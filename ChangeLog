@@ -1,3 +1,61 @@
+2004-12-13  Paolo Bonzini  <bonzini@gnu.org>
+
+	Separate parsing and creation of the NFA.  Avoided recursion on
+	the (very unbalanced) parse tree.
+	[BZ #611]
+	* posix/regcomp.c (struct subexp_optimize, analyze_tree, calc_epsdest,
+	re_dfa_add_tree_node, mark_opt_subexp_iter): Removed.
+	(optimize_subexps, duplicate_tree, calc_first, calc_next,
+	mark_opt_subexp): Rewritten.
+	(preorder, postorder, lower_subexps, lower_subexp, link_nfa_nodes,
+	create_token_tree, free_tree, free_token): New.
+	(analyze): Accept a regex_t *.  Invoke the passes via the preorder and
+	postorder generic visitors.  Do not initialize the fields in the
+	re_dfa_t that represent the transitions.
+	(free_dfa_content): Use free_token.
+	(re_compile_internal): Analyze before UTF-8 optimizations.  Do not
+	include optimization of subexpressions.
+	(create_initial_state): Fetch the DFA node index from the first node's
+	bin_tree_t *.
+	(optimize_utf8): Abort on unexpected nodes, including OP_DUP_QUESTION.
+	Return on COMPLEX_BRACKET.
+	(duplicate_node_closure): Fix comment.
+	(duplicate_node): Do not initialize the fields in the
+	re_dfa_t that represent the transitions.
+	(calc_eclosure, calc_inveclosure): Do not handle OP_DELETED_SUBEXP.
+	(create_tree): Remove final argument.  All callers adjusted.  Rewritten
+	to use create_token_tree.
+	(parse_reg_exp, parse_branch, parse_expression, parse_bracket_exp,
+	build_charclass_op): Use create_tree or create_token_tree instead
+	of re_dfa_add_tree_node.
+	(parse_dup_op): Likewise.  Also free the tree using free_tree for
+	"<re>{0}", and lower OP_DUP_QUESTION to OP_ALT: "a?" is equivalent
+	to "a|".  Adjust invocation of mark_opt_subexp.
+	(parse_sub_exp): Create a single SUBEXP node.
+	* posix/regex_internal.c (re_dfa_add_node): Remove last parameter,
+	always perform as if it was 1.  Do not initialize OPT_SUBEXP and
+	DUPLICATED, and initialize the DFA fields representing the transitions.
+	* posix/regex_internal.h (re_dfa_add_node): Adjust prototype.
+	(re_token_type_t): Move OP_DUP_PLUS and OP_DUP_QUESTION to the tokens
+	section.  Add a tree-only code SUBEXP.  Remove OP_DELETED_SUBEXP.
+	(bin_tree_t): Include a full re_token_t for TOKEN.  Turn FIRST and
+	NEXT into pointers to trees.  Remove ECLOSURE.
+
+2004-12-28  Paolo Bonzini  <bonzini@gnu.org >
+
+	[BZ #605]
+	* posix/regcomp.c (parse_bracket_exp): Do not modify DFA nodes
+	that were already created.
+	* posix/regex_internal.c (re_dfa_add_node): Set accept_mb field
+	in the token if needed.
+	(create_ci_newstate, create_cd_newstate): Set accept_mb field
+	from the tokens' field.
+	* posix/regex_internal.h (re_token_t): Add accept_mb field.
+	(ACCEPT_MB_NODE): Removed.
+	* posix/regexec.c (proceed_next_node, transit_states_mb,
+	build_sifted_states, check_arrival_add_next_nodes): Use
+	accept_mb instead of ACCEPT_MB_NODE.
+
 2005-01-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* debug/chk_fail.c (__chk_fail): Print program name in final message.

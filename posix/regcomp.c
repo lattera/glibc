@@ -33,19 +33,21 @@ static reg_errcode_t create_initial_state (re_dfa_t *dfa);
 #ifdef RE_ENABLE_I18N
 static void optimize_utf8 (re_dfa_t *dfa);
 #endif
-struct subexp_optimize
-{
-  re_dfa_t *dfa;
-  re_token_t *nodes;
-  int no_sub, re_nsub;
-};
-static bin_tree_t *optimize_subexps (struct subexp_optimize *so,
-                                     bin_tree_t *node, int sidx, int depth);
-static reg_errcode_t analyze (re_dfa_t *dfa);
-static reg_errcode_t analyze_tree (re_dfa_t *dfa, bin_tree_t *node);
-static void calc_first (re_dfa_t *dfa, bin_tree_t *node);
-static void calc_next (re_dfa_t *dfa, bin_tree_t *node);
-static void calc_epsdest (re_dfa_t *dfa, bin_tree_t *node);
+static reg_errcode_t analyze (regex_t *preg);
+static reg_errcode_t create_initial_state (re_dfa_t *dfa);
+static reg_errcode_t preorder (bin_tree_t *root,
+			       reg_errcode_t (fn (void *, bin_tree_t *)),
+			       void *extra);
+static reg_errcode_t postorder (bin_tree_t *root,
+				reg_errcode_t (fn (void *, bin_tree_t *)),
+				void *extra);
+static reg_errcode_t optimize_subexps (void *extra, bin_tree_t *node);
+static reg_errcode_t lower_subexps (void *extra, bin_tree_t *node);
+static bin_tree_t *lower_subexp (reg_errcode_t *err, regex_t *preg,
+				 bin_tree_t *node);
+static reg_errcode_t calc_first (void *extra, bin_tree_t *node);
+static reg_errcode_t calc_next (void *extra, bin_tree_t *node);
+static reg_errcode_t link_nfa_nodes (void *extra, bin_tree_t *node);
 static reg_errcode_t duplicate_node_closure (re_dfa_t *dfa, int top_org_node,
 					     int top_clone_node, int root_node,
 					     unsigned int constraint);
@@ -138,14 +140,14 @@ static bin_tree_t *build_charclass_op (re_dfa_t *dfa,
 				       int non_match, reg_errcode_t *err);
 static bin_tree_t *create_tree (re_dfa_t *dfa,
 				bin_tree_t *left, bin_tree_t *right,
-				re_token_type_t type, int index);
-static bin_tree_t *re_dfa_add_tree_node (re_dfa_t *dfa,
-					 bin_tree_t *left, bin_tree_t *right,
-					 const re_token_t *token)
-  __attribute ((noinline));
+				re_token_type_t type);
+static bin_tree_t *create_token_tree (re_dfa_t *dfa,
+				      bin_tree_t *left, bin_tree_t *right,
+				      const re_token_t *token);
 static bin_tree_t *duplicate_tree (const bin_tree_t *src, re_dfa_t *dfa);
-static void mark_opt_subexp (const bin_tree_t *src, re_dfa_t *dfa);
-static void mark_opt_subexp_iter (const bin_tree_t *src, re_dfa_t *dfa, int idx);
+static void free_token (re_token_t *node);
+static reg_errcode_t free_tree (void *extra, bin_tree_t *node);
+static reg_errcode_t mark_opt_subexp (void *extra, bin_tree_t *node);
 
 /* This table gives an error message for each of the error codes listed
    in regex.h.  Obviously the order here has to be same as there.
@@ -598,16 +600,7 @@ free_dfa_content (re_dfa_t *dfa)
 
   if (dfa->nodes)
     for (i = 0; i < dfa->nodes_len; ++i)
-      {
-	re_token_t *node = dfa->nodes + i;
-#ifdef RE_ENABLE_I18N
-	if (node->type == COMPLEX_BRACKET && node->duplicated == 0)
-	  free_charset (node->opr.mbcset);
-	else
-#endif /* RE_ENABLE_I18N */
-	  if (node->type == SIMPLE_BRACKET && node->duplicated == 0)
-	    re_free (node->opr.sbcset);
-      }
+      free_token (dfa->nodes + i);
   re_free (dfa->nexts);
   for (i = 0; i < dfa->nodes_len; ++i)
     {
@@ -811,28 +804,16 @@ re_compile_internal (preg, pattern, length, syntax)
   if (BE (dfa->str_tree == NULL, 0))
     goto re_compile_internal_free_return;
 
+  /* Analyze the tree and create the nfa.  */
+  err = analyze (preg);
+  if (BE (err != REG_NOERROR, 0))
+    goto re_compile_internal_free_return;
+
 #ifdef RE_ENABLE_I18N
   /* If possible, do searching in single byte encoding to speed things up.  */
   if (dfa->is_utf8 && !(syntax & RE_ICASE) && preg->translate == NULL)
     optimize_utf8 (dfa);
 #endif
-
-  if (preg->re_nsub > 0)
-    {
-      struct subexp_optimize so;
-
-      so.dfa = dfa;
-      so.nodes = dfa->nodes;
-      so.no_sub = preg->no_sub;
-      so.re_nsub = preg->re_nsub;
-      dfa->str_tree = optimize_subexps (&so, dfa->str_tree, -1, 0);
-    }
-
-  /* Analyze the tree and collect information which is necessary to
-     create the dfa.  */
-  err = analyze (dfa);
-  if (BE (err != REG_NOERROR, 0))
-    goto re_compile_internal_free_return;
 
   /* Then create the initial state of the dfa.  */
   err = create_initial_state (dfa);
@@ -998,7 +979,7 @@ create_initial_state (dfa)
 
   /* Initial states have the epsilon closure of the node which is
      the first node of the regular expression.  */
-  first = dfa->str_tree->first;
+  first = dfa->str_tree->first->node_idx;
   dfa->init_node = first;
   err = re_node_set_init_copy (&init_nodes, dfa->eclosures + first);
   if (BE (err != REG_NOERROR, 0))
@@ -1104,10 +1085,11 @@ optimize_utf8 (dfa)
       case OP_ALT:
       case END_OF_RE:
       case OP_DUP_ASTERISK:
-      case OP_DUP_QUESTION:
       case OP_OPEN_SUBEXP:
       case OP_CLOSE_SUBEXP:
 	break;
+      case COMPLEX_BRACKET:
+	return;
       case SIMPLE_BRACKET:
 	/* Just double check.  */
         for (i = 0x80 / UINT_BITS; i < BITSET_UINTS; ++i)
@@ -1115,7 +1097,7 @@ optimize_utf8 (dfa)
 	    return;
 	break;
       default:
-	return;
+	abort ();
       }
 
   if (mb_chars || has_period)
@@ -1135,90 +1117,14 @@ optimize_utf8 (dfa)
 }
 #endif
 
-static bin_tree_t *
-optimize_subexps (so, node, sidx, depth)
-     struct subexp_optimize *so;
-     bin_tree_t *node;
-     int sidx, depth;
-{
-  int idx, new_depth, new_sidx;
-  bin_tree_t *ret;
-  if (node == NULL)
-    return NULL;
-
-  new_depth = 0;
-  new_sidx = sidx;
-  if ((depth & 1) && node->type == CONCAT
-      && node->right && node->right->type == 0
-      && so->nodes[idx = node->right->node_idx].type == OP_CLOSE_SUBEXP)
-    {
-      new_depth = depth + 1;
-      if (new_depth == 2
-          || (so->nodes[idx].opr.idx < 8 * sizeof (so->dfa->used_bkref_map)
-              && so->dfa->used_bkref_map & (1 << so->nodes[idx].opr.idx)))
-        new_sidx = so->nodes[idx].opr.idx;
-    }
-  node->left = optimize_subexps (so, node->left, new_sidx, new_depth);
-  new_depth = (depth & 1) == 0 && node->type == CONCAT
-              && node->left && node->left->type == 0
-              && so->nodes[node->left->node_idx].type == OP_OPEN_SUBEXP
-              ? depth + 1 : 0;
-  node->right = optimize_subexps (so, node->right, sidx, new_depth);
-
-  if (node->type != CONCAT)
-    return node;
-  if ((depth & 1) == 0
-      && node->left
-      && node->left->type == 0
-      && so->nodes[idx = node->left->node_idx].type == OP_OPEN_SUBEXP)
-    ret = node->right;
-  else if ((depth & 1)
-           && node->right
-           && node->right->type == 0
-           && so->nodes[idx = node->right->node_idx].type == OP_CLOSE_SUBEXP)
-    ret = node->left;
-  else
-    return node;
-
-  if (so->nodes[idx].opr.idx < 8 * sizeof (so->dfa->used_bkref_map)
-      && so->dfa->used_bkref_map & (1 << so->nodes[idx].opr.idx))
-    return node;
-
-  if (!so->no_sub)
-    {
-      int i;
-
-      if (depth < 2)
-        return node;
-
-      if (so->dfa->subexp_map == NULL)
-        {
-          so->dfa->subexp_map = re_malloc (int, so->re_nsub);
-          if (so->dfa->subexp_map == NULL)
-            return node;
-
-          for (i = 0; i < so->re_nsub; i++)
-            so->dfa->subexp_map[i] = i;
-        }
-
-      i = so->nodes[idx].opr.idx;
-      assert (sidx < i);
-      so->dfa->subexp_map[i] = sidx;
-    }
-
-  so->nodes[idx].type = OP_DELETED_SUBEXP;
-  ret->parent = node->parent;
-  return ret;
-}
-
 /* Analyze the structure tree, and calculate "first", "next", "edest",
    "eclosure", and "inveclosure".  */
 
 static reg_errcode_t
-analyze (dfa)
-     re_dfa_t *dfa;
+analyze (preg)
+     regex_t *preg;
 {
-  int i;
+  re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   reg_errcode_t ret;
 
   /* Allocate arrays.  */
@@ -1230,221 +1136,307 @@ analyze (dfa)
   if (BE (dfa->nexts == NULL || dfa->org_indices == NULL || dfa->edests == NULL
 	  || dfa->eclosures == NULL || dfa->inveclosures == NULL, 0))
     return REG_ESPACE;
-  /* Initialize them.  */
-  for (i = 0; i < dfa->nodes_len; ++i)
+
+  dfa->subexp_map = re_malloc (int, preg->re_nsub);
+  if (dfa->subexp_map != NULL)
     {
-      dfa->nexts[i] = -1;
-      re_node_set_init_empty (dfa->edests + i);
-      re_node_set_init_empty (dfa->eclosures + i);
-      re_node_set_init_empty (dfa->inveclosures + i);
+      int i;
+      for (i = 0; i < preg->re_nsub; i++)
+	dfa->subexp_map[i] = i;
+      preorder (dfa->str_tree, optimize_subexps, dfa);
+      for (i = 0; i < preg->re_nsub; i++)
+	if (dfa->subexp_map[i] != i)
+	  break;
+      if (i == preg->re_nsub)
+	{
+	  free (dfa->subexp_map);
+	  dfa->subexp_map = NULL;
+	}
     }
 
-  ret = analyze_tree (dfa, dfa->str_tree);
-  if (BE (ret == REG_NOERROR, 1))
-    {
-      ret = calc_eclosure (dfa);
-      if (ret == REG_NOERROR)
-	calc_inveclosure (dfa);
-    }
+  ret = postorder (dfa->str_tree, lower_subexps, preg);
+  if (BE (ret != REG_NOERROR, 0))
+    return ret;
+  ret = postorder (dfa->str_tree, calc_first, dfa);
+  if (BE (ret != REG_NOERROR, 0))
+    return ret;
+  preorder (dfa->str_tree, calc_next, dfa);
+  ret = preorder (dfa->str_tree, link_nfa_nodes, dfa);
+  if (BE (ret != REG_NOERROR, 0))
+    return ret;
+  ret = calc_eclosure (dfa);
+  if (BE (ret != REG_NOERROR, 0))
+    return ret;
+  calc_inveclosure (dfa);
   return ret;
 }
 
-/* Helper functions for analyze.
-   This function calculate "first", "next", and "edest" for the subtree
-   whose root is NODE.  */
+/* Our parse trees are very unbalanced, so we cannot use a stack to
+   implement parse tree visits.  Instead, we use parent pointers and
+   some hairy code in these two functions.  */
+static reg_errcode_t
+postorder (root, fn, extra)
+     bin_tree_t *root;
+     reg_errcode_t (fn (void *, bin_tree_t *));
+     void *extra;
+{
+  bin_tree_t *node, *prev;
+
+  for (node = root; ; )
+    {
+      /* Descend down the tree, preferably to the left (or to the right
+	 if that's the only child).  */
+      while (node->left || node->right)
+	if (node->left)
+          node = node->left;
+        else
+          node = node->right;
+
+      do
+	{
+	  reg_errcode_t err = fn (extra, node);
+	  if (BE (err != REG_NOERROR, 0))
+	    return err;
+          if (node->parent == NULL)
+	    return REG_NOERROR;
+	  prev = node;
+	  node = node->parent;
+	}
+      /* Go up while we have a node that is reached from the right.  */
+      while (node->right == prev || node->right == NULL);
+      node = node->right;
+    }
+}
 
 static reg_errcode_t
-analyze_tree (dfa, node)
-     re_dfa_t *dfa;
+preorder (root, fn, extra)
+     bin_tree_t *root;
+     reg_errcode_t (fn (void *, bin_tree_t *));
+     void *extra;
+{
+  bin_tree_t *node;
+
+  for (node = root; ; )
+    {
+      reg_errcode_t err = fn (extra, node);
+      if (BE (err != REG_NOERROR, 0))
+	return err;
+
+      /* Go to the left node, or up and to the right.  */
+      if (node->left)
+	node = node->left;
+      else
+	{
+	  bin_tree_t *prev = NULL;
+	  while (node->right == prev || node->right == NULL)
+	    {
+	      prev = node;
+	      node = node->parent;
+	      if (!node)
+	        return REG_NOERROR;
+	    }
+	  node = node->right;
+	}
+    }
+}
+
+/* Optimization pass: if a SUBEXP is entirely contained, strip it and tell
+   re_search_internal to map the inner one's opr.idx to this one's.  Adjust
+   backreferences as well.  Requires a preorder visit.  */
+static reg_errcode_t
+optimize_subexps (extra, node)
+     void *extra;
      bin_tree_t *node;
 {
-  reg_errcode_t ret;
-  if (node->first == -1)
-    calc_first (dfa, node);
-  if (node->next == -1)
-    calc_next (dfa, node);
-  calc_epsdest (dfa, node);
+  re_dfa_t *dfa = (re_dfa_t *) extra;
 
-  /* Calculate "first" etc. for the left child.  */
-  if (node->left != NULL)
+  if (node->token.type == OP_BACK_REF && dfa->subexp_map)
     {
-      ret = analyze_tree (dfa, node->left);
-      if (BE (ret != REG_NOERROR, 0))
-	return ret;
+      int idx = node->token.opr.idx;
+      node->token.opr.idx = dfa->subexp_map[idx];
+      dfa->used_bkref_map |= 1 << node->token.opr.idx;
     }
-  /* Calculate "first" etc. for the right child.  */
-  if (node->right != NULL)
+
+  else if (node->token.type == SUBEXP
+           && node->left && node->left->token.type == SUBEXP)
     {
-      ret = analyze_tree (dfa, node->right);
-      if (BE (ret != REG_NOERROR, 0))
-	return ret;
+      int other_idx = node->left->token.opr.idx;
+
+      node->left = node->left->left;
+      if (node->left)
+        node->left->parent = node;
+
+      dfa->subexp_map[other_idx] = dfa->subexp_map[node->token.opr.idx];
+      if (other_idx < 8 * sizeof (dfa->used_bkref_map))
+	dfa->used_bkref_map &= ~(1 << other_idx);
+    }
+
+  return REG_NOERROR;
+}
+
+/* Lowering pass: Turn each SUBEXP node into the appropriate concatenation
+   of OP_OPEN_SUBEXP, the body of the SUBEXP (if any) and OP_CLOSE_SUBEXP.  */
+static reg_errcode_t
+lower_subexps (extra, node)
+     void *extra;
+     bin_tree_t *node;
+{
+  regex_t *preg = (regex_t *) extra;
+  reg_errcode_t err = REG_NOERROR;
+
+  if (node->left && node->left->token.type == SUBEXP)
+    {
+      node->left = lower_subexp (&err, preg, node->left);
+      if (node->left)
+	node->left->parent = node;
+    }
+  if (node->right && node->right->token.type == SUBEXP)
+    {
+      node->right = lower_subexp (&err, preg, node->right);
+      if (node->right)
+	node->right->parent = node;
+    }
+
+  return err;
+}
+
+static bin_tree_t *
+lower_subexp (err, preg, node)
+     reg_errcode_t *err;
+     regex_t *preg;
+     bin_tree_t *node;
+{
+  re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
+  bin_tree_t *body = node->left;
+  bin_tree_t *op, *cls, *tree1, *tree;
+
+  if (preg->no_sub
+      && (node->token.opr.idx >= 8 * sizeof (dfa->used_bkref_map)
+	  || !(dfa->used_bkref_map & (1 << node->token.opr.idx))))
+    return node->left;
+
+  /* Convert the SUBEXP node to the concatenation of an
+     OP_OPEN_SUBEXP, the contents, and an OP_CLOSE_SUBEXP.  */
+  op = create_tree (dfa, NULL, NULL, OP_OPEN_SUBEXP);
+  cls = create_tree (dfa, NULL, NULL, OP_CLOSE_SUBEXP);
+  tree1 = body ? create_tree (dfa, body, cls, CONCAT) : cls;
+  tree = create_tree (dfa, op, tree1, CONCAT);
+  if (BE (tree == NULL || tree1 == NULL || op == NULL || cls == NULL, 0))
+    {
+      *err = REG_ESPACE;
+      return NULL;
+    }
+
+  op->token.opr.idx = cls->token.opr.idx = node->token.opr.idx;
+  op->token.opt_subexp = cls->token.opt_subexp = node->token.opt_subexp;
+  return tree;
+}
+
+/* Pass 1 in building the NFA: compute FIRST and create unlinked automaton
+   nodes.  Requires a postorder visit.  */
+static reg_errcode_t
+calc_first (extra, node)
+     void *extra;
+     bin_tree_t *node;
+{
+  re_dfa_t *dfa = (re_dfa_t *) extra;
+  if (node->token.type == CONCAT)
+    {
+      node->first = node->left->first;
+      node->node_idx = node->left->node_idx;
+    }
+  else
+    {
+      node->first = node;
+      node->node_idx = re_dfa_add_node (dfa, node->token);
+      if (BE (node->node_idx == -1, 0))
+        return REG_ESPACE;
     }
   return REG_NOERROR;
 }
 
-/* Calculate "first" for the node NODE.  */
-static void
-calc_first (dfa, node)
-     re_dfa_t *dfa;
+/* Pass 2: compute NEXT on the tree.  Preorder visit.  */
+static reg_errcode_t
+calc_next (extra, node)
+     void *extra;
      bin_tree_t *node;
 {
-  int idx, type;
-  idx = node->node_idx;
-  type = (node->type == 0) ? dfa->nodes[idx].type : node->type;
-
-  switch (type)
+  switch (node->token.type)
     {
-#ifdef DEBUG
-    case OP_OPEN_BRACKET:
-    case OP_CLOSE_BRACKET:
-    case OP_OPEN_DUP_NUM:
-    case OP_CLOSE_DUP_NUM:
-    case OP_DUP_PLUS:
-    case OP_NON_MATCH_LIST:
-    case OP_OPEN_COLL_ELEM:
-    case OP_CLOSE_COLL_ELEM:
-    case OP_OPEN_EQUIV_CLASS:
-    case OP_CLOSE_EQUIV_CLASS:
-    case OP_OPEN_CHAR_CLASS:
-    case OP_CLOSE_CHAR_CLASS:
-      /* These must not appear here.  */
-      assert (0);
-#endif
-    case END_OF_RE:
-    case CHARACTER:
-    case OP_PERIOD:
     case OP_DUP_ASTERISK:
-    case OP_DUP_QUESTION:
-#ifdef RE_ENABLE_I18N
-    case OP_UTF8_PERIOD:
-    case COMPLEX_BRACKET:
-#endif /* RE_ENABLE_I18N */
-    case SIMPLE_BRACKET:
-    case OP_BACK_REF:
+      node->left->next = node;
+      break;
+    case CONCAT:
+      node->left->next = node->right->first;
+      node->right->next = node->next;
+      break;
+    default:
+      if (node->left)
+	node->left->next = node->next;
+      if (node->right)
+        node->right->next = node->next;
+      break;
+    }
+  return REG_NOERROR;
+}
+
+/* Pass 3: link all DFA nodes to their NEXT node (any order will do).  */
+static reg_errcode_t
+link_nfa_nodes (extra, node)
+     void *extra;
+     bin_tree_t *node;
+{
+  re_dfa_t *dfa = (re_dfa_t *) extra;
+  int idx = node->node_idx;
+  reg_errcode_t err = REG_NOERROR;
+
+  switch (node->token.type)
+    {
+    case CONCAT:
+      break;
+
+    case END_OF_RE:
+      assert (node->next == NULL);
+      break;
+
+    case OP_DUP_ASTERISK:
+    case OP_ALT:
+      {
+	int left, right;
+	dfa->has_plural_match = 1;
+	if (node->left != NULL)
+	  left = node->left->first->node_idx;
+	else
+	  left = node->next->node_idx;
+	if (node->right != NULL)
+	  right = node->right->first->node_idx;
+	else
+	  right = node->next->node_idx;
+	assert (left > -1);
+	assert (right > -1);
+	err = re_node_set_init_2 (dfa->edests + idx, left, right);
+      }
+      break;
+
     case ANCHOR:
     case OP_OPEN_SUBEXP:
     case OP_CLOSE_SUBEXP:
-      node->first = idx;
+      err = re_node_set_init_1 (dfa->edests + idx, node->next->node_idx);
       break;
-    case OP_ALT:
-      node->first = idx;
+
+    case OP_BACK_REF:
+      dfa->nexts[idx] = node->next->node_idx;
+      if (node->token.type == OP_BACK_REF)
+	re_node_set_init_1 (dfa->edests + idx, dfa->nexts[idx]);
       break;
-      /* else fall through */
+
     default:
-#ifdef DEBUG
-      assert (node->left != NULL);
-#endif
-      if (node->left->first == -1)
-	calc_first (dfa, node->left);
-      node->first = node->left->first;
+      assert (!IS_EPSILON_NODE (node->token.type));
+      dfa->nexts[idx] = node->next->node_idx;
       break;
     }
-}
 
-/* Calculate "next" for the node NODE.  */
-
-static void
-calc_next (dfa, node)
-     re_dfa_t *dfa;
-     bin_tree_t *node;
-{
-  int idx, type;
-  bin_tree_t *parent = node->parent;
-  if (parent == NULL)
-    {
-      node->next = -1;
-      idx = node->node_idx;
-      if (node->type == 0)
-	dfa->nexts[idx] = node->next;
-      return;
-    }
-
-  idx = parent->node_idx;
-  type = (parent->type == 0) ? dfa->nodes[idx].type : parent->type;
-
-  switch (type)
-    {
-    case OP_DUP_ASTERISK:
-      node->next = idx;
-      break;
-    case CONCAT:
-      if (parent->left == node)
-	{
-	  if (parent->right->first == -1)
-	    calc_first (dfa, parent->right);
-	  node->next = parent->right->first;
-	  break;
-	}
-      /* else fall through */
-    default:
-      if (parent->next == -1)
-	calc_next (dfa, parent);
-      node->next = parent->next;
-      break;
-    }
-  idx = node->node_idx;
-  if (node->type == 0)
-    dfa->nexts[idx] = node->next;
-}
-
-/* Calculate "edest" for the node NODE.  */
-
-static void
-calc_epsdest (dfa, node)
-     re_dfa_t *dfa;
-     bin_tree_t *node;
-{
-  int idx;
-  idx = node->node_idx;
-  if (node->type == 0)
-    {
-      if (dfa->nodes[idx].type == OP_DUP_ASTERISK
-	  || dfa->nodes[idx].type == OP_DUP_QUESTION)
-	{
-	  if (node->left->first == -1)
-	    calc_first (dfa, node->left);
-	  if (node->next == -1)
-	    calc_next (dfa, node);
-	  re_node_set_init_2 (dfa->edests + idx, node->left->first,
-			      node->next);
-	}
-      else if (dfa->nodes[idx].type == OP_ALT)
-	{
-	  int left, right;
-	  if (node->left != NULL)
-	    {
-	      if (node->left->first == -1)
-		calc_first (dfa, node->left);
-	      left = node->left->first;
-	    }
-	  else
-	    {
-	      if (node->next == -1)
-		calc_next (dfa, node);
-	      left = node->next;
-	    }
-	  if (node->right != NULL)
-	    {
-	      if (node->right->first == -1)
-		calc_first (dfa, node->right);
-	      right = node->right->first;
-	    }
-	  else
-	    {
-	      if (node->next == -1)
-		calc_next (dfa, node);
-	      right = node->next;
-	    }
-	  re_node_set_init_2 (dfa->edests + idx, left, right);
-	}
-      else if (dfa->nodes[idx].type == ANCHOR
-	       || dfa->nodes[idx].type == OP_OPEN_SUBEXP
-	       || dfa->nodes[idx].type == OP_CLOSE_SUBEXP
-	       || dfa->nodes[idx].type == OP_BACK_REF)
-	re_node_set_init_1 (dfa->edests + idx, node->next);
-      else
-        assert (!IS_EPSILON_NODE (dfa->nodes[idx].type));
-    }
+  return err;
 }
 
 /* Duplicate the epsilon closure of the node ROOT_NODE.
@@ -1520,7 +1512,7 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
       else /* dfa->edests[org_node].nelem == 2 */
 	{
 	  /* In case of the node can epsilon-transit, and it has two
-	     destinations. E.g. '|', '*', '+', '?'.   */
+	     destinations. In the bin_tree_t and DFA, that's '|' and '*'.   */
 	  org_dest = dfa->edests[org_node].elems[0];
 	  re_node_set_empty (dfa->edests + clone_node);
 	  /* Search for a duplicated node which satisfies the constraint.  */
@@ -1591,16 +1583,13 @@ duplicate_node (new_idx, dfa, org_idx, constraint)
      int *new_idx, org_idx;
      unsigned int constraint;
 {
-  int dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx], 1);
+  int dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx]);
   if (BE (dup_idx == -1, 0))
     return REG_ESPACE;
   dfa->nodes[dup_idx].constraint = constraint;
   if (dfa->nodes[org_idx].type == ANCHOR)
     dfa->nodes[dup_idx].constraint |= dfa->nodes[org_idx].opr.ctx_type;
   dfa->nodes[dup_idx].duplicated = 1;
-  re_node_set_init_empty (dfa->edests + dup_idx);
-  re_node_set_init_empty (dfa->eclosures + dup_idx);
-  re_node_set_init_empty (dfa->inveclosures + dup_idx);
 
   /* Store the index of the original node.  */
   dfa->org_indices[dup_idx] = org_idx;
@@ -1615,8 +1604,6 @@ calc_inveclosure (dfa)
   int src, idx, dest;
   for (src = 0; src < dfa->nodes_len; ++src)
     {
-      if (dfa->nodes[src].type == OP_DELETED_SUBEXP)
-        continue;
       for (idx = 0; idx < dfa->eclosures[src].nelem; ++idx)
 	{
 	  dest = dfa->eclosures[src].elems[idx];
@@ -1652,8 +1639,6 @@ calc_eclosure (dfa)
 #ifdef DEBUG
       assert (dfa->eclosures[node_idx].nelem != -1);
 #endif
-      if (dfa->nodes[node_idx].type == OP_DELETED_SUBEXP)
-        continue;
 
       /* If we have already calculated, skip it.  */
       if (dfa->eclosures[node_idx].nelem != 0)
@@ -2124,9 +2109,9 @@ parse (regexp, preg, syntax, err)
   tree = parse_reg_exp (regexp, preg, &current_token, syntax, 0, err);
   if (BE (*err != REG_NOERROR && tree == NULL, 0))
     return NULL;
-  eor = re_dfa_add_tree_node (dfa, NULL, NULL, &current_token);
+  eor = create_tree (dfa, NULL, NULL, END_OF_RE);
   if (tree != NULL)
-    root = create_tree (dfa, tree, eor, CONCAT, 0);
+    root = create_tree (dfa, tree, eor, CONCAT);
   else
     root = eor;
   if (BE (eor == NULL || root == NULL, 0))
@@ -2163,7 +2148,6 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
 
   while (token->type == OP_ALT)
     {
-      re_token_t alt_token = *token;
       fetch_token (token, regexp, syntax | RE_CARET_ANCHORS_HERE);
       if (token->type != OP_ALT && token->type != END_OF_RE
 	  && (nest == 0 || token->type != OP_CLOSE_SUBEXP))
@@ -2174,13 +2158,12 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
 	}
       else
 	branch = NULL;
-      tree = re_dfa_add_tree_node (dfa, tree, branch, &alt_token);
+      tree = create_tree (dfa, tree, branch, OP_ALT);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
 	  return NULL;
 	}
-      dfa->has_plural_match = 1;
     }
   return tree;
 }
@@ -2219,7 +2202,7 @@ parse_branch (regexp, preg, token, syntax, nest, err)
 	}
       if (tree != NULL && exp != NULL)
 	{
-	  tree = create_tree (dfa, tree, exp, CONCAT, 0);
+	  tree = create_tree (dfa, tree, exp, CONCAT);
 	  if (tree == NULL)
 	    {
 	      *err = REG_ESPACE;
@@ -2253,7 +2236,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
   switch (token->type)
     {
     case CHARACTER:
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+      tree = create_token_tree (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2267,8 +2250,8 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	    {
 	      bin_tree_t *mbc_remain;
 	      fetch_token (token, regexp, syntax);
-	      mbc_remain = re_dfa_add_tree_node (dfa, NULL, NULL, token);
-	      tree = create_tree (dfa, tree, mbc_remain, CONCAT, 0);
+	      mbc_remain = create_token_tree (dfa, NULL, NULL, token);
+	      tree = create_tree (dfa, tree, mbc_remain, CONCAT);
 	      if (BE (mbc_remain == NULL || tree == NULL, 0))
 		{
 		  *err = REG_ESPACE;
@@ -2295,7 +2278,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  return NULL;
 	}
       dfa->used_bkref_map |= 1 << token->opr.idx;
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+      tree = create_token_tree (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2340,7 +2323,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       token->type = CHARACTER;
       /* mb_partial and word_char bits should be initialized already
 	 by peek_token.  */
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+      tree = create_token_tree (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2359,18 +2342,17 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  if (token->opr.ctx_type == WORD_DELIM)
 	    {
 	      token->opr.ctx_type = WORD_FIRST;
-	      tree_first = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+	      tree_first = create_token_tree (dfa, NULL, NULL, token);
 	      token->opr.ctx_type = WORD_LAST;
             }
           else
             {
 	      token->opr.ctx_type = INSIDE_WORD;
-	      tree_first = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+	      tree_first = create_token_tree (dfa, NULL, NULL, token);
 	      token->opr.ctx_type = INSIDE_NOTWORD;
             }
-	  tree_last = re_dfa_add_tree_node (dfa, NULL, NULL, token);
-	  token->type = OP_ALT;
-	  tree = re_dfa_add_tree_node (dfa, tree_first, tree_last, token);
+	  tree_last = create_token_tree (dfa, NULL, NULL, token);
+	  tree = create_tree (dfa, tree_first, tree_last, OP_ALT);
 	  if (BE (tree_first == NULL || tree_last == NULL || tree == NULL, 0))
 	    {
 	      *err = REG_ESPACE;
@@ -2379,7 +2361,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	}
       else
 	{
-	  tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+	  tree = create_token_tree (dfa, NULL, NULL, token);
 	  if (BE (tree == NULL, 0))
 	    {
 	      *err = REG_ESPACE;
@@ -2393,7 +2375,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       fetch_token (token, regexp, syntax);
       return tree;
     case OP_PERIOD:
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+      tree = create_token_tree (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2449,7 +2431,6 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  *err = REG_BADRPT;
 	  return NULL;
 	}
-      dfa->has_plural_match = 1;
     }
 
   return tree;
@@ -2472,17 +2453,10 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
      reg_errcode_t *err;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
-  bin_tree_t *tree, *left_par, *right_par;
+  bin_tree_t *tree;
   size_t cur_nsub;
   cur_nsub = preg->re_nsub++;
 
-  left_par = re_dfa_add_tree_node (dfa, NULL, NULL, token);
-  if (BE (left_par == NULL, 0))
-    {
-      *err = REG_ESPACE;
-      return NULL;
-    }
-  dfa->nodes[left_par->node_idx].opr.idx = cur_nsub;
   fetch_token (token, regexp, syntax | RE_CARET_ANCHORS_HERE);
 
   /* The subexpression may be a null string.  */
@@ -2491,26 +2465,20 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
   else
     {
       tree = parse_reg_exp (regexp, preg, token, syntax, nest, err);
-      if (BE (*err != REG_NOERROR && tree == NULL, 0))
+      if (BE (*err == REG_NOERROR && token->type != OP_CLOSE_SUBEXP, 0))
+        *err = REG_EPAREN;
+      if (BE (*err != REG_NOERROR, 0))
 	return NULL;
     }
-  if (BE (token->type != OP_CLOSE_SUBEXP, 0))
-    {
-      *err = REG_EPAREN;
-      return NULL;
-    }
-  right_par = re_dfa_add_tree_node (dfa, NULL, NULL, token);
   dfa->completed_bkref_map |= 1 << cur_nsub;
-  tree = ((tree == NULL) ? right_par
-	  : create_tree (dfa, tree, right_par, CONCAT, 0));
-  tree = create_tree (dfa, left_par, tree, CONCAT, 0);
-  if (BE (right_par == NULL || tree == NULL, 0))
+
+  tree = create_tree (dfa, tree, NULL, SUBEXP);
+  if (BE (tree == NULL, 0))
     {
       *err = REG_ESPACE;
       return NULL;
     }
-  dfa->nodes[right_par->node_idx].opr.idx = cur_nsub;
-
+  tree->token.opr.idx = cur_nsub;
   return tree;
 }
 
@@ -2525,7 +2493,6 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
      reg_syntax_t syntax;
      reg_errcode_t *err;
 {
-  re_token_t dup_token;
   bin_tree_t *tree = NULL, *old_tree = NULL;
   int i, start, end, start_idx = re_string_cur_idx (regexp);
   re_token_t start_token = *token;
@@ -2588,9 +2555,13 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
 
   fetch_token (token, regexp, syntax);
 
-  /* Treat "<re>{0}*" etc. as "<re>{0}".  */
-  if (BE (elem == NULL || (start == 0 && end == 0), 0))
+  if (BE (elem == NULL, 0))
     return NULL;
+  if (BE (start == 0 && end == 0, 0))
+    {
+      postorder (elem, free_tree, NULL);
+      return NULL;
+    }
 
   /* Extract "<re>{n,m}" to "<re><re>...<re><re>{0,<m-n>}".  */
   if (BE (start > 0, 0))
@@ -2599,7 +2570,7 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
       for (i = 2; i <= start; ++i)
 	{
 	  elem = duplicate_tree (elem, dfa);
-	  tree = create_tree (dfa, tree, elem, CONCAT, 0);
+	  tree = create_tree (dfa, tree, elem, CONCAT);
 	  if (BE (elem == NULL || tree == NULL, 0))
 	    goto parse_dup_op_espace;
 	}
@@ -2614,9 +2585,10 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
   else
     old_tree = NULL;
 
-  mark_opt_subexp (elem, dfa);
-  dup_token.type = (end == -1 ? OP_DUP_ASTERISK : OP_DUP_QUESTION);
-  tree = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
+  if (elem->token.type == SUBEXP)
+    postorder (elem, mark_opt_subexp, (void *) (long) elem->token.opr.idx);
+
+  tree = create_tree (dfa, elem, NULL, (end == -1 ? OP_DUP_ASTERISK : OP_ALT));
   if (BE (tree == NULL, 0))
     goto parse_dup_op_espace;
 
@@ -2626,17 +2598,17 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
   for (i = start + 2; i <= end; ++i)
     {
       elem = duplicate_tree (elem, dfa);
-      tree = create_tree (dfa, tree, elem, CONCAT, 0);
+      tree = create_tree (dfa, tree, elem, CONCAT);
       if (BE (elem == NULL || tree == NULL, 0))
         goto parse_dup_op_espace;
 
-      tree = re_dfa_add_tree_node (dfa, tree, NULL, &dup_token);
+      tree = create_tree (dfa, tree, NULL, OP_ALT);
       if (BE (tree == NULL, 0))
         goto parse_dup_op_espace;
     }
 
   if (old_tree)
-    tree = create_tree (dfa, old_tree, tree, CONCAT, 0);
+    tree = create_tree (dfa, old_tree, tree, CONCAT);
 
   return tree;
 
@@ -3292,57 +3264,58 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   /* Ensure only single byte characters are set.  */
   if (dfa->mb_cur_max > 1)
     bitset_mask (sbcset, dfa->sb_char);
-#endif /* RE_ENABLE_I18N */
 
-  /* Build a tree for simple bracket.  */
-  br_token.type = SIMPLE_BRACKET;
-  br_token.opr.sbcset = sbcset;
-  work_tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
-  if (BE (work_tree == NULL, 0))
-    goto parse_bracket_exp_espace;
-
-#ifdef RE_ENABLE_I18N
   if (mbcset->nmbchars || mbcset->ncoll_syms || mbcset->nequiv_classes
       || mbcset->nranges || (dfa->mb_cur_max > 1 && (mbcset->nchar_classes
 						     || mbcset->non_match)))
     {
-      re_token_t alt_token;
       bin_tree_t *mbc_tree;
       int sbc_idx;
       /* Build a tree for complex bracket.  */
       dfa->has_mb_node = 1;
+      br_token.type = COMPLEX_BRACKET;
+      br_token.opr.mbcset = mbcset;
+      mbc_tree = create_token_tree (dfa, NULL, NULL, &br_token);
+      if (BE (mbc_tree == NULL, 0))
+	goto parse_bracket_exp_espace;
       for (sbc_idx = 0; sbc_idx < BITSET_UINTS; ++sbc_idx)
 	if (sbcset[sbc_idx])
 	  break;
       /* If there are no bits set in sbcset, there is no point
 	 of having both SIMPLE_BRACKET and COMPLEX_BRACKET.  */
-      if (sbc_idx == BITSET_UINTS)
+      if (sbc_idx < BITSET_UINTS)
+	{
+          /* Build a tree for simple bracket.  */
+          br_token.type = SIMPLE_BRACKET;
+          br_token.opr.sbcset = sbcset;
+          work_tree = create_token_tree (dfa, NULL, NULL, &br_token);
+          if (BE (work_tree == NULL, 0))
+            goto parse_bracket_exp_espace;
+
+          /* Then join them by ALT node.  */
+          work_tree = create_tree (dfa, work_tree, mbc_tree, OP_ALT);
+          if (BE (work_tree == NULL, 0))
+            goto parse_bracket_exp_espace;
+	}
+      else
 	{
 	  re_free (sbcset);
-	  dfa->nodes[work_tree->node_idx].type = COMPLEX_BRACKET;
-	  dfa->nodes[work_tree->node_idx].opr.mbcset = mbcset;
-	  return work_tree;
+	  work_tree = mbc_tree;
 	}
-      br_token.type = COMPLEX_BRACKET;
-      br_token.opr.mbcset = mbcset;
-      mbc_tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
-      if (BE (mbc_tree == NULL, 0))
-	goto parse_bracket_exp_espace;
-      /* Then join them by ALT node.  */
-      alt_token.type = OP_ALT;
-      dfa->has_plural_match = 1;
-      work_tree = re_dfa_add_tree_node (dfa, work_tree, mbc_tree, &alt_token);
-      if (BE (mbc_tree != NULL, 1))
-	return work_tree;
     }
   else
     {
+      /* Build a tree for simple bracket.  */
+      br_token.type = SIMPLE_BRACKET;
+      br_token.opr.sbcset = sbcset;
+      work_tree = create_token_tree (dfa, NULL, NULL, &br_token);
+      if (BE (work_tree == NULL, 0))
+        goto parse_bracket_exp_espace;
+
       free_charset (mbcset);
-      return work_tree;
     }
-#else /* not RE_ENABLE_I18N */
-  return work_tree;
 #endif /* not RE_ENABLE_I18N */
+  return work_tree;
 
  parse_bracket_exp_espace:
   *err = REG_ESPACE;
@@ -3703,26 +3676,23 @@ build_charclass_op (dfa, trans, class_name, extra, non_match, err)
   /* Build a tree for simple bracket.  */
   br_token.type = SIMPLE_BRACKET;
   br_token.opr.sbcset = sbcset;
-  tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
+  tree = create_token_tree (dfa, NULL, NULL, &br_token);
   if (BE (tree == NULL, 0))
     goto build_word_op_espace;
 
 #ifdef RE_ENABLE_I18N
   if (dfa->mb_cur_max > 1)
     {
-      re_token_t alt_token;
       bin_tree_t *mbc_tree;
       /* Build a tree for complex bracket.  */
       br_token.type = COMPLEX_BRACKET;
       br_token.opr.mbcset = mbcset;
       dfa->has_mb_node = 1;
-      mbc_tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
+      mbc_tree = create_token_tree (dfa, NULL, NULL, &br_token);
       if (BE (mbc_tree == NULL, 0))
 	goto build_word_op_espace;
       /* Then join them by ALT node.  */
-      alt_token.type = OP_ALT;
-      dfa->has_plural_match = 1;
-      tree = re_dfa_add_tree_node (dfa, tree, mbc_tree, &alt_token);
+      tree = create_tree (dfa, tree, mbc_tree, OP_ALT);
       if (BE (mbc_tree != NULL, 1))
 	return tree;
     }
@@ -3793,12 +3763,23 @@ free_charset (re_charset_t *cset)
 /* Create a tree node.  */
 
 static bin_tree_t *
-create_tree (dfa, left, right, type, index)
+create_tree (dfa, left, right, type)
      re_dfa_t *dfa;
      bin_tree_t *left;
      bin_tree_t *right;
      re_token_type_t type;
-     int index;
+{
+  re_token_t t;
+  t.type = type;
+  return create_token_tree (dfa, left, right, &t);
+}
+
+static bin_tree_t *
+create_token_tree (dfa, left, right, token)
+     re_dfa_t *dfa;
+     bin_tree_t *left;
+     bin_tree_t *right;
+     const re_token_t *token;
 {
   bin_tree_t *tree;
   if (BE (dfa->str_tree_storage_idx == BIN_TREE_STORAGE_SIZE, 0))
@@ -3816,11 +3797,12 @@ create_tree (dfa, left, right, type, index)
   tree->parent = NULL;
   tree->left = left;
   tree->right = right;
-  tree->type = type;
-  tree->node_idx = index;
-  tree->first = -1;
-  tree->next = -1;
-  re_node_set_init_empty (&tree->eclosure);
+  tree->token = *token;
+  tree->token.duplicated = 0;
+  tree->token.opt_subexp = 0;
+  tree->first = NULL;
+  tree->next = NULL;
+  tree->node_idx = -1;
 
   if (left != NULL)
     left->parent = tree;
@@ -3829,103 +3811,89 @@ create_tree (dfa, left, right, type, index)
   return tree;
 }
 
-/* Create both a DFA node and a tree for it.  */
+/* Mark the tree SRC as an optional subexpression.
+   To be called from preorder or postorder.  */
 
-static bin_tree_t *
-re_dfa_add_tree_node (dfa, left, right, token)
-     re_dfa_t *dfa;
-     bin_tree_t *left;
-     bin_tree_t *right;
-     const re_token_t *token;
+static reg_errcode_t
+mark_opt_subexp (extra, node)
+     void *extra;
+     bin_tree_t *node;
 {
-  int new_idx = re_dfa_add_node (dfa, *token, 0);
+  int idx = (int) (long) extra;
+  if (node->token.type == SUBEXP && node->token.opr.idx == idx)
+    node->token.opt_subexp = 1;
 
-  if (new_idx == -1)
-    return NULL;
-
-  return create_tree (dfa, left, right, 0, new_idx);
+  return REG_NOERROR;
 }
 
-/* Mark the tree SRC as an optional subexpression.  */
+/* Free the allocated memory inside NODE. */
 
 static void
-mark_opt_subexp (src, dfa)
-     const bin_tree_t *src;
-     re_dfa_t *dfa;
+free_token (re_token_t *node)
 {
-  /* Pass an OPT_SUBEXP_IDX which is != 1 if the duplicated tree is
-     a subexpression.  */
-  if (src->type == CONCAT
-      && src->left->type == NON_TYPE
-      && dfa->nodes[src->left->node_idx].type == OP_OPEN_SUBEXP)
-    mark_opt_subexp_iter (src, dfa, dfa->nodes[src->left->node_idx].opr.idx);
-}
-
-
-/* Recursive tree walker for mark_opt_subexp.  */
-
-static void
-mark_opt_subexp_iter (src, dfa, idx)
-     const bin_tree_t *src;
-     re_dfa_t *dfa;
-     int idx;
-{
-  int node_idx;
-
-  if (src->type == NON_TYPE)
-    {
-      node_idx = src->node_idx;
-      if ((dfa->nodes[node_idx].type == OP_OPEN_SUBEXP
-	   || dfa->nodes[node_idx].type == OP_CLOSE_SUBEXP)
-	  && dfa->nodes[node_idx].opr.idx == idx)
-	dfa->nodes[node_idx].opt_subexp = 1;
-     }
-
-  if (src->left != NULL)
-    mark_opt_subexp_iter (src->left, dfa, idx);
-
-  if (src->right != NULL)
-    mark_opt_subexp_iter (src->right, dfa, idx);
-}
-
-
-/* Duplicate the node SRC, and return new node.  */
-
-static bin_tree_t *
-duplicate_tree (src, dfa)
-     const bin_tree_t *src;
-     re_dfa_t *dfa;
-{
-  bin_tree_t *left = NULL, *right = NULL, *new_tree;
-  int new_node_idx;
-  /* Since node indies must be according to Post-order of the tree,
-     we must duplicate the left at first.  */
-  if (src->left != NULL)
-    {
-      left = duplicate_tree (src->left, dfa);
-      if (left == NULL)
-	return NULL;
-    }
-
-  /* Secondaly, duplicate the right.  */
-  if (src->right != NULL)
-    {
-      right = duplicate_tree (src->right, dfa);
-      if (right == NULL)
-	return NULL;
-    }
-
-  /* At last, duplicate itself.  */
-  if (src->type == NON_TYPE)
-    {
-      new_node_idx = re_dfa_add_node (dfa, dfa->nodes[src->node_idx], 0);
-      dfa->nodes[new_node_idx].duplicated = 1;
-      if (BE (new_node_idx == -1, 0))
-	return NULL;
-    }
+#ifdef RE_ENABLE_I18N
+  if (node->type == COMPLEX_BRACKET && node->duplicated == 0)
+    free_charset (node->opr.mbcset);
   else
-    new_node_idx = src->type;
+#endif /* RE_ENABLE_I18N */
+    if (node->type == SIMPLE_BRACKET && node->duplicated == 0)
+      re_free (node->opr.sbcset);
+}
 
-  new_tree = create_tree (dfa, left, right, src->type, new_node_idx);
-  return new_tree;
+/* Worker function for tree walking.  Free the allocated memory inside NODE
+   and its children. */
+
+static reg_errcode_t
+free_tree (void *extra, bin_tree_t *node)
+{
+  free_token (&node->token);
+  return REG_NOERROR;
+}
+
+
+/* Duplicate the node SRC, and return new node.  This is a preorder
+   visit similar to the one implemented by the generic visitor, but
+   we need more infrastructure to maintain two parallel trees --- so,
+   it's easier to duplicate.  */
+
+static bin_tree_t *
+duplicate_tree (root, dfa)
+     const bin_tree_t *root;
+     re_dfa_t *dfa;
+{
+  const bin_tree_t *node;
+  bin_tree_t *dup_root;
+  bin_tree_t **p_new = &dup_root, *dup_node = root->parent;
+
+  for (node = root; ; )
+    {
+      /* Create a new tree and link it back to the current parent.  */
+      *p_new = create_token_tree (dfa, NULL, NULL, &node->token);
+      if (*p_new == NULL)
+	return NULL;
+      (*p_new)->parent = dup_node;
+      (*p_new)->token.duplicated = 1;
+      dup_node = *p_new;
+
+      /* Go to the left node, or up and to the right.  */
+      if (node->left)
+	{
+	  node = node->left;
+	  p_new = &dup_node->left;
+	}
+      else
+	{
+	  const bin_tree_t *prev = NULL;
+	  while (node->right == prev || node->right == NULL)
+	    {
+	      prev = node;
+	      node = node->parent;
+	      dup_node = dup_node->parent;
+	      if (!node)
+	        return dup_root;
+	    }
+	  node = node->right;
+	  p_new = &dup_node->right;
+	}
+    }
 }

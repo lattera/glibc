@@ -189,16 +189,16 @@ typedef enum
   OP_CLOSE_SUBEXP = EPSILON_BIT | 1,
   OP_ALT = EPSILON_BIT | 2,
   OP_DUP_ASTERISK = EPSILON_BIT | 3,
-  OP_DUP_PLUS = EPSILON_BIT | 4,
-  OP_DUP_QUESTION = EPSILON_BIT | 5,
-  ANCHOR = EPSILON_BIT | 6,
-  OP_DELETED_SUBEXP = EPSILON_BIT | 7,
+  ANCHOR = EPSILON_BIT | 4,
 
   /* Tree type, these are used only by tree. */
   CONCAT = 16,
+  SUBEXP = 17,
 
   /* Token type, these are used only by token.  */
-  OP_OPEN_BRACKET = 17,
+  OP_DUP_PLUS = 18,
+  OP_DUP_QUESTION,
+  OP_OPEN_BRACKET,
   OP_CLOSE_BRACKET,
   OP_CHARSET_RANGE,
   OP_OPEN_DUP_NUM,
@@ -287,6 +287,7 @@ typedef struct
   unsigned int duplicated : 1;
   unsigned int opt_subexp : 1;
 #ifdef RE_ENABLE_I18N
+  unsigned int accept_mb : 1;
   /* These 2 bits can be moved into the union if needed (e.g. if running out
      of bits; move opr.c to opr.c.c and move the flags to opr.c.flags).  */
   unsigned int mb_partial : 1;
@@ -295,8 +296,6 @@ typedef struct
 } re_token_t;
 
 #define IS_EPSILON_NODE(type) ((type) & EPSILON_BIT)
-#define ACCEPT_MB_NODE(type) \
-  ((type) >= OP_PERIOD && (type) <= OP_UTF8_PERIOD)
 
 struct re_string_t
 {
@@ -432,15 +431,14 @@ struct bin_tree_t
   struct bin_tree_t *parent;
   struct bin_tree_t *left;
   struct bin_tree_t *right;
+  struct bin_tree_t *first;
+  struct bin_tree_t *next;
+
+  re_token_t token;
 
   /* `node_idx' is the index in dfa->nodes, if `type' == 0.
      Otherwise `type' indicate the type of this node.  */
-  re_token_type_t type;
   int node_idx;
-
-  int first;
-  int next;
-  re_node_set eclosure;
 };
 typedef struct bin_tree_t bin_tree_t;
 
@@ -680,7 +678,7 @@ static void re_node_set_remove_at (re_node_set *set, int idx) internal_function;
   (re_node_set_remove_at (set, re_node_set_contains (set, id) - 1))
 #define re_node_set_empty(p) ((p)->nelem = 0)
 #define re_node_set_free(set) re_free ((set)->elems)
-static int re_dfa_add_node (re_dfa_t *dfa, re_token_t token, int mode) internal_function;
+static int re_dfa_add_node (re_dfa_t *dfa, re_token_t token) internal_function;
 static re_dfastate_t *re_acquire_state (reg_errcode_t *err, re_dfa_t *dfa,
 					const re_node_set *nodes) internal_function;
 static re_dfastate_t *re_acquire_state_context (reg_errcode_t *err,

@@ -1330,47 +1330,49 @@ re_node_set_remove_at (set, idx)
    Or return -1, if an error will be occured.  */
 
 static int
-re_dfa_add_node (dfa, token, mode)
+re_dfa_add_node (dfa, token)
      re_dfa_t *dfa;
      re_token_t token;
-     int mode;
 {
+  int type = token.type;
   if (BE (dfa->nodes_len >= dfa->nodes_alloc, 0))
     {
       int new_nodes_alloc = dfa->nodes_alloc * 2;
+      int *new_nexts, *new_indices;
+      re_node_set *new_edests, *new_eclosures, *new_inveclosures;
+
       re_token_t *new_array = re_realloc (dfa->nodes, re_token_t,
 					  new_nodes_alloc);
       if (BE (new_array == NULL, 0))
 	return -1;
       dfa->nodes = new_array;
-      if (mode)
-	{
-	  int *new_nexts, *new_indices;
-	  re_node_set *new_edests, *new_eclosures, *new_inveclosures;
-
-	  new_nexts = re_realloc (dfa->nexts, int, new_nodes_alloc);
-	  new_indices = re_realloc (dfa->org_indices, int, new_nodes_alloc);
-	  new_edests = re_realloc (dfa->edests, re_node_set, new_nodes_alloc);
-	  new_eclosures = re_realloc (dfa->eclosures, re_node_set,
-				      new_nodes_alloc);
-	  new_inveclosures = re_realloc (dfa->inveclosures, re_node_set,
-					 new_nodes_alloc);
-	  if (BE (new_nexts == NULL || new_indices == NULL
-		  || new_edests == NULL || new_eclosures == NULL
-		  || new_inveclosures == NULL, 0))
-	    return -1;
-	  dfa->nexts = new_nexts;
-	  dfa->org_indices = new_indices;
-	  dfa->edests = new_edests;
-	  dfa->eclosures = new_eclosures;
-	  dfa->inveclosures = new_inveclosures;
-	}
+      new_nexts = re_realloc (dfa->nexts, int, new_nodes_alloc);
+      new_indices = re_realloc (dfa->org_indices, int, new_nodes_alloc);
+      new_edests = re_realloc (dfa->edests, re_node_set, new_nodes_alloc);
+      new_eclosures = re_realloc (dfa->eclosures, re_node_set, new_nodes_alloc);
+      new_inveclosures = re_realloc (dfa->inveclosures, re_node_set,
+				     new_nodes_alloc);
+      if (BE (new_nexts == NULL || new_indices == NULL
+	      || new_edests == NULL || new_eclosures == NULL
+	      || new_inveclosures == NULL, 0))
+	return -1;
+      dfa->nexts = new_nexts;
+      dfa->org_indices = new_indices;
+      dfa->edests = new_edests;
+      dfa->eclosures = new_eclosures;
+      dfa->inveclosures = new_inveclosures;
       dfa->nodes_alloc = new_nodes_alloc;
     }
   dfa->nodes[dfa->nodes_len] = token;
-  dfa->nodes[dfa->nodes_len].opt_subexp = 0;
-  dfa->nodes[dfa->nodes_len].duplicated = 0;
   dfa->nodes[dfa->nodes_len].constraint = 0;
+#ifdef RE_ENABLE_I18N
+  dfa->nodes[dfa->nodes_len].accept_mb =
+    (type == OP_PERIOD && dfa->mb_cur_max > 1) || type == COMPLEX_BRACKET;
+#endif
+  dfa->nexts[dfa->nodes_len] = -1;
+  re_node_set_init_empty (dfa->edests + dfa->nodes_len);
+  re_node_set_init_empty (dfa->eclosures + dfa->nodes_len);
+  re_node_set_init_empty (dfa->inveclosures + dfa->nodes_len);
   return dfa->nodes_len++;
 }
 
@@ -1551,16 +1553,13 @@ create_ci_newstate (dfa, nodes, hash)
       re_token_type_t type = node->type;
       if (type == CHARACTER && !node->constraint)
 	continue;
+#ifdef RE_ENABLE_I18N
+      newstate->accept_mb |= node->accept_mb;
+#endif /* RE_ENABLE_I18N */
 
       /* If the state has the halt node, the state is a halt state.  */
-      else if (type == END_OF_RE)
+      if (type == END_OF_RE)
 	newstate->halt = 1;
-#ifdef RE_ENABLE_I18N
-      else if (type == COMPLEX_BRACKET
-	       || type == OP_UTF8_PERIOD
-	       || (type == OP_PERIOD && dfa->mb_cur_max > 1))
-	newstate->accept_mb = 1;
-#endif /* RE_ENABLE_I18N */
       else if (type == OP_BACK_REF)
 	newstate->has_backref = 1;
       else if (type == ANCHOR || node->constraint)
@@ -1611,15 +1610,13 @@ create_cd_newstate (dfa, nodes, context, hash)
 
       if (type == CHARACTER && !constraint)
 	continue;
-      /* If the state has the halt node, the state is a halt state.  */
-      else if (type == END_OF_RE)
-	newstate->halt = 1;
 #ifdef RE_ENABLE_I18N
-      else if (type == COMPLEX_BRACKET
-	       || type == OP_UTF8_PERIOD
-	       || (type == OP_PERIOD && dfa->mb_cur_max > 1))
-	newstate->accept_mb = 1;
+      newstate->accept_mb |= node->accept_mb;
 #endif /* RE_ENABLE_I18N */
+
+      /* If the state has the halt node, the state is a halt state.  */
+      if (type == END_OF_RE)
+	newstate->halt = 1;
       else if (type == OP_BACK_REF)
 	newstate->has_backref = 1;
       else if (type == ANCHOR)
