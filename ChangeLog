@@ -1,5 +1,7 @@
 2003-11-11  Roland McGrath  <roland@redhat.com>
 
+	* manual/xtract-typefun.awk: Swallow [(){}*] from function names.
+
 	* manual/Makefile (info): Don't depend on dir-add.info.
 	(libc.dvi libc.pdf libc.info): Depend on dir-add.texi.
 	(dir-add.info): Target removed, replaced with ...

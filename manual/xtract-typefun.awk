@@ -23,6 +23,7 @@ BEGIN {
     check++;
   }
 
+  gsub(/[(){}*]/, "", $id);
   printf ("* %s: (libc)%s.\n", $id, last_node);
 }
 
@@ -37,5 +38,6 @@ BEGIN {
     check++;
   }
 
+  gsub(/[(){}*]/, "", $id);
   printf ("* %s: (libc)%s.\n", $id, last_node);
 }
