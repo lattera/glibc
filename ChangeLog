@@ -1,3 +1,9 @@
+2002-06-25  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86-64/dl-machine.h (elf_machine_load_address): Rewrite
+	to not use 32-bit pc relative relocations.
+	(elf_machine_dynamic): Likewise.
+
 2002-06-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getdents.c [__ASSUME_GETDENTS64_SYSCALL]
