@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    S390 version.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -66,6 +66,11 @@ register char * stack_pointer __asm__ ("15");
 #define THREAD_SETMEM(descr, member, value) THREAD_SELF->member = (value)
 #define THREAD_SETMEM_NC(descr, member, value) THREAD_SELF->member = (value)
 
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS 1
+
+/* Maximum size of the stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE     8*1024*1024
 
 /* Compare-and-swap for semaphores. */
 

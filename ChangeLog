@@ -1,3 +1,12 @@
+2001-03-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-64/bits/huge_val.h: Move to...
+	* sysdeps/s390/bits/huge_val.h: ...here.
+	* sysdeps/s390/s390-32/bit/huge_val.h: Remove.
+	* sysdeps/s390/s390-64/ffs.c: Move to...
+	* sysdeps/s390/ffs.c: ...here.
+	* sysdeps/s390/s390-32/ffs.c: Remove.
+
 2001-03-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldconfig.c (search_dir): Remove bogus diagnostic, instead

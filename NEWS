@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-3-11
+GNU C Library NEWS -- history of user-visible changes.  2001-3-16
 
 Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -24,6 +24,9 @@ Version 2.2.3
 * An asynchronous name lookup library was added.  The interface is designed
   after POSIX AIO.  The proposal was circulated beforehand to get comments.
   No negative ones came in.  Implemented by Ulrich Drepper.
+
+* Port to S390/64bit contributed by Martin Schwidefsky
+  <schwidefsky@de.ibm.com>.
 
 Version 2.2.2
 
