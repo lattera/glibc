@@ -1,5 +1,11 @@
 2003-01-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* old_pthread_cond_broadcast.c: Optimize initialization a bit to work
+	around gcc defficiencies.
+	* old_pthread_cond_signal.c: Likewise.
+	* old_pthread_cond_timedwait.c: Likewise.
+	* old_pthread_cond_wait.c: Likewise.
+
 	* pthreadP.h (pthread_cond_2_0_t): Remove unneeded lock element.
 
 2003-01-03  Ulrich Drepper  <drepper@redhat.com>

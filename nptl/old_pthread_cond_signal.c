@@ -33,13 +33,18 @@ __pthread_cond_signal_2_0 (cond)
     {
       pthread_cond_t *newcond;
 
+#if LLL_MUTEX_LOCK_INITIALIZER == 0
+      newcond = (pthread_cond_t *) calloc (sizeof (pthread_cond_t), 1);
+      if (newcond == NULL)
+	return ENOMEM;
+#else
       newcond = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
       if (newcond == NULL)
 	return ENOMEM;
 
-      *newcond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
-
-      atomic_write_barrier ();
+      /* Initialize the condvar.  */
+      (void) pthread_cond_init (newcond, NULL);
+#endif
 
       if (atomic_compare_and_exchange_acq (&cond->cond, newcond, NULL) != 0)
 	/* Somebody else just initialized the condvar.  */
