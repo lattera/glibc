@@ -90,6 +90,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 
   {
     struct __old_shmid_ds old;
+    int result;
 
 # ifdef __NR_getuid32
     if (__libc_missing_32bit_uids <= 0)
@@ -107,10 +108,8 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 	    __set_errno(save_errno);
 	  }
 	if (__libc_missing_32bit_uids <= 0)
-	  {
-	    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0, buf);
-	    return result;
-	  }
+	  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64,
+				 0, buf);
       }
 # endif
 

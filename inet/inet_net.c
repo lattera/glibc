@@ -83,6 +83,8 @@ again:
 	}
 	if (*cp && !isspace(*cp))
 		return (INADDR_NONE);
+	if (pp >= parts + 4 || val > 0xff)
+		return (INADDR_NONE);
 	*pp++ = val;
 	n = pp - parts;
 	for (val = 0, i = 0; i < n; i++) {

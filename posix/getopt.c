@@ -3,7 +3,7 @@
    "Keep this file name-space clean" means, talk to drepper@gnu.org
    before changing it!
 
-   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
+   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
    	Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -517,6 +517,10 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
      int *longind;
      int long_only;
 {
+  int print_errors = opterr;
+  if (optstring[0] == ':')
+    print_errors = 0;
+
   optarg = NULL;
 
   if (optind == 0 || !__getopt_initialized)
@@ -673,7 +677,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
       if (ambig && !exact)
 	{
-	  if (opterr)
+	  if (print_errors)
 	    fprintf (stderr, _("%s: option `%s' is ambiguous\n"),
 		     argv[0], argv[optind]);
 	  nextchar += strlen (nextchar);
@@ -694,7 +698,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		optarg = nameend + 1;
 	      else
 		{
-		  if (opterr)
+		  if (print_errors)
 		    {
 		      if (argv[optind - 1][1] == '-')
 			/* --option */
@@ -720,7 +724,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		optarg = argv[optind++];
 	      else
 		{
-		  if (opterr)
+		  if (print_errors)
 		    fprintf (stderr,
 			   _("%s: option `%s' requires an argument\n"),
 			   argv[0], argv[optind - 1]);
@@ -747,7 +751,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       if (!long_only || argv[optind][1] == '-'
 	  || my_index (optstring, *nextchar) == NULL)
 	{
-	  if (opterr)
+	  if (print_errors)
 	    {
 	      if (argv[optind][1] == '-')
 		/* --option */
@@ -777,7 +781,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
     if (temp == NULL || c == ':')
       {
-	if (opterr)
+	if (print_errors)
 	  {
 	    if (posixly_correct)
 	      /* 1003.2 specifies the format of this message.  */
@@ -811,7 +815,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	  }
 	else if (optind == argc)
 	  {
-	    if (opterr)
+	    if (print_errors)
 	      {
 		/* 1003.2 specifies the format of this message.  */
 		fprintf (stderr, _("%s: option requires an argument -- %c\n"),
@@ -860,7 +864,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	    }
 	if (ambig && !exact)
 	  {
-	    if (opterr)
+	    if (print_errors)
 	      fprintf (stderr, _("%s: option `-W %s' is ambiguous\n"),
 		       argv[0], argv[optind]);
 	    nextchar += strlen (nextchar);
@@ -878,7 +882,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		  optarg = nameend + 1;
 		else
 		  {
-		    if (opterr)
+		    if (print_errors)
 		      fprintf (stderr, _("\
 %s: option `-W %s' doesn't allow an argument\n"),
 			       argv[0], pfound->name);
@@ -893,7 +897,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		  optarg = argv[optind++];
 		else
 		  {
-		    if (opterr)
+		    if (print_errors)
 		      fprintf (stderr,
 			       _("%s: option `%s' requires an argument\n"),
 			       argv[0], argv[optind - 1]);
@@ -940,12 +944,12 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	      }
 	    else if (optind == argc)
 	      {
-		if (opterr)
+		if (print_errors)
 		  {
 		    /* 1003.2 specifies the format of this message.  */
 		    fprintf (stderr,
-			   _("%s: option requires an argument -- %c\n"),
-			   argv[0], c);
+			     _("%s: option requires an argument -- %c\n"),
+			     argv[0], c);
 		  }
 		optopt = c;
 		if (optstring[0] == ':')
