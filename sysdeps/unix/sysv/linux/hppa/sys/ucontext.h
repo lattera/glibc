@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,15 +33,16 @@
 typedef unsigned long int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	42
-#define NFPREG	33
+#define NGREG	80
+#define NFPREG	32
 
 /* Container for all general registers.  */
 typedef struct gregset
   {
     greg_t g_regs[32];
-    greg_t sr_regs[5];
-    greg_t g_pad[5];
+    greg_t sr_regs[8];
+    greg_t cr_regs[24];
+    greg_t g_pad[16];
   } gregset_t;
 
 /* Container for all FPU registers.  */
