@@ -1,3 +1,8 @@
+2000-09-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/time.h: Don't defined clockid_t and timer_t unless POSIX
+	definitions are requested.
+
 2000-09-13  Andreas Jaeger  <aj@suse.de>
 
 	* shlib-versions: libBrokenLocale needs minimal version for ia64,

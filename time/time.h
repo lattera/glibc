@@ -50,7 +50,6 @@ __BEGIN_DECLS
 
 #endif /* <time.h> included.  */
 
-
 #if !defined __clock_t_defined && (defined _TIME_H || defined __need_clock_t)
 # define __clock_t_defined	1
 
@@ -73,7 +72,8 @@ typedef __time_t time_t;
 #endif /* time_t not defined and <time.h> or need time_t.  */
 #undef	__need_time_t
 
-#if !defined __clockid_t_defined && (defined _TIME_H || defined __need_clockid_t)
+#if !defined __clockid_t_defined && \
+   ((defined _TIME_H && defined __USE_POSIX199309) || defined __need_clockid_t)
 # define __clockid_t_defined	1
 
 # include <bits/types.h>
@@ -84,7 +84,8 @@ typedef __clockid_t clockid_t;
 #endif /* clockid_t not defined and <time.h> or need clockid_t.  */
 #undef	__clockid_time_t
 
-#if !defined __timer_t_defined && (defined _TIME_H || defined __need_timer_t)
+#if !defined __timer_t_defined && \
+    ((defined _TIME_H && defined __USE_POSIX199309) || defined __need_timer_t)
 # define __timer_t_defined	1
 
 # include <bits/types.h>
