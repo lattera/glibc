@@ -48,5 +48,15 @@ extern void *dlsym (void *__handle, const char *__name);
    the error string so that a following call returns null.  */
 extern char *dlerror (void);
 
+/* Fill in *INFO with the following information about ADDRESS.
+   Returns 0 iff no shared object's segments contain that address.  */
+typedef struct
+  {
+    const char *dli_fname;	/* File name of defining object.  */
+    void *dli_fbase;		/* Load address of that object.  */
+    const char *dli_sname;	/* Name of nearest symbol.  */
+    void *dli_saddr;		/* Exact value of nearest symbol.  */
+  } Dl_info;
+extern int dladdr (void *__address, Dl_info *__info);
 
 #endif	/* dlfcn.h */

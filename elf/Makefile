@@ -25,7 +25,7 @@ routines	:= init-first
 
 extra-libs	= libelf libdl
 libelf-routines	:= elf_hash
-libdl-routines	:= dlopen dlclose dlsym dlerror
+libdl-routines	:= dlopen dlclose dlsym dlerror dladdr
 libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
 
 rtld-routines	:= rtld $(addprefix dl-,minimal load lookup object reloc \

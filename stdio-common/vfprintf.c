@@ -85,7 +85,6 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 # include <libioP.h>
 # define PUTC(C, F)	_IO_putc_unlocked (C, F)
 # define vfprintf	_IO_vfprintf
-# define size_t		_IO_size_t
 # define FILE		_IO_FILE
 # define va_list	_IO_va_list
 # undef	BUFSIZ

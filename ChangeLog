@@ -1,5 +1,13 @@
 Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* stdio-common/vfprintf.c [USE_IN_LIBIO] (size_t): Don't define as
+	macro.  _IO_size_t is just an alias for the real size_t anyway.
+
+	* elf/Makefile (libdl-routines): Add dladdr.
+	* elf/dladdr.c: New file.
+	* elf/dlfcn.h (Dl_info): New typedef.
+	(dladdr): Declare it.
+
 	* sysdeps/libm-i387/s_finite.S: Use `setne' instead of `setnel'.
 
 	* intl/l10nflist.c: Fix conditional on #include <argz.h>.
