@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,17 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
 
+/* As of gcc-2.6.0, it complains about pound signs in front of things
+   that aren't arguments to the macro.  So we use this to pull it off
+   instead.  */
+#define cat(a,b) a##b
+#define poundfnc cat(#,function)
+
 #define	ENTRY(name)							      \
   .section ".text";							      \
   .align 4;								      \
   .global C_SYMBOL_NAME(name);						      \
-  .type  C_SYMBOL_NAME(name), \#function;				      \
+  .type  C_SYMBOL_NAME(name), poundfnc;					      \
   C_LABEL(name)
 
 #define	PSEUDO(name, syscall_name, args)				      \
