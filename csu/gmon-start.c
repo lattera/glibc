@@ -49,8 +49,10 @@ __gmon_start__ (void)
      into every shared library, each of their init functions will call us.  */
   static int called;
 
-  if (called++)
+  if (called)
     return;
+
+  called = 1;
 #endif
 
   /* Start keeping profiling records.  */

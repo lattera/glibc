@@ -28,7 +28,7 @@
    immediate unwinds.  */
 
 int
-setjmp (jmp_buf env)
+_setjmp (jmp_buf env)
 {
   return __sigsetjmp (env, 0);
 }

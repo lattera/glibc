@@ -50,7 +50,7 @@ offset	length	contents
    Linux community) use note type 1 and a vendor name string of "GNU"
    for a note descriptor that indicates ABI requirements.  The note data
    is four 32-bit words.  The first of these is an operating system
-   number (0=Hurd, 1=Linux, 2=Solaris, ...) and the remaining three
+   number (0=Linux, 1=Hurd, 2=Solaris, ...) and the remaining three
    identify the earliest release of that OS that supports this ABI.
    See abi-tags (top level) for details. */
 

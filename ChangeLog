@@ -1,3 +1,14 @@
+2000-11-18  Martin Buchholz  <martin@xemacs.org>
+
+	* csu/gmon-start.c (__gmon_start__): Avoid over-clever trick `if
+	(called++) return;'
+
+2000-11-21  Alan Modra  <alan@linuxcare.com.au>
+
+	* sysdeps/generic/bsd-_setjmp.c (setjmp): Rename to _setjmp.
+
+	* csu/abi-note.S: Correct comment for operating system number.
+
 2000-11-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def: Add GLIBC_2.2.1 for glibc.
@@ -22,8 +33,7 @@
 
 2000-11-22  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/s390/bits/string.h (strncat): Add missing quotation
-	marks.
+	* sysdeps/s390/bits/string.h (strncat): Add missing quotation marks.
 
 2000-11-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
