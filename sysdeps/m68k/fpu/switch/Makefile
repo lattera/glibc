@@ -33,7 +33,7 @@ sysdep_routines := $(sysdep_routines) switch
 # Directory containing 68881 sources.
 +68881-dir := $(filter %/68881,$(+sysdep_dirs))
 
-# For all the files that have 68881 versions and don't exist already
+# For all the files that have 68881 versions and don't exist already in
 # the source directory (math), automatically make ones that switch between
 # 68881 and soft versions.
 $(addprefix $(objpfx), \
