@@ -1,3 +1,7 @@
+2001-10-31  Alexandre Oliva  <aoliva@redhat.com>
+
+	* elf/elf.h: Add R_MN10300_* relocation numbers.
+
 2004-10-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #471] Fix imported from gnulib.
