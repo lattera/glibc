@@ -102,18 +102,19 @@ __get_clockfreq_via_proc_openprom (void)
 
 	  while (len > 0)
 	    {
-	      char node_name[strlen ("/proc/openprom/")
-			     + _D_ALLOC_NAMLEN (this_dirp)
-			     + strlen ("/clock-frequency")];
+	      char node[strlen ("/proc/openprom/")
+			+ _D_ALLOC_NAMLEN (this_dirp)
+			+ strlen ("/clock-frequency")];
+	      char *prop;
 	      int fd;
 
 	      /* Note that
 		   strlen("/clock-frequency") > strlen("/device_type")
 	      */
-	      stpcpy (stpcpy (stpcpy (node_name, "/proc/openprom/"),
-			      this_dirp->d_name),
-		      "/device_type");
-	      fd = open (node_name, O_RDONLY);
+	      __stpcpy (prop = __stpcpy (__stpcpy (node, "/proc/openprom/"),
+					 this_dirp->d_name),
+			"/device_type");
+	      fd = open (node, O_RDONLY);
 	      if (fd != -1)
 		{
 		  char type_string[128];
@@ -124,10 +125,8 @@ __get_clockfreq_via_proc_openprom (void)
 		    {
 		      int clkfreq_fd;
 
-		      stpcpy (stpcpy (stpcpy (node_name, "/proc/openprom/"),
-				      this_dirp->d_name),
-			      "/clock-frequency");
-		      clkfreq_fd = open (node_name, O_RDONLY);
+		      __stpcpy (prop, "/clock-frequency");
+		      clkfreq_fd = open (node, O_RDONLY);
 		      if (fd != -1)
 			{
 			  if (read (clkfreq_fd, type_string,
