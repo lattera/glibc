@@ -30,12 +30,14 @@ subdir := csu
 routines = init-first libc-start $(libc-init) sysdep version check_fds
 csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
-	     $(start-installed-name) g$(start-installed-name) b$(start-installed-name) \
-	     $(csu-dummies)
+	     $(start-installed-name) g$(start-installed-name) $(csu-dummies)
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			      b$(start-installed-name) $(csu-dummies))
-install-lib = $(start-installed-name) g$(start-installed-name) b$(start-installed-name) \
-	      $(csu-dummies)
+install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
+ifeq (yes,$(build-bounded))
+extra-objs += b$(start-installed-name)
+install-lib += b$(start-installed-name)
+endif
 distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
 	     abi-note.S init.c munch-tmpl.c
 generated = version-info.h
@@ -137,6 +139,9 @@ else
 # The startfile is installed under different names, so we just call our
 # source file `start.c' and copy to the installed name after compiling.
 $(objpfx)$(start-installed-name): $(objpfx)start.o
+	rm -f $@
+	ln $< $@
+$(objpfx)b$(start-installed-name): $(objpfx)start.ob
 	rm -f $@
 	ln $< $@
 endif

@@ -5,6 +5,9 @@
 
 2000-07-03  Greg McGary  <greg@mcgary.org>
 
+	* csu/Makefile (extra-objs, install-lib): Add BP objects conditionally.
+	($(objpfx)b$(start-installed-name)): Add non-elf rule.
+
 	* libio/libio.h (_IO_FILE): Revert type of _chain to _IO_FILE*.
 	* libio/libioP.h (_IO_ITER): Revert to type _IO_FILE*.
 	(FILEBUF_LITERAL): Add cast for CHAIN init.
