@@ -1,5 +1,8 @@
 Sun Jan 21 00:55:25 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* misc/Makefile (headers): Rename queue.h to sys/queue.h.
+	* misc/queue.h: Moved to misc/sys/queue.h.
+
 	* sysdeps/unix/sysv/linux/shmat.c: Include sys/shm.h instead of
 	sys/sem.h.
 

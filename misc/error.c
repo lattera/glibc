@@ -50,7 +50,11 @@ void exit ();
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
    function without parameters instead.  */
-void (*error_print_progname) ();
+void (*error_print_progname) (
+#if __STDC__
+			      void
+#endif
+			      );
 
 /* This variable is incremented each time `error' is called.  */
 unsigned int error_message_count;

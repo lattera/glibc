@@ -26,7 +26,7 @@ headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
 	   a.out.h nlist.h stab.h stab.def sgtty.h sys/dir.h sys/cdefs.h \
 	   ttyent.h syscall.h syslog.h sys/syslog.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h utmp.h	 \
-	   err.h error.h queue.h
+	   err.h error.h sys/queue.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \
