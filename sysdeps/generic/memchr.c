@@ -201,4 +201,4 @@ __memchr (s, c_in, n)
 
   return 0;
 }
-weak_alias (__memrchr, BP_SYM (memrchr))
+weak_alias (__memchr, BP_SYM (memchr))
