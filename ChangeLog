@@ -1,3 +1,7 @@
+2001-11-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/resource.h: New file.
+
 2001-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Delete code to remove
