@@ -1,3 +1,7 @@
+2000-12-08  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/dbg_log.h (dbg_log): Correct attribute.
+
 2000-12-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-load.c (fillin_rpath): Don't assume there is '\0' at
