@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995,1996,1997,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <sys/param.h>
 
+#undef __getpagesize
+
 /* Return the system page size.  */
 int
 __getpagesize ()
@@ -37,4 +39,5 @@ __getpagesize ()
 #endif	/* EXEC_PAGESIZE.  */
 }
 
+INTDEF(__getpagesize)
 weak_alias (__getpagesize, getpagesize)

@@ -1,3 +1,49 @@
+2002-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/sys/stat.h: Declare __fxstat_internal and __fxstat64_internal
+	and define __fxstate and __fxstat64 macros if not NOT_IN_libc.
+	Remove __lstat and __fstat inline functions.
+	* sysdeps/generic/fxstat.c: Use INTDEF for __fxstat.
+	* sysdeps/mach/hurd/fxstat.c: Likewise.
+	* sysdeps/unix/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/aix/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fxstat.c: Likewise.
+	* sysdeps/generic/fxstat64.c: Use INTDEF for __fxstat64.
+	* sysdeps/mach/hurd/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/aix/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+
+	* include/unistd.h: Declare __getpid_internal and define
+	__getpid macro if not NOT_IN_libc.
+	* sysdeps/mach/hurd/getpid.c: Use INTDEF for __getpid.
+	* sysdeps/generic/getpid.c: Likewise.
+	* sysdeps/unix/syscalls.list: Add __getpid_internal alias.
+
+	* include/unistd.h: Declare __getpgid_internal and define
+	__getpgid macro if not NOT_IN_libc.
+	* sysdeps/generic/getpgid.c: Use INTDEF for __getpgid.
+	* sysdeps/mach/hurd/getpgid.c: Likewise.
+	* sysdeps/unix/sysv/aix/getpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/__getpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/getpgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add _getpgid_internal alias.
+
+	* include/unistd.h: Declare __getpagesize_internal and define
+	__getpagesize macro if not NOT_IN_libc.
+	* sysdeps/unix/sysv/linux/shmat.c: Include <unistd.h> for
+	__getpagesize.
+	* sysdeps/generic/getpagesize.c: Use INTDEF for __getpagesize.
+	* sysdeps/mach/getpagesize.c: Likewise.
+	* sysdeps/posix/getpagesize.c: Likewise.
+	* sysdeps/unix/getpagesize.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpagesize.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/getpagesize.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getpagesize.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getpagesize.c: Likewise.
+
 2002-04-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/i486/bits/string.h (__strcspn_cg): Use only memory

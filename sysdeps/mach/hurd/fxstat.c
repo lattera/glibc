@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
+#undef __fxstat
+
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
@@ -37,4 +39,5 @@ __fxstat (int vers, int fd, struct stat *buf)
   return 0;
 }
 
+INTDEF(__fxstat)
 weak_alias (__fxstat, _fxstat)

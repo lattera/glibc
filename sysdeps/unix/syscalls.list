@@ -17,7 +17,7 @@ getdomain	-	getdomainname	i:si	getdomainname
 getgid		-	getgid		i:	__getgid	getgid
 getgroups	-	getgroups	i:ip	__getgroups	getgroups
 getitimer	-	getitimer	i:ip	__getitimer	getitimer
-getpid		-	getpid		i:	__getpid	getpid
+getpid		-	getpid		i:	__getpid	getpid __getpid_internal
 getpriority	-	getpriority	i:ii	getpriority
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 getuid		-	getuid		i:	__getuid	getuid

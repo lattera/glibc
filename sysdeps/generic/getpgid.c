@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,1998,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 
+#undef __getpgid
+
 /* Get the process group ID of process PID.  */
 pid_t
 __getpgid (pid)
@@ -26,6 +28,7 @@ __getpgid (pid)
 {
   return pid;
 }
+INTDEF(__getpgid)
 weak_alias (__getpgid, getpgid)
 
 stub_warning (getpgid)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 
 #include "xstatconv.c"
 
+#undef __fxstat64
+
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat64 (int vers, int fd, struct stat64 *buf)
@@ -38,3 +40,5 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
 
   return result;
 }
+
+INTDEF(__fxstat64)

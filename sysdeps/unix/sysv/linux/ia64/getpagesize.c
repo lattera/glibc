@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#undef __getpagesize
+
 /* Return the system page size.  The return value will depend on how
    the kernel is configured.  A program must use this call to
    determine the page size to ensure proper alignment for calls such
@@ -36,4 +38,5 @@ __getpagesize ()
   return GL(dl_pagesize);
 }
 
+INTDEF(__getpagesize)
 weak_alias (__getpagesize, getpagesize)

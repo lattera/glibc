@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 #include <unistd.h>
 
+#undef __getpgid
+
 extern int kgetpgidx (pid_t pid);
 
 int
@@ -25,4 +27,5 @@ __getgpid (pid_t pid)
 {
   return kgetpgidx (pid);
 }
+INTDEF(__getgpid)
 strong_alias (__getpgid, getpgid)

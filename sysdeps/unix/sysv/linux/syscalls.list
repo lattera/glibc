@@ -12,7 +12,7 @@ fork		-	fork		i:	__libc_fork	__fork fork __fork_internal
 get_kernel_syms	EXTRA	get_kernel_syms	i:p	get_kernel_syms
 getegid		-	getegid		i:	__getegid	getegid
 geteuid		-	geteuid		i:	__geteuid	geteuid
-getpgid		-	getpgid		i:i	__getpgid	getpgid
+getpgid		-	getpgid		i:i	__getpgid	getpgid __getpgid_internal
 getpgrp		-	getpgrp		i:	getpgrp
 getppid		-	getppid		i:	__getppid	getppid
 getsid		-	getsid		i:i	getsid

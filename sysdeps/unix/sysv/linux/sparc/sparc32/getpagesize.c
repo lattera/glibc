@@ -20,6 +20,8 @@
 #include <sys/param.h>
 #include <ldsodefs.h>
 
+#undef __getpagesize
+
 /* Return the system page size.  This value will either be 4k or 8k depending
    on whether or not we are running on Sparc v9 machine.  */
 
@@ -37,4 +39,5 @@ __getpagesize ()
   return GL(dl_pagesize);
 }
 
+INTDEF(__getpagesize)
 weak_alias (__getpagesize, getpagesize)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@cygnus.com).
 
@@ -19,6 +19,8 @@
 
 #include <unistd.h>
 
+#undef __getpagesize
+
 /* Return the system page size.  */
 int
 __getpagesize (void)
@@ -26,4 +28,5 @@ __getpagesize (void)
   return __sysconf (_SC_PAGESIZE);
 }
 
+INTDEF(__getpagesize)
 weak_alias (__getpagesize, getpagesize)
