@@ -1,5 +1,8 @@
 2004-10-25  Alexandre Oliva  <aoliva@redhat.com>
 
+	* ChangeLog.am33: Added emacs local variables for mode setting and
+	default changelog name.
+
 	* sysdeps/unix/sysv/linux/linuxthreads/sysdep-cancel.h: Moved...
 	* sysdeps/unix/sysv/linux/am33/linuxthreads/sysdep-cancel.h:
 	... here, where it should have been added in the first place.
@@ -211,3 +214,11 @@
 	* sysdeps/unix/sysv/linux/am33/sysdep.h: New file.
 	* sysdeps/unix/sysv/linux/am33/bits/fcntl.h: New file.
 	* sysdeps/unix/sysv/linux/am33/bits/mman.h: New file.
+
+Local Variables:
+mode: change-log
+left-margin: 8
+fill-column: 74
+version-control: never
+change-log-default-name: "ChangeLog.am33"
+End:
