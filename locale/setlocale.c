@@ -66,10 +66,10 @@ struct locale_data *const _nl_C[] =
 /* Define an array of category names (also the environment variable names),
    indexed by integral category.
 
-   We have entries of fixed width (12 for now) do avoid an array of
+   We have entries of fixed width (16 for now) do avoid an array of
    pointers.  Update the size of the outer array if new, longer locale
    names are introduced.  */
-const char _nl_category_names[][12] =
+const char _nl_category_names[][16] =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
     [category] = category_name,

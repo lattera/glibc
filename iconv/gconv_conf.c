@@ -209,7 +209,7 @@ add_alias (char *rp, void *modules)
 
       inserted = (void **) __tsearch (new_alias, &__gconv_alias_db,
 				      __gconv_alias_compare);
-      if (inserted == NULL || *inserted != (void **) new_alias)
+      if (inserted == NULL || *inserted != new_alias)
 	/* Something went wrong, free this entry.  */
 	free (new_alias);
     }

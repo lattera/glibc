@@ -1,3 +1,26 @@
+1999-04-30  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* string/bits/string2.h (memset): Revert to previous version if
+	unaligned writes are not available.
+
+1999-04-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/bits/string.h (__memset_gc): Help generating
+	better code in presence of the asm.
+
+1999-04-30  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdlib/fmtmsg.c (keywords): Increase array size for faster
+	indexing.
+
+	* locale/localeinfo.h (_nl_category_names): Increase array element
+	size for faster indexing.
+	* locale/setlocale.c (_nl_category_names): Adjusted.
+
+1999-04-30  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* iconv/gconv_conf.c (add_alias): Remove wrong cast.
+
 1999-05-01  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/m68k/stackinfo.h: New file.

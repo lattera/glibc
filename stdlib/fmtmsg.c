@@ -43,7 +43,7 @@ static const struct
 {
   size_t len;
   /* Adjust the size if new elements are added.  */
-  const char name[9];
+  const char name[12];
 } keywords[] =
   {
     { 5, "label" },
