@@ -1,3 +1,8 @@
+2000-06-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/obprintf.c (_IO_obstack_vprintf): Call obstack_make_room,
+	not obstack_blank.
+
 2000-06-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/libc-symbols.h (symbol_version): Add extra level of

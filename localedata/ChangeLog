@@ -1,8 +1,12 @@
+2000-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_DK.com: Not needed.
+
 2000-06-27  Andreas Jaeger  <aj@suse.de>
 
 	* tests-mbwc/*: Initial import of testsuite from Shoji Kuwabara
-	<kuwahara@cthulhu.engr.sgi.com><kuwahara@cthulhu.engr.sgi.com>. 
-	
+	<kuwahara@cthulhu.engr.sgi.com>.
+
 	* Makefile (tests): Add tests from tests-mbwc subdirectory,
 	comment them out for now.
 	(subdir-dirs): New for tests-mbwc, add also vpaths.
