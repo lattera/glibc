@@ -1,5 +1,5 @@
 /* FPU control word bits.  Mips version.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe and Ralf Baechle.
 
@@ -86,10 +86,10 @@
 #define _FPU_IEEE     0x00000F80
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
+typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
 
 /* Macros for accessing the hardware control word.  */
-#define _FPU_GETCW(cw) __asm__ ("cfc1 %0,$31" : "=r" (cw) : )
+#define _FPU_GETCW(cw) __asm__ ("cfc1 %0,$31" : "=r" (cw))
 #define _FPU_SETCW(cw) __asm__ ("ctc1 %0,$31" : : "r" (cw))
 
 /* Default control word set at startup.  */
