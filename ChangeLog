@@ -1,3 +1,9 @@
+2000-10-29  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/generic/lockf64.c: In the case of F_TEST, set l_type to
+	F_RDLCK explicitly.
+	* sysdeps/unix/sysv/linux/i386/lockf64.c: Likewise.
+
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/big5.c: Update.
