@@ -1,0 +1,23 @@
+#ifndef ISO
+type {struct passwd}
+element {struct passwd} {char*} pw_name
+element {struct passwd} uid_t pw_uid
+element {struct passwd} gid_t pw_gid
+element {struct passwd} {char*} pw_dir
+element {struct passwd} {char*} pw_shell
+
+# ifndef POSIX
+type uid_t
+type gid_t
+# endif
+
+function {struct passwd*} getpwnam (const char*)
+function {struct passwd*} getpwuid (uid_t)
+function int getpwnam_r (const char*, struct passwd*, char*, size_t, struct passwd**)
+function int getpwuid_r (uid_t, struct passwd*, char*, size_t, struct passwd**)
+function void endpwent (void)
+function {struct passwd*} getpwent (void)
+funciton void setpwent (void)
+
+allow pw_*
+#endif

@@ -4,7 +4,8 @@ $CC = "gcc";
 $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 
 # List of the headers we are testing.
-@headers = ("poll.h", "nl_types.h", "ndbm.h", "mqueue.h", "monetary.h",
+@headers = ("search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
+	    "poll.h", "nl_types.h", "ndbm.h", "mqueue.h", "monetary.h",
 	    "math.h", "locale.h", "libgen.h", "langinfo.h", "iso646.h",
 	    "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h", "fnmatch.h",
 	    "fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h", "dirent.h",

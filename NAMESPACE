@@ -18,7 +18,7 @@ ndbm.h		dbm_
 poll.h		pd_, ph_, ps_
 pthread.h	pthread_, PTHREAD_
 pwd.h		pw_
-regex.h		re_, rm_
+regex.h		re_, rm_, REG_
 sched.h		sched_, SCHED_
 semaphore.h	sem_, SEM_
 signal.h	sa_, uc_, SIG[A-Z], SIG_[A-Z],

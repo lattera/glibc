@@ -1,5 +1,18 @@
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* conform/conformtest.pl (@headers): Add search.h, sched.h, regex.h,
+	pwd.h, and pthread.h.
+	* conform/data/pthread.h-data: New file.
+	* conform/data/pwd.h-data: New file.
+	* conform/data/regex.h-data: New file.
+	* conform/data/sched.h-data: New file.
+	* conform/data/search.h-data: New file.
+
+	* NAMESPACE: Add REG_ for regex.h.
+
+	* locale/langinfo.h: Don't define YESSTR and NOSTR for XPG6 since
+	they are removed.
+
 	* configure.in (libc_cv_asm_global_directive): Indent .text in
 	test code so that the lame HPUX compiler recognizes it.
 	* sysdeps/hppa/bits/endian.h: New file.

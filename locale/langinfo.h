@@ -333,10 +333,12 @@ enum
 #define YESEXPR			YESEXPR
   NOEXPR,			/* Regex matching ``no'' input.  */
 #define NOEXPR			NOEXPR
-  YESSTR,			/* Output string for ``yes''.  */
-#define YESSTR			YESSTR
-  NOSTR,			/* Output string for ``no''.  */
-#define	NOSTR			NOSTR
+  __YESSTR,			/* Output string for ``yes''.  */
+  __NOSTR,			/* Output string for ``no''.  */
+#ifndef __USE_XOPEN2K
+# define YESSTR			__YESSTR
+# define NOSTR			__NOSTR
+#endif
   _NL_NUM_LC_MESSAGES,
 
   /* This marks the highest value used.  */

@@ -2302,7 +2302,7 @@ else
   libc_cv_asm_global_directive=UNKNOWN
 for ac_globl in .globl .global .EXPORT; do
   cat > conftest.s <<EOF
-.text
+	.text
 	${ac_globl} foo
 foo:
 EOF
