@@ -1,3 +1,8 @@
+Sun Feb 14 01:49:29 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/s_modf.c: Optimized by using __m81_test instead
+	of separare explicit comparisons.
+
 1999-02-11  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/wordsize-64/inttypes.h: Always define ldiv_t if not yet

@@ -33,15 +33,18 @@ float_type
 s(__modf) (float_type x, float_type *iptr)
 {
   float_type x_int, result;
+  unsigned long x_cond;
+
   __asm ("fintrz%.x %1, %0" : "=f" (x_int) : "f" (x));
   *iptr = x_int;
-  if (m81(__isinf) (x))
+  x_cond = __m81_test (x);
+  if (x_cond & __M81_COND_INF)
     {
       result = 0;
-      if (x < 0)
+      if (x_cond & __M81_COND_NEG)
 	result = -result;
     }
-  else if (x == 0)
+  else if (x_cond & __M81_COND_ZERO)
     result = x;
   else
     result = x - x_int;
