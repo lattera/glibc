@@ -25,15 +25,13 @@ Cambridge, MA 02139, USA.  */
 
 #include <elf.h>
 
-#define __ELF_WORDSIZE 32	/* XXX */
-
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
-#define ElfW(type)	_ElfW (Elf, __ELF_WORDSIZE, type)
-#define ELFW(type)	_ElfW (ELF, __ELF_WORDSIZE, type)
+#define ElfW(type)	_ElfW (Elf, __ELF_NATIVE_CLASS, type)
+#define ELFW(type)	_ElfW (ELF, __ELF_NATIVE_CLASS, type)
 #define _ElfW(e,w,t)	_ElfW_1 (e, w, _##t)
 #define _ElfW_1(e,w,t)	e##w##t
-
+#include <elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's

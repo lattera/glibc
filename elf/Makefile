@@ -20,7 +20,7 @@
 
 subdir		:= elf
 
-headers		= elf.h link.h dlfcn.h
+headers		= elf.h elfclass.h link.h dlfcn.h
 routines	= init-first $(dl-routines) dl-open dl-symbol dl-support
 
 # The core dynamic linking functions are in libc for the static and

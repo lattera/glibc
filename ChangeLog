@@ -1,5 +1,16 @@
 Mon Jun 10 06:14:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/link.h: Include elfclass.h to define __ELF_NATIVE_CLASS.
+	(ElfW, ELFW): Use it.
+	* elf/Makefile (headers): Add elfclass.h.
+	* sysdeps/wordsize-32/elfclass.h: New file.
+	* sysdeps/wordsize-64/elfclass.h: New file.
+	* sysdeps/alpha/Implies: Add wordsize-64.
+	* sysdeps/i386/Implies: Add wordsize-32.
+	* sysdeps/m68k/Implies: Add wordsize-32.
+	* sysdeps/mips/Implies: Add wordsize-32.
+	* sysdeps/sparc/Implies: Add wordsize-32.
+
 	* sysdeps/mach/hurd/dl-sysdep.c (__open): Define this instead of open.
 	(__close, __mmap): Likewise define with __ names now.
 
