@@ -1,3 +1,8 @@
+1998-03-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp.c: Rewrite parse_param.
+	Patch by Tim Waugh and. Andreas Schwab.
+
 1998-03-21 23:46  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* Rules: Update timestamps on empty object files.

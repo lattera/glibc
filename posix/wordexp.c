@@ -1067,16 +1067,115 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
   int free_value = 0;
   int pattern_is_quoted = 0; /* 1 for singly-quoted, 2 for doubly-quoted */
   int error;
+  int special = 0;
+  char buffer[21];
   int brace = words[*offset] == '{';
 
   if (brace)
     ++*offset;
 
-  for (; words[*offset]; ++(*offset))
-    {
-      int special;
+  /* First collect the parameter name. */
 
-      if (action != ACT_NONE)
+  if (words[*offset] == '#')
+    {
+      seen_hash = 1;
+      if (!brace)
+	goto envsubst;
+      ++*offset;
+    }
+
+  if (isalpha (words[*offset]) || words[*offset] == '_')
+    {
+      /* Normal parameter name. */
+      do
+	{
+	  env = w_addchar (env, &env_length, &env_maxlen,
+			   words[*offset]);
+	  if (env == NULL)
+	    goto no_space;
+	}
+      while (isalnum (words[++*offset]) || words[*offset] == '_');
+    }
+  else if (isdigit (words[*offset]))
+    {
+      /* Numeric parameter name. */
+      special = 1;
+      do
+	{
+	  env = w_addchar (env, &env_length, &env_maxlen,
+			   words[*offset]);
+	  if (env == NULL)
+	    goto no_space;
+	  if (!brace)
+	    goto envsubst;
+	}
+      while (isdigit(words[++*offset]));
+    }
+  else if (strchr ("*@$", words[*offset]) != NULL)
+    {
+      /* Special parameter. */
+      special = 1;
+      env = w_addchar (env, &env_length, &env_maxlen,
+		       words[*offset]);
+      if (env == NULL)
+	goto no_space;
+      ++*offset;
+    }
+  else
+    {
+      if (brace)
+	goto syntax;
+    }
+
+  if (brace)
+    {
+      /* Check for special action to be applied to the value. */
+      switch (words[*offset])
+	{
+	case '}':
+	  /* Evalute. */
+	  goto envsubst;
+
+	case '#':
+	  action = ACT_RP_SHORT_LEFT;
+	  if (words[1 + *offset] == '#')
+	    {
+	      ++*offset;
+	      action = ACT_RP_LONG_LEFT;
+	    }
+	  break;
+
+	case '%':
+	  action = ACT_RP_SHORT_RIGHT;
+	  if (words[1 + *offset] == '%')
+	    {
+	      ++*offset;
+	      action = ACT_RP_LONG_RIGHT;
+	    }
+	  break;
+
+	case ':':
+	  if (strchr ("-=?+", words[1 + *offset]) == NULL)
+	    goto syntax;
+
+	  colon_seen = 1;
+	  action = words[++*offset];
+	  break;
+
+	case '-':
+	case '=':
+	case '?':
+	case '+':
+	  action = words[*offset];
+	  break;
+
+	default:
+	  goto syntax;
+	}
+
+      /* Now collect the pattern. */
+      ++*offset;
+      for (; words[*offset]; ++(*offset))
 	{
 	  switch (words[*offset])
 	    {
@@ -1120,197 +1219,63 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 			       words[*offset]);
 	  if (pattern == NULL)
 	    goto no_space;
-
-	  continue;
-	}
-
-      switch (words[*offset])
-	{
-	case '}':
-	  if (!brace)
-	    goto end_of_word;
-
-	  if (env == NULL)
-	    goto syntax;
-
-	  /* Evaluate. */
-	  goto envsubst;
-
-	case '#':
-	  /* '#' only has special meaning inside braces or as the very
-	   * first character after $ */
-	  if (*offset == start)
-	    {
-	      seen_hash = 1;
-	      goto envsubst;
-	    }
-
-	  if (!brace)
-	    /* Evaluate */
-	    /* (and re-parse this character) */
-	    goto end_of_word;
-
-	  /* At the start? (i.e. 'string length') */
-	  if (env == NULL)
-	    {
-	      seen_hash = 1;
-	      continue;
-	    }
-	  else if (seen_hash)
-	    goto syntax;
-
-	  action = ACT_RP_SHORT_LEFT;
-	  if (words[1 + *offset] == '#')
-	    {
-	      ++*offset;
-	      action = ACT_RP_LONG_LEFT;
-	    }
-
-	  continue;
-
-	case '%':
-	  if (!brace)
-	    /* Re-parse this character after substitution */
-	    goto end_of_word;
-
-	  if (!env || !*env)
-	    goto syntax;
-
-	  if (seen_hash)
-	    goto syntax;
-
-	  action = ACT_RP_SHORT_RIGHT;
-	  if (words[1 + *offset] == '%')
-	    {
-	      ++*offset;
-	      action = ACT_RP_LONG_RIGHT;
-	    }
-
-	  continue;
-
-	case ':':
-	  if (!brace)
-	    goto end_of_word;
-
-	  if (!env || !*env)
-	    goto syntax;
-
-	  if (seen_hash)
-	    goto syntax;
-
-	  if (words[1 + *offset] != '-' && words[1 + *offset] != '='
-	      && words[1 + *offset] != '?' && words[1 + *offset] != '+')
-	    goto syntax;
-
-	  colon_seen = 1;
-	  action = words[++*offset];
-	  continue;
-
-	case '-':
-	case '=':
-	case '?':
-	case '+':
-	  if (!brace)
-	    goto end_of_word;
-
-	  if (!env || !*env)
-	    goto syntax;
-
-	  action = words[*offset];
-	  continue;
-	}
-
-      special = strchr ("*@$", words[*offset]) != NULL;
-
-      if (!isalnum (words[*offset]) && !special)
-	/* Stop and evaluate, remembering char we stopped at */
-	break;
-
-      env = w_addchar (env, &env_length, &env_maxlen,
-			   words[*offset]);
-      if (env == NULL)
-	goto no_space;
-
-      if (special)
-	{
-	  if (brace)
-	    ++*offset;
-	  goto envsubst;
 	}
     }
 
-  /* End of input string -- remember to reparse the character that we stopped
-   * at.  */
-end_of_word:
+  /* End of input string -- remember to reparse the character that we
+   * stopped at.  */
   --(*offset);
 
 envsubst:
   if (words[start] == '{' && words[*offset] != '}')
     goto syntax;
 
-  if (!env || !*env)
+  if (env == NULL)
     {
       if (seen_hash)
 	{
 	  /* $# expands to the number of positional parameters */
-	  char buffer[21];
 	  buffer[20] = '\0';
-	  *word = w_addstr (*word, word_length, max_length,
-			    _itoa_word (__libc_argc - 1, &buffer[20], 10, 0));
+	  value = _itoa_word (__libc_argc - 1, &buffer[20], 10, 0);
+	  seen_hash = 0;
 	}
       else
 	{
 	  /* Just $ on its own */
 	  *offset = start - 1;
 	  *word = w_addchar (*word, word_length, max_length, '$');
+	  return *word ? 0 : WRDE_NOSPACE;
 	}
-
-      if (env)
-	free (env);
-
-      return *word ? 0 : WRDE_NOSPACE;
     }
-
-  /* Is it a special parameter? */
-  if (strpbrk (env, "*@$") || isdigit (*env))
+  /* Is it a numberic parameter? */
+  else if (isdigit (env[0]))
     {
-      if ((isdigit(*env) && strcspn (env, "1234567890")) ||
-	  (!isdigit(*env) && env[1] != '\0'))
+      int n = atoi (env);
+
+      if (n >= __libc_argc)
+	/* Substitute NULL. */
+	value = NULL;
+      else
+	/* Replace with appropriate positional parameter. */
+	value = __libc_argv[n];
+    }
+  /* Is it a special parameter? */
+  else if (special)
+    {
+      /* Is it `$$'? */
+      if (*env == '$')
 	{
-	  /* Bad substitution if it isn't "*", "@", "$", or just a number.  */
-	bad_subst:
-	  free (env);
-	  fprintf (stderr, "${%s}: bad substitution\n", env);
-	  return WRDE_SYNTAX;
+	  buffer[20] = '\0';
+	  value = _itoa_word (getpid (), &buffer[20], 10, 0);
 	}
-
-      /* Is it a digit? */
-      if (isdigit(*env))
+      /* Is it `${#*}' or `${#@}'? */
+      else if ((*env == '*' || *env == '@') && seen_hash)
 	{
-	  char *endp;
-	  int n = strtol (env, &endp, 10);
-
-	  if (*endp != '\0')
-	    goto bad_subst;
-
+	  buffer[20] = '\0';
+	  value = _itoa_word (__libc_argc > 0 ? __libc_argc - 1 : 0,
+			      &buffer[20], 10, 0);
+	  *word = w_addstr (*word, word_length, max_length, value);
 	  free (env);
-	  if (n >= __libc_argc)
-	    /* Substitute NULL */
-	    return 0;
-
-	  /* Replace with the appropriate positional parameter */
-	  value = __libc_argv[n];
-	  goto maybe_fieldsplit;
-	}
-      /* Is it `$$' ? */
-      else if (*env == '$')
-	{
-	  char pidstr[21];
-
-	  free (env);
-	  pidstr[20] = '\0';
-	  *word = w_addstr (*word, word_length, max_length,
-			    _itoa_word (getpid(), &pidstr[20], 10, 0));
 	  return *word ? 0 : WRDE_NOSPACE;
 	}
       /* Is it `$*' or `$@' (unquoted) ? */
@@ -1320,7 +1285,6 @@ envsubst:
 	  int p;
 
 	  /* Build up value parameter by parameter (copy them) */
-	  free (env);
 	  for (p = 1; __libc_argv[p]; ++p)
 	    {
 	      char *old_pointer = value;
@@ -1334,7 +1298,7 @@ envsubst:
 
 	      /* First realloc will act as malloc because value is
 	       * initialised to NULL. */
-	      value = realloc (value, plist_len);
+	      value = realloc (value, plist_len); /* ### re-work this */
 	      if (value == NULL)
 		{
 		  free (old_pointer);
@@ -1350,46 +1314,58 @@ envsubst:
 	    }
 
 	  free_value = 1;
-	  if (value)
-	    goto maybe_fieldsplit;
-
-	  return 0;
 	}
-
-      /* Must be a quoted `$@' */
-      assert (*env == '@');
-      assert (quoted);
-      free (env);
-
-      /* Each parameter is a separate word ("$@") */
-      if (__libc_argv[0] != NULL && __libc_argv[1] != NULL)
+      else
 	{
-	  /* Append first parameter to current word. */
-	  int p;
+	  /* Must be a quoted `$@' */
+	  assert (*env == '@' && quoted);
 
-	  *word = w_addstr (*word, word_length, max_length, __libc_argv[1]);
-	  if (*word == NULL)
-	    return WRDE_NOSPACE;
-
-	  for (p = 2; __libc_argv[p]; p++)
+	  /* Each parameter is a separate word ("$@") */
+	  if (__libc_argc == 2)
 	    {
-	      size_t len;
-	      char *s;
-	      if (w_addword (pwordexp, *word))
-		return WRDE_NOSPACE;
-	      len = strlen (__libc_argv[p]) + 1;
-	      s = malloc (len);
-	      if (s == NULL)
-		return WRDE_NOSPACE;
-	      *word = memcpy (s, __libc_argv[p], len);
-	      *max_length = *word_length = len - 1;
+	      value = __strdup (__libc_argv[1]);
+	      if (value == NULL)
+		goto no_space;
+	    }
+	  else if (__libc_argc > 2)
+	    {
+	      int p;
+
+	      /* Append first parameter to current word. */
+	      value = w_addstr (*word, word_length, max_length,
+				__libc_argv[1]);
+	      if (value == NULL || w_addword (pwordexp, value))
+		goto no_space;
+
+	      for (p = 2; __libc_argv[p + 1]; p++)
+		{
+		  char *newword = __strdup (__libc_argv[p]);
+		  if (newword == NULL || w_addword (pwordexp, newword))
+		    goto no_space;
+		}
+
+	      /* Start a new word with the last parameter. */
+	      *word = NULL;
+	      *max_length = *word_length = 0;
+	      value = __strdup (__libc_argv[p]);
+	      if (value == NULL)
+		goto no_space;
+	    }
+	  else
+	    {
+	      free (env);
+	      free (pattern);
+	      return 0;
 	    }
 	}
-
-      return 0;
     }
-
-  value = getenv (env);
+  else
+    {
+      value = getenv (env);
+      if (value == NULL && (flags & WRDE_UNDEF))
+	/* Variable not defined. */
+	return WRDE_BADVAL;
+    }
 
   if (action != ACT_NONE)
     {
@@ -1404,13 +1380,10 @@ envsubst:
 	    char c;
 	    char *end;
 
-	    if (!pattern || !*pattern)
+	    if (value == NULL || pattern == NULL || *pattern == '\0')
 	      break;
 
 	    end = value + strlen (value);
-
-	    if (value == NULL)
-	      break;
 
 	    switch (action)
 	      {
@@ -1451,7 +1424,15 @@ envsubst:
 		  {
 		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
 		      {
-			*p = '\0';
+			char *newval;
+			newval = malloc (p - value + 1);
+			if (newval == NULL)
+			  goto no_space;
+			*(char *) __mempcpy (newval, value, p - value) = '\0';
+			if (free_value)
+			  free (value);
+			value = newval;
+			free_value = 1;
 			break;
 		      }
 		  }
@@ -1463,7 +1444,15 @@ envsubst:
 		  {
 		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
 		      {
-			*p = '\0';
+			char *newval;
+			newval = malloc (p - value + 1);
+			if (newval == NULL)
+			  goto no_space;
+			*(char *) __mempcpy (newval, value, p - value) = '\0';
+			if (free_value)
+			  free (value);
+			value = newval;
+			free_value = 1;
 			break;
 		      }
 		  }
@@ -1483,14 +1472,9 @@ envsubst:
 	    break;
 
 	  if (!colon_seen && value)
-	    {
-	      /* Substitute NULL */
-	      free (env);
-	      free (pattern);
-	      return 0;
-	    }
-
-	  if (*pattern)
+	    /* Substitute NULL */
+	    error = 0;
+	  else if (*pattern)
 	    {
 	      /* Expand 'pattern' and write it to stderr */
 	      wordexp_t	we;
@@ -1513,15 +1497,16 @@ envsubst:
 		}
 
 	      wordfree (&we);
-	      free (env);
-	      free (pattern);
-	      return error;
+	    }
+	  else
+	    {
+	      fprintf (stderr, "%s: parameter null or not set\n", env);
+	      error = WRDE_BADVAL;
 	    }
 
-	  fprintf (stderr, "%s: parameter null or not set\n", env);
 	  free (env);
 	  free (pattern);
-	  return WRDE_BADVAL;
+	  return error;
 
 	case ACT_NULL_SUBST:
 	  if (value && *value)
@@ -1586,6 +1571,10 @@ envsubst:
 		char *cp;
 		size_t words_size = 0;
 
+		if (special)
+		  /* Cannot assign special parameters. */
+		  goto syntax;
+
 		for (i = 0; i < we.we_wordc; i++)
 		  words_size += strlen (we.we_wordv[i]) + 1; /* for <space> */
 		words_size++;
@@ -1598,13 +1587,15 @@ envsubst:
 		    *cp++ = ' ';
 		  }
 
-		__stpcpy (cp, we.we_wordv[i]);
+		strcpy (cp, we.we_wordv[i]);
 
 		/* Also assign */
 		setenv (env, words, 1);
 	      }
 
 	    wordfree (&we);
+	    free (env);
+	    free (pattern);
 	    return 0;
 	  }
 
@@ -1644,25 +1635,25 @@ envsubst:
   free (env);
   free (pattern);
 
-  if (value == NULL)
-    {
-      /* Variable not defined */
-      if (flags & WRDE_UNDEF)
-	return WRDE_BADVAL;
-
-      return 0;
-    }
-
   if (seen_hash)
     {
       char param_length[21];
       param_length[20] = '\0';
       *word = w_addstr (*word, word_length, max_length,
-			_itoa_word (strlen (value), &param_length[20], 10, 0));
+			_itoa_word (value ? strlen (value) : 0,
+				    &param_length[20], 10, 0));
+      if (free_value)
+	{
+	  assert (value != NULL);
+	  free (value);
+	}
+
       return *word ? 0 : WRDE_NOSPACE;
     }
 
- maybe_fieldsplit:
+  if (value == NULL)
+    return 0;
+
   if (quoted || !pwordexp)
     {
       /* Quoted - no field split */
@@ -1704,28 +1695,22 @@ envsubst:
 	    }
 
 	  /* Skip IFS whitespace before the field */
-	  while (*field_begin && strchr (ifs_white, *field_begin) != NULL)
-	    field_begin++;
+	  field_begin += strspn (field_begin, ifs_white);
 
 	  if (!seen_nonws_ifs && *field_begin == 0)
 	    /* Nothing but whitespace */
 	    break;
 
 	  /* Search for the end of the field */
-	  field_end = field_begin;
-	  while (*field_end && strchr (ifs, *field_end) == NULL)
-	    field_end++;
+	  field_end = field_begin + strcspn (field_begin, ifs);
 
-	  /* Set up pointer to the character after end of field */
-	  next_field = *field_end ? field_end : NULL;
-
-	  /* Skip whitespace IFS after the field */
-	  while (next_field && *next_field && strchr (ifs_white, *next_field))
-	    next_field++;
+	  /* Set up pointer to the character after end of field and
+             skip whitespace IFS after it. */
+	  next_field = field_end + strspn (field_end, ifs_white);
 
 	  /* Skip at most one non-whitespace IFS character after the field */
 	  seen_nonws_ifs = 0;
-	  if (next_field && *next_field && strchr (ifs, *next_field))
+	  if (*next_field && strchr (ifs, *next_field))
 	    {
 	      seen_nonws_ifs = 1;
 	      next_field++;
@@ -1745,7 +1730,7 @@ envsubst:
 
 	  field_begin = next_field;
 	}
-      while (seen_nonws_ifs || (field_begin != NULL && *field_begin));
+      while (seen_nonws_ifs || *field_begin);
 
       free (value_copy);
     }
