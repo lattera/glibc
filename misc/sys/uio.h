@@ -30,24 +30,24 @@ __BEGIN_DECLS
 
 
 /* Read data from file descriptor FD, and put the result in the
-   buffers described by VECTOR, which is a vector of COUNT `struct iovec's.
+   buffers described by IOVEC, which is a vector of COUNT `struct iovec's.
    The buffers are filled in the order specified.
    Operates just like `read' (see <unistd.h>) except that data are
-   put in VECTOR instead of a contiguous buffer.
+   put in IOVEC instead of a contiguous buffer.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t readv (int __fd, __const struct iovec *__vector, int __count);
+extern ssize_t readv (int __fd, __const struct iovec *__iovec, int __count);
 
-/* Write data pointed by the buffers described by VECTOR, which
+/* Write data pointed by the buffers described by IOVEC, which
    is a vector of COUNT `struct iovec's, to file descriptor FD.
    The data is written in the order specified.
    Operates just like `write' (see <unistd.h>) except that the data
-   are taken from VECTOR instead of a contiguous buffer.
+   are taken from IOVEC instead of a contiguous buffer.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t writev (int __fd, __const struct iovec *__vector, int __count);
+extern ssize_t writev (int __fd, __const struct iovec *__iovec, int __count);
 
 __END_DECLS
 
