@@ -67,6 +67,12 @@ static int	 fts_palloc __P((FTS *, size_t));
 static FTSENT	*fts_sort __P((FTS *, FTSENT *, int));
 static u_short	 fts_stat __P((FTS *, FTSENT *, int));
 
+#ifndef MAX
+#define MAX(a, b)	({ __typeof__ (a) _a = (a); \
+			   __typeof__ (b) _b = (b); \
+			   _a > _b ? _a : _b; })
+#endif
+
 #define	ISDOT(a)	(a[0] == '.' && (!a[1] || a[1] == '.' && !a[2]))
 
 #define	ISSET(opt)	(sp->fts_options & opt)
