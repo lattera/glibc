@@ -1,0 +1,8 @@
+# AIX shares most of the syscalls which are also common to BSD and SVR4.
+unix/common
+
+# AIX has all functions of the mmap family which are described in POSIX.4.
+unix/mman
+
+# AIX has network support in the kernel.
+unix/inet
