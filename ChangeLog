@@ -1,3 +1,8 @@
+1998-09-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db2/common/db_apprec.c (__db_apprec): Add braces to make gcc
+	quiet.
+
 1998-09-07 09:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/tgmath.h (scalb): Only define for __USE_MISC or

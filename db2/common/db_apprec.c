@@ -150,11 +150,12 @@ __db_apprec(dbenv, flags)
 	    ret = log_get(lp, &lsn, &data, DB_PREV)) {
 		ret = __db_dispatch(lp,
 		    &data, &lsn, TXN_BACKWARD_ROLL, txninfo);
-		if (ret != 0)
+		if (ret != 0) {
 			if (ret != DB_TXN_CKP)
 				goto msgerr;
 			else
 				ret = 0;
+		}
 	}
 	if (ret != 0 && ret != DB_NOTFOUND)
 		goto out;
@@ -165,11 +166,12 @@ __db_apprec(dbenv, flags)
 	for (ret = log_get(lp, &lsn, &data, DB_NEXT);
 	    ret == 0; ret = log_get(lp, &lsn, &data, DB_NEXT)) {
 		ret = __db_dispatch(lp, &data, &lsn, TXN_FORWARD_ROLL, txninfo);
-		if (ret != 0)
+		if (ret != 0) {
 			if (ret != DB_TXN_CKP)
 				goto msgerr;
 			else
 				ret = 0;
+		}
 	}
 	if (ret != DB_NOTFOUND)
 		goto out;
