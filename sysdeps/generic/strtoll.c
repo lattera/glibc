@@ -1,5 +1,5 @@
 /* Function to parse a `long long int' from text.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,5 +21,11 @@
 
 #include <strtol.c>
 
-strong_alias (__strtoll_internal, __strtoq_internal)
+#ifdef _LIBC
+# ifdef SHARED
+#  include <shlib-compat.h>
+
+compat_symbol (libc, __strtoll_internal, __strtoq_internal, GLIBC_2_0);
+# endif
 weak_alias (strtoll, strtoq)
+#endif

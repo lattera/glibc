@@ -1,5 +1,5 @@
 /* Function to parse an `unsigned long long int' from text.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,10 @@
 #include <strtoul.c>
 
 #ifdef _LIBC
-strong_alias (__strtoull_internal, __strtouq_internal)
+# ifdef SHARED
+#  include <shlib-compat.h>
+
+compat_symbol (libc, __strtoull_internal, __strtouq_internal, GLIBC_2_0);
+# endif
 weak_alias (strtoull, strtouq)
 #endif
