@@ -28,10 +28,12 @@
 int
 ustat (dev_t dev, struct ustat *ubuf)
 {
-  unsigned short int k_dev;
+  unsigned long long int k_dev;
 
   /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);
+  k_dev =  dev & ((1ULL << 32) - 1);
+  if (k_dev != dev)
+    return EOVERFLOW;
 
-  return INLINE_SYSCALL (ustat, 2, k_dev, CHECK_1 (ubuf));
+  return INLINE_SYSCALL (ustat, 2, (unsigned int) k_dev, CHECK_1 (ubuf));
 }

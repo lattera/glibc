@@ -34,7 +34,7 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 
 ifeq ($(have-thread-library),yes)
 
-others := nscd nscd_nischeck
+others := nscd_nischeck
 install-sbin := nscd nscd_nischeck
 
 extra-objs := $(nscd-modules:=.o) nscd_nischeck.o
@@ -56,6 +56,37 @@ include ../Rules
 CFLAGS-nscd_getpw_r.c = -fexceptions
 CFLAGS-nscd_getgr_r.c = -fexceptions
 CFLAGS-nscd_gethst_r.c = -fexceptions
+
+ifeq (yesyes,$(have-fpie)$(build-shared))
+CFLAGS-nscd.c = -fpie
+CFLAGS-connections.c = -fpie
+CFLAGS-pwdcache.c = -fpie
+CFLAGS-getpwnam_r.c = -fpie
+CFLAGS-getpwuid_r.c = -fpie
+CFLAGS-grpcache.c = -fpie
+CFLAGS-getgrnam_r.c = -fpie
+CFLAGS-getgrgid_r.c = -fpie
+CFLAGS-hstcache.c = -fpie
+CFLAGS-gethstbyad_r.c = -fpie
+CFLAGS-gethstbynm2_r.c = -fpie
+CFLAGS-dbg_log.c = -fpie
+CFLAGS-nscd_conf.c = -fpie
+CFLAGS-nscd_stat.c = -fpie
+CFLAGS-cache.c = -fpie
+CFLAGS-xmalloc.c = -fpie
+CFLAGS-xstrdup.c = -fpie
+
+$(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
+	$(LINK.o) -pie -Wl,-O1 \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
+	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
+	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
+	  -o $@ $^ $(common-objpfx)libc_nonshared.a
+else
+others += nscd
+endif
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
 cpp-srcs-left := $(nscd-modules:=.c)

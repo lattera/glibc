@@ -33,7 +33,7 @@
 int
 __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
 {
-  unsigned short int k_dev;
+  unsigned long long int k_dev;
 
   if (vers != _MKNOD_VER)
     {
@@ -42,9 +42,12 @@ __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
     }
 
   /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev = ((major (*dev) & 0xff) << 8) | (minor (*dev) & 0xff);
+  k_dev =  (*dev) & ((1ULL << 32) - 1);
+  if (k_dev != *dev)
+    return EOVERFLOW;
 
-  return INLINE_SYSCALL (mknod, 3, CHECK_STRING (path), mode, k_dev);
+  return INLINE_SYSCALL (mknod, 3, CHECK_STRING (path), mode,
+			 (unsigned int) k_dev);
 }
 
 weak_alias (__xmknod, _xmknod)

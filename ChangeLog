@@ -1,13 +1,25 @@
 2003-09-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/Makefile: Add rules to build nscd as a PIE.
+
+2003-09-23  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Adjust for larger
 	kernel dev_t size.
+	* sysdeps/unix/sysv/linux/sys/alpha/sysmacros.h: Removed.
+	* sysdeps/unix/sysv/linux/sys/sparc/sysmacros.h: Removed.
 	* sysdeps/unix/sysv/linux/makedev.c: New file.
 	* sysdeps/unix/sysv/linux/Dist: Add makedev.c.
 	* sysdeps/unix/sysv/linux/Makefile [subdir=misc]
 	(sysdep_routines): Add makedev.
 	* sysdeps/unix/sysv/linux/Versions [libc] (GLIBC_2.3.3): Add
 	major, minor, makedev.
+	* sysdeps/unix/sysv/linux/ustat.c (ustat): Adjust for 32-bit
+	kernel dev_t.
+	* sysdeps/unix/sysv/linux/alpha/ustat.c: Removed.
+	* sysdeps/unix/sysv/linux/xmknod.c (__xmknod): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/xmknod.c: Removed.
+	Code by Alexander Viro <aviro@redhat.com>.
 
 2003-09-23  Ulrich Drepper  <drepper@redhat.com>
 
