@@ -26,6 +26,7 @@ struct parser_data;
 extern int _nss_files_parse_rpcent (char *line, struct rpcent *result,
 				    struct parser_data *data,
 				    size_t datalen, int *errnop);
+libc_hidden_proto (_nss_files_parse_rpcent)
 
 #define DECLARE_NSS_PROTOTYPES(service)					      \
 extern enum nss_status _nss_ ## service ## _setrpcent (int);		      \

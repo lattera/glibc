@@ -354,3 +354,4 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 done:
   return 1;
 }
+libc_hidden_def (__nss_hostname_digits_dots)

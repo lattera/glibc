@@ -29,6 +29,7 @@ struct parser_data;
 extern int _nss_files_parse_pwent (char *line, struct passwd *result,
 				   struct parser_data *data,
 				   size_t datalen, int *errnop);
+libc_hidden_proto (_nss_files_parse_pwent)
 
 #define DECLARE_NSS_PROTOTYPES(service)					\
 extern enum nss_status _nss_ ## service ## _setpwent (int);		\

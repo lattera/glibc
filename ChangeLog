@@ -1,5 +1,31 @@
 2002-08-09  Jakub Jelinek  <jakub@redhat.com>
 
+	* include/bits/dlfcn.h: New file.
+	* elf/dl-profstub.c (_dl_mcount_wrapper_check): Add libc_hidden_def.
+
+	* include/grp.h (_nss_files_parse_grent): Add libc_hidden_proto.
+	* include/netinet/ether.h (_nss_files_parse_etherent): Likewise.
+	* include/rpc/netdb.h (_nss_files_parse_rpcent): Likewise.
+	* include/pwd.h (_nss_files_parse_pwent): Likewise.
+	* include/shadow.h (_nss_files_parse_spent): Likewise.
+	* include/netdb.h (_nss_files_parse_protoent,
+	_nss_files_parse_servent, _nss_files_parse_netent): Likewise.
+	* nss/nss_files/files-parse.c (nss_files_parse_hidden_def): Define.
+	(LINE_PARSER): Use it.
+	* nss/nsswitch.h (__nss_hostname_digits_dots): Add libc_hidden_proto.
+	* nss/digits_dots.c (__nss_hostname_digits_dots): Add libc_hidden_def.
+
+	* include/wctype.h (iswalpha, iswdigit, iswlower, iswspace, iswxdigit,
+	towlower, towupper): Add prototypes here too.  Add libc_hidden_proto.
+	* wctype/wcfuncs ((iswalpha, iswdigit, iswlower, iswspace, iswxdigit,
+	towlower, towupper): Add libc_hidden_weak.
+
+	* libio/oldiopopen.c: Move #if SHLIB_COMPAT after _IO_HAVE_SYS_WAIT
+	#endif.
+
+	* manual/debug.texi (%MENU%): Remove trailing dot.
+	Reported by <hayastan132@hotmail.com>.
+
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list (llseek): Add lseek
 	aliases.
 	(lseek): Dummy.

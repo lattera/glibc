@@ -199,7 +199,9 @@ extern enum nss_status _nss_netgroup_parseline (char **cursor,
 						struct __netgrent *result,
 						char *buffer, size_t buflen,
 						int *errnop);
-
+libc_hidden_proto (_nss_files_parse_protoent)
+libc_hidden_proto (_nss_files_parse_servent)
+libc_hidden_proto (_nss_files_parse_netent)
 
 #define DECLARE_NSS_PROTOTYPES(service)					      \
 extern enum nss_status _nss_ ## service ## _setprotoent (int);		      \

@@ -40,3 +40,4 @@ _dl_mcount_wrapper_check (void *selfpc)
   if (GL(dl_profile_map) != NULL)
     _dl_mcount ((ElfW(Addr)) RETURN_ADDRESS (0), (ElfW(Addr)) selfpc);
 }
+libc_hidden_def (_dl_mcount_wrapper_check)

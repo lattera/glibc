@@ -1,6 +1,6 @@
 @node Debugging Support
 @c @node Debugging Support, , Cryptographic Functions, Top
-@c %MENU% Functions to help debugging applications.
+@c %MENU% Functions to help debugging applications
 @chapter Debugging support
 
 Applications are usually debugged using dedicated debugger programs.

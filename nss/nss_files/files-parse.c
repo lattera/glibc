@@ -68,10 +68,12 @@ struct parser_data
 /* The function can't be exported, because the entdata structure
    is defined only in files-foo.c.  */
 # define parser_stclass static inline
+# define nss_files_parse_hidden_def(name)
 #else
 /* Export the line parser function so it can be used in nss_db.  */
 # define parser_stclass /* Global */
 # define parse_line CONCAT(_nss_files_parse_,ENTNAME)
+# define nss_files_parse_hidden_def(name) libc_hidden_def (name)
 #endif
 
 
@@ -101,7 +103,8 @@ parse_line (char *line, struct STRUCTURE *result,			      \
   BODY;									      \
   TRAILING_LIST_PARSER;							      \
   return 1;								      \
-}
+}									      \
+nss_files_parse_hidden_def (parse_line)
 
 
 # define STRING_FIELD(variable, terminator_p, swallow)			      \

@@ -168,5 +168,6 @@ extern int __nss_hostname_digits_dots (const char *name,
 				       struct hostent **result,
 				       enum nss_status *status, int *typep,
 				       int flags, int *afp, int *h_errnop);
+libc_hidden_proto (__nss_hostname_digits_dots)
 
 #endif	/* nsswitch.h */

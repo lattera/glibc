@@ -43,9 +43,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include <shlib-compat.h>
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-
 #ifndef _IO_fork
 #ifdef _LIBC
 #define _IO_fork __vfork
@@ -56,6 +53,9 @@ extern _IO_pid_t _IO_fork __P ((void));
 #endif
 
 #endif /* _IO_HAVE_SYS_WAIT */
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #ifndef _IO_pipe
 #ifdef _LIBC
