@@ -27,7 +27,8 @@ distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
 			   nsswitch.conf digits_dots.c function.def
 
 # This is the trivial part which goes into libc itself.
-routines		= nsswitch $(addsuffix -lookup,$(databases))
+routines		= nsswitch getnssent getnssent_r \
+			  $(addsuffix -lookup,$(databases))
 
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name

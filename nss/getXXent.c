@@ -48,10 +48,10 @@
 /* Sometimes we need to store error codes in the `h_errno' variable.  */
 #ifdef NEED_H_ERRNO
 # define H_ERRNO_PARM , int *h_errnop
-# define H_ERRNO_VAR , &h_errno
+# define H_ERRNO_VAR &h_errno
 #else
 # define H_ERRNO_PARM
-# define H_ERRNO_VAR
+# define H_ERRNO_VAR NULL
 #endif
 
 /* Prototype of the reentrant version.  */
@@ -77,42 +77,14 @@ GETFUNC_NAME (void)
   /* Get lock.  */
   __libc_lock_lock (lock);
 
-  if (buffer == NULL)
-    {
-      buffer_size = BUFLEN;
-      buffer = malloc (buffer_size);
-    }
+  result = (LOOKUP_TYPE *)
+    __nss_getent ((getent_r_function) INTERNAL (REENTRANT_GETNAME),
+		  (void **) &resbuf, &buffer, BUFLEN, &buffer_size,
+		  H_ERRNO_VAR);
 
-  while (buffer != NULL
-	 && INTERNAL (REENTRANT_GETNAME) (&resbuf, buffer, buffer_size, &result
-					  H_ERRNO_VAR) == ERANGE
-#ifdef NEED_H_ERRNO
-	 && h_errno == NETDB_INTERNAL
-#endif
-	 )
-    {
-      char *new_buf;
-      buffer_size += BUFLEN;
-      new_buf = realloc (buffer, buffer_size);
-      if (new_buf == NULL)
-	{
-	  /* We are out of memory.  Free the current buffer so that the
-	     process gets a chance for a normal termination.  */
-	  save = errno;
-	  free (buffer);
-	  __set_errno (save);
-	}
-      buffer = new_buf;
-    }
-
-  if (buffer == NULL)
-    result = NULL;
-
-  /* Release lock.  Preserve error value.  */
   save = errno;
   __libc_lock_unlock (lock);
   __set_errno (save);
-
   return result;
 }
 

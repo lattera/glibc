@@ -130,4 +130,35 @@ int __nss_next (service_user **ni, const char *fct_name, void **fctp,
    and return a pointer to this function if successful.  */
 void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
+
+typedef int (*db_lookup_function) (service_user **, const char *,
+				   void **);
+typedef enum nss_status (*setent_function) (int);
+typedef enum nss_status (*endent_function) (void); 
+typedef enum nss_status (*getent_function) (void *, char *, size_t,
+					    int *, int *); 
+typedef int (*getent_r_function) (void *, char *, size_t,
+				  void **result, int *); 
+
+extern void __nss_setent (const char *func_name,
+			  db_lookup_function lookup_fct,
+			  service_user **nip, service_user **startp,
+			  service_user **last_nip, int stayon,
+			  int *stayon_tmp, int res);
+extern void __nss_endent (const char *func_name,
+			  db_lookup_function lookup_fct,
+			  service_user **nip, service_user **startp,
+			  service_user **last_nip, int res);
+extern int __nss_getent_r (const char *getent_func_name,
+			   const char *setent_func_name,
+			   db_lookup_function lookup_fct,
+			   service_user **nip, service_user **startp,
+			   service_user **last_nip, int *stayon_tmp,
+			   int res,
+			   void *resbuf, char *buffer, size_t buflen,
+			   void **result, int *h_errnop);
+extern void *__nss_getent (getent_r_function func,
+			   void **resbuf, char **buffer, size_t buflen,
+			   size_t *buffer_size, int *h_errnop);
+
 #endif	/* nsswitch.h */

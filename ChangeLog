@@ -1,3 +1,21 @@
+2000-12-05  H.J. Lu  <hjl@gnu.org>
+
+	* nss/Makefile (routines): Add getnssent and getnssent_r.
+	* nss/nsswitch.h (__nss_setent): New internal NSS function.
+	(__nss_endent): Likewise.
+	(__nss_getent_r): Likewise.
+	(__nss_getent): Likewise.
+	* nss/getnssent_r.c: New file.
+	* nss/getnssent.c: New file.
+	* nss/getXXent.c (H_ERRNO_VAR): Updated.
+	(GETFUNC_NAME): Updated to call __nss_getent ().
+	* nss/getXXent_r.c (H_ERRNO_VAR_P): New.
+	(STAYOPEN_TMPVAR): Updated.
+	(STAYOPEN_VAR): Updated.
+	(SETFUNC_NAME): Updated to call __nss_setent ().
+	(ENDFUNC_NAME): Updated to call __nss_endent ().
+	(INTERNAL (REENTRANT_GETNAME)): Updated to call __nss_getent_r ().
+
 2000-12-08  Andreas Jaeger  <aj@suse.de>
 
 	* nscd/dbg_log.h (dbg_log): Correct attribute.

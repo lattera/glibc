@@ -22,10 +22,6 @@
 
 #include "nsswitch.h"
 
-#ifdef NEED__RES
-# include <resolv.h>
-#endif
-
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
 |* 								   *|
@@ -73,31 +69,26 @@
 #ifdef NEED_H_ERRNO
 # define H_ERRNO_PARM , int *h_errnop
 # define H_ERRNO_VAR , &h_errno
+# define H_ERRNO_VAR_P &h_errno
 #else
 # define H_ERRNO_PARM
 # define H_ERRNO_VAR
+# define H_ERRNO_VAR_P NULL
 #endif
 
 /* Some databases take the `stayopen' flag.  */
 #ifdef STAYOPEN
 # define STAYOPEN_TMP CONCAT2_1 (STAYOPEN, _tmp)
-# define STAYOPEN_TMPVAR CONCAT2_1 (STAYOPEN_VAR, _tmp)
+# define STAYOPEN_TMPVAR &CONCAT2_1 (STAYOPEN_VAR, _tmp)
 #else
 # define STAYOPEN void
-# define STAYOPEN_VAR
-# define STAYOPEN_TMPVAR
+# define STAYOPEN_VAR 0
+# define STAYOPEN_TMPVAR NULL
 #endif
 
-/* Prototype for the setXXXent functions we use here.  */
-typedef enum nss_status (*set_function) (STAYOPEN);
-
-/* Prototype for the endXXXent functions we use here.  */
-typedef enum nss_status (*end_function) (void);
-
-/* Prototype for the setXXXent functions we use here.  */
-typedef enum nss_status (*get_function) (LOOKUP_TYPE *, char *, size_t, int *
-					 H_ERRNO_PARM);
-
+#ifndef NEED__RES
+# define NEED__RES 0
+#endif
 
 /* This handle for the NSS data base is shared between all
    set/get/endXXXent functions.  */
@@ -119,103 +110,33 @@ __libc_lock_define_initialized (static, lock)
 
 /* The lookup function for the first entry of this service.  */
 extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
-
-/* Set up NIP to run through the services.  If ALL is zero, use NIP's
-   current location if it's not nil.  Return nonzero if there are no
-   services (left).  */
-static int
-setup (void **fctp, const char *func_name, int all)
-{
-  int no_more;
-  if (startp == NULL)
-    {
-      no_more = DB_LOOKUP_FCT (&nip, func_name, fctp);
-      startp = no_more ? (service_user *) -1l : nip;
-    }
-  else if (startp == (service_user *) -1l)
-    /* No services at all.  */
-    return 1;
-  else
-    {
-      if (all || !nip)
-	/* Reset to the beginning of the service list.  */
-	nip = startp;
-      /* Look up the first function.  */
-      no_more = __nss_lookup (&nip, func_name, fctp);
-    }
-  return no_more;
-}
 
 void
 SETFUNC_NAME (STAYOPEN)
 {
-  set_function fct;
-  int no_more;
-
-#ifdef NEED__RES
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
-    {
-      __set_h_errno (NETDB_INTERNAL);
-      return;
-    }
-#endif /* need _res */
+  int save;
 
   __libc_lock_lock (lock);
+  __nss_setent (SETFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
+		&last_nip, STAYOPEN_VAR, STAYOPEN_TMPVAR, NEED__RES);
 
-  /* Cycle through the services and run their `setXXent' functions until
-     we find an available service.  */
-  no_more = setup ((void **) &fct, SETFUNC_NAME_STRING, 1);
-  while (! no_more)
-    {
-      int is_last_nip = nip == last_nip;
-      enum nss_status status = DL_CALL_FCT (fct, (STAYOPEN_VAR));
-
-      no_more = __nss_next (&nip, SETFUNC_NAME_STRING, (void **) &fct,
-			    status, 0);
-      if (is_last_nip)
-	last_nip = nip;
-    }
-
-#ifdef STAYOPEN_TMP
-  STAYOPEN_TMPVAR = STAYOPEN_VAR;
-#endif
-
+  save = errno;
   __libc_lock_unlock (lock);
+  __set_errno (save);
 }
 
 
 void
 ENDFUNC_NAME (void)
 {
-  end_function fct;
-  int no_more;
-
-#ifdef NEED__RES
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
-    {
-      __set_h_errno (NETDB_INTERNAL);
-      return;
-    }
-#endif /* need _res */
+  int save;
 
   __libc_lock_lock (lock);
-
-  /* Cycle through all the services and run their endXXent functions.  */
-  no_more = setup ((void **) &fct, ENDFUNC_NAME_STRING, 1);
-  while (! no_more)
-    {
-      /* Ignore status, we force check in __NSS_NEXT.  */
-      DL_CALL_FCT (fct, ());
-
-      if (nip == last_nip)
-	/* We have processed all services which were used.  */
-	break;
-
-      no_more = __nss_next (&nip, ENDFUNC_NAME_STRING, (void **) &fct, 0, 1);
-    }
-  last_nip = nip = NULL;
-
+  __nss_endent (ENDFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
+		&last_nip, NEED__RES);
+  save = errno;
   __libc_lock_unlock (lock);
+  __set_errno (save);
 }
 
 
@@ -223,76 +144,18 @@ int
 INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 			      LOOKUP_TYPE **result H_ERRNO_PARM)
 {
-  get_function fct;
-  int no_more;
-  enum nss_status status;
-
-#ifdef NEED__RES
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
-    {
-      __set_h_errno (NETDB_INTERNAL);
-      *result = NULL;
-      return errno;
-    }
-#endif /* need _res */
-
-  /* Initialize status to return if no more functions are found.  */
-  status = NSS_STATUS_NOTFOUND;
+  int status;
+  int save;
 
   __libc_lock_lock (lock);
-
-  /* Run through available functions, starting with the same function last
-     run.  We will repeat each function as long as it succeeds, and then go
-     on to the next service action.  */
-  no_more = setup ((void **) &fct, GETFUNC_NAME_STRING, 0);
-  while (! no_more)
-    {
-      int is_last_nip = nip == last_nip;
-
-      status = DL_CALL_FCT (fct,
-			     (resbuf, buffer, buflen, &errno H_ERRNO_VAR));
-
-      /* The the status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
-	 provided buffer is too small.  In this case we should give
-	 the user the possibility to enlarge the buffer and we should
-	 not simply go on with the next service (even if the TRYAGAIN
-	 action tells us so).  */
-      if (status == NSS_STATUS_TRYAGAIN
-#ifdef NEED_H_ERRNO
-	  && *h_errnop == NETDB_INTERNAL
-#endif
-	  && errno == ERANGE)
-	break;
-
-      do
-	{
-	  no_more = __nss_next (&nip, GETFUNC_NAME_STRING, (void **) &fct,
-				status, 0);
-
-	  if (is_last_nip)
-	    last_nip = nip;
-
-	  if (! no_more)
-	    {
-	      /* Call the `setXXent' function.  This wasn't done before.  */
-	      set_function sfct;
-
-	      no_more = __nss_lookup (&nip, SETFUNC_NAME_STRING,
-				      (void **) &sfct);
-
-	      if (! no_more)
-		status = DL_CALL_FCT (sfct, (STAYOPEN_TMPVAR));
-	      else
-		status = NSS_STATUS_NOTFOUND;
-	    }
-	}
-      while (! no_more && status != NSS_STATUS_SUCCESS);
-    }
-
+  status = __nss_getent_r (GETFUNC_NAME_STRING, SETFUNC_NAME_STRING,
+			   DB_LOOKUP_FCT, &nip, &startp, &last_nip,
+			   STAYOPEN_TMPVAR, NEED__RES, resbuf, buffer,
+			   buflen, (void **) result, H_ERRNO_VAR_P);
+  save = errno;
   __libc_lock_unlock (lock);
-
-  *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
-  return status == NSS_STATUS_SUCCESS ? 0 : errno;
+  __set_errno (save);
+  return status;
 }
 
 
