@@ -1,3 +1,11 @@
+1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: Define __libc_* variant for
+	cancelation wrapper.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+
 1999-12-19  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/libc-start.c: Remove declaration of

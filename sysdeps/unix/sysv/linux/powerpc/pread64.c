@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -33,7 +33,7 @@ static ssize_t __emulate_pread64 (int fd, void *buf, size_t count,
 
 
 ssize_t
-__pread64 (fd, buf, count, offset)
+__libc_pread64 (fd, buf, count, offset)
      int fd;
      void *buf;
      size_t count;
@@ -50,9 +50,10 @@ __pread64 (fd, buf, count, offset)
   return result;
 }
 
-weak_alias (__pread64, pread64)
+strong_alias (__libc_pread64, __pread64)
+weak_alias (__libc_pread64, pread64)
 
-#define __pread64(fd, buf, count, offset) \
+#define __libc_pread64(fd, buf, count, offset) \
      static internal_function __emulate_pread64 (fd, buf, count, offset)
 #endif
 #include <sysdeps/posix/pread64.c>
