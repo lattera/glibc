@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,11 @@
 #include <signal.h>
 
 /* Type for general register.  */
-typedef unsigned int greg_t;
+#if _MIPS_SIM == _MIPS_SIM_ABI32
+typedef __uint32_t greg_t;
+#else
+typedef __uint64_t greg_t;
+#endif
 
 /* Number of general registers.  */
 #define NGREG	36
@@ -115,9 +119,15 @@ typedef struct fpregset
 {
   union
   {
+#if _MIPS_SIM == _MIPS_SIM_ABI32
     double fp_dregs[16];
     float fp_fregs[32];
     unsigned int fp_regs[32];
+#else
+    double fp_dregs[32];
+    /* float fp_fregs[32]; */
+    __uint64_t fp_regs[32];
+#endif
   } fp_r;
   unsigned int fp_csr;
   unsigned int fp_pad;
@@ -133,12 +143,16 @@ typedef struct
 /* Userlevel context.  */
 typedef struct ucontext
 {
+#if _MIPS_SIM == _MIPS_SIM_ABI32
   unsigned long int uc_flags;
+#else
+  __uint64_t uc_flags;
+#endif
   struct ucontext *uc_link;
   __sigset_t uc_sigmask;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  long int uc_filler[48];
+  int uc_filler[48];
 } ucontext_t;
 
 #endif /* sys/ucontext.h */

@@ -1,3 +1,27 @@
+2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/bits/wordsize.h: New file, appropriate for all
+	3 ABIs.
+	* sysdeps/mips/mips64/gmp-mparam.h: New file.  Define
+	BITS_PER_LONGINT to __WORDSIZE, to match all 3 ABIs.
+	* sysdeps/mips/setjmp_aux.c (STRINGXP, REGS, PTRS): New macros.
+	(__sigsetjmp_aux): Use them.  Adjust for all 3 ABIs.
+	* sysdeps/mips/elf/start.S: Adjust for all 3 ABIs.
+	* sysdeps/unix/mips/brk.S: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+	* sysdeps/mips/bits/setjmp.h (__jmp_buf): Likewise.
+	* sysdeps/mips/sys/ucontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/profcs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h: Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/mips64/bsd-setjmp.S: Likewise.
+	* sysdeps/mips/mips64/setjmp.S: Likewise.
+	* sysdeps/mips/mips64/bits/setjmp.h: Deleted, obsolete.
+	* sysdeps/mips/mips64/soft-fp/sfp-machine.h: Use long long for
+	64-bit types.
+
 2003-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/clock_settime.c (HANDLE_REALTIME): Define tv here,

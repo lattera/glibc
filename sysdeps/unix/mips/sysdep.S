@@ -24,24 +24,27 @@
 
 #ifdef _LIBC_REENTRANT
 
+LOCALSZ= 3
+FRAMESZ= (((NARGSAVE+LOCALSZ)*SZREG)+ALSZ)&ALMASK
+RAOFF= FRAMESZ-(1*SZREG)
+GPOFF= FRAMESZ-(2*SZREG)
+V0OFF= FRAMESZ-(3*SZREG)
+	
 ENTRY(__syscall_error)
 #ifdef __PIC__
-	.set noreorder
-	.set	noat
-	move	AT, ra
-	bltzal	zero, 0f
-	nop
-0:	.cpload	ra
-	move	ra, AT
-	.set	at
-	.set	reorder
+	.set noat
+	SETUP_GPX (AT)
+	.set at
 #endif
-	subu	sp, 32
+	PTR_SUBU sp, FRAMESZ
+	.set noat
+	SETUP_GPX64(GPOFF,AT)
+	.set at
 #ifdef __PIC__
-	.cprestore 16
+	SAVE_GP(GPOFF)
 #endif
-	sw	v0, 20(sp)
-	sw	ra, 24(sp)
+	REG_S	v0, V0OFF(sp)
+	REG_S	ra, RAOFF(sp)
 
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
@@ -56,12 +59,13 @@ L(skip):
 	jal	__errno_location
 
 	/* Store the error value.  */
-	lw	t0, 20(sp)
-	sw	t0, 0(v0)
+	REG_L	t4, V0OFF(sp)
+	sw	t4, 0(v0)
 
 	/* And just kick back a -1.  */
-	lw	ra, 24(sp)
-	addiu	sp, 32
+	REG_L	ra, RAOFF(sp)
+	RESTORE_GP64
+	PTR_ADDU sp, FRAMESZ
 	li	v0, -1
 	j	ra
 	END(__syscall_error)
@@ -71,16 +75,10 @@ L(skip):
 
 ENTRY(__syscall_error)
 #ifdef __PIC__
-	.set	noreorder
-	.set	noat
-	move	AT, ra
-	bltzal	zero, 0f
-	nop
-0:	.cpload	ra
-	move	ra, AT
-	.set	at
-	.set	reorder
+	SETUP_GPX (AT)
 #endif
+	SETUP_GPX64 (t9, AT)
+	
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
@@ -94,6 +92,8 @@ L(skip):
 
 	/* And just kick back a -1.  */
 	li v0, -1
+
+	RESTORE_GP64
 	j ra
 	END(__syscall_error)
 #endif  /* _LIBC_REENTRANT  */

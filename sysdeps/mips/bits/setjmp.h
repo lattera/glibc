@@ -1,5 +1,6 @@
 /* Define the machine-dependent type `jmp_buf'.  MIPS version.
-   Copyright (C) 1992,93,95,97,2000 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1993, 1995, 1997, 2000, 2002, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,25 +25,33 @@
 typedef struct
   {
     /* Program counter.  */
-    void * __pc;
+    __ptr_t __pc;
 
     /* Stack pointer.  */
-    void * __sp;
+    __ptr_t __sp;
 
     /* Callee-saved registers s0 through s7.  */
+#if _MIPS_SIM == _MIPS_SIM_ABI32
     int __regs[8];
+#else
+    __extension__ long long __regs[8];
+#endif
 
     /* The frame pointer.  */
-    void * __fp;
+    __ptr_t __fp;
 
     /* The global pointer.  */
-    void * __gp;
+    __ptr_t __gp;
 
     /* Floating point status register.  */
     int __fpc_csr;
 
     /* Callee-saved floating point registers.  */
+#if _MIPS_SIM == _MIPS_SIM_ABI32
     double __fpregs[6];
+#else
+    double __fpregs[8];
+#endif
   } __jmp_buf[1];
 
 #ifdef __USE_MISC
