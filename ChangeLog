@@ -1,3 +1,7 @@
+1998-07-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sigcontextinfo.h: Fix typo.
+
 1998-07-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Correct expression to match gcc version.
