@@ -48,7 +48,7 @@ do_test (void)
       exit (1);
     }
 
-    return 0;
+  return 0;
 }
 
 #define TEST_FUNCTION do_test ()
