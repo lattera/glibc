@@ -35,6 +35,138 @@
 # define STATFS statfs
 # define STATVFS statvfs
 # define INTERNAL_STATVFS __internal_statvfs
+
+
+int
+__statvfs_getflags (const char *name, int fstype, struct stat64 *st)
+{
+  if (st == NULL)
+    return 0;
+
+  const char *fsname = NULL;
+  const char *fsname2 = NULL;
+
+  /* Map the filesystem type we got from the statfs call to a string.  */
+  switch (fstype)
+    {
+    case EXT2_SUPER_MAGIC:
+      fsname = "ext3";
+      fsname2 = "ext2";
+      break;
+    case DEVPTS_SUPER_MAGIC:
+      fsname= "devpts";
+      break;
+    case SHMFS_SUPER_MAGIC:
+      fsname = "tmpfs";
+      break;
+    case PROC_SUPER_MAGIC:
+      fsname = "proc";
+      break;
+    case USBDEVFS_SUPER_MAGIC:
+      fsname = "usbdevfs";
+      break;
+    case AUTOFS_SUPER_MAGIC:
+      fsname = "autofs";
+      break;
+    case NFS_SUPER_MAGIC:
+      fsname = "nfs";
+      break;
+    }
+
+  FILE *mtab = __setmntent ("/proc/mounts", "r");
+  if (mtab == NULL)
+    mtab = __setmntent (_PATH_MOUNTED, "r");
+
+  int result = 0;
+  if (mtab != NULL)
+    {
+      bool success = false;
+      struct mntent mntbuf;
+      char tmpbuf[1024];
+
+      /* No locking needed.  */
+      (void) __fsetlocking (mtab, FSETLOCKING_BYCALLER);
+
+    again:
+      while (__getmntent_r (mtab, &mntbuf, tmpbuf, sizeof (tmpbuf)))
+	{
+	  /* In a first round we look for a given mount point, if
+	     we have a name.  */
+	  if (name != NULL && strcmp (name, mntbuf.mnt_dir) != 0)
+	    continue;
+	  /* We need to look at the entry only if the filesystem
+	     name matches.  If we have a filesystem name.  */
+	  else if (fsname != NULL
+		   && strcmp (fsname, mntbuf.mnt_type) != 0
+		   && (fsname2 == NULL
+		       || strcmp (fsname2, mntbuf.mnt_type) != 0))
+	    continue;
+
+	  /* Find out about the device the current entry is for.  */
+	  struct stat64 fsst;
+	  if (stat64 (mntbuf.mnt_dir, &fsst) >= 0
+	      && st->st_dev == fsst.st_dev)
+	    {
+	      /* Bingo, we found the entry for the device FD is on.
+		 Now interpret the option string.  */
+	      char *cp = mntbuf.mnt_opts;
+	      char *opt;
+
+	      while ((opt = strsep (&cp, ",")) != NULL)
+		if (strcmp (opt, "ro") == 0)
+		  result |= ST_RDONLY;
+		else if (strcmp (opt, "nosuid") == 0)
+		  result |= ST_NOSUID;
+		else if (strcmp (opt, "noexec") == 0)
+		  result |= ST_NOEXEC;
+		else if (strcmp (opt, "nodev") == 0)
+		  result |= ST_NODEV;
+		else if (strcmp (opt, "sync") == 0)
+		  result |= ST_SYNCHRONOUS;
+		else if (strcmp (opt, "mand") == 0)
+		  result |= ST_MANDLOCK;
+		else if (strcmp (opt, "noatime") == 0)
+		  result |= ST_NOATIME;
+		else if (strcmp (opt, "nodiratime") == 0)
+		  result |= ST_NODIRATIME;
+
+	      /* We can stop looking for more entries.  */
+	      success = true;
+	      break;
+	    }
+	}
+      /* Maybe the kernel names for the filesystems changed or the
+	 statvfs call got a name which was not the mount point.  Check
+	 again, this time without checking for name matches first.  */
+      if (! success && (name != NULL || fsname != NULL))
+	{
+	  if (name != NULL)
+	    /* Try without a mount point name.  */
+	    name = NULL;
+	  else
+	    {
+	      /* Try without a filesystem name.  */
+	      assert (fsname != NULL);
+	      fsname = fsname2 = NULL;
+	    }
+
+	  /* It is not strictly allowed to use rewind here.  But
+	     this code is part of the implementation so it is
+	     acceptable.  */
+	  rewind (mtab);
+
+	  goto again;
+	}
+
+      /* Close the file.  */
+      __endmntent (mtab);
+    }
+
+  return result;
+}
+#else
+extern int __statvfs_getflags (const char *name, int fstype,
+			       struct stat64 *st);
 #endif
 
 
@@ -65,7 +197,7 @@ INTERNAL_STATVFS (const char *name, struct STATVFS *buf,
   buf->__f_unused = 0;
 #endif
   buf->f_namemax = fsbuf->f_namelen;
-  memset (buf->__f_spare, '\0', 6 * sizeof (int));
+  memset (buf->__f_spare, '\0', sizeof (buf->__f_spare));
 
   /* What remains to do is to fill the fields f_favail and f_flag.  */
 
@@ -76,128 +208,5 @@ INTERNAL_STATVFS (const char *name, struct STATVFS *buf,
      the /etc/mtab file and search for the entry which matches the given
      file.  The way we can test for matching filesystem is using the
      device number.  */
-  buf->f_flag = 0;
-  if (st != NULL)
-    {
-      struct mntent mntbuf;
-      FILE *mtab;
-      const char *fsname = NULL;
-      const char *fsname2 = NULL;
-      bool success = false;
-
-      /* Map the filesystem type we got from the statfs call to a string.  */
-      switch (fsbuf->f_type)
-	{
-	case EXT2_SUPER_MAGIC:
-	  fsname = "ext3";
-	  fsname2 = "ext2";
-	  break;
-	case DEVPTS_SUPER_MAGIC:
-	  fsname= "devpts";
-	  break;
-	case SHMFS_SUPER_MAGIC:
-	  fsname = "tmpfs";
-	  break;
-	case PROC_SUPER_MAGIC:
-	  fsname = "proc";
-	  break;
-	case USBDEVFS_SUPER_MAGIC:
-	  fsname = "usbdevfs";
-	  break;
-	case AUTOFS_SUPER_MAGIC:
-	  fsname = "autofs";
-	  break;
-	case NFS_SUPER_MAGIC:
-	  fsname = "nfs";
-	  break;
-	}
-
-      mtab = __setmntent ("/proc/mounts", "r");
-      if (mtab == NULL)
-	mtab = __setmntent (_PATH_MOUNTED, "r");
-
-      if (mtab != NULL)
-	{
-	  char tmpbuf[1024];
-
-	  /* No locking needed.  */
-	  (void) __fsetlocking (mtab, FSETLOCKING_BYCALLER);
-
-	again:
-	  while (__getmntent_r (mtab, &mntbuf, tmpbuf, sizeof (tmpbuf)))
-	    {
-	      /* In a first round we look for a given mount point, if
-		 we have a name.  */
-	      if (name != NULL && strcmp (name, mntbuf.mnt_dir) != 0)
-		continue;
-	      /* We need to look at the entry only if the filesystem
-		 name matches.  If we have a filesystem name.  */
-	      else if (fsname != NULL
-		  && strcmp (fsname, mntbuf.mnt_type) != 0
-		  && (fsname2 == NULL
-		      || strcmp (fsname2, mntbuf.mnt_type) != 0))
-		continue;
-
-	      /* Find out about the device the current entry is for.  */
-	      struct stat64 fsst;
-	      if (stat64 (mntbuf.mnt_dir, &fsst) >= 0
-		  && st->st_dev == fsst.st_dev)
-		{
-		  /* Bingo, we found the entry for the device FD is on.
-		     Now interpret the option string.  */
-		  char *cp = mntbuf.mnt_opts;
-		  char *opt;
-
-		  while ((opt = strsep (&cp, ",")) != NULL)
-		    if (strcmp (opt, "ro") == 0)
-		      buf->f_flag |= ST_RDONLY;
-		    else if (strcmp (opt, "nosuid") == 0)
-		      buf->f_flag |= ST_NOSUID;
-		    else if (strcmp (opt, "noexec") == 0)
-		      buf->f_flag |= ST_NOEXEC;
-		    else if (strcmp (opt, "nodev") == 0)
-		      buf->f_flag |= ST_NODEV;
-		    else if (strcmp (opt, "sync") == 0)
-		      buf->f_flag |= ST_SYNCHRONOUS;
-		    else if (strcmp (opt, "mand") == 0)
-		      buf->f_flag |= ST_MANDLOCK;
-		    else if (strcmp (opt, "noatime") == 0)
-		      buf->f_flag |= ST_NOATIME;
-		    else if (strcmp (opt, "nodiratime") == 0)
-		      buf->f_flag |= ST_NODIRATIME;
-
-		  /* We can stop looking for more entries.  */
-		  success = true;
-		  break;
-		}
-	    }
-	  /* Maybe the kernel names for the filesystems changed or the
-	     statvfs call got a name which was not the mount point.
-	     Check again, this time without checking for name matches
-	     first.  */
-	  if (! success && (name != NULL || fsname != NULL))
-	    {
-	      if (name != NULL)
-		/* Try without a mount point name.  */
-		name = NULL;
-	      else
-		{
-		  /* Try without a filesystem name.  */
-		  assert (fsname != NULL);
-		  fsname = fsname2 = NULL;
-		}
-
-	      /* It is not strictly allowed to use rewind here.  But
-		 this code is part of the implementation so it is
-		 acceptable.  */
-	      rewind (mtab);
-
-	      goto again;
-	    }
-
-	  /* Close the file.  */
-	  __endmntent (mtab);
-
-	}
-    }
+  buf->f_flag = __statvfs_getflags (name, fsbuf->f_type, st);
 }
