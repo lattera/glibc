@@ -1,4 +1,19 @@
+2002-09-11  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-environ.c (unsetenv): Rewritten using strncmp,
+	no longer wrongly matches arbitrary prefixes of NAME.
+	Reported by Jakub Jelinek <jakub@redhat.com>.
+
+2002-09-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bug-regex11.c (tests): New array.
+	(main): Rewritten to run more different tests.
+
 2002-09-10  Roland McGrath  <roland@redhat.com>
+
+	* nscd/Makefile (CPPFLAGS-nscd, CPPFLAGS-nscd_conf, CPPFLAGS-dbg_log)
+	(CPPFLAGS-connections, CPPFLAGS-hstcache): Variables removed.
+	Instead, catch all of $(nscd-modules) via cppflags-iterator.mk.
 
 	* sysdeps/powerpc/fpu/s_isnan.c: Do macro hackery on __GI___isnanf as
 	well so we don't get it declared by include/math.h's hidden_proto.

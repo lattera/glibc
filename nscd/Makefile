@@ -53,11 +53,10 @@ distribute := nscd.h nscd-client.h dbg_log.h \
 
 include ../Rules
 
-CPPFLAGS-nscd = -DNOT_IN_libc
-CPPFLAGS-nscd_conf = -DNOT_IN_libc
-CPPFLAGS-dbg_log = -DNOT_IN_libc
-CPPFLAGS-connections = -DNOT_IN_libc
-CPPFLAGS-hstcache = -DNOT_IN_libc
+# This makes sure -DNOT_IN_libc is passed for all these modules.
+cpp-srcs-left := $(nscd-modules:=.c)
+lib := nscd
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
 $(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o

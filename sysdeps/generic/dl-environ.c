@@ -57,30 +57,23 @@ extern char **__environ attribute_hidden;
 int
 unsetenv (const char *name)
 {
+  const size_t len = strlen (name);
   char **ep;
 
   ep = __environ;
   while (*ep != NULL)
-    {
-      size_t cnt = 0;
+    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+      {
+	/* Found it.  Remove this pointer by moving later ones back.  */
+	char **dp = ep;
 
-      while ((*ep)[cnt] == name[cnt] && name[cnt] != '\0')
-	++cnt;
-
-      if ((*ep)[cnt] == '=')
-	{
-	  /* Found it.  Remove this pointer by moving later ones to
-	     the front.  */
-	  char **dp = ep;
-
-	  do
-	    dp[0] = dp[1];
-	  while (*dp++);
-	  /* Continue the loop in case NAME appears again.  */
-	}
-      else
-	++ep;
-    }
+	do
+	  dp[0] = dp[1];
+	while (*dp++);
+	/* Continue the loop in case NAME appears again.  */
+      }
+    else
+      ++ep;
 
   return 0;
 }

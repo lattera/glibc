@@ -1,4 +1,4 @@
-/* Test for newline handling in regex.
+/* Regular expression tests.
    Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
@@ -24,37 +24,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct
+{
+  const char *pattern;
+  const char *string;
+  int nmatch;
+  regmatch_t rm[4];
+} tests[] = {
+  /* Test for newline handling in regex.  */
+  { "[^~]*~", "\nx~y", 2, { { 0, 3 }, { -1, -1 } } },
+  /* Other tests.  */
+  { ".*|\\([KIO]\\)\\([^|]*\\).*|?[KIO]", "10~.~|P|K0|I10|O16|?KSb", 3,
+    { { 0, 21 }, { 15, 16 }, { 16, 18 } } },
+  { ".*|\\([KIO]\\)\\([^|]*\\).*|?\\1", "10~.~|P|K0|I10|O16|?KSb", 3,
+    { { 0, 21 }, { 8, 9 }, { 9, 10 } } }
+};
+
 int
 main (void)
 {
   regex_t re;
-  regmatch_t rm[2];
-  int n;
+  regmatch_t rm[4];
+  int n, i, ret = 0;
 
   mtrace ();
 
-  n = regcomp (&re, "[^~]*~", 0);
-  if (n != 0)
+  for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
-      char buf[500];
-      regerror (n, &re, buf, sizeof (buf));
-      printf ("regcomp failed: %s\n", buf);
-      exit (1);
-    }
+      n = regcomp (&re, tests[i].pattern, 0);
+      if (n != 0)
+	{
+	  char buf[500];
+	  regerror (n, &re, buf, sizeof (buf));
+	  printf ("regcomp %d failed: %s\n", i, buf);
+	  ret = 1;
+	  continue;
+	}
 
-  if (regexec (&re, "\nx~y", 2, rm, 0))
-    {
-      puts ("regexec failed");
-      exit (2);
-    }
-  if (rm[0].rm_so != 0 || rm[0].rm_eo != 3)
-    {
-      printf ("regexec match failure: %d %d\n",
-	      rm[0].rm_so, rm[0].rm_eo);
-      exit (3);
-    }
+      if (regexec (&re, tests[i].string, tests[i].nmatch, rm, 0))
+	{
+	  printf ("regexec %d failed\n", i);
+	  ret = 1;
+	  regfree (&re);
+	  continue;
+	}
 
-  regfree (&re);
+      for (n = 0; n < tests[i].nmatch; ++n)
+	if (rm[n].rm_so != tests[i].rm[n].rm_so
+              || rm[n].rm_eo != tests[i].rm[n].rm_eo)
+	  {
+	    if (tests[i].rm[n].rm_so == -1 && tests[i].rm[n].rm_eo == -1)
+	      break;
+	    printf ("regexec match failure rm[%d] %d..%d\n",
+		    n, rm[n].rm_so, rm[n].rm_eo);
+	    ret = 1;
+	    break;
+	  }
+
+      regfree (&re);
+    }
 
   return 0;
 }
