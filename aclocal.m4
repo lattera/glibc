@@ -121,11 +121,13 @@ AR=`$CC -print-prog-name=ar`
 AC_SUBST(AR)
 
 # ranlib has to be treated a bit differently since it might not exist at all.
-RANLIB=`$CC -print-prog-name=ranlib`
-if test $RANLIB = ranlib; then
+ac_ranlib=`$CC -print-prog-name=ranlib`
+if test "x$ac_ranlib" = xranlib; then
 # This extra check has to happen since gcc simply echos the parameter in
 # case it cannot find the value in its own directories.
 AC_CHECK_TOOL(RANLIB, ranlib, :)
+else
+  RANLIB=$ac_ranlib
 fi
 AC_SUBST(RANLIB)
 
