@@ -1,9 +1,276 @@
+Tue Aug  6 01:13:56 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Clean name space according to ISO C, ISO C/Amd 1, and POSIX.1.
+	This requires to rename several functions to use __ protected
+	names.
+	* dirent/dirent.h: Add prototypes of __opendir, __closedir,
+	and __readdir.
+	* sysdeps/mach/hurd/closedir.c: Prepend function name with __
+	and make old name a weak alias.
+	* sysdeps/mach/hurd/getrlimit.c: Likewise.
+	* sysdeps/mach/hurd/opendir.c: Likewise.
+	* sysdeps/mach/hurd/readdir.c: Likewise.
+	* sysdeps/stub/closedir.c: Likewise.
+	* sysdeps/stub/opendir.c: Likewise.
+	* sysdeps/stub/readdir.c: Likewise.
+	* sysdeps/unix/closedir.c: Likewise.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/unix/readdir.c: Likewise.
+
+	* sysdeps/unix/opendir.c: Call `__fcntl' instead `fcntl'.
+
+	* sysdeps/posix/getcwd.c: Call `__opendir', `__readdir',
+	`__closedir' instead of unprotected names.
+
+	* libio/filedoalloc.c (_IO_file_doallocate): Call `__isatty'
+	instead of `isatty' since later is not part of ISO C.
+	* libio/fileops.c (_IO_file_fopen): Call `__open' instead of
+	`open' since later is not part of ISO C.
+
+	* login/endutent.c (endutent): Call `__endutent_r', not
+	`endutent_r'.
+	* login/endutent_r.c: Rename defined function to `__endutent_r',
+	make `endutent_r' weak alias.
+	* login/getutent.c (getutent): Call `__getutent_r', not
+	`getutent_r'.
+	* login/getutid.c (getutid): Call `__getutid_r', not `getutid_r'.
+	* login/getutid_r.c: Rename defined function to `__getutent_r',
+	make `getutent_r' weak alias.
+	* login/getutline.c (getutline): Call `__getutline_r', not
+ 	`getutline_r'.
+	* login/getutline_r.c: Rename defined function to `__getutline_r',
+	make `getutline_r' weak alias.
+	* login/pututline_r.c: Rename defined function to `__pututline_r',
+	make `pututline_r' weak alias.
+	* login/setutent.c (setutent): Call `__setutline_r', not
+ 	`setutline_r'.
+	* login/setutent_r.c: Rename defined function to `__setutline_r',
+	make `setutline_r' weak alias.
+	Rename `utmpname' to `__utmpname' and make former weak alias.
+	(__utmpname): Call `__strdup', not `strdup'.
+	* login/utmp.h: Add prototypes for name space clean reentrant
+	versions.
+	* sysdeps/unix/getlogin.c: Call `__ttyname_r', `__setutent_r',
+	and `__endutent_r' instead of unprotected names.
+
+	* math/math.h: Add prototype for `__matherr'.
+	* sysdeps/libm-ieee754/k_standard.c: Call `__matherr' instead
+	of `matherr'.
+
+	* nss/getXXbyYY.c: Call __ protected reentrant function.
+	* nss/getXXent.c: Likewise.
+	* nss/getXXbyYY_r.c: Define `get*' function with __ protected
+	name.  Make usual name a weak alias.
+	* nss/getXXent_r.c: Likewise.
+
+	* posix/unistd.h: Add prototype for `__ttyname_r'.
+	* sysdeps/posix/ttyname_r.c: Rename function to `__ttyname_r'
+	and make `ttyname_r' a weak alias.
+
+	* resource/sys/resource.h: Add prototype for `__getrlimit'.
+	* sysdeps/stub/getrlimit.c: Prepend function name with __
+	and make old name a weak alias.
+	* sysdeps/unix/syscalls.list: Rename system call to `__getrlimit'
+	and make `getrlimit' weak alias.
+
+	* libc/stdio/stdio.h: Add prototype for `__vscanf'.
+	* libc/stdio/vscanf.c: De-ANSI-fy.
+	Rename function to `__vscanf' and make `vscanf' a weak alias.
+	* stdio-common/scanf.c (scanf): Use _IO_vscanf/__vscanf instead
+ 	of `vscanf'.
+
+	* stdio-common/reg-printf.c: De-ANSI-fy.
+	Rename function to `__register_printf_function' and make
+	`register_printf_function' weak alias.
+
+	* stdio-common/vfprintf.c: Call `__wcsrtombs' instead of
+	`wcsrtombs'.
+
+	* stdlib/mbstowcs.c: Call `__mbsrtowcs' instead of `mbsrtowcs'.
+	* stdlib/mbtowc.c: Call `__mbrtowc' instead of `mbrtowc'.
+	* stdlib/wcstombs.c: Call `__wcsrtombs' instead of `wcsrtombs'.
+	* stdlib/wctomb.c: Call `__wcrtomb' instead of `wcrtomb'.
+	* wcsmbs/mbrtowc.c: Prepend function name with __ and make old
+ 	name a weak alias.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wchar.h: Add prototypes for __ protected versions.
+
+	* sysdeps/posix/sigsetmask.c (__sigsetmask): Call `__sigprocmask'
+	instead of `sigprocmask'.
+
+
+	* grp/grp.h [__USE_REENTRANT]: Add prototypes for reentrant
+	version getgrent_r, getgrgid_r, and getgrnam_r.
+	* pwd/pwd.h [__USE_REENTRANT]: Add prototypes for reentrant
+	version getpwent_r, getpwuid_r, getpwnam_r and __ protected
+	names.
+	* resolv/netdb.h: Complete rewrite.  No more BSD ugliness.
+
+
+	* misc/error.c (private_strerror): Translate messages from table,
+	too.
+
+	* io/fcntl.h: Pretty printing.
+	* misc/fstab.h: Likewise.
+	* misc/ttyent.h: Likewise.
+	* resource/sys/resource.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/envz.h: Likewise.
+
+	Add support for symbols from POSIX.1c (POSIX threads).
+	* posix/getconf.c: Handle new sysconf symbols.
+	* posix/posix1_lim.h: Define _POSIX_TTY_NAME_MAX and
+	_POSIX_LOGIN_NAME_MAX with minimal maximal values.
+	* sysdeps/generic/confname.h: Define new symbols.
+	* sysdeps/posix/sysconf.c: Handle new symbols.
+	* sysdeps/stub/sysconf.c: Ditto.
+	* sysdeps/unix/sysv/linux/sysconf.c: Removed.  Generic version
+	is ok now.
+
+	* sunrpc/rpc/xdr.h: Move definition of type `xdrproc_t' to
+	have real prototype.
+
+	* sysdeps/generic/resourcebits.h: Add macro definition for
+	RLIMIT_* values.  Some sources test using #ifdef whether specific
+	limit is available.
+	* sysdeps/unix/bsd/sun/sunos4/resourcebits.h: Ditto.
+	* sysdeps/unix/sysv/linux/resourcebits.h: Removed.  We need
+	separate files for the architectures.
+	* sysdeps/unix/sysv/linux/alpha/resourcebits.h: New file.
+	* sysdeps/unix/sysv/linux/i386/resourcebits.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/resourcebits.h: New file.
+	* sysdeps/unix/sysv/linux/mips/resourcebits.h: New file.
+
+	* sysdeps/posix/getdtsz.c: Rewrite to use `__getrlimit' function
+	and only default on `OPEN_MAX'.
+	* sysdeps/unix/sysv/sysv4/getdtsz.c: Removed.  Default is already
+	the POSIX version.
+
+	* time/Makefile (routines): Add ctime_r.
+	* time/asctime.c: Add implementation of `asctime_r'.  Make
+	`asctime' implementation based on reentrant version.
+	* time/ctime_r.c: New file.
+	* time/time.h [__USE_REENTRANT]: Add definition of `asctime_r'
+	and `ctime_r'.
+
+Sat Aug  3 18:41:36 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_toupper): Fix EOF entry.
+	(_nl_C_LC_CTYPE): Fix ordering.
+	* locale/categories.def (LC_CTYPE): Add missing ctype-class32; fix
+ 	typo.
+
+Sat Aug  3 12:31:06 1996  Richard Henderson  <rth@tamu.edu>
+
+	* csu/initfini.c: Discover the maximum alignment generated by the
+	compiler when emitting a function.
+	(_init): Make sure the end of the crti fragment is aligned.
+	(_fini): Likewise.
+
+Fri Aug  2 03:12:40 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* initfini.c: (__libc_is_static): New variable.  Will be
+ 	initialized in init-first.c.  Some actions in the libc work
+ 	different when libc is static or dynamic.
+
+	* sysdeps/unix/sysv/linux/init-first.c (init): Use
+ 	`__libc_is_static' variable to determine whether call to
+ 	`personality' and `setfpucw' is necessary.  When done set variable
+ 	to +-1 depending on library type.
+
+	* locale/setlocale.c (setlocale): Use global variable
+ 	`__libc_enable_secure' instead of calling `get{,e}{g,u}id()' to
+ 	determine whether it's a SET[UG]ID program.
+
+Fri Aug  2 14:40:22 1996  Roland McGrath  <roland@fast.cs.utah.edu>
+
+	* Version 1.93 test release.
+
+	* manual/Makefile: Use -include for chapters-incl too.
+
+	* Makeconfig (+link): Add back start.o, mistakenly removed in last
+	change.
+
+Fri Aug  2 01:04:02 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* nss/Makefile (generated): Add db-*.c.
+
+	* sysdeps/i386/sysdep.h: Get generic/sysdep.h explicitly instead of
+	using #include_next.
+
+	* configure.in (--enable-add-ons): Quote m4 macro args.
+
+	* elf/rtld.c (dl_main): For --verify, fail if no dynamic section.
+
+Thu Aug  1 14:40:03 1996  Roland McGrath  <roland@fast.cs.utah.edu>
+
+	* sunrpc/Makefile [$(cross-compile)=no]: Test before making librpcsvc.
+
+	* Makerules (build-shlib): Add -B$(csu-objpfx) to find crt[in].o there.
+
+	* Makeconfig (+preinit, +postinit): Prepend $(csu-objpfx) here.
+	(+link): Not here.
+
+	* stdio-common/_itoa.h (_itoa_word): Declare unused to suppress
+	warning when inline function is elided.
+	* sysdeps/i386/dl-machine.h (elf_machine_matches_host): Likewise.
+	(elf_machine_runtime_setup): Likewise.
+	* elf/dynamic-link.h (elf_get_dynamic_info): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_got): Likewise.
+	(elf_machine_load_address): Likewise.
+
+	* catgets/gencat.c: Include <locale.h>.
+
+	* sysdeps/unix/mk-local_lim.c (param): Add SYMLOOP_MAX/MAXSYMLINKS.
+
+	* login/logwtmp.c (logwtmp): Call time, not __time.
+
+	* sysdeps/gnu/utmpbits.h (_HAVE_UT_PID): New macro.
+	* login/login.c (login): Test [_HAVE_UT_PID] to use ut_pid member.
+	* login/logwtmp.c (logwtmp): Likewise.
+
+	* sysdeps/generic/ioctl-types.h (sizeof): Define to 0 around #if
+	comparing ioctl macro values.
+
+	* sysdeps/i386/sysdep.h: Do `#include_next <sysdep.h>'.
+
+	* manual/Makefile: Use -include for chapters to suppress warning.
+
+	* sysdeps/stub/socket.c: Fix type of TYPE arg.
+	* sysdeps/stub/socketpair.c: Likewise.
+
+	* sysdeps/stub/_exit.c (_exit): Remove obsolete __NORETURN keyword.
+
+	* sysdeps/generic/sysdep.h: New file, broken out of ...
+	* sysdeps/unix/sysdep.h: ... here.
+	(C_LABEL): Moved out.
+
+	* Makeconfig (soversions.mk): Don't use newfangled ${x%%y} syntax;
+	stick to sed.  Do `exit 0' at end because while returns nonzero.
+
+	* sysdeps/i386/sysdep.h: New file, broken out of ...
+	* sysdeps/unix/i386/sysdep.h: ... here.  Generic asm macros moved out.
+
+	* sysdeps/stub/stdio_lim.h (L_ctermid, L_cuserid): Macros removed.
+	They are defined unconditionally in libio/stdio.h.
+
+	* elf/dl-runtime.c: Include <stddef.h> for `NULL' defn.
+	* elf/dl-cache.c: Likewise.
+
+Mon Jul 29 19:20:05 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir == misc]
+	(sysdep_headers): Add sys/sysmacros.h.
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: New file.
+
 Wed Jul 31 14:21:36 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* termios/termios.h [__OPTIMIZE__]: Remove "optimization" for
-	tcgetattr.  We have weak aliases now.
-	* stdlib/stdlib.h [__OPTIMIZE__ && __GNUC__ >= 2]: Remove
-	"optimizations" for random functions.
+ 	tcgetattr.  We have weak aliases now.  * stdlib/stdlib.h
+ 	[__OPTIMIZE__ && __GNUC__ >= 2]: Remove "optimizations" for random
+ 	functions.
 
 Mon Jul 29 20:33:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
