@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -169,17 +169,24 @@
 #  ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
 #   define __make_section_unallocated(section_string)	\
   asm(".section " section_string "; .previous");
-#  elif defined (HAVE_ASM_POPSECTION_DIRECTIVE)
+#  elif defined HAVE_ASM_POPSECTION_DIRECTIVE
 #   define __make_section_unallocated(section_string)	\
   asm(".pushsection " section_string "; .popsection");
 #  else
 #   define __make_section_unallocated(section_string)
 #  endif
 
-#  define link_warning(symbol, msg)			\
-  __make_section_unallocated (".gnu.warning." #symbol)	\
+#  ifdef HAVE_SECTION_QUOTES
+#   define link_warning(symbol, msg) \
+  __make_section_unallocated (".gnu.warning." #symbol) \
+  static const char __evoke_link_warning_##symbol[]	\
+    __attribute__ ((section (".gnu.warning." #symbol "\"\n\t#\""))) = msg;
+#  else
+#   define link_warning(symbol, msg) \
+  __make_section_unallocated (".gnu.warning." #symbol) \
   static const char __evoke_link_warning_##symbol[]	\
     __attribute__ ((section (".gnu.warning." #symbol "\n\t#"))) = msg;
+#  endif
 # else
 #  define link_warning(symbol, msg)		\
   asm(".stabs \"" msg "\",30,0,0,0\n"	\

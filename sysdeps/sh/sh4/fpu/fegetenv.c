@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-__fegetenv (fenv_t *envp)
+fegetenv (fenv_t *envp)
 {
   unsigned long int temp;
   _FPU_GETCW (temp);
@@ -29,6 +29,3 @@ __fegetenv (fenv_t *envp)
 
   return 0;
 }
-strong_alias (__fegetenv, __old_fegetenv)
-symbol_version (__old_fegetenv, fegetenv, GLIBC_2.1);
-default_symbol_version (__fegetenv, fegetenv, GLIBC_2.2);

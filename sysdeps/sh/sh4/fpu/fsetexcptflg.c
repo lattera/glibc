@@ -22,7 +22,7 @@
 #include <fpu_control.h>
 
 int
-__fesetexceptflag (const fexcept_t *flagp, int excepts)
+fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
   fexcept_t temp;
 
@@ -38,6 +38,3 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
 
   return 0;
 }
-strong_alias (__fesetexceptflag, __old_fesetexceptflag)
-symbol_version (__old_fesetexceptflag, fesetexceptflag, GLIBC_2.1);
-default_symbol_version (__fesetexceptflag, fesetexceptflag, GLIBC_2.2);

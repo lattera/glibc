@@ -22,7 +22,7 @@
 #include <math.h>
 
 int
-__feraiseexcept (int excepts)
+feraiseexcept (int excepts)
 {
   /* Raise exceptions represented by EXPECTS.  */
   fexcept_t temp;
@@ -33,6 +33,3 @@ __feraiseexcept (int excepts)
 
   return 0;
 }
-strong_alias (__feraiseexcept, __old_feraiseexcept)
-symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
-default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.2);

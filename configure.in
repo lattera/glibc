@@ -905,6 +905,29 @@ if test $elf != yes; then
   fi
 fi
 
+if test $elf = yes -a $gnu_ld = yes; then
+  AC_CACHE_CHECK(whether cc puts quotes around section names,
+		 libc_cv_have_section_quotes,
+		 [cat > conftest.c <<EOF
+		  static const int foo
+		  __attribute__ ((section ("bar"))) = 1;
+EOF
+		  if ${CC-cc} -S conftest.c -o conftest.s; then
+		    if grep '\.section.*"bar"' conftest.s >/dev/null; then
+		      libc_cv_have_section_quotes=yes
+		    else
+		      libc_cv_have_section_quotes=no
+		    fi
+		  else
+		    libc_cv_have_section_quotes=unknown
+		  fi
+		  rm -f conftest.[cs]
+		 ])
+  if test $libc_cv_have_section_quotes = yes; then
+    AC_DEFINE(HAVE_SECTION_QUOTES)
+  fi
+fi
+
 dnl AC_CHECK_ASM_UNDERSCORE([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 AC_DEFUN(AC_CHECK_ASM_UNDERSCORE,
 [cat > conftest.$ac_ext <<EOF

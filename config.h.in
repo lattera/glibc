@@ -21,6 +21,9 @@
 /* Define if not using ELF, but `.init' and `.fini' sections are available.  */
 #undef	HAVE_INITFINI
 
+/* Define if __attribute__((section("foo"))) puts quotes around foo.  */
+#undef  HAVE_SECTION_QUOTES
+
 /* Define if using the GNU assembler, gas.  */
 #undef	HAVE_GNU_AS
 

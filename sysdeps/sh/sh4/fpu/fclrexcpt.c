@@ -22,7 +22,7 @@
 #include <fpu_control.h>
 
 int
-__feclearexcept (int excepts)
+feclearexcept (int excepts)
 {
   int cw;
 
@@ -40,6 +40,3 @@ __feclearexcept (int excepts)
 
   return 0;
 }
-strong_alias (__feclearexcept, __old_feclearexcept)
-symbol_version (__old_feclearexcept, feclearexcept, GLIBC_2.1);
-default_symbol_version (__feclearexcept, feclearexcept, GLIBC_2.2);

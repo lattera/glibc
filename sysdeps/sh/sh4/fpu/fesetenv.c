@@ -21,7 +21,7 @@
 #include <fpu_control.h>
 
 int
-__fesetenv (const fenv_t *envp)
+fesetenv (const fenv_t *envp)
 {
   if (envp == FE_DFL_ENV)
       _FPU_SETCW (_FPU_DEFAULT);
@@ -32,6 +32,3 @@ __fesetenv (const fenv_t *envp)
     }
   return 0;
 }
-strong_alias (__fesetenv, __old_fesetenv)
-symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
-default_symbol_version (__fesetenv, fesetenv, GLIBC_2.2);

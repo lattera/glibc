@@ -1,3 +1,21 @@
+2000-06-14  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/sh4/fpu/fclrexcpt.c: Remove definitions for backward
+	compatibility.
+	* sysdeps/sh/sh4/fpu/fegetenv.c: Likewise.
+	* sysdeps/sh/sh4/fpu/fesetenv.c: Likewise.
+	* sysdeps/sh/sh4/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/sh/sh4/fpu/fsetexcptflg.c: Likewise.
+
+2000-06-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h (link_warning): If HAVE_SECTION_QUOTES is
+	defined, terminate quotes and read them after the comment char.
+	* configure.in (HAVE_SECTION_QUOTES): Test whether
+	__attribute__((section ("x"))) puts quotes around x or not.
+	* config.h.in (HAVE_SECTION_QUOTES): Add.
+	* configure: Rebuilt.
+
 2000-06-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/configure.in: Set libc_cv_sysconfdir

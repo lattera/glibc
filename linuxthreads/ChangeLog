@@ -1,3 +1,8 @@
+2000-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* shlib-versions: Add entry for SH.
+	Patch by Kaz Kojima <kkojima@rr.iij4u.or.jp>.
+
 2000-06-13  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	A few optimizations.  Got rid of unnecessary wakeups of timer threads,
