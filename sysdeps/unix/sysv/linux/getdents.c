@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -98,7 +98,7 @@ internal_function
 __GETDENTS (int fd, char *buf, size_t nbytes)
 {
   DIRENT_TYPE *dp;
-  off_t last_offset = -1;
+  off64_t last_offset = -1;
   ssize_t retval;
 
 #ifdef __NR_getdents64
@@ -127,7 +127,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	{
 	  struct kernel_dirent64 *kdp;
 	  const size_t size_diff = (offsetof (struct kernel_dirent64, d_name)
-				   - offsetof (DIRENT_TYPE, d_name));
+				    - offsetof (DIRENT_TYPE, d_name));
 
 	  /* If the structure returned by the kernel is identical to what we
 	     need, don't do any conversions.  */
@@ -138,7 +138,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	    return retval;
 
 	  dp = (DIRENT_TYPE *)buf;
-	  kdp = (struct kernel_dirent64 *)kbuf;
+	  kdp = (struct kernel_dirent64 *) kbuf;
 	  while ((char *) kdp < kbuf + retval)
 	    {
 	      const size_t alignment = __alignof__ (DIRENT_TYPE);
@@ -152,7 +152,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	      int64_t d_off = kdp->d_off;
 	      unsigned char d_type = kdp->d_type;
 
-	      DIRENT_SET_DP_INO(dp, d_ino);
+	      DIRENT_SET_DP_INO (dp, d_ino);
 	      dp->d_off = d_off;
 	      if ((sizeof (dp->d_ino) != sizeof (kdp->d_ino)
 		   && dp->d_ino != d_ino)
@@ -164,7 +164,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 		     otherwise signal overflow.  */
 		  if (last_offset != -1)
 		    {
-		      __lseek (fd, last_offset, SEEK_SET);
+		      __lseek64 (fd, last_offset, SEEK_SET);
 		      return (char *) dp - buf;
 		    }
 		  __set_errno (EOVERFLOW);
@@ -222,7 +222,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	    /* Our heuristic failed.  We read too many entries.  Reset
 	       the stream.  */
 	    assert (last_offset != -1);
-	    __lseek (fd, last_offset, SEEK_SET);
+	    __lseek64 (fd, last_offset, SEEK_SET);
 
 	    if ((char *) dp == buf)
 	      {
