@@ -31,5 +31,5 @@
 int
 getchar_unlocked ()
 {
-  return _IO_getc_unlocked (stdin);
+  return _IO_getc_unlocked (_IO_stdin);
 }

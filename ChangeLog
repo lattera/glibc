@@ -1,3 +1,23 @@
+1999-06-21  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* libio/Makefile (routines): Add putwchar and putwchar_u.
+
+	* libio/putwchar.c: Include <wchar.h> instead of "stdio.h".
+	* libio/putwchar_u.c: Likewise.  Use _IO_stdout instead of
+	stdout.  Fix parameter name.
+
+	* libio/getchar.c: Consistently use _IO_stdin instead of stdin.
+	* libio/getchar_u.c: Likewise.
+
+	* libio/putchar_u.c: Use _IO_stdout instead of stdout.
+
+1999-06-21  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* include/features.h (__GNUC_PREREQ): Don't generate `defined' via
+	macro expansion---it's undefined.  Properly parenthesize
+	substituted parameters.
+	(__GLIBC_PREREQ): Likewise.
+
 1999-06-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (CPPFLAGS): Revert last change.  It has too many

@@ -251,10 +251,15 @@
    #endif
    Note - they won't work for gcc1 or glibc1, since the _MINOR macros
    were not defined then.  */
-#define __GNUC_PREREQ(maj,min) (defined __GNUC__ && defined __GNUC_MINOR__ \
-		&& ((__GNUC__ << 16) + __GNUC_MINOR__) >= ((maj<<16) + min))
-#define __GLIBC_PREREQ(maj,min) (defined __GLIBC__ && defined __GLIBC_MINOR__ \
-		&& ((__GLIBC__ << 16) + __GLIBC_MINOR__) >= ((maj<<16) + min))
+#if defined __GNUC__ && defined __GNUC_MINOR__
+# define __GNUC_PREREQ(maj, min) \
+	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#else
+# define __GNUC_PREREQ(maj, min) 0
+#endif
+
+#define __GLIBC_PREREQ(maj, min) \
+	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
 
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__

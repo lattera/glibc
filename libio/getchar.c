@@ -32,9 +32,10 @@ int
 getchar ()
 {
   int result;
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, stdin);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+			    _IO_stdin);
   _IO_flockfile (_IO_stdin);
-  result = _IO_getc_unlocked (stdin);
+  result = _IO_getc_unlocked (_IO_stdin);
   _IO_funlockfile (_IO_stdin);
   _IO_cleanup_region_end (0);
   return result;
