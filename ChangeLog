@@ -7,7 +7,8 @@ Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	everything and don't bother creating the port set.
 
 	* sysdeps/mach/hurd/uname.c (uname): Deref UNAME to get nodename.
-
+	<unistd.h>: New include.
+	
 	* sysdeps/mach/libc-lock.h (__libc_lock_define): Backslashify
 	continuation line.
 
