@@ -12,12 +12,16 @@ int do_depth;
 int do_chdir;
 int do_phys;
 int do_exit;
+char *skip_subtree;
+char *skip_siblings;
 
 struct option options[] =
 {
   { "depth", no_argument, &do_depth, 1 },
   { "chdir", no_argument, &do_chdir, 1 },
   { "phys", no_argument, &do_phys, 1 },
+  { "skip-subtree", required_argument, NULL, 't' },
+  { "skip-siblings", required_argument, NULL, 's' },
   { "early-exit", no_argument, &do_exit, 1 },
   { NULL, 0, NULL, 0 }
 };
@@ -38,7 +42,7 @@ static int
 cb (const char *name, const struct stat *st, int flag, struct FTW *f)
 {
   if (do_exit && strcmp (name + f->base, "file@2"))
-    return 0;
+    return FTW_CONTINUE;
 
   printf ("base = \"%.*s\", file = \"%s\", flag = %s",
 	  f->base, name, name + f->base, flag2name[flag]);
@@ -49,7 +53,14 @@ cb (const char *name, const struct stat *st, int flag, struct FTW *f)
       free (cwd);
     }
   printf (", level = %d\n", f->level);
-  return do_exit ? 26 : 0;
+
+  if (skip_siblings && strcmp (name + f->base, skip_siblings) == 0)
+    return FTW_SKIP_SIBLINGS;
+
+  if (skip_subtree && strcmp (name + f->base, skip_subtree) == 0)
+    return FTW_SKIP_SUBTREE;
+
+  return do_exit ? 26 : FTW_CONTINUE;
 }
 
 int
@@ -61,7 +72,12 @@ main (int argc, char *argv[])
   mtrace ();
 
   while ((opt = getopt_long_only (argc, argv, "", options, NULL)) != -1)
-    ;
+    {
+      if (opt == 't')
+        skip_subtree = optarg;
+      else if (opt == 's')
+        skip_siblings = optarg;
+    }
 
   if (do_chdir)
     flag |= FTW_CHDIR;
@@ -69,6 +85,15 @@ main (int argc, char *argv[])
     flag |= FTW_DEPTH;
   if (do_phys)
     flag |= FTW_PHYS;
+  if (skip_subtree || skip_siblings)
+    {
+      flag |= FTW_ACTIONRETVAL;
+      if (do_exit)
+	{
+	  printf ("--early-exit cannot be used together with --skip-{siblings,subtree}");
+	  exit (1);
+	}
+    }
 
   char *cw1 = getcwd (NULL, 0);
 

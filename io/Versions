@@ -93,6 +93,10 @@ libc {
     # l*
     lchmod;
   }
+  GLIBC_2.3.3 {
+    # n*
+    nftw; nftw64;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # cancelable.

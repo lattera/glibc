@@ -135,6 +135,8 @@ int rpl_lstat (const char *, struct stat *);
 #ifndef FTW_NAME
 # define FTW_NAME ftw
 # define NFTW_NAME nftw
+# define NFTW_OLD_NAME __old_nftw
+# define NFTW_NEW_NAME __new_nftw
 # define INO_T ino_t
 # define STAT stat
 # ifdef _LIBC
@@ -217,7 +219,8 @@ static const int ftw_arr[] =
 
 
 /* Forward declarations of local functions.  */
-static int ftw_dir (struct ftw_data *data, struct STAT *st) internal_function;
+static int ftw_dir (struct ftw_data *data, struct STAT *st,
+		    struct dir_data *old_dir) internal_function;
 
 
 static int
@@ -415,43 +418,24 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	      || (!find_object (data, &st)
 		  /* Remember the object.  */
 		  && (result = add_object (data, &st)) == 0))
-	    {
-	      result = ftw_dir (data, &st);
-
-	      if (result == 0 && (data->flags & FTW_CHDIR))
-		{
-		  /* Change back to the parent directory.  */
-		  int done = 0;
-		  if (dir->stream != NULL)
-		    if (__fchdir (dirfd (dir->stream)) == 0)
-		      done = 1;
-
-		  if (!done)
-		    {
-		      if (data->ftw.base == 1)
-			{
-			  if (__chdir ("/") < 0)
-			    result = -1;
-			}
-		      else
-			if (__chdir ("..") < 0)
-			  result = -1;
-		    }
-		}
-	    }
+	    result = ftw_dir (data, &st, dir);
 	}
       else
 	result = (*data->func) (data->dirbuf, &st, data->cvt_arr[flag],
 				&data->ftw);
     }
 
+  if ((data->flags & FTW_ACTIONRETVAL) && result == FTW_SKIP_SUBTREE)
+    result = 0;
+
   return result;
 }
 
 
 static int
+__attribute ((noinline))
 internal_function
-ftw_dir (struct ftw_data *data, struct STAT *st)
+ftw_dir (struct ftw_data *data, struct STAT *st, struct dir_data *old_dir)
 {
   struct dir_data dir;
   struct dirent64 *d;
@@ -550,6 +534,9 @@ fail:
       __set_errno (save_err);
     }
 
+  if ((data->flags & FTW_ACTIONRETVAL) && result == FTW_SKIP_SIBLINGS)
+    result = 0;
+
   /* Prepare the return, revert the `struct FTW' information.  */
   data->dirbuf[data->ftw.base - 1] = '\0';
   --data->ftw.level;
@@ -559,11 +546,37 @@ fail:
   if (result == 0 && (data->flags & FTW_DEPTH))
     result = (*data->func) (data->dirbuf, st, FTW_DP, &data->ftw);
 
+  if (old_dir
+      && (data->flags & FTW_CHDIR)
+      && (result == 0
+	  || ((data->flags & FTW_ACTIONRETVAL)
+	      && (result != -1 && result != FTW_STOP))))
+    {
+      /* Change back to the parent directory.  */
+      int done = 0;
+      if (old_dir->stream != NULL)
+	if (__fchdir (dirfd (old_dir->stream)) == 0)
+	  done = 1;
+
+      if (!done)
+	{
+	  if (data->ftw.base == 1)
+	    {
+	      if (__chdir ("/") < 0)
+		result = -1;
+	    }
+	  else
+	    if (__chdir ("..") < 0)
+	      result = -1;
+	}
+    }
+
   return result;
 }
 
 
 static int
+__attribute ((noinline))
 internal_function
 ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	     int flags)
@@ -683,7 +696,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 		result = add_object (&data, &st);
 
 	      if (result == 0)
-		result = ftw_dir (&data, &st);
+		result = ftw_dir (&data, &st, NULL);
 	    }
 	  else
 	    {
@@ -693,6 +706,10 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 				     &data.ftw);
 	    }
 	}
+
+      if ((flags & FTW_ACTIONRETVAL)
+	  && (result == FTW_SKIP_SUBTREE || result == FTW_SKIP_SIBLINGS))
+	result = 0;
     }
 
   /* Return to the start directory (if necessary).  */
@@ -726,6 +743,7 @@ FTW_NAME (path, func, descriptors)
   return ftw_startup (path, 0, func, descriptors, 0);
 }
 
+#ifndef _LIBC
 int
 NFTW_NAME (path, func, descriptors, flags)
      const char *path;
@@ -735,3 +753,43 @@ NFTW_NAME (path, func, descriptors, flags)
 {
   return ftw_startup (path, 1, func, descriptors, flags);
 }
+#else
+
+#include <shlib-compat.h>
+
+int
+NFTW_NEW_NAME (path, func, descriptors, flags)
+     const char *path;
+     NFTW_FUNC_T func;
+     int descriptors;
+     int flags;
+{
+  if (flags
+      & ~(FTW_PHYS | FTW_MOUNT | FTW_CHDIR | FTW_DEPTH | FTW_ACTIONRETVAL))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+  return ftw_startup (path, 1, func, descriptors, flags);
+}
+
+versioned_symbol (libc, NFTW_NEW_NAME, NFTW_NAME, GLIBC_2_3_3);
+
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_3_3)
+
+/* Older nftw* version just ignored all unknown flags.  */
+
+int
+NFTW_OLD_NAME (path, func, descriptors, flags)
+     const char *path;
+     NFTW_FUNC_T func;
+     int descriptors;
+     int flags;
+{
+  flags &= (FTW_PHYS | FTW_MOUNT | FTW_CHDIR | FTW_DEPTH);
+  return ftw_startup (path, 1, func, descriptors, flags);
+}
+
+compat_symbol (libc, NFTW_OLD_NAME, NFTW_NAME, GLIBC_2_1);
+#endif
+#endif

@@ -918,6 +918,17 @@ If this option is specified then all subdirectories and files within
 them are processed before processing the top directory itself
 (depth-first processing).  This also means the type flag given to the
 callback function is @code{FTW_DP} and not @code{FTW_D}.
+@item FTW_ACTIONRETVAL
+If this option is specified then return values from callbacks
+are handled differently.  If the callback returns @code{FTW_CONTINUE},
+walking continues normally.  @code{FTW_STOP} means walking stops
+and @code{FTW_STOP} is returned to the caller.  If @code{FTW_SKIP_SUBTREE}
+is returned by the callback with @code{FTW_D} argument, the subtree
+is skipped and walking continues with next sibling of the directory.
+If @code{FTW_SKIP_SIBLINGS} is returned by the callback, all siblings
+of the current entry are skipped and walking continues in its parent.
+No other return values should be returned from the callbacks if
+this option is set.  This option is a GNU extension.
 @end vtable
 
 The return value is computed in the same way as for @code{ftw}.

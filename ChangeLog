@@ -1,3 +1,30 @@
+2003-11-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/ftw.c (NFTW_OLD_NAME, NFTW_NEW_NAME): Define.
+	(ftw_dir, ftw_startup): Add __attribute ((noinline)).
+	(NFTW_OLD_NAME, NFTW_NEW_NAME): New functions.
+	(NFTW_NAME): Only define if !_LIBC, add versioned_symbol
+	and compat_symbol.
+	* io/ftw64.c (NFTW_OLD_NAME, NFTW_NEW_NAME): Define.
+	* io/Versions (libc): Export nftw@@GLIBC_2.3.3
+	and nftw64@@GLIBC_2.3.3.
+
+	* io/ftw.h (FTW_ACTIONRETVAL): New flag.
+	(FTW_CONTINUE, FTW_STOP, FTW_SKIP_SUBTREE, FTW_SKIP_SIBLINGS): New.
+	* io/ftw.c (ftw_dir): Add old_dir argument.
+	Clear result if it was FTW_SKIP_SIBLINGS after processing all
+	dir entries.  Change cwd back if old_dir != NULL.
+	(process_entry): Adjust caller.  Don't change cwd back here.
+	Change FTW_SKIP_SUBTREE result to 0.
+	(ftw_startup): Adjust ftw_dir caller.
+	Clear result if it was FTW_SKIP_SUBTREE or FTW_SKIP_SIBLINGS.
+	* io/ftwtest.c (skip_subtree, skip_siblings): New variables.
+	(options, main): Add --skip-subtree and --skip-siblings options.
+	(cb): Use return FTW_CONTINUE instead of return 0.
+	Handle --skip-subtree and --skip-siblings.
+	* io/ftwtest-sh: Add tests for FTW_ACTIONRETVAL.
+	* manual/filesys.texi: Document FTW_ACTIONRETVAL.
+
 2003-11-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/ftw.c (ftw_dir): Close dir if callback with FTW_D type returns

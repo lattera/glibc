@@ -20,6 +20,8 @@
 
 #define FTW_NAME ftw64
 #define NFTW_NAME nftw64
+#define NFTW_OLD_NAME __old_nftw64
+#define NFTW_NEW_NAME __new_nftw64
 #define INO_T ino64_t
 #define STAT stat64
 #define LXSTAT __lxstat64

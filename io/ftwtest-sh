@@ -202,6 +202,83 @@ succeeded
 EOF
 rm $testout
 
+mkdir $tmpdir/foo/lvl1b
+echo > $tmpdir/foo/lvl1b/file@1b
+echo > $tmpdir/foo/lvl1b/file2@1b
+echo > $tmpdir/foo/lvl1b/file3@1b
+
+LD_LIBRARY_PATH=$objpfx $ldso $testprogram --skip-subtree=lvl1 $tmpdir |
+    sort > $testout
+
+cat <<EOF | diff -u $testout - || exit 1
+base = "/tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
+base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
+base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
+base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
+base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, level = 2
+base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "/tmp/ftwtest.d/foo/", file = "lvl1b", flag = FTW_D, level = 2
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
+EOF
+rm $testout
+
+LD_LIBRARY_PATH=$objpfx $ldso $testprogram --skip-siblings=lvl1 $tmpdir |
+    sort > $testout
+
+# The filesystem is not required to put lvl1 before lvl1b.
+# If lvl1b comes after lvl1, it shouldn't be printed, while if it
+# comes before, it should.
+catcmd=cat
+[ -n "`ls -U $tmpdir/foo/ | sed -n '/lvl1$/,${/lvl1b$/p}'`" ] \
+  && catcmd="grep -v lvl1b"
+
+$catcmd <<EOF | diff -u $testout - || exit 1
+base = "/tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
+base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
+base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
+base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
+base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, level = 2
+base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "/tmp/ftwtest.d/foo/", file = "lvl1b", flag = FTW_D, level = 2
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
+EOF
+rm $testout
+
+LD_LIBRARY_PATH=$objpfx $ldso $testprogram --skip-siblings=file@1b $tmpdir |
+    sort > $testout
+
+# The filesystem is not required to put file2@1b and file3@1b after file@1b.
+# If file[23]@1b come after file@1b, it shouldn't be printed, while if they
+# come before, they should.
+regexp=`echo $(ls -U /tmp/ftwtest.d/foo/lvl1b \
+	       | sed -n '/file@1b$/,${/file[23]@1b$/p}') | sed 's, ,|,'`
+catcmd=cat
+[ -n "$regexp" ] && catcmd="egrep -v $regexp"
+
+$catcmd <<EOF | diff -u $testout - || exit 1
+base = "/tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
+base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
+base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
+base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
+base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, level = 2
+base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "/tmp/ftwtest.d/foo/", file = "lvl1b", flag = FTW_D, level = 2
+base = "/tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
+base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
+base = "/tmp/ftwtest.d/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
+EOF
+rm $testout
+
 rm -fr $tmpdir
 
 exit 0
