@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 
 int
@@ -75,6 +76,26 @@ main (void)
       }
   }
 # endif
+
+#if 0
+  {
+    int e;
+    long double r = frexpl (LDBL_MIN * LDBL_EPSILON, &e);
+
+    if (r != 0.5)
+      {
+	printf ("frexpl (LDBL_MIN * LDBL_EPSILON, ...): mantissa wrong: %Lg\n",
+		r);
+	result = 1;
+      }
+    else if (e != -16444)
+      {
+	printf ("frexpl (LDBL_MIN * LDBL_EPSILON, ...): exponent wrong: %d\n",
+		e);
+	result = 1;
+      }
+  }
+#endif
 #endif
 
   {
@@ -120,8 +141,9 @@ main (void)
     }
   if (fpclassify (nextafterl (LDBL_MIN, LDBL_MIN / 2.0)) != FP_SUBNORMAL)
     {
-      printf ("fpclassify (LDBL_MIN-epsilon) failed: %d\n",
-	      fpclassify (nextafterl (LDBL_MIN, LDBL_MIN / 2.0)));
+      printf ("fpclassify (LDBL_MIN-epsilon) failed: %d (%Lg)\n",
+	      fpclassify (nextafterl (LDBL_MIN, LDBL_MIN / 2.0)),
+	      nextafterl (LDBL_MIN, LDBL_MIN / 2.0));
       result = 1;
     }
 #endif
@@ -158,6 +180,29 @@ main (void)
       {
 	printf ("fpclassify (0x00008000000000000000) failed: %d (%Lg)\n",
 		fpclassify (u.d), u.d);
+	result = 1;
+      }
+  }
+
+  /* Special NaNs in x86 long double.  Test for scalbl.  */
+  {
+    union
+    {
+      char b[10];
+      long double d;
+    } u =
+      { .b = { 0, 1, 0, 0, 0, 0, 0, 0xc0, 0xff, 0x7f } };
+    long double r;
+
+    r = scalbl (u.d, 0.0);
+    if (!isnan (r))
+      {
+	puts ("scalbl(NaN, 0) does not return NaN");
+	result = 1;
+      }
+    else if (memcmp (&r, &u.d, sizeof (double)) != 0)
+      {
+	puts ("scalbl(NaN, 0) does not return the same NaN");
 	result = 1;
       }
   }

@@ -49,7 +49,7 @@ static char rcsid[] = "$NetBSD: $";
 #else
 	long double z;
 	z = __ieee754_scalbl(x,fn);
-	if(_LIB_VERSION == _IEEE_) return z;
+	if(_LIB_VERSION != _SVID_) return z;
 	if(!(__finitel(z)||__isnanl(z))&&__finitel(x)) {
 	    return __kernel_standard(x,(double)fn,232); /* scalb overflow */
 	}

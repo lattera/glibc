@@ -45,7 +45,7 @@ static char rcsid[] = "$NetBSD: w_scalb.c,v 1.6 1995/05/10 20:49:48 jtc Exp $";
 #else
 	double z;
 	z = __ieee754_scalb(x,fn);
-	if(_LIB_VERSION == _IEEE_) return z;
+	if(_LIB_VERSION != _SVID_) return z;
 	if(!(__finite(z)||__isnan(z))&&__finite(x)) {
 	    return __kernel_standard(x,(double)fn,32); /* scalb overflow */
 	}

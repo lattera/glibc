@@ -52,7 +52,7 @@ ENTRY(__ieee754_scalbf)
 	fnstsw
 	andl	$0x4500, %eax
 	cmpl	$0x0100, %eax
-	je	2f
+	je	3f
 	fld	%st(1)
 	frndint
 	fcomp	%st(2)
@@ -92,5 +92,9 @@ ENTRY(__ieee754_scalbf)
         addl    $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
 #endif
 	fldl	MO(nan)
+	ret
+
+	/* The first parameter is a NaN.  Return it.  */
+3:	fstp	%st(1)
 	ret
 END(__ieee754_scalbf)
