@@ -82,7 +82,7 @@ string.
 
 The amount of memory allocated for the character array may extend past
 the null character that normally marks the end of the string.  In this
-document, the term @dfn{allocation size} is always used to refer to the
+document, the term @dfn{allocated size} is always used to refer to the
 total amount of memory allocated for the string, while the term
 @dfn{length} refers to the number of characters up to (but not
 including) the terminating null character.
@@ -155,8 +155,8 @@ strlen ("hello, world")
 @end smallexample
 
 When applied to a character array, the @code{strlen} function returns
-the length of the string stored there, not its allocation size.  You can
-get the allocation size of the character array that holds a string using
+the length of the string stored there, not its allocated size.  You can
+get the allocated size of the character array that holds a string using
 the @code{sizeof} operator:
 
 @smallexample
@@ -166,6 +166,22 @@ sizeof (string)
 strlen (string)
     @result{} 12
 @end smallexample
+
+But beware, this will not work unless @var{string} is the character
+array itself, not a pointer to it.  For example:
+
+@smallexample
+char string[32] = "hello, world";
+char *ptr = string;
+sizeof (string)
+    @result{} 32
+sizeof (ptr)
+    @result{} 4  /* @r{(on a machine with 4 byte pointers)} */
+@end smallexample
+
+This is an easy mistake to make when you are working with functions that
+take string arguments; those arguments are always pointers, not arrays.
+
 @end deftypefun
 
 @comment string.h
@@ -397,7 +413,7 @@ is implemented to be useful in contexts where this behaviour of the
 @emph{first} written null character.
 
 This function is not part of ISO or POSIX but was found useful while
-developing GNU C Library itself.
+developing the GNU C Library itself.
 
 Its behaviour is undefined if the strings overlap.
 @end deftypefun
@@ -406,12 +422,11 @@ Its behaviour is undefined if the strings overlap.
 @comment GNU
 @deftypefn {Macro} {char *} strdupa (const char *@var{s})
 This function is similar to @code{strdup} but allocates the new string
-using @code{alloca} instead of @code{malloc}
-@pxref{Variable Size Automatic}.  This means of course the returned
-string has the same limitations as any block of memory allocated using
-@code{alloca}.
+using @code{alloca} instead of @code{malloc} (@pxref{Variable Size
+Automatic}).  This means of course the returned string has the same
+limitations as any block of memory allocated using @code{alloca}.
 
-For obvious reasons @code{strdupa} is implemented only as a macro.  I.e.,
+For obvious reasons @code{strdupa} is implemented only as a macro;
 you cannot get the address of this function.  Despite this limitation
 it is a useful function.  The following code shows a situation where
 using @code{malloc} would be a lot more expensive.
@@ -434,8 +449,7 @@ allocates the new string using @code{alloca}
 @pxref{Variable Size Automatic}.  The same advantages and limitations
 of @code{strdupa} are valid for @code{strndupa}, too.
 
-This function is implemented only as a macro which means one cannot
-get the address of it.
+This function is implemented only as a macro, just like @code{strdupa}.
 
 @code{strndupa} is only available if GNU CC is used.
 @end deftypefn
@@ -613,10 +627,10 @@ is an initial substring of @var{s2}, then @var{s1} is considered to be
 @comment BSD
 @deftypefun int strcasecmp (const char *@var{s1}, const char *@var{s2})
 This function is like @code{strcmp}, except that differences in case are
-ignored.  How uppercase and lowercase character are related is
+ignored.  How uppercase and lowercase characters are related is
 determined by the currently selected locale.  In the standard @code{"C"}
 locale the characters @"A and @"a do not match but in a locale which
-regards this characters as parts of the alphabet they do match.
+regards these characters as parts of the alphabet they do match.
 
 @code{strcasecmp} is derived from BSD.
 @end deftypefun
@@ -625,8 +639,8 @@ regards this characters as parts of the alphabet they do match.
 @comment BSD
 @deftypefun int strncasecmp (const char *@var{s1}, const char *@var{s2}, size_t @var{n})
 This function is like @code{strncmp}, except that differences in case
-are ignored.  Like for @code{strcasecmp} it is locale dependent how
-uppercase and lowercase character are related.
+are ignored.  Like @code{strcasecmp}, it is locale dependent how
+uppercase and lowercase characters are related.
 
 @code{strncasecmp} is a GNU extension.
 @end deftypefun
@@ -671,7 +685,7 @@ function.  In fact, if @var{s1} and @var{s2} contain no digits,
 
 Basically, we compare strings normally (character by character), until
 we find a digit in each string - then we enter a special comparison
-mode, where each sequence of digit is taken as a whole.  If we reach the
+mode, where each sequence of digits is taken as a whole.  If we reach the
 end of these two parts without noticing a difference, we return to the
 standard comparison mode.  There are two types of numeric parts:
 "integral" and "fractional" (those  begin with a '0'). The types
@@ -693,7 +707,7 @@ than the other one; else the comparison behaves normally.
 
 @smallexample
 strverscmp ("no digit", "no digit")
-    @result{} 0    /* @r{same behaviour as strverscmp.} */
+    @result{} 0    /* @r{same behaviour as strcmp.} */
 strverscmp ("item#99", "item#100")
     @result{} <0   /* @r{same prefix, but 99 < 100.} */
 strverscmp ("alpha1", "alpha001")
@@ -873,7 +887,8 @@ sort_strings_fast (char **array, int nstrings)
 
           /* @r{The return value is not interesting because we know}
              @r{how long the transformed string is.}  */
-          (void) strxfrm (transformed, array[i], transformed_length + 1);
+          (void) strxfrm (transformed, array[i],
+                          transformed_length + 1);
         @}
 
       temp_array[i].transformed = transformed;
@@ -1096,12 +1111,11 @@ a null pointer.
 @end deftypefun
 
 @strong{Warning:} Since @code{strtok} alters the string it is parsing,
-you always copy the string to a temporary buffer before parsing it with
-@code{strtok}.  If you allow @code{strtok} to modify a string that came
-from another part of your program, you are asking for trouble; that
-string may be part of a data structure that could be used for other
-purposes during the parsing, when alteration by @code{strtok} makes the
-data structure temporarily inaccurate.
+you should always copy the string to a temporary buffer before parsing
+it with @code{strtok}.  If you allow @code{strtok} to modify a string
+that came from another part of your program, you are asking for trouble;
+that string might be used for other purposes after @code{strtok} has
+modified it, and it would not have the expected value.
 
 The string that you are operating on might even be a constant.  Then
 when @code{strtok} tries to modify it, your program will get a fatal
@@ -1146,14 +1160,13 @@ which overcome the limitation of non-reentrancy.
 @comment string.h
 @comment POSIX
 @deftypefun {char *} strtok_r (char *@var{newstring}, const char *@var{delimiters}, char **@var{save_ptr})
-Just like @code{strtok} this function splits the string into several
-tokens which can be accessed be successive calls to @code{strtok_r}.
-The difference is that the information about the next token is not set
-up in some internal state information.  Instead the caller has to
-provide another argument @var{save_ptr} which is a pointer to a string
-pointer.  Calling @code{strtok_r} with a null pointer for
-@var{newstring} and leaving @var{save_ptr} between the calls unchanged
-does the job without limiting reentrancy.
+Just like @code{strtok}, this function splits the string into several
+tokens which can be accessed by successive calls to @code{strtok_r}.
+The difference is that the information about the next token is stored in
+the space pointed to by the third argument, @var{save_ptr}, which is a
+pointer to a string pointer.  Calling @code{strtok_r} with a null
+pointer for @var{newstring} and leaving @var{save_ptr} between the calls
+unchanged does the job without hindering reentrancy.
 
 This function is defined in POSIX-1 and can be found on many systems
 which support multi-threading.
@@ -1162,12 +1175,12 @@ which support multi-threading.
 @comment string.h
 @comment BSD
 @deftypefun {char *} strsep (char **@var{string_ptr}, const char *@var{delimiter})
-A second reentrant approach is to avoid the additional first argument.
-The initialization of the moving pointer has to be done by the user.
-Successive calls of @code{strsep} move the pointer along the tokens
-separated by @var{delimiter}, returning the address of the next token
-and updating @var{string_ptr} to point to the beginning of the next
-token.
+This function is just @code{strtok_r} with the @var{newstring} argument
+replaced by the @var{save_ptr} argument.  The initialization of the
+moving pointer has to be done by the user.  Successive calls to
+@code{strsep} move the pointer along the tokens separated by
+@var{delimiter}, returning the address of the next token and updating
+@var{string_ptr} to point to the beginning of the next token.
 
 This function was introduced in 4.3BSD and therefore is widely available.
 @end deftypefun
@@ -1204,15 +1217,101 @@ token = strsep (&running, delimiters);    /* token => NULL */
 To store or transfer binary data in environments which only support text
 one has to encode the binary data by mapping the input bytes to
 characters in the range allowed for storing or transfering.  SVID
-systems (and nowadays XPG compliant systems) have such a function in the
-C library.
+systems (and nowadays XPG compliant systems) provide minimal support for
+this task.
 
 @comment stdlib.h
 @comment XPG
 @deftypefun {char *} l64a (long int @var{n})
-This function encodes an input value with 32 bits using characters from
-the basic character set.  Groups of 6 bits are encoded using the
-following table:
+This function encodes a 32-bit input value using characters from the
+basic character set.  It returns a pointer to a 6 character buffer which
+contains an encoded version of @var{n}.  To encode a series of bytes the
+user must copy the returned string to a destination buffer.  It returns
+the empty string if @var{n} is zero, which is somewhat bizarre but
+mandated by the standard.@*
+@strong{Warning:} Since a static buffer is used this function should not
+be used in multi-threaded programs.  There is no thread-safe alternative
+to this function in the C library.@*
+@strong{Compatibility Note:} The XPG standard states that the return
+value of @code{l64a} is undefined if @var{n} is negative.  In the GNU
+implementation, @code{l64a} treats its argument as unsigned, so it will
+return a sensible encoding for any nonzero @var{n}; however, portable
+programs should not rely on this.
+
+To encode a large buffer @code{l64a} must be called in a loop, once for
+each 32-bit word of the buffer.  For example, one could do something
+like this:
+
+@smallexample
+char *
+encode (const void *buf, size_t len)
+@{
+  /* @r{We know in advance how long the buffer has to be.} */
+  unsigned char *in = (unsigned char *) buf;
+  char *out = malloc (6 + ((len + 3) / 4) * 6 + 1);
+  char *cp = out;
+
+  /* @r{Encode the length.} */
+  /* @r{Using `htonl' is necessary so that the data can be}
+     @r{decoded even on machines with different byte order.} */
+
+  cp = mempcpy (cp, l64a (htonl (len)), 6);
+
+  while (len > 3)
+    @{
+      unsigned long int n = *in++;
+      n = (n << 8) | *in++;
+      n = (n << 8) | *in++;
+      n = (n << 8) | *in++;
+      len -= 4;
+      if (n)
+        cp = mempcpy (cp, l64a (htonl (n)), 6);
+      else
+            /* @r{`l64a' returns the empty string for n==0, so we }
+               @r{must generate its encoding (}"......"@r{) by hand.} */
+        cp = stpcpy (cp, "......");
+    @}
+  if (len > 0)
+    @{
+      unsigned long int n = *in++;
+      if (--len > 0)
+        @{
+          n = (n << 8) | *in++;
+          if (--len > 0)
+            n = (n << 8) | *in;
+        @}
+      memcpy (cp, l64a (htonl (n)), 6);
+      cp += 6;
+    @}
+  *cp = '\0';
+  return out;
+@}
+@end smallexample
+
+It is strange that the library does not provide the complete
+functionality needed but so be it.
+
+@end deftypefun
+
+To decode data produced with @code{l64a} the following function should be
+used.
+
+@comment stdlib.h
+@comment XPG
+@deftypefun {long int} a64l (const char *@var{string})
+The parameter @var{string} should contain a string which was produced by
+a call to @code{l64a}.  The function processes at least 6 characters of
+this string, and decodes the characters it finds according to the table
+below.  It stops decoding when it finds a character not in the table,
+rather like @code{atoi}; if you have a buffer which has been broken into
+lines, you must be careful to skip over the end-of-line characters.
+
+The decoded number is returned as a @code{long int} value.
+@end deftypefun
+
+The @code{l64a} and @code{a64l} functions use a base 64 encoding, in
+which each character of an encoded string represents six bits of an
+input word.  These symbols are used for the base 64 digits:
 
 @multitable {xxxxx} {xxx} {xxx} {xxx} {xxx} {xxx} {xxx} {xxx} {xxx}
 @item              @tab 0 @tab 1 @tab 2 @tab 3 @tab 4 @tab 5 @tab 6 @tab 7
@@ -1234,84 +1333,9 @@ following table:
                    @tab @code{w} @tab @code{x} @tab @code{y} @tab @code{z}
 @end multitable
 
-The function returns a pointer to a static buffer which contains the
-string representing of the encoding of @var{n}.  To encoded a series of
-bytes the use should append the new string to the destination buffer.
-@emph{Warning:} Since a static buffer is used this function should not
-be used in multi-threaded programs.  There is no thread-safe alternative
-to this function in the C library.
-@end deftypefun
-
-Alone the @code{l64a} function is not usable.  To encode arbitrary
-sequences of bytes one needs some more code and this could look like
-this:
-
-@smallexample
-char *
-encode (const void *buf, size_t len)
-@{
-  /* @r{We know in advance how long the buffer has to be.} */
-  unsigned char *in = (unsigned char *) buf;
-  char *out = malloc (6 + ((len + 3) / 4) * 6 + 1);
-  char *cp = out;
-
-  /* @r{Encode the length.} */
-  memcpy (cp, l64a (len), 6);
-  cp += 6;
-
-  while (len > 3)
-    @{
-      unsigned long int n = *in++;
-      n = (n << 8) | *in++;
-      n = (n << 8) | *in++;
-      n = (n << 8) | *in++;
-      len -= 4;
-      /* @r{Using `htonl' is necessary so that the data can be}
-         @r{decoded even on machines with different byte order.} */
-      memcpy (cp, l64a (htonl (n)), 6);
-      cp += 6;
-    @}
-  if (len > 0)
-    @{
-      unsigned long int n = *in++;
-      if (--len > 0)
-        @{
-          n = (n << 8) | *in++;
-          if (--len > 0)
-            n = (n << 8) | *in;
-        @}
-      memcpy (cp, l64a (htonl (n)), 6);
-      cp += 6;
-    @}
-  *cp = '\0';
-  return out;
-@}
-@end smallexample
-
-It is strange that the library does not provide the complete
-functionality needed but so be it.  There are some other encoding
-methods which are much more widely used (UU encoding, Base64 encoding).
+This encoding scheme is not standard.  There are some other encoding
+methods which are much more widely used (UU encoding, MIME encoding).
 Generally, it is better to use one of these encodings.
-
-To decode data produced with @code{l64a} the following function should be
-used.
-
-@comment stdlib.h
-@comment XPG
-@deftypefun {long int} a64l (const char *@var{string})
-The parameter @var{string} should contain a string which was produced by
-a call to @code{l64a}.  The function processes the next 6 characters and
-decodes the characters it finds according to the table above.
-Characters not in the conversion table are simply ignored.  This is
-useful for breaking the information in lines in which case the end of
-line characters are simply ignored.
-
-The decoded number is returned at the end as a @code{long int} value.
-Consecutive calls to this function are possible but the caller must make
-sure the buffer pointer is update after each call to @code{a64l} since
-this function does not modify the buffer pointer.  Every call consumes 6
-characters.
-@end deftypefun
 
 @node Argz and Envz Vectors
 @section Argz and Envz Vectors

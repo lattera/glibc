@@ -36,21 +36,20 @@ char *
 l64a (n)
      long int n;
 {
+  unsigned long int m = (unsigned long int) n;
   static char result[7];
   int cnt;
 
-  if (n <= 0l)
-    /* The value for N == 0 is defined to be the empty string.  When a
-       negative value is given the result is undefined.  We will
-       return the empty string.  */
+  if (m == 0l)
+    /* The value for N == 0 is defined to be the empty string. */
     return (char *) "";
 
   result[6] = '\0';
 
-  for (cnt = 5; n > 0; --cnt)
+  for (cnt = 5; m > 0; --cnt)
     {
-      result[cnt] = conv_table[n & 0x3f];
-      n >>= 6;
+      result[cnt] = conv_table[m & 0x3f];
+      m >>= 6;
     }
 
   return &result[cnt + 1];

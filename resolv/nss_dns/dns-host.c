@@ -158,7 +158,10 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 
   n = res_search (name, C_IN, type, host_buffer.buf, sizeof (host_buffer.buf));
   if (n < 0)
-    return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    {
+      *h_errnop = h_errno;
+      return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    }
 
   return getanswer_r (&host_buffer, n, name, type, result, buffer, buflen,
 		      h_errnop);
@@ -251,12 +254,18 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
   n = res_query (qbuf, C_IN, T_PTR, (u_char *)host_buffer.buf,
 		 sizeof host_buffer);
   if (n < 0)
-    return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    {
+      *h_errnop = h_errno;
+      return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+    }
 
   status = getanswer_r (&host_buffer, n, qbuf, T_PTR, result, buffer, buflen,
 			h_errnop);
   if (status != NSS_STATUS_SUCCESS)
-    return status;
+    {
+      *h_errnop = h_errno;
+      return status;
+    }
 
 #ifdef SUNSECURITY
   This is not implemented because it is not possible to use the current

@@ -16,7 +16,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /* AIX requires this to be the first thing in the file.  */
-#if defined (_AIX) && !defined (__GNUC__)
+#if defined _AIX && !defined __GNUC__
  #pragma alloca
 #endif
 
@@ -167,6 +167,11 @@ extern void bcopy ();
 
 #if !defined HAVE_STRCOLL && !defined _LIBC
 # define strcoll	strcmp
+#endif
+
+#if !defined HAVE_MEMPCPY && __GLIBC__ - 0 == 2 && __GLIBC_MINOR__ >= 1
+# define HAVE_MEMPCPY	1
+# define mempcpy(Dest, Src, Len) __mempcpy (Dest, Src, Len)
 #endif
 
 
@@ -417,8 +422,12 @@ glob (pattern, flags, errfunc, pglob)
 	      int result;
 
 	      /* Construct the new glob expression.  */
+#ifdef HAVE_MEMPCPY
+	      mempcpy (mempcpy (alt_start, p, next - p), rest, rest_len);
+#else
 	      memcpy (alt_start, p, next - p);
 	      memcpy (&alt_start[next - p], rest, rest_len);
+#endif
 
 	      result = glob (onealt,
 			     ((flags & ~(GLOB_NOCHECK|GLOB_NOMAGIC))
@@ -479,8 +488,12 @@ glob (pattern, flags, errfunc, pglob)
     {
       dirlen = filename - pattern;
       dirname = (char *) __alloca (dirlen + 1);
+#ifdef HAVE_MEMPCPY
+      *((char *) mempcpy (dirname, pattern, dirlen)) = '\0';
+#else
       memcpy (dirname, pattern, dirlen);
       dirname[dirlen] = '\0';
+#endif
       ++filename;
     }
 
@@ -568,8 +581,13 @@ glob (pattern, flags, errfunc, pglob)
 	      char *newp;
 	      size_t home_len = strlen (home_dir);
 	      newp = (char *) __alloca (home_len + dirlen);
+# ifdef HAVE_MEMPCPY
+	      mempcpy (mempcpy (newp, home_dir, home_len),
+		       &dirname[1], dirlen);
+# else
 	      memcpy (newp, home_dir, home_len);
 	      memcpy (&newp[home_len], &dirname[1], dirlen);
+# endif
 	      dirname = newp;
 	    }
 	}
@@ -585,8 +603,13 @@ glob (pattern, flags, errfunc, pglob)
 	  else
 	    {
 	      user_name = (char *) __alloca (end_name - dirname);
+# ifdef HAVE_MEMPCPY
+	      *((char *) mempcpy (user_name, dirname + 1, end_name - dirname))
+		= '\0';
+# else
 	      memcpy (user_name, dirname + 1, end_name - dirname);
 	      user_name[end_name - dirname - 1] = '\0';
+# endif
 	    }
 
 	  /* Look up specific user's home directory.  */
@@ -614,9 +637,14 @@ glob (pattern, flags, errfunc, pglob)
 	      size_t home_len = strlen (home_dir);
 	      size_t rest_len = end_name == NULL ? 0 : strlen (end_name);
 	      newp = (char *) __alloca (home_len + rest_len + 1);
+#  ifdef HAVE_MEMPCPY
+	      *((char *) mempcpy (mempcpy (newp, home_dir, home_len),
+				  end_name, rest_len)) = '\0';
+#  else
 	      memcpy (newp, home_dir, home_len);
 	      memcpy (&newp[home_len], end_name, rest_len);
 	      newp[home_len + rest_len] = '\0';
+#  endif
 	      dirname = newp;
 	    }
 	}
@@ -838,9 +866,17 @@ prefix_array (dirname, array, n)
 	  return 1;
 	}
 
+#ifdef HAVE_MEMPCPY
+      {
+	char *endp = (char *) mempcpy (new, dirname, dirlen);
+	*endp++ = '/';
+	mempcpy (endp, array[i], eltlen);
+      }
+#else
       memcpy (new, dirname, dirlen);
       new[dirlen] = '/';
       memcpy (&new[dirlen + 1], array[i], eltlen);
+#endif
       free ((__ptr_t) array[i]);
       array[i] = new;
     }
@@ -922,6 +958,18 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	      (flags & GLOB_ERR))
 	    return GLOB_ABORTED;
 	}
+      else if (pattern[0] == '\0')
+	{
+	  /* This is a special case for matching directories like in
+	     "*a/".  */
+	  names = (struct globlink *) __alloca (sizeof (struct globlink));
+	  names->name = (char *) malloc (1);
+	  if (names->name == NULL)
+	    goto memory_error;
+	  names->name[0] = '\0';
+	  names->next = NULL;
+	  nfound = 1;
+	}
       else
 	while (1)
 	  {
@@ -941,8 +989,13 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		names->name = (char *) malloc (len + 1);
 		if (names->name == NULL)
 		  goto memory_error;
+#ifdef HAVE_MEMPCPY
+		*((char *) mempcpy ((__ptr_t) names->name, pattern, len))
+		  = '\0';
+#else
 		memcpy ((__ptr_t) names->name, pattern, len);
 		names->name[len] = '\0';
+#endif
 		names->next = NULL;
 		nfound = 1;
 		break;
@@ -992,8 +1045,12 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		  = (char *) malloc (len + 1);
 		if (new->name == NULL)
 		  goto memory_error;
+#ifdef HAVE_MEMPCPY
+		*((char *) mempcpy ((__ptr_t) new->name, name, len)) = '\0';
+#else
 		memcpy ((__ptr_t) new->name, name, len);
 		new->name[len] = '\0';
+#endif
 		new->next = names;
 		names = new;
 		++nfound;
@@ -1014,8 +1071,12 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       names->name = (char *) malloc (len + 1);
       if (names->name == NULL)
 	goto memory_error;
+#ifdef HAVE_MEMPCPY
+      *((char *) mempcpy (names->name, pattern, len)) = '\0';
+#else
       memcpy (names->name, pattern, len);
       names->name[len] = '\0';
+#endif
     }
 
   if (nfound != 0)

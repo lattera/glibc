@@ -48,8 +48,10 @@ __cbrtl (long double x)
   xm = __frexpl (fabs (x), &xe);
 
   /* If X is not finite or is null return it (with raising exceptions
-     if necessary.  */
-  if (xe == 0)
+     if necessary.
+     Note: *Our* version of `frexp' sets XE to zero if the argument is
+     Inf or NaN.  This is not portable but faster.  */
+  if (xe == 0 && fpclassify (x) <= FP_ZERO)
     return x + x;
 
   u = (0.338058687610520237

@@ -215,6 +215,9 @@ _IO_str_seekoff (fp, offset, dir, mode)
   _IO_ssize_t cur_size = _IO_str_count (fp);
   _IO_fpos64_t new_pos = EOF;
 
+  if (mode == 0 && (fp->_flags & _IO_TIED_PUT_GET))
+    mode = (fp->_flags & _IO_CURRENTLY_PUTTING ? _IOS_OUTPUT : _IOS_INPUT);
+
   /* Move the get pointer, if requested. */
   if (mode & _IOS_INPUT)
     {

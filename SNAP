@@ -99,7 +99,7 @@ diff will be relative to the source tree after applying all previous
 daily diffs.  The daily diffs are for people who have relatively low
 bandwidth ftp or uucp connections.
 
-The files will be available via anonymous ftp from alpha.gnu.ai.mit.edu, in
+The files will be available via anonymous ftp from alpha.gnu.org, in
 directory /gnu/libc and on linux.kernel.org in /pub/software/libs/glibc.  The
 directories should look something like:
 
@@ -110,9 +110,9 @@ directories should look something like:
 	.
 	.
 
-Please note that the snapshots on alpha.gnu.ai.mit.edu and on
+Please note that the snapshots on alpha.gnu.org and on
 linux.kernel.org are not always in sync. Patches to some files might
-appear a day a diff earlier or later on alpha than on kernel. 
+appear a day a diff earlier or later on alpha than on kernel.
 Use always alpha or always kernel but don't mix them.
 
 There are sometimes additionally test releases of the add-ons available in
@@ -155,13 +155,13 @@ GETTING HELP, GLIBC DISCUSSIONS, etc
 ------------------------------------
 
 People who want to help with glibc and who test out snapshots regularly should
-get on the libc-alpha@gnu.ai.mit.edu mailing list by sending an email to
-libc-alpha-request@gnu.ai.mit.edu.  This list is meant (as the name suggests)
+get on the libc-alpha@gnu.org mailing list by sending an email to
+libc-alpha-request@gnu.org.  This list is meant (as the name suggests)
 for the discussion of test releases and also reports for them.  People who are
 on this list are welcome to post questions of general interest.
 
 People who are not only willing to test the snapshots but instead really want
-to help developing glibc should contact libc-hacker-request@gnu.ai.mit.edu to
+to help developing glibc should contact libc-hacker-request@gnu.org to
 be put on the developers mailing list.  This list is really only meant for
 developers.  No questions about installation problems or other simple topics
 are wanted nor will they be answered.
@@ -174,7 +174,7 @@ you are talking about and it will just cause confusion.
 BUG REPORTS
 -----------
 
-Send bug reports directly to Ulrich Drepper <drepper@gnu.ai.mit.edu>.  Please
+Send bug reports directly to Ulrich Drepper <drepper@gnu.org>.  Please
 do *not* use the glibcbug script for reporting bugs in the snapshots.
 glibcbug should only be used for problems with the official released versions.
 We don't like bug reports in the bug database because otherwise the impression
@@ -202,7 +202,7 @@ FORMAT FOR PATCHES
 ------------------
 
 If you have a fix for a bug, or an enhancement to submit, send your patch to
-Ulrich Drepper <drepper@gnu.ai.mit.edu>.  Here are some simple guidelines for
+Ulrich Drepper <drepper@gnu.org>.  Here are some simple guidelines for
 submitting patches:
 
     o	Use "unified diffs" for patches.  A typical command for generating

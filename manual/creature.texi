@@ -36,6 +36,11 @@ available.  If you define this macro with a value of @code{2}, then both
 the functionality from the POSIX.1 standard and the functionality from
 the POSIX.2 standard (IEEE Standard 1003.2) are made available.  This is
 in addition to the @w{ISO C} facilities.
+
+The Single Unix Specification specify that setting this macro to the
+value @code{199506L} selects all the values specified by the POSIX
+standards plus those of the Single Unix Specification, i.e., is the
+same as if @code{_XOPEN_SOURCE} is set to @code{500} (see below).
 @end defvr
 
 @comment (none)
@@ -88,7 +93,7 @@ available which are necessary for the X/Open Unix brand.
 
 If the macro @code{_XOPEN_SOURCE} has the value @math{500} this includes
 all functionality described so far plus some new definitions from the
-Single Unix specification, @w{version 2}.
+Single Unix Specification, @w{version 2}.
 @end defvr
 
 @comment (NONE)

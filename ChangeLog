@@ -1,8 +1,94 @@
+1997-10-29 21:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/strops.c (_IO_str_seekoff): If mode is zero and the read/write
+	pointers are tied set mode according to current stream mode.
+
+	* include/features.h [_GNU_SOURCE] (_POSIX_C_SOURCE): Define to
+	199506L.
+	Define _XOPEN_SOURCE to 500 if _POSIX_C_SOURCE is defined.
+	* manual/creature.texi: Describe this.
+
+	* manual/socket.texi: Describe connect, accept, send, sendmsg, sendto,
+	recv, recvfrom, and recvmsg as cancelation points.
+	* sysdeps/unix/inet/syscalls.list: Add __libc_* names for these
+	functions.
+
+1997-10-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Make-dist (try-sysdeps): Don't look for stub files anymore.
+
+	* manual/maint.texi (Porting): Remove another reference to stub
+	directory.
+
+	* sysdeps/unix/bsd/sun/sethostid.c: Include stub version from
+	generic subdir.
+	* sysdeps/unix/sysv/irix4/reboot.c: Likewise.
+	* sysdeps/unix/sysv/irix4/swapon.c: Likewise
+
+1997-10-29 03:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c: Change variable pointed to by h_errnop
+	in all error cases (PR 244).
+
+1997-10-29 00:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c: Fix handling of expressions like "*/" (PR 325).
+	Optimize by using mempcpy.
+
+1997-10-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* po/Makefile ($(mo-installed)): Don't fail during installation if
+	files don't exist (might happen if msgfmt doesn't exist) (PR 328).
+	Suggested by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
+
+1997-10-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/bits/errno.h (ENOMSG): Define it.
+	Pointed out by Klaus Espenlaub
+	<kespenla@hydra.informatik.uni-ulm.de> (PR libc/259).
+
+1997-10-28 17:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_cbrt.c: Testing the returned exponent for
+	zero isn't enough to determine illegal arguments.
+	* sysdeps/libm-ieee754/s_cbrtf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cbrtl.c: Likewise.
+
+1997-10-28 17:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/filesys.texi (S_ISVTX): Describe that it is available with
+	_BSD_SOURCE only.
+	Reported by Jochen Hein <jochen.hein@delphi.central.de>.
+
+1997-10-28 04:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzfile.c (__tzfile_compute): Use negated value of offset for
+	timezone variable.
+	* time/tzset.c (tz_compute): Likewise.
+	Reported by Erik Troan <ewt@redhat.com>.
+
+1997-10-28 02:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/filesys.texi: Correct prototype in readdir_r description.
+	Reported by Jim Meyering <meyering@eng.ascend.com>.
+
+1997-10-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (cbrt_test): Add test for cbrt(0.970299).
+
+1997-10-26 19:39  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* stdlib/l64a.c: Produce a useful result for n < 0.
+	* stdlib/a64l.c: Use unsigned type for working variable.
+	* manual/string.texi (general): Grammar, typo, overfull fixes.
+	(strlen): Insert warning about sizeof(char *).
+	(a64l, l64a): Make documentation agree with implementation.
+
 1997-10-26 18:12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/genops.c: Partial undo of last patch.
 	* libio/stdfiles.c: Likewise.
-	* libio/iofdopen.c: Use _IO_FILE_complete, not _IO_file_plus.
+	* libio/iofdopen.c: Use _IO_FILE_complete, not _IO_FILE_plus.
 	* libio/iopopen.c: Likewise.
 	* libio/iovdprintf.c: Likewise.
 	* libio/libio.h: Remove duplicated `;'.
@@ -21,7 +107,7 @@
 
 	* posix/unistd.h: Add explanation of _POSIX_* constants.
 
-	* posix/unists.h: Add prototypes for __pread, __pread64, __pwrite
+	* posix/unistd.h: Add prototypes for __pread, __pread64, __pwrite
 	and __pwrite64.
 	* sysdeps/generic/pread.c: Define as __pread and make pread weak alias.
 	* sysdeps/generic/pread64.c: Likewise.

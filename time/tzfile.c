@@ -421,7 +421,7 @@ __tzfile_compute (time_t timer, int use_localtime,
     {
       struct ttinfo *info = find_transition (timer);
       __daylight = info->isdst;
-      __timezone = info->offset;
+      __timezone = -info->offset;
       for (i = 0;
 	   i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
 	   ++i)

@@ -538,11 +538,11 @@ include the file @code{<stub-tag.h>} into your file.  This causes the
 function to be listed in the installed @code{<gnu/stubs.h>}, and
 makes GNU ld warn when the function is used.
 
-Some rare functions are only useful on specific systems and aren't
-defined at all on others; these do not appear anywhere in the
-system-independent source code or makefiles (including the
-@file{generic} and @file{stub} directories), only in the
-system-dependent @file{Makefile} in the specific system's subdirectory.
+Some rare functions are only useful on specific systems and
+aren't defined at all on others; these do not appear anywhere
+in the system-independent source code or makefiles (including the
+@file{generic}), only in the system-dependent @file{Makefile} in the
+specific system's subdirectory.
 
 If you come across a file that is in one of the main source directories
 (@file{string}, @file{stdio}, etc.), and you want to write a machine- or

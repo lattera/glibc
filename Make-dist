@@ -88,15 +88,13 @@ sources += $(addsuffix .c,$(elided-routines) \
 +maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
 		  $(filter %.c %.S %.s %.h %.sub,$(distribute))
 foo:=$(shell echo '+maybe-sysdeps=$(+maybe-sysdeps)'>&2)
-# Find all the files that have a stub or generic version.
-try-sysdeps := $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic \
-			     $(..)sysdeps/libm-ieee754,\
+# Find all the files that have a generic version.
+try-sysdeps := $(foreach dir,$(..)sysdeps/generic $(..)sysdeps/libm-ieee754,\
 			     $(addprefix $(dir)/,$(+maybe-sysdeps)))
 foo:=$(shell echo 'try-sysdeps=$(try-sysdeps)'>&2)
 +sysdeps := $(wildcard $(try-sysdeps))
-foo:=$(shell echo 'stub/generic +sysdeps=$(+sysdeps)'>&2)
+foo:=$(shell echo 'generic +sysdeps=$(+sysdeps)'>&2)
 +sysdep-names := $(sort $(patsubst $(..)sysdeps/generic/%,%,\
-				   $(patsubst $(..)sysdeps/stub/%,%,\
 				   $(patsubst $(..)sysdeps/libm-ieee754/%,%,\
 					      $(+sysdeps)))))
 foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)

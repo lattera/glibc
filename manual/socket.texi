@@ -1769,6 +1769,12 @@ completely established, will fail with @code{EALREADY}.
 The socket @var{socket} is non-blocking and already has a pending
 connection in progress (see @code{EINPROGRESS} above).
 @end table
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 @node Listening
@@ -1897,6 +1903,12 @@ The descriptor @var{socket} does not support this operation.
 @var{socket} has nonblocking mode set, and there are no pending
 connections immediately available.
 @end table
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 The @code{accept} function is not allowed for sockets using
@@ -2023,6 +2035,12 @@ case, @code{send} generates a @code{SIGPIPE} signal first; if that
 signal is ignored or blocked, or if its handler returns, then
 @code{send} fails with @code{EPIPE}.
 @end table
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 @node Receiving Data
@@ -2067,6 +2085,12 @@ The operation was interrupted by a signal before any data was read.
 @item ENOTCONN
 You never connected this socket.
 @end table
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 @node Socket Data Options
@@ -2366,6 +2390,12 @@ system on your machine usually does not know this.
 
 It is also possible for one call to @code{sendto} to report an error
 due to a problem related to a previous call.
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 @node Receiving Datagrams
@@ -2398,6 +2428,12 @@ if you are not interested in this information.
 The @var{flags} are interpreted the same way as for @code{recv}
 (@pxref{Socket Data Options}).  The return value and error conditions
 are also the same as for @code{recv}.
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 You can use plain @code{recv} (@pxref{Receiving Data}) instead of
@@ -2420,11 +2456,23 @@ you don't want to specify @var{flags} (@pxref{I/O Primitives}).
 @comment sys/socket.h
 @comment BSD
 @deftypefun int sendmsg (int @var{socket}, const struct msghdr *@var{message}, int @var{flags})
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
 @comment sys/socket.h
 @comment BSD
 @deftypefun int recvmsg (int @var{socket}, struct msghdr *@var{message}, int @var{flags})
+
+This function is defined as a cancelation point in multi-threaded
+programs.  So one has to be prepared for this and make sure that
+possibly allocated resources (like memory, files descriptors,
+semaphores or whatever) are freed even if the thread is cancel.
+@c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 @end ignore
 

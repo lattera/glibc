@@ -548,7 +548,7 @@ tz_compute (timer, tm)
     return 0;
 
   __daylight = timer >= tz_rules[0].change && timer < tz_rules[1].change;
-  __timezone = tz_rules[__daylight ? 1 : 0].offset;
+  __timezone = -tz_rules[__daylight ? 1 : 0].offset;
   __tzname[0] = (char *) tz_rules[0].name;
   __tzname[1] = (char *) tz_rules[1].name;
 

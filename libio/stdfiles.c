@@ -39,7 +39,7 @@
     = {{FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps},}; \
   default_symbol_version (INAME, NAME, GLIBC_2.1)
 #else
-#define DEF_STDFILE(INAME, FD, CHAIN, FLAGS) \
+#define DEF_STDFILE(INAME, NAME, FD, CHAIN, FLAGS) \
   struct _IO_FILE_complete INAME \
     = {{FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps},}; \
   default_symbol_version (INAME, NAME, GLIBC_2.1)

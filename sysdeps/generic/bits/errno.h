@@ -18,23 +18,24 @@
 
 /* This file defines the `errno' constants.  */
 
-#if !defined(__Emath_defined) && (defined(_ERRNO_H) || defined(__need_Emath))
+#if !defined __Emath_defined && (defined _ERRNO_H || defined __need_Emath)
 #undef	__need_Emath
 #define	__Emath_defined	1
 
-#define	EDOM	1
-#define	ERANGE	2
+# define EDOM	1
+# define ERANGE	2
 #endif
 
 #ifdef	_ERRNO_H
-#define	ENOSYS	3
-#define	EINVAL	4
-#define	ESPIPE	5
-#define	EBADF	6
-#define	ENOMEM	7
-#define	EACCES	8
-#define ENFILE  9
-#define EMFILE  10
+# define ENOSYS	3
+# define EINVAL	4
+# define ESPIPE	5
+# define EBADF	6
+# define ENOMEM	7
+# define EACCES	8
+# define ENFILE  9
+# define EMFILE  10
+# define ENOMSG  11
 #endif
 
 #define __set_errno(val) errno = (val)

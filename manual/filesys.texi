@@ -340,7 +340,7 @@ value.  Use @code{readdir_r} when this is critical.
 
 @comment dirent.h
 @comment GNU
-@deftypefun int readdir_r (DIR *@var{dirstream}, struct *@var{entry}, struct **@var{result})
+@deftypefun int readdir_r (DIR *@var{dirstream}, struct dirent *@var{entry}, struct dirent **@var{result})
 This function is the reentrant version of @code{readdir}.  Like
 @code{readdir} it returns the next entry from the directory.  But to
 prevent conflicts for simultaneously running threads the result is not
@@ -1783,6 +1783,10 @@ waste of the server's memory to cache them a second time.  In this use
 the sticky bit also says that the filesystem may fail to record the
 file's modification time onto disk reliably (the idea being that no-one
 cares for a swap file).
+
+This bit is only available on BSD systems (and those derived from
+them).  Therefore one has to use the @code{_BSD_SOURCE} feature select
+macro to get the definition (@pxref{Feature Test Macros}).
 @end table
 
 The actual bit values of the symbols are listed in the table above

@@ -24,7 +24,7 @@ a64l (string)
      const char *string;
 {
   size_t cnt;
-  long int result = 0l;
+  unsigned long int result = 0l;
 
   for (cnt = 0; cnt < 6; ++cnt)
     {
@@ -50,5 +50,5 @@ a64l (string)
 	}
     }
 
-  return result;
+  return (long int) result;
 }

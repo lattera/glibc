@@ -97,6 +97,9 @@ please let me know.
 [Q27]	``Programs like `logname', `top', `uptime' `users', `w' and
 	  `who', show incorrect information about the (number of)
 	  users on my system.  Why?''
+
+[Q28]	``After upgrading to a glibc 2.1 with symbol versioning I get
+	  errors about undefined symbols.  What went wrong?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -734,12 +737,31 @@ symlink that you have in place before you install glibc.  However,
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q28]	``After upgrading to a glibc 2.1 with symbol versioning I get
+	  errors about undefined symbols.  What went wrong?''
+
+[A28] {AJ} In a versioned libc a lot of symbols are now local that
+have been global symbols in previous versions. When defining a extern
+variable both in a user program and extern in the libc the links
+resolves this to only one reference - the one in the library. The
+problem is caused by either wrong program code or tools. In no case
+the global variables from libc should be used by any program. Since
+these reference are now local, you might see a message like:
+
+"msgfmt: error in loading shared libraries: : undefined symbol: _nl_domain_bindings"
+
+The only way to fix this is to recompile your program. Sorry, that's
+the price you might have to pay once for quite a number of advantages
+with symbol versioning.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
-{RM} Roland McGrath, <roland@gnu.ai.mit.edu>
-{HJL} H.J. Lu, <hjl@gnu.ai.mit.edu>
+{RM} Roland McGrath, <roland@gnu.org>
+{HJL} H.J. Lu, <hjl@gnu.org>
 {AJ} Andreas Jaeger, <aj@arthur.rhein-neckar.de>
 {EY} Eric Youngdale, <eric@andante.jic.com>
 {PB} Phil Blundell, <Philip.Blundell@pobox.com>
