@@ -45,69 +45,45 @@
 #  include <locale.h>
 # endif
 
-# ifndef _LIBC
-static const char *
-stringprep_locale_charset_slow (void)
+# ifdef _LIBC
+#  define stringprep_locale_charset() nl_langinfo (CODESET)
+# else
+/**
+ * stringprep_locale_charset:
+ *
+ * Find out current locale charset.  The function respect the CHARSET
+ * environment variable, but typically uses nl_langinfo(CODESET) when
+ * it is supported.  It fall back on "ASCII" if CHARSET isn't set and
+ * nl_langinfo isn't supported or return anything.
+ *
+ * Note that this function return the application's locale's preferred
+ * charset (or thread's locale's preffered charset, if your system
+ * support thread-specific locales).  It does not return what the
+ * system may be using.  Thus, if you receive data from external
+ * sources you cannot in general use this function to guess what
+ * charset it is encoded in.  Use stringprep_convert from the external
+ * representation into the charset returned by this function, to have
+ * data in the locale encoding.
+ *
+ * Return value: Return the character set used by the current locale.
+ *   It will never return NULL, but use "ASCII" as a fallback.
+ **/
+const char *
+stringprep_locale_charset (void)
 {
-  return nl_langinfo (CODESET);
   const char *charset = getenv ("CHARSET");	/* flawfinder: ignore */
 
   if (charset && *charset)
     return charset;
 
 #  ifdef LOCALE_WORKS
-  {
-    char *p;
+  charset = nl_langinfo (CODESET);
 
-    p = setlocale (LC_CTYPE, NULL);
-    setlocale (LC_CTYPE, "");
-
-    charset = nl_langinfo (CODESET);
-
-    setlocale (LC_CTYPE, p);
-
-    if (charset && *charset)
-      return charset;
-  }
+  if (charset && *charset)
+    return charset;
 #  endif
 
   return "ASCII";
-}
-
-static const char *stringprep_locale_charset_cache;
-# endif
-
-/**
- * stringprep_locale_charset:
- *
- * Find out system locale charset.
- *
- * Note that this function return what it believe the SYSTEM is using
- * as a locale, not what locale the program is currently in (modified,
- * e.g., by a setlocale(LC_CTYPE, "ISO-8859-1")).  The reason is that
- * data read from argv[], stdin etc comes from the system, and is more
- * likely to be encoded using the system locale than the program
- * locale.
- *
- * You can set the environment variable CHARSET to override the value
- * returned.  Note that this function caches the result, so you will
- * have to modify CHARSET before calling (even indirectly) any
- * stringprep functions, e.g., by setting it when invoking the
- * application.
- *
- * Return value: Return the character set used by the system locale.
- *   It will never return NULL, but use "ASCII" as a fallback.
- **/
-# ifdef _LIBC
-#  define stringprep_locale_charset() nl_langinfo (CODESET)
-# else
-const char *
-stringprep_locale_charset (void)
-{
-  if (!stringprep_locale_charset_cache)
-    stringprep_locale_charset_cache = stringprep_locale_charset_slow ();
-
-  return stringprep_locale_charset_cache;
 }
 # endif
 
