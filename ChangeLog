@@ -1,3 +1,14 @@
+1998-03-31 18:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/mntent.h: New file.
+
+	* elf/Makefile (trusted-dirs.h): Append slash to filename.
+	* elf/dl-load.c: Rewrite search path handling.
+	* elf/ldsodefs.h (struct r_search_path_elem): Change for rewrite.
+	* elf/rtld.c (process_envvars): Recognize LD_HWCAP_MASK.
+	* sysdeps/generic/dl-sysdep.h (_dl_important_hwcap): New function.
+	* elf/ldsodefs.h: Add prototype.
+
 1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nsswitch.c (__nss_lookup): Adjust comment.

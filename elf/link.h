@@ -156,10 +156,6 @@ struct link_map
     /* Collected information about own RPATH directories.  */
     struct r_search_path_elem **l_rpath_dirs;
 
-    /* Directory names composed from capability names.  */
-    struct r_strlenpair *l_capstrs;
-    size_t l_ncapstrs;
-
     /* Collected results of relocation while profiling.  */
     ElfW(Addr) *l_reloc_result;
 

@@ -1112,6 +1112,12 @@ process_envvars (enum mode *modep, int *lazyp)
 	    _dl_show_auxv ();
 	  break;
 
+	case 10:
+	  /* mask for the important hardware capabilities.  */
+	  if (memcmp (&envline[3], "HWCAP_MASK", 10) == 0)
+	    _dl_hwcap_mask = strtoul (&envline[14], NULL, 0);
+	  break;
+
 	case 12:
 	  /* Where to place the profiling data file.  */
 	  if (memcmp (&envline[3], "DEBUG_OUTPUT", 12) == 0)

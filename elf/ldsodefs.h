@@ -60,9 +60,12 @@ struct r_search_path_elem
     const char *what;
     const char *where;
 
+    /* Basename for this search path element.  The string must end with
+       a slash character.  */
     const char *dirname;
+    size_t dirnamelen;
 
-    enum r_dir_status exists[0];
+    enum r_dir_status status[0];
   };
 
 struct r_strlenpair
@@ -136,6 +139,9 @@ extern int _dl_debug_files;
 
 /* Expect cache ID.  */
 extern int _dl_correct_cache_id;
+
+/* Mask for important hardware capabilities we honour. */
+extern unsigned long int _dl_hwcap_mask;
 
 /* File deccriptor to write debug messages to.  */
 extern int _dl_debug_fd;
@@ -386,7 +392,10 @@ extern void _dl_show_auxv (void);
 extern char *_dl_next_ld_env_entry (char ***position);
 
 /* Return an array with the names of the important hardware capabilities.  */
-extern char **_dl_important_hwcap (size_t *sz);
+extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
+							size_t paltform_len,
+							size_t *sz,
+							size_t *max_capstrlen);
 
 __END_DECLS
 

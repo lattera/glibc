@@ -141,7 +141,7 @@ $(objpfx)trusted-dirs.h: Makefile $(..)Makeconfig
 	$(make-target-directory)
 	(for dir in `echo "$(default-rpath) $(user-defined-trusted-dirs)" |   \
 		     sed 's/:/ /g'`; do					      \
-	   echo "  \"$$dir\",";						      \
+	   echo "  \"$$dir/\",";					      \
 	 done;) > $@T
 	mv -f $@T $@
 $(objpfx)rtldtbl.h: Makefile $(..)Makeconfig genrtldtbl.awk

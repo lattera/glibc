@@ -18,7 +18,10 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <elf.h>
+#include <errno.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -45,7 +48,8 @@ int __libc_enable_secure;
 int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 static ElfW(auxv_t) *_dl_auxv;
-static unsigned long hwcap;
+static unsigned long int hwcap;
+unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 
 
 #ifndef DL_FIND_ARG_COMPONENTS
@@ -273,18 +277,21 @@ _dl_next_ld_env_entry (char ***position)
 
 /* Return an array of useful/necessary hardware capability names.  */
 const struct r_strlenpair *
-_dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz)
+_dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
+		      size_t *max_capstrlen)
 {
   /* Determine how many important bits are set.  */
-  unsigned long int important = hwcap & HWCAP_IMPORTANT;
+  unsigned long int mask = _dl_hwcap_mask;
   size_t cnt = platform != NULL;
   size_t n, m;
   size_t total;
   struct r_strlenpair *temp;
   struct r_strlenpair *result;
+  struct r_strlenpair *rp;
+  char *cp;
 
-  for (n = 0; (~((1UL << n) - 1) & important) != 0; ++n)
-    if ((important & (1UL << n)) != 0)
+  for (n = 0; (~((1UL << n) - 1) & mask) != 0; ++n)
+    if ((mask & (1UL << n)) != 0)
       ++cnt;
 
   if (cnt == 0)
@@ -298,22 +305,23 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz)
 	  _dl_signal_error (ENOMEM, NULL, "cannot create capability list");
 	}
 
-      result[0]->str = (char *) result;	/* Does not really matter.  */
-      result[0]->len = 0;
+      result[0].str = (char *) result;	/* Does not really matter.  */
+      result[0].len = 0;
 
       *sz = 1;
-      return &only_base;
+      return result;
     }
 
   /* Create temporary data structure to generate result table.  */
   temp = (struct r_strlenpair *) alloca (cnt * sizeof (*temp));
   m = 0;
-  for (n = 0; (~((1UL << n) - 1) & important) != 0; ++n)
-    if ((important & (1UL << n)) != 0)
+  for (n = 0; mask != 0; ++n)
+    if ((mask & (1UL << n)) != 0)
       {
 	temp[m].str = _dl_hwcap_string (n);
 	temp[m].len = strlen (temp[m].str);
-	++m
+	mask ^= 1UL << n;
+	++m;
       }
   if (platform != NULL)
     {
@@ -322,35 +330,36 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz)
       ++m;
     }
 
-  if (cnt == 1)
-    {
-      result = (struct r_strlenpair *) malloc (2 * sizeof (*result)
-					       + temp[0].len + 1);
-      if (result == NULL)
-	goto no_memory;
-
-      result[0].str = (char *) (result + 1);
-      result[0].len = len;
-      result[1].str = (char *) (result + 1);
-      result[1].len = 0;
-      result[0].str[0] = '/';
-      memcpy (&result[0].str[1], temp[0].str, temp[0].len);
-      *sz = 2;
-
-      return result;
-    }
-
   /* Determine the total size of all strings together.  */
-  total = cnt * (temp[0].len + temp[cnt - 1].len + 2);
-  for (n = 1; n + 1 < cnt; ++n)
-    total += 2 * (temp[n].len + 1);
+  if (cnt == 1)
+    total = temp[0].len;
+  else
+    {
+      total = (1 << (cnt - 2)) * (temp[0].len = temp[cnt - 1].len + 2);
+      for (n = 1; n + 1 < cnt; ++n)
+	total += (1 << (cnt - 3)) * (temp[n].len + 1);
+    }
 
   /* The result structure: we use a very compressed way to store the
      various combinations of capability names.  */
-  result = (struct r_strlenpair *) malloc (1 << (cnt - 2) * sizeof (*result)
-					   + total);
+  *sz = 1 << cnt;
+  result = (struct r_strlenpair *) malloc (*sz * sizeof (*result) + total);
   if (result == NULL)
     goto no_memory;
+
+  if (cnt == 1)
+    {
+      result[0].str = (char *) (result + *sz);
+      result[0].len = temp[0].len + 1;
+      result[1].str = (char *) (result + *sz);
+      result[1].len = 0;
+      cp = __mempcpy ((char *) (result + *sz), temp[0].str, temp[0].len);
+      *cp = '/';
+      *sz = 2;
+      *max_capstrlen = result[0].len;
+
+      return result;
+    }
 
   /* Fill in the information.  This follows the following scheme
      (indeces from TEMP for four strings):
@@ -360,35 +369,75 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz)
 	      #3: 0, 3		        1001
      This allows to represent all possible combinations of capability
      names in the string.  First generate the strings.  */
-  n = 1 << cnt;
-  cp = result[0].str = (char *) (result + 1 << (cnt - 2));
+  result[1].str = result[0].str = cp = (char *) (result + *sz);
+#define add(idx) \
+      cp = __mempcpy (__mempcpy (cp, temp[idx].str, temp[idx].len), "/", 1);
+  if (cnt == 2)
+    {
+      add (1);
+      add (0);
+    }
+  else
+    {
+      n = 1 << cnt;
+      do
+	{
+	  n -= 2;
+
+	  /* We always add the last string.  */
+	  add (cnt - 1);
+
+	  /* Add the strings which have the bit set in N.  */
+	  for (m = cnt - 2; m > 0; --m)
+	    if ((n & (1 << m)) != 0)
+	      add (m);
+
+	  /* Always add the first string.  */
+	  add (0);
+	}
+      while (n != 0);
+    }
+#undef add
+
+  /* Now we are ready to install the string pointers and length.  */
+  for (n = 0; n < (1 << cnt); ++n)
+    result[n].len = 0;
+  n = cnt;
   do
     {
-#define add(idx) \
-      cp = __mempcpy (__mempcpy (cp, "/", 1), temp[idx].str, temp[idx].len)
+      size_t mask = 1 << --n;
 
-      n -= 2;
-
-      /* We always add the last string.  */
-      add (cnt - 1);
-
-      /* Add the strings which have the bit set in N.  */
-      for (m = cnt - 2; cnt > 0; --cnt)
-	if ((n & (1 << m)) != 0)
-	  add (m);
-
-      /* Always add the first string.  */
-      add (0);
+      rp = result;
+      for (m = 1 << cnt; m > 0; ++rp)
+	if ((--m & mask) != 0)
+	  rp->len += temp[n].len + 1;
     }
   while (n != 0);
 
-  /* Now we are ready to install the string pointers and length.
-     The first string contains all strings.  */
-  result[0].len = 0;
-  for (n = 0; n < cnt; ++n)
-    result[0].len += temp[n].len;
+  /* The first half of the strings all include the first string.  */
+  n = (1 << cnt) - 2;
+  rp = &result[2];
+  while (n != (1 << (cnt - 1)))
+    {
+      if ((n & 1) != 0)
+	rp[0].str = rp[-2].str + rp[-2].len;
+      else
+	rp[0].str = rp[-1].str;
+      ++rp;
+      --n;
+    }
 
-  I KNOW THIS DOES NOT YET WORK --drepper
+  /* The second have starts right after the first part of the string of
+     corresponding entry in the first half.  */
+  do
+    {
+      rp[0].str = rp[-(1 << (cnt - 1))].str + temp[cnt - 1].len + 1;
+      ++rp;
+    }
+  while (--n != 0);
+
+  /* The maximum string length.  */
+  *max_capstrlen = result[0].len;
 
   return result;
 }
