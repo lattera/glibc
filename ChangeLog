@@ -1,3 +1,9 @@
+2000-09-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Use st_pad5.
+	* sysdeps/unix/sysv/linux/mips/xstatconv.c: Fix assignments.
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
+
 2000-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Strip out "unknown" from configuration names.
