@@ -1,3 +1,8 @@
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makerules ($(inst_libdir)/libc.so): Use $(slibdir) instead of
+	$(inst_slibdir) in AS_NEEDED directive.
+
 2005-03-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bits/unistd.h (pread, pread64): Don't swap function arguments.
