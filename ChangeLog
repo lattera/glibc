@@ -1,5 +1,12 @@
 Sun May 12 11:16:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules ($(libdir)/libc.so): Make the file an ld script.
+
+	* sysdeps/mach/hurd/configure.in: Don't grok --with-hurd option.
+
+	* sysdeps/mach/configure.in: File removed.
+	* sysdeps/mach/configure: File removed.
+
 	* mach/Machrules (%.udeps rule): Write deps for %_server.[ch] too.
 	(%_server.[ch] rule): Don't depend on %.defs; use #include to get
 	installed .defs file.

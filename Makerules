@@ -577,17 +577,13 @@ ifndef subdir
 # the special object libc-syms.so that contains just the dynamic symbol
 # table of the shared libc object.
 install: $(libdir)/libc.so
-$(libdir)/libc.so: $(common-objpfx)libc-syms.so subdir_install
-	$(AR) crvs $@ $< `cat $(addprefix $(common-objpfx)sor-,$(subdirs))`
+$(libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
+		   $(common-objpfx)libc.a
+	(echo '/* Use the shared library, but some functions are only in';\
+	 echo '   the static library, so try that secondarily.  */';\
+	 echo 'GROUP ( $(^F) )') > $@.new
+	mv -f $@.new $@
 
-# Extract from the shared object file just the dynamic symbol table
-# needed to link against the shared library.
-$(common-objpfx)libc-syms.so: $(common-objpfx)libc.so
-	AWK='$(AWK)' OBJCOPY='$(OBJCOPY)' OBJDUMP='$(OBJDUMP)' \
-	./extract-dynsym $< $@
-ifndef subdir
-generated += libc-syms.so
-endif
 endif
 
 else
