@@ -52,22 +52,14 @@ elf_machine_dynamic (void)
 
 
 /* Return the run-time load address of the shared object.  */
-// patb
 static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
-  Elf32_Addr addr;
-  asm (" ldr ip,.L1
-  	ldr r3,.L3
-	add r3, r3, sl
-  	ldr ip,[sl, ip]
-  	sub ip, r3, ip
-  	b .L2
-  	.L1: .word _dl_start(GOT)
-	.L3: .word _dl_start(GOTOFF)
-  	.L2: mov %0, ip"
-       : "=r" (addr) : : "ip", "r3");
-  return addr;
+  extern void __dl_start asm ("_dl_start");
+  Elf32_Addr got_addr = (Elf32_Addr) &__dl_start;
+  Elf32_Addr pcrel_addr;
+  asm ("adr %0, _dl_start" : "=r" (pcrel_addr));
+  return pcrel_addr - got_addr;
 }
 
 

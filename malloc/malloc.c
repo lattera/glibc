@@ -852,6 +852,8 @@ Void_t *(*__morecore)() = __default_morecore;
 
 #endif
 
+static size_t __libc_pagesize;
+
 #define MORECORE (*__morecore)
 #define MORECORE_FAILURE 0
 #define MORECORE_CLEARS 1
@@ -860,7 +862,7 @@ Void_t *(*__morecore)() = __default_morecore;
 #define mremap  __mremap
 #define mprotect __mprotect
 #undef malloc_getpagesize
-#define malloc_getpagesize __getpagesize()
+#define malloc_getpagesize __libc_pagesize
 
 #else /* _LIBC */
 
@@ -1654,6 +1656,7 @@ ptmalloc_init __MALLOC_P((void))
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
+  __libc_getpagesize = __getpagesize();
 #endif
   mutex_init(&main_arena.mutex);
   mutex_init(&list_lock);
@@ -1780,7 +1783,7 @@ __malloc_check_init()
   __free_hook = free_check;
   __realloc_hook = realloc_check;
   __memalign_hook = memalign_check;
-  if(check_action == 1)
+  if(check_action & 1)
     fprintf(stderr, "malloc: using debugging hooks\n");
 }
 
@@ -4068,7 +4071,11 @@ int mALLOPt(param_number, value) int param_number; int value;
    the heap contents are saved/restored via some other method.  The
    primary example for this is GNU Emacs with its `dumping' procedure.
    `Hook' function pointers are never saved or restored by these
-   functions. */
+   functions, with two exceptions: If malloc checking was in use when
+   malloc_get_state() was called, then malloc_set_state() calls
+   __malloc_check_init() if possible; if malloc checking was not in
+   use in the recorded state but the user requested malloc checking,
+   then the hooks are reset to 0.  */
 
 #define MALLOC_STATE_MAGIC   0x444c4541l
 #define MALLOC_STATE_VERSION (0*0x100l + 1l) /* major*0x100 + minor */
@@ -4196,10 +4203,18 @@ mALLOC_SET_STATe(msptr) Void_t* msptr;
   /* add version-dependent code here */
   if (ms->version >= 1) {
 #if defined _LIBC || defined MALLOC_HOOKS
-    /* Check whether it is safe to enable malloc checking.  */
+    /* Check whether it is safe to enable malloc checking, or whether
+       it is necessary to disable it.  */
     if (ms->using_malloc_checking && !using_malloc_checking &&
 	!disallow_malloc_check)
       __malloc_check_init ();
+    else if (!ms->using_malloc_checking && using_malloc_checking) {
+      __malloc_hook = 0;
+      __free_hook = 0;
+      __realloc_hook = 0;
+      __memalign_hook = 0;
+      using_malloc_checking = 0;
+    }
 #endif
   }
 
@@ -4319,13 +4334,11 @@ top_check()
   if((char*)t + chunksize(t) == sbrk_base + sbrked_mem ||
      t == initial_top(&main_arena)) return 0;
 
-  switch(check_action) {
-  case 1:
+  if(check_action & 1)
     fprintf(stderr, "malloc: top chunk is corrupt\n");
-    break;
-  case 2:
+  if(check_action & 2)
     abort();
-  }
+
   /* Try to set up a new top chunk. */
   brk = MORECORE(0);
   front_misalign = (unsigned long)chunk2mem(brk) & MALLOC_ALIGN_MASK;
@@ -4374,13 +4387,10 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
   p = mem2chunk_check(mem);
   if(!p) {
     (void)mutex_unlock(&main_arena.mutex);
-    switch(check_action) {
-    case 1:
+    if(check_action & 1)
       fprintf(stderr, "free(): invalid pointer %p!\n", mem);
-      break;
-    case 2:
+    if(check_action & 2)
       abort();
-    }
     return;
   }
 #if HAVE_MMAP

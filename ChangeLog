@@ -1,3 +1,28 @@
+1999-06-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c: Introduce local variable __libc_getpagesize to
+	avoid multiple calls to getpagesize() which might be a syscall.
+
+1999-06-06  Philip Blundell  <philb@gnu.org>
+
+	* stdio-common/tstscanf.c (main): Test the half-word format "%hd".
+
+1999-06-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Running make install): Correct typo in
+	dynamic linker invocation.
+
+1999-06-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_load_address): Fix
+	problems with GOT addressing.
+
+1999-06-05  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (check_action): Change into bitmap so that both
+	diagnostic and abort can be requested by setting it to 3.
+	(mALLOC_SET_STATe): Disable malloc checking if necessary.
+
 1999-06-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Few changes for HPUX.

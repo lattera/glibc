@@ -454,7 +454,7 @@ US.
 	the libc.so which comes with glibc all I get is a core dump.
 
 {UD} On Linux, gcc sets the dynamic linker to /lib/ld-linux.so.1 unless the
-user specifies a -dynamic-linker argument.  This is the name of the libc5
+user specifies a --dynamic-linker argument.  This is the name of the libc5
 dynamic linker, which does not work with glibc.
 
 For casual use of GNU libc you can just specify to the linker

@@ -236,7 +236,7 @@ install}, or you will end up with a mixture of header files from both
 libraries, and you won't be able to compile anything.  You may also need
 to reconfigure GCC to work with the new library.  The easiest way to do
 that is to figure out the compiler switches to make it work again
-(@samp{-Wl,-dynamic-linker=/lib/ld-linux.so.2} should work on Linux
+(@samp{-Wl,--dynamic-linker=/lib/ld-linux.so.2} should work on Linux
 systems) and use them to recompile gcc.  You can also edit the specs
 file (@file{/usr/lib/gcc-lib/@var{TARGET}/@var{VERSION}/specs}), but
 that is a bit of a black art.

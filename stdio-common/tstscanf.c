@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -229,6 +229,21 @@ main (int argc, char **argv)
     printf ("sscanf (\"%s\", \"%%p\", &p) = %d, p == %p\n", buf, res, p);
 
     if (res != 1 || p != NULL)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
+
+  fputs ("Test 7:\n", stdout);
+  {
+    short a[2] = { -1, -1 };
+    int res;
+
+    res = sscanf ("32767 1234", "%hd %hd", &a[0], &a[1]);
+    printf ("res = %d, a[0] = %d, a[1] = %d\n", res, a[0], a[1]);
+
+    if (res != 2 || a[0] != 32767 || a[1] != 1234)
       {
 	fputs ("test failed!\n", stdout);
 	result = 1;
