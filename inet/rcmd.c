@@ -56,7 +56,10 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 int __ivaliduser __P ((FILE *, u_int32_t, const char *, const char *));
 static int __ivaliduser2 __P ((FILE *, u_int32_t, const char *, const char *,
 			       const char *));
-int iruserok (u_int32_t raddr, int superuser, const char *ruser, *luser);
+static int iruserok2 (u_int32_t raddr, int superuser, const char *ruser,
+		      const char *luser, const char *rhost);
+int iruserok (u_int32_t raddr, int superuser, const char *ruser,
+	      const char *luser);
 
 
 int
@@ -286,7 +289,7 @@ ruserok(rhost, superuser, ruser, luser)
 
 	for (ap = hp->h_addr_list; *ap; ++ap) {
 		bcopy(*ap, &addr, sizeof(addr));
-		if (iruserok(addr, superuser, ruser, luser, rhost) == 0)
+		if (iruserok2(addr, superuser, ruser, luser, rhost) == 0)
 			return 0;
 	}
 	return -1;

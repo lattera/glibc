@@ -1,5 +1,7 @@
 1999-11-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/rcmd.c (ruserok): Use iruserok2 not iruserok.
+
 	* locale/iso-3166.def: Update from latest official list.
 
 1999-11-26  Andreas Jaeger  <aj@suse.de>
