@@ -20,21 +20,20 @@ Cambridge, MA 02139, USA.  */
 #define _ERRNO_H
 #include <errnos.h>
 
-ENTRY(syscall_error)
-#ifdef EWOULDBLOCK_sys
-	/* We translate the system's EWOULDBLOCK error into EAGAIN.
-	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
-	   EWOULDBLOCK_sys is the original number.  */
-	subq v0, EWOULDBLOCK_sys, t0
-	cmoveq t0, EAGAIN, v0
+       .comm errno, 4
+#ifdef __ELF__
+       .type errno, @object
 #endif
 
-	/* Store it in errno... */
-!	ldgp gp, 0(t12)
-	stl v0, errno
+LEAF(__syscall_error, 0)
+	.prologue 1
+
+	/* Store return value in errno... */
+	ldgp	gp, 0(t12)
+	stl	v0, errno
 
 	/* And just kick back a -1.  */
-	ldil v0, -1
+	ldi	v0, -1
 	ret
 
-	.end syscall_error
+	END(__syscall_error)
