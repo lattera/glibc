@@ -233,7 +233,6 @@ _dl_start_user:\n\
 " RTLD_START_SPECIAL_INIT "\n\
 	# Load the parameters again.\n\
 	# (eax, edx, ecx, *--esp) = (_dl_loaded, argc, argv, envp)\n\
-	movl (%esp), %edx\n\
 	movl _dl_loaded@GOT(%ebx), %esi\n\
 	leal 8(%esp,%edx,4), %eax\n\
 	leal 4(%esp), %ecx\n\

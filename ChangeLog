@@ -1,5 +1,9 @@
 2000-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/dl-machine.h: Undo last change.
+	* sysdeps/mach/hurd/i386/dl-machine.h (RTLD_START_SPECIAL_INIT):
+	Restore %edx register after call here.
+
 	* sysdeps/arm/atomicity.h: New file.
 	Contributed by Jesper Skov <jskov@redhat.com>.
 

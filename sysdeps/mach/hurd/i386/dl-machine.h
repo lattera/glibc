@@ -3,5 +3,5 @@
    into the asm in sysdeps/i386/dl-machine.h that contains
    the initializer code.  */
 
-#define RTLD_START_SPECIAL_INIT "call _dl_init_first@PLT"
+#define RTLD_START_SPECIAL_INIT "call _dl_init_first@PLT; movl (%esp), %edx"
 #include_next "dl-machine.h"
