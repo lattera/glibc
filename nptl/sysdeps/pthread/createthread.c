@@ -51,32 +51,26 @@ int *__libc_multiple_threads_ptr attribute_hidden;
 
 static int
 do_clone (struct pthread *pd, const struct pthread_attr *attr,
-	  int clone_flags, int (*fct) (void *), STACK_VARIABLES_PARMS)
+	  int clone_flags, int (*fct) (void *), STACK_VARIABLES_PARMS,
+	  int stopped)
 {
 #ifdef PREPARE_CREATE
   PREPARE_CREATE;
 #endif
 
-  /* Lame old kernels do not have CLONE_STOPPED support.  For those do
-     not pass the flag, not instead use the futex method.  */
-#ifndef __ASSUME_CLONE_STOPPED
-# define final_clone_flags clone_flags & ~CLONE_STOPPED
-  if (clone_flags & CLONE_STOPPED)
+  if (stopped)
     /* We Make sure the thread does not run far by forcing it to get a
        lock.  We lock it here too so that the new thread cannot continue
        until we tell it to.  */
     lll_lock (pd->lock);
-#else
-# define final_clone_flags clone_flags
-#endif
 
-  if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, final_clone_flags,
+  if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
 		  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
     /* Failed.  */
     return errno;
 
   /* Now we have the possibility to set scheduling parameters etc.  */
-  if (__builtin_expect ((clone_flags & CLONE_STOPPED) != 0, 0))
+  if (__builtin_expect (stopped != 0, 0))
     {
       INTERNAL_SYSCALL_DECL (err);
       int res = 0;
@@ -97,20 +91,8 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	      (void) INTERNAL_SYSCALL (tgkill, err2, 3,
 				       THREAD_GETMEM (THREAD_SELF, pid),
 				       pd->tid, SIGCANCEL);
-
-# ifdef __ASSUME_CLONE_STOPPED
-	      /* Then wake it up so that the signal can be processed.  */
-	      (void) INTERNAL_SYSCALL (tgkill, err2, 3,
-				       THREAD_GETMEM (THREAD_SELF, pid),
-				       pd->tid, SIGCONT);
-# endif
 #else
 	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
-
-# ifdef __ASSUME_CLONE_STOPPED
-	      /* Then wake it up so that the signal can be processed.  */
-	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCONT);
-# endif
 #endif
 
 	      return INTERNAL_SYSCALL_ERRNO (res, err);
@@ -126,20 +108,6 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
 	    goto err_out;
 	}
-
-#ifdef __ASSUME_CLONE_STOPPED
-      /* Now start the thread for real.  */
-# if __ASSUME_TGKILL
-      res = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
-			      pd->tid, SIGCONT);
-# else
-      res = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCONT);
-# endif
-
-      /* If something went wrong, kill the thread.  */
-      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-	goto err_out;
-#endif
     }
 
   /* We now have for sure more than one thread.  The main thread might
@@ -198,13 +166,6 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 #endif
 		     | 0);
 
-  /* If the newly created threads has to be started stopped since we
-     have to set the scheduling parameters or set the affinity we set
-     the CLONE_STOPPED flag.  */
-  if (attr != NULL && (attr->cpuset != NULL
-		       || (attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0))
-    clone_flags |= CLONE_STOPPED;
-
   if (__builtin_expect (THREAD_GETMEM (THREAD_SELF, report_events), 0))
     {
       /* The parent thread is supposed to report events.  Check whether
@@ -217,8 +178,8 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	{
 	  /* Create the thread.  We always create the thread stopped
 	     so that it does not get far before we tell the debugger.  */
-	  int res = do_clone (pd, attr, clone_flags | CLONE_STOPPED,
-			      start_thread, STACK_VARIABLES_ARGS);
+	  int res = do_clone (pd, attr, clone_flags, start_thread,
+			      STACK_VARIABLES_ARGS, 1);
 	  if (res == 0)
 	    {
 	      /* Now fill in the information about the new thread in
@@ -247,20 +208,24 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
     }
 
 #ifdef NEED_DL_SYSINFO
-  assert (THREAD_SELF_SYSINFO == THREAD_SYSINFO(pd));
+  assert (THREAD_SELF_SYSINFO == THREAD_SYSINFO (pd));
 #endif
+
+  /* Determine whether the newly created threads has to be started
+     stopped since we have to set the scheduling parameters or set the
+     affinity.  */
+  int stopped = 0;
+  if (attr != NULL && (attr->cpuset != NULL
+		       || (attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0))
+    stopped = 1;
 
   /* Actually create the thread.  */
   int res = do_clone (pd, attr, clone_flags, start_thread,
-		      STACK_VARIABLES_ARGS);
+		      STACK_VARIABLES_ARGS, stopped);
 
-#ifndef __ASSUME_CLONE_STOPPED
-  if (res == 0 && (clone_flags & CLONE_STOPPED))
-    {
-      /* And finally restart the new thread.  */
-      lll_unlock (pd->lock);
-    }
-#endif
+  if (res == 0 && stopped)
+    /* And finally restart the new thread.  */
+    lll_unlock (pd->lock);
 
   return res;
 }

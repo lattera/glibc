@@ -1,3 +1,9 @@
+2004-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/createthread.c (create_thread): Remove use of
+	CLONE_STOPPED.  We cannot use SIGCONT which means CLONE_STOPPED
+	needs to be implemented differently to be useful.
+
 2004-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_attr_setschedparam.c: Don't test priority against limits
