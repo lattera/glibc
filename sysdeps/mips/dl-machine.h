@@ -138,10 +138,6 @@ elf_machine_load_address (void)
 /* The MSB of got[1] of a gnu object is set to identify gnu objects.  */
 #define ELF_MIPS_GNU_GOT1_MASK	0x80000000
 
-/* GNU Binutils upto 2.10 produce a wrong relocations.  Bit 30 of
-   got[1] marks good objects.  */
-#define ELF_MIPS_GNU_GOT1_OK	0x00000001
-
 /* We can't rely on elf_machine_got_rel because _dl_object_relocation_scope
    fiddles with global data.  */
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info)			\
@@ -152,10 +148,6 @@ do {									\
   int i, n;								\
 									\
   got = (ElfW(Addr) *) D_PTR (map, l_info[DT_PLTGOT]);			\
-									\
-  if ((got[1] & ELF_MIPS_GNU_GOT1_MASK) != 0)				\
-    got[1] = (ElfW(Addr)) ELF_MIPS_GNU_GOT1_MASK			\
-              | (got[1] & ELF_MIPS_GNU_GOT1_OK);			\
 									\
   if (__builtin_expect (map->l_addr == 0, 1))				\
     goto done;								\
@@ -219,8 +211,8 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
 
       if ((g1 & ELF_MIPS_GNU_GOT1_MASK) != 0)
 	{
-	  struct link_map *l = (struct link_map *)
-		(g1 & ~(ELF_MIPS_GNU_GOT1_MASK|ELF_MIPS_GNU_GOT1_OK));
+	  struct link_map *l =
+	    (struct link_map *) (g1 & ~ELF_MIPS_GNU_GOT1_MASK);
 	  ElfW(Addr) base, limit;
 	  const ElfW(Phdr) *p = l->l_phdr;
 	  ElfW(Half) this, nent = l->l_phnum;
@@ -670,8 +662,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 of got[1] of a gnu object is set to identify gnu objects.
 	 Where we can store l for non gnu objects? XXX  */
       if ((got[1] & ELF_MIPS_GNU_GOT1_MASK) != 0)
-	got[1] = (ElfW(Addr)) ((unsigned) l | ELF_MIPS_GNU_GOT1_MASK
-	                       | (got[1] & ELF_MIPS_GNU_GOT1_OK));
+	got[1] = (ElfW(Addr)) ((unsigned) l | ELF_MIPS_GNU_GOT1_MASK);
       else
 	_dl_mips_gnu_objects = 0;
     }
