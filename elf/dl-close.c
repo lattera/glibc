@@ -94,23 +94,23 @@ _dl_close (void *_map)
 					   * sizeof (unsigned int));
   for (i = 0; i < nsearchlist; ++i)
     {
-      list[i]->l_idx = i;
-      new_opencount[i] = list[i]->l_opencount;
+      map->l_initfini[i]->l_idx = i;
+      new_opencount[i] = map->l_initfini[i]->l_opencount;
     }
   --new_opencount[0];
   for (i = 1; i < nsearchlist; ++i)
-    if (! (list[i]->l_flags_1 & DF_1_NODELETE)
+    if (! (map->l_initfini[i]->l_flags_1 & DF_1_NODELETE)
 	/* Decrement counter.  */
 	&& --new_opencount[i] == 0
 	/* Test whether this object was also loaded directly.  */
-	&& list[i]->l_searchlist.r_list != NULL)
+	&& map->l_initfini[i]->l_searchlist.r_list != NULL)
       {
 	/* In this case we have the decrement all the dependencies of
            this object.  They are all in MAP's dependency list.  */
 	unsigned int j;
-	struct link_map **dep_list = list[i]->l_searchlist.r_list;
+	struct link_map **dep_list = map->l_initfini[i]->l_searchlist.r_list;
 
-	for (j = 1; j < list[i]->l_searchlist.r_nlist; ++j)
+	for (j = 1; j < map->l_initfini[i]->l_searchlist.r_nlist; ++j)
 	  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE))
 	    {
 	      assert (dep_list[j]->l_idx < nsearchlist);
@@ -238,7 +238,7 @@ _dl_close (void *_map)
 	    {
 	      if (imap->l_searchlist.r_list != NULL)
 		free (imap->l_searchlist.r_list);
-	      else if (imap->l_initfini != NULL)
+	      else
 		free (imap->l_initfini);
 	    }
 

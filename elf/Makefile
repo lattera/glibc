@@ -98,7 +98,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
-	unload2 lateglobal
+	neededtest3 unload2 lateglobal
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
 tests-nodlopen-yes = nodlopen
@@ -109,8 +109,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-nodelete-$(have-z-nodelete)) \
 		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
 		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
-		neededobj1 neededobj2 neededobj3 unload2mod unload2dep \
-		ltglobmod1 ltglobmod2
+		neededobj1 neededobj2 neededobj3 neededobj4 \
+		unload2mod unload2dep ltglobmod1 ltglobmod2
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -256,6 +256,8 @@ $(objpfx)nextmod1.so: $(libdl)
 $(objpfx)neededobj1.so: $(libdl)
 $(objpfx)neededobj2.so: $(objpfx)neededobj1.so $(libdl)
 $(objpfx)neededobj3.so: $(objpfx)neededobj1.so $(objpfx)neededobj2.so $(libdl)
+$(objpfx)neededobj4.so: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
+			$(objpfx)neededobj3.so $(libdl)
 $(objpfx)unload2mod.so: $(objpfx)unload2dep.so
 $(objpfx)ltglobmod2.so: $(libdl)
 
@@ -270,11 +272,15 @@ $(objpfx)loadtest.out: $(test-modules)
 
 $(objpfx)neededtest: $(libdl)
 $(objpfx)neededtest.out: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
-		     $(objpfx)neededobj3.so
+			 $(objpfx)neededobj3.so
 
 $(objpfx)neededtest2: $(libdl)
 $(objpfx)neededtest2.out: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
-		     $(objpfx)neededobj3.so
+			  $(objpfx)neededobj3.so
+
+$(objpfx)neededtest3: $(libdl)
+$(objpfx)neededtest3.out: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
+			  $(objpfx)neededobj3.so $(objpfx)neededobj4.so
 
 $(objpfx)restest1: $(objpfx)testobj1.so $(objpfx)testobj1_1.so $(libdl)
 LDFLAGS-restest1 = -rdynamic
