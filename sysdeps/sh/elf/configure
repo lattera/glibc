@@ -1,0 +1,47 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/sh/elf.
+
+if test "$usetls" != no; then
+# Check for support of thread-local storage handling in assembler and
+# linker.
+echo "$as_me:$LINENO: checking for SH TLS support" >&5
+echo $ECHO_N "checking for sh TLS support... $ECHO_C" >&6
+if test "${libc_cv_sh_tls+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat > conftest.S <<\EOF
+	.section ".tdata", "awT", @progbits
+foo:	.long	25
+	.text
+	.long	foo@TLSGD
+	.long	foo@TLSLDM
+	.long	foo@DTPOFF
+	.long	foo@GOTTPOFF
+	.long	foo@TPOFF
+EOF
+if { ac_try='${CC-cc} -S $CFLAGS conftest.S 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_sh_tls=yes
+else
+  libc_cv_sh_tls=no
+fi
+rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_sh_tls" >&5
+echo "${ECHO_T}$libc_cv_sh_tls" >&6
+if test $libc_cv_sh_tls = yes; then
+  cat >>confdefs.h <<\_ACEOF
+#define HAVE_TLS_SUPPORT 1
+_ACEOF
+
+fi
+fi
+
+cat >>confdefs.h <<\_ACEOF
+#define PI_STATIC_AND_HIDDEN 1
+_ACEOF
+

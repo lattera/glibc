@@ -196,20 +196,13 @@ __pthread_cond_wait:
 
 14:
 	add	#48, r15
-.Lfree:	
 	lds.l	@r15+, pr
-.Lpop_pr:
 	mov.l	@r15+, r12
-.Lpop_r12:
 	mov.l	@r15+, r11
-.Lpop_r11:
 	mov.l	@r15+, r10
-.Lpop_r10:
 	mov.l	@r15+, r9
-.Lpop_r9:
 	rts
 	 mov.l	@r15+, r8
-.Lpop_r8:
 
 	.align	2
 .Lmunlock0:
@@ -222,7 +215,6 @@ __pthread_cond_wait:
 	.long	__pthread_mutex_cond_lock-.Lmlocki0b
 
 1:
-.LSblSTART:
 	/* Initial locking failed.  */
 	mov	r8, r5
 #if cond_lock != 0
@@ -296,7 +288,6 @@ __pthread_cond_wait:
 13:
 	bra	14b
 	 mov.l	@(12,r15), r0
-.LSblEND:
 
 	.align	2
 .Lmwait0:
@@ -522,48 +513,6 @@ __condvar_w_cleanup:
 	.uleb128 6
 	.byte	0x4
 	.ualong	.Lalloc-.Lpush_pr
-	.byte	0xe
-	.uleb128 72
-	.byte	0x4
-	.ualong	.Lfree-.Lalloc
-	.byte	0xe
-	.uleb128 24
-	.byte	0x4
-	.ualong	.Lpop_pr-.Lfree
-	.byte	0xe
-	.uleb128 20
-	.byte	0xd1
-	.byte	0x4
-	.ualong	.Lpop_r12-.Lpop_pr
-	.byte	0xe
-	.uleb128 16
-	.byte	0xcc
-	.byte	0x4
-	.ualong	.Lpop_r11-.Lpop_r12
-	.byte	0xe
-	.uleb128 12
-	.byte	0xcb
-	.byte	0x4
-	.ualong	.Lpop_r10-.Lpop_r11
-	.byte	0xe
-	.uleb128 8
-	.byte	0xca
-	.byte	0x4
-	.ualong	.Lpop_r9-.Lpop_r10
-	.byte	0xe
-	.uleb128 4
-	.byte	0xc9
-	.byte	0x4
-	.ualong	.Lpop_r8-.Lpop_r9
-	.byte	0xe
-	.uleb128 0
-	.byte	0xc8
-	.byte	0x4
-	.ualong	.LSblSTART-.Lpop_r8
-	.byte	0xe
-	.uleb128 72
-	.byte	0x4
-	.ualong	.LSblEND-.LSblSTART
 	.byte	0xe
 	.uleb128 72
 	.align	2

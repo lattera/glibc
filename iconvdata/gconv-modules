@@ -1,5 +1,5 @@
 # GNU libc iconv configuration.
-# Copyright (C) 1997-1999, 2000-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1997-2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -1561,3 +1561,12 @@ module	INTERNAL		Shift_JISX0213//	SHIFT_JISX0213	1
 #	from			to			module		cost
 module	TSCII//			INTERNAL		TSCII		1
 module	INTERNAL		TSCII//			TSCII		1
+
+#	from			to			module		cost
+module	PT154//			INTERNAL		PT154		1
+module	INTERNAL		PT154//			PT154		1
+
+#	from			to			module		cost
+alias	STRK1048-2002//		RK1048//
+module	RK1048//		INTERNAL		RK1048		1
+module	INTERNAL		RK1048//		RK1048		1

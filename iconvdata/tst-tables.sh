@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -205,6 +205,8 @@ cat <<EOF |
   ARMSCII-8
   TCVN5712-1
   TSCII
+  PT154
+  RK1048
   #
   # Multibyte encodings come here
   #

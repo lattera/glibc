@@ -151,6 +151,7 @@ es_VE.UTF-8/UTF-8 \
 es_VE/ISO-8859-1 \
 et_EE.UTF-8/UTF-8 \
 et_EE/ISO-8859-1 \
+et_EE.ISO-8859-15/ISO-8859-15 \
 eu_ES.UTF-8/UTF-8 \
 eu_ES/ISO-8859-1 \
 eu_ES@euro/ISO-8859-15 \
@@ -208,6 +209,7 @@ iw_IL/ISO-8859-8 \
 ja_JP.EUC-JP/EUC-JP \
 ja_JP.UTF-8/UTF-8 \
 ka_GE/GEORGIAN-PS \
+kk_KZ/PT154 \
 kl_GL.UTF-8/UTF-8 \
 kl_GL/ISO-8859-1 \
 kn_IN/UTF-8 \
