@@ -1,5 +1,9 @@
 2002-08-02  Roland McGrath  <roland@redhat.com>
 
+	* posix/bits/posix1_lim.h (SSIZE_MAX): Define to LONG_MAX, not INT_MAX.
+	On 32-bit platforms they are the same; on 64-bit platforms ssize_t
+	matches long int, not int.
+
 	* locale/localeinfo.h (_NL_CURRENT_DATA): New macro.
 	* wcsmbs/wcsmbsload.h (update_conversion_ptrs): Use it.
 	* locale/lc-ctype.c (_nl_postload_ctype): Likewise.
