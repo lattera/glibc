@@ -101,6 +101,9 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 #endif
 #ifdef USE_IN_LIBIO
   _IO_strfile f;
+# ifdef _IO_MTSAFE_IO
+  _IO_lock_t lock;
+# endif
 #else
   FILE f;
 #endif
@@ -525,6 +528,9 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 
       /* Print the number.  */
 #ifdef USE_IN_LIBIO
+# ifdef _IO_MTSAFE_IO
+      f._sbf._f._lock = &lock;
+# endif
       _IO_init ((_IO_FILE *) &f, 0);
       _IO_JUMPS ((struct _IO_FILE_plus *) &f) = &_IO_str_jumps;
       _IO_str_init_static ((_IO_strfile *) &f, dest, (s + maxsize) - dest, dest);

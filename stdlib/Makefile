@@ -74,6 +74,13 @@ CFLAGS-bsearch.c = $(exceptions)
 CFLAGS-msort.c = $(exceptions)
 CFLAGS-qsort.c = $(exceptions)
 
+include ../Makeconfig
+
+ifneq (,$(filter %REENTRANT, $(defines)))
+CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
+CFLAGS-strfmon_l.c = -D_IO_MTSAFE_IO
+endif
+
 include ../Rules
 
 

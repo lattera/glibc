@@ -1,5 +1,11 @@
 2001-02-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/strfmon.c [USE_IN_LIBIO]: Define lock variable and store
+	point in FILE structure before calling _IO_init.
+	* stdlib/Makefile: Add -D_IO_MTSAFE_IO to CFLAGS for strfmon and
+	strfmon_l if necessary.
+	Reported by Jury Gerold <gjury@grips.com>.
+
 	* sysdeps/gnu/netinet/tcp.h: Correct values of TCP_ macros.
 	Patch by Pekka.Pietikainen@cern.ch.
 
