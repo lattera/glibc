@@ -188,7 +188,7 @@ __assert_fail (const char *assertion,
 	       const char *file, unsigned int line, const char *function)
 {
   _dl_fatal_printf ("\
-BUG IN DYNAMIC LINKER ld.so: %s: %u: %s%sAssertion `%s' failed!\n",
+Inconsistency detected by ld.so: %s: %u: %s%sAssertion `%s' failed!\n",
 		    file, line, function ?: "", function ? ": " : "",
 		    assertion);
 
@@ -201,7 +201,7 @@ __assert_perror_fail (int errnum,
 {
   char errbuf[64];
   _dl_fatal_printf ("\
-BUG IN DYNAMIC LINKER ld.so: %s: %u: %s%sUnexpected error: %s\n",
+Inconsistency detected by ld.so: %s: %u: %s%sUnexpected error: %s\n",
 		    file, line, function ?: "", function ? ": " : "",
 		    __strerror_r (errnum, errbuf, sizeof (errbuf)));
 }

@@ -1,3 +1,9 @@
+2001-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-minimal.c (__assert_fail): Change error string.  It's
+	most of the time no bug in ld.so.
+	(__assert_perror_fail): Likewise.
+
 2001-04-11  Hans-Peter Nilsson  <hp@axis.com>
 
 	* sysdeps/generic/bits/fenv.h (fexcept_t): Change default type
