@@ -114,7 +114,7 @@
      {								\
        register int _a1 asm ("a1");				\
        LOAD_ARGS_##nr (args)					\
-       asm volatile ("swi %1"					\
+       asm volatile ("swi	%1	@ syscall " #name	\
 		     : "=r" (_a1)				\
 		     : "i" (SYS_ify(name)) ASM_ARGS_##nr	\
 		     : "a1");					\
