@@ -135,6 +135,8 @@ static bin_tree_t *re_dfa_add_tree_node (re_dfa_t *dfa,
 					 const re_token_t *token)
   __attribute ((noinline));
 static bin_tree_t *duplicate_tree (const bin_tree_t *src, re_dfa_t *dfa);
+static void mark_opt_subexp (const bin_tree_t *src, re_dfa_t *dfa);
+static void mark_opt_subexp_iter (const bin_tree_t *src, re_dfa_t *dfa, int idx);
 
 /* This table gives an error message for each of the error codes listed
    in regex.h.  Obviously the order here has to be same as there.
@@ -1031,7 +1033,6 @@ optimize_utf8 (dfa)
       case END_OF_RE:
       case OP_DUP_ASTERISK:
       case OP_DUP_QUESTION:
-      case OP_DUP_PLUS:
       case OP_OPEN_SUBEXP:
       case OP_CLOSE_SUBEXP:
 	break;
@@ -1150,6 +1151,7 @@ calc_first (dfa, node)
     case OP_CLOSE_BRACKET:
     case OP_OPEN_DUP_NUM:
     case OP_CLOSE_DUP_NUM:
+    case OP_DUP_PLUS:
     case OP_NON_MATCH_LIST:
     case OP_OPEN_COLL_ELEM:
     case OP_CLOSE_COLL_ELEM:
@@ -1175,14 +1177,6 @@ calc_first (dfa, node)
     case OP_OPEN_SUBEXP:
     case OP_CLOSE_SUBEXP:
       node->first = idx;
-      break;
-    case OP_DUP_PLUS:
-#ifdef DEBUG
-      assert (node->left != NULL);
-#endif
-      if (node->left->first == -1)
-	calc_first (dfa, node->left);
-      node->first = node->left->first;
       break;
     case OP_ALT:
       node->first = idx;
@@ -1223,7 +1217,6 @@ calc_next (dfa, node)
   switch (type)
     {
     case OP_DUP_ASTERISK:
-    case OP_DUP_PLUS:
       node->next = idx;
       break;
     case CONCAT:
@@ -1258,7 +1251,6 @@ calc_epsdest (dfa, node)
   if (node->type == 0)
     {
       if (dfa->nodes[idx].type == OP_DUP_ASTERISK
-	  || dfa->nodes[idx].type == OP_DUP_PLUS
 	  || dfa->nodes[idx].type == OP_DUP_QUESTION)
 	{
 	  if (node->left->first == -1)
@@ -2377,8 +2369,8 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
 /* This function parse repetition operators like "*", "+", "{1,3}" etc.  */
 
 static bin_tree_t *
-parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
-     bin_tree_t *dup_elem;
+parse_dup_op (elem, regexp, dfa, token, syntax, err)
+     bin_tree_t *elem;
      re_string_t *regexp;
      re_dfa_t *dfa;
      re_token_t *token;
@@ -2386,15 +2378,14 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
      reg_errcode_t *err;
 {
   re_token_t dup_token;
-  bin_tree_t *tree = dup_elem, *work_tree;
-  int start_idx = re_string_cur_idx (regexp);
+  bin_tree_t *tree = NULL;
+  int i, start, end, start_idx = re_string_cur_idx (regexp);
   re_token_t start_token = *token;
+
   if (token->type == OP_OPEN_DUP_NUM)
     {
-      int i;
-      int end = 0;
-      int start = fetch_number (regexp, token, syntax);
-      bin_tree_t *elem;
+      end = 0;
+      start = fetch_number (regexp, token, syntax);
       if (start == -1)
 	{
 	  if (token->type == CHARACTER && token->opr.c == ',')
@@ -2415,123 +2406,104 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
       if (BE (start == -2 || end == -2, 0))
 	{
 	  /* Invalid sequence.  */
-	  if (token->type == OP_CLOSE_DUP_NUM)
-	    goto parse_dup_op_invalid_interval;
-	  else
-	    goto parse_dup_op_ebrace;
-	}
-      if (BE ((start == 0 && end == 0) || tree == NULL, 0))
-	{
-	  /* We treat "<re>{0}" and "<re>{0,0}" as null string.
-	     Similarly "<re>{0}{m,n}".  */
-	  fetch_token (token, regexp, syntax);
-	  return NULL;
+	  if (BE (!(syntax & RE_INVALID_INTERVAL_ORD), 0))
+	    {
+	      if (token->type == END_OF_RE)
+		*err = REG_EBRACE;
+	      else
+		*err = REG_BADBR;
+
+	      return NULL;
+	    }
+
+	  /* If the syntax bit is set, rollback.  */
+	  re_string_set_index (regexp, start_idx);
+	  *token = start_token;
+	  token->type = CHARACTER;
+	  /* mb_partial and word_char bits should be already initialized by
+	     peek_token.  */
+	  return elem;
 	}
 
-      /* Extract "<re>{n,m}" to "<re><re>...<re><re>{0,<m-n>}".  */
-      elem = tree;
-      for (i = 1; i < start; ++i)
+      if (BE (end != -1 && start > end, 0))
 	{
-	  work_tree = duplicate_tree (elem, dfa);
-	  tree = create_tree (dfa, tree, work_tree, CONCAT, 0);
-	  if (BE (work_tree == NULL || tree == NULL, 0))
-	    goto parse_dup_op_espace;
-	}
-
-      if (end == -1)
-	{
-	  /* We treat "<re>{0,}" as "<re>*".  */
-	  dup_token.type = OP_DUP_ASTERISK;
-	  if (start > 0)
-	    {
-	      elem = duplicate_tree (elem, dfa);
-	      work_tree = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
-	      tree = create_tree (dfa, tree, work_tree, CONCAT, 0);
-	      if (BE (elem == NULL || work_tree == NULL || tree == NULL, 0))
-		goto parse_dup_op_espace;
-	    }
-	  else
-	    {
-	      tree = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
-	      if (BE (tree == NULL, 0))
-		goto parse_dup_op_espace;
-	    }
-	}
-      else if (BE (start > end, 0))
-	{
-	  /* First  number greater than first.  */
+	  /* First number greater than second.  */
 	  *err = REG_BADBR;
 	  return NULL;
 	}
-      else if (end - start > 0)
-	{
-	  /* Then extract "<re>{0,m}" to "<re>?<re>?...<re>?".  */
-	  dup_token.type = OP_DUP_QUESTION;
-	  if (start > 0)
-	    {
-	      elem = duplicate_tree (elem, dfa);
-	      elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
-	      tree = create_tree (dfa, tree, elem, CONCAT, 0);
-	      if (BE (elem == NULL || tree == NULL, 0))
-		goto parse_dup_op_espace;
-	    }
-	  else
-	    {
-	      tree = elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
-	      if (BE (tree == NULL, 0))
-		goto parse_dup_op_espace;
-	    }
-	  for (i = 1; i < end - start; ++i)
-	    {
-	      work_tree = duplicate_tree (elem, dfa);
-	      tree = create_tree (dfa, tree, work_tree, CONCAT, 0);
-	      if (BE (work_tree == NULL || tree == NULL, 0))
-		{
-		  *err = REG_ESPACE;
-		  return NULL;
-		}
-	    }
-	}
     }
-  /* Treat "<re>{0}*" etc. as "<re>{0}".  */
-  else if (tree == NULL)
-    ;
   else
     {
-      tree = re_dfa_add_tree_node (dfa, tree, NULL, token);
-      if (BE (tree == NULL, 0))
+      start = (token->type == OP_DUP_PLUS) ? 1 : 0;
+      end = (token->type == OP_DUP_QUESTION) ? 1 : -1;
+    }
+
+  /* Treat "<re>{0}*" etc. as "<re>{0}".  */
+  if (BE (elem == NULL, 0))
+    start = end = 0;
+
+  /* Extract "<re>{n,m}" to "<re><re>...<re><re>{0,<m-n>}".  */
+  else if (BE (start > 0, 0))
+    {
+      tree = elem;
+      for (i = 2; i <= start; ++i)
 	{
-	  *err = REG_ESPACE;
-	  return NULL;
+	  elem = duplicate_tree (elem, dfa);
+	  tree = create_tree (dfa, tree, elem, CONCAT, 0);
+	  if (BE (elem == NULL || tree == NULL, 0))
+	    goto parse_dup_op_espace;
 	}
     }
+
+  if (BE (end != start, 1))
+    {
+      dup_token.type = (end == -1 ? OP_DUP_ASTERISK : OP_DUP_QUESTION);
+      if (BE (start > 0, 0))
+	{
+          elem = duplicate_tree (elem, dfa);
+          if (BE (elem == NULL, 0))
+	    goto parse_dup_op_espace;
+
+          /* This subexpression will be marked as optional, so that
+             empty matches do not touch the registers.  */
+          mark_opt_subexp (elem, dfa);
+
+          /* Prepare the tree with the modifier.  */
+          elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
+          tree = create_tree (dfa, tree, elem, CONCAT, 0);
+	}
+      else
+	{
+	  /* We do not need to duplicate the tree because we have not
+	     created it yet.  */
+          mark_opt_subexp (elem, dfa);
+          tree = elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
+	}
+      
+      if (BE (elem == NULL || tree == NULL, 0))
+        goto parse_dup_op_espace;
+
+      /* This loop is actually executed only when end != -1,
+         to rewrite <re>{0,n} as <re>?<re>?<re>?...  We have
+         already created the start+1-th copy.  */
+      for (i = start + 2; i <= end; ++i)
+        {
+          elem = duplicate_tree (elem, dfa);
+          tree = create_tree (dfa, tree, elem, CONCAT, 0);
+          if (BE (elem == NULL || tree == NULL, 0))
+	    {
+	      *err = REG_ESPACE;
+	      return NULL;
+	    }
+        }
+    }
+
   fetch_token (token, regexp, syntax);
   return tree;
 
  parse_dup_op_espace:
   *err = REG_ESPACE;
   return NULL;
-
- parse_dup_op_ebrace:
-  if (BE (!(syntax & RE_INVALID_INTERVAL_ORD), 0))
-    {
-      *err = REG_EBRACE;
-      return NULL;
-    }
-  goto parse_dup_op_rollback;
- parse_dup_op_invalid_interval:
-  if (BE (!(syntax & RE_INVALID_INTERVAL_ORD), 0))
-    {
-      *err = REG_BADBR;
-      return NULL;
-    }
- parse_dup_op_rollback:
-  re_string_set_index (regexp, start_idx);
-  *token = start_token;
-  token->type = CHARACTER;
-  /* mb_partial and word_char bits should be already initialized by
-     peek_token.  */
-  return dup_elem;
 }
 
 /* Size of the names for collating symbol/equivalence_class/character_class.
@@ -3735,6 +3707,47 @@ re_dfa_add_tree_node (dfa, left, right, token)
     return NULL;
 
   return create_tree (dfa, left, right, 0, new_idx);
+}
+
+/* Mark the tree SRC as an optional subexpression.  */
+
+static void
+mark_opt_subexp (src, dfa)
+     const bin_tree_t *src;
+     re_dfa_t *dfa;
+{
+  /* Pass an OPT_SUBEXP_IDX which is != 1 if the duplicated tree is
+     a subexpression.  */
+  if (src->type == CONCAT
+      && src->left->type == NON_TYPE
+      && dfa->nodes[src->left->node_idx].type == OP_OPEN_SUBEXP)
+    mark_opt_subexp_iter (src, dfa, dfa->nodes[src->left->node_idx].opr.idx);
+}
+
+
+/* Recursive tree walker for mark_opt_subexp.  */
+
+static void
+mark_opt_subexp_iter (src, dfa, idx)
+     const bin_tree_t *src;
+     re_dfa_t *dfa;
+{
+  int node_idx;
+
+  if (src->type == NON_TYPE)
+    {
+      node_idx = src->node_idx;
+      if ((dfa->nodes[node_idx].type == OP_OPEN_SUBEXP
+	   || dfa->nodes[node_idx].type == OP_CLOSE_SUBEXP)
+	  && dfa->nodes[node_idx].opr.idx == idx)
+	dfa->nodes[node_idx].opt_subexp = 1;
+     }
+
+  if (src->left != NULL)
+    mark_opt_subexp_iter (src->left, dfa, idx);
+
+  if (src->right != NULL)
+    mark_opt_subexp_iter (src->right, dfa, idx);
 }
 
 

@@ -432,27 +432,22 @@ a(b|c){2,4}d abcbd 0 5 3 4
 a(b|c){2,4}d abcbcd 0 6 4 5
 a(b|c){2,}d abcd 0 4 2 3
 a(b|c){2,}d abcbd 0 5 3 4
-; perl only:
-a(b|c?)+d abcd 0 4 3 3
-a(b+|((c)*))+d abd 0 3 2 2 2 2 -1 -1
-a(b+|((c)*))+d abcd 0 4 3 3 3 3 2 3
+; perl only: these conflict with the POSIX test below
+;a(b|c?)+d abcd 0 4 3 3
+;a(b+|((c)*))+d abd 0 3 2 2 2 2 -1 -1
+;a(b+|((c)*))+d abcd 0 4 3 3 3 3 2 3
 
 ; posix only:
 - match_default extended REG_EXTENDED REG_STARTEND
 
-; XXX FIXME the following 4 tests fail ATM
-;a(b|c?)+d abcd 0 4 2 3
-;a(b|((c)*))+d abcd 0 4 2 3 2 3 2 3
-;a(b+|((c)*))+d abd 0 3 1 2 -1 -1 -1 -1
-;a(b+|((c)*))+d abcd 0 4 2 3 2 3 2 3
-
+a(b|c?)+d abcd 0 4 2 3
+a(b|((c)*))+d abcd 0 4 2 3 2 3 2 3
+a(b+|((c)*))+d abd 0 3 1 2 -1 -1 -1 -1
+a(b+|((c)*))+d abcd 0 4 2 3 2 3 2 3
 a(b|((c)*))+d ad 0 2 1 1 1 1 -1 -1
-
-; XXX FIXME the following 3 tests fail ATM
-;a(b|((c)*))*d abcd 0 4 2 3 2 3 2 3
-;a(b+|((c)*))*d abd 0 3 1 2 -1 -1 -1 -1
-;a(b+|((c)*))*d abcd 0 4 2 3 2 3 2 3
-
+a(b|((c)*))*d abcd 0 4 2 3 2 3 2 3
+a(b+|((c)*))*d abd 0 3 1 2 -1 -1 -1 -1
+a(b+|((c)*))*d abcd 0 4 2 3 2 3 2 3
 a(b|((c)*))*d ad 0 2 1 1 1 1 -1 -1
 
 - match_default normal REG_PERL

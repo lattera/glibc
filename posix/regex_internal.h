@@ -281,6 +281,7 @@ typedef struct
 #endif
   unsigned int constraint : 10;	/* context constraint */
   unsigned int duplicated : 1;
+  unsigned int opt_subexp : 1;
 #ifdef RE_ENABLE_I18N
   /* These 2 bits can be moved into the union if needed (e.g. if running out
      of bits; move opr.c to opr.c.c and move the flags to opr.c.flags).  */

@@ -1151,13 +1151,13 @@ No match
 /(abc|)+/
     abc
  0: abc
- 1: 
+ 1: abc
     abcabc
  0: abcabc
- 1: 
+ 1: abc
     abcabcabc
  0: abcabcabc
- 1: 
+ 1: abc
     xyz      
  0: 
  1: 
@@ -1165,46 +1165,44 @@ No match
 /([a]*)*/
     a
  0: a
- 1: 
+ 1: a
     aaaaa 
  0: aaaaa
- 1: 
+ 1: aaaaa
 
 /([ab]*)*/
     a
  0: a
- 1: 
+ 1: a
     b
  0: b
- 1: 
+ 1: b
     ababab
  0: ababab
- 1: 
+ 1: ababab
     aaaabcde
  0: aaaab
- 1: 
+ 1: aaaab
     bbbb    
  0: bbbb
- 1: 
+ 1: bbbb
 
 /([^a]*)*/
     b
  0: b
- 1: 
+ 1: b
     bbbb
  0: bbbb
- 1: 
+ 1: bbbb
     aaa   
  0: 
- 1: 
 
 /([^ab]*)*/
     cccc
  0: cccc
- 1: 
+ 1: cccc
     abab  
  0: 
- 1: 
 
 /abc/
     abc

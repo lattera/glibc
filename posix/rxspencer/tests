@@ -431,7 +431,7 @@ a(b|c)*d	-	abcd	abcd	c
 a(b|c)+d	-	abd	abd	b
 a(b|c)+d	-	abcd	abcd	c
 a(b|c?)+d	-	ad	ad	@d
-a(b|c?)+d	-	abcd	abcd	@d
+a(b|c?)+d	-	abcd	abcd	c
 a(b|c){0,0}d	-	ad	ad	-
 a(b|c){0,1}d	-	ad	ad	-
 a(b|c){0,1}d	-	abd	abd	b
@@ -452,9 +452,8 @@ a(b|c){2,4}d	-	abcbd	abcbd	b
 a(b|c){2,4}d	-	abcbcd	abcbcd	c
 a(b|c){2,}d	-	abcd	abcd	c
 a(b|c){2,}d	-	abcbd	abcbd	b
-a(b+|((c)*))+d	-	abd	abd	@d,@d,-
-# XXX Needs to be checked.
-#a(b+|((c)*))+d	-	abcd	abcd	@d,@d,-
+a(b+|((c)*))+d	-	abd	abd	b,-,-
+a(b+|((c)*))+d	-	abcd	abcd	c,c,c
 
 # check out the STARTEND option
 [abc]		&#	a(b)c	b

@@ -1306,6 +1306,7 @@ re_dfa_add_node (dfa, token, mode)
       dfa->nodes_alloc = new_nodes_alloc;
     }
   dfa->nodes[dfa->nodes_len] = token;
+  dfa->nodes[dfa->nodes_len].opt_subexp = 0;
   dfa->nodes[dfa->nodes_len].duplicated = 0;
   dfa->nodes[dfa->nodes_len].constraint = 0;
   return dfa->nodes_len++;

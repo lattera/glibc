@@ -62,7 +62,8 @@ static int check_halt_node_context (const re_dfa_t *dfa, int node,
 static int check_halt_state_context (const regex_t *preg,
 				     const re_dfastate_t *state,
 				     const re_match_context_t *mctx, int idx) internal_function;
-static void update_regs (re_dfa_t *dfa, regmatch_t *pmatch, int cur_node,
+static void update_regs (re_dfa_t *dfa, regmatch_t *pmatch,
+			 regmatch_t *prev_idx_match, int cur_node,
 			 int cur_idx, int nmatch) internal_function;
 static int proceed_next_node (const regex_t *preg, int nregs, regmatch_t *regs,
 			      const re_match_context_t *mctx,
@@ -1277,11 +1278,13 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
      regmatch_t *pmatch;
      int fl_backtrack;
 {
-  re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
+  re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   int idx, cur_node, real_nmatch;
   re_node_set eps_via_nodes;
   struct re_fail_stack_t *fs;
-  struct re_fail_stack_t fs_body = {0, 2, NULL};
+  struct re_fail_stack_t fs_body = { 0, 2, NULL };
+  regmatch_t *prev_idx_match;
+
 #ifdef DEBUG
   assert (nmatch > 1);
   assert (mctx->state_log != NULL);
@@ -1290,15 +1293,23 @@ set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)
     {
       fs = &fs_body;
       fs->stack = re_malloc (struct re_fail_stack_ent_t, fs->alloc);
+      if (fs->stack == NULL)
+	return REG_ESPACE;
     }
   else
     fs = NULL;
+
   cur_node = dfa->init_node;
   real_nmatch = (nmatch <= preg->re_nsub) ? nmatch : preg->re_nsub + 1;
   re_node_set_init_empty (&eps_via_nodes);
+
+  prev_idx_match = (regmatch_t *) alloca (sizeof (regmatch_t) * real_nmatch);
+  memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * real_nmatch);
+
   for (idx = pmatch[0].rm_so; idx <= pmatch[0].rm_eo ;)
     {
-      update_regs (dfa, pmatch, cur_node, idx, real_nmatch);
+      update_regs (dfa, pmatch, prev_idx_match, cur_node, idx, real_nmatch);
+
       if (idx == pmatch[0].rm_eo && cur_node == mctx->last_node)
 	{
 	  int reg_idx;
@@ -1362,30 +1373,54 @@ free_fail_stack_return (fs)
 }
 
 static void
-update_regs (dfa, pmatch, cur_node, cur_idx, nmatch)
+update_regs (dfa, pmatch, prev_idx_match, cur_node, cur_idx, nmatch)
      re_dfa_t *dfa;
-     regmatch_t *pmatch;
+     regmatch_t *pmatch, *prev_idx_match;
      int cur_node, cur_idx, nmatch;
 {
   int type = dfa->nodes[cur_node].type;
-  int reg_num;
-  if (type != OP_OPEN_SUBEXP && type != OP_CLOSE_SUBEXP)
-    return;
-  reg_num = dfa->nodes[cur_node].opr.idx + 1;
-  if (reg_num >= nmatch)
-    return;
   if (type == OP_OPEN_SUBEXP)
     {
+      int reg_num = dfa->nodes[cur_node].opr.idx + 1;
+
       /* We are at the first node of this sub expression.  */
-      pmatch[reg_num].rm_so = cur_idx;
-      pmatch[reg_num].rm_eo = -1;
+      if (reg_num < nmatch)
+	{
+	  pmatch[reg_num].rm_so = cur_idx;
+	  pmatch[reg_num].rm_eo = -1;
+	}
     }
   else if (type == OP_CLOSE_SUBEXP)
-    /* We are at the first node of this sub expression.  */
-    pmatch[reg_num].rm_eo = cur_idx;
+    {
+      int reg_num = dfa->nodes[cur_node].opr.idx + 1;
+      if (reg_num < nmatch)
+	{
+	  /* We are at the last node of this sub expression.  */
+	  if (pmatch[reg_num].rm_so < cur_idx)
+	    {
+	      pmatch[reg_num].rm_eo = cur_idx;
+	      /* This is a non-empty match or we are not inside an optional
+		 subexpression.  Accept this right away.  */
+	      memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * nmatch);
+	    }
+	  else
+	    {
+	      if (dfa->nodes[cur_node].opt_subexp
+		  && prev_idx_match[reg_num].rm_so != -1)
+		/* We transited through an empty match for an optional
+		   subexpression, like (a?)*, and this is not the subexp's
+		   first match.  Copy back the old content of the registers
+		   so that matches of an inner subexpression are undone as
+		   well, like in ((a?))*.  */
+		memcpy (pmatch, prev_idx_match, sizeof (regmatch_t) * nmatch);
+	      else
+		/* We completed a subexpression, but it may be part of
+		   an optional one, so do not update PREV_IDX_MATCH.  */
+		pmatch[reg_num].rm_eo = cur_idx;
+	    }
+	}
+    }
 }
-
-#define NUMBER_OF_STATE 1
 
 /* This function checks the STATE_LOG from the SCTX->last_str_idx to 0
    and sift the nodes in each states according to the following rules.
@@ -3279,7 +3314,7 @@ out_free:
 		 character ch.  See group_nodes_into_DFAstates.  */
 	      for (j = 0; (dests_ch[j][i] & mask) == 0; ++j)
 		;
-	      
+
 	      /* j-th destination accepts the word character ch.  */
 	      if (IS_WORD_CHAR (ch))
 		trtable[ch] = dest_states_word[j];
@@ -3298,7 +3333,7 @@ out_free:
 					   2 * SBC_MAX);
       if (BE (trtable == NULL, 0))
 	goto out_free;
-      
+
       /* For all characters ch...:  */
       for (i = 0; i < BITSET_UINTS; ++i)
 	for (ch = i * UINT_BITS, elem = acceptable[i], mask = 1;
@@ -3310,13 +3345,13 @@ out_free:
 		 character ch.  See group_nodes_into_DFAstates.  */
 	      for (j = 0; (dests_ch[j][i] & mask) == 0; ++j)
 		;
-	      
+
 	      /* j-th destination accepts the word character ch.  */
 	      trtable[ch] = dest_states[j];
 	      trtable[ch + SBC_MAX] = dest_states_word[j];
 	    }
     }
-  
+
   /* new line */
   if (bitset_contain (acceptable, NEWLINE_CHAR))
     {

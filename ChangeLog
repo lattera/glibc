@@ -1,3 +1,24 @@
+2003-12-23  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.c (re_dfa_add_node): Initialize opt_subexp.
+	* posix/regex_internal.h (re_token_type_t): Put OP_DUP_PLUS
+	among the tokens, rather than among the epsilon-transiting nodes.
+	(re_token_t): Add the opt_subexp flag.
+	* posix/regcomp.c (optimize_utf8, calc_first,
+	calc_next, calc_epsdest): Don't consider OP_DUP_PLUS.
+	(mark_opt_subexp, mark_opt_subexp_iter): New functions.
+	(parse_dup_op): Mostly rewritten, lowering OP_DUP_PLUS to
+	OP_DUP_ASTERISK and marking optional subexpressions
+	as such using mark_opt_subexp.
+	* posix/regexec.c (set_regs): Initialize PREV_INDEX_MATCH
+	and pass it to update_regs.
+	(update_regs): Use the PREV_INDEX_MATCH parameter, together
+	with the opt_subexp flag, in order to discard a final empty
+	match of a repeated subexpression.
+	* posix/BOOST.tests: Adjust test vectors.
+	* posix/PCRE.tests: Likewise.
+	* posix/rxspencer/tests: Likewise.
+
 2000-05-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (__expm1_code): Avoid using ?:
@@ -9,7 +30,7 @@
 	* posix/tst-rxspencer.c: Likewise.
 	Based on a patch by Alex Davis <alex14641@yahoo.com>.
 
-2002-12-17  Paolo Bonzini  <bonzini@gnu.org>
+2003-12-17  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regex_internal.h [!_LIBC] (internal_function): Define.
 	(re_string_allocate, re_string_construct, re_string_reconstruct,
@@ -60,7 +81,7 @@
 	(re_string_peek_byte_case, re_fetch_byte_case): Change
 	declaration from ANSI to K&R.
 
-2002-12-16  Paolo Bonzini  <bonzini@gnu.org>
+2003-12-16  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (build_trtable): Don't allocate the trtable
 	until state->word_trtable is known.  Don't hardcode UINT_BITS
@@ -172,7 +193,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h [!__PPC64_ELF_H]: Extend
 	conditional to include typedef elf_vrreg_t.
 
-2002-12-17  Paolo Bonzini  <bonzini@gnu.org>
+2003-12-17  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (re_search_internal): Limit search to the
 	beginning of the buffer if the initial states are empty for
@@ -197,7 +218,7 @@
 	* posix/regex_internal.h: Make sure the regex code compile
 	with non-GCC compilers by hiding attributes.
 
-2002-12-16  Jakub Jelinek  <jakub@redhat.com>
+2003-12-16  Jakub Jelinek  <jakub@redhat.com>
             Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (group_nodes_into_DFAstates): Never produce
@@ -6084,7 +6105,7 @@
 	invalid input if the -c option is used.
 	(main): Correctly append IGNORE string for -c option.
 
-2002-04-06  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+2003-04-06  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/bits/atomic.h: Moved to ...
 	* sysdeps/unix/sysv/linux/sh/bits/atomic.h: ... here.  Add comments.
@@ -8037,7 +8058,7 @@
 	* inet/rcmd.c (rresvport_af): Avoid using invliad values.  Wrap
 	around in search if port IPPORT_RESERVED/2 has been test.
 
-2002-02-20  Paolo Bonzini  <bonzini@gnu.org>
+2003-02-20  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c: Remove inclusions.
 	* posix/regexec.c: Likewise.
@@ -9032,7 +9053,7 @@
 	* io/ftwtest-sh: Add test for relative path argument to nftw()
 	with FTW_CHDIR option.
 
-2002-01-12  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+2003-01-12  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_VFORK_SYSCALL):
 	Define for powerpc.
@@ -9045,12 +9066,12 @@
 	(INLINE_SYSCALL): Make use of INTERNAL_SYSCALL.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: New file.
 
-2002-01-09  Richard Henderson  <rth@redhat.com>
+2003-01-09  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Compute
 	DTPREL64 and TPREL64 without loadbase applied.
 
-2002-01-09  Richard Henderson  <rth@redhat.com>
+2003-01-09  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.S: Use correct definition of errno
 	for NOT_IN_libc.
@@ -9443,7 +9464,7 @@
 
 	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Add nanosecond fields.
 
-2002-01-03  Paul Eggert  <eggert@twinsun.com>
+2003-01-03  Paul Eggert  <eggert@twinsun.com>
 
 	* malloc/obstack.h (__INT_TO_PTR) [__STDC__]: Cast result to
 	(void *) to avoid diagnostic with native c89 on SGI IRIX 6.5
