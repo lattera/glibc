@@ -20,6 +20,7 @@
 
 #include <sys/uio.h>
 #include <stdio-common/_itoa.h>
+#include <asm/ptrace.h>
 #include <bits/sigcontext.h>
 
 /* We will print the register dump in this format:

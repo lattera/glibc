@@ -1,3 +1,15 @@
+1999-11-26  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/gnu/siglist.h: If SIGPWR == SIGLOST, don't include SIGPWR
+	message.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/register-dump.h: Include
+	asm/ptrace.h, since this will not be done with 2.3.xx automatically
+	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h: Likewise.
+
+1999-11-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/iso-3166.def: Update from latest official list.
+
 1999-11-26  Andreas Jaeger  <aj@suse.de>
 
 	* libio/libioP.h: Remove duplicate declaration of _IO_wsetb.
