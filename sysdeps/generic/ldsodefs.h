@@ -785,7 +785,8 @@ extern void _dl_fini (void) internal_function;
    any shared object mappings.  The `r_state' member of `struct r_debug'
    says what change is taking place.  This function's address is
    the value of the `r_brk' member.  */
-extern void _dl_debug_state (void) attribute_hidden;
+extern void _dl_debug_state (void);
+rtld_hidden_proto (_dl_debug_state)
 
 /* Initialize `struct r_debug' if it has not already been done.  The
    argument is the run-time load address of the dynamic linker, to be put

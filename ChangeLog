@@ -1,3 +1,10 @@
+2004-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Versions [ld, GLIBC_PRIVATE]: Add _dl_debug_state.
+	* elf/dl-debug.c (_dl_debug_state): Add rtld_hidden_def.
+	* sysdeps/generic/ldsodefs.h (_dl_debug_state): Don't maek as
+	hidden but use rtld_hidden_proto.
+
 2004-10-19  Alfred M. Szmidt  <ams@gnu.org>
 
 	* sysdeps/generic/readonly-area.c (__readonly_str): Renamed to ...

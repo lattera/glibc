@@ -57,3 +57,4 @@ void
 _dl_debug_state (void)
 {
 }
+rtld_hidden_def (_dl_debug_state)
