@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -23,7 +23,7 @@
 #include <locale/localeinfo.h>
 
 wctype_t
-wctype (const char *property)
+__wctype (const char *property)
 {
   const char *names;
   wctype_t result;
@@ -51,3 +51,4 @@ wctype (const char *property)
   return SWAPU32 (result);
 #endif
 }
+weak_alias (__wctype, wctype)

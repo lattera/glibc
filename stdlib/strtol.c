@@ -263,7 +263,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 	{
 	  /* Figure out the thousands separator character.  */
 # if defined _LIBC || defined _HAVE_BTOWC
-	  thousands = btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
+	  thousands = __btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
 	  if (thousands == WEOF)
 	    thousands = L'\0';
 # endif

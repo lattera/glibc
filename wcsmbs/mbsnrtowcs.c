@@ -110,7 +110,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	  && ((wchar_t *) dst)[result - 1] == L'\0')
 	{
 	  assert (result > 0);
-	  assert (mbsinit (data.statep));
+	  assert (__mbsinit (data.statep));
 	  *src = NULL;
 	  --result;
 	}

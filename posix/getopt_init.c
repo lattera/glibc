@@ -1,5 +1,5 @@
 /* Perform additional initialization for getopt functions in GNU libc.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -54,7 +54,7 @@ __getopt_clean_environment (char **env)
   /* Generate name of the environment variable.  We must know the PID
      and we must not use `sprintf'.  */
   if (__libc_pid == 0xf00baa)
-    __libc_pid = getpid ();
+    __libc_pid = __getpid ();
 
   /* Construct "_<PID>_GNU_nonoption_argv_flags_=" string.  */
   cp = memcpy (&var[sizeof (var) - sizeof (envvar_tail)], envvar_tail,

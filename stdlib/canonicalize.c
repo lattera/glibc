@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ canonicalize (const char *name, char *resolved)
 
   if (name[0] != '/')
     {
-      if (!getcwd (rpath, path_max))
+      if (!__getcwd (rpath, path_max))
 	goto error;
       dest = strchr (rpath, '\0');
     }
@@ -147,7 +147,7 @@ canonicalize (const char *name, char *resolved)
 		  goto error;
 		}
 
-	      n = readlink (rpath, buf, path_max);
+	      n = __readlink (rpath, buf, path_max);
 	      if (n < 0)
 		goto error;
 	      buf[n] = '\0';
@@ -191,11 +191,13 @@ error:
     free (rpath);
   return NULL;
 }
+strong_alias (canonicalize, __realpath)
 weak_alias (canonicalize, realpath)
 
 
 char *
-canonicalize_file_name (const char *name)
+__canonicalize_file_name (const char *name)
 {
   return canonicalize (name, NULL);
 }
+weak_alias (__canonicalize_file_name, canonicalize_file_name)

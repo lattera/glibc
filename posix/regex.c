@@ -51,6 +51,29 @@
 #if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
 # include <wctype.h>
 # include <wchar.h>
+
+/* We have to keep the namespace clean.  */
+# define regfree(preg) __regfree (preg)
+# define regexec(pr, st, nm, pm, ef) __regexec (pr, st, nm, pm, ef)
+# define regcomp(preg, pattern, cflags) __regcomp (preg, pattern, cflags)
+# define regerror(errcode, preg, errbuf, errbuf_size) \
+	__regerror(errcode, preg, errbuf, errbuf_size)
+# define re_set_registers(bu, re, nu, st, en) \
+	__re_set_registers (bu, re, nu, st, en)
+# define re_match_2(bufp, string1, size1, string2, size2, pos, regs, stop) \
+	__re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
+# define re_match(bufp, string, size, pos, regs) \
+	__re_match (bufp, string, size, pos, regs)
+# define re_search(bufp, string, size, startpos, range, regs) \
+	__re_search (bufp, string, size, startpos, range, regs)
+# define re_compile_pattern(pattern, length, bufp) \
+	__re_compile_pattern (pattern, length, bufp)
+# define re_set_syntax(syntax) __re_set_syntax (syntax)
+# define re_search_2(bufp, st1, s1, st2, s2, startpos, range, regs, stop) \
+	__re_search_2 (bufp, st1, s1, st2, s2, startpos, range, regs, stop)
+# define re_compile_fastmap(bufp) __re_compile_fastmap (bufp)
+
+#define btowc __btowc
 #endif
 
 /* This is for other GNU distributions with internationalized messages.  */
@@ -104,8 +127,12 @@ char *realloc ();
 # ifndef INHIBIT_STRING_HEADER
 #  if defined HAVE_STRING_H || defined STDC_HEADERS || defined _LIBC
 #   include <string.h>
-#   if !defined bzero && !defined _LIBC
-#    define bzero(s, n)		(memset (s, '\0', n), (s))
+#   ifndef bzero
+#    ifndef _LIBC
+#     define bzero(s, n)	(memset (s, '\0', n), (s))
+#    else
+#     define bzero(s, n)	__bzero (s, n)
+#    endif
 #   endif
 #  else
 #   include <strings.h>
@@ -941,7 +968,13 @@ printchar (c)
    syntax, so it can be changed between regex compilations.  */
 /* This has no initializer because initialized variables in Emacs
    become read-only after dumping.  */
+#ifdef _LIBC
+reg_syntax_t __re_syntax_options;
+weak_alias (__re_syntax_options, re_syntax_options)
+# define re_syntax_options __re_syntax_options
+#else
 reg_syntax_t re_syntax_options;
+#endif
 
 
 /* Specify the precise syntax of regexps for compilation.  This provides
@@ -966,6 +999,9 @@ re_set_syntax (syntax)
 #endif /* DEBUG */
   return ret;
 }
+#ifdef _LIBC
+weak_alias (__re_set_syntax, re_set_syntax)
+#endif
 
 /* This table gives an error message for each of the error codes listed
    in regex.h.  Obviously the order here has to be same as there.
@@ -1053,9 +1089,17 @@ static const char *re_error_msgid[] =
 # if defined MATCH_MAY_ALLOCATE
 /* 4400 was enough to cause a crash on Alpha OSF/1,
    whose default stack limit is 2mb.  */
+#  ifdef _LIBC
+long int __re_max_failures = 4000;
+#  else
 long int re_max_failures = 4000;
+#  endif
 # else
+#  ifdef _LIBC
+long int __re_max_failures = 2000;
+#  else
 long int re_max_failures = 2000;
+#  endif
 # endif
 
 union fail_stack_elt
@@ -1078,10 +1122,23 @@ typedef struct
 # if defined MATCH_MAY_ALLOCATE
 /* 4400 was enough to cause a crash on Alpha OSF/1,
    whose default stack limit is 2mb.  */
+#  ifdef _LIBC
+int __re_max_failures = 20000;
+#  else
 int re_max_failures = 20000;
+#  endif
 # else
+#  ifdef _LIBC
+int __re_max_failures = 2000;
+#  else
 int re_max_failures = 2000;
+#  endif
 # endif
+
+#ifdef _LIBC
+weak_alias (__re_max_failures, re_max_failures)
+# define re_max_failures __re_max_failures
+#endif
 
 union fail_stack_elt
 {
@@ -1694,7 +1751,11 @@ typedef struct
 #  define CHAR_CLASS_MAX_LENGTH 256
 # endif
 
-# define IS_CHAR_CLASS(string) wctype (string)
+# ifdef _LIBC
+#  define IS_CHAR_CLASS(string) __wctype (string)
+# else
+#  define IS_CHAR_CLASS(string) wctype (string)
+# endif
 #else
 # define CHAR_CLASS_MAX_LENGTH  6 /* Namely, `xdigit'.  */
 
@@ -2189,7 +2250,7 @@ regex_compile (pattern, size, syntax, bufp)
 			wctype_t wt;
                         int ch;
 
-			wt = wctype (str);
+			wt = IS_CHAR_CLASS (str);
 			if (wt == 0)
 			  FREE_STACK_RETURN (REG_ECTYPE);
 
@@ -2201,8 +2262,13 @@ regex_compile (pattern, size, syntax, bufp)
 
                         for (ch = 0; ch < 1 << BYTEWIDTH; ++ch)
 			  {
+# ifdef _LIBC
+			    if (__iswctype (__btowc (ch), wt))
+			      SET_LIST_BIT (ch);
+#else
 			    if (iswctype (btowc (ch), wt))
 			      SET_LIST_BIT (ch);
+#endif
 
 			    if (translate && (is_upper || is_lower)
 				&& (ISUPPER (ch) || ISLOWER (ch)))
@@ -3370,6 +3436,9 @@ re_compile_fastmap (bufp)
   RESET_FAIL_STACK ();
   return 0;
 } /* re_compile_fastmap */
+#ifdef _LIBC
+weak_alias (__re_compile_fastmap, re_compile_fastmap)
+#endif
 
 /* Set REGS to hold NUM_REGS registers, storing them in STARTS and
    ENDS.  Subsequent matches using PATTERN_BUFFER and REGS will use
@@ -3405,6 +3474,9 @@ re_set_registers (bufp, regs, num_regs, starts, ends)
       regs->start = regs->end = (regoff_t *) 0;
     }
 }
+#ifdef _LIBC
+weak_alias (__re_set_registers, re_set_registers)
+#endif
 
 /* Searching routines.  */
 
@@ -3421,6 +3493,9 @@ re_search (bufp, string, size, startpos, range, regs)
   return re_search_2 (bufp, NULL, 0, string, size, startpos, range,
 		      regs, size);
 }
+#ifdef _LIBC
+weak_alias (__re_search, re_search)
+#endif
 
 
 /* Using the compiled pattern in BUFP->buffer, first tries to match the
@@ -3577,6 +3652,9 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
     }
   return -1;
 } /* re_search_2 */
+#ifdef _LIBC
+weak_alias (__re_search_2, re_search_2)
+#endif
 
 /* This converts PTR, a pointer into one of the search strings `string1'
    and `string2' into an offset from the beginning of that string.  */
@@ -3678,6 +3756,9 @@ re_match (bufp, string, size, pos, regs)
 # endif
   return result;
 }
+# ifdef _LIBC
+weak_alias (__re_match, re_match)
+# endif
 #endif /* not emacs */
 
 static boolean group_match_null_string_p _RE_ARGS ((unsigned char **p,
@@ -3723,6 +3804,9 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
 #endif
   return result;
 }
+#ifdef _LIBC
+weak_alias (__re_match_2, re_match_2)
+#endif
 
 /* This is a separate function so that we can force an alloca cleanup
    afterwards.  */
@@ -5416,6 +5500,9 @@ re_compile_pattern (pattern, length, bufp)
     return NULL;
   return gettext (re_error_msgid[(int) ret]);
 }
+#ifdef _LIBC
+weak_alias (__re_compile_pattern, re_compile_pattern)
+#endif
 
 /* Entry points compatible with 4.2 BSD regex library.  We don't define
    them unless specifically requested.  */
@@ -5586,6 +5673,9 @@ regcomp (preg, pattern, cflags)
 
   return (int) ret;
 }
+#ifdef _LIBC
+weak_alias (__regcomp, regcomp)
+#endif
 
 
 /* regexec searches for a given pattern, specified by PREG, in the
@@ -5662,6 +5752,9 @@ regexec (preg, string, nmatch, pmatch, eflags)
   /* We want zero return to mean success, unlike `re_search'.  */
   return ret >= 0 ? (int) REG_NOERROR : (int) REG_NOMATCH;
 }
+#ifdef _LIBC
+weak_alias (__regexec, regexec)
+#endif
 
 
 /* Returns a message corresponding to an error code, ERRCODE, returned
@@ -5707,6 +5800,9 @@ regerror (errcode, preg, errbuf, errbuf_size)
 
   return msg_size;
 }
+#ifdef _LIBC
+weak_alias (__regerror, regerror)
+#endif
 
 
 /* Free dynamically allocated space used by PREG.  */
@@ -5731,5 +5827,8 @@ regfree (preg)
     free (preg->translate);
   preg->translate = NULL;
 }
+#ifdef _LIBC
+weak_alias (__regfree, regfree)
+#endif
 
 #endif /* not emacs  */

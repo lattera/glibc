@@ -329,8 +329,8 @@ find_derivation (const char *toset, const char *toset_expand,
 		  {
 		    regex_t *newp = (regex_t *) malloc (sizeof (regex_t));
 
-		    if (regcomp (newp, __gconv_modules_db[cnt]->from_pattern,
-				 REG_EXTENDED | REG_ICASE) != 0)
+		    if (__regcomp (newp, __gconv_modules_db[cnt]->from_pattern,
+				   REG_EXTENDED | REG_ICASE) != 0)
 		      {
 			/* Something is wrong.  Remember this.  */
 			free (newp);
@@ -345,8 +345,8 @@ find_derivation (const char *toset, const char *toset_expand,
 		    /* Try to match the from name.  */
 		    regmatch_t match[4];
 
-		    if (regexec (__gconv_modules_db[cnt]->from_regex,
-				 current->result_set, 4, match, 0) == 0
+		    if (__regexec (__gconv_modules_db[cnt]->from_regex,
+				   current->result_set, 4, match, 0) == 0
 			&& match[0].rm_so == 0
 			&& current->result_set[match[0].rm_eo] == '\0')
 		      {
@@ -600,7 +600,7 @@ free_mem (void)
   for (cnt = 0; cnt < __gconv_nmodules; ++cnt)
     {
       if (__gconv_modules_db[cnt]->from_regex != NULL)
-	regfree ((regex_t *) __gconv_modules_db[cnt]->from_regex);
+	__regfree ((regex_t *) __gconv_modules_db[cnt]->from_regex);
 
       /* Modules which names do not start with a slash are builtin
 	 transformations and the memory is not allocated dynamically.  */

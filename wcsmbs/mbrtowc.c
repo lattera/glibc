@@ -79,7 +79,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
       if (data.outbufavail > 0 && *(wchar_t *)data.outbuf == L'\0')
 	{
 	  /* The converted character is the NUL character.  */
-	  assert (mbsinit (data.statep));
+	  assert (__mbsinit (data.statep));
 	  result = 0;
 	}
       else

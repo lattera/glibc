@@ -198,6 +198,7 @@ extern wchar_t *wmemset __P ((wchar_t *__s, wchar_t __c, size_t __n));
 
 /* Determine whether C constitutes a valid (one-byte) multibyte
    character.  */
+extern wint_t __btowc __P ((int __c));
 extern wint_t btowc __P ((int __c));
 
 /* Determine whether C corresponds to a member of the extended
@@ -206,6 +207,7 @@ extern int wctob __P ((wint_t __c));
 
 /* Determine whether PS points to an object representing the initial
    state.  */
+extern int __mbsinit __P ((__const mbstate_t *__ps));
 extern int mbsinit __P ((__const mbstate_t *__ps));
 
 /* Write wide character representation of multibyte character pointed

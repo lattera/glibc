@@ -1,3 +1,33 @@
+1998-04-08 20:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_conf.c (__gconv_read_conf): Use __realpath not realpath.
+	* iconv/gconv_db.c: Use __ protected regex functions.
+	* iconv/gconv_simple.c: Use __mbsinit not mbsinit.
+	* posix/getopt_init.c: Use __getpid not getpid.
+	* posix/regex.c: Rename all global functions to start with __ and
+	make old names weak aliases.
+	* posix/regex.h: Adopt prototypes for this.
+	* stdlib/canonicalize.c: Define __realpath, make canonicalize_file_name
+	a weak alias and use __getcwd instead of getcwd.
+	* stdlib/stdlib.h: Declare __realpath and __canonicalize_file_name.
+	* stdlib/strtod.c: Use __btowc instead of btowc.
+	* stdlib/strtol.c: Likewise.
+	* sysdeps/libm-ieee754/s_matherr.c: Weaken definition of matherr.
+	* sysdeps/unix/sysv/linux/errlist.c: Make sure definitions of sys_nerr
+	and sys_errlist are weak.
+	* wcsmbs/btowc.c: Define function as __btowc and make btowc weak alias.
+	* wcsmbs/mbrtowc.c: Use __mbsinit not mbsinit.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/mbsinit.c: Define function as __mbsinit and make mbsinit
+	weak alias.
+	* wcsmbs/wchar.h: Declare __btowc and __mbsinit.
+	* wctype/wctype.c: Define function as __wctype and make wctype
+	weak alias.
+	* wctype/wctype.h: Declare __wctype.
+
 1998-04-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfscanf.c: Perform test in %l[ handling correctly.

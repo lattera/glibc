@@ -459,7 +459,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  thousands = btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
+	  thousands = __btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
 	  if (thousands == WEOF)
 	    thousands = L'\0';
 	  if (thousands == L'\0')
@@ -470,7 +470,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
     grouping = NULL;
 
   /* Find the locale's decimal point character.  */
-  decimal = btowc (*_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT));
+  decimal = __btowc (*_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT));
   if (decimal == WEOF)
     decimal = L'.';
   assert (decimal != L'\0');

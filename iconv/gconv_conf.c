@@ -404,7 +404,7 @@ __gconv_read_conf (void)
 #endif
       char real_elem[MAXPATHLEN];
 
-      if (realpath (elem, real_elem) != NULL)
+      if (__realpath (elem, real_elem) != NULL)
 	{
 	  size_t elem_len = strlen (real_elem);
 	  char *filename, *tmp;

@@ -151,6 +151,7 @@ extern int iswxdigit __P ((wint_t __wc));
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
+extern wctype_t __wctype __P ((__const char *__property));
 extern wctype_t wctype __P ((__const char *__property));
 
 /* Determine whether the wide-character WC has the property described by

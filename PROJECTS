@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: March 1998
+Status: April 1998
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@gnu.org>.
@@ -50,7 +50,7 @@ contact <bug-glibc@gnu.org>.
 
      - exp2
 
-     each with float, double, and long double arguments.
+     with long double arguments.
 
      Beside this most of the complex math functions which are new in
      ISO C 9X should be improved.  Writing some of them in assembler is
@@ -101,3 +101,14 @@ contact <bug-glibc@gnu.org>.
 		int foo __P ((int, int, int, int));
 
      Blargh!
+
+[16] The libio stream file functions should be extended in a way to use
+     mmap to map the file and use it as the buffer to user sees.  For
+     read-only streams this should be rather easy and it avoids all read()
+     calls.
+
+     A more sophisticated solution would use mmap also for writing.  The
+     standards do not demand that the file on the disk is always in the
+     correct form so it would be possible to enlarge it always according
+     to the page size and install the correct length only for fclose() and
+     fflush() calls.

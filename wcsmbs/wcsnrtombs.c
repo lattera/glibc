@@ -111,7 +111,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 	  && dst[data.outbufavail - 1] == '\0')
 	{
 	  assert (data.outbufavail > 0);
-	  assert (mbsinit (data.statep));
+	  assert (__mbsinit (data.statep));
 	  *src = NULL;
 	  --result;
 	}

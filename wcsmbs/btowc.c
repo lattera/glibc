@@ -25,7 +25,7 @@
 
 
 wint_t
-btowc (c)
+__btowc (c)
      int c;
 {
   char buf[sizeof (wchar_t)];
@@ -67,3 +67,4 @@ btowc (c)
 
   return *(wchar_t *)buf;
 }
+weak_alias (__btowc, btowc)

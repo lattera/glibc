@@ -573,6 +573,7 @@ extern int system __P ((__const char *__command));
 /* Return a malloc'd string containing the canonical absolute name of the
    named file.  The last file name component need not exist, and may be a
    symlink to a nonexistent file.  */
+extern char *__canonicalize_file_name __P ((__const char *__name));
 extern char *canonicalize_file_name __P ((__const char *__name));
 #endif
 
@@ -583,6 +584,7 @@ extern char *canonicalize_file_name __P ((__const char *__name));
    name is PATH_MAX chars or more, returns null with `errno' set to
    ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars, returns the
    name in RESOLVED.  */
+extern char *__realpath __P ((__const char *__name, char *__resolved));
 extern char *realpath __P ((__const char *__name, char *__resolved));
 #endif
 

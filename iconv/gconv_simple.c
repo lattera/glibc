@@ -586,7 +586,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen == 0 && !mbsinit (data->statep))
+	  if (*inlen == 0 && !__mbsinit (data->statep))
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;
@@ -705,7 +705,7 @@ __gconv_transform_ucs2_ucs4 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen == 0 && !mbsinit (data->statep))
+	  if (*inlen == 0 && !__mbsinit (data->statep))
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;
@@ -837,7 +837,7 @@ __gconv_transform_ucs4_ucs2 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen == 0 && !mbsinit (data->statep))
+	  if (*inlen == 0 && !__mbsinit (data->statep))
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;
