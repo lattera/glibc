@@ -12,7 +12,6 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
 
-
 2004-05-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (__expm1_code): Define using
