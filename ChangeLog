@@ -1,3 +1,8 @@
+2000-11-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/dl-cache.c (HWCAP_CHECK): Fix access to
+	_dl_hwcap.
+
 2000-11-13  Roland McGrath  <roland@frob.com>
 
 	* hurd/get-host.c (_hurd_get_host_config): Fix last change.
