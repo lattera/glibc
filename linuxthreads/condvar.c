@@ -257,7 +257,7 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
 static int
 pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 				pthread_mutex_t *mutex,
-				struct timespec * reltime)
+				const struct timespec * abstime)
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;

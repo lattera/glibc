@@ -232,9 +232,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 {
   /* The character used as thousands separator.  */
 #ifdef COMPILE_WPRINTF
-  wchar_t thousands_sep;
+  wchar_t thousands_sep = L'\0';
 #else
-  const char *thousands_sep;
+  const char *thousands_sep = NULL;
 #endif
 
   /* The string describing the size of groups of digits.  */
@@ -266,10 +266,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Count number of specifiers we already processed.  */
   int nspecs_done;
-
-  /* This flag is set by the 'I' modifier and selects the use of the
-     `outdigits' as determined by the current locale.  */
-  int use_outdigits;
 
   /* For the %m format we may need the current `errno' value.  */
   int save_errno = errno;
@@ -1292,6 +1288,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       int is_char = 0;	/* Argument is promoted (unsigned) char.  */
       int width = 0;	/* Width of output; 0 means none specified.  */
       int prec = -1;	/* Precision of output; -1 means none specified.  */
+      /* This flag is set by the 'I' modifier and selects the use of the
+	 `outdigits' as determined by the current locale.  */
+      int use_outdigits = 0;
       UCHAR_T pad = L_(' ');/* Padding character.  */
       CHAR_T spec;
 
@@ -1680,6 +1679,7 @@ do_positional:
 	int is_long = specs[nspecs_done].info.is_long;
 	int width = specs[nspecs_done].info.width;
 	int prec = specs[nspecs_done].info.prec;
+	int use_outdigits = specs[nspecs_done].info.i18n;
 	char pad = specs[nspecs_done].info.pad;
 	CHAR_T spec = specs[nspecs_done].info.spec;
 

@@ -1,5 +1,8 @@
 2000-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (vfprintf): Initialize thousands_sep.
+	Define and initialize use_outdigits in the inner loops.
+
 	* sysdeps/posix/sigwait.c: Don't look for signal 0 since it does
 	not exist.  Patch by Miloslav Trmac <mitr@volny.cz> (PR libc/1601).
 
