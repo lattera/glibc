@@ -294,8 +294,7 @@ RANLIB = ranlib
 endif
 
 # Extra flags to pass to GCC.
-+gccwarn := -Wall -Wwrite-strings -Wno-parentheses -Winline \
-	    -Wbad-function-cast -Wconversion
++gccwarn := -Wall -Wwrite-strings -Wno-parentheses -Winline -Wbad-function-cast
 
 # This is the program that generates makefile
 # dependencies from C source files.

@@ -50,12 +50,9 @@ else
 start-installed-name = crt1.o
 
 # These are the special initializer/finalizer files.  They are always the
-# first and last file in the link.  crti.o ... crtn.o are used for normal
-# linking; they define the global "functions" _init and _fini to run the
-# .init and .fini sections.  crti_s.o ... crtn_s.o are for making shared
-# library objects; they put the prologue/epilogue code into the .init and
-# .fini sections, but define no global symbols.
-crtstuff = crti crtn crti_s crtn_s
+# first and last file in the link.  crti.o ... crtn.o define the global
+# "functions" _init and _fini to run the .init and .fini sections.
+crtstuff = crti crtn
 
 install-lib += $(crtstuff:=.o)
 extra-objs += $(crtstuff:=.o)
@@ -67,13 +64,11 @@ omit-deps += $(crtstuff)
 # disable emission of .size directives and debugging information, since
 # they will get confused by the splitting of the output we do.
 $(objpfx)cr%i.s $(objpfx)cr%n.s: initfini.c; $(initfini)
-$(objpfx)cr%i_s.s $(objpfx)cr%n_s.s: initfini.c; $(initfini)
 
 define initfini
 -rm -f $(objpfx)crtcommon.tmp
 (echo 'cat > crtcommon.tmp <<\EOF_common'; \
  $(CC) $< $(CPPFLAGS) $(CFLAGS) \
-       $(patsubst %,-DGLOBAL=static,$(filter %_s.s,$@)) \
        -finhibit-size-directive -g0 -S -o -; \
  echo 'EOF_common') | (cd $(@D); $(SHELL))
 cat $(objpfx)crtcommon.tmp >> $(objpfx)crti.s-new

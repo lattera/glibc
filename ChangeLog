@@ -1,5 +1,14 @@
 Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdio/vfscanf.c (conv_error): Simplify expression to avoid
+ 	"value computed is not used" warning.
+
+	* Makeconfig (+gccwarn): Removed -Wconversion.
+
+	* csu/initfini.c (GLOBAL): Macro removed.
+	(_init, _fini): Always define globally.
+	* csu/Makefile (crtstuff, initfini): Don't make crt[in]_s.o.
+
 	* asia, backward, europe, leapseconds, southamerica: New data from
 	ADO's 95e.
 

@@ -36,7 +36,7 @@ Cambridge, MA 02139, USA.  */
 
 
 #define	inchar()	((c = getc(s)) == EOF ? EOF : (++read_in, c))
-#define	conv_error()	return ((c == EOF || ungetc(c, s)), done)
+#define	conv_error()	return (ungetc(c, s), done)
 #define input_error()	return (done == 0 ? EOF : done)
 #define	memory_error()	return ((errno = ENOMEM), EOF)
 
