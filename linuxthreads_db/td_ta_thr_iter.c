@@ -66,9 +66,15 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 
 	  /* Test the state.
 	     XXX This is incomplete.  */
-	  if (state != TD_THR_ANY_STATE
-	      && (state != TD_THR_ZOMBIE || pds.p_exited == 0)
-	      && (state != TD_THR_RUN || pds.p_exited != 0))
+	  if (state != TD_THR_ANY_STATE)
+	    continue;
+
+	  /* XXX For now we ignore threads which are not running anymore.
+	     The reason is that gdb tries to get the registers and fails.
+	     In future we should have a special mode of the thread library
+	     in which we keep the process around until the actual join
+	     operation happened.  */
+	  if (pds.p_exited != 0)
 	    continue;
 
 	  /* Yep, it matches.  Call the callback function.  */

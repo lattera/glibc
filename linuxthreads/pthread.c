@@ -61,7 +61,8 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* int p_h_errno */
   NULL,                       /* char * p_in_sighandler */
   0,                          /* char p_sigwaiting */
-  PTHREAD_START_ARGS_INITIALIZER, /* struct pthread_start_args p_start_args */
+  PTHREAD_START_ARGS_INITIALIZER(NULL),
+                              /* struct pthread_start_args p_start_args */
   {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
   {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
   0,                          /* int p_userstack */
@@ -103,7 +104,8 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_h_errno */
   NULL,                       /* char * p_in_sighandler */
   0,                          /* char p_sigwaiting */
-  PTHREAD_START_ARGS_INITIALIZER, /* struct pthread_start_args p_start_args */
+  PTHREAD_START_ARGS_INITIALIZER(__pthread_manager),
+                              /* struct pthread_start_args p_start_args */
   {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
   {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
   0,                          /* int p_userstack */

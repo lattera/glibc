@@ -168,7 +168,7 @@ inet_aton(cp, addr)
 			 *	a.b.c	(with c treated as 16 bits)
 			 *	a.b	(with b treated as 24 bits)
 			 */
-			if (pp >> res.bytes + 3
+			if (pp > res.bytes + 3
 			    || val > 0xff)
 				goto ret_0;
 			*pp++ = val;

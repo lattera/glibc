@@ -43,29 +43,29 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
      descriptor in older versions is not fully initialized.  */
   if (pds.p_nr == 1)
     {
-      infop->ti_ta_p = th->th_ta_p;
       infop->ti_tid = th->th_ta_p->pthread_threads_max * 2 + 1;
-      infop->ti_lid = pds.p_pid;
       infop->ti_type = TD_THR_SYSTEM;
       infop->ti_state = TD_THR_RUN;
     }
   else
     {
-      infop->ti_ta_p = th->th_ta_p;
       infop->ti_tid = pds.p_tid;
-      infop->ti_lid = pds.p_pid;
       infop->ti_tls = (char *) pds.p_specific;
       infop->ti_pri = pds.p_priority;
       infop->ti_type = TD_THR_USER;
 
       if (pds.p_exited)
+	/* This should not happen.  */
 	infop->ti_state = TD_THR_ZOMBIE;
       else
 	/* XXX For now there is no way to get more information.  */
 	infop->ti_state = TD_THR_RUN;
-
-      infop->ti_startfunc = pds.p_start_args.start_routine;
     }
+
+  /* Initialization which are the same in both cases.  */
+  infop->ti_lid = pds.p_pid;
+  infop->ti_ta_p = th->th_ta_p;
+  infop->ti_startfunc = pds.p_start_args.start_routine;
 
   return TD_OK;
 }

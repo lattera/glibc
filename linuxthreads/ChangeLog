@@ -1,3 +1,9 @@
+1999-10-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_handle_create): Remove p_startfct initialization.
+
+	* internals.h (_pthread_descr_struct): We don't need p_startfct field.
+
 1999-10-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* internals.h: Correct return types for __libc_read and __libc_write.

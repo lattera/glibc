@@ -1,3 +1,12 @@
+1999-10-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* td_thr_get_info.c: Always initialize start function.
+
+	* td_ta_thr_iter.c: Don't return threads which exited (but are not
+	joined).
+
+	* td_thr_validate.c: Don't skip manager thread.
+
 1999-10-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_ta_thr_iter.c: Use size of descriptor from *TA.

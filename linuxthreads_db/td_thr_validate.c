@@ -35,10 +35,6 @@ td_thr_validate (const td_thrhandle_t *th)
     {
       struct pthread_handle_struct phc;
 
-      if (cnt == 1)
-	/* Skip the manager thread.  */
-	continue;
-
       if (ps_pdread (th->th_ta_p->ph, handles, &phc,
 		     sizeof (struct pthread_handle_struct)) != PS_OK)
 	return TD_ERR;	/* XXX Other error value?  */
