@@ -265,6 +265,7 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 #undef get32
 #undef put16
 #undef put32
+#undef unaligned
 
 /* Include the file a second time to define the function to define the
    function to handle unaligned access.  */
