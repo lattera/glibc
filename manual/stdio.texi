@@ -689,12 +689,12 @@ call to @code{freopen} or @code{freopen64} can reset the
 @itemize @bullet
 @item
 If any of the normal character functions is used (this includes the
-@code{fread} and @code{fwrite} functions) the steam is marked as not
+@code{fread} and @code{fwrite} functions) the stream is marked as not
 wide oriented.
 
 @item
 If any of the wide character functions is used the stream is marked as
-wide oriented
+wide oriented.
 
 @item
 The @code{fwide} function can be used to set the orientation either way.
@@ -709,7 +709,7 @@ will simply be strange or the application will simply crash.  The
 @comment ISO
 @deftypefun int fwide (FILE *@var{stream}, int @var{mode})
 
-The @code{fwide} function can use used to set and query the state of the
+The @code{fwide} function can be used to set and query the state of the
 orientation of the stream @var{stream}.  If the @var{mode} parameter has
 a positive value the streams get wide oriented, for negative values
 narrow oriented.  It is not possible to overwrite previous orientations
