@@ -1,5 +1,5 @@
 /* Some basic tests for LFS.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -98,6 +98,11 @@ do_test (int argc, char *argv[])
   if (ret == -1 && errno == ENOSYS)
     {
       error (0, errno, "lseek64 is not supported");
+      exit (EXIT_SUCCESS);
+    }
+  if (ret == -1 && errno == EINVAL)
+    {
+      error (0, errno, "LFS seems not to be supported ");
       exit (EXIT_SUCCESS);
     }
 

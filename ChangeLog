@@ -1,5 +1,15 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/dcigettext.c: Fix a few warnings.
+	Patch by Bruno Haible <haible@ilog.fr>.
+
+2001-01-08  Andreas Jaeger  <aj@suse.de>
+
+	* io/test-lfs.c (do_test): Check lseek64 return for EINVAL.
+	Reported by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+2001-01-08  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/generic/segfault.c (install_handler): Check output file
 	name with access().
 
