@@ -111,8 +111,7 @@ static double zero = 0.0;
 	if(ix>=0x7ff00000) return one/(x*x);
 	x = fabs(x);
 	if(ix >= 0x40000000) {	/* |x| >= 2.0 */
-		s = __sin(x);
-		c = __cos(x);
+		__sincos (x, &s, &c);
 		ss = s-c;
 		cc = s+c;
 		if(ix<0x7fe00000) {  /* make sure x+x not overflow */

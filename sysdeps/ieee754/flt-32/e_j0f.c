@@ -66,8 +66,7 @@ static float zero = 0.0;
 	if(ix>=0x7f800000) return one/(x*x);
 	x = fabsf(x);
 	if(ix >= 0x40000000) {	/* |x| >= 2.0 */
-		s = __sinf(x);
-		c = __cosf(x);
+		__sincosf (x, &s, &c);
 		ss = s-c;
 		cc = s+c;
 		if(ix<0x7f000000) {  /* make sure x+x not overflow */

@@ -119,8 +119,7 @@ __ieee754_j0l (x)
   x = fabsl (x);
   if (ix >= 0x4000)		/* |x| >= 2.0 */
     {
-      s = __sinl (x);
-      c = __cosl (x);
+      __sincosl (x, &s, &c);
       ss = s - c;
       cc = s + c;
       if (ix < 0x7ffe)

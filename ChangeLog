@@ -1,3 +1,9 @@
+2001-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/dbl-64/e_j0.c: Little optimization, use sincos.
+	* sysdeps/flt-32/e_j0f.c: Likewise.
+	* sysdeps/ldbl-96/e_j0l.c: Likewise.
+
 2000-12-02  H.J. Lu  <hjl@gnu.org>
 
 	* resolv/res_libc.c (res_init): Don't make it default.
