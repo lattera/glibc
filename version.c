@@ -20,12 +20,12 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 CONST char __libc_release[] = "alpha";
-CONST char __libc_version[] = "1.09.6";
+CONST char __libc_version[] = "1.09.7";
 
 void
 DEFUN_VOID(__libc_print_version)
 {
-  printf ("GNU C Library %s release version %s, by Roland McGrath.",
+  printf ("GNU C Library %s release version %s, by Roland McGrath et al.\n",
 	  __libc_release, __libc_version);
 #ifdef	__VERSION__
   printf ("Compiled by GNU CC version %s.\n", __VERSION__);

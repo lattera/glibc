@@ -1,3 +1,29 @@
+Tue May  2 01:52:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	Implemented runtime dynamic linker to support ELF shared libraries.
+	* elf/Makefile: Added rules to make ld.so and libdl.
+	* elf/dl-error.c: New file.
+	* elf/dl-fini.c: New file.
+	* elf/dl-init.c: New file.
+	* elf/dl-load.c: New file.
+	* elf/dl-lookup.c: New file.
+	* elf/dl-object.c: New file.
+	* elf/dl-reloc.c: New file.
+	* elf/dlclose.c: New file.
+	* elf/dlerror.c: New file.
+	* elf/dlopen.c: New file.
+	* elf/dlsym.c: New file.
+	* elf/dynamic-link.h: New file.
+	* elf/link.h: New file.
+	* elf/rtld.c: New file.
+
+Mon May  1 18:48:30 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules (LDFLAGS-c.so): Add -interp and -e switches to make
+ 	libc.so runnable.
+	* version.c (__libc_print_version): Add "et al" and missing NL to
+ 	author credit.
+
 Sat Apr 29 15:46:57 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c (S_ISDIR): Define if undefined.
