@@ -53,6 +53,8 @@ _start:
 	   boundary to avoid penalties from misaligned accesses.  Thanks
 	   to Edward Seidl <seidl@janed.com> for pointing this out.  */
 	andl $0xfffffff8, %esp
+	pushl %eax		/* Push garbage because we allocate
+				   28 more bytes.  */
 
 	/* Provide the highest stack address to the user code (for stacks
 	   which grow downwards).  */

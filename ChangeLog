@@ -1,3 +1,7 @@
+1998-06-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/elf/start.S (_start): Ensure correct alignment.
+
 1998-06-18 16:40  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add _dl_profile_map, _dl_profile_output, _dl_start_profile,
