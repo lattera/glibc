@@ -1,3 +1,8 @@
+2001-01-02  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Make
+	constant unsigned.
+
 2001-01-01  Andreas Jaeger  <aj@suse.de>
 
 	* inet/rcmd.c (rcmd_af): Use socklen_t for len.

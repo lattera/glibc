@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -417,7 +417,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 #undef add
 
   /* Now we are ready to install the string pointers and length.  */
-  for (n = 0; n < (1 << cnt); ++n)
+  for (n = 0; n < (1UL << cnt); ++n)
     result[n].len = 0;
   n = cnt;
   do
@@ -434,7 +434,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   /* The first half of the strings all include the first string.  */
   n = (1 << cnt) - 2;
   rp = &result[2];
-  while (n != (1 << (cnt - 1)))
+  while (n != (1UL << (cnt - 1)))
     {
       if ((n & 1) != 0)
 	rp[0].str = rp[-2].str + rp[-2].len;
