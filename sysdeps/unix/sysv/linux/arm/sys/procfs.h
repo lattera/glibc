@@ -17,17 +17,17 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_PROCFS_H
-
 #define _SYS_PROCFS_H	1
-#include <features.h>
 
 /* This is somehow modelled after the file of the same name on SysVr4
    systems.  It provides a definition of the core file format for ELF
    used on Linux.  */
 
+#include <features.h>
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/ucontext.h>
 #include <sys/user.h>
 #include <sys/elf.h>
 
@@ -90,6 +90,16 @@ struct elf_prpsinfo
     char pr_psargs[ELF_PRARGSZ];	/* Initial part of arg list.  */
   };
 
+/* Addresses.  */
+typedef void *psaddr_t;
+
+/* Register sets.  Linux has different names.  */
+typedef gregset_t prgregset_t;
+typedef fpregset_t prfpregset_t;
+
+/* We don't have any differences between processes and threads,
+   therefore habe only ine PID type.  */
+typedef __pid_t lwpid_t;
 
 /* Addresses.  */
 typedef void *psaddr_t;
