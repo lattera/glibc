@@ -70,9 +70,11 @@ AC_ARG_ENABLE(sanity-checks, dnl
 
 dnl Arguments to enable or disable building the static, shared, profiled,
 dnl and -fomit-frame-pointer libraries.
-AC_ARG_ENABLE(static, dnl
-[  --enable-static         build static library [default=yes]],
-	      static=$enableval, static=yes)
+dnl I've disabled this for now since we cannot build glibc without static
+dnl libraries built in the moment.
+dnl AC_ARG_ENABLE(static, dnl
+dnl [  --enable-static         build static library [default=yes]],
+dnl	      static=$enableval, static=yes)
 AC_ARG_ENABLE(shared, dnl
 [  --enable-shared         build shared library [default=yes if GNU ld & ELF]],
 	      shared=$enableval, shared=default)

@@ -19,6 +19,8 @@
 	* Makeconfig (link-libc-static): Don't use link-libc since this
 	includes the shared object.  Use gnulib only.
 
+	* configure.in: Disable --disable-static.
+
 1998-12-07 12:06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/de.po: Update from translation team.
