@@ -39,7 +39,7 @@ mask:
 #endif
 
 ENTRY(__copysignf)
-	movlps	MO(mask),%xmm3
+	movss	MO(mask),%xmm3
 	andps	%xmm3,%xmm0
 	andnps	%xmm1,%xmm3
 	orps	%xmm3,%xmm0
