@@ -11,9 +11,6 @@ libc {
     __collate_symbol_classes; __collate_symbol_hash; __collate_symbol_strings;
     _libc_intl_domainname; _nl_current_LC_COLLATE; _nl_current_LC_CTYPE;
 
-    # functions from the experimental locale implementation
-    __*_l; __newlocale; __duplocale; __freelocale;
-
     # functions used in inline functions or macros
     __ctype_get_mb_cur_max;
 
@@ -25,5 +22,9 @@ libc {
 
     # s*
     setlocale;
+  }
+  GLIBC_2.1 {
+    # functions from the experimental locale implementation
+    __*_l; __newlocale; __duplocale; __freelocale;
   }
 }
