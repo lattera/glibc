@@ -1,5 +1,5 @@
 /* longjmp for ARM.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,11 +28,6 @@ ENTRY (__longjmp)
 	movs	r2, r0
 	movs	r0, r1		/* get the return value in place */
 	moveq	r1, #1		/* can't let setjmp() return zero! */
-
-#if __ARM_USES_FP
-	add	r2, r2, #48
-	lfmfd	f4, 4, [r2]
-#endif
 
 	LOADREGS(ia, r2, {v1-v6, sl, fp, sp, pc})
 END (__longjmp)
