@@ -117,6 +117,9 @@ endif
 endif
 
 tests = tst-tls1 tst-tls2 tst-tls9
+ifeq (yes,$(have-initfini-array))
+tests += tst-array1 tst-array2 tst-array3
+endif
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static
 ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
@@ -156,6 +159,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod5 tst-tlsmod6 \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a
+ifeq (yes,$(have-initfini-array))
+modules-names += tst-array2dep
+endif
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
@@ -543,3 +549,22 @@ ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-tls9-static.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
 endif
+
+$(objpfx)tst-array1.out: $(objpfx)tst-array1
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)tst-array1 > $@
+	cmp $@ tst-array1.exp > /dev/null
+
+$(objpfx)tst-array2: $(objpfx)tst-array2dep.so
+$(objpfx)tst-array2.out: $(objpfx)tst-array2
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)tst-array2 > $@
+	cmp $@ tst-array2.exp > /dev/null
+
+$(objpfx)tst-array3.out: $(objpfx)tst-array3
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)tst-array3 > $@
+	cmp $@ tst-array1.exp > /dev/null
