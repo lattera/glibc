@@ -146,6 +146,20 @@ before-compile := $(filter-out $(wildcard $(before-compile)),$(before-compile))
 ifdef before-compile
 $(before-compile):
 endif
+
+# If a makefile needs to do something conditional on something that
+# can only be figured out from headers, write a FOO.make.c input
+# file that uses cpp contructs and contains @@@ LINE @@@ for each LINE
+# to emit in the generated makefile, and use -include $(common-objpfx)FOO.make.
+$(common-objpfx)%.make: $(..)%.make.c $(..)Makerules
+	rm -f $@T $@.dT
+	(echo '# Generated from $*.make.c by Makerules.'; \
+	 SUNPRO_DEPENDENCIES='$@.dT $$(common-objpfx)$*.make' \
+	 $(CC) $(CFLAGS) $(CPPFLAGS) -E $< \
+	 | sed -n '/@@@/{s/@@@[	 ]*\(.*\)@@@/\1/;s/[	 ]*$$//p;}'; \
+	 echo 'common-generated += $(@F)'; \
+	 cat $@.dT; rm -f $@.dT) > $@T
+	mv -f $@T $@
 
 # Generate an ordered list of implicit rules which find the source files in
 # each sysdep directory.  The old method was to use vpath to search all the

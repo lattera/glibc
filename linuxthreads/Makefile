@@ -25,7 +25,8 @@ linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 				    Banner)
 
 headers := pthread.h semaphore.h
-distribute := internals.h queue.h restart.h spinlock.h smp.h tst-signal.sh
+distribute := internals.h queue.h restart.h spinlock.h smp.h tst-signal.sh \
+	      libc-tsd.c
 
 routines := weaks no-tsd
 
@@ -37,7 +38,7 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       semaphore spinlock wrapsyscall rwlock pt-machine \
 		       oldsemaphore events getcpuclockid pspinlock barrier \
 		       ptclock_gettime ptclock_settime sighandler \
-		       pthandles
+		       pthandles libc-tls-loc
 
 nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
 initfirst-yes = -Wl,--enable-new-dtags,-z,initfirst
@@ -89,11 +90,49 @@ CFLAGS-cancel.c += -D__NO_WEAK_PTHREAD_ALIASES -D_RPC_THREAD_SAFE_
 CFLAGS-unload.c += -DPREFIX=\"$(objpfx)\"
 CFLAGS-sighandler.c += $(exceptions)
 
+ifeq (yes,$(versioning))
+-include $(common-objpfx)tls.make
+libc-ok-for-link = $(use-thread)
+else
+libc-ok-for-link = yes
+endif
+
+ifeq (no,$(libc-ok-for-link))
+# These hacks are necessary to let us link against a libc.so that exports
+# the symbols _errno, _h_errno, and _res.  Those symbols are accessible
+# in libc at runtime (dynamic linkable), but are not exported at link time
+# so that applications cannot link against them.  However, libpthread.so
+# needs to link against them for its __errno_location et al functions to
+# find the locations that libc's symbols resolve to.  We cannot do this
+# with aliases in libc.so(GLIBC_PRIVATE), because we need to refer to an
+# executable's symbols when it defines them with copy relocs.
+libc-link.so = $(objpfx)libc.so
+
+$(objpfx)libc_pic_lite.a: $(common-objpfx)libc_pic.a
+	cp $< $@T
+	$(AR) d $@T errno.os herrno.os res_libc.os
+	mv -f $@T $@
+
+extra-objs += libc-tsd.os
+$(objpfx)libc_pic_lite.os: $(objpfx)libc_pic_lite.a $(objpfx)libc-tsd.os
+	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
+		  $(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
+
+$(objpfx)libc.so: $(elfobjdir)/soinit.os \
+		  $(objpfx)libc_pic_lite.os \
+		  $(elfobjdir)/sofini.os \
+		  $(elfobjdir)/interp.os $(elfobjdir)/ld.so
+	$(build-shlib)
+
+generated += libc_pic_lite.a libc_pic_lite.os libc.so
+else
+libc-link.so = $(common-objpfx)libc.so
+endif
+
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
-$(objpfx)libpthread.so: $(common-objpfx)libc.so \
-			$(common-objpfx)libc_nonshared.a
+$(objpfx)libpthread.so: $(libc-link.so) $(common-objpfx)libc_nonshared.a
 
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)

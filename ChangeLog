@@ -1,5 +1,17 @@
 2002-11-14  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/errno.c (__libc_errno): Remove alias.
+	* inet/herrno.c (__libc_h_errno): Likewise.
+	* resolv/res_libc.c (__libc_res): Likewise.
+	[USE___THREAD]: Use this in place of [USE_TLS && HAVE___THREAD].
+	(__res_state) [! USE___THREAD]: Don't define as weak.
+	* csu/Versions: Revert last change.
+	* resolv/Versions: Revert last change.
+
+	* Makerules ($(common-objpfx)%.make): New pattern rule.
+	* tls.make.c: New file.
+	* Makefile (distribute): Add it.
+
 	* sysdeps/generic/errno.c [! USE___THREAD]
 	[HAVE_ELF && SHARED && DO_VERSIONING] (errno, _errno): Declare these
 	with compat_symbol so they are not link-time visible.

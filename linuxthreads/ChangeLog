@@ -1,3 +1,22 @@
+2002-11-14  Roland McGrath  <roland@redhat.com>
+
+	* libc-tsd.c: New file.
+	* Makefile (distribute): Add it.
+	(libc-link.so): New variable.
+	($(objpfx)libpthread.so): Depend on that instead of libc.so file name.
+	(libc-ok-for-link): New variable.
+	[$(versioning) = yes]: Include $(common-objpfx)tls.make and define
+	libc-ok-for-link to $(use-thread).
+	[$(libc-ok-for-link) = no]
+	(libc-link.so): Set to $(objpfx)libc.so, not $(common-objpfx)libc.so.
+	($(objpfx)libc_pic_lite.a,$(objpfx)libc_pic_lite.os, $(objpfx)libc.so):
+	New targets.
+	(generated): Append them.
+	(extra-objs): Append libc-tsd.os.
+
+	* libc-tls-loc.c: New file.
+	* Makefile (libpthread-routines): Add it.
+
 2002-11-14  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Fix unterminated
