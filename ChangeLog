@@ -1,3 +1,7 @@
+2001-01-22  Andreas Jaeger  <aj@suse.de>
+
+	* Versions.def: Add version GLIBC_2.2.2.
+
 2001-01-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/TESTS: UTF-8 test data for IBM932 and IBM943 are now
