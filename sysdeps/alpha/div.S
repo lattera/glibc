@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -17,13 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include "div_libc.h"
 
-#ifdef __linux__
-# include <asm/gentrap.h>
-# include <asm/pal.h>
+#undef FRAME
+#ifdef __alpha_fix__
+#define FRAME 0
 #else
-# include <machine/pal.h>
+#define FRAME 16
 #endif
 
 	.set noat
@@ -32,78 +32,54 @@
 	.globl div
 	.ent div
 div:
-	.frame sp, 0, ra
+	.frame sp, FRAME, ra
+#if FRAME > 0
+	lda	sp, -FRAME(sp)
+#endif
 #ifdef PROF
+	.set	macro
 	ldgp	gp, 0(pv)
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
+	.set	nomacro
 	.prologue 1
 #else
 	.prologue 0
 #endif
 
-#define divisor   t1
-#define mask      t2
-#define quotient  t3
-#define modulus   t4
-#define tmp1      t5
-#define tmp2      t6
-#define compare   t7
+	beq	$18, $divbyzero
 
-	/* find correct sign for input to unsigned divide loop. */
-	negl	a1, modulus			# e0    :
-	negl	a2, divisor			# .. e1 :
-	sextl	a1, a1				# e0    :
-	sextl	a2, a2				# .. e1 :
-	mov	zero, quotient			# e0    :
-	mov	1, mask				# .. e1 :
-	cmovge	a1, a1, modulus			# e0    :
-	cmovge	a2, a2, divisor			# .. e1 :
-	beq	a2, $divbyzero			# e1    :
-	unop					#       :
+	_ITOFT2	$17, $f0, 0, $18, $f1, 8
 
-	/* shift divisor left, using 3-bit shifts for 32-bit divides as we
-	   can't overflow.  Three-bit shifts will result in looping three
-	   times less here, but can result in two loops more later.  Thus
-	   using a large shift isn't worth it (and s8addq pairs better than
-	   a shift).  */
+	cvtqt	$f0, $f0
+	cvtqt	$f1, $f1
+	divt/c	$f0, $f1, $f0
+	cvttq/c	$f0, $f0
 
-1:	cmpult	divisor, modulus, compare	# e0    :
-	s8addq	divisor, zero, divisor		# .. e1 :
-	s8addq	mask, zero, mask		# e0    :
-	bne	compare, 1b			# .. e1 :
+	_FTOIT	$f0, $0, 0
 
-	/* start to go right again. */
-2:	addq	quotient, mask, tmp2		# e1    :
-	srl	mask, 1, mask			# .. e0 :
-	cmpule	divisor, modulus, compare	# e0    :
-	subq	modulus, divisor, tmp1		# .. e1 :
-	cmovne	compare, tmp2, quotient		# e1    :
-	srl	divisor, 1, divisor		# .. e0 :
-	cmovne	compare, tmp1, modulus		# e0    :
-	bne	mask, 2b			# .. e1 :
+	mull	$0, $18, $1
+	subl	$17, $1, $1
 
-	/* find correct sign for result.  */
-	xor	a1, a2, compare			# e0    :
-	negl	quotient, tmp1			# .. e1 :
-	negl	modulus, tmp2			# e0    :
-	cmovlt	compare, tmp1, quotient		# .. e1 :
-	cmovlt	a1, tmp2, modulus		# e1    :
+	stl	$0, 0(a0)
+	stl	$1, 4(a0)
+	mov	a0, v0
 
-	/* and store it away in the structure.  */
-	stl	quotient, 0(a0)			# .. e0 :
-	mov	a0, v0				# e1    :
-	stl	modulus, 4(a0)			# .. e0 :
-	ret					# e1    :
+#if FRAME > 0
+	lda	sp, FRAME(sp)
+#endif
+	ret
 
 $divbyzero:
 	mov	a0, v0
-	ldiq	a0, GEN_INTDIV
+	lda	a0, GEN_INTDIV
 	call_pal PAL_gentrap
-
-	/* if trap returns, return zero.  */
 	stl	zero, 0(v0)
 	stl	zero, 4(v0)
+
+#if FRAME > 0
+	lda	sp, FRAME(sp)
+#endif
 	ret
 
 	.end div

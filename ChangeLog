@@ -1,3 +1,10 @@
+2004-07-30  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/divq.S: Save t3 before it gets clobbered.
+	* sysdeps/alpha/remq.S: Likewise.
+	* sysdeps/alpha/div.S, sysdeps/alpha/ldiv.S: Rewrite with the
+	new division algorithms in divl.S and divq.S respectively.
+
 2004-07-28  GOTO Masanori  <gotom@debian.or.jp>
 
 	* timezone/asia: Update from tzdata2004b.

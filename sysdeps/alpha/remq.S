@@ -116,16 +116,16 @@ $fix_sign_in_ret1:
 	_FTOIT	$f0, Q, 8
 	.align	3
 $fix_sign_in_ret2:
-	mulq	Q, Y, QY
-	stq	t4, 8(sp)
-
 	ldt	$f0, 0(sp)
+	stq	t3, 0(sp)
+	cfi_restore ($f0)
+	cfi_rel_offset (t3, 0)
+
+	mulq	Q, Y, QY
+	unop
+	stq	t4, 8(sp)
 	unop
 	cfi_rel_offset (t4, 8)
-	cfi_restore ($f0)
-	stq	t3, 0(sp)
-	unop
-	cfi_rel_offset (t3, 0)
 
 	subq	QY, X, R
 	mov	Y, SY
