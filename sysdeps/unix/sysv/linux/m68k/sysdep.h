@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
    December 1995.
@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/m68k/sysdep.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
@@ -33,40 +34,6 @@
 
 #ifdef ASSEMBLER
 
-/* Define an entry point visible from C.  */
-#define	ENTRY(name)							      \
-  .globl name;								      \
-  .type name, @function;						      \
-  .align 4;								      \
-  C_LABEL(name)								      \
-  CALL_MCOUNT
-
-#undef END
-#define END(name) .size name, . - name
-
-/* If compiled for profiling, call `_mcount' at the start of each function.  */
-#ifdef	PROF
-/* The mcount code relies on a normal frame pointer being on the stack
-   to locate our caller, so push one just for its benefit.  */
-#define CALL_MCOUNT \
-  move.l %fp, -(%sp); move.l %sp, %fp;					      \
-  jbsr JUMPTARGET (_mcount);						      \
-  move.l (%sp)+, %fp;
-#else
-#define CALL_MCOUNT		/* Do nothing.  */
-#endif
-
-#ifdef PIC
-#define JUMPTARGET(name)	name##@PLTPC
-#else
-#define JUMPTARGET(name)	name
-#endif
-
-/* Since C identifiers are not normally prefixed with an underscore
-   on this system, the asm identifier `syscall_error' intrudes on the
-   C name space.  Make sure we use an innocuous name.  */
-#define	syscall_error	__syscall_error
-
 /* Linux uses a negative return value to indicate syscall errors, unlike
    most Unices, which use the condition codes' carry flag.
 
@@ -76,10 +43,11 @@
    for a real error by making sure the value in %d0 is a real error
    number.  Linus said he will make sure the no syscall returns a value
    in -1 .. -4095 as a valid result so we can savely test with -4095.  */
+#undef PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
-    DO_CALL (&SYS_ify (syscall_name), args);				      \
+    DO_CALL (syscall_name, args);					      \
     cmp.l &-4095, %d0;							      \
     jcc syscall_error
 
@@ -93,9 +61,6 @@
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
 syscall_error:								      \
-    move.l (errno@GOTPC, %pc), %a0;					      \
-    neg.l %d0;								      \
-    move.l %d0, (%a0);							      \
     move.l %d0, -(%sp);							      \
     jbsr __errno_location@PLTPC;					      \
     move.l (%sp)+, (%a0);						      \
@@ -145,8 +110,8 @@ syscall_error:								      \
    speed is more important, we don't use movem.  Since %a0 and %a1 are
    scratch registers, we can use them for saving as well.  */
 
-#define DO_CALL(syscall, args)				      		      \
-    move.l syscall, %d0;						      \
+#define DO_CALL(syscall_name, args)			      		      \
+    move.l &SYS_ify(syscall_name), %d0;					      \
     DOARGS_##args							      \
     trap &0;								      \
     UNDOARGS_##args

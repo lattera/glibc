@@ -1,6 +1,6 @@
 /* mc68020 __mpn_rshift -- Shift right a low-level natural-number integer.
 
-Copyright (C) 1996 Free Software Foundation, Inc.
+Copyright (C) 1996, 1998 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -36,11 +36,7 @@ MA 02111-1307, USA. */
 #define cnt d4
 
 	TEXT
-	ALIGN
-	GLOBL	C_SYMBOL_NAME(__mpn_rshift)
-
-C_SYMBOL_NAME(__mpn_rshift:)
-PROLOG(__mpn_rshift)
+ENTRY(__mpn_rshift)
 /* Save used registers on the stack.  */
 	moveml	R(d2)-R(d6)/R(a2),MEM_PREDEC(sp)
 
@@ -147,4 +143,4 @@ L(LLend:)
 /* Restore used registers from stack frame.  */
 	moveml	MEM_POSTINC(sp),R(d2)-R(d6)/R(a2)
 	rts
-EPILOG(__mpn_rshift)
+END(__mpn_rshift)

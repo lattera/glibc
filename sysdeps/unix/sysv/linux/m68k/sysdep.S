@@ -43,13 +43,15 @@ _errno = errno	/* This name is expected by hj's libc.so.5 startup code.  */
 
 /* The syscall stubs jump here when they detect an error.  */
 
-	.globl	__syscall_error
-	.type	__syscall_error, @function
-	.align	4
-__syscall_error:
+#undef CALL_MCOUNT
+#define CALL_MCOUNT /* Don't insert the profiling call, it clobbers %d0.  */
+
+	.text
+ENTRY (__syscall_error)
 	neg.l %d0
+#ifndef _LIBC_REENTRANT
 	move.l %d0, errno
-#ifdef _LIBC_REENTRANT
+#else
 	move.l %d0, -(%sp)
 	jbsr __errno_location
 	move.l (%sp)+, (%a0)
