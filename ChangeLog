@@ -1,3 +1,8 @@
+2002-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Avoid warnings by
+	declaring __restore and __restore_rt as hidden (if possible).
+
 2002-08-25  Roland McGrath  <roland@redhat.com>
 
 	* manual/llio.texi (Access Modes): Fix typos in O_READ/O_WRITE defns.

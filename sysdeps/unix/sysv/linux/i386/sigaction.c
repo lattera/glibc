@@ -46,10 +46,19 @@ extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbound
 int __libc_missing_rt_sigs;
 #endif
 
-#ifdef __NR_rt_sigaction
+/* Using the hidden attribute here does not change the code but it
+   helps to avoid warnings.  */
+#if defined HAVE_HIDDEN && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+# ifdef __NR_rt_sigaction
+extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
+# endif
+extern void restore (void) asm ("__restore") attribute_hidden;
+#else
+# ifdef __NR_rt_sigaction
 static void restore_rt (void) asm ("__restore_rt");
-#endif
+# endif
 static void restore (void) asm ("__restore");
+#endif
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
@@ -126,7 +135,7 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 		"int $0x80\n"
 		"popl %%ebx"
 		: "=a" (result)
-		: "0" (SYS_ify (sigaction)), "r" (sig),
+		: "0" (SYS_ify (sigaction)), "mr" (sig),
 		  "c" (act ? __ptrvalue (&k_newact) : 0),
 		  "d" (oact ? __ptrvalue (&k_oldact) : 0));
 
