@@ -1,2 +1,2 @@
 #define	EINTR_REPEAT
-#include <../sysdeps/generic/sysd-stdio.c>
+#include <sysdeps/generic/sysd-stdio.c>

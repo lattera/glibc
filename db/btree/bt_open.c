@@ -259,7 +259,9 @@ __bt_open(fname, flags, mode, openinfo, dflags)
 		 * Don't overflow the page offset type.
 		 */
 		if (b.psize == 0) {
+#ifdef _STATBUF_ST_BLKSIZE
 			b.psize = sb.st_blksize;
+#endif
 			if (b.psize < MINPSIZE)
 				b.psize = MINPSIZE;
 			if (b.psize > MAX_PAGE_OFFSET + 1)

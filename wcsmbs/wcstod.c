@@ -22,4 +22,4 @@
 
 #define	USE_WIDE_CHAR	1
 
-#include "../stdlib/strtod.c"
+#include <stdlib/strtod.c>

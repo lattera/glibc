@@ -3825,7 +3825,7 @@ wait until the rest of the manual is more done and polished.
 On systems which are based on System V messages of programs (especially
 the system tools) are printed in a strict form using the @code{fmtmsg}
 function.  The uniformity sometimes helps the user to interpret messages
-and the strictness tests of the @code{fmtmsg} function ensures that the
+and the strictness tests of the @code{fmtmsg} function ensure that the
 programmer follows some minimal requirements.
 
 @menu
@@ -3839,7 +3839,7 @@ programmer follows some minimal requirements.
 @subsection Printing Formatted Messages
 
 Messages can be printed to standard error and/or to the console.  To
-select the destination the programmer can use the following to values,
+select the destination the programmer can use the following two values,
 bitwise OR combined if wanted, for the @var{classification} parameter of
 @code{fmtmsg}:
 
@@ -3850,7 +3850,7 @@ Display the message in standard error.
 Display the message on the system console.
 @end vtable
 
-The errorneous piece of the system can be signal by exactly one of the
+The errorneous piece of the system can be signalled by exactly one of the
 following values which also is bitwise ORed with the
 @var{classification} parameter to @code{fmtmsg}:
 
@@ -3900,7 +3900,7 @@ reference to the online documentation where more information can be
 found.  It should contain the @var{label} value and a unique
 identification number.
 
-Each of the parameters can be of a special value which means this value
+Each of the parameters can be a special value which means this value
 is to be omitted.  The symbolic names for these values are:
 
 @vtable @code
@@ -3919,7 +3919,7 @@ Ignore @var{action} parameter.
 Ignore @var{tag} parameter.
 @end vtable
 
-There is another way certain fields can be omitted from the output the
+There is another way certain fields can be omitted from the output to
 standard error.  This is described below in the description of
 environment variables influencing the behaviour.
 
@@ -3961,10 +3961,10 @@ ignored.
 This function is specified in the X/Open Portability Guide.  It is also
 available on all system derived from System V.
 
-The function return the value @code{MM_OK} if no error occurred.  If
+The function returns the value @code{MM_OK} if no error occurred.  If
 only the printing to standard error failed, it returns @code{MM_NOMSG}.
 If printing to the console fails, it returns @code{MM_NOCON}.  If
-nothing is printed @code{MM_NOTOK} is returned.  Among situation where
+nothing is printed @code{MM_NOTOK} is returned.  Among situations where
 all outputs fail this last value is also returned if a parameter value
 is incorrect.
 @end deftypefun
@@ -3974,7 +3974,7 @@ There are two environment variables which influence the behaviour of
 output actually happening on standard error (@emph{not} the console
 output).  Each of the five fields can explicitely be enabled.  To do
 this the user has to put the @code{MSGVERB} variable with a format like
-following in the environment before calling the @code{fmtmsg} function
+the following in the environment before calling the @code{fmtmsg} function
 the first time:
 
 @smallexample
@@ -3990,7 +3990,7 @@ The second environment variable which influences the behaviour of
 @code{fmtmsg} is @code{SEV_LEVEL}.  This variable and the change in the
 behaviour of @code{fmtmsg} is not specified in the X/Open Portability
 Guide.  It is available in System V systems, though.  It can be used to
-introduce no severity levels.  By default, only the five severity levels
+introduce new severity levels.  By default, only the five severity levels
 described above are available.  Any other numeric value would make
 @code{fmtmsg} print nothing.
 
@@ -4026,7 +4026,7 @@ There is another possibility to introduce severity classes beside using
 the environment variable @code{SEV_LEVEL}.  This simplifies the task of
 introducing new classes in a running program.  One could use the
 @code{setenv} or @code{putenv} function to set the environment variable,
-but this toilsome.
+but this is toilsome.
 
 @deftypefun int addseverity (int @var{severity}, const char *@var{string})
 This function allows to introduce new severity classes which can be
@@ -4039,13 +4039,17 @@ value.
 If @var{string} is @code{NULL} the severity class with the numeric value
 according to @var{severity} is removed.
 
+It is not possible to overwrite or remove one of the default severity
+classes.  All calls to @code{addseverity} with @var{severity} set to one
+of the values for the default classes will fail.
+
 The return value is @code{MM_OK} if the task was successfully performed.
 If the return value is @code{MM_NOTOK} something went wrong.  This could
 mean that no more memory is available or a class is not available when
 it has to be removed.
 
 This function is not specified in the X/Open Portability Guide although
-the @code{fmtsmg} is.  It is available on System V systems.
+the @code{fmtsmg} function is.  It is available on System V systems.
 @end deftypefun
 
 
@@ -4120,7 +4124,7 @@ TO FIX: action
 
 @noindent
 I.e., the output produced by the @var{text} and the @var{tag} parameters
-to @code{fmtmsg} vanished.  Please also note the now there is no colon
+to @code{fmtmsg} vanished.  Please also note that now there is no colon
 after the @code{NOTE} and @code{NOTE2} strings in the output.  This is
 not necessary since there is no more output on this line since the text
 is missing.

@@ -22,6 +22,11 @@
 #include <assert.h>
 
 
+/* Global read-only variable defined in rtld.c which is nonzero if we
+   shall give more warning messages.  */
+extern int _dl_verbose __attribute__ ((unused));
+
+
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
 static inline void __attribute__ ((unused))

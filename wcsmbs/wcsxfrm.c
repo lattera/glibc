@@ -31,4 +31,4 @@
 #define STRLEN wcslen
 #define STPNCPY __wcpncpy
 
-#include "../string/strxfrm.c"
+#include <string/strxfrm.c>

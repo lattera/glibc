@@ -56,6 +56,7 @@ static void print_missing_version (int errcode, const char *objname,
 int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
+int _dl_verbose;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -206,12 +207,13 @@ dl_main (const ElfW(Phdr) *phdr,
   int has_interp = 0;
 
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
+  _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
 
-  /* LAZY is determined by the parameters --datadeps and --function-deps
-     if we trace the binary.  */
+  /* LAZY is determined by the environment variable LD_WARN and
+     LD_BIND_NOW if we trace the binary.  */
   if (mode == trace)
-    lazy = (*(getenv ("LD_WARN") ?: "") == '\0' ? -1
-	    : (*(getenv ("LD_BIND_NOW") ?: "") == '\0' ? 1 : 0));
+    lazy = (_dl_verbose
+	    ? (*(getenv ("LD_BIND_NOW") ?: "") == '\0' ? 1 : 0) : -1);
   else
     lazy = !__libc_enable_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 

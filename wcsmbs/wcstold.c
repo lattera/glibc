@@ -41,4 +41,4 @@
        (flt) = u.d;							      \
   } while (0)
 
-#include "../stdlib/strtod.c"
+#include <stdlib/strtod.c>

@@ -591,7 +591,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else if (rinfo == R_PPC_COPY)
     {
-      if (sym->st_size != refsym->st_size)
+      if (sym->st_size > refsym->st_size
+	  || (_dl_verbose && sym->st_size < refsym->st_size))
 	{
 	  const char *strtab;
 
@@ -666,5 +667,3 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #define ELF_MACHINE_NO_REL 1
 
 #endif
-
-

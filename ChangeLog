@@ -1,3 +1,66 @@
+1997-05-25 03:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dynamic-link.h (_dl_verbose): New variable, declare.
+	* elf/rtld.c (_dl_verbose): New variable, define.
+	(dl_main): Define _dl-verbose based on DL_WARN environment variable.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Print warning about
+	changed size in copy relocation only if symbol in shared object
+	is larger or _dl_verbose is nonzero.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rel): Likewise.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rel): Likewise.
+	* sysdeps/sparc/dl-machine.h (elf_machine_rel): Likewise.
+
+	* nis/nss_nis/nis-ethers.c: Don't use relative include paths, use
+	<...>.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+	* sysdeps/unix/sysv/sysd-stdio.c: Likewise.
+	* wcsmbs/wcscoll.c: Likewise.
+	* wcsmbs/wcstod.c: Likewise.
+	* wcsmbs/wcstof.c: Likewise.
+	* wcsmbs/wcstol.c: Likewise.
+	* wcsmbs/wcstold.c: Likewise.
+	* wcsmbs/wcsxfrm.c: Likewise.
+	Reported by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* time/strftime.c: Implement # flag which changes case of output for
+	%a, %b, %B, %p, and %Z format.
+	When printing numbers, the given field width is always respected.
+	This means that padding happens only up to the given width.
+	Proposed by Stephen Gildea <gildea@intouchsys.com>.
+
+1997-05-25 00:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h (logb): Fix thinko, reverse output
+	values.
+	Reported by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
+1997-05-24 21:03  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* db/btree/bt_open.c (__bt_open): Only try to use st_blksize (from
+	struct stat) if it exists for this port.
+
+1997-05-24 20:34  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/standalone/arm/errnos.h: Add EPERM.
+
+1997-05-23 16:28  Philip Blundell  <phil@kings-cross.london.uk.eu.org>
+
+	* linewrap.h: New file, needed to compile argp without libio.
+
+1997-05-24 11:59  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/stdio.texi (Formatted Messages): Corrected some typos.
+
+1997-05-24 11:58  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/stub/start.c: Fix typo.
+
 1997-05-21 17:53  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* argp-help.c (hol_add_cluster): Initialize CL->depth.

@@ -31,8 +31,8 @@
 #include "nss-nis.h"
 
 /* Get implementation for some internal functions. */
-#include "../../resolv/mapv4v6addr.h"
-#include "../../resolv/mapv4v6hostent.h"
+#include <resolv/mapv4v6addr.h>
+#include <resolv/mapv4v6hostent.h>
 
 #define ENTNAME         hostent
 #define DATABASE        "hosts"
@@ -47,7 +47,7 @@ struct hostent_data
 
 #define TRAILING_LIST_MEMBER            h_aliases
 #define TRAILING_LIST_SEPARATOR_P       isspace
-#include "../../nss/nss_files/files-parse.c"
+#include <nss/nss_files/files-parse.c>
 LINE_PARSER
 ("#",
  {

@@ -41,7 +41,7 @@ struct ether
 #define ENTNAME etherent
 #define STRUCTURE ether
 #define EXTERN_PARSER
-#include "../nss/nss_files/files-parse.c"
+#include <nss/nss_files/files-parse.c>
 
 struct response
 {

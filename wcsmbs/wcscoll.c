@@ -28,4 +28,4 @@
 #endif
 #define STRCMP wcscmp
 
-#include "../string/strcoll.c"
+#include <string/strcoll.c>

@@ -282,6 +282,7 @@ memcpy_uppcase (dest, src, len)
   return dest;
 }
 
+
 #if ! HAVE_TM_GMTOFF
 /* Yield the difference between *A and *B,
    measured in seconds, ignoring leap seconds.  */
@@ -464,6 +465,7 @@ strftime (s, maxsize, format, tp)
       int width = -1;
       int to_lowcase = 0;
       int to_uppcase = 0;
+      int change_case = 0;
 
 #if DO_MULTIBYTE
 
@@ -555,6 +557,9 @@ strftime (s, maxsize, format, tp)
 	    case '^':
 	      to_uppcase = 1;
 	      continue;
+	    case '#':
+	      change_case = 1;
+	      continue;
 
 	    default:
 	      break;
@@ -592,9 +597,11 @@ strftime (s, maxsize, format, tp)
       switch (*f)
 	{
 #define DO_NUMBER(d, v) \
-	  digits = d; number_value = v; goto do_number
+	  digits = width == -1 ? d : width;				      \
+	  number_value = v; goto do_number
 #define DO_NUMBER_SPACEPAD(d, v) \
-	  digits = d; number_value = v; goto do_number_spacepad
+	  digits = width == -1 ? d : width;				      \
+	  number_value = v; goto do_number_spacepad
 
 	case '%':
 	  if (modifier != 0)
@@ -605,12 +612,22 @@ strftime (s, maxsize, format, tp)
 	case 'a':
 	  if (modifier != 0)
 	    goto bad_format;
+	  if (change_case)
+	    {
+	      to_uppcase = 1;
+	      to_lowcase = 0;
+	    }
 	  cpy (aw_len, a_wkday);
 	  break;
 
 	case 'A':
 	  if (modifier != 0)
 	    goto bad_format;
+	  if (change_case)
+	    {
+	      to_uppcase = 1;
+	      to_lowcase = 0;
+	    }
 	  cpy (wkday_len, f_wkday);
 	  break;
 
@@ -624,6 +641,11 @@ strftime (s, maxsize, format, tp)
 	case 'B':
 	  if (modifier != 0)
 	    goto bad_format;
+	  if (change_case)
+	    {
+	      to_uppcase = 1;
+	      to_lowcase = 0;
+	    }
 	  cpy (month_len, f_month);
 	  break;
 
@@ -824,6 +846,11 @@ strftime (s, maxsize, format, tp)
 	  /* FALLTHROUGH */
 
 	case 'p':
+	  if (change_case)
+	    {
+	      to_uppcase = 0;
+	      to_lowcase = 1;
+	    }
 	  cpy (ap_len, ampm);
 	  break;
 
@@ -996,6 +1023,11 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (2, (tp->tm_year % 100 + 100) % 100);
 
 	case 'Z':
+	  if (change_case)
+	    {
+	      to_uppcase = 0;
+	      to_lowcase = 1;
+	    }
 	  cpy (zonelen, zone);
 	  break;
 

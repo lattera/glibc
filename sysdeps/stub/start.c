@@ -13,4 +13,4 @@ weak_alias (__data_start, data_start)
 #endif
 
 volatile int __errno;
-string_alias (__errno, errno)
+strong_alias (__errno, errno)
