@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 
 
 /* Type for general register.  */
-typedef unsigned long greg_t;
+typedef unsigned long int greg_t;
 
 /* Number of general registers.  */
 #define NGREG	37
@@ -67,7 +67,7 @@ typedef struct
 /* Userlevel context.  */
 typedef struct ucontext
   {
-    unsigned long uc_flags;
+    unsigned long int uc_flags;
     struct ucontext *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
