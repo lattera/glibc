@@ -1,3 +1,8 @@
+2004-07-26  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/posix/waitid.c [WEXITED]: Clear WEXITED bit in OPTIONS for
+	call to __waitpid.
+
 2004-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/hstcache.c (cache_addhst): Fix two scenarios which lead to
