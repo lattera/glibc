@@ -44,6 +44,9 @@ ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	  err = __i386_io_perm_modify (__mach_task_self (), perm, turn_on);
 	  __mach_port_deallocate (__mach_task_self (), perm);
 	}
+
+      if (err == MIG_BAD_ID)	/* Old kernels don't have these RPCs.  */
+	err = ENOSYS;
     }
 
   return err ? __hurd_fail (err) : 0;
