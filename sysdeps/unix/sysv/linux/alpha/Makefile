@@ -1,3 +1,7 @@
+ifeq ($(subdir),posix)
+sysdep_routines += oldglob
+endif
+
 ifeq ($(subdir),misc)
 sysdep_headers += alpha/ptrace.h alpha/regdef.h
 
