@@ -31,7 +31,7 @@ ENTRY (__vfork)
 	cmpq	$0, __libc_pthread_functions(%rip)
 #else
 	.weak	__pthread_fork
-	movq	$__pthread_fork, %eax
+	movq	$__pthread_fork, %rax
 	testq	%rax, %rax
 #endif
 	jne	HIDDEN_JUMPTARGET (__fork)

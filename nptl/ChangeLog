@@ -1,3 +1,7 @@
+2003-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/td_ta_map_lwp2thr.c: New file.
+
 2003-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-popen1.
