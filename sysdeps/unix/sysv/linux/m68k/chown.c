@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,21 +24,28 @@
 
 #include <linux/posix_types.h>
 
-#include <sysdeps/unix/sysv/linux/32bit_uid_compat.h>
-
 extern int __syscall_chown (const char *__file,
-			    uid_t __owner, gid_t __group);
+			    __kernel_uid_t __owner, __kernel_gid_t __group);
 
 #ifdef __NR_chown32
 extern int __syscall_chown32 (const char *__file,
 			      __kernel_uid32_t owner, __kernel_gid32_t group);
+
+# if __ASSUME_32BITUIDS == 0
+/* This variable is shared with all files that need to check for 32bit
+   uids.  */
+extern int __libc_missing_32bit_uids;
+# endif
 #endif /* __NR_chown32 */
 
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {
-#ifdef __NR_chown32
-  if (__libc_missing_32bit_uids != NO_HIGHUIDS)
+#if __ASSUME_32BITUIDS
+  return INLINE_SYSCALL (chown32, 3, file, owner, group);
+#else
+# ifdef __NR_chown32
+  if (!__libc_missing_32bit_uids)
     {
       int result;
       int saved_errno = errno;
@@ -48,10 +55,18 @@ __chown (const char *file, uid_t owner, gid_t group)
 	return result;
 
       __set_errno (saved_errno);
-      __libc_missing_32bit_uids = NO_HIGHUIDS;
+      __libc_missing_32bit_uids = 1;
     }
-#endif /* __NR_chown32 */
+# endif /* __NR_chown32 */
+
+  if (((owner + 1) > (gid_t) ((__kernel_uid_t) -1U))
+      || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   return INLINE_SYSCALL (chown, 3, file, owner, group);
+#endif
 }
 weak_alias (__chown, chown)
