@@ -79,8 +79,8 @@
 # define __ASSUME_SIOCGIFNAME		1
 #endif
 
-/* MSG_NOSIGNAL was at least available with Linux 2.3.15.  */
-#if __LINUX_KERNEL_VERSION >= 131855
+/* MSG_NOSIGNAL was at least available with Linux 2.2.0.  */
+#if __LINUX_KERNEL_VERSION >= 131584
 # define __ASSUME_MSG_NOSIGNAL		1
 #endif
 
