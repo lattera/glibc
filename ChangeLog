@@ -1,3 +1,7 @@
+Fri Jul  3 14:35:55 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/Versions: New file.
+
 1998-07-02 21:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: Define list of subdirs as all-subdirs and make subdirs
