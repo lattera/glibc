@@ -2269,9 +2269,11 @@ process_envvars (enum mode *modep)
       if (__access ("/etc/suid-debug", F_OK) != 0)
         {
 	  unsetenv ("MALLOC_CHECK_");
-	  if (mode == normal)
-	    GLRO(dl_debug_mask) = 0;
+	  GLRO(dl_debug_mask) = 0;
         }
+
+      if (mode != normal)
+	_exit (5);
     }
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug

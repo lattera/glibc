@@ -105,6 +105,21 @@ add_env="$add_env LD_VERBOSE=$verbose"
 if test "$unused" = yes; then
   add_env="$add_env LD_DEBUG=\"$LD_DEBUG${LD_DEBUG:+,}unused\""
 fi
+
+# The following use of cat is needed to make ldd work in SELinux
+# environments where the executed program might not have permissions
+# to write to the console/tty.  But only bash 3.x supports the pipefail
+# option, and we don't bother to handle the case for older bash versions.
+if set -o pipefail 2> /dev/null; then
+  try_trace() {
+    eval $add_env '"$@"' | cat
+  }
+else
+  try_trace() {
+    eval $add_env '"$@"'
+  }
+fi
+
 case $# in
 0)
   echo >&2 'ldd:' $"missing file arguments"
@@ -153,7 +168,16 @@ warning: you do not have execution permission for" "\`$file'" >&2
     fi
     case $ret in
     0)
-      eval $add_env '"$file"' || result=1
+      # If the program exits with exit code 5, it means the process has been
+      # invoked with __libc_enable_secure.  Fall back to running it through
+      # the dynamic linker.
+      try_trace "$file"
+      rc=$?
+      if [ $rc = 5 ]; then
+	try_trace "$RTLD" "$file"
+	rc=$?
+      fi
+      [ $rc = 0 ] || result=1
       ;;
     1)
       # This can be a non-ELF binary or no binary at all.
@@ -163,10 +187,7 @@ warning: you do not have execution permission for" "\`$file'" >&2
       }
       ;;
     2)
-      # The following use of cat is needed to make ldd work in SELinux
-      # environments where the executed program might not have permissions
-      # to write to the console/tty.
-      eval $add_env \${RTLD} '"$file"' | cat || result=1
+      try_trace "$RTLD" "$file" || result=1
       ;;
     *)
       echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($ret)" >&2

@@ -1,3 +1,12 @@
+2004-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldd.bash.in: When set -o pipefail is available, use that for
+	piping to cat; when not, don't use the pipe at all.
+	Pipe to cat in all cases of running the executable.
+	When direct running exits with code 5, retry running via ${RTLD}.
+	* elf/rtld.c (process_envvars): If __libc_enable_secure and
+	mode != normal, exit with exitcode 5.
+
 2004-12-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/posix/sysconf.c (__sysconf_check_spec): Only define
