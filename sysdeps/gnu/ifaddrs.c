@@ -79,11 +79,9 @@ getifaddrs (struct ifaddrs **ifap)
       ifr = ifreqs;
       do
 	{
-	  /* Fill in all pointers to the storage we've already allocated.  */
+	  /* Fill in pointers to the storage we've already allocated.  */
 	  storage[i].ia.ifa_next = &storage[i + 1].ia;
 	  storage[i].ia.ifa_addr = &storage[i].addr;
-	  storage[i].ia.ifa_netmask = &storage[i].netmask;
-	  storage[i].ia.ifa_broadaddr = &storage[i].broadaddr; /* & dstaddr */
 
 	  /* Now copy the information we already have from SIOCGIFCONF.  */
 	  storage[i].ia.ifa_name = strncpy (storage[i].name, ifr->ifr_name,
@@ -100,26 +98,36 @@ getifaddrs (struct ifaddrs **ifap)
 	  ifr->ifr_addr = storage[i].addr;
 
 	  if (__ioctl (fd, SIOCGIFNETMASK, ifr) < 0)
-	    break;
-	  storage[i].netmask = ifr->ifr_netmask;
+	    storage[i].ia.ifa_netmask = NULL;
+	  else
+	    {
+	      storage[i].ia.ifa_netmask = &storage[i].netmask;
+	      storage[i].netmask = ifr->ifr_netmask;
+	    }
 
 	  if (ifr->ifr_flags & IFF_BROADCAST)
 	    {
 	      ifr->ifr_addr = storage[i].addr;
 	      if (__ioctl (fd, SIOCGIFBRDADDR, ifr) < 0)
-		break;
-	      storage[i].broadaddr = ifr->ifr_broadaddr;
+		storage[i].ia.ifa_broadaddr = NULL;
+	      {
+		storage[i].ia.ifa_broadaddr = &storage[i].broadaddr;
+		storage[i].broadaddr = ifr->ifr_broadaddr;
+	      }
 	    }
 	  else if (ifr->ifr_flags & IFF_POINTOPOINT)
 	    {
 	      ifr->ifr_addr = storage[i].addr;
 	      if (__ioctl (fd, SIOCGIFDSTADDR, ifr) < 0)
-		break;
-	      storage[i].broadaddr = ifr->ifr_dstaddr;
+		storage[i].ia.ifa_broadaddr = NULL;
+	      else
+		{
+		  storage[i].ia.ifa_broadaddr = &storage[i].broadaddr;
+		  storage[i].broadaddr = ifr->ifr_dstaddr;
+		}
 	    }
 	  else
-	    /* Just 'cause.  */
-	    memset (&storage[i].broadaddr, 0, sizeof storage[i].broadaddr);
+	    storage[i].ia.ifa_broadaddr = NULL;
 
 	  storage[i].ia.ifa_data = NULL; /* Nothing here for now.  */
 

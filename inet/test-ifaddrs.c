@@ -50,6 +50,9 @@ Name           Flags   Address         Netmask         Broadcast/Destination");
       char abuf[64], mbuf[64], dbuf[64];
       inline const char *addr_string (struct sockaddr *sa, char *buf)
 	{
+	  if (sa == NULL)
+	    return "<none>";
+
 	  switch (sa->sa_family)
 	    {
 	    case AF_INET:
@@ -60,6 +63,10 @@ Name           Flags   Address         Netmask         Broadcast/Destination");
 	      return inet_ntop (AF_INET6,
 				&((struct sockaddr_in6 *) sa)->sin6_addr,
 				buf, sizeof abuf);
+#ifdef AF_LINK
+	    case AF_LINK:
+	      return "<link>";
+#endif
 	    case AF_UNSPEC:
 	      return "---";
 	    default:

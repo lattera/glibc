@@ -7,6 +7,21 @@
 
 2002-11-25  Roland McGrath  <roland@redhat.com>
 
+	* inet/test-ifaddrs.c (main: addr_string): Handle null SA.
+	Grok AF_LINK if defined.
+	From Momchil Velikov <velco@fadata.bg>.
+
+	* sysdeps/gnu/ifaddrs.c (getifaddrs): If ioctl fails for netmask,
+	brdaddr, or dstaddr, just set those pointers to null and don't fail.
+	Reported by Momchil Velikov <velco@fadata.bg>.
+
+	* sysdeps/generic/ifreq.h (__if_nextreq) [_HAVE_SA_LEN]: If sa_len
+	is > sizeof IFR->ifa_addr, advance past the whole longer length.
+	(__ifreq): Count up NIFS that way too.
+	Reported by Momchil Velikov <velco@fadata.bg>.
+
+	* sysdeps/mach/hurd/lchmod.c: Include <fcntl.h>.
+
 	* sysdeps/mach/hurd/i386/init-first.c: Include <ldsodefs.h>
 	and <fpu_control.h>.
 

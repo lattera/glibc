@@ -24,6 +24,15 @@
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 
+static inline struct ifreq *
+__if_nextreq (struct ifreq *ifr)
+{
+#ifdef _HAVE_SA_LEN
+  if (ifr->ifa_addr > sizeof ifr->ifa_addr)
+    return (struct ifreq *) ((char *) &ifr->ifa_addr + ifr->ifa_addr.sa_len);
+#endif
+  return ifr + 1;
+}
 
 static inline void
 __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
@@ -63,20 +72,25 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
     }
   while (rq_len < sizeof (struct ifreq) + ifc.ifc_len);
 
-  nifs = ifc.ifc_len / sizeof (struct ifreq);
-
   if (fd != sockfd)
     __close (fd);
 
+#ifdef _HAVE_SA_LEN
+  struct ifreq *ifr = ifreqs;
+  nifs = 0;
+  while ((char *) ifr < ifc.ifc_buf + ifc.ifc_len)
+    {
+      ++nifs;
+      ifr = __if_nextreq (ifr);
+      if (ifr == NULL)
+	break;
+    }
+#else
+  nifs = ifc.ifc_len / sizeof (struct ifreq);
+#endif
+
   *num_ifs = nifs;
   *ifreqs = realloc (ifc.ifc_buf, nifs * sizeof (struct ifreq));
-}
-
-
-static inline struct ifreq *
-__if_nextreq (struct ifreq *ifr)
-{
-  return ifr + 1;
 }
 
 
