@@ -85,7 +85,8 @@ enum __socket_type
 #define	PF_ECONET	19	/* Acorn Econet.  */
 #define	PF_ATMSVC	20	/* ATM SVCs.  */
 #define	PF_SNA		22	/* Linux SNA Project */
-#define PF_IRDA		23	/* IRDA sockets.  */
+#define	PF_IRDA		23	/* IRDA sockets.  */
+#define	PF_PPPOX	24	/* PPPoX sockets.  */
 #define	PF_MAX		32	/* For now..  */
 
 /* Address families.  */
@@ -114,7 +115,8 @@ enum __socket_type
 #define	AF_ECONET	PF_ECONET
 #define	AF_ATMSVC	PF_ATMSVC
 #define	AF_SNA		PF_SNA
-#define AF_IRDA		PF_IRDA
+#define	AF_IRDA		PF_IRDA
+#define	AF_PPPOX	PF_PPPOX
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.

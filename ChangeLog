@@ -1,3 +1,11 @@
+2000-05-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_PPPOX): New, from
+	Linux 2.3.99pre7.
+	(AF_PPPOX): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (PF_PPPOX): Likewise.
+	(AF_PPPOX): Likewise.
+
 2000-05-12  Andreas Jaeger  <aj@suse.de>
 
 	* inet/netinet/in.h (IN6_ARE_ADDR_EQUAL): Correct indices.
@@ -12,11 +20,11 @@
 
 2000-05-10  Jakub Jelinek  <jakub@redhat.com>
 
- 	* elf/dl-reloc.c (_dl_reloc_bad_type): Sync messages with plt
- 	argument.
- 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handle
- 	R_SPARC_UA64.
- 	* sysdeps/unix/sysv/linux/sparc/sparc64/time.c: New file.
+	* elf/dl-reloc.c (_dl_reloc_bad_type): Sync messages with plt
+	argument.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handle
+	R_SPARC_UA64.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/time.c: New file.
 
 2000-05-10  Jakub Jelinek  <jakub@redhat.com>
 
