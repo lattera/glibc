@@ -1,6 +1,6 @@
 /* Convert between lowlevel sigmask and libc representation of sigset_t.
    SysVr4 version.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joe Keane <jgk@jgk.org>.
 
@@ -20,14 +20,14 @@
    02111-1307 USA.  */
 
 #define sigset_set_old_mask(set, mask) \
-  do {									      \
+  ({									      \
     unsigned long int *__ptr;						      \
     __ptr = &(set)->__sigbits[0];					      \
     __ptr[0] = (mask);							      \
     __ptr[1] = 0ul;							      \
     __ptr[2] = 0ul;							      \
     __ptr[3] = 0ul;							      \
-  } while (0)
+    0; })
 
-#define sigset_get_old_mask(set, mask) \
-  ((mask) = (unsigned int) (set)->__sigbits[0])
+#define sigset_get_old_mask(set) \
+  ((unsigned int) (set)->__sigbits[0])
