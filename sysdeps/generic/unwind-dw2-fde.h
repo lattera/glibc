@@ -1,13 +1,14 @@
 /* Subroutines needed for unwinding stack frames for exception handling.  */
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+   Free Software Foundation, Inc.
    Contributed by Jason Merrill <jason@cygnus.com>.
 
-This file is part of GNU CC.
+This file is part of GCC.
 
-GNU CC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2, or (at your option) any later
+version.
 
 In addition to the permissions in the GNU General Public License, the
 Free Software Foundation gives you unlimited permission to link the
@@ -18,15 +19,15 @@ do apply in other respects; for example, they cover modification of
 the file, and distribution when not linked into a combine
 executable.)
 
-GNU CC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
 You should have received a copy of the GNU General Public License
-along with GNU CC; see the file COPYING.  If not, write to
-the Free Software Foundation, 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+along with GCC; see the file COPYING.  If not, write to the Free
+Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+02111-1307, USA.  */
 
 
 struct fde_vector
@@ -57,11 +58,15 @@ struct object
       unsigned long mixed_encoding : 1;
       unsigned long encoding : 8;
       /* ??? Wish there was an easy way to detect a 64-bit host here;
-	 we've got 32 bits left to play with... */
+	 we've got 32 bits left to play with...  */
       unsigned long count : 21;
     } b;
     size_t i;
   } s;
+
+#ifdef DWARF2_OBJECT_END_PTR_EXTENSION
+  char *fde_end;
+#endif
 
   struct object *next;
 };
@@ -116,7 +121,7 @@ typedef unsigned char ubyte;
    is located, and what the register lifetimes and stack layout are
    within the function.
 
-   The data structures are defined in the DWARF specfication, although
+   The data structures are defined in the DWARF specification, although
    not in a very readable way (see LITERATURE).
 
    Every time an exception is thrown, the code needs to locate the FDE
@@ -125,7 +130,7 @@ typedef unsigned char ubyte;
    a) in a linear search, find the shared image (i.e. DLL) containing
       the PC
    b) using the FDE table for that shared object, locate the FDE using
-      binary search (which requires the sorting).  */   
+      binary search (which requires the sorting).  */
 
 /* The first few fields of a CIE.  The CIE_id field is 0 for a CIE,
    to distinguish it from a valid FDE.  FDEs are aligned to an addressing
@@ -159,7 +164,17 @@ get_cie (struct dwarf_fde *f)
 static inline fde *
 next_fde (fde *f)
 {
-  return (fde *)((char *)f + f->length + sizeof (f->length));
+  return (fde *) ((char *) f + f->length + sizeof (f->length));
 }
 
 extern fde * _Unwind_Find_FDE (void *, struct dwarf_eh_bases *);
+
+static inline int
+last_fde (struct object *obj __attribute__ ((__unused__)), fde *f)
+{
+#ifdef DWARF2_OBJECT_END_PTR_EXTENSION
+  return (char *)f == obj->fde_end || f->length == 0;
+#else
+  return f->length == 0;
+#endif
+}

@@ -1,22 +1,23 @@
 /* DWARF2 exception handling and frame unwind runtime interface routines.
-   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+   Free Software Foundation, Inc.
 
-   This file is part of GNU CC.
+   This file is part of GCC.
 
-   GNU CC is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
+   GCC is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
-   GNU CC is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   GCC is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with GNU CC; see the file COPYING.  If not, write to
-   the Free Software Foundation, 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   along with GCC; see the file COPYING.  If not, write to the Free
+   Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifdef _LIBC
 #include <stdlib.h>
@@ -37,7 +38,8 @@
 #include "gthr.h"
 #endif
 
-#if !USING_SJLJ_EXCEPTIONS
+
+#ifndef __USING_SJLJ_EXCEPTIONS__
 
 #ifndef STACK_GROWS_DOWNWARD
 #define STACK_GROWS_DOWNWARD 0
@@ -52,7 +54,14 @@
 #define DWARF_FRAME_REGISTERS FIRST_PSEUDO_REGISTER
 #endif
 
-/* This is the register and unwind state for a particular frame.  */
+/* Dwarf frame registers used for pre gcc 3.0 compiled glibc.  */
+#ifndef PRE_GCC3_DWARF_FRAME_REGISTERS
+#define PRE_GCC3_DWARF_FRAME_REGISTERS DWARF_FRAME_REGISTERS
+#endif
+
+/* This is the register and unwind state for a particular frame.  This
+   provides the information necessary to unwind up past a frame and return
+   to its caller.  */
 struct _Unwind_Context
 {
   void *reg[DWARF_FRAME_REGISTERS+1];
@@ -80,7 +89,7 @@ typedef struct
   {
     struct {
       union {
-	unsigned int reg;
+	_Unwind_Word reg;
 	_Unwind_Sword offset;
 	const unsigned char *exp;
       } loc;
@@ -112,8 +121,8 @@ typedef struct
 
   /* The information we care about from the CIE/FDE.  */
   _Unwind_Personality_Fn personality;
-  signed int data_align;
-  unsigned int code_align;
+  _Unwind_Sword data_align;
+  _Unwind_Word code_align;
   unsigned char retaddr_column;
   unsigned char fde_encoding;
   unsigned char lsda_encoding;
@@ -138,10 +147,10 @@ static inline void *
 read_pointer (const void *p) { const union unaligned *up = p; return up->p; }
 
 static inline int
-read_1u (const void *p) { return *(const unsigned char *)p; }
+read_1u (const void *p) { return *(const unsigned char *) p; }
 
 static inline int
-read_1s (const void *p) { return *(const signed char *)p; }
+read_1s (const void *p) { return *(const signed char *) p; }
 
 static inline int
 read_2u (const void *p) { const union unaligned *up = p; return up->u2; }
@@ -168,6 +177,14 @@ _Unwind_GetGR (struct _Unwind_Context *context, int index)
 {
   /* This will segfault if the register hasn't been saved.  */
   return * (_Unwind_Word *) context->reg[index];
+}
+
+/* Get the value of the CFA as saved in CONTEXT.  */
+
+_Unwind_Word
+_Unwind_GetCFA (struct _Unwind_Context *context)
+{
+  return context->cfa;
 }
 
 /* Overwrite the saved value for register REG in CONTEXT with VAL.  */
@@ -206,6 +223,17 @@ _Unwind_GetRegionStart (struct _Unwind_Context *context)
   return (_Unwind_Ptr) context->bases.func;
 }
 
+void *
+_Unwind_FindEnclosingFunction (void *pc)
+{
+  struct dwarf_eh_bases bases;
+  struct dwarf_fde *fde = _Unwind_Find_FDE (pc-1, &bases);
+  if (fde)
+    return bases.func;
+  else
+    return NULL;
+}
+
 #ifndef __ia64__
 _Unwind_Ptr
 _Unwind_GetDataRelBase (struct _Unwind_Context *context)
@@ -231,7 +259,7 @@ extract_cie_info (struct dwarf_cie *cie, struct _Unwind_Context *context,
   const unsigned char *aug = cie->augmentation;
   const unsigned char *p = aug + strlen (aug) + 1;
   const unsigned char *ret = NULL;
-  _Unwind_Ptr tmp;
+  _Unwind_Word utmp;
 
   /* g++ v2 "eh" has pointer immediately following augmentation string,
      so it must be handled first.  */
@@ -244,8 +272,8 @@ extract_cie_info (struct dwarf_cie *cie, struct _Unwind_Context *context,
 
   /* Immediately following the augmentation are the code and
      data alignment and return address column.  */
-  p = read_uleb128 (p, &tmp); fs->code_align = tmp;
-  p = read_sleb128 (p, &tmp); fs->data_align = (saddr) tmp;
+  p = read_uleb128 (p, &fs->code_align);
+  p = read_sleb128 (p, &fs->data_align);
   fs->retaddr_column = *p++;
   fs->lsda_encoding = DW_EH_PE_omit;
 
@@ -254,8 +282,8 @@ extract_cie_info (struct dwarf_cie *cie, struct _Unwind_Context *context,
      the size.  */
   if (*aug == 'z')
     {
-      p = read_uleb128 (p, &tmp);
-      ret = p + tmp;
+      p = read_uleb128 (p, &utmp);
+      ret = p + utmp;
 
       fs->saw_z = 1;
       ++aug;
@@ -303,7 +331,7 @@ static _Unwind_Word
 execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 		  struct _Unwind_Context *context, _Unwind_Word initial)
 {
-  _Unwind_Word stack[64];	/* ??? Assume this is enough. */
+  _Unwind_Word stack[64];	/* ??? Assume this is enough.  */
   int stack_elt;
 
   stack[0] = initial;
@@ -312,9 +340,8 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
   while (op_ptr < op_end)
     {
       enum dwarf_location_atom op = *op_ptr++;
-      _Unwind_Word result = 0, reg;
-      _Unwind_Sword offset;
-      _Unwind_Ptr ptrtmp;
+      _Unwind_Word result, reg, utmp;
+      _Unwind_Sword offset, stmp;
 
       switch (op)
 	{
@@ -391,12 +418,11 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 	  op_ptr += 8;
 	  break;
 	case DW_OP_constu:
-	  op_ptr = read_uleb128 (op_ptr, &ptrtmp);
-	  result = ptrtmp;
+	  op_ptr = read_uleb128 (op_ptr, &result);
 	  break;
 	case DW_OP_consts:
-	  op_ptr = read_sleb128 (op_ptr, &ptrtmp);
-	  result = (saddr)ptrtmp;
+	  op_ptr = read_sleb128 (op_ptr, &stmp);
+	  result = stmp;
 	  break;
 
 	case DW_OP_reg0:
@@ -434,7 +460,7 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 	  result = _Unwind_GetGR (context, op - DW_OP_reg0);
 	  break;
 	case DW_OP_regx:
-	  op_ptr = read_uleb128 (op_ptr, &ptrtmp); reg = ptrtmp;
+	  op_ptr = read_uleb128 (op_ptr, &reg);
 	  result = _Unwind_GetGR (context, reg);
 	  break;
 
@@ -470,12 +496,12 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 	case DW_OP_breg29:
 	case DW_OP_breg30:
 	case DW_OP_breg31:
-	  op_ptr = read_sleb128 (op_ptr, &ptrtmp); offset = (saddr)ptrtmp;
+	  op_ptr = read_sleb128 (op_ptr, &offset);
 	  result = _Unwind_GetGR (context, op - DW_OP_breg0) + offset;
 	  break;
 	case DW_OP_bregx:
-	  op_ptr = read_uleb128 (op_ptr, &ptrtmp); reg = ptrtmp;
-	  op_ptr = read_sleb128 (op_ptr, &ptrtmp); offset = (saddr)ptrtmp;
+	  op_ptr = read_uleb128 (op_ptr, &reg);
+	  op_ptr = read_sleb128 (op_ptr, &offset);
 	  result = _Unwind_GetGR (context, reg) + offset;
 	  break;
 
@@ -533,14 +559,14 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 	    {
 	    case DW_OP_deref:
 	      {
-		void *ptr = (void *)(_Unwind_Ptr) result;
+		void *ptr = (void *) (_Unwind_Ptr) result;
 		result = (_Unwind_Ptr) read_pointer (ptr);
 	      }
 	      break;
 
 	    case DW_OP_deref_size:
 	      {
-		void *ptr = (void *)(_Unwind_Ptr) result;
+		void *ptr = (void *) (_Unwind_Ptr) result;
 		switch (*op_ptr++)
 		  {
 		  case 1:
@@ -572,12 +598,12 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 	      result = ~result;
 	      break;
 	    case DW_OP_plus_uconst:
-	      op_ptr = read_uleb128 (op_ptr, &ptrtmp); reg = ptrtmp;
-	      result += reg;
+	      op_ptr = read_uleb128 (op_ptr, &utmp);
+	      result += utmp;
 	      break;
-	    /* Avoid warnings.  */
+
 	    default:
-	      break;
+	      abort ();
 	    }
 	  break;
 
@@ -597,68 +623,68 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 	  {
 	    /* Binary operations.  */
 	    _Unwind_Word first, second;
-	  if ((stack_elt -= 2) < 0)
-	    abort ();
-	  second = stack[stack_elt];
-	  first = stack[stack_elt + 1];
+	    if ((stack_elt -= 2) < 0)
+	      abort ();
+	    second = stack[stack_elt];
+	    first = stack[stack_elt + 1];
 
-	  switch (op)
-	    {
-	    case DW_OP_and:
-	      result = second & first;
-	      break;
-	    case DW_OP_div:
-	      result = (_Unwind_Sword)second / (_Unwind_Sword)first;
-	      break;
-	    case DW_OP_minus:
-	      result = second - first;
-	      break;
-	    case DW_OP_mod:
-	      result = (_Unwind_Sword)second % (_Unwind_Sword)first;
-	      break;
-	    case DW_OP_mul:
-	      result = second * first;
-	      break;
-	    case DW_OP_or:
-	      result = second | first;
-	      break;
-	    case DW_OP_plus:
-	      result = second + first;
-	      break;
-	    case DW_OP_shl:
-	      result = second << first;
-	      break;
-	    case DW_OP_shr:
-	      result = second >> first;
-	      break;
-	    case DW_OP_shra:
-	      result = (_Unwind_Sword)second >> first;
-	      break;
-	    case DW_OP_xor:
-	      result = second ^ first;
-	      break;
-	    case DW_OP_le:
-	      result = (_Unwind_Sword)first <= (_Unwind_Sword)second;
-	      break;
-	    case DW_OP_ge:
-	      result = (_Unwind_Sword)first >= (_Unwind_Sword)second;
-	      break;
-	    case DW_OP_eq:
-	      result = (_Unwind_Sword)first == (_Unwind_Sword)second;
-	      break;
-	    case DW_OP_lt:
-	      result = (_Unwind_Sword)first < (_Unwind_Sword)second;
-	      break;
-	    case DW_OP_gt:
-	      result = (_Unwind_Sword)first > (_Unwind_Sword)second;
-	      break;
-	    case DW_OP_ne:
-	      result = (_Unwind_Sword)first != (_Unwind_Sword)second;
-	      break;
-	    default:
-	      /* Avoid warnings.  */
-	      break;
-	    }
+	    switch (op)
+	      {
+	      case DW_OP_and:
+		result = second & first;
+		break;
+	      case DW_OP_div:
+		result = (_Unwind_Sword) second / (_Unwind_Sword) first;
+		break;
+	      case DW_OP_minus:
+		result = second - first;
+		break;
+	      case DW_OP_mod:
+		result = (_Unwind_Sword) second % (_Unwind_Sword) first;
+		break;
+	      case DW_OP_mul:
+		result = second * first;
+		break;
+	      case DW_OP_or:
+		result = second | first;
+		break;
+	      case DW_OP_plus:
+		result = second + first;
+		break;
+	      case DW_OP_shl:
+		result = second << first;
+		break;
+	      case DW_OP_shr:
+		result = second >> first;
+		break;
+	      case DW_OP_shra:
+		result = (_Unwind_Sword) second >> first;
+		break;
+	      case DW_OP_xor:
+		result = second ^ first;
+		break;
+	      case DW_OP_le:
+		result = (_Unwind_Sword) first <= (_Unwind_Sword) second;
+		break;
+	      case DW_OP_ge:
+		result = (_Unwind_Sword) first >= (_Unwind_Sword) second;
+		break;
+	      case DW_OP_eq:
+		result = (_Unwind_Sword) first == (_Unwind_Sword) second;
+		break;
+	      case DW_OP_lt:
+		result = (_Unwind_Sword) first < (_Unwind_Sword) second;
+		break;
+	      case DW_OP_gt:
+		result = (_Unwind_Sword) first > (_Unwind_Sword) second;
+		break;
+	      case DW_OP_ne:
+		result = (_Unwind_Sword) first != (_Unwind_Sword) second;
+		break;
+
+	      default:
+		abort ();
+	      }
 	  }
 	  break;
 
@@ -714,20 +740,26 @@ execute_cfa_program (const unsigned char *insn_ptr,
   /* Don't allow remember/restore between CIE and FDE programs.  */
   fs->regs.prev = NULL;
 
+  /* The comparison with the return address uses < rather than <= because
+     we are only interested in the effects of code before the call; for a
+     noreturn function, the return address may point to unrelated code with
+     a different stack configuration that we are not interested in.  We
+     assume that the call itself is unwind info-neutral; if not, or if
+     there are delay instructions that adjust the stack, these must be
+     reflected at the point immediately before the call insn.  */
   while (insn_ptr < insn_end && fs->pc < context->ra)
     {
       unsigned char insn = *insn_ptr++;
-      _Unwind_Word reg;
-      _Unwind_Sword offset;
-      _Unwind_Ptr ptrtmp;
+      _Unwind_Word reg, utmp;
+      _Unwind_Sword offset, stmp;
 
       if ((insn & 0xc0) == DW_CFA_advance_loc)
 	fs->pc += (insn & 0x3f) * fs->code_align;
       else if ((insn & 0xc0) == DW_CFA_offset)
 	{
 	  reg = insn & 0x3f;
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  offset = ptrtmp * fs->data_align;
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
+	  offset = (_Unwind_Sword) utmp * fs->data_align;
 	  fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	  fs->regs.reg[reg].loc.offset = offset;
 	}
@@ -757,28 +789,31 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  break;
 
 	case DW_CFA_offset_extended:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp); reg = ptrtmp;
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  offset = ptrtmp * fs->data_align;
+	  insn_ptr = read_uleb128 (insn_ptr, &reg);
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
+	  offset = (_Unwind_Sword) utmp * fs->data_align;
 	  fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	  fs->regs.reg[reg].loc.offset = offset;
 	  break;
 
 	case DW_CFA_restore_extended:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp); reg = ptrtmp;
+	  insn_ptr = read_uleb128 (insn_ptr, &reg);
 	  fs->regs.reg[reg].how = REG_UNSAVED;
 	  break;
 
 	case DW_CFA_undefined:
 	case DW_CFA_same_value:
+	  insn_ptr = read_uleb128 (insn_ptr, &reg);
+	  break;
+
 	case DW_CFA_nop:
 	  break;
 
 	case DW_CFA_register:
 	  {
 	    _Unwind_Word reg2;
-	    insn_ptr = read_uleb128 (insn_ptr, &ptrtmp); reg = ptrtmp;
-	    insn_ptr = read_uleb128 (insn_ptr, &ptrtmp); reg2 = ptrtmp;
+	    insn_ptr = read_uleb128 (insn_ptr, &reg);
+	    insn_ptr = read_uleb128 (insn_ptr, &reg2);
 	    fs->regs.reg[reg].how = REG_SAVED_REG;
 	    fs->regs.reg[reg].loc.reg = reg2;
 	  }
@@ -793,7 +828,7 @@ execute_cfa_program (const unsigned char *insn_ptr,
 		unused_rs = unused_rs->prev;
 	      }
 	    else
-	      new_rs = alloca (sizeof (struct frame_state_reg_info));
+	      new_rs = __builtin_alloca (sizeof (struct frame_state_reg_info));
 
 	    *new_rs = fs->regs;
 	    fs->regs.prev = new_rs;
@@ -810,60 +845,55 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  break;
 
 	case DW_CFA_def_cfa:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  fs->cfa_reg = ptrtmp;
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  fs->cfa_offset = ptrtmp;
+	  insn_ptr = read_uleb128 (insn_ptr, &fs->cfa_reg);
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
+	  fs->cfa_offset = utmp;
 	  fs->cfa_how = CFA_REG_OFFSET;
 	  break;
 
 	case DW_CFA_def_cfa_register:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  fs->cfa_reg = ptrtmp;
+	  insn_ptr = read_uleb128 (insn_ptr, &fs->cfa_reg);
 	  fs->cfa_how = CFA_REG_OFFSET;
 	  break;
 
 	case DW_CFA_def_cfa_offset:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  fs->cfa_offset = ptrtmp;
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
+	  fs->cfa_offset = utmp;
 	  /* cfa_how deliberately not set.  */
 	  break;
 
 	case DW_CFA_def_cfa_expression:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
 	  fs->cfa_exp = insn_ptr;
 	  fs->cfa_how = CFA_EXP;
-	  insn_ptr += ptrtmp;
+	  insn_ptr += utmp;
 	  break;
 
 	case DW_CFA_expression:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp); reg = ptrtmp;
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
+	  insn_ptr = read_uleb128 (insn_ptr, &reg);
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
 	  fs->regs.reg[reg].how = REG_SAVED_EXP;
 	  fs->regs.reg[reg].loc.exp = insn_ptr;
-	  insn_ptr += ptrtmp;
+	  insn_ptr += utmp;
 	  break;
 
 	  /* From the 2.1 draft.  */
 	case DW_CFA_offset_extended_sf:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp); reg = ptrtmp;
-	  insn_ptr = read_sleb128 (insn_ptr, &ptrtmp);
-	  offset = (saddr)ptrtmp * fs->data_align;
+	  insn_ptr = read_uleb128 (insn_ptr, &reg);
+	  insn_ptr = read_sleb128 (insn_ptr, &stmp);
+	  offset = stmp * fs->data_align;
 	  fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	  fs->regs.reg[reg].loc.offset = offset;
 	  break;
 
 	case DW_CFA_def_cfa_sf:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  fs->cfa_reg = ptrtmp;
-	  insn_ptr = read_sleb128 (insn_ptr, &ptrtmp);
-	  fs->cfa_offset = (saddr)ptrtmp;
+	  insn_ptr = read_uleb128 (insn_ptr, &fs->cfa_reg);
+	  insn_ptr = read_sleb128 (insn_ptr, &fs->cfa_offset);
 	  fs->cfa_how = CFA_REG_OFFSET;
 	  break;
 
 	case DW_CFA_def_cfa_offset_sf:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  fs->cfa_offset = ptrtmp;
+	  insn_ptr = read_sleb128 (insn_ptr, &fs->cfa_offset);
 	  /* cfa_how deliberately not set.  */
 	  break;
 
@@ -877,16 +907,15 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  break;
 
 	case DW_CFA_GNU_args_size:
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  context->args_size = ptrtmp;
+	  insn_ptr = read_uleb128 (insn_ptr, &context->args_size);
 	  break;
 
 	case DW_CFA_GNU_negative_offset_extended:
 	  /* Obsoleted by DW_CFA_offset_extended_sf, but used by
 	     older PowerPC code.  */
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp); reg = ptrtmp;
-	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
-	  offset = ptrtmp * fs->data_align;
+	  insn_ptr = read_uleb128 (insn_ptr, &reg);
+	  insn_ptr = read_uleb128 (insn_ptr, &utmp);
+	  offset = (_Unwind_Word) utmp * fs->data_align;
 	  fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	  fs->regs.reg[reg].loc.offset = -offset;
 	  break;
@@ -897,6 +926,11 @@ execute_cfa_program (const unsigned char *insn_ptr,
     }
 }
 
+/* Given the _Unwind_Context CONTEXT for a stack frame, look up the FDE for
+   its caller and decode it into FS.  This function also sets the
+   args_size and lsda members of CONTEXT, as they are really information
+   about the caller's frame.  */
+
 static _Unwind_Reason_Code
 uw_frame_state_for (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
@@ -913,7 +947,7 @@ uw_frame_state_for (struct _Unwind_Context *context, _Unwind_FrameState *fs)
     {
       /* Couldn't find frame unwind info for this function.  Try a
 	 target-specific fallback mechanism.  This will necessarily
-	 not profide a personality routine or LSDA.  */
+	 not provide a personality routine or LSDA.  */
 #ifdef MD_FALLBACK_FRAME_STATE_FOR
       MD_FALLBACK_FRAME_STATE_FOR (context, fs, success);
       return _URC_END_OF_STACK;
@@ -937,12 +971,12 @@ uw_frame_state_for (struct _Unwind_Context *context, _Unwind_FrameState *fs)
   execute_cfa_program (insn, end, context, fs);
 
   /* Locate augmentation for the fde.  */
-  aug = (unsigned char *)fde + sizeof (*fde);
+  aug = (unsigned char *) fde + sizeof (*fde);
   aug += 2 * size_of_encoded_value (fs->fde_encoding);
   insn = NULL;
   if (fs->saw_z)
     {
-      _Unwind_Ptr i;
+      _Unwind_Word i;
       aug = read_uleb128 (aug, &i);
       insn = aug + i;
     }
@@ -965,10 +999,10 @@ typedef struct frame_state
   void *eh_ptr;
   long cfa_offset;
   long args_size;
-  long reg_or_offset[DWARF_FRAME_REGISTERS+1];
+  long reg_or_offset[PRE_GCC3_DWARF_FRAME_REGISTERS+1];
   unsigned short cfa_reg;
   unsigned short retaddr_column;
-  char saved[DWARF_FRAME_REGISTERS+1];
+  char saved[PRE_GCC3_DWARF_FRAME_REGISTERS+1];
 } frame_state;
 
 #ifndef STATIC
@@ -1001,7 +1035,7 @@ __frame_state_for (void *pc_target, struct frame_state *state_in)
   if (fs.cfa_how == CFA_EXP)
     return 0;
 
-  for (reg = 0; reg < DWARF_FRAME_REGISTERS + 1; reg++)
+  for (reg = 0; reg < PRE_GCC3_DWARF_FRAME_REGISTERS + 1; reg++)
     {
       state_in->saved[reg] = fs.regs.reg[reg].how;
       switch (state_in->saved[reg])
@@ -1059,7 +1093,7 @@ uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 	 that this will not be a problem.  */
       {
 	const unsigned char *exp = fs->cfa_exp;
-	_Unwind_Ptr len;
+	_Unwind_Word len;
 
 	exp = read_uleb128 (exp, &len);
 	cfa = (void *) (_Unwind_Ptr)
@@ -1087,7 +1121,7 @@ uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
       case REG_SAVED_EXP:
 	{
 	  const unsigned char *exp = fs->regs.reg[i].loc.exp;
-	  _Unwind_Ptr len;
+	  _Unwind_Word len;
 	  _Unwind_Ptr val;
 
 	  exp = read_uleb128 (exp, &len);
@@ -1098,6 +1132,11 @@ uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 	break;
       }
 }
+
+/* CONTEXT describes the unwind state for a frame, and FS describes the FDE
+   of its caller.  Update CONTEXT to refer to the caller as well.  Note
+   that the args_size and lsda members are not updated here, but later in
+   uw_frame_state_for.  */
 
 static void
 uw_update_context (struct _Unwind_Context *context, _Unwind_FrameState *fs)
@@ -1113,14 +1152,16 @@ uw_update_context (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 /* Fill in CONTEXT for top-of-stack.  The only valid registers at this
    level will be the return address and the CFA.  */
 
-#define uw_init_context(CONTEXT)					\
-do {									\
-  /* Do any necessary initialization to access arbitrary stack frames.	\
-     On the SPARC, this means flushing the register windows.  */	\
-  __builtin_unwind_init ();						\
-  uw_init_context_1 (CONTEXT, __builtin_dwarf_cfa (),			\
-		     __builtin_return_address (0));			\
-} while (0)
+#define uw_init_context(CONTEXT)					   \
+  do									   \
+    {									   \
+      /* Do any necessary initialization to access arbitrary stack frames. \
+	 On the SPARC, this means flushing the register windows.  */	   \
+      __builtin_unwind_init ();						   \
+      uw_init_context_1 (CONTEXT, __builtin_dwarf_cfa (),		   \
+			 __builtin_return_address (0));			   \
+    }									   \
+  while (0)
 
 static void
 uw_init_context_1 (struct _Unwind_Context *context,
@@ -1154,12 +1195,14 @@ uw_init_context_1 (struct _Unwind_Context *context,
    macro because __builtin_eh_return must be invoked in the context of
    our caller.  */
 
-#define uw_install_context(CURRENT, TARGET)				\
-do {									\
-  long offset = uw_install_context_1 ((CURRENT), (TARGET));		\
-  void *handler = __builtin_frob_return_addr ((TARGET)->ra);		\
-  __builtin_eh_return (offset, handler);				\
-} while (0)
+#define uw_install_context(CURRENT, TARGET)				 \
+  do									 \
+    {									 \
+      long offset = uw_install_context_1 ((CURRENT), (TARGET));		 \
+      void *handler = __builtin_frob_return_addr ((TARGET)->ra);	 \
+      __builtin_eh_return (offset, handler);				 \
+    }									 \
+  while (0)
 
 static inline void
 init_dwarf_reg_size_table (void)
