@@ -62,7 +62,8 @@ texis: texis.awk $(chapters) $(add-chapters) $(appendices) lgpl.texinfo
 	mv -f $@.T $@
 
 nonexamples = $(filter-out $(add-chapters) %.c.texi, $(texis))
-examples = $(filter %.c.texi, $(texis))
+examples = $(filter-out $(foreach d, $(add-ons), ../$d/%.c.texi), \
+			$(filter %.c.texi, $(texis)))
 
 # Kludge: implicit rule so Make knows the one command does it all.
 chapters.% top-menu.%: libc-texinfo.sh $(texis)

@@ -1,5 +1,8 @@
 1999-01-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/Makefile (examples): Filter out the example code from
+	add-ons.
+
 	* version.h (VERSION): Bump to 2.0.110.
 
 	* nis/nis_error.c (nis_errlist): Fix typo in string.
