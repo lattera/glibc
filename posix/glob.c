@@ -106,6 +106,8 @@ extern int errno;
 #define	ANSI_STRING
 #else	/* No standard headers.  */
 
+extern char *getenv ();
+
 #ifdef HAVE_STRING_H
 #include <string.h>
 #define	ANSI_STRING
@@ -496,7 +498,8 @@ glob (pattern, flags, errfunc, pglob)
       struct stat st;
       for (i = oldcount; i < pglob->gl_pathc; ++i)
 	if (((flags & GLOB_ALTDIRFUNC) ?
-	     *pglob->gl_stat : __stat) (pglob->gl_pathv[i], &st) == 0 &&
+	     (*pglob->gl_stat) (pglob->gl_pathv[i], &st) :
+	     __stat (pglob->gl_pathv[i], &st)) == 0 &&
 	    S_ISDIR (st.st_mode))
 	  {
  	    size_t len = strlen (pglob->gl_pathv[i]) + 2;

@@ -1,3 +1,24 @@
+Mon Dec 11 20:07:54 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c [! STDC_HEADERS]: Declare getenv.
+	(glob): Avoid using function as value.
+
+	* elf/rtld.c (dl_main): When mapping argument executable, set
+	l_name to "", not l_libname.
+	After loading DT_NEEDED library, set its l_type to lt_library.
+
+	* sysdeps/mach/hurd/mmap.c: Don't interpret MAP_INHERIT to mean
+	VM_INHERIT.  We can't handle MAP_INHERIT easily.
+	Handle non-page-aligned addresses if congruent to offset.
+
+	* elf/dl-init.c: Skip the initializer for l_type lt_executable
+	with l_name "". Start at _dl_loaded; don't skip the first element.
+
+	* elf/dl-load.c (MAP_FILE): Define to zero if undefined.
+	(MAP_COPY): Define to MAP_PRIVATE if undefined.
+	(_dl_map_object_from_fd): Don't use MAP_INHERIT in mmap calls.
+	If file it ET_EXEC, set its l_type to lt_executable.
+
 Sun Dec 10 09:56:06 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/dl-minimal.c (malloc): Use MAP_PRIVATE in mmap call.
