@@ -1,3 +1,8 @@
+1998-10-06  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Fix clearing startup
+	flag.
+
 1998-10-04  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* mach/mach.h: Remove __mach_msg decl; <mach/message.h> now does it.
