@@ -96,7 +96,7 @@ checking for version `%s' in file %s required by file %s\n",
 	 only print a message if verbose output is requested.  */
       if (verbose)
 	/* XXX We cannot translate the messages.  */
-	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
+	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0], NULL,
 			   make_string ("\
 no version information available (required by ",
 					name, ")"));
@@ -117,6 +117,7 @@ no version information available (required by ",
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_error (0, map->l_name[0] ? map->l_name : _dl_argv[0],
+			    NULL,
 			    make_string ("unsupported version ",
 					 _itoa_word (def->vd_version,
 						     &buf[sizeof (buf) - 1],
@@ -150,7 +151,7 @@ no version information available (required by ",
     {
       if (verbose)
 	/* XXX We cannot translate the message.  */
-	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
+	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0], NULL,
 			   make_string ("weak version `", string,
 					"' not found (required by ", name,
 					")"));
@@ -158,7 +159,7 @@ no version information available (required by ",
     }
 
   /* XXX We cannot translate the message.  */
-  _dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
+  _dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0], NULL,
 		     make_string ("version `", string,
 				  "' not found (required by ", name, ")"));
   return 1;
@@ -200,6 +201,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_error (0, (*map->l_name ? map->l_name : _dl_argv[0]),
+			    NULL,
 			    make_string ("unsupported version ",
 					 _itoa_word (ent->vn_version,
 						     &buf[sizeof (buf) - 1],
@@ -289,6 +291,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
       if (__builtin_expect (map->l_versions == NULL, 0))
 	{
 	  _dl_signal_error (ENOMEM, (*map->l_name ? map->l_name : _dl_argv[0]),
+			    NULL,
 			    N_("cannot allocate version reference table"));
 	  result = 1;
 	}

@@ -63,7 +63,8 @@ static receiver_fct receiver;
 
 void
 internal_function
-_dl_signal_error (int errcode, const char *objname, const char *errstring)
+_dl_signal_error (int errcode, const char *objname, const char *occation,
+		  const char *errstring)
 {
   struct catch *lcatch;
 
@@ -99,9 +100,9 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
     {
       /* Lossage while resolving the program's own symbols is always fatal.  */
       char buffer[1024];
-      _dl_fatal_printf ("\
-%s: error while loading shared libraries: %s%s%s%s%s\n",
+      _dl_fatal_printf ("%s: %s: %s%s%s%s%s\n",
 			_dl_argv[0] ?: "<program name unknown>",
+			occation ?: N_("error while loading shared libraries"),
 			objname, *objname ? ": " : "",
 			errstring, errcode ? ": " : "",
 			(errcode
@@ -113,8 +114,7 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
 
 void
 internal_function
-_dl_signal_cerror (int errcode,
-		   const char *objname,
+_dl_signal_cerror (int errcode, const char *objname, const char *occation,
 		   const char *errstring)
 {
   if (receiver)
@@ -125,7 +125,7 @@ _dl_signal_cerror (int errcode,
       (*receiver) (errcode, objname, errstring);
     }
   else
-    _dl_signal_error (errcode, objname, errstring);
+    _dl_signal_error (errcode, objname, occation, errstring);
 }
 
 

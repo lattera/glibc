@@ -1,3 +1,20 @@
+2001-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	Correct very misleading message for error in failed runtime relocation.
+	* elf/dl-error.c (_dl_signal_error): Take extra parameter to describe
+	place of the error.
+	(_dl_signal_cerror): Likewise.
+	* sysdeps/generic/ldsodefs.h: Adjust prototypes.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+
 2001-09-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconv/strtab.c (strtabinit): Initialize null Strent.

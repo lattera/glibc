@@ -63,7 +63,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 			       & ~(_dl_pagesize - 1)));
 	    if (__builtin_expect (__mprotect (mapstart, mapend - mapstart,
 					      PROT_READ|PROT_WRITE), 0) < 0)
-	      _dl_signal_error (errno, l->l_name, N_("\
+	      _dl_signal_error (errno, l->l_name, NULL, N_("\
 cannot make segment writable for relocation"));
 	  }
     }
@@ -177,7 +177,7 @@ cannot make segment writable for relocation"));
 
 	    if (__builtin_expect (__mprotect (mapstart, mapend - mapstart,
 					      prot), 0) < 0)
-	      _dl_signal_error (errno, l->l_name,
+	      _dl_signal_error (errno, l->l_name, NULL,
 				N_("can't restore segment prot after reloc"));
 
 #ifdef CLEAR_CACHE
@@ -201,7 +201,7 @@ _dl_reloc_bad_type (struct link_map *map, uint_fast8_t type, int plt)
       static char msg[] = "unexpected PLT reloc type 0x??";
       msg[sizeof msg - 3] = DIGIT(type >> 4);
       msg[sizeof msg - 2] = DIGIT(type);
-      _dl_signal_error (0, map->l_name, msg);
+      _dl_signal_error (0, map->l_name, NULL, msg);
     }
   else
     {
@@ -209,6 +209,6 @@ _dl_reloc_bad_type (struct link_map *map, uint_fast8_t type, int plt)
       static char msg[] = "unexpected reloc type 0x??";
       msg[sizeof msg - 3] = DIGIT(type >> 4);
       msg[sizeof msg - 2] = DIGIT(type);
-      _dl_signal_error (0, map->l_name, msg);
+      _dl_signal_error (0, map->l_name, NULL, msg);
     }
 }

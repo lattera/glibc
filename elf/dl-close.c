@@ -53,7 +53,7 @@ _dl_close (void *_map)
     return;
 
   if (__builtin_expect (map->l_opencount, 1) == 0)
-    _dl_signal_error (0, map->l_name, N_("shared object not open"));
+    _dl_signal_error (0, map->l_name, NULL, N_("shared object not open"));
 
   /* Acquire the lock.  */
   __libc_lock_lock_recursive (_dl_load_lock);

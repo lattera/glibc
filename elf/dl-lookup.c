@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <alloca.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -236,6 +237,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	_dl_signal_cerror (0, (reference_name && reference_name[0]
 			       ? reference_name
 			       : (_dl_argv[0] ?: "<main program>")),
+			   N_("relocation error"),
 			   make_string (undefined_msg, undef_name));
       *ref = NULL;
       return 0;
@@ -419,6 +421,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	  _dl_signal_cerror (0, (reference_name && reference_name[0]
 				 ? reference_name
 				 : (_dl_argv[0] ?: "<main program>")),
+			     N_("relocation error"),
 			     make_string ("symbol ", undef_name, ", version ",
 					  version->name,
 					  " not defined in file ",
@@ -441,7 +444,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, (reference_name && reference_name[0]
 				 ? reference_name
-				 : (_dl_argv[0] ?: "<main program>")),
+				 : (_dl_argv[0] ?: "<main program>")), NULL,
 			     make_string (undefined_msg, undef_name,
 					  ", version ",
 					  version->name ?: NULL));
@@ -537,7 +540,8 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	  /* XXX We cannot translate the messages.  */
 	  _dl_signal_cerror (0, (reference_name && reference_name[0]
 				 ? reference_name
-				 : (_dl_argv[0] ?: "<main program>")), buf);
+				 : (_dl_argv[0] ?: "<main program>")),
+			     NULL, buf);
 	}
       *ref = NULL;
       return 0;

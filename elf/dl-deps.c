@@ -97,7 +97,7 @@ struct list
 									      \
 	/* DST must not appear in SUID/SGID programs.  */		      \
 	if (__libc_enable_secure)					      \
-	  _dl_signal_error (0, __str,					      \
+	  _dl_signal_error (0, __str, NULL,				      \
 			    N_("DST not allowed in SUID/SGID programs"));     \
 									      \
 	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
@@ -110,7 +110,7 @@ struct list
 	    /* The replacement for the DST is not known.  We can't	      \
 	       processed.  */						      \
 	    if (fatal)							      \
-	      _dl_signal_error (0, __str, N_("\
+	      _dl_signal_error (0, __str, NULL, N_("\
 empty dynamics string token substitution"));				      \
 	    else							      \
 	      {								      \
@@ -450,7 +450,7 @@ _dl_map_object_deps (struct link_map *map,
 
 	  l->l_initfini = malloc (nneeded * sizeof needed[0]);
 	  if (l->l_initfini == NULL)
-	    _dl_signal_error (ENOMEM, map->l_name,
+	    _dl_signal_error (ENOMEM, map->l_name, NULL,
 			      N_("cannot allocate dependency list"));
 	  memcpy (l->l_initfini, needed, nneeded * sizeof needed[0]);
 	}
@@ -480,7 +480,7 @@ out:
     (struct link_map **) malloc ((2 * nlist + 1)
 				 * sizeof (struct link_map *));
   if (map->l_initfini == NULL)
-    _dl_signal_error (ENOMEM, map->l_name,
+    _dl_signal_error (ENOMEM, map->l_name, NULL,
 		      N_("cannot allocate symbol search list"));
 
 
@@ -527,7 +527,7 @@ out:
 	  if (runp != NULL)
 	    {
 	      while (*runp != NULL)
-		if (*runp == l)
+		if (__builtin_expect (*runp++ == l, 0))
 		  {
 		    struct link_map *here = map->l_initfini[k];
 
@@ -539,8 +539,6 @@ out:
 
 		    break;
 		  }
-		else
-		  ++runp;
 	    }
 	}
     }
@@ -549,5 +547,5 @@ out:
 
   if (errno_reason)
     _dl_signal_error (errno_reason == -1 ? 0 : errno_reason,
-		      objname, errstring);
+		      objname, NULL, errstring);
 }

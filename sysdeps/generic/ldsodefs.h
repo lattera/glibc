@@ -292,15 +292,14 @@ extern void _dl_dprintf (int fd, const char *fmt, ...)
    it is a general problem; ERRSTRING is a string describing the specific
    problem.  */
 extern void _dl_signal_error (int errcode, const char *object,
-			      const char *errstring)
+			      const char *occurred, const char *errstring)
      internal_function
      __attribute__ ((__noreturn__));
 
 /* Like _dl_signal_error, but may return when called in the context of
    _dl_receive_error.  */
-extern void _dl_signal_cerror (int errcode,
-			       const char *object,
-			       const char *errstring)
+extern void _dl_signal_cerror (int errcode, const char *object,
+			       const char *occation, const char *errstring)
      internal_function;
 
 /* Call OPERATE, receiving errors from `dl_signal_cerror'.  Unlike

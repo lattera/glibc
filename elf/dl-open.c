@@ -108,7 +108,7 @@ add_to_global (struct link_map *new)
 	{
 	  _dl_global_scope_alloc = 0;
 	nomem:
-	  _dl_signal_error (ENOMEM, new->l_libname->name,
+	  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
 			    N_("cannot extend global scope"));
 	  return 1;
 	}
@@ -175,7 +175,7 @@ dl_open_worker (void *a)
       /* DSTs must not appear in SUID/SGID programs.  */
       if (__libc_enable_secure)
 	/* This is an error.  */
-	_dl_signal_error (0, "dlopen",
+	_dl_signal_error (0, "dlopen", NULL,
 			  N_("DST not allowed in SUID/SGID programs"));
 
       /* We have to find out from which object the caller is calling.  */
@@ -206,7 +206,7 @@ dl_open_worker (void *a)
 
       /* If the substitution failed don't try to load.  */
       if (*new_file == '\0')
-	_dl_signal_error (0, "dlopen",
+	_dl_signal_error (0, "dlopen", NULL,
 			  N_("empty dynamic string token substitution"));
 
       /* Now we have a new file name.  */
@@ -337,7 +337,7 @@ _dl_open (const char *file, int mode, const void *caller)
 
   if ((mode & RTLD_BINDING_MASK) == 0)
     /* One of the flags must be set.  */
-    _dl_signal_error (EINVAL, file, N_("invalid mode for dlopen()"));
+    _dl_signal_error (EINVAL, file, NULL, N_("invalid mode for dlopen()"));
 
   /* Make sure we are alone.  */
   __libc_lock_lock_recursive (_dl_load_lock);
@@ -396,7 +396,7 @@ _dl_open (const char *file, int mode, const void *caller)
 	free ((char *) errstring);
 
       /* Reraise the error.  */
-      _dl_signal_error (errcode, objname, local_errstring);
+      _dl_signal_error (errcode, objname, NULL, local_errstring);
     }
 
 #ifndef SHARED

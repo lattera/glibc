@@ -345,7 +345,7 @@ add_name_to_object (struct link_map *l, const char *name)
   if (newname == NULL)
     {
       /* No more memory.  */
-      _dl_signal_error (ENOMEM, name, N_("cannot allocate name record"));
+      _dl_signal_error (ENOMEM, name, NULL, N_("cannot allocate name record"));
       return;
     }
   /* The object should have a libname set from _dl_new_object.  */
@@ -452,7 +452,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	    malloc (sizeof (*dirp) + ncapstr * sizeof (enum r_dir_status)
 		    + where_len + len + 1);
 	  if (dirp == NULL)
-	    _dl_signal_error (ENOMEM, NULL,
+	    _dl_signal_error (ENOMEM, NULL, NULL,
 			      N_("cannot create cache for search path"));
 
 	  dirp->dirname = ((char *) dirp + sizeof (*dirp)
@@ -521,7 +521,7 @@ decompose_rpath (struct r_search_path_struct *sps,
 	      result = (struct r_search_path_elem **)
 		malloc (sizeof (*result));
 	      if (result == NULL)
-		_dl_signal_error (ENOMEM, NULL,
+		_dl_signal_error (ENOMEM, NULL, NULL,
 				  N_("cannot create cache for search path"));
 	      result[0] = NULL;
 
@@ -537,7 +537,8 @@ decompose_rpath (struct r_search_path_struct *sps,
      string tokens.  */
   copy = expand_dynamic_string_token (l, rpath);
   if (copy == NULL)
-    _dl_signal_error (ENOMEM, NULL, N_("cannot create RUNPATH/RPATH copy"));
+    _dl_signal_error (ENOMEM, NULL, NULL,
+		      N_("cannot create RUNPATH/RPATH copy"));
 
   /* Count the number of necessary elements in the result array.  */
   nelems = 0;
@@ -550,7 +551,8 @@ decompose_rpath (struct r_search_path_struct *sps,
   result = (struct r_search_path_elem **) malloc ((nelems + 1 + 1)
 						  * sizeof (*result));
   if (result == NULL)
-    _dl_signal_error (ENOMEM, NULL, N_("cannot create cache for search path"));
+    _dl_signal_error (ENOMEM, NULL, NULL,
+		      N_("cannot create cache for search path"));
 
   fillin_rpath (copy, result, ":", 0, what, where);
 
@@ -587,7 +589,8 @@ _dl_init_paths (const char *llp)
   aelem = rtld_search_dirs.dirs = (struct r_search_path_elem **)
     malloc ((nsystem_dirs_len + 1) * sizeof (struct r_search_path_elem *));
   if (rtld_search_dirs.dirs == NULL)
-    _dl_signal_error (ENOMEM, NULL, N_("cannot create search path array"));
+    _dl_signal_error (ENOMEM, NULL, NULL,
+		      N_("cannot create search path array"));
 
   round_size = ((2 * sizeof (struct r_search_path_elem) - 1
 		 + ncapstr * sizeof (enum r_dir_status))
@@ -597,7 +600,8 @@ _dl_init_paths (const char *llp)
     malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
 	    * round_size * sizeof (struct r_search_path_elem));
   if (rtld_search_dirs.dirs[0] == NULL)
-    _dl_signal_error (ENOMEM, NULL, N_("cannot create cache for search path"));
+    _dl_signal_error (ENOMEM, NULL, NULL,
+		      N_("cannot create cache for search path"));
 
   rtld_search_dirs.malloced = 0;
   pelem = _dl_all_dirs = rtld_search_dirs.dirs[0];
@@ -689,7 +693,7 @@ _dl_init_paths (const char *llp)
       env_path_list.dirs = (struct r_search_path_elem **)
 	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
       if (env_path_list.dirs == NULL)
-	_dl_signal_error (ENOMEM, NULL,
+	_dl_signal_error (ENOMEM, NULL, NULL,
 			  N_("cannot create cache for search path"));
 
       (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
@@ -741,7 +745,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
       free (l);
     }
   free (realname);
-  _dl_signal_error (code, name, msg);
+  _dl_signal_error (code, name, NULL, msg);
 }
 
 
@@ -819,7 +823,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       if (_dl_zerofd == -1)
 	{
 	  __close (fd);
-	  _dl_signal_error (errno, NULL, N_("cannot open zero fill device"));
+	  _dl_signal_error (errno, NULL, NULL,
+			    N_("cannot open zero fill device"));
 	}
     }
 #endif
@@ -1101,7 +1106,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
       free (l);
 
-      _dl_signal_error (0, name, N_("shared object cannot be dlopen()ed"));
+      _dl_signal_error (0, name, NULL,
+			N_("shared object cannot be dlopen()ed"));
     }
 
   if (l->l_info[DT_HASH])
@@ -1720,7 +1726,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
 	      || (l = _dl_new_object (name_copy, name, type, loader)) == NULL)
-	    _dl_signal_error (ENOMEM, name,
+	    _dl_signal_error (ENOMEM, name, NULL,
 			      N_("cannot create shared object descriptor"));
 	  /* Signal that this is a faked entry.  */
 	  l->l_faked = 1;
@@ -1734,7 +1740,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  return l;
 	}
       else
-	_dl_signal_error (errno, name, N_("cannot open shared object file"));
+	_dl_signal_error (errno, name, NULL,
+			  N_("cannot open shared object file"));
     }
 
   return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode);

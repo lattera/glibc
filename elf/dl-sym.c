@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,7 +69,7 @@ _dl_sym (void *handle, const char *name, void *who)
 	      if (! _dl_loaded
 		  || caller < _dl_loaded->l_map_start
 		  || caller >= _dl_loaded->l_map_end)
-	        _dl_signal_error (0, NULL, N_("\
+	        _dl_signal_error (0, NULL, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 	    }
 
@@ -131,7 +131,7 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 	  if (! _dl_loaded
 	      || caller < _dl_loaded->l_map_start
 	      || caller >= _dl_loaded->l_map_end)
-	    _dl_signal_error (0, NULL, N_("\
+	    _dl_signal_error (0, NULL, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 	}
 
