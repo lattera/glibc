@@ -1,3 +1,8 @@
+2004-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/Makefile (CFLAGS-nscd_initgroups.c): Set to -fpie.
+	(CFLAGS-initgrcache.c): Likewise.
+
 2004-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/glob.c (glob_in_dir): Don't blindly trust
