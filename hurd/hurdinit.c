@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,8 +42,6 @@ _hurd_ports_use (int which, error_t (*operate) (mach_port_t))
   return HURD_PORT_USE (&_hurd_ports[which], (*operate) (port));
 }
 
-void _hurd_proc_init (char **argv);
-
 DEFINE_HOOK (_hurd_subinit, (void));
 
 /* Initialize the library data structures from the
@@ -84,7 +82,7 @@ _hurd_init (int flags, char **argv,
 
   /* Tell the proc server we exist, if it does.  */
   if (portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
-    _hurd_proc_init (argv);
+    _hurd_proc_init (argv, intarray, intarraysize);
 
   /* All done with init ints and ports.  */
   __vm_deallocate (__mach_task_self (),
@@ -120,14 +118,15 @@ DEFINE_HOOK (_hurd_proc_subinit, (void));
    Call _hurdsig_init to set up signal processing.  */
 
 void
-_hurd_proc_init (char **argv)
+_hurd_proc_init (char **argv,
+		 const int *intarray, size_t intarraysize)
 {
   mach_port_t oldmsg;
   struct hurd_userlink ulink;
   process_t procserver;
 
   /* Initialize the signal code; Mach exceptions will become signals.  */
-  _hurdsig_init ();
+  _hurdsig_init (intarray, intarraysize);
 
   /* The signal thread is now prepared to receive messages.
      It is safe to give the port to the proc server.  */

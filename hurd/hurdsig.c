@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1167,10 +1167,11 @@ extern void __mig_init (void *);
    thread.  */
 
 void
-_hurdsig_init (void)
+_hurdsig_init (const int *intarray, size_t intarraysize)
 {
   error_t err;
   vm_size_t stacksize;
+  struct hurd_sigstate *ss;
 
   __mutex_init (&_hurd_siglock);
 
@@ -1186,9 +1187,26 @@ _hurdsig_init (void)
 				  MACH_MSG_TYPE_MAKE_SEND);
   assert_perror (err);
 
+  /* Initialize the main thread's signal state.  */
+  ss = _hurd_self_sigstate ();
+
+  /* Copy inherited values from our parent (or pre-exec process state)
+     into the signal settings of the main thread.  */
+  if (intarraysize > INIT_SIGMASK)
+    ss->blocked = intarray[INIT_SIGMASK];
+  if (intarraysize > INIT_SIGPENDING)
+    ss->blocked = intarray[INIT_SIGPENDING];
+  if (intarraysize > INIT_SIGIGN && intarray[INIT_SIGIGN] != 0)
+    {
+      int signo;
+      for (signo = 1; signo < NSIG; ++signo)
+	if (intarray[INIT_SIGIGN] & __sigmask(signo))
+	  ss->actions[signo].sa_handler = SIG_IGN;
+    }
+
   /* Set the default thread to receive task-global signals
      to this one, the main (first) user thread.  */
-  _hurd_sigthread = __mach_thread_self ();
+  _hurd_sigthread = ss->thread;
 
   /* Start the signal thread listening on the message port.  */
 
@@ -1214,8 +1232,6 @@ _hurdsig_init (void)
 
   err = __thread_resume (_hurd_msgport_thread);
   assert_perror (err);
-
-  (void) _hurd_self_sigstate ();
 
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),

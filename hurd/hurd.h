@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -235,9 +235,12 @@ extern void _hurd_init (int flags, char **argv,
 			mach_port_t *portarray, size_t portarraysize,
 			int *intarray, size_t intarraysize);
 
-/* Do startup handshaking with the proc server.  */
+/* Do startup handshaking with the proc server, and initialize library data
+   structures that require proc server interaction.  This includes
+   initializing signals; see _hurdsig_init in <hurd/signal.h>.  */
 
-extern void _hurd_proc_init (char **argv);
+extern void _hurd_proc_init (char **argv,
+			     const int *intarray, size_t intarraysize);
 
 
 /* Return the socket server for sockaddr domain DOMAIN.  If DEAD is

@@ -1,5 +1,5 @@
 /* Implementing POSIX.1 signals under the Hurd.
-   Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -216,9 +216,10 @@ _hurd_critical_section_unlock (void *our_lock)
 #define HURD_CRITICAL_END \
       _hurd_critical_section_unlock (__hurd_critical__); } while (0)
 
-/* Initialize the signal code, and start the signal thread.  */
+/* Initialize the signal code, and start the signal thread.
+   Arguments give the "init ints" from exec_startup.  */
 
-extern void _hurdsig_init (void);
+extern void _hurdsig_init (const int *intarray, size_t intarraysize);
 
 /* Initialize proc server-assisted fault recovery for the signal thread.  */
 
