@@ -1,3 +1,8 @@
+Mon Dec 11 20:07:54 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c [! STDC_HEADERS]: Declare getenv.
+	(glob): Avoid using function as value.
+
 Fri Dec  8 13:04:51 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c: Implement new options GLOB_ALTDIRFUNC, GLOB_BRACE,
