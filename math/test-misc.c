@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <fenv.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -203,6 +204,48 @@ main (void)
     else if (memcmp (&r, &u.d, sizeof (double)) != 0)
       {
 	puts ("scalbl(NaN, 0) does not return the same NaN");
+	result = 1;
+      }
+  }
+#endif
+
+#ifndef NO_LONG_DOUBLE
+  {
+    long double r;
+
+    feclearexcept (FE_ALL_EXCEPT);
+    r = scalbl (LDBL_MIN, 2147483647);
+    if (! isinf (r))
+      {
+	puts ("scalbl (LDBL_MIN, 2147483647) does not return Inf");
+	result = 1;
+      }
+    else if (signbit (r) != 0)
+      {
+	puts ("scalbl (LDBL_MIN, 2147483647) returns -Inf");
+	result = 1;
+      }
+    else if (fetestexcept (FE_UNDERFLOW))
+      {
+	puts ("scalbl(NaN, 0) raises underflow exception");
+	result = 1;
+      }
+
+    feclearexcept (FE_ALL_EXCEPT);
+    r = scalbl (LDBL_MAX, -2147483647);
+    if (r != 0.0)
+      {
+	puts ("scalbl (LDBL_MAX, -2147483647) does not return 0");
+	result = 1;
+      }
+    else if (signbit (r) != 0)
+      {
+	puts ("scalbl (LDBL_MAX, -2147483647) returns -Inf");
+	result = 1;
+      }
+    else if (fetestexcept (FE_OVERFLOW))
+      {
+	puts ("scalbl(NaN, 0) raises overflow exception");
 	result = 1;
       }
   }
