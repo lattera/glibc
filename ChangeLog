@@ -1,5 +1,9 @@
 1999-12-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/Versions: Add getrlimit, setrlimit,
+	getrlimit64, setrlimit64 for GLIBC_2.1.3.
+	* sysdeps/unix/sysv/linux/i386/Versions: Add getrlimit, setrlimit,
+	getrlimit64, setrlimit64 for GLIBC_2.1.3.
 	* sysdeps/unix/sysv/linux/i386/Makefile: Add rules for
 	oldgetrlimit and oldsetrlimit.
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add oldgetrlimit and

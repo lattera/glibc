@@ -7,4 +7,8 @@ libc {
   GLIBC_2.1 {
     __modify_ldt; modify_ldt;
   }
+  GLIBC_2.1.3 {
+    # New rlimit interface
+    getrlimit; setrlimit; getrlimit64; setrlimit64;
+  }
 }
