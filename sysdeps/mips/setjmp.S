@@ -23,6 +23,10 @@ Cambridge, MA 02139, USA.  */
    extra arguments.  */
 ENTRY (__setjmp)
 	move a1, sp
+#ifdef __sgi__
+	move a2, fp
+#else
 	move a2, $fp
+#endif
 	j __setjmp_aux
 
