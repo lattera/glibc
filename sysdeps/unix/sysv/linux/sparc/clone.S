@@ -1,6 +1,5 @@
 /* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
-   Contributed by Miguel de Icaza (miguel@nuclecu.unam.mx)
-   Based on code written for the Intel by Richard Henderson (rth@tamu.edu).
+   Contributed by Richard Henderson (rth@tamu.edu).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as

@@ -21,6 +21,7 @@
 #include <time.h>
 #include <string.h>
 #include <limits.h>
+#include <unistd.h>
 
 #define	NOID
 #include <tzfile.h>
@@ -79,6 +80,7 @@ decode (const void *ptr)
 void
 __tzfile_read (const char *file)
 {
+  static const char default_tzdir[] = TZDIR;
   size_t num_isstd, num_isgmt;
   register FILE *f;
   struct tzhead tzhead;
@@ -111,9 +113,19 @@ __tzfile_read (const char *file)
     /* User specified the empty string; use UTC explicitly.  */
     file = "Universal";
 
+  /* We must not allow to read an arbitrary file in a setuid program.
+     So we fail for any file which is not in the directory hierachy
+     starting at TZDIR.  */
+  if (__libc_enable_secure
+      && ((*file == '/'
+	   && memcmp (file, default_tzdir, sizeof (default_tzdir) - 1) != 0)
+	  || strstr (file, "../") != NULL))
+    /* This test a certainly a bit too restrictive but it should catch all
+       critical case.  */
+    return;
+
   if (*file != '/')
     {
-      static const char default_tzdir[] = TZDIR;
       const char *tzdir;
       unsigned int len, tzdir_len;
       char *new;

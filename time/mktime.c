@@ -85,9 +85,6 @@
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 #endif
 
-/* Prototype for the internal function to get information based on TZ.  */
-extern void __tzset_internal __P ((int always));
-
 /* How many days come before each month (0-12).  */
 const unsigned short int __mon_yday[2][13] =
   {
@@ -164,8 +161,10 @@ mktime (tp)
      struct tm *tp;
 {
 #ifdef _LIBC
-  /* Update internal database according to current TZ setting.  */
-  __tzset_internal (1);
+  /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
+     time zone names contained in the external variable `tzname' shall
+     be set as if the tzset() function had been called.  */
+  __tzset ();
 #endif
 
   return __mktime_internal (tp, localtime_r, &localtime_offset);

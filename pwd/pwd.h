@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ extern struct passwd *getpwuid __P ((__uid_t __uid));
 /* Search for an entry with a matching username.  */
 extern struct passwd *getpwnam __P ((__const char *__name));
 
-#ifdef	__USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_REENTRANT
 /* Reasonable value for the buffer sized used in the reentrant
    functions below.  But better use `sysconf'.  */
 #define	NSS_BUFLEN_PASSWD	1024
@@ -140,7 +140,7 @@ extern int fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
 			     struct passwd **__result));
 #endif
 
-#endif	/* reentrant */
+#endif	/* POSIX or reentrant */
 
 
 __END_DECLS

@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: October 1996
+Status: January 1997
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@prep.ai.mit.edu>
@@ -9,6 +9,8 @@ contact <bug-glibc@prep.ai.mit.edu>
 
 [ 1] Port to new platforms or test current version on formerly supported
      platforms.
+
+**** See http://www.gnu.org/software/libc/porting.html for more details.
 
 
 [ 2] Test compliance with standards.  If you have access to recent
@@ -30,6 +32,8 @@ contact <bug-glibc@prep.ai.mit.edu>
      header <wordexp.h> already exists.
 
      Implementation idea: use some functions from bash.
+
+**** Somebody is working on this.  Help may or may not be appreciated.
 
 
 [ 5] Write `long double' versions of the math functions.  This should be
@@ -83,5 +87,15 @@ contact <bug-glibc@prep.ai.mit.edu>
 [11] Rewrite utmp/wtmp functions to use database functions.  This is much
      better than the normal flat file format.
 
-     Please contact bug-glibc@prep.ai.mit.edu before starting to avoid
-     duplicated work.
+**** There are plans for a new approach to this problem.  Please contact
+     bug-glibc@prep.ai.mit.edu before starting to work.)
+
+
+[12] Several more or less small functions have to be written:
+
+     + tcgetid() and waitid()			from XPG4.2
+     + grantpt(), ptsname(), unlockpt()		from XPG4.2
+     + getdate()				from XPG4.2
+     + fmtmsg()					from SVID
+
+     More information are available on request.

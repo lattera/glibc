@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -116,14 +116,14 @@ extern int closedir __P ((DIR *__dirp));
 extern struct dirent *__readdir __P ((DIR *__dirp));
 extern struct dirent *readdir __P ((DIR *__dirp));
 
-#ifdef __USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_REENTRANT
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
 extern int __readdir_r __P ((DIR *__dirp, struct dirent *entry,
 			     struct dirent **result));
 extern int readdir_r __P ((DIR *__dirp, struct dirent *entry,
 			   struct dirent **result));
-#endif
+#endif	/* POSIX or reentrant */
 
 /* Rewind DIRP to the beginning of the directory.  */
 extern void rewinddir __P ((DIR *__dirp));

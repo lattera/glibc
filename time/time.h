@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -171,7 +171,7 @@ extern struct tm *gmtime __P ((__const time_t *__timer));
    of *TIMER in the local timezone.  */
 extern struct tm *localtime __P ((__const time_t *__timer));
 
-#ifdef	__USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_REENTRANT
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
 extern struct tm *__gmtime_r __P ((__const time_t *__timer,
@@ -185,7 +185,7 @@ extern struct tm *__localtime_r __P ((__const time_t *__timer,
 				      struct tm *__tp));
 extern struct tm *localtime_r __P ((__const time_t *__timer,
 				    struct tm *__tp));
-#endif	/* reentrant */
+#endif	/* POSIX or reentrant */
 
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,
@@ -201,7 +201,7 @@ extern char *asctime __P ((__const struct tm *__tp));
 /* Equivalent to `asctime (localtime (timer))'.  */
 extern char *ctime __P ((__const time_t *__timer));
 
-#ifdef	__USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_REENTRANT
 /* Reentrant versions of the above functions.  */
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
@@ -211,7 +211,7 @@ extern char *asctime_r __P ((__const struct tm *__tp, char *__buf));
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
 extern char *ctime_r __P ((__const time_t *__timer, char *__buf));
-#endif	/* reentrant */
+#endif	/* POSIX or reentrant */
 
 
 /* Defined in localtime.c.  */

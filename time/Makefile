@@ -91,22 +91,22 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 # Kludge alert: we use an implicit rule (in what we are generating here)
 # because that is the only way to tell Make that the one command builds all
 # the files.
-	(echo 'define $*-zones'						;\
-	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^;\
-	 echo 'endef'							;\
-	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		;\
-	 echo 'ifdef $*-zones'						;\
-	 echo '$$(addprefix $$(datadir)/zone%/right/,$$($*-zones)): \'	;\
-	 echo '$< $$(objpfx)zic leapseconds yearistype'			;\
-	 echo '	$$(tzcompile)'						;\
-	 echo '$$(addprefix $$(datadir)/zone%/posix/,$$($*-zones)): \'	;\
-	 echo '$< $$(objpfx)zic /dev/null yearistype'			;\
-	 echo '	$$(tzcompile)'						;\
-	 echo '$$(addprefix $$(datadir)/zone%/,$$($*-zones)): \'	;\
-	 echo '$< $$(objpfx)zic $$(leapseconds) yearistype'		;\
-	 echo '	$$(tzcompile)'						;\
-	 echo 'endif'							;\
-	 echo 'zonenames := $$(zonenames) $$($*-zones)'			;\
+	(echo 'define $*-zones'						    ;\
+	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^   ;\
+	 echo 'endef'							    ;\
+	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		    ;\
+	 echo 'ifdef $*-zones'						    ;\
+	 echo '$$(addprefix $$(inst_datadir)/zone%/right/,$$($*-zones)): \' ;\
+	 echo '$< $$(objpfx)zic leapseconds yearistype'			    ;\
+	 echo '	$$(tzcompile)'						    ;\
+	 echo '$$(addprefix $$(inst_datadir)/zone%/posix/,$$($*-zones)): \' ;\
+	 echo '$< $$(objpfx)zic /dev/null yearistype'			    ;\
+	 echo '	$$(tzcompile)'						    ;\
+	 echo '$$(addprefix $$(inst_datadir)/zone%/,$$($*-zones)): \'	    ;\
+	 echo '$< $$(objpfx)zic $$(leapseconds) yearistype'		    ;\
+	 echo '	$$(tzcompile)'						    ;\
+	 echo 'endif'							    ;\
+	 echo 'zonenames := $$(zonenames) $$($*-zones)'			    ;\
 	) > $@.new
 	mv $@.new $@
 

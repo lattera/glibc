@@ -29,6 +29,10 @@
 
 __BEGIN_DECLS
 
+/* Some internals from deep down in the kernel.  */
+#define MAX_ADDR_LEN	7
+
+
 /* This structure defines an ethernet arp header.  */
 
 /* ARP protocol opcodes. */

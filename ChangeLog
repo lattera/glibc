@@ -1,3 +1,40 @@
+1997-01-23  Paul Eggert  <eggert@twinsun.com>
+
+	* mktime.c (mktime): Invoke __tzset, not __tzset_internal, to set tz,
+	so that tzname is set as POSIX requires.
+
+Fri Jan 24 02:49:18 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/dirent.h: Declare readdir_r also when __USE_POSIX.
+	* grp/grp.h: Declare *_r functions also when __USE_POSIX.
+	* pwd/pwd.h: Likewise.
+	* time/time.h: Likewise.
+	* posix/unistd.h: Declare ttyname_r also when __USE_POSIX.
+	* string/string.h: Declare strtok_r also when __USE_POSIX.
+
+	* stdio-common/bug7.c: Use tmpnam to generate names for test files.
+
+	* stdio-common/tmpnam.c: Update copyright.
+	* stdio-common/tmpnam_r.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/sys/kernel_termios.h: Protect
+	against multiple inclusion.  Include <termbits.h>.
+	* sysdeps/unix/sysv/linux/sys/kernel_termios.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/net/if.h: Update according to recent
+	kernel headers.  Patch by Philip Blundell <pjb27@cam.ac.uk>.
+
+Thu Jan 23 17:42:00 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/clone.S: Correct author attribution.
+
+	* sysdeps/unix/sysv/linux/net/if_arp (MAX_ADDR_LEN): Add definition.
+
+Thu Jan 23 14:20:34 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzfile.c (__tzfile_read): Don't allow arbitrary files to be
+	read when running a setuid program.
+
 Thu Jan 23 04:06:42 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Make-dist (.PHONY: dist): Remove duplicate declaration.
@@ -85,7 +122,6 @@ Wed Jan 22 13:19:56 1997  Richard Henderson  <rth@tamu.edu>
 Wed Jan 22 23:05:14 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/mach/hurd/vdprintf.c: Complete de-ANSI-declfication.
-	* sysdeps/posix/pipestream.c (writedecl): Fix typo.
 	Reported by Marcus G. Daniels <marcus@shannon.sysc.pdx.edu>.
 
 Wed Jan 22 13:58:56 1997  Andreas Jaeger  <aj@arthur.pfalz.de>

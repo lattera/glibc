@@ -138,12 +138,14 @@ extern char *strstr __P ((__const char *__haystack, __const char *__needle));
 /* Divide S into tokens separated by characters in DELIM.  */
 extern char *strtok __P ((char *__s, __const char *__delim));
 
-#ifdef	__USE_GNU
+#if defined __USE_POSIX || defined __USE_REENTRANT
 /* Divide S into tokens separated by characters in DELIM.  Information
    passed between calls are stored in SAVE_PTR.  */
 extern char *strtok_r __P ((char *__s, __const char *__delim,
 			    char **__save_ptr));
+#endif
 
+#ifdef __USE_GNU
 /* Find the first occurrence of NEEDLE in HAYSTACK.
    NEEDLE is NEEDLELEN bytes long;
    HAYSTACK is HAYSTACKLEN bytes long.  */
