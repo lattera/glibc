@@ -19,6 +19,7 @@
 
 #include <grp.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -43,13 +44,13 @@ static void
 write_group (const char *filename, int pos)
 {
   FILE *f;
-
+  
   f = fopen (filename, "w");
-  fprintf (f, "one:x:0:one");
+  fprintf (f, "one:x:1:one");
   write_users (f, pos, 1);
-  fprintf (f, "two:x:1:two");
+  fprintf (f, "two:x:2:two");
   write_users (f, pos, 2);
-  fprintf (f, "three:x:2");
+  fprintf (f, "three:x:3");
   write_users (f, pos, 3);
   fclose (f);
 }
@@ -63,7 +64,7 @@ test_entry (const char *name, gid_t gid, struct group *g)
       errors++;
       return;
     }
-
+  
   if ((g->gr_gid == gid) && (strcmp (g->gr_name, name) == 0))
     printf ("Ok: %s: %d\n", g->gr_name, g->gr_gid);
   else
@@ -81,31 +82,36 @@ test_fgetgrent (const char *filename)
   struct group *g;
   FILE *f;
 
-  f = fopen (filename, "r");
+  f = fopen (filename,"r");
 
   g = fgetgrent (f);
-  test_entry ("one", 0, g);
+  test_entry ("one", 1, g);
   g = fgetgrent (f);
-  test_entry ("two", 1, g);
+  test_entry ("two", 2, g);
   g = fgetgrent (f);
-  test_entry ("three", 2, g);
+  test_entry ("three", 3, g);
   fclose (f);
 }
 
-
+		  
 int
-main (void)
+main (int argc, char *argv[])
 {
   char *file = tmpnam (NULL);
-  int i;
+  int i = 0;
 
-  for (i = 0; i < 4; i++)
-    {
-      printf ("Pass %d\n", i);
-      write_group (file, i);
-      test_fgetgrent (file);
-    }
+  if (argc > 1)
+    i = atoi (argv[1]);
+  if (i > 3)
+    i = 3;
+  if (i)
+    printf ("Large group is group: %d\n", i);
+  else
+    printf ("Not using a large group\n");
+  write_group (file, i);
+  test_fgetgrent (file);
+
   remove (file);
-
+  
   return (errors != 0);
 }

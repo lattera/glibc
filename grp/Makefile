@@ -22,11 +22,20 @@
 subdir	:= grp
 headers := grp.h
 
+distribute := tst_fgetgrent.c tst_fgetgrent.sh
+
 routines := fgetgrent initgroups setgroups \
 	    getgrent getgrgid getgrnam putgrent \
 	    getgrent_r getgrgid_r getgrnam_r fgetgrent_r
 
-tests := testgrp tst_fgetgrent
+include ../Makeconfig
+
+tests := testgrp
+
+ifeq (yes,$(build-shared))
+test-srcs :=  tst_fgetgrent
+endif
+
 
 include ../Rules
 
@@ -41,4 +50,16 @@ ifeq ($(have-thread-library),yes)
 CFLAGS-getgrgid_r.c = -DUSE_NSCD=1
 CFLAGS-getgrnam_r.c = -DUSE_NSCD=1
 
+endif
+
+ifeq (no,$(cross-compiling))
+# tst_fgetgrent currently only works with shared libraries
+ifeq (yes,$(build-shared))
+.PHONY: do-tst-fgetgrent
+tests: do-tst-fgetgrent
+do-tst-fgetgrent: $(objpfx)tst_fgetgrent
+	$(SHELL) -e tst_fgetgrent.sh $(common-objpfx) $(elf-objpfx) \
+		 $(rtld-installed-name)
+
+endif
 endif

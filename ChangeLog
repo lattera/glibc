@@ -1,3 +1,11 @@
+1999-06-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* grp/Makefile: Add rules for tst_fgetgrent.
+
+	* grp/tst_fgetgrent.c: Rewritten to read only one file.
+
+	* grp/tst_fgetgrent.sh: New file.
+
 1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* grp/Makefile (tests): Add tst_fgetgrent.
