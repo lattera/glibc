@@ -1,0 +1,46 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/mips/elf.
+
+if test "$usetls" != no; then
+# Check for support of thread-local storage handling in assembler and
+# linker.
+echo "$as_me:$LINENO: checking for MIPS TLS support" >&5
+echo $ECHO_N "checking for MIPS TLS support... $ECHO_C" >&6
+if test "${libc_cv_mips_tls+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat > conftest.s <<\EOF
+	.section ".tdata", "awT", %progbits
+	.globl foo
+foo:	.long	1
+	.section ".tbss", "awT", %nobits
+	.globl bar
+bar:	.skip	4
+	.text
+
+	lw	$25, %call16(__tls_get_addr)($28)
+	jalr	$25
+	addiu	$4, $28, %tlsgd(x)
+EOF
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_mips_tls=yes
+else
+  libc_cv_mips_tls=no
+fi
+rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_mips_tls" >&5
+echo "${ECHO_T}$libc_cv_mips_tls" >&6
+if test $libc_cv_mips_tls = yes; then
+  cat >>confdefs.h <<\_ACEOF
+#define HAVE_TLS_SUPPORT 1
+_ACEOF
+
+fi
+fi
+
