@@ -1,3 +1,8 @@
+2000-10-02  Ralf Baechle  <ralf@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Add missing .mips0 at the
+	end of inline assembler code.
+
 2000-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/features.h [__USE_FILE_OFFSET && !__REDIRECT]: Define

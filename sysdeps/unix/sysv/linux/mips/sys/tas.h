@@ -52,7 +52,8 @@ _test_and_set (int *p, int v) __THROW
      ".set	pop\n\t"
      "sc	%1,%2\n\t"
      "beqz	%1,1b\n"
-     "2:"
+     "2:\n\t"
+     ".set\tmips0"
      : "=&r" (r), "=&r" (t), "=m" (*p)
      : "m" (*p), "r" (v)
      : "memory");
