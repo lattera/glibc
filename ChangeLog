@@ -1,5 +1,10 @@
 1999-05-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/netax25/ax25.h: Update from kernel header.
+	* sysdeps/unix/sysv/linux/netrom/netrom.h: Likewise.
+	* sysdeps/unix/sysv/linux/netrose/rose.h: Likewise.
+	Patch by Craig Small <csmall@scooter.eye-net.com.au>.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet_serv): Change fourth
 	parameter to struct gaih_servtuple *.  Adapt appropriately.
 	(gaih_inet): Use alloca to allocate room for gaih_inet_serv calls.

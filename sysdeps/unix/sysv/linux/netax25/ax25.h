@@ -36,6 +36,7 @@
 #define AX25_IDLE	9
 #define	AX25_PACLEN	10
 #define AX25_IPMAXQUEUE 11
+#define AX25_IAMDIGI	12
 #define AX25_KILL	99
 
 /* AX.25 socket ioctls: */
@@ -48,6 +49,9 @@
 #define SIOCAX25SETPARMS	(SIOCPROTOPRIVATE+6)
 #define SIOCAX25OPTRT		(SIOCPROTOPRIVATE+7)
 #define SIOCAX25CTLCON		(SIOCPROTOPRIVATE+8)
+#define SIOCAX25GETINFO		(SIOCPROTOPRIVATE+9)
+#define SIOCAX25ADDFWD		(SIOCPROTOPRIVATE+10)
+#define SIOCAX25DELFWD		(SIOCPROTOPRIVATE+11)
 
 /* unknown: */
 #define AX25_NOUID_DEFAULT	0
@@ -101,6 +105,25 @@ struct ax25_ctl_struct
     ax25_address dest_addr;
     unsigned int cmd;
     unsigned long arg;
+    unsigned char digi_count;
+    ax25_address digi_addr[AX25_MAX_DIGIS];
+  };
+
+struct ax25_info_struct 
+  {
+    unsigned int  n2, n2count;
+    unsigned int t1, t1timer;
+    unsigned int t2, t2timer;
+    unsigned int t3, t3timer;
+    unsigned int idle, idletimer;
+    unsigned int state;
+    unsigned int rcv_q, snd_q;
+  };
+
+struct ax25_fwd_struct 
+  {
+    ax25_address port_from;
+    ax25_address port_to;
   };
 
 /* AX.25 route structure: */

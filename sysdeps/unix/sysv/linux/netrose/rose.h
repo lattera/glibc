@@ -46,6 +46,7 @@
 #define	SIOCRSACCEPT		(SIOCPROTOPRIVATE + 3)
 #define	SIOCRSCLRRT		(SIOCPROTOPRIVATE + 4)
 #define	SIOCRSGL2CALL		(SIOCPROTOPRIVATE + 5)
+#define	SIOCRSGFACILITIES	(SIOCPROTOPRIVATE + 6)
 
 #define	ROSE_DTE_ORIGINATED	0x00
 #define	ROSE_NUMBER_BUSY	0x01
@@ -73,6 +74,15 @@ struct sockaddr_rose
   ax25_address	srose_digi;
 };
 
+struct full_sockaddr_rose 
+{
+  sa_family_t srose_family;
+  rose_address srose_addr;
+  ax25_address srose_call;
+  unsigned int srose_ndigis;
+  ax25_address srose_digis[ROSE_MAX_DIGIS];
+};
+
 struct rose_route_struct
 {
   rose_address address;
@@ -87,6 +97,18 @@ struct rose_cause_struct
 {
   unsigned char	cause;
   unsigned char	diagnostic;
+};
+
+struct rose_facilities_struct 
+{
+  rose_address source_addr,   dest_addr;
+  ax25_address source_call,   dest_call;
+  unsigned char source_ndigis, dest_ndigis;
+  ax25_address source_digis[ROSE_MAX_DIGIS];
+  ax25_address dest_digis[ROSE_MAX_DIGIS];
+  unsigned int rand;
+  rose_address fail_addr;
+  ax25_address fail_call;
 };
 
 #endif	/* netrose/rose.h */

@@ -29,6 +29,8 @@
 #define NETROM_T2	2
 #define NETROM_N2	3
 #define NETROM_PACLEN	5
+#define	NETROM_T4	6
+#define NETROM_IDLE	7
 
 #define NETROM_KILL	99
 
@@ -45,6 +47,8 @@ struct nr_route_struct
     char mnemonic[7];
     ax25_address neighbour;
     unsigned int obs_count;
+    unsigned int ndigis;
+    ax25_address digipeaters[AX25_MAX_DIGIS];
   };
 
 /* NetRom socket ioctls: */
