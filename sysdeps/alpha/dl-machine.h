@@ -1,7 +1,7 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
 Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Richard Henderson <rht@tamu.edu>.
+Contributed by Richard Henderson <rth@tamu.edu>.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -84,42 +84,64 @@ elf_machine_load_address (void)
 static inline void
 elf_alpha_fix_plt(struct link_map *l,
 		  const Elf64_Rela *reloc,
+		  Elf64_Addr got_addr,
 		  Elf64_Addr value)
 {
   const Elf64_Rela *rela_plt;
   Elf64_Word *plte;
-  long disp;
+  long edisp;
 
   /* Recover the PLT entry address by calculating reloc's index into the
      .rela.plt, and finding that entry in the .plt.  */
 
   rela_plt = (void *)(l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr);
 
-  plte = (void *)(l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
-  plte += 2*(reloc - rela_plt) + 8;
+  plte = (void *)(l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr + 32);
+  plte += 3 * (reloc - rela_plt);
 
   /* Find the displacement from the plt entry to the function.  */
 
-  disp = value - (Elf64_Addr)&plte[2];
+  edisp = (long)(value - (Elf64_Addr)&plte[3]) / 4;
 
-  /* Change "lda $27, ofs($31)" to "ldq $27, ofs($gp)" */
-  plte[0] = 0xa77d0000 | (plte[0] & 0xffff);
-
-  if (disp >= -0x100000 && disp < 0x100000)
+  if (edisp >= -0x100000 && edisp < 0x100000)
     {
       /* If we are in range, use br to perfect branch prediction and
 	 elide the dependancy on the address load.  This case happens,
 	 e.g., when a shared library call is resolved to the same library.  */
-      /* Change "br $0, plt0" to "br $31,function" */
-      plte[1] = 0xc3e00000 | (disp & 0x1fffff);
+
+      int hi, lo;
+      hi = value - (Elf64_Addr)&plte[0];
+      lo = (short)hi;
+      hi = (hi - lo) >> 16;
+
+      /* Emit "ldah $27,H($27)" */
+      plte[0] = 0x277b0000 | (hi & 0xffff);
+
+      /* Emit "lda $27,L($27)" */
+      plte[1] = 0x237b0000 | (lo & 0xffff);
+
+      /* Emit "br $31,function" */
+      plte[2] = 0xc3e00000 | (edisp & 0x1fffff);
     }
   else
     {
       /* Don't bother with the hint since we already know the hint is
 	 wrong.  Eliding it prevents the wrong page from getting pulled
 	 into the cache.  */
-      /* Change "br $0, plt0" to "jmp $31,($27)" */
-      plte[1] = 0x6bfb0000;
+
+      int hi, lo;
+      hi = got_addr - (Elf64_Addr)&plte[0];
+      lo = (short)hi;
+      hi = (hi - lo) >> 16;
+
+      /* Emit "ldah $27,H($27)" */
+      plte[0] = 0x277b0000 | (hi & 0xffff);
+
+      /* Emit "ldq $27,L($27)" */
+      plte[1] = 0xa77b0000 | (lo & 0xffff);
+
+      /* Emit "jmp $31,($27)" */
+      plte[2] = 0x6bfb0000;
     }
 
   /* Flush the instruction cache now that we've diddled.   Tag it as
@@ -172,7 +194,7 @@ elf_machine_rela (struct link_map *map,
       else if (r_info == R_ALPHA_JMP_SLOT)
 	{
 	  *reloc_addr = sym_value;
-	  elf_alpha_fix_plt(map, reloc, sym_value);
+	  elf_alpha_fix_plt(map, reloc, (Elf64_Addr)reloc_addr, sym_value);
 	}
       else if (r_info == R_ALPHA_REFQUAD)
 	{
@@ -285,11 +307,10 @@ _dl_runtime_resolve:
 	/* Set up the arguments for _dl_runtime_resolve. */
 	/* $16 = link_map out of plt0 */
 	ldq	$16, 8($27)
-	/* $17 = (($0 - 8) - ($1 + 16)) / 8 * sizeof(Elf_Rela) */
+	/* $17 = (($28 - 4) - ($27 + 16)) / 12 * sizeof(Elf_Rela) */
 	subq	$28, $27, $28
-	subq	$28, 24, $28
+	subq	$28, 20, $28
 	addq	$28, $28, $17
-	addq	$28, $17, $17
 	/* Do the fixup */
 	bsr	$26, fixup..ng
 	/* Move the destination address to a safe place.  */
@@ -370,4 +391,5 @@ _dl_start_user:
 2:	/* Pass our finalizer function to the user in $0. */
 	lda	$0, _dl_fini
 	/* Jump to the user's entry point.  */
+	mov	$9, $27
 	jmp	($9)");
