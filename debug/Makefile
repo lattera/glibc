@@ -38,7 +38,7 @@ CFLAGS-vsprintf_chk.c = -D_IO_MTSAFE_IO
 CFLAGS-vsnprintf_chk.c = -D_IO_MTSAFE_IO
 CFLAGS-printf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-fprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
-CFLAGS-vprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions) 
+CFLAGS-vprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-vfprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 CFLAGS-gets_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 
@@ -72,7 +72,8 @@ include ../Rules
 
 $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
 		    $(common-objpfx)config.make
-	sed -e 's|@VERSION@|$(version)|' -e 's|@SLIB@|$(slibdir)|' $< > $@.new
+	slibpfx=`echo $(slibdir)|sed 's/lib\(64\|\)$$/$$LIB/'`; \
+	sed -e 's|@VERSION@|$(version)|' -e "s|@SLIB@|$$slibpfx|" $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
 

@@ -1,3 +1,13 @@
+2004-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/Makefile ($(objpfx)catchsegv): To support multilib
+	platforms, use $LIB in path to slibdir.
+
+2004-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/catchsegv.sh: Update copyright year.
+	Use mktemp to create segv_output file.
+
 2004-10-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-libc.c (__libc_dlsym_private, __libc_register_dl_open_hook):
