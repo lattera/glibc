@@ -494,7 +494,7 @@ glob (pattern, flags, errfunc, pglob)
 #endif
 
 	      result = glob (onealt,
-			     ((flags & ~(GLOB_NOCHECK|GLOB_NOMAGIC))
+			     ((flags & ~(GLOB_NOCHECK | GLOB_NOMAGIC))
 			      | GLOB_APPEND), errfunc, pglob);
 
 	      /* If we got an error, return it.  */
@@ -929,7 +929,8 @@ glob (pattern, flags, errfunc, pglob)
 
 	  old_pathc = pglob->gl_pathc;
 	  status = glob_in_dir (filename, dirs.gl_pathv[i],
-				((flags | GLOB_APPEND) & ~GLOB_NOCHECK),
+				((flags | GLOB_APPEND)
+				 & ~(GLOB_NOCHECK | GLOB_NOMAGIC)),
 				errfunc, pglob);
 	  if (status == GLOB_NOMATCH)
 	    /* No matches in this directory.  Try the next.  */

@@ -211,6 +211,19 @@ if test $failed -ne 0; then
   result=1
 fi
 
+# Test NOMAGIC for subdirs
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -g "$testdir" "*/does-not-exist" |
+sort > $testout
+cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+GLOB_NOMATCH
+EOF
+if test $failed -ne 0; then
+  echo "No magic in subdir test failed" >> $logfile
+  result=1
+fi
+
 # Test subdirs correctly
 failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
