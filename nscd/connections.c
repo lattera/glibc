@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -350,6 +350,9 @@ cannot handle old request version %d; current version is %d"),
 	  struct ucred caller;
 	  socklen_t optlen = sizeof (caller);
 
+	  /* Some systems have no SO_PEERCRED implementation.  They don't
+	     care about security so we don't as well.  */
+#ifdef SO_PEERCRED
 	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
 	    {
 	      char buf[256];
@@ -359,6 +362,7 @@ cannot handle old request version %d; current version is %d"),
 	    }
 	  else
 	    if (caller.uid == 0)
+#endif
 	      {
 		if (req->type == GETSTAT)
 		  send_stats (fd, dbs);
@@ -433,6 +437,9 @@ nscd_run (void *p)
 	      continue;
 	    }
 
+	  /* Some systems have no SO_PEERCRED implementation.  They don't
+	     care about security so we don't as well.  */
+#ifdef SO_PEERCRED
 	  if (secure_in_use)
 	    {
 	      struct ucred caller;
@@ -451,6 +458,7 @@ nscd_run (void *p)
 		  || secure[serv2db[req.type]])
 		uid = caller.uid;
 	    }
+#endif
 
 	  /* It should not be possible to crash the nscd with a silly
 	     request (i.e., a terribly large key.  We limit the size

@@ -1,3 +1,9 @@
+2000-01-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/connections.c (handle_request): Handle systems without
+	SO_PEERCRED.
+	(nscd_run): Likewise.
+
 2000-01-07  Andreas Jaeger  <aj@suse.de>
 
 	Add support for Berkeley db 3.0.x and merge db support:
