@@ -424,4 +424,8 @@ extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
 extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
                                           int execute);
 
+#if defined NOT_IN_libc && defined IS_IN_libpthread
+hidden_proto (pthread_getaffinity_np)
+#endif
+
 #endif	/* pthreadP.h */

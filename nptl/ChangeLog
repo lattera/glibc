@@ -1,5 +1,16 @@
 2003-09-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/pthread_attr_getaffinity.c
+	(pthread_attr_getaffinity_np): Don't segfault if iattr->cpuset is
+	NULL.
+	* pthread_getattr_np.c: Set cpuset using pthread_getaffinity_np.
+	* pthreadP.h (pthread_getaffinity_np): Add hidden_proto.
+	* sysdeps/unix/sysv/linux/pthread_getaffinity.c
+	(pthread_getaffinity_np): Add hidden_def.
+
+	* Makefile (tests): Add tst-attr3.
+	* tst-attr3.c: New test.
+
 	* sysdeps/i386/Makefile (CFLAGS-tst-align.c): Remove.
 
 2003-09-15  Jakub Jelinek  <jakub@redhat.com>

@@ -1,6 +1,6 @@
 /* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,28 +17,37 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <pthreadP.h>
-#include <string.h>
-#include <sysdep.h>
-#include <sys/types.h>
+#include <stdio.h>
+#include <tst-stack-align.h>
 
+static int res, *resp;
 
-int
-pthread_getaffinity_np (th, cpuset)
-     pthread_t th;
-     cpu_set_t *cpuset;
+static void __attribute__((constructor))
+con (void)
 {
-  struct pthread *pd = (struct pthread *) th;
-  INTERNAL_SYSCALL_DECL (err);
-  int res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, pd->tid,
-			      sizeof (cpu_set_t), cpuset);
-  if (INTERNAL_SYSCALL_ERROR_P (res, err))
-    return INTERNAL_SYSCALL_ERRNO (res, err);
-
-  /* Clean the rest of the memory the kernel didn't do.  */
-  memset ((char *) cpuset + res, '\0', sizeof (cpu_set_t) - res);
-
-  return 0;
+  res = TEST_STACK_ALIGN () ? -1 : 1;
 }
-hidden_def (pthread_getaffinity_np)
+
+void
+in_dso (int *result)
+{
+  if (!res)
+    {
+      puts ("constructor has not been run");
+      *result = 1;
+    }
+  else if (res != 1)
+    {
+      puts ("constructor has been run without sufficient alignment");
+      *result = 1;
+    }
+
+  resp = result;
+}
+
+static void __attribute__((destructor))
+des (void)
+{
+  if (TEST_STACK_ALIGN ())
+    *resp = 1;
+}

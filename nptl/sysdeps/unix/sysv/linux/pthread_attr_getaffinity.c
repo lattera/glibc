@@ -35,7 +35,10 @@ pthread_attr_getaffinity_np (attr, cpuset)
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
-  memcpy (cpuset, iattr->cpuset, sizeof (cpu_set_t));
+  if (iattr->cpuset)
+    memcpy (cpuset, iattr->cpuset, sizeof (cpu_set_t));
+  else
+    memset (cpuset, -1, sizeof (cpu_set_t));
 
   return 0;
 }

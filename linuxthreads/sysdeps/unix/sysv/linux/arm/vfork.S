@@ -20,36 +20,59 @@
 #include <sysdep-cancel.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <kernel-features.h>
 
-/* Clone the calling process, but without copying the whole address
-pace.
+/* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
-   replaced by a call to `execve'.  Return -1 for errors, 0 to the new
-rocess,
+   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 
 	PSEUDO_PROLOGUE
 
 ENTRY (__vfork)
 
-	SINGLE_THREAD_P
-	bne	HIDDEN_JUMPTARGET (__fork)
 #ifdef __NR_vfork
+
+#ifdef SHARED
+	ldr	ip, 1f
+	ldr	r0, 2f
+3:	add	ip, pc, ip
+	ldr	r0, [ip, r0]
+#else
+	ldr	r0, 1f
+#endif
+	movs	r0, r0
+	bne	HIDDEN_JUMPTARGET (__fork)
+		
 	swi	__NR_vfork
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
 
+#ifndef __ASSUME_VFORK_SYSCALL
 	/* Check if vfork syscall is known at all.  */
-	ldr	a2, =-ENOSYS
-	teq	a1, a2
+	cmn	a1, #ENOSYS
 	bne	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 #endif
 
+#endif
+
+#ifndef __ASSUME_VFORK_SYSCALL
 	/* If we don't have vfork, fork is close enough.  */
 	swi	__NR_fork
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
+#elif !defined __NR_vfork
+# error "__NR_vfork not available and __ASSUME_VFORK_SYSCALL defined"
+#endif
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+
+#ifdef SHARED
+1:	.word	_GLOBAL_OFFSET_TABLE_ - 3b - 8
+2:	.word	__libc_pthread_functions(GOTOFF)
+#else
+	.weak	pthread_create
+1:	.word	pthread_create
+#endif
 
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)

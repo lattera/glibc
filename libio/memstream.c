@@ -32,8 +32,6 @@ struct _IO_FILE_memstream
 
 static int _IO_mem_sync __P ((_IO_FILE* fp));
 static void _IO_mem_finish __P ((_IO_FILE* fp, int));
-static int _IO_wmem_sync __P ((_IO_FILE* fp));
-static void _IO_wmem_finish __P ((_IO_FILE* fp, int));
 
 
 static struct _IO_jump_t _IO_mem_jumps =
@@ -51,30 +49,6 @@ static struct _IO_jump_t _IO_mem_jumps =
   JUMP_INIT (setbuf, _IO_default_setbuf),
   JUMP_INIT (sync, _IO_mem_sync),
   JUMP_INIT (doallocate, INTUSE(_IO_default_doallocate)),
-  JUMP_INIT (read, _IO_default_read),
-  JUMP_INIT (write, _IO_default_write),
-  JUMP_INIT (seek, _IO_default_seek),
-  JUMP_INIT (close, _IO_default_close),
-  JUMP_INIT (stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
-
-static struct _IO_jump_t _IO_wmem_jumps =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT (finish, (_IO_finish_t) _IO_wmem_finish),
-  JUMP_INIT (overflow, (_IO_overflow_t) _IO_wstr_overflow),
-  JUMP_INIT (underflow, (_IO_underflow_t) _IO_wstr_underflow),
-  JUMP_INIT (uflow, (_IO_underflow_t) INTUSE(_IO_wdefault_uflow)),
-  JUMP_INIT (pbackfail, (_IO_pbackfail_t) _IO_wstr_pbackfail),
-  JUMP_INIT (xsputn, (_IO_xsputn_t) INTUSE(_IO_wdefault_xsputn)),
-  JUMP_INIT (xsgetn, (_IO_xsgetn_t) INTUSE(_IO_wdefault_xsgetn)),
-  JUMP_INIT (seekoff, _IO_wstr_seekoff),
-  JUMP_INIT (seekpos, _IO_default_seekpos),
-  JUMP_INIT (setbuf, _IO_default_setbuf),
-  JUMP_INIT (sync, (_IO_sync_t) _IO_wmem_sync),
-  JUMP_INIT (doallocate, INTUSE(_IO_wdefault_doallocate)),
   JUMP_INIT (read, _IO_default_read),
   JUMP_INIT (write, _IO_default_write),
   JUMP_INIT (seek, _IO_default_seek),
@@ -169,58 +143,6 @@ _IO_mem_finish (fp, dummy)
     }
 
   fp->_IO_buf_base = NULL;
-
-  INTUSE(_IO_default_finish) (fp, 0);
-}
-
-
-static int
-_IO_wmem_sync (fp)
-     _IO_FILE* fp;
-{
-  struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
-  int res;
-
-  res = _IO_default_sync (fp);
-  if (res < 0)
-    return res;
-
-  if (fp->_wide_data->_IO_write_ptr == fp->_wide_data->_IO_write_end)
-    {
-      _IO_wstr_overflow (fp, L'\0');
-      --fp->_wide_data->_IO_write_ptr;
-    }
-  else
-    *fp->_wide_data->_IO_write_ptr = '\0';
-
-  *mp->bufloc = (char *) fp->_wide_data->_IO_write_base;
-  *mp->sizeloc = (fp->_wide_data->_IO_write_ptr
-		  - fp->_wide_data->_IO_write_base);
-
-  return 0;
-}
-
-
-static void
-_IO_wmem_finish (fp, dummy)
-     _IO_FILE* fp;
-     int dummy;
-{
-  struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
-
-  *mp->bufloc = (char *) realloc (fp->_wide_data->_IO_write_base,
-				  (fp->_wide_data->_IO_write_ptr
-				   - fp->_wide_data->_IO_write_base + 1)
-				  * sizeof (wchar_t));
-  if (*mp->bufloc != NULL)
-    {
-      ((wchar_t *) (*mp->bufloc))[fp->_wide_data->_IO_write_ptr
-				 - fp->_wide_data->_IO_write_base] = '\0';
-      *mp->sizeloc = (fp->_wide_data->_IO_write_ptr
-		      - fp->_wide_data->_IO_write_base);
-    }
-
-  fp->_wide_data->_IO_buf_base = NULL;
 
   INTUSE(_IO_default_finish) (fp, 0);
 }

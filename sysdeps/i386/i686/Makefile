@@ -4,4 +4,4 @@ static-only-routines += hp-timing
 endif
 
 # So that we can test __m128's alignment
-stack-align-test-flags += -msse -mpreferred-stack-boundary=4
+stack-align-test-flags += -msse

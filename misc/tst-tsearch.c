@@ -1,5 +1,5 @@
 /* Test program for tsearch et al.
-   Copyright (C) 1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <search.h>
+#include <tst-stack-align.h>
 
 #define SEED 0
 #define BALANCED 1
@@ -72,10 +73,14 @@ static int depths[SIZE];
 /* Maximum depth during a tree walk.  */
 static int max_depth;
 
+static int stack_align_check[2];
+
 /* Compare two keys.  */
 static int
 cmp_fn (const void *a, const void *b)
 {
+  if (!stack_align_check[0])
+    stack_align_check[0] = TEST_STACK_ALIGN () ? -1 : 1;
   return *(const int *) a - *(const int *) b;
 }
 
@@ -102,6 +107,9 @@ static void
 walk_action (const void *nodep, const VISIT which, const int depth)
 {
   int key = **(int **) nodep;
+
+  if (!stack_align_check[1])
+    stack_align_check[1] = TEST_STACK_ALIGN () ? -1 : 1;
 
   if (depth > max_depth)
     max_depth = depth;
@@ -328,6 +336,18 @@ main (int argc, char **argv)
       fputs (error ? " failed!\n" : " ok.\n", stdout);
       total_error |= error;
     }
+
+  for (i = 0; i < 2; ++i)
+    if (stack_align_check[i] == 0)
+      {
+        printf ("stack alignment check %d not run\n", i);
+        total_error |= 1;
+      }
+    else if (stack_align_check[i] != 1)
+      {
+        printf ("stack insufficiently aligned in check %d\n", i);
+        total_error |= 1;
+      }
 
   return total_error;
 }

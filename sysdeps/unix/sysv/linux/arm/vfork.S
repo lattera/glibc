@@ -38,8 +38,7 @@ ENTRY (__vfork)
 	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 # else
 	/* Check if vfork syscall is known at all.  */
-	ldr	a2, =-ENOSYS
-	teq	a1, a2
+	cmn	a2, #ENOSYS
 	bne	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 # endif
 #endif
@@ -50,6 +49,8 @@ ENTRY (__vfork)
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+#elif !defined __NR_vfork
+# error "__NR_vfork not available and __ASSUME_VFORK_SYSCALL defined"
 #endif
 
 PSEUDO_END (__vfork)

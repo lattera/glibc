@@ -97,6 +97,7 @@ CFLAGS-atexit.c = -DHAVE_DOT_HIDDEN
 endif
 
 CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
+CFLAGS-tst-qsort.c = $(stack-align-test-flags)
 
 include ../Rules
 

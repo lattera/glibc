@@ -1,6 +1,6 @@
 /* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,28 +17,38 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <pthreadP.h>
-#include <string.h>
-#include <sysdep.h>
-#include <sys/types.h>
+#include <dlfcn.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-
-int
-pthread_getaffinity_np (th, cpuset)
-     pthread_t th;
-     cpu_set_t *cpuset;
+static int
+do_test (void)
 {
-  struct pthread *pd = (struct pthread *) th;
-  INTERNAL_SYSCALL_DECL (err);
-  int res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, pd->tid,
-			      sizeof (cpu_set_t), cpuset);
-  if (INTERNAL_SYSCALL_ERROR_P (res, err))
-    return INTERNAL_SYSCALL_ERRNO (res, err);
+  static const char modname[] = "tst-alignmod.so";
+  int result = 0;
+  void (*fp) (int *);
+  void *h;
 
-  /* Clean the rest of the memory the kernel didn't do.  */
-  memset ((char *) cpuset + res, '\0', sizeof (cpu_set_t) - res);
+  h = dlopen (modname, RTLD_LAZY);
+  if (h == NULL)
+    {
+      printf ("cannot open '%s': %s\n", modname, dlerror ());
+      exit (1);
+    }
 
-  return 0;
+  fp = dlsym (h, "in_dso");
+  if (fp == NULL)
+    {
+      printf ("cannot get symbol 'in_dso': %s\n", dlerror ());
+      exit (1);
+    }
+
+  fp (&result);
+
+  dlclose (h);
+
+  return result;
 }
-hidden_def (pthread_getaffinity_np)
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
