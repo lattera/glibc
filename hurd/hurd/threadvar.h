@@ -60,6 +60,7 @@ enum __hurd_threadvar_index
     _HURD_THREADVAR_ERRNO,	/* `errno' value for this thread.  */
     _HURD_THREADVAR_SIGSTATE,	/* This thread's `struct hurd_sigstate'.  */
     _HURD_THREADVAR_DYNAMIC_USER, /* Dynamically-assigned user variables. */
+    _HURD_THREADVAR_MALLOC,	/* For use of malloc. */
     _HURD_THREADVAR_MAX		/* Default value for __hurd_threadvar_max.  */
   };
 

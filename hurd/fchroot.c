@@ -35,7 +35,13 @@ fchroot (int fd)
 			}));
 
   if (! err)
-    _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], dir);
+    {
+      file_t root;
+      err = __file_reparent (dir, MACH_PORT_NULL, &root);
+      __mach_port_deallocate (__mach_task_self (), dir);
+      if (! err)
+	_hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
+    }
 
   return err ? __hurd_fail (err) : 0;
 }

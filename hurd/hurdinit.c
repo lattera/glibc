@@ -31,7 +31,9 @@ struct hurd_port *_hurd_ports;
 unsigned int _hurd_nports;
 mode_t _hurd_umask;
 sigset_t _hurdsig_traced;
+
 char **__libc_argv;
+int __libc_argc;
 
 
 error_t

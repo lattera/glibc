@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ DEFUN(accept, (fd, addr, addr_len),
   socket_t new;
   addr_port_t aport;
   char *buf = (char *) addr;
-  mach_msg_type_number_t buflen = *addr_len;
+  mach_msg_type_number_t buflen;
   int type;
 
   if (err = HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport)))
@@ -46,6 +46,7 @@ DEFUN(accept, (fd, addr, addr_len),
 
   if (addr != NULL)
     {
+      buflen = *addr_len;
       err = __socket_whatis_address (aport, &type, &buf, &buflen);
       if (err == EOPNOTSUPP)
 	/* If the protocol server can't tell us the address, just return a

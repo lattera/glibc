@@ -52,11 +52,7 @@ unsigned int __hurd_threadvar_max = _HURD_THREADVAR_MAX;
 static unsigned long int threadvars[_HURD_THREADVAR_MAX];
 unsigned long int __hurd_threadvar_stack_offset
   = (unsigned long int) &threadvars;
-unsigned long int __hurd_sigthread_stack_base;
-unsigned long int __hurd_sigthread_stack_end;
-unsigned long int *__hurd_sigthread_variables;
 unsigned long int __hurd_threadvar_stack_mask;
-
 
 /* XXX loser kludge for vm_map kernel bug */
 static vm_address_t fmha;

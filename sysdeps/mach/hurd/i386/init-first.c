@@ -30,10 +30,14 @@ extern void __libc_init (int, char **, char **);
 extern void __getopt_clean_environment (void);
 extern void __libc_global_ctors (void);
 
+unsigned int __hurd_threadvar_max;
+unsigned long int __hurd_threadvar_stack_offset;
+unsigned long int __hurd_threadvar_stack_mask;
+
 int __libc_multiple_libcs = 1;
 
-int __libc_argc;
-char **__libc_argv;
+extern int __libc_argc;
+extern char **__libc_argv;
 
 /* We often need the PID.  Cache this value.  */
 pid_t __libc_pid;

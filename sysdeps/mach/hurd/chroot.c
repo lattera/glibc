@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,8 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(chroot, (file_name), CONST char *file_name)
 {
-  file_t file, dir;
+  error_t err;
+  file_t file, dir, root;
 
   file = __file_name_lookup (file_name, O_EXEC, 0);
   if (file == MACH_PORT_NULL)
@@ -38,6 +39,12 @@ DEFUN(chroot, (file_name), CONST char *file_name)
   if (dir == MACH_PORT_NULL)
     return -1;
 
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], dir);
+  /* Prevent going through DIR's .. */
+  err = __file_reparent (dir, MACH_PORT_NULL, &root);
+  __mach_port_deallocate (__mach_task_self (), dir);
+  if (err)
+    return __hurd_fail (err);
+
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
   return 0;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,45 +32,33 @@ DEFUN(__readlink, (file_name, buf, len),
 {
   error_t err;
   file_t file;
-  char mybuf[2048], *transp = mybuf;
-  mach_msg_type_number_t translen = sizeof (mybuf);
+  struct stat st;
 
-  file = __file_name_lookup (file_name, O_NOTRANS, 0);
+  file = __file_name_lookup (file_name, O_READ | O_NOLINK, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
-  err = __file_get_translator (file, &transp, &translen);
+  err = __io_stat (file, &st);
+  if (! err)
+    if (S_ISLNK (st.st_mode))
+      {
+	char *rbuf = buf;
+
+	err = __io_read (file, &rbuf, &len, 0, len);
+	if (!err && rbuf != buf)
+	  {
+	    memcpy (buf, rbuf, len);
+	    __vm_deallocate (__mach_task_self (), (vm_address_t)rbuf, len);
+	  }
+      }
+    else
+      err = EINVAL;
+
   __mach_port_deallocate (__mach_task_self (), file);
 
   if (err)
     return __hurd_fail (err);
-
-  if (translen < sizeof (_HURD_SYMLINK) ||
-      memcmp (transp, _HURD_SYMLINK, sizeof (_HURD_SYMLINK)))
-    /* The file is not actually a symlink.  */
-    err = EINVAL;
   else
-    {
-      /* This is a symlink; its translator is "/hurd/symlink\0target\0".  */
-      if (len >= translen - sizeof (_HURD_SYMLINK))
-	{
-	  len = translen - sizeof (_HURD_SYMLINK);
-	  if (transp[translen - 1] == '\0')
-	    /* Remove the null terminator.  */
-	    --len;
-	}
-      if (buf == NULL)
-	/* This call is just to find out how large a buffer is required.  */
-	len = translen - sizeof (_HURD_SYMLINK) - 1;
-      else
-	/* Copy into the user's buffer.  */
-	memcpy (buf, transp + sizeof (_HURD_SYMLINK), len);
-    }
-
-  if (transp != mybuf)
-    __vm_deallocate (__mach_task_self (), (vm_address_t) transp, translen);
-
-  return err ? __hurd_fail (err) : len;
+    return len;
 }
-
 weak_alias (__readlink, readlink)

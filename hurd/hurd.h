@@ -109,11 +109,10 @@ extern pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 extern int _hurd_orphaned;
 
 /* This variable is incremented every time the process IDs change.  */
-
-unsigned int _hurd_pids_changed_stamp;
+extern unsigned int _hurd_pids_changed_stamp;
 
 /* This condition is broadcast every time the process IDs change.  */
-struct condition _hurd_pids_changed_sync;
+extern struct condition _hurd_pids_changed_sync;
 
 /* Unix `data break', for brk and sbrk.
    If brk and sbrk are not used, this info will not be initialized or used.  */

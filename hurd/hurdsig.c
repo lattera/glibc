@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,11 @@ thread_t _hurd_msgport_thread;
 
 /* Thread which receives task-global signals.  */
 thread_t _hurd_sigthread;
+
+/* These are set up by _hurdsig_init.  */
+unsigned long int __hurd_sigthread_stack_base;
+unsigned long int __hurd_sigthread_stack_end;
+unsigned long int *__hurd_sigthread_variables;
 
 /* Linked-list of per-thread signal state.  */
 struct hurd_sigstate *_hurd_sigstates;
@@ -423,6 +428,9 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
 
 struct hurd_signal_preemptor *_hurdsig_preemptors;
 sigset_t _hurdsig_preempted_set;
+
+/* XXX temporary to deal with spelling fix */
+weak_alias (_hurdsig_preemptors, _hurdsig_preempters)
 
 /* Mask of stop signals.  */
 #define STOPSIGS (sigmask (SIGTTIN) | sigmask (SIGTTOU) | \

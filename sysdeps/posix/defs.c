@@ -1,6 +1,6 @@
 /* Definitions of global stdio data structures.
 
-Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+Copyright (C) 1991, 1993, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ FILE *__stdio_head = &stdstreams[0];
 void
 DEFUN_VOID(_cleanup)
 {
-  (void) fclose((FILE *) NULL);
+  __fcloseall ();
 }
 
 

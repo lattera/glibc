@@ -20,7 +20,8 @@
 
 /* This is initialized in dtable.c when that gets linked in.
    If dtable.c is not linked in, it will be zero.  */
-file_t (*_hurd_getdport_fn) (int fd);
+static file_t (*_default_hurd_getdport_fn) (int fd) = 0;
+weak_alias (_default_hurd_getdport_fn, _hurd_getdport_fn)
 
 file_t
 __getdport (int fd)

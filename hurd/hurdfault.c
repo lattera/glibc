@@ -1,5 +1,5 @@
 /* Handle faults in the signal thread.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,9 @@
 
 jmp_buf _hurdsig_fault_env;
 struct hurd_signal_preemptor _hurdsig_fault_preemptor;
+
+/* XXX temporary to deal with spelling fix */
+weak_alias (_hurdsig_fault_preemptor, _hurdsig_fault_preempter)
 
 static mach_port_t forward_sigexc;
 
