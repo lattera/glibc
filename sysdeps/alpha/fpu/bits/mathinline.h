@@ -1,5 +1,5 @@
 /* Inline math functions for Alpha.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang.
 
@@ -28,7 +28,7 @@
 # define __MATH_INLINE extern __inline
 #endif
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 # define isunordered(x, y)				\
   (__extension__					\
    ({ double __r;					\
@@ -56,7 +56,7 @@
   (__extension__					\
    ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
       !isunordered(__x, __y) && __x != __y; }))
-#endif /* ISOC9X */
+#endif /* ISO C99 */
 
 #define __inline_copysign(NAME, TYPE)					\
 __MATH_INLINE TYPE							\

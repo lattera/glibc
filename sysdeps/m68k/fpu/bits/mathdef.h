@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
-#if defined __USE_ISOC9X && defined _MATH_H
+#if defined __USE_ISOC99 && defined _MATH_H
 /* The m68k FPUs evaluate all values in the 96 bit floating-point format
    which is also available for the user as `long double'.  Therefore we
    define: */
@@ -42,4 +42,4 @@ typedef long double double_t;	/* `double' expressions are evaluated as
 /* Number of decimal digits for the `long double' type.  */
 # define DECIMAL_DIG	18
 
-#endif	/* ISO C 9X */
+#endif	/* ISO C99 */

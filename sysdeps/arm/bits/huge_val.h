@@ -61,9 +61,9 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 #endif	/* GCC.  */
 
 
-/* ISO C 9X extensions: (float) HUGE_VALF and (long double) HUGE_VALL.  */
+/* ISO C99 extensions: (float) HUGE_VALF and (long double) HUGE_VALL.  */
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 
 # ifdef __GNUC__
 
@@ -101,4 +101,4 @@ static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
    same as `double'.  */
 # define HUGE_VALL HUGE_VAL
 
-#endif /* __USE_ISOC9X.  */
+#endif /* __USE_ISOC99.  */
