@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
@@ -45,4 +45,5 @@ __fesetenv (const fenv_t *envp)
 strong_alias (__fesetenv, __old_fesetenv)
 compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
 #endif
+libm_hidden_ver (__fesetenv, fesetenv)
 versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
