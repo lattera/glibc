@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,9 +28,9 @@
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
 #ifdef __STDC__
-# define SYS_ify(syscall_name)	__NR_N64_##syscall_name
+# define SYS_ify(syscall_name)	__NR_##syscall_name
 #else
-# define SYS_ify(syscall_name)	__NR_N64_/**/syscall_name
+# define SYS_ify(syscall_name)	__NR_/**/syscall_name
 #endif
 
 #ifdef __ASSEMBLER__
