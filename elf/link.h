@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,10 @@ struct link_map
        They may change without notice.  */
 
     const char *l_libname;	/* Name requested (before search).  */
-    Elf32_Dyn *l_info[DT_NUM];	/* Indexed pointers to dynamic section.  */
+    /* Indexed pointers to dynamic section.
+       [0,DT_NUM) are indexed by the processor-independent tags.
+       [DT_NUM,DT_NUM+DT_PROCNUM] are indexed by the tag minus DT_LOPROC.  */
+    Elf32_Dyn *l_info[DT_NUM + DT_PROCNUM];
     const Elf32_Phdr *l_phdr;	/* Pointer to program header table in core.  */
     Elf32_Word l_phnum;		/* Number of program header entries.  */
     Elf32_Addr l_entry;		/* Entry point location.  */
@@ -141,7 +144,7 @@ extern int _dl_secure;
    zero; OBJECT is the name of the problematical shared object, or null if
    it is a general problem; ERRSTRING is a string describing the specific
    problem.  */
-   
+
 extern void _dl_signal_error (int errcode,
 			      const char *object,
 			      const char *errstring)

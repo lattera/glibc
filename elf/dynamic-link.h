@@ -25,11 +25,11 @@ Cambridge, MA 02139, USA.  */
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
 static inline void
-elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
+elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM + DT_PROCNUM])
 {
   unsigned int i;
 
-  for (i = 0; i < DT_NUM; ++i)
+  for (i = 0; i < DT_NUM + DT_PROCNUM; ++i)
     info[i] = NULL;
 
   if (! dyn)
@@ -37,8 +37,14 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
 
   while (dyn->d_tag != DT_NULL)
     {
-      assert (dyn->d_tag < DT_NUM);
-      info[dyn->d_tag] = dyn++;
+      if (dyn->d_tag < DT_NUM)
+	info[dyn->d_tag] = dyn;
+      else if (dyn->d_tag >= DT_LOPROC &&
+	       dyn->d_tag < DT_LOPROC + DT_PROCNUM)
+	info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
+      else
+	assert (! "bad dynamic tag");	
+      dyn++;
     }
 
   if (info[DT_RELA])
@@ -60,7 +66,8 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
 #define ELF_DYNAMIC_DO_REL(map, lazy, resolve)				      \
   if ((map)->l_info[DT_REL])						      \
     elf_dynamic_do_rel ((map), DT_REL, DT_RELSZ, (resolve), 0);		      \
-  if ((map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)			      \
+  if ((map)->l_info[DT_PLTREL] &&					      \
+      (map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)			      \
     elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (resolve), (lazy));
 #else
 #define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */
@@ -72,7 +79,8 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
 #define ELF_DYNAMIC_DO_RELA(map, lazy, resolve)				      \
   if ((map)->l_info[DT_RELA])						      \
     elf_dynamic_do_rela ((map), DT_RELA, DT_RELASZ, (resolve), 0);	      \
-  if ((map)->l_info[DT_PLTREL]->d_un.d_val == DT_RELA)			      \
+  if ((map)->l_info[DT_PLTREL] &&					      \
+      (map)->l_info[DT_PLTREL]->d_un.d_val == DT_RELA)			      \
     elf_dynamic_do_rela ((map), DT_JMPREL, DT_PLTRELSZ, (resolve), (lazy));
 #else
 #define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */

@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -93,10 +93,9 @@ _dl_relocate_object (struct link_map *l, int lazy)
       l->l_prev->l_next = l;
   }
 
-  if (l->l_info[DT_JMPREL] && lazy)
-    /* Set up the PLT so its unrelocated entries will
-       jump to _dl_runtime_resolve, which will relocate them.  */
-    elf_machine_runtime_setup (l);
+  /* Set up the PLT so its unrelocated entries will
+     jump to _dl_runtime_resolve, which will relocate them.  */
+  elf_machine_runtime_setup (l, lazy);
 
   l->l_relocated = 1;
 

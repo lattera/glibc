@@ -76,43 +76,8 @@ static char rcsid[] = "$Id$";
 # include "../conf/options.h"
 #endif
 
-const char *_res_opcodes[] = {
-	"QUERY",
-	"IQUERY",
-	"CQUERYM",
-	"CQUERYU",	/* experimental */
-	"NOTIFY",	/* experimental */
-	"5",
-	"6",
-	"7",
-	"8",
-	"UPDATEA",
-	"UPDATED",
-	"UPDATEDA",
-	"UPDATEM",
-	"UPDATEMA",
-	"ZONEINIT",
-	"ZONEREF",
-};
-
-const char *_res_resultcodes[] = {
-	"NOERROR",
-	"FORMERR",
-	"SERVFAIL",
-	"NXDOMAIN",
-	"NOTIMP",
-	"REFUSED",
-	"6",
-	"7",
-	"8",
-	"9",
-	"10",
-	"11",
-	"12",
-	"13",
-	"14",
-	"NOCHANGE",
-};
+extern const char *_res_opcodes[];
+extern const char *_res_resultcodes[];
 
 /* XXX: we should use getservbyport() instead. */
 static const char *
@@ -310,7 +275,7 @@ __fp_nquery(msg, len, file)
 		putc('\n', file);
 	}
 	if ((!_res.pfcode) || (_res.pfcode & RES_PRF_HEADX))
-	putc(';', file);
+		putc(';', file);
 	if ((!_res.pfcode) || (_res.pfcode & RES_PRF_HEAD2)) {
 		fprintf(file, "; flags:");
 		if (hp->qr)
@@ -342,10 +307,10 @@ __fp_nquery(msg, len, file)
 			fprintf(file, ";; QUESTIONS:\n");
 		while (--n >= 0) {
 			if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
-			fprintf(file, ";;\t");
+				fprintf(file, ";;\t");
 			TruncTest(cp);
 			if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
-			cp = p_cdnname(cp, msg, len, file);
+				cp = p_cdnname(cp, msg, len, file);
 			else {
 				int n;
 				char name[MAXDNAME];
@@ -368,7 +333,7 @@ __fp_nquery(msg, len, file)
 					__p_class(_getshort((u_char*)cp)));
 			cp += INT16SZ;
 			if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
-			putc('\n', file);
+				putc('\n', file);
 		}
 	}
 	/*

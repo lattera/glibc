@@ -1,3 +1,26 @@
+Sat Jan  6 16:39:14 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makefile (subdirs): Added db.
+
+	* resolv/Makefile (routines): Add res_data.
+	* resolv/res_data.c, resolv/res_debug.c, resolv/resolv.h:
+	Updated from BIND 4.9.3 final release.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Handle
+	processor-specific tags.
+	(ELF_DYNAMIC_DO_REL, ELF_DYNAMIC_DO_RELA): Handle absent DT_PLTREL tag.
+
+	* elf/elf.h (DT_MIPS_NUM, DT_PROCNUM): New macros.
+	* elf/link.h (struct link_map): Extend `l_info' by DT_PROCNUM.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): Take new
+	arg LAZY.  Only do our work if LAZY and there is a DT_JMPREL record.
+	* elf/dl-reloc.c (_dl_relocate_object): Call
+	elf_machine_runtime_setup unconditionally, and pass it LAZY flag.
+
+	* elf/dl-load.c: Fixed ELFMAG check to work for either byte order.
+	Align end of load segment only to page size, not to segment alignment.
+
 Thu Jan  4 11:35:18 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/setitimer.c: Code rearranged a bit to use new

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
 endif
 
 # These are the subdirectories containing the library source.
-subdirs = csu assert ctype locale intl math setjmp signal stdlib	\
+subdirs = csu assert ctype db locale intl math setjmp signal stdlib	\
 	  stdio-common $(stdio) malloc string time dirent grp pwd	\
 	  posix io termios resource misc socket sysvipc gmon gnulib	\
 	  $(wildcard crypt) manual $(sysdep-subdirs) elf

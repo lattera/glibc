@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -140,20 +140,23 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rel *reloc)
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline void
-elf_machine_runtime_setup (struct link_map *l)
+elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   Elf32_Addr *got;
   extern void _dl_runtime_resolve (Elf32_Word);
 
-  /* The GOT entries for functions in the PLT have not yet been filled
-     in.  Their initial contents will arrange when called to push an
-     offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
-     and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-  got = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
-  got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
-  /* This function will get called to fix up the GOT entry indicated by
-     the offset on the stack, and then jump to the resolved address.  */
-  got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+  if (l->l_info[DT_JMPREL] && lazy)
+    {
+      /* The GOT entries for functions in the PLT have not yet been filled
+	 in.  Their initial contents will arrange when called to push an
+	 offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
+	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
+      got = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
+      got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
+      /* This function will get called to fix up the GOT entry indicated by
+	 the offset on the stack, and then jump to the resolved address.  */
+      got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+    }
 }
 
 

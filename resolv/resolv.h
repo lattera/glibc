@@ -78,7 +78,7 @@
  * is new enough to contain a certain feature.
  */
 
-#define	__RES	19950621
+#define	__RES	19951031
 
 /*
  * Resolver configuration file.
@@ -121,6 +121,7 @@ struct __res_state {
 		struct in_addr	addr;
 		u_int32_t	mask;
 	} sort_list[MAXRESOLVSORT];
+	char	pad[72];		/* On an i38this means 512b total. */
 };
 
 /*

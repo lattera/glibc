@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ian Lance Taylor (ian@cygnus.com).
 
 This file is part of the GNU C Library.
@@ -326,9 +326,10 @@ typedef struct
 #define DT_DEBUG	21		/* For debugging; unspecified */
 #define DT_TEXTREL	22		/* Reloc might modify .text */
 #define DT_JMPREL	23		/* Address of PLT relocs */
-#define	DT_NUM		24		/* Number used.  */
+#define	DT_NUM		24		/* Number used */
 #define DT_LOPROC	0x70000000	/* Start of processor-specific */
 #define DT_HIPROC	0x7fffffff	/* End of processor-specific */
+#define	DT_PROCNUM	DT_MIPS_NUM	/* Most used by any processor */
 
 /* Standard 64 bit ELF types.  */
 
@@ -573,6 +574,7 @@ typedef struct
 #define DT_MIPS_UNREFEXTNO   0x70000012	/* First external DYNSYM */
 #define DT_MIPS_GOTSYM	     0x70000013	/* First GOT entry in DYNSYM */
 #define DT_MIPS_HIPAGENO     0x70000014	/* Number of GOT page table entries */
+#define DT_MIPS_NUM	     0x15
 
 /* Legal values for DT_MIPS_FLAG Elf32_Dyn entry.  */
 
