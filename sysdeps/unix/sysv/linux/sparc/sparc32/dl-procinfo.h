@@ -21,6 +21,8 @@
 #ifndef _DL_PROCINFO_H
 #define _DL_PROCINFO_H	1
 
+#include <ldsodefs.h>
+
 /* If anything should be added here check whether the size of each string
    is still ok with the given array size.  */
 static const char sparc32_cap_flags[][7] =

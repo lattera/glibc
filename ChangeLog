@@ -1,5 +1,10 @@
 2001-03-07  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/ldconfig.c (_dl_sysdep_message): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h: Include
+	ldsodefs.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: Likewise.
+
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Use
 	_dl_error_printf instead of _dl_sysdep_error.
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.

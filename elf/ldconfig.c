@@ -37,9 +37,6 @@
 #include "ldconfig.h"
 #include "dl-cache.h"
 
-/* We don't need this here - silence the compiler.  */
-#define _dl_sysdep_message(string, args...) do {} while (0);
-
 #include "dl-procinfo.h"
 
 #ifndef LD_SO_CONF
