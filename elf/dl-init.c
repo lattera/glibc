@@ -25,11 +25,19 @@
 typedef void (*init_t) (int, char **, char **);
 
 
-static void
+void
 internal_function
-_dl_init_rec (struct link_map *map, int argc, char **argv, char **env)
+_dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 {
+  struct r_debug *r;
   unsigned int i;
+
+  /* Notify the debugger we have added some objects.  We need to call
+     _dl_debug_initialize in a static program in case dynamic linking has
+     not been used before.  */
+  r = _dl_debug_initialize (0);
+  r->r_state = RT_ADD;
+  _dl_debug_state ();
 
   /* Stupid users forces the ELF specification to be changed.  It now
      says that the dynamic loader is responsible for determining the
@@ -41,11 +49,10 @@ _dl_init_rec (struct link_map *map, int argc, char **argv, char **env)
      loader which has to find the dependencies at runtime instead of
      letting the user do it right.  Stupidity rules!  */
 
-  i = map->l_searchlist.r_nlist;
+  i = main_map->l_searchlist.r_nlist;
   while (i-- > 0)
     {
-      struct link_map *l = map->l_initfini[i];
-      int message_written;
+      struct link_map *l = main_map->l_initfini[i];
       init_t init;
 
       if (l->l_init_called)
@@ -60,27 +67,22 @@ _dl_init_rec (struct link_map *map, int argc, char **argv, char **env)
       if (l->l_name[0] == '\0' && l->l_type == lt_executable)
 	continue;
 
-      /* See whether any dependent objects are not yet initialized.
-	 XXX Is this necessary?  I'm not sure anymore...  */
-      if (l->l_searchlist.r_nlist > 1)
-	_dl_init_rec (l, argc, argv, env);
+      /* Are there any constructors?  */
+      if (l->l_info[DT_INIT] == NULL && l->l_info[DT_INIT_ARRAY] == NULL)
+	continue;
 
-      /* Now run the local constructors.  There are several of them:
+      /* Print a debug message if wanted.  */
+      if (_dl_debug_impcalls)
+	_dl_debug_message (1, "\ncalling init: ",
+			   l->l_name[0] ? l->l_name : _dl_argv[0],
+			   "\n\n", NULL);
+
+      /* Now run the local constructors.  There are two forms of them:
 	 - the one named by DT_INIT
 	 - the others in the DT_INIT_ARRAY.
       */
-      message_written = 0;
-      if (l->l_info[DT_INIT])
+      if (l->l_info[DT_INIT] != NULL)
 	{
-	  /* Print a debug message if wanted.  */
-	  if (_dl_debug_impcalls)
-	    {
-	      _dl_debug_message (1, "\ncalling init: ",
-				 l->l_name[0] ? l->l_name : _dl_argv[0],
-				 "\n\n", NULL);
-	      message_written = 1;
-	    }
-
 	  init = (init_t) (l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr);
 
 	  /* Call the function.  */
@@ -88,7 +90,7 @@ _dl_init_rec (struct link_map *map, int argc, char **argv, char **env)
 	}
 
       /* Next see whether there is an array with initialiazation functions.  */
-      if (l->l_info[DT_INIT_ARRAY])
+      if (l->l_info[DT_INIT_ARRAY] != NULL)
 	{
 	  unsigned int j;
 	  unsigned int jm;
@@ -96,35 +98,12 @@ _dl_init_rec (struct link_map *map, int argc, char **argv, char **env)
 
 	  jm = l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
 
-	  if (jm > 0 && _dl_debug_impcalls && ! message_written)
-	    _dl_debug_message (1, "\ncalling init: ",
-			       l->l_name[0] ? l->l_name : _dl_argv[0],
-			       "\n\n", NULL);
-
 	  addrs = (ElfW(Addr) *) (l->l_info[DT_INIT_ARRAY]->d_un.d_ptr
 				  + l->l_addr);
 	  for (j = 0; j < jm; ++j)
 	    ((init_t) addrs[j]) (argc, argv, env);
 	}
     }
-}
-
-
-void
-internal_function
-_dl_init (struct link_map *main_map, int argc, char **argv, char **env)
-{
-  struct r_debug *r;
-
-  /* Notify the debugger we have added some objects.  We need to call
-     _dl_debug_initialize in a static program in case dynamic linking has
-     not been used before.  */
-  r = _dl_debug_initialize (0);
-  r->r_state = RT_ADD;
-  _dl_debug_state ();
-
-  /* Recursively call the constructors.  */
-  _dl_init_rec (main_map, argc, argv, env);
 
   /* Notify the debugger all new objects are now ready to go.  */
   r->r_state = RT_CONSISTENT;

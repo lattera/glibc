@@ -1,5 +1,8 @@
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-init.c (_dl_init): We don't need to call constructors
+	recursively.  Fold _dl_init_rec in _dl_init and optimize a bit more.
+
 	Implement dynamic determination of constructor/destructor order in
 	the dynamic linker.
 	* elf/Versions [ld.so] (GLIBC_2.0): Remove _dl_init_next.
