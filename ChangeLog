@@ -1,3 +1,8 @@
+2000-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (handle_request): Don't abort() if unknown
+	command is sent.
+
 2000-02-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/hstcache.c (cache_addhst): Don't cache name->record entries

@@ -375,7 +375,8 @@ cannot handle old request version %d; current version is %d"),
       break;
 
     default:
-      abort ();
+      /* Ignore the command, it's nothing we know.  */
+      break;
     }
 }
 
