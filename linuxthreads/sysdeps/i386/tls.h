@@ -123,8 +123,8 @@ typedef struct
   int result;								      \
   if (secondcall)							      \
     ldt_entry.entry_number = ({ int _gs;				      \
-				asm ("movl %%gs, %0" : "=q" (_gs));	      \
-				_gs >> 3; });				      \
+				asm ("movw %%gs, %w0" : "=q" (_gs));	      \
+				(_gs & 0xffff) >> 3; });		      \
   asm volatile (TLS_LOAD_EBX						      \
 		"int $0x80\n\t"						      \
 		TLS_LOAD_EBX						      \
@@ -164,7 +164,7 @@ typedef struct
     __gs = TLS_SETUP_GS_SEGMENT (_descr, secondcall);			      \
     if (__builtin_expect (__gs, 7) != -1)				      \
       {									      \
-	asm ("movl %0, %%gs" : : "q" (__gs));				      \
+	asm ("movw %w0, %%gs" : : "q" (__gs));				      \
 	__gs = 0;							      \
       }									      \
     __gs;								      \

@@ -72,7 +72,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
       1, 0, 0, 0, 0, 1, 0 };						      \
   if (__modify_ldt (1, &ldt_entry, sizeof (ldt_entry)) != 0)		      \
     abort ();								      \
-  asm ("movl %0, %%gs" : : "q" (nr * 8 + 7));				      \
+  asm ("movw %w0, %%gs" : : "q" (nr * 8 + 7));				      \
 })
 
 /* When using the new set_thread_area call, we don't need to change %gs
@@ -83,13 +83,13 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 ({									      \
   int __gs;								      \
   struct modify_ldt_ldt_s ldt_entry =					      \
-    { ({ asm ("movl %%gs, %0" : "=q" (__gs)); __gs >> 3; }),		      \
+    { ({ asm ("movw %%gs, %w0" : "=q" (__gs)); (__gs & 0xffff) >> 3; }),      \
       (unsigned long int) descr, sizeof (struct _pthread_descr_struct),	      \
       1, 0, 0, 0, 0, 1, 0 };						      \
   if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry) == 0, \
       			1))						      \
-    asm ("movl %0, %%gs" :: "q" (__gs));				      \
-  else								      \
+    asm ("movw %w0, %%gs" :: "q" (__gs));				      \
+  else									      \
     __gs = -1;								      \
   __gs;		      							      \
 })
@@ -117,7 +117,7 @@ extern int __have_no_set_thread_area;
 #define FREE_THREAD(descr, nr) \
 {									      \
   int __gs;								      \
-  __asm__ __volatile__ ("movl %%gs, %0" : "=q" (__gs));			      \
+  __asm__ __volatile__ ("movw %%gs, %w0" : "=q" (__gs));		      \
   if (__builtin_expect (__gs & 4, 0))					      \
     {									      \
       struct modify_ldt_ldt_s ldt_entry =				      \
