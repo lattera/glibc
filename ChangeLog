@@ -1,3 +1,8 @@
+1998-10-22 12:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Drastically simplify and
+	improve INLINE_SYSCALL using macro assembler magic.
+
 1998-10-22  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/i386/getgroups.c (__getgroups): Add

@@ -41,7 +41,7 @@ setgroups (n, groups)
       __set_errno (EINVAL);
       return -1;
     }
-  else if
+  else
     {
       size_t i;
       __kernel_gid_t kernel_groups[n];

@@ -200,6 +200,42 @@
 
 #else	/* !__ASSEMBLER__ */
 
+/* We need some help from the assembler to generate optimal code.  We
+   define some macros here which later will be used.  */
+asm ("__X'%ebx = 1\n\t"
+     "__X'%ecx = 2\n\t"
+     "__X'%edx = 2\n\t"
+     "__X'%eax = 3\n\t"
+     "__X'%esi = 3\n\t"
+     "__X'%edi = 3\n\t"
+     "__X'%ebp = 3\n\t"
+     "__X'%esp = 3\n\t"
+     ".macro bpushl name reg\n\t"
+     ".if 1 - \\name\n\t"
+     ".if 2 - \\name\n\t"
+     "pushl %ebx\n\t"
+     ".else\n\t"
+     "xchgl \\reg, %ebx\n\t"
+     ".endif\n\t"
+     ".endif\n\t"
+     ".endm\n\t"
+     ".macro bpopl name reg\n\t"
+     ".if 1 - \\name\n\t"
+     ".if 2 - \\name\n\t"
+     "popl %ebx\n\t"
+     ".else\n\t"
+     "xchgl \\reg, %ebx\n\t"
+     ".endif\n\t"
+     ".endif\n\t"
+     ".endm\n\t"
+     ".macro bmovl name reg\n\t"
+     ".if 1 - \\name\n\t"
+     ".if 2 - \\name\n\t"
+     "movl \\reg, %ebx\n\t"
+     ".endif\n\t"
+     ".endif\n\t"
+     ".endm\n\t");
+
 /* Define a macro which expands inline into the wrapper code for a system
    call.  */
 #undef INLINE_SYSCALL
@@ -207,13 +243,13 @@
   ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
-    PUSHARGS_##nr							      \
-    DOARGS_##nr								      \
+    "bpushl __X'%k2, %k2\n\t"						      \
+    "bmovl __X'%k2, %k2\n\t"						      \
+    "movl %1, %%eax\n\t"						      \
     "int $0x80\n\t"							      \
-    POPARGS_##nr							      \
+    "bpopl __X'%k2, %k2\n\t"						      \
     : "=a" (resultvar)							      \
-    : ASMFMT_##nr(args)							      \
-    "i" (__NR_##name) : "memory", "cc");				      \
+    : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
     if (resultvar >= 0xfffff001)					      \
       {									      \
 	__set_errno (-resultvar);					      \
@@ -221,59 +257,17 @@
       }									      \
     (int) resultvar; })
 
-
-#define PUSHARGS_0	/* Nothing */
-#define DOARGS_0	"movl %1, %%eax\n\t"
-#define POPARGS_0	/* Nothing */
-#define _PUSHARGS_0	/* Nothing */
-#define _DOARGS_0 	/* Nothing */
-#define _POPARGS_0	/* Nothing */
 #define ASMFMT_0()
-
-#define PUSHARGS_1	"xchgl %%ebx, %%edx\n\t" _PUSHARGS_0
-#define DOARGS_1	_DOARGS_0 "movl %2, %%eax\n\t"
-#define POPARGS_1	_POPARGS_0 "xchgl %%edx, %%ebx"
-#define _PUSHARGS_1	_PUSHARGS_0 "pushl %%ebx\n\t"
-#define _DOARGS_1	"movl %1, %%ebx\n\t" _DOARGS_0
-#define _POPARGS_1	"popl %%ebx\n\t" _POPARGS_0
 #define ASMFMT_1(arg1) \
-	"d" (arg1),
-
-#define PUSHARGS_2	PUSHARGS_1
-#define DOARGS_2	_DOARGS_0 "movl %3, %%eax\n\t"
-#define POPARGS_2	POPARGS_1
-#define _PUSHARGS_2	_PUSHARGS_1
-#define _DOARGS_2	_DOARGS_1
-#define _POPARGS_2	_POPARGS_1
+	, "acdSD" (arg1)
 #define ASMFMT_2(arg1, arg2) \
-	"d" (arg1), "c" (arg2),
-
-#define PUSHARGS_3	_PUSHARGS_3
-#define DOARGS_3	_DOARGS_3 "movl %4, %%eax\n\t"
-#define POPARGS_3	_POPARGS_3
-#define _PUSHARGS_3	_PUSHARGS_2
-#define _DOARGS_3	_DOARGS_2
-#define _POPARGS_3	_POPARGS_2
+	, "adCD" (arg1), "c" (arg2)
 #define ASMFMT_3(arg1, arg2, arg3) \
-	"0" (arg1), "c" (arg2), "d" (arg3),
-
-#define PUSHARGS_4	_PUSHARGS_4
-#define DOARGS_4	_DOARGS_4 "movl %5, %%eax\n\t"
-#define POPARGS_4	_POPARGS_4
-#define _PUSHARGS_4	_PUSHARGS_3
-#define _DOARGS_4	_DOARGS_3
-#define _POPARGS_4	_POPARGS_3
+	, "aCD" (arg1), "c" (arg2), "d" (arg3)
 #define ASMFMT_4(arg1, arg2, arg3, arg4) \
-	"0" (arg1), "c" (arg2), "d" (arg3), "S" (arg4),
-
-#define PUSHARGS_5	_PUSHARGS_5
-#define DOARGS_5	_DOARGS_5 "movl %6, %%eax\n\t"
-#define POPARGS_5	_POPARGS_5
-#define _PUSHARGS_5	PUSHARGS_4
-#define _DOARGS_5	_DOARGS_4
-#define _POPARGS_5	_POPARGS_4
+	, "aD" (arg1), "c" (arg2), "d" (arg3), "S" (arg4)
 #define ASMFMT_5(arg1, arg2, arg3, arg4, arg5) \
-	"0" (arg1), "c" (arg2), "d" (arg3), "S" (arg4), "D" (arg5),
+	, "a" (arg1), "c" (arg2), "d" (arg3), "S" (arg4), "D" (arg5)
 
 #endif	/* __ASSEMBLER__ */
 
