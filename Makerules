@@ -511,17 +511,23 @@ endif
 ifeq (yes,$(elf))
 # binutils only position loadable notes into the first page for binaries,
 # not for shared objects
-define build-shlib
-$(build-shlib-helper) \
-	  -o $@.new $(csu-objpfx)abi-note.o -Wl,--verbose \
-	  $(LDLIBS-$(@F:lib%.so=%).so) 2>&1 | \
-	  sed -e '/^=========/,/^=========/!d;/^=========/d' \
+$(common-objpfx)shlib.lds: $(common-objpfx)config.make
+	$(LINK.o) -shared -Wl,-O1 \
+		  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
+		  -Wl,--verbose 2>&1 | \
+	  sed > $@T \
+	      -e '/^=========/,/^=========/!d;/^=========/d' \
 	      -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
-	      $(LDSEDCMD-$(@F:lib%.so=%).so) > $@.lds
-rm -f $@.new
-$(build-shlib-helper) -o $@ -T $@.lds \
+	      -e 's/^.*\*(\.dynbss).*$$/& \
+		 PROVIDE(__start___libc_freeres_ptrs = .); \
+		 *(__libc_freeres_ptrs) \
+		 PROVIDE(__stop___libc_freeres_ptrs = .);/'
+	mv -f $@T $@
+common-generated += shlib.lds
+
+define build-shlib
+$(build-shlib-helper) -o $@ -T $(common-objpfx)shlib.lds \
 	  $(csu-objpfx)abi-note.o $(build-shlib-objlist)
-rm -f $@.lds
 endef
 else
 ifneq (,$(findstring aix,$(config-os)))
@@ -561,16 +567,8 @@ ifeq (yes,$(elf))
 # binutils only position loadable notes into the first page for binaries,
 # not for shared objects
 define build-module
-$(build-module-helper) \
-	  -o $@.new $(csu-objpfx)abi-note.o -Wl,--verbose \
-	  $(LDLIBS-$(@F:lib%.so=%).so) 2>&1 | \
-	  sed -e '/^=========/,/^=========/!d;/^=========/d' \
-	      -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
-	  > $@.lds
-rm -f $@.new
-$(build-module-helper) -o $@ -T $@.lds \
+$(build-module-helper) -o $@ -T $(common-objpfx)shlib.lds \
 	  $(csu-objpfx)abi-note.o $(build-module-objlist)
-rm -f $@.lds
 endef
 else
 ifneq (,$(findstring aix,$(config-os)))
@@ -592,7 +590,7 @@ endif
 
 build-module-helper-objlist = \
 	$(patsubst %_pic.a,$(whole-archive) %_pic.a $(no-whole-archive),\
-		   $(filter-out $(map-file) $(+preinit) $(+postinit),$^))
+		   $(filter-out %.lds $(map-file) $(+preinit) $(+postinit),$^))
 whole-archive := -Wl,--whole-archive
 
 build-module-objlist = $(build-module-helper-objlist) $(LDLIBS-$(@F:%.so=%).so)
@@ -618,12 +616,13 @@ ifeq ($(elf),yes)
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
-LDSEDCMD-c.so = -e 's/^.*\*(\.dynbss).*$$/& __start___libc_freeres_ptrs = .; *(__libc_freeres_ptrs) __stop___libc_freeres_ptrs = .;/'
+LDSEDCMD-c.so = -e 's/^.*\*(\.dynbss).*$$/& *(__libc_freeres_ptrs)/'
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os \
 			 $(elfobjdir)/sofini.os \
-			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so
+			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
+			 $(common-objpfx)shlib.lds
 	$(build-shlib)
 ifeq ($(versioning),yes)
 $(common-objpfx)libc.so: $(common-objpfx)libc.map

@@ -62,7 +62,7 @@ include ../Rules
 LDFLAGS-dl.so = -Wl,-dynamic-linker,$(slibdir)/$(rtld-installed-name)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
-$(test-modules): $(objpfx)%.so: $(objpfx)%.os
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 	$(build-module)
 
 $(objpfx)glrefmain: $(libdl)

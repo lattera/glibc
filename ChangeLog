@@ -1,3 +1,15 @@
+2003-04-26  Roland McGrath  <roland@redhat.com>
+
+	* Makerules ($(common-objpfx)shlib.lds): New target.
+	(common-generated): Add it.
+	(build-shlib, build-module): Use that instead of generating every time.
+	($(common-objpfx)libc.so): Depend on it.
+	(lib%.so rule): Likewise.
+	(build-module-helper-objlist): Remove %.lds.
+	* iconvdata/extra-module.mk ($(objpfx)$(mod).so):
+	Depend on $(common-objpfx)shlib.lds.
+	* dlfcn/Makefile ($(test-modules)): Likewise.
+
 2003-04-26  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/tmpfile.c: Remove USE_IN_LIBIO conditionals.
