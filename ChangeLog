@@ -1,3 +1,13 @@
+2004-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/resolv.h: Add RES_USEBSTRING.
+	* resolv/res_debug.c (p_option): Add handling for RES_USE_INET6,
+	RES_ROTATE, RES_NOCHECKNAME, and RES_USEBSTRING.
+	* resolv/res_init.c (res_setioptions): Recognize ip6-bytestring.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Only perform
+	bytestring IPv6 lookup with RES_USEBSTRING option is selected.
+	Otherwise use the two nibble formats.
+
 2004-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Define HAVE_Z_RELRO if the linker supports -z relro.
