@@ -1,5 +1,20 @@
 2003-07-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_UTIMES for x86 and kernels > 2.5.75.
+
+	* sysdeps/unix/sysv/linux/futimes.c (__futimes): Handle case with
+	second parameter == NULL.
+	* sysdeps/unix/sysv/linux/utimes.c: New file.
+
+2003-07-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/futimes.c: Include kernel-features.h.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_UTIMES): Fix
+	a typo.
+
+2003-07-12  Ulrich Drepper  <drepper@redhat.com>
+
 	* time/sys/time.h: Namespace cleanup.
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_UTIMES for the architectures which always had the syscall.
