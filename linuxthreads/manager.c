@@ -510,8 +510,8 @@ static void pthread_free(pthread_descr th)
   handle->h_descr = NULL;
   handle->h_bottom = (char *)(-1L);
   __pthread_spin_unlock(&handle->h_lock);
-#ifdef FREE_THREAD_SELF
-  FREE_THREAD_SELF(th, th->p_nr);
+#ifdef FREE_THREAD
+  FREE_THREAD(th, th->p_nr);
 #endif
   /* One fewer threads in __pthread_handles */
   __pthread_handles_num--;

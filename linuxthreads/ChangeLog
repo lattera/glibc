@@ -1,3 +1,10 @@
+2000-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* manager.c (pthread_free): Use FREE_THREAD not FREE_THREAD_SELF.
+	* sysdeps/i386/useldt.h: Use "q" constraint instead of "r" where
+	necessary.
+	* sysdeps/i386/i686/pt-machine.h: Include "../useldt.h".
+
 2000-04-24  Mark Kettenis  <kettenis@gnu.org>
 
 	* join.c (pthread_exit): Set p_terminated after reporting the

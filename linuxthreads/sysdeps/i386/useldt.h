@@ -1,6 +1,6 @@
 /* Special definitions for ix86 machine using segment register based
    thread descriptor.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>.
 
@@ -65,15 +65,14 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
     { nr, (unsigned long int) descr, sizeof (*descr), 1, 0, 0, 0, 0, 1, 0 };  \
   if (__modify_ldt (1, &ldt_entry, sizeof (ldt_entry)) != 0)		      \
     abort ();								      \
-  __asm__ __volatile__ ("movw %w0, %%gs" : : "r" (nr * 8 + 7));		      \
+  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (nr * 8 + 7));		      \
 }
 
 /* Free resources associated with thread descriptor.  */
-#define FREE_THREAD_SELF(descr, nr) \
+#define FREE_THREAD(descr, nr) \
 {									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { nr, 0, 0, 0, 0, 1, 0, 1, 0, 0 };					      \
-  __asm__ __volatile__ ("movw %w0,%%gs" : : "r" (0));			      \
   __modify_ldt (1, &ldt_entry, sizeof (ldt_entry));			      \
 }
 
@@ -83,7 +82,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
     __asm__ __volatile__ ("movb %%gs:%P2,%b0"				      \
-			  : "=r" (__value)				      \
+			  : "=q" (__value)				      \
 			  : "0" (0),					      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
@@ -107,7 +106,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
     __asm__ __volatile__ ("movb %%gs:(%2),%b0"				      \
-			  : "=r" (__value)				      \
+			  : "=q" (__value)				      \
 			  : "0" (0),					      \
 			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
@@ -131,7 +130,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   __typeof__ (descr->member) __value = (value);				      \
   if (sizeof (__value) == 1)						      \
     __asm__ __volatile__ ("movb %0,%%gs:%P1" :				      \
-			  : "r" (__value),				      \
+			  : "q" (__value),				      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else									      \
@@ -153,7 +152,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   __typeof__ (descr->member) __value = (value);				      \
   if (sizeof (__value) == 1)						      \
     __asm__ __volatile__ ("movb %0,%%gs:(%1)" :				      \
-			  : "r" (__value),				      \
+			  : "q" (__value),				      \
 			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
   else									      \
