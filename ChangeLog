@@ -6,6 +6,11 @@
 	* timezone/southamerica: Likewise.
 	* timezone/yearistype: Likewise.
 
+2000-08-10  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Synch struct stat64 and
+	stat with current MIPS kernel.
+
 2000-08-01  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/sysv/linux/i386/sys/elf.h (elf_greg_t, ELF_NGREG,
