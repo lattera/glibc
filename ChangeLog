@@ -1,3 +1,32 @@
+1998-07-31 17:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir==misc] (sysdep_routines):
+	Add sys_setresuid.
+
+1998-07-30  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __syscall_setresuid
+	as real name for system call and make setresuid a weak alias.  Set
+	caller to seteuid.
+	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Implement using
+	`setresuid' syscall if availble.  Fixes problems with sendmail
+	which expects `seteuid' to not set the saved user ID.
+
+1998-07-30 20:09 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* time/tzset.c (__tzstring): Get rid of excessive cleverness
+	which was causing stack corruption.
+
+1998-07-31 16:41 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* argp/argp-fmtstream.c (__argp_fmtstream_update): Correct
+	off-by-one in wordwrap algorithm when there' a space at the
+	beginning of the buffer.
+
+1998-07-31 15:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules (LDLIBS-c.so): Extend value instead of overwriting it.
+
 1998-07-31 11:10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Add lots of new symbols from Irix and Solaris.

@@ -213,10 +213,10 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	  if (nextline > buf)
 	    {
 	      /* Swallow separating blanks.  */
-	      if (p > buf)
+	      if (p >= buf)
 		do
 		  --p;
-		while (p > buf && isblank (*p));
+		while (p >= buf && isblank (*p));
 	      nl = p + 1;	/* The newline will replace the first blank. */
 	    }
 	  else

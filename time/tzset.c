@@ -88,66 +88,51 @@ static int tz_compute __P ((time_t timer, const struct tm *tm))
      internal_function;
 static void tzset_internal __P ((int always)) internal_function;
 
-/* Header for a list of buffers containing time zone strings.  */
-struct tzstring_head
+/* List of buffers containing time zone strings. */
+struct tzstring_l
 {
-  struct tzstring_head *next;
-  /* The buffer itself immediately follows the header.
-     The buffer contains zero or more (possibly overlapping) strings.
-     The last string is followed by 2 '\0's instead of the usual 1.  */
+  struct tzstring_l *next;
+  size_t len;  /* strlen(data) - doesn't count terminating NUL! */
+  char data[0];
 };
 
-/* First in a list of buffers containing time zone strings.
-   All the buffers but the last are read-only.  */
-static struct
-{
-  struct tzstring_head head;
-  char data[48];
-} tzstring_list;
+struct tzstring_l *tzstring_list;
 
-/* Size of the last buffer in the list, not counting its header.  */
-static size_t tzstring_last_buffer_size = sizeof tzstring_list.data;
-
-/* Allocate a time zone string with given contents.
-   The string will never be moved or deallocated.
-   However, its contents may be shared with other such strings.  */
+/* Allocate a permanent home for S.  It will never be moved or deallocated,
+   but may share space with other strings.
+   Don't modify the returned string. */
 char *
-__tzstring (string)
-     const char *string;
+__tzstring (const char *s)
 {
-  struct tzstring_head *h;
-  size_t needed;
   char *p;
+  struct tzstring_l *t, *u, *new;
+  size_t len = strlen(s);
 
-  /* Look through time zone string list for a duplicate of this one.  */
-  for (h = &tzstring_list.head;  ;  h = h->next)
-    {
-      for (p = (char *) (h + 1);  p[0] | p[1];  ++p)
-	if (strcmp (p, string) == 0)
+  /* Walk the list and look for a match.  If this string is the same
+     as the end of an already-allocated string, it can share space. */
+  for (u = t = tzstring_list; t; u = t, t = t->next)
+    if (len <= t->len)
+      {
+	p = &t->data[t->len - len];
+	if (strcmp (s, p) == 0)
 	  return p;
-      if (! h->next)
-	break;
-    }
+      }
 
-  /* No duplicate was found.  Copy to the end of this buffer if there's room;
-     otherwise, append a large-enough new buffer to the list and use it.  */
-  ++p;
-  needed = strlen (string) + 2; /* Need 2 trailing '\0's after last string.  */
+  /* Not found; allocate a new buffer. */
+  new = malloc (sizeof (struct tzstring_l) + len + 1);
+  if (!new)
+    return NULL;
 
-  if ((size_t) ((char *) (h + 1) + tzstring_last_buffer_size - p) < needed)
-    {
-      size_t buffer_size = tzstring_last_buffer_size;
-      while ((buffer_size *= 2) < needed)
-	continue;
-      h = malloc (sizeof *h + buffer_size);
-      if (h == NULL)
-	return NULL;
-      h->next = NULL;
-      tzstring_last_buffer_size = buffer_size;
-      p = (char *) (h + 1);
-    }
+  new->next = NULL;
+  new->len = len;
+  strcpy (new->data, s);
 
-  return strncpy (p, string, needed);
+  if (u)
+    u->next = new;
+  else
+    tzstring_list = new;
+
+  return new->data;
 }
 
 static char *old_tz = NULL;
