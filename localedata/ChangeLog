@@ -1,3 +1,7 @@
+2000-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/SJIS: New file.
+
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* tests-mbwc/dat_mblen.c: Correct data after adding C1 characters
