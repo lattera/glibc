@@ -1,3 +1,10 @@
+2002-12-31  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (compile.S, COMPILE.S): Remove -DASSEMBLER here.
+	Use $(S-CPPFLAGS) in place of $(asm-CPPFLAGS).
+	(S-CPPFLAGS): Add -DASSEMBLER here instead.
+	(generate-md5, +make-deps): Fix magic to get $(S-CPPFLAGS).
+
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/thread-m.h [SHARED] (thread_atfork): Assume __dso_handle
