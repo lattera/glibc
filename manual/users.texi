@@ -246,7 +246,7 @@ IDs:
 gid_t *
 read_all_groups (void)
 @{
-  int ngroups = getgroups (NULL, 0);
+  int ngroups = getgroups (0, NULL);
   gid_t *groups
     = (gid_t *) xmalloc (ngroups * sizeof (gid_t));
   int val = getgroups (ngroups, groups);
