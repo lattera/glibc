@@ -55,6 +55,7 @@ int pthread_cancel(pthread_t thread)
   int dorestart = 0;
   pthread_descr th;
   pthread_extricate_if *pextricate;
+  int already_canceled;
 
   __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread)) {
@@ -64,14 +65,15 @@ int pthread_cancel(pthread_t thread)
 
   th = handle->h_descr;
 
-  if (th->p_cancelstate == PTHREAD_CANCEL_DISABLE || th->p_canceled) {
-    th->p_canceled = 1;
+  already_canceled = th->p_canceled;
+  th->p_canceled = 1;
+
+  if (th->p_cancelstate == PTHREAD_CANCEL_DISABLE || already_canceled) {
     __pthread_unlock(&handle->h_lock);
     return 0;
   }
 
   pextricate = th->p_extricate;
-  th->p_canceled = 1;
   pid = th->p_pid;
 
   /* If the thread has registered an extrication interface, then
