@@ -495,9 +495,26 @@ while test $# -gt 0; do
     implied_candidate="`sed 's/#.*$//' < $xsrcdir$name/Implies`"
     implied=
     for x in $implied_candidate; do
+      found=no
       if test -d $xsrcdir$name_base/$x; then
 	implied="$implied $name_base/$x";
-      else
+	found=yes
+      fi
+      for d in $add_ons_pfx ''; do
+	try="${d}sysdeps/$x"
+	case $d in
+	 /*) try_srcdir= ;;
+	 *) try_srcdir=$srcdir/ ;;
+	esac
+	test -n "$enable_debug_configure" &&
+	 echo "[DEBUG]: $name implied $x try($d) {$try_srcdir}$try" >&2
+	if test $try != $xsrcdir$name_base/$x && test -d $try_srcdir$try;
+	then
+	  implied="$implied $try"
+	  found=yes
+	fi
+      done
+      if test $found = no; then
         AC_MSG_WARN($name/Implies specifies nonexistent $x)
       fi
     done

@@ -82,6 +82,7 @@ do_test (int argc, char *argv[])
   cb.aio_reqprio = 0;
   cb.aio_buf = (void *) buf;
   cb.aio_nbytes = sizeof (buf) - 1;
+  cb.aio_offset = 0;
   cb.aio_sigevent.sigev_notify = SIGEV_THREAD;
   cb.aio_sigevent.sigev_notify_function = callback;
   cb.aio_sigevent.sigev_notify_attributes = NULL;

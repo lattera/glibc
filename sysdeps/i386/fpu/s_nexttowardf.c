@@ -1,5 +1,8 @@
-/* Single precision version of nexttoward.c.
-   Conversion to IEEE single float by Jakub Jelinek, jj@ultra.linux.cz. */
+/* s_nexttowardf.c -- float version of s_nextafter.c.
+ * Special i387 version.
+ * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
+ */
+
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -11,14 +14,9 @@
  * ====================================================
  */
 
-/* IEEE functions
- *	nexttowardf(x,y)
- *	return the next machine floating-point number of x in the
- *	direction toward y.
- * This is for machines which use the same binary type for double and
- * long double.
- *   Special cases:
- */
+#if defined(LIBM_SCCS) && !defined(lint)
+static char rcsid[] = "$NetBSD: $";
+#endif
 
 #include "math.h"
 #include "math_private.h"
@@ -31,45 +29,49 @@
 	long double y;
 #endif
 {
-	int32_t hx,hy,ix,iy;
-	u_int32_t ly;
+	int32_t hx,ix,iy;
+	u_int32_t hy,ly,esy;
 
 	GET_FLOAT_WORD(hx,x);
-	EXTRACT_WORDS(hy,ly,y);
+	GET_LDOUBLE_WORDS(esy,hy,ly,y);
 	ix = hx&0x7fffffff;		/* |x| */
-	iy = hy&0x7fffffff;		/* |y| */
+	iy = esy&0x7fff;		/* |y| */
 
-	if((ix>0x7f800000) ||				   /* x is nan */
-	   ((iy>=0x7ff00000)&&((iy-0x7ff00000)|ly)!=0))    /* y is nan */
+	/* Intel's extended format has the normally implicit 1 explicit
+	   present.  Sigh!  */
+	if((ix>0x7f800000) ||			/* x is nan */
+	   (iy>=0x7fff&&(((hy&0x7fffffff)|ly)!=0))) /* y is nan */
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
 	    float x2;
-	    SET_FLOAT_WORD(x,(u_int32_t)(hy&0x80000000)|1);/* return +-minsub*/
+	    SET_FLOAT_WORD(x,((esy&0x8000)<<16)|1);/* return +-minsub*/
 	    x2 = x*x;
-	    if(x2==x) return x2; else return x; /* raise underflow flag */
+	    if(x2==x) return x2; else return x;	/* raise underflow flag */
 	}
 	if(hx>=0) {				/* x > 0 */
-	    if(hy<0||(ix>>23)>(iy>>20)-0x380
-	       || ((ix>>23)==(iy>>20)-0x380
-		   && (ix&0x7fffff)>(((hy<<3)|(ly>>29))&0x7fffff)))	/* x > y, x -= ulp */
+	    if(esy>=0x8000||((ix>>23)&0xff)>iy-0x3f80
+	       || (((ix>>23)&0xff)==iy-0x3f80
+		   && ((ix&0x7fffff)<<8)>(hy&0x7fffffff))) {/* x > y, x -= ulp */
 		hx -= 1;
-	    else				/* x < y, x += ulp */
+	    } else {				/* x < y, x += ulp */
 		hx += 1;
+	    }
 	} else {				/* x < 0 */
-	    if(hy>=0||(ix>>23)>(iy>>20)-0x380
-	       || ((ix>>23)==(iy>>20)-0x380
-		   && (ix&0x7fffff)>(((hy<<3)|(ly>>29))&0x7fffff)))	/* x < y, x -= ulp */
+	    if(esy<0x8000||((ix>>23)&0xff)>iy-0x3f80
+	       || (((ix>>23)&0xff)==iy-0x3f80
+		   && ((ix&0x7fffff)<<8)>(hy&0x7fffffff))) {/* x < y, x -= ulp */
 		hx -= 1;
-	    else				/* x > y, x += ulp */
+	    } else {				/* x > y, x += ulp */
 		hx += 1;
+	    }
 	}
 	hy = hx&0x7f800000;
 	if(hy>=0x7f800000) return x+x;	/* overflow  */
 	if(hy<0x00800000) {		/* underflow */
 	    float x2 = x*x;
 	    if(x2!=x) {		/* raise underflow flag */
-		SET_FLOAT_WORD(x2,hx);
+	        SET_FLOAT_WORD(x2,hx);
 		return x2;
 	    }
 	}

@@ -384,6 +384,24 @@ main (void)
 		v2.ieee.negative);
 	result = 1;
       }
+
+    if (nextafterf (0.0f, INFINITY) != nextafterf (0.0f, 1.0f)
+        || nextafterf (-0.0f, INFINITY) != nextafterf (-0.0f, 1.0f)
+        || nextafterf (0.0f, -INFINITY) != nextafterf (0.0f, -1.0f)
+        || nextafterf (-0.0f, -INFINITY) != nextafterf (-0.0f, -1.0f))
+      {
+	printf ("nextafterf (+-0, +-Inf) != nextafterf (+-0, +-1)\n");
+	result = 1;
+      }
+
+    if (nexttowardf (0.0f, INFINITY) != nexttowardf (0.0f, 1.0f)
+        || nexttowardf (-0.0f, INFINITY) != nexttowardf (-0.0f, 1.0f)
+        || nexttowardf (0.0f, -INFINITY) != nexttowardf (0.0f, -1.0f)
+        || nexttowardf (-0.0f, -INFINITY) != nexttowardf (-0.0f, -1.0f))
+      {
+	printf ("nexttowardf (+-0, +-Inf) != nexttowardf (+-0, +-1)\n");
+	result = 1;
+      }
   }
 
   {
@@ -678,6 +696,24 @@ main (void)
       {
 	printf ("0.0 down: negative differs: 1 vs %d\n",
 		v2.ieee.negative);
+	result = 1;
+      }
+
+    if (nextafter (0.0, INFINITY) != nextafter (0.0, 1.0)
+        || nextafter (-0.0, INFINITY) != nextafter (-0.0, 1.0)
+        || nextafter (0.0, -INFINITY) != nextafter (0.0, -1.0)
+        || nextafter (-0.0, -INFINITY) != nextafter (-0.0, -1.0))
+      {
+	printf ("nextafter (+-0, +-Inf) != nextafter (+-0, +-1)\n");
+	result = 1;
+      }
+
+    if (nexttoward (0.0, INFINITY) != nexttoward (0.0, 1.0)
+        || nexttoward (-0.0, INFINITY) != nexttoward (-0.0, 1.0)
+        || nexttoward (0.0, -INFINITY) != nexttoward (0.0, -1.0)
+        || nexttoward (-0.0, -INFINITY) != nexttoward (-0.0, -1.0))
+      {
+	printf ("nexttoward (+-0, +-Inf) != nexttoward (+-0, +-1)\n");
 	result = 1;
       }
   }
@@ -978,6 +1014,24 @@ main (void)
       {
 	printf ("0.0L down: negative differs: 1 vs %d\n",
 		v2.ieee.negative);
+	result = 1;
+      }
+
+    if (nextafterl (0.0, INFINITY) != nextafterl (0.0, 1.0)
+        || nextafterl (-0.0, INFINITY) != nextafterl (-0.0, 1.0)
+        || nextafterl (0.0, -INFINITY) != nextafterl (0.0, -1.0)
+        || nextafterl (-0.0, -INFINITY) != nextafterl (-0.0, -1.0))
+      {
+	printf ("nextafterl (+-0, +-Inf) != nextafterl (+-0, +-1)\n");
+	result = 1;
+      }
+
+    if (nexttowardl (0.0L, INFINITY) != nexttowardl (0.0L, 1.0L)
+        || nexttowardl (-0.0L, INFINITY) != nexttowardl (-0.0L, 1.0L)
+        || nexttowardl (0.0L, -INFINITY) != nexttowardl (0.0L, -1.0L)
+        || nexttowardl (-0.0L, -INFINITY) != nexttowardl (-0.0L, -1.0L))
+      {
+	printf ("nexttowardl (+-0, +-Inf) != nexttowardl (+-0, +-1)\n");
 	result = 1;
       }
   }

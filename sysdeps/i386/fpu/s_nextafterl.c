@@ -45,10 +45,10 @@ static char rcsid[] = "$NetBSD: $";
 	ix = esx&0x7fff;		/* |x| */
 	iy = esy&0x7fff;		/* |y| */
 
-	/* The additional &hx/&hy is required because Intel's extended format
-           has the normally implicit 1 explicit present.  Sigh!  */
-	if(((ix==0x7fff)&&(((hx|lx)|-(hx|lx))&hx)>>31!=0) ||   /* x is nan */
-	   ((iy==0x7fff)&&(((hy|ly)|-(hy|ly))&hy)>>31!=0))     /* y is nan */
+	/* Intel's extended format has the normally implicit 1 explicit
+	   present.  Sigh!  */
+	if(((ix==0x7fff)&&((hx&0x7fffffff|lx)!=0)) ||   /* x is nan */
+	   ((iy==0x7fff)&&((hy&0x7fffffff|ly)!=0)))     /* y is nan */
 	   return x+y;
 	if(x==y) return y;		/* x=y, return y */
 	if((ix|hx|lx)==0) {			/* x == 0 */

@@ -54,6 +54,7 @@ do_test (void)
   cb.aio_reqprio = 0;
   cb.aio_buf = (void *) buf;
   cb.aio_nbytes = sizeof (buf) - 1;
+  cb.aio_offset = 0;
   cb.aio_sigevent.sigev_notify = SIGEV_NONE;
 
   /* Try to read from stdin where nothing will be available.  */

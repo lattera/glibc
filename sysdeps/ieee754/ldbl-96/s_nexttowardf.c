@@ -36,13 +36,13 @@ static char rcsid[] = "$NetBSD: $";
 	ix = hx&0x7fffffff;		/* |x| */
 	iy = esy&0x7fff;		/* |y| */
 
-	if((ix>0x7f800000) ||   /* x is nan */
-	   (iy>=0x7fff&&((hy|ly)|-(hy|ly))!=0))     /* y is nan */
+	if((ix>0x7f800000) ||			/* x is nan */
+	   (iy>=0x7fff&&((hy|ly)!=0)))		/* y is nan */
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
 	    float x2;
-	    SET_FLOAT_WORD(x,(esy&0x8000?0x80000000:0)|1);/* return +-minsub*/
+	    SET_FLOAT_WORD(x,((esy&0x8000)<<16)|1);/* return +-minsub*/
 	    x2 = x*x;
 	    if(x2==x) return x2; else return x;	/* raise underflow flag */
 	}

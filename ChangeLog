@@ -1,3 +1,34 @@
+2001-06-14  Roland McGrath  <roland@frob.com>
+
+	* configure.in: Let sysdeps Implies files in add-ons bring in
+	sysdeps directories from the main source and other add-ons too.
+
+2001-06-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Add tests for nextafter and nexttoward
+	with +-Inf as second argument.
+
+	* sysdeps/generic/s_nexttowardf.c (__nexttowardf): Only check for
+	NaN, not Inf.
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Fix check for NaN.
+	* sysdeps/i386/fpu/s_nexttoward.c: New.
+	* sysdeps/i386/fpu/s_nexttowardf.c: New.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c (__nexttoward): Simplify
+	check for NaN, optimize x==+-0 handling.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c (__nexttowardf): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextafterl.c (__nextafterl): Simplify
+	check for NaN, fix sign in x==+-0 case.
+	* sysdeps/ia64/fpu/s_nexttoward.c: New.
+	* sysdeps/ia64/fpu/s_nexttowardf.c: New.
+
+2001-06-15  H.J. Lu  <hjl@gnu.org>
+
+	* rt/tst-aio2.c (do_test): Initialize cb.aio_offset to 0.
+	* rt/tst-aio3.c (do_test): Likewise.
+	* rt/tst-aio4.c (do_test): Likewise.
+	* rt/tst-aio5.c (do_test): Likewise.
+	* rt/tst-aio6.c (do_test): Likewise.
+
 2001-06-15  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/bits/mathinline.h: Don't define log2 as inline.

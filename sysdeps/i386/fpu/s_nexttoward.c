@@ -1,4 +1,5 @@
 /* s_nexttoward.c
+ * Special i387 version
  * Conversion from s_nextafter.c by Ulrich Drepper, Cygnus Support,
  * drepper@cygnus.com.
  */
@@ -44,8 +45,10 @@ static char rcsid[] = "$NetBSD: $";
 	ix = hx&0x7fffffff;		/* |x| */
 	iy = esy&0x7fff;		/* |y| */
 
+	/* Intel's extended format has the normally implicit 1 explicit
+	   present.  Sigh!  */
 	if(((ix>=0x7ff00000)&&((ix-0x7ff00000)|lx)!=0) ||   /* x is nan */
-	   ((iy>=0x7fff)&&(hy|ly)!=0))        /* y is nan */
+	   ((iy>=0x7fff)&&((hy&0x7fffffff)|ly)!=0))        /* y is nan */
 	   return x+y;
 	if((long double) x==y) return y;	/* x=y, return y */
 	if((ix|lx)==0) {			/* x == 0 */

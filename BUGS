@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <2000-11-08T09:14:07 drepper>
+Time-stamp: <2001-06-15T21:21:36 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -31,6 +31,14 @@ Severity: [  *] to [***]
 
 [ **]  The RPC code is not 64 bit clean.  This is getting slowly fixed
        but expect incompatible changes on 64 bit platforms like Alpha.
+
+[ **]  If a DSO is using implicitly libpthread and the application itself
+       does not there is a name lookup problem.  E.g., the function fork()
+       will be found in the libc.so instead of libpthread since the thread
+       library is behind the libc.  To correct this problem it must *not*
+       be relied on the currently still enabled handling of weak symbols
+       in the dynamic linker.  Instead explicit tests for the availability
+       of the libpthread version are needed.  [PR libc/2325]
 
 [  *]  The precision of the `sinhl' and/or `asinhl' function do not seem
        to be the best.
