@@ -434,6 +434,7 @@ $(objpfx)tst-tls4: $(libdl) $(shared-thread-library)
 $(objpfx)tst-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
 
 $(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so $(shared-thread-library)
+LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
 
 ifeq ($(build-shared),yes)
 tests: $(objpfx)tst-tls6.out
@@ -455,6 +456,8 @@ $(objpfx)tst-cancel18: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancelx18: $(common-objpfx)rt/librt.so
 $(objpfx)tst-clock2: $(common-objpfx)rt/librt.so
 $(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
+LDFLAGS-tst-_res1mod1.so = -Wl,-soname,tst-_res1mod1.so
+LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
 $(objpfx)tst-_res1: $(objpfx)tst-_res1mod2.so $(shared-thread-library)
 else
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.a

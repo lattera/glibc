@@ -1,3 +1,8 @@
+2004-02-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Define sonames for tst-tls5mod, tst-_res1mod1, and
+	tst-_res1mod2.
+
 2004-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
@@ -23,7 +28,6 @@
 
 	* sysdeps/pthread/pthread_barrier_wait.c (pthread_barrier_wait):
 	Release lock before the loop, don't reacquire it.
-	* DESIGN-barrier.txt: Likewise.
 
 	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h (DL_ARGV_NOT_RELRO): Define.
 
