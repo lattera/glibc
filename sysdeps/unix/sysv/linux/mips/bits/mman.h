@@ -1,4 +1,4 @@
-/* Definitions for POSIX memory map interface.  Linux/PowerPC version.
+/* Definitions for POSIX memory map interface.  Linux/MIPS version.
    Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -61,8 +61,8 @@
 
 /* Flags to `msync'.  */
 #define MS_ASYNC	1		/* Sync memory asynchronously.  */
-#define MS_SYNC		0		/* Synchronous memory sync.  */
 #define MS_INVALIDATE	2		/* Invalidate the caches.  */
+#define MS_SYNC		4		/* Synchronous memory sync.  */
 
 /* Flags for `mlockall'.  */
 #define MCL_CURRENT	1		/* Lock all currently mapped pages.  */

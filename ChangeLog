@@ -1,3 +1,10 @@
+2000-02-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h (MS_SYNC): 0 will not
+	work - set to 4 in accordance with changes made in the Linux/MIPS
+	kernel.  Using MS_SYNC on older kernels with MS_SYNC == 0 doesn't
+	actually work.
+
 2000-02-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Use correct values for
