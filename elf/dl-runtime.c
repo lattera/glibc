@@ -17,6 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define IN_DL_RUNTIME 1		/* This can be tested in dl-machine.h.  */
+
 #include <alloca.h>
 #include <stdlib.h>
 #include <unistd.h>

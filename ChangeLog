@@ -1,5 +1,9 @@
 2002-08-29  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-runtime.c (IN_DL_RUNTIME): Define this macro first thing.
+	* sysdeps/i386/dl-machine.h: Only declare fixup, profile_fixup and
+	define ELF_MACHINE_RUNTIME_TRAMPOLINE under #ifdef IN_DL_RUNTIME.
+
 	* sysdeps/generic/readelflib.c (process_elf_file): Fix typo.
 
 	* iconv/gconv_int.h: Include <stdlib.h> for alloca decl.
