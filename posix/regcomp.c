@@ -2233,6 +2233,14 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       tree = parse_dup_op (tree, regexp, dfa, token, syntax, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
 	return NULL;
+      /* In BRE consecutive duplications are not allowed.  */
+      if ((syntax & RE_CONTEXT_INVALID_DUP)
+	  && (token->type == OP_DUP_ASTERISK
+	      || token->type == OP_OPEN_DUP_NUM))
+	{
+	  *err = REG_BADRPT;
+	  return NULL;
+	}
       dfa->has_plural_match = 1;
     }
 

@@ -1,3 +1,8 @@
+2003-11-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (parse_expression): In BRE consecutive
+	duplications are not allowed.
+
 2003-11-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c (parse_bracket_exp): If end of expression is
