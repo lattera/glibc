@@ -1,3 +1,7 @@
+2002-12-03  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+
 2002-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/system.c (do_system): Make signal handler
