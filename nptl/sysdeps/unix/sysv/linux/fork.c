@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -83,7 +83,7 @@ __libc_fork (void)
       /* Reset the file list.  These are recursive mutexes.  */
       fresetlockfiles ();
 
-      /* We execute this even if the 'fork' call failed.  */
+      /* Reset locks in the I/O code.  */
       _IO_list_resetlock ();
 
       /* Run the handlers registered for the child.  */

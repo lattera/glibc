@@ -1,5 +1,21 @@
 2003-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile: Add rules to build and run tst-atfork2 test.
+	* tst-atfork2.c: New file.
+	* tst-atfork2mod.c: New file.
+
+	* sysdeps/unix/sysv/linux/unregister-atfork.c
+	(__unregister_atfork): Free the memory allocated for the handlers
+	after removing them from the lists.
+
+	* sysdeps/unix/sysv/linux/register-atfork.c: Define memeory
+	cleanup function.
+
+	* tst-atfork1.c (do_test): Wait for the child we forked.
+	Report error in child.
+
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Fix comment.
+
 	* sysdeps/pthread/Makefile: Define CFLAGS-confstr.c.
 
 2003-02-10  Ulrich Drepper  <drepper@redhat.com>

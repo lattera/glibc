@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -34,15 +34,27 @@ __unregister_atfork (dso_handle)
 
   list_for_each_prev_safe (runp, prevp, &__fork_prepare_list)
     if (list_entry (runp, struct fork_handler, list)->dso_handle == dso_handle)
-      list_del (runp);
+      {
+	list_del (runp);
+
+	free (list_entry (runp, struct fork_handler, list));
+      }
 
   list_for_each_prev_safe (runp, prevp, &__fork_parent_list)
     if (list_entry (runp, struct fork_handler, list)->dso_handle == dso_handle)
-      list_del (runp);
+      {
+	list_del (runp);
+
+	free (list_entry (runp, struct fork_handler, list));
+      }
 
   list_for_each_prev_safe (runp, prevp, &__fork_child_list)
     if (list_entry (runp, struct fork_handler, list)->dso_handle == dso_handle)
-      list_del (runp);
+      {
+	list_del (runp);
+
+	free (list_entry (runp, struct fork_handler, list));
+      }
 
   /* Release the lock.  */
   lll_unlock (__fork_lock);

@@ -160,6 +160,18 @@ LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 include ../Makeconfig
 
 ifeq ($(build-shared),yes)
+tests += tst-atfork2
+endif
+
+modules-names = tst-atfork2mod
+extra-objs += $(addsuffix .os,$(strip $(modules-names)))
+test-extras += $(modules-names)
+test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os
+	$(build-module)
+
+ifeq ($(build-shared),yes)
 others: $(objpfx)libpthread_nonshared.a
 endif
 
@@ -184,6 +196,12 @@ endif
 tests-reverse += tst-cancel5
 
 include ../Rules
+
+ifeq (yes,$(build-shared))
+# Make sure these things are built in the `make lib' pass so they can be used
+# to run programs during the `make others' pass.
+lib-noranlib: $(addprefix $(objpfx),$(extra-objs))
+endif
 
 # What we install as libpthread.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
@@ -220,6 +238,11 @@ CFLAGS-tst-unload.c += -DPREFIX=\"$(objpfx)\"
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
+$(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
+LDFLAGS-tst-atfork2 = -rdynamic
+tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
+$(objpfx)tst-atfork2mod.so: $(shared-thread-library)
+
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(objpfx)crti.o
 $(objpfx)libpthread.so: +preinit += $(objpfx)crti.o
@@ -245,6 +268,8 @@ $(addprefix $(objpfx), $(tests-reverse)): \
   $(objpfx)../libc.so $(objpfx)libpthread.so \
   $(objpfx)libpthread_nonshared.a
 $(addprefix $(objpfx),$(tests-static)): $(objpfx)libpthread.a
+
+$(objpfx)tst-atfork2.out: $(objpfx)tst-atfork2mod.so
 else
 $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 endif
@@ -270,7 +295,8 @@ $(objpfx)defs.h: $(objpfx)pt-initfini.s
 $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
-generated += crti.S defs.h pt-initfini.s
+generated += crti.S defs.h pt-initfini.s $(objpfx)tst-atfork2.mtrace \
+	     $(addsuffix .so,$(strip $(modules-names)))
 
 $(objpfx)version.os: $(objpfx)banner.h
 $(objpfx)banner.h: Banner

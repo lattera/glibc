@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -86,3 +86,37 @@ __register_atfork (prepare, parent, child, dso_handle)
   return 0;
 }
 libc_hidden_def (__register_atfork)
+
+
+libc_freeres_fn (free_mem)
+{
+  /* Get the lock to not conflict with running forks.  */
+  lll_lock (__fork_lock);
+
+  list_t *runp;
+  list_t *prevp;
+
+  list_for_each_prev_safe (runp, prevp, &__fork_prepare_list)
+    {
+      list_del (runp);
+
+      free (list_entry (runp, struct fork_handler, list));
+    }
+
+  list_for_each_prev_safe (runp, prevp, &__fork_parent_list)
+    {
+      list_del (runp);
+
+      free (list_entry (runp, struct fork_handler, list));
+    }
+
+  list_for_each_prev_safe (runp, prevp, &__fork_child_list)
+    {
+      list_del (runp);
+
+      free (list_entry (runp, struct fork_handler, list));
+    }
+
+  /* Release the lock.  */
+  lll_unlock (__fork_lock);
+}
