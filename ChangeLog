@@ -1,3 +1,12 @@
+1998-08-18  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* Rules (binaries-static, binaries-shared static pattern rules):
+	Depend on lib%, not just libc%, from $(link-libc{,-static}).
+
+	* sysdeps/mach/hurd/Makefile (link-libc-static): New variable; set
+	this here, overriding Makeconfig generic value so we link against
+	the RPC libs.
+
 1998-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/tstgetopt.c (options): Add NULL entry at end
