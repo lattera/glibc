@@ -1,3 +1,15 @@
+2000-06-19  H.J. Lu  <hjl@gnu.org>
+
+	* spinlock.h (HAS_COMPARE_AND_SWAP): Defined if
+	HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS is defined.
+	(compare_and_swap_with_release_semantics): New. Default to
+	compare_and_swap if HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
+	is not defined.
+
+	* spinlock.c (__pthread_unlock): Call
+	compare_and_swap_with_release_semantics () instead of
+	compare_and_swap ().
+
 2000-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/timer_create.c: Use _set_errno instead of assigning

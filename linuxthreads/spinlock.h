@@ -12,6 +12,25 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        */
 /* GNU Library General Public License for more details.                 */
 
+
+/* There are 2 compare and swap synchronization primitives with
+   different semantics:
+
+	1. compare_and_swap, which has acquire semantics (i.e. it
+	completes befor subsequent writes.)
+	2. compare_and_swap_with_release_semantics, which has release
+	semantics (it completes after previous writes.)
+
+   For those platforms on which they are the same. HAS_COMPARE_AND_SWAP
+   should be defined. For those platforms on which they are different, 
+   HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS has to be defined.  */
+
+#ifndef HAS_COMPARE_AND_SWAP
+#ifdef HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
+#define HAS_COMPARE_AND_SWAP
+#endif
+#endif
+
 #if defined(TEST_FOR_COMPARE_AND_SWAP)
 
 extern int __pthread_has_cas;
@@ -28,6 +47,18 @@ static inline int compare_and_swap(long * ptr, long oldval, long newval,
 }
 
 #elif defined(HAS_COMPARE_AND_SWAP)
+
+#ifdef HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
+
+static inline int
+compare_and_swap_with_release_semantics (long * ptr, long oldval,
+					 long newval, int * spinlock)
+{
+  return __compare_and_swap_with_release_semantics (ptr, oldval,
+						    newval);
+}
+
+#endif
 
 static inline int compare_and_swap(long * ptr, long oldval, long newval,
                                    int * spinlock)
@@ -46,6 +77,10 @@ static inline int compare_and_swap(long * ptr, long oldval, long newval,
   return __pthread_compare_and_swap(ptr, oldval, newval, spinlock);
 }
 
+#endif
+
+#ifndef HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
+#define compare_and_swap_with_release_semantics compare_and_swap
 #endif
 
 /* Internal locks */

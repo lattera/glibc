@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
 
@@ -18,24 +18,24 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-memprofso=@LIBDIR@/libmemprof.so
-memprofstat=@BINDIR@/memprofstat
+memusageso=@LIBDIR@/libmemusage.so
+memusagestat=@BINDIR@/memusagestat
 
 # Print usage message.
 do_usage() {
-  echo >&2 $"Try \`memprof --help' for more information."
+  echo >&2 $"Try \`memusage --help' for more information."
   exit 1
 }
 
 # Message for missing argument.
 do_missing_arg() {
-  echo >&2 $"memprof: option \`$1' requires an argument"
+  echo >&2 $"memusage: option \`$1' requires an argument"
   do_usage
 }
 
 # Print help message
 do_help() {
-  echo $"Usage: memprof [OPTION]... PROGRAM [PROGRAMOPTION]...
+  echo $"Usage: memusage [OPTION]... PROGRAM [PROGRAMOPTION]...
 Profile memory usage of PROGRAM.
 
    -n,--progname=NAME     Name of the program file to profile
@@ -64,8 +64,8 @@ Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
 }
 
 do_version() {
-  echo 'memprof (GNU libc) @VERSION@'
-  echo $"Copyright (C) 1999 Free Software Foundation, Inc.
+  echo 'memusage (GNU libc) @VERSION@'
+  echo $"Copyright (C) 2000 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper."
@@ -82,7 +82,7 @@ while test $# -gt 0; do
     do_help
     ;;
   --us | --usa | --usag | --usage)
-    echo $"Syntax: memprof [--data=FILE] [--progname=NAME] [--png=FILE] [--unbuffered]
+    echo $"Syntax: memusage [--data=FILE] [--progname=NAME] [--png=FILE] [--unbuffered]
             [--buffer=SIZE] [--no-timer] [--time-based] [--total]
             [--title=STRING] [--x-size=SIZE] [--y-size=SIZE]
             PROGRAM [PROGRAMOPTION]..."
@@ -135,43 +135,43 @@ while test $# -gt 0; do
     notimer=yes
     ;;
   -t | --tim | --time | --time- | --time-b | --time-ba | --time-bas | --time-base | --time-based)
-    memprofstat_args="$memprofstat_args -t"
+    memusagestat_args="$memusagestat_args -t"
     ;;
   -T | --to | --tot | --tota | --total)
-    memprofstat_args="$memprofstat_args -T"
+    memusagestat_args="$memusagestat_args -T"
     ;;
   --tit | --titl | --title)
     if test $# -eq 1; then
       do_missing_arg $1
     fi
     shift
-    memprofstat_args="$memprofstat_args -s $1"
+    memusagestat_args="$memusagestat_args -s $1"
     ;;
   --tit=* | --titl=* | --title=*)
-    memprofstat_args="$memprofstat_args -s ${1##*=}"
+    memusagestat_args="$memusagestat_args -s ${1##*=}"
     ;;
   -x | --x | --x- | --x-s | --x-si | --x-siz | --x-size)
     if test $# -eq 1; then
       do_missing_arg $1
     fi
     shift
-    memprofstat_args="$memprofstat_args -x $1"
+    memusagestat_args="$memusagestat_args -x $1"
     ;;
   --x=* | --x-=* | --x-s=* | --x-si=* | --x-siz=* | --x-size=*)
-    memprofstat_args="$memprofstat_args -x ${1##*=}"
+    memusagestat_args="$memusagestat_args -x ${1##*=}"
     ;;
   -y | --y | --y- | --y-s | --y-si | --y-siz | --y-size)
     if test $# -eq 1; then
       do_missing_arg $1
     fi
     shift
-    memprofstat_args="$memprofstat_args -y $1"
+    memusagestat_args="$memusagestat_args -y $1"
     ;;
   --y=* | --y-=* | --y-s=* | --y-si=* | --y-siz=* | --y-size=*)
-    memprofstat_args="$memprofstat_args -y ${1##*=}"
+    memusagestat_args="$memusagestat_args -y ${1##*=}"
     ;;
   --p | --p=* | --t | --t=* | --ti | --ti=* | --u)
-    echo >&2 $"memprof: option \`${1##*=}' is ambiguous"
+    echo >&2 $"memusage: option \`${1##*=}' is ambiguous"
     do_usage
     ;;
   --)
@@ -180,7 +180,7 @@ while test $# -gt 0; do
     break
     ;;
   --*)
-    echo >&2 $"memprof: unrecognized option \`$1'"
+    echo >&2 $"memusage: unrecognized option \`$1'"
     do_usage
     ;;
   *)
@@ -198,35 +198,35 @@ if test $# -eq 0; then
 fi
 
 # This will be in the environment.
-add_env="LD_PRELOAD=$memprofso"
+add_env="LD_PRELOAD=$memusageso"
 
 # Generate data file name.
 datafile=
 if test -n "$data"; then
   datafile="$data"
 elif test -n "$png"; then
-  datafile=$(mktemp ${TMPDIR:-/tmp}/memprof.XXXXXX 2> /dev/null)
+  datafile=$(mktemp ${TMPDIR:-/tmp}/memusage.XXXXXX 2> /dev/null)
   if test $? -ne 0; then
     # Lame, but if there is no `mktemp' program the user cannot expect more.
     if test "$RANDOM" != "$RANDOM"; then
-      datafile=${TMPDIR:-/tmp}/memprof.$RANDOM
+      datafile=${TMPDIR:-/tmp}/memusage.$RANDOM
     else
-      datafile=${TMPDIR:-/tmp}/memprof.$$
+      datafile=${TMPDIR:-/tmp}/memusage.$$
     fi
   fi
 fi
 if test -n "$datafile"; then
-  add_env="$add_env MEMPROF_OUTPUT=$datafile"
+  add_env="$add_env MEMUSAGE_OUTPUT=$datafile"
 fi
 
 # Set buffer size.
 if test -n "$buffer"; then
-  add_env="$add_env MEMPROF_BUFFER_SIZE=$buffer"
+  add_env="$add_env MEMUSAGE_BUFFER_SIZE=$buffer"
 fi
 
 # Disable timers.
 if test -n "$notimer"; then
-  add_env="$add_env MEMPROF_NO_TIMER=yes"
+  add_env="$add_env MEMUSAGE_NO_TIMER=yes"
 fi
 
 # Execute the program itself.
@@ -241,7 +241,7 @@ if test -n "$png" -a -n "$datafile" -a -s "$datafile"; then
   *.png) ;;
   *) png="$png.png" ;;
   esac
-  $memprofstat $memprofstat_args "$datafile" "$png"
+  $memusagestat $memusagestat_args "$datafile" "$png"
 fi
 
 if test -z "$data" -a -n "$datafile"; then

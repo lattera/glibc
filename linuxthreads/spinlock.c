@@ -95,7 +95,9 @@ again:
     /* No threads are waiting for this lock.  Please note that we also
        enter this case if the lock is not taken at all.  If this wouldn't
        be done here we would crash further down.  */
-    if (! compare_and_swap(&lock->__status, oldstatus, 0, &lock->__spinlock))
+    if (! compare_and_swap_with_release_semantics (&lock->__status,
+						   oldstatus, 0,
+						   &lock->__spinlock))
       goto again;
     return 0;
   }
@@ -126,9 +128,9 @@ again:
     /* If max prio thread is at head, remove it with compare-and-swap
        to guard against concurrent lock operation */
     thr = (pthread_descr) oldstatus;
-    if (! compare_and_swap(&lock->__status,
-                           oldstatus, (long)(thr->p_nextlock),
-                           &lock->__spinlock))
+    if (! compare_and_swap_with_release_semantics
+	    (&lock->__status, oldstatus, (long)(thr->p_nextlock),
+	     &lock->__spinlock))
       goto again;
   } else {
     /* No risk of concurrent access, remove max prio thread normally */

@@ -1,5 +1,5 @@
 /* Generate graphic from memory profiling data.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -191,7 +191,7 @@ main (int argc, char *argv[])
 
   if (maxsize_heap == 0 && maxsize_stack == 0)
     {
-      /* The program aborted before memprof was able to write the
+      /* The program aborted before memusage was able to write the
 	 information about the maximum heap and stack use.  Repair
 	 the file now.  */
       struct entry next;

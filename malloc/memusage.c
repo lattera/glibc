@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#include <memprof.h>
+#include <memusage.h>
 
 /* Pointer to the real functions.  These are determined used `dlsym'
    when really needed.  */
@@ -164,24 +164,24 @@ init (void)
 
 /* Find out whether this is the program we are supposed to profile.
    For this the name in the variable `__progname' must match the one
-   given in the environment variable MEMPROF_PROG_NAME.  If the variable
+   given in the environment variable MEMUSAGE_PROG_NAME.  If the variable
    is not present every program assumes it should be profiling.
 
    If this is the program open a file descriptor to the output file.
    We will write to it whenever the buffer overflows.  The name of the
-   output file is determined by the environment variable MEMPROF_OUTPUT.
+   output file is determined by the environment variable MEMUSAGE_OUTPUT.
 
-   If the environment variable MEMPROF_BUFFER_SIZE is set its numerical
+   If the environment variable MEMUSAGE_BUFFER_SIZE is set its numerical
    value determines the size of the internal buffer.  The number gives
    the number of elements in the buffer.  By setting the number to one
    one effectively selects unbuffered operation.
 
-   If MEMPROF_NO_TIMER is not present an alarm handler is installed
+   If MEMUSAGE_NO_TIMER is not present an alarm handler is installed
    which at the highest possible frequency records the stack pointer.  */
 static void
 me (void)
 {
-  const char *env = getenv ("MEMPROF_PROG_NAME");
+  const char *env = getenv ("MEMUSAGE_PROG_NAME");
   size_t prog_len = strlen (__progname);
   if (env != NULL)
     {
@@ -195,7 +195,7 @@ me (void)
   /* Only open the file if it's really us.  */
   if (!not_me && fd == -1)
     {
-      const char *outname = getenv ("MEMPROF_OUTPUT");
+      const char *outname = getenv ("MEMUSAGE_OUTPUT");
       if (outname != NULL)
 	{
 	  fd = creat (outname, 0666);
@@ -216,15 +216,15 @@ me (void)
 	      /* Determine the buffer size.  We use the default if the
 		 environment variable is not present.  */
 	      buffer_size = DEFAULT_BUFFER_SIZE;
-	      if (getenv ("MEMPROF_BUFFER_SIZE") != NULL)
+	      if (getenv ("MEMUSAGE_BUFFER_SIZE") != NULL)
 		{
-		  buffer_size = atoi (getenv ("MEMPROF_BUFFER_SIZE"));
+		  buffer_size = atoi (getenv ("MEMUSAGE_BUFFER_SIZE"));
 		  if (buffer_size == 0 || buffer_size > DEFAULT_BUFFER_SIZE)
 		    buffer_size = DEFAULT_BUFFER_SIZE;
 		}
 
 	      /* Possibly enable timer-based stack pointer retrieval.  */
-	      if (getenv ("MEMPROF_NO_TIMER") == NULL)
+	      if (getenv ("MEMUSAGE_NO_TIMER") == NULL)
 		{
 		  struct sigaction act;
 

@@ -1,5 +1,13 @@
 2000-06-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/Makefile: Change all references to memprof into memusage.
+	* malloc/memprof.c: Rename to...
+	* malloc/memusage.c: ...this.  New file.
+	* malloc/memprof.sh: Rename to...
+	* malloc/memusage.sh: ...this.  New file.
+	* malloc/memprofstat.c: Rename to...
+	* malloc/memusagestat.c: ...this.  New file.
+
 	* elf/sprof.c (print_version): Update year.
 
 	* elf/sprof.c (load_shobj): Don't always add load address to dynamic
