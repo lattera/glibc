@@ -24,13 +24,14 @@ Cambridge, MA 02139, USA.  */
 char *
 strndup (const char *s, size_t n)
 {
-  size_t len = strnlen (s) + 1;
-  char *new = malloc (len);
+  size_t len = strnlen (s);
+  char *new = malloc (len + 1);
 
   if (new == NULL)
     return NULL;
 
   memcpy (new, s, len);
+  new[len] = '\0';
 
   return new;
 }

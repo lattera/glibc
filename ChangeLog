@@ -1,3 +1,19 @@
+Fri Jun 28 07:27:10 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* string/strndup.c (strndup): Always terminate the string.
+	* string/string.h (strndupa): Likewise.
+
+Thu Jun 27 14:22:31 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio/Makefile (routines): Add vscanf.
+	* stdio-common/Makefile (routines): Remove vscanf.
+	* stdio-common/vscanf.c: Move to ...
+	* stdio/vscanf.c: here.
+
+	* rpm/Makefile (headers, install-lib, install-lib.so,
+	versioned, install-bin, install-sbin, install-data,
+	install-others): Add $(-VARIABLE).
+
 Fri Jun 28 02:41:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* nss/Makefile (databases): New variable.

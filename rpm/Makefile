@@ -15,15 +15,17 @@ distinfo := $(common-objpfx)distinfo- \
 
 config = $(config-machine)-$(config-vendor)-$(config-os)
 
-headers := $(foreach d,$(subdirs),$($d-headers))
-install-lib := $(foreach d,$(subdirs),$($d-install-lib))
-install-lib.so := $(foreach d,$(subdirs),$(filter-out $($d-versioned),\
+headers := $(-headers) $(foreach d,$(subdirs),$($d-headers))
+install-lib := $(-install-lib) $(foreach d,$(subdirs),$($d-install-lib))
+install-lib.so := $(-install-lib.so) \
+		  $(foreach d,$(subdirs),$(filter-out $($d-versioned),\
 						      $($d-install-lib.so)))
-versioned := $(foreach d,$(subdirs),$($d-versioned))
-install-bin := $(foreach d,$(subdirs),$($d-install-bin))
-install-sbin := $(foreach d,$(subdirs),$($d-install-sbin))
-install-data := $(foreach d,$(subdirs),$($d-install-data))
-install-others := $(foreach d,$(subdirs),$($d-install-others))
+versioned := $(-versioned) $(foreach d,$(subdirs),$($d-versioned))
+install-bin := $(-install-bin) $(foreach d,$(subdirs),$($d-install-bin))
+install-sbin := $(-install-sbin) $(foreach d,$(subdirs),$($d-install-sbin))
+install-data := $(-install-data) $(foreach d,$(subdirs),$($d-install-data))
+install-others := $(-install-others) \
+		  $(foreach d,$(subdirs),$($d-install-others))
 
 # Notice things to be installed in /etc.  They get specially marked as
 # possibly user-modified config files.

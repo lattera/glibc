@@ -87,7 +87,8 @@ contact <bug-glibc@prep.ai.mit.edu>
 
 [ 9] Write AVL-tree based tsearch() et.al. functions.  Currently only
      a very simple algorithm is used.
-
+     There is a public domain version but using this would cause problems
+     with the assignment.
 
 [10] Extend regex and/or rx to work with wide characters.
 
@@ -107,7 +108,8 @@ contact <bug-glibc@prep.ai.mit.edu>
      contribute it to the FSF.
 
 
-[13] Write access function for group, ether, shadow, rpc, netmasks,
-     bootparams, netgroup, publickey, automount, aliases databases.
+[13] Write access function for ether, shadow, netmasks, bootparams,
+     netgroup, publickey, automount, aliases databases for nss_files
+     and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.

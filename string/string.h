@@ -107,8 +107,11 @@ extern char *strndup __P ((__const char *__string, size_t __n));
 #define strndupa(s, n)							      \
 ({									      \
   __const char *__old = (s);						      \
-  size_t __len = strnlen (__old) + 1;					      \
-  memcpy (__builtin_alloca (__len), __old, __len);			      \
+  char *__new;								      \
+  size_t __len = strnlen (__old);					      \
+  __new = memcpy (__builtin_alloca (__len + 1), __old, __len);		      \
+  __new[__len] = '\0';							      \
+  __new;								      \
 })
 #endif
 
