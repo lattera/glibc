@@ -36,7 +36,7 @@ extern struct locale_data *const _nl_C[];
 
 /* For each category we keep a list of records for the locale files
    which are somehow addressed.  */
-static struct loaded_l10nfile *locale_file_list[__LC_LAST];
+struct loaded_l10nfile *_nl_locale_file_list[__LC_LAST];
 
 
 struct locale_data *
@@ -118,7 +118,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
   /* If exactly this locale was already asked for we have an entry with
      the complete name.  */
-  locale_file = _nl_make_l10nflist (&locale_file_list[category],
+  locale_file = _nl_make_l10nflist (&_nl_locale_file_list[category],
 				    locale_path, locale_path_len, mask,
 				    language, territory, codeset,
 				    normalized_codeset, modifier, special,
@@ -129,7 +129,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
     {
       /* Find status record for addressed locale file.  We have to search
 	 through all directories in the locale path.  */
-      locale_file = _nl_make_l10nflist (&locale_file_list[category],
+      locale_file = _nl_make_l10nflist (&_nl_locale_file_list[category],
 					locale_path, locale_path_len, mask,
 					language, territory, codeset,
 					normalized_codeset, modifier, special,
@@ -251,7 +251,7 @@ _nl_remove_locale (int locale, struct locale_data *data)
   if (--data->usage_count == 0)
     {
       /* First search the entry in the list of loaded files.  */
-      struct loaded_l10nfile *ptr = locale_file_list[locale];
+      struct loaded_l10nfile *ptr = _nl_locale_file_list[locale];
 
       /* Search for the entry.  It must be in the list.  Otherwise it
 	 is a bug and we crash badly.  */
@@ -287,28 +287,3 @@ _nl_remove_locale (int locale, struct locale_data *data)
       free (data);
     }
 }
-
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  int category;
-
-  for (category = 0; category < __LC_LAST; ++category)
-    if (category != LC_ALL)
-      {
-	struct loaded_l10nfile *runp = locale_file_list[category];
-
-	while (runp != NULL)
-	  {
-	    struct loaded_l10nfile *here = runp;
-	    struct locale_data *data = (struct locale_data *) runp->data;
-
-	    if (data != NULL && data != _nl_C[category])
-	      _nl_unload_locale (data);
-	    runp = runp->next;
-	    free ((char *) here->filename);
-	    free (here);
-	  }
-      }
-}
-text_set_element (__libc_subfreeres, free_mem);
