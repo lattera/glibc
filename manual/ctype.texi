@@ -162,7 +162,7 @@ vertical tab
 @comment ISO
 @deftypefun int isblank (int @var{c})
 Returns true if @var{c} is a blank character; that is, a space or a tab.
-This function has been added in @w{ISO C99}.
+This function was originally a GNU extension, but was added in @w{ISO C99}.
 @end deftypefun
 
 @cindex graphic character
@@ -598,8 +598,8 @@ characters as well.
 @comment ISO
 @deftypefun int iswblank (wint_t @var{wc})
 Returns true if @var{wc} is a blank character; that is, a space or a tab.
-This function has been added in @w{ISO C99}.  It is declared in
-@file{wchar.h}.
+This function was originally a GNU extension, but was added in @w{ISO C99}.
+It is declared in @file{wchar.h}.
 @end deftypefun
 
 @node Using Wide Char Classes, Wide Character Case Conversion, Classification of Wide Characters, Character Handling
