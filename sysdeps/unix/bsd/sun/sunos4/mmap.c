@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
    deallocates any previous mapping for the affected region.  */
 
 extern caddr_t __mmap_syscall (caddr_t addr, size_t len,
-			       int prot, int flags, int fd, off_t offset)
+			       int prot, int flags, int fd, off_t offset);
 
 
 caddr_t
