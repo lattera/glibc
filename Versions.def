@@ -22,16 +22,10 @@ libdl {
   GLIBC_2.0
   GLIBC_2.1
 }
-libhurduser {
-  GLIBC_2.0
-}
 libm {
   GLIBC_2.0
   GLIBC_2.1
   GLIBC_2.2
-}
-libmachuser {
-  GLIBC_2.0
 }
 libnsl {
   GLIBC_2.0

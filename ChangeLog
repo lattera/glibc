@@ -1,3 +1,14 @@
+2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdrlimit.c (init_rlimit): Give the RLIMIT_NOFILE soft limit
+	an initial value of 1024 instead of RLIM_INFINITY.
+
+	* Versions.def (libmachuser, libhurduser): Remove these sections,
+	since these libraries do not presently use symbol versions.
+
+	* sysdeps/mach/hurd/getdtsz.c (__getdtablesize): If the resource limit
+	is RLIM_INFINITY, return -1 instead.
+
 2000-03-24  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile (postclean): Added soversions.i.
