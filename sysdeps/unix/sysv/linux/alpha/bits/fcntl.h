@@ -49,8 +49,10 @@
 # define O_NOFOLLOW	0200000	/* Do not follow links.  */
 #endif
 
+#ifdef __USE_LARGEFILE64
 /* Not necessary, files are always with 64bit off_t.  */
-#define O_LARGEFILE	0
+# define O_LARGEFILE	0
+#endif
 
 /* For now Linux has synchronisity options for data and read operations.
    We define the symbols here but let them do the same as O_SYNC since
