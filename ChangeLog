@@ -1,5 +1,9 @@
 2000-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add
+	getrlimit@GLIBC_2.0.
+	Reported by Yoshito Kawada <KAWADA@jp.ibm.com>.
+
 	* sysdeps/unix/sysv/linux/powerpc/setrlimit64.c: Removed.
 	Reported by Kaoru Fukui <k_fukui@highway.ne.jp>.
 
