@@ -1,1 +1,1 @@
-#include <protocols/talkd.h>
+#include <inet/protocols/talkd.h>

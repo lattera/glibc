@@ -26,6 +26,8 @@
 #include "libioP.h"
 #include <stdio.h>
 
+#undef fread_unlocked
+
 _IO_size_t
 fread_unlocked (buf, size, count, fp)
      void *buf;
@@ -33,7 +35,7 @@ fread_unlocked (buf, size, count, fp)
      _IO_size_t count;
      _IO_FILE *fp;
 {
-  _IO_size_t bytes_requested = size*count;
+  _IO_size_t bytes_requested = size * count;
   _IO_size_t bytes_read;
   CHECK_FILE (fp, 0);
   if (bytes_requested == 0)

@@ -81,9 +81,9 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
    not happen we do something more optimal.  */
 
 #ifdef ELF_MACHINE_PLTREL_OVERLAP
-#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, lazy) \
+#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy) \
   do {									      \
-    struct { ElfW(Addr) start, size;  int lazy; } ranges[3];		      \
+    struct { ElfW(Addr) start, size; int lazy; } ranges[3];		      \
     int ranges_index;							      \
 									      \
     ranges[0].lazy = ranges[2].lazy = 0;				      \
@@ -96,7 +96,7 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
 									      \
-     if ((lazy)								      \
+     if ((do_lazy)							      \
 	&& (map)->l_info[DT_PLTREL]					      \
 	&& (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
       {									      \
@@ -114,9 +114,9 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 			      ranges[ranges_index].lazy);		      \
   } while (0)
 #else
-#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, lazy) \
+#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy) \
   do {									      \
-    struct { ElfW(Addr) start, size;  int lazy; } ranges[2];		      \
+    struct { ElfW(Addr) start, size; int lazy; } ranges[2];		      \
     int ranges_index;							      \
     ranges[0].lazy = 0;							      \
     ranges[0].size = ranges[1].size = 0;				      \
@@ -132,7 +132,7 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
       {									      \
 	ElfW(Addr) start = (map)->l_info[DT_JMPREL]->d_un.d_ptr;	      \
 									      \
-	if (lazy							      \
+	if ((do_lazy)							      \
 	    /* This test does not only detect whether the relocation	      \
 	       sections are in the right order, it also checks whether	      \
 	       there is a DT_REL/DT_RELA section.  */			      \
@@ -140,7 +140,7 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 	  {								      \
 	    ranges[1].start = start;					      \
 	    ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
-	    ranges[1].lazy = lazy;					      \
+	    ranges[1].lazy = (do_lazy);					      \
 	  }								      \
 	else								      \
 	  /* Combine processing the sections.  */			      \

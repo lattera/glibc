@@ -29,14 +29,14 @@ Canada, you must get @code{crypt} support from a site outside the US,
 such as @samp{ftp.ifi.uio.no}.
 @c Check this please someone:
 (Most non-US mirrors of @samp{ftp.gnu.org} will have it too.)  The file
-you need is @file{glibc-crypt-@var{VERSION}.tar.gz}.  
+you need is @file{glibc-crypt-@var{VERSION}.tar.gz}.
 
 You will need recent versions of several GNU tools: definitely GCC and
 GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 
 @menu
 * Configuring and compiling::   How to compile and test GNU libc.
-* Installation::                How to install it once you've got it compiled.
+* Running make install::        How to install it once you've got it compiled.
 * Tools for Compilation::       You'll need these first.
 * Supported Configurations::    What it runs on, what it doesn't.
 * Linux::                       Specific advice for Linux systems.
@@ -208,7 +208,7 @@ The distribution already includes the on-line formatted version of the
 manual, as Info files.  You can regenerate those with @w{@code{make
 info}}, but it shouldn't be necessary.
 
-@node Installation
+@node Running make install
 @appendixsec Installing the C Library
 @cindex installing
 

@@ -21,7 +21,7 @@
 #
 subdir	:= libio
 
-headers	:= stdio.h libio.h _G_config.h
+headers	:= stdio.h libio.h _G_config.h bits/stdio.h
 
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \

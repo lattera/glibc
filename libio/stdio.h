@@ -56,12 +56,6 @@ typedef struct _IO_FILE FILE;
 
 #include <libio.h>
 
-#ifdef __cplusplus
-# define __STDIO_INLINE inline
-#else
-# define __STDIO_INLINE extern __inline
-#endif
-
 /* The type of the second argument to `fgetpos' and `fsetpos'.  */
 #ifndef __USE_FILE_OFFSET64
 typedef _G_fpos_t fpos_t;
@@ -267,14 +261,6 @@ extern int vsprintf __P ((char *__restrict __s,
 			  __const char *__restrict __format,
 			  _G_va_list __arg));
 
-#ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE int
-vprintf (__const char *__restrict __fmt, _G_va_list __arg) __THROW
-{
-  return vfprintf (stdout, __fmt, __arg);
-}
-#endif /* Use extern inlines.  */
-
 #if defined __USE_BSD || defined __USE_ISOC9X || defined __USE_UNIX98
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf __P ((char *__restrict __s, size_t __maxlen,
@@ -352,32 +338,10 @@ extern int getchar __P ((void));
    optimization for it.  */
 #define getc(_fp) _IO_getc (_fp)
 
-#ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE int
-getchar (void) __THROW
-{
-  return _IO_getc (stdin);
-}
-#endif /* Use extern inlines.  */
-
 #if defined __USE_POSIX || defined __USE_MISC
 /* These are defined in POSIX.1:1996.  */
 extern int getc_unlocked __P ((FILE *__stream));
 extern int getchar_unlocked __P ((void));
-
-# ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE int
-getc_unlocked (FILE *__fp) __THROW
-{
-  return _IO_getc_unlocked (__fp);
-}
-
-__STDIO_INLINE int
-getchar_unlocked (void) __THROW
-{
-  return _IO_getc_unlocked (stdin);
-}
-# endif /* Use extern inlines.  */
 #endif /* Use POSIX or MISC.  */
 
 
@@ -392,45 +356,15 @@ extern int putchar __P ((int __c));
    so we always do the optimization for it.  */
 #define putc(_ch, _fp) _IO_putc (_ch, _fp)
 
-#ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE int
-putchar (int __c) __THROW
-{
-  return _IO_putc (__c, stdout);
-}
-#endif	/* Use extern inlines.  */
-
 #ifdef __USE_MISC
 /* Faster version when locking is not necessary.  */
 extern int fputc_unlocked __P ((int __c, FILE *__stream));
-
-# ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE int
-fputc_unlocked (int __c, FILE *__stream) __THROW
-{
-  return _IO_putc_unlocked (__c, __stream);
-}
-# endif /* Use extern inlines.  */
 #endif /* Use MISC.  */
 
 #if defined __USE_POSIX || defined __USE_MISC
 /* These are defined in POSIX.1:1996.  */
 extern int putc_unlocked __P ((int __c, FILE *__stream));
 extern int putchar_unlocked __P ((int __c));
-
-# ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE int
-putc_unlocked (int __c, FILE *__stream) __THROW
-{
-  return _IO_putc_unlocked (__c, __stream);
-}
-
-__STDIO_INLINE int
-putchar_unlocked (int __c) __THROW
-{
-  return _IO_putc_unlocked (__c, stdout);
-}
-# endif /* Use extern inlines.  */
 #endif /* Use POSIX or MISC.  */
 
 
@@ -472,14 +406,6 @@ extern _IO_ssize_t getdelim __P ((char **__lineptr, size_t *__n,
 /* Like `getdelim', but reads up to a newline.  */
 extern _IO_ssize_t getline __P ((char **__lineptr, size_t *__n,
 				 FILE *__stream));
-
-# ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE _IO_ssize_t
-getline (char **__lineptr, size_t *__n, FILE *__stream) __THROW
-{
-  return __getdelim (__lineptr, __n, '\n', __stream);
-}
-# endif /* Use extern inlines.  */
 #endif
 
 
@@ -603,20 +529,6 @@ extern int ferror __P ((FILE *__stream));
 extern void clearerr_unlocked __P ((FILE *__stream));
 extern int feof_unlocked __P ((FILE *__stream));
 extern int ferror_unlocked __P ((FILE *__stream));
-
-# ifdef __USE_EXTERN_INLINES
-__STDIO_INLINE int
-feof_unlocked (FILE *__stream) __THROW
-{
-  return _IO_feof_unlocked (__stream);
-}
-
-__STDIO_INLINE int
-ferror_unlocked (FILE *__stream) __THROW
-{
-  return _IO_ferror_unlocked (__stream);
-}
-# endif /* Use extern inlines.  */
 #endif
 
 
@@ -702,10 +614,13 @@ extern void funlockfile __P ((FILE *__stream));
 # include <getopt.h>
 #endif
 
-__END_DECLS
+/* If we are compiling with optimizing read this file.  It contains
+   several optizing inline functions and macros.  */
+#ifdef __USE_EXTERN_INLINES
+# include <bits/stdio.h>
+#endif
 
-/* Define helper macro.  */
-#undef __STDIO_INLINE
+__END_DECLS
 
 #endif /* <stdio.h> included.  */
 

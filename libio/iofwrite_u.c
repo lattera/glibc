@@ -26,6 +26,8 @@
 #include "libioP.h"
 #include <stdio.h>
 
+#undef fwrite_unlocked
+
 _IO_size_t
 fwrite_unlocked (buf, size, count, fp)
      const void *buf;

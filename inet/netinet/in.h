@@ -41,14 +41,20 @@ enum
     IPPROTO_PUP = 12,	   /* PUP protocol.  */
     IPPROTO_UDP = 17,	   /* User Datagram Protocol.  */
     IPPROTO_IDP = 22,	   /* XNS IDP protocol.  */
+    IPPROTO_TP = 29,	   /* SO Transport Protocol Class 4.  */
     IPPROTO_IPV6 = 41,     /* IPv6 header.  */
     IPPROTO_ROUTING = 43,  /* IPv6 routing header.  */
     IPPROTO_FRAGMENT = 44, /* IPv6 fragmentation header.  */
+    IPPROTO_RSVP = 46,	   /* Reservation Protocol.  */
+    IPPROTO_GRE = 47,	   /* General Routing Encapsulation.  */
     IPPROTO_ESP = 50,      /* encapsulating security payload.  */
     IPPROTO_AH = 51,       /* authentication header.  */
     IPPROTO_ICMPV6 = 58,   /* ICMPv6.  */
     IPPROTO_NONE = 59,     /* IPv6 no next header.  */
     IPPROTO_DSTOPTS = 60,  /* IPv6 destination options.  */
+    IPPROTO_MTP = 92,	   /* Multicast Transport Protocol.  */
+    IPPROTO_ENCAP = 98,	   /* Encapsulation Header.  */
+    IPPROTO_PIM = 103,	   /* Protocol Independent Multicast.  */
     IPPROTO_RAW = 255,	   /* Raw IP packets.  */
     IPPROTO_MAX
   };
