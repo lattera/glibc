@@ -537,6 +537,7 @@ init_iosys (void)
 
   /* First try the pciconfig_iobase syscall added to 2.2.15 and 2.3.99.  */
 
+#ifdef __NR_pciconfig_iobase
   addr = __pciconfig_iobase (IOBASE_DENSE_MEM, 0, 0);
   if (addr != -1)
     {
@@ -578,6 +579,7 @@ init_iosys (void)
 
       return 0;
     }
+#endif
 
   /* Second, collect the contents of /etc/alpha_systype or /proc/cpuinfo.  */
 
