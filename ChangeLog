@@ -1,3 +1,8 @@
+2000-05-04  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/pwdcache.c (addpwbyname): Initialize oldeuid to silence
+	GCC.
+
 2000-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/findlocale.c (_nl_find_locale): Add new parameter to
