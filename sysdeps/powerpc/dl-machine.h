@@ -57,10 +57,11 @@
 #define OPCODE_LI(rd,simm)    OPCODE_ADDI(rd,0,simm)
 #define OPCODE_SLWI(ra,rs,sh) OPCODE_RLWINM(ra,rs,sh,0,31-sh)
 
-#define PPC_DCBST(where) asm __volatile__ ("dcbst 0,%0" : : "r"(where))
-#define PPC_SYNC asm __volatile__ ("sync")
-#define PPC_ISYNC asm __volatile__ ("sync; isync")
-#define PPC_ICBI(where) asm __volatile__ ("icbi 0,%0" : : "r"(where))
+#define PPC_DCBST(where) asm volatile ("dcbst 0,%0" : : "r"(where))
+#define PPC_SYNC asm volatile ("sync")
+#define PPC_ISYNC asm volatile ("sync; isync")
+#define PPC_ICBI(where) asm volatile ("icbi 0,%0" : : "r"(where))
+#define PPC_DIE asm volatile ("tweq 0,0")
 
 /* Use this when you've modified some code, but it won't be in the
    instruction fetch queue (or when it doesn't matter if it is). */
@@ -147,9 +148,9 @@ elf_machine_load_address (void)
 /* The PLT uses Elf32_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
 
-  /* This code is used in dl-runtime.c to call the `fixup' function
-     and then redirect to the address it returns. It is called
-     from code built in the PLT by elf_machine_runtime_setup. */
+/* This code is used in dl-runtime.c to call the `fixup' function
+   and then redirect to the address it returns. It is called
+   from code built in the PLT by elf_machine_runtime_setup. */
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.section \".text\"
 	.align 2
@@ -511,11 +512,14 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  Elf32_addr *const reloc_addr)
+		  Elf32_Addr *const reloc_addr)
 {
+#ifndef RTLD_BOOTSTRAP
   const Elf32_Sym *const refsym = sym;
+#endif
   Elf32_Word loadbase, finaladdr;
   const int rinfo = ELF32_R_TYPE (reloc->r_info);
+  extern char **_dl_argv;
 
   if (rinfo == R_PPC_NONE)
     return;
@@ -598,7 +602,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       if (sym->st_size > refsym->st_size
 	  || (_dl_verbose && sym->st_size < refsym->st_size))
 	{
-	  extern char **_dl_argv;
 	  const char *strtab;
 
 	  strtab = ((void *) map->l_addr
@@ -631,11 +634,31 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  plt = (Elf32_Word *)((char *)map->l_addr
 			       + map->l_info[DT_PLTGOT]->d_un.d_val);
 	  index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
-
 	  if (index >= PLT_DOUBLE_SIZE)
 	    {
 	      /* Slots greater than or equal to 2^13 have 4 words available
 		 instead of two.  */
+	      /* FIXME: There are some possible race conditions in this code,
+		 when called from 'fixup'.
+
+		 1) Suppose that a lazy PLT entry is executing, a
+		 context switch between threads (or a signal) occurs,
+		 and the new thread or signal handler calls the same
+		 lazy PLT entry.  Then the PLT entry would be changed
+		 while it's being run, which will cause a segfault
+		 (almost always).
+
+		 2) Suppose the reverse: that a lazy PLT entry is
+		 being updated, a context switch occurs, and the new
+		 code calls the lazy PLT entry that is being updated.
+		 Then the half-fixed PLT entry will be executed, which
+		 will also almost always cause a segfault.
+
+		 These problems don't happen with the 2-word entries, because
+		 only one of the two instructions are changed when a lazy
+		 entry is retargeted at the actual PLT entry; the li
+		 instruction stays the same (we have to update it anyway,
+		 because we might not be updating a lazy PLT entry).  */
 	      reloc_addr[0] = OPCODE_LI (11, finaladdr);
 	      reloc_addr[1] = OPCODE_ADDIS (11, 11, finaladdr + 0x8000 >> 16);
 	      reloc_addr[2] = OPCODE_MTCTR (11);
@@ -648,19 +671,27 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 				 / sizeof(Elf32_Rela));
 
+	      plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
 	      reloc_addr[0] = OPCODE_LI (11, index*4);
 	      reloc_addr[1] =
 		OPCODE_B (-(4*(index*2
 			       + 1
 			       - PLT_LONGBRANCH_ENTRY_WORDS
 			       + PLT_INITIAL_ENTRY_WORDS)));
-	      plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
 	    }
 	}
       MODIFIED_CODE (reloc_addr);
     }
   else
-    assert (! "unexpected dynamic reloc type");
+    {
+#ifdef RTLD_BOOTSTRAP
+      PPC_DIE;  /* There is no point calling _dl_sysdep_error, it
+		   almost certainly hasn't been relocated properly.  */
+#else
+      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
+			": Unknown relocation type\n", NULL);
+#endif
+    }
 
   if (rinfo == R_PPC_ADDR16_LO ||
       rinfo == R_PPC_ADDR16_HI ||

@@ -23,11 +23,10 @@ void
 fegetexceptflag (fexcept_t *flagp, int excepts)
 {
   fenv_union_t u;
-  unsigned int flag;
 
   /* Get the current state.  */
   u.fenv = fegetenv_register ();
 
-  /* Return that portion that corresponds to the requested exceptions. */
-  *flagp = flag = u.l[1] & FPSCR_STICKY_BITS & FE_to_sticky (excepts);
+  /* Return (all of) it.  */
+  *flagp = u.l[1];
 }

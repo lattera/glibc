@@ -46,7 +46,7 @@ routines := htonl htons		\
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
 	    in6_addr getnameinfo if_index
 
-tests := htontest test_ifindex
+tests := htontest test_ifindex tst-ntoa
 
 # No warnings about losing BSD code.
 CFLAGS-rcmd.c = -w

@@ -536,6 +536,26 @@ Calling @code{localtime} has one other effect: it sets the variable
 Zone Functions}.
 @end deftypefun
 
+Using the @code{localtime} function is a big problem in multi-threaded
+programs.  The result is returned in a static buffer and this is used in
+all threads.  POSIX.1c introduced a varient of this function.
+
+@comment time.h
+@comment POSIX.1c
+@deftypefun {struct tm *} localtime_r (const time_t *@var{time}, struct tm *@var{resultp})
+The @code{localtime_r} function works just like the @code{localtime}
+function.  It takes a pointer to a variable containing the calendar time
+and converts it to the broken-down time format.
+
+But the result is not placed in a static buffer.  Instead it is placed
+in the object of type @code{struct tm} to which the parameter
+@var{resultp} points.
+
+If the conversion is successful the function returns a pointer to the
+object the result was written into, i.e., it returns @var{resultp}.
+@end deftypefun
+
+
 @comment time.h
 @comment ISO
 @deftypefun {struct tm *} gmtime (const time_t *@var{time})
@@ -546,6 +566,21 @@ Greenwich Mean Time (GMT)---rather than relative to the local time zone.
 Recall that calendar times are @emph{always} expressed in coordinated
 universal time.
 @end deftypefun
+
+As for the @code{localtime} function we have the problem that the result
+is placed ina static variable.  POSIX.1c also provides a replacement for
+@code{gmtime}.
+
+@comment time.h
+@comment POSIX.1c
+@deftypefun {struct tm *} gmtime_r (const time_t *@var{time}, struct tm *@var{resultp})
+This function is similar to @code{localtime_r}, except that it converts
+just like @code{gmtime} the given time as Coordinated Universal Time.
+
+If the conversion is successful the function returns a pointer to the
+object the result was written into, i.e., it returns @var{resultp}.
+@end deftypefun
+
 
 @comment time.h
 @comment ISO
@@ -602,6 +637,20 @@ string.)
 @end deftypefun
 
 @comment time.h
+@comment POSIX.1c
+@deftypefun {char *} asctime_r (const struct tm *@var{brokentime}, char *@var{buffer})
+This function is similar to @code{asctime} but instead of placing the
+result in a static buffer it writes the string in the buffer pointed to
+by the parameter @var{buffer}.  This buffer should have at least room
+for 16 bytes.
+
+If no error occurred the function returns a pointer to the string the
+result was written into, i.e., it returns @var{buffer}.  Otherwise
+return @code{NULL}.
+@end deftypefun
+
+
+@comment time.h
 @comment ISO
 @deftypefun {char *} ctime (const time_t *@var{time})
 The @code{ctime} function is similar to @code{asctime}, except that the
@@ -615,6 +664,23 @@ asctime (localtime (@var{time}))
 @code{ctime} sets the variable @code{tzname}, because @code{localtime}
 does so.  @xref{Time Zone Functions}.
 @end deftypefun
+
+@comment time.h
+@comment POSIX.1c
+@deftypefun {char *} ctime_r (const time_t *@var{time}, char *@var{buffer})
+This function is similar to @code{ctime}, only that it places the result
+in the string pointed to by @var{buffer}.  It is equivalent to (written
+using gcc extensions, @xref{Statement Exprs,,,gcc,Porting and Using gcc}.):
+
+@smallexample
+(@{ struct tm tm; asctime_r (localtime_r (time, &tm), buf); @})
+@end smallexample
+
+If no error occurred the function returns a pointer to the string the
+result was written into, i.e., it returns @var{buffer}.  Otherwise
+return @code{NULL}.
+@end deftypefun
+
 
 @comment time.h
 @comment ISO
@@ -885,7 +951,7 @@ A literal @samp{%} character.
 The @var{size} parameter can be used to specify the maximum number of
 characters to be stored in the array @var{s}, including the terminating
 null character.  If the formatted time requires more than @var{size}
-characters, @code{strftime} return zero and the content of the array
+characters, @code{strftime} returns zero and the content of the array
 @var{s} is indetermined.  Otherwise the return value indicates the
 number of characters placed in the array @var{s}, not including the
 terminating null character.
@@ -1094,6 +1160,10 @@ The @code{tzname} array is required for POSIX.1 compatibility, but in
 GNU programs it is better to use the @code{tm_zone} member of the
 broken-down time structure, since @code{tm_zone} reports the correct
 abbreviation even when it is not the latest one.
+
+Though the strings are declared as @code{char *} the user must stay away
+from modifying these strings.  Modying the strings will almost certainly
+lead to trouble.
 
 @end deftypevar
 

@@ -80,7 +80,7 @@ struct hostent *_addr2hostname_hosts (const char *, int, int);
 static const char *
 nrl_domainname (void)
 {
-  static const char *domain = NULL;
+  static char *domain = NULL;
   static int first = 1;
 
   if (first)

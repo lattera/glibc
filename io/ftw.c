@@ -101,8 +101,14 @@ static int
 object_compare (const void *p1, const void *p2)
 {
   /* We don't need a sophisticated and useful comparison.  We are only
-     interested in equality.  */
-  return memcmp (p1, p2, sizeof (struct known_object));
+     interested in equality.  However, we must be careful not to
+     accidentally compare `holes' in the structure.  */
+  const struct known_object *kp1 = p1, *kp2 = p2;
+  int cmp1;
+  cmp1 = memcmp(&kp1->dev, &kp2->dev, sizeof(kp1->dev));
+  if (cmp1 != 0)
+    return cmp1;
+  return memcmp (&kp1->ino, &kp2->ino, sizeof (kp1->ino));
 }
 
 

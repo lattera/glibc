@@ -42,7 +42,11 @@ xtmp_to_utmp (const struct xtmp *xtmp, struct utmp *utmp)
 #if _HAVE_XT_ID - 0
   strncpy (utmp->ut_id, xtmp->xt_id, sizeof xtmp->xt_id);
 #endif
+#if _HAVE_UT_TV - 0
+  utmp->ut_tv.tv_sec = xtmp->xt_time;
+#else
   utmp->ut_time = xtmp->xt_time;
+#endif
   strncpy (utmp->ut_user, xtmp->xt_user, XT_NAMESIZE);
 #if _HAVE_XT_HOST - 0
   strncpy (utmp->ut_host, xtmp->xt_host, XT_HOSTSIZE);
@@ -66,7 +70,11 @@ utmp_to_xtmp (const struct utmp *utmp, struct xtmp *xtmp)
 #if _HAVE_XT_ID - 0
   strncpy (xtmp->xt_id, utmp->ut_id, sizeof xtmp->xt_id);
 #endif
+#if _HAVE_UT_TV - 0
+  xtmp->xt_time = utmp->ut_tv.tv_sec;
+#else
   xtmp->xt_time = utmp->ut_time;
+#endif
   strncpy (xtmp->xt_user, utmp->ut_user, XT_NAMESIZE);
 #if _HAVE_XT_HOST - 0
   strncpy (xtmp->xt_host, utmp->ut_host, XT_HOSTSIZE);
@@ -79,24 +87,28 @@ utmp_to_xtmp (const struct utmp *utmp, struct xtmp *xtmp)
    function returns 1 if the information that is in both old and new
    style entries is identical.  Otherwise this function returns 0.  */
 int
-compare_entry (const struct utmp *xtmp, const struct utmp *utmp)
+compare_entry (const struct xtmp *xtmp, const struct utmp *utmp)
 {
   return
     (
 #if _HAVE_XT_TYPE - 0
-     xtmp->ut_type == utmp->ut_type
+     xtmp->xt_type == utmp->ut_type
 #endif
 #if _HAVE_XT_PID - 0
-     && xtmp->ut_pid == utmp->ut_pid
+     && xtmp->xt_pid == utmp->ut_pid
 #endif
-     && !strncmp (xtmp->ut_line, utmp->ut_line, XT_LINESIZE - 1)
+     && !strncmp (xtmp->xt_line, utmp->ut_line, XT_LINESIZE - 1)
 #if _HAVE_XT_ID - 0
-     && !strncmp (xtmp->ut_id, utmp->ut_id, sizeof utmp->ut_id)
+     && !strncmp (xtmp->xt_id, utmp->ut_id, sizeof utmp->ut_id)
 #endif
-     && xtmp->ut_time == utmp->ut_time
-     && !strncmp (xtmp->ut_user, utmp->ut_user, XT_NAMESIZE)
+#if _HAVE_UT_TV - 0
+     && xtmp->xt_time == utmp->ut_tv.tv_sec
+#else
+     && xtmp->xt_time == utmp->ut_time
+#endif
+     && !strncmp (xtmp->xt_user, utmp->ut_user, XT_NAMESIZE)
 #if _HAVE_XT_HOST - 0
-     && !strncmp (xtmp->ut_host, utmp->ut_host, XT_HOSTSIZE - 1)
+     && !strncmp (xtmp->xt_host, utmp->ut_host, XT_HOSTSIZE - 1)
 #endif
-     && xtmp->ut_addr == utmp->ut_addr);
+     && xtmp->xt_addr == utmp->ut_addr);
 }

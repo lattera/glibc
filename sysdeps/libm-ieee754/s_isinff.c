@@ -15,12 +15,8 @@ static char rcsid[] = "$NetBSD: s_isinff.c,v 1.3 1995/05/11 23:20:21 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	int __isinff(float x)
-#else
-	int __isinff(x)
-	float x;
-#endif
+int
+__isinff (float x)
 {
 	int32_t ix,t;
 	GET_FLOAT_WORD(ix,x);

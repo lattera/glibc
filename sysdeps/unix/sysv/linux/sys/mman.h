@@ -23,20 +23,12 @@
 #include <features.h>
 
 #include <bits/types.h>
-#define __need_size_t
-#include <stddef.h>
-
-#include <sys/cdefs.h>
 
 /* Get the bit values from the kernel header file.  */
-#include <linux/mman.h>
+#include <bits/mman.h>
 
-#ifndef MAP_ANON
-#define MAP_ANON	MAP_ANONYMOUS
-#endif
-#ifndef MAP_FILE
-#define MAP_FILE	0
-#endif
+/* Return value of `mmap' in case of an error.  */
+#define MAP_FAILED	((__caddr_t) -1)
 
 __BEGIN_DECLS
 /* Map addresses starting near ADDR and extending for LEN bytes.  from
@@ -44,7 +36,7 @@ __BEGIN_DECLS
    is nonzero, it is the desired mapping address.  If the MAP_FIXED bit is
    set in FLAGS, the mapping will be at ADDR exactly (which must be
    page-aligned); otherwise the system chooses a convenient nearby address.
-   The return value is the actual mapping address chosen or (caddr_t) -1
+   The return value is the actual mapping address chosen or MAP_FAILED
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
@@ -69,9 +61,11 @@ extern int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
    unpredictable before this is done.  Flags are from the MS_* set.  */
 extern int msync __P ((__caddr_t __addr, size_t __len, int __flags));
 
+#ifdef __USE_BSD
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
 extern int madvise __P ((__caddr_t __addr, size_t __len, int __advice));
+#endif
 
 /* Cause all currently mapped pages of the process to be memory resident
    until unlocked by a call to the `munlockall', until the process exits,
@@ -89,6 +83,7 @@ extern int mlock __P ((__caddr_t __addr, size_t __len));
 /* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
 extern int munlock __P ((__caddr_t __addr, size_t __len));
 
+#ifdef __USE_MISC
 /* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
    NEW_LEN.  If MAY_MOVE is MREMAP_MAYMOVE the returned address may
    differ from ADDR.  */
@@ -96,6 +91,7 @@ extern __caddr_t __mremap __P ((__caddr_t __addr, size_t __old_len,
 				size_t __new_len, int __may_move));
 extern __caddr_t mremap __P ((__caddr_t __addr, size_t __old_len,
 			      size_t __new_len, int __may_move));
+#endif
 
 __END_DECLS
 

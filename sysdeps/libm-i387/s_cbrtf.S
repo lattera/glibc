@@ -28,22 +28,25 @@
 #endif
 
         .align ALIGNARG(4)
-        ASM_TYPE_DIRECTIVE(f1,@object)
-f1:	.double 0.492659620528969547
-        ASM_SIZE_DIRECTIVE(f1)
-        ASM_TYPE_DIRECTIVE(f2,@object)
-f2:	.double 0.697570460207922770
-        ASM_SIZE_DIRECTIVE(f2)
         ASM_TYPE_DIRECTIVE(f3,@object)
 f3:	.double 0.191502161678719066
         ASM_SIZE_DIRECTIVE(f3)
+        ASM_TYPE_DIRECTIVE(f2,@object)
+f2:	.double 0.697570460207922770
+        ASM_SIZE_DIRECTIVE(f2)
+        ASM_TYPE_DIRECTIVE(f1,@object)
+f1:	.double 0.492659620528969547
+        ASM_SIZE_DIRECTIVE(f1)
 
-#define CBRT2 1.2599210498948731648
-#define SQR_CBRT2 1.5874010519681994748
+#define CBRT2		1.2599210498948731648
+#define ONE_CBRT2	0.793700525984099737355196796584
+#define SQR_CBRT2	1.5874010519681994748
+#define ONE_SQR_CBRT2	0.629960524947436582364439673883
 
 	ASM_TYPE_DIRECTIVE(factor,@object)
-factor:	.double 1.0 / SQR_CBRT2
-	.double 1.0 / CBRT2
+        .align ALIGNARG(4)
+factor:	.double ONE_SQR_CBRT2
+	.double ONE_CBRT2
 	.double 1.0
 	.double CBRT2
 	.double SQR_CBRT2
@@ -55,10 +58,10 @@ two25:	.byte 0, 0, 0, 0x4c
 
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%ebx)
-#define MOX(op,x,f) op##@GOTOFF(%ebx,x,f)
+#define MOX(op,x) op##@GOTOFF(%ebx,x,1)
 #else
 #define MO(op) op
-#define MOX(op,x,f) op(,x,f)
+#define MOX(op,x) op(x)
 #endif
 
 	.text
@@ -114,11 +117,16 @@ ENTRY(__cbrtf)
 #endif
 	fabs
 
-	/* The following code has two track:
+	/* The following code has two tracks:
 	    a) compute the normalized cbrt value
 	    b) compute xe/3 and xe%3
 	   The right track computes the value for b) and this is done
-	   in an optimized way by avoiding division.  */
+	   in an optimized way by avoiding division.
+
+	   But why two tracks at all?  Very easy: efficiency.  Some FP
+	   instruction can overlap with a certain amount of integer (and
+	   FP) instructions.  So we get (except for the imull) all
+	   instructions for free.  */
 
 	fld	%st(0)			/* xm : xm */
 	fmull	MO(f3)			/* f3*xm : xm */
@@ -142,20 +150,24 @@ ENTRY(__cbrtf)
 	fadd	%st(0)			/* 2*t2 : t2+2*xm : u : xm */
 			subl	%edx, %ecx
 	faddp	%st, %st(3)		/* t2+2*xm : u : 2*t2+xm */
+			shll	$3, %ecx
 	fmulp				/* u*(t2+2*xm) : 2*t2+xm */
 	fdivp	%st, %st(1)		/* u*(t2+2*xm)/(2*t2+xm) */
-	fmull	MOX(16+factor,%ecx,8)	/* u*(t2+2*xm)/(2*t2+xm)*FACT */
+	fmull	MOX(16+factor,%ecx)	/* u*(t2+2*xm)/(2*t2+xm)*FACT */
 	pushl	%eax
 	fildl	(%esp)			/* xe/3 : u*(t2+2*xm)/(2*t2+xm)*FACT */
 	fxch				/* u*(t2+2*xm)/(2*t2+xm)*FACT : xe/3 */
-	popl	%eax
 	fscale				/* u*(t2+2*xm)/(2*t2+xm)*FACT*2^xe/3 */
-	fstp	%st(1)
+	popl	%edx
 #ifdef PIC
+	movl	8(%esp), %eax
 	popl	%ebx
+#else
+	movl	4(%esp), %eax
 #endif
-	testl	$0x80000000, 4(%esp)
-	jz	4f
+	testl	%eax, %eax
+	fstp	%st(1)
+	jns	4f
 	fchs
 4:	ret
 

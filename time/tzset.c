@@ -33,7 +33,7 @@ extern int __use_tzfile;
 extern void __tzfile_read __P ((const char *file));
 extern void __tzfile_default __P ((const char *std, const char *dst,
 				   long int stdoff, long int dstoff));
-extern const char * __tzstring __P ((const char *string));
+extern char * __tzstring __P ((const char *string));
 extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
@@ -76,7 +76,7 @@ static tz_rule tz_rules[2];
 static int compute_change __P ((tz_rule *rule, int year));
 
 /* Header for a list of buffers containing time zone strings.  */
-struct tzstring_head 
+struct tzstring_head
 {
   struct tzstring_head *next;
   /* The buffer itself immediately follows the header.
@@ -98,7 +98,7 @@ static size_t tzstring_last_buffer_size = sizeof tzstring_list.data;
 /* Allocate a time zone string with given contents.
    The string will never be moved or deallocated.
    However, its contents may be shared with other such strings.  */
-const char *
+char *
 __tzstring (string)
      const char *string;
 {
@@ -109,7 +109,7 @@ __tzstring (string)
   /* Look through time zone string list for a duplicate of this one.  */
   for (h = &tzstring_list.head;  ;  h = h->next)
     {
-      for (p = (char *) (h + 1);  p[0] | p[1];  p++)
+      for (p = (char *) (h + 1);  p[0] | p[1];  ++p)
 	if (strcmp (p, string) == 0)
 	  return p;
       if (! h->next)
@@ -118,7 +118,7 @@ __tzstring (string)
 
   /* No duplicate was found.  Copy to the end of this buffer if there's room;
      otherwise, append a large-enough new buffer to the list and use it.  */
-  p++;
+  ++p;
   needed = strlen (string) + 2; /* Need 2 trailing '\0's after last string.  */
 
   if ((size_t) ((char *) (h + 1) + tzstring_last_buffer_size - p) < needed)
@@ -133,8 +133,7 @@ __tzstring (string)
       p = (char *) (h + 1);
     }
 
-  strncpy (p, string, needed);
-  return p;
+  return strncpy (p, string, needed);
 }
 
 static char *old_tz = NULL;
@@ -304,6 +303,18 @@ __tzset_internal (always)
 	  if (l < 2 && *tz == ':')
 	    ++tz;
 	}
+      if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
+	{
+	  /* There is no rule.  See if there is a default rule file.  */
+	  __tzfile_default (tz_rules[0].name, tz_rules[1].name,
+			    tz_rules[0].offset, tz_rules[1].offset);
+	  if (__use_tzfile)
+	    {
+	      free (old_tz);
+	      old_tz = NULL;
+	      return;
+	    }
+	}
     }
   else
     /* There is no DST.  */
@@ -311,19 +322,6 @@ __tzset_internal (always)
 
  done_names:
   free (tzbuf);
-
-  if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
-    {
-      /* There is no rule.  See if there is a default rule file.  */
-      __tzfile_default (tz_rules[0].name, tz_rules[1].name,
-			tz_rules[0].offset, tz_rules[1].offset);
-      if (__use_tzfile)
-	{
-	  free (old_tz);
-	  old_tz = NULL;
-	  return;
-	}
-    }
 
   /* Figure out the standard <-> DST rules.  */
   for (whichrule = 0; whichrule < 2; ++whichrule)

@@ -288,6 +288,7 @@ extern bool_t xdr_reference __P ((XDR * __xdrs, caddr_t * __pp, u_int __size,
 extern bool_t xdr_pointer __P ((XDR * __xdrs, char **__objpp,
 				u_int __obj_size, xdrproc_t __xdr_obj));
 extern bool_t xdr_wrapstring __P ((XDR * __xdrs, char **__cpp));
+extern u_long xdr_sizeof __P ((xdrproc_t, void *));
 
 /*
  * Common opaque bytes objects used by many rpc protocols;

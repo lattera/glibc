@@ -23,16 +23,11 @@ int
 fetestexcept (int excepts)
 {
   fenv_union_t u;
-  int flags;
 
   /* Get the current state.  */
   u.fenv = fegetenv_register ();
 
-  /* Find the bits that indicate exceptions have occurred.  */
-  flags = u.l[1] & FPSCR_STICKY_BITS;
-
-  /* Set the FE_INVALID bit if any of the FE_INVALID_* bits are set.  */
-  flags |= ((u.l[1] & FE_ALL_INVALID) != 0) << 31-24;
-
-  return flags & excepts;
+  /* The FE_INVALID bit is dealt with correctly by the hardware, so we can
+     just:  */
+  return u.l[1] & excepts;
 }

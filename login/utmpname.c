@@ -44,6 +44,7 @@ __utmpname (const char *file)
 
   /* Close the old file.  */
   (*__libc_utmp_jump_table->endutent) ();
+  __libc_utmp_jump_table = &__libc_utmp_unknown_functions;
 
   if (strcmp (file, __libc_utmp_file_name) != 0)
     {
@@ -68,7 +69,6 @@ __utmpname (const char *file)
 	}
     }
 
-  __libc_utmp_jump_table = &__libc_utmp_unknown_functions;
   result = 0;
 
 done:

@@ -11,4 +11,4 @@ __exp2f (float x)
 }
 weak_alias (__exp2f, exp2f)
 
-stub_warning (exp2)
+stub_warning (exp2f)

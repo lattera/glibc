@@ -29,9 +29,15 @@
 void
 print_entry (struct utmp *up)
 {
+#if _HAVE_UT_TV - 0
   printf ("[%d] [%05d] [%-4.4s] [%-8.8s] [%-12.12s] [%-15.15s] [%ld]\n",
 	  up->ut_type, up->ut_pid, up->ut_id, up->ut_user,
-	  up->ut_line, 4 + ctime (&up->ut_time), up->ut_tv.tv_usec);
+	  up->ut_line, 4 + ctime (&up->ut_tv.tv_sec), up->ut_tv.tv_usec);
+#else
+  printf ("[%d] [%05d] [%-4.4s] [%-8.8s] [%-12.12s] [%-15.15s]\n",
+	  up->ut_type, up->ut_pid, up->ut_id, up->ut_user,
+	  up->ut_line, 4 + ctime (&up->ut_time));
+#endif
 }
 
 int
@@ -41,13 +47,13 @@ main (int argc, char *argv[])
 
   if (argc > 1)
     utmpname (argv[1]);
-  
+
   setutent ();
 
   while ((up = getutent ()))
     print_entry (up);
 
   endutent ();
-  
+
   return EXIT_SUCCESS;
 }

@@ -52,6 +52,7 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
 #define _FPU_GETCW(cw) ( { \
   fpu_control_t tmp[2] __attribute__ ((__aligned__(8))); \
   __asm__ ("mffs 0; stfd 0,%0" : "=m" (*tmp) : : "fr0"); \
+  (cw)=tmp[1]; \
   tmp[1]; } )
 #define _FPU_SETCW(cw) { \
   fpu_control_t tmp[2] __attribute__ ((__aligned__(8))); \

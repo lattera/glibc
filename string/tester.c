@@ -107,6 +107,19 @@ main (void)
   (void) strcpy (one, "");
   equal (one, "", 7);			/* Boundary condition. */
 
+  /* A closely related function is stpcpy.  */
+  it = "stpcpy";
+  check ((stpcpy (one, "abcde") - one) == 5, 1);
+  equal (one, "abcde", 2);
+
+  check ((stpcpy (one, "x") - one) == 1, 3);
+  equal (one, "x", 4);			/* Writeover. */
+  equal (one+2, "cde", 5);		/* Wrote too much? */
+
+  check ((stpcpy (stpcpy (stpcpy (one, "a"), "b"), "c") - one) == 3, 6);
+  equal (one, "abc", 7);
+  equal (one + 4, "e", 8);
+
   /* stpncpy.  */
   it = "stpncpy";
 

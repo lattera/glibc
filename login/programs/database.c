@@ -88,7 +88,7 @@ open_database (const char *file, const char *old_file)
 	  error (0, errno, "%s", old_file);
 	  goto return_error;
 	}
-  
+
       database->old_file = strdup (old_file);
       if (database->old_file == NULL)
 	{
@@ -100,12 +100,12 @@ open_database (const char *file, const char *old_file)
   /* Initialize database.  */
   if (initialize_database (database) < 0)
     goto return_error;
-  
+
   return database;
 
 return_error:
   close_database (database);
-  
+
   return NULL;
 }
 
@@ -121,16 +121,16 @@ synchronize_database (utmp_database *database)
     {
       time_t curtime;
       time_t mtime;
-      
+
       curtime = time (NULL);
-      
+
       if (get_mtime (database->old_fd, &mtime) < 0)
 	{
 	  error (0, errno, _("%s: cannot get modification time"),
 		 database->old_file);
 	  return -1;
 	}
-      
+
       if (mtime >= database->mtime)
 	{
 	  int position = 0;
@@ -141,7 +141,7 @@ synchronize_database (utmp_database *database)
 	    {
 	      if (read_old_entry (database, position, &old_entry) < 0)
 		break;
-	      
+
 	      if (read_entry (database, position, &entry) < 0
 		  || !compare_entry (&old_entry, &entry))
 		{
@@ -157,7 +157,7 @@ synchronize_database (utmp_database *database)
 
 	  database->mtime = curtime;
 	}
-      
+
     }
 
   return 0;
@@ -175,7 +175,7 @@ close_database (utmp_database *database)
 
   if (database->old_fd >= 0)
     close (database->old_fd);
-  
+
   /* Free allocated memory.  */
   if (database->file)
     free (database->file);
@@ -200,7 +200,7 @@ read_entry (utmp_database *database, int position, struct utmp *entry)
   nbytes = read (database->fd, entry, sizeof (struct utmp));
   if (nbytes != sizeof (struct utmp))
     return -1;
-  
+
   return 0;
 }
 
@@ -221,7 +221,7 @@ write_entry (utmp_database *database, int position,
   fl.l_type = F_WRLCK;
   fl.l_whence = SEEK_SET;
   fcntl (database->fd, F_SETLKW, &fl);
-  
+
   offset = position * sizeof (struct utmp);
   if (lseek (database->fd, offset, SEEK_SET) < 0)
     goto fail;
@@ -259,7 +259,7 @@ append_entry (utmp_database *database, const struct utmp *entry)
   fl.l_type = F_WRLCK;
   fl.l_whence = SEEK_SET;
   fcntl (database->fd, F_SETLKW, &fl);
-  
+
   offset = lseek (database->fd, 0, SEEK_END);
   if (offset % sizeof (struct utmp) != 0)
     {
@@ -278,7 +278,7 @@ append_entry (utmp_database *database, const struct utmp *entry)
     }
 
   result = offset / sizeof (struct utmp);
-  
+
 fail:
   /* And unlock the file.  */
   fl.l_type = F_UNLCK;
@@ -303,7 +303,7 @@ read_old_entry (utmp_database *database, int position,
   nbytes = read (database->old_fd, &old_entry, sizeof (struct xtmp));
   if (nbytes != sizeof (struct xtmp))
     return -1;
-  
+
   xtmp_to_utmp (&old_entry, entry);
   return 0;
 }
@@ -318,7 +318,7 @@ write_old_entry (utmp_database *database, int position,
   off_t offset;
 
   utmp_to_xtmp (entry, &old_entry);
-  
+
   offset = position * sizeof (struct xtmp);
   if (lseek (database->old_fd, offset, SEEK_SET) < 0)
     return -1;
@@ -337,7 +337,7 @@ initialize_database (utmp_database *database)
 {
   struct utmp entry;
   int position = 0;
-  
+
   assert (database);
 
   /* Check if there is a file in the old format to read.  */
@@ -395,6 +395,7 @@ initialize_database (utmp_database *database)
 }
 
 
+#if _HAVE_UT_TYPE - 0
 static int
 store_state_entry (utmp_database *database, int old_position,
 		   const struct utmp *old_entry)
@@ -413,7 +414,7 @@ store_state_entry (utmp_database *database, int old_position,
       /* Read the next entry.  */
       if (read_entry (database, new_position, &new_entry) < 0)
 	break;
-      
+
       if (old_entry->ut_type == new_entry.ut_type)
 	{
 	  found = 1;
@@ -428,16 +429,23 @@ store_state_entry (utmp_database *database, int old_position,
     {
       const struct utmp *entry;
 
-      if (old_entry->ut_time > new_entry.ut_time)
+      if (
+#if _HAVE_UT_TV - 0
+	  old_entry->ut_tv.tv_sec > new_entry.ut_tv.tv_sec
+#else
+	  old_entry->ut_time > new_entry.ut_time
+#endif
+	  )
 	entry = old_entry;
       else
 	entry = &new_entry;
-      
+
       return replace_entry (database, old_position, new_position, entry);
     }
 
   return store_entry (database, old_position, old_entry);
 }
+#endif
 
 
 static int
@@ -468,11 +476,17 @@ store_process_entry (utmp_database *database, int old_position,
     {
       const struct utmp *entry;
 
-      if (old_entry->ut_time > new_entry.ut_time)
+      if (
+#if _HAVE_UT_TV - 0
+	  old_entry->ut_tv.tv_sec > new_entry.ut_tv.tv_sec
+#else
+	  old_entry->ut_time > new_entry.ut_time
+#endif
+	  )
 	entry = old_entry;
       else
 	entry = &new_entry;
-      
+
       return replace_entry (database, old_position, new_position, entry);
     }
 
@@ -485,7 +499,7 @@ replace_entry (utmp_database *database, int old_position, int new_position,
 	       const struct utmp *entry)
 {
   struct utmp tmp;
-  
+
   if (read_entry (database, old_position, &tmp) < 0
       || write_entry (database, old_position, entry) < 0
       || write_entry (database, new_position, &tmp) < 0)
@@ -518,7 +532,7 @@ static int
 get_mtime (int filedes, time_t *timer)
 {
   struct stat st;
-  
+
   if (fstat (filedes, &st) < 0)
     return -1;
 

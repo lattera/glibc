@@ -64,7 +64,7 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    pmap_prot2 pmap_rmt rpc_prot rpc_common rpc_cmsg \
 	    svc svc_auth svc_authux svc_raw svc_run svc_simple \
 	    svc_tcp svc_udp xdr xdr_array xdr_float xdr_mem \
-	    xdr_rec xdr_ref xdr_stdio publickey
+	    xdr_rec xdr_ref xdr_stdio publickey xdr_sizeof
 
 others := rpcinfo
 install-bin := rpcgen

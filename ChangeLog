@@ -1,3 +1,435 @@
+1997-08-10 18:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Define build-programs to no if not set and $(config-os)
+	is none.
+	* Makerules (+depfiles): Don't add $(others) if not build-programs.
+	* Rules (others): Don't depend on $(install-bin), $(install-rootbin)
+	and $(install-sbin) if not build-programs.
+	* Makefile (subdirs): Remove login.
+	* sysdeps/mach/hurd/Subdirs: Add login.
+	* sysdeps/unix/Subdirs: Add login.
+
+	* sysdeps/generic/sys/mman.h: Test feature macros before defining
+	non-POSIX things.  Add MAP_FAILED.
+	* sysdeps/unix/bsd/osf/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/irix4/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Rewrite to not use kernel header
+	but bits/mman.h.  Test feature macros before definitions non-POSIX
+	functions.
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/sparc64/bits/mman.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add bits/mman.h.
+	* sysdeps/unix/sysv/linux/i386/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/Dist: New file.  Likewise.
+
+	* catgets/open_catalog.c (__open_catalog): Compare result of mmap
+	with MAP_FAILED and not -1.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* elf/dl-minimal.c (malloc): Likewise.
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Likewise.
+	* locale/loadlocale.c (_nl_load_locale): Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* malloc/malloc.c (mmap_chunk): Likewise.
+	(new_heap): Likewise.
+	* string/stratcliff.c: Likewise.
+	* string/tester.c: Add tests for stpcpy.
+
+	* gmon/gmon.c (__monstartup): Use calloc instead of malloc+memset.
+
+	* gmon/sys/gmon.h: Add prototype for write_profiling.
+
+	* elf/dl-profile.c: Add decsriptions and implement reading of
+	existing data in profiling file.
+	* gmon/sys/gmon_out.h (GMON_SHOBJ_VERSION): New macro for shared
+	lib profiling data.
+
+	* sysdeps/stub/bits/libc-lock.h (__libc_once_define): Add new first
+	parameter for class.
+
+	* inet/inet_ntoa.c: Make once control variable static.
+	Correctly handle case where key cannot be retrieved.
+	* inet/Makefile (tests): Add tst-ntoa.
+	* inet/tst-ntoa.c: New file.
+
+	* manual/time.texi: Document localtime_r, gmtime_r, asctime_r, and
+	ctime_r.
+	Mention that tzname values must not be changed.
+
+	* manual/users.texi: Document UTMP/WTMP handling functions.
+	Mainly written by Mark Kettenis.
+
+	* math/libm-test.c (cbrt_test): Add test for number with aboslute
+	value < 1.0.
+
+	* nss/nss_files/files-XXX.c (internal_setent): If opening of file
+	failed with EGAIN return NSS_STATUS_TRYAGAIN.
+	* nss/nss_files/files-alias.c (internal_setent): Likewise.
+
+	* sysdeps/generic/bits/utmp.h: Pretty print.
+
+	* sysdeps/i386/i586/strcpy.S: New file.  Much faster implementation.
+	* sysdeps/i386/i586/stpcpy.S: New file.
+	* sysdeps/i386/i686/Implies: Don't fall back on i586 versions since
+	these are less efficient than i486/i386 versions.
+
+	* sysdeps/libm-i387/e_rem_pio2.c: Add empty file to prevent the
+	version from libm-ieee754 be compiled since the later is not needed.
+	* sysdeps/libm-i387/e_rem_pio2f.c: Likewise.
+	* sysdeps/libm-i387/e_rem_pio2l.c: Likewise.
+	* sysdeps/libm-i387/k_rem_pio2.c: Likewise.
+	* sysdeps/libm-i387/k_rem_pio2f.c: Likewise.
+	* sysdeps/libm-i387/k_rem_pio2l.c: Likewise.
+	* sysdeps/m68k/fpu/e_rem_pio2.c: Likewise.
+	* sysdeps/m68k/fpu/e_rem_pio2f.c: Likewise.
+	* sysdeps/m68k/fpu/e_rem_pio2l.c: Likewise.
+	* sysdeps/m68k/fpu/k_rem_pio2.c: Likewise.
+	* sysdeps/m68k/fpu/k_rem_pio2f.c: Likewise.
+	* sysdeps/m68k/fpu/k_rem_pio2l.c: Likewise.
+
+	* sysdeps/libm-i387/s_cbrt.S: Fix several bugs.
+	* sysdeps/libm-i387/s_cbrtf.S: Likewise.
+	* sysdeps/libm-i387/s_cbrtl.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/if_index.c (if_indextoname): Correct
+	little bug.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (struct msghdr): Make field
+	msg_iovlen of type int.
+
+	* time/tzfile.c: Change return type of __tzstring to char *.
+	* time/tzset.c: Likewise.  Change definition of __tzstring.
+
+	* time/tzset.c: Interpret no DST information in user provided time
+	zone specification as it is meant: no DST.
+	Patch by Paul Eggert <eggert@twinsun.com>.
+
+1997-07-20 03:01  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/elf/dl-load.c (add_name_to_object): New procedure.
+	(_dl_map_object_from_fd): Use add_name_to_object.
+	(_dl_map_object): If an object's SONAME is used to resolve a
+	dependency, add it to the list of the object's names.
+
+	* inet/getnameinfo.c: Make `domain' non-const.
+
+	* sysdeps/unix/sysv/linux/powerpc/kernel_termios.c: Clean up.
+
+	* math/test-fenv.c (feenv_nomask_test): Don't execute if
+	FE_NOMASK_ENV is not defined, or if fesetenv(FE_NOMASK_ENV)
+	sets errno to ENOSYS.
+
+	* sysdeps/powerpc/dl-machine.h: Print proper error message on
+	unknown reloc type (rather than using assert).
+
+	* sysdeps/unix/sysv/linux/powerpc/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/profil.c: Deleted.
+
+1997-07-16 12:47  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/bits/fenv.h (feraiseexcept): New optimising macro.
+	(feclearexcept): New optimising macro.
+	(FE_NOMASK_ENV): Change to procedure so it can enable exceptions.
+	(FE_ENABLED_ENV): Add.
+	(FE_NONIEEE_ENV): Add.
+	* sysdeps/powerpc/bits/fenv_const.c: Add __fe_enabled_env,
+	__fe_nonieee_env; delete __fe_nomask_env.
+	* sysdeps/powerpc/bits/fe_nomask.c: New file (stub warning until it
+	gets implemented in the kernel).
+
+	* sysdeps/powerpc/fraiseenv.c: Deal with chips that don't have
+	FE_INVALID_SOFTWARE implemented. Use macros for bit names for clarity.
+	* sysdeps/powerpc/fsetexcptflag.c: Likewise.
+
+	* io/ftw.c: Don't compare holes in structures.
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Cast the result of the
+	macros to `int', because otherwise it might be `long long' which
+	the calling code is probably not expecting.
+
+	* sysdeps/libm-ieee754/s_lround.c [NO_LONG_DOUBLE]: Fix a few bugs,
+	document the existence of some more.
+
+	* sysdeps/powerpc/s_llrint.c: New file.
+	* sysdeps/powerpc/s_lrint.c: New file.
+	* sysdeps/powerpc/s_llround.c: New file.
+	* sysdeps/powerpc/s_lround.c: New file.
+
+	* sysdeps/powerpc/s_sqrt.c: New file.
+	* sysdeps/powerpc/s_sqrtf.c: New file.
+	* sysdeps/powerpc/w_sqrt.s: New empty file.
+	* sysdeps/powerpc/w_sqrtf.s: New empty file.
+	* sysdeps/powerpc/t_sqrt.c: New file.
+	* sysdeps/powerpc/test-arithf.c: New file.
+	* sysdeps/powerpc/Makefile [subdir=math]: Add t_sqrt to support
+	routines.  Add test-arithf to test programs.
+
+	* sysdeps/powerpc/bits/mathdef.h: Add FP_ILOGB0, FP_ILOGBNAN.
+
+	* sysdeps/powerpc/strcmp.s: Simplify drastically. Now much neater,
+	and possibly faster (or possibly slower, depending on input).
+
+1997-06-08 22:55  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/fenvbits.h: Correct FE_DFL_ENV and FE_NOMASK_ENV
+	macros.
+	* sysdeps/powerpc/s_rint.c: New file.
+
+1997-05-22 08:47  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/Makefile [subdir=math]: Add q_* routines.
+	* sysdeps/powerpc/Dist: Add quad_float.h.
+	* sysdeps/powerpc/q_dtoq.c: New file.
+	* sysdeps/powerpc/q_itoq.c: New file.
+	* sysdeps/powerpc/q_lltoq.c: New file.
+	* sysdeps/powerpc/q_neg.c: New file.
+	* sysdeps/powerpc/q_qtoi.c: New file.
+	* sysdeps/powerpc/q_qtoll.c: New file.
+	* sysdeps/powerpc/q_qtos.c: New file.
+	* sysdeps/powerpc/q_qtou.c: New file.
+	* sysdeps/powerpc/q_qtoull.c: New file.
+	* sysdeps/powerpc/q_stoq.c: New file.
+	* sysdeps/powerpc/q_ulltoq.c: New file.
+	* sysdeps/powerpc/q_utoq.c: New file.
+	* sysdeps/powerpc/quad_float.h: New file.
+	* sysdeps/powerpc/test-arith.c: New file.
+
+	* sysdeps/powerpc/fpu_control.h: Fix _FPU_GETCW.
+	* sysdeps/powerpc/fegetround.c: Use mcrfs to be faster and not
+	require a stack frame.
+	* sysdeps/powerpc/bits/fenv.h: Include inline macro for fegetround.
+
+1997-05-18 05:55  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/fenv_libc.h (fegetenv_register,
+	fesetenv_register): Add 'volatile'.
+	(set_fpscr_bit, reset_fpscr_bit): New macros, FPSCR_*
+	constants to use with them.
+	* sysdeps/powerpc/s_copysign.S: New file.
+	* sysdeps/powerpc/s_copysignf.s: New file.
+	* sysdeps/powerpc/s_fabs.S: New file.
+	* sysdeps/powerpc/s_fabsf.s: New file.
+	* sysdeps/powerpc/s_isnan.c: New file.
+	* sysdeps/powerpc/s_isnanf.s: New file.
+	* sysdeps/powerpc/s_rintf.c: New file.
+
+	* sysdeps/powerpc/fenvbits.h: Make FE_INVALID the summary
+	bit in the FPSCR, not the enable bit.
+	* sysdeps/powerpc/fraiseexcpt.c: Consequent change to the above.
+	* sysdeps/powerpc/fclrexcpt.c: Correct.
+	* sysdeps/powerpc/fsetexcptflag.c: Correct.
+	* sysdeps/powerpc/ftestexcpt.c: Is now much simpler.
+	* sysdeps/powerpc/fgetexcptflg.c: Simplify.
+
+	* sysdeps/powerpc/strlen.s: Schedule better, save 3 clocks :-).
+
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Add comment
+	explaining some reentrancy issues with lazy PLT entries.
+
+1997-08-09 13:04  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/logout.c (logout): utmpname returns -1 on error.
+
+	* login/libutil.map: Remove updwtmp.
+
+	* login/getutline.c: Rename getutline to __getutline and make
+	getutline a weak alias.  Make getutxline a weak alias for
+	__getutline.
+	* login/getutid.c: Rename getutid to __getutid and make getutid a
+	weak alias.  Make getutxid a weak alias for __getutid.
+	* libc.map: Add getutxid, getutxline.
+
+	* login/utmpname.c (__utmpname): Reset backend right after backend
+	endutent call.
+	* login/utmp_file.c: Reordered functions.  Remove unecessary
+	header files.
+	(getutent_r_file, pututline_file): Do not call setutent_file.  At this
+	point the file is guaranteed to be open (assert!).
+	(getutid_r_file, getutline_r_file): Remove check for validity of file
+	descriptor.  At this point the file is guaranteed to be open.
+	(getutent_r_file, internal_getut_r, getutline_r_file, pututline_file,
+	updwtmp_file): Do not wait when unlocking file.
+	* login/utmp_daemon.c: General cleanup and a bit of reordering.
+	(getutent_r_daemon, pututline_daemon): Do not call setutent_daemon.
+	At this point the socket is guaranteed to be open (assert!).
+	(getutid_r_daemon, getutline_r_daemon): Do not check if daemon_sock is
+	valid.  At this point the socket is guaranteed to be open (assert!).
+	* login/getutline_r.c: Remove unnecessary header files.
+	(__getutline_r): Do not call backend setutent.
+	* login/getutid_r.c: Remove unnecessary header files.
+	(__getutid_r): Do not call backend setutent.
+	* login/getutent_r.c: Remove unneccesary header files.
+	(__libc_utmp_unknown_functions): Added getutid_r_unknown,
+	getutline_r_unknown.
+	(setutent_unknown): Only set file backend if setutent for the file
+	backend was successful.
+	(getutent_r_unknown, pututline_unknown): Call setutent_unknown instead
+	of __setutent.  Report failure if no backend was selected.
+	(getutid_r_unknown): New function.
+	(getutline_r_unknown): New function.
+	(__endutent): Reset backend.  This makes sure all backends are checked
+	on the next setutent call.
+
+1997-08-08 20:20  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis_cache.c: Replace dummy functions.
+
+	* libc.map: Add xdr_sizeof symbol.
+
+	* sunrpc/Makefile: Add xdr_sizeof to routines.
+	* sunrpc/rpc/xdr.h: Add xdr_sizeof prototype.
+	* sunrpc/xdr_sizeof.c: New, from tirpc 2.3.
+
+1997-08-08  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/bits/libc-lock.h (__libc_once): Define correctly.
+
+1997-08-07  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Put parens in the
+	right place.
+
+1997-08-06  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Do arithmetic on
+	PC's in long long to avoid overflow.
+
+1997-08-07  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/bits/libc-lock.h (__libc_once, __libc_once_define):
+	New macros.
+
+1997-08-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/Makefile (headers): Remove bits/nislib.h.
+
+1997-08-06 14:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/hurd/Subdirs: Add login.
+
+1997-08-06 14:23  Klaus Espenlaub  <kespenla@hydra.informatik.uni-ulm.de>
+
+	* db/hash/hash.c (init_hash): Don't use stat() if it doesn't provide
+	the preferred block size.
+
+	* login/programs/database.c (store_state_entry): Don't compile if
+	there is no ut_type field.
+	(store_state_entry, store_process_entry): Use the ut_tv field
+	for timestamps if supported.
+
+	* login/programs/utmpdump.c (print_entry): Always use ut_tv field.
+
+	* login/programs/xtmp.c: Fix numerous xtmp/utmp typos.  Use the ut_tv
+	field for timestamps if supported.
+
+	* login/programs/xtmp.h: Fix xtmp/utmp typo.
+
+	* sysdeps/posix/defs.c (stdstream): Change (PTR) to (void *).
+
+	* sysdeps/stub/connect.c (connect): Change to __connect, add alias.
+	* sysdeps/stub/send.c (send): Likewise.
+	* sysdeps/stub/s_exp2f.c: Emit correct stub_warning().
+	* sysdeps/stub/statfs.c: Move stub_warning() to the usual place.
+	* sysdeps/stub/init-first.c: Add definition of __libc_pid.
+
+1997-08-05 13:28  Philip Blundell  <pb@spring.nexus.co.uk>
+
+	* sysdeps/standalone/arm/bits/errno.h: Add EISDIR, EOPNOTSUPP;
+	tidy up formatting.
+
+	* Makefile (subdirs): Remove `login'.
+	* sysdeps/unix/Subdirs: New file; build `login' subdirectory
+	for Unix systems.
+
+1997-08-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/bits/utmpx.h: New file.
+
+	* sysdeps/mach/hurd/Dist: Add some files.
+	* sysdeps/mips/Dist: Likewise.
+	* sysdeps/mips/mips64/Dist: Likewise.
+	* sysdeps/sparc/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Likewise.
+	* sysdeps/mips/mipsel/Dist: New file.
+	* sysdeps/sparc64/elf/Dist: New file.
+	* sysdeps/unix/sysv/linux/sparc64/Dist: New file.
+
+1997-08-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add missing symbols.
+
+1997-08-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/socket.texi: Correct typos.
+
+	* manual/math.texi: Correct typos.
+
+	* manual/time.texi (Formatting Date and Time): Likewise.
+
+1997-08-04 13:06  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* gmon/gmon.c (write_gmon): New function; guts from _mcleanup.
+	(_mcleanup): Use write_gmon.
+	(write_profiling): This function can be safely called at any time
+	to write a current histogram without interfering with ongoing
+	profiling.
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Initialize NSAMPLES.
+
+1997-08-01 17:53  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): Sample buffer need
+	not be vm_deallocated; it's a stack buffer.
+	(profil_vm_deallocate): Delete prototype.
+	(#include <../mach/RPC_vm_deallocate_rpc.c>): Drop this
+	inclusion.
+	* sysdeps/mach/hurd/Makefile
+	($(common-objpfx)hurd/../mach/RPC_vm_deallocate_rpc.c): Delete
+	this rule.
+
+	* sysdeps/mach/hurd/profil.c (fetch_samples): New function, guts
+	from profile_waiter.
+	(profile_waiter): Use fetch_samples.
+	(profil): When turning off profiling, fetch the last bunch of
+	samples before disabling PC sampling.
+	(fetch_samples): Add prototype.
+
+1997-07-30 12:53  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/Makefile: Give normal rules for the mach RPC
+	source included by profil.c instead of trying to use
+	before-compile grot.
+
+1997-07-23 15:04  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/profil.c (profile_waiter): Do vm_deallocate
+	after releasing lock.  Use special RPC stubs and avoid assert,
+	thus making this function entirely independent of the threadvar
+	mechanism and of cthreads.
+	(lock): Convert to be a spin lock instead of a mutex, so that the
+	waiter thread need not use cthreads.  Use a fork prepare hook
+	instead of _hurd_fork_locks to make sure we are clean before
+	forking.
+	(fork_profil_child): Renamed from fork_profil.
+	(profil_reply_port): New variable.
+	(profil_vm_deallocate, profil_task_get_sampled_pcs): Special RPC
+	stubs made by special hacks.
+	* sysdeps/mach/hurd/Makefile (before-compile): Add the mach RPC
+	source files that profil.c needs if we are in the gmon directory.
+
+	* mach/setup-thread.c (__mach_setup_thread): Delete avoidance of a
+	cthreads bug that hasn't existed for two years.
+
 1997-08-04 15:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/localedef.c (main): Set bit in avail for those
@@ -44,7 +476,7 @@
 	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
 
-	* stdio-common/printf_fp.c (__printf_fp): Correct rouding of number
+	* stdio-common/printf_fp.c (__printf_fp): Correct rounding of numbers
 	1.0 < x < 8.0.
 	* stdio-common/tfformat.c: Add new tests for above bug.
 
@@ -192,7 +624,7 @@
 	* csu/defs.awk: Fix regexp for end and align.
 	Patch by Klaus Espenlaub <kespenla@hydra.informatik.uni-ulm.de>.
 
-	* locale/programs/localedef.c (print_escaped): New function.
+	* locale/programs/locale.c (print_escaped): New function.
 	(show_info): Use print_escaped if strings can control unprintable
 	characters.
 	Patch by Jochen Hein <jochen.hein@delphi.central.de>.
@@ -710,7 +1142,7 @@
 
 	* time/africa: Update from tzdata1997g.
 	* time/asia: Likewise.
-	* time/australia: Likewise.
+	* time/australasia: Likewise.
 	* time/europe: Likewise.
 	* time/iso3166.tab: Likewise.
 	* time/zone.tab: Likewise.
@@ -960,7 +1392,7 @@
 	* login/programs/utmpd.c:
 	(main): Change handling of errors in opening the database.
 	* login/programs/database.c:
-	(open_database, synchronize_dtatabase, initialize_database):
+	(open_database, synchronize_database, initialize_database):
 	Properly handle errors.
 	(get_mtime): Use fstat instead of stat.  All callers changed.
 
@@ -1127,7 +1559,7 @@
 	* libio/strops.c: Correctly handle _IO_write_end.
 
 	* nss/libnss_files.map: Add __nss_netgroup_parseline.
-	* nss/nss_files/files-netgroup.c (_nss_netgroup_parseline): Don't
+	* nss/nss_files/files-netgrp.c (_nss_netgroup_parseline): Don't
 	panic if setnetgrent wasn't called before, return error.
 	Patch by Thorsten Kukuk <kukuk@uni-paderborn.de>.
 
@@ -3325,7 +3757,7 @@
 
 	* libc.map: Add more symbols.
 
-	* Mwkerules (load-map-file): Currectly handle missing map file.
+	* Makerules (load-map-file): Currectly handle missing map file.
 
 1997-06-15 17:00  Philip Blundell  <Philip.Blundell@pobox.com>
 
@@ -3584,8 +4016,8 @@
 1997-06-12 12:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/__math.h (__M_SQRT2): Define here since we
-	cannot rely on M_SQRT2 being defined.  (log1p): Use __M_SQRT2 not
-	M_SQRT2.
+	cannot rely on M_SQRT2 being defined.
+	(log1p): Use __M_SQRT2 not M_SQRT2.
 	* math/math.h (_Mldbl): Define even if M_* constants are not
 	defined.
 	Reported by corsepiu@faw.uni-ulm.de.

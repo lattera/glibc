@@ -43,7 +43,7 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
-extern const char * __tzstring (const char *); /* Defined in tzset.c.  */
+extern char * __tzstring (const char *); /* Defined in tzset.c.  */
 
 static struct ttinfo *find_transition (time_t timer);
 static void compute_tzname_max (size_t);

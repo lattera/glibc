@@ -30,7 +30,7 @@
 #ifdef __GNUC__
 #if __STDC__ == 1
 
-/* In GNU or ANSI mode, gcc leaves `float' expressions as-is, I think.  */
+/* In GNU or ANSI mode, gcc leaves `float' expressions as-is.  */
 typedef float float_t;		/* `float' expressions are evaluated as
 				   `float'.  */
 typedef double double_t;	/* `double' expressions are evaluated as
@@ -70,3 +70,7 @@ typedef double double_t;
 #define INFINITY	HUGE_VAL
 
 #endif
+
+/* The values returned by `ilogb' for 0 and NaN respectively.  */
+#define FP_ILOGB0	0x80000001
+#define FP_ILOGBNAN	0x7fffffff

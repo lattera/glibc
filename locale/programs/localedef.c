@@ -279,7 +279,7 @@ cannot `stat' locale file `%s'"),
 	      localedef->categories[cat].generic
 		= mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
 
-	      if (localedef->categories[cat].generic == (void *) -1)
+	      if (localedef->categories[cat].generic == MAP_FAILED)
 		{
 		  size_t left = st.st_size;
 		  void *read_ptr;

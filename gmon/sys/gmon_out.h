@@ -33,6 +33,9 @@
 #define	GMON_MAGIC	"gmon"	/* magic cookie */
 #define GMON_VERSION	1	/* version number */
 
+/* For profiling shared object we need a new format.  */
+#define GMON_SHOBJ_VERSION	0x1ffff
+
 __BEGIN_DECLS
 
 /*

@@ -618,7 +618,13 @@ invalid.  I.e., an emulated FPU is for the libc as good as a real one.
 	  glibc 2.x?
 
 [A20] {AJ} There's only support for glibc 2.0 in gcc 2.7.2.2 or later.
-For 2.7.2.2 you should use the following patch and configure for
+
+gcc 2.7.2.2 has also a nasty bug.  It installs its own version of
+assert.h into /usr/<machine>/include that is not compatible with
+glibc.  Please remove this file - otherwise you get lots of problems
+with configure.
+
+For 2.7.2.2 you should also use the following patch and configure for
 e.g. i486-linux.
 -----------------------------------------------------------------------
 --- configure       Tue Feb 11 15:57:17 1997

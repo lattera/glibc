@@ -21,7 +21,7 @@
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 int
-send (fd, buf, n, flags)
+__send (fd, buf, n, flags)
      int fd;
      __const __ptr_t buf;
      size_t n;
@@ -30,6 +30,7 @@ send (fd, buf, n, flags)
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__send, send)
 
 
 stub_warning (send)

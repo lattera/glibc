@@ -25,5 +25,9 @@ const unsigned long long __fe_dfl_env __attribute__ ((aligned (8))) =
 0xfff8000000000000ULL;
 
 /* Floating-point environment where none of the exceptions are masked.  */
-const unsigned long long __fe_nomask_env __attribute__ ((aligned (8))) = 
+const unsigned long long __fe_enabled_env __attribute__ ((aligned (8))) = 
 0xfff80000000000f8ULL;
+
+/* Floating-point environment with the NI bit set.  */
+const unsigned long long __fe_nonieee_env __attribute__ ((aligned (8))) = 
+0xfff8000000000004ULL;

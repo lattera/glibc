@@ -18,6 +18,9 @@
 
 ifdef in-Makerules
 
+subdirs := $(filter-out sunrpc,$(subdirs)) # XXX skip broken dirs
+# See hurd/Makefile for commands that install some crucial sunrpc headers.
+
 # Look for header files in hurd/ under the top-level library source directory.
 # Look for generated header files where they get created.
 includes += -I$(..)hurd -I$(common-objpfx)hurd/
@@ -33,7 +36,6 @@ inhibit-unix-syscalls = yes
 # be compatible with some existing binaries for that system.
 inhibit-glue = yes
 
-
 ifeq (,$(filter mach hurd,$(subdir)))
 # Subdirectories other than hurd/ might use the generated Hurd headers.
 # So make sure we get a chance to run in hurd/ to make them before all else.
@@ -46,6 +48,12 @@ hurd-objpfx = $(common-objpfx)hurd/
 before-compile += $(patsubst %,$(hurd-objpfx)hurd/%.h,auth io fs process)
 $(patsubst %,$(hurd-objpfx)hurd/%.%,auth io fs process):
 	$(MAKE) -C $(..)hurd generated no_deps=t
+endif
+
+# Hurd profil.c includes this file, so give a rule to make it.
+ifeq ($(subdir),gmon)
+$(common-objpfx)hurd/../mach/RPC_task_get_sampled_pcs.c:
+	$(MAKE) -C $(..)mach generated no_deps=t
 endif
 
 
@@ -114,11 +122,6 @@ $(inst_libdir)/libc.so: $(rpcuserlibs)
 # objects directly into the shared object.
 ifeq (elf,$(subdir))
 $(objpfx)librtld.so: $(rpcuserlibs:.so=_pic.a)
-endif
-
-# We need the CThreads interface.
-ifeq (misc,$(subdir))
-sysdep_routines += cthreads
 endif
 
 

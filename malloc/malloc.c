@@ -1684,7 +1684,7 @@ static mchunkptr mmap_chunk(size) size_t size;
   size = (size + SIZE_SZ + page_mask) & ~page_mask;
 
   p = (mchunkptr)MMAP(size, PROT_READ|PROT_WRITE);
-  if(p == (mchunkptr)-1) return 0;
+  if(p == (mchunkptr) MAP_FAILED) return 0;
 
   n_mmaps++;
   if (n_mmaps > max_n_mmaps) max_n_mmaps = n_mmaps;
@@ -1812,7 +1812,7 @@ new_heap(size) size_t size;
   size = (size + page_mask) & ~page_mask;
 
   p1 = (char *)MMAP(HEAP_MAX_SIZE<<1, PROT_NONE);
-  if(p1 == (char *)-1)
+  if(p1 == MAP_FAILED)
     return 0;
   p2 = (char *)(((unsigned long)p1 + HEAP_MAX_SIZE) & ~(HEAP_MAX_SIZE-1));
   ul = p2 - p1;

@@ -21,7 +21,7 @@
 #
 subdir	:= nis
 
-headers			:= $(wildcard rpcsvc/*.[hx]) bits/nislib.h
+headers			:= $(wildcard rpcsvc/*.[hx])
 distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner \
 			nisplus-parser.h
 

@@ -18,13 +18,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <limits.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <utmp.h>
 
@@ -32,9 +30,10 @@
 
 
 /* Descriptor for the file and position.  */
-static int file_fd = INT_MIN;
+static int file_fd = -1;
 static off_t file_offset;
 
+/* Cache for the last read entry.  */
 static struct utmp last_entry;
 
 
@@ -68,14 +67,14 @@ setutent_file (void)
   if (file_fd < 0)
     {
       const char *file_name = __libc_utmp_file_name;
-      
+
       if (strcmp (__libc_utmp_file_name, _PATH_UTMP) == 0
 	  && __access (_PATH_UTMP "x", F_OK) == 0)
 	file_name = _PATH_UTMP "x";
       else if (strcmp (__libc_utmp_file_name, _PATH_WTMP) == 0
 	       && __access (_PATH_WTMP "x", F_OK) == 0)
 	file_name = _PATH_WTMP "x";
-	       
+
       file_fd = open (file_name, O_RDWR);
       if (file_fd == -1)
 	{
@@ -96,18 +95,8 @@ setutent_file (void)
   /* Make sure the entry won't match.  */
   last_entry.ut_type = -1;
 #endif
-  
+
   return 1;
-}
-
-
-static void
-endutent_file (void)
-{
-  if (file_fd >= 0)
-    close (file_fd);
-
-  file_fd = INT_MIN;
 }
 
 
@@ -117,11 +106,9 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
   ssize_t nbytes;
   struct flock fl;			/* Information struct for locking.  */
 
-  /* Open utmp file if not already done.  */
-  if (file_fd == INT_MIN)
-    setutent_file ();
+  assert (file_fd >= 0);
 
-  if (file_fd == -1 || file_offset == -1l)
+  if (file_offset == -1l)
     {
       /* Not available.  */
       *result = NULL;
@@ -131,12 +118,16 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
   /* XXX The following is not perfect.  Instead of locking the file itself
      Marek Michalkiewicz <marekm@i17linuxb.ists.pwr.wroc.pl> suggests to
      use an extra locking file.  */
+  /* XXX I think using an extra locking file does not solve the
+     problems.  Instead we should set an alarm, which causes fcntl to
+     fail, as in ../nis/lckcache.c.
+     Mark Kettenis <kettenis@phys.uva.nl>.  */
 
   /* Try to get the lock.  */
   memset (&fl, '\0', sizeof (struct flock));
   fl.l_type = F_RDLCK;
   fl.l_whence = SEEK_SET;
-  fcntl (file_fd, F_SETLKW, &fl);
+  fcntl (file_fd, F_SETLK, &fl);
 
   /* Read the next entry.  */
   nbytes = read (file_fd, &last_entry, sizeof (struct utmp));
@@ -159,62 +150,6 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
   *result = buffer;
 
   return 0;
-}
-
-
-/* For implementing this function we don't use the getutent_r function
-   because we can avoid the reposition on every new entry this way.  */
-static int
-getutline_r_file (const struct utmp *line, struct utmp *buffer,
-		  struct utmp **result)
-{
-  struct flock fl;
-
-  if (file_fd < 0 || file_offset == -1l)
-    {
-      *result = NULL;
-      return -1;
-    }
-
-  /* Try to get the lock.  */
-  memset (&fl, '\0', sizeof (struct flock));
-  fl.l_type = F_RDLCK;
-  fl.l_whence = SEEK_SET;
-  fcntl (file_fd, F_SETLKW, &fl);
-
-  while (1)
-    {
-      /* Read the next entry.  */
-      if (read (file_fd, &last_entry, sizeof (struct utmp))
-	  != sizeof (struct utmp))
-	{
-	  __set_errno (ESRCH);
-	  file_offset = -1l;
-	  *result = NULL;
-	  goto unlock_return;
-	}
-      file_offset += sizeof (struct utmp);
-
-      /* Stop if we found a user or login entry.  */
-      if (
-#if _HAVE_UT_TYPE - 0
-	  (last_entry.ut_type == USER_PROCESS
-	   || last_entry.ut_type == LOGIN_PROCESS)
-	  &&
-#endif
-	  !strncmp (line->ut_line, last_entry.ut_line, sizeof line->ut_line))
-	break;
-    }
-
-  memcpy (buffer, &last_entry, sizeof (struct utmp));
-  *result = buffer;
-
-unlock_return:
-  /* And unlock the file.  */
-  fl.l_type = F_UNLCK;
-  fcntl (file_fd, F_SETLKW, &fl);
-
-  return ((*result == NULL) ? -1 : 0);
 }
 
 
@@ -308,7 +243,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 unlock_return:
   /* And unlock the file.  */
   fl.l_type = F_UNLCK;
-  fcntl (file_fd, F_SETLKW, &fl);
+  fcntl (file_fd, F_SETLK, &fl);
 
   return result;
 }
@@ -320,7 +255,9 @@ static int
 getutid_r_file (const struct utmp *id, struct utmp *buffer,
 		struct utmp **result)
 {
-  if (file_fd < 0 || file_offset == -1l)
+  assert (file_fd >= 0);
+
+  if (file_offset == -1l)
     {
       *result = NULL;
       return -1;
@@ -339,6 +276,64 @@ getutid_r_file (const struct utmp *id, struct utmp *buffer,
 }
 
 
+/* For implementing this function we don't use the getutent_r function
+   because we can avoid the reposition on every new entry this way.  */
+static int
+getutline_r_file (const struct utmp *line, struct utmp *buffer,
+		  struct utmp **result)
+{
+  struct flock fl;
+
+  assert (file_fd >= 0);
+
+  if (file_offset == -1l)
+    {
+      *result = NULL;
+      return -1;
+    }
+
+  /* Try to get the lock.  */
+  memset (&fl, '\0', sizeof (struct flock));
+  fl.l_type = F_RDLCK;
+  fl.l_whence = SEEK_SET;
+  fcntl (file_fd, F_SETLKW, &fl);
+
+  while (1)
+    {
+      /* Read the next entry.  */
+      if (read (file_fd, &last_entry, sizeof (struct utmp))
+	  != sizeof (struct utmp))
+	{
+	  __set_errno (ESRCH);
+	  file_offset = -1l;
+	  *result = NULL;
+	  goto unlock_return;
+	}
+      file_offset += sizeof (struct utmp);
+
+      /* Stop if we found a user or login entry.  */
+      if (
+#if _HAVE_UT_TYPE - 0
+	  (last_entry.ut_type == USER_PROCESS
+	   || last_entry.ut_type == LOGIN_PROCESS)
+	  &&
+#endif
+	  !strncmp (line->ut_line, last_entry.ut_line, sizeof line->ut_line))
+	break;
+    }
+
+  memcpy (buffer, &last_entry, sizeof (struct utmp));
+  *result = buffer;
+
+unlock_return:
+  /* And unlock the file.  */
+  fl.l_type = F_UNLCK;
+  fcntl (file_fd, F_SETLK, &fl);
+
+  return ((*result == NULL) ? -1 : 0);
+}
+
+
 static struct utmp *
 pututline_file (const struct utmp *data)
 {
@@ -347,13 +342,7 @@ pututline_file (const struct utmp *data)
   struct utmp *pbuf;
   int found;
 
-  /* Open utmp file if not already done.  */
-  if (file_fd == INT_MIN)
-    setutent_file ();
-
-  if (file_fd == -1)
-    /* Something went wrong.  */
-    return NULL;
+  assert (file_fd >= 0);
 
   /* Find the correct place to insert the data.  */
   if (file_offset > 0
@@ -375,7 +364,7 @@ pututline_file (const struct utmp *data)
   memset (&fl, '\0', sizeof (struct flock));
   fl.l_type = F_WRLCK;
   fl.l_whence = SEEK_SET;
-  fcntl (file_fd, F_SETLKW, &fl);
+  fcntl (file_fd, F_SETLK, &fl);
 
   if (found < 0)
     {
@@ -418,9 +407,19 @@ pututline_file (const struct utmp *data)
  unlock_return:
    /* And unlock the file.  */
   fl.l_type = F_UNLCK;
-  fcntl (file_fd, F_SETLKW, &fl);
+  fcntl (file_fd, F_SETLK, &fl);
 
   return pbuf;
+}
+
+
+static void
+endutent_file (void)
+{
+  assert (file_fd >= 0);
+
+  close (file_fd);
+  file_fd = -1;
 }
 
 
@@ -441,7 +440,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   memset (&fl, '\0', sizeof (struct flock));
   fl.l_type = F_WRLCK;
   fl.l_whence = SEEK_SET;
-  fcntl (fd, F_SETLKW, &fl);
+  fcntl (fd, F_SETLK, &fl);
 
   /* Remember original size of log file.  */
   offset = lseek (fd, 0, SEEK_END);

@@ -18,7 +18,6 @@
 
 #ifndef _KERNEL_TERMIOS_H
 #define _KERNEL_TERMIOS_H 1
-/* The following corresponds to the values from the Linux 2.0.28 kernel.  */
 
 /* We need the definition of tcflag_t, cc_t, and speed_t.  */
 #include <bits/termios.h>
@@ -33,8 +32,8 @@ struct __kernel_termios
     tcflag_t c_lflag;		/* local mode flags */
     cc_t c_cc[__KERNEL_NCCS];	/* control characters */
     cc_t c_line;		/* line discipline */
-    int c_ispeed;               /* input speed */
-    int c_ospeed;               /* output speed */
+    speed_t c_ispeed;           /* input speed */
+    speed_t c_ospeed;           /* output speed */
   };
 
 #define _HAVE_C_ISPEED 1

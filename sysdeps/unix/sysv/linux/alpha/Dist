@@ -1,11 +1,14 @@
-alpha/ptrace.h alpha/regdef.h
-ieee_get_fp_control.S ieee_set_fp_control.S
-ioperm.c
-init-first.h
+alpha/ptrace.h
+alpha/regdef.h
+bits/mman.h
 clone.S
+ieee_get_fp_control.S
+ieee_set_fp_control.S
+init-first.h
+ioperm.c
 kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
-sys/io.h
 sys/acct.h
+sys/io.h
 sys/procfs.h

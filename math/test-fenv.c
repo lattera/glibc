@@ -228,8 +228,21 @@ fe_tests (void)
 static void
 feenv_nomask_test (const char *flag_name, int fe_exc)
 {
+#if defined FE_NOMASK_ENV
   int status;
   pid_t pid;
+  fenv_t saved;
+
+  fegetenv (&saved);
+  errno = 0;
+  fesetenv (FE_NOMASK_ENV);
+  status = errno;
+  fesetenv (&saved);
+  if (status == ENOSYS)
+    {
+      printf ("Test: not testing FE_NOMASK_ENV, it isn't implemented.\n");
+      return;
+    }
 
   printf ("Test: after fesetenv (FE_NOMASK_ENV) processes will abort\n");
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
@@ -265,6 +278,7 @@ feenv_nomask_test (const char *flag_name, int fe_exc)
 	++count_errors;
       }
   }
+#endif
 }
 
 /* Test that program doesn't abort with default environment */

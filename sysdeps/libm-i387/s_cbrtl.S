@@ -28,52 +28,69 @@
 #endif
 
         .align ALIGNARG(4)
-        ASM_TYPE_DIRECTIVE(f1,@object)
-f1:	.double 0.338058687610520237
-	ASM_SIZE_DIRECTIVE(f1)
-        ASM_TYPE_DIRECTIVE(f2,@object)
-f2:	.double 1.67595307700780102
-	ASM_SIZE_DIRECTIVE(f2)
-        ASM_TYPE_DIRECTIVE(f3,@object)
-f3:	.double -2.82414939754975962
-	ASM_SIZE_DIRECTIVE(f3)
-        ASM_TYPE_DIRECTIVE(f4,@object)
-f4:	.double 4.09559907378707839
-	ASM_SIZE_DIRECTIVE(f4)
-        ASM_TYPE_DIRECTIVE(f5,@object)
-f5:	.double -4.11151425200350531
-	ASM_SIZE_DIRECTIVE(f5)
-        ASM_TYPE_DIRECTIVE(f6,@object)
-f6:	.double 2.65298938441952296
-	ASM_SIZE_DIRECTIVE(f6)
-        ASM_TYPE_DIRECTIVE(f7,@object)
-f7:	.double -0.988553671195413709
-	ASM_SIZE_DIRECTIVE(f7)
         ASM_TYPE_DIRECTIVE(f8,@object)
-f8:	.double 0.161617097923756032
+f8:	.tfloat 0.161617097923756032
 	ASM_SIZE_DIRECTIVE(f8)
+        .align ALIGNARG(4)
+        ASM_TYPE_DIRECTIVE(f7,@object)
+f7:	.tfloat -0.988553671195413709
+	ASM_SIZE_DIRECTIVE(f7)
+        .align ALIGNARG(4)
+        ASM_TYPE_DIRECTIVE(f6,@object)
+f6:	.tfloat 2.65298938441952296
+	ASM_SIZE_DIRECTIVE(f6)
+        .align ALIGNARG(4)
+        ASM_TYPE_DIRECTIVE(f5,@object)
+f5:	.tfloat -4.11151425200350531
+	ASM_SIZE_DIRECTIVE(f5)
+        .align ALIGNARG(4)
+        ASM_TYPE_DIRECTIVE(f4,@object)
+f4:	.tfloat 4.09559907378707839
+	ASM_SIZE_DIRECTIVE(f4)
+        .align ALIGNARG(4)
+        ASM_TYPE_DIRECTIVE(f3,@object)
+f3:	.tfloat -2.82414939754975962
+	ASM_SIZE_DIRECTIVE(f3)
+        .align ALIGNARG(4)
+        ASM_TYPE_DIRECTIVE(f2,@object)
+f2:	.tfloat 1.67595307700780102
+	ASM_SIZE_DIRECTIVE(f2)
+        .align ALIGNARG(4)
+        ASM_TYPE_DIRECTIVE(f1,@object)
+f1:	.tfloat 0.338058687610520237
+	ASM_SIZE_DIRECTIVE(f1)
 
-#define CBRT2 1.2599210498948731648
-#define SQR_CBRT2 1.5874010519681994748
+#define CBRT2		1.2599210498948731648
+#define ONE_CBRT2	0.793700525984099737355196796584
+#define SQR_CBRT2	1.5874010519681994748
+#define ONE_SQR_CBRT2	0.629960524947436582364439673883
 
+	/* We make the entries in the following table all 16 bytes
+	   wide to avoid having to implement a multiplication by 10.  */
 	ASM_TYPE_DIRECTIVE(factor,@object)
-factor:	.double 1.0 / SQR_CBRT2
-	.double 1.0 / CBRT2
-	.double 1.0
-	.double CBRT2
-	.double SQR_CBRT2
+        .align ALIGNARG(4)
+factor:	.tfloat ONE_SQR_CBRT2
+	.byte 0, 0, 0, 0, 0, 0
+	.tfloat ONE_CBRT2
+	.byte 0, 0, 0, 0, 0, 0
+	.tfloat 1.0
+	.byte 0, 0, 0, 0, 0, 0
+	.tfloat CBRT2
+	.byte 0, 0, 0, 0, 0, 0
+	.tfloat SQR_CBRT2
 	ASM_SIZE_DIRECTIVE(factor)
 
         ASM_TYPE_DIRECTIVE(two64,@object)
+        .align ALIGNARG(4)
 two64:  .byte 0, 0, 0, 0, 0, 0, 0xf0, 0x43
         ASM_SIZE_DIRECTIVE(two64)
 
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%ebx)
-#define MOX(op,x,f) op##@GOTOFF(%ebx,x,f)
+#define MOX(op,x) op##@GOTOFF(%ebx,x,1)
 #else
 #define MO(op) op
-#define MOX(op,x,f) op(,x,f)
+#define MOX(op,x) op(x)
 #endif
 
 	.text
@@ -97,7 +114,7 @@ ENTRY(__cbrtl)
 #endif
 
 	cmpl	$0, %eax
-	je	2f
+	jne	2f
 
 #ifdef PIC
 	fldt	8(%esp)
@@ -106,8 +123,13 @@ ENTRY(__cbrtl)
 #endif
 	fmull	MO(two64)
 	movl	$-64, %ecx
+#ifdef PIC
+	fstpt	8(%esp)
+	movl	16(%esp), %eax
+#else
 	fstpt	4(%esp)
 	movl	12(%esp), %eax
+#endif
 	movl	%eax, %edx
 	andl	$0x7fff, %eax
 
@@ -126,31 +148,45 @@ ENTRY(__cbrtl)
 #endif
 	fabs
 
-	/* The following code has two track:
+	/* The following code has two tracks:
 	    a) compute the normalized cbrt value
 	    b) compute xe/3 and xe%3
 	   The right track computes the value for b) and this is done
-	   in an optimized way by avoiding division.  */
+	   in an optimized way by avoiding division.
 
-	fld	%st(0)			/* xm : xm */
+	   But why two tracks at all?  Very easy: efficiency.  Some FP
+	   instruction can overlap with a certain amount of integer (and
+	   FP) instructions.  So we get (except for the imull) all
+	   instructions for free.  */
 
-	fmull	MO(f7)			/* f7*xm : xm */
+	fldt	MO(f8)			/* f8 : xm */
+	fmul	%st(1)			/* f8*xm : xm */
+
+	fldt	MO(f7)
+	faddp				/* f7+f8*xm : xm */
+	fmul	%st(1)			/* (f7+f8*xm)*xm : xm */
 			movl	$1431655766, %eax
-	faddl	MO(f6)			/* f6+f7*xm : xm */
+	fldt	MO(f6)
+	faddp				/* f6+(f7+f8*xm)*xm : xm */
 			imull	%ecx
-	fmul	%st(1)			/* (f6+f7*xm)*xm : xm */
+	fmul	%st(1)			/* (f6+(f7+f8*xm)*xm)*xm : xm */
 			movl	%ecx, %eax
-	faddl	MO(f5)			/* f5+(f6+f7*xm)*xm : xm */
+	fldt	MO(f5)
+	faddp				/* f5+(f6+(f7+f8*xm)*xm)*xm : xm */
 			sarl	$31, %eax
-	fmul	%st(1)			/* (f5+(f6+f7*xm)*xm)*xm : xm */
+	fmul	%st(1)			/* (f5+(f6+(f7+f8*xm)*xm)*xm)*xm : xm */
 			subl	%eax, %edx
-	faddl	MO(f4)			/* f4+(f5+(f6+f7*xm)*xm)*xm : xm */
-	fmul	%st(1)			/* (f4+(f5+(f6+f7*xm)*xm)*xm)*xm : xm */
-	faddl	MO(f3)			/* f3+(f4+(f5+(f6+f7*xm)*xm)*xm)*xm : xm */
-	fmul	%st(1)			/* (f3+(f4+(f5+(f6+f7*xm)*xm)*xm)*xm)*xm : xm */
-	faddl	MO(f2)			/* f2+(f3+(f4+(f5+(f6+f7*xm)*xm)*xm)*xm)*xm : xm */
-	fmul	%st(1)			/* (f2+(f3+(f4+(f5+(f6+f7*xm)*xm)*xm)*xm)*xm)*xm : xm */
-	faddl	MO(f1)			/* u:=f1+(f2+(f3+(f4+(f5+(f6+f7*xm)*xm)*xm)*xm)*xm)*xm : xm */
+	fldt	MO(f4)
+	faddp				/* f4+(f5+(f6+(f7+f8*xm)*xm)*xm)*xm : xm */
+	fmul	%st(1)			/* (f4+(f5+(f6+(f7+f8*xm)*xm)*xm)*xm)*xm : xm */
+	fldt	MO(f3)
+	faddp				/* f3+(f4+(f5+(f6+(f7+f8*xm)*xm)*xm)*xm)*xm : xm */
+	fmul	%st(1)			/* (f3+(f4+(f5+(f6+(f7+f8*xm)*xm)*xm)*xm)*xm)*xm : xm */
+	fldt	MO(f2)
+	faddp				/* f2+(f3+(f4+(f5+(f6+(f7+f8*xm)*xm)*xm)*xm)*xm)*xm : xm */
+	fmul	%st(1)			/* (f2+(f3+(f4+(f5+(f6+(f7+f8*xm)*xm)*xm)*xm)*xm)*xm)*xm : xm */
+	fldt	MO(f1)
+	faddp				/* u:=f1+(f2+(f3+(f4+(f5+(f6+(f7+f8*xm)*xm)*xm)*xm)*xm)*xm)*xm : xm */
 
 	fld	%st			/* u : u : xm */
 	fmul	%st(1)			/* u*u : u : xm */
@@ -164,19 +200,24 @@ ENTRY(__cbrtl)
 	fadd	%st(0)			/* 2*t2 : t2+2*xm : u : xm */
 			subl	%edx, %ecx
 	faddp	%st, %st(3)		/* t2+2*xm : u : 2*t2+xm */
+			shll	$4, %ecx
 	fmulp				/* u*(t2+2*xm) : 2*t2+xm */
 	fdivp	%st, %st(1)		/* u*(t2+2*xm)/(2*t2+xm) */
-	fmull	MOX(16+factor,%ecx,8)	/* u*(t2+2*xm)/(2*t2+xm)*FACT */
+	fldt	MOX(32+factor,%ecx)
+	fmulp				/* u*(t2+2*xm)/(2*t2+xm)*FACT */
 	pushl	%eax
 	fildl	(%esp)			/* xe/3 : u*(t2+2*xm)/(2*t2+xm)*FACT */
 	fxch				/* u*(t2+2*xm)/(2*t2+xm)*FACT : xe/3 */
-	popl	%eax
 	fscale				/* u*(t2+2*xm)/(2*t2+xm)*FACT*2^xe/3 */
-	fstp	%st(1)
+	popl	%edx
 #ifdef PIC
+	movl	16(%esp), %eax
 	popl	%ebx
+#else
+	movl	12(%esp), %eax
 #endif
-	testl	$0x8000, 12(%esp)
+	testl	$0x8000, %eax
+	fstp	%st(1)
 	jz	4f
 	fchs
 4:	ret

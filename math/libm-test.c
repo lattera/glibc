@@ -999,6 +999,7 @@ cbrt_test (void)
   check_isinfn ("cbrt (-inf) == -inf", FUNC(cbrt) (minus_infty));
   check_isnan ("cbrt (NaN) == NaN", FUNC(cbrt) (nan_value));
 #endif
+  check ("cbrt (-0.001) == -0.1", FUNC(cbrt) (-0.001), -0.1);
   check_eps ("cbrt (8) == 2", FUNC(cbrt) (8), 2, CHOOSE (5e-17L, 0, 0));
   check_eps ("cbrt (-27) == -3", FUNC(cbrt) (-27.0), -3.0,
 	     CHOOSE (3e-16L, 0, 0));

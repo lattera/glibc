@@ -107,27 +107,51 @@ local_strdup (const char *s)
   return (char *) memcpy (new, s, len);
 }
 
+/* Add `name' to the list of names for a particular shared object.
+   `name' is expected to have been allocated with malloc and will
+   be freed if the shared object already has this name.
+   Returns false if the object already had this name.  */
+static int
+add_name_to_object (struct link_map *l, char *name)
+{
+  struct libname_list *lnp, *lastp;
+  struct libname_list *newname;
+
+  if (name == NULL)
+  {
+    /* No more memory.  */
+    _dl_signal_error (ENOMEM, NULL, _("could not allocate name string"));
+    return 0;
+  }
+
+  lastp = NULL;
+  for (lnp = l->l_libname; lnp != NULL; lastp = lnp, lnp = lnp->next)
+    if (strcmp (name, lnp->name) == 0)
+      {
+	free (name);
+	return 0;
+      }
+
+  newname = malloc (sizeof *newname);
+  if (newname == NULL)
+  {
+    /* No more memory.  */
+    _dl_signal_error (ENOMEM, name, _("cannot allocate name record"));
+    free(name);
+    return 0;
+  }
+  /* The object should have a libname set from _dl_new_object.  */
+  assert (lastp != NULL);
+
+  newname->name = name;
+  newname->next = NULL;
+  lastp->next = newname;
+  return 1;
+}
+
 
 /* Implement cache for search path lookup.  */
-#if 0
-/* This is how generated should look like.  I'll remove this once I'm
-   sure everything works correctly.  */
-static struct r_search_path_elem rtld_search_dir1 =
-  { "/lib/", 5, unknown, 0, unknown, NULL };
-static struct r_search_path_elem rtld_search_dir2 =
-  { "/usr/lib/", 9, unknown, 0, unknown, &r ld_search_dir1 };
-
-static struct r_search_path_elem *rtld_search_dirs[] =
-{
-  &rtld_search_dir1,
-  &rtld_search_dir2,
-  NULL
-};
-
-static struct r_search_path_elem *all_dirs = &rtld_search_dir2;
-#else
-# include "rtldtbl.h"
-#endif
+#include "rtldtbl.h"
 
 static size_t max_dirnamelen;
 
@@ -423,9 +447,10 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	    l->l_next->l_prev = l->l_prev;
 	  free (l);
 	}
-      free (name);	/* XXX Can this be correct? --drepper */
       free (realname);
       _dl_signal_error (code, name, msg);
+      free (name);         /* Hmmm.  Can this leak memory?  Better
+			      than a segfault, anyway.  */
     }
 
   inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
@@ -434,7 +459,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
       caddr_t mapat = __mmap ((caddr_t) mapstart, len, prot,
 			      fixed|MAP_COPY|MAP_FILE,
 			      fd, offset);
-      if (mapat == (caddr_t) -1)
+      if (mapat == MAP_FAILED)
 	lose (errno, "failed to map segment from shared object");
       return mapat;
     }
@@ -451,7 +476,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	  mapping_size &= ~(_dl_pagesize - 1);
 	  result = __mmap (file_mapping, mapping_size, PROT_READ,
 			   MAP_COPY|MAP_FILE, fd, 0);
-	  if (result == (void *) -1)
+	  if (result == MAP_FAILED)
 	    lose (errno, "cannot map file data");
 	  file_mapping = result;
 	}
@@ -467,7 +492,6 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   for (l = _dl_loaded; l; l = l->l_next)
     if (! strcmp (realname, l->l_name))
       {
-	struct libname_list *lnp, *lastp;
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
 	__close (fd);
@@ -475,26 +499,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	/* If the name is not in the list of names for this object add
 	   it.  */
 	free (realname);
-	lastp = NULL;
-	for (lnp = l->l_libname; lnp != NULL; lastp = lnp, lnp = lnp->next)
-	  if (strcmp (name, lnp->name) == 0)
-	    {
-	      free (name);
-	      break;
-	    }
-	if (lnp == NULL)
-	  {
-	    struct libname_list *newname = malloc (sizeof *newname);
-	    if (newname == NULL)
-	      /* No more memory.  */
-	      lose (ENOMEM, "cannot allocate name record");
-	    /* The object should have a libname set.  */
-	    assert (lastp != NULL);
-
-	    newname->name = name;
-	    newname->next = NULL;
-	    lastp->next = newname;
-	  }
+	add_name_to_object (l, name);
 	++l->l_opencount;
 	return l;
       }
@@ -701,7 +706,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 		mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
 				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
 				ANONFD, 0);
-		if (mapat == (caddr_t) -1)
+		if (mapat == MAP_FAILED)
 		  lose (errno, "cannot map zero-fill pages");
 	      }
 	  }
@@ -876,6 +881,10 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
+	const char *soname = (const char *) (l->l_addr +
+					     l->l_info[DT_STRTAB]->d_un.d_ptr +
+					     l->l_info[DT_SONAME]->d_un.d_val);
+	add_name_to_object (l, local_strdup (soname));
 	++l->l_opencount;
 	return l;
       }

@@ -37,9 +37,10 @@ enum
     /* ... except for FE_INVALID, for which we use bit 31. FE_INVALID
        actually corresponds to bits 7 through 12 and 21 through 23
        in the FPSCR, but we can't use that because the current draft
-       says that it must be a power of 2.  Instead we use bit 24 which
-       is the enable bit for all the FE_INVALID exceptions.  */
-    FE_INVALID = 1 << 31-24,
+       says that it must be a power of 2.  Instead we use bit 2 which
+       is the summary bit for all the FE_INVALID exceptions, which
+       kind of makes sense.  */
+    FE_INVALID = 1 << 31-2,
 #define FE_INVALID	FE_INVALID
 
 #ifdef __USE_GNU
@@ -69,19 +70,22 @@ enum
     FE_INVALID_IMZ = 1 << 31-11,
 #define FE_INVALID_IMZ	FE_INVALID_IMZ
 
-    /* Comparison with NaN or SNaN. */
+    /* Comparison with NaN or SNaN.  */
     FE_INVALID_COMPARE = 1 << 31-12,
 #define FE_INVALID_COMPARE	FE_INVALID_COMPARE
 
-    /* Invalid operation flag for software (not set by hardware). */
+    /* Invalid operation flag for software (not set by hardware).  */
+    /* Note that some chips don't have this implemented, presumably
+       because no-one expected anyone to write software for them %-).  */
     FE_INVALID_SOFTWARE = 1 << 31-21,
 #define FE_INVALID_SOFTWARE	FE_INVALID_SOFTWARE
 
-    /* Square root of negative number (including -Inf). */
+    /* Square root of negative number (including -Inf).  */
+    /* Note that some chips don't have this implemented.  */
     FE_INVALID_SQRT = 1 << 31-22,
 #define FE_INVALID_SQRT	FE_INVALID_SQRT
 
-    /* Conversion-to-integer of a NaN or a number too large or too small. */
+    /* Conversion-to-integer of a NaN or a number too large or too small.  */
     FE_INVALID_INTEGER_CONVERSION = 1 << 31-23,
 #define FE_INVALID_INTEGER_CONVERSION	FE_INVALID_INTEGER_CONVERSION
 
@@ -122,7 +126,53 @@ extern const fenv_t __fe_dfl_env;
 #define FE_DFL_ENV	(&__fe_dfl_env)
 
 #ifdef __USE_GNU
-/* Floating-point environment where none of the exceptions are masked.  */
-extern const fenv_t __fe_nomask_env;
-# define FE_NOMASK_ENV	(&__fe_nomask_env)
+/* Floating-point environment where all exceptions are enabled.  Note that
+   this is not sufficient to give you SIGFPE.  */
+extern const fenv_t __fe_enabled_env;
+# define FE_ENABLED_ENV	(&__fe_enabled_env)
+
+/* Floating-point environment with (processor-dependent) non-IEEE floating
+   point.  */
+extern const fenv_t __fe_nonieee_env;
+# define FE_NONIEEE_ENV	(&__fe_nonieee_env)
+
+/* Floating-point environment with all exceptions enabled.  Note that
+   just evaluating this value will set the processor into 'FPU
+   exceptions imprecise recoverable' mode, which may cause a significant
+   performance penalty (but have no other visible effect).  */
+extern const fenv_t *__fe_nomask_env __P ((void));
+# define FE_NOMASK_ENV	(__fe_nomask_env ())
 #endif
+
+#ifdef __OPTIMIZE__
+/* Inline definition for fegetround.  */
+# define fegetround() \
+  (__extension__  ({ int __fegetround_result;				      \
+		     __asm__ ("mcrfs 7,7 ; mfcr %0"			      \
+			     : "=r"(__fegetround_result) : : "cr7");	      \
+		     __fegetround_result & 3; }))
+
+/* Inline definition for feraiseexcept.  */
+# define feraiseexcept(__excepts) \
+  (__extension__ ({ if (__builtin_constant_p (__excepts)		      \
+			&& ((__excepts) & -(__excepts)) == 0		      \
+			&& (__excepts) != FE_INVALID) {			      \
+		      if ((__excepts) != 0)				      \
+			__asm__ __volatile__				      \
+			  ("mtfsb1 %0"					      \
+			   : : "i"(32 - __builtin_ffs (__excepts)));	      \
+		    } else						      \
+		      (feraiseexcept) (__excepts); }))
+
+/* Inline definition for feclearexcept.  */
+# define feclearexcept(__excepts) \
+  (__extension__  ({ if (__builtin_constant_p (__excepts)		      \
+			 && ((__excepts) & -(__excepts)) == 0		      \
+			 && (__excepts) != FE_INVALID) {		      \
+		       if ((__excepts) != 0)				      \
+			 __asm__ __volatile__				      \
+			   ("mtfsb0 %0"					      \
+			    : : "i"(32 - __builtin_ffs (__excepts)));	      \
+		     } else						      \
+		       (feclearexcept) (__excepts); }))
+#endif /* __OPTIMIZE__ */

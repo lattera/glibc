@@ -24,7 +24,7 @@
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
 int
-connect (fd, addr, len)
+__connect (fd, addr, len)
      int fd;
      __CONST_SOCKADDR_ARG addr;
      size_t len;
@@ -32,6 +32,7 @@ connect (fd, addr, len)
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__connect, connect)
 
 
 stub_warning (connect)

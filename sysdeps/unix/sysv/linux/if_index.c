@@ -182,11 +182,9 @@ if_indextoname (unsigned int ifindex, char *ifname)
 #else
   struct if_nameindex *idx = if_nameindex ();
   struct if_nameindex *p;
-  char *result;
+  char *result = NULL;
 
-  if (idx == NULL)
-    result = NULL;
-  else
+  if (idx != NULL)
     {
       for (p = idx; p->if_index || p->if_name; ++p)
 	if (p->if_index == ifindex)

@@ -19,6 +19,7 @@
 
 #include <fenv_libc.h>
 
+#undef feraiseexcept
 void
 feraiseexcept (int excepts)
 {
@@ -36,9 +37,17 @@ feraiseexcept (int excepts)
   u.l[1] = (u.l[1]
 	    | excepts & FPSCR_STICKY_BITS
 	    /* Turn FE_INVALID into FE_INVALID_SOFTWARE.  */
-	    | excepts << (31 - 21) - (31 - 24) & FE_INVALID_SOFTWARE);
+	    | (excepts >> (31 - FPSCR_VX) - (31 - FPSCR_VXSOFT)
+	       & FE_INVALID_SOFTWARE));
 
   /* Store the new status word (along with the rest of the environment),
      triggering any appropriate exceptions.  */
   fesetenv_register (u.fenv);
+
+  if ((excepts & FE_INVALID)
+      /* For some reason, some PowerPC chips (the 601, in particular)
+	 don't have FE_INVALID_SOFTWARE implemented.  Detect this
+	 case and raise FE_INVALID_SNAN instead.  */
+      && !fetestexcept (FE_INVALID))
+    set_fpscr_bit (FPSCR_VXSNAN);
 }

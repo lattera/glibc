@@ -16,12 +16,8 @@ static char rcsid[] = "$NetBSD: s_isinf.c,v 1.3 1995/05/11 23:20:14 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-#ifdef __STDC__
-	int __isinf(double x)
-#else
-	int __isinf(x)
-	double x;
-#endif
+int
+__isinf (double x)
 {
 	int32_t hx,lx;
 	EXTRACT_WORDS(hx,lx,x);

@@ -26,40 +26,40 @@
 #ifdef NO_LONG_DOUBLE
 /* The `long double' is in fact the IEEE `double' type.  */
 
+/* This code does not presently work.  */
+
 long int
 __lround (long double x)
 {
   int32_t j0;
   u_int32_t i1, i0;
   long int result;
+  int sign;
 
   EXTRACT_WORDS (i0, i1, x);
   j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+  sign = (i0 & 0x80000000) != 0 ? -1 : 1;
+  i0 &= 0xfffff;
   if (j0 < 20)
     {
       if (j0 < 0)
-	result = j0 < -1 ? 0 : ((i0 & 0x80000000) ? -1 : 1);
+	result = j0 < -1 ? 0 : sign;
       else
 	{
 	  u_int32_t i = 0xfffff >> j0;
+	  i0 |= 0x100000;
 	  if (((i0 & i) | i1) == 0)
-	    result = (long int) ((i0 & 0xfffff) | 0x100000) >> j0;
+	    result = i0 >> j0;
 	  else
-	    {
-	      /* X is not integral.  */
-	      u_int32_t j = i0 + (0x80000 >> j0);
-              if (j < i0)
-		result = (long int) 0x80000 >> (20 - j0);
-	      else
-		result = (j | 0x100000) >> (20 - j0);
-	    }
+	    /* X is not integral.  */
+	    result = (i0 + (0x80000 >> j0)) >> (20 - j0);
 	}
     }
   else if (j0 >= 8 * sizeof (long int) || j0 > 51)
     {
       /* The number is too large.  It is left implementation defined
 	 what happens.  */
-      result = (long int) x;
+      return (long int) x;
     }
   else
     {
@@ -97,7 +97,7 @@ __lround (long double x)
 	}
     }
 
-  return i0 & 0x80000000 ? -result : result;
+  return sign * result;
 }
 #else
 long int

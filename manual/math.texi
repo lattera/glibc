@@ -232,7 +232,7 @@ infinite.
 @item
 Squre root if the operand is less then zero.
 @item
-Conversion of an internal floating-point number to an integer or toa
+Conversion of an internal floating-point number to an integer or to a
 decimal string when overflow, infinity, or NaN precludes a faithful
 representation in that format and this cannot otherwise be signaled.
 @item
@@ -247,7 +247,7 @@ If the exception does not cause a trap handler to be called the result
 of the operation is taken as a quiet NaN.
 
 @item Division by Zero
-This exception is raised of the devisor is zero and the dividend is a
+This exception is raised if the devisor is zero and the dividend is a
 finite nonzero number.  If no trap occurs the result is either
 @iftex
 @tex
@@ -270,8 +270,8 @@ $-\infty$
 signs of the operands.
 
 @item Overflow
-This exception is signalled whenever if the result cannot be represented
-as a finite value in the destination precision's format.  If no trap
+This exception is signalled whenever the result cannot be represented
+as a finite value in the precision format of the destination.  If no trap
 occurs the result depends on the sign of the intermediate result and the
 current rounding mode (@w{IEEE 754}, @w{section 7.3}):
 @enumerate
@@ -334,7 +334,7 @@ $\infty$.
 @end enumerate
 
 @item Underflow
-The underflow exception is created when a intermediate result is too
+The underflow exception is created when an intermediate result is too
 small for the operation or if the operations result rounded to the
 destination precision causes a loss of accuracy by approximating the
 result by denormalized numbers.
@@ -342,17 +342,17 @@ result by denormalized numbers.
 When no trap is installed for the underflow exception, underflow shall
 be signaled (via the underflow flag) only when both tininess and loss of
 accuracy have been detected.  If no trap handler is installed the
-operation continues witht he inprecise small value or zero if the
+operation continues with an inprecise small value or zero if the
 destination precision cannot hold the small exact result.
 
 @item Inexact
-This exception is signaled if the rounded result is not exact (such as
+This exception is signalled if the rounded result is not exact (such as
 computing the square root of two) or the result overflows without an
 overflow trap.
 @end table
 
 To control whether an exception causes a trap to occur all @w{IEEE 754}
-conformant floating-point implementation (either hardware or software)
+conformant floating-point implementations (either hardware or software)
 have a control word.  By setting specific bits for each exception in
 this control word the programmer can decide whether a trap is wanted or
 not.
@@ -378,42 +378,42 @@ actual implementation can be very different, depending on the underlying
 hardware or software.
 
 To address the single exception the @file{fenv.h} headers defines a
-number macros:
+number of macros:
 
 @vtable @code
 @comment fenv.h
 @comment ISO
 @item FE_INEXACT
-Represent the inexact exception iff the FPU supports this exception.
+Represents the inexact exception iff the FPU supports this exception.
 @comment fenv.h
 @comment ISO
 @item FE_DIVBYZERO
-Represent the divide by zero exception iff the FPU supports this exception.
+Represents the divide by zero exception iff the FPU supports this exception.
 @comment fenv.h
 @comment ISO
 @item FE_UNDERFLOW
-Represent the underflow exception iff the FPU supports this exception.
+Represents the underflow exception iff the FPU supports this exception.
 @comment fenv.h
 @comment ISO
 @item FE_OVERFLOW
-Represent the overflow exception iff the FPU supports this exception.
+Represents the overflow exception iff the FPU supports this exception.
 @comment fenv.h
 @comment ISO
 @item FE_INVALID
-Represent the invalid exception iff the FPU supports this exception.
+Represents the invalid exception iff the FPU supports this exception.
 @end vtable
 
 The macro @code{FE_ALL_EXCEPT} is the bitwise OR of all exception macros
 which are supported by the FP implementation.
 
-Each of the supported exception flag can either be set or unset.  The
+Each of the supported exception flags can either be set or unset.  The
 @w{ISO C 9X} standard defines functions to set, unset and test the
 status of the flags.
 
 @comment fenv.h
 @comment ISO
 @deftypefun void feclearexcept (int @var{excepts})
-This functions clears all of the supported exception flags denoted by
+This function clears all of the supported exception flags denoted by
 @var{excepts} in the status word.
 @end deftypefun
 
@@ -430,7 +430,7 @@ exception flags indicated by the parameter @var{excepts}.
 @end deftypefun
 
 @noindent
-To restore the previously saved values one can use this functions:
+To restore the previously saved values one can use this function:
 
 @comment fenv.h
 @comment ISO
@@ -486,7 +486,7 @@ control word for the exceptions and the rounding mode can be safed.
 
 The file @file{fenv.h} defines the type @code{fenv_t}.  The layout of a
 variable of this type is implementation defined but the variable is able
-to contain the complete status informations.  To fill a variable of this
+to contain the complete status information.  To fill a variable of this
 type one can use this function:
 
 @comment fenv.h
@@ -497,7 +497,7 @@ Store the current floating-point environment in the object pointed to by
 @end deftypefun
 
 @noindent
-Another possibility which is useful is several situations is
+Another possibility which is useful in several situations is
 
 @comment fenv.h
 @comment ISO
@@ -505,7 +505,7 @@ Another possibility which is useful is several situations is
 Store the current floating-point environment in the object pointed to by
 @var{envp}.  Afterwards, all exception flags are cleared and if
 available a mode is installed which continues on all exception and does
-not cause a trap to occur.  In ths case a nonzero value is returned.
+not cause a trap to occur.  In this case a nonzero value is returned.
 
 If the floating-point implementation does not support such a non-stop
 mode, the return value is zero.
@@ -605,14 +605,14 @@ $-\infty$.
 Round toward zero.
 @end vtable
 
-At any time one of the four rounding modes above is selected.  To get
+At any time one of the above four rounding modes is selected.  To get
 information about the currently selected mode one can use this function:
 
 @comment fenv.h
 @comment ISO
 @deftypefun int fegetround (void)
 Return the currently selected rounding mode, represented by one of the
-values of the defined rouding mode macros.
+values of the defined rounding mode macros.
 @end deftypefun
 
 @noindent
@@ -625,18 +625,18 @@ Change the currently selected rounding mode to the mode described by the
 parameter @var{round}.  If @var{round} does not correspond to one of the
 supported rounding modes nothing is changed.
 
-The function return a nonzero value iff the requested rounding mode can
+The function returns a nonzero value iff the requested rounding mode can
 be established.  Otherwise zero is returned.
 @end deftypefun
 
-Changing the rounding mode can be necessary for various reasons.  But
+Changing the rounding mode might be necessary for various reasons.  But
 changing the mode only to round a given number normally is no good idea.
 The standard defines a set of functions which can be used to round an
 argument according to some rules and for all of the rounding modes there
 is a corresponding function.
 
 If a large set of number has to be rounded it might be good to change
-the rounding mode and do not use the function the library provides.  So
+the rounding mode and to not use the function the library provides.  So
 the perhaps necessary switching of the rounding mode in the library
 function can be avoided.  But since not all rounding modes are
 guaranteed to exist on any platform this possible implementation cannot
@@ -684,7 +684,7 @@ The value is the reziprocal of the square root of the value of the number pi.
 
 ALl values are defined as @code{long double} values unless the compiler
 does not support this type or @code{__STDC__} is not defined (both is
-unlikey).  Historically the numbers were @code{double} values and some
+unlikely).  Historically the numbers were @code{double} values and some
 old code still relies on this so you might want to add explizit casts if
 the extra precision of the @code{long double} value is not needed.  One
 critical case are functions with a variable number of arguments, such as
@@ -705,7 +705,7 @@ this value is not added to @file{math.h}.  Every program should use
 @section Floating-Point Comparison Functions
 @cindex unordered comparison
 
-The @w{IEEE 754} standards defines s'a set of functions which allows to
+The @w{IEEE 754} standards defines a set of functions which allows to
 compare even those numbers which normally would cause an exception to be
 raised since they are unordered.  E.g., the expression
 
@@ -774,7 +774,7 @@ All the macros are defined in a way to ensure that both arguments are
 evaluated exactly once and so they can be used exactly like the builtin
 operators.
 
-On several platform these macros are mapped on very efficient functions
+On several platform these macros are mapped to very efficient functions
 the processor understands.  But on machines missing these functions, the
 macros above might be rather slow.  So it is best to use the builtin
 operators unless it is necessary to use unordered comparisons.

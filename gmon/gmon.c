@@ -126,13 +126,12 @@ __monstartup (lowpc, highpc)
     p->tolimit = MAXARCS;
   p->tossize = p->tolimit * sizeof(struct tostruct);
 
-  cp = malloc (p->kcountsize + p->fromssize + p->tossize);
+  cp = calloc (p->kcountsize + p->fromssize + p->tossize, 1);
   if (! cp)
     {
       ERR(_("monstartup: out of memory\n"));
       return;
     }
-  memset (cp, '\0', p->kcountsize + p->fromssize + p->tossize);
   p->tos = (struct tostruct *)cp;
   cp += p->tossize;
   p->kcount = (u_short *)cp;
@@ -296,13 +295,12 @@ write_bb_counts (fd)
 }
 
 
-void
-_mcleanup ()
+static void
+write_gmon (void)
 {
     struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
     int fd;
 
-    __moncontrol (0);
     fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
     if (fd < 0)
       {
@@ -328,8 +326,29 @@ _mcleanup ()
     /* write basic-block execution counts: */
     write_bb_counts (fd);
 
+    __close (fd);
+}
+
+
+void
+__write_profiling (void)
+{
+  int save = _gmonparam.state;
+  _gmonparam.state = GMON_PROF_OFF;
+  if (save == GMON_PROF_ON)
+    write_gmon ();
+  _gmonparam.state = save;
+}
+weak_alias (__write_profiling, write_profiling)
+
+
+void
+_mcleanup (void)
+{
+    __moncontrol (0);
+
+    write_gmon ();
+
     /* free the memory. */
     free (_gmonparam.tos);
-
-    __close (fd);
 }

@@ -1,3 +1,4 @@
 errnos.awk err_hurd.sub
 libc-ldscript
 libc_p-ldscript
+cthreads.c

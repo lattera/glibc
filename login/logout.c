@@ -30,7 +30,7 @@ logout (const char *line)
   int result = 0;
 
   /* Tell that we want to use the UTMP file.  */
-  if (utmpname (_PATH_UTMP) == 0)
+  if (utmpname (_PATH_UTMP) == -1)
     return 0;
 
   /* Open UTMP file.  */

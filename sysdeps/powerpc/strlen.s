@@ -61,8 +61,8 @@
  # Some notes on register usage: Under the SVR4 ABI, we can use registers
  # 0 and 3 through 12 (so long as we don't call any procedures) without
  # saving them. We can also use registers 14 through 31 if we save them.
- # We can't use r1 (it's the stack pointer), nor r2 or r13 because the user
- # program may expect them to be hold their usual value if we get sent
+ # We can't use r1 (it's the stack pointer), r2 nor r13 because the user
+ # program may expect them to hold their usual value if we get sent
  # a signal. Integer parameters are passed in r3 through r10.
  # We can use condition registers cr0, cr1, cr5, cr6, and cr7 without saving
  # them, the others we must save.
@@ -80,14 +80,11 @@ strlen:
  # r9-12 are temporaries. r0 is used as a temporary and for discarded
  # results.
 	clrrwi %r4,%r3,2
-	lis   %r6,0xfeff
 	lis   %r7,0x7f7f
-	rlwinm %r10,%r3,0,29,29
-	lwz   %r8,0(%r4)
-	addi  %r7,%r7,0x7f7f
 	rlwinm %r5,%r3,3,27,28
-	cmpwi %cr1,%r10,0
+	lwz   %r8,0(%r4)
 	li    %r9,-1
+	addi  %r7,%r7,0x7f7f
  # That's the setup done, now do the first pair of words.
  # We make an exception and use method (2) on the first two words, to reduce
  # overhead.
@@ -97,12 +94,14 @@ strlen:
 	add   %r0,%r0,%r7
 	nor   %r0,%r10,%r0
 	and.  %r8,%r0,%r9
+	mtcrf 0x01,%r3
 	bne   done0
- # Handle second word of pair. Put addi between branches to avoid hurting
- # branch prediction.
+	lis   %r6,0xfeff
 	addi  %r6,%r6,-0x101
+ # Are we now aligned to a doubleword boundary?
+	bt    29,loop
 
-	bne   %cr1,loop
+ # Handle second word of pair.
 	lwzu  %r8,4(%r4)
 	and   %r0,%r7,%r8
 	or    %r10,%r7,%r8

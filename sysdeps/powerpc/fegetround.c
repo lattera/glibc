@@ -19,13 +19,11 @@
 
 #include <fenv_libc.h>
 
+#undef fegetround
 int
 fegetround (void)
 {
-  fenv_union_t u;
-
-  u.fenv = fegetenv_register ();
-
-  /* The rounding mode is bits 30 and 31 of the FPSCR.  */
-  return u.l[1] & 3;
+  int result;
+  asm ("mcrfs 7,7 ; mfcr %0" : "=r"(result) : : "cr7"); \
+  return result & 3;
 }

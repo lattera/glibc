@@ -50,29 +50,129 @@
 
    This approach is very different from the normal profiling.  We have
    to use the profiling data in exactly the way they are expected to
-   be written to disk.  */
+   be written to disk.  But the normal format used by gprof is not usable
+   to do this.  It is optimized for size.  It writes the tags as single
+   bytes but this means that the following 32/64 bit values are
+   unaligned.
+
+   Therefore we use a new format.  This will look like this
+
+					0  1  2  3	<- byte is 32 bit word
+	0000				g  m  o  n
+	0004				*version*	<- GMON_SHOBJ_VERSION
+	0008				00 00 00 00
+	000c				00 00 00 00
+	0010				00 00 00 00
+
+	0014				*tag*		<- GMON_TAG_TIME_HIST
+	0018				?? ?? ?? ??
+					?? ?? ?? ??	<- 32/64 bit LowPC
+	0018+A				?? ?? ?? ??
+					?? ?? ?? ??	<- 32/64 bit HighPC
+	0018+2*A			*histsize*
+	001c+2*A			*profrate*
+	0020+2*A			s  e  c  o
+	0024+2*A			n  d  s  \0
+	0028+2*A			\0 \0 \0 \0
+	002c+2*A			\0 \0 \0
+	002f+2*A			s
+
+	0030+2*A			?? ?? ?? ??	<- Count data
+	...				...
+	0030+2*A+K			?? ?? ?? ??
+
+	0030+2*A+K			*tag*		<- GMON_TAG_CG_ARC
+	0034+2*A+K			*lastused*
+	0038+2*A+K			?? ?? ?? ??
+					?? ?? ?? ??	<- FromPC#1
+	0038+3*A+K			?? ?? ?? ??
+					?? ?? ?? ??	<- ToPC#1
+	0038+4*A+K			?? ?? ?? ??	<- Count#1
+	...				...		   ...
+	0038+(2*(CN-1)+2)*A+(CN-1)*4+K	?? ?? ?? ??
+					?? ?? ?? ??	<- FromPC#CGN
+	0038+(2*(CN-1)+3)*A+(CN-1)*4+K	?? ?? ?? ??
+					?? ?? ?? ??	<- ToPC#CGN
+	0038+(2*CN+2)*A+(CN-1)*4+K	?? ?? ?? ??	<- Count#CGN
+
+   We put (for now? no basic block information in the file since this would
+   introduce rase conditions among all the processes who want to write them.
+
+   `K' is the number of count entries which is computed as
+
+ 		textsize / HISTFRACTION
+
+   `CG' in the above table is the number of call graph arcs.  Normally,
+   the table is sparse and the profiling code writes out only the those
+   entries which are really used in the program run.  But since we must
+   not extend this table (the profiling file) we'll keep them all here.
+   So CN can be executed in advance as
+
+		MINARCS <= textsize*(ARCDENSITY/100) <= MAXARCS
+
+   Now the remaining question is: how to build the data structures we can
+   work with from this data.  We need the from set and must associate the
+   froms with all the associated tos.  We will do this by constructing this
+   data structures at the program start.  To do this we'll simply visit all
+   entries in the call graph table and add it to the appropriate list.  */
 
 extern char *_strerror_internal __P ((int, char *buf, size_t));
 
 extern int __profile_frequency __P ((void));
-
-
-static struct gmonparam param;
 
 /* We define a special type to address the elements of the arc table.
    This is basically the `gmon_cg_arc_record' format but it includes
    the room for the tag and it uses real types.  */
 struct here_cg_arc_record
   {
-    char tag;
-    uintptr_t from_pc __attribute__ ((packed));
-    uintptr_t self_pc __attribute__ ((packed));
-    uint32_t count __attribute__ ((packed));
-  };
+    uintptr_t from_pc;
+    uintptr_t self_pc;
+    uint32_t count;
+  } __attribute__ ((packed));
 
 static struct here_cg_arc_record *data;
 
+/* This is the number of entry which have been incorporated in the toset.  */
+static uint32_t narcs;
+/* This is a pointer to the object representing the number of entries
+   currently in the mmaped file.  At no point of time this has to be the
+   same as NARCS.  If it is equal all entries from the file are in our
+   lists.  */
+static uint32_t *narcsp;
 
+/* Description of the currently profiled object.  */
+static long int state;
+
+static volatile uint16_t *kcount;
+static size_t kcountsize;
+
+struct here_tostruct
+  {
+    struct here_cg_arc_record volatile *here;
+    uint16_t link;
+  };
+
+static uint16_t *froms;
+static size_t fromssize;
+
+static struct here_tostruct *tos;
+static size_t tossize;
+static size_t tolimit;
+static size_t toidx;
+
+static uintptr_t lowpc;
+static uintptr_t highpc;
+static size_t textsize;
+static unsigned int hashfraction;
+static unsigned int log_hashfraction;
+
+/* This is the information about the mmaped memory.  */
+static struct gmon_hdr *addr;
+static off_t expected_size;
+
+
+/* Set up profiling data to profile object desribed by MAP.  The output
+   file is found (or created) in OUTPUT_DIR.  */
 void
 _dl_start_profile (struct link_map *map, const char *output_dir)
 {
@@ -82,11 +182,10 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   const ElfW(Phdr) *ph;
   ElfW(Addr) mapstart = ~((ElfW(Addr)) 0);
   ElfW(Addr) mapend = 0;
-  off_t expected_size;
   struct gmon_hdr gmon_hdr;
   struct gmon_hist_hdr hist_hdr;
-  struct gmon_hdr *addr;
   char *hist;
+  size_t idx;
 
   /* Compute the size of the sections which contain program code.  */
   for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
@@ -104,40 +203,41 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
   /* Now we can compute the size of the profiling data.  This is done
      with the same formulars as in `monstartup' (see gmon.c).  */
-  param.state = GMON_PROF_OFF;
-  param.lowpc = mapstart + map->l_addr;
-  param.highpc = mapend + map->l_addr;
-  param.textsize = mapend - mapstart;
-  param.kcountsize = param.textsize / HISTFRACTION;
-  param.hashfraction = HASHFRACTION;
-  param.log_hashfraction = -1;
+  state = GMON_PROF_OFF;
+  lowpc = ROUNDDOWN (mapstart + map->l_addr,
+		     HISTFRACTION * sizeof(HISTCOUNTER));
+  highpc = ROUNDUP (mapend + map->l_addr,
+		    HISTFRACTION * sizeof(HISTCOUNTER));
+  textsize = highpc - lowpc;
+  kcountsize = textsize / HISTFRACTION;
+  hashfraction = HASHFRACTION;
   if ((HASHFRACTION & (HASHFRACTION - 1)) == 0)
     /* If HASHFRACTION is a power of two, mcount can use shifting
        instead of integer division.  Precompute shift amount.  */
-    param.log_hashfraction = ffs (param.hashfraction
-				  * sizeof (*param.froms)) - 1;
-  param.fromssize = param.textsize / HASHFRACTION;
-  param.tolimit = param.textsize * ARCDENSITY / 100;
-  if (param.tolimit < MINARCS)
-    param.tolimit = MINARCS;
-  if (param.tolimit > MAXARCS)
-    param.tolimit = MAXARCS;
-  param.tossize = param.tolimit * sizeof (struct tostruct);
+    log_hashfraction = __builtin_ffs (hashfraction * sizeof (*froms)) - 1;
+  else
+    log_hashfraction = -1;
+  fromssize = textsize / HASHFRACTION;
+  tolimit = textsize * ARCDENSITY / 100;
+  if (tolimit < MINARCS)
+    tolimit = MINARCS;
+  if (tolimit > MAXARCS)
+    tolimit = MAXARCS;
+  tossize = tolimit * sizeof (struct here_tostruct);
 
   expected_size = (sizeof (struct gmon_hdr)
-		   + 1 + sizeof (struct gmon_hist_hdr)
-		   + ((1 + sizeof (struct gmon_cg_arc_record))
-		      * (param.fromssize / sizeof (*param.froms))));
+		   + 4 + sizeof (struct gmon_hist_hdr) + kcountsize
+		   + 4 + 4 + tossize * sizeof (struct here_cg_arc_record));
 
   /* Create the gmon_hdr we expect or write.  */
   memset (&gmon_hdr, '\0', sizeof (struct gmon_hdr));
   memcpy (&gmon_hdr.cookie[0], GMON_MAGIC, sizeof (gmon_hdr.cookie));
-  *(int32_t *) gmon_hdr.version = GMON_VERSION;
+  *(int32_t *) gmon_hdr.version = GMON_SHOBJ_VERSION;
 
   /* Create the hist_hdr we expect or write.  */
   *(char **) hist_hdr.low_pc = (char *) mapstart;
   *(char **) hist_hdr.high_pc = (char *) mapend;
-  *(int32_t *) hist_hdr.hist_size = param.kcountsize / sizeof (HISTCOUNTER);
+  *(int32_t *) hist_hdr.hist_size = kcountsize / sizeof (HISTCOUNTER);
   *(int32_t *) hist_hdr.prof_rate = __profile_frequency ();
   strncpy (hist_hdr.dimen, "seconds", sizeof (hist_hdr.dimen));
   hist_hdr.dimen_abbrev = 's';
@@ -193,15 +293,19 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
     {
       __close (fd);
     wrong_format:
+
+      if (addr != NULL)
+	__munmap ((void *) addr, expected_size);
+
       _dl_sysdep_error (filename,
 			": file is no correct profile data file for `",
 			_dl_profile, "'\n", NULL);
       return;
     }
 
-  addr = (void *) __mmap (NULL, expected_size, PROT_READ|PROT_WRITE,
-			  MAP_SHARED|MAP_FILE, fd, 0);
-  if (addr == (void *) -1)
+  addr = (struct gmon_hdr *) __mmap (NULL, expected_size, PROT_READ|PROT_WRITE,
+				     MAP_SHARED|MAP_FILE, fd, 0);
+  if (addr == (struct gmon_hdr *) MAP_FAILED)
     {
       char buf[400];
       int errnum = errno;
@@ -217,54 +321,97 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
   /* Pointer to data after the header.  */
   hist = (char *) (addr + 1);
+  kcount = (uint16_t *) ((char *) hist + sizeof (uint32_t)
+			 + sizeof (struct gmon_hist_hdr));
 
   /* Compute pointer to array of the arc information.  */
-  data = (struct here_cg_arc_record *) (hist + 1
-					+ sizeof (struct gmon_hist_hdr));
+  data = (struct here_cg_arc_record *) ((char *) kcount + kcountsize
+					+ 2 * sizeof (uint32_t));
+  narcsp = (uint32_t *) (hist + sizeof (uint32_t)
+			 + sizeof (struct gmon_hist_hdr) + sizeof (uint32_t));
 
   if (st.st_size == 0)
     {
       /* Create the signature.  */
-      size_t cnt;
-
       memcpy (addr, &gmon_hdr, sizeof (struct gmon_hdr));
 
-      *hist = GMON_TAG_TIME_HIST;
-      memcpy (hist + 1, &hist_hdr, sizeof (struct gmon_hist_hdr));
+      *(uint32_t *) hist = GMON_TAG_TIME_HIST;
+      memcpy (hist + sizeof (uint32_t), &hist_hdr,
+	      sizeof (struct gmon_hist_hdr));
 
-      for (cnt = 0; cnt < param.fromssize / sizeof (*param.froms); ++cnt)
-	data[cnt].tag = GMON_TAG_CG_ARC;
+      *(uint32_t *) (hist + sizeof (uint32_t) + sizeof (struct gmon_hist_hdr)
+		     + kcountsize) = GMON_TAG_CG_ARC;
     }
   else
     {
       /* Test the signature in the file.  */
       if (memcmp (addr, &gmon_hdr, sizeof (struct gmon_hdr)) != 0
-	  || *hist != GMON_TAG_TIME_HIST
-	  || memcmp (hist + 1, &hist_hdr, sizeof (struct gmon_hist_hdr)) != 0)
+	  || *(uint32_t *) hist != GMON_TAG_TIME_HIST
+	  || memcmp (hist + sizeof (uint32_t), &hist_hdr,
+		     sizeof (struct gmon_hist_hdr)) != 0
+	  || (*(uint32_t *) (hist + sizeof (uint32_t)
+			    + sizeof (struct gmon_hist_hdr) + kcountsize)
+	      != GMON_TAG_CG_ARC))
 	goto wrong_format;
     }
 
+  /* Allocate memory for the froms data and the pointer to the tos records.  */
+  froms = (uint16_t *) calloc (fromssize + tossize, 1);
+  if (froms == NULL)
+    {
+      __munmap ((void *) addr, expected_size);
+      _dl_sysdep_fatal ("Out of memory while initializing profiler", NULL);
+      /* NOTREACHED */
+    }
+
+  tos = (struct here_tostruct *) ((char *) froms + fromssize);
+  toidx = 0;
+
+  /* Now we have to process all the arc count entries.  BTW: it is
+     not critical whether the *NARCSP value changes meanwhile.  Before
+     we enter a new entry in to toset we will check that everything is
+     available in TOS.  This happens in _dl_mcount.
+
+     Loading the entries in reverse order should help to get the most
+     frequently used entries at the front of the list.  */
+  for (idx = narcs = *narcsp; idx > 0; )
+    {
+      size_t from_index;
+      size_t newtoidx;
+      --idx;
+      from_index = ((data[idx].from_pc - lowpc)
+		    / (hashfraction * sizeof (*froms)));
+      newtoidx = toidx++;
+      tos[newtoidx].here = &data[idx];
+      tos[newtoidx].link = froms[from_index];
+      froms[from_index] = newtoidx;
+    }
+
   /* Turn on profiling.  */
-  param.state = GMON_PROF_ON;
+  state = GMON_PROF_ON;
 }
 
 
 void
 _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 {
-  if (param.state != GMON_PROF_ON)
+  if (state != GMON_PROF_ON)
     return;
-  param.state = GMON_PROF_BUSY;
+  state = GMON_PROF_BUSY;
 
   /* Compute relative addresses.  The shared object can be loaded at
      any address.  The value of frompc could be anything.  We cannot
      restrict it in any way, just set to a fixed value (0) in case it
      is outside the allowed range.  These calls show up as calls from
      <external> in the gprof output.  */
-  frompc -= param.lowpc;
-  if (frompc >= param.textsize)
+  frompc -= lowpc;
+  if (frompc >= textsize)
     frompc = 0;
-  selfpc -= param.lowpc;
+  selfpc -= lowpc;
+  if (selfpc >= textsize)
+    goto done;
 
-  param.state = GMON_PROF_ON;
+
+ done:
+  state = GMON_PROF_ON;
 }

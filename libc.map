@@ -18,7 +18,9 @@ GLIBC_2.0 {
 
     # functions with special/multiple interfaces
     __sigsetjmp; _setjmp; __sigaddset; __sigdelset; __sigismember;
-    __sysv_signal; __bsd_getpgrp; _longjmp;
+    __sysv_signal; __bsd_getpgrp; _longjmp; _mcount;
+    __divqu; __remqu; __divqs; __remqs; __divlu; __remlu; __divls;
+    __remls;
 
     # functions which have an additional interface since they are
     # are cancelable.
@@ -179,7 +181,8 @@ GLIBC_2.0 {
     get_kernel_syms; get_myaddress; get_nprocs; get_nprocs_conf;
     get_phys_pages; getaddrinfo; getaliasbyname; getaliasbyname_r;
     getaliasent; getaliasent_r; getc; getc_unlocked; getchar;
-    getchar_unlocked; getcwd; getdate; getdate_r; getdelim; getdirentries;
+    getchar_unlocked; getcontext;
+    getcwd; getdate; getdate_r; getdelim; getdirentries;
     getdomainname; getdtablesize; getegid; getenv; geteuid; getfsent;
     getfsfile; getfsspec; getgid; getgrent; getgrent_r; getgrgid;
     getgrgid_r; getgrnam; getgrnam_r; getgroups; gethostbyaddr;
@@ -193,6 +196,7 @@ GLIBC_2.0 {
     getprotobyname; getprotobyname_r; getprotobynumber;
     getprotobynumber_r; getprotoent; getprotoent_r; getpublickey; getpw;
     getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
+    getresgid; getresuid;
     getrlimit; getrpcbyname; getrpcbyname_r; getrpcbynumber;
     getrpcbynumber_r; getrpcent; getrpcent_r; getrpcport; getrusage; gets;
     getsecretkey; getservbyname; getservbyname_r; getservbyport;
@@ -200,14 +204,15 @@ GLIBC_2.0 {
     getsockopt; getspent; getspent_r; getspnam; getspnam_r; getsubopt;
     gettext; gettimeofday; getttyent; getttynam; getuid; getusershell;
     getutent; getutent_r; getutid; getutid_r; getutline; getutline_r;
-    getutxent; getw; getwd; glob; glob_pattern_p; globfree; gmtime;
-    gmtime_r; group_member; gsignal; gtty;
+    getutxent; getutxid; getutxline; getw; getwd; glob; glob_pattern_p;
+    globfree; gmtime; gmtime_r; group_member; gsignal; gtty;
 
     # h*
     hasmntopt; hcreate; hcreate_r; hdestroy; hdestroy_r; herror;
     host2netname; hsearch; hsearch_r; hstrerror; htonl; htons;
 
     # i*
+    ieee_get_fp_control; ieee_set_fp_control;
     if_freenameindex; if_indextoname; if_nameindex; if_nametoindex; index;
     inet6_isipv4mapped; inet_addr; inet_aton; inet_lnaof; inet_makeaddr;
     inet_netof; inet_network; inet_nsap_addr; inet_nsap_ntoa; inet_ntoa;
@@ -254,7 +259,7 @@ GLIBC_2.0 {
     msgsnd; msync; mtrace; munlock; munlockall; munmap; muntrace;
 
     # n*
-    nanosleep; netname2host; netname2user; nftw; nice; nl_langinfo;
+    nanosleep; netname2host; netname2user; nftw; nfsservctl; nice; nl_langinfo;
     nrand48; nrand48_r; ntohl; ntohs;
 
     # o*
@@ -262,7 +267,8 @@ GLIBC_2.0 {
     open_memstream; opendir; openlog;
 
     # p*
-    parse_printf_format; passwd2des; pathconf; pause; pclose; perror;
+    parse_printf_format; passwd2des; pathconf; pause; pciconfig_read;
+    pciconfig_write; pclose; perror;
     personality; pipe; pmap_getmaps; pmap_getport; pmap_rmtcall; pmap_set;
     pmap_unset; poll; popen; printf; printf_size; printf_size_info;
     profil; profil_counter; pselect; psignal;
@@ -287,7 +293,7 @@ GLIBC_2.0 {
     pututxline; putw; pvalloc;
 
     # q*
-    qecvt; qecvt_r; qfcvt; qfcvt_r; qgcvt; qsort; quotactl;
+    qecvt; qecvt_r; query_module; qfcvt; qfcvt_r; qgcvt; qsort; quotactl;
 
     # r*
     raise; rand; rand_r; random; random_r; rcmd;
@@ -310,11 +316,13 @@ GLIBC_2.0 {
 
     seed48; seed48_r; seekdir; select;
     semctl; semget; semop; send; sendmsg; sendto; setaliasent; setbuf;
-    setbuffer; setdomainname; setegid; setenv; seteuid; setfsent;
+    setbuffer; setcontext;
+    setdomainname; setegid; setenv; seteuid; setfsent;
     setfsgid; setfsuid; setgid; setgrent; setgroups; sethostent;
     sethostid; sethostname; setitimer; setjmp; setlinebuf; setlocale;
     setlogin; setlogmask; setmntent; setnetent; setnetgrent; setpgid;
-    setpgrp; setpriority; setprotoent; setpwent; setregid; setreuid;
+    setpgrp; setpriority; setprotoent; setpwent; setregid; setresgid;
+    setresuid; setreuid;
     setrlimit; setrpcent; setservent; setsid; setsockopt; setspent;
     setstate; setstate_r; settimeofday; setttyent; setuid; setusershell;
     setutent; setutxent; setvbuf; sgetspent; sgetspent_r; shmat; shmctl;
@@ -342,7 +350,7 @@ GLIBC_2.0 {
     svcudp_bufcreate; svcudp_create; svcudp_enablecache;
 
     swab; swapoff; swapon; symlink; sync;
-    syscall; sysconf; sysctl; sysinfo; syslog;
+    syscall; sysconf; sysctl; sysinfo; syslog; sysmips;
     system;
 
     # t*
@@ -389,7 +397,7 @@ GLIBC_2.0 {
     xdr_keybuf; xdr_keystatus; xdr_long; xdr_netnamestr; xdr_netobj;
     xdr_opaque; xdr_opaque_auth; xdr_pmap; xdr_pmaplist; xdr_pointer;
     xdr_reference; xdr_rejected_reply; xdr_replymsg; xdr_rmtcall_args;
-    xdr_rmtcallres; xdr_short; xdr_string; xdr_u_char; xdr_u_int;
+    xdr_rmtcallres; xdr_short; xdr_sizeof; xdr_string; xdr_u_char; xdr_u_int;
     xdr_u_long; xdr_u_short; xdr_union; xdr_unixcred; xdr_vector;
     xdr_void; xdr_wrapstring; xdrmem_create; xdrrec_create;
     xdrrec_endofrecord; xdrrec_eof; xdrrec_skiprecord; xdrstdio_create;

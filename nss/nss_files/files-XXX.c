@@ -72,7 +72,7 @@ internal_setent (int stayopen)
       stream = fopen (DATAFILE, "r");
 
       if (stream == NULL)
-	status = NSS_STATUS_UNAVAIL;
+	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
       else
 	{
 	  /* We have to make sure the file is  `closed on exec'.  */

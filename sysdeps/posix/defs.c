@@ -32,7 +32,7 @@
     {									      \
       _IOMAGIC,								      \
       NULL, NULL, NULL, NULL, 0,					      \
-      (PTR) fd,								      \
+      (void *) fd,							      \
       { readwrite, /* ... */ },						      \
       { NULL, NULL, NULL, NULL, NULL },					      \
       { NULL, NULL },							      \

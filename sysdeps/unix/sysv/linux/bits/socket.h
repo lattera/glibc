@@ -136,7 +136,7 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    size_t msg_iovlen;		/* Number of elements in the vector.  */
+    int msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
     socklen_t msg_controllen;	/* Ancillary data buffer length.  */

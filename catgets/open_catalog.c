@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -183,7 +183,7 @@ __open_catalog (__nl_catd catalog, int with_path)
   catalog->file_ptr =
     (struct catalog_obj *) __mmap (NULL, st.st_size, PROT_READ,
 				   MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
-  if (catalog->file_ptr != (struct catalog_obj *) -1)
+  if (catalog->file_ptr != (struct catalog_obj *) MAP_FAILED)
     /* Tell the world we managed to mmap the file.  */
     catalog->status = mmapped;
   else

@@ -66,7 +66,7 @@ malloc (size_t n)
       assert (n <= _dl_pagesize);
       page = __mmap (0, _dl_pagesize, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
-      assert (page != (caddr_t) -1);
+      assert (page != MAP_FAILED);
       if (page != alloc_end)
 	alloc_ptr = page;
       alloc_end = page + _dl_pagesize;

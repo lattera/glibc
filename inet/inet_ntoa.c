@@ -43,7 +43,7 @@ static void free_key_mem (void *mem);
 char *
 inet_ntoa (struct in_addr in)
 {
-  __libc_once_define (once);
+  __libc_once_define (static, once);
   char *buffer;
   unsigned char *bytes;
 
@@ -51,20 +51,22 @@ inet_ntoa (struct in_addr in)
   __libc_once (once, init);
 
   if (static_buf != NULL)
-    return static_buf;
-
-  /* We don't use the static buffer and so we have a key.  Use it to
-     get the thread-specific buffer.  */
-  buffer = __libc_getspecific (key);
-  if (buffer == NULL)
+    buffer = static_buf;
+  else
     {
-      /* No buffer allocated so far.  */
-      buffer = malloc (18);
+      /* We don't use the static buffer and so we have a key.  Use it
+	 to get the thread-specific buffer.  */
+      buffer = __libc_getspecific (key);
       if (buffer == NULL)
-	/* No more memory available.  We use the static buffer.  */
-	buffer = local_buf;
-      else
-	__libc_setspecific (key, buffer);
+	{
+	  /* No buffer allocated so far.  */
+	  buffer = malloc (18);
+	  if (buffer == NULL)
+	    /* No more memory available.  We use the static buffer.  */
+	    buffer = local_buf;
+	  else
+	    __libc_setspecific (key, buffer);
+	}
     }
 
   bytes = (unsigned char *) &in;
@@ -91,4 +93,5 @@ static void
 free_key_mem (void *mem)
 {
   free (mem);
+  __libc_setspecific (key, NULL);
 }

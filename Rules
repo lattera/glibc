@@ -38,9 +38,14 @@ export subdir := $(subdir)
 .PHONY: all
 all: objs lib others
 
+ifeq ($(build-programs),yes)
 others: $(addprefix $(objpfx),$(extra-objs) \
 			      $(install-lib) $(install-bin) \
 			      $(install-rootsbin) $(install-sbin))
+else
+others: $(addprefix $(objpfx),$(extra-objs) \
+			      $(install-lib))
+endif
 
 ifneq	"$(findstring env,$(origin headers))" ""
 headers :=
@@ -81,18 +86,31 @@ common-generated := $(common-generated) dummy.o dummy.c empty.c empty.o
 # This makes all the auxiliary and test programs.
 
 .PHONY: others tests
+ifeq ($(build-programs),yes)
 others: $(addprefix $(objpfx),$(others) $(extra-objs))
+else
+others: $(addprefix $(objpfx),$(extra-objs))
+endif
 ifeq ($(cross-compiling),yes)
 tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
 else
 tests: $(tests:%=$(objpfx)%.out)
 endif
 
+ifeq ($(build-programs),yes)
 ifneq "$(strip $(others) $(tests) $(test-srcs))" ""
 $(addprefix $(objpfx),$(others) $(tests) $(test-srcs)): %: %.o \
   $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
+endif
+else
+ifneq "$(strip $(tests) $(test-srcs))" ""
+$(addprefix $(objpfx),$(tests) $(test-srcs)): %: %.o \
+  $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link)
+endif
 endif
 
 ifneq "$(strip $(tests) $(test-srcs))" ""

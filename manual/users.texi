@@ -42,6 +42,9 @@ can use to examine these databases.
 * Who Logged In::               Getting the name of the user who logged in,
 				 or of the real user ID of the current process.
 
+* User Accounting Database::    Keeping information about users and various
+                                 actions in databases.
+
 * User Database::               Functions and data structures for
                         	 accessing the user database.
 * Group Database::              Functions and data structures for
@@ -51,7 +54,7 @@ can use to examine these databases.
 				 inquiry functions.
 @end menu
 
-@node User and Group IDs, Process Persona, Users and Groups, Users and Groups
+@node User and Group IDs
 @section User and Group IDs
 
 @cindex login name
@@ -72,7 +75,7 @@ not accessible to users who are not a member of that group.  Each group
 has a @dfn{group name} and @dfn{group ID}.  @xref{Group Database},
 for how to find information about a group ID or group name.
 
-@node Process Persona, Why Change Persona, User and Group IDs, Users and Groups
+@node Process Persona
 @section The Persona of a Process
 @cindex persona
 @cindex effective user ID
@@ -114,7 +117,7 @@ its permission to access files, see @ref{Access Permission}.
 The user ID of a process also controls permissions for sending signals
 using the @code{kill} function.  @xref{Signaling Another Process}.
 
-@node Why Change Persona, How Change Persona, Process Persona, Users and Groups
+@node Why Change Persona
 @section Why Change the Persona of a Process?
 
 The most obvious situation where it is necessary for a process to change
@@ -146,7 +149,7 @@ the game program wants to update this file, it can change its effective
 user ID to be that for @code{games}.  In effect, the program must
 adopt the persona of @code{games} so it can write the scores file.
 
-@node How Change Persona, Reading Persona, Why Change Persona, Users and Groups
+@node How Change Persona
 @section How an Application Can Change Persona
 @cindex @code{setuid} programs
 
@@ -177,7 +180,7 @@ when they are not needed, which makes for more robustness.
 
 @c !!! talk about _POSIX_SAVED_IDS
 
-@node Reading Persona, Setting User ID, How Change Persona, Users and Groups
+@node Reading Persona
 @section Reading the Persona of a Process
 
 Here are detailed descriptions of the functions for reading the user and
@@ -262,7 +265,7 @@ read_all_groups (void)
 @end smallexample
 @end deftypefun
 
-@node Setting User ID, Setting Groups, Reading Persona, Users and Groups
+@node Setting User ID
 @section Setting the User ID
 
 This section describes the functions for altering the user ID (real
@@ -325,7 +328,7 @@ have permission to change to the specified ID.
 @end table
 @end deftypefun
 
-@node Setting Groups, Enable/Disable Setuid, Setting User ID, Users and Groups
+@node Setting Groups
 @section Setting the Group IDs
 
 This section describes the functions for altering the group IDs (real
@@ -400,7 +403,7 @@ the user name @var{user}.  The group ID @var{gid} is also included.
 @c groups USER is a member of.
 @end deftypefun
 
-@node Enable/Disable Setuid, Setuid Program Example, Setting Groups, Users and Groups
+@node Enable/Disable Setuid
 @section Enabling and Disabling Setuid Access
 
 A typical setuid program does not need its special access all of the
@@ -466,7 +469,7 @@ feature with a preprocessor conditional, like this:
 #endif
 @end smallexample
 
-@node Setuid Program Example, Tips for Setuid, Enable/Disable Setuid, Users and Groups
+@node Setuid Program Example
 @section Setuid Program Example
 
 Here's an example showing how to set up a program that changes its
@@ -606,7 +609,7 @@ record_score (int score)
 @end group
 @end smallexample
 
-@node Tips for Setuid, Who Logged In, Setuid Program Example, Users and Groups
+@node Tips for Setuid
 @section Tips for Writing Setuid Programs
 
 It is easy for setuid programs to give the user access that isn't
@@ -650,7 +653,7 @@ would ordinarily have permission to access those files.  You can use the
 uses the real user and group IDs, rather than the effective IDs.
 @end itemize
 
-@node Who Logged In, User Database, Tips for Setuid, Users and Groups
+@node Who Logged In
 @section Identifying Who Logged In
 @cindex login name, determining
 @cindex user ID, determining
@@ -658,7 +661,9 @@ uses the real user and group IDs, rather than the effective IDs.
 You can use the functions listed in this section to determine the login
 name of the user who is running a process, and the name of the user who
 logged in the current session.  See also the function @code{getuid} and
-friends (@pxref{Reading Persona}).
+friends (@pxref{Reading Persona}).  How this information is collected by
+the system and how to control/add/remove information from the background
+storage is described in @ref{User Accounting Database}.
 
 The @code{getlogin} function is declared in @file{unistd.h}, while
 @code{cuserid} and @code{L_cuserid} are declared in @file{stdio.h}.
@@ -707,7 +712,610 @@ For most purposes, it is more useful to use the environment variable
 precisely because the user can set @code{LOGNAME} arbitrarily.
 @xref{Standard Environment}.
 
-@node User Database, Group Database, Who Logged In, Users and Groups
+
+@node User Accounting Database
+@section The User Accounting Database
+@cindex user accounting database
+
+Most Unix-like operating systems keep track of logged in users by
+maintaining a user accounting database.  This user accounting database
+stores for each terminal, who has logged on, at what time, the process
+ID of the user's login shell, etc., etc., but also stores information
+about the run level of the system, the time of the last system reboot,
+and possibly more.
+
+The user accounting database typically lives in @file{/etc/utmp},
+@file{/var/adm/utmp} or @file{/var/run/utmp}.  However, these files
+should @strong{never} be accessed directly.  For reading information
+from and writing information to the user accounting database, the
+functions described in this section should be used.
+
+
+@menu
+* Manipulating the Database::   Scanning and modifying the user
+                                 accounting database.
+* XPG Functions::               A standardized way for doing the same thing.
+* Logging In and Out::          Functions from BSD that modify the user
+                                 accounting database.
+@end menu
+
+@node Manipulating the Database
+@subsection Manipulating the User Accounting Database
+
+These functions and the corresponding data structures are declared in
+the header file @file{utmp.h}.
+@pindex utmp.h
+
+@comment utmp.h
+@comment SVID
+@deftp {Data Type} {struct exit_status}
+The @code{exit_status} data structure is used to hold information about
+the exit status of processes marked as @code{DEAD_PROCESS} in the user
+accounting database.
+
+@table @code
+@item short int e_termination
+The exit status of the process.
+
+@item short int e_exit
+The exit status of the process.
+@end table
+@end deftp
+
+@deftp {Data Type} {struct utmp}
+The @code{utmp} data structure is used to hold information about entries
+in the user accounting database.  On the GNU system it has the following
+members:
+
+@table @code
+@item short int ut_type
+Specifies the type of login; one of @code{EMPTY}, @code{RUN_LVL},
+@code{BOOT_TIME}, @code{OLD_TIME}, @code{NEW_TIME}, @code{INIT_PROCESS},
+@code{LOGIN_PROCESS}, @code{USER_PROCESS}, @code{DEAD_PROCESS} or
+@code{ACCOUNTING}.
+
+@item pid_t ut_pid
+The process ID number of the login process.
+
+@item char ut_line[]
+The device name of the tty (without @file{/dev/}).
+
+@item char ut_id[]
+The inittab ID of the process.
+
+@item char ut_user[]
+The user's login name.
+
+@item char ut_host[]
+The name of the host from which the user logged in.
+
+@item struct exit_status ut_exit
+The exit status of a process marked as @code{DEAD_PROCESS}.
+
+@item long ut_session
+The Session ID, used for windowing.
+
+@item struct timeval ut_tv
+Time the entry was made.  For entries of type @code{OLD_TIME} this is
+the time when the system clock changed, and for entries of type
+@code{NEW_TIME} this is the time the system clock was set to.
+
+@item int32_t ut_addr_v6[4]
+The Internet address of a remote host.
+@end table
+@end deftp
+
+The @code{ut_type}, @code{ut_pid}, @code{ut_id}, @code{ut_tv}, and
+@code{ut_host} fields are not available on all systems.  Portable
+applications therefore should be prepared for these situations.  To help
+doing this the @file{utmp.h} header provides macros
+@code{_HAVE_UT_TYPE}, @code{_HAVE_UT_PID}, @code{_HAVE_UT_ID},
+@code{_HAVE_UT_TV}, and @code{_HAVE_UT_HOST} if the respective field is
+available.  The programmer can handle the situations by using
+@code{#ifdef} in the program code.
+
+The following macros are defined for use as values for the
+@code{ut_type} member of the @code{utmp} structure.  The values are
+integer constants.
+
+@table @code
+@comment utmp.h
+@comment SVID
+@vindex EMPTY
+@item EMPTY
+This macro is used to indicate that the entry contains no valid user
+accounting information.
+
+@comment utmp.h
+@comment SVID
+@vindex RUN_LVL
+@item RUN_LVL
+This macro is used to identify the systems runlevel.
+
+@comment utmp.h
+@comment SVID
+@vindex BOOT_TIME
+@item BOOT_TIME
+This macro is used to identify the time of system boot.
+
+@comment utmp.h
+@comment SVID
+@vindex OLD_TIME
+@item OLD_TIME
+This macro is used to identify the time when the system clock changed.
+
+@comment utmp.h
+@comment SVID
+@vindex NEW_TIME
+@item NEW_TIME
+This macro is used to identify the time after the system changed.
+
+@comment utmp.h
+@comment SVID
+@vindex INIT_PROCESS
+@item INIT_PROCESS
+This macro is used to identify a process spawned by the init process.
+
+@comment utmp.h
+@comment SVID
+@vindex LOGIN_PROCESS
+@item LOGIN_PROCESS
+This macro is used to identify the session leader of a logged in user.
+
+@comment utmp.h
+@comment SVID
+@vindex USER_PROCESS
+@item USER_PROCESS
+This macro is used to identify a user process.
+
+@comment utmp.h
+@comment SVID
+@vindex DEAD_PROCESS
+@item DEAD_PROCESS
+This macro is used to identify a terminated process.
+
+@comment utmp.h
+@comment SVID
+@vindex ACCOUNTING
+@item ACCOUNTING
+???
+@end table
+
+The size of the @code{ut_line}, @code{ut_id}, @code{ut_user} and
+@code{ut_host} arrays can be found using the @code{sizeof} operator.
+
+Many older systems have, instead of an @code{ut_tv} member, an
+@code{ut_time} member, usually of type @code{time_t}, for representing
+the time associated with the entry.  Therefore, for backwards
+compatibility only, @file{utmp.h} defines @code{ut_time} as an alias for
+@code{ut_tv.tv_sec}.
+
+@comment utmp.h
+@comment SVID
+@deftypefun void setutent (void)
+This function opens the user accounting database to begin scanning it.
+You can then call @code{getutent}, @code{getutid} or @code{getutline} to
+read entries and @code{pututline} to write entries.
+
+If the database is already open, it resets the input to the beginning of
+the database.
+@end deftypefun
+
+@comment utmp.h
+@comment SVID
+@deftypefun {struct utmp *} getutent (void)
+The @code{getutent} function reads the next entry from the user
+accounting database.  It returns a pointer to the entry, which is
+statically allocated and may be overwritten by subsequent calls to
+@code{getutent}.  You must copy the contents of the structure if you
+wish to save the information or you can use the @code{getutent_r}
+function which stores the data in a user-provided buffer.
+
+A null pointer is returned in case no further entry is available.
+@end deftypefun
+
+@comment utmp.h
+@comment SVID
+@deftypefun void endutent (void)
+This function closes the user accounting database.
+@end deftypefun
+
+@comment utmp.h
+@comment SVID
+@deftypefun {struct utmp *} getutid (const struct utmp *@var{id})
+This function searches forward from the current point in the database
+for an entry that matches @var{id}.  If the @code{ut_type} member of the
+@var{id} structure is one of @code{RUN_LVL}, @code{BOOT_TIME},
+@code{OLD_TIME} or @code{NEW_TIME} the entries match if the
+@code{ut_type} members are identical.  If the @code{ut_type} member of
+the @var{id} structure is @code{INIT_PROCESS}, @code{LOGIN_PROCESS},
+@code{USER_PROCESS} or @code{DEAD_PROCESS}, the entries match if the the
+@code{ut_type} member of the entry read from the database is one of
+these four, and the @code{ut_id} members match.  However if the
+@code{ut_id} member of either the @var{id} structure or the entry read
+from the database is empty it checks if the @code{ut_line} members match
+instead.  If a matching entry is found, @code{getutid} returns a pointer
+to the entry, which is statically allocated, and may be overwritten by a
+subsequent call to @code{getutent}, @code{getutid} or @code{getutline}.
+You must copy the contents of the structure if you wish to save the
+information.
+
+A null pointer is returned in case the end of the database is reached
+without a match.
+
+The @code{getutid} function may cache the last read entry.  Therefore,
+if you are using @code{getutid} to search for multiple occurrences, it
+is necessary to zero out the static data after each call.  Otherwise
+@code{getutid} could just return a pointer to the same entry over and
+over again.
+@end deftypefun
+
+@comment utmp.h
+@comment SVID
+@deftypefun {struct utmp *} getutline (const struct utmp *@var{line})
+This function searches forward from the current point in the database
+until it finds an entry whose @code{ut_type} value is
+@code{LOGIN_PROCESS} or @code{USER_PROCESS}, and whose @code{ut_line}
+member matches the @code{ut_line} member of the @var{line} structure.
+If it finds such an entry, it returns a pointer to the entry which is
+statically allocated, and may be overwritten by a subsequent call to
+@code{getutent}, @code{getutid} or @code{getutline}.  You must copy the
+contents of the structure if you wish to save the information.
+
+A null pointer is returned in case the end of the database is reached
+without a match.
+
+The @code{getutline} function may cache the last read entry.  Therefore
+if you are using @code{getutline} to search for multiple occurrences, it
+is necessary to zero out the static data after each call.  Otherwise
+@code{getutline} could just return a pointer to the same entry over and
+over again.
+@end deftypefun
+
+@comment utmp.h
+@comment SVID
+@deftypefun {struct utmp *} pututline (const struct utmp *@var{utmp})
+The @code{pututline} function inserts the entry @code{*@var{utmp}} at
+the appropriate place in the user accounting database.  If it finds that
+it is not already at the correct place in the database, it uses
+@code{getutid} to search for the position to insert the entry, however
+this will not modify the static structure returned by @code{getutent},
+@code{getutid} and @code{getutline}.  If this search fails, the entry
+is appended to the database.
+
+The @code{pututline} function returns a pointer to a copy of the entry
+inserted in the user accounting database, or a null pointer if the entry
+could not be added.  The following @code{errno} error conditions are
+defined for this function:
+
+@table @code
+@item EPERM
+The process does not have the appropriate privileges; you cannot modify
+the user accounting database.
+@end table
+@end deftypefun
+
+All the @code{get*} functions mentioned before store the information
+they return in a static buffer.  This can be a problem in multi-threaded
+programs since the data return for the request is overwritten be the
+return value data in another thread.  Therefore the GNU C Library
+provides as extensions three more functions which return the data in a
+user-provided buffer.
+
+@comment utmp.h
+@comment GNU
+@deftypefun int getutent_r (struct utmp *@var{buffer}, struct utmp **@var{result})
+The @code{getutent_r} is equivalent to the @code{getutent} function.  It
+returns the next entry from the database.  But instead of storing the
+information in a static buffer it stores it in the buffer pointed to by
+the parameter @var{buffer}.
+
+If the call was successful, the function returns @code{0} and the
+pointer variable pointed to by the parameter @var{result} contains a
+pointer to the buffer which contains the result (this is most probably
+the same value as @var{buffer}).  If something went wrong during the
+execution of @code{getutent_r} the function returns @code{-1}.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment utmp.h
+@comment GNU
+@deftypefun int getutid_r (const struct utmp *@var{id}, struct utmp *@var{buffer}, struct utmp **@var{result})
+This function retrieves just like @code{getutid} the next entry matching
+the information stored in @var{id}.  But the result is stored in the
+buffer pointed to by the parameter @var{buffer}.
+
+If successful the function returns @code{0} and the pointer variable
+pointed to by the parameter @var{result} contains a pointer to the
+buffer with the result (probably the same as @var{result}.  If not
+successful the function return @code{-1}.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment utmp.h
+@comment GNU
+@deftypefun int getutline_r (const struct utmp *@var{line}, struct utmp *@var{buffer}, struct utmp **@var{result})
+This function retrieves just like @code{getutline} the next entry
+matching the information stored in @var{line}.  But the result is stored
+in the buffer pointed to by the parameter @var{buffer}.
+
+If successful the function returns @code{0} and the pointer variable
+pointed to by the parameter @var{result} contains a pointer to the
+buffer with the result (probably the same as @var{result}.  If not
+successful the function return @code{-1}.
+
+This function is a GNU extension.
+@end deftypefun
+
+
+In addition to the user accounting database, most systems keep a number
+of similar databases.  For example most systems keep a log file with all
+previous logins (usually in @file{/etc/wtmp} or @file{/var/log/wtmp}).
+
+For specifying which database to examine, the following function should
+be used.
+
+@comment utmp.h
+@comment SVID
+@deftypefun int utmpname (const char *@var{file})
+The @code{utmpname} function changes the name of the database to be
+examined to @var{file}, and closes any previously opened database.  By
+default @code{getutent}, @code{getutid}, @code{getutline} and
+@code{pututline} read from and write to the user accounting database.
+
+The following macros are defined for use as the @var{file} argument:
+
+@deftypevr Macro {char *} _PATH_UTMP
+This macro is used to specify the user accounting database.
+@end deftypevr
+
+@deftypevr Macro {char *} _PATH_WTMP
+This macro is used to specify the user accounting log file.
+@end deftypevr
+
+The @code{utmpname} function returns a value of @code{0} if the new name
+was successfully stored, and a value of @code{-1} to indicate an error.
+Note that @code{utmpname} does not try open the database, and that
+therefore the return value does not say anything about whether the
+database can be successfully opened.
+@end deftypefun
+
+Specially for maintaining log-like databases the GNU C Library provides
+the following function:
+
+@comment utmp.h
+@comment SVID
+@deftypefun void updwtmp (const char *@var{wtmp_file}, const struct utmp *@var{utmp})
+The @code{updwtmp} function appends the entry *@var{utmp} to the
+database specified by @var{wtmp_file}.  For possible values for the
+@var{wtmp_file} argument see the @code{utmpname} function.
+@end deftypefun
+
+@strong{Portability Note:} Although many operating systems provide a
+subset of these functions, they are not standardized.  There are often
+subtle differences in the return types, and there are considerable
+differences between the various definitions of @code{struct utmp}.  When
+programming for the GNU system, it is probably probably best to stick
+with the functions described in this section.  If however, you want your
+program to be portable, consider using the XPG functions described in
+@ref{XPG Functions}, or take a look at the BSD compatible functions in
+@ref{Logging In and Out}.
+
+
+@node XPG Functions
+@subsection XPG User Accounting Database Functions
+
+These functions, described in the X/Open Portability Guide, are declared
+in the header file @file{utmpx.h}.
+@pindex utmpx.h
+
+@deftp {Data Type} {struct utmpx}
+The @code{utmpx} data structure contains at least the following members:
+
+@table @code
+@item short int ut_type
+Specifies the type of login; one of @code{EMPTY}, @code{RUN_LVL},
+@code{BOOT_TIME}, @code{OLD_TIME}, @code{NEW_TIME}, @code{INIT_PROCESS},
+@code{LOGIN_PROCESS}, @code{USER_PROCESS} or @code{DEAD_PROCESS}.
+
+@item pid_t ut_pid
+The process ID number of the login process.
+
+@item char ut_line[]
+The device name of the tty (without @file{/dev/}).
+
+@item char ut_id[]
+The inittab ID of the process.
+
+@item char ut_user[]
+The user's login name.
+
+@item struct timeval ut_tv
+Time the entry was made.  For entries of type @code{OLD_TIME} this is
+the time when the system clock changed, and for entries of type
+@code{NEW_TIME} this is the time the system clock was set to.
+@end table
+On the GNU system, @code{struct utmpx} is identical to @code{struct
+utmp} except for the fact that including @file{utmpx.h} does not make
+visible the declaration of @code{struct exit_status}.
+@end deftp
+
+The following macros are defined for use as values for the
+@code{ut_type} member of the @code{utmpx} structure.  The values are
+integer constants and are, on the GNU system, identical to the
+definitions in @file{utmp.h}.
+
+@table @code
+@comment utmpx.h
+@comment XPG4.2
+@vindex EMPTY
+@item EMPTY
+This macro is used to indicate that the entry contains no valid user
+accounting information.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex RUN_LVL
+@item RUN_LVL
+This macro is used to identify the systems runlevel.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex BOOT_TIME
+@item BOOT_TIME
+This macro is used to identify the time of system boot.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex OLD_TIME
+@item OLD_TIME
+This macro is used to identify the time when the system clock changed.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex NEW_TIME
+@item NEW_TIME
+This macro is used to identify the time after the system changed.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex INIT_PROCESS
+@item INIT_PROCESS
+This macro is used to identify a process spawned by the init process.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex LOGIN_PROCESS
+@item LOGIN_PROCESS
+This macro is used to identify the session leader of a logged in user.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex USER_PROCESS
+@item USER_PROCESS
+This macro is used to identify a user process.
+
+@comment utmpx.h
+@comment XPG4.2
+@vindex DEAD_PROCESS
+@item DEAD_PROCESS
+This macro is used to identify a terminated process.
+@end table
+
+The size of the @code{ut_line}, @code{ut_id} and @code{ut_user} arrays
+can be found using the @code{sizeof} operator.
+
+@comment utmpx.h
+@comment XPG4.2
+@deftypefun void setutxent (void)
+This function is similar to @code{setutent}.  On the GNU system it is
+simply an alias for @code{setutent}.
+@end deftypefun
+
+@comment utmpx.h
+@comment XPG4.2
+@deftypefun {struct utmpx *} getutxent (void)
+The @code{getutxent} function is similar to @code{getutent}, but returns
+a pointer to a @code{struct utmpx} instead of @code{struct utmp}.  On
+the GNU system it simply is an alias for @code{getutent}.
+@end deftypefun
+
+@comment utmpx.h
+@comment XPG4.2
+@deftypefun void endutxent (void)
+This function is similar to @code{endutent}.  On the GNU system it is
+simply an alias for @code{endutent}.
+@end deftypefun
+
+@comment utmpx.h
+@comment XPG4.2
+@deftypefun {struct utmpx *} getutxid (const struct utmpx *@var{id})
+This function is similar to @code{getutid}, but uses @code{struct utmpx}
+instead of @code{struct utmp}.  On the GNU system it is simply an alias
+for @code{getutid}.
+@end deftypefun
+
+@comment utmpx.h
+@comment XPG4.2
+@deftypefun {struct utmpx *} getutxline (const struct utmpx *@var{line})
+This function is similar to @code{getutid}, but uses @code{struct utmpx}
+instead of @code{struct utmp}.  On the GNU system it is simply an alias
+for @code{getutline}.
+@end deftypefun
+
+@comment utmpx.h
+@comment XPG4.2
+@deftypefun {struct utmpx *} pututxline (const struct utmpx *@var{utmp})
+The @code{pututxline} function provides functionality identical to
+@code{pututline}, but uses @code{struct utmpx} instead of @code{struct
+utmp}.  On the GNU system @code{pututxline} is simply an alias for
+@code{pututline}.
+@end deftypefun
+
+
+@node Logging In and Out
+@subsection Logging In and Out
+
+These functions, derived from BSD, are available in the separate
+@file{libutil} library, and declared in @file{utmp.h}.
+@pindex utmp.h
+
+Note that the @code{ut_user} member of @code{struct utmp} is called
+@code{ut_name} in BSD.  Therefore, @code{ut_name} is defined as an alias
+for @code{ut_user} in @file{utmp.h}.
+
+@comment utmp.h
+@comment BSD
+@deftypefun int login_tty (int @var{filedes})
+This function makes @var{filedes} the controlling terminal of the
+current process, redirects standard input, standard output and
+standard error output to this terminal, and closes @var{filedes}.
+
+This function returns @code{0} on successful completion, and @code{-1}
+on error.
+@end deftypefun
+
+@comment utmp.h
+@comment BSD
+@deftypefun void login (const struct utmp *@var{entry})
+The @code{login} functions inserts an entry into the user accounting
+database.  The @code{ut_line} member is set to the name of the terminal
+on standard input.  If standard input is not a terminal @code{login}
+uses standard output or standard error output to determine the name of
+the terminal.  If @code{struct utmp} has a @code{ut_type} member,
+@code{login} sets it to @code{USER_PROCESS}, and if there is an
+@code{ut_pid} member, it will be set to the process ID of the current
+process.  The remaining entries are copied from @var{entry}.
+
+A copy of the entry is written to the user accounting log file.
+@end deftypefun
+
+@comment utmp.h
+@comment BSD
+@deftypefun int logout (const char *@var{ut_line})
+This function modifies the user accounting database to indicate that the
+user on @var{ut_line} has logged out.
+
+The @code{logout} function returns @code{1} if the entry was successfully
+written to the database, or @code{0} on error.
+@end deftypefun
+
+@comment utmp.h
+@comment BSD
+@deftypefun void logwtmp (const char *@var{ut_line}, const char *@var{ut_name}, const char *@var{ut_host})
+The @code{logwtmp} function appends an entry to the user accounting log
+file, for the current time and the information provided in the
+@var{ut_line}, @var{ut_name} and @var{ut_host} arguments.
+@end deftypefun
+
+@strong{Portability Note:} The BSD @code{struct utmp} only has the
+@code{ut_line}, @code{ut_name}, @code{ut_host} and @code{ut_time}
+members.  Older systems do not even have the @code{ut_host} member.
+
+
+@node User Database
 @section User Database
 @cindex user database
 @cindex password database
@@ -725,7 +1333,7 @@ network server gives access to it.
 * Writing a User Entry::        How a program can rewrite a user's record.
 @end menu
 
-@node User Data Structure, Lookup User, User Database, User Database
+@node User Data Structure
 @subsection The Data Structure that Describes a User
 
 The functions and data structures for accessing the system user database
@@ -766,7 +1374,7 @@ be used.
 @end table
 @end deftp
 
-@node Lookup User, Scanning All Users, User Data Structure, User Database
+@node Lookup User
 @subsection Looking Up One User
 @cindex converting user ID to user name
 @cindex converting user name to user ID
@@ -839,7 +1447,7 @@ In the later case the global @var{errno} variable is set to
 @end deftypefun
 
 
-@node Scanning All Users, Writing a User Entry, Lookup User, User Database
+@node Scanning All Users
 @subsection Scanning the List of All Users
 @cindex scanning the user list
 
@@ -927,7 +1535,7 @@ This function closes the internal stream used by @code{getpwent} or
 @code{getpwent_r}.
 @end deftypefun
 
-@node Writing a User Entry,  , Scanning All Users, User Database
+@node Writing a User Entry
 @subsection Writing a User Entry
 
 @comment pwd.h
@@ -947,7 +1555,7 @@ would inevitably leave out much of the important information.
 The function @code{putpwent} is declared in @file{pwd.h}.
 @end deftypefun
 
-@node Group Database, Netgroup Database, User Database, Users and Groups
+@node Group Database
 @section Group Database
 @cindex group database
 @pindex /etc/group
@@ -963,7 +1571,7 @@ service provides access to it.
 * Scanning All Groups::         Scanning the list of all groups.
 @end menu
 
-@node Group Data Structure, Lookup Group, Group Database, Group Database
+@node Group Data Structure
 @subsection The Data Structure for a Group
 
 The functions and data structures for accessing the system group
@@ -990,7 +1598,7 @@ null pointer.
 @end table
 @end deftp
 
-@node Lookup Group, Scanning All Groups, Group Data Structure, Group Database
+@node Lookup Group
 @subsection Looking Up One Group
 @cindex converting group name to group ID
 @cindex converting group ID to group name
@@ -1061,7 +1669,7 @@ In the later case the global @var{errno} variable is set to
 @code{ERANGE}.
 @end deftypefun
 
-@node Scanning All Groups,  , Lookup Group, Group Database
+@node Scanning All Groups
 @subsection Scanning the List of All Groups
 @cindex scanning the group list
 
@@ -1148,7 +1756,7 @@ This function closes the internal stream used by @code{getgrent} or
 @code{getgrent_r}.
 @end deftypefun
 
-@node Netgroup Database, Database Example, Group Database, Users and Groups
+@node Netgroup Database
 @section Netgroup Database
 
 @menu
@@ -1158,7 +1766,7 @@ This function closes the internal stream used by @code{getgrent} or
 * Netgroup Membership::            How to test for netgroup membership.
 @end menu
 
-@node Netgroup Data, Lookup Netgroup, Netgroup Database, Netgroup Database
+@node Netgroup Data
 @subsection Netgroup Data
 
 @cindex Netgroup
@@ -1191,7 +1799,7 @@ case is useful as well.  I.e., there may be entries which will not
 match any input.  For entries like a name consisting of the single
 character @code{-} shall be used.
 
-@node Lookup Netgroup, Netgroup Membership, Netgroup Data, Netgroup Database
+@node Lookup Netgroup
 @subsection Looking up one Netgroup
 
 The lookup functions for netgroups are a bit different to all other
@@ -1262,7 +1870,7 @@ selected netgroup.  As a result all string pointers returned by calls
 to @code{getnetgrent} are invalid afterwards.
 @end deftypefun
 
-@node Netgroup Membership,  , Lookup Netgroup, Netgroup Database
+@node Netgroup Membership
 @subsection Testing for Netgroup Membership
 
 It is often not necessary to scan the whole netgroup since often the
@@ -1295,7 +1903,7 @@ itself is not found, the netgroup does not contain the triple or
 internal errors occurred.
 @end deftypefun
 
-@node Database Example,  , Netgroup Database, Users and Groups
+@node Database Example
 @section User and Group Database Example
 
 Here is an example program showing the use of the system database inquiry

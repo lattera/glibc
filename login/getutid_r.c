@@ -20,8 +20,6 @@
 
 #include <errno.h>
 #include <bits/libc-lock.h>
-#include <string.h>
-#include <unistd.h>
 #include <utmp.h>
 
 #include "utmp-private.h"
@@ -38,7 +36,7 @@ int
 __getutid_r (const struct utmp *id, struct utmp *buffer, struct utmp **result)
 {
 #if (_HAVE_UT_ID - 0) && (_HAVE_UT_TYPE - 0)
-  int retval = -1;
+  int retval;
 
   /* Test whether ID has any of the legal types.  */
   if (id->ut_type != RUN_LVL && id->ut_type != BOOT_TIME
@@ -54,11 +52,7 @@ __getutid_r (const struct utmp *id, struct utmp *buffer, struct utmp **result)
 
   __libc_lock_lock (__libc_utmp_lock);
 
-  /* Not yet initialized.  */
-  if ((*__libc_utmp_jump_table->setutent) ())
-    retval = (*__libc_utmp_jump_table->getutid_r) (id, buffer, result);
-  else
-    *result = NULL;
+  retval = (*__libc_utmp_jump_table->getutid_r) (id, buffer, result);
 
   __libc_lock_unlock (__libc_utmp_lock);
 

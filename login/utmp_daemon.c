@@ -17,8 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
-#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -31,7 +31,7 @@
 
 
 /* Descriptor for the socket.  */
-static int daemon_sock = INT_MIN;
+static int daemon_sock = -1;
 
 
 /* Functions defined here.  */
@@ -59,12 +59,13 @@ struct utfuncs __libc_utmp_daemon_functions =
 
 static int do_setutent (int sock);
 static int do_getutent (int sock, struct utmp *buffer);
-static int do_endutent (int sock);
-static int do_getutline (int sock, const struct utmp *line,
-			 struct utmp *buffer);
 static int do_getutid (int sock, const struct utmp *id,
 			    struct utmp *buffer);
 static int do_pututline (int sock, const struct utmp *utmp);
+static int do_getutline (int sock, const struct utmp *line,
+			 struct utmp *buffer);
+static int do_pututline (int sock, const struct utmp *utmp);
+static int do_endutent (int sock);
 static int do_updwtmp (int sock, const char *file,
 		       const struct utmp *utmp);
 
@@ -79,7 +80,7 @@ setutent_daemon (void)
   if (access (_PATH_UTMPD_RW, F_OK) == -1
       && access (_PATH_UTMPD_RO, F_OK) == -1)
     return 0;
-    
+
   if (daemon_sock < 0)
     {
       daemon_sock = open_socket (_PATH_UTMPD_RW);
@@ -100,33 +101,10 @@ setutent_daemon (void)
 }
 
 
-static void
-endutent_daemon (void)
-{
-  if (daemon_sock >= 0)
-    {
-      /* Send request to the daemon.  */
-      do_endutent (daemon_sock);
-      close (daemon_sock);
-    }
-
-  daemon_sock = INT_MIN;
-}
-
-
 static int
 getutent_r_daemon (struct utmp *buffer, struct utmp **result)
 {
-  /* Open connection if not already done.  */
-  if (daemon_sock == INT_MIN)
-    setutent_daemon ();
-
-  if (daemon_sock < 0)
-    {
-      /* Not available.  */
-      *result = NULL;
-      return -1;
-    }
+  assert (daemon_sock >= 0);
 
   /* Send request to the daemon.  */
   if (do_getutent (daemon_sock, buffer) < 0)
@@ -141,36 +119,10 @@ getutent_r_daemon (struct utmp *buffer, struct utmp **result)
 
 
 static int
-getutline_r_daemon (const struct utmp *line, struct utmp *buffer,
-		    struct utmp **result)
-{
-  if (daemon_sock < 0)
-    {
-      *result = NULL;
-      return -1;
-    }
-
-  /* Send request to the daemon.  */
-  if (do_getutline (daemon_sock, line, buffer) < 0)
-    {
-      *result = NULL;
-      return -1;;
-    }
-
-  *result = buffer;
-  return 0;
-}
-
-
-static int
 getutid_r_daemon (const struct utmp *id, struct utmp *buffer,
 		  struct utmp **result)
 {
-  if (daemon_sock < 0)
-    {
-      *result = NULL;
-      return -1;
-    }
+  assert (daemon_sock >= 0);
 
   /* Send request to the daemon.  */
   if (do_getutid (daemon_sock, id, buffer) < 0)
@@ -184,22 +136,47 @@ getutid_r_daemon (const struct utmp *id, struct utmp *buffer,
 }
 
 
+static int
+getutline_r_daemon (const struct utmp *line, struct utmp *buffer,
+		    struct utmp **result)
+{
+  assert (daemon_sock >= 0);
+
+  /* Send request to the daemon.  */
+  if (do_getutline (daemon_sock, line, buffer) < 0)
+    {
+      *result = NULL;
+      return -1;
+    }
+
+  *result = buffer;
+  return 0;
+}
+
+
 static struct utmp *
 pututline_daemon (const struct utmp *utmp)
 {
-  /* Open connection if not already done.  */
-  if (daemon_sock == INT_MIN)
-    setutent_daemon ();
-
-  if (daemon_sock < 0)
-    /* Something went wrong.  */
-    return NULL;
+  assert (daemon_sock >= 0);
 
   /* Send request to the daemon.  */
   if (do_pututline (daemon_sock, utmp) < 0)
     return NULL;
 
   return (struct utmp *)utmp;
+}
+
+
+static void
+endutent_daemon (void)
+{
+  assert (daemon_sock >= 0);
+
+  /* Send request to the daemon.  */
+  do_endutent (daemon_sock);
+
+  close (daemon_sock);
+  daemon_sock = -1;
 }
 
 
@@ -233,11 +210,11 @@ do_setutent (int sock)
   size_t size;
 
   size = sizeof (setutent_request) + strlen (__libc_utmp_file_name) + 1;
-  
+
   request = malloc (size);
   if (request == NULL)
     return -1;
-  
+
   request->header.version = UTMPD_VERSION;
   request->header.size = size;
   request->header.type = UTMPD_REQ_SETUTENT;
@@ -286,24 +263,27 @@ do_getutent (int sock, struct utmp *buffer)
 }
 
 static int
-do_endutent (int sock)
+do_getutid (int sock, const struct utmp *id, struct utmp *buffer)
 {
-  endutent_request request;
-  endutent_reply reply;
+  getutid_request request;
+  getutid_reply reply;
 
   request.header.version = UTMPD_VERSION;
-  request.header.size = sizeof (endutent_request);
-  request.header.type = UTMPD_REQ_ENDUTENT;
+  request.header.size = sizeof (getutid_request);
+  request.header.type = UTMPD_REQ_GETUTID;
+  memcpy (&request.id, id, sizeof (struct utmp));
 
   reply.header.version = UTMPD_VERSION;
-  reply.header.size = sizeof (endutent_reply);
-  reply.header.type = UTMPD_REQ_ENDUTENT;
+  reply.header.size = sizeof (getutid_reply);
+  reply.header.type = UTMPD_REQ_GETUTID;
 
   if (send_request (sock, &request.header, &reply.header) < 0)
     return -1;
 
   if (reply.result < 0)
     __set_errno (reply.errnum);
+  else
+    memcpy (buffer, &reply.entry, sizeof (struct utmp));
 
   return reply.result;
 }
@@ -322,32 +302,6 @@ do_getutline (int sock, const struct utmp *line, struct utmp *buffer)
   reply.header.version = UTMPD_VERSION;
   reply.header.size = sizeof (getutline_reply);
   reply.header.type = UTMPD_REQ_GETUTLINE;
-
-  if (send_request (sock, &request.header, &reply.header) < 0)
-    return -1;
-
-  if (reply.result < 0)
-    __set_errno (reply.errnum);
-  else
-    memcpy (buffer, &reply.entry, sizeof (struct utmp));
-
-  return reply.result;
-}
-
-static int
-do_getutid (int sock, const struct utmp *id, struct utmp *buffer)
-{
-  getutid_request request;
-  getutid_reply reply;
-
-  request.header.version = UTMPD_VERSION;
-  request.header.size = sizeof (getutid_request);
-  request.header.type = UTMPD_REQ_GETUTID;
-  memcpy (&request.id, id, sizeof (struct utmp));
-
-  reply.header.version = UTMPD_VERSION;
-  reply.header.size = sizeof (getutid_reply);
-  reply.header.type = UTMPD_REQ_GETUTID;
 
   if (send_request (sock, &request.header, &reply.header) < 0)
     return -1;
@@ -385,6 +339,29 @@ do_pututline (int sock, const struct utmp *utmp)
 }
 
 static int
+do_endutent (int sock)
+{
+  endutent_request request;
+  endutent_reply reply;
+
+  request.header.version = UTMPD_VERSION;
+  request.header.size = sizeof (endutent_request);
+  request.header.type = UTMPD_REQ_ENDUTENT;
+
+  reply.header.version = UTMPD_VERSION;
+  reply.header.size = sizeof (endutent_reply);
+  reply.header.type = UTMPD_REQ_ENDUTENT;
+
+  if (send_request (sock, &request.header, &reply.header) < 0)
+    return -1;
+
+  if (reply.result < 0)
+    __set_errno (reply.errnum);
+
+  return reply.result;
+}
+
+static int
 do_updwtmp (int sock, const char *file, const struct utmp *utmp)
 {
   updwtmp_request *request;
@@ -392,11 +369,11 @@ do_updwtmp (int sock, const char *file, const struct utmp *utmp)
   size_t size;
 
   size = sizeof (updwtmp_request) + strlen (file) + 1;
-  
+
   request = malloc (size);
   if (request == NULL)
     return -1;
-  
+
   request->header.version = UTMPD_VERSION;
   request->header.size = size;
   request->header.type = UTMPD_REQ_UPDWTMP;

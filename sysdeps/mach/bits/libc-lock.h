@@ -75,6 +75,27 @@ typedef cthread_key_t __libc_key_t;
     (*__save_FCT)(__save_ARG);						    \
 }
 
+/* Use mutexes as once control variables. */
+
+struct __libc_once
+  {
+    __libc_lock_t lock;
+    int done;
+  };
+
+#define __libc_once_define(CLASS,NAME) \
+  CLASS struct __libc_once NAME = { MUTEX_INITIALZER, 0 }
+
+
+/* Call handler iff the first call.  */
+#define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
+  do {									      \
+    __libc_lock_lock (ONCE_CONTROL.lock);				      \
+    if (!ONCE_CONTROL.done)						      \
+      (INIT_FUNCTION) ();						      \
+    ONCE_CONTROL.done = 1;						      \
+    __libc_lock_lock (ONCE_CONTROL.lock);				      \
+  } while (0)
 
 #ifdef _LIBC
 /* We need portable names for some functions.  E.g., when they are

@@ -149,6 +149,17 @@ ifeq ($(origin prefix),undefined) # ifndef would override explicit empty value.
 prefix = /usr/local
 endif
 
+# Decide whether we shall build the programs or not.  We always do this
+# unless the user tells us (in configparms) or we are building for a
+# standalone target.
+ifndef build-programs
+ifneq ($(config-os),none)
+build-programs=yes
+else
+build-programs=no
+endif
+endif
+
 # Common prefix for machine-dependent installation directories.
 ifeq ($(origin exec_prefix),undefined)
 exec_prefix = $(prefix)

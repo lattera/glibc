@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: April 1997
+Status: August 1997
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@prep.ai.mit.edu>
@@ -35,14 +35,6 @@ contact <bug-glibc@prep.ai.mit.edu>
      Take a look at the matrix in
 	ftp://prep.ai.mit.edu/pub/gnu/ABOUT-NLS
      for the current status (of course better use a mirror of prep).
-
-
-[ 5] Write wordexp() function; this is described in POSIX.2, the
-     header <wordexp.h> already exists.
-
-     Implementation idea: use some functions from bash.
-
-**** Somebody is working on this.  Help may or may not be appreciated.
 
 
 [ 6] Write `long double' versions of the math functions.  This should be
@@ -115,3 +107,7 @@ contact <bug-glibc@prep.ai.mit.edu>
 		int foo __P ((int, int, int, int));
 
      Blargh!
+
+[16] Write an nss_hesiod module.  The Hesiod daemon from the MIT Athena
+     project should be available.  The goal is to avoid the ugly NIS
+     emulation interface and contacting the daemon directly.

@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -41,7 +41,7 @@ main (int argc, char *argv[])
 		       MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   dest = (char *) mmap (NULL, 3*size, PROT_READ|PROT_WRITE,
 			MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-  if (adr == (char *)-1L || dest == (char *)-1L)
+  if (adr == MAP_FAILED || dest == MAP_FAILED)
     {
       if (errno == ENOSYS)
         puts ("No test, mmap not available.");

@@ -41,33 +41,14 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   mach_msg_type_number_t tssize = MACHINE_THREAD_STATE_COUNT;
   vm_address_t stack;
   vm_size_t size;
-  int anywhere = 0;
+  int anywhere;
 
   size = stack_size ? *stack_size ? : STACK_SIZE : STACK_SIZE;
+  stack = stack_base ? *stack_base ? : 0 : 0;
+  anywhere = !stack_base || !*stack_base;
 
-  if (stack_base && *stack_base)
-    stack = *stack_base;
-  else if (size == STACK_SIZE)
-    {
-      /* Cthreads has a bug that makes its stack-probing code fail if
-	 the stack is too low in memory.  It's bad to try and fix it there
-	 until cthreads is integrated into libc, so we'll just do it here
-	 by requesting a high address.  When the cthreads bug is fixed,
-	 this assignment to STACK should be changed to 0, and the ANYWHERE
-	 argument to vm_allocate should be changed to 0.  This comment should
-	 be left, however, in order to confuse people who wonder why its
-	 here.  (Though perhaps that last sentence (and this one) should
-	 be deleted to maximize the effect.)  */
-#ifdef STACK_GROWTH_DOWN
-      stack = VM_MAX_ADDRESS - size - __vm_page_size;
-#else
-      stack = VM_MIN_ADDRESS;
-#endif
-    }
-  else
-    anywhere = 1;
-
-  if (error = __vm_allocate (task, &stack, size + __vm_page_size, anywhere))
+  error = __vm_allocate (task, &stack, size + __vm_page_size, anywhere);
+  if (error)
     return error;
 
   if (stack_size)

@@ -282,7 +282,9 @@ init_hash(hashp, file, info)
 	const char *file;
 	HASHINFO *info;
 {
+#ifdef _STATBUF_ST_BLKSIZE
 	struct stat statbuf;
+#endif
 	int nelem;
 
 	nelem = 1;
@@ -299,14 +301,14 @@ init_hash(hashp, file, info)
 	memset(hashp->BITMAPS, 0, sizeof (hashp->BITMAPS));
 
 	/* Fix bucket size to be optimal for file system */
+#ifdef _STATBUF_ST_BLKSIZE
 	if (file != NULL) {
 		if (stat(file, &statbuf))
 			return (NULL);
-#if defined _STATBUF_ST_BLKSIZE
 		hashp->BSIZE = statbuf.st_blksize;
-#endif
 		hashp->BSHIFT = __hash_log2(hashp->BSIZE);
 	}
+#endif
 
 	if (info) {
 		if (info->bsize) {

@@ -62,7 +62,7 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
                        | MAP_FILE
 #endif
                        , fd, 0);
-      if (result == (void *) -1)
+      if (result == MAP_FAILED)
         result = NULL;
       else
         *sizep = st.st_size;

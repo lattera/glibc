@@ -28,6 +28,6 @@ __statfs (const char *file, struct statfs *buf)
   __set_errno (ENOSYS);
   return -1;
 }
-stub_warning (statfs)
-
 weak_alias (__statfs, statfs)
+
+stub_warning (statfs)

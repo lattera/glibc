@@ -142,11 +142,11 @@ But now the POSIX people came and unified the interface with their words
 possible.
 
 A solution provides the Unix98 specification which finally introduces a
-type @code{socklen_t}.  This type is used in all of the cases in
+type @code{socklen_t}.  This type is used in all of the cases that were
 previously changed to use @code{size_t}.  The only requirement of this
 type is that it is an unsigned type of at least 32 bits.  Therefore,
 implementations which require references to 32 bit variables be passed
-can be as happy as implementations which right from the start of 64 bit
+can be as happy as implementations which use right from the start 64 bit
 values.
 
 

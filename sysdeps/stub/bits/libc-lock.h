@@ -72,7 +72,7 @@
 
 
 /* Define once control variable.  */
-#define __libc_once_define(NAME) int NAME = 0
+#define __libc_once_define(CLASS, NAME) CLASS int NAME = 0
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \

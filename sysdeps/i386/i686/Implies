@@ -1,2 +1,4 @@
-# Code optimized for i586 is better than simple i386 code.
-i386/i586
+# Due to the reordering and the oher nifty extensions in the i686 it is
+# not really good to use heavily i586 optimized code on a i686.  It's
+# better to use i486/i386 code.
+i386/i486
