@@ -166,11 +166,11 @@ dl_open_worker (void *a)
 
 	  buf[sizeof buf - 1] = '\0';
 
-	  _dl_debug_message (1, "\nopening file=", new->l_name,
+	  _dl_debug_message (1, "opening file=", new->l_name,
 			     "; opencount == ",
 			     _itoa_word (new->l_opencount,
 					 buf + sizeof buf - 1, 10, 0),
-			     "\n", NULL);
+			     "\n\n", NULL);
 	}
       /* It was already open.  */
       return;
@@ -325,11 +325,11 @@ dl_open_worker (void *a)
 
       buf[sizeof buf - 1] = '\0';
 
-      _dl_debug_message (1, "\nopening file=", new->l_name,
+      _dl_debug_message (1, "opening file=", new->l_name,
 			 "; opencount == ",
 			 _itoa_word (new->l_opencount,
 				     buf + sizeof buf - 1, 10, 0),
-			 "\n", NULL);
+			 "\n\n", NULL);
     }
 }
 

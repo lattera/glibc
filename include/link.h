@@ -101,6 +101,14 @@ struct r_scope_elem
 };
 
 
+/* Structure to record search path and allocation mechanism.  */
+struct r_search_path_struct
+  {
+    struct r_search_path_elem **dirs;
+    int malloced;
+  };
+
+
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
 
@@ -176,7 +184,7 @@ struct link_map
     struct r_found_version *l_versions;
 
     /* Collected information about own RPATH directories.  */
-    struct r_search_path_elem **l_rpath_dirs;
+    struct r_search_path_struct l_rpath_dirs;
 
     /* Collected results of relocation while profiling.  */
     ElfW(Addr) *l_reloc_result;
@@ -205,7 +213,7 @@ struct link_map
     ino64_t l_ino;
 
     /* Collected information about own RUNPATH directories.  */
-    struct r_search_path_elem **l_runpath_dirs;
+    struct r_search_path_struct l_runpath_dirs;
 
     /* List of object in order of the init and fini calls.  */
     struct link_map **l_initfini;

@@ -126,6 +126,16 @@ static void
 free_mem (void)
 {
   struct link_map *l;
+  struct r_search_path_elem *d;
+
+  /* Remove all search directories.  */
+  d = _dl_all_dirs;
+  while (d != _dl_init_all_dirs)
+    {
+      struct r_search_path_elem *old = d;
+      d = d->next;
+      free (old);
+    }
 
   /* Remove all additional names added to the objects.  */
   for (l = _dl_loaded; l != NULL; l = l->l_next)

@@ -60,6 +60,6 @@ ld {
     _dl_init_first;
 
     # variables used elsewhere
-    _dl_out_of_memory;
+    _dl_out_of_memory; _dl_all_dirs; _dl_init_all_dirs;
   }
 }

@@ -1,5 +1,30 @@
 2000-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h: Add declaration for _dl_all_dirs and
+	_dl_all_init_dirs.
+	* include/link.h (struct r_search_path_struct): New.
+	(struct link_map): Use it for l_rpath_dirs and l_runpath_dirs.
+	* elf/Versions [ld] (GLIBC_2.2): Add _dl_all_dirs and
+	_dl_all_init_dirs.
+	* elf/dl-close.c (_dl_close): Free l_rpath_dirs and l_runpath_dirs.
+	* elf/dl-libc.c (free_mem): Free _dl_all_dirs list except elements
+	added at startup time.
+	* elf/dl-load.c: Fix memory handling.  r_search_path_struct
+	contains element to remember fact that we can free memory.
+	(all_dirs): Renamed to _dl_all_dirs.  Made global.
+	(_dl_init_all_dirs): New variable.
+	(fillin_rpath): Save one malloc call.
+	(decompose_rpath): Change interface.  New first parameter points to
+	r_search_path_struct.
+	(_dl_init_paths): Adjust for changes.  Mark all memory as not
+	deletable.  Set _dl_init_all_paths value.
+	(open_path): Remove may_free_dirs parameter.  r_search_path_elem ***
+	parameter replaced with r_search_path_struct *.  Information about
+	freeing now contained in r_search_path_struct.
+	(_dl_map_object): Adjust for above changes.
+
+	* elf/dl-open.c (dl_open_worker): Change format of debug info a bit.
+
 	* elf/dl-load.c (fillin_rpath): Only check for trusted directories
 	when adding new entries.
 

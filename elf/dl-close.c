@@ -215,6 +215,11 @@ _dl_close (void *_map)
 	  if (imap->l_phdr_allocated)
 	    free ((void *) imap->l_phdr);
 
+	  if (imap->l_rpath_dirs.dirs != (void *) -1)
+	    free (imap->l_rpath_dirs.dirs);
+	  if (imap->l_runpath_dirs.dirs != (void *) -1)
+	    free (imap->l_runpath_dirs.dirs);
+
 	  free (imap);
 	}
     }

@@ -200,6 +200,10 @@ extern const char _dl_out_of_memory[];
 /* Nonzero if runtime lookups should not update the .got/.plt.  */
 extern int _dl_bind_not;
 
+/* List of search directories.  */
+extern struct r_search_path_elem *_dl_all_dirs;
+extern struct r_search_path_elem *_dl_init_all_dirs;
+
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 

@@ -98,7 +98,7 @@ extern const char *_dl_platform;
 extern size_t _dl_platformlen;
 
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
-static struct r_search_path_elem **env_path_list;
+static struct r_search_path_struct env_path_list;
 
 /* List of the hardware capabilities we might end up using.  */
 static const struct r_strlenpair *capstr;
@@ -329,10 +329,13 @@ add_name_to_object (struct link_map *l, const char *name)
 }
 
 /* All known directories in sorted order.  */
-static struct r_search_path_elem *all_dirs;
+struct r_search_path_elem *_dl_all_dirs;
+
+/* All directories after startup.  */
+struct r_search_path_elem *_dl_init_all_dirs;
 
 /* Standard search directories.  */
-static struct r_search_path_elem **rtld_search_dirs;
+static struct r_search_path_struct rtld_search_dirs;
 
 static size_t max_dirnamelen;
 
@@ -365,7 +368,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	cp[len++] = '/';
 
       /* See if this directory is already known.  */
-      for (dirp = all_dirs; dirp != NULL; dirp = dirp->next)
+      for (dirp = _dl_all_dirs; dirp != NULL; dirp = dirp->next)
 	if (dirp->dirnamelen == len && memcmp (cp, dirp->dirname, len) == 0)
 	  break;
 
@@ -389,12 +392,14 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	  /* It's a new directory.  Create an entry and add it.  */
 	  dirp = (struct r_search_path_elem *)
 	    malloc (sizeof (*dirp) + ncapstr * sizeof (enum r_dir_status)
-		    + where_len);
+		    + where_len + len + 1);
 	  if (dirp == NULL)
 	    _dl_signal_error (ENOMEM, NULL,
 			      N_("cannot create cache for search path"));
 
-	  dirp->dirname = cp;
+	  dirp->dirname = ((char *) dirp + sizeof (*dirp)
+			   + ncapstr * sizeof (enum r_dir_status));
+	  memcpy ((char *) dirp->dirname, cp, len + 1);
 	  dirp->dirnamelen = len;
 
 	  if (len > max_dirnamelen)
@@ -440,14 +445,14 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 	  dirp->what = what;
 	  if (__builtin_expect (where != NULL, 1))
-	    dirp->where = memcpy ((char *) dirp + sizeof (*dirp)
+	    dirp->where = memcpy ((char *) dirp + sizeof (*dirp) + len + 1
 				  + ncapstr * sizeof (enum r_dir_status),
 				  where, where_len);
 	  else
 	    dirp->where = NULL;
 
-	  dirp->next = all_dirs;
-	  all_dirs = dirp;
+	  dirp->next = _dl_all_dirs;
+	  _dl_all_dirs = dirp;
 
 	  /* Put it in the result array.  */
 	  result[nelems++] = dirp;
@@ -461,9 +466,10 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 }
 
 
-static struct r_search_path_elem **
+static void
 internal_function
-decompose_rpath (const char *rpath, struct link_map *l, const char *what)
+decompose_rpath (struct r_search_path_struct *sps,
+		 const char *rpath, struct link_map *l, const char *what)
 {
   /* Make a copy we can work with.  */
   const char *where = l->l_name;
@@ -474,7 +480,7 @@ decompose_rpath (const char *rpath, struct link_map *l, const char *what)
 
   /* First see whether we must forget the RUNPATH and RPATH from this
      object.  */
-  if (_dl_inhibit_rpath != NULL && !__libc_enable_secure)
+  if (__builtin_expect (_dl_inhibit_rpath != NULL, 0) && !__libc_enable_secure)
     {
       const char *found = strstr (_dl_inhibit_rpath, where);
       if (found != NULL)
@@ -492,7 +498,10 @@ decompose_rpath (const char *rpath, struct link_map *l, const char *what)
 				  N_("cannot create cache for search path"));
 	      result[0] = NULL;
 
-	      return result;
+	      sps->dirs = result;
+	      sps->malloced = 1;
+
+	      return;
 	    }
 	}
     }
@@ -516,7 +525,15 @@ decompose_rpath (const char *rpath, struct link_map *l, const char *what)
   if (result == NULL)
     _dl_signal_error (ENOMEM, NULL, N_("cannot create cache for search path"));
 
-  return fillin_rpath (copy, result, ":", 0, what, where);
+  fillin_rpath (copy, result, ":", 0, what, where);
+
+  /* Free the copied RPATH string.  `fillin_rpath' make own copies if
+     necessary.  */
+  free (copy);
+
+  sps->dirs = result;
+  /* The caller will change this value if we haven't used a real malloc.  */
+  sps->malloced = 1;
 }
 
 
@@ -540,22 +557,23 @@ _dl_init_paths (const char *llp)
 				 &ncapstr, &max_capstrlen);
 
   /* First set up the rest of the default search directory entries.  */
-  aelem = rtld_search_dirs = (struct r_search_path_elem **)
+  aelem = rtld_search_dirs.dirs = (struct r_search_path_elem **)
     malloc ((nsystem_dirs_len + 1) * sizeof (struct r_search_path_elem *));
-  if (rtld_search_dirs == NULL)
+  if (rtld_search_dirs.dirs == NULL)
     _dl_signal_error (ENOMEM, NULL, N_("cannot create search path array"));
 
   round_size = ((2 * sizeof (struct r_search_path_elem) - 1
 		 + ncapstr * sizeof (enum r_dir_status))
 		/ sizeof (struct r_search_path_elem));
 
-  rtld_search_dirs[0] = (struct r_search_path_elem *)
+  rtld_search_dirs.dirs[0] = (struct r_search_path_elem *)
     malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
 	    * round_size * sizeof (struct r_search_path_elem));
-  if (rtld_search_dirs[0] == NULL)
+  if (rtld_search_dirs.dirs[0] == NULL)
     _dl_signal_error (ENOMEM, NULL, N_("cannot create cache for search path"));
 
-  pelem = all_dirs = rtld_search_dirs[0];
+  rtld_search_dirs.malloced = 0;
+  pelem = _dl_all_dirs = rtld_search_dirs.dirs[0];
   strp = system_dirs;
   idx = 0;
 
@@ -572,12 +590,10 @@ _dl_init_paths (const char *llp)
       pelem->dirnamelen = system_dirs_len[idx];
       strp += system_dirs_len[idx] + 1;
 
-      if (pelem->dirname[0] != '/')
-	for (cnt = 0; cnt < ncapstr; ++cnt)
-	  pelem->status[cnt] = existing;
-      else
-	for (cnt = 0; cnt < ncapstr; ++cnt)
-	  pelem->status[cnt] = unknown;
+      /* System paths must be absolute.  */
+      assert (pelem->dirname[0] == '/');
+      for (cnt = 0; cnt < ncapstr; ++cnt)
+	pelem->status[cnt] = unknown;
 
       pelem->next = (++idx == nsystem_dirs_len ? NULL : (pelem + round_size));
 
@@ -599,27 +615,30 @@ _dl_init_paths (const char *llp)
 	{
 	  /* Allocate room for the search path and fill in information
 	     from RUNPATH.  */
-	  l->l_runpath_dirs =
-	    decompose_rpath ((const void *) (D_PTR (l, l_info[DT_STRTAB])
-					     + l->l_info[DT_RUNPATH]->d_un.d_val),
-			     l, "RUNPATH");
+	  decompose_rpath (&l->l_runpath_dirs,
+			   (const void *) (D_PTR (l, l_info[DT_STRTAB])
+					   + l->l_info[DT_RUNPATH]->d_un.d_val),
+			   l, "RUNPATH");
 
 	  /* The RPATH is ignored.  */
-	  l->l_rpath_dirs = (void *) -1;
+	  l->l_rpath_dirs.dirs = (void *) -1;
 	}
       else
 	{
-	  l->l_runpath_dirs = (void *) -1;
+	  l->l_runpath_dirs.dirs = (void *) -1;
 
 	  if (l->l_info[DT_RPATH])
-	    /* Allocate room for the search path and fill in information
-	       from RPATH.  */
-	    l->l_rpath_dirs =
-	      decompose_rpath ((const void *) (D_PTR (l, l_info[DT_STRTAB])
+	    {
+	      /* Allocate room for the search path and fill in information
+		 from RPATH.  */
+	      decompose_rpath (&l->l_rpath_dirs,
+			       (const void *) (D_PTR (l, l_info[DT_STRTAB])
 					       + l->l_info[DT_RPATH]->d_un.d_val),
 			       l, "RPATH");
+	      l->l_rpath_dirs.malloced = 0;
+	    }
 	  else
-	    l->l_rpath_dirs = (void *) -1;
+	    l->l_rpath_dirs.dirs = (void *) -1;
 	}
     }
 #endif	/* SHARED */
@@ -639,23 +658,28 @@ _dl_init_paths (const char *llp)
 	  ++cp;
 	}
 
-      env_path_list = (struct r_search_path_elem **)
+      env_path_list.dirs = (struct r_search_path_elem **)
 	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
-      if (env_path_list == NULL)
+      if (env_path_list.dirs == NULL)
 	_dl_signal_error (ENOMEM, NULL,
 			  N_("cannot create cache for search path"));
 
-      (void) fillin_rpath (local_strdup (llp), env_path_list, ":;",
+      (void) fillin_rpath (strdupa (llp), env_path_list.dirs, ":;",
 			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
 
-      if (env_path_list[0] == NULL)
+      if (env_path_list.dirs[0] == NULL)
 	{
-	  free (env_path_list);
-	  env_path_list = (void *) -1;
+	  free (env_path_list.dirs);
+	  env_path_list.dirs = (void *) -1;
 	}
+
+      env_path_list.malloced = 0;
     }
   else
-    env_path_list = (void *) -1;
+    env_path_list.dirs = (void *) -1;
+
+  /* Remember the last search directory added at startup.  */
+  _dl_init_all_dirs = _dl_all_dirs;
 }
 
 
@@ -1224,10 +1248,9 @@ print_search_path (struct r_search_path_elem **list,
 
 static int
 open_path (const char *name, size_t namelen, int preloaded,
-	   struct r_search_path_elem ***dirsp, int may_free_dirs,
-	   char **realname)
+	   struct r_search_path_struct *sps, char **realname)
 {
-  struct r_search_path_elem **dirs = *dirsp;
+  struct r_search_path_elem **dirs = sps->dirs;
   char *buf;
   int fd = -1;
   const char *current_what = NULL;
@@ -1341,9 +1364,9 @@ open_path (const char *name, size_t namelen, int preloaded,
     {
       /* Paths which were allocated using the minimal malloc() in ld.so
 	 must not be freed using the general free() in libc.  */
-      if (may_free_dirs)
-	free (*dirsp);
-      *dirsp = (void *) -1;
+      if (sps->malloced)
+	free (sps->dirs);
+      sps->dirs = (void *) -1;
     }
 
   return -1;
@@ -1415,68 +1438,67 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	     to be loaded.  Then that object's dependent, and on up.  */
 	  for (l = loader; fd == -1 && l; l = l->l_loader)
 	    {
-	      if (l->l_rpath_dirs == NULL)
+	      if (l->l_rpath_dirs.dirs == NULL)
 		{
 		  if (l->l_info[DT_RPATH] == NULL)
 		    /* There is no path.  */
-		    l->l_rpath_dirs = (void *) -1;
+		    l->l_rpath_dirs.dirs = (void *) -1;
 		  else
 		    {
 		      /* Make sure the cache information is available.  */
 		      size_t ptrval = (D_PTR (l, l_info[DT_STRTAB])
 				       + l->l_info[DT_RPATH]->d_un.d_val);
-		      l->l_rpath_dirs =
-			decompose_rpath ((const char *) ptrval, l,
-					 "RPATH");
+		      decompose_rpath (&l->l_rpath_dirs,
+				       (const char *) ptrval, l, "RPATH");
 
-		      if (l->l_rpath_dirs != (void *) -1)
+		      if (l->l_rpath_dirs.dirs != (void *) -1)
 			fd = open_path (name, namelen, preloaded,
-					&l->l_rpath_dirs, 1, &realname);
+					&l->l_rpath_dirs, &realname);
 		    }
 		}
-	      else if (l->l_rpath_dirs != (void *) -1)
+	      else if (l->l_rpath_dirs.dirs != (void *) -1)
 		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
-				0, &realname);
+				&realname);
 	    }
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
              itself.  */
 	  l = _dl_loaded;
 	  if (fd == -1 && l && l->l_type != lt_loaded && l != loader
-	      && l->l_rpath_dirs != (void *) -1)
-	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs, 0,
+	      && l->l_rpath_dirs.dirs != (void *) -1)
+	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
 			    &realname);
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
-      if (fd == -1 && env_path_list != (void *) -1)
-	fd = open_path (name, namelen, preloaded, &env_path_list, 0,
+      if (fd == -1 && env_path_list.dirs != (void *) -1)
+	fd = open_path (name, namelen, preloaded, &env_path_list,
 			&realname);
 
       /* Look at the RUNPATH informaiton for this binary.  */
-      if (loader != NULL && loader->l_runpath_dirs != (void *) -1)
+      if (loader != NULL && loader->l_runpath_dirs.dirs != (void *) -1)
 	{
-	  if (loader->l_runpath_dirs == NULL)
+	  if (loader->l_runpath_dirs.dirs == NULL)
 	    {
 	      if (loader->l_info[DT_RUNPATH] == NULL)
 		/* No RUNPATH.  */
-		loader->l_runpath_dirs = (void *) -1;
+		loader->l_runpath_dirs.dirs = (void *) -1;
 	      else
 		{
 		  /* Make sure the cache information is available.  */
 		  size_t ptrval = (D_PTR (loader, l_info[DT_STRTAB])
 				   + loader->l_info[DT_RUNPATH]->d_un.d_val);
-		  loader->l_runpath_dirs =
-		    decompose_rpath ((const char *) ptrval, loader, "RUNPATH");
+		  decompose_rpath (&loader->l_runpath_dirs,
+				   (const char *) ptrval, loader, "RUNPATH");
 
-		  if (loader->l_runpath_dirs != (void *) -1)
+		  if (loader->l_runpath_dirs.dirs != (void *) -1)
 		    fd = open_path (name, namelen, preloaded,
-				    &loader->l_runpath_dirs, 1, &realname);
+				    &loader->l_runpath_dirs, &realname);
 		}
 	    }
-	  else if (loader->l_runpath_dirs != (void *) -1)
+	  else if (loader->l_runpath_dirs.dirs != (void *) -1)
 	    fd = open_path (name, namelen, preloaded,
-			    &loader->l_runpath_dirs, 0, &realname);
+			    &loader->l_runpath_dirs, &realname);
 	}
 
       if (fd == -1)
@@ -1536,8 +1558,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       if (fd == -1
 	  && (l == NULL ||
 	      __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
-	  && rtld_search_dirs != (void *) -1)
-	fd = open_path (name, namelen, preloaded, &rtld_search_dirs, 0,
+	  && rtld_search_dirs.dirs != (void *) -1)
+	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
 			&realname);
 
       /* Add another newline when we a tracing the library loading.  */
