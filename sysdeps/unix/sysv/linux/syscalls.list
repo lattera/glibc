@@ -72,6 +72,8 @@ setfsuid	EXTRA	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid
 setresgid	EXTRA	setresgid	3	setresgid
 setresuid	EXTRA	setresuid	3	setresuid
+sigaltstack	-	sigaltstack	2	sigaltstack
+sigstack	-	sigstack	2	sigstack
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_lstat	lxstat	lstat		2	__syscall_lstat
 sys_mknod	xmknod	mknod		3	__syscall_mknod

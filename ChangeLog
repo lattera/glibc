@@ -1,3 +1,12 @@
+1998-06-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add sigaltstack and
+	sigstack.
+
+	* sysdeps/unix/sysv/linux/bits/sigstack.h: Add definitions of
+	SS_ONSTACK, SS_DISABLE, MINSIGSTKSZ and SIGSTKSZ.
+	* sysdeps/unix/sysv/linux/alpha/bits/sigstack.h: New file.
+
 1998-06-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/i386/dl-machine.h (_dl_start_user): Store stack address
