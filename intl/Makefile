@@ -51,9 +51,8 @@ ifeq (yes,$(build-shared))
 ifneq ($(strip $(MSGFMT)),:)
 .PHONY: do-gettext-test do-translit-test
 tests: $(objpfx)mtrace-tst-gettext do-translit-test
-$(objpfx)mtrace-tst-gettext: do-gettext-test
+$(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@
-do-gettext-test: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/ \
 	  $(objpfx)tst-gettext.mtrace
