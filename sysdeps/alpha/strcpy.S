@@ -35,7 +35,7 @@ ENTRY(strcpy)
 	.prologue 1
 
 	mov	a0, v0		# set up return value
-	jsr	t9, __stxcpy	# do the copy
-	ret
+	mov	ra, t9
+	jmp	$31, __stxcpy	# do the copy
 
 	END(strcpy)
