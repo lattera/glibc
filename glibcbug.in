@@ -107,6 +107,12 @@ ARCH=`[ -f /bin/arch ] && /bin/arch`
 MACHINE=`[ -f /bin/machine ] && /bin/machine`
 CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
 
+case $HOST in *linux*)
+  KHDRS=`(echo '#include <linux/version.h>
+	  echo '! UTS_RELEASE' ) |
+	 $CC -E - | sed -n '/!/s/[! "]//gp'`;;
+esac
+
 ORGANIZATION_C='<organization of PR author (multiple lines)>'
 SYNOPSIS_C='<synopsis of the problem (one line)>'
 SEVERITY_C='<[ non-critical | serious | critical ] (one line)>'
@@ -149,6 +155,7 @@ ${ORGANIZATION- $ORGANIZATION_C}
 `[ -n "$CFLAGS" ] && echo Build CFLAGS: $CFLAGS`
 `[ -n "$CC" ] && echo Build CC: $CC`
 `[ -n "$CCVERSION" ] && echo Compiler version: $CCVERSION`
+`[ -n "$KHDRS" ] && echo Kernel headers: $KHDRS`
 `[ -n "$VERSIONING" ] && echo Symbol versioning: $VERSIONING`
 `[ -n "$BUILD_STATIC" ] && echo Build static: $BUILD_STATIC`
 `[ -n "$BUILD_SHARED" ] && echo Build shared: $BUILD_SHARED`

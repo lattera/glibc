@@ -1,3 +1,8 @@
+1998-04-07 19:03  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* glibcbug.in: On linux, report version of kernel headers seen
+	by compiler.
+
 1998-04-07 16:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add __asprintf to GLIBC_2.1.
