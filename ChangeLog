@@ -1,3 +1,11 @@
+2004-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/hooks.c (top_check): Print top chunk corruption as normal
+	error message.
+
+	* malloc/malloc.c (malloc_printerr): Don't make informational
+	message look like error message.
+
 2004-09-09  Andreas Jaeger  <aj@suse.de>
 
 	* nscd/Makefile (CFLAGS-nscd_setup_thread.c): Set to -fpie.

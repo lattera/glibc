@@ -5453,13 +5453,20 @@ malloc_printerr(int action, const char *str, void *ptr)
 	}
 
       struct iovec iov[3];
-      iov[0].iov_base = (char *) "*** glibc detected *** ";
-      iov[0].iov_len = strlen (iov[0].iov_base);
-      iov[1].iov_base = (char *) str;
-      iov[1].iov_len = strlen (str);
-      iov[2].iov_base = cp;
-      iov[2].iov_len = &buf[sizeof (buf) - 1] - cp;
-      TEMP_FAILURE_RETRY (__writev (STDERR_FILENO, iov, 3));
+      int n = 0;
+      if ((action & 4) == 0)
+	{
+	  iov[0].iov_base = (char *) "*** glibc detected *** ";
+	  iov[0].iov_len = strlen (iov[0].iov_base);
+	  ++n;
+	}
+      iov[n].iov_base = (char *) str;
+      iov[n].iov_len = strlen (str);
+      ++n;
+      iov[n].iov_base = cp;
+      iov[n].iov_len = &buf[sizeof (buf) - 1] - cp;
+      ++n;
+      TEMP_FAILURE_RETRY (__writev (STDERR_FILENO, iov, n));
     }
   if (action & 2)
     abort ();

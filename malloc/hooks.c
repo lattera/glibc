@@ -216,7 +216,7 @@ top_check()
   if((char*)t + chunksize(t) == mp_.sbrk_base + main_arena.system_mem ||
      t == initial_top(&main_arena)) return 0;
 
-  malloc_printerr (check_action | 4, "malloc: top chunk is corrupt", NULL);
+  malloc_printerr (check_action, "malloc: top chunk is corrupt", t);
 
   /* Try to set up a new top chunk. */
   brk = MORECORE(0);
