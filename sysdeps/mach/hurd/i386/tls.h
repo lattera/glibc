@@ -39,7 +39,7 @@
 # include <mach/i386/mach_i386.h>
 
 # ifndef HAVE_I386_SET_GDT
-#  define __i386_set_gdt(thr, sel, desc) ((thr), (sel), (desc), MIG_BAD_ID)
+#  define __i386_set_gdt(thr, sel, desc) ((void) (thr), (void) (sel), (void) (desc), MIG_BAD_ID)
 # endif
 
 # include <errno.h>
