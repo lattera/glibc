@@ -1,4 +1,4 @@
-/* System-specific socket constants and types.  Linux version.
+/* System-specific socket constants and types.  Linux/MIPS version.
    Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,7 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if !defined _SYS_STAT_H && !defined _NETINET_IN_H
+#ifndef __BITS_SOCKET_H
+#define __BITS_SOCKET_H
+
+#if !defined _SYS_SOCKET_H && !defined _NETINET_IN_H
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
 
@@ -25,65 +28,93 @@
 #define __need_NULL
 #include <stddef.h>
 
+#include <sys/types.h>
+
 /* Type for length arguments in socket calls.  */
 typedef unsigned int socklen_t;
 
-/* Supported address families. */
-#define PF_UNSPEC	0
+/* Types of sockets.  */
+enum __socket_type
+{
+  SOCK_DGRAM = 1,		/* Connectionless, unreliable datagrams
+				   of fixed maximum length.  */
+#define SOCK_DGRAM SOCK_DGRAM
+  SOCK_STREAM = 2,		/* Sequenced, reliable, connection-based
+				   byte streams.  */
+#define SOCK_STREAM SOCK_STREAM
+  SOCK_RAW = 3,			/* Raw protocol interface.  */
+#define SOCK_RAW SOCK_RAW
+  SOCK_RDM = 4,			/* Reliably-delivered messages.  */
+#define SOCK_RDM SOCK_RDM
+  SOCK_SEQPACKET = 5,		/* Sequenced, reliable, connection-based,
+				   datagrams of fixed maximum length.  */
+#define SOCK_SEQPACKET SOCK_SEQPACKET
+  SOCK_PACKET = 10		/* Linux specific way of getting packets
+				   at the dev level.  For writing rarp and
+				   other similar things on the user level. */
+#define SOCK_PACKET SOCK_PACKET
+};
+
+/* Protocol families.  */
+#define	PF_UNSPEC	0	/* Unspecified.  */
 #define	PF_LOCAL	1	/* Local to host (pipes and file-domain).  */
 #define	PF_UNIX		PF_LOCAL /* Old BSD name for PF_LOCAL.  */
-#define	PF_FILE		PF_LOCAL /* POSIX name for PF_LOCAL.  */
+#define	PF_FILE		PF_LOCAL /* Another non-standard name for PF_LOCAL.  */
 #define	PF_INET		2	/* IP protocol family.  */
 #define	PF_AX25		3	/* Amateur Radio AX.25.  */
 #define	PF_IPX		4	/* Novell Internet Protocol.  */
-#define	PF_APPLETALK	5	/* Don't use this.  */
+#define	PF_APPLETALK	5	/* Appletalk DDP.  */
 #define	PF_NETROM	6	/* Amateur radio NetROM.  */
 #define	PF_BRIDGE	7	/* Multiprotocol bridge.  */
-#define	PF_AAL5		8	/* Reserved for Werner's ATM.  */
+#define	PF_ATMPVC	8	/* ATM PVCs.  */
 #define	PF_X25		9	/* Reserved for X.25 project.  */
 #define	PF_INET6	10	/* IP version 6.  */
-#define	PF_ROSE		11	/* Amateur Radio X.25 PLP       */
-#define	PF_DECnet	12	/* Reserved for DECnet project  */
-#define	PF_NETBEUI	13	/* Reserved for 802.2LLC project*/
-#define	PF_SECURITY	14	/* Security callback pseudo AF */
-#define	PF_KEY		15	/* PF_KEY key management API */
+#define	PF_ROSE		11	/* Amateur Radio X.25 PLP.  */
+#define	PF_DECnet	12	/* Reserved for DECnet project.  */
+#define	PF_NETBEUI	13	/* Reserved for 802.2LLC project.  */
+#define	PF_SECURITY	14	/* Security callback pseudo AF.  */
+#define	PF_KEY		15	/* PF_KEY key management API.  */
 #define	PF_NETLINK	16
-#define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD */
-#define	PF_PACKET	17	/* Packet family                */
-#define	PF_ASH		18	/* Ash */
-#define PF_MAX		32		/* For now.. */
+#define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD.  */
+#define	PF_PACKET	17	/* Packet family.  */
+#define	PF_ASH		18	/* Ash.  */
+#define	PF_ECONET	19	/* Acorn Econet.  */
+#define	PF_ATMSVC	20	/* ATM SVCs.  */
+#define	PF_SNA		22	/* Linux SNA Project */
+#define	PF_MAX		32	/* For now..  */
 
-/* Protocol families, same as address families. */
-#define AF_UNSPEC	PF_UNSPEC
-#define AF_UNIX		PF_UNIX
-#define AF_LOCAL	PF_LOCAL
-#define AF_FILE		PF_FILE
-
-#define AF_AX25		PF_AX25
-#define AF_IPX		PF_IPX
-#define AF_APPLETALK	PF_APPLETALK
+/* Address families.  */
+#define	AF_UNSPEC	PF_UNSPEC
+#define	AF_LOCAL	PF_LOCAL
+#define	AF_UNIX		PF_UNIX
+#define	AF_FILE		PF_FILE
+#define	AF_INET		PF_INET
+#define	AF_AX25		PF_AX25
+#define	AF_IPX		PF_IPX
+#define	AF_APPLETALK	PF_APPLETALK
 #define	AF_NETROM	PF_NETROM
-#define AF_BRIDGE	PF_BRIDGE
-#define AF_AAL5		PF_AAL5
-#define AF_X25		PF_X25
-#define AF_INET6	PF_INET6
-#define AF_ROSE		PF_ROSE
-#define AF_DECNET	PF_DECNET
-#define AF_NETBEUI	PF_NETBEUI
+#define	AF_BRIDGE	PF_BRIDGE
+#define	AF_ATMPVC	PF_ATMPVC
+#define	AF_X25		PF_X25
+#define	AF_INET6	PF_INET6
+#define	AF_ROSE		PF_ROSE
+#define	AF_DECnet	PF_DECnet
+#define	AF_NETBEUI	PF_NETBEUI
 #define	AF_SECURITY	PF_SECURITY
 #define	pseudo_AF_KEY	PF_KEY
 #define	AF_NETLINK	PF_NETLINK
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_PACKET	PF_PACKET
 #define	AF_ASH		PF_ASH
-#define AF_MAX		PF_MAX
+#define	AF_ECONET	PF_ECONET
+#define	AF_ATMSVC	PF_ATMSVC
+#define	AF_SNA		PF_SNA
+#define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
 
    XXX These definitions also should go into the appropriate headers as
    far as they are available.  */
-#define SOL_IPV6        41
-#define SOL_ICMPV6      58
 #define SOL_RAW		255
 #define SOL_DECNET      261
 #define SOL_X25         262
@@ -106,10 +137,15 @@ struct sockaddr
 enum
   {
     MSG_OOB		= 0x01,	/* Process out-of-band data.  */
+#define MSG_OOB		MSG_OOB
     MSG_PEEK		= 0x02,	/* Peek at incoming messages.  */
+#define MSG_PEEK	MSG_PEEK
     MSG_DONTROUTE	= 0x04,	/* Don't use local routing.  */
+#define MSG_DONTROUTE	MSG_DONTROUTE
     MSG_CTRUNC		= 0x08,	/* Control data lost before delivery.  */
+#define MSG_CTRUNC	MSG_CTRUNC
     MSG_PROXY		= 0x10	/* Supply or ask second address.  */
+#define MSG_PROXY	MSG_PROXY
   };
 
 
@@ -121,10 +157,10 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
-    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+    size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
@@ -132,12 +168,13 @@ struct msghdr
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
   {
-    socklen_t cmsg_len;		/* Length of data in cmsg_data plus length
+    size_t cmsg_len;		/* Length of data in cmsg_data plus length
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
 #if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2
     unsigned char __cmsg_data[0]; /* Ancillary data.  */
+    /* XXX Perhaps this should be removed.  */
 #endif
   };
 
@@ -157,14 +194,14 @@ struct cmsghdr
 			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
 #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
 
-
-#ifndef _EXTERN_INLINE
-# define _EXTERN_INLINE extern __inline
-#endif
 extern struct cmsghdr *__cmsg_nxthdr __P ((struct msghdr *__mhdr,
 					   struct cmsghdr *__cmsg));
+#ifdef __USE_EXTERN_INLINES
+# ifndef _EXTERN_INLINE
+#  define _EXTERN_INLINE extern __inline
+# endif
 _EXTERN_INLINE struct cmsghdr *
-__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg)
+__cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
 {
   if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
     /* The kernel header does this so there may be a reason.  */
@@ -180,7 +217,29 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg)
     return NULL;
   return __cmsg;
 }
+#endif	/* Use `extern inline'.  */
 
+/* Socket level message types.  This must match the definitions in
+   <linux/socket.h>.  */
+enum
+  {
+    SCM_RIGHTS = 0x01,		/* Transfer file descriptors.  */
+#define SCM_RIGHTS SCM_RIGHTS
+#ifdef __USE_BSD
+    SCM_CREDENTIALS = 0x02,     /* Credentials passing.  */
+# define SCM_CREDENTIALS SCM_CREDENTIALS
+#endif
+    __SCM_CONNECT = 0x03	/* Data array is `struct scm_connect'.  */
+  };
+
+/* User visible structure for SCM_CREDENTIALS message */
+
+struct ucred
+{
+  pid_t pid;			/* PID of sending process.  */
+  uid_t uid;			/* UID of sending process.  */
+  gid_t gid;			/* GID of sending process.  */
+};
 
 /* Get socket manipulation related informations from kernel headers.  */
 #include <asm/socket.h>
@@ -192,3 +251,5 @@ struct linger
     int l_onoff;		/* Nonzero to linger on close.  */
     int l_linger;		/* Time to linger.  */
   };
+
+#endif	/* bits/socket.h */
