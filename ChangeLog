@@ -1,3 +1,178 @@
+Wed Nov 27 06:10:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Fix typo.
+
+	* configure: Require autoconf-2.11.
+
+	* elf/dl-deps.c: Terminate duplicate list.
+
+	* libio/libio.h: Add prototypes for _IO_seekoff and _IO_seekpos.
+	* libio/strfile.h: Update from current libg++.
+	* libio/strops.c: Likewise.
+
+	* login/Makefile (routines): Update after correction of reentrant
+	interface.
+	* login/endutent.c: Removed.
+	* login/endutent_r.c: Likewise.
+	* login/pututline.c: Likewise.
+	* login/pututline_r.c: Likewise.
+	* login/setutent.c: Likewise.
+	* login/setutent_r.c: Likewise.
+	* login/getutent.c: Update for new interface.
+	* login/getutent_r.c: Likewise.
+	* login/getutid.c: Likewise.
+	* login/getutid_r.c: Likewise.
+	* login/getutline.c: Likewise.
+	* login/getutline_r.c: Likewise.
+	* login/login.c: Likewise.
+	* login/logout.c: Likewise.
+	* login/logwtmp.c: Likewise.
+	* login/utmp.h: Likewise.
+	* sysdeps/unix/getlogin.c: Likewise.
+	* sysdeps/unix/getlogin_r.c: Likewise.
+	* login/utmp-private.h: New private header.
+	* login/utmp_db.c: Stub DB backend for utmp handler.
+	* login/utmp_file.c: File backend for utmp handler.
+	* sysdeps/gnu/utmpbits.h (struct utmp): Add some more fields.
+	(enum utlogin): List of record types.
+	(struct exit_status): Record to align with other implementations.
+
+	* sysdeps/generic/paths.h: Add _PATH_UTMP_DB.
+	* sysdeps/unix/sysv/linux/paths.h: Likewise.
+
+	* sysdeps/generic/pty.c: Use getgrnam_r instead of getgrnam.
+
+	* sysdeps/stub/getlogin.c: Update copyright.
+	* sysdeps/stub/getlogin_r.c: Likewise.
+
+	* nss/getXXbyYY_r.c: Use -1l for error-pointer value instead of -1.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+
+	* posix/Makefile (headers): Add wait.h.
+	* posix/wait.h: New file.
+
+	* posix/sys/types.h: Always define intN_t types.
+
+	* stdio-common/Makefile: Update copyright.
+	Use -Wno-format flag for scanf4.c and scanf7.c.
+
+	* stdlib/stdlib.h: Reformat.
+
+	* time/africa: Update from ADO tzdata1996m.
+	* time/antarctica: Likewise.
+	* time/asia: Likewise.
+	* time/australia: Likewise.
+	* time/etcetera: Likewise.
+	* time/europe: Likewise.
+	* time/northamerica: Likewise.
+	* time/southamerica: Likewise.
+	* time/zone.tab: Likewise.
+
+Fri Nov 22 19:34:12 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/getcwd.c (__getcwd): After resizing the buffer
+	move the current contents to the end and relocate file name
+	pointer to upper half of the buffer.
+
+Sun Nov 24 04:56:19 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/africa: Update from ADO tzdata1996m.
+	* time/antarctica: Likewise.
+	* time/asia: Likewise.
+	* time/australia: Likewise.
+	* time/etcetera: Likewise.
+	* time/europe: Likewise.
+	* time/nothamerica: Likewise.
+	* time/southameria: Likewise.
+	* time/zone.tab: Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/serial.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=misc] (sysdep_headers):
+	Add sys/serial.h.
+	* sysdeps/unix/sysv/linux/Dist: Add sys/serial.h.
+
+	* posix/wait.h: New file.
+	* posix/Makefile (headers): Add wait.h.
+
+Sat Nov 23 17:27:52 1996  Roland McGrath  <roland@gnu.ai.mit.edu>
+
+	* Makeconfig ($(common-objpfx)soversions.mk): Use regular
+	expression instead of shell pattern matching.
+	* shlib-versions: Change to regular expressions.
+
+Sat Nov 23 13:24:55 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/stat.c: Add section from libgcc to copyright comment
+	to allow this file to be statically linked in applications.
+	* io/fstat.c: Likewise.
+	* io/lstat.c: Likewise.
+	* io/mknod.c: Likewise.
+
+Fri Nov 22 15:14:23 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/initfini.c: Add section from libgcc to copyright comment
+	to allow this file to be statically linked in applications.
+
+	* malloc/obstack.h [!_LIBC && !HAVE_STRING_H]: Define memcpy if
+	not already defined.
+	(obstack_grow, obstack_grow0): Correct placement of braces.
+
+	* gnu-versions.h (_GNU_OBSTACK_INTERFACE_VERSION): Define to 2.
+	* malloc/obstack.c (OBSTACK_INTERFACE_VERSION): Define to 2.
+
+Thu Nov 21 19:54:51 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (make-link): Simplify by changing directory only if
+	not using rellns-sh; check whether we really have symbolic links.
+
+	* rellns-sh: Fix the case of $(dirname $2) being a prefix of
+	$(dirname $1); use status of ln for exit code; make more robust
+	against multiple slashes in a row.
+
+Thu Nov 21 13:05:21 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* configure.in (after AC_CANONICAL_HOST): mutate *-*-gnu* names
+	into *-*-gnu-gnu*.
+	* shlib-versions (gnu versions): Recognize *-*-gnu-gnu* instead of
+	the three-part name, to distinguish correctly from *-*-linux-gnu*.
+
+	* sysdeps/mach/hurd/Makefile ($(libdir)/libc.so): Depend on
+	$(rpcuserlibs).
+
+	* sysdeps/mach/hurd/Makefile (install-others): Add
+	$(libdir)/libc_p.a.
+	($(libdir)/libc_p.a): New rule.
+	* sysdeps/mach/hurd/libc_p-ldscript: New file.
+	* sysdeps/mach/hurd/Dist: Add libc_p-ldscript.
+
+Wed Nov 20 20:28:21 1996  Richard Henderson  <rth@tamu.edu>
+
+	* Makerules (make-link): Use $(shell) to find rellns-sh before we cd.
+	* time/Makefile: Likewise.
+
+	* sysdeps/alpha/elf/Makefile: New file.  Build crtbegin.o & crtend.o.
+	* sysdeps/alpha/elf/Dist: New file.
+	* sysdeps/alpha/elf/crtbegin.S, sysdeps/alpha/elf/crtend.S: New files.
+	The bits currently distributed with GCC fail in two ways -- they don't
+	understand multiple .got subsections and the extents of the lists are
+	dynamicly bound meaning that the application's lists get executed
+	multiple times and the library's lists never get executed.
+
+Wed Nov 20 00:42:45 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/strtod.c: Fix previous change.
+
+Wed Nov 20 22:07:58 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* time/Makefile ($(installed-localtime-file)): Use $(..) to find
+	rellns-sh script.
+
+Wed Nov 20 12:50:54 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/Makefile: Add CFLAGS-scanf7.c to prevent warning.
+	Likesie for scanf4.c
+
 Wed Nov 20 02:04:11 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sigsuspend.c: Make sigsuspend a weak

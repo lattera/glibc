@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 #
 #	Sub-makefile for login portion of the library.
@@ -24,9 +24,10 @@ subdir	:= login
 
 headers	:= utmp.h utmpbits.h lastlog.h pty.h
 
-routines := setutent endutent getutent getutid getutline pututline	\
-	    setutent_r endutent_r getutent_r getutid_r getutline_r	\
-	    pututline_r
+routines := getutent getutent_r getutid getutline getutid_r getutline_r \
+	    utmp_file utmp_db
+
+distribtue := utmp-private.h
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil

@@ -8,7 +8,8 @@ sysdep_routines += sysctl clone
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/module.h sys/io.h sys/klog.h sys/kdaemon.h \
 		  sys/user.h syscall-list.h sys/sysmacros.h sys/procfs.h \
-		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h
+		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h \
+		  sys/serial.h
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/syscall.h

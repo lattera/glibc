@@ -9,49 +9,49 @@
 # -------------		------- --------
 
 # The interface to -lm depends only on cpu, not on operating system.
-i?86-*-*		libm=6
-m68k-*-*		libm=6
-alpha-*-*		libm=6
+i.86-.*-.*		libm=6
+m68k-.*-.*		libm=6
+alpha-.*-.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
-i?86-*-linux*		libc=6
-m68k-*-linux*		libc=6
-alpha-*-linux*		libc=6
+i.86-.*-linux.*		libc=6
+m68k-.*-linux.*		libc=6
+alpha-.*-linux.*	libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
-*-*-gnu?*		libmachuser=1
+.*-.*-gnu-gnu.*		libmachuser=1
 
 # libhurduser.so.0.0 corresponds to hurd/*.defs as of 7 May 1996.
-*-*-gnu?*		libhurduser=0.0
+.*-.*-gnu-gnu*		libhurduser=0.0
 
 # libc.so.0.2 is for the Hurd alpha release 0.2.
-*-*-gnu?*		libc=0.2
+.*-.*-gnu-gnu*		libc=0.2
 
 # The dynamic loader also requires different names.
-i?86-*-linux*		ld=ld-linux.so.2
+i.86-.*-linux.*		ld=ld-linux.so.2
 # We use the ELF ABI standard name for the default.
-*-*-*			ld=ld.so.1
+.*-.*-.*		ld=ld.so.1
 
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
-*-*-*			libdl=2
+.*-.*-.*		libdl=2
 
 # So far the -lutil interface is the same on all platforms, except for the
 # `struct utmp' format, which depends on libc.
-*-*-*			libutil=1
+.*-.*-.*		libutil=1
 
 # Version number 2 is used on other systems for the BIND 4.9.5 resolver
 # interface.
-*-*-*			libresolv=2
+.*-.*-.*		libresolv=2
 
 # Interface revision of nss_* modules.  This must match NSS_SHLIB_REVISION
 # in nss/nsswitch.h, which determines the library names used for service
 # names given in /etc/nsswitch.conf.
-*-*-*			libnss_files=1
-*-*-*			libnss_dns=1
-*-*-*			libnss_db=1
+.*-.*-.*		libnss_files=1
+.*-.*-.*		libnss_dns=1
+.*-.*-.*		libnss_db=1
 
 # We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
-*-*-*			libdb=2
+.*-.*-.*		libdb=2
 
 # This defines the shared library version numbers we will install.
-*-*-*			libcrypt=1
+.*-.*-.*		libcrypt=1

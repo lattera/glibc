@@ -25,8 +25,7 @@ Boston, MA 02111-1307, USA.  */
 int
 logout (const char *line)
 {
-  struct utmp_data data = { ut_fd: -1 };
-  struct utmp tmp;
+  struct utmp tmp, utbuf;
   struct utmp *ut;
   int result = 0;
 
@@ -35,7 +34,7 @@ logout (const char *line)
     return 0;
 
   /* Open UTMP file.  */
-  setutent_r (&data);
+  setutent ();
 
   /* Fill in search information.  */
 #if _HAVE_UT_TYPE - 0
@@ -44,7 +43,7 @@ logout (const char *line)
   strncpy (tmp.ut_line, line, sizeof tmp.ut_line);
 
   /* Read the record.  */
-  if (getutline_r (&tmp, &ut, &data) >= 0)
+  if (getutline_r (&tmp, &utbuf, &ut) >= 0)
     {
       /* Clear information about who & from where.  */
       bzero (ut->ut_name, sizeof ut->ut_name);
@@ -57,12 +56,12 @@ logout (const char *line)
       time (&ut->ut_time);
 #endif
 
-      if (pututline_r (ut, &data) >= 0)
+      if (pututline (ut) >= 0)
 	result = 1;
     }
 
   /* Close UTMP file.  */
-  endutent_r (&data);
+  endutent ();
 
   return result;
 }

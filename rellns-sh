@@ -28,15 +28,13 @@ case $1 in
   to=`echo $1 | sed 's%^/%%'`
 
   if test -d $2; then
-    fromname=.
-    from=`echo $2 | sed 's%/$%%'`
+    from=`echo $2 | sed 's%/*$%%'`
   else
-    fromname=`echo $2 | sed 's%.*/\([^/]*\)$%\1%'`
-    from=`echo $2 | sed "s%/*$fromname$%%"`
+    from=`echo $2 | sed 's%/*[^/]*$%%'`
   fi
 
-  case $from in
-  /*) from=`echo $from | sed 's%^/%%'` ;;
+  case "$from" in
+  /*) from=`echo $from | sed 's%^/*%%'` ;;
   ?*) from=`cd $from && pwd | sed 's%^/%%'` ;;
   *) from=`pwd | sed 's%^/%%'` ;;
   esac
@@ -47,8 +45,8 @@ case $1 in
 
     test "$preto" != "$prefrom" && break
 
-    to=`echo $to | sed 's%^[^/]*/\(.*\)$%\1%'`
-    from=`echo $from | sed 's%^[^/]*/\(.*\)$%\1%'`
+    to=`echo $to | sed 's%^[^/]*/*\(.*\)$%\1%'`
+    from=`echo $from | sed 's%^[^/]*/*\(.*\)$%\1%'`
   done
 
   while test -n "$from"; do
@@ -63,5 +61,3 @@ case $1 in
   ln -s $1 $2
   ;;
 esac
-
-exit 0

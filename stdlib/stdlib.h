@@ -245,14 +245,16 @@ struct random_data
 
 extern int __random_r __P ((struct random_data *__buf, int32_t *__result));
 extern int random_r __P ((struct random_data *__buf, int32_t *__result));
+
 extern int __srandom_r __P ((unsigned int __seed, struct random_data *__buf));
+extern int srandom_r __P ((unsigned int __seed, struct random_data *__buf));
+
 extern int __initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
 			       size_t __statelen, struct random_data *__buf));
-extern int __setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
-
-extern int srandom_r __P ((unsigned int __seed, struct random_data *__buf));
 extern int initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
 			     size_t __statelen, struct random_data *__buf));
+
+extern int __setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
 extern int setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
 #endif	/* Use reentrant.  */
 #endif	/* Use BSD.  */

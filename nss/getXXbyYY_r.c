@@ -97,7 +97,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
     {
       no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING, (void **) &fct);
       if (no_more)
-	startp = (service_user *) -1;
+	startp = (service_user *) -1l;
       else
 	{
 	  startp = nip;
@@ -118,7 +118,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   else
     {
       fct = start_fct;
-      no_more = (nip = startp) == (service_user *) -1;
+      no_more = (nip = startp) == (service_user *) -1l;
     }
 
   while (no_more == 0)

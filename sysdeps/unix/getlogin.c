@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <unistd.h>
@@ -34,9 +34,8 @@ getlogin (void)
   char tty_pathname[2 + 2 * NAME_MAX];
   char *real_tty_path = tty_pathname;
   char *result = NULL;
-  struct utmp_data utmp_data = { ut_fd: -1 };
   static char name[UT_NAMESIZE + 1];
-  struct utmp *ut, line;
+  struct utmp *ut, line, buffer;
 
   /* Get name of tty connected to fd 0.  Return NULL if not a tty or
      if fd 0 isn't open.  Note that a lot of documentation says that
@@ -52,9 +51,9 @@ getlogin (void)
 
   real_tty_path += 5;		/* Remove "/dev/".  */
 
-  __setutent_r (&utmp_data);
+  __setutent ();
   strncpy (line.ut_line, real_tty_path, sizeof line.ut_line);
-  if (__getutline_r (&line, &ut, &utmp_data) < 0)
+  if (__getutline_r (&line, &buffer, &ut) < 0)
     {
       if (errno == ESRCH)
 	/* The caller expects ENOENT if nothing is found.  */
@@ -68,7 +67,7 @@ getlogin (void)
       result = name;
     }
 
-  __endutent_r (&utmp_data);
+  __endutent ();
 
   return result;
 }

@@ -76,7 +76,6 @@ typedef unsigned short int ushort;
 typedef unsigned int uint;
 #endif
 
-#ifdef __USE_BSD
 /* These size-specific names are used by some of the inet code.  */
 
 #if !defined (__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 7
@@ -112,7 +111,6 @@ __u_intN_t (64, __DI__);
 
 typedef int register_t __attribute__ ((__mode__ (__word__)));
 
-#endif
 
 /* Some code from BIND tests this macro to see if the types above are
    defined.  */

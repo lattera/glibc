@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright (C) 1993 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
@@ -32,8 +32,6 @@ typedef void (*_IO_free_type) __P((void*));
 
 struct _IO_str_fields
 {
-  /* The current length is max(_len, _IO_write_ptr-_IO_write_base). */
-  _IO_size_t _len;
   _IO_alloc_type _allocate_buffer;
   _IO_free_type _free_buffer;
 };

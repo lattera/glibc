@@ -176,7 +176,7 @@ $(includedir)/stubs.h: subdir_install
 	else $(INSTALL_DATA) $(objpfx)stubs.h $@; fi
 	rm -f $(objpfx)stubs.h
 
-ifeq (yes, $(build-shared))
+ifeq (yes,$(build-shared))
 
 # Like stubs.h the gnu/lib-names.h header is not used while building the
 # libc itself.  So we generate it while installing.

@@ -600,16 +600,24 @@ versioned := $(strip $(foreach so,$(install-lib.so),\
 $(addprefix $(slibdir)/,$(filter-out $(versioned),$(install-lib.so))): \
 $(slibdir)/%.so: $(objpfx)%.so; $(do-install-program)
 
+ifneq ($(findstring -s,$(LN_S)),)
 define make-link
-here=`pwd`; cd $(@D); \
-rm -f $(@F).new; \
+rm -f $@.new; \
 if test '$(@D)' = '$(<D)'; then \
-  $(LN_S) $(<F) $(@F).new; \
+  (cd $(@D); $(LN_S) $(<F) $(@F).new); \
 else \
-  $(SHELL) $$here/$(..)rellns-sh $< $(@F).new; \
+  $(SHELL) $(..)rellns-sh $< $@.new; \
 fi; \
-mv -f $(@F).new $(@F)
+mv -f $@.new $@
 endef
+else
+# If we have no symbolic links don't bother with rellns-sh.
+define make-link
+rm -f $@.new; \
+$(LN_S) $< $@.new; \
+mv -f $@.new $@
+endef
+endif
 
 ifdef libc.so-version
 # For a library specified to be version N, install three files:

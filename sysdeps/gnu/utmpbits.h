@@ -52,6 +52,31 @@ struct lastlog
   char ll_host[UT_HOSTSIZE];
 };
 
+
+/* Which program created the record.  */
+enum utlogin
+{
+  unknown,
+  X,
+  local,
+  rlogin,
+  telnet,
+  rsh,
+  ftp,
+  screen,
+  splitvt,
+  xterm
+  /* More could be added here.  */
+};
+
+
+struct exit_status
+{
+  short int e_termination;	/* Process termination status.  */
+  short int e_exit;		/* Process exit status.  */
+};
+
+
 struct utmp
 {
   short int ut_type;		/* Type of login.  */
@@ -61,11 +86,14 @@ struct utmp
   char ut_user[UT_NAMESIZE];	/* Username (not NUL terminated).  */
 #define ut_name	ut_user		/* Compatible field name for same.  */
   char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
-  int ut_exit;			/* Process termination/exit status.  */
+  struct exit_status ut_exit;	/* The exit status of a process marked
+				   as DEAD_PROCESS.  */
   long ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
-  int32_t ut_addr;		/* Internet address of remote host.  */
-  char pad[32];			/* Reserved for future use.  */
+  int32_t ut_addr[4];		/* Internet address of remote host.  */
+  enum utlogin ut_login;	/* To store information about source.  */
+  short int ut_syslen;		/* Significant length of ut_host.  */
+  char pad[14];			/* Reserved for future use.  */
 };
 
 #define ut_time	ut_tv.tv_sec	/* Backwards compatibility.  */

@@ -523,9 +523,10 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 	(file="$(wildcard $(patsubst %,$(..)%/shlib-versions,$(add-ons))) \
 	       $(..)shlib-versions"; \
 	 for f in $$file; do \
-	 sed 's/#.*$$//' $$f | while read conf versions; do \
-	   test -n "$$versions" || continue; \
-	   case '$(config-machine)-$(config-vendor)-$(config-os)' in $$conf)\
+	   sed 's/#.*$$//' $$f | while read conf versions; do \
+	     test -n "$$versions" && \
+	     test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
+			: "$$conf"` != 0 || continue; \
 	     for v in $$versions; do \
 	       lib=`echo $$v | sed 's/=.*$$//'`; \
 	       if eval "test -z \"\$$vers_lib$$lib\""; then \
@@ -536,9 +537,10 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 			   echo "all-sonames+=$$lib.so\$$($$lib.so-version)";;\
 		   *) echo "$$lib.so-version=$$number"; \
 		      echo "all-sonames+=\$$($$lib.so-version)";;  \
-		 esac; \
+	         esac; \
 	       fi; \
-	   done ;; esac; done; \
+	     done; \
+	   done; \
 	 done;) > $@T; exit 0
 	mv -f $@T $@
 

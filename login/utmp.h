@@ -58,9 +58,11 @@ extern int utmpname __P ((__const char *__file));
 extern struct utmp *getutent __P ((void));
 
 /* Rest the input stream to the beginning of the file.  */
+extern void __setutent __P ((void));
 extern void setutent __P ((void));
 
 /* Close the current open file.  */
+extern void __endutent __P ((void));
 extern void endutent __P ((void));
 
 /* Search forward from the current point in the utmp file until the
@@ -76,42 +78,19 @@ extern struct utmp *pututline __P ((__const struct utmp *__utmp_ptr));
 
 
 #ifdef	__USE_REENTRANT
-/* Define the data structure needed for the reentrant version.  */
-struct utmp_data
-{
-  int ut_fd;
-  off_t loc_utmp;
-  struct utmp ubuf;
-};
-
-
 /* Reentrant versions of the file for handling utmp files.  */
-extern int __getutent_r __P ((struct utmp **__utmp,
-			      struct utmp_data *__utmp_data));
-extern int getutent_r __P ((struct utmp **__utmp,
-			    struct utmp_data *__utmp_data));
+extern int __getutent_r __P ((struct utmp *__buffer, struct utmp **__result));
+extern int getutent_r __P ((struct utmp *__buffer, struct utmp **__result));
 
-extern void __setutent_r __P ((struct utmp_data *__utmp_data));
-extern void setutent_r __P ((struct utmp_data *__utmp_data));
-
-extern void __endutent_r __P ((struct utmp_data *__utmp_data));
-extern void endutent_r __P ((struct utmp_data *__utmp_data));
-
-extern int __getutid_r __P ((__const struct utmp *__id, struct utmp **__utmp,
-			     struct utmp_data *__utmp_data));
-extern int getutid_r __P ((__const struct utmp *__id, struct utmp **__utmp,
-			   struct utmp_data *__utmp_data));
+extern int __getutid_r __P ((__const struct utmp *__id, struct utmp *__buffer,
+			     struct utmp **__result));
+extern int getutid_r __P ((__const struct utmp *__id, struct utmp *__buffer,
+			   struct utmp **__result));
 
 extern int __getutline_r __P ((__const struct utmp *__line,
-			       struct utmp **__utmp,
-			       struct utmp_data *__utmp_data));
-extern int getutline_r __P ((__const struct utmp *__line, struct utmp **__utmp,
-			     struct utmp_data *__utmp_data));
-
-extern int __pututline_r __P ((__const struct utmp *__utmp_ptr,
-			       struct utmp_data *__utmp_data));
-extern int pututline_r __P ((__const struct utmp *__utmp_ptr,
-			     struct utmp_data *__utmp_data));
+			       struct utmp *__buffer, struct utmp **__result));
+extern int getutline_r __P ((__const struct utmp *__line,
+			     struct utmp *__buffer, struct utmp **__result));
 
 #endif	/* Use reentrant.  */
 

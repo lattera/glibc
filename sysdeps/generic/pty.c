@@ -59,9 +59,12 @@ openpty(amaster, aslave, name, termp, winp)
 	static char line[] = "/dev/ptyXX";
 	register const char *cp1, *cp2;
 	register int master, slave, ttygid;
+	size_t buflen = sysconf (_SC_GETGR_R_SIZE_MAX);
+	char buffer[buflen];
+	struct group grbuffer;
 	struct group *gr;
 
-	if ((gr = getgrnam("tty")) != NULL)
+	if (getgrnam_r("tty", &grbuffer, buffer, buflen, &gr) >= 0)
 		ttygid = gr->gr_gid;
 	else
 		ttygid = -1;

@@ -1,74 +1,55 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>
+   and Paul Janzen <pcj@primenet.com>, 1996.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <libc-lock.h>
 #include <string.h>
 #include <unistd.h>
 #include <utmp.h>
 
+#include "utmp-private.h"
 
-/* For implementing this function we don't use the getutent_r function
-   because we can avoid the reposition on every new entry this way.  */
+
+/* We have to use the lock in getutent_r.c.  */
+__libc_lock_define (extern, __libc_utmp_lock)
+
+/* The jump table is also in getutent_r.c.  */
+extern struct utfuncs *__libc_utmp_jump_table;
+
+
 int
-__getutline_r (const struct utmp *line, struct utmp **utmp,
-	       struct utmp_data *utmp_data)
+__getutline_r (const struct utmp *line, struct utmp *buffer,
+	       struct utmp **result)
 {
-  /* Open utmp file if not already done.  */
-  if (utmp_data->ut_fd == -1)
-    {
-      __setutent_r (utmp_data);
-      if (utmp_data->ut_fd == -1)
-	return -1;
-    }
+  int retval = -1;
 
-  /* Position file correctly.  */
-  if (lseek (utmp_data->ut_fd, utmp_data->loc_utmp, SEEK_SET) == -1)
-    return -1;
+  __libc_lock_lock (__libc_utmp_lock);
 
-  while (1)
-    {
-      /* Read the next entry.  */
-      if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
-	  != sizeof (struct utmp))
-	{
-	  utmp_data->loc_utmp = 0; /* Mark UTMP_DATA->ubuf invalid.  */
-	  __set_errno (ESRCH);
-	  return -1;
-	}
+  /* Not yet initialized.  */
+  if ((*__libc_utmp_jump_table->setutent) (0))
+    retval = (*__libc_utmp_jump_table->getutline_r) (line, buffer, result);
+  else
+    *result = NULL;
 
-      /* Update position pointer.  */
-      utmp_data->loc_utmp += sizeof (struct utmp);
+  __libc_lock_unlock (__libc_utmp_lock);
 
-      if (
-#if _HAVE_UT_TYPE - 0
-	  (utmp_data->ubuf.ut_type == USER_PROCESS
-	   || utmp_data->ubuf.ut_type == LOGIN_PROCESS)
-	  &&
-#endif
-	  ! strncmp (line->ut_line, utmp_data->ubuf.ut_line,
-		     sizeof line->ut_line))
-	/* Stop if we found a user or login entry.  */
-	break;
-    }
-
-  *utmp = &utmp_data->ubuf;
-
-  return 0;
+  return retval;
 }
 weak_alias (__getutline_r, getutline_r)

@@ -53,8 +53,9 @@ _dl_map_object_deps (struct link_map *map,
       preloads[nlist]->l_reserved = 1;
     }
 
-  /* Terminate the list.  */
+  /* Terminate the lists.  */
   head[nlist].next = NULL;
+  duphead.next = NULL;
 
   /* Start here for adding dependencies to the list.  */
   tailp = &head[nlist++];

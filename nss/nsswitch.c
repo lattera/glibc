@@ -339,10 +339,10 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 
 	      if (nss_dlerror_run (do_open) != 0)
 		/* Failed to load the library.  */
-		ni->library->lib_handle = (void *) -1;
+		ni->library->lib_handle = (void *) -1l;
 	    }
 
-	  if (ni->library->lib_handle == (void *) -1)
+	  if (ni->library->lib_handle == (void *) -1l)
 	    /* Library not found => function not found.  */
 	    result = NULL;
 	  else

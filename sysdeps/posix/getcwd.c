@@ -344,8 +344,11 @@ __getcwd (buf, size)
 		      __set_errno (ENOMEM);/* closedir might have changed it.*/
 		      return NULL;
 		    }
-		  pathp = &buf[pathp - path];
+		  pathp = &buf[pathp - path + size / 2];
 		  path = buf;
+		  /* Move current contents up to the end of the buffer.
+		     This is guaranteed to be non-overlapping.  */
+		  memcpy (pathp, pathp - size / 2, path + size - pathp);
 		}
 	    }
 	  pathp -= namlen;

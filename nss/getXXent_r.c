@@ -124,9 +124,9 @@ setup (void **fctp, const char *func_name, int all)
   if (startp == NULL)
     {
       no_more = DB_LOOKUP_FCT (&nip, func_name, fctp);
-      startp = no_more ? (service_user *) -1 : nip;
+      startp = no_more ? (service_user *) -1l : nip;
     }
-  else if (startp == (service_user *) -1)
+  else if (startp == (service_user *) -1l)
     /* No services at all.  */
     return 1;
   else

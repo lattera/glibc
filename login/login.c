@@ -1,21 +1,21 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <limits.h>
@@ -43,8 +43,8 @@ tty_name (int fd, char **tty, size_t buf_len)
 	  rv = ttyname_r (fd, buf, buf_len);
 
 	  if (rv < 0 || memchr (buf, '\0', buf_len))
-	    /* We either got an error, or we succeeded and the returned name fit
-	       in the buffer.  */
+	    /* We either got an error, or we succeeded and the
+	       returned name fit in the buffer.  */
 	    break;
 
 	  /* Try again with a longer buffer.  */
@@ -68,9 +68,9 @@ tty_name (int fd, char **tty, size_t buf_len)
     }
 
   if (rv == 0)
-    *tty = buf;			/* Return buffer to the user.  */
+    *tty = buf;		/* Return buffer to the user.  */
   else if (buf != *tty)
-    free (buf);			/* Free what we malloced when returning an error.  */
+    free (buf);		/* Free what we malloced when returning an error.  */
 
   return rv;
 }
@@ -86,8 +86,8 @@ login (const struct utmp *ut)
   char *tty = _tty;
   int found_tty;
   const char *ttyp;
-  struct utmp_data data = { -1 };
   struct utmp copy = *ut;
+  struct utmp utbuf;
 
   /* Fill in those fields we supply.  */
 #if _HAVE_UT_TYPE - 0
@@ -118,26 +118,16 @@ login (const struct utmp *ut)
 	  struct utmp *old;
 
 	  /* Open UTMP file.  */
-	  setutent_r (&data);
+	  setutent ();
 
 	  /* Read the record.  */
-	  if (getutline_r (&copy, &old, &data) >= 0)
-	    {
-#if _HAVE_UT_TYPE - 0
-	      /* We have to fake the old entry because this `login'
-		 function does not fit well into the UTMP file
-		 handling scheme.  */
-	      old->ut_type = copy.ut_type;
-#endif
-	      pututline_r (&copy, &data);
-	    }
-	  else if (errno == ESRCH)
-	    /* We didn't find anything.  pututline_r will add UT at the end
-	       of the file in this case.  */
-	    pututline_r (&copy, &data);
+	  getutline_r (&copy, &utbuf, &old);
+
+	  /* Write the entry.  */
+	  pututline (&copy);
 
 	  /* Close UTMP file.  */
-	  endutent_r (&data);
+	  endutent ();
 	}
 
       if (tty != _tty)
@@ -147,23 +137,18 @@ login (const struct utmp *ut)
   /* Update the WTMP file.  Here we have to add a new entry.  */
   if (utmpname (_PATH_WTMP) != 0)
     {
+      struct utmp *up;
+
       /* Open the WTMP file.  */
-      setutent_r (&data);
+      setutent ();
 
       /* Position at end of file.  */
-      data.loc_utmp = lseek (data.ut_fd, 0, SEEK_END);
-      if (data.loc_utmp != -1)
-	{
-#if _HAVE_UT_TYPE - 0
-	  /* We have to fake the old entry because this `login'
-	     function does not fit well into the UTMP file handling
-	     scheme.  */
-	  data.ubuf.ut_type = copy.ut_type;
-#endif
-	  pututline_r (&copy, &data);
-	}
+      while (! getutent_r (&utbuf, &up));
+
+      /* Write the new entry.  */
+      pututline (&copy);
 
       /* Close WTMP file.  */
-      endutent_r (&data);
+      endutent ();
     }
 }

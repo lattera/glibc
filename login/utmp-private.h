@@ -1,6 +1,8 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Internal definitions and declarations for UTMP functions.
+   Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>
+   and Paul Janzen <pcj@primenet.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,20 +19,23 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _UTMP_PRIVATE_H
+#define _UTMP_PRIVATE_H	1
+
 #include <utmp.h>
 
-
-/* Local buffer to store the result.  */
-static struct utmp buffer;
-
-
-struct utmp *
-getutline (const struct utmp *line)
+/* The extra `int' argument for each function shows whether locking is
+   wanted or not.  */
+struct utfuncs
 {
-  struct utmp *result;
+  int (*setutent) (int);
+  int (*getutent_r) (struct utmp *, struct utmp **);
+  int (*getutid_r) (const struct utmp *, struct utmp *, struct utmp **);
+  int (*getutline_r) (const struct utmp *, struct utmp *, struct utmp **);
+  struct utmp *(*pututline) (const struct utmp *);
+  void (*endutent) (void);
+  int (*utmpname) (const char *);
 
-  if (__getutline_r (line, &buffer, &result) < 0)
-    return NULL;
+};
 
-  return result;
-}
+#endif /* utmp-private.h */
