@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -35,19 +36,22 @@ _dl_get_origin (void)
 {
   char linkval[PATH_MAX];
   char *result;
+  int len;
 
-  if (__readlink ("/proc/self/exe", linkval, PATH_MAX) != -1
+  if ((len = __readlink ("/proc/self/exe", linkval, PATH_MAX)) > 0
       && linkval[0] != '[')
     {
       /* We can use this value.  */
-      char *last_slash = strrchr (linkval, '/');
-      result = (char *) malloc (last_slash - linkval + 1);
+      assert (linkval[0] == '/');
+      while (len > 1 && linkval[len - 1] != '/')
+	--len;
+      result = (char *) malloc (len + 1);
       if (result == NULL)
 	result = (char *) -1;
-      else if (last_slash == linkval)
+      else if (len == 1)
 	memcpy (result, "/", 2);
       else
-	*((char *) __mempcpy (result, linkval, last_slash - linkval)) = '\0';
+	*((char *) __mempcpy (result, linkval, len - 1)) = '\0';
     }
   else
     {
@@ -57,7 +61,7 @@ _dl_get_origin (void)
       if (GL(dl_origin_path) != NULL)
 	{
 	  size_t len = strlen (GL(dl_origin_path));
-	  result = malloc (len + 1);
+	  result = (char *) malloc (len + 1);
 	  if (result == NULL)
 	    result = (char *) -1;
 	  else

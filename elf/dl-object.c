@@ -150,15 +150,18 @@ _dl_new_object (char *realname, const char *libname, int type,
 	}
 
       /* Add the real file name.  */
-      memcpy (cp, realname, realname_len);
+      cp = __mempcpy (cp, realname, realname_len);
 
-      /* Now remove the filename and the slash.  Leave the slash if it
+      /* Now remove the filename and the slash.  Leave the slash if
 	 the name is something like "/foo".  */
-      cp = strrchr (origin, '/');
+      do
+	--cp;
+      while (*cp != '/');
+
       if (cp == origin)
-	origin[1] = '\0';
-      else
-	*cp = '\0';
+	/* Keep the only slash which is the first character.  */
+	++cp;
+      *cp = '\0';
 
     out:
       new->l_origin = origin;

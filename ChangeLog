@@ -1,5 +1,11 @@
 2002-02-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-object.c (_dl_new_object): Avoid using strrchr.  We have
+	more information.
+	* elf/rtld.c (dl_main): Avoid strrchr.
+	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Use the
+	result of readlink.  Search from the back for '/'.
+
 	* elf/dl-profile.c (_dl_start_profile): Help the compiler to avoid
 	strncpy if possible.
 

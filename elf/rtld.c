@@ -589,10 +589,17 @@ of this helper program; chances are you did not intend to run this program.\n\
 	   be our SONAME, and add it to our name list.  */
 	if (GL(dl_rtld_map).l_ld == NULL)
 	  {
-	    char *p = strrchr (_dl_rtld_libname.name, '/');
-	    if (p)
+	    const char *p = NULL;
+	    const char *cp = _dl_rtld_libname.name;
+
+	    /* Find the filename part of the path.  */
+	    while (*cp != '\0')
+	      if (*cp++ == '/')
+		p = cp;
+
+	    if (p != NULL)
 	      {
-		_dl_rtld_libname2.name = p+1;
+		_dl_rtld_libname2.name = p;
 		/* _dl_rtld_libname2.next = NULL;  Already zero.  */
 		_dl_rtld_libname.next = &_dl_rtld_libname2;
 	      }
