@@ -1,5 +1,7 @@
 2000-10-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-sysdep.c (DL_FIND_ARG_COMPONENTS): Little cleanup.
+
 	* sysdeps/i386/fpu/libm-test-ulps: Update for changes in libm-test.inc.
 
 2000-10-16  Jakub Jelinek  <jakub@redhat.com>
@@ -25,7 +27,7 @@
 
 2000-10-16  Ulrich Drepper  <drepper@redhat.com>
 
-	* timezone/Makefile: Define HAVE_GETTEXT fir zdump.c, zic.c,
+	* timezone/Makefile: Define HAVE_GETTEXT for zdump.c, zic.c,
 	ialloc.c, and scheck.c.
 	* malloc/obstack.c: Always include <libintl.h> for glibc.
 	* posix/getopt.c: Likewise.

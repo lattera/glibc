@@ -61,14 +61,14 @@ unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 
 #ifndef DL_FIND_ARG_COMPONENTS
 # define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
-  do {								\
-    void **_tmp;						\
-    (argc) = *(long *) cookie;					\
-    (argv) = (char **) cookie + 1;				\
-    (envp) = (argv) + (argc) + 1;				\
-    for (_tmp = (void **) (envp); *_tmp; ++_tmp)		\
-      continue;							\
-    (auxp) = (void *) ++_tmp;					\
+  do {									      \
+    void **_tmp;							      \
+    (argc) = *(long int *) cookie;					      \
+    (argv) = (char **) ((long int *) cookie + 1);			      \
+    (envp) = (argv) + (argc) + 1;					      \
+    for (_tmp = (void **) (envp); *_tmp; ++_tmp)			      \
+      continue;								      \
+    (auxp) = (void *) ++_tmp;						      \
   } while (0)
 #endif
 
