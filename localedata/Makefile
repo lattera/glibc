@@ -43,7 +43,8 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 
 distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
 	      README mnemonic.ds fr_CA,2.13.in de_DE.in da_DK.in	 \
-	      $(charmaps) $(locales) $(ld-test-srcs) tst-rpmatch.sh
+	      $(charmaps) $(locales) $(ld-test-srcs) tst-rpmatch.sh	 \
+	      SUPPORTED
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
@@ -66,3 +67,14 @@ tests: $(objpfx)collate-test $(objpfx)xfrm-test $(objpfx)tst-fmon \
 	$(SHELL) -e tst-locale.sh $(common-objpfx)
 	$(SHELL) -e tst-rpmatch.sh $(common-objpfx)
 endif
+
+# Sometimes the whole collection of locale files should be installed.
+ifneq ($(install_root),)
+LOCALEDEF=chroot $(install_root) $(bindir)/localedef
+else
+LOCALEDEF=$(common-objpfx)locale/localedef
+endif
+install-locales:
+	(while read locale charset; do \
+	   $(LOCALEDEF) -c -i $$locale -f $$charset $$locale; \
+	 done) < SUPPORTED

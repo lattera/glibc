@@ -1,3 +1,19 @@
+1998-03-24 12:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (distribute): Add SUPPORTED.
+	(install-locales): New rule to install locale dat ausing localedef.
+	* SUPPORTED: New file.  Names all usable locales.
+	Based on a patch by Cristian Gafton <gafton@redhat.com>.
+
+	* locales/gr_GR: Correct collation description.
+	* locales/nl_NL: Correct Charset requirement.
+	* locales/pt_BR: Fix int_curr_symbol.
+	* locales/ru_RU: Fix ctype data.
+	Patches by Cristian Gafton <gafton@redhat.com>.
+
+	* locales/nl_NL: Fix yesexpr/noexpr.
+	* locales/pt_BR: Likewise.
+
 1998-03-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/ru_RU: Correct last patch.

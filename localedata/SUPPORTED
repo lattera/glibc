@@ -1,0 +1,47 @@
+# This file names the currently supported and somewhat tested locales.
+# If you have any additions please use the glibcbug script to send an
+# appropriate message.
+cs_CZ ISO-8859-2
+da_DK ISO-8859-1
+de_AT ISO-8859-1
+de_BE ISO-8859-1
+de_CH ISO-8859-1
+de_DE ISO-8859-1
+de_LU ISO-8859-1
+en_CA ISO-8859-1
+en_DK ISO-8859-1
+en_GB ISO-8859-1
+en_IE ISO-8859-1
+en_US ISO-8859-1
+es_ES ISO-8859-1
+et_EE ISO-8859-1
+eu_ES ISO-8859-1
+fi_FI ISO-8859-1
+fo_FO ISO-8859-1
+fr_BE ISO-8859-1
+fr_CA ISO-8859-1
+fr_CH ISO-8859-1
+fr_FR ISO-8859-1
+fr_LU ISO-8859-1
+ga_IE ISO-8859-1
+gr_GR ISO-8859-7
+hr_HR ISO-8859-2
+hu_HU ISO-8859-2
+is_IS ISO-8859-1
+it_IT ISO-8859-1
+iw_IL ISO-8859-8
+kl_GL ISO-8859-1
+lt_LT BALTIC
+lv_LV BALTIC
+nl_BE ISO-8859-1
+nl_NL ISO-8859-1
+no_NO ISO-8859-1
+pl_PL ISO-8859-2
+pt_BR ISO-8859-1
+pt_PT ISO-8859-1
+ro_RO ISO-8859-2
+ru_RU ISO-8859-5
+sl_SI ISO-8859-2
+sv_FI ISO-8859-1
+sv_SE ISO-8859-1
+tr_TR ISO-8859-9
