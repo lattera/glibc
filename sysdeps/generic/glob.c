@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -649,8 +649,18 @@ glob (pattern, flags, errfunc, pglob)
 		    pwbuflen = 1024;
 		  pwtmpbuf = (char *) __alloca (pwbuflen);
 
-		  success = (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p)
-			     >= 0);
+		  success = 1;
+		  while (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p) < 0)
+		    {
+		      if (errno != ERANGE)
+			{
+			  success = 0;
+			  break;
+			}
+		      pwbuflen *= 2;
+		      pwtmpbuf = (char *) __alloca (pwbuflen);
+		      __set_errno (0);
+		    }
 #   else
 		  p = getpwnam (name);
 		  success = p != NULL;
@@ -723,17 +733,23 @@ glob (pattern, flags, errfunc, pglob)
 	      buflen = 1024;
 	    pwtmpbuf = (char *) __alloca (buflen);
 
-	    if (getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) >= 0)
-	      home_dir = p->pw_dir;
-	    else
-	      home_dir = NULL;
+	    while (getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) < 0)
+	      {
+		if (errno != ERANGE)
+		  {
+		    p = NULL;
+		    break;
+		  }
+		pwtmpbuf = __alloca (buflen *= 2);
+		__set_errno (0);
+	      }
 #  else
 	    p = getpwnam (user_name);
+#  endif
 	    if (p != NULL)
 	      home_dir = p->pw_dir;
 	    else
 	      home_dir = NULL;
-#  endif
 	  }
 	  /* If we found a home directory use this.  */
 	  if (home_dir != NULL)
