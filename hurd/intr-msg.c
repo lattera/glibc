@@ -1,5 +1,5 @@
 /* Replacement for mach_msg used in interruptible Hurd RPCs.
-   Copyright (C) 95,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 95,96,97,98,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -222,8 +222,11 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 				  &~ (sizeof (mach_msg_type_t) - 1));
 		}
 	      else
-		clean_ports (*((void **) ty)++,
-			     ty->msgtl_header.msgt_deallocate);
+		{
+		  clean_ports (*(void **) ty,
+			       ty->msgtl_header.msgt_deallocate);
+		  ++(void **) ty;
+		}
 	    }
 	}
       break;
@@ -332,6 +335,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
       break;
 
     default:			/* Quiet -Wswitch-enum.  */
+      break;
     }
 
   ss->intr_port = MACH_PORT_NULL;

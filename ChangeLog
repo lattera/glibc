@@ -1,5 +1,11 @@
 2001-12-16  Roland McGrath  <roland@frob.com>
 
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Add `break' after
+	`default:' to silence new GCC warning.
+	Rewrite cast of lvalue to silence new GCC warning.
+
+	* sysdeps/mach/hurd/i386/init-first.c: Avoid multi-line strings in asm.
+
 	* sysdeps/mach/hurd/spawni.c: New file, by me with a
 	couple fixes by Neal H Walfield <neal@cs.uml.edu>.
 

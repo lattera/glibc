@@ -247,22 +247,18 @@ init (int *data)
    we will run on, and jmp to the run-time address of `init1'; when it
    returns, it will run the user code with the argument data at the
    top of the stack.  */
-asm ("
- switch_stacks:
-  movl %eax, %esp
-  jmp *%ecx
-");
+asm ("switch_stacks:\n"
+     "	movl %eax, %esp\n"
+     "	jmp *%ecx");
 
 /* As in the stack-switching case, at this point our stack is unwound
    and callers' registers restored, and only %ecx and %eax communicate
    values from the lines above.  In this case we have stashed in %eax
    the user code return address.  Push it on the top of the stack so
    it acts as init1's return address, and then jump there.  */
-asm ("
-  call_init1:
-  push %eax
-  jmp *%ecx
-");
+asm ("call_init1:\n"
+     "	push %eax\n"
+     "	jmp *%ecx\n");
 
 
 /* Do the first essential initializations that must precede all else.  */
