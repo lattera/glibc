@@ -1,3 +1,14 @@
+1999-06-13  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/atomicity.h (exchange_and_add): Remove `volatile';
+	add `memory' clobber; optimise for constant `val'.
+	(atomic_add): Likewise.
+	(test_and_set): Remove `volatile'; add `memory' clobber; be more
+	like the original `test_and_set'.
+	(compare_and_swap): Remove `volatile'; add `memory' clobber;
+	optimise for constant `oldval'.
+	(always_swap): Remove `volatile'; add `memory' clobber.
+
 1999-06-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Disable signbit* inline

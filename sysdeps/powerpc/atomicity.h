@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations.  PowerPC version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,12 +33,12 @@ __attribute__ ((unused))
 exchange_and_add (volatile uint32_t *mem, int val)
 {
   int tmp, result;
-  __asm__ __volatile__ ("\
+  __asm__ ("\
 0:	lwarx	%0,0,%2
-	add	%1,%3,%0
+	add%I3	%1,%0,%3
 	stwcx.	%1,0,%2
 	bne-	0b
-" : "=&r"(result), "=&r"(tmp) : "r" (mem), "r"(val) : "cr0");
+" : "=&b"(result), "=&r"(tmp) : "r" (mem), "Ir"(val) : "cr0", "memory");
   return result;
 }
 
@@ -47,12 +47,12 @@ __attribute__ ((unused))
 atomic_add (volatile uint32_t *mem, int val)
 {
   int tmp;
-  __asm__ __volatile__("\
+  __asm__ ("\
 0:	lwarx	%0,0,%1
-	add	%0,%2,%0
+	add%I2	%0,%0,%2
 	stwcx.	%0,0,%1
 	bne-	0b
-" : "=&r"(tmp) : "r" (mem), "r"(val) : "cr0");
+" : "=&b"(tmp) : "r" (mem), "Ir"(val) : "cr0", "memory");
 }
 
 static __ATOMICITY_INLINE int
@@ -60,16 +60,16 @@ __attribute__ ((unused))
 compare_and_swap (volatile long int *p, long int oldval, long int newval)
 {
   int result;
-  __asm__ __volatile__ ("\
+  __asm__ ("\
 0:	lwarx	%0,0,%1
-	xor.	%0,%0,%2
+	sub%I2c.	%0,%0,%2
 	cntlzw	%0,%0
 	bne-	1f
 	stwcx.	%3,0,%1
 	bne-	0b
-1:	srwi	%0,%0,5
-" : "=&r"(result) : "r"(p), "r"(oldval), "r"(newval) : "cr0");
-  return result;
+1:	
+" : "=&b"(result) : "r"(p), "Ir"(oldval), "r"(newval) : "cr0", "memory");
+  return result >> 5;
 }
 
 static __ATOMICITY_INLINE long int
@@ -77,28 +77,27 @@ __attribute__ ((unused))
 always_swap (volatile long int *p, long int newval)
 {
   long int result;
-  __asm__ __volatile__ ("\
+  __asm__ ("\
 0:	lwarx	%0,0,%1
 	stwcx.	%2,0,%1
 	bne-	0b
-" : "=&r"(result) : "r"(p), "r"(newval) : "cr0");
+" : "=&r"(result) : "r"(p), "r"(newval) : "cr0", "memory");
   return result;
 }
 
 static __ATOMICITY_INLINE int
 __attribute__ ((unused))
-test_and_set (volatile long int *p, long int oldval, long int newval)
+test_and_set (volatile long int *p, long int newval)
 {
   int result;
-  __asm__ __volatile__ ("\
+  __asm__ ("\
 0:	lwarx	%0,0,%1
-	xor.	%0,%0,%2
-	cntlzw	%0,%0
+	cmpwi	%0,0
 	bne-	1f
-	stwcx.	%3,0,%1
+	stwcx.	%2,0,%1
 	bne-	0b
-1:	srwi	%0,%0,5
-" : "=&r"(result) : "r"(p), "r"(oldval), "r"(newval) : "cr0");
+1:
+" : "=&r"(result) : "r"(p), "r"(newval) : "cr0", "memory");
   return result;
 }
 

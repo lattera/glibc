@@ -7,6 +7,13 @@ Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.org>.  Questions and suggestions should be send to
 <bug-glibc@gnu.org>.
 
+Version 2.2
+
+* Thorsten Kukuk added secure mode support to nscd.
+
+* Update from Berkeley db 2.7.5.
+
+
 Version 2.1.1
 
 * New ISO C 9x function _Exit, imaxabs, and imaxdiv are added.
