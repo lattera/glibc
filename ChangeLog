@@ -1,3 +1,8 @@
+2001-12-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/posix/cuserid.c (cuserid): If we don't find the UID,
+	but have a user supplied buffer, return the empty buffer, not NULL.
+
 2001-12-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* crypt/md5.c (md5_process_bytes): Correct handling of alignment.

@@ -102,25 +102,28 @@ int pthread_key_delete(pthread_key_t key)
 
   /* Set the value of the key to NULL in all running threads, so
      that if the key is reallocated later by pthread_key_create, its
-     associated values will be NULL in all threads. */
+     associated values will be NULL in all threads.
 
-  {
-    struct pthread_key_delete_helper_args args;
-    struct pthread_request request;
+     Do nothing if no threads have been created yet.  */
 
-    args.idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
-    args.idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
-    args.self = 0;
+  if (__pthread_manager_request != -1)
+    {
+      struct pthread_key_delete_helper_args args;
+      struct pthread_request request;
 
-    request.req_thread = self;
-    request.req_kind = REQ_FOR_EACH_THREAD;
-    request.req_args.for_each.arg = &args;
-    request.req_args.for_each.fn = pthread_key_delete_helper;
+      args.idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
+      args.idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
+      args.self = 0;
 
-    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				    (char *) &request, sizeof(request)));
-    suspend(self);
-  }
+      request.req_thread = self;
+      request.req_kind = REQ_FOR_EACH_THREAD;
+      request.req_args.for_each.arg = &args;
+      request.req_args.for_each.fn = pthread_key_delete_helper;
+
+      TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
+				      (char *) &request, sizeof(request)));
+      suspend(self);
+    }
 
   pthread_mutex_unlock(&pthread_keys_mutex);
   return 0;
