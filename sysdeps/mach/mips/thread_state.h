@@ -28,3 +28,11 @@ Cambridge, MA 02139, USA.  */
 
 #define PC pc
 #define SP r29
+
+struct machine_thread_all_state
+  {
+    int set;			/* Mask of bits (1 << FLAVOR).  */
+    struct mips_thread_state basic;
+    struct mips_exc_state exc;
+    struct mips_float_state fpu;
+  };
