@@ -202,7 +202,7 @@ __STRING2_COPY_TYPE (8);
 #    define __mempcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
 		  && __string2_1bptr_p (src) && n <= 8			      \
-		  ? __builtin_memcpy (dest, src, n) + n			      \
+		  ? __builtin_memcpy (dest, src, n) + (n)		      \
 		  : __mempcpy (dest, src, n)))
 #   else
 #    define __mempcpy(dest, src, n) \

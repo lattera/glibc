@@ -1,3 +1,8 @@
+2002-01-29  Ben Collins  <bcollins@debian.org>
+
+	* string/bits/string2.h (__mempcpy): Protect size arg for
+	addition when using __builtin_memcpy.
+
 2002-01-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/Makefile (tests): Add tst-qsort.
