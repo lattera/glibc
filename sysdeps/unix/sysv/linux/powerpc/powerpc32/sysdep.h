@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,97,98,99,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1992,97,98,99,2000,01,02,03 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -93,10 +93,50 @@
     ret;								\
   })
 
-# define LOADARGS_0(name) \
+/* Define a macro which expands inline into the wrapper code for a system
+   call. This use is for internal calls that do not need to handle errors
+   normally. It will never touch errno. This returns just what the kernel
+   gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
+   the negation of the return value in the kernel gets reverted.  */
+
+#undef INTERNAL_SYSCALL
+# define INTERNAL_SYSCALL(name, nr, args...)				\
+  ({									\
+    register long r0  __asm__ ("r0");					\
+    register long r3  __asm__ ("r3");					\
+    register long r4  __asm__ ("r4");					\
+    register long r5  __asm__ ("r5");					\
+    register long r6  __asm__ ("r6");					\
+    register long r7  __asm__ ("r7");					\
+    register long r8  __asm__ ("r8");					\
+    register long r9  __asm__ ("r9");					\
+    register long r10 __asm__ ("r10");					\
+    register long r11 __asm__ ("r11");					\
+    register long r12 __asm__ ("r12");					\
+    LOADARGS_##nr(name, args);						\
+    __asm__ __volatile__						\
+      ("sc\n\t"								\
+       "bns+	0f\n\t"							\
+       "neg	%1,%1\n"						\
+       "0:"								\
+       : "=&r" (r0),							\
+	 "=&r" (r3), "=&r" (r4), "=&r" (r5),  "=&r" (r6),  "=&r" (r7),	\
+	 "=&r" (r8), "=&r" (r9), "=&r" (r10), "=&r" (r11), "=&r" (r12)	\
+       : ASM_INPUT_##nr							\
+       : "cr0", "ctr", "memory");					\
+    (int) r3;								\
+  })
+  
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)   ((unsigned long) (val) >= -4095U)
+  
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)     (-(val))
+
+# define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name
 # define LOADARGS_1(name, arg1) \
-	LOADARGS_0(name); \
+	LOADARGS_0(name, 0); \
 	r3 = (long) (arg1)
 # define LOADARGS_2(name, arg1, arg2) \
 	LOADARGS_1(name, arg1); \

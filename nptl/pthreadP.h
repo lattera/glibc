@@ -22,13 +22,13 @@
 
 #include <pthread.h>
 #include <setjmp.h>
-#include <stdint.h>
 #include <sys/syscall.h>
 #include "descr.h"
 #include <tls.h>
 #include <lowlevellock.h>
 #include <stackinfo.h>
 #include <internaltypes.h>
+#include <pthread-functions.h>
 
 
 /* Internal variables.  */
@@ -65,65 +65,6 @@ hidden_proto (__pthread_keys)
    tests.  */
 extern int __pthread_debug attribute_hidden;
 #define DEBUGGING_P __builtin_expect (__pthread_debug, 0)
-
-
-/* Compatibility type for old conditional variable interfaces.  */
-typedef struct
-{
-  pthread_cond_t *cond;
-} pthread_cond_2_0_t;
-
-
-/* Data type shared with libc.  The libc uses it to pass on calls to
-   the thread functions.  */
-struct pthread_functions
-{
-  int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
-  int (*ptr___pthread_attr_init_2_0) (pthread_attr_t *);
-  int (*ptr___pthread_attr_init_2_1) (pthread_attr_t *);
-  int (*ptr_pthread_attr_getdetachstate) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setdetachstate) (pthread_attr_t *, int);
-  int (*ptr_pthread_attr_getinheritsched) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setinheritsched) (pthread_attr_t *, int);
-  int (*ptr_pthread_attr_getschedparam) (const pthread_attr_t *,
-					 struct sched_param *);
-  int (*ptr_pthread_attr_setschedparam) (pthread_attr_t *,
-					 const struct sched_param *);
-  int (*ptr_pthread_attr_getschedpolicy) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setschedpolicy) (pthread_attr_t *, int);
-  int (*ptr_pthread_attr_getscope) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setscope) (pthread_attr_t *, int);
-  int (*ptr_pthread_condattr_destroy) (pthread_condattr_t *);
-  int (*ptr_pthread_condattr_init) (pthread_condattr_t *);
-  int (*ptr___pthread_cond_broadcast) (pthread_cond_t *);
-  int (*ptr___pthread_cond_destroy) (pthread_cond_t *);
-  int (*ptr___pthread_cond_init) (pthread_cond_t *,
-				  const pthread_condattr_t *);
-  int (*ptr___pthread_cond_signal) (pthread_cond_t *);
-  int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
-  int (*ptr___pthread_cond_broadcast_2_0) (pthread_cond_2_0_t *);
-  int (*ptr___pthread_cond_destroy_2_0) (pthread_cond_2_0_t *);
-  int (*ptr___pthread_cond_init_2_0) (pthread_cond_2_0_t *,
-				      const pthread_condattr_t *);
-  int (*ptr___pthread_cond_signal_2_0) (pthread_cond_2_0_t *);
-  int (*ptr___pthread_cond_wait_2_0) (pthread_cond_2_0_t *, pthread_mutex_t *);
-  int (*ptr_pthread_equal) (pthread_t, pthread_t);
-  void (*ptr___pthread_exit) (void *);
-  int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
-  int (*ptr_pthread_setschedparam) (pthread_t, int,
-				    const struct sched_param *);
-  int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_init) (pthread_mutex_t *,
-				 const pthread_mutexattr_t *);
-  int (*ptr_pthread_mutex_lock) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);
-  pthread_t (*ptr_pthread_self) (void);
-  int (*ptr_pthread_setcancelstate) (int, int *);
-  int (*ptr_pthread_setcanceltype) (int, int *);
-};
-
-/* Variable in libc.so.  */
-extern struct pthread_functions __libc_pthread_functions attribute_hidden;
 
 
 /* Cancellation test.  */
@@ -299,10 +240,13 @@ extern int __pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
 				  __attr);
 extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock);
+extern int __pthread_rwlock_rdlock_internal (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
+extern int __pthread_rwlock_wrlock_internal (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
+extern int __pthread_rwlock_unlock_internal (pthread_rwlock_t *__rwlock);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
 extern int __pthread_cond_init (pthread_cond_t *cond,
@@ -312,8 +256,13 @@ extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
 extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
 extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
+extern int __pthread_key_create_internal (pthread_key_t *key,
+					  void (*destr) (void *));
 extern void *__pthread_getspecific (pthread_key_t key);
+extern void *__pthread_getspecific_internal (pthread_key_t key);
 extern int __pthread_setspecific (pthread_key_t key, const void *value);
+extern int __pthread_setspecific_internal (pthread_key_t key,
+					   const void *value);
 extern int __pthread_once (pthread_once_t *once_control,
 			   void (*init_routine) (void));
 extern int __pthread_once_internal (pthread_once_t *once_control,
@@ -340,6 +289,8 @@ extern int __pthread_cond_timedwait_2_0 (pthread_cond_2_0_t *cond,
 extern int __pthread_cond_wait_2_0 (pthread_cond_2_0_t *cond,
 				    pthread_mutex_t *mutex);
 
+
+
 /* The two functions are in libc.so and not exported.  */
 extern int __libc_enable_asynccancel (void) attribute_hidden;
 extern void __libc_disable_asynccancel (int oldtype)
@@ -347,19 +298,24 @@ extern void __libc_disable_asynccancel (int oldtype)
 
 #ifdef IS_IN_libpthread
 /* Special versions which use non-exported functions.  */
-extern void _GI_pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
-				      void (*routine) (void *), void *arg)
+extern void __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
+				    void (*routine) (void *), void *arg)
      attribute_hidden;
 # undef pthread_cleanup_push
 # define pthread_cleanup_push(routine,arg) \
   { struct _pthread_cleanup_buffer _buffer;				      \
-    _GI_pthread_cleanup_push (&_buffer, (routine), (arg));
+    __pthread_cleanup_push (&_buffer, (routine), (arg));
 
-extern void _GI_pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
-				     int execute) attribute_hidden;
+extern void __pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
+				   int execute) attribute_hidden;
 # undef pthread_cleanup_pop
 # define pthread_cleanup_pop(execute) \
-    _GI_pthread_cleanup_pop (&_buffer, (execute)); }
+    __pthread_cleanup_pop (&_buffer, (execute)); }
 #endif
+
+extern void __pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
+					  void (*routine) (void *), void *arg);
+extern void __pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
+					   int execute);
 
 #endif	/* pthreadP.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -54,7 +54,7 @@ _pthread_cleanup_push_defer (buffer, routine, arg)
 
   THREAD_SETMEM (self, cleanup, buffer);
 }
-
+strong_alias (_pthread_cleanup_push_defer, __pthread_cleanup_push_defer)
 
 void
 _pthread_cleanup_pop_restore (buffer, execute)
@@ -84,3 +84,4 @@ _pthread_cleanup_pop_restore (buffer, execute)
   if (execute)
     buffer->__routine (buffer->__arg);
 }
+strong_alias (_pthread_cleanup_pop_restore, __pthread_cleanup_pop_restore)

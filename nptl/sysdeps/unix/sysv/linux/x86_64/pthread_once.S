@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -86,7 +86,7 @@ __pthread_once:
 	leaq	clear_once_control(%rip), %rsi
 	movq	%rdi, %rdx
 	movq	%rsp, %rdi
-	call	_GI_pthread_cleanup_push	/* Note: no @PLT.  */
+	call	__pthread_cleanup_push	/* Note: no @PLT.  */
 
 	movq	48(%rsp), %rax
 	call	*%rax
@@ -96,7 +96,7 @@ __pthread_once:
 	   of the stack.  Otherwise the first parameter would have
 	   to be reloaded.  */
 	xorq	%rdi, %rdi
-	call	_GI_pthread_cleanup_pop	/* Note: no @PLT.  */
+	call	__pthread_cleanup_pop	/* Note: no @PLT.  */
 
 	addq	$32, %rsp
 

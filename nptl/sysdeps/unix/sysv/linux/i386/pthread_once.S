@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -103,7 +103,7 @@ __pthread_once:
 	pushl	%ebx
 	pushl	%eax
 	pushl	%edx
-	call	_GI_pthread_cleanup_push	/* Note: no @PLT.  */
+	call	__pthread_cleanup_push	/* Note: no @PLT.  */
 
 	movl	44(%esp), %eax
 	call	*%eax
@@ -113,7 +113,7 @@ __pthread_once:
 	   of the stack.  Otherwise the first parameter would have
 	   to be reloaded.  */
 	movl	$0, 4(%esp)
-	call	_GI_pthread_cleanup_pop	/* Note: no @PLT.  */
+	call	__pthread_cleanup_pop	/* Note: no @PLT.  */
 
 	addl	$28, %esp
 

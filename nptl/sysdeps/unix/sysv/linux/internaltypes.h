@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,6 +19,8 @@
 
 #ifndef _INTERNALTYPES_H
 #define _INTERNALTYPES_H	1
+
+#include <stdint.h>
 
 
 struct pthread_attr
@@ -126,5 +128,12 @@ struct sem
 {
   unsigned int count;
 };
+
+
+/* Compatibility type for old conditional variable interfaces.  */
+typedef struct
+{
+  pthread_cond_t *cond;
+} pthread_cond_2_0_t;
 
 #endif	/* internaltypes.h */

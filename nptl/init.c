@@ -57,9 +57,9 @@ extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 static struct pthread_functions pthread_functions =
   {
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
-#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+# if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
     .ptr___pthread_attr_init_2_0 = __pthread_attr_init_2_0,
-#endif
+# endif
     .ptr___pthread_attr_init_2_1 = __pthread_attr_init_2_1,
     .ptr_pthread_attr_getdetachstate = __pthread_attr_getdetachstate,
     .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
@@ -78,13 +78,13 @@ static struct pthread_functions pthread_functions =
     .ptr___pthread_cond_init = __pthread_cond_init,
     .ptr___pthread_cond_signal = __pthread_cond_signal,
     .ptr___pthread_cond_wait = __pthread_cond_wait,
-#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+# if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
     .ptr___pthread_cond_broadcast_2_0 = __pthread_cond_broadcast_2_0,
     .ptr___pthread_cond_destroy_2_0 = __pthread_cond_destroy_2_0,
     .ptr___pthread_cond_init_2_0 = __pthread_cond_init_2_0,
     .ptr___pthread_cond_signal_2_0 = __pthread_cond_signal_2_0,
     .ptr___pthread_cond_wait_2_0 = __pthread_cond_wait_2_0,
-#endif
+# endif
     .ptr_pthread_equal = __pthread_equal,
     .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_getschedparam = __pthread_getschedparam,
@@ -95,7 +95,17 @@ static struct pthread_functions pthread_functions =
     .ptr_pthread_mutex_unlock = INTUSE(__pthread_mutex_unlock),
     .ptr_pthread_self = __pthread_self,
     .ptr_pthread_setcancelstate = __pthread_setcancelstate,
-    .ptr_pthread_setcanceltype = __pthread_setcanceltype
+    .ptr_pthread_setcanceltype = __pthread_setcanceltype,
+    .ptr___pthread_cleanup_upto = __pthread_cleanup_upto,
+    .ptr___pthread_once = __pthread_once_internal,
+    .ptr___pthread_rwlock_rdlock = __pthread_rwlock_rdlock_internal,
+    .ptr___pthread_rwlock_wrlock = __pthread_rwlock_wrlock_internal,
+    .ptr___pthread_rwlock_unlock = __pthread_rwlock_unlock_internal,
+    .ptr___pthread_key_create = __pthread_key_create_internal,
+    .ptr___pthread_getspecific = __pthread_getspecific_internal,
+    .ptr___pthread_setspecific = __pthread_setspecific_internal,
+    .ptr__pthread_cleanup_push_defer = __pthread_cleanup_push_defer,
+    .ptr__pthread_cleanup_pop_restore = __pthread_cleanup_pop_restore
   };
 # define ptr_pthread_functions &pthread_functions
 #else

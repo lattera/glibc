@@ -1,3 +1,7 @@
+2003-01-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libthread_db.so-no-z-defs): Define.
+
 2002-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_thr_tsd.c (td_thr_tsd): Read correct entry from pthread_keys

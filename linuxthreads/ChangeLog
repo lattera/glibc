@@ -1,3 +1,8 @@
+2003-01-04  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Makefile: New file.
+
 2003-01-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* internals.h (LIBC_THREAD_GETMEM, LIBC_THREAD_SETMEM): Define

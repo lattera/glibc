@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  NPTL version.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@
 #ifdef _LIBC
 # include <lowlevellock.h>
 # include <tls.h>
+# include <pthread-functions.h>
 #endif
 
 /* Mutex type.  */
@@ -144,6 +145,17 @@ typedef pthread_key_t __libc_key_t;
   (FUNC != NULL ? FUNC ARGS : ELSE)
 #endif
 
+/* Call thread functions through the function pointer table.  */
+#if defined SHARED && !defined NOT_IN_libc
+# define PTF(NAME) __libc_pthread_functions.ptr_##NAME
+# define __libc_ptf_call(FUNC, ARGS, ELSE) \
+  (PTF(FUNC) != NULL ? PTF(FUNC) ARGS : ELSE)
+#else
+# define PTF(NAME) NAME
+# define __libc_ptf_call(FUNC, ARGS, ELSE) \
+  __libc_maybe_call (FUNC, ARGS, ELSE)
+#endif
+
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
@@ -215,9 +227,9 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
 #endif
 #define __libc_rwlock_rdlock(NAME) \
-  __libc_maybe_call (__pthread_rwlock_rdlock, (&(NAME)), 0)
+  __libc_ptf_call (__pthread_rwlock_rdlock, (&(NAME)), 0)
 #define __libc_rwlock_wrlock(NAME) \
-  __libc_maybe_call (__pthread_rwlock_wrlock, (&(NAME)), 0)
+  __libc_ptf_call (__pthread_rwlock_wrlock, (&(NAME)), 0)
 
 /* Lock the recursive named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
@@ -289,7 +301,7 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
 #endif
 #define __libc_rwlock_unlock(NAME) \
-  __libc_maybe_call (__pthread_rwlock_unlock, (&(NAME)), 0)
+  __libc_ptf_call (__pthread_rwlock_unlock, (&(NAME)), 0)
 
 /* Unlock the recursive named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
@@ -324,8 +336,8 @@ typedef pthread_key_t __libc_key_t;
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
   do {									      \
-    if (__pthread_once != NULL)						      \
-      __pthread_once (&(ONCE_CONTROL), (INIT_FUNCTION));		      \
+    if (PTF(__pthread_once) != NULL)					      \
+      PTF(__pthread_once) (&(ONCE_CONTROL), INIT_FUNCTION);		      \
     else if ((ONCE_CONTROL) == PTHREAD_ONCE_INIT) {			      \
       INIT_FUNCTION ();							      \
       (ONCE_CONTROL) = !PTHREAD_ONCE_INIT;				      \
@@ -336,9 +348,9 @@ typedef pthread_key_t __libc_key_t;
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG) \
   { struct _pthread_cleanup_buffer _buffer;				      \
-    int _avail = _pthread_cleanup_push_defer != NULL;			      \
+    int _avail = PTF(_pthread_cleanup_push_defer) != NULL;		      \
     if (_avail) {							      \
-      _pthread_cleanup_push_defer (&_buffer, (FCT), (ARG));		      \
+      PTF(_pthread_cleanup_push_defer) (&_buffer, FCT, ARG);		      \
     } else if (DOIT) {							      \
       _buffer.__routine = (FCT);					      \
       _buffer.__arg = (ARG);						      \
@@ -347,7 +359,7 @@ typedef pthread_key_t __libc_key_t;
 /* End critical region with cleanup.  */
 #define __libc_cleanup_region_end(DOIT) \
     if (_avail) {							      \
-      _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
+      PTF(_pthread_cleanup_pop_restore) (&_buffer, DOIT);		      \
     } else if (DOIT)							      \
       _buffer.__routine (_buffer.__arg);				      \
   }
@@ -355,21 +367,21 @@ typedef pthread_key_t __libc_key_t;
 /* Sometimes we have to exit the block in the middle.  */
 #define __libc_cleanup_end(DOIT) \
     if (_avail) {							      \
-      _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
+      PTF(_pthread_cleanup_pop_restore) (&_buffer, DOIT);		      \
     } else if (DOIT)							      \
       _buffer.__routine (_buffer.__arg)
 
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \
-  __libc_maybe_call (__pthread_key_create, (KEY, DESTRUCTOR), 1)
+  __libc_ptf_call (__pthread_key_create, (KEY, DESTRUCTOR), 1)
 
 /* Get thread-specific data.  */
 #define __libc_getspecific(KEY) \
-  __libc_maybe_call (__pthread_getspecific, (KEY), NULL)
+  __libc_ptf_call (__pthread_getspecific, (KEY), NULL)
 
 /* Set thread-specific data.  */
 #define __libc_setspecific(KEY, VALUE) \
-  __libc_maybe_call (__pthread_setspecific, (KEY, VALUE), 0)
+  __libc_ptf_call (__pthread_setspecific, (KEY, VALUE), 0)
 
 
 /* Register handlers to execute before and after `fork'.  Note that the

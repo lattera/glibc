@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -163,6 +163,9 @@ __pthread_rwlock_rdlock:
 
 	.globl	pthread_rwlock_rdlock
 pthread_rwlock_rdlock = __pthread_rwlock_rdlock
+
+	.globl	__pthread_rwlock_rdlock_internal
+__pthread_rwlock_rdlock_internal = __pthread_rwlock_rdlock
 
 
 	.globl	pthread_rwlock_timedrdlock
@@ -425,6 +428,9 @@ __pthread_rwlock_wrlock:
 	.globl	pthread_rwlock_wrlock
 pthread_rwlock_wrlock = __pthread_rwlock_wrlock
 
+	.globl	__pthread_rwlock_wrlock_internal
+__pthread_rwlock_wrlock_internal = __pthread_rwlock_wrlock
+
 
 	.globl	pthread_rwlock_timedwrlock
 	.type	pthread_rwlock_timedwrlock,@function
@@ -643,3 +649,6 @@ __pthread_rwlock_unlock:
 
 	.globl	pthread_rwlock_unlock
 pthread_rwlock_unlock = __pthread_rwlock_unlock
+
+	.globl	__pthread_rwlock_unlock_internal
+__pthread_rwlock_unlock_internal = __pthread_rwlock_unlock

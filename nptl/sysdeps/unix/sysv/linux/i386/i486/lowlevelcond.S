@@ -136,7 +136,7 @@ __pthread_cond_wait:
 	movl	%ebx, 8(%esp)
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
-	call	_GI_pthread_cleanup_push
+	call	__pthread_cleanup_push
 
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
@@ -209,7 +209,7 @@ __pthread_cond_wait:
 11:	leal	12(%esp), %edx
 	movl	$0, 4(%esp)
 	movl	%edx, (%esp)
-	call	_GI_pthread_cleanup_pop
+	call	__pthread_cleanup_pop
 
 	movl	48(%esp), %eax
 	movl	%eax, (%esp)
@@ -316,7 +316,7 @@ __pthread_cond_timedwait:
 	movl	%ebx, 8(%esp)
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
-	call	_GI_pthread_cleanup_push
+	call	__pthread_cleanup_push
 
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
@@ -425,7 +425,7 @@ __pthread_cond_timedwait:
 11:	leal	20(%esp), %edx
 	movl	$0, 4(%esp)
 	movl	%edx, (%esp)
-	call	_GI_pthread_cleanup_pop
+	call	__pthread_cleanup_pop
 
 	movl	60(%esp), %ecx
 	movl	%ecx, (%esp)
