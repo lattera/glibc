@@ -279,6 +279,12 @@ handle_amd (int name)
 long int
 __sysconf (int name)
 {
+  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
+    {
+      /* XXX Test whether TSC is usable.  */
+      return 200112L;
+    }
+
   /* We only handle the cache information here (for now).  */
   if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_LINESIZE)
     return linux_sysconf (name);

@@ -58,7 +58,7 @@ endif
 
 distribute := nscd.h nscd-client.h dbg_log.h \
 	      $(addsuffix .c, $(filter-out xmalloc, $(nscd-modules))) \
-	      nscd_nischeck.c TODO nscd.conf nscd.init nscd_proto.h \
+	      nscd_nischeck.c nscd.conf nscd.init nscd_proto.h \
 	      nscd-types.h
 
 include ../Rules
@@ -69,34 +69,43 @@ CFLAGS-nscd_gethst_r.c = -fexceptions
 CFLAGS-nscd_getai.c = -fexceptions
 CFLAGS-nscd_initgroups.c = -fexceptions
 
+nscd-cflags = -DIS_IN_nscd=1
 ifeq (yesyes,$(have-fpie)$(build-shared))
-CFLAGS-nscd.c += -fpie
-CFLAGS-connections.c += -fpie
-CFLAGS-pwdcache.c += -fpie
-CFLAGS-getpwnam_r.c += -fpie
-CFLAGS-getpwuid_r.c += -fpie
-CFLAGS-grpcache.c += -fpie
-CFLAGS-getgrnam_r.c += -fpie
-CFLAGS-getgrgid_r.c += -fpie
-CFLAGS-hstcache.c += -fpie
-CFLAGS-gethstbyad_r.c += -fpie
-CFLAGS-gethstbynm2_r.c += -fpie
-CFLAGS-dbg_log.c += -fpie
-CFLAGS-nscd_conf.c += -fpie
-CFLAGS-nscd_stat.c += -fpie
-CFLAGS-cache.c += -fpie
-CFLAGS-xmalloc.c += -fpie
-CFLAGS-xstrdup.c += -fpie
-CFLAGS-mem.c += -fpie
-CFLAGS-nscd_setup_thread.c += -fpie
-CFLAGS-aicache.c += -fpie
-CFLAGS-selinux.c += -fpie
-CFLAGS-initgrcache.c += -fpie
-CFLAGS-gai.c += -fpie
+nscd-cflags += -fpie
+endif
+
+CFLAGS-nscd.c += $(nscd-cflags)
+CFLAGS-connections.c += $(nscd-cflags)
+CFLAGS-pwdcache.c += $(nscd-cflags)
+CFLAGS-getpwnam_r.c += $(nscd-cflags)
+CFLAGS-getpwuid_r.c += $(nscd-cflags)
+CFLAGS-grpcache.c += $(nscd-cflags)
+CFLAGS-getgrnam_r.c += $(nscd-cflags)
+CFLAGS-getgrgid_r.c += $(nscd-cflags)
+CFLAGS-hstcache.c += $(nscd-cflags)
+CFLAGS-gethstbyad_r.c += $(nscd-cflags)
+CFLAGS-gethstbynm2_r.c += $(nscd-cflags)
+CFLAGS-dbg_log.c += $(nscd-cflags)
+CFLAGS-nscd_conf.c += $(nscd-cflags)
+CFLAGS-nscd_stat.c += $(nscd-cflags)
+CFLAGS-cache.c += $(nscd-cflags)
+CFLAGS-xmalloc.c += $(nscd-cflags)
+CFLAGS-xstrdup.c += $(nscd-cflags)
+CFLAGS-mem.c += $(nscd-cflags)
+CFLAGS-nscd_setup_thread.c += $(nscd-cflags)
+CFLAGS-aicache.c += $(nscd-cflags)
+CFLAGS-selinux.c += $(nscd-cflags)
+CFLAGS-initgrcache.c += $(nscd-cflags)
+CFLAGS-gai.c += $(nscd-cflags)
+
+ifeq (yesyes,$(have-fpie)$(build-shared))
+ifeq (yes,$(have-z-relro))
+relro-LDFLAGS += -Wl,-z,now
+endif
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	$(LINK.o) -pie -Wl,-O1 \
-	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(relro-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  $(LDFLAGS) $(LDFLAGS-$(@F)) \

@@ -1,3 +1,0 @@
-
-* If we have reached the max. # of process, close accept socket.
-  ! THIS COULD CAUSE THE KERNEL TO HANG ! BE CAREFUL !

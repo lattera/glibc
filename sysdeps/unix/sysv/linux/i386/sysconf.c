@@ -21,7 +21,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <hp-timing.h>
 
 static long int linux_sysconf (int name);
 
@@ -347,13 +347,13 @@ __sysconf (int name)
 {
   if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
     {
-      /* Check dynamically.  */
-      int ac = i386_i486_test ();
-
-      /* Only i386 and i486 have no TSC.  */
+#if HP_TIMING_AVAIL
       // XXX We can add  here test for machines which cannot support a
-      // XXX usabel TSC.
-      return ac == 0 || (ac & (1 << 21)) == 0 ? -1 : 200112L;
+      // XXX usable TSC.
+      return 200112L;
+#else
+      return -1;
+#endif
     }
 
   /* All the remainder, except the cache information, is handled in

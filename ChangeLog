@@ -1,3 +1,24 @@
+2004-10-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (__sysconf): Return 200112L
+	for _SC_CPUTIME or _SC_THREAD_CPUTIME.
+
+	* nscd/Makefile (nscd-cflags): Set to -DIS_IN_nscd=1, plus
+	-fpie if building PIE.
+	(CFLAGS-*.c): Use it.
+
+	* nscd/Makefile (relro-LDFLAGS): Add -Wl,-z,now if have-z-relro.
+	($(objpfx)nscd): Add $(relro-LDFLAGS).
+
+	* sysdeps/unix/sysv/linux/i386/sysconf.c: Include hp-timing.h.
+	(__sysconf): Return -1 for _SC_CPUTIME or _SC_THREAD_CPUTIME if
+	!HP_TIMING_AVAIL.
+
+2004-10-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile (distribute): Remove TODO.
+	* nscd/TODO: Removed.
+
 2004-10-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/gai.c: Define __no_netlink_support if NEED_NETLINK is
