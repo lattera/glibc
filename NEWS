@@ -97,6 +97,8 @@ Version 2.1
 * Support for the IPv6 protocol has been added to the socket API, as per the
   latest draft standards.
 
+* Support for Linux 2.2 has been added.
+
 * Interface changes relative to the latest 2.0.x release:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 addseverity			NEW: Unix98
@@ -430,6 +432,11 @@ xdr_sizeof			NEW: Secure RPC
 xdr_unixcred			NEW: sunrpc ext
 xencrypt			NEW: Secure RPC
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Version 2.0.6
+
+* more bug fixes
+
 
 Version 2.0.5
 

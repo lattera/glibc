@@ -1,5 +1,20 @@
 1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* scripts/config.sub: Update from latest autoconf release.
+	* scripts/config.guess: Likewise.
+
+	* sysdeps/i386/i786: New file.
+
+1999-01-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Running make install): Change for Linux 2.2.
+
+1999-01-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/process.texi (Creating a Process): Fix typos.
+
+1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
+
 	* ctype/ctype.c (toupper): Correct variable names from lat change.
 	(tolower): Likewise.
 
