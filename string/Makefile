@@ -35,7 +35,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   swab strfry memfrob memmem				\
 		   $(addprefix argz-,append count create ctsep next	\
 			             delete extract insert stringify)	\
-		   envz
+		   envz basename
 
 tests		:= tester testcopy test-ffs tst-strlen
 distribute	:= memcopy.h pagecopy.h

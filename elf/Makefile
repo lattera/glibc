@@ -53,7 +53,8 @@ install-bin	= ldd
 
 # Make sure these things are built in the `make lib' pass so they can be used
 # to run programs during the `make others' pass.
-lib-noranlib: $(objpfx)ld.so $(addprefix $(objpfx),$(extra-objs))
+lib-noranlib: $(objpfx)$(rtld-installed-name) \
+	      $(addprefix $(objpfx),$(extra-objs))
 
 ifneq (,$(filter linux% linux,$(config-os)))
 extra-objs	+= linux-compat.so
@@ -91,6 +92,14 @@ endef
 
 # The dl code in the static libc needs a default library path.
 CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
+
+ifneq (ld.so, $(rtld-installed-name))
+# Make sure ld-gnu.so.1 exists in the build directory so we can link
+# against it.
+$(objpfx)$(rtld-installed-name): $(objpfx)ld.so
+	rm -f $@
+	ln $< $@
+endif
 
 # The Linux-compatible dynamic linker shared object is just the same
 # with one object file of compatibility initialization code added.

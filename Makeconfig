@@ -312,8 +312,9 @@ ifeq (yes,$(build-shared))
 # We need the versioned name of libc.so in the deps of $(others) et al
 # so that the symlink to libc.so is created before anything tries to
 # run the linked programs.
-link-libc = -Wl,-rpath-link=$(common-objdir) \
+link-libc = -Wl,-rpath-link=$(common-objdir):$(elfobjdir) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
+	    $(elfobjdir)/$(rtld-installed-name) \
 	    $(common-objpfx)libc.a $(gnulib)
 # Choose the default search path for the dynamic linker based on
 # where we will install libraries.

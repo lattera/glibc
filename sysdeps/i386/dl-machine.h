@@ -79,7 +79,7 @@ elf_machine_rel (struct link_map *map,
 					int noplt))
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  Elf32_Addr loadbase;
+  Elf32_Addr loadbase, undo;
 
   switch (ELF32_R_TYPE (reloc->r_info))
     {
@@ -101,20 +101,17 @@ elf_machine_rel (struct link_map *map,
       break;
     case R_386_32:
       if (resolve && map == &_dl_rtld_map)
-	{
-	  /* Undo the relocation done here during bootstrapping.  Now we will
-	     relocate it anew, possibly using a binding found in the user
-	     program or a loaded library rather than the dynamic linker's
-	     built-in definitions used while loading those libraries.  */
-	  const Elf32_Sym *const dlsymtab
-	    = (void *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-	  *reloc_addr -= (map->l_addr +
-			  dlsymtab[ELF32_R_SYM (reloc->r_info)].st_value);
-	}
+	/* Undo the relocation done here during bootstrapping.  Now we will
+	   relocate it anew, possibly using a binding found in the user
+	   program or a loaded library rather than the dynamic linker's
+	   built-in definitions used while loading those libraries.  */
+	undo = map->l_addr + sym->st_value;
+      else
+	undo = 0;
       loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
 		  /* RESOLVE is null during bootstrap relocation.  */
 		  map->l_addr);
-      *reloc_addr += sym ? (loadbase + sym->st_value) : 0;
+      *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
       break;
     case R_386_RELATIVE:
       if (!resolve || map != &_dl_rtld_map) /* Already done in rtld itself.  */
