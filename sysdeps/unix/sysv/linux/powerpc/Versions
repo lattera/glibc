@@ -9,6 +9,9 @@ libc {
     # functions used in other libraries
     __xstat64; __fxstat64; __lxstat64;
 
+    # g*
+    glob64;
+
     # New rlimit interface
     getrlimit; setrlimit; getrlimit64; setrlimit64;
 

@@ -2013,12 +2013,22 @@ new_heap(size) size_t size;
      mapping (on Linux, this is the case for all non-writable mappings
      anyway). */
   p1 = (char *)MMAP(0, HEAP_MAX_SIZE<<1, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
-  if(p1 == MAP_FAILED)
-    return 0;
-  p2 = (char *)(((unsigned long)p1 + HEAP_MAX_SIZE) & ~(HEAP_MAX_SIZE-1));
-  ul = p2 - p1;
-  munmap(p1, ul);
-  munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
+  if(p1 != MAP_FAILED) {
+    p2 = (char *)(((unsigned long)p1 + HEAP_MAX_SIZE) & ~(HEAP_MAX_SIZE-1));
+    ul = p2 - p1;
+    munmap(p1, ul);
+    munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
+  } else {
+    /* Try to take the chance that an allocation of only HEAP_MAX_SIZE
+       is already aligned. */
+    p2 = (char *)MMAP(0, HEAP_MAX_SIZE, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
+    if(p2 == MAP_FAILED)
+      return 0;
+    if((unsigned long)p2 & (HEAP_MAX_SIZE-1)) {
+      munmap(p2, HEAP_MAX_SIZE);
+      return 0;
+    }
+  }
   if(mprotect(p2, size, PROT_READ|PROT_WRITE) != 0) {
     munmap(p2, HEAP_MAX_SIZE);
     return 0;

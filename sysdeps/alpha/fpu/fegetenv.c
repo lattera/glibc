@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 __fegetenv (fenv_t *envp)
@@ -31,10 +31,8 @@ __fegetenv (fenv_t *envp)
   swcr = __ieee_get_fp_control ();
   __asm__ __volatile__ ("mf_fpcr %0" : "=f" (fpcr));
 
-  /* Merge the two bits of information.  The magic number at the end is
-     the exception enable mask.  */
-
-  *envp = (fpcr & (3UL << 58)) | (swcr & (FE_ALL_EXCEPT | 0x3e));
+  /* Merge the two bits of information.  */
+  *envp = ((fpcr & FPCR_ROUND_MASK) | (swcr & SWCR_ALL_MASK));
 
   /* Success.  */
   return 0;

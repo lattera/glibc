@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 __feupdateenv (const fenv_t *envp)
@@ -34,7 +34,7 @@ __feupdateenv (const fenv_t *envp)
   /* Raise the saved exception.  Incidently for us the implementation
      defined format of the values in objects of type fexcept_t is the
      same as the ones specified using the FE_* constants.  */
-  feraiseexcept ((int) tmp & FE_ALL_EXCEPT);
+  feraiseexcept (tmp & SWCR_STATUS_MASK);
 
   /* Success.  */
   return 0;

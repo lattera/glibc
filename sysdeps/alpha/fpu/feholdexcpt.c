@@ -1,5 +1,5 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997
 
@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 feholdexcept (fenv_t *envp)
@@ -27,7 +27,7 @@ feholdexcept (fenv_t *envp)
   fegetenv(envp);
 
   /* Clear all exception status bits and exception enable bits.  */
-  __ieee_set_fp_control(0);
+  __ieee_set_fp_control(*envp & SWCR_MAP_MASK);
 
   return 0;
 }

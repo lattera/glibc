@@ -1,5 +1,5 @@
 /* Test exception in current environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997.
 
@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 fetestexcept (int excepts)
@@ -28,5 +28,5 @@ fetestexcept (int excepts)
   /* Get current exceptions.  */
   tmp = __ieee_get_fp_control();
 
-  return tmp & excepts & FE_ALL_EXCEPT;
+  return tmp & excepts & SWCR_STATUS_MASK;
 }

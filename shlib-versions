@@ -85,7 +85,6 @@ mips.*-.*-linux.*	libresolv=2		GLIBC_2.0 GLIBC_2.2
 # names given in /etc/nsswitch.conf.
 mips.*-.*-linux.*	libnss_files=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_dns=2		GLIBC_2.0 GLIBC_2.2
-mips.*-.*-linux.*	libnss_db=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_compat=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_nis=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
@@ -93,7 +92,6 @@ mips.*-.*-linux.*	libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libnss_files=2
 .*-.*-.*		libnss_dns=2
-.*-.*-.*		libnss_db=2
 .*-.*-.*		libnss_compat=2
 .*-.*-.*		libnss_nis=2
 .*-.*-.*		libnss_nisplus=2
@@ -104,13 +102,6 @@ mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 alpha.*-.*-linux.*	libnsl=1.1
 mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libnsl=1
-
-# We use libdb.so.3 for the interface in version 2.x of the Berkeley DB code.
-.*-.*-.*		libdb=3
-# This is the Berkeley DB 1.85.  We use the version numbers from glibc 2.0.*
-# for all times.
-alpha-.*-linux.*        libdb1=2.1
-.*-.*-.*                libdb1=2
 
 # This defines the shared library version numbers we will install.
 alpha.*-.*-linux.*	libcrypt=1.1

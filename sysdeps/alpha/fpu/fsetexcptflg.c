@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 __fesetexceptflag (const fexcept_t *flagp, int excepts)
@@ -29,7 +29,7 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
   tmp = __ieee_get_fp_control ();
 
   /* Set all the bits that were called for.  */
-  tmp = (tmp & ~FE_ALL_EXCEPT) | (*flagp & excepts & FE_ALL_EXCEPT);
+  tmp = (tmp & ~SWCR_STATUS_MASK) | (*flagp & excepts & SWCR_STATUS_MASK);
 
   /* And store it back.  */
   __ieee_set_fp_control (tmp);

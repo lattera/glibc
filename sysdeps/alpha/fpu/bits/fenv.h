@@ -36,6 +36,11 @@
 
 enum
   {
+#ifdef __USE_GNU
+    FE_DENORMAL =	1UL << 22,
+#define FE_DENORMAL	FE_DENORMAL
+#endif
+
     FE_INEXACT =	1UL << 21,
 #define FE_INEXACT	FE_INEXACT
 
@@ -51,11 +56,9 @@ enum
     FE_INVALID =	1UL << 17,
 #define FE_INVALID	FE_INVALID
 
-    FE_ALL_EXCEPT =
-	(FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
+    FE_ALL_EXCEPT =	0x3f << 17
 #define FE_ALL_EXCEPT	FE_ALL_EXCEPT
   };
-
 
 /* Alpha chips support all four defined rouding modes.
 
@@ -81,6 +84,19 @@ enum
 #define FE_UPWARD	FE_UPWARD
   };
 
+#ifdef __USE_GNU
+/* On later hardware, and later kernels for earlier hardware, we can forcibly
+   underflow denormal inputs and outputs.  This can speed up certain programs
+   significantly, usually without affecting accuracy.  */
+enum
+  {
+    FE_MAP_DMZ =	1UL << 12,	/* Map denorm inputs to zero */
+#define FE_MAP_DMZ	FE_MAP_DMZ
+
+    FE_MAP_UMZ =	1UL << 13,	/* Map underflowed outputs to zero */
+#define FE_MAP_UMZ	FE_MAP_UMZ
+  };
+#endif
 
 /* Type representing exception flags.  */
 typedef unsigned long int fexcept_t;
@@ -96,6 +112,10 @@ typedef unsigned long int fenv_t;
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
 # define FE_NOMASK_ENV	((fenv_t *) 0x880000000000003eUL)
+
+/* Floating-point environment with (processor-dependent) non-IEEE floating
+   point.  In this case, mapping denormals to zero.  */
+# define FE_NONIEEE_ENV ((fenv_t *) 0x8800000000003000UL)
 #endif
 
 /* The system calls to talk to the kernel's FP code.  */

@@ -69,7 +69,7 @@ if ($#ARGV == 0) {
     $binary=$ARGV[0];
     $data=$ARGV[1];
 } else {
-    die "Wrong number of arguments.";
+    die "Wrong number of arguments, run $progname --help for help.";
 }
 
 sub location {

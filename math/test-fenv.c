@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de> and
+   Contributed by Andreas Jaeger <aj@suse.de> and
    Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -343,31 +343,273 @@ feenv_mask_test (const char *flag_name, int fe_exc)
   }
 }
 
+/* Test that program aborts with no masked interrupts */
+static void
+feexcp_nomask_test (const char *flag_name, int fe_exc)
+{
+  int status;
+  pid_t pid;
+
+  printf ("Test: after fedisable (%s) processes will abort\n");
+  printf ("      when feraiseexcept (%s) is called.\n", flag_name, flag_name);
+  pid = fork ();
+  if (pid == 0)
+    {
+#ifdef RLIMIT_CORE
+      /* Try to avoid dumping core.  */
+      struct rlimit core_limit;
+      core_limit.rlim_cur = 0;
+      core_limit.rlim_max = 0;
+      setrlimit (RLIMIT_CORE, &core_limit);
+#endif
+
+      fedisableexcept (FE_ALL_EXCEPT);
+      feenableexcept (fe_exc);
+      feraiseexcept (fe_exc);
+      exit (2);
+    }
+  else if (pid < 0)
+    {
+      if (errno != ENOSYS)
+	{
+	  printf ("  Fail: Could not fork.\n");
+	  ++count_errors;
+	}
+      else
+	printf ("  `fork' not implemented, test ignored.\n");
+    }
+  else {
+    if (waitpid (pid, &status, 0) != pid)
+      {
+	printf ("  Fail: waitpid call failed.\n");
+	++count_errors;
+      }
+    else if (WIFSIGNALED (status) && WTERMSIG (status) == SIGFPE)
+      printf ("  Pass: Process received SIGFPE.\n");
+    else
+      {
+	printf ("  Fail: Process didn't receive signal and exited with status %d.\n",
+		status);
+	++count_errors;
+      }
+  }
+}
+
+/* Test that program doesn't abort with exception.  */
+static void
+feexcp_mask_test (const char *flag_name, int fe_exc)
+{
+  int status;
+  pid_t pid;
+
+  printf ("Test: after fedisable (%s) processes will not abort\n");
+  printf ("      when feraiseexcept (%s) is called.\n", flag_name, flag_name);
+  pid = fork ();
+  if (pid == 0)
+    {
+#ifdef RLIMIT_CORE
+      /* Try to avoid dumping core.  */
+      struct rlimit core_limit;
+      core_limit.rlim_cur = 0;
+      core_limit.rlim_max = 0;
+      setrlimit (RLIMIT_CORE, &core_limit);
+#endif
+      feenableexcept (FE_ALL_EXCEPT);
+      fedisableexcept (fe_exc);
+      feraiseexcept (fe_exc);
+      exit (2);
+    }
+  else if (pid < 0)
+    {
+      if (errno != ENOSYS)
+	{
+	  printf ("  Fail: Could not fork.\n");
+	  ++count_errors;
+	}
+      else
+	printf ("  `fork' not implemented, test ignored.\n");
+    }
+  else {
+    if (waitpid (pid, &status, 0) != pid)
+      {
+	printf ("  Fail: waitpid call failed.\n");
+	++count_errors;
+      }
+    else if (WIFEXITED (status) && WEXITSTATUS (status) == 2)
+      printf ("  Pass: Process exited normally.\n");
+    else
+      {
+	printf ("  Fail: Process exited abnormally with status %d.\n",
+		status);
+	++count_errors;
+      }
+  }
+}
+
+
+/* Tests for feenableexcept/fedisableexcept/fegetexcept.  */
+static void
+feenable_test (const char *flag_name, int fe_exc)
+{
+  int excepts;
+
+
+  printf ("Tests for feenableexcepts etc. with flag %s\n", flag_name);
+
+  /* First disable all exceptions.  */
+  if (fedisableexcept (FE_ALL_EXCEPT) == -1)
+    {
+      printf ("Test: fedisableexcept (FE_ALL_EXCEPT) failed\n");
+      ++count_errors;
+      /* If this fails, the other tests don't make sense.  */
+      return;
+    }
+  excepts = fegetexcept ();
+  if (excepts != 0)
+    {
+      printf ("Test: fegetexcept (%s) failed, return should be 0, is %d\n",
+	      flag_name, excepts);
+      ++count_errors;
+    }
+
+  excepts = feenableexcept (fe_exc);
+  if (excepts == -1)
+    {
+      printf ("Test: feenableexcept (%s) failed\n", flag_name);
+      ++count_errors;
+      return;
+    }
+  if (excepts != 0)
+    {
+      printf ("Test: feenableexcept (%s) failed, return should be 0, is %x\n",
+	      flag_name, excepts);
+      ++count_errors;
+    }
+
+  excepts = fegetexcept ();
+  if (excepts != fe_exc)
+    {
+      printf ("Test: fegetexcept (%s) failed, return should be 0x%x, is 0x%x\n",
+	      flag_name, fe_exc, excepts);
+      ++count_errors;
+    }
+
+  /* And now disable the exception again.  */
+  excepts = fedisableexcept (fe_exc);
+  if (excepts == -1)
+    {
+      printf ("Test: fedisableexcept (%s) failed\n", flag_name);
+      ++count_errors;
+      return;
+    }
+  if (excepts != fe_exc)
+    {
+      printf ("Test: fedisableexcept (%s) failed, return should be 0x%x, is 0x%x\n",
+	      flag_name, fe_exc, excepts);
+      ++count_errors;
+    }
+
+  excepts = fegetexcept ();
+  if (excepts != 0)
+    {
+      printf ("Test: fegetexcept (%s) failed, return should be 0, is 0x%x\n",
+	      flag_name, excepts);
+      ++count_errors;
+    }
+
+  /* Now the other way round: Enable all exceptions and disable just this one.  */
+  if (feenableexcept (FE_ALL_EXCEPT) == -1)
+    {
+      printf ("Test: feenableexcept (FE_ALL_EXCEPT) failed\n");
+      ++count_errors;
+      /* If this fails, the other tests don't make sense.  */
+      return;
+    }
+
+  excepts = fegetexcept ();
+  if (excepts != FE_ALL_EXCEPT)
+    {
+      printf ("Test: fegetexcept (%s) failed, return should be 0x%x, is 0x%x\n",
+	      flag_name, FE_ALL_EXCEPT, excepts);
+      ++count_errors;
+    }
+
+  excepts = fedisableexcept (fe_exc);
+  if (excepts == -1)
+    {
+      printf ("Test: fedisableexcept (%s) failed\n", flag_name);
+      ++count_errors;
+      return;
+    }
+  if (excepts != FE_ALL_EXCEPT)
+    {
+      printf ("Test: fedisableexcept (%s) failed, return should be 0, is 0x%x\n",
+	      flag_name, excepts);
+      ++count_errors;
+    }
+
+  excepts = fegetexcept ();
+  if (excepts != (FE_ALL_EXCEPT & ~fe_exc))
+    {
+      printf ("Test: fegetexcept (%s) failed, return should be 0x%x, is 0x%x\n",
+	      flag_name, (FE_ALL_EXCEPT & ~fe_exc), excepts);
+      ++count_errors;
+    }
+
+  /* And now enable the exception again.  */
+  excepts = feenableexcept (fe_exc);
+  if (excepts == -1)
+    {
+      printf ("Test: feenableexcept (%s) failed\n", flag_name);
+      ++count_errors;
+      return;
+    }
+  if (excepts != (FE_ALL_EXCEPT & ~fe_exc))
+    {
+      printf ("Test: feenableexcept (%s) failed, return should be 0, is 0x%x\n",
+	      flag_name, excepts);
+      ++count_errors;
+    }
+
+  excepts = fegetexcept ();
+  if (excepts != FE_ALL_EXCEPT)
+    {
+      printf ("Test: fegetexcept (%s) failed, return should be 0x%x, is 0x%x\n",
+	      flag_name, FE_ALL_EXCEPT, excepts);
+      ++count_errors;
+    }
+  feexcp_nomask_test (flag_name, fe_exc);
+  feexcp_mask_test (flag_name, fe_exc);
+  
+}
+
+
+static void
+fe_single_test (const char *flag_name, int fe_exc)
+{
+  feenv_nomask_test (flag_name, fe_exc);
+  feenv_mask_test (flag_name, fe_exc);
+  feenable_test (flag_name, fe_exc);
+}
 
 
 static void
 feenv_tests (void)
 {
-
 #ifdef FE_DIVBYZERO
-  feenv_nomask_test ("FE_DIVBYZERO", FE_DIVBYZERO);
-  feenv_mask_test ("FE_DIVBYZERO", FE_DIVBYZERO);
+  fe_single_test ("FE_DIVBYZERO", FE_DIVBYZERO);
 #endif
 #ifdef FE_INVALID
-  feenv_nomask_test ("FE_INVALID", FE_INVALID);
-  feenv_mask_test ("FE_INVALID", FE_INVALID);
+  fe_single_test ("FE_INVALID", FE_INVALID);
 #endif
 #ifdef FE_INEXACT
-  feenv_nomask_test ("FE_INEXACT", FE_INEXACT);
-  feenv_mask_test ("FE_INEXACT", FE_INEXACT);
+  fe_single_test ("FE_INEXACT", FE_INEXACT);
 #endif
 #ifdef FE_UNDERFLOW
-  feenv_nomask_test ("FE_UNDERFLOW", FE_UNDERFLOW);
-  feenv_mask_test ("FE_UNDERFLOW", FE_UNDERFLOW);
+  fe_single_test ("FE_UNDERFLOW", FE_UNDERFLOW);
 #endif
 #ifdef FE_OVERFLOW
-  feenv_nomask_test ("FE_OVERFLOW", FE_OVERFLOW);
-  feenv_mask_test ("FE_OVERFLOW", FE_OVERFLOW);
+  fe_single_test ("FE_OVERFLOW", FE_OVERFLOW);
 #endif
   fesetenv (FE_DFL_ENV);
 }

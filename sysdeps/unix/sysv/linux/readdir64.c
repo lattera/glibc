@@ -4,11 +4,4 @@
 
 #include <sysdeps/unix/readdir.c>
 
-#include <shlib-compat.h>
-
-versioned_symbol (libc, __readdir64, readdir64, GLIBC_2_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__readdir64, __old_readdir64)
-compat_symbol (libc, __old_readdir64, readdir64, GLIBC_2_1);
-#endif
+weak_alias(__readdir64, readdir64)

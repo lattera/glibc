@@ -57,6 +57,7 @@
 #endif
 
 #ifndef ELIDE_CODE
+#if !defined _LIBC || !defined GLOB_ONLY_P
 
 #if defined STDC_HEADERS || defined __GNU_LIBRARY__
 # include <stddef.h>
@@ -299,10 +300,15 @@ static
 inline
 #endif
 const char *next_brace_sub __P ((const char *begin));
+
+#endif /* GLOB_ONLY_P */
+
 static int glob_in_dir __P ((const char *pattern, const char *directory,
 			     int flags,
 			     int (*errfunc) (const char *, int),
 			     glob_t *pglob));
+
+#if !defined _LIBC || !defined GLOB_ONLY_P
 static int prefix_array __P ((const char *prefix, char **array, size_t n));
 static int collated_compare __P ((const __ptr_t, const __ptr_t));
 
@@ -351,6 +357,8 @@ next_brace_sub (begin)
 
   return cp;
 }
+
+#endif /* !GLOB_ONLY_P */
 
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
@@ -1075,6 +1083,8 @@ glob (pattern, flags, errfunc, pglob)
 }
 
 
+#if !defined _LIBC || !defined GLOB_ONLY_P
+
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 void
 globfree (pglob)
@@ -1219,6 +1229,8 @@ weak_alias (__glob_pattern_p, glob_pattern_p)
 # endif
 #endif
 
+#endif /* !GLOB_ONLY_P */
+
 
 /* Like `glob', but PATTERN is a final pathname component,
    and matches are searched for in DIRECTORY.
@@ -1327,9 +1339,10 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		{
 		  const char *name;
 		  size_t len;
-		  struct dirent *d = ((flags & GLOB_ALTDIRFUNC)
-				      ? (*pglob->gl_readdir) (stream)
-				      : readdir ((DIR *) stream));
+		  struct dirent *d =
+		    ((flags & GLOB_ALTDIRFUNC)
+		     ? (struct dirent *)((*pglob->gl_readdir) (stream))
+		     : readdir ((DIR *) stream));
 		  if (d == NULL)
 		    break;
 		  if (! REAL_DIR_ENTRY (d))

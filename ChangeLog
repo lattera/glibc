@@ -1,5 +1,81 @@
 2000-08-19  Andreas Jaeger  <aj@suse.de>
 
+	* malloc/mtrace.pl (usage): Inform about --help.
+
+2000-08-19  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (new_heap): try harder to get an aligned chunk of
+	size HEAP_MAX_SIZE.
+
+2000-08-19  Andreas Jaeger  <aj@suse.de>
+
+	* shlib-versions: Remove libnss_db, libdb and libdb1.
+
+2000-08-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/readdir.c: Move...
+	* sysdeps/unix/sysv/linux/ia64/readdir.c: ...here and
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir.c: ...here.
+	* sysdeps/unix/sysv/linux/alpha/readdir_r.c: Move...
+	* sysdeps/unix/sysv/linux/ia64/readdir_r.c: ...here and
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir_r.c: ...here.
+	* sysdeps/unix/sysv/linux/alpha/readdir64.c: Remove.
+	* sysdeps/unix/sysv/linux/alpha/readdir64_r.c: Remove.
+	* sysdeps/unix/sysv/linux/alpha/getdents64.c: Remove.
+	* sysdeps/unix/sysv/linux/alpha/getdents.c: Only use for non-LFS
+	getdents.
+	* sysdeps/unix/sysv/linux/readdir64.c: Remove versioning.
+	* sysdeps/unix/sysv/linux/readdir64_r.c: Likewise.
+
+2000-08-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/glob.h (__glob64): Add prototype.
+	* sysdeps/generic/glob.c: If GLOB_ONLY_P is defined, only
+	define glob and glob_in_dir.
+	* sysdeps/unix/sysv/linux/i386/Versions: Add glob64@@GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/arm/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/i386/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/arm/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/glob64.c: New file.
+
+2000-08-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/Makefile (memusage): libmemusage.so is installed in slibdir.
+
+2000-08-17  Andreas Jaeger  <aj@suse.de>
+
+	* math/test-fenv.c (fe_single_test): New function.
+	(fe_env_tests): Use fe_single_test.
+	(feenable_test): New tests for feenable/fedisable and
+	fegetexcpetions.
+	(feexcp_mask_test): New function.
+	(feexcp_nomask_test): New function.
+
+2000-08-19  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/fpu/fenv_libc.h: New file.
+	* sysdeps/alpha/fpu/fclrexcpt.c: Use it.
+	* sysdeps/alpha/fpu/fegetenv.c: Likewise.
+	* sysdeps/alpha/fpu/fesetround.c: Likewise.
+	* sysdeps/alpha/fpu/fegetround.c: Likewise.
+	* sysdeps/alpha/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/alpha/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/alpha/fpu/ftestexcept.c: Likewise.
+	* sysdeps/alpha/fpu/fedisblxcpt.c: Likewise.  Use the smaller mask.
+	* sysdeps/alpha/fpu/feenablxcpt.c: Likewise.
+	* sysdeps/alpha/fpu/fegetexcept.c: Likewise.
+	* sysdeps/alpha/fpu/feholdexcpt.c: Retain the SWCR_MAP bits.
+	* sysdeps/alpha/fpu/fesetenv.c: Likewise.
+	* sysdeps/alpha/fpu/feupdateenv.c: Likewise.
+	* sysdeps/alpha/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/alpha/fpu/bits/fenv.h (FE_DENORMAL): New.
+	(FE_MAP_DMZ, FE_MAP_UMZ, FE_NONIEEE_ENV): New.
+
+2000-08-19  Andreas Jaeger  <aj@suse.de>
+
 	* elf/constload1.c: Include <stdio.h> for puts prototype.
 
 2000-08-19  Ulrich Drepper  <drepper@redhat.com>
