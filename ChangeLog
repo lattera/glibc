@@ -9,6 +9,19 @@
 
 2002-08-15  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/m68k/Versions: Add *xattr syscalls with
+	version 2.3.
+	* sysdeps/unix/sysv/linux/arm/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Versions: Likewise.
+	Patch by Andreas Gruenbacher <agruen@suse.de>.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add *xattr syscalls.
 
 2002-08-14  Roland McGrath  <roland@redhat.com>
