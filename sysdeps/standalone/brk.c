@@ -46,8 +46,10 @@ int __C_heap_size;
 static
 #endif
 void
-__NONE_set_memvals (argc, argv, envp),
-      int argc; char **argv; char **envp;
+__NONE_set_memvals (argc, argv, envp)
+     int argc;
+     char **argv;
+     char **envp;
 {
 
   __rorig  =
