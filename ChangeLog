@@ -1,5 +1,7 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/tst-tables.sh: Add BIG5HKSCS.
+
 	* iconvdata/tst-table-to.c (main): Correct cast in iconv call.
 	* iconvdata/tst-table-from.c: Include <string.h>.
 	(try): Correct cast in iconv call.

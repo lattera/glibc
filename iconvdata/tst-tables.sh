@@ -188,7 +188,7 @@ cat <<EOF |
   CP949
   #JOHAB                                No charmap exists
   BIG5
-  #BIG5HKSCS                            Broken, please fix it
+  BIG5HKSCS
   EUC-JP
   EUC-CN            GB2312
   #GBK                                  Converter uses private area characters

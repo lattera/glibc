@@ -365,6 +365,49 @@ name is the maximum allowed size.  Modern systems all have the
 critical.  In any case there is no such problem with the @code{readdir}
 function, so that even on systems without the @code{d_reclen} member one
 could use multiple threads by using external locking.
+
+It is also important to look at the definition of the @code{struct
+dirent} type.  Simply passing a pointer to an object of this type for
+the second parameter of @code{readdir_r} might not be enough.  Some
+systems don't define the @code{d_name} element sufficiently long.  In
+this case the user has to provide additional space.  There must be room
+for at least @code{NAME_MAX + 1} characters in the @code{d_name} array.
+Code to call @code{readdir_r} could look like this:
+
+@smallexample
+  union
+  @{
+    struct dirent d;
+    char b[offsetof (struct dirent, d_name) + NAME_MAX + 1];
+  @} u;
+
+  if (readdir_r (dir, &u.d, &res) == 0)
+    ...
+@end smallexample
+@end deftypefun
+
+To support large filesystems on 32-bit machines there are LFS variants
+of the last two functions.
+
+@comment dirent.h
+@comment LFS
+@deftypefun {struct dirent64 *} readdir64 (DIR *@var{dirstream})
+The @code{readdir64} function is just like the @code{readdir} function
+except that it returns a pointer to a record of type @code{struct
+dirent64}.  Some of the members of this data type (notably @code{d_ino})
+might have a different size to allow large filesystems.
+
+In all other aspects this function is equivalent to @code{readdir}.
+@end deftypefun
+
+@comment dirent.h
+@comment LFS
+@deftypefun int readdir64_r (DIR *@var{dirstream}, struct dirent64 *@var{entry}, struct dirent64 **@var{result})
+The @code{readdir64_r} function is equivalent to the @code{readdir_r}
+function except that it takes parameters of base type @code{struct
+dirent64} instead of @code{struct dirent} in the second and third
+position.  The same precautions mentioned in the documentation of
+@code{readdir_r} also apply here.
 @end deftypefun
 
 @comment dirent.h
