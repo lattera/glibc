@@ -297,7 +297,7 @@ enum
 # define __SIGEV_MAX_SIZE	64
 # define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 4)
 
- struct sigevent
+typedef struct sigevent
   {
     sigval_t sigev_value;
     int sigev_signo;
