@@ -32,7 +32,7 @@
 struct link_map *
 internal_function
 _dl_new_object (char *realname, const char *libname, int type,
-		struct link_map *loader)
+		struct link_map *loader, int mode)
 {
   struct link_map *l;
   int idx;
@@ -95,7 +95,15 @@ _dl_new_object (char *realname, const char *libname, int type,
 
   /* Insert the scope if it isn't the global scope we already added.  */
   if (idx == 0 || &loader->l_searchlist != new->l_scope[0])
-    new->l_scope[idx] = &loader->l_searchlist;
+    {
+      if ((mode & RTLD_DEEPBIND) != 0 && idx != 0)
+	{
+	  new->l_scope[1] = new->l_scope[0];
+	  idx = 0;
+	}
+
+      new->l_scope[idx] = &loader->l_searchlist;
+    }
 
   new->l_local_scope[0] = &new->l_searchlist;
 

@@ -1,5 +1,5 @@
 /* System dependent definitions for run-time dynamic loading.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #define RTLD_NOW	0x00002	/* Immediate function call binding.  */
 #define	RTLD_BINDING_MASK   0x3	/* Mask of binding time value.  */
 #define RTLD_NOLOAD	0x00004	/* Do not load the object.  */
+#define RTLD_DEEPBIND	0x00008	/* Use deep binding.  */
 
 /* If the following bit is set in the MODE argument to `dlopen',
    the symbols of the loaded object and its dependencies are made

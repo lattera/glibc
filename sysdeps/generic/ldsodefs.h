@@ -722,7 +722,8 @@ extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name)
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_main_map list.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
-					int type, struct link_map *loader)
+					int type, struct link_map *loader,
+					int mode)
      internal_function attribute_hidden;
 
 /* Relocate the given object (if it hasn't already been).

@@ -881,7 +881,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #endif
 
   /* Enter the new object in the list of loaded objects.  */
-  l = _dl_new_object (realname, name, l_type, loader);
+  l = _dl_new_object (realname, name, l_type, loader, mode);
   if (__builtin_expect (! l, 0))
     {
       errstring = N_("cannot create shared object descriptor");
@@ -1355,15 +1355,12 @@ cannot enable executable stack as shared object requires");
 
   /* If this object has DT_SYMBOLIC set modify now its scope.  We don't
      have to do this for the main map.  */
-  if (__builtin_expect (l->l_info[DT_SYMBOLIC] != NULL, 0)
+  if ((mode & RTLD_DEEPBIND) == 0
+      && __builtin_expect (l->l_info[DT_SYMBOLIC] != NULL, 0)
       && &l->l_searchlist != l->l_scope[0])
     {
       /* Create an appropriate searchlist.  It contains only this map.
-
-	 XXX This is the definition of DT_SYMBOLIC in SysVr4.  The old
-	 GNU ld.so implementation had a different interpretation which
-	 is more reasonable.  We are prepared to add this possibility
-	 back as part of a GNU extension of the ELF format.  */
+	 This is the definition of DT_SYMBOLIC in SysVr4.  */
       l->l_symbolic_searchlist.r_list =
 	(struct link_map **) malloc (sizeof (struct link_map *));
 
@@ -1968,7 +1965,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
-	      || (l = _dl_new_object (name_copy, name, type, loader)) == NULL)
+	      || (l = _dl_new_object (name_copy, name, type, loader,
+				      mode)) == NULL)
 	    _dl_signal_error (ENOMEM, name, NULL,
 			      N_("cannot create shared object descriptor"));
 	  /* Signal that this is a faked entry.  */

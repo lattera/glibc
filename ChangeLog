@@ -1,3 +1,23 @@
+2004-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/dlfcn.h: Add RTLD_DEEPBIND.
+	* elf/dl-object.c (_dl_new_object): Add new parameter mode.  If mode
+	has RTLD_DEEPBIND set add local searchlist before global scope.
+	* sysdeps/generic/ldsodefs.h (_dl_new_object): Adjust prototype.
+	* elf/rtld.c: Adjust callers of _dl_new_object.
+	* elf/dl-load.c: Likewise.
+	(_dl_map_object_from_fd): If RTLD_DEEPBIND is used, don't do anything
+	for DF_SYMBOLIC.
+	* elf/dl-open.c (dl_open_writer): Pass RTLD_DEEPBIND flag on to
+	_dl_map_object_deps.
+	* elf/tst-deep1.c: New file.
+	* elf/tst-deep1mod1.c: New file.
+	* elf/tst-deep1mod2.c: New file.
+	* elf/tst-deep1mod3.c: New file.
+	* elf/Makefile: Add rules to build and run new tests.
+
+	* elf/dl-deps.c: Pretty printing.
+
 2004-09-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h (inline_syscall[0-6]): Change name

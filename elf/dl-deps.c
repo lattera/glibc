@@ -509,7 +509,7 @@ _dl_map_object_deps (struct link_map *map,
       runp->map->l_reserved = 0;
     }
 
-  if (__builtin_expect(GLRO(dl_debug_mask) & DL_DEBUG_PRELINK, 0) != 0
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK, 0) != 0
       && map == GL(dl_loaded))
     {
       /* If we are to compute conflicts, we have to build local scope

@@ -879,7 +879,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      _dl_new_object ((char *) "", "", lt_executable, NULL);
+      _dl_new_object ((char *) "", "", lt_executable, NULL, 0);
       if (GL(dl_loaded) == NULL)
 	_dl_fatal_printf ("cannot allocate memory for link map\n");
       GL(dl_loaded)->l_phdr = phdr;
@@ -1271,7 +1271,8 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	 better be, since it's read-only and so we couldn't relocate it).
 	 We just want our data structures to describe it as if we had just
 	 mapped and relocated it normally.  */
-      struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL);
+      struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL,
+					   0);
       if (__builtin_expect (l != NULL, 1))
 	{
 	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
