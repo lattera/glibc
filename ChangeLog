@@ -1,5 +1,7 @@
 2000-04-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/arm/libm-test-ulps: New file.
+
 	* malloc/malloc.c: Undo all of today's changes.
 
 	* locale/programs/locale.c (show_info): Don't try to look into
