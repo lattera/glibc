@@ -811,7 +811,7 @@ gconv_end (struct __gconv_step *data)
 				/* We use GB 2312.  */			      \
 				if (NEED_LENGTH_TEST			      \
 				    && __builtin_expect (outptr + 3 > outend, \
-							 0)		      \
+							 0))		      \
 				  {					      \
 				    result = __GCONV_FULL_OUTPUT;	      \
 				    break;				      \

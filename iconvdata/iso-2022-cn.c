@@ -272,7 +272,7 @@ enum
 	  {								      \
 	    *outptr++ = SI;						      \
 	    set = ASCII_set;						      \
-	    if (NEED_LENGTH_TEST && __builtin_expet (outptr == outend, 0))    \
+	    if (NEED_LENGTH_TEST && __builtin_expect (outptr == outend, 0))   \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -319,7 +319,7 @@ enum
 		else							      \
 		  written = ucs4_to_gb2312 (ch, buf, 2);		      \
 									      \
-		if (__builin_expect (written, 0) != __UNKNOWN_10646_CHAR)     \
+		if (__builtin_expect (written, 0) != __UNKNOWN_10646_CHAR)    \
 		  /* Oh well, then switch SO.  */			      \
 		  used = GB2312_set + CNS11643_1_set - set;		      \
 		else							      \
