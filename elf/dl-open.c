@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@
 #include <dl-dst.h>
 
 
-#ifdef SHARED
+#ifndef SHARED
 /* Giving this initialized value preallocates some surplus bytes in the
    static TLS area, see __libc_setup_tls (libc-tls.c).  */
 size_t _dl_tls_static_size = 576;
