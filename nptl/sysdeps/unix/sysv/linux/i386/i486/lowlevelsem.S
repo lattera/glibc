@@ -80,9 +80,15 @@ __new_sem_wait:
 4:
 #endif
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+#if USE___THREAD
 	movl	%gs:0, %edx
 	subl	errno@gottpoff(%ebx), %edx
 	movl	%eax, (%edx)
+#else
+	movl	%eax, %edx
+	call	__errno_location@plt
+	movl	%edx, (%eax)
+#endif
 	orl	$-1, %eax
 	popl	%esi
 	popl	%ebx
@@ -121,9 +127,14 @@ __new_sem_trywait:
 3:
 #endif
 	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
+#if USE___THREAD
 	movl	%gs:0, %edx
 	subl	errno@gottpoff(%ecx), %edx
 	movl	$EAGAIN, (%edx)
+#else
+	call	__errno_location@plt
+	movl	$EAGAIN, (%eax)
+#endif
 	orl	$-1, %eax
 	ret
 	.size	__new_sem_trywait,.-__new_sem_trywait
@@ -226,9 +237,15 @@ sem_timedwait:
 4:
 #endif
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+#if USE___THREAD
 	movl	%gs:0, %edx
 	subl	errno@gottpoff(%ebx), %edx
 	movl	%eax, (%edx)
+#else
+	movl	%eax, %edx
+	call	__errno_location@plt
+	movl	%edx, (%eax)
+#endif
 
 	addl	$8, %esp
 	orl	$-1, %eax
@@ -272,9 +289,14 @@ __new_sem_post:
 4:
 #endif
 	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+#if USE___THREAD
 	movl	%gs:0, %edx
 	subl	errno@gottpoff(%ebx), %edx
 	movl	$EINVAL, (%edx)
+#else
+	call	__errno_location@plt
+	movl	$EAGAIN, (%eax)
+#endif
 
 	orl	$-1, %eax
 	popl	%ebx
