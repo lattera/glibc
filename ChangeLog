@@ -1,3 +1,19 @@
+2000-04-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/elf/start.S: Use __PIC__ instead of PIC.
+	* sysdeps/mips/mips64/add_n.S: Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S: Likewise.
+	* sysdeps/mips/mips64/lshift.S: Likewise.
+	* sysdeps/mips/mips64/mul_1.S: Likewise.
+	* sysdeps/mips/mips64/rshift.S: Likewise.
+	* sysdeps/mips/mips64/setjmp.S: Likewise.
+	* sysdeps/mips/mips64/sub_n.S: Likewise.
+	* sysdeps/mips/mips64/submul_1.S: Likewise.
+
+	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Remove strtab
+	and update comment.  The strtab from _dl_relocate_object can be
+	used.
+
 2000-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv.c (iconv): Add __builtin_expect where useful.
