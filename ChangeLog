@@ -1,3 +1,10 @@
+2004-02-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): Correctly set up l_map_end and l_addr
+	in vDSO's link_map, don't assume l_addr == 0.  Set GL(dl_sysinfo)
+	from e_entry only if AT_SYSINFO not present and adjust by l_addr.
+	Take vDSO into account when inserting rtld into _dl_loaded chain.
+
 2004-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/svcauth_des.c (authdes_getucred): Removed fixed limit on

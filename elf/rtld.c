@@ -1211,11 +1211,9 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
     }
 
 #ifdef NEED_DL_SYSINFO
+  struct link_map *sysinfo_map = NULL;
   if (GL(dl_sysinfo_dso) != NULL)
     {
-      /* We have a prelinked DSO preloaded by the system.  */
-      GL(dl_sysinfo) = GL(dl_sysinfo_dso)->e_entry;
-
       /* Do an abridged version of the work _dl_map_object_from_fd would do
 	 to map in the object.  It's already mapped and prelinked (and
 	 better be, since it's read-only and so we couldn't relocate it).
@@ -1225,9 +1223,6 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
       if (__builtin_expect (l != NULL, 1))
 	{
 	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT];
-#ifndef NDEBUG
-	  uint_fast16_t pt_load_num = 0;
-#endif
 
 	  l->l_phdr = ((const void *) GL(dl_sysinfo_dso)
 		       + GL(dl_sysinfo_dso)->e_phoff);
@@ -1239,21 +1234,21 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 		{
 		  l->l_ld = (void *) ph->p_vaddr;
 		  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
-		  break;
 		}
-#ifndef NDEBUG
-	      if (ph->p_type == PT_LOAD)
+	      else if (ph->p_type == PT_LOAD)
 		{
-		  assert (pt_load_num
-			  || (void *) ph->p_vaddr == GL(dl_sysinfo_dso));
-		  pt_load_num++;
+		  if (! l->l_addr)
+		    l->l_addr = ph->p_vaddr;
+		  else if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
+		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
 		}
-#endif
 	    }
+	  l->l_map_start = (ElfW(Addr)) GL(dl_sysinfo_dso);
+	  l->l_addr = l->l_map_start - l->l_addr;
+	  l->l_map_end += l->l_addr;
 	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);
 	  l->l_relocated = 1;
-	  l->l_map_start = (ElfW(Addr)) GL(dl_sysinfo_dso);
 
 	  /* Now that we have the info handy, use the DSO image's soname
 	     so this object can be looked up by name.  Note that we do not
@@ -1271,6 +1266,11 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 		_dl_fatal_printf ("out of memory\n");
 	      l->l_libname->name = memcpy (copy, dsoname, len);
 	    }
+
+	  /* We have a prelinked DSO preloaded by the system.  */
+	  if (GL(dl_sysinfo) == DL_SYSINFO_DEFAULT)
+	    GL(dl_sysinfo) = GL(dl_sysinfo_dso)->e_entry + l->l_addr;
+	  sysinfo_map = l;
 	}
     }
 #endif
@@ -1316,9 +1316,17 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	++i;
       GL(dl_rtld_map).l_prev = GL(dl_loaded)->l_searchlist.r_list[i - 1];
       if (__builtin_expect (mode, normal) == normal)
-	GL(dl_rtld_map).l_next = (i + 1 < GL(dl_loaded)->l_searchlist.r_nlist
-				  ? GL(dl_loaded)->l_searchlist.r_list[i + 1]
-				  : NULL);
+	{
+	  GL(dl_rtld_map).l_next = (i + 1 < GL(dl_loaded)->l_searchlist.r_nlist
+				    ? GL(dl_loaded)->l_searchlist.r_list[i + 1]
+				    : NULL);
+#ifdef NEED_DL_SYSINFO
+	  if (sysinfo_map != NULL
+	      && GL(dl_rtld_map).l_prev->l_next == sysinfo_map
+	      && GL(dl_rtld_map).l_next != sysinfo_map)
+	    GL(dl_rtld_map).l_prev = sysinfo_map;
+#endif
+	}
       else
 	/* In trace mode there might be an invisible object (which we
 	   could not find) after the previous one in the search list.
