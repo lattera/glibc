@@ -204,7 +204,7 @@ extern char *alloca ();
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
    NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
-   unless SIZE <= 0, in which case it is as big as necessary.  */
+   unless SIZE == 0, in which case it is as big as necessary.  */
 
 GETCWD_RETURN_TYPE
 __getcwd (buf, size)
@@ -226,7 +226,7 @@ __getcwd (buf, size)
   int prev_errno = errno;
   size_t allocated = size;
 
-  if (size <= 0)
+  if (size == 0)
     {
       if (buf != NULL)
 	{
@@ -363,7 +363,7 @@ __getcwd (buf, size)
 
 	  if ((size_t) (pathp - path) <= namlen)
 	    {
-	      if (size > 0)
+	      if (size != 0)
 		{
 		  (void) __closedir (dirstream);
 		  __set_errno (ERANGE);

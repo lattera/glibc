@@ -1,8 +1,7 @@
 1999-08-20  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/unix/sysv/linux/getcwd.c: Allocate buffer large enough
-	not only if size == 0, but also for size < 0.
-	* sysdeps/posix/getcwd.c: Likewise.  [PR libc/1269]
+	* sysdeps/posix/getcwd.c: Correct comment saying < 0 is ok for size
+	type.  [PR libc/1269]
 
 	* posix/execvp.c (execvp): Allocate array name of correct size.
 	Optimize inner loop.  Use execve directly, not execv.
