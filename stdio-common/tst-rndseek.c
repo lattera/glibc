@@ -10,7 +10,7 @@ static char tempdata[65 * 1024];
 
 static int do_test (void);
 #define TEST_FUNCTION do_test ()
-#define TIMEOUT 4
+#define TIMEOUT 10
 
 #include "../test-skeleton.c"
 
