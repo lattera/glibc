@@ -1,3 +1,20 @@
+2002-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-lookup.h [!VERSIONED]: Add new parameter flags.  Use it to
+	check whether the caller prefers getting the most recent version of
+	a symbol of the earliest version.
+	* elf/dl-lookup.c: Adjust all callers of do_lookup.  Change
+	_dl_do_lookup to also take the new parameter and pass it on.
+	Change 'explicit' parameter of _dl_lookup_symbol and
+	_dl_lookup_versioned_symbol to flags.  Adjust tests.
+	* sysdeps/generic/ldsodefs.h: Adjust prototypes.
+	* elf/dl-libc.c: Adjust all callers of _dl_lookup_symbol and
+	_dl_lookup_versioned_symbol.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+
 2002-04-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (LOC): Don't paste

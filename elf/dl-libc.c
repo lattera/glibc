@@ -84,7 +84,8 @@ do_dlsym (void *ptr)
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
   args->ref = NULL;
   args->loadbase = _dl_lookup_symbol (args->name, args->map, &args->ref,
-				      args->map->l_local_scope, 0, 1);
+				      args->map->l_local_scope, 0,
+				      DL_LOOKUP_RETURN_NEWEST);
 }
 
 static void

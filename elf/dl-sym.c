@@ -51,7 +51,9 @@ _dl_sym (void *handle, const char *name, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope as seen in the caller object.  */
-    result = _dl_lookup_symbol (name, match, &ref, match->l_scope, 0, 0);
+    result = _dl_lookup_symbol (name, match, &ref, match->l_scope, 0,
+				DL_LOOKUP_RETURN_NEWEST
+				| DL_LOOKUP_ADD_DEPENDENCY);
   else
     {
       if (handle != RTLD_NEXT)
@@ -60,7 +62,7 @@ _dl_sym (void *handle, const char *name, void *who)
 	  struct link_map *map = handle;
 
 	  result = _dl_lookup_symbol (name, match, &ref, map->l_local_scope,
-				      0, 1);
+				      0, DL_LOOKUP_RETURN_NEWEST);
 	}
       else
 	{
@@ -132,7 +134,7 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
     result = _dl_lookup_versioned_symbol (name, match, &ref, match->l_scope,
-					  &vers, 0, 0);
+					  &vers, 0, DL_LOOKUP_ADD_DEPENDENCY);
   else if (handle == RTLD_NEXT)
     {
       if (__builtin_expect (match == GL(dl_loaded), 0))
@@ -157,7 +159,7 @@ RTLD_NEXT used in code not dynamically loaded"));
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
       result = _dl_lookup_versioned_symbol (name, map, &ref,
-					    map->l_local_scope, &vers, 0, 1);
+					    map->l_local_scope, &vers, 0, 0);
     }
 
   if (ref != NULL)

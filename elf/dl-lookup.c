@@ -190,7 +190,7 @@ static int
 internal_function
 _dl_do_lookup (const char *undef_name, unsigned long int hash,
 	       const ElfW(Sym) *ref, struct sym_val *result,
-	       struct r_scope_elem *scope, size_t i,
+	       struct r_scope_elem *scope, size_t i, int flags,
 	       struct link_map *skip, int type_class);
 static int
 internal_function
@@ -215,7 +215,7 @@ lookup_t
 internal_function
 _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 		   const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		   int type_class, int explicit)
+		   int type_class, int flags)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
@@ -226,8 +226,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
-    if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0, NULL,
-		   type_class))
+    if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0, flags,
+		   NULL, type_class))
       {
 	/* We have to check whether this would bind UNDEF_MAP to an object
 	   in the global scope which was dynamically loaded.  In this case
@@ -236,7 +236,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
 	    /* Don't do this for explicit lookups as opposed to implicit
 	       runtime lookups.  */
-	    && ! explicit
+	    && (flags & DL_LOOKUP_ADD_DEPENDENCY) != 0
 	    /* Add UNDEF_MAP to the dependencies.  */
 	    && add_dependency (undef_map, current_value.m) < 0)
 	  /* Something went wrong.  Perhaps the object we tried to reference
@@ -272,7 +272,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
       for (scope = symbol_scope; *scope; ++scope)
 	if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			   0, NULL, ELF_RTYPE_CLASS_PLT))
+			   0, flags, NULL, ELF_RTYPE_CLASS_PLT))
 	  break;
 
       if (protected_value.s != NULL && protected_value.m != undef_map)
@@ -319,10 +319,10 @@ _dl_lookup_symbol_skip (const char *undef_name,
     assert (i < (*scope)->r_nlist);
 
   if (! _dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, i,
-		       skip_map, 0))
+		       DL_LOOKUP_RETURN_NEWEST, skip_map, 0))
     while (*++scope)
       if (_dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, 0,
-			 skip_map, 0))
+			 DL_LOOKUP_RETURN_NEWEST, skip_map, 0))
 	break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
@@ -341,10 +341,12 @@ _dl_lookup_symbol_skip (const char *undef_name,
 
       if (i >= (*scope)->r_nlist
 	  || !_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			     i, skip_map, ELF_RTYPE_CLASS_PLT))
+			     i, DL_LOOKUP_RETURN_NEWEST, skip_map,
+			     ELF_RTYPE_CLASS_PLT))
 	while (*++scope)
 	  if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			     0, skip_map, ELF_RTYPE_CLASS_PLT))
+			     0, DL_LOOKUP_RETURN_NEWEST, skip_map,
+			     ELF_RTYPE_CLASS_PLT))
 	    break;
 
       if (protected_value.s != NULL && protected_value.m != undef_map)
@@ -375,7 +377,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 			     struct link_map *undef_map, const ElfW(Sym) **ref,
 			     struct r_scope_elem *symbol_scope[],
 			     const struct r_found_version *version,
-			     int type_class, int explicit)
+			     int type_class, int flags)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
@@ -383,6 +385,9 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   int protected;
 
   bump_num_relocations ();
+
+  /* No other flag than DL_LOOKUP_ADD_DEPENDENCY is allowed.  */
+  assert (flags == 0 || flags == DL_LOOKUP_ADD_DEPENDENCY);
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -398,14 +403,15 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	  if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
 	      /* Don't do this for explicit lookups as opposed to implicit
 		 runtime lookups.  */
-	      && ! explicit
+	      && flags != 0
 	      /* Add UNDEF_MAP to the dependencies.  */
 	      && add_dependency (undef_map, current_value.m) < 0)
 	    /* Something went wrong.  Perhaps the object we tried to reference
 	       was just removed.  Try finding another definition.  */
 	    return INTUSE(_dl_lookup_versioned_symbol) (undef_name, undef_map,
 							ref, symbol_scope,
-							version, type_class, 0);
+							version, type_class,
+							0);
 
 	  break;
 	}
@@ -590,12 +596,14 @@ _dl_setup_hash (struct link_map *map)
   map->l_chain = hash;
 }
 
+
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 		    const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		    struct sym_val *value, const struct r_found_version *version,
-		    int type_class, int protected)
+		    struct sym_val *value,
+		    const struct r_found_version *version, int type_class,
+		    int protected)
 {
   const char *reference_name = undef_map->l_name;
 
@@ -628,7 +636,8 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
 	  if (version == 0)
 	    _dl_do_lookup (undef_name, hash, *ref, &val,
-			   undef_map->l_local_scope[0], 0, NULL, type_class);
+			   undef_map->l_local_scope[0], 0, 0, NULL,
+			   type_class);
 	  else
 	    _dl_do_lookup_versioned (undef_name, hash, *ref, &val,
 				     undef_map->l_local_scope[0], 0, version,
@@ -671,10 +680,10 @@ static int __attribute_noinline__
 internal_function
 _dl_do_lookup (const char *undef_name, unsigned long int hash,
 	       const ElfW(Sym) *ref, struct sym_val *result,
-	       struct r_scope_elem *scope, size_t i,
+	       struct r_scope_elem *scope, size_t i, int flags,
 	       struct link_map *skip, int type_class)
 {
-  return do_lookup (undef_name, hash, ref, result, scope, i, skip,
+  return do_lookup (undef_name, hash, ref, result, scope, i, flags, skip,
 		    type_class);
 }
 

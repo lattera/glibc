@@ -532,14 +532,23 @@ extern lookup_t _dl_lookup_symbol (const char *undef,
 				   struct link_map *undef_map,
 				   const ElfW(Sym) **sym,
 				   struct r_scope_elem *symbol_scope[],
-				   int type_class, int explicit)
+				   int type_class, int flags)
      internal_function;
 extern lookup_t _dl_lookup_symbol_internal (const char *undef,
 					    struct link_map *undef_map,
 					    const ElfW(Sym) **sym,
 					    struct r_scope_elem *symbol_scope[],
-					    int type_class, int explicit)
+					    int type_class, int flags)
      internal_function;
+
+enum
+  {
+    /* If necessary add dependency between user and provider object.  */
+    DL_LOOKUP_ADD_DEPENDENCY = 1,
+    /* Return most recent version instead of default version for
+       unversioned lookup.  */
+    DL_LOOKUP_RETURN_NEWEST = 2
+  };
 
 /* Lookup versioned symbol.  */
 extern lookup_t _dl_lookup_versioned_symbol (const char *undef,

@@ -19,10 +19,10 @@
 
 #if VERSIONED
 # define FCT do_lookup_versioned
-# define ARG const struct r_found_version *const version,
+# define ARG const struct r_found_version *const version
 #else
 # define FCT do_lookup
-# define ARG
+# define ARG int flags
 #endif
 
 /* Inner part of the lookup functions.  We return a value > 0 if we
@@ -30,7 +30,7 @@
    something bad happened.  */
 static inline int
 FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
-     struct sym_val *result, struct r_scope_elem *scope, size_t i, ARG
+     struct sym_val *result, struct r_scope_elem *scope, size_t i, ARG,
      struct link_map *skip, int type_class)
 {
   struct link_map **list = scope->r_list;
@@ -129,19 +129,34 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 		continue;
 	    }
 #else
-	  /* No specific version is selected.  When the object file
-	     also does not define a version we have a match.
-	     Otherwise we accept the default version, or in case there
-	     is only one version defined, this one version.  */
+	  /* No specific version is selected.  There are two ways we
+	     can got here:
+
+	     - a binary which does not include versioning information
+	       is loaded
+
+	     - dlsym() instead of dlvsym() is used to get a symbol which
+	       might exist in more than one form
+
+	     If the library does not provide symbol version
+	     information there is no problem at at: we simply use the
+	     symbol if it is defined.
+
+	     These two lookups need to be handled differently if the
+	     library defines versions.  In the case of the old
+	     unversioned application the oldest (default) version
+	     should be used.  In case of a dlsym() call the latest and
+	     public interface should be returned.  */
 	  if (verstab != NULL)
 	    {
-	      ElfW(Half) ndx = verstab[symidx] & 0x7fff;
-	      if (ndx >= 2) /* map->l_versions[ndx].hash != 0) */
+	      if ((verstab[symidx] & 0x7fff)
+		  >= ((flags & DL_LOOKUP_RETURN_NEWEST) ? 2 : 3))
 		{
 		  /* Don't accept hidden symbols.  */
 		  if ((verstab[symidx] & 0x8000) == 0 && num_versions++ == 0)
 		    /* No version so far.  */
 		    versioned_sym = sym;
+
 		  continue;
 		}
 	    }

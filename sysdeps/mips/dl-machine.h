@@ -307,7 +307,8 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 	  }								      \
 	case 0:								      \
 	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,	      \
-				     l->l_scope, ELF_RTYPE_CLASS_PLT, 0);     \
+				     l->l_scope, ELF_RTYPE_CLASS_PLT,	      \
+				     DL_LOOKUP_ADD_DEPENDENCY);		      \
 	}								      \
 									      \
       /* Currently value contains the base load address of the object	      \
