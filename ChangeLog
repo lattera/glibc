@@ -1,5 +1,7 @@
 1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/bits/string2.h: Add more memset optimizations.
+
 	* resolv/inet_addr.c (inet_aton): Optimize switch statement away.
 
 	* resolv/inet_pton.c (inet_pton4): Little optimizations.

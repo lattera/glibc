@@ -94,9 +94,65 @@ __STRING2_COPY_TYPE (8);
 /* Set N bytes of S to C.  */
 #ifndef _HAVE_STRING_ARCH_memset
 # define memset(s, c, n) \
-  (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
-		  ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
-		  : memset (s, c, n)))
+  (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
+		  ? (__builtin_constant_p (c)				      \
+		     ? __memset_gc (s, (c) * 0x01010101, n)		      \
+		     : __memset_gc (s, (n) == 1 ? (c) : (c) * 0x01010101, n)) \
+		  : (__builtin_constant_p (c) && (c) == '\0'		      \
+		     ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
+		     : memset (s, c, n))))
+
+#define __memset_gc(s, c, n) \
+  ({ void *__s = (s);							      \
+     __uint32_t *__ts = (__uint32_t *) __s;				      \
+     									      \
+     /* This `switch' statement will be removed at compile-time.  */	      \
+     switch (n)								      \
+       {								      \
+       case 15:								      \
+	 *__ts++ = c;							      \
+       case 11:								      \
+	 *__ts++ = c;							      \
+       case 7:								      \
+	 *__ts++ = c;							      \
+       case 3:								      \
+	 *((__uint16_t *) __ts)++ = c;					      \
+	 *((__uint8_t *) __ts) = c;					      \
+	 break;								      \
+									      \
+       case 14:								      \
+	 *__ts++ = c;							      \
+       case 10:								      \
+	 *__ts++ = c;							      \
+       case 6:								      \
+	 *__ts++ = c;							      \
+       case 2:								      \
+	 *((__uint16_t *) __ts) = c;					      \
+	 break;								      \
+									      \
+       case 13:								      \
+	 *__ts++ = c;							      \
+       case 9:								      \
+	 *__ts++ = c;							      \
+       case 5:								      \
+	 *__ts++ = c;							      \
+       case 1:								      \
+	 *((__uint8_t *) __ts) = c;					      \
+	 break;								      \
+									      \
+       case 16:								      \
+	 *__ts++ = c;							      \
+       case 12:								      \
+	 *__ts++ = c;							      \
+       case 8:								      \
+	 *__ts++ = c;							      \
+       case 4:								      \
+	 *__ts = c;							      \
+       case 0:								      \
+	 break;								      \
+       }								      \
+									      \
+     __s; })
 #endif
 
 
