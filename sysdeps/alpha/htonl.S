@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,15 +30,13 @@ ENTRY(htonl)
 	.prologue 0
 #endif
 
-	extlh	a0, 5, t1	# t1 = dd000000
-	zap	a0, 0xfd, t2	# t2 = 0000cc00
-	sll	t2, 5, t2	# t2 = 00198000
-	s8addl	t2, t1, t1	# t1 = ddcc0000
-	zap	a0, 0xfb, t2	# t2 = 00bb0000
-	srl	t2, 8, t2	# t2 = 0000bb00
-	extbl	a0, 3, v0	# v0 = 000000aa
-	or	t1, v0, v0	# v0 = ddcc00aa
-	or	t2, v0, v0	# v0 = ddccbbaa
+	inslh	a0, 7, t0	# t0 = 0000000000AABBCC
+	inswl	a0, 3, t1	# t1 = 000000CCDD000000
+	or	t1, t0, t1	# t1 = 000000CCDDAABBCC
+	sll	t1, 16, t2	# t2 = 0000000000CCDDAA
+	zapnot	t1, 0x0A, t0	# t0 = 00000000DD00BB00
+	zapnot	t2, 0x05, t3	# t3 = 0000000000CC00AA
+	addl	t0, t3, v0	# v0 = ssssssssDDCCBBAA
 	ret
 
 	END(htonl)
