@@ -20,6 +20,8 @@
 # define _WINT_T
 typedef unsigned int wint_t;
 #endif
+#define __need_mbstate_t
+#include <wchar.h>
 #define _G_size_t	size_t
 typedef struct
 {

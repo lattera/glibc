@@ -26,6 +26,7 @@
 # it with the rest of us.  Send it using the `glibcbug' script to
 # bugs@gnu.org.
 
+catalan		ca_ES.ISO-8859-1
 croatian	hr_HR.ISO-8859-2
 czech		cs_CZ.ISO-8859-2
 danish          da_DK.ISO-8859-1

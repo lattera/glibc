@@ -1,6 +1,7 @@
 # This file names the currently supported and somewhat tested locales.
 # If you have any additions please use the glibcbug script to send an
 # appropriate message.
+ca_ES ISO-8859-1
 cs_CZ ISO-8859-2
 da_DK ISO-8859-1
 de_AT ISO-8859-1

@@ -169,9 +169,10 @@ compile but use what you say instead of guessing what your system is.
 This is most useful to change the CPU submodel.  For example, if
 configure guesses your machine as @code{i586-pc-linux-gnu} but you want
 to compile a library optimized for 386es, give
-@samp{--host=i386-pc-linux-gnu} or just @samp{--host=i386-linux}.  (A
-library compiled for a Pentium (@code{i586}) will still work on a 386,
-but it may be slower.)
+@samp{--host=i386-pc-linux-gnu} or just @samp{--host=i386-linux} and add
+the appropriate compiler flags (@samp{-mcpu=i386} will do the trick) to
+@var{CFLAGS}. (A library compiled for a Pentium (@code{i586}) will still
+work on a 386, but it may be slower.)
 
 If you give just @samp{--build}, configure will get confused.
 @end table
@@ -419,11 +420,14 @@ maintainers by sending electronic mail to @email{bug-glibc@@gnu.org}.
 
 Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486},
 @samp{i586}, or @samp{i686}.  All of those configurations produce a
-library that can run on any of these processors.  The library will be
-optimized for the specified processor, but will not use instructions not
-available on all of them.  If you want the library to use instructions
-only available on newer processors, give GCC the appropriate @samp{-m}
-switches via @var{CFLAGS}.
+library that can run on any of these processors if the compiler is
+configured correctly.  The GCC compiler by default generates code
+that's optimized for the machine it's configured for and will use the
+instructions available on that machine.  For example if your GCC is
+configured for @samp{i686}, gcc will optimize for @samp{i686} and
+might issue some @samp{i686} specific instructions.  To generate code
+for other models you should give GCC the appropriate @samp{-march=}
+and @samp{-mcpu=} compiler switches via @var{CFLAGS}.
 
 @node Linux
 @appendixsec Specific advice for Linux systems
