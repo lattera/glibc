@@ -96,7 +96,7 @@ __opendir (const char *name)
       /* We first have to check whether the name is for a directory.  We
 	 cannot do this after the open() call since the open/close operation
 	 performed on, say, a tape device might have undesirable effects.  */
-      if (__stat (name, &statbuf) < 0)
+      if (__xstat (_STAT_VER, name, &statbuf) < 0)
 	return NULL;
       if (! S_ISDIR (statbuf.st_mode))
 	{

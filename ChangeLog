@@ -1,3 +1,8 @@
+1998-12-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/opendir.c (__opendir): Use __xstat instead of
+	__stat.
+
 1998-12-11  Kunihiro Ishiguro  <kunihiro@zebra.org>
 
 	* inet/netinet/in.h: Change obsolete structure member
