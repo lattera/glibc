@@ -1,3 +1,11 @@
+1998-12-01 09:47 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/unix/sysv/linux/sys/timex.h: Copy out
+	user-space-relevant definitions from linux/timex.h of kernel
+	2.1.130 and remove include of kernel header.
+
+	* sysdeps/unix/sysv/linux/adjtime.c: Remove portability crud.
+
 1998-12-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* posix/regex.c: Get regex.h from system path, not from local
