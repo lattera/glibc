@@ -582,7 +582,7 @@ There also is a function for the conversion in the other direction.
 @comment ISO
 @deftypefun int wctob (wint_t @var{c})
 The @code{wctob} function (``wide character to byte'') takes as the
-paremeter a valid wide character.  If the multibyte representation for
+parameter a valid wide character.  If the multibyte representation for
 this character in the initial state is exactly one byte long the return
 value of this function is this character.  Otherwise the return value is
 @code{EOF}.
@@ -770,7 +770,7 @@ Please note that the @code{mbslen} function is quite inefficient.  The
 implementation of @code{mbstouwcs} implemented using @code{mbslen} would
 have to perform the conversion of the multibyte character input string
 twice and this conversion might be quite expensive.  So it is necessary
-to think about the consequences of using the easier but inprecise method
+to think about the consequences of using the easier but imprecise method
 before doing the work twice.
 
 @comment wchar.h
@@ -1581,7 +1581,7 @@ The first step is the function to create a handle.
 @deftypefun iconv_t iconv_open (const char *@var{tocode}, const char *@var{fromcode})
 The @code{iconv_open} function has to be used before starting a
 conversion.  The two parameters this function takes determine the
-sources and destination character set for the conversion and if the
+source and destination character set for the conversion and if the
 implementation has the possibility to perform such a conversion the
 function returns a handle.
 
@@ -1606,7 +1606,7 @@ with the descriptor there is information about the conversion state.
 This must of course not be messed up by using it in different
 conversions.
 
-An @code{iconv} descriptor is just a file descriptor as for every use a
+An @code{iconv} descriptor is like a file descriptor as for every use a
 new descriptor must be created.  The descriptor does not stand for all
 of the conversions from @var{fromset} to @var{toset}.
 
@@ -1708,7 +1708,7 @@ performed if some protocol requires this for the output text.
 
 The conversion stops for three reasons.  The first is that all
 characters from the input buffer are converted.  This actually can mean
-two things: really all bytes from the input buffer are consumed or the
+two things: really all bytes from the input buffer are consumed or
 there are some bytes at the end of the buffer which possibly can form a
 complete character but the input is incomplete.  The second reason for a
 stop is when the output buffer is full.  And the third reason is that
@@ -1729,7 +1729,7 @@ desirable solution.  Therefore future versions will provide better ones
 but they are not yet finished.
 
 If all input from the input buffer is successfully converted and stored
-in the output buffer the function returns the number of conversion
+in the output buffer the function returns the number of conversions
 performed.  In all other cases the return value is @code{(size_t) -1}
 and @code{errno} is set appropriately.  In this case the value pointed
 to by @var{inbytesleft} is nonzero.
@@ -1889,7 +1889,7 @@ above case the input parameter to the function is a @code{wchar_t}
 pointer this is the case (unless the user violates alignment when
 computing the parameter).  But in other situations, especially when
 writing generic functions where one does not know what type of character
-set on uses and therefore treats text as a sequence of bytes, it might
+set one uses and therefore treats text as a sequence of bytes, it might
 become tricky.
 
 
@@ -1936,7 +1936,7 @@ Some implementations in commercial Unices implement a mixture of these
 possibilities, the majority only the second solution.  This often leads
 to problems, though.  Since the modules with the conversion modules must
 be dynamically loaded the system must have this possibility for all
-programs.  But this is not the case.  At least some platforms (if no
+programs.  But this is not the case.  At least some platforms (if not
 all) are not able to dynamically load objects if the program is linked
 statically.  This is often solved by outlawing static linking entirely
 but sure it is a weak solution.  The GNU C library does not have this
@@ -1945,7 +1945,7 @@ get acquainted with this and forgets about the restriction on other
 systems.
 
 A second thing to know about other @code{iconv} implementations is that
-the number of available conversion is often very limited.  Some
+the number of available conversions is often very limited.  Some
 implementations provide in the standard release (not the special
 international release, if something exists) at most 100 to 200
 conversion possibilities.  This does not mean 200 different character
@@ -1957,7 +1957,7 @@ of conversions which renders them useless for almost all uses.
 
 This directly leads to a third and probably the most problematic point.
 The way the @code{iconv} conversion functions are implemented on all
-known Unix system the availability of the conversion functions from
+known Unix system and the availability of the conversion functions from
 character set @math{@cal{A}} to @math{@cal{B}} and the conversion from
 @math{@cal{B}} to @math{@cal{C}} does @emph{not} imply that the
 conversion from @math{@cal{A}} to @math{@cal{C}} is available.
@@ -2034,20 +2034,20 @@ well documented (see below) and it therefore is easy to write new
 conversion modules.  The drawback of using loadable object is not a
 problem in the GNU C library, at least on ELF systems.  Since the
 library is able to load shared objects even in statically linked
-binaries this means that static linking must not be forbidden in case
+binaries this means that static linking needs not to be forbidden in case
 one wants to use @code{iconv}.
 
 The second mentioned problems is the number of supported conversions.
-First, the GNU C library supports more then 150 character.  And the was
-the implementation is designed the number of supported conversions is
-greater than 22350 (@math{150} times @math{149}).  If any conversion
+First, the GNU C library supports more than 150 character sets.  And the
+way the implementation is designed the number of supported conversions
+is greater than 22350 (@math{150} times @math{149}).  If any conversion
 from or to a character set is missing it can easily be added.
 
 This high number is due to the fact that the GNU C library
 implementation of @code{iconv} does not have the third problem mentioned
 above.  I.e., whenever there is a conversion from a character set
 @math{@cal{A}} to @math{@cal{B}} and from @math{@cal{B}} to
-@math{@cal{C}} it always is possible to convert from @math{@cal{A}} to
+@math{@cal{C}} it is always possible to convert from @math{@cal{A}} to
 @math{@cal{C}} directly.  If the @code{iconv_open} returns an error and
 sets @code{errno} to @code{EINVAL} this really means there is no known
 way, directly or indirectly, to perform the wanted conversion.
@@ -2059,8 +2059,8 @@ intermediate representation it is possible to ``triangulate''.
 
 There is no inherent requirement to provide a conversion to @w{ISO
 10646} for a new character set and it is also possible to provide other
-conversion where neither source not destination character set is @w{ISO
-10646}.  The currently existing set of conversion is simply meant to
+conversions where neither source not destination character set is @w{ISO
+10646}.  The currently existing set of conversions is simply meant to
 convert all conversions which might be of interest.  What could be done
 in future is improving the speed of certain conversions.
 
@@ -2087,7 +2087,7 @@ text files, where each of the lines has one of the following formats:
 @itemize @bullet
 @item
 If the first non-whitespace character is a @kbd{#} the line contains
-only comments is is ignored.
+only comments and is ignored.
 
 @item
 Lines starting with @code{alias} define an alias name for a character
@@ -2105,7 +2105,7 @@ sets specified by the ISO have an alias of the form
 @code{ISO-IR-@var{nnn}} where @var{nnn} is the registration number.
 This allows programs which know about the registration number to
 construct character set names and use them in @code{iconv_open} calls.
-More on the available names and alias follows below.
+More on the available names and aliases follows below.
 
 @item
 Lines starting with @code{module} introduce an available conversion
@@ -2353,7 +2353,7 @@ This element must never be modified.
 
 @item mbstate_t *statep
 The @code{statep} element points to an object of type @code{mbstate_t}
-(@pxref{Keeping the state}).  The conversion of an stateful charater
+(@pxref{Keeping the state}).  The conversion of an stateful character
 set must use the object pointed to by this element to store information
 about the conversion state.  The @code{statep} element itself must never
 be modified.
