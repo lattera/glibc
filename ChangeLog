@@ -1,3 +1,11 @@
+1999-12-21  Andreas Schwab  <schwab@suse.de>
+
+	* include/unistd.h: Declare __libc_lseek.
+
+1999-12-21  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/longlong.h: Remove __P.
+
 1999-12-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/powerpc/fpu/libm-ulps: New file.
