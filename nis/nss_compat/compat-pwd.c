@@ -327,7 +327,7 @@ internal_setpwent (ent_t *ent)
 
 
 enum nss_status
-_nss_compat_setpwent (void)
+_nss_compat_setpwent (int stayopen)
 {
   enum nss_status result;
 

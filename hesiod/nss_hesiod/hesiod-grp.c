@@ -36,7 +36,7 @@
 #include <nss/nss_files/files-parse.c>
 
 enum nss_status
-_nss_hesiod_setgrent (void)
+_nss_hesiod_setgrent (int stayopen)
 {
   return NSS_STATUS_SUCCESS;
 }

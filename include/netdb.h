@@ -143,10 +143,81 @@ extern int ruserpass (const char *host, const char **aname,
 /* The following declarations and definitions have been removed from
    the public header since we don't want people to use them.  */
 
-#define AI_V4MAPPED	0x0008  /* IPv4-mapped addresses are acceptable.  */
-#define AI_ALL		0x0010  /* Return both IPv4 and IPv6 addresses.  */
-#define AI_ADDRCONFIG	0x0020  /* Use configuration of this host to choose
-                                  returned address type.  */
+#define AI_V4MAPPED	0x0008	/* IPv4-mapped addresses are acceptable.  */
+#define AI_ALL		0x0010	/* Return both IPv4 and IPv6 addresses.	 */
+#define AI_ADDRCONFIG	0x0020	/* Use configuration of this host to choose
+				  returned address type.  */
 #define AI_DEFAULT    (AI_V4MAPPED | AI_ADDRCONFIG)
+
+#include <inet/netgroup.h>
+
+#define DECLARE_NSS_PROTOTYPES(service)						\
+extern enum nss_status _nss_ ## service ## _setprotoent (int);			\
+extern enum nss_status _nss_ ## service ## _endprotoent (void);			\
+extern enum nss_status _nss_ ## service ## _getprotoent_r			\
+		       (struct protoent *proto, char *buffer, size_t buflen,	\
+			int *errnop);						\
+extern enum nss_status _nss_ ## service ## _getprotobyname_r			\
+		       (const char *name, struct protoent *proto,		\
+			char *buffer, size_t buflen, int *errnop);		\
+extern enum nss_status _nss_ ## service ## _getprotobynumber_r			\
+		       (int number, struct protoent *proto,			\
+			char *buffer, size_t buflen, int *errnop);		\
+extern enum nss_status _nss_ ## service ## _sethostent (int);			\
+extern enum nss_status _nss_ ## service ## _endhostent (void);			\
+extern enum nss_status _nss_ ## service ## _gethostent_r			\
+		       (struct hostent *host, char *buffer, size_t buflen,	\
+			int *errnop, int *h_errnop);				\
+extern enum nss_status _nss_ ## service ## _gethostbyname2_r			\
+		       (const char *name, int af, struct hostent *host,		\
+			char *buffer, size_t buflen, int *errnop,		\
+			int *h_errnop);						\
+extern enum nss_status _nss_ ## service ## _gethostbyname_r			\
+		       (const char *name, struct hostent *host, char *buffer,	\
+			size_t buflen, int *errnop, int *h_errnop);		\
+extern enum nss_status _nss_ ## service ## _gethostbyaddr_r			\
+		       (const void *addr, socklen_t addrlen, int af,		\
+			struct hostent *host, char *buffer, size_t buflen,	\
+			int *errnop, int *h_errnop);				\
+extern enum nss_status _nss_ ## service ## _setservent (int);			\
+extern enum nss_status _nss_ ## service ## _endservent (void);			\
+extern enum nss_status _nss_ ## service ## _getservent_r			\
+		       (struct servent *serv, char *buffer, size_t buflen,	\
+			int *errnop);						\
+extern enum nss_status _nss_ ## service ## _getservbyname_r			\
+		       (const char *name, const char *protocol,			\
+			struct servent *serv, char *buffer, size_t buflen,	\
+			int *errnop);						\
+extern enum nss_status _nss_ ## service ## _getservbyport_r			\
+		       (int port, const char *protocol, struct servent *serv,	\
+			char *buffer, size_t buflen, int *errnop);		\
+extern enum nss_status _nss_ ## service ## _setnetgrent				\
+                       (const char *group, struct __netgrent *result);		\
+extern enum nss_status _nss_ ## service ## _endnetgrent				\
+		       (struct __netgrent *result);				\
+extern enum nss_status _nss_ ## service ##_getnetgrent_r			\
+		       (struct __netgrent *result, char *buffer,		\
+			size_t buflen, int *errnop);				\
+extern enum nss_status _nss_## service ##_setnetent (int stayopen);		\
+extern enum nss_status _nss_ ## service ## _endnetent (void);			\
+extern enum nss_status _nss_## service ##_getnetent_r				\
+			(struct netent *net, char *buffer, size_t buflen,	\
+			 int *errnop, int *herrnop);				\
+extern enum nss_status _nss_## service ##_getnetbyname_r			\
+			(const char *name, struct netent *net, char *buffer,	\
+			 size_t buflen, int *errnop, int *herrnop);		\
+extern enum nss_status _nss_## service ##_getnetbyaddr_r			\
+		       (uint32_t addr, int type, struct netent *net,		\
+			char *buffer, size_t buflen, int *errnop,		\
+			int *herrnop);
+
+DECLARE_NSS_PROTOTYPES (compat)
+DECLARE_NSS_PROTOTYPES (dns)
+DECLARE_NSS_PROTOTYPES (files)
+DECLARE_NSS_PROTOTYPES (hesiod)
+DECLARE_NSS_PROTOTYPES (nis)
+DECLARE_NSS_PROTOTYPES (nisplus)
+
+#undef DECLARE_NSS_PROTOTYPES
 
 #endif /* !_NETDB_H */

@@ -129,8 +129,7 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
 }
 
 enum nss_status
-_nss_nisplus_setnetgrent (char *group)
-
+_nss_nisplus_setnetgrent (const char *group, struct __netgrent *dummy)
 {
   enum nss_status status;
   char buf[strlen (group) + 30];
@@ -169,7 +168,7 @@ _nss_nisplus_setnetgrent (char *group)
 }
 
 enum nss_status
-_nss_nisplus_endnetgrent (void)
+_nss_nisplus_endnetgrent (struct __netgrent *dummy)
 {
   __libc_lock_lock (lock);
 

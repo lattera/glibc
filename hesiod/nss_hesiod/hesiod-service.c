@@ -47,7 +47,7 @@ LINE_PARSER
  )
 
 enum nss_status
-_nss_hesiod_setservent (void)
+_nss_hesiod_setservent (int stayopen)
 {
   return NSS_STATUS_SUCCESS;
 }

@@ -82,7 +82,7 @@ internal_setgrent (void)
 }
 
 enum nss_status
-_nss_nisplus_setgrent (void)
+_nss_nisplus_setgrent (int stayopen)
 {
   enum nss_status status;
 

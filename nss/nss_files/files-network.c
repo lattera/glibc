@@ -23,6 +23,7 @@
 
 #define ENTNAME		netent
 #define DATABASE	"networks"
+#define NEED_H_ERRNO
 
 struct netent_data {};
 

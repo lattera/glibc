@@ -42,7 +42,7 @@ static char *oldkey = NULL;
 static int oldkeylen = 0;
 
 enum nss_status
-_nss_nis_setpwent (void)
+_nss_nis_setpwent (int stayopen)
 {
   __libc_lock_lock (lock);
 

@@ -227,7 +227,7 @@ internal_setspent (ent_t *ent)
 
 
 enum nss_status
-_nss_compat_setspent (void)
+_nss_compat_setspent (int stayopen)
 {
   enum nss_status result;
 
@@ -484,7 +484,7 @@ getspent_next_nisplus_netgr (const char *name, struct spwd *result,
 
       if (parse_res)
         {
- 	  /* Store the User in the blacklist for the "+" at the end of
+	  /* Store the User in the blacklist for the "+" at the end of
 	     /etc/passwd */
 	  blacklist_store_name (result->sp_namp, ent);
 	  copy_spwd_changes (result, &ent->pwd, p2, p2len);
@@ -844,7 +844,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	{
 	  /* XXX Do not use fixed length buffers.  */
           char buf2[1024];
- 	  char *user, *host, *domain;
+	  char *user, *host, *domain;
           struct __netgrent netgrdata;
 
           bzero (&netgrdata, sizeof (struct __netgrent));

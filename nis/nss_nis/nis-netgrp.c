@@ -43,7 +43,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 			 char *buffer, size_t buflen, int *errnop);
 
 enum nss_status
-_nss_nis_setnetgrent (char *group)
+_nss_nis_setnetgrent (const char *group, struct __netgrent *dummy)
 {
   char *domain;
   char *result;
@@ -92,7 +92,7 @@ _nss_nis_setnetgrent (char *group)
 
 
 enum nss_status
-_nss_nis_endnetgrent (void)
+_nss_nis_endnetgrent (struct __netgrent *dummy)
 {
   __libc_lock_lock (lock);
 

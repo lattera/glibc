@@ -55,24 +55,25 @@ static int pid;
 static const char *test_dir;
 
 /* List of temporary files.  */
-struct name_list
+struct temp_name_list
 {
   struct qelem q;
   const char *name;
-} *name_list;
+} *temp_name_list;
 
 /* Add temporary files in list.  */
 static void
 add_temp_file (const char *name)
 {
-  struct name_list *newp = (struct name_list *) calloc (sizeof (*newp), 1);
+  struct temp_name_list *newp
+    = (struct temp_name_list *) calloc (sizeof (*newp), 1);
   if (newp != NULL)
     {
       newp->name = name;
-      if (name_list == NULL)
-	name_list = (struct name_list *) &newp->q;
+      if (temp_name_list == NULL)
+	temp_name_list = (struct temp_name_list *) &newp->q;
       else
-	insque (newp, name_list);
+	insque (newp, temp_name_list);
     }
 }
 
@@ -80,10 +81,10 @@ add_temp_file (const char *name)
 static void
 delete_temp_files (void)
 {
-  while (name_list != NULL)
+  while (temp_name_list != NULL)
     {
-      remove (name_list->name);
-      name_list = (struct name_list *) name_list->q.q_forw;
+      remove (temp_name_list->name);
+      temp_name_list = (struct temp_name_list *) temp_name_list->q.q_forw;
     }
 }
 

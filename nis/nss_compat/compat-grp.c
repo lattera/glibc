@@ -169,7 +169,7 @@ internal_setgrent (ent_t *ent)
 
 
 enum nss_status
-_nss_compat_setgrent (void)
+_nss_compat_setgrent (int stayopen)
 {
   enum nss_status result;
 
@@ -543,7 +543,7 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	{
           enum nss_status status;
 
- 	  /* Store the group in the blacklist for the "+" at the end of
+	  /* Store the group in the blacklist for the "+" at the end of
 	     /etc/group */
 	  blacklist_store_name (&result->gr_name[1], ent);
 	  status = getgrnam_plusgroup (&result->gr_name[1], result, buffer,

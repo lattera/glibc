@@ -106,7 +106,8 @@ static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 
 enum nss_status
 _nss_dns_getnetbyname_r (const char *name, struct netent *result,
-			 char *buffer, size_t buflen, int *errnop)
+			 char *buffer, size_t buflen, int *errnop,
+			 int *herrnop)
 {
   /* Return entry for network with NAME.  */
   querybuf net_buffer;
@@ -134,8 +135,9 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
 
 
 enum nss_status
-_nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
-			 char *buffer, size_t buflen, int *errnop)
+_nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
+			 char *buffer, size_t buflen, int *errnop,
+			 int *herrnop)
 {
   /* Return entry for network with NAME.  */
   enum nss_status status;
@@ -151,7 +153,7 @@ _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
 
   if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     return NSS_STATUS_UNAVAIL;
-  
+
   net2 = (u_int32_t) net;
   for (cnt = 4; net2 != 0; net2 >>= 8)
     net_bytes[--cnt] = net2 & 0xff;

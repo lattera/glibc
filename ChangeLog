@@ -1,3 +1,53 @@
+2000-12-18  Andreas Jaeger  <aj@suse.de>
+
+	* test-skeleton.c: Use temp_name_list instead of temp_name_list to
+	avoid collision with name_list from inet/netgroup.h.
+
+	* nss/nss_files/files-network.c (NEED_H_ERRNO): Define.
+
+	* include/grp.h (DECLARE_NSS_PROTOTYPES): New.
+	* include/pwd.h (DECLARE_NSS_PROTOTYPES): New.
+	* include/netdb.h (DECLARE_NSS_PROTOTYPES): New.
+	* include/shadow.h (DECLARE_NSS_PROTOTYPES): New.
+
+	* hesiod/nss_hesiod/hesiod-proto.c (_nss_hesiod_setprotoent): Fix
+	declaration to match prototype.
+	* hesiod/nss_hesiod/hesiod-pwd.c (_nss_hesiod_setpwent): Likewise.
+	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_setgrent): Likewise.
+	* hesiod/nss_hesiod/hesiod-service.c (_nss_hesiod_setservent):
+	Likewise.
+	* nis/nss_nis/nis-grp.c (_nss_nis_setgrent): Likewise.
+	* nis/nss_nis/nis-pwd.c (_nss_nis_setpwent): Likewise.
+	* nis/nss_nis/nis-proto.c (_nss_nis_setprotoent): Likewise.
+	* nis/nss_nis/nis-service.c (_nss_nis_setservent): Likewise.
+	(_nss_nis_getservbyport_r): Likewise.
+	* nis/nss_nis/nis-hosts.c (_nss_nis_sethostent): Likewise.
+	* nis/nss_nis/nis-spwd.c (_nss_nis_setspent): Likewise.
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetent_r): Likewise.
+	(_nss_nis_setnetent): Likewise
+	* nis/nss_nis/nis-netgrp.c (_nss_nis_setnetgrent): Likewise.
+	(_nss_nis_endnetgrent): Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c (_nss_nisplus_endnetgrent):
+	Likewise.
+	(_nss_nisplus_setnetgrent): Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_nisplus_setspent): Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c (_nss_nisplus_setpwent): Likewise.
+	* nis/nss_nisplus/nisplus-grp.c (_nss_nisplus_setgrent): Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_setnetent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_sethostent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-service.c (_nss_nisplus_setservent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-proto.c (_nss_nisplus_setprotoent):
+	Likewise.
+	* nis/nss_compat/compat-spwd.c (_nss_compat_setspent): Likewise.
+	* nis/nss_compat/compat-pwd.c (_nss_compat_setpwent): Likewise.
+	* nis/nss_compat/compat-grp.c (_nss_compat_setgrent): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Likewise.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Likewise.
+	(_nss_dns_getnetbyaddr_r): Likewise.
+
 2000-12-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/k_sinl.c (__kernel_sinl): Fix functions

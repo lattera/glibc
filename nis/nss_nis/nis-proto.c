@@ -106,7 +106,7 @@ internal_nis_setprotoent (void)
 }
 
 enum nss_status
-_nss_nis_setprotoent (void)
+_nss_nis_setprotoent (int stayopen)
 {
   enum nss_status status;
 

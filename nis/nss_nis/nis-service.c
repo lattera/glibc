@@ -115,7 +115,7 @@ internal_nis_setservent (intern_t *intern)
   return status;
 }
 enum nss_status
-_nss_nis_setservent (void)
+_nss_nis_setservent (int stayopen)
 {
   enum nss_status status;
 
@@ -207,7 +207,7 @@ _nss_nis_getservent_r (struct servent *serv, char *buffer, size_t buflen,
 }
 
 enum nss_status
-_nss_nis_getservbyname_r (const char *name, char *protocol,
+_nss_nis_getservbyname_r (const char *name, const char *protocol,
 			  struct servent *serv, char *buffer, size_t buflen,
 			  int *errnop)
 {
@@ -312,8 +312,9 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
 }
 
 enum nss_status
-_nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
-			  char *buffer, size_t buflen, int *errnop)
+_nss_nis_getservbyport_r (int port, const char *protocol,
+			  struct servent *serv, char *buffer,
+			  size_t buflen, int *errnop)
 {
   intern_t data = { NULL, NULL };
   enum nss_status status;

@@ -158,7 +158,7 @@ _nss_create_tablename (int *errnop)
 }
 
 enum nss_status
-_nss_nisplus_setprotoent (void)
+_nss_nisplus_setprotoent (int stayopen)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
