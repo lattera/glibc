@@ -1,3 +1,8 @@
+2004-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Avoid read call with NULL
+	pointer and zero length.
+
 2004-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (prune_cache): Print correct list when debugging.

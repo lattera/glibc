@@ -67,7 +67,7 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 static int
 internal_function
 nscd_getgr_r (const char *key, size_t keylen, request_type type,
-	      struct group *resultbuf, char *buffer, size_t buflen,
+	      struct group *resbuf, char *buffer, size_t buflen,
 	      struct group **result)
 {
   gr_response_header gr_resp;
@@ -115,17 +115,17 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       buflen -= total_len;
 
       p += align;
-      resultbuf->gr_mem = (char **) p;
+      resbuf->gr_mem = (char **) p;
       p += (1 + gr_resp.gr_mem_cnt) * sizeof (char *);
 
       /* Set pointers for strings.  */
-      resultbuf->gr_name = p;
+      resbuf->gr_name = p;
       p += gr_resp.gr_name_len;
-      resultbuf->gr_passwd = p;
+      resbuf->gr_passwd = p;
       p += gr_resp.gr_passwd_len;
 
       /* Fill in what we know now.  */
-      resultbuf->gr_gid = gr_resp.gr_gid;
+      resbuf->gr_gid = gr_resp.gr_gid;
 
       /* Allocate array to store lengths.  */
       len = (uint32_t *) alloca (gr_resp.gr_mem_cnt * sizeof (uint32_t));
@@ -133,7 +133,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       total_len = gr_resp.gr_mem_cnt * sizeof (uint32_t);
       vec[0].iov_base = len;
       vec[0].iov_len = total_len;
-      vec[1].iov_base = resultbuf->gr_name;
+      vec[1].iov_base = resbuf->gr_name;
       vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
       total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 
@@ -143,13 +143,13 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	goto out;
 
       /* Clear the terminating entry.  */
-      resultbuf->gr_mem[gr_resp.gr_mem_cnt] = NULL;
+      resbuf->gr_mem[gr_resp.gr_mem_cnt] = NULL;
 
       /* Prepare reading the group members.  */
       total_len = 0;
       for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
 	{
-	  resultbuf->gr_mem[cnt] = p;
+	  resbuf->gr_mem[cnt] = p;
 	  total_len += len[cnt];
 	  p += len[cnt];
 	}
@@ -157,17 +157,21 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       if (__builtin_expect (total_len > buflen, 0))
 	goto no_room;
 
-      retval = 0;
-      n = TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
-					     total_len));
-      if (__builtin_expect (n != total_len, 0))
+      if (gr_resp.gr_mem_cnt > 0
+	  && __builtin_expect (TEMP_FAILURE_RETRY (__read (sock,
+							   resbuf->gr_mem[0],
+							   total_len))
+			       != total_len, 0))
 	{
 	  /* The `errno' to some value != ERANGE.  */
 	  __set_errno (ENOENT);
 	  retval = ENOENT;
 	}
       else
-	*result = resultbuf;
+	{
+	  retval = 0;
+	  *result = resbuf;
+	}
     }
   else
     {
