@@ -1,3 +1,7 @@
+2001-06-15  H.J. Lu  <hjl@gnu.org>
+
+	* pthread.c (__pthread_reset_main_thread): Fix a typo.
+
 2001-02-02  John S. Marvin  <jsm@udlkern.fc.hp.com>
 
 	* semaphore.h: Use struct _pthread_fastlock as an element of
