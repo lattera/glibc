@@ -265,18 +265,12 @@ typedef pthread_key_t __libc_key_t;
     }
 
 #define __libc_cleanup_push(fct, arg) \
-  { struct _pthread_cleanup_buffer _buffer;				      \
-    int _avail = _pthread_cleanup_push != NULL;				      \
-    if (_avail) {							      \
-      _pthread_cleanup_push (&_buffer, (fct), (arg));			      \
-    }
+    { struct _pthread_cleanup_buffer _buffer; 				      \
+    __libc_maybe_call (_pthread_cleanup_push, (&_buffer, (fct), (arg)), 0)
 
 #define __libc_cleanup_pop(execute) \
-    if (_avail) {							      \
-      _pthread_cleanup_pop (&_buffer, execute);				      \
-    }									      \
-  }
-
+    __libc_maybe_call (_pthread_cleanup_pop, (&_buffer, execute), 0);	      \
+    }
 
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \

@@ -1,3 +1,13 @@
+2003-09-22  Philip Blundell  <philb@gnu.org>
+
+	* forward.c: Add _pthread_cleanup_push, _pthread_cleanup_pop.
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Likewise.
+	* pthread.c (__pthread_elements): Initialise these new elements.
+	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_push): Use
+	__libc_maybe_call.
+	(__libc_cleanup_pop): Likewise.
+
 2003-09-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* attr.c: Include stdlib.h.

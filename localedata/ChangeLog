@@ -1,3 +1,17 @@
+2003-09-21  Jordi Mallach  <jordi@gnu.org>
+
+	* locales/ca_ES: Fix mon_grouping, int_frac_digits and frac_digits
+	values.
+	* locales/eu_ES: Fix int_frac_digits and frac_digits values.
+	* locales/gl_ES: Likewise.
+
+2003-09-21  Jordi Mallach  <jordi@gnu.org>
+
+	* locales/ca_ES: Fix mon_grouping, int_frac_digits and frac_digits
+	values.
+	* locales/eu_ES: Fix int_frac_digits and frac_digits values.
+	* locales/gl_ES: Likewise.
+
 2003-09-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/lo_LA: Fix duplicated collation entries.

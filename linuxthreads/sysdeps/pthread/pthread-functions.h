@@ -83,6 +83,11 @@ struct pthread_functions
   int (*ptr_pthread_raise) (int sig);
   int (*ptr___pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
 				       const struct timespec *);
+  void (*ptr__pthread_cleanup_push) (struct _pthread_cleanup_buffer * buffer,
+				     void (*routine)(void *), void * arg);
+
+  void (*ptr__pthread_cleanup_pop) (struct _pthread_cleanup_buffer * buffer,
+				    int execute);
 };
 
 /* Variable in libc.so.  */

@@ -279,7 +279,9 @@ struct pthread_functions __pthread_functions =
     .ptr_pthread_cleanup_upto = __pthread_cleanup_upto,
     .ptr_pthread_sigaction = __pthread_sigaction,
     .ptr_pthread_sigwait = __pthread_sigwait,
-    .ptr_pthread_raise = __pthread_raise
+    .ptr_pthread_raise = __pthread_raise,
+    .ptr__pthread_cleanup_push = _pthread_cleanup_push,
+    .ptr__pthread_cleanup_pop = _pthread_cleanup_pop
   };
 #ifdef SHARED
 # define ptr_pthread_functions &__pthread_functions
