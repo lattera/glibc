@@ -1,7 +1,7 @@
 /* Pentium __mpn_submul_1 -- Multiply a limb vector with a limb and subtract
    the result from a second limb vector.
 
-Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -53,10 +53,10 @@ C_SYMBOL_NAME(__mpn_submul_1:)
 	INSN2(lea,l	,R(res_ptr),MEM_INDEX(res_ptr,size,4))
 	INSN2(lea,l	,R(s1_ptr),MEM_INDEX(s1_ptr,size,4))
 	INSN1(neg,l	,R(size))
-	INSN2(xor,l	,R(edx),R(edx))
+	INSN2(xor,l	,R(ebx),R(ebx))
 	ALIGN (3)
-Loop:
-	INSN2(mov,l	,R(ebx),R(edx))
+
+Loop:	INSN2(adc,l	,R(ebx),$0)
 	INSN2(mov,l	,R(eax),MEM_INDEX(s1_ptr,size,4))
 
 	INSN1(mul,l	,R(s2_limb))
@@ -67,14 +67,14 @@ Loop:
 	INSN2(adc,l	,R(edx),$0)
 	INSN2(sub,l	,R(ebx),R(eax))
 
-	INSN2(adc,l	,R(edx),$0)
 	INSN2(mov,l	,MEM_INDEX(res_ptr,size,4),R(ebx))
-
 	INSN1(inc,l	,R(size))
+
+	INSN2(mov,l	,R(ebx),R(edx))
 	INSN1(jnz,	,Loop)
 
-
-	INSN2(mov,l	,R(eax),R(edx))
+	INSN2(adc,l	,R(ebx),$0)
+	INSN2(mov,l	,R(eax),R(ebx))
 	INSN1(pop,l	,R(ebp))
 	INSN1(pop,l	,R(ebx))
 	INSN1(pop,l	,R(esi))

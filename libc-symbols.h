@@ -170,7 +170,7 @@ extern const char _libc_intl_domainname[];
    are better clued in to what we are doing.  */
 #undef	strong_alias
 #define strong_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
+  __typeof (name) aliasname __attribute__ ((alias (#name)));
 
 #ifdef HAVE_WEAK_SYMBOLS
 #undef	weak_symbol
@@ -178,7 +178,7 @@ extern const char _libc_intl_domainname[];
   extern __typeof (name) name __attribute__ ((weak));
 #undef	weak_alias
 #define weak_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
+  __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 #endif	/* HAVE_WEAK_SYMBOLS.  */
 #endif	/* Not ASSEMBLER, and GCC 2.8 or later.  */
 

@@ -1,6 +1,6 @@
-! sparc __mpn_lshift --
+! SPARC v9 __mpn_lshift --
 
-! Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+! Copyright (C) 1996 Free Software Foundation, Inc.
 
 ! This file is part of the GNU MP Library.
 
@@ -25,70 +25,71 @@
 ! size		%o2
 ! cnt		%o3
 
-#include "sysdep.h"
-
-	.text
-	.align	4
-	.global	C_SYMBOL_NAME(__mpn_lshift)
-C_SYMBOL_NAME(__mpn_lshift):
-	sll	%o2,2,%g1
+.section	".text"
+	.align 4
+	.global __mpn_lshift
+	.type	 __mpn_lshift,#function
+	.proc	04
+__mpn_lshift:
+	sllx	%o2,3,%g1
 	add	%o1,%g1,%o1	! make %o1 point at end of src
-	ld	[%o1-4],%g2	! load first limb
+	ldx	[%o1-8],%g2	! load first limb
 	sub	%g0,%o3,%o5	! negate shift count
 	add	%o0,%g1,%o0	! make %o0 point at end of res
 	add	%o2,-1,%o2
-	andcc	%o2,4-1,%g4	! number of limbs in first loop
-	srl	%g2,%o5,%g1	! compute function result
-	be	L0		! if multiple of 4 limbs, skip first loop
-	st	%g1,[%sp+80]
+	and	%o2,4-1,%g4	! number of limbs in first loop
+	srlx	%g2,%o5,%g1	! compute function result
+	brz,pn	%g4,.L0		! if multiple of 4 limbs, skip first loop
+	stx	%g1,[%sp+80]
 
 	sub	%o2,%g4,%o2	! adjust count for main loop
 
-Loop0:	ld	[%o1-8],%g3
-	add	%o0,-4,%o0
-	add	%o1,-4,%o1
-	addcc	%g4,-1,%g4
-	sll	%g2,%o3,%o4
-	srl	%g3,%o5,%g1
+.Loop0:	ldx	[%o1-16],%g3
+	add	%o0,-8,%o0
+	add	%o1,-8,%o1
+	add	%g4,-1,%g4
+	sllx	%g2,%o3,%o4
+	srlx	%g3,%o5,%g1
 	mov	%g3,%g2
 	or	%o4,%g1,%o4
-	bne	Loop0
-	 st	%o4,[%o0+0]
+	brnz,pt	%g4,.Loop0
+	 stx	%o4,[%o0+0]
 
-L0:	tst	%o2
-	be	Lend
+.L0:	brz,pn	%o2,.Lend
 	 nop
 
-Loop:	ld	[%o1-8],%g3
-	add	%o0,-16,%o0
-	addcc	%o2,-4,%o2
-	sll	%g2,%o3,%o4
-	srl	%g3,%o5,%g1
+.Loop:	ldx	[%o1-16],%g3
+	add	%o0,-32,%o0
+	add	%o2,-4,%o2
+	sllx	%g2,%o3,%o4
+	srlx	%g3,%o5,%g1
 
-	ld	[%o1-12],%g2
-	sll	%g3,%o3,%g4
+	ldx	[%o1-24],%g2
+	sllx	%g3,%o3,%g4
 	or	%o4,%g1,%o4
-	st	%o4,[%o0+12]
-	srl	%g2,%o5,%g1
+	stx	%o4,[%o0+24]
+	srlx	%g2,%o5,%g1
 
-	ld	[%o1-16],%g3
-	sll	%g2,%o3,%o4
+	ldx	[%o1-32],%g3
+	sllx	%g2,%o3,%o4
 	or	%g4,%g1,%g4
-	st	%g4,[%o0+8]
-	srl	%g3,%o5,%g1
+	stx	%g4,[%o0+16]
+	srlx	%g3,%o5,%g1
 
-	ld	[%o1-20],%g2
-	sll	%g3,%o3,%g4
+	ldx	[%o1-40],%g2
+	sllx	%g3,%o3,%g4
 	or	%o4,%g1,%o4
-	st	%o4,[%o0+4]
-	srl	%g2,%o5,%g1
+	stx	%o4,[%o0+8]
+	srlx	%g2,%o5,%g1
 
-	add	%o1,-16,%o1
+	add	%o1,-32,%o1
 	or	%g4,%g1,%g4
-	bne	Loop
-	 st	%g4,[%o0+0]
+	brnz,pt	%o2,.Loop
+	 stx	%g4,[%o0+0]
 
-Lend:	sll	%g2,%o3,%g2
-	st	%g2,[%o0-4]
+.Lend:	sllx	%g2,%o3,%g2
+	stx	%g2,[%o0-8]
 	retl
-	ld	[%sp+80],%o0
+	ldx	[%sp+80],%o0
+.LLfe1:
+	.size	 __mpn_lshift,.LLfe1-__mpn_lshift

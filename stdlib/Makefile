@@ -102,7 +102,8 @@ endef
 mpn-copy = $(filter-out $(mpn-sysdep),$(mpn-headers))# mp_clz_tab.c)
 $(mpn-copy): %: $(ignore gmp2glibc.sed) $(gmp-srcdir)/%; $(gmp2glibc)
 
-.PHONY: copy-mpn clean-mpn
+.PHONY: copy-mpn clean-mpn mpn-stuff
+mpn-stuff: $(mpn-stuff)
 copy-mpn: $(mpn-stuff)
 	test ! -d CVS || cvs commit -m'Updated from $(gmp-srcdir)' $+
 clean-mpn:

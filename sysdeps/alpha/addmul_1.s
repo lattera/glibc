@@ -26,16 +26,7 @@
  # size		r18
  # s2_limb	r19
 
- # This code runs at 42 cycles/limb on the 21064.
-
- # To improve performance for long multiplications, we would use
- # 'fetch' for S1 and 'fetch_m' for RES.  It's not obvious how to use
- # these instructions without slowing down the general code: 1. We can
- # only have two prefetches in operation at any time in the Alpha
- # architecture.  2. There will seldom be any special alignment
- # between RES_PTR and S1_PTR.  Maybe we can simply divide the current
- # loop into an inner and outer loop, having the inner loop handle
- # exactly one prefetch block?
+ # This code runs at 42 cycles/limb on EV4 and 18 cycles/limb on EV5.
 
 	.set	noreorder
 	.set	noat
@@ -52,7 +43,7 @@ __mpn_addmul_1:
 	mulq	$2,$19,$3	# $3 = prod_low
 	ldq	$5,0($16)	# $5 = *res_ptr
 	umulh	$2,$19,$0	# $0 = prod_high
-	beq	$18,Lend1	# jump if size was == 1
+	beq	$18,.Lend1	# jump if size was == 1
 	ldq	$2,0($17)	# $2 = s1_limb
 	addq	$17,8,$17	# s1_ptr++
 	subq	$18,1,$18	# size--
@@ -60,10 +51,10 @@ __mpn_addmul_1:
 	cmpult	$3,$5,$4
 	stq	$3,0($16)
 	addq	$16,8,$16	# res_ptr++
-	beq	$18,Lend2	# jump if size was == 2
+	beq	$18,.Lend2	# jump if size was == 2
 
 	.align	3
-Loop:	mulq	$2,$19,$3	# $3 = prod_low
+.Loop:	mulq	$2,$19,$3	# $3 = prod_low
 	ldq	$5,0($16)	# $5 = *res_ptr
 	addq	$4,$0,$0	# cy_limb = cy_limb + 'cy'
 	subq	$18,1,$18	# size--
@@ -77,9 +68,9 @@ Loop:	mulq	$2,$19,$3	# $3 = prod_low
 	stq	$3,0($16)
 	addq	$16,8,$16	# res_ptr++
 	addq	$5,$0,$0	# combine carries
-	bne	$18,Loop
+	bne	$18,.Loop
 
-Lend2:	mulq	$2,$19,$3	# $3 = prod_low
+.Lend2:	mulq	$2,$19,$3	# $3 = prod_low
 	ldq	$5,0($16)	# $5 = *res_ptr
 	addq	$4,$0,$0	# cy_limb = cy_limb + 'cy'
 	umulh	$2,$19,$4	# $4 = cy_limb
@@ -91,7 +82,7 @@ Lend2:	mulq	$2,$19,$3	# $3 = prod_low
 	addq	$5,$0,$0	# combine carries
 	addq	$4,$0,$0	# cy_limb = prod_high + cy
 	ret	$31,($26),1
-Lend1:	addq	$5,$3,$3
+.Lend1:	addq	$5,$3,$3
 	cmpult	$3,$5,$5
 	stq	$3,0($16)
 	addq	$0,$5,$0

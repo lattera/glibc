@@ -1,4 +1,4 @@
-/* __mpn_mod_1(dividend_ptr, dividend_size, divisor_limb) --
+/* mpn_mod_1(dividend_ptr, dividend_size, divisor_limb) --
    Divide (DIVIDEND_PTR,,DIVIDEND_SIZE) by DIVISOR_LIMB.
    Return the single-limb remainder.
    There are no constraints on the value of the divisor.
@@ -38,10 +38,10 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 mp_limb
 #if __STDC__
-__mpn_mod_1 (mp_srcptr dividend_ptr, mp_size_t dividend_size,
-	     mp_limb divisor_limb)
+mpn_mod_1 (mp_srcptr dividend_ptr, mp_size_t dividend_size,
+	   mp_limb divisor_limb)
 #else
-__mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
+mpn_mod_1 (dividend_ptr, dividend_size, divisor_limb)
      mp_srcptr dividend_ptr;
      mp_size_t dividend_size;
      mp_limb divisor_limb;

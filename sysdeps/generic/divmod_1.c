@@ -1,4 +1,4 @@
-/* __mpn_divmod_1(quot_ptr, dividend_ptr, dividend_size, divisor_limb) --
+/* mpn_divmod_1(quot_ptr, dividend_ptr, dividend_size, divisor_limb) --
    Divide (DIVIDEND_PTR,,DIVIDEND_SIZE) by DIVISOR_LIMB.
    Write DIVIDEND_SIZE limbs of quotient at QUOT_PTR.
    Return the single-limb remainder.
@@ -6,7 +6,7 @@
 
    QUOT_PTR and DIVIDEND_PTR might point to the same limb.
 
-Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1993, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -41,11 +41,11 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 mp_limb
 #if __STDC__
-__mpn_divmod_1 (mp_ptr quot_ptr,
+mpn_divmod_1 (mp_ptr quot_ptr,
 	      mp_srcptr dividend_ptr, mp_size_t dividend_size,
 	      mp_limb divisor_limb)
 #else
-__mpn_divmod_1 (quot_ptr, dividend_ptr, dividend_size, divisor_limb)
+mpn_divmod_1 (quot_ptr, dividend_ptr, dividend_size, divisor_limb)
      mp_ptr quot_ptr;
      mp_srcptr dividend_ptr;
      mp_size_t dividend_size;

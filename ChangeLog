@@ -1,5 +1,11 @@
 Fri Mar  1 10:09:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* stdlib/Makefile (mpn-stuff): New target.
+	(copy-mpn): Use it.
+
+	* Code copied from GMP updated to 1.937 version.
+	* stdlib/strtod.c (HAVE_ALLOCA): Define this for gmp headers.
+
 	* posix/glob.c: Use canonical code from autoconf manual for dirent
  	include.
 	[_D_NAMLEN]: Redefine NAMLEN using this.

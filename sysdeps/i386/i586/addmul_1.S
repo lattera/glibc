@@ -1,7 +1,7 @@
 /* Pentium __mpn_addmul_1 -- Multiply a limb vector with a limb and add
    the result to a second limb vector.
 
-Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -32,12 +32,12 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 #define res_ptr edi
 #define s1_ptr esi
+#define size ecx
 #define s2_limb ebp
 
 	TEXT
 	ALIGN (3)
 	GLOBL	C_SYMBOL_NAME(__mpn_addmul_1)
-	.type	C_SYMBOL_NAME(__mpn_addmul_1),@function
 C_SYMBOL_NAME(__mpn_addmul_1:)
 
 	INSN1(push,l	,R(edi))
@@ -47,38 +47,36 @@ C_SYMBOL_NAME(__mpn_addmul_1:)
 
 	INSN2(mov,l	,R(res_ptr),MEM_DISP(esp,20))
 	INSN2(mov,l	,R(s1_ptr),MEM_DISP(esp,24))
-	INSN2(mov,l	,R(ecx),MEM_DISP(esp,28))
+	INSN2(mov,l	,R(size),MEM_DISP(esp,28))
 	INSN2(mov,l	,R(s2_limb),MEM_DISP(esp,32))
 
-	INSN2(lea,l	,R(res_ptr),MEM_INDEX(res_ptr,ecx,4))
-	INSN2(lea,l	,R(s1_ptr),MEM_INDEX(s1_ptr,ecx,4))
-	INSN1(neg,l	,R(ecx))
-	INSN2(xor,l	,R(edx),R(edx))
+	INSN2(lea,l	,R(res_ptr),MEM_INDEX(res_ptr,size,4))
+	INSN2(lea,l	,R(s1_ptr),MEM_INDEX(s1_ptr,size,4))
+	INSN1(neg,l	,R(size))
+	INSN2(xor,l	,R(ebx),R(ebx))
 	ALIGN (3)
-Loop:
-	INSN2(mov,l	,R(ebx),R(edx))
-	INSN2(mov,l	,R(eax),MEM_INDEX(s1_ptr,ecx,4))
+
+Loop:	INSN2(adc,l	,R(ebx),$0)
+	INSN2(mov,l	,R(eax),MEM_INDEX(s1_ptr,size,4))
 
 	INSN1(mul,l	,R(s2_limb))
 
 	INSN2(add,l	,R(eax),R(ebx))
-	INSN2(mov,l	,R(ebx),MEM_INDEX(res_ptr,ecx,4))
+	INSN2(mov,l	,R(ebx),MEM_INDEX(res_ptr,size,4))
 
 	INSN2(adc,l	,R(edx),$0)
 	INSN2(add,l	,R(ebx),R(eax))
 
-	INSN2(adc,l	,R(edx),$0)
-	INSN2(mov,l	,MEM_INDEX(res_ptr,ecx,4),R(ebx))
+	INSN2(mov,l	,MEM_INDEX(res_ptr,size,4),R(ebx))
+	INSN1(inc,l	,R(size))
 
-	INSN1(inc,l	,R(ecx))
+	INSN2(mov,l	,R(ebx),R(edx))
 	INSN1(jnz,	,Loop)
 
-
-	INSN2(mov,l	,R(eax),R(edx))
+	INSN2(adc,l	,R(ebx),$0)
+	INSN2(mov,l	,R(eax),R(ebx))
 	INSN1(pop,l	,R(ebp))
 	INSN1(pop,l	,R(ebx))
 	INSN1(pop,l	,R(esi))
 	INSN1(pop,l	,R(edi))
 	ret
-Lfe1:
-	.size	C_SYMBOL_NAME(__mpn_addmul_1),Lfe1-C_SYMBOL_NAME(__mpn_addmul_1)

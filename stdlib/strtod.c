@@ -36,6 +36,10 @@ Cambridge, MA 02139, USA.  */
 #include "../locale/localeinfo.h"
 #include <math.h>
 #include <stdlib.h>
+
+/* The gmp headers need some configuration frobs.  */
+#define HAVE_ALLOCA 1
+
 #include "gmp.h"
 #include "gmp-impl.h"
 #include <gmp-mparam.h>

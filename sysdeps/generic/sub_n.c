@@ -1,6 +1,6 @@
-/* __mpn_sub_n -- Subtract two limb vectors of equal, non-zero length.
+/* mpn_sub_n -- Subtract two limb vectors of equal, non-zero length.
 
-Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -23,9 +23,9 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 mp_limb
 #if __STDC__
-__mpn_sub_n (mp_ptr res_ptr, mp_srcptr s1_ptr, mp_srcptr s2_ptr, mp_size_t size)
+mpn_sub_n (mp_ptr res_ptr, mp_srcptr s1_ptr, mp_srcptr s2_ptr, mp_size_t size)
 #else
-__mpn_sub_n (res_ptr, s1_ptr, s2_ptr, size)
+mpn_sub_n (res_ptr, s1_ptr, s2_ptr, size)
      register mp_ptr res_ptr;
      register mp_srcptr s1_ptr;
      register mp_srcptr s2_ptr;

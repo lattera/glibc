@@ -1,6 +1,6 @@
  # Alpha 21064 __udiv_qrnnd
 
- # Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+ # Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 
  # This file is part of the GNU MP Library.
 
@@ -21,13 +21,11 @@
 
         .set noreorder
         .set noat
-
 .text
-        .align 3
-        .globl __udiv_qrnnd
-        .ent __udiv_qrnnd 0
+        .align	3
+        .globl	__udiv_qrnnd
+        .ent	__udiv_qrnnd
 __udiv_qrnnd:
-__udiv_qrnnd..ng:
         .frame $30,0,$26,0
         .prologue 0
 #define cnt	$2
@@ -39,9 +37,9 @@ __udiv_qrnnd..ng:
 #define qb	$20
 
 	ldiq	cnt,16
-	blt	d,Largedivisor
+	blt	d,.Largedivisor
 
-Loop1:	cmplt	n0,0,tmp
+.Loop1:	cmplt	n0,0,tmp
 	addq	n1,n1,n1
 	bis	n1,tmp,n1
 	addq	n0,n0,n0
@@ -74,12 +72,12 @@ Loop1:	cmplt	n0,0,tmp
 	cmovne	qb,tmp,n1
 	bis	n0,qb,n0
 	subq	cnt,1,cnt
-	bgt	cnt,Loop1
+	bgt	cnt,.Loop1
 	stq	n1,0(rem_ptr)
 	bis	$31,n0,$0
 	ret	$31,($26),1
 
-Largedivisor:
+.Largedivisor:
 	and	n0,1,$4
 
 	srl	n0,1,n0
@@ -91,7 +89,7 @@ Largedivisor:
 	srl	d,1,$5
 	addq	$5,$6,$5
 
-Loop2:	cmplt	n0,0,tmp
+.Loop2:	cmplt	n0,0,tmp
 	addq	n1,n1,n1
 	bis	n1,tmp,n1
 	addq	n0,n0,n0
@@ -124,27 +122,27 @@ Loop2:	cmplt	n0,0,tmp
 	cmovne	qb,tmp,n1
 	bis	n0,qb,n0
 	subq	cnt,1,cnt
-	bgt	cnt,Loop2
+	bgt	cnt,.Loop2
 
 	addq	n1,n1,n1
 	addq	$4,n1,n1
-	bne	$6,Odd
+	bne	$6,.LOdd
 	stq	n1,0(rem_ptr)
 	bis	$31,n0,$0
 	ret	$31,($26),1
 
-Odd:
+.LOdd:
 	/* q' in n0. r' in n1 */
 	addq	n1,n0,n1
 	cmpult	n1,n0,tmp	# tmp := carry from addq
-	beq	tmp,LLp6
+	beq	tmp,.LLp6
 	addq	n0,1,n0
 	subq	n1,d,n1
-LLp6:	cmpult	n1,d,tmp
-	bne	tmp,LLp7
+.LLp6:	cmpult	n1,d,tmp
+	bne	tmp,.LLp7
 	addq	n0,1,n0
 	subq	n1,d,n1
-LLp7:
+.LLp7:
 	stq	n1,0(rem_ptr)
 	bis	$31,n0,$0
 	ret	$31,($26),1

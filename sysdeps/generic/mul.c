@@ -1,6 +1,6 @@
-/* __mpn_mul -- Multiply two natural numbers.
+/* mpn_mul -- Multiply two natural numbers.
 
-Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1993, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -43,11 +43,11 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 mp_limb
 #if __STDC__
-__mpn_mul (mp_ptr prodp,
-	  mp_srcptr up, mp_size_t usize,
-	  mp_srcptr vp, mp_size_t vsize)
+mpn_mul (mp_ptr prodp,
+	 mp_srcptr up, mp_size_t usize,
+	 mp_srcptr vp, mp_size_t vsize)
 #else
-__mpn_mul (prodp, up, usize, vp, vsize)
+mpn_mul (prodp, up, usize, vp, vsize)
      mp_ptr prodp;
      mp_srcptr up;
      mp_size_t usize;
@@ -58,6 +58,7 @@ __mpn_mul (prodp, up, usize, vp, vsize)
   mp_ptr prod_endp = prodp + usize + vsize - 1;
   mp_limb cy;
   mp_ptr tspace;
+  TMP_DECL (marker);
 
   if (vsize < KARATSUBA_THRESHOLD)
     {
@@ -86,7 +87,7 @@ __mpn_mul (prodp, up, usize, vp, vsize)
 	  cy_limb = 0;
 	}
       else
-	cy_limb = __mpn_mul_1 (prodp, up, usize, v_limb);
+	cy_limb = mpn_mul_1 (prodp, up, usize, v_limb);
 
       prodp[usize] = cy_limb;
       prodp++;
@@ -100,10 +101,10 @@ __mpn_mul (prodp, up, usize, vp, vsize)
 	    {
 	      cy_limb = 0;
 	      if (v_limb == 1)
-		cy_limb = __mpn_add_n (prodp, prodp, up, usize);
+		cy_limb = mpn_add_n (prodp, prodp, up, usize);
 	    }
 	  else
-	    cy_limb = __mpn_addmul_1 (prodp, up, usize, v_limb);
+	    cy_limb = mpn_addmul_1 (prodp, up, usize, v_limb);
 
 	  prodp[usize] = cy_limb;
 	  prodp++;
@@ -111,7 +112,9 @@ __mpn_mul (prodp, up, usize, vp, vsize)
       return cy_limb;
     }
 
-  tspace = (mp_ptr) alloca (2 * vsize * BYTES_PER_MP_LIMB);
+  TMP_MARK (marker);
+
+  tspace = (mp_ptr) TMP_ALLOC (2 * vsize * BYTES_PER_MP_LIMB);
   MPN_MUL_N_RECURSE (prodp, up, vp, vsize, tspace);
 
   prodp += vsize;
@@ -119,12 +122,12 @@ __mpn_mul (prodp, up, usize, vp, vsize)
   usize -= vsize;
   if (usize >= vsize)
     {
-      mp_ptr tp = (mp_ptr) alloca (2 * vsize * BYTES_PER_MP_LIMB);
+      mp_ptr tp = (mp_ptr) TMP_ALLOC (2 * vsize * BYTES_PER_MP_LIMB);
       do
 	{
 	  MPN_MUL_N_RECURSE (tp, up, vp, vsize, tspace);
-	  cy = __mpn_add_n (prodp, prodp, tp, vsize);
-	  __mpn_add_1 (prodp + vsize, tp + vsize, vsize, cy);
+	  cy = mpn_add_n (prodp, prodp, tp, vsize);
+	  mpn_add_1 (prodp + vsize, tp + vsize, vsize, cy);
 	  prodp += vsize;
 	  up += vsize;
 	  usize -= vsize;
@@ -138,10 +141,11 @@ __mpn_mul (prodp, up, usize, vp, vsize)
 
   if (usize != 0)
     {
-      __mpn_mul (tspace, vp, vsize, up, usize);
-      cy = __mpn_add_n (prodp, prodp, tspace, vsize);
-      __mpn_add_1 (prodp + vsize, tspace + vsize, usize, cy);
+      mpn_mul (tspace, vp, vsize, up, usize);
+      cy = mpn_add_n (prodp, prodp, tspace, vsize);
+      mpn_add_1 (prodp + vsize, tspace + vsize, usize, cy);
     }
 
+  TMP_FREE (marker);
   return *prod_endp;
 }

@@ -1,7 +1,7 @@
-! sparc __mpn_add_n -- Add two limb vectors of the same length > 0 and store
+! SPARC __mpn_add_n -- Add two limb vectors of the same length > 0 and store
 ! sum in a third limb vector.
 
-! Copyright (C) 1995 Free Software Foundation, Inc.
+! Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
 ! This file is part of the GNU MP Library.
 
@@ -32,18 +32,14 @@
 	.align	4
 	.global	C_SYMBOL_NAME(__mpn_add_n)
 C_SYMBOL_NAME(__mpn_add_n):
-	cmp	size,8
-	mov	0,%o4			! clear cy-save register
-	blt,a	Ltriv
-	addcc	size,-2,size
 	xor	s2_ptr,res_ptr,%g1
 	andcc	%g1,4,%g0
 	bne	L1			! branch if alignment differs
 	nop
-L0:	andcc	res_ptr,4,%g0		! res_ptr unaligned? Side effect: cy=0
-	beq	L_v1			! if no, branch
-	nop
 ! **  V1a  **
+L0:	andcc	res_ptr,4,%g0		! res_ptr unaligned? Side effect: cy=0
+	be	L_v1			! if no, branch
+	nop
 /* Add least significant limb separately to align res_ptr and s2_ptr */
 	ld	[s1_ptr],%g4
 	add	s1_ptr,4,s1_ptr
@@ -53,12 +49,15 @@ L0:	andcc	res_ptr,4,%g0		! res_ptr unaligned? Side effect: cy=0
 	addcc	%g4,%g2,%o4
 	st	%o4,[res_ptr]
 	add	res_ptr,4,res_ptr
+L_v1:	addx	%g0,%g0,%o4		! save cy in register
+	cmp	size,2			! if size < 2 ...
+	bl	Lend2			! ... branch to tail code
+	subcc	%g0,%o4,%g0		! restore cy
 
-L_v1:	ld	[s1_ptr+0],%g4
+	ld	[s1_ptr+0],%g4
+	addcc	size,-10,size
 	ld	[s1_ptr+4],%g1
 	ldd	[s2_ptr+0],%g2
-	addx	%g0,%g0,%o4		! save cy in register
-	addcc	size,-10,size
 	blt	Lfin1
 	subcc	%g0,%o4,%g0		! restore cy
 /* Add blocks of 8 limbs until less than 8 limbs remain */
@@ -98,7 +97,7 @@ Lfin1:	addcc	size,8-2,size
 	blt	Lend1
 	subcc	%g0,%o4,%g0		! restore cy
 /* Add blocks of 2 limbs until less than 2 limbs remain */
-Loop1b:	addxcc	%g4,%g2,%o4
+Loope1:	addxcc	%g4,%g2,%o4
 	ld	[s1_ptr+8],%g4
 	addxcc	%g1,%g3,%o5
 	ld	[s1_ptr+12],%g1
@@ -109,7 +108,7 @@ Loop1b:	addxcc	%g4,%g2,%o4
 	add	s1_ptr,8,s1_ptr
 	add	s2_ptr,8,s2_ptr
 	add	res_ptr,8,res_ptr
-	bge	Loop1b
+	bge	Loope1
 	subcc	%g0,%o4,%g0		! restore cy
 Lend1:	addxcc	%g4,%g2,%o4
 	addxcc	%g1,%g3,%o5
@@ -144,10 +143,13 @@ L1:	xor	s1_ptr,res_ptr,%g1
    things can be aligned (that we care about) we now know that the alignment
    of s1_ptr and s2_ptr are the same.  */
 
-L2:	andcc	s1_ptr,4,%g0		! s1_ptr unaligned? Side effect: cy=0
-	beq	L_v2			! if no, branch
+L2:	cmp	size,1
+	be	Ljone
 	nop
-/* Add least significant limb separately to align res_ptr and s2_ptr */
+	andcc	s1_ptr,4,%g0		! s1_ptr unaligned? Side effect: cy=0
+	be	L_v2			! if no, branch
+	nop
+/* Add least significant limb separately to align s1_ptr and s2_ptr */
 	ld	[s1_ptr],%g4
 	add	s1_ptr,4,s1_ptr
 	ld	[s2_ptr],%g2
@@ -195,9 +197,9 @@ Loop2:	ldd	[s1_ptr+0],%g2
 	subcc	%g0,%o4,%g0		! restore cy
 
 Lfin2:	addcc	size,8-2,size
-Ltriv:	blt	Lend2
+	blt	Lend2
 	subcc	%g0,%o4,%g0		! restore cy
-Loop2b:	ldd	[s1_ptr+0],%g2
+Loope2:	ldd	[s1_ptr+0],%g2
 	ldd	[s2_ptr+0],%o4
 	addxcc	%g2,%o4,%g2
 	st	%g2,[res_ptr+0]
@@ -208,13 +210,13 @@ Loop2b:	ldd	[s1_ptr+0],%g2
 	add	s1_ptr,8,s1_ptr
 	add	s2_ptr,8,s2_ptr
 	add	res_ptr,8,res_ptr
-	bge	Loop2b
+	bge	Loope2
 	subcc	%g0,%o4,%g0		! restore cy
 Lend2:	andcc	size,1,%g0
 	be	Lret2
 	subcc	%g0,%o4,%g0		! restore cy
 /* Add last limb */
-	ld	[s1_ptr],%g4
+Ljone:	ld	[s1_ptr],%g4
 	ld	[s2_ptr],%g2
 	addxcc	%g4,%g2,%o4
 	st	%o4,[res_ptr]

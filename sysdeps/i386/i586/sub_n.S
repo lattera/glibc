@@ -1,7 +1,7 @@
 /* Pentium __mpn_sub_n -- Subtract two limb vectors of the same length > 0
    and store difference in a third limb vector.
 
-Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -30,13 +30,6 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #include "sysdep.h"
 #include "asm-syntax.h"
 
-#define t1	%eax
-#define t2	%edx
-#define src1	%esi
-#define src2	%ebp
-#define dst	%edi
-#define x	%ebx
-
 .text
 	ALIGN (3)
 	.globl C_SYMBOL_NAME(__mpn_sub_n)
@@ -46,85 +39,85 @@ C_SYMBOL_NAME(__mpn_sub_n:)
 	pushl	%ebx
 	pushl	%ebp
 
-	movl	20(%esp),dst		/* res_ptr */
-	movl	24(%esp),src1		/* s1_ptr */
-	movl	28(%esp),src2		/* s2_ptr */
+	movl	20(%esp),%edi		/* res_ptr */
+	movl	24(%esp),%esi		/* s1_ptr */
+	movl	28(%esp),%ebp		/* s2_ptr */
 	movl	32(%esp),%ecx		/* size */
 
-	movl	(src2),x
+	movl	(%ebp),%ebx
 
 	decl	%ecx
-	movl	%ecx,t2
+	movl	%ecx,%edx
 	shrl	$3,%ecx
-	andl	$7,t2
+	andl	$7,%edx
 	testl	%ecx,%ecx		/* zero carry flag */
 	jz	Lend
-	pushl	t2
+	pushl	%edx
 
 	ALIGN (3)
-Loop:	movl	28(dst),%eax		/* fetch destination cache line */
-	leal	32(dst),dst
+Loop:	movl	28(%edi),%eax		/* fetch destination cache line */
+	leal	32(%edi),%edi
 
-L1:	movl	(src1),t1
-	movl	4(src1),t2
-	sbbl	x,t1
-	movl	4(src2),x
-	sbbl	x,t2
-	movl	8(src2),x
-	movl	t1,-32(dst)
-	movl	t2,-28(dst)
+L1:	movl	(%esi),%eax
+	movl	4(%esi),%edx
+	sbbl	%ebx,%eax
+	movl	4(%ebp),%ebx
+	sbbl	%ebx,%edx
+	movl	8(%ebp),%ebx
+	movl	%eax,-32(%edi)
+	movl	%edx,-28(%edi)
 
-L2:	movl	8(src1),t1
-	movl	12(src1),t2
-	sbbl	x,t1
-	movl	12(src2),x
-	sbbl	x,t2
-	movl	16(src2),x
-	movl	t1,-24(dst)
-	movl	t2,-20(dst)
+L2:	movl	8(%esi),%eax
+	movl	12(%esi),%edx
+	sbbl	%ebx,%eax
+	movl	12(%ebp),%ebx
+	sbbl	%ebx,%edx
+	movl	16(%ebp),%ebx
+	movl	%eax,-24(%edi)
+	movl	%edx,-20(%edi)
 
-L3:	movl	16(src1),t1
-	movl	20(src1),t2
-	sbbl	x,t1
-	movl	20(src2),x
-	sbbl	x,t2
-	movl	24(src2),x
-	movl	t1,-16(dst)
-	movl	t2,-12(dst)
+L3:	movl	16(%esi),%eax
+	movl	20(%esi),%edx
+	sbbl	%ebx,%eax
+	movl	20(%ebp),%ebx
+	sbbl	%ebx,%edx
+	movl	24(%ebp),%ebx
+	movl	%eax,-16(%edi)
+	movl	%edx,-12(%edi)
 
-L4:	movl	24(src1),t1
-	movl	28(src1),t2
-	sbbl	x,t1
-	movl	28(src2),x
-	sbbl	x,t2
-	movl	32(src2),x
-	movl	t1,-8(dst)
-	movl	t2,-4(dst)
+L4:	movl	24(%esi),%eax
+	movl	28(%esi),%edx
+	sbbl	%ebx,%eax
+	movl	28(%ebp),%ebx
+	sbbl	%ebx,%edx
+	movl	32(%ebp),%ebx
+	movl	%eax,-8(%edi)
+	movl	%edx,-4(%edi)
 
-	leal	32(src1),src1
-	leal	32(src2),src2
+	leal	32(%esi),%esi
+	leal	32(%ebp),%ebp
 	decl	%ecx
 	jnz	Loop
 
-	popl	t2
+	popl	%edx
 Lend:
-	decl	t2			/* test t2 w/o clobbering carry */
+	decl	%edx			/* test %edx w/o clobbering carry */
 	js	Lend2
-	incl	t2
+	incl	%edx
 Loop2:
-	leal	4(dst),dst
-	movl	(src1),t1
-	sbbl	x,t1
-	movl	4(src2),x
-	movl	t1,-4(dst)
-	leal	4(src1),src1
-	leal	4(src2),src2
-	decl	t2
+	leal	4(%edi),%edi
+	movl	(%esi),%eax
+	sbbl	%ebx,%eax
+	movl	4(%ebp),%ebx
+	movl	%eax,-4(%edi)
+	leal	4(%esi),%esi
+	leal	4(%ebp),%ebp
+	decl	%edx
 	jnz	Loop2
 Lend2:
-	movl	(src1),t1
-	sbbl	x,t1
-	movl	t1,(dst)
+	movl	(%esi),%eax
+	sbbl	%ebx,%eax
+	movl	%eax,(%edi)
 
 	sbbl	%eax,%eax
 	negl	%eax

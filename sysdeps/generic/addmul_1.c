@@ -1,9 +1,9 @@
-/* __mpn_addmul_1 -- multiply the S1_SIZE long limb vector pointed to by S1_PTR
+/* mpn_addmul_1 -- multiply the S1_SIZE long limb vector pointed to by S1_PTR
    by S2_LIMB, add the S1_SIZE least significant limbs of the product to the
    limb vector pointed to by RES_PTR.  Return the most significant limb of
    the product, adjusted for carry-out from the addition.
 
-Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -26,7 +26,7 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #include "longlong.h"
 
 mp_limb
-__mpn_addmul_1 (res_ptr, s1_ptr, s1_size, s2_limb)
+mpn_addmul_1 (res_ptr, s1_ptr, s1_size, s2_limb)
      register mp_ptr res_ptr;
      register mp_srcptr s1_ptr;
      mp_size_t s1_size;

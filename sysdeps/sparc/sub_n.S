@@ -1,7 +1,7 @@
-! sparc __mpn_sub_n -- Subtract two limb vectors of the same length > 0 and
+! SPARC __mpn_sub_n -- Subtract two limb vectors of the same length > 0 and
 ! store difference in a third limb vector.
 
-! Copyright (C) 1995 Free Software Foundation, Inc.
+! Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
 ! This file is part of the GNU MP Library.
 
@@ -38,7 +38,7 @@ C_SYMBOL_NAME(__mpn_sub_n):
 	nop
 ! **  V1a  **
 	andcc	res_ptr,4,%g0		! res_ptr unaligned? Side effect: cy=0
-	beq	L_v1			! if no, branch
+	be	L_v1			! if no, branch
 	nop
 /* Add least significant limb separately to align res_ptr and s2_ptr */
 	ld	[s1_ptr],%g4
@@ -133,9 +133,9 @@ L1:	xor	s1_ptr,res_ptr,%g1
 	nop
 ! **  V1b  **
 	andcc	res_ptr,4,%g0		! res_ptr unaligned? Side effect: cy=0
-	beq	L_v1b			! if no, branch
+	be	L_v1b			! if no, branch
 	nop
-/* Add least significant limb separately to align res_ptr and s2_ptr */
+/* Add least significant limb separately to align res_ptr and s1_ptr */
 	ld	[s2_ptr],%g4
 	add	s2_ptr,4,s2_ptr
 	ld	[s1_ptr],%g2
@@ -232,7 +232,7 @@ L2:	cmp	size,1
 	be	Ljone
 	nop
 	andcc	s1_ptr,4,%g0		! s1_ptr unaligned? Side effect: cy=0
-	beq	L_v2			! if no, branch
+	be	L_v2			! if no, branch
 	nop
 /* Add least significant limb separately to align s1_ptr and s2_ptr */
 	ld	[s1_ptr],%g4

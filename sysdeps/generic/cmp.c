@@ -1,6 +1,6 @@
-/* __mpn_cmp -- Compare two low-level natural-number integers.
+/* mpn_cmp -- Compare two low-level natural-number integers.
 
-Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1993, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -28,9 +28,9 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 int
 #if __STDC__
-__mpn_cmp (mp_srcptr op1_ptr, mp_srcptr op2_ptr, mp_size_t size)
+mpn_cmp (mp_srcptr op1_ptr, mp_srcptr op2_ptr, mp_size_t size)
 #else
-__mpn_cmp (op1_ptr, op2_ptr, size)
+mpn_cmp (op1_ptr, op2_ptr, size)
      mp_srcptr op1_ptr;
      mp_srcptr op2_ptr;
      mp_size_t size;

@@ -1,6 +1,6 @@
-/* __mpn_mul_n -- Multiply two natural numbers of length n.
+/* mpn_mul_n -- Multiply two natural numbers of length n.
 
-Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -41,13 +41,6 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #define KARATSUBA_THRESHOLD 2
 #endif
 
-void
-#if __STDC__
-____mpn_mul_n (mp_ptr, mp_srcptr, mp_srcptr, mp_size_t, mp_ptr);
-#else
-____mpn_mul_n ();
-#endif
-
 /* Handle simple cases with traditional multiplication.
 
    This is the most critical code of multiplication.  All multiplies rely
@@ -57,9 +50,9 @@ ____mpn_mul_n ();
 
 void
 #if __STDC__
-____mpn_mul_n_basecase (mp_ptr prodp, mp_srcptr up, mp_srcptr vp, mp_size_t size)
+impn_mul_n_basecase (mp_ptr prodp, mp_srcptr up, mp_srcptr vp, mp_size_t size)
 #else
-____mpn_mul_n_basecase (prodp, up, vp, size)
+impn_mul_n_basecase (prodp, up, vp, size)
      mp_ptr prodp;
      mp_srcptr up;
      mp_srcptr vp;
@@ -82,7 +75,7 @@ ____mpn_mul_n_basecase (prodp, up, vp, size)
       cy_limb = 0;
     }
   else
-    cy_limb = __mpn_mul_1 (prodp, up, size, v_limb);
+    cy_limb = mpn_mul_1 (prodp, up, size, v_limb);
 
   prodp[size] = cy_limb;
   prodp++;
@@ -96,10 +89,10 @@ ____mpn_mul_n_basecase (prodp, up, vp, size)
 	{
 	  cy_limb = 0;
 	  if (v_limb == 1)
-	    cy_limb = __mpn_add_n (prodp, prodp, up, size);
+	    cy_limb = mpn_add_n (prodp, prodp, up, size);
 	}
       else
-	cy_limb = __mpn_addmul_1 (prodp, up, size, v_limb);
+	cy_limb = mpn_addmul_1 (prodp, up, size, v_limb);
 
       prodp[size] = cy_limb;
       prodp++;
@@ -108,10 +101,10 @@ ____mpn_mul_n_basecase (prodp, up, vp, size)
 
 void
 #if __STDC__
-____mpn_mul_n (mp_ptr prodp,
+impn_mul_n (mp_ptr prodp,
 	     mp_srcptr up, mp_srcptr vp, mp_size_t size, mp_ptr tspace)
 #else
-____mpn_mul_n (prodp, up, vp, size, tspace)
+impn_mul_n (prodp, up, vp, size, tspace)
      mp_ptr prodp;
      mp_srcptr up;
      mp_srcptr vp;
@@ -135,9 +128,9 @@ ____mpn_mul_n (prodp, up, vp, size, tspace)
       mp_limb cy_limb;
 
       MPN_MUL_N_RECURSE (prodp, up, vp, esize, tspace);
-      cy_limb = __mpn_addmul_1 (prodp + esize, up, esize, vp[esize]);
+      cy_limb = mpn_addmul_1 (prodp + esize, up, esize, vp[esize]);
       prodp[esize + esize] = cy_limb;
-      cy_limb = __mpn_addmul_1 (prodp + esize, vp, size, up[esize]);
+      cy_limb = mpn_addmul_1 (prodp + esize, vp, size, up[esize]);
 
       prodp[esize + size] = cy_limb;
     }
@@ -170,24 +163,24 @@ ____mpn_mul_n (prodp, up, vp, size, tspace)
 
       /*** Product M.	 ________________
 			|_(U1-U0)(V0-V1)_|  */
-      if (__mpn_cmp (up + hsize, up, hsize) >= 0)
+      if (mpn_cmp (up + hsize, up, hsize) >= 0)
 	{
-	  __mpn_sub_n (prodp, up + hsize, up, hsize);
+	  mpn_sub_n (prodp, up + hsize, up, hsize);
 	  negflg = 0;
 	}
       else
 	{
-	  __mpn_sub_n (prodp, up, up + hsize, hsize);
+	  mpn_sub_n (prodp, up, up + hsize, hsize);
 	  negflg = 1;
 	}
-      if (__mpn_cmp (vp + hsize, vp, hsize) >= 0)
+      if (mpn_cmp (vp + hsize, vp, hsize) >= 0)
 	{
-	  __mpn_sub_n (prodp + hsize, vp + hsize, vp, hsize);
+	  mpn_sub_n (prodp + hsize, vp + hsize, vp, hsize);
 	  negflg ^= 1;
 	}
       else
 	{
-	  __mpn_sub_n (prodp + hsize, vp, vp + hsize, hsize);
+	  mpn_sub_n (prodp + hsize, vp, vp + hsize, hsize);
 	  /* No change of NEGFLG.  */
 	}
       /* Read temporary operands from low part of PROD.
@@ -197,13 +190,13 @@ ____mpn_mul_n (prodp, up, vp, size, tspace)
 
       /*** Add/copy product H.  */
       MPN_COPY (prodp + hsize, prodp + size, hsize);
-      cy = __mpn_add_n (prodp + size, prodp + size, prodp + size + hsize, hsize);
+      cy = mpn_add_n (prodp + size, prodp + size, prodp + size + hsize, hsize);
 
       /*** Add product M (if NEGFLG M is a negative number).  */
       if (negflg)
-	cy -= __mpn_sub_n (prodp + hsize, prodp + hsize, tspace, size);
+	cy -= mpn_sub_n (prodp + hsize, prodp + hsize, tspace, size);
       else
-	cy += __mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
+	cy += mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
 
       /*** Product L.	 ________________  ________________
 			|________________||____U0 x V0_____|  */
@@ -214,22 +207,22 @@ ____mpn_mul_n (prodp, up, vp, size, tspace)
 
       /*** Add/copy Product L (twice).  */
 
-      cy += __mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
+      cy += mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
       if (cy)
-	__mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
+	mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
 
       MPN_COPY (prodp, tspace, hsize);
-      cy = __mpn_add_n (prodp + hsize, prodp + hsize, tspace + hsize, hsize);
+      cy = mpn_add_n (prodp + hsize, prodp + hsize, tspace + hsize, hsize);
       if (cy)
-	__mpn_add_1 (prodp + size, prodp + size, size, 1);
+	mpn_add_1 (prodp + size, prodp + size, size, 1);
     }
 }
 
 void
 #if __STDC__
-____mpn_sqr_n_basecase (mp_ptr prodp, mp_srcptr up, mp_size_t size)
+impn_sqr_n_basecase (mp_ptr prodp, mp_srcptr up, mp_size_t size)
 #else
-____mpn_sqr_n_basecase (prodp, up, size)
+impn_sqr_n_basecase (prodp, up, size)
      mp_ptr prodp;
      mp_srcptr up;
      mp_size_t size;
@@ -251,7 +244,7 @@ ____mpn_sqr_n_basecase (prodp, up, size)
       cy_limb = 0;
     }
   else
-    cy_limb = __mpn_mul_1 (prodp, up, size, v_limb);
+    cy_limb = mpn_mul_1 (prodp, up, size, v_limb);
 
   prodp[size] = cy_limb;
   prodp++;
@@ -265,10 +258,10 @@ ____mpn_sqr_n_basecase (prodp, up, size)
 	{
 	  cy_limb = 0;
 	  if (v_limb == 1)
-	    cy_limb = __mpn_add_n (prodp, prodp, up, size);
+	    cy_limb = mpn_add_n (prodp, prodp, up, size);
 	}
       else
-	cy_limb = __mpn_addmul_1 (prodp, up, size, v_limb);
+	cy_limb = mpn_addmul_1 (prodp, up, size, v_limb);
 
       prodp[size] = cy_limb;
       prodp++;
@@ -277,10 +270,10 @@ ____mpn_sqr_n_basecase (prodp, up, size)
 
 void
 #if __STDC__
-____mpn_sqr_n (mp_ptr prodp,
+impn_sqr_n (mp_ptr prodp,
 	     mp_srcptr up, mp_size_t size, mp_ptr tspace)
 #else
-____mpn_sqr_n (prodp, up, size, tspace)
+impn_sqr_n (prodp, up, size, tspace)
      mp_ptr prodp;
      mp_srcptr up;
      mp_size_t size;
@@ -303,9 +296,9 @@ ____mpn_sqr_n (prodp, up, size, tspace)
       mp_limb cy_limb;
 
       MPN_SQR_N_RECURSE (prodp, up, esize, tspace);
-      cy_limb = __mpn_addmul_1 (prodp + esize, up, esize, up[esize]);
+      cy_limb = mpn_addmul_1 (prodp + esize, up, esize, up[esize]);
       prodp[esize + esize] = cy_limb;
-      cy_limb = __mpn_addmul_1 (prodp + esize, up, size, up[esize]);
+      cy_limb = mpn_addmul_1 (prodp + esize, up, size, up[esize]);
 
       prodp[esize + size] = cy_limb;
     }
@@ -322,13 +315,13 @@ ____mpn_sqr_n (prodp, up, size, tspace)
 
       /*** Product M.	 ________________
 			|_(U1-U0)(U0-U1)_|  */
-      if (__mpn_cmp (up + hsize, up, hsize) >= 0)
+      if (mpn_cmp (up + hsize, up, hsize) >= 0)
 	{
-	  __mpn_sub_n (prodp, up + hsize, up, hsize);
+	  mpn_sub_n (prodp, up + hsize, up, hsize);
 	}
       else
 	{
-	  __mpn_sub_n (prodp, up, up + hsize, hsize);
+	  mpn_sub_n (prodp, up, up + hsize, hsize);
 	}
 
       /* Read temporary operands from low part of PROD.
@@ -338,10 +331,10 @@ ____mpn_sqr_n (prodp, up, size, tspace)
 
       /*** Add/copy product H.  */
       MPN_COPY (prodp + hsize, prodp + size, hsize);
-      cy = __mpn_add_n (prodp + size, prodp + size, prodp + size + hsize, hsize);
+      cy = mpn_add_n (prodp + size, prodp + size, prodp + size + hsize, hsize);
 
       /*** Add product M (if NEGFLG M is a negative number).  */
-      cy -= __mpn_sub_n (prodp + hsize, prodp + hsize, tspace, size);
+      cy -= mpn_sub_n (prodp + hsize, prodp + hsize, tspace, size);
 
       /*** Product L.	 ________________  ________________
 			|________________||____U0 x U0_____|  */
@@ -352,53 +345,56 @@ ____mpn_sqr_n (prodp, up, size, tspace)
 
       /*** Add/copy Product L (twice).  */
 
-      cy += __mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
+      cy += mpn_add_n (prodp + hsize, prodp + hsize, tspace, size);
       if (cy)
-	__mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
+	mpn_add_1 (prodp + hsize + size, prodp + hsize + size, hsize, cy);
 
       MPN_COPY (prodp, tspace, hsize);
-      cy = __mpn_add_n (prodp + hsize, prodp + hsize, tspace + hsize, hsize);
+      cy = mpn_add_n (prodp + hsize, prodp + hsize, tspace + hsize, hsize);
       if (cy)
-	__mpn_add_1 (prodp + size, prodp + size, size, 1);
+	mpn_add_1 (prodp + size, prodp + size, size, 1);
     }
 }
 
 /* This should be made into an inline function in gmp.h.  */
 inline void
 #if __STDC__
-__mpn_mul_n (mp_ptr prodp, mp_srcptr up, mp_srcptr vp, mp_size_t size)
+mpn_mul_n (mp_ptr prodp, mp_srcptr up, mp_srcptr vp, mp_size_t size)
 #else
-__mpn_mul_n (prodp, up, vp, size)
+mpn_mul_n (prodp, up, vp, size)
      mp_ptr prodp;
      mp_srcptr up;
      mp_srcptr vp;
      mp_size_t size;
 #endif
 {
+  TMP_DECL (marker);
+  TMP_MARK (marker);
   if (up == vp)
     {
       if (size < KARATSUBA_THRESHOLD)
 	{
-	  ____mpn_sqr_n_basecase (prodp, up, size);
+	  impn_sqr_n_basecase (prodp, up, size);
 	}
       else
 	{
 	  mp_ptr tspace;
-	  tspace = (mp_ptr) alloca (2 * size * BYTES_PER_MP_LIMB);
-	  ____mpn_sqr_n (prodp, up, size, tspace);
+	  tspace = (mp_ptr) TMP_ALLOC (2 * size * BYTES_PER_MP_LIMB);
+	  impn_sqr_n (prodp, up, size, tspace);
 	}
     }
   else
     {
       if (size < KARATSUBA_THRESHOLD)
 	{
-	  ____mpn_mul_n_basecase (prodp, up, vp, size);
+	  impn_mul_n_basecase (prodp, up, vp, size);
 	}
       else
 	{
 	  mp_ptr tspace;
-	  tspace = (mp_ptr) alloca (2 * size * BYTES_PER_MP_LIMB);
-	  ____mpn_mul_n (prodp, up, vp, size, tspace);
+	  tspace = (mp_ptr) TMP_ALLOC (2 * size * BYTES_PER_MP_LIMB);
+	  impn_mul_n (prodp, up, vp, size, tspace);
 	}
     }
+  TMP_FREE (marker);
 }

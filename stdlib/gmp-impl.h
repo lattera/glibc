@@ -1,6 +1,6 @@
 /* Include file for internal GNU MP types and definitions.
 
-Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -18,25 +18,50 @@ You should have received a copy of the GNU Library General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
 the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-#if ! defined (alloca)
-#if defined (__GNUC__)
+/* When using gcc, make sure to use its builtin alloca.  */
+#if ! defined (alloca) && defined (__GNUC__)
 #define alloca __builtin_alloca
+#define HAVE_ALLOCA
+#endif
+
+/* When using cc, do whatever necessary to allow use of alloca.  For many
+   machines, this means including alloca.h.  IBM's compilers need a #pragma
+   in "each module that needs to use alloca".  */
+#if ! defined (alloca)
+/* We need lots of variants for MIPS, to cover all versions and perversions
+   of OSes for MIPS.  */
+#if defined (__mips) || defined (MIPSEL) || defined (MIPSEB) \
+ || defined (_MIPSEL) || defined (_MIPSEB) || defined (__sgi) \
+ || defined (__alpha) || defined (__sparc) || defined (sparc) \
+ || defined (__ksr__)
+#include <alloca.h>
+#define HAVE_ALLOCA
+#endif
+#if defined (_IBMR2)
+#pragma alloca
+#define HAVE_ALLOCA
+#endif
+#if defined (__DECC)
+#define alloca(x) __ALLOCA(x)
+#define HAVE_ALLOCA
 #endif
 #endif
 
-#if ! defined (alloca)
-#if defined (__sparc__) || defined (sparc) || defined (__sgi)
-#include <alloca.h>
-#endif
+#if ! defined (HAVE_ALLOCA) || USE_STACK_ALLOC
+#include "stack-alloc.h"
+#else
+#define TMP_DECL(m)
+#define TMP_ALLOC(x) alloca(x)
+#define TMP_MARK(m)
+#define TMP_FREE(m)
 #endif
 
 #ifndef NULL
-#define NULL 0L
+#define NULL ((void *) 0)
 #endif
 
 #if ! defined (__GNUC__)
 #define inline			/* Empty */
-void *alloca();
 #endif
 
 #define ABS(x) (x >= 0 ? x : -x)
@@ -46,7 +71,7 @@ void *alloca();
 #include "gmp-mparam.h"
 /* #include "longlong.h" */
 
-#ifdef __STDC__
+#if defined (__STDC__)  || defined (__cplusplus)
 void *malloc (size_t);
 void *realloc (void *, size_t);
 void free (void *);
@@ -119,35 +144,6 @@ void _mp_default_free ();
       }									\
   } while (0)
 
-/*  Swap (mp_ptr, mp_size_t) (U, UL) with (V, VL)  */
-#define MPN_SWAP(u, l, v, m) \
-  do {									\
-    { mp_ptr _; _ = (u), (u) = (v), (v) = _;}				\
-    { mp_size_t _; _ = (l), (l) = (m), (m) = _;}			\
-  } while (0)
-
-/*  Return true iff the limb X has less bits than the limb Y.  */
-#define MPN_LESS_BITS_LIMB(x,y) ((x) < (y) && (x) < ((x) ^ (y)))
-
-/*  Return true iff (mp_ptr, mp_size_t) (U, UL) has less bits than (V, VL).  */
-#define MPN_LESS_BITS(u, l, v, m) \
-  ((l) < (m)								\
-   || ((l) == (m) && (l) != 0 && MPN_LESS_BITS_LIMB ((u)[(l - 1)], (v)[(l) - 1])))
-
-/*  Return true iff (mp_ptr, mp_size_t) (U, UL) has more bits than (V, VL).  */
-#define MPN_MORE_BITS(u, l, v, m) MPN_LESS_BITS (v, m, u, l)
-
-/*  Perform twos complement on (mp_ptr, mp_size_t) (U, UL), 
-    putting result at (v, VL).  Precondition: U[0] != 0.  */
-#define MPN_COMPL_INCR(u, v, l)	\
-  do {									\
-    mp_size_t _ = 0;							\
-    (u)[0] = -(v)[_];							\
-    while (_++ < (l)) 							\
-      (u)[_] = ~(v)[_];							\
-  } while (0)
-#define MPN_COMPL MPN_COMPL_INCR
-
 /* Initialize the MP_INT X with space for NLIMBS limbs.
    X should be a temporary variable, and it will be automatically
    cleared out when the running function returns.
@@ -156,23 +152,23 @@ void _mp_default_free ();
 #define MPZ_TMP_INIT(X, NLIMBS) \
   do {									\
     mpz_ptr __x = (X);							\
-    __x->alloc = (NLIMBS);						\
-    __x->d = (mp_ptr) alloca ((NLIMBS) * BYTES_PER_MP_LIMB);		\
+    __x->_mp_alloc = (NLIMBS);						\
+    __x->_mp_d = (mp_ptr) TMP_ALLOC ((NLIMBS) * BYTES_PER_MP_LIMB);	\
   } while (0)
 
 #define MPN_MUL_N_RECURSE(prodp, up, vp, size, tspace) \
   do {									\
     if ((size) < KARATSUBA_THRESHOLD)					\
-      ____mpn_mul_n_basecase (prodp, up, vp, size);			\
+      impn_mul_n_basecase (prodp, up, vp, size);			\
     else								\
-      ____mpn_mul_n (prodp, up, vp, size, tspace);			\
+      impn_mul_n (prodp, up, vp, size, tspace);			\
   } while (0);
 #define MPN_SQR_N_RECURSE(prodp, up, size, tspace) \
   do {									\
     if ((size) < KARATSUBA_THRESHOLD)					\
-      ____mpn_sqr_n_basecase (prodp, up, size);				\
+      impn_sqr_n_basecase (prodp, up, size);				\
     else								\
-      ____mpn_sqr_n (prodp, up, size, tspace);				\
+      impn_sqr_n (prodp, up, size, tspace);				\
   } while (0);
 
 /* Structure for conversion between internal binary format and
@@ -197,6 +193,13 @@ struct bases
      choose to multiply by big_base_inverted.  */
   mp_limb big_base_inverted;
 };
+
+/* Access macros for structure fields for user-visible structures with
+   hidden fields.  */
+#define size(X) (X)._mp_size
+#define alloc(X) (X)._mp_alloc
+#define prec(X) (X)._mp_prec
+#define limbs(X) (X)._mp_d
 
 extern const struct bases __mp_bases[];
 extern mp_size_t __gmp_default_fp_limb_precision;
@@ -288,6 +291,11 @@ typedef mp_limb UWtype;
 typedef unsigned int UHWtype;
 #define W_TYPE_SIZE BITS_PER_MP_LIMB
 
+/* Internal mpn calls */
+#define impn_mul_n_basecase	__MPN(impn_mul_n_basecase)
+#define impn_mul_n		__MPN(impn_mul_n)
+#define impn_sqr_n_basecase	__MPN(impn_sqr_n_basecase)
+#define impn_sqr_n		__MPN(impn_sqr_n)
 
 #ifndef IEEE_DOUBLE_BIG_ENDIAN
 #define IEEE_DOUBLE_BIG_ENDIAN 1
@@ -298,10 +306,10 @@ union ieee_double_extract
 {
   struct
     {
-      unsigned long sig:1;
-      unsigned long exp:11;
-      unsigned long manh:20;
-      unsigned long manl:32;
+      unsigned int sig:1;
+      unsigned int exp:11;
+      unsigned int manh:20;
+      unsigned int manl:32;
     } s;
   double d;
 };
@@ -310,10 +318,10 @@ union ieee_double_extract
 {
   struct
     {
-      unsigned long manl:32;
-      unsigned long manh:20;
-      unsigned long exp:11;
-      unsigned long sig:1;
+      unsigned int manl:32;
+      unsigned int manh:20;
+      unsigned int exp:11;
+      unsigned int sig:1;
     } s;
   double d;
 };

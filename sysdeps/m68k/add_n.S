@@ -1,7 +1,7 @@
 /* mc68020 __mpn_add_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
 
-Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -27,50 +27,53 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
   size		(sp + 12)
 */
 
+#include "sysdep.h"
 #include "asm-syntax.h"
 
 	TEXT
 	ALIGN
-	GLOBL	___mpn_add_n
+	GLOBL	C_SYMBOL_NAME(__mpn_add_n)
 
-LAB(___mpn_add_n)
+C_SYMBOL_NAME(__mpn_add_n:)
+PROLOG(__mpn_add_n)
 /* Save used registers on the stack.  */
-	INSN2(move,l	,MEM_PREDEC(sp),d2)
-	INSN2(move,l	,MEM_PREDEC(sp),a2)
+	movel	R(d2),MEM_PREDEC(sp)
+	movel	R(a2),MEM_PREDEC(sp)
 
 /* Copy the arguments to registers.  Better use movem?  */
-	INSN2(move,l	,a2,MEM_DISP(sp,12))
-	INSN2(move,l	,a0,MEM_DISP(sp,16))
-	INSN2(move,l	,a1,MEM_DISP(sp,20))
-	INSN2(move,l	,d2,MEM_DISP(sp,24))
+	movel	MEM_DISP(sp,12),R(a2)
+	movel	MEM_DISP(sp,16),R(a0)
+	movel	MEM_DISP(sp,20),R(a1)
+	movel	MEM_DISP(sp,24),R(d2)
 
-	INSN2(eor,w	,d2,#1)
-	INSN2(lsr,l	,d2,#1)
-	bcc L1
-	INSN2(subq,l	,d2,#1)		/* clears cy as side effect */
+	eorw	#1,R(d2)
+	lsrl	#1,R(d2)
+	bcc	L(L1)
+	subql	#1,R(d2)	/* clears cy as side effect */
 
-LAB(Loop)
-	INSN2(move,l	,d0,MEM_POSTINC(a0))
-	INSN2(move,l	,d1,MEM_POSTINC(a1))
-	INSN2(addx,l	,d0,d1)
-	INSN2(move,l	,MEM_POSTINC(a2),d0)
-LAB(L1)	INSN2(move,l	,d0,MEM_POSTINC(a0))
-	INSN2(move,l	,d1,MEM_POSTINC(a1))
-	INSN2(addx,l	,d0,d1)
-	INSN2(move,l	,MEM_POSTINC(a2),d0)
+L(Loop:)
+	movel	MEM_POSTINC(a0),R(d0)
+	movel	MEM_POSTINC(a1),R(d1)
+	addxl	R(d1),R(d0)
+	movel	R(d0),MEM_POSTINC(a2)
+L(L1:)	movel	MEM_POSTINC(a0),R(d0)
+	movel	MEM_POSTINC(a1),R(d1)
+	addxl	R(d1),R(d0)
+	movel	R(d0),MEM_POSTINC(a2)
 
-	dbf d2,Loop			/* loop until 16 lsb of %4 == -1 */
-	INSN2(subx,l	,d0,d0)		/* d0 <= -cy; save cy as 0 or -1 in d0 */
-	INSN2(sub,l	,d2,#0x10000)
-	bcs L2
-	INSN2(add,l	,d0,d0)		/* restore cy */
-	bra Loop
+	dbf	R(d2),L(Loop)		/* loop until 16 lsb of %4 == -1 */
+	subxl	R(d0),R(d0)	/* d0 <= -cy; save cy as 0 or -1 in d0 */
+	subl	#0x10000,R(d2)
+	bcs	L(L2)
+	addl	R(d0),R(d0)	/* restore cy */
+	bra	L(Loop)
 
-LAB(L2)
-	INSN1(neg,l	,d0)
+L(L2:)
+	negl	R(d0)
 
 /* Restore used registers from stack frame.  */
-	INSN2(move,l	,a2,MEM_POSTINC(sp))
-	INSN2(move,l	,d2,MEM_POSTINC(sp))
+	movel	MEM_POSTINC(sp),R(a2)
+	movel	MEM_POSTINC(sp),R(d2)
 
 	rts
+EPILOG(__mpn_add_n)
