@@ -52,7 +52,7 @@ I/O address space that's 512MB large!).  */
 #define vuip		volatile unsigned int *
 
 #define JENSEN_IO_BASE		(0xfffffc0300000000UL)
-#define JENSEN_MEM		(0xfffffc0200000000UL)	/* sparse!! */
+#define JENSEN_SPARSE_MEM	(0xfffffc0200000000UL)
 
 /*
  * With respect to the I/O architecture, APECS and LCA are identical,
@@ -94,7 +94,7 @@ static struct platform {
   {"EB64+",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"EB66",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"EB66P",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
-  {"Jensen",	IOSYS_JENSEN,	JENSEN_MEM,		JENSEN_MEM},
+  {"Jensen",	IOSYS_JENSEN,	0,			JENSEN_SPARSE_MEM},
   {"Mikasa",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"Mustang",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"Noname",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
