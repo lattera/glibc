@@ -17,9 +17,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _SIGNAL_H
+#if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
+
+#ifndef sc_pc
 
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
@@ -114,3 +116,5 @@ struct sigcontext
 /* Codes for SIGTRAP.  */
 #define DBG_SINGLE_TRAP		0x1 /* single step */
 #define DBG_BRKPNT_FAULT	0x2 /* breakpoint instruction */
+
+#endif /* sc_pc */

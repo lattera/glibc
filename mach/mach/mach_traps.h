@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #define _MACH_MACH_TRAPS_H_	1
 
 #include <mach/port.h>
+#include <mach/message.h>	/* mach_msg_timeout_t */
 #include <mach/kern_return.h>
 
 /* Create and return a new receive right.  */
@@ -64,8 +65,10 @@ extern boolean_t __swtch_pri (int priority);
    milliseconds.  If OPTION is SWITCH_OPTION_DEPRESS, then block for
    TIME milliseconds and depress the thread's priority as done by
    swtch_pri.  If OPTION is SWITCH_OPTION_NONE, ignore TIME.  */
-kern_return_t thread_switch (mach_port_t new_thread, int option, int time);
-kern_return_t __thread_switch (mach_port_t new_thread, int option, int time);
+kern_return_t thread_switch (mach_port_t new_thread,
+			     int option, mach_msg_timeout_t option_time);
+kern_return_t __thread_switch (mach_port_t new_thread,
+			     int option, mach_msg_timeout_t option_time);
 
 /* Block the current thread until the kernel (or device) event
    identified by EVENT occurs.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,97,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,97,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ mach_port_t _hurd_host_priv, _hurd_device_master;
 
 
 kern_return_t
-__get_privileged_ports (host_priv_t *host_priv_ptr,
+__get_privileged_ports (mach_port_t *host_priv_ptr,
 			device_t *device_master_ptr)
 {
   if ((host_priv_ptr && _hurd_host_priv == MACH_PORT_NULL)

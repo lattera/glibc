@@ -1,3 +1,23 @@
+2002-01-02  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/powerpc/elf/libc-start.c: Make AUXVEC diddling code
+	conditional on [HAVE_AUX_VECTOR].
+
+	* mach/mach/mach_traps.h (thread_switch, __thread_switch): Use
+	mach_msg_timeout_t as type of final argument.
+
+	* hurd/privports.c (__get_privileged_ports):
+	Change host_priv_t to mach_port_t in argument type.
+	* hurd/hurd.h (get_privileged_ports, __get_privileged_ports):
+	Update decls.
+
+	* sysdeps/mach/hurd/i386/bits/sigcontext.h: Protect from
+	multiple inclusion.  Inhibit #error under [_SYS_UCONTEXT_H].
+	* sysdeps/mach/hurd/alpha/bits/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/hppa/bits/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/mips/bits/sigcontext.h: Likewise.
+	* sysdeps/mach/hurd/powerpc/bits/sigcontext.h: Likewise.
+
 2002-01-01  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/errnos.awk: Tighten up device_types.h matching.

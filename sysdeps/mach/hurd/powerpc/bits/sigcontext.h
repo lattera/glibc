@@ -1,5 +1,5 @@
 /* Machine-dependent signal context structure for GNU Hurd.  PowerPC version.
-   Copyright (C) 1991, 1992, 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SIGNAL_H
+#if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
+
+#ifndef sc_pc
 
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
@@ -74,3 +76,5 @@ struct sigcontext
     unsigned int sc_fpscr_pad;
     unsigned int sc_fpscr;
   };
+
+#endif /* sc_pc */
