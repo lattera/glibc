@@ -22,10 +22,18 @@
 #include <stdint.h>
 #include <string.h>
 #include "jis0201.h"
+#include "jis0208.h"
 #include "jis0212.h"
-#include "jis0201.h"
 #include "gb2312.h"
 #include "ksc5601.h"
+
+struct gap
+{
+  uint16_t start;
+  uint16_t end;
+  int32_t idx;
+};
+
 #include "iso8859-7jp.h"
 
 /* This makes obvious what everybody knows: 0x1b is the Esc character.  */
@@ -36,11 +44,12 @@
 #define DEFINE_FINI	0
 
 /* Definitions used in the body of the `gconv' function.  */
-#define FROM_LOOP		from_iso2022jp
-#define TO_LOOP			to_iso2022jp
+#define FROM_LOOP		from_iso2022jp_loop
+#define TO_LOOP			to_iso2022jp_loop
 #define MIN_NEEDED_FROM		1
 #define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
+#define MAX_NEEDED_TO		4
 #define FROM_DIRECTION		dir == from_iso2022jp
 #define PREPARE_LOOP \
   enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
@@ -98,7 +107,7 @@ gconv_init (struct gconv_step *step)
   /* Determine which direction.  */
   struct iso2022jp_data *new_data;
   enum direction dir = illegal_dir;
-  enum variant var;
+  enum variant var = illegal_var;
   int result;
 
   if (__strcasecmp (step->from_name, "ISO-2022-JP//") == 0)
@@ -233,9 +242,9 @@ gconv_end (struct gconv_step *data)
 	   then the input buffer ends we terminate with an error since	      \
 	   we must not risk missing an escape sequence just because it	      \
 	   is not entirely in the current input buffer.  */		      \
-	if (inptr + 2 >= inbufend					      \
+	if (inptr + 2 >= inend						      \
 	    || (var == iso2022jp2 && inptr[1] == '$' && inptr[2] == '('	      \
-		&& inptr +3 >= inbufend))				      \
+		&& inptr + 3 >= inend))					      \
 	  {								      \
 	    /* Not enough input available.  */				      \
 	    result = GCONV_EMPTY_INPUT;					      \
@@ -244,7 +253,7 @@ gconv_end (struct gconv_step *data)
 									      \
 	if (inptr[1] == '(')						      \
 	  {								      \
-	    if (inptr[2] = 'B')						      \
+	    if (inptr[2] == 'B')					      \
 	      {								      \
 		/* ASCII selected.  */					      \
 		set = ASCII_set;					      \
@@ -293,7 +302,7 @@ gconv_end (struct gconv_step *data)
 			inptr += 4;					      \
 			continue;					      \
 		      }							      \
-		    else (inptr[3] == 'D')				      \
+		    else if (inptr[3] == 'D')				      \
 		      {							      \
 			/* JIS X 0212-1990 selected.  */		      \
 			set = JISX0212_set;				      \
@@ -364,23 +373,22 @@ gconv_end (struct gconv_step *data)
 	     0208-1990.  If somebody has problems with this please	      \
 	     provide the appropriate tables.  */			      \
 	  ch = jisx0208_to_ucs4 (&inptr,				      \
-				 NEED_LENGTH_TEST ? inbufend - inptr : 2, 0); \
+				 NEED_LENGTH_TEST ? inend - inptr : 2, 0);    \
 	else if (set == JISX0212_set)					      \
 	  /* Use the JIS X 0212 table.  */				      \
 	  ch = jisx0212_to_ucs4 (&inptr,				      \
-				 NEED_LENGTH_TEST ? inbufend - inptr : 2, 0); \
+				 NEED_LENGTH_TEST ? inend - inptr : 2, 0);    \
 	else if (set == GB2312_set)					      \
 	  /* Use the GB 2312 table.  */					      \
 	  ch = gb2312_to_ucs4 (&inptr,					      \
-			       NEED_LENGTH_TEST ? inbufend - inptr : 2, 0);   \
+			       NEED_LENGTH_TEST ? inend - inptr : 2, 0);      \
 	else								      \
 	  {								      \
 	    assert (set == KSC5601_set);				      \
 									      \
 	    /* Use the KSC 5601 table.  */				      \
 	    ch = ksc5601_to_ucs4 (&inptr,				      \
-				  NEED_LENGTH_TEST ? inbufend - inptr : 2,    \
-				  0);					      \
+				  NEED_LENGTH_TEST ? inend - inptr : 2, 0);   \
 	  }								      \
 									      \
 	if (NEED_LENGTH_TEST && ch == 0)				      \
@@ -459,21 +467,21 @@ gconv_end (struct gconv_step *data)
 	if (set == JISX0208_1978_set || set == JISX0208_1983_set)	      \
 	  written = ucs4_to_jisx0208 (ch, outptr,			      \
 				      (NEED_LENGTH_TEST			      \
-				       ? outbufend - outptr : 2));	      \
+				       ? outend - outptr : 2));		      \
 	else if (set == JISX0212_set)					      \
 	  written = ucs4_to_jisx0212 (ch, outptr,			      \
 				      (NEED_LENGTH_TEST			      \
-				       ? outbufend - outptr : 2));	      \
+				       ? outend - outptr : 2));		      \
 	else if (set == GB2312_set)					      \
 	  written = ucs4_to_gb2312 (ch, outptr, (NEED_LENGTH_TEST	      \
-						 ? outbufend - outptr : 2));  \
+						 ? outend - outptr : 2));     \
 	else								      \
 	  {								      \
 	    assert (set == KSC5601_set);				      \
 									      \
 	    written = ucs4_to_ksc5601 (ch, outptr,			      \
 				       (NEED_LENGTH_TEST		      \
-					? outbufend - outptr : 2));	      \
+					? outend - outptr : 2));	      \
 	  }								      \
 									      \
 	if (NEED_LENGTH_TEST && written == 0)				      \
@@ -499,7 +507,7 @@ gconv_end (struct gconv_step *data)
 	/* First test whether we have at least three more bytes for	      \
 	   the escape sequence.  The two charsets which require four	      \
 	   bytes will be handled later.  */				      \
-	if (NEED_LENGTH_TEST && outptr + 3 > outbufend)			      \
+	if (NEED_LENGTH_TEST && outptr + 3 > outend)			      \
 	  {								      \
 	    result = GCONV_FULL_OUTPUT;					      \
 	    break;							      \
@@ -514,7 +522,7 @@ gconv_end (struct gconv_step *data)
 	    *outptr++ = 'B';						      \
 	    set = ASCII_set;						      \
 									      \
-	    if (NEED_LENGTH_TEST && outptr == outbufend)		      \
+	    if (NEED_LENGTH_TEST && outptr == outend)			      \
 	      {								      \
 		result = GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -527,7 +535,7 @@ gconv_end (struct gconv_step *data)
 	    /* This character set is not available in ISO-2022-JP.  */	      \
 	    if (var == iso2022jp)					      \
 	      {								      \
-		result == GCONV_ILLEGAL_INPUT;				      \
+		result = GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -537,7 +545,7 @@ gconv_end (struct gconv_step *data)
 	    *outptr++ = 'A';						      \
 	    set = ISO88591_set;						      \
 									      \
-	    if (NEED_LENGTH_TEST && outptr == outbufend)		      \
+	    if (NEED_LENGTH_TEST && outptr == outend)			      \
 	      {								      \
 		result = GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -563,7 +571,7 @@ gconv_end (struct gconv_step *data)
 		*outptr++ = '@';					      \
 		set = JISX0201_set;					      \
 									      \
-		if (NEED_LENGTH_TEST && outptr == outbufend)		      \
+		if (NEED_LENGTH_TEST && outptr == outend)		      \
 		  {							      \
 		    result = GCONV_FULL_OUTPUT;				      \
 		    break;						      \
@@ -582,7 +590,7 @@ gconv_end (struct gconv_step *data)
 		    *outptr++ = 'B';					      \
 		    set = JISX0208_1983_set;				      \
 									      \
-		    if (NEED_LENGTH_TEST && outptr + 2 > outbufend)	      \
+		    if (NEED_LENGTH_TEST && outptr + 2 > outend)	      \
 		      {							      \
 			result = GCONV_FULL_OUTPUT;			      \
 			break;						      \
@@ -603,7 +611,7 @@ gconv_end (struct gconv_step *data)
 		    if (written != UNKNOWN_10646_CHAR)			      \
 		      {							      \
 			/* We use JIS X 0212.  */			      \
-			if (outptr + 4 > outbufend)			      \
+			if (outptr + 4 > outend)			      \
 			  {						      \
 			    result = GCONV_FULL_OUTPUT;			      \
 			    break;					      \
@@ -614,7 +622,7 @@ gconv_end (struct gconv_step *data)
 			*outptr++ = 'D';				      \
 			set = JISX0212_set;				      \
 									      \
-			if (NEED_LENGTH_TEST && outptr + 2 > outbufend)	      \
+			if (NEED_LENGTH_TEST && outptr + 2 > outend)	      \
 			  {						      \
 			    result = GCONV_FULL_OUTPUT;			      \
 			    break;					      \
@@ -634,7 +642,7 @@ gconv_end (struct gconv_step *data)
 			    *outptr++ = 'A';				      \
 			    set = GB2312_set;				      \
 									      \
-			    if (NEED_LENGTH_TEST && outptr + 2 > outbufend)   \
+			    if (NEED_LENGTH_TEST && outptr + 2 > outend)      \
 			      {						      \
 				result = GCONV_FULL_OUTPUT;		      \
 				break;					      \
@@ -649,7 +657,7 @@ gconv_end (struct gconv_step *data)
 			    if (written != UNKNOWN_10646_CHAR)		      \
 			      {						      \
 				/* We use KSC 5601.  */			      \
-				if (outptr + 4 > outbufend)		      \
+				if (outptr + 4 > outend)		      \
 				  {					      \
 				    result = GCONV_FULL_OUTPUT;		      \
 				    break;				      \
@@ -661,7 +669,7 @@ gconv_end (struct gconv_step *data)
 				set = KSC5601_set;			      \
 									      \
 				if (NEED_LENGTH_TEST			      \
-				    && outptr + 2 > outbufend)		      \
+				    && outptr + 2 > outend)		      \
 				  {					      \
 				    result = GCONV_FULL_OUTPUT;		      \
 				    break;				      \

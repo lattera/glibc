@@ -23,6 +23,7 @@
 
 #include <gconv.h>
 #include <stdint.h>
+#include <assert.h>
 
 /* Conversion table.  */
 extern const uint16_t __gb2312_to_ucs[];
@@ -66,7 +67,7 @@ extern const char __gb2312_from_ucs4_tab8[][2];
 extern const char __gb2312_from_ucs4_tab9[][2];
 
 static inline size_t
-ucs4_to_gb2312 (uint32_t wch, unsigned char **s, size_t avail)
+ucs4_to_gb2312 (uint32_t wch, unsigned char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   char buf[2];
@@ -220,8 +221,8 @@ ucs4_to_gb2312 (uint32_t wch, unsigned char **s, size_t avail)
   if (avail < 2)
     return 0;
 
-  *(*s)++ = cp[0];
-  *(*s)++ = cp[1];
+  s[0] = cp[0];
+  s[1] = cp[1];
 
   return 2;
 }

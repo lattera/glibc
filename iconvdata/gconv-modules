@@ -750,3 +750,10 @@ module	INTERNAL		CP737//			CP737		1
 #	from			  to			module		cost
 module	CP775//			INTERNAL		CP775		1
 module	INTERNAL		CP775//			CP775		1
+
+#	from			  to			module		cost
+module	ISO-2022-JP//		INTERNAL		ISO-2022-JP	1
+module	INTERNAL		ISO-2022-JP//		ISO-2022-JP	1
+
+module	ISO-2022-JP-2//		INTERNAL		ISO-2022-JP	1
+module	INTERNAL		ISO-2022-JP-2//		ISO-2022-JP	1

@@ -1,3 +1,8 @@
+1998-04-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gconv-modules: Add entry for ISO-2022-JP and
+	ISO-2022-JP-2.
+
 1998-04-25 18:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Use gap method for iso8859-5, iso8859-7,

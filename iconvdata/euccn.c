@@ -54,7 +54,7 @@
 	{								      \
 	  /* Two or more byte character.  First test whether the	      \
 	     next character is also available.  */			      \
-	  const char *endp;						      \
+	  const unsigned char *endp;					      \
 									      \
 	  if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
 	    {								      \

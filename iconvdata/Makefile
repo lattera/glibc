@@ -353,7 +353,7 @@ $(objpfx)ibm1047.h: ../localedata/charmaps/IBM1047 Makefile
 $(objpfx)iso8859-7jp.h: ../localedata/charmaps/ISO-8859-7 Makefile
 	$(make-target-directory)
 	( echo "static const uint32_t iso88597_to_ucs4[96] = {"; \
-	  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\([A-F].\)[[:space:]]*<U\(....\)>.*/  [0x\1-0xA0] = 0x\2,/p' -e d $^ | sort -u; \
+	  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\([A-F].\)[[:space:]]*<U\(....\)>.*/  [0x\1 - 0xA0] = 0x\2,/p' -e d $^ | sort -u; \
 	  echo "};"; \
 	  echo "static struct gap from_idx[] = {"; \
 	  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\([A-F].\)[[:space:]]*<U\(....\)>.*/0x\2 0x\1/p' -e d $^ | sort -u | $(PERL) gap.pl; \

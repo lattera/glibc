@@ -28,13 +28,11 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 {
   if (ch > 0x7f)
     {
-      uint16_t idx = 0;
-
-      if (ucs4_to_ksc5601 (ch, &idx))
-	idx |= 0x8080;
-
-      cp[0] = (unsigned char) (idx / 256);
-      cp[1] = (unsigned char) (idx & 0xff);
+      if (ucs4_to_ksc5601 (ch, cp, 2) != UNKNOWN_10646_CHAR)
+	{
+	  cp[0] |= 0x80;
+	  cp[1] |= 0x80;
+	}
     }
   /* XXX Think about 0x5c ; '\'.  */
   else
@@ -89,14 +87,14 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	/* Two-byte character.  First test whether the next character	      \
 	   is also available.  */					      \
 	ch = ksc5601_to_ucs4 (&inptr,					      \
-			      NEED_LENGTH_TEST ? inptr - inbufend : 2, x080); \
+			      NEED_LENGTH_TEST ? inptr - inend : 2, 0x80);    \
 	if (NEED_LENGTH_TEST && ch == 0)				      \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	if (ch == UNKNOWN_10646_CHAR))					      \
+	if (ch == UNKNOWN_10646_CHAR)					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    result = GCONV_ILLEGAL_INPUT;				      \

@@ -82,7 +82,7 @@ ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 }
 
 static inline size_t
-ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char **s, size-t avail)
+ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
   int m;
@@ -102,8 +102,8 @@ ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char **s, size-t avail)
 	  if (avail < 2)
 	    return 0;
 
-	  *(*s)++ = (m / 94) + 0x30;
-	  *(*s)++ = (m % 94) + 0x21;
+	  s[0] = (m / 94) + 0x30;
+	  s[1] = (m % 94) + 0x21;
 
 	  return 2;
 	}
@@ -114,7 +114,7 @@ ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char **s, size-t avail)
 
 
 static inline size_t
-ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char **s, size_t avail)
+ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
   int m;
@@ -134,8 +134,8 @@ ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char **s, size_t avail)
 	  if (avail < 2)
 	    return 0;
 
-	  *(*s)++ = __ksc5601_hanja_from_ucs[m].val[0];
-	  *(*s)++ = __ksc5601_hanja_from_ucs[m].val[1];
+	  s[0] = __ksc5601_hanja_from_ucs[m].val[0];
+	  s[1] = __ksc5601_hanja_from_ucs[m].val[1];
 
 	  return 2;
 	}
@@ -145,7 +145,7 @@ ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char **s, size_t avail)
 }
 
 static inline  size_t
-ucs4_to_ksc5601_sym (uint32_t wch, unsigned char **s, size_t avail)
+ucs4_to_ksc5601_sym (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
   int m;
@@ -165,8 +165,8 @@ ucs4_to_ksc5601_sym (uint32_t wch, unsigned char **s, size_t avail)
 	  if (avail < 2)
 	    return 0;
 
-	  *(*s)++ = __ksc5601_sym_from_ucs[m].val[0];
-	  *(*s)++ = __ksc5601_sym_from_ucs[m].val[1];
+	  s[0] = __ksc5601_sym_from_ucs[m].val[0];
+	  s[1] = __ksc5601_sym_from_ucs[m].val[1];
 
 	  return 2;
 	}
@@ -177,10 +177,10 @@ ucs4_to_ksc5601_sym (uint32_t wch, unsigned char **s, size_t avail)
 
 
 static inline size_t
-ucs4_to_ksc5601 (uint32_t wch, unsigned char **s, size_t avail)
+ucs4_to_ksc5601 (uint32_t wch, unsigned char *s, size_t avail)
 {
   if (wch >= 0xac00 && wch <= 0xd7a3)
-    return ucs4_to_ksc5601_hangul (wch, (uint16_t *) s);
+    return ucs4_to_ksc5601_hangul (wch, s, avail);
   else if ((wch >= 0x4e00 && wch <= 0x9fff)
 	   || (wch >= 0xf900 && wch <= 0xfa0b))
     return ucs4_to_ksc5601_hanja (wch, s, avail);

@@ -141,84 +141,6 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
     return (uint32_t) __ksc5601_hanja_to_ucs[(c1 - 0xe0) * 188 + c2
 					     - (c2 > 0x90 ? 0x43 : 0x31)];
 }
-
-static uint16_t
-johab_hanja_from_ucs (uint32_t ch)
-{
-  uint16_t idx;
-  if (ucs4_to_ksc5601_hanja (ch, &idx))
-    {
-      int idx1, idx2;
-      /* Hanja begins at the 42th row. 42=0x2a : 0x2a + 0x20 = 0x4a.  */
-      idx1 = idx / 256 - 0x4a;
-      idx2 = idx % 256 + 0x80;
-
-      return ((idx1 / 2) * 256 + 0xe000 + idx2
-	      + (idx1 % 2 ? 0 :  (idx2 > 0xee ? 0x43 : 0x31) - 0xa1));
-    }
-  else
-    return 0;
-}
-
-static uint16_t
-johab_sym_from_ucs (uint32_t ch)
-{
-  uint16_t idx;
-  if (ucs4_to_ksc5601_sym (ch, &idx))
-    {
-      int idx1, idx2;
-
-      idx1 = idx / 256 - 0x21;
-      idx2 = idx % 256 + 0x80;
-
-      return ((idx1 / 2) * 256 + 0xd900 + idx2
-	      + (idx1 % 2 ? 0 : (idx2 > 0xee ? 0x43 : 0x31) - 0xa1));
-    }
-  else
-    return 0;
-}
-
-
-static inline void
-johab_from_ucs4 (uint32_t ch, unsigned char *cp)
-{
-  if (ch >= 0x7f)
-    {
-      int idx;
-
-      if (ch >= 0xac00 && ch <= 0xd7a3)
-	{
-	  ch -= 0xac00;
-	  idx = init_to_bit[ch / 588];  /* 21*28 = 588 */
-	  idx += mid_to_bit[(ch / 28) % 21];  /* (ch % (21 * 28)) / 28 */
-	  idx += final_to_bit[ch %  28]; /* (ch % (21 * 28)) % 28 */
-	}
-      /* KS C 5601-1992 Annex 3 regards  0xA4DA(Hangul Filler : U3164)
-         as symbol */
-      else if (ch >= 0x3131 && ch <= 0x3163)
-	idx = jamo_from_ucs_table[ch - 0x3131];
-      else if (ch >= 0x4e00 && ch <= 0x9fa5
-	       || ch >= 0xf900 && ch <= 0xfa0b)
-	idx = johab_hanja_from_ucs (ch);
-      /*       Half-width Korean Currency Won Sign
-	       else if ( ch == 0x20a9 )
-	       idx = 0x5c00;
-      */
-      else
-	idx = johab_sym_from_ucs (ch);
-
-      cp[0] = (unsigned char) (idx / 256);
-      cp[1] = (unsigned char) (idx & 0xff);
-
-    }
-  else
-    {
-      cp[0] = (unsigned char) ch;
-      cp[1] = 0;
-    }
-}
-
-
 /* Definitions used in the body of the `gconv' function.  */
 #define CHARSET_NAME		"JOHAB//"
 #define FROM_LOOP		from_johab
@@ -365,7 +287,6 @@ johab_from_ucs4 (uint32_t ch, unsigned char *cp)
 #define BODY \
   {									      \
     uint32_t ch = *((uint32_t *) inptr);				      \
-    unsigned char cp[2];						      \
     /*									      \
        if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))      \
 	 {								      \
@@ -379,27 +300,101 @@ johab_from_ucs4 (uint32_t ch, unsigned char *cp)
        else								      \
 	 cp = from_ucs4_lat1[ch];					      \
     */									      \
-    johab_from_ucs4 (ch, cp);						      \
 									      \
-    if (cp[0] == '\0' && ch != 0)					      \
+    if (ch < 0x7f)							      \
+      *outptr++ = ch;							      \
+    else								      \
       {									      \
-	/* Illegal character.  */					      \
-	result = GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
-									      \
-    *outptr++ = cp[0];							      \
-    /* Now test for a possible second byte and write this if possible.  */    \
-    if (cp[1] != '\0')							      \
-      {									      \
-	if (NEED_LENGTH_TEST && outptr >= outend)			      \
+	if (ch >= 0xac00 && ch <= 0xd7a3)				      \
 	  {								      \
-	    /* The result does not fit into the buffer.  */		      \
-	    --outptr;							      \
-	    result = GCONV_FULL_OUTPUT;					      \
-	    break;							      \
+	    ch -= 0xac00;						      \
+									      \
+	    ch = (init_to_bit[ch / 588]	  /* 21 * 28 = 588 */		      \
+		  + mid_to_bit[(ch / 28) % 21]/* (ch % (21 * 28)) / 28 */     \
+		  + final_to_bit[ch %  28]);  /* (ch % (21 * 28)) % 28 */     \
+									      \
+	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+	      {								      \
+		result = GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    *outptr++ = ch / 256;					      \
+	    *outptr++ = ch % 256;					      \
 	  }								      \
-	*outptr++ = cp[1];						      \
+	/* KS C 5601-1992 Annex 3 regards  0xA4DA(Hangul Filler : U3164)      \
+	   as symbol */							      \
+	else if (ch >= 0x3131 && ch <= 0x3163)				      \
+	  {								      \
+	    ch = jamo_from_ucs_table[ch - 0x3131];			      \
+									      \
+	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+	      {								      \
+		result = GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    *outptr++ = ch / 256;					      \
+	    *outptr++ = ch % 256;					      \
+	  }								      \
+	if ((ch >= 0x4e00 && ch <= 0x9fa5) || (ch >= 0xf900 && ch <= 0xfa0b)) \
+	  {								      \
+	    size_t written;						      \
+									      \
+	    written = ucs4_to_ksc5601_hanja (ch, outptr,		      \
+					     (NEED_LENGTH_TEST		      \
+					      ? outend - outptr : 2));	      \
+	    if (NEED_LENGTH_TEST && written == 0)			      \
+	      {								      \
+		result = GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+	    if (written == UNKNOWN_10646_CHAR)				      \
+	      {								      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    outptr[0] -= 0x4a;						      \
+	    outptr[1] += 0x80;						      \
+									      \
+	    outptr[1] += (outptr[0] % 2					      \
+			  ? 0 : (outptr[1] > 0xee ? 0x43 : 0x31));	      \
+	    outptr[1] -= 0xa1;						      \
+	    outptr[0] /= 2;						      \
+	    outptr[0] += 0xe0;						      \
+									      \
+	    outptr += 2;						      \
+	  }								      \
+	else								      \
+	  {								      \
+	    size_t written;						      \
+									      \
+	    written = ucs4_to_ksc5601_sym (ch, outptr,			      \
+					   (NEED_LENGTH_TEST		      \
+					    ? outend - outptr : 2));	      \
+	    if (NEED_LENGTH_TEST && written == 0)			      \
+	      {								      \
+		result = GCONV_FULL_OUTPUT;				      \
+		break;							      \
+	      }								      \
+	    if (written == UNKNOWN_10646_CHAR)				      \
+	      {								      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    outptr[0] -= 0x4a;						      \
+	    outptr[1] += 0x80;						      \
+									      \
+	    outptr[1] += (outptr[0] % 2					      \
+			  ? 0 : (outptr[1] > 0xee ? 0x43 : 0x31));	      \
+	    outptr[1] -= 0xa1;						      \
+	    outptr[0] /= 2;						      \
+	    outptr[0] += 0xe0;						      \
+									      \
+	    outptr += 2;						      \
+	  }								      \
       }									      \
 									      \
     inptr += 4;								      \
