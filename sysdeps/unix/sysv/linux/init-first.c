@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995-1999,2000,01,02,03,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,9 +29,6 @@
 
 #include <ldsodefs.h>
 
-/* The function is called from assembly stubs the compiler can't see.  */
-static void init (int, char **, char **) __attribute__ ((used));
-
 /* Set nonzero if we have to be prepared for more then one libc being
    used in the process.  Safe assumption if initializer never runs.  */
 int __libc_multiple_libcs attribute_hidden = 1;
@@ -42,9 +39,19 @@ int __libc_argc attribute_hidden;
 char **__libc_argv attribute_hidden;
 
 
-static void
-init (int argc, char **argv, char **envp)
+void
+attribute_hidden
+__libc_init_first (int argc, char **argv, char **envp)
 {
+#ifdef SHARED
+  /* For DSOs we do not need __libc_init_first but instead _init.  */
+}
+
+void
+attribute_hidden
+_init (int argc, char **argv, char **envp)
+{
+#endif
 #ifdef USE_NONOPTION_FLAGS
   extern void __getopt_clean_environment (char **);
 #endif
@@ -87,27 +94,6 @@ init (int argc, char **argv, char **envp)
   __libc_global_ctors ();
 #endif
 }
-
-#ifdef SHARED
-
-strong_alias (init, _init);
-
-extern void __libc_init_first (void);
-
-void
-__libc_init_first (void)
-{
-}
-
-#else
-extern void __libc_init_first (int argc, char **argv, char **envp);
-
-void
-__libc_init_first (int argc, char **argv, char **envp)
-{
-  init (argc, argv, envp);
-}
-#endif
 
 
 /* This function is defined here so that if this file ever gets into
