@@ -77,7 +77,7 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 
 
 /* Descriptor to write debug messages to.  */
-int _dl_debug_fd;
+int _dl_debug_fd = 2;
 
 
 void
@@ -122,7 +122,9 @@ _dl_debug_message (int new_line, const char *msg, ...)
 	if (new_line)
 	  {
 	    char buf[7] = "00000:\t";
-	    __write (_dl_debug_fd, _itoa_word (pid, &buf[5], 10, 0), 7);
+	    assert (pid >= 0 && pid < 100000);
+	    _itoa_word (pid, &buf[5], 10, 0);
+	    __write (_dl_debug_fd, buf, 7);
 	    new_line = 0;
 	  }
 

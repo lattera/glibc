@@ -44,6 +44,7 @@ rt_sigreturn.c
 rt_sigsuspend.c
 rt_sigtimedwait.c
 scsi/sg.h
+scsi/scsi.h
 sys/acct.h
 sys/debugreg.h
 sys/fsuid.h

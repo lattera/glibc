@@ -57,7 +57,7 @@ _dl_load_cache_lookup (const char *name)
 
   /* Print a message if the loading of libs is traced.  */
   if (_dl_debug_libs)
-    _dl_sysdep_message ("\t search cache=", LD_SO_CACHE, "\n", NULL);
+    _dl_debug_message (1, " search cache=", LD_SO_CACHE, "\n", NULL);
 
   if (cache == NULL)
     {
@@ -106,7 +106,7 @@ _dl_load_cache_lookup (const char *name)
 
   /* Print our result if wanted.  */
   if (_dl_debug_libs && best != NULL)
-    _dl_sysdep_message ("\t  trying file=", best, "\n", NULL);
+    _dl_debug_message (1, "  trying file=", best, "\n", NULL);
 
   return best;
 }

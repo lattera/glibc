@@ -1,4 +1,30 @@
-Wed Mar 11 10:30:53 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-03-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Use
+	_dl_debug_message.
+
+1998-03-12  Matthias Urlichs  <smurf@noris.de>
+
+	* elf/dl-misc.c: Default for debug output should be stderr.
+	* elf/dl-misc.c: Spurious garbage bytes after the PID in debug output.
+	* elf/dl-lookup.c: reference_name may be NULL or empty.
+
+1998-03-11 10:30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* aclocal.m4 (LIBC_PROG_FOO_GNU): Fix order of redirection.
+
+1998-03-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add scsi/scsi.h.
+
+	* sysdeps/unix/sysv/linux/scsi/sg.h: Include features.h.
+
+1998-03-10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/scsi/scsi.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Install it.
+
+1998-03-11 10:30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/elf/start.S: Let __libc_start_main do most of the
 	init stuff.
