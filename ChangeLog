@@ -1,3 +1,10 @@
+2000-06-29  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/rpc_svcout.c (write_msg_out): Always use format string
+	with syslog.
+	(print_err_message): Likewise.
+	Reported by Chris Evans <chris@ferret.lmh.ox.ac.uk>.
+
 2000-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/loadlocale.c (_nl_load_locale): Make sure all locale data
