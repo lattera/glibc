@@ -1,3 +1,7 @@
+2003-06-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/dl-machine.h: Include <sysdep.h>.
+
 2003-06-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* test-skeleton.c (main): Request getopt to not reorder the
