@@ -46,12 +46,10 @@
 #define LONG_MAX_32_BITS 2147483647
 
 #ifndef LONG_MAX
-#define LONG_MAX LONG_MAX_32_BITS
+# define LONG_MAX LONG_MAX_32_BITS
 #endif
 
 #include <sys/types.h>
-
-#undef memchr
 
 
 /* Search no more than N bytes of S for C.  */
