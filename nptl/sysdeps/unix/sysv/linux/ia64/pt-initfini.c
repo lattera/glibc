@@ -36,6 +36,22 @@
    * crtn.s puts the corresponding function epilogues
    in the .init and .fini sections. */
 
+#include <stddef.h>
+
+#ifdef HAVE_INITFINI_ARRAY
+
+__asm__ ("\n\
+#include \"defs.h\"\n\
+\n\
+/*@HEADER_ENDS*/\n\
+\n\
+/*@_init_PROLOG_BEGINS*/\n\
+	.xdata8 \".init_array\",@fptr(__pthread_initialize_minimal_internal)\n\
+/*@_init_PROLOG_ENDS*/\n\
+");
+
+#else
+
 __asm__ ("\n\
 \n\
 #include \"defs.h\"\n\
@@ -48,13 +64,16 @@ __asm__ ("\n\
 	.global _init#\n\
 	.proc _init#\n\
 _init:\n\
+	.prologue\n\
+	.save ar.pfs, r34\n\
 	alloc r34 = ar.pfs, 0, 3, 0, 0\n\
+	.vframe r32\n\
 	mov r32 = r12\n\
+	.save rp, r33\n\
 	mov r33 = b0\n\
+	.body\n\
 	adds r12 = -16, r12\n\
 	;;\n\
-/* we could use r35 to save gp, but we use the stack since that's what\n\
- * all the other init routines will do --davidm 00/04/05 */\n\
 	st8 [r12] = gp, -16\n\
 	br.call.sptk.many b0 = __pthread_initialize_minimal_internal# ;;\n\
 	;;\n\
@@ -62,7 +81,6 @@ _init:\n\
 	;;\n\
 	ld8 gp = [r12]\n\
 	;;\n\
-	.align 16\n\
 	.endp _init#\n\
 \n\
 /*@_init_PROLOG_ENDS*/\n\
@@ -83,12 +101,16 @@ _init:\n\
 	.global _fini#\n\
 	.proc _fini#\n\
 _fini:\n\
+	.prologue\n\
+	.save ar.pfs, r34\n\
 	alloc r34 = ar.pfs, 0, 3, 0, 0\n\
+	.vframe r32\n\
 	mov r32 = r12\n\
+	.save rp, r33\n\
 	mov r33 = b0\n\
+	.body\n\
 	adds r12 = -16, r12\n\
 	;;\n\
-	.align 16\n\
 	.endp _fini#\n\
 \n\
 /*@_fini_PROLOG_ENDS*/\n\
@@ -106,3 +128,5 @@ _fini:\n\
 /*@TRAILER_BEGINS*/\n\
 	.weak	__gmon_start__#\n\
 ");
+
+#endif
