@@ -8,6 +8,10 @@ ifeq ($(subdir),db2)
 CPPFLAGS += -DHAVE_LLSEEK=1
 endif
 
+ifeq ($(subdir),malloc)
+CFLAGS-malloc.c = -DMORECORE_CLEARS=2
+endif
+
 ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek getresuid getresgid umount umount2
 

@@ -213,8 +213,11 @@ I am ready for my first lesson today.";
 
   {
     char buf[20];
+    char buf2[512];
     printf ("snprintf (\"%%30s\", \"foo\") == %d, \"%.*s\"\n",
 	    snprintf (buf, sizeof (buf), "%30s", "foo"), sizeof (buf), buf);
+    printf ("snprintf (\"%%.999999u\", 10)\n",
+	    snprintf(buf2, sizeof(buf2), "%.999999u", 10));
   }
 
   fp_test ();

@@ -226,8 +226,12 @@
   MORECORE_FAILURE          (default: -1)
      The value returned upon failure of MORECORE.
   MORECORE_CLEARS           (default 1)
-     True (1) if the routine mapped to MORECORE zeroes out memory (which
-     holds for sbrk).
+     The degree to which the routine mapped to MORECORE zeroes out
+     memory: never (0), only for newly allocated space (1) or always
+     (2).  The distinction between (1) and (2) is necessary because on
+     some systems, if the application first decrements and then
+     increments the break value, the contents of the reallocated space
+     are unspecified.
   DEFAULT_TRIM_THRESHOLD
   DEFAULT_TOP_PAD
   DEFAULT_MMAP_THRESHOLD
@@ -861,11 +865,15 @@ Void_t *(*__morecore)() = __default_morecore;
 
 #endif
 
-static size_t __libc_pagesize;
-
 #define MORECORE (*__morecore)
 #define MORECORE_FAILURE 0
+
+#ifndef MORECORE_CLEARS
 #define MORECORE_CLEARS 1
+#endif
+
+static size_t __libc_pagesize;
+
 #define mmap    __mmap
 #define munmap  __munmap
 #define mremap  __mremap
@@ -3596,10 +3604,16 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   if(!ar_ptr)
     return 0;
 
-  /* check if expand_top called, in which case don't need to clear */
+  /* Check if expand_top called, in which case there may be
+     no need to clear. */
 #if MORECORE_CLEARS
   oldtop = top(ar_ptr);
   oldtopsize = chunksize(top(ar_ptr));
+#if MORECORE_CLEARS < 2
+  /* Only newly allocated memory is guaranteed to be cleared.  */
+  if (oldtopsize < sbrk_base + max_sbrked_mem - (char *)oldtop)
+    oldtopsize = (sbrk_base + max_sbrked_mem - (char *)oldtop);
+#endif
 #endif
   p = chunk_alloc (ar_ptr, sz);
 

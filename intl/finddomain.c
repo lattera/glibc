@@ -191,6 +191,10 @@ _nl_find_domain (dirname, locale, domainname)
   if (alias_value != NULL)
     free (locale);
 
+  /* The space for normalized_codeset is dynamically allocated.  Free it.  */
+  if (mask & XPG_NORM_CODESET)
+    free (normalized_codeset);
+
   return retval;
 }
 

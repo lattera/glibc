@@ -1,3 +1,28 @@
+1999-09-24  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/tst-printf.c (main): Add a testcase for large
+	precision.  Reported by Tymm Twillman <tymm@coe.missouri.edu>.
+
+1999-09-24  Andreas Schwab  <schwab@suse.de>
+
+	* math/bits/mathcalls.h: Fix last change.  Also declare __finite.
+
+1999-09-24  Andreas Jaeger  <aj@suse.de>
+
+	* intl/finddomain.c (_nl_find_domain): Fix memory leak: Free
+	normalized_codeset.  Reported by Belicky Zsolt <zsolt@prolan.hu>.
+
+1999-09-23  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/Makefile [malloc] (CFLAGS-malloc.c): New
+	variable.  Define MORECORE_CLEARS to 2.
+
+	* malloc/malloc.c (cALLOc): Correctly handle systems where sbrk
+	doesn't clear the contents of memory that is reallocated after
+	decrementing the break value first.  Update comment about
+	MORECORE_CLEARS, explaining the meaning of the values it can be
+	set to.
+
 1999-09-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/nss_compat/compat-pwd.c (internal_getpwuid_r): Set errno in
@@ -13,7 +38,7 @@
 
 	* stdio-common/tstscanf.c (main): Add test case from PR libc/1313
 	reported by Ben Caradoc-Davies <bmcd@physics.otago.ac.nz>.
-		
+
 1999-09-22  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/vfscanf.c: Fix width handling when scanning floats.

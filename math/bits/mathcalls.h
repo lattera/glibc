@@ -175,13 +175,16 @@ __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
    is +Infinity, -1 if it is -Infinity.  */
 __MATHDECL_1 (int,__isinf,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
+/* Return nonzero if VALUE is finite and not NaN.  */
+__MATHDECL_1 (int,__finite,, (_Mdouble_ __value)) __attribute__ ((__const__));
+
 #ifdef __USE_MISC
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
 __MATHDECL_1 (int,isinf,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
 /* Return nonzero if VALUE is finite and not NaN.  */
-__MATHDECLX (int,finite,, (_Mdouble_ __value), (__const__));
+__MATHDECL_1 (int,finite,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
 /* Deal with an infinite or NaN result.
    If ERROR is ERANGE, result is +Inf;
@@ -211,11 +214,11 @@ __MATHCALLX (nan,, (__const char *__tagb), (__const__));
 
 
 /* Return nonzero if VALUE is not a number.  */
-__MATHDECLX (int,__isnan,, (_Mdouble_ __value), (__const__));
+__MATHDECL_1 (int,__isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
 #if defined __USE_MISC || defined __USE_XOPEN
 /* Return nonzero if VALUE is not a number.  */
-__MATHDECLX (int,isnan,, (_Mdouble_ __value), (__const__));
+__MATHDECL_1 (int,isnan,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
 /* Bessel functions.  */
 __MATHCALL (j0,, (_Mdouble_));
