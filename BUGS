@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1999-12-31T14:42:14-0800 drepper>
+Time-stamp: <00/07/14 11:39:22 aj>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -58,7 +58,7 @@ Severity: [  *] to [***]
        completely.
 
 [  *]  The regex implementation has various other problems, like limitations
-       of the expression size etc.
+       of the expression size etc. [PR libc/1570, PR libc/1777]
 
        None of these can be fixed without a rewrite.
 
