@@ -1,5 +1,21 @@
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions [libpthread: GLIBC_2.3.2]: Remove creat, poll, pselect,
+	readv, select, sigpause, sigsuspend, sigwaitinfo, waitid, writev.
+	* Makefile (libpthread-routines): Remove pt-creat, pt-poll,
+	pt-pselect, pt-readv, pt-select, pt-sigpause, pt-sigsuspend,
+	pt-sigwaitinfo, pt-waitid, and pt-writev.
+	* pt-creat.c: Removed.
+	* pt-poll.c: Removed.
+	* pt-pselect.c: Removed.
+	* pt-readv.c: Removed.
+	* pt-select.c: Removed.
+	* pt-sigpause.c: Removed.
+	* pt-sigsuspend.c: Removed.
+	* pt-sigwaitinfo.c: Removed.
+	* pt-waitid.c: Removed.
+	* pt-writev.c: Removed.
+
 	* init.c (pthread_functions): New variable.
 	(__pthread_initialize_minimal): Pass pointer to pthread_functions
 	(or NULL) to __libc_pthread_init.

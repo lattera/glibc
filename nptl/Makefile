@@ -99,10 +99,8 @@ libpthread-routines = init events \
 		      pt-sendto pt-fsync pt-lseek pt-lseek64 pt-msync \
 		      pt-nanosleep pt-open pt-open64 pt-pause pt-pread \
 		      pt-pread64 pt-pwrite pt-pwrite64 pt-tcdrain pt-system \
-		      pt-wait pt-waitpid pt-readv pt-writev pt-creat \
-		      pt-msgrcv pt-msgsnd pt-poll pt-select pt-sigpause \
-		      pt-sigsuspend pt-sigwait pt-sigwaitinfo pt-waitid \
-		      pt-pselect pt-raise \
+		      pt-wait pt-waitpid pt-msgrcv pt-msgsnd pt-sigwait \
+		      pt-raise \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
 		      herrno res pt-allocrtsig \
