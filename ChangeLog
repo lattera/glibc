@@ -1,3 +1,9 @@
+2002-04-13  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/s_finite.c: Add internal alias.
+	* sysdeps/m68k/fpu/s_finitef.c: Likewise.
+	* sysdeps/m68k/fpu/s_finitel.c: Likewise.
+
 2002-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-lookup.h [!VERSIONED]: Add new parameter flags.  Use it to
