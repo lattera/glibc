@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL (wait)
+SYSCALL__ (wait)
 	movl 4(ap), r2
 	beq 1f
 	movl r1, (r2)
