@@ -1,3 +1,11 @@
+1999-11-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locale.c: Don't handle LC_ALL together with the
+	other categories when printing the value.
+	Patch by Akira YOSHIYAMA <yosshy@tkf.att.ne.jp>.
+
+	* locale/locale.h: Correct comment about LC_ALL.
+
 1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c (ctype_output): Correct computation of

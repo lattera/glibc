@@ -31,7 +31,7 @@
 __BEGIN_DECLS
 
 /* These are the possibilities for the first argument to setlocale.
-   The code assumes that LC_ALL is the highest value, and zero the lowest.  */
+   The code assumes that the lowest LC_* symbol has the value zero.  */
 #define LC_CTYPE          0
 #define LC_NUMERIC        1
 #define LC_TIME           2

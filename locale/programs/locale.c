@@ -547,7 +547,8 @@ show_locale_vars (void)
 
   /* Now all categories in an unspecified order.  */
   for (cat_no = 0; cat_no < NCATEGORIES; ++cat_no)
-    get_source (category[cat_no].name);
+    if (cat_no != LC_ALL)
+      get_source (category[cat_no].name);
 
   /* The last is the LC_ALL value.  */
   printf ("LC_ALL=%s\n", lcall ? : "");
