@@ -28,6 +28,7 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 {
   struct pthread_handle_struct *handles = ta->handles;
   int pthread_threads_max = ta->pthread_threads_max;
+  size_t sizeof_descr = ta->sizeof_descr;
   int cnt;
 
   LOG (__FUNCTION__);
@@ -46,15 +47,28 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 	  struct _pthread_descr_struct pds;
 	  td_thrhandle_t th;
 
-	  if (ps_pdread (ta->ph, phc.h_descr, &pds,
-			 sizeof (struct _pthread_descr_struct)) != PS_OK)
+	  if (ps_pdread (ta->ph, phc.h_descr, &pds, sizeof_descr) != PS_OK)
 	    return TD_ERR;	/* XXX Other error value?  */
+
+	  /* The manager thread must be handled special.  The descriptor
+	     exists but the thread only gets created when the first
+	     `pthread_create' call is issued.  A clear indication that
+	     this happened is when the p_pid field is non-zero.  */
+	  if (cnt == 1 && pds.p_pid == 0)
+	    continue;
 
 	  /* Now test whether this thread matches the specified
 	     conditions.  */
 
 	  /* Only if the priority level is as high or higher.  */
 	  if (pds.p_priority < ti_pri)
+	    continue;
+
+	  /* Test the state.
+	     XXX This is incomplete.  */
+	  if (state != TD_THR_ANY_STATE
+	      && (state != TD_THR_ZOMBIE || pds.p_exited == 0)
+	      && (state != TD_THR_RUN || pds.p_exited != 0))
 	    continue;
 
 	  /* Yep, it matches.  Call the callback function.  */
