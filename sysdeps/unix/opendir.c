@@ -80,7 +80,6 @@ __opendir (const char *name)
   lose:
     {
       save_errno = errno;
-    lose2:
       (void) __close (fd);
       __set_errno (save_errno);
       return NULL;

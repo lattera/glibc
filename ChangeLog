@@ -2,6 +2,11 @@
 
 	* version.h (VERSION): Bump to 2.0.98.
 
+1998-10-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/unix/opendir.c (__opendir): Remove label lose2 which is 
+	unnecessary after the changes of 1998-10-12. 
+ 
 1998-10-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (inline_outb): Fix output
