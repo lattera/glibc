@@ -1,3 +1,7 @@
+2004-09-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/ldd.bash.in: Fix syntax errors.
+
 2004-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-execstack.c

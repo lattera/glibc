@@ -75,6 +75,7 @@ For bug reporting instructions, please see:
   -u | --u | --un | --unu | --unus | --unuse | --unused)
     unused=yes
     shift
+    ;;
   --v | --ve | --ver)
     echo >&2 $"ldd: option \`$1' is ambiguous"
     exit 1
@@ -102,7 +103,7 @@ nonelf ()
 add_env="LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now"
 add_env="$add_env LD_VERBOSE=$verbose"
 if test "$unused" = yes; then
-  add_env="$add_env LD_DEBUG="$LD_DEBUG${LD_DEBUG:+,}unused"
+  add_env="$add_env LD_DEBUG=\"$LD_DEBUG${LD_DEBUG:+,}unused\""
 fi
 case $# in
 0)
