@@ -1,3 +1,8 @@
+2000-06-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pathconf.c: Define LINUX_LINK_MAX and
+	use it instead of LINK_MAX.
+
 2000-06-08  Andreas Jaeger  <aj@suse.de>
 
 	* libio/genops.c (_IO_list_lock): Only compile body if we're
