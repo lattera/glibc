@@ -1,3 +1,8 @@
+2000-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h [__USE_FILE_OFFSET && !__REDIRECT]: Define
+	__USE_LARGEFILE64 and __USE_LARGEFILE to 1 and not nothing.
+
 2000-10-02  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Synch with Linux
