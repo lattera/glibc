@@ -187,11 +187,11 @@ xdr_uint8_t (XDR *xdrs, uint8_t *uip)
 
   switch (xdrs->x_op)
     {
-    case XDR_DECODE:
-      ut = (uint32_t) *uip;
-      return XDR_GETINT32 (xdrs, (int32_t *) &ut);
     case XDR_ENCODE:
-      if (!XDR_PUTINT32 (xdrs, (int32_t *) &ut))
+      ut = (uint32_t) *uip;
+      return XDR_PUTINT32 (xdrs, (int32_t *) &ut);
+    case XDR_DECODE:
+      if (!XDR_GETINT32 (xdrs, (int32_t *) &ut))
 	return FALSE;
       *uip = (uint8_t) ut;
       return TRUE;
