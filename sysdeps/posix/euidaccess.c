@@ -1,5 +1,5 @@
 /* Check if effective user id can access file
-   Copyright (C) 1990,91,95,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,95,96,97,98,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,22 +43,11 @@
 #include <unistd.h>
 #endif
 
-#ifdef _POSIX_VERSION
-#include <limits.h>
-#if !defined(NGROUPS_MAX) || NGROUPS_MAX < 1
-#undef NGROUPS_MAX
-#define NGROUPS_MAX sysconf (_SC_NGROUPS_MAX)
-#endif /* NGROUPS_MAX */
-
-#else /* not _POSIX_VERSION */
+#ifndef _POSIX_VERSION
 uid_t getuid ();
 gid_t getgid ();
 uid_t geteuid ();
 gid_t getegid ();
-#include <sys/param.h>
-#if !defined(NGROUPS_MAX) && defined(NGROUPS)
-#define NGROUPS_MAX NGROUPS
-#endif /* not NGROUPS_MAX and NGROUPS */
 #endif /* not POSIX_VERSION */
 
 #include <errno.h>
