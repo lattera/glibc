@@ -1,5 +1,11 @@
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/fpu/bits/mathinline.h (__finite): Mark constant as
+	unsigned to avoid warning.  [PR libc/1271].
+
+	* conform/conformtest.pl: Allow testing regex.h which requires
+	sys/types.h being included.
+
 	* conform/data/regex.h-data: Allow *_t types.
 	* conform/data/pwd.h-data: Likewise.
 	* conform/data/sched.h-data: Likewise

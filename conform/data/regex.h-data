@@ -1,6 +1,6 @@
 #ifndef ISO
 type regex_t
-element regex_t re_nsub
+element regex_t size_t re_nsub
 
 type regoff_t
 

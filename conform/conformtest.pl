@@ -18,6 +18,9 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 	     'short', 'signed', 'sizeof', 'static', 'struct', 'switch',
 	     'typedef', 'union', 'unsigned', 'void', 'volatile', 'while');
 
+# Some headers need a bit more attention.
+$mustprepend{'regex.h'} = "#include <sys/types.h>\n";
+
 # Make an hash table from this information.
 while ($#keywords) {
   $iskeyword{pop (@keywords)} = 1;
@@ -228,12 +231,14 @@ while ($#headers >= 0) {
   my($fnamebase) = "$tmpdir/$h-test";
   my($missing);
   my(@allow) = ();
+  my($prepend) = $mustprepend{$h};
 
   printf ("Testing <$h>\n");
   printf ("----------" . "-" x length ($h) . "\n");
 
   # Generate a program to test for the availability of this header.
   open (TESTFILE, ">$fnamebase.c");
+  print TESTFILE "$prepend";
   print TESTFILE "#include <$h>\n";
   close (TESTFILE);
 
@@ -260,6 +265,7 @@ while ($#headers >= 0) {
 
       # Generate a program to test for the availability of this member.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       print TESTFILE "$struct a;\n";
       print TESTFILE "$struct b;\n";
@@ -275,6 +281,7 @@ while ($#headers >= 0) {
 
       # Test the types of the members.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       print TESTFILE "$struct a;\n";
       print TESTFILE "extern $type b$rest;\n";
@@ -293,6 +300,7 @@ while ($#headers >= 0) {
 
       # Generate a program to test for the availability of this constant.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       print TESTFILE "__typeof__ ($const) a = $const;\n";
       close (TESTFILE);
@@ -303,6 +311,7 @@ while ($#headers >= 0) {
       if ($value ne "") {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
 	print TESTFILE "#include <$h>\n";
 	print TESTFILE "int main (void) { return $const != $value; }\n";
 	close (TESTFILE);
@@ -327,6 +336,7 @@ while ($#headers >= 0) {
 
       # Generate a program to test for the availability of this constant.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       print TESTFILE "$type *a;\n";
       close (TESTFILE);
@@ -344,6 +354,7 @@ while ($#headers >= 0) {
 
       # Generate a program to test for availability of this function.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       # print TESTFILE "#undef $fname\n";
       print TESTFILE "$rettype (*foobarbaz) $args = $fname;\n";
@@ -354,6 +365,7 @@ while ($#headers >= 0) {
 
       # Generate a program to test for the type of this function.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       # print TESTFILE "#undef $fname\n";
       print TESTFILE "extern $rettype (*foobarbaz) $args;\n";
@@ -370,6 +382,7 @@ while ($#headers >= 0) {
 
       # Generate a program to test for availability of this macro.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       print TESTFILE "#ifndef $macro\n";
       print TESTFILE "# error \"Macro $macro not defined\"\n";
