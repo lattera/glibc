@@ -1,4 +1,4 @@
-/* Machine-dependent SIGPROF signal handler.  Linux/m68k version.
+/* Machine-dependent SIGPROF signal handler.  "Generic" version w/ sigcontext
 Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -16,7 +16,10 @@ You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
-  
+
+/* In many Unix systems signal handlers are called like this
+   and the interrupted PC is easily findable in the `struct sigcontext'.  */
+
 static void
 profil_counter (int signr, int code, struct sigcontext *scp)
 {
