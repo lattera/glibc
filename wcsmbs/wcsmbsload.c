@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <ctype.h>
 #include <langinfo.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -111,7 +112,7 @@ getfct (const char *to, const char *from)
 
 /* The gconv functions expects the name to be complete, including the
    trailing shashes if necessary.  */
-#define add_slashes(str) \
+#define norm_add_slashes(str) \
   ({									      \
     const char *cp = str;						      \
     char *result;							      \
@@ -122,8 +123,10 @@ getfct (const char *to, const char *from)
       if (*cp++ == '/')							      \
 	++cnt;								      \
 									      \
-    result = alloca (cp - str + 3);					      \
-    tmp = __mempcpy (result, str, cp - str);				      \
+    tmp = result = alloca (cp - str + 3);				      \
+    cp = str;								      \
+    while (*cp != '\0')							      \
+      *tmp++ = _toupper (*cp++);					      \
     if (cnt < 2)							      \
       {									      \
 	*tmp++ = '/';							      \
@@ -171,8 +174,9 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	    charset_name =
 	      new_category->values[_NL_ITEM_INDEX(CODESET)].string;
 
-	  /* Add the slashes necessary for a complete lookup.  */
-	  complete_name = add_slashes (charset_name);
+	  /* Normalize the name and add the slashes necessary for a
+             complete lookup.  */
+	  complete_name = norm_add_slashes (charset_name);
 
 	  __wcsmbs_gconv_fcts.tomb = getfct (complete_name, "INTERNAL");
 	  __wcsmbs_gconv_fcts.towc = getfct ("INTERNAL", complete_name);

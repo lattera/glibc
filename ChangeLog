@@ -1,3 +1,8 @@
+1999-03-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsmbsload.c (add_slashes): Rename to norm_add_slashes
+	and fold string to uppercase [PR libc/1005].
+
 1999-03-03  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* elf/dl-load.c (lose): Fix return type.
