@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <math.h>
+#include "math_private.h"
 #include "mathimpl.h"
 
 #ifndef SUFF
@@ -47,14 +48,12 @@ s(__ieee754_scalb) (float_type x, float_type fn)
 	return x * fn;
       else if (x_cond & __M81_COND_ZERO)
 	return x;
-      else if (x_cond & __M81_COND_INF)
-	return 0.0/0.0;
       else
 	return x / -fn;
     }
 
   if (m81(__rint) (fn) != fn)
-    return 0.0/0.0;
+    return (x - x) / (x - x);
 
   __asm ("fscale%.x %1, %0" : "=f" (retval) : "f" (fn), "0" (x));
   return retval;

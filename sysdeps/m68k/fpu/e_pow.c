@@ -41,23 +41,25 @@ s(__ieee754_pow) (float_type x, float_type y)
   y_cond = __m81_test (y);
   if (y_cond & __M81_COND_ZERO)
     return 1.0;
+  if (y_cond & __M81_COND_NAN)
+    return x == 1.0 ? x : x + y;
 
   x_cond = __m81_test (x);
-  if ((x_cond | y_cond) & __M81_COND_NAN)
+  if (x_cond & __M81_COND_NAN)
     return x + y;
 
   if (y_cond & __M81_COND_INF)
     {
       ax = s(fabs) (x);
-      if (ax == 1)
-	return y - y;
-      if (ax > 1)
+      if (ax == 1.0)
+	return ax;
+      if (ax > 1.0)
 	return y_cond & __M81_COND_NEG ? 0 : y;
       else
 	return y_cond & __M81_COND_NEG ? -y : 0;
     }
 
-  if (s(fabs) (y) == 1)
+  if (s(fabs) (y) == 1.0)
     return y_cond & __M81_COND_NEG ? 1 / x : x;
 
   if (y == 2)
@@ -77,7 +79,7 @@ s(__ieee754_pow) (float_type x, float_type y)
     }
 
   ax = s(fabs) (x);
-  if (x_cond & (__M81_COND_INF | __M81_COND_ZERO) || ax == 1)
+  if (x_cond & (__M81_COND_INF | __M81_COND_ZERO) || ax == 1.0)
     {
       z = ax;
       if (y_cond & __M81_COND_NEG)
