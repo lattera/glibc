@@ -43,7 +43,11 @@
 #define O_FSYNC		O_SYNC
 #define O_ASYNC		020000	/* fcntl, for BSD compatibility */
 
-/* XXX missing */
+#ifdef __USE_GNU
+# define O_DIRECT	040000	/* Direct disk access.  */
+#endif
+
+/* Not necessary, files are always with 64bit off_t.  */
 #define O_LARGEFILE	0
 
 /* Values for the second argument to `fcntl'.  */
