@@ -1,0 +1,6 @@
+dl-sym.c
+dl-open.c
+dl-close.c
+kernel_proto.h
+bits/utmpx.h
+gnu/lib-names.h
