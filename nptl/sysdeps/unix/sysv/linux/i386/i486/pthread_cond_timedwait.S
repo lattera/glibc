@@ -206,14 +206,15 @@ __pthread_cond_timedwait:
 	call	__pthread_mutex_lock_internal
 	addl	$36, %esp
 
-	movl	%esi, %eax
+	/* We return the result of the mutex_lock operation if it failed.  */
+	testl	%eax, %eax
+	cmovel	%esi, %eax
 
 18:	popl	%ebx
 	popl	%esi
 	popl	%edi
 	popl	%ebp
 
-	/* We return the result of the mutex_lock operation.  */
 	ret
 
 	/* Initial locking failed.  */
