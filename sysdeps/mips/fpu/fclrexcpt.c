@@ -1,5 +1,5 @@
 /* Clear given exceptions in current floating-point environment.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <fenv.h>
+#include <fenv_libc.h>
 #include <fpu_control.h>
 #include <shlib-compat.h>
 
@@ -33,8 +34,11 @@ __feclearexcept (int excepts)
   /* Read the complete control word.  */
   _FPU_GETCW (cw);
 
-  /* Clear exception bits.  */
-  cw &= ~excepts;
+  /* Clear exception flag bits and cause bits. If the cause bit is not
+     cleared, the next CTC instruction (just below) will re-generate
+     the exception.  */
+
+  cw &= ~(excepts | (excepts << CAUSE_SHIFT));
 
   /* Put the new data in effect.  */
   _FPU_SETCW (cw);
@@ -42,6 +46,7 @@ __feclearexcept (int excepts)
   /* Success.  */
   return 0;
 }
+
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__feclearexcept, __old_feclearexcept)
 compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
