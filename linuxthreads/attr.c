@@ -225,7 +225,7 @@ int __pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
   int err;
 
   if ((((uintptr_t) stackaddr)
-       & ~__alignof__ (struct _pthread_descr_struct)) != 0)
+       & (__alignof__ (struct _pthread_descr_struct) - 1)) != 0)
     err = EINVAL;
   else
     err = __pthread_attr_setstacksize (attr, stacksize);
@@ -263,7 +263,6 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 {
   pthread_handle handle = thread_handle (thread);
   pthread_descr descr;
-  char *guardaddr;
 
   if (handle == NULL)
     return ENOENT;
@@ -282,21 +281,24 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 			(struct sched_param *) &attr->__schedparam) != 0)
     return errno;
 
-  guardaddr = descr->p_guardaddr;
   attr->__inheritsched = descr->p_inheritsched;
   attr->__scope = PTHREAD_SCOPE_SYSTEM;
-  attr->__stacksize = (char *)(descr + 1) - guardaddr - descr->p_guardsize;
+  attr->__stacksize = (char *)(descr + 1) - (char *)descr->p_guardaddr
+		      - descr->p_guardsize;
   attr->__guardsize = descr->p_guardsize;
   attr->__stackaddr_set = descr->p_userstack;
 #ifdef NEED_SEPARATE_REGISTER_STACK
-  guardaddr -= attr->__stacksize;
   attr->__stacksize *= 2;
   /* XXX This is awkward.  The guard pages are in the middle of the
      two stacks.  We must count the guard size in the stack size since
      otherwise the range of the stack area cannot be computed.  */
   attr->__stacksize += attr->__guardsize;
 #endif
-  attr->__stackaddr = guardaddr;
+#ifndef _STACK_GROWS_UP
+  attr->__stackaddr = (char *)(descr + 1);
+#else
+#error __stackaddr not handled
+#endif
 
   return 0;
 }
