@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/i386 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -161,7 +161,7 @@ union user_desc_init
 #  define TLS_LOAD_EBX
 # endif
 
-#if defined NEED_DL_SYSINFO && defined SHARED
+#if defined NEED_DL_SYSINFO
 # define INIT_SYSINFO \
   _head->sysinfo = GL(dl_sysinfo)
 #else

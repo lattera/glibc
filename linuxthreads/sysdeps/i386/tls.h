@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  linuxthreads/i386 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -182,7 +182,7 @@ TLS_DO_MODIFY_LDT_KERNEL_CHECK(						      \
   TLS_DO_MODIFY_LDT ((descr), 0)
 #  endif
 
-#if defined NEED_DL_SYSINFO && defined SHARED
+#if defined NEED_DL_SYSINFO
 # define INIT_SYSINFO \
   head->sysinfo = GL(dl_sysinfo)
 #else

@@ -35,7 +35,7 @@
    || (major ((Dev)) == 4 && minor ((Dev)) >= 128 && minor ((Dev)) < 192)     \
    || (major ((Dev)) >= 128 && major ((Dev)) < 136))
 
-/* Check if DEV corresponds to a master pseudo terminal device.  */
+/* Check if DEV corresponds to a slave pseudo terminal device.  */
 #define SLAVE_P(Dev)                                                          \
   (major ((Dev)) == 3                                                         \
    || (major ((Dev)) == 4 && minor ((Dev)) >= 192 && minor ((Dev)) < 256)     \

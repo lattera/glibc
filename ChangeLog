@@ -1,3 +1,7 @@
+2003-01-15  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* sysdeps/unix/sysv/linux/ptsname.c: Fix typo in comment.
+
 2003-01-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (re_compile_internal): If clearing buffer, clear
