@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,95,96,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,97,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,21 @@ __pid_t
 __libc_waitpid (__pid_t pid, int *stat_loc, int options)
 {
   if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL);
+    {
+#ifdef __NR_waitpid
+      return INLINE_SYSCALL (waitpid, 3, pid, stat_loc, options);
+#else
+      return INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL);
+#endif
+    }
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
+#ifdef __NR_waitpid
+  int result = INLINE_SYSCALL (waitpid, 3, pid, stat_loc, options);
+#else
   int result = INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL);
+#endif
 
   LIBC_CANCEL_RESET (oldtype);
 
