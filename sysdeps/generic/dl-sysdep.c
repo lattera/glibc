@@ -89,10 +89,6 @@ _dl_sysdep_start (void **start_argptr,
 # define set_seen(tag) seen |= M ((tag)->a_type)
 #endif
 
-#if HP_TIMING_AVAIL
-  HP_TIMING_NOW (GL(dl_cpuclock_offset));
-#endif
-
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
 			  _dl_auxv);
 
@@ -258,9 +254,11 @@ _dl_show_auxv (void)
 	      const char *val = av->a_un.a_ptr;
 
 	      if (__builtin_expect (auxvars[idx].form, dec) == dec)
-		val = _itoa (av->a_un.a_val, buf + sizeof buf - 1, 10, 0);
+		val = _itoa ((unsigned long int) av->a_un.a_val,
+			     buf + sizeof buf - 1, 10, 0);
 	      else if (__builtin_expect (auxvars[idx].form, hex) == hex)
-		val = _itoa (av->a_un.a_val, buf + sizeof buf - 1, 16, 0);
+		val = _itoa ((unsigned long int) av->a_un.a_val,
+			     buf + sizeof buf - 1, 16, 0);
 
 	      _dl_printf ("%s%s\n", auxvars[idx].label, val);
 	    }

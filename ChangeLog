@@ -1,3 +1,10 @@
+2002-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Move
+	dl_cpuclock_offset initialization to _dl_start_final.
+	(_dl_show_auxv): Avoid unnecessary sign extension.
+	* elf/rtld.c (_dl_start_final): Initialize dl_cpuclock_offset.
+
 2002-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* config.h.in: Add HAVE_TLS_SUPPORT.

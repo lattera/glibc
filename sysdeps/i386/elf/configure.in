@@ -7,9 +7,11 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 AC_CACHE_CHECK(for i386 TLS support, libc_cv_386_tls, [dnl
 cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
+	.globl foo
 foo:	.long	1
 	.section ".tbss", "awT", @nobits
-	.comm	bar,4,4
+	.globl bar
+bar:	.skip	4
 	.text
 baz:	leal	bar@TLSLDM(%ebx), %eax
 	leal	bar@DTPOFF(%eax), %edx

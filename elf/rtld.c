@@ -96,8 +96,7 @@ asm (".protected _rtld_global");
 #endif
 
 
-static void dl_main (const ElfW(Phdr) *phdr,
-		     ElfW(Word) phnum,
+static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry);
 
 static struct libname_list _dl_rtld_libname;
@@ -240,6 +239,10 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   GL(dl_rtld_map).l_mach = bootstrap_map_p->l_mach;
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
+
+#if HP_TIMING_AVAIL
+  HP_TIMING_NOW (GL(dl_cpuclock_offset));
+#endif
 
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
