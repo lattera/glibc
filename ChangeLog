@@ -1,3 +1,10 @@
+2004-02-21  Andreas Jaeger  <aj@suse.de>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Fix casts used as lvalue.
+
+	* iconv/gconv_simple.c (internal_ucs4le_loop): Remove cast used as
+	lvalue.
+
 2004-02-19  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/generic/framestate.c [__USING_SJLJ_EXCEPTIONS__]

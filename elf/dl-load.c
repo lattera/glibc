@@ -1228,7 +1228,7 @@ cannot allocate TLS data structures for initial thread");
       }
     else
       /* Adjust the PT_PHDR value by the runtime load address.  */
-      (ElfW(Addr)) l->l_phdr += l->l_addr;
+      l->l_phdr = (ElfW(Phdr) *) ((ElfW(Addr)) l->l_phdr + l->l_addr);
   }
 
 #ifdef USE_TLS
@@ -1254,7 +1254,7 @@ cannot allocate TLS data structures for initial thread");
 	}
     }
   else
-    (ElfW(Addr)) l->l_ld += l->l_addr;
+    l->l_ld = (ElfW(Dyn) *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 
   l->l_entry += l->l_addr;
 
