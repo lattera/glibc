@@ -210,10 +210,7 @@ static void *mempcpy PARAMS ((void *dest, const void *src, size_t n));
 struct known_translation_t
 {
   /* Domain in which to search.  */
-  char *domain;
-
-  /* Plural index.  */
-  unsigned long int plindex;
+  char *domainname;
 
   /* The category.  */
   int category;
@@ -221,8 +218,12 @@ struct known_translation_t
   /* State of the catalog counter at the point the string was found.  */
   int counter;
 
+  /* Catalog where the string was found.  */
+  struct loaded_l10nfile *domain;
+
   /* And finally the translation.  */
   const char *translation;
+  size_t translation_length;
 
   /* Pointer to the string in question.  */
   char msgid[ZERO];
@@ -253,16 +254,12 @@ transcmp (const void *p1, const void *p2)
   result = strcmp (s1->msgid, s2->msgid);
   if (result == 0)
     {
-      result = strcmp (s1->domain, s2->domain);
+      result = strcmp (s1->domainname, s2->domainname);
       if (result == 0)
-	{
-	  result = s1->plindex - s2->plindex;
-	  if (result == 0)
-	    /* We compare the category last (though this is the cheapest
-	       operation) since it is hopefully always the same (namely
-	       LC_MESSAGES).  */
-	    result = s1->category - s2->category;
-	}
+	/* We compare the category last (though this is the cheapest
+	   operation) since it is hopefully always the same (namely
+	   LC_MESSAGES).  */
+	result = s1->category - s2->category;
     }
 
   return result;
@@ -284,8 +281,14 @@ const char _nl_default_dirname[] = GNULOCALEDIR;
 struct binding *_nl_domain_bindings;
 
 /* Prototypes for local functions.  */
-static unsigned long int plural_eval (struct expression *pexp,
-				      unsigned long int n) internal_function;
+static char *plural_lookup PARAMS ((struct loaded_l10nfile *domain,
+				    unsigned long int n,
+				    const char *translation,
+				    size_t translation_len))
+     internal_function;
+static unsigned long int plural_eval PARAMS ((struct expression *pexp,
+					      unsigned long int n))
+     internal_function;
 static const char *category_to_name PARAMS ((int category)) internal_function;
 static const char *guess_category_value PARAMS ((int category,
 						 const char *categoryname))
@@ -328,12 +331,17 @@ struct block_list
 #endif	/* have alloca */
 
 
+#ifdef _LIBC
 /* List of blocks allocated for translations.  */
-static struct transmem_list
+typedef struct transmem_list
 {
   struct transmem_list *next;
   char data[0];
-} *transmem_list;
+} transmem_block_t;
+static struct transmem_list *transmem_list;
+#else
+typedef char transmem_block_t;
+#endif
 
 
 /* Names for the libintl functions are a problem.  They must not clash
@@ -389,6 +397,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   char *dirname, *xdomainname;
   char *single_locale;
   char *retval;
+  size_t retlen;
   int saved_errno;
 #if defined HAVE_TSEARCH || defined _LIBC
   struct known_translation_t *search;
@@ -412,23 +421,26 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 #if defined HAVE_TSEARCH || defined _LIBC
   msgid_len = strlen (msgid1) + 1;
 
-  if (plural == 0)
-    {
-      /* Try to find the translation among those which we found at
-	 some time.  */
-      search = (struct known_translation_t *) alloca (sizeof (*search)
-						      + msgid_len);
-      memcpy (search->msgid, msgid1, msgid_len);
-      search->domain = (char *) domainname;
-      search->plindex = 0;
-      search->category = category;
+  /* Try to find the translation among those which we found at
+     some time.  */
+  search =
+    (struct known_translation_t *) alloca (sizeof (*search) + msgid_len);
+  memcpy (search->msgid, msgid1, msgid_len);
+  search->domainname = (char *) domainname;
+  search->category = category;
 
-      foundp = (struct known_translation_t **) tfind (search, &root, transcmp);
-      if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
-	{
-	  __libc_rwlock_unlock (_nl_state_lock);
-	  return (char *) (*foundp)->translation;
-	}
+  foundp = (struct known_translation_t **) tfind (search, &root, transcmp);
+  if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
+    {
+      /* Now deal with plural.  */
+      if (plural)
+	retval = plural_lookup ((*foundp)->domain, n, (*foundp)->translation,
+				(*foundp)->translation_length);
+      else
+	retval = (char *) (*foundp)->translation;
+
+      __libc_rwlock_unlock (_nl_state_lock);
+      return retval;
     }
 #endif
 
@@ -563,39 +575,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
       if (domain != NULL)
 	{
-	  unsigned long int index = 0;
-
-	  if (plural != 0)
-	    {
-	      const struct loaded_domain *domaindata =
-		(const struct loaded_domain *) domain->data;
-	      index = plural_eval (domaindata->plural, n);
-	      if (index >= domaindata->nplurals)
-		/* This should never happen.  It means the plural expression
-		   and the given maximum value do not match.  */
-		index = 0;
-
-#if defined HAVE_TSEARCH || defined _LIBC
-	      /* Try to find the translation among those which we
-		 found at some time.  */
-	      search = (struct known_translation_t *) alloca (sizeof (*search)
-							      + msgid_len);
-	      memcpy (search->msgid, msgid1, msgid_len);
-	      search->domain = (char *) domainname;
-	      search->plindex = index;
-	      search->category = category;
-
-	      foundp = (struct known_translation_t **) tfind (search, &root,
-							      transcmp);
-	      if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
-		{
-		  __libc_rwlock_unlock (_nl_state_lock);
-		  return (char *) (*foundp)->translation;
-		}
-#endif
-	    }
-
-	  retval = _nl_find_msg (domain, msgid1, index);
+	  retval = _nl_find_msg (domain, msgid1, &retlen);
 
 	  if (retval == NULL)
 	    {
@@ -604,15 +584,20 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	      for (cnt = 0; domain->successor[cnt] != NULL; ++cnt)
 		{
 		  retval = _nl_find_msg (domain->successor[cnt], msgid1,
-					 index);
+					 &retlen);
 
 		  if (retval != NULL)
-		    break;
+		    {
+		      domain = domain->successor[cnt];
+		      break;
+		    }
 		}
 	    }
 
 	  if (retval != NULL)
 	    {
+	      /* Found the translation of MSGID1 in domain DOMAIN:
+		 starting at RETVAL, RETLEN bytes.  */
 	      FREE_BLOCKS (block_list);
 	      __set_errno (saved_errno);
 #if defined HAVE_TSEARCH || defined _LIBC
@@ -626,12 +611,14 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 			    + domainname_len + 1 - ZERO);
 		  if (newp != NULL)
 		    {
-		      newp->domain = mempcpy (newp->msgid, msgid1, msgid_len);
-		      memcpy (newp->domain, domainname, domainname_len + 1);
-		      newp->plindex = index;
+		      newp->domainname =
+			mempcpy (newp->msgid, msgid1, msgid_len);
+		      memcpy (newp->domainname, domainname, domainname_len + 1);
 		      newp->category = category;
 		      newp->counter = _nl_msg_cat_cntr;
+		      newp->domain = domain;
 		      newp->translation = retval;
+		      newp->translation_length = retlen;
 
 		      /* Insert the entry in the search tree.  */
 		      foundp = (struct known_translation_t **)
@@ -646,9 +633,15 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		{
 		  /* We can update the existing entry.  */
 		  (*foundp)->counter = _nl_msg_cat_cntr;
+		  (*foundp)->domain = domain;
 		  (*foundp)->translation = retval;
+		  (*foundp)->translation_length = retlen;
 		}
 #endif
+	      /* Now deal with plural.  */
+	      if (plural)
+		retval = plural_lookup (domain, n, retval, retlen);
+
 	      __libc_rwlock_unlock (_nl_state_lock);
 	      return retval;
 	    }
@@ -660,14 +653,15 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
 char *
 internal_function
-_nl_find_msg (domain_file, msgid, index)
+_nl_find_msg (domain_file, msgid, lengthp)
      struct loaded_l10nfile *domain_file;
      const char *msgid;
-     unsigned long int index;
+     size_t *lengthp;
 {
   const struct loaded_domain *domain;
   size_t act;
   char *result;
+  size_t resultlen;
 
   if (domain_file->decided == 0)
     _nl_load_domain (domain_file);
@@ -691,17 +685,21 @@ _nl_find_msg (domain_file, msgid, index)
 	/* Hash table entry is empty.  */
 	return NULL;
 
-      if (W (domain->must_swap, domain->orig_tab[nstr - 1].length) == len
-	  && strcmp (msgid,
-		     domain->data + W (domain->must_swap,
-				       domain->orig_tab[nstr - 1].offset)) == 0)
-	{
-	  act = nstr - 1;
-	  goto found;
-	}
-
       while (1)
 	{
+	  /* Compare msgid with the original string at index nstr-1.
+	     We compare the lengths with >=, not ==, because plural entries
+	     are represented by strings with an embedded NUL.  */
+	  if (W (domain->must_swap, domain->orig_tab[nstr - 1].length) >= len
+	      && (strcmp (msgid,
+			  domain->data + W (domain->must_swap,
+					    domain->orig_tab[nstr - 1].offset))
+		  == 0))
+	    {
+	      act = nstr - 1;
+	      goto found;
+	    }
+
 	  if (idx >= domain->hash_size - incr)
 	    idx -= domain->hash_size - incr;
 	  else
@@ -711,16 +709,6 @@ _nl_find_msg (domain_file, msgid, index)
 	  if (nstr == 0)
 	    /* Hash table entry is empty.  */
 	    return NULL;
-
-	  if (W (domain->must_swap, domain->orig_tab[nstr - 1].length) == len
-	      && (strcmp (msgid,
-			  domain->data + W (domain->must_swap,
-					    domain->orig_tab[nstr - 1].offset))
-		  == 0))
-	    {
-	      act = nstr - 1;
-	      goto found;
-	    }
 	}
       /* NOTREACHED */
     }
@@ -756,6 +744,7 @@ _nl_find_msg (domain_file, msgid, index)
      string to use a different character set, this is the time.  */
   result = ((char *) domain->data
 	    + W (domain->must_swap, domain->trans_tab[act].offset));
+  resultlen = W (domain->must_swap, domain->trans_tab[act].length) + 1;
 
 #if defined _LIBC || HAVE_ICONV
   if (
@@ -772,9 +761,10 @@ _nl_find_msg (domain_file, msgid, index)
 	 appropriate table with the same structure as the table
 	 of translations in the file, where we can put the pointers
 	 to the converted strings in.
-	 There is a slight complication with the INDEX: We don't know
-	 a priori which entries are plural entries. Therefore at any
-	 moment we can only translate the variants 0 .. INDEX.  */
+	 There is a slight complication with plural entries.  They
+	 are represented by consecutive NUL terminated strings.  We
+	 handle this case by converting RESULTLEN bytes, including
+	 NULs.  */
 
       if (domain->conv_tab == NULL
 	  && ((domain->conv_tab = (char **) calloc (domain->nstrings,
@@ -787,8 +777,7 @@ _nl_find_msg (domain_file, msgid, index)
 	/* Nothing we can do, no more memory.  */
 	goto converted;
 
-      if (domain->conv_tab[act] == NULL
-	  || *(nls_uint32 *) domain->conv_tab[act] < index)
+      if (domain->conv_tab[act] == NULL)
 	{
 	  /* We haven't used this string so far, so it is not
 	     translated yet.  Do this now.  */
@@ -796,46 +785,37 @@ _nl_find_msg (domain_file, msgid, index)
 	     We allocate always larger blocks which get used over
 	     time.  This is faster than many small allocations.   */
 	  __libc_lock_define_initialized (static, lock)
-#define INITIAL_BLOCK_SIZE	4080
+# define INITIAL_BLOCK_SIZE	4080
 	  static unsigned char *freemem;
 	  static size_t freemem_size;
 
-	  size_t resultlen;
 	  const unsigned char *inbuf;
 	  unsigned char *outbuf;
 	  int malloc_count;
-
-	  /* Note that we translate (index + 1) consecutive strings at
-	     once, including the final NUL byte.  */
-	  {
-	    unsigned long int i = index;
-	    char *p = result;
-	    do
-	      p += strlen (p) + 1;
-	    while (i-- > 0);
-	    resultlen = p - result;
-	  }
+# ifndef _LIBC
+	  transmem_block_t *transmem_list = NULL;
+# endif
 
 	  __libc_lock_lock (lock);
 
 	  inbuf = result;
-	  outbuf = freemem + sizeof (nls_uint32);
+	  outbuf = freemem + sizeof (size_t);
 
 	  malloc_count = 0;
 	  while (1)
 	    {
+	      transmem_block_t *newmem;
 # ifdef _LIBC
-	      struct transmem_list *newmem;
 	      size_t non_reversible;
 	      int res;
 
-	      if (freemem_size < 4)
+	      if (freemem_size < sizeof (size_t))
 		goto resize_freemem;
 
 	      res = __gconv (domain->conv,
 			     &inbuf, inbuf + resultlen,
 			     &outbuf,
-			     outbuf + freemem_size - sizeof (nls_uint32),
+			     outbuf + freemem_size - sizeof (size_t),
 			     &non_reversible);
 
 	      if (res == __GCONV_OK || res == __GCONV_EMPTY_INPUT)
@@ -850,16 +830,15 @@ _nl_find_msg (domain_file, msgid, index)
 	      inbuf = result;
 # else
 #  if HAVE_ICONV
-#   define transmem freemem
 	      const char *inptr = (const char *) inbuf;
 	      size_t inleft = resultlen;
 	      char *outptr = (char *) outbuf;
 	      size_t outleft;
 
-	      if (freemem_size < 4)
+	      if (freemem_size < sizeof (size_t))
 		goto resize_freemem;
 
-	      outleft = freemem_size - 4;
+	      outleft = freemem_size - sizeof (size_t);
 	      if (iconv (domain->conv, &inptr, &inleft, &outptr, &outleft)
 		  != (size_t) (-1))
 		{
@@ -871,30 +850,34 @@ _nl_find_msg (domain_file, msgid, index)
 		  __libc_lock_unlock (lock);
 		  goto converted;
 		}
-#  else
-#   define transmem freemem
 #  endif
 # endif
 
 	    resize_freemem:
-	      /* We must allocate a new buffer of resize the old one.  */
+	      /* We must allocate a new buffer or resize the old one.  */
 	      if (malloc_count > 0)
 		{
-		  struct transmem_list *next = transmem_list->next;
-
 		  ++malloc_count;
 		  freemem_size = malloc_count * INITIAL_BLOCK_SIZE;
-		  newmem = (struct transmem_list *) realloc (transmem_list,
-							     freemem_size);
-
+		  newmem = (transmem_block_t *) realloc (transmem_list,
+							 freemem_size);
+# ifdef _LIBC
 		  if (newmem != NULL)
-		    transmem_list = next;
+		    transmem_list = transmem_list->next;
+		  else
+		    {
+		      struct transmem_list *old = transmem_list;
+
+		      transmem_list = transmem_list->next;
+		      free (old);
+		    }
+# endif
 		}
 	      else
 		{
 		  malloc_count = 1;
 		  freemem_size = INITIAL_BLOCK_SIZE;
-		  newmem = (struct transmem_list *) malloc (freemem_size);
+		  newmem = (transmem_block_t *) malloc (freemem_size);
 		}
 	      if (__builtin_expect (newmem == NULL, 0))
 		{
@@ -912,27 +895,31 @@ _nl_find_msg (domain_file, msgid, index)
 
 	      freemem = newmem->data;
 	      freemem_size -= offsetof (struct transmem_list, data);
+# else
+	      transmem_list = newmem;
+	      freemem = newmem;
 # endif
 
-	      outbuf = freemem + sizeof (nls_uint32);
+	      outbuf = freemem + sizeof (size_t);
 	    }
 
 	  /* We have now in our buffer a converted string.  Put this
 	     into the table of conversions.  */
-	  *(nls_uint32 *) freemem = index;
+	  *(size_t *) freemem = outbuf - freemem - sizeof (size_t);
 	  domain->conv_tab[act] = freemem;
 	  /* Shrink freemem, but keep it aligned.  */
 	  freemem_size -= outbuf - freemem;
 	  freemem = outbuf;
-	  freemem += freemem_size & (alignof (nls_uint32) - 1);
-	  freemem_size = freemem_size & ~ (alignof (nls_uint32) - 1);
+	  freemem += freemem_size & (alignof (size_t) - 1);
+	  freemem_size = freemem_size & ~ (alignof (size_t) - 1);
 
 	  __libc_lock_unlock (lock);
 	}
 
-      /* Now domain->conv_tab[act] contains the translation of at least
-	 the variants 0 .. INDEX.  */
-      result = domain->conv_tab[act] + sizeof (nls_uint32);
+      /* Now domain->conv_tab[act] contains the translation of all
+	 the plural variants.  */
+      result = domain->conv_tab[act] + sizeof (size_t);
+      resultlen = *(size_t *) domain->conv_tab[act];
     }
 
  converted:
@@ -940,26 +927,58 @@ _nl_find_msg (domain_file, msgid, index)
 
 #endif /* _LIBC || HAVE_ICONV */
 
-  /* Now skip some strings.  How much depends on the index passed in.  */
+  *lengthp = resultlen;
+  return result;
+}
+
+
+/* Look up a plural variant.  */
+static char *
+internal_function
+plural_lookup (domain, n, translation, translation_len)
+     struct loaded_l10nfile *domain;
+     unsigned long int n;
+     const char *translation;
+     size_t translation_len;
+{
+  struct loaded_domain *domaindata = (struct loaded_domain *) domain->data;
+  unsigned long int index;
+  const char *p;
+
+  index = plural_eval (domaindata->plural, n);
+  if (index >= domaindata->nplurals)
+    /* This should never happen.  It means the plural expression and the
+       given maximum value do not match.  */
+    index = 0;
+
+  /* Skip INDEX strings at TRANSLATION.  */
+  p = translation;
   while (index-- > 0)
     {
 #ifdef _LIBC
-      result = __rawmemchr (result, '\0');
+      p = __rawmemchr (p, '\0');
 #else
-      result = strchr (result, '\0');
+      p = strchr (p, '\0');
 #endif
       /* And skip over the NUL byte.  */
-      ++result;
-    }
+      p++;
 
-  return result;
+      if (p >= translation + translation_len)
+	/* This should never happen.  It means the plural expression
+	   evaluated to a value larger than the number of variants
+	   available for MSGID1.  */
+	return (char *) translation;
+    }
+  return (char *) p;
 }
 
 
 /* Function to evaluate the plural expression and return an index value.  */
 static unsigned long int
 internal_function
-plural_eval (struct expression *pexp, unsigned long int n)
+plural_eval (pexp, n)
+     struct expression *pexp;
+     unsigned long int n;
 {
   switch (pexp->operation)
     {

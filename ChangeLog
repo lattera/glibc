@@ -1,3 +1,30 @@
+2001-01-04  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-support.c (DL_FIND_AUXV): New.  Defined if not defined.
+	(_dl_clktck): Declared.
+	(non_dynamic_init): Take 3 arguments.
+	Set _dl_pagesize, _dl_platform and _dl_clktck from AUX.
+
+2001-01-01  Bruno Haible  <haible@clisp.cons.org>
+
+	Finish implementation of plural form handling.
+	* intl/dcigettext.c (known_translation_t): Rename 'domain' field to
+	'domainname'.  Remove 'plindex' field. Add 'domain' and
+	'translation_length' fields.
+	(transcmp): Don't compare 'plindex' fields.
+	(plural_lookup): New function.
+	(DCIGETTEXT): Change cache handing in the plural case.  Don't call
+	plural_eval before the translation and its catalog file have been
+	found. Remove plindex from cache key.  Add 'translation_length' and
+	'domain' to cache result.
+	(_nl_find_msg): Remove index argument, return length of translation
+	to the caller instead.  Weaken comparison of string lengths, to account
+	for plural entries.  Call iconv() on the entire result string, not
+	only on the portion needed so far.
+	* intl/loadinfo.h (_nl_find_msg): Remove index argument, add lengthp
+	argument.
+	* intl/loadmsgcat.c (_nl_load_domain): Adapt to _nl_find_msg change.
+
 2001-01-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/plural.y (yylex): Minimal improvement in number scanner.

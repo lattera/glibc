@@ -101,7 +101,7 @@ extern char *_nl_find_language PARAMS ((const char *name));
 
 
 extern char *_nl_find_msg PARAMS ((struct loaded_l10nfile *domain_file,
-				   const char *msgid, unsigned long int index))
+				   const char *msgid, size_t *lengthp))
      internal_function;
 
 #endif	/* loadinfo.h */

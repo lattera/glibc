@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 97, 98, 99, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -107,15 +107,46 @@ int _dl_starting_up = 1;
    At this time it is not anymore a problem to modify the tables.  */
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
+#ifndef DL_FIND_AUXV
+# define DL_FIND_AUXV(auxp, envp) \
+  do { \
+    void **_tmp; \
+    for (_tmp = (void **) (envp); *_tmp; ++_tmp) \
+      continue; \
+    (auxp) = (void *) ++_tmp; \
+  } while (0)
+#endif
 
-static void non_dynamic_init (void) __attribute__ ((unused));
+extern int _dl_clktck;
+
+static void non_dynamic_init (int argc, char **argv, char **envp)
+  __attribute__ ((unused));
 
 static void
-non_dynamic_init (void)
+non_dynamic_init (int argc, char **argv, char **envp)
 {
-  _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
+  ElfW(auxv_t) *av;
 
-  _dl_pagesize = __getpagesize ();
+  DL_FIND_AUXV (av, envp);
+
+  for (; av->a_type != AT_NULL; ++av)
+    switch (av->a_type)
+      {
+      case AT_PAGESZ:
+	_dl_pagesize = av->a_un.a_val;
+	break;
+      case AT_PLATFORM:
+	_dl_platform = av->a_un.a_ptr;
+	break;
+      case AT_CLKTCK:
+	_dl_clktck = av->a_un.a_val;
+	break;
+      }
+
+  if (!_dl_pagesize)
+    _dl_pagesize = __getpagesize ();
+
+  _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
 
   /* Initialize the data structures for the search paths for shared
      objects.  */

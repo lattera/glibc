@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -107,14 +107,15 @@ static struct expression germanic_plural =
   .operation = not_equal,
   .val =
   {
-    .args2 = {
+    .args2 =
+    {
       .left = (struct expression *) &plvar,
       .right = (struct expression *) &plone
     }
   }
 };
 
-#define INIT_GERMANIC_PLURAL()
+# define INIT_GERMANIC_PLURAL()
 
 #else
 
@@ -141,7 +142,7 @@ init_germanic_plural ()
     }
 }
 
-#define INIT_GERMANIC_PLURAL() init_germanic_plural ()
+# define INIT_GERMANIC_PLURAL() init_germanic_plural ()
 
 #endif
 
@@ -160,6 +161,7 @@ _nl_load_domain (domain_file)
   int use_mmap = 0;
   struct loaded_domain *domain;
   char *nullentry;
+  size_t nullentrylen;
 
   domain_file->decided = 1;
   domain_file->data = NULL;
@@ -297,7 +299,7 @@ _nl_load_domain (domain_file)
 # endif
 #endif
   domain->conv_tab = NULL;
-  nullentry = _nl_find_msg (domain_file, "", 0);
+  nullentry = _nl_find_msg (domain_file, "", &nullentrylen);
   if (nullentry != NULL)
     {
 #if defined _LIBC || HAVE_ICONV
