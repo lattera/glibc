@@ -1,5 +1,14 @@
 1998-08-12  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/bits/posix_opt.h: Rewritten with comments and
+	multiple inclusion protection.
+	(_POSIX_SYNCHRONIZED_IO, _POSIX_FSYNC, _POSIX_MAPPED_FILES,
+	_POSIX_MEMORY_PROTECTION, _POSIX_POLL, _POSIX_SELECT): New macros,
+	define all these to 1.
+	(_POSIX_SYNC_IO): Add #undef, to remind us that pathconf reports it.
+
+1998-08-12  Roland McGrath  <roland@baalperazim.frob.com>
+
 	* sysdeps/mach/usleep.c: Include <unistd.h>.
 	(usleep): Return void.
 
