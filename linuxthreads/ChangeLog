@@ -1,3 +1,7 @@
+2000-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* manager.c (pthread_handle_create): Initialize p_res._sock to -1.
+
 2000-05-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* internals.h (__RES_PTHREAD_INTERNAL): Define.

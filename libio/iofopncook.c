@@ -26,7 +26,7 @@
 #include <libioP.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <shlib-compat.h>
 
 /* Prototyped for local functions.  */
 static _IO_ssize_t _IO_cookie_read (register _IO_FILE* fp, void* buf,
@@ -35,7 +35,8 @@ static _IO_ssize_t _IO_cookie_write (register _IO_FILE* fp,
 				     const void* buf, _IO_ssize_t size);
 static _IO_off64_t _IO_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir);
 static int _IO_cookie_close (_IO_FILE* fp);
-
+_IO_FILE * _IO_fopencookie (void *cookie, const char *mode,
+			    _IO_cookie_io_functions_t io_functions);
 
 static _IO_ssize_t
 _IO_cookie_read (fp, buf, size)
@@ -140,7 +141,7 @@ _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
 
 
 _IO_FILE *
-fopencookie (cookie, mode, io_functions)
+_IO_fopencookie (cookie, mode, io_functions)
      void *cookie;
      const char *mode;
      _IO_cookie_io_functions_t io_functions;
@@ -182,3 +183,73 @@ fopencookie (cookie, mode, io_functions)
 
   return &new_f->cfile.__file;
 }
+
+versioned_symbol (libc, _IO_fopencookie, fopencookie, GLIBC_2_2);
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
+
+static _IO_off64_t _IO_old_cookie_seek (_IO_FILE *fp, _IO_off64_t offset,
+					int dir);
+_IO_FILE * _IO_old_fopencookie (void *cookie, const char *mode,
+				_IO_cookie_io_functions_t io_functions);
+
+static _IO_off64_t
+_IO_old_cookie_seek (fp, offset, dir)
+     _IO_FILE *fp;
+     _IO_off64_t offset;
+     int dir;
+{
+  struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
+  int (*seek) (_IO_FILE *, _IO_off_t, int);
+  int ret;
+
+  seek = (int (*)(_IO_FILE *, _IO_off_t, int)) cfile->__io_functions.seek;
+  if (seek == NULL)
+    return _IO_pos_BAD;
+
+  ret = seek (cfile->__cookie, offset, dir);
+
+  return (ret == -1) ? _IO_pos_BAD : ret;
+}
+
+static struct _IO_jump_t _IO_old_cookie_jumps = {
+  JUMP_INIT_DUMMY,
+  JUMP_INIT(finish, _IO_file_finish),
+  JUMP_INIT(overflow, _IO_file_overflow),
+  JUMP_INIT(underflow, _IO_file_underflow),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_default_pbackfail),
+  JUMP_INIT(xsputn, _IO_file_xsputn),
+  JUMP_INIT(xsgetn, _IO_default_xsgetn),
+  JUMP_INIT(seekoff, _IO_file_seekoff),
+  JUMP_INIT(seekpos, _IO_default_seekpos),
+  JUMP_INIT(setbuf, _IO_file_setbuf),
+  JUMP_INIT(sync, _IO_file_sync),
+  JUMP_INIT(doallocate, _IO_file_doallocate),
+  JUMP_INIT(read, _IO_cookie_read),
+  JUMP_INIT(write, _IO_cookie_write),
+  JUMP_INIT(seek, _IO_old_cookie_seek),
+  JUMP_INIT(close, _IO_cookie_close),
+  JUMP_INIT(stat, _IO_default_stat),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue),
+};
+
+_IO_FILE *
+_IO_old_fopencookie (cookie, mode, io_functions)
+     void *cookie;
+     const char *mode;
+     _IO_cookie_io_functions_t io_functions;
+{
+  _IO_FILE *ret;
+
+  ret = _IO_fopencookie (cookie, mode, io_functions);
+  if (ret != NULL)
+    _IO_JUMPS (ret) = &_IO_old_cookie_jumps;
+
+  return ret;
+}
+
+compat_symbol (libc, _IO_old_fopencookie, fopencookie, GLIBC_2_0);
+
+#endif

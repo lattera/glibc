@@ -89,7 +89,7 @@ res_init(void) {
 
 #undef _res
 
-struct __res_state _res;
+struct __res_state _res = { _sock : -1 };
 
 
 struct __res_state *

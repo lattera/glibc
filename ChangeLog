@@ -1,4 +1,19 @@
+2000-05-20 2000  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/res_libc.c (_res): Initialize _sock to -1.
+
+2000-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/iofopncook.c (_IO_fopencookie): Renamed from fopencookie.
+	(fopencookie@@GLIBC_2.2): New.
+	(_IO_old_cookie_seek, _IO_old_fopencookie, _IO_old_cookie_jumps): New.
+	(fopencookie@GLIBC_2.0): New.
+	* libio/Versions: Add fopencookie to GLIBC_2.2.
+
 2000-05-18  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/rpc_main.c (parseargs): Don't accept -M and -N.
+	Closes PR libc/1731.
 
 	* manual/arith.texi (Parsing of Integers): Fix typo.
 	Closes PR libc/1744, reported by blp@gnu.org.
