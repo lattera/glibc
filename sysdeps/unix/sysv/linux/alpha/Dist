@@ -11,6 +11,7 @@ kernel_stat.h
 kernel_termios.h
 net/route.h
 rt_sigaction.S
+sizes.h
 sys/acct.h
 sys/io.h
 sys/procfs.h

@@ -44,7 +44,7 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
 	      README mnemonic.ds fr_CA,2.13.in de_DE.in da_DK.in	 \
 	      $(charmaps) $(locales) $(ld-test-srcs) tst-rpmatch.sh	 \
-	      SUPPORTED
+	      SUPPORTED tst-locale.sh
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig

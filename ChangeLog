@@ -1,5 +1,15 @@
 1998-03-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: Add sizes.h.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
+
+	* sysdeps/generic/stub_warning: Removed.
+
+	* Makefile (distribute): Add include/des.h.
+
+	* manual/Makefile (distribute): Change dir-add.texi to
+	dir-add.texinfo.
+
 	* glibcbug.in: Create files safely when mktemp is not available.
 
 	* sysdeps/unix/sysv/linux/adjtime.c: Make weak alias appear again.
