@@ -11,7 +11,6 @@ main (int argc, char *argv[])
   int result = 0;
   struct mntent mef;
   struct mntent *mnt = &mef;
-  char *name;
   FILE *fp;
 
   mef.mnt_fsname = strdupa ("/dev/hda1");
@@ -29,8 +28,7 @@ main (int argc, char *argv[])
       result = 1;
     }
 
-  name = tmpnam (NULL);
-  fp = fopen (name, "w+");
+  fp = tmpfile ();
   if (fp == NULL)
     {
       printf ("Cannot open temporary file: %m\n");
@@ -75,8 +73,6 @@ main (int argc, char *argv[])
 	  puts ("Error while reading written entry back in");
 	  result = 1;
 	}
-
-      remove (name);
     }
 
   return result;
