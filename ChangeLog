@@ -1,5 +1,8 @@
 Fri Sep  1 16:16:12 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/i386/longjmp-ts.c: Use new array format for
+	jmp_buf.
+
 	* libc-symbols.h (link_warning): Take new first arg SYMBOL; ask
 	for a warning on references to that specific symbol, not the
 	entire containing object file.

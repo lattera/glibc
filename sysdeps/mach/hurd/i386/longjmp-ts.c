@@ -1,5 +1,5 @@
 /* Perform a `longjmp' on a Mach thread_state.  i386 version.
-Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,11 +29,11 @@ _hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
 {
   struct i386_thread_state *ts = state;
 
-  ts->ebx = env[0].__jmpbuf[0].__bx;
-  ts->esi = env[0].__jmpbuf[0].__si;
-  ts->edi = env[0].__jmpbuf[0].__di;
-  ts->ebp = (int) env[0].__jmpbuf[0].__bp;
-  ts->uesp = (int) env[0].__jmpbuf[0].__sp;
-  ts->eip = (int) env[0].__jmpbuf[0].__pc;
+  ts->ebx = env[0].__jmpbuf[JB_BX];
+  ts->esi = env[0].__jmpbuf[JB_SI];
+  ts->edi = env[0].__jmpbuf[JB_DI];
+  ts->ebp = env[0].__jmpbuf[JB_BP];
+  ts->uesp = env[0].__jmpbuf[JB_SP];
+  ts->eip = env[0].__jmpbuf[JB_PC];
   ts->eax = val ?: 1;
 }
