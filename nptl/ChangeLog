@@ -33,8 +33,6 @@
 	* tst-clock2.c: Likewise.
 	* tst-cond11.c: Likewise.
 
-2004-10-05  Jakub Jelinek  <jakub@redhat.com>
-
 	* sysdeps/pthread/timer_create.c (timer_create): Use
 	defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0 instead of
 	defined CLOCK_PROCESS_CPUTIME_ID #ifs and similarly for
