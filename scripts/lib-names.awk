@@ -6,7 +6,7 @@ $1 != "DEFAULT" { multi = 1 }
 {
   lib = $2;
   version = $3;
-  if ($3 ~ /[^0-9]/) {
+  if ($3 !~ /^[0-9]/) {
     soname = $3;
     extra = $3;
     sub(/\.so.*$/, "", extra);

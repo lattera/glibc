@@ -1,5 +1,8 @@
 2005-02-10  Roland McGrath  <roland@redhat.com>
 
+	* scripts/lib-names.awk: Consider [0-9].* a "number", not just [0-9]+.
+	Reported by H.J. Lu <hongjiu.lu@intel.com>.
+
 	* scripts/lib-names.awk: Always print WORDSIZE32 section first when
 	doing two.
 
