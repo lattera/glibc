@@ -1,4 +1,10 @@
-2001-11-16  Stephen L Moshier <moshier@mediaone.net>
+2001-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c (byte_re_match_2_internal): For gcc replace switch
+	statement with gotos.
+	Based on a patch by Paolo Bonzini <bonzini@pc-amo3.elet.polimi.it>.
+
+2001-11-16  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/ldbl-96/s_erfl.c (__erfcl): Fix K&R header.
 
