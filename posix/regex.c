@@ -128,14 +128,14 @@ char *realloc ();
 #define SWITCH_ENUM_CAST(x) (x)
 #endif
 
+/* How many characters in the character set.  */
+#define CHAR_SET_SIZE 256
+
 #ifdef SYNTAX_TABLE
 
 extern char *re_syntax_table;
 
 #else /* not SYNTAX_TABLE */
-
-/* How many characters in the character set.  */
-#define CHAR_SET_SIZE 256
 
 static char re_syntax_table[CHAR_SET_SIZE];
 

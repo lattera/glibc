@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <signal.h>
+#define __need_NULL
+#include <stddef.h>
 
 /* Test whether SET is empty.  */
 int

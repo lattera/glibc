@@ -33,13 +33,14 @@
 __libc_lock_define_initialized (static, lock)
 
 static nis_result *result = NULL;
-static nis_name *names = NULL;
+static nis_name tablename_val = NULL;
+static u_long tablename_len = 0;
 
 #define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
 
 #define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
 /* Get implementation for some internal functions. */
 #include "../../resolv/mapv4v6addr.h"
@@ -57,10 +58,10 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
-      strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
-             "hosts_tbl") != 0 ||
-      result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 4)
+      __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+      strcmp(result->objects.objects_val[0].EN_data.en_type,
+	     "hosts_tbl") != 0 ||
+      result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 4)
     return 0;
 
   if (room_left < NISENTRYLEN (0, 2, result) + 1)
@@ -162,37 +163,58 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
       host->h_aliases[i] = line;
 
       while (*line != '\0' && *line != ' ')
-	line++;
+	++line;
 
-      if (line != host->h_aliases[i])
-            {
-              *line = '\0';
-              line++;
-              i++;
-            }
+      if (*line == ' ')
+	{
+	  *line = '\0';
+	  ++line;
+	  ++i;
+	}
+      else
+	host->h_aliases[i+1] = NULL;
     }
 
   return 1;
 
 }
 
+static enum nss_status
+_nss_create_tablename (void)
+{
+  if (tablename_val == NULL)
+    {
+      char buf [40 + strlen (nis_local_directory ())];
+      char *p;
+
+      p = stpcpy (buf, "hosts.org_dir.");
+      p = stpcpy (p, nis_local_directory ());
+      tablename_val = strdup (buf);
+      if (tablename_val == NULL)
+        return NSS_STATUS_TRYAGAIN;
+      tablename_len = strlen (tablename_val);
+    }
+  return NSS_STATUS_SUCCESS;
+}
+
 enum nss_status
 _nss_nisplus_sethostent (void)
 {
+  enum nss_status status = NSS_STATUS_SUCCESS;
+
   __libc_lock_lock (lock);
 
   if (result)
     nis_freeresult (result);
   result = NULL;
-  if (names)
-    {
-      nis_freenames (names);
-      names = NULL;
-    }
+
+  if (tablename_val == NULL)
+    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
+      status = NSS_STATUS_UNAVAIL;
 
   __libc_lock_unlock (lock);
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
@@ -203,11 +225,6 @@ _nss_nisplus_endhostent (void)
   if (result)
     nis_freeresult (result);
   result = NULL;
-  if (names)
-    {
-      nis_freenames (names);
-      names = NULL;
-    }
 
   __libc_lock_unlock (lock);
 
@@ -225,11 +242,11 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
     {
       if (result == NULL)
 	{
-	  names = nis_getnames("hosts.org_dir");
-	  if (names == NULL || names[0] == NULL)
-	    return NSS_STATUS_UNAVAIL;
+	  if (tablename_val == NULL)
+	    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
+	      return NSS_STATUS_UNAVAIL;
 
-	  result = nis_first_entry(names[0]);
+	  result = nis_first_entry(tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
             {
               int retval;
@@ -248,7 +265,7 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	{
 	  nis_result *res2;
 
-	  res2 = nis_next_entry(names[0], &result->cookie);
+	  res2 = nis_next_entry(tablename_val, &result->cookie);
 	  nis_freeresult (result);
 	  result = res2;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
@@ -302,6 +319,13 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
 {
   int parse_res, retval;
 
+  if (tablename_val == NULL)
+    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
+      {
+	*herrnop = NETDB_INTERNAL;
+	return NSS_STATUS_UNAVAIL;
+      }
+
   if (name == NULL)
     {
       __set_errno (EINVAL);
@@ -311,28 +335,27 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
   else
     {
       nis_result *result;
-      char buf[strlen (name) + 255];
+      char buf[strlen (name) + 255 + tablename_len];
 
       /* Search at first in the alias list, and use the correct name
 	 for the next search */
-      sprintf(buf, "[name=%s],hosts.org_dir", name);
-      result = nis_list(buf, EXPAND_NAME, NULL, NULL);
+      sprintf(buf, "[name=%s],%s", name, tablename_val);
+      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       /* If we do not find it, try it as original name. But if the
 	 database is correct, we should find it in the first case, too */
-      if ((result->status != NIS_SUCCESS &&
-	   result->status != NIS_S_SUCCESS) ||
-	  result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
-	  strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
+      if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
+	  __type_of (result->objects.objects_val) != ENTRY_OBJ ||
+	  strcmp(result->objects.objects_val->EN_data.en_type,
 		 "hosts_tbl") != 0 ||
-	  result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len
-	  < 3)
-	sprintf(buf, "[cname=%s],hosts.org_dir", name);
+	  result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
+	sprintf(buf, "[cname=%s],%s", name, tablename_val);
       else
-	sprintf(buf, "[cname=%s],hosts.org_dir", NISENTRYVAL(0, 0, result));
+	sprintf(buf, "[cname=%s],%s", NISENTRYVAL(0, 0, result),
+		tablename_val);
 
       nis_freeresult (result);
-      result = nis_list(buf, EXPAND_NAME, NULL, NULL);
+      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       retval = niserr2nss (result->status);
       if (retval != NSS_STATUS_SUCCESS)
@@ -385,17 +408,21 @@ _nss_nisplus_gethostbyaddr_r (const char *addr, int addrlen, int type,
 			      struct hostent *host, char *buffer,
 			      size_t buflen, int *herrnop)
 {
+  if (tablename_val == NULL)
+    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
+      return NSS_STATUS_UNAVAIL;
+
   if (addr == NULL)
     return NSS_STATUS_NOTFOUND;
   else
     {
       nis_result *result;
-      char buf[1025];
+      char buf[255 + tablename_len];
       int retval, parse_res;
 
-      snprintf(buf, sizeof (buf) -1, "[addr=%s],hosts.org_dir",
-	       inet_ntoa (*(struct in_addr *)addr));
-      result = nis_list(buf, EXPAND_NAME, NULL, NULL);
+      snprintf(buf, sizeof (buf) -1, "[addr=%s],%s",
+	       inet_ntoa (*(struct in_addr *)addr), tablename_val);
+      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       retval = niserr2nss (result->status);
       if (retval != NSS_STATUS_SUCCESS)

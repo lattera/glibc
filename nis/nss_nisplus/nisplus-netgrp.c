@@ -36,10 +36,10 @@ static unsigned long data_size = 0;
 static unsigned long position = 0;
 
 #define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
 
 #define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
 static enum nss_status
 _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
@@ -49,8 +49,7 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
 
   /* Some sanity checks.  */
   if (data == NULL || data_size == 0)
-    /* User bug.  setnetgrent() wasn't called before.  */
-    abort ();
+    return NSS_STATUS_NOTFOUND;
 
   if (position == data_size)
     return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
@@ -154,9 +153,9 @@ _nss_nisplus_setnetgrent (char *group)
       position = 0;
     }
 
-  sprintf(buf, "[name=%s],netgroup.org_dir", group);
+  sprintf (buf, "[name=%s],netgroup.org_dir", group);
 
-  data = nis_list(buf, EXPAND_NAME, NULL, NULL);
+  data = nis_list (buf, EXPAND_NAME, NULL, NULL);
 
   if (niserr2nss (data->status) != NSS_STATUS_SUCCESS)
     {

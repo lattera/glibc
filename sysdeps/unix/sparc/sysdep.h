@@ -27,19 +27,29 @@
 #define	syscall_error	C_SYMBOL_NAME(__syscall_error)
 #endif
 
-#define	ENTRY(name)							      \
-  .global C_SYMBOL_NAME(name);						      \
-  .align 2;								      \
+#ifdef HAVE_ELF
+#define	ENTRY(name)		\
+  .global C_SYMBOL_NAME(name);	\
+  .type name,@function;		\
+  .align 4;			\
   C_LABEL(name)
 
-#define	PSEUDO(name, syscall_name, args)				      \
-  .global syscall_error;						      \
-  ENTRY (name)								      \
-  mov SYS_ify(syscall_name), %g1;				   	      \
-  ta 0;									      \
-  bcc 1f;								      \
-  sethi %hi(syscall_error), %g1;					      \
-  jmp %g1 + %lo(syscall_error);	nop;					      \
+#else
+#define	ENTRY(name)		\
+  .global C_SYMBOL_NAME(name);	\
+  .align 4;			\
+  C_LABEL(name)
+
+#endif /* HAVE_ELF */
+
+#define	PSEUDO(name, syscall_name, args)	\
+  .global syscall_error;			\
+  ENTRY (name)					\
+  mov SYS_ify(syscall_name), %g1;		\
+  ta 0;						\
+  bcc 1f;					\
+  sethi %hi(syscall_error), %g1;		\
+  jmp %g1 + %lo(syscall_error);	nop;		\
 1:
 
 #define	ret		retl; nop

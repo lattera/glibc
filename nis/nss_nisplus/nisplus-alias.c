@@ -31,27 +31,47 @@
 __libc_lock_define_initialized (static, lock)
 
 static nis_result *result = NULL;
-static nis_name *names = NULL;
+static u_long next_entry = 0;
+static nis_name tablename_val = NULL;
+static u_long tablename_len = 0;
 
 #define NISENTRYVAL(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
 
 #define NISENTRYLEN(idx,col,res) \
-        ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+        ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
+
+static enum nss_status
+_nss_create_tablename (void)
+{
+  if (tablename_val == NULL)
+    {
+      char buf [40 + strlen (nis_local_directory ())];
+      char *p;
+
+      p = stpcpy (buf, "mail_aliases.org_dir.");
+      p = stpcpy (p, nis_local_directory ());
+      tablename_val = strdup (buf);
+      if (tablename_val == NULL)
+        return NSS_STATUS_TRYAGAIN;
+      tablename_len = strlen (tablename_val);
+    }
+  return NSS_STATUS_SUCCESS;
+}
 
 static int
-_nss_nisplus_parse_aliasent (nis_result *result, struct aliasent *alias,
-			  char *buffer, size_t buflen)
+_nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
+			     struct aliasent *alias, char *buffer,
+			     size_t buflen)
 {
   if (result == NULL)
     return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      result->objects.objects_len != 1 ||
-      result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
-      strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
+      __type_of (&result->objects.objects_val[entry]) != ENTRY_OBJ ||
+      strcmp(result->objects.objects_val[entry].EN_data.en_type,
 	     "mail_aliases") != 0 ||
-      result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 2)
+      result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 2)
     return 0;
   else
     {
@@ -62,7 +82,7 @@ _nss_nisplus_parse_aliasent (nis_result *result, struct aliasent *alias,
       char *line;
       char *cp;
 
-      if (NISENTRYLEN(0, 1, result) >= buflen)
+      if (NISENTRYLEN(entry, 1, result) >= buflen)
 	{
 	  /* The line is too long for our buffer.  */
 	no_more_room:
@@ -71,19 +91,20 @@ _nss_nisplus_parse_aliasent (nis_result *result, struct aliasent *alias,
 	}
       else
 	{
-	  strncpy (buffer, NISENTRYVAL(0, 1, result), NISENTRYLEN(0, 1, result));
-	  buffer[NISENTRYLEN(0, 1, result)] = '\0';
+	  strncpy (buffer, NISENTRYVAL(entry, 1, result),
+		   NISENTRYLEN(entry, 1, result));
+	  buffer[NISENTRYLEN(entry, 1, result)] = '\0';
 	}
 
-      if (NISENTRYLEN(0, 0, result) >= room_left)
+      if (NISENTRYLEN(entry, 0, result) >= room_left)
 	goto no_more_room;
 
       alias->alias_local = 0;
       alias->alias_members_len = 0;
       *first_unused = '\0';
       ++first_unused;
-      strcpy (first_unused, NISENTRYVAL(0, 0, result));
-      first_unused[NISENTRYLEN(0, 0, result)] = '\0';
+      strcpy (first_unused, NISENTRYVAL(entry, 0, result));
+      first_unused[NISENTRYLEN(entry, 0, result)] = '\0';
       alias->alias_name = first_unused;
 
       /* Terminate the line for any case.  */
@@ -129,23 +150,38 @@ _nss_nisplus_parse_aliasent (nis_result *result, struct aliasent *alias,
     }
 }
 
-enum nss_status
-_nss_nisplus_setaliasent (void)
+static enum nss_status
+internal_setaliasent (void)
 {
-  __libc_lock_lock (lock);
-
   if (result)
     nis_freeresult (result);
   result = NULL;
-  if (names)
+
+  if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
+    return NSS_STATUS_UNAVAIL;
+
+  next_entry = 0;
+  result = nis_list(tablename_val, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
     {
-      nis_freenames (names);
-      names = NULL;
+      nis_freeresult (result);
+      result = NULL;
     }
+  return niserr2nss (result->status);
+}
+
+enum nss_status
+_nss_nisplus_setaliasent (void)
+{
+  enum nss_status status;
+
+  __libc_lock_lock (lock);
+
+  status = internal_setaliasent ();
 
   __libc_lock_unlock (lock);
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
@@ -156,11 +192,7 @@ _nss_nisplus_endaliasent (void)
   if (result)
     nis_freeresult (result);
   result = NULL;
-  if (names)
-    {
-      nis_freenames (names);
-      names = NULL;
-    }
+  next_entry = 0;
 
   __libc_lock_unlock (lock);
 
@@ -173,31 +205,18 @@ internal_nisplus_getaliasent_r (struct aliasent *alias,
 {
   int parse_res;
 
+  if (result == NULL)
+    internal_setaliasent ();
+
   /* Get the next entry until we found a correct one. */
   do
     {
-      if (result == NULL)
-	{
-	  names = nis_getnames("mail_aliases.org_dir");
-	  if (names == NULL || names[0] == NULL)
-	    return NSS_STATUS_UNAVAIL;
+      if (next_entry >= result->objects.objects_len)
+	return NSS_STATUS_NOTFOUND;
 
-	  result = nis_first_entry(names[0]);
-	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
-	}
-      else
-	{
-	  nis_result *res2;
-
-	  res2 = nis_next_entry(names[0], &result->cookie);
-	  nis_freeresult (result);
-	  result = res2;
-	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
-	}
-
-      parse_res = _nss_nisplus_parse_aliasent (result, alias, buffer, buflen);
+      parse_res = _nss_nisplus_parse_aliasent (result, next_entry, alias,
+					       buffer, buflen);
+      ++next_entry;
     } while (!parse_res);
 
   return NSS_STATUS_SUCCESS;
@@ -224,21 +243,26 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
 {
   int parse_res;
 
+  if (tablename_val == NULL)
+    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
+      return NSS_STATUS_UNAVAIL;
+
   if (name == NULL || strlen(name) > 8)
     return NSS_STATUS_NOTFOUND;
   else
     {
       nis_result *result;
-      char buf[strlen (name) + 30];
+      char buf[strlen (name) + 30 + tablename_len];
 
-      sprintf(buf, "[name=%s],mail_aliases.org_dir", name);
+      sprintf(buf, "[name=%s],%s", name, tablename_val);
 
-      result = nis_list(buf, EXPAND_NAME, NULL, NULL);
+      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	return niserr2nss (result->status);
 
-      parse_res = _nss_nisplus_parse_aliasent (result, alias, buffer, buflen);
+      parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
+					       buffer, buflen);
 
       if (parse_res)
 	return NSS_STATUS_SUCCESS;

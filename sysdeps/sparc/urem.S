@@ -37,10 +37,18 @@
 
 
 
-#include "DEFS.h"
+#include "sysdep.h"
+#ifdef __linux__
+#include <asm/traps.h>
+#else
+#ifdef __svr4__
 #include <sys/trap.h>
+#else
+#include <machine/trap.h>
+#endif
+#endif
 
-FUNC(.urem)
+ENTRY(.urem)
 
 	! Ready to divide.  Compute size of quotient; scale comparand.
 	orcc	%o1, %g0, %o5

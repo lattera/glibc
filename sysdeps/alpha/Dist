@@ -1,5 +1,4 @@
 setjmp_aux.c
-DEFS.h
 divrem.h
 divl.S divq.S reml.S remq.S
 _mcount.S

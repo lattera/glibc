@@ -291,6 +291,15 @@ DEFUN(_IO_file_underflow, (fp),
 
   _IO_switch_to_get_mode(fp);
 
+  /* This is very tricky. We have to adjust those
+     pointers before we call _IO_SYSREAD () since
+     we may longjump () out while waiting for
+     input. Those pointers may be screwed up. H.J. */
+  fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_buf_base;
+  fp->_IO_read_end = fp->_IO_buf_base;
+  fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end
+    = fp->_IO_buf_base;
+
   count = _IO_SYSREAD (fp, fp->_IO_buf_base,
 		       fp->_IO_buf_end - fp->_IO_buf_base);
   if (count <= 0)
@@ -300,10 +309,7 @@ DEFUN(_IO_file_underflow, (fp),
       else
 	fp->_flags |= _IO_ERR_SEEN, count = 0;
   }
-  fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_buf_base;
-  fp->_IO_read_end = fp->_IO_buf_base + count;
-  fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end
-    = fp->_IO_buf_base;
+  fp->_IO_read_end += count;
   if (count == 0)
     return EOF;
   if (fp->_offset != _IO_pos_BAD)

@@ -84,10 +84,10 @@
 typedef int __libc_key_t;
 
 /* Create key for thread specific data.  */
-#define __libc_key_create(KEY,DEST)
+#define __libc_key_create(KEY,DEST) -1
 
 /* Set thread-specific data associated with KEY to VAL.  */
-#define __libc_setspecific(KEY,VAL)
+#define __libc_setspecific(KEY,VAL) -1
 
 /* Get thread-specific data associated with KEY.  */
 #define __libc_getspecific(KEY) 0

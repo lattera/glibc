@@ -254,10 +254,14 @@ extern nis_name __nis_default_owner __P ((char *));
 extern nis_name __nis_default_group __P ((char *));
 extern u_long __nis_default_ttl __P ((char *));
 extern u_long __nis_default_access __P ((char *, u_long));
-extern fd_result *__nis_finddirectory __P ((directory_obj *, nis_name));
+extern fd_result *__nis_finddirectory __P ((directory_obj *, const_nis_name));
+extern u_long __nis_hash __P ((const void *keyarg, register size_t len));
 extern log_result *__nis_dumplog __P ((nis_server *,nis_name, u_long));
 extern log_result *__nis_dump __P ((nis_server *, nis_name,
 				    int (*)(nis_name, nis_object *, void *)));
+/* NIS+ cache locking */
+extern int __nis_lock_cache __P ((void));
+extern int __nis_unlock_cache __P ((void));
 
 __END_DECLS
 

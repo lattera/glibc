@@ -1,5 +1,5 @@
 /* FPU control word bits.  i387 version.
-   Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe.
 
@@ -82,7 +82,7 @@
 
 #define _FPU_DEFAULT  0x137f
 
-/* IEEE:  same as above, but exceptions */
+/* IEEE:  same as above.  */
 #define _FPU_IEEE     0x137f
 
 /* Type of the control word.  */

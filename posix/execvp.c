@@ -116,6 +116,7 @@ execvp (file, argv)
 		 that we did find one but were denied access.  */
 	      got_eacces = 1;
 	    case ENOENT:
+	    case ESTALE:
 	      /* Those errors indicate the file is missing or not executable
 		 by us, in which case we want to just try the next path
 		 directory.  */

@@ -1,7 +1,10 @@
 GLIBC_2.0 {
   global:
     __nis_default_access; __nis_default_group; __nis_default_owner;
-    __nis_default_ttl;    __yp_check;          nis_add;
+    __nis_default_ttl;    __nis_finddirectory; __nis_lock_cache;
+    __nis_unlock_cache;   __nis_hash;
+
+    nis_add;
     nis_add_entry;        nis_addmember;       nis_checkpoint;
     nis_clone_directory;  nis_clone_entry;     nis_clone_group;
     nis_clone_link;       nis_clone_nis_attr;  nis_clone_objdata;
@@ -51,6 +54,7 @@ GLIBC_2.0 {
     xdr_ypresp_xfr;       xdr_ypstat;          xdr_ypupdate_args;
     xdr_ypxfrstat;        xdr_zotypes;
 
+    __yp_check;          
     yp_all;               yp_bind;             yp_first;
     yp_get_default_domain; yp_maplist;         yp_master;
     yp_match;             yp_next;             yp_order;

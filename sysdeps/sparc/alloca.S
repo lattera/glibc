@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include "DEFS.h"
+#include "sysdep.h"
 
 /* Code produced by Sun's C compiler calls this function with two extra
    arguments which it makes relocatable symbols but seem always to be
@@ -26,7 +26,7 @@
 #define __builtin_alloca ___builtin_alloca
 #endif
 
-FUNC (__builtin_alloca)
+ENTRY (__builtin_alloca)
 	sub %sp, %o0, %sp	/* Push some stack space.  */
 	retl			/* Return; the returned buffer leaves 96 */
 	add %sp, 96, %o0	/* bytes of register save area at the top. */

@@ -1,7 +1,6 @@
-/* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,13 +17,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __need_wchar_t
-#include <stddef.h>
-#include <locale.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <syslog.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <rpcsvc/nis.h>
+#include <rpcsvc/nislib.h>
+#include <rpcsvc/nis_cache.h>
+#include <bits/libc-lock.h>
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#include "nis_intern.h"
 
-extern unsigned long int ____wcstoul_l_internal (const wchar_t *, wchar_t **,
-						 int, int, __locale_t);
+/* XXX Only dummy functions in the moment. The real implementation
+       will follow, if we have a working nis_cachemgr */
+directory_obj *
+__cache_search (const_nis_name name)
+{
+  return NULL;
+}
 
-#include <wcstoul.c>
+nis_error 
+__cache_add (fd_result *fd)
+{
+  return NIS_FAIL;
+}

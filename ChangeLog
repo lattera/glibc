@@ -1,3 +1,147 @@
+1997-07-11 03:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/inet_ntoa.c: Prevent looking for thread data key if we found
+	one.
+
+	* signal/sigandset.c: Include stddef.h to get NULL defined.
+	* signal/sigisempty.c: Likewise.
+	* signal/sigorset.c: Likewise.
+	* sysdeps/stub/if_index.h: Likewise.
+	* wcsmbs/wcstod_l.c: Include locale.h to get __locale_t defined.
+	* wcsmbs/wcstof_l.c: Likewise.
+	* wcsmbs/wcstol_l.c: Likewise.
+	* wcsmbs/wcstold_l.c: Likewise.
+	* wcsmbs/wcstoll_l.c: Likewise.
+	* wcsmbs/wcstoul_l.c: Likewise.
+	* wcsmbs/wcstoull_l.c: Likewise.
+	Reported by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
+	* stdio-common/snprintf.c: Use ISO C function definition form.
+
+	* sysdeps/stub/libc-lock.h: Don't define __libc_key_create and
+	__libc_setspecific as empty macros since they are used as
+	function with return value.
+	Reported by Andreas Jaeger.
+
+1997-07-10  Marcus G. Daniels  <marcus@cathcart.sysc.pdx.edu>
+
+	* sysdeps/mach/hurd/select.c (__select): Need bit count for
+	MACH_MSG_TYPE_INTEGER_T.
+
+1997-07-08 10:12  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/i370/Implies: New file for i370-ibm-mvs port.
+	* sysdeps/mvs/Implies: Likewise.
+
+1997-07-09 23:06  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/Makefile: Add new source files.
+
+	* nis/nis_intern.h: Add new internal functions.
+	* nis/rpcsvc/nislib.h: Likewise.
+
+	* nis/lckcache.c: New.
+	* nis/nis_cache.c: New, dummy functions in the moment.
+	* nis/nis_util.c: New.
+	* nis/nisplus-parser.h: New.
+	* nis/nss_nisplus/nisplus-parser.c: New.
+	* nis/rpcsvc/nis_cache.h: New.
+	* nis/rpcsvc/nis_cache.x: New.
+
+	* nis/nss_compat/compat-grp.c: Matches Solaris behaviour now.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-alias.c: Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+
+	* nis/nss_nis/nis-publickey.c: Remove libc-lock.h include.
+
+	* nis/nis_intern.c: Removed.
+
+	* nis/nis_call.c: Complete rewrite.
+	* nis/nis_lookup.c: Likewise.
+	* nis/nis_table.c: Likewise.
+
+	* nis/libnsl.map: Add missing symbols.
+
+	* nis/nis_print.c: Fix nis_print_link.
+	* nis/nis_subr.c: Fix nis_getnames.
+
+1997-07-09 07:19  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* posix/execvp.c (execvp): Handle ESTALE.
+
+1997-07-10 13:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c: Make CHAR_SET_SIZE definition always available,
+	even if SYNTAX_TABLE is defined.
+	Patch by Akim Demaille <demaille@inf.enst.fr>.
+
+1997-07-09 08:16  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/fileops.c (_IO_file_underflow): Adjust pointers
+	before calling _IO_SYSREAD ().
+
+1997-07-07 22:54  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/sparc/divrem.m4: Eliminate use of "DEFS.h"
+	(sysdep.h does the same job).
+	* sysdeps/sparc/alloca.S: Likewise.
+	* sysdeps/sparc/dotmul.S: Likewise.
+	* sysdeps/sparc/udiv_qrnnd.S: Likewise.
+
+	* sysdeps/sparc/rem.S: Regenerated.
+	* sysdeps/sparc/sdiv.S: Regenerated.
+	* sysdeps/sparc/udiv.S: Regenerated.
+	* sysdeps/sparc/urem.S: Regenerated.
+
+	* sysdeps/sparc/DEFS.h: Removed.
+	* sysdeps/sparc/elf/DEFS.h: Removed.
+	* sysdeps/sparc/Dist: Don't distribute DEFS.h.
+
+	* sysdeps/unix/sparc/sysdep.h: Use 4 byte alignment. Add .type
+	directive #ifdef HAVE_ELF.  Minor format changes.
+
+	* sysdeps/alpha/DEFS.h: Removed.
+	* sysdeps/alpha/Dist: Don't distribute DEFS.h.
+
+1997-07-07 19:03  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* math/test-fenv.c (feenv_nomask_test): Move
+	fesetenv (FE_NOMASK_ENV) after fork () to work with
+	SMP.
+
+	* sysdeps/i386/fpu_control.h (_FPU_IEEE): Fix comment.
+
+1997-07-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add _IO_peekc_locked.
+
+1997-07-07 15:45  Fila Kolodny  <fila@ibi.com>
+
+	* Makeconfig: Add dbobjdir to rpath-link analogous to nssobjdir.
+
+1997-07-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/feholdexcpt.c: Shift the exception mask in the
+	right position.
+	* sysdeps/m68k/fpu/fesetenv.c (fesetenv): Likewise.
+
+1997-07-08 13:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c (spaces, zeroes): Handle broken SGI compiler.
+	Patch by Richard Stallman <rms@gnu.ai.mit.edu>.
+
 1997-07-08 02:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/lockf.c (lockf): Clear fl before using.

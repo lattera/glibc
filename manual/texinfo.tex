@@ -1,5 +1,5 @@
 %% TeX macros to handle Texinfo files.
-%% $Id: texinfo.tex,v 2.207 1997/07/07 13:08:20 drepper Exp $
+%% $Id: texinfo.tex,v 2.208 1997/07/11 01:01:45 drepper Exp $
 
 %  Copyright (C) 1985, 86, 88, 90, 91, 92, 93,
 %                94, 95, 96, 97 Free Software Foundation, Inc.
@@ -36,7 +36,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.207 $
+\deftexinfoversion$Revision: 2.208 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -101,6 +101,7 @@
 \hyphenation{ap-pen-dix}
 \hyphenation{mini-buf-fer mini-buf-fers}
 \hyphenation{eshell}
+\hyphenation{white-space}
 
 % Margin to add to right of even pages, to left of odd pages.
 \newdimen \bindingoffset
@@ -1235,6 +1236,7 @@ where each line of input produces a line of output.}
   \let\tensf=\titlesf \let\teni=\titlei \let\tensy=\titlesy
   \let\tenttsl=\titlettsl
   \resetmathfonts \setleading{25pt}}
+\def\titlefont#1{{\titlefonts #1}}
 \def\chapfonts{%
   \let\tenrm=\chaprm \let\tenit=\chapit \let\tensl=\chapsl
   \let\tenbf=\chapbf \let\tentt=\chaptt \let\smallcaps=\chapsc
@@ -3298,7 +3300,9 @@ width0pt\relax} \fi
    \unnumbchapmacro{#1}\def\thischapter{}%
    \begingroup                  % Set up to handle contents files properly.
       \catcode`\\=0  \catcode`\{=1  \catcode`\}=2  \catcode`\@=11
-      \catcode`\^=7 % to see ^^e4 as \"a etc. juha@piuha.ydi.vtt.fi
+      % We can't do this, because then an actual ^ in a section
+      % title fails, e.g., @chapter ^ -- exponentiation.  --karl, 9jul97.
+      %\catcode`\^=7 % to see ^^e4 as \"a etc. juha@piuha.ydi.vtt.fi
       \raggedbottom             % Worry more about breakpoints than the bottom.
       \advance\hsize by -\contentsrightmargin % Don't use the full line length.
 }

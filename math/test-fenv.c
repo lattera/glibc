@@ -227,10 +227,10 @@ feenv_nomask_test (const char *flag_name, int fe_exc)
 
   printf ("Test: after fesetenv (FE_NOMASK_ENV) processes will abort\n");
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
-  fesetenv (FE_NOMASK_ENV);
   pid = fork  ();
   if (pid == 0)
     {
+      fesetenv (FE_NOMASK_ENV);
       feraiseexcept (fe_exc);
       exit (2);
     }
@@ -270,10 +270,10 @@ feenv_mask_test (const char *flag_name, int fe_exc)
 
   printf ("Test: after fesetenv (FE_DFL_ENV) processes will not abort\n");
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
-  fesetenv (FE_DFL_ENV);
   pid = fork ();
   if (pid == 0)
     {
+      fesetenv (FE_DFL_ENV);
       feraiseexcept (fe_exc);
       exit (2);
     }

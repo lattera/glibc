@@ -116,8 +116,7 @@ nis_getnames (const_nis_name name)
   nis_name *getnames = NULL;
   char local_domain[NIS_MAXNAMELEN + 1];
   char *path, *cp;
-  int count, pos;
-
+  int count, pos, have_point;
 
   strncpy (local_domain, nis_local_directory (), NIS_MAXNAMELEN);
   local_domain[NIS_MAXNAMELEN] = '\0';
@@ -146,6 +145,8 @@ nis_getnames (const_nis_name name)
   else
     path = strdupa (path);
 
+  have_point = (strchr (name, '.') != NULL);
+
   pos = 0;
 
   cp = strtok (path, ":");
@@ -156,7 +157,7 @@ nis_getnames (const_nis_name name)
 	  char *cptr = local_domain;
 	  char *tmp;
 
-	  while (count_dots (cptr) >= 2)
+	  while ((have_point && *cptr != '\0') || (count_dots (cptr) >= 2))
 	    {
 	      if (pos >= count)
 		{
@@ -171,13 +172,18 @@ nis_getnames (const_nis_name name)
 	      getnames[pos] = tmp;
 	      tmp = stpcpy (tmp, name);
 	      *tmp++ = '.';
-	      stpcpy (tmp, cptr);
+	      if (cptr[1] != '\0')
+		stpcpy (tmp, cptr);
+	      else
+		++cptr;
 
 	      ++pos;
 
-	      while (*cptr != '.')
+	      while (*cptr != '.' && *cptr != '\0')
 		++cptr;
-	      ++cptr;
+	      if (cptr[0] != '\0' && cptr[1] != '\0')
+		/* If we have only ".", don't remove the "." */
+		++cptr;
 	    }
 	}
       else
@@ -186,31 +192,35 @@ nis_getnames (const_nis_name name)
 
 	  if (cp[strlen (cp) - 1] == '$')
 	    {
+	      char *p;
+
 	      tmp = malloc (strlen (cp) + strlen (local_domain) +
 			    strlen (name) + 2);
 	      if (tmp == NULL)
 		return NULL;
 
-	      tmp = stpcpy (tmp, name);
-	      *tmp++ = '.';
-	      tmp = stpcpy (tmp, cp);
-	      --tmp;
-	      if (tmp[-1] != '.')
-		*tmp++ = '.';
-	      stpcpy (tmp, local_domain);
+	      p = stpcpy (tmp, name);
+	      *p++ = '.';
+	      p = stpcpy (p, cp);
+	      --p;
+	      if (p[-1] != '.')
+		*p++ = '.';
+	      stpcpy (p, local_domain);
 	    }
 	  else
 	    {
+	      char *p;
+
 	      tmp = malloc (strlen (cp) + strlen (name) + 2);
 	      if (tmp == NULL)
 		return NULL;
 
-	      tmp = stpcpy (tmp, name);
-	      *tmp++ = '.';
-	      stpcpy (tmp, cp);
+	      p = stpcpy (tmp, name);
+	      *p++ = '.';
+	      stpcpy (p, cp);
 	    }
 
-	  if (pos > count)
+	  if (pos >= count)
 	    {
 	      count += 5;
 	      getnames = realloc (getnames, (count + 1) * sizeof (char *));

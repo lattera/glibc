@@ -17,12 +17,13 @@
 # Boston, MA 02111-1307, USA.
 
 #
-#	Makefile for NIS part.
+#	Makefile for NIS/NIS+ part.
 #
 subdir	:= nis
 
 headers			:= $(wildcard rpcsvc/*.[hx])
-distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner
+distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner \
+			nisplus-parser.h
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
@@ -44,15 +45,15 @@ vpath %.c $(subdir-dirs)
 libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
                   nis_subr nis_local_names nis_free nis_file \
                   nis_print nis_error nis_call nis_lookup nis_clone\
-                  nis_table nis_xdr nis_intern nis_server nis_ping\
+                  nis_cache nis_table nis_xdr nis_server nis_ping\
 		  nis_checkpoint nis_mkdir nis_rmdir nis_getservlist\
-		  nis_verifygroup nis_ismember nis_addmember \
+		  nis_verifygroup nis_ismember nis_addmember nis_util\
 		  nis_removemember nis_creategroup nis_destroygroup\
 		  nis_print_group_entry nis_domain_of nis_domain_of_r\
-		  nis_modify nis_remove nis_add nis_defaults
+		  nis_modify nis_remove nis_add nis_defaults lckcache
 libnsl-map	= libnsl.map
 
-libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd)
+libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd) nisplus-parser
 libnss_compat-inhibit-o	= $(filter-out .so,$(object-suffixes))
 libnss_compat-map	:= libnss_compat.map
 
@@ -60,16 +61,14 @@ libnss_nis-routines	:= $(addprefix nis-,$(databases))
 libnss_nis-inhibit-o	= $(filter-out .so,$(object-suffixes))
 libnss_nis-map		:= libnss_nis.map
 
-libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases))
+libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser
 libnss_nisplus-inhibit-o = $(filter-out .so,$(object-suffixes))
 libnss_nisplus-map	:= libnss_nisplus.map
 
 include ../Rules
 
 
-$(objpfx)libnss_compat.so: $(objpfx)libnsl.so$(libnsl.so-version) \
-			   $(common-objpfx)nss/libnss_files.so \
-			   $(common-objpfx)nis/libnss_nisplus.so
+$(objpfx)libnss_compat.so: $(objpfx)libnsl.so$(libnsl.so-version)
 $(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \
 			$(common-objpfx)nss/libnss_files.so
 $(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)

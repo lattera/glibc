@@ -30,128 +30,94 @@ nis_lookup (const_nis_name name, const u_long flags)
   struct ns_request req;
   nis_name *names;
   nis_error status;
-  int is_link = 1;	 /* We should go at least once in the while loop */
   int count_links = 0;	 /* We will follow only 16 links in the deep */
-  int i;
+  int done = 0;
+  int name_nr = 0;
+  nis_name namebuf[2] = {NULL, NULL};
 
   res = calloc (1, sizeof (nis_result));
 
   if (flags & EXPAND_NAME)
     {
-      names = __nis_expandname (name);
+      names = nis_getnames (name);
       if (names == NULL)
 	{
 	  res->status = NIS_NAMEUNREACHABLE;
 	  return res;
 	}
-
-      i = 0;
-      while (names[i] != NULL && (i == 0 || res->status > 1))
-	{
-	  req.ns_name = names[i];
-
-	  while (is_link)
-	    {
-	      req.ns_object.ns_object_len = 0;
-	      req.ns_object.ns_object_val = NULL;
-	      memset (res, '\0', sizeof (nis_result));
-
-	      if ((status = __do_niscall (req.ns_name, NIS_LOOKUP,
-					  (xdrproc_t) xdr_ns_request,
-					  (caddr_t) & req,
-					  (xdrproc_t) xdr_nis_result,
-				      (caddr_t) res, flags)) != RPC_SUCCESS)
-		{
-		  res->status = status;
-		  nis_freenames (names);
-		  return res;
-		}
-
-	      if ((res->status == NIS_SUCCESS || res->status == NIS_S_SUCCESS)
-		  && (res->objects.objects_len > 0 &&
-		      res->objects.objects_val->zo_data.zo_type == LINK_OBJ))
-		is_link = 1;
-	      else
-		is_link = 0;
-
-	      if (is_link)
-		{
-		  if ((flags & FOLLOW_LINKS) == FOLLOW_LINKS)
-		    {
-		      if (count_links == 16)
-			{
-			  res->status = NIS_LINKNAMEERROR;
-			  return res;
-			}
-		      else
-			++count_links;
-
-		      req.ns_name = res->objects.objects_val->LI_data.li_name;
-		    }
-		  else
-		    {
-		      res->status = NIS_NOTSEARCHABLE;
-		      return res;
-		    }
-		}
-	    }
-
-	  ++i;
-	  if (res->status == NIS_NOT_ME)
-	    res->status = NIS_NOSUCHNAME;
-	}
-
-      nis_freenames (names);
     }
   else
     {
-      req.ns_name = (char *)name;
+      names = namebuf;
+      names[0] = (nis_name) name;
+    }
 
-      while (is_link)
+  req.ns_name = names[0];
+  while (!done)
+    {
+      req.ns_object.ns_object_len = 0;
+      req.ns_object.ns_object_val = NULL;
+      memset (res, '\0', sizeof (nis_result));
+
+      status = __do_niscall (req.ns_name, NIS_LOOKUP,
+			     (xdrproc_t) xdr_ns_request,
+			     (caddr_t) & req,
+			     (xdrproc_t) xdr_nis_result,
+			     (caddr_t) res, flags);
+      if (status != NIS_SUCCESS)
+	res->status = status;
+
+      switch (res->status)
 	{
-	  req.ns_object.ns_object_len = 0;
-	  req.ns_object.ns_object_val = NULL;
-	  memset (res, '\0', sizeof (nis_result));
-
-	  if ((status = __do_niscall (req.ns_name, NIS_LOOKUP,
-				      (xdrproc_t) xdr_ns_request,
-				      (caddr_t) &req,
-				      (xdrproc_t) xdr_nis_result,
-				      (caddr_t) res, flags)) != RPC_SUCCESS)
+	case NIS_PARTIAL:
+	case NIS_SUCCESS:
+	case NIS_S_SUCCESS:
+	  if (__type_of(NIS_RES_OBJECT (res)) == LINK_OBJ &&
+	      flags & FOLLOW_LINKS) /* We are following links */
 	    {
-	      res->status = status;
-	      return res;
+	      /* if we hit the link limit, bail */
+	      if (count_links > NIS_MAXLINKS)
+		{
+		  res->status = NIS_LINKNAMEERROR;
+		  ++done;
+		  break;
+		}
+	      if (count_links)
+		free (req.ns_name);
+	      ++count_links;
+	      req.ns_name = strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
+	      nis_freeresult (res);
+	      res = calloc (1, sizeof (nis_result));
 	    }
-
-	  if ((res->status == NIS_SUCCESS || res->status == NIS_S_SUCCESS) &&
-	      (res->objects.objects_len > 0 &&
-	       res->objects.objects_val->zo_data.zo_type == LINK_OBJ))
-	    is_link = 1;
 	  else
-	    is_link = 0;
-
-	  if (is_link)
+	    ++done;
+	  break;
+	case NIS_CBRESULTS:
+	  /* XXX Implement CALLBACK here ! */
+	  ++done;
+	  break;
+	default:
+	  /* Try the next domainname if we don't follow a link */
+	  if (count_links)
 	    {
-	      if ((flags & FOLLOW_LINKS) == FOLLOW_LINKS)
-		{
-		  if (count_links == 16)
-		    {
-		      res->status = NIS_LINKNAMEERROR;
-		      return res;
-		    }
-		  else
-		    ++count_links;
-
-		  req.ns_name = res->objects.objects_val->LI_data.li_name;
-		}
-	      else
-		{
-		  res->status = NIS_NOTSEARCHABLE;
-		  return res;
-		}
+	      free (req.ns_name);
+	      res->status = NIS_LINKNAMEERROR;
+	      ++done;
+	      break;
 	    }
+	  ++name_nr;
+	  if (names[name_nr] == NULL)
+	    {
+	      ++done;
+	      break;
+	    }
+	  req.ns_name = names[name_nr];
+	  break;
 	}
     }
+
+  if (names != namebuf)
+    nis_freenames (names);
 
   return res;
 }

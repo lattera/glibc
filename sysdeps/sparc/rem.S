@@ -37,10 +37,18 @@
 
 
 
-#include "DEFS.h"
+#include "sysdep.h"
+#ifdef __linux__
+#include <asm/traps.h>
+#else
+#ifdef __svr4__
 #include <sys/trap.h>
+#else
+#include <machine/trap.h>
+#endif
+#endif
 
-FUNC(.rem)
+ENTRY(.rem)
 	! compute sign of result; if neither is negative, no problem
 	orcc	%o1, %o0, %g0	! either negative?
 	bge	2f			! no, go do the divide

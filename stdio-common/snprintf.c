@@ -23,10 +23,7 @@
    string FORMAT, writing no more than MAXLEN characters.  */
 /* VARARGS3 */
 int
-__snprintf (s, maxlen, format)
-      char *s;
-      size_t maxlen;
-      const char *format;
+__snprintf (char *s, size_t maxlen, const char *format, ...)
 {
   va_list arg;
   int done;

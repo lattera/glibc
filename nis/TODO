@@ -2,8 +2,6 @@
  * nis_addmember: Where checks for duplicate group members ? nisgrpadm or
 		  nis_addmember ?
 
- * nss_nisplus: When using parser form nss_files, rewrite parser
-
  * nis_table.c: nis_list(): 
 	Missing flags: FOLLOW_PATH, ALL_RESULTS
 	callback: Don't simulate it, use server callback thread

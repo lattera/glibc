@@ -1,7 +1,6 @@
-/* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,13 +17,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __need_wchar_t
-#include <stddef.h>
-#include <locale.h>
+#ifndef __NISPLUS_PARSER_H_
+#define __NISPLUS_PARSER_H_ 1
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#include <pwd.h>
+#include <grp.h>
+#include <shadow.h>
 
-extern unsigned long int ____wcstoul_l_internal (const wchar_t *, wchar_t **,
-						 int, int, __locale_t);
+extern int _nss_nisplus_parse_pwent (nis_result *, struct passwd *,
+				     char *, size_t);
+extern int _nss_nisplus_parse_grent (nis_result *, u_long, struct group *,
+				     char *, size_t);
+extern int _nss_nisplus_parse_spent (nis_result *, struct spwd *,
+				     char *, size_t);
 
-#include <wcstoul.c>
+#endif

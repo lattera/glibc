@@ -20,6 +20,7 @@
 
 #define __need_wchar_t
 #include <stddef.h>
+#include <locale.h>
 
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 

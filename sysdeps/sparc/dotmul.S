@@ -10,8 +10,8 @@
  * This code optimizes short (less than 13-bit) multiplies.
  */
 
-#include "DEFS.h"
-FUNC(.mul)
+#include "sysdep.h"
+ENTRY(.mul)
 	mov	%o0, %y		! multiplier -> Y
 	andncc	%o0, 0xfff, %g0	! test bits 12..31
 	be	Lmul_shortway	! if zero, can do it the short way

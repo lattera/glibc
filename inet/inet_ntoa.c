@@ -57,6 +57,9 @@ inet_ntoa (struct in_addr in)
 	       really went wrong.  In any case use a static buffer
 	       which is better than nothing.  */
 	    buffer = static_buf;
+	  else
+	    /* We have a key.  */
+	    initialized = 1;
 	}
 
       __libc_lock_unlock (lock);

@@ -27,143 +27,66 @@
 #include <rpcsvc/nislib.h>
 
 #include "nss-nisplus.h"
+#include "nisplus-parser.h"
 
 __libc_lock_define_initialized (static, lock);
 
 static nis_result *result = NULL;
-static nis_name *names = NULL;
+static unsigned long next_entry = 0;
+static nis_name tablename_val = NULL;
+static u_long tablename_len = 0;
 
-#define NISENTRYVAL(idx,col,res) \
-((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
-
-#define NISENTRYLEN(idx,col,res) \
-  ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
-
-int
-_nss_nisplus_parse_grent (nis_result * result, struct group *gr,
-			  char *buffer, size_t buflen)
+static enum nss_status
+_nss_create_tablename (void)
 {
-  char *first_unused = buffer;
-  size_t room_left = buflen;
-  char *line;
-  int count;
-
-  if (result == NULL)
-    return 0;
-
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      result->objects.objects_len != 1 ||
-      result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
-      strcmp (result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
-	      "group_tbl") != 0 ||
-      result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 4)
-    return 0;
-
-  if (NISENTRYLEN (0, 0, result) >= room_left)
+  if (tablename_val == NULL)
     {
-      /* The line is too long for our buffer.  */
-    no_more_room:
-      __set_errno (ERANGE);
-      return 0;
+      char buf [40 + strlen (nis_local_directory ())];
+      char *p;
+
+      p = stpcpy (buf, "group.org_dir.");
+      p = stpcpy (p, nis_local_directory ());
+      tablename_val = strdup (buf);
+      if (tablename_val == NULL)
+        return NSS_STATUS_TRYAGAIN;
+      tablename_len = strlen (tablename_val);
     }
+  return NSS_STATUS_SUCCESS;
+}
 
-  strncpy (first_unused, NISENTRYVAL (0, 0, result),
-	   NISENTRYLEN (0, 0, result));
-  first_unused[NISENTRYLEN (0, 0, result)] = '\0';
-  gr->gr_name = first_unused;
-  room_left -= (strlen (first_unused) + 1);
-  first_unused += strlen (first_unused) + 1;
+static enum nss_status
+internal_setgrent (void)
+{
+  if (result)
+    nis_freeresult (result);
+  result = NULL;
+  next_entry = 0;
 
-  if (NISENTRYLEN (0, 1, result) >= room_left)
-    goto no_more_room;
+  if (tablename_val == NULL)
+    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
+      return NSS_STATUS_UNAVAIL;
 
-  strncpy (first_unused, NISENTRYVAL (0, 1, result),
-	   NISENTRYLEN (0, 1, result));
-  first_unused[NISENTRYLEN (0, 1, result)] = '\0';
-  gr->gr_passwd = first_unused;
-  room_left -= (strlen (first_unused) + 1);
-  first_unused += strlen (first_unused) + 1;
-
-  if (NISENTRYLEN (0, 2, result) >= room_left)
-    goto no_more_room;
-
-  strncpy (first_unused, NISENTRYVAL (0, 2, result),
-	   NISENTRYLEN (0, 2, result));
-  first_unused[NISENTRYLEN (0, 2, result)] = '\0';
-  gr->gr_gid = atoi (first_unused);
-  room_left -= (strlen (first_unused) + 1);
-  first_unused += strlen (first_unused) + 1;
-
-  if (NISENTRYLEN (0, 3, result) >= room_left)
-    goto no_more_room;
-
-  strncpy (first_unused, NISENTRYVAL (0, 3, result),
-	   NISENTRYLEN (0, 3, result));
-  first_unused[NISENTRYLEN (0, 3, result)] = '\0';
-  line = first_unused;
-  room_left -= (strlen (line) + 1);
-  first_unused += strlen (line) + 1;
-  /* Adjust the pointer so it is aligned for
-     storing pointers.  */
-  first_unused += __alignof__ (char *) - 1;
-  first_unused -= ((first_unused - (char *) 0) % __alignof__ (char *));
-  gr->gr_mem = (char **) first_unused;
-
-  count = 0;
-  while (*line != '\0')
+  result = nis_list (tablename_val, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
     {
-      /* Skip leading blanks.  */
-      while (isspace (*line))
-	++line;
-
-      if (*line == '\0')
-	break;
-
-      if (room_left < sizeof (char *))
-	  goto no_more_room;
-      room_left -= sizeof (char *);
-      gr->gr_mem[count] = line;
-
-      while (*line != '\0' && *line != ',' && !isspace(*line))
-	++line;
-
-      if (line != gr->gr_mem[count])
-	{
-	  if (*line != '\0')
-	    {
-	      *line = '\0';
-	      ++line;
-	    }
-	  ++count;
-	}
-      else
-	gr->gr_mem[count] = NULL;
+      nis_freeresult (result);
+      result = NULL;
     }
-  if (room_left < sizeof (char *))
-      goto no_more_room;
-  room_left -= sizeof (char *);
-  gr->gr_mem[count] = NULL;
-
-  return 1;
+  return niserr2nss (result->status);
 }
 
 enum nss_status
 _nss_nisplus_setgrent (void)
 {
+  enum nss_status status;
+
   __libc_lock_lock (lock);
 
-  if (result)
-    nis_freeresult (result);
-  result = NULL;
-  if (names)
-    {
-      nis_freenames (names);
-      names = NULL;
-    }
+  status = internal_setgrent ();
 
   __libc_lock_unlock (lock);
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
@@ -174,11 +97,6 @@ _nss_nisplus_endgrent (void)
   if (result)
     nis_freeresult (result);
   result = NULL;
-  if (names)
-    {
-      nis_freenames (names);
-      names = NULL;
-    }
 
   __libc_lock_unlock (lock);
 
@@ -190,31 +108,18 @@ internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen)
 {
   int parse_res;
 
+  if (result == NULL)
+    internal_setgrent ();
+
   /* Get the next entry until we found a correct one. */
   do
     {
-      if (result == NULL)
-	{
-	  names = nis_getnames ("group.org_dir");
-	  if (names == NULL || names[0] == NULL)
-	    return NSS_STATUS_UNAVAIL;
+      if (next_entry >= result->objects.objects_len)
+	return NSS_STATUS_NOTFOUND;
 
-	  result = nis_first_entry (names[0]);
-	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
-	}
-      else
-	{
-	  nis_result *res;
-
-	  res = nis_next_entry (names[0], &result->cookie);
-	  nis_freeresult (result);
-	  result = res;
-	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-	    return niserr2nss (result->status);
-	}
-
-      parse_res = _nss_nisplus_parse_grent (result, gr, buffer, buflen);
+      parse_res = _nss_nisplus_parse_grent (result, next_entry, gr,
+					    buffer, buflen);
+      ++next_entry;
     }
   while (!parse_res);
 
@@ -241,16 +146,20 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 {
   int parse_res;
 
+  if (tablename_val == NULL)
+    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
+      return NSS_STATUS_UNAVAIL;
+
   if (name == NULL || strlen (name) > 8)
     return NSS_STATUS_NOTFOUND;
   else
     {
       nis_result *result;
-      char buf[strlen (name) + 24];
+      char buf[strlen (name) + 24 + tablename_len];
 
-      sprintf (buf, "[name=%s],group.org_dir", name);
+      sprintf (buf, "[name=%s],%s", name, tablename_val);
 
-      result = nis_list (buf, EXPAND_NAME, NULL, NULL);
+      result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
@@ -260,7 +169,7 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 	  return status;
 	}
 
-      parse_res = _nss_nisplus_parse_grent (result, gr, buffer, buflen);
+      parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen);
 
       nis_freeresult (result);
 
@@ -278,31 +187,37 @@ enum nss_status
 _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
 			 char *buffer, size_t buflen)
 {
-  int parse_res;
-  nis_result *result;
-  char buf[36];
+  if (tablename_val == NULL)
+    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
+      return NSS_STATUS_UNAVAIL;
 
-  sprintf (buf, "[gid=%d],group.org_dir", gid);
+  {
+    int parse_res;
+    nis_result *result;
+    char buf[36 + tablename_len];
 
-  result = nis_list (buf, EXPAND_NAME, NULL, NULL);
+    sprintf (buf, "[gid=%d],%s", gid, tablename_val);
 
-  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-    {
-      enum nss_status status = niserr2nss (result->status);
+    result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
-      nis_freeresult (result);
-      return status;
-    }
+    if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
+      {
+	enum nss_status status = niserr2nss (result->status);
 
-  parse_res = _nss_nisplus_parse_grent (result, gr, buffer, buflen);
+	nis_freeresult (result);
+	return status;
+      }
 
-  nis_freeresult (result);
+    parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen);
 
-  if (parse_res)
-    return NSS_STATUS_SUCCESS;
+    nis_freeresult (result);
 
-  if (!parse_res && errno == ERANGE)
-    return NSS_STATUS_TRYAGAIN;
-  else
-    return NSS_STATUS_NOTFOUND;
+    if (parse_res)
+      return NSS_STATUS_SUCCESS;
+
+    if (!parse_res && errno == ERANGE)
+      return NSS_STATUS_TRYAGAIN;
+    else
+      return NSS_STATUS_NOTFOUND;
+  }
 }

@@ -32,15 +32,15 @@ fesetenv (const fenv_t *envp)
   __asm__ ("fmovem%.l %/fpcr/%/fpsr,%0" : "=m" (*&temp));
 
   temp.status_register &= ~FE_ALL_EXCEPT;
-  temp.control_register &= ~((FE_ALL_EXCEPT << 5) | FE_UPWARD);
+  temp.control_register &= ~((FE_ALL_EXCEPT << 6) | FE_UPWARD);
   if (envp == FE_DFL_ENV)
     ;
   else if (envp == FE_NOMASK_ENV)
-    temp.control_register |= FE_ALL_EXCEPT << 5;
+    temp.control_register |= FE_ALL_EXCEPT << 6;
   else
     {
       temp.control_register |= (envp->control_register
-				& ((FE_ALL_EXCEPT << 5) | FE_UPWARD));
+				& ((FE_ALL_EXCEPT << 6) | FE_UPWARD));
       temp.status_register |= envp->status_register & FE_ALL_EXCEPT;
     }
 

@@ -16,21 +16,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-unsigned int if_nametoindex(const char *ifname)
+#define __need_NULL
+#include <stddef.h>
+
+unsigned int
+if_nametoindex (const char *ifname)
 {
   return 0;
 }
 
-char *if_indextoname(unsigned int ifindex, char *ifname)
+char *
+if_indextoname (unsigned int ifindex, char *ifname)
 {
   return NULL;
 }
 
-void if_freenameindex(struct if_nameindex *ifn)
+void
+if_freenameindex (struct if_nameindex *ifn)
 {
 }
 
-struct if_nameindex *if_nameindex(void)
+struct if_nameindex *
+if_nameindex (void)
 {
   return NULL;
 }

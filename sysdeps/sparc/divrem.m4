@@ -82,7 +82,7 @@ L.$1.eval(2**N+$2):
 	', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2-1)')')
 	ifelse($1, 1, `9:')')dnl
 
-#include "DEFS.h"
+#include "sysdep.h"
 #ifdef __linux__
 #include <asm/traps.h>
 #else

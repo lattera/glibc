@@ -77,6 +77,41 @@ nis_flags2str (const u_long flags)
   return buf;
 }
 
+static void
+nis_print_objtype (enum zotypes type)
+{
+  switch (type)
+    {
+    case BOGUS_OBJ:
+      fputs (_("BOGUS OBJECT\n"), stdout);
+      break;
+    case NO_OBJ:
+      fputs (_("NO OBJECT\n"), stdout);
+      break;
+    case DIRECTORY_OBJ:
+      fputs (_("DIRECTORY\n"), stdout);
+      break;
+    case GROUP_OBJ:
+      fputs (_("GROUP\n"), stdout);
+      break;
+    case TABLE_OBJ:
+      fputs (_("TABLE\n"), stdout);
+      break;
+    case ENTRY_OBJ:
+      fputs (_("ENTRY\n"), stdout);
+      break;
+    case LINK_OBJ:
+      fputs (_("LINK\n"), stdout);
+      break;
+    case PRIVATE_OBJ:
+      fputs (_("PRIVATE\n"), stdout);
+      break;
+    default:
+      fputs (_("(Unknown object)\n"), stdout);
+      break;
+    }
+}
+
 void
 nis_print_rights (const u_long access)
 {
@@ -218,9 +253,10 @@ nis_print_table (const table_obj *obj)
 void
 nis_print_link (const link_obj *obj)
 {
-  printf (_("Type : %d\n"), obj->li_rtype);
-  printf (_("Name : %s\n"), obj->li_name);
-  printf (_("Attributes : %d\n"), obj->li_attrs.li_attrs_len);
+  fputs (_("Linked Object Type : "), stdout);
+  nis_print_objtype (obj->li_rtype);
+  printf (_("Linked to : %s\n"), obj->li_name);
+  /* XXX Print the attributs here, if they exists */
 }
 
 void
@@ -255,41 +291,29 @@ nis_print_object (const nis_object * obj)
   printf (_("Creation Time : %s"), ctime (&obj->zo_oid.ctime));
   printf (_("Mod. Time     : %s"), ctime (&obj->zo_oid.mtime));
   fputs (_("Object Type   : "), stdout);
+  nis_print_objtype (obj->zo_data.zo_type);
   switch (obj->zo_data.zo_type)
     {
-    case BOGUS_OBJ:
-      fputs (_("BOGUS OBJECT\n"), stdout);
-      break;
-    case NO_OBJ:
-      fputs (_("NO OBJECT\n"), stdout);
-      break;
     case DIRECTORY_OBJ:
-      fputs (_("DIRECTORY\n"), stdout);
       nis_print_directory (&obj->zo_data.objdata_u.di_data);
       break;
     case GROUP_OBJ:
-      fputs (_("GROUP\n"), stdout);
       nis_print_group (&obj->zo_data.objdata_u.gr_data);
       break;
     case TABLE_OBJ:
-      fputs (_("TABLE\n"), stdout);
       nis_print_table (&obj->zo_data.objdata_u.ta_data);
       break;
     case ENTRY_OBJ:
-      fputs (_("ENTRY\n"), stdout);
       nis_print_entry (&obj->zo_data.objdata_u.en_data);
       break;
     case LINK_OBJ:
-      fputs (_("LINK\n"), stdout);
       nis_print_link (&obj->zo_data.objdata_u.li_data);
       break;
     case PRIVATE_OBJ:
-      fputs (_("PRIVATE\n"), stdout);
       printf (_("    Data Length = %u\n"),
 	      obj->zo_data.objdata_u.po_data.po_data_len);
       break;
     default:
-      fputs (_("(Unknown object)\n"), stdout);
       break;
     }
 }

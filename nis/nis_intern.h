@@ -24,17 +24,22 @@
 
 __BEGIN_DECLS
 
-extern nis_error __do_niscall2 (const nis_server *server, u_int server_len,
-				u_long prog, xdrproc_t xargs, caddr_t req,
-				xdrproc_t xres, caddr_t resp, u_long flags);
-extern nis_error __do_niscall (const_nis_name name, u_long prog,
-			       xdrproc_t xargs, caddr_t req, xdrproc_t xres,
-			       caddr_t resp, u_long flags);
+extern nis_error __do_niscall2 __P ((const nis_server *serv, u_int serv_len,
+				     u_long prog, xdrproc_t xargs, caddr_t req,
+				     xdrproc_t xres, caddr_t resp, 
+				     u_long flags));
+extern nis_error __do_niscall __P ((const_nis_name name, u_long prog,
+				    xdrproc_t xargs, caddr_t req, 
+				    xdrproc_t xres, caddr_t resp,
+				    u_long flags));
 #if defined (HAVE_SECURE_RPC)
-extern AUTH *authdes_pk_create (const char *, const netobj *, u_int,
-				struct sockaddr *, des_block *);
+extern AUTH *authdes_pk_create __P ((const char *, const netobj *, u_int,
+				     struct sockaddr *, des_block *));
 #endif
-extern nis_name *__nis_expandname (const char *);
+
+/* NIS+ cache */
+extern directory_obj *__cache_search __P ((const_nis_name name));
+extern nis_error __cache_add __P ((fd_result *));
 
 __END_DECLS
 

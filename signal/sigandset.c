@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <signal.h>
+#define __need_NULL
+#include <stddef.h>
 
 /* Combine sets LEFT and RIGHT by logical AND and place result in DEST.  */
 int

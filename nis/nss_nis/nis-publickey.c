@@ -22,7 +22,6 @@
 #include <errno.h>
 #include <string.h>
 #include <syslog.h>
-#include <bits/libc-lock.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
@@ -40,7 +39,7 @@ _nss_nis_getpublickey (const char *netname, char *pkey)
   enum nss_status retval;
   char *domain, *result;
   int len;
-
+  
   pkey[0] = 0;
 
   if (netname == NULL)
