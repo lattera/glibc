@@ -1,5 +1,7 @@
 2001-04-16  Andreas Jaeger  <aj@suse.de>
 
+	* math/libm-test.inc (atan2_test): Add more testcases.
+
 	* iconv/gconv_db.c: Include gconv_charset.h for
 	__gconv_lookup_alias prototype.
 
