@@ -2742,7 +2742,7 @@ previous definition was here"));
 			{
 			  /* Nothing found.  We tell the user.  */
 			  lr_error (ldfile, _("\
-%s: no representable `default_missing' definition found"), LC_CTYPE);
+%s: no representable `default_missing' definition found"), "LC_CTYPE");
 			  break;
 			}
 		      if (now->tok != tok_semicolon)

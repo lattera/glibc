@@ -1,3 +1,8 @@
+2000-08-23  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/ld-ctype.c (ctype_read): Fix parameter for
+	lr_error.
+
 2000-08-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Use
