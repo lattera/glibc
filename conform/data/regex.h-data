@@ -38,4 +38,5 @@ function void regfree (regex_t*)
 allow REG_*
 allow re_*
 allow rm_*
+allow *_t
 #endif

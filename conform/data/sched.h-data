@@ -19,4 +19,5 @@ allow-header time.h
 
 allow sched_*
 allow SCHED_*
+allow *_t
 #endif

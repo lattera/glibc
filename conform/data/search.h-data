@@ -25,4 +25,6 @@ function {void*} tdelete (const void*, void**, int(*)(const void*, const void*))
 function {void*} tfind (const void*, void*const*, int(*)(const void*, const void*)) tfind (const void*, void*const*, int(*)(const void*, const void*))
 function {void*} tsearch (const void*, void**, int(*)(const void*, const void*))
 function void twalk (const void*, void (*) (const void*, VISIT, int))
+
+allow *_t
 #endif

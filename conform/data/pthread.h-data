@@ -131,4 +131,5 @@ allow-header time.h
 
 allow PTHREAD_*
 allow pthread_*
+allow *_t
 #endif

@@ -20,4 +20,5 @@ function {struct passwd*} getpwent (void)
 funciton void setpwent (void)
 
 allow pw_*
+allow *_t
 #endif

@@ -31,12 +31,14 @@ __BEGIN_DECLS
 /* Prototype structure for a linked-list data structure.
    This is the type used by the `insque' and `remque' functions.  */
 
+# ifdef __USE_GNU
 struct qelem
   {
     struct qelem *q_forw;
     struct qelem *q_back;
     char q_data[1];
   };
+# endif
 
 
 /* Insert ELEM into a doubly-linked list, after PREV.  */
@@ -104,8 +106,8 @@ struct hsearch_data
    same time.  */
 extern int hsearch_r __P ((ENTRY __item, ACTION __action, ENTRY **__retval,
 			   struct hsearch_data *__htab));
-extern int hcreate_r __P ((size_t __nel, struct hsearch_data *htab));
-extern void hdestroy_r __P ((struct hsearch_data *htab));
+extern int hcreate_r __P ((size_t __nel, struct hsearch_data *__htab));
+extern void hdestroy_r __P ((struct hsearch_data *__htab));
 #endif
 
 
@@ -126,16 +128,16 @@ VISIT;
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP and insert a new element if not found.  */
 extern void *tsearch __PMT ((__const void *__key, void **__rootp,
-			     __compar_fn_t compar));
+			     __compar_fn_t __compar));
 
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP.  If no matching entry is available return NULL.  */
 extern void *tfind __PMT ((__const void *__key, void *__const *__rootp,
-			   __compar_fn_t compar));
+			   __compar_fn_t __compar));
 
 /* Remove the element matching KEY from the tree pointed to by *ROOTP.  */
 extern void *tdelete __PMT ((__const void *__key, void **__rootp,
-			     __compar_fn_t compar));
+			     __compar_fn_t __compar));
 
 #ifndef __ACTION_FN_T
 # define __ACTION_FN_T
@@ -146,7 +148,7 @@ typedef void (*__action_fn_t) __PMT ((__const void *__nodep,
 
 /* Walk through the whole tree and call the ACTION callback for every node
    or leaf.  */
-extern void twalk __PMT ((__const void *__root, __action_fn_t action));
+extern void twalk __PMT ((__const void *__root, __action_fn_t __action));
 
 #ifdef __USE_GNU
 /* Callback type for function to free a tree node.  If the keys are atomic
@@ -154,7 +156,7 @@ extern void twalk __PMT ((__const void *__root, __action_fn_t action));
 typedef void (*__free_fn_t) __PMT ((void *__nodep));
 
 /* Destroy the whole tree, call FREEFCT for each node or leaf.  */
-extern void tdestroy __PMT ((void *__root, __free_fn_t freefct));
+extern void tdestroy __PMT ((void *__root, __free_fn_t __freefct));
 #endif
 
 

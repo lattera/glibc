@@ -1,5 +1,13 @@
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* conform/data/regex.h-data: Allow *_t types.
+	* conform/data/pwd.h-data: Likewise.
+	* conform/data/sched.h-data: Likewise
+	* conform/data/pthread.h-data: Likewise.
+	* conform/data/search.h-data: Likewise.
+
+	* misc/search.h: Avoid namespace pollution.
+
 	* conform/conformtest.pl (@headers): Add search.h, sched.h, regex.h,
 	pwd.h, and pthread.h.
 	* conform/data/pthread.h-data: New file.
