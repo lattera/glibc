@@ -4,6 +4,9 @@
 
 2002-12-01  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Fix condition
+	testing getdents64 return value.
+
 	* scripts/versions.awk: Don't pass -n flag to sort command.
 
 	* posix/bug-regex13.c: Include <string.h>.
