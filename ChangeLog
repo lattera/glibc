@@ -1,3 +1,12 @@
+2003-09-10  Chris Demetriou  <cgd@broadcom.com>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Remove
+	"#if 0" surrounding most of contents.
+	(SYSCALL_ERROR_LABEL): Define.
+	(__SYSCALL_CLOBBERS): Add $10.
+	(internal_syscall7): Remove.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+
 2003-09-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (dl_main): Also set l_map_start.

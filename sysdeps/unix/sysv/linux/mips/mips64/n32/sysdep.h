@@ -33,9 +33,16 @@
 # define SYS_ify(syscall_name)	__NR_N32_/**/syscall_name
 #endif
 
+#ifdef __ASSEMBLER__
 
-#ifndef __ASSEMBLER__
-#if 0 /* untested */
+/* We don't want the label for the error handler to be visible in the symbol
+   table when we define it here.  */
+#ifdef __PIC__
+# define SYSCALL_ERROR_LABEL 99b
+#endif
+
+#else   /* ! __ASSEMBLER__ */
+
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */
 #undef INLINE_SYSCALL
@@ -228,36 +235,7 @@
 	_sys_result;							\
 })
 
-#define internal_syscall7(name, err, arg1, arg2, arg3, arg4, arg5, arg6, arg7)\
-({ 									\
-	long _sys_result;						\
-									\
-	{								\
-	register long long __v0 asm("$2"); 				\
-	register long long __a0 asm("$4") = (long long) arg1; 		\
-	register long long __a1 asm("$5") = (long long) arg2; 		\
-	register long long __a2 asm("$6") = (long long) arg3; 		\
-	register long long __a3 asm("$7") = (long long) arg4; 		\
-	register long long __a4 asm("$8") = (long long) arg5; 		\
-	register long long __a5 asm("$9") = (long long) arg6; 		\
-	register long long __a6 asm("$10") = (long long) arg7; 		\
-	__asm__ volatile ( 						\
-	".set\tnoreorder\n\t" 						\
-	"li\t$2, %5\t\t\t# " #name "\n\t" 				\
-	"syscall\n\t" 							\
-	".set\treorder" 						\
-	: "=r" (__v0), "+r" (__a3) 					\
-	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
-	  "r" (__a4), "r" (__a5), "r" (__a6)				\
-	: __SYSCALL_CLOBBERS); 						\
-	err = __a3;							\
-	_sys_result = __v0;						\
-	}								\
-	_sys_result;							\
-})
-
-#define __SYSCALL_CLOBBERS "$1", "$3", "$11", "$12", "$13", "$14", "$15", "$24", "$25"
-#endif /* untested */
+#define __SYSCALL_CLOBBERS "$1", "$3", "$10", "$11", "$12", "$13", "$14", "$15", "$24", "$25"
 #endif /* __ASSEMBLER__ */
 
 #endif /* linux/mips/sysdep.h */
