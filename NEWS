@@ -3,8 +3,7 @@ Copyright (C) 1992-2000,01,02 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
-<bugs@gnu.org>.  Questions and suggestions should be send to
-<bug-glibc@gnu.org>.
+<bugs@gnu.org>.  Please send questions and suggestions to <bug-glibc@gnu.org>.
 
 Version 2.3
 
@@ -41,6 +40,10 @@ Version 2.3
 
 * Bruno Haible contributed iconv converters for ISO-2022-JP-3, SHIFT JIS-X0213,
   and EUC-JISX0213.
+
+* New header <ifaddrs.h> with functions `getifaddrs' and `freeifaddrs':
+  BSD-compatible interface for getting all network interface addresses.
+  Implementation for IPv4 by Roland McGrath.
 
 Version 2.2.5
 

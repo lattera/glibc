@@ -1358,6 +1358,9 @@ text_set_element (_hurd_reauth_hook, reauth_proc);
 const char *
 _hurdsig_getenv (const char *variable)
 {
+  if (__libc_enable_secure)
+    return NULL;
+
   if (_hurdsig_catch_memory_fault (__environ))
     /* We bombed in getenv.  */
     return NULL;

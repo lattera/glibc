@@ -1,3 +1,8 @@
+2002-07-19  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdsig.c (_hurdsig_getenv): Always return null if
+	__libc_enable_secure is set.
+
 2002-07-24  Roland McGrath  <roland@frob.com>
 
 	Added <ifaddrs.h> interface with functions `getifaddrs', `freeifaddrs'.
