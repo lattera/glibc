@@ -116,7 +116,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = l;
@@ -129,128 +130,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
   return lazy;
 }
-
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-#ifndef PROF
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.type _dl_runtime_resolve, @function\n\
-	.align 16\n\
-	" CFI_STARTPROC "\n\
-_dl_runtime_resolve:\n\
-	subq $56,%rsp\n\
-	" CFI_ADJUST_CFA_OFFSET(72)" # Incorporate PLT\n\
-	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.\n\
-	movq %rcx,8(%rsp)\n\
-	movq %rdx,16(%rsp)\n\
-	movq %rsi,24(%rsp)\n\
-	movq %rdi,32(%rsp)\n\
-	movq %r8,40(%rsp)\n\
-	movq %r9,48(%rsp)\n\
-	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.\n\
-	movq %rsi,%r11		# Multiply by 24\n\
-	addq %r11,%rsi\n\
-	addq %r11,%rsi\n\
-	shlq $3, %rsi\n\
-	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset\n\
-	call fixup		# Call resolver.\n\
-	movq %rax, %r11		# Save return value\n\
-	movq 48(%rsp),%r9	# Get register content back.\n\
-	movq 40(%rsp),%r8\n\
-	movq 32(%rsp),%rdi\n\
-	movq 24(%rsp),%rsi\n\
-	movq 16(%rsp),%rdx\n\
-	movq 8(%rsp),%rcx\n\
-	movq (%rsp),%rax\n\
-	addq $72,%rsp		# Adjust stack(PLT did 2 pushes)\n\
-	" CFI_ADJUST_CFA_OFFSET(-72)" \n\
-	jmp *%r11		# Jump to function address.\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_profile, @function\n\
-	.align 16\n\
-	" CFI_STARTPROC "\n\
-_dl_runtime_profile:\n\
-	subq $56,%rsp\n\
-	" CFI_ADJUST_CFA_OFFSET(72)" # Incorporate PLT\n\
-	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.\n\
-	movq %rcx,8(%rsp)\n\
-	movq %rdx,16(%rsp)\n\
-	movq %rsi,24(%rsp)\n\
-	movq %rdi,32(%rsp)\n\
-	movq %r8,40(%rsp)\n\
-	movq %r9,48(%rsp)\n\
-	movq 72(%rsp), %rdx	# Load return address if needed\n\
-	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.\n\
-	movq %rsi,%r11		# Multiply by 24\n\
-	addq %r11,%rsi\n\
-	addq %r11,%rsi\n\
-	shlq $3, %rsi\n\
-	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset\n\
-	call profile_fixup	# Call resolver.\n\
-	movq %rax, %r11		# Save return value\n\
-	movq 48(%rsp),%r9	# Get register content back.\n\
-	movq 40(%rsp),%r8\n\
-	movq 32(%rsp),%rdi\n\
-	movq 24(%rsp),%rsi\n\
-	movq 16(%rsp),%rdx\n\
-	movq 8(%rsp),%rcx\n\
-	movq (%rsp),%rax\n\
-	addq $72,%rsp		# Adjust stack\n\
-	" CFI_ADJUST_CFA_OFFSET(-72)"\n\
-	jmp *%r11		# Jump to function address.\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
-	.previous\n\
-");
-#else
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_resolve, @function\n\
-	.type _dl_runtime_profile, @function\n\
-	.align 16\n\
-	" CFI_STARTPROC "\n\
-_dl_runtime_resolve:\n\
-_dl_runtime_profile:\n\
-	subq $56,%rsp\n\
-	" CFI_ADJUST_CFA_OFFSET(72)" # Incorporate PLT\n\
-	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.\n\
-	movq %rcx,8(%rsp)\n\
-	movq %rdx,16(%rsp)\n\
-	movq %rsi,24(%rsp)\n\
-	movq %rdi,32(%rsp)\n\
-	movq %r8,40(%rsp)\n\
-	movq %r9,48(%rsp)\n\
-	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.\n\
-	movq %rsi,%r11		# Multiply by 24\n\
-	addq %r11,%rsi\n\
-	addq %r11,%rsi\n\
-	shlq $3, %rsi\n\
-	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset\n\
-	call fixup		# Call resolver.\n\
-	movq %rax, %r11		# Save return value\n\
-	movq 48(%rsp),%r9	# Get register content back.\n\
-	movq 40(%rsp),%r8\n\
-	movq 32(%rsp),%rdi\n\
-	movq 24(%rsp),%rsi\n\
-	movq 16(%rsp),%rdx\n\
-	movq 8(%rsp),%rcx\n\
-	movq (%rsp),%rax\n\
-	addq $72,%rsp		# Adjust stack\n\
-	" CFI_ADJUST_CFA_OFFSET(-72)"\n\
-	jmp *%r11		# Jump to function address.\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
-	.previous\n\
-");
-#endif
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -348,9 +227,14 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
   return value;
 }
 
+
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER x86_64_gnu_pltenter
+#define ARCH_LA_PLTEXIT x86_64_gnu_pltexit
+
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
@@ -390,7 +274,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #ifndef RTLD_BOOTSTRAP
       const Elf64_Sym *const refsym = sym;
 #endif
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf64_Addr value = (sym == NULL ? 0
 			  : (Elf64_Addr) sym_map->l_addr + sym->st_value);
@@ -553,4 +437,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */

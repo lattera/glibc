@@ -39,14 +39,24 @@ _dl_new_object (char *realname, const char *libname, int type,
   size_t libname_len = strlen (libname) + 1;
   struct link_map *new;
   struct libname_list *newname;
+#ifdef SHARED
+  /* We create the map for the executable before we know whether we have
+     auditing libraries and if yes, how many.  Assume the worst.  */
+  unsigned int naudit = GLRO(dl_naudit) ?: ((mode & __RTLD_OPENEXEC)
+					    ? DL_NNS : 0);
+  size_t audit_space = naudit * sizeof (new->l_audit[0]);
+#else
+# define audit_space 0
+#endif
 
-  new = (struct link_map *) calloc (sizeof (*new) + sizeof (*newname)
-				    + libname_len, 1);
+  new = (struct link_map *) calloc (sizeof (*new) + audit_space
+				    + sizeof (*newname) + libname_len, 1);
   if (new == NULL)
     return NULL;
 
   new->l_real = new;
-  new->l_libname = newname = (struct libname_list *) (new + 1);
+  new->l_libname = newname = (struct libname_list *) ((char *) (new + 1)
+						      + audit_space);
   newname->name = (char *) memcpy (newname + 1, libname, libname_len);
   /* newname->next = NULL;	We use calloc therefore not necessary.  */
   newname->dont_free = 1;
@@ -58,6 +68,14 @@ _dl_new_object (char *realname, const char *libname, int type,
   new->l_tls_offset = NO_TLS_OFFSET;
 #endif
   new->l_ns = nsid;
+
+#ifdef SHARED
+  for (unsigned int cnt = 0; cnt < naudit; ++cnt)
+    {
+      new->l_audit[cnt].cookie = (uintptr_t) new;
+      /* new->l_audit[cnt].bindflags = 0; */
+    }
+#endif
 
   /* new->l_global = 0;	We use calloc therefore not necessary.  */
 

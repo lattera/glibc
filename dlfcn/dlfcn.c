@@ -1,5 +1,5 @@
-/* Configuration of lookup functions.
-   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+/* Load a shared object at run time.
+   Copyright (C) 1995,96,97,98,99,2000,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,4 +17,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Nothing special.  */
+#include <dlfcn.h>
+
+
+int __dlfcn_argc attribute_hidden;
+char **__dlfcn_argv attribute_hidden;
+
+
+void
+__attribute ((constuctor))
+init (int argc, char *argv[])
+{
+  __dlfcn_argc = argc;
+  __dlfcn_argv = argv;
+}

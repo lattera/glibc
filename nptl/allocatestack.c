@@ -920,7 +920,8 @@ init_one_static_tls (struct pthread *curp, struct link_map *map)
 # endif
 
   /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  dtv[map->l_tls_modid].pointer = dest;
+  dtv[map->l_tls_modid].pointer.val = dest;
+  dtv[map->l_tls_modid].pointer.is_static = true;
 
   /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),

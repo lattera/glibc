@@ -20,7 +20,7 @@
 #include <elf.h>
 #include <assert.h>
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 /* We pass reloc_addr as a pointer to void, as opposed to a pointer to
    ElfW(Addr), because not all architectures can assume that the
    relocated address is properly aligned, whereas the compiler is
@@ -64,7 +64,7 @@ elf_machine_lazy_rel (struct link_map *map,
 
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
-#ifndef RESOLVE
+#ifndef RESOLVE_MAP
 static
 #else
 auto
@@ -199,7 +199,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 #endif
 }
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 # ifdef RTLD_BOOTSTRAP
 #  define ELF_DURING_STARTUP (1)

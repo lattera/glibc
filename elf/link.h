@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000, 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@
 #define _ElfW_1(e,w,t)	e##w##t
 
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
+#include <bits/link.h>
 
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's
@@ -94,6 +95,47 @@ struct link_map
 
 #ifdef __USE_GNU
 
+/* Version numbers for la_version handshake interface.  */
+#define LAV_CURRENT	1
+
+/* Activity types signaled through la_activity.  */
+enum
+  {
+    LA_ACT_CONSISTENT,		/* Link map consistent again.  */
+    LA_ACT_ADD,			/* New object will be added.  */
+    LA_ACT_DELETE		/* Objects will be removed.  */
+  };
+
+/* Values representing origin of name for dynamic loading.  */
+enum
+  {
+    LA_SER_ORIG = 0x01,		/* Original name.  */
+    LA_SER_LIBPATH = 0x02,	/* Directory from LD_LIBRARY_PATH.  */
+    LA_SER_RUNPATH = 0x04,	/* Directory from RPATH/RUNPATH.  */
+    LA_SER_CONFIG = 0x08,	/* Found through ldconfig.  */
+    LA_SER_DEFAULT = 0x40,	/* Default directory.  */
+    LA_SER_SECURE = 0x80	/* Unused.  */
+  };
+
+/* Values for la_objopen return value.  */
+enum
+  {
+    LA_FLG_BINDTO = 0x01,	/* Audit symbols bound to this object.  */
+    LA_FLG_BINDFROM = 0x02	/* Audit symbols bound from this object.  */
+  };
+
+/* Values for la_symbind flags parameter.  */
+enum
+  {
+    LA_SYMB_NOPLTENTER = 0x01,	/* la_pltenter will not be called.  */
+    LA_SYMB_NOPLTEXIT = 0x02,	/* la_pltexit will not be called.  */
+    LA_SYMB_STRUCTCALL = 0x04,	/* Return value is a structure.  */
+    LA_SYMB_DLSYM = 0x08,	/* Binding due to dlsym call.  */
+    LA_SYMB_ALTVALUE = 0x10	/* Value has been changed by a previous
+				   la_symbind call.  */
+  };
+
+
 struct dl_phdr_info
   {
     ElfW(Addr) dlpi_addr;
@@ -114,9 +156,28 @@ struct dl_phdr_info
 
 __BEGIN_DECLS
 
-extern int dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
-					     size_t size, void *data),
-			    void *data);
+extern int dl_iterate_phdr (int (*__callback) (struct dl_phdr_info *,
+					       size_t, void *),
+			    void *__data);
+
+
+/* Prototypes for the ld.so auditing interfaces.  These are not
+   defined anywhere in ld.so but instead have to be provided by the
+   auditing DSO.  */
+extern unsigned int la_version (unsigned int __version);
+extern void la_activity (uintptr_t *__cookie, unsigned int __flag);
+extern char *la_objsearch (const char *__name, uintptr_t *__cookie,
+			   unsigned int __flag);
+extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
+				uintptr_t *__cookie);
+extern void la_preinit (uintptr_t *__cookie);
+extern uintptr_t la_symbind32 (Elf32_Sym *__sym, unsigned int __ndx,
+			       uintptr_t *__refcook, uintptr_t *__defcook,
+			       unsigned int *__flags, const char *__symname);
+extern uintptr_t la_symbind64 (Elf64_Sym *__sym, unsigned int __ndx,
+			       uintptr_t *__refcook, uintptr_t *__defcook,
+			       unsigned int *__flags, const char *__symname);
+extern unsigned int la_objclose (uintptr_t *__cookie);
 
 __END_DECLS
 

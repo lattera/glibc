@@ -22,6 +22,11 @@
 #include <stdlib.h>
 #include <ldsodefs.h>
 
+extern int __libc_argc attribute_hidden;
+extern char **__libc_argv attribute_hidden;
+
+extern char **__environ;
+
 /* The purpose of this file is to provide wrappers around the dynamic
    linker error mechanism (similar to dlopen() et al in libdl) which
    are usable from within libc.  Generally we want to throw away the
@@ -77,7 +82,8 @@ do_dlopen (void *ptr)
 {
   struct do_dlopen_args *args = (struct do_dlopen_args *) ptr;
   /* Open and relocate the shared object.  */
-  args->map = _dl_open (args->name, args->mode, NULL, __LM_ID_CALLER);
+  args->map = GLRO(dl_open) (args->name, args->mode, NULL, __LM_ID_CALLER,
+			     __libc_argc, __libc_argv, __environ);
 }
 
 static void
@@ -93,7 +99,7 @@ do_dlsym (void *ptr)
 static void
 do_dlclose (void *ptr)
 {
-  _dl_close ((struct link_map *) ptr);
+  GLRO(dl_close) ((struct link_map *) ptr);
 }
 
 /* This code is to support __libc_dlopen from __libc_dlopen'ed shared
@@ -109,7 +115,7 @@ struct dl_open_hook
 #ifdef SHARED
 extern struct dl_open_hook *_dl_open_hook;
 libc_hidden_proto (_dl_open_hook);
-struct dl_open_hook *_dl_open_hook __attribute__((nocommon));
+struct dl_open_hook *_dl_open_hook __attribute__ ((nocommon));
 libc_hidden_data_def (_dl_open_hook);
 #else
 static void
@@ -119,7 +125,7 @@ do_dlsym_private (void *ptr)
   struct r_found_version vers;
   vers.name = "GLIBC_PRIVATE";
   vers.hidden = 1;
-  /* vers.hash = _dl_elf_hash (version);  */
+  /* vers.hash = _dl_elf_hash (vers.name);  */
   vers.hash = 0x0963cf85;
   vers.filename = NULL;
 

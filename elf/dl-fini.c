@@ -53,7 +53,12 @@ _dl_fini (void)
       /* Protect against concurrent loads and unloads.  */
       __rtld_lock_lock_recursive (GL(dl_load_lock));
 
+      unsigned int nmaps = 0;
       unsigned int nloaded = GL(dl_ns)[cnt]._ns_nloaded;
+      /* No need to do anything for empty namespaces or those used for
+	 auditing DSOs.  */
+      if (nloaded == 0 || GL(dl_ns)[cnt]._ns_loaded->l_auditing)
+	goto out;
 
       /* XXX Could it be (in static binaries) that there is no object
 	 loaded?  */
@@ -76,6 +81,7 @@ _dl_fini (void)
 
       unsigned int i;
       struct link_map *l;
+      assert (nloaded != 0 || GL(dl_ns)[cnt]._ns_loaded == NULL);
       for (l = GL(dl_ns)[cnt]._ns_loaded, i = 0; l != NULL; l = l->l_next)
 	/* Do not handle ld.so in secondary namespaces.  */
 	if (l == l->l_real)
@@ -90,7 +96,7 @@ _dl_fini (void)
 	  }
       assert (cnt != LM_ID_BASE || i == nloaded);
       assert (cnt == LM_ID_BASE || i == nloaded || i == nloaded - 1);
-      unsigned int nmaps = i;
+      nmaps = i;
 
       if (nmaps != 0)
 	{
@@ -163,6 +169,7 @@ _dl_fini (void)
 	 high and will be decremented in this loop.  So we release the
 	 lock so that some code which might be called from a destructor
 	 can directly or indirectly access the lock.  */
+    out:
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
       /* 'maps' now contains the objects in the right order.  Now call the
@@ -176,38 +183,49 @@ _dl_fini (void)
 	      /* Make sure nothing happens if we are called twice.  */
 	      l->l_init_called = 0;
 
-	      /* Don't call the destructors for objects we are not
-		 supposed to.  */
-	      if (l->l_name[0] == '\0' && l->l_type == lt_executable)
-		continue;
-
 	      /* Is there a destructor function?  */
-	      if (l->l_info[DT_FINI_ARRAY] == NULL
-		  && l->l_info[DT_FINI] == NULL)
-		continue;
-
-	      /* When debugging print a message first.  */
-	      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS,
-				    0))
-		_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
-				  l->l_name[0] ? l->l_name : rtld_progname,
-				  cnt);
-
-	      /* First see whether an array is given.  */
-	      if (l->l_info[DT_FINI_ARRAY] != NULL)
+	      if (l->l_info[DT_FINI_ARRAY] != NULL
+		  || l->l_info[DT_FINI] != NULL)
 		{
-		  ElfW(Addr) *array =
-		    (ElfW(Addr) *) (l->l_addr
-				    + l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
-		  unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-				    / sizeof (ElfW(Addr)));
-		  while (i-- > 0)
-		    ((fini_t) array[i]) ();
+		  /* When debugging print a message first.  */
+		  if (__builtin_expect (GLRO(dl_debug_mask)
+					& DL_DEBUG_IMPCALLS, 0))
+		    _dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
+				      l->l_name[0] ? l->l_name : rtld_progname,
+				      cnt);
+
+		  /* First see whether an array is given.  */
+		  if (l->l_info[DT_FINI_ARRAY] != NULL)
+		    {
+		      ElfW(Addr) *array =
+			(ElfW(Addr) *) (l->l_addr
+					+ l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
+		      unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
+					/ sizeof (ElfW(Addr)));
+		      while (i-- > 0)
+			((fini_t) array[i]) ();
+		    }
+
+		  /* Next try the old-style destructor.  */
+		  if (l->l_info[DT_FINI] != NULL)
+		    ((fini_t) DL_DT_FINI_ADDRESS (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
 		}
 
-	      /* Next try the old-style destructor.  */
-	      if (l->l_info[DT_FINI] != NULL)
-		((fini_t) DL_DT_FINI_ADDRESS (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
+#ifdef SHARED
+	      /* Auditing checkpoint: another object closed.  */
+	      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+		{
+		  struct audit_ifaces *afct = GLRO(dl_audit);
+		  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+		    {
+		      if (afct->objclose != NULL)
+			/* Return value is ignored.  */
+			(void) afct->objclose (&l->l_audit[cnt].cookie);
+
+		      afct = afct->next;
+		    }
+		}
+#endif
 	    }
 
 	  /* Correct the previous increment.  */

@@ -1,5 +1,5 @@
 /* Startup support for ELF initializers/finalizers in the main executable.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,9 +86,13 @@ __libc_csu_init (void)
 #endif
 }
 
+/* This function should not be used anymore.  We run the executable's
+   destructor now just like any other.  We cannot remove the function,
+   though.  */
 void
 __libc_csu_fini (void)
 {
+#if 0
 #ifdef HAVE_INITFINI_ARRAY
   size_t i = __fini_array_end - __fini_array_start;
   while (i-- > 0)
@@ -96,4 +100,5 @@ __libc_csu_fini (void)
 #endif
 
   _fini ();
+#endif
 }

@@ -22,6 +22,7 @@
 
 #include <dl-sysdep.h>
 #ifndef __ASSEMBLER__
+# include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
@@ -32,7 +33,11 @@
 typedef union dtv
 {
   size_t counter;
-  void *pointer;
+  struct
+  {
+    void *val;
+    bool is_static;
+  } pointer;
 } dtv_t;
 
 

@@ -48,8 +48,6 @@ void
 internal_function __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
-  size_t offset;
-
   /* If the alignment requirements are too high fail.  */
   if (map->l_tls_align > GL(dl_tls_static_align))
     {
@@ -71,15 +69,15 @@ cannot allocate memory in static TLS block"));
 
   n = (freebytes - blsize) / map->l_tls_align;
 
-  offset = GL(dl_tls_static_used) + (freebytes - n * map->l_tls_align
-				     - map->l_tls_firstbyte_offset);
+  size_t offset = GL(dl_tls_static_used) + (freebytes - n * map->l_tls_align
+					    - map->l_tls_firstbyte_offset);
 
   map->l_tls_offset = GL(dl_tls_static_used) = offset;
 # elif TLS_DTV_AT_TP
   size_t used;
   size_t check;
 
-  offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
+  size_t offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
   used = offset + map->l_tls_blocksize;
   check = used;
   /* dl_tls_static_used includes the TCB at the beginning.  */
@@ -93,8 +91,20 @@ cannot allocate memory in static TLS block"));
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 
-  if (map->l_relocated)
-    GL(dl_init_static_tls) (map);
+  /* If the object is not yet relocated we cannot initialize the
+     static TLS region.  Delay it.  */
+  if (map->l_real->l_relocated)
+    {
+#ifdef SHARED
+      if (__builtin_expect (THREAD_DTV()[0].counter != GL(dl_tls_generation),
+			    0))
+	/* Update the slot information data for at least the generation of
+	   the DSO we are allocating data for.  */
+	(void) _dl_update_slotinfo (map->l_tls_modid);
+#endif
+
+      GL(dl_init_static_tls) (map);
+    }
   else
     map->l_need_tls_init = 1;
 }
@@ -114,7 +124,8 @@ _dl_nothread_init_static_tls (struct link_map *map)
 # endif
 
   /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  THREAD_DTV ()[map->l_tls_modid].pointer = dest;
+  THREAD_DTV ()[map->l_tls_modid].pointer.val = dest;
+  THREAD_DTV ()[map->l_tls_modid].pointer.is_static = true;
 
   /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
@@ -137,11 +148,17 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   /* Initialize it to make the compiler happy.  */
   const char *errstring = NULL;
 
+#ifdef SHARED
+  /* If we are auditing, install the same handlers we need for profiling.  */
+  consider_profiling |= GLRO(dl_audit) != NULL;
+#endif
+
   if (l->l_relocated)
     return;
 
   /* If DT_BIND_NOW is set relocate all references in this object.  We
      do not do this if we are profiling, of course.  */
+  // XXX Correct for auditing?
   if (!consider_profiling
       && __builtin_expect (l->l_info[DT_BIND_NOW] != NULL, 0))
     lazy = 0;
@@ -225,29 +242,6 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
-#define RESOLVE(ref, version, r_type) \
-    (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
-     ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
-	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
-		? (bump_num_cache_relocations (),			      \
-	   (*ref) = l->l_lookup_cache.ret,				      \
-	   l->l_lookup_cache.value)					      \
-	: ({ lookup_t _lr;						      \
-	     int _tc = elf_machine_type_class (r_type);			      \
-	     l->l_lookup_cache.type_class = _tc;			      \
-	     l->l_lookup_cache.sym = (*ref);				      \
-	     const struct r_found_version *v = NULL;			      \
-	     int flags = DL_LOOKUP_ADD_DEPENDENCY;			      \
-	     if ((version) != NULL && (version)->hash != 0)		      \
-	       {							      \
-		 v = (version);						      \
-		 flags = 0;						      \
-	       }							      \
-	     _lr = _dl_lookup_symbol_x (strtab + (*ref)->st_name, l, (ref),   \
-					scope, v, _tc, flags, NULL);	      \
-	     l->l_lookup_cache.ret = (*ref);				      \
-	     l->l_lookup_cache.value = _lr; }))				      \
-     : l->l_addr)
 
     /* This macro is used as a callback from elf_machine_rel{a,} when a
        static TLS reloc is about to be performed.  Since (in dl-load.c) we
@@ -276,20 +270,19 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	   will be NULL.  */
 	if (l->l_info[DT_PLTRELSZ] == NULL)
 	  {
-	    errstring = N_("%s: profiler found no PLTREL in object %s\n");
+	    errstring = N_("%s: no PLTREL found in object %s\n");
 	  fatal:
 	    _dl_fatal_printf (errstring,
 			      rtld_progname ?: "<program name unknown>",
 			      l->l_name);
 	  }
 
-	l->l_reloc_result =
-	  (ElfW(Addr) *) calloc (sizeof (ElfW(Addr)),
-				 l->l_info[DT_PLTRELSZ]->d_un.d_val);
+	l->l_reloc_result = calloc (sizeof (l->l_reloc_result[0]),
+				    l->l_info[DT_PLTRELSZ]->d_un.d_val);
 	if (l->l_reloc_result == NULL)
 	  {
 	    errstring = N_("\
-%s: profiler out of memory shadowing PLTREL of %s\n");
+%s: out of memory to store relocation results for %s\n");
 	    goto fatal;
 	  }
       }

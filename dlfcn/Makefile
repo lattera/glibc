@@ -20,8 +20,8 @@ subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
-		   dlmopen
-routines	:= $(patsubst %,s%,$(libdl-routines))
+		   dlmopen dlfcn
+routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
 elide-routines.os := $(routines)
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
@@ -34,7 +34,7 @@ include ../Makeconfig
 
 ifeq ($(versioning),yes)
 libdl-routines	+= dlopenold
-libdl-shared-only-routines := dlopenold
+libdl-shared-only-routines := dlopenold dlfcn
 endif
 
 ifeq (yes,$(build-shared))
@@ -64,8 +64,6 @@ extra-objs += $(modules-names:=.os)
 generated := $(modules-names:=.so)
 
 include ../Rules
-
-LDFLAGS-dl.so = -Wl,-dynamic-linker,$(slibdir)/$(rtld-installed-name)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds

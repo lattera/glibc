@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <libintl.h>
 #include <stddef.h>
+#include <unistd.h>
 #include <ldsodefs.h>
 
 #if !defined SHARED && defined IS_IN_libdl
@@ -61,8 +62,10 @@ dlmopen_doit (void *a)
 # endif
       GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid namespace"));
 
-  args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			args->caller, args->nsid);
+  args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
+			     args->caller,
+			     args->nsid, __dlfcn_argc, __dlfcn_argv,
+			     __environ);
 }
 
 

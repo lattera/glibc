@@ -93,7 +93,6 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 {
   ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAY];
   ElfW(Dyn) *preinit_array_size = main_map->l_info[DT_PREINIT_ARRAYSZ];
-  struct r_debug *r;
   unsigned int i;
 
   if (__builtin_expect (GL(dl_initfirst) != NULL, 0))
@@ -120,13 +119,6 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 	((init_t) addrs[cnt]) (argc, argv, env);
     }
 
-  /* Notify the debugger we have added some objects.  We need to call
-     _dl_debug_initialize in a static program in case dynamic linking has
-     not been used before.  */
-  r = _dl_debug_initialize (0);
-  r->r_state = RT_ADD;
-  _dl_debug_state ();
-
   /* Stupid users forced the ELF specification to be changed.  It now
      says that the dynamic loader is responsible for determining the
      order in which the constructors have to run.  The constructors
@@ -140,10 +132,6 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   i = main_map->l_searchlist.r_nlist;
   while (i-- > 0)
     call_init (main_map->l_initfini[i], argc, argv, env);
-
-  /* Notify the debugger all new objects are now ready to go.  */
-  r->r_state = RT_CONSISTENT;
-  _dl_debug_state ();
 
 #ifndef HAVE_INLINED_SYSCALLS
   /* Finished starting up.  */

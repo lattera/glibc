@@ -129,7 +129,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = l;
@@ -154,112 +155,18 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    destroys the passed register information.  */
 /* GKM FIXME: Fix trampoline to pass bounds so we can do
    without the `__unbounded' qualifier.  */
-#define ARCH_FIXUP_ATTRIBUTE __attribute__ ((regparm (3), unused))
+#define ARCH_FIXUP_ATTRIBUTE __attribute__ ((regparm (3), stdcall, unused))
 
-static ElfW(Addr) fixup (struct link_map *__unbounded l,
-			 ElfW(Word) reloc_offset)
+extern ElfW(Addr) _dl_fixup (struct link_map *__unbounded l,
+			     ElfW(Word) reloc_offset)
      ARCH_FIXUP_ATTRIBUTE;
-static ElfW(Addr) profile_fixup (struct link_map *l, ElfW(Word) reloc_offset,
-				 ElfW(Addr) retaddr)
+extern ElfW(Addr) _dl_profile_fixup (struct link_map *l,
+				     ElfW(Word) reloc_offset,
+				     ElfW(Addr) retaddr, const void *regs,
+				     long int *framesizep)
      ARCH_FIXUP_ATTRIBUTE;
 # endif
 
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-# if !defined PROF && !__BOUNDED_POINTERS__
-#  define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.type _dl_runtime_resolve, @function\n\
-	" CFI_STARTPROC "\n\
-	.align 16\n\
-_dl_runtime_resolve:\n\
-	" CFI_ADJUST_CFA_OFFSET (8) "\n\
-	pushl %eax		# Preserve registers otherwise clobbered.\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	pushl %ecx\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	pushl %edx\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note\n\
-	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.\n\
-	call fixup		# Call resolver.\n\
-	popl %edx		# Get register content back.\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	popl %ecx\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
-	ret $8			# Jump to function address.\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_profile, @function\n\
-	" CFI_STARTPROC "\n\
-	.align 16\n\
-_dl_runtime_profile:\n\
-	" CFI_ADJUST_CFA_OFFSET (8) "\n\
-	pushl %eax		# Preserve registers otherwise clobbered.\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	pushl %ecx\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	pushl %edx\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	movl 20(%esp), %ecx	# Load return address\n\
-	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note\n\
-	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.\n\
-	call profile_fixup	# Call resolver.\n\
-	popl %edx		# Get register content back.\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	popl %ecx\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
-	ret $8			# Jump to function address.\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
-	.previous\n\
-");
-# else
-#  define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_resolve, @function\n\
-	.type _dl_runtime_profile, @function\n\
-	" CFI_STARTPROC "\n\
-	.align 16\n\
-_dl_runtime_resolve:\n\
-_dl_runtime_profile:\n\
-	" CFI_ADJUST_CFA_OFFSET (8) "\n\
-	pushl %eax		# Preserve registers otherwise clobbered.\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	pushl %ecx\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	pushl %edx\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	movl 16(%esp), %edx	# Push the arguments for `fixup'\n\
-	movl 12(%esp), %eax\n\
-	pushl %edx\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	pushl %eax\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	call fixup		# Call resolver.\n\
-	popl %edx		# Pop the parameters\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	popl %ecx\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	popl %edx		# Get register content back.\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	popl %ecx\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
-	ret $8			# Jump to function address.\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
-	.previous\n\
-");
-# endif
 #endif
 
 /* Mask identifying addresses reserved for the user program,
@@ -375,9 +282,14 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
   return value;
 }
 
+
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER i86_gnu_pltenter
+#define ARCH_LA_PLTEXIT i86_gnu_pltexit
+
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* The i386 never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
@@ -422,7 +334,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #endif	/* !RTLD_BOOTSTRAP and have no -z combreloc */
     {
       const Elf32_Sym *const refsym = sym;
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
 #else
@@ -549,14 +461,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 # ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
 # endif
-# ifdef USE_TLS
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-# else
-      Elf32_Addr value = RESOLVE (&sym, version, r_type);
-      if (sym != NULL)
-	value += sym->st_value;
-# endif
 
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
@@ -692,4 +598,4 @@ elf_machine_lazy_rela (struct link_map *map,
 
 #endif	/* !RTLD_BOOTSTRAP */
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */

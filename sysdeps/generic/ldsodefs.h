@@ -52,23 +52,15 @@ __BEGIN_DECLS
   most architectures the entry is already relocated - but for some not
   and we need to relocate at access time.  */
 #ifdef DL_RO_DYN_SECTION
-# define D_PTR(map,i) (map->i->d_un.d_ptr + map->l_addr)
+# define D_PTR(map, i) ((map)->i->d_un.d_ptr + (map)->l_addr)
 #else
-# define D_PTR(map,i) map->i->d_un.d_ptr
+# define D_PTR(map, i) (map)->i->d_un.d_ptr
 #endif
 
-/* On some platforms more information than just the address of the symbol
-   is needed from the lookup functions.  In this case we return the whole
-   link map.  */
-#ifdef DL_LOOKUP_RETURNS_MAP
+/* Result of the lookup functions and how to retrieve the base address.  */
 typedef struct link_map *lookup_t;
 # define LOOKUP_VALUE(map) map
-# define LOOKUP_VALUE_ADDRESS(map) (map ? map->l_addr : 0)
-#else
-typedef ElfW(Addr) lookup_t;
-# define LOOKUP_VALUE(map) map->l_addr
-# define LOOKUP_VALUE_ADDRESS(address) address
-#endif
+# define LOOKUP_VALUE_ADDRESS(map) ((map) ? (map)->l_addr : 0)
 
 /* on some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture
@@ -182,6 +174,55 @@ enum allowmask
   };
 
 
+/* Type for list of auditing interfaces.  */
+struct La_i86_regs;
+struct La_i86_retval;
+struct La_x86_64_regs;
+struct La_x86_64_retval;
+
+
+struct audit_ifaces
+{
+  void (*activity) (uintptr_t *, unsigned int);
+  char *(*objsearch) (const char *, uintptr_t *, unsigned int);
+  unsigned int (*objopen) (struct link_map *, Lmid_t, uintptr_t *);
+  void (*preinit) (uintptr_t *);
+  union
+  {
+    uintptr_t (*symbind32) (Elf32_Sym *, unsigned int, uintptr_t *,
+			    uintptr_t *, unsigned int *, const char *);
+    uintptr_t (*symbind64) (Elf64_Sym *, unsigned int, uintptr_t *,
+			    uintptr_t *, unsigned int *, const char *);
+  };
+  union
+  {
+    uintptr_t (*i86_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
+				   uintptr_t *, const struct La_i86_regs *,
+				   unsigned int *, const char *name,
+				   long int *framesizep);
+    uintptr_t (*x86_64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
+				      uintptr_t *,
+				      const struct La_x86_64_regs *,
+				      unsigned int *, const char *name,
+				      long int *framesizep);
+  };
+  union
+  {
+    unsigned int (*i86_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
+				     uintptr_t *, const struct La_i86_regs *,
+				     struct La_i86_retval *, const char *);
+    unsigned int (*x86_64_gnu_pltexit) (Elf64_Sym *, unsigned int, uintptr_t *,
+					uintptr_t *,
+					const struct La_x86_64_regs *,
+					struct La_x86_64_retval *,
+					const char *);
+  };
+  unsigned int (*objclose) (uintptr_t *);
+
+  struct audit_ifaces *next;
+};
+
+
 /* Test whether given NAME matches any of the names of the given object.  */
 extern int _dl_name_match_p (const char *__name, struct link_map *__map)
      internal_function;
@@ -224,7 +265,7 @@ struct rtld_global
 #endif
   EXTERN struct link_namespaces
   {
-    /* And a pointer to the map for the main map.  */
+    /* A pointer to the map for the main map.  */
     struct link_map *_ns_loaded;
     /* Number of object in the _dl_loaded list.  */
     unsigned int _ns_nloaded;
@@ -277,8 +318,12 @@ struct rtld_global
   EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
 #endif
 
-  /* Structure describing the dynamic linker itself.  */
+  /* Structure describing the dynamic linker itself.  We need to
+     reserve memory for the data the audit libraries need.  */
   EXTERN struct link_map _dl_rtld_map;
+#ifdef SHARED
+  struct auditstate audit_data[DL_NNS];
+#endif
 
 #if defined SHARED && defined _LIBC_REENTRANT \
     && defined __rtld_lock_default_lock_recursive
@@ -311,6 +356,7 @@ struct rtld_global
     struct dtv_slotinfo
     {
       size_t gen;
+      bool is_static;
       struct link_map *map;
     } slotinfo[0];
   } *_dl_tls_dtv_slotinfo_list;
@@ -483,32 +529,12 @@ struct rtld_global_ro
      call the function instead of going through the PLT.  The result
      is that we can avoid exporting the functions and we do not jump
      PLT relocations in libc.so.  */
-  const char *(*_dl_get_origin) (void);
-  size_t (*_dl_dst_count) (const char *, int);
-  char *(*_dl_dst_substitute) (struct link_map *, const char *, char *, int);
-  struct link_map *(internal_function *_dl_map_object) (struct link_map *,
-							const char *, int,
-							int, int, int, Lmid_t);
-  void (internal_function *_dl_map_object_deps) (struct link_map *,
-						 struct link_map **,
-						 unsigned int, int, int);
-  void (*_dl_relocate_object) (struct link_map *, struct r_scope_elem *[],
-			       int, int);
-  int (internal_function *_dl_check_map_versions) (struct link_map *, int,
-						   int);
-  void (internal_function *_dl_init) (struct link_map *, int, char **,
-					char **);
-  void (*_dl_debug_state) (void);
-#ifndef MAP_COPY
-  void (*_dl_unload_cache) (void);
-#endif
   void (*_dl_debug_printf) (const char *, ...)
        __attribute__ ((__format__ (__printf__, 1, 2)));
   int (internal_function *_dl_catch_error) (const char **, const char **,
 					    void (*) (void *), void *);
   void (internal_function *_dl_signal_error) (int, const char *, const char *,
 					      const char *);
-  void (internal_function *_dl_start_profile) (void);
   void (*_dl_mcount) (ElfW(Addr) frompc, ElfW(Addr) selfpc);
   lookup_t (internal_function *_dl_lookup_symbol_x) (const char *,
 						     struct link_map *,
@@ -518,7 +544,13 @@ struct rtld_global_ro
 						     int, int,
 						     struct link_map *);
   int (*_dl_check_caller) (const void *, enum allowmask);
+  void *(*_dl_open) (const char *file, int mode, const void *caller_dlopen,
+		     Lmid_t nsid, int argc, char *argv[], char *env[]);
+  void (*_dl_close) (void *map);
 
+  /* List of auditing interfaces.  */
+  struct audit_ifaces *_dl_audit;
+  unsigned int _dl_naudit;
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
@@ -910,6 +942,20 @@ extern char *_dl_dst_substitute (struct link_map *l, const char *name,
 /* Check validity of the caller.  */
 extern int _dl_check_caller (const void *caller, enum allowmask mask)
      attribute_hidden;
+
+/* Open the shared object NAME, relocate it, and run its initializer if it
+   hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
+   the object is already opened, returns its existing map.  */
+extern void *_dl_open (const char *name, int mode, const void *caller,
+		       Lmid_t nsid, int argc, char *argv[], char *env[])
+     attribute_hidden;
+
+/* Add module to slot information data.  */
+extern void _dl_add_to_slotinfo (struct link_map  *l) attribute_hidden;
+
+/* Update slot information data for at least the generation of the
+   module with the given index.  */
+extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid);
 
 __END_DECLS
 

@@ -1,3 +1,18 @@
+2005-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (init_one_static_tls): Adjust initialization of DTV
+	entry for static tls deallocation fix.
+	* sysdeps/alpha/tls.h (dtv_t): Change pointer type to be struct which
+	also contains information whether the memory pointed to is static
+	TLS or not.
+	* sysdeps/i386/tls.h: Likewise.
+	* sysdeps/ia64/tls.h: Likewise.
+	* sysdeps/powerpc/tls.h: Likewise.
+	* sysdeps/s390/tls.h: Likewise.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/sparc/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+
 2004-12-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Use __sigemptyset.

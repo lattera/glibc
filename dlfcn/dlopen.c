@@ -19,6 +19,8 @@
 
 #include <dlfcn.h>
 #include <stddef.h>
+#include <unistd.h>
+#include <ldsodefs.h>
 
 #if !defined SHARED && defined IS_IN_libdl
 
@@ -56,8 +58,10 @@ dlopen_doit (void *a)
 {
   struct dlopen_args *args = (struct dlopen_args *) a;
 
-  args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			args->caller, args->file == NULL ? LM_ID_BASE : NS);
+  args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
+			     args->caller,
+			     args->file == NULL ? LM_ID_BASE : NS,
+			     __dlfcn_argc, __dlfcn_argv, __environ);
 }
 
 

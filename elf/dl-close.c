@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <bits/libc-lock.h>
 #include <ldsodefs.h>
 #include <sys/types.h>
@@ -99,7 +100,6 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 
 
 void
-internal_function
 _dl_close (void *_map)
 {
   struct reldep_list
@@ -112,6 +112,7 @@ _dl_close (void *_map)
   } *reldeps = NULL;
   struct link_map **list;
   struct link_map *map = _map;
+  Lmid_t ns = map->l_ns;
   unsigned int i;
   unsigned int *new_opencount;
 #ifdef USE_TLS
@@ -139,8 +140,8 @@ _dl_close (void *_map)
     {
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	GLRO(dl_debug_printf) ("\nclosing file=%s; opencount == %u\n",
-				map->l_name, map->l_opencount);
+	_dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
+			  map->l_name, map->l_opencount);
 
       /* Decrement the object's reference counter, not the dependencies'.  */
       --map->l_opencount;
@@ -268,13 +269,17 @@ _dl_close (void *_map)
   for (i = 0; list[i] != NULL; ++i)
     {
       struct link_map *imap = list[i];
+
+      /* All elements must be in the same namespace.  */
+      assert (imap->l_ns == ns);
+
       if (new_opencount[i] == 0 && imap->l_type == lt_loaded
 	  && (imap->l_flags_1 & DF_1_NODELETE) == 0)
 	{
 	  /* When debugging print a message first.  */
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-	    GLRO(dl_debug_printf) ("\ncalling fini: %s [%lu]\n\n",
-				   imap->l_name, imap->l_ns);
+	    _dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
+			      imap->l_name, ns);
 
 	  /* Call its termination function.  Do not do it for
 	     half-cooked objects.  */
@@ -298,6 +303,22 @@ _dl_close (void *_map)
 		 (imap, ((void *) imap->l_addr
 			 + imap->l_info[DT_FINI]->d_un.d_ptr))) ();
 	    }
+
+#ifdef SHARED
+	  /* Auditing checkpoint: we have a new object.  */
+	  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+	    {
+	      struct audit_ifaces *afct = GLRO(dl_audit);
+	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+		{
+		  if (afct->objclose != NULL)
+		    /* Return value is ignored.  */
+		    (void) afct->objclose (&imap->l_audit[cnt].cookie);
+
+		  afct = afct->next;
+		}
+	    }
+#endif
 
 	  /* This object must not be used anymore.  We must remove the
 	     reference from the scope.  */
@@ -365,9 +386,30 @@ _dl_close (void *_map)
       assert (imap->l_type == lt_loaded || imap->l_opencount > 0);
     }
 
+#ifdef SHARED
+  /* Auditing checkpoint: we will start deleting objects.  */
+  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+    {
+      struct link_map *head = GL(dl_ns)[ns]._ns_loaded;
+      struct audit_ifaces *afct = GLRO(dl_audit);
+      /* Do not call the functions for any auditing object.  */
+      if (head->l_auditing == 0)
+	{
+	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+	    {
+	      if (afct->activity != NULL)
+		afct->activity (&head->l_audit[cnt].cookie, LA_ACT_DELETE);
+
+	      afct = afct->next;
+	    }
+	}
+    }
+#endif
+
   /* Notify the debugger we are about to remove some loaded objects.  */
-  _r_debug.r_state = RT_DELETE;
-  GLRO(dl_debug_state) ();
+  struct r_debug *r = _dl_debug_initialize (0);
+  r->r_state = RT_DELETE;
+  _dl_debug_state ();
 
 #ifdef USE_TLS
   size_t tls_free_start;
@@ -389,21 +431,19 @@ _dl_close (void *_map)
 	  if (__builtin_expect (imap->l_global, 0))
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
-	      unsigned int cnt
-		= GL(dl_ns)[imap->l_ns]._ns_main_searchlist->r_nlist;
+	      unsigned int cnt = GL(dl_ns)[ns]._ns_main_searchlist->r_nlist;
 
 	      do
 		--cnt;
-	      while (GL(dl_ns)[imap->l_ns]._ns_main_searchlist->r_list[cnt]
-		     != imap);
+	      while (GL(dl_ns)[ns]._ns_main_searchlist->r_list[cnt] != imap);
 
 	      /* The object was already correctly registered.  */
 	      while (++cnt
-		     < GL(dl_ns)[imap->l_ns]._ns_main_searchlist->r_nlist)
-		GL(dl_ns)[imap->l_ns]._ns_main_searchlist->r_list[cnt - 1]
-		  = GL(dl_ns)[imap->l_ns]._ns_main_searchlist->r_list[cnt];
+		     < GL(dl_ns)[ns]._ns_main_searchlist->r_nlist)
+		GL(dl_ns)[ns]._ns_main_searchlist->r_list[cnt - 1]
+		  = GL(dl_ns)[ns]._ns_main_searchlist->r_list[cnt];
 
-	      --GL(dl_ns)[imap->l_ns]._ns_main_searchlist->r_nlist;
+	      --GL(dl_ns)[ns]._ns_main_searchlist->r_nlist;
 	    }
 
 #ifdef USE_TLS
@@ -412,9 +452,10 @@ _dl_close (void *_map)
 	    {
 	      any_tls = true;
 
-	      if (! remove_slotinfo (imap->l_tls_modid,
-				     GL(dl_tls_dtv_slotinfo_list), 0,
-				     imap->l_init_called))
+	      if (GL(dl_tls_dtv_slotinfo_list) != NULL
+		  && ! remove_slotinfo (imap->l_tls_modid,
+					GL(dl_tls_dtv_slotinfo_list), 0,
+					imap->l_init_called))
 		/* All dynamically loaded modules with TLS are unloaded.  */
 		GL(dl_tls_max_dtv_idx) = GL(dl_tls_static_nelem);
 
@@ -499,12 +540,12 @@ _dl_close (void *_map)
 	  else
 	    {
 #ifdef SHARED
-	      assert (imap->l_ns != LM_ID_BASE);
+	      assert (ns != LM_ID_BASE);
 #endif
-	      GL(dl_ns)[imap->l_ns]._ns_loaded = imap->l_next;
+	      GL(dl_ns)[ns]._ns_loaded = imap->l_next;
 	    }
 
-	  --GL(dl_ns)[imap->l_ns]._ns_nloaded;
+	  --GL(dl_ns)[ns]._ns_nloaded;
 	  if (imap->l_next != NULL)
 	    imap->l_next->l_prev = imap->l_prev;
 
@@ -579,16 +620,36 @@ _dl_close (void *_map)
   if (any_tls)
     {
       if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
-	__libc_fatal (_("TLS generation counter wrapped!  Please report as described in <http://www.gnu.org/software/libc/bugs.html>."));
+	_dl_fatal_printf ("TLS generation counter wrapped!  Please report as described in <http://www.gnu.org/software/libc/bugs.html>.\n");
 
       if (tls_free_end == GL(dl_tls_static_used))
 	GL(dl_tls_static_used) = tls_free_start;
     }
 #endif
 
+#ifdef SHARED
+  /* Auditing checkpoint: we have deleted all objects.  */
+  if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+    {
+      struct link_map *head = GL(dl_ns)[ns]._ns_loaded;
+      /* Do not call the functions for any auditing object.  */
+      if (head->l_auditing == 0)
+	{
+	  struct audit_ifaces *afct = GLRO(dl_audit);
+	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+	    {
+	      if (afct->activity != NULL)
+		afct->activity (&head->l_audit[cnt].cookie, LA_ACT_CONSISTENT);
+
+	      afct = afct->next;
+	    }
+	}
+    }
+#endif
+
   /* Notify the debugger those objects are finalized and gone.  */
-  _r_debug.r_state = RT_CONSISTENT;
-  GLRO(dl_debug_state) ();
+  r->r_state = RT_CONSISTENT;
+  _dl_debug_state ();
 
   /* Now we can perhaps also remove the modules for which we had
      dependencies because of symbol lookup.  */
@@ -612,7 +673,6 @@ _dl_close (void *_map)
   /* Release the lock.  */
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 }
-libc_hidden_def (_dl_close)
 
 
 #ifdef USE_TLS

@@ -34,7 +34,7 @@ struct r_debug *
 internal_function
 _dl_debug_initialize (ElfW(Addr) ldbase)
 {
-  if (_r_debug.r_brk == 0)
+  if (_r_debug.r_brk == 0 || ldbase != 0)
     {
       /* Tell the debugger where to find the map of loaded objects.  */
       _r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;

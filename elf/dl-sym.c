@@ -116,14 +116,69 @@ RTLD_NEXT used in code not dynamically loaded"));
 
   if (ref != NULL)
     {
+      void *value;
+
 #if defined USE_TLS && defined SHARED
       if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
 	/* The found symbol is a thread-local storage variable.
 	   Return the address for to the current thread.  */
-	return _dl_tls_symaddr (result, ref);
+	value = _dl_tls_symaddr (result, ref);
+      else
+#endif
+	value = DL_SYMBOL_ADDRESS (result, ref);
+
+#ifdef SHARED
+      /* Auditing checkpoint: we have a new binding.  Provide the
+	 auditing libraries the possibility to change the value and
+	 tell us whether further auditing is wanted.  */
+      if (__builtin_expect (GLRO(dl_naudit) > 0, 0))
+	{
+	  const char *strtab = (const char *) D_PTR (result,
+						     l_info[DT_STRTAB]);
+	  /* Compute index of the symbol entry in the symbol table of
+	     the DSO with the definition.  */
+	  unsigned int ndx = (ref - (ElfW(Sym) *) D_PTR (result,
+							 l_info[DT_SYMTAB]));
+
+	  if ((match->l_audit_any_plt | result->l_audit_any_plt) != 0)
+	    {
+	      unsigned int altvalue = 0;
+	      struct audit_ifaces *afct = GLRO(dl_audit);
+	      /* Synthesize a symbol record where the st_value field is
+		 the result.  */
+	      ElfW(Sym) sym = *ref;
+	      sym.st_value = (ElfW(Addr)) value;
+
+	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+		{
+		  if (afct->symbind != NULL
+		      && ((match->l_audit[cnt].bindflags & LA_FLG_BINDFROM)
+			  != 0
+			  || ((result->l_audit[cnt].bindflags & LA_FLG_BINDTO)
+			      != 0)))
+		    {
+		      unsigned int flags = altvalue | LA_SYMB_DLSYM;
+		      uintptr_t new_value
+			= afct->symbind (&sym, ndx,
+					 &match->l_audit[cnt].cookie,
+					 &result->l_audit[cnt].cookie,
+					 &flags, strtab + ref->st_name);
+		      if (new_value != (uintptr_t) sym.st_value)
+			{
+			  altvalue = LA_SYMB_ALTVALUE;
+			  sym.st_value = new_value;
+			}
+		    }
+
+		  afct = afct->next;
+		}
+
+	      value = (void *) sym.st_value;
+	    }
+	}
 #endif
 
-      return DL_SYMBOL_ADDRESS (result, ref);
+      return value;
     }
 
   return NULL;

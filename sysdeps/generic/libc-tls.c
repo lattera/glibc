@@ -1,5 +1,5 @@
 /* Initialization code for TLS in statically linked application.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -178,17 +178,18 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 
   /* Initialize the TLS block.  */
 # if TLS_TCB_AT_TP
-  static_dtv[2].pointer = ((char *) tlsblock + tcb_offset
-			   - roundup (memsz, align ?: 1));
+  static_dtv[2].pointer.val = ((char *) tlsblock + tcb_offset
+			       - roundup (memsz, align ?: 1));
   static_map.l_tls_offset = roundup (memsz, align ?: 1);
 # elif TLS_DTV_AT_TP
-  static_dtv[2].pointer = (char *) tlsblock + tcb_offset;
+  static_dtv[2].pointer.val = (char *) tlsblock + tcb_offset;
   static_map.l_tls_offset = tcb_offset;
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
+  static_dtv[2].pointer.is_static = true;
   /* sbrk gives us zero'd memory, so we don't need to clear the remainder.  */
-  memcpy (static_dtv[2].pointer, initimage, filesz);
+  memcpy (static_dtv[2].pointer.val, initimage, filesz);
 
   /* Install the pointer to the dtv.  */
 

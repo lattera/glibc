@@ -34,6 +34,7 @@
 
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 #include <bits/link.h>
+#include <bits/linkmap.h>
 #include <dl-lookupcfg.h>
 #include <tls.h>		/* Defines USE_TLS.  */
 
@@ -199,6 +200,10 @@ struct link_map
 				       should be called on this link map
 				       when relocation finishes.  */
     unsigned int l_used:1;	/* Nonzero if the DSO is used.  */
+    unsigned int l_auditing:1;	/* Nonzero if the DSO is used in auditing.  */
+    unsigned int l_audit_any_plt:1; /* Nonzero if at least one audit module
+				       is interested in the PLT interception.*/
+
     /* Array with version names.  */
     unsigned int l_nversions;
     struct r_found_version *l_versions;
@@ -207,7 +212,14 @@ struct link_map
     struct r_search_path_struct l_rpath_dirs;
 
     /* Collected results of relocation while profiling.  */
-    ElfW(Addr) *l_reloc_result;
+    struct reloc_result
+    {
+      ElfW(Addr) addr;
+      struct link_map *bound;
+      unsigned int boundndx;
+      uint32_t enterexit;
+      unsigned int flags;
+    } *l_reloc_result;
 
     /* Pointer to the version information if available.  */
     ElfW(Versym) *l_versyms;
@@ -263,11 +275,7 @@ struct link_map
     {
       const ElfW(Sym) *sym;
       int type_class;
-#ifdef DL_LOOKUP_RETURNS_MAP
       struct link_map *value;
-#else
-      ElfW(Addr) value;
-#endif
       const ElfW(Sym) *ret;
     } l_lookup_cache;
 
@@ -297,7 +305,64 @@ struct link_map
        done.  */
     ElfW(Addr) l_relro_addr;
     size_t l_relro_size;
+
+    /* Audit information.  This array apparent must be the last in the
+       structure.  Never add something after it.  */
+    struct auditstate
+    {
+      uintptr_t cookie;
+      unsigned int bindflags;
+    } l_audit[0];
   };
+
+/* Version numbers for la_version handshake interface.  */
+#define LAV_CURRENT	1
+
+/* Activity types signaled through la_activity.  */
+enum
+  {
+    LA_ACT_CONSISTENT,
+    LA_ACT_ADD,
+    LA_ACT_DELETE
+  };
+
+/* Values representing origin of name for dynamic loading.  */
+enum
+  {
+    LA_SER_ORIG = 0x01,		/* Original name.  */
+    LA_SER_LIBPATH = 0x02,	/* Directory from LD_LIBRARY_PATH.  */
+    LA_SER_RUNPATH = 0x04,	/* Directory from RPATH/RUNPATH.  */
+    LA_SER_CONFIG = 0x08,	/* Found through ldconfig.  */
+    LA_SER_DEFAULT = 0x40,	/* Default directory.  */
+    LA_SER_SECURE = 0x80	/* Unused.  */
+  };
+
+/* Values for la_objopen return value.  */
+enum
+  {
+    LA_FLG_BINDTO = 0x01,	/* Audit symbols bound to this object.  */
+    LA_FLG_BINDFROM = 0x02	/* Audit symbols bound from this object.  */
+  };
+
+/* Values for la_symbind flags parameter.  */
+enum
+  {
+    LA_SYMB_NOPLTENTER = 0x01,	/* la_pltenter will not be called.  */
+    LA_SYMB_NOPLTEXIT = 0x02,	/* la_pltexit will not be called.  */
+    LA_SYMB_STRUCTCALL = 0x04,	/* Return value is a structure.  */
+    LA_SYMB_DLSYM = 0x08,	/* Binding due to dlsym call.  */
+    LA_SYMB_ALTVALUE = 0x10	/* Value has been changed by a previous
+				   la_symbind call.  */
+  };
+
+#if __ELF_NATIVE_CLASS == 32
+# define symbind symbind32
+# define pltenter plt
+#elif __ELF_NATIVE_CLASS == 64
+# define symbind symbind64
+#else
+# error "__ELF_NATIVE_CLASS must be defined"
+#endif
 
 struct dl_phdr_info
   {

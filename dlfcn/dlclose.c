@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <dlfcn.h>
+#include <ldsodefs.h>
 
 #if !defined SHARED && defined IS_IN_libdl
 
@@ -33,7 +34,7 @@ dlclose (void *handle)
 static void
 dlclose_doit (void *handle)
 {
-  _dl_close (handle);
+  GLRO(dl_close) (handle);
 }
 
 int
