@@ -1,3 +1,8 @@
+2004-05-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Correct _dl_signal_cerror
+	call.
+
 2004-05-10  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdlookup.c (__hurd_file_name_split): Return ENOENT for "".
