@@ -1,5 +1,12 @@
 2004-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_create.c (__pthread_create_2_1): Remember whether thread
+	is created detached and if yes, do not try to free the stack in case
+	the thread creation failed.
+	* sysdeps/pthread/createthread.c (do_clone): Free stack here if clone
+	call fails.  Don't depend on INTERNAL_SYSCALL_ERRNO return zero in
+	case there has been no error.  [BZ #405]
+
 	* pthread_create.c (start_thread): Don't wait for scheduler data
 	etc to be set at the beginning of the function.  The cancellation
 	infrastructure must have been set up.  And enable async

@@ -66,8 +66,16 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 
   if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
 		  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
-    /* Failed.  */
-    return errno;
+    {
+      /* Failed.  If the thread is detached, remove the TCB here since
+	 the caller cannot do this.  The caller remembered the thread
+	 as detached and cannot reverify that it is not since it must
+	 not access the thread descriptor again.  */
+      if (IS_DETACHED (pd))
+	__deallocate_stack (pd);
+
+      return errno;
+    }
 
   /* Now we have the possibility to set scheduling parameters etc.  */
   if (__builtin_expect (stopped != 0, 0))
@@ -95,7 +103,9 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
 #endif
 
-	      return INTERNAL_SYSCALL_ERRNO (res, err);
+	      return (INTERNAL_SYSCALL_ERROR_P (res, err)
+		      ? INTERNAL_SYSCALL_ERRNO (res, err)
+		      : 0);
 	    }
 	}
 
