@@ -1,3 +1,7 @@
+1999-06-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/Dist: New file.
+
 1999-06-26  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/bits/mathinline.h: Move all libm internal
