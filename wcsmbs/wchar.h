@@ -119,10 +119,11 @@ extern wchar_t *wcsncat (wchar_t *__restrict __dest,
      __THROW;
 
 /* Compare S1 and S2.  */
-extern int wcscmp (__const wchar_t *__s1, __const wchar_t *__s2) __THROW;
+extern int wcscmp (__const wchar_t *__s1, __const wchar_t *__s2)
+     __THROW __attribute_pure__;
 /* Compare N wide-characters of S1 and S2.  */
 extern int wcsncmp (__const wchar_t *__s1, __const wchar_t *__s2, size_t __n)
-     __THROW;
+     __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
 /* Compare S1 and S2, ignoring case.  */
@@ -167,39 +168,42 @@ extern size_t __wcsxfrm_l (wchar_t *__s1, __const wchar_t *__s2,
 			   size_t __n, __locale_t __loc) __THROW;
 
 /* Duplicate S, returning an identical malloc'd string.  */
-extern wchar_t *wcsdup (__const wchar_t *__s) __THROW;
+extern wchar_t *wcsdup (__const wchar_t *__s) __THROW __attribute_malloc__;
 #endif
 
 /* Find the first occurrence of WC in WCS.  */
-extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc) __THROW;
+extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc)
+     __THROW __attribute_pure__;
 /* Find the last occurrence of WC in WCS.  */
-extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc) __THROW;
+extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc)
+     __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
 /* This funciton is similar to `wcschr'.  But it returns a pointer to
    the closing NUL wide character in case C is not found in S.  */
-extern wchar_t *wcschrnul (__const wchar_t *__s, wchar_t __wc) __THROW;
+extern wchar_t *wcschrnul (__const wchar_t *__s, wchar_t __wc)
+     __THROW __attribute_pure__;
 #endif
 
 /* Return the length of the initial segmet of WCS which
    consists entirely of wide characters not in REJECT.  */
 extern size_t wcscspn (__const wchar_t *__wcs, __const wchar_t *__reject)
-     __THROW;
+     __THROW __attribute_pure__;
 /* Return the length of the initial segmet of WCS which
    consists entirely of wide characters in  ACCEPT.  */
 extern size_t wcsspn (__const wchar_t *__wcs, __const wchar_t *__accept)
-     __THROW;
+     __THROW __attribute_pure__;
 /* Find the first occurrence in WCS of any character in ACCEPT.  */
 extern wchar_t *wcspbrk (__const wchar_t *__wcs, __const wchar_t *__accept)
-     __THROW;
+     __THROW __attribute_pure__;
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 extern wchar_t *wcsstr (__const wchar_t *__haystack, __const wchar_t *__needle)
-     __THROW;
+     __THROW __attribute_pure__;
 
 #ifdef __USE_XOPEN
 /* Another name for `wcsstr' from XPG4.  */
 extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
-     __THROW;
+     __THROW __attribute_pure__;
 #endif
 
 /* Divide WCS into tokens separated by characters in DELIM.  */
@@ -208,22 +212,24 @@ extern wchar_t *wcstok (wchar_t *__restrict __s,
 			wchar_t **__restrict __ptr) __THROW;
 
 /* Return the number of wide characters in S.  */
-extern size_t __wcslen (__const wchar_t *__s) __THROW;
-extern size_t wcslen (__const wchar_t *__s) __THROW;
+extern size_t __wcslen (__const wchar_t *__s) __THROW __attribute_pure__;
+extern size_t wcslen (__const wchar_t *__s) __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
 /* Return the number of wide characters in S, but at most MAXLEN.  */
-extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen) __THROW;
+extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen)
+     __THROW __attribute_pure__;
 #endif
 
 
 /* Search N wide characters of S for C.  */
 extern wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c, size_t __n)
-     __THROW;
+     __THROW __attribute_pure__;
 
 /* Compare N wide characters of S1 and S2.  */
 extern int wmemcmp (__const wchar_t *__restrict __s1,
-		    __const wchar_t *__restrict __s2, size_t __n) __THROW;
+		    __const wchar_t *__restrict __s2, size_t __n)
+     __THROW __attribute_pure__;
 
 /* Copy N wide characters of SRC to DEST.  */
 extern wchar_t *wmemcpy (wchar_t *__restrict __s1,

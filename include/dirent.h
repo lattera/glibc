@@ -18,6 +18,8 @@ extern __ssize_t __getdents (int __fd, char *__buf, size_t __nbytes)
      internal_function;
 extern __ssize_t __getdents64 (int __fd, char *__buf, size_t __nbytes)
      internal_function;
-extern int __alphasort64 (const void *a, const void *b);
-extern int __versionsort64 (const void *a, const void *b);
+extern int __alphasort64 (const void *a, const void *b)
+     __attribute_pure__;
+extern int __versionsort64 (const void *a, const void *b)
+     __attribute_pure__;
 #endif

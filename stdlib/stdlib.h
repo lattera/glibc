@@ -134,15 +134,16 @@ extern size_t __ctype_get_mb_cur_max (void) __THROW;
 
 
 /* Convert a string to a floating-point number.  */
-extern double atof (__const char *__nptr) __THROW;
+extern double atof (__const char *__nptr) __THROW __attribute_pure__;
 /* Convert a string to an integer.  */
-extern int atoi (__const char *__nptr) __THROW;
+extern int atoi (__const char *__nptr) __THROW __attribute_pure__;
 /* Convert a string to a long integer.  */
-extern long int atol (__const char *__nptr) __THROW;
+extern long int atol (__const char *__nptr) __THROW __attribute_pure__;
 
 #if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_MISC)
-/* These functions will part of the standard C library in ISO C99.  */
-__extension__ extern long long int atoll (__const char *__nptr) __THROW;
+/* Convert a string to a long long integer.  */
+__extension__ extern long long int atoll (__const char *__nptr)
+     __THROW __attribute_pure__;
 #endif
 
 /* Convert a string to a floating-point number.  */
@@ -384,7 +385,7 @@ atoll (__const char *__nptr) __THROW
 extern char *l64a (long int __n) __THROW;
 
 /* Read a number from a string S in base 64 as above.  */
-extern long int a64l (__const char *__s) __THROW;
+extern long int a64l (__const char *__s) __THROW __attribute_pure__;
 
 
 # include <sys/types.h>	/* we need int32_t... */
@@ -552,7 +553,7 @@ extern void *valloc (size_t __size) __THROW __attribute_malloc__;
 #ifdef __USE_XOPEN2K
 /* Allocate memory of SIZE bytes with an alignment of ALIGNMENT.  */
 extern int posix_memalign (void **memptr, size_t alignment, size_t size)
-     __THROW;
+     __THROW __attribute_malloc__;
 #endif
 
 /* Abort execution and generate a core-dump.  */

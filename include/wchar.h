@@ -3,10 +3,13 @@
 
 # ifdef _WCHAR_H
 /* Now define the internal interfaces.  */
-extern int __wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2);
+extern int __wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2)
+     __attribute_pure__;
 extern int __wcsncasecmp (__const wchar_t *__s1, __const wchar_t *__s2,
-			  size_t __n);
-extern size_t __wcsnlen (__const wchar_t *__s, size_t __maxlen);
+			  size_t __n)
+     __attribute_pure__;
+extern size_t __wcsnlen (__const wchar_t *__s, size_t __maxlen)
+     __attribute_pure__;
 extern wint_t __btowc (int __c);
 extern int __mbsinit (__const __mbstate_t *__ps);
 extern size_t __mbrtowc (wchar_t *__restrict __pwc,
@@ -37,7 +40,8 @@ extern wchar_t *__wmempcpy (wchar_t *__restrict __s1,
 			    size_t __n);
 extern wchar_t *__wmemmove (wchar_t *__s1, __const wchar_t *__s2,
 			    size_t __n);
-extern wchar_t *__wcschrnul (__const wchar_t *__s, wchar_t __wc);
+extern wchar_t *__wcschrnul (__const wchar_t *__s, wchar_t __wc)
+     __attribute_pure__;
 
 extern int __vfwscanf (FILE *__restrict __s,
 		       __const wchar_t *__restrict __format,

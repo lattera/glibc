@@ -252,11 +252,13 @@ extern int scandir64 (__const char *__restrict __dir,
 
 /* Function to compare two `struct dirent's alphabetically.  */
 # ifndef __USE_FILE_OFFSET64
-extern int alphasort (__const void *__e1, __const void *__e2) __THROW;
+extern int alphasort (__const void *__e1, __const void *__e2)
+     __THROW __attribute_pure__;
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (alphasort,
-		       (__const void *__e1, __const void *__e2) __THROW,
+		       (__const void *__e1, __const void *__e2)
+		       __THROW __attribute_pure__,
 		       alphasort64);
 #  else
 #   define alphasort alphasort64
@@ -264,17 +266,20 @@ extern int __REDIRECT (alphasort,
 # endif
 
 # if defined __USE_GNU && defined __USE_LARGEFILE64
-extern int alphasort64 (__const void *__e1, __const void *__e2) __THROW;
+extern int alphasort64 (__const void *__e1, __const void *__e2)
+     __THROW __attribute_pure__;
 # endif
 
 # ifdef __USE_GNU
 /* Function to compare two `struct dirent's by name & version.  */
 #  ifndef __USE_FILE_OFFSET64
-extern int versionsort (__const void *__e1, __const void *__e2) __THROW;
+extern int versionsort (__const void *__e1, __const void *__e2)
+     __THROW __attribute_pure__;
 #  else
 #   ifdef __REDIRECT
 extern int __REDIRECT (versionsort,
-		       (__const void *__e1, __const void *__e2) __THROW,
+		       (__const void *__e1, __const void *__e2)
+		       __THROW __attribute_pure__,
 		       versionsort64);
 #   else
 #    define versionsort versionsort64
@@ -282,7 +287,8 @@ extern int __REDIRECT (versionsort,
 #  endif
 
 #  ifdef __USE_LARGEFILE64
-extern int versionsort64 (__const void *__e1, __const void *__e2) __THROW;
+extern int versionsort64 (__const void *__e1, __const void *__e2)
+     __THROW __attribute_pure__;
 #  endif
 # endif
 
