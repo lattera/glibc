@@ -2,6 +2,10 @@
 
 	* sysdeps/unix/sysv/linux/bits/sem.h: Don't define union semun.
 	Define macro _SEM_SEMUN_UNDEFINED instead.
+	Reported by Dirk Laessig <d.laessig@tu-bs.de>.
+
+	* stdio-common/tst-wc-printf.c: New file.  Test for %S and %C format.
+	* stdio-common/Makefile (tests): Add tst-wc-printf.
 
 1998-04-28 16:32  Philip Blundell  <philb@gnu.org>
 
