@@ -25,9 +25,12 @@ routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r
 
 include ../Makeconfig
 
+# To find xmalloc.c
+vpath %.c ../locale/programs
+
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
-		dbg_log nscd_conf nscd_stat cache
+		dbg_log nscd_conf nscd_stat cache xmalloc
 
 ifeq ($(have-thread-library),yes)
 
