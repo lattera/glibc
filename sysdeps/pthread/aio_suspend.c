@@ -31,6 +31,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
@@ -47,6 +48,7 @@ aio_suspend (list, nent, timeout)
   struct requestlist *requestlist[nent];
   pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
   int cnt;
+  bool any = false;
   int result = 0;
   int dummy;
 
@@ -70,6 +72,7 @@ aio_suspend (list, nent, timeout)
 		waitlist[cnt].sigevp = NULL;
 		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
 		requestlist[cnt]->waiting = &waitlist[cnt];
+		any = true;
 	      }
 	    else
 	      /* We will never suspend.  */
@@ -82,7 +85,7 @@ aio_suspend (list, nent, timeout)
 
 
   /* Only if none of the entries is NULL or finished to be wait.  */
-  if (cnt == nent)
+  if (cnt == nent && any)
     {
       int oldstate;
 

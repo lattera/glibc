@@ -1,7 +1,7 @@
 2003-01-02  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/pthread/aio_suspend.c (aio_suspend): Simplify by
-	removing 'any' variable.
+	* sysdeps/pthread/aio_suspend.c (aio_suspend): Don't quite remove
+	any, but unify the test.
 
 2003-01-02  Jakub Jelinek  <jakub@redhat.com>
 
