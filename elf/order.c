@@ -1,5 +1,6 @@
 #include <unistd.h>
 
+void init (void) __attribute__ ((constructor));
 void
 __attribute__ ((constructor))
 init (void)
@@ -7,6 +8,7 @@ init (void)
   write (1, "4", 1);
 }
 
+void fini (void) __attribute__ ((destructor));
 void
 __attribute__ ((destructor))
 fini (void)

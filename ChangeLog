@@ -1,5 +1,16 @@
 2000-11-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/loadfail.c: Little cosmetic changes to avoid warnings.
+	* elf/loadtest.c: Likewise.
+	* elf/multiload.c: Likewise.
+	* elf/next.c: Likewise.
+	* elf/nodelete.c: Likewise.
+	* elf/noload.c: Likewise.
+	* elf/order.c: Likewise.
+	* elf/origtest.c: Likewise.
+	* elf/preloadtest.c: Likewise.
+	* elf/restest1.c: Likewise.
+
 	* sysdeps/i386/i486/bits/string.h (__strncat_g) [i686]: Fourth
 	parameter of asm must be in %ecx.
 

@@ -12,6 +12,7 @@ main (void)
   return res != 92;
 }
 
+extern int foo (int a);
 int
 foo (int a)
 {

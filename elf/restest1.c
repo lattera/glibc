@@ -49,6 +49,7 @@ main (void)
 }
 
 
+extern int foo (int a);
 int
 foo (int a)
 {

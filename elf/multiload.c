@@ -97,6 +97,7 @@ main (void)
   return 0;
 }
 
+extern int foo (int a);
 int
 foo (int a)
 {

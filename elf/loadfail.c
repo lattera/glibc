@@ -34,6 +34,7 @@ main (void)
   return h != NULL;
 }
 
+extern int foo (int a);
 int
 foo (int a)
 {

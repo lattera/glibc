@@ -146,7 +146,7 @@ main (int argc, char *argv[])
     }
 
   /* Unload all loaded modules.  */
-  for (count = 0; count < NOBJS; ++count)
+  for (count = 0; count < (int) NOBJS; ++count)
     if (testobjs[count].handle != NULL)
       {
 	printf ("\nclose: %s: l_initfini = %p, l_versions = %p\n",
@@ -174,6 +174,7 @@ main (int argc, char *argv[])
 }
 
 
+extern int foo (int a);
 int
 foo (int a)
 {

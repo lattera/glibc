@@ -11,6 +11,7 @@ int fini_ran;
 
 
 static void
+__attribute__ ((noreturn))
 handler (int sig)
 {
   siglongjmp (jmpbuf, 1);

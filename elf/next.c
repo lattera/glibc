@@ -5,7 +5,7 @@ extern int successful_rtld_next_test (void);
 extern void *failing_rtld_next_use (void);
 
 
-int
+static int
 do_test (void)
 {
   int result;
