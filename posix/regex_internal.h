@@ -178,7 +178,9 @@ typedef enum
   OP_UTF8_PERIOD = 7,
 #endif /* RE_ENABLE_I18N */
 
-  EPSILON_BIT = 8,
+  /* We define EPSILON_BIT as a macro so that OP_OPEN_SUBEXP is used
+     when the debugger shows values of this enum type.  */
+#define EPSILON_BIT 8
   OP_OPEN_SUBEXP = EPSILON_BIT | 0,
   OP_CLOSE_SUBEXP = EPSILON_BIT | 1,
   OP_ALT = EPSILON_BIT | 2,

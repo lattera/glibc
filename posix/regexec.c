@@ -139,16 +139,16 @@ static reg_errcode_t transit_state_mb (const regex_t *preg,
 				       re_match_context_t *mctx);
 #endif /* RE_ENABLE_I18N */
 static reg_errcode_t transit_state_bkref (const regex_t *preg,
-					  re_node_set *nodes,
+					  const re_node_set *nodes,
 					  re_match_context_t *mctx);
 static reg_errcode_t get_subexp (const regex_t *preg, re_match_context_t *mctx,
 				 int bkref_node, int bkref_str_idx);
 static reg_errcode_t get_subexp_sub (const regex_t *preg,
 				     re_match_context_t *mctx,
-				     re_sub_match_top_t *sub_top,
+				     const re_sub_match_top_t *sub_top,
 				     re_sub_match_last_t *sub_last,
 				     int bkref_node, int bkref_str);
-static int find_subexp_node (re_dfa_t *dfa, re_node_set *nodes,
+static int find_subexp_node (const re_dfa_t *dfa, const re_node_set *nodes,
 			     int subexp_idx, int fl_open);
 static reg_errcode_t check_arrival (const regex_t *preg,
 				    re_match_context_t *mctx,
@@ -727,7 +727,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	}
 
       /* Reconstruct the buffers so that the matcher can assume that
-	 the matching starts from the begining of the buffer.  */
+	 the matching starts from the beginning of the buffer.  */
       err = re_string_reconstruct (&input, match_first, eflags,
 				   preg->newline_anchor);
       if (BE (err != REG_NOERROR, 0))
@@ -768,7 +768,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 			goto free_return;
 		    }
 		  else
-		    break; /* We found a matching.  */
+		    break; /* We found a match.  */
 		}
 	    }
 	  match_ctx_clean (&mctx);
@@ -2362,7 +2362,7 @@ transit_state_mb (preg, pstate, mctx)
 static reg_errcode_t
 transit_state_bkref (preg, nodes, mctx)
     const regex_t *preg;
-    re_node_set *nodes;
+    const re_node_set *nodes;
     re_match_context_t *mctx;
 {
   reg_errcode_t err;
@@ -2375,7 +2375,7 @@ transit_state_bkref (preg, nodes, mctx)
       int dest_str_idx, prev_nelem, bkc_idx;
       int node_idx = nodes->elems[i];
       unsigned int context;
-      re_token_t *node = dfa->nodes + node_idx;
+      const re_token_t *node = dfa->nodes + node_idx;
       re_node_set *new_dest_nodes;
 
       /* Check whether `node' is a backreference or not.  */
@@ -2483,12 +2483,13 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 {
   int subexp_num, sub_top_idx;
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
-  char *buf = (char *) re_string_get_buffer (mctx->input);
+  const char *buf = (const char *) re_string_get_buffer (mctx->input);
   /* Return if we have already checked BKREF_NODE at BKREF_STR_IDX.  */
   int cache_idx = search_cur_bkref_entry (mctx, bkref_str_idx);
   for (; cache_idx < mctx->nbkref_ents; ++cache_idx)
     {
-      struct re_backref_cache_entry *entry = mctx->bkref_ents + cache_idx;
+      const struct re_backref_cache_entry *entry
+	= &mctx->bkref_ents[cache_idx];
       if (entry->str_idx > bkref_str_idx)
 	break;
       if (entry->node == bkref_node)
@@ -2503,7 +2504,7 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
       re_sub_match_top_t *sub_top = mctx->sub_tops[sub_top_idx];
       re_sub_match_last_t *sub_last;
       int sub_last_idx, sl_str;
-      char *bkref_str;
+      const char *bkref_str;
 
       if (dfa->nodes[sub_top->node].opr.idx != subexp_num)
 	continue; /* It isn't related.  */
@@ -2529,7 +2530,7 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 
 	  /* Reload buf and bkref_str, since the preceding call might
 	     have reallocated the buffer.  */
-	  buf = (char *) re_string_get_buffer (mctx->input);
+	  buf = (const char *) re_string_get_buffer (mctx->input);
 	  bkref_str = buf + bkref_str_idx;
 
 	  if (err == REG_NOMATCH)
@@ -2545,7 +2546,7 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
       for (; sl_str <= bkref_str_idx; ++sl_str)
 	{
 	  int cls_node, sl_str_off;
-	  re_node_set *nodes;
+	  const re_node_set *nodes;
 	  sl_str_off = sl_str - sub_top->str_idx;
 	  /* The matched string by the sub expression match with the substring
 	     at the back reference?  */
@@ -2595,7 +2596,7 @@ static reg_errcode_t
 get_subexp_sub (preg, mctx, sub_top, sub_last, bkref_node, bkref_str)
      const regex_t *preg;
      re_match_context_t *mctx;
-     re_sub_match_top_t *sub_top;
+     const re_sub_match_top_t *sub_top;
      re_sub_match_last_t *sub_last;
      int bkref_node, bkref_str;
 {
@@ -2625,15 +2626,15 @@ get_subexp_sub (preg, mctx, sub_top, sub_last, bkref_node, bkref_str)
 
 static int
 find_subexp_node (dfa, nodes, subexp_idx, fl_open)
-     re_dfa_t *dfa;
-     re_node_set *nodes;
+     const re_dfa_t *dfa;
+     const re_node_set *nodes;
      int subexp_idx, fl_open;
 {
   int cls_idx;
   for (cls_idx = 0; cls_idx < nodes->nelem; ++cls_idx)
     {
       int cls_node = nodes->elems[cls_idx];
-      re_token_t *node = dfa->nodes + cls_node;
+      const re_token_t *node = dfa->nodes + cls_node;
       if (((fl_open && node->type == OP_OPEN_SUBEXP)
 	  || (!fl_open && node->type == OP_CLOSE_SUBEXP))
 	  && node->opr.idx == subexp_idx)

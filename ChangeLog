@@ -1,3 +1,9 @@
+2003-11-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regexec.c: Add const in a number of places.
+	* posix/regex_internal.h: Make EPSILON_BIT a macro to help
+	debugging.  Its value isn't important.
+
 2003-11-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/PTESTS: Fix first test of GA143.
