@@ -1,6 +1,6 @@
 /* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -46,7 +46,8 @@ static u_long tablename_len = 0;
 
 static int
 _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
-			    char *buffer, size_t buflen, int *errnop)
+			    char *buffer, size_t buflen, int *errnop,
+			    int flags)
 {
   unsigned int i;
   char *first_unused = buffer;
@@ -71,16 +72,11 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
     }
 
   data = first_unused;
-  if (inet_pton (af, NISENTRYVAL (0, 2, result), data) < 1)
-    /* Illegal address: ignore line.  */
-    return 0;
 
-  host->h_addrtype = af;
-  if (af == AF_INET6)
-    host->h_length = IN6ADDRSZ;
-  else
+  /* Parse address.  */
+  if (af == AF_INET && inet_pton (af, NISENTRYVAL (0, 2, result), data) > 0)
     {
-      if (_res.options & RES_USE_INET6)
+      if (flags & AI_V4MAPPED)
 	{
 	  map_v4v6_address (data, data);
 	  host->h_addrtype = AF_INET6;
@@ -92,6 +88,16 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 	  host->h_length = INADDRSZ;
 	}
     }
+  else if (af == AF_INET6
+	   && inet_pton (AF_INET6, NISENTRYVAL (0, 2, result), data) > 0)
+    {
+      host->h_addrtype = AF_INET6;
+      host->h_length = IN6ADDRSZ;
+    }
+  else
+    /* Illegal address: ignore line.  */
+    return 0;
+
   first_unused+=host->h_length;
   room_left-=host->h_length;
 
@@ -281,11 +287,13 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
             }
 	}
 
-      parse_res = _nss_nisplus_parse_hostent (result, AF_INET6, host, buffer,
-					      buflen, errnop);
-      if (parse_res < 1 && *errnop != ERANGE)
-	parse_res = _nss_nisplus_parse_hostent (result, AF_INET, host,
-						buffer, buflen, errnop);
+      if (_res.options & RES_USE_INET6)
+	parse_res = _nss_nisplus_parse_hostent (result, AF_INET6, host, buffer,
+						buflen, errnop, AI_V4MAPPED);
+      else
+	parse_res = _nss_nisplus_parse_hostent (result, AF_INET, host, buffer,
+						buflen, errnop, 0);
+
       if (parse_res == -1)
         {
 	  nis_freeresult (result);
@@ -318,10 +326,10 @@ _nss_nisplus_gethostent_r (struct hostent *result, char *buffer,
   return status;
 }
 
-enum nss_status
-_nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
-			       char *buffer, size_t buflen, int *errnop,
-			       int *herrnop)
+static enum nss_status
+internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
+			   char *buffer, size_t buflen, int *errnop,
+			   int *herrnop, int flags)
 {
   int parse_res, retval;
 
@@ -380,7 +388,7 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
         }
 
       parse_res = _nss_nisplus_parse_hostent (result, af, host, buffer,
-					      buflen, errnop);
+					      buflen, errnop, flags);
 
       nis_freeresult (result);
 
@@ -399,6 +407,25 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
 }
 
 enum nss_status
+_nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
+			       char *buffer, size_t buflen, int *errnop,
+			       int *herrnop)
+{
+  return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
+				    herrnop,
+			 ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
+}
+
+enum nss_status
+_nss_nisplus_getipnodebyname_r (const char *name, int af, int flags,
+				struct hostent *result, char *buffer,
+				size_t buflen, int *errnop, int *herrnop)
+{
+  return internal_gethostbyname2_r (name, af, result, buffer, buflen,
+				    errnop, herrnop, flags);
+}
+
+enum nss_status
 _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
 			      char *buffer, size_t buflen, int *errnop,
 			      int *h_errnop)
@@ -407,18 +434,19 @@ _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
     {
       enum nss_status status;
 
-      status = _nss_nisplus_gethostbyname2_r (name, AF_INET6, host, buffer,
-					      buflen, errnop, h_errnop);
+      status = internal_gethostbyname2_r (name, AF_INET6, host, buffer,
+					  buflen, errnop, h_errnop,
+					  AI_V4MAPPED);
       if (status == NSS_STATUS_SUCCESS)
         return status;
     }
 
-  return _nss_nisplus_gethostbyname2_r (name, AF_INET, host, buffer,
-					buflen, errnop, h_errnop);
+  return internal_gethostbyname2_r (name, AF_INET, host, buffer,
+				   buflen, errnop, h_errnop, 0);
 }
 
 enum nss_status
-_nss_nisplus_gethostbyaddr_r (const char *addr, size_t addrlen, int type,
+_nss_nisplus_gethostbyaddr_r (const char *addr, size_t addrlen, int af,
 			      struct hostent *host, char *buffer,
 			      size_t buflen, int *errnop, int *herrnop)
 {
@@ -454,8 +482,9 @@ _nss_nisplus_gethostbyaddr_r (const char *addr, size_t addrlen, int type,
           return retval;
         }
 
-      parse_res = _nss_nisplus_parse_hostent (result, type, host,
-					      buffer, buflen, errnop);
+      parse_res = _nss_nisplus_parse_hostent (result, af, host,
+					      buffer, buflen, errnop,
+		     ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
       nis_freeresult (result);
 
       if (parse_res > 0)

@@ -1,6 +1,6 @@
 /* Copyright (C) 1996, 1997, 1998, 1999  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -37,6 +37,9 @@
 #define DATABASE        "hosts"
 #define NEED_H_ERRNO
 
+#define EXTRA_ARGS      , af, flags
+#define EXTRA_ARGS_DECL , int af, int flags
+
 #define ENTDATA hostent_data
 struct hostent_data
   {
@@ -55,30 +58,30 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+   if (af == AF_INET && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+     {
+       if (flags & AI_V4MAPPED)
+         {
+           map_v4v6_address ((char *) entdata->host_addr,
+                             (char *) entdata->host_addr);
+           result->h_addrtype = AF_INET6;
+           result->h_length = IN6ADDRSZ;
+         }
+       else
+         {
+           result->h_addrtype = AF_INET;
+           result->h_length = INADDRSZ;
+         }
+     }
+   else if (af == AF_INET6
+            && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
      {
        result->h_addrtype = AF_INET6;
        result->h_length = IN6ADDRSZ;
      }
    else
-     if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
-       {
-	 if (_res.options & RES_USE_INET6)
-	   {
-	     map_v4v6_address ((char *) entdata->host_addr,
-			       (char *) entdata->host_addr);
-	     result->h_addrtype = AF_INET6;
-	     result->h_length = IN6ADDRSZ;
-	   }
-	 else
-	   {
-	     result->h_addrtype = AF_INET;
-	     result->h_length = INADDRSZ;
-	   }
-       }
-     else
-       /* Illegal address: ignore line.  */
-       return 0;
+     /* Illegal address: ignore line.  */
+     return 0;
 
    /* Store a pointer to the address in the expected form.  */
    entdata->h_addr_ptrs[0] = entdata->host_addr;
@@ -86,8 +89,8 @@ LINE_PARSER
    result->h_addr_list = entdata->h_addr_ptrs;
 
    STRING_FIELD (result->h_name, isspace, 1);
- }
-)
+ })
+
 
 __libc_lock_define_initialized (static, lock)
 
@@ -131,9 +134,11 @@ _nss_nis_endhostent (void)
   return NSS_STATUS_SUCCESS;
 }
 
+/* The calling function always need to get a lock first. */
 static enum nss_status
 internal_nis_gethostent_r (struct hostent *host, char *buffer,
-			   size_t buflen, int *errnop, int *h_errnop)
+			   size_t buflen, int *errnop, int *h_errnop,
+			   int af, int flags)
 {
   char *domain;
   char *result;
@@ -200,7 +205,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	++p;
       free (result);
 
-      parse_res = parse_line (p, host, data, buflen, errnop);
+      parse_res = parse_line (p, host, data, buflen, errnop, af, flags);
       if (parse_res == -1)
 	{
 	  free (outkey);
@@ -219,25 +224,27 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
   return NSS_STATUS_SUCCESS;
 }
 
-int
+enum nss_status
 _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
 		       int *errnop, int *h_errnop)
 {
-  int status;
+  enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_gethostent_r (host, buffer, buflen, errnop, h_errnop);
+  status = internal_nis_gethostent_r (host, buffer, buflen, errnop, h_errnop,
+		        ((_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET),
+			((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0 ));
 
   __libc_lock_unlock (lock);
 
   return status;
 }
 
-enum nss_status
-_nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
+static enum nss_status
+internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			   char *buffer, size_t buflen, int *errnop,
-			   int *h_errnop)
+			   int *h_errnop, int flags)
 {
   enum nss_status retval;
   char *domain, *result, *p;
@@ -302,7 +309,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
     ++p;
   free (result);
 
-  parse_res = parse_line (p, host, data, buflen, errnop);
+  parse_res = parse_line (p, host, data, buflen, errnop, af, flags);
 
   if (parse_res < 1 || host->h_addrtype != af)
     {
@@ -323,6 +330,16 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 }
 
 enum nss_status
+_nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
+			   char *buffer, size_t buflen, int *errnop,
+			   int *h_errnop)
+{
+  return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
+				    h_errnop,
+		        ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
+}
+
+enum nss_status
 _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
 			  size_t buflen, int *errnop, int *h_errnop)
 {
@@ -330,18 +347,18 @@ _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
     {
       enum nss_status status;
 
-      status = _nss_nis_gethostbyname2_r (name, AF_INET6, host, buffer, buflen,
-					  errnop, h_errnop);
+      status = internal_gethostbyname2_r (name, AF_INET6, host, buffer, buflen,
+					  errnop, h_errnop, AI_V4MAPPED);
       if (status == NSS_STATUS_SUCCESS)
 	return status;
     }
 
-  return _nss_nis_gethostbyname2_r (name, AF_INET, host, buffer, buflen,
-				    errnop, h_errnop);
+  return internal_gethostbyname2_r (name, AF_INET, host, buffer, buflen,
+				    errnop, h_errnop, 0);
 }
 
 enum nss_status
-_nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int type,
+_nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int af,
 			  struct hostent *host, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
 {
@@ -393,7 +410,8 @@ _nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int type,
     ++p;
   free (result);
 
-  parse_res = parse_line (p, host, data, buflen, errnop);
+  parse_res = parse_line (p, host, data, buflen, errnop, af,
+			  ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
   if (parse_res < 1)
     {
       if (parse_res == -1)
@@ -410,4 +428,13 @@ _nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int type,
 
   *h_errnop = NETDB_SUCCESS;
   return NSS_STATUS_SUCCESS;
+}
+
+enum nss_status
+_nss_nis_getipnodebyname_r (const char *name, int af, int flags,
+			    struct hostent *result, char *buffer,
+			    size_t buflen, int *errnop, int *herrnop)
+{
+  return internal_gethostbyname2_r (name, af, result, buffer, buflen,
+				    errnop, herrnop, flags);
 }

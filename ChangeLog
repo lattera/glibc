@@ -1,8 +1,15 @@
+1999-08-29  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/Versions: Add _nss_*_getipnodebyname_r.
+	* nis/nss_nis/nis-hosts.c: Add _nss_nis_getipnodebyname_r.
+	* nis/nss_nisplus/nisplus-hosts.c: Add _nss_nisplus_getipnodebyname_r.
+	* nss/Versions: Add _nss_files_getipnodebyname_r.
+
 1999-08-28  H.J. Lu  <hjl@gnu.org>
 
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Don't count the alloca'ed
 	memory for buffer.
-		
+
 1999-08-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/netpacket/packet.h: Update from 2.3.15

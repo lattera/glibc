@@ -49,6 +49,8 @@ static const struct test_times tests[] =
   { NULL, 0, 0 }
 };
 
+/* This string will be used for `putenv' calls.  */
+char envstring[100];
 
 void
 print_tzvars (void)
@@ -123,7 +125,8 @@ main (int argc, char ** argv)
   {
     struct tm tmBuf = {0, 0, 0, 10, 3, 98, 0, 0, -1};
     char buf[200];
-    putenv ("TZ=Europe/London");
+    strcpy (envstring, "TZ=Europe/London");
+    putenv (envstring);
     t = mktime (&tmBuf);
     snprintf (buf, sizeof (buf), "TZ=%s %ld %d %d %d %d %d %d %d %d %d",
 	      getenv ("TZ"), t,
@@ -145,7 +148,8 @@ main (int argc, char ** argv)
   {
     struct tm tmBuf = {0, 0, 0, 10, 3, 98, 0, 0, -1};
     char buf[200];
-    putenv ("TZ=GMT");
+    strcpy (envstring, "TZ=GMT");
+    /* No putenv call needed!  */
     t = mktime (&tmBuf);
     snprintf (buf, sizeof (buf), "TZ=%s %ld %d %d %d %d %d %d %d %d %d",
 	      getenv ("TZ"), t,
