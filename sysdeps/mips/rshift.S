@@ -1,6 +1,6 @@
 /* MIPS2 __mpn_rshift --
 
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 2000 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -27,12 +27,12 @@ MA 02111-1307, USA.  */
    size		$6
    cnt		$7
 */
-#ifdef PIC
+#ifdef __PIC__
 	.option pic2
 #endif
 ENTRY (__mpn_rshift)
 	.set	noreorder
-#ifdef PIC
+#ifdef __PIC__
 	.cpload t9
 #endif
 	.set	nomacro
@@ -92,3 +92,4 @@ ENTRY (__mpn_rshift)
 .Lend:	srl	$8,$10,$7
 	j	$31
 	sw	$8,0($4)
+	END (__mpn_rshift)
