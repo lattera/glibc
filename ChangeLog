@@ -1,3 +1,10 @@
+2004-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_getai.c: Add some checks to detect corrupt databases.
+	* nscd/nscd_getgr_r.c: Likewise
+	* nscd/nscd_gethst_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise
+
 2004-11-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (calc_eclosure_iter): Don't access
