@@ -1,3 +1,18 @@
+2005-03-27  Andreas Jaeger  <aj@suse.de>
+
+	* debug/warning-nop.c (__builtin___memcpy_chk): Define away to
+	avoid warnings with older compiler.
+	(__builtin___memcpy_chk): Likewise.
+	(__builtin___memmove_chk: Likewise.
+	(__builtin___mempcpy_chk): Likewise.
+	(__builtin___memset_chk): Likewise.
+	(__builtin___stpcpy_chk): Likewise.
+	(__builtin___strcat_chk): Likewise.
+	(__builtin___strcpy_chk): Likewise.
+	(__builtin___strncat_chk): Likewise.
+	(__builtin___strncpy_chk): Likewise.
+	(__builtin_object_size): Likewise.
+
 2005-03-27  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* elf/tls-macros.h: Correct typo.
