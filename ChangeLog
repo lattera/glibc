@@ -1,3 +1,15 @@
+1999-09-11  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/glob.h (glob): If #defining to glob64, do this before
+	declaring it, so that all declarations and uses match, and do not
+	declare glob64, to avoid a declaration clash.
+	(globfree): Likewise with globfree64.
+
+1999-09-08  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* sysdeps/generic/glob.c (prefix_array) [__MSDOS__,WINDOWS32]:
+	Keep the trailing slash unless DIRNAME is just "x:/".
+
 1999-10-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/siginfo.h (SI_KERNEL): Added.

@@ -1105,7 +1105,7 @@ prefix_array (dirname, array, n)
 #if defined __MSDOS__ || defined WINDOWS32
   else if (dirlen > 1)
     {
-      if (dirname[dirlen - 1] == '/')
+      if (dirname[dirlen - 1] == '/' && dirname[dirlen - 2] == ':')
 	/* DIRNAME is "d:/".  Don't prepend the slash from DIRNAME.  */
 	--dirlen;
       else if (dirname[dirlen - 1] == ':')

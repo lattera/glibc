@@ -140,6 +140,11 @@ typedef struct
   } glob64_t;
 #endif
 
+#if _FILE_OFFSET_BITS == 64 && __GNUC__ < 2
+# define glob glob64
+# define globfree globfree64
+#endif
+
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
    If a directory cannot be opened or read and ERRFUNC is not nil,
@@ -148,7 +153,7 @@ typedef struct
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-#if _FILE_OFFSET_BITS != 64
+#if _FILE_OFFSET_BITS != 64 || __GNUC__ < 2
 extern int glob __P ((__const char *__pattern, int __flags,
 		      int (*__errfunc) (__const char *, int),
 		      glob_t *__pglob));
@@ -156,16 +161,11 @@ extern int glob __P ((__const char *__pattern, int __flags,
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 extern void globfree __P ((glob_t *__pglob));
 #else
-# if __GNUC__ >= 2
 extern int glob __P ((__const char *__pattern, int __flags,
 		      int (*__errfunc) (__const char *, int),
 		      glob_t *__pglob)) __asm__ ("glob64");
 
 extern void globfree __P ((glob_t *__pglob)) __asm__ ("globfree64");
-# else
-#  define glob glob64
-#  define globfree globfree64
-# endif
 #endif
 
 #ifdef _LARGEFILE64_SOURCE
