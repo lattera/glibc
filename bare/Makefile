@@ -22,8 +22,9 @@
 subdir := bare
 
 bare-routines := brdinit console strtsupp
+routines = $(bare-routines)
+elided-routines = $(bare-routines)
 extra-objs = $(bare-routines:%=%.o)
-distribute = $(bare-routines:%=%.c)
 
 install-lib = lib$(config-vendor).a
 
