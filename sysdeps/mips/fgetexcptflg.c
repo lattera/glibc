@@ -1,6 +1,7 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Store current representation for exceptions.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,22 +18,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <sys/ustat.h>
-#include <sys/sysmacros.h>
+#include <fenv.h>
+#include <fpu_control.h>
 
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-extern int __syscall_ustat (unsigned long dev, struct ustat *ubuf);
-
-int
-ustat (dev_t dev, struct ustat *ubuf)
+void
+fegetexceptflag (fexcept_t *flagp, int excepts)
 {
-  unsigned long k_dev;
+  fexcept_t temp;
 
-  /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);
+  /* Get the current exceptions.  */
+  _FPU_GETCW (temp);
 
-  return INLINE_SYSCALL (ustat, 2, k_dev, ubuf);
+  *flagp = temp & excepts & FE_ALL_EXCEPT;
 }

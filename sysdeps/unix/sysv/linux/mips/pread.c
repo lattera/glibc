@@ -18,21 +18,45 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/ustat.h>
-#include <sys/sysmacros.h>
+#include <unistd.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-extern int __syscall_ustat (unsigned long dev, struct ustat *ubuf);
+#ifdef __NR_pread
 
-int
-ustat (dev_t dev, struct ustat *ubuf)
+extern ssize_t __syscall_pread (int fd, void *buf, size_t count, int dummy,
+				off_t offset_hi, off_t offset_lo);
+
+static ssize_t __emulate_pread (int fd, void *buf, size_t count,
+				off_t offset) internal_function;
+
+
+ssize_t
+__pread (fd, buf, count, offset)
+     int fd;
+     void *buf;
+     size_t count;
+     off_t offset;
 {
-  unsigned long k_dev;
+  ssize_t result;
 
-  /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);
+  /* First try the syscall.  */
+#if defined(__MIPSEB__)
+  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0, 0, offset);
+#elif defined(__MIPSEL__)
+  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0, offset, 0);
+#endif
+  if (result == -1 && errno == ENOSYS)
+    /* No system call available.  Use the emulation.  */
+    result = __emulate_pread (fd, buf, count, offset);
 
-  return INLINE_SYSCALL (ustat, 2, k_dev, ubuf);
+  return result;
 }
+
+weak_alias (__pread, pread)
+
+#define __pread(fd, buf, count, offset) \
+     static internal_function __emulate_pread (fd, buf, count, offset)
+#endif
+#include <sysdeps/posix/pread.c>

@@ -1,6 +1,7 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Set current rounding direction.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,22 +18,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <sys/ustat.h>
-#include <sys/sysmacros.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-extern int __syscall_ustat (unsigned long dev, struct ustat *ubuf);
+#include <fenv.h>
+#include <fpu_control.h>
 
 int
-ustat (dev_t dev, struct ustat *ubuf)
+fesetround (int round)
 {
-  unsigned long k_dev;
+  unsigned short int cw;
 
-  /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);
+  if ((round & ~0x3) != 0)
+    /* ROUND is no valid rounding mode.  */
+    return 0;
 
-  return INLINE_SYSCALL (ustat, 2, k_dev, ubuf);
+  /* Get current state.  */
+  _FPU_GETCW (cw);
+
+  /* Set rounding bits.  */
+  cw &= ~0x3;
+  cw |= round;
+  /* Set new state.  */
+  _FPU_SETCW (cw);
+
+  return 1;
 }

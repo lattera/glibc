@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1009,7 +1009,7 @@
 #define SYS_time			(SYS_Linux +  13)
 #define SYS_mknod			(SYS_Linux +  14)
 #define SYS_chmod			(SYS_Linux +  15)
-#define SYS_chown			(SYS_Linux +  16)
+#define SYS_lchown			(SYS_Linux +  16)
 #define SYS_break			(SYS_Linux +  17)
 #define SYS_oldstat			(SYS_Linux +  18)
 #define SYS_lseek			(SYS_Linux +  19)
@@ -1045,7 +1045,7 @@
 #define SYS_geteuid			(SYS_Linux +  49)
 #define SYS_getegid			(SYS_Linux +  50)
 #define SYS_acct			(SYS_Linux +  51)
-#define SYS_phys			(SYS_Linux +  52)
+#define SYS_umount2			(SYS_Linux +  52)
 #define SYS_lock			(SYS_Linux +  53)
 #define SYS_ioctl			(SYS_Linux +  54)
 #define SYS_fcntl			(SYS_Linux +  55)
@@ -1183,5 +1183,25 @@
 #define SYS_query_module		(SYS_Linux + 187)
 #define SYS_poll			(SYS_Linux + 188)
 #define SYS_nfsservctl			(SYS_Linux + 189)
+#define SYS_setresgid			(SYS_Linux + 190)
+#define SYS_getresgid			(SYS_Linux + 191)
+#define SYS_prctl			(SYS_Linux + 192)
+#define SYS_rt_sigreturn		(SYS_Linux + 193)
+#define SYS_rt_sigaction		(SYS_Linux + 194)
+#define SYS_rt_sigprocmask		(SYS_Linux + 195)
+#define SYS_rt_sigpending		(SYS_Linux + 196)
+#define SYS_rt_sigtimedwait		(SYS_Linux + 197)
+#define SYS_rt_sigqueueinfo		(SYS_Linux + 198)
+#define SYS_rt_sigsuspend		(SYS_Linux + 199)
+#define SYS_pread			(SYS_Linux + 200)
+#define SYS_pwrite			(SYS_Linux + 201)
+#define SYS_chown			(SYS_Linux + 202)
+#define SYS_getcwd			(SYS_Linux + 203)
+#define SYS_capget			(SYS_Linux + 204)
+#define SYS_capset			(SYS_Linux + 205)
+#define SYS_sigaltstack			(SYS_Linux + 206)
+#define SYS_sendfile			(SYS_Linux + 207)
+#define SYS_putpmsg			(SYS_Linux + 208)
+#define SYS_getpmsg			(SYS_Linux + 209)
 
 #endif	/* sys/syscall.h */

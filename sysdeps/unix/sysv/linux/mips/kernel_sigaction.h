@@ -4,9 +4,12 @@
 
 #define HAVE_SA_RESTORER
 
+/* Linux/MIPS still uses the old sigaction structure in the kernel.  */
+#define old_kernel_sigaction kernel_sigaction
+
 struct kernel_sigaction {
 	unsigned int	sa_flags;
-	__sighandler_t	sa_handler;
+	__sighandler_t	k_sa_handler;
 	unsigned long	sa_mask;
 	unsigned int    __pad0[3]; /* reserved, keep size constant */
 

@@ -34,13 +34,16 @@ shutdown	-	shutdown	2	__shutdown	shutdown
 socket		-	socket		3	__socket	socket
 socketpair	-	socketpair	4	__socketpair	socketpair
 
-getresuid	-	getresuid	3	getresuid
-getresgid	-	getresgid	3	getresgid
-
 #
 # There are defined locally because the caller is also defined in this dir.
 #
-s_llseek	llseek	_llseek		5	__syscall__llseek
+s_llseek	llseek	_llseek		5	__sys_llseek
+s_sigaction	sigaction sigaction	3	__syscall_sigaction
+s_ustat		ustat	ustat		2	__syscall_ustat
+sys_mknod	xmknod	mknod		3	__syscall_mknod
+sys_fstat	fxstat	fstat		2	__syscall_fstat
+sys_lstat	lxstat	lstat		2	__syscall_lstat
+sys_stat	xstat	stat		2	__syscall_stat
 
 # System calls with wrappers.
 rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction
@@ -55,16 +58,14 @@ s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid
 s_getresuid	getresuid getresuid	3	__syscall_getresuid
 s_poll		poll	poll		3	__syscall_poll
-s_pread64	pread64	pread		5	__syscall_pread
+s_pread		pread	pread		6	__syscall_pread
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
-s_pwrite64	pwrite64 pwrite		5	__syscall_pwrite
+s_pwrite	pwrite	pwrite		6	__syscall_pwrite
 s_reboot	reboot	reboot		3	__syscall_reboot
-s_sigaction	sigaction sigaction	3	__syscall_sigaction
 s_sigpending	sigpending sigpending	1	__syscall_sigpending
 s_sigprocmask	sigprocmask sigprocmask	3	__syscall_sigprocmask
-s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
-s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
-s_ustat		ustat	ustat		2	__syscall_ustat
+# Todo: we can pass 6 args in registers, no need for the wrapper
+sysctl		sysctl	_sysctl		1	__syscall_sysctl
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_lstat	lxstat	lstat		2	__syscall_lstat
 sys_mknod	xmknod	mknod		3	__syscall_mknod

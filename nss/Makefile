@@ -43,6 +43,11 @@ tests			= test-netdb
 
 include ../Makeconfig
 
+ifeq (yes,$(build-static-nss))
+otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
+	     $(resolvobjdir)/libresolv.a
+endif
+
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files db
 
@@ -83,6 +88,10 @@ $(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 	 echo '#define GENERIC "../nss_db/db-XXX.c"';\
 	 echo '#include <$<>') > $@.new
 	mv -f $@.new $@
+
+ifeq (yes,$(build-static-nss))
+$(objpfx)getent: $(objpfx)libnss_files.a
+endif
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

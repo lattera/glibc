@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,6 @@
 #define IPC_STAT	2		/* Get `ipc_perm' options.  */
 #define IPC_INFO	3		/* See ipcs.  */
 
-
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
 
@@ -50,14 +49,6 @@ struct ipc_perm
     unsigned short int __seq;		/* Sequence number.  */
   };
 
-
-/* Kludge to work around Linux' restriction of only up to five
-   arguments to a system call.  */
-struct ipc_kludge
-  {
-    void *msgp;
-    long int msgtyp;
-  };
 
 __BEGIN_DECLS
 

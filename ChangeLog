@@ -1,12 +1,83 @@
-1998-09-03  Philip Blundell  <pb@nexus.co.uk> 
- 
-	* sysdeps/arm/bits/endian.h (__FLOAT_WORD_ORDER): Define to big 
-	endian. 
-	* math/math_private.h: Use __FLOAT_WORD_ORDER rather than 
-	BYTE_ORDER. 
-	* string/endian.h: If __FLOAT_WORD_ORDER wasn't defined by 
-	<bits/endian.h>, make it the same as __BYTE_ORDER. 
- 
+1998-11-27  Philip Blundell  <pb@nexus.co.uk>
+
+	Fixes to allow compilation with static NSS:
+	* nss/Makefile: Make explicit the dependency of getent on
+	libnss_files.a.
+	[build_static_nss]: Define $(otherlibs) appropriately.
+	* nss/Depend: Add a dependency on `resolv'.
+
+1998-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	Partial support for MIPS ISO C 9x exception handling:
+	* sysdeps/mips/fclrexcpt.c: New file.
+	* sysdeps/mips/ftestexcept.c: New file.
+	* sysdeps/mips/fgetexcptflg.c: New file.
+	* sysdeps/mips/fesetround.c: New file.
+	* sysdeps/mips/fegetround.c: New file.
+	* sysdeps/mips/fegetenv.c: New file.
+	* sysdeps/mips/fesetenv.c: New file.
+	* sysdeps/mips/feupdateenv.c: Likewise.
+	* sysdeps/mips/bits/fenv.h: New file.
+
+1998-11-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/signum.h: Remove inclusion of
+	<asm/signal.h> and add needed symbols from <asm/signal.h>; bring
+	in sync with linux specific version.
+
+	Patches by Ralf Baechle <ralf@uni-koblenz.de> for mips-linux:
+
+	* sysdeps/unix/mips/sysdep.S: Define _errno as weak_alias, rewrite
+	errno declaration.
+
+	* sysdeps/unix/sysv/linux/mips/ustat.c: Use INLINE_SYSCALL instead
+	of calling __syscall_*.
+	* sysdeps/unix/sysv/linux/mips/xmknod.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Update entries.
+
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Add missing SYS_*
+	constants, correct values according to Linux 2.1.130.
+
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/mips/pread.c: New file.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: New file.
+
+	* sysdeps/mips/Makefile (sysdep_routines): Use += instead of a
+	:=.
+
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Remove ipc_kludge.
+
+	* sysdeps/unix/sysv/linux/mips/xstatconv.c: New file.
+
+	* sysdeps/unix/sysv/linux/mips/xstat.c: Removed.
+
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: New file.
+
+	* sysdeps/unix/sysv/linux/mips/kernel_termios.h: Add copyright
+	message, change name of include protection, remove inclusion of
+	<bits/termios.h>.
+
+	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h
+	(old_kernel_sigaction): Define.
+	(struct kernel_sigaction): Rename sa_handler to k_sa_handler.
+
+	* sysdeps/unix/sysv/linux/mips/bits/time.h: Removed, we can use
+	the general linux version.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h (_STAT_VER_KERNEL): Added.
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Update file.
+
+1998-09-03  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/bits/endian.h (__FLOAT_WORD_ORDER): Define to big
+	endian.
+	* math/math_private.h: Use __FLOAT_WORD_ORDER rather than
+	BYTE_ORDER.
+	* string/endian.h: If __FLOAT_WORD_ORDER wasn't defined by
+	<bits/endian.h>, make it the same as __BYTE_ORDER.
+
 1998-11-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/math.h: Avoid using long double functions in generic macros
@@ -17,41 +88,41 @@
 	* scripts/config.sub: Add Netwinder specific matches.
 	Patch by Scott Bambrough <scottb@corelcomputer.com>.
 
-1998-11-26  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
- 
-	* Makeconfig ($(common-objpfx)sysd-dirs): Use automatic variables 
-	if possible. 
-	($(common-objpfx)sysd-sorted): Likewise. 
- 
-1998-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* sysdeps/libm-ieee754/e_log.c (__ieee754_log): Add declaration of  
-	local variables t1,t2 only if needed. 
- 
+1998-11-26  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makeconfig ($(common-objpfx)sysd-dirs): Use automatic variables
+	if possible.
+	($(common-objpfx)sysd-sorted): Likewise.
+
+1998-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/e_log.c (__ieee754_log): Add declaration of
+	local variables t1,t2 only if needed.
+
 	* sysdeps/libm-ieee754/e_atan2.c: Added braces to avoid compiler
 	warnings.
-	* sysdeps/libm-ieee754/s_truncf.c (__truncf): Likewise. 
-	* sysdeps/libm-ieee754/s_trunc.c (__trunc): Likewise. 
- 
-	* sysdeps/mips/mul_1.S (Loop): Add closing comment to avoid 
-	warning. 
- 
-1998-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* math/math.h: Add brace to correct #if expression. 
- 
-1998-11-26  Philip Blundell  <philb@gnu.org> 
- 
-	Undo change of 1998-11-12: 
-	* sysdeps/unix/sysv/linux/netlink/netlink.h: Deleted. 
-	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove 
-	netlink/netlink.h. 
-	* sysdeps/unix/sysv/linux/Dist: Likewise. 
- 
-1998-11-22  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
- 
-	* nis/nis_print.c (nis_print_entry): Changes to match Solaris output. 
- 
+	* sysdeps/libm-ieee754/s_truncf.c (__truncf): Likewise.
+	* sysdeps/libm-ieee754/s_trunc.c (__trunc): Likewise.
+
+	* sysdeps/mips/mul_1.S (Loop): Add closing comment to avoid
+	warning.
+
+1998-11-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/math.h: Add brace to correct #if expression.
+
+1998-11-26  Philip Blundell  <philb@gnu.org>
+
+	Undo change of 1998-11-12:
+	* sysdeps/unix/sysv/linux/netlink/netlink.h: Deleted.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove
+	netlink/netlink.h.
+	* sysdeps/unix/sysv/linux/Dist: Likewise.
+
+1998-11-22  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_print.c (nis_print_entry): Changes to match Solaris output.
+
 1998-11-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/mips/dl-machine.h (ELF_MACHINE_NO_PLT): New defined macro.
@@ -64,29 +135,29 @@
 	* sysdeps/mips/sys/ucontext.h: New file.
 	Patches by kaz Kojima <kkojima@rr.iij4u.or.jp>.
 
-1998-11-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* sysdeps/generic/pselect.c (__pselect): Change interface, 
-	set/restore sigmask. 
- 
-	* misc/sys/select.h: Change declaration according to Stevens' Unix  
-	Network Programming. 
-	* include/sys/select.h (__pselect): Likewise. 
-	Reported by <bwelling@anomaly.munge.com> [PR libc/872]. 
- 
-	* include/fpu_control.h: New file, contains __setfpucw 
-	declaration. 
- 
-	* sysdeps/generic/fpu_control.h: Remove __setfpucw declaration, 
-	it's an internal symbol. 
-	* sysdeps/alpha/fpu/fpu_control.h: Likewise. 
-	* sysdeps/arm/fpu/fpu_control.h: Likewise. 
-	* sysdeps/i386/fpu_control.h: Likewise. 
-	* sysdeps/m68k/fpu_control.h: Likewise. 
-	* sysdeps/powerpc/fpu_control.h: Likewise. 
-	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Likewise. 
-	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Likewise. 
- 
+1998-11-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/pselect.c (__pselect): Change interface,
+	set/restore sigmask.
+
+	* misc/sys/select.h: Change declaration according to Stevens' Unix
+	Network Programming.
+	* include/sys/select.h (__pselect): Likewise.
+	Reported by <bwelling@anomaly.munge.com> [PR libc/872].
+
+	* include/fpu_control.h: New file, contains __setfpucw
+	declaration.
+
+	* sysdeps/generic/fpu_control.h: Remove __setfpucw declaration,
+	it's an internal symbol.
+	* sysdeps/alpha/fpu/fpu_control.h: Likewise.
+	* sysdeps/arm/fpu/fpu_control.h: Likewise.
+	* sysdeps/i386/fpu_control.h: Likewise.
+	* sysdeps/m68k/fpu_control.h: Likewise.
+	* sysdeps/powerpc/fpu_control.h: Likewise.
+	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Likewise.
+	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Likewise.
+
 1998-11-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.104.
