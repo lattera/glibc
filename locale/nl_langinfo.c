@@ -1,5 +1,6 @@
 /* User interface for extracting locale-dependent parameters.
-   Copyright (C) 1995,96,97,99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,99,2000,2001,2002,2005
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +45,18 @@ nl_langinfo (item)
   if (category < 0 || category == LC_ALL || category >= __LC_LAST)
     /* Bogus category: bogus item.  */
     return (char *) "";
+
+  /* Special case value for NL_LOCALE_NAME (category).
+     This is not a real item index in the string table.  */
+  if (index == _NL_ITEM_INDEX (_NL_LOCALE_NAME (category)))
+    {
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# define THISLOCALE l
+#else
+# define THISLOCALE _NL_CURRENT_LOCALE
+#endif
+      return (char *) THISLOCALE->__names[category];
+    }
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   data = l->__locales[category];
