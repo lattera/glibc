@@ -65,6 +65,8 @@ have-ksh = @libc_cv_have_ksh@
 
 sizeof-long-double = @sizeof_long_double@
 
+completely-soft = @completely_soft@
+
 # Configuration options.
 gnu-as = @gnu_as@
 gnu-ld = @gnu_ld@

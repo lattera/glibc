@@ -1,5 +1,15 @@
 libc {
   GLIBC_2.2 {
+    __sim_exceptions; __sim_disabled_exceptions; __sim_round_mode;
+    __adddf3; __addsf3; __divdf3; __divsf3; __eqdf2; __eqsf2;
+    __extendsfdf2; __fixdfdi; __fixdfsi; __fixsfdi; __fixsfsi;
+    __fixtfdi; __fixtfsi;
+    __fixunsdfdi; __fixunsdfsi; __fixunssfdi; __fixunssfsi;
+    __floatdidf; __floatdisf; __floatsidf; __floatsisf;
+    __gedf2; __gesf2; __ledf2; __lesf2; __muldf3; __mulsf3;
+    __negdf2; __negsf2; __sqrtdf2; __sqrtsf2; __subdf3;
+    __subsf3; __truncdfsf2; __trunctfsf2;
+
     _q_add; _q_cmp; _q_cmpe; _q_div; _q_dtoq; _q_feq; _q_fge; _q_fgt;
     _q_fle; _q_flt; _q_fne; _q_itoq; _q_mul; _q_neg; _q_qtod; _q_qtoi;
     _q_qtos; _q_qtou; _q_sqrt; _q_stoq; _q_sub;

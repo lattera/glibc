@@ -766,3 +766,47 @@ do {									\
     q = n / d, r = n % d;			\
   } while (0)
 
+
+/* A restoring bit-by-bit division primitive.  */
+
+#define _FP_DIV_MEAT_N_loop(fs, wc, R, X, Y)				\
+  do {									\
+    int count = _FP_WFRACBITS_##fs;					\
+    _FP_FRAC_DECL_##wc (u);						\
+    _FP_FRAC_DECL_##wc (v);						\
+    _FP_FRAC_COPY_##wc (u, X);						\
+    _FP_FRAC_COPY_##wc (v, Y);						\
+    _FP_FRAC_SET_##wc (R, _FP_ZEROFRAC_##wc);				\
+    /* Normalize U and V.  */						\
+    _FP_FRAC_SLL_##wc (u, _FP_WFRACXBITS_##fs);				\
+    _FP_FRAC_SLL_##wc (v, _FP_WFRACXBITS_##fs);				\
+    /* First round.  Since the operands are normalized, either the	\
+       first or second bit will be set in the fraction.  Produce a	\
+       normalized result by checking which and adjusting the loop	\
+       count and exponent accordingly.  */				\
+    if (_FP_FRAC_GE_1 (u, v))						\
+      {									\
+	_FP_FRAC_SUB_##wc (u, u, v);					\
+	_FP_FRAC_LOW_##wc (R) |= 1;					\
+	count--;							\
+      }									\
+    else								\
+      R##_e--;								\
+    /* Subsequent rounds.  */						\
+    do {								\
+      int msb = (_FP_WS_TYPE) _FP_FRAC_HIGH_##wc (u) < 0;		\
+      _FP_FRAC_SLL_##wc (u, 1);						\
+      _FP_FRAC_SLL_##wc (R, 1);						\
+      if (msb || _FP_FRAC_GE_1 (u, v))					\
+	{								\
+	  _FP_FRAC_SUB_##wc (u, u, v);					\
+	  _FP_FRAC_LOW_##wc (R) |= 1;					\
+	}								\
+    } while (--count > 0);						\
+    /* If there's anything left in U, the result is inexact.  */	\
+    _FP_FRAC_LOW_##wc (R) |= !_FP_FRAC_ZEROP_##wc (u);			\
+  } while (0)
+
+#define _FP_DIV_MEAT_1_loop(fs, R, X, Y)  _FP_DIV_MEAT_N_loop (fs, 1, R, X, Y)
+#define _FP_DIV_MEAT_2_loop(fs, R, X, Y)  _FP_DIV_MEAT_N_loop (fs, 2, R, X, Y)
+#define _FP_DIV_MEAT_4_loop(fs, R, X, Y)  _FP_DIV_MEAT_N_loop (fs, 4, R, X, Y)

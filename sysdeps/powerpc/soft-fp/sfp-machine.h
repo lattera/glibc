@@ -10,7 +10,7 @@
 #define _FP_MUL_MEAT_Q(R,X,Y)				\
   _FP_MUL_MEAT_4_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
 
-#define _FP_DIV_MEAT_S(R,X,Y)	_FP_DIV_MEAT_1_udiv(S,R,X,Y)
+#define _FP_DIV_MEAT_S(R,X,Y)	_FP_DIV_MEAT_1_loop(S,R,X,Y)
 #define _FP_DIV_MEAT_D(R,X,Y)	_FP_DIV_MEAT_2_udiv(D,R,X,Y)
 #define _FP_DIV_MEAT_Q(R,X,Y)	_FP_DIV_MEAT_4_udiv(Q,R,X,Y)
 
@@ -40,9 +40,19 @@
     R##_c = FP_CLS_NAN;						\
   } while (0)
 
-/* Exception flags. */
-#define FP_EX_INVALID		(1 << 4)
-#define FP_EX_OVERFLOW		(1 << 3)
-#define FP_EX_UNDERFLOW		(1 << 2)
-#define FP_EX_DIVZERO		(1 << 1)
-#define FP_EX_INEXACT		(1 << 0)
+/* Exception flags.  We use the bit positions of the appropriate bits
+   in the FPSCR, which also correspond to the FE_* bits.  This makes
+   everything easier ;-).  */
+#define FP_EX_INVALID         (1 << (31 - 2))
+#define FP_EX_OVERFLOW        (1 << (31 - 3))
+#define FP_EX_UNDERFLOW       (1 << (31 - 4))
+#define FP_EX_DIVZERO         (1 << (31 - 5))
+#define FP_EX_INEXACT         (1 << (31 - 6))
+
+#define FP_HANDLE_EXCEPTIONS  __simulate_exceptions (_fex)
+#define FP_ROUNDMODE          __sim_round_mode
+
+extern int __sim_exceptions attribute_hidden;
+extern int __sim_disabled_exceptions attribute_hidden;
+extern int __sim_round_mode attribute_hidden;
+extern void __simulate_exceptions (int x) attribute_hidden;

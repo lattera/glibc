@@ -510,58 +510,84 @@
   (X##_f[3] = I3, X##_f[2] = I2, X##_f[1] = I1, X##_f[0] = I0)
 
 #ifndef __FP_FRAC_ADD_3
-#define __FP_FRAC_ADD_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)			\
-  (r0 = x0 + y0,							\
-   r1 = x1 + y1 + (r0 < x0),						\
-   r2 = x2 + y2 + (r1 < x1))
+#define __FP_FRAC_ADD_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
+  do {								\
+    int _c1, _c2;							\
+    r0 = x0 + y0;						\
+    _c1 = r0 < x0;						\
+    r1 = x1 + y1;						\
+    _c2 = r1 < x1;						\
+    r1 += _c1;							\
+    _c2 |= r1 < _c1;						\
+    r2 = x2 + y2 + _c2;						\
+  } while (0)
 #endif
 
 #ifndef __FP_FRAC_ADD_4
-#define __FP_FRAC_ADD_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)		\
-  (r0 = x0 + y0,							\
-   r1 = x1 + y1 + (r0 < x0),						\
-   r2 = x2 + y2 + (r1 < x1),						\
-   r3 = x3 + y3 + (r2 < x2))
+#define __FP_FRAC_ADD_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
+  do {								\
+    int _c1, _c2, _c3;						\
+    r0 = x0 + y0;						\
+    _c1 = r0 < x0;						\
+    r1 = x1 + y1;						\
+    _c2 = r1 < x1;						\
+    r1 += _c1;							\
+    _c2 |= r1 < _c1;						\
+    r2 = x2 + y2;						\
+    _c3 = r2 < x2;						\
+    r2 += _c2;							\
+    _c3 |= r2 < _c2;						\
+    r3 = x3 + y3 + _c3;						\
+  } while (0)
 #endif
 
 #ifndef __FP_FRAC_SUB_3
-#define __FP_FRAC_SUB_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)			\
-  (r0 = x0 - y0,							\
-   r1 = x1 - y1 - (r0 > x0),						\
-   r2 = x2 - y2 - (r1 > x1))
+#define __FP_FRAC_SUB_3(r2,r1,r0,x2,x1,x0,y2,y1,y0)		\
+  do {								\
+    int _c1, _c2;							\
+    r0 = x0 - y0;						\
+    _c1 = r0 > x0;						\
+    r1 = x1 - y1;						\
+    _c2 = r1 > x1;						\
+    r1 -= _c1;							\
+    _c2 |= r1 > _c1;						\
+    r2 = x2 - y2 - _c2;						\
+  } while (0)
 #endif
 
 #ifndef __FP_FRAC_SUB_4
-#define __FP_FRAC_SUB_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)		\
-  (r0 = x0 - y0,							\
-   r1 = x1 - y1 - (r0 > x0),						\
-   r2 = x2 - y2 - (r1 > x1),						\
-   r3 = x3 - y3 - (r2 > x2))
+#define __FP_FRAC_SUB_4(r3,r2,r1,r0,x3,x2,x1,x0,y3,y2,y1,y0)	\
+  do {								\
+    int _c1, _c2, _c3;						\
+    r0 = x0 - y0;						\
+    _c1 = r0 > x0;						\
+    r1 = x1 - y1;						\
+    _c2 = r1 > x1;						\
+    r1 -= _c1;							\
+    _c2 |= r1 > _c1;						\
+    r2 = x2 - y2;						\
+    _c3 = r2 > x2;						\
+    r2 -= _c2;							\
+    _c3 |= r2 > _c2;						\
+    r3 = x3 - y3 - _c3;						\
+  } while (0)
 #endif
 
 #ifndef __FP_FRAC_DEC_3
 #define __FP_FRAC_DEC_3(x2,x1,x0,y2,y1,y0)				\
   do {									\
-    UWtype _t0, _t1;							\
-    _t0 = x0;								\
-    x0 -= y0;								\
-    _t1 = x1;								\
-    x1 -= y1 + (x0 > _t0);						\
-    x2 -= y2 + (x1 > _t1);						\
+    UWtype _t0, _t1, _t2;						\
+    _t0 = x0, _t1 = x1, _t2 = x2;					\
+    __FP_FRAC_SUB_3 (x2, x1, x0, _t2, _t1, _t0, y2, y1, y0);		\
   } while (0)
 #endif
 
 #ifndef __FP_FRAC_DEC_4
 #define __FP_FRAC_DEC_4(x3,x2,x1,x0,y3,y2,y1,y0)			\
   do {									\
-    UWtype _t0, _t1;							\
-    _t0 = x0;								\
-    x0 -= y0;								\
-    _t1 = x1;								\
-    x1 -= y1 + (x0 > _t0);						\
-    _t0 = x2;								\
-    x2 -= y2 + (x1 > _t1);						\
-    x3 -= y3 + (x2 > _t0);						\
+    UWtype _t0, _t1, _t2, _t3;						\
+    _t0 = x0, _t1 = x1, _t2 = x2, _t3 = x3;				\
+    __FP_FRAC_SUB_4 (x3,x2,x1,x0,_t3,_t2,_t1,_t0, y3,y2,y1,y0);		\
   } while (0)
 #endif
 

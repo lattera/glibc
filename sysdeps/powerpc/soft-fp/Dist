@@ -25,4 +25,6 @@ q_sub.c
 q_ulltoq.c
 q_util.c
 q_utoq.c
+sim-full.c
+fenv_const.c
 sfp-machine.h

@@ -304,6 +304,16 @@ if test -z "$enable_hacker_mode"; then
   esac
 fi
 
+# Brain dead PowerPC box with absolutely no FPU.
+echo $host
+case "$machine-$host_os" in
+  powerpc*-*soft)
+    with_fp=no
+    completely_soft=yes
+    AC_SUBST(completely_soft)
+    ;;
+esac
+
 dnl We need to use [ and ] for other purposes for a while now.
 changequote(,)dnl
 # Expand the configuration machine name into a subdirectory by architecture

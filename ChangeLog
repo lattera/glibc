@@ -1,3 +1,56 @@
+2002-10-08  Richard Henderson  <rth@redhat.com>
+
+	* soft-fp/op-4.h: Handle carry correctly in
+	__FP_FRAC_ADD_3, __FP_FRAC_ADD_4, __FP_FRAC_SUB_3,
+	__FP_FRAC_SUB_4, __FP_FRAC_DEC_3, __FP_FRAC_DEC_4.
+	* soft-fp/op-common.h: New macros _FP_DIV_MEAT_N_loop.
+
+2002-10-08  Aldy Hernandez  <aldyh@redhat.com>
+
+	* configure.in: Compute completely-soft.
+	* config.make.in: Make completely-soft available to sub-makes.
+	* sysdeps/powerpc/soft-fp/Makefile: Add gcc-single-routines and
+	gcc-double-routines.  Add sim-full.c.  Add fenv_const and
+	fe_nomask to libm-support.
+	* sysdeps/powerpc/soft-fp/sim-full.c: New file.
+	* sysdeps/powerpc/soft-fp/fraiseexcpt.c: New file.
+	* sysdeps/powerpc/soft-fp/fegetexcept.c: New file.
+	* sysdeps/powerpc/soft-fp/fclrexcpt.c: New file.
+	* sysdeps/powerpc/soft-fp/ftestexcept.c: New file.
+	* sysdeps/powerpc/soft-fp/fgetexcptflg.c: New file.
+	* sysdeps/powerpc/soft-fp/fsetexcptflg.c: New file.
+	* sysdeps/powerpc/soft-fp/fedisblxcpt.c: New file.
+	* sysdeps/powerpc/soft-fp/feenablxcpt.c: New file.
+	* sysdeps/powerpc/soft-fp/fegetenv.c: New file.
+	* sysdeps/powerpc/soft-fp/fesetenv.c: New file.
+	* sysdeps/powerpc/soft-fp/fegetround.c: New file.
+	* sysdeps/powerpc/soft-fp/fesetround.c: New file.
+	* sysdeps/powerpc/soft-fp/feupdateenv.c: New file.
+	* sysdeps/powerpc/soft-fp/feholdexcpt.c: New file.
+	* sysdeps/powerpc/soft-fp/fenv_const.c: New file.
+	* sysdeps/powerpc/soft-fp/libm-test-ulps: New file.
+	* sysdeps/powerpc/soft-fp/Versions: Add libgcc soft-float
+	symbols.  Add __sim_disabled_exceptions, __sim_exceptions,
+	__sim_round_mode.
+	* sysdeps/powerpc/soft-float/Dist: Add sim-full.c, fenv_const.c.
+	* sysdeps/powerpc/soft-float/sfp-machine.h: Define
+	FP_HANDLE_EXCEPTIONS.
+	Define FP_ROUNDMODE.
+	Redefine FP_* macros to correspond to the FE_* bit positions.
+	Define FP_DIV_MEAT_S to _FP_DIV_MEAT_1_loop.
+	Define externs for __sim_exceptions, __sim_disabled_exceptions,
+	__sim_round_mode, __simulate_exceptions.
+	* sysdeps/powerpc/fpu/bits/fenv.h: Move file from here...
+	* sysdeps/powerpc/bits/fenv.h: ...to here.
+
+2002-10-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela):
+	Store R_PPC_UADDR32 and R_PPC_UADDR16 one byte at a time.
+	Use __builtin_expect for R_PPC_ADDR24 overflow check.  Fix
+	R_PPC_ADDR16, R_PPC_UADDR16 and R_PPC_ADDR14* overflow check, use
+	__builtin_expect.
+
 2002-10-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/resolv.h (__libc_res_nquery, __libc_res_nsearch,

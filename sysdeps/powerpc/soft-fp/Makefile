@@ -22,6 +22,9 @@
 # 02111-1307 USA.
 
 ifeq ($(subdir),soft-fp)
+ifeq ($(completely-soft),yes)
+sysdep_routines += $(gcc-single-routines) $(gcc-double-routines) sim-full
+endif
 ifeq ($(sizeof-long-double),16)
 powerpc-quad-routines := q_add q_cmp q_cmpe q_div q_dtoq q_feq q_fge	\
 	q_fgt q_fle q_flt q_fne q_itoq q_mul q_neg q_qtod q_qtoi	\
@@ -32,5 +35,8 @@ endif
 endif
 
 ifeq ($(subdir),math)
+ifeq ($(completely-soft),yes)
+libm-support += fenv_const fe_nomask
+endif
 CPPFLAGS += -I../soft-fp/
 endif
