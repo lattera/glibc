@@ -217,7 +217,7 @@ _dl_determine_tlsoffset (void)
       size_t off;
       max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
 
-      if (slotinfo[cnt].map->l_tls_blocksize >= freetop - freebottom)
+      if (slotinfo[cnt].map->l_tls_blocksize <= freetop - freebottom)
 	{
 	  off = roundup (freebottom, slotinfo[cnt].map->l_tls_align);
 	  if (off - freebottom < firstbyte)
