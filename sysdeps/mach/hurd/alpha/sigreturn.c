@@ -17,43 +17,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Declare global register variables before any code.  */
-register double f0 asm ("$f0");
-register double f1 asm ("$f1");
-register double f2 asm ("$f2");
-register double f3 asm ("$f3");
-register double f4 asm ("$f4");
-register double f5 asm ("$f5");
-register double f6 asm ("$f6");
-register double f7 asm ("$f7");
-register double f8 asm ("$f8");
-register double f9 asm ("$f9");
-register double f10 asm ("$f10");
-register double f11 asm ("$f11");
-register double f12 asm ("$f12");
-register double f13 asm ("$f13");
-register double f14 asm ("$f14");
-register double f15 asm ("$f15");
-register double f16 asm ("$f16");
-register double f17 asm ("$f17");
-register double f18 asm ("$f18");
-register double f19 asm ("$f19");
-register double f20 asm ("$f20");
-register double f21 asm ("$f21");
-register double f22 asm ("$f22");
-register double f23 asm ("$f23");
-register double f24 asm ("$f24");
-register double f25 asm ("$f25");
-register double f26 asm ("$f26");
-register double f27 asm ("$f27");
-register double f28 asm ("$f28");
-register double f29 asm ("$f29");
-register double f30 asm ("$f30");;
-
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/threadvar.h>
+#include <hurd/msg.h>
 #include <stdlib.h>
+#include <string.h>
+#include <mach/machine/alpha_instruction.h>
 
 int
 __sigreturn (struct sigcontext *scp)
@@ -119,37 +89,39 @@ __sigreturn (struct sigcontext *scp)
       asm volatile ("mt_fpcr %0" : : "f" (scp->sc_fpcsr));
 
       /* Restore floating-point registers. */
-      f0 = scp->sc_fpregs[0];
-      f1 = scp->sc_fpregs[1];
-      f2 = scp->sc_fpregs[2];
-      f3 = scp->sc_fpregs[3];
-      f4 = scp->sc_fpregs[4];
-      f5 = scp->sc_fpregs[5];
-      f6 = scp->sc_fpregs[6];
-      f7 = scp->sc_fpregs[7];
-      f8 = scp->sc_fpregs[8];
-      f9 = scp->sc_fpregs[9];
-      f10 = scp->sc_fpregs[10];
-      f11 = scp->sc_fpregs[11];
-      f12 = scp->sc_fpregs[12];
-      f13 = scp->sc_fpregs[13];
-      f14 = scp->sc_fpregs[14];
-      f15 = scp->sc_fpregs[15];
-      f16 = scp->sc_fpregs[16];
-      f17 = scp->sc_fpregs[17];
-      f18 = scp->sc_fpregs[18];
-      f19 = scp->sc_fpregs[19];
-      f20 = scp->sc_fpregs[20];
-      f21 = scp->sc_fpregs[21];
-      f22 = scp->sc_fpregs[22];
-      f23 = scp->sc_fpregs[23];
-      f24 = scp->sc_fpregs[24];
-      f25 = scp->sc_fpregs[25];
-      f26 = scp->sc_fpregs[26];
-      f27 = scp->sc_fpregs[27];
-      f28 = scp->sc_fpregs[28];
-      f29 = scp->sc_fpregs[29];
-      f30 = scp->sc_fpregs[30];
+#define restore_fpr(n) \
+  asm volatile ("ldt $f" #n ",%0" : : "m" (scp->sc_fpregs[n]))
+      restore_fpr (0);
+      restore_fpr (1);
+      restore_fpr (2);
+      restore_fpr (3);
+      restore_fpr (4);
+      restore_fpr (5);
+      restore_fpr (6);
+      restore_fpr (7);
+      restore_fpr (8);
+      restore_fpr (9);
+      restore_fpr (10);
+      restore_fpr (11);
+      restore_fpr (12);
+      restore_fpr (13);
+      restore_fpr (14);
+      restore_fpr (15);
+      restore_fpr (16);
+      restore_fpr (17);
+      restore_fpr (18);
+      restore_fpr (19);
+      restore_fpr (20);
+      restore_fpr (21);
+      restore_fpr (22);
+      restore_fpr (23);
+      restore_fpr (24);
+      restore_fpr (25);
+      restore_fpr (26);
+      restore_fpr (27);
+      restore_fpr (28);
+      restore_fpr (29);
+      restore_fpr (30);
     }
 
   /* Load all the registers from the sigcontext.  */
@@ -165,7 +137,7 @@ __sigreturn (struct sigcontext *scp)
        registers and PSW it will to restore, onto the user's stack and let
        it pop them from there.  */
     register const struct sigcontext *const scpreg asm ("$2") = scp;
-    register integer_t *usp asm ("$3") = scpreg->sc_regs[30];
+    register integer_t *usp asm ("$3") = (integer_t *) scpreg->sc_regs[30];
     register integer_t usp_align asm ("$4");
 
     /* Push an 8-word "trap frame" onto the user stack for `rei':
@@ -226,7 +198,7 @@ __sigreturn (struct sigcontext *scp)
     /* Switch the stack pointer to the trap frame set up on
        the user stack and do the magical `rei' PAL call.  */
     asm volatile ("mov %0, $30\n"
-		  "call_pal %0"
+		  "call_pal %1"
 		  : : "r" (rei_frame), "i" (op_rei));
     /* Firewall.  */
     asm volatile ("call_pal %0" : : "i" (op_halt));
