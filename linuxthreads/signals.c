@@ -74,7 +74,7 @@ static union
 {
   arch_sighandler_t old;
   void (*rt) (int, struct siginfo *, struct ucontext *);
-} sighandler[NSIG];
+} sighandler[NSIG] = { [1 ... NSIG - 1] = { (arch_sighandler_t) SIG_ERR } };
 
 /* The wrapper around user-provided signal handlers */
 static void pthread_sighandler(int signo, SIGCONTEXT ctx)
@@ -157,10 +157,14 @@ int __sigaction(int sig, const struct sigaction * act,
     return -1;
   if (sig > 0 && sig < NSIG)
     {
-      if (oact != NULL)
+      if (oact != NULL
+	  /* We may have inherited SIG_IGN from the parent, so return the
+	     kernel's idea of the signal handler the first time
+	     through.  */
+	  && (__sighandler_t) sighandler[sig].old != SIG_ERR)
 	oact->sa_handler = (__sighandler_t) sighandler[sig].old;
       if (act)
-	/* For the assignment is does not matter whether it's a normal
+	/* For the assignment it does not matter whether it's a normal
 	   or real-time signal.  */
 	sighandler[sig].old = (arch_sighandler_t) act->sa_handler;
     }
