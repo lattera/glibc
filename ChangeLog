@@ -1,6 +1,11 @@
+1999-11-01  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.h: Describe __malloc_initialize_hook.
+	* manual/memory.texi: Document __malloc_initialize_hook.
+
 1999-11-11  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/unix/sysv/linux/setrlimit.c: COrrectly use rlimits.
+	* sysdeps/unix/sysv/linux/setrlimit.c: Correctly use rlimits.
 
 1999-11-09  Andreas Jaeger  <aj@suse.de>
 

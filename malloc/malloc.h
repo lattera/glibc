@@ -206,8 +206,11 @@ extern __malloc_ptr_t malloc_get_state __MALLOC_P ((void));
 extern int malloc_set_state __MALLOC_P ((__malloc_ptr_t __ptr));
 
 #if defined __GLIBC__ || defined MALLOC_HOOKS
-/* Hooks for debugging versions. */
+/* Called once when malloc is initialized; redefining this variable in
+   the application provides the preferred way to set up the hook
+   pointers. */
 extern void (*__malloc_initialize_hook) __MALLOC_PMT ((void));
+/* Hooks for debugging and user-defined versions. */
 extern void (*__free_hook) __MALLOC_PMT ((__malloc_ptr_t __ptr,
 					__const __malloc_ptr_t));
 extern __malloc_ptr_t (*__malloc_hook) __MALLOC_PMT ((size_t __size,
