@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 
 # undef	_ASSERT_H
 # undef	assert
+# undef __ASSERT_VOID_CAST
 
 # ifdef	__USE_GNU
 #  undef assert_perror
@@ -34,6 +35,12 @@
 #define	_ASSERT_H	1
 #include <features.h>
 
+#if defined __cplusplus && __GNUC_PREREQ (2,95)
+# define __ASSERT_VOID_CAST static_cast<void>
+#else
+# define __ASSERT_VOID_CAST (void)
+#endif
+
 /* void assert (int expression);
 
    If NDEBUG is defined, do nothing.
@@ -41,7 +48,7 @@
 
 #ifdef	NDEBUG
 
-# define assert(expr)		((void) 0)
+# define assert(expr)		(__ASSERT_VOID_CAST (0))
 
 /* void assert_perror (int errnum);
 
@@ -50,7 +57,7 @@
    (This is a GNU extension.) */
 
 # ifdef	__USE_GNU
-#  define assert_perror(errnum)	((void) 0)
+#  define assert_perror(errnum)	(__ASSERT_VOID_CAST (0))
 # endif
 
 #else /* Not NDEBUG.  */
@@ -77,16 +84,16 @@ extern void __assert (const char *__assertion, const char *__file, int __line)
 
 __END_DECLS
 
-# define assert(expr)							      \
-  ((void) ((expr) ? 0 :							      \
-	   (__assert_fail (__STRING(expr),				      \
-			   __FILE__, __LINE__, __ASSERT_FUNCTION), 0)))
+# define assert(expr) \
+  (__ASSERT_VOID_CAST ((expr) ? 0 :					      \
+		       (__assert_fail (__STRING(expr), __FILE__, __LINE__,    \
+				       __ASSERT_FUNCTION), 0)))
 
 # ifdef	__USE_GNU
-#  define assert_perror(errnum)						      \
-  ((void) (!(errnum) ? 0 : (__assert_perror_fail ((errnum),		      \
-						  __FILE__, __LINE__,	      \
-						  __ASSERT_FUNCTION), 0)))
+#  define assert_perror(errnum) \
+  (__ASSERT_VOID_CAST (!(errnum) ? 0 :					      \
+		       (__assert_perror_fail ((errnum), __FILE__, __LINE__,   \
+					      __ASSERT_FUNCTION), 0)))
 # endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
