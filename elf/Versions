@@ -14,6 +14,9 @@ libc {
     # functions used in other libraries
     _dl_sym; _dl_vsym;
   }
+  GLIBC_2.2.4 {
+    dl_iterate_phdr;
+  }
 }
 
 ld {

@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,5 +91,25 @@ struct link_map
     ElfW(Dyn) *l_ld;		/* Dynamic section of the shared object.  */
     struct link_map *l_next, *l_prev; /* Chain of loaded objects.  */
   };
+
+#ifdef __USE_GNU
+
+struct dl_phdr_info
+  {
+    ElfW(Addr) dlpi_addr;
+    const char *dlpi_name;
+    const ElfW(Phdr) *dlpi_phdr;
+    ElfW(Half) dlpi_phnum;
+  };
+
+__BEGIN_DECLS
+
+extern int dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
+					     size_t size, void *data),
+			    void *data) __THROW;
+
+__END_DECLS
+
+#endif
 
 #endif /* link.h */

@@ -1,7 +1,21 @@
+2001-07-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (routines): Add dl-iteratephdr and
+	dl-iteratephdr-static.
+	(elide-routines.os): Add dl-iteratephdr-static.
+	* elf/dl-iteratephdr.c: New file.
+	* elf/link.h (struct dl_phdr_info): New definition.
+	(dl_iterate_phdr): New prototype.
+	* elf/Versions (dl_iterate_phdr): Add at GLIBC_2.2.4.
+	* include/link.h (struct dl_phdr_info): New definition.
+	(dl_iterate_phdr, __dl_iterate_phdr): New prototypes.
+	* sysdeps/generic/dl-iteratephdr-static.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-iteratephdr-static.c: New file.
+
 2001-07-24  Igor Khavkine  <i_khavki@alcor.concordia.ca>
 
-        * hurd/hurdsig.c (_hurdsig_init): Fix incorrect initialization
-        of pending signals.
+	* hurd/hurdsig.c (_hurdsig_init): Fix incorrect initialization
+	of pending signals.
 
 2001-06-22  Jakub Jelinek  <jakub@redhat.com>
 
