@@ -1,3 +1,7 @@
+2002-03-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h (MEMORY_BARRIER): Define as asm with memory as clobber.
+
 2002-03-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/pt-machine.h: Add testandset and __compare_and_swap

@@ -193,12 +193,14 @@ static inline int nonexisting_handle(pthread_handle h, pthread_t id)
 #define THREAD_STACK_START_ADDRESS  __pthread_initial_thread_bos
 #endif
 
-/* If MEMORY_BARRIER isn't defined in pt-machine.h, assume the architecture
-   doesn't need a memory barrier instruction (e.g. Intel x86).  Some
-   architectures distinguish between full, read and write barriers.  */
+/* If MEMORY_BARRIER isn't defined in pt-machine.h, assume the
+   architecture doesn't need a memory barrier instruction (e.g. Intel
+   x86).  Still we need the compiler to respect the barrier and emit
+   all outstanding operations which modify memory.  Some architectures
+   distinguish between full, read and write barriers.  */
 
 #ifndef MEMORY_BARRIER
-#define MEMORY_BARRIER()
+#define MEMORY_BARRIER() asm ("" : : : "memory")
 #endif
 #ifndef READ_MEMORY_BARRIER
 #define READ_MEMORY_BARRIER() MEMORY_BARRIER()
