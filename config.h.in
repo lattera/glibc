@@ -38,6 +38,9 @@
    declaring a symbol global (default `.globl').  */
 #undef	ASM_GLOBAL_DIRECTIVE
 
+/* Define a symbol_name as a global .symbol_name for ld.  */
+#undef	HAVE_ASM_GLOBAL_DOT_NAME
+
 /* Define to use GNU libio instead of GNU stdio.
    This is defined by configure under --enable-libio.  */
 #undef	USE_IN_LIBIO
