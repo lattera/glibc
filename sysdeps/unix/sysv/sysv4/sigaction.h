@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* The proper definitions for SVR4's sigaction.
+Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -15,12 +16,6 @@ You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
-
-/* The proper definitions for SVR4's sigaction.
-   If the operating system has a `sigaction' system call that correctly
-   implements the POSIX.1 behavior, there should be a system-dependent
-   version of this file that defines `struct sigaction' and the `SA_*'
-   constants appropriately.  */
 
 /* Structure describing the action to be taken when a signal arrives.  */
 struct sigaction
@@ -39,6 +34,7 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
+#ifdef __USE_MISC
 #define	SA_ONSTACK	0x1	/* Take signal on signal stack.  */
 #define SA_RESETHAND	0x2	/* Reset to SIG_DFL on entry to handler.  */
 #define	SA_RESTART	0x4	/* Don't restart syscall on signal return.  */
@@ -46,6 +42,7 @@ struct sigaction
 #define SA_NODEFER	0x10	/* Don't automatically block the signal when
  				   its handler is being executed.  */
 #define SA_NOSCLDWAIT	0x10000	/* Don't create zombie processes.  */
+#endif
 #define	SA_NOCLDSTOP	0x20000	/* Don't send SIGCHLD when children stop.  */
 
 /* Values for the HOW argument to `sigprocmask'.  */
