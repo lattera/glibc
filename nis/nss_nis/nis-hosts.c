@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -259,8 +259,21 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
       *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
-  retval = yperr2nss (yp_match (domain, "hosts.byname", name,
-                                strlen (name), &result, &len));
+  else
+    {
+      /* Convert name to lowercase.  */
+      size_t len = strlen (name);
+      char name2[len + 1];
+      int i;
+
+      for (i = 0; i < len; ++i)
+	name2[i] = tolower (name[i]);
+      name2[i] = '\0';
+
+      retval = yperr2nss (yp_match (domain, "hosts.byname", name2,
+				    len, &result, &len));
+
+    }
 
   if (retval != NSS_STATUS_SUCCESS)
     {
