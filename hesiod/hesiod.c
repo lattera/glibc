@@ -77,10 +77,8 @@ hesiod_init(void **context) {
 	char *cp;
 
 	ctx = malloc(sizeof(struct hesiod_p));
-	if (ctx == 0) {
-		__set_errno(ENOMEM);
+	if (ctx == 0)
 		return (-1);
-	}
 
 	ctx->LHS = NULL;
 	ctx->RHS = NULL;
@@ -96,10 +94,8 @@ hesiod_init(void **context) {
 		 */
 		ctx->LHS = malloc(strlen(DEF_LHS)+1);
 		ctx->RHS = malloc(strlen(DEF_RHS)+1);
-		if (ctx->LHS == 0 || ctx->RHS == 0) {
-			__set_errno(ENOMEM);
+		if (ctx->LHS == 0 || ctx->RHS == 0)
 			goto cleanup;
-		}
 		strcpy(ctx->LHS, DEF_LHS);
 		strcpy(ctx->RHS, DEF_RHS);
 #else
@@ -111,18 +107,15 @@ hesiod_init(void **context) {
 	 * variable.
 	 */
 	if ((cp = __secure_getenv("HES_DOMAIN")) != NULL) {
-		if (ctx->RHS)
-			free(ctx->RHS);
+		free(ctx->RHS);
 		ctx->RHS = malloc(strlen(cp)+2);
-		if (!ctx->RHS) {
-			__set_errno(ENOMEM);
+		if (!ctx->RHS)
 			goto cleanup;
-		}
 		if (cp[0] == '.')
 			strcpy(ctx->RHS, cp);
 		else {
-			strcpy(ctx->RHS, ".");
-			strcat(ctx->RHS, cp);
+			ctx->RHS[0] = '.';
+			strcpy(ctx->RHS + 1, cp);
 		}
 	}
 
@@ -158,10 +151,8 @@ hesiod_end(void *context) {
 
 	if (ctx->res)
 		res_nclose(ctx->res);
-	if (ctx->RHS)
-		free(ctx->RHS);
-	if (ctx->LHS)
-		free(ctx->LHS);
+	free(ctx->RHS);
+	free(ctx->LHS);
 	if (ctx->res && ctx->free_res)
 		(*ctx->free_res)(ctx->res);
 	free(ctx);
@@ -178,6 +169,7 @@ hesiod_to_bind(void *context, const char *name, const char *type) {
 	char *bindname;
 	char **rhs_list = NULL;
 	const char *RHS, *cp;
+	char *endp;
 
 	/* Decide what our RHS is, and set cp to the end of the actual name. */
 	if ((cp = strchr(name, '@')) != NULL) {
@@ -201,25 +193,23 @@ hesiod_to_bind(void *context, const char *name, const char *type) {
 	 */
 	if ((bindname = malloc((cp - name) + strlen(type) + strlen(RHS) +
 	    (ctx->LHS ? strlen(ctx->LHS) : 0) + 4)) == NULL) {
-		__set_errno(ENOMEM);
 		if (rhs_list)
 			hesiod_free_list(context, rhs_list);
 		return NULL;
 	}
 
 	/* Now put together the DNS name. */
-	memcpy(bindname, name, cp - name);
-	bindname[cp - name] = '\0';
-	strcat(bindname, ".");
-	strcat(bindname, type);
+	endp = (char *) __mempcpy (bindname, name, cp - name);
+	*endp++ = '.';
+	endp = (char *) __stpcpy (endp, type);
 	if (ctx->LHS) {
 		if (ctx->LHS[0] != '.')
-			strcat(bindname, ".");
-		strcat(bindname, ctx->LHS);
+			*endp++ = '.';
+		endp = __stpcpy (endp, ctx->LHS);
 	}
 	if (RHS[0] != '.')
-		strcat(bindname, ".");
-	strcat(bindname, RHS);
+		*endp++ = '.';
+	strcpy (endp, RHS);
 
 	if (rhs_list)
 		hesiod_free_list(context, rhs_list);
@@ -279,10 +269,8 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 	 * Clear the existing configuration variable, just in case
 	 * they're set.
 	 */
-	if (ctx->RHS)
-		free(ctx->RHS);
-	if (ctx->LHS)
-		free(ctx->LHS);
+	free(ctx->RHS);
+	free(ctx->LHS);
 	ctx->RHS = ctx->LHS = 0;
 
 	/*
@@ -317,10 +305,8 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 			continue;
 
 		*cpp = malloc(strlen(data) + 1);
-		if (!*cpp) {
-			__set_errno(ENOMEM);
+		if (!*cpp)
 			goto cleanup;
-		}
 		strcpy(*cpp, data);
 	}
 	fclose(fp);
@@ -328,10 +314,8 @@ parse_config_file(struct hesiod_p *ctx, const char *filename) {
 
  cleanup:
 	fclose(fp);
-	if (ctx->RHS)
-		free(ctx->RHS);
-	if (ctx->LHS)
-		free(ctx->LHS);
+	free(ctx->RHS);
+	free(ctx->LHS);
 	ctx->RHS = ctx->LHS = 0;
 	return (-1);
 }
@@ -394,10 +378,8 @@ get_txt_records(struct hesiod_p *ctx, int class, const char *name) {
 	}
 
 	list = malloc((ancount + 1) * sizeof(char *));
-	if (!list) {
-		__set_errno(ENOMEM);
+	if (!list)
 		return (NULL);
-	}
 	j = 0;
 	for (i = 0; i < ancount; i++) {
 		skip = dn_skipname(cp, eom);
@@ -467,10 +449,8 @@ __hesiod_res_get(void *context) {
 	if (!ctx->res) {
 		struct __res_state *res;
 		res = (struct __res_state *)malloc(sizeof *res);
-		if (res == NULL) {
-			__set_errno(ENOMEM);
+		if (res == NULL)
 			return (NULL);
-		}
 		memset(res, 0, sizeof *res);
 		__hesiod_res_set(ctx, res, free);
 	}

@@ -1,6 +1,10 @@
+2001-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* hesiod/hesiod.c: Remove unnecessary code.  Remove all uses of strcat.
+
 2001-02-02  Ulrich Drepper  <drepper@redhat.com>
 
-	* hesiod/hesiod.c (hesiod_resolve): Also search HS records is
+	* hesiod/hesiod.c (hesiod_resolve): Also search HS records if
 	errno is ECONNREFUSED.
 
 	* posix/Makefile: Define MBS_SUPPORT for regex.c.
