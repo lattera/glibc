@@ -97,6 +97,8 @@ please let me know.
 2.25.	I need lots of open files.  What do I have to do?
 2.26.	How do I get the same behavior on parsing /etc/passwd and
 	/etc/group as I have with libc5 ?
+2.27.	What needs to be recompiled when upgrading from glibc 2.0 to glibc
+	2.1?
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -318,14 +320,14 @@ new kernel features when using old kernel headers for compiling the GNU C
 library.
 
 {ZW} Even if you are using a 2.0 kernel on your machine, we recommend you
-compile GNU libc with 2.1 kernel headers.  That way you won't have to
-recompile libc if you ever upgrade to kernel 2.1 or 2.2.  To tell libc which
+compile GNU libc with 2.2 kernel headers.  That way you won't have to
+recompile libc if you ever upgrade to kernel 2.2.  To tell libc which
 headers to use, give configure the --with-headers switch
-(e.g. --with-headers=/usr/src/linux-2.1.107/include).
+(e.g. --with-headers=/usr/src/linux-2.2.0/include).
 
-Note that you must configure the 2.1 kernel if you do this, otherwise libc
+Note that you must configure the 2.2 kernel if you do this, otherwise libc
 will be unable to find <linux/version.h>.  Just change the current directory
-to the root of the 2.1 tree and do `make include/linux/version.h'.
+to the root of the 2.2 tree and do `make include/linux/version.h'.
 
 
 1.9.	The compiler hangs while building iconvdata modules.  What's
@@ -462,8 +464,8 @@ There are some failures which are not directly related to the GNU libc:
   checks have been used so that you can't build with it.
 - The kernel might have bugs.  For example on Linux/Alpha 2.0.34 the
   floating point handling has quite a number of bugs and therefore most of
-  the test cases in the math subdirectory will fail.  The current Linux 2.1
-  development kernels have fixes for the floating point support on Alpha.
+  the test cases in the math subdirectory will fail.  Linux 2.2 has
+  fixes for the floating point support on Alpha.
 
 
 1.17.	What is symbol versioning good for?  Do I need it?
@@ -961,7 +963,7 @@ really screwed up.
 in the kernel and work-arounds are not suitable.  Besides, some parts of the
 kernel are too buggy when it comes to using threads.
 
-If you need nscd, you have to use a 2.1 kernel.
+If you need nscd, you have to use at least a 2.1 kernel.
 
 Note that I have at this point no information about any other platform.
 
@@ -1011,6 +1013,35 @@ shadow: compat
 passwd_compat: nis
 group_compat: nis
 shadow_compat: nis
+
+
+2.27.	What needs to be recompiled when upgrading from glibc 2.0 to glibc
+	2.1?
+
+{AJ,CG} If you just upgrade the glibc from 2.0.x (x <= 7) to 2.1, binaries
+that have been linked against glibc 2.0 will continue to work.
+
+If you compile your own binaries against glibc 2.1, you also need to
+recompile some other libraries.  The problem is that libio had to be
+changed and therefore libraries that are based or depend on the libio
+of glibc, e.g. ncurses or slang, need to be recompiled.  If you
+experience strange segmentation faults in your programs linked against
+glibc 2.1, you might need to recompile your libraries.
+
+Another problem is that older binaries that were linked statically against
+glibc 2.0 will reference the older nss modules (libnss_files.so.1 instead of
+libnss_files.so.2), so don't remove them.  Also, the old glibc-2.0 compiled
+static libraries (libfoo.a) which happen to depend on the older libio
+behavior will be broken by the glibc 2.1 upgrade.  We plan to produce a
+compatibility library that people will be able to link in if they want
+to compile a static library generated against glibc 2.0 into a program
+on a glibc 2.1 system.  You just add -lcompat and you should be fine.
+
+The glibc-compat add-on will provide the libcompat.a library, the older
+nss modules, and a few other files.  Together, they should make it
+possible to do development with old static libraries on a glibc 2.1
+system.  This add-on is still in development.  You can get it from <URL>
+but please keep in mind that it is experimental.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -1350,7 +1381,7 @@ define it this way and therefore programs must be adopted.
 3.16.	Why has <netinet/ip_fw.h> disappeared?
 
 {AJ} The corresponding Linux kernel data structures and constants are
-totally different in Linux 2.0 and Linux 2.1.  This situation has to be
+totally different in Linux 2.0 and Linux 2.2.  This situation has to be
 taken care in user programs using the firewall structures and therefore
 those programs (ipfw is AFAIK the only one) should deal with this problem
 themselves.
@@ -1480,6 +1511,7 @@ Answers were given by:
 {TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
 {GK} Geoffrey Keating, <geoffk@ozemail.com.au>
 {HJ} H.J. Lu, <hjl@gnu.org>
+{CG} Cristian Gafton, <gafton@redhat.com>
 
 Local Variables:
  mode:outline
