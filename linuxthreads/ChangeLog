@@ -1,3 +1,12 @@
+2004-10-18  Roland McGrath  <roland@redhat.com>
+
+	[BZ #406]
+	* Makefile (linuxthreads-CPPFLAGS): New variable;
+	adds -DIS_IN_linuxthreads=1.
+	* sysdeps/i386/tls.h: Protect "useldt.h" with
+	[!IS_IN_linuxthreads && !DO_MODIFY_LDT].
+	* sysdeps/i386/i686/pt-machine.h: Revert last change.
+
 2004-10-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/errno-loc.c: Don't undef #errno
