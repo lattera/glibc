@@ -1,3 +1,15 @@
+1999-03-03  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/bits/fcntl.h
+	[__USE_GNU] (O_NOFOLLOW, O_DIRECTORY): New macros.
+	* hurd/hurdlookup.c (__hurd_file_name_lookup): If O_NOFOLLOW is set,
+	set O_NOTRANS as well.
+	(__hurd_file_name_lookup_retry): At successful end of lookup,
+	if O_NOFOLLOW set, io_stat the resultant port and fail with ENOENT if
+	it is a translated node not owned by root.
+	(__hurd_file_name_lookup): If O_DIRECTORY is set, put a trailing slash
+	on the file name passed to LOOKUP.
+
 1999-03-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/time.texi (High Resolution Timer): Correct computation in
