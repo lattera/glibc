@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -23,7 +23,7 @@
 #define __SIZEOF_PTHREAD_ATTR_T 56
 #define __SIZEOF_PTHREAD_MUTEX_T 40
 #define __SIZEOF_PTHREAD_MUTEXATTR_T 4
-#define __SIZEOF_PTHREAD_COND_T 24
+#define __SIZEOF_PTHREAD_COND_T 64
 #define __SIZEOF_PTHREAD_CONDATTR_T 4
 #define __SIZEOF_PTHREAD_RWLOCK_T 56
 #define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
@@ -74,8 +74,9 @@ typedef union
   struct
   {
     int __lock;
-    unsigned int __nr_wakers;
-    unsigned int __nr_sleepers;
+    unsigned long long int __total_seq;
+    unsigned long long int __wakeup_seq;
+    unsigned long long int __woken_seq;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
   long int __align;
