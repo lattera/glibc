@@ -61,7 +61,7 @@ add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi contrib.texi
 
 -include texis
-texis: texis.awk $(chapters) $(add-chapters) $(appendices) lesser.texinfo
+texis: texis.awk $(chapters) $(add-chapters) $(appendices) lesser.texi fdl.texi
 	$(AWK) -f $^ > $@.T
 	mv -f $@.T $@
 

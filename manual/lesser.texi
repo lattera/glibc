@@ -1,5 +1,13 @@
-@node Library Copying
-@appendixsec GNU LESSER GENERAL PUBLIC LICENSE
+@setfilename lgpl.info
+
+@set lgpl-appendix
+
+@ifset lgpl-appendix
+@appendix GNU LESSER GENERAL PUBLIC LICENSE
+@end ifset
+@ifclear lgpl-appendix
+@unnumbered GNU LESSER GENERAL PUBLIC LICENSE
+@end ifclear
 
 @cindex LGPL, Lesser General Public License
 @center Version 2.1, February 1999

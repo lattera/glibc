@@ -1311,7 +1311,7 @@ gethostname (char *host)
   int herr;
 
   hstbuflen = 1024;
-  /* Allocate buffer, remember to free it to avoid a memory leakage.  */
+  /* Allocate buffer, remember to free it to avoid memory leakage.  */
   tmphstbuf = malloc (hstbuflen);
 
   while ((res = gethostbyname_r (host, &hostbuf, tmphstbuf, hstbuflen,

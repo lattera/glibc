@@ -1,3 +1,14 @@
+2001-07-06  Andreas Jaeger  <aj@suse.de>
+
+	* manual/Makefile (texis): Add fdl.texi.
+	* manual/fdl.texi: New.
+	* manual/socket.texi (Host Names): Improve grammar, fix overflow hbox.
+	* manual/libc.texinfo: Add fdl, update titlepage.
+	Patches by Brian Youmans <3diff@gnu.org>.
+
+	* sysdeps/unix/make_errlist.c (main): Print LGPL v2.1 for
+	generated file.
+
 2001-07-06  Paul Eggert  <eggert@twinsun.com>
 
 	* manual/argp.texi: Remove ignored LGPL copyright notice; it's
@@ -8,7 +19,6 @@
         * manual/lesser.texi: Renamed from manual/lgpl.texinfo,
         as fsf.org uses the name "lesser.texi".
 	* manual/Makefile (texis): Follow rename.
-
 
 2001-07-06  Andreas Jaeger  <aj@suse.de>
 

@@ -17,10 +17,10 @@
 @comment %**end of header (This is for running Texinfo on a region.)
 
 @c sold 0.06/1.09, print run out 21may96
-@set EDITION 0.09 DRAFT
-@set VERSION 2.2 Beta
-@set UPDATED 28 Aug 1999
-@set ISBN 1-882114-53-1
+@set EDITION 0.10
+@set VERSION 2.2.x
+@set UPDATED 2001-07-06
+@set ISBN 1-882114-55-8
 
 @ifinfo
 This file documents the GNU C library.
@@ -28,31 +28,25 @@ This file documents the GNU C library.
 This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-Copyright (C) 1993, '94, '95, '96, '97, '98, '99 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
 
-Permission is granted to make and distribute verbatim copies of
-this manual provided the copyright notice and this permission notice
-are preserved on all copies.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being "GNU Lesser General Public License", the
+Front-Cover texts being (a) (see below), and with the Back-Cover Texts
+being (b) (see below).  A copy of the license is included in the section
+entitled "GNU Free Documentation License".
 
-@ignore
-Permission is granted to process this file through TeX and print the
-results, provided the printed document carries copying permission
-notice identical to this one except for the removal of this paragraph
-(this paragraph not being relevant to the printed manual).
+(a) The FSF's Front-Cover Text is:
 
-@end ignore
-Permission is granted to copy and distribute modified versions of this
-manual under the conditions for verbatim copying, provided also that the
-section entitled ``GNU Lesser General Public License'' is included
-exactly as in the original, and provided that the entire resulting
-derived work is distributed under the terms of a permission notice
-identical to this one.
+     A GNU Manual
 
-Permission is granted to copy and distribute translations of this manual
-into another language, under the above conditions for modified versions,
-except that the text of the translation of the section entitled ``GNU
-Lesser General Public License'' must be approved for accuracy by the
-Foundation.
+(b) The FSF's Back-Cover Text is:
+
+     You have freedom to copy and modify this GNU Manual, like GNU
+     software.  Copies published by the Free Software Foundation raise
+     funds for GNU development.
 @end ifinfo
 
 @iftex
@@ -74,30 +68,34 @@ Foundation.
 @center for version @value{VERSION}
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1993, '94, '95, '96, '97, '98 Free Software Foundation, Inc.
+Copyright @copyright{} 1993, 1994, 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
 @sp 2
 Published by the Free Software Foundation @*
 59 Temple Place -- Suite 330, @*
 Boston, MA 02111-1307 USA @*
-Printed copies are available for $50 each. @*
 ISBN @value{ISBN} @*
 
-Permission is granted to make and distribute verbatim copies of
-this manual provided the copyright notice and this permission notice
-are preserved on all copies.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being "GNU Lesser General Public License", the
+Front-Cover texts being (a) (see below), and with the Back-Cover Texts
+being (b) (see below).  A copy of the license is included in the section
+entitled "GNU Free Documentation License".
 
-Permission is granted to copy and distribute modified versions of this
-manual under the conditions for verbatim copying, provided also that the
-section entitled ``GNU Lesser General Public License'' is included
-exactly as in the original, and provided that the entire resulting
-derived work is distributed under the terms of a permission notice
-identical to this one.
+(a) The FSF's Front-Cover Text is:
 
-Permission is granted to copy and distribute translations of this manual
-into another language, under the above conditions for modified versions,
-except that the text of the translation of the section entitled ``GNU
-Lesser General Public License'' must be approved for accuracy by the
-Foundation.
+     A GNU Manual
+
+(b) The FSF's Back-Cover Text is:
+
+     You have freedom to copy and modify this GNU Manual, like GNU
+     software.  Copies published by the Free Software Foundation raise
+     funds for GNU development.
+
+Cover art for the Free Software Foundation's printed edition
+by Etienne Suvasa.
+
 @end titlepage
 @page
 
@@ -116,8 +114,10 @@ of the GNU C Library.
 @node Copying, Concept Index, Contributors, Top
 @include lesser.texi
 
+@node Documentation License, Concept Index, Copying, Top
+@include fdl.texi
 
-@node Concept Index, Type Index, Copying, Top
+@node Concept Index, Type Index, Documentation License, Top
 @unnumbered Concept Index
 
 @printindex cp
