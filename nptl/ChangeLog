@@ -1,3 +1,10 @@
+2004-02-16  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/pt-longjmp.c: Replace libc with
+	libpthread as "lib" parameter to SHLIB_COMPAT.
+	(__novmx_siglongjmp): Fix typo in function name.
+	(__novmx_longjmp): Fix typo in function name.
+
 2004-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait): Add a

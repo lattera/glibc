@@ -22,7 +22,7 @@
 #include <bits/wordsize.h>
 #include "pthreadP.h"
 #include  <shlib-compat.h>
-#if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
+#if defined SHARED && SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_3_4)
 
 /* These functions are not declared anywhere since they shouldn't be
    used at another place but here.  */
@@ -32,12 +32,12 @@ extern void __novmx__libc_longjmp (sigjmp_buf env, int val)
      __attribute__ ((noreturn));
 
 
-void __novmxsiglongjmp (sigjmp_buf env, int val)
+void __novmx_siglongjmp (sigjmp_buf env, int val)
 {
   __novmx__libc_siglongjmp (env, val);
 }
 
-void __novmxlongjmp (jmp_buf env, int val)
+void __novmx_longjmp (jmp_buf env, int val)
 {
   __novmx__libc_longjmp (env, val);
 }
