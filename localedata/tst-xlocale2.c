@@ -9,26 +9,26 @@ static int do_test (__locale_t l);
 int
 main (void)
 {
-  __locale_t l;
-  __locale_t l2;
+  locale_t l;
+  locale_t l2;
   int result;
 
-  l = __newlocale (1 << LC_ALL, "de_DE.ISO-8859-1", NULL);
+  l = newlocale (1 << LC_ALL, "de_DE.ISO-8859-1", NULL);
   if (l == NULL)
     {
-      printf ("__newlocale failed: %m\n");
+      printf ("newlocale failed: %m\n");
       exit (EXIT_FAILURE);
     }
   puts ("Running tests of created locale");
   result = do_test (l);
 
-  l2 = __duplocale (l);
+  l2 = duplocale (l);
   if (l2 == NULL)
     {
-      printf ("__duplocale failed: %m\n");
+      printf ("duplocale failed: %m\n");
       exit (EXIT_FAILURE);
     }
-  __freelocale (l);
+  freelocale (l);
   puts ("Running tests of duplicated locale");
   result |= do_test (l2);
 
@@ -43,7 +43,7 @@ static const char exx[] = "11111111111111110111111000000000000000000000000000";
 
 
 static int
-do_test (__locale_t l)
+do_test (locale_t l)
 {
   int result = 0;
   int n;
@@ -56,9 +56,9 @@ do_test (__locale_t l)
 	result = 1;							      \
       }
 
-  DO_TEST (__isdigit_l, exd);
-  DO_TEST (__isalpha_l, exa);
-  DO_TEST (__isxdigit_l, exx);
+  DO_TEST (isdigit_l, exd);
+  DO_TEST (isalpha_l, exa);
+  DO_TEST (isxdigit_l, exx);
 
   return result;
 }

@@ -25,7 +25,7 @@ main (void)
 {
   int cnt;
   int result = 0;
-  __locale_t loc = __newlocale (1 << LC_ALL, "C", NULL);
+  locale_t loc = newlocale (1 << LC_ALL, "C", NULL);
 
   for (cnt = 0; cnt < ntests; ++cnt)
     {
@@ -38,10 +38,10 @@ main (void)
 	  continue;
 	}
 
-      printf ("\n__strcasecmp_l (\"%s\", \"%s\", loc)\n",
+      printf ("\nstrcasecmp_l (\"%s\", \"%s\", loc)\n",
 	      tests[cnt].str1, tests[cnt].str2);
 
-      r = __strcasecmp_l (tests[cnt].str1, tests[cnt].str2, loc);
+      r = strcasecmp_l (tests[cnt].str1, tests[cnt].str2, loc);
       if (tests[cnt].result == 0)
 	{
 	  if (r != 0)
