@@ -1,5 +1,9 @@
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/ldconfig.c (parse_conf): Print full name of config dir
+	including chroot() path.
+	(main): Remove trailing / from opt_chroot string.
+
 	* include/features.h: Correct description of what happens if no
 	*_SOURCE macro is defined.
 

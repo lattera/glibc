@@ -525,7 +525,7 @@ search_dir (const struct dir_entry *entry)
 
   file_name_len = PATH_MAX;
   file_name = alloca (file_name_len);
-  
+
   dlibs = NULL;
 
   if (opt_verbose)
@@ -570,7 +570,7 @@ search_dir (const struct dir_entry *entry)
 	  file_name_len = len + 1;
 	  file_name = alloca (file_name_len);
 	}
-      sprintf (file_name , "%s/%s", entry->path, direntry->d_name);      
+      sprintf (file_name , "%s/%s", entry->path, direntry->d_name);
 #ifdef _DIRENT_HAVE_D_TYPE
       if (direntry->d_type != DT_UNKNOWN)
 	stat_buf.st_mode = DTTOIF (direntry->d_type);
@@ -734,7 +734,8 @@ parse_conf (const char *filename)
 
   if (file == NULL)
     {
-      error (0, errno, _("Can't open configuration file %s"), filename);
+      error (0, errno, _("Can't open configuration file %s%s%s"),
+	     opt_chroot ?: "", opt_chroot ? "/" : "", filename);
       return;
     }
 
@@ -791,6 +792,12 @@ main (int argc, char **argv)
   /* Chroot first.  */
   if (opt_chroot)
     {
+      /* Normalize the path a bit, we might need it for printing later.  */
+      char *endp = strchr (opt_chroot, '\0');
+      while (endp > opt_chroot + 1 && endp[-1] == '/')
+	--endp;
+      *endp = '\0';
+
       if (chroot (opt_chroot))
 	/* Report failure and exit program.  */
 	error (EXIT_FAILURE, errno, _("Can't chroot to %s"), opt_chroot);
