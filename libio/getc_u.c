@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1996,1997,1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
    General Public License.  */
 
 #include "libioP.h"
-#include "stdio.h"
+#include <stdio.h>
 
 #undef getc_unlocked
 

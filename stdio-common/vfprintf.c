@@ -798,8 +798,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_float):							      \
       {									      \
 	/* Floating-point number.  This is handled by printf_fp.c.  */	      \
-	extern int __printf_fp __P ((FILE *, const struct printf_info *,      \
-				     const void **const));		      \
 	const void *ptr;						      \
 	int function_done;						      \
 									      \
@@ -848,9 +846,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
     LABEL (form_floathex):						      \
       {									      \
-        /* FLoating point number printed as hexadecimal number.  */	      \
-	extern int __printf_fphex __P ((FILE *, const struct printf_info *,   \
-					const void **const));		      \
+        /* Floating point number printed as hexadecimal number.  */	      \
 	const void *ptr;						      \
 	int function_done;						      \
 									      \
@@ -919,7 +915,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	else								      \
 	  {								      \
 	    /* Write "(nil)" for a nil pointer.  */			      \
-	    string = (CHAR_T *) L_("(nil)");	 			      \
+	    string = (CHAR_T *) L_("(nil)");				      \
 	    /* Make sure the full string "(nil)" is printed.  */	      \
 	    if (prec < 5)						      \
 	      prec = 5;							      \

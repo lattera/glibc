@@ -74,7 +74,7 @@
 #endif
 
 extern int __printf_fp (FILE *, const struct printf_info *,
-			const void **const);
+			const void *const *);
 /* This function determines the number of digit groups in the output.
    The definition is in printf_fp.c.  */
 extern unsigned int __guess_grouping (unsigned int intdig_max,

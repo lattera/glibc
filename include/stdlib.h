@@ -55,8 +55,12 @@ extern void _quicksort (void *const pbase, size_t total_elems,
 
 extern int __cxa_atexit (void (*func) (void *), void *arg, void *d);
 
+extern void __cxa_finalize (void *d);
+
 extern int __posix_memalign (void **memptr, size_t alignment, size_t size)
      __attribute_malloc__;
+
+extern int __libc_system (const char *line);
 
 #endif
 #undef __Need_M_And_C

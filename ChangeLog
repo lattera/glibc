@@ -1,3 +1,24 @@
+2000-12-26  Andreas Jaeger  <aj@suse.de>
+
+	* libio/getc_u.c: Include stdio.h via system path to get internal
+	prototypes.
+	* libio/getwc_u.c: Likewise.
+
+	* stdlib/strfmon.c: Fix prototype of __printf_fp.
+
+	* stdio-common/vfprintf.c (process_arg): Move __printf_fphex and
+	__printf_fp prototypes to ...
+	* include/printf.h: ...here.
+
+	* include/stdio.h: Add some internal prototypes to shut up GCC.
+	* include/stdlib.h: Likewise.
+
+	* sysdeps/posix/sigpause.c (__sigpause): Use ISO C prototype
+	declaration.
+
+	* include/signal.h: Add prototypes for internal sigpause
+	interfaces.
+
 2000-12-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/byteswap.h (__bswap_64): Make it usable for

@@ -60,6 +60,10 @@ extern void __funlockfile (FILE *__stream);
    possible.  */
 extern int __ftrylockfile (FILE *__stream);
 
+extern int __getc_unlocked (FILE *__fp);
+extern wint_t __getwc_unlocked (FILE *__fp);
+
+
 # endif
 
 #endif
