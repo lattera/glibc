@@ -1,3 +1,8 @@
+2000-12-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/byteswap.h (__bswap_64): Make it usable for
+	64bit platforms.  Reported by Dave Gilbert <gilbertd@treblig.org>.
+
 2000-12-11  Bruno Haible  <haible@clisp.cons.org>
 
 	* Makefile ($(inst_includedir)/gnu/stubs.h): Sort in the C locale.
