@@ -1,5 +1,9 @@
 2001-05-06  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/fpu/e_fmodl.c: New, rewrite of e_fmodl.S.
+	* sysdeps/i386/fpu/e_fmodl.S: Removed.
+	* sysdeps/i386/fpu/e_atan2l.c: New, rewrite of e_atan2l.S.
+	* sysdeps/i386/fpu/e_atan2l.S: Removed.
 	* sysdeps/i386/fpu/e_acosl.c: New, rewrite of e_acos.S.
 	* sysdeps/i386/fpu/s_atanl.c: New, rewrite of e_atanl.S.
 	* sysdeps/i386/fpu/e_sqrtl.c: New, rewrite of e_sqrt.S.
