@@ -1,3 +1,9 @@
+2004-01-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (get_subexp): Remove bkref_str variable.
+	Extend buffers if needed before comparisons.
+	(get_subexp_sub): Handle clean_state_log_if_needed failure.
+
 2004-01-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i486/bits/atomic.h (atomic_add): Fix test for using
