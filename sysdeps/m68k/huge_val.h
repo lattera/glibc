@@ -23,16 +23,10 @@
 
 #include <features.h>
 #include <sys/cdefs.h>
-#include <endian.h>
 
 /* IEEE positive infinity (-HUGE_VAL is negative infinity).  */
 
-#if __BYTE_ORDER == __BIG_ENDIAN
 #define	__HUGE_VAL_bytes	{ 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 }
-#endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__HUGE_VAL_bytes	{ 0, 0, 0, 0, 0, 0, 0xf0, 0x7f }
-#endif
 
 #define __huge_val_t	union { unsigned char __c[8]; double __d; }
 #ifdef	__GNUC__
@@ -48,12 +42,7 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 #ifdef __USE_ISOC9X
 
-#if __BYTE_ORDER == __BIG_ENDIAN
 #define	__HUGE_VALF_bytes	{ 0x7f, 0x80, 0, 0 }
-#endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__HUGE_VALF_bytes	{ 0, 0, 0x80, 0x7f }
-#endif
 
 #define __huge_valf_t	union { unsigned char __c[4]; float __f; }
 #ifdef	__GNUC__
@@ -65,12 +54,7 @@ static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
 #endif	/* GCC.  */
 
 
-#if __BYTE_ORDER == __BIG_ENDIAN
 #define	__HUGE_VALL_bytes	{ 0x7f, 0xff, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-#endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__HUGE_VALL_bytes	{ 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0 }
-#endif
 
 #define __huge_vall_t	union { unsigned char __c[12]; long double __ld; }
 #ifdef	__GNUC__
