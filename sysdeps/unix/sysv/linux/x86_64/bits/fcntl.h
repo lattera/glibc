@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/x86-64.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 
 
 #include <sys/types.h>
+#include <bits/wordsize.h>
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
@@ -56,8 +57,11 @@
 #endif
 
 #ifdef __USE_LARGEFILE64
-/* Not necessary, files are always with 64bit off_t.  */
-# define O_LARGEFILE	0
+# if __WORDSIZE == 64
+#  define O_LARGEFILE	0
+# else
+#  define O_LARGEFILE	0100000
+# endif
 #endif
 
 /* Values for the second argument to `fcntl'.  */
@@ -69,10 +73,15 @@
 #define F_GETLK		5	/* Get record locking info.  */
 #define F_SETLK		6	/* Set record locking info (non-blocking).  */
 #define F_SETLKW	7	/* Set record locking info (blocking).	*/
-#define F_GETLK64	F_GETLK	/* Get record locking info.  */
-#define F_SETLK64	F_SETLK	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	F_SETLKW /* Set record locking info (blocking).	*/
-
+#if __WORDSIZE == 64
+# define F_GETLK64	F_GETLK	/* Get record locking info.  */
+# define F_SETLK64	F_SETLK	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	F_SETLKW /* Set record locking info (blocking).	*/
+#else
+#define F_GETLK64	12	/* Get record locking info.  */
+#define F_SETLK64	13	/* Set record locking info (non-blocking).  */
+#define F_SETLKW64	14	/* Set record locking info (blocking).	*/
+#endif
 #if defined __USE_BSD || defined __USE_XOPEN2K
 # define F_SETOWN	8	/* Get owner of socket (receiver of SIGIO).  */
 # define F_GETOWN	9	/* Set owner of socket (receiver of SIGIO).  */
@@ -128,13 +137,17 @@
 # define DN_MULTISHOT	0x80000000	/* Don't remove notifier.  */
 #endif
 
-/* We don't need to support __USE_FILE_OFFSET64.  */
 struct flock
   {
     short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.	*/
     short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
+#ifndef __USE_FILE_OFFSET64
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
+#else
+    __off64_t l_start;	/* Offset where the lock begins.  */
+    __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
+#endif
     __pid_t l_pid;	/* Process holding the lock.  */
   };
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,35 +27,69 @@
 
 #define __need_size_t
 #include <stddef.h>
+#include <bits/wordsize.h>
 
 /* Convenience types.  */
 typedef unsigned char __u_char;
 typedef unsigned short int __u_short;
 typedef unsigned int __u_int;
 typedef unsigned long int __u_long;
+#if __WORDSIZE == 64
 typedef unsigned long int __u_quad_t;
 typedef long int __quad_t;
+#else
+# ifdef __GLIBC_HAVE_LONG_LONG
+__extension__ typedef unsigned long long int __u_quad_t;
+__extension__ typedef long long int __quad_t;
+# else
+typedef struct
+  {
+    long int __val[2];
+  } __quad_t;
+typedef struct
+  {
+    __u_long __val[2];
+  } __u_quad_t;
+# endif
+#endif
 typedef signed char __int8_t;
 typedef unsigned char __uint8_t;
 typedef signed short int __int16_t;
 typedef unsigned short int __uint16_t;
 typedef signed int __int32_t;
 typedef unsigned int __uint32_t;
+#if __WORDSIZE == 64
 typedef signed long int __int64_t;
 typedef unsigned long int __uint64_t;
+#else
+# ifdef __GLIBC_HAVE_LONG_LONG
+__extension__ typedef signed long long int __int64_t;
+__extension__ typedef unsigned long long int __uint64_t;
+# endif
+#endif
 typedef __quad_t *__qaddr_t;
 
 typedef __uint64_t __dev_t;		/* Type of device numbers.  */
 typedef __uint32_t __uid_t;		/* Type of user identifications.  */
 typedef __uint32_t __gid_t;		/* Type of group identifications.  */
+#if __WORDSIZE == 64
 typedef __uint64_t __ino_t;		/* Type of file serial numbers.  */
+#else
+typedef __u_long__ino_t;		/* Type of file serial numbers.  */
+#endif
 typedef __uint64_t __ino64_t;		/*  "" (LFS) */
 typedef __uint32_t __mode_t;		/* Type of file attribute bitmasks.  */
+#if __WORDSIZE == 64
 typedef __uint64_t __nlink_t;		/* Type of file link counts.  */
 typedef __int64_t  __off_t;		/* Type of file sizes and offsets.  */
+#else
+typedef __u_int __nlink_t;		/* Type of file link counts.  */
+typedef long int __off_t;		/* Type of file sizes and offsets.  */
+#endif
 typedef __int64_t  __off64_t;		/*  "" (LFS) */
 typedef __int64_t  __loff_t;		/* Type of file sizes and offsets.  */
 typedef __int32_t  __pid_t;		/* Type of process identifications.  */
+#if __WORDSIZE == 64
 typedef __int64_t  __ssize_t;		/* Type of a byte count, or error.  */
 typedef __uint64_t  __rlim_t;		/* Type of resource counts.  */
 typedef __uint64_t  __rlim64_t;		/*  "" (LFS) */
@@ -66,6 +100,18 @@ typedef __uint64_t __fsblkcnt64_t;	/*  "" (LFS) */
 typedef __uint64_t __fsfilcnt_t;	/* Type to count file system inodes.  */
 typedef __uint64_t __fsfilcnt64_t;	/*  "" (LFS) */
 typedef __uint32_t __id_t;		/* General type for IDs.  */
+#else
+typedef int __ssize_t;			/* Type of a byte count, or error.  */
+typedef __u_long __rlim_t;		/* Type of resource counts.  */
+typedef __u_quad_t __rlim64_t;		/* Type of resource counts (LFS).  */
+typedef long int  __blkcnt_t;		/* Type to count nr disk blocks.  */
+typedef __quad_t  __blkcnt64_t;		/*  "" (LFS) */
+typedef __long __fsblkcnt_t;		/* Type to count file system blocks.  */
+typedef __u_quad_t __fsblkcnt64_t;	/*  "" (LFS) */
+typedef __u_long __fsfilcnt_t;		/* Type to count file system inodes.  */
+typedef __u_quad_t __fsfilcnt64_t;	/*  "" (LFS) */
+typedef __u_int __id_t;			/* General type for ID.  */
+#endif
 
 typedef struct
   {
@@ -89,7 +135,11 @@ typedef int __clockid_t;
 typedef int __timer_t;
 
 /* Used in `struct shmid_ds'.  */
+#if __WORDSIZE == 64
 typedef int __ipc_pid_t;
+#else
+typedef unsigned short int __ipc_pid_t;
+#endif
 
 /* type to represent block size. */
 typedef long int __blksize_t;
@@ -102,11 +152,20 @@ typedef long int __blksize_t;
 #define __FD_SETSIZE	1024
 
 /* Used in XTI.  */
+#if __WORDSIZE == 64
 typedef int __t_scalar_t;
 typedef unsigned int __t_uscalar_t;
+#else
+typedef long int __t_scalar_t;
+typedef unsigned long int __t_uscalar_t;
+#endif
 
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
+#if __WORDSIZE == 64
 typedef long int __intptr_t;
+#else
+typedef int __intptr_t;
+#endif
 
 /* Duplicate info from sys/socket.h.  */
 typedef unsigned int __socklen_t;

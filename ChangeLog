@@ -1,3 +1,30 @@
+2002-03-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add defines for
+	x86-64.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/socket.h: New.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h: New.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: New.
+
+	* sysdeps/x86_64/bits/setjmp.h: New.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/sem.h: New.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/resource.h: New.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Add compatibilty
+	for x86.
+	* sysdeps/unix/sysv/linux/x86_64/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/types.h: Likewise.
+
+2002-02-28  Bo Thorsen  <bo@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Merge with i386
+	version.
+
 2002-03-03  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/bits/wordsize.h: New file.
