@@ -33,7 +33,7 @@ endif
 libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
-tests = glrefmain failtest
+tests = glrefmain failtest tst-dladdr
 endif
 modules-names = glreflib1 glreflib2 failtestmod
 extra-objs += $(modules-names:=.os) eval.os
@@ -47,9 +47,12 @@ test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
 
-$(objpfx)glrefmain: $(objpfx)libdl.so
+$(objpfx)glrefmain: $(libdl)
 $(objpfx)glrefmain.out: $(objpfx)glrefmain \
 			$(objpfx)glreflib1.so $(objpfx)glreflib2.so
 
 $(objpfx)failtest: $(libdl)
 $(objpfx)failtest.out: $(objpfx)failtestmod.so
+
+$(objpfx)tst-dladdr: $(libdl)
+$(objpfx)tst-dladdr.out: $(objpfx)glreflib1.so

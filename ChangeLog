@@ -1,3 +1,15 @@
+2000-07-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/gnu/netinet/tcp.h: Add TCP options from Linux 2.4.
+
+	* dlfcn/Makefile ($(objpfx)tst-dladdr): New.
+	($(objpfx)tst-dladdr.out): new.
+	(tests): Add tst-dladdr.
+	($(objpfx)glrefmain): Use libdl.
+
+	* dlfcn/tst-dladdr.c: New file.  Based on a test by Volkmar Sieh
+	<vs@caldera.de>.
+	
 2000-07-27  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add truncate(64) and
