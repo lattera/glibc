@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -389,12 +389,12 @@ siblings_uncached (const char *output_path)
   elems = NULL;
   for (;;)
     {
-      struct dirent *other_dentry;
+      struct dirent64 *other_dentry;
       const char *other_name;
       char *other_path;
       struct stat other_stat;
 
-      other_dentry = readdir (dirp);
+      other_dentry = readdir64 (dirp);
       if (other_dentry == NULL)
 	break;
 

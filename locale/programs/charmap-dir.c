@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -88,13 +88,13 @@ charmap_readdir (CHARMAP_DIR *cdir)
 {
   for (;;)
     {
-      struct dirent *dirent;
+      struct dirent64 *dirent;
       size_t len;
       size_t size;
       char *filename;
       mode_t mode;
 
-      dirent = readdir (cdir->dir);
+      dirent = readdir64 (cdir->dir);
       if (dirent == NULL)
         return NULL;
       if (strcmp (dirent->d_name, ".") == 0)

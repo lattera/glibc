@@ -1,5 +1,5 @@
-GNU C Library NEWS -- history of user-visible changes.  2002-12-2
-Copyright (C) 1992-2001, 2002 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.  2003-1-12
+Copyright (C) 1992-2002, 2003 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
@@ -33,6 +33,17 @@ Version 2.3.2
 
 * The `btowc' function should work at least twice as fast due to
   specialized callbacks in the iconv modules.  Implemented by Bruno Haible.
+
+* With approriate thread add-ons cancelable functions are now implemented
+  in libc.so as well.  No need to call the function in libpthread.  This
+  change allowed to finally disable the incorrect and expensive handling
+  of weak definition in ld.so.
+
+* Yet more PLT entries in libc.so have been removed.  We finally arrived
+  at the bare minimum.  Startup times improved appropriately.
+
+* Support for the new Linux/x86 system call interface was added.  The
+  AT_SYSINFO auxiliary vector entry is recognized and handled.
 
 Version 2.3
 

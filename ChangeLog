@@ -1,3 +1,17 @@
+2003-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap-dir.c (charmap_readdir): Use struct
+	dirent64 instead of struct dirent for dirent.  Call readdir64
+	instead of readdir.
+
+	* locale/programs/locfile.c (siblings_uncached): Use struct
+	dirent64 instead of struct dirent for other_dentry.  Call
+	readdir64 instead of readdir.
+
+	* elf/ldconfig.c (direntry): Change type to struct dirent64.
+	(search_dir): Use readdir64 instead of readdir.
+	Patch by Zhangfan Xing <xing@pacific.jpl.nasa.gov>.
+
 2003-01-12  Roland McGrath  <roland@redhat.com>
 
 	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Use strtoul,
