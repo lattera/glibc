@@ -1,5 +1,5 @@
 /* POSIX spinlock implementation.  MIPS version.
-   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include <pthread.h>
 #include <sys/tas.h>
 #include "internals.h"
+
+#include <sgidefs.h>
 
 /* This implementation is similar to the one used in the Linux kernel.  */
 int

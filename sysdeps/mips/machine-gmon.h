@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  MIPS
-   Copyright (C) 1996, 1997, 2000, 2001, 2002, 2003
+   Copyright (C) 1996, 1997, 2000, 2001, 2002, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,6 +17,8 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+#include <sgidefs.h>
 
 #define _MCOUNT_DECL(frompc,selfpc) \
 static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
@@ -81,10 +83,10 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 # define CPRETURN
 #endif
 
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+#if _MIPS_SIM == _MIPS_SIM_NABI32
 # define PTR_ADDU_STRING "add" /* no u */
 # define PTR_SUBU_STRING "sub" /* no u */
-#elif defined _ABI64 && _MIPS_SIM == _ABI64
+#elif _MIPS_SIM == _MIPS_SIM_ABI64
 # define PTR_ADDU_STRING "daddu"
 # define PTR_SUBU_STRING "dsubu"
 #else

@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1995, 1997, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 2000, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -38,7 +39,7 @@ __longjmp (env, val_arg)
   register int val asm ("a1");
 
   /* Pull back the floating point callee-saved registers.  */
-#if defined _ABI64 && _MIPS_SIM == _ABI64
+#if _MIPS_SIM == _MIPS_SIM_ABI64
   asm volatile ("l.d $f24, %0" : : "m" (env[0].__fpregs[0]));
   asm volatile ("l.d $f25, %0" : : "m" (env[0].__fpregs[1]));
   asm volatile ("l.d $f26, %0" : : "m" (env[0].__fpregs[2]));

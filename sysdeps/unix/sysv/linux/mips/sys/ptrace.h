@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2003
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,6 +22,7 @@
 #define _SYS_PTRACE_H	1
 
 #include <features.h>
+#include <sgidefs.h>
 
 __BEGIN_DECLS
 
@@ -123,7 +124,7 @@ enum __ptrace_request
    appear (those that are used for the particular request) as:
      pid_t PID, void *ADDR, int DATA, void *ADDR2
    after REQUEST.  */
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+#if _MIPS_SIM == _MIPS_SIM_NABI32
 __extension__ extern long long int ptrace
   (enum __ptrace_request __request, ...) __THROW;
 #else

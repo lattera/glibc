@@ -1,5 +1,37 @@
 2004-07-20  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/unix/sysv/linux/mips/Makefile ($(objpfx)syscall-%.h):
+	Sort by syscalls.  Make sure we get headers such as sgidefs.h from
+	the build tree before just-installed ones.
+
+	* sysdeps/mips/atomicity.h, sysdeps/mips/dl-machine.h,
+	sysdeps/mips/machine-gmon.h, sysdeps/mips/bits/setjmp.h,
+	sysdeps/mips/fpu/bits/mathdef.h,
+	sysdeps/mips/mips64/__longjmp.c,
+	sysdeps/mips/mips64/setjmp_aux.c,
+	sysdeps/unix/sysv/linux/mips/kernel_stat.h,
+	sysdeps/unix/sysv/linux/mips/pread.c,
+	sysdeps/unix/sysv/linux/mips/pread64.c,
+	sysdeps/unix/sysv/linux/mips/ptrace.c,
+	sysdeps/unix/sysv/linux/mips/pwrite.c,
+	sysdeps/unix/sysv/linux/mips/pwrite64.c,
+	sysdeps/unix/sysv/linux/mips/sigaction.c,
+	sysdeps/unix/sysv/linux/mips/sigcontextinfo.h,
+	sysdeps/unix/sysv/linux/mips/bits/fcntl.h,
+	sysdeps/unix/sysv/linux/mips/bits/sigcontext.h,
+	sysdeps/unix/sysv/linux/mips/bits/stat.h,
+	sysdeps/unix/sysv/linux/mips/sys/procfs.h,
+	sysdeps/unix/sysv/linux/mips/sys/ptrace.h,
+	sysdeps/unix/sysv/linux/mips/sys/tas.h,
+	sysdeps/unix/sysv/linux/mips/sys/ucontext.h,
+	sysdeps/unix/sysv/linux/mips/sys/user.h: Use standard names
+	for ABI macros, include sgidefs.h where appropriate.
+	sysdeps/unix/sysv/linux/mips/Makefile ($(objpfx)syscall-%.h):
+	Likewise.
+	sysdeps/unix/sysv/linux/mips/configure.in (asm-unistd.h):
+	Likewise.
+	sysdeps/unix/sysv/linux/mips/configure: Rebuilt.
+
 	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Update to use
 	_dl_lookup_symbol_x.
 	(elf_machine_runtime_link_map): Don't INTUSE _dl_signal_error.

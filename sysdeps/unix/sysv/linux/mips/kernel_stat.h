@@ -1,3 +1,4 @@
+#include <sgidefs.h>
 /* As tempting as it is to define XSTAT_IS_XSTAT64 for n64, the
    userland data structures are not identical, because of different
    padding.  */

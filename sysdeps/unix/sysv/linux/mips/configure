@@ -30,6 +30,7 @@ echo "$as_me: WARNING: *** asm/unistd.h not found, it will not be pre-processed"
 	-e 's,__NR_N64_N32_,__NR_N32_,g' \
 	-e 's,__NR_N64_N64_,__NR_N64_,g' \
     | awk > asm-unistd.h '
+BEGIN { print "#include <sgidefs.h>"; }
 /^#define __NR.*unused/ { print; next; }
 /^#define __NR_N64__exit __NR_N64_exit/ {
 	print "#define __NR__exit __NR_exit";
@@ -50,7 +51,7 @@ echo "$as_me: WARNING: *** asm/unistd.h not found, it will not be pre-processed"
 	name = $2;
 	sub (/_N32_/, "_", name);
 	print;
-	print "#if defined _ABIN32 && _MIPS_SIM == _ABIN32";
+	print "#if _MIPS_SIM == _MIPS_SIM_NABI32";
 	print "# define " name " " $2;
 	print "#endif";
 	next;
@@ -59,7 +60,7 @@ echo "$as_me: WARNING: *** asm/unistd.h not found, it will not be pre-processed"
 	name = $2;
 	sub (/_N64_/, "_", name);
 	print;
-	print "#if defined _ABI64 && _MIPS_SIM == _ABI64";
+	print "#if _MIPS_SIM == _MIPS_SIM_ABI64";
 	print "# define " name " " $2;
 	print "#endif";
 	next;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
 
+#include <sgidefs.h>
 
 /* Type for general register.  Even in o32 we assume 64-bit registers,
    like the kernel.  */
