@@ -267,6 +267,23 @@ newer Linux kernel with the @code{devptsfs} or @code{devfs} filesystems
 providing pty slaves, you don't need this program; otherwise you do.
 The source for @file{pt_chown} is in @file{login/programs/pt_chown.c}.
 
+After installation you might want to configure the timezone and locale
+installation of your system.  The GNU C library comes with a locale
+database which gets configured with @code{localedef}.  For example, to
+set up a German locale with name @code{de_DE}, simply issue the command
+@samp{localedef -i de_DE -f ISO-8859-1 de_DE}.  To configure all locales 
+that are supported by glibc, you can issue from your build directory the 
+command @samp{make localedata/install-locales}.
+
+To configure the locally used timezone, you can either set the @code{TZ}
+environment variable.  The script @code{tzselect} helps you to select
+the right value.  As an example for Germany, tzselect would tell you to
+use @samp{TZ='Europe/Berlin'}.  For a system wide installation (the
+given paths are for an installation with @samp{--prefix=/usr}), link the 
+timezone file which is in @file{/usr/share/zoneinfo} to the file
+@file{/etc/localtime}.  For Germany, you might execute @samp{ln -s
+/usr/share/zoneinfo/Europe/Berlin /etc/localtime}.
+
 @node Tools for Compilation
 @appendixsec Recommended Tools for Compilation
 @cindex installation tools

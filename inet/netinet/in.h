@@ -56,6 +56,7 @@ enum
     IPPROTO_MTP = 92,	   /* Multicast Transport Protocol.  */
     IPPROTO_ENCAP = 98,	   /* Encapsulation Header.  */
     IPPROTO_PIM = 103,	   /* Protocol Independent Multicast.  */
+    IPPROTO_COMP = 108,	   /* Compression Header Protocol.  */
     IPPROTO_RAW = 255,	   /* Raw IP packets.  */
     IPPROTO_MAX
   };

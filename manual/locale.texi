@@ -914,7 +914,7 @@ selected when the program runs.  If the user selects the locale
 correctly there should never be a misunderstanding over the time and
 date format.
 
-@node Formatting Numbers, Locale Information, Locales
+@node Formatting Numbers, , Locale Information, Locales
 @section A dedicated function to format numbers
 
 We have seen that the structure returned by @code{localeconv} as well as

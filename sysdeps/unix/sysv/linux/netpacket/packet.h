@@ -1,5 +1,5 @@
 /* Definitions for use with Linux AF_PACKET sockets.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,9 @@ struct sockaddr_ll
 
 #define PACKET_ADD_MEMBERSHIP		1
 #define PACKET_DROP_MEMBERSHIP		2
+#define	PACKET_RECV_OUTPUT		3
+#define	PACKET_RX_RING			5
+#define	PACKET_STATISTICS		6
 
 struct packet_mreq
   {

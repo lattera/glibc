@@ -103,7 +103,7 @@ enum __socket_type
 #define	AF_DECnet	PF_DECnet
 #define	AF_NETBEUI	PF_NETBEUI
 #define	AF_SECURITY	PF_SECURITY
-#define	pseudo_AF_KEY	PF_KEY
+#define	AF_KEY		PF_KEY
 #define	AF_NETLINK	PF_NETLINK
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_PACKET	PF_PACKET
@@ -192,9 +192,9 @@ enum
 #define	MSG_URG		MSG_URG
     MSG_RST		= 0x1000,
 #define	MSG_RST		MSG_RST
-    MSG_ERRQUEUE	= 0x2000,
+    MSG_ERRQUEUE	= 0x2000, /* Fetch message from error queue.  */
 #define	MSG_ERRQUEUE	MSG_ERRQUEUE
-    MSG_NOSIGNAL	= 0x4000
+    MSG_NOSIGNAL	= 0x4000  /* Do not generate SIGPIPE.  */
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
   };
 

@@ -1,3 +1,25 @@
+1999-08-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (ptmalloc_init): Don't use variables to set
+	thresholds for SUID binaries.  [PR libc/1277]
+
+1999-08-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Running make install): Give examples for
+	timezone and locale installation.
+
+1999-08-28  Zack Weinberg  <zack@bitmover.com>
+
+	* glibcbug.in: Get CCVERSION from autoconf substitution.
+	* configure.in: Calculate and substitute CCVERSION.
+
+1999-08-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Fix sa_flags,
+	partially reverting a patch from 1998-12-29.  We just can't change 
+	the flags, kernels with different flags lead to
+	incompatibilities.
+
 1999-08-26  Andreas Schwab  <schwab@suse.de>
 
 	* locale/langinfo.h (YESSTR, NOSTR): Still define if __USE_GNU.

@@ -17,7 +17,7 @@ access permissions and modification times.
 				 file names.
 * Accessing Directories::       Finding out what files a directory
 				 contains.
-* Working on Directory Trees::  Apply actions to all files or a selectable
+* Working with Directory Trees:: Apply actions to all files or a selectable
                                  subset of a directory hierarchy.
 * Hard Links::                  Adding alternate names to a file.
 * Symbolic Links::              A file that ``points to'' a file name.
@@ -793,7 +793,7 @@ is @math{0} or a bitwise-OR combination of any of the following values.
 While traversing the directory symbolic links are not followed.  Instead
 symbolic links are reported using the @code{FTW_SL} value for the type
 parameter to the callback function.  If the file referenced by a
-symbolic link does not exist {FTW_SLN} is returned instead.
+symbolic link does not exist @code{FTW_SLN} is returned instead.
 @item FTW_MOUNT
 The callback function is only called for items which are on the same
 mounted filesystem as the directory given by the @var{filename}
@@ -1826,7 +1826,7 @@ main purpose is for access control.
 The file owner and group play a role in determining access because the
 file has one set of access permission bits for the owner, another set
 that applies to users who belong to the file's group, and a third set of
-bits that applies to everyone else.  @xref{Access Permission} for the
+bits that applies to everyone else.  @xref{Access Permission}, for the
 details of how access is decided based on this data.
 
 When a file is created, its owner is set to the effective user ID of the
@@ -1915,7 +1915,7 @@ The @dfn{file mode}, stored in the @code{st_mode} field of the file
 attributes, contains two kinds of information: the file type code, and
 the access permission bits.  This section discusses only the access
 permission bits, which control who can read or write the file.
-@xref{Testing File Type} for information about the file type code.
+@xref{Testing File Type}, for information about the file type code.
 
 All of the symbols listed in this section are defined in the header file
 @file{sys/stat.h}.

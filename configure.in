@@ -478,6 +478,10 @@ test -n "$aux_missing" && AC_MSG_WARN([
 *** some features will be disabled.
 *** Check the INSTALL file for required versions.])
 
+# glibcbug.in wants to know the compiler version.
+CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
+AC_SUBST(CCVERSION)
+
 AC_PROG_CC_LOCAL
 AC_CANONICAL_BUILD
 if test $host != $build; then

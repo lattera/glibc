@@ -305,6 +305,10 @@
 # include <sys/types.h>
 #endif
 
+#ifndef _LIBC
+# define __secure_getenv(Str) getenv (Str)
+#endif
+
 /* Macros for handling mutexes and thread-specific data.  This is
    included early, because some thread-related header files (such as
    pthread.h) should be included before any others. */
@@ -1674,13 +1678,13 @@ ptmalloc_init __MALLOC_P((void))
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_init_all);
 #endif /* !defined NO_THREADS */
 #if defined _LIBC || defined MALLOC_HOOKS
-  if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
+  if((s = __secure_getenv("MALLOC_TRIM_THRESHOLD_")))
     mALLOPt(M_TRIM_THRESHOLD, atoi(s));
-  if((s = getenv("MALLOC_TOP_PAD_")))
+  if((s = __secure_getenv("MALLOC_TOP_PAD_")))
     mALLOPt(M_TOP_PAD, atoi(s));
-  if((s = getenv("MALLOC_MMAP_THRESHOLD_")))
+  if((s = __secure_getenv("MALLOC_MMAP_THRESHOLD_")))
     mALLOPt(M_MMAP_THRESHOLD, atoi(s));
-  if((s = getenv("MALLOC_MMAP_MAX_")))
+  if((s = __secure_getenv("MALLOC_MMAP_MAX_")))
     mALLOPt(M_MMAP_MAX, atoi(s));
   s = getenv("MALLOC_CHECK_");
 #ifndef NO_THREADS

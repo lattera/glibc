@@ -10,6 +10,7 @@ RELEASE="@RELEASE@"
 ADDONS="@subdirs@"
 HOST="@host@"
 CC='@CC@'
+CCVERSION='@CCVERSION@'
 CFLAGS="@CFLAGS@"
 SYSINCLUDES="@SYSINCLUDES@"
 VERSIONING="@VERSIONING@"
@@ -109,7 +110,6 @@ SYSTEM=`( [ -f /bin/uname ] && /bin/uname -a ) || \
         ( [ -f /usr/bin/uname ] && /usr/bin/uname -a ) || echo ""`
 ARCH=`[ -f /bin/arch ] && /bin/arch`
 MACHINE=`[ -f /bin/machine ] && /bin/machine`
-CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
 
 case $HOST in *linux*)
   KHDRS=`(echo '#include <linux/version.h>'
