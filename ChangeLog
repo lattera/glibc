@@ -1,3 +1,7 @@
+2000-08-21  Marko Myllynen  <myllynen@lut.fi>
+
+	* inet/netinet/icmp6.h: Add Mobile IPv6 extensions structures.
+
 2000-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gethosts): Handle TRY_AGAIN error

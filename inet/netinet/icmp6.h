@@ -232,5 +232,23 @@ struct nd_opt_mtu             /* MTU option */
     uint32_t  nd_opt_mtu_mtu;
   };
 
+/* Mobile IPv6 extension: Advertisement Interval.  */
+struct nd_opt_adv_interval
+  {
+    uint8_t   nd_opt_adv_interval_type;
+    uint8_t   nd_opt_adv_interval_len;
+    uint16_t  nd_opt_adv_interval_reserved;
+    uint32_t  nd_opt_adv_interval_ival;
+  };
+
+/* Mobile IPv6 extension: Home Agent Info.  */
+struct nd_opt_home_agent_info
+  {
+    uint8_t   nd_opt_home_agent_info_type;
+    uint8_t   nd_opt_home_agent_info_len;
+    uint16_t  nd_opt_home_agent_info_reserved;
+    int16_t   nd_opt_home_agent_info_preference;
+    uint16_t  nd_opt_home_agent_info_lifetime;
+  };
 
 #endif /* netinet/icmpv6.h */

@@ -1,5 +1,9 @@
 2000-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ko_KR: Updated for glibc 2.2.
+	Patches by Won-kyu Park <wkpark@chem.skku.ac.kr>.
+	* SUPPORTED: Add ko_KR.
+
 	* locales/de_BE@euro: New file.
 	* locales/eu_ES@euro: New file.
 	* locales/ga_IE@euro: New file.
