@@ -1,3 +1,11 @@
+2004-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Fix search for map in maps array.
+	Reverse order of namespaces.
+	* elf/Makefile: Add rules to build and run tst-dlmopen3.
+	* elf/tst-dlmopen3.c: New file.
+	* elf/tst-dlmopen1mod.c: Add check whether constructor runs.
+
 2004-10-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/glob.c (globfree): Clear gl_pathv after freeing it.

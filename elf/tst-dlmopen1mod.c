@@ -3,6 +3,16 @@
 #include <gnu/lib-names.h>
 
 
+static int cnt;
+
+static void
+__attribute ((constructor))
+constr (void)
+{
+  ++cnt;
+}
+
+
 int
 foo (Lmid_t ns2)
 {
@@ -31,6 +41,17 @@ foo (Lmid_t ns2)
     {
       printf ("dlclose for %s in %s failed: %s\n",
 	      LIBC_SO, __func__, dlerror ());
+      return 1;
+    }
+
+  if (cnt == 0)
+    {
+      puts ("constructor did not run");
+      return 1;
+    }
+  else if (cnt != 1)
+    {
+      puts ("constructor did not run exactly once");
       return 1;
     }
 

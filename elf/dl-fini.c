@@ -42,23 +42,18 @@ _dl_fini (void)
      using `dlopen' there are possibly several other modules with its
      dependencies to be taken into account.  Therefore we have to start
      determining the order of the modules once again from the beginning.  */
-  unsigned int i;
-  unsigned int nloaded;
-  struct link_map *l;
   struct link_map **maps = NULL;
   size_t maps_size = 0;
 
-  /* We First run the destructors of the main namespaces, then the
-     other ones.  The order should not matter since the namespace
-     content is supposed to be independent.  But we can have auditing
-     code in a auxiliaty namespace and we want it to monitor the
-     destructors.  */
-  for (Lmid_t cnt = 0; cnt < DL_NNS; ++cnt)
+  /* We run the destructors of the main namespaces last.  As for the
+     other namespaces, we pick run the destructors in them in reverse
+     order of the namespace ID.  */
+  for (Lmid_t cnt = DL_NNS - 1; cnt >= 0; --cnt)
     {
       /* Protect against concurrent loads and unloads.  */
       __rtld_lock_lock_recursive (GL(dl_load_lock));
 
-      nloaded = GL(dl_ns)[cnt]._ns_nloaded;
+      unsigned int nloaded = GL(dl_ns)[cnt]._ns_nloaded;
 
       /* XXX Could it be (in static binaries) that there is no object
 	 loaded?  */
@@ -79,20 +74,20 @@ _dl_fini (void)
 			     nloaded * sizeof (struct link_map *));
 	}
 
+      unsigned int i;
+      struct link_map *l;
       for (l = GL(dl_ns)[cnt]._ns_loaded, i = 0; l != NULL; l = l->l_next)
-	{
-	  assert (i < nloaded);
+	/* Do not handle ld.so in secondary namespaces.  */
+	if (l == l->l_real)
+	  {
+	    assert (i < nloaded);
 
-	  /* Do not handle ld.so in secondary namespaces.  */
-	  if (l == l->l_real)
-	    {
-	      maps[i++] = l;
+	    maps[i++] = l;
 
-	      /* Bump l_opencount of all objects so that they are not
-		 dlclose()ed from underneath us.  */
-	      ++l->l_opencount;
-	    }
-	}
+	    /* Bump l_opencount of all objects so that they are not
+	       dlclose()ed from underneath us.  */
+	    ++l->l_opencount;
+	  }
       assert (cnt != LM_ID_BASE || i == nloaded);
       assert (cnt == LM_ID_BASE || i == nloaded || i == nloaded - 1);
       unsigned int nmaps = i;
@@ -105,46 +100,23 @@ _dl_fini (void)
 	    /* The main executable always comes first.  */
 	    l = l->l_next;
 	  for (; l != NULL; l = l->l_next)
-	    {
-	      unsigned int j;
-	      unsigned int k;
+	    /* Do not handle ld.so in secondary namespaces.  */
+	    if (l == l->l_real)
+	      {
+		/* Find the place in the 'maps' array.  */
+		unsigned int j;
+		for (j = cnt == LM_ID_BASE ? 1 : 0; maps[j] != l; ++j)
+		  assert (j < nmaps);
 
-	      /* Find the place in the 'maps' array.  */
-	      for (j = 1; maps[j] != l; ++j)
-		;
-
-	      /* Find all object for which the current one is a dependency and
-		 move the found object (if necessary) in front.  */
-	      for (k = j + 1; k < nmaps; ++k)
-		{
-		  struct link_map **runp = maps[k]->l_initfini;
-		  if (runp != NULL)
-		    {
-		      while (*runp != NULL)
-			if (*runp == l)
-			  {
-			    struct link_map *here = maps[k];
-
-			    /* Move it now.  */
-			    memmove (&maps[j] + 1,
-				     &maps[j],
-				     (k - j) * sizeof (struct link_map *));
-			    maps[j++] = here;
-
-			    break;
-			  }
-			else
-			  ++runp;
-		    }
-
-		  if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
-		    {
-		      unsigned int m = maps[k]->l_reldepsact;
-		      struct link_map **relmaps = maps[k]->l_reldeps;
-
-		      while (m-- > 0)
-			{
-			  if (relmaps[m] == l)
+		/* Find all object for which the current one is a dependency
+		   and move the found object (if necessary) in front.  */
+		for (unsigned int k = j + 1; k < nmaps; ++k)
+		  {
+		    struct link_map **runp = maps[k]->l_initfini;
+		    if (runp != NULL)
+		      {
+			while (*runp != NULL)
+			  if (*runp == l)
 			    {
 			      struct link_map *here = maps[k];
 
@@ -152,14 +124,37 @@ _dl_fini (void)
 			      memmove (&maps[j] + 1,
 				       &maps[j],
 				       (k - j) * sizeof (struct link_map *));
-			      maps[j] = here;
+			      maps[j++] = here;
 
 			      break;
 			    }
-			}
-		    }
-		}
-	    }
+			  else
+			    ++runp;
+		      }
+
+		    if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
+		      {
+			unsigned int m = maps[k]->l_reldepsact;
+			struct link_map **relmaps = maps[k]->l_reldeps;
+
+			while (m-- > 0)
+			  {
+			    if (relmaps[m] == l)
+			      {
+				struct link_map *here = maps[k];
+
+				/* Move it now.  */
+				memmove (&maps[j] + 1,
+					 &maps[j],
+					 (k - j) * sizeof (struct link_map *));
+				maps[j] = here;
+
+				break;
+			      }
+			  }
+		      }
+		  }
+	      }
 	}
 
       /* We do not rely on the linked list of loaded object anymore from
