@@ -21,9 +21,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#ifdef __i386__
-# include <ucontext.h>
-#endif
 #include <sys/wait.h>
 #include <sys/resource.h>
 #include <shlib-compat.h>
@@ -195,10 +192,6 @@ extern int _h_errno;
 static void pthread_exit_process(int retcode, void *arg);
 static void pthread_handle_sigcancel(int sig);
 static void pthread_handle_sigrestart(int sig);
-#ifdef __i386__
-static void pthread_handle_sigrestart_nonrt(int sig, struct sigcontext ctx);
-static void pthread_handle_sigcancel_nonrt(int sig, struct sigcontext ctx);
-#endif
 static void pthread_handle_sigdebug(int sig);
 
 /* Signal numbers used for the communication.
@@ -362,19 +355,11 @@ static void pthread_initialize(void)
   /* Setup signal handlers for the initial thread.
      Since signal handlers are shared between threads, these settings
      will be inherited by all other threads. */
-#ifndef __i386__
   sa.sa_handler = pthread_handle_sigrestart;
-#else
-  sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart_nonrt;
-#endif
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   __sigaction(__pthread_sig_restart, &sa, NULL);
-#ifndef __i386__
   sa.sa_handler = pthread_handle_sigcancel;
-#else
-  sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel_nonrt;
-#endif
   sa.sa_flags = 0;
   __sigaction(__pthread_sig_cancel, &sa, NULL);
   if (__pthread_sig_debug > 0) {
@@ -660,14 +645,6 @@ static void pthread_handle_sigrestart(int sig)
     siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
 }
 
-#ifdef __i386__
-static void pthread_handle_sigrestart_nonrt(int sig, struct sigcontext ctx)
-{
-  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
-  pthread_handle_sigrestart(sig);
-}
-#endif
-
 /* The handler for the CANCEL signal checks for cancellation
    (in asynchronous mode), for process-wide exit and exec requests.
    For the thread manager thread, redirect the signal to
@@ -701,14 +678,6 @@ static void pthread_handle_sigcancel(int sig)
     }
   }
 }
-
-#ifdef __i386__
-static void pthread_handle_sigcancel_nonrt(int sig, struct sigcontext ctx)
-{
-  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
-  pthread_handle_sigcancel(sig);
-}
-#endif
 
 /* Handler for the DEBUG signal.
    The debugging strategy is as follows:
