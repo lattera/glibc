@@ -102,7 +102,7 @@
 #  undef EOF
 #  define EOF		  WEOF
 # else
-#  define ungetc(c, s)	((void) ((int) c == EOF				      \
+#  define ungetc(c, s)	((void) ((int) (signed char) c == EOF		      \
 				 || (--read_in,				      \
 				     _IO_sputbackc (s, (unsigned char) c))))
 #  define inchar()	(c == EOF ? EOF					      \
