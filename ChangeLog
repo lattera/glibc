@@ -1,3 +1,8 @@
+2004-09-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Randomize request ID every
+	time.
+
 2004-09-18  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/waitid.c (do_waitid): Pass fifth argument to
