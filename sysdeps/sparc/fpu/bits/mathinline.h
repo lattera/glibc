@@ -1,5 +1,5 @@
 /* Inline math functions for SPARC.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -24,13 +24,13 @@
 
 #include <bits/wordsize.h>
 
-#if defined __GNUC__
+#ifdef __GNUC__
 
 #ifdef __USE_ISOC99
 
-#if __WORDSIZE == 32
+# if __WORDSIZE == 32
 
-# define __unordered_cmp(x, y) \
+#  define __unordered_cmp(x, y) \
   (__extension__							      \
    ({ unsigned __r;							      \
       if (sizeof(x) == 4 && sizeof(y) == 4)				      \
@@ -47,16 +47,16 @@
 	}								      \
       __r; }))
 
-# define isgreater(x, y) ((__unordered_cmp (x, y) & (3 << 10)) == (2 << 10))
-# define isgreaterequal(x, y) ((__unordered_cmp (x, y) & (1 << 10)) == 0)
-# define isless(x, y) ((__unordered_cmp (x, y) & (3 << 10)) == (1 << 10))
-# define islessequal(x, y) ((__unordered_cmp (x, y) & (2 << 10)) == 0)
-# define islessgreater(x, y) (((__unordered_cmp (x, y) + (1 << 10)) & (2 << 10)) != 0)
-# define isunordered(x, y) ((__unordered_cmp (x, y) & (3 << 10)) == (3 << 10))
+#  define isgreater(x, y) ((__unordered_cmp (x, y) & (3 << 10)) == (2 << 10))
+#  define isgreaterequal(x, y) ((__unordered_cmp (x, y) & (1 << 10)) == 0)
+#  define isless(x, y) ((__unordered_cmp (x, y) & (3 << 10)) == (1 << 10))
+#  define islessequal(x, y) ((__unordered_cmp (x, y) & (2 << 10)) == 0)
+#  define islessgreater(x, y) (((__unordered_cmp (x, y) + (1 << 10)) & (2 << 10)) != 0)
+#  define isunordered(x, y) ((__unordered_cmp (x, y) & (3 << 10)) == (3 << 10))
 
-#else /* sparc64 */
+# else /* sparc64 */
 
-# define __unordered_v9cmp(x, y, op, qop) \
+#  define __unordered_v9cmp(x, y, op, qop) \
   (__extension__							      \
    ({ unsigned __r;						      	      \
       if (sizeof(x) == 4 && sizeof(y) == 4)				      \
@@ -79,29 +79,32 @@
 	}								      \
       __r; }))
 
-# define isgreater(x, y) __unordered_v9cmp(x, y, "g", _Qp_cmp (&__x, &__y) == 2)
-# define isgreaterequal(x, y) __unordered_v9cmp(x, y, "ge", (_Qp_cmp (&__x, &__y) & 1) == 0)
-# define isless(x, y) __unordered_v9cmp(x, y, "l", _Qp_cmp (&__x, &__y) == 1)
-# define islessequal(x, y) __unordered_v9cmp(x, y, "le", (_Qp_cmp (&__x, &__y) & 2) == 0)
-# define islessgreater(x, y) __unordered_v9cmp(x, y, "lg", ((_Qp_cmp (&__x, &__y) + 1) & 2) != 0)
-# define isunordered(x, y) __unordered_v9cmp(x, y, "u", _Qp_cmp (&__x, &__y) == 3)
+#  define isgreater(x, y) __unordered_v9cmp(x, y, "g", _Qp_cmp (&__x, &__y) == 2)
+#  define isgreaterequal(x, y) __unordered_v9cmp(x, y, "ge", (_Qp_cmp (&__x, &__y) & 1) == 0)
+#  define isless(x, y) __unordered_v9cmp(x, y, "l", _Qp_cmp (&__x, &__y) == 1)
+#  define islessequal(x, y) __unordered_v9cmp(x, y, "le", (_Qp_cmp (&__x, &__y) & 2) == 0)
+#  define islessgreater(x, y) __unordered_v9cmp(x, y, "lg", ((_Qp_cmp (&__x, &__y) + 1) & 2) != 0)
+#  define isunordered(x, y) __unordered_v9cmp(x, y, "u", _Qp_cmp (&__x, &__y) == 3)
 
-#endif /* sparc64 */
+# endif /* sparc64 */
 
 #endif /* __USE_ISOC99 */
 
 #if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) && defined __OPTIMIZE__
 
-#ifdef __cplusplus
-# define __MATH_INLINE __inline
-#else
-# define __MATH_INLINE extern __inline
-#endif  /* __cplusplus */
+# ifdef __cplusplus
+#  define __MATH_INLINE __inline
+# else
+#  define __MATH_INLINE extern __inline
+# endif  /* __cplusplus */
 
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
 # if __GNUC_PREREQ (2, 8)
-   /* Test for negative number.  Used in the signbit() macro.  */
+
+#  ifdef __USE_ISOC99
+
+/* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
 __signbitf (float __x) __THROW
 {
@@ -109,7 +112,7 @@ __signbitf (float __x) __THROW
   return __u.__i < 0;
 }
 
-#if __WORDSIZE == 32
+#   if __WORDSIZE == 32
 
 __MATH_INLINE int
 __signbit (double __x) __THROW
@@ -124,28 +127,30 @@ __signbitl (long double __x) __THROW
   return __signbit ((double)__x);
 }
 
-#else /* sparc64 */
+#   else /* sparc64 */
 
 __MATH_INLINE int
 __signbit (double __x) __THROW
 {
-  __extension__ union { double __d; long __i; } __u = { __d: __x };
+  __extension__ union { double __d; long int __i; } __u = { __d: __x };
   return __u.__i < 0;
 }
 
 __MATH_INLINE int
 __signbitl (long double __x) __THROW
 {
-  __extension__ union { long double __l; long __i[2]; } __u = { __l: __x };
+  __extension__ union { long double __l; long int __i[2]; } __u = { __l: __x };
   return __u.__i[0] < 0;
 }
 
-#endif /* sparc64 */
+#   endif /* sparc64 */
 
-#ifndef __NO_MATH_INLINES
+#  endif /* __USE_ISOC99 */
+
+#  ifndef __NO_MATH_INLINES
 
 __MATH_INLINE double
-sqrt(double __x) __THROW
+sqrt (double __x) __THROW
 {
   register double __r;
   __asm ("fsqrtd %1,%0" : "=f" (__r) : "f" (__x));
@@ -153,30 +158,30 @@ sqrt(double __x) __THROW
 }
 
 __MATH_INLINE float
-sqrtf(float __x) __THROW
+sqrtf (float __x) __THROW
 {
   register float __r;
   __asm ("fsqrts %1,%0" : "=f" (__r) : "f" (__x));
   return __r;
 }
 
-#if __WORDSIZE == 64
+#   if __WORDSIZE == 64
 __MATH_INLINE long double
-sqrtl(long double __x) __THROW
+sqrtl (long double __x) __THROW
 {
   long double __r;
-  extern void _Qp_sqrt(long double *, __const__ long double *);
-  _Qp_sqrt(&__r, &__x);
+  extern void _Qp_sqrt (long double *, __const__ long double *);
+  _Qp_sqrt (&__r, &__x);
   return __r;
 }
-#endif /* sparc64 */
+#   endif /* sparc64 */
 
-#endif
+#  endif /* !__NO_MATH_INLINES */
 
 /* This code is used internally in the GNU libc.  */
-#ifdef __LIBC_INTERNAL_MATH_INLINES
+#  ifdef __LIBC_INTERNAL_MATH_INLINES
 __MATH_INLINE double
-__ieee754_sqrt(double __x)
+__ieee754_sqrt (double __x)
 {
   register double __r;
   __asm ("fsqrtd %1,%0" : "=f" (__r) : "f" (__x));
@@ -184,29 +189,29 @@ __ieee754_sqrt(double __x)
 }
 
 __MATH_INLINE float
-__ieee754_sqrtf(float __x)
+__ieee754_sqrtf (float __x)
 {
   register float __r;
   __asm ("fsqrts %1,%0" : "=f" (__r) : "f" (__x));
   return __r;
 }
 
-#if __WORDSIZE == 64
+#   if __WORDSIZE == 64
 __MATH_INLINE long double
-__ieee754_sqrtl(long double __x)
+__ieee754_sqrtl (long double __x)
 {
   long double __r;
-  extern void _Qp_sqrt(long double *, __const__ long double *);
+  extern void _Qp_sqrt (long double *, __const__ long double *);
   _Qp_sqrt(&__r, &__x);
   return __r;
 }
-#endif /* sparc64 */
-#endif /* __LIBC_INTERNAL_MATH_INLINES */
-#endif /* gcc 2.8+ */
+#   endif /* sparc64 */
+#  endif /* __LIBC_INTERNAL_MATH_INLINES */
+# endif /* gcc 2.8+ */
 
-#ifdef __USE_ISOC99
+# ifdef __USE_ISOC99
 
-#ifndef __NO_MATH_INLINES
+#  ifndef __NO_MATH_INLINES
 
 __MATH_INLINE double fdim (double __x, double __y);
 __MATH_INLINE double
@@ -222,7 +227,7 @@ fdimf (float __x, float __y)
   return __x < __y ? 0 : __x - __y;
 }
 
-#endif /* !__NO_MATH_INLINES */
-#endif /* __USE_ISOC99 */
+#  endif /* !__NO_MATH_INLINES */
+# endif /* __USE_ISOC99 */
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 #endif /* __GNUC__ */
