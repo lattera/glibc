@@ -7,6 +7,10 @@
 	* mutex.c: Define __pthread_mutexattr_gettype and
 	__pthread_mutexattr_settype.
 	* weak.c: Likewise.
+	* sysdeps/pthread/pthread.h: Declare __pthread_mutexattr_gettype and
+	__pthread_mutexattr_settype.
+	* sysdeps/pthread/bits/libc-lock.h (__libc_lock_init_recursive):
+	Use __pthread_mutexattr_settype.
 
 1998-07-08 22:26  Ulrich Drepper  <drepper@cygnus.com>
 

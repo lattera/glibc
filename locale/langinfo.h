@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -207,7 +207,7 @@ enum
   _NL_CTYPE_WIDTH,
   _NL_CTYPE_MB_CUR_MAX,
   _NL_CTYPE_CODESET_NAME,
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
   CODESET = _NL_CTYPE_CODESET_NAME,
 #endif
   _NL_NUM_LC_CTYPE,
@@ -219,7 +219,7 @@ enum
 #define INT_CURR_SYMBOL		INT_CURR_SYMBOL
   CURRENCY_SYMBOL,
 #define CURRENCY_SYMBOL		CURRENCY_SYMBOL
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
   CRNCYSTR = CURRENCY_SYMBOL,
 # define CRNCYSTR			CRNCYSTR
 #endif
@@ -255,13 +255,13 @@ enum
      These also correspond to members of `struct lconv'; see <locale.h>.  */
   DECIMAL_POINT = _NL_ITEM (LC_NUMERIC, 0),
 #define DECIMAL_POINT		DECIMAL_POINT
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
   RADIXCHAR = DECIMAL_POINT,
 # define RADIXCHAR		RADIXCHAR
 #endif
   THOUSANDS_SEP,
 #define THOUSANDS_SEP		THOUSANDS_SEP
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
   THOUSEP = THOUSANDS_SEP,
 #define THOUSANDS_SEP		THOUSANDS_SEP
 #endif

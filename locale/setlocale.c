@@ -133,7 +133,7 @@ __libc_lock_define_initialized (, __libc_setlocale_lock)
 static inline char *
 new_composite_name (int category, const char *newnames[LC_ALL])
 {
-  size_t last_len;
+  size_t last_len = 0;
   size_t cumlen = 0;
   int i;
   char *new, *p;

@@ -63,7 +63,7 @@ typedef pthread_key_t __libc_key_t;
       {									      \
 	pthread_mutexattr_t __attr;					      \
 	__pthread_mutexattr_init (&__attr);				      \
-	__pthread_mutexattr_setkind_np (&__attr, PTHREAD_MUTEX_RECURSIVE_NP); \
+	__pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_RECURSIVE_NP); \
 	__pthread_mutex_init (&(NAME), &__attr);			      \
 	__pthread_mutexattr_destroy (&__attr);				      \
       }									      \

@@ -84,7 +84,7 @@ extern "C" {
    `glob'.  Since this is not the case here it will never be
    returned but the conformance test suites still require the symbol
    to be defined.  */
-#if (_XOPEN_SOURCE - 0) == 500
+#ifdef _XOPEN_SOURCE
 # define GLOB_NOSYS	(-1)
 #endif
 

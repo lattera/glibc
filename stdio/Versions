@@ -47,5 +47,18 @@ libc {
   GLIBC_2.1 {
     # functions used in other libraries
     __asprintf;
+
+    # c*
+    clearerr_unlocked;
+
+    # f*
+    feof_unlocked; ferror_unlocked; fflush_unlocked;  fgets_unlocked;
+    fileno_unlocked; fputc_unlocked; fread_unlocked; fwrite_unlocked;
+
+    # g*
+    getc_unlocked; getchar_unlocked;
+
+    # p*
+    putc_unlocked; putchar_unlocked;
   }
 }

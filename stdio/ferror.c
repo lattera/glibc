@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 #undef	ferror
+#undef	ferror_unlocked
 
 
 /* Return non-zero if STREAM has its error indicator set.  */
@@ -35,3 +36,5 @@ ferror (stream)
 
   return stream->__error;
 }
+
+weak_alias (ferror, ferror_unlocked)

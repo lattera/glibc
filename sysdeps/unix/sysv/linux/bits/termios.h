@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  Linux version.
-   Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,7 @@ struct termios
 #define ONLRET	0000040
 #define OFILL	0000100
 #define OFDEL	0000200
-#if defined __USE_MISC || defined __USE_UNIX98
+#if defined __USE_MISC || defined __USE_XOPEN
 # define NLDLY	0000400
 # define   NL0	0000000
 # define   NL1	0000400
@@ -162,7 +162,7 @@ struct termios
 /* c_lflag bits */
 #define ISIG	0000001
 #define ICANON	0000002
-#if defined __USE_MISC || defined __USE_UNIX98
+#if defined __USE_MISC || defined __USE_XOPEN
 # define XCASE	0000004
 #endif
 #define ECHO	0000010

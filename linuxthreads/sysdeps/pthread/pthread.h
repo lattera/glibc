@@ -318,10 +318,14 @@ extern int pthread_mutexattr_destroy __P ((pthread_mutexattr_t *__attr));
 /* Set the mutex kind attribute in *ATTR to KIND (either PTHREAD_MUTEX_NORMAL,
    PTHREAD_MUTEX_RECURSIVE, PTHREAD_MUTEX_ERRORCHECK, or
    PTHREAD_MUTEX_DEFAULT).  */
+extern int __pthread_mutexattr_settype __P ((pthread_mutexattr_t *__attr,
+					     int __kind));
 extern int pthread_mutexattr_settype __P ((pthread_mutexattr_t *__attr,
 					   int __kind));
 
 /* Return in *KIND the mutex kind attribute in *ATTR. */
+extern int __pthread_mutexattr_gettype __P ((__const pthread_mutexattr_t *__attr,
+					     int *__kind));
 extern int pthread_mutexattr_gettype __P ((__const pthread_mutexattr_t *__attr,
 					   int *__kind));
 #endif

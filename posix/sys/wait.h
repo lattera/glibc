@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
-#if defined __USE_UNIX98 && !defined pid_t
+#if defined __USE_XOPEN && !defined pid_t
 typedef __pid_t pid_t;
 # define pid_t pid_t
 #endif

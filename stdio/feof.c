@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 #undef	feof
-
+#undef	feof_unlocked
 
 /* Return non-zero if STREAM has its EOF indicator set.  */
 int
@@ -35,3 +35,5 @@ feof (stream)
 
   return stream->__eof;
 }
+
+weak_alias (feof, feof_unlocked)

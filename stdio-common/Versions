@@ -20,7 +20,7 @@ libc {
     dprintf;
 
     # f*
-    fprintf; fscanf;
+    flockfile; fprintf; fscanf; ftrylockfile; funlockfile;
 
     # g*
     getline; getw;

@@ -145,10 +145,12 @@ __MATHCALL (pow,, (_Mdouble_ __x, _Mdouble_ __y));
 /* Return the square root of X.  */
 __MATHCALL (sqrt,, (_Mdouble_ __x));
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
 /* Return `sqrt(X*X + Y*Y)'.  */
 __MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
+#endif
 
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 /* Return the cube root of X.  */
 __MATHCALL (cbrt,, (_Mdouble_ __x));
 #endif

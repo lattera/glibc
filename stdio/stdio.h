@@ -333,6 +333,11 @@ extern int fclose __P ((FILE *__stream));
 /* Flush STREAM, or all streams if STREAM is NULL.  */
 extern int fflush __P ((FILE *__stream));
 
+#ifdef __USE_MISC
+/* Faster versions when locking is not required.  */
+extern int fflush_unlocked __P ((FILE *__stream));
+#endif
+
 #ifdef __USE_GNU
 /* Close all streams.  */
 extern int __fcloseall __P ((void));
@@ -543,6 +548,26 @@ getchar (void)
 }
 #endif /* Optimizing.  */
 
+#if defined __USE_POSIX || defined __USE_MISC
+/* These are defined in POSIX.1:1996.  */
+extern int getc_unlocked __P ((FILE *__stream));
+extern int getchar_unlocked __P ((void));
+
+# ifdef __OPTIMIZE__
+extern __inline int
+getc_unlocked (FILE *__stream)
+{
+  return __getc (__stream);
+}
+
+extern __inline int
+getchar_unlocked (void)
+{
+  return __getc (stdin);
+}
+# endif /* Optimizing.  */
+#endif /* Use POSIX or MISC.  */
+
 
 /* Write a character to STREAM.  */
 extern int fputc __P ((int __c, FILE *__stream));
@@ -571,6 +596,39 @@ putchar (int __c)
 }
 #endif
 
+#ifdef __USE_MISC
+/* Faster version when locking is not necessary.  */
+extern int fputc_unlocked __P ((int __c, FILE *__stream));
+
+# ifdef __OPTIMIZE__
+extern __inline int
+fputc_unlocked (int __c, FILE *__stream)
+{
+  return __putc (__c, __stream);
+}
+# endif /* Optimizing.  */
+#endif /* Use MISC.  */
+
+#if defined __USE_POSIX || defined __USE_MISC
+/* These are defined in POSIX.1:1996.  */
+extern int putc_unlocked __P ((int __c, FILE *__stream));
+extern int putchar_unlocked __P ((int __c));
+
+# ifdef __OPTIMIZE__
+extern __inline int
+putc_unlocked (int __c, FILE *__stream)
+{
+  return __putc (__c, __stream);
+}
+
+extern __inline int
+putchar_unlocked (int __c)
+{
+  return __putc (__c, stdout);
+}
+# endif /* Optimizing.  */
+#endif /* Use POSIX or MISC.  */
+
 
 #if defined __USE_SVID || defined __USE_MISC
 /* Get a word (int) from STREAM.  */
@@ -584,6 +642,12 @@ extern int putw __P ((int __w, FILE *__stream));
 /* Get a newline-terminated string of finite length from STREAM.  */
 extern char *fgets __P ((char *__restrict __s, int __n,
 			 FILE *__restrict __stream));
+
+#ifdef __USE_GNU
+/* This function does the same as `fgets' but does not lock the stream.  */
+extern char *fgets_unlocked __P ((char *__restrict __s, int __n,
+				  FILE *__restrict __stream));
+#endif
 
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.  */
@@ -635,6 +699,15 @@ extern size_t fread __P ((__ptr_t __restrict __ptr, size_t __size,
 extern size_t fwrite __P ((__const __ptr_t __restrict __ptr, size_t __size,
 			   size_t __n, FILE *__restrict __s));
 
+#ifdef __USE_MISC
+/* Faster versions when locking is not necessary.  */
+extern size_t fread_unlocked __P ((void *__restrict __ptr, size_t __size,
+				   size_t __n, FILE *__restrict __stream));
+extern size_t fwrite_unlocked __P ((__const void *__restrict __ptr,
+				    size_t __size, size_t __n,
+				    FILE *__restrict __stream));
+#endif
+
 
 /* Seek to a certain position on STREAM.  */
 extern int fseek __P ((FILE *__stream, long int __off, int __whence));
@@ -661,6 +734,17 @@ extern int ferror __P ((FILE *__stream));
 #define	ferror(stream)	((stream)->__error != 0)
 #endif /* Optimizing.  */
 
+#ifdef __USE_MISC
+/* Faster versions when locking is not required.  */
+extern void clearerr_unlocked __P ((FILE *__stream));
+extern int feof_unlocked __P ((FILE *__stream));
+extern int ferror_unlocked __P ((FILE *__stream));
+
+# ifdef	__OPTIMIZE__
+#  define feof_unlocked(stream)		((stream)->__eof != 0)
+#  define ferror_unlocked(stream)	((stream)->__error != 0)
+# endif /* Optimizing.  */
+#endif
 
 /* Print a message describing the meaning of the value of errno.  */
 extern void perror __P ((__const char *__s));
@@ -679,6 +763,11 @@ extern const char *const _sys_errlist[];
 /* Return the system file descriptor for STREAM.  */
 extern int fileno __P ((FILE *__stream));
 #endif /* Use POSIX.  */
+
+#ifdef __USE_MISC
+/* Faster version when locking is not required.  */
+extern int fileno_unlocked __P ((FILE *__stream));
+#endif
 
 
 #if (defined __USE_POSIX2 || defined __USE_SVID || defined __USE_BSD || \
@@ -717,6 +806,35 @@ extern int obstack_vprintf __P ((struct obstack *__obstack,
 				 __gnuc_va_list __args));
 #endif
 
+
+#if defined __USE_POSIX || defined __USE_MISC
+/* These are defined in POSIX.1:1996.  */
+
+/* Acquire ownership of STREAM.  */
+extern void flockfile __P ((FILE *__stream));
+
+/* Try to acquire ownership of STREAM but do not block if it is not
+   possible.  */
+extern int ftrylockfile __P ((FILE *__stream));
+
+/* Relinquish the ownership granted for STREAM.  */
+extern void funlockfile __P ((FILE *__stream));
+#endif /* POSIX || misc */
+
+#if defined __USE_XOPEN && !defined __USE_GNU
+/* The X/Open standard requires some functions and variables to be
+   declared here which do not belong into this header.  But we have to
+   follow.  In GNU mode we don't do this nonsense.  */
+
+/* For more information on these symbols look in <getopt.h>.  */
+extern char *optarg;
+extern int optind;
+extern int opterr;
+extern int optopt;
+
+extern int getopt __P ((int __argc, char *__const *__argv,
+			__const char *__shortopts));
+#endif
 
 __END_DECLS
 

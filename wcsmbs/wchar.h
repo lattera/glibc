@@ -66,6 +66,12 @@ typedef struct
 # define WEOF (0xffffffffu)
 #endif
 
+/* For XPG4 compliance we have to define the stuff from <wctype.h> here
+   as well.  */
+#if defined __USE_XOPEN && !defined __USE_UNIX98
+# include <wctype.h>
+#endif
+
 /* This incomplete type is defined in <time.h> but needed here because
    of `wcsftime'.  */
 struct tm;
@@ -160,6 +166,13 @@ extern wchar_t *wcspbrk __P ((__const wchar_t *__wcs,
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 extern wchar_t *wcsstr __P ((__const wchar_t *__haystack,
 			     __const wchar_t *__needle));
+
+#if defined __USE_XOPEN && !defined __USE_UNIX98
+/* Another name for `wcsstr' from XPG4.  */
+extern wchar_t *wcswcs __P ((__const wchar_t *__haystack,
+			     __const wchar_t *__needle));
+#endif
+
 /* Divide WCS into tokens separated by characters in DELIM.  */
 extern wchar_t *wcstok __P ((wchar_t *__restrict __s,
 			     __const wchar_t *__restrict __delim,

@@ -198,7 +198,7 @@ typedef __ssize_t ssize_t;
 #define __need_NULL
 #include <stddef.h>
 
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
 /* The Single Unix specification says that some more types are
    available here.  */
 # ifndef gid_t
@@ -228,7 +228,9 @@ typedef __off64_t off64_t;
 typedef __pid_t pid_t;
 #  define pid_t pid_t
 # endif
+#endif	/* X/Open */
 
+#ifdef __USE_UNIX98
 # ifndef intptr_t
 typedef __intptr_t intptr_t;
 #  define intptr_t intptr_t
@@ -1055,7 +1057,7 @@ extern void swab __P ((__const __ptr_t __from, __ptr_t __to, ssize_t __n));
 
 /* The Single Unix specification, version 2, demands these prototypes
    to be here.  They are also found in <stdio.h>.  */
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN
 /* Return the name of the controlling terminal.  */
 extern char *ctermid __P ((char *__s));
 
@@ -1063,7 +1065,12 @@ extern char *ctermid __P ((char *__s));
    used and might go away some time.  */
 extern char *cuserid __P ((char *__s));
 
+/* Rename file OLD to NEW.  */
+extern int rename __P ((__const char *__old, __const char *__new));
+#endif
 
+
+#if defined __USE_POSIX199309 || defined __USE_UNIX98
 /* This function is only available if the system has POSIX threads.  */
 
 /* Install handlers to be called when a new process is created with FORK.

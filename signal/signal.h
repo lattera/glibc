@@ -32,7 +32,7 @@ __BEGIN_DECLS
 #include <bits/types.h>
 #include <bits/sigset.h>		/* __sigset_t, __sig_atomic_t.  */
 
-#if defined _SIGNAL_H && defined __USE_UNIX98 && !defined pid_t
+#if defined _SIGNAL_H && defined __USE_XOPEN && !defined pid_t
 typedef __pid_t pid_t;
 # define pid_t pid_t
 #endif	/* Unix98 */

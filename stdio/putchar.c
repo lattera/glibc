@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,3 +27,5 @@ putchar (int c)
 {
   return __putc (c, stdout);
 }
+
+weak_alias (putchar, putchar_unlocked)

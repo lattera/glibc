@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,3 +46,5 @@ fileno (stream)
 
   return (*stream->__io_funcs.__fileno) (stream->__cookie);
 }
+
+weak_alias(fileno, fileno_unlocked)

@@ -1,3 +1,73 @@
+1998-07-09 13:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/grp.h: Define gid_t also for __USE_XOPEN.
+	* io/fcntl.h: Include <sys/stat.h> also for __USE_XOPEN.
+	* io/utime.h: Define time_t also for __USE_XOPEN.
+	* io/sys/stat.h: Define time_t also for __USE_XOPEN.
+	Define *_t types except for pid_t also for __USE_XOPEN.
+	Define S_* macros also for __USE_XOPEN.
+	* locale/langinfo.h: Define CODESET, CRNCYSTR, RADIXCHAR, and
+	THOUSEP also for __USE_XOPEN.
+	* math/math.c: Define M_* macros also for __USE_XOPEN.
+	* math/bits/mathcalls.h: Declare hypot also for __USE_XOPEN.
+	* posix/fnmatch.h: Define FNM_NOSYS and for if _XOPEN_SOURCE is
+	defined.
+	* posix/glob.h: Likewise for GLOB_NOSYS.
+	* posix/regex.h: Likewise for REG_NOSYS.
+	* posix/wordexp.h: Likewise for WRDE_NOSYS.
+	* posix/unistd.h: Define *_t types also for __USE_XOPEN.
+	* posix/sys/wait.h: Define pid_t for __USE_XOPEN.
+	* pwd/pwd.h: Define gid_t and pid_t also for __USE_XOPEN.
+	* signal/signal.h: Define pid_t also fir __USE_XOPEN.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Define _RSYNC and O_DSYNC also
+	for __USE_POSIX199309.
+	* sysdeps/unix/sysv/linux/bits/termios.h: Define the various B*
+	constants also for __USE_XOPEN.
+	* wcsmbs/wchar.h: For XPG4 include wctype.h.
+
+	* intl/dcgettext.c (find_msg): Initialize act to prevent warning.
+	* locale/setlocale.c (new_composite_name): Likewise for last_len.
+
+	* libio/stdio.h: Don't declare fclose_unlocked.
+
+	* sysdeps/posix/fpathconf.c: Handle _PC_FILESIZEBITS.
+
+1998-07-08  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* stdio/stdio.h: Add prototypes for fflush_unlocked,
+	getc_unlocked, getchar_unlocked, putc_unlocked, putchar_unlocked,
+	fgets_unlocked, fread_unlocked, fwrite_unlocked,
+	clearerr_unlocked, feof_unlocked, ferror_unlocked,
+	fileno_unlocked, flockfile, ftrylockfile, funlockfile.
+	[__USE_XOPEN && !__USE_GNU] Declare optarg, optind, opterr.  Add
+	prototype for getopt.
+	* stdio/clearerr.c (clearerr_unlocked): Weak alias for clearerr.
+	* stdio/feof.c (feof_unlocked): Weak alias for feof.
+	* stdio/ferror.c (ferror_unlocked): Weak alias for ferror.
+	* stdio/fflush.c (fflush_unlocked): Weak alias for fflush.
+	* stdio/fgets.c (fgets_unlocked): Weak alias for fgets.
+	* stdio/fileno.c (fileno_unlocked): Weak alias for fileno.
+	* stdio/fputc.c (fputc_unlocked): Weak alias for fputc.
+	* stdio/fread.c (fread_unlocked): Weak alias for fread.
+	* stdio/fwrite.c (fwrite_unlocked): Weak alias for fwrite.
+	* stdio/getc.c (getchar_unlocked): Weak alias for getc.
+	* stdio/getchar.c (getchar_unlocked): Weak alias for getchar.
+	* stdio/putc.c (putc_unlocked): Weak alias for putc.
+	* stdio/putchar.c (putchar_unlocked): Weak alias for putchar.
+	* stdio/Versions [GLIBC_2.1]: Add clearerr_unlocked,
+	feof_unlocked, ferror_unlocked, fflush_unlocked, fgets_unlocked,
+	fileno_unlocked, fputc_unlocked, fread_unlocked, fwrite_unlocked,
+	getc_unlocked, getchar_unlocked, putc_unlocked and
+	putchar_unlocked.
+
+	* libio/Versions: Move flockfile, ftrylockfile and funlockfile
+	from here ...
+	* stdio-common/Versions: ... to here.
+
+1998-07-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makerules (versioning): Correct typo.
+
 1998-07-08 22:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Versions: Add _dl_mcount_wrapper_check.

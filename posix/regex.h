@@ -282,7 +282,7 @@ extern reg_syntax_t re_syntax_options;
    `re_error_msg' table in regex.c.  */
 typedef enum
 {
-#if (_XOPEN_SOURCE - 0) == 500
+#ifdef _XOPEN_SOURCE
   REG_ENOSYS = -1,	/* This will never happen for this implementation.  */
 #endif
 

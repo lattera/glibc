@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ extern "C" {
    `fnmatch'.  Since this is not the case here it will never be
    returned but the conformance test suites still require the symbol
    to be defined.  */
-#if (_XOPEN_SOURCE - 0) == 500
+#ifdef _XOPEN_SOURCE
 # define FNM_NOSYS	(-1)
 #endif
 
