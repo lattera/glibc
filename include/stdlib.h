@@ -40,7 +40,7 @@ extern int __drand48_iterate (unsigned short int __xsubi[3],
 
 extern int __setenv (__const char *__name, __const char *__value,
 		     int __replace);
-extern void __unsetenv (__const char *__name);
+extern int __unsetenv (__const char *__name);
 extern int __clearenv (void);
 extern char *__canonicalize_file_name (__const char *__name);
 extern char *__realpath (__const char *__name, char *__resolved);

@@ -6,6 +6,7 @@
 	(setenv, unsetenv): Make available for __USE_XOPEN2K.
 	Change return type of unsetenv to int.
 	(qecvt, qgcvt, qfcvt): Declare only if __USE_MISC.
+	* include/stdlib.h: Change return type of unsetenv to int.
 	* sysdeps/generic/setenv.c (unsetenv): Change return type to int.
 	Return -1 and set errno if parameter is invalid.
 	* stdlib/random.c (__random): Change return value type to long.
