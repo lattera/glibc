@@ -284,15 +284,15 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 
       if (type & SELECT_READ)
 	got++;
-      else
+      else if (readfds)
 	FD_CLR (i, readfds);
       if (type & SELECT_WRITE)
 	got++;
-      else
+      else if (writefds)
 	FD_CLR (i, writefds);
       if (type & SELECT_URG)
 	got++;
-      else
+      else if (exceptfds)
 	FD_CLR (i, exceptfds);
     }
 
