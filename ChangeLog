@@ -1,5 +1,8 @@
 2000-04-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-reloc.c (_dl_relocate_object): Add one more
+	__builtin_expect saying that we don't normally expect to profile.
+
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Add
 	__builtin_expect where desirable.
 
