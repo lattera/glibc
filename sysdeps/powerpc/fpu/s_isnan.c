@@ -20,12 +20,20 @@
 /* Ugly kludge to avoid declarations.  */
 #define __isnanf __Xisnanf
 #define isnanf Xisnanf
+#define __GI___isnanf __GI___Xisnanf
 
 #include "math.h"
 #include <fenv_libc.h>
 
 #undef __isnanf
 #undef isnanf
+#undef __GI___isnanf
+
+
+/* The hidden_proto in include/math.h was obscured by the macro hackery.  */
+__typeof (__isnan) __isnanf;
+hidden_proto (__isnanf)
+
 
 int
 __isnan (x)
@@ -41,6 +49,7 @@ __isnan (x)
 }
 hidden_def (__isnan)
 weak_alias (__isnan, isnan)
+
 
 /* It turns out that the 'double' version will also always work for
    single-precision.  */

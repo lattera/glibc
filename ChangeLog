@@ -1,5 +1,9 @@
 2002-09-10  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/powerpc/fpu/s_isnan.c: Do macro hackery on __GI___isnanf as
+	well so we don't get it declared by include/math.h's hidden_proto.
+	Then do hidden_proto for __isnanf locally so hidden_def works right.
+
 	* posix/bug-regex5.c (main): Use `union locale_data_value' rather than
 	a cast to turn nl_langinfo return value into an integer.
 
