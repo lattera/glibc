@@ -1,3 +1,8 @@
+2001-04-19  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdsig.c (write_corefile): Check RLIMIT_CORE limit and do
+	nothing if it's zero.
+
 2001-04-19  Matthew Wilcox  <willy@ldl.fc.hp.com>
 
 	* sysdeps/unix/sysv/linux/hppa/sysdep.h (INLINE_SYSCALL):
