@@ -1,5 +1,11 @@
 2000-09-05  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/powerpc/Subdirs: New file, adds soft-fp.
+
+	* sysdeps/sparc/sparc64/Implies: Add soft-fp.
+	* sysdeps/sparc/sparc32/Implies: Likewise.
+	* sysdeps/powerpc/Implies: Likewise.
+
 	* libio/oldiofsetpos64.c: Check for compatibility with glibc 2.1.
 	* libio/oldiofgetpos64.c: Likewise.
 

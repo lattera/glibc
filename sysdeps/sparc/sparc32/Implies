@@ -2,3 +2,4 @@ wordsize-32
 # SPARC uses IEEE 754 floating point.
 ieee754/flt-32
 ieee754/dbl-64
+sparc/sparc32/soft-fp
