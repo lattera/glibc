@@ -71,6 +71,7 @@ struct aixtermios
 #define AIX_VT0		0x00000000
 #define AIX_VT1		0x00008000
 
+#define AIX_CBAUD	0x0000000f
 #define AIX_CSIZE	0x00000030
 #define AIX_CS5		0x00000000
 #define AIX_CS6		0x00000010
