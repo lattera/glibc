@@ -1,9 +1,13 @@
+1998-01-24 11:34  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* nis/nislib/nislib.h: Removed.
+
 1998-01-22 00:55  Ulrich Drepper  <drepper@happy.cygnus.com>
 
 	* libc.map: Add __libc_uid, __libc_pid, __syscall_rt_sigqueueinfo,
 	__pread64, __pwrite64, and __getpid.
 
-	* libc/rt/aio_misc.c: Use pread and pwrite instead of __ protected
+	* rt/aio_misc.c: Use pread and pwrite instead of __ protected
 	versions.
 
 1998-01-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
