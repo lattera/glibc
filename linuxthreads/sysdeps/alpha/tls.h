@@ -114,10 +114,12 @@ typedef struct
    the compiler does its job and unifies the multiple
    __builtin_thread_pointer instances.  */
 
-#define THREAD_GETMEM(descr, member) THREAD_SELF->member
-#define THREAD_GETMEM_NC(descr, member) THREAD_SELF->member
-#define THREAD_SETMEM(descr, member, value) (THREAD_SELF->member = (value))
-#define THREAD_SETMEM_NC(descr, member, value) (THREAD_SELF->member = (value))
+#define THREAD_GETMEM(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_SETMEM(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
+#define THREAD_SETMEM_NC(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
 
 # endif	/* HAVE_TLS_SUPPORT */
 #endif /* __ASSEMBLER__ */

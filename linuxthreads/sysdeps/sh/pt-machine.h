@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    SuperH version.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Niibe Yutaka <gniibe@m17n.org>.
 
@@ -68,10 +68,12 @@ struct _pthread_descr_struct;
   ({ __asm__ __volatile__("ldc %0,gbr" : : "r" (descr));})
 
 /* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) THREAD_SELF->member
-#define THREAD_GETMEM_NC(descr, member) THREAD_SELF->member
-#define THREAD_SETMEM(descr, member, value) THREAD_SELF->member = (value)
-#define THREAD_SETMEM_NC(descr, member, value) THREAD_SELF->member = (value)
+#define THREAD_GETMEM(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_SETMEM(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
+#define THREAD_SETMEM_NC(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
 #endif /* __ASSEMBLER__ */
 
 #endif /* pt-machine.h */

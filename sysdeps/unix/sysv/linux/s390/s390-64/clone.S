@@ -43,10 +43,10 @@ ENTRY(__clone)
 	lg	%r5,168(%r15)		/* load child_tid from stack */
 	l	%r6,160(%r15)		/* load tls from stack */
 	svc	SYS_ify(clone)
-	lg	%r6,48(%r15)		/* restore %r6 */
 	ltgr	%r2,%r2			/* check return code */
-	jgm	SYSCALL_ERROR_LABEL
 	jz	thread_start
+	lg	%r6,48(%r15)		/* restore %r6 */
+	jgm	SYSCALL_ERROR_LABEL
 	br	%r14
 error:
 	lghi	%r2,-EINVAL

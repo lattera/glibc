@@ -87,10 +87,12 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 
 /* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) __thread_self->member
-#define THREAD_GETMEM_NC(descr, member) __thread_self->member
-#define THREAD_SETMEM(descr, member, value) __thread_self->member = (value)
-#define THREAD_SETMEM_NC(descr, member, value) __thread_self->member = (value)
+#define THREAD_GETMEM(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_SETMEM(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
+#define THREAD_SETMEM_NC(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
 
 /* We want the OS to assign stack addresses.  */
 #define FLOATING_STACKS 1

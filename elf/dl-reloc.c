@@ -39,9 +39,9 @@
 /* We are trying to perform a static TLS relocation in MAP, but it was
    dynamically loaded.  This can only work if there is enough surplus in
    the static TLS area already allocated for each running thread.  If this
-   object's TLS segment is too big to fit, we return false.  If it fits,
-   we set MAP->l_tls_offset and return true.  */
-static bool
+   object's TLS segment is too big to fit, we fail.  If it fits,
+   we set MAP->l_tls_offset and return.  */
+static void __attribute_noinline__
 allocate_static_tls (struct link_map *map)
 {
   size_t offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
@@ -54,10 +54,13 @@ allocate_static_tls (struct link_map *map)
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
       > GL(dl_tls_static_size))
-    return false;
+    {
+      const char *errstring = N_("\
+shared object cannot be dlopen()ed: static TLS memory too small");
+      INTUSE(_dl_signal_error) (0, (map)->l_name, NULL, errstring);
+    }
   map->l_tls_offset = offset;
   GL(dl_tls_static_used) = offset + map->l_tls_blocksize;
-  return true;
 }
 #endif
 
@@ -197,13 +200,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
        intended to produce.  */
 #define CHECK_STATIC_TLS(map, sym_map)					      \
     do {								      \
-      if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0)		      \
-	  && !allocate_static_tls (sym_map))				      \
-	{								      \
-	  errstring = N_("\
-shared object cannot be dlopen()ed: static TLS memory too small");	      \
-	  INTUSE(_dl_signal_error) (0, (map)->l_name, NULL, errstring);	      \
-	}								      \
+      if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0))		      \
+	allocate_static_tls (sym_map);					      \
     } while (0)
 
 #include "dynamic-link.h"
@@ -256,7 +254,7 @@ INTDEF (_dl_relocate_object)
 
 
 void
-internal_function
+internal_function __attribute_noinline__
 _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
 {
   extern const char INTUSE(_itoa_lower_digits)[] attribute_hidden;

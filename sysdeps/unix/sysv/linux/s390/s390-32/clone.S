@@ -42,10 +42,10 @@ ENTRY(__clone)
 	l	%r5,100(%r15)		/* load child_tid from stack */
 	l	%r6,96(%r15)		/* load tls from stack */
 	svc	SYS_ify(clone)
-	l	%r6,24(%r15)		/* restore %r6 */
 	ltr	%r2,%r2			/* check return code */
-	jm	SYSCALL_ERROR_LABEL
 	jz	thread_start
+	l	%r6,24(%r15)		/* restore %r6 */
+	jm	SYSCALL_ERROR_LABEL
 	br	%r14
 error:
 	lhi	%r2,-EINVAL

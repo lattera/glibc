@@ -80,10 +80,12 @@ register char * stack_pointer __asm__ ("15");
 #endif
 
 /* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) THREAD_SELF->member
-#define THREAD_GETMEM_NC(descr, member) THREAD_SELF->member
-#define THREAD_SETMEM(descr, member, value) THREAD_SELF->member = (value)
-#define THREAD_SETMEM_NC(descr, member, value) THREAD_SELF->member = (value)
+#define THREAD_GETMEM(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_SETMEM(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
+#define THREAD_SETMEM_NC(descr, member, value) \
+  (sizeof (descr), THREAD_SELF->member = (value))
 
 /* We want the OS to assign stack addresses.  */
 #define FLOATING_STACKS 1
