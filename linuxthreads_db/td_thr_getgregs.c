@@ -1,5 +1,5 @@
 /* Get a thread's general register set.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -35,7 +35,7 @@ td_thr_getgregs (const td_thrhandle_t *th, prgregset_t gregs)
 
   /* If the thread already terminated we return all zeroes.  */
   if (pds.p_terminated)
-    memset (gregs, '\0', sizeof (gregs));
+    memset (gregs, '\0', sizeof (prgrepset_t));
   /* Otherwise get the register content through the callback.  */
   else if (ps_lgetregs (th->th_ta_p->ph, pds.p_pid, gregs) != PS_OK)
     return TD_ERR;

@@ -1,3 +1,7 @@
+2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* td_thr_getgregs.c: Correct size parameter of memset call.
+
 1999-12-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* proc_service.h: Fix typos in last added declaractions.

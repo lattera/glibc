@@ -1,5 +1,8 @@
 2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/ieee754/ldbl-96/s_modfl.c: Correct handling of arguments
+	with exponent >31 and < 63 (PR libc/1548).
+
 	* locale/programs/ld-collate.c (output_weightwc): Return index
 	measured in words, not bytes.  Don't write out words for ignored
 	characters.
