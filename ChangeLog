@@ -1,3 +1,8 @@
+2005-02-08  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Remove use of
+	RESOLVE.
+
 2005-02-07  Richard Henderson  <rth@redhat.com>
 
 	* iconvdata/jis0208.h (struct jisx0208_ucs_idx): Move before use.
