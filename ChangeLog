@@ -1,5 +1,9 @@
 1999-11-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-ctype.c (allocate_arrays): Complete last
+	patch.  Use wch instead of idx to compute index.
+	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 	* inet/rcmd.c (ruserok): Use iruserok2 not iruserok.
 
 	* locale/iso-3166.def: Update from latest official list.

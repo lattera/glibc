@@ -3108,10 +3108,10 @@ Computing table size for character classes might take a while..."),
 	      if (wch != ILLEGAL_CHAR_VALUE)
 		{
 		  /* Store the value.  */
-		  size_t nr = idx % ctype->plane_size;
+		  size_t nr = wch % ctype->plane_size;
 		  size_t depth = 0;
 
-		  while (ctype->names[nr + depth * ctype->plane_size] != nr)
+		  while (ctype->names[nr + depth * ctype->plane_size] != wch)
 		    ++depth;
 		  assert (depth < ctype->plane_cnt);
 
