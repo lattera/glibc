@@ -227,10 +227,8 @@ struct cmsghdr
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
-#if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2
-    __extension__ unsigned char __cmsg_data[0]; /* Ancillary data.  */
+    __extension__ unsigned char __flexarr; /* Ancillary data.  */
     /* XXX Perhaps this should be removed.  */
-#endif
   };
 
 /* Ancillary data object manipulation macros.  */
