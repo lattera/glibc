@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1559,7 +1559,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	fd = open_path (name, namelen, preloaded, &env_path_list,
 			&realname, &fb);
 
-      /* Look at the RUNPATH informaiton for this binary.  */
+      /* Look at the RUNPATH information for this binary.  */
       if (loader != NULL && loader->l_runpath_dirs.dirs != (void *) -1)
 	{
 	  if (loader->l_runpath_dirs.dirs == NULL)
@@ -1585,7 +1585,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 			    &loader->l_runpath_dirs, &realname, &fb);
 	}
 
-      if (fd == -1)
+      if (fd == -1 && (! preloaded || ! __libc_enable_secure))
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */

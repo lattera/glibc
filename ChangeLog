@@ -1,5 +1,8 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object): Don't look in cache for
+	preloading in SUID binaries.
+
 	* elf/dl-profile.c (_dl_start_profile): Open the output file with
 	O_NOFOLLOW if possible.
 
