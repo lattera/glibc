@@ -49,8 +49,8 @@ NESTED(__clone,4*SZREG,sp)
 
 	/* Sanity check arguments.  */
 	li		v0,EINVAL
-	beqz		a0,error	/* No NULL function pointers.  */
-	beqz		a1,error	/* No NULL stack pointers.  */
+	beqz		a0,L(error)	/* No NULL function pointers.  */
+	beqz		a1,L(error)	/* No NULL stack pointers.  */
 
 	subu		a1,32		/* Reserve argument save space.  */
 	sw		a0,0(a1)	/* Save function pointer.  */
@@ -62,15 +62,15 @@ NESTED(__clone,4*SZREG,sp)
 	li		v0,__NR_clone
 	syscall
 
-	bnez		a3,error
-	beqz		v0,.Lthread_start
+	bnez		a3,L(error)
+	beqz		v0,L(thread_start)
 
 	/* Successful return from the parent */
 	addiu		sp,32
 	ret
 
 	/* Something bad happened -- no child created */
-error:
+L(error):
 	addiu		sp,32
 #ifdef __PIC__
 	la		t9,__syscall_error
@@ -84,7 +84,7 @@ error:
    its own function so that we can terminate the stack trace with our
    debug info.  */
 
-.Lthread_start:
+L(thread_start):
 	/* cp is already loaded.  */
 	.cprestore	16
 	/* The stackframe has been created on entry of clone().  */

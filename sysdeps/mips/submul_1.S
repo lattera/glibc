@@ -1,7 +1,7 @@
 /* MIPS __mpn_submul_1 -- Multiply a limb vector with a single limb and
 subtract the product from a second limb vector.
 
-Copyright (C) 1995, 2000 Free Software Foundation, Inc.
+Copyright (C) 1995, 2000, 2002, 2003 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -46,14 +46,14 @@ ENTRY (__mpn_submul_1)
 	multu	$8,$7
 
 	addiu	$6,$6,-1
-	beq	$6,$0,$LC0
+	beq	$6,$0,L(LC0)
 	move	$2,$0		/* zero cy2 */
 
 	addiu	$6,$6,-1
-	beq	$6,$0,$LC1
+	beq	$6,$0,L(LC1)
 	lw	$8,0($5)	/* load new s1 limb as early as possible */
 
-Loop:	lw	$10,0($4)
+L(Loop):	lw	$10,0($4)
 	mflo	$3
 	mfhi	$9
 	addiu	$5,$5,4
@@ -67,11 +67,11 @@ Loop:	lw	$10,0($4)
 	addu	$2,$2,$10
 	sw	$3,0($4)
 	addiu	$4,$4,4
-	bne	$6,$0,Loop	/* should be "bnel" */
+	bne	$6,$0,L(Loop)	/* should be "bnel" */
 	addu	$2,$9,$2	/* add high product limb and carry from addition */
 
 	/* cool down phase 1 */
-$LC1:	lw	$10,0($4)
+L(LC1):	lw	$10,0($4)
 	mflo	$3
 	mfhi	$9
 	addu	$3,$3,$2
@@ -85,7 +85,7 @@ $LC1:	lw	$10,0($4)
 	addu	$2,$9,$2	/* add high product limb and carry from addition */
 
 	/* cool down phase 0 */
-$LC0:	lw	$10,0($4)
+L(LC0):	lw	$10,0($4)
 	mflo	$3
 	mfhi	$9
 	addu	$3,$3,$2

@@ -1,7 +1,7 @@
 /* MIPS3 __mpn_add_n -- Add two limb vectors of the same length > 0 and
  * store sum in a third limb vector.
  *
- * Copyright (C) 1995, 2000 Free Software Foundation, Inc.
+ * Copyright (C) 1995, 2000, 2002, 2003 Free Software Foundation, Inc.
  *
  * This file is part of the GNU MP Library.
  *
@@ -22,6 +22,7 @@
  */
 
 #include <sysdep.h>
+#include <sys/asm.h>
 
 /*
  * INPUT PARAMETERS
@@ -38,10 +39,10 @@
 	.globl	__mpn_add_n
 	.ent	__mpn_add_n
 __mpn_add_n:
-	.set	noreorder
 #ifdef __PIC__
-	.cpload t9
+	SETUP_GP /* ??? unused */
 #endif
+	.set	noreorder
 	.set	nomacro
 
 	ld	$10,0($5)
@@ -49,12 +50,12 @@ __mpn_add_n:
 
 	daddiu	$7,$7,-1
 	and	$9,$7,4-1	# number of limbs in first loop
-	beq	$9,$0,.L0	# if multiple of 4 limbs, skip first loop
-	 move	$2,$0
+	beq	$9,$0,L(L0)	# if multiple of 4 limbs, skip first loop
+	move	$2,$0
 
 	dsubu	$7,$7,$9
 
-.Loop0:	daddiu	$9,$9,-1
+L(Loop0):	daddiu	$9,$9,-1
 	ld	$12,8($5)
 	daddu	$11,$11,$2
 	ld	$13,8($6)
@@ -68,13 +69,13 @@ __mpn_add_n:
 	daddiu	$6,$6,8
 	move	$10,$12
 	move	$11,$13
-	bne	$9,$0,.Loop0
-	 daddiu	$4,$4,8
+	bne	$9,$0,L(Loop0)
+	daddiu	$4,$4,8
 
-.L0:	beq	$7,$0,.Lend
-	 nop
+L(L0):	beq	$7,$0,L(Lend)
+	nop
 
-.Loop:	daddiu	$7,$7,-4
+L(Loop):	daddiu	$7,$7,-4
 
 	ld	$12,8($5)
 	daddu	$11,$11,$2
@@ -115,10 +116,10 @@ __mpn_add_n:
 	daddiu	$5,$5,32
 	daddiu	$6,$6,32
 
-	bne	$7,$0,.Loop
-	 daddiu	$4,$4,32
+	bne	$7,$0,L(Loop)
+	daddiu	$4,$4,32
 
-.Lend:	daddu	$11,$11,$2
+L(Lend):	daddu	$11,$11,$2
 	sltu	$8,$11,$2
 	daddu	$11,$10,$11
 	sltu	$2,$11,$10

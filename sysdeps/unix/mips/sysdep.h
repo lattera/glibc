@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,95,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 1999, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -33,7 +34,7 @@
    can make things confusing if you're debugging---it looks like it's jumping
    backwards into the previous fn.  */
 #ifdef __PIC__
- #define PSEUDO(name, syscall_name, args) \
+#define PSEUDO(name, syscall_name, args) \
   .align 2;								      \
   99: la t9,__syscall_error;						      \
   jr t9;								      \
@@ -44,7 +45,7 @@
   syscall;								      \
   .set reorder;								      \
   bne a3, zero, 99b;							      \
-syse1:
+L(syse1):
 #else
 #define PSEUDO(name, syscall_name, args) \
   .set noreorder;							      \
@@ -57,7 +58,7 @@ syse1:
   syscall;								      \
   .set reorder;								      \
   bne a3, zero, 99b;							      \
-syse1:
+L(syse1):
 #endif
 
 #undef PSEUDO_END
@@ -66,11 +67,19 @@ syse1:
 #define ret	j ra ; nop
 
 #undef END
-#define END(sym)        .end sym
+#define	END(function)                                   \
+		.end	function;		        \
+		.size	function,.-function
 
 #define r0	v0
 #define r1	v1
 /* The mips move insn is d,s.  */
 #define MOVE(x,y)	move y , x
+
+#if _MIPS_SIM == _MIPS_SIM_ABI32 || _MIPS_SIM == _MIPS_SIM_ABIO64
+# define L(label) $L ## label
+#else
+# define L(label) .L ## label
+#endif
 
 #endif

@@ -1,6 +1,6 @@
 /* MIPS2 __mpn_lshift --
 
-Copyright (C) 1995, 2000 Free Software Foundation, Inc.
+Copyright (C) 1995, 2000, 2002, 2003 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -44,12 +44,12 @@ ENTRY (__mpn_lshift)
 	addu	$4,$4,$2	/* make r4 point at end of res */
 	addiu	$6,$6,-1
 	and	$9,$6,4-1	/* number of limbs in first loop */
-	beq	$9,$0,.L0	/* if multiple of 4 limbs, skip first loop */
-	 srl	$2,$10,$13	/* compute function result */
+	beq	$9,$0,L(L0)	/* if multiple of 4 limbs, skip first loop */
+	srl	$2,$10,$13	/* compute function result */
 
 	subu	$6,$6,$9
 
-.Loop0:	lw	$3,-8($5)
+L(Loop0):	lw	$3,-8($5)
 	addiu	$4,$4,-4
 	addiu	$5,$5,-4
 	addiu	$9,$9,-1
@@ -57,13 +57,13 @@ ENTRY (__mpn_lshift)
 	srl	$12,$3,$13
 	move	$10,$3
 	or	$8,$11,$12
-	bne	$9,$0,.Loop0
-	 sw	$8,0($4)
+	bne	$9,$0,L(Loop0)
+	sw	$8,0($4)
 
-.L0:	beq	$6,$0,.Lend
-	 nop
+L(L0):	beq	$6,$0,L(Lend)
+	nop
 
-.Loop:	lw	$3,-8($5)
+L(Loop):	lw	$3,-8($5)
 	addiu	$4,$4,-16
 	addiu	$6,$6,-4
 	sll	$11,$10,$7
@@ -89,10 +89,10 @@ ENTRY (__mpn_lshift)
 
 	addiu	$5,$5,-16
 	or	$8,$14,$9
-	bgtz	$6,.Loop
-	 sw	$8,0($4)
+	bgtz	$6,L(Loop)
+	sw	$8,0($4)
 
-.Lend:	sll	$8,$10,$7
+L(Lend):	sll	$8,$10,$7
 	j	$31
 	sw	$8,-4($4)
 	END (__mpn_lshift)

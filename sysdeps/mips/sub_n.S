@@ -1,7 +1,7 @@
 /* MIPS2 __mpn_sub_n -- Subtract two limb vectors of the same length > 0 and
 store difference in a third limb vector.
 
-Copyright (C) 1995, 2000 Free Software Foundation, Inc.
+Copyright (C) 1995, 2000, 2002, 2003 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -43,12 +43,12 @@ ENTRY (__mpn_sub_n)
 
 	addiu	$7,$7,-1
 	and	$9,$7,4-1	/* number of limbs in first loop */
-	beq	$9,$0,.L0	/* if multiple of 4 limbs, skip first loop */
-	 move	$2,$0
+	beq	$9,$0,L(L0)	/* if multiple of 4 limbs, skip first loop */
+	move	$2,$0
 
 	subu	$7,$7,$9
 
-.Loop0:	addiu	$9,$9,-1
+L(Loop0):	addiu	$9,$9,-1
 	lw	$12,4($5)
 	addu	$11,$11,$2
 	lw	$13,4($6)
@@ -62,13 +62,13 @@ ENTRY (__mpn_sub_n)
 	addiu	$6,$6,4
 	move	$10,$12
 	move	$11,$13
-	bne	$9,$0,.Loop0
-	 addiu	$4,$4,4
+	bne	$9,$0,L(Loop0)
+	addiu	$4,$4,4
 
-.L0:	beq	$7,$0,.Lend
-	 nop
+L(L0):	beq	$7,$0,L(Lend)
+	nop
 
-.Loop:	addiu	$7,$7,-4
+L(Loop):	addiu	$7,$7,-4
 
 	lw	$12,4($5)
 	addu	$11,$11,$2
@@ -109,10 +109,10 @@ ENTRY (__mpn_sub_n)
 	addiu	$5,$5,16
 	addiu	$6,$6,16
 
-	bne	$7,$0,.Loop
-	 addiu	$4,$4,16
+	bne	$7,$0,L(Loop)
+	addiu	$4,$4,16
 
-.Lend:	addu	$11,$11,$2
+L(Lend):	addu	$11,$11,$2
 	sltu	$8,$11,$2
 	subu	$11,$10,$11
 	sltu	$2,$10,$11
