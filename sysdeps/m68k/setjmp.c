@@ -58,3 +58,6 @@ __sigsetjmp (jmp_buf env, int savemask)
   /* Save the signal mask if requested.  */
   return __sigjmp_save (env, savemask);
 }
+#if !defined BSD_SETJMP && !defined BSD__SETJMP
+hidden_def (__sigsetjmp)
+#endif
