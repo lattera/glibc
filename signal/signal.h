@@ -180,6 +180,10 @@ typedef __sighandler_t sig_t;
 #ifdef __USE_POSIX
 
 # ifdef __USE_POSIX199309
+/* We need `struct timespec' later on.  */
+#  define __need_timespec
+#  include <time.h>
+
 /* Get the `siginfo_t' type plus the needed symbols.  */
 #  include <bits/siginfo.h>
 # endif
@@ -238,9 +242,6 @@ extern int sigpending __P ((sigset_t *__set));
 extern int sigwait __P ((__const sigset_t *__set, int *__sig));
 
 # ifdef __USE_POSIX199309
-/* This type actually is defined in <time.h>.  */
-struct timespec;
-
 /* Select any of pending signals from SET and place information in INFO.  */
 extern int sigwaitinfo __P ((__const sigset_t *__set, siginfo_t *__info));
 
