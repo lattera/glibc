@@ -1,3 +1,8 @@
+2000-06-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/ksc5601.h (ksc5601_to_ucs4): Undo *s in all cases of
+	an error.
+
 2000-06-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_dl.c (do_release_shlib): Don't reset reference
