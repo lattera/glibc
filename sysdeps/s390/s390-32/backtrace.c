@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -61,6 +61,7 @@ struct trace_arg
   int cnt, size;
 };
 
+#ifdef SHARED
 static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
 static _Unwind_Ptr (*unwind_getip) (struct _Unwind_Context *);
 
@@ -77,6 +78,10 @@ init (void)
   if (unwind_getip == NULL)
     unwind_backtrace = NULL;
 }
+#else
+# define unwind_backtrace _Unwind_Backtrace
+# define unwind_getip _Unwind_GetIP
+#endif
 
 static int
 __backchain_backtrace (void **array, int size)
@@ -122,9 +127,11 @@ int
 __backtrace (void **array, int size)
 {
   struct trace_arg arg = { .array = array, .size = size, .cnt = -1 };
+#ifdef SHARED
   __libc_once_define (static, once);
 
   __libc_once (once, init);
+#endif
   if (unwind_backtrace == NULL)
     return __backchain_backtrace (array, size);
 

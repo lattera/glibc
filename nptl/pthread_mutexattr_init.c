@@ -28,7 +28,7 @@ __pthread_mutexattr_init (attr)
   if (sizeof (struct pthread_mutexattr) != sizeof (pthread_mutexattr_t))
     memset (attr, '\0', sizeof (*attr));
 
-  /* We use bit 31 to single whether the mutex is going to be
+  /* We use bit 31 to signal whether the mutex is going to be
      process-shared or not.  By default it is zero, i.e., the mutex is
      not process-shared.  */
   ((struct pthread_mutexattr *) attr)->mutexkind = PTHREAD_MUTEX_NORMAL;

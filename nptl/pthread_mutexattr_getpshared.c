@@ -29,7 +29,7 @@ pthread_mutexattr_getpshared (attr, pshared)
 
   iattr = (const struct pthread_mutexattr *) attr;
 
-  /* We use bit 31 to single whether the mutex is going to be
+  /* We use bit 31 to signal whether the mutex is going to be
      process-shared or not.  */
   *pshared = ((iattr->mutexkind & 0x80000000) != 0
 	      ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);

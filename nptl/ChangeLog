@@ -1,3 +1,13 @@
+2004-06-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_mutexattr_getpshared.c (pthread_mutex_getpshared): Fix
+	comment typo.
+	* pthread_mutexattr_gettype.c (pthread_mutexattr_gettype): Likewise.
+	* pthread_mutexattr_init.c (__pthread_mutexattr_init): Likewise.
+	* pthread_mutexattr_settype.c (__pthread_mutexattr_settype): Likewise.
+	* pthread_mutexattr_setpshared.c (pthread_mutexattr_setpshared):
+	Likewise.  Reported by Bob Cook <bobcook47@hotmail.com>.
+
 2004-06-11  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (lll_compare_and_swap):

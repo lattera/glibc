@@ -1,3 +1,15 @@
+2004-06-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/s390/s390-32/backtrace.c (init): Guard with #ifdef SHARED.
+	(unwind_backtrace, unwind_getip): Define #ifndef SHARED.
+	(__backtrace): Don't call init #ifndef SHARED.
+	* sysdeps/s390/s390-64/backtrace.c (init): Guard with #ifdef SHARED.
+	(unwind_backtrace, unwind_getip): Define #ifndef SHARED.
+	(__backtrace): Don't call init #ifndef SHARED.
+	* sysdeps/ia64/backtrace.c (init): Guard with #ifdef SHARED.
+	(unwind_backtrace, unwind_getip): Define #ifndef SHARED.
+	(__backtrace): Don't call init #ifndef SHARED.
+
 2004-06-11  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/arm/strlen.S [__ARMEB__]: Compute correctly for big-endian.
