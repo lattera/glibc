@@ -21,6 +21,7 @@ error.  Instead, the error condition is indicated by returning the old
 break value (instead of the new, requested one).  */
 
 #include <sysdep.h>
+#define _ERRNO_H
 #include <errnos.h>
 
 #ifdef PIC

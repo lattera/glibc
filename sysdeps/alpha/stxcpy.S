@@ -36,7 +36,7 @@ Cambridge, MA 02139, USA.  */
    Furthermore, v0, a3-a5, t11, and t12 are untouched.
 */
 
-/* This is generally scheduled for the EV5, but should still be pretty 
+/* This is generally scheduled for the EV5, but should still be pretty
    good for the EV4 too.  */
 
 #include <sysdep.h>
@@ -65,7 +65,7 @@ stxcpy_aligned:
 	lda	t2, -1		# e1    : build a mask against false zero
 	mskqh	t2, a1, t2	# e0    :   detection in the src word
 	mskqh	t1, a1, t3	# e0    :
-	ornot	t1, t2, t2	# .. e1 : 
+	ornot	t1, t2, t2	# .. e1 :
 	mskql	t0, a1, t0	# e0    : assemble the first output word
 	cmpbge	zero, t2, t7	# .. e1 : bits set iff null found
 	or	t0, t3, t1	# e0    :
@@ -99,9 +99,9 @@ $a_eos:
 	/* We're doing a partial word store and so need to combine
 	   our source and original destination words.  */
 	ldq_u	t0, 0(a0)	# e0    :
-	subq	t8, 1, t6	# .. e1 : 
+	subq	t8, 1, t6	# .. e1 :
 	zapnot	t1, t6, t1	# e0    : clear src bytes >= null
-	or	t8, t6, t7	# .. e1 : 
+	or	t8, t6, t7	# .. e1 :
 	zap	t0, t7, t0	# e0    : clear dst bytes <= null
 	or	t0, t1, t1	# e1    :
 
@@ -156,13 +156,13 @@ $u_head:
 	or	t1, t4, t1	# .. e1 :
 	mskqh	t1, a0, t1	# e0    :
 	or	t0, t1, t1	# e1    :
-	
+
 	or	t1, t6, t6	# e0    :
 	cmpbge	zero, t6, t7	# .. e1 :
 	lda	t6, -1		# e0    : for masking just below
 	bne	t7, $u_final	# .. e1 :
 
-	mskql	t6, a1, t6		# e0    : mask out the bits we have 
+	mskql	t6, a1, t6		# e0    : mask out the bits we have
 	or	t6, t2, t2		# e1    :   already extracted before
 	cmpbge	zero, t2, t7		# e0    :   testing eos
 	bne	t7, $u_late_head_exit	# .. e1 (zdb)
@@ -181,7 +181,7 @@ $u_head:
 
 	/* Unaligned copy main loop.  In order to avoid reading too much,
 	   the loop is structured to detect zeros in aligned source words.
-	   This has, unfortunately, effectively pulled half of a loop 
+	   This has, unfortunately, effectively pulled half of a loop
 	   iteration out into the head and half into the tail, but it does
 	   prevent nastiness from accumulating in the very thing we want
 	   to run as fast as possible.
@@ -207,7 +207,7 @@ $u_loop:
 
 	/* We've found a zero somewhere in the source word we just read.
 	   If it resides in the lower half, we have one (probably partial)
-	   word to write out, and if it resides in the upper half, we 
+	   word to write out, and if it resides in the upper half, we
 	   have one full and one partial word left to write out.
 
 	   On entry to this basic block:
@@ -234,7 +234,7 @@ $u_final:
 	negq	t7, t6		# e0    : isolate low bit set
 	and	t6, t7, t8	# e1    :
 
-	and	t8, 0x80, t6	# e0    : avoid dest word load if we can 
+	and	t8, 0x80, t6	# e0    : avoid dest word load if we can
 	bne	t6, 1f		# .. e1 (zdb)
 
 	ldq_u	t0, 0(a0)	# e0    :
@@ -256,7 +256,7 @@ $unaligned:
 	and	a0, 7, t4	# .. e1 : find dest misalignment
 	and	a1, 7, t5	# e0    : find src misalignment
 
-	/* Conditionally load the first destination word and a bytemask 
+	/* Conditionally load the first destination word and a bytemask
 	   with 0xff indicating that the destination byte is sacrosanct.  */
 
 	mov	zero, t0	# .. e1 :
@@ -290,18 +290,19 @@ $unaligned:
 
 	negq	t7, t6		# .. e1 : build bitmask of bytes <= zero
 	and	t6, t7, t8	# e0    :
-	nop			# .. e1 :
+	and	a1, 7, t5	# .. e1 :
 	subq	t8, 1, t6	# e0    :
 	or	t6, t8, t7	# e1    :
+	srl	t8, t5, t8	# e0    : adjust final null return value
 
-	zapnot	t2, t7, t2	# e0    : prepare source word; mirror changes
+	zapnot	t2, t7, t2	# .. e1 : prepare source word; mirror changes
 	and	t1, t2, t1	# e1    : to source validity mask
-	extql	t2, a1, t2	# e0    :
+	extql	t2, a1, t2	# .. e0 :
 	extql	t1, a1, t1	# e0    :
 
-	andnot	t0, t2, t0	# e0    : zero place for source to reside
+ 	andnot	t0, t2, t0	# .. e1 : zero place for source to reside
 	or	t0, t1, t1	# e1    : and put it there
-	stq_u	t1, 0(a0)	# e0    :
-	ret	(t9)		# .. e1 :
+	stq_u	t1, 0(a0)	# .. e0 :
+	ret	(t9)
 
 	.end __stxcpy
