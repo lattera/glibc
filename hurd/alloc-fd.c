@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -89,17 +89,20 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	  /* Enlarge the table.  */
 	  int save = errno;
 	  struct hurd_fd **new;
-	  /* Try to double the table size (but don't exceed the limit).
-	     If there isn't any at all, give it three slots (because
-	     stdio will take that many anyway).  */
-	  int size = _hurd_dtablesize ? _hurd_dtablesize * 2 : 3;
+	  /* Try to double the table size, but don't exceed the limit,
+	     and make sure it exceeds FIRST_FD.  */
+	  int size = _hurd_dtablesize * 2;
 	  if (size > rlimit)
 	    size = rlimit;
+	  else if (size <= first_fd)
+	    size = first_fd + 1;
+
 	  /* If we fail to allocate that, decrement the desired size
 	     until we succeed in allocating it.  */
 	  do
 	    new = realloc (_hurd_dtable, size * sizeof (*_hurd_dtable));
-	  while (new == NULL && size-- > _hurd_dtablesize);
+	  while (new == NULL && size-- > first_fd);
+
 	  if (new != NULL)
 	    {
 	      /* We managed to allocate a new table.  Now install it.  */
