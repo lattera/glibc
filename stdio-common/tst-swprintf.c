@@ -31,14 +31,14 @@ main (void)
   if (n != nexp)							      \
     {									      \
       printf ("swprintf (.., .., L\"%ls\", \"%ls\") return %d, not %d\n",     \
-	      fmt, input, (int) n, (int) nexp);				      \
+	      fmt, (wchar_t*) input, (int) n, (int) nexp);		      \
       result = 1;							      \
     }									      \
   else if (wcscmp (buf, exp) != 0)					      \
     {									      \
       printf ("\
 swprintf (.., .., L\"%ls\", \"%ls\") produced \"%ls\", not \"%ls\"\n",	      \
-	     fmt, input, buf, exp );					      \
+	     fmt, (wchar_t *) input, buf, exp );			      \
       result = 1;							      \
     }
 

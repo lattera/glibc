@@ -51,11 +51,14 @@
 
 #if USE_TLS && HAVE___THREAD
 # define __libc_tsd_define(CLASS, KEY)	CLASS __thread void *__libc_tsd_##KEY;
-#else
-# define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY;
-#endif
 
-#define __libc_tsd_get(KEY)		(__libc_tsd_##KEY)
-#define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
+# define __libc_tsd_get(KEY)		(__libc_tsd_##KEY)
+# define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
+#else
+# define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY##_data;
+
+# define __libc_tsd_get(KEY)		(__libc_tsd_##KEY##_data)
+# define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY##_data = (VALUE))
+#endif
 
 #endif	/* bits/libc-tsd.h */

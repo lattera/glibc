@@ -1,3 +1,15 @@
+2002-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/Makefile (tests): Add bug-fopena+.
+	* libio/bug-fopena+.c: New file.
+
+	* stdio-common/tst-swprintf.c (main): Add casts to avoid warnings.
+
+	* locale/xlocale.c: Fix the last change.  The variable still has
+	to end in _data.
+	* sysdeps/generic/bits/libc-tsd.h [!(USE_TLS && HAVE___THREAD)]
+	(__libc_tsd_set): Add _data prefix to variable name.
+
 2002-08-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/sigset-cvt-mask.h (sigset_set_old_mask): Replace
