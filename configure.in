@@ -1,4 +1,4 @@
-dnl Process this file with autoconf to produce a configure script.
+Dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
 AC_PREREQ(2.4.2)dnl		dnl Minimum Autoconf version required.
 AC_INIT(features.h)
@@ -110,9 +110,9 @@ netbsd* | 386bsd* | freebsd* | bsdi*)
   base_os=unix/bsd/bsd4.4 ;;
 osf* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
   base_os=unix/bsd ;;
-sysv* | isc* | esix* | sco* | minix* | irix4*)
+sysv* | isc* | esix* | sco* | minix* | irix4* | linux*)
   base_os=unix/sysv ;;
-linux* | solaris[2-9]*)
+solaris[2-9]*)
   base_os=unix/sysv/sysv4 ;;
 none)
   base_os=standalone ;;
