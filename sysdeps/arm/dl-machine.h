@@ -416,7 +416,13 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 	case R_ARM_GLOB_DAT:
 	case R_ARM_JUMP_SLOT:
-	  *reloc_addr = value;
+#ifdef RTLD_BOOTSTRAP 
+	  /* Fix weak undefined references.  */
+	  if (sym != NULL && sym->st_value == 0) 
+	    *reloc_addr = 0;
+	  else
+#endif
+	    *reloc_addr = value;
 	  break;
 	case R_ARM_ABS32:
 	  {
