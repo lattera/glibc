@@ -56,7 +56,7 @@ $CFLAGS{"XOPEN2K"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
 $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
 $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
 $mustprepend{'signal.h'} = "#include <pthread.h>\n";
-$mustprepend{'stdio.h'} = "#include <stdarg.h>\n";
+$mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
 $mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
 $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
 
@@ -668,9 +668,8 @@ while ($#headers >= 0) {
       # Remember that this name is allowed.
       push @allow, $type;
 
-      # Generate a program to test for the availability of this constant.
+      # Generate a program to test for the availability of this type.
       open (TESTFILE, ">$fnamebase.c");
-      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       if ($maybe_opaque == 1) {
 	print TESTFILE "$type *a;\n";

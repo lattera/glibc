@@ -1,7 +1,8 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* conform/conformtest.pl: Define $mustprepend{"stdio.h"}.
-	* libio/stdio.h: Always define __need___va_list.
+	* conform/conformtest.pl: Undo last change.  Define
+	$mustprepend{"stdio.h"}.
+	* libio/stdio.h: Define va_list correctly.
 
 	* conform/data/pthread.h-data: Make priority protocol related
 	functions optional.  Fix typos.

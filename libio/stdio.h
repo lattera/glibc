@@ -32,9 +32,6 @@ __BEGIN_DECLS
 # define __need_NULL
 # include <stddef.h>
 
-# define __need___va_list
-# include <stdarg.h>
-
 # include <bits/types.h>
 # define __need_FILE
 # define __need___FILE
@@ -65,6 +62,17 @@ typedef struct _IO_FILE __FILE;
 #define _STDIO_USES_IOSTREAM
 
 #include <libio.h>
+
+#ifdef __USE_XOPEN
+# ifdef __GNUC__
+#  ifndef _VA_LIST_DEFINED
+typedef _G_va_list va_list;
+#   define _VA_LIST_DEFINED
+#  endif
+# else
+#  include <stdarg.h>
+# endif
+#endif
 
 /* The type of the second argument to `fgetpos' and `fsetpos'.  */
 #ifndef __USE_FILE_OFFSET64
