@@ -38,7 +38,7 @@ trampoline (int sig, int code, struct sigcontext *context)
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
 DEFUN(__sigaction, (sig, act, oact),
-      int sig AND CONST struct sigaction *act AND struct sigaction *OACT)
+      int sig AND CONST struct sigaction *act AND struct sigaction *oact)
 {
   struct sigaction myact;
   __sighandler_t ohandler;
