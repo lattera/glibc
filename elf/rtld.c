@@ -1477,8 +1477,8 @@ process_envvars (enum mode *modep)
 static void
 print_statistics (void)
 {
-  char buf[200];
 #ifndef HP_TIMING_NONAVAIL
+  char buf[200];
   char *cp;
   char *wp;
 

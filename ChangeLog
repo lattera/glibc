@@ -1,5 +1,12 @@
 2001-04-02  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/ieee754/dbl-64/uroot.h: Add missing braces arount
+	initializers.
+	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Likewise.
+
+	* elf/rtld.c (print_statistics)[!HP_TIMING_NONAVAIL]: Avoid
+	warning about unused variable.
+
 	* string/string.h (strndupa): Add cast for C++ conformance.
 	(strdupa): Likewise.
 	Fixes PR libc/2173, reported by tbrowder@home.com. 
