@@ -1672,7 +1672,6 @@ ptmalloc_init __MALLOC_P((void))
   tsd_key_create(&arena_key, NULL);
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_init_all);
-#else /* !defined NO_THREADS */
 #endif /* !defined NO_THREADS */
 #if defined _LIBC || defined MALLOC_HOOKS
   if((s = getenv("MALLOC_TRIM_THRESHOLD_")))

@@ -179,7 +179,7 @@ enum
     MSG_TRUNC		= 0x20,
 #define	MSG_TRUNC	MSG_TRUNC
     MSG_DONTWAIT	= 0x40, /* Nonblocking IO.  */
-#define	MSG_DONTWAIT	MSG_TRUNC
+#define	MSG_DONTWAIT	MSG_DONTWAIT
     MSG_EOR		= 0x80, /* End of record.  */
 #define	MSG_EOR		MSG_EOR
     MSG_WAITALL		= 0x100, /* Wait for a full request.  */
