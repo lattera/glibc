@@ -29,7 +29,8 @@
 			if >=199309L, add IEEE Std 1003.1b-1993;
 			if >=199506L, add IEEE Std 1003.1c-1995
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
-			Single Unix conformance is wanted.
+			Single Unix conformance is wanted, to 600 for the
+			upcoming sixth revision.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
    _LARGEFILE_SOURCE	Some more functions for correct standard I/O.
    _LARGEFILE64_SOURCE	Additional functionality from LFS for large files.
@@ -57,7 +58,8 @@
    __USE_XOPEN		Define XPG things.
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
-   __USE_XOPEN2K        Define XPG6 things
+   __USE_XOPEN2K        Define XPG6 things.
+   __USE_LARGEFILE	Define correct standard I/O things.
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
    __USE_BSD		Define 4.3BSD things.
@@ -162,7 +164,7 @@
 #if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
      !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1
-# if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) != 500
+# if defined _XOPEN_SOURCE && (_XOPEN_SOURCE - 0) < 500
 #  define _POSIX_C_SOURCE	2
 # else
 #  define _POSIX_C_SOURCE	199506L
@@ -192,7 +194,7 @@
 #  define __USE_UNIX98	1
 #  undef _LARGEFILE_SOURCE
 #  define _LARGEFILE_SOURCE	1
-#  if (_XOPEN_SOURCE - 0) == 600
+#  if (_XOPEN_SOURCE - 0) >= 600
 #   define __USE_XOPEN2K	1
 #  endif
 # else

@@ -174,17 +174,12 @@ CPPFLAGS-dl-load.c = -I$(objpfx).
 ifeq (yes,$(build-shared))
 $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
 	$(make-target-directory)
-	$(INSTALL_PROGRAM) $< $@.new
+	$(do-install-program)
 
 $(inst_slibdir)/$(rtld-installed-name): \
   $(inst_slibdir)/$(rtld-version-installed-name) \
   $(inst_slibdir)/libc-$(version).so
-	rm -f $@ $<
-	$(symbolic-link-prog) $<.new $@
-	ln $<.new $<
-	rm -f $@
-	$(symbolic-link-prog) $(<F) $@
-	rm -f $<.new
+	$(make-shlib-link)
 
 # Special target called by parent to install just the dynamic linker.
 .PHONY: ldso_install

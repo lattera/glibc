@@ -1,3 +1,26 @@
+2000-08-01  Ulrich Drepper  <drepper@redhat.com>
+	    Joseph S. Myers  <jsm28@cam.ac.uk>
+
+	* math/tgmath.h: Make standard compliant.  Don't ask how.
+
+2000-07-04  H.J. Lu  <hjl@gnu.org>
+
+	* elf/Makefile ($(inst_slibdir)/$(rtld-version-installed-name)):
+	Use $(do-install-program) instead of "$(INSTALL_PROGRAM) $< $@.new".
+	($(inst_slibdir)/$(rtld-installed-name)): Use $(make-shlib-link) only.
+
+2000-07-30  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* include/features.h (_XOPEN_SOURCE): Update the explanation.
+	(__USE_LARGEFILE): Add an explanation.
+	(_POSIX_C_SOURCE): Define to 2 only if _XOPEN_SOURCE < 500.
+	(__USE_XOPEN2K): Define whenever _XOPEN_SOURCE >= 600.
+
+2000-08-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/Makefile: Enable exception handling for genops, wgenops,
+	fileops, and wfileops.
+
 2000-07-29  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Take into
