@@ -14,7 +14,9 @@ tst_towctrans (FILE *fp, int debug_flg)
   TST_DECL_VARS (wint_t);
   wint_t wc;
   const char *ts;
+#if SHOJI_IS_RIGHT
   int dummy=0;
+#endif
   wctrans_t wto;
 
   TST_DO_TEST (towctrans)
@@ -26,6 +28,7 @@ tst_towctrans (FILE *fp, int debug_flg)
 	  wc = TST_INPUT (towctrans).wc;
 	  ts = TST_INPUT (towctrans).ts;
 
+#if SHOJI_IS_RIGHT
 	  if ((wto = wctrans (ts)) == (wctrans_t) 0)
 	    {
 #if 0
@@ -41,6 +44,9 @@ tst_towctrans (FILE *fp, int debug_flg)
 		  fprintf (stdout, "towctrans() ------ wctrans() returnd 0.\n");
 		}
 	    }
+#else
+	  wto = wctrans (ts);
+#endif
 
 	  TST_CLEAR_ERRNO;
 	  ret = towctrans (wc, wto);

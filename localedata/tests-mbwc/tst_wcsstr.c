@@ -31,7 +31,7 @@ tst_wcsstr (FILE * fp, int debug_flg)
 	  if (ret)
 	    {
 	      fprintf (stderr,
-		       "	ret[ 0 ] = 0x%x <-> 0x%x = ws2[ 0 ]\n",
+		       "	ret[ 0 ] = 0x%lx <-> 0x%lx = ws2[ 0 ]\n",
 		       ret[0], ws2[0]);
 	    }
 	}
@@ -59,8 +59,8 @@ tst_wcsstr (FILE * fp, int debug_flg)
 	    if (debug_flg)
 	      {
 		fprintf (stderr,
-			 "	: ret[ %d ] = 0x%x <-> 0x%x = ws2[ %d ]\n", i,
-			 ret[i], ws2[i], i);
+			 "	: ret[ %d ] = 0x%lx <-> 0x%lx = ws2[ %d ]\n",
+			 i, ret[i], ws2[i], i);
 	      }
 
 	    if (ret[i] != ws2[i])

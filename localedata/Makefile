@@ -35,15 +35,6 @@ locales := $(filter-out $(addprefix locales/, CVS RCS SCCS %~), \
 repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS SCCS %~), \
 					   $(wildcard repertoiremaps/*))
 
-# Disable the tests for now - first the locales have to be generated
-#tests := tst_iswalnum tst_iswprint tst_towctrans tst_wcsncmp tst_wctrans \
-#	  tst_iswalpha tst_iswpunct tst_wcschr tst_wcspbrk tst_wctype	 \
-#	  tst_iswcntrl tst_iswspace tst_wcscoll tst_wcsspn tst_iswdigit	 \
-#	  tst_iswupper tst_wcscpy tst_wcsstr tst_iswgraph tst_iswxdigit	 \
-#	  tst_wcscspn tst_wcswidth tst_iswlower tst_swscanf tst_wcslen	 \
-#	  tst_wctob tst_iswctype tst_towlower tst_wcscat tst_towupper    \
-#	  tst_wcscmp tst_wcsncat tst_wcsncpy tst_wcsxfrm tst_wcwidth
-
 
 subdir-dirs = tests-mbwc
 vpath %.c tests-mbwc
@@ -69,8 +60,9 @@ fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
 
 generated := $(test-input) $(test-output)
-generated-dirs := $(basename $(test-input)) en_US $(ld-test-names) tt_TT\
-		  de_DE.437 $(addprefix tstfmon_,$(fmon-tests))
+generated-dirs := $(basename $(test-input)) $(ld-test-names) tt_TT	\
+		  de_DE.437 $(addprefix tstfmon_,$(fmon-tests))		\
+		  en_US.ANSI_X3.4-1968 ja_JP.EUC-JP
 
 distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\
@@ -81,6 +73,22 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
+
+ifeq (no,$(cross-compiling))
+ifeq (yes,$(build-shared))
+# Disable the tests for now - first the locales have to be generated
+locale_test_suite := tst_iswalnum tst_iswprint tst_towctrans tst_wcsncmp \
+		     tst_wctrans tst_iswalpha tst_iswpunct tst_wcschr	 \
+		     tst_wcspbrk tst_wctype tst_iswcntrl tst_iswspace	 \
+		     tst_wcscoll tst_wcsspn tst_iswdigit tst_iswupper	 \
+		     tst_wcscpy tst_wcsstr tst_iswgraph tst_iswxdigit	 \
+		     tst_wcscspn tst_wcswidth tst_iswlower tst_swscanf	 \
+		     tst_wcslen tst_wctob tst_iswctype tst_towlower	 \
+		     tst_wcscat tst_towupper tst_wcscmp tst_wcsncat	 \
+		     tst_wcsncpy tst_wcsxfrm tst_wcwidth
+tests = $(locale_test_suite)
+endif
+endif
 
 # Files to install.
 install-others := $(addprefix $(inst_i18ndir)/, $(charmaps) $(locales) \
@@ -100,6 +108,7 @@ CFLAGS-tst-mbswcs3.c = -Wno-format
 CFLAGS-tst-mbswcs4.c = -Wno-format
 CFLAGS-tst-mbswcs5.c = -Wno-format
 CFLAGS-tst-trans.c = -Wno-format
+
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
@@ -123,6 +132,7 @@ do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
 	$(SHELL) -e $< $(common-objpfx)
 do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test
 	$(SHELL) -e $< $(common-objpfx)
+$(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: do-tst-ctype
 endif
 endif
 

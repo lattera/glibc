@@ -33,7 +33,6 @@ TST_SWSCANF tst_swscanf_loc [] =
 	},
       },
       /*------------------------ 02 -----------------------*/
-      /* <NO_WAIVER> x 2 */
       { { {
 	0x00E4, 0x00C4, 0x0000		       /* "äÄ" */
       },
@@ -60,8 +59,13 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"1%d:2%d:3%d:4%d:5%d:6%d:7%d:8%d:9%d", 0
       },
-	{ 1,EINVAL,1,EOF,
+#ifdef SHOJI_IS_RIGHT
+	{ 1,EINVAL,1,WEOF,
 	  0,0,0,0,"", { 0x0000 },
+#else
+	{ 0,0,1,0,
+	  0,0,0,0,"", { 0x0000 },
+#endif
 	},
       },
       /*---------------------------------------------------*/
@@ -136,7 +140,6 @@ TST_SWSCANF tst_swscanf_loc [] =
 	},
       },
       /*------------------------ 03 -----------------------*/
-      /* <NO_WAIVER> */
       { { {
 	0x0031,			0x003A,
 	0x0030,			0x003A,
@@ -144,12 +147,16 @@ TST_SWSCANF tst_swscanf_loc [] =
 	0x0061,			0x003A,
 	0x0063, 0x0064, 0x0000, 0x0000,
       },
-	  L"%2$d:%1$u:%f:%c:%s", 0
+	  L"%2$d:%1$u:%3$f:%4$c:%5$s", 0
       },
 	{ 1,0,1,5,
 	  0, 1, 3.9, 'a', "cd", { 0x0000 }
 	},
       },
+#ifdef SHOJI_IS_RIGHT
+      /* XXX This test does not make sense.  The format string is
+	 L"\x1\x2\x25\x53" and it is supposed to match the words
+	 0x30A2, 0x30A4, 0x0001.  */
       /*------------------------ 04 -----------------------*/
       /* <NO_WAIVER> x 2 */
       { { {
@@ -161,6 +168,7 @@ TST_SWSCANF tst_swscanf_loc [] =
 	  0,0,0,0,"", { 0x0000 }
 	},
       },
+#endif
       /*---------------------------------------------------*/
       { is_last: 1}	/* Last element.  */
     }

@@ -1,5 +1,47 @@
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* tests-mbwc/dat_iswcntrl.c: U0000 is not in class cntrl.
+	* tests-mbwc/dat_iswctype.c: U0000 is not in class cntrl.
+	U4E06 is not in EUC-JP.
+	* tests-mbwc/dat_swscanf.c: Correct several bugs in the tests.
+	* tests-mbwc/dat_towctrans.c: Likewise.
+	* tests-mbwc/dat_wcscoll.c: Likewise.
+	* tests-mbwc/dat_wcswidth.c: Likewise.
+	* tests-mbwc/dat_wctob.c: Likewise.
+
+	* tests-mbwc/tst_towctrans.c: Remove hack which avoided crash in an
+	versions.
+
+	* tests-mbwc/dat_iswprint.c: Disable one test until it is decided
+	what is correct.
+	* tests-mbwc/dat_wcsxfrm.c: Likewise.
+	* tests-mbwc/dat_wcwidth.c: Likewise.
+
+	* tests-mbwc/tst_funcs.h: Pretty print.
+
+	* tests-mbwc/tst_scscanf.c: Use correct format to avoid warning.
+	* tests-mbwc/tst_wcschr.c: Likewise.
+	* tests-mbwc/tst_wcscpy.c: Likewise.
+	* tests-mbwc/tst_wcscat.c: Likewise.
+	* tests-mbwc/tst_wcsncpy.c: Likewise.
+	* tests-mbwc/tst_wcspbrk.c: Likewise.
+	* tests-mbwc/tst_wcsstr.c: Likewise.
+	* tests-mbwc/tst_wctrans.c: Likewise.
+	* tests-mbwc/tst_wctype.c: Likewise.
+
+	* tests-mbwc/tst_wcscoll.c: Print better error messages.
+
+	* Makefile (tests): Define as $(locale_test_suite) but only
+	if not cross-compiling and shared libs are built.
+	(locale_test_suite): New variable.  Name all new tests from the
+	locale test suite.
+	Add rule to run new tests only when all data is available.
+	* tst-ctype.sh: Add hack to generate en_US.ANSI_X3.4-1968 locale.
+
+	* tst-ctype-de_DE.in: U00A0 is not in class graph.
+
+	* charmaps/EUC-JP: Remove U005C and U007E entries from non-ASCII range.
+
 	* locales/i18n: Backspace isn't blank, tab is.
 
 	* tst-ctype.c (main): Add tests for control characters and space.

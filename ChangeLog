@@ -1,7 +1,24 @@
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-ctype.c (ctype_finish): Take all characters from
+	the input charset into account when generating the hash table.
+	(allocate_arrays): Correct setting default width.  Not all empty slots
+	in the table are filled, only those not covert explicitly by the
+	locale description and in the charset.
+
 	* wctype/towctrans.c (__towctrans): Be graceful and accept error
 	return values from the wctrans function.
+
+	* stdio-common/vfscanf.c: Make sure to always return WEOF and EOF for
+	wide character version.
+	For %C handling, test correct pointer variable for NULL.
+
+	* wcsmbs/wctob.c: Handle WEOF special.
+
+	* wcsmbs/wcwidth.h: 0xff in width array means invalid character.
+
+	* wctype/wctype.h: Protect gcc-isms with __extension__.  Avoid
+	always-true test to avoid warning.
 
 2000-06-27  Greg McGary  <greg@mcgary.org>
 

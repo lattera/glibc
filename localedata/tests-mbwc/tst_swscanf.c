@@ -59,7 +59,7 @@ tst_swscanf (FILE * fp, int debug_flg)
 
 	  if (TST_INPUT (swscanf).wch)
 	    {
-	      fprintf (stdout, "			val_S[ 0 ] = 0x%x\n",
+	      fprintf (stdout, "			val_S[ 0 ] = 0x%lx\n",
 		       val_S[0]);
 	    }
 	  else

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -176,48 +176,61 @@ extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
 extern unsigned int *__ctype32_b;
 
 # define iswalnum(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwalnum) : iswalnum (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwalnum) : iswalnum (wc)))
 # define iswalpha(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwalpha) : iswalpha (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwalpha) : iswalpha (wc)))
 # define iswcntrl(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwcntrl) : iswcntrl (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwcntrl) : iswcntrl (wc)))
 # define iswdigit(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwdigit) : iswdigit (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwdigit) : iswdigit (wc)))
 # define iswlower(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwlower) : iswlower (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwlower) : iswlower (wc)))
 # define iswgraph(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwgraph) : iswgraph (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwgraph) : iswgraph (wc)))
 # define iswprint(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwprint) : iswprint (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwprint) : iswprint (wc)))
 # define iswpunct(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwpunct) : iswpunct (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwpunct) : iswpunct (wc)))
 # define iswspace(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwspace) : iswspace (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwspace) : iswspace (wc)))
 # define iswupper(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwupper) : iswupper (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwupper) : iswupper (wc)))
 # define iswxdigit(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwxdigit) : iswxdigit (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwxdigit) : iswxdigit (wc)))
 
 # ifdef __USE_GNU
 #  define iswblank(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & _ISwblank) : iswblank (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwblank) : iswblank (wc)))
 # endif
 
 # define iswctype(wc, desc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (int) (__ctype32_b[wc] & desc) : iswctype (wc, desc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (int) (__ctype32_b[(wint_t) (wc)] & desc) : iswctype (wc, desc)))
 
 #endif	/* gcc && optimizing */
 
@@ -245,12 +258,14 @@ extern const wint_t *__ctype32_tolower;
 extern const wint_t *__ctype32_toupper;
 
 # define towlower(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (wint_t) __ctype32_tolower[wc] : towlower (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (wint_t) __ctype32_tolower[(wint_t) (wc)] : towlower (wc)))
 
 # define towupper(wc) \
-  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
-   ? (wint_t) __ctype32_toupper[wc] : towupper (wc))
+  (__extension__							      \
+    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
+     ? (wint_t) __ctype32_toupper[(wint_t) (wc)] : towupper (wc)))
 
 #endif	/* gcc && optimizing */
 

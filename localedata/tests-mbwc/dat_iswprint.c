@@ -65,7 +65,9 @@ TST_ISW_LOC (PRINT, print) = {
 	{  { 0x007E }, { 0,0,0,0 }  },
 	{  { 0x007F }, { 0,0,1,0 }  },
 	{  { 0x0080 }, { 0,0,1,0 }  }, /* 20 */
+#ifdef NO_WAIVER
 	{  { 0x3042 }, { 0,0,1,0 }  }, /* <WAIVER> */
+#endif
 	{ is_last: 1 }			/* Last element.  */
       }
   },
@@ -120,4 +122,3 @@ TST_ISW_LOC (PRINT, print) = {
   },
   {   TST_ISW_REC (end, print) }
 };
-

@@ -1,5 +1,5 @@
 /* Internal header containing implementation of wcwidth() function.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -33,6 +33,7 @@ static __inline int
 internal_wcwidth (wint_t ch)
 {
   size_t idx;
+  unsigned char res;
 
   if (ch == L'\0')
     return 0;
@@ -41,5 +42,6 @@ internal_wcwidth (wint_t ch)
   if (idx == ~((size_t) 0) || (__ctype32_b[idx] & _ISwprint) == 0)
     return -1;
 
-  return (int) __ctype_width[idx];
+  res = __ctype_width[idx];
+  return res == (unsigned char) '\xff' ? -1 : (int) res;
 }

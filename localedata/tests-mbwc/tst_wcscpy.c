@@ -46,7 +46,7 @@ tst_wcscpy (FILE * fp, int debug_flg)
 	      if (debug_flg)
 		{
 		  fprintf (stderr,
-			   "ws1[ %d ] = 0x%x <-> wx_ex[ %d ] = 0x%x\n", i,
+			   "ws1[ %d ] = 0x%lx <-> wx_ex[ %d ] = 0x%lx\n", i,
 			   ws1[i], i, ws_ex[i]);
 		}
 

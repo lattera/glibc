@@ -32,7 +32,7 @@ tst_wcspbrk (FILE * fp, int debug_flg)
 		   rec + 1, (ret == NULL) ? "null" : "not null");
 	  if (ret)
 	    fprintf (stderr,
-		     "			      ret[0] = 0x%x : 0x%x = ws2[0]\n",
+		     "			      ret[0] = 0x%lx : 0x%lx = ws2[0]\n",
 		     ret[0], ws2[0]);
 	}
 
@@ -58,7 +58,7 @@ tst_wcspbrk (FILE * fp, int debug_flg)
 
 	if (debug_flg)
 	  fprintf (stdout,
-		   "			    *ret = 0x%x <-> 0x%x = wc_ex\n",
+		   "			    *ret = 0x%lx <-> 0x%lx = wc_ex\n",
 		   *ret, wc_ex);
 
 	if (*ret != wc_ex)

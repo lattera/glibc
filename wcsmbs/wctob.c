@@ -36,6 +36,9 @@ wctob (c)
   size_t dummy;
   int status;
 
+  if (c == WEOF)
+    return EOF;
+
   /* Tell where we want the result.  */
   data.__outbuf = buf;
   data.__outbufend = buf + MB_LEN_MAX;

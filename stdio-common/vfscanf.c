@@ -86,7 +86,7 @@
 #  define ISXDIGIT(Ch)	  iswxdigit (Ch)
 #  define TOLOWER(Ch)	  towlower (Ch)
 #  define ORIENT	  if (s->_vtable_offset == 0 && _IO_fwide (s, 1) != 1)\
-			    return EOF
+			    return WEOF
 #  define __strtoll_internal	__wcstoll_internal
 #  define __strtoull_internal	__wcstoull_internal
 #  define __strtol_internal	__wcstol_internal
@@ -99,6 +99,8 @@
 #  define CHAR_T	  wchar_t
 #  define UCHAR_T	  unsigned int
 #  define WINT_T	  wint_t
+#  undef EOF
+#  define EOF		  WEOF
 # else
 #  define ungetc(c, s)	((void) ((int) c == EOF				      \
 				 || (--read_in,				      \
@@ -715,7 +717,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (!(flags & SUPPRESS))
 	    {
 	      wstr = ARG (wchar_t *);
-	      if (str == NULL)
+	      if (wstr == NULL)
 		conv_error ();
 	    }
 

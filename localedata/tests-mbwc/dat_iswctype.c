@@ -210,7 +210,12 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0x0009, "blank"  }, { 0,0,0,0 }  },
       {	 { 0x000B, "blank"  }, { 0,0,1,0 }  },
       {	 { 0x0020, "blank"  }, { 0,0,0,0 }  },
+#ifdef SHOJI_IS_RIGHT
       {	 { 0x0000, "cntrl"  }, { 0,0,0,0 }  },
+#else
+      /* XXX U0000 has no properties at all.  */
+      {	 { 0x0000, "cntrl"  }, { 0,0,1,0 }  },
+#endif
       {	 { 0x001F, "cntrl"  }, { 0,0,0,0 }  },
       {	 { 0x0020, "cntrl"  }, { 0,0,1,0 }  },
       {	 { 0x0021, "cntrl"  }, { 0,0,1,0 }  },
@@ -531,8 +536,13 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0xFF66, "jkata"  }, { 0,0,0,0 }  },	   /* HALF KATA WO	 */
       {	 { 0xFF6F, "jkata"  }, { 0,0,0,0 }  },	   /* HALF KATA tu	 */
       {	 { 0x4E05, "jkanji" }, { 0,0,0,0 }  },	   /* CJK UNI.IDEO.	 */
+#ifdef SHOJI_IS_RIGHT
       /* <NO_WAIVER>: */
       {	 { 0x4E06, "jkanji" }, { 0,0,1,1 }  },	   /* CJK UNI.IDEO.NON-J */
+#else
+      /* XXX This character does not exist in EUC-JP.  */
+      {	 { 0x4E06, "jkanji" }, { 0,0,1,0 }  },	   /* CJK UNI.IDEO.NON-J */
+#endif
       {	 { 0x4E07, "jkanji" }, { 0,0,0,0 }  },	   /* CJK UNI.IDEO.	 */
       { is_last: 1 }
     }

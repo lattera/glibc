@@ -38,6 +38,9 @@ generate_locale ()
 }
 
 generate_locale EUC-JP ja_JP ja_JP.EUC-JP
+# XXX This is a hack for now.  We need the en_US.ANSI_X3.4-1968 locale
+# XXX elsewhere
+generate_locale ANSI_X3.4-1968 en_US en_US.ANSI_X3.4-1968
 
 status=0
 

@@ -46,7 +46,11 @@ TST_ISW_LOC (CNTRL, cntrl) = {
     {	TST_ISW_REC (enUS, cntrl)
 	{
 	  {  { WEOF   }, { 0,0,1,0 }  },
+#ifdef SHOJI_IS_RIGHT
 	  {  { 0x0000 }, { 0,0,0,0 }  },
+#else
+	  {  { 0x0000 }, { 0,0,1,0 }  },
+#endif
 	  {  { 0x001F }, { 0,0,0,0 }  },
 	  {  { 0x0020 }, { 0,0,1,0 }  },
 	  {  { 0x0021 }, { 0,0,1,0 }  },

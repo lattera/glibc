@@ -55,12 +55,13 @@ TST_WCSXFRM tst_wcsxfrm_loc [] = {
       { /*inp*/ { { 0x0000,0x0000 }, { 0x0000,0x0000 }, 7, 7 },	 /* #04 */
 	/*exp*/ {   1,0,	       0,0,		     },
       },
-
+#ifdef NO_WAIVER
       { /* <WAIVER> x 2 */
 	/*inp*/ { { 0x3061,0x0000 }, { 0xFF42,0x0000 }, 7, 7 },	 /* #05 */
 	/* <WAIVER>	*/
 	/*exp*/ {   1,EINVAL,	       1,(size_t)-1,	     },
       },
+#endif
       { is_last: 1 }
     }
   },
@@ -82,10 +83,12 @@ TST_WCSXFRM tst_wcsxfrm_loc [] = {
       { /*inp*/ { { 0xFF71,0x0000 }, { 0x30A2,0x0000 }, 7, 7 },	 /* #05 */
 	/*exp*/ {   1,0,	       0,0,		     },
       },
+#ifdef NO_WAIVER
       /* <WAIVER> x 2 */
       { /*inp*/ { { 0x008E,0x0000 }, { 0x008F,0x0000 }, 7, 7 },	 /* #06 */
 	/*exp*/ {   1,EINVAL,	       1,(size_t)-1,	     },
       },
+#endif
       { is_last: 1 }
     }
   },

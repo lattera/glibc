@@ -27,7 +27,7 @@ tst_wcschr (FILE * fp, int debug_flg)
 	{
 	  if (ret)
 	    {
-	      fprintf (stderr, "wcschr: ret = 0x%x\n", *ret);
+	      fprintf (stderr, "wcschr: ret = 0x%lx\n", *ret);
 	    }
 	  else
 	    {

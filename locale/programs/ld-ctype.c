@@ -345,6 +345,10 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
   struct charseq *space_seq;
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   int warned;
+  const void *key;
+  size_t len;
+  void *vdata;
+  void *curs;
 
   /* Now resolve copying and also handle completely missing definitions.  */
   if (ctype == NULL)
@@ -636,6 +640,21 @@ character '%s' in class `%s' must not be in class `%s'"),
 	      }
 	  }
       }
+
+  /* Now set all the other characters of the character set to the
+     default width.  */
+  curs = NULL;
+  while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
+    {
+      struct charseq *data = (struct charseq *) vdata;
+
+      if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
+	data->ucs4 = repertoire_find_value (ctype->repertoire,
+					    data->name, len);
+
+      if (data->ucs4 != ILLEGAL_CHAR_VALUE)
+	(void) find_idx (ctype, NULL, NULL, NULL, data->ucs4);
+    }
 
   /* There must be a multiple of 10 digits.  */
   if (ctype->mbdigits_act % 10 != 0)
@@ -3158,6 +3177,10 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 {
   size_t idx;
   size_t width_table_size;
+  const void *key;
+  size_t len;
+  void *vdata;
+  void *curs;
 
   /* First we have to decide how we organize the arrays.  It is easy
      for a one-byte character set.  But multi-byte character set
@@ -3345,8 +3368,8 @@ Computing table size for character classes might take a while..."),
   width_table_size = (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul;
   ctype->width = (unsigned char *) xmalloc (width_table_size);
 
-  /* Initialize with default width value.  */
-  memset (ctype->width, charmap->width_default, width_table_size);
+  /* Initialize with -1.  */
+  memset (ctype->width, '\xff', width_table_size);
   if (charmap->width_rules != NULL)
     {
       size_t cnt;
@@ -3389,8 +3412,10 @@ Computing table size for character classes might take a while..."),
 		  size_t depth = 0;
 
 		  while (ctype->names[nr + depth * ctype->plane_size] != wch)
-		    ++depth;
-		  assert (depth < ctype->plane_cnt);
+		    {
+		      ++depth;
+		      assert (depth < ctype->plane_cnt);
+		    }
 
 		  ctype->width[nr + depth * ctype->plane_size]
 		    = charmap->width_rules[cnt].width;
@@ -3418,6 +3443,37 @@ Computing table size for character classes might take a while..."),
 		    bytes[inner] = 0;
 		}
 	    }
+	}
+    }
+
+  /* Now set all the other characters of the character set to the
+     default width.  */
+  curs = NULL;
+  while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
+    {
+      struct charseq *data = (struct charseq *) vdata;
+      size_t nr;
+      size_t depth;
+
+      if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
+	data->ucs4 = repertoire_find_value (ctype->repertoire,
+					    data->name, len);
+
+      if (data->ucs4 != ILLEGAL_CHAR_VALUE)
+	{
+	  nr = data->ucs4 % ctype->plane_size;
+	  depth = 0;
+
+	  while (ctype->names[nr + depth * ctype->plane_size] != data->ucs4)
+	    {
+	      ++depth;
+	      assert (depth < ctype->plane_cnt);
+	    }
+
+	  if (ctype->width[nr + depth * ctype->plane_size]
+	      == (unsigned char) '\xff')
+	    ctype->width[nr + depth * ctype->plane_size] =
+	      charmap->width_default;
 	}
     }
 

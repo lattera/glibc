@@ -44,9 +44,28 @@ tst_wcscoll (FILE * fp, int debug_flg)
 	    else
 	      {
 		err_count++;
-		Result (C_FAILURE, S_WCSCOLL, CASE_3,
-			"the return value should be positive "
-			"/negative but it's negative/positive.");
+		if (cmp == 1)
+		  {
+		    if (ret == 0)
+		      Result (C_FAILURE, S_WCSCOLL, CASE_3,
+			      "the return value should be positive"
+			      " but it's zero.");
+		    else
+		      Result (C_FAILURE, S_WCSCOLL, CASE_3,
+			      "the return value should be positive"
+			      " but it's negative.");
+		  }
+		else
+		  {
+		    if (ret == 0)
+		      Result (C_FAILURE, S_WCSCOLL, CASE_3,
+			      "the return value should be negative"
+			      " but it's zero.");
+		    else
+		      Result (C_FAILURE, S_WCSCOLL, CASE_3,
+			      "the return value should be negative"
+			      " but it's positive.");
+		  }
 	      }
 	  }
       }
