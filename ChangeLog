@@ -1,5 +1,8 @@
 1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/Makefile (test): Add tst-cookie.
+	* stdio-common/tst-cookie.c: New file.
+
 	* sysdeps/unix/sysv/linux/mips/bits/errno.h: Fix EILSEQ value
 	changed in last patch.  Reported by Ralf Baechle.
 
