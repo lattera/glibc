@@ -1,5 +1,7 @@
 2000-04-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/sysinfo.texi: Document getdomainname, setdomainname
+	and sysctl.
 	* manual/string.texi: Fix typo.
 	* manual/terminal.texi: Document gtty and stty.
 	Patch by Bryan Henderson <bryanh@giraffe-data.com>.

@@ -15,6 +15,7 @@ can make changes.
                                  machine and what operating system it is
                                  running.
 * Filesystem Handling::         Controlling/querying mounts
+* System Parameters::           Getting and setting various system parameters
 @end menu
 
 To get information on parameters of the system that are built into the
@@ -24,25 +25,77 @@ Configuration}.
 @node Host Identification
 @section Host Identification
 
-This section explains how to identify the particular machine that your
-program is running on.  The identification of a machine consists of its
-Internet host name and Internet address; see @ref{Internet Namespace}.
-The host name should always be a fully qualified domain name, like
-@w{@samp{crispy-wheats-n-chicken.ai.mit.edu}}, not a simple name like
-just @w{@samp{crispy-wheats-n-chicken}}.
+This section explains how to identify the particular system on which your
+program is running.  First, let's review the various ways computer systems
+are named, which is a little complicated because of the history of the
+development of the Internet.
+
+Every Unix system (also known as a host) has a host name, whether it's
+connected to a network or not.  In its simplest form, as used before
+computer networks were an issue, it's just a word like @samp{chicken}.
+@cindex host name
+
+But any system attached to the Internet or any network like it conforms
+to a more rigorous naming convention as part of the Domain Name System
+(DNS).  In DNS, every host name is composed of two parts:
+@cindex DNS
+@cindex Domain Name System
+
+@enumerate
+@item
+hostname 
+@cindex hostname
+@item
+domain name
+@cindex domain name
+@end enumerate
+
+You will note that ``hostname'' looks a lot like ``host name'', but is
+not the same thing, and that people often incorrectly refer to entire
+host names as ``domain names.''
+
+In DNS, the full host name is properly called the FQDN (Fully Qualified 
+Domain Name) and consists of the hostname, then a period, then the
+domain name.  The domain name itself usually has multiple components
+separated by periods.  So for example, a system's hostname may be
+@samp{chicken} and its domain name might be @samp{ai.mit.edu}, so 
+its FQDN (which is its host name) is @samp{chicken.ai.mit.edu}.
+@cindex FQDN
+
+Adding to the confusion, though, is that DNS is not the only name space
+in which a computer needs to be known.  Another name space is the 
+NIS (aka YP) name space.  For NIS purposes, there is another domain
+name, which is called the NIS domain name or the YP domain name.  It
+need not have anything to do with the DNS domain name.
+@cindex YP
+@cindex NIS
+@cindex NIS domain name
+@cindex YP domain name
+
+Confusing things even more is the fact that in DNS, it is possible for
+multiple FQDNs to refer to the same system.  However, there is always
+exactly one of them that is the true host name, and it is called the
+canonical FQDN.  
+
+In some contexts, the host name is called a ``node name.''
+
+For more information on DNS host naming, @xref{Host Names}.
 
 @pindex hostname
 @pindex hostid
 @pindex unistd.h
-Prototypes for these functions appear in @file{unistd.h}.  The shell
-commands @code{hostname} and @code{hostid} work by calling them.
+Prototypes for these functions appear in @file{unistd.h}.  
+
+The programs @code{hostname}, @code{hostid}, and @code{domainname} work
+by calling these functions.
 
 @comment unistd.h
 @comment BSD
 @deftypefun int gethostname (char *@var{name}, size_t @var{size})
-This function returns the name of the host machine in the array
-@var{name}.  The @var{size} argument specifies the size of this array,
-in bytes.
+This function returns the host name of the system on which it is called,
+in the array @var{name}.  The @var{size} argument specifies the size of
+this array, in bytes.  Note that this is @emph{not} the DNS hostname.
+If the system participates in DNS, this is the FQDN (see above).
 
 The return value is @code{0} on success and @code{-1} on failure.  In
 the GNU C library, @code{gethostname} fails if @var{size} is not large
@@ -69,10 +122,17 @@ error code.
 @comment unistd.h
 @comment BSD
 @deftypefun int sethostname (const char *@var{name}, size_t @var{length})
-The @code{sethostname} function sets the name of the host machine to
-@var{name}, a string with length @var{length}.  Only privileged
-processes are allowed to do this.  Usually it happens just once, at
-system boot time.
+The @code{sethostname} function sets the host name of the system that
+calls it to @var{name}, a string with length @var{length}.  Only
+privileged processes are permitted to do this.
+
+Usually @code{sethostname} gets called just once, at system boot time.
+Often, the program that calls it sets it to the value it finds in the
+file @code{/etc/hostname}.
+@cindex /etc/hostname
+
+Be sure to set the host name to the full host name, not just the DNS
+hostname (see above).
 
 The return value is @code{0} on success and @code{-1} on failure.
 The following @code{errno} error condition is defined for this function:
@@ -84,21 +144,63 @@ This process cannot set the host name because it is not privileged.
 @end deftypefun
 
 @comment unistd.h
+@comment ???
+@deftypefun int getdomainnname (char *@var{name}, size_t @var{length})
+@cindex NIS domain name
+@cindex YP domain name
+
+@code{getdomainname} returns the NIS (aka YP) domain name of the system
+on which it is called.  Note that this is not the more popular DNS
+domain name.  Get that with @code{gethostname}.
+
+The specifics of this function are analogous to @code{gethostname}, above.
+
+@end deftypefun
+
+@comment unistd.h
+@comment ???
+@deftypefun int setdomainnname (const char *@var{name}, size_t @var{length})
+@cindex NIS domain name
+@cindex YP domain name
+
+@code{getdomainname} sets the NIS (aka YP) domain name of the system
+on which it is called.  Note that this is not the more popular DNS
+domain name.  Set that with @code{sethostname}.
+
+The specifics of this function are analogous to @code{sethostname}, above.
+
+@end deftypefun
+
+@comment unistd.h
 @comment BSD
 @deftypefun {long int} gethostid (void)
 This function returns the ``host ID'' of the machine the program is
-running on.  By convention, this is usually the primary Internet address
+running on.  By convention, this is usually the primary Internet IP address
 of that machine, converted to a @w{@code{long int}}.  However, on some
 systems it is a meaningless but unique number which is hard-coded for
 each machine.
+
+This is not widely used.  It arose in BSD 4.2, but was dropped in BSD 4.4.
+It is not required by POSIX.
+
+The proper way to query the IP address is to use @code{gethostbyname}
+on the results of @code{gethostname}.  For more information on IP addresses,
+@xref{Host Addresses}.
 @end deftypefun
 
 @comment unistd.h
 @comment BSD
 @deftypefun int sethostid (long int @var{id})
 The @code{sethostid} function sets the ``host ID'' of the host machine
-to @var{id}.  Only privileged processes are allowed to do this.  Usually
+to @var{id}.  Only privileged processes are permitted to do this.  Usually
 it happens just once, at system boot time.
+
+The proper way to establish the primary IP address of a system
+is to configure the IP address resolver to associate that IP address with 
+the system's host name as returned by @code{gethostname}.  For example,
+put a record for the system in @file{/etc/hosts}.
+
+See @code{gethostid} above for more information on host ids.
 
 The return value is @code{0} on success and @code{-1} on failure.
 The following @code{errno} error conditions are defined for this function:
@@ -123,6 +225,12 @@ associated data type are declared in the header file
 @file{sys/utsname.h}.
 @pindex sys/utsname.h
 
+As a bonus, @code{uname} also gives some information identifying the 
+particular system your program is running on.  This is the same information
+which you can get with functions targetted to this purpose described in 
+@ref{Host Identification}.
+
+
 @comment sys/utsname.h
 @comment POSIX.1
 @deftp {Data Type} {struct utsname}
@@ -132,11 +240,6 @@ by the @code{uname} function.  It has the following members:
 @table @code
 @item char sysname[]
 This is the name of the operating system in use.
-
-@item char nodename[]
-This is the network name of this particular computer.  In the GNU
-library, the value is the same as that returned by @code{gethostname};
-see @ref{Host Identification}.
 
 @item char release[]
 This is the current release level of the operating system implementation.
@@ -172,6 +275,22 @@ hardware, it consists of the first two parts of the configuration name:
 @code{"m68k-sun"},
 @code{"mips-dec"}
 @end quotation
+
+@item char nodename[]
+This is the host name of this particular computer.  In the GNU C
+library, the value is the same as that returned by @code{gethostname};
+see @ref{Host Identification}.
+
+@ gethostname() is implemented with a call to uname().
+
+@item char domainname[]
+This is the NIS or YP domain name.  It is the same value returned by
+@code{getdomainname}; see @ref{Host Identification}.  This element 
+is a relatively recent invention and use of it is not as portable as
+use of the rest of the structure.
+
+@c getdomainname() is implemented with a call to uname().
+
 @end table
 @end deftp
 
@@ -709,7 +828,7 @@ the @var{data} argument is a null string, regardless of their actual values.
 @item MS_REMOUNT
 This bit on means to remount the filesystem.  Off means to mount it.
 @c There is a mask MS_RMT_MASK in mount.h that says only two of the options
-@c can be reset by remount.  But the Linux kernel has it's own version of
+@c can be reset by remount.  But the Linux kernel has its own version of
 @c MS_RMT_MASK that says they all can be reset.  As far as I can tell,
 @c libc just passes the arguments straight through to the kernel.
 
@@ -927,3 +1046,149 @@ to zeroes.  It is more widely available than @code{umount2} but since it
 lacks the possibility to forcefully unmount a filesystem is deprecated
 when @code{umount2} is also available.
 @end deftypefun
+
+
+
+@node System Parameters
+@section System Parameters
+
+This section describes the @code{sysctl} function, which gets and sets
+a variety of system parameters.
+
+The symbols used in this section are declared in the file @file{sysctl.h}.
+
+@comment sysctl.h
+@comment BSD
+@deftypefun int sysctl (int *@var{names}, int @var{nlen}, void *@var{oldval},
+        size_t *@var{oldlenp}, void *@var{newval}, size_t @var{newlen})
+
+@code{sysctl} gets or sets a specified system parameter.  There are so
+many of these parameters that it is not practical to list them all here,
+but here are some examples:
+
+@itemize @bullet
+@item network domain name
+@item paging parameters
+@item network Address Resolution Protocol timeout time
+@item maximum number of files that may be open
+@item root filesystem device
+@item when kernel was built
+@end itemize
+
+The set of available parameters depends on the kernel configuration and
+can change while the system is running, particularly when you load and
+unload loadable kernel modules.
+
+The system parameters with which @code{syslog} is concerned are arranged
+in a hierarchical structure like a hierarchical filesystem.  To identify
+a particular parameter, you specify a path through the structure in a
+way analogous to specifying the pathname of a file.  Each component of
+the path is specified by an integer and each of these integers has a
+macro defined for it by @file{sysctl.h}.  @var{names} is the path, in
+the form of an array of integers.  Each component of the path is one
+element of the array, in order.  @var{nlen} is the number of components
+in the path.
+
+For example, the first component of the path for all the paging
+parameters is the value @code{CTL_VM}.  For the free page thresholds, the
+second component of the path is @code{VM_FREEPG}.  So to get the free
+page threshold values, make @var{names} an array containing the two
+elements @code{CTL_VM} and @code{VM_FREEPG} and make @var{nlen} = 2.
+
+
+The format of the value of a parameter depends on the parameter.
+Sometimes it is an integer; sometimes it is an ASCII string; sometimes
+it is an elaborate structure.  In the case of the free page thresholds
+used in the example above, the parameter value is a structure containing
+several integers.
+
+In any case, you identify a place to return the parameter's value with
+@var{oldval} and specify the amount of storage available at that
+location as *@var{oldlenp}.  *@var{oldlenp} does double duty because it
+is also the output location that contains the actual length of the
+returned value.
+
+If you don't want the parameter value returned, specify a null pointer
+for @var{oldval}.
+
+To set the parameter, specify the address and length of the new value 
+as @var{newval} and @var{newlen}.  If you don't want to set the parameter,
+specify a null pointer as @var{newval}.
+
+If you get and set a parameter in the same @code{sysctl} call, the value
+returned is the value of the parameter before it was set.
+
+Each system parameter has a set of permissions similar to the
+permissions for a file (including the permissions on directories in its
+path) that determine whether you may get or set it.  For the purposes of
+these permissions, every parameter is considered to be owned by the
+superuser and Group 0 so processes with that effective uid or gid may
+have more access to system parameters.  Unlike with files, the superuser
+does not invariably have full permission to all system parameters, because
+some of them are designed not to be changed ever.
+
+
+@code{sysctl} returns a zero return value if it succeeds.  Otherwise, it
+returns @code{-1} and sets @code{errno} appropriately.  Besides the
+failures that apply to all system calls, the following are the
+@code{errno} codes for all possible failures:
+
+@table @code
+@item EPERM
+The process is not permitted to access one of the components of the 
+path of the system parameter or is not permitted to access the system parameter
+itself in the way (read or write) that it requested.
+@c There is some indication in the Linux 2.2 code that the code is trying to 
+@c return EACCESS here, but the EACCESS value never actually makes it to the
+@c user.
+@item ENOTDIR
+There is no system parameter corresponding to @var{name}.
+@item EFAULT
+@var{oldval} is not null, which means the process wanted to read the parameter,
+but *@var{oldlenp} is zero, so there is no place to return it.
+@item EINVAL
+@itemize @bullet
+@item
+The process attempted to set a system parameter to a value that is not valid
+for that parameter.
+@item
+The space provided for the return of the system parameter is not the right
+size for that parameter.
+@end itemize
+@item ENOMEM
+This value may be returned instead of the more correct @code{EINVAL} in some
+cases where the space provided for the return of the system parameter is too
+small.
+
+@end table
+
+@end deftypefun
+
+If you have a Linux kernel with the @code{proc} filesystem, you can get
+and set most of the same parameters by reading and writing to files in 
+the @code{sys} directory of the @code{proc} filesystem.  In the @code{sys}
+directory, the directory structure represents the hierarchical structure
+of the parameters.  E.g. you can display the free page thresholds with
+@smallexample
+cat /proc/sys/vm/freepages
+@end smallexample
+@c In Linux, the sysctl() and /proc instances of the parameter are created
+@c together.  The proc filesystem accesses the same data structure as
+@c sysctl(), which has special fields in it for /proc.  But it is still
+@c possible to create a sysctl-only parameter.
+
+Some more traditional and more widely available, though less general,
+GNU C library functions for getting and setting some of the same system
+parameters are:
+
+@itemize @bullet
+@item
+@code{getdomainname}, @code{setdomainname}
+@item
+@code{gethostname}, @code{sethostname} (@xref{Host Identification}.)
+@item
+@code{uname} (@xref{Hardware/Software Type ID}.)
+@item
+@code{bdflush}
+@end itemize
+
