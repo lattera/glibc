@@ -1,7 +1,11 @@
+2004-03-15  Ulrich Weigand  <uweigand@de.ibm.com>
+
+	* init.c (nptl_version): Add __attribute_used__ to nptl_version.
+
 2004-03-12  Richard Henderson  <rth@redhat.com>
 
-        * sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h: Propagate
-        oldvalue from CENABLE to CDISABLE.
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h: Propagate
+	oldvalue from CENABLE to CDISABLE.
 
 2004-03-12  Ulrich Drepper  <drepper@redhat.com>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,97 +65,91 @@
 #define I18N		0x400	/* I: use locale's digits */
 
 
-#ifdef USE_IN_LIBIO
-# include <libioP.h>
-# include <libio.h>
+#include <locale/localeinfo.h>
+#include <libioP.h>
+#include <libio.h>
 
-# undef va_list
-# define va_list	_IO_va_list
+#undef va_list
+#define va_list	_IO_va_list
 
-# ifdef COMPILE_WSCANF
-#  define ungetc(c, s)	((void) (c == WEOF				      \
+#ifdef COMPILE_WSCANF
+# define ungetc(c, s)	((void) (c == WEOF				      \
 				 || (--read_in,				      \
 				     INTUSE(_IO_sputbackwc) (s, c))))
-#  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
+# define ungetc_not_eof(c, s)	((void) (--read_in,			      \
 					 INTUSE(_IO_sputbackwc) (s, c)))
-#  define inchar()	(c == WEOF ? ((errno = inchar_errno), WEOF)	      \
+# define inchar()	(c == WEOF ? ((errno = inchar_errno), WEOF)	      \
 			 : ((c = _IO_getwc_unlocked (s)),		      \
 			    (void) (c != WEOF				      \
 				    ? ++read_in				      \
 				    : (size_t) (inchar_errno = errno)), c))
 
-#  define MEMCPY(d, s, n) __wmemcpy (d, s, n)
-#  define ISSPACE(Ch)	  iswspace (Ch)
-#  define ISDIGIT(Ch)	  iswdigit (Ch)
-#  define ISXDIGIT(Ch)	  iswxdigit (Ch)
-#  define TOLOWER(Ch)	  towlower (Ch)
-#  define ORIENT	  if (_IO_fwide (s, 1) != 1) return WEOF
-#  define __strtoll_internal	__wcstoll_internal
-#  define __strtoull_internal	__wcstoull_internal
-#  define __strtol_internal	__wcstol_internal
-#  define __strtoul_internal	__wcstoul_internal
-#  define __strtold_internal	__wcstold_internal
-#  define __strtod_internal	__wcstod_internal
-#  define __strtof_internal	__wcstof_internal
+# define MEMCPY(d, s, n) __wmemcpy (d, s, n)
+# define ISSPACE(Ch)	  iswspace (Ch)
+# define ISDIGIT(Ch)	  iswdigit (Ch)
+# define ISXDIGIT(Ch)	  iswxdigit (Ch)
+# define TOLOWER(Ch)	  towlower (Ch)
+# define ORIENT	  if (_IO_fwide (s, 1) != 1) return WEOF
+# define __strtoll_internal	__wcstoll_internal
+# define __strtoull_internal	__wcstoull_internal
+# define __strtol_internal	__wcstol_internal
+# define __strtoul_internal	__wcstoul_internal
+# define __strtold_internal	__wcstold_internal
+# define __strtod_internal	__wcstod_internal
+# define __strtof_internal	__wcstof_internal
 
-#  define L_(Str)	  L##Str
-#  define CHAR_T	  wchar_t
-#  define UCHAR_T	  unsigned int
-#  define WINT_T	  wint_t
-#  undef EOF
-#  define EOF		  WEOF
-# else
-#  define ungetc(c, s)	((void) ((int) c == EOF				      \
+# define L_(Str)	L##Str
+# define CHAR_T	  	wchar_t
+# define UCHAR_T	unsigned int
+# define WINT_T	  	wint_t
+# undef EOF
+# define EOF		WEOF
+#else
+# define ungetc(c, s)	((void) ((int) c == EOF				      \
 				 || (--read_in,				      \
 				     INTUSE(_IO_sputbackc) (s, (unsigned char) c))))
-#  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
+# define ungetc_not_eof(c, s)	((void) (--read_in,			      \
 					 INTUSE(_IO_sputbackc) (s, (unsigned char) c)))
-#  define inchar()	(c == EOF ? ((errno = inchar_errno), EOF)	      \
+# define inchar()	(c == EOF ? ((errno = inchar_errno), EOF)	      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
 			    (void) (c != EOF				      \
 				    ? ++read_in				      \
 				    : (size_t) (inchar_errno = errno)), c))
-#  define MEMCPY(d, s, n) memcpy (d, s, n)
-#  define ISSPACE(Ch)	  isspace (Ch)
-#  define ISDIGIT(Ch)	  isdigit (Ch)
-#  define ISXDIGIT(Ch)	  isxdigit (Ch)
-#  define TOLOWER(Ch)	  tolower (Ch)
-#  define ORIENT	  if (_IO_vtable_offset (s) == 0		      \
+# define MEMCPY(d, s, n) memcpy (d, s, n)
+# define ISSPACE(Ch)	  __isspace_l (Ch, loc)
+# define ISDIGIT(Ch)	  __isdigit_l (Ch, loc)
+# define ISXDIGIT(Ch)	  __isxdigit_l (Ch, loc)
+# define TOLOWER(Ch)	  __tolower_l (Ch, loc)
+# define ORIENT	  if (_IO_vtable_offset (s) == 0			      \
 			      && _IO_fwide (s, -1) != -1)		      \
 			    return EOF
 
-#  define L_(Str)	  Str
-#  define CHAR_T	  char
-#  define UCHAR_T	  unsigned char
-#  define WINT_T	  int
-# endif
+# define L_(Str)	Str
+# define CHAR_T	  	char
+# define UCHAR_T	unsigned char
+# define WINT_T		int
+#endif
 
-# define encode_error() do {						      \
-			  if (errp != NULL) *errp |= 4;			      \
-			  _IO_funlockfile (s);				      \
-			  __libc_cleanup_end (0);			      \
+#define encode_error() do {						      \
+			  errval = 4;					      \
 			  __set_errno (EILSEQ);				      \
-			  return done;					      \
+			  goto errout;					      \
 			} while (0)
-# define conv_error()	do {						      \
-			  if (errp != NULL) *errp |= 2;			      \
-			  _IO_funlockfile (s);				      \
-			  __libc_cleanup_end (0);			      \
-			  return done;					      \
+#define conv_error()	do {						      \
+			  errval = 2;					      \
+			  goto errout;					      \
 			} while (0)
-# define input_error()	do {						      \
-			  _IO_funlockfile (s);				      \
-			  if (errp != NULL) *errp |= 1;			      \
-			  __libc_cleanup_end (0);			      \
-			  return done ?: EOF;				      \
+#define input_error()	do {						      \
+			  errval = 1;					      \
+			  if (done == 0) done = EOF;			      \
+			  goto errout;					      \
 			} while (0)
-# define memory_error() do {						      \
-			  _IO_funlockfile (s);				      \
+#define memory_error() do {						      \
 			  __set_errno (ENOMEM);				      \
-			  __libc_cleanup_end (0);			      \
-			  return EOF;					      \
+			  done = EOF;					      \
+			  goto errout;					      \
 			} while (0)
-# define ARGCHECK(s, format)						      \
+#define ARGCHECK(s, format)						      \
   do									      \
     {									      \
       /* Check file argument for consistence.  */			      \
@@ -171,100 +165,31 @@
 	  return EOF;							      \
 	}								      \
     } while (0)
-# define LOCK_STREAM(S)							      \
+#define LOCK_STREAM(S)							      \
   __libc_cleanup_region_start (1, (void (*) (void *)) &_IO_funlockfile, (S)); \
   _IO_flockfile (S)
-# define UNLOCK_STREAM(S)						      \
+#define UNLOCK_STREAM(S)						      \
   _IO_funlockfile (S);							      \
   __libc_cleanup_region_end (0)
-#else
-# define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
-# define ungetc_not_eof(c, s)	(--read_in, (ungetc) (c, s))
-# define inchar()	(c == EOF ? EOF					      \
-			 : ((c = getc (s)), (void) (c != EOF && ++read_in), c))
-# define MEMCPY(d, s, n)  memcpy (d, s, n)
-# define ISSPACE(Ch)      isspace (Ch)
-# define ISDIGIT(Ch)      isdigit (Ch)
-# define ISXDIGIT(Ch)     isxdigit (Ch)
-# define TOLOWER(Ch)      tolower (Ch)
-
-# define L_(Str)          Str
-# define CHAR_T           char
-# define UCHAR_T          unsigned char
-# define WINT_T           int
-
-# define encode_error()	do {						      \
-			  funlockfile (s);				      \
-			  __set_errno (EILSEQ);				      \
-			  return done;					      \
-			} while (0)
-# define conv_error()	do {						      \
-			  funlockfile (s);				      \
-			  return done;					      \
-			} while (0)
-# define input_error()	do {						      \
-			  funlockfile (s);				      \
-			  return done ?: EOF;				      \
-			} while (0)
-# define memory_error()	do {						      \
-			  funlockfile (s);				      \
-			  __set_errno (ENOMEM);				      \
-			  return EOF;					      \
-			} while (0)
-# define ARGCHECK(s, format)						      \
-  do									      \
-    {									      \
-      /* Check file argument for consistence.  */			      \
-      if (!__validfp (s) || !s->__mode.__read)				      \
-	{								      \
-	  __set_errno (EBADF);						      \
-	  return EOF;							      \
-	}								      \
-      else if (format == NULL)						      \
-	{								      \
-	  __set_errno (EINVAL);						      \
-	  return EOF;							      \
-	}								      \
-    } while (0)
-#if 1
-      /* XXX For now !!! */
-# define flockfile(S) /* nothing */
-# define funlockfile(S) /* nothing */
-# define LOCK_STREAM(S)
-# define UNLOCK_STREAM(S)
-#else
-# define LOCK_STREAM(S)							      \
-  __libc_cleanup_region_start (&__funlockfile, (S));			      \
-  __flockfile (S)
-# define UNLOCK_STREAM(S)						      \
-  __funlockfile (S);							      \
-  __libc_cleanup_region_end (0)
-#endif
-#endif
 
 
 /* Read formatted input from S according to the format string
    FORMAT, using the argument list in ARG.
    Return the number of assignments made, or -1 for an input error.  */
-#ifdef USE_IN_LIBIO
-# ifdef COMPILE_WSCANF
+#ifdef COMPILE_WSCANF
 int
 _IO_vfwscanf (s, format, argptr, errp)
      _IO_FILE *s;
      const wchar_t *format;
      _IO_va_list argptr;
      int *errp;
-# else
+#else
 int
 _IO_vfscanf (s, format, argptr, errp)
      _IO_FILE *s;
      const char *format;
      _IO_va_list argptr;
      int *errp;
-# endif
-#else
-int
-__vfscanf (FILE *s, const char *format, va_list argptr)
 #endif
 {
   va_list arg;
@@ -275,6 +200,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   register WINT_T c = 0;	/* Last char read.  */
   register int width;		/* Maximum field width.  */
   register int flags;		/* Modifiers for current format element.  */
+  int errval = 0;
+#ifndef COMPILE_WSCANF
+  __locale_t loc = _NL_CURRENT_LOCALE;
+  struct locale_data *const curctype = loc->__locales[LC_CTYPE];
+#endif
 
   /* Errno of last failed inchar call.  */
   int inchar_errno = 0;
@@ -353,20 +283,26 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
   ARGCHECK (s, format);
 
-  /* Figure out the decimal point character.  */
-#ifdef COMPILE_WSCANF
-  decimal = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
-#else
-  decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+ {
+#ifndef COMPILE_WSCANF
+   struct locale_data *const curnumeric = loc->__locales[LC_NUMERIC];
 #endif
-  /* Figure out the thousands separator character.  */
+
+   /* Figure out the decimal point character.  */
 #ifdef COMPILE_WSCANF
-  thousands = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_THOUSANDS_SEP_WC);
+   decimal = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
 #else
-  thousands = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
-  if (*thousands == '\0')
-    thousands = NULL;
+   decimal = curnumeric->values[_NL_ITEM_INDEX (DECIMAL_POINT)].string;
 #endif
+   /* Figure out the thousands separator character.  */
+#ifdef COMPILE_WSCANF
+   thousands = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_THOUSANDS_SEP_WC);
+#else
+   thousands = curnumeric->values[_NL_ITEM_INDEX (THOUSANDS_SEP)].string;
+   if (*thousands == '\0')
+     thousands = NULL;
+#endif
+ }
 
   /* Lock the stream.  */
   LOCK_STREAM (s);
@@ -1237,8 +1173,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      to_level = _NL_CURRENT_WORD (LC_CTYPE,
 					   _NL_CTYPE_INDIGITS_WC_LEN) - 1;
 #else
-	      to_level = _NL_CURRENT_WORD (LC_CTYPE,
-					   _NL_CTYPE_INDIGITS_MB_LEN) - 1;
+	      to_level = (uint32_t) curctype->values[_NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN)].word - 1;
 #endif
 
 	      /* Read the number into workspace.  */
@@ -1266,8 +1201,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      const char *cmpp;
 		      int avail = width > 0 ? width : INT_MAX;
 
-		      mbdigits[n] = _NL_CURRENT (LC_CTYPE,
-						 _NL_CTYPE_INDIGITS0_MB + n);
+		      mbdigits[n]
+			= curctype->values[_NL_CTYPE_INDIGITS0_MB + n].string;
 
 		      for (level = 0; level < from_level; level++)
 			mbdigits[n] = strchr (mbdigits[n], '\0') + 1;
@@ -2316,33 +2251,31 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  && (char *) str == *strptr + strsize)
 			{
 			  /* Enlarge the buffer.  */
-			  str = (char *) realloc (*strptr, 2 * strsize);
+			  size_t newsize = 2 * strsize;
+
+			allocagain:
+			  str = (char *) realloc (*strptr, newsize);
 			  if (str == NULL)
 			    {
 			      /* Can't allocate that much.  Last-ditch
 				 effort.  */
-			      str = (char *) realloc (*strptr, strsize + 1);
-			      if (str == NULL)
+			      if (newsize > strsize + 1)
 				{
-				  /* We lose.  Oh well.  Terminate the
-				     string and stop converting,
-				     so at least we don't skip any input.  */
-				  ((char *) (*strptr))[strsize - 1] = '\0';
-				  ++done;
-				  conv_error ();
+				  newsize = strsize + 1;
+				  goto allocagain;
 				}
-			      else
-				{
-				  *strptr = (char *) str;
-				  str += strsize;
-				  ++strsize;
-				}
+			      /* We lose.  Oh well.  Terminate the
+				 string and stop converting,
+				 so at least we don't skip any input.  */
+			      ((char *) (*strptr))[strsize - 1] = '\0';
+			      ++done;
+			      conv_error ();
 			    }
 			  else
 			    {
 			      *strptr = (char *) str;
 			      str += strsize;
-			      strsize *= 2;
+			      strsize = newsize;
 			    }
 			}
 		    }
@@ -2428,27 +2361,29 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       ungetc (c, s);
     }
 
+ errout:
   /* Unlock stream.  */
   UNLOCK_STREAM (s);
+
+  if (errp != NULL)
+    *errp |= errval;
 
   return done;
 }
 
-#ifdef USE_IN_LIBIO
-# ifdef COMPILE_WSCANF
+#ifdef COMPILE_WSCANF
 int
 __vfwscanf (FILE *s, const wchar_t *format, va_list argptr)
 {
   return _IO_vfwscanf (s, format, argptr, NULL);
 }
-# else
+#else
 int
 __vfscanf (FILE *s, const char *format, va_list argptr)
 {
   return INTUSE(_IO_vfscanf) (s, format, argptr, NULL);
 }
 libc_hidden_def (__vfscanf)
-# endif
 #endif
 
 #ifdef COMPILE_WSCANF

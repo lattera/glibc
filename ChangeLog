@@ -1,5 +1,8 @@
 2004-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfscanf.c: Simplify error handling macros.  Use
+	direct locale access functions.
+
 	* sysdeps/generic/strcasestr.c (__strcasestr): Optimize use of
 	tolower function.
 
