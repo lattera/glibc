@@ -56,12 +56,12 @@ C_SYMBOL_NAME(__mpn_add_n:)
 #ifdef PIC
 	call	here
 here:	leal	(Loop - 3 - here)(%eax,%eax,8),%eax
-	addl	(%esp),%eax
-	addl	$4,%esp
+	addl	%eax,(%esp)
+	ret
 #else
 	leal	(Loop - 3)(%eax,%eax,8),%eax	/* calc start addr in loop */
-#endif
 	jmp	*%eax			/* jump into loop */
+#endif
 	ALIGN (3)
 Loop:	movl	(%esi),%eax
 	adcl	(%edx),%eax

@@ -376,7 +376,11 @@ $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir)): \
 	$(AR) cru$(verbose) ${O%-lib} \
 	      $(patsubst $(objpfx)%,%,$^)
 	touch $@
+ifdef subdir
 O%-lib = $(filter ../,$(firstword $(objdir) ../))$(patsubst %,$(libtype$*),c)
+else
+O%-lib = $(patsubst %,$(libtype$*),c)
+endif
 
 endif
 

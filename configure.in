@@ -339,6 +339,25 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
+AC_MSG_CHECKING(for .set assembler directive)
+AC_CACHE_VAL(libc_cv_asm_set_directive, [dnl
+cat > conftest.s <<\EOF
+.text
+foo: .long 0
+.set bar,foo
+EOF
+if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  libc_cv_asm_set_directive=yes
+else
+  libc_cv_asm_set_directive=no
+fi
+rm -f contest*])
+AC_MSG_RESULT($libc_cv_asm_set_directive)
+if test $libc_cv_asm_set_directive = yes; then
+  AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
+fi
+
+
 # sysdeps configure fragments may set these with files to be linked below.
 libc_link_dests=
 libc_link_sources=
