@@ -5,8 +5,8 @@ escape_char /
 % charmap: BIG5-CP950
 %
 % Original Author:
-%    Ming-Che Chuang 
-% 	PPE of NTU, Taiwan, ROC 
+%    Ming-Che Chuang
+% 	PPE of NTU, Taiwan, ROC
 %
 % Currently Maintained by:
 %    Yuan-Chung Cheng
@@ -24,8 +24,8 @@ contact    ""
 email      "bug-glibc@gnu.org"
 tel        ""
 fax        ""
-language   "zh"
-territory  "TW"
+language   "Chinese"
+territory  "Taiwan R.O.C."
 revision   "0.2"
 date       "2000-08-02"
 %
