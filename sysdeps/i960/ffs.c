@@ -1,7 +1,7 @@
 /* ffs -- find first set bit in a word, counted from least significant end.
    For i960 Core architecture
    This file is part of the GNU C Library.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 2004 Free Software Foundation, Inc.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
    On-Line Applications Research Corporation.
 
@@ -37,6 +37,7 @@ __ffs (x)
   return cnt;
 }
 weak_alias (__ffs, ffs)
+libc_hidden_builtin_def (ffs)
 
 #else
 
