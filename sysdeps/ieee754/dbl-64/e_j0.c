@@ -124,10 +124,10 @@ static double zero = 0.0;
 	 * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
 	 * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
 	 */
-		if(ix>0x48000000) z = (invsqrtpi*cc)/__sqrt(x);
+		if(ix>0x48000000) z = (invsqrtpi*cc)/__ieee754_sqrt(x);
 		else {
 		    u = pzero(x); v = qzero(x);
-		    z = invsqrtpi*(u*cc-v*ss)/__sqrt(x);
+		    z = invsqrtpi*(u*cc-v*ss)/__ieee754_sqrt(x);
 		}
 		return z;
 	}
@@ -215,10 +215,10 @@ V[]  =  {1.27304834834123699328e-02, /* 0x3F8A1270, 0x91C9C71A */
                     if ((s*c)<zero) cc = z/ss;
                     else            ss = z/cc;
                 }
-                if(ix>0x48000000) z = (invsqrtpi*ss)/__sqrt(x);
+                if(ix>0x48000000) z = (invsqrtpi*ss)/__ieee754_sqrt(x);
                 else {
                     u = pzero(x); v = qzero(x);
-                    z = invsqrtpi*(u*ss+v*cc)/__sqrt(x);
+                    z = invsqrtpi*(u*ss+v*cc)/__ieee754_sqrt(x);
                 }
                 return z;
 	}
