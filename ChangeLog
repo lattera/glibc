@@ -1373,7 +1373,6 @@
 	* sysdeps/mips/dl-machine.h: Update some comments.
 	(ELF_MACHINE_ALIGN_MASK): Removed, it's not needed.
 
->>>>>>> 1.3514
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add
