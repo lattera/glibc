@@ -446,8 +446,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       plt[8 + 6] = 0xadc40011;
       plt[8 + 7] = 0x9330700c;
 
-      /* Now put the magic cookie at the beginning of .PLT3
-	 Entry .PLT4 is unused by this implementation.  */
+      /* Now put the magic cookie at the beginning of .PLT2
+	 Entry .PLT3 is unused by this implementation.  */
       *((struct link_map **)(&plt[16 + 0])) = l;
     }
 
@@ -467,13 +467,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	ldx	[%l6 + 32 + 8], %o0
 	sub     %g1, %l6, %l0
 	xor     %l2, -1016, %l2
-	sethi   %hi(5120), %l3
+	sethi   %hi(5120), %l3	! 160 * 32
 	add     %l0, %l2, %l0
 	sethi   %hi(32768), %l4
 	udivx   %l0, %l3, %l3
 	sllx    %l3, 2, %l1
 	add     %l1, %l3, %l1
 	sllx    %l1, 10, %l2
+	sub	%l4, 4, %l4	! No thanks to Sun for not obeying their own ABI
 	sllx    %l1, 5, %l1
 	sub     %l0, %l2, %l0
 	udivx   %l0, 24, %l0
@@ -495,6 +496,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	! srlx	%g1, 12, %o1 - Done in .PLT1
 	ldx	[%l6 + 8], %o0
 	add	%o1, %o1, %o3
+	sub	%o1, 96, %o1	! No thanks to Sun for not obeying their own ABI
 	mov	%i7, %o2
 	call	" #fixup_name "
 	 add	%o1, %o3, %o1

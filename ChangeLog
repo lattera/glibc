@@ -1,3 +1,13 @@
+2000-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/fpu/fedisblxcpt.c: New file.
+	* sysdeps/sparc/fpu/feenablxcpt.c: New file.
+	* sysdeps/sparc/fpu/fegetexcept.c: New file.
+	* sysdeps/sparc/sparc64/fpu/e_sqrtl.c: New file.
+
+	* sysdeps/sparc/sparc64/dl-machine.h: Subtract 4 .rela.plt entries
+	to match Solaris.
+
 2000-08-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/fpu_control.h (_FPU_GETCW): Use type-correct code.
