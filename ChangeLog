@@ -1,14 +1,17 @@
+2003-12-29  Andreas Schwab  <schwab@suse.de>
+
+	* stdio-common/Makefile (CFLAGS-errlist.c, CFLAGS-siglist.c): Add
+	$(fno_unit_at_a_time) to avoid reordering assembler output.
+
 2003-12-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regexec.c (re_copy_regs): Revert comment change.
 	Avoid memory leak if realloc fails.
 	(proceed_next_node): Return -2 if re_node_set_insert fails.
 	Return -2 if push_fail_stack fails.
-	(push_fail_stack): Change fs->alloc only after successful
-	realloc.
+	(push_fail_stack): Change fs->alloc only after successful realloc.
 	(pop_fail_stack): Formatting.
-	(set_regs): If proceed_next_node returns -2, free eps_via_nodes
-	and fs.
+	(set_regs): If proceed_next_node returns -2, free eps_via_nodes and fs.
 	(check_arrival_add_next_nodes): Merge identical statements
 	from if branches.
 

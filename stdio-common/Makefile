@@ -87,6 +87,8 @@ CFLAGS-tempname.c = -fexceptions
 CFLAGS-psignal.c = -fexceptions
 CFLAGS-vprintf.c = -fexceptions
 CFLAGS-cuserid.c = -fexceptions
+CFLAGS-errlist.c = $(fno-unit-at-a-time)
+CFLAGS-siglist.c = $(fno-unit-at-a-time)
 
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
