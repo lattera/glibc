@@ -448,16 +448,16 @@ elf_machine_rela (struct link_map *map,
 }
 
 static inline void
-elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
+elf_machine_lazy_rel (Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
-  Elf64_Addr * const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
+  Elf64_Addr * const reloc_addr = (void *)(l_addr + reloc->r_offset);
   unsigned long const r_type = ELF64_R_TYPE (reloc->r_info);
 
   if (r_type == R_ALPHA_JMP_SLOT)
     {
       /* Perform a RELATIVE reloc on the .got entry that transfers
 	 to the .plt.  */
-      *reloc_addr += map->l_addr;
+      *reloc_addr += l_addr;
     }
   else if (r_type == R_ALPHA_NONE)
     return;
