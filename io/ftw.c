@@ -37,8 +37,6 @@
 # define NFTW_NAME nftw
 # define INO_T ino_t
 # define STAT stat
-# define DIRENT dirent
-# define READDIR __readdir
 # define LXSTAT __lxstat
 # define XSTAT __xstat
 # define FTW_FUNC_T __ftw_func_t
@@ -163,10 +161,10 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
       else
 	{
 	  DIR *st = data->dirstreams[data->actdir]->stream;
-	  struct DIRENT *d;
+	  struct dirent64 *d;
 	  size_t actsize = 0;
 
-	  while ((d = READDIR (st)) != NULL)
+	  while ((d = __readdir64 (st)) != NULL)
 	    {
 	      size_t this_len = _D_EXACT_NAMLEN (d);
 	      if (actsize + this_len + 2 >= bufsize)
@@ -340,7 +338,7 @@ internal_function
 ftw_dir (struct ftw_data *data, struct STAT *st)
 {
   struct dir_data dir;
-  struct DIRENT *d;
+  struct dirent64 *d;
   int previous_base = data->ftw.base;
   int result;
   char *startp;
@@ -402,7 +400,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
     *startp++ = '/';
   data->ftw.base = startp - data->dirbuf;
 
-  while (dir.stream != NULL && (d = READDIR (dir.stream)) != NULL)
+  while (dir.stream != NULL && (d = __readdir64 (dir.stream)) != NULL)
     {
       result = process_entry (data, &dir, d->d_name, _D_EXACT_NAMLEN (d));
       if (result != 0)

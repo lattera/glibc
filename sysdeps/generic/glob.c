@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -119,6 +119,40 @@ extern int errno;
    if the `d_type' member for `struct dirent' is available.  */
 #ifdef _DIRENT_HAVE_D_TYPE
 # define HAVE_D_TYPE	1
+#endif
+
+#if _LIBC
+# define HAVE_DIRENT64	1
+#endif
+
+/* If the system has the `struct dirent64' type we use it internally.  */
+#if defined HAVE_DIRENT64 && !defined COMPILE_GLOB64
+# if defined HAVE_DIRENT_H || defined __GNU_LIBRARY__
+#  define CONVERT_D_NAMLEN(d64, d32)
+# else
+#  define CONVERT_D_NAMLEN(d64, d32) \
+  (d64)->d_namlen = (d32)->d_namlen;
+# endif
+
+# if (defined POSIX || defined WINDOWS32) && !defined __GNU_LIBRARY__
+#  define CONVERT_D_INO(d64, d32)
+# else
+#  define CONVERT_D_INO(d64, d32) \
+  (d64)->d_ino = (d32)->d_ino;
+# endif
+
+# ifdef HAVE_D_TYPE
+#  define CONVERT_D_TYPE(d64, d32) \
+  (d64)->d_type = (d32)->d_type;
+# else
+#  define CONVERT_D_TYPE(d64, d32)
+# endif
+
+# define CONVERT_DIRENT_DIRENT64(d64, d32) \
+  memcpy ((d64)->d_name, (d32)->d_name, NAMLEN (d32));			      \
+  CONVERT_D_NAMLEN (d64, d32)						      \
+  CONVERT_D_INO (d64, d32)						      \
+  CONVERT_D_TYPE (d64, d32)
 #endif
 
 
@@ -246,7 +280,7 @@ extern char *alloca ();
 # define sysconf(id) __sysconf (id)
 # define closedir(dir) __closedir (dir)
 # define opendir(name) __opendir (name)
-# define readdir(str) __readdir (str)
+# define readdir(str) __readdir64 (str)
 # define getpwnam_r(name, bufp, buf, len, res) \
    __getpwnam_r (name, bufp, buf, len, res)
 # ifndef __stat64
@@ -1339,10 +1373,29 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		{
 		  const char *name;
 		  size_t len;
-		  struct dirent *d =
-		    ((flags & GLOB_ALTDIRFUNC)
-		     ? (struct dirent *)((*pglob->gl_readdir) (stream))
-		     : readdir ((DIR *) stream));
+#if defined HAVE_DIRENT64 && !defined COMPILE_GLOB64
+		  struct dirent64 *d;
+		  struct dirent64 d64;
+
+		  if (flags & GLOB_ALTDIRFUNC)
+		    {
+		      struct dirent *d32 = (*pglob->gl_readdir) (stream);
+		      if (d32 != NULL)
+			{
+			  CONVERT_DIRENT_DIRENT64 (&d64, d32);
+			  d = &d64;
+			}
+		      else
+			d = NULL;
+		    }
+		  else
+		    d = __readdir64 ((DIR *) stream);
+#else
+		  struct dirent *d = ((flags & GLOB_ALTDIRFUNC)
+				      ? ((struct dirent *)
+					 (*pglob->gl_readdir) (stream))
+				      : __readdir ((DIR *) stream));
+#endif
 		  if (d == NULL)
 		    break;
 		  if (! REAL_DIR_ENTRY (d))

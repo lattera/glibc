@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,1996-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
   static size_t namelen;
   struct stat64 st;
   DIR *dirstream;
-  struct dirent *d;
+  struct dirent64 *d;
   size_t devlen = strlen (dev) + 1;
 
   dirstream = __opendir (dev);
@@ -54,8 +54,8 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
       return NULL;
     }
 
-  while ((d = __readdir (dirstream)) != NULL)
-    if (((ino_t) d->d_fileno == myino || *dostat)
+  while ((d = __readdir64 (dirstream)) != NULL)
+    if ((d->d_fileno == myino || *dostat)
 	&& strcmp (d->d_name, "stdin")
 	&& strcmp (d->d_name, "stdout")
 	&& strcmp (d->d_name, "stderr"))
@@ -80,7 +80,7 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
 #ifdef _STATBUF_ST_RDEV
 	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
 #else
-	    && (ino64_t) d->d_fileno == myino && st.st_dev == mydev
+	    && d->d_fileno == myino && st.st_dev == mydev
 #endif
 	   )
 	  {

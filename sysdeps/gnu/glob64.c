@@ -17,4 +17,6 @@
 
 #define NO_GLOB_PATTERN_P 1
 
+#define COMPILE_GLOB64	1
+
 #include <sysdeps/generic/glob.c>

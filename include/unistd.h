@@ -88,6 +88,7 @@ extern ssize_t __write (int __fd, __const void *__buf, size_t __n);
 extern __pid_t __fork (void);
 extern int __getpagesize (void) __attribute__ ((__const__));
 extern int __ftruncate (int __fd, __off_t __length);
+extern int __ftruncate64 (int __fd, __off64_t __length);
 extern void *__sbrk (intptr_t __delta);
 
 

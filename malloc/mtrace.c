@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991,92,93,94,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1991-1994,1996-1999,2000,2001 Free Software Foundation, Inc.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
 
@@ -268,7 +268,7 @@ mtrace ()
 #endif
   if (mallfile != NULL || mallwatch != NULL)
     {
-      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "w");
+      mallstream = fopen64 (mallfile != NULL ? mallfile : "/dev/null", "w");
       if (mallstream != NULL)
 	{
 	  /* Make sure we close the file descriptor on exec.  */

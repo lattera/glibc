@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1998,1999,2000,2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -40,7 +40,7 @@ sethostid (id)
     }
 
   /* Open file for writing.  Everybody is allowed to read this file.  */
-  fd = __open (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
+  fd = __open64 (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
   if (fd < 0)
     return -1;
 
@@ -70,9 +70,9 @@ gethostid ()
   int fd;
 
   /* First try to get the ID from a former invocation of sethostid.  */
-  fd = __open (HOSTIDFILE, O_RDONLY);
+  fd = __open64 (HOSTIDFILE, O_RDONLY);
   if (fd < 0)
-    fd = __open (OLD_HOSTIDFILE, O_RDONLY);
+    fd = __open64 (OLD_HOSTIDFILE, O_RDONLY);
   if (fd >= 0)
     {
       ssize_t n = __read (fd, &id, sizeof (id));

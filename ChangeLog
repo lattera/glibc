@@ -1,5 +1,32 @@
 2001-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/ftw.c: Always use readdir64.
+	* io/ftw64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+	* sysdeps/generic/glob.c: Likewise.  Convert results if gl_readdir
+	callback to dirent.  Still allow compiling outside glibc.
+	* sysdeps/gnu/glob64.c: Define COMPILE_GLOB64.
+	* sysdeps/unix/sysv/linux/i386/glob64.c: Likewise.
+
+	* malloc/mtrace.c: Use fopen64.
+	* posix/spawni.c: Use __open64.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c: Likewise.
+
+	* sysdeps/generic/ftruncate64.c: Define __ftruncate64 and make old
+	name a weak alias.
+	* sysdeps/unix/sysv/aix/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ftruncate64.c: Likewise.
+
+	* resolv/res_data.c: Add cast to avoid warning.
+
+	* include/unistd.h: Declare __ftruncate64.
+
+	* sysdeps/generic/utmp_file.c: Use LFS functions and type.
+
 	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Use __lseek64
 	instead of __lseek.
 

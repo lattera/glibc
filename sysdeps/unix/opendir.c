@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,98,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1996,98,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -110,7 +110,7 @@ __opendir (const char *name)
 	 }
     }
 
-  fd = __open (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS);
+  fd = __open64 (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS);
   if (__builtin_expect (fd, 0) < 0)
     return NULL;
 

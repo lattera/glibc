@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -32,7 +32,7 @@
 
 /* Descriptor for the file and position.  */
 static int file_fd = -1;
-static off_t file_offset;
+static off64_t file_offset;
 
 /* Cache for the last read entry.  */
 static struct utmp last_entry;
@@ -138,7 +138,7 @@ setutent_file (void)
 	}
     }
 
-  __lseek (file_fd, 0, SEEK_SET);
+  __lseek64 (file_fd, 0, SEEK_SET);
   file_offset = 0;
 
 #if _HAVE_UT_TYPE - 0
@@ -384,13 +384,13 @@ pututline_file (const struct utmp *data)
   if (found < 0)
     {
       /* We append the next entry.  */
-      file_offset = __lseek (file_fd, 0, SEEK_END);
+      file_offset = __lseek64 (file_fd, 0, SEEK_END);
       if (file_offset % sizeof (struct utmp) != 0)
 	{
 	  file_offset -= file_offset % sizeof (struct utmp);
-	  __ftruncate (file_fd, file_offset);
+	  __ftruncate64 (file_fd, file_offset);
 
-	  if (__lseek (file_fd, 0, SEEK_END) < 0)
+	  if (__lseek64 (file_fd, 0, SEEK_END) < 0)
 	    {
 	      pbuf = NULL;
 	      goto unlock_return;
@@ -401,7 +401,7 @@ pututline_file (const struct utmp *data)
     {
       /* We replace the just read entry.  */
       file_offset -= sizeof (struct utmp);
-      __lseek (file_fd, file_offset, SEEK_SET);
+      __lseek64 (file_fd, file_offset, SEEK_SET);
     }
 
   /* Write the new data.  */
@@ -410,7 +410,7 @@ pututline_file (const struct utmp *data)
       /* If we appended a new record this is only partially written.
 	 Remove it.  */
       if (found < 0)
-	(void) __ftruncate (file_fd, file_offset);
+	(void) __ftruncate64 (file_fd, file_offset);
       pbuf = NULL;
     }
   else
@@ -440,7 +440,7 @@ static int
 updwtmp_file (const char *file, const struct utmp *utmp)
 {
   int result = -1;
-  off_t offset;
+  off64_t offset;
   int fd;
 
   /* Open WTMP file.  */
@@ -451,13 +451,13 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   LOCK_FILE (fd, F_WRLCK);
 
   /* Remember original size of log file.  */
-  offset = __lseek (fd, 0, SEEK_END);
+  offset = __lseek64 (fd, 0, SEEK_END);
   if (offset % sizeof (struct utmp) != 0)
     {
       offset -= offset % sizeof (struct utmp);
-      __ftruncate (fd, offset);
+      __ftruncate64 (fd, offset);
 
-      if (__lseek (fd, 0, SEEK_END) < 0)
+      if (__lseek64 (fd, 0, SEEK_END) < 0)
 	goto unlock_return;
     }
 
@@ -466,7 +466,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
      will remain.  */
   if (__write (fd, utmp, sizeof (struct utmp)) != sizeof (struct utmp))
     {
-      __ftruncate (fd, offset);
+      __ftruncate64 (fd, offset);
       goto unlock_return;
     }
 
