@@ -1262,33 +1262,8 @@ For example, @code{ldexp (0.8, 4)} returns @code{12.8}.
 @end deftypefun
 
 The following functions, which come from BSD, provide facilities
-equivalent to those of @code{ldexp} and @code{frexp}.
-
-@comment math.h
-@comment BSD
-@deftypefun double logb (double @var{x})
-@comment math.h
-@comment BSD
-@deftypefunx float logbf (float @var{x})
-@comment math.h
-@comment BSD
-@deftypefunx {long double} logbl (long double @var{x})
-These functions return the integer part of the base-2 logarithm of
-@var{x}, an integer value represented in type @code{double}.  This is
-the highest integer power of @code{2} contained in @var{x}.  The sign of
-@var{x} is ignored.  For example, @code{logb (3.5)} is @code{1.0} and
-@code{logb (4.0)} is @code{2.0}.
-
-When @code{2} raised to this power is divided into @var{x}, it gives a
-quotient between @code{1} (inclusive) and @code{2} (exclusive).
-
-If @var{x} is zero, the return value is minus infinity if the machine
-supports infinities, and a very small number if it does not.  If @var{x}
-is infinity, the return value is infinity.
-
-For finite @var{x}, the value returned by @code{logb} is one less than
-the value that @code{frexp} would store into @code{*@var{exponent}}.
-@end deftypefun
+equivalent to those of @code{ldexp} and @code{frexp}.  See also the
+@w{ISO C} function @code{logb} which originally also appeared in BSD.
 
 @comment math.h
 @comment BSD
