@@ -1,5 +1,8 @@
 Fri Mar 24 02:35:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* misc/Makefile (headers): Add utmp.h.
+	* misc/utmp.h: New file, incorporated from 4.4-Lite.
+
 	* stdio/printf-parse.h: New file, mostly written by drepper.
 	* stdio/vfprintf.c: Rewritten, mostly by drepper.
 	* stdio/printf-prs.c: Rewritten.

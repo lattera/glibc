@@ -48,10 +48,10 @@ Version 1.10
   for the `printf' and `scanf' families of functions.  For example,
   `printf ("Number %2$d, Mr %1$s\n", "Jones", 6);'' prints
   ``Number 6, Mr Jones''.  This is mainly useful when providing different
-  format strings for different languages, whose grammar may dictate
-  a different ordering of the values being printed.  To support this
+  format strings for different languages, whose grammars may dictate
+  different orderings of the values being printed.  To support this
   feature, the interface for `register_printf_handler' has changed; see
-  the header file <printf.h>.
+  the header file <printf.h> for details.
 
 * The `printf' and `scanf' families of functions now understand a new
   formatting flag for numeric conversions: the ' flag (e.g. %'d or %'f) says
