@@ -1,3 +1,8 @@
+2001-09-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: New file, contributed
+	Stephen L Moshier.
+
 2001-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile: Add rules to build new tests.  Don't run them yet since
