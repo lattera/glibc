@@ -1,5 +1,5 @@
 /* Enqueue and list of read or write requests.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef lio_listio
 #include <aio.h>
 #include <assert.h>
 #include <errno.h>
@@ -26,6 +27,8 @@
 
 #include "aio_misc.h"
 
+#define LIO_OPCODE_BASE 0
+#endif
 
 /* We need this special structure to handle asynchronous I/O.  */
 struct async_waitlist
@@ -72,7 +75,8 @@ lio_listio (mode, list, nent, sig)
       {
 	list[cnt]->aio_sigevent.sigev_notify = SIGEV_NONE;
 	requests[cnt] = __aio_enqueue_request ((aiocb_union *) list[cnt],
-					       list[cnt]->aio_lio_opcode);
+					       (list[cnt]->aio_lio_opcode
+					        | LIO_OPCODE_BASE));
 
 	if (requests[cnt] != NULL)
 	  /* Successfully enqueued.  */

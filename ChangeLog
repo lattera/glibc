@@ -1,3 +1,10 @@
+2003-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/lio_listio.c (LIO_OPCODE_BASE): Define.
+	(lio_listio): Use it.
+	* sysdeps/pthread/lio_listio64.c: Include lio_listio.c instead of
+	after few defines to avoid duplication.
+
 2003-07-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/stdio.h (__libc_fatal): Add libc_hidden_proto.
