@@ -183,7 +183,7 @@ check_libc_caller (const void *caller)
 	    expected1_from = (const void *) l->l_map_start;
 	    expected1_to = (const void *) l->l_map_end;
 	  }
-	else if (strcmp (expected1, l->l_name) == 0)
+	else if (strcmp (expected2, l->l_name) == 0)
 	  {
 	  is_2:
 	    expected2_from = (const void *) l->l_map_start;

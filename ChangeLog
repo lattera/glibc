@@ -1,3 +1,7 @@
+2004-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (check_libc_caller): Fix typo.
+
 2004-03-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/tst-dlmodcount.c: Include stddef.h and stdlib.h.
