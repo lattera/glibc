@@ -57,7 +57,7 @@ __pthread_setspecific (key, value)
       idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
 
       /* This is the second level array.  Allocate it if necessary.  */
-      level2 = THREAD_GETMEM_NC (self, specific[idx1st]);
+      level2 = THREAD_GETMEM_NC (self, specific, idx1st);
       if (level2 == NULL)
 	{
 	  if (value == NULL)
@@ -71,7 +71,7 @@ __pthread_setspecific (key, value)
 	  if (level2 == NULL)
 	    return ENOMEM;
 
-	  THREAD_SETMEM_NC (self, specific[idx1st], level2);
+	  THREAD_SETMEM_NC (self, specific, idx1st, level2);
 	}
 
       /* Pointer to the right array element.  */

@@ -45,7 +45,7 @@ __pthread_getspecific (key)
 	 for this thread since the second level array is not allocated
 	 return NULL, too.  */
       struct pthread_key_data *level2 = THREAD_GETMEM_NC (THREAD_SELF,
-							  specific[idx1st]);
+							  specific, idx1st);
       if (level2 == NULL)
 	/* Not allocated, therefore no data.  */
 	return NULL;

@@ -1,5 +1,16 @@
 2002-11-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/tls.h (THREAD_GETMEM_NC): Change interface.  It now
+	takes the array member name and the index as parameters.
+	(THREAD_SETMEM_NC): Likewise.
+	* pthread_getspecific.c: Use new THREAD_GETMEM_NC interface.
+	* pthread_setspecific.c: Use new THREAD_GETMEM_NC and THREAD_SETMEM_NC
+	interfaces.
+
+	* sysdeps/i386/tls.h (THREAD_SETMEM): Use size of member element
+	to decide which code to use.
+	(THREAD_SETMEM_NC): Likewise.
+
 	* allocatestack.c (queue_stack): Don't remove stack from list here.
 	Do it in the caller.  Correct condition to prematurely terminate
 	loop to free stacks.
