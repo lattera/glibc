@@ -1,3 +1,11 @@
+2004-02-02  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (check_matching): Add P_MATCH_FIRST parameter.
+	(re_search_internal): Pass new parameter to check_matching.
+	(check_matching): Unless a parenthesized group is found at the
+	beginning of the regexp, advance P_MATCH_FIRST until we entered
+	a state different from the initial state.
+
 2004-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/libm-test.inc (lround_test): Add new test.

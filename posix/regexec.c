@@ -60,7 +60,8 @@ static inline re_dfastate_t *acquire_init_state_context
      __attribute ((always_inline)) internal_function;
 static reg_errcode_t prune_impossible_nodes (re_match_context_t *mctx)
      internal_function;
-static int check_matching (re_match_context_t *mctx, int fl_longest_match)
+static int check_matching (re_match_context_t *mctx, int fl_longest_match,
+			   int *p_match_first)
      internal_function;
 static int check_halt_node_context (const re_dfa_t *dfa, int node,
 				    unsigned int context) internal_function;
@@ -745,7 +746,8 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	  /* It seems to be appropriate one, then use the matcher.  */
 	  /* We assume that the matching starts from 0.  */
 	  mctx.state_log_top = mctx.nbkref_ents = mctx.max_mb_elem_len = 0;
-	  match_last = check_matching (&mctx, fl_longest_match);
+	  match_last = check_matching (&mctx, fl_longest_match,
+				       range >= 0 ? &match_first : NULL);
 	  if (match_last != -1)
 	    {
 	      if (BE (match_last == -2, 0))
@@ -966,13 +968,16 @@ acquire_init_state_context (err, mctx, idx)
    and return the index where the matching end, return -1 if not match,
    or return -2 in case of an error.
    FL_LONGEST_MATCH means we want the POSIX longest matching.
+   If P_MATCH_FIRST is not NULL, and the match fails, it is set to the
+   next place where we may want to try matching.
    Note that the matcher assume that the maching starts from the current
    index of the buffer.  */
 
 static int
-check_matching (mctx, fl_longest_match)
+check_matching (mctx, fl_longest_match, p_match_first)
     re_match_context_t *mctx;
     int fl_longest_match;
+    int *p_match_first;
 {
   re_dfa_t *const dfa = mctx->dfa;
   reg_errcode_t err;
@@ -980,6 +985,7 @@ check_matching (mctx, fl_longest_match)
   int match_last = -1;
   int cur_str_idx = re_string_cur_idx (&mctx->input);
   re_dfastate_t *cur_state;
+  int at_init_state = p_match_first != NULL, skipped = 0;
 
   cur_state = acquire_init_state_context (&err, mctx, cur_str_idx);
   /* An initial state must not be NULL(invalid state).  */
@@ -992,6 +998,7 @@ check_matching (mctx, fl_longest_match)
      later.  E.g. Processing back references.  */
   if (BE (dfa->nbackref, 0))
     {
+      at_init_state = 0;
       err = check_subexp_matching_top (mctx, &cur_state->nodes, 0);
       if (BE (err != REG_NOERROR, 0))
 	return err;
@@ -1022,7 +1029,16 @@ check_matching (mctx, fl_longest_match)
 
   while (!re_string_eoi (&mctx->input))
     {
+      re_dfastate_t *old_state = cur_state;
       cur_state = transit_state (&err, mctx, cur_state);
+      if (at_init_state)
+	{
+	  if (old_state == cur_state)
+	    skipped++;
+	  else
+	    at_init_state = 0;
+	}
+
       if (cur_state == NULL) /* Reached at the invalid state or an error.  */
 	{
 	  cur_str_idx = re_string_cur_idx (&mctx->input);
@@ -1062,6 +1078,10 @@ check_matching (mctx, fl_longest_match)
 	    }
 	}
    }
+
+  if (match_last == -1 && skipped)
+    *p_match_first += skipped;
+
   return match_last;
 }
 
