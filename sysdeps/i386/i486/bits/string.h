@@ -329,7 +329,7 @@ __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
   register unsigned long int __d0;
-  register void *__res;
+  register unsigned char *__res;
   if (__n == 0)
     return NULL;
 #ifdef __i686__

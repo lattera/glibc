@@ -23,32 +23,43 @@
 #ifndef	_SIGNAL_H
 
 #if !defined __need_sig_atomic_t && !defined __need_sigset_t
-# define _SIGNAL_H	1
-# include <features.h>
+# define _SIGNAL_H
 #endif
+
+#include <features.h>
 
 __BEGIN_DECLS
 
-#include <bits/types.h>
 #include <bits/sigset.h>		/* __sigset_t, __sig_atomic_t.  */
 
-#if defined _SIGNAL_H && defined __USE_XOPEN && !defined pid_t
+/* An integral type that can be modified atomically, without the
+   possibility of a signal arriving in the middle of the operation.  */
+#ifndef __sig_atomic_t_defined
+# if defined __need_sig_atomic_t || defined _SIGNAL_H
+#  undef __need_sig_atomic_t
+#  define __sig_atomic_t_defined 1
+typedef __sig_atomic_t sig_atomic_t;
+# endif 
+#endif
+
+#ifndef __sigset_t_defined
+# if defined __need_sigset_t || (defined _SIGNAL_H && defined __USE_POSIX)
+#  undef __need_sigset_t
+#  define __sigset_t_defined	1
+typedef __sigset_t sigset_t;
+# endif
+#endif
+
+#ifdef _SIGNAL_H
+
+#include <bits/types.h>
+#include <bits/signum.h>
+
+#if defined __USE_XOPEN && !defined pid_t
 typedef __pid_t pid_t;
 # define pid_t pid_t
 #endif	/* Unix98 */
 
-#if !defined __sig_atomic_t_defined \
-    && (defined _SIGNAL_H || defined __need_sig_atomic_t)
-/* An integral type that can be modified atomically, without the
-   possibility of a signal arriving in the middle of the operation.  */
-typedef __sig_atomic_t sig_atomic_t;
-# define __sig_atomic_t_defined
-#endif /* `sig_atomic_t' undefined and <signal.h> or need `sig_atomic_t'.  */
-#undef __need_sig_atomic_t
-
-#ifdef _SIGNAL_H
-
-#include <bits/signum.h>
 
 /* Type of a signal handler.  */
 typedef void (*__sighandler_t) __PMT ((int));
@@ -120,7 +131,7 @@ extern void psignal __P ((int __sig, __const char *__s));
    selects the X/Open version.  */
 extern int __sigpause __P ((int __sig_or_mask, int __is_sig));
 
-#if defined __USE_BSD || defined __USE_GNU
+#ifdef __USE_BSD
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
 extern int sigpause __P ((int __mask));
@@ -166,19 +177,7 @@ typedef __sighandler_t sighandler_t;
 typedef __sighandler_t sig_t;
 #endif
 
-#endif /* <signal.h> included.  */
-
-
-#if !defined __sigset_t_defined \
-    && ((defined _SIGNAL_H  && defined __USE_POSIX) || defined __need_sigset_t)
-typedef __sigset_t sigset_t;
-# define __sigset_t_defined	1
-#endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
-#undef __need_sigset_t
-
 #ifdef __USE_POSIX
-
-# ifdef _SIGNAL_H
 
 /* We need `struct timespec' later on.  */
 #  define __need_timespec
@@ -253,11 +252,9 @@ extern int sigtimedwait __P ((__const sigset_t *__set, siginfo_t *__info,
 extern int sigqueue __P ((__pid_t __pid, int __sig,
 			  __const union sigval __val));
 
-# endif /* <signal.h> included.  */
-
 #endif /* Use POSIX.  */
 
-#if defined _SIGNAL_H && defined __USE_BSD
+#ifdef __USE_BSD
 
 /* Names of the signals.  This variable exists only for compatibility.
    Use `strsignal' instead (see <string.h>).  */
@@ -295,13 +292,10 @@ extern int sigvec __P ((int __sig, __const struct sigvec *__vec,
 /* Restore the state saved in SCP.  */
 extern int sigreturn __P ((struct sigcontext *__scp));
 
-#endif /* signal.h included and use BSD.  */
+#endif /*  use BSD.  */
 
 
-#if defined _SIGNAL_H && (defined __USE_BSD || defined __USE_XOPEN_EXTENDED)
-
-# define __need_size_t
-# include <stddef.h>
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system
@@ -321,10 +315,9 @@ extern int sigstack __P ((__const struct sigstack *__ss,
 extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));
 
-#endif /* signal.h included and use BSD or X/Open Unix.  */
+#endif /* use BSD or X/Open Unix.  */
 
-
-#if defined _SIGNAL_H && defined __USE_UNIX98
+#ifdef __USE_UNIX98
 /* Simplified interface for signal management.  */
 
 /* Add SIG to the calling process' signal mask.  */
@@ -338,7 +331,7 @@ extern int sigignore __P ((int __sig));
 
 /* Set the disposition of SIG.  */
 extern __sighandler_t sigset __P ((int __sig, __sighandler_t __disp));
-#endif
+#endif /* use Unix98 */
 
 #ifdef __USE_POSIX
 /* Some of the functions for handling signals in threaded programs must
@@ -357,6 +350,8 @@ extern int __libc_current_sigrtmax __P ((void));
 /* Allocate real-time signal with highest/lowest available priority.  */
 extern int __libc_allocate_rtsig __P ((int __high));
 
+#endif /* signal.h  */
+
 __END_DECLS
 
-#endif /* signal.h  */
+#endif /* not signal.h */

@@ -163,6 +163,23 @@ install_handler (void)
   sigemptyset (&sa.sa_mask);
   sa.sa_flags = SA_RESTART;
 
+  /* Maybe we are expected to use an alternative stack.  */
+  if (getenv ("SEGFAULT_USE_ALTSTACK") != 0)
+    {
+      void *stack_mem = malloc (2 * SIGSTKSZ);
+      struct sigaltstack ss;
+
+      if (stack_mem != NULL)
+	{
+	  ss.ss_sp = stack_mem;
+	  ss.ss_flags = 0;
+	  ss.ss_size = 2 * SIGSTKSZ;
+
+	  if (sigaltstack (&ss, NULL) == 0)
+	    sa.sa_flags |= SA_ONSTACK;
+	}
+    }
+  
   if (sigs == NULL)
     sigaction (SIGSEGV, &sa, NULL);
   else if (sigs[0] == '\0')
@@ -190,21 +207,5 @@ install_handler (void)
 #endif
       INSTALL_FOR_SIG (SIGABRT, "abrt");
       INSTALL_FOR_SIG (SIGFPE, "fpe");
-    }
-
-  /* Maybe we are expected to use an alternative stack.  */
-  if (getenv ("SEGFAULT_USE_ALTSTACK") != 0)
-    {
-      void *stack_mem = malloc (2 * SIGSTKSZ);
-      struct sigaltstack ss;
-
-      if (stack_mem != NULL)
-	{
-	  ss.ss_sp = stack_mem;
-	  ss.ss_flags = SS_ONSTACK;
-	  ss.ss_size = 2 * SIGSTKSZ;
-
-	  sigaltstack (&ss, NULL);
-	}
     }
 }

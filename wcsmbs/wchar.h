@@ -244,9 +244,6 @@ extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
 
 /* Write wide character representation of multibyte character string
    SRC to DST.  */
-extern size_t __mbsrtowcs __P ((wchar_t *__restrict __dst,
-				__const char **__restrict __src,
-				size_t __len, mbstate_t *__restrict __ps));
 extern size_t mbsrtowcs __P ((wchar_t *__restrict __dst,
 			      __const char **__restrict __src,
 			      size_t __len, mbstate_t *__restrict __ps));

@@ -17,6 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _BITS_SIGTHREAD_H 
+#define _BITS_SIGTHREAD_H	1
+
 #if !defined _SIGNAL_H && !defined _PTHREAD_H
 # error "Never include this file directly.  Use <pthread.h> instead"
 #endif
@@ -30,3 +33,5 @@ extern int pthread_sigmask __P ((int __how, __const __sigset_t *__newmask,
 
 /* Send signal SIGNO to the given thread. */
 extern int pthread_kill __P ((pthread_t __thread, int __signo));
+
+#endif	/* bits/sigthread.h */

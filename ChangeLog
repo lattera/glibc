@@ -1,3 +1,19 @@
+1998-09-12  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/segfault.c (install_handler): Install signal
+	handler with SA_ONSTACK instead of setting the stack flags to
+	SS_ONSTACK.  Do not install handler for SIGSTKFLT if it is not
+	defined.
+
+1998-09-12 14:24 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* signal/signal.h: Fix multiple inclusion guard to cover the
+	entire file.
+	* wcsmbs/wchar.h: Remove prototype of internal function
+	__mbsrtowcs.
+	* sysdeps/i386/i486/bits/string.h (memchr): Don't do
+	arithmetic on `void *'.
+
 1998-09-12 01:09  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: Fix wrong tests.  Add new tests.

@@ -1,3 +1,8 @@
+1998-09-12 14:24 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
+ 
+	* linuxthreads/sysdeps/unix/sysv/linux/bits/sigthread.h: Add 
+	multiple inclusion guard. 
+ 
 1998-09-02 11:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* signals.c (sigaction): Check that sig is less than NSIG to avoid
