@@ -687,7 +687,8 @@ load_profdata (const char *name, struct shobj *shobj)
 
   if (st.st_size != shobj->expected_size)
     {
-      error (0, 0, _("profiling data file `%s' does match shared object `%s'"),
+      error (0, 0,
+	     _("profiling data file `%s' does not match shared object `%s'"),
 	     name, shobj->name);
       close (fd);
       return NULL;
