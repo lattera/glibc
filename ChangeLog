@@ -1,5 +1,14 @@
 2000-04-04  Andreas Schwab  <schwab@suse.de>
 
+	* elf/cache.c (print_entry): Only look at the type field when
+	printing the type.
+
+2000-04-04  Andreas Schwab  <schwab@suse.de>
+
+	* iconvdata/big5.c (BODY): Fix typo.
+
+2000-04-04  Andreas Schwab  <schwab@suse.de>
+
 	* sysdeps/m68k/dl-machine.h (RTLD_START): Rewrite for new init
 	function interface.  Remove unused _dl_start_user entry point.
 

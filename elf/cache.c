@@ -72,7 +72,7 @@ static void
 print_entry (const char *lib, int flag, const char *key)
 {
   printf ("\t%s (", lib);
-  switch (flag)
+  switch (flag & FLAG_TYPE_MASK)
     {
     case FLAG_LIBC4:
     case FLAG_ELF:
