@@ -89,7 +89,8 @@ $error:
 
 	.ent thread_start
 thread_start:
-	.frame	zero,0,zero,0
+	.frame	fp,0,fp,0
+	mov	0, fp
 	.prologue 0
 
 	/* Load up the arguments.  */

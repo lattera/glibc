@@ -44,10 +44,11 @@
 	.ent _start, 0
 	.type _start,@function
 _start:
-	.frame	$31, 0, $31
+	.frame	$15, 0, $15
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 	subq	sp, 16, sp
+	mov	0, $15
 	.prologue 0
 
   /* Load address of the user's main function.  */
