@@ -20,11 +20,15 @@ Cambridge, MA 02139, USA.  */
 #define _ERRNO_H
 #include <errnos.h>
 
-       .comm errno, 4
+	.section .bss
+	.globl errno
+errno:	.space 4
 #ifdef __ELF__
-       .type errno, @object
+	.type errno, @object
+	.size errno, 4
 #endif
 
+	.text
 LEAF(__syscall_error, 0)
 	ldgp	gp, 0(t12)
 	.prologue 1
