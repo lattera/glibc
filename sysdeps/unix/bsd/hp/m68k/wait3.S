@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-ENTRY(___wait3)
+ENTRY(__wait3)
 	movel sp@(8), d1
 	moveal sp@(12), a0
 	movel #SYS_wait, d0
