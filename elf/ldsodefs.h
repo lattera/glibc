@@ -363,7 +363,8 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
    If LAZY is nonzero, don't relocate its PLT.  */
 extern void _dl_relocate_object (struct link_map *map,
 				 struct link_map *scope[],
-				 int lazy) internal_function;
+				 int lazy, int consider_profiling)
+     internal_function;
 
 /* Check the version dependencies of all objects available through
    MAP.  If VERBOSE print some more diagnostics.  */
@@ -406,8 +407,7 @@ extern void _dl_start_profile (struct link_map *map, const char *output_dir)
      internal_function;
 
 /* The actual functions used to keep book on the calls.  */
-extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
-     internal_function;
+extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
 
 
 /* Show the members of the auxiliary array passed up from the kernel.  */

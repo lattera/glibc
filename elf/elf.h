@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ian Lance Taylor <ian@cygnus.com>.
 
@@ -21,13 +21,13 @@
 #ifndef _ELF_H
 #define	_ELF_H 1
 
-#include <sys/cdefs.h>
+#include <features.h>
 
 __BEGIN_DECLS
 
 /* Standard ELF types.  */
 
-#include <inttypes.h>
+#include <stdint.h>
 
 /* Type for a 16-bit quantity.  */
 typedef uint16_t Elf32_Half;

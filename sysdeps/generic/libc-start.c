@@ -25,11 +25,12 @@ extern void __libc_init_first (int argc, char **argv, char **envp);
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
 extern int __libc_multiple_libcs;
+extern void *__libc_stack_end;
 
 int
 __libc_start_main (int (*main) (int, char **, char **), int argc,
 		   char **argv, void (*init) (void), void (*fini) (void),
-		   void (*rtld_fini) (void))
+		   void (*rtld_fini) (void), void *stack_end)
 {
 #ifndef PIC
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
@@ -38,6 +39,9 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
   int *dummy_addr = &_dl_starting_up;
 
   __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
+
+  /* Store the lowest stack address.  */
+  __libc_stack_end = stack_end;
 #endif
 
   /* Set the global _environ variable correctly.  */

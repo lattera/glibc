@@ -33,7 +33,7 @@ int
 mkstemp (template)
      char *template;
 {
-  static const char letters[]
+  static const char letters[62]
     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   static uint64_t value;
   struct timeval tv;

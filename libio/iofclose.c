@@ -43,7 +43,8 @@ _IO_new_fclose (fp)
   else
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
   _IO_FINISH (fp);
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
   if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
     {
       fp->_IO_file_flags = 0;

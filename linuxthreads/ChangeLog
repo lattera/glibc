@@ -1,3 +1,7 @@
+1998-06-07 13:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Optimize cleanup handlers a bit.
+
 1998-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* attr.c: Correct typo.

@@ -38,7 +38,7 @@ routines	:= signal raise killpg \
 
 tests		:= tst-signal
 
-distribute	:= sigsetops.h testrtsig.h
+distribute	:= sigsetops.h testrtsig.h sigset-cvt-mask.h
 
 
 include ../Rules

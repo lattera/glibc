@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  LinuxThreads version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,13 +119,14 @@ typedef pthread_key_t __libc_key_t;
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(FCT, ARG) \
   { struct _pthread_cleanup_buffer _buffer;				      \
-    if (_pthread_cleanup_push_defer != NULL) {				      \
+    int _avail = _pthread_cleanup_push_defer != NULL;			      \
+    if (_avail) {							      \
       _pthread_cleanup_push_defer (&_buffer, (FCT), (ARG));		      \
     }
 
 /* End critical region with cleanup.  */
 #define __libc_cleanup_region_end(DOIT) \
-    if (_pthread_cleanup_push_defer != NULL) {				      \
+    if (_avail) {							      \
       _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
     }									      \
   }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -34,5 +34,6 @@ rewind (fp)
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   _IO_rewind (fp);
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
 }

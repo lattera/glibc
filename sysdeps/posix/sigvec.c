@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,55 +20,20 @@
 #include <errno.h>
 #include <stddef.h>
 
+/* Include macros to convert between `sigset_t' and old-style mask. */
+#include "sigset-cvt-mask.h"
 
 /* We use a wrapper handler to support SV_RESETHAND.  */
-
-static __sighandler_t wrapped_handlers[NSIG];
-static sigset_t wrapped_masks[NSIG];
-
-static void wrapper_handler __P ((int sig));
-static inline int convert_mask __P ((sigset_t *set, const int mask));
-
-static void
-wrapper_handler (sig)
-     int sig;
+struct sigvec_wrapper_data
 {
-  int save;
-  struct sigaction act;
+  __sighandler_t sw_handler;
+  unsigned int sw_mask;
+};
 
-  act.sa_handler = SIG_DFL;
-  act.sa_mask = wrapped_masks[sig];
-  act.sa_flags = 0;
-  save = errno;
-  (void) __sigaction (sig, &act, (struct sigaction *) NULL);
-  __set_errno (save);
+static void sigvec_wrapper_handler __P ((int sig));
 
-  (*wrapped_handlers[sig]) (sig);
-}
+static struct sigvec_wrapper_data sigvec_wrapper_data[NSIG];
 
-static inline int
-convert_mask (set, mask)
-     sigset_t *set;
-     const int mask;
-{
-  register int sig;
-
-  if (sizeof (*set) == sizeof (mask))
-    *(int *) set = mask;
-  else if (sizeof (*set) == sizeof (unsigned long int))
-    *(unsigned long int *) set = (unsigned int) mask;
-  else
-    {
-      if (__sigemptyset (set) < 0)
-	return -1;
-
-      for (sig = 1; sig < NSIG && sig <= sizeof (mask) * 8; ++sig)
-	if ((mask & sigmask (sig)) && __sigaddset (set, sig) < 0)
-	  return -1;
-    }
-
-  return 0;
-}
 
 /* If VEC is non-NULL, set the handler for SIG to the `sv_handler' member
    of VEC.  The signals in `sv_mask' will be blocked while the handler runs.
@@ -91,25 +56,32 @@ __sigvec (sig, vec, ovec)
 	n = NULL;
       else
 	{
-	  n = &new;
-	  n->sa_handler = vec->sv_handler;
-	  if (convert_mask (&n->sa_mask, vec->sv_mask) < 0)
-	    return -1;
-	  n->sa_flags = 0;
+	  __sighandler_t handler;
+	  unsigned int mask;
+	  unsigned int sv_flags;
+	  unsigned int sa_flags;
 
-	  if (vec->sv_flags & SV_ONSTACK)
+	  handler = vec->sv_handler;
+	  mask = vec->sv_mask;
+	  sv_flags = vec->sv_flags;
+	  sa_flags = 0;
+	  if (sv_flags & SV_ONSTACK)
 	    {
 #ifdef SA_ONSTACK
-	      n->sa_flags |= SA_ONSTACK;
+	      sa_flags |= SA_ONSTACK;
 #else
 	      __set_errno (ENOSYS);
 	      return -1;
 #endif
 	    }
 #ifdef SA_RESTART
-	  if (!(vec->sv_flags & SV_INTERRUPT))
-	    n->sa_flags |= SA_RESTART;
+	  if (!(sv_flags & SV_INTERRUPT))
+	    sa_flags |= SA_RESTART;
 #endif
+	  n = &new;
+	  new.sa_handler = handler;
+	  sigset_set_old_mask (&new.sa_mask, mask);
+	  new.sa_flags = sa_flags;
 	}
 
       if (__sigaction (sig, n, &old) < 0)
@@ -117,12 +89,18 @@ __sigvec (sig, vec, ovec)
     }
   else
     {
+      __sighandler_t handler;
+      unsigned int mask;
+      struct sigvec_wrapper_data *data;
       struct sigaction wrapper;
 
-      wrapper.sa_handler = wrapper_handler;
-      wrapped_handlers[sig] = vec->sv_handler;
-      if (convert_mask (&wrapped_masks[sig], vec->sv_mask) < 0)
-	return -1;
+      handler = vec->sv_handler;
+      mask = (unsigned int)vec->sv_mask;
+      data = &sigvec_wrapper_data[sig];
+      wrapper.sa_handler = sigvec_wrapper_handler;
+      /* FIXME: should we set wrapper.sa_mask, wrapper.sa_flags??  */
+      data->sw_handler = handler;
+      data->sw_mask = mask;
 
       if (__sigaction (sig, &wrapper, &old) < 0)
 	return -1;
@@ -130,38 +108,58 @@ __sigvec (sig, vec, ovec)
 
   if (ovec != NULL)
     {
-      register int i;
-      int mask = 0;
+      __sighandler_t handler;
+      unsigned int sv_flags;
+      unsigned int sa_flags;
+      unsigned int mask;
 
-      if (sizeof (int) == sizeof (sigset_t))
-	mask = *(int *) &old.sa_mask;
-      else if (sizeof (unsigned long int) == sizeof (sigset_t))
-	mask = *(unsigned long int *) &old.sa_mask;
-      else
-	for (i = 1; i < NSIG && i <= sizeof (mask) * 8; ++i)
-	  if (__sigismember (&old.sa_mask, i))
-	    mask |= sigmask (i);
-
-      ovec->sv_mask = mask;
-      ovec->sv_flags = 0;
+      handler = old.sa_handler;
+      sv_flags = 0;
+      sa_flags = old.sa_flags;
+      if (handler == sigvec_wrapper_handler)
+	{
+	  handler = sigvec_wrapper_data[sig].sw_handler;
+	  /* should we use data->sw_mask?? */
+	  sv_flags |= SV_RESETHAND;
+	}
+      sigset_get_old_mask (&old.sa_mask, mask);
 #ifdef SA_ONSTACK
-      if (old.sa_flags & SA_ONSTACK)
-	ovec->sv_flags |= SV_ONSTACK;
+     if (sa_flags & SA_ONSTACK)
+	sv_flags |= SV_ONSTACK;
 #endif
 #ifdef SA_RESTART
-      if (!(old.sa_flags & SA_RESTART))
+     if (!(sa_flags & SA_RESTART))
 #endif
-	ovec->sv_flags |= SV_INTERRUPT;
-      if (old.sa_handler == wrapper_handler)
-	{
-	  ovec->sv_flags |= SV_RESETHAND;
-	  ovec->sv_handler = wrapped_handlers[sig];
-	}
-      else
-	ovec->sv_handler = old.sa_handler;
+	sv_flags |= SV_INTERRUPT;
+      ovec->sv_handler = handler;
+      ovec->sv_mask = (int)mask;
+      ovec->sv_flags = (int)sv_flags;
     }
 
   return 0;
 }
 
 weak_alias (__sigvec, sigvec)
+
+
+static void
+sigvec_wrapper_handler (sig)
+     int sig;
+{
+  struct sigvec_wrapper_data *data;
+  unsigned int mask;
+  struct sigaction act;
+  int save;
+  __sighandler_t handler;
+
+  data = &sigvec_wrapper_data[sig];
+  mask = data->sw_mask;
+  act.sa_handler = SIG_DFL;
+  sigset_set_old_mask (&act.sa_mask, mask);
+  act.sa_flags = 0;
+  save = errno;
+  handler = data->sw_handler;
+  (void) __sigaction (sig, &act, (struct sigaction *) NULL);
+  __set_errno (save);
+  (*handler) (sig);
+}

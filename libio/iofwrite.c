@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -40,7 +40,8 @@ _IO_fwrite (buf, size, count, fp)
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   written = _IO_sputn (fp, (const char *) buf, request);
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
   /* Many traditional implementations return 0 if size==0 && count > 0,
      but ANSI requires us to return count in this case. */
   if (written == request)

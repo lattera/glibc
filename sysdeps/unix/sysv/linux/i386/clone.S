@@ -33,10 +33,10 @@ ENTRY(__clone)
 	movl	$-EINVAL,%eax
 	movl	4(%esp),%ecx		/* no NULL function pointers */
 	testl	%ecx,%ecx
-	jz	syscall_error
+	jz	SYSCALL_ERROR_LABEL
 	movl	8(%esp),%ecx		/* no NULL stack pointers */
 	testl	%ecx,%ecx
-	jz	syscall_error
+	jz	SYSCALL_ERROR_LABEL
 
 	/* Insert the argument onto the new stack.  */
 	subl	$8,%ecx
@@ -56,7 +56,7 @@ ENTRY(__clone)
 	popl	%ebx
 
 	test	%eax,%eax
-	jl	syscall_error
+	jl	SYSCALL_ERROR_LABEL
 	jz	thread_start
 
 L(pseudo_end):

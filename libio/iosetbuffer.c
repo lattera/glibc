@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -38,7 +38,8 @@ _IO_setbuffer (fp, buf, size)
   if (!buf)
     size = 0;
   (void) _IO_SETBUF (fp, buf, size);
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
 }
 
 #ifdef weak_alias

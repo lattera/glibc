@@ -93,6 +93,9 @@ const char *_dl_inhibit_rpath;		/* RPATH values which should be
    never be called.  */
 int _dl_starting_up;
 
+/* This variable contains the lowest stack address ever used.  */
+void *__libc_stack_end;
+
 static void dl_main (const ElfW(Phdr) *phdr,
 		     ElfW(Half) phent,
 		     ElfW(Addr) *user_entry);
@@ -201,7 +204,7 @@ relocate_doit (void *a)
   struct relocate_args *args = (struct relocate_args *) a;
 
   _dl_relocate_object (args->l, _dl_object_relocation_scope (args->l),
-		       args->lazy);
+		       args->lazy, 0);
 }
 
 static void
@@ -852,6 +855,11 @@ of this helper program; chances are you did not intend to run this program.\n\
        know that because it is self-contained).  */
 
     struct link_map *l;
+    int consider_profiling = _dl_profile != NULL;
+
+    /* If we are profiling we also must do lazy reloaction.  */
+    lazy |= consider_profiling;
+
     l = _dl_loaded;
     while (l->l_next)
       l = l->l_next;
@@ -859,7 +867,8 @@ of this helper program; chances are you did not intend to run this program.\n\
       {
 	if (l != &_dl_rtld_map)
 	  {
-	    _dl_relocate_object (l, _dl_object_relocation_scope (l), lazy);
+	    _dl_relocate_object (l, _dl_object_relocation_scope (l), lazy,
+				 consider_profiling);
 	    *_dl_global_scope_end = NULL;
 	  }
 	l = l->l_prev;
@@ -875,7 +884,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     if (_dl_rtld_map.l_opencount > 0)
       /* There was an explicit ref to the dynamic linker as a shared lib.
 	 Re-relocate ourselves with user-controlled symbol definitions.  */
-      _dl_relocate_object (&_dl_rtld_map, &_dl_default_scope[2], 0);
+      _dl_relocate_object (&_dl_rtld_map, &_dl_default_scope[2], 0, 0);
   }
 
   {

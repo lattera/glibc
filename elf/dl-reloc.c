@@ -28,7 +28,8 @@
 
 void
 internal_function
-_dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
+_dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy,
+		     int consider_profiling)
 {
   if (l->l_relocated)
     return;
@@ -72,9 +73,9 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 			  l->l_name, (flags)))
 
 #include "dynamic-link.h"
-    ELF_DYNAMIC_RELOCATE (l, lazy, 1);
+    ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);
 
-    if (_dl_profile_map == l)
+    if (_dl_profile != NULL)
       {
 	/* Allocate the array which will contain the already found
 	   relocations.  */

@@ -31,12 +31,10 @@
 /* Store (- %eax) into errno through the GOT.  */
 # ifdef _LIBC_REENTRANT
 #  define SYSCALL_ERROR_HANDLER						      \
-  .type syscall_error,@function;					      \
-0:movl (%esp),%ebx;							      \
+1:movl (%esp),%ebx;							      \
   ret;									      \
-syscall_error:								      \
-  pushl %ebx;								      \
-  call 0b;								      \
+0:pushl %ebx;								      \
+  call 1b;								      \
   addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
@@ -46,25 +44,22 @@ syscall_error:								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
   movl $-1, %eax;							      \
-  jmp L(pseudo_end);							      \
-  .size syscall_error,.-syscall_error;
+  jmp L(pseudo_end);
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
 # else
 #  define SYSCALL_ERROR_HANDLER						      \
   .type syscall_error,@function;					      \
-0:movl (%esp),%ecx;							      \
+1:movl (%esp),%ecx;							      \
   ret;									      \
-syscall_error:								      \
-  call 0b;								      \
+0:call 1b;								      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \
   movl $-1, %eax;							      \
-  jmp L(pseudo_end);							      \
-  .size syscall_error,.-syscall_error;
+  jmp L(pseudo_end);
 # endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 

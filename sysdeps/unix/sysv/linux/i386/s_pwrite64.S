@@ -44,10 +44,10 @@ ENTRY (__syscall_pwrite64)
 	movl	0x10(%esp,1),%ebx
 	/* Load syscall number into %eax.  */
 	movl	$SYS_ify(pwrite), %eax
-	int	$0x80		/* Do the system call.  */
-	POPARGS_5		/* Restore register contents.  */
-	cmpl	$-4095, %eax	/* Check %eax for error.  */
-	jae	syscall_error	/* Jump to error handler if error.  */
+	int	$0x80			/* Do the system call.  */
+	POPARGS_5			/* Restore register contents.  */
+	cmpl	$-4095, %eax		/* Check %eax for error.  */
+	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 #endif
 L(pseudo_end):
 	ret			/* Return to caller.  */

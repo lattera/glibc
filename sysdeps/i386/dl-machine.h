@@ -105,8 +105,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       if (profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
-	  /* Say that we really want profiling and the timers are started.  */
-	  _dl_profile_map = l;
+
+	  if (_dl_name_match_p (_dl_profile, l))
+	    /* This is the object we are looking for.  Say that we really
+	       want profiling and the timers are started.  */
+	    _dl_profile_map = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -209,6 +212,8 @@ _dl_start_user:\n\
 	call 0f\n\
 0:	popl %ebx\n\
 	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx\n\
+	# Store the highest stack address\n\
+	movl %esp,__libc_stack_end@GOT(%ebx)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	movl _dl_skip_args@GOT(%ebx), %eax\n\

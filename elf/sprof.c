@@ -68,15 +68,15 @@ extern int __profile_frequency __P ((void));
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
-#define OPT_COUNT_TOTAL	1
-#define OPT_TEST 2
+#define OPT_TEST	1
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
 {
   { NULL, 0, NULL, 0, N_("Output selection:") },
-  { "count-total", OPT_COUNT_TOTAL, NULL, 0,
-    N_("print number of invocations for each function") },
+  { "flat-profile", 'p', NULL, 0,
+    N_("generate flat profile with counts and ticks") },
+
   { "test", OPT_TEST, NULL, OPTION_HIDDEN, NULL },
   { NULL, 0, NULL, 0, NULL }
 };
@@ -101,7 +101,9 @@ static struct argp argp =
 static enum
 {
   NONE = 0,
-  COUNT_TOTAL
+  FLAT_MODE = 1 << 0,
+
+  DEFAULT_MODE = FLAT_MODE
 } mode;
 
 /* If nonzero the total number of invocations of a function is emitted.  */
@@ -135,6 +137,7 @@ struct known_symbol
   size_t size;
 
   uintmax_t ticks;
+  uintmax_t calls;
 };
 
 
@@ -173,6 +176,7 @@ struct profdata
   off_t size;
 
   char *hist;
+  struct gmon_hist_hdr *hist_hdr;
   uint16_t *kcount;
   uint32_t narcs;		/* Number of arcs in toset.  */
   struct here_cg_arc_record *data;
@@ -192,7 +196,9 @@ static void unload_shobj (struct shobj *shobj);
 static struct profdata *load_profdata (const char *name, struct shobj *shobj);
 static void unload_profdata (struct profdata *profdata);
 static void count_total_ticks (struct shobj *shobj, struct profdata *profdata);
+static void count_calls (struct shobj *shobj, struct profdata *profdata);
 static void read_symbols (struct shobj *shobj);
+static void generate_flat_profile (struct profdata *profdata);
 
 
 int
@@ -266,26 +272,19 @@ no filename for profiling data given and shared object `%s' has no soname"),
 
   read_symbols (shobj_handle);
 
+  /* Count the ticks.  */
+  count_total_ticks (shobj_handle, profdata_handle);
+
+  /* Count the calls.  */
+  count_calls (shobj_handle, profdata_handle);
+
+  /* If no mode is specified fall back to the default mode.  */
+  if (mode == NONE)
+    mode = DEFAULT_MODE;
+
   /* Do some work.  */
-  switch (mode)
-    {
-    case COUNT_TOTAL:
-      count_total_ticks (shobj_handle, profdata_handle);
-      {
-	size_t n;
-	for (n = 0; n < symidx; ++n)
-	  if (sortsym[n]->ticks != 0)
-	    printf ("Name: %-30s, Ticks: %" PRIdMAX "\n", sortsym[n]->name,
-		    sortsym[n]->ticks);
-	printf ("Total ticks: %" PRIdMAX "\n", total_ticks);
-      }
-      break;
-    case NONE:
-      /* Do nothing.  */
-      break;
-    default:
-      assert (! "Internal error");
-    }
+  if (mode & FLAT_MODE)
+    generate_flat_profile (profdata_handle);
 
   /* Free the resources.  */
   unload_shobj (shobj_handle);
@@ -301,9 +300,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 {
   switch (key)
     {
-    case OPT_COUNT_TOTAL:
-      mode = COUNT_TOTAL;
-      break;
     case OPT_TEST:
       do_test = 1;
       break;
@@ -689,6 +685,8 @@ load_profdata (const char *name, struct shobj *shobj)
 
   /* Pointer to data after the header.  */
   result->hist = (char *) ((struct gmon_hdr *) addr + 1);
+  result->hist_hdr = (struct gmon_hist_hdr *) ((char *) result->hist
+					       + sizeof (uint32_t));
   result->kcount = (uint16_t *) ((char *) result->hist + sizeof (uint32_t)
 				 + sizeof (struct gmon_hist_hdr));
 
@@ -709,7 +707,7 @@ load_profdata (const char *name, struct shobj *shobj)
   *(char **) hist_hdr.high_pc = (char *) shobj->highpc - shobj->map->l_addr;
   if (do_test)
     printf ("low_pc = %p\nhigh_pc = %p\n",
-	    hist_hdr.low_pc, hist_hdr.high_pc);
+	    *(char **) hist_hdr.low_pc, *(char **) hist_hdr.high_pc);
   *(int32_t *) hist_hdr.hist_size = shobj->kcountsize / sizeof (HISTCOUNTER);
   *(int32_t *) hist_hdr.prof_rate = __profile_frequency ();
   strncpy (hist_hdr.dimen, "seconds", sizeof (hist_hdr.dimen));
@@ -718,7 +716,7 @@ load_profdata (const char *name, struct shobj *shobj)
   /* Test whether the header of the profiling data is ok.  */
   if (memcmp (addr, &gmon_hdr, sizeof (struct gmon_hdr)) != 0
       || *(uint32_t *) result->hist != GMON_TAG_TIME_HIST
-      || memcmp (result->hist + sizeof (uint32_t), &hist_hdr,
+      || memcmp (result->hist_hdr, &hist_hdr,
 		 sizeof (struct gmon_hist_hdr)) != 0
       || narcsp[-1] != GMON_TAG_CG_ARC)
     {
@@ -802,6 +800,49 @@ count_total_ticks (struct shobj *shobj, struct profdata *profdata)
 }
 
 
+static struct known_symbol *
+find_symbol (uintptr_t addr)
+{
+  size_t sidx = 0;
+
+  while (sidx < symidx)
+    {
+      uintptr_t start = sortsym[sidx]->addr;
+      uintptr_t end = start + sortsym[sidx]->size;
+
+      if (addr >= start && addr < end)
+	return sortsym[sidx];
+
+      if (addr < start)
+	break;
+
+      ++sidx;
+    }
+
+  return NULL;
+}
+
+
+static void
+count_calls (struct shobj *shobj, struct profdata *profdata)
+{
+  struct here_cg_arc_record *data = profdata->data;
+  uint32_t narcs = profdata->narcs;
+  uint32_t cnt;
+
+  for (cnt = 0; cnt < narcs; ++cnt)
+    {
+      uintptr_t here = data[cnt].self_pc;
+      struct known_symbol *symbol;
+
+      /* Find the symbol for this address.  */
+      symbol = find_symbol (here);
+      if (symbol != NULL)
+	symbol->calls += data[cnt].count;
+    }
+}
+
+
 static int
 symorder (const void *o1, const void *o2)
 {
@@ -843,6 +884,7 @@ read_symbols (struct shobj *shobj)
 	     || ELFW(ST_TYPE) (sym->st_info) == STT_NOTYPE)
 	    && sym->st_size != 0)
 	  {
+	    struct known_symbol **existp;
 	    struct known_symbol *newsym
 	      = (struct known_symbol *) obstack_alloc (&shobj->ob_sym,
 						       sizeof (*newsym));
@@ -853,9 +895,25 @@ read_symbols (struct shobj *shobj)
 	    newsym->addr = sym->st_value;
 	    newsym->size = sym->st_size;
 	    newsym->ticks = 0;
+	    newsym->calls = 0;
 
-	    tsearch (newsym, &symroot, symorder);
-	    ++n;
+	    existp = tfind (newsym, &symroot, symorder);
+	    if (existp == NULL)
+	      {
+		/* New function.  */
+		tsearch (newsym, &symroot, symorder);
+		++n;
+	      }
+	    else
+	      {
+		/* The function is already defined.  See whether we have
+		   a better name here.  */
+		if ((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		  *existp = newsym;
+		else
+		  /* We don't need the allocated memory.  */
+		  obstack_free (&shobj->ob_sym, newsym);
+	      }
 	  }
     }
   else
@@ -872,11 +930,12 @@ read_symbols (struct shobj *shobj)
 	 dynamic symbol table!!  */
       while ((void *) symtab < (void *) strtab)
 	{
-	  if (/*(ELFW(ST_TYPE)(symtab->st_info) == STT_FUNC
-		|| ELFW(ST_TYPE)(symtab->st_info) == STT_NOTYPE)
-		&&*/ symtab->st_size != 0)
+	  if ((ELFW(ST_TYPE)(symtab->st_info) == STT_FUNC
+	       || ELFW(ST_TYPE)(symtab->st_info) == STT_NOTYPE)
+	      && symtab->st_size != 0)
 	    {
 	      struct known_symbol *newsym;
+	      struct known_symbol **existp;
 
 	      newsym =
 		(struct known_symbol *) obstack_alloc (&shobj->ob_sym,
@@ -889,8 +948,23 @@ read_symbols (struct shobj *shobj)
 	      newsym->size = symtab->st_size;
 	      newsym->ticks = 0;
 
-	      tsearch (newsym, &symroot, symorder);
-	      ++n;
+	      existp = tfind (newsym, &symroot, symorder);
+	      if (existp == NULL)
+		{
+		  /* New function.  */
+		  tsearch (newsym, &symroot, symorder);
+		  ++n;
+		}
+	      else
+		{
+		  /* The function is already defined.  See whether we have
+		     a better name here.  */
+		  if ((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		    *existp = newsym;
+		  else
+		    /* We don't need the allocated memory.  */
+		    obstack_free (&shobj->ob_sym, newsym);
+		}
 	    }
 	}
 
@@ -902,4 +976,76 @@ read_symbols (struct shobj *shobj)
     abort ();
 
   twalk (symroot, printsym);
+}
+
+
+static int
+countorder (const void *p1, const void *p2)
+{
+  struct known_symbol *s1 = (struct known_symbol *) p1;
+  struct known_symbol *s2 = (struct known_symbol *) p2;
+
+  if (s1->ticks != s2->ticks)
+    return (int) (s2->ticks - s1->ticks);
+
+  if (s1->calls != s2->calls)
+    return (int) (s2->calls - s1->calls);
+
+  return strcmp (s1->name, s2->name);
+}
+
+
+static double tick_unit;
+static uintmax_t cumu_ticks;
+
+static void
+printflat (const void *node, VISIT value, int level)
+{
+  if (value == leaf || value == postorder)
+    {
+      struct known_symbol *s = *(struct known_symbol **) node;
+
+      cumu_ticks += s->ticks;
+
+      printf ("%6.2f%10.2f%9.2f%9" PRIdMAX "%9.2f%9.2f  %s\n",
+	      total_ticks ? (100.0 * s->ticks) / total_ticks : 0.0,
+	      tick_unit * cumu_ticks,
+	      tick_unit * s->ticks,
+	      s->calls,
+	      s->calls ? (s->ticks * 1000000) * tick_unit / s->calls : 0,
+	      0.0,	/* FIXME: don't know about called functions.  */
+	      s->name);
+    }
+}
+
+
+/* ARGUSED */
+static void
+freenoop (void *p)
+{
+}
+
+
+static void
+generate_flat_profile (struct profdata *profdata)
+{
+  size_t n;
+  void *data = NULL;
+
+  tick_unit = 1.0 / *(uint32_t *) profdata->hist_hdr->prof_rate;
+
+  printf ("Flat profile:\n\n"
+	  "Each sample counts as %g %s.\n",
+	  tick_unit, profdata->hist_hdr->dimen);
+  fputs ("  %   cumulative   self              self     total\n"
+	 " time   seconds   seconds    calls  us/call  us/call  name\n",
+	 stdout);
+
+  for (n = 0; n < symidx; ++n)
+    if (sortsym[n]->calls != 0 || sortsym[n]->ticks != 0)
+      tsearch (sortsym[n], &data, countorder);
+
+  twalk (data, printflat);
+
+  tdestroy (data, freenoop);
 }

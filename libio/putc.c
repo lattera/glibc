@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,8 @@ _IO_putc (c, fp)
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   result = _IO_putc_unlocked (c, fp);
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
   return result;
 }
 

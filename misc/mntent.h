@@ -1,5 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,10 +53,10 @@ __BEGIN_DECLS
 /* Structure describing a mount table entry.  */
 struct mntent
   {
-    char *mnt_fsname;		/* Device or server for filesystem.  */
-    char *mnt_dir;		/* Directory mounted on.  */
-    char *mnt_type;		/* Type of filesystem: ufs, nfs, etc.  */
-    char *mnt_opts;		/* Comma-separated options for fs.  */
+    const char *mnt_fsname;	/* Device or server for filesystem.  */
+    const char *mnt_dir;	/* Directory mounted on.  */
+    const char *mnt_type;	/* Type of filesystem: ufs, nfs, etc.  */
+    const char *mnt_opts;	/* Comma-separated options for fs.  */
     int mnt_freq;		/* Dump frequency (in days).  */
     int mnt_passno;		/* Pass number for `fsck'.  */
   };

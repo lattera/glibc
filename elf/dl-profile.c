@@ -436,7 +436,6 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
 
 void
-internal_function
 _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 {
   uint16_t *topcindex;
@@ -479,7 +478,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 
   /* We have to look through the chain of arcs whether there is already
      an entry for our arc.  */
-  while (fromp->here->from_pc == frompc)
+  while (fromp->here->from_pc != frompc)
     {
       if (fromp->link != 0)
 	do
@@ -523,8 +522,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	      data[newarc].self_pc = selfpc;
 	      data[newarc].count = 0;
 	      fromp->link = 0;
-
-	      narcs++;
+	      ++narcs;
 
 	      break;
 	    }

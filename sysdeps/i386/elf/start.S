@@ -53,6 +53,11 @@ _start:
 	   boundary to avoid penalties from misaligned accesses.  Thanks
 	   to Edward Seidl <seidl@janed.com> for pointing this out.  */
 	andl $0xfffffff8, %esp
+
+	/* Provide the highest stack address to the user code (for stacks
+	   which grow downwards).  */
+	pushl %esp
+
 	pushl %edx		/* Push address of the shared library
 				   termination function.  */
 

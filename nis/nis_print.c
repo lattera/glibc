@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -150,7 +150,7 @@ nis_print_rights (const u_long access)
 
       acc >>= 8;
     }
-  printf ("%s", result);
+  fputs (result, stdout);
 }
 
 void
@@ -176,20 +176,19 @@ nis_print_directory (const directory_obj *dir)
 	  fputs (_("None.\n"), stdout);
 	  break;
 	case NIS_PK_DH:
-	  fprintf (stdout, _("Diffie-Hellmann (%d bits)\n"),
-		   (sptr->pkey.n_len - 1) * 4);
+	  printf (_("Diffie-Hellmann (%d bits)\n"),
+		  (sptr->pkey.n_len - 1) * 4);
 	  /* sptr->pkey.n_len counts the last 0, too */
 	  break;
 	case NIS_PK_RSA:
-	  fprintf (stdout, _("RSA (%d bits)\n"),
-		   (sptr->pkey.n_len - 1) * 4);
+	  printf (_("RSA (%d bits)\n"), (sptr->pkey.n_len - 1) * 4);
 	  break;
 	case NIS_PK_KERB:
 	  fputs (_("Kerberos.\n"), stdout);
 	  break;
 	default:
-	  fprintf (stdout, _("Unknown (type = %d, bits = %d)\n"),
-		   sptr->key_type, (sptr->pkey.n_len - 1) * 4);
+	  printf (_("Unknown (type = %d, bits = %d)\n"), sptr->key_type,
+		  (sptr->pkey.n_len - 1) * 4);
 	  break;
 	}
 
@@ -214,7 +213,7 @@ nis_print_directory (const directory_obj *dir)
 	      if (ptr->uaddr != NULL && strlen (ptr->uaddr) > 0)
 		printf ("%s\n", ptr->uaddr);
 	      else
-		printf ("-\n");
+		fputs ("-\n", stdout);
 	      ptr++;
 	    }
 	}
@@ -233,7 +232,7 @@ nis_print_directory (const directory_obj *dir)
 	{
 	  nis_print_rights (ptr->oa_rights);
 	  printf (_("\tType         : %s\n"), nis_nstype2str (ptr->oa_otype));
-	  printf (_("\tAccess rights: "));
+	  fputs (_("\tAccess rights: "), stdout);
 	  nis_print_rights (ptr->oa_rights);
 	  fputs ("\n", stdout);
 	  ptr++;

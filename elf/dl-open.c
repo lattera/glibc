@@ -102,7 +102,8 @@ _dl_open (const char *file, int mode)
 	  asm ("" : "=r" (reloc) : "0" (reloc));
 
 	  (*reloc) (l, _dl_object_relocation_scope (l),
-		    (mode & RTLD_BINDING_MASK) == RTLD_LAZY);
+		    ((mode & RTLD_BINDING_MASK) == RTLD_LAZY
+		     || _dl_profile != NULL), _dl_profile != NULL);
 	  *_dl_global_scope_end = NULL;
 	}
 

@@ -30,7 +30,7 @@ ENTRY (syscall)
 	int $0x80		/* Do the system call.  */
 	POPARGS_5		/* Restore register contents.  */
 	cmpl $-4095, %eax	/* Check %eax for error.  */
-	jae syscall_error	/* Jump to error handler if error.  */
+	jae SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 L(pseudo_end):
 	ret			/* Return to caller.  */
 

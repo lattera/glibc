@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -44,11 +44,8 @@ _IO_vsprintf (string, format, args)
   _IO_init (&sf._sbf._f, 0);
   _IO_JUMPS (&sf._sbf._f) = &_IO_str_jumps;
   _IO_str_init_static (&sf._sbf._f, string, -1, string);
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, &sf);
-  _IO_flockfile (&sf._sbf._f);
   ret = _IO_vfprintf (&sf._sbf._f, format, args);
   _IO_putc_unlocked ('\0', &sf._sbf._f);
-  _IO_cleanup_region_end (1);
   return ret;
 }
 

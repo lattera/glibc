@@ -37,7 +37,7 @@ ENTRY (__mmap)
 
 	/* If 0 > %eax > -4096 there was an error.  */
 	cmpl $-4096, %eax
-	ja syscall_error
+	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
 L(pseudo_end):

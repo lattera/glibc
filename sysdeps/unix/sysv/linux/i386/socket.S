@@ -55,7 +55,7 @@ ENTRY (__socket)
 
 	/* %eax is < 0 if there was an error.  */
 	cmpl $-125, %eax
-	jae syscall_error
+	jae SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
 L(pseudo_end):

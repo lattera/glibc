@@ -100,7 +100,9 @@
 # define LOCK_STREAM(S)							      \
   __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, (S));    \
   _IO_flockfile (S)
-# define UNLOCK_STREAM __libc_cleanup_region_end (1)
+# define UNLOCK_STREAM(S)						      \
+  _IO_funlockfile (S);							      \
+  __libc_cleanup_region_end (0)
 #else
 # define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
 # define inchar()	(c == EOF ? EOF					      \
@@ -143,12 +145,14 @@
 # define flockfile(S) /* nothing */
 # define funlockfile(S) /* nothing */
 # define LOCK_STREAM(S)
-# define UNLOCK_STREAM
+# define UNLOCK_STREAM(S)
 #else
 # define LOCK_STREAM(S)							      \
   __libc_cleanup_region_start (&__funlockfile, (S));			      \
   __flockfile (S)
-# define UNLOCK_STREAM __libc_cleanup_region_end (1)
+# define UNLOCK_STREAM(S)						      \
+  __funlockfile (S);							      \
+  __libc_cleanup_region_end (0)
 #endif
 #endif
 
@@ -1216,7 +1220,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     }
 
   /* Unlock stream.  */
-  UNLOCK_STREAM;
+  UNLOCK_STREAM (s);
 
   return done;
 }

@@ -1472,7 +1472,12 @@ do_positional:
 
 all_done:
   /* Unlock the stream.  */
-  __libc_cleanup_region_end (1);
+#ifdef USE_IN_LIBIO
+  _IO_funlockfile (s);
+#else
+  __funlockfile (s);
+#endif
+  __libc_cleanup_region_end (0);
 
   return done;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -33,8 +33,9 @@ getchar ()
 {
   int result;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, stdin);
-  _IO_flockfile (stdin);
+  _IO_flockfile (_IO_stdin);
   result = _IO_getc_unlocked (stdin);
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (_IO_stdin);
+  _IO_cleanup_region_end (0);
   return result;
 }

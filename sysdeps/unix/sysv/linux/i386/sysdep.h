@@ -46,13 +46,22 @@
    is a real error number.  Linus said he will make sure the no syscall
    returns a value in -1 .. -4095 as a valid result so we can savely
    test with -4095.  */
+
+/* We don't want the label for the error handle to be global when we define
+   it here.  */
+#ifdef PIC
+# define SYSCALL_ERROR_LABEL 0f
+#else
+# define SYSCALL_ERROR_LABEL syscall_error
+#endif
+
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
     cmpl $-4095, %eax;							      \
-    jae syscall_error;							      \
+    jae SYSCALL_ERROR_LABEL;						      \
   L(pseudo_end):
 
 #undef	PSEUDO_END
@@ -66,13 +75,11 @@
 /* Store (- %eax) into errno through the GOT.  */
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
-  .type syscall_error,@function;					      \
-syscall_error:								      \
-  pushl %ebx;								      \
-  call 0f;								      \
-0:popl %ebx;								      \
+0:pushl %ebx;								      \
+  call 1f;								      \
+1:popl %ebx;								      \
   xorl %edx, %edx;							      \
-  addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx;				      \
+  addl $_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx;				      \
   subl %eax, %edx;							      \
   pushl %edx;								      \
   call __errno_location@PLT;						      \
@@ -80,24 +87,20 @@ syscall_error:								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
   movl $-1, %eax;							      \
-  jmp L(pseudo_end);							      \
-  .size syscall_error,.-syscall_error;
+  jmp L(pseudo_end);
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
 #else
 #define SYSCALL_ERROR_HANDLER						      \
-  .type syscall_error,@function;					      \
-syscall_error:								      \
-  call 0f;								      \
-0:popl %ecx;								      \
+0:call 1f;								      \
+1:popl %ecx;								      \
   xorl %edx, %edx;							      \
-  addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ecx;				      \
+  addl $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx;				      \
   subl %eax, %edx;							      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \
   movl $-1, %eax;							      \
-  jmp L(pseudo_end);							      \
-  .size syscall_error,.-syscall_error;
+  jmp L(pseudo_end);
 #endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 

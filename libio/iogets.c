@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -65,7 +65,8 @@ _IO_gets (buf)
   buf[count] = 0;
   retval = buf;
 unlock_return:
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (_IO_stdin);
+  _IO_cleanup_region_end (0);
   return retval;
 }
 

@@ -58,6 +58,9 @@ struct link_map *_dl_profile_map;
 /* Names of shared object for which the RPATHs should be ignored.  */
 const char *_dl_inhibit_rpath;
 
+/* This is the address of the last stack address ever used.  */
+void *__libc_stack_end;
+
 
 static void non_dynamic_init (void) __attribute__ ((unused));
 

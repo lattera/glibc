@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -161,10 +161,8 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
    to inline functions containing inlines themselves.  */
 #define ELF_DYNAMIC_RELOCATE(map, lazy, consider_profile) \
   do {									      \
-    int profile = (consider_profile && _dl_profile != NULL		      \
-		   && _dl_name_match_p (_dl_profile, (map)));		      \
-    int edr_lazy = elf_machine_runtime_setup ((map), (lazy) || profile,	      \
-					      profile);			      \
+    int edr_lazy = elf_machine_runtime_setup ((map), (lazy),		      \
+					      (consider_profile));	      \
     ELF_DYNAMIC_DO_REL ((map), edr_lazy);				      \
     ELF_DYNAMIC_DO_RELA ((map), edr_lazy);				      \
   } while (0)

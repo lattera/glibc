@@ -1,3 +1,99 @@
+1998-06-07 13:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add _dl_profile.
+	* elf/dl-reloc.c (_dl_relocate_object): Take extra argument, pass
+	this to ELF_DYNAMIC_RELOCATE.
+	Always allocate array for relocation result if LD_PROFILE is defined.
+	* elf/ldsodefs.h: Adjust prototypes.
+	* elf/dl-open.c (_dl_open): Call relocation function with extra
+	argument.
+	* elf/rtld.c: Likewise.
+	* elf/dl-profile.c (_dl_mcount): Don't mark as internal function.
+	Correct loop condition.
+	* elf/dynamic-link.h: Don't examine _dl_profile variable, pass
+	consider_profile to runtime setup function.
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): Use
+	_dl_runtime_profile for all shared objects if LD_PROFILE is defined.
+
+	* elf/dl-support.c: Define __libc_stack_end.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/libc-start.c: Store last stack address in
+	__libc_stack_end.
+	* sysdeps/i386/dl-machine.h (_dl_start_user): Store stack address.
+	* sysdeps/i386/elf/start.s: Call __libc_start_main with extra argument.
+
+	* elf/elf.h: Include <features.h>, not <sys/cdefs.h>.
+	Include <stdint.h>, not <inttypes.h>.
+
+	* elf/sprof.c: Implement flat profiling.
+
+	* libio/fgetc.c: Call _IO_cleanup_region_end with 0 and call
+	_IO_funlockfile explicitly.
+	* libio/fileops.c: Likewise.
+	* libio/fputc.c: Likewise.
+	* libio/freopen.c: Likewise.
+	* libio/freopen64.c: Likewise.
+	* libio/fseek.c: Likewise.
+	* libio/fseeko.c: Likewise.
+	* libio/fseeko64.c: Likewise.
+	* libio/ftello.c: Likewise.
+	* libio/ftello64.c: Likewise.
+	* libio/getc.c: Likewise.
+	* libio/getchar.c: Likewise.
+	* libio/iofclose.c: Likewise.
+	* libio/iofflush.c: Likewise.
+	* libio/iofgetpos.c: Likewise.
+	* libio/iofgetpos64.c: Likewise.
+	* libio/iofgets.c: Likewise.
+	* libio/iofputs.c: Likewise.
+	* libio/iofread.c: Likewise.
+	* libio/iofsetpos.c: Likewise.
+	* libio/iofsetpos64.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/iofwrite.c: Likewise.
+	* libio/iogetdelim.c: Likewise.
+	* libio/iogets.c: Likewise.
+	* libio/ioputs.c: Likewise.
+	* libio/ioseekoff.c: Likewise.
+	* libio/ioseekpos.c: Likewise.
+	* libio/iosetbuffer.c: Likewise.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/ioungetc.c: Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	* libio/oldiofclose.c: Likewise.
+	* libio/peekc.c: Likewise.
+	* libio/putc.c: Likewise.
+	* libio/putchar.c: Likewise.
+	* libio/rewind.c: Likewise.
+
+	* malloc/mtrace.c: Pretty print.
+
+	* misc/mntent.h (struct mentent): Make string elements const char *.
+
+	* nis/nis_printf.c: Optimize I/O a little bit.
+
+	* signal/Makefile (distribute): Add sigset-cvt-mask.h.
+	* sysdeps/generic/sigset-cvt-mask.h: New file.
+	* sysdeps/unix/sysv/linux/sigset-cvt-mask.h: New file.
+	* sysdeps/unix/sysv/sysv4/sigset-cvt-mask.h: New file.
+	* sysdeps/posix/sigvec.c: Rewrite the use definitions from
+	sigset-cvt-mask.h to do the dirty work.
+	Patches by Joe Keane.
+
+	* sysdeps/posix/mkstemp.c: Save one precious byte of rodata.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Rewrite PSEUDO etc to make
+	syscall_error label in case of PIC anonymous.
+	* sysdeps/unix/sysv/linux/i386/i686/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Adapt for this change.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Adapt for this change.
+	* sysdeps/unix/sysv/linux/i386/s_pread64.S: Adapt for this change.
+	* sysdeps/unix/sysv/linux/i386/s_pwrite64.S: Adapt for this change.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Adapt for this change.
+	* sysdeps/unix/sysv/linux/i386/syscall.S: Adapt for this change.
+
 1998-06-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/xdr_rec.c (xdrrec_create): Add cast for *_ops array since

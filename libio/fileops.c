@@ -460,7 +460,8 @@ _IO_file_sync (fp)
     fp->_offset = _IO_pos_BAD;
   /* FIXME: Cleanup - can this be shared? */
   /*    setg(base(), ptr, ptr); */
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
   return retval;
 }
 

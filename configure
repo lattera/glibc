@@ -3330,10 +3330,14 @@ while test -n "$ac_sources"; do
 done
 EOF
 cat >> $CONFIG_STATUS <<EOF
-echo '$config_vars' >> config.make; test -d bits || mkdir bits
+config_vars='$config_vars'
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 
+case $CONFIG_FILES in *config.make*)
+echo "$config_vars" >> config.make;;
+esac
+test -d bits || mkdir bits
 exit 0
 EOF
 chmod +x $CONFIG_STATUS

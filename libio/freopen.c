@@ -54,6 +54,7 @@ freopen (filename, mode, fp)
   else
 #endif
     result = _IO_freopen (filename, mode, fp);
-  _IO_cleanup_region_end (1);
+  _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
   return result;
 }

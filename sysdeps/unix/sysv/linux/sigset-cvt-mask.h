@@ -1,5 +1,8 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Convert between lowlevel sigmask and libc representation of sigset_t.
+   Linux version.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Joe Keane <jgk@jgk.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,21 +19,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include "libioP.h"
-#include "stdio.h"
+#define sigset_set_old_mask(set, mask) \
+  do {									      \
+    unsigned long int *__ptr;						      \
+    int __cnt;								      \
+    __ptr = &(set)->__val[0];						      \
+    *__ptr++ = (unsigned long int) (mask);				      \
+    __cnt = _SIGSET_NWORDS - 2;						      \
+    do									      \
+      *__ptr++ = 0ul;							      \
+    while (--__cnt >= 0);						      \
+  } while (0)
 
-#undef putchar
-
-int
-putchar (c)
-     int c;
-{
-  int result;
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-			       _IO_stdout);
-  _IO_flockfile (_IO_stdout);
-  result = _IO_putc_unlocked (c, _IO_stdout);
-  _IO_funlockfile (_IO_stdout);
-  _IO_cleanup_region_end (0);
-  return result;
-}
+#define sigset_get_old_mask(set, mask) \
+  ((mask) = (unsigned int) (set)->__val[0])
