@@ -150,7 +150,8 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-stack1 \
 	tst-unload \
 	tst-sysconf \
-	tst-locale1 tst-locale2
+	tst-locale1 tst-locale2 \
+	tst-umask1
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
@@ -216,6 +217,7 @@ CFLAGS-pthread_self.os += -fomit-frame-pointer
 CFLAGS-tst-unload.c += -DPREFIX=\"$(objpfx)\"
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
+tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(objpfx)crti.o

@@ -1,3 +1,9 @@
+2003-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-umask1.
+	(tst-umask1-ARGS): Define.
+	* tst-umask1.c: New file.
+
 2003-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (libpthread-routines): Remove lowlevelrwlock.  Add
