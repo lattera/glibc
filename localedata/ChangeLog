@@ -1,3 +1,17 @@
+1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* repertoiremaps/mnemonic.ds: Add U066A, UFE80, UFE81, UFE83,
+	UFE85, and UFE8B.
+	* charmaps/IBM864: Add mapping for /x25, /xc1, /xc2, /xc3, /xc4,
+	and /xc6.
+	* charmaps/KOI8-U: Fix typo in /x95 entry.
+	* charmaps/KOI8-R: Correct 0x95 entry.
+	* charmaps/CP1258: Add /xEC.
+	* repertoiremaps/mnemonic.ds: Add U0300 and U0301.
+	* charmaps/IBM874: Add Euro.
+	* charmaps/ISO-8859-7: Map /xB4 to U0384.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 1999-11-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/ISO-8859-10: Correct alias.  This charset was issued in

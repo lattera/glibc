@@ -25,6 +25,9 @@ situations.
 Severity: [  *] to [***]
 
 
+[** ]  Closing shared objects in statically linked binaries most of the
+       times leads to crashes during the dlopen().  Hard to fix.
+
 [ **]  There are problems with signal handling when using LinuxThreads.
 
 [ **]  The RPC code is not 64 bit clean.  This is getting slowly fixed

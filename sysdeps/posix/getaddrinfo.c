@@ -368,14 +368,16 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  struct hostent *h;
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
+	  int no_inet6_data;
 
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 	    gethosts (AF_INET6, struct in6_addr);
+	  no_inet6_data = no_data;
 
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    gethosts (AF_INET, struct in_addr);
 
-	  if (no_data != 0)
+	  if (no_data != 0 && no_inet6_data != 0)
 	    /* We made requests but they turned out no data.  The name
 	       is known, though.  */
 	    return (GAIH_OKIFUNSPEC | -EAI_NODATA);

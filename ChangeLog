@@ -1,3 +1,8 @@
+1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't fail if host has
+	only IPv6 address.  Reported by Artur Frysiak <wiget@pld.org.pl>.
+
 1999-12-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/bits/string2.h (__memset_gc, __mempcpy_small, __strcpy_small,
