@@ -1,3 +1,8 @@
+2002-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/zh_HK: Correct date information.
+	Patch by Anthony Fok <anthony@thizlinux.com>.
+
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/sr_YU: Correct month entries for June and July

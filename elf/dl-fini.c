@@ -169,4 +169,15 @@ _dl_fini (void)
 	    ((fini_t) DL_DT_FINI_ADDRESS (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
 	}
     }
+
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
+    {
+      INTUSE(_dl_debug_printf) ("\nruntime linker statistics:\n");
+      INTUSE(_dl_debug_printf) ("\
+           final number of relocations: %lu\n",
+				GL(dl_num_relocations));
+      INTUSE(_dl_debug_printf) ("\
+final number of relocations from cache: %lu\n",
+				GL(dl_num_cache_relocations));
+    }
 }

@@ -1,5 +1,8 @@
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-fini.c (_dl_fini): Print some final statistics on the
+	total number of relocations performed.
+
 	* elf/sprof.c (load_profdata): If do_test provide information as
 	to why loading failed.
 	* elf/dl-profile.c (_dl_start_profile): Initialize all of
