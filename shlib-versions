@@ -23,6 +23,7 @@
 
 s390x-.*-linux.*        DEFAULT			GLIBC_2.2
 cris-.*-linux.*		DEFAULT			GLIBC_2.2
+x86_64-.*-linux.*       DEFAULT			GLIBC_2.2.5
 %if defined(USE_IN_LIBIO) && !defined(GLIBC_OLDEST_ABI)
 // If you use configure --enable-libio --enable-oldest-abi=2.0 then we
 // won't rename the old version sets and all the libraries except libc
@@ -79,6 +80,7 @@ mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
 hppa.*-.*-.*		ld=ld.so.1		GLIBC_2.2
 s390x-.*-linux.*	ld=ld64.so.1		GLIBC_2.2
 cris-.*-linux.*		ld=ld.so.1		GLIBC_2.2
+x86_64-.*-linux.*	ld=ld-linux-x86-64.so.2	GLIBC_2.2.5
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1
 

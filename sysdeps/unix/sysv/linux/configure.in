@@ -54,6 +54,9 @@ case "$machine" in
   sh*)
     arch_minimum_kernel=2.3.99
     ;;
+  x86_64*)
+    arch_minimum_kernel=2.4.0
+    ;;
   *)
     arch_minimum_kernel=2.0.10
     ;;
@@ -102,7 +105,7 @@ fi
 # in /lib and /etc.
 if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   # 64bit libraries on sparc go to /lib64 and not /lib
-  if test "$machine" = "sparc/sparc64"; then
+  if test "$machine" = "sparc/sparc64" -o "$machine" = "x86_64"; then
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';
@@ -165,6 +168,9 @@ case "$machine" in
     ;;
   sparc*)
     ldd_rewrite_script=../sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed
+    ;;
+  x86_64*)
+    ldd_rewrite_script=../sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed
     ;;
   *)
     ;;

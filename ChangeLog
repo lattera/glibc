@@ -1,3 +1,15 @@
+2001-09-19  Andreas Jaeger  <aj@suse.de>
+
+	* Versions.def: Add missing versions 2.2.3 for libthread_db and
+	libpthread.
+
+	* sysdeps/unix/sysv/linux/configure.in: Add minimal kernel version
+	for x86-64, install x86-64 into */lib64.
+
+	* shlib-versions: Add x86-64.
+
+	* elf/elf.h: Add x86-64 relocations.
+
 2001-09-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/fr.po: Update from translation team.
