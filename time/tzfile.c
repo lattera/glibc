@@ -311,16 +311,25 @@ __tzfile_read (const char *file)
     rule_stdoff = rule_dstoff = types[0].offset;
   else
     {
+      int stdoff_set = 0, dstoff_set = 0;
       rule_stdoff = rule_dstoff = 0;
       for (i = 0; i < num_transitions; ++i)
 	{
-	  if (!rule_stdoff && !types[type_idxs[i]].isdst)
-	    rule_stdoff = types[type_idxs[i]].offset;
-	  if (!rule_dstoff && types[type_idxs[i]].isdst)
-	    rule_dstoff = types[type_idxs[i]].offset;
-	  if (rule_stdoff && rule_dstoff)
+	  if (!stdoff_set && !types[type_idxs[i]].isdst)
+	    {
+	      stdoff_set = 1;
+	      rule_stdoff = types[type_idxs[i]].offset;
+	    }
+	  if (!dstoff_set && types[type_idxs[i]].isdst)
+	    {
+	      dstoff_set = 1;
+	      rule_dstoff = types[type_idxs[i]].offset;
+	    }
+	  if (stdoff_set && dstoff_set)
 	    break;
 	}
+      if (!dstoff_set)
+	rule_dstoff = rule_stdoff;
     }
 
   __daylight = rule_stdoff != rule_dstoff;

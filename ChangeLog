@@ -1,3 +1,8 @@
+1999-03-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* time/tzfile.c (__tzfile_read): Handle the case where there are
+	transitions but no DST.
+
 1999-03-20  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* mach/Machrules (extra-libs-others): Add $(interface-library) here
