@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -20,12 +20,12 @@
 #include <errno.h>
 #include <error.h>
 #include <dirent.h>
+#include <inttypes.h>
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdint.h>
 #include <sys/fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -84,7 +84,7 @@ print_entry (const char *lib, int flag, uint64_t hwcap, const char *key)
       break;
     }
   if (hwcap != 0)
-    printf (", hwcap: 0x%Lx", hwcap);
+    printf (", hwcap: 0x%" PRIx64, hwcap);
   printf (") => %s\n", key);
 }
 

@@ -1,5 +1,8 @@
 2001-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/cache.c (print_entry): Use PRIx64 instead of Lx in printf
+	string.  Include <inttypes.h> instead of <stdint.h>.
+
 	* localedata/Makefile (tests): Add bug-iconv-trans.
 	Define bug-iconv-trans-ENV.
 	* localedata/bug-iconv-trans.c: New file.
