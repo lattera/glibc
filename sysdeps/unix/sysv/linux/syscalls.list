@@ -24,6 +24,8 @@ ioperm		-	ioperm		3	ioperm
 iopl		-	iopl		1	iopl
 klogctl		EXTRA	syslog		3	klogctl
 lchown		-	lchown		3	__lchown	lchown
+madvise		-	madvise		3	madvise
+mincore		-	mincore		3	mincore
 mlock		EXTRA	mlock		2	__mlock	mlock
 mlockall	EXTRA	mlockall	1	__mlockall	mlockall
 mmap		-	mmap		6	__mmap		mmap
