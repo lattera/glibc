@@ -61,8 +61,10 @@ ENTRY (BP_SYM (__clone))
 	jz	SYSCALL_ERROR_LABEL
 #endif
 
-	/* Insert the argument onto the new stack.  */
-	subl	$16,%ecx
+	/* Insert the argument onto the new stack.  Make sure the new
+	   thread is started with an alignment of (mod 16).  */
+	andl	$0xfffffff0, %ecx
+	subl	$24,%ecx
 	movl	ARG(%esp),%eax		/* no negative argument counts */
 	movl	%eax,12(%ecx)
 

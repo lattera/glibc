@@ -1,3 +1,8 @@
+2003-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: Make sure child gets a
+	stack which is aligned (mod 16).
+
 2003-09-17  Uwe Reimann  <Uwe_Reimann@gmx.net>
 	    Hans-Peter Nilsson  <hp@axis.com>
 
