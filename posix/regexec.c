@@ -22,8 +22,6 @@ static reg_errcode_t match_ctx_init (re_match_context_t *cache, int eflags,
 				     int n) internal_function;
 static void match_ctx_clean (re_match_context_t *mctx) internal_function;
 static void match_ctx_free (re_match_context_t *cache) internal_function;
-static void match_ctx_free_subtops (re_match_context_t *mctx)
-     internal_function;
 static reg_errcode_t match_ctx_add_entry (re_match_context_t *cache, int node,
 					  int str_idx, int from, int to)
      internal_function;
@@ -4102,28 +4100,6 @@ static void
 match_ctx_clean (mctx)
     re_match_context_t *mctx;
 {
-  match_ctx_free_subtops (mctx);
-  mctx->nsub_tops = 0;
-  mctx->nbkref_ents = 0;
-}
-
-/* Free all the memory associated with MCTX.  */
-
-static void
-match_ctx_free (mctx)
-    re_match_context_t *mctx;
-{
-  match_ctx_free_subtops (mctx);
-  re_free (mctx->sub_tops);
-  re_free (mctx->bkref_ents);
-}
-
-/* Free all the memory associated with MCTX->SUB_TOPS.  */
-
-static void
-match_ctx_free_subtops (mctx)
-     re_match_context_t *mctx;
-{
   int st_idx;
   for (st_idx = 0; st_idx < mctx->nsub_tops; ++st_idx)
     {
@@ -4143,6 +4119,21 @@ match_ctx_free_subtops (mctx)
 	}
       free (top);
     }
+
+  mctx->nsub_tops = 0;
+  mctx->nbkref_ents = 0;
+}
+
+/* Free all the memory associated with MCTX.  */
+
+static void
+match_ctx_free (mctx)
+    re_match_context_t *mctx;
+{
+  /* First, free all the memory associated with MCTX->SUB_TOPS.  */
+  match_ctx_clean (mctx);
+  re_free (mctx->sub_tops);
+  re_free (mctx->bkref_ents);
 }
 
 /* Add a new backreference entry to MCTX.

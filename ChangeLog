@@ -1,5 +1,9 @@
 2004-11-09  Paolo Bonzini  <bonzini@gnu.org>
 
+	* posix/regexec.c (match_ctx_free_subtops): Remove, merge into...
+	(match_ctx_clean): ... this function.
+	(match_ctx_free): Call match_ctx_clean.
+
 	* posix/regexec.c (transit_state): Remove the check for
 	out-of-bounds buffers.
 	(check_matching): Check here for out-of-bounds buffers.
