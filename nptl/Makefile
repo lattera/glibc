@@ -155,6 +155,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-stdio1 tst-stdio2 \
 	tst-stack1 \
 	tst-unload \
+	tst-dlsym1 \
 	tst-sysconf \
 	tst-locale1 tst-locale2 \
 	tst-umask1 \
@@ -257,6 +258,8 @@ $(objpfx)tst-tls3: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-tls3 = -rdynamic
 $(objpfx)tst-tls3.out: $(objpfx)tst-tls3mod.so
 $(objpfx)tst-tls3mod.so: $(shared-thread-library)
+
+$(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(objpfx)crti.o

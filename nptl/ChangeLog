@@ -1,5 +1,8 @@
 2003-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-dlsym1.
+	* tst-dlsym1.c: New file.
+
 	* init.c (__pthread_initialize_minimal_internal): Set
 	GL(dl_error_catch_tsd) to __libc_dl_error_tsd.
 	* Versions (libc:GLIBC_PRIVATE): Export __libc_dl_error_tsd.
