@@ -59,23 +59,23 @@ TST_WCTOMB tst_wctomb_loc [] = {
     {
       /* #01 : normal case		   */
       { /*input.*/ { 1,	   0x00C4  },
-	/*expect*/ { 0,0,1,1,  "Ä"	   },
+	/*expect*/ { 0,1,1,  "Ä"	   },
       },
       /* #02 : normal case		   */
       { /*input.*/ { 1,	   0x00DC  },
-	/*expect*/ { 0,0,1,1,  "Ü"	   },
+	/*expect*/ { 0,1,1,  "Ü"	   },
       },
       /* #03 : normal case		   */
       { /*input.*/ { 1,	   0x0092  },
-	/*expect*/ { 0,0,1,1,  "\222"  },
+	/*expect*/ { 0,1,1,  "\222"  },
       },
       /* #04 : error case		   */
       { /*input.*/ { 1,	   0x3041  },
-	/*expect*/ { 0,0,1,-1, ""	   },
+	/*expect*/ { 0,1,-1, ""	   },
       },
       /* #05 : state dependency	   */
       { /*input.*/ { 0,	   0x0000  },
-	/*expect*/ { 0,0,0,0,  ""	   },
+	/*expect*/ { 0,0,0,  ""	   },
       },
       { is_last: 1 }
     }
@@ -85,24 +85,24 @@ TST_WCTOMB tst_wctomb_loc [] = {
     {
       /* #01 : normal case		   */
       { /*input.*/ { 1,	   0x0041  },
-	/*expect*/ { 0,0,1,1,  "A"	   },
+	/*expect*/ { 0,1,1,  "A"	   },
       },
       /* #02 : normal case		   */
       { /*input.*/ { 1,	   0x0042  },
-	/*expect*/ { 0,0,1,1,  "B"	   },
+	/*expect*/ { 0,1,1,  "B"	   },
       },
       /* #03 : error case		   */
       /* <WAIVER> */
       { /*input.*/ { 1,	   0x00C4  },
-	/*expect*/ { 0,0,1,-1, ""	   },
+	/*expect*/ { 0,1,-1, ""	   },
       },
       /* #04 : error case		   */
       { /*input.*/ { 1,	   0x30A4  },
-	/*expect*/ { 0,0,1,-1, ""	   },
+	/*expect*/ { 0,1,-1, ""	   },
       },
       /* #05 : state dependency	   */
       { /*input.*/ { 0,	   0x0000  },
-	/*expect*/ { 0,0,0,0,  ""	   },
+	/*expect*/ { 0,0,0,  ""	   },
       },
       { is_last: 1 }
     }
@@ -112,23 +112,23 @@ TST_WCTOMB tst_wctomb_loc [] = {
     {
       /* #01 : normal case		   */
       { /*input.*/ { 1,	   0x3042  },
-	/*expect*/ { 0,0,1,2,  "\244\242"   },
+	/*expect*/ { 0,1,2,  "\244\242"   },
       },
       /* #02 : normal case		   */
       { /*input.*/ { 1,	   0x3044  },
-	/*expect*/ { 0,0,1,2,  "\244\244"   },
+	/*expect*/ { 0,1,2,  "\244\244"   },
       },
       /* #03 : normal case		   */
       { /*input.*/ { 1,	   0x008E  },
-	/*expect*/ { 0,0,1,-1, ""	   },
+	/*expect*/ { 0,1,-1, ""	   },
       },
       /* #04 : jisX0212		   */
       { /*input.*/ { 1,	   0x00C4	  },
-	/*expect*/ { 0,0,1,3,  "\217\252\243" }, /* jisx0210  returns 3 */
+	/*expect*/ { 0,1,3,  "\217\252\243" }, /* jisx0210  returns 3 */
       },
       /* #05 : state dependency	   */
       { /*input.*/ { 0,	   0x008E  },
-	/*expect*/ { 0,0,0,0,  ""	   },
+	/*expect*/ { 0,0,0,  ""	   },
       },
       { is_last: 1 }
     }

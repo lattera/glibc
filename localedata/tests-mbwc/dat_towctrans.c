@@ -39,13 +39,13 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
     { Ttowctrans, TST_LOC_C },
     {
 #ifdef SHOJI_IS_RIGHT
-      {	 { 0x0010, "xxxxxxx" }, { 1,EINVAL,1,0x0010 }  },
-#else
-      {	 { 0x0010, "xxxxxxx" }, { 1,0,     1,0x0010 }  },
-#endif
-      {	 { 0x007F, "tolower" }, { 1,0,	   1,0x007F }  },
-      {	 { 0x0061, "toupper" }, { 1,0,	   1,0x0041 }  },
-      {	 { 0x0041, "tolower" }, { 1,0,	   1,0x0061 }  },
+      {	 { 0x0010, "xxxxxxx" }, { EINVAL,1,0x0010 }  },
+#else				  
+      {	 { 0x0010, "xxxxxxx" }, { 0,     1,0x0010 }  },
+#endif				  
+      {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
+      {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
+      {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },
       { is_last: 1 }
     }
   },
@@ -53,37 +53,37 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
     { Ttowctrans, TST_LOC_de },
     {
 #ifdef SHOJI_IS_RIGHT
-      {	 { 0x0010, "tojkata" }, { 1,EINVAL,1,0x0010 }  },
-#else
-      {	 { 0x0010, "tojkata" }, { 1,0,     1,0x0010 }  },
-#endif
-      {	 { 0x0080, "tolower" }, { 1,0,	   1,0x0080 }  },
-      {	 { 0x00EC, "toupper" }, { 1,0,	   1,0x00CC }  },
-      {	 { 0x00CC, "tolower" }, { 1,0,	   1,0x00EC }  },
-      { is_last: 1 }
-    }
-  },
-  {
-    { Ttowctrans, TST_LOC_enUS },
-    {
-#ifdef SHOJI_IS_RIGHT
-      {	 { 0x0010, "xxxxxxx" }, { 1,EINVAL,1,0x0010 }  },
-#else
-      {	 { 0x0010, "xxxxxxx" }, { 1,0,     1,0x0010 }  },
-#endif
-      {	 { 0x007F, "tolower" }, { 1,0,	   1,0x007F }  },
-      {	 { 0x0061, "toupper" }, { 1,0,	   1,0x0041 }  },
-      {	 { 0x0041, "tolower" }, { 1,0,	   1,0x0061 }  },
-      { is_last: 1 }
-    }
-  },
-  {
+      {	 { 0x0010, "tojkata" }, { EINVAL,1,0x0010 }  },
+#else				  
+      {	 { 0x0010, "tojkata" }, { 0,     1,0x0010 }  },
+#endif				  
+      {	 { 0x0080, "tolower" }, { 0,	   1,0x0080 }  },
+      {	 { 0x00EC, "toupper" }, { 0,	   1,0x00CC }  },
+      {	 { 0x00CC, "tolower" }, { 0,	   1,0x00EC }  },
+      { is_last: 1 }		  
+    }				  
+  },				  
+  {				  
+    { Ttowctrans, TST_LOC_enUS }, 
+    {				  
+#ifdef SHOJI_IS_RIGHT		  
+      {	 { 0x0010, "xxxxxxx" }, { EINVAL,1,0x0010 }  },
+#else				  
+      {	 { 0x0010, "xxxxxxx" }, { 0,     1,0x0010 }  },
+#endif				  
+      {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
+      {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
+      {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },
+      { is_last: 1 }		  
+    }				  
+  },				  
+  {				  
     { Ttowctrans, TST_LOC_eucJP },
-    {
-      {	 { 0xFF21, "tolower" }, { 1,0,	   1,0xFF41 }  },
-      {	 { 0xFF41, "toupper" }, { 1,0,	   1,0xFF21 }  },
-      {	 { 0x30A1, "tojhira" }, { 1,0,	   1,0x3041 }  },
-      {	 { 0x3041, "tojkata" }, { 1,0,	   1,0x30A1 }  },
+    {				  
+      {	 { 0xFF21, "tolower" }, { 0,	   1,0xFF41 }  },
+      {	 { 0xFF41, "toupper" }, { 0,	   1,0xFF21 }  },
+      {	 { 0x30A1, "tojhira" }, { 0,	   1,0x3041 }  },
+      {	 { 0x3041, "tojkata" }, { 0,	   1,0x30A1 }  },
       { is_last: 1 }
     }
   },

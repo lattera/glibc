@@ -28,10 +28,10 @@
  *    Set the ret_flg=0 for TRUE cases and the tst_isw*() will check
  *    the non-zero value.
  *
- *    { { WEOF }, { 0,0,1,0 } },
- *			| |
- *			| ret_val: an expected return value
- *			ret_flg: if 1, compare an actual return value with the
- *				 ret_val; if 0, the test program
- *				 checks the actual return value.
+ *    { { WEOF }, { 0,1,0 } },
+ *		      | |
+ *		      | ret_val: an expected return value
+ *		      ret_flg: if 1, compare an actual return value with the
+ *			       ret_val; if 0, the test program
+ *			       checks the actual return value.
  */

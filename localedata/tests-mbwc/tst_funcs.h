@@ -53,8 +53,7 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 
 #define TST_ABS(x)  (((x) > 0) ? (x) : -(x))
 
-#define TMD_ERRET(_type_)   int	  err_flg; \
-			    int	  err_val; \
+#define TMD_ERRET(_type_)   int	  err_val; \
 			    int	  ret_flg; \
 			    _type_ ret_val
 
@@ -87,7 +86,7 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 	int   warn_count __attribute__ ((unused));	\
 	int   func_id, seq_num = 0;			\
 	const char *locale;				\
-	int   err_flg, err_exp, ret_flg;		\
+	int   err_exp, ret_flg;				\
 	int errno_save = 0;				\
 	_type_ ret_exp;					\
 	_type_ ret
@@ -114,13 +113,11 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 	for (seq_num=0; seq_num < _count_; seq_num++)
 
 #define TST_GET_ERRET(_ofunc_)			\
-	err_flg = TST_EXPECT (_ofunc_).err_flg; \
 	err_exp = TST_EXPECT (_ofunc_).err_val; \
 	ret_flg = TST_EXPECT (_ofunc_).ret_flg; \
 	ret_exp = TST_EXPECT (_ofunc_).ret_val
 
 #define TST_GET_ERRET_SEQ(_ofunc_)		    \
-	err_flg = TST_EXPECT_SEQ (_ofunc_).err_flg; \
 	err_exp = TST_EXPECT_SEQ (_ofunc_).err_val; \
 	ret_flg = TST_EXPECT_SEQ (_ofunc_).ret_flg; \
 	ret_exp = TST_EXPECT_SEQ (_ofunc_).ret_val
@@ -131,12 +128,11 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 #define TST_SAVE_ERRNO \
 	errno_save = errno
 
+/* Test value of ret and of errno if it should have a value.  */
 #define TST_IF_RETURN(_s_func_) \
-  if (err_flg == 1)							      \
+  if (err_exp != 0)							      \
     {									      \
-      /* If no error occured, errno is undefined. Here we check only if       \
-         errno has the right value if it should have one.  */		      \
-      if ((err_exp == 0) || (errno_save == err_exp))			      \
+      if (errno_save == err_exp)					      \
 	{								      \
 	  result (fp, C_SUCCESS, _s_func_, locale, rec+1, seq_num+1, 1,	      \
 		  MS_PASSED);						      \

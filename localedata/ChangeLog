@@ -1,3 +1,64 @@
+2000-08-18  Andreas Jaeger  <aj@suse.de>
+
+	* tests-mbwc/tst_funcs.h (TMD_ERRET): Don't declare err_flg.
+	(TST_DECL_VARS): Don't declare err_flg.
+	(TST_GET_ERRET): Don't set err_flg.
+	(TST_GET_ERRET_SEQ): Likewise.
+	(TST_IF_RETURN): Don't use err_flg, check err_exp directly.
+
+	* tests-mbwc/dat_swscanf.c: Don't set err_flg.
+	* tests-mbwc/dat_iswalnum.c: Likewise.
+	* tests-mbwc/dat_iswalpha.c: Likewise.
+	* tests-mbwc/dat_iswcntrl.c: Likewise.
+	* tests-mbwc/dat_iswctype.c: Likewise.
+	* tests-mbwc/dat_iswdigit.c: Likewise.
+	* tests-mbwc/dat_iswgraph.c: Likewise.
+	* tests-mbwc/dat_iswlower.c: Likewise.
+	* tests-mbwc/dat_iswprint.c: Likewise.
+	* tests-mbwc/dat_iswpunct.c: Likewise.
+	* tests-mbwc/dat_iswspace.c: Likewise.
+	* tests-mbwc/dat_iswupper.c: Likewise.
+	* tests-mbwc/dat_iswxdigit.c: Likewise.
+	* tests-mbwc/dat_mblen.c: Likewise.
+	* tests-mbwc/dat_mbrlen.c: Likewise.
+	* tests-mbwc/dat_mbrtowc.c: Likewise.
+	* tests-mbwc/dat_mbsrtowcs.c: Likewise.
+	* tests-mbwc/dat_mbstowcs.c: Likewise.
+	* tests-mbwc/dat_mbtowc.c: Likewise.
+	* tests-mbwc/dat_strcoll.c: Likewise.
+	* tests-mbwc/dat_strfmon.c: Likewise.
+	* tests-mbwc/dat_strxfrm.c: Likewise.
+	* tests-mbwc/dat_swscanf.c: Likewise.
+	* tests-mbwc/dat_towctrans.c: Likewise.
+	* tests-mbwc/dat_towlower.c: Likewise.
+	* tests-mbwc/dat_towupper.c: Likewise.
+	* tests-mbwc/dat_wcrtomb.c: Likewise.
+	* tests-mbwc/dat_wcscat.c: Likewise.
+	* tests-mbwc/dat_wcschr.c: Likewise.
+	* tests-mbwc/dat_wcscmp.c: Likewise.
+	* tests-mbwc/dat_wcscoll.c: Likewise.
+	* tests-mbwc/dat_wcscpy.c: Likewise.
+	* tests-mbwc/dat_wcscspn.c: Likewise.
+	* tests-mbwc/dat_wcslen.c: Likewise.
+	* tests-mbwc/dat_wcsncat.c: Likewise.
+	* tests-mbwc/dat_wcsncmp.c: Likewise.
+	* tests-mbwc/dat_wcsncpy.c: Likewise.
+	* tests-mbwc/dat_wcspbrk.c: Likewise.
+	* tests-mbwc/dat_wcsrtombs.c: Likewise.
+	* tests-mbwc/dat_wcsspn.c: Likewise.
+	* tests-mbwc/dat_wcsstr.c: Likewise.
+	* tests-mbwc/dat_wcstod.c: Likewise.
+	* tests-mbwc/dat_wcstok.c: Likewise.
+	* tests-mbwc/dat_wcstombs.c: Likewise.
+	* tests-mbwc/dat_wcswidth.c: Likewise.
+	* tests-mbwc/dat_wcsxfrm.c: Likewise.
+	* tests-mbwc/dat_wctob.c: Likewise.
+	* tests-mbwc/dat_wctomb.c: Likewise.
+	* tests-mbwc/dat_wctrans.c: Likewise.
+	* tests-mbwc/dat_wctype.c: Likewise.
+	* tests-mbwc/dat_wcwidth.c: Likewise.
+	* tests-mbwc/dat_isw-funcs.h: Fix comment.
+
 2000-08-17  Andreas Jaeger  <aj@suse.de>
 
 	* tests-mbwc/tst_funcs.h (TST_IF_RETURN): Only test errno if it

@@ -28,31 +28,31 @@ TST_STRCOLL tst_strcoll_loc [] = {
     { Tstrcoll, TST_LOC_de },
     {
       { /*input.*/ { "ÄBCDEFG", "ÄBCDEFG"	      },  /* #1 */
-	/*expect*/ { 1,0,1,0,			      },
+	/*expect*/ { 0,1,0,			      },
       },
       { /*input.*/ { "XX Ä XX", "XX B XX"	      },  /* #2 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
       { /*input.*/ { "XX B XX", "XX Ä XX"	      },  /* #3 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "B",	"a"		      },  /* #4 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "a",	"B"		      },  /* #5 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
       { /*input.*/ { "b",	"A"		      },  /* #6 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "A",	"b"		      },  /* #7 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
       { /*input.*/ { "ä",	"B"		      },  /* #8 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
       { /*input.*/ { "B",	"ä"		      },  /* #9 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { is_last: 1 } /* Last element.  */
     }
@@ -61,39 +61,39 @@ TST_STRCOLL tst_strcoll_loc [] = {
     { Tstrcoll, TST_LOC_enUS },
     {
       { /*input.*/ { "ABCDEFG", "ABCDEFG"	      },  /* #1 */
-	/*expect*/ { 1,0,1,0,			      },
+	/*expect*/ { 0,1,0,			      },
       },
       { /*input.*/ { "XX a XX", "XX B XX"	      },  /* #2 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
       { /*input.*/ { "XX B XX", "XX a XX"	      },  /* #3 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       {
 	/* <WAIVER> */
 	/*input.*/ { "B",	"a"		      },  /* #4 */
 #ifdef SHOJI_IS_RIGHT
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
 #else
 		   /* XXX We are not testing the C locale.  */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
 #endif
       },
       {
 	/* <WAIVER> */
 	/*input.*/ { "a",	"B"		      },  /* #5 */
 #ifdef SHOJI_IS_RIGHT
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
 #else
 		   /* XXX We are not testing the C locale.  */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
 #endif
       },
       { /*input.*/ { "b",	"A"		      },  /* #6 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "A",	"b"		      },  /* #7 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
 #ifdef NO_WAIVER
       /* XXX I do not yet know whether strcoll really should reject
@@ -101,12 +101,12 @@ TST_STRCOLL tst_strcoll_loc [] = {
       {
 	/* #8 */  /* <WAIVER> */
 	/*input.*/ { "\244\242\244\244\244\246\244\250\244\252", "ABCDEFG" },
-	/*expect*/ { 1,EINVAL,0,0,		      },
+	/*expect*/ { EINVAL,0,0,		      },
       },
       {
 	/* #9 */  /* <WAIVER> */
 	/*input.*/ { "ABCZEFG", "\244\242\244\244\244\246\244\250\244\252" },
-	/*expect*/ { 1,EINVAL,0,0,		      },
+	/*expect*/ { EINVAL,0,0,		      },
       },
 #endif
       { is_last: 1 } /* Last element.  */
@@ -117,27 +117,27 @@ TST_STRCOLL tst_strcoll_loc [] = {
     {
       { /*input.*/ { "\244\242\244\244\244\246\244\250\244\252",
 		     "\244\242\244\244\244\246\244\250\244\252" },  /* #1 */
-	/*expect*/ { 1,0,1,0,			      },
+	/*expect*/ { 0,1,0,			      },
       },
       { /*input.*/ { "\244\242\244\244\244\246\244\250\244\252",
 		     "\244\242\244\244\244\363\244\250\244\252" },  /* #2 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
       { /*input.*/ { "\244\242\244\244\244\363\244\250\244\252",
 		     "\244\242\244\244\244\246\244\250\244\252" },  /* #3 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "B",	"a"		      },  /* #4 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
       { /*input.*/ { "a",	"B"		      },  /* #5 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "b",	"A"		      },  /* #6 */
-	/*expect*/ { 1,0,0,+1,			      },
+	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "A",	"b"		      },  /* #7 */
-	/*expect*/ { 1,0,0,-1,			      },
+	/*expect*/ { 0,0,-1,			      },
       },
 #ifdef NO_WAIVER
       /* XXX I do not yet know whether strcoll really should reject
@@ -145,12 +145,12 @@ TST_STRCOLL tst_strcoll_loc [] = {
       {
 	/* <WAIVER> */
 	/*input.*/ { "\200\216\217", "ABCDEFG"	      },  /* #8 */
-	/*expect*/ { 1,EINVAL,0,0,		      },
+	/*expect*/ { EINVAL,0,0,		      },
       },
       {
 	/* <WAIVER> */
 	/*input.*/ { "ABCZEFG", "\200\216\217"	      },  /* #9 */
-	/*expect*/ { 1,EINVAL,0,0,		      },
+	/*expect*/ { EINVAL,0,0,		      },
       },
 #endif
       { is_last: 1 } /* Last element.  */

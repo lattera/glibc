@@ -28,7 +28,9 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%d:%u:%f:%c:%s", 0
       },
-	{ 1,0,1,5,
+	{ /* The fields are: err_val, ret_flag, ret_val,
+	     val_int, val_uns, val_flt, val_c, val_s, val_S.  */
+	  0,1,5,
 	  -1, 2, 3.3, 'ä', "ÄÜ", { 0x0000, },
 	},
       },
@@ -38,7 +40,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%lc", 'C'
       },
-	{ 1,0,1,1,
+	{ 0,1,1,
 	  0,0,0,0,"", { 0x00E4, 0x0000 },
 	},
       },
@@ -48,7 +50,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%ls", 'S'
       },
-	{ 1,0,1,1,
+	{ 0,1,1,
 	  0,0,0,0,"", { 0x00E4, 0x00C4, 0x0000 },
 	},
       },
@@ -63,7 +65,7 @@ TST_SWSCANF tst_swscanf_loc [] =
 	{ 1,EINVAL,1,WEOF,
 	  0,0,0,0,"", { 0x0000 },
 #else
-	{ 0,0,1,0,
+	{ 0,1,0,
 	  0,0,0,0,"", { 0x0000 },
 #endif
 	},
@@ -84,7 +86,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%d:%u:%f:%c:%s", 0
       },
-	{ 1,0,1,5,
+	{ 0,1,5,
 	  -1, 2, 5.43, 'A', "ab", { 0x0000 },
 	},
       },
@@ -95,7 +97,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%C", 'C'
       },
-	{ 1,0,1,1,
+	{ 0,1,1,
 	  0,0,0,0,"", { 0x0063, 0x0000 },
 	},
       },
@@ -105,7 +107,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%S", 'S'
       },
-	{ 1,0,1,1,
+	{ 0,1,1,
 	  0,0,0,0,"", { 0x0063, 0x0064, 0x0000 },
 	},
       },
@@ -125,7 +127,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%d:%u:%f:%c:%s", 0
       },
-	{ 1,0,1,5,
+	{ 0,1,5,
 	  -1, 2, 3.3, 'b', "ab", { 0x0000 }
 	},
       },
@@ -135,7 +137,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%ls", 'S'
       },
-	{ 1,0,1,1,
+	{ 0,1,1,
 	  0,0,0,0,"", { 0x30A2, 0x30A4, 0x0000 }
 	},
       },
@@ -149,7 +151,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  L"%2$d:%1$u:%3$f:%4$c:%5$s", 0
       },
-	{ 1,0,1,5,
+	{ 0,1,5,
 	  0, 1, 3.9, 'a', "cd", { 0x0000 }
 	},
       },
@@ -164,7 +166,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 	  { 0x0001,0x0002,0x0025,0x0053,0x0000 }, 'S'
       },
-	{ 1,EILSEQ,1,EOF,
+	{ EILSEQ,1,EOF,
 	  0,0,0,0,"", { 0x0000 }
 	},
       },
