@@ -246,7 +246,7 @@ gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
   gnu_ld=yes gnu_as=yes
 esac
 case "$host_os" in
-gnu*elf* | linux*elf* | sysv4* | solaris2*)
+gnu*elf* | linux* | sysv4* | solaris2*)
   elf=yes
 esac
 

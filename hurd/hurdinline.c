@@ -1,5 +1,6 @@
-/* Include this first to avoid defining its inline functions.  */
+/* Include these first to avoid defining their inline functions.  */
 #include <lock-intern.h>
+#include <signal.h>
 
 #undef _EXTERN_INLINE
 #define _EXTERN_INLINE /* Define the real function. */

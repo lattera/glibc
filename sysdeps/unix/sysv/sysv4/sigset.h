@@ -1,5 +1,5 @@
 /* __sig_atomic_t, __sigset_t, and related definitions.  SVR4 version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ __sigfillset (__sigset_t *__set)
      for signals [1,31].  Setting bits for unimplemented signals seems
      harmless (and we will find out if it really is).  */
   __set->__sigbits[0] = __set->__sigbits[1] =
-    __set->__sigbits[2] = __set->__sigbits[3] = -1;
+    __set->__sigbits[2] = __set->__sigbits[3] = ~0L;
   return 0;
 }
 
