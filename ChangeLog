@@ -1,3 +1,18 @@
+1999-11-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_dynamic): New function.
+	(elf_machine_got): Removed, not needed anymore.
+	(ELF_MACHINE_RELOC_NOPLT): Removed.
+	(ELF_MACHINE_JMP_SLOT): Added.
+	(_RTLD_PROLOGUE): We use gcc, no need to check for __STDC__.
+	(_RTLD_EPILOGUE): Likewise.
+	(RESOLVE_GOTSYM): Use R_MIPS_REL32.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Likewise.
+	Based on patches from Maciej W. Rozycki <macro@ds2.pg.gda.pl> and
+	Ralf Baechle <baechle@uni-koblenz.de>.
+
+	* sysdeps/mips/mips64/dl-machine.h: Apply same patches.
+	
 1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Don't use the charset
