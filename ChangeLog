@@ -1,3 +1,25 @@
+1999-10-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/ifreq.h: New file.
+
+	* resolv/res_hconf.c: Add missing includes to get all prototypes.
+	(_res_hconf_reorder_addrs): Rewrite.  This never worked before.
+	Reported by John DiMarco <jdd@cs.toronto.edu>.
+
+	(_res_hconf_reorder_addrs): Made thread safe.
+	(free_mem): New function, needed for malloc debugging.
+
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/if_index.c (opensock): Move function to ...
+	* sysdeps/generic/opensock.c (__opensock): ...here in a new file.
+	* sysdeps/unix/sysv/linux/if_index.c: Change all callers of
+	opensock to use __opensock.
+
+	* socket/Makefile (routines): Add opensock.
+
+	* include/sys/socket.h (__opensock): Add prototype declaration.
+
 1999-10-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h: Added missing

@@ -35,47 +35,6 @@ static int old_siocgifconf;
 # define old_siocgifconf 0
 #endif
 
-/* Try to get a socket to talk to the kernel.  */
-#if defined SIOCGIFINDEX || defined SIOCGIFNAME
-static int
-internal_function
-opensock (void)
-{
-  /* Cache the last AF that worked, to avoid many redundant calls to
-     socket().  */
-  static int sock_af = -1;
-  int fd = -1;
-  __libc_lock_define_initialized (static, lock);
-
-  if (sock_af != -1)
-    {
-      fd = __socket (sock_af, SOCK_DGRAM, 0);
-      if (fd != -1)
-        return fd;
-    }
-
-  __libc_lock_lock (lock);
-
-  if (sock_af != -1)
-    fd = __socket (sock_af, SOCK_DGRAM, 0);
-
-  if (fd == -1)
-    {
-      fd = __socket (sock_af = AF_INET, SOCK_DGRAM, 0);
-      if (fd < 0)
-	fd = __socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
-      if (fd < 0)
-	fd = __socket (sock_af = AF_IPX, SOCK_DGRAM, 0);
-      if (fd < 0)
-	fd = __socket (sock_af = AF_AX25, SOCK_DGRAM, 0);
-      if (fd < 0)
-	fd = __socket (sock_af = AF_APPLETALK, SOCK_DGRAM, 0);
-    }
-
-  __libc_lock_unlock (lock);
-  return fd;
-}
-#endif
 
 unsigned int
 if_nametoindex (const char *ifname)
@@ -85,7 +44,7 @@ if_nametoindex (const char *ifname)
   return 0;
 #else
   struct ifreq ifr;
-  int fd = opensock ();
+  int fd = __opensock ();
 
   if (fd < 0)
     return 0;
@@ -124,7 +83,7 @@ if_nameindex (void)
   __set_errno (ENOSYS);
   return NULL;
 #else
-  int fd = opensock ();
+  int fd = __opensock ();
   struct ifconf ifc;
   unsigned int nifs, i;
   int rq_len;
@@ -235,7 +194,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
 #  endif
       int status;
 
-      fd = opensock ();
+      fd = __opensock ();
 
       if (fd < 0)
 	return NULL;
@@ -285,7 +244,7 @@ void
 internal_function
 __protocol_available (int *have_inet, int *have_inet6)
 {
-  int fd = opensock ();
+  int fd = __opensock ();
   unsigned int nifs;
   int rq_len;
   struct ifconf ifc;

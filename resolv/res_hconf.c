@@ -17,9 +17,9 @@
    Boston, MA 02111-1307, USA.  */
 
 /* This file provides a Linux /etc/host.conf compatible front end to
-the various name resolvers (/etc/hosts, named, NIS server, etc.).
-Though mostly compatibly, the following differences exist compared
-to the original implementation:
+   the various name resolvers (/etc/hosts, named, NIS server, etc.).
+   Though mostly compatibly, the following differences exist compared
+   to the original implementation:
 
 	- new command "spoof" takes an arguments like RESOLV_SPOOF_CHECK
 	  environment variable (i.e., `off', `nowarn', or `warn').
@@ -27,13 +27,19 @@ to the original implementation:
 	- line comments can appear anywhere (not just at the beginning of
 	  a line)
 */
+
+#include <errno.h>
 #include <ctype.h>
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <net/if.h>
-
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <bits/libc-lock.h>
+#include "ifreq.h"
 #include "res_hconf.h"
 
 #define _PATH_HOSTCONF	"/etc/host.conf"
@@ -374,113 +380,118 @@ _res_hconf_init (void)
 }
 
 
+/* List of known interfaces.  */
+static struct netaddr
+{
+  int addrtype;
+  union
+  {
+    struct
+    {
+      u_int32_t	addr;
+      u_int32_t	mask;
+    } ipv4;
+  } u;
+} *ifaddrs;
+
+/* We need to protect the dynamic buffer handling.  */
+__libc_lock_define_initialized (static, lock);
+
 /* Reorder addresses returned in a hostent such that the first address
    is an address on the local subnet, if there is such an address.
-   Otherwise, nothing is changed.  */
+   Otherwise, nothing is changed.
+
+   Note that this function currently only handles IPv4 addresses.  */
 
 void
 _res_hconf_reorder_addrs (struct hostent *hp)
 {
 #if defined SIOCGIFCONF && defined SIOCGIFNETMASK
-  static int num_ifs = -1;	/* number of interfaces */
-  static struct netaddr
-  {
-    int addrtype;
-    union
-    {
-      struct
-      {
-	u_int32_t	addr;
-	u_int32_t	mask;
-      } ipv4
-    } u;
-  } *ifaddrs;
+  int i, j;
+  /* Number of interfaces.  */
+  static int num_ifs = -1;
 
+  /* Only reorder if we're supposed to.  */
+  if ((_res_hconf.flags & HCONF_FLAG_REORDER) == 0)
+    return;
+  
+  /* Can't deal with anything but IPv4 for now...  */
   if (hp->h_addrtype != AF_INET)
-    return;	/* can't deal with anything but IPv4 for now... */
+    return;
 
   if (num_ifs <= 0)
     {
-      struct ifconf ifs;
-      struct ifreq *ifr;
-      size_t size, num;
-      int sd;
-
-      /* initialize interface table: */
+      struct ifreq *ifr, *cur_ifr;
+      int sd, num, i;
+      /* Save errno.  */
+      int save = errno;
+      
+      /* Initialize interface table.  */
 
       num_ifs = 0;
 
-      sd = __socket (AF_INET, SOCK_DGRAM, 0);
+      sd = __opensock ();
       if (sd < 0)
 	return;
 
-      /* Now get list of interfaces.  Since we don't know how many
-	 interfaces there are, we keep increasing the buffer size
-	 until we have at least sizeof(struct ifreq) too many bytes.
-	 That implies that the ioctl() return because it ran out of
-	 interfaces, not memory */
-      size = 0;
-      ifs.ifc_buf = 0;
-      do
-	{
-	  size += 4 * sizeof (struct ifreq);
-	  ifs.ifc_buf = realloc (ifs.ifs_buf, size);
-	  if (ifs.ifc_buf == NULL)
-	    {
-	      close (sd);
-	      return;
-	    }
-	  ifs.ifc_len = size;
-	  if (__ioctl (sd, SIOCGIFCONF, &ifs) < 0)
-	    goto cleanup;
-	}
-      while (size - ifs.ifc_len < sizeof (struct ifreq));
+      /* Get lock.  */
+      __libc_lock_lock (lock);
 
-      num = ifs.ifc_len / sizeof (struct ifreq);
+      /* Get a list of interfaces.  */
+      __ifreq (&ifr, &num);
+      if (!ifr)
+	goto cleanup;
 
       ifaddrs = malloc (num * sizeof (ifaddrs[0]));
       if (!ifaddrs)
-	goto cleanup;
-
-      ifr = ifs.ifc_req;
-      for (i = 0; i < num; ++i)
+	goto cleanup1;
+      
+      /* Copy usable interfaces in ifaddrs structure.  */
+      for (cur_ifr = ifr, i = 0;  i < num; ++cur_ifr, ++i)
 	{
-	  if (ifr->ifr_addr.sa_family != AF_INET)
+	  if (cur_ifr->ifr_addr.sa_family != AF_INET)
 	    continue;
+	  
 	  ifaddrs[num_ifs].addrtype = AF_INET;
+	  ifaddrs[num_ifs].u.ipv4.addr =
+	    ((struct sockaddr_in *) &cur_ifr->ifr_addr)->sin_addr.s_addr;
 
-	  memcpy (&ifaddrs[num_ifs].u.ipv4.addr,
-		  &((struct sockaddr_in *)ifr->ifr_addr)->sin_addr, 4);
-
-	  if (__ioctl (sd, SIOCGIFNETMASK, if) < 0)
+	  if (__ioctl (sd, SIOCGIFNETMASK, cur_ifr) < 0)
 	    continue;
-	  memcpy (&ifaddrs[num_ifs].u.ipv4.mask,
-		  ((struct sockaddr_in *)ifr->ifr_mask)->sin_addr, 4);
 
-	  ++num_ifs;	/* now we're committed to this entry */
+	  ifaddrs[num_ifs].u.ipv4.mask =
+	    ((struct sockaddr_in *) &cur_ifr->ifr_netmask)->sin_addr.s_addr;
+
+	  /* Now we're committed to this entry.  */
+	  ++num_ifs;
 	}
-      /* just keep enough memory to hold all the interfaces we want: */
+      /* Just keep enough memory to hold all the interfaces we want.  */
       ifaddrs = realloc (ifaddrs, num_ifs * sizeof (ifaddrs[0]));
 
+    cleanup1:
+      __if_freereq (ifr);
+
     cleanup:
+      /* Release lock, preserve error value, and close socket.  */
+      save = errno;
+      __libc_lock_unlock (lock);
       close (sd);
-      free (ifs.ifc_buf);
     }
 
   if (num_ifs == 0)
     return;
 
-  /* find an address for which we have a direct connection: */
+  /* Find an address for which we have a direct connection.  */
   for (i = 0; hp->h_addr_list[i]; ++i)
     {
-      h_addr = (struct in_addr *) hp->h_addr_list[i];
+      struct in_addr *haddr = (struct in_addr *) hp->h_addr_list[i];
 
       for (j = 0; j < num_ifs; ++j)
 	{
-	  if_addr    = ifaddrs[j].u.ipv4.addr;
-	  if_netmask = ifaddrs[j].u.ipv4.mask;
+	  u_int32_t if_addr    = ifaddrs[j].u.ipv4.addr;
+	  u_int32_t if_netmask = ifaddrs[j].u.ipv4.mask;
 
-	  if (((h_addr->s_addr ^ if_addr) & if_netmask) == 0)
+	  if (((haddr->s_addr ^ if_addr) & if_netmask) == 0)
 	    {
 	      void *tmp;
 
@@ -537,3 +548,14 @@ _res_hconf_trim_domains (struct hostent *hp)
   for (i = 0; hp->h_aliases[i]; ++i)
     _res_hconf_trim_domain (hp->h_aliases[i]);
 }
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (ifaddrs != NULL)
+    free (ifaddrs);
+}
+
+text_set_element (__libc_subfreeres, free_mem);
