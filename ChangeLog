@@ -1,17 +1,43 @@
+2004-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c: We don't need for specialized lookup functions.
+	Combining the functionality does not slow down relocation processing,
+	it might even speed it up a little.
+	* sysdeps/generic/ldsodefs.h: Adjust prototypes for lookup function.
+	Add only one function pointer to rtlf_global_ro.
+	* elf/do-lookup.h: Replace #ifs with ifs.
+	* elf/dl-libc.c: Adjust _dl_lookup_* callers.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/rtld.c: Likewise.  Adjust _rtld_global_ro initialization.
+
 2004-03-06  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (__rtld_local_attribute__,
+	__rtld_global_attribute__): Undef after use.
+	(_rtld_local_ro): Define __rtld_local_attribute__ with just hidden
+	if available.
 
 	* soft-fp/quad.h (union _FP_UNION_Q): Add longs structure.
 	* sysdeps/alpha/Implies: Add alpha/soft-fp.
 	* sysdeps/alpha/soft-fp/sfp-machine.h: Rewrite for GEM interface.
-	* sysdeps/alpha/Subdirs, sysdeps/alpha/soft-fp/Makefile,
-	sysdeps/alpha/soft-fp/Versions, sysdeps/alpha/soft-fp/local-soft-fp.h,
-	sysdeps/alpha/soft-fp/ots_add.c, sysdeps/alpha/soft-fp/ots_cmp.c,
-	sysdeps/alpha/soft-fp/ots_cmpe.c, sysdeps/alpha/soft-fp/ots_cvtqux.c,
-	sysdeps/alpha/soft-fp/ots_cvtqx.c, sysdeps/alpha/soft-fp/ots_cvttx.c,
-	sysdeps/alpha/soft-fp/ots_cvtxq.c, sysdeps/alpha/soft-fp/ots_cvtxt.c,
-	sysdeps/alpha/soft-fp/ots_div.c, sysdeps/alpha/soft-fp/ots_mul.c,
-	sysdeps/alpha/soft-fp/ots_nintxq.c, sysdeps/alpha/soft-fp/ots_sub.c:
-	New files.
+	* sysdeps/alpha/Subdirs: New file.
+	* sysdeps/alpha/soft-fp/Makefile: New file.
+	* sysdeps/alpha/soft-fp/Versions: New file.
+	* sysdeps/alpha/soft-fp/local-soft-fp.h: New file.
+	* sysdeps/alpha/soft-fp/ots_add.c: New file.
+	* sysdeps/alpha/soft-fp/ots_cmp.c: new file.
+	* sysdeps/alpha/soft-fp/ots_cmpe.c: New file.
+	* sysdeps/alpha/soft-fp/ots_cvtqux.c: New file.
+	* sysdeps/alpha/soft-fp/ots_cvtqx.c: New file.
+	* sysdeps/alpha/soft-fp/ots_cvttx.c: New file.
+	* sysdeps/alpha/soft-fp/ots_cvtxq.c: New file.
+	* sysdeps/alpha/soft-fp/ots_cvtxt.c: New file.
+	* sysdeps/alpha/soft-fp/ots_div.c: New file.
+	* sysdeps/alpha/soft-fp/ots_mul.c: New file.
+	* sysdeps/alpha/soft-fp/ots_nintxq.c: New file.
+	* sysdeps/alpha/soft-fp/ots_sub.c: New file.
 
 2004-03-06  Ulrich Drepper  <drepper@redhat.com>
 

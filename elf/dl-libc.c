@@ -85,9 +85,9 @@ do_dlsym (void *ptr)
 {
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
   args->ref = NULL;
-  args->loadbase = GLRO(dl_lookup_symbol) (args->name, args->map, &args->ref,
-					   args->map->l_local_scope, 0,
-					   DL_LOOKUP_RETURN_NEWEST);
+  args->loadbase = GLRO(dl_lookup_symbol_x) (args->name, args->map, &args->ref,
+					     args->map->l_local_scope, NULL, 0,
+					     DL_LOOKUP_RETURN_NEWEST, NULL);
 }
 
 static void
@@ -126,9 +126,8 @@ do_dlsym_private (void *ptr)
 
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
   args->ref = NULL;
-  l = GLRO(dl_lookup_versioned_symbol) (args->name, args->map,
-					&args->ref, args->map->l_scope,
-					&vers, 0, 0);
+  l = GLRO(dl_lookup_symbol_x) (args->name, args->map, &args->ref,
+				args->map->l_scope, &vers, 0, 0, NULL);
   args->loadbase = l;
 }
 

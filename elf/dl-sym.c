@@ -82,9 +82,9 @@ _dl_sym (void *handle, const char *name, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope as seen in the caller object.  */
-    result = GLRO(dl_lookup_symbol) (name, match, &ref, match->l_scope, 0,
-				     DL_LOOKUP_RETURN_NEWEST
-				     | DL_LOOKUP_ADD_DEPENDENCY);
+    result = GLRO(dl_lookup_symbol_x) (name, match, &ref, match->l_scope, NULL,
+				       0, (DL_LOOKUP_RETURN_NEWEST
+					   | DL_LOOKUP_ADD_DEPENDENCY), NULL);
   else
     {
       if (handle != RTLD_NEXT)
@@ -92,9 +92,9 @@ _dl_sym (void *handle, const char *name, void *who)
 	  /* Search the scope of the given object.  */
 	  struct link_map *map = handle;
 
-	  result = GLRO(dl_lookup_symbol) (name, match, &ref,
-					   map->l_local_scope, 0,
-					   DL_LOOKUP_RETURN_NEWEST);
+	  result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
+					     map->l_local_scope, NULL, 0,
+					     DL_LOOKUP_RETURN_NEWEST, NULL);
 	}
       else
 	{
@@ -111,8 +111,8 @@ RTLD_NEXT used in code not dynamically loaded"));
 	  while (l->l_loader != NULL)
 	    l = l->l_loader;
 
-	  result = GLRO(dl_lookup_symbol_skip) (name, l, &ref,
-						l->l_local_scope, match);
+	  result = GLRO(dl_lookup_symbol_x) (name, l, &ref, l->l_local_scope,
+					     NULL, 0, 0, match);
 	}
     }
 
@@ -165,9 +165,9 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    result = GLRO(dl_lookup_versioned_symbol) (name, match, &ref,
-					       match->l_scope, &vers, 0,
-					       DL_LOOKUP_ADD_DEPENDENCY);
+    result = GLRO(dl_lookup_symbol_x) (name, match, &ref, match->l_scope,
+				       &vers, 0, DL_LOOKUP_ADD_DEPENDENCY,
+				       NULL);
   else if (handle == RTLD_NEXT)
     {
       if (__builtin_expect (match == GL(dl_loaded), 0))
@@ -183,17 +183,15 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader != NULL)
 	l = l->l_loader;
 
-      result = GLRO(dl_lookup_versioned_symbol_skip) (name, l, &ref,
-						      l->l_local_scope,
-						      &vers, match);
+      result = GLRO(dl_lookup_symbol_x) (name, l, &ref, l->l_local_scope,
+					 &vers, 0, 0, match);
     }
   else
     {
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
-      result = GLRO(dl_lookup_versioned_symbol) (name, map, &ref,
-						 map->l_local_scope, &vers,
-						 0, 0);
+      result = GLRO(dl_lookup_symbol_x) (name, map, &ref, map->l_local_scope,
+					 &vers, 0, 0, NULL);
     }
 
   if (ref != NULL)

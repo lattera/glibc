@@ -139,10 +139,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_signal_error = _dl_signal_error,
     ._dl_start_profile = _dl_start_profile,
     ._dl_mcount = _dl_mcount_internal,
-    ._dl_lookup_symbol = _dl_lookup_symbol,
-    ._dl_lookup_versioned_symbol = _dl_lookup_versioned_symbol,
-    ._dl_lookup_symbol_skip = _dl_lookup_symbol_skip,
-    ._dl_lookup_versioned_symbol_skip = _dl_lookup_versioned_symbol_skip,
+    ._dl_lookup_symbol_x = _dl_lookup_symbol_x,
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -1521,9 +1518,10 @@ cannot allocate TLS data structures for initial thread");
 	    ElfW(Addr) loadbase;
 	    lookup_t result;
 
-	    result = _dl_lookup_symbol (INTUSE(_dl_argv)[i], GL(dl_loaded),
-					&ref, GL(dl_loaded)->l_scope,
-					ELF_RTYPE_CLASS_PLT, 1);
+	    result = _dl_lookup_symbol_x (INTUSE(_dl_argv)[i], GL(dl_loaded),
+					  &ref, GL(dl_loaded)->l_scope, NULL,
+					  ELF_RTYPE_CLASS_PLT,
+					  DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 

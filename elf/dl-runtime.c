@@ -73,29 +73,25 @@ fixup (
       used don't look in the global scope.  */
   if (__builtin_expect (ELFW(ST_VISIBILITY) (sym->st_other), 0) == 0)
     {
-      switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
-	{
-	default:
-	  {
-	    const ElfW(Half) *vernum =
-	      (const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);
-	    ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)] & 0x7fff;
-	    const struct r_found_version *version = &l->l_versions[ndx];
+      const struct r_found_version *version = NULL;
+      // XXX Why exactly do we have the differentiation of the flags here?
+      int flags = DL_LOOKUP_ADD_DEPENDENCY;
 
-	    if (version->hash != 0)
-	      {
-		result = _dl_lookup_versioned_symbol (strtab + sym->st_name,
-						      l, &sym, l->l_scope,
-						      version,
-						      ELF_RTYPE_CLASS_PLT, 0);
-		break;
-	      }
-	  }
-	case 0:
-	  result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-				      l->l_scope, ELF_RTYPE_CLASS_PLT,
-				      DL_LOOKUP_ADD_DEPENDENCY);
+      if (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+	{
+	  const ElfW(Half) *vernum =
+	    (const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);
+	  ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)] & 0x7fff;
+	  version = &l->l_versions[ndx];
+	  if (version->hash == 0)
+	    version = NULL;
+	  else
+	    flags = 0;
 	}
+
+      result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
+				    l->l_scope, version, ELF_RTYPE_CLASS_PLT,
+				    DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol
@@ -161,31 +157,26 @@ profile_fixup (
 	 don't look in the global scope.  */
       if (__builtin_expect (ELFW(ST_VISIBILITY) (sym->st_other), 0) == 0)
 	{
-	  switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
-	    {
-	    default:
-	      {
-		const ElfW(Half) *vernum =
-		  (const void *) D_PTR (l,l_info[VERSYMIDX (DT_VERSYM)]);
-		ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)] & 0x7fff;
-		const struct r_found_version *version = &l->l_versions[ndx];
+	  const struct r_found_version *version = NULL;
+	  // XXX Why exactly do we have the differentiation of the flags here?
+	  int flags = DL_LOOKUP_ADD_DEPENDENCY;
 
-		if (version->hash != 0)
-		  {
-		    result = _dl_lookup_versioned_symbol (strtab
-							  + sym->st_name,
-							  l, &sym, l->l_scope,
-							  version,
-							  ELF_RTYPE_CLASS_PLT,
-							  0);
-		    break;
-		  }
-	      }
-	    case 0:
-	      result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-					  l->l_scope, ELF_RTYPE_CLASS_PLT,
-					  DL_LOOKUP_ADD_DEPENDENCY);
+	  if (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+	    {
+	      const ElfW(Half) *vernum =
+		(const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);
+	      ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)] & 0x7fff;
+	      version = &l->l_versions[ndx];
+	      if (version->hash == 0)
+		version = NULL;
+	      else
+		flags = 0;
 	    }
+
+	  result = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,
+					l->l_scope, version,
+					ELF_RTYPE_CLASS_PLT,
+					DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
 	  /* Currently result contains the base load address (or link map)
 	     of the object that defines sym.  Now add in the symbol
