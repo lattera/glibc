@@ -1,3 +1,8 @@
+2003-08-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/dl-machine.h (elf_machine_rela): Use _dl_reloc_bad_type.
+	(elf_machine_lazy_rel): Likewise.
+
 2003-08-18  Art Haas  <ahaas@airmail.net>
 
 	* malloc/malloc.h: Remove unneeded ';' where closing the C++
