@@ -1,3 +1,8 @@
+2002-08-27  Roland McGrath  <roland@redhat.com>
+
+	* locale/Versions (libc: GLIBC_PRIVATE): Move __uselocale to ...
+	(libc: GLIBC_2.3): ... here.
+
 2002-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/Dist: Add ucontext_i.h and
