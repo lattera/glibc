@@ -1,3 +1,7 @@
+2001-04-10  Andreas Jaeger  <aj@suse.de>
+
+	* math/test-fenv.c (initial_tests): Protect FE_TONEAREST declaration.
+
 2001-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-minimal.c (__assert_fail): Change error string.  It's
