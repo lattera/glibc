@@ -21,6 +21,11 @@
 #include <execinfo.h>
 
 
+/* This is a global variable set at program start time.  It marks the
+   highest used stack address.  */
+extern void *__libc_stack_end;
+
+
 /* This is the stack alyout we see with every stack frame.
 
             +-----------------+        +-----------------+
@@ -42,6 +47,7 @@ __backtrace (array, size)
 {
   /* We assume that all the code is generated with frame pointers set.  */
   register void *ebp __asm__ ("ebp");
+  register void *esp __asm__ ("esp");
   struct layout *current;
   int cnt = 0;
 
@@ -49,8 +55,10 @@ __backtrace (array, size)
   current = (struct layout *) ebp;
   while (cnt < size)
     {
-      if (current == NULL)
-	/* This means the toplevel is reached.  */
+      if (current < esp || current > __libc_stack_end)
+	/* This means the address is out of range.  Note that for the
+	   toplevel we see a frame pointer with value NULL which clearly is
+	   out of range.  */
 	break;
 
       array[cnt++] = current->return_address;

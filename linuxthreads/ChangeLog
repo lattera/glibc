@@ -1,3 +1,13 @@
+1998-06-09 15:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c: Define __pthread_manager_adjust_prio and use it to
+	increase priority when needed.
+	* internals.h: Add prototype for __pthread_manager_adjust_prio.
+	* mutex.c: Optimize mutexes to wake up only one thread.
+	* pthread.c: Move PID of manager fro global variable in structure
+	element.
+	Patches by Xavier Leroy.
+
 1998-06-07 13:47  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/pthread/bits/libc-lock.h: Optimize cleanup handlers a bit.

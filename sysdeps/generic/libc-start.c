@@ -39,10 +39,10 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
   int *dummy_addr = &_dl_starting_up;
 
   __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
+#endif
 
   /* Store the lowest stack address.  */
   __libc_stack_end = stack_end;
-#endif
 
   /* Set the global _environ variable correctly.  */
   __environ = &argv[argc + 1];
