@@ -1,5 +1,5 @@
   /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -828,6 +828,9 @@ Void_t*  public_mALLOc(size_t);
 #else
 Void_t*  public_mALLOc();
 #endif
+#ifdef libc_hidden_proto
+libc_hidden_proto (public_mALLOc)
+#endif
 
 /*
   free(Void_t* p)
@@ -844,6 +847,9 @@ Void_t*  public_mALLOc();
 void     public_fREe(Void_t*);
 #else
 void     public_fREe();
+#endif
+#ifdef libc_hidden_proto
+libc_hidden_proto (public_fREe)
 #endif
 
 /*
@@ -889,6 +895,9 @@ Void_t*  public_rEALLOc(Void_t*, size_t);
 #else
 Void_t*  public_rEALLOc();
 #endif
+#ifdef libc_hidden_proto
+libc_hidden_proto (public_rEALLOc)
+#endif
 
 /*
   memalign(size_t alignment, size_t n);
@@ -906,6 +915,9 @@ Void_t*  public_rEALLOc();
 Void_t*  public_mEMALIGn(size_t, size_t);
 #else
 Void_t*  public_mEMALIGn();
+#endif
+#ifdef libc_hidden_proto
+libc_hidden_proto (public_mEMALIGn)
 #endif
 
 /*
@@ -3318,6 +3330,9 @@ public_mALLOc(size_t bytes)
 	 ar_ptr == arena_for_chunk(mem2chunk(victim)));
   return victim;
 }
+#ifdef libc_hidden_def
+libc_hidden_def(public_mALLOc)
+#endif
 
 void
 public_fREe(Void_t* mem)
@@ -3359,6 +3374,9 @@ public_fREe(Void_t* mem)
   _int_free(ar_ptr, mem);
   (void)mutex_unlock(&ar_ptr->mutex);
 }
+#ifdef libc_hidden_def
+libc_hidden_def (public_fREe)
+#endif
 
 Void_t*
 public_rEALLOc(Void_t* oldmem, size_t bytes)
@@ -3433,6 +3451,9 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
 	 ar_ptr == arena_for_chunk(mem2chunk(newp)));
   return newp;
 }
+#ifdef libc_hidden_def
+libc_hidden_def (public_rEALLOc)
+#endif
 
 Void_t*
 public_mEMALIGn(size_t alignment, size_t bytes)
@@ -3478,7 +3499,9 @@ public_mEMALIGn(size_t alignment, size_t bytes)
 	 ar_ptr == arena_for_chunk(mem2chunk(p)));
   return p;
 }
-strong_alias (public_mEMALIGn, __memalign_internal)
+#ifdef libc_hidden_def
+libc_hidden_def (public_mEMALIGn)
+#endif
 
 Void_t*
 public_vALLOc(size_t bytes)
@@ -5403,7 +5426,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
   if (hook != NULL)
     mem = (*hook)(alignment, size, RETURN_ADDRESS (0));
   else
-    mem = __memalign_internal (alignment, size);
+    mem = public_mEMALIGn (alignment, size);
 
   if (mem != NULL) {
     *memptr = mem;

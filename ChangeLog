@@ -1,5 +1,7 @@
 2004-03-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c: Don't call exported interface in the implementation.
+
 	* include/wctype.h: Add libc_hidden_proto for __towctrans.
 	* wctype/towctrans.c: Add libc_hidden_def.
 
