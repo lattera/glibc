@@ -1,5 +1,10 @@
 2002-08-31  Roland McGrath  <roland@redhat.com>
 
+	* locale/newlocale.c (__newlocale): Don't leak old data or names.
+
+	* locale/xlocale.h (__locale_struct): Move __names member last,
+	for binary compatibility.
+
 	* locale/duplocale.c (__duplocale): Free names from the right array.
 
 	* locale/uselocale.c (__uselocale): Return previous locale when
