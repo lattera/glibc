@@ -9,6 +9,7 @@
 	* sysdeps/generic/putenv.c: Use __add_to_environ instead of setenv.
 	* include/stdlib.h: Add prototype of __add_to_environ.
 	* stdlib/tst-environ.c: New file.
+	* stdlib/Makefile (tests): Add tst-environ.
 
 	* sysdeps/i386/bits/string.h (__memset_cc): Fix typo in last patch.
 
