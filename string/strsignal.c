@@ -57,7 +57,7 @@ strsignal (int signum)
 #ifdef SIGRTMIN
       (signum >= SIGRTMIN && signum <= SIGRTMAX) ||
 #endif
-      signum < 0 || signum > NSIG || (desc = _sys_siglist[signum]) == NULL)
+      signum < 0 || signum >= NSIG || (desc = _sys_siglist[signum]) == NULL)
     {
       char *buffer = getbuffer ();
       int len = __snprintf (buffer, BUFFERSIZ - 1,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,29 +16,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-const char * const __new_sys_siglist[NSIG] =
+int
+main (void)
 {
-#define init_sig(sig, abbrev, desc)   [sig] desc,
-#include "siglist.h"
-#undef init_sig
-};
+  int decpt, sign;
+  char *p;
 
-const char * const __new_sys_sigabbrev[NSIG] =
-{
-#define init_sig(sig, abbrev, desc)   [sig] abbrev,
-#include "siglist.h"
-#undef init_sig
-};
+  p = ecvt (0.0, 0, &decpt, &sign);
+  printf ("p: \"%s\", decpt: %d, sign: %d\n", p, decpt, sign);
+  if (p[0] != '\0')
+    return 1;
 
-#ifdef DO_VERSIONING
-strong_alias (__new_sys_siglist, _new_sys_siglist)
-default_symbol_version (__new_sys_siglist, _sys_siglist, GLIBC_2.1);
-default_symbol_version (_new_sys_siglist, sys_siglist, GLIBC_2.1);
-default_symbol_version (__new_sys_sigabbrev, sys_sigabbrev, GLIBC_2.1);
-#else
-weak_alias(__new_sys_siglist, sys_siglist)
-weak_alias(__new_sys_sigabbrev, sys_sigabbrev)
-#endif
+  return 0;
+}

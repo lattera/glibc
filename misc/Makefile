@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ install-lib := libbsd-compat.a libg.a
 non-lib.a := libbsd-compat.a
 gpl2lgpl := error.c error.h
 
-tests := tst-dirname tst-tsearch tst-fdset
+tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt
 
 include ../Rules
 

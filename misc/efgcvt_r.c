@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting, reentrant versions.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,6 +61,17 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       if (*sign)
 	value = -value;
     }
+  else
+    /* Value is Inf or NaN.  */
+    *sign = 0;
+
+  if (ndigit <= 0)
+    {
+      if (len > 0)
+	buf[0] = '\0';
+      *decpt = 0;
+      return 0;
+    }
 
   n = snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
   if (n < 0)
@@ -72,11 +83,8 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
   *decpt = i;
 
   if (i == 0)
-    {
-      /* Value is Inf or NaN.  */
-      *sign = 0;
-      return 0;
-    }
+    /* Value is Inf or NaN.  */
+    return 0;
 
   if (i < n)
     {
@@ -84,7 +92,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 	++i;
       while (i < n && !isdigit (buf[i]));
       memmove (&buf[*decpt], &buf[i], n - i);
-      buf[n - (i - *decpt)] = 0;
+      buf[n - (i - *decpt)] = '\0';
     }
 
   return 0;

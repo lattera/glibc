@@ -268,8 +268,8 @@ extern int sigqueue __P ((__pid_t __pid, int __sig,
 
 /* Names of the signals.  This variable exists only for compatibility.
    Use `strsignal' instead (see <string.h>).  */
-extern __const char *__const _sys_siglist[_NSIG + 1];
-extern __const char *__const sys_siglist[_NSIG + 1];
+extern __const char *__const _sys_siglist[_NSIG];
+extern __const char *__const sys_siglist[_NSIG];
 
 /* Structure passed to `sigvec'.  */
 struct sigvec

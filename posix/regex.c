@@ -2,7 +2,7 @@
    version 0.12.
    (Implements POSIX draft P1003.2/D11.2, except for some of the
    internationalization features.)
-   Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -30,6 +30,14 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
+
+#ifndef PARAMS
+# if defined __GNUC__ || (defined __STDC__ && __STDC__)
+#  define PARAMS(args) args
+# else
+#  define PARAMS(args) ()
+# endif  /* GCC.  */
+#endif  /* Not PARAMS.  */
 
 #if defined STDC_HEADERS && !defined emacs
 # include <stddef.h>
@@ -329,7 +337,12 @@ typedef char boolean;
 #define false 0
 #define true 1
 
-static int re_match_2_internal ();
+static int re_match_2_internal PARAMS ((struct re_pattern_buffer *bufp,
+					const char *string1, int size1,
+					const char *string2, int size2,
+					int pos,
+					struct re_registers *regs,
+					int stop));
 
 /* These are the command codes that appear in compiled regular
    expressions.  Some opcodes are followed by argument bytes.  A
@@ -2368,10 +2381,12 @@ regex_compile (pattern, size, syntax, bufp)
               if (syntax & RE_NO_BK_PARENS) goto normal_backslash;
 
               if (COMPILE_STACK_EMPTY)
-                if (syntax & RE_UNMATCHED_RIGHT_PAREN_ORD)
-                  goto normal_backslash;
-                else
-                  FREE_STACK_RETURN (REG_ERPAREN);
+		{
+		  if (syntax & RE_UNMATCHED_RIGHT_PAREN_ORD)
+		    goto normal_backslash;
+		  else
+		    FREE_STACK_RETURN (REG_ERPAREN);
+		}
 
             handle_close:
               if (fixup_alt_jump)
@@ -2388,10 +2403,12 @@ regex_compile (pattern, size, syntax, bufp)
 
               /* See similar code for backslashed left paren above.  */
               if (COMPILE_STACK_EMPTY)
-                if (syntax & RE_UNMATCHED_RIGHT_PAREN_ORD)
-                  goto normal_char;
-                else
-                  FREE_STACK_RETURN (REG_ERPAREN);
+		{
+		  if (syntax & RE_UNMATCHED_RIGHT_PAREN_ORD)
+		    goto normal_char;
+		  else
+		    FREE_STACK_RETURN (REG_ERPAREN);
+		}
 
               /* Since we just checked for an empty stack above, this
                  ``can't happen''.  */

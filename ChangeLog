@@ -1,3 +1,10 @@
+1998-01-31 11:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/efgcvt_r.c (fcvt_r): Handle illegal NDIGIT correctly.
+	[PR libc/410]
+	* misc/Makefile (tests): Add tst-efgcvt.
+	* misc/tst-efgcvt.c: New file.
+
 1998-01-31 00:21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c: Add some more cleanups by Akim Demaille.
@@ -749,20 +756,20 @@
 
 1998-01-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
- 	* manual/arith.texi (Parsing of Integers): Correct description of
- 	strtoul. Pointed out by Scott Snyder <snyder@fnald0.fnal.gov>.
- 	[PR libc/396]
+	* manual/arith.texi (Parsing of Integers): Correct description of
+	strtoul. Pointed out by Scott Snyder <snyder@fnald0.fnal.gov>.
+	[PR libc/396]
 
 1997-12-30 14:14  Matthias Urlichs  <urlichs@noris.de>
 
-        * misc/lsearch.c (lsearch): Return a pointer to the new element
-        if one was "allocated".
+	* misc/lsearch.c (lsearch): Return a pointer to the new element
+	if one was "allocated".
 
 1997-12-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
-        * string/strsignal.c: NSIG is not a valid index into
-        _sys_siglist.  Don't zap the last character of the "Unknown
-        signal" message.
+	* string/strsignal.c: NSIG is not a valid index into
+	_sys_siglist.  Don't zap the last character of the "Unknown
+	signal" message.
 
 1998-01-19 15:08  Ulrich Drepper  <drepper@cygnus.com>
 
