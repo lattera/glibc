@@ -22,7 +22,7 @@
 #ifdef SHARED
 .LLGETPC0:
 	retl
-	 addl	%o7, %o0, %o0
+	 add	%o7, %o0, %o0
 #endif
 ENTRY(__vfork)
 #ifdef SHARED
@@ -38,9 +38,9 @@ ENTRY(__vfork)
 	cmp	%o2, 0
 	bne	HIDDEN_JUMPTARGET(__fork)
 #else
-	.weak	__pthread_fork
-	sethi	%hi(__pthread_fork), %o0
-	or	%o0, %lo(__pthread_fork), %o0
+	.weak	pthread_create
+	sethi	%hi(pthread_create), %o0
+	or	%o0, %lo(pthread_create), %o0
 	brnz,pn	%o0, 1f
 #endif
 	 mov	__NR_vfork, %g1

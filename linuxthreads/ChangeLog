@@ -1,3 +1,22 @@
+2003-02-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/vfork.S (__vfork): Check
+	pthread_create existance, not __pthread_fork.
+	* sysdeps/unix/sysv/linux/i386/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S (__vfork):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/sh/vfork.S (__vfork): Likewise.
+	Add .weak pthread_create.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S (__vfork): Fix a typo.
+	Check pthread_create existance, not __pthread_fork.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S (__vfork): Branch to
+	__fork whenever libpthread.so is loaded.
+
 2003-02-09  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h:

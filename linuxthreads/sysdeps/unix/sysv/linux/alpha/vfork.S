@@ -31,8 +31,8 @@ __LABEL(__vfork)
 	ldq	t0, __libc_pthread_functions(gp) !gprel
 	bne	t0, HIDDEN_JUMPTARGET (__fork) !samegp
 #else
-	.weak	__pthread_fork
-	ldq	t0, __pthread_fork(gp) !literal
+	.weak	pthread_create
+	ldq	t0, pthread_create(gp) !literal
 	bne	t0, $do_fork
 #endif
 

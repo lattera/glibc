@@ -1,5 +1,5 @@
 /* Check for text relocations in DSOs.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contribute by Ulrich Drepper <drepper@redhat.com>. 2002.
 
@@ -38,8 +38,10 @@
 # define __E(name, bits) Elf##bits##_##name
 # define SWAP(val) \
   ({ __typeof (val) __res;						      \
-     if ((ehdr.e_ident[EI_DATA] == ELFDATA2MSB && BYTE_ORDER == LITTLE_ENDIAN \
-	  || ehdr.e_ident[EI_DATA] == ELFDATA2LSB && BYTE_ORDER == BIG_ENDIAN)\
+     if (((ehdr.e_ident[EI_DATA] == ELFDATA2MSB				      \
+	   && BYTE_ORDER == LITTLE_ENDIAN)				      \
+	  || (ehdr.e_ident[EI_DATA] == ELFDATA2LSB			      \
+	      && BYTE_ORDER == BIG_ENDIAN))				      \
 	 && sizeof (val) != 1)						      \
        {								      \
 	 if (sizeof (val) == 2)						      \

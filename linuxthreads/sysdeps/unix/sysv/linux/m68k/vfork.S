@@ -32,8 +32,8 @@ ENTRY (__vfork)
 #ifdef SHARED
 	tstl	(__libc_pthread_functions@GOTPC, %pc)
 #else
-	.weak	__pthread_fork
-	movel	#__pthread_fork, %d0
+	.weak	pthread_create
+	movel	#pthread_create, %d0
 #endif
 	jbne	HIDDEN_JUMPTARGET (__fork)
 

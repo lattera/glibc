@@ -31,8 +31,8 @@ ENTRY (__vfork)
 	larl	%r1,__libc_pthread_functions
 	lg	%r1,0(%r1)
 #else
-	.weak	__pthread_fork
-	larl	%r1,__pthread_fork
+	.weak	pthread_create
+	larl	%r1,pthread_create
 #endif
 	ltgr	%r1,%r1
 	jgne	HIDDEN_JUMPTARGET(__fork)

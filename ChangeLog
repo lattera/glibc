@@ -1,3 +1,10 @@
+2003-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (check-textrel-CFLAGS): Pass _XOPEN_SOURCE and
+	_BSD_SOURCE to compiler.
+	* elf/check-textrel.c (SWAP): Add parenthesis to avoid warnings.
+	Patches by Alan Modra.
+
 2003-02-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/ftwtest.c: Get current working directory before and after the

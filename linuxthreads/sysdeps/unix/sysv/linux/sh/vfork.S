@@ -30,7 +30,7 @@ ENTRY (__vfork)
 	mov.l	.Lpthread_func, r0
 	mov.l	@(r0,r12), r0
 #else
-	mov.l	.Lpthread_fork, r0
+	mov.l	.Lpthread_create, r0
 #endif
 	tst	r0, r0
 	bf	.Lhidden_fork
@@ -53,8 +53,9 @@ ENTRY (__vfork)
 .Lpthread_func:
 	.long	__libc_pthread_functions@GOTOFF
 #else
-.Lpthread_fork:
-	.long	__pthread_fork
+.Lpthread_create:
+	.weak	pthread_create
+	.long	pthread_create
 #endif
 
 .Lhidden_fork:	

@@ -601,7 +601,7 @@ $(objpfx)tst-array4.out: $(objpfx)tst-array4 $(objpfx)tst-array2dep.so
 	  $< > $@
 	cmp $@ tst-array4.exp > /dev/null
 
-check-textrel-CFLAGS = -O
+check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
 $(objpfx)check-textrel: check-textrel.c
 	$(native-compile)
 

@@ -40,8 +40,8 @@ ENTRY (__vfork)
 	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
 	cmpl	$0, __libc_pthread_functions@GOTOFF(%ecx)
 # else
-	.weak	__pthread_fork
-	movl	$__pthread_fork, %eax
+	.weak	pthread_create
+	movl	$pthread_create, %eax
 	testl	%eax, %eax
 # endif
 	jne	HIDDEN_JUMPTARGET (__fork)

@@ -23,7 +23,7 @@
 #ifdef SHARED
 .LLGETPC0:
 	retl
-	 addl	%o7, %o0, %o0
+	 add	%o7, %o0, %o0
 #endif
 ENTRY(__vfork)
 #ifdef SHARED
@@ -38,9 +38,9 @@ ENTRY(__vfork)
 	ld	[%o2], %o2
 	cmp	%o2, 0
 #else
-	.weak	__pthread_fork
-	sethi	%hi(__pthread_fork), %o0
-	orcc	%o0, %lo(__pthread_fork), %o0
+	.weak	pthread_create
+	sethi	%hi(pthread_create), %o0
+	orcc	%o0, %lo(pthread_create), %o0
 #endif
 #if defined SHARED && !defined BROKEN_SPARC_WDISP22
 	bne	HIDDEN_JUMPTARGET(__fork)
@@ -48,7 +48,7 @@ ENTRY(__vfork)
 	bne	1f
 #endif
 	 mov	__NR_vfork, %g1
-	ta 0x10;
+	ta	0x10
 	bcs	__syscall_error_handler
 	 nop
 	sub	%o1, 1, %o1

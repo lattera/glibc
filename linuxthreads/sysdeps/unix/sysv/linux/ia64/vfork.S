@@ -33,8 +33,8 @@ ENTRY(__vfork)
 #ifdef SHARED
 	addl r14 = @gprel(__libc_pthread_functions#), gp;;
 #else
-	.weak	__pthread_fork
-	addl r14 = @ltoff(@fptr(__pthread_fork#)), gp;;
+	.weak	pthread_create
+	addl r14 = @ltoff(@fptr(pthread_create#)), gp;;
 #endif
 	ld8 r14 = [r14];;
 	cmp.ne p6, p7 = 0, r14

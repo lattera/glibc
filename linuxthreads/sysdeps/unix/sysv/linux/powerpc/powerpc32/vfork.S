@@ -39,9 +39,9 @@ ENTRY (__vfork)
 	cmpwi	10,0
 	bne-	HIDDEN_JUMPTARGET(__fork)
 # else
-	.weak	__pthread_fork
-	lis	9,__pthread_fork@ha
-	la	9,__pthread_fork@l(9)
+	.weak	pthread_create
+	lis	9,pthread_create@ha
+	la	9,pthread_create@l(9)
 	cmpwi	9,0
 	bne-	.Lhidden_fork
 # endif

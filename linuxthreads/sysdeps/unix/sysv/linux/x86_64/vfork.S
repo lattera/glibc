@@ -30,8 +30,8 @@ ENTRY (__vfork)
 #ifdef SHARED
 	cmpq	$0, __libc_pthread_functions(%rip)
 #else
-	.weak	__pthread_fork
-	movq	$__pthread_fork, %rax
+	.weak	pthread_create
+	movq	$pthread_create, %rax
 	testq	%rax, %rax
 #endif
 	jne	HIDDEN_JUMPTARGET (__fork)
