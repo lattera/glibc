@@ -53,21 +53,14 @@ canonicalize (const char *name, char *resolved)
     path_max = 1024;
 #endif
 
-  rpath = resolved;
+  rpath = resolved ? __alloca (path_max) : malloc (path_max);
   rpath_limit = rpath + path_max;
-  if (!resolved)
-    rpath = malloc (path_max);
 
   if (name[0] != '/')
     {
-      /* We don't write to RPATH directly since the application and
-	 the library might disagree about the value for PATH_MAX.  */
-      char tmpbuf[path_max];
-
       if (!getcwd (rpath, path_max))
 	goto error;
-
-      dest = __stpcpy (rpath, tmpbuf);
+      dest = strchr (rpath, '\0');
     }
   else
     {
@@ -128,7 +121,7 @@ canonicalize (const char *name, char *resolved)
 
 	  if (S_ISLNK (st.st_mode))
 	    {
-	      char * buf = __alloca(path_max);
+	      char *buf = __alloca (path_max);
 
 	      if (++num_links > MAXSYMLINKS)
 		{
@@ -169,10 +162,13 @@ canonicalize (const char *name, char *resolved)
   if (dest > rpath + 1 && dest[-1] == '/')
     --dest;
   *dest = '\0';
-  return rpath;
+
+  return resolved ? strcpy (resolved, rpath) : rpath;
 
 error:
-  if (!resolved)
+  if (resolved)
+    strcpy (resolved, rpath);
+  else
     free (rpath);
   return NULL;
 }

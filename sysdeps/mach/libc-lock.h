@@ -70,4 +70,10 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
 }
 
 
+#ifdef _LIBC
+/* We need portable names for some functions.  E.g., when they are
+   used as argument to __libc_cleanup_region_start.  */
+#define __libc_mutex_unlock __mutex_unlock
+#endif
+
 #endif	/* libc-lock.h */

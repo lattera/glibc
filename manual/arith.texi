@@ -97,7 +97,7 @@ to @code{-HUGE_VAL} as a value.
 
 In the BSD library, on certain machines, @code{infnan} raises a fatal
 signal in all cases.  The GNU library does not do likewise, because that
-does not fit the ANSI C specification.
+does not fit the @w{ISO C} specification.
 @end deftypefun
 
 @strong{Portability Note:} The functions listed in this section are BSD
@@ -120,7 +120,7 @@ Prototypes for @code{abs} and @code{labs} are in @file{stdlib.h};
 @code{fabs} and @code{cabs} are declared in @file{math.h}.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int abs (int @var{number})
 This function returns the absolute value of @var{number}.
 
@@ -130,14 +130,14 @@ cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {long int} labs (long int @var{number})
 This is similar to @code{abs}, except that both the argument and result
 are of type @code{long int} rather than @code{int}.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double fabs (double @var{number})
 This function returns the absolute value of the floating-point number
 @var{number}.
@@ -172,7 +172,7 @@ those cases.
 All these functions are declared in @file{math.h}.
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double frexp (double @var{value}, int *@var{exponent})
 The @code{frexp} function is used to split the number @var{value}
 into a normalized fraction and an exponent.
@@ -191,7 +191,7 @@ zero is stored in @code{*@var{exponent}}.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double ldexp (double @var{value}, int @var{exponent})
 This function returns the result of multiplying the floating-point
 number @var{value} by 2 raised to the power @var{exponent}.  (It can
@@ -258,7 +258,7 @@ numbers, this is impossible.  The functions listed here return the
 result as a @code{double} instead to get around this problem.
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double ceil (double @var{x})
 The @code{ceil} function rounds @var{x} upwards to the nearest integer,
 returning that value as a @code{double}.  Thus, @code{ceil (1.5)}
@@ -266,7 +266,7 @@ is @code{2.0}.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double floor (double @var{x})
 The @code{ceil} function rounds @var{x} downwards to the nearest
 integer, returning that value as a @code{double}.  Thus, @code{floor
@@ -285,7 +285,7 @@ you explicit select another.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double modf (double @var{value}, double *@var{integer-part})
 This function breaks the argument @var{value} into an integer part and a
 fractional part (between @code{-1} and @code{1}, exclusive).  Their sum
@@ -298,7 +298,7 @@ returns @code{0.5} and stores @code{2.0} into @code{intpart}.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double fmod (double @var{numerator}, double @var{denominator})
 This function computes the remainder from the division of
 @var{numerator} by @var{denominator}.  Specifically, the return value is
@@ -353,7 +353,7 @@ To use these facilities, you should include the header file
 @file{stdlib.h} in your program.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} div_t
 This is a structure type used to hold the result returned by the @code{div}
 function.  It has the following members:
@@ -368,7 +368,7 @@ The remainder from the division.
 @end deftp
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun div_t div (int @var{numerator}, int @var{denominator})
 This function @code{div} computes the quotient and remainder from
 the division of @var{numerator} by @var{denominator}, returning the
@@ -389,7 +389,7 @@ Now @code{result.quot} is @code{-3} and @code{result.rem} is @code{2}.
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} ldiv_t
 This is a structure type used to hold the result returned by the @code{ldiv}
 function.  It has the following members:
@@ -407,7 +407,7 @@ type @code{long int} rather than @code{int}.)
 @end deftp
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun ldiv_t ldiv (long int @var{numerator}, long int @var{denominator})
 The @code{ldiv} function is similar to @code{div}, except that the
 arguments are of type @code{long int} and the result is returned as a
@@ -442,7 +442,7 @@ one by one.
 These functions are declared in @file{stdlib.h}.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {long int} strtol (const char *@var{string}, char **@var{tailptr}, int @var{base})
 The @code{strtol} (``string-to-long'') function converts the initial
 part of @var{string} to a signed integer, which is returned as a value
@@ -502,7 +502,7 @@ There is an example at the end of this section.
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {unsigned long int} strtoul (const char *@var{string}, char **@var{tailptr}, int @var{base})
 The @code{strtoul} (``string-to-unsigned-long'') function is like
 @code{strtol} except it deals with unsigned numbers, and returns its
@@ -558,7 +558,7 @@ as well.
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {long int} atol (const char *@var{string})
 This function is similar to the @code{strtol} function with a @var{base}
 argument of @code{10}, except that it need not detect overflow errors.
@@ -567,7 +567,7 @@ existing code; using @code{strtol} is more robust.
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int atoi (const char *@var{string})
 This function is like @code{atol}, except that it returns an @code{int}
 value rather than @code{long int}.  The @code{atoi} function is also
@@ -640,7 +640,7 @@ sum_ints_from_string (char *string)
 These functions are declared in @file{stdlib.h}.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun double strtod (const char *@var{string}, char **@var{tailptr})
 The @code{strtod} (``string-to-double'') function converts the initial
 part of @var{string} to a floating-point number, which is returned as a
@@ -736,7 +736,7 @@ which will handle numbers represented using the grouping scheme of the
 current locale (@pxref{Parsing of Integers}).
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun double atof (const char *@var{string})
 This function is similar to the @code{strtod} function, except that it
 need not detect overflow and underflow errors.  The @code{atof} function

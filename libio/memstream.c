@@ -77,21 +77,21 @@ open_memstream (bufloc, sizeloc)
   if (new_f == NULL)
     return NULL;
 #ifdef _IO_MTSAFE_IO
-  new_f->fp._sf._f._lock = &new_f->lock;
+  new_f->fp._sf._sbf._f._lock = &new_f->lock;
 #endif
 
   buf = ALLOC_BUF (_IO_BUFSIZ);
-  _IO_init (&new_f->fp._sf._f, 0);
-  _IO_JUMPS (&new_f->fp._sf._f) = &_IO_mem_jumps;
-  _IO_str_init_static (&new_f->fp._sf._f, buf, _IO_BUFSIZ, buf);
-  new_f->fp._sf._f._flags &= ~_IO_USER_BUF;
+  _IO_init (&new_f->fp._sf._sbf._f, 0);
+  _IO_JUMPS (&new_f->fp._sf._sbf._f) = &_IO_mem_jumps;
+  _IO_str_init_static (&new_f->fp._sf._sbf._f, buf, _IO_BUFSIZ, buf);
+  new_f->fp._sf._sbf._f._flags &= ~_IO_USER_BUF;
   new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   new_f->fp._sf._s._free_buffer = (_IO_free_type) free;
 
   new_f->fp.bufloc = bufloc;
   new_f->fp.sizeloc = sizeloc;
 
-  return &new_f->fp._sf._f;
+  return &new_f->fp._sf._sbf._f;
 }
 
 

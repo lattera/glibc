@@ -298,7 +298,7 @@ below.
 
 The normal return value from @code{sysconf} is the value you requested.
 A value of @code{-1} is returned both if the implementation does not
-impose a limit, and in case of an error.  
+impose a limit, and in case of an error.
 
 The following @code{errno} error conditions are defined for this function:
 
@@ -467,7 +467,7 @@ Inquire about the virtual memory page size of the machine.
 @c @xref{XXX getpagesize}. !!! ???
 @end table
 
-@node Examples of Sysconf 
+@node Examples of Sysconf
 @subsection Examples of @code{sysconf}
 
 We recommend that you first test for a macro definition for the
@@ -656,8 +656,8 @@ This is the BSD name for @code{NAME_MAX}.  It is defined in
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
-@deftypevr Macro int FILENAME_MAX 
+@comment ISO
+@deftypevr Macro int FILENAME_MAX
 The value of this macro is an integer constant expression that
 represents the maximum length of a file name string.  It is defined in
 @file{stdio.h}.
@@ -699,7 +699,7 @@ library.
 @comment POSIX.1
 @deftypevr Macro int _POSIX_CHOWN_RESTRICTED
 If this option is in effect, the @code{chown} function is restricted so
-that the only changes permitted to nonprivileged processes is to change 
+that the only changes permitted to nonprivileged processes is to change
 the group owner of a file to either be the effective group ID of the
 process, or one of its supplementary group IDs.  @xref{File Owner}.
 @end deftypevr

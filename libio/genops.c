@@ -861,3 +861,7 @@ __io_defs io_defs__;
 #ifdef weak_alias
 weak_alias (_IO_cleanup, _cleanup)
 #endif
+
+#ifdef text_set_element
+text_set_element(__libc_atexit, _cleanup);
+#endif

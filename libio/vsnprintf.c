@@ -36,7 +36,7 @@ _IO_vsnprintf (string, maxlen, format, args)
   int ret;
 #ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
-  sf._f._lock = &lock;
+  sf._sbf._f._lock = &lock;
 #endif
   _IO_init ((_IO_FILE *) &sf, 0);
   _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_str_jumps;

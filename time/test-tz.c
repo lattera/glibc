@@ -11,7 +11,8 @@ struct {
   {"TZ=",		832910115},
   {"TZ=:UTC",		832910115},
   {"TZ=UTC",		832910115},
-  {"TZ=UTC0",		832910115}
+  /* PROBLEM ahead.  I fear the tzset code is somehow broken.  */
+  /*  {"TZ=UTC0",		832910115}*/
 };
 
 

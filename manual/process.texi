@@ -34,7 +34,7 @@ primitive functions to do each step individually instead.
 * Creating a Process::          How to fork a child process.
 * Executing a File::            How to make a process execute another program.
 * Process Completion::          How to tell when a child process has completed.
-* Process Completion Status::   How to interpret the status value 
+* Process Completion Status::   How to interpret the status value
                                  returned from a child process.
 * BSD Wait Functions::  	More functions, for backward compatibility.
 * Process Creation Example::    A complete example program.
@@ -51,7 +51,7 @@ it doesn't give you much control over the details: you have to wait
 until the subprogram terminates before you can do anything else.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int system (const char *@var{command})
 @pindex sh
 This function executes @var{command} as a shell command.  In the GNU C
@@ -224,7 +224,7 @@ The child doesn't inherit alarms set by the parent process.
 The set of pending signals (@pxref{Delivery of Signal}) for the child
 process is cleared.  (The child process inherits its mask of blocked
 signals and signal actions from the parent process.)
-@end itemize 
+@end itemize
 
 
 @comment unistd.h
@@ -300,7 +300,7 @@ passed as the last such argument.
 @deftypefun int execve (const char *@var{filename}, char *const @var{argv}@t{[]}, char *const @var{env}@t{[]})
 This is similar to @code{execv}, but permits you to specify the environment
 for the new program explicitly as the @var{env} argument.  This should
-be an array of strings in the same format as for the @code{environ} 
+be an array of strings in the same format as for the @code{environ}
 variable; see @ref{Environment Access}.
 @end deftypefun
 
@@ -725,7 +725,7 @@ argument using the equivalent of @samp{sh -c @var{command}}.
 #define SHELL "/bin/sh"
 
 @group
-int 
+int
 my_system (const char *command)
 @{
   int status;
@@ -758,7 +758,7 @@ example.
 Remember that the first @code{argv} argument supplied to the program
 represents the name of the program being executed.  That is why, in the
 call to @code{execl}, @code{SHELL} is supplied once to name the program
-to execute and a second time to supply a value for @code{argv[0]}.  
+to execute and a second time to supply a value for @code{argv[0]}.
 
 The @code{execl} call in the child process doesn't return if it is
 successful.  If it fails, you must do something to make the child

@@ -12,7 +12,7 @@ floating-point types supported by the GNU C library.
 * Floating-Point Limits ::              Parameters which characterize
                                          supported floating-point
                                          representations on a particular
-                                         system. 
+                                         system.
 @end menu
 
 @node Integer Representation Limits, Floating-Point Limits ,  , Representation Limits
@@ -37,32 +37,32 @@ macros are all integer constant expressions.
 @pindex limits.h
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int CHAR_BIT
 This is the number of bits in a @code{char}, usually eight.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SCHAR_MIN
 This is the minimum value that can be represented by a @code{signed char}.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SCHAR_MAX
 This is the maximum value that can be represented by a @code{signed char}.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int UCHAR_MAX
 This is the maximum value that can be represented by a @code{unsigned char}.
 (The minimum value of an @code{unsigned char} is zero.)
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int CHAR_MIN
 This is the minimum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MIN} if @code{char} is signed, or zero
@@ -70,7 +70,7 @@ otherwise.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int CHAR_MAX
 This is the maximum value that can be represented by a @code{char}.
 It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
@@ -78,7 +78,7 @@ It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SHRT_MIN
 This is the minimum value that can be represented by a @code{signed
 short int}.  On most machines that the GNU C library runs on,
@@ -86,21 +86,21 @@ short int}.  On most machines that the GNU C library runs on,
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SHRT_MAX
 This is the maximum value that can be represented by a @code{signed
 short int}.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int USHRT_MAX
 This is the maximum value that can be represented by an @code{unsigned
 short int}.  (The minimum value of an @code{unsigned short int} is zero.)
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int INT_MIN
 This is the minimum value that can be represented by a @code{signed
 int}.  On most machines that the GNU C system runs on, an @code{int} is
@@ -108,21 +108,21 @@ a 32-bit quantity.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int INT_MAX
 This is the maximum value that can be represented by a @code{signed
 int}.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {unsigned int} UINT_MAX
 This is the maximum value that can be represented by an @code{unsigned
 int}.  (The minimum value of an @code{unsigned int} is zero.)
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {long int} LONG_MIN
 This is the minimum value that can be represented by a @code{signed long
 int}.  On most machines that the GNU C system runs on, @code{long}
@@ -130,14 +130,14 @@ integers are 32-bit quantities, the same size as @code{int}.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {long int} LONG_MAX
 This is the maximum value that can be represented by a @code{signed long
 int}.
 @end deftypevr
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {unsigned long int} ULONG_MAX
 This is the maximum value that can be represented by an @code{unsigned
 long int}.  (The minimum value of an @code{unsigned long int} is zero.)
@@ -180,9 +180,9 @@ particular system.
 @menu
 * Floating-Point Representation::       Definitions of terminology.
 * Floating-Point Parameters::           Descriptions of the library
-                                         facilities. 
+                                         facilities.
 * IEEE Floating Point::                 An example of a common
-                                         representation. 
+                                         representation.
 @end menu
 
 @node Floating-Point Representation, Floating-Point Parameters,  , Floating-Point Limits
@@ -233,7 +233,7 @@ unsigned integer.
 @cindex mantissa (of floating-point number)
 @cindex significand (of floating-point number)
 
-@item 
+@item
 The @dfn{precision} of the mantissa.  If the base of the representation
 is @var{b}, then the precision is the number of base-@var{b} digits in
 the mantissa.  This is a constant for the particular representation.
@@ -286,14 +286,14 @@ expression.  The other macros listed here cannot be reliably used in
 places that require constant expressions, such as @samp{#if}
 preprocessing directives or array size specifications.
 
-Although the ANSI C standard specifies minimum and maximum values for
+Although the @w{ISO C} standard specifies minimum and maximum values for
 most of these parameters, the GNU C implementation uses whatever
 floating-point representations are supported by the underlying hardware.
-So whether GNU C actually satisfies the ANSI C requirements depends on
+So whether GNU C actually satisfies the @w{ISO C} requirements depends on
 what machine it is running on.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_ROUNDS
 This value characterizes the rounding mode for floating-point addition.
 The following values indicate standard rounding modes:
@@ -317,7 +317,7 @@ mode.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_RADIX
 This is the value of the base, or radix, of exponent representation.
 This is guaranteed to be a constant expression, unlike the other macros
@@ -325,28 +325,28 @@ described in this section.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating-point
 mantissa for the @code{float} data type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int DBL_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating-point
 mantissa for the @code{double} data type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int LDBL_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating-point
 mantissa for the @code{long double} data type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_DIG
 This is the number of decimal digits of precision for the @code{float}
 data type.  Technically, if @var{p} and @var{b} are the precision and
@@ -360,14 +360,14 @@ The value of this macro is guaranteed to be at least @code{6}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int DBL_DIG
 This is similar to @code{FLT_DIG}, but is for the @code{double} data
 type.  The value of this macro is guaranteed to be at least @code{10}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int LDBL_DIG
 This is similar to @code{FLT_DIG}, but is for the @code{long double}
 data type.  The value of this macro is guaranteed to be at least
@@ -375,7 +375,7 @@ data type.  The value of this macro is guaranteed to be at least
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_MIN_EXP
 This is the minimum negative integer such that the mathematical value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
@@ -385,21 +385,21 @@ represented in the exponent field of the number.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int DBL_MIN_EXP
 This is similar to @code{FLT_MIN_EXP}, but is for the @code{double} data
 type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int LDBL_MIN_EXP
 This is similar to @code{FLT_MIN_EXP}, but is for the @code{long double}
 data type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_MIN_10_EXP
 This is the minimum negative integer such that the mathematical value
 @code{10} raised to this power minus 1 can be represented as a
@@ -408,14 +408,14 @@ guaranteed to be no greater than @code{-37}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int DBL_MIN_10_EXP
 This is similar to @code{FLT_MIN_10_EXP}, but is for the @code{double}
 data type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int LDBL_MIN_10_EXP
 This is similar to @code{FLT_MIN_10_EXP}, but is for the @code{long
 double} data type.
@@ -424,7 +424,7 @@ double} data type.
 
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_MAX_EXP
 This is the maximum negative integer such that the mathematical value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
@@ -434,21 +434,21 @@ in the exponent field of the number.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int DBL_MAX_EXP
 This is similar to @code{FLT_MAX_EXP}, but is for the @code{double} data
 type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int LDBL_MAX_EXP
 This is similar to @code{FLT_MAX_EXP}, but is for the @code{long double}
 data type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FLT_MAX_10_EXP
 This is the maximum negative integer such that the mathematical value
 @code{10} raised to this power minus 1 can be represented as a
@@ -457,14 +457,14 @@ guaranteed to be at least @code{37}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int DBL_MAX_10_EXP
 This is similar to @code{FLT_MAX_10_EXP}, but is for the @code{double}
 data type.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int LDBL_MAX_10_EXP
 This is similar to @code{FLT_MAX_10_EXP}, but is for the @code{long
 double} data type.
@@ -472,7 +472,7 @@ double} data type.
 
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro double FLT_MAX
 The value of this macro is the maximum representable floating-point
 number of type @code{float}, and is guaranteed to be at least
@@ -480,7 +480,7 @@ number of type @code{float}, and is guaranteed to be at least
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro double DBL_MAX
 The value of this macro is the maximum representable floating-point
 number of type @code{double}, and is guaranteed to be at least
@@ -488,7 +488,7 @@ number of type @code{double}, and is guaranteed to be at least
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {long double} LDBL_MAX
 The value of this macro is the maximum representable floating-point
 number of type @code{long double}, and is guaranteed to be at least
@@ -497,7 +497,7 @@ number of type @code{long double}, and is guaranteed to be at least
 
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro double FLT_MIN
 The value of this macro is the minimum normalized positive
 floating-point number that is representable by type @code{float}, and is
@@ -505,7 +505,7 @@ guaranteed to be no more than @code{1E-37}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro double DBL_MIN
 The value of this macro is the minimum normalized positive
 floating-point number that is representable by type @code{double}, and
@@ -513,7 +513,7 @@ is guaranteed to be no more than @code{1E-37}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {long double} LDBL_MIN
 The value of this macro is the minimum normalized positive
 floating-point number that is representable by type @code{long double},
@@ -522,7 +522,7 @@ and is guaranteed to be no more than @code{1E-37}.
 
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro double FLT_EPSILON
 This is the minimum positive floating-point number of type @code{float}
 such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's guaranteed to
@@ -530,14 +530,14 @@ be no greater than @code{1E-5}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro double DBL_EPSILON
 This is similar to @code{FLT_EPSILON}, but is for the @code{double}
 type.  The maximum value is @code{1E-9}.
 @end deftypevr
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {long double} LDBL_EPSILON
 This is similar to @code{FLT_EPSILON}, but is for the @code{long double}
 type.  The maximum value is @code{1E-9}.
@@ -546,15 +546,15 @@ type.  The maximum value is @code{1E-9}.
 
 @node IEEE Floating Point,  , Floating-Point Parameters, Floating-Point Limits
 @subsection IEEE Floating Point
-@cindex IEEE floating-point representation 
+@cindex IEEE floating-point representation
 @cindex floating-point, IEEE
 @cindex IEEE Std 754
 
 
 Here is an example showing how these parameters work for a common
 floating point representation, specified by the @cite{IEEE Standard for
-Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985)}.  Nearly
-all computers today use this format.
+Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985 or ANSI/IEEE
+Std 854-1987)}.  Nearly all computers today use this format.
 
 The IEEE single-precision float representation uses a base of 2.  There
 is a sign bit, a mantissa with 23 bits plus one hidden bit (so the total

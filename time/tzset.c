@@ -1,22 +1,21 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <ctype.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -25,16 +24,16 @@ Cambridge, MA 02139, USA.  */
 #include <time.h>
 
 /* Defined in mktime.c.  */
-extern CONST unsigned short int __mon_yday[2][13];
+extern const unsigned short int __mon_yday[2][13];
 
 #define NOID
 #include "tzfile.h"
 
 extern int __use_tzfile;
-extern void EXFUN(__tzfile_read, (CONST char *file));
-extern void EXFUN(__tzfile_default, (char *std AND char *dst AND
-				     long int stdoff AND long int dstoff));
-extern int EXFUN(__tzfile_compute, (time_t, struct tm));
+extern void __tzfile_read __P ((const char *file));
+extern void __tzfile_default __P ((char *std, char *dst,
+				   long int stdoff, long int dstoff));
+extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
@@ -71,14 +70,17 @@ typedef struct
 
 /* tz_rules[0] is standard, tz_rules[1] is daylight.  */
 static tz_rule tz_rules[2];
+
+
+static int compute_change __P ((tz_rule *rule, int year));
 
 int __tzset_run = 0;
 
 /* Interpret the TZ envariable.  */
 void
-DEFUN_VOID(__tzset)
+__tzset ()
 {
-  register CONST char *tz;
+  register const char *tz;
   register size_t l;
   unsigned short int hh, mm, ss;
   unsigned short int whichrule;
@@ -86,13 +88,13 @@ DEFUN_VOID(__tzset)
   /* Free old storage.  */
   if (tz_rules[0].name != NULL && *tz_rules[0].name != '\0')
     {
-      free((PTR) tz_rules[0].name);
+      free((void *) tz_rules[0].name);
       tz_rules[0].name = NULL;
     }
   if (tz_rules[1].name != NULL && *tz_rules[1].name != '\0' &&
       tz_rules[1].name != tz_rules[0].name)
     {
-      free((PTR) tz_rules[1].name);
+      free((void *) tz_rules[1].name);
       tz_rules[1].name = NULL;
     }
 
@@ -125,8 +127,8 @@ DEFUN_VOID(__tzset)
       tz_rules[1].name = (char *) malloc(len);
       if (tz_rules[1].name == NULL)
 	return;
-      memcpy ((PTR) tz_rules[0].name, UTC, len);
-      memcpy ((PTR) tz_rules[1].name, UTC, len);
+      memcpy ((void *) tz_rules[0].name, UTC, len);
+      memcpy ((void *) tz_rules[1].name, UTC, len);
       tz_rules[0].type = tz_rules[1].type = J0;
       tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
       tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
@@ -157,7 +159,7 @@ DEFUN_VOID(__tzset)
     }
 
   {
-    char *n = realloc ((PTR) tz_rules[0].name, l + 1);
+    char *n = realloc ((void *) tz_rules[0].name, l + 1);
     if (n != NULL)
       tz_rules[0].name = n;
   }
@@ -183,8 +185,8 @@ DEFUN_VOID(__tzset)
     case 3:
       break;
     }
-  tz_rules[0].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
-			 (min(hh, 23) * 60 * 60));
+  tz_rules[0].offset *= (min (ss, 59) + (min (mm, 59) * 60) +
+			 (min (hh, 23) * 60 * 60));
 
   for (l = 0; l < 3; ++l)
     {
@@ -197,24 +199,24 @@ DEFUN_VOID(__tzset)
   /* Get the DST timezone name (if any).  */
   if (*tz != '\0')
     {
-      char *n = malloc (strlen(tz) + 1);
+      char *n = malloc (strlen (tz) + 1);
       if (n != NULL)
 	{
 	  tz_rules[1].name = n;
-	  if (sscanf(tz, "%[^0-9,+-]", tz_rules[1].name) != 1 ||
-	      (l = strlen(tz_rules[1].name)) < 3)
+	  if (sscanf (tz, "%[^0-9,+-]", tz_rules[1].name) != 1 ||
+	      (l = strlen (tz_rules[1].name)) < 3)
 	    {
 	      free (n);
 	      tz_rules[1].name = (char *) "";
 	      goto done_names;	/* Punt on name, set up the offsets.  */
 	    }
-	  n = realloc ((PTR) tz_rules[1].name, l + 1);
+	  n = realloc ((void *) tz_rules[1].name, l + 1);
 	  if (n != NULL)
 	    tz_rules[1].name = n;
+
+	  tz += l;
 	}
     }
-
-  tz += l;
 
   /* Figure out the DST offset from GMT.  */
   if (*tz == '-' || *tz == '+')
@@ -234,8 +236,8 @@ DEFUN_VOID(__tzset)
     case 2:
       ss = 0;
     case 3:
-      tz_rules[1].offset *= (min(ss, 59) + (min(mm, 59) * 60) +
-			     (min(hh, 23) * (60 * 60)));
+      tz_rules[1].offset *= (min (ss, 59) + (min (mm, 59) * 60) +
+			     (min (hh, 23) * (60 * 60)));
       break;
     }
   for (l = 0; l < 3; ++l)
@@ -338,7 +340,7 @@ DEFUN_VOID(__tzset)
 	    }
 	  for (l = 0; l < 3; ++l)
 	    {
-	      while (isdigit(*tz))
+	      while (isdigit (*tz))
 		++tz;
 	      if (l < 2 && *tz == ':')
 		++tz;
@@ -361,7 +363,7 @@ DEFUN_VOID(__tzset)
 size_t __tzname_cur_max;
 
 long int
-DEFUN_VOID(__tzname_max)
+__tzname_max ()
 {
   if (! __tzset_run)
     __tzset ();
@@ -374,7 +376,9 @@ DEFUN_VOID(__tzname_max)
    put it in RULE->change, saving YEAR in RULE->computed_for.
    Return nonzero if successful, zero on failure.  */
 static int
-DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
+compute_change (rule, year)
+     tz_rule *rule;
+     int year;
 {
   register time_t t;
   int y;
@@ -410,7 +414,7 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
       /* Mm.n.d - Nth "Dth day" of month M.  */
       {
 	register int i, d, m1, yy0, yy1, yy2, dow;
-	register CONST unsigned short int *myday =
+	register const unsigned short int *myday =
 	  &__mon_yday[__isleap (year)][rule->m];
 
 	/* First add SECSPERDAY for each day in months before M.  */
@@ -456,8 +460,9 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
    and set `__tzname', `__timezone', and `__daylight' accordingly.
    Return nonzero on success, zero on failure.  */
 int
-DEFUN(__tz_compute, (timer, tm),
-      time_t timer AND const struct tm *tm)
+__tz_compute (timer, tm)
+     time_t timer;
+     const struct tm *tm;
 {
   if (! __tzset_run)
     __tzset ();

@@ -175,9 +175,10 @@ Introduction
 
 Standards and Portability
 
-* ANSI C::                      The American National Standard for the
+* ISO C::                       The American National Standard for the
                                  C programming language.
-* POSIX::                       The IEEE 1003 standards for operating systems.
+* POSIX::                       The ISO/IEC 9945 (aka IEEE 1003) standards
+                                 for operating systems.
 * Berkeley Unix::               BSD and SunOS.
 * SVID::                        The System V Interface Description.
 
@@ -365,7 +366,7 @@ I/O on Streams
 * Binary Streams::              Some systems distinguish between text files
                                  and binary files.
 * File Positioning::            About random-access streams.
-* Portable Positioning::        Random access on peculiar ANSI C systems.
+* Portable Positioning::        Random access on peculiar ISO C systems.
 * Stream Buffering::            How to control buffering of streams.
 * Temporary Files::             How to open a temporary file.
 * Other Kinds of Streams::      Other Kinds of Streams
@@ -609,7 +610,7 @@ Mathematics
 
 Pseudo-Random Numbers
 
-* ANSI Random::                 @code{rand} and friends.
+* ISO Random::                  @code{rand} and friends.
 * BSD Random::                  @code{random} and friends.
 
 Low-Level Arithmetic Functions

@@ -1,5 +1,5 @@
 @node Searching and Sorting, Pattern Matching, Locales, Top
-@chapter Searching and Sorting 
+@chapter Searching and Sorting
 
 This chapter describes functions for searching and sorting arrays of
 arbitrary objects.  You pass the appropriate comparison function to be
@@ -10,7 +10,7 @@ and the total number of elements.
 * Comparison Functions::        Defining how to compare two objects.
 				 Since the sort and search facilities
                                  are general, you have to specify the
-                                 ordering. 
+                                 ordering.
 * Array Search Function::       The @code{bsearch} function.
 * Array Sort Function::         The @code{qsort} function.
 * Search/Sort Example::         An example program.
@@ -64,11 +64,11 @@ the header file @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {void *} bsearch (const void *@var{key}, const void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 The @code{bsearch} function searches the sorted array @var{array} for an object
 that is equivalent to @var{key}.  The array contains @var{count} elements,
-each of which is of size @var{size} bytes.  
+each of which is of size @var{size} bytes.
 
 The @var{compare} function is used to perform the comparison.  This
 function is called with two pointer arguments and should return an
@@ -97,7 +97,7 @@ To sort an array using an arbitrary comparison function, use the
 @pindex stdlib.h
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun void qsort (void *@var{array}, size_t @var{count}, size_t @var{size}, comparison_fn_t @var{compare})
 The @var{qsort} function sorts the array @var{array}.  The array contains
 @var{count} elements, each of which is of size @var{size}.
@@ -191,5 +191,3 @@ Kermit, the frog
 Gonzo, the whatever
 Couldn't find Janice.
 @end smallexample
-
-

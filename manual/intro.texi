@@ -9,7 +9,7 @@ programs.
 @cindex library
 
 The GNU C library, described in this document, defines all of the
-library functions that are specified by the ANSI C standard, as well as
+library functions that are specified by the @w{ISO C} standard, as well as
 additional features specific to POSIX and other derivatives of the Unix
 operating system, and extensions specific to the GNU system.
 
@@ -33,8 +33,8 @@ portability.
 
 This manual is written with the assumption that you are at least
 somewhat familiar with the C programming language and basic programming
-concepts.  Specifically, familiarity with ANSI standard C
-(@pxref{ANSI C}), rather than ``traditional'' pre-ANSI C dialects, is
+concepts.  Specifically, familiarity with ISO standard C
+(@pxref{ISO C}), rather than ``traditional'' pre-ISO C dialects, is
 assumed.
 
 The GNU C library includes several @dfn{header files}, each of which
@@ -61,7 +61,7 @@ specific information about them.
 @cindex standards
 
 This section discusses the various standards and other sources that the
-GNU C library is based upon.  These sources include the ANSI C and
+GNU C library is based upon.  These sources include the @w{ISO C} and
 POSIX standards, and the System V and Berkeley Unix implementations.
 
 The primary focus of this manual is to tell you how to make effective
@@ -77,44 +77,48 @@ other symbols provided by the library.  This list also states which
 standards each function or symbol comes from.
 
 @menu
-* ANSI C::                      The American National Standard for the
-				 C programming language.
-* POSIX::                       The IEEE 1003 standards for operating
-                                 systems.
+* ISO C::                      The international standard for the C
+                                 programming language.
+* POSIX::                       The ISO/IEC 9945 (aka IEEE 1003) standards
+                                 for operating systems.
 * Berkeley Unix::               BSD and SunOS.
 * SVID::                        The System V Interface Description.
 @end menu
 
-@node ANSI C, POSIX,  , Standards and Portability
-@subsection ANSI C
-@cindex ANSI C
+@node ISO C, POSIX,  , Standards and Portability
+@subsection ISO C
+@cindex ISO C
 
 The GNU C library is compatible with the C standard adopted by the
 American National Standards Institute (ANSI):
-@cite{American National Standard X3.159-1989---``ANSI C''}.
+@cite{American National Standard X3.159-1989---``ANSI C''} and later
+by the International Standardization Organizaion (ISO):
+@cite{ISO/IEC 9899:1990, ``Programming languages---C''}.
+We here refer to the standard as @w{ISO C} since this is the more
+general standard in respect of ratification.
 The header files and library facilities that make up the GNU library are
-a superset of those specified by the ANSI C standard.@refill
+a superset of those specified by the @w{ISO C} standard.@refill
 
 @pindex gcc
-If you are concerned about strict adherence to the ANSI C standard, you
+If you are concerned about strict adherence to the @w{ISO C} standard, you
 should use the @samp{-ansi} option when you compile your programs with
-the GNU C compiler.  This tells the compiler to define @emph{only} ANSI
+the GNU C compiler.  This tells the compiler to define @emph{only} ISO
 standard features from the library header files, unless you explicitly
 ask for additional features.  @xref{Feature Test Macros}, for
 information on how to do this.
 
-Being able to restrict the library to include only ANSI C features is
-important because ANSI C puts limitations on what names can be defined
+Being able to restrict the library to include only @w{ISO C} features is
+important because @w{ISO C} puts limitations on what names can be defined
 by the library implementation, and the GNU extensions don't fit these
 limitations.  @xref{Reserved Names}, for more information about these
 restrictions.
 
 This manual does not attempt to give you complete details on the
-differences between ANSI C and older dialects.  It gives advice on how
+differences between @w{ISO C} and older dialects.  It gives advice on how
 to write programs to work portably under multiple C dialects, but does
 not aim for completeness.
 
-@node POSIX, Berkeley Unix, ANSI C, Standards and Portability
+@node POSIX, Berkeley Unix, ISO C, Standards and Portability
 @subsection POSIX (The Portable Operating System Interface)
 @cindex POSIX
 @cindex POSIX.1
@@ -128,8 +132,8 @@ Interface for Computer Environments}.  POSIX is derived mostly from
 various versions of the Unix operating system.
 
 The library facilities specified by the POSIX standards are a superset
-of those required by ANSI C; POSIX specifies additional features for
-ANSI C functions, as well as specifying new additional functions.  In
+of those required by @w{ISO C}; POSIX specifies additional features for
+@w{ISO C} functions, as well as specifying new additional functions.  In
 general, the additional requirements and functionality defined by the
 POSIX standards are aimed at providing lower-level support for a
 particular kind of operating system environment, rather than general
@@ -139,7 +143,7 @@ system environments.@refill
 The GNU C library implements all of the functions specified in
 @cite{IEEE Std 1003.1-1990, the POSIX System Application Program
 Interface}, commonly referred to as POSIX.1.  The primary extensions to
-the ANSI C facilities specified by this standard include file system
+the @w{ISO C} facilities specified by this standard include file system
 interface primitives (@pxref{File System Interface}), device-specific
 terminal control functions (@pxref{Low-Level Terminal Interface}), and
 process control functions (@pxref{Processes}).
@@ -175,7 +179,7 @@ The GNU C library defines facilities from some versions of Unix which
 are not formally standardized, specifically from the 4.2 BSD, 4.3 BSD,
 and 4.4 BSD Unix systems (also known as @dfn{Berkeley Unix}) and from
 @dfn{SunOS} (a popular 4.2 BSD derivative that includes some Unix System
-V functionality).  These systems support most of the ANSI and POSIX
+V functionality).  These systems support most of the @w{ISO C} and POSIX
 facilities, and 4.4 BSD and newer releases of SunOS in fact support them all.
 
 The BSD facilities include symbolic links (@pxref{Symbolic Links}), the
@@ -193,7 +197,7 @@ the AT&T Unix System V operating system.  It is to some extent a
 superset of the POSIX standard (@pxref{POSIX}).
 
 The GNU C library defines some of the facilities required by the SVID
-that are not also required by the ANSI or POSIX standards, for
+that are not also required by the @w{ISO C} or POSIX standards, for
 compatibility with  System V Unix and other Unix systems (such as
 SunOS) which include these facilities.  However, many of the more
 obscure and less generally useful facilities required by the SVID are
@@ -295,7 +299,7 @@ program needs to include multiple header files, the order in which they
 are included doesn't matter.
 
 @strong{Compatibility Note:} Inclusion of standard header files in any
-order and any number of times works in any ANSI C implementation.
+order and any number of times works in any @w{ISO C} implementation.
 However, this has traditionally not been the case in many older C
 implementations.
 
@@ -384,7 +388,7 @@ just makes your program slower.
 @cindex name space
 
 The names of all library types, macros, variables and functions that
-come from the ANSI C standard are reserved unconditionally; your program
+come from the @w{ISO C} standard are reserved unconditionally; your program
 @strong{may not} redefine these names.  All other library names are
 reserved if your program explicitly includes the header file that
 defines or declares them.  There are several reasons for these

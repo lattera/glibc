@@ -36,7 +36,7 @@ The system starts a C program by calling the function @code{main}.  It
 is up to you to write a function named @code{main}---otherwise, you
 won't even be able to link your program without errors.
 
-In ANSI C you can define @code{main} either to take no arguments, or to
+In @w{ISO C} you can define @code{main} either to take no arguments, or to
 take two arguments that represent the command line arguments to the
 program, like this:
 
@@ -519,7 +519,7 @@ The value of an environment variable can be accessed with the
 @pindex stdlib.h
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {char *} getenv (const char *@var{name})
 This function returns a string that is the value of the environment
 variable @var{name}.  You must not modify this string.  In some non-Unix
@@ -742,7 +742,7 @@ Returning from @code{main} is equivalent to calling @code{exit}, and
 the value that @code{main} returns is used as the argument to @code{exit}.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun void exit (int @var{status})
 The @code{exit} function terminates the process with status
 @var{status}.  This function does not return.
@@ -812,7 +812,7 @@ are declared in the file @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int EXIT_SUCCESS
 This macro can be used with the @code{exit} function to indicate
 successful program completion.
@@ -823,7 +823,7 @@ expression.
 @end deftypevr
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int EXIT_FAILURE
 This macro can be used with the @code{exit} function to indicate
 unsuccessful program completion in a general sense.
@@ -849,7 +849,7 @@ application, by setting up a cleanup function in the library itself
 using @code{atexit} or @code{on_exit}.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int atexit (void (*@var{function}) (void))
 The @code{atexit} function registers the function @var{function} to be
 called at normal program termination.  The @var{function} is called with
@@ -891,7 +891,7 @@ for this function is in @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun void abort (void)
 The @code{abort} function causes abnormal program termination.  This
 does not execute cleanup functions registered with @code{atexit} or

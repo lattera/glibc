@@ -305,7 +305,7 @@ library which you are using.  Also include the files
 you ran @file{configure}.
 
 If you think you have found some way in which the GNU C library does not
-conform to the ANSI and POSIX standards (@pxref{Standards and
+conform to the ISO and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!@refill
 
 Send bug reports to the Internet address
@@ -767,8 +767,8 @@ generated are @file{ioctls.h}, @file{errnos.h}, @file{sys/param.h}, and
 
 @c ??? This section is really short now.  Want to keep it? --roland
 
-Although the GNU C library implements the ANSI C library facilities, you
-@emph{can} use the GNU C library with traditional, ``pre-ANSI'' C
+Although the GNU C library implements the @w{ISO C} library facilities, you
+@emph{can} use the GNU C library with traditional, ``pre-ISO'' C
 compilers.  However, you need to be careful because the content and
 organization of the GNU C library header files differs from that of
 traditional C implementations.  This means you may need to make changes
@@ -963,7 +963,7 @@ The random number generation functions @code{random}, @code{srandom},
 @code{rand} and @code{srand} functions, were written by Earl T. Cohen
 for the University of California at Berkeley and are copyrighted by the
 Regents of the University of California.  They have undergone minor
-changes to fit into the GNU C library and to fit the ANSI C standard,
+changes to fit into the GNU C library and to fit the @w{ISO C} standard,
 but the functional code is Berkeley's.@refill
 
 @item

@@ -47,7 +47,6 @@ extern int errno;
    The position in the buffer that corresponds to the position
    in external file system is normally _IO_read_end, except in putback
    mode, when it is _IO_save_end.
-   when it is _IO_save_end.
    If the field _fb._offset is >= 0, it gives the offset in
    the file as a whole corresponding to eGptr(). (?)
 
@@ -185,7 +184,7 @@ DEFUN(_IO_file_fopen, (fp, filename, mode),
   _IO_mask_flags(fp, read_write,_IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
   if (read_write & _IO_IS_APPENDING)
     if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
-	== _IO_pos_BAD)
+	== _IO_pos_BAD && errno != ESPIPE)
       return NULL;
   _IO_link_in(fp);
   return fp;
@@ -200,7 +199,12 @@ DEFUN(_IO_file_attach, (fp, fd),
   fp->_fileno = fd;
   fp->_flags &= ~(_IO_NO_READS+_IO_NO_WRITES);
   fp->_flags |= _IO_DELETE_DONT_CLOSE;
+  /* Get the current position of the file. */
+  /* We have to do that since that may be junk. */
   fp->_offset = _IO_pos_BAD;
+  if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
+      == _IO_pos_BAD && errno != ESPIPE)
+    return NULL;
   return fp;
 }
 

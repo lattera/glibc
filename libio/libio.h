@@ -52,10 +52,14 @@ the executable file might be covered by the GNU General Public License. */
 #endif
 
 #ifndef __P
+#if _G_HAVE_SYS_CDEFS
+#include <sys/cdefs.h>
+#else
 #ifdef __STDC__
 #define __P(protos) protos
 #else
 #define __P(protos) ()
+#endif
 #endif
 #endif /*!__P*/
 
@@ -79,10 +83,14 @@ the executable file might be covered by the GNU General Public License. */
 #define EOF (-1)
 #endif
 #ifndef NULL
-#if !defined(__cplusplus) || defined(__GNUC__)
+#ifdef __GNUG__
+#define NULL (__null)
+#else
+#if !defined(__cplusplus)
 #define NULL ((void*)0)
 #else
 #define NULL (0)
+#endif
 #endif
 #endif
 
@@ -183,6 +191,7 @@ struct _IO_FILE {
 #define _IO_file_flags _flags
 
   /* The following pointers correspond to the C++ streambuf protocol. */
+  /* Note:  Tk uses the _IO_read_ptr and _IO_read_end fields directly. */
   char* _IO_read_ptr;	/* Current read pointer */
   char* _IO_read_end;	/* End of get area. */
   char* _IO_read_base;	/* Start of putback+get area. */
@@ -199,10 +208,6 @@ struct _IO_FILE {
   struct _IO_marker *_markers;
 
   struct _IO_FILE *_chain;
-
-#if  !_IO_UNIFIED_JUMPTABLES
-  struct _IO_jump_t *_jumps; /* Jump table */
-#endif
 
   int _fileno;
   int _blksize;

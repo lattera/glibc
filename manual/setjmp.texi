@@ -55,7 +55,7 @@ between an ordinary return and a return made by a call to
 @code{longjmp}, so calls to @code{setjmp} usually appear in an @samp{if}
 statement.
 
-Here is how the example program described above might be set up:  
+Here is how the example program described above might be set up:
 
 @smallexample
 @include setjmp.c.texi
@@ -95,7 +95,7 @@ performing non-local exits.  These facilities are declared in
 @pindex setjmp.h
 
 @comment setjmp.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} jmp_buf
 Objects of type @code{jmp_buf} hold the state information to
 be restored by a non-local exit.  The contents of a @code{jmp_buf}
@@ -103,7 +103,7 @@ identify a specific place to return to.
 @end deftp
 
 @comment setjmp.h
-@comment ANSI
+@comment ISO
 @deftypefn Macro int setjmp (jmp_buf @var{state})
 When called normally, @code{setjmp} stores information about the
 execution state of the program in @var{state} and returns zero.  If
@@ -112,8 +112,8 @@ execution state of the program in @var{state} and returns zero.  If
 @end deftypefn
 
 @comment setjmp.h
-@comment ANSI
-@deftypefun void longjmp (jmp_buf @var{state}, int @var{value}) 
+@comment ISO
+@deftypefun void longjmp (jmp_buf @var{state}, int @var{value})
 This function restores current execution to the state saved in
 @var{state}, and continues execution from the call to @code{setjmp} that
 established that return point.  Returning from @code{setjmp} by means of
@@ -210,4 +210,3 @@ argument.  If the @code{sigsetjmp} call that set this @var{state} used a
 nonzero @var{savesigs} flag, @code{siglongjmp} also restores the set of
 blocked signals.
 @end deftypefun
-

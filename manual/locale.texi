@@ -9,7 +9,7 @@ the language spoken.
 @cindex internationalization
 @cindex locales
 @dfn{Internationalization} of software means programming it to be able
-to adapt to the user's favorite conventions.  In ANSI C,
+to adapt to the user's favorite conventions.  In @w{ISO C},
 internationalization works by means of @dfn{locales}.  Each locale
 specifies a collection of conventions, one convention for each purpose.
 The user chooses a set of conventions by specifying a locale (via
@@ -21,15 +21,15 @@ will follow the conventions preferred by the user.
 
 @menu
 * Effects of Locale::           Actions affected by the choice of
-                                 locale. 
+                                 locale.
 * Choosing Locale::             How the user specifies a locale.
 * Locale Categories::           Different purposes for which you can
-                                 select a locale. 
+                                 select a locale.
 * Setting the Locale::          How a program specifies the locale
-                                 with library functions. 
+                                 with library functions.
 * Standard Locales::            Locale names available on all systems.
 * Numeric Formatting::          How to format numbers according to the
-                                 chosen locale. 
+                                 chosen locale.
 @end menu
 
 @node Effects of Locale, Choosing Locale,  , Locales
@@ -128,14 +128,14 @@ use as an argument to @code{setlocale}.
 
 @table @code
 @comment locale.h
-@comment ANSI
+@comment ISO
 @item LC_COLLATE
 @vindex LC_COLLATE
 This category applies to collation of strings (functions @code{strcoll}
 and @code{strxfrm}); see @ref{Collation Functions}.
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @item LC_CTYPE
 @vindex LC_CTYPE
 This category applies to classification and conversion of characters,
@@ -143,48 +143,44 @@ and to multibyte and wide characters;
 see @ref{Character Handling} and @ref{Extended Characters}.
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @item LC_MONETARY
 @vindex LC_MONETARY
 This category applies to formatting monetary values; see @ref{Numeric
 Formatting}.
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @item LC_NUMERIC
 @vindex LC_NUMERIC
 This category applies to formatting numeric values that are not
 monetary; see @ref{Numeric Formatting}.
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @item LC_TIME
 @vindex LC_TIME
 This category applies to formatting date and time values; see
 @ref{Formatting Date and Time}.
 
-@ignore   This is apparently a feature that was in some early
-draft of the POSIX.2 standard, but it's not listed in draft 11.  Do we
-still support this anyway?  Is there a corresponding environment
-variable?
-
 @comment locale.h
-@comment GNU
-@item LC_RESPONSE
-@vindex LC_RESPONSE
-This category applies to recognizing ``yes'' or ``no'' responses to
-questions.
+@comment XOPEN
+@item LC_MESSAGES
+@vindex LC_MESSAGES
+This category applies to selecting the language used in the user interface
+for message translation.
+@ignore  see @ref{gettext} and @ref{catgets}
 @end ignore
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @item LC_ALL
 @vindex LC_ALL
 This is not an environment variable; it is only a macro that you can use
 with @code{setlocale} to set a single locale for all purposes.
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @item LANG
 @vindex LANG
 If this environment variable is defined, its value specifies the locale
@@ -197,7 +193,7 @@ to use for all purposes except as overridden by the variables above.
 A C program inherits its locale environment variables when it starts up.
 This happens automatically.  However, these variables do not
 automatically control the locale used by the library functions, because
-ANSI C says that all programs start by default in the standard @samp{C}
+@w{ISO C} says that all programs start by default in the standard @samp{C}
 locale.  To use the locales specified by the environment, you must call
 @code{setlocale}.  Call it as follows:
 
@@ -217,9 +213,9 @@ general use or for a specific category.
 The symbols in this section are defined in the header file @file{locale.h}.
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @deftypefun {char *} setlocale (int @var{category}, const char *@var{locale})
-The function @code{setlocale} sets the current locale for 
+The function @code{setlocale} sets the current locale for
 category @var{category} to @var{locale}.
 
 If @var{category} is @code{LC_ALL}, this specifies the locale for all
@@ -238,7 +234,7 @@ Concatenation}) if you want to save it past any further calls to
 @code{setlocale} itself.)
 
 You should not modify the string returned by @code{setlocale}.
-It might be the same string that was passed as an argument in a 
+It might be the same string that was passed as an argument in a
 previous call to @code{setlocale}.
 
 When you read the current locale for category @code{LC_ALL}, the value
@@ -277,23 +273,23 @@ with_other_locale (char *new_locale,
 
   /* @r{Get the name of the current locale.}  */
   old_locale = setlocale (LC_ALL, NULL);
-  
+
   /* @r{Copy the name so it won't be clobbered by @code{setlocale}.} */
   saved_locale = strdup (old_locale);
   if (old_locale == NULL)
     fatal ("Out of memory");
-  
+
   /* @r{Now change the locale and do some stuff with it.} */
   setlocale (LC_ALL, new_locale);
   (*subroutine) (argument);
-  
+
   /* @r{Restore the original locale.} */
   setlocale (LC_ALL, saved_locale);
   free (saved_locale);
 @}
 @end smallexample
 
-@strong{Portability Note:} Some ANSI C systems may define additional
+@strong{Portability Note:} Some @w{ISO C} systems may define additional
 locale categories.  For portability, assume that any symbol beginning
 with @samp{LC_} might be defined in @file{locale.h}.
 
@@ -306,7 +302,7 @@ are these three standard ones:
 @table @code
 @item "C"
 This is the standard C locale.  The attributes and behavior it provides
-are specified in the ANSI C standard.  When your program starts up, it
+are specified in the @w{ISO C} standard.  When your program starts up, it
 initially uses this locale by default.
 
 @item "POSIX"
@@ -343,7 +339,7 @@ conventions of the current locale, you can use the function
 @cindex numeric value formatting
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @deftypefun {struct lconv *} localeconv (void)
 The @code{localeconv} function returns a pointer to a structure whose
 components contain information about how numeric and monetary values
@@ -356,7 +352,7 @@ value.
 @end deftypefun
 
 @comment locale.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} {struct lconv}
 This is the data type of the value returned by @code{localeconv}.
 @end deftp
@@ -436,7 +432,7 @@ international and local formats, respectively.  (Most often, both
 members have the same value.)
 
 In the standard @samp{C} locale, both of these members have the value
-@code{CHAR_MAX}, meaning ``unspecified''.  The ANSI standard doesn't say
+@code{CHAR_MAX}, meaning ``unspecified''.  The ISO standard doesn't say
 what to do when you find this the value; we recommend printing no
 fractional digits.  (This locale also specifies the empty string for
 @code{mon_decimal_point}, so printing any fractional digits would be
@@ -469,7 +465,7 @@ assumed to be in Canadian dollars.
 The local currency symbol for the selected locale.
 
 In the standard @samp{C} locale, this member has a value of @code{""}
-(the empty string), meaning ``unspecified''.  The ANSI standard doesn't
+(the empty string), meaning ``unspecified''.  The ISO standard doesn't
 say what to do when you find this value; we recommend you simply print
 the empty string as you would print any other string found in the
 appropriate member.
@@ -496,13 +492,13 @@ amounts (or zero), and the @code{n_cs_precedes} member applies to
 negative amounts.
 
 In the standard @samp{C} locale, both of these members have a value of
-@code{CHAR_MAX}, meaning ``unspecified''.  The ANSI standard doesn't say
+@code{CHAR_MAX}, meaning ``unspecified''.  The ISO standard doesn't say
 what to do when you find this value, but we recommend printing the
 currency symbol before the amount.  That's right for most countries.
 In other words, treat all nonzero values alike in these members.
 
 The POSIX standard says that these two members apply to the
-@code{int_curr_symbol} as well as the @code{currency_symbol}.  The ANSI
+@code{int_curr_symbol} as well as the @code{currency_symbol}.  The ISO
 C standard seems to imply that they should apply only to the
 @code{currency_symbol}---so the @code{int_curr_symbol} should always
 precede the amount.
@@ -521,7 +517,7 @@ amounts (or zero), and the @code{n_sep_by_space} member applies to
 negative amounts.
 
 In the standard @samp{C} locale, both of these members have a value of
-@code{CHAR_MAX}, meaning ``unspecified''.  The ANSI standard doesn't say
+@code{CHAR_MAX}, meaning ``unspecified''.  The ISO standard doesn't say
 what you should do when you find this value; we suggest you treat it as
 one (print a space).  In other words, treat all nonzero values alike in
 these members.
@@ -532,7 +528,7 @@ These members apply only to @code{currency_symbol}.  When you use
 
 The POSIX standard says that these two members apply to the
 @code{int_curr_symbol} as well as the @code{currency_symbol}.  But an
-example in the ANSI C standard clearly implies that they should apply
+example in the @w{ISO C} standard clearly implies that they should apply
 only to the @code{currency_symbol}---that the @code{int_curr_symbol}
 contains any appropriate separator, so you should never print an
 additional space.
@@ -556,7 +552,7 @@ These are strings used to indicate positive (or zero) and negative
 In the standard @samp{C} locale, both of these members have a value of
 @code{""} (the empty string), meaning ``unspecified''.
 
-The ANSI standard doesn't say what to do when you find this value; we
+The ISO standard doesn't say what to do when you find this value; we
 recommend printing @code{positive_sign} as you find it, even if it is
 empty.  For a negative value, print @code{negative_sign} as you find it
 unless both it and @code{positive_sign} are empty, in which case print
@@ -592,14 +588,13 @@ Print the sign string right after the currency symbol.
 @samp{C} locale.
 @end table
 
-The ANSI standard doesn't say what you should do when the value is
+The ISO standard doesn't say what you should do when the value is
 @code{CHAR_MAX}.  We recommend you print the sign after the currency
 symbol.
 @end table
 
 It is not clear whether you should let these members apply to the
 international currency format or not.  POSIX says you should, but
-intuition plus the examples in the ANSI C standard suggest you should
+intuition plus the examples in the @w{ISO C} standard suggest you should
 not.  We hope that someone who knows well the conventions for formatting
 monetary quantities will tell us what we should recommend.
-

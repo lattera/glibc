@@ -157,7 +157,7 @@ this function is in @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment malloc.h stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {void *} malloc (size_t @var{size})
 This function returns a pointer to a newly allocated block @var{size}
 bytes long, or a null pointer if the block could not be allocated.
@@ -179,7 +179,7 @@ memset (ptr, 0, sizeof (struct foo));
 @end smallexample
 
 You can store the result of @code{malloc} into any pointer variable
-without a cast, because ANSI C automatically converts the type
+without a cast, because @w{ISO C} automatically converts the type
 @code{void *} to another type of pointer when necessary.  But the cast
 is necessary in contexts other than assignment operators or if you might
 want your code to run in traditional C.
@@ -263,7 +263,7 @@ The prototype for this function is in @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment malloc.h stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun void free (void *@var{ptr})
 The @code{free} function deallocates the block of storage pointed at
 by @var{ptr}.
@@ -327,7 +327,7 @@ is declared in @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment malloc.h stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {void *} realloc (void *@var{ptr}, size_t @var{newsize})
 The @code{realloc} function changes the size of the block whose address is
 @var{ptr} to be @var{newsize}.
@@ -340,7 +340,7 @@ contents.
 
 If you pass a null pointer for @var{ptr}, @code{realloc} behaves just
 like @samp{malloc (@var{newsize})}.  This can be convenient, but beware
-that older implementations (before ANSI C) may not support this
+that older implementations (before @w{ISO C}) may not support this
 behavior, and will probably crash when @code{realloc} is passed a null
 pointer.
 @end deftypefun
@@ -383,7 +383,7 @@ is declared in @file{stdlib.h}.
 @pindex stdlib.h
 
 @comment malloc.h stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun {void *} calloc (size_t @var{count}, size_t @var{eltsize})
 This function allocates a block long enough to contain a vector of
 @var{count} elements, each of size @var{eltsize}.  Its contents are
@@ -984,10 +984,10 @@ obstacks, or non-obstack allocation, can reuse the space of the chunk.
 
 The interfaces for using obstacks may be defined either as functions or
 as macros, depending on the compiler.  The obstack facility works with
-all C compilers, including both ANSI C and traditional C, but there are
+all C compilers, including both @w{ISO C} and traditional C, but there are
 precautions you must take if you plan to use compilers other than GNU C.
 
-If you are using an old-fashioned non-ANSI C compiler, all the obstack
+If you are using an old-fashioned @w{non-ISO C} compiler, all the obstack
 ``functions'' are actually defined only as macros.  You can call these
 macros like functions, but you cannot use them in any other way (for
 example, you cannot take their address).
@@ -1006,7 +1006,7 @@ If you use @code{*obstack_list_ptr++} as the obstack pointer argument,
 you will get very strange results since the incrementation may occur
 several times.
 
-In ANSI C, each function has both a macro definition and a function
+In @w{ISO C}, each function has both a macro definition and a function
 definition.  The function definition is used if you take the address of the
 function without calling it.  An ordinary call uses the macro definition by
 default, but you can request the function definition instead by writing the
@@ -1024,12 +1024,11 @@ funcp = obstack_alloc;
 @end smallexample
 
 @noindent
-This is the same situation that exists in ANSI C for the standard library
+This is the same situation that exists in @w{ISO C} for the standard library
 functions.  @xref{Macro Definitions}.
 
 @strong{Warning:} When you do use the macros, you must observe the
-precaution of avoiding side effects in the first operand, even in ANSI
-C.
+precaution of avoiding side effects in the first operand, even in @w{ISO C}.
 
 If you use the GNU C compiler, this precaution is not necessary, because
 various language extensions in GNU C permit defining the macros so as to

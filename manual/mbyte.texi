@@ -26,7 +26,7 @@ character codes.
                                  and vice versa.
 * Length of Char::              how many bytes make up one multibyte char.
 * Converting One Char::         Converting a string character by character.
-* Example of Conversion::       Example showing why converting 
+* Example of Conversion::       Example showing why converting
 				 one character at a time may be useful.
 * Shift State::                 Multibyte codes with "shift characters".
 @end menu
@@ -246,7 +246,7 @@ code with @code{MB_CUR_MAX}, and the maximum for @emph{any} multibyte
 code supported on your computer with @code{MB_LEN_MAX}.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int MB_LEN_MAX
 This is the maximum length of a multibyte character for any supported
 locale.  It is defined in @file{limits.h}.
@@ -254,7 +254,7 @@ locale.  It is defined in @file{limits.h}.
 @end deftypevr
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int MB_CUR_MAX
 This macro expands into a (possibly non-constant) positive integer
 expression that is the maximum number of bytes in a multibyte character
@@ -320,7 +320,7 @@ is often used to terminate a string of wide characters, just as a single
 byte with value zero often terminates a string of ordinary characters.
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} wchar_t
 This is the ``wide character'' type, an integer type whose range is
 large enough to represent all distinct values in any extended character
@@ -358,7 +358,7 @@ functions to convert one character at a time.  @xref{Converting One
 Char}.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun size_t mbstowcs (wchar_t *@var{wstring}, const char *@var{string}, size_t @var{size})
 The @code{mbstowcs} (``multibyte string to wide character string'')
 function converts the null-terminated string of multibyte characters
@@ -398,7 +398,7 @@ mbstowcs_alloc (const char *string)
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun size_t wcstombs (char *@var{string}, const wchar_t @var{wstring}, size_t @var{size})
 The @code{wcstombs} (``wide character string to multibyte string'')
 function converts the null-terminated wide character array @var{wstring}
@@ -425,11 +425,11 @@ present if the number is less than @var{size}.
 
 This section describes how to scan a string containing multibyte
 characters, one character at a time.  The difficulty in doing this
-is to know how many bytes each character contains.  Your program 
+is to know how many bytes each character contains.  Your program
 can use @code{mblen} to find this out.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int mblen (const char *@var{string}, size_t @var{size})
 The @code{mblen} function with a non-null @var{string} argument returns
 the number of bytes that make up the multibyte character beginning at
@@ -468,7 +468,7 @@ with the @code{mbtowc} function.  The @code{wctomb} function does the
 reverse.  These functions are declared in @file{stdlib.h}.
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int mbtowc (wchar_t *@var{result}, const char *@var{string}, size_t @var{size})
 The @code{mbtowc} (``multibyte to wide character'') function when called
 with non-null @var{string} converts the first multibyte character
@@ -502,7 +502,7 @@ shift state.  @xref{Shift State}.
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int wctomb (char *@var{string}, wchar_t @var{wchar})
 The @code{wctomb} (``wide character to multibyte'') function converts
 the wide character code @var{wchar} to its corresponding multibyte
@@ -536,7 +536,7 @@ stored shift state @emph{as well as} storing the multibyte character
 @end deftypefun
 
 @node Example of Conversion, Shift State, Converting One Char, Extended Characters
-@section Character-by-Character Conversion Example 
+@section Character-by-Character Conversion Example
 
 Here is an example that reads multibyte character text from descriptor
 @code{input} and writes the corresponding wide characters to descriptor

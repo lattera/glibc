@@ -34,7 +34,7 @@ and synchronize.
 * Generating Signals::          How to send a signal to a process.
 * Blocking Signals::            Making the system hold signals temporarily.
 * Waiting for a Signal::        Suspending your program until a signal
-                                 arrives. 
+                                 arrives.
 * Signal Stack::                Using a Separate Signal Stack.
 * BSD Signal Handling::         Additional functions for backward
 			         compatibility with BSD.
@@ -51,11 +51,11 @@ signals.
 * Kinds of Signals::            Some examples of what can cause a signal.
 * Signal Generation::           Concepts of why and how signals occur.
 * Delivery of Signal::          Concepts of what a signal does to the
-                                 process. 
+                                 process.
 @end menu
 
 @node Kinds of Signals
-@subsection Some Kinds of Signals 
+@subsection Some Kinds of Signals
 
 A signal reports the occurrence of an exceptional event.  These are some
 of the events that can cause (or @dfn{generate}, or @dfn{raise}) a
@@ -229,7 +229,7 @@ defined.  Since the signal numbers are allocated consecutively,
 @menu
 * Program Error Signals::       Used to report serious program errors.
 * Termination Signals::         Used to interrupt and/or terminate the
-                                 program. 
+                                 program.
 * Alarm Signals::               Used to indicate expiration of timers.
 * Asynchronous I/O Signals::    Used to indicate input is available.
 * Job Control Signals::         Signals used to support job control.
@@ -279,7 +279,7 @@ files is so that you can examine them with a debugger to investigate
 what caused the error.
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SIGFPE
 The @code{SIGFPE} signal reports a fatal arithmetic error.  Although the
 name is derived from ``floating-point exception'', this signal actually
@@ -294,7 +294,8 @@ floating-point number.
 Actual floating-point exceptions are a complicated subject because there
 are many types of exceptions with subtly different meanings, and the
 @code{SIGFPE} signal doesn't distinguish between them.  The @cite{IEEE
-Standard for Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985)}
+Standard for Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985
+and ANSI/IEEE Std 854-1987)}
 defines various floating-point exceptions and requires conforming
 computer systems to report their occurrences.  However, this standard
 does not specify how the exceptions are reported, or what kinds of
@@ -368,7 +369,7 @@ Floating underflow fault.
 @end table
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SIGILL
 The name of this signal is derived from ``illegal instruction''; it
 usually means your program is trying to execute garbage or a privileged
@@ -387,7 +388,7 @@ the system has trouble running the handler for a signal.
 @cindex illegal instruction
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SIGSEGV
 @cindex segmentation violation
 This signal is generated when a program tries to read or write outside
@@ -421,7 +422,7 @@ The name of this signal is an abbreviation for ``bus error''.
 @cindex bus error
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SIGABRT
 @cindex abort signal
 This signal indicates an error detected by the program itself and
@@ -480,7 +481,7 @@ The (obvious) default action for all of these signals is to cause the
 process to terminate.
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SIGTERM
 @cindex termination signal
 The @code{SIGTERM} signal is a generic signal used to cause program
@@ -493,7 +494,7 @@ The shell command @code{kill} generates @code{SIGTERM} by default.
 @end deftypevr
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SIGINT
 @cindex interrupt signal
 The @code{SIGINT} (``program interrupt'') signal is sent when the user
@@ -595,7 +596,7 @@ time used by the current process.  The name is an abbreviation for
 @comment BSD
 @deftypevr Macro int SIGPROF
 This signal is typically indicates expiration of a timer that measures
-both CPU time used by the current process, and CPU time expended on 
+both CPU time used by the current process, and CPU time expended on
 behalf of the process by the system.  Such a timer is used to implement
 code profiling facilities, hence the name of this signal.
 @end deftypevr
@@ -623,7 +624,7 @@ On most operating systems, terminals and sockets are the only kinds of
 files that can generate @code{SIGIO}; other kinds, including ordinary
 files, never generate @code{SIGIO} even if you ask them to.
 
-In the GNU system @code{SIGIO} will always be generated properly 
+In the GNU system @code{SIGIO} will always be generated properly
 if you successfully set asynchronous mode with @code{fcntl}.
 @end deftypevr
 
@@ -703,7 +704,7 @@ ignored, or blocked.
 @comment POSIX.1
 @deftypevr Macro int SIGTSTP
 The @code{SIGTSTP} signal is an interactive stop signal.  Unlike
-@code{SIGSTOP}, this signal can be handled and ignored.  
+@code{SIGSTOP}, this signal can be handled and ignored.
 
 Your program should handle this signal if you have a special need to
 leave files or system tables in a secure state when a process is
@@ -719,7 +720,7 @@ support, see @ref{Special Characters}.
 @comment signal.h
 @comment POSIX.1
 @deftypevr Macro int SIGTTIN
-A process cannot read from the the user's terminal while it is running 
+A process cannot read from the the user's terminal while it is running
 as a background job.  When any process in a background job tries to
 read from the terminal, all of the processes in the job are sent a
 @code{SIGTTIN} signal.  The default action for this signal is to
@@ -906,11 +907,11 @@ This function prints a message describing the signal @var{signum} to the
 standard error output stream @code{stderr}; see @ref{Standard Streams}.
 
 If you call @code{psignal} with a @var{message} that is either a null
-pointer or an empty string, @code{psignal} just prints the message 
+pointer or an empty string, @code{psignal} just prints the message
 corresponding to @var{signum}, adding a trailing newline.
 
 If you supply a non-null @var{message} argument, then @code{psignal}
-prefixes its output with this string.  It adds a colon and a space 
+prefixes its output with this string.  It adds a colon and a space
 character to separate the @var{message} from the string corresponding
 to @var{signum}.
 
@@ -969,7 +970,7 @@ The name @code{sighandler_t} for this data type is a GNU extension.
 @end deftp
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypefun sighandler_t signal (int @var{signum}, sighandler_t @var{action})
 The @code{signal} function establishes @var{action} as the action for
 the signal @var{signum}.
@@ -1086,7 +1087,7 @@ provided only for compatibility with SVID.
 @end deftypefun
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro sighandler_t SIG_ERR
 The value of this macro is used as the return value from @code{signal}
 to indicate an error.
@@ -1139,7 +1140,7 @@ handler is started; this is true regardless of the value in
 handler, you must write code in the handler to unblock it.
 
 @item int sa_flags
-This specifies various flags which can affect the behavior of 
+This specifies various flags which can affect the behavior of
 the signal.  These are described in more detail in @ref{Flags for Sigaction}.
 @end table
 @end deftp
@@ -1201,10 +1202,10 @@ you can rely on using it as an argument to @code{sigaction}.  This
 problem never happens on the GNU system.
 
 So, you're better off using one or the other of the mechanisms
-consistently within a single program.  
+consistently within a single program.
 
 @strong{Portability Note:} The basic @code{signal} function is a feature
-of ANSI C, while @code{sigaction} is part of the POSIX.1 standard.  If
+of @w{ISO C}, while @code{sigaction} is part of the POSIX.1 standard.  If
 you are concerned about portability to non-POSIX systems, then you
 should use the @code{signal} function instead.
 
@@ -1267,7 +1268,7 @@ action for @code{SIGINT} without changing that action.
 struct sigaction query_action;
 
 if (sigaction (SIGINT, NULL, &query_action) < 0)
-  /* @r{@code{sigaction} returns -1 in case of error.} */ 
+  /* @r{@code{sigaction} returns -1 in case of error.} */
 else if (query_action.sa_handler == SIG_DFL)
   /* @r{@code{SIGINT} is handled in the default, fatal manner.} */
 else if (query_action.sa_handler == SIG_IGN)
@@ -1412,7 +1413,7 @@ describes what your handler should do, and what you should avoid.
 
 @menu
 * Handler Returns::             Handlers that return normally, and what
-                                 this means. 
+                                 this means.
 * Termination in Handler::      How handler functions terminate a program.
 * Longjmp in Handler::          Nonlocal transfer of control out of a
                                  signal handler.
@@ -1421,9 +1422,9 @@ describes what your handler should do, and what you should avoid.
 * Merged Signals::		When a second signal arrives before the
 				 first is handled.
 * Nonreentrancy::               Do not call any functions unless you know they
-                                 are reentrant with respect to signals. 
+                                 are reentrant with respect to signals.
 * Atomic Data Access::          A single handler can run in the middle of
-                                 reading or writing a single object. 
+                                 reading or writing a single object.
 @end menu
 
 @node Handler Returns
@@ -1567,7 +1568,7 @@ read_data ()
     waiting_for_input = 1;
     @dots{}
     waiting_for_input = 0;
-  @} else @{ 
+  @} else @{
     @dots{}
   @}
 @}
@@ -1679,7 +1680,7 @@ sigchld_handler (int signo)
     struct process *p;
 
     /* @r{Keep asking for a status until we get a definitive result.}  */
-    do 
+    do
       @{
         errno = 0;
         pid = waitpid (WAIT_ANY, &w, WNOHANG | WUNTRACED);
@@ -1777,7 +1778,7 @@ sig_atomic_t last_process_status_change;
 @end smallexample
 
 @node Nonreentrancy
-@subsection Signal Handling and Nonreentrant Functions 
+@subsection Signal Handling and Nonreentrant Functions
 @cindex restrictions on signal handler functions
 
 Handler functions usually don't do very much.  The best practice is to
@@ -1994,7 +1995,7 @@ one it is, and how many bits it contains, may vary from machine to
 machine.
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} sig_atomic_t
 This is an integer data type.  Objects of this type are always accessed
 atomically.
@@ -2134,7 +2135,7 @@ function is declared in @file{signal.h}.
 @pindex signal.h
 
 @comment signal.h
-@comment ANSI
+@comment ISO
 @deftypefun int raise (int @var{signum})
 The @code{raise} function sends the signal @var{signum} to the calling
 process.  It returns zero if successful and a nonzero value if it fails.
@@ -2201,7 +2202,7 @@ main (void)
 @end group
 @end smallexample
 
-@strong{Portability note:} @code{raise} was invented by the ANSI C
+@strong{Portability note:} @code{raise} was invented by the @w{ISO C}
 committee.  Older systems may not support it, so using @code{kill} may
 be more portable.  @xref{Signaling Another Process}.
 
@@ -2369,7 +2370,7 @@ them from interrupting sensitive operations.  For instance:
 @itemize @bullet
 @item
 You can use the @code{sigprocmask} function to block signals while you
-modify global variables that are also modified by the handlers for these 
+modify global variables that are also modified by the handlers for these
 signals.
 
 @item
@@ -2381,18 +2382,18 @@ signal handler can run without being interrupted itself by signals.
 @menu
 * Why Block::                           The purpose of blocking signals.
 * Signal Sets::                         How to specify which signals to
-                                         block. 
+                                         block.
 * Process Signal Mask::                 Blocking delivery of signals to your
 				         process during normal execution.
 * Testing for Delivery::                Blocking to Test for Delivery of
-                                         a Signal. 
+                                         a Signal.
 * Blocking for Handler::                Blocking additional signals while a
 				         handler is being run.
 * Checking for Pending Signals::        Checking for Pending Signals
 * Remembering a Signal::                How you can get almost the same
                                          effect as blocking a signal, by
                                          handling it and setting a flag
-                                         to be tested later. 
+                                         to be tested later.
 @end menu
 
 @node Why Block
@@ -2743,7 +2744,7 @@ sigaddset (&base_mask, SIGINT);
 sigaddset (&base_mask, SIGTSTP);
 
 /* @r{Block user interrupts while doing other processing.} */
-sigprocmask (SIG_SETMASK, &base_mask, NULL); 
+sigprocmask (SIG_SETMASK, &base_mask, NULL);
 @dots{}
 
 /* @r{After a while, check to see whether any signals are pending.} */
@@ -2980,7 +2981,7 @@ returns.
 
 The mask remains @var{set} only as long as @code{sigsuspend} is waiting.
 The function @code{sigsuspend} always restores the previous signal mask
-when it returns.  
+when it returns.
 
 The return value and error conditions are the same as for @code{pause}.
 @end deftypefun
@@ -2993,8 +2994,8 @@ sigset_t mask, oldmask;
 
 @dots{}
 
-/* @r{Set up the mask of signals to temporarily block.} */ 
-sigemptyset (&mask); 
+/* @r{Set up the mask of signals to temporarily block.} */
+sigemptyset (&mask);
 sigaddset (&mask, SIGUSR1);
 
 @dots{}
@@ -3121,7 +3122,7 @@ The return value is @code{0} on success and @code{-1} on failure.  If
 You tried to disable a stack that was in fact currently in use.
 
 @item ENOMEM
-The size of the alternate stack was too small.  
+The size of the alternate stack was too small.
 It must be greater than @code{MINSIGSTKSZ}.
 @end table
 @end deftypefun
@@ -3193,7 +3194,7 @@ The BSD facilities are declared in @file{signal.h}.
 
 @menu
 * BSD Handler::                 BSD Function to Establish a Handler.
-* Blocking in BSD::             BSD Functions for Blocking Signals. 
+* Blocking in BSD::             BSD Functions for Blocking Signals.
 @end menu
 
 @node BSD Handler
@@ -3270,7 +3271,7 @@ code @code{EINTR}.  @xref{Interrupted Primitives}.
 @end deftypefun
 
 @node Blocking in BSD
-@subsection BSD Functions for Blocking Signals 
+@subsection BSD Functions for Blocking Signals
 
 @comment signal.h
 @comment BSD

@@ -6,7 +6,7 @@ The exact set of features available when you compile a source file
 is controlled by which @dfn{feature test macros} you define.
 
 If you compile your programs using @samp{gcc -ansi}, you get only the
-ANSI C library features, unless you explicitly request additional
+@w{ISO C} library features, unless you explicitly request additional
 features by defining one or more of the feature macros.
 @xref{Invoking GCC,, GNU CC Command Options, gcc.info, The GNU CC Manual},
 for more information about GCC options.@refill
@@ -24,7 +24,7 @@ self-contained way.
 @defvr Macro _POSIX_SOURCE
 If you define this macro, then the functionality from the POSIX.1
 standard (IEEE Standard 1003.1) is available, as well as all of the
-ANSI C facilities.
+@w{ISO C} facilities.
 @end defvr
 
 @comment (none)
@@ -35,14 +35,14 @@ functionality from the POSIX.1 standard (IEEE Standard 1003.1) is made
 available.  If you define this macro with a value of @code{2}, then both
 the functionality from the POSIX.1 standard and the functionality from
 the POSIX.2 standard (IEEE Standard 1003.2) are made available.  This is
-in addition to the ANSI C facilities.
+in addition to the @w{ISO C} facilities.
 @end defvr
 
 @comment (none)
 @comment GNU
 @defvr Macro _BSD_SOURCE
 If you define this macro, functionality derived from 4.3 BSD Unix is
-included as well as the ANSI C, POSIX.1, and POSIX.2 material.
+included as well as the @w{ISO C}, POSIX.1, and POSIX.2 material.
 
 Some of the features derived from 4.3 BSD Unix conflict with the
 corresponding features specified by the POSIX.1 standard.  If this
@@ -67,7 +67,7 @@ the normal C library.
 @comment GNU
 @defvr Macro _SVID_SOURCE
 If you define this macro, functionality derived from SVID is
-included as well as the ANSI C, POSIX.1, POSIX.2, and X/Open material.
+included as well as the @w{ISO C}, POSIX.1, POSIX.2, and X/Open material.
 @end defvr
 
 @comment (none)
@@ -89,7 +89,7 @@ available which are necessary for the X/Open Unix brand.
 @comment (none)
 @comment GNU
 @defvr Macro _GNU_SOURCE
-If you define this macro, everything is included: ANSI C, POSIX.1,
+If you define this macro, everything is included: @w{ISO C}, POSIX.1,
 POSIX.2, BSD, SVID, X/Open, and GNU extensions.  In the cases where
 POSIX.1 conflicts with BSD, the POSIX definitions take precedence.
 

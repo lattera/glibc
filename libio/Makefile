@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 #
 #	Specific makefile for libio.
@@ -26,7 +26,7 @@ headers	:= stdio.h libio.h _G_config.h
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \
 	iofopncook iofprintf iofputs iofread iofsetpos ioftell		      \
-	iofwrite iogetdelim iogetline iogets iopadn iopopen ioprims ioputs    \
+	iofwrite iogetdelim iogetline iogets iopadn iopopen ioputs	      \
 	ioseekoff ioseekpos iosetbuffer iosetvbuf iosprintf ioungetc	      \
 	iovsprintf iovsscanf						      \
 									      \
@@ -40,6 +40,8 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
+CPPFLAGS-.o += -DIO_DEBUG
+
 ifneq (,$(filter %REENTRANT, $(defines)))
 routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
 	    iofflush_u putc_u putchar_u peekc
@@ -48,7 +50,7 @@ CPPFLAGS += -D_IO_MTSAFE_IO
 endif
 
 aux	:=								      \
-	cleanup fileops genops stdfiles stdio strops
+	fileops genops stdfiles stdio strops
 
 distribute := iolibio.h libioP.h strfile.h Banner
 

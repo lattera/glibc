@@ -123,7 +123,7 @@ DEFUN(_IO_proc_open, (fp, command, mode),
 	  proc_file_chain = proc_file_chain->next;
 	}
 
-      _IO_execl("/bin/sh", "sh", "-c", command, NULL);
+      _IO_execl("/bin/sh", "sh", "-c", command, (char *) 0);
       _IO__exit(127);
     }
   _IO_close(child_end);

@@ -71,12 +71,12 @@ domain or range errors.  In particular, this means that you won't see
 Handling}, for more information about signals.)
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro double HUGE_VAL
 An expression representing a particular very large number.  On machines
-that use @w{IEEE 754} floating point format, the value is ``infinity''.
-On other machines, it's typically the largest positive number that can
-be represented.
+that use @w{IEEE 754}/@w{IEEE 854} floating point format, the value is
+``infinity''.  On other machines, it's typically the largest positive
+number that can be represented.
 
 The value of this macro is used as the return value from various
 mathematical @code{double} returning functions in overflow situations.
@@ -132,21 +132,21 @@ You can also compute the value of pi with the expression @code{acos
 
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double sin (double @var{x})
 This function returns the sine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double cos (double @var{x})
 This function returns the cosine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double tan (double @var{x})
 This function returns the tangent of @var{x}, where @var{x} is given in
 radians.
@@ -172,7 +172,7 @@ which are the inverses of the sine, cosine and tangent functions,
 respectively.
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double asin (double @var{x})
 This function computes the arc sine of @var{x}---that is, the value whose
 sine is @var{x}.  The value is in units of radians.  Mathematically,
@@ -185,7 +185,7 @@ over the domain @code{-1} to @code{1}.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double acos (double @var{x})
 This function computes the arc cosine of @var{x}---that is, the value
 whose cosine is @var{x}.  The value is in units of radians.
@@ -199,7 +199,7 @@ over the domain @code{-1} to @code{1}.
 
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double atan (double @var{x})
 This function computes the arc tangent of @var{x}---that is, the value
 whose tangent is @var{x}.  The value is in units of radians.
@@ -209,7 +209,7 @@ returned is the one between @code{-pi/2} and @code{pi/2}
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double atan2 (double @var{y}, double @var{x})
 This is the two argument arc tangent function.  It is similar to computing
 the arc tangent of @var{y}/@var{x}, except that the signs of both arguments
@@ -237,7 +237,7 @@ case.
 @cindex logarithm functions
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double exp (double @var{x})
 The @code{exp} function returns the value of e (the base of natural
 logarithms) raised to power @var{x}.
@@ -247,7 +247,7 @@ magnitude of the result is too large to be representable.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double log (double @var{x})
 This function returns the natural logarithm of @var{x}.  @code{exp (log
 (@var{x}))} equals @var{x}, exactly in mathematics and approximately in
@@ -266,7 +266,7 @@ The argument is zero.  The log of zero is not defined.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double log10 (double @var{x})
 This function returns the base-10 logarithm of @var{x}.  Except for the
 different base, it is similar to the @code{log} function.  In fact,
@@ -274,7 +274,7 @@ different base, it is similar to the @code{log} function.  In fact,
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double pow (double @var{base}, double @var{power})
 This is a general exponentiation function, returning @var{base} raised
 to @var{power}.
@@ -294,7 +294,7 @@ An underflow or overflow condition was detected in the result.
 
 @cindex square root function
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double sqrt (double @var{x})
 This function returns the nonnegative square root of @var{x}.
 
@@ -346,7 +346,7 @@ The functions in this section are related to the exponential functions;
 see @ref{Exponents and Logarithms}.
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double sinh (double @var{x})
 The @code{sinh} function returns the hyperbolic sine of @var{x}, defined
 mathematically as @w{@code{exp (@var{x}) - exp (-@var{x}) / 2}}.  The
@@ -355,7 +355,7 @@ function fails, and sets @code{errno} to @code{ERANGE}, if the value of
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double cosh (double @var{x})
 The @code{cosh} function returns the hyperbolic cosine of @var{x},
 defined mathematically as @w{@code{exp (@var{x}) + exp (-@var{x}) / 2}}.
@@ -364,7 +364,7 @@ of @var{x} is too large; that is, if overflow occurs.
 @end deftypefun
 
 @comment math.h
-@comment ANSI
+@comment ISO
 @deftypefun double tanh (double @var{x})
 This function returns the hyperbolic tangent of @var{x}, whose
 mathematical definition is @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
@@ -424,27 +424,27 @@ generator.  There is no standard meaning for a particular seed value;
 the same seed, used in different C libraries or on different CPU types,
 will give you different random numbers.
 
-The GNU library supports the standard ANSI C random number functions
+The GNU library supports the standard @w{ISO C} random number functions
 plus another set derived from BSD.  We recommend you use the standard
 ones, @code{rand} and @code{srand}.
 
 @menu
-* ANSI Random::      @code{rand} and friends.
+* ISO Random::       @code{rand} and friends.
 * BSD Random::       @code{random} and friends.
 @end menu
 
-@node ANSI Random
-@subsection ANSI C Random Number Functions
+@node ISO Random
+@subsection ISO C Random Number Functions
 
 This section describes the random number functions that are part of
-the ANSI C standard.
+the @w{ISO C} standard.
 
 To use these facilities, you should include the header file
 @file{stdlib.h} in your program.
 @pindex stdlib.h
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int RAND_MAX
 The value of this macro is an integer constant expression that
 represents the maximum possible value returned by the @code{rand}
@@ -454,14 +454,14 @@ may be as low as @code{32767}.
 @end deftypevr
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun int rand ()
 The @code{rand} function returns the next pseudo-random number in the
 series.  The value is in the range from @code{0} to @code{RAND_MAX}.
 @end deftypefun
 
 @comment stdlib.h
-@comment ANSI
+@comment ISO
 @deftypefun void srand (unsigned int @var{seed})
 This function establishes @var{seed} as the seed for a new series of
 pseudo-random numbers.  If you call @code{rand} before a seed has been

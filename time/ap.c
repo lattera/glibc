@@ -1,22 +1,21 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -25,12 +24,14 @@ Cambridge, MA 02139, USA.  */
 /* Prints the time in the form "hh:mm ?M", where ? is A or P.
    A simple test for strftime().  */
 int
-DEFUN(main, (argc, argv), int argc AND char **argv)
+main (int argc, char **argv)
 {
   char buf[20];
   time_t t;
 
+#ifndef NO_MCHECK
   mcheck (NULL);
+#endif
 
   if (argc != 1)
     fprintf(stderr, "Usage: %s\n", argv[0]);

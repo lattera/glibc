@@ -5,7 +5,7 @@
 @cindex variable number of arguments
 @cindex optional arguments
 
-ANSI C defines a syntax as part of the kernel language for specifying
+@w{ISO C} defines a syntax as part of the kernel language for specifying
 functions that take a variable number or type of arguments.  (Such
 functions are also referred to as @dfn{variadic functions}.)  However,
 the kernel language provides no mechanism for actually accessing
@@ -32,7 +32,7 @@ Every call to the function should supply the same number and type of
 arguments as specified in the function definition.
 
 On the other hand, sometimes a function performs an operation that can
-meaningfully accept an unlimited number of arguments.  
+meaningfully accept an unlimited number of arguments.
 
 For example, consider a function that joins its arguments into a linked
 list.  It makes sense to connect any number of arguments together into a
@@ -80,11 +80,11 @@ function can accept additional arguments of unspecified type by putting
 @samp{@dots{}} at the end of the arguments.  For example,
 
 @example
-int 
+int
 func (const char *a, int b, @dots{})
 @{
   @dots{}
-@}	
+@}
 @end example
 
 @noindent
@@ -92,7 +92,7 @@ outlines a definition of a function @code{func} which returns an
 @code{int} and takes at least two arguments, the first two being a
 @code{const char *} and an @code{int}.@refill
 
-An obscure restriction placed by the ANSI C standard is that the last
+An obscure restriction placed by the @w{ISO C} standard is that the last
 required argument must not be declared @code{register} in the function
 definition.  Furthermore, this argument must not be of a function or
 array type, and may not be, for example, a @code{char} or @code{short
@@ -101,7 +101,7 @@ int} (whether signed or not) or a @code{float}.
 @strong{Compatibility Note:} Many older C dialects provide a similar,
 but incompatible, mechanism for defining functions with variable numbers
 of arguments.  In particular, the @samp{@dots{}} syntax is a new feature
-of ANSI C.
+of @w{ISO C}.
 
 
 @node Receiving the Argument Values, How Many Arguments, Syntax for Variable Arguments, How Variable Arguments are Used
@@ -207,13 +207,13 @@ These macros are defined in the header file @file{stdarg.h}.
 @pindex stdarg.h
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} va_list
 The type @code{va_list} is used for argument pointer variables.
 @end deftp
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} void va_start (va_list @var{ap}, @var{last_required})
 This macro initialized the argument pointer variable @var{ap} to point
 to the first of the optional arguments of the current function;
@@ -221,14 +221,14 @@ to the first of the optional arguments of the current function;
 @end deftypefn
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} @var{type} va_arg (va_list @var{ap}, @var{type})
 The @code{va_arg} macro returns the value of the next optional argument,
 and changes the internal state of @var{ap} to move past this argument.
-Thus, successive uses of @code{va_arg} return successive optional 
+Thus, successive uses of @code{va_arg} return successive optional
 arguments.
 The type of the value returned by @code{va_arg} is the @var{type}
-specified in the call.  
+specified in the call.
 
 The @var{type} must match the type of the actual argument, and must not
 be @code{char} or @code{short int} or @code{float}.  (Remember that the
@@ -236,7 +236,7 @@ default argument promotions apply to optional arguments.)
 @end deftypefn
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} void va_end (va_list @var{ap})
 This ends the use of @var{ap}.  After a @code{va_end} call, further
 @code{va_arg} calls with the same @var{ap} may not work.  You should invoke
@@ -263,7 +263,7 @@ way the variable arguments facility is commonly used.)
 @example
 #include <stdarg.h>
 
-int 
+int
 add_em_up (int count, @dots{})
 @{
   va_list ap;

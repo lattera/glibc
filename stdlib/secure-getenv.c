@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#undef	feof
-
-
-/* Return non-zero if STREAM has its EOF indicator set.  */
-int
-feof (stream)
-     FILE *stream;
+/* Some programs and especially the libc itself have to be careful
+   what values to accept from the environment.  This special version
+   checks for SUID or SGID first before doing any work.  */
+char *
+__secure_getenv (name)
+     const char *name;
 {
-  if (!__validfp (stream))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return stream->__eof;
+  return __libc_enable_secure ? NULL : getenv (name);
 }

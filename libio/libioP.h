@@ -57,71 +57,180 @@ extern "C" {
 #define _IO_seek_cur 1
 #define _IO_seek_end 2
 
-typedef int (*_IO_overflow_t) __P((_IO_FILE*, int));
-typedef int (*_IO_underflow_t) __P((_IO_FILE*));
-typedef _IO_size_t (*_IO_xsputn_t) __P((_IO_FILE*,const void*,_IO_size_t));
-typedef _IO_size_t (*_IO_xsgetn_t) __P((_IO_FILE*, void*, _IO_size_t));
-typedef _IO_ssize_t (*_IO_read_t) __P((_IO_FILE*, void*, _IO_ssize_t));
-typedef _IO_ssize_t (*_IO_write_t) __P((_IO_FILE*,const void*,_IO_ssize_t));
-typedef int (*_IO_stat_t) __P((_IO_FILE*, void*));
-typedef _IO_fpos_t (*_IO_seek_t) __P((_IO_FILE*, _IO_off_t, int));
-typedef int (*_IO_doallocate_t) __P((_IO_FILE*));
-typedef int (*_IO_pbackfail_t) __P((_IO_FILE*, int));
-typedef _IO_FILE* (*_IO_setbuf_t) __P((_IO_FILE*, char *, _IO_ssize_t));
-typedef int (*_IO_sync_t) __P((_IO_FILE*));
-typedef void (*_IO_finish_t) __P((_IO_FILE*)); /* finalize */
-typedef int (*_IO_close_t) __P((_IO_FILE*)); /* finalize */
-typedef _IO_fpos_t (*_IO_seekoff_t) __P((_IO_FILE*, _IO_off_t, int, int));
+/* THE JUMPTABLE FUNCTIONS.
 
-/* The _IO_seek_cur and _IO_seek_end options are not allowed. */
-typedef _IO_fpos_t (*_IO_seekpos_t) __P((_IO_FILE*, _IO_fpos_t, int));
+ * The _IO_FILE type is used to implement the FILE type in GNU libc,
+ * as well as the streambuf class in GNU iostreams for C++.
+ * These are all the same, just used differently.
+ * An _IO_FILE (or FILE) object is allows followed by a pointer to
+ * a jump table (of pointers to functions).  The pointer is accessed
+ * with the _IO_JUMPS macro.  The jump table has a eccentric format,
+ * so as to be compatible with the layout of a C++ virtual function table.
+ * (as implemented by g++).  When a pointer to a steambuf object is
+ * coerced to an (_IO_FILE*), then _IO_JUMPS on the result just
+ * happens to point to the virtual function table of the streambuf.
+ * Thus the _IO_JUMPS function table used for C stdio/libio does
+ * double duty as the virtual functiuon table for C++ streambuf.
+ *
+ * The entries in the _IO_JUMPS function table (and hence also the
+ * virtual functions of a streambuf) are described below.
+ * The first parameter of each function entry is the _IO_FILE/streambuf
+ * object being acted on (i.e. the 'this' parameter).
+ */
 
-#if  !_IO_UNIFIED_JUMPTABLES
-#define _IO_JUMPS(THIS) (THIS)->_jumps
-#else
 #define _IO_JUMPS(THIS) ((struct _IO_FILE_plus*)(THIS))->vtable
-#endif
-
-#if  !_IO_UNIFIED_JUMPTABLES
+#ifdef _G_USING_THUNKS
 #define JUMP_FIELD(TYPE, NAME) TYPE NAME
 #define JUMP0(FUNC, THIS) _IO_JUMPS(THIS)->FUNC(THIS)
 #define JUMP1(FUNC, THIS, X1) _IO_JUMPS(THIS)->FUNC(THIS, X1)
 #define JUMP2(FUNC, THIS, X1, X2) _IO_JUMPS(THIS)->FUNC(THIS, X1, X2)
-#define JUMP3(FUNC, THIS, X1, X2, X3) _IO_JUMPS(THIS)->FUNC(THIS, X1, X2, X3)
+#define JUMP3(FUNC, THIS, X1,X2,X3) _IO_JUMPS(THIS)->FUNC(THIS, X1,X2, X3)
 #define JUMP_INIT(NAME, VALUE) VALUE
+#define JUMP_INIT_DUMMY JUMP_INIT(dummy, 0), JUMP_INIT(dummy2, 0)
 #else
+/* These macros will change when we re-implement vtables to use "thunks"! */
 #define JUMP_FIELD(TYPE, NAME) struct { short delta1, delta2; TYPE pfn; } NAME
 #define JUMP0(FUNC, THIS) _IO_JUMPS(THIS)->FUNC.pfn(THIS)
 #define JUMP1(FUNC, THIS, X1) _IO_JUMPS(THIS)->FUNC.pfn(THIS, X1)
 #define JUMP2(FUNC, THIS, X1, X2) _IO_JUMPS(THIS)->FUNC.pfn(THIS, X1, X2)
 #define JUMP3(FUNC, THIS, X1,X2,X3) _IO_JUMPS(THIS)->FUNC.pfn(THIS, X1,X2, X3)
 #define JUMP_INIT(NAME, VALUE) {0, 0, VALUE}
-#endif
 #define JUMP_INIT_DUMMY JUMP_INIT(dummy, 0)
+#endif
 
+/* The 'finish' function does any final cleaning up of an _IO_FILE object.
+   It does not delete (free) it, but does everything else to finalize it/
+   It matches the streambuf::~streambuf virtual destructor.  */
+typedef void (*_IO_finish_t) __P((_IO_FILE*)); /* finalize */
 #define _IO_FINISH(FP) JUMP0(__finish, FP)
+
+/* The 'overflow' hook flushes the buffer.
+   The second argument is a character, or EOF.
+   It matches the streambuf::overflow virtual function. */
+typedef int (*_IO_overflow_t) __P((_IO_FILE*, int));
 #define _IO_OVERFLOW(FP, CH) JUMP1(__overflow, FP, CH)
+
+/* The 'underflow' hook tries to fills the get buffer.
+   It returns the next character (as an unsigned char) or EOF.  The next
+   character remains in the get buffer, and the get postion is not changed.
+   It matches the streambuf::underflow virtual function. */
+typedef int (*_IO_underflow_t) __P((_IO_FILE*));
 #define _IO_UNDERFLOW(FP) JUMP0(__underflow, FP)
+
+/* The 'uflow' hook returns the next character in the input stream
+   (cast to unsigned char), and increments the read position;
+   EOF is returned on failure.
+   It matches the streambuf::uflow virtual function, which is not in the
+   cfront implementation, but was added to C++ by the ANSI/ISO committee. */
 #define _IO_UFLOW(FP) JUMP0(__uflow, FP)
+
+/* The 'pbackfail' hook handles backing up.
+   It matches the streambuf::pbackfail virtual function. */
+typedef int (*_IO_pbackfail_t) __P((_IO_FILE*, int));
 #define _IO_PBACKFAIL(FP, CH) JUMP1(__pbackfail, FP, CH)
+
+/* The 'xsputn' hook writes upto N characters from buffer DATA.
+   Returns the number of character actually written.
+   It matches the streambuf::xsputn virtual function. */
+typedef _IO_size_t (*_IO_xsputn_t)
+  __P((_IO_FILE *FP, const void *DATA, _IO_size_t N));
 #define _IO_XSPUTN(FP, DATA, N) JUMP2(__xsputn, FP, DATA, N)
+
+/* The 'xsgetn' hook reads upto N characters into buffer DATA.
+   Returns the number of character actually read.
+   It matches the streambuf::xsgetn virtual function. */
+typedef _IO_size_t (*_IO_xsgetn_t) __P((_IO_FILE*FP, void*DATA, _IO_size_t N));
 #define _IO_XSGETN(FP, DATA, N) JUMP2(__xsgetn, FP, DATA, N)
+
+/* The 'seekoff' hook moves the stream position to a new position
+   relative to the start of the file (if DIR==0), the current position
+   (MODE==1), or the end of the file (MODE==2).
+   It matches the streambuf::seekoff virtual function.
+   It is also used for the ANSI fseek function. */
+typedef _IO_fpos_t (*_IO_seekoff_t)
+  __P((_IO_FILE* FP, _IO_off_t OFF, int DIR, int MODE));
 #define _IO_SEEKOFF(FP, OFF, DIR, MODE) JUMP3(__seekoff, FP, OFF, DIR, MODE)
+
+/* The 'seekpos' hook also moves the stream position,
+   but to an absolute position given by a fpos_t (seekpos).
+   It matches the streambuf::seekpos virtual function.
+   It is also used for the ANSI fgetpos and fsetpos functions.  */
+/* The _IO_seek_cur and _IO_seek_end options are not allowed. */
+typedef _IO_fpos_t (*_IO_seekpos_t) __P((_IO_FILE*, _IO_fpos_t, int));
 #define _IO_SEEKPOS(FP, POS, FLAGS) JUMP2(__seekpos, FP, POS, FLAGS)
+
+/* The 'setbuf' hook gives a buffer to the file.
+   It matches the streambuf::setbuf virtual function. */
+typedef _IO_FILE* (*_IO_setbuf_t) __P((_IO_FILE*, char *, _IO_ssize_t));
 #define _IO_SETBUF(FP, BUFFER, LENGTH) JUMP2(__setbuf, FP, BUFFER, LENGTH)
+
+/* The 'sync' hook attempts to synchronize the internal data structures
+   of the file with the external state.
+   It matches the streambuf::sync virtual function. */
+typedef int (*_IO_sync_t) __P((_IO_FILE*));
 #define _IO_SYNC(FP) JUMP0(__sync, FP)
+
+/* The 'doallocate' hook is used to tell the file to allocate a buffer.
+   It matches the streambuf::doallocate virtual function, which is not
+   in the ANSI/ISO C++ standard, but is part traditional implementations. */
+typedef int (*_IO_doallocate_t) __P((_IO_FILE*));
 #define _IO_DOALLOCATE(FP) JUMP0(__doallocate, FP)
+
+/* The following four hooks (sysread, syswrite, sysclose, sysseek, and
+   sysstat) are low-level hooks specific to this implementation.
+   There is no correspondance in the ANSI/ISO C++ standard library.
+   The hooks basically correspond to the Unix system functions
+   (read, write, close, lseek, and stat) except that a _IO_FILE*
+   parameter is used instead of a integer file descriptor;  the default
+   implementation used for normal files just calls those functions.
+   The advantage of overriding these functions instead of the higher-level
+   ones (underflow, overflow etc) is that you can leave all the buffering
+   higher-level functions.  */
+
+/* The 'sysread' hook is used to read data from the external file into
+   an existing buffer.  It generalizes the Unix read(2) function.
+   It matches the streambuf::sys_read virtual function, which is
+   specific to this implementaion. */
+typedef _IO_ssize_t (*_IO_read_t) __P((_IO_FILE*, void*, _IO_ssize_t));
 #define _IO_SYSREAD(FP, DATA, LEN) JUMP2(__read, FP, DATA, LEN)
+
+/* The 'syswrite' hook is used to write data from an existing buffer
+   to an external file.  It generalizes the Unix write(2) function.
+   It matches the streambuf::sys_write virtual function, which is
+   specific to this implementaion. */
+typedef _IO_ssize_t (*_IO_write_t) __P((_IO_FILE*,const void*,_IO_ssize_t));
 #define _IO_SYSWRITE(FP, DATA, LEN) JUMP2(__write, FP, DATA, LEN)
+
+/* The 'sysseek' hook is used to re-position an external file.
+   It generalizes the Unix lseek(2) function.
+   It matches the streambuf::sys_seek virtual function, which is
+   specific to this implementaion. */
+typedef _IO_fpos_t (*_IO_seek_t) __P((_IO_FILE*, _IO_off_t, int));
 #define _IO_SYSSEEK(FP, OFFSET, MODE) JUMP2(__seek, FP, OFFSET, MODE)
+
+/* The 'sysclose' hook is used to finalize (close, finish up) an
+   external file.  It generalizes the Unix close(2) function.
+   It matches the streambuf::sys_close virtual function, which is
+   specific to this implementation. */
+typedef int (*_IO_close_t) __P((_IO_FILE*)); /* finalize */
 #define _IO_SYSCLOSE(FP) JUMP0(__close, FP)
+
+/* The 'sysstat' hook is used to get information about an external file
+   into a struct stat buffer.  It generalizes the Unix fstat(2) call.
+   It matches the streambuf::sys_stat virtual function, which is
+   specific to this implementaion. */
+typedef int (*_IO_stat_t) __P((_IO_FILE*, void*));
 #define _IO_SYSSTAT(FP, BUF) JUMP1(__stat, FP, BUF)
+
 
 #define _IO_CHAR_TYPE char /* unsigned char ? */
 #define _IO_INT_TYPE int
 
 struct _IO_jump_t {
     JUMP_FIELD(_G_size_t, __dummy);
+#ifdef _G_USING_THUNKS
+    JUMP_FIELD(_G_size_t, __dummy2);
+#endif
     JUMP_FIELD(_IO_finish_t, __finish);
     JUMP_FIELD(_IO_overflow_t, __overflow);
     JUMP_FIELD(_IO_underflow_t, __underflow);
@@ -147,16 +256,13 @@ struct _IO_jump_t {
 };
 
 /* We always allocate an extra word following an _IO_FILE.
+   This contains a pointer to the function jump table used.
    This is for compatibility with C++ streambuf; the word can
    be used to smash to a pointer to a virtual function table. */
 
 struct _IO_FILE_plus {
   _IO_FILE file;
-#if _IO_UNIFIED_JUMPTABLES
   const struct _IO_jump_t *vtable;
-#else
-  const void *vtable;
-#endif
 };
 
 /* Generic functions */
@@ -225,7 +331,7 @@ extern void _IO_flush_all_linebuffered __P((void));
 #define _IO_have_backup(fp) ((fp)->_IO_save_base != NULL)
 #define _IO_in_backup(fp) ((fp)->_flags & _IO_IN_BACKUP)
 #define _IO_have_markers(fp) ((fp)->_markers != NULL)
-#define _IO_blen(p) ((fp)->_IO_buf_end - (fp)->_IO_buf_base)
+#define _IO_blen(fp) ((fp)->_IO_buf_end - (fp)->_IO_buf_base)
 
 /* Jumptable functions for files. */
 
@@ -290,10 +396,14 @@ extern void (*_IO_cleanup_registration_needed) __P ((void));
 #define EOF (-1)
 #endif
 #ifndef NULL
-#if !defined(__cplusplus) || defined(__GNUC__)
+#ifdef __GNUG__
+#define NULL (__null)
+#else
+#if !defined(__cplusplus)
 #define NULL ((void*)0)
 #else
 #define NULL (0)
+#endif
 #endif
 #endif
 
@@ -337,22 +447,17 @@ extern int _IO_vscanf __P((const char *, _IO_va_list));
 }
 #endif
 
-#if  _IO_UNIFIED_JUMPTABLES
-#define _IO_FJUMP /* nothing */
-#else
-#define _IO_FJUMP &_IO_file_jumps,
-#endif
 #ifdef _IO_MTSAFE_IO
 /* check following! */
 #define FILEBUF_LITERAL(CHAIN, FLAGS, FD) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, _IO_FJUMP FD, \
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, FD, \
 	   0, 0, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
 #else
 /* check following! */
 #define FILEBUF_LITERAL(CHAIN, FLAGS, FD) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, _IO_FJUMP FD }
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, FD }
 #endif
 
 /* VTABLE_LABEL defines NAME as of the CLASS class.
@@ -402,7 +507,7 @@ extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 #define MAYBE_SET_EINVAL /* nothing */
 #endif
 
-#ifdef DEBUG
+#ifdef IO_DEBUG
 #define CHECK_FILE(FILE,RET) \
 	if ((FILE) == NULL) { MAYBE_SET_EINVAL; return RET; } \
 	else { COERCE_FILE(FILE); \

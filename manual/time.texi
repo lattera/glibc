@@ -93,7 +93,7 @@ such as arithmetic and printing work properly and consistently no matter
 what the underlying representation is.
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int CLOCKS_PER_SEC
 The value of this macro is the number of clock ticks per second measured
 by the @code{clock} function.
@@ -106,14 +106,14 @@ This is an obsolete name for @code{CLOCKS_PER_SEC}.
 @end deftypevr
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} clock_t
 This is the type of the value returned by the @code{clock} function.
 Values of type @code{clock_t} are in units of clock ticks.
 @end deftp
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun clock_t clock (void)
 This function returns the elapsed processor time.  The base time is
 arbitrary but doesn't change within a single process.  If the processor
@@ -177,7 +177,7 @@ start-up.  A value of @code{(clock_t)(-1)} is returned to indicate failure.
 @end deftypefun
 
 @strong{Portability Note:} The @code{clock} function described in
-@ref{Basic CPU Time}, is specified by the ANSI C standard.  The
+@ref{Basic CPU Time}, is specified by the @w{ISO C} standard.  The
 @code{times} function is a feature of POSIX.1.  In the GNU system, the
 value returned by the @code{clock} function is equivalent to the sum of
 the @code{tms_utime} and @code{tms_stime} fields returned by
@@ -239,7 +239,7 @@ These facilities are declared in the header file @file{time.h}.
 
 @cindex epoch
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} time_t
 This is the data type used to represent calendar time.
 When interpreted as an absolute time
@@ -255,7 +255,7 @@ floating-point type.
 @end deftp
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
 The @code{difftime} function returns the number of seconds elapsed
 between time @var{time1} and time @var{time0}, as a value of type
@@ -268,7 +268,7 @@ where subtraction doesn't work directly.
 @end deftypefun
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun time_t time (time_t *@var{result})
 The @code{time} function returns the current time as a value of type
 @code{time_t}.  If the argument @var{result} is not a null pointer, the
@@ -457,7 +457,7 @@ zone, and it also indicates which time zone was used.
 The symbols in this section are declared in the header file @file{time.h}.
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} {struct tm}
 This is the data type used to represent a broken-down time.  The structure
 contains at least the following members, which can appear in any order:
@@ -510,17 +510,17 @@ is the number of seconds that you must add to UTC to get local time.
 You can also think of this as the number of seconds east of UTC.  For
 example, for U.S. Eastern Standard Time, the value is @code{-5*60*60}.
 The @code{tm_gmtoff} field is derived from BSD and is a GNU library
-extension; it is not visible in a strict ANSI C environment.
+extension; it is not visible in a strict @w{ISO C} environment.
 
 @item const char *tm_zone
 This field is the name for the time zone that was used to compute this
 broken-down time value.  Like @code{tm_gmtoff}, this field is a BSD and
-GNU extension, and is not visible in a strict ANSI C environment.
+GNU extension, and is not visible in a strict @w{ISO C} environment.
 @end table
 @end deftp
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun {struct tm *} localtime (const time_t *@var{time})
 The @code{localtime} function converts the calendar time pointed to by
 @var{time} to broken-down time representation, expressed relative to the
@@ -537,7 +537,7 @@ Zone Functions}.
 @end deftypefun
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun {struct tm *} gmtime (const time_t *@var{time})
 This function is similar to @code{localtime}, except that the broken-down
 time is expressed as Coordinated Universal Time (UTC)---that is, as
@@ -548,7 +548,7 @@ universal time.
 @end deftypefun
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun time_t mktime (struct tm *@var{brokentime})
 The @code{mktime} function is used to convert a broken-down time structure
 to a calendar time representation.  It also ``normalizes'' the contents of
@@ -579,7 +579,7 @@ These functions are declared in the header file @file{time.h}.
 @pindex time.h
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun {char *} asctime (const struct tm *@var{brokentime})
 The @code{asctime} function converts the broken-down time value that
 @var{brokentime} points to into a string in a standard format:
@@ -602,7 +602,7 @@ string.)
 @end deftypefun
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @deftypefun {char *} ctime (const time_t *@var{time})
 The @code{ctime} function is similar to @code{asctime}, except that the
 time value is specified as a @code{time_t} calendar time value rather
@@ -617,7 +617,7 @@ does so.  @xref{Time Zone Functions}.
 @end deftypefun
 
 @comment time.h
-@comment ANSI
+@comment ISO
 @comment POSIX.2
 @deftypefun size_t strftime (char *@var{s}, size_t @var{size}, const char *@var{template}, const struct tm *@var{brokentime})
 This function is similar to the @code{sprintf} function (@pxref{Formatted

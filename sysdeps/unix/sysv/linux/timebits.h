@@ -33,9 +33,11 @@ struct timeval
 
 
 #ifndef _TIMEBITS_H
-#define	_TIMEBITS_H	1
+# define _TIMEBITS_H	1
 
-#include <asm/param.h>
-#define CLOCKS_PER_SEC HZ	/* XXX names not kosher */
+# ifdef __USE_MISC
+#  include <asm/param.h>
+#  define CLOCKS_PER_SEC HZ	/* XXX names not kosher */
+# endif
 
 #endif	/* timebits.h */

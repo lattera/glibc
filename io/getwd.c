@@ -38,10 +38,10 @@ getwd (buf)
       return NULL;
     }
 
-  if (getcwd (tmpbuf, LOCAL_PATH_MAX) == NULL)
+  if (getcwd (tmpbuf, PATH_MAX) == NULL)
     {
       /* We use 1024 here since it should really be enough and because
-	 this is a save value.  */
+	 this is a safe value.  */
       __strerror_r (errno, buf, 1024);
       return NULL;
     }

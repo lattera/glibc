@@ -59,6 +59,16 @@ AC_ARG_ENABLE(libio, dnl
 	       fi],
 	      stdio=default)
 
+AC_ARG_ENABLE(new-malloc, dnl
+[  --enable-new-malloc	  use the new malloc implementation.  This is the
+                          default for Linux, others use the old malloc.],
+	      [if test $enableval = yes; then
+		 malloc=new-malloc
+	       else
+		 malloc=malloc
+	       fi],
+	      malloc=default)
+
 AC_ARG_ENABLE(sanity-checks, dnl
 [  --disable-sanity-checks really do not use threads (should not be used
 			  except in special situations) [default=yes]],
@@ -677,6 +687,12 @@ default) stdio=stdio ;;
 esac
 AC_MSG_RESULT($stdio)
 
+AC_MSG_CHECKING(malloc selection)
+AC_SUBST(malloc)
+test $malloc = default && malloc=malloc
+AC_MSG_RESULT($malloc)
+
+
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_sysconfdir)
 
@@ -695,6 +711,10 @@ AC_SUBST(shared)
 if test $shared = default; then
   if test $gnu_ld = yes; then
     shared=$elf
+  else
+    # For now we do not assume shared libs are available.  In future more
+    # tests might become available.
+    shared=no
   fi
 fi
 AC_SUBST(profile)

@@ -46,7 +46,7 @@ would rather have a program crash, visibly, than have it return nonsense
 without indicating anything might be wrong.
 
 @comment assert.h
-@comment ANSI
+@comment ISO
 @deftypefn Macro void assert (int @var{expression})
 Verify the programmer's belief that @var{expression} should be nonzero
 at this point in the program.
@@ -139,7 +139,7 @@ problems that @emph{do not} represent bugs in the program.
 @cindex variadic functions
 @cindex optional arguments
 
-ANSI C defines a syntax for declaring a function to take a variable
+@w{ISO C} defines a syntax for declaring a function to take a variable
 number or type of arguments.  (Such functions are referred to as
 @dfn{varargs functions} or @dfn{variadic functions}.)  However, the
 language itself provides no mechanism for such functions to access their
@@ -191,7 +191,7 @@ These are good reasons to define a @dfn{variadic} function which can
 handle as many arguments as the caller chooses to pass.
 
 Some functions such as @code{open} take a fixed set of arguments, but
-occasionally ignore the last few.  Strict adherence to ANSI C requires
+occasionally ignore the last few.  Strict adherence to @w{ISO C} requires
 these functions to be defined as variadic; in practice, however, the GNU
 C compiler and most other C compilers let you define such a function to
 take a fixed set of arguments---the most it can ever use---and then only
@@ -229,7 +229,7 @@ additional variable arguments.  @xref{Calling Variadics}.
 			  variable arguments functions.
 * Argument Macros::      Detailed specification of the macros
         		  for accessing variable arguments.
-* Old Varargs::		 The pre-ANSI way of defining variadic functions.
+* Old Varargs::		 The pre-ISO way of defining variadic functions.
 @end menu
 
 @node Variadic Prototypes
@@ -241,7 +241,7 @@ additional variable arguments.  @xref{Calling Variadics}.
 A function that accepts a variable number of arguments must be declared
 with a prototype that says so.   You write the fixed arguments as usual,
 and then tack on @samp{@dots{}} to indicate the possibility of
-additional arguments.  The syntax of ANSI C requires at least one fixed
+additional arguments.  The syntax of @w{ISO C} requires at least one fixed
 argument before the @samp{@dots{}}.  For example,
 
 @smallexample
@@ -264,7 +264,7 @@ definition.  Furthermore, this argument's type must be
 @dfn{self-promoting}: that is, the default promotions must not change
 its type.  This rules out array and function types, as well as
 @code{float}, @code{char} (whether signed or not) and @w{@code{short int}}
-(whether signed or not).  This is actually an ANSI C requirement.
+(whether signed or not).  This is actually an @w{ISO C} requirement.
 
 @node Receiving Arguments
 @subsubsection Receiving the Argument Values
@@ -328,7 +328,7 @@ argument values, but at its own pace.
 argument pointer value to a subroutine, you must not keep using the same
 argument pointer value after that subroutine returns.  For full
 portability, you should just pass it to @code{va_end}.  This is actually
-an ANSI C requirement, but most ANSI C compilers work happily
+an @w{ISO C} requirement, but most ANSI C compilers work happily
 regardless.
 
 @node How Many Arguments
@@ -419,13 +419,13 @@ These macros are defined in the header file @file{stdarg.h}.
 @pindex stdarg.h
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} va_list
 The type @code{va_list} is used for argument pointer variables.
 @end deftp
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} void va_start (va_list @var{ap}, @var{last-required})
 This macro initializes the argument pointer variable @var{ap} to point
 to the first of the optional arguments of the current function;
@@ -436,7 +436,7 @@ found in the header file @file{varargs.h}.
 @end deftypefn
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} @var{type} va_arg (va_list @var{ap}, @var{type})
 The @code{va_arg} macro returns the value of the next optional argument,
 and modifies the value of @var{ap} to point to the subsequent argument.
@@ -450,7 +450,7 @@ of the actual argument.
 @end deftypefn
 
 @comment stdarg.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} void va_end (va_list @var{ap})
 This ends the use of @var{ap}.  After a @code{va_end} call, further
 @code{va_arg} calls with the same @var{ap} may not work.  You should invoke
@@ -480,10 +480,10 @@ arguments facility.
 @subsubsection Old-Style Variadic Functions
 
 @pindex varargs.h
-Before ANSI C, programmers used a slightly different facility for
+Before @w{ISO C}, programmers used a slightly different facility for
 writing variadic functions.  The GNU C compiler still supports it;
-currently, it is more portable than the ANSI C facility, since support
-for ANSI C is still not universal.  The header file which defines the
+currently, it is more portable than the @w{ISO C} facility, since support
+for @w{ISO C} is still not universal.  The header file which defines the
 old-fashioned variadic facility is called @file{varargs.h}.
 
 Using @file{varargs.h} is almost the same as using @file{stdarg.h}.
@@ -548,7 +548,7 @@ You can assign it to any pointer variable since it has type @code{void
 @code{NULL}.
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {void *} NULL
 This is a null pointer constant.
 @end deftypevr
@@ -571,13 +571,13 @@ recommend instead adding a prototype for the function you are calling.
 The result of subtracting two pointers in C is always an integer, but the
 precise data type varies from C compiler to C compiler.  Likewise, the
 data type of the result of @code{sizeof} also varies between compilers.
-ANSI defines standard aliases for these two types, so you can refer to
+ISO defines standard aliases for these two types, so you can refer to
 them in a portable fashion.  They are defined in the header file
 @file{stddef.h}.
 @pindex stddef.h
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} ptrdiff_t
 This is the signed integer type of the result of subtracting two
 pointers.  For example, with the declaration @code{char *p1, *p2;}, the
@@ -588,7 +588,7 @@ type that exists only for this purpose.
 @end deftp
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} size_t
 This is an unsigned integer type used to represent the sizes of objects.
 The result of the @code{sizeof} operator is of this type, and functions
@@ -616,7 +616,7 @@ possibility of error, when a function argument or value is supposed to
 have type @code{size_t}, never declare its type in any other way.
 
 @strong{Compatibility Note:} Implementations of C before the advent of
-ANSI C generally used @code{unsigned int} for representing object sizes
+@w{ISO C} generally used @code{unsigned int} for representing object sizes
 and @code{int} for pointer subtraction results.  They did not
 necessarily define either @code{size_t} or @code{ptrdiff_t}.  Unix
 systems did define @code{size_t}, in @file{sys/types.h}, but the
@@ -665,7 +665,7 @@ bits in an integer data type.  But you can compute it from the macro
 
 @table @code
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item CHAR_BIT
 This is the number of bits in a @code{char}---eight, on most systems.
 The value has type @code{int}.
@@ -705,23 +705,23 @@ described by the macro---thus, @code{ULONG_MAX} has type
 @comment Extra blank lines make it look better.
 @table @code
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item SCHAR_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed char}}.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item SCHAR_MAX
 @comment limits.h
-@comment ANSI
+@comment ISO
 @itemx UCHAR_MAX
 
 These are the maximum values that can be represented by a
 @w{@code{signed char}} and @w{@code{unsigned char}}, respectively.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item CHAR_MIN
 
 This is the minimum value that can be represented by a @code{char}.
@@ -729,7 +729,7 @@ It's equal to @code{SCHAR_MIN} if @code{char} is signed, or zero
 otherwise.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item CHAR_MAX
 
 This is the maximum value that can be represented by a @code{char}.
@@ -737,7 +737,7 @@ It's equal to @code{SCHAR_MAX} if @code{char} is signed, or
 @code{UCHAR_MAX} otherwise.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item SHRT_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
@@ -745,10 +745,10 @@ short int}}.  On most machines that the GNU C library runs on,
 @code{short} integers are 16-bit quantities.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item SHRT_MAX
 @comment limits.h
-@comment ANSI
+@comment ISO
 @itemx USHRT_MAX
 
 These are the maximum values that can be represented by a
@@ -756,7 +756,7 @@ These are the maximum values that can be represented by a
 respectively.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item INT_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
@@ -764,17 +764,17 @@ int}}.  On most machines that the GNU C system runs on, an @code{int} is
 a 32-bit quantity.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item INT_MAX
 @comment limits.h
-@comment ANSI
+@comment ISO
 @itemx UINT_MAX
 
 These are the maximum values that can be represented by, respectively,
 the type @w{@code{signed int}} and the type @w{@code{unsigned int}}.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item LONG_MIN
 
 This is the minimum value that can be represented by a @w{@code{signed
@@ -782,10 +782,10 @@ long int}}.  On most machines that the GNU C system runs on, @code{long}
 integers are 32-bit quantities, the same size as @code{int}.
 
 @comment limits.h
-@comment ANSI
+@comment ISO
 @item LONG_MAX
 @comment limits.h
-@comment ANSI
+@comment ISO
 @itemx ULONG_MAX
 
 These are the maximum values that can be represented by a
@@ -803,7 +803,7 @@ long long int}}.  On most machines that the GNU C system runs on,
 @comment GNU
 @item LONG_LONG_MAX
 @comment limits.h
-@comment ANSI
+@comment ISO
 @itemx ULONG_LONG_MAX
 
 These are the maximum values that can be represented by a @code{signed
@@ -962,16 +962,16 @@ expression.  The other macros listed here cannot be reliably used in
 places that require constant expressions, such as @samp{#if}
 preprocessing directives or in the dimensions of static arrays.
 
-Although the ANSI C standard specifies minimum and maximum values for
+Although the @w{ISO C} standard specifies minimum and maximum values for
 most of these parameters, the GNU C implementation uses whatever values
 describe the floating point representation of the target machine.  So in
-principle GNU C actually satisfies the ANSI C requirements only if the
+principle GNU C actually satisfies the @w{ISO C} requirements only if the
 target machine is suitable.  In practice, all the machines currently
 supported are suitable.
 
 @table @code
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_ROUNDS
 This value characterizes the rounding mode for floating point addition.
 The following values indicate standard rounding modes:
@@ -1011,7 +1011,7 @@ the IEEE single-precision standard.
 @end smallexample
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_RADIX
 This is the value of the base, or radix, of exponent representation.
 This is guaranteed to be a constant expression, unlike the other macros
@@ -1019,7 +1019,7 @@ described in this section.  The value is 2 on all machines we know of
 except the IBM 360 and derivatives.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating point
 mantissa for the @code{float} data type.  The following expression
@@ -1036,7 +1036,7 @@ float radix = FLT_RADIX;
 where @code{radix} appears @code{FLT_MANT_DIG} times.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_MANT_DIG
 @itemx LDBL_MANT_DIG
 This is the number of base-@code{FLT_RADIX} digits in the floating point
@@ -1045,7 +1045,7 @@ respectively.
 
 @comment Extra blank lines make it look better.
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_DIG
 
 This is the number of decimal digits of precision for the @code{float}
@@ -1057,10 +1057,10 @@ point number with @var{p} base @var{b} digits and back again, without
 change to the @var{q} decimal digits.
 
 The value of this macro is supposed to be at least @code{6}, to satisfy
-ANSI C.
+@w{ISO C}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_DIG
 @itemx LDBL_DIG
 
@@ -1069,7 +1069,7 @@ These are similar to @code{FLT_DIG}, but for the data types
 macros are supposed to be at least @code{10}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_MIN_EXP
 This is the smallest possible exponent value for type @code{float}.
 More precisely, is the minimum negative integer such that the value
@@ -1077,7 +1077,7 @@ More precisely, is the minimum negative integer such that the value
 normalized floating point number of type @code{float}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_MIN_EXP
 @itemx LDBL_MIN_EXP
 
@@ -1085,21 +1085,21 @@ These are similar to @code{FLT_MIN_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_MIN_10_EXP
 This is the minimum negative integer such that @code{10} raised to this
 power minus 1 can be represented as a normalized floating point number
 of type @code{float}.  This is supposed to be @code{-37} or even less.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_MIN_10_EXP
 @itemx LDBL_MIN_10_EXP
 These are similar to @code{FLT_MIN_10_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_MAX_EXP
 This is the largest possible exponent value for type @code{float}.  More
 precisely, this is the maximum positive integer such that value
@@ -1107,28 +1107,28 @@ precisely, this is the maximum positive integer such that value
 floating point number of type @code{float}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_MAX_EXP
 @itemx LDBL_MAX_EXP
 These are similar to @code{FLT_MAX_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_MAX_10_EXP
 This is the maximum positive integer such that @code{10} raised to this
 power minus 1 can be represented as a normalized floating point number
 of type @code{float}.  This is supposed to be at least @code{37}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_MAX_10_EXP
 @itemx LDBL_MAX_10_EXP
 These are similar to @code{FLT_MAX_10_EXP}, but for the data types
 @code{double} and @code{long double}, respectively.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_MAX
 
 The value of this macro is the maximum number representable in type
@@ -1138,7 +1138,7 @@ has type @code{float}.
 The smallest representable number is @code{- FLT_MAX}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_MAX
 @itemx LDBL_MAX
 
@@ -1147,7 +1147,7 @@ These are similar to @code{FLT_MAX}, but for the data types
 macro's value is the same as the type it describes.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_MIN
 
 The value of this macro is the minimum normalized positive floating
@@ -1155,7 +1155,7 @@ point number that is representable in type @code{float}.  It is supposed
 to be no more than @code{1E-37}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_MIN
 @itemx LDBL_MIN
 
@@ -1164,7 +1164,7 @@ These are similar to @code{FLT_MIN}, but for the data types
 macro's value is the same as the type it describes.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item FLT_EPSILON
 
 This is the minimum positive floating point number of type @code{float}
@@ -1172,7 +1172,7 @@ such that @code{1.0 + FLT_EPSILON != 1.0} is true.  It's supposed to
 be no greater than @code{1E-5}.
 
 @comment float.h
-@comment ANSI
+@comment ISO
 @item DBL_EPSILON
 @itemx LDBL_EPSILON
 
@@ -1236,7 +1236,7 @@ You can use @code{offsetof} to measure the location within a structure
 type of a particular structure member.
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} size_t offsetof (@var{type}, @var{member})
 This expands to a integer constant expression that is the offset of the
 structure member named @var{member} in a the structure type @var{type}.

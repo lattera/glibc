@@ -36,7 +36,7 @@ variable @code{errno}.  This variable is declared in the header file
 @pindex errno.h
 
 @comment errno.h
-@comment ANSI
+@comment ISO
 @deftypevr {Variable} {volatile int} errno
 The variable @code{errno} contains the system error number.  You can
 change the value of @code{errno}.
@@ -62,7 +62,7 @@ result of calling other library functions which might fail.  You should
 assume that any library function might alter @code{errno} when the
 function returns an error.
 
-@strong{Portability Note:} ANSI C specifies @code{errno} as a
+@strong{Portability Note:} @w{ISO C} specifies @code{errno} as a
 ``modifiable lvalue'' rather than as a variable, permitting it to be
 implemented as a macro.  For example, its expansion might involve a
 function call, like @w{@code{*_errno ()}}.  In fact, that is what it is
@@ -397,7 +397,7 @@ unless it has handled or blocked @code{SIGPIPE}.
 @end deftypevr
 
 @comment errno.h
-@comment ANSI: Numerical argument out of domain
+@comment ISO: Numerical argument out of domain
 @deftypevr Macro int EDOM
 @comment errno 33 @c DO NOT REMOVE
 Domain error; used by mathematical functions when an argument value does
@@ -405,7 +405,7 @@ not fall into the domain over which the function is defined.
 @end deftypevr
 
 @comment errno.h
-@comment ANSI: Numerical result out of range
+@comment ISO: Numerical result out of range
 @deftypevr Macro int ERANGE
 @comment errno 34 @c DO NOT REMOVE
 Range error; used by mathematical functions when the result value is
@@ -1198,7 +1198,7 @@ for a given error code; the variable
 name of the program that encountered the error.
 
 @comment string.h
-@comment ANSI
+@comment ISO
 @deftypefun {char *} strerror (int @var{errnum})
 The @code{strerror} function maps the error code (@pxref{Checking for
 Errors}) specified by the @var{errnum} argument to a descriptive error
@@ -1215,7 +1215,7 @@ The function @code{strerror} is declared in @file{string.h}.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun void perror (const char *@var{message})
 This function prints an error message to the stream @code{stderr};
 see @ref{Standard Streams}.
@@ -1239,7 +1239,7 @@ messages or embedded newlines.  Each error message begins with a capital
 letter and does not include any terminating punctuation.
 
 @strong{Compatibility Note:}  The @code{strerror} function is a new
-feature of ANSI C.  Many older C systems do not support this function
+feature of @w{ISO C}.  Many older C systems do not support this function
 yet.
 
 @cindex program name

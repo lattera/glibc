@@ -42,7 +42,11 @@ main (int argc, char *argv[])
 	printf ("wrong character in reopened file, value = %d\n", ch);
 	lose = 1;
       }
+#if 0
+    /* Hey, how did this ever worked?  `file1' is already closed!!!
+       -- drepper@gnu  */
     fclose (file1);
+#endif
     fclose (file2);
     remove (filename1);
     remove (filename2);

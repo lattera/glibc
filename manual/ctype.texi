@@ -44,7 +44,7 @@ particular class of characters; each has a name starting with @samp{is}.
 Each of them takes one argument, which is a character to test, and
 returns an @code{int} which is treated as a boolean value.  The
 character argument is passed as an @code{int}, and it may be the
-constant value @code{EOF} instead of a real character.  
+constant value @code{EOF} instead of a real character.
 
 The attributes of any given character can vary between locales.
 @xref{Locales}, for more information on locales.@refill
@@ -54,21 +54,21 @@ These functions are declared in the header file @file{ctype.h}.
 
 @cindex lower-case character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int islower (int @var{c})
 Returns true if @var{c} is a lower-case letter.
 @end deftypefun
 
 @cindex upper-case character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isupper (int @var{c})
 Returns true if @var{c} is an upper-case letter.
 @end deftypefun
 
 @cindex alphabetic character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isalpha (int @var{c})
 Returns true if @var{c} is an alphabetic character (a letter).  If
 @code{islower} or @code{isupper} is true of a character, then
@@ -83,14 +83,14 @@ additional characters.
 @cindex digit character
 @cindex decimal digit character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isdigit (int @var{c})
 Returns true if @var{c} is a decimal digit (@samp{0} through @samp{9}).
 @end deftypefun
 
 @cindex alphanumeric character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isalnum (int @var{c})
 Returns true if @var{c} is an alphanumeric character (a letter or
 number); in other words, if either @code{isalpha} or @code{isdigit} is
@@ -99,7 +99,7 @@ true of a character, then @code{isalnum} is also true.
 
 @cindex hexadecimal digit character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isxdigit (int @var{c})
 Returns true if @var{c} is a hexadecimal digit.
 Hexadecimal digits include the normal decimal digits @samp{0} through
@@ -109,7 +109,7 @@ Hexadecimal digits include the normal decimal digits @samp{0} through
 
 @cindex punctuation character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int ispunct (int @var{c})
 Returns true if @var{c} is a punctuation character.
 This means any printing character that is not alphanumeric or a space
@@ -118,7 +118,7 @@ character.
 
 @cindex whitespace character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isspace (int @var{c})
 Returns true if @var{c} is a @dfn{whitespace} character.  In the standard
 @code{"C"} locale, @code{isspace} returns true for only the standard
@@ -155,7 +155,7 @@ This function is a GNU extension.
 
 @cindex graphic character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isgraph (int @var{c})
 Returns true if @var{c} is a graphic character; that is, a character
 that has a glyph associated with it.  The whitespace characters are not
@@ -164,7 +164,7 @@ considered graphic.
 
 @cindex printing character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int isprint (int @var{c})
 Returns true if @var{c} is a printing character.  Printing characters
 include all the graphic characters, plus the space (@samp{ }) character.
@@ -172,7 +172,7 @@ include all the graphic characters, plus the space (@samp{ }) character.
 
 @cindex control character
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int iscntrl (int @var{c})
 Returns true if @var{c} is a control character (that is, a character that
 is not a printing character).
@@ -203,7 +203,7 @@ character to convert, and return the converted character as an
 @code{int}.  If the conversion is not applicable to the argument given,
 the argument is returned unchanged.
 
-@strong{Compatibility Note:} In pre-ANSI C dialects, instead of
+@strong{Compatibility Note:} In pre-@w{ISO C} dialects, instead of
 returning the argument unchanged, these functions may fail when the
 argument is not suitable for the conversion.  Thus for portability, you
 may need to write @code{islower(c) ? toupper(c) : c} rather than just
@@ -213,7 +213,7 @@ These functions are declared in the header file @file{ctype.h}.
 @pindex ctype.h
 
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int tolower (int @var{c})
 If @var{c} is an upper-case letter, @code{tolower} returns the corresponding
 lower-case letter.  If @var{c} is not an upper-case letter,
@@ -221,7 +221,7 @@ lower-case letter.  If @var{c} is not an upper-case letter,
 @end deftypefun
 
 @comment ctype.h
-@comment ANSI
+@comment ISO
 @deftypefun int toupper (int @var{c})
 If @var{c} is a lower-case letter, @code{tolower} returns the corresponding
 upper-case letter.  Otherwise @var{c} is returned unchanged.

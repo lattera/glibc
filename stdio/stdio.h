@@ -169,6 +169,10 @@ extern void __libc_fatal __P ((__const char *__message))
      __attribute__ ((__noreturn__));
 
 
+/* For thread safe I/O functions we need a lock in each stream.  We
+   keep the type opaque here.  */
+struct __stdio_lock;
+
 /* The FILE structure.  */
 struct __stdio_file
 {
@@ -176,8 +180,8 @@ struct __stdio_file
      for the glue to Unix stdio getc/putc to work.
      NOTE: stdio/glue.c has special knowledge of these first four members.  */
   int __magic;
-#define	_IOMAGIC	0xfedabeeb	/* Magic number to fill `__magic'.  */
-#define	_GLUEMAGIC	0xfeedbabe	/* Magic for glued Unix streams.  */
+#define	_IOMAGIC ((int) 0xfedabeeb)	/* Magic number to fill `__magic'.  */
+#define	_GLUEMAGIC ((int) 0xfeedbabe)	/* Magic for glued Unix streams.  */
 
   char *__bufp;			/* Pointer into the buffer.  */
   char *__get_limit;		/* Reading limit.  */
@@ -202,6 +206,7 @@ struct __stdio_file
   unsigned int __linebuf_active:1; /* put_limit is not really in use.  */
   unsigned int __seen:1;	/* This stream has been seen.  */
   unsigned int __ispipe:1;	/* Nonzero if opened by popen.  */
+  struct __stdio_lock *__lock;	/* Pointer to associated lock.  */
 };
 
 

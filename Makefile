@@ -52,7 +52,7 @@ endif
 
 # These are the subdirectories containing the library source.
 subdirs = csu assert ctype db locale intl catgets math setjmp signal stdlib \
-	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd\
+	  stdio-common $(stdio) $(malloc) string wcsmbs time dirent grp pwd \
 	  posix io termios resource misc login socket sysvipc gmon gnulib \
 	  wctype manual shadow crypt $(sysdep-subdirs) nss elf po $(add-ons)
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.

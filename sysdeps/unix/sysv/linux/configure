@@ -1,16 +1,43 @@
-; then
+ # Local configure fragment for sysdeps/unix/sysv/linux.
+
+# On Linux, the default is to use libio instead of stdio.
+test $stdio = default && stdio=libio
+
+# We also use the new malloc by default.
+test $malloc = default && malloc=new-malloc
+
+# Don't bother trying to generate any glue code to be compatible with the
+# existing system library, because we are the only system library.
+inhibit_glue=yes
+
+echo $ac_n "checking installed Linux kernel header files""... $ac_c" 1>&6
+echo "configure:15: checking installed Linux kernel header files" >&5
+if eval "test \"`echo '$''{'libc_cv_linux2010'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 20 "configure"
+#include "confdefs.h"
+#include <linux/version.h>
+int main() {
+#if LINUX_VERSION_CODE <  ( *65536+ 0 *256+ 10) /* .0.10 */
+eat flaming death
+#endif
+; return 0; }
+EOF
+if { (eval echo configure:29: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_linux2010='2.0.10 or later'
 else
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat conftest.$ac_ext >&AC_FD_CC
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
   rm -rf conftest*
   libc_cv_linux2010='TOO OLD!'
 fi
 rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_linux2010" 1>&AC_FD_MSG
+echo "$ac_t""$libc_cv_linux2010" 1>&6
 if test "$libc_cv_linux2010" != '2.0.10 or later'; then
   { echo "configure: error: GNU libc requires kernel header files from
 Linux 2.0.10 or later to be installed before configuring.

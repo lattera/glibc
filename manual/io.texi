@@ -119,14 +119,14 @@ and formatted output functions (@pxref{Formatted Output}).
 
 If you are concerned about portability of your programs to systems other
 than GNU, you should also be aware that file descriptors are not as
-portable as streams.  You can expect any system running ANSI C to
+portable as streams.  You can expect any system running @w{ISO C} to
 support streams, but non-GNU systems may not support file descriptors at
 all, or may only implement a subset of the GNU functions that operate on
 file descriptors.  Most of the file descriptor functions in the GNU
 library are included in the POSIX.1 standard, however.
 
 @node File Position,  , Streams and File Descriptors, I/O Concepts
-@subsection File Position 
+@subsection File Position
 
 One of the attributes of an open file is its @dfn{file position} that
 keeps track of where in the file the next character is to be read or
@@ -163,11 +163,11 @@ given file at the same time.  In order for each program to be able to
 read the file at its own pace, each program must have its own file
 pointer, which is not affected by anything the other programs do.
 
-In fact, each opening of a file creates a separate file position.  
+In fact, each opening of a file creates a separate file position.
 Thus, if you open a file twice even in the same program, you get two
 streams or descriptors with independent file positions.
 
-By contrast, if you open a descriptor and then duplicate it to get 
+By contrast, if you open a descriptor and then duplicate it to get
 another descriptor, these two descriptors share the same file position:
 changing the file position of one descriptor will affect the other.
 
@@ -285,7 +285,7 @@ The file named @file{b}, in the directory named @file{a} in the root directory.
 The file named @file{a}, in the current working directory.
 
 @item /a/./b
-This is the same as @file{/a/b}.  
+This is the same as @file{/a/b}.
 
 @item ./a
 The file named @file{a}, in the current working directory.
@@ -295,7 +295,7 @@ The file named @file{a}, in the parent directory of the current working
 directory.
 @end table
 
-@c An empty string may ``work'', but I think it's confusing to 
+@c An empty string may ``work'', but I think it's confusing to
 @c try to describe it.  It's not a useful thing for users to use--rms.
 A file name that names a directory may optionally end in a @samp{/}.
 You can specify a file name of @file{/} to refer to the root directory,
@@ -323,7 +323,7 @@ this manual as the @dfn{usual file name errors}.
 
 @table @code
 @item EACCES
-The process does not have search permission for a directory component 
+The process does not have search permission for a directory component
 of the file name.
 
 @item ENAMETOOLONG
@@ -363,7 +363,7 @@ There are two reasons why it can be important for you to be aware of
 file name portability issues:
 
 @itemize @bullet
-@item 
+@item
 If your program makes assumptions about file name syntax, or contains
 embedded literal file name strings, it is more difficult to get it to
 run under other operating systems that use different syntax conventions.
@@ -377,7 +377,7 @@ operating system over a network, or read and write disks in formats used
 by other operating systems.
 @end itemize
 
-The ANSI C standard says very little about file name syntax, only that
+The @w{ISO C} standard says very little about file name syntax, only that
 file names are strings.  In addition to varying restrictions on the
 length of file names and what characters can validly appear in a file
 name, different operating systems use different conventions and syntax
@@ -392,5 +392,3 @@ component strings.  However, in the GNU system, you do not need to worry
 about these restrictions; any character except the null character is
 permitted in a file name string, and there are no limits on the length
 of file name strings.
-
-

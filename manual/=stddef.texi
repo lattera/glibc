@@ -9,7 +9,7 @@ definitions, your program should include the header file
 @pindex stddef.h
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} ptrdiff_t
 This is the signed integer type of the result of subtracting two
 pointers.  For example, with the declaration @code{char *p1, *p2;}, the
@@ -20,7 +20,7 @@ exists only for this purpose.
 @end deftp
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} size_t
 This is an unsigned integer type used to represent the sizes of objects.
 The result of the @code{sizeof} operator is of this type, and functions
@@ -30,12 +30,12 @@ objects of arbitrary sizes accept arguments of this type to specify
 object sizes.
 @end deftp
 
-In the GNU system @code{size_t} is equivalent to one of the types 
+In the GNU system @code{size_t} is equivalent to one of the types
 @code{unsigned int} and @code{unsigned long int}.  These types have
 identical properties on the GNU system, and for most purposes, you
-can use them interchangeably.  However, they are distinct types, 
+can use them interchangeably.  However, they are distinct types,
 and in certain contexts, you may not treat them as identical.  For
-example, when you specify the type of a function argument in a 
+example, when you specify the type of a function argument in a
 function prototype, it makes a difference which one you use.  If
 the system header files declare @code{malloc} with an argument
 of type @code{size_t} and you declare @code{malloc} with an argument
@@ -47,12 +47,12 @@ supposed to have type @code{size_t}, always write the type as
 actually be.
 
 @strong{Compatibility Note:}  Types such as @code{size_t} are new
-features of ANSI C.  Older, pre-ANSI C implementations have
+features of @w{ISO C}.  Older, pre-ANSI C implementations have
 traditionally used @code{unsigned int} for representing object sizes
 and @code{int} for pointer subtraction results.
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro {void *} NULL
 @cindex null pointer
 This is a null pointer constant.  It can be assigned to any pointer
@@ -60,7 +60,7 @@ variable since it has type @code{void *}, and is guaranteed not to
 point to any real object.  This macro is the best way to get a null
 pointer value.  You can also use @code{0} or @code{(void *)0} as a null
 pointer constant, but using @code{NULL} makes the purpose of the
-constant more evident.  
+constant more evident.
 
 When passing a null pointer as an argument to a function for which there
 is no prototype declaration in scope, you should explicitly cast
@@ -70,7 +70,7 @@ thing.
 @end deftypevr
 
 @comment stddef.h
-@comment ANSI
+@comment ISO
 @deftypefn {Macro} size_t offsetof (@var{type}, @var{member})
 This expands to a integer constant expression that is the offset of the
 structure member named @var{member} in a @code{struct} of type

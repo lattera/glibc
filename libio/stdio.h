@@ -73,7 +73,10 @@ typedef _IO_fpos_t fpos_t;
 
 #include <stdio_lim.h>
 
+#ifdef	__USE_SVID
+/* Default path prefix for `tempnam' and `tmpnam'.  */
 #define P_tmpdir      "/tmp"
+#endif
 
 /* For use by debuggers. These are linked in if printf or fprintf are used. */
 extern FILE *stdin, *stdout, *stderr; /* TODO */

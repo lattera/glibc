@@ -25,7 +25,7 @@ representing a communications channel to a file, device, or process.
 * Binary Streams::              Some systems distinguish between text files
                                  and binary files.
 * File Positioning::            About random-access streams.
-* Portable Positioning::        Random access on peculiar ANSI C systems.
+* Portable Positioning::        Random access on peculiar ISO C systems.
 * Stream Buffering::            How to control buffering of streams.
 * Other Kinds of Streams::      Streams that do not necessarily correspond
                                  to an open file.
@@ -47,7 +47,7 @@ only in the technical sense.
 The @code{FILE} type is declared in the header file @file{stdio.h}.
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} FILE
 This is the data type used to represent stream objects.  A @code{FILE}
 object holds all of the internal state information about the connection
@@ -78,7 +78,7 @@ These streams are declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevar {FILE *} stdin
 The @dfn{standard input} stream, which is the normal source of input for the
 program.
@@ -86,7 +86,7 @@ program.
 @cindex standard input stream
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevar {FILE *} stdout
 The @dfn{standard output} stream, which is used for normal output from
 the program.
@@ -94,7 +94,7 @@ the program.
 @cindex standard output stream
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevar {FILE *} stderr
 The @dfn{standard error} stream, which is used for error messages and
 diagnostics issued by the program.
@@ -134,7 +134,7 @@ Everything described in this section is declared in the header file
 @file{stdio.h}.
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun {FILE *} fopen (const char *@var{filename}, const char *@var{opentype})
 The @code{fopen} function opens a stream for I/O to the file
 @var{filename}, and returns a pointer to the stream.
@@ -174,7 +174,7 @@ but output is always appended to the end of the file.
 @end table
 
 As you can see, @samp{+} requests a stream that can do both input and
-output.  The ANSI standard says that when using such a stream, you must
+output.  The ISO standard says that when using such a stream, you must
 call @code{fflush} (@pxref{Stream Buffering}) or a file positioning
 function such as @code{fseek} (@pxref{File Positioning}) when switching
 from reading to writing or vice versa.  Otherwise, internal buffers
@@ -216,7 +216,7 @@ file locking facilities to avoid simultaneous access.  @xref{File
 Locks}.
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int FOPEN_MAX
 The value of this macro is an integer constant expression that
 represents the minimum number of streams that the implementation
@@ -230,7 +230,7 @@ resource limit; @pxref{Limits on Resources}.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun {FILE *} freopen (const char *@var{filename}, const char *@var{opentype}, FILE *@var{stream})
 This function is like a combination of @code{fclose} and @code{fopen}.
 It first closes the stream referred to by @var{stream}, ignoring any
@@ -261,7 +261,7 @@ stream and the file is cancelled.  After you have closed a stream, you
 cannot perform any additional operations on it.
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fclose (FILE *@var{stream})
 This function causes @var{stream} to be closed and the connection to
 the corresponding file to be broken.  Any buffered output is written
@@ -299,7 +299,7 @@ These functions are declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fputc (int @var{c}, FILE *@var{stream})
 The @code{fputc} function converts the character @var{c} to type
 @code{unsigned char}, and writes it to the stream @var{stream}.
@@ -308,7 +308,7 @@ character @var{c} is returned.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int putc (int @var{c}, FILE *@var{stream})
 This is just like @code{fputc}, except that most systems implement it as
 a macro, making it faster.  One consequence is that it may evaluate the
@@ -318,14 +318,14 @@ use for writing a single character.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int putchar (int @var{c})
 The @code{putchar} function is equivalent to @code{putc} with
 @code{stdout} as the value of the @var{stream} argument.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fputs (const char *@var{s}, FILE *@var{stream})
 The function @code{fputs} writes the string @var{s} to the stream
 @var{stream}.  The terminating null character is not written.
@@ -348,7 +348,7 @@ outputs the text @samp{Are you hungry?} followed by a newline.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int puts (const char *@var{s})
 The @code{puts} function writes the string @var{s} to the stream
 @code{stdout} followed by a newline.  The terminating null character of
@@ -392,7 +392,7 @@ not @code{EOF}, you can be sure that it will fit in a @samp{char}
 variable without loss of information.
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fgetc (FILE *@var{stream})
 This function reads the next character as an @code{unsigned char} from
 the stream @var{stream} and returns its value, converted to an
@@ -401,7 +401,7 @@ the stream @var{stream} and returns its value, converted to an
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int getc (FILE *@var{stream})
 This is just like @code{fgetc}, except that it is permissible (and
 typical) for it to be implemented as a macro that evaluates the
@@ -411,7 +411,7 @@ character.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int getchar (void)
 The @code{getchar} function is equivalent to @code{getc} with @code{stdin}
 as the value of the @var{stream} argument.
@@ -537,7 +537,7 @@ getline (char **lineptr, size_t *n, FILE *stream)
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun {char *} fgets (char *@var{s}, int @var{count}, FILE *@var{stream})
 The @code{fgets} function reads characters from the stream @var{stream}
 up to and including a newline character and stores them in the string
@@ -560,7 +560,7 @@ error message.  We recommend using @code{getline} instead of @code{fgets}.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefn {Deprecated function} {char *} gets (char *@var{s})
 The function @code{gets} reads characters from the stream @code{stdin}
 up to the next newline character, and stores them in the string @var{s}.
@@ -650,7 +650,7 @@ The function to unread a character is called @code{ungetc}, because it
 reverses the action of @code{getc}.
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int ungetc (int @var{c}, FILE *@var{stream})
 The @code{ungetc} function pushes back the character @var{c} onto the
 input stream @var{stream}.  So the next input from @var{stream} will
@@ -736,7 +736,7 @@ These functions are declared in @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun size_t fread (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
 This function reads up to @var{count} objects of size @var{size} into
 the array @var{data}, from the stream @var{stream}.  It returns the
@@ -751,7 +751,7 @@ object.  Therefore, the stream remains at the actual end of the file.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun size_t fwrite (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
 This function writes up to @var{count} objects of size @var{size} from
 the array @var{data}, to the stream @var{stream}.  The return value is
@@ -1376,7 +1376,7 @@ just include @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int printf (const char *@var{template}, @dots{})
 The @code{printf} function prints the optional arguments under the
 control of the template string @var{template} to the stream
@@ -1385,14 +1385,14 @@ negative value if there was an output error.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fprintf (FILE *@var{stream}, const char *@var{template}, @dots{})
 This function is just like @code{printf}, except that the output is
 written to the stream @var{stream} instead of @code{stdout}.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int sprintf (char *@var{s}, const char *@var{template}, @dots{})
 This is like @code{printf}, except that the output is stored in the character
 array @var{s} instead of written to a stream.  A null character is written
@@ -1564,7 +1564,7 @@ Prototypes for these functions are declared in @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int vprintf (const char *@var{template}, va_list @var{ap})
 This function is similar to @code{printf} except that, instead of taking
 a variable number of arguments directly, it takes an argument list
@@ -1572,14 +1572,14 @@ pointer @var{ap}.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int vfprintf (FILE *@var{stream}, const char *@var{template}, va_list @var{ap})
 This is the equivalent of @code{fprintf} with the variable argument list
 specified directly as for @code{vprintf}.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int vsprintf (char *@var{s}, const char *@var{template}, va_list @var{ap})
 This is the equivalent of @code{sprintf} with the variable argument list
 specified directly as for @code{vprintf}.
@@ -1912,7 +1912,7 @@ The facilities of this section are declared in the header file
 @end menu
 
 @strong{Portability Note:} The ability to extend the syntax of
-@code{printf} template strings is a GNU extension.  ANSI standard C has
+@code{printf} template strings is a GNU extension.  ISO standard C has
 nothing similar.
 
 @node Registering New Conversions
@@ -2658,7 +2658,7 @@ Prototypes for these functions are in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int scanf (const char *@var{template}, @dots{})
 The @code{scanf} function reads formatted input from the stream
 @code{stdin} under the control of the template string @var{template}.
@@ -2672,14 +2672,14 @@ template), then @code{EOF} is returned.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fscanf (FILE *@var{stream}, const char *@var{template}, @dots{})
 This function is just like @code{scanf}, except that the input is read
 from the stream @var{stream} instead of @code{stdin}.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int sscanf (const char *@var{s}, const char *@var{template}, @dots{})
 This is like @code{scanf}, except that the characters are taken from the
 null-terminated string @var{s} instead of from a stream.  Reaching the
@@ -2750,7 +2750,7 @@ These symbols are declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int EOF
 This macro is an integer value that is returned by a number of functions
 to indicate an end-of-file condition, or some other error situation.
@@ -2759,7 +2759,7 @@ value may be some other negative number.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun void clearerr (FILE *@var{stream})
 This function clears the end-of-file and error indicators for the
 stream @var{stream}.
@@ -2769,14 +2769,14 @@ end-of-file indicator for the stream.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int feof (FILE *@var{stream})
 The @code{feof} function returns nonzero if and only if the end-of-file
 indicator for the stream @var{stream} is set.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int ferror (FILE *@var{stream})
 The @code{ferror} function returns nonzero if and only if the error
 indicator for the stream @var{stream} is set, indicating that an error
@@ -2799,7 +2799,7 @@ For more information about the descriptor-level I/O functions, see
 The GNU system and other POSIX-compatible operating systems organize all
 files as uniform sequences of characters.  However, some other systems
 make a distinction between files containing text and files containing
-binary data, and the input and output facilities of ANSI C provide for
+binary data, and the input and output facilities of @w{ISO C} provide for
 this distinction.  This section tells you how to write programs portable
 to such systems.
 
@@ -2875,7 +2875,7 @@ are declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun {long int} ftell (FILE *@var{stream})
 This function returns the current file position of the stream
 @var{stream}.
@@ -2887,7 +2887,7 @@ possibly for other reasons as well.  If a failure occurs, a value of
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fseek (FILE *@var{stream}, long int @var{offset}, int @var{whence})
 The @code{fseek} function is used to change the file position of the
 stream @var{stream}.  The value of @var{whence} must be one of the
@@ -2915,7 +2915,7 @@ function (@pxref{I/O Primitives}) and to specify offsets for file locks
 (@pxref{Control Operations}).
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SEEK_SET
 This is an integer constant which, when used as the @var{whence}
 argument to the @code{fseek} function, specifies that the offset
@@ -2923,7 +2923,7 @@ provided is relative to the beginning of the file.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SEEK_CUR
 This is an integer constant which, when used as the @var{whence}
 argument to the @code{fseek} function, specifies that the offset
@@ -2931,7 +2931,7 @@ provided is relative to the current file position.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int SEEK_END
 This is an integer constant which, when used as the @var{whence}
 argument to the @code{fseek} function, specifies that the offset
@@ -2939,7 +2939,7 @@ provided is relative to the end of the file.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun void rewind (FILE *@var{stream})
 The @code{rewind} function positions the stream @var{stream} at the
 begining of the file.  It is equivalent to calling @code{fseek} on the
@@ -2977,7 +2977,7 @@ An alias for @code{SEEK_END}.
 
 On the GNU system, the file position is truly a character count.  You
 can specify any character count value as an argument to @code{fseek} and
-get reliable results for any random access file.  However, some ANSI C
+get reliable results for any random access file.  However, some @w{ISO C}
 systems do not represent file positions in this way.
 
 On some systems where text streams truly differ from binary streams, it
@@ -3024,7 +3024,7 @@ These symbols are declared in the header file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftp {Data Type} fpos_t
 This is the type of an object that can encode information about the
 file position of a stream, for use by the functions @code{fgetpos} and
@@ -3036,7 +3036,7 @@ representation.
 @end deftp
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fgetpos (FILE *@var{stream}, fpos_t *@var{position})
 This function stores the value of the file position indicator for the
 stream @var{stream} in the @code{fpos_t} object pointed to by
@@ -3046,7 +3046,7 @@ value in @code{errno}.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fsetpos (FILE *@var{stream}, const fpos_t @var{position})
 This function sets the file position indicator for the stream @var{stream}
 to the position @var{position}, which must have been set by a previous
@@ -3157,7 +3157,7 @@ If you want to flush the buffered output at another time, call
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int fflush (FILE *@var{stream})
 This function causes any buffered output on @var{stream} to be delivered
 to the file.  If @var{stream} is a null pointer, then
@@ -3188,7 +3188,7 @@ file @file{stdio.h}.
 @pindex stdio.h
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun int setvbuf (FILE *@var{stream}, char *@var{buf}, int @var{mode}, size_t @var{size})
 This function is used to specify that the stream @var{stream} should
 have the buffering mode @var{mode}, which can be either @code{_IOFBF}
@@ -3218,7 +3218,7 @@ be honored.
 @end deftypefun
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int _IOFBF
 The value of this macro is an integer constant expression that can be
 used as the @var{mode} argument to the @code{setvbuf} function to
@@ -3226,7 +3226,7 @@ specify that the stream should be fully buffered.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int _IOLBF
 The value of this macro is an integer constant expression that can be
 used as the @var{mode} argument to the @code{setvbuf} function to
@@ -3234,7 +3234,7 @@ specify that the stream should be line buffered.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int _IONBF
 The value of this macro is an integer constant expression that can be
 used as the @var{mode} argument to the @code{setvbuf} function to
@@ -3242,7 +3242,7 @@ specify that the stream should be unbuffered.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypevr Macro int BUFSIZ
 The value of this macro is an integer constant expression that is good
 to use for the @var{size} argument to @code{setvbuf}.  This value is
@@ -3265,7 +3265,7 @@ efficient size.
 @end deftypevr
 
 @comment stdio.h
-@comment ANSI
+@comment ISO
 @deftypefun void setbuf (FILE *@var{stream}, char *@var{buf})
 If @var{buf} is a null pointer, the effect of this function is
 equivalent to calling @code{setvbuf} with a @var{mode} argument of
