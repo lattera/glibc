@@ -1,9 +1,21 @@
+2002-09-04  Bruno Haible  <bruno@clisp.org>
+
+	* wrapsyscall.c (PROMOTE_INTEGRAL_TYPE): New macro.
+	(open, open64): Change va_arg argument type to the integral type to
+	which mode_t promotes.
+
+	* sysdeps/pthread/tst-timer.c (main): Don't assume anything about
+	the structure of 'struct sigevent'.
+
+	* errno.c (__errno_location, __h_errno_location, __res_state):
+	Use prototype function definitions.
+
 2002-07-29  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* shlib-versions: Set libpthread version to 2.3 for powerpc64.
 	* sysdeps/powerpc/pt-machine.h: moved to...
 	* sysdeps/powerpc/powerpc32/pt-machine.h: ...here
-	* sysdeps/powerpc/powerpc64/pt-machine.h: New file. 
+	* sysdeps/powerpc/powerpc64/pt-machine.h: New file.
 
 2002-09-02  Roland McGrath  <roland@redhat.com>
 

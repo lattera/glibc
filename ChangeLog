@@ -1,13 +1,15 @@
 2002-09-04  Bruno Haible  <bruno@clisp.org>
 
-        * elf/readlib.c (process_file): Conditionalize check for QMAGIC.
-
 	* sysdeps/unix/sysv/linux/sigset-cvt-mask.h (sigset_set_old_mask,
 	sigset_get_old_mask): Turn into inline functions.
 	* sysdeps/unix/sysv/aix/sigset-cvt-mask.h (sigset_set_old_mask,
 	sigset_get_old_mask): Likewise.
 	* sysdeps/unix/sysv/sysv4/sigset-cvt-mask.h (sigset_set_old_mask,
 	sigset_get_old_mask): Likewise.
+	* sysdeps/generic/sigset-cvt-mask.h (sigset_set_old_mask): Declutter
+	syntax.
+
+        * elf/readlib.c (process_file): Conditionalize check for QMAGIC.
 
 	* sysdeps/generic/_strerror.c (_sys_errlist, _sys_nerr): Remove
 	default definitions.

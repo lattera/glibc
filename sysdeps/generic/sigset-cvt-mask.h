@@ -27,7 +27,7 @@ static inline int __attribute__ ((unused))
 sigset_set_old_mask (sigset_t *set, int mask)
 {
   if (sizeof (__sigset_t) == sizeof (unsigned int))
-    *set = (unsigned int) (mask);
+    *set = (unsigned int) mask;
   else
     {
       register unsigned int __sig;
