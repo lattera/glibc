@@ -257,10 +257,12 @@ _nl_load_domain (domain_file)
   nullentry = _nl_find_msg (domain_file, "", 0);
   if (nullentry != NULL)
     {
-      const char *charsetstr = strstr (nullentry, "charset=");
+      const char *charsetstr;
       const char *plural;
       const char *nplurals;
 
+#if defined _LIBC || HAVE_ICONV
+      charsetstr = strstr (nullentry, "charset=");
       if (charsetstr != NULL)
 	{
 	  size_t len;
@@ -271,12 +273,12 @@ _nl_load_domain (domain_file)
 	  len = strcspn (charsetstr, " \t\n");
 
 	  charset = (char *) alloca (len + 1);
-#if defined _LIBC || HAVE_MEMPCPY
+# if defined _LIBC || HAVE_MEMPCPY
 	  *((char *) mempcpy (charset, charsetstr, len)) = '\0';
-#else
+# else
 	  memcpy (charset, charsetstr, len);
 	  charset[len] = '\0';
-#endif
+# endif
 
 	  /* The output charset should normally be determined by the
 	     locale.  But sometimes the locale is not used or not correctly
@@ -285,17 +287,18 @@ _nl_load_domain (domain_file)
 	  if (outcharset == NULL || outcharset[0] == '\0')
 	    outcharset = (*_nl_current[LC_CTYPE])->values[_NL_ITEM_INDEX (CODESET)].string;
 
-#ifdef _LIBC
+# ifdef _LIBC
 	  if (__gconv_open (outcharset, charset, &domain->conv,
 			    GCONV_AVOID_NOCONV)
 	      != __GCONV_OK)
 	    domain->conv = (__gconv_t) -1;
-#else
-# if HAVE_ICONV
+# else
+#  if HAVE_ICONV
 	  domain->conv = iconv_open (outcharset, charset);
+#  endif
 # endif
-#endif
 	}
+#endif /* _LIBC || HAVE_ICONV */
 
       /* Also look for a plural specification.  */
       plural = strstr (nullentry, "plural=");

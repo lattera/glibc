@@ -16,6 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* Tell glibc's <string.h> to provide a prototype for mempcpy().
+   This must come before <config.h> because <config.h> may include
+   <features.h>, and once <features.h> has been included, it's too late.  */
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE	1
+#endif
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -59,9 +66,6 @@ void free ();
 #endif
 
 #if defined HAVE_STRING_H || defined _LIBC
-# ifndef _GNU_SOURCE
-#  define _GNU_SOURCE	1
-# endif
 # include <string.h>
 #else
 # include <strings.h>
@@ -98,9 +102,12 @@ void free ();
 # include <bits/libc-lock.h>
 #else
 /* Provide dummy implementation if this is outside glibc.  */
-# define __libc_lock_define_initialized (CLASS, NAME)
+# define __libc_lock_define_initialized(CLASS, NAME)
 # define __libc_lock_lock(NAME)
 # define __libc_lock_unlock(NAME)
+# define __libc_rwlock_define_initialized(CLASS, NAME)
+# define __libc_rwlock_rdlock(NAME)
+# define __libc_rwlock_unlock(NAME)
 #endif
 
 /* @@ end of prolog @@ */
@@ -626,9 +633,9 @@ _nl_find_msg (domain_file, msgid, index)
      const char *msgid;
      unsigned long int index;
 {
-  size_t act = 0;
-  size_t top, bottom;
   struct loaded_domain *domain;
+  size_t act;
+  char *result;
 
   if (domain_file->decided == 0)
     _nl_load_domain (domain_file);
@@ -657,103 +664,8 @@ _nl_find_msg (domain_file, msgid, index)
 		     domain->data + W (domain->must_swap,
 				       domain->orig_tab[nstr - 1].offset)) == 0)
 	{
-	  /* We found an entry.  If we have to convert the string to use
-	     a different character set this is the time.  */
-	  char *result =
-	    (char *) domain->data + W (domain->must_swap,
-				       domain->trans_tab[nstr - 1].offset);
-
-	  /* Now skip some strings.  How much depends on the index passed
-	     in.  */
-	  while (index-- > 0)
-	    {
-#ifdef _LIBC
-	      result = __rawmemchr (result, '\0');
-#else
-	      result = strchr (result, '\0');
-#endif
-	      /* And skip over the NUL byte.  */
-	      ++result;
-	    }
-
-	  if (
-#ifdef _LIBC
-	      domain->conv != (__gconv_t) -1
-#else
-# if HAVE_ICONV
-	      domain->conv != (iconv_t) -1
-# endif
-#endif
-	      )
-	    {
-	      /* We are supposed to do a conversion.  First allocate an
-		 appropriate table with the same structure as the hash
-		 table in the file where we can put the pointers to the
-		 converted strings in.  */
-	      if (domain->conv_tab == NULL
-		  && ((domain->conv_tab = (char **) calloc (domain->hash_size,
-							    sizeof (char *)))
-		      == NULL))
-		/* Mark that we didn't succeed allocating a table.  */
-		domain->conv_tab = (char **) -1;
-
-	      if (domain->conv_tab == (char **) -1)
-		/* Nothing we can do, no more memory.  */
-		return NULL;
-
-	      if (domain->conv_tab[idx] == NULL)
-		{
-		  /* We haven't used this string so far, so it is not
-		     translated yet.  Do this now.  */
-#ifdef _LIBC
-		  /* For glibc we use a bit more efficient memory handling.
-		     We allocate always larger blocks which get used over
-		     time.  This is faster than many small allocations.   */
-		  __libc_lock_define_initialized (static, lock)
-		  static unsigned char *freemem;
-		  static size_t freemem_size;
-		  /* Note that we include the NUL byte.  */
-		  size_t resultlen = strlen (result) + 1;
-		  const unsigned char *inbuf = result;
-		  unsigned char *outbuf = freemem;
-		  size_t written;
-		  int res;
-
-		  __libc_lock_lock (lock);
-
-		  while ((res = __gconv (domain->conv,
-					 &inbuf, inbuf + resultlen,
-					 &outbuf, outbuf + freemem_size,
-					 &written)) == __GCONV_OK)
-		    {
-		      if (res != __GCONV_FULL_OUTPUT)
-			goto out;
-
-		      /* We must resize the buffer.  */
-		      freemem_size = MAX (2 * freemem_size, 4064);
-		      freemem = (char *) malloc (freemem_size);
-		      if (freemem == NULL)
-			goto out;
-
-		      inbuf = result;
-		      outbuf = freemem;
-		    }
-
-		  /* We have now in our buffer a converted string.  Put this
-		     in the hash table  */
-		  domain->conv_tab[idx] = freemem;
-		  freemem_size -= outbuf - freemem;
-		  freemem = outbuf;
-
-		out:
-		  __libc_lock_unlock (lock);
-#endif
-		}
-
-	      result = domain->conv_tab[idx];
-	    }
-
-	  return result;
+	  act = nstr - 1;
+	  goto found;
 	}
 
       while (1)
@@ -773,37 +685,199 @@ _nl_find_msg (domain_file, msgid, index)
 			  domain->data + W (domain->must_swap,
 					    domain->orig_tab[nstr - 1].offset))
 		  == 0))
-	    return ((char *) domain->data
-		    + W (domain->must_swap,
-			 domain->trans_tab[nstr - 1].offset));
+	    {
+	      act = nstr - 1;
+	      goto found;
+	    }
 	}
       /* NOTREACHED */
     }
-
-  /* Now we try the default method:  binary search in the sorted
-     array of messages.  */
-  bottom = 0;
-  top = domain->nstrings;
-  while (bottom < top)
+  else
     {
-      int cmp_val;
+      /* Try the default method:  binary search in the sorted array of
+	 messages.  */
+      size_t top, bottom;
 
-      act = (bottom + top) / 2;
-      cmp_val = strcmp (msgid, (domain->data
-				+ W (domain->must_swap,
-				     domain->orig_tab[act].offset)));
-      if (cmp_val < 0)
-	top = act;
-      else if (cmp_val > 0)
-	bottom = act + 1;
-      else
-	break;
+      bottom = 0;
+      top = domain->nstrings;
+      while (bottom < top)
+	{
+	  int cmp_val;
+
+	  act = (bottom + top) / 2;
+	  cmp_val = strcmp (msgid, (domain->data
+				    + W (domain->must_swap,
+					 domain->orig_tab[act].offset)));
+	  if (cmp_val < 0)
+	    top = act;
+	  else if (cmp_val > 0)
+	    bottom = act + 1;
+	  else
+	    goto found;
+	}
+      /* No translation was found.  */
+      return NULL;
     }
 
-  /* If an translation is found return this.  */
-  return bottom >= top ? NULL : ((char *) domain->data
-				 + W (domain->must_swap,
-				      domain->trans_tab[act].offset));
+ found:
+  /* The translation was found at index ACT.  If we have to convert the
+     string to use a different character set, this is the time.  */
+  result = (char *) domain->data
+	   + W (domain->must_swap, domain->trans_tab[act].offset);
+
+#if defined _LIBC || HAVE_ICONV
+  if (
+# ifdef _LIBC
+      domain->conv != (__gconv_t) -1
+# else
+#  if HAVE_ICONV
+      domain->conv != (iconv_t) -1
+#  endif
+# endif
+      )
+    {
+      /* We are supposed to do a conversion.  First allocate an
+	 appropriate table with the same structure as the table
+	 of translations in the file, where we can put the pointers
+	 to the converted strings in.
+	 The is a slight complication with the INDEX: We don't know
+	 a priori which entries are plural entries. Therefore at any
+	 moment we can only translate the variants 0 .. INDEX.  */
+
+      if (domain->conv_tab == NULL
+	  && ((domain->conv_tab = (char **) calloc (domain->nstrings,
+						    sizeof (char *)))
+	      == NULL))
+	/* Mark that we didn't succeed allocating a table.  */
+	domain->conv_tab = (char **) -1;
+
+      if (domain->conv_tab == (char **) -1)
+	/* Nothing we can do, no more memory.  */
+	goto converted;
+
+      if (domain->conv_tab[act] == NULL
+	  || *(nls_uint32 *) domain->conv_tab[act] < index)
+	{
+	  /* We haven't used this string so far, so it is not
+	     translated yet.  Do this now.  */
+	  /* We use a bit more efficient memory handling.
+	     We allocate always larger blocks which get used over
+	     time.  This is faster than many small allocations.   */
+	  __libc_lock_define_initialized (static, lock)
+	  static unsigned char *freemem;
+	  static size_t freemem_size;
+
+	  size_t resultlen;
+	  const unsigned char *inbuf;
+	  unsigned char *outbuf;
+
+	  /* Note that we translate (index + 1) consecutive strings at
+	     once, including the final NUL byte.  */
+	  {
+	    unsigned long int i = index;
+	    char *p = result;
+	    do
+	      p += strlen (p) + 1;
+	    while (i-- > 0);
+	    resultlen = p - result;
+	  }
+
+	  inbuf = result;
+	  outbuf = freemem + 4;
+
+	  __libc_lock_lock (lock);
+
+# ifdef _LIBC
+	  {
+	    size_t written;
+	    int res;
+
+	    while ((res = __gconv (domain->conv,
+				   &inbuf, inbuf + resultlen,
+				   &outbuf, outbuf + freemem_size,
+				   &written)) == __GCONV_OK)
+	      {
+		if (res != __GCONV_FULL_OUTPUT)
+		  goto out;
+
+		/* We must resize the buffer.  */
+		freemem_size = MAX (2 * freemem_size, 4064);
+		freemem = (char *) malloc (freemem_size);
+		if (freemem == NULL)
+		  goto out;
+
+		inbuf = result;
+		outbuf = freemem + 4;
+	      }
+	  }
+# else
+#  if HAVE_ICONV
+	  for (;;)
+	    {
+	      const char *inptr = (const char *) inbuf;
+	      size_t inleft = resultlen;
+	      char *outptr = (char *) outbuf;
+	      size_t outleft = freemem_size;
+
+	      if (iconv (domain->conv, &inptr, &inleft, &outptr, &outleft)
+		  != (size_t)(-1))
+		{
+		  outbuf = (unsigned char *) outptr;
+		  break;
+		}
+	      if (errno != E2BIG)
+		goto out;
+
+	      /* We must resize the buffer.  */
+	      freemem_size = 2 * freemem_size;
+	      if (freemem_size < 4064)
+		freemem_size = 4064;
+	      freemem = (char *) malloc (freemem_size);
+	      if (freemem == NULL)
+		goto out;
+
+	      outbuf = freemem + 4;
+	    }
+#  endif
+# endif
+
+	  /* We have now in our buffer a converted string.  Put this
+	     into the table of conversions.  */
+	  *(nls_uint32 *) freemem = index;
+	  domain->conv_tab[act] = freemem;
+	  /* Shrink freemem, but keep it aligned.  */
+	  freemem_size -= outbuf - freemem;
+	  freemem = outbuf;
+	  freemem += freemem_size & 3;
+	  freemem_size = freemem_size & ~3;
+
+	out:
+	  __libc_lock_unlock (lock);
+	}
+
+      /* Now domain->conv_tab[act] contains the translation of at least
+	 the variants 0 .. INDEX.  */
+      result = domain->conv_tab[act] + 4;
+    }
+
+ converted:
+  /* The result string is converted.  */
+
+#endif /* _LIBC || HAVE_ICONV */
+
+  /* Now skip some strings.  How much depends on the index passed in.  */
+  while (index-- > 0)
+    {
+#ifdef _LIBC
+      result = __rawmemchr (result, '\0');
+#else
+      result = strchr (result, '\0');
+#endif
+      /* And skip over the NUL byte.  */
+      ++result;
+    }
+
+  return result;
 }
 
 

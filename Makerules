@@ -58,13 +58,13 @@ include $(..)Makeconfig
 endif
 
 # `configure' writes a definition of `config-sysdirs' in `config.make'.
-sysdirs = $(strip $(full-config-sysdirs))
+sysdirs = $(strip $(full_config_sysdirs))
 
 +sysdir_pfx = $(common-objpfx)
 
 export sysdirs := $(sysdirs)
 
-+sysdep_dirs := $(full-config-sysdirs)
++sysdep_dirs := $(full_config_sysdirs)
 ifdef objdir
 +sysdep_dirs := $(objdir) $(+sysdep_dirs)
 endif
@@ -283,7 +283,7 @@ ifeq ($(versioning),yes)
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
 common-generated += $(version-maps)
-postclean-generated += sysd-versions Versions.all
+postclean-generated += sysd-versions Versions.all abi-versions.h
 
 ifndef avoid-generated
 ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))

@@ -46,9 +46,9 @@
 # include <bits/libc-lock.h>
 #else
 /* Provide dummy implementation if this is outside glibc.  */
-# define __libc_lock_define_initialized (CLASS, NAME)
-# define __libc_lock_lock(NAME)
-# define __libc_lock_unlock(NAME)
+# define __libc_rwlock_define(CLASS, NAME)
+# define __libc_rwlock_wrlock(NAME)
+# define __libc_rwlock_unlock(NAME)
 #endif
 
 /* @@ end of prolog @@ */

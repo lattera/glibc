@@ -1,5 +1,5 @@
 /* Cache handling for group lookup.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -158,7 +158,8 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
 
       /* This is the member string length array.  */
       cp = mempcpy (cp, gr_mem_len, gr_mem_cnt * sizeof (size_t));
-      gr_name = cp = mempcpy (cp, grp->gr_name, gr_name_len);
+      gr_name = cp;
+      cp = mempcpy (cp, grp->gr_name, gr_name_len);
       cp = mempcpy (cp, grp->gr_passwd, gr_passwd_len);
 
       for (cnt = 0; cnt < gr_mem_cnt; ++cnt)

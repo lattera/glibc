@@ -19,8 +19,6 @@ analysis
 docs
 releases
 
-linuxthreads
-
 libc.prj .libc.prcs_aux
 libc.proj .snprj
 

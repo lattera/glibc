@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -188,14 +188,19 @@ internal_gid_from_group (void *context, const char *groupname, gid_t *group)
 	{
 	  char *endp;
 	  char *q = ++p;
+	  long int val;
 
 	  q = p;
 	  while (*q != '\0' && *q != ':')
 	    ++q;
 
-	  *group = strtol (p, &endp, 10);
-	  if (endp == q && endp != p)
-	    status = NSS_STATUS_SUCCESS;
+	  val = strtol (p, &endp, 10);
+	  if (sizeof (gid_t) == sizeof (long int) || (gid_t) val == val)
+	    {
+	      *group = val;
+	      if (endp == q && endp != p)
+		status = NSS_STATUS_SUCCESS;
+	    }
         }
       hesiod_free_list (context, grp_res);
     }
@@ -219,7 +224,7 @@ _nss_hesiod_initgroups (const char *user, gid_t group, long int *start,
 
   if (list == NULL)
     {
-      hesiod_end(context);
+      hesiod_end (context);
       return errno == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
     }
 
@@ -231,6 +236,7 @@ _nss_hesiod_initgroups (const char *user, gid_t group, long int *start,
     {
       char *endp;
       char *q;
+      long int val;
 
       status = NSS_STATUS_NOTFOUND;
 
@@ -241,21 +247,24 @@ _nss_hesiod_initgroups (const char *user, gid_t group, long int *start,
       if (*q != '\0')
 	*q++ = '\0';
 
-      group = strtol (p, &endp, 10);
-      if (*endp == '\0' && endp != p)
-	status = NSS_STATUS_SUCCESS;
-      else
-	status = internal_gid_from_group (context, p, &group);
+      val = strtol (p, &endp, 10);
+      if (sizeof (gid_t) == sizeof (long int) || (gid_t) val == val)
+	{
+	  if (*endp == '\0' && endp != p)
+	    status = NSS_STATUS_SUCCESS;
+	  else
+	    status = internal_gid_from_group (context, p, &group);
 
-      if (status == NSS_STATUS_SUCCESS
-	  && !internal_gid_in_list (groups, group, *start))
-	groups[(*start)++] = group;
+	  if (status == NSS_STATUS_SUCCESS
+	      && !internal_gid_in_list (groups, group, *start))
+	    groups[(*start)++] = group;
+	}
 
       p = q;
     }
 
   hesiod_free_list (context, list);
-  hesiod_end(context);
+  hesiod_end (context);
 
   return NSS_STATUS_SUCCESS;
 }

@@ -1,3 +1,68 @@
+2000-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_initgroups): Handle
+	overflows in conversion from ASCII.
+
+2000-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makeconfig (full_config_sysdirs): Renamed from full-config-sysdirs.
+	* Makerules (full_config_sysdirs): Likewise.
+	* MakeTAGS (full_config_sysdirs): Likewise.
+
+2000-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* .cvsignore: Remove linuxthreads.
+	* po/.cvsignore: Remove *.pot.
+	* posix/glob/.cvsignore: Removed.
+	* sysdeps/unix/bsd/osf/.cvsignore: Removed.
+
+2000-04-25  Andreas Jaeger  <aj@suse.de>
+
+	* conform/Makefile (distribute): Also distribute contents of
+	subdirectories.
+
+	* Makerules (no_deps): Remove abi-versions.h.
+
+	* nis/nis_print_group_entry.c: Include alloca.h for alloca prototype.
+
+2000-04-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/elf/Dist: Remove.
+	* sysdeps/sparc/sparc64/elf/crtbegin.S: Remove.
+	* sysdeps/sparc/sparc64/elf/crtbeginS.S: Remove.
+	* sysdeps/sparc/sparc64/elf/crtend.S: Remove.
+	* sysdeps/sparc/sparc64/elf/crtendS.S: Remove.
+	* sysdeps/sparc/sparc64/elf/Makefile: Don't build crtbegin/crtend
+	objects.
+
+2000-04-25  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/grpcache.c: Fix gr_name pointer [PR/1702].
+
+2000-04-23  Bruno Haible  <clisp.cons.org>
+
+	* intl/dcigettext.c: Define _GNU_SOURCE as early as possible.
+	* intl/l10nflist.c: Likewise.
+
+2000-04-23  Bruno Haible  <clisp.cons.org>
+
+	* intl/bindtextdom.c [!_LIBC]: Define __libc_rwlock_define,
+	__libc_rwlock_wrlock, __libc_rwlock_unlock as empty.
+	* intl/textdomain.c [!_LIBC]: Likewise.
+	* intl/dcigettext.c [!_LIBC]: Define __libc_rwlock_define_initialized,
+	__libc_rwlock_rdlock, __libc_rwlock_unlock as empty.
+	* intl/loadmsgcat.c (_nl_load_domain) [!_LIBC, !HAVE_ICONV]: Avoid
+	syntax error.
+
+2000-04-23  Bruno Haible  <clisp.cons.org>
+
+	* intl/dcigettext.c (_nl_find_msg): Do the plural treatment and
+	character set conversion also in the case the translation was found
+	after a hash collision or through binary search. Store the maximum
+	index together with the converted message. Use iconv() when available.
+	In case of out of memory during conversion, return the unconverted
+	translated string, not NULL.
+
 2000-04-25  Jes Sorensen  <Jes.Sorensen@cern.ch>
 
 	* shlib-versions: Rename ia64 dynamic linker to ld-linux-ia64.so.1
