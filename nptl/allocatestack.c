@@ -313,7 +313,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
       /* Remember the stack-related values.  */
       pd->stackblock = (char *) attr->stackaddr - size;
-      pd->stackblock_size = size - adj;
+      pd->stackblock_size = size;
 
       /* This is a user-provided stack.  It will not be queued in the
 	 stack cache nor will the memory (except the TLS memory) be freed.  */
