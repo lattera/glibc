@@ -24,7 +24,7 @@ routines = bindtextdom dcgettext dgettext gettext	\
 	   dcigettext dcngettext dngettext ngettext \
 	   finddomain loadmsgcat localealias textdomain	\
 	   l10nflist explodename plural plural-exp
-distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias \
+distribute = gmo.h gettextP.h hash-string.h loadinfo.h locale.alias \
 	     plural.y plural-exp.h po2test.sed tst-gettext.sh tst-translit.sh \
 	     translit.po tst-gettext2.sh tstlang1.po tstlang2.po tstcodeset.po\
 	     tst-codeset.sh plural-eval.c
