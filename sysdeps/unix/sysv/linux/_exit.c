@@ -36,3 +36,5 @@ _exit (status)
       ABORT_INSTRUCTION;
     }
 }
+libc_hidden_def (_exit)
+weak_alias (_exit, _Exit)

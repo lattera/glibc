@@ -38,6 +38,5 @@ _exit:
 	hlt
 	.size	_exit,.-_exit
 
-	.globl	_Exit
-	.weak	_Exit
-_Exit	= _exit
+libc_hidden_def (_exit)
+weak_alias (_exit, _Exit)
