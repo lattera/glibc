@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1997, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995,1997,1999,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,19 +23,19 @@
 
 extern int sys_nerr;
 #ifndef HAVE_STRERROR
-extern char *sys_errlist[];
+extern const char *const sys_errlist[];
 #endif
 
 int
-main ()
+main (void)
 {
   register int i;
   struct tm timenow;
   time_t now;
   int year;
 
-  now = time(NULL);
-  timenow = *localtime(&now);
+  now = time (NULL);
+  timenow = *localtime (&now);
 
   year = timenow.tm_year + 1900;
 

@@ -1,5 +1,8 @@
 2001-07-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/make_errlist.c: Adjust sys_errlist declaration to
+	what we define in <stdio.h>.
+
 	* iconv/iconv_prog.c (main): Don't unconditionally define
 	variables only use if _POSIX_MAPPED_FILES is defined.
 
