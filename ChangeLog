@@ -2,6 +2,25 @@
 
 	* misc/tst-tsearch.c (main): Correct type for initstate argument.
 
+	* sysdeps/generic/dl-procinfo.h (_DL_HWCAP_COUNT): New.
+	(_dl_string_hwcap): New, does nothing.
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (_DL_HWCAP_COUNT):
+	New.
+	(_dl_procinfo): Use _DL_HWCAP_COUNT instead of a constant.
+	(_dl_string_hwcap): New function, converts from string to hwcap
+	encoding.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h (_DL_HWCAP_COUNT):
+	New.
+	(_dl_procinfo): Use _DL_HWCAP_COUNT instead of a constant.
+	(_dl_string_hwcap): New function, converts from string to hwcap
+	encoding.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h (_DL_HWCAP_COUNT):
+	New.
+	(_dl_procinfo): Use _DL_HWCAP_COUNT instead of a constant.
+	(_dl_string_hwcap): New function, converts from string to hwcap
+	encoding.
+	
 2000-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (distribute): Add dl-lookupcfg.h.

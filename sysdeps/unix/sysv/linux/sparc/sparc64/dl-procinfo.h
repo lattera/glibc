@@ -1,5 +1,5 @@
 /* Linux/sparc64 version of processor capability information handling macros.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
@@ -27,6 +27,7 @@ static const char sparc64_cap_flags[][7] =
   {
     "flush", "stbar", "swap", "muldiv", "v9"
   };
+#define _DL_HWCAP_COUNT 5
 
 static inline int
 __attribute__ ((unused))
@@ -36,7 +37,7 @@ _dl_procinfo (int word)
 
   _dl_sysdep_message ("AT_HWCAP:   ", NULL);
 
-  for (i = 0; i < 5; ++i)
+  for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
       _dl_sysdep_message (" ", sparc64_cap_flags[i], NULL);
 
@@ -50,6 +51,20 @@ __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
   return sparc64_cap_flags[idx];
+};
+
+
+static inline int
+__attribute__ ((unused))
+_dl_string_hwcap (const char *str)
+{
+  int i;
+  for (i = 0; i < _DL_HWCAP_COUNT; i++)
+    {
+      if (strcmp (str, sparc64_cap_flags [i]) == 0)
+	return i;
+    }
+  return -1;
 };
 
 #define HWCAP_IMPORTANT (0)

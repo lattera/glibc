@@ -1,5 +1,5 @@
 /* Linux/i386 version of processor capability information handling macros.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -30,6 +30,7 @@ static const char x86_cap_flags[][7] =
     "pat", "pse36", "18", "19", "20", "21", "22", "mmx",
     "osfxsr", "25", "26", "27", "28", "29", "30", "amd3d"
   };
+#define _DL_HWCAP_COUNT 32
 
 static inline int
 __attribute__ ((unused))
@@ -41,7 +42,7 @@ _dl_procinfo (int word)
 
   _dl_sysdep_message ("AT_HWCAP:   ", NULL);
 
-  for (i = 0; i < 32; ++i)
+  for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
       _dl_sysdep_message (" ", x86_cap_flags[i], NULL);
 
@@ -81,6 +82,20 @@ enum
 
   /* XXX Which others to add here?  */
   HWCAP_IMPORTANT = (HWCAP_I386_MMX)
+};
+
+static inline int
+__attribute__ ((unused))
+_dl_string_hwcap (const char *str)
+{
+  int i;
+  
+  for (i = 0; i < _DL_HWCAP_COUNT; i++)
+    {
+      if (strcmp (str, x86_cap_flags[i]) == 0)
+	return i;
+    }
+  return -1;
 };
 
 #endif /* dl-procinfo.h */
