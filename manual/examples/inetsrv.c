@@ -37,7 +37,7 @@ read_from_client (int filedes)
 int
 main (void)
 {
-  extern int make_socket (unsigned short int port);
+  extern int make_socket (uint16_t port);
   int sock;
   fd_set active_fd_set, read_fd_set;
   int i;

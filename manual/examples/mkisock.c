@@ -4,7 +4,7 @@
 #include <netinet/in.h>
 
 int 
-make_socket (unsigned short int port)
+make_socket (uint16_t port)
 {
   int sock;
   struct sockaddr_in name;

@@ -1,3 +1,25 @@
+1998-03-30 17:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Remove duplicate rules to handle stamp.oS.
+
+1998-03-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/examples/inetsrv.c (main): Change prototype of
+	make_socket following change in mkisock.c.
+
+	* manual/examples/inetcli.c (SERVERHOST): Use mescaline.gnu.org as
+	example host.
+	(main): Change prototype of init_sockaddr following change in
+	isockadd.c.
+
+	* manual/examples/mkisock.c (make_socket): Use uint16_t for port.
+	* manual/examples/isockad.c (init_sockaddr): Likewise.
+
+	* manual/examples/mkfsock.c (make_named_socket): Removed blank
+	lines for clarification.
+	(make_named_socket): Use strncpy instead of strcpy.
+	Reported by Francesco Potorti` <F.Potorti@cnuce.cnr.it>.
+
 1998-03-30 13:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (parent-mostlyclean): Use object-suffixes-for-libc for

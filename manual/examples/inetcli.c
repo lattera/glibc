@@ -9,7 +9,7 @@
 
 #define PORT		5555
 #define MESSAGE		"Yow!!! Are we having fun yet?!?"
-#define SERVERHOST 	"churchy.gnu.ai.mit.edu"
+#define SERVERHOST 	"mescaline.gnu.org"
 
 void 
 write_to_server (int filedes)
@@ -30,7 +30,7 @@ main (void)
 {
   extern void init_sockaddr (struct sockaddr_in *name,
 			     const char *hostname,
-			     unsigned short int port);
+			     uint16_t port);
   int sock;
   struct sockaddr_in servername;
 

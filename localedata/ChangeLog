@@ -1,7 +1,3 @@
-1998-03-30 17:20  Ulrich Drepper  <drepper@cygnus.com>
-
-	* Makerules: Remove duplicate rules to handle stamp.oS.
-
 1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Fix test rules from last patch.

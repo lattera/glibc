@@ -7,7 +7,7 @@
 void 
 init_sockaddr (struct sockaddr_in *name,
 	       const char *hostname,
-	       unsigned short int port)
+	       uint16_t port)
 {
   struct hostent *hostinfo;
 
