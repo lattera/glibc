@@ -18,14 +18,8 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
-#include "gmp.h"
-#include "gmp-mparam.h"
-#include <float.h>
+#include <limits.h>
 
-
-/* Function to construct a floating point number from an MP integer
-   containing the fraction bits, a base 2 exponent, and a sign flag.  */
-extern double __mpn_construct_double (mp_srcptr mpn, int exponent, int neg);
 
 int
 erand48_r (xsubi, buffer, result)
@@ -33,30 +27,20 @@ erand48_r (xsubi, buffer, result)
      struct drand48_data *buffer;
      double *result;
 {
-  mp_limb mpn[(3 * sizeof (unsigned short int) + sizeof (mp_limb) - 1)
-	      / sizeof (mp_limb)];
-
   /* Compute next state.  */
   if (__drand48_iterate (xsubi, buffer) < 0)
     return -1;
 
-  /* Build a 48-bit mpn containing the 48 random bits.  */
+  /* Construct a positive double with the 48 random bits distributed over
+     its fractional part so the resulting FP number is [0.0,1.0).  */
 
-#if BITS_PER_MP_LIMB == 64
-  mpn[0] = (xsubi[0] << 32) | (xsubi[1] << 16) | xsubi[2];
-#elif BITS_PER_MP_LIMB == 32
-  mpn[0] = (xsubi[1] << 16) | xsubi[2];
-  mpn[1] = xsubi[0];
+#if USHRT_MAX == 65535
+  *result = ((double) xsubi[2] / (1ULL << 48) +
+	     (double) xsubi[1] / (1ULL << 32) +
+	     (double) xsubi[0] / (1ULL << 16));
 #else
- #error "BITS_PER_MP_LIMB value not handled"
+# error Unsupported size of short int
 #endif
-
-  /* Shift them up so they are most significant bits of the fraction.  */
-  __mpn_lshift (mpn, mpn, sizeof mpn / sizeof mpn[0], DBL_MANT_DIG - 48);
-
-  /* Construct a positive double using those bits for the fractional part,
-     and a zero exponent so the resulting FP number is [0.0,1.0).  */
-  *result = __mpn_construct_double (mpn, 0, 0);
 
   return 0;
 }

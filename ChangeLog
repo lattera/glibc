@@ -1,3 +1,8 @@
+Sat Mar 16 20:58:43 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* stdlib/erand48_r.c: Use FP division by powers of two to distribute
+	short bits into double.
+
 Sat Mar 16 20:08:22 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/alpha/memchr.S: new file.
