@@ -1,3 +1,14 @@
+2004-06-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #219]
+	* nss/nsswitch.c (free_mem): Don't try to close a library handle
+	if the handle is invalid.  Patch by David Kimdon <kimdon@esrf.fr>.
+
+2004-06-11  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #217]
+	* debug/xtrace.sh: Fix typo in error diagnostics.
+
 2004-06-14  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/psignal.c (psignal): Don't use BUF when asprintf

@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-1999,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -749,7 +750,8 @@ libc_freeres_fn (free_mem)
     {
       service_library *oldl = library;
 
-      __libc_dlclose (library->lib_handle);
+      if (library->lib_handle && library->lib_handle != (void *) -1l)
+	__libc_dlclose (library->lib_handle);
 
       library = library->next;
       free (oldl);

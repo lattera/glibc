@@ -143,7 +143,7 @@ fi
 program=$1
 shift
 if test ! -f "$program"; then
-  printf >2& $"executable \`$program' not found\n"
+  printf >&2 $"executable \`$program' not found\n"
   help_info
 fi
 if test ! -x "$program"; then
