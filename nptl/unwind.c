@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>
    and Richard Henderson <rth@redhat.com>, 2003.
@@ -47,7 +47,7 @@ unwind_stop (int version, _Unwind_Action actions,
   struct pthread *self = THREAD_SELF;
   struct _pthread_cleanup_buffer *curp = THREAD_GETMEM (self, cleanup);
   int do_longjump = 0;
-  
+
   /* Adjust all pointers used in comparisons, so that top of thread's
      stack is at the top of address space.  Without that, things break
      if stack is allocated above the main stack.  */
@@ -93,7 +93,7 @@ unwind_stop (int version, _Unwind_Action actions,
     }
 
   if (do_longjump)
-    __libc_longjmp ((struct __jmp_buf_tag *) buf->cancel_jmp_buf, 1);
+    __libc_unwind_longjmp ((struct __jmp_buf_tag *) buf->cancel_jmp_buf, 1);
 
   return _URC_NO_REASON;
 }
@@ -155,7 +155,7 @@ __pthread_unwind (__pthread_unwind_buf_t *buf)
     }
 
   /* We simply jump to the registered setjmp buffer.  */
-  __libc_longjmp ((struct __jmp_buf_tag *) ibuf->cancel_jmp_buf, 1);
+  __libc_unwind_longjmp ((struct __jmp_buf_tag *) ibuf->cancel_jmp_buf, 1);
 #endif
   /* NOTREACHED */
 

@@ -1,5 +1,15 @@
 2004-09-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/alpha/jmpbuf-unwind.h: Define __libc_unwind_longjmp.
+	* sysdeps/i386/jmpbuf-unwind.h: Likewise
+	* sysdeps/powerpc/jmpbuf-unwind.h: Likewise.
+	* sysdeps/s390/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sh/jmpbuf-unwind.h: Likewise.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h: Likewise.
+	* sysdeps/x86_64/jmpbuf-unwind.h: Likewise.
+	* unwind.c: Use it.
+
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):
 	Rename __data.__clock to __data.__nwaiters, make it unsigned int.
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h (pthread_cond_t):

@@ -46,7 +46,7 @@ tf (void *p)
       struct timeval tv;
       gettimeofday (&tv, NULL);
       struct timespec ts;
-      /* Wait three second.  */
+      /* Wait three seconds.  */
       ts.tv_sec = tv.tv_sec + 3;
       ts.tv_nsec = tv.tv_usec * 1000;
       pthread_cond_timedwait (&cond, &mut, &ts);
