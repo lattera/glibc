@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,29 +17,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include "_itoa.h"
-
 /* Lower-case digits.  */
-CONST char _itoa_lower_digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+const char _itoa_lower_digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
 /* Upper-case digits.  */
-CONST char _itoa_upper_digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const char _itoa_upper_digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-char *
-DEFUN(_itoa, (value, buflim, base, upper_case),
-      unsigned long long int value AND char *buflim AND
-      unsigned int base AND int upper_case)
-{
-  /* Base-36 digits for numbers.  */
-  CONST char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
+/* Cause _itoa.h to define _itoa as a real function instead of an
+   `extern inline'.  */
+#define _EXTERN_INLINE /* empty */
 
-  register char *bp = buflim;
-
-  while (value > 0)
-    {
-      *--bp = digits[value % base];
-      value /= base;
-    }
-
-  return bp;
-}
+#include "_itoa.h"

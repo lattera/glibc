@@ -1,5 +1,13 @@
 Sat Apr  8 00:40:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* malloc/free.c (__malloc_safe_bcopy, memmove): Don't define
+ 	#ifdef emacs.
+	* malloc/realloc.c: Likewise.
+
+	* stdio/_itoa.c (_EXTERN_INLINE): Define to empty before #include
+ 	"_itoa.h".
+	(_itoa): Function removed.
+
 	* malloc/free.c: Remove use of `assert'.
 
 	* malloc/realloc.c [! emacs] (safe_bcopy): Renamed to
