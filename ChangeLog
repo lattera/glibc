@@ -1,3 +1,15 @@
+1999-01-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile ($(objpfx)syscall-%.d): Fix
+	generation of dependency list to make it work with newer versions
+	of gcc.
+
+1999-01-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makerules (build-module): New macro, moved from...
+	* elf/Makefile (build-module): ... here.
+	* iconvdata/Makefile (build-module): ... and here.
+
 1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/alpha/Versions: Add __atan2 for libm and GLIBC_2.0.

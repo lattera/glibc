@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -114,18 +114,6 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
-
-# This macro is similar to build-shlib but it does not define a soname
-# and it does not depend on the destination name to start with `lib'.
-define build-module
-$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  -B$(csu-objpfx) $(load-map-file) \
-	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
-	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -Wl,--whole-archive \
-	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
-endef
 
 # Rule to generate the shared objects.
 charmaps = ../localedata/charmaps

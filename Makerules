@@ -369,6 +369,18 @@ $(LINK.o) -shared -Wl,-O1 -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
+# This macro is similar to build-shlib but it does not define a soname
+# and it does not depend on the destination name to start with `lib'.
+define build-module
+$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
+	  -B$(csu-objpfx) $(load-map-file) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
+	  -Wl,--whole-archive \
+	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
+	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
+endef
+
 ifndef libc.so-version
 # Undefine this because it can't work when we libc.so is unversioned.
 static-only-routines =

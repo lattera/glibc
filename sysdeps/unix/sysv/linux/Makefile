@@ -23,7 +23,7 @@ install-others += $(inst_includedir)/bits/syscall.h
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
-	rm -f $(@:.h=.d)
+	rm -f $(@:.h=.d)-t
 	{ \
 	 echo '/* Generated at libc build time from kernel syscall list.  */';\
 	 echo ''; \
@@ -31,12 +31,16 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 echo '# error "Never use <bits/syscall.h> directly; include <sys/syscall.h> instead."'; \
 	 echo '#endif'; \
 	 echo ''; \
-	 SUNPRO_DEPENDENCIES='$(@:.h=.d) $(patsubst $(objpfx)%,$$(objpfx)%,\
-						    $(@:.d=.h) $(@:.h=.d))' \
+	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
 	 $(CC) -E -x c $(sysincludes) $< -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p'; \
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
+	sed < $(@:.h=.d)-t > $(@:.h=.d)-t2 \
+	    -e 's,$(subst .,\.,$@),$(patsubst $(objpfx)%,$$(objpfx)%,\
+					      $(@:.d=.h) $(@:.h=.d)),'
+	rm -f $(@:.h=.d)-t
+	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
 
 $(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h $(+force)
 	$(make-target-directory)

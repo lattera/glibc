@@ -202,18 +202,6 @@ else
 $(objpfx)sprof: $(objpfx)libdl.a
 endif
 
-# This macro is similar to build-shlib but it does not define a soname
-# and it does not depend on the destination name to start with `lib'.
-define build-module
-$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  -B$(csu-objpfx) $(load-map-file) \
-	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
-	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -Wl,--whole-archive -Wl,-soname,$(@F) \
-	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
-endef
-
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
