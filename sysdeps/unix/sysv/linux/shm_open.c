@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,8 +80,8 @@ where_is_shmfs (void)
   while ((mp = __getmntent_r (fp, &resmem, buf, sizeof buf)) != NULL)
     /* The original name is "shm" but this got changed in early Linux
        2.4.x to "tmpfs".  */
-    if ((strcmp (mp->mnt_type, "tmpfs") == 0)
-	|| (strcmp (mp->mnt_type, "shm")))
+    if (strcmp (mp->mnt_type, "tmpfs") == 0
+	|| strcmp (mp->mnt_type, "shm") == 0)
       {
 	/* Found it.  There might be more than one place where the
            filesystem is mounted but one is enough for us.  */
