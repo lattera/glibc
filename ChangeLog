@@ -1,3 +1,8 @@
+2002-05-29  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-error.c (_dl_signal_cerror): Report error if ld.so debug
+	is turned on.
+
 2002-05-28  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-deps.c (_dl_map_object_deps): Don't add objects which

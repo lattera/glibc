@@ -119,6 +119,10 @@ internal_function
 _dl_signal_cerror (int errcode, const char *objname, const char *occation,
 		   const char *errstring)
 {
+  if (__builtin_expect (GL(dl_debug_mask), 0))
+    INTUSE(_dl_debug_printf) ("%s: error: %s: %s (%s)\n", objname, occation,
+			      errstring, receiver ? "continued" : "fatal");
+
   if (receiver)
     {
       /* We are inside _dl_receive_error.  Call the user supplied
