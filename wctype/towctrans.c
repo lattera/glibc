@@ -1,5 +1,5 @@
 /* Map wide character using given mapping.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,11 @@ wint_t
 __towctrans (wint_t wc, wctrans_t desc)
 {
   size_t idx;
+
+  /* If the user passes in an invalid DESC valid (the one returned from
+     `wctrans' in case of an error) simply return the value.  */
+  if (desc == (wctrans_t) 0)
+    return wc;
 
   idx = cname_lookup (wc);
   if (idx == ~((size_t) 0))
