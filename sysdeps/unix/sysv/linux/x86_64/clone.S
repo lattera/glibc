@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,16 +31,22 @@
    the kernel entry is:
    int clone (long flags, void *child_stack).
 
-   The parameters are passed in register from userland:
+   The parameters are passed in register and on the stack from userland:
    rdi: fn
    rsi: child_stack
    rdx:	flags
    rcx: arg
+   r8d:	TID field in parent
+   r9d: thread pointer
+%esp+8:	TID field in child
 
    The kernel expects:
    rax: system call number
    rdi: flags
-   rsi: child_stack  */
+   rsi: child_stack
+   rdx: TID field in parent
+   r10: TID field in child
+   r8:	thread pointer  */
 
 
         .text
@@ -57,11 +63,14 @@ ENTRY (BP_SYM (__clone))
 	movq	%rcx,8(%rsi)
 
 	/* Save the function pointer.  It will be popped off in the
-	child in the ebx frobbing below.  */
+	   child in the ebx frobbing below.  */
 	movq	%rdi,0(%rsi)
 
 	/* Do the system call.  */
 	movq	%rdx, %rdi
+	movq	%r8, %rdx
+	movq	%r9, %r8
+	movq	8(%rsp), %r10
 	movq	$SYS_ify(clone),%rax
 	syscall
 
