@@ -22,7 +22,7 @@ extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr eval
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
-		   modcxaatexit.c
+		   modcxaatexit.c modstatic.c
 
 extra-libs-others := libdl
 
@@ -42,6 +42,14 @@ endif
 endif
 modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
 		errmsg1mod modatexit modcxaatexit
+
+ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
+tests += tststatic
+tests-static += tststatic
+modules-names += modstatic
+tststatic-ENV = LD_LIBRARY_PATH=$(objpfx)
+endif
+
 extra-objs += $(modules-names:=.os) eval.os
 generated := $(modules-names:=.so)
 
@@ -79,6 +87,11 @@ $(objpfx)tstcxaatexit: $(libdl)
 $(objpfx)tstcxaatexit.out: $(objpfx)tstcxaatexit $(objpfx)modcxaatexit.so
 
 $(objpfx)modatexit.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+
+$(objpfx)tststatic: $(objpfx)libdl.a
+$(objpfx)tststatic.out: $(objpfx)tststatic $(objpfx)modstatic.so
+
+$(objpfx)modstatic.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

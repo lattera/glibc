@@ -3,10 +3,10 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2000-12-11.07}
+\def\texinfoversion{2001-05-24.09}
 %
-% Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
-% Free Software Foundation, Inc.
+% Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
+%               2000, 01 Free Software Foundation, Inc.
 %
 % This texinfo.tex file is free software; you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as
@@ -169,6 +169,16 @@
    \showboxbreadth\maxdimen\showboxdepth\maxdimen
 }%
 \fi
+
+% add check for \lastpenalty to plain's definitions.  If the last thing
+% we did was a \nobreak, we don't want to insert more space.
+% 
+\def\smallbreak{\ifnum\lastpenalty<10000\par\ifdim\lastskip<\smallskipamount
+  \removelastskip\penalty-50\smallskip\fi\fi}
+\def\medbreak{\ifnum\lastpenalty<10000\par\ifdim\lastskip<\medskipamount
+  \removelastskip\penalty-100\medskip\fi\fi}
+\def\bigbreak{\ifnum\lastpenalty<10000\par\ifdim\lastskip<\bigskipamount
+  \removelastskip\penalty-200\bigskip\fi\fi}
 
 % For @cropmarks command.
 % Do @cropmarks to get crop marks.
@@ -730,9 +740,9 @@ where each line of input produces a line of output.}
   \fi
   %
   \ifodd\pageno
-    \def\temp{\inleftmargin\lefttext}%
+    \def\temp{\inrightmargin\righttext}% odd page -> outside is right margin
   \else
-    \def\temp{\inrightmargin\righttext}%
+    \def\temp{\inleftmargin\lefttext}%
   \fi
   \temp
 }
@@ -924,11 +934,15 @@ where each line of input produces a line of output.}
     \fi
       \ifx\empty\imagewidth\else width \imagewidth \fi
       \ifx\empty\imageheight\else height \imageheight \fi
-      {#1.pdf}%
+      \ifnum\pdftexversion<13
+	 #1.pdf%
+       \else
+         {#1.pdf}%
+       \fi
     \ifnum\pdftexversion < 14 \else
       \pdfrefximage \pdflastximage
     \fi}
-  \def\pdfmkdest#1{\pdfdest name{#1@} xyz}
+  \def\pdfmkdest#1{\pdfdest name{#1} xyz}
   \def\pdfmkpgn#1{#1@}
   \let\linkcolor = \Blue  % was Cyan, but that seems light?
   \def\endlink{\Black\pdfendlink}
@@ -1026,6 +1040,7 @@ where each line of input produces a line of output.}
   \def\pdfurl#1{%
     \begingroup
       \normalturnoffactive\def\@{@}%
+      \let\value=\expandablevalue
       \leavevmode\Red
       \startlink attr{/Border [0 0 0]}%
         user{/Subtype /Link /A << /S /URI /URI (#1) >>}%
@@ -1140,6 +1155,18 @@ where each line of input produces a line of output.}
 \setfont\smallttsl\ttslshape{10}{900}
 \font\smalli=cmmi9
 \font\smallsy=cmsy9
+
+% Fonts for small examples (8pt).
+\setfont\smallerrm\rmshape{8}{1000}
+\setfont\smallertt\ttshape{8}{1000}
+\setfont\smallerbf\bfshape{10}{800}
+\setfont\smallerit\itshape{8}{1000}
+\setfont\smallersl\slshape{8}{1000}
+\setfont\smallersf\sfshape{8}{1000}
+\setfont\smallersc\scshape{10}{800}
+\setfont\smallerttsl\ttslshape{10}{800}
+\font\smalleri=cmmi8
+\font\smallersy=cmsy8
 
 % Fonts for title page:
 \setfont\titlerm\rmbshape{12}{\magstep3}
@@ -1258,7 +1285,14 @@ where each line of input produces a line of output.}
   \let\tenbf=\smallbf \let\tentt=\smalltt \let\smallcaps=\smallsc
   \let\tensf=\smallsf \let\teni=\smalli \let\tensy=\smallsy
   \let\tenttsl=\smallttsl
-  \resetmathfonts \setleading{11pt}}
+  \resetmathfonts \setleading{10.5pt}}
+\def\smallerfonts{%
+  \let\tenrm=\smallerrm \let\tenit=\smallerit \let\tensl=\smallersl
+  \let\tenbf=\smallerbf \let\tentt=\smallertt \let\smallcaps=\smallersc
+  \let\tensf=\smallersf \let\teni=\smalleri \let\tensy=\smallersy
+  \let\tenttsl=\smallerttsl
+  \resetmathfonts \setleading{9.5pt}}
+\let\smallexamplefonts = \smallerfonts
 
 % Set up the default fonts, so we can use them for creating boxes.
 %
@@ -2452,10 +2486,14 @@ width0pt\relax} \fi
     \let\tenrm=\nullfont \let\tenit=\nullfont \let\tensl=\nullfont
     \let\tenbf=\nullfont \let\tentt=\nullfont \let\smallcaps=\nullfont
     \let\tensf=\nullfont
-    % Similarly for index fonts (mostly for their use in smallexample).
+    % Similarly for index fonts.
     \let\smallrm=\nullfont \let\smallit=\nullfont \let\smallsl=\nullfont
     \let\smallbf=\nullfont \let\smalltt=\nullfont \let\smallsc=\nullfont
     \let\smallsf=\nullfont
+    % Similarly for smallexample fonts.
+    \let\smallerrm=\nullfont \let\smallerit=\nullfont \let\smallersl=\nullfont
+    \let\smallerbf=\nullfont \let\smallertt=\nullfont \let\smallersc=\nullfont
+    \let\smallersf=\nullfont
     %
     % Don't complain when characters are missing from the fonts.
     \tracinglostchars = 0
@@ -2904,16 +2942,17 @@ width0pt\relax} \fi
         % Now the real index entry with the fonts.
         \toks0 = {#2}%
         %
-        % If third (subentry) arg is present, add it to the index
-        % string.  And include a space.
+        % If the third (subentry) arg is present, add it to the index
+        % line to write.
         \ifx\thirdarg\emptymacro \else
-          \toks0 = \expandafter{\the\toks0 \space #3}%
+          \toks0 = \expandafter{\the\toks0{#3}}%
         \fi
         %
-        % Set up the complete index entry, with both the sort key
-        % and the original text, including any font commands.  We write
-        % three arguments to \entry to the .?? file, texindex reduces to
-        % two when writing the .??s sorted result.
+        % Set up the complete index entry, with both the sort key and
+        % the original text, including any font commands.  We write
+        % three arguments to \entry to the .?? file (four in the
+        % subentry case), texindex reduces to two when writing the .??s
+        % sorted result.
         \edef\temp{%
           \write\csname#1indfile\endcsname{%
             \realbackslash entry{\indexsorttmp}{\folio}{\the\toks0}}%
@@ -3135,11 +3174,18 @@ width0pt\relax} \fi
 \def\primary #1{\line{#1\hfil}}
 
 \newskip\secondaryindent \secondaryindent=0.5cm
-
-\def\secondary #1#2{
-{\parfillskip=0in \parskip=0in
-\hangindent =1in \hangafter=1
-\noindent\hskip\secondaryindent\hbox{#1}\indexdotfill #2\par
+\def\secondary#1#2{{%
+  \parfillskip=0in
+  \parskip=0in
+  \hangindent=1in
+  \hangafter=1
+  \noindent\hskip\secondaryindent\hbox{#1}\indexdotfill
+  \ifpdf
+    \pdfgettoks#2.\ \the\toksA % The page number ends the paragraph.
+  \else
+    #2
+  \fi
+  \par
 }}
 
 % Define two-column mode, which we use to typeset indexes.
@@ -4134,9 +4180,17 @@ width0pt\relax} \fi
 % is reset to zero; thus the \afterenvbreak inserts no space -- but the
 % start of the next paragraph will insert \parskip
 %
-\def\aboveenvbreak{{\advance\envskipamount by \parskip
-\endgraf \ifdim\lastskip<\envskipamount
-\removelastskip \penalty-50 \vskip\envskipamount \fi}}
+\def\aboveenvbreak{{%
+  \ifnum\lastpenalty < 10000
+    \advance\envskipamount by \parskip
+    \endgraf
+    \ifdim\lastskip<\envskipamount
+      \removelastskip
+      \penalty-50
+      \vskip\envskipamount
+    \fi
+  \fi
+}}
 
 \let\afterenvbreak = \aboveenvbreak
 
@@ -4268,7 +4322,7 @@ width0pt\relax} \fi
 \def\smalllispx{\begingroup
   \def\Esmalllisp{\nonfillfinish\endgroup}%
   \def\Esmallexample{\nonfillfinish\endgroup}%
-  \smallfonts
+  \smallexamplefonts
   \lisp
 }
 
@@ -4279,12 +4333,12 @@ width0pt\relax} \fi
   \let\Edisplay = \nonfillfinish
   \gobble
 }
-
+%
 % @smalldisplay (when @smallbook): @display plus smaller fonts.
 %
 \def\smalldisplayx{\begingroup
   \def\Esmalldisplay{\nonfillfinish\endgroup}%
-  \smallfonts \rm
+  \smallexamplefonts \rm
   \display
 }
 
@@ -4296,12 +4350,12 @@ width0pt\relax} \fi
   \let\Eformat = \nonfillfinish
   \gobble
 }
-
+%
 % @smallformat (when @smallbook): @format plus smaller fonts.
 %
 \def\smallformatx{\begingroup
   \def\Esmallformat{\nonfillfinish\endgroup}%
-  \smallfonts \rm
+  \smallexamplefonts \rm
   \format
 }
 
@@ -5836,7 +5890,8 @@ width0pt\relax} \fi
     \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
     \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
     \begingroup
-      \catcode`\^^M = 5 % in case we're inside an example
+      \catcode`\^^M = 5     % in case we're inside an example
+      \normalturnoffactive  % allow _ et al. in names
       % If the image is by itself, center it.
       \ifvmode
         \nobreak\bigskip
@@ -5948,6 +6003,15 @@ should work if nowhere else does.}
   \setemergencystretch
 }
 
+% Use `small' versions.
+% 
+\def\smallenvironments{%
+  \let\smalldisplay = \smalldisplayx
+  \let\smallexample = \smalllispx
+  \let\smallformat = \smallformatx
+  \let\smalllisp = \smalllispx
+}
+
 % @letterpaper (the default).
 \def\letterpaper{{\globaldefs = 1
   \parskip = 3pt plus 2pt minus 1pt
@@ -5970,11 +6034,7 @@ should work if nowhere else does.}
   \contentsrightmargin = 0pt
   \deftypemargin = 0pt
   \defbodyindent = .5cm
-  %
-  \let\smalldisplay = \smalldisplayx
-  \let\smallexample = \smalllispx
-  \let\smallformat = \smallformatx
-  \let\smalllisp = \smalllispx
+  \smallenvironments
 }}
 
 % Use @afourpaper to print on European A4 paper.
@@ -5986,6 +6046,26 @@ should work if nowhere else does.}
   %
   \tolerance = 700
   \hfuzz = 1pt
+}}
+
+% Use @afivepaper to print on European A5 paper.
+% From romildo@urano.iceb.ufop.br, 2 July 2000.
+% He also recommends making @example and @lisp be small.
+\def\afivepaper{{\globaldefs = 1
+  \setleading{12.5pt}%
+  \parskip = 2pt plus 1pt minus 0.1pt
+  %
+  \internalpagesizes{166mm}{120mm}{\voffset}{-8mm}{\bindingoffset}{8pt}%
+  %
+  \lispnarrowing = 0.2in
+  \tolerance = 800
+  \hfuzz = 1.2pt
+  \contentsrightmargin = 0mm
+  \deftypemargin = 0pt
+  \defbodyindent = 2mm
+  \tableindent = 12mm
+  %
+  \smallenvironments
 }}
 
 % A specific text layout, 24x15cm overall, intended for A4 paper.  Top margin
