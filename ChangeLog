@@ -1,3 +1,7 @@
+2003-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/be.po: Update from translation team.
+
 2003-10-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (map_doit): Pass __RTLD_OPENEXEC in last parameter to
