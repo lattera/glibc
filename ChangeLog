@@ -1,3 +1,9 @@
+2005-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* socket/bits/socket2.h (recv): Avoid calls to the _chk variant if
+	we know the call succeeds.
+	(recvfrom): Likewise.
+
 2005-03-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regexec.c (check_node_accept_bytes): Correct cast to avoid
