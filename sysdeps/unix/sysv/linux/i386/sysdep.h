@@ -42,12 +42,14 @@ Cambridge, MA 02139, USA.  */
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
+ lose: SYSCALL_PIC_SETUP						      \
+    jmp JUMPTARGET (syscall_error)					      \
   .globl syscall_error;							      \
   ENTRY (name)								      \
     movl $SYS_ify (syscall_name), %eax;					      \
     DO_CALL (args);							      \
     testl %eax, %eax;							      \
-    jl JUMPTARGET (syscall_error)
+    jl lose
 
 /* We define our own ENTRY macro because the alignment should be 16 for ELF.  */
 #undef ENTRY

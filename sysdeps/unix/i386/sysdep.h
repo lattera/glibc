@@ -42,15 +42,23 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 #define	PSEUDO(name, syscall_name, args)				      \
+lose: SYSCALL_PIC_SETUP							      \
+  jmp JUMPTARGET(syscall_error)						      \
   .globl syscall_error;							      \
   ENTRY (name)								      \
   DO_CALL (syscall_name, args);						      \
-  jb JUMPTARGET(syscall_error)
+  jb lose
 
 #ifdef PIC
-#define JUMPTARGET(name) name##@PLT
+#define JUMPTARGET(name)	name##@PLT
+#define SYSCALL_PIC_SETUP \
+    pushl %ebx;								      \
+    call 0f;								      \
+0:  popl %ebx;								      \
+    addl $_GLOBAL_OFFSET_TABLE+[.-0b], %ebx;
 #else
-#define JUMPTARGET(name) name
+#define JUMPTARGET(name)	name
+#define SYSCALL_PIC_SETUP	/* Nothing.  */
 #endif
 
 /* This is defined as a separate macro so that other sysdep.h files

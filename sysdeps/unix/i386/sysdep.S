@@ -41,11 +41,11 @@ notb:
 #ifndef	PIC
 	movl %eax, C_SYMBOL_NAME(errno)
 #else
-	/* Standard PIC nonsense to store into `errno' through the GOT.  */
-	call here
-here:	popl %ecx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-here], %ecx
-	movl C_SYMBOL_NAME(errno@GOT)(%ecx), %ecx
+	/* The caller has pushed %ebx and then set it up to
+	   point to the GOT before calling us through the PLT.  */
+	movl C_SYMBOL_NAME(errno@GOT)(%ebx), %ecx
+	/* Pop %ebx value saved before jumping here.  */
+	popl %ebx
 	movl %eax, (%ecx)
 #endif
 	movl $-1, %eax

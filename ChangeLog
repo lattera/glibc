@@ -1,5 +1,13 @@
 Wed Oct 18 03:33:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PSEUDO): Use
+	SYSCALL_PIC_SETUP before jumping to syscall_error.
+	* sysdeps/unix/i386/sysdep.h (SYSCALL_PIC_SETUP): New macro.
+	(PSEUDO): Use it before jumping to syscall_error.
+	* sysdeps/unix/i386/sysdep.S [! PIC]: Don't find GOT address;
+	expect it in %ebx on entry.  Pop old %ebx value off stack after
+	using it. 
+
 	* signal/signal.h [__USE_BSD] (_sys_siglist, sys_siglist): Declare
 	them.
 
