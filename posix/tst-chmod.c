@@ -153,7 +153,7 @@ do_test (int argc, char *argv[])
 	}
       close (fd);
     }
-  if (errno != EACCES)
+  else if (errno != EACCES)
     {
       puts ("creat didn't generate correct errno value");
       result = 1;
@@ -177,7 +177,7 @@ do_test (int argc, char *argv[])
 	}
       close (fd);
     }
-  if (errno != EACCES)
+  else if (errno != EACCES)
     {
       puts ("creat didn't generate correct errno value");
       result = 1;

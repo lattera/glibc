@@ -1,5 +1,7 @@
 2000-10-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (VERSION): Bump to 2.1.96.
+
 	* posix/tst-chmod.c (do_test): Account for people running the
 	tests as root.
 
