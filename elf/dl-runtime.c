@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,8 @@
    function.  */
 
 #ifndef ELF_MACHINE_NO_PLT
-static ElfW(Addr) __attribute_used__
+static ElfW(Addr)
+__attribute ((used, noinline))
 fixup (
 # ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
         ELF_MACHINE_RUNTIME_FIXUP_ARGS,
@@ -64,12 +65,6 @@ fixup (
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
   lookup_t result;
   ElfW(Addr) value;
-
-  /* The use of `alloca' here looks ridiculous but it helps.  The goal is
-     to prevent the function from being inlined and thus optimized out.
-     There is no official way to do this so we use this trick.  gcc never
-     inlines functions which use `alloca'.  */
-  alloca (sizeof (int));
 
   /* Sanity check that we're really looking at a PLT relocation.  */
   assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
@@ -132,7 +127,8 @@ fixup (
 
 #if !defined PROF && !defined ELF_MACHINE_NO_PLT && !__BOUNDED_POINTERS__
 
-static ElfW(Addr) __attribute_used__
+static ElfW(Addr)
+__attribute ((used, noinline))
 profile_fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
        ELF_MACHINE_RUNTIME_FIXUP_ARGS,
@@ -143,12 +139,6 @@ profile_fixup (
   ElfW(Addr) *resultp;
   lookup_t result;
   ElfW(Addr) value;
-
-  /* The use of `alloca' here looks ridiculous but it helps.  The goal is
-     to prevent the function from being inlined, and thus optimized out.
-     There is no official way to do this so we use this trick.  gcc never
-     inlines functions which use `alloca'.  */
-  alloca (sizeof (int));
 
   /* This is the address in the array where we store the result of previous
      relocations.  */

@@ -764,26 +764,14 @@ _dl_init_paths (const char *llp)
 }
 
 
-/* Think twice before changing anything in this function.  It is placed
-   here and prepared using the `alloca' magic to prevent it from being
-   inlined.  The function is only called in case of an error.  But then
-   performance does not count.  The function used to be "inlinable" and
-   the compiled did so all the time.  This increased the code size for
-   absolutely no good reason.  */
 static void
-__attribute__ ((noreturn))
+__attribute__ ((noreturn, noinline))
 lose (int code, int fd, const char *name, char *realname, struct link_map *l,
       const char *msg)
 {
-  /* The use of `alloca' here looks ridiculous but it helps.  The goal
-     is to avoid the function from being inlined.  There is no official
-     way to do this so we use this trick.  gcc never inlines functions
-     which use `alloca'.  */
-  int *a = (int *) alloca (sizeof (int));
-  a[0] = fd;
   /* The file might already be closed.  */
-  if (a[0] != -1)
-    (void) __close (a[0]);
+  if (fd != -1)
+    (void) __close (fd);
   if (l != NULL)
     {
       /* Remove the stillborn object from the list and free it.  */
