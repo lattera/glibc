@@ -1,3 +1,12 @@
+1998-05-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/terminal.texi (I/O Queues): Fix typo.
+
+	* manual/stdio.texi (Closing Streams): Fix grammar.
+
+	* manual/arith.texi (Absolute Value): Correct typo.
+	Patches by Oskar Liljeblad <osk@hem.passagen.se>. [PR libc/630]
+
 1998-05-19 15:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (process_envvars): Fix typo.  Don't handle

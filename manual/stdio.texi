@@ -296,10 +296,10 @@ is written and any buffered input is discarded.  The @code{fcloseall}
 function returns a value of @code{0} if all the files were closed
 successfully, and @code{EOF} if an error was detected.
 
-This function should be used in only in special situation, e.g., when an
+This function should be used only in special situation, e.g., when an
 error occurred and the program must be aborted.  Normally each single
 stream should be closed separately so that problems with one stream can
-be identifier.  It is also problematic since the standard streams
+be identified.  It is also problematic since the standard streams
 (@pxref{Standard Streams}) will also be closed.
 
 The function @code{fcloseall} is declared in @file{stdio.h}.

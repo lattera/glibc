@@ -437,7 +437,7 @@ INFINITY + I * copysign (0.0, cimag (z))
 
 These functions are provided for obtaining the @dfn{absolute value} (or
 @dfn{magnitude}) of a number.  The absolute value of a real number
-@var{x} is @var{x} is @var{x} is positive, @minus{}@var{x} if @var{x} is
+@var{x} is @var{x} if @var{x} is positive, @minus{}@var{x} if @var{x} is
 negative.  For a complex number @var{z}, whose real part is @var{x} and
 whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
 (@var{x}*@var{x} + @var{y}*@var{y})}}.

@@ -90,7 +90,7 @@ The @dfn{terminal output queue} is like the input queue, but for output;
 it contains characters that have been written by processes, but not yet
 transmitted to the terminal.  If output flow control is enabled by
 setting the @code{IXON} input mode bit (@pxref{Input Modes}), the
-terminal driver obeys STOP and STOP characters sent by the terminal to
+terminal driver obeys START and STOP characters sent by the terminal to
 stop and restart transmission of output.
 
 @dfn{Clearing} the terminal input queue means discarding any characters
