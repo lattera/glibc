@@ -88,11 +88,12 @@ $(common-objpfx)config.make: $(common-objpfx)config.status $(..)config.h.in
 
 # Find all the sysdeps configure fragments, to make sure we re-run
 # configure when any of them changes.
-sysdep-configures = $(foreach dir,$(config-sysdirs),\
-			      $(patsubst %.in,%,\
-					 $(firstword $(wildcard \
-					    $(dir)/configure \
-					    $(dir)/configure.in))))
+sysdep-configures = \
+  $(foreach dir,$(config-sysdirs),\
+	    $(patsubst %.in,%,\
+		       $(firstword $(wildcard \
+		         $(sysdep_dir)/$(dir)/configure \
+			 $(sysdep_dir)/$(dir)/configure.in))))
 
 # Force the user to configure before making.
 $(common-objpfx)config.status: $(..)configure $(sysdep-configures)
@@ -312,7 +313,7 @@ ifeq (yes,$(build-shared))
 # We need the versioned name of libc.so in the deps of $(others) et al
 # so that the symlink to libc.so is created before anything tries to
 # run the linked programs.
-link-libc = -Wl,-rpath-link=$(common-objdir):$(elfobjdir) \
+link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)libc.so$(libc.so-version) \
 	    $(elfobjdir)/$(rtld-installed-name) \
 	    $(common-objpfx)libc.a $(gnulib)
@@ -323,6 +324,8 @@ default-rpath = $(slibdir):$(libdir)
 else
 default-rpath = $(libdir)
 endif
+# This is how to find at build-time things that will be installed there.
+rpath-link = $(common-objdir):$(elfobjdir)
 else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif
@@ -356,9 +359,9 @@ built-program-cmd = $(built-program-file)
 else
 comma = ,
 define built-program-cmd
-LD_LIBRARY_PATH=$(common-objdir)$(patsubst -Wl$(comma)-rpath-link=%,:%,\
-					   $(filter -Wl$(comma)-rpath-link=%,\
-						    $(sysdep-LDFLAGS))) \
+LD_LIBRARY_PATH=$(rpath-link)$(patsubst -Wl$(comma)-rpath-link=%,:%,\
+					 $(filter -Wl$(comma)-rpath-link=%,\
+						  $(sysdep-LDFLAGS))) \
 $(elf-objpfx)ld.so $(built-program-file)
 endef
 endif

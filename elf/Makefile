@@ -26,7 +26,7 @@ routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load lookup object reloc deps \
-			          runtime error init fini)
+			          runtime error init fini debug)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.so = $(dl-routines) dl-support
 

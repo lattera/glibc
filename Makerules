@@ -420,10 +420,15 @@ endif
 define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
-	    $(patsubst $(objpfx)%,%,$(o-objects))) \
-	  $(filter subdir_lib,$(firstword $(subdir) subdir_lib)); \
+	    $(patsubst $(objpfx)%,%,$(o-objects))) $(subdirs-stamp-o); \
 	$$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef
+ifndef subdir
+subdirs-stamps := $(foreach d,$(subdirs),\
+			    $(firstword $(objdir) $(subdir))/stamp%-$d)
+subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
+$(subdirs-stamps): subdir_lib;
+endif
 object-suffixes-left = $(object-suffixes)
 include $(o-iterator)
 
@@ -810,8 +815,10 @@ define distinfo-vars
 rm -f $@.new
 $(foreach var,subdir subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
-	      others tests extra-libs $(extra-libs:%=%-routines),
-echo >> $@.new '$(var)	:= $($(var))')
+	      others tests extra-libs $(extra-libs:%=%-routines) \
+	      $(addprefix install-,lib data bin sbin others),
+echo >> $@.new '$(subdir)-$(var) := $($(var))'
+echo >> $@.new '$(var) = $$($(subdir)-$(var))')
 endef
 
 ifneq (,$(strip $(gpl2lgpl)))

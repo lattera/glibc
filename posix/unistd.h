@@ -662,13 +662,6 @@ extern int acct __P ((__const char *__name));
    This call is restricted to the super-user.  */
 extern int chroot __P ((__const char *__path));
 
-/* Make the block special device PATH available to the system for swapping.
-   This call is restricted to the super-user.  */
-extern int swapon __P ((__const char *__path));
-
-/* Stop using block special device PATH for swapping.  */
-extern int swapoff __P ((__const char *__path));
-
 
 /* Successive calls return the shells listed in `/etc/shells'.  */
 extern char *getusershell __P ((void));

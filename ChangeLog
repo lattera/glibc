@@ -1,3 +1,56 @@
+Thu Jun 13 00:02:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): If no value and *REF is
+	null, consider it a strong reference and give the error.
+
+Wed Jun 12 15:52:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dl-open.c (_dl_open): Correctly terminate relocating loop
+ 	after relocating NEW when it's the only new object.
+
+	* elf/dl-init.c (_dl_init_next): When out of initializers, set
+ 	_r_debug.r_state to RT_CONSISTENT and call _dl_debug_state just
+ 	before return.
+
+	* elf/rtld.c (dl_main): Move _dl_debug_initialize call after
+ 	relocation.  Call it unconditionally and only fill in DT_DEBUG
+ 	if it's present.  Then call _dl_debug_state with r_state RT_ADD
+ 	before running initializers.
+
+	* elf/dl-open.c (_dl_open): Call _dl_debug_initialize and then call
+ 	_dl_debug_state with r_state RT_ADD before running initializers
+	* elf/dl-close.c (_dl_close): Call _dl_debug_state with r_state
+ 	RT_DELETE before running finalizers and with RT_CONSISTENT just
+ 	before return.
+
+	* elf/Makefile (dl-routines): Add dl-debug.
+	* elf/dl-debug.c: New file.
+	* elf/rtld.c (_dl_r_debug): Rename to _r_debug and move to dl-debug.c.
+	(_dl_r_debug_state): Rename to _dl_debug_state and likewise move.
+	(dl_main): Use _dl_debug_initialize.
+	* elf/link.h: Fix name to _dl_debug_state in decl.
+	(_dl_debug_initialize): Declare new function from dl-debug.c.
+	(_r_debug): Declare it.
+
+	* Makerules (distinfo-vars): Add install-{lib,data,bin,sbin,others}.
+	In distinfo set $(subdir)-VAR and then set VAR to $($(subdir)-VAR).
+
+	* Makeconfig (rpath-link): New variable; add $(elfobjdir).
+	(default-rpath): Use it.
+	(built-program-cmd): Use it in LD_LIBRARY_PATH.
+
+	* Makeconfig (sysdep-configures): Prepend $(sysdep_dir) to names tried.
+
+	* sysdeps/unix/Dist: Add make-syscalls.sh.
+
+	* misc/Makefile (headers): Add sys/swap.h.
+	* posix/unistd.h: Remove decls for swapon, swapoff.
+	* sysdeps/generic/sys/swap.h: New file.
+	* sysdeps/unix/sysv/linux/sys/swap.h: New file.
+
+	* sysdeps/unix/sysv/linux/gnu/types.h: Remove temporary hack #define
+	of __kernel_fsid_t.  It is correctly defines in <linux/types.h> now.
+
 Tue Jun 11 23:23:30 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules (LDFLAGS-c.so): Use __libc_main instead of

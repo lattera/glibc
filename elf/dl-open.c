@@ -29,6 +29,7 @@ _dl_open (struct link_map *parent, const char *file, int mode)
 {
   struct link_map *new, *l;
   ElfW(Addr) init;
+  struct r_debug *r;
 
 
   /* Load the named object.  */
@@ -47,7 +48,7 @@ _dl_open (struct link_map *parent, const char *file, int mode)
   l = new;
   while (l->l_next)
     l = l->l_next;
-  do
+  while (1)
     {
       if (! l->l_relocated)
 	{
@@ -56,8 +57,10 @@ _dl_open (struct link_map *parent, const char *file, int mode)
 	  *_dl_global_scope_end = NULL;
 	}
 
+      if (l == new)
+	break;
       l = l->l_prev;
-    } while (l != new);
+    }
 
   new->l_global = (mode & RTLD_GLOBAL);
   if (new->l_global)
@@ -107,6 +110,14 @@ _dl_open (struct link_map *parent, const char *file, int mode)
 	  _dl_global_scope_end[1] = NULL;
 	}
     }
+
+
+  /* Notify the debugger we have added some objects.  We need to call
+     _dl_debug_initialize in a static program in case dynamic linking has
+     not been used before.  */
+  r = _dl_debug_initialize (0);
+  r->r_state = RT_ADD;
+  _dl_debug_state ();
 
   /* Run the initializer functions of new objects.  */
   while (init = _dl_init_next (new))

@@ -62,6 +62,9 @@ struct r_debug
     ElfW(Addr) r_ldbase;	/* Base address the linker is loaded at.  */
   };
 
+/* This is the instance of that structure used by the dynamic linker.  */
+extern struct r_debug _r_debug;
+
 /* This symbol refers to the "dynamic structure" in the `.dynamic' section
    of whatever module refers to `_DYNAMIC'.  So, to find its own
    `struct r_debug', a program could do:
@@ -291,7 +294,12 @@ extern void _dl_fini (void);
    any shared object mappings.  The `r_state' member of `struct r_debug'
    says what change is taking place.  This function's address is
    the value of the `r_brk' member.  */
-extern void _dl_r_debug_state (void);
+extern void _dl_debug_state (void);
+
+/* Initialize `struct r_debug' if it has not already been done.  The
+   argument is the run-time load address of the dynamic linker, to be put
+   in the `r_ldbase' member.  Returns the address of the structure.  */
+extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase);
 
 
 #endif /* link.h */

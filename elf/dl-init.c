@@ -65,5 +65,10 @@ _dl_init_next (struct link_map *map)
       l->l_init_called = 1;
     }
 
+
+  /* Notify the debugger all new objects are now ready to go.  */
+  _r_debug.r_state = RT_CONSISTENT;
+  _dl_debug_state ();
+
   return 0;
 }

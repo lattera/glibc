@@ -3,3 +3,4 @@ ioctls-tmpl.c ioctls.awk snarf-ioctls
 make_errlist.c
 mk-local_lim.c
 s-proto.S
+make-syscalls.sh

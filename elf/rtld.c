@@ -46,8 +46,6 @@ int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
 
-struct r_debug _dl_r_debug;
-
 static void dl_main (const ElfW(Phdr) *phdr,
 		     ElfW(Half) phent,
 		     ElfW(Addr) *user_entry);
@@ -229,12 +227,6 @@ of this helper program; chances are you did not intend to run this program.\n",
     /* Set up our cache of pointers into the hash table.  */
     _dl_setup_hash (l);
 
-  if (l->l_info[DT_DEBUG])
-    /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
-       with the run-time address of the r_debug structure, which we
-       will set up later to communicate with the debugger.  */
-    l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) &_dl_r_debug;
-
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  */
   _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname = interpreter_name;
@@ -343,11 +335,20 @@ of this helper program; chances are you did not intend to run this program.\n",
       _dl_relocate_object (&_dl_rtld_map, &_dl_default_scope[2], 0);
   }
 
-  /* Tell the debugger where to find the map of loaded objects.  */
-  _dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
-  _dl_r_debug.r_ldbase = _dl_rtld_map.l_addr; /* Record our load address.  */
-  _dl_r_debug.r_map = _dl_loaded;
-  _dl_r_debug.r_brk = (ElfW(Addr)) &_dl_r_debug_state;
+  {
+    /* Initialize _r_debug.  */
+    struct r_debug *r = _dl_debug_initialize (_dl_rtld_map.l_addr);
+
+    l = _dl_loaded;
+    if (l->l_info[DT_DEBUG])
+      /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
+	 with the run-time address of the r_debug structure  */
+      l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+
+    /* Notify the debugger that all objects are now mapped in.  */
+    r->r_state = RT_ADD;
+    _dl_debug_state ();
+  }
 
   if (_dl_rtld_map.l_info[DT_INIT])
     {
@@ -364,11 +365,4 @@ of this helper program; chances are you did not intend to run this program.\n",
 
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */
-}
-
-/* This function exists solely to have a breakpoint set on it by the
-   debugger.  */
-void
-_dl_r_debug_state (void)
-{
 }

@@ -41,6 +41,10 @@ _dl_close (struct link_map *map)
     /* There are still references to this object.  Do nothing more.  */
     return;
 
+  /* Notify the debugger we are about to remove some loaded objects.  */
+  _r_debug.r_state = RT_DELETE;
+  _dl_debug_state ();
+
   list = map->l_searchlist;
 
   /* The search list contains a counted reference to each object it
@@ -105,4 +109,8 @@ _dl_close (struct link_map *map)
     }
 
   free (list);
+
+  /* Notify the debugger those objects are finalized and gone.  */
+  _r_debug.r_state = RT_CONSISTENT;
+  _dl_debug_state ();
 }
