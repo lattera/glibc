@@ -21,6 +21,7 @@
 #include <signal.h>
 #include "pthreadP.h"
 #include "atomic.h"
+#include <sysdep.h>
 
 
 int
@@ -56,7 +57,12 @@ pthread_cancel (th)
 
 	  /* The cancellation handler will take care of marking the
 	     thread as canceled.  */
-	  result = __pthread_kill (th, SIGCANCEL);
+	  INTERNAL_SYSCALL_DECL (err);
+
+	  int val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCANCEL);
+
+	  if (INTERNAL_SYSCALL_ERROR_P (val, err))
+	    result = INTERNAL_SYSCALL_ERRNO (val, err);
 
 	  break;
 	}

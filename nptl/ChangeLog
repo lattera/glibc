@@ -1,7 +1,18 @@
 2003-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_cancel.c (pthread_cancel): Use tkill directly.
+
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill):
+	Disallow sending SIGCANCEL.
+
 	* Makefile (tests): Remove tst-basic7.  Add tst-kill1, tst-kill2,
-	tst-kill3, tst-kill4.
+	tst-kill3, tst-kill4, tst-kill5.
+	* tst-kill1.c: New file.
+	* tst-kill2.c: New file.
+	* tst-kill3.c: New file.
+	* tst-kill5.c: New file.
+	* tst-basic7.c: Renamed to...
+	* tst-kill4.c: ...this.
 
 2003-02-21  Roland McGrath  <roland@redhat.com>
 

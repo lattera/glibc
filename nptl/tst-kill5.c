@@ -1,6 +1,6 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,34 +18,32 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <pthread.h>
 #include <signal.h>
-#include <pthreadP.h>
-#include <tls.h>
-#include <sysdep.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 int
-__pthread_kill (threadid, signo)
-     pthread_t threadid;
-     int signo;
+do_test (void)
 {
-  struct pthread *pd = (struct pthread *) threadid;
+  /* XXX This test might require architecture and system specific changes.
+     There is no guarantee that this signal number is invalid.  */
+  int e = pthread_kill (pthread_self (), SIGRTMAX + 10);
+  if (e == 0)
+    {
+      puts ("kill didn't failed");
+      exit (1);
+    }
+  if (e != EINVAL)
+    {
+      puts ("error not EINVAL");
+      exit (1);
+    }
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
-  /* Disallow sending the signal we use for cancellation.  */
-  if (signo == SIGCANCEL)
-    return EINVAL;
-
-  /* We have a special syscall to do the work.  */
-  INTERNAL_SYSCALL_DECL (err);
-
-  int val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, signo);
-
-  return (INTERNAL_SYSCALL_ERROR_P (val, err)
-	  ? INTERNAL_SYSCALL_ERRNO (val, err) : 0);
+  return 0;
 }
-strong_alias (__pthread_kill, pthread_kill)
+
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
