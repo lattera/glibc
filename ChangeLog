@@ -1,5 +1,8 @@
 2002-11-05  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/mips/sysdep.h [! __PIC__] (PSEUDO): Add nop after jump.
+	From Johannes Stezenbach <js@convergence.de>.
+
 	* sysdeps/unix/sysv/linux/mips/Versions (libc: GLIBC_2.0): Change
 	#errlist-compat magic comment to give 123 as size.
 	(libc: GLIBC_2.1): Remove this set, moving #errlist-compat magic to ...
