@@ -1,3 +1,10 @@
+2002-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/sys/socket.h: Declare __libc_send, __libc_recv,
+	__libc_sendto, __libc_sendmsg, __libc_recvmsg, and __libc_accept.
+
+	* include/unistd.h: Declare __libc_fork.
+
 2002-09-17  Roland McGrath  <roland@redhat.com>
 
 	* sunrpc/xcrypt.c (passwd2des_internal): Renamed fom passwd2des.
