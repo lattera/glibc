@@ -136,10 +136,6 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
   return 0;
 }
 
-#define weak_extern2(name) weak_extern (name)
-weak_extern2 (FLOOR) weak_extern2 (LOG10) weak_extern2 (FABS)
-weak_extern2 (EXP)
-
 int
 APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
      FLOAT_TYPE value;
@@ -151,46 +147,34 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
 
   if (isfinite (value) && value != 0.0)
     {
-      FLOAT_TYPE (*log10_function) (FLOAT_TYPE) = &LOG10;
-
-      if (log10_function)
-	{
-	  /* Use the reasonable code if -lm is included.  */
-	  FLOAT_TYPE dexponent;
-	  dexponent = FLOOR (LOG10 (FABS (value)));
-	  value *= EXP (dexponent * -M_LN10);
-	  exponent = (int) dexponent;
-	}
+      /* Slow code that doesn't require -lm functions.  */
+      FLOAT_TYPE d;
+      FLOAT_TYPE f = 1.0;
+      if (value < 0.0)
+	d = -value;
       else
+	d = value;
+      if (d < 1.0)
 	{
-	  /* Slow code that doesn't require -lm functions.  */
-	  FLOAT_TYPE d;
-	  if (value < 0.0)
-	    d = -value;
-	  else
-	    d = value;
-	  if (d < 1.0)
+	  do
 	    {
-	      do
-		{
-		  d *= 10.0;
-		  --exponent;
-		}
-	      while (d < 1.0);
+	      f *= 10.0;
+	      --exponent;
 	    }
-	  else if (d >= 10.0)
+	  while (d * f < 1.0);
+
+	  value *= f;
+	}
+      else if (d >= 10.0)
+	{
+	  do
 	    {
-	      do
-		{
-		  d *= 0.1;
-		  ++exponent;
-		}
-	      while (d >= 10.0);
+	      f *= 10;
+	      ++exponent;
 	    }
-	  if (value < 0.0)
-	    value = -d;
-	  else
-	    value = d;
+	  while (d >= f * 10.0);
+
+	  value /= f;
 	}
     }
   else if (value == 0.0)

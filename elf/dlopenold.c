@@ -17,7 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifdef PIC
+/* This file is for compatibility with glibc 2.0.  Compile it only if
+   versioning is used.  */
+#if defined PIC && DO_VERSIONING
 
 #include <dlfcn.h>
 #include <stddef.h>

@@ -1,3 +1,9 @@
+1998-11-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/efgcvt_r.c (fcvt_r): Remove code which tries to use libm
+	functions.  Reduce error in computing normalized value by multiplying
+	factor in loop and compute result in one step.
+
 1998-11-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
  
 	* elf/dlopenold.c: Compile only if DO_VERSIONING is also defined. 
