@@ -1,3 +1,9 @@
+2002-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_thr_tls_get_addr.c: New file.
+	* thread_db.h: Add prototype for td_thr_tls_get_addr.
+	* Makefile (libthread_db-routines): Add td_thr_tls_get_addr.
+
 2002-03-03  Andreas Jaeger  <aj@suse.de>
 
 	* thread_dbP.h: Include <unistd.h> for prototypes of __libc_write.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,8 @@ typedef enum
   TD_NOTSD,	  /* No thread-specific data available.  */
   TD_MALLOC,	  /* Out of memory.  */
   TD_PARTIALREG,  /* Not entire register set was read or written.  */
-  TD_NOXREGS	  /* X register set not available for given thread.  */
+  TD_NOXREGS,	  /* X register set not available for given thread.  */
+  TD_NOTALLOC	  /* TLS memory not yet allocated.  */
 } td_err_e;
 
 
@@ -90,6 +91,10 @@ typedef struct td_thrhandle
   td_thragent_t *th_ta_p;
   psaddr_t th_unique;
 } td_thrhandle_t;
+
+
+/* Forward declaration of a type defined by and for the dynamic linker.  */
+struct link_map;
 
 
 /* Flags for `td_ta_thr_iter'.  */
@@ -344,7 +349,7 @@ extern td_err_e td_ta_clear_event (const td_thragent_t *__ta,
 
 /* Return information about last event.  */
 extern td_err_e td_ta_event_getmsg (const td_thragent_t *__ta,
-				    td_event_msg_t *msg);
+				    td_event_msg_t *__msg);
 
 
 /* Set suggested concurrency level for process associated with TA.  */
@@ -394,6 +399,12 @@ extern td_err_e td_thr_setgregs (const td_thrhandle_t *__th,
 /* Set extended register contents of process running thread TH.  */
 extern td_err_e td_thr_setxregs (const td_thrhandle_t *__th,
 				 const void *__addr);
+
+
+/* Get address of thread local variable.  */
+extern td_err_e td_thr_tls_get_addr (const td_thrhandle_t *__th,
+				     struct link_map *__map, size_t __offset,
+				     void **__address);
 
 
 /* Enable reporting for EVENT for thread TH.  */

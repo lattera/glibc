@@ -1,4 +1,4 @@
-# Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ libthread_db-routines = td_init td_log td_ta_delete td_ta_get_nthreads      \
 			td_thr_event_enable td_thr_set_event 		    \
 			td_thr_clear_event td_thr_event_getmsg		    \
 			td_ta_set_event td_ta_event_getmsg		    \
-			td_ta_clear_event td_symbol_list
+			td_ta_clear_event td_symbol_list td_thr_tls_get_addr
 
 libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 
