@@ -1,3 +1,8 @@
+2001-01-12  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/generic/segfault.c (install_handler): Use access, not
+	__access.
+
 2001-01-12  Andreas Jaeger  <aj@suse.de>
 
 	* posix/fnmatch_loop.c (FCT): Remove signed warnings.
