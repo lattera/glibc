@@ -1,3 +1,9 @@
+1999-06-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Don't fail
+	always when oact is NULL.
+	Patch by Christian Meder <meder@isr.uni-stuttgart.de>.
+
 1999-06-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* math/libm-test.c (jn_test): Adjust delta.

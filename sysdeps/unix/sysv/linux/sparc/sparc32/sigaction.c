@@ -1,5 +1,5 @@
 /* POSIX.1 sigaction call for Linux/SPARC.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza (miguel@nuclecu.unam.mx), 1997.
 
@@ -118,12 +118,15 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
     ret = r_sig;
   }
 
-  if (oact && ret >= 0)
+  if (ret >= 0)
     {
-      oact->sa_handler = k_osigact.k_sa_handler;
-      oact->sa_mask.__val[0] = k_osigact.sa_mask;
-      oact->sa_flags = k_osigact.sa_flags;
-      oact->sa_restorer = NULL;
+      if (oact)
+	{
+	  oact->sa_handler = k_osigact.k_sa_handler;
+	  oact->sa_mask.__val[0] = k_osigact.sa_mask;
+	  oact->sa_flags = k_osigact.sa_flags;
+	  oact->sa_restorer = NULL;
+	}
       return ret;
     }
 
