@@ -25,6 +25,7 @@
 #include <pagecopy.h>
 
 #undef mempcpy
+#undef __mempcpy
 
 void *
 __mempcpy (dstpp, srcpp, len)
