@@ -1,5 +1,9 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/gnu/netinet/tcp.h: Define everything but TCP_ macros
+	only if __USE_MISC.
+	* conform/data/netinet/tcp.h-data: Reserved prefix TCP_.
+
 	* sysdeps/gnu/net/if.h: Cleanup namespace.  Define IF_NAMESIZE.
 
 	* inet/netinet/in.h: Make IPPROTO_ constants also macros.

@@ -33,11 +33,26 @@
 #define _NETINET_TCP_H	1
 
 #include <features.h>
-#include <sys/types.h>
 
-__BEGIN_DECLS
+/*
+ * User-settable options (used with setsockopt).
+ */
+#define	TCP_NODELAY	 0x01	/* Don't delay send to coalesce packets  */
+#define	TCP_MAXSEG	 0x02	/* Set maximum segment size  */
+#define TCP_CORK	 0x03	/* Control sending of partial frames  */
+#define TCP_KEEPIDLE	 0x04	/* Start keeplives after this period */
+#define TCP_KEEPINTVL	 0x05	/* Interval between keepalives */
+#define TCP_KEEPCNT	 0x06	/* Number of keepalives before death */
+#define TCP_SYNCNT	 0x07	/* Number of SYN retransmits */
+#define TCP_LINGER2	 0x08	/* Life time of orphaned FIN-WAIT-2 state */
+#define TCP_DEFER_ACCEPT 0x09	/* Wake up listener only when data arrive */
+#define TCP_WINDOW_CLAMP 0x10	/* Bound advertised window */
+#define TCP_INFO	 0x11	/* Information about this connection. */
 
-#ifdef __FAVOR_BSD
+#ifdef __USE_MISC
+# include <sys/types.h>
+
+# ifdef __FAVOR_BSD
 typedef	u_int32_t tcp_seq;
 /*
  * TCP header.
@@ -49,34 +64,34 @@ struct tcphdr
     u_int16_t th_dport;		/* destination port */
     tcp_seq th_seq;		/* sequence number */
     tcp_seq th_ack;		/* acknowledgement number */
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#  if __BYTE_ORDER == __LITTLE_ENDIAN
     u_int8_t th_x2:4;		/* (unused) */
     u_int8_t th_off:4;		/* data offset */
-#endif
-#if __BYTE_ORDER == __BIG_ENDIAN
+#  endif
+#  if __BYTE_ORDER == __BIG_ENDIAN
     u_int8_t th_off:4;		/* data offset */
     u_int8_t th_x2:4;		/* (unused) */
-#endif
+#  endif
     u_int8_t th_flags;
-#define	TH_FIN	0x01
-#define	TH_SYN	0x02
-#define	TH_RST	0x04
-#define	TH_PUSH	0x08
-#define	TH_ACK	0x10
-#define	TH_URG	0x20
+#  define TH_FIN	0x01
+#  define TH_SYN	0x02
+#  define TH_RST	0x04
+#  define TH_PUSH	0x08
+#  define TH_ACK	0x10
+#  define TH_URG	0x20
     u_int16_t th_win;		/* window */
     u_int16_t th_sum;		/* checksum */
     u_int16_t th_urp;		/* urgent pointer */
 };
 
-#else /* !__FAVOR_BSD */
+# else /* !__FAVOR_BSD */
 struct tcphdr
   {
     u_int16_t source;
     u_int16_t dest;
     u_int32_t seq;
     u_int32_t ack_seq;
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#  if __BYTE_ORDER == __LITTLE_ENDIAN
     u_int16_t res1:4;
     u_int16_t doff:4;
     u_int16_t fin:1;
@@ -86,7 +101,7 @@ struct tcphdr
     u_int16_t ack:1;
     u_int16_t urg:1;
     u_int16_t res2:2;
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#  elif __BYTE_ORDER == __BIG_ENDIAN
     u_int16_t doff:4;
     u_int16_t res1:4;
     u_int16_t res2:2;
@@ -96,14 +111,14 @@ struct tcphdr
     u_int16_t rst:1;
     u_int16_t syn:1;
     u_int16_t fin:1;
-#else
-#error	"Adjust your <bits/endian.h> defines"
-#endif
+#  else
+#   error "Adjust your <bits/endian.h> defines"
+#  endif
     u_int16_t window;
     u_int16_t check;
     u_int16_t urg_ptr;
 };
-#endif /* __FAVOR_BSD */
+# endif /* __FAVOR_BSD */
 
 enum
 {
@@ -120,20 +135,20 @@ enum
   TCP_CLOSING   /* now a valid state */
 };
 
-#define	TCPOPT_EOL		0
-#define	TCPOPT_NOP		1
-#define	TCPOPT_MAXSEG		2
-#define TCPOLEN_MAXSEG		4
-#define TCPOPT_WINDOW		3
-#define TCPOLEN_WINDOW		3
-#define TCPOPT_SACK_PERMITTED	4		/* Experimental */
-#define TCPOLEN_SACK_PERMITTED	2
-#define TCPOPT_SACK		5		/* Experimental */
-#define TCPOPT_TIMESTAMP	8
-#define TCPOLEN_TIMESTAMP	10
-#define TCPOLEN_TSTAMP_APPA	(TCPOLEN_TIMESTAMP+2) /* appendix A */
+# define TCPOPT_EOL		0
+# define TCPOPT_NOP		1
+# define TCPOPT_MAXSEG		2
+# define TCPOLEN_MAXSEG		4
+# define TCPOPT_WINDOW		3
+# define TCPOLEN_WINDOW		3
+# define TCPOPT_SACK_PERMITTED	4		/* Experimental */
+# define TCPOLEN_SACK_PERMITTED	2
+# define TCPOPT_SACK		5		/* Experimental */
+# define TCPOPT_TIMESTAMP	8
+# define TCPOLEN_TIMESTAMP	10
+# define TCPOLEN_TSTAMP_APPA	(TCPOLEN_TIMESTAMP+2) /* appendix A */
 
-#define TCPOPT_TSTAMP_HDR	\
+# define TCPOPT_TSTAMP_HDR	\
     (TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_TIMESTAMP<<8|TCPOLEN_TIMESTAMP)
 
 /*
@@ -142,34 +157,19 @@ enum
  * but 512 is probably more convenient.
  * This should be defined as MIN(512, IP_MSS - sizeof (struct tcpiphdr)).
  */
-#define	TCP_MSS	512
+# define TCP_MSS	512
 
-#define	TCP_MAXWIN	65535	/* largest value for (unscaled) window */
+# define TCP_MAXWIN	65535	/* largest value for (unscaled) window */
 
-#define TCP_MAX_WINSHIFT	14	/* maximum window shift */
+# define TCP_MAX_WINSHIFT	14	/* maximum window shift */
 
-/*
- * User-settable options (used with setsockopt).
- */
-#define	TCP_NODELAY	0x01	/* Don't delay send to coalesce packets  */
-#define	TCP_MAXSEG	0x02	/* Set maximum segment size  */
-#define TCP_CORK	0x03	/* Control sending of partial frames  */
-#define TCP_KEEPIDLE	0x04	/* Start keeplives after this period */
-#define TCP_KEEPINTVL	0x05	/* Interval between keepalives */
-#define TCP_KEEPCNT	0x06	/* Number of keepalives before death */
-#define TCP_SYNCNT	0x07	/* Number of SYN retransmits */
-#define TCP_LINGER2	0x08	/* Life time of orphaned FIN-WAIT-2 state */
-#define TCP_DEFER_ACCEPT 0x09	/* Wake up listener only when data arrive */
-#define TCP_WINDOW_CLAMP 0x10	/* Bound advertised window */
-#define TCP_INFO	 0x11	/* Information about this connection. */
-
-#define SOL_TCP		6	/* TCP level */
+# define SOL_TCP		6	/* TCP level */
 
 
-#define TCPI_OPT_TIMESTAMPS	1
-#define TCPI_OPT_SACK		2
-#define TCPI_OPT_WSCALE		4
-#define TCPI_OPT_ECN		8
+# define TCPI_OPT_TIMESTAMPS	1
+# define TCPI_OPT_SACK		2
+# define TCPI_OPT_WSCALE	4
+# define TCPI_OPT_ECN		8
 
 /* Values for tcpi_state.  */
 enum tcp_ca_state
@@ -219,6 +219,6 @@ struct tcp_info
   u_int32_t	tcpi_reordering;
 };
 
-__END_DECLS
+#endif /* Misc.  */
 
 #endif /* netinet/tcp.h */
