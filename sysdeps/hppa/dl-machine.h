@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PA-RISC version.
-   Copyright (C) 1995-1997,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997,1999,2000,2001,2002, 2003
+	Free Software Foundation, Inc.
    Contributed by David Huggins-Daines <dhd@debian.org>
    This file is part of the GNU C Library.
 
@@ -481,8 +482,9 @@ asm (									\
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  Elf32_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const Elf32_Sym *const refsym = sym;
   unsigned long const r_type = ELF32_R_TYPE (reloc->r_info);
   struct link_map *sym_map;
@@ -531,9 +533,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	return;
 #endif
       /* .eh_frame can have unaligned relocs.  */
-      if ((unsigned long) reloc_addr & 3)
+      if ((unsigned long) reloc_addr_arg & 3)
 	{
-	  char *rel_addr = (char *) reloc_addr;
+	  char *rel_addr = (char *) reloc_addr_arg;
 	  rel_addr[0] = value >> 24;
 	  rel_addr[1] = value >> 16;
 	  rel_addr[2] = value >> 8;
@@ -614,7 +616,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 			    rtld_progname ?: "<program name unknown>",
 			    strtab + refsym->st_name);
 	}
-      memcpy (reloc_addr, (void *) value,
+      memcpy (reloc_addr_arg, (void *) value,
 	      MIN (sym->st_size, refsym->st_size));
       return;
 
@@ -637,8 +639,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 static inline void
 elf_machine_rela_relative (struct link_map *map, Elf32_Addr l_addr,
 			   const Elf32_Rela *reloc,
-			   Elf32_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   unsigned long const r_type = ELF32_R_TYPE (reloc->r_info);
   Elf32_Addr value;
 
@@ -651,9 +654,9 @@ elf_machine_rela_relative (struct link_map *map, Elf32_Addr l_addr,
     {
     case R_PARISC_DIR32:
       /* .eh_frame can have unaligned relocs.  */
-      if ((unsigned long) reloc_addr & 3)
+      if ((unsigned long) reloc_addr_arg & 3)
 	{
-	  char *rel_addr = (char *) reloc_addr;
+	  char *rel_addr = (char *) reloc_addr_arg;
 	  rel_addr[0] = value >> 24;
 	  rel_addr[1] = value >> 16;
 	  rel_addr[2] = value >> 8;

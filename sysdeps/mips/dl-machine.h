@@ -534,10 +534,7 @@ static inline void
 #endif
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
-		 /* We use void* because the location to be relocated
-		    is not required to be properly aligned for a
-		    ELFW(Addr).  */
-		 void /* ElfW(Addr) */ *const reloc_addr)
+		 void *const reloc_addr)
 {
   const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
@@ -640,7 +637,7 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 
 static inline void
 elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
-			  void /* ElfW(Addr) */ *const reloc_addr)
+			  void *const reloc_addr)
 {
   /* XXX Nothing to do.  There is no relative relocation, right?  */
 }
