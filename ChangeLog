@@ -1,3 +1,9 @@
+2003-12-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/libio.h: Use __builtin_expect in _IO_getc_unlocked,
+	_IO_peekc_unlocked, _IO_ptc_unlcoked, _IO_getwc_unlocked, and
+	_IO_putwc_unlocked.
+
 2003-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/dbl-64/e_j0.c (__ieee754_y0): Raise only
