@@ -144,7 +144,7 @@ typedef int __intptr_t;
 
 
 /* Now add the thread types.  */
-#if defined __USE_POSIX199506 || defined __USE_UNIX98
+#ifdef __USE_UNIX98
 # include <bits/pthreadtypes.h>
 #endif
 
