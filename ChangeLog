@@ -1,5 +1,7 @@
 Tue May  2 01:52:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/i386/sysdep.h (SNARF_ARGS, CALL_WITH_SP): Rewritten.
+
 	Implemented runtime dynamic linker to support ELF shared libraries.
 	* elf/Makefile: Added rules to make ld.so and libdl.
 	* elf/dl-error.c: New file.
@@ -16,6 +18,13 @@ Tue May  2 01:52:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* elf/dynamic-link.h: New file.
 	* elf/link.h: New file.
 	* elf/rtld.c: New file.
+	* sysdeps/i386/dl-machine.h: New file.
+	* sysdeps/stub/dl-machine.h: New file.
+	* sysdeps/i386/dl-runtime.c: New file.
+	* sysdeps/stub/dl-runtime.c: New file.
+	* sysdeps/i386/elf/start.S: New file.
+	* sysdeps/generic/dl-sysdep.c: New file.
+	* sysdeps/mach/hurd/dl-sysdep.c: New file.
 
 Mon May  1 18:48:30 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 

@@ -1,3 +1,5 @@
+# Makefile for elf subdirectory of GNU C Library.
+
 # Copyright (C) 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -16,8 +18,34 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-subdir	:= elf
+subdir		:= elf
 
-headers	:= elf.h # libelf.h
+headers		:= elf.h libelf.h link.h dlfcn.h
+routines	:= init-first
+
+extra-libs	= libelf libdl
+libelf-routines	:= elf_hash
+libdl-routines	:= dlopen dlclose dlsym dlerror
+libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
+LDLIBS-dl.so	:= -lc -lld
+
+rtld-routines	:= rtld $(addprefix dl-,load lookup object reloc	\
+				        runtime sysdep error init fini)
+distribute	= $(rtld-routines:=.c) dynamic-link.h
+
+include ../Makeconfig
+
+ifeq (yes,$(build-shared))
+extra-objs	= $(rtld-routines:=.so)
+install-lib	= ld.so
+endif
 
 include ../Rules
+
+$(objpfx)ld.so: $(rtld-routines:%=$(objpfx)%.so) \
+		$(patsubst %,$(common-objpfx)lib%_pic.a,\
+			   elf c $(LDLIBS-c.so:-l%=%))
+	$(LINK.o) -nostdlib -shared -o $@ \
+		  '-Wl,-(' $^ -lgcc '-Wl,-)'
+
+$(objpfx)libdl.so: $(common-objpfx)libc.so $(objpfx)ld.so

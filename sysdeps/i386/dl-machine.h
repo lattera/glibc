@@ -1,0 +1,169 @@
+/* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
+Copyright (C) 1995 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#define ELF_MACHINE_NAME "i386"
+
+#include <assert.h>
+#include <string.h>
+#include <link.h>
+
+
+/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+static inline int
+elf_machine_matches_host (Elf32_Half e_machine)
+{
+  switch (e_machine)
+    {
+    case EM_386:
+    case EM_486:
+      return 1;
+    default:
+      return 0;
+    }
+}
+
+
+/* Return the run-time address of the _GLOBAL_OFFSET_TABLE_.
+   Must be inlined in a function which uses global data.  */
+static inline Elf32_Addr *
+elf_machine_got (void)
+{
+  register Elf32_Addr *got asm ("%ebx");
+  return got;
+}
+
+
+/* Return the run-time load address of the shared object.  */
+static inline Elf32_Addr
+elf_machine_load_address (void)
+{
+  Elf32_Addr addr;
+  asm ("	call here\n"
+       "here:	popl %0\n"
+       "	subl $here, %0"
+       : "=r" (addr));
+  return addr;
+}
+/* The `subl' insn above will contain an R_386_32 relocation entry
+   intended to insert the run-time address of the label `here'.
+   This will be the first relocation in the text of the dynamic linker;
+   we skip it to avoid trying to modify read-only text in this early stage.  */
+#define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \
+  ++(const Elf32_Rel *) (dynamic_info)[DT_REL]->d_un.d_ptr;
+
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   LOADADDR is the load address of the object; INFO is an array indexed
+   by DT_* of the .dynamic section info.  */
+
+static inline void
+elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
+		 const Elf32_Rel *reloc,
+		 Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
+{
+  Elf32_Addr *const reloc_addr = (Elf32_Addr *) reloc->r_offset;
+  const Elf32_Addr sym_value = sym_loadaddr + sym->st_value;
+
+  switch (ELF32_R_TYPE (reloc->r_info))
+    {
+    case R_386_COPY:
+      memcpy (reloc_addr, (void *) sym_value, sym->st_size);
+      break;
+    case R_386_GLOB_DAT:
+    case R_386_JMP_SLOT:
+      *reloc_addr = sym_value;
+      break;
+    case R_386_32:
+      *reloc_addr += sym_value;
+      break;
+    case R_386_RELATIVE:
+      *reloc_addr += loadaddr;
+      break;
+    case R_386_PC32:
+      *reloc_addr = sym_value - (Elf32_Addr) reloc_addr;
+      break;
+    default:
+      assert (! "unexpected dynamic reloc type");
+      break;
+    }
+}
+
+
+/* The i386 never uses Elf32_Rela relocations.  */
+static inline void
+elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
+		  const Elf32_Rela *reloc, 
+		  Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
+{
+  _dl_signal_error (0, "Elf32_Rela relocation requested -- unused on i386");
+}
+
+
+/* Set up the loaded object described by L so its unrelocated PLT
+   entries will jump to the on-demand fixup code in dl-runtime.c.  */
+
+static inline void
+elf_machine_runtime_setup (struct link_map *l)
+{
+  extern void _dl_runtime_resolve (Elf32_Word);
+  /* The GOT entries for functions in the PLT have not yet been filled
+     in.  Their initial contents will arrange when called to push an
+     offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
+     and then jump to _GLOBAL_OFFSET_TABLE[2].  */
+  Elf32_Addr *got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
+  got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
+  /* This function will get called to fix up the GOT entry indicated by
+     the offset on the stack, and then jump to the resolved address.  */
+  got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+}
+
+
+/* Initial entry point code for the dynamic linker.
+   The C function `_dl_start' is the real entry point;
+   its return value is the user program's entry point.  */
+
+#define RTLD_START asm ("\
+.text\n\
+.globl _start\n\
+_start:	call _dl_start\n\
+	# Save the user entry point address in %ebx.\n\
+	movl %eax, %ebx\n\
+	# Call _dl_init_next to return the address of an initializer\n\
+	# function to run.\n\
+0:	call _dl_init_next@PLT\n\
+	# Check for zero return, when out of initializers.\n\
+	testl %eax,%eax\n\
+	jz 1f\n\
+	# Call the shared object initializer function.\n\
+	# NOTE: We depend only on the registers (%ebx)\n\
+	# and the return address pushed by this call;\n\
+	# the initializer is called with the stack just\n\
+	# as it appears on entry, and it is free to move\n\
+	# the stack around, as long as it winds up jumping to\n\
+	# the return address on the top of the stack.\n\
+	call *%eax\n\
+	# Loop to call _dl_init_next for the next initializer.\n\
+	jmp 0b\n\
+	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
+1:	call 2f\n\
+2:	popl %eax\n\
+	addl $_GLOBAL_OFFSET_TABLE_+[.-2b], %eax\n\
+	leal _dl_fini@GOT(%eax), %edx\n\
+	# Jump to the user entry point.\n\
+	jmp *%ebx\n\
+");

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,15 +20,11 @@ Cambridge, MA 02139, USA.  */
 
 #define LOSE asm volatile ("hlt")
 
-#define SNARF_ARGS(argc, argv, envp)					      \
+#define SNARF_ARGS(entry_sp, argc, argv, envp)				      \
   do									      \
     {									      \
-      int *entry_sp;							      \
       register char **p;						      \
-									      \
-      asm ("leal 4(%%ebp), %0" : "=r" (entry_sp));			      \
-									      \
-      argc = *entry_sp;							      \
+      argc = (int) *entry_sp;						      \
       argv = (char **) (entry_sp + 1);					      \
       p = argv;								      \
       while (*p++ != NULL)						      \
@@ -38,9 +34,15 @@ Cambridge, MA 02139, USA.  */
       envp = p;							      \
     } while (0)
 
-#define CALL_WITH_SP(fn, sp) \
-  asm volatile ("movl %0, %%esp; jmp %1" : : \
-		"g" (sp), "m" (*(long int *) (fn)) : "%esp")
+#define CALL_WITH_SP(fn, info, sp) \
+  do {									      \
+	void **ptr = (void **) sp;					      \
+	*--(__typeof (info) *) ptr = info;				      \
+	ptr[-1] = ptr;							      \
+	--ptr;								      \
+    asm volatile ("movl %0, %%esp; call %1" : : 			      \
+		  "g" (ptr), "m" (*(long int *) (fn)) : "%esp"); 	      \
+  } while (0)
 
 #define STACK_GROWTH_DOWN
 
