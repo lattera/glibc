@@ -1,3 +1,8 @@
+2003-03-17  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_lock_wait):
+	Formatting tweaks.
+
 2003-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/bits/atomic.h: Add __builtin_expect where appropriate.
@@ -29,6 +34,7 @@
 	* sysdeps/unix/sysv/linux/libc-lowlevelmutex.c: New file.
 	* sysdeps/unix/sysv/linux/libc-lowlevellock.c: New file.
 	* sysdeps/unix/sysv/linux/lowlevellock.c: New file.
+
 	* sysdeps/unix/sysv/linux/lowlevelmutex.c: New file.
 	* sysdeps/unix/sysv/linux/sem_post.c: New file.
 	* sysdeps/unix/sysv/linux/sem_timedwait.c: New file.

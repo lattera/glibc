@@ -1,3 +1,7 @@
+2003-03-17  Roland McGrath  <roland@redhat.com>
+
+	* include/ctype.h: Revert last change.
+
 2003-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* argp/tst-argp1.c: Use test-skeleton.c.
