@@ -1,5 +1,7 @@
 1999-01-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.112.
+
 	* sunrpc/clnt_tcp.c (clnttcp_call): Resolve 32-64 comparison
 	conflict for 64 bit platforms.
 	Patch by trott@rottmann.hi.shuttle.de.
