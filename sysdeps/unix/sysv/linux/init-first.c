@@ -28,9 +28,6 @@
 #include <libc-internal.h>
 
 #include <ldsodefs.h>
-#ifndef SHARED
-# include "dl-osinfo.h"
-#endif
 
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (int, char **, char **) __attribute__ ((unused));
@@ -57,10 +54,6 @@ init (int argc, char **argv, char **envp)
   /* Make sure we don't initialize twice.  */
   if (!__libc_multiple_libcs)
     {
-#ifndef SHARED
-      DL_SYSDEP_OSCHECK (__libc_fatal);
-#endif
-
       /* Set the FPU control word to the proper default value if the
 	 kernel would use a different value.  (In a static program we
 	 don't have this information.)  */

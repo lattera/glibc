@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <bp-start.h>
@@ -29,6 +30,7 @@ extern void *__libc_stack_end;
 
 #include <tls.h>
 #ifndef SHARED
+# include <dl-osinfo.h>
 extern void __pthread_initialize_minimal (void)
 # if !(USE_TLS - 0)
      __attribute__ ((weak))
@@ -80,6 +82,14 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
        *auxvec != NULL; ++auxvec);
   ++auxvec;
   _dl_aux_init ((ElfW(auxv_t) *) auxvec);
+# endif
+# ifdef DL_SYSDEP_OSCHECK
+  if (!__libc_multiple_libcs)
+    {
+      /* This needs to run to initiliaze _dl_osversion before TLS
+	 setup might check it.  */
+      DL_SYSDEP_OSCHECK (__libc_fatal);
+    }
 # endif
 
   /* Initialize the thread library at least a bit since the libgcc

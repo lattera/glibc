@@ -309,7 +309,7 @@ _dl_allocate_tls_init (void *result)
 	    /* Unused entry.  */
 	    continue;
 
-	  if (map->l_type == lt_loaded)
+	  if (map->l_tls_offset == 0)
 	    {
 	      /* For dynamically loaded modules we simply store
 		 the value indicating deferred allocation.  */

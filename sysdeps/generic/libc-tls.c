@@ -102,7 +102,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 	  break;
 	}
 
-  if (memsz == 0 && tcbsize == 0)
+  if (memsz == 0 && tcbsize <= TLS_INIT_TCB_SIZE)
     /* We do not need a TLS block and no thread descriptor.  */
     return;
 

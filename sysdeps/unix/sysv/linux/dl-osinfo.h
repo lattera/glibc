@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <string.h>
+#include <fcntl.h>
 #include <sys/sysctl.h>
 #include <sys/utsname.h>
 #include "kernel-features.h"

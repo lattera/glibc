@@ -1,3 +1,25 @@
+2002-12-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/libc-start.c (__libc_start_main): Do
+	DL_SYSDEP_OSCHECK here.
+	* sysdeps/unix/sysv/linux/init-first.c (init): Not here.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include <fcntl.h>.
+
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Bail if
+	argument TCBSIZE <= TLS_INIT_TCB_SIZE, not just if it's zero.
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Check l_tls_offset
+	instead of l_type to decide whether to use TLS_DTV_UNALLOCATED.
+
+	* include/link.h: Comment typo fix.
+
+2002-12-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_FSYNC): Set to 200112L.
+	(_POSIX_SPAWN, _POSIX_MAPPED_FILES, _POSIX_MEMLOCK_RANGE,
+	_POSIX_MEMORY_PROTECTION): Likewise.
+	(_POSIX_POLL, _POSIX_SELECT): Removed.
+
 2002-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define macros which
