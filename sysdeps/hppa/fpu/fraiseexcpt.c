@@ -22,6 +22,9 @@
 #include <float.h>
 #include <math.h>
 
+/* Please see section 10, 
+   page 10-5 "Delayed Trapping" in the PA-RISC 2.0 Architecture manual */
+
 int
 feraiseexcept (int excepts)
 {
@@ -33,56 +36,64 @@ feraiseexcept (int excepts)
 
   /* We do these bits in assembly to be certain GCC doesn't optimize
      away something important, and so we can force delayed traps to
-     occur.  */
+     occur. */
 
-  /* FIXME: These all need verification! */
-
-  /* First: invalid exception.  */
+  /* We use "fldd 0(%%sr0,%%sp),%0" to flush the delayed exception */
+	
+  /* First: Invalid exception.  */
   if (excepts & FE_INVALID)
     {
       /* One example of a invalid operation is 0 * Infinity.  */
       double d = HUGE_VAL;
-      __asm__ __volatile__ ("fmpy,dbl %1,%%fr0,%0\n\t"
-			    /* FIXME: is this a proper trap barrier? */
-			    "fcpy,dbl %%fr0,%%fr0" : "=f" (d) : "0" (d));
+      __asm__ __volatile__ (
+		"	fcpy,dbl %%fr0,%%fr22\n"
+		"	fmpy,dbl %0,%%fr22,%0\n"
+		"	fldd 0(%%sr0,%%sp),%0"
+		: "+f" (d) : : "%fr22" );
     }
 
-  /* Next: division by zero.  */
+  /* Second: Division by zero.  */
   if (excepts & FE_DIVBYZERO)
     {
       double d = 1.0;
-      __asm__ __volatile__ ("fdiv,dbl %1,%%fr0,%0\n\t"
-			    "fcpy,dbl %%fr0,%%fr0" : "=f" (d) : "0" (d));
+      __asm__ __volatile__ (
+		"	fcpy,dbl %%fr0,%%fr22\n"
+		"	fdiv,dbl %0,%%fr22,%0\n"
+		"	fldd 0(%%sr0,%%sp),%0"
+		: "+f" (d) : : "%fr22" );
     }
 
-  /* Next: overflow.  */
-  /* FIXME: Compare with IA-64 - do we have the same problem? */
+  /* Third: Overflow.  */
   if (excepts & FE_OVERFLOW)
     {
       double d = DBL_MAX;
-
-      __asm__ __volatile__ ("fmpy,dbl %1,%1,%0\n\t"
-			    "fcpy,dbl %%fr0,%%fr0" : "=f" (d) : "0" (d));
+      __asm__ __volatile__ (
+		"	fadd,dbl %0,%0,%0\n"
+		"	fldd 0(%%sr0,%%sp),%0"
+		: "+f" (d) );
     }
 
-  /* Next: underflow.  */
+  /* Fourth: Underflow.  */
   if (excepts & FE_UNDERFLOW)
     {
       double d = DBL_MIN;
-      double e = 69.69;
-
-      __asm__ __volatile__ ("fdiv,dbl %1,%2,%0\n\t"
-			    "fcpy,dbl %%fr0,%%fr0" : "=f" (d) : "0" (d), "f" (e));
+      double e = 3.0;
+      __asm__ __volatile__ (
+		"	fdiv,dbl %0,%1,%0\n"
+		"	fldd 0(%%sr0,%%sp),%0"
+		: "+f" (d) : "f" (e) );
     }
 
-  /* Last: inexact.  */
+  /* Fifth: Inexact */
   if (excepts & FE_INEXACT)
     {
-      double d = 1.0;
-      double e = M_PI;
-
-      __asm__ __volatile__ ("fdiv,dbl %1,%2,%0\n\t"
-			    "fcpy,dbl %%fr0,%%fr0" : "=f" (d) : "0" (d), "f" (e));
+      double d = M_PI;
+      double e = 69.69;
+      __asm__ __volatile__ (
+		"	fdiv,dbl %0,%1,%%fr22\n"
+		"	fcnvfxt,dbl,sgl %%fr22,%%fr22L\n"
+		"	fldd 0(%%sr0,%%sp),%%fr22"
+		: : "f" (d), "f" (e) : "%fr22" );
     }
 
   /* Success.  */
