@@ -1,3 +1,8 @@
+2000-01-11  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/mips/__longjmp.c (__longjmp): Change call to abort into
+	infinite loop to avoid pulling in stdio in the dynamic linker.
+
 2000-01-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h (elf_machine_matches_host): Follow
