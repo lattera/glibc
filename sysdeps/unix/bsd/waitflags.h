@@ -1,5 +1,5 @@
-/* Definitions of flag bits for `waitpid' et al.
-Copyright (C) 1992 Free Software Foundation, Inc.
+/* Definitions of flag bits for `waitpid' et al.  Hurd version.
+Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,5 +24,8 @@ Cambridge, MA 02139, USA.  */
 /* Bits in the third argument to `waitpid'.  */
 #define	WNOHANG		1	/* Don't block waiting.  */
 #define	WUNTRACED	2	/* Report status of stopped children.  */
+#ifdef  __USE_GNU
+#define WNOREAP		4	/* Don't remove record of child reported.  */
+#endif
 
 #endif	/* waitflags.h */

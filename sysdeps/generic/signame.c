@@ -1,5 +1,5 @@
 /* Convert between signal names and numbers.
-   Copyright (C) 1990, 1992, 1993, 1995 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1992, 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,10 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <sys/types.h>		/* Some systems need this for <signal.h>.  */
 #include <signal.h>
+
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
 
 /* Some systems declare `sys_siglist in <unistd.h>; if
    configure defined SYS_SIGLIST_DECLARED, it may expect
@@ -239,7 +243,7 @@ sig_abbrev (number)
 
   if (sig_table_nelts == 0)
     signame_init ();
-  
+
   for (i = 0; i < sig_table_nelts; i++)
     if (sig_table[i].number == number)
       return (char *)sig_table[i].abbrev;
@@ -293,10 +297,10 @@ strsignal (signal)
      int signal;
 {
   static char buf[] = "Signal 12345678901234567890";
- 
+
   if (signal > 0 || signal < NSIG)
     return (char *) sys_siglist[signal];
- 
+
   sprintf (buf, "Signal %d", signal);
   return buf;
 }

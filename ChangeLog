@@ -1,5 +1,7 @@
 Wed Mar 20 09:42:11 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* sysdeps/unix/bsd/waitflags.h (WNOREAP): New macro.
+
 	* elf/dl-load.c (_dl_map_object_from_fd): Always set L->l_type; if not
 	lt_executable, then lt_library.
 	* elf/rtld.c (dl_main): Don't set NEW->l_type after _dl_map_object.
