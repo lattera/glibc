@@ -61,7 +61,10 @@ BEGIN {
 # current library.  This is the only place where we print something to
 # the intermediate file.
 /^   / {
-  printf("%s %s %s\n", actlib, actver, $0) | sort;
+  sortver=actver
+  # Ensure GLIBC_ versions come always first
+  sub(/^GLIBC_/," GLIBC_",sortver)
+  printf("%s %s %s\n", actlib, sortver, $0) | sort;
 }
 
 

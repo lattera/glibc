@@ -3,6 +3,7 @@
 	* sysdeps/generic/strcasecmp.c (__strcasecmp): Little performance
 	patch.
 	* sysdeps/generic/strncase.c: Likewise.
+	* string/tester.c: Add tests for strcasecmp and strncasecmp.
 
 2001-12-05  Geoff Keating  <geoffk@redhat.com>
 
@@ -373,6 +374,7 @@
 2001-10-02  Jakub Jelinek  <jakub@redhat.com>
 	    H.J. Lu  <hjl@gnu.org>
 
+	* Versions.def (libc): Add GCC_3.0.
 	* configure.in (libc_cv_gcc_static_libgcc): Set to -static-libgcc
 	if gcc supports this flag.
 	(EXPORT_UNWIND_FIND_FDE): Define unless target configure disables it.
@@ -388,7 +390,7 @@
 	* elf/Versions (__register_frame_info, __deregister_frame_info): Add
 	for GLIBC_2.0.
 	(__register_frame_info_bases, __register_frame_info_table_bases,
-	__deregister_frame_info_bases, _Unwind_Find_FDE): Add for GLIBC_2.2.5.
+	__deregister_frame_info_bases, _Unwind_Find_FDE): Add for GCC_3.0.
 	* elf/Makefile (routines): Add unwind-dw2-fde.
 	(shared-only-routines): Add unwind-dw2-fde.
 	* sysdeps/alpha/gccframe.h: New file.
