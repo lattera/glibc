@@ -157,12 +157,10 @@ _dl_fini (void)
 	      ElfW(Addr) *array =
 		(ElfW(Addr) *) (l->l_addr
 				+ l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
-	      unsigned int sz = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-				 / sizeof (ElfW(Addr)));
-	      unsigned int cnt;
-
-	      for (cnt = 0; cnt < sz; ++cnt)
-		((fini_t) (l->l_addr + array[cnt])) ();
+	      unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
+				/ sizeof (ElfW(Addr)));
+	      while (i-- > 0)
+		((fini_t) array[i]) ();
 	    }
 
 	  /* Next try the old-style destructor.  */

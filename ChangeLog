@@ -1,3 +1,8 @@
+2002-10-28  David Mosberger  <davidm@hpl.hp.com>
+
+	* elf/dl-fini.c (_dl_fini): Invoke fini_array in _reverse_ order.
+	Don't add L->l_addr to array entry values.
+
 2002-11-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/test-string.h: New file.
