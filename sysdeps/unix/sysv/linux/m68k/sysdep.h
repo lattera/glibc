@@ -69,7 +69,7 @@
   END (name)
 
 #ifdef PIC
-# ifdef RTLD_PRIVATE_ERRNO
+# if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER						      \
 SYSCALL_ERROR_LABEL:							      \
     lea (errno, %pc), %a0;					      	      \
@@ -83,7 +83,7 @@ SYSCALL_ERROR_LABEL:							      \
 # else /* !RTLD_PRIVATE_ERRNO */
 /* Store (- %d0) into errno through the GOT.  */
 #  if defined _LIBC_REENTRANT
-#  define SYSCALL_ERROR_HANDLER						      \
+#   define SYSCALL_ERROR_HANDLER					      \
 SYSCALL_ERROR_LABEL:							      \
     neg.l %d0;								      \
     move.l %d0, -(%sp);							      \
@@ -95,7 +95,7 @@ SYSCALL_ERROR_LABEL:							      \
     move.l %d0, %a0;							      \
     rts;
 #  else /* !_LIBC_REENTRANT */
-#  define SYSCALL_ERROR_HANDLER						      \
+#   define SYSCALL_ERROR_HANDLER					      \
 SYSCALL_ERROR_LABEL:							      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
