@@ -412,6 +412,15 @@ struct bin_tree_t
 };
 typedef struct bin_tree_t bin_tree_t;
 
+#define BIN_TREE_STORAGE_SIZE \
+  ((1024 - sizeof (void *)) / sizeof (bin_tree_t))
+
+struct bin_tree_storage_t
+{
+  struct bin_tree_storage_t *next;
+  bin_tree_t data[BIN_TREE_STORAGE_SIZE];
+};
+typedef struct bin_tree_storage_t bin_tree_storage_t;
 
 #define CONTEXT_WORD 1
 #define CONTEXT_NEWLINE (CONTEXT_WORD << 1)
@@ -578,7 +587,6 @@ struct re_dfa_t
   re_token_t *nodes;
   int nodes_alloc;
   int nodes_len;
-  bin_tree_t *str_tree;
   int *nexts;
   int *org_indices;
   re_node_set *edests;
@@ -589,6 +597,9 @@ struct re_dfa_t
   re_dfastate_t *init_state_word;
   re_dfastate_t *init_state_nl;
   re_dfastate_t *init_state_begbuf;
+  bin_tree_t *str_tree;
+  bin_tree_storage_t *str_tree_storage;
+  int str_tree_storage_idx;
 
   /* number of subexpressions `re_nsub' is in regex_t.  */
   int subexps_alloc;
@@ -598,9 +609,6 @@ struct re_dfa_t
   int nbackref; /* The number of backreference in this dfa.  */
   /* Bitmap expressing which backreference is used.  */
   unsigned int used_bkref_map;
-#ifdef DEBUG
-  char* re_str;
-#endif
   unsigned int has_plural_match : 1;
   /* If this dfa has "multibyte node", which is a backreference or
      a node which can accept multibyte character or multi character
@@ -609,6 +617,9 @@ struct re_dfa_t
   unsigned int is_utf8 : 1;
   unsigned int map_notascii : 1;
   int mb_cur_max;
+#ifdef DEBUG
+  char* re_str;
+#endif
 };
 
 #ifndef RE_NO_INTERNAL_PROTOTYPES

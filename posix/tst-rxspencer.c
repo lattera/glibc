@@ -384,6 +384,8 @@ main (int argc, char **argv)
       {NULL,	0,		NULL,		0 }
     };
 
+  mtrace ();
+
   while (getopt_long (argc, argv, "", options, NULL) >= 0);
 
   if (optind + 1 != argc)
@@ -510,6 +512,7 @@ main (int argc, char **argv)
 	}
     }
 
+  free (line);
   fclose (f);
   return ret;
 }

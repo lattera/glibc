@@ -1,3 +1,45 @@
+2003-11-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (extend_buffers): Don't allocate
+	twice as big state_log as needed.  Don't modify pstr->valid_len
+	for mb_cur_max == 1 !icase !trans.
+
+	* posix/regcomp.c (free_bin_tree): Removed.
+	(create_tree): Add dfa argument.  Don't call re_malloc for
+	each tree, instead allocate from str_tree_storage.
+	(re_dfa_add_tree_node): New function.
+	(free_dfa_content): Handle freeing if dfa->nodes == NULL
+	or dfa->state_table == NULL.
+	(re_compile_internal): Call free_dfa_content if init_dfa
+	fails.  Call free_workarea_compile, re_string_destruct
+	and free_dfa_content for most of the other failure paths.
+	(init_dfa): Initialize str_tree_storage_idx.
+	Don't clear any fields on allocation failure.
+	(free_workarea_compile): Free str_tree_storage chunks
+	instead of free_bin_tree (dfa->str_tree).
+	(parse): Call re_dfa_add_tree_node instead of re_dfa_add_node
+	followed by create_tree.  Add dfa argument to remaining
+	create_tree calls.  Remove new_idx variable.  Remove calls
+	to free_bin_tree.
+	(parse_reg_exp, parse_branch, parse_expression, parse_sub_exp,
+	parse_dup_op, parse_bracket_exp, build_charclass_op): Likewise.
+	(duplicate_tree): Remove calls to free_bin_tree, add dfa
+	argument to create_tree.
+	* posix/regex_internal.h (BIN_TREE_STORAGE_SIZE): Define.
+	(bin_tree_storage_t): New type.
+	(re_dfa_t): Add str_tree_storage and str_tree_storage_idx
+	fields.
+	* posix/Makefile (tests): Add bug-regex21.
+	(generated): Add bug-regex21-mem, bug-regex21.mtrace,
+	tst-rxspencer-mem and tst-rxspencer.mtrace.
+	(tests): Depend on $(objpfx)bug-regex21-mem
+	and $(objpfx)tst-rxspencer-mem.
+	(bug-regex21-ENV, tst-rxspencer-ENV): Set.
+	($(objpfx)bug-regex21-mem, $(objpfx)tst-rxspencer-mem): New.
+	* posix/tst-rxspencer.c (main): Add call to mtrace.
+	Free line at the end.
+	* posix/bug-regex21.c: New test.
+
 2003-11-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/bug-regex20.c: Correct invalid UTF-8 sequences.
@@ -11,7 +53,7 @@
 
 2003-11-18  Ulrich Drepper  <drepper@redhat.com>
 
-	* posix/regexec.c (get_subexp): After calling get_subexp_seb
+	* posix/regexec.c (get_subexp): After calling get_subexp_sub
 	reload buf and bkref_str.  Little optimization by avoiding memcmp.
 
 2003-11-14  David Mosberger   <davidm@hpl.hp.com>

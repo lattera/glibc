@@ -3840,7 +3840,7 @@ extend_buffers (mctx)
       /* And double the length of state_log.  */
       re_dfastate_t **new_array;
       new_array = re_realloc (mctx->state_log, re_dfastate_t *,
-			      pstr->bufs_len * 2);
+			      pstr->bufs_len + 1);
       if (BE (new_array == NULL, 0))
 	return REG_ESPACE;
       mctx->state_log = new_array;
@@ -3866,8 +3866,6 @@ extend_buffers (mctx)
 	{
 	  if (pstr->trans != NULL)
 	    re_string_translate_buffer (pstr);
-	  else
-	    pstr->valid_len = pstr->bufs_len;
 	}
     }
   return REG_NOERROR;

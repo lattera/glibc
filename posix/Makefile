@@ -78,7 +78,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
-		   tst-nice tst-nanosleep transbug tst-rxspencer
+		   bug-regex21 tst-nice tst-nanosleep transbug tst-rxspencer
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -93,7 +93,8 @@ before-compile	:= testcases.h ptestcases.h
 generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     annexc annexc.out wordexp-tst.out bug-regex2-mem \
 	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
-	     tst-getconf.out
+	     bug-regex21-mem bug-regex21.mtrace \
+	     tst-rxspencer-mem tst-rxspencer.mtrace tst-getconf.out
 
 include ../Rules
 
@@ -178,7 +179,9 @@ endif
 # XXX Please note that for now we ignore the result of this test.
 tests: $(objpfx)annexc.out
 ifeq (no,$(cross-compiling))
-tests:$(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem $(objpfx)tst-getconf.out
+tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
+  $(objpfx)bug-regex21-mem $(objpfx)tst-rxspencer-mem \
+  $(objpfx)tst-getconf.out
 endif
 
 $(objpfx)annexc.out: $(objpfx)annexc
@@ -198,6 +201,16 @@ bug-regex14-ENV = MALLOC_TRACE=$(objpfx)bug-regex14.mtrace
 
 $(objpfx)bug-regex14-mem: $(objpfx)bug-regex14.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex14.mtrace > $@
+
+bug-regex21-ENV = MALLOC_TRACE=$(objpfx)bug-regex21.mtrace
+
+$(objpfx)bug-regex21-mem: $(objpfx)bug-regex21.out
+	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex21.mtrace > $@
+
+tst-rxspencer-ENV = MALLOC_TRACE=$(objpfx)tst-rxspencer.mtrace
+
+$(objpfx)tst-rxspencer-mem: $(objpfx)tst-rxspencer.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-rxspencer.mtrace > $@
 
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(SHELL) -e $< $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
