@@ -58,7 +58,16 @@ unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 
 struct hurd_startup_data *_dl_hurd_data;
 
-unsigned int __hurd_threadvar_max = _HURD_THREADVAR_MAX;
+/* Defining these variables here avoids the inclusion of hurdsig.c.  */
+unsigned long int __hurd_sigthread_stack_base;
+unsigned long int __hurd_sigthread_stack_end;
+unsigned long int *__hurd_sigthread_variables;
+
+/* Defining these variables here avoids the inclusion of init-first.c.
+   We need to provide temporary storage for the per-thread variables
+   of the main user thread here, since it is used for storing the
+   `errno' variable.  Note that this information is lost once we
+   relocate the dynamic linker.  */
 static unsigned long int threadvars[_HURD_THREADVAR_MAX];
 unsigned long int __hurd_threadvar_stack_offset
   = (unsigned long int) &threadvars;
@@ -500,6 +509,21 @@ __libc_read (int fd, void *buf, size_t nbytes)
   return nread;
 }
 
+__ssize_t weak_function
+__libc_write (int fd, const void *buf, size_t nbytes)
+{
+  error_t err;
+  mach_msg_type_number_t nwrote;
+	  
+  assert (fd < _hurd_init_dtablesize);
+  
+  err = __io_write (_hurd_init_dtable[fd], buf, nbytes, -1, &nwrote);
+  if (err)
+    return __hurd_fail (err);
+
+  return nwrote;
+}
+
 off_t weak_function
 __lseek (int fd, off_t offset, int whence)
 {
@@ -614,6 +638,14 @@ __getpid ()
   return pid;
 }
 
+char *
+weak_function
+__getcwd (char *buf, size_t size)
+{
+  abort ();
+  return NULL;
+}
+
 void weak_function
 _exit (int status)
 {
@@ -645,7 +677,7 @@ abort (void)
     /* Try for ever and ever.  */
     ABORT_INSTRUCTION;
 }
-
+
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is
    weak, the real defn in libc.so will override it if we are linked into
@@ -664,13 +696,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		     timeout, notify);
 }
 
-char * weak_function
-__getcwd (char *buf, size_t size) /* XXX loser elf/dl-object.c */
-{
-  abort ();
-  return NULL;
-}
-
+
 void
 internal_function
 _dl_show_auxv (void)
@@ -697,29 +723,4 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 
   *sz = 1;
   return result;
-}
-
-
-void weak_function
-_dl_sysdep_output (int fd, const char *msg, ...)
-{
-  va_list ap;
-
-  assert(fd < _hurd_init_dtablesize);
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[fd], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
 }

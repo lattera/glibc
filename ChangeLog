@@ -1,5 +1,20 @@
 1998-09-12  Mark Kettenis  <kettenis@phys.uva.nl>
 
+	* sysdeps/mach/hurd/dl-sysdep.c: Do not define
+	__hurd_threadvar_max.  Add comment explaining why we define
+	__hurd_threadvar_stack_offset and __hurd_threadvar_stack_mask here.
+
+1998-07-29  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_variables): Define to
+	prevent inclusion of Hurd signal handling code.
+	(__libc_write): New function.
+	(_dl_sysdep_output): Removed.  The implementation in
+	`elf/dl-misc.c' now also works for the Hurd.
+
+1998-09-12  Mark Kettenis  <kettenis@phys.uva.nl>
+
 	* hurd/hurdstartup.c: Do not include hurdmalloc.h; _hurd_startup
 	does not use any of malloc/realloc/free anymore.  Include
 	set-hooks.h with <> instead of "".
