@@ -1,3 +1,11 @@
+2003-05-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h: Define hidden attribute for real also if
+	LIBC_NONSHARED is defined.  Patch by Jakub Jelinek.
+
+	* csu/Makefile: Add rules to build Scrt1.o.
+	* sysdeps/i386/elf/start.S: Make code compilable with SHARED.
+
 2003-05-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/vfprintf.c (process_arg, process_string_arg): Use

@@ -31,11 +31,12 @@ routines = init-first libc-start $(libc-init) sysdep version check_fds \
 aux	 = errno
 elide-routines.os = libc-tls
 static-only-routines = elf-init
-csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
+csu-dummies = $(filter-out $(start-installed-name),crt1.o Scrt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
 	     $(start-installed-name) g$(start-installed-name) $(csu-dummies)
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
-			      b$(start-installed-name) $(csu-dummies))
+			     b$(start-installed-name) $(csu-dummies) \
+			     S$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
 distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
 	     abi-note.S init.c munch-tmpl.c not-cancel.h
@@ -48,6 +49,11 @@ tests-static := tst-empty
 all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
+
+ifeq (yes,$(build-shared))
+extra-objs += S$(start-installed-name)
+install-lib += S$(start-installed-name)
+endif
 
 ifeq (yes,$(build-bounded))
 extra-objs += b$(start-installed-name)
@@ -149,6 +155,9 @@ ifeq (yes,$(elf))
 $(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 				  $(objpfx)init.o
 	$(link-relocatable)
+$(objpfx)S$(start-installed-name): $(objpfx)start.os $(objpfx)abi-note.o \
+				  $(objpfx)init.o
+	$(link-relocatable)
 $(objpfx)b$(start-installed-name): $(objpfx)start.ob $(objpfx)abi-note.ob \
 				  $(objpfx)init.ob
 	$(link-relocatable)
@@ -156,6 +165,9 @@ else
 # The startfile is installed under different names, so we just call our
 # source file `start.c' and copy to the installed name after compiling.
 $(objpfx)$(start-installed-name): $(objpfx)start.o
+	rm -f $@
+	ln $< $@
+$(objpfx)S$(start-installed-name): $(objpfx)start.os
 	rm -f $@
 	ln $< $@
 $(objpfx)b$(start-installed-name): $(objpfx)start.ob
@@ -174,7 +186,8 @@ $(addprefix $(objpfx),$(sort g$(start-installed-name) \
 
 # These extra files are sometimes expected by system standard linking
 # procedures, but we have nothing for them to do.  So compile empty files.
-$(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):\
+$(addprefix $(objpfx),$(filter-out $(start-installed-name)\
+				   S$(start-installed-name),$(csu-dummies))):\
   $(before-compile)
 	$(COMPILE.c) -o $@ -x c /dev/null
 

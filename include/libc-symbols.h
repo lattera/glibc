@@ -441,7 +441,8 @@
   strong_alias(real, name)
 #endif
 
-#if defined HAVE_VISIBILITY_ATTRIBUTE && defined SHARED
+#if defined HAVE_VISIBILITY_ATTRIBUTE \
+    && (defined SHARED || defined LIBC_NONSHARED)
 # define attribute_hidden __attribute__ ((visibility ("hidden")))
 #else
 # define attribute_hidden

@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF i386 ABI.
-   Copyright (C) 1995,1996,1997,1998,2000,2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,6 +67,27 @@ _start:
 	pushl %edx		/* Push address of the shared library
 				   termination function.  */
 
+#ifdef SHARED
+	/* Load PIC register.  */
+	call 1f
+	addl $_GLOBAL_OFFSET_TABLE_, %ebx
+
+	/* Push address of our own entry points to .fini and .init.  */
+	leal __libc_csu_fini@GOTOFF(%ebx), %eax
+	pushl %eax
+	leal __libc_csu_init@GOTOFF(%ebx), %eax
+	pushl %eax
+
+	pushl %ecx		/* Push second argument: argv.  */
+	pushl %esi		/* Push first argument: argc.  */
+
+	leal BP_SYM (main)@GOTOFF(%ebx), %eax
+	pushl %eax
+
+	/* Call the user's main function, and exit with its value.
+	   But let the libc call main.    */
+	call BP_SYM (__libc_start_main)@PLT
+#else
 	/* Push address of our own entry points to .fini and .init.  */
 	pushl $__libc_csu_fini
 	pushl $__libc_csu_init
@@ -79,8 +100,14 @@ _start:
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.    */
 	call BP_SYM (__libc_start_main)
+#endif
 
 	hlt			/* Crash if somehow `exit' does return.  */
+
+#ifdef SHARED
+1:	movl	(%esp), %ebx
+	ret
+#endif
 
 /* To fulfill the System V/i386 ABI we need this symbol.  Yuck, it's so
    meaningless since we don't support machines < 80386.  */
