@@ -754,12 +754,11 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
     {
       /* Remove the stillborn object from the list and free it.  */
       assert (l->l_next == NULL);
-#ifndef SHARED
       if (l->l_prev == NULL)
-	/* No other module loaded.  */
+	/* No other module loaded. This happens only in the static library,
+	   or in rtld under --verify.  */
 	GL(dl_loaded) = NULL;
       else
-#endif
 	l->l_prev->l_next = NULL;
       --GL(dl_nloaded);
       free (l);

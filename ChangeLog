@@ -1,5 +1,8 @@
 2002-08-15  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-load.c (lose): Remove [!SHARED] conditional from null check
+	on L->l_prev; it can happen under rtld --verify too.
+
 	* locale/loadarchive.c (_nl_load_locale_from_archive): Don't read the
 	header separately, just map an initial window of 2MB from the file
 	and remap if that is not large enough to cover the whole header.
