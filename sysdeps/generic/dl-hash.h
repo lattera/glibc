@@ -1,5 +1,5 @@
 /* Compute hash alue for given string according to ELF standard.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,15 +22,15 @@
 
 
 /* This is the hashing function specified by the ELF ABI.  In the
-   first five operations now overflow is possible so we optimized it a
+   first five operations no overflow is possible so we optimized it a
    bit.  */
-static inline unsigned
-_dl_elf_hash (const char *name)
+static inline unsigned int
+_dl_elf_hash (const unsigned char *name)
 {
   unsigned long int hash = 0;
   if (*name != '\0')
     {
-      hash = (hash << 4) + *name++;
+      hash = *name++;
       if (*name != '\0')
 	{
 	  hash = (hash << 4) + *name++;
@@ -48,15 +48,20 @@ _dl_elf_hash (const char *name)
 			  unsigned long int hi;
 			  hash = (hash << 4) + *name++;
 			  hi = hash & 0xf0000000;
-			  if (hi != 0)
-			    {
-			      hash ^= hi >> 24;
-			      /* The ELF ABI says `hash &= ~hi', but
-				 this is equivalent in this case and
-				 on some machines one insn instead of
-				 two.  */
-			      hash ^= hi;
-			    }
+
+			  /* The algorithm specified in the ELF ABI is as
+			     follows:
+
+			     if (hi != 0)
+			       hash ^= hi >> 24;
+
+			     hash &= ~hi;
+
+			     But the following is equivalent and a lot
+			     faster, especially on modern processors.  */
+
+			  hash ^= hi;
+			  hash ^= hi >> 24;
 			}
 		    }
 		}

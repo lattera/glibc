@@ -1,3 +1,12 @@
+1998-12-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-hash.h: Move to...
+	* sysdeps/generic/dl-hash.h: ...here.  Correct parameter type (must
+	be unsigned char).  Remove conditional from inner loop and rearrange
+	binary operations (12-22% performance increase).
+	* sysdeps/i386/i686/dl-hash.h: New file.  Yet 10% faster than
+	optimized generic version.
+
 1998-12-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-lookup.c (do_lookup): If looking up an unversioned symbol
