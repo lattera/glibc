@@ -157,7 +157,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
-			      "1:\tleaq %2, %%rsi\n\t"			      \
+			      "1:\tleaq %2, %%rdi\n\t"			      \
 			      "subq $128, %%rsp\n\t"			      \
 			      "callq __lll_lock_wait\n\t"		      \
 			      "addq $128, %%rsp\n\t"			      \
@@ -171,7 +171,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 # define lll_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm __volatile (LOCK_INSTR "addl $1,%0\n\t"		      \
+            __asm __volatile (LOCK_INSTR "incl %0\n\t"			      \
 			      "jng 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %0, %%rdi\n\t"			      \
@@ -210,14 +210,14 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "0:\txaddl %0, %2\n\t"			      \
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
-			      "1:\tleaq %2, %%rsi\n\t"			      \
+			      "1:\tleaq %2, %%rdi\n\t"			      \
 			      "subq $128, %%rsp\n\t"			      \
 			      "callq __lll_lock_wait\n\t"		      \
 			      "addq $128, %%rsp\n\t"			      \
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
-			      : "=D" (ignore1), "=&S" (ignore2), "=m" (futex) \
+			      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex) \
 			      : "0" (-1), "2" (futex)			      \
 			      : "memory"); })
 
@@ -227,7 +227,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
             __asm __volatile ("cmpl $0, __libc_multiple_threads(%%rip)\n\t"   \
 			      "je 0f\n\t"				      \
 			      "lock\n"					      \
-			      "0:\taddl $1,%0\n\t"			      \
+			      "0:\incl %0\n\t"			      \
 			      "jng 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %0, %%rdi\n\t"			      \
