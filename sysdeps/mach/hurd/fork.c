@@ -297,6 +297,7 @@ __fork (void)
 		 Give the child as many references for it as we have.  */
 	      mach_port_urefs_t refs, *record_refs = NULL;
 	      mach_port_t insert;
+	      mach_msg_type_name_t insert_type = MACH_MSG_TYPE_COPY_SEND;
 	      if (portnames[i] == newtask)
 		/* Skip the name we use for the child's task port.  */
 		continue;
@@ -309,6 +310,7 @@ __fork (void)
 		  /* Get the proc server port for the new task.  */
 		  if (err = __proc_task2proc (portnames[i], newtask, &insert))
 		    LOSE;
+		  insert_type = MACH_MSG_TYPE_MOVE_SEND;
 		}
 	      else if (portnames[i] == ss->thread)
 		{
@@ -347,6 +349,7 @@ __fork (void)
 		  if (j < nthreads)
 		    continue;
 
+		  /* Copy our own send right.  */
 		  insert = portnames[i];
 		}
 	      /* Find out how many user references we have for
