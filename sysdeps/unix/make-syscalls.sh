@@ -248,7 +248,7 @@ shared-only-routines += $file
     # generate makefile envelope & rule head
     echo "ifeq (,\$(filter $file,\$(bp-thunks)))"
     echo "bp-thunks += $file"
-    echo "\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto$cancellable.d"
+    echo "\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto-bp.d"
 
     # generate macro head
     echo "	(echo '#define $callname(`echo $arglist | \

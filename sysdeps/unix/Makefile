@@ -305,6 +305,7 @@ ifndef no_deps
 # These deps use file names relative to a subdir, so don't
 # include them in the parent directory.
 -include $(common-objpfx)s-proto.d
+-include $(common-objpfx)s-proto-bp.d
 -include $(common-objpfx)s-proto-cancel.d
 endif
 endif
@@ -314,7 +315,7 @@ $(common-objpfx)s-%.d: $(..)sysdeps/unix/s-%.S \
 # Don't try to use compat.h in the db2 subdir
 	$(subst -include ./compat.h,,$(+make-deps))
 
-common-generated += s-proto.d s-proto-cancel.d
+common-generated += s-proto.d s-proto-bp.d s-proto-cancel.d
 postclean-generated += sysd-syscalls
 
 endif

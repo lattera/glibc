@@ -51,7 +51,7 @@
 #include <sys/quota.h>
 #include <sys/resource.h>
 #include <sys/select.h>
-#include <sys/sendfile.h>
+#include <io/sys/sendfile.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/statfs.h>
@@ -61,7 +61,6 @@
 #include <sys/times.h>
 #include <sys/timex.h>
 #include <sys/utsname.h>
-#include <sys/vm86.h>
 #include <sys/wait.h>
 
 #endif /* _bpthunks_h_ */
