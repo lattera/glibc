@@ -1,5 +1,8 @@
 2000-06-30  Andreas Jaeger  <aj@suse.de>
 
+	* posix/Makefile (tests): tst-exec and tst-spawn only work with
+	shared libraries.
+
 	* io/Makefile (CFLAGS-test-lfs.c): New.
 	(tests): Add test-lfs.
 

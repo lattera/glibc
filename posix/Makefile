@@ -23,7 +23,7 @@ subdir	:= posix
 
 headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   glob.h regex.h wordexp.h fnmatch.h bits/types.h getopt.h	      \
-	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h 	      \
+	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h	      \
 	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h	      \
@@ -39,7 +39,7 @@ routines :=								      \
 	times								      \
 	wait waitpid wait3 wait4 waitid					      \
 	alarm sleep pause nanosleep					      \
-	fork vfork _exit	      					      \
+	fork vfork _exit						      \
 	execve fexecve execv execle execl execvp execlp			      \
 	getpid getppid							      \
 	getuid geteuid getgid getegid getgroups setuid setgid group_member    \
@@ -68,10 +68,10 @@ aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
-		   tst-truncate64 tst-fork tst-exec tst-spawn
+		   tst-truncate64 tst-fork
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
-tests           += wordexp-test
+tests           += wordexp-test tst-exec tst-spawn
 endif
 others		:= getconf
 install-bin	:= getconf
