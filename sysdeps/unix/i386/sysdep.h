@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,18 +20,43 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	ASSEMBLER
 
+/* Syntactic details of assembler.  */
+
+#ifdef HAVE_ELF
+
+/* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
+#define ALIGNARG(log2) 1<<log2
+/* For ELF we need the `.type' directive to make shared libs work right.  */
+#define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg;
+
+/* In ELF C symbols are asm symbols.  */
+#undef	NO_UNDERSCORES
+#define NO_UNDERSCORES
+
+#else
+
+#define ALIGNARG(log2) log2
+#define ASM_TYPE_DIRECTIVE(name,type) /* Nothing is specified.  */
+
+#endif
+
+
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
-  .align 4;								      \
-  C_LABEL(name)
+  .align ALIGNARG(4);							      \
+  C_LABEL(name)								      \
+  CALL_MCOUNT
 
-/* For ELF we need the `.type' directive to make shared libs work right.  */
-#ifdef HAVE_ELF
-#define ASM_TYPE_DIRECTIVE(name,typearg)	.type name,typearg;
+/* If compiled for profiling, call `mcount' at the start of each function.  */
+#ifdef	PROF
+/* The mcount code relies on a normal frame pointer being on the stack
+   to locate our caller, so push one just for its benefit.  */
+#define CALL_MCOUNT \
+  pushl %ebp; movl %esp, %ebp; call JUMPTARGET(mcount); popl %ebp;
 #else
-#define ASM_TYPE_DIRECTIVE(name,type) /* Nothing is specified.  */
+#define CALL_MCOUNT		/* Do nothing.  */
 #endif
 
 #ifdef	NO_UNDERSCORES
@@ -39,6 +64,7 @@ Cambridge, MA 02139, USA.  */
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
 #define	syscall_error	__syscall_error
+#define mcount		_mcount
 #endif
 
 #define	PSEUDO(name, syscall_name, args)				      \

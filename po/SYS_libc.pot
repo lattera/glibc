@@ -1,0 +1,807 @@
+msgid ""
+msgstr ""
+"Date: 1996-02-14 01:31:32-0500\n"
+"From: Roland McGrath <roland@charlie-brown.gnu.ai.mit.edu>\n"
+"Content-Type: text/plain; charset=\n"
+"Xgettext-Options: --keyword=_ --keyword=N_ --sort-output -d -\n"
+"Files\n"
+"\t: /dev/null assert-perr.c assert.c assert.h\n"
+"\t\n"
+"\t\n"
+"\t\n"
+"\t\n"
+"\t\n"
+"\t\n"
+"\t"
+
+#: assert.c:48
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr ""
+
+#: assert-perr.c:46
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr ""
+
+#: charmap.c:324
+msgid "%s: `END CHARMAP' is missing"
+msgstr ""
+
+#: charmap.c:195
+msgid "%s: unexpected end of file in charmap"
+msgstr ""
+
+#: locfile-lex.c:87
+msgid "%s: unexpected end of file in locale defintion file"
+msgstr ""
+
+#: locfile-parse.c:205
+msgid "%s:%Zd: `copy' must be sole rule"
+msgstr ""
+
+#: collate.c:51 locale-ctype.c:261 locfile-parse.c:190 locfile-parse.c:236
+msgid "%s:%Zd: category `%s' does not end with `END %s'"
+msgstr ""
+
+#: locfile-parse.c:268
+msgid "%s:%Zd: category item `%s' already defined"
+msgstr ""
+
+#: locfile-lex.c:250 locfile-lex.c:518
+msgid "%s:%Zd: character `%s' not defined"
+msgstr ""
+
+#: locfile-lex.c:155
+msgid "%s:%Zd: comment does not start in column 1"
+msgstr ""
+
+#: collate.c:165 collate.c:174
+msgid "%s:%Zd: directives `forward' and `backward' are mutually exclusive"
+msgstr ""
+
+#: locale-ctype.c:187
+msgid "%s:%Zd: duplicate definition of item `%s' in category `LC_CTYPE'"
+msgstr ""
+
+#: locale-ctype.c:101
+msgid "%s:%Zd: duplicate definiton of item `%s' in category `LC_CTYPE'"
+msgstr ""
+
+#: locfile-lex.c:497
+msgid "%s:%Zd: end of line in character symbol"
+msgstr ""
+
+#: locale-ctype.c:121
+msgid "%s:%Zd: illegal use of `...'"
+msgstr ""
+
+#: locfile-parse.c:172
+msgid "%s:%Zd: invalid locale `%s' in copy statement"
+msgstr ""
+
+#: locfile-parse.c:741
+msgid "%s:%Zd: invalid number"
+msgstr ""
+
+#: locfile-lex.c:455
+msgid "%s:%Zd: line too long;  use `getconf LINE_MAX' to get the current maximum line length"
+msgstr ""
+
+#: locfile-lex.c:131
+msgid "%s:%Zd: line too long;  use `getconf LINE_MAX' to get the maximum line length"
+msgstr ""
+
+#: locfile-parse.c:112
+msgid "%s:%Zd: locale category start expected"
+msgstr ""
+
+#: locale-ctype.c:158
+msgid "%s:%Zd: lower bound of ellipsis not smaller"
+msgstr ""
+
+#: locfile-parse.c:130
+msgid "%s:%Zd: multiple definition of locale category %s"
+msgstr ""
+
+#: locfile-parse.c:725
+msgid "%s:%Zd: number expected"
+msgstr ""
+
+#: collate.c:76
+msgid "%s:%Zd: symbolic name must not be duplicate name in charmap"
+msgstr ""
+
+#: collate.c:124
+msgid "%s:%Zd: symbolic name must not duplicate name in charmap"
+msgstr ""
+
+#: locfile-lex.c:201
+msgid "%s:%Zd: syntax error in locale definition file"
+msgstr ""
+
+#: locfile-parse.c:337
+msgid "%s:%Zd: too few elements for item `%s'"
+msgstr ""
+
+#: locfile-parse.c:321
+msgid "%s:%Zd: too many elements for item `%s`"
+msgstr ""
+
+#: locfile-lex.c:437
+msgid "%s:%Zd: trailing garbage at end of line"
+msgstr ""
+
+#: locfile-lex.c:237
+msgid "%s:%Zd: unterminated string at end of line"
+msgstr ""
+
+#: charmap.c:429
+msgid "%s:%u: byte constant has less than two digits"
+msgstr ""
+
+#: charmap.c:435
+msgid "%s:%u: character encoding must be given in 8-bit bytes"
+msgstr ""
+
+#: charmap.c:239
+msgid "%s:%u: duplicate code set name specification"
+msgstr ""
+
+#: charmap.c:259
+msgid "%s:%u: duplicate definition of mb_cur_max"
+msgstr ""
+
+#: charmap.c:276
+msgid "%s:%u: duplicate definition of mb_cur_min"
+msgstr ""
+
+#: charmap.c:462 charmap.c:498
+msgid "%s:%u: duplicate entry"
+msgstr ""
+
+#: charmap.c:264
+msgid "%s:%u: illegal value for mb_cur_max: %d"
+msgstr ""
+
+#: charmap.c:281
+msgid "%s:%u: illegal value for mb_cur_min: %d"
+msgstr ""
+
+#: charmap.c:332
+msgid "%s:%u: line too long;  use `getconf LINE_MAX' to get the current maximum linelength"
+msgstr ""
+
+#: charmap.c:448
+msgid "%s:%u: number of bytes in character definition exceeds `mb_cur_max'"
+msgstr ""
+
+#: charmap.c:486
+msgid "%s:%u: starting character is bigger than last"
+msgstr ""
+
+#: locale-ctype.c:352
+msgid "<SP> character must not be in class `%s'"
+msgstr ""
+
+#: locale-ctype.c:346
+msgid "<SP> character not in class `%s'"
+msgstr ""
+
+#: monetary.c:113
+msgid "Internal error in %s, line %u"
+msgstr ""
+
+#: regex.c:952 xmalloc.c:74
+msgid "Memory exhausted"
+msgstr ""
+
+#: locfile-parse.c:466
+msgid "cannot copy locale definition file `%s'"
+msgstr ""
+
+#: locale-ctype.c:472 locfile-parse.c:481 locfile-parse.c:682
+msgid "cannot open output file `%s': %m"
+msgstr ""
+
+#: locfile-parse.c:779
+msgid "cannot read locale directory `%s'"
+msgstr ""
+
+#: locale-ctype.c:485 locale-ctype.c:507 locfile-parse.c:690
+msgid "cannot write output file `%s': %m"
+msgstr ""
+
+#: locfile-parse.c:429
+msgid "category `%s' not defined"
+msgstr ""
+
+#: locale-ctype.c:319
+msgid "character '\\%o' in class `%s' must be in class `%s'"
+msgstr ""
+
+#: locale-ctype.c:325
+msgid "character '\\%o' inc class `%s' must not be in class `%s'"
+msgstr ""
+
+#: locale-ctype.c:341
+msgid "character <SP> not defined in character map"
+msgstr ""
+
+#: locale-ctype.c:600 locale-ctype.c:638 locale-ctype.c:644 locale-ctype.c:650 locale-ctype.c:656 locale-ctype.c:662 locale-ctype.c:668 locale-ctype.c:697 locale-ctype.c:703 locale-ctype.c:738 locale-ctype.c:770 locale-ctype.c:777
+msgid "character `%s' not defined while needed as default value"
+msgstr ""
+
+#: charmap.c:118
+msgid "computing character table size: this may take a while"
+msgstr ""
+
+#: charmap.c:72 charmap.c:78 locfile-lex.c:60
+msgid "input file `%s' not found"
+msgstr ""
+
+#: locale-ctype.c:333 locfile-parse.c:385 locfile-parse.c:532
+msgid "internal error in %s, line %u"
+msgstr ""
+
+#: monetary.c:75
+msgid "item `%s' does not correspond to any valid name in ISO-4217"
+msgstr ""
+
+#: monetary.c:100 numeric.c:52
+msgid "item `%s' in category `%s' must not be empty"
+msgstr ""
+
+#: monetary.c:70
+msgid "item `%s' of category `%s' has wrong length"
+msgstr ""
+
+#: locfile-parse.c:422 messages.c:43 monetary.c:61 numeric.c:41
+msgid "item `%s' of category `%s' undefined"
+msgstr ""
+
+#: messages.c:63
+msgid "no correct regular expression for item `%s' in category `%s': %s"
+msgstr ""
+
+#: charmap.c:96
+msgid "program limitation: for now only upto %Zu bytes per character are allowed"
+msgstr ""
+
+#: monetary.c:88
+msgid "value for item `%s' in category `%s' must be in range %d...%d"
+msgstr ""
+
+#: psignal.c:48
+msgid "%s%sUnknown signal %d\n"
+msgstr ""
+
+#: mcheck.c:174
+msgid "block freed twice"
+msgstr ""
+
+#: mcheck.c:177
+msgid "bogus mcheck_status, library is buggy"
+msgstr ""
+
+#: mcheck.c:168
+msgid "memory clobbered before allocated block"
+msgstr ""
+
+#: mcheck.c:171
+msgid "memory clobbered past end of allocated block"
+msgstr ""
+
+#: mcheck.c:165
+msgid "memory is consistent, library is buggy"
+msgstr ""
+
+#: ../sysdeps/mach/_strerror.c:43
+msgid "Error in unknown error system: "
+msgstr ""
+
+#: ../sysdeps/generic/_strerror.c:36 ../sysdeps/mach/_strerror.c:58
+msgid "Unknown error "
+msgstr ""
+
+#: strsignal.c:40
+msgid "Unknown signal %d"
+msgstr ""
+
+#: getopt.c:668
+msgid "%s: illegal option -- %c\n"
+msgstr ""
+
+#: getopt.c:671
+msgid "%s: invalid option -- %c\n"
+msgstr ""
+
+#: getopt.c:596
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr ""
+
+#: getopt.c:568
+msgid "%s: option `%s' is ambiguous\n"
+msgstr ""
+
+#: getopt.c:611
+msgid "%s: option `%s' requires an argument\n"
+msgstr ""
+
+#: getopt.c:591
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr ""
+
+#: getopt.c:707
+msgid "%s: option requires an argument -- %c\n"
+msgstr ""
+
+#: getopt.c:643
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr ""
+
+#: getopt.c:639
+msgid "%s: unrecognized option `--%s'\n"
+msgstr ""
+
+#: regex.c:946
+msgid "Invalid back reference"
+msgstr ""
+
+#: regex.c:944
+msgid "Invalid character class name"
+msgstr ""
+
+#: regex.c:943
+msgid "Invalid collation character"
+msgstr ""
+
+#: regex.c:950
+msgid "Invalid content of \\{\\}"
+msgstr ""
+
+#: regex.c:953
+msgid "Invalid preceding regular expression"
+msgstr ""
+
+#: regex.c:951
+msgid "Invalid range end"
+msgstr ""
+
+#: regex.c:942
+msgid "Invalid regular expression"
+msgstr ""
+
+#: regex.c:941
+msgid "No match"
+msgstr ""
+
+#: regex.c:5197
+msgid "No previous regular expression"
+msgstr ""
+
+#: regex.c:954
+msgid "Premature end of regular expression"
+msgstr ""
+
+#: regex.c:955
+msgid "Regular expression too big"
+msgstr ""
+
+#: regex.c:940
+msgid "Success"
+msgstr ""
+
+#: regex.c:945
+msgid "Trailing backslash"
+msgstr ""
+
+#: regex.c:948
+msgid "Unmatched ( or \\("
+msgstr ""
+
+#: regex.c:956
+msgid "Unmatched ) or \\)"
+msgstr ""
+
+#: regex.c:947
+msgid "Unmatched [ or [^"
+msgstr ""
+
+#: regex.c:949
+msgid "Unmatched \\{"
+msgstr ""
+
+#: rcmd.c:325
+msgid ".rhosts fstat failed"
+msgstr ""
+
+#: rcmd.c:321
+msgid ".rhosts lstat failed"
+msgstr ""
+
+#: rcmd.c:323
+msgid ".rhosts not regular file"
+msgstr ""
+
+#: rcmd.c:329
+msgid ".rhosts writeable by other than owner"
+msgstr ""
+
+#: rcmd.c:118
+msgid "Trying %s...\n"
+msgstr ""
+
+#: rcmd.c:327
+msgid "bad .rhosts owner"
+msgstr ""
+
+#: rcmd.c:112
+msgid "connect to address %s: "
+msgstr ""
+
+#: rcmd.c:154
+msgid "rcmd: select (setting up stderr): %s\n"
+msgstr ""
+
+#: rcmd.c:86
+msgid "rcmd: socket: All ports in use\n"
+msgstr ""
+
+#: rcmd.c:141
+msgid "rcmd: write (setting up stderr): %s\n"
+msgstr ""
+
+#: rcmd.c:158
+msgid "select: protocol failure in circuit setup\n"
+msgstr ""
+
+#: rcmd.c:176
+msgid "socket: protocol failure in circuit setup.\n"
+msgstr ""
+
+#: herror.c:74
+msgid "Host name lookup failure"
+msgstr ""
+
+#: herror.c:76
+msgid "No address associated with name"
+msgstr ""
+
+#: herror.c:72
+msgid "Resolver Error 0 (no error)"
+msgstr ""
+
+#: herror.c:114
+msgid "Resolver internal error"
+msgstr ""
+
+#: herror.c:73
+msgid "Unknown host"
+msgstr ""
+
+#: herror.c:117
+msgid "Unknown resolver error"
+msgstr ""
+
+#: herror.c:75
+msgid "Unknown server error"
+msgstr ""
+
+#: rpc_main.c:77
+msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
+msgstr ""
+
+#: rpc_main.c:80
+msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
+msgstr ""
+
+#: rpc_util.c:258
+msgid "%s, line %d: "
+msgstr ""
+
+#: rpc_main.c:143
+msgid "%s: output would overwrite %s\n"
+msgstr ""
+
+#: rpc_main.c:149
+msgid "%s: unable to open "
+msgstr ""
+
+#: clnt_perr.c:125
+msgid "(unknown authentication error - %d)"
+msgstr ""
+
+#: clnt_perr.c:112 clnt_perr.c:133
+msgid "; low version = %lu, high version = %lu"
+msgstr ""
+
+#: clnt_perr.c:119
+msgid "; why = "
+msgstr ""
+
+#: clnt_perr.c:276
+msgid "Authentication OK"
+msgstr ""
+
+#: pmap_rmt.c:336
+msgid "Broadcast select problem"
+msgstr ""
+
+#: pmap_rmt.c:254
+msgid "Cannot create socket for broadcast rpc"
+msgstr ""
+
+#: pmap_rmt.c:348
+msgid "Cannot receive reply to broadcast"
+msgstr ""
+
+#: pmap_clnt.c:79
+msgid "Cannot register service"
+msgstr ""
+
+#: pmap_rmt.c:312
+msgid "Cannot send broadcast packet"
+msgstr ""
+
+#: pmap_rmt.c:260
+msgid "Cannot set socket option SO_BROADCAST"
+msgstr ""
+
+#: clnt_perr.c:286
+msgid "Client credential too weak"
+msgstr ""
+
+#: clnt_perr.c:254
+msgid "Error %d"
+msgstr ""
+
+#: clnt_perr.c:290
+msgid "Failed (unspecified error)"
+msgstr ""
+
+#: clnt_perr.c:278
+msgid "Invalid client credential"
+msgstr ""
+
+#: clnt_perr.c:282
+msgid "Invalid client verifier"
+msgstr ""
+
+#: clnt_perr.c:288
+msgid "Invalid server verifier"
+msgstr ""
+
+#: clnt_perr.c:217
+msgid "RPC: (unknown error code)"
+msgstr ""
+
+#: clnt_perr.c:179
+msgid "RPC: Authentication error"
+msgstr ""
+
+#: clnt_perr.c:169
+msgid "RPC: Can't decode result"
+msgstr ""
+
+#: clnt_perr.c:167
+msgid "RPC: Can't encode arguments"
+msgstr ""
+
+#: clnt_perr.c:199
+msgid "RPC: Failed (unspecified error)"
+msgstr ""
+
+#: clnt_perr.c:177
+msgid "RPC: Incompatible versions of RPC"
+msgstr ""
+
+#: clnt_perr.c:195
+msgid "RPC: Port mapper failure"
+msgstr ""
+
+#: clnt_perr.c:185
+msgid "RPC: Procedure unavailable"
+msgstr ""
+
+#: clnt_perr.c:197
+msgid "RPC: Program not registered"
+msgstr ""
+
+#: clnt_perr.c:181
+msgid "RPC: Program unavailable"
+msgstr ""
+
+#: clnt_perr.c:183
+msgid "RPC: Program/version mismatch"
+msgstr ""
+
+#: clnt_perr.c:189
+msgid "RPC: Remote system error"
+msgstr ""
+
+#: clnt_perr.c:187
+msgid "RPC: Server can't decode arguments"
+msgstr ""
+
+#: clnt_perr.c:165
+msgid "RPC: Success"
+msgstr ""
+
+#: clnt_perr.c:175
+msgid "RPC: Timed out"
+msgstr ""
+
+#: clnt_perr.c:173
+msgid "RPC: Unable to receive"
+msgstr ""
+
+#: clnt_perr.c:171
+msgid "RPC: Unable to send"
+msgstr ""
+
+#: clnt_perr.c:191
+msgid "RPC: Unknown host"
+msgstr ""
+
+#: clnt_perr.c:193
+msgid "RPC: Unknown protocol"
+msgstr ""
+
+#: clnt_perr.c:280
+msgid "Server rejected credential"
+msgstr ""
+
+#: clnt_perr.c:284
+msgid "Server rejected verifier"
+msgstr ""
+
+#: rpc_parse.c:326
+msgid "array declaration expected"
+msgstr ""
+
+#: auth_unix.c:314
+msgid "auth_none.c - Fatal marshalling problem"
+msgstr ""
+
+#: pmap_rmt.c:177
+msgid "broadcast: ioctl (get interface configuration)"
+msgstr ""
+
+#: pmap_rmt.c:184
+msgid "broadcast: ioctl (get interface flags)"
+msgstr ""
+
+#: svc_udp.c:398
+msgid "cache_set: victim not found"
+msgstr ""
+
+#: svc_simple.c:64
+msgid "can't reassign procedure number %d\n"
+msgstr ""
+
+#: clnt_raw.c:106
+msgid "clnt_raw.c - Fatal header serialization error."
+msgstr ""
+
+#: rpc_scan.c:109
+msgid "constant or identifier expected"
+msgstr ""
+
+#: svc_simple.c:70
+msgid "couldn't create an rpc server\n"
+msgstr ""
+
+#: svc_simple.c:77
+msgid "couldn't register prog %d vers %d\n"
+msgstr ""
+
+#: rpc_parse.c:77
+msgid "definition keyword expected"
+msgstr ""
+
+#: svc_udp.c:344
+msgid "enablecache: cache already enabled"
+msgstr ""
+
+#: svc_udp.c:349
+msgid "enablecache: could not allocate cache"
+msgstr ""
+
+#: svc_udp.c:356
+msgid "enablecache: could not allocate cache data"
+msgstr ""
+
+#: svc_udp.c:362
+msgid "enablecache: could not allocate cache fifo"
+msgstr ""
+
+#: rpc_util.c:300
+msgid "expected '%s'"
+msgstr ""
+
+#: rpc_util.c:312
+msgid "expected '%s' or '%s'"
+msgstr ""
+
+#: rpc_util.c:325
+msgid "expected '%s', '%s' or '%s'"
+msgstr ""
+
+#: rpc_parse.c:384
+msgid "expected type specifier"
+msgstr ""
+
+#: get_myaddr.c:73
+msgid "get_myaddress: ioctl (get interface configuration)"
+msgstr ""
+
+#: rpc_scan.c:281
+msgid "illegal character in file: "
+msgstr ""
+
+#: rpc_parse.c:146
+msgid "illegal result type"
+msgstr ""
+
+#: svc_simple.c:140
+msgid "never registered prog %d\n"
+msgstr ""
+
+#: rpc_parse.c:305 rpc_parse.c:313
+msgid "no array-of-pointer declarations -- use typedef"
+msgstr ""
+
+#: rpc_scan.c:456 rpc_scan.c:464
+msgid "preprocessor error"
+msgstr ""
+
+#: svc_simple.c:83
+msgid "registerrpc: out of memory\n"
+msgstr ""
+
+#: svc_tcp.c:199 svc_tcp.c:204
+msgid "svc_tcp: makefd_xprt: out of memory\n"
+msgstr ""
+
+#: svc_tcp.c:147
+msgid "svctcp_.c - cannot getsockname or listen"
+msgstr ""
+
+#: svc_tcp.c:134
+msgid "svctcp_.c - udp socket creation problem"
+msgstr ""
+
+#: svc_tcp.c:154 svc_tcp.c:161
+msgid "svctcp_create: out of memory\n"
+msgstr ""
+
+#: svc_udp.c:119
+msgid "svcudp_create - cannot getsockname"
+msgstr ""
+
+#: svc_udp.c:107
+msgid "svcudp_create: socket creation problem"
+msgstr ""
+
+#: rpc_util.c:285
+msgid "too many files!\n"
+msgstr ""
+
+#: svc_simple.c:132
+msgid "trouble replying to prog %d\n"
+msgstr ""
+
+#: rpc_scan.c:319
+msgid "unterminated string constant"
+msgstr ""
+
+#: rpc_main.c:75
+msgid "usage: %s infile\n"
+msgstr ""
+
+#: rpc_parse.c:330
+msgid "variable-length array declaration expected"
+msgstr ""
+
+#: rpc_parse.c:370
+msgid "voids allowed only inside union and program definitions"
+msgstr ""

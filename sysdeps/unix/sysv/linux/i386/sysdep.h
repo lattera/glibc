@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -16,9 +16,6 @@ You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
-
-/* In the Linux/ELF world, C symbols are asm symbols.  */
-#define NO_UNDERSCORES
 
 /* There is some commonality.  */
 #include <sysdeps/unix/i386/sysdep.h>
@@ -63,15 +60,6 @@ syscall_error:								      \
   movl $-1, %eax;							      \
   ret;
 #endif
-
-/* We define our own ENTRY macro because the alignment should be 16 for
-   ELF.  */
-#undef ENTRY
-#define ENTRY(name)							      \
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (name);				      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME (name), @function)			      \
-  .align 16;								      \
-  C_LABEL (name)
 
 /* Linux takes system call arguments in registers:
 

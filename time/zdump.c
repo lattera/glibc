@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.20";
+static char	elsieid[] = "@(#)zdump.c	7.22";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -87,6 +87,14 @@ static char	elsieid[] = "@(#)zdump.c	7.20";
 #define INITIALIZE(x)
 #endif /* !defined GNUC_or_lint */
 #endif /* !defined INITIALIZE */
+
+/*
+** For the benefit of GNU folk...
+*/
+
+#ifndef _
+#define _(x) x
+#endif /* !defined _ */
 
 extern char **	environ;
 extern int	getopt();

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,9 @@ export subdir := $(subdir)
 # This is the default target; it makes the library and auxiliary programs.
 .PHONY: all
 all: objs lib others
+
+others: $(addprefix $(objpfx),$(extra-objs) \
+			      $(install-lib) $(install-bin) $(install-sbin))
 
 ifneq	"$(findstring env,$(origin headers))" ""
 headers :=

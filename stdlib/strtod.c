@@ -149,7 +149,7 @@ round_and_return (mp_limb *retval, int exponent, int negative,
 	  round_bit = (shift - 1) % BITS_PER_MP_LIMB;
 	  for (i = 0; i < (shift - 1) / BITS_PER_MP_LIMB; ++i)
 	    more_bits |= retval[i] != 0;
-	  more_bits |= (round_limb & ((1 << round_bit) - 1)) != 0;
+	  more_bits |= (round_limb & ((((mp_limb) 1) << round_bit) - 1)) != 0;
 
 	  (void) __mpn_rshift (retval, &retval[shift / BITS_PER_MP_LIMB],
                                RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),

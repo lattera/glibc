@@ -16,7 +16,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.39";
+static char	privatehid[] = "@(#)private.h	7.40";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -200,6 +200,14 @@ extern int	unlink P((const char * filename));
 #define INITIALIZE(x)
 #endif /* !defined GNUC_or_lint */
 #endif /* !defined INITIALIZE */
+
+/*
+** For the benefit of GNU folk...
+*/
+
+#ifndef _
+#define _(x) x
+#endif /* !defined _ */
 
 /*
 ** UNIX was a registered trademark of UNIX System Laboratories in 1993.

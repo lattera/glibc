@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.59";
+static char	elsieid[] = "@(#)zic.c	7.60";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 

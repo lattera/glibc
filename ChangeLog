@@ -1,4 +1,51 @@
+Wed Feb 21 02:25:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* Rules (others): Depend on $(extra-objs), $(install-lib),
+	$(install-bin), $(install-sbin), in object directory.
+
+	* Makeconfig (link-libc): Don't pass -rpath option with default
+	path, since ld.so should use the same default.
+	* Makerules (build-shlib): Likewise.
+
+	* Makerules (make-target-directory): Use mkinstalldirs.
+
+	* sysdeps/mach/i386/sysdep.h: Include unix/i386/sysdep.h to
+	redefine ENTRY et al.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (NO_UNDERSCORES, ENTRY):
+	Macros removed.  The code in unix/i386/sysdep.h should now suffice.
+
+	* sysdeps/unix/i386/sysdep.h (ALIGNARG): New macro, defns for
+	[HAVE_ELF] and not.
+	(ENTRY): Use it in .align directive.
+	(CALL_MCOUNT): New macro, empty unless [PROF].
+	(ENTRY): Do CALL_MCOUNT just after the label.
+
+	* Makeconfig (CPPFLAGS-.po): New variable, use -DPROF so assembly
+	code can call mcount.
+
+Tue Feb 20 23:05:16 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* time/private.h, time/zdump.c, time/zic.c: Updated verbatim from ADO;
+	translation markings are now integrated in his distribution.
+
+	* stdlib/strtod.c (round_and_return): Add missing (mp_limb) 1 cast.
+
 Mon Feb 19 18:31:59 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* po: New directory where `LANG.po' files for message translations
+	will reside.
+	* po/SYS_libc.pot: New file, template of message strings as in source.
+	* MakeTAGS: New rules to build po/SYS_libc.pot automatically from
+	the source using xgettext.
+	* Makerules ($(..)po/%.pot): New rule.
+	* manual/Makefile (../po/manual.pot): New target, make it empty.
+
+	* sysdeps/unix/bsd/alarm.c: Moved to sysdeps/unix/alarm.c.
+	* sysdeps/unix/bsd/nice.c: Moved to sysdeps/unix/nice.c.
+	* sysdeps/unix/bsd/stime.c: Moved to sysdeps/unix/stime.c.
+	* sysdeps/unix/bsd/time.c: Moved to sysdeps/unix/time.c.
+	* sysdeps/unix/bsd/utime.c: Moved to sysdeps/unix/utime.c.
 
 	* time/zic.c, time/scheck.c, time/private.h, time/tzfile.h:
 	Updated from ADO 96d.

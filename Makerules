@@ -449,13 +449,11 @@ $(make-target-directory)
 $(INSTALL_DATA) $< $@
 endef
 
-# Make the target directory if it doesn't exist.  Because of make's
-# directory cache, this will produce the `mkdir' command when the directory
-# already exists, if it didn't exist at the start of the `make' run.  The
-# `-' prefix ignores errors from mkdir, so there will just be some
-# gratuitous but harmless `File exists' messages.
+# Make the target directory if it doesn't exist, using the `mkinstalldirs'
+# script that does `mkdir -p' even if `mkdir' doesn't support that flag.
 define make-target-directory
-$(addprefix -mkdir ,$(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
+$(addprefix $(..)mkinstalldirs ,\
+	    $(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 
 # Any directory (parent or subdir) that has any object files to build
@@ -574,7 +572,7 @@ define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
-	  -Wl,-rpath-link=$(common-objdir) -Wl,-rpath=$(libdir) \
+	  -Wl,-rpath-link=$(common-objdir) \
 	  -Wl,--whole-archive $^ $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
@@ -620,6 +618,10 @@ check: tests
 .PHONY: TAGS
 TAGS: distinfo $(..)MakeTAGS
 	$(MAKE) $(addprefix -f ,$^) $@
+
+$(..)po/%.pot: distinfo $(..)MakeTAGS
+	$(MAKE) $(addprefix -f ,$^) $@
+
 
 .PHONY: echo-headers
 echo-headers:

@@ -291,7 +291,7 @@ endif
 endif
 ifndef link-libc
 ifeq (yes,$(build-shared))
-link-libc = -Wl,-rpath-link=$(common-objdir) -Wl,-rpath=$(default-rpath) \
+link-libc = -Wl,-rpath-link=$(common-objdir) \
 	    $(common-objpfx)libc.so$(libc.so-version) $(gnulib)
 # Choose the default search path for the dynamic linker based on
 # where we will install libraries.
@@ -450,6 +450,7 @@ ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.
 # The profiled object files are named foo.po.
 object-suffixes += .po
+CPPFLAGS-.po = -DPROF
 CFLAGS-.po = -pg
 libtype.po = lib%_p.a
 endif
