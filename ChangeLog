@@ -15,6 +15,7 @@
 2004-11-05  Roland McGrath  <roland@redhat.com>
 
 	* manual/errno.texi (Error Codes): Revert last change for now.
+	* sysdeps/gnu/errlist.c: Regenerated.
 
 2004-11-04  Roland McGrath  <roland@frob.com>
 
