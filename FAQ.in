@@ -876,6 +876,26 @@ solutions:
 - if you need NIS/NIS+, use the Name Service Cache Daemon nscd that comes
   with glibc 2.1.
 
+??	Compiling programs I get parse errors in libio.h (e.g. "parse error
+	before `_IO_seekoff'").  How should I fix this?
+
+{AJ} You might get the following errors when upgrading to glibc 2.1:
+
+  In file included from /usr/include/stdio.h:57,
+                   from ...
+  /usr/include/libio.h:335: parse error before `_IO_seekoff'
+  /usr/include/libio.h:335: parse error before `_G_off64_t'
+  /usr/include/libio.h:336: parse error before `_IO_seekpos'
+  /usr/include/libio.h:336: parse error before `_G_fpos64_t'
+
+The problem is a wrong _G_config.h file in your include path.  The
+_G_config.h file that comes with glibc 2.1 should be used and not one from
+libc5 or from a compiler directory.  To check which _G_config.h file the
+compiler uses, compile your program with `gcc -E ...|grep G_config.h' and
+remove that file.  Your compiler should pick up the file that has been
+installed by glibc 2.1 in your include directory.
+
+
 ? Source and binary incompatibilities, and what to do about them
 
 ??	I expect GNU libc to be 100% source code compatible with
