@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -419,7 +419,10 @@ glob (pattern, flags, errfunc, pglob)
 	  if (onealt == NULL)
 	    {
 	      if (!(flags & GLOB_APPEND))
-		globfree (pglob);
+		{
+		  globfree (pglob);
+		  pglob->gl_pathc = 0;
+		}
 	      return GLOB_NOSPACE;
 	    }
 #endif
@@ -501,7 +504,10 @@ glob (pattern, flags, errfunc, pglob)
 		  free (onealt);
 #endif
 		  if (!(flags & GLOB_APPEND))
-		    globfree (pglob);
+		    {
+		      globfree (pglob);
+		      pglob->gl_pathc = 0;
+		    }
 		  return result;
 		}
 
@@ -933,6 +939,7 @@ glob (pattern, flags, errfunc, pglob)
 	    {
 	      globfree (&dirs);
 	      globfree (pglob);
+	      pglob->gl_pathc = 0;
 	      return status;
 	    }
 
@@ -943,6 +950,7 @@ glob (pattern, flags, errfunc, pglob)
 	    {
 	      globfree (&dirs);
 	      globfree (pglob);
+	      pglob->gl_pathc = 0;
 	      return GLOB_NOSPACE;
 	    }
 	}
@@ -975,6 +983,7 @@ glob (pattern, flags, errfunc, pglob)
 		{
 		  globfree (&dirs);
 		  globfree (pglob);
+		  pglob->gl_pathc = 0;
 		  return GLOB_NOSPACE;
 		}
 
@@ -1009,6 +1018,7 @@ glob (pattern, flags, errfunc, pglob)
 			    pglob->gl_pathc - old_pathc))
 	    {
 	      globfree (pglob);
+	      pglob->gl_pathc = 0;
 	      return GLOB_NOSPACE;
 	    }
 	}
@@ -1035,6 +1045,7 @@ glob (pattern, flags, errfunc, pglob)
  	    if (new == NULL)
 	      {
 		globfree (pglob);
+		pglob->gl_pathc = 0;
 		return GLOB_NOSPACE;
 	      }
 	    strcpy (&new[len - 2], "/");

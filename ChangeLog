@@ -1,5 +1,8 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/glob.c (glob): Explicitly set gl_pathc to zero
+	after globfree() calls.
+
 	* elf/dl-deps.c (struct openaux_args): Add open_mode element.
 	(openaux): Pass open_mode as new last argument to _dl_map_object.
 	(_dl_map_object_deps): Add new argument open_mode.  Initialize
