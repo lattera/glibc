@@ -1,3 +1,24 @@
+1999-06-26  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Move all libm internal
+	definitions...
+	* sysdeps/m68k/fpu/mathimpl.h: ... here.  New file.
+	* sysdeps/m68k/fpu/e_acos.c: Include "mathimpl.h".
+	* sysdeps/m68k/fpu/e_atan2.c: Likewise.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/e_pow.c: Likewise.
+	* sysdeps/m68k/fpu/e_scalb.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccos.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccosh.c: Likewise.
+	* sysdeps/m68k/fpu/s_cexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_csin.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinh.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogb.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrint.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintf.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintl.c: Likewise.
+	* sysdeps/m68k/fpu/s_modf.c: Likewise.
+
 1999-06-25  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd.h, hurd/hurd/fd.h, hurd/hurd/port.h, hurd/hurd/signal.h,
