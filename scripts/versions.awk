@@ -16,7 +16,10 @@ BEGIN {
       libs[$1] = 1;
       curlib = $1;
       while (getline < defsfile && ! /^}/) {
-	versions[$1] = 1;
+        if ($2 == "=")
+	  renamed[$1] = $3;
+	else
+	  versions[$1] = 1;
       }
     }
   }
@@ -33,6 +36,7 @@ BEGIN {
 
 # This matches the beginning of the version information for a new library.
 /^[a-zA-Z0-9_.]+/ {
+  delete renamed;
   actlib = $1;
   if (!libs[$1]) {
     printf("no versions defined for %s\n", $1) > "/dev/stderr";
@@ -43,11 +47,14 @@ BEGIN {
 
 # This matches the beginning of a new version for the current library.
 /^  [A-Za-z_]/ {
-  actver = $1;
-  if (!versions[$1]) {
+  if (renamed[$1])
+    actver = renamed[$1];
+  else if (!versions[$1]) {
     printf("version %s not defined\n", $1) > "/dev/stderr";
     exit 1;
   }
+  else
+    actver = $1;
   next;
 }
 

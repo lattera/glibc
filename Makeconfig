@@ -687,23 +687,23 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 	 for f in $$file; do \
 	   sed 's/#.*$$//;s/^[ 	]*%/#/' $$f \
 	   | $(CC) -include $(common-objpfx)config.h -E -x c - \
-	   | while read conf versions; do \
-	     test -n "$$versions" && \
+	   | while read conf version setname; do \
+	     test -n "$$version" && \
 	     test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 			: "$$conf"` != 0 || continue; \
-	     for v in $$versions; do \
-	       lib=`echo $$v | sed 's/=.*$$//'`; \
-	       if eval "test -z \"\$$vers_lib$$lib\""; then \
-		 eval vers_lib$${lib}=yes; \
-		 number=`echo $$v | sed "s/^.*=//"`; \
-		 case $$number in \
-		   [0-9]*) echo "$$lib.so-version=.$$number"; \
-			   echo "all-sonames+=$$lib.so\$$($$lib.so-version)";;\
-		   *) echo "$$lib.so-version=$$number"; \
-		      echo "all-sonames+=\$$($$lib.so-version)";;  \
-	         esac; \
-	       fi; \
-	     done; \
+	       lib=`echo $$version | sed 's/=.*$$//'`; \
+	     if eval "test -z \"\$$versioners_lib$$lib\""; then \
+	       eval vers_lib$${lib}=yes; \
+	       number=`echo $$version | sed "s/^.*=//"`; \
+	       case $$number in \
+		 [0-9]*) echo "$$lib.so-version=.$$number"; \
+			 echo "all-sonames+=$$lib.so\$$($$lib.so-version)";;\
+		 *) echo "$$lib.so-version=$$number"; \
+		    echo "all-sonames+=\$$($$lib.so-version)";;  \
+	       esac; \
+	       test -z "$$setname" || \
+	         echo "map-firstversions+=$${lib}:$${setname}"; \
+	     fi; \
 	   done; \
 	 done;) > $@T; exit 0
 	mv -f $@T $@

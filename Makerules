@@ -1,4 +1,5 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2000
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -127,6 +128,18 @@ before-compile := $(filter $(common-objpfx)mach% $(common-objpfx)hurd%,\
 			   $(before-compile)) \
 		  $(filter-out $(common-objpfx)mach% $(common-objpfx)hurd%,\
 			       $(before-compile))
+
+# Even before that, we need abi-versions.h which is generated right here.
+ifeq ($(versioning),yes)
+ifndef avoid-generated
+before-compile := $(common-objpfx)abi-versions.h $(before-compile)
+$(common-objpfx)abi-versions.h: $(..)scripts/abi-versions.awk \
+				$(common-objpfx)Versions.all
+	LC_ALL=C $(AWK) -f $^ > $@T
+	mv -f $@T $@
+endif # avoid-generated
+endif # $(versioning) = yes
+
 
 # Remove existing files from `before-compile'.  Things are added there when
 # they must exist for dependency generation to work right, but once they
@@ -277,9 +290,15 @@ ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
 sysd-versions-force = FORCE
 FORCE:
 endif
-$(common-objpfx)Versions.all: $(..)Versions.def \
-			      $(wildcard $(add-ons:%=$(..)%/Versions.def))
-	cat $^ > $@T
+$(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
+	                      $(..)Versions.def \
+			      $(wildcard $(add-ons:%=$(..)%/Versions.def)) \
+			      $(common-objpfx)soversions.mk
+	{ for map in $(map-firstversions); do \
+	    echo $$map; \
+	  done | sed 's/:/ : /'; \
+	  cat $(filter-out $< $(common-objpfx)soversions.mk,$^); \
+	} | LC_ALL=C $(AWK) -f $< > $@T
 	mv -f $@T $@
 $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 			       $(..)scripts/versions.awk \
@@ -295,6 +314,7 @@ $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 endif # avoid-generated
 endif # $(versioning) = yes
 endif # sysd-dirs-done
+
 
 ifndef compile-command.S
 compile-command.S = $(compile.S) $(OUTPUT_OPTION)
