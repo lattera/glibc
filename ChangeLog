@@ -1,3 +1,10 @@
+2000-12-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-639.def: Correct one entry.  Add two missing entries.
+
+	* locale/iso-4217.def: Change entry for Eritrea.
+	Reported by Daniel Yacob <yacob@geez.org>.
+
 2000-12-23  Ben Collins  <bcollins@debian.org>
 
 	* manual/charset.texi (Extended Char Intro): Fix typo in ISO 6937

@@ -57,7 +57,7 @@ DEFINE_INT_CURR("DZD ")		/* Algerian Dinar  */
 DEFINE_INT_CURR("ECS ")		/* Ecuadoran Sucre  */
 DEFINE_INT_CURR("EEK ")		/* Estonian Kroon  */
 DEFINE_INT_CURR("EGP ")		/* Egyptian Pound  */
-DEFINE_INT_CURR("ERB ")		/* Eritrean Birr  */
+DEFINE_INT_CURR("ERN ")		/* Eritrean Nakfa  */
 DEFINE_INT_CURR("ESP ")		/* Spanish Peseta  */
 DEFINE_INT_CURR("ETB ")		/* Ethiopian Birr  */
 DEFINE_INT_CURR("EUR ")		/* European Union Euro  */
