@@ -23,15 +23,19 @@ extra-objs += $(foreach o,$(object-suffixes-$(lib)),$($(lib)-routines:=$o))
 alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
 			     $(objpfx)$(patsubst %,$(libtype$o),\
 			     $(lib:lib%=%)))
-ifneq (,$(filter .so,$(object-suffixes-$(lib))))
-alltypes-$(lib) += $(objpfx)$(lib).so
-endif
 
 ifeq (,$($(lib)-no-lib-dep))
 lib-noranlib: $(alltypes-$(lib))
 else
 others: $(alltypes-$(lib))
 endif
+
+# The linked shared library is never a dependent of lib-noranlib,
+# because linking it will depend on libc.so already being built.
+ifneq (,$(filter .so,$(object-suffixes-$(lib))))
+others: $(objpfx)$(lib).so
+endif
+
 
 # Use o-iterator.mk to generate a rule for each flavor of library.
 define o-iterator-doit

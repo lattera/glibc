@@ -1,3 +1,8 @@
+Wed May 29 00:52:20 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* extra-lib.mk (alltypes-$(lib)): Don't append $(objpfx)$(lib).so.
+	(others): Instead, make this depend on it.
+
 Tue May 28 04:38:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* limits.h: Change MB_LEN_MAX to 6.  A 31-bit ISO 10646
