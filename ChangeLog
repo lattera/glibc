@@ -1,3 +1,14 @@
+2001-12-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/configure.in (libc_cv_gcc_unwind_find_fde): Add
+	missing backslash in test arguments.
+	* sysdeps/mach/hurd/configure: Regenerated.
+
+2001-11-26  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdinit.c (_hurd_ports_use): Check if _hurd_ports is null.
+	Reported by John Tobey <jtobey@john-edwin-tobey.org>.
+
 2001-11-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile (modules): Add ARMSCII-8.
