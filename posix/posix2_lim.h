@@ -34,8 +34,14 @@ Cambridge, MA 02139, USA.  */
 #define	_POSIX2_BC_STRING_MAX		1000
 
 /* The maximum number of weights that can be assigned to an entry of
-   the LC_COLLATE category `order' keyword in a locale definition.  */
-#define	_POSIX2_EQUIV_CLASS_MAX		2
+   the LC_COLLATE `order' keyword in the locale definition file.
+   We have no fixed limit, 255 is very high.  */
+#define	_POSIX2_COLL_WEIGHTS_MAX	255
+
+/* The maximum number of weights that can be assigned to an entry of
+   the LC_COLLATE category `order' keyword in a locale definition.
+   We have no fixed limit, 255 is a high number.  */
+#define	_POSIX2_EQUIV_CLASS_MAX		255
 
 /* The maximum number of expressions that can be nested
    within parentheses by the `expr' utility.  */
@@ -48,8 +54,9 @@ Cambridge, MA 02139, USA.  */
    permitted when using the interval notation `\{M,N\}'.  */
 #define	_POSIX2_RE_DUP_MAX		255
 
-/* The manimum number of bytes in a character class name.  */
-#define	_POSIX2_CHARCLASS_NAME_MAX	14
+/* The maximum number of bytes in a character class name.  We have no
+   fixed limit, 2048 is a high number.  */
+#define	_POSIX2_CHARCLASS_NAME_MAX	2048
 
 
 /* These values are implementation-specific,
@@ -67,6 +74,9 @@ Cambridge, MA 02139, USA.  */
 #endif
 #ifndef	BC_STRING_MAX
 #define	BC_STRING_MAX		_POSIX2_BC_STRING_MAX
+#endif
+#ifndef	COLL_WEIGHTS_MAX
+#define	COLL_WEIGHTS_MAX	_POSIX2_COLL_WEIGHTS_MAX
 #endif
 #ifndef	EQUIV_CLASS_MAX
 #define	EQUIV_CLASS_MAX		_POSIX2_EQUIV_CLASS_MAX

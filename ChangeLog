@@ -1,3 +1,92 @@
+Fri Jul 26 04:41:28 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/libintl.h: Define optimizing macros if __OPTIMIZE__ is
+	defined, not __OPTIMIZED.
+	(_nl_msg_cat_cntr): Move declaration outside macro definition
+	to prevent "nested extern" warning.
+	(dcgettext): Rename local variable `result' to `__result'.
+
+Thu Jul 25 22:46:30 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* locale/programs/localedef.c (__progname): Remove decl.
+	(main): Use program_invocation_short_name instead of __progname.
+	(usage): Use program_invocation_name instead of __progname.
+
+Fri Jul 26 03:46:08 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c: Use "libc" instead of PACKAGE.
+	* locale/localedef.c: Ditto.
+	* locale/locale.c: Ditto.
+
+	* locale/findlocale.c (_nl_find_locale): Little optimization.
+	Use new function `strndup'.
+
+	* locale/loadlocale.c: Little optimization.  Use constant value
+	from `_nl_category_num_items' instead of byte-order dependend
+	value from file.
+
+	* locale/programs/ld-time.c (time_add): Correct string constant.
+
+	* locale/programs/locale-spec.c: New file.
+	* locale/programs/locale.c: Call `locale_special' function if
+	no other field matches.
+
+	* locale/programs/localedef.c: No need to define `program_name'.
+	Use global variable `__progname'.
+
+	* locale/programs/locfile.c (write_locale_data): Always write
+	LC_MESSAGES data in LC_MESSAGES/SYS_LC_MESSAGES file.  This is
+	necessary since message catalogs are also installed in the
+	LC_MESSAGES/ directory.
+
+	* locale/programs/stringtrans.c (ADDC): Correctly use `encode_char'
+	function instead of writing single bytes.
+	(encode_char): Also handle little endian.
+
+	* locale/setlocale.c (new_composite_name): Little optimization.
+	Use return value of `memcpy'.
+
+	* misc/ttyent.h: Pretty print prototypes, add missing parameter
+	names, prepend parameter names with __  and use `__const' instead
+	of `const'.
+	* posix/unistd.h: Ditto.
+	* stdlib/stdlib.h: Ditto.
+	* string/string.h: Ditto.
+
+	* posix/getconf.c: De-ASNI-fy.  Recognize POSIX.2 constant names.
+	Use `error' function instead of doing it by hand.
+	* sysdeps/posix/sysconf.c: De-ANSI-fy.
+	Handle _SC_COLL_WEIGHTS_MAX.
+	* sysdeps/stub/sysconf.c: Handle _SC_CHARCLASS_NAME_MAX,
+	_SC_COLL_WEIGHTS_MAX, _SC_EQUIV_CLASS_MAX, _SC_2_LOCALEDEF
+	since these do depend on the platform.
+	Add POSIX.4 symbols.
+
+	* posix/posix2_lim.h: Add missing definition of
+	_POSIX2_COLL_WEIGHTS_MAX.
+	Change _POSIX2_EQUIV_CLASS_MAX and _POSIX2_CHARCLASS_NAME_MAX
+	to high values since we have no fixed limit.
+
+	* sysdeps/generic/confname.h: Add _SC_PAGE_SIZE as alias for
+	_SC_PAGESIZE for buggy systems (= HP UX) out there.
+
+	* wcsmbs/Makefile (routines): Add mbsnrtowcs and wcsnrtombs.
+	* wcsmbs/mbsnrtowcs.c: New file.  Non-standard implementation.
+	* wcsmbs/wcsnrtombs.c: Ditto.
+	* wcsmbs/wchar.h [__USE_GNU]: Add prototypes for mbsnrtowcs and
+	wcsnrtombs.
+
+Thu Jul 25 00:25:54  Richard Henderson  <rth@tamu.edu>
+
+	* nss/nss_db/db-XXX.c: Kill trailing ; from lock defn as a matter of
+	course.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise.
+	* sysdeps/mach/hurd/dirstream.h (struct __dirstream): Likewise.
+	* sysdeps/unix/bsd/telldir.c (struct record): Likewise.
+	* sysdeps/unix/dirstream.h (struct __dirstream): Likewise.
+
 Thu Jul 25 00:53:06 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/configure.in (LIBC_LINUX_VERSION): New

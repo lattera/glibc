@@ -89,30 +89,32 @@ extern char *__strdup __P ((__const char *__s));
 extern char *strdup __P ((__const char *__s));
 #endif
 
-#if defined (__USE_GNU) && defined (__GNUC__)
-/* Duplicate S, returning an identical alloca'd string.  */
-#define strdupa(s)							      \
-({									      \
-  __const char *__old = (s);						      \
-  size_t __len = strlen (__old) + 1;					      \
-  memcpy (__builtin_alloca (__len), __old, __len);			      \
-})
-
 /* Return a malloc'd copy of at most N bytes of STRING.  The
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
 extern char *strndup __P ((__const char *__string, size_t __n));
 
+#if defined (__USE_GNU) && defined (__GNUC__)
+/* Duplicate S, returning an identical alloca'd string.  */
+#define strdupa(s)							      \
+  (__extension__							      \
+    ({									      \
+      __const char *__old = (s);					      \
+      size_t __len = strlen (__old) + 1;				      \
+      char *__new = __builtin_alloca (__len);				      \
+      memcpy (__new, __old, __len);					      \
+    }))
+
 /* Return an alloca'd copy of at most N bytes of string.  */
 #define strndupa(s, n)							      \
-({									      \
-  __const char *__old = (s);						      \
-  char *__new;								      \
-  size_t __len = strnlen (__old, (n));					      \
-  __new = memcpy (__builtin_alloca (__len + 1), __old, __len);		      \
-  __new[__len] = '\0';							      \
-  __new;								      \
-})
+  (__extension__							      \
+    ({									      \
+      __const char *__old = (s);					      \
+      size_t __len = strnlen (__old, (n));				      \
+      char *__new = __builtin_alloca (__len + 1);			      \
+      __new[__len] = '\0';						      \
+      memcpy (__new, __old, __len);					      \
+    }))
 #endif
 
 /* Find the first occurrence of C in S.  */
@@ -231,7 +233,7 @@ extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
 
 #ifdef	__USE_MISC
 /* Return the file name within directory of FILENAME.  */
-extern char *basename __P ((__const char *filename));
+extern char *basename __P ((__const char *__filename));
 #endif
 
 __END_DECLS

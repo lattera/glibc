@@ -57,10 +57,12 @@ struct ttyent {
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
-struct ttyent *getttyent __P((void));
-struct ttyent *getttynam __P((const char *));
-int setttyent __P((void));
-int endttyent __P((void));
+
+struct ttyent *getttyent __P ((void));
+struct ttyent *getttynam __P ((__const char *));
+int setttyent __P ((void));
+int endttyent __P ((void));
+
 __END_DECLS
 
 #endif /* !_TTYENT_H_ */

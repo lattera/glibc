@@ -1,6 +1,6 @@
-/* libgettext.h -- Message catalogs for internationalization.
-Copyright (C) 1995 Free Software Foundation, Inc.
-Contributed by Ulrich Drepper.
+/* libintl.h -- Message catalogs for internationalization.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 This file is derived from the file libgettext.h in the GNU gettext package.
 
 This file is part of the GNU C Library.  Its master source is NOT part of
@@ -22,13 +22,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #ifndef _LIBINTL_H
+
 #define _LIBINTL_H	1
 #include <features.h>
-
-#include <locale.h>
-
-#define __need_NULL
-#include <stddef.h>
 
 /* We define an additional symbol to signal that we use the GNU
    implementation of gettext.  */
@@ -72,8 +68,16 @@ extern char *__bindtextdomain __P ((__const char *__domainname,
 
 
 /* Optimized version of the function above.  */
-#if defined __OPTIMIZED
-/* These must be a macro.  Inlined functions are useless because the
+#if defined __OPTIMIZE__
+
+/* We need NULL for `gettext'.  */
+#define __need_NULL
+#include <stddef.h>
+
+/* We need LC_MESSAGES for `dgettext'.  */
+# include <locale.h>
+
+/* These must be macros.  Inlined functions are useless because the
    `__builtin_constant_p' predicate in dcgettext would always return
    false.  */
 
@@ -83,13 +87,16 @@ extern char *__bindtextdomain __P ((__const char *__domainname,
   dcgettext (domainname, msgid, LC_MESSAGES)
 
 # if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)
+/* Variable defined in loadmsgcat.c which gets incremented every time a
+   new catalog is loaded.  */
+extern int _nl_msg_cat_cntr;
+
 #  define dcgettext(domainname, msgid, category)			      \
   (__extension__							      \
    ({									      \
-     char *result;							      \
+     char *__result;							      \
      if (__builtin_constant_p (msgid))					      \
        {								      \
-	 extern int _nl_msg_cat_cntr;					      \
 	 static char *__translation__;					      \
 	 static int __catalog_counter__;				      \
 	 if (! __translation__ || __catalog_counter__ != _nl_msg_cat_cntr)    \
@@ -98,11 +105,11 @@ extern char *__bindtextdomain __P ((__const char *__domainname,
 	       __dcgettext ((domainname), (msgid), (category));		      \
 	     __catalog_counter__ = _nl_msg_cat_cntr;			      \
 	   }								      \
-	 result = __translation__;					      \
+	 __result = __translation__;					      \
        }								      \
      else								      \
-       result = __dcgettext ((domainname), (msgid), (category));	      \
-     result;								      \
+       __result = __dcgettext ((domainname), (msgid), (category));	      \
+     __result;								      \
     }))
 # endif
 #endif /* Optimizing. */

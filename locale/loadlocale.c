@@ -94,7 +94,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       /* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
            instead.  */
       char *newp;
-      
+
       __close (fd);
 
       newp = (char *) alloca (strlen (file->filename)
@@ -189,14 +189,15 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     }
 
   newdata = malloc (sizeof *newdata +
-		    W (filedata->nstrings) * sizeof (union locale_data_value));
+		    (_nl_category_num_items[category]
+		     * sizeof (union locale_data_value)));
   if (! newdata)
     goto puntmap;
 
   newdata->name = NULL;	/* This will be filled if necessary in findlocale.c. */
   newdata->filedata = (void *) filedata;
   newdata->filesize = st.st_size;
-  newdata->nstrings = W (filedata->nstrings);
+  newdata->nstrings = _nl_category_num_items[category];
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
       off_t idx = W (filedata->strindex[cnt]);
@@ -234,5 +235,3 @@ _nl_free_locale (const struct locale_data *data)
     }
   free ((void *) data);
 }
-
-

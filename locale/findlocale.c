@@ -170,21 +170,17 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
   /* Determine the locale name for which loading succeeded.  This
      information comes from the file name.  The form is
-     <path>/<locale>/LC_foo.  We must extract this <locale> part.  */
+     <path>/<locale>/LC_foo.  We must extract the <locale> part.  */
   if (((struct locale_data *) locale_file->data)->name == NULL)
     {
-      char *newp, *cp, *endp;
+      char *cp, *endp;
 
       endp = strrchr (locale_file->filename, '/');
       cp = endp - 1;
       while (cp[-1] != '/')
 	--cp;
-      newp = (char *) malloc (endp - cp + 1);
-      if (newp == NULL)
-	return NULL;
-      memcpy (newp, cp, endp - cp);
-      newp[endp - cp] = '\0';
-      ((struct locale_data *) locale_file->data)->name = newp;
+      ((struct locale_data *) locale_file->data)->name = __strndup (cp,
+								    endp - cp);
     }
   *name = (char *) ((struct locale_data *) locale_file->data)->name;
 

@@ -194,8 +194,8 @@ extern __inline long int atol (__const char *__nptr)
    next call.  */
 extern char *l64a __P ((long int __n));
 
-/* Read a number from a string in base 64 as above.  */
-extern long int a64l __P ((const char *));
+/* Read a number from a string S in base 64 as above.  */
+extern long int a64l __P ((__const char *__s));
 #endif
 
 
@@ -457,12 +457,12 @@ extern lldiv_t lldiv __P ((long long int __numer, long long int __denom)) __attr
 /* Convert VALUE to a string with NDIGIT digits and return a pointer to
    this.  Set *DECPT with the position of the decimal character and *SIGN
    with the sign of the number.  */
-char *ecvt __P ((double __value, int __ndigit, int *__decpt, int *sign));
+char *ecvt __P ((double __value, int __ndigit, int *__decpt, int *__sign));
 
 /* Convert VALUE to a string rounded to NDIGIT decimal digits.  Set *DECPT
    with the position of the decimal character and *SIGN with the sign of
    the number.  */
-char *fcvt __P ((double __value, int __ndigit, int *__decpt, int *sign));
+char *fcvt __P ((double __value, int __ndigit, int *__decpt, int *__sign));
 
 /* If possible convert VALUE to a string with NDIGIT significant digits.
    Otherwise use exponential representation.  The resulting string will
@@ -471,24 +471,24 @@ char *gcvt __P ((double __value, int __ndigit, char *__buf));
 
 /* Long double versions of above functions.  */
 char *qecvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *sign));
+		  int *__sign));
 char *qfcvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *sign));
+		  int *__sign));
 char *qgcvt __P ((__long_double_t __value, int __ndigit, char *__buf));
 
 
 #ifdef __USE_REENTRANT
 /* Reentrant version of the functions above which provide their own
    buffers.  */
-int ecvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
+int ecvt_r __P ((double __value, int __ndigit, int *__decpt, int *__sign,
 		 char *__buf, size_t __len));
-int fcvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
+int fcvt_r __P ((double __value, int __ndigit, int *__decpt, int *__sign,
 		 char *__buf, size_t __len));
 
 int qecvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *sign, char *__buf, size_t __len));
+		  int *__sign, char *__buf, size_t __len));
 int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
-		  int *sign, char *__buf, size_t __len));
+		  int *__sign, char *__buf, size_t __len));
 #endif
 #endif
 
@@ -498,7 +498,7 @@ int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
 extern int mblen __P ((__const char *__s, size_t __n));
 /* Return the length of the given multibyte character,
    putting its `wchar_t' representation in *PWC.  */
-extern int mbtowc __P ((wchar_t * __pwc, __const char *__s, size_t __n));
+extern int mbtowc __P ((wchar_t *__pwc, __const char *__s, size_t __n));
 /* Put the multibyte character represented
    by WCHAR in S, returning its length.  */
 extern int wctomb __P ((char *__s, wchar_t __wchar));
@@ -510,9 +510,9 @@ extern __inline int mblen (__const char *__s, size_t __n)
 
 
 /* Convert a multibyte string to a wide char string.  */
-extern size_t mbstowcs __P ((wchar_t * __pwcs, __const char *__s, size_t __n));
+extern size_t mbstowcs __P ((wchar_t *__pwcs, __const char *__s, size_t __n));
 /* Convert a wide char string to multibyte string.  */
-extern size_t wcstombs __P ((char *__s, __const wchar_t * __pwcs, size_t __n));
+extern size_t wcstombs __P ((char *__s, __const wchar_t *__pwcs, size_t __n));
 
 
 #ifdef __USE_SVID

@@ -935,16 +935,29 @@ write_locale_data (const char *output_path, const char *category,
   int fd;
   char *fname;
 
-  asprintf (&fname, "%s%s", output_path, category);
-  fd = creat (fname, 0666);
+  fname = malloc (strlen (output_path) + strlen (category) + 6);
+  if (fname == NULL)
+    error (5, errno, _("memory exhausted"));
+
+  /* Normally we write to the directory pointed to by the OUTPUT_PATH.
+     But for LC_MESSAGES we have to take care for the translation
+     data.  This means we need to have a directory LC_MESSAGES in
+     which we place the file under the name SYS_LC_MESSAGES.  */
+  if (strcmp (category, "LC_MESSAGES") == 0)
+    fd = -1;
+  else
+    {
+      sprintf (fname, "%s%s", output_path, category);
+      fd = creat (fname, 0666);
+    }
+
   if (fd == -1)
     {
       int save_err = errno;
 
       if (errno == EISDIR)
 	{
-	  free (fname);
-	  asprintf (&fname, "%1$s%2$s/SYS_%2$s", output_path, category);
+	  sprintf (fname, "%1$s%2$s/SYS_%2$s", output_path, category);
 	  fd = creat (fname, 0666);
 	  if (fd == -1)
 	    save_err = errno;

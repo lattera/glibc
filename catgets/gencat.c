@@ -165,7 +165,7 @@ main (int argc, char *argv[])
   if (do_version)
     {
       fprintf (stderr, "%s - GNU %s %s\n", program_invocation_name,
-	       PACKAGE, VERSION);
+	       "libc", VERSION);
       exit (EXIT_SUCCESS);
     }
 

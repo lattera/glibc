@@ -36,16 +36,23 @@ void *xmalloc (size_t __n);
 void *xrealloc (void *__p, size_t __n);
 
 
-#define ADDC(ch)							    \
-  do									    \
-    {									    \
-      if (bufact == bufmax)						    \
-	{								    \
-	  bufmax *= 2;							    \
-	  buf = xrealloc (buf, bufmax);					    \
-	}								    \
-      buf[bufact++] = (ch);						    \
-    }									    \
+#define ADDC(ch)							      \
+  do									      \
+    {									      \
+      char *cp;								      \
+      if (bufact + (encoding_method == ENC_UCS4 ? 4 : 1) >= bufmax)	      \
+	{								      \
+	  bufmax *= 2;							      \
+	  buf = xrealloc (buf, bufmax);					      \
+	}								      \
+      cp = &buf[bufact];						      \
+      if (encode_char (ch, &cp) < 0)					      \
+	{								      \
+	  free (buf);							      \
+	  return NULL;							      \
+	}								      \
+      bufact = cp - buf;						      \
+    }									      \
   while (0)
 
 
@@ -92,31 +99,15 @@ translate_string (char *str, struct charset_t *charset)
 	  return NULL;
 	}
       else
-	{
-	  /* Encode string using current method.  */
-	  char *cp;
-
-	  if (bufmax - bufact < 8)
-	    {
-	      bufmax *= 2;
-	      buf = (char *) xrealloc (buf, bufmax);
-	    }
-
-	  cp = &buf[bufact];
-	  if (encode_char (value, &cp) < 0)
-	    {
-	      free (buf);
-	      return NULL;
-	    }
-	  bufact = cp - buf;
-	}
+	/* Encode string using current method.  */
+	ADDC (value);
 
       str = &tp[1];
     }
 
   ADDC ('\0');
 
-  return buf;;
+  return buf;
 }
 
 
@@ -127,15 +118,22 @@ encode_char (unsigned int value, char **cpp)
     {
     case ENC_UCS1:
       if (value > 255)
-	return -11;
+	return -1;
       *(*cpp)++ = (char) value;
       break;
 
     case ENC_UCS4:
+#if __BYTE_ORDER == __BIG_ENDIAN
       *(*cpp)++ = (char) (value >> 24);
       *(*cpp)++ = (char) ((value >> 16) & 0xff);
       *(*cpp)++ = (char) ((value >> 8) & 0xff);
       *(*cpp)++ = (char) (value & 0xff);
+#else
+      *(*cpp)++ = (char) (value & 0xff);
+      *(*cpp)++ = (char) ((value >>= 8) & 0xff);
+      *(*cpp)++ = (char) ((value >>= 8) & 0xff);
+      *(*cpp)++ = (char) ((value >>= 8) & 0xff);
+#endif
       break;
 
     default:

@@ -53,12 +53,12 @@ static const struct locale_data * *const _nl_current[] =
 /* Array indexed by category of pointers to _nl_C_CATEGORY slots.
    Elements are zero for categories whose data is never used.  */
 const struct locale_data *const _nl_C[] =
-{
+  {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
-  [category] = &_nl_C_##category,
+    [category] = &_nl_C_##category,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
-};
+  };
 
 
 /* Define an array of category names (also the environment variable names),
@@ -169,11 +169,8 @@ new_composite_name (int category, char *newnames[LC_ALL])
 	return (char *) _nl_C_name;
 
       new = malloc (last_len + 1);
-      if (new == NULL)
-	return NULL;
 
-      memcpy (new, newnames[0], last_len + 1);
-      return new;
+      return new == NULL ? NULL : memcpy (new, newnames[0], last_len + 1);
     }
 
   new = malloc (cumlen);

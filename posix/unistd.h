@@ -216,7 +216,7 @@ extern unsigned int sleep __P ((unsigned int __seconds));
 #ifdef __USE_BSD
 /* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
    or ignored.  Return value is not necessarily useful.  */
-extern unsigned int usleep __P ((unsigned __useconds));
+extern unsigned int usleep __P ((unsigned int __useconds));
 #endif
 
 
@@ -270,7 +270,7 @@ extern char *get_current_dir_name __P ((void));
    NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
    unless SIZE <= 0, in which case it is as big as necessary.  */
 
-char *__canonicalize_directory_name_internal __P ((const char *__thisdir,
+char *__canonicalize_directory_name_internal __P ((__const char *__thisdir,
 						   char *__buf,
 						   size_t __size));
 #endif
@@ -307,7 +307,7 @@ extern int execve __P ((__const char *__path, char *__const __argv[],
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for `execve'.  */
 extern int fexecve __P ((int __fd,
-			 char *const __argv[], char *const __envp[]));
+			 char *__const __argv[], char *__const __envp[]));
 
 #endif
 
@@ -317,11 +317,11 @@ extern int execv __P ((__const char *__path, char *__const __argv[]));
 
 /* Execute PATH with all arguments after PATH until a NULL pointer,
    and the argument after that for environment.  */
-extern int execle __P ((__const char *__path, __const char *__arg,...));
+extern int execle __P ((__const char *__path, __const char *__arg, ...));
 
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */
-extern int execl __P ((__const char *__path, __const char *__arg,...));
+extern int execl __P ((__const char *__path, __const char *__arg, ...));
 
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
@@ -415,7 +415,7 @@ extern __pid_t setsid __P ((void));
 
 #ifdef __USE_GNU
 /* Return the session ID of the given process.  */
-extern __pid_t getsid __P ((__pid_t));
+extern __pid_t getsid __P ((__pid_t __pid));
 #endif
 
 /* Get the real user ID of the calling process.  */
@@ -659,7 +659,7 @@ extern int sync __P ((void));
 extern int vhangup __P ((void));
 
 /* Revoke the access of all descriptors currently open on FILE.  */
-extern int revoke __P ((const char *__file));
+extern int revoke __P ((__const char *__file));
 
 
 /* Enable statistical profiling, writing samples of the PC into at most
@@ -689,7 +689,7 @@ extern void setusershell __P ((void)); /* Rewind and re-read the file.  */
 
 /* Prompt with PROMPT and read a string from the terminal without echoing.
    Uses /dev/tty if possible; otherwise stderr and stdin.  */
-extern char *getpass __P ((const char *__prompt));
+extern char *getpass __P ((__const char *__prompt));
 
 /* Put the program in the background, and dissociate from the controlling
    terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
@@ -770,10 +770,11 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
    set to EINTR.  */
 
 #define TEMP_FAILURE_RETRY(expression) \
-  ({ long int __result;							      \
+  (__extension__							      \
+    ({ long int __result;						      \
        do __result = (long int) (expression);				      \
        while (__result == -1L && errno == EINTR);			      \
-       __result; })
+       __result; }))							      \
 
 #endif
 

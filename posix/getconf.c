@@ -16,18 +16,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <error.h>
+#include <libintl.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 struct conf
   {
-    CONST char *name;
-    CONST int call_name;
-    CONST enum { SYSCONF, CONFSTR, PATHCONF } call;
+    const char *name;
+    const int call_name;
+    const enum { SYSCONF, CONFSTR, PATHCONF } call;
   };
 
 static struct conf vars[] =
@@ -82,31 +83,43 @@ static struct conf vars[] =
     { "_POSIX_PII_OSI_CLTS", _SC_PII_OSI_CLTS, SYSCONF },
     { "_POSIX_PII_OSI_M", _SC_PII_OSI_M, SYSCONF },
     { "_T_IOV_MAX", _SC_T_IOV_MAX, SYSCONF },
+    /* POSIX.2  */
+    { "BC_BASE_MAX", _SC_BC_BASE_MAX, SYSCONF },
+    { "BC_DIM_MAX", _SC_BC_DIM_MAX, SYSCONF },
+    { "BC_SCALE_MAX", _SC_BC_SCALE_MAX, SYSCONF },
+    { "BC_STRING_MAX", _SC_BC_STRING_MAX, SYSCONF },
+    { "COLL_WEIGHTS_MAX", _SC_COLL_WEIGHTS_MAX, SYSCONF },
+    { "EQUIV_CLASS_MAX", _SC_EQUIV_CLASS_MAX, SYSCONF },
+    { "EXPR_NEST_MAX", _SC_EXPR_NEST_MAX, SYSCONF },
+    { "LINE_MAX", _SC_LINE_MAX, SYSCONF },
+    { "RE_DUP_MAX", _SC_RE_DUP_MAX, SYSCONF },
+    { "CHARCLASS_NAME_MAX", _SC_CHARCLASS_NAME_MAX },
+    { "POSIX2_C_BIND", _SC_2_C_BIND, SYSCONF },
+    { "POSIX2_C_DEV", _SC_2_C_DEV, SYSCONF },
+    { "POSIX2_FORT_DEV", _SC_2_FORT_DEV, SYSCONF },
+    { "POSIX2_FORT_RUN", _SC_2_FORT_RUN, SYSCONF },
+    { "POSIX2_LOCALEDEF", _SC_2_LOCALEDEF, SYSCONF },
+    { "POSIX2_SW_DEV", _SC_2_SW_DEV, SYSCONF },
 
     { "PATH", _CS_PATH, CONFSTR },
 
     { NULL, 0, SYSCONF }
   };
 
-static CONST char *program;
+extern const char *__progname;
+
 
 static void
-DEFUN_VOID(usage)
+usage (void)
 {
-  fprintf (stderr, _("Usage: %s variable_name [pathname]\n"), program);
+  fprintf (stderr, _("Usage: %s variable_name [pathname]\n"), __progname);
   exit (2);
 }
 
 int
-DEFUN(main, (argc, argv), int argc AND char **argv)
+main (int argc, char *argv[])
 {
-  register CONST struct conf *c;
-
-  program = strrchr (argv[0], '/');
-  if (program == NULL)
-    program = argv[0];
-  else
-    ++program;
+  register const struct conf *c;
 
   if (argc < 2 || argc > 3)
     usage ();
@@ -124,11 +137,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 	      usage ();
 	    value = pathconf (argv[2], c->call_name);
 	    if (value == -1)
-	      {
-		fprintf (stderr, "%s: pathconf: %s: %s\n",
-			 program, argv[2], strerror (errno));
-		exit (3);
-	      }
+	      error (3, errno, "pathconf: %s", argv[2]);
+
 	    printf ("%ld\n", value);
 	    exit (0);
 
@@ -145,22 +155,17 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 	    clen = confstr (c->call_name, (char *) NULL, 0);
 	    cvalue = (char *) malloc (clen);
 	    if (cvalue == NULL)
-	      {
-		fprintf (stderr, "%s: malloc: %s\n",
-			 program, strerror (errno));
-		exit (3);
-	      }
+	      error (3, 0, _("memory exhausted"));
+
 	    if (confstr (c->call_name, cvalue, clen) != clen)
-	      {
-		fprintf (stderr, "%s: confstr: %s\n",
-			 program, strerror (errno));
-		exit (3);
-	      }
+	      error (3, errno, "confstr");
+
 	    printf ("%.*s\n", (int) clen, cvalue);
 	    exit (0);
 	  }
       }
 
-  fprintf (stderr, _("%s: Unrecognized variable `%s'\n"), program, argv[1]);
-  exit (2);
+  error (2, 0, _("Unrecognized variable `%s'"), argv[1]);
+  /* NOTREACHED */
+  return 2;
 }

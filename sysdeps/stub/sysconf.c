@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <time.h>
@@ -25,7 +24,8 @@ Cambridge, MA 02139, USA.  */
 
 /* Get the value of the system variable NAME.  */
 long int
-DEFUN(__sysconf, (name), int name)
+__sysconf (name)
+     int name;
 {
   switch (name)
     {
@@ -36,11 +36,40 @@ DEFUN(__sysconf, (name), int name)
     case _SC_TZNAME_MAX:
       return __tzname_max ();
 
+    case _SC_CHARCLASS_NAME_MAX:
+#ifdef	CHARCLASS_NAME_MAX
+      return CHARCLASS_NAME_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_COLL_WEIGHTS_MAX:
+#ifdef	COLL_WEIGHTS_MAX
+      return COLL_WEIGHTS_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_EQUIV_CLASS_MAX:
+#ifdef	EQUIV_CLASS_MAX
+      return EQUIV_CLASS_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_2_LOCALEDEF:
+#ifdef	_POSIX2_LOCALEDEF
+      return _POSIX2_LOCALEDEF;
+#else
+      return -1;
+#endif
+
     case _SC_ARG_MAX:
     case _SC_CHILD_MAX:
     case _SC_CLK_TCK:
     case _SC_NGROUPS_MAX:
     case _SC_OPEN_MAX:
+    case _SC_STREAM_MAX:
     case _SC_JOB_CONTROL:
     case _SC_SAVED_IDS:
     case _SC_REALTIME_SIGNALS:
@@ -57,7 +86,20 @@ DEFUN(__sysconf, (name), int name)
     case _SC_MESSAGE_PASSING:
     case _SC_SEMAPHORES:
     case _SC_SHARED_MEMORY_OBJECTS:
+
+    case _SC_AIO_LIST_MAX:
+    case _SC_AIO_MAX:
+    case _SC_AIO_PRIO_DELTA_MAX:
+    case _SC_DELAYTIME_MAX:
+    case _SC_MQ_OPEN_MAX:
+    case _SC_MQ_PRIO_MAX:
     case _SC_VERSION:
+    case _SC_PAGESIZE:
+    case _SC_RTSIG_MAX:
+    case _SC_SEM_NSEMS_MAX:
+    case _SC_SEM_VALUE_MAX:
+    case _SC_SIGQUEUE_MAX:
+    case _SC_TIMER_MAX:
 
     case _SC_PII:
     case _SC_PII_XTI:
@@ -77,11 +119,9 @@ DEFUN(__sysconf, (name), int name)
     case _SC_BC_DIM_MAX:
     case _SC_BC_SCALE_MAX:
     case _SC_BC_STRING_MAX:
-    case _SC_EQUIV_CLASS_MAX:
     case _SC_EXPR_NEST_MAX:
     case _SC_LINE_MAX:
     case _SC_RE_DUP_MAX:
-    case _SC_CHARCLASS_NAME_MAX:
     case _SC_2_VERSION:
     case _SC_2_C_BIND:
     case _SC_2_C_DEV:

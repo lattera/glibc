@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <unistd.h>
@@ -24,12 +23,13 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <time.h>
 
-extern int EXFUN(__getdtablesize, (NOARGS));
-extern size_t EXFUN(__getpagesize, (NOARGS));
+extern int __getdtablesize __P ((void));
+extern size_t __getpagesize __P ((void));
 
 /* Get the value of the system variable NAME.  */
 long int
-DEFUN(__sysconf, (name), int name)
+__sysconf (name)
+     int name;
 {
   switch (name)
     {
@@ -297,6 +297,13 @@ DEFUN(__sysconf, (name), int name)
     case _SC_BC_STRING_MAX:
 #ifdef	BC_STRING_MAX
       return BC_STRING_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_COLL_WEIGHTS_MAX:
+#ifdef	COLL_WEIGHTS_MAX
+      return COLL_WEIGHTS_MAX;
 #else
       return -1;
 #endif

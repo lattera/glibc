@@ -131,7 +131,7 @@ extern wchar_t *wmemcpy __P ((wchar_t *__s1, __const wchar_t *__s2,
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
 extern wchar_t *wmemmove __P ((wchar_t *__s1, __const wchar_t *__s2,
-			       size_t __N));
+			       size_t __n));
 
 /* Set N bytes of S to C.  */
 extern wchar_t *wmemset __P ((wchar_t *__s, wchar_t __c, size_t __n));
@@ -168,8 +168,8 @@ extern __inline size_t mbrlen (__const char *s, size_t n, mbstate_t *ps)
 { return ps != NULL ? mbrtowc (NULL, s, n, ps) : __mbrlen (s, n, NULL); }
 #endif
 
-/* Write wide character representation of multibyte chracter string SRC
-   to DST.  */
+/* Write wide character representation of multibyte character string
+   SRC to DST.  */
 extern size_t mbsrtowcs __P ((wchar_t *__dst, __const char **__src,
 			      size_t __len, mbstate_t *__ps));
 
@@ -180,6 +180,21 @@ extern size_t wcsrtombs __P ((char *__dst, __const wchar_t **__src,
 
 
 #ifdef	__USE_GNU
+/* Write wide character representation of at most NMC bytes of the
+   multibyte character string SRC to DST.  */
+extern size_t __mbsnrtowcs __P ((wchar_t *__dst, __const char **__src,
+				 size_t __nmc, size_t __len, mbstate_t *__ps));
+extern size_t mbsnrtowcs __P ((wchar_t *__dst, __const char **__src,
+			       size_t __nmc, size_t __len, mbstate_t *__ps));
+
+/* Write multibyte character representation of at most NWC characters
+   from the wide character string SRC to DST.  */
+extern size_t __wcsnrtombs __P ((char *__dst, __const wchar_t **__src,
+				 size_t __nwc, size_t __len, mbstate_t *__ps));
+extern size_t wcsnrtombs __P ((char *__dst, __const wchar_t **__src,
+			       size_t __nwc, size_t __len, mbstate_t *__ps));
+
+
 /* The following functions are extensions found in X/Open CAE.  */
 
 /* Determine number of column positions required for C.  */
@@ -229,11 +244,11 @@ extern unsigned long long int wcstouq __P ((__const wchar_t *__nptr,
 /* The internal entry points for `wcstoX' take an extra flag argument
    saying whether or not to parse locale-dependent number grouping.  */
 extern double __wcstod_internal __P ((__const wchar_t *__nptr,
-				      wchar_t **_endptr, int __group));
+				      wchar_t **__endptr, int __group));
 extern float __wcstof_internal __P ((__const wchar_t *__nptr,
-				     wchar_t **_endptr, int __group));
+				     wchar_t **__endptr, int __group));
 extern __long_double_t __wcstold_internal __P ((__const wchar_t *__nptr,
-						wchar_t **_endptr,
+						wchar_t **__endptr,
 						int __group));
 
 extern long int __wcstol_internal __P ((__const wchar_t *__nptr,

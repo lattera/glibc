@@ -1,4 +1,7 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* locale - Implementation of the locale program according to POSIX 1003.2
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -12,8 +15,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -105,13 +108,20 @@ struct category
 static struct category category[] =
   {
 #define DEFINE_CATEGORY(category, name, items, postload, in, check, out)      \
-    { _NL_NUM_##category, name, NELEMS (category##_desc) - 1,                 \
-      category##_desc },
+    [category] = { _NL_NUM_##category, name, NELEMS (category##_desc),	      \
+		   category##_desc },
 #include "categories.def"
 #undef DEFINE_CATEGORY
   };
 #define NCATEGORIES NELEMS (category)
 
+
+/* Automatically set variable.  */
+extern const char *__progname;
+
+/* helper function for extended name handling.  */
+extern void locale_special (const char *name, int show_category_name,
+			    int show_keyword_name);
 
 /* Prototypes for local functions.  */
 static void usage (int status) __attribute__ ((noreturn));
@@ -146,7 +156,7 @@ main (int argc, char *argv[])
          != EOF)
     switch (optchar)
       {
-      case '\0':
+      case '\0':		/* Long option.  */
 	break;
       case 'a':
 	do_all = 1;
@@ -173,7 +183,7 @@ main (int argc, char *argv[])
   /* Version information is requested.  */
   if (do_version)
     {
-      fprintf (stderr, "GNU %s %s\n", PACKAGE, VERSION);
+      fprintf (stderr, "%s - GNU %s %s\n", __progname, "libc", VERSION);
       exit (EXIT_SUCCESS);
     }
 
@@ -222,7 +232,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
-             program_invocation_name);
+	     __progname);
   else
     printf (gettext ("\
 Usage: %s [OPTION]... name\n\
@@ -235,7 +245,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
   -c, --category-name   write names of selected categories\n\
   -k, --keyword-name    write names of selected keywords\n"),
-	    program_invocation_name);
+	    __progname);
 
   exit (status);
 }
@@ -424,4 +434,8 @@ show_info (const char *name)
 	    return;
 	  }
     }
+
+  /* When we get to here the name is not standard ones.  For testing
+     and perhpas advanced use we allow some more symbols.  */
+  locale_special (name, show_category_name, show_keyword_name);
 }

@@ -257,7 +257,7 @@ time_add (struct linereader *lr, struct localedef_t *locale,
 #define STRARR_ELEM(cat, max)						      \
     case tok_##cat:							      \
       if (time->cur_num_##cat >= max)					      \
-	lr_error (lr, _("						      \
+	lr_error (lr, _("\
 too many values for field `%s' in category `LC_TIME'"),			      \
 		  #cat, "LC_TIME");					      \
       else if (code->val.str.start == NULL)				      \

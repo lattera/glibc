@@ -67,9 +67,6 @@ struct copy_def_list_t *copy_list;
 /* If this is defined be POSIX conform.  */
 int posix_conformance;
 
-/* Name of the running program.  */
-const char *program_name;
-
 /* If not zero give a lot more messages.  */
 int verbose;
 
@@ -118,7 +115,6 @@ main (int argc, char *argv[])
   /* Set initial values for global varaibles.  */
   copy_list = NULL;
   posix_conformance = getenv ("POSIXLY_CORRECT") != NULL;
-  program_name = argv[0];
   error_print_progname = error_print;
   verbose = 0;
 
@@ -128,12 +124,7 @@ main (int argc, char *argv[])
   setlocale (LC_CTYPE, "");
 
   /* Initialize the message catalog.  */
-#if 0
-  /* In the final version for glibc we can use the variable.  */
   textdomain (_libc_intl_domainname);
-#else
-  textdomain ("SYS_libc");
-#endif
 
   while ((optchar = getopt_long (argc, argv, "cf:hi:u:vV", long_options, NULL))
          != EOF)
@@ -182,7 +173,8 @@ main (int argc, char *argv[])
   /* Version information is requested.  */
   if (do_version)
     {
-      fprintf (stderr, "%s - GNU %s %s\n", program_name, PACKAGE, VERSION);
+      fprintf (stderr, "%s - GNU %s %s\n", program_invocation_short_name,
+	       "libc", VERSION);
       exit (0);
     }
 
@@ -389,7 +381,7 @@ usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-             program_name);
+	     program_invocation_name);
   else
     printf (_("\
 Usage: %s [OPTION]... name\n\
@@ -405,7 +397,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 System's directory for character maps: %s\n\
                        locale files  : %s\n"),
-	    program_name, CHARMAP_PATH, LOCALE_PATH);
+	    program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
 
   exit (status);
 }
