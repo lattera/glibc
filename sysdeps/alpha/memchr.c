@@ -72,7 +72,7 @@ memchr (const void *s, int c, size_t n)
 	  unsigned char *cp = (unsigned char *) (longword_ptr - 1);
 	  int i;
 
-	  for (i = 0; i < 6; i++)
+	  for (i = 0; i < 7; i++)
 	    if (cp[i] == c)
 	      return &cp[i];
 	  return &cp[7];
