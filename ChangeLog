@@ -1,5 +1,9 @@
 2002-08-23  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/i386/dl-machine.h (elf_machine_load_address): Add a dummy
+	global variable reference in an unused asm parameter, to ensure the
+	compiler has set up the GOT register before we use it.
+
 	* malloc/hooks.c: Move variable definitions ahead of uses.
 	* libio/fileops.c: Move versioned_symbol defns ahead of _IO_jump_t
 	initializers that make reference to variables they define.

@@ -49,10 +49,14 @@ elf_machine_dynamic (void)
 static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
+  /* It doesn't matter what variable this is, the reference never makes
+     it to assembly.  We need a dummy reference to some global variable
+     via the GOT to make sure the compiler initialized %ebx in time.  */
+  extern int _dl_argc;
   Elf32_Addr addr;
   asm ("leal _dl_start@GOTOFF(%%ebx), %0\n"
        "subl _dl_start@GOT(%%ebx), %0"
-       : "=r" (addr) : : "cc");
+       : "=r" (addr) : "m" (_dl_argc) : "cc");
   return addr;
 }
 
