@@ -118,7 +118,7 @@ typedef struct
      __self - 1;})
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
-# define DB_THREAD_SELF REGISTER (32, REG_GBR * 4, 0)
+# define DB_THREAD_SELF REGISTER (32, 32, REG_GBR * 4, 0)
 
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) (descr->member)

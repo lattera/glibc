@@ -1,3 +1,14 @@
+2003-12-11  Ulrich Weigand  <uweigand@de.ibm.com>
+
+	* sysdeps/alpha/tls.h (DB_THREAD_SELF): Pass bit size of thread
+	register as second parameter to the REGISTER macro.
+	* sysdeps/ia64/tls.h (DB_THREAD_SELF): Likewise.
+	* sysdeps/powerpc/tls.h (DB_THREAD_SELF): Likewise.
+	* sysdeps/sh/tls.h (DB_THREAD_SELF): Likewise.
+	* sysdeps/sparc/tls.h (DB_THREAD_SELF): Likewise.
+	* sysdeps/s390/tls.h (DB_THREAD_SELF): Pass __WORDSIZE as bit size
+	of thread register as second parameter to REGISTER macro in 64 case.
+
 2004-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-getpid.c): Removed.

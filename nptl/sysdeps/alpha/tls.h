@@ -120,7 +120,7 @@ typedef struct
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  REGISTER (64, 32 * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
+  REGISTER (64, 64, 32 * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
 /* Identifier for the current thread.  THREAD_SELF is usable but
    sometimes more expensive than necessary as in this case.  */

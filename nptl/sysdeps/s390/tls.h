@@ -1,5 +1,5 @@
-/* Definition for thread-local data handling.  nptl/s390 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+/* Definition for thread-local data handling.  NPTL/s390 version.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -138,7 +138,8 @@ typedef struct
 # define THREAD_SELF ((struct pthread *) __builtin_thread_pointer ())
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
-# define DB_THREAD_SELF REGISTER (32, 18 * 4, 0) REGISTER (64, 18 * 8, 0)
+# define DB_THREAD_SELF REGISTER (32, 32, 18 * 4, 0) \
+			REGISTER (64, __WORDSIZE, 18 * 8, 0)
 
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) \

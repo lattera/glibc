@@ -131,9 +131,9 @@ register void *__thread_register __asm__ ("r13");
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF							      \
-  REGISTER (32, PT_THREAD_POINTER * 4,					      \
+  REGISTER (32, 32, PT_THREAD_POINTER * 4,					      \
 	    - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)			      \
-  REGISTER (64, PT_THREAD_POINTER * 8,					      \
+  REGISTER (64, 64, PT_THREAD_POINTER * 8,					      \
 	    - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
 /* Read member of the thread descriptor directly.  */

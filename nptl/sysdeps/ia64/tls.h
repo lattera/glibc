@@ -123,7 +123,7 @@ register struct pthread *__thread_self __asm__("r13");
 # define THREAD_SELF (__thread_self - 1)
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
-# define DB_THREAD_SELF REGISTER (64, 13 * 8, -sizeof (struct pthread))
+# define DB_THREAD_SELF REGISTER (64, 64, 13 * 8, -sizeof (struct pthread))
 
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) \

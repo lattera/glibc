@@ -1,3 +1,8 @@
+2003-12-11  Ulrich Weigand  <uweigand@de.ibm.com>
+
+	* db_info.c (REGISTER): Add bit size of thread register as second
+	parameter to REGISTER macro.
+
 2003-12-02  Roland McGrath  <roland@redhat.com>
 
 	* thread_dbP.h (DB_FUNCTION): New macro.
