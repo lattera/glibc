@@ -32,8 +32,8 @@ below.
 Configuring and compiling GNU Libc
 ==================================
 
-   GNU Libc can be compiled in the source directory but we strongly
-advise to build in a separate build directory.  For example, if you
+   GNU libc can be compiled in the source directory, but we strongly
+advise to build it in a separate build directory.  For example, if you
 have unpacked the glibc sources in `/src/gnu/glibc-2.1.0', create a
 directory `/src/gnu/glibc-build' to put the object files in.  This
 allows to remove the whole build directory in case an error occurs
@@ -45,7 +45,7 @@ at the top level of the source tree.  In the scenario above, you'd type
      $ ../glibc-2.1.0/configure ARGS...
 
    Please note that even if you're building in a separate build
-directory, the compiliation needs to modify a few files in the source
+directory, the compilation needs to modify a few files in the source
 directory, especially some files in the manual subdirectory.
 
 `configure' takes many options, but you can get away with knowing only
@@ -53,14 +53,15 @@ two: `--prefix' and `--enable-add-ons'.  The `--prefix' option tells
 configure where you want glibc installed.  This defaults to
 `/usr/local'.  The `--enable-add-ons' option tells configure to use all
 the add-on bundles it finds in the source directory.  Since important
-functionality is provided in add-ons, you should always give this
+functionality is provided in add-ons, you should always specify this
 option.
 
    It may also be useful to set the CC and CFLAGS variables in the
 environment when running `configure'.  CC selects the C compiler that
 will be used, and CFLAGS sets optimization options for the compiler.
 
-   Here are all the useful options known by `configure':
+   The following list describes all of the available options for
+`configure':
 
 `--prefix=DIRECTORY'
      Install machine-independent data files in subdirectories of
@@ -69,13 +70,13 @@ will be used, and CFLAGS sets optimization options for the compiler.
 `--exec-prefix=DIRECTORY'
      Install the library and other machine-dependent files in
      subdirectories of `DIRECTORY'.  The default is to the `--prefix'
-     directory if that option is given, or `/usr/local' otherwise.
+     directory if that option is specified, or `/usr/local' otherwise.
 
 `--with-headers=DIRECTORY'
      Look for kernel header files in DIRECTORY, not `/usr/include'.
      Glibc needs information from the kernel's private header files.
-     It will normally look in `/usr/include' for them, but if you give
-     this option, it will look in DIRECTORY instead.
+     It will normally look in `/usr/include' for them, but if you
+     specify this option, it will look in DIRECTORY instead.
 
      This option is primarily of use on a system where the headers in
      `/usr/include' come from an older version of glibc.  Conflicts can
@@ -86,9 +87,9 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
 `--enable-add-ons[=LIST]'
      Enable add-on packages in your source tree.  If this option is
-     given with no list, it enables all the add-on packages it finds.
-     If you do not wish to use some add-on package that you have
-     present in your source tree, give this option a list of the
+     specified with no list, it enables all the add-on packages it
+     finds.  If you do not wish to use some add-on package that you
+     have present in your source tree, give this option a list of the
      add-ons that you _do_ want used, like this:
      `--enable-add-ons=crypt,linuxthreads'
 
@@ -96,19 +97,19 @@ will be used, and CFLAGS sets optimization options for the compiler.
      Use the binutils (assembler and linker) in `DIRECTORY', not the
      ones the C compiler would default to.  You could use this option if
      the default binutils on your system cannot deal with all the
-     constructs in the GNU C library.  (`configure' will detect the
-     problem and suppress these constructs, so the library will still
-     be usable, but functionality may be lost--for example, you can not
-     build a shared libc with old binutils.)
+     constructs in the GNU C library.  In that case, `configure' will
+     detect the problem and suppress these constructs, so that the
+     library will still be usable, but functionality may be lost--for
+     example, you can't build a shared libc with old binutils.
 
 `--without-fp'
      Use this option if your computer lacks hardware floating-point
      support and your operating system does not emulate an FPU.
 
 `--disable-shared'
-     Don't build shared libraries even if we could.  Not all systems
-     support shared libraries; you need ELF support and (currently) the
-     GNU linker.
+     Don't build shared libraries even if it is possible.  Not all
+     systems support shared libraries; you need ELF support and
+     (currently) the GNU linker.
 
 `--disable-profile'
      Don't build libraries with profiling information.  You may want to
@@ -123,7 +124,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
 `--disable-versioning'
      Don't compile the shared libraries with symbol version information.
-     Doing this will make the library that's built incompatible with old
+     Doing this will make the resulting library incompatible with old
      binaries, so it's not recommended.
 
 `--enable-static-nss'
@@ -134,23 +135,23 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
 `--build=BUILD-SYSTEM'
 `--host=HOST-SYSTEM'
-     These options are for cross-compiling.  If you give them both and
-     BUILD-SYSTEM is different from HOST-SYSTEM, `configure' will
-     prepare to cross-compile glibc from BUILD-SYSTEM to be used on
-     HOST-SYSTEM.  You'll probably need the `--with-headers' option
+     These options are for cross-compiling.  If you specify both
+     options and BUILD-SYSTEM is different from HOST-SYSTEM, `configure'
+     will prepare to cross-compile glibc from BUILD-SYSTEM to be used
+     on HOST-SYSTEM.  You'll probably need the `--with-headers' option
      too, and you may have to override CONFIGURE's selection of the
      compiler and/or binutils.
 
-     If you give just `--host', configure will prepare for a native
-     compile but use what you say instead of guessing what your system
-     is.  This is most useful to change the CPU submodel.  For example,
-     if configure guesses your machine as `i586-pc-linux-gnu' but you
-     want to compile a library for 386es, give
+     If you only specify `--host', configure will prepare for a native
+     compile but use what you specify instead of guessing what your
+     system is.  This is most useful to change the CPU submodel.  For
+     example, if configure guesses your machine as `i586-pc-linux-gnu'
+     but you want to compile a library for 386es, give
      `--host=i386-pc-linux-gnu' or just `--host=i386-linux' and add the
      appropriate compiler flags (`-mcpu=i386' will do the trick) to
      CFLAGS.
 
-     If you give just `--build', configure will get confused.
+     If you specify just `--build', configure will get confused.
 
    To build the library and related programs, type `make'.  This will
 produce a lot of output, some of which may look like errors from `make'
@@ -172,17 +173,18 @@ Instead, edit the generated `Makefile' and uncomment the line
 
 You can change the `4' to some other number as appropriate for your
 system.  Instead of changing the `Makefile', you could give this option
-directly to `make' and call it as, e.g.  `make PARALLELMFLAGS=-j4'.  If
-you're building in the source directory, you've got to use the latter
-approach since in this case no new `Makefile' is generated which you
-can change.
+directly to `make' and call it as, for example, `make
+PARALLELMFLAGS=-j4'.  If you're building in the source directory, you
+must use the latter approach since in this case no new `Makefile' is
+generated for you to change.
 
-   To build and run some test programs which exercise some of the
-library facilities, type `make check'.  This should complete
-successfully; if it doesn't, do not use the built library, and report a
-bug.  *Note Reporting Bugs::, for how to do that.  Note that some of
-the tests assume they are not being run by `root'.  We recommend you
-compile and test glibc as an unprivileged user.
+   To build and run test programs which exercise some of the library
+facilities, type `make check'.  If it does not complete successfully,
+do not use the built library, and report a bug after verifying that the
+problem is not already known.  *Note Reporting Bugs::, for instructions
+on reporting bugs.  Note that some of the tests assume they are not
+being run by `root'.  We recommend you compile and test glibc as an
+unprivileged user.
 
    To format the `GNU C Library Reference Manual' for printing, type
 `make dvi'.  You need a working TeX installation to do this.  The
@@ -195,20 +197,20 @@ Installing the C Library
 
    To install the library and its header files, and the Info files of
 the manual, type `make install'.  This will build things if necessary,
-before installing them.  Don't rely on that; compile everything first.
-If you are installing glibc as your primary C library, we recommend you
-shut the system down to single-user mode first, and reboot afterward.
-This minimizes the risk of breaking things when the library changes out
-from underneath.
+before installing them.  However, you should still compile everything
+first.  If you are installing glibc as your primary C library, we
+recommend that you shut the system down to single-user mode first, and
+reboot afterward.  This minimizes the risk of breaking things when the
+library changes out from underneath.
 
    If you are upgrading from a previous installation of glibc 2.0 or
 2.1, `make install' will do the entire job.  If you're upgrading from
 Linux libc5 or some other C library, you need to rename the old
-`/usr/include' directory out of the way before running `make install',
-or you will end up with a mixture of header files from both libraries,
-and you won't be able to compile anything.  You may also need to
-reconfigure GCC to work with the new library.  The easiest way to do
-that is to figure out the compiler switches to make it work again
+`/usr/include' directory before running `make install', or you will end
+up with a mixture of header files from both libraries, and you won't be
+able to compile anything.  You may also need to reconfigure GCC to work
+with the new library.  The easiest way to do that is to figure out the
+compiler switches to make it work again
 (`-Wl,--dynamic-linker=/lib/ld-linux.so.2' should work on Linux
 systems) and use them to recompile gcc.  You can also edit the specs
 file (`/usr/lib/gcc-lib/TARGET/VERSION/specs'), but that is a bit of a
@@ -237,6 +239,23 @@ privileges.)  If you are using a 2.1 or newer Linux kernel with the
 this program; otherwise you do.  The source for `pt_chown' is in
 `login/programs/pt_chown.c'.
 
+   After installation you might want to configure the timezone and
+locale installation of your system.  The GNU C library comes with a
+locale database which gets configured with `localedef'.  For example, to
+set up a German locale with name `de_DE', simply issue the command
+`localedef -i de_DE -f ISO-8859-1 de_DE'.  To configure all locales
+that are supported by glibc, you can issue from your build directory the
+command `make localedata/install-locales'.
+
+   To configure the locally used timezone, you can either set the `TZ'
+environment variable.  The script `tzselect' helps you to select the
+right value.  As an example for Germany, tzselect would tell you to use
+`TZ='Europe/Berlin''.  For a system wide installation (the given paths
+are for an installation with `--prefix=/usr'), link the timezone file
+which is in `/usr/share/zoneinfo' to the file `/etc/localtime'.  For
+Germany, you might execute `ln -s /usr/share/zoneinfo/Europe/Berlin
+/etc/localtime'.
+
 Recommended Tools for Compilation
 =================================
 
@@ -246,12 +265,12 @@ build the GNU C library:
    * GNU `make' 3.75
 
      You need the latest version of GNU `make'.  Modifying the GNU C
-     Library to work with other `make' programs would be so hard that we
-     recommend you port GNU `make' instead.  *Really.*  We recommend
-     version GNU `make' version 3.75 or 3.77.  All earlier versions
-     have severe bugs or lack features. Version 3.76 is known to have
-     bugs which only show up in big projects like GNU `libc'.  Version
-     3.76.1 seems OK but some people have reported problems.
+     Library to work with other `make' programs would be so difficult
+     that we recommend you port GNU `make' instead.  *Really.*  We
+     recommend version GNU `make' version 3.75 or 3.77.  All earlier
+     versions have severe bugs or lack features. Version 3.76 is known
+     to have bugs which only show up in big projects like GNU `libc'.
+     Version 3.76.1 seems OK but some people have reported problems.
 
    * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1
 
@@ -368,8 +387,8 @@ they definitely don't work anymore.  Porting the library is not hard.
 If you are interested in doing a port, please contact the glibc
 maintainers by sending electronic mail to <bug-glibc@gnu.org>.
 
-   Each case of `iX86' can be `i386', `i486', `i586', or `i686'.  All
-of those configurations produce a library that can run on this
+   Valid cases of `iX86' include `i386', `i486', `i586', and `i686'.
+All of those configurations produce a library that can run on this
 processor and newer processors.  The GCC compiler by default generates
 code that's optimized for the machine it's configured for and will use
 the instructions available on that machine.  For example if your GCC is
@@ -383,7 +402,7 @@ Specific advice for Linux systems
 
    If you are installing GNU libc on a Linux system, you need to have
 the header files from a 2.2 kernel around for reference.  You do not
-need to use the 2.2 kernel, just have its headers where glibc can get
+need to use the 2.2 kernel, just have its headers where glibc can access
 at them.  The easiest way to do this is to unpack it in a directory
 such as `/usr/src/linux-2.2.1'.  In that directory, run `make config'
 and accept all the defaults.  Then run `make include/linux/version.h'.
@@ -428,9 +447,9 @@ errors and omissions in this manual.  If you report them, they will get
 fixed.  If you don't, no one will ever know about them and they will
 remain unfixed for all eternity, if not longer.
 
-   It is a good idea to check first that the problem was not reported
-before.  Bugs are documented in two places: The file `BUGS' describes a
-number of well known bugs and the bug tracking system has a WWW
+   It is a good idea to verify that the problem has not already been
+reported.  Bugs are documented in two places: The file `BUGS' describes
+a number of well known bugs and the bug tracking system has a WWW
 interface at <http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  The
 WWW interface gives you access to open and closed reports.  The closed
 reports normally include a patch or a hint on solving the problem.
@@ -469,6 +488,6 @@ function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
 errors or omissions in this manual, please report them to the Internet
 address <bug-glibc-manual@gnu.org>.  If you refer to specific sections
-when reporting on the manual, please include the section names for
-easier identification.
+of the manual, please include the section names for easier
+identification.
 

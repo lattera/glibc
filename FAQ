@@ -237,6 +237,9 @@ Make up your own decision.
 GNU CC versions 2.95 and above are derived from egcs, and they may do even
 better.
 
+Please note that gcc 2.95 and 2.95.1 cannot compile glibc on Alpha due to
+problems in the complex float support.
+
 
 1.3.	When I try to compile glibc I get only error messages.
 	What's wrong?
@@ -402,6 +405,11 @@ Add-ons can add features (including entirely new shared libraries), override
 files, provide support for additional architectures, and just about anything
 else.  The existing makefiles do most of the work; only some few stub rules
 must be written to get everything running.
+
+Most add-ons are tightly coupled to a specific GNU libc version.  Please
+check that the add-ons work with the GNU libc.  For example the crypt and
+linuxthreads add-ons have the same numbering scheme as the libc and will in
+general only work with the corresponding libc.
 
 
 1.12.	My XXX kernel emulates a floating-point coprocessor for me.

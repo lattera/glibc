@@ -147,19 +147,20 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	 align the pointer.  */
       align = ((__alignof__ (char *) - (p - ((char *) 0)))
 	       & (__alignof__ (char *) - 1));
-      if (buflen < (align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *)
-		    + gr_resp.gr_name_len + gr_resp.gr_passwd_len))
+      total_len = align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *)
+		  + gr_resp.gr_name_len + gr_resp.gr_passwd_len;
+      if (buflen < total_len)
 	{
 	no_room:
 	  __set_errno (ERANGE);
 	  __close (sock);
 	  return ERANGE;
 	}
+      buflen -= total_len;
 
       p += align;
       resultbuf->gr_mem = (char **) p;
       p += (1 + gr_resp.gr_mem_cnt) * sizeof (char *);
-      buflen -= align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *);
 
       /* Set pointers for strings.  */
       resultbuf->gr_name = p;
@@ -179,8 +180,6 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       vec[1].iov_base = resultbuf->gr_name;
       vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
       total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
-
-      buflen -= gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 
       /* Get this data.  */
       if (__readv (sock, vec, 2) != total_len)

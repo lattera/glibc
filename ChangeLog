@@ -1,3 +1,7 @@
+1999-08-31  H.J. Lu  <hjl@gnu.org>
+
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Cleanup the buffer count.
+
 1999-09-05  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdprio.c (_hurd_priority_which_map): If WHO is zero default
