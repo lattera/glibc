@@ -85,7 +85,7 @@ endif
 
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	constload1 order $(tests-vis-$(have-protected))
+	constload1 order $(tests-vis-$(have-protected)) noload
 tests-vis-yes = vismain
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
@@ -290,3 +290,7 @@ $(objpfx)order.out: $(objpfx)order
 $(objpfx)vismain: $(addprefix $(objpfx),vismod1.so vismod2.so)
 $(objpfx)vismain.out: $(addprefix $(objpfx),vismod3.so)
 vismain-ENV = LD_PRELOAD=$(addprefix $(objpfx),vismod3.so)
+
+$(objpfx)noload: $(objpfx)testobj1.so
+LDFLAGS-noload = -rdynamic
+$(objpfx)noload.out: $(objpfx)testobj5.so
