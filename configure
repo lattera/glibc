@@ -1685,7 +1685,7 @@ fi
 echo $ac_n "checking compiler version""... $ac_c" 1>&6
 echo "configure:1687: checking compiler version" >&5
 case `${CC-cc} -v 2>&1` in
-  *egcs-2.91.* | *egcs-1.0.[2-9]* | *egcs-1.1* | *2.8.[1-9]* | *2.9.[0-9] )
+  *egcs-2.91.* | *egcs-1.0.[2-9]* | *egcs-1.1* | *2.8.[1-9]* | *2.9.[0-9]*)
     cc_is_recent="ok"
     ;;
   *)

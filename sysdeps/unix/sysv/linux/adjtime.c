@@ -41,6 +41,7 @@
 #endif
 
 #ifndef ADJTIMEX
+#define NO_LOCAL_ADJTIME
 #define ADJTIMEX(x) __adjtimex (x)
 #endif
 
@@ -91,6 +92,6 @@ ADJTIME (itv, otv)
   return 0;
 }
 
-#ifndef ADJTIME
+#ifdef NO_LOCAL_ADJTIME
 weak_alias (__adjtime, adjtime)
 #endif

@@ -1147,7 +1147,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
       switch (words[*offset])
 	{
 	case '}':
-	  /* Evalute. */
+	  /* Evaluate. */
 	  goto envsubst;
 
 	case '#':
@@ -1295,36 +1295,23 @@ envsubst:
       /* Is it `$*' or `$@' (unquoted) ? */
       else if (*env == '*' || (*env == '@' && !quoted))
 	{
-	  size_t plist_len = 1;
+	  size_t plist_len = 0;
 	  int p;
+	  char *end;
 
 	  /* Build up value parameter by parameter (copy them) */
 	  for (p = 1; __libc_argv[p]; ++p)
+	    plist_len += strlen (__libc_argv[p]) + 1; /* for space */
+	  value = malloc (plist_len);
+	  if (value == NULL)
+	    goto no_space;
+	  end = value;
+	  *end = 0;
+	  for (p = 1; __libc_argv[p]; ++p)
 	    {
-	      char *old_pointer = value;
-	      size_t argv_len = strlen (__libc_argv[p]);
-	      size_t old_plist_len = plist_len;
-
-	      if (value)
-		value[plist_len - 1] = 0;
-
-	      plist_len += 1 + argv_len;
-
-	      /* First realloc will act as malloc because value is
-	       * initialised to NULL. */
-	      value = realloc (value, plist_len); /* ### re-work this */
-	      if (value == NULL)
-		{
-		  free (old_pointer);
-		  return WRDE_NOSPACE;
-		}
-
-	      memcpy (&value[old_plist_len - 1], __libc_argv[p], argv_len + 1);
-	      if (__libc_argv[p + 1])
-		{
-		  value[plist_len - 1] = '\0';
-		  value[plist_len - 2] = ' ';
-		}
+	      if (p > 1)
+		*end++ = ' ';
+	      end = __stpcpy (end, __libc_argv[p]);
 	    }
 
 	  free_value = 1;
@@ -1336,11 +1323,7 @@ envsubst:
 
 	  /* Each parameter is a separate word ("$@") */
 	  if (__libc_argc == 2)
-	    {
-	      value = __strdup (__libc_argv[1]);
-	      if (value == NULL)
-		goto no_space;
-	    }
+	    value = __libc_argv[1];
 	  else if (__libc_argc > 2)
 	    {
 	      int p;
@@ -1361,8 +1344,6 @@ envsubst:
 	      /* Start a new word with the last parameter. */
 	      *word = w_newword (word_length, max_length);
 	      value = __strdup (__libc_argv[p]);
-	      if (value == NULL)
-		goto no_space;
 	    }
 	  else
 	    {
@@ -1373,11 +1354,16 @@ envsubst:
 	}
     }
   else
+    value = getenv (env);
+
+  if (value == NULL && (flags & WRDE_UNDEF))
     {
-      value = getenv (env);
-      if (value == NULL && (flags & WRDE_UNDEF))
-	/* Variable not defined. */
-	return WRDE_BADVAL;
+      /* Variable not defined. */
+      if (pattern)
+	free (pattern);
+      if (env)
+	free (env);
+      return WRDE_BADVAL;
     }
 
   if (action != ACT_NONE)
@@ -1408,7 +1394,19 @@ envsubst:
 		    if (fnmatch (pattern, value, 0) != FNM_NOMATCH)
 		      {
 			*p = c;
-			value = p;
+			if (free_value)
+			  {
+			    char *newval = __strdup (p);
+			    if (newval == NULL)
+			      {
+				free (value);
+				goto no_space;
+			      }
+			    free (value);
+			    value = newval;
+			  }
+			else
+			  value = p;
 			break;
 		      }
 		    *p = c;
@@ -1424,7 +1422,19 @@ envsubst:
 		    if (fnmatch (pattern, value, 0) != FNM_NOMATCH)
 		      {
 			*p = c;
-			value = p;
+			if (free_value)
+			  {
+			    char *newval = __strdup (p);
+			    if (newval == NULL)
+			      {
+				free (value);
+				goto no_space;
+			      }
+			    free (value);
+			    value = newval;
+			  }
+			else
+			  value = p;
 			break;
 		      }
 		    *p = c;
@@ -1519,6 +1529,8 @@ envsubst:
 
 	  free (env);
 	  free (pattern);
+	  if (free_value)
+	    free (value);
 	  return error;
 
 	case ACT_NULL_SUBST:
@@ -1531,6 +1543,8 @@ envsubst:
 	      /* Substitute NULL */
 	      free (env);
 	      free (pattern);
+	      if (free_value)
+		free (value);
 	      return 0;
 	    }
 
@@ -1539,6 +1553,9 @@ envsubst:
 	    /* Substitute word */
 	    wordexp_t we;
 	    int i;
+
+	    if (free_value)
+	      free (value);
 
 	    if (quoted)
 	      {
@@ -1622,6 +1639,8 @@ envsubst:
 	  /* Substitute NULL */
 	  free (env);
 	  free (pattern);
+	  if (free_value)
+	    free (value);
 	  return 0;
 
 	case ACT_NULL_ASSIGN:
@@ -1634,6 +1653,8 @@ envsubst:
 	      /* Substitute NULL */
 	      free (env);
 	      free (pattern);
+	      if (free_value)
+		free (value);
 	      return 0;
 	    }
 

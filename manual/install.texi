@@ -8,6 +8,7 @@
 @menu
 * Tools for Installation::      We recommend using these tools to build.
 * Supported Configurations::    What systems the GNU C library runs on.
+* Tips for Installation::       Useful hints for the installation.
 * Reporting Bugs::              How to report bugs (if you want to
                                 get them fixed) and other troubles
                                 you may have with the GNU C library.
@@ -324,6 +325,39 @@ sun3-sunos4.@var{n} sun3
 sun4-solaris2.@var{n} sun4-sunos5.@var{n}
 sun4-sunos4.@var{n} sun4
 @end smallexample
+
+@node Tips for Installation
+@appendixsec Useful hints for the installation
+
+There are a some more or less obvious methods one should know when
+compiling GNU libc:
+
+@itemize @bullet
+@item
+Better never compile in the source directory.  Create a new directory
+and run the @file{configure} from there.  Everything should happen
+automagically.
+
+@item
+You can use the @code{-j} option of GNU make by changing the line
+specifying @code{PARALLELMAKE} in the Makefile generated during the
+configuration.
+
+It is not useful to start the @code{make} process using the @code{-j}
+option since this option is not propagated down to the sub-@code{make}s.
+
+@item
+If you made some changes after a complete build and only want to check
+these changes run @code{make} while specifying the list of subdirs it
+has to visit.
+
+@smallexample
+make subdirs="nss elf"
+@end smallexample
+
+The above build run will only visit the subdirectories @file{nss} and
+@file{elf}.  Beside this it updates the @file{libc} files itself.
+@end itemize
 
 @node Reporting Bugs
 @appendixsec Reporting Bugs

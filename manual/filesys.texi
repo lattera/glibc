@@ -541,7 +541,7 @@ uses the @code{strverscmp} function internally.
 
 It is important not to mix the use of @code{scandir} and the 64 bits
 comparison functions or vice versa.  There are systems on which this
-work but on others it will fail miserably.
+works but on others it will fail miserably.
 
 @node Simple Directory Lister Mark II
 @subsection Simple Program to List a Directory, Mark II

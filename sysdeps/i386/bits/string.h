@@ -48,6 +48,7 @@
 __STRING_INLINE void *
 __memcpy_c (void *__dest, __const void *__src, size_t __n)
 {
+  unsigned long int __d0, __d1, __d2;
   switch (__n)
     {
     case 0:
@@ -108,9 +109,9 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
     ("cld\n\t"								      \
      "rep; movsl"							      \
      x									      \
-     : /* no outputs */							      \
-     : "c" (__n / 4), "D" (__dest), "S" (__src)				      \
-     : "cx", "di", "si", "memory");
+     : "=&c" (__d0), "=&D" (__d1), "=&S" (__d2)				      \
+     : "0" (__n / 4), "1" (__dest), "2" (__src)				      \
+     : "memory");
 
   switch (__n % 4)
     {
@@ -137,24 +138,25 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
 __STRING_INLINE void *
 memmove (void *__dest, __const void *__src, size_t __n)
 {
+  unsigned long int __d0, __d1, __d2;
   if (__dest < __src)
     __asm__ __volatile__
       ("cld\n\t"
        "rep\n\t"
        "movsb"
-       : /* no output */
-       : "c" (__n), "S" (__src),"D" (__dest)
-       : "cx", "si", "di");
+       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
+       : "0" (__n), "1" (__src), "2" (__dest)
+       : "memory");
   else
     __asm__ __volatile__
       ("std\n\t"
        "rep\n\t"
        "movsb\n\t"
        "cld"
-       : /* no output */
-       : "c" (__n), "S" (__n - 1 + (const char *) __src),
-	 "D" (__n - 1 + (char *) __dest)
-       : "cx", "si", "di", "memory");
+       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
+       : "0" (__n), "1" (__n - 1 + (const char *) __src),
+	 "2" (__n - 1 + (char *) __dest)
+       : "memory");
   return __dest;
 }
 
@@ -171,6 +173,7 @@ memmove (void *__dest, __const void *__src, size_t __n)
 __STRING_INLINE void *
 __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
 {
+  unsigned long int __d0, __d1;
   switch (__n)
     {
     case 0:
@@ -194,9 +197,9 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
     ("cld\n\t"								      \
      "rep; stosl"							      \
      x									      \
-     : /* no outputs */							      \
-     : "a" (__pattern),"c" (__n / 4), "D" (__s)				      \
-     : "cx", "di", "memory")
+     : "=&c" (__d0), "=&D" (__d1)					      \
+     : "a" (__pattern),"0" (__n / 4), "1" (__s)				      \
+     : "memory")
 
   switch (__n % 4)
     {
@@ -219,32 +222,34 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
 __STRING_INLINE void *
 __memset_cg (void *__s, unsigned long __c, size_t __n)
 {
+  unsigned long int __d0, __d1;
   __asm__ __volatile__
     ("cld\n\t"
      "rep; stosl\n\t"
-     "testb	$2,%b1\n\t"
+     "testb	$2,%b3\n\t"
      "je	1f\n\t"
      "stosw\n"
      "1:\n\t"
-     "testb	$1,%b1\n\t"
+     "testb	$1,%b3\n\t"
      "je	2f\n\t"
      "stosb\n"
      "2:"
-     : /* no output */
-     : "a" (__c), "q" (__n), "c" (__n / 4), "D" (__s)
-     : "cx", "di", "memory");
+     : "=&c" (__d0), "=&D" (__d1)
+     : "a" (__c), "q" (__n), "0" (__n / 4), "1" (__s)
+     : "memory");
   return __s;
 }
 
 __STRING_INLINE void *
 __memset_gg (void *__s, char __c, size_t __n)
 {
+  unsigned long int __d0, __d1;
   __asm__ __volatile__
     ("cld\n\t"
      "rep; stosb"
-     : /* no output */
-     : "a" (__c),"D" (__s), "c" (__n)
-     : "cx", "di", "memory");
+     : "=&D" (__d0), "=&c" (__d1)
+     : "a" (__c), "0" (__s), "1" (__n)
+     : "memory");
   return __s;
 }
 
@@ -256,6 +261,7 @@ __memset_gg (void *__s, char __c, size_t __n)
 __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
+  unsigned long int __d0;
   register void *__res;
   if (count == 0)
     return NULL;
@@ -266,9 +272,8 @@ memchr (__const void *__s, int __c, size_t __n)
      "je	1f\n\t"
      "movl	$1,%0\n"
      "1:"
-     : "=D" (__res)
-     : "a" (__c), "0" (__s), "c" (__n)
-     : "cx");
+     : "=D" (__res), "=&c" (__d0)
+     : "a" (__c), "0" (__s), "1" (__n));
   return __res - 1;
 }
 
@@ -278,14 +283,15 @@ memchr (__const void *__s, int __c, size_t __n)
 __STRING_INLINE size_t
 strlen (__const char *__str)
 {
+  unsigned long int __d0;
   register size_t __res;
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
      "notl %0"
-     : "=c" (__res)
-     : "D" (__str), "a" (0), "0" (0xffffffff)
-     : "di", "cc");
+     : "=c" (__res), "=&D" (__d0)
+     : "1" (__str), "a" (0), "0" (0xffffffff)
+     : "cc");
   return __res - 1;
 }
 
@@ -295,6 +301,7 @@ strlen (__const char *__str)
 __STRING_INLINE char *
 strcpy (char *__dest, __const char *__src)
 {
+  unsigned long int __d0, __d1;
   __asm__ __volatile__
     ("cld\n"
      "1:\n\t"
@@ -302,9 +309,9 @@ strcpy (char *__dest, __const char *__src)
      "stosb\n\t"
      "testb	%%al,%%al\n\t"
      "jne	1b"
-     : /* no output */
-     : "S" (__src), "D" (__dest)
-     : "si", "di", "ax", "memory", "cc");
+     : "=&S" (__d0), "=&D" (__d1)
+     : "0" (__src), "1" (__dest)
+     : "ax", "memory", "cc");
   return __dest;
 }
 
@@ -314,6 +321,7 @@ strcpy (char *__dest, __const char *__src)
 __STRING_INLINE char *
 strncpy (char *__dest, __const char *__src, size_t __n)
 {
+  unsigned long int __d0, __d1, __d2;
   __asm__ __volatile__
     ("cld\n"
      "1:\n\t"
@@ -325,9 +333,9 @@ strncpy (char *__dest, __const char *__src, size_t __n)
      "jne	1b\n\t"
      "rep; stosb\n"
      "2:"
-     : /* no output */
-     : "S" (__src), "D" (__dest), "c" (__n)
-     : "si", "di", "ax", "cx", "memory", "cc");
+     : "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
+     : "0" (__src), "1" (__dest), "2" (__n)
+     : "ax", "memory", "cc");
   return __dest;
 }
 
@@ -337,6 +345,7 @@ strncpy (char *__dest, __const char *__src, size_t __n)
 __STRING_INLINE char *
 strcat (char *__dest, __const char *__src)
 {
+  unsigned long int __d0, __d1, __d2, __d3;
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
@@ -346,9 +355,9 @@ strcat (char *__dest, __const char *__src)
      "stosb\n\t"
      "testb	%%al,%%al\n\t"
      "jne	1b"
-     : /* no output */
-     : "S" (__src), "D" (__dest), "a" (0), "c" (0xffffffff)
-     : "si", "di", "ax", "cx", "memory", "cc");
+     : "=&S" (__d0), "=&D" (__d1), "=&c" (__d2), "=&a" (__d3)
+     : "0" (__src), "1" (__dest), "2" (0xffffffff), "3" (0)
+     : "memory", "cc");
   return __dest;
 }
 
@@ -358,11 +367,12 @@ strcat (char *__dest, __const char *__src)
 __STRING_INLINE char *
 strncat (char *__dest, __const char *__src, size_t __n)
 {
+  unsigned long int __d0, __d1, __d2, __d3;
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
      "decl	%1\n\t"
-     "movl	%4,%3\n"
+     "movl	%5,%3\n"
      "1:\n\t"
      "decl	%3\n\t"
      "js	2f\n\t"
@@ -373,9 +383,9 @@ strncat (char *__dest, __const char *__src, size_t __n)
      "2:\n\t"
      "xorl	%2,%2\n\t"
      "stosb"
-     : /* no output */
-     : "S" (__src), "D" (__dest), "a" (0), "c" (0xffffffff), "g" (__n)
-     : "si", "di", "ax", "cx", "memory", "cc");
+     : "=&S" (__d0), "=&D" (__d1), "=&c" (__d2), "=&a" (__d3)
+     : "g" (__n), "0" (__src), "1" (__dest), "2" (0xffffffff), "3" (0)
+     : "memory", "cc");
   return __dest;
 }
 
@@ -385,6 +395,7 @@ strncat (char *__dest, __const char *__src, size_t __n)
 __STRING_INLINE int
 strcmp (__const char *__s1, __const char *__s2)
 {
+  unsigned long int __d0, __d1;
   register int __res;
   __asm__ __volatile__
     ("cld\n"
@@ -400,9 +411,9 @@ strcmp (__const char *__s1, __const char *__s2)
      "sbbl	%%eax,%%eax\n\t"
      "orb	$1,%%eax\n"
      "3:"
-     : "=a" (__res)
-     : "S" (__s1), "D" (__s2)
-     : "si", "di", "cc");
+     : "=a" (__res), "=&S" (__d0), "=&D" (__d1)
+     : "1" (__s1), "2" (__s2)
+     : "cc");
   return __res;
 }
 
@@ -412,6 +423,7 @@ strcmp (__const char *__s1, __const char *__s2)
 __STRING_INLINE int
 strncmp (__const char *__s1, __const char *__s2, size_t __n)
 {
+  unsigned long int __d0, __d1, __d2;
   register int __res;
   __asm__ __volatile__
     ("cld\n"
@@ -430,9 +442,9 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
      "sbbl	%%eax,%%eax\n\t"
      "orb	$1,%%al\n"
      "4:"
-     : "=a" (__res)
-     : "S" (__s1), "D" (__s2), "c" (__n)
-     : "si", "di", "cx", "cc");
+     : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
+     : "1" (__s1), "2" (__s2), "3" (__n)
+     : "cc");
   return __res;
 }
 
@@ -447,6 +459,7 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
 __STRING_INLINE char *
 __strchr_g (__const char *__s, int __c)
 {
+  unsigned long int __d0;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -460,15 +473,16 @@ __strchr_g (__const char *__s, int __c)
      "movl	$1,%1\n"
      "2:\n\t"
      "movl	%1,%0"
-     : "=a" (__res)
-     : "S" (__s), "0" (__c)
-     : "si", "cc");
+     : "=a" (__res), "=&S" (__d0)
+     : "0" (__c), "1" (__s)
+     : "cc");
   return __res - 1;
 }
 
 __STRING_INLINE char *
 __strchr_c (__const char *__s, int __c)
 {
+  unsigned long int __d0;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -481,9 +495,9 @@ __strchr_c (__const char *__s, int __c)
      "movl	$1,%1\n"
      "2:\n\t"
      "movl	%1,%0"
-     : "=a" (__res)
-     : "S" (__s), "0" (__c)
-     : "si", "cc");
+     : "=a" (__res), "=&S" (__d0)
+     : "0" (__c), "1" (__s)
+     : "cc");
   return __res - 1;
 }
 
@@ -495,6 +509,7 @@ __strchr_c (__const char *__s, int __c)
 __STRING_INLINE size_t
 strcspn (__const char *__s, __const char *__reject)
 {
+  unsigned long int __d0, __d1, __d2;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
@@ -514,19 +529,20 @@ strcspn (__const char *__s, __const char *__reject)
      "jne	1b\n"
      "2:\n\t"
      "popl	%%ebx"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "r" (__reject)
-     : "ax", "cx", "di", "cc");
+     : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
+     : "r" (__reject), "1" (0), "2" (0xffffffff), "3" (__s),
+     : "cc");
   return (__res - 1) - __s;
 }
 #else
 __STRING_INLINE size_t
 strcspn (__const char *__s, __const char *__reject)
 {
+  unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "repne; scasb\n\t"
      "notl	%%ecx\n\t"
      "decl	%%ecx\n\t"
@@ -535,14 +551,14 @@ strcspn (__const char *__s, __const char *__reject)
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repne; scasb\n\t"
      "jne	1b\n"
      "2:"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff),"0" (__s), "g" (__reject)
-     : "ax", "cx", "dx", "di", "cc");
+     : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
+     : "g" (__reject), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "cc");
   return (__res - 1) - __s;
 }
 #endif
@@ -555,6 +571,7 @@ strcspn (__const char *__s, __const char *__reject)
 __STRING_INLINE size_t
 strspn (__const char *__s, __const char *__accept)
 {
+  unsigned long int __d0, __d1, __d2;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
@@ -574,19 +591,20 @@ strspn (__const char *__s, __const char *__accept)
      "je	1b\n"
      "2:\n\t"
      "popl	%%ebx"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "r" (__accept)
-     : "ax", "cx", "di", "cc");
+     : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
+     : "r" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "cc");
   return (__res - 1) - __s;
 }
 #else
 __STRING_INLINE size_t
 strspn (__const char *__s, __const char *__accept)
 {
+  unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "repne; scasb\n\t"
      "notl	%%ecx\n\t"
      "decl	%%ecx\n\t"
@@ -595,14 +613,14 @@ strspn (__const char *__s, __const char *__accept)
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repne; scasb\n\t"
      "je	1b\n"
      "2:"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
-     : "ax", "cx", "dx", "di", "cc");
+     : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
+     : "g" (__accept), "0" (__s), "a" (0), "c" (0xffffffff)
+     : "cc");
   return (__res - 1) - __s;
 }
 #endif
@@ -614,6 +632,7 @@ strspn (__const char *__s, __const char *__accept)
 __STRING_INLINE char *
 strpbrk (__const char *__s, __const char *__accept)
 {
+  unsigned long int __d0, __d1, __d2;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
@@ -637,15 +656,16 @@ strpbrk (__const char *__s, __const char *__accept)
      "xorl	%0,%0\n"
      "3:\n\t"
      "popl	%%ebx"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "r" (__accept)
-     : "ax", "cx", "di", "cc");
+     : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
+     : "r" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "cc");
   return __res;
 }
 #else
 __STRING_INLINE char *
 strpbrk (__const char *__s, __const char *__accept)
 {
+  unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
@@ -667,9 +687,9 @@ strpbrk (__const char *__s, __const char *__accept)
      "2:\n\t"
      "xorl	%0,%0\n"
      "3:"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
-     : "ax", "cx", "dx", "di", "cc");
+     : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
+     : "g" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "cc");
   return __res;
 }
 #endif
@@ -681,6 +701,7 @@ strpbrk (__const char *__s, __const char *__accept)
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)
 {
+  unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
@@ -703,25 +724,26 @@ strstr (__const char *__haystack, __const char *__needle)
      "xorl	%%eax,%%eax\n\t"
      "2:\n\t"
      "popl	%%ebx"
-     : "=a" (__res)
-     : "0" (0), "c" (0xffffffff), "S" (__haystack), "r" (__needle)
-     : "cx", "di", "si", "cc");
+     : "=&a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
+     : "r" (__needle), "0" (0), "1" (0xffffffff), "2" (__haystack)
+     : "cc");
   return __res;
 }
 #else
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)
 {
+  unsigned long int __d0, __d1, __d2, __d3;
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t" \
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "repne; scasb\n\t"
      "notl	%%ecx\n\t"
      "decl	%%ecx\n\t"	/* NOTE! This also sets Z if searchstring='' */
      "movl	%%ecx,%%edx\n"
      "1:\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "movl	%%esi,%%eax\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repe; cmpsb\n\t"
@@ -732,9 +754,9 @@ strstr (__const char *__haystack, __const char *__needle)
      "jne	1b\n\t"
      "xorl	%%eax,%%eax\n\t"
      "2:"
-     : "=a" (__res)
-     : "0" (0), "c" (0xffffffff), "S" (__haystack), "g" (__needle)
-     : "cx", "dx", "di", "si", "cc");
+     : "=&a" (__res), "=&c" (__d0), "=&S" (__d1), "=&d" (__d2), "=&D" (__d3)
+     : "g" (__needle), "0" (0), "1" (0xffffffff), "2" (__haystack)
+     : "cc");
   return __res;
 }
 #endif

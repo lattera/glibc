@@ -1,3 +1,42 @@
+1998-03-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* glibcbug.in: Create files safely when mktemp is not available.
+
+	* sysdeps/unix/sysv/linux/adjtime.c: Make weak alias appear again.
+	Patch by a sun <asun@saul1.u.washington.edu>.
+
+1998-03-25  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* libc.map: Rename getname to getnetname.
+
+1998-03-25 13:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/maint.texi: Use supported platform in examples.
+
+	* manual/install.texi: Document some installation tips.
+
+1998-03-25 10:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp.c: Fix some memory leaks and makes $* more efficient.
+	Fix a bug so that it returns an error if a numeric parameter is
+	unset and WRDE_UNDEF is set.
+	Patch by Andreas Schwab and Tim Waugh.
+	* posix/wordexp-test.c: Add new new test.
+
+1998-03-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c (regex_compile): Last patch wasn't entirely
+	correct.  Patch by Alain Magloire <alainm@rcsm.ece.mcgill.ca>.
+
+1998-03-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/filesys.texi (Scanning Directory Content): Fix typo.
+
+1998-03-25 09:24  Bernd Schmidt  <crux@Pool.Informatik.RWTH-Aachen.DE>
+
+	* sysdeps/i386/bits/string.h: Fix all assembler statements so that
+	clobbered registers don't appear as operands.
+
 1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c: Undefine ISASCII and ISPRINT before defining for

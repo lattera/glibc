@@ -24,15 +24,17 @@ STDIO="@stdio@"
 PATH=/bin:/usr/bin:/usr/local/bin:$PATH
 export PATH
 
-TEMP=`mktemp -q /tmp/glibcbugXXXXXX`
+TEMP=`mktemp -q /tmp/glibcbugXXXXXX 2>/dev/null`
 if test $? -ne 0; then
   TEMP=/tmp/glibcbug.$$
   echo > $TEMP
+  chmod 600 $TEMP
 fi
-TEMPx=`mktemp -q /tmp/glibcbugXXXXXX`
+TEMPx=`mktemp -q /tmp/glibcbugXXXXXX 2>/dev/null`
 if test $? -ne 0; then
   TEMPx=/tmp/glibcbug.$$.x
   echo > $TEMPx
+  chmod 600 $TEMPx
 fi
 
 BUGADDR=${1-$BUGGLIBC}

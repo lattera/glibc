@@ -138,6 +138,7 @@ struct test_case_struct
     { WRDE_BADCHAR, NULL, "close-brace}", 0, 0, { NULL, } },
     { WRDE_CMDSUB, NULL, "$(ls)", WRDE_NOCMD, 0, { NULL, } },
     { WRDE_BADVAL, NULL, "$var", WRDE_UNDEF, 0, { NULL, } },
+    { WRDE_BADVAL, NULL, "$9", WRDE_UNDEF, 0, { NULL, } },
     { WRDE_SYNTAX, NULL, "$[50+20))", 0, 0, { NULL, } },
     { WRDE_SYNTAX, NULL, "${%%noparam}", 0, 0, { NULL, } },
     { WRDE_SYNTAX, NULL, "${missing-brace", 0, 0, { NULL, } },

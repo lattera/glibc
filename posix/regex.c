@@ -2171,14 +2171,14 @@ regex_compile (pattern, size, syntax, bufp)
                     for (;;)
                       {
                         PATFETCH (c);
-                        if (c == ':' || c == ']' || !isalpha (c) || p == pend
+                        if ((c == ':' && *p == ']') || p == pend
                             || c1 == CHAR_CLASS_MAX_LENGTH)
                           break;
                         str[c1++] = c;
                       }
                     str[c1] = '\0';
 
-                    /* If isn't a word bracketed by `[:' and:`]':
+                    /* If isn't a word bracketed by `[:' and `:]':
                        undo the ending character, the letters, and leave
                        the leading `:' and `[' (but set bits for them).  */
                     if (c == ':' && *p == ']')
