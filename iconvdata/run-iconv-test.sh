@@ -32,8 +32,11 @@ trap "rm -f $temp1 $temp2" 1 2 3 15
 GCONV_PATH=$codir/iconvdata
 export GCONV_PATH
 
+# We have to have some directories in the library path.
+LIBPATH=$codir:$codir/iconvdata
+
 # How the start the iconv(1) program.
-ICONV="$codir/elf/ld.so --library-path $codir $codir/iconv/iconv_prog"
+ICONV="$codir/elf/ld.so --library-path $LIBPATH $codir/iconv/iconv_prog"
 
 # We read the file named TESTS.  All non-empty lines not starting with
 # `#' are interpreted as commands.

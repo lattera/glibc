@@ -1,3 +1,31 @@
+1998-05-18 11:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/run-iconv-test.sh: Extend library-path by iconvdata
+	directory.
+
+1998-05-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* rpm/Makefile: Delete inclusion of version.mk.
+
+1998-05-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Add all libio functions needed libstdc++ with version
+	2.0, sort entries.
+
+1998-05-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* iconvdata/Makefile (generated): Add *.stmp files.
+
+1998-05-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* timezone/Makefile (testdata, build-testdata): New variables, use
+	them in rules for test data.
+	($(objpfx)tst-timezone.out): Depend on test data.
+	($(testdata)/Europe/Berlin, $(testdata)/Universal,
+	$(testdata)/Australia/Melbourne, $(testdata)/America/Sao_Paulo):
+	New rules to build test data.
+	(tst-timezone-ENV): Pass TZDIR to point to test data.
+
 1998-05-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/TESTS: ISO-2022-KR has not really ASCII as a subset

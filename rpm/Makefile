@@ -7,7 +7,6 @@ all:
 subdir := rpm
 include ../Makeconfig
 include $(common-objpfx)soversions.mk
-include $(common-objpfx)version.mk
 
 distinfo := $(common-objpfx)distinfo \
 	    $(wildcard $(subdirs:%=$(common-objpfx)%/distinfo))

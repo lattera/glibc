@@ -166,22 +166,39 @@ CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
 CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
 
 # We have to make sure the data for testing the tz functions is available.
-$(objpfx)test-tz.out: $(addprefix $(objpfx)testdata/, America/New_York \
-						      Etc/UTC UTC)
+testdata = $(objpfx)testdata
+define build-testdata
+$(built-program-cmd) -d $(testdata) -L $(leapseconds) -y ./yearistype $<
+endef
 
-$(objpfx)testdata/America/New_York: northamerica $(objpfx)zic \
-				    $(leapseconds) yearistype
-	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
-	  -y yearistype northamerica
-$(objpfx)testdata/Etc/UTC: etcetera $(objpfx)zic $(leapseconds) yearistype
-	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
-	  -y yearistype etcetera
-$(objpfx)testdata/UTC: simplebackw $(objpfx)zic $(objpfx)testdata/Etc/UTC \
+$(objpfx)test-tz.out: $(addprefix $(testdata)/, America/New_York Etc/UTC UTC)
+$(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
+				       Europe/Berlin Universal \
+				       Australia/Melbourne \
+				       America/Sao_Paulo)
+
+test-tz-ENV = TZDIR=$(testdata)
+tst-timezone-ENV = TZDIR=$(testdata)
+
+$(testdata)/America/New_York: northamerica $(objpfx)zic $(leapseconds) \
+			      yearistype
+	$(build-testdata)
+$(testdata)/Etc/UTC: etcetera $(objpfx)zic $(leapseconds) yearistype
+	$(build-testdata)
+$(testdata)/UTC: simplebackw $(objpfx)zic $(testdata)/Etc/UTC \
+		 $(leapseconds) yearistype
+	$(build-testdata)
+$(testdata)/Europe/Berlin: europe $(objpfx)zic $(leapseconds) yearistype
+	$(build-testdata)
+$(testdata)/Universal: simplebackw $(objpfx)zic $(testdata)/Etc/UTC \
 		       $(leapseconds) yearistype
-	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
-	  -y yearistype simplebackw
-
-test-tz-ENV = TZDIR=$(objpfx)testdata
+	$(build-testdata)
+$(testdata)/Australia/Melbourne: australasia $(objpfx)zic $(leapseconds) \
+				 yearistype
+	$(build-testdata)
+$(testdata)/America/Sao_Paulo: southamerica $(objpfx)zic $(leapseconds) \
+			       yearistype
+	$(build-testdata)
 
 
 $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
