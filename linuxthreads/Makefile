@@ -65,8 +65,8 @@ tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 test-srcs = tst-signal
 
 ifeq ($(build-static),yes)
-tests += tststatic
-tests-static += tststatic
+tests += tststatic tst-static-locale
+tests-static += tststatic tst-static-locale
 endif
 
 ifeq (yes,$(build-shared))

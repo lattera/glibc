@@ -1,5 +1,7 @@
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
+	* locale/duplocale.c: Include <string.h>.
+
 	* intl/dcigettext.c (DCIGETTEXT) [_LIBC]: Check for bogus CATEGORY.
 	[_LIBC] (category_to_name): Don't define the function.  Instead
 	define a macro using _nl_category_names.

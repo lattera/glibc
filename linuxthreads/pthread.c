@@ -479,7 +479,7 @@ __pthread_initialize_minimal(void)
 # endif
 #endif
 
-#if !(USE_TLS && HAVE___THREAD) && defined SHARED
+#if !(USE_TLS && HAVE___THREAD)
   /* Initialize thread-locale current locale to point to the global one.
      With __thread support, the variable's initializer takes care of this.  */
   __uselocale (LC_GLOBAL_LOCALE);

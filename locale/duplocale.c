@@ -21,6 +21,7 @@
 #include <locale.h>
 #include <bits/libc-lock.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <localeinfo.h>
 
