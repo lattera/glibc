@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -255,23 +255,58 @@ extern _IO_FILE *_IO_stderr;
 #endif
 
 
+/* Functions to do I/O and file management for a stream.  */
+
+/* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
+   Return number of bytes read.  */
+typedef __ssize_t __io_read_fn __PMT ((__ptr_t __cookie, char *__buf,
+				       size_t __nbytes));
+
+/* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
+   unless there is an error.  Return number of bytes written, or -1 if
+   there is an error without writing anything.  If the file has been
+   opened for append (__mode.__append set), then set the file pointer
+   to the end of the file and then do the write; if not, just write at
+   the current file pointer.  */
+typedef __ssize_t __io_write_fn __PMT ((__ptr_t __cookie, __const char *__buf,
+				      size_t __n));
+
+/* Move COOKIE's file position to *POS bytes from the
+   beginning of the file (if W is SEEK_SET),
+   the current position (if W is SEEK_CUR),
+   or the end of the file (if W is SEEK_END).
+   Set *POS to the new file position.
+   Returns zero if successful, nonzero if not.  */
+typedef int __io_seek_fn __PMT ((__ptr_t __cookie, _IO_off_t __pos, int __w));
+
+/* Close COOKIE.  */
+typedef int __io_close_fn __PMT ((__ptr_t __cookie));
+
+
 #ifdef _GNU_SOURCE
-/* Define the user-visible type, with user-friendly member names.  */
+/* User-visible names for the above.  */
+typedef __io_read_fn cookie_read_function_t;
+typedef __io_write_fn cookie_write_function_t;
+typedef __io_seek_fn cookie_seek_function_t;
+typedef __io_close_fn cookie_close_function_t;
+
+/* The structure with the cookie function pointers.  */
 typedef struct
 {
-  _IO_ssize_t (*read) __PMT ((struct _IO_FILE *, void *, _IO_ssize_t));
-  _IO_ssize_t (*write) __PMT ((struct _IO_FILE *, const void *, _IO_ssize_t));
-  _IO_fpos_t (*seek) __PMT ((struct _IO_FILE *, _IO_off_t, int));
-  int (*close) __PMT ((struct _IO_FILE *));
+  __io_read_fn *read;		/* Read bytes.  */
+  __io_write_fn *write;		/* Write bytes.  */
+  __io_seek_fn *seek;		/* Seek/tell file position.  */
+  __io_close_fn *close;		/* Close file.  */
 } _IO_cookie_io_functions_t;
+typedef _IO_cookie_io_functions_t cookie_io_functions_t;
 
 /* Special file type for fopencookie function.  */
 struct _IO_cookie_file
 {
-  struct _IO_FILE file;
-  const void *vtable;
-  void *cookie;
-  _IO_cookie_io_functions_t io_functions;
+  struct _IO_FILE __file;
+  const void *__vtable;
+  void *__cookie;
+  _IO_cookie_io_functions_t __io_functions;
 };
 #endif
 

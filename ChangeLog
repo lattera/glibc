@@ -1,5 +1,8 @@
 1999-06-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/iofopncook.c: Adjust for renaming of structure elements.
+	* libio/libio.h: Define cookie functions with all the names.
+
 	* pwd/fgetpwent_r.c: Set errno in the correct way.
 	* shadow/fgetspent_r.c: Likewise.
 	* pwd/fgetpwent.c: Handle long lines correctly.  Little
