@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -187,7 +187,7 @@ _hurd_exec (task_t task, file_t file,
     }
 
   /* Prune trailing null ports from the descriptor table.  */
-  while (dtable[dtablesize - 1] == MACH_PORT_NULL)
+  while (dtablesize > 0 && dtable[dtablesize - 1] == MACH_PORT_NULL)
     --dtablesize;
 
   /* The information is all set up now.  Try to exec the file.  */
