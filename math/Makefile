@@ -1,4 +1,4 @@
-# Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,9 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_casinh s_cacosh s_catanh s_csqrt s_cpow s_cproj s_clog10 \
 	     s_fma s_lrint s_llrint s_lround s_llround e_exp10 w_log2	\
 	     $(calls:s_%=m_%)
-generated += $(foreach s,.c .S l.c l.S f.c f.S,$(calls:s_%=m_%$s))
+
+include ../Makeconfig
+
 dbl-only-routines := branred doasin dosincos halfulp mpa mpatan2	\
 		     mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
 		     slowpow
@@ -70,7 +72,6 @@ libm-routines = $(strip $(libm-support) $(libm-calls) \
 long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l))
 long-m-support = t_sincosl k_sincosl
 long-m-yes = $(long-m-routines) $(long-m-support)
-distribute += $(long-m-yes:=.c)
 
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,
@@ -79,11 +80,10 @@ distribute += $(long-m-yes:=.c)
 # routine that should be compiled separately for its libc and libm versions.
 calls = s_isinf s_isnan s_finite s_copysign s_modf s_scalbn s_frexp s_ldexp \
 	s_signbit
+generated += $(foreach s,.c .S l.c l.S f.c f.S,$(calls:s_%=m_%$s))
 routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
-distribute += $(long-c-yes:=.c)
-
-include ../Makeconfig
+distribute += $(long-m-yes:=.c) $(long-c-yes:=.c)
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
