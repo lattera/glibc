@@ -1,3 +1,7 @@
+2004-08-11  Roland McGrath  <roland@redhat.com>
+
+	* iconvdata/testdata/ISO-2022-JP-3: Regenerated.
+
 2004-08-10  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/generic/bits/in.h (struct ip_mreq): Remove definition.
