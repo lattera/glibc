@@ -22,6 +22,8 @@
 	* sysdeps/generic/sigpause.c (__sigpause): Likewise.
 	* sysdeps/posix/sigpause.c (__sigpause): Likewise.
 	* sysdeps/unix/bsd/osf/alpha/sigpause.S: Likewise.
+	* sysdeps/posix/raise.c: Likewise.
+	* sysdeps/generic/raise.c: Likewise.
 
 2002-08-03  Ulrich Drepper  <drepper@redhat.com>
 
