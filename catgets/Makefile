@@ -28,6 +28,8 @@ others		= gencat
 install-bin	= gencat
 extra-objs	= $(gencat-modules:=.o)
 
+tests = tst-catgets
+
 gencat-modules	= xmalloc
 
 # To find xmalloc.c
@@ -41,16 +43,21 @@ $(objpfx)gencat: $(gencat-modules:%=$(objpfx)%.o)
 catgets-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%N:$(msgcatdir)/%l/%N:$(msgcatdir)/%l/LC_MESSAGES/%N:"' \
 	    -DHAVE_CONFIG_H
 
-generated = de.msg de.cat test1.cat test1.h
+generated = de.msg test1.cat test1.h
+generated-dirs = de
+
+tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
 
 ifneq ($(cross-compiling),yes)
-tests: $(objpfx)de.cat $(objpfx)test1.cat
+tests: $(objpfx)de/libc.cat $(objpfx)test1.cat
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
 $(objpfx)test1.cat: test1.msg $(objpfx)gencat
 	$(built-program-cmd) -H $(objpfx)test1.h $@ $<
-$(objpfx)de.cat: $(objpfx)de.msg $(objpfx)gencat
+$(objpfx)de/libc.cat: $(objpfx)de.msg $(objpfx)gencat
+	-mkdir $(objpfx)de
 	$(built-program-cmd) $@ $<
+$(objpfx)tst-catgets.out: $(objpfx)de/libc.cat
 
 # Generate a non-simple input file.
 $(objpfx)de.msg: $(..)po/de.po

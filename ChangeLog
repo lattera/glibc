@@ -1,5 +1,12 @@
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* catgets/Depend: New file.  Add intl.
+	* catgets/Makefile (tests): Add tst-catgets.
+	(generated): Remove de.msg.
+	(generated-dirs): Add de.
+	Add dependency if tst-catgets output on de/libc.cat.
+	* catgets/tst-catgets.c: New file.
+
 	* po/ja.po: New file.
 	* po/el.po: Update from translation team.
 
