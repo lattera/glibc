@@ -1,5 +1,8 @@
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/Makefile (tests): Add tst-bsearch.
+	* stdlib/tst-bsearch.c: New file.
+
 	* posix/getopt.c (_getopt_internal): Don't recognize an option
 	name as ambiguous if it's a prefix for more than one name but the
 	other struct option values are identical.
