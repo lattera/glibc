@@ -653,7 +653,8 @@ elf_machine_rela (struct link_map *map,
       /* During relocation all TLS symbols are defined and used.
          Therefore the offset is already correct.  */
 # ifndef RTLD_BOOTSTRAP
-      *reloc_addr = TLS_DTPREL_VALUE (sym, reloc);
+      if (sym_map != NULL)
+	*reloc_addr = TLS_DTPREL_VALUE (sym, reloc);
 # endif
       return;
 

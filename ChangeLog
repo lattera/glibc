@@ -1,3 +1,8 @@
+2003-06-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela)
+	<case R_PPC64_DTPREL64>: Don't segfault on undefined symbols.
+
 2003-06-17  Paul Mackerras  <paulus@samba.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: New file.
