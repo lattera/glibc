@@ -71,7 +71,7 @@ main (int argc, char *argv[])
   setenv ("LC_MESSAGES", "non-existing-locale", 1);
   setenv ("LC_CTYPE", "non-existing-locale", 1);
   setenv ("LANG", "non-existing-locale", 1);
-  setlocale (LC_CTYPE, "de_DE");
+  setlocale (LC_CTYPE, "de_DE.ISO-8859-1");
   unsetenv ("OUTPUT_CHARSET");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
@@ -225,8 +225,9 @@ positive_gettext_test (void)
       if (found == NULL || strcmp (found, msgs[cnt].msgstr) != 0)
 	{
 	  /* Oops, shouldn't happen.  */
-	  printf ("  gettext (\"%s\") failed, returned \"%s\"\n",
-		  msgs[cnt].msgid, found);
+	  printf ("\
+  gettext (\"%s\") failed, returned \"%s\", expected \"%s\"\n",
+		  msgs[cnt].msgid, found, msgs[cnt].msgstr);
 	  result = 1;
 	}
     }
@@ -270,8 +271,9 @@ positive_dgettext_test (const char *domain)
       if (found == NULL || strcmp (found, msgs[cnt].msgstr) != 0)
 	{
 	  /* Oops, shouldn't happen.  */
-	  printf ("  dgettext (\"%s\", \"%s\") failed, returned \"%s\"\n",
-		  domain, msgs[cnt].msgid, found);
+	  printf ("\
+  dgettext (\"%s\", \"%s\") failed, returned \"%s\", expected \"%s\"\n",
+		  domain, msgs[cnt].msgid, found, msgs[cnt].msgstr);
 	  result = 1;
 	}
     }
@@ -293,8 +295,10 @@ positive_dcgettext_test (const char *domain, int category)
       if (found == NULL || strcmp (found, msgs[cnt].msgstr) != 0)
 	{
 	  /* Oops, shouldn't happen.  */
-	  printf ("  dcgettext (\"%s\", \"%s\", %s) failed, returned \"%s\"\n",
-		  domain, msgs[cnt].msgid, catname[category], found);
+	  printf ("\
+  dcgettext (\"%s\", \"%s\", %s) failed, returned \"%s\", expected \"%s\"\n",
+		  domain, msgs[cnt].msgid, catname[category], found,
+		  msgs[cnt].msgstr);
 	  result = 1;
 	}
     }

@@ -1,5 +1,18 @@
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_trans.c: Test with _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN
+	whether this information is available.
+
+	* intl/dcigettext.c (_nl_find_msg): Correct reallocation of
+	buffers in case the translation is too large.  Remember allocated
+	memory blocks in a list.
+	(free_mem): Free memory for translations.
+
+	* intl/tst-gettext.c: Use correct locale.  Improve error messages.
+
+	* locale/programs/ld-ctype.c (ctype_output): If no default_missing
+	information is available set the string length to zero.
+
 	* sysdeps/i386/i686/strcmp.S: Little optimization in non-BP case.
 
 2000-06-30  Greg McGary  <greg@mcgary.org>

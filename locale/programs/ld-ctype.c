@@ -1078,7 +1078,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN):
 	    default_missing_len = (ctype->default_missing
 				   ? wcslen ((wchar_t *)ctype->default_missing)
-				   : 1);
+				   : 0);
 	    iov[2 + elem + offset].iov_base = &default_missing_len;
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;

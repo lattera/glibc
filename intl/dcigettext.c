@@ -55,6 +55,7 @@ extern int errno;
 #endif
 
 #if defined STDC_HEADERS || defined _LIBC
+# include <stddef.h>
 # include <stdlib.h>
 #else
 char *getenv ();
@@ -311,6 +312,14 @@ struct block_list
 # undef alloca
 # define alloca(size) (malloc (size))
 #endif	/* have alloca */
+
+
+/* List of blocks allocated for translations.  */
+static struct transmem_list
+{
+  struct transmem_list *next;
+  char data[0];
+} *transmem_list;
 
 
 /* Names for the libintl functions are a problem.  They must not clash
@@ -775,12 +784,14 @@ _nl_find_msg (domain_file, msgid, index)
 	     We allocate always larger blocks which get used over
 	     time.  This is faster than many small allocations.   */
 	  __libc_lock_define_initialized (static, lock)
+#define INITIAL_BLOCK_SIZE	4080
 	  static unsigned char *freemem;
 	  static size_t freemem_size;
 
 	  size_t resultlen;
 	  const unsigned char *inbuf;
 	  unsigned char *outbuf;
+	  int malloc_count;
 
 	  /* Note that we translate (index + 1) consecutive strings at
 	     once, including the final NUL byte.  */
@@ -798,9 +809,11 @@ _nl_find_msg (domain_file, msgid, index)
 	  inbuf = result;
 	  outbuf = freemem + sizeof (nls_uint32);
 
+	  malloc_count = 0;
 	  while (1)
 	    {
 # ifdef _LIBC
+	      struct transmem_list *newmem;
 	      size_t non_reversible;
 	      int res;
 
@@ -825,6 +838,7 @@ _nl_find_msg (domain_file, msgid, index)
 	      inbuf = result;
 # else
 #  if HAVE_ICONV
+#   define transmem freemem
 	      const char *inptr = (const char *) inbuf;
 	      size_t inleft = resultlen;
 	      char *outptr = (char *) outbuf;
@@ -845,21 +859,48 @@ _nl_find_msg (domain_file, msgid, index)
 		  __libc_lock_unlock (lock);
 		  goto converted;
 		}
+#  else
+#   define transmem freemem
 #  endif
 # endif
 
 	    resize_freemem:
-	      /* We must resize the buffer.  */
-	      freemem_size = 2 * freemem_size;
-	      if (freemem_size < 4064)
-		freemem_size = 4064;
-	      freemem = (char *) malloc (freemem_size);
-	      if (__builtin_expect (freemem == NULL, 0))
+	      /* We must allocate a new buffer of resize the old one.  */
+	      if (malloc_count > 0)
 		{
+		  struct transmem_list *next = transmem_list->next;
+
+		  ++malloc_count;
+		  freemem_size = malloc_count * INITIAL_BLOCK_SIZE;
+		  newmem = (struct transmem_list *) realloc (transmem_list,
+							     freemem_size);
+
+		  if (newmem != NULL)
+		    transmem_list = next;
+		}
+	      else
+		{
+		  malloc_count = 1;
+		  freemem_size = INITIAL_BLOCK_SIZE;
+		  newmem = (struct transmem_list *) malloc (freemem_size);
+		}
+	      if (__builtin_expect (newmem == NULL, 0))
+		{
+		  freemem = NULL;
 		  freemem_size = 0;
 		  __libc_lock_unlock (lock);
 		  goto converted;
 		}
+
+# ifdef _LIBC
+	      /* Add the block to the list of blocks we have to free
+                 at some point.  */
+	      newmem->next = transmem_list;
+	      transmem_list = newmem;
+
+	      freemem = newmem->data;
+	      freemem_size -= offsetof (struct transmem_list, data);
+# endif
 
 	      outbuf = freemem + sizeof (nls_uint32);
 	    }
@@ -1090,6 +1131,7 @@ static void __attribute__ ((unused))
 free_mem (void)
 {
   struct binding *runp;
+  void *old;
 
   for (runp = _nl_domain_bindings; runp != NULL; runp = runp->next)
     {
@@ -1106,6 +1148,13 @@ free_mem (void)
 
   /* Remove the search tree with the known translations.  */
   __tdestroy (root, free);
+
+  while (transmem_list != NULL)
+    {
+      old = transmem_list;
+      transmem_list = transmem_list->next;
+      free (old);
+    }
 }
 
 text_set_element (__libc_subfreeres, free_mem);
