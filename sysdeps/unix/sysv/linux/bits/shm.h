@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,2000,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,8 @@
 /* Commands for `shmctl'.  */
 #define SHM_LOCK	11		/* lock segment (root only) */
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
+
+__BEGIN_DECLS
 
 /* Segment low boundary address multiple.  */
 #define SHMLBA		(__getpagesize ())
@@ -94,5 +96,7 @@ struct shm_info
     unsigned long int swap_attempts;
     unsigned long int swap_successes;
   };
+
+__END_DECLS
 
 #endif /* __USE_MISC */
