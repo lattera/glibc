@@ -30,4 +30,4 @@ routines := gethnamaddr getnetbyaddr getnetbyname getnetent getnetnamadr \
 
 include ../Rules
 
-CFLAGS += -Wno-strict-prototypes -Wno-comment -Wno-write-strings
++cflags += -Wno-strict-prototypes -Wno-comment -Wno-write-strings
