@@ -1885,7 +1885,12 @@ check_dst_limits_calc_pos_1 (mctx, boundaries, subexp_idx, from_node, bkref_idx)
 	      {
 		int dst, cpos;
 
-		if (ent->node != node || ent->subexp_from != ent->subexp_to)
+		if (ent->node != node)
+		  continue;
+
+		if (subexp_idx <= 8 * sizeof (ent->eps_reachable_subexps_map)
+		    && (ent->eps_reachable_subexps_map
+			& (1 << (subexp_idx - 1))) == 0)
 		  continue;
 
 		/* Recurse trying to reach the OP_OPEN_SUBEXP and
@@ -1906,11 +1911,13 @@ check_dst_limits_calc_pos_1 (mctx, boundaries, subexp_idx, from_node, bkref_idx)
 		cpos = check_dst_limits_calc_pos_1 (mctx, boundaries,
 						    subexp_idx, dst, bkref_idx);
 
-		if (cpos == -1 && (boundaries & 1))
+		if (cpos == -1 /* && (boundaries & 1) */)
 		  return -1;
 
-		if (cpos == 0 /* && (boundaries & 2) */)
+		if (cpos == 0 && (boundaries & 2))
 		  return 0;
+
+		ent->eps_reachable_subexps_map &= ~(1 << (subexp_idx - 1));
 	      }
 	    while (ent++->more);
 	    break;
@@ -4169,6 +4176,18 @@ match_ctx_add_entry (mctx, node, str_idx, from, to)
   mctx->bkref_ents[mctx->nbkref_ents].str_idx = str_idx;
   mctx->bkref_ents[mctx->nbkref_ents].subexp_from = from;
   mctx->bkref_ents[mctx->nbkref_ents].subexp_to = to;
+
+  /* This is a cache that saves negative results of check_dst_limits_calc_pos.
+     If bit N is clear, means that this entry won't epsilon-transition to
+     an OP_OPEN_SUBEXP or OP_CLOSE_SUBEXP for the N+1-th subexpression.  If
+     it is set, check_dst_limits_calc_pos_1 will recurse and try to find one
+     such node.
+
+     A backreference does not epsilon-transition unless it is empty, so set
+     to all zeros if FROM != TO.  */
+  mctx->bkref_ents[mctx->nbkref_ents].eps_reachable_subexps_map
+    = (from == to ? ~0 : 0);
+
   mctx->bkref_ents[mctx->nbkref_ents++].more = 0;
   if (mctx->max_mb_elem_len < to - from)
     mctx->max_mb_elem_len = to - from;

@@ -1,3 +1,16 @@
+2004-11-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add bug-regex24.
+	* posix/bug-regex24.c: New file.
+
+2004-11-12  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Use the map to
+	cut recursive paths.  Make exit condition more precise.
+	(match_ctx_add_entry): Initialize the map.
+	* posix/regex_internal.h (struct re_backref_cache_entry): Add a map of
+	reachable subexpression nodes from each backreference cache entry.
+
 2004-11-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/setreuid.c: Remove sys/syscall.h,

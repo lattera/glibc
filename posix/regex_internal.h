@@ -548,9 +548,9 @@ struct re_backref_cache_entry
   int str_idx;
   int subexp_from;
   int subexp_to;
-  /* We need only one byte from the following field.  If other small
-     fields are added the type could be changed to 'char'.  */
-  int more;
+  char more;
+  char unused;
+  unsigned short int eps_reachable_subexps_map;
 };
 
 typedef struct
