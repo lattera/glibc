@@ -1,0 +1,91 @@
+Starting with version 2.2, the resolver in the GNU C Library comes
+from BIND 8.  Only a subset of the src/lib/resolv part of libbind is
+included here; basically the parts that are needed to provide the
+functionality present in the resolver from BIND 4.9.7 that was
+included in the previous release of the GNU C Library, augmented by
+the parts needed to provide thread-safety.  This means that support
+for things as dynamic DNS updates and TSIG keys isn't included.  If
+you need those facilities, please take a look at the full BIND
+distribution.
+
+
+Differences
+===========
+
+The resolver in the GNU C Library still differs from what's in BIND
+8.2.3-T5B:
+
+* The resolver in glibc strictly adheres to the recommendations in RFC
+  1535.  BIND 8.2.3-T5B seems to relax those rules a bit (see the code
+  that's wrapped in `#ifndef RFC1535').
+
+* The RES_DEBUG option (`options debug' in /etc/resolv.conf) has been
+  disabled.
+
+* The resolver in glibc allows underscores in domain names.
+
+* The <resolv.h> header in glibc includes <netinet/in.h> and
+  <arpa/nameser.h> to make it self-contained.
+
+* The `res_close' function in glibc only tries to close open files
+  referenced through `_res' if the RES_INIT bit is set in
+  `_res.options'.  This fixes a potential security bug with programs
+  that bogusly call `res_close' without initializing the resolver
+  state first.  Note that the thread-safe `res_nclose' still doesn't
+  check the RES_INIT bit.  By the way, you're not really supposed to
+  call `res_close/res_nclose' directly.
+
+
+Source code
+===========
+
+The following files come from the BIND distribution (currently version
+8.2.3-T5B):
+
+src/include/
+  arpa/nameser.h
+  arpa/nameser_compat.h
+  resolv.h
+
+src/lib/resolv/
+  herror.c
+  res_comp.c
+  res_data.c
+  res_debug.c
+  res_debug.h
+  res_init.c
+  res_mkquery.c
+  res_query.c
+  res_send.c
+
+src/lib/nameser/
+  ns_name.c
+  ns_netint.c
+  ns_parse.c
+  ns_print.c
+  ns_samedomain.c
+  ns_ttl.c
+
+src/lib/inet/
+  inet_addr.c
+  inet_net_ntop.c
+  inet_net_pton.c
+  inet_neta.c
+  inet_ntop.c
+  inet_pton.c
+  nsap_addr.c
+
+src/lib/isc/
+  base64.c
+
+Some of these files have been optimized a bit, and adaptations have
+been made to make them fit in with the rest of glibc.  The more
+non-obvious changes are wrapped in something like `#ifdef _LIBC'.
+
+res_libc.c is home-brewn, although parts of it are taken from res_data.c.
+
+res_hconf.c and res_hconf.h were contributed by David Mosberger, and
+do not come from BIND.
+
+The files gethnamaddr.c, mapv4v6addr.h and mapv4v6hostent.h are
+leftovers from BIND 4.9.7.

@@ -1,3 +1,8 @@
+2000-07-18  Mark Kettenis  <kettenis@gnu.org>
+
+	* manager.c (pthread_handle_create): Remove initialization of
+	new_thread->p_res._sock.
+
 2000-07-19  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	Bugfixes to the variant of the code for machines with no compare
