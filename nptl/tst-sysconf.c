@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -22,8 +22,8 @@
 #include <unistd.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   puts ("We expect no limits");
   /* We have no fixed limit on the number of threads.  Make sure the
@@ -43,3 +43,6 @@ main (void)
 
   return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
