@@ -65,9 +65,10 @@ __pthread_cond_timedwait:
 	mov.l	@(4,r13), r0
 	mov.l	.L1g, r1
 	cmp/hs	r1, r0
-	bt/s	18f
+	bf	0f
+	bra	18f
 	 mov	#EINVAL, r0
-
+0:
 	/* Get internal lock.  */
 	mov	#0, r3
 	mov	#1, r4
@@ -119,8 +120,11 @@ __pthread_cond_timedwait:
 	mov.l	@(cond_futex,r8), r0
 	add	r2, r0
 	mov.l	r0, @(cond_futex,r8)
+	mov	#(1 << clock_bits), r2
+	mov.l	@(cond_nwaiters,r8), r0
+	add	r2, r0
+	mov.l	r0, @(cond_nwaiters,r8)
 	
-
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r10
 	mov.l	@(wakeup_seq+4,r8), r11
@@ -271,7 +275,36 @@ __pthread_cond_timedwait:
 	mov.l	r0,@(woken_seq,r8)
 	mov.l	r1,@(woken_seq+4,r8)
 
-24:	
+24:
+	mov	#(1 << clock_bits), r2
+	mov.l	@(cond_nwaiters,r8),r0
+	sub	r2, r0
+	mov.l	r0,@(cond_nwaiters,r8)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	mov.l	@(total_seq,r8),r0
+	mov.l	@(total_seq+4,r8),r1
+	and	r1, r0
+	not	r0, r0
+	cmp/eq	#0, r0
+	bf/s	25f
+	 mov	#((1 << clock_bits) - 1), r1
+	not	r1, r1
+	mov.l	@(cond_nwaiters,r8),r0
+	tst	r1, r0
+	bf	25f
+
+	mov	r8, r4
+	add	#cond_nwaiters, r4
+	mov	#FUTEX_WAKE, r5
+	mov	#1, r6
+	mov	#0, r7
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+	
+25:	
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else
@@ -461,6 +494,37 @@ __condvar_tw_cleanup:
 	mov.l	r1,@(woken_seq+4,r8)
 
 3:
+	mov	#(1 << clock_bits), r2
+	mov.l	@(cond_nwaiters,r8),r0
+	sub	r2, r0
+	mov.l	r0,@(cond_nwaiters,r8)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	mov	#0, r10
+	mov.l	@(total_seq,r8),r0
+	mov.l	@(total_seq+4,r8),r1
+	and	r1, r0
+	not	r0, r0
+	cmp/eq	#0, r0
+	bf/s	4f
+	 mov	#((1 << clock_bits) - 1), r1
+	not	r1, r1
+	mov.l	@(cond_nwaiters,r8),r0
+	tst	r1, r0
+	bf	4f
+
+	mov	r8, r4
+	add	#cond_nwaiters, r4
+	mov	#FUTEX_WAKE, r5
+	mov	#1, r6
+	mov	#0, r7
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+	mov	#1, r10
+
+4:
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else
@@ -480,7 +544,9 @@ __condvar_tw_cleanup:
 
 2:
 	/* Wake up all waiters to make sure no signal gets lost.  */
-	mov	r8, r4
+	tst	r10, r10
+	bf/s	5f
+	 mov	r8, r4
 	add	#cond_futex, r4
 	mov	#FUTEX_WAKE, r5
 	mov	#-1, r6
@@ -491,6 +557,7 @@ __condvar_tw_cleanup:
 	trapa	#0x14
 	SYSCALL_INST_PAD
 
+5:
         mov.l   .Lmlocki5, r1
         bsrf    r1
          mov     r9, r4
