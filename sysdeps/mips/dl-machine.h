@@ -428,40 +428,23 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
 		 ElfW(Addr) *const reloc_addr)
 {
-  ElfW(Addr) loadbase;
-  ElfW(Addr) undo __attribute__ ((unused));
+#ifndef RTLD_BOOTSTRAP
+  /* This is defined in rtld.c, but nowhere in the static libc.a;
+     make the reference weak so static programs can still link.  This
+     declaration cannot be done when compiling rtld.c (i.e.  #ifdef
+     RTLD_BOOTSTRAP) because rtld.c contains the common defn for
+     _dl_rtld_map, which is incompatible with a weak decl in the same
+     file.  */
+  weak_extern (_dl_rtld_map);
+#endif
 
   switch (ELFW(R_TYPE) (reloc->r_info))
     {
     case R_MIPS_REL32:
-      {
-	ElfW(Addr) undo = 0;
-
-	if (ELFW(ST_BIND) (sym->st_info) == STB_LOCAL
-	    && (ELFW(ST_TYPE) (sym->st_info) == STT_SECTION
-		|| ELFW(ST_TYPE) (sym->st_info) == STT_NOTYPE))
-	  {
-	    *reloc_addr += map->l_addr;
-	    break;
-	  }
 #ifndef RTLD_BOOTSTRAP
-	/* This is defined in rtld.c, but nowhere in the static libc.a;
-	   make the reference weak so static programs can still link.  This
-	   declaration cannot be done when compiling rtld.c (i.e.  #ifdef
-	   RTLD_BOOTSTRAP) because rtld.c contains the common defn for
-	   _dl_rtld_map, which is incompatible with a weak decl in the same
-	   file.  */
-	weak_extern (_dl_rtld_map);
-	if (map == &_dl_rtld_map)
-	  /* Undo the relocation done here during bootstrapping.  Now we will
-	     relocate it anew, possibly using a binding found in the user
-	     program or a loaded library rather than the dynamic linker's
-	     built-in definitions used while loading those libraries.  */
-	  undo = map->l_addr + sym->st_value;
+      if (map != &_dl_rtld_map)
 #endif
-	  loadbase = RESOLVE (&sym, version, R_MIPS_REL32);
-	  *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
-	}
+	*reloc_addr += map->l_addr;
       break;
     case R_MIPS_NONE:		/* Alright, Wilbur.  */
       break;
