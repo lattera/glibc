@@ -1,5 +1,8 @@
 2003-10-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/sprof.c (load_shobj): Use l_map_start not l_addr to locate
+	ELF header.
+
 	* inet/rcmd.c (__validuser2_sa): Remove unnecessary code to skip
 	rest of line.  We use getline which means this cannot happen.
 

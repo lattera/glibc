@@ -513,7 +513,7 @@ load_shobj (const char *name)
   /* Now we have to load the symbol table.
 
      First load the section header table.  */
-  ehdr = (ElfW(Ehdr) *) map->l_addr;
+  ehdr = (ElfW(Ehdr) *) map->l_map_start;
 
   /* Make sure we are on the right party.  */
   if (ehdr->e_shentsize != sizeof (ElfW(Shdr)))
