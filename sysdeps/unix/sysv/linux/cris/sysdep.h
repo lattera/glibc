@@ -1,5 +1,5 @@
 /* Assembler macros for CRIS.
-   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -104,6 +104,18 @@
 0:							@ \
   SETUP_PIC						@ \
   PLTJUMP (syscall_error)				@ \
+  END (name)
+
+#define	PSEUDO_NOERRNO(name, syscall_name, args) \
+  ENTRY	(name)						@ \
+  DOARGS_##args						@ \
+  movu.w SYS_ify (syscall_name),$r9			@ \
+  break	13						@ \
+  UNDOARGS_return_##args
+
+#define ret_NOERRNO
+
+#define	PSEUDO_END_NOERRNO(name) \
   END (name)
 
 #define DOARGS_0

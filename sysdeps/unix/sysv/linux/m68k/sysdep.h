@@ -68,6 +68,16 @@
   SYSCALL_ERROR_HANDLER;						      \
   END (name)
 
+#undef PSEUDO_NOERRNO
+#define	PSEUDO_NOERRNO(name, syscall_name, args)			      \
+  .text;								      \
+  ENTRY (name)								      \
+    DO_CALL (syscall_name, args)
+
+#undef PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(name)					      \
+  END (name)
+
 #ifdef PIC
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER						      \
