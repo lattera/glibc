@@ -1,3 +1,8 @@
+2004-08-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/aio_misc.c (handle_fildes_io): Remove noreturn
+	attribute.  Return NULL instead of calling pthread_exit at the end.
+
 2004-08-11  Roland McGrath  <roland@redhat.com>
 
 	* iconvdata/testdata/ISO-2022-JP-3: Regenerated.

@@ -38,12 +38,12 @@ tf (void *arg)
       exit (EXIT_FAILURE);
     }
 
+  pthread_t mt = *(pthread_t *) arg;
+
   pthread_barrier_wait (&b);
 
-  pthread_t *mtp = (pthread_t *) arg;
-
   /* This call will never return.  */
-  pthread_join (*mtp, NULL);
+  pthread_join (mt, NULL);
 
   return NULL;
 }

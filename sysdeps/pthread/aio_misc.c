@@ -1,5 +1,6 @@
 /* Handle general operations.
-   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -470,7 +471,6 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 
 
 static void *
-__attribute__ ((noreturn))
 handle_fildes_io (void *arg)
 {
   pthread_t self = pthread_self ();
@@ -676,7 +676,7 @@ handle_fildes_io (void *arg)
     }
   while (runp != NULL);
 
-  pthread_exit (NULL);
+  return NULL;
 }
 
 
