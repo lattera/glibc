@@ -51,6 +51,10 @@ __gconv_transliterate (struct __gconv_step *step,
   uint_fast32_t high;
   uint32_t *default_missing;
 
+  /* The input buffer.  There are actually 4-byte values.  */
+  winbuf = (uint32_t *) *inbufp;
+  winbufend = (uint32_t *) inbufend;
+
   /* If there is no transliteration information in the locale don't do
      anything and return the error.  */
   size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_HASH_SIZE);
@@ -63,10 +67,6 @@ __gconv_transliterate (struct __gconv_step *step,
   from_tbl = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_FROM_TBL);
   to_idx = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_TO_IDX);
   to_tbl = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_TO_TBL);
-
-  /* The input buffer.  There are actually 4-byte values.  */
-  winbuf = (uint32_t *) *inbufp;
-  winbufend = (uint32_t *) inbufend;
 
   /* Test whether there is enough input.  */
   if (winbuf + 1 > winbufend)
