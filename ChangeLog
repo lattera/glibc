@@ -1,5 +1,8 @@
 1999-01-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* scripts/config.guess: Changes for ARM/Linux.
+	* scripts/config.sub: Likewise.
+
 	* elf/Makefile: Define libdl variable as name of libdl library and
 	use it in all dependencies.
 
