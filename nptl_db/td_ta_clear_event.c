@@ -1,5 +1,5 @@
 /* Globally disable events.
-   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -28,7 +28,7 @@ td_ta_clear_event (ta_arg, event)
 {
   td_thragent_t *const ta = (td_thragent_t *) ta_arg;
   td_err_e err;
-  psaddr_t eventmask;
+  psaddr_t eventmask = 0;
   void *copy;
 
   LOG ("td_ta_clear_event");

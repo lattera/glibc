@@ -95,6 +95,7 @@ extern char * __strptime_internal (const char *rp, const char *fmt,
 				   int era_cnt, __locale_t loc)
      internal_function;
 
+extern double __difftime (time_t time1, time_t time0);
 
 
 /* Use in the clock_* functions.  Size of the field representing the

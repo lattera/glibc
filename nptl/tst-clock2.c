@@ -25,6 +25,7 @@
 #include <unistd.h>
 
 
+#if _POSIX_THREAD_CPUTIME
 static pthread_barrier_t b2;
 static pthread_barrier_t bN;
 
@@ -48,6 +49,7 @@ tf (void *arg)
 
   return NULL;
 }
+#endif
 
 
 int
@@ -68,15 +70,15 @@ do_test (void)
 
   pthread_t th[N + 1];
   clockid_t cl[N + 1];
-#ifndef CLOCK_THREAD_CPUTIME_ID
+# ifndef CLOCK_THREAD_CPUTIME_ID
   if (pthread_getcpuclockid (pthread_self (), &cl[0]) != 0)
     {
       puts ("own pthread_getcpuclockid failed");
       return 1;
     }
-#else
+# else
   cl[0] = CLOCK_THREAD_CPUTIME_ID;
-#endif
+# endif
 
   pthread_attr_t at;
 

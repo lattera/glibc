@@ -1,5 +1,11 @@
 2004-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/test-ifaddrs.c: Fight warnings.
+
+	* argp/argp-help.c: Fight warnings.
+
+	* include/time.h: Declare __difftime.
+
 	* sysdeps/unix/sysv/linux/internal_statvfs.c: Restructure to avoid
 	duplication in 64-bit version.
 	* sysdeps/unix/sysv/linux/wordsize-64/internal_statvfs64.c: New file.

@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing help output
-   Copyright (C) 1995-2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -47,6 +47,7 @@ char *alloca ();
 #include <assert.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <limits.h>
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 #endif
@@ -452,8 +453,10 @@ make_hol (const struct argp *argp, struct hol_cluster *cluster)
       hol->entries = malloc (sizeof (struct hol_entry) * hol->num_entries);
       hol->short_options = malloc (num_short_options + 1);
 
-      assert (hol->entries && hol->short_options
-	      && hol->num_entries <= SIZE_MAX / sizeof (struct hol_entry));
+      assert (hol->entries && hol->short_options);
+#if SIZE_MAX <= UINT_MAX
+      assert (hol->num_entries <= SIZE_MAX / sizeof (struct hol_entry));
+#endif
 
       /* Fill in the entries.  */
       so = hol->short_options;
@@ -846,8 +849,10 @@ hol_append (struct hol *hol, struct hol *more)
 	  char *short_options =
 	    malloc (hol_so_len + strlen (more->short_options) + 1);
 
-	  assert (entries && short_options
-		  && num_entries <= SIZE_MAX / sizeof (struct hol_entry));
+	  assert (entries && short_options);
+#if SIZE_MAX <= UINT_MAX
+	  assert (num_entries <= SIZE_MAX / sizeof (struct hol_entry));
+#endif
 
 	  __mempcpy (__mempcpy (entries, hol->entries,
 				hol->num_entries * sizeof (struct hol_entry)),

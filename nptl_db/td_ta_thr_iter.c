@@ -1,5 +1,5 @@
 /* Iterate over a process's threads.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -119,7 +119,7 @@ td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
 {
   td_thragent_t *const ta = (td_thragent_t *) ta_arg;
   td_err_e err;
-  psaddr_t list;
+  psaddr_t list = 0;
 
   LOG ("td_ta_thr_iter");
 
