@@ -1,5 +1,5 @@
 /* Print size value using units for orders of magnitude.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on a proposal by Larry McVoy <lm@sgi.com>.
@@ -123,6 +123,7 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
 
 
   /* Fetch the argument value.	*/
+#ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     {
       fpnum.ldbl.d = *(const long double *) args[0];
@@ -147,6 +148,7 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
 	  }
     }
   else
+#endif	/* no long double */
     {
       fpnum.dbl.d = *(const double *) args[0];
 

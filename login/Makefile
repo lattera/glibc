@@ -61,7 +61,7 @@ endif
 # pt_chown needs to be setuid root.
 $(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)
 	$(make-target-directory)
-	-$(INSTALL) -m 4755 -o root $< $@
+	-$(INSTALL_PROGRAM) -m 4755 -o root $< $@
 
 $(objpfx)utmpd: $(utmpd-routines:%=$(objpfx)%.o)
 

@@ -151,6 +151,7 @@ __printf_fphex (FILE *fp,
 
 
   /* Fetch the argument value.	*/
+#ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     {
       fpnum.ldbl.d = *(const long double *) args[0];
@@ -170,6 +171,7 @@ __printf_fphex (FILE *fp,
 	}
     }
   else
+#endif	/* no long double */
     {
       fpnum.dbl.d = *(const double *) args[0];
 

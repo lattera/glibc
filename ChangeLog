@@ -1,3 +1,15 @@
+1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf_fp.c: #ifdef out long double handling code if
+	__NO_LONG_DOUBLE_MATH is defined to avoid warnings.
+	* stdio-common/printf_fphex.c: Likewise.
+	* stdio-common/printf-size.c: Likewise.
+
+1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/Makefile: Install pt_chown using INSTALL_PROGRAM.
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
+
 1998-12-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/powerpc/dl-machine.h (elf_machine_matches_host): Mark
@@ -7,7 +19,7 @@
 	(elf_machine_plt_value): Likewise.
 	* sysdeps/powerpc/backtrace.c: Include stddef.h to get NULL
 	definition.
-	Patches by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+	Patchess by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
 
 	* sysdeps/mips/dl-machine.h (elf_machine_rel): Fixl_addr parameter
 	type.  Reported by job bogan <job@piquin.uchicago.edu>.

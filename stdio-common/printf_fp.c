@@ -1,5 +1,5 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -287,6 +287,7 @@ __printf_fp (FILE *fp,
     grouping = NULL;
 
   /* Fetch the argument value.	*/
+#ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     {
       fpnum.ldbl = *(const long double *) args[0];
@@ -313,6 +314,7 @@ __printf_fp (FILE *fp,
 	}
     }
   else
+#endif	/* no long double */
     {
       fpnum.dbl = *(const double *) args[0];
 
