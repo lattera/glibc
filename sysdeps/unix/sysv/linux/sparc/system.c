@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <unistd.h>
-#include <sys/param.h>
-#include <ldsodefs.h>
-#include <sysdep.h>
+#include <kernel-features.h>
 
-/* Return the system page size.  This value will either be 4k or 8k depending
-   on whether or not we are running on Sparc v9 machine.  */
+/* We have to and actually can handle cancelable system().  The big
+   problem: we have to kill the child process if necessary.  To do
+   this a cleanup handler has to be registered and is has to be able
+   to find the PID of the child.  The main problem is to reliable have
+   the PID when needed.  It is not necessary for the parent thread to
+   return.  It might still be in the kernel when the cancellation
+   request comes.  Therefore we have to use the clone() calls ability
+   to have the kernel write the PID into the user-level variable.  */
+#ifdef __ASSUME_CLONE_THREAD_FLAGS
+# define FORK() \
+  INLINE_CLONE_SYSCALL (CLONE_PARENT_SETTID | SIGCHLD, 0, &pid, NULL, NULL)
+#endif
 
-/* If we are not a static program, this value is collected from the system
-   via the AT_PAGESZ auxiliary argument.  If we are a static program, we
-   use the getpagesize system call.  */
-
-int
-__getpagesize ()
-{
-  if (GL(dl_pagesize) == 0)
-    {
-      INTERNAL_SYSCALL_DECL (err);
-      GL(dl_pagesize) = INTERNAL_SYSCALL (getpagesize, err, 0);
-    }
-  return GL(dl_pagesize);
-}
-libc_hidden_def (__getpagesize)
-weak_alias (__getpagesize, getpagesize)
+#include "../system.c"

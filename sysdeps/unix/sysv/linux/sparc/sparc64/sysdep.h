@@ -152,6 +152,18 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	"restore %%g0, -1, %%o0;"					\
 	"1:"
 
+#define __CLONE_SYSCALL_STRING						\
+	"ta	0x6d;"							\
+	"bcc,pt	%%xcc, 1f;"						\
+	" sub	%%o1, 1, %%o1;"						\
+	"save	%%sp, -192, %%sp;"					\
+	"call	__errno_location;"					\
+	" mov	-1, %%i1;"						\
+	"st	%%i0,[%%o0];"						\
+	"restore %%g0, -1, %%o0;"					\
+	"1:"								\
+	"and	%%o0, %%o1, %%o0"
+
 #define __INTERNAL_SYSCALL_STRING					\
 	"ta	0x6d;"							\
 	"bcs,a,pt %%xcc, 1f;"						\

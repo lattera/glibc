@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu).
 
@@ -23,7 +23,8 @@
 #include <asm/errno.h>
 #include <asm/unistd.h>
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
+	     pid_t *ptid, void *tls, pid_t *ctid); */
 
 	.text
 	.align	4
@@ -39,6 +40,12 @@ __clone:
 	 orcc	%i1,%g0,%o1
 	be	.Lerror
 	 mov	%i2,%o0
+	/* ptid */
+	mov	%i4,%o2
+	/* tls */
+	mov	%i5,%o3
+	/* ctid */
+	ld	[%fp+92],%o4
 
 	/* Do the system call */
 	set	__NR_clone,%g1

@@ -368,18 +368,18 @@ extern int _rpc_dtablesize (void) __THROW;
 /*
  * Print why creation failed
  */
-extern void clnt_pcreateerror (__const char *__msg) __THROW;	/* stderr */
+extern void clnt_pcreateerror (__const char *__msg);	/* stderr */
 extern char *clnt_spcreateerror(__const char *__msg) __THROW;	/* string */
 
 /*
  * Like clnt_perror(), but is more verbose in its output
  */
-extern void clnt_perrno (enum clnt_stat __num) __THROW;		/* stderr */
+extern void clnt_perrno (enum clnt_stat __num);		/* stderr */
 
 /*
  * Print an English error message, given the client error code
  */
-extern void clnt_perror (CLIENT *__clnt, __const char *__msg) __THROW;
+extern void clnt_perror (CLIENT *__clnt, __const char *__msg);
 							/* stderr */
 extern char *clnt_sperror (CLIENT *__clnt, __const char *__msg) __THROW;
 							/* string */

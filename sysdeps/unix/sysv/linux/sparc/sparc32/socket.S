@@ -79,7 +79,11 @@ ENTRY (__socket)
 
 #if defined NEED_CANCELLATION && defined CENABLE
 .Lsocket_cancel:
+	cfi_startproc
 	save %sp, -96, %sp
+	cfi_def_cfa_register (%fp)
+	cfi_window_save
+	cfi_register (%o7, %i7)
 	CENABLE
 	 nop
 	mov %o0, %l0
@@ -93,6 +97,7 @@ ENTRY (__socket)
 	 mov %l0, %o0
 	jmpl %i7 + 8, %g0
 	 restore %g0, %l1, %o0
+	cfi_endproc
 	SYSCALL_ERROR_HANDLER2
 #endif
 
