@@ -1,5 +1,9 @@
 2003-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c (do_sigwaitinfo): Fold
+	SI_TKILL code into SI_USER.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c (do_sigtimedwait): Likewise.
+
 	* sysdeps/posix/sigpause.c (do_sigpause): Use sigdelset after all.
 
 2003-05-15  Jakub Jelinek  <jakub@redhat.com>
