@@ -1,3 +1,12 @@
+2003-04-03  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Fix up use of compilation flags to match the build:
+	For .s files, $ASFLAGS;
+	For .S files, $CPPFLAGS $ASFLAGS;
+	For .c files, $CFLAGS $CPPFLAGS;
+	when linking, add $LDFLAGS.
+	* configure: Regenerated.
+
 2003-04-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Reverse test
