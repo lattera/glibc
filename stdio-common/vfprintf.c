@@ -1311,7 +1311,10 @@ do_positional:
 
 all_done:
   /* Unlock the stream.  */
+#ifdef USE_IN_LIBIO
+  /* (stdio has no locking yet.) */
   __libc_cleanup_region_end (1);
+#endif
 
   return done;
 }

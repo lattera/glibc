@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libc-lock.h>
 
 #ifdef	__GNUC__
 #define	HAVE_LONGLONG
@@ -119,7 +120,7 @@ Cambridge, MA 02139, USA.  */
 # define LOCK_STREAM(S)							      \
   __libc_cleanup_region_start (&__funlockfile, (S));			      \
   __flockfile (S)
-# define UNLOCK_STREAM __libc_cleanup_region_start (1)
+# define UNLOCK_STREAM __libc_cleanup_region_end (1)
 #endif
 #endif
 
