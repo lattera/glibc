@@ -1,5 +1,7 @@
 2002-03-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* grp/initgroups.c (__nss_group_data): Declare as hidden.
+
 	* include/locale.h (_nl_C_locobj): Declare as hidden.
 
 	* time/asctime.c (_nl_C_LC_TIME): Declare as hidden.

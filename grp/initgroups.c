@@ -1,4 +1,4 @@
-/* Copyright (C) 1989,91,93,1996-1999,2000,01 Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ extern int __nss_group_lookup (service_user **nip, const char *name,
 				   void **fctp);
 extern void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
-extern service_user *__nss_group_database;
+extern service_user *__nss_group_database attribute_hidden;
 
 static enum nss_status
 compat_call (service_user *nip, const char *user, gid_t group, long int *start,
