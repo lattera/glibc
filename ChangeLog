@@ -1,7 +1,12 @@
 2003-06-23  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/pthread/aio_suspend.c (aio_suspend): Set errno to EINTR
-	if this is what pthread_cond_wait returned.
+	* sysdeps/pthread/aio_misc.h: Mark __aio_requests_mutex,
+	__aio_enqueue_request, __aio_find_req, __aio_find_req_fd,
+	__aio_free_request, __aio_notify, and __aio_sigqueue as hidden.
+
+	* sysdeps/pthread/aio_suspend.c (aio_suspend): Set errno to the result
+	of pthread_cond_wait if there was an error.  Use pthread_cleanup_*
+	instead of __lbic_cleanup_region_*.
 
 2003-06-20  Richard Henderson  <rth@redhat.com>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,38 +90,41 @@ struct requestlist
 
 
 /* Lock for global I/O list of requests.  */
-extern pthread_mutex_t __aio_requests_mutex;
+extern pthread_mutex_t __aio_requests_mutex attribute_hidden;
 
 
 /* Enqueue request.  */
 extern struct requestlist *__aio_enqueue_request (aiocb_union *aiocbp,
 						  int operation)
-     internal_function;
+     attribute_hidden internal_function;
 
 /* Find request entry for given AIO control block.  */
 extern struct requestlist *__aio_find_req (aiocb_union *elem)
-     internal_function;
+     attribute_hidden internal_function;
 
 /* Find request entry for given file descriptor.  */
-extern struct requestlist *__aio_find_req_fd (int fildes) internal_function;
+extern struct requestlist *__aio_find_req_fd (int fildes)
+     attribute_hidden internal_function;
 
 /* Remove request from the list.  */
 extern void __aio_remove_request (struct requestlist *last,
 				  struct requestlist *req, int all)
-     internal_function;
+     attribute_hidden internal_function;
 
 /* Release the entry for the request.  */
-extern void __aio_free_request (struct requestlist *req) internal_function;
+extern void __aio_free_request (struct requestlist *req)
+     attribute_hidden internal_function;
 
 /* Notify initiator of request and tell this everybody listening.  */
-extern void __aio_notify (struct requestlist *req) internal_function;
+extern void __aio_notify (struct requestlist *req)
+     attribute_hidden internal_function;
 
 /* Notify initiator of request.  */
 extern int __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
-     internal_function;
+     attribute_hidden internal_function;
 
 /* Send the signal.  */
 extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
-     internal_function;
+     attribute_hidden internal_function;
 
 #endif /* aio_misc.h */

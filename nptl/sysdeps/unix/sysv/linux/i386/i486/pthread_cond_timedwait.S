@@ -81,32 +81,14 @@ __pthread_cond_timedwait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
-	/* Install cancellation handler.  */
-#ifdef PIC
-	call	__i686.get_pc_thunk.cx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
-	leal	__condvar_cleanup@GOTOFF(%ecx), %eax
-#else
-	leal	__condvar_cleanup, %eax
-#endif
-	subl	$44, %esp
+	subl	$20, %esp
 .Lsubl:
-	leal	28(%esp), %edx
-	movl	%esp, 8(%esp)
-	movl	%eax, 4(%esp)
-	movl	%edx, (%esp)
-	call	__pthread_cleanup_push
 
-	/* Address of the mutex.  */
-	movl	68(%esp), %ecx
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
-	movl	%edi, 20(%esp)
-	movl	%edx, 24(%esp)
-	/* Prepare structure passed to cancellation handler.  */
-	movl	%ecx, (%esp)
-	movl	%ebx, 4(%esp)
+	movl	%edi, 12(%esp)
+	movl	%edx, 16(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -117,18 +99,20 @@ __pthread_cond_timedwait:
 #endif
 	jne	3f
 
+.LcleanupSTART:
 4:	call	__pthread_enable_asynccancel
-	movl	%eax, 8(%esp)
+	movl	%eax, (%esp)
 
 	/* Get the current time.  */
 	movl	%ebx, %edx
+.LebxmovedUR:
 #ifdef __NR_clock_gettime
 	/* Get the clock number.  Note that the field in the condvar
 	   structure stores the number minus 1.  */
 	movl	cond_clock(%ebx), %ebx
 	/* Only clocks 0 and 1 are allowed.  Both are handled in the
 	   kernel.  */
-	leal	12(%esp), %ecx
+	leal	4(%esp), %ecx
 	movl	$__NR_clock_gettime, %eax
 	ENTER_KERNEL
 # ifndef __ASSUME_POSIX_TIMERS
@@ -136,27 +120,29 @@ __pthread_cond_timedwait:
 	je	19f
 # endif
 	movl	%edx, %ebx
+.LebxbackUR:
 
 	/* Compute relative timeout.  */
 	movl	(%ebp), %ecx
 	movl	4(%ebp), %edx
-	subl	12(%esp), %ecx
-	subl	16(%esp), %edx
+	subl	4(%esp), %ecx
+	subl	8(%esp), %edx
 #else
 	/* Get the current time.  */
-	leal	12(%esp), %ebx
+	leal	4(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
 	ENTER_KERNEL
 	movl	%edx, %ebx
+.LebxbackUR:
 
 	/* Compute relative timeout.  */
-	movl	16(%esp), %eax
+	movl	8(%esp), %eax
 	movl	$1000, %edx
 	mul	%edx		/* Milli seconds to nano seconds.  */
 	movl	(%ebp), %ecx
 	movl	4(%ebp), %edx
-	subl	12(%esp), %ecx
+	subl	4(%esp), %ecx
 	subl	%eax, %edx
 #endif
 	jns	12f
@@ -166,19 +152,22 @@ __pthread_cond_timedwait:
 	js	13f
 
 	/* Store relative timeout.  */
-21:	movl	%ecx, 12(%esp)
-	movl	%edx, 16(%esp)
-	leal	12(%esp), %esi
+21:	movl	%ecx, 4(%esp)
+	movl	%edx, 8(%esp)
+	leal	4(%esp), %esi
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
 	addl	$wakeup_seq, %ebx
+.Ladd_wakeup:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	subl	$wakeup_seq, %ebx
+.Lsub_wakeup:
 	movl	%eax, %esi
 
-	movl	8(%esp), %eax
+	movl	(%esp), %eax
 	call	__pthread_disable_asynccancel
+.LcleanupEND:
 
 	/* Lock.  */
 	movl	$1, %eax
@@ -197,10 +186,10 @@ __pthread_cond_timedwait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 
-	cmpl	24(%esp), %edx
+	cmpl	16(%esp), %edx
 	ja	7f
 	jb	15f
-	cmpl	20(%esp), %edi
+	cmpl	12(%esp), %edi
 	jbe	15f
 
 7:	cmpl	%ecx, %edx
@@ -230,12 +219,9 @@ __pthread_cond_timedwait:
 	jne	10f
 
 	/* Remove cancellation handler.  */
-11:	movl	28+CLEANUP_PREV(%esp), %edx
-	movl	%edx, %gs:CLEANUP
-
-	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
+11:	movl	44(%esp), %eax
 	call	__pthread_mutex_cond_lock
-	addl	$44, %esp
+	addl	$20, %esp
 .Laddl:
 
 	/* We return the result of the mutex_lock operation if it failed.  */
@@ -320,19 +306,19 @@ __pthread_cond_timedwait:
 #if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
 	/* clock_gettime not available.  */
 .LSbl4:
-19:	leal	12(%esp), %ebx
+19:	leal	4(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
 	ENTER_KERNEL
 	movl	%edx, %ebx
 
 	/* Compute relative timeout.  */
-	movl	16(%esp), %eax
+	movl	8(%esp), %eax
 	movl	$1000, %edx
 	mul	%edx		/* Milli seconds to nano seconds.  */
 	movl	(%ebp), %ecx
 	movl	4(%ebp), %edx
-	subl	12(%esp), %ecx
+	subl	4(%esp), %ecx
 	subl	%eax, %edx
 	jns	20f
 	addl	$1000000000, %edx
@@ -341,10 +327,110 @@ __pthread_cond_timedwait:
 	js	13b
 	jmp	21b
 #endif
-.LENDCODE:
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)
+
+
+	.type	__condvar_cleanup3, @function
+__condvar_cleanup3:
+	leal	wakeup_seq(%edx), %ebx # XXX Is this correct?  %edx preserved?
+.LSbl5:
+	.size	__condvar_cleanup3, .-__condvar_cleanup3
+	.type	__condvar_cleanup2, @function
+__condvar_cleanup2:
+	subl	$wakeup_seq, %ebx
+	.size	__condvar_cleanup2, .-__condvar_cleanup2
+	.type	__condvar_cleanup, @function
+__condvar_cleanup:
+	movl	%eax, %esi
+
+	/* Get internal lock.  */
+	movl	$1, %eax
+	LOCK
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
+	xaddl	%eax, cond_lock(%ebx)
+#endif
+	testl	%eax, %eax
+	je	1f
+
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
+	call	__lll_mutex_lock_wait
+
+1:	addl	$1, wakeup_seq(%ebx)
+	adcl	$0, wakeup_seq+4(%ebx)
+
+	addl	$1, woken_seq(%ebx)
+	adcl	$0, woken_seq+4(%ebx)
+
+	LOCK
+	subl	$1, cond_lock(%ebx)
+	je	2f
+
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+
+	/* Wake up all waiters to make sure no signal gets lost.  */
+2:	addl	$wakeup_seq, %ebx
+	movl	$FUTEX_WAKE, %ecx
+	movl	$SYS_futex, %eax
+	movl	$0x7fffffff, %edx
+	ENTER_KERNEL
+
+	movl	44(%esp), %eax
+	call	__pthread_mutex_cond_lock
+
+	movl	%esi, (%esp)
+.LcallUR:
+	call	_Unwind_Resume
+	hlt
+.LENDCODE:
+	.size	__condvar_cleanup, .-__condvar_cleanup
+
+
+	.section .gcc_except_table,"a",@progbits
+.LexceptSTART:
+	.byte	0xff				# @LPStart format (omit)
+	.byte	0xff				# @TType format (omit)
+	.byte	0x0b				# call-site format
+						# DW_EH_PE_sdata4
+	.uleb128 .Lcstend-.Lcstbegin
+.Lcstbegin:
+	.long	.LcleanupSTART-.LSTARTCODE
+	.long	.Ladd_wakeup-.LcleanupSTART
+	.long	__condvar_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.LebxmovedUR-.LSTARTCODE
+	.long	.LebxbackUR-.LebxmovedUR
+	.long	__condvar_cleanup3-.LSTARTCODE
+	.uleb128  0
+	.long	.LebxmovedUR-.LSTARTCODE
+	.long	.Ladd_wakeup-.LebxmovedUR
+	.long	__condvar_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.Ladd_wakeup-.LSTARTCODE
+	.long	.Lsub_wakeup-.Ladd_wakeup
+	.long	__condvar_cleanup2-.LSTARTCODE
+	.uleb128  0
+	.long	.Lsub_wakeup-.LSTARTCODE
+	.long	.LcleanupEND-.Lsub_wakeup
+	.long	__condvar_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.LcallUR-.LSTARTCODE
+	.long	.LENDCODE-.LcallUR
+	.long	0
+	.uleb128  0
+.Lcstend:
 
 
 	.section .eh_frame,"a",@progbits
@@ -354,10 +440,10 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.long	0				# CIE ID.
 	.byte	1				# Version number.
 #ifdef SHARED
-	.string	"zR"				# NUL-terminated augmentation
+	.string	"zPLR"				# NUL-terminated augmentation
 						# string.
 #else
-	.ascii	"\0"				# NUL-terminated augmentation
+	.string	"zPL"				# NUL-terminated augmentation
 						# string.
 #endif
 	.uleb128 1				# Code alignment factor.
@@ -365,9 +451,20 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.byte	8				# Return address register
 						# column.
 #ifdef SHARED
-	.uleb128 1				# Augmentation value length.
-	.byte	0x1b				# Encoding: DW_EH_PE_pcrel
+	.uleb128 7				# Augmentation value length.
+	.byte	0x9b				# Personality: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4
+						# + DW_EH_PE_indirect
+	.long	DW.ref.__gcc_personality_v0-.
+	.byte	0x1b				# LSDA Encoding: DW_EH_PE_pcrel
 						# + DW_EH_PE_sdata4.
+	.byte	0x1b				# FDE Encoding: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4.
+#else
+	.uleb128 6				# Augmentation value length.
+	.byte	0x0				# Personality: absolute
+	.long	__gcc_personality_v0
+	.byte	0x0				# LSDA Encoding: absolute
 #endif
 	.byte 0x0c				# DW_CFA_def_cfa
 	.uleb128 4
@@ -387,8 +484,11 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.long	.LSTARTCODE			# Start address of the code.
 #endif
 	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
+	.uleb128 4				# Augmentation size
 #ifdef SHARED
-	.uleb128 0				# No augmentation data.
+	.long	.LexceptSTART-.
+#else
+	.long	.LexceptSTART
 #endif
 	.byte	0x40+.Lpush_ebp-.LSTARTCODE	# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -413,7 +513,7 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Lsubl-.Lpush_ebx
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 64
+	.uleb128 40
 	.byte	3				# DW_CFA_advance_loc2
 	.2byte	.Laddl-.Lsubl
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -455,6 +555,22 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.byte	0x40+.LSbl4-.LSbl3		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 64
+	.byte	0x40+.LSbl5-.LSbl4		# DW_CFA_advance_loc+N
+#else
+	.byte	0x40+.LSbl5-.LSbl3		# DW_CFA_advance_loc+N
 #endif
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 40
 	.align	4
 .LENDFDE:
+
+#ifdef SHARED
+	.hidden DW.ref.__gcc_personality_v0
+	.weak   DW.ref.__gcc_personality_v0
+	.section .gnu.linkonce.d.DW.ref.__gcc_personality_v0,"aw",@progbits
+	.align 4
+	.type   DW.ref.__gcc_personality_v0, @object
+	.size   DW.ref.__gcc_personality_v0, 4
+DW.ref.__gcc_personality_v0:
+	.long   __gcc_personality_v0
+#endif

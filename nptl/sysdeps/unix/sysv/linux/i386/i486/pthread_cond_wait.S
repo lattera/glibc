@@ -35,64 +35,6 @@
 
 	.text
 
-	.align	16
-	.type	__condvar_cleanup, @function
-	.globl	__condvar_cleanup
-	.hidden	__condvar_cleanup
-__condvar_cleanup:
-	pushl	%ebx
-	pushl	%esi
-	movl	12(%esp), %esi
-
-	/* Get internal lock.  */
-	movl	4(%esi), %ebx
-	movl	$1, %eax
-	LOCK
-#if cond_lock == 0
-	xaddl	%eax, (%ebx)
-#else
-	xaddl	%eax, cond_lock(%ebx)
-#endif
-	testl	%eax, %eax
-	je	1f
-
-#if cond_lock == 0
-	movl	%ebx, %ecx
-#else
-	leal	cond_lock(%ebx), %ecx
-#endif
-	call	__lll_mutex_lock_wait
-
-1:	addl	$wakeup_seq, %ebx
-	addl	$1, (%ebx)
-	adcl	$0, 4(%ebx)
-
-	addl	$1, woken_seq-wakeup_seq(%ebx)
-	adcl	$0, woken_seq-wakeup_seq+4(%ebx)
-
-	LOCK
-	subl	$1, cond_lock-wakeup_seq(%ebx)
-	je	2f
-
-	leal	cond_lock-wakeup_seq(%ebx), %eax
-	call	__lll_mutex_unlock_wake
-
-	/* Wake up all waiters to make sure no signal gets lost.  */
-2:	movl	$FUTEX_WAKE, %ecx
-	movl	$SYS_futex, %eax
-	movl	$0x7fffffff, %edx
-	ENTER_KERNEL
-
-	pushl	(%esi)
-	call	__pthread_mutex_cond_lock
-	popl	%eax
-
-	popl	%esi
-	popl	%ebx
-	ret
-	.size	__condvar_cleanup, .-__condvar_cleanup
-
-
 /* int pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)  */
 	.globl	__pthread_cond_wait
 	.type	__pthread_cond_wait, @function
@@ -136,31 +78,14 @@ __pthread_cond_wait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
-	/* Install cancellation handler.  */
-#ifdef PIC
-	call	__i686.get_pc_thunk.cx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
-	leal	__condvar_cleanup@GOTOFF(%ecx), %eax
-#else
-	leal	__condvar_cleanup, %eax
-#endif
-	subl	$36, %esp
+	subl	$12, %esp
 .Lsubl:
-	leal	20(%esp), %edx
-	movl	%esp, 8(%esp)
-	movl	%eax, 4(%esp)
-	movl	%edx, (%esp)
-	call	__pthread_cleanup_push
 
 	/* Get and store current wakeup_seq value.  */
-	movl	56(%esp), %ecx
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
-	movl	%edi, 12(%esp)
-	movl	%edx, 16(%esp)
-	/* Prepare structure passed to cancellation handler.  */
-	movl	%ecx, (%esp)
-	movl	%ebx, 4(%esp)
+	movl	%edi, 4(%esp)
+	movl	%edx, 8(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -171,18 +96,22 @@ __pthread_cond_wait:
 #endif
 	jne	3f
 
+.LcleanupSTART:
 4:	call	__pthread_enable_asynccancel
-	movl	%eax, 8(%esp)
+	movl	%eax, (%esp)
 
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
 	addl	$wakeup_seq, %ebx
+.Ladd_wakeup:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	subl	$wakeup_seq, %ebx
+.Lsub_wakeup:
 
-	movl	8(%esp), %eax
+	movl	(%esp), %eax
 	call	__pthread_disable_asynccancel
+.LcleanupEND:
 
 	/* Lock.  */
 	movl	$1, %eax
@@ -201,10 +130,10 @@ __pthread_cond_wait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 
-	cmpl	16(%esp), %edx
+	cmpl	8(%esp), %edx
 	ja	7f
 	jb	8b
-	cmpl	12(%esp), %edi
+	cmpl	4(%esp), %edi
 	jbe	8b
 
 7:	cmpl	%ecx, %edx
@@ -224,13 +153,9 @@ __pthread_cond_wait:
 #endif
 	jne	10f
 
-	/* Remove cancellation handler.  */
-11:	movl	20+CLEANUP_PREV(%esp), %edx
-	movl	%edx, %gs:CLEANUP
-
-	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
+11:	movl	32(%esp), %eax
 	call	__pthread_mutex_cond_lock
-	addl	$36, %esp
+	addl	$12, %esp
 .Laddl:
 
 14:	popl	%ebx
@@ -306,23 +231,110 @@ __pthread_cond_wait:
 
 	movl	%esi, %eax
 	jmp	14b
-.LENDCODE:
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
 
 
+	.type	__condvar_cleanup2, @function
+__condvar_cleanup2:
+	subl	$wakeup_seq, %ebx
+	.size	__condvar_cleanup2, .-__condvar_cleanup2
+.LSbl4:
+	.type	__condvar_cleanup, @function
+__condvar_cleanup:
+	movl	%eax, %esi
+
+	/* Get internal lock.  */
+	movl	$1, %eax
+	LOCK
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
+	xaddl	%eax, cond_lock(%ebx)
+#endif
+	testl	%eax, %eax
+	je	1f
+
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
+	call	__lll_mutex_lock_wait
+
+1:	addl	$1, wakeup_seq(%ebx)
+	adcl	$0, wakeup_seq+4(%ebx)
+
+	addl	$1, woken_seq(%ebx)
+	adcl	$0, woken_seq+4(%ebx)
+
+	LOCK
+	subl	$1, cond_lock(%ebx)
+	je	2f
+
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+
+	/* Wake up all waiters to make sure no signal gets lost.  */
+2:	addl	$wakeup_seq, %ebx
+	movl	$FUTEX_WAKE, %ecx
+	movl	$SYS_futex, %eax
+	movl	$0x7fffffff, %edx
+	ENTER_KERNEL
+
+	movl	32(%esp), %eax
+	call	__pthread_mutex_cond_lock
+
+	movl	%esi, (%esp)
+.LcallUR:
+	call	_Unwind_Resume
+	hlt
+.LENDCODE:
+	.size	__condvar_cleanup, .-__condvar_cleanup
+
+
+	.section .gcc_except_table,"a",@progbits
+.LexceptSTART:
+	.byte	0xff				# @LPStart format (omit)
+	.byte	0xff				# @TType format (omit)
+	.byte	0x0b				# call-site format
+						# DW_EH_PE_sdata4
+	.uleb128 .Lcstend-.Lcstbegin
+.Lcstbegin:
+	.long	.LcleanupSTART-.LSTARTCODE
+	.long	.Ladd_wakeup-.LcleanupSTART
+	.long	__condvar_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.Ladd_wakeup-.LSTARTCODE
+	.long	.Lsub_wakeup-.Ladd_wakeup
+	.long	__condvar_cleanup2-.LSTARTCODE
+	.uleb128  0
+	.long	.Lsub_wakeup-.LSTARTCODE
+	.long	.LcleanupEND-.Lsub_wakeup
+	.long	__condvar_cleanup-.LSTARTCODE
+	.uleb128  0
+	.long	.LcallUR-.LSTARTCODE
+	.long	.LENDCODE-.LcallUR
+	.long	0
+	.uleb128  0
+.Lcstend:
+
 	.section .eh_frame,"a",@progbits
 .LSTARTFRAME:
-	.long	L(ENDCIE)-L(STARTCIE)	# Length of the CIE.
+	.long	L(ENDCIE)-L(STARTCIE)		# Length of the CIE.
 .LSTARTCIE:
 	.long	0				# CIE ID.
 	.byte	1				# Version number.
 #ifdef SHARED
-	.string	"zR"				# NUL-terminated augmentation
+	.string	"zPLR"				# NUL-terminated augmentation
 						# string.
 #else
-	.ascii	"\0"				# NUL-terminated augmentation
+	.string	"zPL"				# NUL-terminated augmentation
 						# string.
 #endif
 	.uleb128 1				# Code alignment factor.
@@ -330,9 +342,20 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 	.byte	8				# Return address register
 						# column.
 #ifdef SHARED
-	.uleb128 1				# Augmentation value length.
-	.byte	0x1b				# Encoding: DW_EH_PE_pcrel
+	.uleb128 7				# Augmentation value length.
+	.byte	0x9b				# Personality: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4
+						# + DW_EH_PE_indirect
+	.long	DW.ref.__gcc_personality_v0-.
+	.byte	0x1b				# LSDA Encoding: DW_EH_PE_pcrel
 						# + DW_EH_PE_sdata4.
+	.byte	0x1b				# FDE Encoding: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4.
+#else
+	.uleb128 6				# Augmentation value length.
+	.byte	0x0				# Personality: absolute
+	.long	__gcc_personality_v0
+	.byte	0x0				# LSDA Encoding: absolute
 #endif
 	.byte 0x0c				# DW_CFA_def_cfa
 	.uleb128 4
@@ -352,8 +375,11 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 	.long	.LSTARTCODE			# Start address of the code.
 #endif
 	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
+	.uleb128 4				# Augmentation size
 #ifdef SHARED
-	.uleb128 0				# No augmentation data.
+	.long	.LexceptSTART-.
+#else
+	.long	.LexceptSTART
 #endif
 	.byte	0x40+.Lpush_edi-.LSTARTCODE	# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -373,7 +399,7 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Lsubl-.Lpush_ebx
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 52
+	.uleb128 36
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Laddl-.Lsubl
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -405,6 +431,9 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 	.byte	0x40+.LSbl3-.LSbl2		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 20
+	.byte	0x40+.LSbl4-.LSbl3		# DW_CFA_advance_loc+N
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 28
 	.align	4
 .LENDFDE:
 
@@ -418,4 +447,15 @@ __i686.get_pc_thunk.cx:
 	movl (%esp), %ecx;
 	ret
 	.size	__i686.get_pc_thunk.cx,.-__i686.get_pc_thunk.cx
+#endif
+
+#ifdef SHARED
+	.hidden DW.ref.__gcc_personality_v0
+	.weak   DW.ref.__gcc_personality_v0
+	.section .gnu.linkonce.d.DW.ref.__gcc_personality_v0,"aw",@progbits
+	.align 4
+	.type   DW.ref.__gcc_personality_v0, @object
+	.size   DW.ref.__gcc_personality_v0, 4
+DW.ref.__gcc_personality_v0:
+	.long   __gcc_personality_v0
 #endif

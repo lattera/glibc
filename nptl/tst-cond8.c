@@ -52,6 +52,8 @@ ch (void *arg)
       puts ("ch: cannot unlock mutex");
       exit (1);
     }
+
+  puts ("ch done");
 }
 
 

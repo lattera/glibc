@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <aio.h>
+#include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@ tf (void *arg)
   int r = pthread_barrier_wait (&b);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      puts ("barrier_wait failed");
+      puts ("tf: barrier_wait failed");
       exit (1);
     }
 
@@ -52,11 +53,36 @@ tf (void *arg)
 
   const struct aiocb *l[1] = { arg };
 
-  aio_suspend (l, 1, NULL);
+  TEMP_FAILURE_RETRY (aio_suspend (l, 1, NULL));
 
   pthread_cleanup_pop (0);
 
-  puts ("aio_suspend returned");
+  puts ("tf: aio_suspend returned");
+
+  exit (1);
+}
+
+
+static void *
+tf2 (void *arg)
+{
+  int r = pthread_barrier_wait (&b);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      puts ("tf2: barrier_wait failed");
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  const struct aiocb *l[1] = { arg };
+  struct timespec ts = { .tv_sec = 1000, .tv_nsec = 0 };
+
+  TEMP_FAILURE_RETRY (aio_suspend (l, 1, &ts));
+
+  pthread_cleanup_pop (0);
+
+  puts ("tf2: aio_suspend returned");
 
   exit (1);
 }
@@ -108,7 +134,7 @@ do_test (void)
   while (nanosleep (&ts, &ts) != 0)
     continue;
 
-  puts ("going to cancel in-time");
+  puts ("going to cancel tf in-time");
   if (pthread_cancel (th) != 0)
     {
       puts ("1st cancel failed");
@@ -129,12 +155,61 @@ do_test (void)
 
   if (cl_called == 0)
     {
-      puts ("cleanup handler not called");
+      puts ("tf cleanup handler not called");
       return 1;
     }
   if (cl_called > 1)
     {
-      puts ("cleanup handler called more than once");
+      puts ("tf cleanup handler called more than once");
+      return 1;
+    }
+
+  cl_called = 0;
+
+  if (pthread_create (&th, NULL, tf2, &a) != 0)
+    {
+      puts ("2nd create failed");
+      return 1;
+    }
+
+  r = pthread_barrier_wait (&b);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      puts ("2nd barrier_wait failed");
+      exit (1);
+    }
+
+  ts.tv_sec = 0;
+  ts.tv_nsec = 100000000;
+  while (nanosleep (&ts, &ts) != 0)
+    continue;
+
+  puts ("going to cancel tf2 in-time");
+  if (pthread_cancel (th) != 0)
+    {
+      puts ("2nd cancel failed");
+      return 1;
+    }
+
+  if (pthread_join (th, &status) != 0)
+    {
+      puts ("2nd join failed");
+      return 1;
+    }
+  if (status != PTHREAD_CANCELED)
+    {
+      puts ("2nd thread not canceled");
+      return 1;
+    }
+
+  if (cl_called == 0)
+    {
+      puts ("tf2 cleanup handler not called");
+      return 1;
+    }
+  if (cl_called > 1)
+    {
+      puts ("tf2 cleanup handler called more than once");
       return 1;
     }
 
@@ -156,43 +231,87 @@ do_test (void)
 
   if (pthread_create (&th, NULL, tf, &a) != 0)
     {
-      puts ("2nd create failed");
+      puts ("3rd create failed");
       return 1;
     }
 
-  puts ("going to cancel early");
+  puts ("going to cancel tf early");
   if (pthread_cancel (th) != 0)
     {
-      puts ("2nd cancel failed");
+      puts ("3rd cancel failed");
       return 1;
     }
 
   r = pthread_barrier_wait (&b);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      puts ("barrier_wait failed");
+      puts ("3rd barrier_wait failed");
       exit (1);
     }
 
   if (pthread_join (th, &status) != 0)
     {
-      puts ("2nd join failed");
+      puts ("3rd join failed");
       return 1;
     }
   if (status != PTHREAD_CANCELED)
     {
-      puts ("2nd thread not canceled");
+      puts ("3rd thread not canceled");
       return 1;
     }
 
   if (cl_called == 0)
     {
-      printf ("cleanup handler not called\n");
+      printf ("tf cleanup handler not called\n");
       return 1;
     }
   if (cl_called > 1)
     {
-      printf ("cleanup handler called more than once\n");
+      printf ("tf cleanup handler called more than once\n");
+      return 1;
+    }
+
+  cl_called = 0;
+
+  if (pthread_create (&th, NULL, tf2, &a) != 0)
+    {
+      puts ("4th create failed");
+      return 1;
+    }
+
+  puts ("going to cancel tf2 early");
+  if (pthread_cancel (th) != 0)
+    {
+      puts ("4th cancel failed");
+      return 1;
+    }
+
+  r = pthread_barrier_wait (&b);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      puts ("4th barrier_wait failed");
+      exit (1);
+    }
+
+  if (pthread_join (th, &status) != 0)
+    {
+      puts ("4th join failed");
+      return 1;
+    }
+  if (status != PTHREAD_CANCELED)
+    {
+      puts ("4th thread not canceled");
+      return 1;
+    }
+
+  if (cl_called == 0)
+    {
+      printf ("tf2 cleanup handler not called\n");
+      return 1;
+    }
+  if (cl_called > 1)
+    {
+      printf ("tf2 cleanup handler called more than once\n");
       return 1;
     }
 

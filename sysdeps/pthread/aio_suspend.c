@@ -141,7 +141,7 @@ aio_suspend (list, nent, timeout)
 	  .nent = nent
 	};
 
-      __libc_cleanup_region_start (1, cleanup, &clparam);
+      pthread_cleanup_push (cleanup, &clparam);
 
       if (timeout == NULL)
 	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
@@ -165,7 +165,7 @@ aio_suspend (list, nent, timeout)
 					   &abstime);
 	}
 
-      __libc_cleanup_region_end (0);
+      pthread_cleanup_pop (0);
     }
 
   /* Now remove the entry in the waiting list for all requests
@@ -199,8 +199,8 @@ aio_suspend (list, nent, timeout)
 	 form expected from `aio_suspend'.  */
       if (result == ETIMEDOUT)
 	__set_errno (EAGAIN);
-      else if (result == EINTR)
-	__set_errno (EINTR);
+      else
+	__set_errno (result);
 
       result = -1;
     }
