@@ -1,5 +1,14 @@
 2004-11-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd-client.h (libc_locked_map_ptr): Add new first
+	parameter, used as class for definition.
+	* nscd/nscd_getpw_r.c: Adjust for libc_locked_map_ptr change.
+	(pw_map_free): Ensure no crash after memory is freed.
+	* nscd/nscd_getgr.c: Likewise.  Make map externally visible.
+	* nscd/nscd_gethst.c: Likewise.
+	* nscd/nscd_getai.c: Use map from nscd_gethost.c.
+	* nscd/nscd_initgroups.c: Use map from nscd_getgr.c.
+
 	* nscd/nscd_getai.c: Add some checks to detect corrupt databases.
 	* nscd/nscd_getgr_r.c: Likewise
 	* nscd/nscd_gethst_r.c: Likewise.

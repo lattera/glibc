@@ -264,7 +264,7 @@ struct locked_map_ptr
   int lock;
   struct mapped_database *mapped;
 };
-#define libc_locked_map_ptr(name) static struct locked_map_ptr name
+#define libc_locked_map_ptr(class, name) class struct locked_map_ptr name
 
 
 /* Open socket connection to nscd server.  */

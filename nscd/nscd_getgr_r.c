@@ -204,7 +204,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       else
 	/* We already have the data.  Just copy the group name and
 	   password.  */
-	memcpy (resultbuf->gr_name, gr_name, gr_name_len);
+	memcpy (resultbuf->gr_name, gr_name,
+		gr_resp->gr_name_len + gr_resp->gr_passwd_len);
 
       /* Clear the terminating entry.  */
       resultbuf->gr_mem[gr_resp->gr_mem_cnt] = NULL;
@@ -241,6 +242,19 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	{
 	  /* Copy the group member names.  */
 	  memcpy (resultbuf->gr_mem[0], gr_name + gr_name_len, total_len);
+
+	  /* Try to detect corrupt databases.  */
+	  if (resultbuf->gr_name[gr_name_len - 1] != '\0'
+	      || resultbuf->gr_passwd[gr_resp->gr_passwd_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < gr_resp->gr_mem_cnt; ++cnt)
+		     if (resultbuf->gr_mem[cnt][len[cnt] - 1] != '\0')
+		       break;
+	  	   cnt < gr_resp->gr_mem_cnt; }))
+	    {
+	      /* We cannot use the database.  */
+	      retval = -1;
+	      goto out_close;
+	    }
 
 	  *result = resultbuf;
 	}

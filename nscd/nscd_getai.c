@@ -142,6 +142,12 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 	  /* Copy the data in the block.  */
 	  memcpy (resultbuf + 1, respdata, datalen);
 
+	  /* Try to detect corrupt databases.  */
+	  if (resultbuf->canon != NULL
+	      && resultbuf->canon[ai_resp->canonlen - 1] != '\0')
+	    /* We cannot use the database.  */
+	    goto out_close;
+
 	  retval = 0;
 	  *result = resultbuf;
 	}
@@ -157,6 +163,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
       retval = 0;
     }
 
+ out_close:
   if (sock != -1)
     close_not_cancel_no_status (sock);
  out:

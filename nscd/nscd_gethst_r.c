@@ -336,6 +336,16 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  memcpy (resultbuf->h_aliases[0],
 		  (const char *) addr_list + addr_list_len, total_len);
 
+	  /* Try to detect corrupt databases.  */
+	  if (resultbuf->h_name[hst_resp->h_name_len - 1] != '\0'
+	      || ({for (cnt = 0; cnt < hst_resp->h_aliases_cnt; ++cnt)
+		     if (resultbuf->h_aliases[cnt][aliases_len[cnt] - 1]
+			 != '\0')
+		       break;
+		   cnt < hst_resp->h_aliases_cnt; }))
+	    /* We cannot use the database.  */
+	    goto out_close;
+
 	  retval = 0;
 	  *result = resultbuf;
 	}
