@@ -1,5 +1,14 @@
 2001-01-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): If HAVE_AUX_XID is
+	defined don't look whether the AT_*ID values were set.
+	If HAVE_AUX_PAGESIZE is defined don't look whether the pagesize is set.
+	(_dl_show_auxv): Rewrite to avoid switch statement.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_AT_PAGESIZE for kernel >= 2.4.1.
+	* sysdeps/unix/sysv/linux/ldsodefs.h: Define HAVE_AUX_XID.
+	Define HAVE_AUX_PAGESIZE if __ASSUME_AT_PAGESIZE is defined.
+
 	* sysdeps/unix/sysv/linux/fxstat64.c: Add one __builtin_expect.
 	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
 	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.

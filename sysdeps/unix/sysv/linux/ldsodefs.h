@@ -19,6 +19,8 @@
 
 #ifndef	_LDSODEFS_H
 
+#include "kernel-features.h"
+
 /* Get the real definitions.  */
 #include_next <ldsodefs.h>
 
@@ -29,5 +31,15 @@
 
 /* Used by static binaries to check the auxiliary vector.  */
 extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
+
+/* We can assume that the kernel always provides the AT_UID, AT_EUID,
+   AT_GID, and AT_EGID values in the auxiliary vector.  */
+#define HAVE_AUX_XID
+
+/* Starting with one of the 2.4.0 pre-releases the Linux kernel passes
+   up the page size information.  */
+#if __ASSUME_AT_PAGESIZE
+# define HAVE_AUX_PAGESIZE
+#endif
 
 #endif /* ldsodefs.h */

@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -156,4 +156,10 @@
    Be safe, use 2.3.99.  */
 #if __LINUX_KERNEL_VERSION >= 131939
 # define __ASSUME_O_DIRECTORY	1
+#endif
+
+/* Starting with one of the 2.4.0 pre-releases the Linux kernel passes
+   up the page size information.  */
+#if __LINUX_KERNEL_VERSION >= 132097
+# define __ASSUME_AT_PAGESIZE	1
 #endif

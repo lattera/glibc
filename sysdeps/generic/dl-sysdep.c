@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -87,16 +88,16 @@ _dl_sysdep_start (void **start_argptr,
   uid_t euid = 0;
   gid_t gid = 0;
   gid_t egid = 0;
-  unsigned int seen;
+#ifndef HAVE_AUX_X
+  unsigned int seen = 0;
+# define M(type) (1 << (type))
+#endif
 
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
 			  _dl_auxv);
 
   user_entry = (ElfW(Addr)) &ENTRY_POINT;
   _dl_platform = NULL; /* Default to nothing known about the platform.  */
-
-  seen = 0;
-#define M(type) (1 << (type))
 
   for (av = _dl_auxv; av->a_type != AT_NULL; seen |= M ((++av)->a_type))
     switch (av->a_type)
@@ -149,16 +150,20 @@ _dl_sysdep_start (void **start_argptr,
   /* Linux doesn't provide us with any of these values on the stack
      when the dynamic linker is run directly as a program.  */
 
-#define SEE(UID, uid) if ((seen & M (AT_##UID)) == 0) uid = __get##uid ()
+#ifndef HAVE_AUX_XID
+# define SEE(UID, uid) if ((seen & M (AT_##UID)) == 0) uid = __get##uid ()
   SEE (UID, uid);
   SEE (GID, gid);
   SEE (EUID, euid);
   SEE (EGID, egid);
+#endif
 
   __libc_enable_secure = uid != euid || gid != egid;
 
+#ifndef HAVE_AUX_PAGESIZE
   if (_dl_pagesize == 0)
     _dl_pagesize = __getpagesize ();
+#endif
 
 #ifdef DL_SYSDEP_INIT
   DL_SYSDEP_INIT;
@@ -206,87 +211,56 @@ _dl_show_auxv (void)
   /* Terminate string.  */
   buf[63] = '\0';
 
+  /* The following code assumes that the AT_* values are encoded
+  starting from 0 with AT_NULL, 1 for AT_IGNORE, and all other values
+  close by (otherwise the array will be too large).  In case we have
+  to support a platform where these requirements are not fulfilled
+  some alternative implementation has to be used.  */
   for (av = _dl_auxv; av->a_type != AT_NULL; ++av)
-    switch (av->a_type)
+    {
+      static const struct
       {
-      case AT_PHDR:
-	_dl_sysdep_message ("AT_PHDR:     0x",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					16, 0),
-			    "\n", NULL);
-	break;
-      case AT_PHNUM:
-	_dl_sysdep_message ("AT_PHNUM:    ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      case AT_PAGESZ:
-	_dl_sysdep_message ("AT_PAGESZ:   ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      case AT_ENTRY:
-	_dl_sysdep_message ("AT_ENTRY:    0x",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					16, 0),
-			    "\n", NULL);
-	break;
-      case AT_BASE:
-	_dl_sysdep_message ("AT_BASE:     0x",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					16, 0),
-			    "\n", NULL);
-	break;
-      case AT_UID:
-	_dl_sysdep_message ("AT_UID:      ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      case AT_GID:
-	_dl_sysdep_message ("AT_GID:      ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      case AT_EUID:
-	_dl_sysdep_message ("AT_EUID:     ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      case AT_EGID:
-	_dl_sysdep_message ("AT_EGID:     ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      case AT_PLATFORM:
-	_dl_sysdep_message ("AT_PLATFORM: ", av->a_un.a_ptr, "\n", NULL);
-	break;
-      case AT_HWCAP:
-	_dl_hwcap = av->a_un.a_val;
-	if (_dl_procinfo (_dl_hwcap) < 0)
-	  _dl_sysdep_message ("AT_HWCAP:  ",
-			      _itoa_word (_dl_hwcap, buf + sizeof buf - 1,
-					  16, 0),
-			      "\n", NULL);
-	break;
-      case AT_CLKTCK:
-	_dl_sysdep_message ("AT_CLKTCK:   ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      case AT_FPUCW:
-	_dl_sysdep_message ("AT_FPUCW:    ",
-			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					10, 0),
-			    "\n", NULL);
-	break;
-      }
+	const char label[16];
+	enum { dec, hex, str } form;
+      } auxvars[] =
+	{
+	  [AT_EXECFD - 2] =   { "AT_EXECFD:   ", dec },
+	  [AT_PHDR - 2] =     { "AT_PHDR:     0x", hex },
+	  [AT_PHENT - 2] =    { "AT_PHENT:    ", dec },
+	  [AT_PHNUM - 2] =    { "AT_PHNUM:    ", dec },
+	  [AT_PAGESZ - 2] =   { "AT_PAGESZ:   ", dec },
+	  [AT_BASE - 2] =     { "AT_BASE:     0x", hex },
+	  [AT_FLAGS - 2] =    { "AT_FLAGS:    0x", hex },
+	  [AT_ENTRY - 2] =    { "AT_ENTRY:    0x", hex },
+	  [AT_NOTELF - 2] =   { "AT_NOTELF:   ", hex },
+	  [AT_UID - 2] =      { "AT_UID:      ", dec },
+	  [AT_EUID - 2] =     { "AT_EUID:     ", dec },
+	  [AT_GID - 2] =      { "AT_GID:      ", dec },
+	  [AT_EGID - 2] =     { "AT_EGID:     ", dec },
+	  [AT_PLATFORM - 2] = { "AT_PLATFORM: ", str },
+	  [AT_HWCAP - 2] =    { "AT_HWCAP:    ", hex },
+	  [AT_CLKTCK - 2] =   { "AT_CLKTCK:   ", dec },
+	  [AT_FPUCW - 2] =    { "AT_FPUCW:    ", hex }
+	};
+      unsigned int idx = (unsigned int) (av->a_type - 2);
+
+      assert (AT_NULL == 0);
+      assert (AT_IGNORE == 1);
+      if (idx < sizeof (auxvars) / sizeof (auxvars[0]))
+	{
+	  if (av->a_type != AT_HWCAP || _dl_procinfo (av->a_un.a_val) < 0)
+	    {
+	      const char *val = av->a_un.a_ptr;
+
+	      if (__builtin_expect (auxvars[idx].form, dec) == dec)
+		val = _itoa_word (av->a_un.a_val, buf + sizeof buf - 1, 10, 0);
+	      else if (__builtin_expect (auxvars[idx].form, hex) == hex)
+		val = _itoa_word (av->a_un.a_val, buf + sizeof buf - 1, 16, 0);
+
+	      _dl_sysdep_message (auxvars[idx].label, val, "\n", NULL);
+	    }
+	}
+    }
 }
 
 
