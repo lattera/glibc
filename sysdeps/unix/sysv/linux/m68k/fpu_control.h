@@ -80,11 +80,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Now two recommended fpucr */
 
-/* Linux default:
-     - extended precision
-     - rounding to nearest
-     - exceptions on overflow, zero divide and NaN */
-#define _FPU_DEFAULT  0x00005400
+/* The fdlibm code requires no interrupts for exceptions.  Don't
+   change the rounding mode, it would break long double I/O!  */
+#define _FPU_DEFAULT  0x00000000
 
 /* IEEE:  same as above, but exceptions.  We must make it non-zero so
    that __setfpucw works.  This bit will be ignored.  */
