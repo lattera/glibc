@@ -574,7 +574,7 @@ _dl_init_paths (const char *llp)
    the compiled did so all the time.  This increased the code size for
    absolutely no good reason.  */
 #define LOSE(code, s) lose (code, fd, name, realname, l, s)
-static void volatile
+static void
 __attribute__ ((noreturn))
 lose (int code, int fd, const char *name, char *realname, struct link_map *l,
       const char *msg)
