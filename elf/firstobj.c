@@ -1,5 +1,7 @@
 #include <errno.h>
 
+extern int foo (void);
+
 int
 foo (void)
 {
