@@ -188,7 +188,7 @@ int sigwait(const sigset_t * set, int * sig)
      signals in set is unspecified." */
   sigfillset(&mask);
   sigdelset(&mask, __pthread_sig_cancel);
-  for (s = 1; s <= NSIG; s++) {
+  for (s = 1; s < NSIG; s++) {
     if (sigismember(set, s) &&
         s != __pthread_sig_restart &&
         s != __pthread_sig_cancel &&
@@ -198,7 +198,7 @@ int sigwait(const sigset_t * set, int * sig)
           sighandler[s].old == (arch_sighandler_t) SIG_DFL ||
           sighandler[s].old == (arch_sighandler_t) SIG_IGN) {
         sa.sa_handler = pthread_null_sighandler;
-        sigemptyset(&sa.sa_mask);
+        sigfillset(&sa.sa_mask);
         sa.sa_flags = 0;
         sigaction(s, &sa, NULL);
       }

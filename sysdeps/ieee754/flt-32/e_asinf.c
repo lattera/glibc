@@ -13,6 +13,12 @@
  * ====================================================
  */
 
+/*
+  Single precision expansion contributed by
+  Stephen L. Moshier <moshier@na-net.ornl.gov>
+*/
+
+
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: e_asinf.c,v 1.5 1995/05/12 04:57:25 jtc Exp $";
 #endif
@@ -27,20 +33,19 @@ static float
 #endif
 one =  1.0000000000e+00, /* 0x3F800000 */
 huge =  1.000e+30,
-pio2_hi =  1.5707962513e+00, /* 0x3fc90fda */
-pio2_lo =  7.5497894159e-08, /* 0x33a22168 */
-pio4_hi =  7.8539818525e-01, /* 0x3f490fdb */
-	/* coefficient for R(x^2) */
-pS0 =  1.6666667163e-01, /* 0x3e2aaaab */
-pS1 = -3.2556581497e-01, /* 0xbea6b090 */
-pS2 =  2.0121252537e-01, /* 0x3e4e0aa8 */
-pS3 = -4.0055535734e-02, /* 0xbd241146 */
-pS4 =  7.9153501429e-04, /* 0x3a4f7f04 */
-pS5 =  3.4793309169e-05, /* 0x3811ef08 */
-qS1 = -2.4033949375e+00, /* 0xc019d139 */
-qS2 =  2.0209457874e+00, /* 0x4001572d */
-qS3 = -6.8828397989e-01, /* 0xbf303361 */
-qS4 =  7.7038154006e-02; /* 0x3d9dc62e */
+
+pio2_hi = 1.57079637050628662109375f,
+pio2_lo = -4.37113900018624283e-8f,
+pio4_hi = 0.785398185253143310546875f,
+
+/* asin x = x + x^3 p(x^2)
+   -0.5 <= x <= 0.5;
+   Peak relative error 4.8e-9 */
+p0 = 1.666675248e-1f,
+p1 = 7.495297643e-2f,
+p2 = 4.547037598e-2f,
+p3 = 2.417951451e-2f,
+p4 = 4.216630880e-2f;
 
 #ifdef __STDC__
 	float __ieee754_asinf(float x)
@@ -63,30 +68,26 @@ qS4 =  7.7038154006e-02; /* 0x3d9dc62e */
 		if(huge+x>one) return x;/* return x with inexact if x!=0*/
 	    } else {
 		t = x*x;
-		p = t*(pS0+t*(pS1+t*(pS2+t*(pS3+t*(pS4+t*pS5)))));
-		q = one+t*(qS1+t*(qS2+t*(qS3+t*qS4)));
-		w = p/q;
+		w = t * (p0 + t * (p1 + t * (p2 + t * (p3 + t * p4))));
 		return x+x*w;
 	    }
 	}
 	/* 1> |x|>= 0.5 */
 	w = one-fabsf(x);
-	t = w*(float)0.5;
-	p = t*(pS0+t*(pS1+t*(pS2+t*(pS3+t*(pS4+t*pS5)))));
-	q = one+t*(qS1+t*(qS2+t*(qS3+t*qS4)));
+	t = w*0.5f;
+	p = t * (p0 + t * (p1 + t * (p2 + t * (p3 + t * p4))));
 	s = __ieee754_sqrtf(t);
 	if(ix>=0x3F79999A) { 	/* if |x| > 0.975 */
-	    w = p/q;
-	    t = pio2_hi-((float)2.0*(s+s*w)-pio2_lo);
+	    t = pio2_hi-(2.0f*(s+s*p)-pio2_lo);
 	} else {
 	    int32_t iw;
 	    w  = s;
 	    GET_FLOAT_WORD(iw,w);
 	    SET_FLOAT_WORD(w,iw&0xfffff000);
 	    c  = (t-w*w)/(s+w);
-	    r  = p/q;
-	    p  = (float)2.0*s*r-(pio2_lo-(float)2.0*c);
-	    q  = pio4_hi-(float)2.0*w;
+	    r  = p;
+	    p  = 2.0f*s*r-(pio2_lo-2.0f*c);
+	    q  = pio4_hi-2.0f*w;
 	    t  = pio4_hi-(p-q);
 	}
 	if(hx>0) return t; else return -t;

@@ -1,4 +1,13 @@
+2001-04-16  Stephen L Moshier  <moshier@mediaone.net>
+
+	* sysdeps/ieee754/flt-32/e_asinf.c (pio2_hi, pio2_lo, pio4_hi):
+	Correct the values. (pSx, qSx): Replace by shorter approximation.
+	Use f suffix on float constants.
+
 2001-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: New file.
+	Contributed by Stephen L Moshier <moshier@mediaone.net>.
 
 	* string/string.h: Replace const in attribute list with __const__.
 
