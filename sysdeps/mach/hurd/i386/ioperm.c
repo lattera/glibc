@@ -36,7 +36,7 @@ ioperm (unsigned long int from, unsigned long int num, int turn_on)
   if (! err)
     {
       io_perm_t perm;
-      err = __i386_io_perm_create (devmaster, from, from + num, &perm);
+      err = __i386_io_perm_create (devmaster, from, from + num - 1, &perm);
       __mach_port_deallocate (__mach_task_self (), devmaster);
       if (! err)
 	{
