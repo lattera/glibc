@@ -42,7 +42,7 @@ __BEGIN_DECLS
 # include <bits/time.h>
 
 /* This is the obsolete POSIX.1-1988 name for the same constant.  */
-# if defined __USE_POSIX && !defined __USE_XOPEN2K
+# if !defined __STRICT_ANSI__ && !defined __USE_XOPEN2K
 #  ifndef CLK_TCK
 #   define CLK_TCK	CLOCKS_PER_SEC
 #  endif
