@@ -25,10 +25,9 @@
 #include "../kernel-features.h"
 
 
-# if __ASSUME_FCNTL64 == 0
+#if __ASSUME_FCNTL64 == 0
 /* This variable is shared with all files that check for fcntl64.  */
-int __have_no_fcntl64;
-# endif
+static int __have_no_fcntl64;
 #endif
 
 int
@@ -65,14 +64,14 @@ __libc_fcntl (int fd, int cmd, ...)
 
 	fl.l_start = (off_t)fl64->l_start;
 	/* Check if we can represent the values with the smaller type.  */
-	if ((off64_t)fl.l_start != fl64->l_start)
+	if ((off64_t) fl.l_start != fl64->l_start)
 	  {
 	    __set_errno (EOVERFLOW);
 	    return -1;
 	  }
-	fl.l_len = (off_t)fl64->l_len;
+	fl.l_len = (off_t) fl64->l_len;
 	/* Check if we can represent the values with the smaller type.  */
-	if ((off64_t)fl.l_len != fl64->l_len)
+	if ((off64_t) fl.l_len != fl64->l_len)
 	  {
 	    __set_errno (EOVERFLOW);
 	    return -1;
@@ -99,16 +98,17 @@ __libc_fcntl (int fd, int cmd, ...)
       {
 	struct flock fl;
 	struct flock64 *fl64 = arg;
-	fl.l_start = (off_t)fl64->l_start;
+
+	fl.l_start = (off_t) fl64->l_start;
 	/* Check if we can represent the values with the smaller type.  */
-	if ((off64_t)fl.l_start != fl64->l_start)
+	if ((off64_t) fl.l_start != fl64->l_start)
 	  {
 	    __set_errno (EOVERFLOW);
 	    return -1;
 	  }
 	fl.l_len = (off_t)fl64->l_len;
 	/* Check if we can represent the values with the smaller type.  */
-	if ((off64_t)fl.l_len != fl64->l_len)
+	if ((off64_t) fl.l_len != fl64->l_len)
 	  {
 	    __set_errno (EOVERFLOW);
 	    return -1;
