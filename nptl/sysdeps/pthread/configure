@@ -6,6 +6,13 @@ echo "$as_me: error: compiler support for __thread is required" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
+if test "x${libc_cv_visibility_attribute}" != xyes ||
+   test "x${libc_cv_broken_visibility_attribute}" != xno; then
+  { { echo "$as_me:$LINENO: error: working compiler support for visibility attribute is required" >&5
+echo "$as_me: error: working compiler support for visibility attribute is required" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
 if test "x$libc_cv_asm_cfi_directives" != xyes; then
     case "$base_machine" in
     i386 | x86_64 | powerpc | s390)

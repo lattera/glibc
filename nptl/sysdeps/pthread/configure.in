@@ -5,6 +5,11 @@ if test "x$libc_cv_gcc___thread" != xyes; then
   AC_MSG_ERROR(compiler support for __thread is required)
 fi
 
+if test "x${libc_cv_visibility_attribute}" != xyes ||
+   test "x${libc_cv_broken_visibility_attribute}" != xno; then
+  AC_MSG_ERROR(working compiler support for visibility attribute is required)
+fi
+
 if test "x$libc_cv_asm_cfi_directives" != xyes; then
   dnl We need this only for some architectures.
   case "$base_machine" in
