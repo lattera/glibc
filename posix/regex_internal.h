@@ -379,9 +379,9 @@ static unsigned int re_string_context_at (const re_string_t *input, int idx,
 #define re_string_fetch_byte_case(pstr) \
   ((pstr)->mbs_case[(pstr)->cur_idx++])
 #define re_string_first_byte(pstr, idx) \
-  ((idx) == (pstr)->len || (pstr)->wcs[idx] != WEOF)
+  ((idx) == (pstr)->valid_len || (pstr)->wcs[idx] != WEOF)
 #define re_string_is_single_byte_char(pstr, idx) \
-  ((pstr)->wcs[idx] != WEOF && ((pstr)->len == (idx) \
+  ((pstr)->wcs[idx] != WEOF && ((pstr)->valid_len == (idx) \
 				|| (pstr)->wcs[(idx) + 1] != WEOF))
 #define re_string_eoi(pstr) ((pstr)->stop <= (pstr)->cur_idx)
 #define re_string_cur_idx(pstr) ((pstr)->cur_idx)
