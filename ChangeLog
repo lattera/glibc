@@ -1,5 +1,8 @@
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Set FD_CLOEXEC
+	for descriptor.
+
 	* misc/sys/mman.h: Add prototypes for shm_open and shm_unlink.
 	* rt/Makefile (librt-routines): Add shm_open and shm_unlink.
 	* rt/Versions [librt] (GLIBC_2.2): Add shm_open and shm_unlink.

@@ -121,6 +121,7 @@ shm_open (const char *name, int oflag, mode_t mode)
 {
   size_t namelen;
   char *fname;
+  int fd;
 
   /* Determine where the shmfs is mounted.  */
   __libc_once (once, where_is_shmfs);
@@ -153,7 +154,29 @@ shm_open (const char *name, int oflag, mode_t mode)
      file on the shmfs.  If this is what should be done the whole function
      should be revamped since we can determine whether shmfs is available
      while trying to open the file, all in one turn.  */
-  return open (fname, oflag, mode);
+  fd = open (fname, oflag, mode);
+  if (fd != -1)
+    {
+      /* We got a descriptor.  Now set the FD_CLOEXEC bit.  */
+      int flags = fcntl (fd, F_GETFD, 0);
+
+      if (__builtin_expect (flags, 0) >= 0)
+	{
+	  flags |= FD_CLOEXEC;
+	  flags = fcntl (fd, F_SETFD, flags);
+	}
+
+      if (flags == -1)
+	{
+	  /* Something went wrong.  We cannot return the descriptor.  */
+	  int save_errno = errno;
+	  close (fd);
+	  fd = -1;
+	  __set_errno (save_errno);
+	}
+    }
+
+  return fd;
 }
 
 
