@@ -37,6 +37,7 @@
   .Lpseudo_cancel:							      \
     CENABLE;								      \
     DOCARGS_##args							      \
+    move.l %d0, -(%sp);							      \
     move.l &SYS_ify (syscall_name), %d0;				      \
     trap &0;								      \
     move.l %d0, %d2;							      \

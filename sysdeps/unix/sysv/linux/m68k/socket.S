@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 #define P(a, b) P2(a, b)
@@ -41,6 +41,10 @@
 
 .globl __socket
 ENTRY (__socket)
+#if defined NEED_CANCELLATION && defined CENABLE
+	SINGLE_THREAD_P
+	jne 1f
+#endif
 
 	/* Save registers.  */
 	move.l %d2, %a0
@@ -64,6 +68,42 @@ ENTRY (__socket)
 
 	/* Successful; return the syscall's value.  */
 	rts
+
+#if defined NEED_CANCELLATION && defined CENABLE
+1:	/* Enable asynchronous cancellation.  */
+	CENABLE
+
+	/* Save registers.  */
+	move.l %d2, -(%sp)
+	move.l %d0, -(%sp)
+
+	move.l #SYS_ify (socketcall), %d0 /* System call number in %d0.  */
+
+	/* Use ## so `socket' is a separate token that might be #define'd.  */
+	move.l #P (SOCKOP_,socket), %d1	/* Subcode is first arg to syscall.  */
+	lea 4+8(%sp), %a1		/* Address of args is 2nd arg.  */
+	move.l %a1, %d2
+
+	/* Do the system call trap.  */
+	trap #0
+
+	/* Restore cancellation.  */
+	move.l %d0, %d2
+	CDISABLE
+	addq.l #4, %sp
+	move.l %d2, %d0
+
+	/* Restore registers.  */
+	move.l (%sp)+, %d2
+
+	/* %d0 is < 0 if there was an error.  */
+	tst.l %d0
+	jmi SYSCALL_ERROR_LABEL
+
+	/* Successful; return the syscall's value.  */
+	rts
+#endif
+	
 PSEUDO_END (__socket)
 
 #ifndef NO_WEAK_ALIAS
