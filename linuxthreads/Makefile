@@ -121,13 +121,23 @@ endif
 
 ifeq (yes,$(build-shared))
 tests-nodelete-yes = unload
-tests += tst-_res1
+tests += tst-tls1 tst-_res1
 endif
 
-modules-names = tst-_res1mod1 tst-_res1mod2
+modules-names = tst-_res1mod1 tst-_res1mod2 \
+		tst-tls1mod tst-tls1moda tst-tls1modb tst-tls1modc \
+		tst-tls1modd tst-tls1mode tst-tls1modf
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+
+tst-tls1mod.so-no-z-defs = yes
+tst-tls1moda.so-no-z-defs = yes
+tst-tls1modb.so-no-z-defs = yes
+tst-tls1modc.so-no-z-defs = yes
+tst-tls1modd.so-no-z-defs = yes
+tst-tls1mode.so-no-z-defs = yes
+tst-tls1modf.so-no-z-defs = yes
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 	$(build-module)
@@ -305,6 +315,16 @@ endif
 ifeq (yes,$(build-shared))
 $(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
 $(objpfx)tst-_res1: $(objpfx)tst-_res1mod2.so $(shared-thread-library)
+
+$(objpfx)tst-tls1: $(objpfx)tst-tls1mod.so $(shared-thread-library)
+
+tests: $(objpfx)tst-tls2.out
+$(objpfx)tst-tls2.out: tst-tls2.sh $(objpfx)tst-tls1 \
+		       $(objpfx)tst-tls1moda.so $(objpfx)tst-tls1modb.so \
+		       $(objpfx)tst-tls1modc.so $(objpfx)tst-tls1modd.so \
+		       $(objpfx)tst-tls1mode.so $(objpfx)tst-tls1modf.so
+	$(SHELL) -e tst-tls2.sh $(common-objpfx) $(elf-objpfx) \
+		    $(rtld-installed-name)
 endif
 
 ifeq (no,$(cross-compiling))
