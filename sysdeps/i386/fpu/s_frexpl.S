@@ -32,6 +32,12 @@
 	ASM_TYPE_DIRECTIVE(two64,@object)
 two64:	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x43
 	ASM_SIZE_DIRECTIVE(two64)
+	/* The following is LDBL_MAX / ldexp (1.0, 64), the largest
+	   number we can handle the normal way.  */
+	ASM_TYPE_DIRECTIVE(largest,@object)
+largest:
+	.byte 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xbe, 0x7f, 0, 0
+	ASM_SIZE_DIRECTIVE(largest)
 
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%edx)
@@ -63,12 +69,16 @@ ENTRY (BP_SYM (__frexpl))
 	cmpl	$0, %eax
 	je	2f
 
+	cmpl	$0x7fbe, %eax
+	ja	4f
+
 	fldt	VAL0(%esp)
 #ifdef	PIC
 	call	3f
 3:	popl	%edx
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-3b], %edx
 #endif
+
 	fmull	MO(two64)	/* It's not necessary to use a 80bit factor */
 	movl	$-64, %ecx
 	fstpt	VAL0(%esp)
@@ -92,5 +102,15 @@ ENTRY (BP_SYM (__frexpl))
 
 	LEAVE
 	ret
+
+4:	movl	VAL2(%esp), %ecx
+	movl	%ecx, %edx
+	andl	$0x7fff, %ecx
+
+	andl	$0x8000, %edx
+	subl	$16382, %ecx
+	orl	$0x3ffe, %edx
+	movl	%edx, VAL2(%esp)
+	jmp	1b
 END (BP_SYM (__frexpl))
 weak_alias (BP_SYM (__frexpl), BP_SYM (frexpl))

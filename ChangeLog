@@ -1,3 +1,9 @@
+2000-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/test-misc.c (main): Add tests for frexp.
+	Reported by Fred J. Tydeman <tydeman@tybor.com>.
+	* sysdeps/i386/fpu/s_frexpl.S: Don't overflow during the computation.
+
 2000-12-02  H.J. Lu  <hjl@gnu.org>
 
 	* locale/lc-time.c (_nl_init_era_entries): Pass L'\0' instead of

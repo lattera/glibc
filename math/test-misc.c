@@ -39,6 +39,43 @@ main (void)
 	result = 1;
       }
   }
+
+# if __GNUC__ >= 3 || __GNUC_MINOR__ >= 96
+  {
+    long double x = LDBL_MAX / ldexpl (1.0L, LDBL_MANT_DIG + 1);
+    long double m;
+    int i;
+
+#  if LDBL_MANT_DIG == 64
+    m = 0xf.fffffffffffffffp-4L;
+#  else
+#   error "Please adjust"
+#  endif
+
+    for (i = 0; i < LDBL_MANT_DIG + 1; ++i, x *= 2.0L)
+      {
+	long double r;
+	int e;
+
+	printf ("2^%d: ", LDBL_MAX_EXP - (LDBL_MANT_DIG + 1) + i);
+
+	r = frexpl (x, &e);
+	if (r != m)
+	  {
+	    printf ("mantissa incorrect: %.20La\n", r);
+	    result = 1;
+	    continue;
+	  }
+	if (e != LDBL_MAX_EXP - (LDBL_MANT_DIG + 1) + i)
+	  {
+	    printf ("exponent wrong %d (%.20Lg)\n", e, x);
+	    result = 1;
+	    continue;
+	  }
+	puts ("ok");
+      }
+  }
+# endif
 #endif
 
   {
