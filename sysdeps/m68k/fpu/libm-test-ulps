@@ -219,10 +219,6 @@ float: 1
 ifloat: 1
 ildouble: 19
 ldouble: 19
-Test "Real part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
-ifloat: 3
-Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
-ifloat: 2
 Test "Real part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 float: 3
 ifloat: 3
@@ -648,8 +644,6 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
-ifloat: 1
 Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
 double: 0.2758
 float: 0.3667
@@ -829,11 +823,147 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 
+Function: Real part of "cacos":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "cacos":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "cacosh":
+double: 1
+float: 7
+idouble: 1
+ifloat: 7
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "cacosh":
+double: 1
+idouble: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "casin":
+double: 3
+float: 2
+idouble: 3
+ifloat: 2
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "casin":
+float: 2
+ifloat: 2
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "casinh":
+double: 6
+float: 19
+idouble: 6
+ifloat: 19
+ildouble: 6
+ldouble: 6
+
+Function: Imaginary part of "casinh":
+double: 13
+float: 2
+idouble: 13
+ifloat: 2
+ildouble: 7
+ldouble: 7
+
+Function: Real part of "catan":
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "catan":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 7
+ldouble: 7
+
+Function: Real part of "catanh":
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "catanh":
+ildouble: 2
+ldouble: 2
+
 Function: "cbrt":
 double: 1
 idouble: 1
 ildouble: 948
 ldouble: 948
+
+Function: Real part of "ccos":
+float: 1
+ifloat: 1
+
+Function: Imaginary part of "ccos":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "ccosh":
+double: 1
+float: 3
+idouble: 1
+ifloat: 3
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "ccosh":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "cexp":
+float: 3
+ifloat: 3
+ildouble: 5
+ldouble: 5
+
+Function: Imaginary part of "cexp":
+float: 2
+ifloat: 2
+ildouble: 19
+ldouble: 19
+
+Function: Imaginary part of "clog":
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "clog10":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "clog10":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 3
+ldouble: 3
 
 Function: "cos":
 double: 2
@@ -849,11 +979,73 @@ ldouble: 2
 
 Function: Real part of "cpow":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "cpow":
 double: 1.103
+float: 6
 idouble: 1.103
+ifloat: 6
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "csin":
+float: 1
+ifloat: 1
+
+Function: Imaginary part of "csin":
+float: 1
+ifloat: 1
+
+Function: Real part of "csinh":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "csinh":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "csqrt":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
+
+Function: Imaginary part of "csqrt":
+ildouble: 1
+ldouble: 1
+
+Function: Real part of "ctan":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+ildouble: 439
+ldouble: 439
+
+Function: Imaginary part of "ctan":
+ildouble: 2
+ldouble: 2
+
+Function: Real part of "ctanh":
+float: 1
+ifloat: 1
+ildouble: 2
+ldouble: 2
+
+Function: Imaginary part of "ctanh":
+double: 1
+idouble: 1
+ildouble: 25
+ldouble: 25
 
 Function: "erfc":
 double: 24
