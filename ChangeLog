@@ -1,3 +1,8 @@
+2000-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_conf.c (add_module): Remove some unneeded code to
+	avoid adding double slashes.
+
 2000-08-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* dirent/dirent.h (alphasort, versionsort): Move __attribute_pure__

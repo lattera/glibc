@@ -276,9 +276,6 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
     return;
   if (module[0] == '/')
     dir_len = 0;
-  else
-    /* Increment by one for the slash.  */
-    ++dir_len;
 
   /* See whether we must add the ending.  */
   need_ext = 0;
@@ -318,11 +315,8 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
       if (dir_len == 0)
 	tmp = (char *) new_module->module_name;
       else
-	{
-	  tmp = __mempcpy ((char *) new_module->module_name,
-			   directory, dir_len - 1);
-	  *tmp++ = '/';
-	}
+	tmp = __mempcpy ((char *) new_module->module_name,
+			 directory, dir_len);
 
       tmp = __mempcpy (tmp, module, wp - module);
 
