@@ -1,3 +1,9 @@
+2004-10-25  Roland McGrath  <roland@redhat.com>
+
+	* nss/nss_files/files-parse.c (nss_files_parse_hidden_def): Define to
+	libnss_files_hidden_def, not hidden_def.  This file is also compiled
+	into libnss_hesiod by #include.
+
 2004-10-25  Roland McGrath  <roland@frob.com>
 
 	* configure.in (ASM_LINE_SEP): Move this setting to ...
