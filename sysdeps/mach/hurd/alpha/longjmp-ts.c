@@ -29,13 +29,13 @@ _hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
 {
   struct alpha_thread_state *ts = state;
 
-  ts->r9 = env[0].__9;
-  ts->r11 = env[0].__11;
-  ts->r12 = env[0].__12;
-  ts->r13 = env[0].__13;
-  ts->r14 = env[0].__14;
-  ts->r15 = (long int) env[0].__fp;
-  ts->r30 = (long int) env[0].__sp;
-  ts->pc = (long int) env[0].__pc;
+  ts->r9 = env[0].__jmpbuf[0].__9;
+  ts->r11 = env[0].__jmpbuf[0].__11;
+  ts->r12 = env[0].__jmpbuf[0].__12;
+  ts->r13 = env[0].__jmpbuf[0].__13;
+  ts->r14 = env[0].__jmpbuf[0].__14;
+  ts->r15 = (long int) env[0].__jmpbuf[0].__fp;
+  ts->r30 = (long int) env[0].__jmpbuf[0].__sp;
+  ts->pc = (long int) env[0].__jmpbuf[0].__pc;
   ts->r0 = val ?: 1;
 }
