@@ -1,3 +1,8 @@
+2003-10-09  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld.c (dl_main): Don't set l_name for sysinfo DSO, since there
+	is no file to name.
+
 2003-10-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Don't generate
