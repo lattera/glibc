@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1992-1999,2000,2001,2002,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ TEXI2PDF = texi2dvi --pdf
 
 ifneq ($(strip $(MAKEINFO)),:)
 all: info
-info: libc.info dir-add.info
+info: libc.info
 endif
 
 # scripts we use
@@ -74,7 +74,8 @@ examples = $(filter-out $(foreach d, $(add-ons), ../$d/%.c.texi), \
 chapters.% top-menu.%: libc-texinfo.sh $(texis) Makefile
 	AWK=$(AWK) $(SHELL) $< '$(chapters)' '$(add-chapters)' '$(appendices)'
 
-libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi libm-err.texi
+libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi dir-add.texi \
+			     libm-err.texi
 libc.dvi libc.pdf: texinfo.tex
 
 html: libc/index.html
@@ -91,11 +92,11 @@ stamp-summary: summary.awk $(filter-out summary.texi, $(texis))
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.info: xtract-typefun.awk $(texis)
-	(echo "INFO-DIR-SECTION GNU C library functions";		\
-	 echo "START-INFO-DIR-ENTRY";					\
+dir-add.texi: xtract-typefun.awk $(texis)
+	(echo "@dircategory GNU C library functions and macros";	\
+	 echo "@direntry";						\
 	 $(AWK) -f $^ | sort;						\
-	 echo "END-INFO-DIR-ENTRY") > $@.new
+	 echo "@end direntry") > $@.new
 	mv -f $@.new $@
 
 # The table with the math errors is generated.
@@ -134,7 +135,7 @@ minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
 doc-only-dist = Makefile COPYING.LIB
 distribute = $(minimal-dist) $(examples) stdio-fp.c	\
 	     libc.info* libc.?? libc.??s texinfo.tex	\
-	     xtract-typefun.awk dir-add.info dir libm-err-tab.pl
+	     xtract-typefun.awk dir-add.texi dir libm-err-tab.pl
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
@@ -163,14 +164,14 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
-	-rm -f libc.dvi libc.pdf libc.tmp libc.info* dir-add.info
+	-rm -f libc.dvi libc.pdf libc.tmp libc.info*
 	-rm -f $(objpfx)stubs $(objpfx)distinfo
 	-rm -f $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
 clean: mostlyclean
 distclean: clean
 indices = cp fn pg tp vr ky
 realclean: distclean
-	-rm -f texis summary.texi stamp-summary *.c.texi
+	-rm -f texis summary.texi stamp-summary *.c.texi dir-add.texi
 	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
 	-rm -f libc.log libc.aux libc.toc dir-add.texinfo
 	-rm -f top-menu.texi chapters.texi
@@ -178,27 +179,11 @@ realclean: distclean
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
 ifneq ($(strip $(MAKEINFO)),:)
-# There are two variants of install-info out there.  The GNU version
-# knows about the INFO-DIR-SECTION tag, the Debian version doesn't.
-ifneq ($(OLD_DEBIAN_INSTALL_INFO),yes)
-install: $(inst_infodir)/libc.info dir-add.info
+install: $(inst_infodir)/libc.info
 	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
 	 test -f $(inst_infodir)/dir || $(INSTALL_DATA) dir $(inst_infodir);\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
-	 $(INSTALL_INFO) --info-dir=$(inst_infodir) dir-add.info;\
 	else : ; fi
-else
-install: $(inst_infodir)/libc.info dir-add.info
-	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
-	  test -f $(inst_infodir)/dir || $(INSTALL_DATA) dir $(inst_infodir);\
-	 $(INSTALL_INFO) --info-dir=$(inst_infodir) \
-	     --section '^GNU Libraries:' 'GNU Libraries:' \
-	     $(inst_infodir)/libc.info;\
-	 $(INSTALL_INFO) --info-dir=$(inst_infodir) \
-	     --section '^GNU C Library functions:' 'GNU C Library functions:' \
-	     dir-add.info;\
-	else : ; fi
-endif
 endif
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;

@@ -312,7 +312,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi subdirs force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF CCVERSION SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO OLD_DEBIAN_INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_Bgroup ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie libc_cv_have_initfini libc_cv_cpp_asm_debuginfo no_whole_archive exceptions LIBGD EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi subdirs force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF CCVERSION SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_Bgroup ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie libc_cv_have_initfini libc_cv_cpp_asm_debuginfo no_whole_archive exceptions LIBGD EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -4553,41 +4553,6 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-if test "$INSTALL_INFO" != "no"; then
-echo "$as_me:$LINENO: checking for old Debian install-info" >&5
-echo $ECHO_N "checking for old Debian install-info... $ECHO_C" >&6
-if test "${libc_cv_old_debian_install_info+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  mkdir conftest.d
-  # There is a hard ^_ on the next line.  I am open to better ideas.
-  (echo ''
-  echo 'File: dir	Node: Top	This is the top of the INFO tree'
-  echo '* Menu:') >conftest.d/dir
-  (echo 'INFO-DIR-SECTION i-d-s works'
-  echo 'START-INFO-DIR-ENTRY'
-  echo '* Prog: (prog).   Program.'
-  echo 'END-INFO-DIR-ENTRY') >conftest.d/prog.info
-  if $INSTALL_INFO --info-dir=conftest.d conftest.d/prog.info >&5 2>&1
-  then
-    if grep -s 'i-d-s works' conftest.d/dir >/dev/null
-    then libc_cv_old_debian_install_info=no
-    else libc_cv_old_debian_install_info=yes
-    fi
-  else libc_cv_old_debian_install_info=no testfailed=t
-  fi
-  rm -fr conftest.d
-fi
-echo "$as_me:$LINENO: result: $libc_cv_old_debian_install_info" >&5
-echo "${ECHO_T}$libc_cv_old_debian_install_info" >&6
-if test -n "$testfailed"
-then { echo "$as_me:$LINENO: WARNING: install-info errored out, check config.log" >&5
-echo "$as_me: WARNING: install-info errored out, check config.log" >&2;}
-fi
-OLD_DEBIAN_INSTALL_INFO=$libc_cv_old_debian_install_info
-fi
-
-
 # Extract the first word of "bison", so it can be a program name with args.
 set dummy bison; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
@@ -7857,7 +7822,6 @@ s,@libc_cv_have_ksh@,$libc_cv_have_ksh,;t t
 s,@AWK@,$AWK,;t t
 s,@PERL@,$PERL,;t t
 s,@INSTALL_INFO@,$INSTALL_INFO,;t t
-s,@OLD_DEBIAN_INSTALL_INFO@,$OLD_DEBIAN_INSTALL_INFO,;t t
 s,@BISON@,$BISON,;t t
 s,@VERSIONING@,$VERSIONING,;t t
 s,@libc_cv_asm_protected_directive@,$libc_cv_asm_protected_directive,;t t

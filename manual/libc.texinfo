@@ -9,6 +9,7 @@
 @direntry
 * Libc: (libc).                 C library.
 @end direntry
+@include dir-add.texi
 
 @c This tells texinfo.tex to use the real section titles in xrefs in
 @c place of the node name, when no section title is explicitly given.
@@ -28,7 +29,7 @@ This file documents the GNU C library.
 This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
