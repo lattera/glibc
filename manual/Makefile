@@ -111,7 +111,7 @@ doc-only-dist = Makefile COPYING.LIB
 distribute = $(minimal-dist) $(examples) texis stdio-fp.c		\
 	     libc.info* libc.?? libc.??s texinfo.tex stamp-summary	\
 	     xtract-typefun.awk dir-add.texinfo dir-add.info dir	\
-	     chapters.texi top-menu.texi
+	     chapters.texi top-menu.texi summary.texi
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^

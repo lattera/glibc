@@ -126,5 +126,8 @@ ifeq (elf,$(subdir))
 $(objpfx)librtld.os: $(rpcuserlibs:.so=_pic.a)
 endif
 
+ifeq (hurd, $(subdir))
+sysdep_routines += cthreads
+endif
 
 endif	# in-Makerules

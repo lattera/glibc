@@ -82,6 +82,12 @@ STRCOLL (s1, s2, l)
   if (collate_nrules == 0)
     return STRCMP (s1, s2);
 
+  /* Handle empty strings as a special case.  */
+  if (*s1 == '\0')
+    return *s2 == '\0' ? 0 : -1;
+  else if (*s2 == '\0')
+    return 1;
+
   /* Get full information about the strings.  This means we get
      information for all passes in a special data structure.  */
   get_string (s1, s1forw, s1backw);

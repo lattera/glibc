@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -182,6 +182,14 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 	STPNCPY (dest, src, n);
 
       return STRLEN (src);
+    }
+
+  /* Handle an empty string as a special case.  */
+  if (*src == '\0')
+    {
+      if (n != 0)
+	*dest = '\0';
+      return 1;
     }
 
   /* Get full information about the string.  This means we get

@@ -1,3 +1,32 @@
+1998-07-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (headers2_0): Add sigstack.h.
+
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Also define __getrusage.
+
+1998-07-22 11:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/fileops.c (_IO_file_sync): Don't lock stream here.
+	Reported by Thorsten Kukuk.
+
+	* string/strcoll.c: Correct problem with empty strings.
+	* string/strxfrm.c: Likewise.
+	Reported by vbzoli@hbrt.hu [PR libc/719].
+
+1998-07-21 18:40  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/posix/tempname.c: Use the random-name generator
+	already used by mktemp/mkstemp.  Honor TMPDIR.
+
+1998-07-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* hurd/Makefile (routines): Remove cthreads.
+	* sysdeps/mach/hurd/Makefile (sysdep_routines): Add cthreads.
+
+	* sysdeps/unix/sysv/linux/i386/Dist: Add missing files.
+
+	* manual/Makefile (distribute): Add summary.texi.
+
 1998-07-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sigcontextinfo.h: Fix typo.
@@ -9,7 +38,7 @@
 	* configure.in: Move test for available port after machine
 	variable is defined.
 
-1998-07-21 16:08 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+1998-07-21 16:08  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* sysdeps/unix/sysv/linux/sendmsg.c: If passing a SCM_CREDS
 	message, copy the buffer and resize it to what the kernel

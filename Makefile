@@ -306,7 +306,7 @@ headers2_0 := 	__math.h bytesex.h confname.h direntry.h elfclass.h  	\
 		utmpbits.h utsnamelen.h waitflags.h waitstatus.h 	\
 		xopen_lim.h gnu/types.h sys/ipc_buf.h 			\
 		sys/kernel_termios.h sys/msq_buf.h sys/sem_buf.h 	\
-		sys/shm_buf.h sys/socketcall.h
+		sys/shm_buf.h sys/socketcall.h sigstack.h
 
 .PHONY: remove-old-headers
 remove-old-headers:

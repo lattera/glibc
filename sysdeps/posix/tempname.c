@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 #ifdef USE_IN_LIBIO
 # include "libioP.h"
@@ -87,14 +89,11 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
 {
   int saverrno = errno;
   static const char tmpdir[] = P_tmpdir;
-  static size_t indices[2];
-  size_t *idx;
-#if 0
-  static pid_t oldpid = (pid_t) 0;
-#endif
-  pid_t pid = __getpid();
-  register size_t len, plen, dlen;
-  int wrapped;
+  size_t plen, dlen, len;
+  char *XXXXXX;
+  static uint64_t value;
+  struct timeval tv;
+  int count;
 
   if (dir_search)
     {
@@ -132,56 +131,37 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
   else
     plen = 0;
 
-  if (dir != tmpdir && !strcmp (dir, tmpdir))
-    dir = tmpdir;
-  idx = &indices[(plen == 0 && dir == tmpdir) ? 1 : 0];
+  len = __snprintf (buf, bufsize, "%.*s/%.*sXXXXXX",
+	      (int) dlen, dir, (int) plen, pfx);
 
-#if 0
-  /* XXX Is this ever useful???  At least when using a thread package
-     which uses different PIDs for the threads it is not helpful.  */
-  if (pid != oldpid)
+  if (len < dlen + plen + 7)
+  {
+      __set_errno (EINVAL);
+      return NULL;
+  }
+
+  XXXXXX = &buf[dlen + plen + 1];
+
+  /* Get some more or less random data.  */
+  __gettimeofday (&tv, NULL);
+  value += ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec ^ __getpid ();
+
+  for (count = 0; count < TMP_MAX; value += 7777, ++count)
     {
-      oldpid = pid;
-      indices[0] = indices[1] = 0;
-    }
-#endif
+      uint64_t v = value;
 
-  wrapped = 0; /* We have not yet wrapped around the index counter.  */
-  len = dlen + 1 + plen + 5 + 3;
-  while (1)
-    {
-      size_t i;
-
-      if (*idx >= ((sizeof (letters) - 1) * (sizeof (letters) - 1) *
-		   (sizeof (letters) - 1)))
-	{
-	  if (wrapped)
-	    /* We really wrapped around this call.  Can't believe it
-	       but nevertheless stop the endless loop.  */
-	    break;
-
-	  indices[0] = indices[1] = 0;
-	  wrapped = 1;
-	}
-
-      i = (*idx)++;
-
-      /* Construct a file name and see if it already exists.
-
-	 We use a single counter in *IDX to cycle each of three
-	 character positions through each of 62 possible letters.  */
-
-      if (__snprintf (buf, bufsize, "%.*s/%.*s%.5d%c%c%c",
-		      (int) dlen, dir, (int) plen,
-		      pfx, pid % 100000,
-		      letters[i % (sizeof (letters) - 1)],
-		      letters[(i / (sizeof (letters) - 1))
-			     % (sizeof (letters) - 1)],
-		      letters[(i / ((sizeof (letters) - 1) *
-				    (sizeof (letters) - 1)))
-			     % (sizeof (letters) - 1)]
-		    ) != (int) len)
-	return NULL;
+      /* Fill in the random bits.  */
+      XXXXXX[0] = letters[v % 62];
+      v /= 62;
+      XXXXXX[1] = letters[v % 62];
+      v /= 62;
+      XXXXXX[2] = letters[v % 62];
+      v /= 62;
+      XXXXXX[3] = letters[v % 62];
+      v /= 62;
+      XXXXXX[4] = letters[v % 62];
+      v /= 62;
+      XXXXXX[5] = letters[v % 62];
 
       if (streamptr != NULL)
 	{

@@ -42,7 +42,6 @@ routines = hurdstartup hurdinit \
 	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
 	   get-host set-host \
 	   path-lookup \
-	   cthreads \
 	   setauth \
 	   pid2task task2pid \
 	   getuids setuids getumask fchroot \

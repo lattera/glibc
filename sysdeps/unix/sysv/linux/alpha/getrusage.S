@@ -35,7 +35,7 @@
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 #define GETRUSAGE	__getrusage_tv64
 #else
-#define GETRUSAGE	getrusage
+#define GETRUSAGE	__getrusage
 #endif
 
 LEAF(GETRUSAGE, 16)
@@ -131,5 +131,9 @@ $error:
 END(GETRUSAGE)
 
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+strong_alias(__getrusage_tv64, ____getrusage_tv64)
+default_symbol_version (____getrusage_tv64, __getrusage, GLIBC_2.1)
 default_symbol_version (__getrusage_tv64, getrusage, GLIBC_2.1)
+#else
+weak_alias(__getrusage, getrusage)
 #endif
