@@ -49,7 +49,7 @@
 	* sysdeps/powerpc/powerpc32/memset.S: Put __cache_line_size in bss.
 	* sysdeps/powerpc/powerpc64/memset.S: Likewise.
 
-	* Versions.def (libthread_db): Add GLICB_2.3.3 set.
+	* Versions.def (libthread_db): Add GLIBC_2.3.3 set.
 
 2003-03-14  Roland McGrath  <roland@redhat.com>
 
