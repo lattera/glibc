@@ -1,5 +1,7 @@
 2002-11-08  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/bug-regex13.c (tests): Add new test.
+
 	* string/test-strchr.c (stupid_strchr): New function.
 	(do_random_tests): Make sure the string is zero terminated.
 	* string/test-strpbrk.c (stupid_strpbrk): New function.

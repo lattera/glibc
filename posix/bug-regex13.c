@@ -33,6 +33,7 @@ static struct
 } tests[] = {
   {RE_BACKSLASH_ESCAPE_IN_LISTS, "[0\\-9]", "1", -1}, /* It should not match.  */
   {RE_BACKSLASH_ESCAPE_IN_LISTS, "[0\\-9]", "-", 0}, /* It should match.  */
+  {RE_SYNTAX_POSIX_BASIC, "s1\n.*\ns3", "s1\ns2\ns3", 0}
 };
 
 int
