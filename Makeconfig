@@ -818,7 +818,7 @@ postclean-generated += soversions.mk soversions.i \
 		       shlib-versions.v shlib-versions.v.i
 
 # Generate the header containing the names of all shared libraries.
-# We use a stamp file to avoid uncessary recompilations.
+# We use a stamp file to avoid unnecessary recompilations.
 before-compile += $(common-objpfx)gnu/lib-names.h
 ifeq ($(soversions.mk-done),t)
 $(common-objpfx)gnu/lib-names.h: $(common-objpfx)gnu/lib-names.stmp; @:
