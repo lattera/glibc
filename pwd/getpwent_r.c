@@ -8,7 +8,7 @@ published by the Free Software Foundation; either version 2 of the
 License, or (at your option) any later version.
 
 The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
+but WITHOUT ANY WARRANTY; without even the implied warranty of/tes
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
 
@@ -25,6 +25,6 @@ Boston, MA 02111-1307, USA.  */
 #define	GETFUNC_NAME	getpwent
 #define	ENDFUNC_NAME	endpwent
 #define DATABASE_NAME	passwd
-#define BUFLEN		1024
+#define BUFLEN		NSS_BUFLEN_PASSWD
 
 #include "../nss/getXXent_r.c"

@@ -123,6 +123,17 @@ extern struct passwd *getpwnam_r __P ((__const char *__name,
 				       struct passwd *__resultbuf,
 				       char *__buffer, int __buflen));
 
+
+#ifdef	__USE_SVID
+/* Read an entry from STREAM.  */
+extern struct passwd *__fgetpwent_r __P ((FILE * __stream,
+					  struct passwd *__resultbuf,
+					  char *__buffer, int __buflen));
+extern struct passwd *fgetpwent_r __P ((FILE * __stream,
+					struct passwd *__resultbuf,
+					char *__buffer, int __buflen));
+#endif
+
 #endif	/* reentrant */
 
 

@@ -283,7 +283,7 @@ endif
 
 # Default flags to pass the C compiler.
 ifndef default_cflags
-default_cflags := -g
+default_cflags := -g -O
 endif
 
 # Flags to pass the C compiler when assembling preprocessed assembly code
@@ -485,7 +485,7 @@ ifeq (yes,$(build-omitfp))
 object-suffixes += .go
 CFLAGS-.go = -g
 CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
-CFLAGS-.so += $(CFLAGS.o)
+CFLAGS-.so += $(CFLAGS-.o)
 libtype.go = lib%_g.a
 endif
 

@@ -16,27 +16,8 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <stdio.h>
 #include <pwd.h>
-
-/* Define a line parsing function using the common code
-   used in the nss_files module.  */
-
-#define STRUCTURE	passwd
-#define ENTNAME		pwent
-struct pwent_data {};
-
-#include "../nss/nss_files/files-parse.c"
-LINE_PARSER
-(,
- STRING_FIELD (result->pw_name, ISCOLON, 0);
- STRING_FIELD (result->pw_passwd, ISCOLON, 0);
- INT_FIELD (result->pw_uid, ISCOLON, 0, 10,);
- INT_FIELD (result->pw_gid, ISCOLON, 0, 10,);
- STRING_FIELD (result->pw_gecos, ISCOLON, 0);
- STRING_FIELD (result->pw_dir, ISCOLON, 0);
- result->pw_shell = line;
- )
+#include <stdio.h>
 
 
 /* Read one entry from the given stream.  */
@@ -45,21 +26,6 @@ fgetpwent (FILE *stream)
 {
   static char buffer[BUFSIZ];
   static struct passwd result;
-  char *p;
 
-  do
-    {
-      p = fgets (buffer, sizeof buffer, stream);
-      if (p == NULL)
-	return NULL;
-
-      /* Skip leading blanks.  */
-      while (isspace (*p))
-	++p;
-    } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
-	     /* Parse the line.  If it is invalid, loop to
-		get the next line of the file to parse.  */
-	     ! parse_line (p, &result, (void *) buffer, sizeof buffer));
-
-  return &result;
+  return __fgetpwent_r (stream, &result, buffer, sizeof buffer);
 }

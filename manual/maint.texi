@@ -206,12 +206,12 @@ compiler.  We recommend GCC version 2.7.2 or later; earlier versions may
 have problems.
 
 @item
-@code{binutils} 2.6
+@code{binutils} 2.7
 
 Using the GNU @code{binutils} (assembler, linker, and related tools) is
 preferable when possible, and they are required to build an ELF shared C
-library.  We recommend @code{binutils} version 2.6 or later; earlier
-versions are known to have problems.
+library.  We recommend @code{binutils} version 2.7 or later; earlier
+versions are known to have problems or to not support all architectures.
 @end itemize
 
 @node Supported Configurations

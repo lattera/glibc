@@ -23,6 +23,6 @@ subdir	:= pwd
 
 routines := fgetpwent getpw putpwent \
 	    getpwent getpwnam getpwuid \
-	    getpwent_r getpwnam_r getpwuid_r
+	    getpwent_r getpwnam_r getpwuid_r fgetpwent_r
 
 include ../Rules

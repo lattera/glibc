@@ -43,6 +43,10 @@ init (void *data)
   char **argv = (char **)data + 1;
   char **envp = &argv[argc + 1];
 
+  /* XXX Another gcc bug.  We marked the function as `unused' but it
+     is still optimized away.  */
+  volatile void *foo __attribute__ ((unused)) = &init;
+
 #ifdef PIC
   if (&__libc_is_static != NULL)
 #endif

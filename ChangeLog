@@ -1,3 +1,25 @@
+Fri Aug  9 17:38:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/timex.h: Include <sys/time.h> to
+	get `struct timeval'.
+	* sysdeps/unix/sysv/linux/sys/acct.h: Get time_t from <time.h>.
+	* sysdeps/unix/sysv/linux/sys/module.h: Get size_t from <stddef.h>.
+	* sysdeps/unix/sysv/linux/sys/io.h: Get definition of __P.
+	* sysdeps/unix/sysv/linux/sys/klog.h: Likewise.
+	* gmon/sys/gmon.h: Include <sys/types.h> to get u_long.
+	* sysdeps/unix/sysv/linux/direntry.h: Complete types in
+	<linux/dirent.h>.
+	* io/fts.h: Include <sys/types.h> to get dev_t.
+	Reported by Matthias Urlichs.
+
+	* sysdeps/posix/tempname.c [USE_IN_LIBIO]: Don't clear
+ 	_IO_file_flags.  It's the same as _flags.
+	Reported by Miquel van Smoorenburg <miquels@Q.cistron.nl>.
+
+Wed Aug  7 19:38:47 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/resourcebits.h: Add RLIMIT_AS.
+
 Thu Aug  8 16:17:38 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pwd/getpwent.c: Define BUFLEN from NSS_BUFLEN_PASSWD.

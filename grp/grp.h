@@ -110,6 +110,16 @@ extern struct group *getgrnam_r __P ((__const char *__name,
 				      struct group *__resultbuf,
 				      char *buffer, int __buflen));
 
+#ifdef	__USE_SVID
+/* Read a group entry from STREAM.  */
+extern struct group *__fgetgrent_r __P ((FILE * __stream,
+					 struct group *__resultbuf,
+					 char *buffer, int __buflen));
+extern struct group *fgetgrent_r __P ((FILE * __stream,
+				       struct group *__resultbuf,
+				       char *buffer, int __buflen));
+#endif
+
 #endif	/* reentrant */
 
 

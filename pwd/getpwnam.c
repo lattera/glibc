@@ -25,6 +25,6 @@ Boston, MA 02111-1307, USA.  */
 #define DATABASE_NAME	passwd
 #define ADD_PARAMS	const char *name
 #define ADD_VARIABLES	name
-#define BUFLEN		1024
+#define BUFLEN		NSS_BUFLEN_PASSWD
 
 #include "../nss/getXXbyYY.c"

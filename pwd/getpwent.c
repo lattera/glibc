@@ -25,6 +25,6 @@ Boston, MA 02111-1307, USA.  */
 #define	GETFUNC_NAME	getpwent
 #define	ENDFUNC_NAME	endpwent
 #define DATABASE_NAME	passwd
-#define BUFLEN		1024
+#define BUFLEN		NSS_BUFLEN_PASSWD
 
 #include "../nss/getXXent.c"

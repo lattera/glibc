@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #define DATABASE	"passwd"
 struct pwent_data {};
 
-/* Our parser function is already defined in fgetpwent.c, so use that
+/* Our parser function is already defined in fgetpwent_r.c, so use that
    to parse lines from the database file.  */
 #define EXTERN_PARSER
 #include "files-parse.c"

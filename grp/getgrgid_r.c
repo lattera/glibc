@@ -25,6 +25,6 @@ Boston, MA 02111-1307, USA.  */
 #define DATABASE_NAME	group
 #define ADD_PARAMS	gid_t gid
 #define ADD_VARIABLES	gid
-#define BUFLEN		1024
+#define BUFLEN		NSS_BUFLEN_GROUP
 
 #include "../nss/getXXbyYY_r.c"

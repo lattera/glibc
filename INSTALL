@@ -163,12 +163,13 @@ build the GNU C library:
      GNU C compiler.  We recommend GCC version 2.7.2 or later; earlier
      versions may have problems.
 
-   * `binutils' 2.6
+   * `binutils' 2.7
 
      Using the GNU `binutils' (assembler, linker, and related tools) is
      preferable when possible, and they are required to build an ELF
-     shared C library.  We recommend `binutils' version 2.6 or later;
-     earlier versions are known to have problems.
+     shared C library.  We recommend `binutils' version 2.7 or later;
+     earlier versions are known to have problems or to not support all
+     architectures.
 
 Supported Configurations
 ------------------------
