@@ -20,7 +20,6 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
-#include <tcb-offsets.h>
 
 #ifdef UP
 # define LOCK
@@ -28,85 +27,31 @@
 # define LOCK lock
 #endif
 
+#define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 
+#define ETIMEDOUT		110
+
 
 	.text
 
+/* int pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+			       const struct timespec *abstime)  */
+	.globl	__pthread_cond_timedwait
+	.type	__pthread_cond_timedwait, @function
 	.align	16
-	.type	__condvar_cleanup, @function
-	.globl	__condvar_cleanup
-	.hidden	__condvar_cleanup
-__condvar_cleanup:
-	/* Get internal lock.  */
-	movq	%rdi, %r8
-	movq	8(%rdi), %rdi
-	movl	$1, %esi
-	LOCK
-#if cond_lock == 0
-	xaddl	%esi, (%rdi)
-#else
-	xaddl	%esi, cond_lock(%rdi)
-#endif
-	testl	%esi, %esi
-	je	1f
-
-#if cond_lock != 0
-	addq	$cond_lock, %rdi
-#endif
-	callq	__lll_mutex_lock_wait
-#if cond_lock != 0
-	subq	$cond_lock, %rdi
-#endif
-
-1:	addq	$1, wakeup_seq(%rdi)
-
-	addq	$1, woken_seq(%rdi)
-
-	/* Wake up all waiters to make sure no signal gets lost.  */
-	addq	$wakeup_seq, %rdi
-	movq	$FUTEX_WAKE, %rsi
-	movl	$0x7fffffff, %edx
-	movq	$SYS_futex, %rax
-	syscall
-	subq	$wakeup_seq, %rdi
-
-	LOCK
-#if cond_lock == 0
-	decl	(%rdi)
-#else
-	decl	cond_lock(%rdi)
-#endif
-	je	2f
-#if cond_lock != 0
-	addq	$cond_lock, %rdi
-#endif
-	callq	__lll_mutex_unlock_wake
-
-	/* Lock the mutex unless asynchronous cancellation is in effect.  */
-2:	testq	$2, (%r8)
-	jne	3f
-
-	movq	16(%r8), %rdi
-	callq	__pthread_mutex_lock_internal
-
-3:	retq
-	.size	__condvar_cleanup, .-__condvar_cleanup
-
-
-/* int pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)  */
-	.globl	__pthread_cond_wait
-	.type	__pthread_cond_wait, @function
-	.align	16
-__pthread_cond_wait:
+__pthread_cond_timedwait:
 	pushq	%r12
-	subq	$64, %rsp
+	pushq	%r13
+	pushq	%r14
+	subq	$80, %rsp
 
 	/* Prepare structure passed to cancellation handler.  */
 	movq	%rdi, 8(%rsp)
 	movq	%rsi, 16(%rsp)
+	movq	%rdx, %r13
 
 	/* Get internal lock.  */
 	movl	$1, %esi
@@ -124,7 +69,7 @@ __pthread_cond_wait:
 	callq	__pthread_mutex_unlock_internal
 
 	testl	%eax, %eax
-	jne	12f
+	jne	16f
 
 	movq	8(%rsp), %rdi
 	addq	$1, total_seq(%rdi)
@@ -135,14 +80,14 @@ __pthread_cond_wait:
 #else
 	leaq	__condvar_cleanup, %rsi
 #endif
-	leaq	32(%rsp), %rdi
+	leaq	48(%rsp), %rdi
 	movq	%rsp, %rdx
 	callq	__pthread_cleanup_push
 
 	/* Get and store current wakeup_seq value.  */
 	movq	8(%rsp), %rdi
 	movq	wakeup_seq(%rdi), %r12
-	movq	%r12, 24(%rsp)
+	movq	%r12, 40(%rsp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -154,15 +99,40 @@ __pthread_cond_wait:
 	jne	3f
 
 4:	movq	%rsp, %rdi
-	callq	__pthread_enable_asynccancel_2
+	call	__pthread_enable_asynccancel_2
+
+	/* Get the current time.  */
+	leaq	24(%rsp), %rdi
+	xorq	%rcx, %rcx
+	movq	$SYS_gettimeofday, %rax
+	syscall
+
+	/* Compute relative timeout.  */
+	movq	32(%rsp), %rax
+	movq	$1000, %rdx
+	mul	%rdx		/* Milli seconds to nano seconds.  */
+	movq	(%r13), %rcx
+	movq	4(%r13), %rdx
+	subq	24(%rsp), %rcx
+	subq	%rax, %rdx
+	jns	12f
+	addq	$1000000000, %rdx
+	decq	%rcx
+12:	testq	%rcx, %rcx
+	js	13f
+
+	/* Store relative timeout.  */
+	movq	%rcx, 24(%rsp)
+	movq	%rdx, 32(%rsp)
 
 	movq	8(%rsp), %rdi
-	xorq	%r10, %r10
+	leaq	24(%rsp), %r10
+	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	%r12, %rdx
 	addq	$wakeup_seq-cond_lock, %rdi
 	movq	$SYS_futex, %rax
-	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
 	syscall
+	movq	%rax, %r14
 
 	movq	(%rsp), %rdi
 	callq	__pthread_disable_asynccancel
@@ -183,13 +153,21 @@ __pthread_cond_wait:
 
 	movq	wakeup_seq(%rdi), %r12
 
-	cmpq	24(%rsp), %rax
-	jb	8b
+	cmpq	40(%rsp), %rax
+	jb	15f
 
 	cmpq	%rax, %r12
-	jna	8b
+	ja	9f
 
-	incq	woken_seq(%rdi)
+15:	cmpq	$-ETIMEDOUT, %r14
+	jne	8b
+
+13:	incq	wakeup_seq(%rdi)
+	movq	$ETIMEDOUT, %rsi
+	jmp	14f
+
+9:	xorq	%rsi, %rsi
+14:	incq	woken_seq(%rdi)
 
 	LOCK
 #if cond_lock == 0
@@ -200,16 +178,20 @@ __pthread_cond_wait:
 	jne	10f
 
 	/* Remove cancellation handler.  */
-11:	movq	32+CLEANUP_PREV(%rsp), %rdx
+11:	movq	48+CLEANUP_PREV(%rsp), %rdx
 	movq	%rdx, %fs:CLEANUP
 
 	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_lock_internal
-14:	addq	$64, %rsp
 
+	testq	%rax, %rax
+	cmoveq	%rsi, %rax
+
+18:	addq	$80, %rsp
+	popq	%r14
+	popq	%r13
 	popq	%r12
 
-	/* We return the result of the mutex_lock operation.  */
 	retq
 
 	/* Initial locking failed.  */
@@ -217,7 +199,7 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	call	__lll_mutex_lock_wait
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
@@ -225,7 +207,7 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	call	__lll_mutex_unlock_wake
 	jmp	4b
 
 	/* Locking in loop failed.  */
@@ -233,38 +215,39 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_lock_wait
+	call	__lll_mutex_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
 	jmp	6b
 
-	/* Unlock after loop requires wakeup.  */
+	/* Unlock after loop requires waekup.  */
 10:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	call	__lll_mutex_unlock_wake
 	jmp	11b
 
 	/* The initial unlocking of the mutex failed.  */
-12:	movq	%rax, %r10
-	movq	8(%rsp), %rdi
+16:	movq	8(%rsp), %rdi
+	movq	%rax, (%rsp)
 	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
 	decl	cond_lock(%rdi)
 #endif
-	jne	13f
+	jne	17f
 
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	callq	__lll_mutex_unlock_wake
+	call	__lll_mutex_unlock_wake
 
-13:	movq	%r10, %rax
-	jmp	14b
+17:	movq	(%rsp), %rax
+	jmp	18b
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
-versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
+	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
+versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)

@@ -67,7 +67,7 @@ pthread_rwlock_timedrdlock:
 2:	movl	WRITER(%ebp), %eax
 	testl	%eax, %eax
 	jne	14f
-	cmp	$0, WRITERS_QUEUED(%ebp)
+	cmpl	$0, WRITERS_QUEUED(%ebp)
 	je	5f
 	cmpl	$0, FLAGS(%ebp)
 	je	5f

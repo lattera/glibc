@@ -67,7 +67,7 @@ pthread_rwlock_timedwrlock:
 2:	movl	WRITER(%ebp), %eax
 	testl	%eax, %eax
 	jne	14f
-	cmp	$0, NR_READERS(%ebp)
+	cmpl	$0, NR_READERS(%ebp)
 	je	5f
 
 	/* Check the value of the timeout parameter.  */

@@ -61,7 +61,7 @@ __pthread_rwlock_rdlock:
 2:	movl	WRITER(%ebx), %eax
 	testl	%eax, %eax
 	jne	14f
-	cmp	$0, WRITERS_QUEUED(%ebx)
+	cmpl	$0, WRITERS_QUEUED(%ebx)
 	je	5f
 	cmpl	$0, FLAGS(%ebx)
 	je	5f
