@@ -8,7 +8,3 @@ sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
 		   rt_sigqueueinfo rt_sigaction rt_sigpending \
 		   sigrestorer
 endif
-
-ifeq ($(subdir),resource)
-sysdep_routines += oldgetrlimit oldsetrlimit
-endif
