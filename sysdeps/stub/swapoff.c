@@ -23,7 +23,7 @@ Boston, MA 02111-1307, USA.  */
 int
 swapoff (const char *path)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

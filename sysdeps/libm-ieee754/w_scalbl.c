@@ -57,7 +57,7 @@ static char rcsid[] = "$NetBSD: $";
 	    return __kernel_standard(x,(double)fn,233); /* scalb underflow */
 	}
 #ifndef _SCALB_INT
-	if(!__finitel(fn)) errno = ERANGE;
+	if(!__finitel(fn)) __set_errno (ERANGE);
 #endif
 	return z;
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,22 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdlib.h>
 
 
 /* Execute LINE as a shell command.  */
 int
-DEFUN(system, (line), CONST char *line)
+__libc_system (line)
+     const char *line;
 {
   if (line == NULL)
     return 0;			/* This indicates no command processor.  */
 
-  errno = ENOSYS;
+  __sys_errno (ENOSYS);
   return -1;
 }
+weak_alias (__libc_system, system)
 
 
 stub_warning (system)

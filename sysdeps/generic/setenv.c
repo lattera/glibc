@@ -88,7 +88,7 @@ setenv (name, value, replace)
       if (new_environ[size] == NULL)
 	{
 	  free ((char *) new_environ);
-	  errno = ENOMEM;
+	  __set_errno (ENOMEM);
 	  UNLOCK;
 	  return -1;
 	}

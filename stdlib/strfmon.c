@@ -38,7 +38,7 @@ Boston, MA 02111-1307, USA.  */
   do {									      \
     if (dest >= s + maxsize - 1)					      \
       {									      \
-	errno = E2BIG;							      \
+	__set_errno (E2BIG);						      \
 	va_end (ap);							      \
 	return -1;							      \
       }									      \
@@ -158,7 +158,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	    case '+':			/* Use +/- for sign of number.  */
 	      if (n_sign_posn != -1)
 		{
-		  errno = EINVAL;
+		  __set_errno (EINVAL);
 		  va_end (ap);
 		  return -1;
 		}
@@ -174,7 +174,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	    case '(':			/* Use ( ) for negative sign.  */
 	      if (n_sign_posn != -1)
 		{
-		  errno = EINVAL;
+		  __set_errno (EINVAL);
 		  va_end (ap);
 		  return -1;
 		}
@@ -207,7 +207,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	     can stop now and return an error.  */
 	  if (dest + width >= s + maxsize)
 	    {
-	      errno = E2BIG;
+	      __set_errno (E2BIG);
 	      va_end (ap);
 	      return -1;
 	    }
@@ -218,7 +218,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	{
 	  if (!isdigit (*++fmt))
 	    {
-	      errno = EINVAL;
+	      __set_errno (EINVAL);
 	      va_end (ap);
 	      return -1;
 	    }
@@ -236,7 +236,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	{
 	  if (!isdigit (*++fmt))
 	    {
-	      errno = EINVAL;
+	      __set_errno (EINVAL);
 	      va_end (ap);
 	      return -1;
 	    }
@@ -276,7 +276,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	      right_prec = *_NL_CURRENT (LC_MONETARY, FRAC_DIGITS);
 	  break;
 	default:		/* Any unrecognized format is an error.  */
-	  errno = EINVAL;
+	  __set_errno (EINVAL);
 	  va_end (ap);
 	  return -1;
 	}

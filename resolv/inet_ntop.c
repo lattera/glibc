@@ -64,7 +64,7 @@ inet_ntop(af, src, dst, size)
 	case AF_INET6:
 		return (inet_ntop6(src, dst, size));
 	default:
-		errno = EAFNOSUPPORT;
+		__set_errno (EAFNOSUPPORT);
 		return (NULL);
 	}
 	/* NOTREACHED */
@@ -91,7 +91,7 @@ inet_ntop4(src, dst, size)
 	char tmp[sizeof "255.255.255.255"];
 
 	if (SPRINTF((tmp, fmt, src[0], src[1], src[2], src[3])) > size) {
-		errno = ENOSPC;
+		__set_errno (ENOSPC);
 		return (NULL);
 	}
 	strcpy(dst, tmp);
@@ -187,7 +187,7 @@ inet_ntop6(src, dst, size)
 	 * Check for overflow, copy, and we're done.
 	 */
 	if ((size_t)(tp - tmp) > size) {
-		errno = ENOSPC;
+		__set_errno (ENOSPC);
 		return (NULL);
 	}
 	strcpy(dst, tmp);

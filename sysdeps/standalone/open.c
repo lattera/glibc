@@ -1,7 +1,7 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
- 
+
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
@@ -36,7 +35,9 @@ Cambridge, MA 02139, USA.  */
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
 int
-DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
+__open (file, oflag)
+     const char *file;
+     int oflag;
 {
   int mode;
   int newfd;
@@ -44,7 +45,7 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
 
   if (file == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -69,17 +70,17 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
     }
 
   if ( newfd == -1 ) {
-    errno = ENFILE;
+    __set_errno (ENFILE);
     return -1;
   }
 
-  /* 
+  /*
    *  Initialize the open slot
    */
 
   __FD_Table[ newfd ].in_use = 1;
   __FD_Table[ newfd ].flags = oflag;
-  
+
   return newfd;
 }
 
@@ -89,8 +90,10 @@ DEFUN(__open, (file, oflag), CONST char *file AND int oflag DOTS)
 static
 #endif
 void
-DEFUN(__NONE_init_console_io, (argc, argv, envp),
-      int argc AND char **argv AND char **envp)
+__NONE_init_console_io (argc, argv, envp)
+     int argc;
+     char **argv;
+     char **envp;
 {
   int index;
 

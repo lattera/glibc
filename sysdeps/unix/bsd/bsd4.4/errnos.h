@@ -165,4 +165,6 @@
 #endif /* __USE_BSD */
 
 
+#define __set_errno(val) errno = (val)
+
 #endif /* <errno.h> included.  */

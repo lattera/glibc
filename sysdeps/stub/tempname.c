@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
@@ -27,13 +26,15 @@ Cambridge, MA 02139, USA.  */
    Return the generated filename or NULL if one could not
    be generated, putting the length of the string in *LENPTR.  */
 char *
-DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr),
-      CONST char *dir AND CONST char *pfx AND
-      int dir_search AND size_t *lenptr AND
-      FILE **streamptr)
+__stdio_gen_tempname (dir, pfx, dir_search, lenptr)
+     const char *dir;
+     const char *pfx;
+     int dir_search;
+     size_t *lenptr;
+     FILE **streamptr;
 {
   *lenptr = 0;
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return NULL;
 }
 

@@ -34,6 +34,8 @@ endif
 # Text domain name to install under; must match ../locale/SYS_libc.c string.
 domainname = libc
 
+all: # Make this the default target; it will be defined in Rules.
+
 # Get $(version) defined.
 include ../Makeconfig
 -include $(common-objpfx)version.mk

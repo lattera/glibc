@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,15 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/resource.h>
 #include <sys/sysmp.h>
 
 int
-DEFUN(setpriority, (which, who, prio),
-      enum __priority_which which AND int who AND int prio)
+setpriority (which, who, prio)
+     enum __priority_which which;
+     int who;
+     int prio;
 {
   switch (which)
     {
@@ -35,7 +36,6 @@ DEFUN(setpriority, (which, who, prio),
       return __sysmp (MP_SCHED, MPTS_RENICE_USER, who, prio);
     }
 
-  errno = EINVAL;
+  __set_errno (EINVAL);
   return -1;
 }
-

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -27,7 +26,7 @@ Cambridge, MA 02139, USA.  */
    The process group IDs of the session and the calling process
    are set to the process ID of the calling process, which is returned.  */
 int
-DEFUN_VOID(__setsid)
+__setsid ()
 {
   pid_t pid = getpid ();
   int tty;
@@ -36,7 +35,7 @@ DEFUN_VOID(__setsid)
   if (__getpgid (pid) == pid)
     {
       /* Already the leader.  */
-      errno = EPERM;
+      __set_errno (EPERM);
       return -1;
     }
 
@@ -46,13 +45,13 @@ DEFUN_VOID(__setsid)
   tty = open ("/dev/tty", 0);
   if (tty < 0)
     {
-      errno = save;
+      __set_errno (save);
       return 0;
     }
   (void) __ioctl (tty, TIOCNOTTY, 0);
   (void) __close (tty);
 
-  errno = save;
+  __set_errno (save);
   return 0;
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
 /* Return the system file descriptor associated with STREAM.  */
 int
-DEFUN(fileno, (stream), FILE *stream)
+fileno (stream)
+     FILE *stream;
 {
   extern void __stdio_check_funcs __P ((FILE *));
 
   if (! __validfp (stream))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -37,9 +37,9 @@ DEFUN(fileno, (stream), FILE *stream)
   if (stream->__io_funcs.__fileno == NULL)
     {
 #ifdef EOPNOTSUPP
-      errno = EOPNOTSUPP;
+      __set_errno (EOPNOTSUPP);
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
 #endif
       return -1;
     }

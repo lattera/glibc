@@ -70,7 +70,7 @@ hcreate_r (nel, htab)
   /* Test for correct arguments.  */
   if (htab == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return 0;
     }
 
@@ -105,7 +105,7 @@ hdestroy_r (htab)
   /* Test for correct arguments.  */
   if (htab == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return;
     }
 
@@ -147,7 +147,7 @@ hsearch_r (item, action, retval, htab)
      error.  */
   if (action == ENTER && htab->filled == htab->size)
     {
-      errno = ENOMEM;
+      __set_errno (ENOMEM);
       *retval = NULL;
       return 0;
     }
@@ -222,7 +222,7 @@ hsearch_r (item, action, retval, htab)
       return 1;
     }
 
-  errno = ESRCH;
+  __set_errno (ESRCH);
   *retval = NULL;
   return 0;
 }

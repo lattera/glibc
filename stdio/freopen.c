@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
@@ -30,16 +29,18 @@ extern int __stdio_reopen __P ((const char *filename, __io_mode mode,
 
 /* Replace STREAM, opening it on FILENAME.  */
 FILE *
-DEFUN(freopen, (filename, mode, stream),
-      CONST char *filename AND CONST char *mode AND register FILE *stream)
+freopen (filename, mode, stream)
+     const char *filename;
+     const char *mode;
+     register FILE *stream;
 {
   __io_mode m;
-  PTR cookie;
+  void *cookie;
 
   if (!__getmode (mode, &m))
     {
       (void) fclose (stream);
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 
@@ -56,7 +57,7 @@ DEFUN(freopen, (filename, mode, stream),
     {
       int save = errno;
       (void) fclose (stream);
-      errno = save;
+      __set_errno (save);
       return NULL;
     }
 

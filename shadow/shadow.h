@@ -25,8 +25,6 @@ Boston, MA 02111-1307, USA.  */
 
 #define	__need_FILE
 #include <stdio.h>
-#define	__need_time_t
-#include <time.h>
 
 /* Paths to the userd files.  */
 #define	SHADOW "/etc/shadow"
@@ -39,14 +37,14 @@ struct spwd
 {
   char *sp_namp;		/* Login name.  */
   char *sp_pwdp;		/* Encrypted password.  */
-  __time_t sp_lstchg;		/* Date of last change.  */
-  __time_t sp_min;		/* Minimum number of days between changes.  */
-  __time_t sp_max;		/* Maximum number of days between changes.  */
-  __time_t sp_warn;		/* Number of days to warn user to change
+  long int sp_lstchg;		/* Date of last change.  */
+  long int sp_min;		/* Minimum number of days between changes.  */
+  long int sp_max;		/* Maximum number of days between changes.  */
+  long int sp_warn;		/* Number of days to warn user to change
 				   the password.  */
-  __time_t sp_inact;		/* Number of days the account may be
+  long int sp_inact;		/* Number of days the account may be
 				   inactive.  */
-  __time_t sp_expire;		/* Number of days since 1970-01-01 until
+  long int sp_expire;		/* Number of days since 1970-01-01 until
 				   account expires.  */
   unsigned long int sp_flag;	/* Reserved.  */
 };

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +16,23 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sgtty.h>
 #include <stddef.h>
 
 /* Fill in *PARAMS with terminal parameters associated with FD.  */
 int
-DEFUN(gtty, (fd, params),
-      int fd AND struct sgttyb *params)
+gtty (fd, params)
+     int fd;
+     struct sgttyb *params;
 {
   if (params == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

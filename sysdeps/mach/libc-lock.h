@@ -31,9 +31,9 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
    initialized with __libc_lock_init before it can be used (or define it
    with __libc_lock_define_initialized, below).  Use `extern' for CLASS to
    declare a lock defined in another module.  In public structure
-   definitions, the lock element must come last, because its storage size
-   will not be known outside of libc.  (Or you can use a pointer to the
-   lock structure; i.e. NAME begins with a `*'.)  */
+   definitions you must use a pointer to the lock structure (i.e., NAME
+   begins with a `*'), because its storage size will not be known outside
+   of libc.  */
 #define __libc_lock_define(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
 

@@ -1,5 +1,5 @@
 /* ANSI C `remove' function to delete a file or directory.  POSIX.1 version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ remove (file)
     return 0;
   else if (errno == ENOTDIR && __unlink (file) == 0)
     {
-      errno = save;
+      __set_errno (save);
       return 0;
     }
 

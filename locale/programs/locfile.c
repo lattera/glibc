@@ -829,6 +829,7 @@ syntax error in collating order definition"));
 	    case tok_mon:
 	    case tok_am_pm:
 	    case tok_alt_digits:
+	    case tok_era:
 	      READ_STRING_LIST (time_add, bad_time);
 	      continue;
 
@@ -836,7 +837,6 @@ syntax error in collating order definition"));
 	    case tok_d_fmt:
 	    case tok_t_fmt:
 	    case tok_t_fmt_ampm:
-	    case tok_era:
 	    case tok_era_year:
 	    case tok_era_d_t_fmt:
 	    case tok_era_d_fmt:
@@ -935,7 +935,7 @@ write_locale_data (const char *output_path, const char *category,
   int fd;
   char *fname;
 
-  fname = malloc (strlen (output_path) + strlen (category) + 6);
+  fname = malloc (strlen (output_path) + 2 * strlen (category) + 6);
   if (fname == NULL)
     error (5, errno, _("memory exhausted"));
 

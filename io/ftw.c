@@ -47,7 +47,7 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 
   got = 0;
 
-  errno = 0;
+  __set_errno (0);
 
   while ((entry = readdir (dirs[level])) != NULL)
     {
@@ -61,7 +61,7 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 	  && (entry->d_name[1] == '\0' ||
 	      (entry->d_name[1] == '.' && entry->d_name[2] == '\0')))
 	{
-	  errno = 0;
+	  __set_errno (0);
 	  continue;
 	}
 
@@ -70,9 +70,9 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
       if (namlen + len + 1 > PATH_MAX)
 	{
 #ifdef ENAMETOOLONG
-	  errno = ENAMETOOLONG;
+	  __set_errno (ENAMETOOLONG);
 #else
-	  errno = ENOMEM;
+	  __set_errno (ENOMEM);
 #endif
 	  return -1;
 	}
@@ -120,7 +120,7 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 
 	      save = errno;
 	      closedir (dirs[newlev]);
-	      errno = save;
+	      __set_errno (save);
 	      dirs[newlev] = NULL;
 	    }
 	}
@@ -139,13 +139,13 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 	  skip = got;
 	  while (skip-- != 0)
 	    {
-	      errno = 0;
+	      __set_errno (0);
 	      if (readdir (dirs[level]) == NULL)
 		return errno == 0 ? 0 : -1;
 	    }
 	}
 
-      errno = 0;
+      __set_errno (0);
     }
 
   return errno == 0 ? 0 : -1;
@@ -211,7 +211,7 @@ DEFUN(ftw, (dir, func, descriptors),
 
 	  save = errno;
 	  closedir (dirs[0]);
-	  errno = save;
+	  __set_errno (save);
 	}
     }
 

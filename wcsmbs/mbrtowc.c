@@ -62,7 +62,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	  if ((byte & 0xc0) == 0x80 || (byte & 0xfe) == 0xfe)
 	    {
 	      /* Oh, oh.  An encoding error.  */
-	      errno = EILSEQ;
+	      __set_errno (EILSEQ);
 	      return (size_t) -1;
 	    }
 
@@ -109,7 +109,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	  if ((byte & 0xc0) != 0x80)
 	    {
 	      /* Oh, oh.  An encoding error.  */
-	      errno = EILSEQ;
+	      __set_errno (EILSEQ);
 	      return (size_t) -1;
 	    }
 

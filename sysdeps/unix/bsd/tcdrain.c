@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <termios.h>
@@ -26,13 +25,14 @@ Cambridge, MA 02139, USA.  */
 
 /* Wait for pending output to be written on FD.  */
 int
-DEFUN(tcdrain, (fd), int fd)
+__libc_tcdrain (int fd)
 {
   /* The TIOCSETP control waits for pending output to be written before
      affecting its changes, so we use that without changing anything.  */
   struct sgttyb b;
-  if (__ioctl(fd, TIOCGETP, (PTR) &b) < 0 ||
-      __ioctl(fd, TIOCSETP, (PTR) &b) < 0)
+  if (__ioctl (fd, TIOCGETP, (void *) &b) < 0 ||
+      __ioctl (fd, TIOCSETP, (void *) &b) < 0)
     return -1;
   return 0;
 }
+weak_alias (__libc_tcdrain, tcdrain)

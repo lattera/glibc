@@ -26,7 +26,7 @@ setegid (gid)
 {
   if (gid == (gid_t) ~0)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

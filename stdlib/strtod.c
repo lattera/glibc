@@ -151,7 +151,7 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
 
       if (shift > MANT_DIG)
 	{
-	  errno = EDOM;
+	  __set_errno (EDOM);
 	  return 0.0;
 	}
 
@@ -563,7 +563,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	 	  FLOAT retval;
 
 		  /* Overflow or underflow.  */
-		  errno = ERANGE;
+		  __set_errno (ERANGE);
 		  retval = (exp_negative ? 0.0 :
 			    negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL);
 
@@ -631,13 +631,13 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
   if (int_no + exponent > MAX_10_EXP + 1)
     {
-      errno = ERANGE;
+      __set_errno (ERANGE);
       return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
     }
 
   if (exponent < MIN_10_EXP - (DIG + 1))
     {
-      errno = ERANGE;
+      __set_errno (ERANGE);
       return 0.0;
     }
 
@@ -694,7 +694,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	 Check it against the maximum possible exponent.  */
       if (bits > MAX_EXP)
 	{
-	  errno = ERANGE;
+	  __set_errno (ERANGE);
 	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
 	}
 

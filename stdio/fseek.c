@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
@@ -26,14 +25,16 @@ Cambridge, MA 02139, USA.  */
    is SEEK_SET, the end of the file is it is SEEK_END,
    or the current position if it is SEEK_CUR.  */
 int
-DEFUN(fseek, (stream, offset, whence),
-      register FILE *stream AND long int offset AND int whence)
+fseek (stream, offset, whence)
+     register FILE *stream;
+     long int offset;
+     int whence;
 {
   long int o;
 
   if (!__validfp (stream))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 
@@ -63,7 +64,7 @@ DEFUN(fseek, (stream, offset, whence),
   switch (whence)
     {
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
 
     case SEEK_END:
@@ -72,7 +73,7 @@ DEFUN(fseek, (stream, offset, whence),
 	 for, and then look where that is.  */
       if (stream->__io_funcs.__seek == NULL)
 	{
-	  errno = ESPIPE;
+	  __set_errno (ESPIPE);
 	  return EOF;
 	}
       else
@@ -144,7 +145,7 @@ DEFUN(fseek, (stream, offset, whence),
   if (o < 0)
     {
       /* Negative file position is meaningless.  */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -167,7 +168,7 @@ DEFUN(fseek, (stream, offset, whence),
 	 But it makes more sense for fseek to to fail with ESPIPE
 	 than for the next reading or writing operation to fail
 	 that way.  */
-      errno = ESPIPE;
+      __set_errno (ESPIPE);
       return EOF;
     }
 

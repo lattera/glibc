@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <pwd.h>
@@ -25,11 +24,13 @@ Cambridge, MA 02139, USA.  */
 /* Write an entry to the given stream.
    This must know the format of the password file.  */
 int
-DEFUN(putpwent, (p, stream), register CONST struct passwd *p AND FILE *stream)
+putpwent (p, stream)
+     register const struct passwd *p;
+     FILE *stream;
 {
   if (p == NULL || stream == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

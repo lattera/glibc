@@ -50,7 +50,7 @@ __localtime_r (timer, tp)
 
   if (timer == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 

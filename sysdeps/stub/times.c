@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/times.h>
 #include <stddef.h>
@@ -26,15 +25,16 @@ Cambridge, MA 02139, USA.  */
    Return the elapsed real time, or (clock_t) -1 for errors.
    All times are in CLK_TCKths of a second.  */
 clock_t
-DEFUN(__times, (buffer), struct tms *buffer)
+__times (buffer)
+     struct tms *buffer;
 {
   if (buffer == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return (clock_t) -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return (clock_t) -1;
 }
 stub_warning (times)

@@ -41,7 +41,7 @@ _IO_fgetpos (fp, posp)
     {
 #ifdef EIO
       if (errno == 0)
-	errno = EIO;
+	__set_errno (EIO);
 #endif
       return EOF;
     }

@@ -31,7 +31,7 @@ static char rcsid[] = "$NetBSD: $";
 {
 	if(!__finitel(value)||value==0.0) return value;
 	value = __scalbnl(value,exp);
-	if(!__finitel(value)||value==0.0) errno = ERANGE;
+	if(!__finitel(value)||value==0.0) __set_errno (ERANGE);
 	return value;
 }
 weak_alias (__ldexpl, ldexpl)

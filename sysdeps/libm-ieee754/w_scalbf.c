@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -19,7 +19,7 @@ static char rcsid[] = "$NetBSD: w_scalbf.c,v 1.3 1995/05/10 20:49:50 jtc Exp $";
 
 /*
  * wrapper scalbf(float x, float fn) is provide for
- * passing various standard test suite. One 
+ * passing various standard test suite. One
  * should use scalbn() instead.
  */
 
@@ -56,11 +56,11 @@ static char rcsid[] = "$NetBSD: w_scalbf.c,v 1.3 1995/05/10 20:49:50 jtc Exp $";
 	if(z==(float)0.0&&z!=x) {
 	    /* scalbf underflow */
 	    return (float)__kernel_standard((double)x,(double)fn,133);
-	} 
+	}
 #ifndef _SCALB_INT
-	if(!__finitef(fn)) errno = ERANGE;
+	if(!__finitef(fn)) __set_errno (ERANGE);
 #endif
 	return z;
-#endif 
+#endif
 }
 weak_alias (__scalbf, scalbf)

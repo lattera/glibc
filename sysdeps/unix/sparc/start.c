@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,9 @@ int __data_start = 0;
 weak_alias (__data_start, data_start)
 #endif
 
-VOLATILE int errno;
+VOLATILE int __errno;
+strong_alias (__errno, errno)
+
 
 extern void EXFUN(__libc_init, (int argc, char **argv, char **envp));
 extern int EXFUN(main, (int argc, char **argv, char **envp));
@@ -117,7 +119,7 @@ DEFUN_VOID(init_shlib)
   caddr_t sobssmap;
   void (*ldstart) (int, int);
   struct exec soexec;
-  struct 
+  struct
     {
       caddr_t crt_ba;
       int crt_dzfd;
@@ -126,7 +128,7 @@ DEFUN_VOID(init_shlib)
       char **crt_ep;
       caddr_t crt_bp;
     } soarg;
-  
+
   /* If not dynamically linked, do nothing.  */
   if (&_DYNAMIC == 0)
     return;
@@ -137,7 +139,7 @@ DEFUN_VOID(init_shlib)
       || soexec.a_magic != ZMAGIC)
     {
       static CONST char emsg[] = "crt0: no /usr/lib/ld.so\n";
-      
+
       syscall (SYS_write, 2, emsg, sizeof (emsg) - 1);
       syscall (SYS_exit, 127);
     }
@@ -165,7 +167,7 @@ DEFUN_VOID(init_shlib)
   soarg.crt_dp = &_DYNAMIC;
   soarg.crt_ep = __environ;
   soarg.crt_bp = (caddr_t) &&retaddr;
-  
+
   ldstart = (__typeof (ldstart)) (somap + soexec.a_entry);
   (*ldstart) (1, (char *) &soarg - (char *) sp);
 

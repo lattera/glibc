@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,10 +28,10 @@ __pathconf (const char *path, int name)
   int fd = open (path, 0);
   if (fd >= 0)
     {
-      long int value = __fpathconf (0, name);
+      long int value = __fpathconf (fd, name);
       int save = errno;
       (void) close (fd);
-      errno = save;
+      __set_errno (save);
       return value;
     }
   return -1L;

@@ -64,7 +64,9 @@ static struct xp_ops svcudp_op = {
 	svcudp_destroy
 };
 
+#ifndef errno
 extern int errno;
+#endif
 
 /*
  * kept in xprt->xp_p2
@@ -472,4 +474,3 @@ cache_get(xprt, msg, replyp, replylenp)
 	uc->uc_addr = xprt->xp_raddr;
 	return(0);
 }
-

@@ -40,7 +40,7 @@ _IO_ftell (fp)
     {
 #ifdef EIO
       if (errno == 0)
-	errno = EIO;
+	__set_errno (EIO);
 #endif
       return -1L;
     }

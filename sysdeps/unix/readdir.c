@@ -36,7 +36,7 @@ __readdir (DIR *dirp)
 
   if (dirp == NULL || dirp->data == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 

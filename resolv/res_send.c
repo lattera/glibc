@@ -144,7 +144,7 @@ static int vc = 0;	/* is the socket a virtual ciruit? */
 			ntohs(address.sin_port),
 			strerror(error));
 	}
-	errno = save;
+	__set_errno (save);
     }
     static void
     Perror(file, string, error)
@@ -158,7 +158,7 @@ static int vc = 0;	/* is the socket a virtual ciruit? */
 		fprintf(file, "res_send: %s: %s\n",
 			string, strerror(error));
 	}
-	errno = save;
+	__set_errno (save);
     }
 #endif
 
@@ -380,7 +380,7 @@ res_send(buf, buflen, ans, anssiz)
 					Perror(stderr, "socket(vc)", errno);
 					return (-1);
 				}
-				errno = 0;
+				__set_errno (0);
 				if (connect(s, (struct sockaddr *)nsap,
 					    sizeof(struct sockaddr)) < 0) {
 					terrno = errno;
@@ -581,7 +581,7 @@ read_len:
 					       (stdout, ";; new DG socket\n"))
 #endif
 					connected = 0;
-					errno = 0;
+					__set_errno (0);
 				}
 				if (sendto(s, (char*)buf, buflen, 0,
 					   (struct sockaddr *)nsap,
@@ -625,7 +625,7 @@ read_len:
 				_res_close();
 				goto next_ns;
 			}
-			errno = 0;
+			__set_errno (0);
 			fromlen = sizeof(struct sockaddr_in);
 			resplen = recvfrom(s, (char*)ans, anssiz, 0,
 					   (struct sockaddr *)&from, &fromlen);
@@ -756,11 +756,11 @@ read_len:
 	_res_close();
 	if (!v_circuit)
 		if (!gotsomewhere)
-			errno = ECONNREFUSED;	/* no nameservers found */
+			__set_errno (ECONNREFUSED); /* no nameservers found */
 		else
-			errno = ETIMEDOUT;	/* no answer obtained */
+			__set_errno (ETIMEDOUT);    /* no answer obtained */
 	else
-		errno = terrno;
+		__set_errno (terrno);
 	return (-1);
 }
 

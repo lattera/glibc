@@ -93,7 +93,7 @@ __mbsrtowcs (dst, src, len, ps)
       else
 	{
 	  /* This is an illegal encoding.  */
-	  errno = EILSEQ;
+	  __set_errno (EILSEQ);
 	  return (size_t) -1;
 	}
 
@@ -105,7 +105,7 @@ __mbsrtowcs (dst, src, len, ps)
 	  if ((byte & 0xc0) != 0x80)
 	    {
 	      /* This is an illegal encoding.  */
-	      errno = EILSEQ;
+	      __set_errno (EILSEQ);
 	      return (size_t) -1;
 	    }
 

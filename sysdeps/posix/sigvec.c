@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <signal.h>
 #include <errno.h>
 #include <stddef.h>
@@ -28,7 +27,8 @@ static __sighandler_t wrapped_handlers[NSIG];
 static sigset_t wrapped_masks[NSIG];
 
 static void
-DEFUN(wrapper_handler, (sig), int sig)
+wrapper_handler (sig)
+     int sig;
 {
   int save;
   struct sigaction act;
@@ -37,33 +37,31 @@ DEFUN(wrapper_handler, (sig), int sig)
   act.sa_mask = wrapped_masks[sig];
   act.sa_flags = 0;
   save = errno;
-  (void) __sigaction(sig, &act, (struct sigaction *) NULL);
-  errno = save;
+  (void) __sigaction (sig, &act, (struct sigaction *) NULL);
+  __set_errno (save);
 
-  (*wrapped_handlers[sig])(sig);
+  (*wrapped_handlers[sig]) (sig);
 }
 
-static
-#ifdef	__GNUC__
-inline
-#endif
-int
-DEFUN(convert_mask, (set, mask), sigset_t *set AND CONST int mask)
+static inline int
+convert_mask (set, mask)
+     sigset_t *set;
+     const int mask;
 {
   register int sig;
 
-  if (sizeof(*set) == sizeof(mask))
+  if (sizeof (*set) == sizeof (mask))
     {
       *(int *) set = mask;
       return 0;
     }
 
-  if (__sigemptyset(set) < 0)
+  if (__sigemptyset (set) < 0)
     return -1;
 
   for (sig = 1; sig < NSIG; ++sig)
-    if (mask & sigmask(sig))
-      if (__sigaddset(set, sig) < 0)
+    if (mask & sigmask (sig))
+      if (__sigaddset (set, sig) < 0)
 	return -1;
 
   return 0;
@@ -75,8 +73,10 @@ DEFUN(convert_mask, (set, mask), sigset_t *set AND CONST int mask)
    reset to SIG_DFL before `sv_handler' is entered.  If OVEC is non-NULL,
    it is filled in with the old information for SIG.  */
 int
-DEFUN(__sigvec, (sig, vec, ovec),
-      int sig AND CONST struct sigvec *vec AND struct sigvec *ovec)
+__sigvec (sig, vec, ovec)
+     int sig;
+     const struct sigvec *vec;
+     struct sigvec *ovec;
 {
   struct sigaction old;
 
@@ -93,13 +93,13 @@ DEFUN(__sigvec, (sig, vec, ovec),
 	  if (convert_mask (&n->sa_mask, vec->sv_mask) < 0)
 	    return -1;
 	  n->sa_flags = 0;
-	  
+
 	  if (vec->sv_flags & SV_ONSTACK)
 	    {
 #ifdef SA_ONSTACK
 	      n->sa_flags |= SA_ONSTACK;
 #else
-	      errno = ENOSYS;
+	      __set_errno (ENOSYS);
 	      return -1;
 #endif
 	    }

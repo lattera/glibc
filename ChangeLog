@@ -1,3 +1,655 @@
+Mon Sep 23 15:31:04 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/Makefile ($(includedir)/rpc/netdb.h): There is no make
+	variable `top_srcdir' in libc; use $(..) instead.
+
+	* sysdeps/mach/hurd/Makefile (rtld-installed-name): Delete special
+	definition.  It was a *Mistake*.  (With a capital M.)
+
+	* sysdeps/mach/getsysstats.c (__get_nprocs): Renamed from
+	__get_nproc.
+	(__get_nprocs_conf): Renamed from __get_nproc_conf.
+
+Fri Sep 27 03:49:56 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Add support for cancelable system calls.
+
+	* csu/initfini.c: Make in crti.o reference to symbol
+ 	__libc_force_cancel_wrapper when compiling reentrant version.
+	* misc/Makefile (routines): Add force-wrapper.
+	* misc/force-wrapper.c: New file.
+
+	* posix/system.c: Rename function to __libc_system and make system
+ 	a weak alias.
+	* sysdeps/stub/system.c: Likewise.
+	* posix/wait.c: Rename function to __libc_wait and make __wait a
+	weak alias.  De-ANSI-fy.
+	* sysdeps/standalone/read.c: Rename function to __libc_read and
+	make __read a weak alias.
+	* sysdeps/stub/read.c: Likewise.
+	* sysdeps/standalone/write.c: Rename function to __libc_write and
+	make __write a weak alias.
+	* sysdeps/stub/write.c: Likewise.
+	* sysdeps/stub/tcdrain.c: Rename function to __libc_tcdrain and
+ 	make tcdrain a weak alias.
+	* sysdeps/unix/bsd/tcdrain.c: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/tcdrain.c: Likewise.
+	* sysdeps/unix/sysv/tcdrain.c: Likewise.
+	* sysdeps/unix/sysv/linux/tcdrain.c: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/wait.c: Rename function to __libc_wait
+	and make __wait a weak alias.
+	* sysdeps/stub/waitpid.c: Rename function to __libc_waitpid and
+	make __waitpid a weak alias.
+	* sysdeps/unix/bsd/bsd4.4/waitpid.c: Likewise.
+	* sysdeps/unix/sysv/linux/waitpid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/waitpid.c: Likewise.
+	* sysdeps/unix/common/pause.c: Rename function to __libc_pause
+	and make pause a weak alias.  De-ANSI-fy.
+
+	* sysdeps/unix/syscalls.list: Change name for close, fcntl, fsync,
+ 	lseek, open, read, and write to have __libc_ prefix and make old
+ 	names a weak alias.
+	* sysdeps/unix/mman/syscalls.list: Likewise for msync.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise for nanosleep.
+
+	* io/creat.c: De-ANSI-fy.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add pause.
+
+Thu Sep 26 19:15:55 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/mntent.h: Add MNTTYPE_* and MNTOPT_* macros.
+	Reported by Hans Grobler <grobh@nolian.ee.sun.ac.za>.
+
+Thu Sep 26 14:40:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/pathconf.c: Pass descriptor for just opened file
+ 	to fpathconf.
+	Reported by Martin von Loewis <martin@mira.isdn.cs.tu-berlin.de>.
+
+Thu Sep 26 04:02:43 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locfile.c (write_locale_data): Allocate room
+	even for file name for LC_MESSAGES locale.
+	(locafile_read): `tok_era' must be handled as a string list.
+	* locale/programs/ld-time.c: Finish correction of handling `era'.
+	* locale/C-time.c (_nl_C_LC_TIME): Add initializer for new fields.
+	* locale/categories.def: Add postload function for LC_TIME.
+	* locale/setlocale.c: Make lock global and rename to
+ 	__libc_setlocale_lock.
+	* locale/localeinfo.h (struct era_entry): New type.  Used in strftime.
+	Add prototypes for _nl_get_era_entry and _nl_get_alt_digit.
+	* locale/lc-time.c (_nl_postload_time): New function.  Initialize
+	lazy intialization.
+	(_nl_get_era_entry): New function.  Return era entry which corresponds
+	to given year.
+	(_nl_get_alt_digit): New function.  Return string with alternate
+	digit representation for given number.
+
+	* time/strftime.c (strftime): Use _nl_get_alt_digit to get
+	string representing alternate digit notation.
+
+Wed Sep 25 17:31:55 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/waitstatus.h (union wait): Add w_status field.
+	Reported by Hans Grobler <grobh@nolian.ee.sun.ac.za>.
+
+	* elf/rtld.c (dl_main): Process LD_PRELOAD before loading
+ 	ld.so.preload.  Suggested by David Engel <david@elo.ods.com>.
+
+Wed Sep 25 13:10:57 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c (main): Change --version again because RMS wants
+	the package name in parentheses.
+	* db/makedb.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
+Tue Sep 24 01:28:05 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(objpfx)sysd-dirs): Depend on Subdirs files, command
+	rewritten.
+	($(objpfx)version-info.h): Depend on Banner files, command
+	rewritten.
+
+Wed Sep 25 02:44:41 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sleep.c: New file.  Based on nanosleep.
+
+Tue Sep 24 21:46:02 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shadow/lckpwdf.c (PWD_LOCKFILE): Change to /etc/lock.pwd to be
+ 	on the same device as the password file.
+	* shadow/shadow.h (struct spwd): Change type of numeric fields
+	to `long int' since there value are days, not seconds.
+	* shadow/putspent.c: Change casts from time_t to `long int'.
+	* shadow/sgetspent_r.c (LINE_READER): Likewise.
+
+Mon Sep 23 23:05:24 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/errnos.h: Define __set_errno to make
+	sure the thread specific variable is set as well as the global
+	variable.
+	* sysdeps/mach/hurd/errnos.awk: Define macro for source code
+	compatibility.
+	* sysdeps/stub/errnos.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/errnos.h: Likewise.
+
+	* shadow/putspent.c: Don't include <errno.h>.
+
+	* dirent/scandir.c (scandir): Use __set_errno to set errno
+ 	variable.
+	* elf/dl-load.c (open_path): Likewise.
+	* inet/rcmd.c (rcmd): Likewise.
+	(rresvport): Likewise.
+	* intl/dcgettext.c [!__set_errno]: Define __set_errno.
+	(DCGETTEXT): Use __set_errno to set errno variable.
+	* io/fts.c (fts_open): Likewise.
+	(fts_close): Likewise.
+	(fts_read): Likewise.
+	(fts_set): Likewise.
+	(fts_children): Likewise.
+	(fts_build): Likewise.
+	(fts_stat): Likewise.
+	* io/ftw.c (ftw_dir): Likewise.
+	(ftw): Likewise.
+	* io/getwd.c (getwd): Likewise.
+	* io/lockf.c (lockf): Likewise.
+	* libio/libioP.h [EINVAL]: Use __set_errno to define MAYBE_SET_EINVAL.
+	* libio/iofdopen.c (_IO_fdopen): Use MAYBE_SET_EINVAL to errno.
+	* libio/iogetdelim.c (_IO_getdelim): Likewise.
+	* libio/fileops.c (_IO_file_open): Use __set_errno to set errno
+	variable.
+	* libio/iofgetpos.c (_IO_fgetpos): Likewise.
+	* libio/iofsetpos.c (_IO_fsetpos): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	* locale/loadlocale.c (_nl_load_locale): Likewise.
+	* locale/nl_langinfo.c (nl_langinfo): Likewise.
+	* locale/setlocale.c (ERROR_RETURN): Likewise.
+	* login/getutid_r (__getutid_r): Likewise.
+	* login/getutline_r (__getutline_r): Likewise.
+	* login/login.c (tty_name): Likewise.
+	* login/oututline_r.c (__pututline_r): Likewise.
+	* malloc/malloc.c (morecore): Likewise.
+	* misc/efgcvt_r.c (fcvt_r): Likewise.
+	* misc/hsearch_r.c (hcreate_r): Likewise.
+	(hdestroy_r): Likewise.
+	(hsearch_r): Likewise.
+	* nss/nsswitch.c (__nss_configure_lookup): Likewise.
+	* nss/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): Likewise.
+	(_nss_dns_gethostbyaddr_r): Likewise.
+	* nss/nss_files/files-XXX.c (internal_getent): Likewise.
+	* nss/nss_files/files-parse.c (parse_list): Likewise.
+	* posix/confstr.c (confstr): Likewise.  De-ANSI-fy.
+	* posix/execvp.c (execvp): Likewise.
+	* posix/glob.c: Define __set_errno.
+	(glob): Use __set_errno to set errno variable.
+	(glob_in_dir): Likewise.
+	* pwd/getpw.c: Likewise. De-ANSI-fy.
+	* pwd/putpwent.c: Likewise.
+	* resolv/inet_net_ntop.c: Likewise.
+	* resolv/inet_net_pton.c: Likewise.
+	* resolv/inet_neta.c: Likewise.
+	* resolv/inet_ntop.c: Likewise.
+	* resolv/inet_pton.c: Likewise.
+	* resolv/res_query.c (res_search): Likewise.
+	* resolv/res_send.c (Aerror): Likewise.
+	(Perror): Likewise.
+	(res_send): Likewise.
+	* signal/sigaddset.c: Likewise.  De-ANSI-fy.
+	* signal/sigdelset.c: Likewise.
+	* signal/sigempty.c: Likewise.
+	* signal/sigfillset.c: Likewise.
+	* signal/sigismem.c: Likewise.
+	* stdio/fclose.c: Likewise.
+	* stdio/feof.c: Likewise.
+	* stdio/ferror.c: Likewise.
+	* stdio/fflush.c: Likewise.
+	* stdio/fgetc.c: Likewise.
+	* stdio/fgetpos.c: Likewise.
+	* stdio/fgets.c: Likewise.
+	* stdio/fileno.c: Likewise.
+	* stdio/fmemopen.c: Likewise.
+	* stdio/fopen.c: Likewise.
+	* stdio/fputc.c: Likewise.
+	* stdio/fread.c: Likewise.
+	* stdio/freopen.c: Likewise.
+	* stdio/fseek.c: Likewise.
+	* stdio/fsetpos.c: Likewise.
+	* stdio/ftell.c: Likewise.
+	* stdio/fwrite.c: Likewise.
+	* stdio/getdelim.c: Likewise.
+	* stdio/gets.c: Likewise.
+	* stdio/glue.c: Likewise.
+	* stdio/internals.c: Likewise.
+	* stdio/memstream.c: Likewise.
+	* stdio/setvbuf.c: Likewise.
+	* stdio/ungetc.c: Likewise.
+	* stdio/vsscanf.c: Likewise.
+	* stdio-common/reg-printf.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* stdlib/canonicalize.c: Likewise.
+	* stdlib/msort.c: Likewise.
+	* stdlib/random_r.c: Likewise.
+	* stdlib/strfmon.c: Likewise.
+	* stdlib/strtod.c: Likewise.
+	* stdlib/strtol.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* time/asctime.c: Likewise.
+	* time/localtime.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wcstok.c: Likewise.
+	* sysdeps/generic/ftime.c: Likewise.
+	* sysdeps/generic/pty.c: Likewise.
+	* sysdeps/generic/setenv.c: Likewise.
+	* sysdeps/generic/speed.c: Likewise.
+	* sysdeps/generic/sysd-stdio.c: Likewise.
+	* sysdeps/generic/uname.c: Likewise.
+	* sysdeps/generic/vlimit.c: Likewise.
+	* sysdeps/libm-ieee754/k_standard.c: Likewise.
+	* sysdeps/libm-ieee754/s_ldexp.c: Likewise.
+	* sysdeps/libm-ieee754/s_ldexpf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ldexpl.c: Likewise.
+	* sysdeps/libm-ieee754/w_scalb.c: Likewise.
+	* sysdeps/libm-ieee754/w_scalbf.c: Likewise.
+	* sysdeps/libm-ieee754/w_scalbl.c: Likewise.
+	* sysdeps/posix/dup2.c: Likewise.
+	* sysdeps/posix/euidaccess.c: Likewise.
+	* sysdeps/posix/fdopen.c: Likewise.
+	* sysdeps/posix/flock.c: Likewise.
+	* sysdeps/posix/fpathconf.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* sysdeps/posix/gettimeofday.c: Likewise.
+	* sysdeps/posix/isatty.c: Likewise.
+	* sysdeps/posix/isfdtype.c: Likewise.
+	* sysdeps/posix/killpg.c: Likewise.
+	* sysdeps/posix/mkstemp.c: Likewise.
+	* sysdeps/posix/mktemp.c: Likewise.
+	* sysdeps/posix/pathconf.c: Likewise.
+	* sysdeps/posix/pipestream.c: Likewise.
+	* sysdeps/posix/remove.c: Likewise.
+	* sysdeps/posix/rename.c: Likewise.
+	* sysdeps/posix/sigintr.c: Likewise.
+	* sysdeps/posix/signal.c: Likewise.
+	* sysdeps/posix/sigsuspend.c: Likewise.
+	* sysdeps/posix/sigvec.c: Likewise.
+	* sysdeps/posix/sleep.c: Likewise.
+	* sysdeps/posix/sysconf.c: Likewise.
+	* sysdeps/posix/system.c: Likewise.
+	* sysdeps/posix/tempname.c: Likewise.
+	* sysdeps/posix/truncate.c: Likewise.
+	* sysdeps/posix/ttyname.c: Likewise.
+	* sysdeps/posix/ttyname_r.c: Likewise.
+	* sysdeps/posix/wait3.c: Likewise.
+	* sysdeps/standalone/close.c: Likewise.
+	* sysdeps/standalone/open.c: Likewise.
+	* sysdeps/standalone/read.c: Likewise.
+	* sysdeps/standalone/write.c: Likewise.
+	* sysdeps/stub/__longjmp.c: Likewise.
+	* sysdeps/stub/accept.c: Likewise.
+	* sysdeps/stub/access.c: Likewise.
+	* sysdeps/stub/acct.c: Likewise.
+	* sysdeps/stub/adjtime.c: Likewise.
+	* sysdeps/stub/alarm.c: Likewise.
+	* sysdeps/stub/bind.c: Likewise.
+	* sysdeps/stub/brk.c: Likewise.
+	* sysdeps/stub/chdir.c: Likewise.
+	* sysdeps/stub/chflags.c: Likewise.
+	* sysdeps/stub/chmod.c: Likewise.
+	* sysdeps/stub/chown.c: Likewise.
+	* sysdeps/stub/chroot.c: Likewise.
+	* sysdeps/stub/clock.c: Likewise.
+	* sysdeps/stub/close.c: Likewise.
+	* sysdeps/stub/closedir.c: Likewise.
+	* sysdeps/stub/connect.c: Likewise.
+	* sysdeps/stub/ctermid.c: Likewise.
+	* sysdeps/stub/cuserid.c: Likewise.
+	* sysdeps/stub/dirfd.c: Likewise.
+	* sysdeps/stub/dup.c: Likewise.
+	* sysdeps/stub/dup2.c: Likewise.
+	* sysdeps/stub/euidaccess.c: Likewise.
+	* sysdeps/stub/execve.c: Likewise.
+	* sysdeps/stub/fchdir.c: Likewise.
+	* sysdeps/stub/fchflags.c: Likewise.
+	* sysdeps/stub/fchmod.c: Likewise.
+	* sysdeps/stub/fchown.c: Likewise.
+	* sysdeps/stub/fcntl.c: Likewise.
+	* sysdeps/stub/fdopen.c: Likewise.
+	* sysdeps/stub/fexecve.c: Likewise.
+	* sysdeps/stub/flock.c: Likewise.
+	* sysdeps/stub/fork.c: Likewise.
+	* sysdeps/stub/fpathconf.c: Likewise.
+	* sysdeps/stub/fstatfs.c: Likewise.
+	* sysdeps/stub/fsync.c: Likewise.
+	* sysdeps/stub/ftruncate.c: Likewise.
+	* sysdeps/stub/fxstat.c: Likewise.
+	* sysdeps/stub/getcwd.c: Likewise.
+	* sysdeps/stub/getdents.c: Likewise.
+	* sysdeps/stub/getdomain.c: Likewise.
+	* sysdeps/stub/getdtsz.c: Likewise.
+	* sysdeps/stub/getegid.c: Likewise.
+	* sysdeps/stub/getenv.c: Likewise.
+	* sysdeps/stub/geteuid.c: Likewise.
+	* sysdeps/stub/getgid.c: Likewise.
+	* sysdeps/stub/getgroups.c: Likewise.
+	* sysdeps/stub/gethostid.c: Likewise.
+	* sysdeps/stub/gethostname.c: Likewise.
+	* sysdeps/stub/getitimer.c: Likewise.
+	* sysdeps/stub/getlogin.c: Likewise.
+	* sysdeps/stub/getlogin_r.c: Likewise.
+	* sysdeps/stub/getpagesize.c: Likewise.
+	* sysdeps/stub/getpeername.c: Likewise.
+	* sysdeps/stub/getpid.c: Likewise.
+	* sysdeps/stub/getppid.c: Likewise.
+	* sysdeps/stub/getpriority.c: Likewise.
+	* sysdeps/stub/getrlimit.c: Likewise.
+	* sysdeps/stub/getrusage.c: Likewise.
+	* sysdeps/stub/getsid.c: Likewise.
+	* sysdeps/stub/getsockname.c: Likewise.
+	* sysdeps/stub/getsockopt.c: Likewise.
+	* sysdeps/stub/getsysstats.c: Likewise.
+	* sysdeps/stub/gettimeofday.c: Likewise.
+	* sysdeps/stub/getuid.c: Likewise.
+	* sysdeps/stub/gtty.c: Likewise.
+	* sysdeps/stub/ioctl.c: Likewise.
+	* sysdeps/stub/isatty.c: Likewise.
+	* sysdeps/stub/isfdtype.c: Likewise.
+	* sysdeps/stub/kill.c: Likewise.
+	* sysdeps/stub/killpg.c: Likewise.
+	* sysdeps/stub/link.c: Likewise.
+	* sysdeps/stub/listen.c: Likewise.
+	* sysdeps/stub/lseek.c: Likewise.
+	* sysdeps/stub/lxstat.c: Likewise.
+	* sysdeps/stub/madvice.c: Likewise.
+	* sysdeps/stub/mkdir.c: Likewise.
+	* sysdeps/stub/mkfifo.c: Likewise.
+	* sysdeps/stub/mkstemp.c: Likewise.
+	* sysdeps/stub/mktemp.c: Likewise.
+	* sysdeps/stub/mmap.c: Likewise.
+	* sysdeps/stub/morecore.c: Likewise.
+	* sysdeps/stub/mprotect.c: Likewise.
+	* sysdeps/stub/msgctl.c: Likewise.
+	* sysdeps/stub/msgget.c: Likewise.
+	* sysdeps/stub/msgrcv.c: Likewise.
+	* sysdeps/stub/msgsnd.c: Likewise.
+	* sysdeps/stub/msync.c: Likewise.
+	* sysdeps/stub/munmap.c: Likewise.
+	* sysdeps/stub/nanosleep.c: Likewise.
+	* sysdeps/stub/nice.c: Likewise.
+	* sysdeps/stub/nlist.c: Likewise.
+	* sysdeps/stub/open.c: Likewise.
+	* sysdeps/stub/opendir.c: Likewise.
+	* sysdeps/stub/pathconf.c: Likewise.
+	* sysdeps/stub/pause.c: Likewise.
+	* sysdeps/stub/pipe.c: Likewise.
+	* sysdeps/stub/pipestream.c: Likewise.
+	* sysdeps/stub/poll.c: Likewise.
+	* sysdeps/stub/profil.c: Likewise.
+	* sysdeps/stub/ptrace.c: Likewise.
+	* sysdeps/stub/putenv.c: Likewise.
+	* sysdeps/stub/raise.c: Likewise.
+	* sysdeps/stub/read.c: Likewise.
+	* sysdeps/stub/readdir.c: Likewise.
+	* sysdeps/stub/readlink.c: Likewise.
+	* sysdeps/stub/readv.c: Likewise.
+	* sysdeps/stub/reboot.c: Likewise.
+	* sysdeps/stub/recv.c: Likewise.
+	* sysdeps/stub/recvfrom.c: Likewise.
+	* sysdeps/stub/recvmsg.c: Likewise.
+	* sysdeps/stub/remove.c: Likewise.
+	* sysdeps/stub/rename.c: Likewise.
+	* sysdeps/stub/revoke.c: Likewise.
+	* sysdeps/stub/rewinddir.c: Likewise.
+	* sysdeps/stub/rmdir.c: Likewise.
+	* sysdeps/stub/sbrk.c: Likewise.
+	* sysdeps/stub/sched_getp.c: Likewise.
+	* sysdeps/stub/sched_gets.c: Likewise.
+	* sysdeps/stub/sched_primax.c: Likewise.
+	* sysdeps/stub/sched_primin.c: Likewise.
+	* sysdeps/stub/sched_rr_gi.c: Likewise.
+	* sysdeps/stub/sched_setp.c: Likewise.
+	* sysdeps/stub/sched_sets.c: Likewise.
+	* sysdeps/stub/sched_yield.c: Likewise.
+	* sysdeps/stub/seekdir.c: Likewise.
+	* sysdeps/stub/select.c: Likewise.
+	* sysdeps/stub/semctl.c: Likewise.
+	* sysdeps/stub/semget.c: Likewise.
+	* sysdeps/stub/semop.c: Likewise.
+	* sysdeps/stub/send.c: Likewise.
+	* sysdeps/stub/sendmsg.c: Likewise.
+	* sysdeps/stub/sendto.c: Likewise.
+	* sysdeps/stub/setdomain.c: Likewise.
+	* sysdeps/stub/setegid.c: Likewise.
+	* sysdeps/stub/setenv.c: Likewise.
+	* sysdeps/stub/seteuid.c: Likewise.
+	* sysdeps/stub/setgid.c: Likewise.
+	* sysdeps/stub/setgroups.c: Likewise.
+	* sysdeps/stub/sethostid.c: Likewise.
+	* sysdeps/stub/sethostname.c: Likewise.
+	* sysdeps/stub/setitimer.c: Likewise.
+	* sysdeps/stub/setjmp.c: Likewise.
+	* sysdeps/stub/setlogin.c: Likewise.
+	* sysdeps/stub/setpgid.c: Likewise.
+	* sysdeps/stub/setpriority.c: Likewise.
+	* sysdeps/stub/setregid.c: Likewise.
+	* sysdeps/stub/setreuid.c: Likewise.
+	* sysdeps/stub/setrlimit.c: Likewise.
+	* sysdeps/stub/setsid.c: Likewise.
+	* sysdeps/stub/setsockopt.c: Likewise.
+	* sysdeps/stub/settimeofday.c: Likewise.
+	* sysdeps/stub/setuid.c: Likewise.
+	* sysdeps/stub/shmat.c: Likewise.
+	* sysdeps/stub/shmctl.c: Likewise.
+	* sysdeps/stub/shmdt.c: Likewise.
+	* sysdeps/stub/shmget.c: Likewise.
+	* sysdeps/stub/shutdown.c: Likewise.
+	* sysdeps/stub/sigaction.c: Likewise.
+	* sysdeps/stub/sigaltstack.c: Likewise.
+	* sysdeps/stub/sigblock.c: Likewise.
+	* sysdeps/stub/sigintr.c: Likewise.
+	* sysdeps/stub/signal.c: Likewise.
+	* sysdeps/stub/sigpause.c: Likewise.
+	* sysdeps/stub/sigpending.c: Likewise.
+	* sysdeps/stub/sigprocmask.c: Likewise.
+	* sysdeps/stub/sigreturn.c: Likewise.
+	* sysdeps/stub/sigsetmask.c: Likewise.
+	* sysdeps/stub/sigstack.c: Likewise.
+	* sysdeps/stub/sigsuspend.c: Likewise.
+	* sysdeps/stub/sigvec.c: Likewise.
+	* sysdeps/stub/sleep.c: Likewise.
+	* sysdeps/stub/socket.c: Likewise.
+	* sysdeps/stub/socketpair.c: Likewise.
+	* sysdeps/stub/sstk.c: Likewise.
+	* sysdeps/stub/statfs.c: Likewise.
+	* sysdeps/stub/stime.c: Likewise.
+	* sysdeps/stub/stty.c: Likewise.
+	* sysdeps/stub/swapoff.c: Likewise.
+	* sysdeps/stub/swapon.c: Likewise.
+	* sysdeps/stub/symlink.c: Likewise.
+	* sysdeps/stub/sync.c: Likewise.
+	* sysdeps/stub/syscall.c: Likewise.
+	* sysdeps/stub/sysconf.c: Likewise.
+	* sysdeps/stub/sysd-stdio.c: Likewise.
+	* sysdeps/stub/system.c: Likewise.
+	* sysdeps/stub/tcdrain.c: Likewise.
+	* sysdeps/stub/tcflow.c: Likewise.
+	* sysdeps/stub/tcflush.c: Likewise.
+	* sysdeps/stub/tcgetattr.c: Likewise.
+	* sysdeps/stub/tcgetpgrp.c: Likewise.
+	* sysdeps/stub/tcsendbrk.c: Likewise.
+	* sysdeps/stub/tcsetattr.c: Likewise.
+	* sysdeps/stub/tcsetpgrp.c: Likewise.
+	* sysdeps/stub/telldir.c: Likewise.
+	* sysdeps/stub/tempname.c: Likewise.
+	* sysdeps/stub/time.c: Likewise.
+	* sysdeps/stub/times.c: Likewise.
+	* sysdeps/stub/truncate.c: Likewise.
+	* sysdeps/stub/ttyname.c: Likewise.
+	* sysdeps/stub/ttyname_r.c: Likewise.
+	* sysdeps/stub/ualarm.c: Likewise.
+	* sysdeps/stub/ulimit.c: Likewise.
+	* sysdeps/stub/umask.c: Likewise.
+	* sysdeps/stub/unlink.c: Likewise.
+	* sysdeps/stub/usleep.c: Likewise.
+	* sysdeps/stub/ustat.c: Likewise.
+	* sysdeps/stub/utime.c: Likewise.
+	* sysdeps/stub/utimes.c: Likewise.
+	* sysdeps/stub/vhangup.c: Likewise.
+	* sysdeps/stub/wait.c: Likewise.
+	* sysdeps/stub/wait3.c: Likewise.
+	* sysdeps/stub/wait4.c: Likewise.
+	* sysdeps/stub/waitpid.c: Likewise.
+	* sysdeps/stub/write.c: Likewise.
+	* sysdeps/stub/writev.c: Likewise.
+	* sysdeps/stub/xmknod.c: Likewise.
+	* sysdeps/stub/xstat.c: Likewise.
+	* sysdeps/unix/closedir.c: Likewise.
+	* sysdeps/unix/fxstat.c: Likewise.
+	* sysdeps/unix/getlogin.c: Likewise.
+	* sysdeps/unix/getlogin_r.c: Likewise.
+	* sysdeps/unix/mkdir.c: Likewise.
+	* sysdeps/unix/nice.c: Likewise.
+	* sysdeps/unix/nlist.c: Likewise.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/unix/readdir.c: Likewise.
+	* sysdeps/unix/rmdir.c: Likewise.
+	* sysdeps/unix/stime.c: Likewise.
+	* sysdeps/unix/xmknod.c: Likewise.
+	* sysdeps/unix/xstat.c: Likewise.
+	* sysdeps/unix/bsd/isatty.c: Likewise.
+	* sysdeps/unix/bsd/setegid.c: Likewise.
+	* sysdeps/unix/bsd/seteuid.c: Likewise.
+	* sysdeps/unix/bsd/setsid.c: Likewise.
+	* sysdeps/unix/bsd/sigaction.c: Likewise.
+	* sysdeps/unix/bsd/sigprocmask.c: Likewise.
+	* sysdeps/unix/bsd/sigsuspend.c: Likewise.
+	* sysdeps/unix/bsd/tcflow.c: Likewise.
+	* sysdeps/unix/bsd/tcflush.c: Likewise.
+	* sysdeps/unix/bsd/tcgetattr.c: Likewise.
+	* sysdeps/unix/bsd/tcsetattr.c: Likewise.
+	* sysdeps/unix/bsd/times.c: Likewise.
+	* sysdeps/unix/bsd/ulimit.c: Likewise.
+	* sysdeps/unix/common/lxstat.c: Likewise.
+	* sysdeps/unix/common/tcsendbrk.c: Likewise.
+	* sysdeps/unix/sysv/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/settimeofday.c: Likewise.
+	* sysdeps/unix/sysv/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/tcflow.c: Likewise.
+	* sysdeps/unix/sysv/tcflush.c: Likewise.
+	* sysdeps/unix/sysv/tcgetattr.c: Likewise.
+	* sysdeps/unix/sysv/tcsendbrk.c: Likewise.
+	* sysdeps/unix/sysv/tcsetattr.c: Likewise.
+	* sysdeps/unix/bsd/ultrix4/sysconf.c: Likewise.
+	* sysdeps/unix/sysv/irix4/getpriority.c: Likewise.
+	* sysdeps/unix/sysv/irix4/setpriority.c: Likewise.
+	* sysdeps/unix/sysv/linux/adjtime.c: Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c: Likewise.
+	* sysdeps/unix/sysv/linux/gethostname.c: Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c: Likewise.
+	* sysdeps/unix/sysv/linux/ptrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/speed.c: Likewise.
+	* sysdeps/unix/sysv/linux/ulimit.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/sysconf.c: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/sigtramp.c: Likewise.
+	* sysdeps/unix/bsd/sun/sparc/sigtramp.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/speed.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/tcsetattr.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/brk.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/brk.c: Likewise.
+
+	* sunrpc/clnt_tcp.c: Protect declaration of errno by #ifndef.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+
+	* sysdeps/generic/strtok.c: Don't check argument, just crash.
+	* sysdeps/generic/strtok_r.c: Likewise.
+
+	* sysdeps/stub/start.c: Make __errno a strong alias of errno.
+	* sysdeps/unix/start.c: Likewise.  De-ANSI-fy.
+	* sysdeps/unix/sparc/start.c: Likewise.
+	* sysdeps/standalone/m68k/m68020/start.S: Likewise.
+	* sysdeps/unix/sysv/irix4/start.c: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/start.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+
+Mon Sep 23 17:54:57 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c (main): Put package name in --version message
+	in parantheses.  Reported by Jim Meyering.
+	* db/makedb.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
+	* sysdeps/i386/fpu/__math.h (tan): Make sure gcc knows we use
+	two registers.  Patch by John Bowman.
+
+Sat Sep 21 15:08:25 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/mach/libc-lock.h: Fix comment.
+	* sysdeps/stubs/libc-lock.h: Likewise.
+
+Sat Sep 21 13:50:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/genops.c (_IO_init) [_IO_MTSAFE_IO]: Dereference pointer
+ 	to lock when passing it to __libc_lock_init macro.
+	(_IO_default_finish) [_IO_MTSAFE_IO]: Dereference pointer to lock
+	when passing it to __libc_lock_fini macro.
+
+Sat Sep 21 14:35:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (SYSCALL_ERROR_HANDLER)
+	[_LIBC_REENTRANT]: Add missing semicolon.
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Move inclusion of
+ 	sysdep.h to the top outside of #ifndef PIC.  Don't include errnos.h.
+  	Use the ENTRY macro.
+
+Sat Sep 21 14:33:41 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/Makefile: Make `all' the default target.
+	* po/Makefile: Likewise.
+
+Mon Sep 23 15:49:47 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/test-canon.c: Correct patch from Thu Sep 12 23:01:16 1996.
+	I applied it incorrectly.
+	* sysdeps/m68k/fpu/s_scalbn.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbnf.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbnl.c: Likewise.
+
+Mon Sep 23 03:00:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shadow/sgetspent_r.c (LINE_PARSER): Accept empty 9th field.
+	Patch by NIIBE Yutaka <gniibe@mri.co.jp>.
+
+	* shadow/sgetspent_r.c (LINE_PARSER): Don't accept any chars after
+ 	9th field.
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==misc]
+	(sysdep_headers): Add sys/debugreg.h, sys/kd.h, sys/soundcard.h,
+ 	and sys/vt.h.
+	* sysdeps/unix/sysv/linux/sys/debugreg.h: New file.
+	* sysdeps/unix/sysv/linux/sys/kd.h: New file.
+	* sysdeps/unix/sysv/linux/sys/soundcard.h: New file.
+	* sysdeps/unix/sysv/linux/sys/vt.h: New file.
+	Reported by NIIBE Yutaka <gniibe@mri.co.jp>.
+
 Thu Sep 26 13:44:29 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* hurd/Makefile (installed-sunrpc-headers): New variable.

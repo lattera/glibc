@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
@@ -26,7 +25,8 @@ Cambridge, MA 02139, USA.  */
 /* SIGALRM signal handler for `sleep'.  This does nothing but return,
    but SIG_IGN isn't supposed to break `pause'.  */
 static void
-DEFUN(sleep_handler, (sig), int sig)
+sleep_handler (sig)
+     int sig;
 {
   return;
 }
@@ -39,7 +39,8 @@ DEFUN(sleep_handler, (sig), int sig)
    signal afterwards is undefined.  There is no return value to indicate
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
 unsigned int
-DEFUN(sleep, (seconds), unsigned int seconds)
+sleep (seconds)
+     unsigned int seconds;
 {
   unsigned int remaining, slept;
   time_t before, after;
@@ -100,7 +101,7 @@ DEFUN(sleep, (seconds), unsigned int seconds)
 
   /* Restore the `errno' value we started with.
      Some of the calls we made might have failed, but we didn't care.  */
-  errno = save;
+  __set_errno (save);
 
   return slept > seconds ? 0 : seconds - slept;
 }

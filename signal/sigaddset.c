@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,13 @@ Cambridge, MA 02139, USA.  */
 
 /* Add SIGNO to SET.  */
 int
-DEFUN(sigaddset, (set, signo), sigset_t *set AND int signo)
+sigaddset (set, signo)
+     sigset_t *set;
+     int signo;
 {
   if (set == NULL || signo <= 0 || signo >= NSIG)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

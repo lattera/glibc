@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -27,7 +27,7 @@ static char rcsid[] = "$NetBSD: s_ldexp.c,v 1.6 1995/05/10 20:47:40 jtc Exp $";
 {
 	if(!__finite(value)||value==0.0) return value;
 	value = __scalbn(value,exp);
-	if(!__finite(value)||value==0.0) errno = ERANGE;
+	if(!__finite(value)||value==0.0) __set_errno (ERANGE);
 	return value;
 }
 weak_alias (__ldexp, ldexp)

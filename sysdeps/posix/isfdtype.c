@@ -30,7 +30,7 @@ isfdtype (int fildes, int fdtype)
   {
     int save_error = errno;
     result = fstat (fildes, &st);
-    errno = save_error;
+    __set_errno (save_error);
   }
 
   return result ?: (st.st_mode & S_IFMT) == fdtype;

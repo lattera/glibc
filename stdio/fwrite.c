@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -24,11 +23,13 @@ Cambridge, MA 02139, USA.  */
 
 /* Write NMEMB chunks of SIZE bytes each from PTR onto STREAM.  */
 size_t
-DEFUN(fwrite, (ptr, size, nmemb, stream),
-      CONST PTR ptr AND size_t size AND
-      size_t nmemb AND register FILE *stream)
+fwrite (ptr, size, nmemb, stream)
+     const void *ptr;
+     size_t size;
+     size_t nmemb;
+     register FILE *stream;
 {
-  register CONST unsigned char *p = (CONST unsigned char *) ptr;
+  register const unsigned char *p = (const unsigned char *) ptr;
   register size_t to_write = size * nmemb;
   register size_t written = 0;
   int newlinep;
@@ -37,7 +38,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 
   if (!__validfp (stream) || !stream->__mode.__write)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return 0;
     }
 
@@ -71,7 +72,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	goto done;
       }
 
-    errno = save;
+    __set_errno (save);
   }
 
   if (stream->__buffer == NULL && default_func &&
@@ -82,7 +83,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
     {
       int count = (stream->__io_funcs.__write == NULL ? to_write :
 		   (*stream->__io_funcs.__write) (stream->__cookie,
-						  (CONST char *) p,
+						  (const char *) p,
 						  to_write));
       if (count > 0)
 	{
@@ -105,7 +106,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
   buffer_space = stream->__bufsize - (stream->__bufp - stream->__buffer);
 
   newlinep = (stream->__linebuf &&
-	      memchr ((CONST PTR) p, '\n', to_write) != NULL);
+	      memchr ((const void *) p, '\n', to_write) != NULL);
 
   if (newlinep && stream->__bufp == stream->__buffer &&
       stream->__offset == stream->__target)
@@ -148,7 +149,7 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	      *stream->__bufp++ = *p++;
 	  else
 	    {
-	      memcpy ((PTR) stream->__bufp, (PTR) p, n);
+	      memcpy ((void *) stream->__bufp, (void *) p, n);
 	      stream->__bufp += n;
 	      p += n;
 	    }

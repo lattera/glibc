@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +16,27 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <termios.h>
 
-static int EXFUN(bad_speed, (speed_t speed));
+static int bad_speed __P ((speed_t speed));
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
-DEFUN(tcsetattr, (fd, optional_actions, termios_p),
-      int fd AND int optional_actions AND CONST struct termios *termios_p)
+tcsetattr (fd, optional_actions, termios_p)
+     int fd;
+     int optional_actions;
+     const struct termios *termios_p;
 {
   if (fd < 0)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
   if (termios_p == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
   switch (optional_actions)
@@ -45,7 +46,7 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
     case TCSAFLUSH:
       break;
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -53,18 +54,19 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
       bad_speed(termios_p->__ispeed == 0 ?
 		termios_p->__ospeed : termios_p->__ispeed))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
 
 /* Stricknine checking.  */
 static int
-DEFUN(bad_speed, (speed), speed_t speed)
+bad_speed (speed)
+     speed_t speed;
 {
   switch (speed)
     {

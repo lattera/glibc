@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 struct dirent *
 __readdir (DIR *dirp)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return NULL;
 }
 weak_alias (__readdir, readdir)

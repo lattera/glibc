@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <errno.h>
 #include <stdio.h>
 #include <shadow.h>
 
@@ -31,39 +30,39 @@ putspent (const struct spwd *p, FILE *stream)
   if (fprintf (stream, "%s:%s:", p->sp_namp, p->sp_pwdp) < 0)
     ++errors;
 
-  if ((p->sp_lstchg != (time_t) -1
+  if ((p->sp_lstchg != (long int) -1
        && fprintf (stream, "%ld:", p->sp_lstchg) < 0)
-      || (p->sp_lstchg == (time_t) -1
+      || (p->sp_lstchg == (long int) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
-  if ((p->sp_min != (time_t) -1
+  if ((p->sp_min != (long int) -1
        && fprintf (stream, "%ld:", p->sp_min) < 0)
-      || (p->sp_min == (time_t) -1
+      || (p->sp_min == (long int) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
-  if ((p->sp_max != (time_t) -1
+  if ((p->sp_max != (long int) -1
        && fprintf (stream, "%ld:", p->sp_max) < 0)
-      || (p->sp_max == (time_t) -1
+      || (p->sp_max == (long int) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
-  if ((p->sp_warn != (time_t) -1
+  if ((p->sp_warn != (long int) -1
        && fprintf (stream, "%ld:", p->sp_warn) < 0)
-      || (p->sp_warn == (time_t) -1
+      || (p->sp_warn == (long int) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
-  if ((p->sp_inact != (time_t) -1
+  if ((p->sp_inact != (long int) -1
        && fprintf (stream, "%ld:", p->sp_inact) < 0)
-      || (p->sp_inact == (time_t) -1
+      || (p->sp_inact == (long int) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 
-  if ((p->sp_expire != (time_t) -1
+  if ((p->sp_expire != (long int) -1
        && fprintf (stream, "%ld:", p->sp_expire) < 0)
-      || (p->sp_expire == (time_t) -1
+      || (p->sp_expire == (long int) -1
 	  && putc (':', stream) == EOF))
     ++errors;
 

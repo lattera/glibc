@@ -149,6 +149,7 @@ END \
     print "/* errno is a per-thread variable.  */";
     print "#include <hurd/threadvar.h>";
     print "#define errno	(*__hurd_errno_location ())";
+    print "#define __set_errno(val) errno = (val)";
     print "";
     print "#endif /* <errno.h> included.  */";
     print "";

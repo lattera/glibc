@@ -26,7 +26,7 @@ ustat (dev, ust)
      dev_t dev;
      struct ustat * ust;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (ustat)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stddef.h>
@@ -26,15 +25,16 @@ Cambridge, MA 02139, USA.  */
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
 int
-DEFUN(__pipe, (__pipedes), int __pipedes[2])
+__pipe (__pipedes)
+     int __pipedes[2];
 {
   if (__pipedes == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (pipe)

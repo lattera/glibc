@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <utime.h>
 
@@ -24,16 +23,18 @@ Cambridge, MA 02139, USA.  */
 /* Set the access and modification times of FILE to those given in TIMES.
    If TIMES is NULL, set them to the current time.  */
 int
-DEFUN(utime, (file, times), CONST char *file AND CONST struct utimbuf *times)
+utime (file, times)
+     const char *file;
+     const struct utimbuf *times;
 {
   if (file == NULL)
     {
-      errno = EINVAL;
-      return(-1);
+      __set_errno (EINVAL);
+      return -1;
     }
 
-  errno = ENOSYS;
-  return(-1);
+  __set_errno (ENOSYS);
+  return -1;
 }
 
 

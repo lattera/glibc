@@ -53,7 +53,9 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #include <arpa/inet.h>
 #define MAX_BROADCAST_SIZE 1400
 
+#ifndef errno
 extern int errno;
+#endif
 static struct timeval timeout = { 3, 0 };
 
 
@@ -388,4 +390,3 @@ done_broad:
 	AUTH_DESTROY(unix_auth);
 	return (stat);
 }
-

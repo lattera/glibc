@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,15 +30,18 @@ Cambridge, MA 02139, USA.  */
    null terminator), or -1 on error or EOF.  */
 
 ssize_t
-DEFUN(__getdelim, (lineptr, n, terminator, stream),
-      char **lineptr AND size_t *n AND int terminator AND FILE *stream)
+__getdelim (lineptr, n, terminator, stream)
+     char **lineptr;
+     size_t *n;
+     int terminator;
+     FILE *stream;
 {
   char *line, *p;
   size_t size, copy;
 
   if (!__validfp (stream) || lineptr == NULL || n == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -116,7 +118,7 @@ DEFUN(__getdelim, (lineptr, n, terminator, stream),
 	  size_t i;
 	  char *found;
 
-	  i = stream->__get_limit - stream->__bufp;	
+	  i = stream->__get_limit - stream->__bufp;
 	  if (i == 0)
 	    {
 	      /* Refill the buffer.  */
@@ -127,7 +129,7 @@ DEFUN(__getdelim, (lineptr, n, terminator, stream),
 	      if (c == terminator)
 		goto win;
 	      --copy;
-	      i = stream->__get_limit - stream->__bufp;	
+	      i = stream->__get_limit - stream->__bufp;
 	    }
 
 	  if (i > copy)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -28,18 +27,20 @@ Cambridge, MA 02139, USA.  */
 /* Read formatted input from S according to the format
    string FORMAT, using the argument list in ARG.  */
 int
-DEFUN(__vsscanf, (s, format, arg),
-      CONST char *s AND CONST char *format AND va_list arg)
+__vsscanf (s, format, arg)
+     const char *s;
+     const char *format;
+     va_list arg;
 {
   FILE f;
 
   if (s == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  memset((PTR) &f, 0, sizeof(f));
+  memset ((void *) &f, 0, sizeof (f));
   f.__magic = _IOMAGIC;
   f.__mode.__read = 1;
   f.__bufp = f.__buffer = (char *) s;
@@ -51,7 +52,7 @@ DEFUN(__vsscanf, (s, format, arg),
   f.__room_funcs.__input = NULL;
   f.__seen = 1;
 
-  return __vfscanf(&f, format, arg);
+  return __vfscanf (&f, format, arg);
 }
 
 

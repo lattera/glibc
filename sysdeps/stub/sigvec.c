@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <signal.h>
 #include <errno.h>
 
@@ -26,10 +25,12 @@ Cambridge, MA 02139, USA.  */
    reset to SIG_DFL before `sv_handler' is entered.  If OVEC is non-NULL,
    it is filled in with the old information for SIG.  */
 int
-DEFUN(__sigvec, (sig, vec, ovec),
-      int sig AND CONST struct sigvec *vec AND struct sigvec *ovec)
+__sigvec (sig, vec, ovec)
+     int sig;
+     const struct sigvec *vec;
+     struct sigvec *ovec;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (sigvec)

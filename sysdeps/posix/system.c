@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -35,7 +34,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Execute LINE as a shell command, returning its status.  */
 int
-DEFUN(system, (line), register CONST char *line)
+__libc_system (const char *line)
 {
   int status, save;
   pid_t pid;
@@ -57,7 +56,7 @@ DEFUN(system, (line), register CONST char *line)
     {
       save = errno;
       (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
-      errno = save;
+      __set_errno (save);
       return -1;
     }
 
@@ -74,13 +73,13 @@ DEFUN(system, (line), register CONST char *line)
   if (__sigprocmask (SIG_BLOCK, &block, &omask) < 0)
     {
       if (errno == ENOSYS)
-	errno = save;
+	__set_errno (save);
       else
 	{
 	  save = errno;
 	  (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
 	  (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
-	  errno = save;
+	  __set_errno (save);
 	  return -1;
 	}
     }
@@ -93,7 +92,7 @@ DEFUN(system, (line), register CONST char *line)
   if (pid == (pid_t) 0)
     {
       /* Child side.  */
-      CONST char *new_argv[4];
+      const char *new_argv[4];
       new_argv[0] = SHELL_NAME;
       new_argv[1] = "-c";
       new_argv[2] = line;
@@ -105,7 +104,7 @@ DEFUN(system, (line), register CONST char *line)
       (void) UNBLOCK;
 
       /* Exec the shell.  */
-      (void) __execve (SHELL_PATH, (char *CONST *) new_argv, __environ);
+      (void) __execve (SHELL_PATH, (char *const *) new_argv, __environ);
       _exit (127);
     }
   else if (pid < (pid_t) 0)
@@ -137,10 +136,11 @@ DEFUN(system, (line), register CONST char *line)
        UNBLOCK) != 0)
     {
       if (errno == ENOSYS)
-	errno = save;
+	__set_errno (save);
       else
 	return -1;
     }
 
   return status;
 }
+weak_alias (__libc_system, system)

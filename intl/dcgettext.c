@@ -46,6 +46,9 @@ char *alloca ();
 #ifndef errno
 extern int errno;
 #endif
+#ifndef __set_errno
+# define __set_errno(val) errno = (val)
+#endif
 
 #if defined STDC_HEADERS || defined _LIBC
 # include <stdlib.h>
@@ -277,13 +280,13 @@ DCGETTEXT (domainname, msgid, category)
       dirname = (char *) alloca (path_max + dirname_len);
       ADD_BLOCK (block_list, dirname);
 
-      errno = 0;
+      __set_errno (0);
       while ((ret = getcwd (dirname, path_max)) == NULL && errno == ERANGE)
 	{
 	  path_max += PATH_INCR;
 	  dirname = (char *) alloca (path_max + dirname_len);
 	  ADD_BLOCK (block_list, dirname);
-	  errno = 0;
+	  __set_errno (0);
 	}
 
       if (ret == NULL)
@@ -291,7 +294,7 @@ DCGETTEXT (domainname, msgid, category)
 	  /* We cannot get the current working directory.  Don't signal an
 	     error but simply return the default string.  */
 	  FREE_BLOCKS (block_list);
-	  errno = saved_errno;
+	  __set_errno (saved_errno);
 	  return (char *) msgid;
 	}
 
@@ -352,7 +355,7 @@ DCGETTEXT (domainname, msgid, category)
 	  || strcmp (single_locale, "POSIX") == 0)
 	{
 	  FREE_BLOCKS (block_list);
-	  errno = saved_errno;
+	  __set_errno (saved_errno);
 	  return (char *) msgid;
 	}
 
@@ -381,7 +384,7 @@ DCGETTEXT (domainname, msgid, category)
 	  if (retval != NULL)
 	    {
 	      FREE_BLOCKS (block_list);
-	      errno = saved_errno;
+	      __set_errno (saved_errno);
 	      return retval;
 	    }
 	}

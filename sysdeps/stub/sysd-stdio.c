@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
@@ -24,20 +23,24 @@ Cambridge, MA 02139, USA.  */
 /* Read up to N chars into BUF from COOKIE.
    Return how many chars were read, 0 for EOF or -1 for error.  */
 int
-DEFUN(__stdio_read, (cookie, buf, n),
-      PTR cookie AND register char *buf AND register size_t n)
+__stdio_read (cookie, buf, n)
+     void *cookie;
+     register char *buf;
+     register size_t n;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
 /* Write up to N chars from BUF to COOKIE.
    Return how many chars were written or -1 for error.  */
 int
-DEFUN(__stdio_write, (cookie, buf, n),
-      PTR cookie AND register CONST char *buf AND register size_t n)
+__stdio_write (cookie, buf, n)
+     void *cookie;
+     register const char *buf;
+     register size_t n;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
@@ -45,19 +48,22 @@ DEFUN(__stdio_write, (cookie, buf, n),
    The new file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 int
-DEFUN(__stdio_seek, (cookie, pos, whence),
-      PTR cookie AND fpos_t *pos AND int whence)
+__stdio_seek (cookie, pos, whence)
+     void *cookie;
+     fpos_t *pos;
+     int whence;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
 /* Close the file associated with COOKIE.
    Return 0 for success or -1 for failure.  */
 int
-DEFUN(__stdio_close, (cookie), PTR cookie)
+__stdio_close (cookie)
+      void *cookie;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
@@ -65,21 +71,24 @@ DEFUN(__stdio_close, (cookie), PTR cookie)
    or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
    descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
 int
-DEFUN(__stdio_fileno, (cookie), PTR cookie)
+__stdio_fileno (cookie)
+     void *cookie;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
 
 /* Open FILENAME with the mode in M.
    Store the magic cookie associated with the opened file in *COOKIEPTR.
-   Return zero on success and nonzero on failure.  */   
+   Return zero on success and nonzero on failure.  */
 int
-DEFUN(__stdio_open, (filename, m, cookieptr),
-      CONST char *filename AND __io_mode m AND PTR *cookieptr)
+__stdio_open (filename, m, cookieptr)
+     const char *filename;
+     __io_mode m;
+     void **cookieptr;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
@@ -87,11 +96,13 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
 /* Open FILENAME with the mode in M.  Use the same magic cookie
    already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
 int
-DEFUN(__stdio_reopen, (filename, m, cookieptr),
-      CONST char *filename AND __io_mode m AND
-      PTR *cookieptr AND __io_close_fn closefn)
+__stdio_reopen (filename, m, cookieptr)
+     const char *filename;
+     __io_mode m;
+     void **cookieptr;
+     __io_close_fn closefn;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

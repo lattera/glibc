@@ -24,7 +24,7 @@ Boston, MA 02111-1307, USA.  */
 int
 nanosleep (const struct timespec *requested_time, struct timespec *remaining)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (nanosleep)

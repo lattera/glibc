@@ -1,5 +1,5 @@
 /* msort -- an alternative to qsort, with an identical interface.
-   Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
    Written by Mike Haertel, September 1988.
 
 This file is part of the GNU C Library.
@@ -19,15 +19,21 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <memcopy.h>
 #include <errno.h>
 
+static void msort_with_tmp __P ((void *b, size_t n, size_t s,
+				 __compar_fn_t cmp, char *t));
+
 static void
-DEFUN(msort_with_tmp, (b, n, s, cmp, t),
-      PTR b AND size_t n AND size_t s AND __compar_fn_t cmp AND char *t)
+msort_with_tmp (b, n, s, cmp, t)
+     void *b;
+     size_t n;
+     size_t s;
+     __compar_fn_t cmp;
+     char *t;
 {
   char *tmp;
   char *b1, *b2;
@@ -84,10 +90,13 @@ DEFUN(msort_with_tmp, (b, n, s, cmp, t),
 }
 
 void
-DEFUN(qsort, (b, n, s, cmp),
-      PTR b AND size_t n AND size_t s AND __compar_fn_t cmp)
+qsort (b, n, s, cmp)
+     void *b;
+     size_t n;
+     size_t s;
+     __compar_fn_t cmp;
 {
-  CONST size_t size = n * s;
+  const size_t size = n * s;
 
   if (size < 1024)
     /* The temporary array is small, so put it on the stack.  */
@@ -101,9 +110,9 @@ DEFUN(qsort, (b, n, s, cmp),
 	{
 	  /* Couldn't get space, so use the slower algorithm
 	     that doesn't need a temporary array.  */
-	  extern void EXFUN(_quicksort, (PTR __base,
-					 size_t __nmemb, size_t __size,
-					 __compar_fn_t __compar));
+	  extern void _quicksort __P ((void *__base,
+				       size_t __nmemb, size_t __size,
+				       __compar_fn_t __compar));
 	  _quicksort (b, n, s, cmp);
 	}
       else
@@ -111,6 +120,6 @@ DEFUN(qsort, (b, n, s, cmp),
 	  msort_with_tmp (b, n, s, cmp, tmp);
 	  free (tmp);
 	}
-      errno = save;
+      __set_errno (save);
     }
 }

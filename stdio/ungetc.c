@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
 
 /* Push the character C back onto the input stream of STREAM.  */
 int
-DEFUN(ungetc, (c, stream), register int c AND register FILE *stream)
+ungetc (c, stream)
+     register int c;
+     register FILE *stream;
 {
-  if (!__validfp(stream) || !stream->__mode.__read)
+  if (!__validfp (stream) || !stream->__mode.__read)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 

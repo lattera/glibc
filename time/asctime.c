@@ -39,7 +39,7 @@ __asctime_r (const struct tm *tp, char *buf)
 {
   if (tp == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 

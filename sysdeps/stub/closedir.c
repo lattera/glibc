@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 int
 __closedir (DIR *dirp)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 weak_alias (__closedir, closedir)

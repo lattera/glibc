@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <termios.h>
@@ -26,14 +25,16 @@ Cambridge, MA 02139, USA.  */
 
 /* Suspend or restart transmission on FD.  */
 int
-DEFUN(tcflow, (fd, action), int fd AND int action)
+tcflow (fd, action)
+     int fd;
+     int action;
 {
   switch (action)
     {
     case TCOOFF:
-      return __ioctl(fd, TIOCSTOP, (PTR) NULL);
+      return __ioctl (fd, TIOCSTOP, (PTR) NULL);
     case TCOON:
-      return __ioctl(fd, TIOCSTART, (PTR) NULL);
+      return __ioctl (fd, TIOCSTART, (PTR) NULL);
 
     case TCIOFF:
     case TCION:
@@ -42,7 +43,7 @@ DEFUN(tcflow, (fd, action), int fd AND int action)
 	   `write'.  Is there another way to do this?  */
 	struct termios attr;
 	unsigned char c;
-	if (tcgetattr(fd, &attr) < 0)
+	if (tcgetattr (fd, &attr) < 0)
 	  return -1;
 	c = attr.c_cc[action == TCIOFF ? VSTOP : VSTART];
 	if (c != _POSIX_VDISABLE && write (fd, &c, 1) < 1)
@@ -51,7 +52,7 @@ DEFUN(tcflow, (fd, action), int fd AND int action)
       }
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 }

@@ -29,5 +29,11 @@ extern int __errno;
 extern int *__errno_location __P ((void)) __attribute__ ((__const__));
 #define errno	(*__errno_location ())
 
+#define __set_errno(val) errno = __errno = (val)
+
+#else /* !__USE_REENTRENT || (_LIBC && !_LIBC_REENTRANT) */
+
+#define __set_errno(val) errno = (val)
+
 #endif
 #endif

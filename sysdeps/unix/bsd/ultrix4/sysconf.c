@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
    Contributed by Ian Lance Taylor (ian@airs.com).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,20 +20,19 @@ Cambridge, MA 02139, USA.  */
    value for _SC_CHILD_MAX.  Everything else is from <sys/param.h>,
    which the default sysconf already knows how to handle.  */
 
-#include <ansidecl.h>
 #include <unistd.h>
 #include <errno.h>
 
 /* This is an Ultrix header file.  */
 #include <sys/sysinfo.h>
 
-extern int EXFUN(__getsysinfo, (unsigned int op, void *buffer,
-				size_t nbytes, int *start,
-				void *arg));
-extern long int EXFUN(__default_sysconf, (int name));
+extern int __getsysinfo __P ((unsigned int op, void *buffer,
+			      size_t nbytes, int *start, void *arg));
+extern long int __default_sysconf __P ((int name));
 
 long int
-DEFUN(__sysconf, (name), int name)
+__sysconf (name)
+     int name;
 {
   if (name == _SC_CHILD_MAX)
     {
@@ -46,11 +45,11 @@ DEFUN(__sysconf, (name), int name)
       if (__getsysinfo (GSI_MAX_UPROCS, &ret, sizeof (ret), &start,
 			(void *) 0) > 0)
 	{
-	  errno = save;
+	  __set_errno (save);
 	  return ret;
 	}
 
-      errno = save;
+      __set_errno (save);
     }
 
   return __default_sysconf (name);

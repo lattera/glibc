@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 
@@ -25,9 +24,9 @@ Cambridge, MA 02139, USA.  */
    Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 int
-DEFUN_VOID(__fork)
+__fork ()
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (fork)

@@ -183,7 +183,7 @@ parse_list (char *line, struct parser_data *data, int datalen)
       if ((char *) &p[1] - (char *) data > datalen)
 	{
 	  /* We cannot fit another pointer in the buffer.  */
-	  errno = ERANGE;
+	  __set_errno (ERANGE);
 	  return NULL;
 	}
       if (*line == '\0')

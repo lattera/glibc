@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with the GNU C Library; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <a.out.h>
 #include <stdio.h>
@@ -27,8 +26,9 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
    which is terminated by an element with a NULL `n_un.n_name' member,
    and fill in the elements of NL.  */
 int
-DEFUN(nlist, (file, nl),
-      CONST char *file AND struct nlist *nl)
+nlist (file, nl)
+     const char *file;
+     struct nlist *nl;
 {
   FILE *f;
   struct exec header;
@@ -40,52 +40,53 @@ DEFUN(nlist, (file, nl),
 
   if (nl == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  f = fopen(file, "r");
+  f = fopen (file, "r");
   if (f == NULL)
     return -1;
 
-  if (fread((PTR) &header, sizeof(header), 1, f) != 1)
+  if (fread ((void *) &header, sizeof (header), 1, f) != 1)
     goto lose;
 
-  if (fseek(f, N_SYMOFF(header), SEEK_SET) != 0)
+  if (fseek (f, N_SYMOFF (header), SEEK_SET) != 0)
     goto lose;
 
-  symbols = (struct nlist *) __alloca(header.a_syms);
-  nsymbols = header.a_syms / sizeof(symbols[0]);
+  symbols = (struct nlist *) __alloca (header.a_syms);
+  nsymbols = header.a_syms / sizeof (symbols[0]);
 
-  if (fread((PTR) symbols, sizeof(symbols[0]), nsymbols, f) != nsymbols)
+  if (fread ((void *) symbols, sizeof (symbols[0]), nsymbols, f) != nsymbols)
     goto lose;
 
-  if (fread((PTR) &string_table_size, sizeof(string_table_size), 1, f) != 1)
+  if (fread ((void *) &string_table_size, sizeof (string_table_size), 1, f)
+      != 1)
     goto lose;
-  string_table_size -= sizeof(string_table_size);
+  string_table_size -= sizeof (string_table_size);
 
-  string_table = (char *) __alloca(string_table_size);
-  if (fread((PTR) string_table, string_table_size, 1, f) != 1)
+  string_table = (char *) __alloca (string_table_size);
+  if (fread ((void *) string_table, string_table_size, 1, f) != 1)
     goto lose;
 
   for (i = 0; i < nsymbols; ++i)
     {
       register struct nlist *nlp;
       for (nlp = nl; nlp->n_un.n_name != NULL; ++nlp)
-	if (!strcmp(nlp->n_un.n_name,
-		    &string_table[symbols[i].n_un.n_strx -
-				  sizeof(string_table_size)]))
+	if (!strcmp (nlp->n_un.n_name,
+		     &string_table[symbols[i].n_un.n_strx -
+				  sizeof (string_table_size)]))
 	  {
-	    char *CONST name = nlp->n_un.n_name;
+	    char *const name = nlp->n_un.n_name;
 	    *nlp = symbols[i];
 	    nlp->n_un.n_name = name;
 	  }
     }
 
-  (void) fclose(f);
+  (void) fclose (f);
   return 0;
 
  lose:;
-  (void) fclose(f);
+  (void) fclose (f);
   return -1;
 }

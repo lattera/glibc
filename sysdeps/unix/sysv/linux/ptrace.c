@@ -46,12 +46,12 @@ ptrace (enum __ptrace_request request, ...)
     {
       if (request > 0 && request < 4)
 	{
-	  errno = 0;
+	  __set_errno (0);
 	  return ret;
 	}
       return res;
     }
 
-  errno = -res;
+  __set_errno (-res);
   return -1;
 }

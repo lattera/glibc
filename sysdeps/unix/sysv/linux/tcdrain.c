@@ -21,9 +21,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Wait for pending output to be written on FD.  */
 int
-tcdrain (fd)
-      int fd;
+__libc_tcdrain (int fd)
 {
   /* With an argument of 1, TCSBRK for output to be drain.  */
   return __ioctl (fd, TCSBRK, 1);
 }
+weak_alias (__libc_tcdrain, tcdrain)

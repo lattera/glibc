@@ -27,14 +27,30 @@ Boston, MA 02111-1307, USA.  */
 /* Undefine following line in production version.  */
 /* #define NDEBUG 1 */
 #include <assert.h>
+#include <stdlib.h>
 
 #include "locales.h"
 #include "localeinfo.h"
 #include "stringtrans.h"
 
+#define SWAPU32(w) \
+  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
+
 
 void *xmalloc (size_t __n);
 void *xrealloc (void *__p, size_t __n);
+
+
+/* Entry describing an entry of the era specification.  */
+struct era_data
+{
+  int32_t direction;
+  int32_t offset;
+  int32_t start_date[3];
+  int32_t stop_date[3];
+  const char *name;
+  const char *format;
+};
 
 
 /* The real definition of the struct for the LC_TIME locale.  */
@@ -55,13 +71,16 @@ struct locale_time_t
   const char *t_fmt;
   const char *t_fmt_ampm;
   const char **era;
-  size_t era_num;
+  u_int32_t cur_num_era;
   const char *era_year;
   const char *era_d_t_fmt;
   const char *era_t_fmt;
   const char *era_d_fmt;
   const char *alt_digits[100];
-  size_t cur_num_alt_digits;
+  u_int32_t cur_num_alt_digits;
+
+  struct era_data *era_entries;
+  struct era_data *era_entries_ob;
 };
 
 
@@ -109,6 +128,263 @@ time_finish (struct localedef_t *locale)
   TEST_ELEM (d_fmt);
   TEST_ELEM (t_fmt);
   TEST_ELEM (t_fmt_ampm);
+
+  /* Now process the era entries.  */
+  if (time->cur_num_era != 0)
+    {
+      const int days_per_month[12] = { 31, 29, 31, 30, 31, 30,
+				       31, 31, 30, 31 ,30, 31 };
+      size_t idx;
+
+      time->era_entries =
+	(struct era_data *) xmalloc (time->cur_num_era
+				     * sizeof (struct era_data));
+
+      for (idx = 0; idx < time->cur_num_era; ++idx)
+	{
+	  size_t era_len = strlen (time->era[idx]);
+	  char *str = xmalloc ((era_len + 1 + 3) & ~3);
+	  char *endp;
+
+	  memcpy (str, time->era[idx], era_len + 1);
+
+	  /* First character must be + or - for the direction.  */
+	  if (*str != '+' && *str != '-')
+	    {
+	      error (0, 0, _("direction flag in string %d in `era' field"
+			     " in category `%s' is not '+' nor '-'"),
+		     idx + 1, "LC_TIME");
+	      /* Default arbitrarily to '+'.  */
+	      time->era_entries[idx].direction = '+';
+	    }
+	  else
+	    time->era_entries[idx].direction = *str;
+	  if (*++str != ':')
+	    {
+	      error (0, 0, _("direction flag in string %d in `era' field"
+			     " in category `%s' is not a single character"),
+		     idx + 1, "LC_TIME");
+	      (void) strsep (&str, ":");
+	    }
+	  else
+	    ++str;
+
+	  /* Now the offset year.  */
+	  time->era_entries[idx].offset = strtol (str, &endp, 10);
+	  if (endp == str)
+	    {
+	      error (0, 0, _("illegal number for offset in string %d in"
+			     " `era' field in category `%s'"),
+		     idx + 1, "LC_TIME");
+	      (void) strsep (&str, ":");
+	    }
+	  else if (*endp != ':')
+	    {
+	      error (0, 0, _("garbage at end of offset value in string %d in"
+			     " `era' field in category `%s'"),
+		     idx + 1, "LC_TIME");
+	      (void) strsep (&str, ":");
+	    }
+	  else
+	    str = endp + 1;
+
+	  /* Next is the starting date in ISO format.  */
+	  if (strncmp (str, "-*", 2) == 0)
+	    {
+	      time->era_entries[idx].start_date[0] =
+		time->era_entries[idx].start_date[1] =
+		time->era_entries[idx].start_date[2] = 0x80000000;
+	      if (str[2] != ':')
+		goto garbage_start_date;
+	      str += 3;
+	    }
+	  else if (strncmp (str, "+*", 2) == 0)
+	    {
+	      time->era_entries[idx].start_date[0] =
+		time->era_entries[idx].start_date[1] =
+		time->era_entries[idx].start_date[2] = 0x7fffffff;
+	      if (str[2] != ':')
+		goto garbage_start_date;
+	      str += 3;
+	    }
+	  else
+	    {
+	      time->era_entries[idx].start_date[0] = strtol (str, &endp, 10);
+	      if (endp == str || *endp != '/')
+		goto invalid_start_date;
+	      else
+		str = endp + 1;
+	      time->era_entries[idx].start_date[0] -= 1900;
+
+	      time->era_entries[idx].start_date[1] = strtol (str, &endp, 10);
+	      if (endp == str || *endp != '/')
+		goto invalid_start_date;
+	      else
+		str = endp + 1;
+	      time->era_entries[idx].start_date[1] -= 1;
+
+	      time->era_entries[idx].start_date[2] = strtol (str, &endp, 10);
+	      if (endp == str)
+		{
+		invalid_start_date:
+		  error (0, 0, _("illegal starting date in string %d in"
+				 " `era' field in category `%s'"),
+			 idx + 1, "LC_TIME");
+		  (void) strsep (&str, ":");
+		}
+	      else if (*endp != ':')
+		{
+		garbage_start_date:
+		  error (0, 0, _("garbage at end of starting date in string %d"
+				 " in `era' field in category `%s'"),
+			 idx + 1, "LC_TIME");
+		  (void) strsep (&str, ":");
+		}
+	      else
+		{
+		  str = endp + 1;
+
+		  /* Check for valid value.  */
+		  if (time->era_entries[idx].start_date[1] < 0
+		      || time->era_entries[idx].start_date[1] >= 12
+		      || time->era_entries[idx].start_date[2] < 0
+		      || (time->era_entries[idx].start_date[2]
+			  > days_per_month[time->era_entries[idx].start_date[1]])
+		      || (time->era_entries[idx].start_date[1] == 2
+			  && time->era_entries[idx].start_date[2] == 29
+			  && !__isleap (time->era_entries[idx].start_date[0])))
+			  error (0, 0, _("starting date is illegal in"
+					 " string %d in `era' field in"
+					 " category `%s'"),
+				 idx + 1, "LC_TIME");
+		}
+	    }
+
+	  /* Next is the stoping date in ISO format.  */
+	  if (strncmp (str, "-*", 2) == 0)
+	    {
+	      time->era_entries[idx].stop_date[0] =
+		time->era_entries[idx].stop_date[1] =
+		time->era_entries[idx].stop_date[2] = 0x80000000;
+	      if (str[2] != ':')
+		goto garbage_stop_date;
+	      str += 3;
+	    }
+	  else if (strncmp (str, "+*", 2) == 0)
+	    {
+	      time->era_entries[idx].stop_date[0] =
+		time->era_entries[idx].stop_date[1] =
+		time->era_entries[idx].stop_date[2] = 0x7fffffff;
+	      if (str[2] != ':')
+		goto garbage_stop_date;
+	      str += 3;
+	    }
+	  else
+	    {
+	      time->era_entries[idx].stop_date[0] = strtol (str, &endp, 10);
+	      if (endp == str || *endp != '/')
+		goto invalid_stop_date;
+	      else
+		str = endp + 1;
+	      time->era_entries[idx].stop_date[0] -= 1900;
+
+	      time->era_entries[idx].stop_date[1] = strtol (str, &endp, 10);
+	      if (endp == str || *endp != '/')
+		goto invalid_stop_date;
+	      else
+		str = endp + 1;
+	      time->era_entries[idx].stop_date[1] -= 1;
+
+	      time->era_entries[idx].stop_date[2] = strtol (str, &endp, 10);
+	      if (endp == str)
+		{
+		invalid_stop_date:
+		  error (0, 0, _("illegal stopping date in string %d in"
+				 " `era' field in category `%s'"),
+			 idx + 1, "LC_TIME");
+		  (void) strsep (&str, ":");
+		}
+	      else if (*endp != ':')
+		{
+		garbage_stop_date:
+		  error (0, 0, _("garbage at end of stopping date in string %d"
+				 " in `era' field in category `%s'"),
+			 idx + 1, "LC_TIME");
+		  (void) strsep (&str, ":");
+		}
+	      else
+		{
+		  str = endp + 1;
+
+		  /* Check for valid value.  */
+		  if (time->era_entries[idx].stop_date[1] < 0
+		      || time->era_entries[idx].stop_date[1] >= 12
+		      || time->era_entries[idx].stop_date[2] < 0
+		      || (time->era_entries[idx].stop_date[2]
+			  > days_per_month[time->era_entries[idx].stop_date[1]])
+		      || (time->era_entries[idx].stop_date[1] == 2
+			  && time->era_entries[idx].stop_date[2] == 29
+			  && !__isleap (time->era_entries[idx].stop_date[0])))
+			  error (0, 0, _("stopping date is illegal in"
+					 " string %d in `era' field in"
+					 " category `%s'"),
+				 idx + 1, "LC_TIME");
+		}
+	    }
+
+	  if (str == NULL || *str == '\0')
+	    {
+	      error (0, 0, _("missing era name in string %d in `era' field"
+			     "in category `%s'"), idx + 1, "LC_TIME");
+	      time->era_entries[idx].name =
+		time->era_entries[idx].format = "";
+	    }
+	  else
+	    {
+	      time->era_entries[idx].name = strsep (&str, ":");
+
+	      if (str == NULL || *str == '\0')
+		{
+		  error (0, 0, _("missing era format in string %d in `era'"
+				 " field in category `%s'"),
+			 idx + 1, "LC_TIME");
+		  time->era_entries[idx].name =
+		    time->era_entries[idx].format = "";
+		}
+	      else
+		time->era_entries[idx].format = str;
+	    }
+	}
+
+      /* Construct the array for the other byte order.  */
+      time->era_entries_ob =
+	(struct era_data *) xmalloc (time->cur_num_era
+				      * sizeof (struct era_data));
+
+      for (idx = 0; idx < time->cur_num_era; ++idx)
+	{
+	  time->era_entries_ob[idx].direction =
+	    SWAPU32 (time->era_entries[idx].direction);
+	  time->era_entries_ob[idx].offset =
+	    SWAPU32 (time->era_entries[idx].offset);
+	  time->era_entries_ob[idx].start_date[0] =
+	    SWAPU32 (time->era_entries[idx].start_date[0]);
+	  time->era_entries_ob[idx].start_date[1] =
+	    SWAPU32 (time->era_entries[idx].start_date[1]);
+	  time->era_entries_ob[idx].start_date[2] =
+	    SWAPU32 (time->era_entries[idx].stop_date[2]);
+	  time->era_entries_ob[idx].stop_date[0] =
+	    SWAPU32 (time->era_entries[idx].stop_date[0]);
+	  time->era_entries_ob[idx].stop_date[1] =
+	    SWAPU32 (time->era_entries[idx].stop_date[1]);
+	  time->era_entries_ob[idx].stop_date[2] =
+	    SWAPU32 (time->era_entries[idx].stop_date[2]);
+	  time->era_entries_ob[idx].name =
+	    time->era_entries[idx].name;
+	  time->era_entries_ob[idx].format =
+	    time->era_entries[idx].format;
+	}
+    }
 }
 
 
@@ -117,8 +393,9 @@ time_output (struct localedef_t *locale, const char *output_path)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
-		  + (time->era_num > 0 ? time->era_num - 1 : 0)
-		  + time->cur_num_alt_digits];
+		  + time->cur_num_era - 1
+		  + time->cur_num_alt_digits - 1
+		  + 1 + (time->cur_num_era * 9 - 1) * 2];
   struct locale_file data;
   u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num;
@@ -209,10 +486,11 @@ time_output (struct localedef_t *locale, const char *output_path)
   last_idx = ++cnt;
 
   idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < time->era_num; ++num, ++cnt)
+  for (num = 0; num < time->cur_num_era; ++num, ++cnt)
     {
       iov[2 + cnt].iov_base = (void *) time->era[num];
       iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
+      idx[1 + last_idx] += iov[2 + cnt].iov_len;
     }
   ++last_idx;
 
@@ -241,13 +519,128 @@ time_output (struct localedef_t *locale, const char *output_path)
   iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
+  ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->era_d_fmt ?: "");
+  iov[2 + cnt].iov_base = (void *) (time->era_t_fmt ?: "");
   iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+
+  /* We must align the following data.  */
+  iov[2 + cnt].iov_base = (void *) "\0\0";
+  iov[2 + cnt].iov_len = ((idx[last_idx] + 3) & ~3) - idx[last_idx];
+  idx[last_idx] = (idx[last_idx] + 3) & ~3;
   ++cnt;
 
-  assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME) - 1
-		  + time->cur_num_alt_digits));
+  iov[2 + cnt].iov_base = (void *) &time->cur_num_alt_digits;
+  iov[2 + cnt].iov_len = sizeof (u_int32_t);
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  /* The `era' data in usable form.  */
+  iov[2 + cnt].iov_base = (void *) &time->cur_num_era;
+  iov[2 + cnt].iov_len = sizeof (u_int32_t);
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define ERA_B1 time->era_entries
+# define ERA_B2 time->era_entries_ob
+#else
+# define ERA_B1 time->era_entries_ob
+# define ERA_B2 time->era_entries
+#endif
+  idx[1 + last_idx] = idx[last_idx];
+  for (num = 0; num < time->cur_num_era; ++num)
+    {
+      size_t l;
+
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].direction;
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].offset;
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[0];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[0];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+
+      l = (strchr (ERA_B1[num].format, '\0') - ERA_B1[num].name) + 1;
+      l = (l + 3) & ~3;
+      iov[2 + cnt].iov_base = (void *) ERA_B1[num].name;
+      iov[2 + cnt].iov_len = l;
+      ++cnt;
+
+      idx[1 + last_idx] += 8 * sizeof (int32_t) + l;
+
+      assert (idx[1 + last_idx] % 4 == 0);
+    }
+  ++last_idx;
+
+  /* idx[1 + last_idx] = idx[last_idx]; */
+  for (num = 0; num < time->cur_num_era; ++num)
+    {
+      size_t l;
+
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].direction;
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].offset;
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[0];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[0];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+
+      l = (strchr (ERA_B2[num].format, '\0') - ERA_B2[num].name) + 1;
+      l = (l + 3) & ~3;
+      iov[2 + cnt].iov_base = (void *) ERA_B2[num].name;
+      iov[2 + cnt].iov_len = l;
+      ++cnt;
+
+      /* idx[1 + last_idx] += 8 * sizeof (int32_t) + l; */
+    }
+
+
+  assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
+		  + time->cur_num_era - 1
+		  + time->cur_num_alt_digits - 1
+		  + 1 + (time->cur_num_era * 9 - 1) * 2)
+	  && last_idx + 1 == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   write_locale_data (output_path, "LC_TIME", 2 + cnt, iov);
 }
@@ -291,9 +684,10 @@ too many values for field `%s' in category `LC_TIME'"),			      \
 		  "era", "LC_TIME");
       else
 	{
-	  ++time->era_num;
-	  time->era = xrealloc (time->era, time->era_num * sizeof (char *));
-	  time->era[time->era_num - 1] = code->val.str.start;
+	  ++time->cur_num_era;
+	  time->era = xrealloc (time->era,
+				time->cur_num_era * sizeof (char *));
+	  time->era[time->cur_num_era - 1] = code->val.str.start;
 	}
       break;
 

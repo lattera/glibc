@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -27,22 +26,23 @@ link_warning (gets,
 /* Read a newline-terminated string from stdin into S,
    removing the trailing newline.  Return S or NULL.  */
 char *
-DEFUN(gets, (s), char *s)
+gets (s)
+     char *s;
 {
   register char *p = s;
   register int c;
   FILE *stream = stdin;
 
-  if (!__validfp(stream) || p == NULL)
+  if (!__validfp (stream) || p == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 
-  if (feof(stream) || ferror(stream))
+  if (feof (stream) || ferror (stream))
     return NULL;
 
-  while ((c = getchar()) != EOF)
+  while ((c = getchar ()) != EOF)
     if (c == '\n')
       break;
     else

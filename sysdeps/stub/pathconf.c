@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <unistd.h>
@@ -24,11 +23,13 @@ Cambridge, MA 02139, USA.  */
 
 /* Get file-specific information about PATH.  */
 long int
-DEFUN(__pathconf, (path, name), CONST char *path AND int name)
+__pathconf (path, name)
+     const char *path;
+     int name;
 {
   if (path == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
   return __fpathconf (0, name);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
@@ -27,7 +26,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Create a directory named PATH with protections MODE.  */
 int
-DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
+__mkdir (path, mode)
+     const char *path;
+     mode_t mode;
 {
   char *cmd = __alloca (80 + strlen (path));
   char *p;
@@ -38,7 +39,7 @@ DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
 
   if (path == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -51,7 +52,7 @@ DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
     }
   else
     {
-      errno = EEXIST;
+      __set_errno (EEXIST);
       return -1;
     }
 
@@ -83,11 +84,11 @@ DEFUN(__mkdir, (path, mode), CONST char *path AND mode_t mode)
   /* If system doesn't set errno, but the mkdir fails, we really
      have no idea what went wrong.  EIO is the vaguest error I
      can think of, so I'll use that.  */
-  errno = EIO;
+  __set_errno (EIO);
   status = system (cmd);
   if (WIFEXITED (status) && WEXITSTATUS (status) == 0)
     {
-      errno = save;
+      __set_errno (save);
       return 0;
     }
   else

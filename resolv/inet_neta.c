@@ -77,6 +77,6 @@ inet_neta(src, dst, size)
 	return (odst);
 
  emsgsize:
-	errno = EMSGSIZE;
+	__set_errno (EMSGSIZE);
 	return (NULL);
 }

@@ -56,7 +56,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
   if (wc < 0 || wc > 0x7fffffff)
     {
       /* This is no correct ISO 10646 character.  */
-      errno = EILSEQ;
+      __set_errno (EILSEQ);
       return (size_t) -1;
     }
 

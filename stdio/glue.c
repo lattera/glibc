@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,6 @@ Cambridge, MA 02139, USA.  */
    libraries) compiled with Unix header files to work with the GNU C
    library.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <errno.h>
 
@@ -74,7 +73,8 @@ unix_FILE _iob[] =
    In a Unix stdio FILE `_cnt' is the first element.
    In a GNU stdio or glued FILE, the first element is the magic number.  */
 int
-DEFUN(_filbuf, (file), unix_FILE *file)
+_filbuf (file)
+     unix_FILE *file;
 {
   switch (++file->glue.magic)	/* Compensate for Unix getc's decrement.  */
     {
@@ -88,15 +88,16 @@ DEFUN(_filbuf, (file), unix_FILE *file)
 
     default:
       /* Bogus stream.  */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 }
 
 /* Called by the Unix stdio `putc' macro.  Much like getc, above.  */
 int
-DEFUN(_flsbuf, (c, file),
-      int c AND unix_FILE *file)
+_flsbuf (c, file)
+     int c;
+     unix_FILE *file;
 {
   /* Compensate for putc's decrement.  */
   switch (++file->glue.magic)
@@ -108,7 +109,7 @@ DEFUN(_flsbuf, (c, file),
       return putc (c, (FILE *) file);
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 }

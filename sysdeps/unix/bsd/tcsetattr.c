@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <termios.h>
@@ -24,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include "bsdtty.h"
 
 
-CONST speed_t __bsd_speeds[] =
+const speed_t __bsd_speeds[] =
   {
     0,
     50,
@@ -47,8 +46,10 @@ CONST speed_t __bsd_speeds[] =
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
-DEFUN(tcsetattr, (fd, optional_actions, termios_p),
-      int fd AND int optional_actions AND CONST struct termios *termios_p)
+tcsetattr (fd, optional_actions, termios_p)
+     int fd;
+     int optional_actions;
+     const struct termios *termios_p;
 {
   struct sgttyb buf;
   struct tchars tchars;
@@ -59,18 +60,18 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
 #endif
   size_t i;
 
-  if (__ioctl(fd, TIOCGETP, &buf) < 0 ||
-      __ioctl(fd, TIOCGETC, &tchars) < 0 ||
-      __ioctl(fd, TIOCGLTC, &ltchars) < 0 ||
+  if (__ioctl (fd, TIOCGETP, &buf) < 0 ||
+      __ioctl (fd, TIOCGETC, &tchars) < 0 ||
+      __ioctl (fd, TIOCGLTC, &ltchars) < 0 ||
 #ifdef	TIOCGETX
-      __ioctl(fd, TIOCGETX, &extra) < 0 ||
+      __ioctl (fd, TIOCGETX, &extra) < 0 ||
 #endif
-      __ioctl(fd, TIOCLGET, &local) < 0)
+      __ioctl (fd, TIOCLGET, &local) < 0)
     return -1;
 
   if (termios_p == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
   switch (optional_actions)
@@ -78,15 +79,15 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
     case TCSANOW:
       break;
     case TCSADRAIN:
-      if (tcdrain(fd) < 0)
+      if (tcdrain (fd) < 0)
 	return -1;
       break;
     case TCSAFLUSH:
-      if (tcflush(fd, TCIFLUSH) < 0)
+      if (tcflush (fd, TCIFLUSH) < 0)
 	return -1;
       break;
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -100,7 +101,7 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
     }
   if (buf.sg_ispeed == -1 || buf.sg_ospeed == -1)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -174,13 +175,13 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
   tchars.t_startc = termios_p->c_cc[VSTART];
   tchars.t_stopc = termios_p->c_cc[VSTOP];
 
-  if (__ioctl(fd, TIOCSETP, &buf) < 0 ||
-      __ioctl(fd, TIOCSETC, &tchars) < 0 ||
-      __ioctl(fd, TIOCSLTC, &ltchars) < 0 ||
+  if (__ioctl (fd, TIOCSETP, &buf) < 0 ||
+      __ioctl (fd, TIOCSETC, &tchars) < 0 ||
+      __ioctl (fd, TIOCSLTC, &ltchars) < 0 ||
 #ifdef	TIOCGETX
-      __ioctl(fd, TIOCSETX, &extra) < 0 ||
+      __ioctl (fd, TIOCSETX, &extra) < 0 ||
 #endif
-      __ioctl(fd, TIOCLSET, &local) < 0)
+      __ioctl (fd, TIOCLSET, &local) < 0)
     return -1;
   return 0;
 }

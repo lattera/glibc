@@ -28,7 +28,7 @@ __xstat (int vers, const char *file, struct stat *buf)
 {
   if (vers != _STAT_VER)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

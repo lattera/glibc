@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@ Cambridge, MA 02139, USA.  */
    locking mechanism.  In 4BSD, these are two incompatible locking mechanisms,
    perhaps with different semantics?  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -29,7 +28,9 @@ Cambridge, MA 02139, USA.  */
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
 int
-DEFUN(__flock, (fd, operation), int fd AND int operation)
+__flock (fd, operation)
+     int fd;
+     int operation;
 {
   struct flock lbuf;
 
@@ -45,7 +46,7 @@ DEFUN(__flock, (fd, operation), int fd AND int operation)
       lbuf.l_type = F_UNLCK;
       break;
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

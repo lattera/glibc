@@ -173,14 +173,14 @@ main (int argc, char *argv[])
   /* Version information is requested.  */
   if (do_version)
     {
-      fprintf (stderr, "localedef - GNU %s %s\n", PACKAGE, VERSION);
+      fprintf (stderr, "localedef (GNU %s) %s\n", PACKAGE, VERSION);
       fprintf (stderr, _("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "1995, 1996");
-      fprintf (stderr, _("Written by %s\n"),
-	       "Ulrich Drepper <drepper@cygnus.com>");
+      fprintf (stderr, _("Written by %s.\n"),
+	       "Ulrich Drepper");
 
       exit (0);
     }
@@ -406,7 +406,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 System's directory for character maps: %s\n\
                        locale files  : %s\n"),
 	      program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
-      printf (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"));
+      fputs (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
+	     stdout);
     }
 
   exit (status);
@@ -429,7 +430,7 @@ error_print ()
 static const char *
 construct_output_path (char *path)
 {
-  char *normal = NULL;
+  const char *normal = NULL;
   char *result;
 
   if (strchr (path, '/') == NULL)
@@ -455,6 +456,9 @@ construct_output_path (char *path)
 	  if (endp > startp)
 	    normal = _nl_normalize_codeset (startp, endp - startp);
 	}
+      else
+	/* This is to keep gcc quiet.  */
+	endp = NULL;
 
       /* We put an additional '\0' at the end of the string because at
 	 the end of the function we need another byte for the trailing

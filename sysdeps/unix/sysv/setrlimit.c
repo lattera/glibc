@@ -1,6 +1,6 @@
 /* setrlimit function for systems with ulimit system call (SYSV).
 
-Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@ Cambridge, MA 02139, USA.  */
 
 /* This only implements those functions which are available via ulimit.  */
 
-#include <ansidecl.h>
 #include <sys/resource.h>
 #include <stddef.h>
 #include <errno.h>
@@ -29,30 +28,31 @@ Cambridge, MA 02139, USA.  */
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
 int
-DEFUN(setrlimit, (resource, rlimits),
-      enum __rlimit_resource resource AND struct rlimit *rlimits)
+setrlimit (resource, rlimits)
+     enum __rlimit_resource resource;
+     struct rlimit *rlimits;
 {
   if (rlimits == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
   switch (resource)
     {
     case RLIMIT_FSIZE:
-      return __ulimit(2, rlimits->rlim_cur);
+      return __ulimit (2, rlimits->rlim_cur);
 
     case RLIMIT_DATA:
     case RLIMIT_CPU:
     case RLIMIT_STACK:
     case RLIMIT_CORE:
     case RLIMIT_RSS:
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 }

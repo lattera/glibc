@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
 
@@ -19,7 +19,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 
@@ -28,11 +27,12 @@ Cambridge, MA 02139, USA.  */
 
 /* Close the file descriptor FD.  */
 int
-DEFUN(__close, (fd), int fd)
+__close (fd)
+     int fd;
 {
   if ( !__FD_Is_valid( fd ) || !__FD_Table[ fd ].in_use )
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 

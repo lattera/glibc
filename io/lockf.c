@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ lockf (int fd, int cmd, off_t len)
 	return -1;
       if (fl.l_type == F_UNLCK || fl.l_pid == getpid ())
 	return 0;
-      errno = EACCES;
+      __set_errno (EACCES);
       return -1;
 
     case F_ULOCK:
@@ -54,7 +54,7 @@ lockf (int fd, int cmd, off_t len)
       break;
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
@@ -24,15 +23,17 @@ Cambridge, MA 02139, USA.  */
 
 /* Change the protections of the file FD refers to to MODE.  */
 int
-DEFUN(__fchmod, (fd, mode), int fd AND mode_t mode)
+__fchmod (fd, mode)
+     int fd;
+     mode_t mode;
 {
   if (fd < 0)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL(;
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (fchmod)

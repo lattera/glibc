@@ -25,7 +25,7 @@ Boston, MA 02111-1307, USA.  */
 int
 __sched_getscheduler (pid_t pid)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (sched_getscheduler)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,16 +27,18 @@ Cambridge, MA 02139, USA.  */
 
 /* Read N bytes into BUF from COOKIE.  */
 int
-DEFUN(__stdio_read, (cookie, buf, n),
-      PTR cookie AND register char *buf AND register size_t n)
+__stdio_read (cookie, buf, n)
+     void *cookie;
+     register char *buf;
+     register size_t n;
 {
-  CONST int fd = (int) cookie;
+  const int fd = (int) cookie;
 #if	defined (EINTR) && defined (EINTR_REPEAT)
   int save = errno;
   int nread;
 
  try:;
-  errno = 0;
+  __set_errno (0);
   nread = __read (fd, buf, (int) n);
   if (nread < 0)
     {
@@ -46,7 +46,7 @@ DEFUN(__stdio_read, (cookie, buf, n),
 	goto try;
       return -1;
     }
-  errno = save;
+  __set_errno (save);
   return nread;
 
 #else	/* No EINTR.  */
@@ -57,10 +57,12 @@ DEFUN(__stdio_read, (cookie, buf, n),
 
 /* Write N bytes from BUF to COOKIE.  */
 int
-DEFUN(__stdio_write, (cookie, buf, n),
-      PTR cookie AND register CONST char *buf AND register size_t n)
+__stdio_write (cookie, buf, n)
+     void *cookie;
+     register const char *buf;
+     register size_t n;
 {
-  CONST int fd = (int) cookie;
+  const int fd = (int) cookie;
   register size_t written = 0;
 
   while (n > 0)
@@ -89,8 +91,10 @@ DEFUN(__stdio_write, (cookie, buf, n),
    The new file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 int
-DEFUN(__stdio_seek, (cookie, pos, whence),
-      PTR cookie AND fpos_t *pos AND int whence)
+__stdio_seek (cookie, pos, whence)
+     void *cookie;
+     fpos_t *pos;
+     int whence;
 {
   off_t new;
   new = __lseek ((int) cookie, (off_t) *pos, whence);
@@ -103,7 +107,8 @@ DEFUN(__stdio_seek, (cookie, pos, whence),
 
 /* Close COOKIE.  */
 int
-DEFUN(__stdio_close, (cookie), PTR cookie)
+__stdio_close (cookie)
+     void *cookie;
 {
   return __close ((int) cookie);
 }
@@ -112,7 +117,8 @@ DEFUN(__stdio_close, (cookie), PTR cookie)
    or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
    descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
 int
-DEFUN(__stdio_fileno, (cookie), PTR cookie)
+__stdio_fileno (cookie)
+     void *cookie;
 {
   return (int) cookie;
 }
@@ -120,8 +126,10 @@ DEFUN(__stdio_fileno, (cookie), PTR cookie)
 
 /* Open the given file with the mode given in the __io_mode argument.  */
 int
-DEFUN(__stdio_open, (filename, m, cookieptr),
-      CONST char *filename AND __io_mode m AND PTR *cookieptr)
+__stdio_open (filename, m, cookieptr)
+     const char *filename;
+     __io_mode m;
+     void **cookieptr;
 {
   int fd;
   int mode;
@@ -155,11 +163,13 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
 /* Open FILENAME with the mode in M.  Use the same magic cookie
    already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
 int
-DEFUN(__stdio_reopen, (filename, m, cookieptr),
-      CONST char *filename AND __io_mode m AND
-      PTR *cookieptr AND __io_close_fn closefn)
+__stdio_reopen (filename, m, cookieptr)
+     const char *filename;
+     __io_mode m;
+     void **cookieptr;
+     __io_close_fn closefn;
 {
-  PTR newcookie;
+  void *newcookie;
 
   /* We leave the old descriptor open while we open the file.
      That way ``freopen ("/dev/stdin", "r", stdin)'' works.  */

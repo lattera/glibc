@@ -32,7 +32,7 @@ sethostid (id)
   /* Test for appropriate rights to set host ID.  */
   if (geteuid () || getuid ())
     {
-      errno = EPERM;
+      __set_errno (EPERM);
       return -1;
     }
 

@@ -118,10 +118,10 @@ __MATH_INLINE double
 tan (double __x)
 {
   register double __value;
+  register double __value2 __attribute__ ((unused));
   __asm __volatile__
-    ("fptan\n\t"
-     "fincstp"
-     : "=t" (__value) : "0" (__x));
+    ("fptan"
+     : "=t" (__value2), "=u" (__value) : "0" (__x));
 
   return __value;
 }

@@ -34,7 +34,7 @@ wcstok (wcs, delim, save_ptr)
   if (wcs == NULL)
     if (*save_ptr == NULL)
       {
-	errno = EINVAL;
+	__set_errno (EINVAL);
 	return NULL;
       }
     else

@@ -12,4 +12,5 @@ int __data_start = 0;
 weak_alias (__data_start, data_start)
 #endif
 
-volatile int errno;
+volatile int __errno;
+string_alias (__errno, errno)

@@ -149,7 +149,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
     break;
   default:
     *h_errnop = NETDB_INTERNAL;
-    errno = EAFNOSUPPORT;
+    __set_errno (EAFNOSUPPORT);
     return NSS_STATUS_UNAVAIL;
   }
 
@@ -310,13 +310,13 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
       size = IN6ADDRSZ;
       break;
     default:
-      errno = EAFNOSUPPORT;
+      __set_errno (EAFNOSUPPORT);
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }
   if (size != len)
     {
-      errno = EAFNOSUPPORT;
+      __set_errno (EAFNOSUPPORT);
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }

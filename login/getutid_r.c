@@ -37,7 +37,7 @@ __getutid_r (const struct utmp *id, struct utmp **utmp,
       && id->ut_type != USER_PROCESS && id->ut_type != DEAD_PROCESS)
     /* No, using '<' and '>' for the test is not possible.  */
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -66,7 +66,7 @@ __getutid_r (const struct utmp *id, struct utmp **utmp,
 	      != sizeof (struct utmp))
 	    {
 	      utmp_data->loc_utmp = 0; /* Mark loc_utmp invalid. */
-	      errno = ESRCH;
+	      __set_errno (ESRCH);
 	      return -1;
 	    }
 
@@ -89,7 +89,7 @@ __getutid_r (const struct utmp *id, struct utmp **utmp,
 	      != sizeof (struct utmp))
 	    {
 	      utmp_data->loc_utmp = 0; /* Mark loc_utmp invalid. */
-	      errno = ESRCH;
+	      __set_errno (ESRCH);
 	      return -1;
 	    }
 
@@ -110,7 +110,7 @@ __getutid_r (const struct utmp *id, struct utmp **utmp,
 
   return 0;
 #else	/* !_HAVE_UT_ID && !_HAVE_UT_TYPE */
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 #endif
 }

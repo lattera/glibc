@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,13 +27,16 @@ Cambridge, MA 02139, USA.  */
    to S, the function returns NULL without appending the null character.
    If there is a file error, always return NULL.  */
 char *
-DEFUN(fgets, (s, n, stream), char *s AND int n AND register FILE *stream)
+fgets (s, n, stream)
+     char *s;
+     int n;
+     register FILE *stream;
 {
   register char *p = s;
 
-  if (!__validfp(stream) || s == NULL || n <= 0)
+  if (!__validfp (stream) || s == NULL || n <= 0)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 
@@ -45,7 +47,7 @@ DEFUN(fgets, (s, n, stream), char *s AND int n AND register FILE *stream)
     {
       /* Unbuffered stream.  Not much optimization to do.  */
       register int c = 0;
-      while (--n > 0 && (c = getc (stream)) != EOF) 
+      while (--n > 0 && (c = getc (stream)) != EOF)
 	if ((*p++ = c) == '\n')
 	  break;
       if (c == EOF && (p == s || ferror (stream)))
@@ -79,7 +81,7 @@ DEFUN(fgets, (s, n, stream), char *s AND int n AND register FILE *stream)
       size_t i;
       char *found;
 
-      i = stream->__get_limit - stream->__bufp;	
+      i = stream->__get_limit - stream->__bufp;
       if (i == 0)
 	{
 	  /* Refill the buffer.  */
@@ -93,7 +95,7 @@ DEFUN(fgets, (s, n, stream), char *s AND int n AND register FILE *stream)
 	      *p = '\0';
 	      return s;
 	    }
-	  i = stream->__get_limit - stream->__bufp;	
+	  i = stream->__get_limit - stream->__bufp;
 	}
 
       if (i > n)

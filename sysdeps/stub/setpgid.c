@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 
@@ -24,9 +23,11 @@ Cambridge, MA 02139, USA.  */
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
 int
-DEFUN(__setpgid, (pid, pgid), int pid AND int pgid)
+__setpgid (pid, pgid)
+     int pid;
+     int pgid;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (setpgid)

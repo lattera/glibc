@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -26,7 +25,9 @@ Cambridge, MA 02139, USA.  */
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
    open the same file as FD is.  Return FD2 or -1.  */
 int
-DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
+__dup2 (fd, fd2)
+     int fd;
+     int fd2;
 {
   int save;
 
@@ -36,7 +37,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 #endif
 )
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 
@@ -51,7 +52,7 @@ DEFUN(__dup2, (fd, fd2), int fd AND int fd2)
 
   save = errno;
   (void) close (fd2);
-  errno = save;
+  __set_errno (save);
 
   return fcntl (fd, F_DUPFD, fd2);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <signal.h>
 #include <stddef.h>
@@ -38,15 +37,17 @@ trampoline (int sig, int code, struct sigcontext *context)
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
-DEFUN(__sigaction, (sig, act, oact),
-      int sig AND CONST struct sigaction *act AND struct sigaction *oact)
+__sigaction (sig, act, oact)
+     int sig;
+     const struct sigaction *act;
+     struct sigaction *oact;
 {
   struct sigaction myact;
   __sighandler_t ohandler;
 
   if (sig <= 0 || sig >= NSIG)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

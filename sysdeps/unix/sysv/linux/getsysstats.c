@@ -153,7 +153,7 @@ phys_pages_info (const char *format)
 
   if (result == -1)
     /* We cannot get the needed value: signal an error.  */
-    errno = ENOSYS;
+    __set_errno (ENOSYS);
 
   return result;
 }

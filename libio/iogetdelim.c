@@ -48,9 +48,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
 
   if (lineptr == NULL || n == NULL)
     {
-#ifdef EINVAL
-      errno = EINVAL;
-#endif
+      MAYBE_SET_EINVAL;
       return -1;
     }
   CHECK_FILE (fp, -1);

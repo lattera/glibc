@@ -102,7 +102,6 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 	}								      \
     } while (0)
 # define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
-/* This macro must be without parameter!  Don't change it.  */
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
@@ -113,7 +112,7 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
       /* Check file argument for consistence.  */			      \
       if (!__validfp(S) || !S->__mode.__write || Format == NULL)	      \
 	{								      \
-	  errno = EINVAL;						      \
+	  __set_errno (EINVAL);						      \
 	  return -1;							      \
 	}								      \
       if (!S->__seen)							      \
@@ -1431,6 +1430,9 @@ struct helper_file
   {
     struct _IO_FILE_plus _f;
     _IO_FILE *_put_stream;
+#ifdef _IO_MTSAFE_IO
+    _IO_lock_t lock;
+#endif
   };
 
 static int
@@ -1483,6 +1485,9 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   hp->_IO_write_ptr = buf;
   hp->_IO_write_end = buf + sizeof buf;
   hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS;
+#ifdef _IO_MTSAFE_IO
+  hp->_lock = &helper.lock;
+#endif
   _IO_JUMPS (hp) = (struct _IO_jump_t *) &_IO_helper_jumps;
 
   /* Now print to helper instead.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,20 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
 /* Return the offset in bytes from the beginning
    of the file of the file position of STREAM.  */
 long int
-DEFUN(ftell, (stream), FILE *stream)
+ftell (stream)
+     FILE *stream;
 {
   long int pos;
 
   if (!__validfp (stream))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1L;
     }
 

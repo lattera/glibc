@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <sysdep.h>
 #include <sys/resource.h>
 #include <unistd.h>
@@ -45,7 +44,7 @@ __ulimit (cmd, newlimit)
 	/* Get limit on file size.  */
 	struct rlimit fsize;
 
-	status = getrlimit(RLIMIT_FSIZE, &fsize);
+	status = getrlimit (RLIMIT_FSIZE, &fsize);
 	if (status < 0)
 	  return -1;
 
@@ -58,14 +57,14 @@ __ulimit (cmd, newlimit)
 	struct rlimit fsize;
 	fsize.rlim_cur = newlimit * 512;
 	fsize.rlim_max = newlimit * 512;
-	
-	return setrlimit(RLIMIT_FSIZE, &fsize);
+
+	return setrlimit (RLIMIT_FSIZE, &fsize);
       }
     case 4:
-      return sysconf(_SC_OPEN_MAX);
+      return sysconf (_SC_OPEN_MAX);
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 }

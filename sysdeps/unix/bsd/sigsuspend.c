@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <signal.h>
 #include <stddef.h>
@@ -26,21 +25,22 @@ Cambridge, MA 02139, USA.  */
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
 int
-DEFUN(sigsuspend, (set), CONST sigset_t *set)
+sigsuspend (set)
+     const sigset_t *set;
 {
   int mask;
   int sig;
 
   if (set == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
   mask = 0;
   for (sig = 1; sig <= NSIG; ++sig)
-    if (__sigismember(set, sig))
-      mask |= sigmask(sig);
+    if (__sigismember (set, sig))
+      mask |= sigmask (sig);
 
-  return __sigpause(mask);
+  return __sigpause (mask);
 }

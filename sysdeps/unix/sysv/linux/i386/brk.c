@@ -45,11 +45,10 @@ __brk (void *addr)
 
   if (newbrk < addr)
     {
-      errno = ENOMEM;
+      __set_errno (ENOMEM);
       return -1;
     }
 
   return 0;
 }
 weak_alias (__brk, brk)
-

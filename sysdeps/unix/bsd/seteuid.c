@@ -26,7 +26,7 @@ seteuid (uid)
 {
   if (uid == (uid_t) ~0)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

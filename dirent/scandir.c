@@ -16,18 +16,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 
 int
-DEFUN(scandir, (dir, namelist, select, cmp),
-      CONST char *dir AND
-      struct dirent ***namelist AND
-      int EXFUN((*select), (struct dirent *)) AND
-      int EXFUN((*cmp), (CONST PTR, CONST PTR)))
+scandir (dir, namelist, select, cmp)
+     const char *dir;
+     struct dirent ***namelist;
+     int (*select) __P ((struct dirent *));
+     int (*cmp) __P ((const void *, const void *));
 {
   DIR *dp = opendir (dir);
   struct dirent **v = NULL;
@@ -39,7 +38,7 @@ DEFUN(scandir, (dir, namelist, select, cmp),
     return -1;
 
   save = errno;
-  errno = 0;
+  __set_errno (0);
 
   i = 0;
   while ((d = readdir (dp)) != NULL)
@@ -58,7 +57,7 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 	    if (new == NULL)
 	      {
 	      lose:
-		errno = ENOMEM;
+		__set_errno (ENOMEM);
 		break;
 	      }
 	    v = new;
@@ -79,12 +78,12 @@ DEFUN(scandir, (dir, namelist, select, cmp),
       while (i > 0)
 	free (v[--i]);
       free (v);
-      errno = save;
+      __set_errno (save);
       return -1;
     }
 
   (void) closedir (dp);
-  errno = save;
+  __set_errno (save);
 
   /* Sort the list if we have a comparison function to sort with.  */
   if (cmp != NULL)

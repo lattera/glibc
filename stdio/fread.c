@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,19 +25,22 @@ Cambridge, MA 02139, USA.  */
 
 /* Read NMEMB chunks of SIZE bytes each from STREAM into P.  */
 size_t
-DEFUN(fread, (p, size, nmemb, stream),
-      PTR p AND size_t size AND size_t nmemb AND register FILE *stream)
+fread (p, size, nmemb, stream)
+     void *p;
+     size_t size;
+     size_t nmemb;
+     register FILE *stream;
 {
   register char *ptr = (char *) p;
   register size_t to_read = size * nmemb;
   size_t bytes = to_read;
 
-  if (!__validfp(stream) || !stream->__mode.__read)
+  if (!__validfp (stream) || !stream->__mode.__read)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return 0;
     }
-  if (feof(stream) || ferror(stream))
+  if (feof (stream) || ferror (stream))
     return 0;
   if (p == NULL || to_read == 0)
     return 0;
@@ -48,7 +50,7 @@ DEFUN(fread, (p, size, nmemb, stream),
       /* This stream has never been seen before, or it has a character
 	 pushed back.  Call __fillbf to deal with those cases.  Life will
 	 be simpler after this call.  */
-      int c = __fillbf(stream);
+      int c = __fillbf (stream);
       if (c == EOF)
 	return 0;
       *ptr++ = c;
@@ -65,7 +67,7 @@ DEFUN(fread, (p, size, nmemb, stream),
 	copy = to_read;
       to_read -= copy;
       if (copy > 20)
-	memcpy((PTR) ptr, (PTR) stream->__bufp, copy);
+	memcpy((void *) ptr, (void *) stream->__bufp, copy);
       else
 	{
 	  register size_t i;
@@ -90,8 +92,8 @@ DEFUN(fread, (p, size, nmemb, stream),
 	while (to_read > 0)
 	  {
 	    register int count;
-	    count = (*stream->__io_funcs.__read)(stream->__cookie,
-						 ptr, to_read);
+	    count = (*stream->__io_funcs.__read) (stream->__cookie,
+						  ptr, to_read);
 	    if (count > 0)
 	      {
 		to_read -= count;
@@ -118,7 +120,7 @@ DEFUN(fread, (p, size, nmemb, stream),
     }
   else
     {
-      int c = __fillbf(stream);
+      int c = __fillbf (stream);
       if (c == EOF)
 	return (bytes - to_read) / size;
       *ptr++ = (char) c;

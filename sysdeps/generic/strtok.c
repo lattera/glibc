@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <string.h>
 
 
@@ -39,15 +38,7 @@ strtok (s, delim)
   char *token;
 
   if (s == NULL)
-    {
-      if (olds == NULL)
-	{
-	  errno = EINVAL;
-	  return NULL;
-	}
-      else
-	s = olds;
-    }
+    s = olds;
 
   /* Scan leading delimiters.  */
   s += strspn (s, delim);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 
 /* Set the name of the current YP domain to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 int
-DEFUN(setdomainname, (name, len),
-      __const char *name AND size_t len)
+setdomainname (name, len)
+     const char *name;
+     size_t len;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

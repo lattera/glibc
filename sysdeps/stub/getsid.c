@@ -1,5 +1,5 @@
 /* getsid -- Return session ID of a process.  Stub version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,6 @@ Cambridge, MA 02139, USA.  */
 pid_t
 getsid (pid_t pid)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return (pid_t) -1;
 }

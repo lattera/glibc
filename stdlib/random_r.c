@@ -185,7 +185,7 @@ __initstate_r (seed, arg_state, n, buf)
     {
       if (n < BREAK_0)
 	{
-	  errno = EINVAL;
+	  __set_errno (EINVAL);
 	  return -1;
 	}
       buf->rand_type = TYPE_0;
@@ -271,7 +271,7 @@ __setstate_r (arg_state, buf)
       break;
     default:
       /* State info munged.  */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

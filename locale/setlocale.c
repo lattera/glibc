@@ -116,13 +116,13 @@ static const char *_nl_current_names[] =
 
 
 /* Lock for protecting global data.  */
-__libc_lock_define_initialized (static, lock)
+__libc_lock_define_initialized (, __libc_setlocale_lock)
 
 
 /* Use this when we come along an error.  */
 #define ERROR_RETURN							      \
   do {									      \
-    errno = EINVAL;							      \
+    __set_errno (EINVAL);						      \
     return NULL;							      \
   } while (0)
 
@@ -314,7 +314,7 @@ setlocale (int category, const char *locale)
 	}
 
       /* Protect global data.  */
-      __libc_lock_lock (lock);
+      __libc_lock_lock (__libc_setlocale_lock);
 
       /* Load the new data for each category.  */
       while (category-- > 0)
@@ -354,7 +354,7 @@ setlocale (int category, const char *locale)
 	}
 
       /* Critical section left.  */
-      __libc_lock_unlock (lock);
+      __libc_lock_unlock (__libc_setlocale_lock);
 
       return composite;
     }
@@ -364,7 +364,7 @@ setlocale (int category, const char *locale)
       char *newname = (char *) locale;
 
       /* Protect global data.  */
-      __libc_lock_lock (lock);
+      __libc_lock_lock (__libc_setlocale_lock);
 
       if (_nl_current[category] != NULL)
 	{
@@ -393,7 +393,7 @@ setlocale (int category, const char *locale)
 	}
 
       /* Critical section left.  */
-      __libc_lock_unlock (lock);
+      __libc_lock_unlock (__libc_setlocale_lock);
 
       return newname;
     }

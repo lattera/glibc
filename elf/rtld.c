@@ -310,6 +310,24 @@ of this helper program; chances are you did not intend to run this program.\n",
   preloads = NULL;
   npreloads = 0;
 
+  if (! __libc_enable_secure)
+    {
+      const char *preloadlist = getenv ("LD_PRELOAD");
+      if (preloadlist)
+	{
+	  /* The LD_PRELOAD environment variable gives a colon-separated
+	     list of libraries that are loaded before the executable's
+	     dependencies and prepended to the global scope list.  */
+	  char *list = strdupa (preloadlist);
+	  char *p;
+	  while ((p = strsep (&list, ":")) != NULL)
+	    {
+	      (void) _dl_map_object (NULL, p, lt_library);
+	      ++npreloads;
+	    }
+	}
+    }
+
   /* Read the contents of the file.  */
   file = _dl_sysdep_read_whole_file ("/etc/ld.so.preload", &file_size,
 				     PROT_READ | PROT_WRITE);
@@ -373,24 +391,6 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       /* We don't need the file anymore.  */
       __munmap (file, file_size);
-    }
-
-  if (! __libc_enable_secure)
-    {
-      const char *preloadlist = getenv ("LD_PRELOAD");
-      if (preloadlist)
-	{
-	  /* The LD_PRELOAD environment variable gives a colon-separated
-	     list of libraries that are loaded before the executable's
-	     dependencies and prepended to the global scope list.  */
-	  char *list = strdupa (preloadlist);
-	  char *p;
-	  while ((p = strsep (&list, ":")) != NULL)
-	    {
-	      (void) _dl_map_object (NULL, p, lt_library);
-	      ++npreloads;
-	    }
-	}
     }
 
   if (npreloads != 0)

@@ -101,6 +101,8 @@ typedef enum
   ERA_D_T_FMT,			/* Date and time in alternate era format.  */
   ERA_T_FMT,			/* Time in alternate era format.  */
 
+  _NL_TIME_NUM_ALT_DIGITS,	/* Number entries in the alt_digits arrays.  */
+
   _NL_TIME_ERA_NUM_ENTRIES,	/* Number entries in the era arrays.  */
   _NL_TIME_ERA_ENTRIES_EB,	/* Structure with era entries in usable form.*/
   _NL_TIME_ERA_ENTRIES_EL,

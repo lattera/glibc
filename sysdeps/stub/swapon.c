@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 
 /* Make the block special device PATH available to the system for swapping.
    This call is restricted to the super-user.  */
 int
-DEFUN(swapon, (path), CONST char *path)
+swapon (path)
+     const char *path;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +24,8 @@ Cambridge, MA 02139, USA.  */
 
 /* Make sure that FP has its functions set.  */
 void
-DEFUN(__stdio_check_funcs, (fp), register FILE *fp)
+__stdio_check_funcs (fp)
+     register FILE *fp;
 {
   if (!fp->__seen)
     {
@@ -34,7 +34,7 @@ DEFUN(__stdio_check_funcs, (fp), register FILE *fp)
 	 If no buffer is set (and the stream is not made explicitly
 	 unbuffered), we allocate a buffer below, using the bufsize
 	 set by this function.  */
-      extern void EXFUN(__stdio_init_stream, (FILE *));
+      extern void __stdio_init_stream __P ((FILE *));
       fp->__room_funcs = __default_room_functions;
       fp->__io_funcs = __default_io_functions;
       __stdio_init_stream (fp);
@@ -51,7 +51,8 @@ DEFUN(__stdio_check_funcs, (fp), register FILE *fp)
 /* Figure out what kind of buffering (none, line, or full)
    and what buffer size to give FP.  */
 static void
-DEFUN(init_stream, (fp), register FILE *fp)
+init_stream (fp)
+     register FILE *fp;
 {
   __stdio_check_funcs (fp);
 
@@ -69,13 +70,13 @@ DEFUN(init_stream, (fp), register FILE *fp)
       save = errno;
       while (fp->__bufsize >= MIN_BUFSIZE)
 	{
-	  fp->__buffer = (char *) malloc(fp->__bufsize);
+	  fp->__buffer = (char *) malloc (fp->__bufsize);
 	  if (fp->__buffer == NULL)
 	    fp->__bufsize /= 2;
 	  else
 	    break;
 	}
-      errno = save;
+      __set_errno (save);
 
       if (fp->__buffer == NULL)
 	{
@@ -96,7 +97,8 @@ DEFUN(init_stream, (fp), register FILE *fp)
 
 /* Determine the current file position of STREAM if it is unknown.  */
 int
-DEFUN(__stdio_check_offset, (stream), FILE *stream)
+__stdio_check_offset (stream)
+     FILE *stream;
 {
   init_stream (stream);
 
@@ -106,15 +108,15 @@ DEFUN(__stdio_check_offset, (stream), FILE *stream)
       if (stream->__io_funcs.__seek == NULL)
 	{
 	  /* Unknowable.  */
-	  errno = ESPIPE;
+	  __set_errno (ESPIPE);
 	  return EOF;
 	}
       else
 	{
 	  /* Unknown.  Find it out.  */
 	  fpos_t pos = (fpos_t) 0;
-	  if ((*stream->__io_funcs.__seek)(stream->__cookie,
-					   &pos, SEEK_CUR) < 0)
+	  if ((*stream->__io_funcs.__seek) (stream->__cookie,
+					    &pos, SEEK_CUR) < 0)
 	    {
 	      if (errno == ESPIPE)
 		/* Object is incapable of seeking.  */
@@ -139,13 +141,14 @@ DEFUN(__stdio_check_offset, (stream), FILE *stream)
    seeking as necessary and updating its `offset' field.
    Sets ferror(FP) (and possibly errno) for errors.  */
 static void
-DEFUN(seek_to_target, (fp), FILE *fp)
+seek_to_target (fp)
+     FILE *fp;
 {
   int save = errno;
   if (__stdio_check_offset (fp) == EOF)
     {
       if (errno == ESPIPE)
-	errno = save;
+	__set_errno (save);
       else
 	fp->__error = 1;
     }
@@ -156,13 +159,13 @@ DEFUN(seek_to_target, (fp), FILE *fp)
       if (fp->__io_funcs.__seek == NULL)
 	{
 	  /* We can't seek!  */
-	  errno = ESPIPE;
+	  __set_errno (ESPIPE);
 	  fp->__error = 1;
 	}
       else
 	{
 	  fpos_t pos = fp->__target;
-	  if ((*fp->__io_funcs.__seek)(fp->__cookie, &pos, SEEK_SET) < 0)
+	  if ((*fp->__io_funcs.__seek) (fp->__cookie, &pos, SEEK_SET) < 0)
 	    /* Seek failed!  */
 	    fp->__error = 1;
 	  else
@@ -175,10 +178,10 @@ DEFUN(seek_to_target, (fp), FILE *fp)
 #ifdef EGRATUITOUS
 		  /* It happens in the Hurd when the io server doesn't
 		     obey the protocol for io_seek.  */
-		  errno = EGRATUITOUS;
+		  __set_errno (EGRATUITOUS);
 #else
 		  /* I don't think this can happen in Unix.  */
-		  errno = ESPIPE; /* ??? */
+		  __set_errno (ESPIPE); /* ??? */
 #endif
 		  fp->__error = 1;
 		}
@@ -194,8 +197,9 @@ DEFUN(seek_to_target, (fp), FILE *fp)
    flushed to avoid a system call for a single character.
    This is the default `output room' function.  */
 static void
-DEFUN(flushbuf, (fp, c),
-      register FILE *fp AND int c)
+flushbuf (fp, c)
+     register FILE *fp;
+     int c;
 {
   int flush_only = c == EOF;
   size_t buffer_written;
@@ -223,21 +227,21 @@ DEFUN(flushbuf, (fp, c),
 	  !fp->__mode.__append)
 	{
 	  int save = errno;
-	  CONST int aligned = (fp->__buffer == NULL ||
-			       __stdio_check_offset(fp) == EOF ||
+	  const int aligned = (fp->__buffer == NULL ||
+			       __stdio_check_offset (fp) == EOF ||
 			       fp->__target % fp->__bufsize == 0);
-	  errno = save;
+	  __set_errno (save);
 
 	  if (!aligned)
 	    {
 	      /* Move to a block (buffer size) boundary and read in a block.
 		 Then the output will be written as a whole block, too.  */
-	      CONST size_t o = fp->__target % fp->__bufsize;
+	      const size_t o = fp->__target % fp->__bufsize;
 	      fp->__target -= o;
-	      if ((*fp->__room_funcs.__input)(fp) == EOF && ferror(fp))
+	      if ((*fp->__room_funcs.__input) (fp) == EOF && ferror (fp))
 		return;
 	      else
-		__clearerr(fp);
+		__clearerr (fp);
 
 	      if (fp->__get_limit - fp->__buffer < o)
 		/* Oops.  We didn't read enough (probably because we got EOF).
@@ -322,8 +326,8 @@ DEFUN(flushbuf, (fp, c),
       if (!ferror(fp))
 	{
 	  /* Write out the buffered data.  */
-	  wrote = (*fp->__io_funcs.__write)(fp->__cookie, fp->__buffer,
-					    to_write);
+	  wrote = (*fp->__io_funcs.__write) (fp->__cookie, fp->__buffer,
+					     to_write);
 	  if (wrote > 0)
 	    {
 	      if (fp->__mode.__append)
@@ -347,7 +351,7 @@ DEFUN(flushbuf, (fp, c),
   fp->__bufp = fp->__buffer;
 
   /* If we're not just flushing, write the last character, C.  */
-  if (!flush_only && !ferror(fp))
+  if (!flush_only && !ferror (fp))
     {
       if (fp->__buffer == NULL || (fp->__linebuf && (unsigned char) c == '\n'))
 	{
@@ -382,7 +386,7 @@ DEFUN(flushbuf, (fp, c),
       fp->__get_limit = fp->__buffer;
     }
 
-  if (feof(fp) || ferror(fp))
+  if (feof (fp) || ferror (fp))
     fp->__bufp = fp->__put_limit;
 }
 
@@ -390,7 +394,8 @@ DEFUN(flushbuf, (fp, c),
 /* Fill the buffer for FP and return the first character read (or EOF).
    This is the default `input_room' function.  */
 static int
-DEFUN(fillbuf, (fp), register FILE *fp)
+fillbuf (fp)
+     register FILE *fp;
 {
   /* How far into the buffer we read we want to start bufp.  */
   size_t buffer_offset = 0;
@@ -435,13 +440,13 @@ DEFUN(fillbuf, (fp), register FILE *fp)
 	  }
 	seek_to_target (fp);
       }
-    errno = save;
+    __set_errno (save);
   }
 
-  while (!ferror(fp) && !feof(fp) && nread <= buffer_offset)
+  while (!ferror (fp) && !feof (fp) && nread <= buffer_offset)
     {
       /* Try to fill the buffer.  */
-      int count = (*fp->__io_funcs.__read)(fp->__cookie, buffer, to_read);
+      int count = (*fp->__io_funcs.__read) (fp->__cookie, buffer, to_read);
       if (count == 0)
 	fp->__eof = 1;
       else if (count < 0)
@@ -460,7 +465,7 @@ DEFUN(fillbuf, (fp), register FILE *fp)
   if (fp->__buffer == NULL)
     /* There is no buffer, so return the character we read
        without all the buffer pointer diddling.  */
-    return (feof(fp) || ferror(fp)) ? EOF : c;
+    return (feof (fp) || ferror (fp)) ? EOF : c;
 
   /* Reset the buffer pointer to the beginning of the buffer
      (plus whatever offset we may have set above).  */
@@ -468,7 +473,7 @@ DEFUN(fillbuf, (fp), register FILE *fp)
 
  end:;
 
-  if (feof(fp) || ferror(fp))
+  if (feof (fp) || ferror (fp))
     {
       /* Set both end pointers to the beginning of the buffer so
 	 the next i/o call will force a call to __fillbf/__flshfp.  */
@@ -494,12 +499,12 @@ extern __io_write_fn __stdio_write;
 extern __io_seek_fn __stdio_seek;
 extern __io_close_fn __stdio_close;
 extern __io_fileno_fn __stdio_fileno;
-CONST __io_functions __default_io_functions =
+const __io_functions __default_io_functions =
   {
     __stdio_read, __stdio_write, __stdio_seek, __stdio_close, __stdio_fileno
   };
 
-CONST __room_functions __default_room_functions =
+const __room_functions __default_room_functions =
   {
     fillbuf, flushbuf
   };
@@ -508,18 +513,19 @@ CONST __room_functions __default_room_functions =
 /* Flush the buffer for FP and also write C if FLUSH_ONLY is nonzero.
    This is the function used by putc and fflush.  */
 int
-DEFUN(__flshfp, (fp, c),
-      register FILE *fp AND int c)
+__flshfp (fp, c)
+     register FILE *fp;
+     int c;
 {
   int flush_only = c == EOF;
 
-  if (!__validfp(fp) || !fp->__mode.__write)
+  if (!__validfp (fp) || !fp->__mode.__write)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 
-  if (ferror(fp))
+  if (ferror (fp))
     return EOF;
 
   if (fp->__pushed_back)
@@ -530,7 +536,7 @@ DEFUN(__flshfp, (fp, c),
     }
 
   /* Make sure the stream is initialized (has functions and buffering).  */
-  init_stream(fp);
+  init_stream (fp);
 
   /* Do this early, so a `putc' on such a stream will never return success.  */
   if (fp->__room_funcs.__output == NULL)
@@ -589,14 +595,15 @@ DEFUN(__flshfp, (fp, c),
 /* Fill the buffer for FP and return the first character read.
    This is the function used by getc.  */
 int
-DEFUN(__fillbf, (fp), register FILE *fp)
+__fillbf (fp)
+     register FILE *fp;
 {
   register int c;
   fpos_t new_target;
 
-  if (!__validfp(fp) || !fp->__mode.__read)
+  if (!__validfp (fp) || !fp->__mode.__read)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 
@@ -609,7 +616,7 @@ DEFUN(__fillbf, (fp), register FILE *fp)
     }
 
   /* Make sure the stream is initialized (has functions and buffering). */
-  init_stream(fp);
+  init_stream (fp);
 
   /* If we're trying to read the first character of a new
      line of input from an unbuffered or line buffered stream,
@@ -648,11 +655,11 @@ DEFUN(__fillbf, (fp), register FILE *fp)
 
   fp->__target = new_target;
 
-  if (ferror(fp))
+  if (ferror (fp))
     c = EOF;
   else if (fp->__room_funcs.__input != NULL)
     {
-      c = (*fp->__room_funcs.__input)(fp);
+      c = (*fp->__room_funcs.__input) (fp);
       if (fp->__buffer == NULL)
 	/* This is an unbuffered stream, so the target sync above
 	   won't do anything the next time around.  Instead, note that
@@ -673,13 +680,14 @@ DEFUN(__fillbf, (fp), register FILE *fp)
 
 /* Nuke a stream, but don't kill its link in the chain.  */
 void
-DEFUN(__invalidate, (stream), register FILE *stream)
+__invalidate (stream)
+     register FILE *stream;
 {
   /* Save its link.  */
   register FILE *next = stream->__next;
 
   /* Pulverize the fucker.  */
-  memset((PTR) stream, 0, sizeof(FILE));
+  memset((void *) stream, 0, sizeof(FILE));
 
   /* Restore the deceased's link.  */
   stream->__next = next;

@@ -79,7 +79,7 @@ cfsetospeed  (termios_p, speed)
 
   if (termios_p == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -97,7 +97,7 @@ cfsetospeed  (termios_p, speed)
 	return 0;
       }
 
-  errno = EINVAL;
+  __set_errno (EINVAL);
   return -1;
 }
 

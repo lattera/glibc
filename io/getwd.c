@@ -37,7 +37,7 @@ getwd (buf)
 
   if (buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 

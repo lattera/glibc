@@ -418,7 +418,7 @@ open_path (const char *name, size_t namelen,
   p = dirpath;
   if (p == NULL || *p == '\0')
     {
-      errno = ENOENT;
+      __set_errno (ENOENT);
       return -1;
     }
 

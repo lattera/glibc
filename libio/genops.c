@@ -466,7 +466,7 @@ DEFUN(_IO_init, (fp, flags),
   fp->_markers = NULL;
   fp->_cur_column = 0;
 #ifdef _IO_MTSAFE_IO
-  __libc_lock_init (fp->_lock);
+  __libc_lock_init (*fp->_lock);
 #endif
 }
 
@@ -501,7 +501,7 @@ DEFUN(_IO_default_finish, (fp),
     }
 
 #ifdef _IO_MTSAFE_IO
-  __libc_lock_fini (fp->_lock);
+  __libc_lock_fini (*fp->_lock);
 #endif
 
   _IO_un_link(fp);

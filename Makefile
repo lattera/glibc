@@ -115,34 +115,22 @@ ifeq (yes,$(build-shared))
 lib: $(common-objpfx)libc.so
 endif
 
-$(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
-	(echo define sysdep-subdirs;					      \
-	 for sysdir in $(config-sysdirs); do				      \
-	   case $$sysdir in						      \
-	     /*) dir=$$sysdir ;;					      \
-	     *)  dir=$(..)$$sysdir ;;					      \
-	   esac;							      \
-	   if [ -r $$dir/Subdirs ]; then				      \
-	     sed 's/#.*$$//' $$dir/Subdirs;				      \
-	   else true;							      \
-	   fi;								      \
-	 done;								      \
+all-Subdirs-files = $(wildcard $(addsuffix /Subdirs, $(config-sysdirs)))
+$(objpfx)sysd-dirs: $(+sysdir_pfx)config.make $(all-Subdirs-files)
+	(echo define sysdep-subdirs;				\
+	 sed 's/#.*$$//' $(all-Subdirs-files) /dev/null;	\
 	 echo endef) > $@-tmp
-	 mv -f $@-tmp $@
+	mv -f $@-tmp $@
 
-$(objpfx)version-info.h: $(..)Makefile $(+sysdir_pfx)config.make
-	(first=yes;                                                           \
-	 for dir in $(subdirs); do                                            \
-	   if [ -r $$dir/Banner ]; then                                       \
-	     if [ $$first = yes ]; then                                       \
-	       echo "\"Available extensions:";                                \
-	       first=no;                                                      \
-	     fi;                                                              \
-	     sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$dir/Banner;    \
-	   fi;                                                                \
-	 done;                                                                \
-	 [ $$first = yes ] || echo "\"") > $@-tmp
-	 mv -f $@-tmp $@
+all-Banner-files = $(wildcard $(addsuffix /Banner, $(subdirs)))
+$(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
+	(files="$(all-Banner-files)";				\
+	 if [ test -n "$$files" ]; then				\
+	   echo "\"Available extensions:";			\
+	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$files;	\
+	   echo "\"";						\
+	 fi) > $@-tmp
+	mv -f $@-tmp $@
 
 version.c-objects := $(addprefix $(objpfx)version,$(object-suffixes))
 $(version.c-objects): $(objpfx)version-info.h

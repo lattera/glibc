@@ -32,7 +32,7 @@ __sysconf (name)
   switch (name)
     {
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
 
     case _SC_TZNAME_MAX:
@@ -173,7 +173,7 @@ __sysconf (name)
       break;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

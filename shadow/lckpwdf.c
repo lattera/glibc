@@ -28,7 +28,7 @@ Boston, MA 02111-1307, USA.  */
 
 
 /* Name of the lock file.  */
-#define PWD_LOCKFILE "/var/lock/lock.pwd"
+#define PWD_LOCKFILE "/etc/lock.pwd"
 
 /* How long to wait for getting the lock before returning with an
    error.  */

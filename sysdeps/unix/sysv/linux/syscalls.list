@@ -26,7 +26,8 @@ mount		EXTRA	mount		5	__mount	mount
 mremap		-	mremap		4	__mremap	mremap
 munlock		-	munlock		2	__munlock	munlock
 munlockall	-	munlockall	0	__munlockall	munlockall
-nanosleep	-	nanosleep	2	nanosleep
+nanosleep	-	nanosleep	2	__libc_nanosleep	nanosleep
+pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
 s_getpriority	getpriority getpriority	2	__syscall_getpriority

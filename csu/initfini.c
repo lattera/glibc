@@ -94,6 +94,18 @@ _init (void)
   if (__gmon_start__)
     __gmon_start__ ();
 
+#ifdef _LIBC_REENTRANT
+  {
+    /* This is a trick to generate a reference for the symbol
+       __libc_force_cancel_wrapper which can be used to force parts of
+       the thread library to be used where some functions and system
+       calls are overwritten.  The value of this variable is always 0.  */
+    extern const int __libc_force_cancel_wrapper;
+    if (__libc_force_cancel_wrapper)
+      _init ();
+  }
+#endif
+
   /* End the here document containing the .init prologue code.
      Then fetch the .section directive just written and append that
      to crtn.s-new, followed by the function epilogue.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ __sigsetjmp (jmp_buf env, int savemask)
   /* Save the signal mask if requested.  */
   __sigjmp_save (env, savemask);
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   /* No way to signal failure.	*/
   return 0;
 }

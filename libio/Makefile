@@ -36,6 +36,8 @@ routines	:=							      \
 									      \
 	libc_fatal
 
+all: # Make this the default target; it will be defined in Rules.
+
 include ../Makeconfig
 
 ifneq (,$(filter %REENTRANT, $(defines)))

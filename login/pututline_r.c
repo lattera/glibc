@@ -45,7 +45,7 @@ __pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
       && id->ut_type != USER_PROCESS && id->ut_type != DEAD_PROCESS)
     /* No, using '<' and '>' for the test is not possible.  */
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 #endif

@@ -27,11 +27,26 @@ Cambridge, MA 02139, USA.  */
 
 /* File listing canonical interesting mount points.  */
 #define	_PATH_MNTTAB	"/etc/fstab"
-#define	MNTTAB		_PATH_MNTTAB /* Deprecated alias.  */
+#define	MNTTAB		_PATH_MNTTAB	/* Deprecated alias.  */
 
 /* File listing currently active mount points.  */
 #define	_PATH_MOUNTED	"/var/run/mtab"
-#define	MOUNTED		_PATH_MOUNTED /* Deprecated alias.  */
+#define	MOUNTED		_PATH_MOUNTED	/* Deprecated alias.  */
+
+
+/* General filesystem types.  */
+#define MNTTYPE_IGNORE	"ignore"	/* Ignore this entry.  */
+#define MNTTYPE_NFS	"nfs"		/* Network file system.  */
+#define MNTTYPE_SWAP	"swap"		/* Swap device.  */
+
+
+/* Generic mount options.  */
+#define MNTOPT_DEFAULTS	"defaults"	/* Use all default options.  */
+#define MNTOPT_RO	"ro"		/* Read only.  */
+#define MNTOPT_RW	"rw"		/* Read/write.  */
+#define MNTOPT_SUID	"suid"		/* Set uid allowed.  */
+#define MNTOPT_NOSUID	"nosuid"	/* No set uid allowed.  */
+#define MNTOPT_NOAUTO	"noauto"	/* Do not auto mount.  */
 
 
 __BEGIN_DECLS
@@ -50,10 +65,8 @@ struct mntent
 
 /* Prepare to begin reading and/or writing mount table entries from the
    beginning of FILE.  MODE is as for `fopen'.  */
-extern FILE *__setmntent __P ((__const char *__file,
-			       __const char *__mode));
-extern FILE *setmntent __P ((__const char *__file,
-			     __const char *__mode));
+extern FILE *__setmntent __P ((__const char *__file, __const char *__mode));
+extern FILE *setmntent __P ((__const char *__file, __const char *__mode));
 
 /* Read one mount table entry from STREAM.  Returns a pointer to storage
    reused on the next call, or null for EOF or error (use feof/ferror to
@@ -72,10 +85,8 @@ extern struct mntent *getmntent_r __P ((FILE *__stream,
 
 /* Write the mount table entry described by MNT to STREAM.
    Return zero on success, nonzero on failure.  */
-extern int __addmntent __P ((FILE *__stream,
-			     __const struct mntent *__mnt));
-extern int addmntent __P ((FILE *__stream,
-			   __const struct mntent *__mnt));
+extern int __addmntent __P ((FILE *__stream, __const struct mntent *__mnt));
+extern int addmntent __P ((FILE *__stream, __const struct mntent *__mnt));
 
 /* Close a stream opened with `setmntent'.  */
 extern int __endmntent __P ((FILE *__stream));

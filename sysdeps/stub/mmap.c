@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ Cambridge, MA 02139, USA.  */
 caddr_t
 __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return (caddr_t) -1;
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
@@ -24,18 +23,20 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 
 
-#define	badmode()	return ((errno = EINVAL), 0)
+#define	badmode()	return ((__set_errno (EINVAL)), 0)
 
 /* Dissect the given mode string into an __io_mode.  */
 int
-DEFUN(__getmode, (mode, mptr), CONST char *mode AND __io_mode *mptr)
+__getmode (mode, mptr)
+     const char *mode;
+     __io_mode *mptr;
 {
   register unsigned char i;
 
   if (mode == NULL)
     badmode ();
 
-  memset ((PTR) mptr, 0, sizeof (*mptr));
+  memset ((void *) mptr, 0, sizeof (*mptr));
 
   switch (*mode)
     {
@@ -78,14 +79,16 @@ DEFUN(__getmode, (mode, mptr), CONST char *mode AND __io_mode *mptr)
 
 /* Open a new stream on the given file.  */
 FILE *
-DEFUN(fopen, (filename, mode), CONST char *filename AND CONST char *mode)
+fopen (filename, mode)
+     const char *filename;
+     const char *mode;
 {
   FILE *stream;
   __io_mode m;
 
   if (filename == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 
@@ -100,7 +103,7 @@ DEFUN(fopen, (filename, mode), CONST char *filename AND CONST char *mode)
     {
       int save = errno;
       (void) fclose (stream);
-      errno = save;
+      __set_errno (save);
       return NULL;
     }
 

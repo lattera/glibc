@@ -135,7 +135,7 @@ execvp (file, argv)
 
   if (got_eacces)
     /* At least one failure was due to permissions, so report that error.  */
-    errno = EACCES;
+    __set_errno (EACCES);
 
   /* Return the error from the last attempt (probably ENOENT).  */
   return -1;

@@ -22,7 +22,6 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef FUNC
 #define FUNC scalbn
-#include <s_ldexp.c>
 #endif
 #ifndef float_type
 #define float_type double

@@ -71,6 +71,8 @@ syscall_error:								      \
   movl %ecx, (%eax);							      \
   movl $-1, %eax;							      \
   ret;
+/* A quick note: it is assumed that the call to `__errno_location' does
+   not modify the parameter value!  */
 #else
 #define SYSCALL_ERROR_HANDLER						      \
   .type syscall_error,@function;					      \

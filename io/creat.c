@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <fcntl.h>
 #include <sys/types.h>
 
@@ -24,7 +23,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Create FILE with protections MODE.  */
 int
-DEFUN(creat, (file, mode), CONST char *file AND mode_t mode)
+creat (file, mode)
+     const char *file;
+     mode_t mode;
 {
-  return __open(file, O_WRONLY|O_CREAT|O_TRUNC, mode);
+  return __open (file, O_WRONLY|O_CREAT|O_TRUNC, mode);
 }

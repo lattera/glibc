@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <errno.h>
 #include <unistd.h>
@@ -27,28 +26,30 @@ Cambridge, MA 02139, USA.  */
    with the value corresponding to NAME.  Return the number
    of characters required to hold NAME's entire value.  */
 size_t
-DEFUN(confstr, (name, buf, len),
-      int name AND char *buf AND size_t len)
+confstr (name, buf, len)
+     int name;
+     char *buf;
+     size_t len;
 {
-  CONST char *string;
+  const char *string;
   size_t string_len;
 
   switch (name)
     {
     case _CS_PATH:
       {
-	static CONST char cs_path[] = CS_PATH;
+	static const char cs_path[] = CS_PATH;
 	string = cs_path;
-	string_len = sizeof(cs_path);
+	string_len = sizeof (cs_path);
       }
       break;
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return 0;
     }
 
   if (buf != NULL)
-    (void) strncpy(buf, string, len);
+    (void) strncpy (buf, string, len);
   return string_len;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <signal.h>
@@ -43,7 +42,7 @@ struct child
    original function with the original cookie.  */
 
 #define FUNC(type, name, args)						      \
-  static type DEFUN(__CONCAT(child_,name), args, __CONCAT(name,decl))	      \
+  static type __CONCAT(child_,name) args __CONCAT(name,decl))		      \
   {									      \
     struct child *c = (struct child *) cookie;				      \
     {									      \
@@ -52,15 +51,15 @@ struct child
     }									      \
   }
 
-#define readdecl PTR cookie AND register char *buf AND register size_t n
+#define readdecl void *cookie AND register char *buf AND register size_t n
 FUNC (int, read, (cookie, buf, n))
-#define writedecl PTR cookie AND register CONST char *buf AND register size_t n
+#define writedecl void *cookie AND register const char *buf AND register size_t n
 FUNC (int, write, (cookie, buf, n))
-#define seekdecl PTR cookie AND fpos_t *pos AND int whence
+#define seekdecl void *cookie AND fpos_t *pos AND int whence
 FUNC (int, seek, (cookie, pos, whence))
-#define closedecl PTR cookie
+#define closedecl void *cookie
 FUNC (int, close, (cookie))
-#define filenodecl PTR cookie
+#define filenodecl void *cookie
 FUNC (int, fileno, (cookie))
 
 static const __io_functions child_funcs
@@ -69,7 +68,9 @@ static const __io_functions child_funcs
 /* Open a new stream that is a one-way pipe to a
    child process running the given shell command.  */
 FILE *
-DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
+popen (command, mode)
+     const char *command;
+     const char *mode;
 {
   pid_t pid;
   int pipedes[2];
@@ -78,12 +79,12 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
 
   if (command == NULL || mode == NULL || (*mode != 'r' && *mode != 'w'))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 
   /* Create the pipe.  */
-  if (pipe(pipedes) < 0)
+  if (pipe (pipedes) < 0)
     return NULL;
 
   /* Fork off the child.  */
@@ -100,24 +101,24 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
       /* We are the child side.  Make the write side of
 	 the pipe be stdin or the read side be stdout.  */
 
-      CONST char *new_argv[4];
+      const char *new_argv[4];
 
       if ((*mode == 'w' ? dup2(pipedes[STDIN_FILENO], STDIN_FILENO) :
-	  dup2(pipedes[STDOUT_FILENO], STDOUT_FILENO)) < 0)
-	_exit(127);
+	  dup2 (pipedes[STDOUT_FILENO], STDOUT_FILENO)) < 0)
+	_exit (127);
 
       /* Close the pipe descriptors.  */
-      (void) close(pipedes[STDIN_FILENO]);
-      (void) close(pipedes[STDOUT_FILENO]);
+      (void) close (pipedes[STDIN_FILENO]);
+      (void) close (pipedes[STDOUT_FILENO]);
 
       /* Exec the shell.  */
       new_argv[0] = SH_NAME;
       new_argv[1] = "-c";
       new_argv[2] = command;
       new_argv[3] = NULL;
-      (void) execve(SH_PATH, (char *CONST *) new_argv, environ);
+      (void) execve (SH_PATH, (char *CONST *) new_argv, environ);
       /* Die if it failed.  */
-      _exit(127);
+      _exit (127);
     }
 
   /* We are the parent side.  */
@@ -180,7 +181,7 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
       while (dead > 0 && dead != pid);
     }
 #endif
-    errno = save;
+    __set_errno (save);
     return NULL;
   }
 }
@@ -188,15 +189,16 @@ DEFUN(popen, (command, mode), CONST char *command AND CONST char *mode)
 /* Close a stream opened by popen and return its status.
    Returns -1 if the stream was not opened by popen.  */
 int
-DEFUN(pclose, (stream), register FILE *stream)
+pclose (stream)
+     register FILE *stream;
 {
   struct child *c;
   pid_t pid, dead;
   int status;
 
-  if (!__validfp(stream) || !stream->__ispipe)
+  if (!__validfp (stream) || !stream->__ispipe)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -204,7 +206,7 @@ DEFUN(pclose, (stream), register FILE *stream)
   pid = c->pid;
   stream->__cookie = c->cookie;
   stream->__io_funcs = c->funcs;
-  free ((PTR) c);
+  free ((void *) c);
   stream->__ispipe = 0;
   if (fclose (stream))
     return -1;

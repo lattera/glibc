@@ -16,8 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
 #include <signal.h>
 #include <stddef.h>
 #include <unistd.h>
@@ -27,7 +25,8 @@ extern int __syscall_sigsuspend (int, unsigned long, unsigned long);
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
 int
-DEFUN(sigsuspend, (set), CONST sigset_t *set)
+sigsuspend (set)
+     const sigset_t *set;
 {
   return __syscall_sigsuspend (0, 0, *set);
 }

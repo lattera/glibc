@@ -58,7 +58,7 @@ getlogin (void)
     {
       if (errno == ESRCH)
 	/* The caller expects ENOENT if nothing is found.  */
-	errno = ENOENT;
+	__set_errno (ENOENT);
       result = NULL;
     }
   else

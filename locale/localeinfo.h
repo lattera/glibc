@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <stddef.h>
 #include <langinfo.h>
+#include <time.h>
 #include <sys/types.h>
 
 #include "../intl/loadinfo.h"	/* For loaded_l10nfile definition.  */
@@ -76,6 +77,17 @@ enum value_type
 };
 
 
+/* Structure to access `era' information from LC_TIME.  */
+struct era_entry
+{
+  u_int32_t direction;		/* Contains '+' or '-'.  */
+  int32_t offset;
+  int32_t start_date[3];
+  int32_t stop_date[3];
+  const char name_fmt[0];
+};
+
+
 /* For each category declare the variable for the current locale data.  */
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
 extern const struct locale_data *_nl_current_##category;
@@ -112,6 +124,13 @@ extern const struct locale_data *_nl_find_locale (const char *locale_path,
 
 /* Try to load the file described by FILE.  */
 extern void _nl_load_locale (struct loaded_l10nfile *file, int category);
+
+
+/* Return `era' entry which corresponds to TP.  Used in strftime.  */
+struct era_entry *_nl_get_era_entry (const struct tm *tp);
+
+/* Return `alt_digit' which corresponds to NUMBER.  Used in strftime.  */
+const char *_nl_get_alt_digit (unsigned int number);
 
 
 /* Global variables for LC_COLLATE category data.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <termios.h>
@@ -24,8 +23,10 @@ Cambridge, MA 02139, USA.  */
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
-DEFUN(tcsetattr, (fd, optional_actions, termios_p),
-      int fd AND int optional_actions AND CONST struct termios *termios_p)
+tcsetattr (fd, optional_actions, termios_p)
+     int fd;
+     int optional_actions;
+     const struct termios *termios_p;
 {
   unsigned long cmd;
 
@@ -41,7 +42,7 @@ DEFUN(tcsetattr, (fd, optional_actions, termios_p),
       cmd = TCSETSF;
       break;
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 int
 __getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 weak_alias (__getrlimit, getrlimit)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/ioctl.h>
 
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */
 int
-DEFUN(__ioctl, (fd, request),
-      int fd AND unsigned long int request DOTS)
+__ioctl (fd, request)
+     int fd;
+     unsigned long int request;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (ioctl)

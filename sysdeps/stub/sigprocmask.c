@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <signal.h>
 
@@ -25,8 +24,10 @@ Cambridge, MA 02139, USA.  */
    according to HOW, which may be SIG_BLOCK, SIG_UNBLOCK or SIG_SETMASK.
    If OSET is not NULL, store the old set of blocked signals in *OSET.  */
 int
-DEFUN(__sigprocmask, (how, set, oset),
-      int how AND CONST sigset_t *set AND sigset_t *oset)
+__sigprocmask (how, set, oset)
+     int how;
+     const sigset_t *set;
+     sigset_t *oset;
 {
   switch (how)
     {
@@ -35,11 +36,11 @@ DEFUN(__sigprocmask, (how, set, oset),
     case SIG_SETMASK:
       break;
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

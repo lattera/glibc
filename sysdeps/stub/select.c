@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -27,11 +26,14 @@ Cambridge, MA 02139, USA.  */
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
 int
-DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
-      int nfds AND fd_set *readfds AND fd_set *writefds AND
-      fd_set *exceptfds AND struct timeval *timeout)
+__select (nfds, readfds, writefds, exceptfds, timeout)
+     int nfds;
+     fd_set *readfds;
+     fd_set *writefds;
+     fd_set *exceptfds;
+     struct timeval *timeout;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (select)

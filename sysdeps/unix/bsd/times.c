@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <sys/times.h>
@@ -31,7 +30,8 @@ extern time_t _posix_start_time;
 __inline
 #endif
 static clock_t
-DEFUN(timeval_to_clock_t, (tv), CONST struct timeval *tv)
+timeval_to_clock_t (tv)
+     const struct timeval *tv;
 {
   return (clock_t) ((tv->tv_sec * CLK_TCK) +
 		    (tv->tv_usec * CLK_TCK / 1000000L));
@@ -42,27 +42,28 @@ DEFUN(timeval_to_clock_t, (tv), CONST struct timeval *tv)
    Return the elapsed real time, or (clock_t) -1 for errors.
    All times are in CLK_TCKths of a second.  */
 clock_t
-DEFUN(__times, (buffer), struct tms *buffer)
+__times (buffer)
+     struct tms *buffer;
 {
   struct rusage usage;
 
   if (buffer == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return (clock_t) -1;
     }
 
-  if (__getrusage(RUSAGE_SELF, &usage) < 0)
+  if (__getrusage (RUSAGE_SELF, &usage) < 0)
     return (clock_t) -1;
-  buffer->tms_utime = (clock_t) timeval_to_clock_t(&usage.ru_utime);
-  buffer->tms_stime = (clock_t) timeval_to_clock_t(&usage.ru_stime);
+  buffer->tms_utime = (clock_t) timeval_to_clock_t (&usage.ru_utime);
+  buffer->tms_stime = (clock_t) timeval_to_clock_t (&usage.ru_stime);
 
-  if (__getrusage(RUSAGE_CHILDREN, &usage) < 0)
+  if (__getrusage (RUSAGE_CHILDREN, &usage) < 0)
     return (clock_t) -1;
-  buffer->tms_cutime = (clock_t) timeval_to_clock_t(&usage.ru_utime);
-  buffer->tms_cstime = (clock_t) timeval_to_clock_t(&usage.ru_stime);
+  buffer->tms_cutime = (clock_t) timeval_to_clock_t (&usage.ru_utime);
+  buffer->tms_cstime = (clock_t) timeval_to_clock_t (&usage.ru_stime);
 
-  return (time((time_t *) NULL) - _posix_start_time) * CLK_TCK;
+  return (time ((time_t *) NULL) - _posix_start_time) * CLK_TCK;
 }
 
 weak_alias (__times, times)

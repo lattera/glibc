@@ -39,7 +39,7 @@ _IO_fsetpos (fp, posp)
       /*ANSI explicily requires setting errno to a positive value on failure.*/
 #ifdef EIO
       if (errno == 0)
-	errno = EIO;
+	__set_errno (EIO);
 #endif
       result = EOF;
     }

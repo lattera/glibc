@@ -25,7 +25,7 @@ Boston, MA 02111-1307, USA.  */
 int
 __sched_rr_get_interval (pid_t pid, struct timespec *t)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (sched_rr_get_interval)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -15,8 +15,6 @@ You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
-
-#include <ansidecl.h>
 
 #ifndef	__GNUC__
   #error This file uses GNU C extensions; you must compile with GCC.
@@ -52,8 +50,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 
 /* Defined in __sigvec.S.  */
-extern int EXFUN(__raw_sigvec, (int sig, CONST struct sigvec *vec,
-				struct sigvec *ovec));
+extern int __raw_sigvec __P ((int sig, CONST struct sigvec *vec,
+			      struct sigvec *ovec));
 
 /* User-specified signal handlers.  */
 #define mytramp 1
@@ -70,7 +68,8 @@ extern __sighandler_t _sigfunc[];
    Saves and restores the general regs %g2-%g7, the %y register, and
    all the FPU regs (including %fsr), around calling the user's handler.  */
 static void
-DEFUN(trampoline, (sig), int sig)
+trampoline (sig)
+     int sig;
 {
   /* We use `double' and `long long int' so `std' (store doubleword) insns,
      which might be faster than single-word stores, will be generated.  */
@@ -97,7 +96,7 @@ DEFUN(trampoline, (sig), int sig)
 
   int code;
   register struct sigcontext *context asm("%i0"); /* See end of fn.  */
-  PTR addr;
+  void *addr;
   int y;
   double fpsave[16];
   int fsr;
@@ -147,8 +146,8 @@ DEFUN(trampoline, (sig), int sig)
   glsave[2] = g6;
 
   /* Call the user's handler.  */
-  (*((void EXFUN((*), (int sig, int code, struct sigcontext *context,
-		       PTR addr))) handlers[sig]))
+  (*((void (*) __P ((int sig, int code, struct sigcontext *context,
+		     void *addr))) handlers[sig]))
     (sig, code, context, addr);
 
   /* Restore the Y register.  */
@@ -199,8 +198,10 @@ DEFUN(trampoline, (sig), int sig)
 #endif
 
 int
-DEFUN(__sigvec, (sig, vec, ovec),
-      int sig AND CONST struct sigvec *vec AND struct sigvec *ovec)
+__sigvec (sig, vec, ovec)
+     int sig;
+     const struct sigvec *vec;
+     struct sigvec *ovec;
 {
 #ifndef	mytramp
   extern void _sigtramp (int);
@@ -212,11 +213,11 @@ DEFUN(__sigvec, (sig, vec, ovec),
 
   if (sig <= 0 || sig >= NSIG)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  mask = __sigblock(sigmask(sig));
+  mask = __sigblock (sigmask(sig));
 
   ohandler = handlers[sig];
 
@@ -240,7 +241,7 @@ DEFUN(__sigvec, (sig, vec, ovec),
   if (ovec != NULL && ovec->sv_handler == trampoline)
     ovec->sv_handler = ohandler;
 
-  (void) __sigsetmask(mask);
+  (void) __sigsetmask (mask);
 
   return 0;
 }

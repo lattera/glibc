@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/time.h>
 
@@ -25,11 +24,11 @@ Cambridge, MA 02139, USA.  */
    of time adjustment remaining to be done from the last `__adjtime' call.
    This call is restricted to the super-user.  */
 int
-DEFUN(__adjtime, (delta, olddelta),
-      CONST struct timeval *delta AND
-      struct timeval *olddelta)
+__adjtime (delta, olddelta)
+     const struct timeval *delta;
+     struct timeval *olddelta;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (adjtime)

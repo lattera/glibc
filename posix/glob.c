@@ -72,6 +72,9 @@ Cambridge, MA 02139, USA.  */
 #if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
 extern int errno;
 #endif
+#ifndef __set_errno
+#define __set_errno(val) errno = (val)
+#endif
 
 #ifndef	NULL
 #define	NULL	0
@@ -274,7 +277,7 @@ glob (pattern, flags, errfunc, pglob)
 
   if (pattern == NULL || pglob == NULL || (flags & ~__GLOB_FLAGS) != 0)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -880,7 +883,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	(*pglob->gl_closedir) (stream);
       else
 	closedir ((DIR *) stream);
-      errno = save;
+      __set_errno (save);
     }
   return nfound == 0 ? GLOB_NOMATCH : 0;
 
@@ -891,7 +894,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       (*pglob->gl_closedir) (stream);
     else
       closedir ((DIR *) stream);
-    errno = save;
+    __set_errno (save);
   }
   while (names != NULL)
     {
@@ -903,4 +906,3 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 }
 
 #endif	/* Not ELIDE_CODE.  */
-

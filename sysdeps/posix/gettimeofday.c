@@ -37,7 +37,7 @@ __gettimeofday (tv, tz)
 {
   if (tv == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

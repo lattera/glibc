@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 
 /* Increase the size of the stack by INCREMENT,
    and return the address of the bottom of the stack.  */
-PTR
-DEFUN(sstk, (increment), int increment)
+void *
+sstk (increment)
+     int increment;
 {
-  errno = ENOSYS;
-  return (PTR) -1;
+  __set_errno (ENOSYS);
+  return (void *) -1;
 }
 
 stub_warning (sstk)

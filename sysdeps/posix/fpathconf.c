@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <unistd.h>
@@ -26,25 +25,27 @@ Cambridge, MA 02139, USA.  */
 
 /* Get file-specific information about descriptor FD.  */
 long int
-DEFUN(__fpathconf, (fd, name), int fd AND int name)
+__fpathconf (fd, name)
+     int fd;
+     int name;
 {
   if (fd < 0)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 
   switch (name)
     {
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
 
     case _PC_LINK_MAX:
 #ifdef	LINK_MAX
       return LINK_MAX;
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -52,7 +53,7 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 #ifdef	MAX_CANON
       return MAX_CANON;
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -60,7 +61,7 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 #ifdef	MAX_INPUT
       return MAX_INPUT;
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -68,7 +69,7 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 #ifdef	NAME_MAX
       return NAME_MAX;
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -83,7 +84,7 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 	  return buf.f_namelen;
       }
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -91,7 +92,7 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 #ifdef	PIPE_BUF
       return PIPE_BUF;
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -141,12 +142,12 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 #ifdef	SOCK_MAXBUF
       return SOCK_MAXBUF;
 #else
-      errno = ENOSYS;
+      __set_errno (ENOSYS);
       return -1;
 #endif
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

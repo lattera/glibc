@@ -148,7 +148,7 @@ main (int argc, char ** argv)
       if (!tests[i].out && errno != tests[i].error)
 	{
 	  printf ("%s: flunked test %d (expected errno %d, got %d)\n",
-		  argv[0], i, tests[i].errno, error);
+		  argv[0], i, tests[i].errno, errno);
 	  ++errors;
 	  continue;
 	}

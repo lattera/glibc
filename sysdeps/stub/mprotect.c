@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 int
 __mprotect (caddr_t addr, size_t len, int prot)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 weak_alias (__mprotect, mprotect)

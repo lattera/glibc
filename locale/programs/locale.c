@@ -183,14 +183,14 @@ main (int argc, char *argv[])
   /* Version information is requested.  */
   if (do_version)
     {
-      fprintf (stderr, "locale - GNU %s %s\n", PACKAGE, VERSION);
+      fprintf (stderr, "locale (GNU %s) %s\n", PACKAGE, VERSION);
       fprintf (stderr, _("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "1995, 1996");
-      fprintf (stderr, _("Written by %s\n"),
-	       "Ulrich Drepper <drepper@cygnus.com>");
+      fprintf (stderr, _("Written by %s.\n"),
+	       "Ulrich Drepper");
 
       exit (EXIT_SUCCESS);
     }
@@ -255,7 +255,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --category-name   write names of selected categories\n\
   -k, --keyword-name    write names of selected keywords\n"),
 	      __progname);
-      printf (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"));
+      fputs (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
+	     stdout);
     }
 
   exit (status);

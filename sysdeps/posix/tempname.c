@@ -56,7 +56,7 @@ exists (const char *file)
 	 trouble, while reporting that it doesn't exist when it does would
 	 violate the interface of __stdio_gen_tempname.  */
       int exists = errno != ENOENT;
-      errno = save;
+      __set_errno (save);
       return exists;
     }
 }
@@ -106,7 +106,7 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
 	d = "/tmp";
       if (d == NULL)
 	{
-	  errno = ENOENT;
+	  __set_errno (ENOENT);
 	  return NULL;
 	}
       dir = d;
@@ -186,7 +186,7 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
 		lose:
 		  (void) remove (buf);
 		  (void) __close (fd);
-		  errno = save;
+		  __set_errno (save);
 		  return NULL;
 		}
 	      _IO_init (&fp->file, 0);
@@ -214,7 +214,7 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
 		  const int save = errno;
 		  (void) remove (buf);
 		  (void) __close (fd);
-		  errno = save;
+		  __set_errno (save);
 		  return NULL;
 		}
 	      (*streamptr)->__cookie = (__ptr_t) (long int) fd;
@@ -232,7 +232,7 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
       /* If the file already existed we have continued the loop above,
 	 so we only get here when we have a winning name to return.  */
 
-      errno = saverrno;
+      __set_errno (saverrno);
 
       if (lenptr != NULL)
 	*lenptr = len + 1;
@@ -240,6 +240,6 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
     }
 
   /* We got out of the loop because we ran out of combinations to try.  */
-  errno = EEXIST;		/* ? */
+  __set_errno (EEXIST);		/* ? */
   return NULL;
 }

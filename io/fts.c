@@ -100,7 +100,7 @@ fts_open(argv, options, compar)
 
 	/* Options check. */
 	if (options & ~FTS_OPTIONMASK) {
-		errno = EINVAL;
+		__set_errno (EINVAL);
 		return (NULL);
 	}
 
@@ -134,7 +134,7 @@ fts_open(argv, options, compar)
 	for (root = NULL, nitems = 0; *argv; ++argv, ++nitems) {
 		/* Don't allow zero-length paths. */
 		if ((len = strlen(*argv)) == 0) {
-			errno = ENOENT;
+			__set_errno (ENOENT);
 			goto mem3;
 		}
 
@@ -262,7 +262,7 @@ fts_close(sp)
 
 	/* Set errno and return. */
 	if (!ISSET(FTS_NOCHDIR) && saved_errno) {
-		errno = saved_errno;
+		__set_errno (saved_errno);
 		return (-1);
 	}
 	return (0);
@@ -425,7 +425,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		 * can distinguish between error and EOF.
 		 */
 		free(p);
-		errno = 0;
+		__set_errno (0);
 		return (sp->fts_cur = NULL);
 	}
 
@@ -446,7 +446,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		if (FCHDIR(sp, p->fts_symfd)) {
 			saved_errno = errno;
 			(void)close(p->fts_symfd);
-			errno = saved_errno;
+			__set_errno (saved_errno);
 			SET(FTS_STOP);
 			return (NULL);
 		}
@@ -476,7 +476,7 @@ fts_set(sp, p, instr)
 {
 	if (instr && instr != FTS_AGAIN && instr != FTS_FOLLOW &&
 	    instr != FTS_NOINSTR && instr != FTS_SKIP) {
-		errno = EINVAL;
+		__set_errno (EINVAL);
 		return (1);
 	}
 	p->fts_instr = instr;
@@ -492,7 +492,7 @@ fts_children(sp, instr)
 	int fd;
 
 	if (instr && instr != FTS_NAMEONLY) {
-		errno = EINVAL;
+		__set_errno (EINVAL);
 		return (NULL);
 	}
 
@@ -503,7 +503,7 @@ fts_children(sp, instr)
 	 * Errno set to 0 so user can distinguish empty directory from
 	 * an error.
 	 */
-	errno = 0;
+	__set_errno (0);
 
 	/* Fatal errors stop here. */
 	if (ISSET(FTS_STOP))
@@ -681,7 +681,7 @@ mem1:				saved_errno = errno;
 					free(p);
 				fts_lfree(head);
 				(void)closedir(dirp);
-				errno = saved_errno;
+				__set_errno (saved_errno);
 				cur->fts_info = FTS_ERR;
 				SET(FTS_STOP);
 				return (NULL);
@@ -803,7 +803,7 @@ fts_stat(sp, p, follow)
 		if (stat(p->fts_accpath, sbp)) {
 			saved_errno = errno;
 			if (!lstat(p->fts_accpath, sbp)) {
-				errno = 0;
+				__set_errno (0);
 				return (FTS_SLNONE);
 			}
 			p->fts_errno = saved_errno;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <sysdep.h>
 #include <sys/resource.h>
 #include <unistd.h>
@@ -37,8 +36,9 @@ extern int _etext;
        can open.
    Returns -1 on errors.  */
 long int
-DEFUN(ulimit, (cmd, newlimit),
-      int cmd AND long int newlimit)
+ulimit (cmd, newlimit)
+     int cmd;
+     long int newlimit;
 {
   int status;
 
@@ -49,7 +49,7 @@ DEFUN(ulimit, (cmd, newlimit),
 	/* Get limit on file size.  */
 	struct rlimit fsize;
 
-	status = getrlimit(RLIMIT_FSIZE, &fsize);
+	status = getrlimit (RLIMIT_FSIZE, &fsize);
 	if (status < 0)
 	  return -1;
 
@@ -62,25 +62,25 @@ DEFUN(ulimit, (cmd, newlimit),
 	struct rlimit fsize;
 	fsize.rlim_cur = newlimit * 512;
 	fsize.rlim_max = newlimit * 512;
-	
-	return setrlimit(RLIMIT_FSIZE, &fsize);
+
+	return setrlimit (RLIMIT_FSIZE, &fsize);
       }
     case 3:
       /* Get maximum address for `brk'.  */
       {
 	struct rlimit dsize;
 
-	status = getrlimit(RLIMIT_DATA, &dsize);
+	status = getrlimit (RLIMIT_DATA, &dsize);
 	if (status < 0)
 	  return -1;
 
 	return ((long int) &_etext) + dsize.rlim_cur;
       }
     case 4:
-      return sysconf(_SC_OPEN_MAX);
+      return sysconf (_SC_OPEN_MAX);
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 }

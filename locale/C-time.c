@@ -26,7 +26,7 @@ const struct locale_data _nl_C_LC_TIME =
 {
   _nl_C_name,
   NULL, 0, /* no file mapped */
-  45,
+  53,
   {
     { string: "Sun" },
     { string: "Mon" },
@@ -72,6 +72,14 @@ const struct locale_data _nl_C_LC_TIME =
     { string: "%m/%d/%y" },
     { string: "%H:%M:%S" },
     { string: "%I:%M:%S %p" },
-    { string: NULL }
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { string: NULL },
+    { word: 0 },
+    { string: NULL },
+    { string: NULL },
   }
 };

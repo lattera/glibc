@@ -86,7 +86,7 @@ syscall_error:								      \
     neg.l %d0;								      \
     move.l %d0, (%a0);							      \
     move.l %d0, -(%sp);							      \
-    jbsr __errno_location@PLTPC						      \
+    jbsr __errno_location@PLTPC;					      \
     move.l (%sp)+, (%a0);						      \
     move.l POUND -1, %d0;						      \
     /* Copy return value to %a0 for syscalls that are declared to return      \

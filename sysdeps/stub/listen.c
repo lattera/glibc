@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/socket.h>
 
@@ -24,10 +23,11 @@ Cambridge, MA 02139, USA.  */
    N connection requests will be queued before further requests are refused.
    Returns 0 on success, -1 for errors.  */
 int
-DEFUN(listen, (fd, n),
-      int fd AND unsigned int n)
+listen (fd, n)
+     int fd;
+     unsigned int n;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with the GNU C Library; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,11 +35,12 @@ weak_alias (__data_start, data_start)
 #endif
 
 #ifndef errno
-volatile int errno;
+volatile int __errno;
+string_alias (__errno, errno)
 #endif
 
-extern void EXFUN(__libc_init, (int argc, char **argv, char **envp));
-extern int EXFUN(main, (int argc, char **argv, char **envp));
+extern void __libc_init __P ((int argc, char **argv, char **envp));
+extern int main __P ((int argc, char **argv, char **envp));
 
 
 /* Not a prototype because it gets called strangely.  */
@@ -51,9 +51,9 @@ static void start1();
 /* N.B.: It is important that this be the first function.
    This file is the first thing in the text section.  */
 void
-DEFUN_VOID(_start)
+_start ()
 {
-  start1();
+  start1 ();
 }
 
 #ifndef NO_UNDERSCORES

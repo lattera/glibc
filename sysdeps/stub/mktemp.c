@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
 #include <errno.h>
 
@@ -24,15 +23,16 @@ Cambridge, MA 02139, USA.  */
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.  */
 char *
-DEFUN(mktemp, (template), char *template)
+mktemp (template)
+     char *template;
 {
-  if (strcmp(&template[strlen(template) - 6], "XXXXXX"))
+  if (strcmp (&template[strlen (template) - 6], "XXXXXX"))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return template;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return NULL;
 }
 

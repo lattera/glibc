@@ -32,7 +32,7 @@ __closedir (DIR *dirp)
 
   if (dirp == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

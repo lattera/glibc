@@ -27,7 +27,7 @@ ftime (timebuf)
   int save = errno;
   struct tm tp;
 
-  errno = 0;
+  __set_errno (0);
   if (time (&timebuf->time) == (time_t) -1 && errno != 0)
     return -1;
   timebuf->millitm = 0;
@@ -38,6 +38,6 @@ ftime (timebuf)
   timebuf->timezone = tp.tm_gmtoff / 60;
   timebuf->dstflag = tp.tm_isdst;
 
-  errno = save;
+  __set_errno (save);
   return 0;
 }

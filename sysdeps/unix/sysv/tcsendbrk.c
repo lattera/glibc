@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <signal.h>
@@ -27,7 +26,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Send zero bits on FD.  */
 int
-DEFUN(tcsendbreak, (fd, duration), int fd AND int duration)
+tcsendbreak (fd, duration)
+     int fd;
+     int duration;
 {
   /* The break lasts 0.25 to 0.5 seconds if DURATION is zero,
      and an implementation-defined period if DURATION is nonzero.
@@ -38,6 +39,6 @@ DEFUN(tcsendbreak, (fd, duration), int fd AND int duration)
   /* ioctl can't send a break of any other duration for us.
      This could be changed to use trickery (e.g. lower speed and
      send a '\0') to send the break, but for now just return an error.  */
-  errno = EINVAL;
+  __set_errno (EINVAL);
   return -1;
 }

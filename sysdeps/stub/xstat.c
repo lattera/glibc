@@ -26,11 +26,11 @@ __xstat (int vers, const char *file, struct stat *buf)
 {
   if (vers != _STAT_VER || file == NULL || buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (stat)

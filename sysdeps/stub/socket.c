@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/socket.h>
 
@@ -24,10 +23,12 @@ Cambridge, MA 02139, USA.  */
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
    Returns a file descriptor for the new socket, or -1 for errors.  */
 int
-DEFUN(socket, (domain, type, protocol),
-      int domain AND int type AND int protocol)
+socket (domain, type, protocol)
+     int domain;
+     int type;
+     int protocol;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

@@ -26,22 +26,22 @@ __fxstat (int vers, int fd, struct stat *buf)
 {
   if (vers != _STAT_VER)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
   if (fd < 0)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
   else if (buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (__fxstat)

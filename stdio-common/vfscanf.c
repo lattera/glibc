@@ -66,7 +66,7 @@ Cambridge, MA 02139, USA.  */
 			} while (0)
 # define memory_error()	do {						      \
 			  _IO_funlockfile (s);				      \
-			  errno = ENOMEM;				      \
+			  __set_errno (ENOMEM);				      \
 			  return EOF;					      \
 			} while (0)
 # define ARGCHECK(s, format)						      \
@@ -97,7 +97,7 @@ Cambridge, MA 02139, USA.  */
 			} while (0)
 # define memory_error()	do {						      \
 			  funlockfile (s);				      \
-			  errno = ENOMEM;				      \
+			  __set_errno (ENOMEM);				      \
 			  return EOF;					      \
 			} while (0)
 # define ARGCHECK(s, format)						      \
@@ -106,7 +106,7 @@ Cambridge, MA 02139, USA.  */
       /* Check file argument for consistence.  */			      \
       if (!__validfp (s) || !s->__mode.__read || format == NULL)	      \
 	{								      \
-	  errno = EINVAL;						      \
+	  __set_errno (EINVAL);						      \
 	  return EOF;							      \
 	}								      \
     } while (0)

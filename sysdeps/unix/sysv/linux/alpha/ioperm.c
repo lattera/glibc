@@ -326,7 +326,7 @@ init_iosys (void)
 	  fprintf(stderr,
 		  "ioperm.init_iosys(): Unable to determine system type.\n"
 		  "\t(May need " PATH_ALPHA_SYSTYPE " symlink?)\n");
-	  errno = ENODEV;
+	  __set_errno (ENODEV);
 	  return -1;
 	}
     }
@@ -349,7 +349,7 @@ init_iosys (void)
     }
 
   /* systype is not a know platform name... */
-  errno = EINVAL;
+  __set_errno (EINVAL);
   return -1;
 }
 
@@ -366,7 +366,7 @@ _ioperm (unsigned long from, unsigned long num, int turn_on)
   /* this test isn't as silly as it may look like; consider overflows! */
   if (from >= MAX_PORT || from + num > MAX_PORT)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -391,7 +391,7 @@ _ioperm (unsigned long from, unsigned long num, int turn_on)
 	    case IOSYS_APECS:	base = APECS_IO_BASE; break;
 	    case IOSYS_CIA:	base = CIA_IO_BASE; break;
 	    default:
-	      errno = ENODEV;
+	      __set_errno (ENODEV);
 	      return -1;
 	    }
 	  addr  = port_to_cpu_addr (from, io.sys, 1);
@@ -425,7 +425,7 @@ _iopl (unsigned int level)
 {
     if (level > 3)
       {
-	errno = EINVAL;
+	__set_errno (EINVAL);
 	return -1;
       }
     if (level)

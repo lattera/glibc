@@ -45,6 +45,9 @@ Cambridge, MA 02139, USA.  */
 #if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
 extern int errno;
 #endif
+#ifndef __set_errno
+#define __set_errno(val) errno = (val)
+#endif
 
 #ifndef	NULL
 #define	NULL	0
@@ -211,7 +214,7 @@ __getcwd (buf, size)
     {
       if (buf != NULL)
 	{
-	  errno = EINVAL;
+	  __set_errno (EINVAL);
 	  return NULL;
 	}
 
@@ -305,7 +308,7 @@ __getcwd (buf, size)
 		{
 		  int save = errno;
 		  (void) __closedir (dirstream);
-		  errno = save;
+		  __set_errno (save);
 		  goto lose;
 		}
 	      if (st.st_dev == thisdev && st.st_ino == thisino)
@@ -316,7 +319,7 @@ __getcwd (buf, size)
 	{
 	  int save = errno;
 	  (void) __closedir (dirstream);
-	  errno = save;
+	  __set_errno (save);
 	  goto lose;
 	}
       else
@@ -327,7 +330,7 @@ __getcwd (buf, size)
 	    {
 	      if (buf != NULL)
 		{
-		  errno = ERANGE;
+		  __set_errno (ERANGE);
 		  return NULL;
 		}
 	      else
@@ -338,7 +341,7 @@ __getcwd (buf, size)
 		    {
 		      (void) __closedir (dirstream);
 		      free (path);
-		      errno = ENOMEM; /* closedir might have changed it.  */
+		      __set_errno (ENOMEM);/* closedir might have changed it.*/
 		      return NULL;
 		    }
 		  pathp = &buf[pathp - path];

@@ -60,7 +60,7 @@ inet_net_ntop(af, src, bits, dst, size)
 	case AF_INET:
 		return (inet_net_ntop_ipv4(src, bits, dst, size));
 	default:
-		errno = EAFNOSUPPORT;
+		__set_errno (EAFNOSUPPORT);
 		return (NULL);
 	}
 }
@@ -91,7 +91,7 @@ inet_net_ntop_ipv4(src, bits, dst, size)
 	int b;
 
 	if (bits < 0 || bits > 32) {
-		errno = EINVAL;
+		__set_errno (EINVAL);
 		return (NULL);
 	}
 	if (bits == 0) {
@@ -134,6 +134,6 @@ inet_net_ntop_ipv4(src, bits, dst, size)
 	return (odst);
 
  emsgsize:
-	errno = EMSGSIZE;
+	__set_errno (EMSGSIZE);
 	return (NULL);
 }

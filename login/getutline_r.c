@@ -48,7 +48,7 @@ __getutline_r (const struct utmp *line, struct utmp **utmp,
 	  != sizeof (struct utmp))
 	{
 	  utmp_data->loc_utmp = 0; /* Mark UTMP_DATA->ubuf invalid.  */
-	  errno = ESRCH;
+	  __set_errno (ESRCH);
 	  return -1;
 	}
 

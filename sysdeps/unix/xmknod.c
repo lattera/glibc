@@ -31,7 +31,7 @@ __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
 {
   if (vers != _MKNOD_VER)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

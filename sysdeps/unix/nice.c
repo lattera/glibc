@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/resource.h>
@@ -24,21 +23,22 @@ Cambridge, MA 02139, USA.  */
 /* Increment the scheduling priority of the calling process by INCR.
    The superuser may use a negative INCR to decrement the priority.  */
 int
-DEFUN(nice, (incr), int incr)
+nice (incr)
+     int incr;
 {
   int save;
   int prio;
 
   /* -1 is a valid priority, so we use errno to check for an error.  */
   save = errno;
-  errno = 0;
+  __set_errno (0);
   prio = getpriority (PRIO_PROCESS, 0);
   if (prio == -1)
     {
       if (errno != 0)
 	return -1;
       else
-	errno = save;
+	__set_errno (save);
     }
 
   return setpriority (PRIO_PROCESS, 0, prio + incr);

@@ -55,7 +55,7 @@ routines := brk sbrk sstk ioctl \
 	    efgcvt efgcvt_r qefgcvt qefgcvt_r \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error ustat \
-	    getsysstats
+	    getsysstats force-wrapper
 aux := init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -35,18 +34,18 @@ Cambridge, MA 02139, USA.  */
    Return (pid_t) -1 for errors.  If the WUNTRACED bit is set in OPTIONS,
    return status for stopped children; otherwise don't.  */
 pid_t
-DEFUN(__waitpid, (pid, stat_loc, options),
-      pid_t pid AND int *stat_loc AND int options)
+__libc_waitpid (pid_t pid, int *stat_loc, int options)
 {
   if ((options & ~(WNOHANG|WUNTRACED)) != 0)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return (pid_t) -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return (pid_t) -1;
 }
-stub_warning (waitpid)
+weak_alias (__libc_waitpid, __waitpid)
+weak_alias (__libc_waitpid, waitpid)
 
-weak_alias (__waitpid, waitpid)
+stub_warning (waitpid)

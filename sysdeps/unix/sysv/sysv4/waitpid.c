@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -53,8 +52,7 @@ extern int __waitid __P ((__idtype_t idtype, __pid_t id,
    return status for stopped children; otherwise don't.  */
 
 __pid_t
-DEFUN(__waitpid, (pid, stat_loc, options),
-      __pid_t pid AND int *stat_loc AND int options)
+__libc_waitpid (__pid_t pid, int *stat_loc, int options)
 {
   __idtype_t idtype;
   __pid_t tmp_pid = pid;
@@ -117,4 +115,5 @@ DEFUN(__waitpid, (pid, stat_loc, options),
   return infop.__pid;
 }
 
-weak_alias (__waitpid, waitpid)
+weak_alias (__libc_waitpid, __waitpid)
+weak_alias (__libc_waitpid, waitpid)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,18 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <termios.h>
 
 /* Suspend or restart transmission on FD.  */
 int
-DEFUN(tcflow, (fd, action), int fd AND int action)
+tcflow (fd, action)
+     int fd;
+     int action;
 {
   if (fd < 0)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 
@@ -39,11 +40,11 @@ DEFUN(tcflow, (fd, action), int fd AND int action)
       break;
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

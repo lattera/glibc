@@ -24,7 +24,7 @@ Boston, MA 02111-1307, USA.  */
 int
 __sched_yield (void)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (sched_yield)

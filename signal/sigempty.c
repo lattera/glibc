@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,12 @@ Cambridge, MA 02139, USA.  */
 
 /* Clear all signals from SET.  */
 int
-DEFUN(sigemptyset, (set), sigset_t *set)
+sigemptyset (set)
+     sigset_t *set;
 {
   if (set == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

@@ -25,10 +25,9 @@ Cambridge, MA 02139, USA.  */
 int
 __statfs (const char *file, struct statfs *buf)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (statfs)
 
 weak_alias (__statfs, statfs)
-

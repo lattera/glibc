@@ -55,6 +55,14 @@ please let me know.
 	  libc anymore?''
 
 [Q15]	``What are these `add-ons'?''
+
+[Q16]	``When I use GNU libc on my Linux system by linking against
+	  to libc.so which comes with glibc all I get is a core dump.''
+
+[Q17]	``Looking through the shared libc file I haven't found the
+	  functions `stat', `lstat', `fstat', and `mknod' and while
+	  linking on my Linux system I get error messages.  How is
+	  this supposed to work?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -425,12 +433,119 @@ to use this feature.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q16]	``When I use GNU libc on my Linux system by linking against
+	  to libc.so which comes with glibc all I get is a core dump.''
+
+[A16] {UD} It is not enough to simply link against the GNU libc
+library itself.  The GNU C library comes with its own dynamic linker
+which really conforms to the ELF API standard.  This dynamic linker
+must be used.
+
+Normally this is done by the compiler.  The gcc will use
+
+	-dynamic-linker /lib/ld-linux.so.1
+
+unless the user specifies her/himself a -dynamic-linker argument.  But
+this is not the correct name for the GNU dynamic linker.  The correct
+name is /lib/ld.so.1 which is the name specified in the SVr4 ABi.
+
+To change your environment to use GNU libc for compiling you need to
+change the `specs' file of your gcc.  This file is normally found at
+
+	/usr/lib/gcc-lib/<arch>/<version>/specs
+
+In this file you have to change a few things:
+
+- change `ld-linux.so.1' to `ld.so.1'
+
+- remove all expression `%{...:-lgmon}';  there is no libgmon in glibc
+
+
+Things are getting a bit more complicated if you have GNU libc
+installed in some other place than /usr, i.e., if you do not want to
+use it instead of the old libc.  In this case the needed startup files
+and libraries are not found in the regular places.  So the specs file
+must tell the compiler and linker exactly what to use.  Here is for
+example the gcc-2.7.2 specs file when GNU libc is installed at
+/home/gnu:
+
+-----------------------------------------------------------------------
+*asm:
+%{V} %{v:%{!V:-V}} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*}
+
+*asm_final:
+%{pipe:-}
+
+*cpp:
+%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__} %{posix:-D_POSIX_SOURCE} -I/home/gnu/include
+
+*cc1:
+
+
+*cc1plus:
+
+
+*endfile:
+%{!shared:crtend.o%s} %{shared:crtendS.o%s} /home/gnu/lib/crtn.o%s
+
+*link:
+-m elf_i386 -rpath=/home/gnu/lib -L/home/gnu/lib %{shared:-shared}   %{!shared:     %{!ibcs:       %{!static: 	%{rdynamic:-export-dynamic} 	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld.so.1}} 	%{static:-static}}}
+
+*lib:
+%{!shared: %{mieee-fp:-lieee} %{p:-lc_p} %{!p:%{pg:-lc_p} %{!pg:-lc}}}
+
+*libgcc:
+%{!shared:-lgcc}
+
+*startfile:
+%{!shared: %{pg:/home/gnu/lib/gcrt1.o%s} %{!pg:%{p:/home/gnu/lib/gcrt1.o} %{!p:/home/gnu/lib/crt1.o%s}}} /home/gnu/lib/crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}
+
+*switches_need_spaces:
+
+
+*signed_char:
+%{funsigned-char:-D__CHAR_UNSIGNED__}
+
+*predefines:
+-D__ELF__ -Dunix -Di386 -Dlinux -Asystem(unix) -Asystem(posix) -Acpu(i386) -Amachine(i386)
+
+*cross_compile:
+0
+
+*multilib:
+. ;
+
+-----------------------------------------------------------------------
+
+Future versions of GCC will automatically provide the correct specs.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q17]	``Looking through the shared libc file I haven't found the
+	  functions `stat', `lstat', `fstat', and `mknod' and while
+	  linking on my Linux system I get error messages.  How is
+	  this supposed to work?''
+
+[A17] {RM} Believe it or not, stat and lstat (and fstat, and mknod)
+are supposed to be undefined references in libc.so.6!  Your problem is
+probably a missing or incorrect /usr/lib/libc.so file; note that this
+is a small text file now, not a symlink to libc.so.6.  It should look
+something like this:
+
+GROUP ( libc.so.6 ld.so.1 libc.a )
+
+
+{UD} The Linux ldconfig file probably generates a link libc.so ->
+libc.so.6 in /lib.  This is not correct.  There must not be such a
+link.  The linker script with the above contents is placed in
+/usr/lib which is enough for the linker.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
-
-Amended by:
 {RM} Roland McGrath, <roland@gnu.ai.mit.edu>
 
 Local Variables:

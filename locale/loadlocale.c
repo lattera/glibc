@@ -144,7 +144,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 		    {
 		      free (filedata);
 		      if (nread == 0)
-			errno = EINVAL; /* Bizarreness going on.  */
+			__set_errno (EINVAL); /* Bizarreness going on.  */
 		      goto puntfd;
 		    }
 		  p += nread;
@@ -153,7 +153,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	    }
 	  else
 	    goto puntfd;
-	  errno = save_err;
+	  __set_errno (save_err);
 	}
       else
 	goto puntfd;
@@ -184,7 +184,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
        >= (size_t) st.st_size))
     {
       /* Insufficient data.  */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       goto puntmap;
     }
 
@@ -204,7 +204,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       if (idx >= newdata->filesize)
 	{
 	  free (newdata);
-	  errno = EINVAL;
+	  __set_errno (EINVAL);
 	  goto puntmap;
 	}
       if (_nl_value_types[category][cnt] == word)

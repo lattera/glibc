@@ -93,7 +93,7 @@ canonicalize (const char *name, char *resolved)
 	    {
 	      if (resolved)
 		{
-		  errno = ENAMETOOLONG;
+		  __set_errno (ENAMETOOLONG);
 		  goto error;
 		}
 	      new_size = rpath_limit - rpath;
@@ -120,7 +120,7 @@ canonicalize (const char *name, char *resolved)
 
 	      if (++num_links > MAXSYMLINKS)
 		{
-		  errno = ELOOP;
+		  __set_errno (ELOOP);
 		  goto error;
 		}
 
@@ -134,7 +134,7 @@ canonicalize (const char *name, char *resolved)
 
 	      if ((long int) (n + strlen (end)) >= path_max)
 		{
-		  errno = ENAMETOOLONG;
+		  __set_errno (ENAMETOOLONG);
 		  goto error;
 		}
 

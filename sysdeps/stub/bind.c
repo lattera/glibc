@@ -16,16 +16,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/socket.h>
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
 int
-DEFUN(bind, (fd, addr, len),
-      int fd AND const struct sockaddr *addr AND size_t len)
+bind (fd, addr, len)
+     int fd;
+     const struct sockaddr *addr;
+     size_t len;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

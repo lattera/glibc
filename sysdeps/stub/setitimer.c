@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <errno.h>
 #include <sys/time.h>
@@ -25,17 +24,18 @@ Cambridge, MA 02139, USA.  */
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
 int
-DEFUN(__setitimer, (which, new, old),
-      enum __itimer_which which AND
-      struct itimerval *new AND struct itimerval *old)
+__setitimer (which, new, old)
+     enum __itimer_which which;
+     struct itimerval *new;
+     struct itimerval *old;
 {
   if (new == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (setitimer)

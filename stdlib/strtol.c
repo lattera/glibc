@@ -31,6 +31,9 @@ Cambridge, MA 02139, USA.  */
 #ifndef errno
 extern int errno;
 #endif
+#ifndef __set_errno
+# define __set_errno(val) errno = (val)
+#endif
 
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
@@ -309,7 +312,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 
   if (overflow)
     {
-      errno = ERANGE;
+      __set_errno (ERANGE);
 #if UNSIGNED
       return ULONG_MAX;
 #else

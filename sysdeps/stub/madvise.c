@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 int
 madvise (caddr_t addr, size_t len, int advice)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

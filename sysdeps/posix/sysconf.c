@@ -37,7 +37,7 @@ __sysconf (name)
   switch (name)
     {
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
 
     case _SC_ARG_MAX:

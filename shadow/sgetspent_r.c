@@ -28,34 +28,41 @@ Cambridge, MA 02139, USA.  */
 #define ENTNAME		spent
 struct spent_data {};
 
+/* Predicate which always returns false, needed below.  */
+#define FALSE(arg) 0
+
+
 #include "../nss/nss_files/files-parse.c"
 LINE_PARSER
 (,
  STRING_FIELD (result->sp_namp, ISCOLON, 0);
  STRING_FIELD (result->sp_pwdp, ISCOLON, 0);
- INT_FIELD (result->sp_lstchg, ISCOLON, 0, 10, (time_t));
- INT_FIELD (result->sp_min, ISCOLON, 0, 10, (time_t));
- INT_FIELD (result->sp_max, ISCOLON, 0, 10, (time_t));
+ INT_FIELD (result->sp_lstchg, ISCOLON, 0, 10, (long int));
+ INT_FIELD (result->sp_min, ISCOLON, 0, 10, (long int));
+ INT_FIELD (result->sp_max, ISCOLON, 0, 10, (long int));
  while (isspace (*line))
    ++line;
  if (*line == '\0')
    {
      /* The old form.  */
-     result->sp_warn = (time_t) -1;
-     result->sp_inact = (time_t) -1;
-     result->sp_expire = (time_t) -1;
+     result->sp_warn = (long int) -1;
+     result->sp_inact = (long int) -1;
+     result->sp_expire = (long int) -1;
      result->sp_flag = ~0ul;
    }
  else
    {
-     INT_FIELD_MAYBE_NULL (result->sp_warn, ISCOLON, 0, 10, (time_t),
-			   (time_t) -1);
-     INT_FIELD_MAYBE_NULL (result->sp_inact, ISCOLON, 0, 10, (time_t),
-			   (time_t) -1);
-     INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10, (time_t),
-			   (time_t) -1);
-     INT_FIELD_MAYBE_NULL (result->sp_flag, ISCOLON, 0, 10,
-			   (unsigned long int), ~0ul);
+     INT_FIELD_MAYBE_NULL (result->sp_warn, ISCOLON, 0, 10, (long int),
+			   (long int) -1);
+     INT_FIELD_MAYBE_NULL (result->sp_inact, ISCOLON, 0, 10, (long int),
+			   (long int) -1);
+     INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10, (long int),
+			   (long int) -1);
+     if (*line != '\0')
+       INT_FIELD_MAYBE_NULL (result->sp_flag, FALSE, 0, 10,
+			     (unsigned long int), ~0ul)
+     else
+       result->sp_flag = ~0ul;
    }
  )
 

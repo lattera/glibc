@@ -35,7 +35,7 @@ __register_printf_function (spec, converter, arginfo)
 {
   if (spec < 0 || spec > (int) UCHAR_MAX)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

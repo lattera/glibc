@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,32 +16,31 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stddef.h>
 
 /* Read NBYTES into BUF from FD.  Return the number read or -1.  */
 ssize_t
-DEFUN(__read, (fd, buf, nbytes),
-      int fd AND PTR buf AND size_t nbytes)
+__libc_read (int fd, void *buf, size_t nbytes)
 {
   if (nbytes == 0)
     return 0;
   if (fd < 0)
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
   if (buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (read)
 
-weak_alias (__read, read)
+weak_alias (__libc_read, __read)
+weak_alias (__libc_read, read)

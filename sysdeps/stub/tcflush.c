@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <termios.h>
 
 /* Flush pending data on FD.  */
 int
-DEFUN(tcflush, (fd, queue_selector), int fd AND int queue_selector)
+tcflush (fd, queue_selector)
+     int fd;
+     int queue_selector;
 {
   switch (queue_selector)
     {
@@ -32,19 +33,13 @@ DEFUN(tcflush, (fd, queue_selector), int fd AND int queue_selector)
       break;
 
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 
 
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
 stub_warning(tcflush);
-
-#endif	/* GNU stabs.  */

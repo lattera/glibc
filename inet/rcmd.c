@@ -111,7 +111,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 
 			(void)fprintf(stderr, _("connect to address %s: "),
 			    inet_ntoa(sin.sin_addr));
-			errno = oerrno;
+			__set_errno (oerrno);
 			perror(0);
 			hp->h_addr_list++;
 			bcopy(hp->h_addr_list[0], &sin.sin_addr, hp->h_length);
@@ -146,7 +146,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		FD_ZERO(&reads);
 		FD_SET(s, &reads);
 		FD_SET(s2, &reads);
-		errno = 0;
+		__set_errno (0);
 		if (select(1 + (s > s2 ? s : s2), &reads, 0, 0, 0) < 1 ||
 		    !FD_ISSET(s2, &reads)) {
 			if (errno != 0)
@@ -227,7 +227,7 @@ rresvport(alport)
 		(*alport)--;
 		if (*alport == IPPORT_RESERVED/2) {
 			(void)close(s);
-			errno = EAGAIN;		/* close */
+			__set_errno (EAGAIN);		/* close */
 			return (-1);
 		}
 	}

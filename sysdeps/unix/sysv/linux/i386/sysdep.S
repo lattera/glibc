@@ -33,6 +33,9 @@ errno:	.zero 4
 	.globl _errno
 	.type _errno,@object
 _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
+	.globl __errno
+	.type __errno,@object
+__errno = errno	/* This name is expected by the MT code.  */
 	.text
 
 /* The following code is only used in the shared library when we

@@ -192,7 +192,7 @@ res_search(name, class, type, answer, anslen)
 		h_errno = NETDB_INTERNAL;
 		return (-1);
 	}
-	errno = 0;
+	__set_errno (0);
 	h_errno = HOST_NOT_FOUND;	/* default, if we never query */
 	dots = 0;
 	for (cp = name; *cp; cp++)

@@ -529,17 +529,11 @@ strftime (s, maxsize, format, tp)
 #ifdef _NL_CURRENT
 	  if (modifier == 'O' && 0 <= number_value)
 	    {
-	      /* ALT_DIGITS is the first entry in an array with
-		 alternative digit symbols.  We have to find string
-		 number NUMBER_VALUE, but must not look beyond
-		 END_ALT_DIGITS.  */
-	      int run = number_value;
-	      const char *cp = alt_digits;
+	      /* Get the locale specific alternate representation of
+		 the number NUMBER_VALUE.  If none exist NULL is returned.  */
+	      const char *cp = _nl_get_alt_digit (number_value);
 
-	      while (run-- > 0 && cp < end_alt_digits)
-		cp = strchr (cp, '\0') + 1;
-
-	      if (cp < end_alt_digits)
+	      if (cp != NULL)
 		{
 		  size_t digitlen = strlen (cp);
 		  if (digitlen != 0)

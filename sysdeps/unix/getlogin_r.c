@@ -53,7 +53,7 @@ getlogin_r (name, name_len)
 
     if (result < 0)
       {
-	errno = err;
+	__set_errno (err);
 	return err;
       }
   }

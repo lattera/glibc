@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 
@@ -25,13 +24,15 @@ Cambridge, MA 02139, USA.  */
 
 /* Set the file position of STREAM to *POS.  */
 int
-DEFUN(fsetpos, (stream, pos), FILE *stream AND CONST fpos_t *pos)
+fsetpos (stream, pos)
+     FILE *stream;
+     const fpos_t *pos;
 {
   if (pos == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 
-  return fseek(stream, *pos, SEEK_SET);
+  return fseek (stream, *pos, SEEK_SET);
 }

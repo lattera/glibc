@@ -1,19 +1,19 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
- 
+
 This file is part of the GNU C Library.
- 
+
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
 published by the Free Software Foundation; either version 2 of the
 License, or (at your option) any later version.
- 
+
 The GNU C Library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
- 
+
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
@@ -43,7 +43,7 @@ _M68Kvec:                               | standard location for vectors
         .space   4088                   | to avoid initial intr stack
                                         |   from 135BUG on MVME13? as entry
                                         |   and start code at 0x4000
-around: 
+around:
         move.w  %sr,initial_sr          | save initial values
         movec   %isp,%a0
         movel   %a0,initial_isp
@@ -53,19 +53,19 @@ around:
         movel   %a0,initial_msp
         oriw    #0x0700,%sr             | INTERRUPTS OFF!!!
 
-        
+
 
         |
         | zero out uninitialized data area
         |
 zerobss:
-        moveal  #end,%a0                | find end of .bss 
-        moveal  #_bss_start,%a1         | find beginning of .bss 
+        moveal  #end,%a0                | find end of .bss
+        moveal  #_bss_start,%a1         | find beginning of .bss
         movel   #0,%d0
 
 loop:   movel   #0,%a1@+                | to zero out uninitialized
         cmpal   %a0,%a1
-        jlt     loop                    | loop until _end reached 
+        jlt     loop                    | loop until _end reached
 
         movel   #heap_size,__C_heap_size | set ___C_heap_size
         movel   #heap_memory,__C_heap_start | set ___C_heap_start
@@ -77,14 +77,14 @@ loop:   movel   #0,%a1@+                | to zero out uninitialized
         movw    #0x3000,%sr             | SUPV MODE,INTERRUPTS ON!!!
 
 #ifdef NEED_UNDERSCORES
-        jsr     __Board_Initialize      | initialize the board 
+        jsr     __Board_Initialize      | initialize the board
 #else
-        jsr     _Board_Initialize       | initialize the board 
+        jsr     _Board_Initialize       | initialize the board
 #endif
 
-        move.l  #0,%sp@-                | envp = NULL 
-        move.l  #0,%sp@-                | argv = NULL 
-        move.l  #0,%sp@-                | argc = NULL 
+        move.l  #0,%sp@-                | envp = NULL
+        move.l  #0,%sp@-                | argv = NULL
+        move.l  #0,%sp@-                | argc = NULL
 #ifdef NEED_UNDERSCORES
         jsr     ___libc_init            | initialize the library and
                                         |   call main
@@ -93,8 +93,8 @@ loop:   movel   #0,%a1@+                | to zero out uninitialized
                                         |   call main
 #endif
         add.l   #12,%sp
- 
-        move.l  #0,%sp@-                | argc = NULL 
+
+        move.l  #0,%sp@-                | argc = NULL
         jsr     __exit                  | call the Board specific exit
         addq.l  #4,%sp
 
@@ -121,7 +121,7 @@ _name##:  .space _space
 
 #define DECLARE_LABEL(_name) \
           .globl   _name ; \
-_name##:  
+_name##:
 
 #define DECLARE_PTR(_name) DECLARE_SPACE(_name,4,2)
 #define DECLARE_U32(_name) DECLARE_SPACE(_name,4,2)
@@ -139,6 +139,7 @@ DECLARE_U16(initial_sr)
 DECLARE_LABEL(_environ)
 DECLARE_PTR(environ)
 
+DECLARE_LABEL(__errno)
 DECLARE_LABEL(_errno)
 DECLARE_U32(errno)
 

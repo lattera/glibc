@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
 
@@ -19,7 +19,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stddef.h>
@@ -30,32 +29,31 @@ Cambridge, MA 02139, USA.  */
 
 /* Read NBYTES into BUF from FD.  Return the number read or -1.  */
 ssize_t
-DEFUN(__read, (fd, buf, nbytes),
-      int fd AND PTR buf AND size_t nbytes)
+__libc_read (int fd, void *buf, size_t nbytes)
 {
   char *buffer = (char *) buf;
   int data;
   int poll;
 
-  errno = 0;
+  __set_errno (0);
 
   if (nbytes == 0)
     return 0;
 
   if ( !__FD_Is_valid( fd ) || !__FD_Table[ fd ].in_use )
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
   if (buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
   if ( __FD_Table[ fd ].flags & O_WRONLY )  /* is it write only? */
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 
@@ -63,11 +61,11 @@ DEFUN(__read, (fd, buf, nbytes),
 
   poll = ( __FD_Table[ fd ].flags & O_NONBLOCK ) ? 1 : 0;
 
-  /* Read a single character.  This is a cheap way to insure that the 
-     upper layers get every character because _Console_Getc can't timeout 
+  /* Read a single character.  This is a cheap way to insure that the
+     upper layers get every character because _Console_Getc can't timeout
      or otherwise know when to stop.  */
 
-  
+
   data = _Console_Getc(poll);
 
   if ( data == -1 )                 /* if no data return */
@@ -84,4 +82,5 @@ DEFUN(__read, (fd, buf, nbytes),
   return 1;
 }
 
-weak_alias (__read, read)
+weak_alias (__libc_read, __read)
+weak_alias (__libc_read, read)

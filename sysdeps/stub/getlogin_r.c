@@ -28,7 +28,7 @@ getlogin_r (name, name_len)
      char *name;
      size_t name_len;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return errno;
 }
 

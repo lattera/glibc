@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@ Cambridge, MA 02139, USA.  */
    or stub versions of getrlimit.  Separate versions could be written
    for efficiency, but it's probably not worth it.  */
 
-#include <ansidecl.h>
 #include <sys/vlimit.h>
 #include <sys/resource.h>
 #include <errno.h>
@@ -28,8 +27,9 @@ Cambridge, MA 02139, USA.  */
 /* Set the soft limit for RESOURCE to be VALUE.
    Returns 0 for success, -1 for failure.  */
 int
-DEFUN(vlimit, (resource, value),
-      enum __vlimit_resource resource AND int value)
+vlimit (resource, value)
+     enum __vlimit_resource resource;
+     int value;
 {
   if (resource >= LIM_CPU && resource <= LIM_MAXRSS)
     {
@@ -39,13 +39,13 @@ DEFUN(vlimit, (resource, value),
 	(enum __rlimit_resource) ((int) resource - 1);
       struct rlimit lims;
 
-      if (getrlimit(rlimit_res, &lims) < 0)
+      if (getrlimit (rlimit_res, &lims) < 0)
 	return -1;
 
       lims.rlim_cur = value;
       return setrlimit(rlimit_res, &lims);
     }
 
-  errno = EINVAL;
+  __set_errno (EINVAL);
   return -1;
 }

@@ -6,12 +6,13 @@ chdir		-	chdir		1	__chdir		chdir
 chmod		-	chmod		2	__chmod		chmod
 chown		-	chown		3	__chown		chown
 chroot		-	chroot		1	chroot
-close		-	close		1	__close		close
+close		-	close		1	__libc_close	__close close
 dup		-	dup		2	__dup		dup
 dup2		-	dup2		2	__dup2		dup2
 fchdir		-	fchdir		1	fchdir
-fcntl		-	fcntl		3	__fcntl		fcntl
-fsync		-	fsync		1	fsync
+fcntl		-	fcntl		3	__libc_fcntl	__fcntl fcntl
+fstatfs		-	fstatfs		2	__fstatfs	fstatfs
+fsync		-	fsync		1	__libc_fsync	fsync
 getdomain	-	getdomainname	2	getdomainname
 getgid		-	getgid		0	__getgid	getgid
 getgroups	-	getgroups	2	__getgroups	getgroups
@@ -23,12 +24,12 @@ getuid		-	getuid		0	__getuid	getuid
 ioctl		-	ioctl		3	__ioctl		ioctl
 kill		-	kill		2	__kill		kill
 link		-	link		2	__link		link
-lseek		-	lseek		3	__lseek		lseek
+lseek		-	lseek		3	__libc_lseek	__lseek lseek
 mkdir		-	mkdir		2	__mkdir		mkdir
-open		-	open		3	__open		open
+open		-	open		3	__libc_open	__open open
 profil		-	profil		4	profil
 ptrace		-	ptrace		4	ptrace
-read		-	read		3	__read		read
+read		-	read		3	__libc_read	__read read
 readlink	-	readlink	3	__readlink	readlink
 readv		-	readv		3	readv
 reboot		-	reboot		1	reboot
@@ -48,6 +49,7 @@ settimeofday	-	settimeofday	2	__settimeofday	settimeofday
 setuid		-	setuid		1	__setuid	setuid
 sigsuspend	-	sigsuspend	1	sigsuspend
 sstk		-	sstk		1	sstk
+statfs		-	statfs		2	__statfs	statfs
 swapoff		-	swapoff		1	swapoff
 swapon		-	swapon		1	swapon
 symlink		-	symlink		2	__symlink	symlink
@@ -55,11 +57,9 @@ sync		-	sync		0	sync
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
 sys_stat	xstat	stat		2	__syscall_stat
-statfs		-	statfs		2	__statfs	statfs
-fstatfs		-	fstatfs		2	__fstatfs	fstatfs
 umask		-	umask		1	__umask		umask
 uname		-	uname		1	uname
 unlink		-	unlink		1	__unlink	unlink
 utimes		-	utimes		2	__utimes	utimes
-write		-	write		3	__write		write
+write		-	write		3	__libc_write	__write write
 writev		-	writev		3	writev

@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -45,7 +45,9 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <rpc/pmap_clnt.h>
 
+#ifndef errno
 extern int errno;
+#endif
 
 /*
  * UDP bases client side rpc operations
@@ -66,7 +68,7 @@ static struct clnt_ops udp_ops = {
 	clntudp_control
 };
 
-/* 
+/*
  * Private data kept per client handle
  */
 struct cu_data {
@@ -204,7 +206,7 @@ clntudp_create(raddr, program, version, wait, sockp)
 	    UDPMSGSIZE, UDPMSGSIZE));
 }
 
-static enum clnt_stat 
+static enum clnt_stat
 clntudp_call(cl, proc, xargs, argsp, xresults, resultsp, utimeout)
 	register CLIENT	*cl;		/* client handle */
 	u_long		proc;		/* procedure number */
@@ -286,7 +288,7 @@ send_again:
 #endif /* def FD_SETSIZE */
 	for (;;) {
 		readfds = mask;
-		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL, 
+		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL,
 			       (int *)NULL, &(cu->cu_wait))) {
 
 		case 0:
@@ -299,7 +301,7 @@ send_again:
 			if ((time_waited.tv_sec < timeout.tv_sec) ||
 				((time_waited.tv_sec == timeout.tv_sec) &&
 				(time_waited.tv_usec < timeout.tv_usec)))
-				goto send_again;	
+				goto send_again;
 			return (cu->cu_error.re_status = RPC_TIMEDOUT);
 
 		/*
@@ -308,27 +310,27 @@ send_again:
 		 */
 		case -1:
 			if (errno == EINTR)
-				continue;	
+				continue;
 			cu->cu_error.re_errno = errno;
 			return (cu->cu_error.re_status = RPC_CANTRECV);
 		}
 		do {
 			fromlen = sizeof(struct sockaddr);
-			inlen = recvfrom(cu->cu_sock, cu->cu_inbuf, 
+			inlen = recvfrom(cu->cu_sock, cu->cu_inbuf,
 				(int) cu->cu_recvsz, 0,
 				(struct sockaddr *)&from, &fromlen);
 		} while (inlen < 0 && errno == EINTR);
 		if (inlen < 0) {
 			if (errno == EWOULDBLOCK)
-				continue;	
+				continue;
 			cu->cu_error.re_errno = errno;
 			return (cu->cu_error.re_status = RPC_CANTRECV);
 		}
 		if (inlen < 4)
-			continue;	
+			continue;
 		/* see if reply transaction id matches sent id */
 		if (*((u_int32_t *)(cu->cu_inbuf)) != *((u_int32_t *)(cu->cu_outbuf)))
-			continue;	
+			continue;
 		/* we now assume we have the proper reply */
 		break;
 	}
@@ -351,7 +353,7 @@ send_again:
 				xdrs->x_op = XDR_FREE;
 				(void)xdr_opaque_auth(xdrs,
 				    &(reply_msg.acpted_rply.ar_verf));
-			} 
+			}
 		}  /* end successful completion */
 		else {
 			/* maybe our credentials need to be refreshed ... */
@@ -391,7 +393,7 @@ clntudp_freeres(cl, xdr_res, res_ptr)
 	return ((*xdr_res)(xdrs, res_ptr));
 }
 
-static void 
+static void
 clntudp_abort(/*h*/)
 	/*CLIENT *h;*/
 {
@@ -426,7 +428,7 @@ clntudp_control(cl, request, info)
 	}
 	return (TRUE);
 }
-	
+
 static void
 clntudp_destroy(cl)
 	CLIENT *cl;

@@ -64,7 +64,7 @@ inet_net_pton(af, src, dst, size)
 	case AF_INET:
 		return (inet_net_pton_ipv4(src, dst, size));
 	default:
-		errno = EAFNOSUPPORT;
+		__set_errno (EAFNOSUPPORT);
 		return (-1);
 	}
 }
@@ -192,10 +192,10 @@ inet_net_pton_ipv4(src, dst, size)
 	return (bits);
 
  enoent:
-	errno = ENOENT;
+	__set_errno (ENOENT);
 	return (-1);
 
  emsgsize:
-	errno = EMSGSIZE;
+	__set_errno (EMSGSIZE);
 	return (-1);
 }

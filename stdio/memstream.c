@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,8 +29,9 @@ struct memstream_info
 
 /* Enlarge STREAM's buffer.  */
 static void
-DEFUN(enlarge_buffer, (stream, c),
-      register FILE *stream AND int c)
+enlarge_buffer (stream, c)
+     register FILE *stream;
+     int c;
 {
   struct memstream_info *info = (struct memstream_info *) stream->__cookie;
   size_t need;
@@ -64,7 +64,7 @@ DEFUN(enlarge_buffer, (stream, c),
 	newsize = need;
       else
 	newsize = stream->__bufsize * 2;
-      newbuf = (char *) realloc ((PTR) stream->__buffer, newsize);
+      newbuf = (char *) realloc ((void *) stream->__buffer, newsize);
       if (newbuf == NULL)
 	{
 	  stream->__error = 1;
@@ -82,7 +82,7 @@ DEFUN(enlarge_buffer, (stream, c),
   if (need > 0)
     {
       /* We are extending the buffer after an fseek; zero-fill new space.  */
-      bzero (stream->__bufp, need);
+      memset (stream->__bufp, '\0', need);
       stream->__bufp += need;
     }
 
@@ -96,8 +96,10 @@ DEFUN(enlarge_buffer, (stream, c),
    There is no external state to munge.  */
 
 static int
-DEFUN(seek, (cookie, pos, whence),
-      PTR cookie AND fpos_t *pos AND int whence)
+seek (cookie, pos, whence)
+     void *cookie;
+     fpos_t *pos;
+     int whence;
 {
   switch (whence)
     {
@@ -118,7 +120,8 @@ DEFUN(seek, (cookie, pos, whence),
 }
 
 static int
-DEFUN(free_info, (cookie), PTR cookie)
+free_info (cookie)
+     void *cookie;
 {
 #if 0
   struct memstream_info *info = (struct memstream_info *) cookie;
@@ -138,15 +141,16 @@ DEFUN(free_info, (cookie), PTR cookie)
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
 FILE *
-DEFUN(open_memstream, (bufloc, sizeloc),
-      char **bufloc AND size_t *sizeloc)
+open_memstream (bufloc, sizeloc)
+     char **bufloc;
+     size_t *sizeloc;
 {
   FILE *stream;
   struct memstream_info *info;
 
   if (bufloc == NULL || sizeloc == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 
@@ -159,14 +163,14 @@ DEFUN(open_memstream, (bufloc, sizeloc),
     {
       int save = errno;
       (void) fclose (stream);
-      errno = save;
+      __set_errno (save);
       return NULL;
     }
 
   stream->__room_funcs.__output = enlarge_buffer;
   stream->__io_funcs.__seek = seek;
   stream->__io_funcs.__close = free_info;
-  stream->__cookie = (PTR) info;
+  stream->__cookie = (void *) info;
   stream->__userbuf = 1;
 
   info->buffer = bufloc;

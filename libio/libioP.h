@@ -397,7 +397,7 @@ extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 #endif
 
 #ifdef EINVAL
-#define MAYBE_SET_EINVAL errno = EINVAL
+#define MAYBE_SET_EINVAL __set_errno (EINVAL)
 #else
 #define MAYBE_SET_EINVAL /* nothing */
 #endif

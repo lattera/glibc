@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,12 +26,15 @@ Cambridge, MA 02139, USA.  */
    If MODE indicates full or line buffering, use BUF,
    a buffer of SIZE bytes; if BUF is NULL, malloc a buffer.  */
 int
-DEFUN(setvbuf, (stream, buf, mode, size),
-      FILE *stream AND char *buf AND int mode AND size_t size)
+setvbuf (stream, buf, mode, size)
+     FILE *stream;
+     char *buf;
+     int mode;
+     size_t size;
 {
-  if (!__validfp(stream))
+  if (!__validfp (stream))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     }
 
@@ -40,7 +42,7 @@ DEFUN(setvbuf, (stream, buf, mode, size),
      but we allow it to replace an old buffer, flushing it first.  */
   if (stream->__buffer != NULL)
     {
-      (void) fflush(stream);
+      (void) fflush (stream);
       /* Free the old buffer if it was malloc'd.  */
       if (!stream->__userbuf)
 	free(stream->__buffer);
@@ -53,7 +55,7 @@ DEFUN(setvbuf, (stream, buf, mode, size),
   switch (mode)
     {
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return EOF;
     case _IONBF:	/* Unbuffered.  */
       stream->__buffer = NULL;
@@ -65,13 +67,13 @@ DEFUN(setvbuf, (stream, buf, mode, size),
     case _IOFBF:	/* Fully buffered.  */
       if (size == 0)
 	{
-	  errno = EINVAL;
+	  __set_errno (EINVAL);
 	  return EOF;
 	}
       stream->__bufsize = size;
       if (buf != NULL)
 	stream->__userbuf = 1;
-      else if ((buf = (char *) malloc(size)) == NULL)
+      else if ((buf = (char *) malloc (size)) == NULL)
 	return EOF;
       stream->__buffer = buf;
       break;

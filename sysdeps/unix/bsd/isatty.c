@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 
 /* Return 1 if FD is a terminal, 0 if not.  */
 int
-DEFUN(__isatty, (fd), int fd)
+__isatty (fd)
+     int fd;
 {
   int save;
   int is_tty;
@@ -31,7 +31,7 @@ DEFUN(__isatty, (fd), int fd)
 
   save = errno;
   is_tty = __ioctl (fd, TIOCGETP, &term) == 0;
-  errno = save;
+  __set_errno (save);
 
   return is_tty;
 }

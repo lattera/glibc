@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -26,7 +25,9 @@ extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
 
 /* Open a new stream on a given system file descriptor.  */
 FILE *
-DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
+fdopen (fd, mode)
+     int fd;
+     const char *mode;
 {
   register FILE *stream;
   __io_mode m;
@@ -48,14 +49,14 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
     case O_RDONLY:
       if (!m.__read)
 	{
-	  errno = EBADF;
+	  __set_errno (EBADF);
 	  return NULL;
 	}
       break;
     case O_WRONLY:
       if (!m.__write)
 	{
-	  errno = EBADF;
+	  __set_errno (EBADF);
 	  return NULL;
 	}
       break;
@@ -65,7 +66,7 @@ DEFUN(fdopen, (fd, mode), int fd AND CONST char *mode)
   if (stream == NULL)
     return NULL;
 
-  stream->__cookie = (PTR) fd;
+  stream->__cookie = (void *) fd;
   stream->__mode = m;
 
   return stream;

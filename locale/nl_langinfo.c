@@ -48,7 +48,7 @@ nl_langinfo (item)
   if (category < 0 || category >= LC_ALL)
     {
       /* Bogus category: bogus item.  */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 
@@ -57,7 +57,7 @@ nl_langinfo (item)
   if (index >= data->nstrings)
     {
       /* Bogus index for this category: bogus item.  */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <errno.h>
 
@@ -27,9 +26,10 @@ Cambridge, MA 02139, USA.  */
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
 __ptr_t
-DEFUN(__default_morecore, (increment), ptrdiff_t increment)
+__default_morecore (increment)
+     ptrdiff_t increment;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return NULL;
 }
 

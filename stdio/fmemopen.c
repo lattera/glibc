@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -25,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Defined in fopen.c.  */
-extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
+extern int __getmode __P ((const char *mode, __io_mode *mptr));
 
 /* Open a new stream that will read and/or write from the buffer in
    S, which is of LEN bytes.  If the mode indicates appending, the
@@ -40,8 +39,10 @@ extern int EXFUN(__getmode, (CONST char *mode, __io_mode *mptr));
    to read, attempted writes always return an output error and attempted
    reads always return end-of-file.  */
 FILE *
-DEFUN(fmemopen, (s, len, mode),
-      PTR s AND size_t len AND CONST char *mode)
+fmemopen (s, len, mode)
+     void *s;
+     size_t len;
+     const char *mode;
 {
   __io_mode m;
   register FILE *stream;
@@ -77,7 +78,7 @@ DEFUN(fmemopen, (s, len, mode),
 	{
 	  int save = errno;
 	  (void) fclose (stream);
-	  errno = save;
+	  __set_errno (save);
 	  return NULL;
 	}
     }
@@ -102,7 +103,7 @@ DEFUN(fmemopen, (s, len, mode),
 	stream->__bufp = p;
     }
   else if (stream->__mode.__truncate)
-    memset ((PTR) stream->__buffer, 0, len);
+    memset ((void *) stream->__buffer, 0, len);
 
   return stream;
 }

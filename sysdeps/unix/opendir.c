@@ -41,7 +41,7 @@ __opendir (const char *name)
     {
       /* POSIX.1-1990 says an empty name gets ENOENT;
 	 but `open' might like it fine.  */
-      errno = ENOENT;
+      __set_errno (ENOENT);
       return NULL;
     }
 
@@ -56,7 +56,7 @@ __opendir (const char *name)
     goto lose;
   if (! S_ISDIR (statbuf.st_mode))
     {
-      errno = ENOTDIR;
+      __set_errno (ENOTDIR);
       goto lose;
     }
 
@@ -66,7 +66,7 @@ __opendir (const char *name)
     {
       int save = errno;
       (void) __close (fd);
-      errno = save;
+      __set_errno (save);
       return NULL;
     }
 
@@ -85,7 +85,7 @@ __opendir (const char *name)
       int save = errno;
       free (dirp);
       (void) __close (fd);
-      errno = save;
+      __set_errno (save);
       return NULL;
     }
 

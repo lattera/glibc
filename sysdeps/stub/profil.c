@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Stub version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
     /* Disable profiling.  */
     return 0;
 
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (profil)

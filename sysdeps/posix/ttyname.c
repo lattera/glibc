@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
@@ -32,9 +31,10 @@ char *__ttyname = NULL;
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
 char *
-DEFUN(ttyname, (fd), int fd)
+ttyname (fd)
+     int fd;
 {
-  static CONST char dev[] = "/dev";
+  static const char dev[] = "/dev";
   static char *name;
   static size_t namelen = 0;
   struct stat st;
@@ -75,12 +75,12 @@ DEFUN(ttyname, (fd), int fd)
 	  {
 	    (void) closedir (dirstream);
 	    __ttyname = name;
-	    errno = save;
+	    __set_errno (save);
 	    return name;
 	  }
       }
 
   (void) closedir (dirstream);
-  errno = save;
+  __set_errno (save);
   return NULL;
 }

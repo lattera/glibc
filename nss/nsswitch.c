@@ -195,14 +195,14 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
 	break;
       if (cmp > 0)
 	{
-	  errno = EINVAL;
+	  __set_errno (EINVAL);
 	  return -1;
 	}
     }
 
   if (cnt == sizeof databases)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -216,7 +216,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
   if (new_db == NULL)
     {
       /* Illegal service specification.  */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <sys/ioctl.h>
 
 /* Wait for pending output to be written on FD.  */
 int
-DEFUN(tcdrain, (fd), int fd)
+__libc_tcdrain (int fd)
 {
   return __ioctl (fd, TIOCDRAIN);
 }
+weak_alias (__libc_tcdrain, tcdrain)

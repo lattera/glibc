@@ -24,7 +24,7 @@ Boston, MA 02111-1307, USA.  */
 int
 __sched_get_priority_min (int algorithm)
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (sched_get_priority_min)

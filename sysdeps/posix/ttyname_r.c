@@ -50,7 +50,7 @@ __ttyname_r (fd, buf, buflen)
      the loop.  */
   if (buflen < (int) (sizeof (dev) + 1))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -83,13 +83,13 @@ __ttyname_r (fd, buf, buflen)
 	if (stat (buf, &st) == 0 && st.st_dev == mydev)
 	  {
 	    (void) closedir (dirstream);
-	    errno = save;
+	    __set_errno (save);
 	    return 0;
 	  }
       }
 
   (void) closedir (dirstream);
-  errno = save;
+  __set_errno (save);
   return -1;
 }
 weak_alias (__ttyname_r, ttyname_r)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
@@ -27,7 +26,8 @@ Cambridge, MA 02139, USA.  */
 
 /* Create a directory named PATH with protections MODE.  */
 int
-DEFUN(__rmdir, (path), CONST char *path)
+__rmdir (path)
+     const char *path;
 {
   char *cmd = __alloca (80 + strlen (path));
   char *p;
@@ -37,7 +37,7 @@ DEFUN(__rmdir, (path), CONST char *path)
 
   if (path == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -46,7 +46,7 @@ DEFUN(__rmdir, (path), CONST char *path)
     return -1;
   if (!S_ISDIR (statbuf.st_mode))
     {
-      errno = ENOTDIR;
+      __set_errno (ENOTDIR);
       return -1;
     }
 
@@ -64,12 +64,12 @@ DEFUN(__rmdir, (path), CONST char *path)
   /* If system doesn't set errno, but the rmdir fails, we really
      have no idea what went wrong.  EIO is the vaguest error I
      can think of, so I'll use that.  */
-  errno = EIO;
+  __set_errno (EIO);
   status = system (cmd);
   if (WIFEXITED (status) && WEXITSTATUS (status) == 0)
     {
       return 0;
-      errno = save;
+      __set_errno (save);
     }
   else
     return -1;

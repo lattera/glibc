@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <sysdep.h>
 #include <errno.h>
 #include <stddef.h>
@@ -26,15 +25,17 @@ Cambridge, MA 02139, USA.  */
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
-DEFUN(__sigaction, (sig, act, oact),
-      int sig AND CONST struct sigaction *act AND struct sigaction *oact)
+__sigaction (sig, act, oact)
+     int sig;
+     const struct sigaction *act;
+     struct sigaction *oact;
 {
   sighandler_t handler;
   int save;
 
   if (sig <= 0 || sig >= NSIG)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -48,7 +49,7 @@ DEFUN(__sigaction, (sig, act, oact),
 	return -1;
       save = errno;
       (void) signal (sig, handler);
-      errno = save;
+      __set_errno (save);
     }
   else
     {
@@ -57,7 +58,7 @@ DEFUN(__sigaction, (sig, act, oact),
       if (act->sa_flags != 0)
 	{
 	unimplemented:
-	  errno = ENOSYS;
+	  __set_errno (ENOSYS);
 	  return -1;
 	}
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ __ulimit (cmd, newlimit)
      int cmd;
      long int newlimit;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 weak_alias (__ulimit, ulimit)

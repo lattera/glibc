@@ -48,21 +48,21 @@ int
 __get_phys_pages ()
 {
   /* We have no general way to determine this value.  */
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 weak_alias (__get_phys_pages, get_phys_pages)
 
-link_warning (get_phys_pages, "warning: get_phys_pages will always fail")
+stub_warning (get_phys_pages)
 
 
 int
 __get_avphys_pages ()
 {
   /* We have no general way to determine this value.  */
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 weak_alias (__get_avphys_pages, get_avphys_pages)
 
-link_warning (get_avphys_pages, "warning: get_avphys_pages will always fail")
+stub_warning (get_avphys_pages)
