@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,14 +22,21 @@
 #include <features.h>
 
 /*
- * Get the kernel definition for sysmips(2)
+ * Commands for the sysmips(2) call
+ *
+ * sysmips(2) is deprecated - though some existing software uses it.
+ * We only support the following commands.  Sysmips exists for compatibility
+ * purposes only so new software should avoid it.
  */
-#include <asm/sysmips.h>
+#define SETNAME                   1	/* set hostname                  */
+#define FLUSH_CACHE		   3	/* writeback and invalidate caches */
+#define MIPS_FIXADE               7	/* control address error fixing  */
+#define MIPS_RDNVRAM              10	/* read NVRAM			 */
+#define MIPS_ATOMIC_SET		2001	/* atomically set variable       */
 
 __BEGIN_DECLS
 
-extern int sysmips (__const int cmd, __const int arg1,
-		    __const int arg2, __const int arg3) __THROW;
+extern int sysmips (__const int cmd, ...) __THROW;
 
 __END_DECLS
 
