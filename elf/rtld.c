@@ -1176,7 +1176,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  l->l_map_start = (ElfW(Addr)) GL(dl_sysinfo_dso);
 
 	  /* Now that we have the info handy, use the DSO image's soname
-	     so this object can be looked up by name.  */
+	     so this object can be looked up by name.  Note that we do not
+	     set l_name here.  That field gives the file name of the DSO,
+	     and this DSO is not associated with any file.  */
 	  if (l->l_info[DT_SONAME] != NULL)
 	    {
 	      /* Work around a kernel problem.  The kernel cannot handle
@@ -1184,10 +1186,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
 				     + l->l_info[DT_SONAME]->d_un.d_val);
 	      size_t len = strlen (dsoname);
-	      l->l_name = (char *) malloc (len);
-	      if (l->l_name == NULL)
+	      char *copy = malloc (len);
+	      if (copy == NULL)
 		_dl_fatal_printf ("out of memory\n");
-	      l->l_libname->name = memcpy (l->l_name, dsoname, len);
+	      l->l_libname->name = memcpy (copy, dsoname, len);
 	    }
 	}
     }
