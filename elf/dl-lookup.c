@@ -134,10 +134,10 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
     {
       /* We could find no value for a strong reference.  */
       const char msg[] = "undefined symbol: ";
-      char buf[sizeof msg + strlen (undef_name)];
+      const size_t len = strlen (undef_name);
+      char buf[sizeof msg + len];
       memcpy (buf, msg, sizeof msg - 1);
-      memcpy (&buf[sizeof msg - 1], undef_name,
-	      sizeof buf - sizeof msg + 1);
+      memcpy (&buf[sizeof msg - 1], undef_name, len + 1);
       _dl_signal_error (0, reference_name, buf);
     }
 

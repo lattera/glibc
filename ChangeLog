@@ -1,5 +1,8 @@
 Tue Jul 16 16:43:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/dl-lookup.c (_dl_lookup_symbol): Avoid sizeof dynamic auto array
+	because that is broken on alpha.
+
 	* sysdeps/mach/hurd/mmap.c: Use same inheritance arg in second vm_map
 	call as in first.
 
