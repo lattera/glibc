@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,13 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct rpcent
-#define SETFUNC_NAME	setrpcent
-#define	GETFUNC_NAME	getrpcent
-#define	ENDFUNC_NAME	endrpcent
-#define DATABASE_NAME	rpc
-#define STAYOPEN	int stayopen
-#define STAYOPEN_VAR	stayopen
+#define LOOKUP_TYPE		struct rpcent
+#define SETFUNC_NAME		setrpcent
+#define	GETFUNC_NAME		getrpcent
+#define	ENDFUNC_NAME		endrpcent
+#define DATABASE_NAME		rpc
+#define STAYOPEN		int stayopen
+#define STAYOPEN_VAR		stayopen
+#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXent_r.c"

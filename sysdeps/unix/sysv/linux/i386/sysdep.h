@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 95, 96, 97, 98, 99, 00 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1995-2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -79,9 +79,12 @@
 #define SYSCALL_ERROR_HANDLER						      \
 0:pushl %ebx;								      \
   call 1f;								      \
-1:popl %ebx;								      \
+  .subsection 1;							      \
+1:movl (%esp), %ebx;							      \
+  ret;									      \
+  .previous;								      \
+  addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
   xorl %edx, %edx;							      \
-  addl $_GLOBAL_OFFSET_TABLE_+[.-1b], %ebx;				      \
   subl %eax, %edx;							      \
   pushl %edx;								      \
   PUSH_ERRNO_LOCATION_RETURN;						      \
@@ -97,9 +100,12 @@
 #else
 #define SYSCALL_ERROR_HANDLER						      \
 0:call 1f;								      \
-1:popl %ecx;								      \
+  .subsection 1;							      \
+1:movl (%esp), %ecx;							      \
+  ret;									      \
+  .previous;								      \
+  addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   xorl %edx, %edx;							      \
-  addl $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx;				      \
   subl %eax, %edx;							      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \

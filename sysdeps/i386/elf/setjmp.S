@@ -1,5 +1,5 @@
 /* setjmp for i386, ELF version.
-   Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,12 +51,12 @@ ENTRY (BP_SYM (__sigsetjmp))
            we can't save and restore our caller's value.  Instead, we do an
            indirect jump through the GOT, using for the temporary register
            %ecx, which is call-clobbered.  */
-	call L(here)
-L(here):
-	popl %ecx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ecx
-	movl C_SYMBOL_NAME (BP_SYM (__sigjmp_save)@GOT)(%ecx), %ecx
+	call 1f
+	addl $_GLOBAL_OFFSET_TABLE_, %ecx
+	leal C_SYMBOL_NAME (BP_SYM (__sigjmp_save)@GOTOFF)(%ecx), %ecx
 	jmp *%ecx
+1:	movl (%esp), %ecx
+	ret
 #else
 	jmp BP_SYM (__sigjmp_save)
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,12 +21,13 @@
 #include <stdint.h>
 
 
-#define LOOKUP_TYPE	struct netent
-#define FUNCTION_NAME	getnetbyaddr
-#define DATABASE_NAME	networks
-#define ADD_PARAMS	uint32_t net, int type
-#define ADD_VARIABLES	net, type
-#define NEED__RES	1
-#define NEED_H_ERRNO	1
+#define LOOKUP_TYPE		struct netent
+#define FUNCTION_NAME		getnetbyaddr
+#define DATABASE_NAME		networks
+#define ADD_PARAMS		uint32_t net, int type
+#define ADD_VARIABLES		net, type
+#define NEED__RES		1
+#define NEED_H_ERRNO		1
+#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,14 +19,15 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct netent
-#define SETFUNC_NAME	setnetent
-#define	GETFUNC_NAME	getnetent
-#define	ENDFUNC_NAME	endnetent
-#define DATABASE_NAME	networks
-#define STAYOPEN	int stayopen
-#define STAYOPEN_VAR	stayopen
-#define NEED__RES	1
-#define NEED_H_ERRNO	1
+#define LOOKUP_TYPE		struct netent
+#define SETFUNC_NAME		setnetent
+#define	GETFUNC_NAME		getnetent
+#define	ENDFUNC_NAME		endnetent
+#define DATABASE_NAME		networks
+#define STAYOPEN		int stayopen
+#define STAYOPEN_VAR		stayopen
+#define NEED__RES		1
+#define NEED_H_ERRNO		1
+#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXent_r.c"

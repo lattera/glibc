@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -20,11 +20,12 @@
 #include <shadow.h>
 
 
-#define LOOKUP_TYPE	struct spwd
-#define FUNCTION_NAME	getspnam
-#define DATABASE_NAME	shadow
-#define ADD_PARAMS	const char *name
-#define ADD_VARIABLES	name
-#define BUFLEN		1024
+#define LOOKUP_TYPE		struct spwd
+#define FUNCTION_NAME		getspnam
+#define DATABASE_NAME		shadow
+#define ADD_PARAMS		const char *name
+#define ADD_VARIABLES		name
+#define BUFLEN			1024
+#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

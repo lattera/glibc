@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -20,10 +20,11 @@
 #include <aliases.h>
 
 
-#define LOOKUP_TYPE	struct aliasent
-#define SETFUNC_NAME	setaliasent
-#define	GETFUNC_NAME	getaliasent
-#define	ENDFUNC_NAME	endaliasent
-#define DATABASE_NAME	aliases
+#define LOOKUP_TYPE		struct aliasent
+#define SETFUNC_NAME		setaliasent
+#define	GETFUNC_NAME		getaliasent
+#define	ENDFUNC_NAME		endaliasent
+#define DATABASE_NAME		aliases
+#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXent_r.c"

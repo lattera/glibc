@@ -1,5 +1,33 @@
 2002-04-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/getXXbyYY_r.c: If NSS_attribute_hidden is defined use it with the
+	DB_LOOKUP_FCT prototype.
+	* nss/getXXent_r.c: Likewise.
+	* inet/getaliasent_r.c: Define NSS_attribute_hidden.
+	* inet/getaliasname_r.c: Likewise.
+	* inet/getnetbyad_r.c: Likewise.
+	* inet/getnetbynm_r.c: Likewise.
+	* inet/getnetent_r.c: Likewise.
+	* inet/getproto_r.c: Likewise.
+	* inet/getprtent_r.c: Likewise.
+	* inet/getprtname_r.c: Likewise.
+	* inet/getrpcbyname_r.c: Likewise.
+	* inet/getrpcbynumber_r.c: Likewise.
+	* inet/getrpcent_r.c: Likewise.
+	* inet/getservent_r.c: Likewise.
+	* inet/getsrvbynm_r.c: Likewise.
+	* inet/getsrvbypt_r.c: Likewise.
+	* shadow/getspent_r.c: Likewise.
+	* shadow/getspnam_r.c: Likewise.
+
+	* malloc/thread-m.h: Define __libc_tsd_MALLOC_data as static.
+
+	* sysdeps/i386/elf/bsd-setjmp.S: Use GOTOFF for __sigjmp_save access.
+	Use i686-friendly PIC code.
+	* sysdeps/i386/elf/setjmp.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Use i686-friendly PIC code.
+
 	* sysdeps/mach/hurd/Versions: Add _dl_init_first to libc and ld export
 	list.
 	* elf/Versions: Remove it here.
