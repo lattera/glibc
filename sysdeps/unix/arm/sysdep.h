@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,5 +22,9 @@
 /* Some definitions to allow the assembler in sysdeps/unix/ to build
    without needing ARM-specific versions of all the files.  */
 
+#ifdef __ASSEMBLER__
+
 #define ret		RETINSTR(mov, pc, r14)
 #define MOVE(a,b)	mov b,a
+
+#endif
