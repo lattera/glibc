@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    powerpc version.
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,16 +38,35 @@ register char * stack_pointer __asm__ ("r1");
 /* Compare-and-swap for semaphores. */
 /* note that test-and-set(x) is the same as !compare-and-swap(x, 0, 1) */
 
-#define HAS_COMPARE_AND_SWAP
+#define HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
 #define IMPLEMENT_TAS_WITH_CAS
 
-#if BROKEN_PPC_ASM_CR0
-static
-#else
-PT_EI
-#endif
-int
+PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
+{
+  int ret;
+
+  __asm__ __volatile__ (
+	   "0:    lwarx %0,0,%1 ;"
+	   "      xor. %0,%3,%0;"
+	   "      bne 1f;"
+	   "      stwcx. %2,0,%1;"
+	   "      bne- 0b;"
+	   "1:    "
+	: "=&r"(ret)
+	: "r"(p), "r"(newval), "r"(oldval)
+	: "cr0", "memory");
+  /* This version of __compare_and_swap is to be used when acquiring
+     a lock, so we don't need to worry about whether other memory
+     operations have completed, but we do need to be sure that any loads
+     after this point really occur after we have acquired the lock.  */
+  __asm__ __volatile__ ("isync" : : : "memory");
+  return ret == 0;
+}
+
+PT_EI int
+__compare_and_swap_with_release_semantics (long int *p, 
+					   long int oldval, long int newval)
 {
   int ret;
 
@@ -62,6 +81,5 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 	: "=&r"(ret)
 	: "r"(p), "r"(newval), "r"(oldval)
 	: "cr0", "memory");
-  MEMORY_BARRIER ();
   return ret == 0;
 }
