@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +16,12 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
-#define _ERRNO_H
-#include <errnos.h>
+/* The syscall stubs jump here when they detect an error.
+   The code for Linux is almost identical to the canonical Unix/i386
+   code, except that the error number in %eax is negated.  */
 
-/* We jump here when a system call gets an error.
-   The error number is negated in %eax.  */
-.globl syscall_error
-syscall_error:
-	negl %eax		/* Make it positive.  */
-#if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
-	/* We translate the system's EWOULDBLOCK error into EAGAIN.
-	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
-	   EWOULDBLOCK_sys is the original number.  */
-	cmpl %eax, $EWOULDBLOCK_sys /* Is it the old EWOULDBLOCK?  */
-	jne 0f			/* Branch if not.  */
-	move $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
-#endif
-0:	movl %eax, _errno	/* Store it in `errno'.  */
-	move $-1, %eax		/* Return -1.  */
-	ret
+__syscall_error:
+	negl %eax
+
+#define __syscall_error __syscall_error_1
+#include <sysdeps/unix/i386/sysdep.S>

@@ -21,6 +21,11 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <fcntl.h>
 #include <link.h>
+#include <unistd.h>
+
+extern int _dl_argc;
+extern char **_dl_argv;
+extern char **_environ;
 
 Elf32_Addr
 _dl_sysdep_start (void **start_argptr,

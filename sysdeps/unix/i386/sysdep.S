@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,16 @@ syscall_error:
 	jne notb		/* Branch if not.  */
 	movl $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
 #endif
-notb:	movl %eax, C_SYMBOL_NAME(errno)
+notb:
+#ifndef	PIC
+	movl %eax, C_SYMBOL_NAME(errno)
+#else
+	/* Standard PIC nonsense to store into `errno' through the GOT.  */
+	call here
+here:	popl %ecx
+	addl $_GLOBAL_OFFSET_TABLE_+[.-here], %ecx
+	movl C_SYMBOL_NAME(errno@GOT)(%ecx), %ecx
+	movl %eax, (%ecx)
+#endif
 	movl $-1, %eax
 	ret

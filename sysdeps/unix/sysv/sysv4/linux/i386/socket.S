@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+#include <sys/socketcall.h>
 
 .globl syscall_error
 
@@ -24,32 +25,30 @@ Cambridge, MA 02139, USA.  */
    They are all gated through the single `socketcall' system call number.
    `socketcall' takes two arguments: the first is the subcode, specifying
    which socket function is being called; and the second is a pointer to
-   the arguments to specific function.
+   the arguments to the specific function.
 
    The .S files for the other calls just #define socket and #include this.  */
 
 ENTRY (socket)
 
 	/* Save registers.  */
-	pushl %ebx
-	pushl %ecx
+	movl %ebx, %edx
 
-	movl $__NR_socketcall, %eax	/* System call number in %eax.  */
+	movl $SYS_socketcall, %eax	/* System call number in %eax.  */
 
 	/* Use ## so `socket' is a separate token that might be #define'd.  */
 	movl $SYS_##socket, %ebx	/* Subcode is first arg to syscall.  */
-	lea 12(%esp), %ecx		/* Address of args in 2nd arg.  */
+	lea 8(%esp), %ecx		/* Address of args is 2nd arg.  */
 
         /* Do the system call trap.  */
 	int $0x80
 
 	/* Restore registers.  */
-	popl %ecx
-	popl %ebx
+	movl %edx, %ebx
 
 	/* %eax is < 0 if there was an error.  */
 	testl %eax, %eax
-	jl syscall_error
+	jl JUMPTARGET(syscall_error)
 
 	/* Successful; return the syscall's value.  */
 	ret

@@ -20,10 +20,19 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	ASSEMBLER
 
+/* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
-  .globl C_SYMBOL_NAME(name);						      \
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
+  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align 4;								      \
   C_LABEL(name)
+
+/* For ELF we need the `.type' directive to make shared libs work right.  */
+#ifdef HAVE_ELF
+#define ASM_TYPE_DIRECTIVE(name,type)	.type name,type;
+#else
+#define ASM_TYPE_DIRECTIVE(name,type) /* Nothing is specified.  */
+#endif
 
 #ifdef	NO_UNDERSCORES
 /* Since C identifiers are not normally prefixed with an underscore
@@ -36,7 +45,13 @@ Cambridge, MA 02139, USA.  */
   .globl syscall_error;							      \
   ENTRY (name)								      \
   DO_CALL (syscall_name, args);						      \
-  jb syscall_error
+  jb JUMPTARGET(syscall_error)
+
+#ifdef PIC
+#define JUMPTARGET(name) name@PLT
+#else
+#define JUMPTARGET(name) name
+#endif
 
 /* This is defined as a separate macro so that other sysdep.h files
    can include this one and then redefine DO_CALL.  */

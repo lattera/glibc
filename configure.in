@@ -111,9 +111,9 @@ netbsd* | 386bsd* | freebsd* | bsdi*)
   base_os=unix/bsd/bsd4.4 ;;
 osf* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
   base_os=unix/bsd ;;
-linux* | sysv* | isc* | esix* | sco* | minix* | irix4*)
+sysv* | isc* | esix* | sco* | minix* | irix4*)
   base_os=unix/sysv ;;
-solaris[2-9]*)
+linux* | solaris[2-9]*)
   base_os=unix/sysv/sysv4 ;;
 none)
   base_os=standalone ;;

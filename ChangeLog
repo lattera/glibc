@@ -1,3 +1,43 @@
+Sat Jul 22 01:56:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/i386/sysdep.h (JUMPTARGET): New macro; use name@PLT
+ 	#ifdef PIC.
+	(PSEUDO): Use JUMPTARGET(syscall_error) in jump insn.
+	* sysdeps/unix/i386/syscall.S: Use JUMPTARGET(syscall_error) in
+ 	jump insn.
+
+	* sysdeps/unix/sysv/sysv4/linux/i386/sysdep.h: Rewritten.
+	* sysdeps/unix/sysv/sysv4/linux/i386/syscall.S: New file.
+	* sysdeps/unix/sysv/sysv4/linux/i386/socket.S: Include
+ 	<sys/socketcall.h>.  Save %ebx in call-clobbered %edx instead of
+ 	stack.  Use JUMPTARGET(syscall_error) in jump insn.
+
+	* Makeconfig (+gccwarn): Add -Wbad-function-cast -Wconversion.
+
+	* sysdeps/unix/i386/sysdep.h (ENTRY): Use ASM_GLOBAL_DIRECTIVE and
+ 	ASM_TYPE_DIRECTIVE.
+	(ASM_TYPE_DIRECTIVE): New macro; defined using `.type' #ifdef ELF.
+
+	* sysdeps/unix/sysv/sysv4/linux/i386/sysdep.S (__syscall_error): 
+	Rewritten, #include'ing unix/i386/sysdep.S for most of the code.
+	* sysdeps/unix/i386/sysdep.S [PIC]: Store into `errno' through the GOT.
+
+	Fixes to help Linux, inspired by drepper's work:
+	* configure.in (os=linux*): Use unix/sysv/sysv4 for $base_os,
+ 	instead of unix/sysv.
+	* sysdeps/posix/utimes.c: New file.
+	* sysdeps/generic/getdomain.c: New file.
+	* sysdeps/i386/init-first.c: Removed gratuitous #include <hurd.h>.
+	* sysdeps/generic/dl-sysdep.c: Include <unistd.h> and declare
+ 	externals _dl_argc, _dl_argc, and _environ.
+	* sysdeps/unix/sysv/linux/{accept,connect,getsockname,rename,
+	socketpair,waitpid,bind,getpeername,listen,setsid,wait4}.S: Moved
+	to new directory sysdeps/unix/sysv/sysv4/linux.
+	* sysdeps/unix/sysv/linux: Directory removed.
+	* sysdeps/unix/sysv/i386/linux/{socket.S,sysdep.h,sysdep.S}: Moved
+	to new directory sysdeps/unix/sysv/sysv4/linux/i386.
+	* sysdeps/unix/sysv/linux/i386: Directory removed.
+
 Fri Jul 21 12:57:29 1995  Michael I Bushnell  <mib@geech.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/socket.c (socket): Consider MIG_BAD_ID and

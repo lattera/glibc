@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,28 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/utsname.h>
 
-ENTRY (__wait)
-	movl 0(%esp), %eax	/* Fetch the return address.  */
-	movl $-1, 0(%esp)	/* First arg is -1.  */
-				/* Second arg is our arg at 4(%esp).  */
-	pushl $0		/* Third arg is 0.  */
-	pushl %eax		/* Push the return address.  */
+#if _UTSNAME_DOMAIN_LENGTH
+/* The `uname' information includes the domain name.  */
 
-	/* Jump to waitpid; it will return to our caller.  */
-	jmp ___waitpid
+/* Put the name of the current YP domain in no more than LEN bytes of NAME.
+   The result is null-terminated if LEN is large enough for the full
+   name and the terminator.  */
+int
+getdomainname (char *name, size_t len)
+{
+  struct utsname u;
 
-weak_alias (__wait, wait)
+  if (uname (&u) < 0)
+    return -1;
+
+  strncpy (name, u.domainname, len);
+  return 0;
+}
+
+#else
+#include <sysdeps/stub/getdomain.c>
+#endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,11 +18,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.globl syscall_error
+ASM_GLOBAL_DIRECTIVE syscall_error
 ENTRY (syscall)
 	popl %ecx		/* Pop return address into %ecx.  */
 	popl %eax		/* Pop syscall number into %eax.  */
 	pushl %ecx		/* Push back return address.  */
-	.byte 0x9a, 0, 0, 0, 0, 7, 0 /* lcall $7, $0 -- gas bug */
-	jb JUMPTARGET(syscall_error)
-	ret
+	DO_CALL (5)		/* Frob the args and do the system call.  */
+	testl %eax, %eax	/* Check %eax for error.  */
+	jl JUMPTARGET(syscall_error) /* Jump to error handler if negative.  */
+	ret			/* Return to caller.  */
