@@ -1,5 +1,5 @@
 /* Prototypes and definition for malloc implementation.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,6 +74,11 @@ extern "C" {
 #endif
 
 /* Nonzero if the malloc is already initialized.  */
+#ifdef _LIBC
+/* In the GNU libc we rename the global variable
+   `__malloc_initialized' to `__libc_malloc_initialized'.  */
+#define __malloc_initialized __libc_malloc_initialized
+#endif
 extern int __malloc_initialized;
 
 /* Initialize global configuration.  Not needed with GNU libc. */
@@ -178,7 +183,7 @@ extern __malloc_ptr_t (*__memalign_hook) __MALLOC_P ((size_t __size,
 						      size_t __alignment));
 
 /* Activate a standard set of debugging hooks. */
-extern void malloc_check_init __MALLOC_P ((void));
+extern void __malloc_check_init __MALLOC_P ((void));
 
 #endif
 

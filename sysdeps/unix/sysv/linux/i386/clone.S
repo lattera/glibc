@@ -38,7 +38,7 @@ ENTRY(__clone)
 	jz	syscall_error
 
 	/* Insert the argument onto the new stack.  */
-	subl	$-8,%ecx
+	subl	$8,%ecx
 	movl	16(%esp),%eax		/* no negative argument counts */
 	movl	%eax,4(%ecx)
 

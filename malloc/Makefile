@@ -50,4 +50,5 @@ $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 lib: $(objpfx)libmcheck.a
 
 
-CPPFLAGS-malloc.o += -DMALLOC_DEBUG
+# Uncomment this for test releases.  For public releases it is too expensive.
+#CPPFLAGS-malloc.o += -DMALLOC_DEBUG

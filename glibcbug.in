@@ -106,11 +106,11 @@ From: ${USER}
 To: ${BUGADDR}
 Subject: [50 character or so descriptive subject here (for reference)]
 
->Submitter-Id:	<submitter ID>
+>Submitter-Id:	net
 >Originator:	${ORIGINATOR}
 >Organization:
 ${ORGANIZATION- $ORGANIZATION_C}
->Confidential:	no		(the GNU PR database is public)
+>Confidential:	no
 >Synopsis:	$SYNOPSIS_C
 >Severity:	$SEVERITY_C
 >Priority:	$PRIORITY_C

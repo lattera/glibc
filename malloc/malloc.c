@@ -647,7 +647,7 @@ do {                                                                          \
       might set to a value close to the average size of a process
       (program) running on your system.  Releasing this much memory
       would allow such a process to run in memory.  Generally, it's
-      worth it to tune for trimming rather tham memory mapping when a
+      worth it to tune for trimming rather than memory mapping when a
       program undergoes phases where several large chunks are
       allocated and released in ways that can reuse each other's
       storage, perhaps mixed with phases where there are no such
@@ -1486,6 +1486,13 @@ static unsigned long max_mmapped_mem = 0;
 
 
 
+#ifndef _LIBC
+#define weak_variable
+#else
+/* In GNU libc we want the hook variables to be weak definitions to
+   avoid a problem with Emacs.  */
+#define weak_variable weak_function
+#endif
 
 /* Already initialized? */
 int __malloc_initialized = 0;
@@ -1533,12 +1540,20 @@ ptmalloc_init __MALLOC_P((void))
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
 #endif
 #if defined(_LIBC) || defined(MALLOC_HOOKS)
+  if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
+    mALLOPt(M_TRIM_THRESHOLD, atoi(s));
+  if((s = getenv("MALLOC_TOP_PAD_")))
+    mALLOPt(M_TOP_PAD, atoi(s));
+  if((s = getenv("MALLOC_MMAP_THRESHOLD_")))
+    mALLOPt(M_MMAP_THRESHOLD, atoi(s));
+  if((s = getenv("MALLOC_MMAP_MAX_")))
+    mALLOPt(M_MMAP_MAX, atoi(s));
   s = getenv("MALLOC_CHECK_");
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
   if(s) {
-    if(s[0]) mallopt(M_CHECK_ACTION, (int)(s[0] - '0'));
-    malloc_check_init();
+    if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
+    __malloc_check_init();
   }
   if(__malloc_initialize_hook != NULL)
     (*__malloc_initialize_hook)();
@@ -1592,18 +1607,18 @@ memalign_hook_ini(sz, alignment) size_t sz; size_t alignment;
   return mEMALIGn(sz, alignment);
 }
 
-void (*__malloc_initialize_hook) __MALLOC_P ((void)) = NULL;
-void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr)) = NULL;
-__malloc_ptr_t (*__malloc_hook)
+void weak_variable (*__malloc_initialize_hook) __MALLOC_P ((void)) = NULL;
+void weak_variable (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr)) = NULL;
+__malloc_ptr_t weak_variable (*__malloc_hook)
  __MALLOC_P ((size_t __size)) = malloc_hook_ini;
-__malloc_ptr_t (*__realloc_hook)
+__malloc_ptr_t weak_variable (*__realloc_hook)
  __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size)) = realloc_hook_ini;
-__malloc_ptr_t (*__memalign_hook)
+__malloc_ptr_t weak_variable (*__memalign_hook)
  __MALLOC_P ((size_t __size, size_t __alignment)) = memalign_hook_ini;
 
 /* Activate a standard set of debugging hooks. */
 void
-malloc_check_init()
+__malloc_check_init()
 {
   __malloc_hook = malloc_check;
   __free_hook = free_check;
@@ -3265,10 +3280,12 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   if (__malloc_hook != NULL) {
     sz = n * elem_size;
     mem = (*__malloc_hook)(sz);
+    if(mem == 0)
+      return 0;
 #ifdef HAVE_MEMCPY
     memset(mem, 0, sz);
 #else
-    while(sz > 0) mem[--sz] = 0; /* rather inefficient */
+    while(sz > 0) ((char*)mem)[--sz] = 0; /* rather inefficient */
 #endif
     return mem;
   }

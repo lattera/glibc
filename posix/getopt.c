@@ -253,7 +253,8 @@ static int last_nonopt;
 /* Bash 2.0 gives us an environment variable containing flags
    indicating ARGV elements that should not be considered arguments.  */
 
-static const char *nonoption_flags;
+static char *nonoption_flags;
+static int nonoption_flags_max_len;
 static int nonoption_flags_len;
 
 static int original_argc;
@@ -272,6 +273,16 @@ store_args (int argc, char *const *argv)
   original_argv = argv;
 }
 text_set_element (__libc_subinit, store_args);
+
+# define SWAP_FLAGS(ch1, ch2) \
+  if (nonoption_flags_len > 0)						      \
+    {									      \
+      char __tmp = nonoption_flags[ch1];				      \
+      nonoption_flags[ch1] = nonoption_flags[ch2];			      \
+      nonoption_flags[ch2] = __tmp;					      \
+    }
+#else
+# define SWAP_FLAGS(ch1, ch2)
 #endif
 
 /* Exchange two adjacent subsequences of ARGV.
@@ -301,6 +312,28 @@ exchange (argv)
      It leaves the longer segment in the right place overall,
      but it consists of two parts that need to be swapped next.  */
 
+#ifdef _LIBC
+  /* First make sure the handling of the `nonoption_flags' string can
+     work normally.  Our top argument must be in the range of the
+     string.  */
+  if (nonoption_flags_len != 0 && top >= nonoption_flags_max_len)
+    {
+      /* We must extend the array.  The user plays games with us and
+	 presents new arguments.  */
+      char *new_str = malloc (top + 1);
+      if (new_str == NULL)
+	nonoption_flags_len = nonoption_flags_max_len = 0;
+      else
+	{
+	  memcpy (new_str, nonoption_flags, nonoption_flags_max_len);
+	  memset (&new_str[nonoption_flags_max_len], '\0',
+		  top + 1 - nonoption_flags_max_len);
+	  nonoption_flags_max_len = top + 1;
+	  nonoption_flags = new_str;
+	}
+    }
+#endif
+
   while (top > middle && middle > bottom)
     {
       if (top - middle > middle - bottom)
@@ -315,6 +348,7 @@ exchange (argv)
 	      tem = argv[bottom + i];
 	      argv[bottom + i] = argv[top - (middle - bottom) + i];
 	      argv[top - (middle - bottom) + i] = tem;
+	      SWAP_FLAGS (bottom + i, top - (middle - bottom) + i);
 	    }
 	  /* Exclude the moved bottom segment from further swapping.  */
 	  top -= len;
@@ -331,6 +365,7 @@ exchange (argv)
 	      tem = argv[bottom + i];
 	      argv[bottom + i] = argv[middle + i];
 	      argv[middle + i] = tem;
+	      SWAP_FLAGS (bottom + i, middle + i);
 	    }
 	  /* Exclude the moved top segment from further swapping.  */
 	  bottom += len;
@@ -389,13 +424,33 @@ _getopt_initialize (argc, argv, optstring)
 	 command it runs, specifying which ARGV elements are the results of
 	 file name wildcard expansion and therefore should not be
 	 considered as options.  */
-      char var[100];
-      sprintf (var, "_%d_GNU_nonoption_argv_flags_", getpid ());
-      nonoption_flags = getenv (var);
-      if (nonoption_flags == NULL)
-	nonoption_flags_len = 0;
-      else
-	nonoption_flags_len = strlen (nonoption_flags);
+
+      if (nonoption_flags_max_len == 0)
+	{
+	  char var[100];
+	  const char *orig_str;
+	  sprintf (var, "_%d_GNU_nonoption_argv_flags_", getpid ());
+	  orig_str = getenv (var);
+	  if (orig_str == NULL || orig_str[0] == '\0')
+	    nonoption_flags_max_len = -1;
+	  else
+	    {
+	      int len = nonoption_flags_max_len = strlen (orig_str);
+	      if (nonoption_flags_max_len < argc)
+		nonoption_flags_max_len = argc;
+	      nonoption_flags = (char *) malloc (nonoption_flags_max_len);
+	      if (nonoption_flags == NULL)
+		nonoption_flags_max_len = -1;
+	      else
+		{
+		  memcpy (nonoption_flags, orig_str, len);
+		  memset (&nonoption_flags[len], '\0',
+			  nonoption_flags_max_len - len);
+		}
+	    }
+	}
+
+      nonoption_flags_len = nonoption_flags_max_len;
     }
   else
     nonoption_flags_len = 0;

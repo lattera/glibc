@@ -61,26 +61,28 @@
 #define YPPROG		((u_long)100004)
 #define YPVERS		((u_long)2)
 #define YPVERS_ORIG	((u_long)1)
-#define YPMAXRECORD	((u_long)1024)
-#define YPMAXDOMAIN	((u_long)256)
-#define YPMAXMAP	((u_long)64)
-#define YPMAXPEER	((u_long)256)
+#define YPMAXRECORD	1024
+#define YPMAXDOMAIN	64 /* XXX orig. yp_prot.h defines ((u_long)256) */
+#define YPMAXMAP	64
+#define YPMAXPEER	64 /* XXX orig. yp_prot.h defines ((u_long)256) */
 
 /* byte size of a large NIS packet */
 #define YPMSGSZ		1600
 
-#ifndef DATUM
 typedef struct {
-	char	*dptr;
-	int	dsize;
-} datum;
-#define DATUM
-#endif
+  u_int keydat_len;
+  char *keydat_val;
+} keydat;
+
+typedef struct {
+  u_int valdat_len;
+  char *valdat_val;
+} valdat;
 
 struct ypmap_parms {
   char *domain;			/* Null string means not available */
   char *map;			/* Null string means not available */
-  unsigned long int ordernum;	/* 0 means not available */
+  unsigned int ordernum;	/* 0 means not available */
   char *owner;			/* Null string means not available */
 };
 
@@ -91,7 +93,7 @@ struct ypmap_parms {
 struct ypreq_key {
   const char *domain;
   const char *map;
-  datum keydat;
+  keydat keydat;
 };
 
 struct ypreq_nokey {
@@ -101,16 +103,9 @@ struct ypreq_nokey {
 
 struct ypreq_xfr {
   struct ypmap_parms map_parms;
-  unsigned long transid;
-  unsigned long proto;
-  unsigned short port;
-};
-
-struct ypreq_newxfr {
-  struct ypmap_parms map_parms;
-  unsigned long transid;
-  unsigned long proto;
-  char *name;
+  u_int transid;
+  u_int proto;
+  u_int port;
 };
 
 #define ypxfr_domain map_parms.domain
@@ -118,40 +113,70 @@ struct ypreq_newxfr {
 #define ypxfr_ordernum map_parms.ordernum
 #define ypxfr_owner map_parms.owner
 
+/* Return status values */
+
+enum ypstat {
+  YP_TRUE = 1,		/* General purpose success code */
+#define YP_TRUE YP_TRUE
+  YP_NOMORE = 2,	/* No more entries in map */
+#define YP_NOMORE YP_NOMORE
+  YP_FALSE = 0,		/* General purpose failure code */
+#define YP_FALSE YP_FALSE
+  YP_NOMAP = -1,	/* No such map in domain */
+#define YP_NOMAP YP_NOMAP
+  YP_NODOM = -2,	/* Domain not supported */
+#define YP_NODOM YP_NODOM
+  YP_NOKEY = -3,	/* No such key in map */
+#define YP_NOKEY YP_NOKEY
+  YP_BADOP = -4,	/* Invalid operation */
+#define YP_BADOP YP_BADOP
+  YP_BADDB = -5,	/* Server data base is bad */
+#define YP_BADDB YP_BADDB
+  YP_YPERR = -6,	/* NIS server error */
+#define YP_YPERR YP_YPERR
+  YP_BADARGS = -7,	/* Request arguments bad */
+#define YP_BADARGS YP_BADARGS
+  YP_VERS = -8,		/* NIS server version mismatch - server can't supply
+			   requested service. */
+#define YP_VERS YP_VERS
+};
+
 /*
  * Response parameter structures
  */
 
+typedef enum ypstat ypstat;
+
 struct ypresp_val {
-  long unsigned status;
-  datum valdat;
+  ypstat status;
+  valdat valdat;
 };
 
 struct ypresp_key_val {
-  long unsigned status;
-  datum keydat;
-  datum valdat;
+  ypstat status;
+  keydat keydat;
+  valdat valdat;
 };
 
 struct ypresp_master {
-  long unsigned status;
+  ypstat status;
   char *master;
 };
 
 struct ypresp_order {
-  long unsigned status;
-  unsigned long int ordernum;
+  ypstat status;
+  u_int ordernum;
 };
 
 struct ypmaplist {
-  char map[YPMAXMAP + 1];
+  char *map;
 #define ypml_name map
   struct ypmaplist *next;
 #define ypml_next next
 };
 
 struct ypresp_maplist {
-  long unsigned status;
+  ypstat status;
   struct ypmaplist *list;
 };
 
@@ -175,20 +200,6 @@ struct ypresp_maplist {
 #define YPPROC_MAPLIST	((u_long)11)
 #define	YPPROC_NEWXFR	((u_long)12)
 
-/* Return status values */
-
-#define YP_TRUE	 	((long)1)	/* General purpose success code */
-#define YP_NOMORE 	((long)2)	/* No more entries in map */
-#define YP_FALSE 	((long)0)	/* General purpose failure code */
-#define YP_NOMAP 	((long)-1)	/* No such map in domain */
-#define YP_NODOM 	((long)-2)	/* Domain not supported */
-#define YP_NOKEY 	((long)-3)	/* No such key in map */
-#define YP_BADOP 	((long)-4)	/* Invalid operation */
-#define YP_BADDB 	((long)-5)	/* Server data base is bad */
-#define YP_YPERR 	((long)-6)	/* NIS server error */
-#define YP_BADARGS 	((long)-7)	/* Request arguments bad */
-#define YP_VERS		((long)-8)	/* NIS server version mismatch - server
-					 *   can't supply requested service. */
 /*
  *		Protocol between clients and NIS binder servers
  */
@@ -230,7 +241,7 @@ struct ypbind_binding {
 struct ypbind_resp {
   enum ypbind_resptype ypbind_status;
   union {
-    unsigned long ypbind_error;
+    u_int ypbind_error;
     struct ypbind_binding ypbind_bindinfo;
   } ypbind_respbody;
 };
@@ -246,9 +257,9 @@ struct ypbind_resp {
  * Request data structure for ypbind "Set domain" procedure.
  */
 struct ypbind_setdom {
-  char ypsetdom_domain[YPMAXDOMAIN + 1];
+  char *ypsetdom_domain;
   struct ypbind_binding ypsetdom_binding;
-  unsigned short ypsetdom_vers;
+  u_int ypsetdom_vers;
 };
 #define ypsetdom_addr ypsetdom_binding.ypbind_binding_addr
 #define ypsetdom_port ypsetdom_binding.ypbind_binding_port
@@ -259,7 +270,7 @@ struct ypbind_setdom {
  *		is supplied to ypxfr as a command-line parameter when it
  *		is activated by ypserv.
  */
-#define YPPUSHVERS		((u_long) 1)
+#define YPPUSHVERS		((u_long)1)
 #define YPPUSHVERS_ORIG		((u_long)1)
 
 /* Procedure symbols */
@@ -268,31 +279,49 @@ struct ypbind_setdom {
 #define YPPUSHPROC_XFRRESP	((u_long)1)
 
 struct yppushresp_xfr {
-  unsigned long transid;
-  unsigned long status;
+  u_int transid;
+  yppush_status status;
 };
 
 /* Status values for yppushresp_xfr.status */
 
-#define YPPUSH_SUCC	((long)1)	/* Success */
-#define YPPUSH_AGE	((long)2)	/* Master's version not newer */
-#define YPPUSH_NOMAP 	((long)-1)	/* Can't find server for map */
-#define YPPUSH_NODOM 	((long)-2)	/* Domain not supported */
-#define YPPUSH_RSRC 	((long)-3)	/* Local resouce alloc failure */
-#define YPPUSH_RPC 	((long)-4)	/* RPC failure talking to server */
-#define YPPUSH_MADDR	((long)-5)	/* Can't get master address */
-#define YPPUSH_YPERR 	((long)-6)	/* NIS server/map db error */
-#define YPPUSH_BADARGS 	((long)-7)	/* Request arguments bad */
-#define YPPUSH_DBM	((long)-8)	/* Local dbm operation failed */
-#define YPPUSH_FILE	((long)-9)	/* Local file I/O operation failed */
-#define YPPUSH_SKEW	((long)-10)	/* Map version skew during transfer */
-#define YPPUSH_CLEAR	((long)-11)	/* Can't send "Clear" req to local
-					 *   ypserv */
-#define YPPUSH_FORCE	((long)-12)	/* No local order number in map -
-					 *   use -f flag. */
-#define YPPUSH_XFRERR	((long)-13)	/* ypxfr error */
-#define YPPUSH_REFUSED	((long)-14)	/* Transfer request refused by ypserv */
-#define	YPPUSH_NOALIAS	((long)-15)	/* Alias not found for map or domain */
+enum yppush_status {
+  YPPUSH_SUCC = 1,		/* Success */
+#define YPPUSH_SUCC	YPPUSH_SUCC
+  YPPUSH_AGE = 2,		/* Master's version not newer */
+#define YPPUSH_AGE	YPPUSH_AGE
+  YPPUSH_NOMAP = -1,		/* Can't find server for map */
+#define YPPUSH_NOMAP 	YPPUSH_NOMAP
+  YPPUSH_NODOM = -2,		/* Domain not supported */
+#define YPPUSH_NODOM 	YPPUSH_NODOM
+  YPPUSH_RSRC = -3,		/* Local resouce alloc failure */
+#define YPPUSH_RSRC 	YPPUSH_RSRC
+  YPPUSH_RPC = -4,		/* RPC failure talking to server */
+#define YPPUSH_RPC 	YPPUSH_RPC
+  YPPUSH_MADDR = -5,		/* Can't get master address */
+#define YPPUSH_MADDR	YPPUSH_MADDR
+  YPPUSH_YPERR = -6,		/* NIS server/map db error */
+#define YPPUSH_YPERR 	YPPUSH_YPERR
+  YPPUSH_BADARGS = -7,		/* Request arguments bad */
+#define YPPUSH_BADARGS 	YPPUSH_BADARGS
+  YPPUSH_DBM = -8,		/* Local dbm operation failed */
+#define YPPUSH_DBM	YPPUSH_DBM
+  YPPUSH_FILE = -9,		/* Local file I/O operation failed */
+#define YPPUSH_FILE	YPPUSH_FILE
+  YPPUSH_SKEW = -10,		/* Map version skew during transfer */
+#define YPPUSH_SKEW	YPPUSH_SKEW
+  YPPUSH_CLEAR = -11,		/* Can't send "Clear" req to local ypserv */
+#define YPPUSH_CLEAR	YPPUSH_CLEAR
+  YPPUSH_FORCE = -12,		/* No local order number in map - use -f flag*/
+#define YPPUSH_FORCE	YPPUSH_FORCE
+  YPPUSH_XFRERR = -13,		/* ypxfr error */
+#define YPPUSH_XFRERR	YPPUSH_XFRERR
+  YPPUSH_REFUSED = -14,		/* Transfer request refused by ypserv */
+#define YPPUSH_REFUSED	YPPUSH_REFUSED
+  YPPUSH_NOALIAS = -15		/* Alias not found for map or domain */
+#define	YPPUSH_NOALIAS	YPPUSH_NOALIAS
+};
+typedef enum yppush_status yppush_status;
 
 struct ypresp_all {
   bool_t more;
@@ -303,33 +332,24 @@ struct ypresp_all {
 
 __BEGIN_DECLS
 
-extern bool_t xdr_datum __P ((XDR *__xdrs, datum * __objp));
-extern bool_t xdr_ypdomain_wrap_string __P ((XDR *__xdrs, char ** __objp));
-extern bool_t xdr_ypmap_wrap_string __P ((XDR *__xdrs, char ** __objp));
 extern bool_t xdr_ypreq_key __P ((XDR *__xdrs, struct ypreq_key * __objp));
 extern bool_t xdr_ypreq_nokey __P ((XDR *__xdrs, struct ypreq_nokey * __objp));
 extern bool_t xdr_ypreq_xfr __P ((XDR *__xdrs, struct ypreq_xfr * __objp));
-extern bool_t xdr_ypreq_newxfr __P ((XDR *__xdrs, struct ypreq_newxfr * __objp));
 extern bool_t xdr_ypresp_val __P ((XDR *__xdrs, struct ypresp_val * __objp));
 extern bool_t xdr_ypresp_key_val __P ((XDR *__xdrs, struct ypresp_key_val * __objp));
 extern bool_t xdr_ypbind_resp __P ((XDR *__xdrs, struct ypbind_resp * __objp));
 extern bool_t xdr_ypbind_setdom __P ((XDR *__xdrs, struct ypbind_setdom * __objp));
 extern bool_t xdr_ypmap_parms __P ((XDR *__xdrs, struct ypmap_parms * __objp));
-extern bool_t xdr_ypowner_wrap_string __P ((XDR *__xdrs, char ** __objp));
 extern bool_t xdr_yppushresp_xfr __P ((XDR *__xdrs, struct yppushresp_xfr * __objp));
 extern bool_t xdr_ypresp_order __P ((XDR *__xdrs, struct ypresp_order  * __objp));
 extern bool_t xdr_ypresp_master __P ((XDR *__xdrs, struct ypresp_master * __objp));
 extern bool_t xdr_ypall __P ((XDR *__xdrs, struct ypall_callback * __objp));
 extern bool_t xdr_ypresp_maplist __P ((XDR *__xdrs, struct ypresp_maplist * __objp));
-
-extern bool_t xdr_domainname_ypbind __P ((XDR *__xdrs, char * __objp));
 extern bool_t xdr_ypbind_binding __P ((XDR *__xdrs, struct ypbind_binding * __objp));
 extern bool_t xdr_ypbind_resptype __P ((XDR *__xdrs, enum ypbind_resptype * __objp));
 extern bool_t xdr_ypstat __P ((XDR *__xdrs, enum ypbind_resptype * __objp));
 extern bool_t xdr_ypresp_all __P ((XDR *__xdrs, struct ypresp_all  * __objp));
-extern bool_t xdr_ypresp_all_seq __P ((XDR *__xdrs, u_long * __objp));
-extern bool_t xdr_ypmaplist_str __P ((XDR *__xdrs, char * __objp));
-extern bool_t xdr_ypmaplist __P ((XDR *__xdrs, struct ypmaplist * __objp));
+extern bool_t xdr_domainname __P ((XDR *__xdrs, char ** __objp));
 
 __END_DECLS
 

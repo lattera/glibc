@@ -7,4 +7,6 @@ long-double-fcts = yes
 
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized
+CFLAGS-dl-load.c += -Wno-unused
+CFLAGS-dl-reloc.c += -Wno-unused
 endif

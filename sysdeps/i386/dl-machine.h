@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,6 +70,12 @@ elf_machine_load_address (void)
   (dynamic_info)[DT_RELSZ]->d_un.d_val -= sizeof (Elf32_Rel);
 
 
+/* We add a declaration of this function here so that in dl-runtime.c
+   the ELF_MACHINE_RUNTIME_TRAMPOLINE macro really can pass the parameters
+   in registers.  */
+static ElfW(Addr) fixup (struct link_map *l, ElfW(Word) reloc_offset)
+     __attribute__ ((regparm (2), unused));
+
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
@@ -92,15 +98,24 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
       got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
 
+
   /* This code is used in dl-runtime.c to call the `fixup' function
      and then redirect to the address it returns.  */
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
 _dl_runtime_resolve:
-	call fixup	# Args pushed by PLT.
-	addl $8, %esp	# Pop args.
-	jmp *%eax	# Jump to function address.
+	pushl %eax		# Preserve registers otherwise clobbered.
+	pushl %ecx
+	pushl %edx
+	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note
+	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.
+	call fixup		# Call resolver.
+	popl %edx		# Get register content back.
+	popl %ecx
+	xchgl %eax, (%esp)	# Get %eax contents end store function address.
+	ret $8			# Jump to function address.
+	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 ");
 /* The PLT uses Elf32_Rel relocs.  */
 #define elf_machine_relplt elf_machine_rel
