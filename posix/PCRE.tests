@@ -2365,3 +2365,22 @@ No match
  0: bc123bc
  1: bc
  2: bc
+
+/^a{2,5}$/
+    aa
+ 0: aa
+    aaa
+ 0: aaa
+    aaaa
+ 0: aaaa
+    aaaaa
+ 0: aaaaa
+    *** Failers
+No match
+    a
+No match
+    b
+No match
+    aaaaab
+No match
+    aaaaaa

@@ -1250,6 +1250,31 @@ re_node_set_insert (set, elem)
   return 1;
 }
 
+/* Insert the new element ELEM to the re_node_set* SET.
+   SET should not already have any element greater than or equal to ELEM.
+   Return -1 if an error is occured, return 1 otherwise.  */
+
+static int
+re_node_set_insert_last (set, elem)
+     re_node_set *set;
+     int elem;
+{
+  /* Realloc if we need.  */
+  if (set->alloc == set->nelem)
+    {
+      int *new_array;
+      set->alloc = (set->alloc + 1) * 2;
+      new_array = re_realloc (set->elems, int, set->alloc);
+      if (BE (new_array == NULL, 0))
+	return -1;
+      set->elems = new_array;
+    }
+
+  /* Insert the new element.  */
+  set->elems[set->nelem++] = elem;
+  return 1;
+}
+
 /* Compare two node sets SET1 and SET2.
    return 1 if SET1 and SET2 are equivalent, return 0 otherwise.  */
 

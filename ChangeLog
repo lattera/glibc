@@ -1,3 +1,13 @@
+2004-11-23  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (analyze_tree): Always call calc_epsdest.
+	(calc_inveclosure): Use re_node_set_insert_last.
+	(parse_dup_op): Lower X{1,5} to (X(X(X(XX?)?)?)?)?
+	rather than X?X?X?X?X?.
+	* posix/regex_internal.h (re_node_set_insert_last): New declaration.
+	* posix/regex_internal.c (re_node_set_insert_last): New function.
+	* posix/PCRE.tests: Add testcases.
+
 2004-11-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* dlfcn/dlfcn.h: Remove nonnull attribute from dlopen.

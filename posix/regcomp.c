@@ -1269,8 +1269,8 @@ analyze_tree (dfa, node)
     calc_first (dfa, node);
   if (node->next == -1)
     calc_next (dfa, node);
-  if (node->eclosure.nelem == 0)
-    calc_epsdest (dfa, node);
+  calc_epsdest (dfa, node);
+
   /* Calculate "first" etc. for the left child.  */
   if (node->left != NULL)
     {
@@ -1626,7 +1626,7 @@ calc_inveclosure (dfa)
       for (idx = 0; idx < dfa->eclosures[src].nelem; ++idx)
 	{
 	  dest = dfa->eclosures[src].elems[idx];
-	  re_node_set_insert (dfa->inveclosures + dest, src);
+	  re_node_set_insert_last (dfa->inveclosures + dest, src);
 	}
     }
 }
@@ -2538,7 +2538,7 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
      reg_errcode_t *err;
 {
   re_token_t dup_token;
-  bin_tree_t *tree = NULL;
+  bin_tree_t *tree = NULL, *old_tree = NULL;
   int i, start, end, start_idx = re_string_cur_idx (regexp);
   re_token_t start_token = *token;
 
@@ -2598,12 +2598,14 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
       end = (token->type == OP_DUP_QUESTION) ? 1 : -1;
     }
 
+  fetch_token (token, regexp, syntax);
+
   /* Treat "<re>{0}*" etc. as "<re>{0}".  */
-  if (BE (elem == NULL, 0))
-    start = end = 0;
+  if (BE (elem == NULL || (start == 0 && end == 0), 0))
+    return NULL;
 
   /* Extract "<re>{n,m}" to "<re><re>...<re><re>{0,<m-n>}".  */
-  else if (BE (start > 0, 0))
+  if (BE (start > 0, 0))
     {
       tree = elem;
       for (i = 2; i <= start; ++i)
@@ -2613,52 +2615,41 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
 	  if (BE (elem == NULL || tree == NULL, 0))
 	    goto parse_dup_op_espace;
 	}
+
+      if (start == end)
+	return tree;
+
+      /* Duplicate ELEM before it is marked optional.  */
+      elem = duplicate_tree (elem, dfa);
+      old_tree = tree;
     }
+  else
+    old_tree = NULL;
 
-  if (BE (end != start, 1))
+  mark_opt_subexp (elem, dfa);
+  dup_token.type = (end == -1 ? OP_DUP_ASTERISK : OP_DUP_QUESTION);
+  tree = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
+  if (BE (tree == NULL, 0))
+    goto parse_dup_op_espace;
+
+  /* This loop is actually executed only when end != -1,
+     to rewrite <re>{0,n} as (<re>(<re>...<re>?)?)?...  We have
+     already created the start+1-th copy.  */
+  for (i = start + 2; i <= end; ++i)
     {
-      dup_token.type = (end == -1 ? OP_DUP_ASTERISK : OP_DUP_QUESTION);
-      if (BE (start > 0, 0))
-	{
-          elem = duplicate_tree (elem, dfa);
-          if (BE (elem == NULL, 0))
-	    goto parse_dup_op_espace;
-
-          /* This subexpression will be marked as optional, so that
-             empty matches do not touch the registers.  */
-          mark_opt_subexp (elem, dfa);
-
-          /* Prepare the tree with the modifier.  */
-          elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
-          tree = create_tree (dfa, tree, elem, CONCAT, 0);
-	}
-      else
-	{
-	  /* We do not need to duplicate the tree because we have not
-	     created it yet.  */
-          mark_opt_subexp (elem, dfa);
-          tree = elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
-	}
-
+      elem = duplicate_tree (elem, dfa);
+      tree = create_tree (dfa, tree, elem, CONCAT, 0);
       if (BE (elem == NULL || tree == NULL, 0))
         goto parse_dup_op_espace;
 
-      /* This loop is actually executed only when end != -1,
-         to rewrite <re>{0,n} as <re>?<re>?<re>?...  We have
-         already created the start+1-th copy.  */
-      for (i = start + 2; i <= end; ++i)
-        {
-          elem = duplicate_tree (elem, dfa);
-          tree = create_tree (dfa, tree, elem, CONCAT, 0);
-          if (BE (elem == NULL || tree == NULL, 0))
-	    {
-	      *err = REG_ESPACE;
-	      return NULL;
-	    }
-        }
+      tree = re_dfa_add_tree_node (dfa, tree, NULL, &dup_token);
+      if (BE (tree == NULL, 0))
+        goto parse_dup_op_espace;
     }
 
-  fetch_token (token, regexp, syntax);
+  if (old_tree)
+    tree = create_tree (dfa, old_tree, tree, CONCAT, 0);
+
   return tree;
 
  parse_dup_op_espace:

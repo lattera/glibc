@@ -668,6 +668,8 @@ static reg_errcode_t re_node_set_init_union (re_node_set *dest,
 static reg_errcode_t re_node_set_merge (re_node_set *dest,
 					const re_node_set *src) internal_function;
 static int re_node_set_insert (re_node_set *set, int elem) internal_function;
+static int re_node_set_insert_last (re_node_set *set,
+				    int elem) internal_function;
 static int re_node_set_compare (const re_node_set *set1,
 				const re_node_set *set2) internal_function;
 static int re_node_set_contains (const re_node_set *set, int elem) internal_function;
