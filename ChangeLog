@@ -1,3 +1,8 @@
+1998-05-17  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/svc_tcp.c: Add FreeBSD DoS patch.
+	* sunrpc/xdr_rec.c: Likewise.
+
 1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/Makefile (tests): Add runptests.

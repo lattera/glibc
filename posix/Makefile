@@ -29,6 +29,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
+	      PTESTS PTESTS2C.sed ptestcases.h \
 	      globtest.c globtest.sh wordexp-tst.sh
 
 routines :=								      \
@@ -52,14 +53,14 @@ routines :=								      \
 	pread pwrite pread64 pwrite64
 
 aux		:= init-posix environ
-tests		:= tstgetopt testfnm runtests wordexp-test
+tests		:= tstgetopt testfnm runtests wordexp-test runptests
 test-srcs	:= globtest
 others		:= getconf
 install-bin	:= getconf
 install-lib	:= libposix.a
 gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 
-before-compile	:= testcases.h
+before-compile	:= testcases.h ptestcases.h
 
 # So they get cleaned up.
 generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10)
@@ -85,6 +86,13 @@ lib: $(objpfx)libposix.a
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
+	mv -f $@T $@
+ifeq ($(with-cvs),yes)
+	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
+endif
+
+ptestcases.h: PTESTS PTESTS2C.sed
+	sed -f PTESTS2C.sed < $< > $@T
 	mv -f $@T $@
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
