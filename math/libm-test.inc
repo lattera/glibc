@@ -3795,6 +3795,114 @@ rint_test (void)
 }
 
 static void
+rint_test_tonearest (void)
+{
+  int save_round_mode;
+  START (rint_tonearest);
+
+  save_round_mode = fegetround();
+
+  if (!fesetround (FE_TONEAREST))
+  {
+    TEST_f_f (rint, 2.0, 2.0);
+    TEST_f_f (rint, 1.5, 2.0);
+    TEST_f_f (rint, 1.0, 1.0);
+    TEST_f_f (rint, 0.5, 0.0);
+    TEST_f_f (rint, 0.0, 0.0);
+    TEST_f_f (rint, minus_zero, minus_zero);
+    TEST_f_f (rint, -0.5, -0.0);
+    TEST_f_f (rint, -1.0, -1.0);
+    TEST_f_f (rint, -1.5, -2.0);
+    TEST_f_f (rint, -2.0, -2.0);
+  }
+
+  fesetround(save_round_mode);
+
+  END (rint_tonearest);
+}
+
+static void
+rint_test_towardzero (void)
+{
+  int save_round_mode;
+  START (rint_towardzero);
+
+  save_round_mode = fegetround();
+
+  if (!fesetround (FE_TOWARDZERO))
+  {
+    TEST_f_f (rint, 2.0, 2.0);
+    TEST_f_f (rint, 1.5, 1.0);
+    TEST_f_f (rint, 1.0, 1.0);
+    TEST_f_f (rint, 0.5, 0.0);
+    TEST_f_f (rint, 0.0, 0.0);
+    TEST_f_f (rint, minus_zero, minus_zero);
+    TEST_f_f (rint, -0.5, -0.0);
+    TEST_f_f (rint, -1.0, -1.0);
+    TEST_f_f (rint, -1.5, -1.0);
+    TEST_f_f (rint, -2.0, -2.0);
+  }
+
+  fesetround(save_round_mode);
+
+  END (rint_towardzero);
+}
+
+static void
+rint_test_downward (void)
+{
+  int save_round_mode;
+  START (rint_downward);
+
+  save_round_mode = fegetround();
+
+  if (!fesetround (FE_DOWNWARD))
+  {
+    TEST_f_f (rint, 2.0, 2.0);
+    TEST_f_f (rint, 1.5, 1.0);
+    TEST_f_f (rint, 1.0, 1.0);
+    TEST_f_f (rint, 0.5, 0.0);
+    TEST_f_f (rint, 0.0, 0.0);
+    TEST_f_f (rint, minus_zero, minus_zero);
+    TEST_f_f (rint, -0.5, -1.0);
+    TEST_f_f (rint, -1.0, -1.0);
+    TEST_f_f (rint, -1.5, -2.0);
+    TEST_f_f (rint, -2.0, -2.0);
+  }
+
+  fesetround(save_round_mode);
+
+  END (rint_downward);
+}
+
+static void
+rint_test_upward (void)
+{
+  int save_round_mode;
+  START (rint_upward);
+
+  save_round_mode = fegetround();
+
+  if (!fesetround (FE_UPWARD))
+  {
+    TEST_f_f (rint, 2.0, 2.0);
+    TEST_f_f (rint, 1.5, 2.0);
+    TEST_f_f (rint, 1.0, 1.0);
+    TEST_f_f (rint, 0.5, 1.0);
+    TEST_f_f (rint, 0.0, 0.0);
+    TEST_f_f (rint, minus_zero, minus_zero);
+    TEST_f_f (rint, -0.5, -0.0);
+    TEST_f_f (rint, -1.0, -1.0);
+    TEST_f_f (rint, -1.5, -1.0);
+    TEST_f_f (rint, -2.0, -2.0);
+  }
+
+  fesetround(save_round_mode);
+
+  END (rint_upward);
+}
+
+static void
 round_test (void)
 {
   START (round);
@@ -4557,6 +4665,10 @@ main (int argc, char **argv)
   floor_test ();
   nearbyint_test ();
   rint_test ();
+  rint_test_tonearest ();
+  rint_test_towardzero ();
+  rint_test_downward ();
+  rint_test_upward ();
   lrint_test ();
   llrint_test ();
   round_test ();

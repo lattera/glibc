@@ -1,3 +1,51 @@
+2004-12-22  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* math/libm-test.inc (rint_test_tonearest): New test.
+	(rint_test_towardzero): New test.
+	(rint_test_downward): New test.
+	(rint_test_upward): New test.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Fix -0.0 case.
+	Remove redundant const values.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: Fix -0.0 case.
+	Remove redundant const values.  Use float const.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Fix -0.0 case.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: Fix -0.0 case.
+	Use float const.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Fix -0.0 case.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Fix -0.0 case.
+	Use float const.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Fix -0.0 case.
+	Remove redundant const values.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Fix -0.0 case.
+	Remove redundant const values.  Use float const.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Fix -0.0 case.
+	Remove redundant const values.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Fix -0.0 case.
+	Remove redundant const values.  Use float const.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.  Remove redundant const values.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.  Remove redundant const values.
+	Use float const.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorf.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.  Use float const.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.  Use float const.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.  Remove redundant const values.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.  Remove redundant const values.
+	Use float const.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Use EALIGN for Quadword
+	alignment.  Fix -0.0 case.  Remove redundant const values.
+	Use float const.
+
 2005-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/cdefs.h: Define __wur.

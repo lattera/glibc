@@ -21,12 +21,12 @@
 
 	.section	".toc","aw"
 .LC0:	/* 2**23 */
-	.tc FD_41600000_0[TC],0x4160000000000000
+	.tc FD_4b000000_0[TC],0x4b00000000000000
 	.section	".text"
 
-ENTRY (__rintf)
+EALIGN (__rintf, 4, 0)
 	CALL_MCOUNT 0
-	lfd	fp13,.LC0@toc(2)
+	lfs	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
 	fsubs	fp12,fp13,fp13	/* generate 0.0  */
 	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO23)  */
@@ -35,13 +35,14 @@ ENTRY (__rintf)
 	bng-	cr6,.L4
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
-	blr
+	fabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = 0.0; */
 .L4:
 	bnllr-	cr6		/* if (x < 0.0)  */
-	fsubs	fp1,fp13,fp1	/* x = TWO23 - x;  */
-	fsubs	fp0,fp1,fp13	/* x = - (x - TWO23);  */
-	fneg	fp1,fp0
-	blr
+	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
+	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
+	fnabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = -0.0; */
 	END (__rintf)
 
 weak_alias (__rintf, rintf)

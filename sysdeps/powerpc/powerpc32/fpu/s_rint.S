@@ -57,13 +57,14 @@ ENTRY (__rint)
 	bng-	cr6,.L4
 	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
-	blr
+	fabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = 0.0; */
 .L4:
 	bnllr-	cr6		/* if (x < 0.0)  */
-	fsub	fp1,fp13,fp1	/* x = TWO52 - x;  */
-	fsub	fp0,fp1,fp13	/* x = - (x - TWO52);  */
-	fneg	fp1,fp0
-	blr
+	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
+	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
+	fnabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = -0.0; */
 	END (__rint)
 
 weak_alias (__rint, rint)

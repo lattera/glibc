@@ -21,11 +21,9 @@
 
 	.section	".toc","aw"
 .LC0:	/* 2**23 */
-	.tc FD_41600000_0[TC],0x4160000000000000
+	.tc FD_4b000000_0[TC],0x4b00000000000000
 .LC1:	/* 0.5 */
-	.tc FD_3fe00000_0[TC],0x3fe0000000000000
-.LC2:	/* -0.0 */
-	.tc FD_80000000_0[TC],0x8000000000000000
+	.tc FD_3f000000_0[TC],0x3f00000000000000
 	.section	".text"
 	
 /* float [fp1] roundf  (float x [fp1])
@@ -38,22 +36,23 @@
    "Round toward Zero" mode and round by adding +-0.5 before rounding
    to the integer value.  */
 
-ENTRY (__roundf )
+EALIGN (__roundf, 4, 0)
 	CALL_MCOUNT 0
 	mffs	fp11		/* Save current FPU rounding mode.  */
-	lfd	fp13,.LC0@toc(2)
+	lfs	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
 	fsubs	fp12,fp13,fp13	/* generate 0.0  */
 	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO23)  */
 	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
 	bnllr-	cr7
 	mtfsfi	7,1		/* Set rounding mode toward 0.  */
-	lfd	fp10,.LC1@toc(2)
+	lfs	fp10,.LC1@toc(2)
 	ble-	cr6,.L4
 	fadds	fp1,fp1,fp10	/* x+= 0.5;  */
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
-.L9:	
+	fabs	fp1,fp1		/* if (x == 0.0)  */
+				/* x = 0.0; */
 	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
 	blr
 .L4:
@@ -61,10 +60,10 @@ ENTRY (__roundf )
 	bge-	cr6,.L9		/* if (x < 0.0)  */
 	fsubs	fp1,fp9,fp13	/* x-= TWO23;  */
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
-	fcmpu	cr5,fp1,fp12	/* if (x > 0.0)  */
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
-	bnelr+	cr5
-	lfd	fp1,.LC2@toc(2)	/* x must be -0.0 for the 0.0 case.  */	
+	fnabs	fp1,fp1		/* if (x == 0.0)  */
+				/* x = -0.0; */
+.L9:
+	mtfsf	0x01,fp11	/* restore previous rounding mode.  */	
 	blr
 	END (__roundf)
 

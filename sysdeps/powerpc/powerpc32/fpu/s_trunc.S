@@ -26,19 +26,11 @@
 TWO52.0:
 	.long 0x43300000
 	.long 0
-	.type	NEGZERO.0,@object
-	.size	NEGZERO.0,8
-NEGZERO.0:
-	.long 0x80000000
-	.long 0
 
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align 3
 .LC0:	/* 2**52 */
 	.long 0x43300000
-	.long 0
-.LC1:	/* -0.0 */
-	.long 0x80000000
 	.long 0
 
 /* double [fp1] trunc (double x [fp1])
@@ -70,23 +62,18 @@ ENTRY (__trunc)
 	ble-	cr6,.L4
 	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
-.L9:	
+	fabs	fp1,fp1		/* if (x == 0.0)  */
+				/* x = 0.0; */
 	mtfsf	0x01,fp11	/* restore previous truncing mode.  */
 	blr
 .L4:
 	bge-	cr6,.L9		/* if (x < 0.0)  */
 	fsub	fp1,fp1,fp13	/* x-= TWO52;  */
 	fadd	fp1,fp1,fp13	/* x+= TWO52;  */
-	fcmpu	cr5,fp1,fp12	/* if (x > 0.0)  */
+	fnabs	fp1,fp1		/* if (x == 0.0)  */
+				/* x = -0.0; */
+.L9:
 	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
-	bnelr+	cr5
-#ifdef SHARED
-	lwz	r9,.LC1@got(10)
-	lfd	fp1,0(r9)
-#else
-	lis	r9,.LC1@ha
-	lfd	fp1,.LC1@l(r9)
-#endif
 	blr
 	END (__trunc)
 

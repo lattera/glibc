@@ -21,18 +21,16 @@
 
 
 	.section	.rodata
-	.align 3
+	.align 2
 	.type	TWO23.0,@object
-	.size	TWO23.0,8
+	.size	TWO23.0,4
 TWO23.0:
-	.long 0x41600000
-	.long 0
+	.long 0x4b000000
 
-	.section	.rodata.cst8,"aM",@progbits,8
-	.align 3
+	.section	.rodata.cst4,"aM",@progbits,4
+	.align 2
 .LC0:	/* 2**23 */
-	.long 0x41600000
-	.long 0
+	.long 0x4b000000
 
 	.section	".text"
 ENTRY (__rintf)
@@ -42,10 +40,10 @@ ENTRY (__rintf)
 	mflr	r10
 	lwz	r9,.LC0@got(10)
 	mtlr	r11
-	lfd	fp13,0(r9)
+	lfs	fp13,0(r9)
 #else
 	lis	r9,.LC0@ha
-	lfd	fp13,.LC0@l(r9)
+	lfs	fp13,.LC0@l(r9)
 #endif
 	fabs	fp0,fp1
 	fsubs	fp12,fp13,fp13	/* generate 0.0  */
@@ -55,13 +53,14 @@ ENTRY (__rintf)
 	bng-	cr6,.L4
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
-	blr
+	fabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = 0.0; */
 .L4:
 	bnllr-	cr6		/* if (x < 0.0)  */
-	fsubs	fp1,fp13,fp1	/* x = TWO23 - x;  */
-	fsubs	fp0,fp1,fp13	/* x = - (x - TWO23);  */
-	fneg	fp1,fp0
-	blr
+	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
+	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
+	fnabs	fp1,fp1		/* if (x == 0.0)  */
+	blr			/* x = -0.0; */
 	END (__rintf)
 
 weak_alias (__rintf, rintf)

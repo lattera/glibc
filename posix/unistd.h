@@ -283,7 +283,6 @@ extern int euidaccess (__const char *__name, int __type)
    the current position (if WHENCE is SEEK_CUR),
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
-// XXX Probably should be __wur but lseek(fd,
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
 #else
