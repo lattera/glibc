@@ -1,5 +1,5 @@
 /* Machine-specific definition for spin locks.  Alpha version.
-   Copyright (C) 1994,97,2002 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,8 +38,8 @@ typedef __volatile long int __spin_lock_t;
 _EXTERN_INLINE void
 __spin_unlock (__spin_lock_t *__lock)
 {
-  __asm__ __volatile__ ("mb");
-  *__lock = 0;
+  __asm__ __volatile__ ("mb; stq $31, %0; mb"
+			: "=m" (__lock));
 }
 
 /* Try to lock LOCK; return nonzero if we locked it, zero if another has.  */
@@ -47,9 +47,6 @@ __spin_unlock (__spin_lock_t *__lock)
 _EXTERN_INLINE int
 __spin_try_lock (register __spin_lock_t *__lock)
 {
-#if 1
-  return 1;
-#else
   register long int __rtn, __tmp;
 
   do
@@ -69,7 +66,6 @@ __spin_try_lock (register __spin_lock_t *__lock)
    } while (! __rtn);
   /* RTN is now nonzero; we have the lock.  */
   return __rtn;
-#endif
 }
 
 /* Return nonzero if LOCK is locked.  */
