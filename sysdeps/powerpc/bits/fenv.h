@@ -119,10 +119,10 @@ typedef double fenv_t;
 
 /* If the default argument is used we use this value.  */
 extern const fenv_t __fe_dfl_env;
-#define FE_DFL_ENV	(&__fe_dfl_env);
+#define FE_DFL_ENV	(&__fe_dfl_env)
 
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
 extern const fenv_t __fe_nomask_env;
-# define FE_NOMASK_ENV	(&__fe_nomask_env);
+# define FE_NOMASK_ENV	(&__fe_nomask_env)
 #endif

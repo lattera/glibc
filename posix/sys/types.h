@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ typedef __uid_t uid_t;
 
 #ifndef ssize_t
 typedef __ssize_t ssize_t;
-#define ssize_t ssize_t
+# define ssize_t ssize_t
 #endif
 
 #ifdef	__USE_BSD
@@ -68,7 +68,6 @@ typedef __key_t key_t;
 
 #define	__need_size_t
 #include <stddef.h>
-typedef size_t socklen_t;
 
 #ifdef __USE_MISC
 /* Old compatibility names for C types.  */
@@ -82,41 +81,41 @@ typedef unsigned int uint;
 #if !defined (__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 7
 
 /* These types are defined by the ISO C 9x header <inttypes.h>. */
-#ifndef __int8_t_defined
-#define __int8_t_defined
+# ifndef __int8_t_defined
+#  define __int8_t_defined
 typedef	char int8_t;
 typedef	short int int16_t;
 typedef	int int32_t;
-#ifdef __GNUC__
+#  ifdef __GNUC__
 typedef long long int int64_t;
-#endif
-#endif
+#  endif
+# endif
 
 /* But these were defined by ISO C without the first `_'.  */
 typedef	unsigned char u_int8_t;
 typedef	unsigned short int u_int16_t;
 typedef	unsigned int u_int32_t;
-#ifdef __GNUC__
+# ifdef __GNUC__
 typedef unsigned long long int u_int64_t;
-#endif
+# endif
 
 typedef int register_t;
 
 #else
 
 /* For GCC 2.7 and later, we can use specific type-size attributes.  */
-#define __intN_t(N, MODE) \
+# define __intN_t(N, MODE) \
   typedef int int##N##_t __attribute__ ((__mode__ (MODE)))
-#define __u_intN_t(N, MODE) \
+# define __u_intN_t(N, MODE) \
   typedef unsigned int u_int##N##_t __attribute__ ((__mode__ (MODE)))
 
-#ifndef __int8_t_defined
-#define __int8_t_defined
+# ifndef __int8_t_defined
+#  define __int8_t_defined
 __intN_t (8, __QI__);
 __intN_t (16, __HI__);
 __intN_t (32, __SI__);
 __intN_t (64, __DI__);
-#endif
+# endif
 
 __u_intN_t (8, __QI__);
 __u_intN_t (16, __HI__);
@@ -128,16 +127,16 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 
 /* Some code from BIND tests this macro to see if the types above are
    defined.  */
-#define __BIT_TYPES_DEFINED__	1
 #endif
+#define __BIT_TYPES_DEFINED__	1
 
 
 #ifdef	__USE_BSD
 /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
-#include <endian.h>
+# include <endian.h>
 
 /* It also defines `fd_set' and the FD_* macros for `select'.  */
-#include <sys/select.h>
+# include <sys/select.h>
 #endif /* Use BSD.  */
 
 

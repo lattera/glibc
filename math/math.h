@@ -264,10 +264,10 @@ extern int matherr __P ((struct exception *__exc));
 
 /* Some useful constants.  */
 # define M_E		_Mldbl(2.7182818284590452354)	/* e */
-# define M_LOG2E	_Mldbl(1.4426950408889634074)	/* log 2e */
-# define M_LOG10E	_Mldbl(0.43429448190325182765)	/* log 10e */
-# define M_LN2		_Mldbl(0.69314718055994530942)	/* log e2 */
-# define M_LN10		_Mldbl(2.30258509299404568402)	/* log e10 */
+# define M_LOG2E	_Mldbl(1.4426950408889634074)	/* log_2 e */
+# define M_LOG10E	_Mldbl(0.43429448190325182765)	/* log_10 e */
+# define M_LN2		_Mldbl(0.69314718055994530942)	/* log_e 2 */
+# define M_LN10		_Mldbl(2.30258509299404568402)	/* log_e 10 */
 # define M_PI		_Mldbl(3.14159265358979323846)	/* pi */
 # define M_PI_2		_Mldbl(1.57079632679489661923)	/* pi/2 */
 # define M_PI_4		_Mldbl(0.78539816339744830962)	/* pi/4 */
@@ -312,34 +312,50 @@ extern int matherr __P ((struct exception *__exc));
 
 /* Return nonzero value if X is greater than Y.  */
 # ifndef isgreater
-#  define isgreater(x, y) (!isunordered ((x), (y)) && (x) > (y))
+#  define isgreater(x, y) \
+  (__extension__							      \
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
+      !isunordered (__x, __y) && __x > __y; }))
 # endif
 
 /* Return nonzero value if X is greater than or equal to Y.  */
 # ifndef isgreaterequal
-#  define isgreaterequal(x, y) (!isunordered ((x), (y)) && (x) >= (y))
+#  define isgreaterequal(x, y) \
+  (__extension__							      \
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
+      !isunordered (__x, __y) && __x >= __y; }))
 # endif
 
 /* Return nonzero value if X is less than Y.  */
 # ifndef isless
-#  define isless(x, y) (!isunordered ((x), (y)) && (x) < (y))
+#  define isless(x, y) \
+  (__extension__							      \
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
+      !isunordered (__x, __y) && __x < __y; }))
 # endif
 
 /* Return nonzero value if X is less than or equal to Y.  */
 # ifndef islessequal
-#  define islessequal(x, y) (!isunordered ((x), (y)) && (x) <= (y))
+#  define islessequal(x, y) \
+  (__extension__							      \
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
+      !isunordered (__x, __y) && __x <= __y; }))
 # endif
 
 /* Return nonzero value if either X is less than Y or Y is less than X.  */
 # ifndef islessgreater
 #  define islessgreater(x, y) \
-     (!isunordered ((x), (y)) && ((x) < (y) || (y) < (x)))
+  (__extension__							      \
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
+      !isunordered (__x, __y) && (__x < __y || __y < __x); }))
 # endif
 
 /* Return nonzero value if arguments are unordered.  */
 # ifndef isunordered
 #  define isunordered(x, y) \
-     (fpclassify (x) == FP_NAN || fpclassify (y) == FP_NAN)
+  (__extension__							      \
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
+      fpclassify (__x) == FP_NAN || fpclassify (__y) == FP_NAN; }))
 # endif
 
 #endif

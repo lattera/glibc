@@ -107,11 +107,17 @@ cfsetspeed (struct termios *termios_p, speed_t speed)
 {
   size_t cnt;
 
-  for (cnt = 0; cnt < sizeof (speeds); ++cnt)
-    if (speed == speeds[cnt].value)
+  for (cnt = 0; cnt < sizeof (speeds) / sizeof (speeds[0]); ++cnt)
+    if (speed == speeds[cnt].internal)
       {
 	cfsetispeed (termios_p, speed);
 	cfsetospeed (termios_p, speed);
+	return;
+      }
+    else if (speed == speeds[cnt].value)
+      {
+	cfsetispeed (termios_p, speeds[cnt].internal);
+	cfsetospeed (termios_p, speeds[cnt].internal);
 	return;
       }
 

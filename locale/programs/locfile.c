@@ -920,17 +920,23 @@ void
 check_all_categories (struct localedef_t *locale, struct charset_t *charset)
 {
  /* Call the finishing functions for all locales.  */
-  if ((locale->binary & (1 << LC_CTYPE)) == 0)
+  if ((locale->avail & (1 << LC_CTYPE)) != 0
+      && (locale->binary & (1 << LC_CTYPE)) == 0)
     ctype_finish (locale, charset);
-  if ((locale->binary & (1 << LC_COLLATE)) == 0)
+  if ((locale->avail & (1 << LC_COLLATE)) != 0
+      && (locale->binary & (1 << LC_COLLATE)) == 0)
     collate_finish (locale, charset);
-  if ((locale->binary & (1 << LC_MONETARY)) == 0)
+  if ((locale->avail & (1 << LC_MONETARY)) != 0
+      && (locale->binary & (1 << LC_MONETARY)) == 0)
     monetary_finish (locale);
-  if ((locale->binary & (1 << LC_NUMERIC)) == 0)
+  if ((locale->avail & (1 << LC_NUMERIC)) != 0
+      && (locale->binary & (1 << LC_NUMERIC)) == 0)
     numeric_finish (locale);
-  if ((locale->binary & (1 << LC_TIME)) == 0)
+  if ((locale->avail & (1 << LC_TIME)) != 0
+      && (locale->binary & (1 << LC_TIME)) == 0)
     time_finish (locale);
-  if ((locale->binary & (1 << LC_MESSAGES)) == 0)
+  if ((locale->avail & (1 << LC_MESSAGES)) != 0
+      && (locale->binary & (1 << LC_MESSAGES)) == 0)
     messages_finish (locale);
 }
 
@@ -940,12 +946,18 @@ write_all_categories (struct localedef_t *locale, struct charset_t *charset,
 		      const char *output_path)
 {
   /* Call all functions to write locale data.  */
-  ctype_output (locale, charset, output_path);
-  collate_output (locale, charset, output_path);
-  monetary_output (locale, output_path);
-  numeric_output (locale, output_path);
-  time_output (locale, output_path);
-  messages_output (locale, output_path);
+  if ((locale->avail & (1 << LC_CTYPE)) != 0)
+    ctype_output (locale, charset, output_path);
+  if ((locale->avail & (1 << LC_COLLATE)) != 0)
+    collate_output (locale, charset, output_path);
+  if ((locale->avail & (1 << LC_MONETARY)) != 0)
+    monetary_output (locale, output_path);
+  if ((locale->avail & (1 << LC_NUMERIC)) != 0)
+    numeric_output (locale, output_path);
+  if ((locale->avail & (1 << LC_TIME)) != 0)
+    time_output (locale, output_path);
+  if ((locale->avail & (1 << LC_MESSAGES)) != 0)
+    messages_output (locale, output_path);
 }
 
 

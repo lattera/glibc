@@ -767,7 +767,7 @@ typedef enum name_pos name_pos;
 #endif
 
 /* Prototypes, and extern declarations for the NIS library functions. */
-#include <bits/nislib.h>
+#include <rpcsvc/nislib.h>
 #endif /* __NIS_RPCGEN_H */
 /* EDIT_START */
 

@@ -1,5 +1,5 @@
 %% TeX macros to handle Texinfo files.
-%% $Id: texinfo.tex,v 2.211 1997/07/28 21:55:24 drepper Exp $
+%% $Id: texinfo.tex,v 2.212 1997/08/04 14:14:11 drepper Exp $
 
 %  Copyright (C) 1985, 86, 88, 90, 91, 92, 93,
 %                94, 95, 96, 97 Free Software Foundation, Inc.
@@ -36,7 +36,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.211 $
+\deftexinfoversion$Revision: 2.212 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -121,7 +121,7 @@
 
 % For @cropmarks command.
 % Do @cropmarks to get crop marks.
-%
+% 
 \newif\ifcropmarks
 \let\cropmarks = \cropmarkstrue
 %
@@ -1396,10 +1396,6 @@ where each line of input produces a line of output.}
 % the catcodes are wrong for parsearg to work.)
 \gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\ttsl}
 
-% If you use @setkbdinputexample, then @kbd produces slanted tty font
-% only inside of @example and friends.
-\def\setkbdinputexample{\gdef\kbdexamplefont\ttsl}
-
 \def\xkey{\key}
 \def\kbdfoo#1#2#3\par{\def\one{#1}\def\three{#3}\def\threex{??}%
 \ifx\one\xkey\ifx\threex\three \key{#2}%
@@ -1412,7 +1408,7 @@ where each line of input produces a line of output.}
 % @uref (abbreviation for `urlref') takes an optional second argument
 % specifying the text to display.  First (mandatory) arg is the url.
 % Perhaps eventually put in a hypertex \special here.
-%
+% 
 \def\uref#1{\urefxxx #1,,\finish}
 \def\urefxxx#1,#2,#3\finish{%
   \setbox0 = \hbox{\ignorespaces #2}%
@@ -2645,7 +2641,7 @@ width0pt\relax} \fi
 \def\begindoublecolumns{\begingroup % ended by \enddoublecolumns
   % Grab any single-column material above us.
   \output = {\global\setbox\partialpage = \vbox{%
-    %
+    % 
     % Here is a possibility not foreseen in manmac: if we accumulate a
     % whole lot of material, we might end up calling this \output
     % routine twice in a row (see the doublecol-lose test, which is
@@ -4402,15 +4398,15 @@ width0pt\relax} \fi
 % Read the last existing aux file, if any.  No error if none exists.
 \def\readauxfile{\begingroup
   \catcode`\^^@=\other
-  \catcode`\^=\other
-  \catcode`\^=\other
+  \catcode`\^^A=\other
+  \catcode`\^^B=\other
   \catcode`\^^C=\other
   \catcode`\^^D=\other
   \catcode`\^^E=\other
   \catcode`\^^F=\other
   \catcode`\^^G=\other
   \catcode`\^^H=\other
-  \catcode`\^=\other
+  \catcode`\^^K=\other
   \catcode`\^^L=\other
   \catcode`\^^N=\other
   \catcode`\^^P=\other
@@ -4617,7 +4613,7 @@ width0pt\relax} \fi
 
 % @image.  We use the macros from epsf.tex to support this.
 % If epsf.tex is not installed and @image is used, we complain.
-%
+% 
 % Check for and read epsf.tex up front.  If we read it only at @image
 % time, we might be inside a group, and then its definitions would get
 % undone and the next image would fail.

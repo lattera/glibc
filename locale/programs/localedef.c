@@ -234,8 +234,11 @@ main (int argc, char *argv[])
 	    {
 	      avail = act_add_locdef->locale->categories[cat].generic != NULL;
 	      if (avail)
-		localedef->categories[cat].generic
-		  = act_add_locdef->locale->categories[cat].generic;
+		{
+		  localedef->categories[cat].generic
+		    = act_add_locdef->locale->categories[cat].generic;
+		  localedef->avail |= 1 << cat;
+		}
 	    }
 
 	  if (! avail)

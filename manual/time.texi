@@ -885,11 +885,30 @@ A literal @samp{%} character.
 The @var{size} parameter can be used to specify the maximum number of
 characters to be stored in the array @var{s}, including the terminating
 null character.  If the formatted time requires more than @var{size}
-characters, the excess characters are discarded.  The return value from
-@code{strftime} is the number of characters placed in the array @var{s},
-not including the terminating null character.  If the value equals
-@var{size}, it means that the array @var{s} was too small; you should
-repeat the call, providing a bigger array.
+characters, @code{strftime} return zero and the content of the array
+@var{s} is indetermined.  Otherwise the return value indicates the
+number of characters placed in the array @var{s}, not including the
+terminating null character.
+
+@emph{Warning:} This convention for the return value which is prescribed
+in @w{ISO C} can lead to problems in some situations.  For certain
+format strings and certain locales the output really can be the empty
+string and this cannot be discovered by testing the return value only.
+E.g., in most locales the AM/PM time format is not supported (most of
+the world uses the 24 hour time representation).  In such locales
+@code{"%p"} will return the empty string, i.e., the return value is
+zero.  To detect situations like this something similar to the following
+code should be used:
+
+@smallexample
+buf[0] = '\1';
+len = strftime (buf, bufsize, format, tp);
+if (len == 0 && buf[0] != '\0')
+  @{
+    /* Something went wrong in the strftime call.  */
+    @dots{}
+  @}
+@end smallexample
 
 If @var{s} is a null pointer, @code{strftime} does not actually write
 anything, but instead returns the number of characters it would have written.

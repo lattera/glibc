@@ -1,5 +1,5 @@
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,14 +49,14 @@ struct osockaddr
    uses with any of the listed types to be allowed without complaint.
    G++ 2.7 does not support transparent unions so there we want the
    old-style declaration, too.  */
-#if	(!defined (__GNUC__) || __GNUC__ < 2 || defined(__cplusplus) || \
+#if	(!defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus || \
 	 (__GNUC__ == 2 && __GNUC_MINOR__ < 7))
-#define	__SOCKADDR_ARG		struct sockaddr *
-#define	__CONST_SOCKADDR_ARG	__const struct sockaddr *
+# define __SOCKADDR_ARG		struct sockaddr *
+# define __CONST_SOCKADDR_ARG	__const struct sockaddr *
 #else
 /* Add more `struct sockaddr_AF' types here as necessary.
    These are all the ones I found on NetBSD and Linux.  */
-#define __SOCKADDR_ALLTYPES \
+# define __SOCKADDR_ALLTYPES \
   __SOCKADDR_ONETYPE (sockaddr) \
   __SOCKADDR_ONETYPE (sockaddr_at) \
   __SOCKADDR_ONETYPE (sockaddr_ax25) \
@@ -71,14 +71,14 @@ struct osockaddr
   __SOCKADDR_ONETYPE (sockaddr_un) \
   __SOCKADDR_ONETYPE (sockaddr_x25)
 
-#define __SOCKADDR_ONETYPE(type) struct type *__##type##__;
+# define __SOCKADDR_ONETYPE(type) struct type *__##type##__;
 typedef union { __SOCKADDR_ALLTYPES
 	      } __SOCKADDR_ARG __attribute__ ((__transparent_union__));
-#undef __SOCKADDR_ONETYPE
-#define __SOCKADDR_ONETYPE(type) __const struct type *__##type##__;
+# undef __SOCKADDR_ONETYPE
+# define __SOCKADDR_ONETYPE(type) __const struct type *__##type##__;
 typedef union { __SOCKADDR_ALLTYPES
 	      } __CONST_SOCKADDR_ARG __attribute__ ((__transparent_union__));
-#undef __SOCKADDR_ONETYPE
+# undef __SOCKADDR_ONETYPE
 #endif
 
 
@@ -95,20 +95,20 @@ extern int socketpair __P ((int __domain, int __type, int __protocol,
 			    int __fds[2]));
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
-extern int bind __P ((int __fd, __CONST_SOCKADDR_ARG __addr, size_t __len));
+extern int bind __P ((int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len));
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
 extern int getsockname __P ((int __fd, __SOCKADDR_ARG __addr,
-			     size_t *__len));
+			     socklen_t *__len));
 
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
    For connectionless socket types, just set the default address to send to
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
 extern int __connect __P ((int __fd,
-			   __CONST_SOCKADDR_ARG __addr, size_t __len));
+			   __CONST_SOCKADDR_ARG __addr, socklen_t __len));
 extern int connect __P ((int __fd,
-			 __CONST_SOCKADDR_ARG __addr, size_t __len));
+			 __CONST_SOCKADDR_ARG __addr, socklen_t __len));
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
@@ -130,14 +130,14 @@ extern int recv __P ((int __fd, __ptr_t __buf, size_t __n, int __flags));
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 extern int sendto __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			int __flags, __CONST_SOCKADDR_ARG __addr,
-			size_t __addr_len));
+			socklen_t __addr_len));
 
 /* Read N bytes into BUF through socket FD.
    If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
    the sender, and store the actual size of the address in *ADDR_LEN.
    Returns the number of bytes read or -1 for errors.  */
 extern int recvfrom __P ((int __fd, __ptr_t __buf, size_t __n, int __flags,
-			  __SOCKADDR_ARG __addr, size_t *__addr_len));
+			  __SOCKADDR_ARG __addr, socklen_t *__addr_len));
 
 
 /* Send a message described MESSAGE on socket FD.
@@ -154,13 +154,13 @@ extern int recvmsg __P ((int __fd, struct msghdr *__message, int __flags));
    into OPTVAL (which is *OPTLEN bytes long), and set *OPTLEN to the value's
    actual length.  Returns 0 on success, -1 for errors.  */
 extern int getsockopt __P ((int __fd, int __level, int __optname,
-			    __ptr_t __optval, size_t *__optlen));
+			    __ptr_t __optval, socklen_t *__optlen));
 
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).
    Returns 0 on success, -1 for errors.  */
 extern int setsockopt __P ((int __fd, int __level, int __optname,
-			    __ptr_t __optval, size_t __optlen));
+			    __ptr_t __optval, socklen_t __optlen));
 
 
 /* Prepare to accept connections on socket FD.
@@ -174,7 +174,7 @@ extern int listen __P ((int __fd, unsigned int __n));
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  */
 extern int accept __P ((int __fd, __SOCKADDR_ARG __addr,
-			size_t *__addr_len));
+			socklen_t *__addr_len));
 
 /* Shut down all or part of the connection open on socket FD.
    HOW determines what to shut down:

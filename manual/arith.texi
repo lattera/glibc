@@ -201,7 +201,7 @@ better to use those in this section which are introduced in the @w{ISO C
 
 @comment math.h
 @comment ISO
-@deftypefun int fpclassify (@emph{float-type} @var{x})
+@deftypefn {Macro} int fpclassify (@emph{float-type} @var{x})
 This is a generic macro which works on all floating-point types and
 which returns a value of type @code{int}.  The possible values are:
 
@@ -227,7 +227,7 @@ plain floating-point number without special meaning.
 This macro is useful if more than property of a number must be
 tested.  If one only has to test for, e.g., a NaN value, there are
 function which are faster.
-@end deftypefun
+@end deftypefn
 
 The remainder of this section introduces some more specific functions.
 They might be implemented faster than the call to @code{fpclassify} and
@@ -236,7 +236,7 @@ should be used (and not @code{fpclassify}).
 
 @comment math.h
 @comment ISO
-@deftypefun int isfinite (@emph{float-type} @var{x})
+@deftypefn {Macro} int isfinite (@emph{float-type} @var{x})
 The value returned by this macro is nonzero if the value of @var{x} is
 not plus or minus infinity and not NaN.  I.e., it could be implemented as
 
@@ -247,11 +247,11 @@ not plus or minus infinity and not NaN.  I.e., it could be implemented as
 @code{isfinite} is also implemented as a macro which can handle all
 floating-point types.  Programs should use this function instead of
 @var{finite} (@pxref{Predicates on Floats}).
-@end deftypefun
+@end deftypefn
 
 @comment math.h
 @comment ISO
-@deftypefun int isnormal (@emph{float-type} @var{x})
+@deftypefn {Macro} int isnormal (@emph{float-type} @var{x})
 If @code{isnormal} returns a nonzero value the value or @var{x} is
 neither a NaN, infinity, zero, nor a denormalized number.  I.e., it
 could be implemented as
@@ -259,11 +259,11 @@ could be implemented as
 @smallexample
 (fpclassify (x) == FP_NORMAL)
 @end smallexample
-@end deftypefun
+@end deftypefn
 
 @comment math.h
 @comment ISO
-@deftypefun int isnan (@emph{float-type} @var{x})
+@deftypefn {Macro} int isnan (@emph{float-type} @var{x})
 The situation with this macro is a bit complicated.  Here @code{isnan}
 is a macro which can handle all kinds of floating-point types.  It
 returns a nonzero value is @var{x} does not represent a NaN value and
@@ -287,7 +287,7 @@ situation the function be absolutely necessary one can use
 to avoid the macro expansion.  Using the macro has two big adavantages:
 it is more portable and one does not have to choose the right function
 among @code{isnan}, @code{isnanf}, and @code{isnanl}.
-@end deftypefun
+@end deftypefn
 
 
 @node Operations on Complex

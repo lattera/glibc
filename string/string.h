@@ -282,6 +282,13 @@ extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
 extern char *basename __P ((__const char *__filename));
 #endif
 
+
+/* Some functions might be implemented as optimized inline assembler
+   functions.  */
+#if !defined __NO_STRING_INLINES && defined __OPTIMIZE__
+# include <bits/string.h>
+#endif
+
 __END_DECLS
 
 #endif /* string.h  */

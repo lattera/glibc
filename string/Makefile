@@ -22,7 +22,7 @@
 subdir	:= string
 
 headers	:= string.h strings.h memory.h endian.h bits/endian.h \
-	   argz.h envz.h byteswap.h bits/byteswap.h
+	   argz.h envz.h byteswap.h bits/byteswap.h bits/string.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strverscmp strdup strndup				\
@@ -48,9 +48,9 @@ distribute	:= memcopy.h pagecopy.h tst-svc.expect
 include ../Rules
 
 tester-ENV = LANGUAGE=C
-CFLAGS-tester.c = -fno-builtin
-CFLAGS-tst-strlen.c = -fno-builtin
-CFLAGS-stratcliff.c = -fno-builtin
+CFLAGS-tester.c = -fno-builtin -D__NO_STRING_INLINES
+CFLAGS-tst-strlen.c = -fno-builtin -D__NO_STRING_INLINES
+CFLAGS-stratcliff.c = -fno-builtin -D__NO_STRING_INLINES
 
 tests: $(objpfx)tst-svc.out
 	cmp tst-svc.expect $(objpfx)tst-svc.out

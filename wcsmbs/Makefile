@@ -38,6 +38,8 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcscoll_l wcsxfrm_l \
 	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l
 
+tests := tst-wcstof
+
 include ../Rules
 
 CFLAGS-wcwidth.c = -I../wctype

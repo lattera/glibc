@@ -66,20 +66,27 @@ opensock (void)
 unsigned int
 if_nametoindex (const char *ifname)
 {
+#ifndef SIOGIFINDEX
+  __set_errno (ENOSYS);
+#else
   struct ifreq ifr;
+  int rc;
   int fd = opensock ();
 
   if (fd < 0)
     return 0;
 
   strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
-  if (ioctl (fd, SIOGIFINDEX, &ifr) < 0)
+  rc = ioctl (fd, SIOGIFINDEX, &ifr);
+  if (rc < 0)
     {
       close (fd);
+      __set_errno (rc == -EINVAL ? ENOSYS : -rc);
       return 0;
     }
   close (fd);
   return ifr.ifr_ifindex;
+#endif
 }
 
 void
@@ -98,6 +105,11 @@ if_freenameindex (struct if_nameindex *ifn)
 struct if_nameindex *
 if_nameindex (void)
 {
+#ifndef SIOGIFINDEX
+  __set_errno (ENOSYS);
+  return NULL;
+#else
+  int rc;
   int fd = opensock ();
   struct ifconf ifc;
   unsigned int rq_ifs = 4, nifs, i;
@@ -141,10 +153,12 @@ if_nameindex (void)
 	  goto jump;
 	}
       strcpy (idx[i].if_name, ifr->ifr_name);
-      if (ioctl (fd, SIOGIFINDEX, ifr) < 0)
+      rc = ioctl (fd, SIOGIFINDEX, ifr);
+      if (rc < 0)
 	{
 	  free (idx);
 	  idx = NULL;
+	  __set_errno (rc == -EINVAL ? ENOSYS : -rc);
 	  goto jump;
 	}
       idx[i].if_index = ifr->ifr_ifindex;
@@ -156,22 +170,33 @@ jump:
   free (ifc.ifc_buf);
   close (fd);
   return idx;
+#endif
 }
 
 char *
 if_indextoname (unsigned int ifindex, char *ifname)
 {
+#ifndef SIOGIFINDEX
+  __set_errno (ENOSYS);
+  return NULL;
+#else
   struct if_nameindex *idx = if_nameindex ();
   struct if_nameindex *p;
+  char *result;
 
-  for (p = idx; p->if_index || p->if_name; ++p)
-    if (p->if_index == ifindex)
-      {
-	strncpy (ifname, p->if_name, IFNAMSIZ);
-	if_freenameindex (idx);
-	return ifname;
-      }
+  if (idx == NULL)
+    result = NULL;
+  else
+    {
+      for (p = idx; p->if_index || p->if_name; ++p)
+	if (p->if_index == ifindex)
+	  {
+	    result = strncpy (ifname, p->if_name, IFNAMSIZ);
+	    break;
+	  }
 
-  if_freenameindex (idx);
-  return NULL;
+      if_freenameindex (idx);
+    }
+  return result;
+#endif
 }

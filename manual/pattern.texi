@@ -1202,9 +1202,6 @@ expand_and_execute (const char *program, const char *options)
 @}
 @end smallexample
 
-In practice, since @code{wordexp} is executed by running a subshell, it
-would be faster to do this by concatenating the strings with spaces
-between them and running that as a shell command using @samp{sh -c}.
 
 @c No sense finishing this for here.
 @ignore

@@ -812,13 +812,24 @@ __printf_fp (FILE *fp,
       {
 	char *tp = cp;
 
-	if (digit == '5')
+	if (digit == '5' && (*(cp - 1) & 1) == 0)
 	  /* This is the critical case.	 */
 	  if (fracsize == 1 && frac[0] == 0)
 	    /* Rest of the number is zero -> round to even.
 	       (IEEE 754-1985 4.1 says this is the default rounding.)  */
-	    if ((*(cp - 1) & 1) == 0)
-	      goto do_expo;
+	    goto do_expo;
+	  else if (scalesize == 0)
+	    {
+	      /* Here we have to see whether all limbs are zero since no
+		 normalization happened.  */
+	      size_t lcnt = fracsize;
+	      while (lcnt >= 1 && frac[lcnt - 1] == 0)
+		--lcnt;
+	      if (lcnt == 0)
+		/* Rest of the number is zero -> round to even.
+		   (IEEE 754-1985 4.1 says this is the default rounding.)  */
+		goto do_expo;
+	    }
 
 	if (fracdig_no > 0)
 	  {

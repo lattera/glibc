@@ -374,7 +374,11 @@ GLIBC_2.0 {
     wcstoul; wcstoull; wcstouq; wcswcs; wcswidth; wcsxfrm; wctob; wctomb;
     wctrans; wctype; wcwidth;
 
-    wmemchr; wmemcmp; wmemcpy; wmemmove; wmemset; write; writev;
+    wmemchr; wmemcmp; wmemcpy; wmemmove; wmemset;
+
+    wordexp; wordfree;
+
+    write; writev;
 
     # x*
     xdecrypt; xdr_accepted_reply; xdr_array; xdr_authdes_cred;

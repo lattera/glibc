@@ -509,7 +509,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	  && ((STRNCASECMP (cp, L_("inf"), 3) == 0 && (matched = 3))
 	      || (STRNCASECMP (cp, L_("infinity"), 8) == 0 && (matched = 8))))
 	{
-	  /* Return +/- inifity.  */
+	  /* Return +/- infinity.  */
 	  if (endptr != NULL)
 	    *endptr = (STRING_TYPE *) (cp + matched);
 

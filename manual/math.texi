@@ -1,3 +1,11 @@
+@c We need some definitions here.
+@iftex
+@set TEXFORMULAS
+@end iftex
+@ifhtml
+@set cdot ·
+@end ifhtml
+
 @node Mathematics, Arithmetic, Low-Level Terminal Interface, Top
 @chapter Mathematics
 
@@ -25,13 +33,18 @@ in case of double using @code{double} is a good compromise.
 
 
 @menu
-* Domain and Range Errors::     Detecting overflow conditions and the like.
-* Trig Functions::              Sine, cosine, and tangent.
-* Inverse Trig Functions::      Arc sine, arc cosine, and arc tangent.
-* Exponents and Logarithms::    Also includes square root.
-* Hyperbolic Functions::        Hyperbolic sine and friends.
-* Pseudo-Random Numbers::       Functions for generating pseudo-random
-				 numbers.
+* Domain and Range Errors::      Detecting overflow conditions and the like.
+* Exceptions in Math Functions:: Signalling exception in math functions.
+* Mathematical Constants::       Precise numeric values for often used
+                                  constant.
+* FP Comparison Functions::      Special functions to compare floating-point
+                                  numbers.
+* Trig Functions::               Sine, cosine, and tangent.
+* Inverse Trig Functions::       Arc sine, arc cosine, and arc tangent.
+* Exponents and Logarithms::     Also includes square root.
+* Hyperbolic Functions::         Hyperbolic sine and friends.
+* Pseudo-Random Numbers::        Functions for generating pseudo-random
+				  numbers.
 @end menu
 
 @node Domain and Range Errors
@@ -72,11 +85,11 @@ and test @code{errno} afterward.  As a consequence of this use of
 @code{errno}, use of the mathematical functions is not reentrant if you
 check for errors.
 
-@c !!! this isn't always true at the moment....
-None of the mathematical functions ever generates signals as a result of
-domain or range errors.  In particular, this means that you won't see
-@code{SIGFPE} signals generated within these functions.  (@xref{Signal
-Handling}, for more information about signals.)
+@c ### This is no longer true.  --drepper
+@c None of the mathematical functions ever generates signals as a result of
+@c domain or range errors.  In particular, this means that you won't see
+@c @code{SIGFPE} signals generated within these functions.  (@xref{Signal
+@c Handling}, for more information about signals.)
 
 @comment math.h
 @comment ISO
@@ -111,12 +124,661 @@ This macro is introduced in @w{ISO C 9X}.
 @end deftypevr
 
 
-@comment
+A special case is the @code{ilogb} function @pxref{Exponents and
+Logarithms}.  Since the return value is an integer value, one cannot
+compare with @code{HUGE_VAL} etc.  Therefore two further values are
+defined.
+
+@comment math.h
+@comment ISO
+@deftypevr Macro int FP_ILOGB0
+This value is returned by @code{ilogb} if the argument is @code{0}.  The
+numeric value is either @code{INT_MIN} or @code{-INT_MAX}.
+
+This macro is introduced in @w{ISO C 9X}.
+@end deftypevr
+
+@comment math.h
+@comment ISO
+@deftypevr Macro int FP_ILOGBNAN
+This value is returned by @code{ilogb} if the argument is @code{NaN}.  The
+numeric value is either @code{INT_MIN} or @code{INT_MAX}.
+
+This macro is introduced in @w{ISO C 9X}.
+@end deftypevr
+
 
 For more information about floating-point representations and limits,
 see @ref{Floating Point Parameters}.  In particular, the macro
 @code{DBL_MAX} might be more appropriate than @code{HUGE_VAL} for many
 uses other than testing for an error in a mathematical function.
+
+
+@node Exceptions in Math Functions
+@section Exceptions in Math Functions
+@cindex exception
+@cindex signal
+
+Due to the restrictions in the size of the floating-point number
+representation or the limitation of the input range of certain functions
+some of the mathematical operations and functions have to signal
+exceptional situations.  The @w{IEEE 754} standard specifies which
+exceptions have to be supported and how they can be handled.
+
+@w{IEEE 754} specifies two actions for floating-point exception: taking
+a trap or continuing without doing so.  If the trap is taken a
+(possibly) user defined trap handler is called and this function can
+correct the argument or react somehow else on the call.  If the trap
+handler returns, its return value is taken as the result of the
+operation.
+
+If no trap handler is called each of the known exceptions has a default
+action.  This consists of setting a corresponding bit in the
+floating-point status word to indicate which kind of exception was
+raised and to return a default value, which depends on the exception
+(see the table below).
+
+@noindent
+The exceptions defined in @w{IEEE 754} are:
+
+@table @samp
+@item Invalid Operation
+This exception is raised if the given operands are invalid for the
+operation to be performed.  Examples are
+(see @w{IEEE 754}, @w{section 7}):
+@enumerate
+@item
+Any operation on a signalling NaN.
+@item
+Addition or subtraction; magnitude subtraction of infinities such as
+@iftex
+@tex
+$(+\infty) + (-\infty)$.
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{(+oo) + (-oo)}.
+@end ifclear
+@item
+Multiplication:
+@iftex
+@tex
+$0 \cdot \infty$.
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@ifset cdot
+@math{0 @value{cdot} oo}.
+@end ifset
+@ifclear cdot
+@math{0 x oo}.
+@end ifclear
+@end ifclear
+
+@item
+Division: @math{0/0} or
+@iftex
+@tex
+$\infty/\infty$.
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{oo/oo}.
+@end ifclear
+
+@item
+Remainder: @math{x} REM @math{y}, where @math{y} is zero or @math{x} is
+infinite.
+@item
+Squre root if the operand is less then zero.
+@item
+Conversion of an internal floating-point number to an integer or toa
+decimal string when overflow, infinity, or NaN precludes a faithful
+representation in that format and this cannot otherwise be signaled.
+@item
+Conversion of an unrecognizable input string.
+@item
+Comparison via predicates involving @math{<} or @math{>}, without
+@code{?}, when the operands are @dfn{unordered}.  (@math{?>} means the
+unordered greater relation, @xref{FP Comparison Functions}).
+@end enumerate
+
+If the exception does not cause a trap handler to be called the result
+of the operation is taken as a quiet NaN.
+
+@item Division by Zero
+This exception is raised of the devisor is zero and the dividend is a
+finite nonzero number.  If no trap occurs the result is either
+@iftex
+@tex
+$\infty$
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{+oo}
+@end ifclear
+or
+@iftex
+@tex
+$-\infty$
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{-oo}
+@end ifclear
+, depending on the
+signs of the operands.
+
+@item Overflow
+This exception is signalled whenever if the result cannot be represented
+as a finite value in the destination precision's format.  If no trap
+occurs the result depends on the sign of the intermediate result and the
+current rounding mode (@w{IEEE 754}, @w{section 7.3}):
+@enumerate
+@item
+Round to nearest carries all overflows to
+@iftex
+@tex
+$\infty$
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{oo}
+@end ifclear
+with the sign of the intermediate result.
+@item
+Round towards @math{0} carries all overflows to the precision's largest
+finite number with the sign of the intermediate result.
+@item
+Round towards
+@iftex
+@tex
+$-\infty$
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{-oo}
+@end ifclear
+carries positive overflows to the
+precision's largest finite number and carries negative overflows to
+@iftex
+@tex
+$-\infty$.
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{-oo}.
+@end ifclear
+
+@item
+Round towards
+@iftex
+@tex
+$\infty$
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{oo}
+@end ifclear
+carries negative overflows to the
+precision's most negative finite number and carries positive overflows
+to
+@iftex
+@tex
+$\infty$.
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{oo}.
+@end ifclear
+@end enumerate
+
+@item Underflow
+The underflow exception is created when a intermediate result is too
+small for the operation or if the operations result rounded to the
+destination precision causes a loss of accuracy by approximating the
+result by denormalized numbers.
+
+When no trap is installed for the underflow exception, underflow shall
+be signaled (via the underflow flag) only when both tininess and loss of
+accuracy have been detected.  If no trap handler is installed the
+operation continues witht he inprecise small value or zero if the
+destination precision cannot hold the small exact result.
+
+@item Inexact
+This exception is signaled if the rounded result is not exact (such as
+computing the square root of two) or the result overflows without an
+overflow trap.
+@end table
+
+To control whether an exception causes a trap to occur all @w{IEEE 754}
+conformant floating-point implementation (either hardware or software)
+have a control word.  By setting specific bits for each exception in
+this control word the programmer can decide whether a trap is wanted or
+not.
+
+@w{ISO C 9X} introduces a set of function which can be used to control
+exceptions.  There are functions to manipulate the control word, to
+query the status word or to save and restore the whole state of the
+floating-point unit.  There are also functions to control the rounding
+mode used.
+
+@menu
+* Status bit operations::       Manipulate the FP status word.
+* FPU environment::             Controlling the status of the FPU.
+* Rounding Modes::              Controlling the rounding mode.
+@end menu
+
+@node Status bit operations
+@subsection Controlling the FPU status word
+
+To control the five types of exceptions defined in @w{IEEE 754} some
+functions are defined which abstract the interface to the FPU.  The
+actual implementation can be very different, depending on the underlying
+hardware or software.
+
+To address the single exception the @file{fenv.h} headers defines a
+number macros:
+
+@vtable @code
+@comment fenv.h
+@comment ISO
+@item FE_INEXACT
+Represent the inexact exception iff the FPU supports this exception.
+@comment fenv.h
+@comment ISO
+@item FE_DIVBYZERO
+Represent the divide by zero exception iff the FPU supports this exception.
+@comment fenv.h
+@comment ISO
+@item FE_UNDERFLOW
+Represent the underflow exception iff the FPU supports this exception.
+@comment fenv.h
+@comment ISO
+@item FE_OVERFLOW
+Represent the overflow exception iff the FPU supports this exception.
+@comment fenv.h
+@comment ISO
+@item FE_INVALID
+Represent the invalid exception iff the FPU supports this exception.
+@end vtable
+
+The macro @code{FE_ALL_EXCEPT} is the bitwise OR of all exception macros
+which are supported by the FP implementation.
+
+Each of the supported exception flag can either be set or unset.  The
+@w{ISO C 9X} standard defines functions to set, unset and test the
+status of the flags.
+
+@comment fenv.h
+@comment ISO
+@deftypefun void feclearexcept (int @var{excepts})
+This functions clears all of the supported exception flags denoted by
+@var{excepts} in the status word.
+@end deftypefun
+
+To safe the current status of the flags in the status word @file{fenv.h}
+defines the type @code{fexcept_t} which can hold all the information.
+The following function can be used to retrieve the current setting.
+
+@comment fenv.h
+@comment ISO
+@deftypefun void fegetexceptflag (fexcept_t *@var{flagp}, int @var{excepts})
+Store in the variable pointed to by @var{flagp} an
+implementation-defined value representing the current setting of the
+exception flags indicated by the parameter @var{excepts}.
+@end deftypefun
+
+@noindent
+To restore the previously saved values one can use this functions:
+
+@comment fenv.h
+@comment ISO
+@deftypefun void fesetexceptflag (const fexcept_t *@var{flagp}, int @var{excepts})
+Restore from the variable pointed to by @var{flagp} the setting of the
+flags for the exceptions denoted by the value of the parameter
+@var{excepts}.
+@end deftypefun
+
+The last function allows to query the current status of the flags.  The
+flags can be set either explicitely (using @code{fesetexceptflag} or
+@code{feclearexcept}) or by a floating-point operation which happened
+before.  Since the flags are accumulative, the flags must be explicitely
+reset using @code{feclearexcept} if one wants to test for a certain
+exceptions raised by a specific piece of code.
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fetestexcept (int @var{excepts})
+Test whether a subset of the flags indicated by the parameter
+@var{except} is currently set.  If yes, a nonzero value is returned
+which specifies which exceptions are set.  Otherwise the result is zero.
+@end deftypefun
+
+@noindent
+Code which uses the @code{fetestexcept} function could look like this:
+
+@smallexample
+@{
+  double f;
+  int raised;
+  feclearexcept (FE_ALL_EXCEPT);
+  f = compute ();
+  raised = fetestexcept (FE_OVERFLOW | FE_INVALID);
+  if (raised & FE_OVERFLOW) @{ /* ... */ @}
+  if (raised & FE_INVALID) @{ /* ... */ @}
+  /* ... */
+@}
+@end smallexample
+
+Please note that the return value of @code{fetestexcept} is @code{int}
+but this does not mean that the @code{fexcept_t} type is generally
+representable as an integer.  These are completely independent types.
+
+
+@node FPU environment
+@subsection Controlling the Floating-Point environment
+
+It is sometimes necessary so save the complete status of the
+floating-point unit for a certain time to perform some completely
+different actions.  Beside the status of the exception flags, the
+control word for the exceptions and the rounding mode can be safed.
+
+The file @file{fenv.h} defines the type @code{fenv_t}.  The layout of a
+variable of this type is implementation defined but the variable is able
+to contain the complete status informations.  To fill a variable of this
+type one can use this function:
+
+@comment fenv.h
+@comment ISO
+@deftypefun void fegetenv (fenv_t *@var{envp})
+Store the current floating-point environment in the object pointed to by
+@var{envp}.
+@end deftypefun
+
+@noindent
+Another possibility which is useful is several situations is
+
+@comment fenv.h
+@comment ISO
+@deftypefun int feholdexcept (fenv_t *@var{envp})
+Store the current floating-point environment in the object pointed to by
+@var{envp}.  Afterwards, all exception flags are cleared and if
+available a mode is installed which continues on all exception and does
+not cause a trap to occur.  In ths case a nonzero value is returned.
+
+If the floating-point implementation does not support such a non-stop
+mode, the return value is zero.
+@end deftypefun
+
+The functions which allow a state of the floating-point unit to be
+restored can take two kinds of arguments:
+
+@itemize @bullet
+@item
+Pointed to objects which previously were initialized by a call to
+@code{fegetenv} or @code{feholdexcept}.
+@item
+@vindex FE_DFL_ENV
+The special macro @code{FE_DFL_ENV} which represents the floating-point
+environment as it was available at program start.
+@item
+Implementation defined macros with names starting with @code{FE_}.
+
+@vindex FE_NOMASK_ENV
+If possible, the GNU C Library defines a macro @code{FE_NOMASK_ENV}
+which represents an environment where no exception is masked and so each
+raised exception causes a trap to occur.  Whether this macro is available can easily be tested using @code{#ifdef}.
+
+Some platforms might define further predefined environments.
+@end itemize
+
+@noindent
+To set any of the environments there are two functions defined.
+
+@deftypefun void fesetenv (const fenv_t *@var{envp})
+Establish the floating-point environment described in the object pointed
+to by @var{envp}.  Even if one or more exceptions flags in the restored
+environment are set no exception is raised.
+@end deftypefun
+
+In some situations the previous status of the exception flags must not
+simply be discarded and so this function is useful:
+
+@deftypefun void feupdateenv (const fenv_t *@var{envp})
+The current status of the floating-point unit is preserved in some
+automatic storage before the environment described by the object pointed
+to by @var{envp} is installed.  Once this is finished all exceptions set
+in the original environment which is saved in the automatic storage, is
+raised.
+@end deftypefun
+
+This function can be used to execute a part of the program with an
+environment which masks all exceptions and before switching back remove
+unwanted exception and raise the remaining exceptions.
+
+
+@node Rounding Modes
+@subsection Rounding modes of the Floating-Point Unit
+
+@w{IEEE 754} defines four different rounding modes.  If the rounding
+mode is supported by the floating-point implementation the corresponding
+of the following macros is defined:
+
+@vtable @code
+@comment fenv.h
+@comment ISO
+@item FE_TONEAREST
+Round to nearest.  This is the default mode and should always be used
+except when a different mode is explicitely required.  Only rounding to
+nearest guarantees numeric stability of the computations.
+
+@comment fenv.h
+@comment ISO
+@item FE_UPWARD
+Round toward
+@iftex
+@tex
+$+\infty$.
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{+oo}.
+@end ifclear
+
+@comment fenv.h
+@comment ISO
+@item FE_DOWNWARD
+Round toward
+@iftex
+@tex
+$-\infty$.
+@end tex
+@end iftex
+@ifclear TEXFORMULAS
+@math{-oo}.
+@end ifclear
+
+@comment fenv.h
+@comment ISO
+@item FE_TOWARDZERO
+Round toward zero.
+@end vtable
+
+At any time one of the four rounding modes above is selected.  To get
+information about the currently selected mode one can use this function:
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fegetround (void)
+Return the currently selected rounding mode, represented by one of the
+values of the defined rouding mode macros.
+@end deftypefun
+
+@noindent
+To set a specific rounding mode the next function can be used.
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fesetround (int @var{round})
+Change the currently selected rounding mode to the mode described by the
+parameter @var{round}.  If @var{round} does not correspond to one of the
+supported rounding modes nothing is changed.
+
+The function return a nonzero value iff the requested rounding mode can
+be established.  Otherwise zero is returned.
+@end deftypefun
+
+Changing the rounding mode can be necessary for various reasons.  But
+changing the mode only to round a given number normally is no good idea.
+The standard defines a set of functions which can be used to round an
+argument according to some rules and for all of the rounding modes there
+is a corresponding function.
+
+If a large set of number has to be rounded it might be good to change
+the rounding mode and do not use the function the library provides.  So
+the perhaps necessary switching of the rounding mode in the library
+function can be avoided.  But since not all rounding modes are
+guaranteed to exist on any platform this possible implementation cannot
+be portably used.  A default method has to be implemented as well.
+
+
+@node Mathematical Constants
+@section Predefined Mathematical Constants
+@cindex constants
+@cindex mathematical constants
+
+The header @file{math.h} defines a series of mathematical constants if
+@code{_BSD_SOURCE} or a more general feature select macro is defined
+before including this file.  All values are defined as preprocessor
+macros starting with @code{M_}.  The collection includes:
+
+@vtable @code
+@item M_E
+The value is that of the base of the natural logarithm.
+@item M_LOG2E
+The value is computed as the logarithm to base @code{2} of @code{M_E}.
+@item M_LOG10E
+The value is computed as the logarithm to base @code{10} of @code{M_E}.
+@item M_LN2
+The value is computed as the natural logarithm of @code{2}.
+@item M_LN10
+The value is computed as the natural logarithm of @code{10}.
+@item M_PI
+The value is those of the number pi.
+@item M_PI_2
+The value is those of the number pi divided by two.
+@item M_PI_4
+The value is those of the number pi divided by four.
+@item M_1_PI
+The value is the reziprocal of the value of the number pi.
+@item M_2_PI
+The value is two times the reziprocal of the value of the number pi.
+@item M_2_SQRTPI
+The value is two times the reziprocal of the square root of the number pi.
+@item M_SQRT2
+The value is the square root of the value of the number pi.
+@item M_SQRT1_2
+The value is the reziprocal of the square root of the value of the number pi.
+@end vtable
+
+ALl values are defined as @code{long double} values unless the compiler
+does not support this type or @code{__STDC__} is not defined (both is
+unlikey).  Historically the numbers were @code{double} values and some
+old code still relies on this so you might want to add explizit casts if
+the extra precision of the @code{long double} value is not needed.  One
+critical case are functions with a variable number of arguments, such as
+@code{printf}.
+
+@vindex PI
+@emph{Note:} Some programs use a constant named @code{PI} which has the
+same value as @code{M_PI}.  This probably derives from Stroustroup's
+book about his C++ programming language where this value is used in
+examples (and perhaps some AT&T headers contain this value).  But due to
+possible name space problems (@code{PI} is a quite frequently used name)
+this value is not added to @file{math.h}.  Every program should use
+@code{M_PI} instead or add on the the compiler command line
+@code{-DPI=M_PI}.
+
+
+@node FP Comparison Functions
+@section Floating-Point Comparison Functions
+@cindex unordered comparison
+
+The @w{IEEE 754} standards defines s'a set of functions which allows to
+compare even those numbers which normally would cause an exception to be
+raised since they are unordered.  E.g., the expression
+
+@smallexample
+int v = a < 1.0;
+@end smallexample
+
+@noindent
+would raise an exception if @var{a} would be a NaN.  Functions to
+compare unordered numbers are part of the FORTRAN language for a long
+time and the extensions in @w{ISO C 9X} finally introduce them as well
+for the C programming language.
+
+All of the operations are implemented as macros which allow their
+arguments to be of either @code{float}, @code{double}, or @code{long
+double} type.
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int isgreater (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+This macro determines whether the argument @var{x} is greater than
+@var{y}.  This is equivalent to @math{(x) > (y)} but no exception is
+raised if @var{x} or @var{y} are unordered.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int isgreaterequal (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+This macro determines whether the argument @var{x} is greater than or
+equal to @var{y}.  This is equivalent to @math{(x) >= (y)} but no
+exception is raised if @var{x} or @var{y} are unordered.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int isless (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+This macro determines whether the argument @var{x} is less than @var{y}.
+This is equivalent @math{(x) < (y)} but no exception is raised if
+@var{x} or @var{y} are unordered.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int islessequal (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+This macro determines whether the argument @var{x} is less than or equal
+to @var{y}.  This is equivalent to @math{(x) <= (y)} but no exception
+is raised if @var{x} or @var{y} are unordered.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int islessgreater (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+This macro determines whether the argument @var{x} is less or greater
+than @var{y}.  This is equivalent to @math{(x) < (y) || (x) > (y)}
+(except that @var{x} and @var{y} are only evaluated once) but no
+exception is raised if @var{x} or @var{y} are unordered.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int isunordered (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+This macro determines whether its arguments are unordered.
+@end deftypefn
+
+All the macros are defined in a way to ensure that both arguments are
+evaluated exactly once and so they can be used exactly like the builtin
+operators.
+
+On several platform these macros are mapped on very efficient functions
+the processor understands.  But on machines missing these functions, the
+macros above might be rather slow.  So it is best to use the builtin
+operators unless it is necessary to use unordered comparisons.
+
 
 @node Trig Functions
 @section Trigonometric Functions
@@ -128,11 +790,9 @@ that pi radians equals 180 degrees.
 
 @cindex pi (trigonometric constant)
 The math library does define a symbolic constant for pi in @file{math.h}
-when BSD compliance is required (@pxref{Feature Test Macros}).  Beside
-pi several other constants are defined.
-
-@noindent
-In case it is not possible to use this macro one easily can define it:
+(@pxref{Mathematical Constants}) when BSD compliance is required
+(@pxref{Feature Test Macros}).  In case it is not possible to use this
+predefined macro one easily can define it:
 
 @smallexample
 #define M_PI 3.14159265358979323846264338327
@@ -458,6 +1118,60 @@ different base, it is similar to the @code{log} function.  In fact,
 
 @comment math.h
 @comment ISO
+@deftypefun double logb (double @var{x})
+@deftypefunx float logbf (float @var{x})
+@deftypefunx {long double} logbl (long double @var{x})
+These functions extract the exponent of @var{x} and return it as a
+signed integer value.  If @var{x} is zero, a range error may occur.
+
+A special case are subnormal numbers (if supported by the floating-point
+format).  The exponent returned is not the actual value from @var{x}.
+Instead the number is first normalized as if the range of the exponent
+field is large enough.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun int ilogb (double @var{x})
+@deftypefunx int ilogbf (float @var{x})
+@deftypefunx int ilogbl (long double @var{x})
+These functions are equivalent to the corresponding @code{logb}
+functions except that the values are returned as signed integer values.
+Since integer values cannot represent infinity and NaN, there are some
+special symbols defined to help detect these situations.
+
+@vindex FP_ILOGB0
+@vindex FP_ILOGBNAN
+@code{ilogb} returns @code{FP_ILOGB0} if @var{x} is @code{0} and it
+returns @code{FP_ILOGBNAN} if @var{x} is @code{NaN}.  These values are
+system specific and no fixed value is assigned.  More concrete, these
+values might even have the same value.  So a piece of code handling the
+result of @code{ilogb} could look like this:
+
+@smallexample
+i = ilogb (f);
+if (i == FP_ILOGB0 || i == FP_ILOGBNAN)
+  @{
+    if (isnan (f))
+      @{
+        /* @r{Handle NaN.}  */
+      @}
+    else if (f  == 0.0)
+      @{
+        /* @r{Handle 0.0.}  */
+      @}
+    else
+      @{
+        /* @r{Some other value with large exponent,}
+           @r{perhaps +Inf.}  */
+      @}
+  @}
+@end smallexample
+
+@end deftypefun
+
+@comment math.h
+@comment ISO
 @deftypefun double pow (double @var{base}, double @var{power})
 @deftypefunx float powf (float @var{base}, float @var{power})
 @deftypefunx {long double} powl (long double @var{base}, long double @var{power})
@@ -758,6 +1472,7 @@ the real valued function @code{atanh} there is not limit for the range
 of the argument.
 @end deftypefun
 
+
 @node Pseudo-Random Numbers
 @section Pseudo-Random Numbers
 @cindex random numbers
@@ -928,7 +1643,7 @@ since the state consists of a 48 bit array.
 
 @comment stdlib.h
 @comment SVID
-@deftypefun double drand48 ()
+@deftypefun double drand48 (void)
 This function returns a @code{double} value in the range of @code{0.0}
 to @code{1.0} (exclusive).  The random bits are determined by the global
 state of the random number generator in the C library.
@@ -953,7 +1668,7 @@ using to get reproducible results.
 
 @comment stdlib.h
 @comment SVID
-@deftypefun {long int} lrand48 ()
+@deftypefun {long int} lrand48 (void)
 The @code{lrand48} functions return an integer value in the range of
 @code{0} to @code{2^31} (exclusive).  Even if the size of the @code{long
 int} type can take more than 32 bits no higher numbers are returned.
@@ -977,7 +1692,7 @@ the first call to get reproducible results.
 
 @comment stdlib.h
 @comment SVID
-@deftypefun {long int} mrand48 ()
+@deftypefun {long int} mrand48 (void)
 The @code{mrand48} function is similar to @code{lrand48}.  The only
 difference is that the numbers returned are in the range @code{-2^31} to
 @code{2^31} (exclusive).

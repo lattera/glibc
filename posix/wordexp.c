@@ -21,6 +21,7 @@
 #include <wordexp.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <pwd.h>
 #include <sys/types.h>
 #include <string.h>
@@ -52,7 +53,7 @@ parse_backtick (char **word, size_t *word_length, const char *words,
 static int
 eval_expr (char *expr, int *result);
 
-/* The w_*() unctions manipulate word lists. */
+/* The w_*() functions manipulate word lists. */
 
 static char*
 w_extend (char *word, size_t *word_length, size_t by)
@@ -206,7 +207,7 @@ parse_tilde (char **word, size_t *word_length, const char *words,
 	     size_t *offset, size_t wordc)
 {
   /* We are poised _at_ a tilde */
-  int i;
+  size_t i;
 
   if (*word_length != 0)
     {
@@ -245,7 +246,7 @@ parse_tilde (char **word, size_t *word_length, const char *words,
 
       uid = getuid ();
 
-      while ((result = __getpwuid_r (uid, pwd, buffer, buflen, &tpwd)) != 0
+      while ((result = __getpwuid_r (uid, &pwd, buffer, buflen, &tpwd)) != 0
 	     && errno == ERANGE)
 	{
 	  buflen += 1000;
@@ -268,14 +269,13 @@ parse_tilde (char **word, size_t *word_length, const char *words,
   else
     {
       /* Look up user name in database to get home directory */
-      uid_t uid;
-      char *user = strndup (&words[1 + *offset], i - *offset);
+      char *user = strndupa (&words[1 + *offset], i - *offset);
       struct passwd pwd, *tpwd;
       int buflen = 1000;
       char* buffer = __alloca (buflen);
       int result;
 
-      while ((result = __getpwnam_r (uid, pwd, buffer, buflen, &tpwd)) != 0
+      while ((result = __getpwnam_r (user, &pwd, buffer, buflen, &tpwd)) != 0
 	     && errno == ERANGE)
 	{
 	  buflen += 1000;
@@ -683,7 +683,7 @@ exec_comm (char *comm, char **word, size_t *word_length, int flags,
   int buflen;
   int state = 0;
   int i;
-  char *sh, *buffer;
+  char *buffer;
   pid_t pid;
   /* 'state' is:
    *  0 until first non-(whitespace-ifs)
@@ -1397,7 +1397,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
       while (*ifsch != '\0')
 	if ((*ifsch == ' ') || (*ifsch == '\t') || (*ifsch == '\n'))
 	  {
-	    /* White space IFS.  Se first whether it is already in our
+	    /* White space IFS.  See first whether it is already in our
 	       collection.  */
 	    char *runp = ifs_white;
 

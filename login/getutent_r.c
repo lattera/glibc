@@ -31,7 +31,7 @@
 /* The various backends we have.  */
 static int getutent_r_unknown (struct utmp *buffer, struct utmp **result);
 static struct utmp *pututline_unknown (const struct utmp *data);
-static void setutent_unknown (void);
+static int setutent_unknown (void);
 static void endutent_unknown (void);
 
 /* Initial Jump table.  */
@@ -79,17 +79,22 @@ weak_alias (__endutent, endutent)
 weak_alias (__endutent, endutxent)
 
 
-static void
+static int
 setutent_unknown (void)
 {
+  int result;
+
   /* See whether utmpd is running.  */
-  if ((*__libc_utmp_daemon_functions.setutent) ())
+  result = (*__libc_utmp_daemon_functions.setutent) ();
+  if (result)
     __libc_utmp_jump_table = &__libc_utmp_daemon_functions;
   else
     {
-      (*__libc_utmp_file_functions.setutent) ();
+      result = (*__libc_utmp_file_functions.setutent) ();
       __libc_utmp_jump_table = &__libc_utmp_file_functions;
     }
+
+  return result;
 }
 
 

@@ -50,6 +50,6 @@ __longjmp (__jmp_buf env, int val)
 		  because this code always jumps out anyway.  */
 	       );
 
-  /* This call avoids `volatile function does return' warnings.  */
-  abort ();
+  /* Avoid `volatile function does return' warnings.  */
+  for (;;);
 }

@@ -1,3 +1,108 @@
+1997-08-04 15:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/localedef.c (main): Set bit in avail for those
+	categories which are successfully read.
+	* locale/programs/locfile.c (check_all_categories): Don't check
+	categories if they are not available.
+	(write_all_categories): Don't write categories if they are not
+	available.
+
+	* login/setutent_r.c (setutent_unknown): Change return type to
+	int and return result of called function.
+
+	* manual/arith.texi: Mark floating-point test macro from ISO C 9X
+	as macros (not functions).
+	* manual/libc.texinfo (UPDATED): Update.
+	* manual/math.texi: Document exceptions, functions to handle
+	exceptions, mathematical constants, FP comparison functions
+	and several new functions from ISO C 9X.
+	Change parameter of drand48, lrand48, and mrand48 to void (not
+	empty).
+	* manual/pattern.texi: Remove paragraph which explained that wordexp
+	is executed by running a shell.
+	* manual/time.texi: Explain difficulties with strftime if the
+	functions returns 0 and no error occurred.
+
+	* math/math.h: Correct comment for some M_* constants.
+	(isgreater, isgreaterequal, isless, islessequal, islessgreater,
+	inunordered): Rewrite to make sure the arguments are evaluated
+	exactly once.
+
+	* nis/rpcsvc/nis.x: Undo last change.
+	* nis/rpcsvc/nis.h: Likewise.
+	* nis/rpcsvc/nislib.h: File moved back to here.
+
+	* posix/sys/types.h: Don't define socklen_t.  Pretty print.
+	* socket/sys/socket.h (bind, getsockname, connect, sendto, recvfrom,
+	getsockopt, setsockopt, accept): Change size argument to type
+	socklen_t.
+	Pretty print.
+	* manual/socket.texi: Describe socklen_t and change prototypes of
+	socket functions to use socklen_t.
+	* sysdeps/generic/bits/socket.h: Define socklen_t.
+	(struct msghdr): Correct types to use socklen_t.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+
+	* stdio-common/printf_fp.c (__printf_fp): Correct rouding of number
+	1.0 < x < 8.0.
+	* stdio-common/tfformat.c: Add new tests for above bug.
+
+	* stdlib/strtod.c: Fix typo.
+
+	* string/Makefile (headers): Add bits/string.h.
+	(CFLAGS-*): Add -D__NO_STRING_INLINES.
+	* string/string.h: Include <bits/string.h> if optimizing and
+	__NO_STRING_INLINES is not defined.
+	* sysdeps/stub/bits/string.h: New file.
+
+	* sysdeps/powerpc/bits/fenv.h: Fix typos.
+
+	* sysdeps/unix/sysv/linux/if_index.c: Let functions return ENOSYS
+	if SIOGIFINDEX is not defined.
+
+	* sysdeps/wordsize-32/inttypes.h: Pretty print.
+	* sysdeps/wordsize-64/inttypes.h: Pretty print.
+
+	* termios/cfsetspeed.c: Rewrite loop to do what it shall do.
+
+	* wcsmbs/Makefile (tests): Add tst-wcstof.
+	* wcsmbs/tst-wcstof.c: New file.
+
+1997-08-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/__longjmp.c: Replace call to abort by infinite
+	loop, to avoid dragging stdio into the dynamic linker.
+
+1997-08-02 19:44  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* nis/nis_findserv.c (xid, xid_seed, xid_lookup): Make them
+	u_int32_t.
+
+1997-08-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/wordexp.c (parse_tilde): Fix calls to __getpwnam_r and
+	__getpwuid_r.
+	Include <stdio.h> to get prototypes of *printf.
+	(exec_comm): Remove unneeded variable *sh.
+
+	* libc.map: Add wordexp, wordfree.
+
+	* posix/Makefile (routines): Add wordexp.
+
+1997-08-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/wordexp.c: Correct typo in comment.
+	(wordexp): Likewise.
+
+	* manual/errno.texi (Error Codes): Fix typo.
+
+1997-08-03 15:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/initfini.c (SECTION): Don't put quotes around section name
+	since this is not understood by all assemblers.
+	Patch by Klaus Espenlaub <kespenla@hydra.informatik.uni-ulm.de>.
+
 1997-08-02 21:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/Makefile (headers): Rename netinet/inbits.h to bits/in.h.

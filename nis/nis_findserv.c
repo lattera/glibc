@@ -134,7 +134,7 @@ nis_null_3_recv (void *argp, CLIENT * clnt)
 struct findserv_req
 {
   struct sockaddr_in sin;
-  u_long xid;
+  u_int32_t xid;
   u_int server_nr;
   u_int server_ep;
 };
@@ -146,7 +146,7 @@ __nis_findfastest (dir_binding * bind)
   struct findserv_req **pings;
   struct sockaddr_in sin;
   int found = -1;
-  time_t xid_seed, xid_lookup;
+  uint32_t xid_seed, xid_lookup;
   int sock, dontblock = 1;
   CLIENT *clnt;
   void *foo = NULL;
@@ -157,7 +157,7 @@ __nis_findfastest (dir_binding * bind)
 					   for multihomed hosts */
   pings_count = 0;
   pings = malloc (sizeof (struct findserv_req *) * pings_max);
-  xid_seed = time (NULL) ^ getpid ();
+  xid_seed = (uint32_t) (time (NULL) ^ getpid ());
 
   memset (&sin, '\0', sizeof (sin));
   sin.sin_family = AF_INET;

@@ -32,6 +32,9 @@
 
 __BEGIN_DECLS
 
+/* Type for length arguments in socket calls.  */
+typedef unsigned int socklen_t;
+
 /* Types of sockets.  */
 enum __socket_type
 {
@@ -130,14 +133,14 @@ enum
 struct msghdr
   {
     __ptr_t msg_name;		/* Address to send to/receive from.  */
-    int msg_namelen;		/* Length of address data.  */
-    /* XXX Should be type `socklen_t' according to POSIX.1g.  */
+    socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
     size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
     socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+
     int msg_flags;		/* Flags on received message.  */
   };
 

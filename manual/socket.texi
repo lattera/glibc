@@ -128,6 +128,28 @@ protocol} which you can request by specifying 0 as the protocol
 number.  And that's what you should normally do---use the default.
 @end itemize
 
+Throughout the following description at various places
+variables/parameters to denote sizes are required.  And here the trouble
+starts.  In the first implementations the type of these variables was
+simply @code{int}.  This type was on almost all machines of this time 32
+bits wide and so a de-factor standard required 32 bit variables.  This
+is important since references to variables of this type are passed to
+the kernel.
+
+But now the POSIX people came and unified the interface with their words
+"all size values are of type @code{size_t}".  But on 64 bit machines
+@code{size_t} is 64 bits wide and so variable references are not anymore
+possible.
+
+A solution provides the Unix98 specification which finally introduces a
+type @code{socklen_t}.  This type is used in all of the cases in
+previously changed to use @code{size_t}.  The only requirement of this
+type is that it is an unsigned type of at least 32 bits.  Therefore,
+implementations which require references to 32 bit variables be passed
+can be as happy as implementations which right from the start of 64 bit
+values.
+
+
 @node Communication Styles
 @section Communication Styles
 
@@ -358,7 +380,7 @@ For examples of use, see @ref{File Namespace}, or see @ref{Inet Example}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int bind (int @var{socket}, struct sockaddr *@var{addr}, size_t @var{length})
+@deftypefun int bind (int @var{socket}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{bind} function assigns an address to the socket
 @var{socket}.  The @var{addr} and @var{length} arguments specify the
 address; the detailed format of the address depends on the namespace.
@@ -406,7 +428,7 @@ Internet socket.  The prototype for this function is in the header file
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getsockname (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
+@deftypefun int getsockname (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 The @code{getsockname} function returns information about the
 address of the socket @var{socket} in the locations specified by the
 @var{addr} and @var{length-ptr} arguments.  Note that the
@@ -1688,7 +1710,7 @@ program must do, using the @code{connect} function, which is declared in
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int connect (int @var{socket}, struct sockaddr *@var{addr}, size_t @var{length})
+@deftypefun int connect (int @var{socket}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{connect} function initiates a connection from the socket
 with file descriptor @var{socket} to the socket whose address is
 specified by the @var{addr} and @var{length} arguments.  (This socket
@@ -1833,7 +1855,7 @@ queue.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
+@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 This function is used to accept a connection request on the server
 socket @var{socket}.
 
@@ -2327,7 +2349,7 @@ more information about the @code{connect} function.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int sendto (int @var{socket}, void *@var{buffer}. size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t @var{length})
+@deftypefun int sendto (int @var{socket}, void *@var{buffer}. size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t @var{length})
 The @code{sendto} function transmits the data in the @var{buffer}
 through the socket @var{socket} to the destination address specified
 by the @var{addr} and @var{length} arguments.  The @var{size} argument
@@ -2356,7 +2378,7 @@ also tells you where it was sent from.  This function is declared in
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
+@deftypefun int recvfrom (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 The @code{recvfrom} function reads one packet from the socket
 @var{socket} into the buffer @var{buffer}.  The @var{size} argument
 specifies the maximum number of bytes to be read.
@@ -2583,7 +2605,7 @@ They are declared in @file{sys/socket.h}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, size_t *@var{optlen-ptr})
+@deftypefun int getsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, socklen_t *@var{optlen-ptr})
 The @code{getsockopt} function gets information about the value of
 option @var{optname} at level @var{level} for socket @var{socket}.
 
@@ -2613,7 +2635,7 @@ The @var{optname} doesn't make sense for the given @var{level}.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, size_t @var{optlen})
+@deftypefun int setsockopt (int @var{socket}, int @var{level}, int @var{optname}, void *@var{optval}, socklen_t @var{optlen})
 This function is used to set the socket option @var{optname} at level
 @var{level} for socket @var{socket}.  The value of the option is passed
 in the buffer @var{optval}, which has size @var{optlen}.
