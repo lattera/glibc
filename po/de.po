@@ -107,12 +107,13 @@ msgstr ""
 "%15ld  Cache-Misses bei positiven Einträgen\n"
 "%15ld  Cache-Misses bei negativen Einträgen\n"
 "%15ld%% Cache-Hit Verhältnis\n"
-"%15s  Prüfe /etc/%s für Änderungen\n"
+"%15s  Prüfe /etc/%s auf Änderungen\n"
 
 #: nis/nis_print.c:251
 msgid "\nGroup Members :\n"
 msgstr "\nGruppen Mitglieder :\n"
 
+# einfach "Lebenszeit" (?) -ke-
 #: nis/nis_print.c:322
 msgid "\nTime to Live  : "
 msgstr "\nTime to Live        : "
@@ -315,7 +316,7 @@ msgstr "%s: Kann den Verzeichniseintrag »%s« nicht löschen (unlink): %s\n"
 #: timezone/zic.c:889
 #, c-format
 msgid "%s: Error closing %s: %s\n"
-msgstr "%s: Fehler beim Schliessen der Datei »%s«: %s\n"
+msgstr "%s: Fehler beim Schließen der Datei »%s«: %s\n"
 
 #: timezone/zic.c:882
 #, c-format
@@ -375,7 +376,7 @@ msgstr "%s: Zu viele Argumente\n"
 #: login/programs/database.c:129
 #, c-format
 msgid "%s: cannot get modification time"
-msgstr "%s: kann die Modifikationsdatei nicht bekommen"
+msgstr "%s: kann die Modifikationszeit nicht bekommen"
 
 #: timezone/zic.c:1928
 #, c-format
@@ -506,7 +507,7 @@ msgstr "Unbekanntes Signal"
 #: elf/sprof.c:570
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
-msgstr "*** Die Datei »%s« ist gestript: keine detaillierte Analysise möglich\n"
+msgstr "*** Die Datei »%s« ist gestrippt: keine detaillierte Analyse möglich\n"
 
 #: catgets/gencat.c:267
 msgid "*standard input*"
@@ -952,7 +953,7 @@ msgstr "Erzeuge die C Headerdatei NAME mit den Symboldefinitionen"
 
 #: locale/programs/localedef.c:100
 msgid "Create output even if warning messages were issued"
-msgstr "Die Ausgabedatei wirderzeugt, obwohl Warnungen ausgegeben wurden"
+msgstr "Die Ausgabedatei wird erzeugt, obwohl Warnungen ausgegeben wurden"
 
 #: db2/makedb.c:68
 msgid "Create simple DB database from textual input."
@@ -971,7 +972,7 @@ msgstr "Ungültiger Link über Gerätegrenzen hinweg"
 #: nis/nss_nisplus/nisplus-publickey.c:171
 #, c-format
 msgid "DES entry for netname %s not unique\n"
-msgstr "Der DES Eintrag für den netname »%s« ist nicht eindeutig\n"
+msgstr "Der DES-Eintrag für den netname »%s« ist nicht eindeutig\n"
 
 #: nis/nis_print.c:111
 msgid "DIRECTORY\n"
@@ -1341,6 +1342,7 @@ msgstr "GROUP\n"
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr "Unsinnige Daten in ARGP_HELP_FMT: %s"
 
+# Kann man das auf mehrere Zeilen a 79/80 Zeichen formatieren? -ke-
 #: catgets/gencat.c:116
 msgid ""
 "Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
@@ -1398,10 +1400,11 @@ msgstr "Aufgelegt"
 msgid "Haven't found \"%d\" in group cache!"
 msgstr "Habe »%d« nicht im Group-Cache gefunden!"
 
+# Die anderen sind ja auch groß geschrieben... -ke-
 #: nscd/pwdcache.c:249
 #, c-format
 msgid "Haven't found \"%d\" in password cache!"
-msgstr "Habe »%d« nicht im password-Cache gefunden!"
+msgstr "Habe »%d« nicht im Password-Cache gefunden!"
 
 #: nscd/grpcache.c:212
 #, c-format
@@ -1414,10 +1417,11 @@ msgstr "Habe »%s« nicht im Group-Cache gefunden!"
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Habe »%s« nicht im Host-Cache gefunden!"
 
+# ditto -ke-
 #: nscd/pwdcache.c:210
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
-msgstr "Habe »%s« nicht im password-Cache gefunden!"
+msgstr "Habe »%s« nicht im Password-Cache gefunden!"
 
 #. TRANS The remote host for a requested network connection is down.
 #: stdio-common/../sysdeps/gnu/errlist.c:469
@@ -3721,11 +3725,10 @@ msgstr "fcntl: F_SETFD"
 msgid "field `%s' in category `%s' undefined"
 msgstr "Der Eintrag »%s« in der Kategorie »%s« ist nicht definiert"
 
-# XXX Welche Bedeutung hat hier das 'may'?
 #: sunrpc/rpc_main.c:1146
 #, c-format
 msgid "file `%s' already exists and may be overwritten\n"
-msgstr "Die Datei »%s« existiert bereits und wird möglicherweise überschrieben\n"
+msgstr "Die Datei »%s« existiert bereits und würde überschrieben\n"
 
 #: locale/programs/locfile.c:683
 msgid "from-value of `collating-element' must be a string"

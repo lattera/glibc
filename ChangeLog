@@ -1,6 +1,10 @@
+2000-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/de.po: Update from translation team.
+
 1999-12-31  Martin Buchholz  <martin@xemacs.org>
 
-	* argp/argp-help.c: Likewise.
+	* argp/argp-help.c: Fix typos.
 	* argp/argp.h: Likewise.
 	* elf/dl-object.c: Likewise.
 	* elf/dl-open.c: Likewise.
