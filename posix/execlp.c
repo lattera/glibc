@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -25,20 +24,19 @@ Cambridge, MA 02139, USA.  */
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
 int
-DEFUN(execlp, (file), CONST char *file DOTS)
+execlp (const char *file, const char *arg, ...)
 {
-  CONST char *argv[1024];
-  register unsigned int i;
+  const char *argv[1024];
+  unsigned int i;
   va_list args;
 
-  va_start (args, file);
+  va_start (args, arg);
 
-  i = 0;
-  do
-    argv[i] = va_arg (args, CONST char *);
-  while (argv[i++] != NULL);
+  argv[i = 0] = arg;
+  while (argv[i++] != NULL)
+    argv[i] = va_arg (args, const char *);
 
   va_end (args);
 
-  return execvp (file, (char *CONST *) argv);
+  return execvp (file, (char *const *) argv);
 }

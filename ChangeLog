@@ -1,3 +1,25 @@
+Wed Oct  9 00:24:52 1996  Jim Meyering  <meyering@asic.sc.ti.com>
+
+	* time/strftime.c: Allow old K&R compilers compile this file.
+
+Wed Oct  9 12:03:56 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/execlp.c: Add first argument parameter to be compliant
+	with POSIX.  Rearrange body to start vararg counter after
+	this new argument.
+
+Wed Oct  9 04:34:50 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Rewrite.  We cannot use
+	simply a wrapper around the <linux.elfcore.h> file since the
+	kernel header is not clean enough.  We provide the definitions
+	in this file instead.
+
+Wed Oct  9 01:43:18 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c (sethostid): Avoid
+	get?id calls by using __libc_enable_secure.
+
 Wed Oct  9 00:30:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/getnetgrent_r.c: Correct netgroup implementation.  A

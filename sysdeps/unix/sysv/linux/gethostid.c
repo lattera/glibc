@@ -30,7 +30,7 @@ sethostid (id)
   ssize_t written;
 
   /* Test for appropriate rights to set host ID.  */
-  if (geteuid () || getuid ())
+  if (__libc_enable_secure)
     {
       __set_errno (EPERM);
       return -1;

@@ -46,7 +46,7 @@ static char sccsid[] = "@(#)auth_unix.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 #include <limits.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/params.h>
+#include <sys/param.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
@@ -174,7 +174,7 @@ authunix_create_default()
 	char machname[MAX_MACHINE_NAME + 1];
 	register int uid;
 	register int gid;
-	int max_nr_groups = sysconf (_SC_NGROUP_MAX);
+	int max_nr_groups = sysconf (_SC_NGROUPS_MAX);
 	gid_t gids[max_nr_groups];
 
 	if (gethostname(machname, MAX_MACHINE_NAME) == -1)
