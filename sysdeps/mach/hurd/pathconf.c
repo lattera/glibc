@@ -27,8 +27,8 @@ long int
 __pathconf (const char *file, int name)
 {
   error_t err;
+  int value;			/* RPC returns an `int', not a `long int'.  */
   file_t port = __file_name_lookup (file, 0, 0);
-  long int value;
   if (port == MACH_PORT_NULL)
     return -1L;
   err = __file_pathconf (port, name, &value);

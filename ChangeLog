@@ -1,5 +1,7 @@
 Tue Jul 25 09:14:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/pathconf.c: Declare VALUE as int, not long int.
+
 	* stdlib/strtol.c [_LIBC]: Define STDC_HEADERS.
 
 	* sysdeps/unix/sysv/ftime.S: New file.
