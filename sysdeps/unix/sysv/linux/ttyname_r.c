@@ -28,14 +28,13 @@
 
 #include <stdio-common/_itoa.h>
 
-static int getttyname_r __P ((int fd, char *buf, size_t buflen,
+static int getttyname_r __P ((char *buf, size_t buflen,
 			      dev_t mydev, ino_t myino, int save,
 			      int *dostat)) internal_function;
 
 static int
 internal_function
-getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
-     int fd;
+getttyname_r (buf, buflen, mydev, myino, save, dostat)
      char *buf;
      size_t buflen;
      dev_t mydev;
@@ -152,10 +151,10 @@ __ttyname_r (fd, buf, buflen)
   if (stat (buf, &st1) == 0 && S_ISDIR (st1.st_mode))
     {
 #ifdef _STATBUF_ST_RDEV
-      ret = getttyname_r (fd, buf, buflen, st.st_rdev, st.st_ino, save,
+      ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,
 			  &dostat);
 #else
-      ret = getttyname_r (fd, buf, buflen, st.st_dev, st.st_ino, save,
+      ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino, save,
 			  &dostat);
 #endif
     }
@@ -170,10 +169,10 @@ __ttyname_r (fd, buf, buflen)
       buf[sizeof ("/dev/") - 1] = '\0';
       buflen += sizeof ("pts/") - 1;
 #ifdef _STATBUF_ST_RDEV
-      ret = getttyname_r (fd, buf, buflen, st.st_rdev, st.st_ino, save,
+      ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,
 			  &dostat);
 #else
-      ret = getttyname_r (fd, buf, buflen, st.st_dev, st.st_ino, save,
+      ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino, save,
 			  &dostat);
 #endif
     }
@@ -183,10 +182,10 @@ __ttyname_r (fd, buf, buflen)
       buf[sizeof ("/dev/") - 1] = '\0';
       dostat = 1;
 #ifdef _STATBUF_ST_RDEV
-      ret = getttyname_r (fd, buf, buflen, st.st_rdev, st.st_ino,
+      ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino,
 			  save, &dostat);
 #else
-      ret = getttyname_r (fd, buf, buflen, st.st_dev, st.st_ino,
+      ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino,
 			  save, &dostat);
 #endif
     }

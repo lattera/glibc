@@ -30,15 +30,14 @@
 
 char *__ttyname = NULL;
 
-static char * getttyname __P ((const char *dev, int fd, dev_t mydev,
+static char * getttyname __P ((const char *dev, dev_t mydev,
 			       ino_t myino, int save, int *dostat))
      internal_function;
 
 static char *
 internal_function
-getttyname (dev, fd, mydev, myino, save, dostat)
+getttyname (dev, mydev, myino, save, dostat)
      const char *dev;
-     int fd;
      dev_t mydev;
      ino_t myino;
      int save;
@@ -142,9 +141,9 @@ ttyname (fd)
   if (stat ("/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
     {
 #ifdef _STATBUF_ST_RDEV
-      name = getttyname ("/dev/pts", fd, st.st_rdev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev/pts", st.st_rdev, st.st_ino, save, &dostat);
 #else
-      name = getttyname ("/dev/pts", fd, st.st_dev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev/pts", st.st_dev, st.st_ino, save, &dostat);
 #endif
     }
   else
@@ -156,9 +155,9 @@ ttyname (fd)
   if (!name && dostat != -1)
     {
 #ifdef _STATBUF_ST_RDEV
-      name = getttyname ("/dev", fd, st.st_rdev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev", st.st_rdev, st.st_ino, save, &dostat);
 #else
-      name = getttyname ("/dev", fd, st.st_dev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev", st.st_dev, st.st_ino, save, &dostat);
 #endif
     }
 
@@ -166,9 +165,9 @@ ttyname (fd)
     {
       dostat = 1;
 #ifdef _STATBUF_ST_RDEV
-      name = getttyname ("/dev", fd, st.st_rdev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev", st.st_rdev, st.st_ino, save, &dostat);
 #else
-      name = getttyname ("/dev", fd, st.st_dev, st.st_ino, save, &dostat);
+      name = getttyname ("/dev", st.st_dev, st.st_ino, save, &dostat);
 #endif
     }
 

@@ -79,30 +79,3 @@ old_adjtimex	-	old_adjtimex	1	__adjtimex_tv32  __adjtimex@GLIBC_2.0 adjtimex@GLI
 
 # and one for timeval64 entry points
 adjtimex	adjtime	adjtimex	1	__syscall_adjtimex_tv64
-
-# System calls with wrappers.
-rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction
-rt_sigpending	-	rt_sigpending	2	__syscall_rt_sigpending
-rt_sigprocmask	-	rt_sigprocmask	4	__syscall_rt_sigprocmask
-rt_sigqueueinfo	-	rt_sigqueueinfo	3	__syscall_rt_sigqueueinfo
-rt_sigsuspend	-	rt_sigsuspend	2	__syscall_rt_sigsuspend
-rt_sigtimedwait	-	rt_sigtimedwait	4	__syscall_rt_sigtimedwait
-s_getcwd	getcwd	getcwd		2	__syscall_getcwd
-s_getdents	getdents getdents	3	__syscall_getdents
-s_getpriority	getpriority getpriority	2	__syscall_getpriority
-s_getresgid	getresgid getresgid	3	__syscall_getresgid
-s_getresuid	getresuid getresuid	3	__syscall_getresuid
-s_poll		poll	poll		3	__syscall_poll
-s_ptrace	ptrace	ptrace		4	__syscall_ptrace
-s_reboot	reboot	reboot		3	__syscall_reboot
-s_sigaction	sigaction sigaction	3	__syscall_sigaction
-s_sigpending	sigpending sigpending	1	__syscall_sigpending
-s_sigprocmask	sigprocmask sigprocmask	3	__syscall_sigprocmask
-s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
-s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
-sys_fstat	fxstat	fstat		2	__syscall_fstat
-sys_lstat	lxstat	lstat		2	__syscall_lstat
-sys_mknod	xmknod	mknod		3	__syscall_mknod
-sys_readv	readv	readv		3	__syscall_readv
-sys_stat	xstat	stat		2	__syscall_stat
-sys_writev	writev	writev		3	__syscall_writev

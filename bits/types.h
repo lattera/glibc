@@ -93,7 +93,7 @@ typedef unsigned long int __fd_mask;
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
 #define	__NFDBITS	(sizeof (unsigned long int) * 8)
 #define	__FDELT(d)	((d) / __NFDBITS)
-#define	__FDMASK(d)	((unsigned long int) 1 << ((d) % __NFDBITS))
+#define	__FDMASK(d)	((__fd_mask) 1 << ((d) % __NFDBITS))
 
 /* fd_set for select and pselect.  */
 typedef struct
@@ -102,8 +102,10 @@ typedef struct
        from the user namespace.  */
 #ifdef __USE_XOPEN
     __fd_mask fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
+# define __FDS_BITS(set) ((set)->fds_bits)
 #else
     __fd_mask __fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
+# define __FDS_BITS(set) ((set)->__fds_bits)
 #endif
   } __fd_set;
 

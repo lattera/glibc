@@ -1,3 +1,31 @@
+1998-11-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/setgroups.c (setgroups): Remove
+	unnecessary test and add cast.
+
+1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/getconf.c: Add initializer SYSCONF for CHARCLASS_NAME_MAX.
+
+	* sysdeps/unix/sysv/linux/ttyname.c (getttyname): Remove unused
+	parameter fd.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+
+1998-11-02  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/bits/types.h (__FDS_BITS): New macro to access
+	fds_bits member.
+	(__FDMASK): Use __fd_mask instead of unsigned long int in cast.
+
+1998-10-31  Richard Henderson  <rth@cygnus.com>
+
+	* math/Makefile (gmp-objs): Add udiv_qrnnd.
+
+	* sysdeps/unix/alpha/sysdep.h (INLINE_SYSCALL*): New.
+	(inline_syscall*): New.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (INLINE_SYSCALL): New.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Kill __syscall* bits.
+
 1998-10-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* aclocal.m4 (LIBC_PROG_FOO_GNU): Name output file using -o to
@@ -5,66 +33,66 @@
 
 	* posix/PTESTS: Remove comment about incorrect test (it is correct).
 
-1998-10-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
- 
-	* sunrpc/Versions: Add xdr_uint32_t and xdr_int32_t. 
-	* sunrpc/pmap_rmt.c: Initialize clnt_stat variable. 
-	* sunrpc/rpc/auth_des.h: Use uint32_t for time values. 
-	* sunrpc/rpc/xdr.h: Add INT32 support. 
+1998-10-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/Versions: Add xdr_uint32_t and xdr_int32_t.
+	* sunrpc/pmap_rmt.c: Initialize clnt_stat variable.
+	* sunrpc/rpc/auth_des.h: Use uint32_t for time values.
+	* sunrpc/rpc/xdr.h: Add INT32 support.
 	* sunrpc/xdr.c: Implement xdr_int32_t and xdr_uint32_t .
- 
-	* nis/nis_call.c: Changes for new 64bit clean NIS+ interface. 
-	* nis/nis_callback.c: Likewise. 
-	* nis/nis_creategroup.c: Likewise. 
-	* nis/nis_defaults.c: Likewise. 
-	* nis/nis_intern.h: Likewise. 
-	* nis/nis_lookup.c: Likewise. 
-	* nis/nis_ping.c: Likewise. 
-	* nis/nis_print.c: Likewise. 
-	* nis/nis_table.c: Likewise. 
-	* nis/nis_util.c: Likewise. 
-	* nis/nis_xdr.c: Likewise. 
-	* nis/rpcsvc/nis.h: Likewise. 
-	* nis/rpcsvc/nis.x: Likewise. 
-	* nis/rpcsvc/nis_callback.h: Likewise. 
-	* nis/rpcsvc/nis_object.x: Likewise. 
-	* nis/rpcsvc/nislib.h: Likewise. 
- 
-	* nis/rpcsvc/yp.h: Remove casts to (u_long). 
-	* nis/rpcsvc/yp_prot.h: Likewise. 
-	* nis/rpcsvc/ypupd.h: Likewise. 
-	* nis/ypclnt.c: Change %ld to %d in sprintf. 
- 
-1998-10-29  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
- 
-	* manual/locale.texi (Formatting Numbers): Fix strfmon examples. 
- 
-1998-10-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
- 
-	* sysdeps/generic/bits/select.h (__FD_ZERO): Change '\0' to plain 
-	0, __fd_mask is usually not a char. 
- 
-1998-10-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* sysdeps/unix/sysv/linux/sigpending.c (sigpending): Allow 
-	compilation on systems without rt_* syscalls (e.g. on Linux 2.0). 
-	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask): Likewise. 
-	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise. 
-	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise. 
-	* sysdeps/unix/sysv/linux/sigsuspend.c (__sigsuspend): Likewise 
-	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise. 
-	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise. 
- 
-	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Allow 
-	compiling on systems without rt_sigaction syscall. 
-	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c (__sigaction): 
-	Likewise. 
- 
-1998-10-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* time/strptime.c (HERE_D_FMT): Fix typo.   
-	Reported by Claus Heine <heine@math1.rwth-aachen.de>, PR libc/842. 
- 
+
+	* nis/nis_call.c: Changes for new 64bit clean NIS+ interface.
+	* nis/nis_callback.c: Likewise.
+	* nis/nis_creategroup.c: Likewise.
+	* nis/nis_defaults.c: Likewise.
+	* nis/nis_intern.h: Likewise.
+	* nis/nis_lookup.c: Likewise.
+	* nis/nis_ping.c: Likewise.
+	* nis/nis_print.c: Likewise.
+	* nis/nis_table.c: Likewise.
+	* nis/nis_util.c: Likewise.
+	* nis/nis_xdr.c: Likewise.
+	* nis/rpcsvc/nis.h: Likewise.
+	* nis/rpcsvc/nis.x: Likewise.
+	* nis/rpcsvc/nis_callback.h: Likewise.
+	* nis/rpcsvc/nis_object.x: Likewise.
+	* nis/rpcsvc/nislib.h: Likewise.
+
+	* nis/rpcsvc/yp.h: Remove casts to (u_long).
+	* nis/rpcsvc/yp_prot.h: Likewise.
+	* nis/rpcsvc/ypupd.h: Likewise.
+	* nis/ypclnt.c: Change %ld to %d in sprintf.
+
+1998-10-29  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/locale.texi (Formatting Numbers): Fix strfmon examples.
+
+1998-10-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/generic/bits/select.h (__FD_ZERO): Change '\0' to plain
+	0, __fd_mask is usually not a char.
+
+1998-10-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sigpending.c (sigpending): Allow
+	compilation on systems without rt_* syscalls (e.g. on Linux 2.0).
+	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask): Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c (__sigsuspend): Likewise
+	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Allow
+	compiling on systems without rt_sigaction syscall.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c (__sigaction):
+	Likewise.
+
+1998-10-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/strptime.c (HERE_D_FMT): Fix typo.
+	Reported by Claus Heine <heine@math1.rwth-aachen.de>, PR libc/842.
+
 1998-10-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/Makefile (tests): Add rules to run gencat on test1.msg.

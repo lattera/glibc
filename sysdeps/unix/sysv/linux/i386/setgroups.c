@@ -36,7 +36,7 @@ setgroups (n, groups)
      size_t n;
      const gid_t *groups;
 {
-  if (n < 0 || n > __sysconf (_SC_NGROUPS_MAX))
+  if (n > (size_t) __sysconf (_SC_NGROUPS_MAX))
     {
       __set_errno (EINVAL);
       return -1;
