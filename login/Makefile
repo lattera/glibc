@@ -42,7 +42,7 @@ vpath %.c programs
 extra-libs      := libutil
 extra-libs-others := $(extra-libs)
 
-libutil-routines:= login login_tty logout logwtmp pty
+libutil-routines:= login login_tty logout logwtmp pty updwtmp
 
 include ../Rules
 

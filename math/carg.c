@@ -27,3 +27,7 @@ __carg (__complex__ double x)
   return __atan2 (__imag__ x, __real__ x);
 }
 weak_alias (__carg, carg)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__carg, __cargl)
+weak_alias (__carg, cargl)
+#endif

@@ -27,7 +27,7 @@
 #include <utmp.h>
 
 #include "utmp-private.h"
-#include "utmpd/utmpd.h"
+#include "programs/utmpd.h"
 
 #ifndef _LIBC
 #define __set_errno(val) errno = (val)

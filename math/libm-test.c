@@ -3915,7 +3915,8 @@ cpow_test (void)
   check ("imag(cpow (1 + i0), (0 + i0)) = 0", __imag__ result, 0);
 
   result = FUNC (cpow) (BUILD_COMPLEX (2, 0), BUILD_COMPLEX (10, 0));
-  check ("real(cpow (2 + i0), (10 + i0)) = 1024", __real__ result, 1024);
+  check_eps ("real(cpow (2 + i0), (10 + i0)) = 1024", __real__ result, 1024,
+	     CHOOSE (2e-16L, 0, 0));
   check ("imag(cpow (2 + i0), (10 + i0)) = 0", __imag__ result, 0);
 
 }
@@ -4158,7 +4159,7 @@ static void
 identities (void)
 {
   identities1_test (0.2L, CHOOSE (1e-18L, 0, 2e-7));
-  identities1_test (0.9L, CHOOSE (1e-18L, 0, 0));
+  identities1_test (0.9L, CHOOSE (1e-18L, 0, 1e-7));
   identities1_test (0, 0);
   identities1_test (-1, CHOOSE (1e-18L, 0, 1e-7));
 

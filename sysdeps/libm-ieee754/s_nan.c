@@ -28,9 +28,6 @@
 double
 __nan (const char *tagp)
 {
-  static const union ieee754_double nan_value =
-  { ieee: { mantissa1: 0, mantissa0: 0x80000, exponent: 0x7ff, negative: 0 } };
-
   if (tagp[0] != '\0')
     {
       char buf[6 + strlen (tagp)];
@@ -38,6 +35,10 @@ __nan (const char *tagp)
       return strtod (buf, NULL);
     }
 
-  return nan_value.d;
+  return NAN;
 }
 weak_alias (__nan, nan)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__nan, __nanl)
+weak_alias (__nan, nanl)
+#endif

@@ -27,3 +27,7 @@ __fmin (double x, double y)
   return (islessequal (x, y) || isnan (y)) ? x : y;
 }
 weak_alias (__fmin, fmin)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__fmim, __fminl)
+weak_alias (__fmin, fminl)
+#endif

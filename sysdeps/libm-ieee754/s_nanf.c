@@ -28,9 +28,6 @@
 float
 __nanf (const char *tagp)
 {
-  static const union ieee754_float nan_value =
-  { ieee: { mantissa: 0x400000, exponent: 0xff, negative: 0 } };
-
   if (tagp[0] != '\0')
     {
       char buf[6 + strlen (tagp)];
@@ -38,6 +35,6 @@ __nanf (const char *tagp)
       return strtof (buf, NULL);
     }
 
-  return nan_value.f;
+  return NANF;
 }
 weak_alias (__nanf, nanf)

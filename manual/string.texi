@@ -890,6 +890,9 @@ specifying a null character as the value of the @var{c} argument.
 @comment BSD
 @deftypefun {char *} index (const char *@var{string}, int @var{c})
 @code{index} is another name for @code{strchr}; they are exactly the same.
+New code should always use @code{strchr} since this name is defined in
+@w{ISO C} while @code{index} is a BSD invention which never was available
+on @w{System V} derived systems.
 @end deftypefun
 
 @comment string.h
@@ -910,6 +913,9 @@ strrchr ("hello, world", 'l')
 @comment BSD
 @deftypefun {char *} rindex (const char *@var{string}, int @var{c})
 @code{rindex} is another name for @code{strrchr}; they are exactly the same.
+New code should always use @code{strrchr} since this name is defined in
+@w{ISO C} while @code{rindex} is a BSD invention which never was available
+on @w{System V} derived systems.
 @end deftypefun
 
 @comment string.h
@@ -1067,13 +1073,14 @@ Here is a simple example showing the use of @code{strtok}.
 
 @dots{}
 
-char string[] = "words separated by spaces -- and, punctuation!";
+const char string[] = "words separated by spaces -- and, punctuation!";
 const char delimiters[] = " .,;:!-";
-char *token;
+char *token, *cp;
 
 @dots{}
 
-token = strtok (string, delimiters);  /* token => "words" */
+cp = strdupa (string);                /* Make writable copy.  */
+token = strtok (cp, delimiters);      /* token => "words" */
 token = strtok (NULL, delimiters);    /* token => "separated" */
 token = strtok (NULL, delimiters);    /* token => "by" */
 token = strtok (NULL, delimiters);    /* token => "spaces" */
@@ -1097,7 +1104,7 @@ pointer.  Calling @code{strtok_r} with a null pointer for
 @var{newstring} and leaving @var{save_ptr} between the calls unchanged
 does the job without limiting reentrancy.
 
-This function was proposed for POSIX.1b and can be found on many systems
+This function is defined in POSIX-1 and can be found on many systems
 which support multi-threading.
 @end deftypefun
 
@@ -1123,14 +1130,14 @@ Here is how the above example looks like when @code{strsep} is used.
 
 @dots{}
 
-char string[] = "words separated by spaces -- and, punctuation!";
+const char string[] = "words separated by spaces -- and, punctuation!";
 const char delimiters[] = " .,;:!-";
 char *running;
 char *token;
 
 @dots{}
 
-running = string;
+running = strdupa (string);
 token = strsep (&running, delimiters);    /* token => "words" */
 token = strsep (&running, delimiters);    /* token => "separated" */
 token = strsep (&running, delimiters);    /* token => "by" */
@@ -1180,13 +1187,66 @@ The function returns a pointer to a static buffer which contains the
 string representing of the encoding of @var{n}.  To encoded a series of
 bytes the use should append the new string to the destination buffer.
 @emph{Warning:} Since a static buffer is used this function should not
-be used in multi-threaded programs.  There is no thread-safe alternatice
+be used in multi-threaded programs.  There is no thread-safe alternative
 to this function in the C library.
 @end deftypefun
+
+Alone the @code{l64a} function is not usable.  To encode arbitrary
+sequences of bytes one needs some more code and this could look like
+this:
+
+@smallexample
+char *
+encode (const void *buf, size_t len)
+@{
+  /* @r{We know in advance how long the buffer has to be.} */
+  unsigned char *in = (unsigned char *) buf;
+  char *out = malloc (6 + ((len + 3) / 4) * 6 + 1);
+  char *cp = out;
+
+  /* @r{Encode the length.} */
+  memcpy (cp, l64a (len), 6);
+  cp += 6;
+
+  while (len > 3)
+    @{
+      unsigned long int n = *in++;
+      n = (n << 8) | *in++;
+      n = (n << 8) | *in++;
+      n = (n << 8) | *in++;
+      len -= 4;
+      /* @r{Using `htonl' is necessary so that the data can be}
+         @r{decoded even on machines with different byte order.} */
+      memcpy (cp, l64a (htonl (n)), 6);
+      cp += 6;
+    @}
+  if (len > 0)
+    @{
+      unsigned long int n = *in++;
+      if (--len > 0)
+        @{
+          n = (n << 8) | *in++;
+          if (--len > 0)
+            n = (n << 8) | *in;
+        @}
+      memcpy (cp, l64a (htonl (n)), 6);
+      cp += 6;
+    @}
+  *cp = '\0';
+  return out;
+@}
+@end smallexample
+
+It is strange that the library does not provide the complete
+functionality needed but so be it.  There are some other encoding
+methods which are much more widely used (UU encoding, Base64 encoding).
+Generally, it is better to use one of these encodings.
 
 To decode data produced with @code{l64a} the following function should be
 used.
 
+@comment stdlib.h
+@comment XPG
 @deftypefun {long int} a64l (const char *@var{string})
 The parameter @var{string} should contain a string which was produced by
 a call to @code{l64a}.  The function processes the next 6 characters and
@@ -1205,17 +1265,17 @@ characters.
 @node Argz and Envz Vectors
 @section Argz and Envz Vectors
 
-@cindex argz vectors
+@cindex argz vectors (string vectors)
 @cindex string vectors, null-character separated
 @cindex argument vectors, null-character separated
 @dfn{argz vectors} are vectors of strings in a contiguous block of
 memory, each element separated from its neighbors by null-characters
 (@code{'\0'}).
 
-@cindex envz vectors
+@cindex envz vectors (environment vectors)
 @cindex environment vectors, null-character separated
 @dfn{Envz vectors} are an extension of argz vectors where each element is a
-name-value pair, separated by a @code{'='} character (as in a unix
+name-value pair, separated by a @code{'='} character (as in a Unix
 environment).
 
 @menu
@@ -1247,13 +1307,17 @@ allocation error occurs.
 @pindex argz.h
 These functions are declared in the standard include file @file{argz.h}.
 
+@comment argz.h
+@comment GNU
 @deftypefun {error_t} argz_create (char *const @var{argv}[], char **@var{argz}, size_t *@var{argz_len})
-The @code{argz_create} function converts the unix-style argument vector
+The @code{argz_create} function converts the Unix-style argument vector
 @var{argv} (a vector of pointers to normal C strings, terminated by
 @code{(char *)0}; @pxref{Program Arguments}) into an argz vector with
 the same elements, which is returned in @var{argz} and @var{argz_len}.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {error_t} argz_create_sep (const char *@var{string}, int @var{sep}, char **@var{argz}, size_t *@var{argz_len})
 The @code{argz_create_sep} function converts the null-terminated string
 @var{string} into an argz vector (returned in @var{argz} and
@@ -1261,14 +1325,18 @@ The @code{argz_create_sep} function converts the null-terminated string
 character @var{sep}.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {size_t} argz_count (const char *@var{argz}, size_t @var{arg_len})
 Returns the number of elements in the argz vector @var{argz} and
 @var{argz_len}.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {void} argz_extract (char *@var{argz}, size_t @var{argz_len}, char **@var{argv})
 The @code{argz_extract} function converts the argz vector @var{argz} and
-@var{argz_len} into a unix-style argument vector stored in @var{argv},
+@var{argz_len} into a Unix-style argument vector stored in @var{argv},
 by putting pointers to every element in @var{argz} into successive
 positions in @var{argv}, followed by a terminator of @code{0}.
 @var{Argv} must be pre-allocated with enough space to hold all the
@@ -1281,6 +1349,8 @@ still active.  This function is useful for passing the elements in
 @var{argz} to an exec function (@pxref{Executing a File}).
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {void} argz_stringify (char *@var{argz}, size_t @var{len}, int @var{sep})
 The @code{argz_stringify} converts @var{argz} into a normal string with
 the elements separated by the character @var{sep}, by replacing each
@@ -1289,20 +1359,26 @@ string) with @var{sep}.  This is handy for printing @var{argz} in a
 readable manner.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {error_t} argz_add (char **@var{argz}, size_t *@var{argz_len}, const char *@var{str})
 The @code{argz_add} function adds the string @var{str} to the end of the
 argz vector @code{*@var{argz}}, and updates @code{*@var{argz}} and
 @code{*@var{argz_len}} accordingly.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {error_t} argz_add_sep (char **@var{argz}, size_t *@var{argz_len}, const char *@var{str}, int @var{delim})
 The @code{argz_add_sep} function is similar to @code{argz_add}, but
 @var{str} is split into separate elements in the result at occurances of
 the character @var{delim}.  This is useful, for instance, for
-adding the components of a unix search path to an argz vector, by using
+adding the components of a Unix search path to an argz vector, by using
 a value of @code{':'} for @var{delim}.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {error_t} argz_append (char **@var{argz}, size_t *@var{argz_len}, const char *@var{buf}, size_t @var{buf_len})
 The @code{argz_append} function appends @var{buf_len} bytes starting at
 @var{buf} to the argz vector @code{*@var{argz}}, reallocating
@@ -1310,6 +1386,8 @@ The @code{argz_append} function appends @var{buf_len} bytes starting at
 @code{*@var{argz_len}}.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {error_t} argz_delete (char **@var{argz}, size_t *@var{argz_len}, char *@var{entry})
 If @var{entry} points to the beginning of one of the elements in the
 argz vector @code{*@var{argz}}, the @code{argz_delete} function will
@@ -1319,6 +1397,8 @@ destructive argz functions usually reallocate their argz argument,
 pointers into argz vectors such as @var{entry} will then become invalid.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {error_t} argz_insert (char **@var{argz}, size_t *@var{argz_len}, char *@var{before}, const char *@var{entry})
 The @code{argz_insert} function inserts the string @var{entry} into the
 argz vector @code{*@var{argz}} at a point just before the existing
@@ -1330,6 +1410,8 @@ is @code{0}, @var{entry} is added to the end instead (as if by
 @var{before} will result in @var{entry} being inserted at the beginning.
 @end deftypefun
 
+@comment argz.h
+@comment GNU
 @deftypefun {char *} argz_next (char *@var{argz}, size_t @var{argz_len}, const char *@var{entry})
 The @code{argz_next} function provides a convenient way of iterating
 over the elements in the argz vector @var{argz}.  It returns a pointer
@@ -1387,6 +1469,8 @@ fail) have a return type of @code{error_t}, and return either @code{0} or
 @pindex envz.h
 These functions are declared in the standard include file @file{envz.h}.
 
+@comment envz.h
+@comment GNU
 @deftypefun {char *} envz_entry (const char *@var{envz}, size_t @var{envz_len}, const char *@var{name})
 The @code{envz_entry} function finds the entry in @var{envz} with the name
 @var{name}, and returns a pointer to the whole entry---that is, the argz
@@ -1394,6 +1478,8 @@ element which begins with @var{name} followed by a @code{'='} character.  If
 there is no entry with that name, @code{0} is returned.
 @end deftypefun
 
+@comment envz.h
+@comment GNU
 @deftypefun {char *} envz_get (const char *@var{envz}, size_t @var{envz_len}, const char *@var{name})
 The @code{envz_get} function finds the entry in @var{envz} with the name
 @var{name} (like @code{envz_entry}), and returns a pointer to the value
@@ -1401,6 +1487,8 @@ portion of that entry (following the @code{'='}).  If there is no entry with
 that name (or only a null entry), @code{0} is returned.
 @end deftypefun
 
+@comment envz.h
+@comment GNU
 @deftypefun {error_t} envz_add (char **@var{envz}, size_t *@var{envz_len}, const char *@var{name}, const char *@var{value})
 The @code{envz_add} function adds an entry to @code{*@var{envz}}
 (updating @code{*@var{envz}} and @code{*@var{envz_len}}) with the name
@@ -1410,6 +1498,8 @@ already exists in @var{envz}, it is removed first.  If @var{value} is
 (mentioned above).
 @end deftypefun
 
+@comment envz.h
+@comment GNU
 @deftypefun {error_t} envz_merge (char **@var{envz}, size_t *@var{envz_len}, const char *@var{envz2}, size_t @var{envz2_len}, int @var{override})
 The @code{envz_merge} function adds each entry in @var{envz2} to @var{envz},
 as if with @code{envz_add}, updating @code{*@var{envz}} and
@@ -1421,6 +1511,8 @@ entry in @var{envz} can prevent an entry of the same name in @var{envz2} from
 being added to @var{envz}, if @var{override} is false.
 @end deftypefun
 
+@comment envz.h
+@comment GNU
 @deftypefun {void} envz_strip (char **@var{envz}, size_t *@var{envz_len})
 The @code{envz_strip} function removes any null entries from @var{envz},
 updating @code{*@var{envz}} and @code{*@var{envz_len}}.

@@ -247,6 +247,10 @@ sb7  = -2.24409524465858183362e+01; /* 0xC03670E2, 0x42712D62 */
 	if(hx>=0) return one-r/x; else return  r/x-one;
 }
 weak_alias (__erf, erf)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__erf, __erfl)
+weak_alias (__erf, erfl)
+#endif
 
 #ifdef __STDC__
 	double __erfc(double x)

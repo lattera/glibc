@@ -30,14 +30,15 @@ __BEGIN_DECLS
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
-/* POSIX Standard approved as IEEE Std 1003.1 as of August, 1988 and
-   extended by P1003.1b (aka POSIX.4).  */
-#define	_POSIX_VERSION	199309L
+/* POSIX Standard approved as ISO/IEC 9945-1 as of August, 1988 and
+   extended by POSIX-1b (aka POSIX-4) and POSIX-1c (aka POSIX threads).  */
+#define	_POSIX_VERSION	199506L
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
 
-#define	_POSIX2_C_VERSION	199209L	/* Invalid until 1003.2 is done.  */
+/* POSIX Standard approved as ISO/IEC 9945-2 as of December, 1993.  */
+#define	_POSIX2_C_VERSION	199209L
 
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
@@ -287,6 +288,7 @@ extern int chdir __P ((__const char *__path));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the process's working directory to the one FD is open on.  */
+extern int __fchdir __P ((int __fd));
 extern int fchdir __P ((int __fd));
 #endif
 

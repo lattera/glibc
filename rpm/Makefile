@@ -9,8 +9,8 @@ include ../Makeconfig
 include $(common-objpfx)soversions.mk
 include $(common-objpfx)version.mk
 
-distinfo := $(common-objpfx)distinfo- \
-	    $(wildcard $(subdirs:%=$(common-objpfx)distinfo-%))
+distinfo := $(common-objpfx)distinfo \
+	    $(wildcard $(subdirs:%=$(common-objpfx)%/distinfo))
 -include $(distinfo)
 
 config = $(config-machine)-$(config-vendor)-$(config-os)
@@ -32,14 +32,15 @@ install-others := $(-install-others) \
 install-sysconf := $(filter $(sysconfdir)/%,$(install-others))
 install-others := $(filter-out $(sysconfdir)/%,$(install-others))
 
-# Add the unversioned lib*.so's to install-lib.
-install-lib += $(install-lib.so)
+# Add the unversioned lib*.so's.
+install-slib = $(install-lib.so)
 
-# For each versioned lib*.so, add three files:
-#   lib*-VERSION.so, lib*.so.MAJOR, and lib*.so
-install-lib += $(foreach lib,$(versioned),\
-			 $(patsubst %.so,%-$(version).so,$(lib)) \
-			 $(lib)$($(lib)-version) $(lib))
+# For each versioned lib*.so, add two files:
+#   lib*-VERSION.so and lib*.so.MAJOR
+install-slib += $(foreach lib,$(versioned),\
+			  $(patsubst %.so,%-$(version).so,$(lib)) \
+			  $(lib)$($(lib)-version))
+install-lib += $(versioned)
 
 # Add libc.a and libc_p.a.
 install-lib += $(foreach o,$(filter-out .so,$(object-suffixes)),\
@@ -48,18 +49,17 @@ install-lib += $(foreach o,$(filter-out .so,$(object-suffixes)),\
 ifeq (yes,$(build-shared))
 # Add libc.so itself, which is a special case in Makerules.
 ifndef libc.so-version
-install-others += $(slibdir)/libc.so
+install-slib += libc.so
 else
-install-others += $(libdir)/libc.so \
-		  $(slibdir)/libc-$(version).so \
-		  $(slibdir)/libc.so$(libc.so-version)
+install-lib += libc.so
+install-slib += libc-$(version).so libc.so$(libc.so-version)
 endif
 endif
 
 
 all: glibc-$(version).$(config).rpm
 
-instvars = include lib bin sbin data others
+instvars = include lib slib bin sbin data others
 
 # Generate the rpm spec file for this configuration.
 $(config): template $(distinfo) Makefile

@@ -34,3 +34,7 @@ __fdim (double x, double y)
   return x < y ? 0 : x - y;
 }
 weak_alias (__fdim, fdim)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__fdim, __fdiml)
+weak_alias (__fdim, fdiml)
+#endif

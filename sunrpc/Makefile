@@ -124,8 +124,6 @@ $(inst_includedir)/rpcsvc/bootparam_prot.h: \
 # Install the rpc data base file.
 $(inst_sysconfdir)/rpc: etc.rpc
 	$(do-install)
-
-defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'
 
 # Generate the rpcsvc headers with rpcgen.
 # We use a stamp file to avoid unnessary recompilation each time rpcgen is

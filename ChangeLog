@@ -1,3 +1,74 @@
+1997-06-04 20:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/string.texi: Add comments to discourage use of index and
+	rindex.
+	(strtok, strsep): Apply function on copy of the strings in example.
+	(l64a): Add example.
+
+	* posix/unistd.h: Correct value for _POSIX_VERSION.
+
+	* sunrpc/Makefile (defines): Remove definition.
+
+	* sysdeps/ieee754/nan.h: Correct typo.
+
+1997-06-04 10:50  Fila Kolodny  <fila@ibi.com>
+
+	* posix/unistd.h: Add definition of __fchdir corresponding to fchdir.
+
+	* login/utmp_daemon.c: Correct location of utmpd.h.
+
+1997-06-03 19:16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules: Rename $(common-objpfx)distinfo-$(subdir) to
+	$(objpfx)distinfo.
+	* rpm/Makefile (distinfo): Adapted.
+
+1997-06-03 18:32  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* rpm/Makefile (install-slib): Collect shared libraries here
+	instead of in install-lib, including libc.
+	(instvars): Add slib.
+
+1997-06-03 18:23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* login/Makefile (libutil-routines): Add updwtmp.
+
+1997-06-03 16:16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* monetary.h: New file, needed for localedata/tst-fmon.c.
+
+1997-06-02 20:31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c (cpow_test): Add epsilon for long double in
+	test for 2^10.
+	(identities): Add epsilon for float in second identity test.
+
+	* sysdeps/m68k/huge_val.h: Change GCC's HUGE_VAL{,F,L} to use
+	DI and SI mode integers instead of bytes.  Fix value of HUGE_VALL.
+
+	* sysdeps/m68k/nan.h: New file.
+
+	* sysdeps/m68k/fpu/__math.h (isgreater, isgreaterequal, isless,
+	islessequal, islessgreater, isunordered): Fix assembler syntax.
+
+	* sysdeps/m68k/fpu/fraiseexcpt.c: Do it right so that gcc doesn't
+	optimize out the operations.
+
+	* sysdeps/libm-ieee754/s_nan.c: Use NaN macro instead of static
+	constant.
+	* sysdeps/libm-ieee754/s_nanf.c: Likewise.
+	* sysdeps/libm-ieee754/s_nanl.c: Likewise.
+
+	* math/carg.c [NO_LONG_DOUBLE]: Add alias for long double
+	function.
+	* sysdeps/libm-ieee754/s_erf.c: Likewise.
+	* sysdeps/libm-ieee754/s_fdim.c: Likewise.
+	* sysdeps/libm-ieee754/s_fmax.c: Likewise.
+	* sysdeps/libm-ieee754/s_fmin.c: Likewise.
+	* sysdeps/libm-ieee754/s_log2.c: Likewise.
+	* sysdeps/libm-ieee754/s_nan.c: Likewise.
+	* sysdeps/libm-ieee754/s_remquo.c: Likewise.
+
 1997-06-03 23:42  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-support.c: Define and initialize _dl_verbose used in

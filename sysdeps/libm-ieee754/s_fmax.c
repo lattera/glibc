@@ -27,3 +27,7 @@ __fmax (double x, double y)
   return (isgreaterequal (x, y) || isnan (y)) ? x : y;
 }
 weak_alias (__fmax, fmax)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__fmax, __fmaxl)
+weak_alias (__fmax, fmaxl)
+#endif

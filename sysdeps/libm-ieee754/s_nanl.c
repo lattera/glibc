@@ -28,10 +28,6 @@
 long double
 __nanl (const char *tagp)
 {
-  static const union ieee854_long_double nan_value =
-  { ieee: { mantissa1: 0, mantissa0: 0xc0000000,
-	    exponent: 0x7fff, negative: 0 } };
-
   if (tagp[0] != '\0')
     {
       char buf[6 + strlen (tagp)];
@@ -39,6 +35,6 @@ __nanl (const char *tagp)
       return strtold (buf, NULL);
     }
 
-  return nan_value.d;
+  return NANL;
 }
 weak_alias (__nanl, nanl)

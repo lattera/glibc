@@ -26,15 +26,19 @@
 
 /* IEEE positive infinity (-HUGE_VAL is negative infinity).  */
 
-#define	__HUGE_VAL_bytes	{ 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 }
-
-#define __huge_val_t	union { unsigned char __c[8]; double __d; }
 #ifdef	__GNUC__
-#define	HUGE_VAL	(__extension__ \
-			 ((__huge_val_t) { __c: __HUGE_VAL_bytes }).__d)
-#else	/* Not GCC.  */
-static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
+
+#define HUGE_VAL					\
+  (__extension__					\
+   ((union { unsigned long long __l; double __d; })	\
+    { __l: 0x7ff0000000000000ULL }).__d)
+
+#else /* not GCC */
+
+static union { unsigned char __c[8]; double __d; } __huge_val =
+  { { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 } };
 #define	HUGE_VAL	(__huge_val.__d)
+
 #endif	/* GCC.  */
 
 
@@ -42,27 +46,28 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 #ifdef __USE_ISOC9X
 
-#define	__HUGE_VALF_bytes	{ 0x7f, 0x80, 0, 0 }
+#ifdef __GNUC__
 
-#define __huge_valf_t	union { unsigned char __c[4]; float __f; }
-#ifdef	__GNUC__
-#define	HUGE_VALF	(__extension__ \
-			 ((__huge_valf_t) { __c: __HUGE_VALF_bytes }).__f)
-#else	/* Not GCC.  */
-static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
+#define HUGE_VALF					\
+  (__extension__					\
+   ((union { unsigned long __l; float __f; })		\
+    { __l: 0x7f800000UL }).__f)
+
+#define HUGE_VALL					\
+  (__extension__					\
+   ((union { unsigned long __l[3]; long double __ld; })	\
+    { __l: { 0x7fff0000UL, 0x80000000UL, 0UL } }).__ld)
+
+#else /* not GCC */
+
+static union { unsigned char __c[4]; float __f; } __huge_valf =
+  { { 0x7f, 0x80, 0, 0 } };
 #define	HUGE_VALF	(__huge_valf.__f)
-#endif	/* GCC.  */
 
-
-#define	__HUGE_VALL_bytes	{ 0x7f, 0xff, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-
-#define __huge_vall_t	union { unsigned char __c[12]; long double __ld; }
-#ifdef	__GNUC__
-#define	HUGE_VALL	(__extension__ \
-			 ((__huge_vall_t) { __c: __HUGE_VALL_bytes }).__ld)
-#else	/* Not GCC.  */
-static __huge_vall_t __huge_vall = { __HUGE_VALL_bytes };
+static union { unsigned char __c[12]; long double __ld; } __huge_vall =
+  { { 0x7f, 0xff, 0, 0, 0x80, 0, 0, 0, 0, 0, 0, 0 } };
 #define	HUGE_VALL	(__huge_vall.__ld)
+
 #endif	/* GCC.  */
 
 #endif	/* __USE_ISOC9X.  */

@@ -836,10 +836,10 @@ ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(..)config.h
 check: tests
 
 .PHONY: TAGS
-TAGS: $(common-objpfx)distinfo-$(subdir) $(..)MakeTAGS
+TAGS: $(objpfx)distinfo $(..)MakeTAGS
 	$(MAKE) $(addprefix -f ,$^) $@
 
-$(..)po/%.pot: $(common-objpfx)distinfo-$(subdir) $(..)MakeTAGS FORCE
+$(..)po/%.pot: $(objpfx)distinfo $(..)MakeTAGS FORCE
 	$(MAKE) $(addprefix -f ,$(filter-out FORCE,$^)) $@
 FORCE:
 
@@ -874,7 +874,7 @@ common-clean: common-mostlyclean
 	-rm -f $(addprefix $(objpfx),$(generated)) $(+depfiles)
 	-rm -fr $(addprefix $(objpfx),$(generated-dirs))
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
-	-rm -f $(common-objpfx)distinfo-$(subdir)
+	-rm -f $(objpfx)distinfo
 
 # Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'
 # for each function which is a stub.  We grovel over all the .d files
@@ -897,7 +897,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Make the distribution tar file.
 
 .PHONY: dist
-dist: $(common-objpfx)distinfo-$(subdir) $(..)Make-dist
+dist: $(objpfx)distinfo $(..)Make-dist
 	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
 
 # Avoid depending on source files found in sysdeps dirs,
@@ -908,14 +908,12 @@ dist: $(filter-out %.c %.S %.s,$(distribute))
 # environment get too large.  Instead, we write all the information into
 # a generated makefile fragment `distinfo', and then include it with -f in
 # the sub-make that makes the distribution (above).
-$(common-objpfx)distinfo-$(subdir): Makefile $(..)Makerules \
-				    $(wildcard $(foreach dir,$(sysdirs),\
-						         $(dir)/Makefile))
+$(objpfx)distinfo: Makefile $(..)Makerules \
+		   $(wildcard $(foreach dir,$(sysdirs),$(dir)/Makefile))
 	$(distinfo-vars)
 	mv -f $@.new $@
-.PHONY: subdir_distinfo distinfo
-subdir_distinfo: distinfo
-distinfo: $(common-objpfx)distinfo-$(subdir)
+.PHONY: subdir_distinfo
+subdir_distinfo: $(objpfx)distinfo
 
 define distinfo-vars
 rm -f $@.new

@@ -129,3 +129,7 @@ static double zero   =  0.0;
 }
 
 weak_alias (__log2, log2)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__log2, __log2l)
+weak_alias (__log2, log2l)
+#endif
