@@ -140,7 +140,7 @@ extern int atoi (__const char *__nptr) __THROW __attribute_pure__;
 /* Convert a string to a long integer.  */
 extern long int atol (__const char *__nptr) __THROW __attribute_pure__;
 
-#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_MISC)
+#if defined __USE_ISOC99 || (defined __GLIBC_HAVE_LONG_LONG && defined __USE_MISC)
 /* Convert a string to a long long integer.  */
 __extension__ extern long long int atoll (__const char *__nptr)
      __THROW __attribute_pure__;
@@ -167,7 +167,7 @@ extern unsigned long int strtoul (__const char *__restrict __nptr,
 				  char **__restrict __endptr, int __base)
      __THROW;
 
-#if defined __GNUC__ && defined __USE_BSD
+#if defined __GLIBC_HAVE_LONG_LONG && defined __USE_BSD
 /* Convert a string to a quadword integer.  */
 __extension__
 extern long long int strtoq (__const char *__restrict __nptr,
@@ -179,7 +179,7 @@ extern unsigned long long int strtouq (__const char *__restrict __nptr,
      __THROW;
 #endif /* GCC and use BSD.  */
 
-#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_MISC)
+#if defined __USE_ISOC99 || (defined __GLIBC_HAVE_LONG_LONG && defined __USE_MISC)
 /* These functions will part of the standard C library in ISO C99.  */
 
 /* Convert a string to a quadword integer.  */

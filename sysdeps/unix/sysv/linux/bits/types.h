@@ -33,7 +33,7 @@ typedef unsigned char __u_char;
 typedef unsigned short __u_short;
 typedef unsigned int __u_int;
 typedef unsigned long __u_long;
-#ifdef __GNUC__
+#ifdef __GLIBC_HAVE_LONG_LONG
 __extension__ typedef unsigned long long int __u_quad_t;
 __extension__ typedef long long int __quad_t;
 #else
@@ -52,7 +52,7 @@ typedef signed short int __int16_t;
 typedef unsigned short int __uint16_t;
 typedef signed int __int32_t;
 typedef unsigned int __uint32_t;
-#ifdef __GNUC__
+#ifdef __GLIBC_HAVE_LONG_LONG
 __extension__ typedef signed long long int __int64_t;
 __extension__ typedef unsigned long long int __uint64_t;
 #endif
@@ -63,7 +63,7 @@ typedef __u_int __uid_t;		/* Type of user identifications.  */
 typedef __u_int __gid_t;		/* Type of group identifications.  */
 typedef __u_long __ino_t;		/* Type of file serial numbers.  */
 typedef __u_int __mode_t;		/* Type of file attribute bitmasks.  */
-typedef __u_int __nlink_t; 		/* Type of file link counts.  */
+typedef __u_int __nlink_t;		/* Type of file link counts.  */
 typedef long int __off_t;		/* Type of file sizes and offsets.  */
 typedef __quad_t __loff_t;		/* Type of file sizes and offsets.  */
 typedef int __pid_t;			/* Type of process identifications.  */
