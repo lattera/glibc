@@ -1,5 +1,10 @@
 2000-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/test-misc.c: Add more tests for nextafter.
+	* sysdeps/i386/fpu/s_nextafterl.c: Handle decrement for x<0 correctly.
+	* sysdeps/ieee754/ldbl-96/math_ldbl.h
+	(ieee_long_double_shape_type): Make sign_exponent element signed.
+
 	* manual/message.texi: Add Estonian to plural overview list.
 	Correct rule for Slavic languages.
 	Patch by Stanislav Brabec <utx@penguin.cz>.

@@ -13,7 +13,7 @@ typedef union
   struct
   {
     unsigned int sign_exponent:16;
-    unsigned int empty:16;
+    int empty:16;
     u_int32_t msw;
     u_int32_t lsw;
   } parts;
@@ -30,7 +30,7 @@ typedef union
   {
     u_int32_t lsw;
     u_int32_t msw;
-    unsigned int sign_exponent:16;
+    int sign_exponent:16;
     unsigned int empty:16;
   } parts;
 } ieee_long_double_shape_type;

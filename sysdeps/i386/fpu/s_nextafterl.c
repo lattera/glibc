@@ -36,8 +36,9 @@ static char rcsid[] = "$NetBSD: $";
 	long double x,y;
 #endif
 {
-	int32_t hx,hy,ix,iy;
-	u_int32_t lx,ly,esx,esy;
+	u_int32_t hx,hy,ix,iy;
+	u_int32_t lx,ly;
+	int32_t esx,esy;
 
 	GET_LDOUBLE_WORDS(esx,hx,lx,x);
 	GET_LDOUBLE_WORDS(esy,hy,ly,y);
@@ -90,7 +91,7 @@ static char rcsid[] = "$NetBSD: $";
 		      else {
 			esx -= 1;
 			hx = hx - 1;
-			if (esx > 0)
+			if ((esx&0x7fff) > 0)
 			  hx |= 0x80000000;
 		      }
 		    } else

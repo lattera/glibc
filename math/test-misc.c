@@ -114,41 +114,138 @@ main (void)
       }
   }
 
-  if (fpclassify (FLT_MIN) != FP_NORMAL)
-    {
-      printf ("fpclassify (FLT_MIN) failed: %d\n", fpclassify (FLT_MIN));
-      result = 1;
-    }
-  if (fpclassify (nextafterf (FLT_MIN, FLT_MIN / 2.0f)) != FP_SUBNORMAL)
-    {
-      printf ("fpclassify (FLT_MIN-epsilon) failed: %d\n",
-	      fpclassify (nextafterf (FLT_MIN, FLT_MIN / 2.0f)));
-      result = 1;
-    }
-  if (fpclassify (DBL_MIN) != FP_NORMAL)
-    {
-      printf ("fpclassify (DBL_MIN) failed: %d\n", fpclassify (DBL_MIN));
-      result = 1;
-    }
-  if (fpclassify (nextafter (DBL_MIN, DBL_MIN / 2.0)) != FP_SUBNORMAL)
-    {
-      printf ("fpclassify (DBL_MIN-epsilon) failed: %d\n",
-	      fpclassify (nextafter (DBL_MIN, DBL_MIN / 2.0)));
-      result = 1;
-    }
+  {
+    float f;
+
+    f = FLT_MIN;
+    if (fpclassify (f) != FP_NORMAL)
+      {
+	printf ("fpclassify (FLT_MIN) failed: %d\n", fpclassify (f));
+	result = 1;
+      }
+    f = nextafterf (f, FLT_MIN / 2.0f);
+    if (fpclassify (f) != FP_SUBNORMAL)
+      {
+	printf ("fpclassify (FLT_MIN-epsilon) failed: %d\n", fpclassify (f));
+	result = 1;
+      }
+    f = nextafterf (f, FLT_MIN);
+    if (fpclassify (f) != FP_NORMAL)
+      {
+	printf ("fpclassify (FLT_MIN-epsilon+epsilong) failed: %d\n",
+		fpclassify (f));
+	result = 1;
+      }
+
+    f = -FLT_MIN;
+    if (fpclassify (f) != FP_NORMAL)
+      {
+	printf ("fpclassify (-FLT_MIN) failed: %d\n", fpclassify (f));
+	result = 1;
+      }
+    f = nextafterf (f, -FLT_MIN / 2.0f);
+    if (fpclassify (f) != FP_SUBNORMAL)
+      {
+	printf ("fpclassify (-FLT_MIN-epsilon) failed: %d\n", fpclassify (f));
+	result = 1;
+      }
+    f = nextafterf (f, -FLT_MIN);
+    if (fpclassify (f) != FP_NORMAL)
+      {
+	printf ("fpclassify (-FLT_MIN-epsilon+epsilong) failed: %d\n",
+		fpclassify (f));
+	result = 1;
+      }
+  }
+  {
+    double d;
+
+    d = DBL_MIN;
+    if (fpclassify (d) != FP_NORMAL)
+      {
+	printf ("fpclassify (DBL_MIN) failed: %d\n", fpclassify (d));
+	result = 1;
+      }
+    d = nextafter (d, DBL_MIN / 2.0);
+    if (fpclassify (d) != FP_SUBNORMAL)
+      {
+	printf ("fpclassify (DBL_MIN-epsilon) failed: %d\n", fpclassify (d));
+	result = 1;
+      }
+    d = nextafter (d, DBL_MIN);
+    if (fpclassify (d) != FP_NORMAL)
+      {
+	printf ("fpclassify (DBL_MIN-epsilon+epsilon) failed: %d\n",
+		fpclassify (d));
+	result = 1;
+      }
+
+    d = -DBL_MIN;
+    if (fpclassify (d) != FP_NORMAL)
+      {
+	printf ("fpclassify (-DBL_MIN) failed: %d\n", fpclassify (d));
+	result = 1;
+      }
+    d = nextafter (d, -DBL_MIN / 2.0);
+    if (fpclassify (d) != FP_SUBNORMAL)
+      {
+	printf ("fpclassify (-DBL_MIN-epsilon) failed: %d\n", fpclassify (d));
+	result = 1;
+      }
+    d = nextafter (d, -DBL_MIN);
+    if (fpclassify (d) != FP_NORMAL)
+      {
+	printf ("fpclassify (-DBL_MIN-epsilon+epsilon) failed: %d\n",
+		fpclassify (d));
+	result = 1;
+      }
+  }
 #ifndef NO_LONG_DOUBLE
-  if (fpclassify (LDBL_MIN) != FP_NORMAL)
-    {
-      printf ("fpclassify (LDBL_MIN) failed: %d\n", fpclassify (LDBL_MIN));
-      result = 1;
-    }
-  if (fpclassify (nextafterl (LDBL_MIN, LDBL_MIN / 2.0)) != FP_SUBNORMAL)
-    {
-      printf ("fpclassify (LDBL_MIN-epsilon) failed: %d (%Lg)\n",
-	      fpclassify (nextafterl (LDBL_MIN, LDBL_MIN / 2.0)),
-	      nextafterl (LDBL_MIN, LDBL_MIN / 2.0));
-      result = 1;
-    }
+  {
+    long double ld;
+
+    ld = LDBL_MIN;
+    if (fpclassify (ld) != FP_NORMAL)
+      {
+	printf ("fpclassify (LDBL_MIN) failed: %d\n", fpclassify (ld));
+	result = 1;
+      }
+    ld = nextafterl (ld, LDBL_MIN / 2.0);
+    if (fpclassify (ld) != FP_SUBNORMAL)
+      {
+	printf ("fpclassify (LDBL_MIN-epsilon) failed: %d (%La)\n",
+		fpclassify (ld), ld);
+	result = 1;
+      }
+    ld = nextafterl (ld, LDBL_MIN);
+    if (fpclassify (ld) != FP_NORMAL)
+      {
+	printf ("fpclassify (LDBL_MIN-epsilon+epsilon) failed: %d (%La)\n",
+		fpclassify (ld), ld);
+	result = 1;
+      }
+
+    ld = -LDBL_MIN;
+    if (fpclassify (ld) != FP_NORMAL)
+      {
+	printf ("fpclassify (-LDBL_MIN) failed: %d\n", fpclassify (ld));
+	result = 1;
+      }
+    ld = nextafterl (ld, -LDBL_MIN / 2.0);
+    if (fpclassify (ld) != FP_SUBNORMAL)
+      {
+	printf ("fpclassify (-LDBL_MIN-epsilon) failed: %d (%La)\n",
+		fpclassify (ld), ld);
+	result = 1;
+      }
+    ld = nextafterl (ld, -LDBL_MIN);
+    if (fpclassify (ld) != FP_NORMAL)
+      {
+	printf ("fpclassify (-LDBL_MIN-epsilon+epsilon) failed: %d (%La)\n",
+		fpclassify (ld), ld);
+	result = 1;
+      }
+  }
 #endif
 
   if (! isnormal (FLT_MIN))
