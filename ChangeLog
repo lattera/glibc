@@ -1,5 +1,8 @@
 2002-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/install.texi: Typographical and grammatical cleanup.
+	Patch by Dennis Grace <dgrace@us.ibm.com>.
+
 	* sunrpc/rpc_svcout.c (write_real_program): Write "result, "
 	parameter if mtflag.  Patch by <jeongyun@innovay.com>.
 
