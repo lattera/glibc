@@ -734,7 +734,7 @@ extern int ttyslot (void) __THROW;
 extern int link (__const char *__from, __const char *__to)
      __THROW __nonnull ((1, 2)) __wur;
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 /* Make a symbolic link to FROM named TO.  */
 extern int symlink (__const char *__from, __const char *__to)
      __THROW __nonnull ((1, 2)) __wur;
@@ -1044,6 +1044,11 @@ extern void swab (__const void *__restrict __from, void *__restrict __to,
 #ifdef __USE_XOPEN
 /* Return the name of the controlling terminal.  */
 extern char *ctermid (char *__s) __THROW __nonnull ((1));
+#endif
+
+/* Define some macros helping to catch buffer overflows.  */
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+# include <bits/unistd.h>
 #endif
 
 __END_DECLS
