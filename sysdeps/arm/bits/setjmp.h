@@ -23,10 +23,14 @@
 #endif
 
 #ifndef _ASM
-/* Jump buffer contains v1-v6, sl, fp, sp, pc and (f4-f7) if we do FP. */
-# if __ARM_USES_FP
-typedef int __jmp_buf[22];
-# else
+/* Jump buffer contains v1-v6, sl, fp, sp and pc.  Other registers are not
+   saved.  */
 typedef int __jmp_buf[10];
-# endif
 #endif
+
+#define __JMP_BUF_SP		8
+
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address) \
+  ((void *) (address) < (void *) (jmpbuf[__JMP_BUF_SP]))
