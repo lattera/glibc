@@ -43,7 +43,7 @@ __libc_tsd_define (static, DL_ERROR)
 #define tsd_setspecific(data)	__libc_tsd_set (DL_ERROR, (data))
 
 
-/* This points to a function which is called when an error is
+/* This points to a function which is called when an continuable error is
    received.  Unlike the handling of `catch' this function may return.
    The arguments will be the `errstring' and `objname'.
 
@@ -84,13 +84,6 @@ _dl_signal_error (int errcode,
 	}
       longjmp (lcatch->env, errcode ?: -1);
     }
-  else if (receiver)
-    {
-      /* We are inside _dl_receive_error.  Call the user supplied
-	 handler and resume the work.  The receiver will still be
-	 installed.  */
-      (*receiver) (errcode, objname, errstring);
-    }
   else
     {
       /* Lossage while resolving the program's own symbols is always fatal.  */
@@ -104,6 +97,25 @@ _dl_signal_error (int errcode,
 			 : ""), "\n", NULL);
     }
 }
+
+
+void
+internal_function
+_dl_signal_cerror (int errcode,
+		   const char *objname,
+		   const char *errstring)
+{
+  if (receiver)
+    {
+      /* We are inside _dl_receive_error.  Call the user supplied
+	 handler and resume the work.  The receiver will still be
+	 installed.  */
+      (*receiver) (errcode, objname, errstring);
+    }
+  else
+    _dl_signal_error (errcode, objname, errstring);
+}
+
 
 int
 internal_function

@@ -96,10 +96,10 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
-	_dl_signal_error (0, (reference_name  && reference_name[0]
-			      ? reference_name
-			      : (_dl_argv[0] ?: "<main program>")),
-			  make_string (undefined_msg, undef_name));
+	_dl_signal_cerror (0, (reference_name  && reference_name[0]
+			       ? reference_name
+			       : (_dl_argv[0] ?: "<main program>")),
+			   make_string (undefined_msg, undef_name));
       *ref = NULL;
       return 0;
     }
@@ -199,29 +199,33 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 	break;
 
       if (res < 0)
-	/* Oh, oh.  The file named in the relocation entry does not
-	   contain the needed symbol.  */
-	_dl_signal_error (0, (reference_name && reference_name[0]
-			      ? reference_name
-			      : (_dl_argv[0] ?: "<main program>")),
-			  make_string ("symbol ", undef_name, ", version ",
-				       version->name,
-				       " not defined in file ",
-				       version->filename,
-				       " with link time reference",
-				       res == -2
-				       ? " (no version symbols)" : ""));
+	{
+	  /* Oh, oh.  The file named in the relocation entry does not
+	     contain the needed symbol.  */
+	  _dl_signal_cerror (0, (reference_name && reference_name[0]
+				 ? reference_name
+				 : (_dl_argv[0] ?: "<main program>")),
+			     make_string ("symbol ", undef_name, ", version ",
+					  version->name,
+					  " not defined in file ",
+					  version->filename,
+					  " with link time reference",
+					  res == -2
+					  ? " (no version symbols)" : ""));
+	  *ref = NULL;
+	  return 0;
+	}
     }
 
   if (current_value.s == NULL)
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
-	_dl_signal_error (0, (reference_name && reference_name[0]
-			      ? reference_name
-			      : (_dl_argv[0] ?: "<main program>")),
-			  make_string (undefined_msg, undef_name,
-				       ", version ", version->name ?: NULL));
+	_dl_signal_cerror (0, (reference_name && reference_name[0]
+			       ? reference_name
+			       : (_dl_argv[0] ?: "<main program>")),
+			   make_string (undefined_msg, undef_name,
+					", version ", version->name ?: NULL));
       *ref = NULL;
       return 0;
     }
@@ -281,9 +285,9 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	  char buf[sizeof undefined_msg + len];
 	  __mempcpy (__mempcpy (buf, undefined_msg, sizeof undefined_msg - 1),
 		     undef_name, len + 1);
-	  _dl_signal_error (0, (reference_name && reference_name[0]
-				? reference_name
-				: (_dl_argv[0] ?: "<main program>")), buf);
+	  _dl_signal_cerror (0, (reference_name && reference_name[0]
+				 ? reference_name
+				 : (_dl_argv[0] ?: "<main program>")), buf);
 	}
       *ref = NULL;
       return 0;

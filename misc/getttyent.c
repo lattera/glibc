@@ -93,7 +93,6 @@ getttyent()
 		if (*p && *p != '#')
 			break;
 	}
-	funlockfile(tf);
 
 	zapchar = 0;
 	tty.ty_name = p;
@@ -124,6 +123,8 @@ getttyent()
 		else
 			break;
 	}
+	/* We can release the lock only here since `zapchar' is global.  */
+	funlockfile(tf);
 
 	if (zapchar == '#' || *p == '#')
 		while ((c = *++p) == ' ' || c == '\t')

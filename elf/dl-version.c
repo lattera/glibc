@@ -93,9 +93,10 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
 	 object was linked against another version of this file.  We
 	 only print a message if verbose output is requested.  */
       if (verbose)
-	_dl_signal_error (0, map->l_name, make_string ("\
+	_dl_signal_cerror (0, map->l_name,
+			   make_string ("\
 no version information available (required by ",
-						       name, ")"));
+					name, ")"));
       return 0;
     }
 
@@ -143,16 +144,16 @@ no version information available (required by ",
   if (weak)
     {
       if (verbose)
-	_dl_signal_error (0, map->l_name,
-			  make_string ("weak version `", string,
-				       "' not found (required by ", name,
-				       ")"));
+	_dl_signal_cerror (0, map->l_name,
+			   make_string ("weak version `", string,
+					"' not found (required by ", name,
+					")"));
       return 0;
     }
 
-  _dl_signal_error (0, map->l_name,
-		    make_string ("version `", string,
-				 "' not found (required by ", name, ")"));
+  _dl_signal_cerror (0, map->l_name,
+		     make_string ("version `", string,
+				  "' not found (required by ", name, ")"));
   return 1;
 }
 

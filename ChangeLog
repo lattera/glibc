@@ -1,4 +1,20 @@
+1999-02-23  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dl-error.c (_dl_signal_cerror): New function.
+	(_dl_signal_error): Don't call receiver function.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Call _dl_signal_cerror
+	instead of _dl_signal_error when reporting references to undefined
+	symbols or versions.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+	* elf/dl-version.c (match_symbol): Likewise.
+
+	* elf/ldsodefs.h: Declare _dl_signal_cerror.
+
 1999-02-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/getttyent.c (getttyent): Release lock on stream later to
+	also protect global variable zapchar.
 
 	* sysdeps/unix/sysv/linux/clock.c: Don't test return value of
 	__times [PR libc/990].

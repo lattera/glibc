@@ -208,6 +208,13 @@ extern void _dl_signal_error (int errcode,
      internal_function
      __attribute__ ((__noreturn__));
 
+/* Like _dl_signal_error, but may return when called in the context of
+   _dl_receive_error.  */
+extern void _dl_signal_cerror (int errcode,
+			       const char *object,
+			       const char *errstring)
+     internal_function;
+
 /* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
    error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
    set to a string constructed from the strings passed to _dl_signal_error,
@@ -219,7 +226,7 @@ extern int _dl_catch_error (char **errstring,
 			    void *args)
      internal_function;
 
-/* Call OPERATE, receiving errors from `dl_signal_error'.  Unlike
+/* Call OPERATE, receiving errors from `dl_signal_cerror'.  Unlike
    `_dl_catch_error' the operation is resumed after the OPERATE
    function returns.
    ARGS is passed as argument to OPERATE.  */
