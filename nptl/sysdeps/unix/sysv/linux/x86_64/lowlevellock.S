@@ -51,24 +51,18 @@ __lll_mutex_lock_wait:
 	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
-	je	1f
-
-	movl	%edx, %eax
-	xchgl	%eax, (%rdi)	/* NB:	 lock is implied */
-
-	testl	%eax, %eax
-	je	2f
+	jne	2f
 
 1:	movq	$SYS_futex, %rax
 	syscall
 
-	movl	%edx, %eax
+2:	movl	%edx, %eax
 	xchgl	%eax, (%rdi)	/* NB:	 lock is implied */
 
 	testl	%eax, %eax
 	jnz	1b
 
-2:	popq	%rdx
+	popq	%rdx
 	popq	%r10
 	retq
 	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait

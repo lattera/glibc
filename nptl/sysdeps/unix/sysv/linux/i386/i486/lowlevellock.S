@@ -51,24 +51,18 @@ __lll_mutex_lock_wait:
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
-	je 1f
-
-	movl	%edx, %eax
-	xchgl	%eax, (%ebx)	/* NB:	 lock is implied */
-
-	testl	%eax, %eax
-	je	2f
+	jne 2f
 
 1:	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
-	movl	%edx, %eax
+2:	movl	%edx, %eax
 	xchgl	%eax, (%ebx)	/* NB:	 lock is implied */
 
 	testl	%eax, %eax
 	jnz,pn	1b
 
-2:	popl	%esi
+	popl	%esi
 	popl	%ebx
 	popl	%edx
 	ret
