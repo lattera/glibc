@@ -389,9 +389,7 @@ enum
 # define N_SIGN_POSN		__N_SIGN_POSN
 #endif
   _NL_MONETARY_CRNCYSTR,
-#ifdef __USE_XOPEN
-# define CRNCYSTR		__CRNCYSTR
-#endif
+#define CRNCYSTR		__CRNCYSTR
   __INT_P_CS_PRECEDES,
 #ifdef __USE_GNU
 # define INT_P_CS_PRECEDES	__INT_P_CS_PRECEDES
@@ -447,18 +445,14 @@ enum
 #ifdef __USE_GNU
 # define DECIMAL_POINT		__DECIMAL_POINT
 #endif
-#ifdef __USE_XOPEN
   RADIXCHAR = __DECIMAL_POINT,
-# define RADIXCHAR		RADIXCHAR
-#endif
+#define RADIXCHAR		RADIXCHAR
   __THOUSANDS_SEP,
 #ifdef __USE_GNU
 # define THOUSANDS_SEP		__THOUSANDS_SEP
 #endif
-#ifdef __USE_XOPEN
   THOUSEP = __THOUSANDS_SEP,
-# define THOUSANDS_SEP		__THOUSANDS_SEP
-#endif
+#define THOUSANDS_SEP		__THOUSANDS_SEP
   __GROUPING,
 #ifdef __USE_GNU
 # define GROUPING		__GROUPING
@@ -468,13 +462,9 @@ enum
   _NL_NUM_LC_NUMERIC,
 
   __YESEXPR = _NL_ITEM (LC_MESSAGES, 0), /* Regex matching ``yes'' input.  */
-#ifdef __USE_GNU
-# define YESEXPR		__YESEXPR
-#endif
+#define YESEXPR			__YESEXPR
   __NOEXPR,			/* Regex matching ``no'' input.  */
-#ifdef __USE_GNU
-# define NOEXPR			__NOEXPR
-#endif
+#define NOEXPR			__NOEXPR
   __YESSTR,			/* Output string for ``yes''.  */
 #ifdef __USE_GNU
 # define YESSTR			__YESSTR
