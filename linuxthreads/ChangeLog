@@ -1,3 +1,7 @@
+2003-02-21  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (install-lib-ldscripts): New variable.
+
 2003-02-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: Avoid short

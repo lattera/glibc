@@ -1,3 +1,7 @@
+2003-02-21  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (install-lib-ldscripts): New variable.
+
 2003-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h: Define INVALID_TD_P and INVALID_NOT_TERMINATED_TD_P.
