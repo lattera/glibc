@@ -543,14 +543,15 @@ GLIBC_2.1 {
     ecb_crypt; endutxent;
 
     # f*
+    fattach; fdetach;
     fgetpos64; fmtmsg; fopen64; freopen64; fseeko; fseeko64; fsetpos64;
     fstatfs64; fstatvfs; fstatvfs64; ftello; ftello64; ftruncate64; ftw64;
     fopen; fclose; fdopen;
 
     # g*
-    gai_strerror; getcontext; getdate; getdate_r; getitimer; getnameinfo;
-    getnetname; getpt; getrlimit64; getrusage; gettimeofday;
-    getutxent; getutxid; getutxline; grantpt;
+    gai_strerror; getcontext; getdate; getdate_r; getitimer; getmsg;
+    getnameinfo; getnetname; getpmsg; getpt; getrlimit64; getrusage;
+    gettimeofday; getutxent; getutxid; getutxline; grantpt;
 
     # New special glibc functions.
     gnu_get_libc_release; gnu_get_libc_version;
@@ -573,7 +574,7 @@ GLIBC_2.1 {
     lockf64; lseek64;
 
     # m*
-    mmap64; mempcpy;
+    makecontext; mmap64; mempcpy;
 
     # n*
     netname2host; netname2user; nftw; nftw64;
@@ -583,20 +584,20 @@ GLIBC_2.1 {
 
     # p*
     passwd2des; pread; pread64; printf_size; printf_size_info;
-    ptsname; ptsname_r; pututxline; pwrite; pwrite64;
+    ptsname; ptsname_r; putmsg; putpmsg; pututxline; pwrite; pwrite64;
 
     # r*
     readdir64; readdir64_r; rtime;
 
     # s*
+    scalbln; scalblnf; scalblnl;
     scandir64; setitimer; setrlimit64; setutxent; settimeofday;
     sighold; sigrelse; sigignore; sigset; statfs64; statvfs; statvfs64;
-    strcasestr; sysv_signal;
+    strcasestr; strtoimax; strtoumax; strverscmp; strfxtime;
+    swapcontext; sysv_signal;
 
     # New RT signal functions.
     sigqueue; sigtimedwait; sigwaitinfo;
-
-    strverscmp; strfxtime;
 
     # t*
     tcgetsid; tdestroy; tmpfile64; truncate64;
@@ -608,8 +609,9 @@ GLIBC_2.1 {
     versionsort; versionsort64;
 
     # w*
-    wait4; wcscasecmp; wcsncasecmp; wcstoll; wcstoull; wcswcs; wmemrtombs;
-    wmemrtowcs; wordexp; wordfree;
+    wait4; waitid; wcscasecmp; wcsncasecmp; wcsnlen; wcstoll;
+    wcstoimax; wcstoumax; wcstoull; wcswcs; wmemrtombs; wmemrtowcs;
+    wordexp; wordfree;
 
     # x*
     xdecrypt; xdr_authdes_cred; xdr_authdes_verf;

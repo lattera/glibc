@@ -1,3 +1,15 @@
+1998-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Add fattach, fdetach, getmsg, getpmsg, makecontext,
+	putmsg, putpmsg, scalbln, scalblnf, scalblnl, strtoimax,
+	strtoumax, swapcontext, waitid, wcsnlen, wcstoimax, wcstoumax with
+	version GLIBC_2.1.
+
+1998-06-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/lang.texi (Range of Type): Change @end table->@end vtable.
+	(Floating Point Parameters): Likewise.
+
 1998-06-01  Gordon Matzigkeit  <gord@profitpress.com>
 
 	* hurd/Makefile (routines): Add cthreads.

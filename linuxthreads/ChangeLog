@@ -1,3 +1,7 @@
+1998-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* attr.c: Correct typo.
+
 1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_free): Unmap guard before the stack.

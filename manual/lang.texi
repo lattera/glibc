@@ -853,7 +853,7 @@ long long int} and @code{unsigned long long int}, respectively.
 
 This is the maximum value that can be represented by a @code{wchar_t}.
 @xref{Wide Char Intro}.
-@end table
+@end vtable
 
 The header file @file{limits.h} also defines some additional constants
 that parameterize various operating system and file system limits.  These
@@ -1218,7 +1218,7 @@ These are similar to @code{FLT_EPSILON}, but for the data types
 @code{double} and @code{long double}, respectively.  The type of the
 macro's value is the same as the type it describes.  The values are not
 supposed to be greater than @code{1E-9}.
-@end table
+@end vtable
 
 @node IEEE Floating Point
 @subsubsection IEEE Floating Point

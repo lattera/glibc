@@ -330,7 +330,7 @@ TRANS particular protocol being used by the socket.  @xref{Socket Options}. */
 #ifdef EPROTONOSUPPORT
 /*
 TRANS The socket domain does not support the requested communications protocol
-TRANS (perhaps because the requested protocol is completely invalid.)
+TRANS (perhaps because the requested protocol is completely invalid).
 TRANS @xref{Creating a Socket}. */
     [ERR_REMAP (EPROTONOSUPPORT)] = N_("Protocol not supported"),
 #endif
