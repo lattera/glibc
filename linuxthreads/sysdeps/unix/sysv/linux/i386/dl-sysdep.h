@@ -1,5 +1,5 @@
 /* System-specific settings for dynamic linker code.  IA-32 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,12 +49,16 @@
 extern void _dl_sysinfo_int80 (void) attribute_hidden;
 # define DL_SYSINFO_DEFAULT (uintptr_t) _dl_sysinfo_int80
 # define DL_SYSINFO_IMPLEMENTATION \
-  asm (".type _dl_sysinfo_int80,@function\n\t"				      \
+  asm (".text\n\t"							      \
+       ".type _dl_sysinfo_int80,@function\n\t"				      \
        ".hidden _dl_sysinfo_int80\n"					      \
+       CFI_STARTPROC "\n"						      \
        "_dl_sysinfo_int80:\n\t"						      \
        "int $0x80;\n\t"							      \
        "ret;\n\t"							      \
-       ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80");
+       CFI_ENDPROC "\n"							      \
+       ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80\n\t"		      \
+       ".previous");
 #endif
 
 #endif	/* dl-sysdep.h */
