@@ -1,3 +1,19 @@
+2000-03-24  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/if_index.c: New file.
+
+	* sysdeps/unix/sysv/linux/net/if.h: Moved to ...
+	* sysdeps/gnu/net/if.h: here.
+	(_IOT_ifconf, _IOT_ifreq): Hurd ioctl type macros moved from ...
+	* sysdeps/mach/hurd/net/if.h: ... here; this file now removed.
+	* sysdeps/generic/net/if.h: New file.  Declares just the standard
+	functions and `struct if_nameindex' type.
+	* socket/Makefile (headers): Add net/if.h here.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Not here.
+	* sysdeps/mach/hurd/Dist: Remove it here.
+	* sysdeps/unix/sysv/linux/Dist: And here.
+	* sysdeps/generic/if_index.c: Include <net/if.h>.
+
 2000-03-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Use D_PTR to

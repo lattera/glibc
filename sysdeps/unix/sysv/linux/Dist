@@ -23,7 +23,6 @@ socketcall.h
 sysctl.c
 termio.h
 net/ethernet.h
-net/if.h
 net/if_arp.h
 net/if_packet.h
 net/if_ppp.h

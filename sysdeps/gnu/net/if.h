@@ -1,4 +1,5 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* net/if.h -- declarations for inquiring about network interfaces
+   Copyright (C) 1997,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,21 +29,40 @@
 enum
   {
     IFF_UP = 0x1,		/* Interface is up.  */
+#define IFF_UP	IFF_UP
     IFF_BROADCAST = 0x2,	/* Broadcast address valid.  */
+#define IFF_BROADCAST	IFF_BROADCAST
     IFF_DEBUG = 0x4,		/* Turn on debugging.  */
+#define IFF_DEBUG	IFF_DEBUG
     IFF_LOOPBACK = 0x8,		/* Is a loopback net.  */
+#define IFF_LOOPBACK	IFF_LOOPBACK
     IFF_POINTOPOINT = 0x10,	/* Interface is point-to-point link.  */
+#define IFF_POINTOPOINT	IFF_POINTOPOINT
     IFF_NOTRAILERS = 0x20,	/* Avoid use of trailers.  */
+#define IFF_NOTRAILERS	IFF_NOTRAILERS
     IFF_RUNNING = 0x40,		/* Resources allocated.  */
+#define IFF_RUNNING	IFF_RUNNING
     IFF_NOARP = 0x80,		/* No address resolution protocol.  */
+#define IFF_NOARP	IFF_NOARP
     IFF_PROMISC = 0x100,	/* Receive all packets.  */
+#define IFF_PROMISC	IFF_PROMISC
+
     /* Not supported */
     IFF_ALLMULTI = 0x200,	/* Receive all multicast packets.  */
+#define IFF_ALLMULTI	IFF_ALLMULTI
 
     IFF_MASTER = 0x400,		/* Master of a load balancer.  */
+#define IFF_MASTER	IFF_MASTER
     IFF_SLAVE = 0x800,		/* Slave of a load balancer.  */
+#define IFF_SLAVE	IFF_SLAVE
 
-    IFF_MULTICAST = 0x1000	/* Supports multicast.  */
+    IFF_MULTICAST = 0x1000,	/* Supports multicast.  */
+#define IFF_MULTICAST	IFF_MULTICAST
+
+    IFF_PORTSEL = 0x2000,	/* Can set media type.  */
+#define IFF_PORTSEL	IFF_PORTSEL
+    IFF_AUTOMEDIA = 0x4000	/* Auto media select active.  */
+#define IFF_AUTOMEDIA	IFF_AUTOMEDIA
   };
 
 /* The ifaddr structure contains information about one address of an
@@ -87,6 +107,7 @@ struct ifmap
 /* Interface request structure used for socket ioctl's.  All interface
    ioctl's must have parameter definitions which begin with ifr_name.
    The remainder may be interface specific.  */
+
 struct ifreq
   {
 #define IFHWADDRLEN	6
@@ -111,7 +132,6 @@ struct ifreq
 	__caddr_t ifru_data;
       } ifr_ifru;
   };
-
 #define ifr_name	ifr_ifrn.ifrn_name	/* interface name 	*/
 #define ifr_hwaddr	ifr_ifru.ifru_hwaddr	/* MAC address 		*/
 #define	ifr_addr	ifr_ifru.ifru_addr	/* address		*/
@@ -124,10 +144,11 @@ struct ifreq
 #define ifr_map		ifr_ifru.ifru_map	/* device map		*/
 #define ifr_slave	ifr_ifru.ifru_slave	/* slave device		*/
 #define	ifr_data	ifr_ifru.ifru_data	/* for use by interface	*/
-#define ifr_ifindex	ifr_ifru..ifru_ivalue    /* interface index      */
+#define ifr_ifindex	ifr_ifru.ifru_ivalue    /* interface index      */
+#define ifr_bandwidth	ifr_ifru.ifru_ivalue	/* link bandwidth	*/
+#define ifr_qlen	ifr_ifru.ifru_ivalue	/* queue length		*/
+#define _IOT_ifreq	_IOT(_IOTS(struct ifreq),1,0,0,0,0) /* not right */
 
-#define _IOT_ifreq \
-_IOT(_IOTS(struct ifreq),1,0,0,0,0)
 
 /* Structure used in SIOCGIFCONF request.  Used to retrieve interface
    configuration for machine (useful for programs which must know all
@@ -144,26 +165,29 @@ struct ifconf
   };
 #define	ifc_buf	ifc_ifcu.ifcu_buf	/* Buffer address.  */
 #define	ifc_req	ifc_ifcu.ifcu_req	/* Array of structures.  */
-#define _IOT_ifconf \
-_IOT(_IOTS(struct ifconf),1,0,0,0,0)
+#define _IOT_ifconf _IOT(_IOTS(struct ifconf),1,0,0,0,0) /* not right */
 
+__BEGIN_DECLS
 
 /* Convert an interface name to an index, and vice versa.  */
 
-unsigned int  if_nametoindex(const char *ifname);
-char  *if_indextoname(unsigned int ifindex, char *ifname);
+extern unsigned int if_nametoindex (__const char *__ifname) __THROW;
+extern char *if_indextoname (unsigned int __ifindex, char *__ifname) __THROW;
 
 /* Return a list of all interfaces and their indices.  */
 
-struct if_nameindex {
-  unsigned int   if_index;  /* 1, 2, ... */
-  char          *if_name;   /* null terminated name: "eth0", .... */
-};
+struct if_nameindex
+  {
+    unsigned int if_index;	/* 1, 2, ... */
+    char *if_name;		/* null terminated name: "eth0", ... */
+  };
 
-struct if_nameindex  *if_nameindex(void);
+extern struct if_nameindex *if_nameindex (void) __THROW;
 
 /* Free the data returned from if_nameindex.  */
 
-void  if_freenameindex(struct if_nameindex *ptr);
+extern void if_freenameindex (struct if_nameindex *__ptr) __THROW;
+
+__END_DECLS
 
 #endif /* net/if.h */

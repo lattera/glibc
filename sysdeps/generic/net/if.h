@@ -1,4 +1,5 @@
-/* Copyright (C) 1997,98,99,2000 Free Software Foundation, Inc.
+/* net/if.h -- declarations for inquiring about network interfaces
+   Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,47 +17,34 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <net/if.h>
-#include <errno.h>
-#include <stddef.h>
+#ifndef _NET_IF_H
 
-unsigned int
-if_nametoindex (const char *ifname)
-{
-  __set_errno (ENOSYS);
-  return 0;
-}
-stub_warning (if_nametoindex)
-
-char *
-if_indextoname (unsigned int ifindex, char *ifname)
-{
-  __set_errno (ENOSYS);
-  return NULL;
-}
-stub_warning (if_indextoname)
-
-void
-if_freenameindex (struct if_nameindex *ifn)
-{
-}
-stub_warning (if_freenameindex)
-
-struct if_nameindex *
-if_nameindex (void)
-{
-  __set_errno (ENOSYS);
-  return NULL;
-}
-stub_warning (if_nameindex)
-#include <stub-tag.h>
+#define _NET_IF_H	1
+#include <features.h>
 
 
-void
-internal_function
-__protocol_available (int *have_inet, int *have_inet6)
-{
-  /* By default we assume that IPv4 is avaialble, IPv6 not.  */
-  *have_inet = 1;
-  *have_inet6 = 0;
-}
+__BEGIN_DECLS
+
+/* Convert an interface name to an index, and vice versa.  */
+
+extern unsigned int if_nametoindex (__const char *__ifname) __THROW;
+extern char *if_indextoname (unsigned int __ifindex, char *__ifname) __THROW;
+
+/* Return a list of all interfaces and their indices.  */
+
+struct if_nameindex
+  {
+    unsigned int if_index;	/* 1, 2, ... */
+    char *if_name;		/* null terminated name: "eth0", ... */
+  };
+
+extern struct if_nameindex *if_nameindex (void) __THROW;
+
+/* Free the data returned from if_nameindex.  */
+
+extern void if_freenameindex (struct if_nameindex *__ptr) __THROW;
+
+__END_DECLS
+
+
+#endif /* net/if.h */
