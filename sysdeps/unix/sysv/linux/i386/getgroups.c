@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,16 +45,16 @@ extern int __libc_missing_32bit_uids;
 int
 __getgroups (int n, gid_t *groups)
 {
-  if (n < 0)
+#if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (getgroups32, 2, n, CHECK_N (groups, n));
+#else
+  if (__builtin_expect (n, 1) < 0)
     {
       __set_errno (EINVAL);
       return -1;
     }
   else
     {
-#if __ASSUME_32BITUIDS > 0
-      return INLINE_SYSCALL (getgroups32, 2, n, CHECK_N (groups, n));
-#else
       int i, ngids;
       __kernel_gid_t kernel_groups[n = MIN (n, __sysconf (_SC_NGROUPS_MAX))];
 # ifdef __NR_getgroups32
@@ -77,8 +77,8 @@ __getgroups (int n, gid_t *groups)
 	for (i = 0; i < ngids; i++)
 	  (__ptrvalue (groups))[i] = kernel_groups[i];
       return ngids;
-#endif
     }
+#endif
 }
 
 weak_alias (__getgroups, getgroups)

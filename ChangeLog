@@ -1,3 +1,8 @@
+2001-03-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/getgroups.c (__getgroups): getgroups32
+	syscall checks for negative n so don't test here as well.
+
 2001-03-23  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (ENTRY): Moved to ...
