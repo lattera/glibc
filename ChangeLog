@@ -1,3 +1,8 @@
+2003-10-02  Jeroen Dekkers  <jeroen@dekkers.cx>
+
+	* sysdeps/mach/hurd/malloc-machine.h: Copy the tsd code from
+        the old thread-m.h header too.
+
 2003-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ): Go

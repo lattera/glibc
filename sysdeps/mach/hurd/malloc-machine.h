@@ -53,6 +53,16 @@
 /* No we're *not* using pthreads.  */
 #define __pthread_initialize ((void (*)(void))0)
 
+/* thread specific data for glibc */
+
+#include <bits/libc-tsd.h>
+
+typedef int tsd_key_t[1];	/* no key data structure, libc magic does it */
+__libc_tsd_define (static, MALLOC)	/* declaration/common definition */
+#define tsd_key_create(key, destr)	((void) (key))
+#define tsd_setspecific(key, data)	__libc_tsd_set (MALLOC, (data))
+#define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (MALLOC))
+
 #include <sysdeps/generic/malloc-machine.h>
 
 #endif /* !defined(_MALLOC_MACHINE_H) */
