@@ -357,10 +357,12 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
   int eflags = 0;
 
   /* Check for out-of-range.  */
-  if (BE (start < 0 || start > length || range < 0, 0))
+  if (BE (start < 0 || start > length, 0))
     return -1;
   if (BE (start + range > length, 0))
     range = length - start;
+  else if (BE (start + range < 0, 0))
+    range = -start;
 
   eflags |= (bufp->not_bol) ? REG_NOTBOL : 0;
   eflags |= (bufp->not_eol) ? REG_NOTEOL : 0;

@@ -1,3 +1,11 @@
+2002-10-01  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex_internal.c (re_string_reconstruct): Reset the member
+	LEN and STOP.
+	* posix/regexec.c (re_search_stub): Remove incorrect condition of
+	"range < 0".
+	Round RANGE in case that it is too small.
+
 2002-10-01  Roland McGrath  <roland@frob.com>
 
 	* config.h.in (NO_HIDDEN): New #undef.
