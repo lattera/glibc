@@ -67,7 +67,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   reldep6mod4.c reldep6mod3.c reldep6mod2.c reldep6mod1.c \
 		   reldep6mod0.c \
 		   unwind-dw2.c unwind-dw2-fde.c unwind.h unwind-pe.h \
-		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c tls.h dl-tls.h
+		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c tls.h dl-tls.h \
+		   tls-macros.h
 
 include ../Makeconfig
 
@@ -117,7 +118,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
-	restest2 next dblload dblunload reldep5 reldep6 tst-tls1
+	restest2 next dblload dblunload reldep5 reldep6 tst-tls1 tst-tls2
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete

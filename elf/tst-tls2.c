@@ -5,9 +5,9 @@
 #include "tls-macros.h"
 
 
-/* Two common 'int' variables in TLS.  */
-COMMON_INT_DEF(foo);
-COMMON_INT_DEF(bar);
+/* Two 'int' variables in TLS.  */
+VAR_INT_DEF(foo);
+VAR_INT_DEF(bar);
 
 
 int

@@ -1,5 +1,11 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/tst-tls1.c: Move TLS helper macros to...
+	* elf/tls-macros.h: ...here.  New file.
+	* elf/tst-tls2.c: New file.
+	* elf/Makefile (tests): Add tst-tls2.
+	(distribute): Add tls-macros.h.
+
 	* po/sv.po: Update from translation team.
 
 	* elf/tst-tls1.c (main): Add complete set of tests.  Split
