@@ -49,7 +49,7 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
       assert (sizeof (sec) >= sizeof (now.tv_sec));
 
       /* Get the current time for this clock.  */
-      if (clock_gettime (clock_id, &now) != 0)
+      if (__builtin_expect (clock_gettime (clock_id, &now), 0) != 0)
 	return errno;
 
       /* Compute the difference.  */
