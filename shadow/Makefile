@@ -28,5 +28,10 @@ routines	= getspent getspnam sgetspent fgetspent putspent \
 
 CFLAGS-getspent_r.c = -fexceptions
 CFLAGS-getspent.c = -fexceptions
+CFLAGS-fgetspent.c = -fexceptions
+CFLAGS-fgetspent_r.c = -fexceptions
+CFLAGS-putspent.c = -fexceptions
+CFLAGS-getspnam.c = -fexceptions
+CFLAGS-getspnam_r.c = -fexceptions
 
 include ../Rules

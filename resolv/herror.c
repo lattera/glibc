@@ -62,6 +62,7 @@ static const char rcsid[] = "$BINDId: herror.c,v 8.11 1999/10/13 16:39:39 vixie 
 #include <unistd.h>
 
 #include <libintl.h>
+#include <not-cancel.h>
 
 const char *h_errlist[] = {
 	N_("Resolver Error 0 (no error)"),
@@ -94,7 +95,7 @@ herror(const char *s) {
 	v++;
 	v->iov_base = "\n";
 	v->iov_len = 1;
-	__writev(STDERR_FILENO, iov, (v - iov) + 1);
+	writev_not_cancel_no_status(STDERR_FILENO, iov, (v - iov) + 1);
 }
 
 /*

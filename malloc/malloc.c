@@ -4139,7 +4139,18 @@ _int_free(mstate av, Void_t* mem)
     if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
       {
 	if (check_action & 1)
-	  fprintf (stderr, "free(): invalid pointer %p!\n", mem);
+	  {
+#ifdef _LIBC
+	    _IO_flockfile (stderr);
+	    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+	    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+#endif
+	    fprintf (stderr, "free(): invalid pointer %p!\n", mem);
+#ifdef _LIBC
+	    ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+	    _IO_funlockfile (stderr);
+#endif
+	  }
 	if (check_action & 2)
 	  abort ();
 	return;
@@ -5108,6 +5119,11 @@ void mSTATs()
 
   if(__malloc_initialized < 0)
     ptmalloc_init ();
+#ifdef _LIBC
+  _IO_flockfile (stderr);
+  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+#endif
   for (i=0, ar_ptr = &main_arena;; i++) {
     (void)mutex_lock(&ar_ptr->mutex);
     mi = mALLINFo(ar_ptr);
@@ -5151,6 +5167,10 @@ void mSTATs()
   fprintf(stderr, "locked waiting   = %10ld\n", stat_lock_wait);
   fprintf(stderr, "locked total     = %10ld\n",
           stat_lock_direct + stat_lock_loop + stat_lock_wait);
+#endif
+#ifdef _LIBC
+  ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+  _IO_funlockfile (stderr);
 #endif
 }
 

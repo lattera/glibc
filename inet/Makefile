@@ -79,6 +79,10 @@ CFLAGS-getservent_r.c = -fexceptions
 CFLAGS-getservent.c = -fexceptions
 CFLAGS-getprtent_r.c = -fexceptions
 CFLAGS-getprtent.c = -fexceptions
+CFLAGS-either_ntoh.c = -fexceptions
+CFLAGS-either_hton.c = -fexceptions
+CFLAGS-getnetgrent.c = -fexceptions
+CFLAGS-getnetgrent_r.c = -fexceptions
 
 endif
 

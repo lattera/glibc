@@ -47,10 +47,15 @@ endif
 
 ifeq ($(have-thread-library),yes)
 
-CFLAGS-getgrgid_r.c = -DUSE_NSCD=1
-CFLAGS-getgrnam_r.c = -DUSE_NSCD=1
+CFLAGS-getgrgid_r.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-getgrnam_r.c = -DUSE_NSCD=1 -fexceptions
 CFLAGS-getgrent_r.c = -fexceptions
 CFLAGS-getgrent.c = -fexceptions
+CFLAGS-fgetgrent.c = -fexceptions
+CFLAGS-fgetgrent_r.c = -fexceptions
+CFLAGS-putgrent.c = -fexceptions
+CFLAGS-initgroups.c = -fexceptions
+CFLAGS-getgrgid.c = -fexceptions
 
 endif
 

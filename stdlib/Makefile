@@ -83,7 +83,6 @@ CFLAGS-bsearch.c = $(exceptions)
 CFLAGS-msort.c = $(exceptions)
 CFLAGS-qsort.c = $(exceptions)
 CFLAGS-system.c = -fexceptions
-CFLAGS-mkstemp.c = -fexceptions
 CFLAGS-fmtmsg.c = -fexceptions
 
 include ../Makeconfig

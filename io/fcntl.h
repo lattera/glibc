@@ -116,17 +116,16 @@ extern int creat64 (__const char *__file, __mode_t __mode);
 # define F_TEST  3	/* Test a region for other processes locks.  */
 
 # ifndef __USE_FILE_OFFSET64
-extern int lockf (int __fd, int __cmd, __off_t __len) __THROW;
+extern int lockf (int __fd, int __cmd, __off_t __len);
 # else
 # ifdef __REDIRECT
-extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len) __THROW,
-		       lockf64);
+extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len), lockf64);
 # else
 #  define lockf lockf64
 # endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int lockf64 (int __fd, int __cmd, __off64_t __len) __THROW;
+extern int lockf64 (int __fd, int __cmd, __off64_t __len);
 # endif
 #endif
 

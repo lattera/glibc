@@ -572,8 +572,6 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 LDLIBS-c.so += $(gnulib)
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
-# Force the backward compatibility EH functions to be linked.
-LDFLAGS-c.so += -u __register_frame
 # Pre-link the objects of libc_pic.a so that we can locally resolve
 # COMMON symbols before we link against ld.so.  This is because ld.so
 # contains some of libc_pic.a already, which will prevent the COMMONs

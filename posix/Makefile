@@ -118,7 +118,7 @@ endif
 endif
 
 CFLAGS-regex.c = -Wno-strict-prototypes
-CFLAGS-getaddrinfo.c = -DRESOLVER
+CFLAGS-getaddrinfo.c = -DRESOLVER -fexceptions
 CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pwrite.c = -fexceptions -fasynchronous-unwind-tables
@@ -132,6 +132,12 @@ CFLAGS-wordexp.c = -fexceptions
 CFLAGS-sysconf.c = -fexceptions
 CFLAGS-pathconf.c = -fexceptions
 CFLAGS-fpathconf.c = -fexceptions
+CFLAGS-spawn.c = -fexceptions
+CFLAGS-spawnp.c = -fexceptions
+CFLAGS-spawni.c = -fexceptions
+CFLAGS-pause.c = -fexceptions
+CFLAGS-glob.c = -fexceptions
+CFLAGS-glob64.c = -fexceptions
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour

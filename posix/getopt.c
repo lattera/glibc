@@ -2,7 +2,7 @@
    NOTE: getopt is now part of the C library, so if you don't know what
    "Keep this file name-space clean" means, talk to drepper@gnu.org
    before changing it!
-   Copyright (C) 1987,88,89,90,91,92,93,94,95,96,98,99,2000,2001,2002
+   Copyright (C) 1987,88,89,90,91,92,93,94,95,96,98,99,2000,2001,2002,2003
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -692,11 +692,18 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	      if (__asprintf (&buf, _("%s: option `%s' is ambiguous\n"),
 			      argv[0], argv[optind]) >= 0)
 		{
+		  _IO_flockfile (stderr);
+
+		  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+		  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
 		  if (_IO_fwide (stderr, 0) > 0)
 		    __fwprintf (stderr, L"%s", buf);
 		  else
 		    fputs (buf, stderr);
+
+		  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+		  _IO_funlockfile (stderr);
 
 		  free (buf);
 		}
@@ -761,10 +768,19 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 #if defined _LIBC && defined USE_IN_LIBIO
 		      if (n >= 0)
 			{
+			  _IO_flockfile (stderr);
+
+			  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+			  ((_IO_FILE *) stderr)->_flags2
+			    |= _IO_FLAGS2_NOTCANCEL;
+
 			  if (_IO_fwide (stderr, 0) > 0)
 			    __fwprintf (stderr, L"%s", buf);
 			  else
 			    fputs (buf, stderr);
+
+			  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+			  _IO_funlockfile (stderr);
 
 			  free (buf);
 			}
@@ -792,10 +808,19 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 %s: option `%s' requires an argument\n"),
 				      argv[0], argv[optind - 1]) >= 0)
 			{
+			  _IO_flockfile (stderr);
+
+			  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+			  ((_IO_FILE *) stderr)->_flags2
+			    |= _IO_FLAGS2_NOTCANCEL;
+
 			  if (_IO_fwide (stderr, 0) > 0)
 			    __fwprintf (stderr, L"%s", buf);
 			  else
 			    fputs (buf, stderr);
+
+			  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+			  _IO_funlockfile (stderr);
 
 			  free (buf);
 			}
@@ -861,10 +886,18 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 #if defined _LIBC && defined USE_IN_LIBIO
 	      if (n >= 0)
 		{
+		  _IO_flockfile (stderr);
+
+		  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+		  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+
 		  if (_IO_fwide (stderr, 0) > 0)
 		    __fwprintf (stderr, L"%s", buf);
 		  else
 		    fputs (buf, stderr);
+
+		  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+		  _IO_funlockfile (stderr);
 
 		  free (buf);
 		}
@@ -919,10 +952,18 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 #if defined _LIBC && defined USE_IN_LIBIO
 	    if (n >= 0)
 	      {
+		_IO_flockfile (stderr);
+
+		int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+		((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+
 		if (_IO_fwide (stderr, 0) > 0)
 		  __fwprintf (stderr, L"%s", buf);
 		else
 		  fputs (buf, stderr);
+
+		((_IO_FILE *) stderr)->_flags2 = old_flags2;
+		_IO_funlockfile (stderr);
 
 		free (buf);
 	      }
@@ -962,10 +1003,18 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 				_("%s: option requires an argument -- %c\n"),
 				argv[0], c) >= 0)
 		  {
+		    _IO_flockfile (stderr);
+
+		    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+		    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+
 		    if (_IO_fwide (stderr, 0) > 0)
 		      __fwprintf (stderr, L"%s", buf);
 		    else
 		      fputs (buf, stderr);
+
+		    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+		    _IO_funlockfile (stderr);
 
 		    free (buf);
 		  }
@@ -1025,10 +1074,18 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		if (__asprintf (&buf, _("%s: option `-W %s' is ambiguous\n"),
 				argv[0], argv[optind]) >= 0)
 		  {
+		    _IO_flockfile (stderr);
+
+		    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+		    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+
 		    if (_IO_fwide (stderr, 0) > 0)
 		      __fwprintf (stderr, L"%s", buf);
 		    else
 		      fputs (buf, stderr);
+
+		    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+		    _IO_funlockfile (stderr);
 
 		    free (buf);
 		  }
@@ -1061,10 +1118,19 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 %s: option `-W %s' doesn't allow an argument\n"),
 					argv[0], pfound->name) >= 0)
 			  {
+			    _IO_flockfile (stderr);
+
+			    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+			    ((_IO_FILE *) stderr)->_flags2
+			      |= _IO_FLAGS2_NOTCANCEL;
+
 			    if (_IO_fwide (stderr, 0) > 0)
 			      __fwprintf (stderr, L"%s", buf);
 			    else
 			      fputs (buf, stderr);
+
+			    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+			    _IO_funlockfile (stderr);
 
 			    free (buf);
 			  }
@@ -1094,10 +1160,19 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 %s: option `%s' requires an argument\n"),
 					argv[0], argv[optind - 1]) >= 0)
 			  {
+			    _IO_flockfile (stderr);
+
+			    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+			    ((_IO_FILE *) stderr)->_flags2
+			      |= _IO_FLAGS2_NOTCANCEL;
+
 			    if (_IO_fwide (stderr, 0) > 0)
 			      __fwprintf (stderr, L"%s", buf);
 			    else
 			      fputs (buf, stderr);
+
+			    ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+			    _IO_funlockfile (stderr);
 
 			    free (buf);
 			  }
@@ -1160,10 +1235,18 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 %s: option requires an argument -- %c\n"),
 				    argv[0], c) >= 0)
 		      {
+			_IO_flockfile (stderr);
+
+			int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+			((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+
 			if (_IO_fwide (stderr, 0) > 0)
 			  __fwprintf (stderr, L"%s", buf);
 			else
 			  fputs (buf, stderr);
+
+			((_IO_FILE *) stderr)->_flags2 = old_flags2;
+			_IO_funlockfile (stderr);
 
 			free (buf);
 		      }

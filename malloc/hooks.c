@@ -106,7 +106,18 @@ __malloc_check_init()
   __realloc_hook = realloc_check;
   __memalign_hook = memalign_check;
   if(check_action & 1)
-    fprintf(stderr, "malloc: using debugging hooks\n");
+    {
+#ifdef _LIBC
+      _IO_flockfile (stderr);
+      int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+      ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+#endif
+      fprintf(stderr, "malloc: using debugging hooks\n");
+#ifdef _LIBC
+      ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+      _IO_funlockfile (stderr);
+#endif
+    }
 }
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
@@ -224,7 +235,18 @@ top_check()
      t == initial_top(&main_arena)) return 0;
 
   if(check_action & 1)
-    fprintf(stderr, "malloc: top chunk is corrupt\n");
+    {
+#ifdef _LIBC
+      _IO_flockfile (stderr);
+      int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+      ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+#endif
+      fprintf(stderr, "malloc: top chunk is corrupt\n");
+#ifdef _LIBC
+      ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+      _IO_funlockfile (stderr);
+#endif
+    }
   if(check_action & 2)
     abort();
 
@@ -278,7 +300,18 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
   if(!p) {
     (void)mutex_unlock(&main_arena.mutex);
     if(check_action & 1)
-      fprintf(stderr, "free(): invalid pointer %p!\n", mem);
+      {
+#ifdef _LIBC
+	_IO_flockfile (stderr);
+	int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+	((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+#endif
+	fprintf(stderr, "free(): invalid pointer %p!\n", mem);
+#ifdef _LIBC
+	((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+	_IO_funlockfile (stderr);
+#endif
+      }
     if(check_action & 2)
       abort();
     return;
@@ -315,7 +348,18 @@ realloc_check(oldmem, bytes, caller)
   (void)mutex_unlock(&main_arena.mutex);
   if(!oldp) {
     if(check_action & 1)
-      fprintf(stderr, "realloc(): invalid pointer %p!\n", oldmem);
+      {
+#ifdef _LIBC
+	_IO_flockfile (stderr);
+	int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+	((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+#endif
+	fprintf(stderr, "realloc(): invalid pointer %p!\n", oldmem);
+#ifdef _LIBC
+	((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+	_IO_funlockfile (stderr);
+#endif
+      }
     if(check_action & 2)
       abort();
     return malloc_check(bytes, NULL);

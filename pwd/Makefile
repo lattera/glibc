@@ -36,6 +36,7 @@ CFLAGS-getpwuid_r.c = -DUSE_NSCD=1
 CFLAGS-getpwnam_r.c = -DUSE_NSCD=1
 CFLAGS-getpwent_r.c = -fexceptions
 CFLAGS-getpwent.c = -fexceptions
+CFLAGS-getpw.c = -fexceptions
 
 endif
 

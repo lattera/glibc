@@ -88,6 +88,7 @@ CFLAGS-mkstemp.c = -fexceptions
 CFLAGS-mkstemp64.c = -fexceptions
 CFLAGS-getsysstats.c = -fexceptions
 CFLAGS-getusershell.c = -fexceptions
+CFLAGS-err.c = -fexceptions
 
 include ../Rules
 

@@ -71,6 +71,10 @@ CFLAGS-statfs.c = -fexceptions
 CFLAGS-fstatfs.c = -fexceptions
 CFLAGS-statvfs.c = -fexceptions
 CFLAGS-fstatvfs.c = -fexceptions
+CFLAGS-fts.c = -fexceptions
+CFLAGS-lockf.c = -fexceptions
+CFLAGS-posix_fallocate.c = -fexceptions
+CFLAGS-posix_fallocate64.c = -fexceptions
 
 CFLAGS-test-stat.c = -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c = -D_LARGEFILE64_SOURCE

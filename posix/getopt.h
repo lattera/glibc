@@ -1,5 +1,5 @@
 /* Declarations for getopt.
-   Copyright (C) 1989-1994, 1996-1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1989-1994, 1996-1999,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,14 @@
    doesn't flood the namespace with stuff the way some other headers do.)  */
 #if !defined __GNU_LIBRARY__
 # include <ctype.h>
+#endif
+
+#ifndef __THROW
+# if defined __cplusplus && __GNUC_PREREQ (2,8)
+#  define __THROW	throw ()
+# else
+#  define __THROW
+# endif
 #endif
 
 #ifdef	__cplusplus
@@ -142,7 +150,8 @@ struct option
 /* Many other libraries have conflicting prototypes for getopt, with
    differences in the consts, in stdlib.h.  To avoid compilation
    errors, only prototype getopt for the GNU C library.  */
-extern int getopt (int ___argc, char *const *___argv, const char *__shortopts);
+extern int getopt (int ___argc, char *const *___argv, const char *__shortopts)
+       __THROW;
 # else /* not __GNU_LIBRARY__ */
 extern int getopt ();
 # endif /* __GNU_LIBRARY__ */
@@ -150,10 +159,12 @@ extern int getopt ();
 # ifndef __need_getopt
 extern int getopt_long (int ___argc, char *const *___argv,
 			const char *__shortopts,
-		        const struct option *__longopts, int *__longind);
+		        const struct option *__longopts, int *__longind)
+       __THROW;
 extern int getopt_long_only (int ___argc, char *const *___argv,
 			     const char *__shortopts,
-		             const struct option *__longopts, int *__longind);
+		             const struct option *__longopts, int *__longind)
+       __THROW;
 
 /* Internal only.  Users should not call this directly.  */
 extern int _getopt_internal (int ___argc, char *const *___argv,

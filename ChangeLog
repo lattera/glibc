@@ -1,3 +1,55 @@
+2003-09-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* grp/Makefile (CFLAGS-getgrgid_r.c, CFLAGS-getgrnam_r.c,
+	CFLAGS-fgetgrent.c, CFLAGS-fgetgrent_r.c, CFLAGS-putgrent.c,
+	CFLAGS-initgroups.c, CFLAGS-getgrgid.c): Add -fexceptions.
+	* inet/Makefile (CFLAGS-either_ntoh.c, CFLAGS-either_hton.c,
+	CFLAGS-getnetgrent.c, CFLAGS-getnetgrent_r.c): Likewise.
+	* io/Makefile (CFLAGS-posix_fallocate.c, CFLAGS-posix_fallocate64.c):
+	Likewise.
+	* misc/Makefile (CFLAGS-err.c): Likewise.
+	* posix/Makefile (CFLAGS-getaddrinfo.c, CFLAGS-spawn.c,
+	CFLAGS-spawnp.c, CFLAGS-spawni.c, CFLAGS-pause.c, CFLAGS-glob.c,
+	CFLAGS-glob64.c): Likewise.
+	* pwd/Makefile (CFLAGS-getpw.c): Likewise.
+	* shadow/Makefile (CFLAGS-fgetspent.c, CFLAGS-fgetspent_r.c,
+	CFLAGS-putspent.c, CFLAGS-getspnam.c, CFLAGS-getspnam_r.c): Likewise.
+	* stdio-common/Makefile (CFLAGS-cuserid.c): Likewise.
+	* sunrpc/Makefile (CFLAGS-openchild.c): Likewise.
+
+	* stdlib/Makefile (CFLAGS-mkstemp.c): Remove definition.
+
+	* libio/stdio.h: Remove __THROW from cuserid prototype.
+
+	* locale/loadarchive.c: Use only non-cancelable interfaces.
+	* resolv/herror.c (herror): Likewise.
+
+	* malloc/hooks.c: Before using IO stream mark stream so it uses
+	only non-cancelable interfaces.
+	* malloc/malloc.c: Likewise.
+	* posix/getopt.c: Likewise.
+
+
+2003-09-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makerules (LDFLAGS-c.so): Remove -u __register_frame.
+
+2003-09-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/stdio_ext.h: Mark most functions with __THROW.
+
+	* misc/err.h: Remove __THROW from all prototypes.
+
+	* posix/getopt.h (__THROW): Define if not already defined.  Add
+	__THROW to the getopt functions.
+
+2003-09-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/Makefile (CFLAGS-lockf.c): Add -fexceptions.
+	(CFLAGS-fts.c): Likewise.
+	* io/fcntl.h: Remove __THROW from lockf prototypes.
+	* io/fts.h: Remove most __THROW.
+
 2003-09-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/tls-macros.h (TLS_IE): Add a stop bit for ia64.
