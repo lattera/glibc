@@ -206,7 +206,7 @@ do_test (void)
   if (timer_create (CLOCK_REALTIME, &ev, &timer_none) != 0)
     {
       printf ("*** timer_create for timer_none failed: %m\n");
-      result = 1;
+      return 1;
     }
 
   struct sigaction sa = { .sa_sigaction = sig1_handler,
@@ -223,7 +223,7 @@ do_test (void)
   if (timer_create (CLOCK_REALTIME, &ev, &timer_sig1) != 0)
     {
       printf ("*** timer_create for timer_sig1 failed: %m\n");
-      result = 1;
+      return 1;
     }
 
   memset (&ev, 0x33, sizeof (ev));
@@ -233,7 +233,7 @@ do_test (void)
   if (timer_create (CLOCK_REALTIME, &ev, &timer_sig2) != 0)
     {
       printf ("*** timer_create for timer_sig2 failed: %m\n");
-      result = 1;
+      return 1;
     }
 
   memset (&ev, 0x44, sizeof (ev));
@@ -244,7 +244,7 @@ do_test (void)
   if (timer_create (CLOCK_REALTIME, &ev, &timer_thr1) != 0)
     {
       printf ("*** timer_create for timer_thr1 failed: %m\n");
-      result = 1;
+      return 1;
     }
 
   pthread_attr_t nattr;
@@ -263,7 +263,7 @@ do_test (void)
   if (timer_create (CLOCK_REALTIME, &ev, &timer_thr2) != 0)
     {
       printf ("*** timer_create for timer_thr2 failed: %m\n");
-      result = 1;
+      return 1;
     }
 
   int ret = timer_getoverrun (timer_thr1);

@@ -40,7 +40,10 @@ do_test (void)
       printf ("cnt = %d\n", i);
 
       if (timer_create (CLOCK_REALTIME, &sigev, &timerId) < 0)
-	perror ("timer_create");
+	{
+	  perror ("timer_create");
+	  continue;
+	}
 
       res = timer_settime (timerId, 0, &itval, NULL);
       if (res < 0)

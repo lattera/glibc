@@ -12,10 +12,12 @@
 
 2004-08-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* rt/tst-timer2.c (do_test): If timer_create fails, just continue.
+	* rt/tst-timer4.c (do_test): If one of the timer_create calls fails,
+	return 1 immediately.
+
 	* time/tzfile.c (__tzfile_read): Free transitions only if it will
 	not be reused.
-
-2004-08-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c: Include <sys/param.h>.
 	* sysdeps/ieee754/dbl-64/mpa.h (MAX, MIN): Macros removed.
