@@ -1,3 +1,9 @@
+2005-09-05  Richard Henderson  <rth@redhat.com>
+	                                                                        
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (SINGLE_THREAD_P):
+	Move definition inside libpthread, libc, librt check.  Provide
+	definition for rtld.
+
 2004-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/jmpbuf-unwind.h: Define __libc_unwind_longjmp.
@@ -2217,8 +2223,8 @@
 
 	* sysdeps/alpha/elf/pt-initfini.c: Avoid .ent/.end.
 	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (lll_futex_wait,
-        lll_futex_timed_wait, lll_futex_wake, lll_futex_requeue): On success
-        return actual return value from the syscall, not 0.
+	lll_futex_timed_wait, lll_futex_wake, lll_futex_requeue): On success
+	return actual return value from the syscall, not 0.
 
 2003-07-07  Ulrich Drepper  <drepper@redhat.com>
 
@@ -2830,7 +2836,7 @@
 
 	* sysdeps/sh/tcb-offsets.sym: Define MUTEX_FUTEX.
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
-        Add __mutex field.
+	Add __mutex field.
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (SYSCALL_WITH_INST_PAD):
 	Define.
 	(lll_futex_wait, lll_futex_wake): Define.
