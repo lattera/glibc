@@ -129,6 +129,10 @@ prune_cache (struct database *table, time_t now)
   size_t first = cnt + 1;
   size_t last = 0;
 
+  /* If this table is not actually used don't do anything.  */
+  if (cnt == 0)
+    return;
+
   /* If we check for the modification of the underlying file we invalidate
      the entries also in this case.  */
   if (table->check_file)

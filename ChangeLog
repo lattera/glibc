@@ -1,10 +1,13 @@
 1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/cache.c (prune_cache): The table might not be unused.  In
+	this case do nothing.
+
 	* catgets/gencat.c (read_input_file): Don't drop white spaces
 	between number/identifier and string.
 	Patch by Dima Barsky <dima@pwd.hp.com>.
 	If no white space at all follows number/identifier remove existing
-	message with the number/ientifier.
+	message with the number/identifier.
 
 1999-04-14  H.J. Lu  <hjl@gnu.org>
 
