@@ -5,7 +5,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 #   /lib/modules/$(uname -r)/build/include
 # Check whether this directory is available.
 if test -z "$sysheaders" &&
-   test $cross_compiling" = no &&
+   test "x$cross_compiling" = xno &&
    test -d /lib/modules/`uname -r`/build/include; then
   sysheaders="/lib/modules/`uname -r`/build/include"
   ccheaders=`$CC -print-file-name=include`

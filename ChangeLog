@@ -1,5 +1,8 @@
 2002-10-25  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/configure.in: Fix typo in last change.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 	* sysdeps/generic/ldsodefs.h: Remove [! SHARED] conditional from
 	_dl_starting_up decl.
 
