@@ -1,3 +1,12 @@
+2005-01-16  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/rewinddir.c: Reset filepos.
+	* dirent/tst-seekdir.c: Check telldir value after calling rewinddir.
+
+2005-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-auditmod1.c: Reduce duplication.
+
 2005-01-16  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/dl-machine.h: Remove trampoline code.  Define

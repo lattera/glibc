@@ -11,8 +11,23 @@ main (int argc, char *argv[])
   int i = 0;
   int result = 0;
   struct dirent *dp;
+  long int save0;
+  long int rewind;
 
   dirp = opendir (".");
+  if (dirp == NULL)
+    {
+      printf ("opendir failed: %m\n");
+      return 1;
+    }
+
+  save0 = telldir (dirp);
+  if (save0 == -1)
+    {
+      printf ("telldir failed: %m\n");
+      result = 1;
+    }
+
   for (dp = readdir (dirp); dp != NULL; dp = readdir (dirp))
     {
       /* save position 3 (after fourth entry) */
@@ -44,6 +59,19 @@ main (int argc, char *argv[])
   for (dp = readdir (dirp); dp != NULL; dp = readdir (dirp))
     printf ("%s\n", dp->d_name);
 
+  /* Check rewinddir */
+  rewinddir (dirp);
+  rewind = telldir (dirp);
+  if (rewind == -1)
+    {
+      printf ("telldir failed: %m\n");
+      result = 1;
+    }
+  else if (save0 != rewind)
+    {
+      printf ("rewinddir didn't reset directory stream\n");
+      result = 1;
+    }
 
   closedir (dirp);
   return result;
