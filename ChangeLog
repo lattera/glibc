@@ -1,5 +1,28 @@
 2000-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/findlocale.c (free_mem): We can remove NODELETE marked
+	data, just not the C locale data.
+
+	* intl/tst-gettext.c: Use setlocale() in addition to setting envvar.
+	* intl/tst-gettext.sh: Copy locale data if necessary.
+	* intl/Makefile (generated-dirs): Add localedir.
+
+	* intl/dcigettext.c (guess_category_value): For libc always use
+	the setlocale() method.
+
+	* intl/Makefile: Add rules to build, run and, distribute  tst-gettext2.
+	* intl/tst-gettext2.c: New file.
+	* intl/tst-gettext2.sh: New file.
+	* intl/tstlang1.po: New file.
+	* intl/tstlang2.po: New file.
+	Patch by Andreas Jaeger <aj@suse.de>.
+
+2000-10-26  GOTO Masanori  <gotom@debian.or.jp>
+
+	* intl/locale.alias: Add ja_JP.ujis alias.
+
+2000-10-30  Ulrich Drepper  <drepper@redhat.com>
+
 	* locale/findlocale.c (_nl_find_locale): Don't store normalized
 	name in *NAME.
 

@@ -1079,7 +1079,7 @@ guess_category_value (category, categoryname)
   /* `LANGUAGE' is not set.  So we have to proceed with the POSIX
      methods of looking to `LC_ALL', `LC_xxx', and `LANG'.  On some
      systems this can be done by the `setlocale' function itself.  */
-#if defined HAVE_SETLOCALE && defined HAVE_LC_MESSAGES && defined HAVE_LOCALE_NULL
+#if defined _LIBC || (defined HAVE_SETLOCALE && defined HAVE_LC_MESSAGES && defined HAVE_LOCALE_NULL)
   return setlocale (category, NULL);
 #else
   /* Setting of LC_ALL overwrites all other.  */

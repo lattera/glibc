@@ -52,6 +52,7 @@ italian         it_IT.ISO-8859-1
 japanese	ja_JP.eucJP
 japanese.euc	ja_JP.eucJP
 ja_JP		ja_JP.eucJP
+ja_JP.ujis	ja_JP.eucJP
 japanese.sjis	ja_JP.SJIS
 korean		ko_KR.eucKR
 korean.euc 	ko_KR.eucKR

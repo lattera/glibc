@@ -106,6 +106,7 @@ main (int argc, char *argv[])
   /* Now the same tests with LC_ALL deciding.  */
   unsetenv ("LANGUAGE");
   setenv ("LC_ALL", "existing-locale", 1);
+  setlocale (LC_ALL, "");
   puts ("test `gettext' with LC_ALL set");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
@@ -119,13 +120,13 @@ main (int argc, char *argv[])
      LC_MESSAGES category.  We leave this value set for the `dgettext'
      and `dcgettext' tests.  */
   textdomain ("non-existing-domain");
-  puts ("test `gettext' with LANGUAGE set");
+  puts ("test `gettext' with LC_ALL deciding");
   if (negative_gettext_test () != 0)
     {
       puts ("FAILED");
       result = 1;
     }
-  puts ("test `dgettext' with LANGUAGE set");
+  puts ("test `dgettext' with LC_ALL deciding");
   if (positive_dgettext_test ("existing-domain") != 0)
     {
       puts ("FAILED");
@@ -135,8 +136,11 @@ main (int argc, char *argv[])
   /* Now the same tests with LC_MESSAGES deciding.  */
   unsetenv ("LC_ALL");
   setenv ("LC_MESSAGES", "existing-locale", 1);
+  setlocale (LC_MESSAGES, "");
   setenv ("LC_TIME", "existing-locale", 1);
+  setlocale (LC_TIME, "");
   setenv ("LC_NUMERIC", "non-existing-locale", 1);
+  setlocale (LC_NUMERIC, "");
   puts ("test `gettext' with LC_ALL set");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
@@ -150,33 +154,33 @@ main (int argc, char *argv[])
      LC_MESSAGES category.  We leave this value set for the `dgettext'
      and `dcgettext' tests.  */
   textdomain ("non-existing-domain");
-  puts ("test `gettext' with LANGUAGE set");
+  puts ("test `gettext' with LC_xxx deciding");
   if (negative_gettext_test () != 0)
     {
       puts ("FAILED");
       result = 1;
     }
-  puts ("test `dgettext' with LANGUAGE set");
+  puts ("test `dgettext' with LC_xxx deciding");
   if (positive_dgettext_test ("existing-domain") != 0)
     {
       puts ("FAILED");
       result = 1;
     }
-  puts ("test `dcgettext' with LANGUAGE set (LC_MESSAGES)");
+  puts ("test `dcgettext' with category == LC_MESSAGES");
   if (positive_dcgettext_test ("existing-domain", LC_MESSAGES) != 0)
     {
       puts ("FAILED");
       result = 1;
     }
   /* Try a different category.  For this we also switch the domain.  */
-  puts ("test `dcgettext' with LANGUAGE set (LC_TIME)");
+  puts ("test `dcgettext' with LANGUAGE == LC_TIME");
   if (positive_dcgettext_test ("existing-time-domain", LC_TIME) != 0)
     {
       puts ("FAILED");
       result = 1;
     }
   /* This time use a category for which there is no catalog.  */
-  puts ("test `dcgettext' with LANGUAGE set (LC_NUMERIC)");
+  puts ("test `dcgettext' with LANGUAGE == LC_NUMERIC");
   if (negative_dcgettext_test ("existing-domain", LC_NUMERIC) != 0)
     {
       puts ("FAILED");
@@ -186,10 +190,11 @@ main (int argc, char *argv[])
   /* Now the same tests with LANG deciding.  */
   unsetenv ("LC_MESSAGES");
   setenv ("LANG", "existing-locale", 1);
+  setlocale (LC_ALL, "");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
   textdomain ("existing-domain");
-  puts ("test `gettext' with LC_ALL set");
+  puts ("test `gettext' with LANG set");
   if (positive_gettext_test () != 0)
     {
       puts ("FAILED");
@@ -199,18 +204,20 @@ main (int argc, char *argv[])
      LC_MESSAGES category.  We leave this value set for the `dgettext'
      and `dcgettext' tests.  */
   textdomain ("non-existing-domain");
-  puts ("test `gettext' with LANGUAGE set");
+  puts ("test `gettext' with LANG set");
   if (negative_gettext_test () != 0)
     {
       puts ("FAILED");
       result = 1;
     }
-  puts ("test `dgettext' with LANGUAGE set");
+  puts ("test `dgettext' with LANG set");
   if (positive_dgettext_test ("existing-domain") != 0)
     {
       puts ("FAILED");
       result = 1;
     }
+
+  setlocale (LC_ALL, "C");
 
   return result;
 }

@@ -253,7 +253,7 @@ free_mem (void)
 	    struct loaded_l10nfile *here = runp;
 	    struct locale_data *data = (struct locale_data *) runp->data;
 
-	    if (data != NULL && data->usage_count != UNDELETABLE)
+	    if (data != NULL && data != _nl_C[category])
 	      _nl_unload_locale (data);
 	    runp = runp->next;
 	    free ((char *) here->filename);

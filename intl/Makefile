@@ -26,9 +26,9 @@ routines = bindtextdom dcgettext dgettext gettext	\
 	   l10nflist explodename plural
 distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias \
 	     plural.y po2test.sed tst-gettext.sh tst-translit.sh	\
-	     translit.po
+	     translit.po tst-gettext2.sh tstlang1.po tstlang2.po
 
-test-srcs := tst-gettext tst-translit
+test-srcs := tst-gettext tst-translit tst-gettext2
 tests = tst-ngettext
 
 before-compile = $(objpfx)msgs.h
@@ -36,7 +36,7 @@ before-compile = $(objpfx)msgs.h
 install-others = $(inst_msgcatdir)/locale.alias
 
 generated = msgs.h mtrace-tst-gettext tst-gettext.mtrace
-generated-dirs := domaindir
+generated-dirs := domaindir localedir
 
 plural.c: plural.y
 	$(YACC) $(YFLAGS) $@ $^
@@ -50,16 +50,18 @@ include ../Rules
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 ifneq ($(strip $(MSGFMT)),:)
-.PHONY: do-gettext-test do-translit-test
-tests: $(objpfx)mtrace-tst-gettext do-translit-test
+tests: $(objpfx)mtrace-tst-gettext $(objpfx)tst-translit.out \
+       $(objpfx)tst-gettext2.out
 $(objpfx)mtrace-tst-gettext: $(objpfx)tst-gettext.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/ \
 	  $(objpfx)tst-gettext.mtrace
- do-translit-test: $(objpfx)tst-translit.out
 $(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
+$(objpfx)tst-gettext2.out: tst-gettext2.sh $(objpfx)tst-gettext2
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/ \
+		 $(objpfx)tst-gettext
 endif
 endif
 endif
@@ -69,6 +71,7 @@ $(objpfx)msgs.h: po2test.sed ../po/de.po
 	sed -f $^ > $@
 
 CFLAGS-tst-gettext.c = -DTESTSTRS_H=\"$(objpfx)msgs.h\"
+CFLAGS-tst-gettext2.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
 
 $(objpfx)tst-translit.out: $(objpfx)tst-gettext.out

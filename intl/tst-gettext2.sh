@@ -31,34 +31,24 @@ export LC_ALL
 
 # Generate the test data.
 test -d ${objpfx}domaindir || mkdir ${objpfx}domaindir
-test -d ${objpfx}localedir || mkdir ${objpfx}localedir
-# Create the domain directories.
-test -d ${objpfx}domaindir/existing-locale || mkdir ${objpfx}domaindir/existing-locale
-test -d ${objpfx}domaindir/existing-locale/LC_MESSAGES || mkdir ${objpfx}domaindir/existing-locale/LC_MESSAGES
-test -d ${objpfx}domaindir/existing-locale/LC_TIME || mkdir ${objpfx}domaindir/existing-locale/LC_TIME
 # Create the locale directories.
-test -d ${objpfx}localedir/existing-locale || {
-  mkdir ${objpfx}localedir/existing-locale
-  for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMEIRC PAPER TELEPHONE TIME; do
-    cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_$f \
-       ${objpfx}localedir/existing-locale
-  done
-}
-test -d ${objpfx}localedir/existing-locale/LC_MESSAGES || {
-  mkdir ${objpfx}localedir/existing-locale/LC_MESSAGES
-  cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_MESSAGES/SYS_LC_MESSAGES \
-     ${objpfx}localedir/existing-locale/LC_MESSAGES
-}
+test -d ${objpfx}domaindir/lang1 || mkdir ${objpfx}domaindir/lang1
+test -d ${objpfx}domaindir/lang2 || mkdir ${objpfx}domaindir/lang2
+test -d ${objpfx}domaindir/lang1/LC_MESSAGES || mkdir ${objpfx}domaindir/lang1/LC_MESSAGES
+test -d ${objpfx}domaindir/lang2/LC_MESSAGES || mkdir ${objpfx}domaindir/lang2/LC_MESSAGES
 
 # Populate them.
-msgfmt -o ${objpfx}domaindir/existing-locale/LC_MESSAGES/existing-domain.mo \
-       ../po/de.po
-msgfmt -o ${objpfx}domaindir/existing-locale/LC_TIME/existing-time-domain.mo \
-       ../po/de.po
+msgfmt -o ${objpfx}domaindir/lang1/LC_MESSAGES/tstlang.mo \
+       tstlang1.po
+
+msgfmt -o ${objpfx}domaindir/lang2/LC_MESSAGES/tstlang.mo \
+       tstlang2.po
+
 
 # Now run the test.
-MALLOC_TRACE=$malloc_trace LOCPATH=${objpfx}localedir:$LOCPATH \
+MALLOC_TRACE=$malloc_trace \
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-${objpfx}tst-gettext > ${objpfx}tst-gettext.out ${objpfx}domaindir
+${objpfx}tst-gettext2 > ${objpfx}tst-gettext2.out ${objpfx}domaindir
 
 exit $?
+

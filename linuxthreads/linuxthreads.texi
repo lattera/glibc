@@ -187,7 +187,7 @@ any pthreads function until it has been reinitialized.
 @findex pthread_attr_setscope
 @comment pthread.h
 @comment POSIX
-@deftypefun int pthread_attr_set@var{attr} (pthread_attr_t *@var{obj}, int @var{value})
+@deftypefun int pthread_attr_setattr (pthread_attr_t *@var{obj}, int @var{value})
 Set attribute @var{attr} to @var{value} in the attribute object pointed
 to by @var{obj}.  See below for a list of possible attributes and the
 values they can take.
@@ -204,7 +204,7 @@ below.
 @findex pthread_attr_getscope
 @comment pthread.h
 @comment POSIX
-@deftypefun int pthread_attr_get@var{attr} (const pthread_attr_t *@var{obj}, int *@var{value})
+@deftypefun int pthread_attr_getattr (const pthread_attr_t *@var{obj}, int *@var{value})
 Store the current setting of @var{attr} in @var{obj} into the variable
 pointed to by @var{value}.
 
@@ -558,7 +558,7 @@ The default type is ``fast''.
 Variables of type @code{pthread_mutex_t} can also be initialized
 statically, using the constants @code{PTHREAD_MUTEX_INITIALIZER} (for
 timed mutexes), @code{PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP} (for
-recursive mutexes), @code{PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP} 
+recursive mutexes), @code{PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP}
 (for fast mutexes(, and @code{PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP}
 (for error checking mutexes).
 
@@ -700,8 +700,8 @@ This function always returns 0.
 
 LinuxThreads supports only one mutex attribute: the mutex type, which is
 either @code{PTHREAD_MUTEX_ADAPTIVE_NP} for ``fast'' mutexes,
-@code{PTHREAD_MUTEX_RECURSIVE_NP} for ``recursive'' mutexes, 
-@code{PTHREAD_MUTEX_TIMED_NP} for ``timed'' mutexes, or 
+@code{PTHREAD_MUTEX_RECURSIVE_NP} for ``recursive'' mutexes,
+@code{PTHREAD_MUTEX_TIMED_NP} for ``timed'' mutexes, or
 @code{PTHREAD_MUTEX_ERRORCHECK_NP} for ``error checking'' mutexes.  As
 the @code{NP} suffix indicates, this is a non-portable extension to the
 POSIX standard and should not be employed in portable programs.
@@ -728,12 +728,12 @@ The default mutex type is ``timed'', that is, @code{PTHREAD_MUTEX_TIMED_NP}.
 @var{attr} to the value specified by @var{type}.
 
 If @var{type} is not @code{PTHREAD_MUTEX_ADAPTIVE_NP},
-@code{PTHREAD_MUTEX_RECURSIVE_NP}, @code{PTHREAD_MUTEX_TIMED_NP}, or 
+@code{PTHREAD_MUTEX_RECURSIVE_NP}, @code{PTHREAD_MUTEX_TIMED_NP}, or
 @code{PTHREAD_MUTEX_ERRORCHECK_NP}, this function will return
 @code{EINVAL} and leave @var{attr} unchanged.
 
-The standard Unix98 identifiers @code{PTHREAD_MUTEX_DEFAULT}, 
-@code{PTHREAD_MUTEX_NORMAL}, @code{PTHREAD_MUTEX_RECURSIVE}, 
+The standard Unix98 identifiers @code{PTHREAD_MUTEX_DEFAULT},
+@code{PTHREAD_MUTEX_NORMAL}, @code{PTHREAD_MUTEX_RECURSIVE},
 and @code{PTHREAD_MUTEX_ERRORCHECK} are also permitted.
 
 @end deftypefun
