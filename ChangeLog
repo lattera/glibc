@@ -1,5 +1,7 @@
 2003-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/confname.h: Remove #ifs.
+
 	* posix/Makefile (CFLAGS-regex.c): Remove RE_ENABLE_I18N definition.
 	* posix/regex_internal.h (RE_ENABLE_I18N): Pretty printing.
 
