@@ -19,7 +19,6 @@ analysis
 docs
 releases
 
-crypt
 linuxthreads
 
 libc.prj .libc.prcs_aux
