@@ -66,7 +66,11 @@ DEFUN(__sysconf, (name), int name)
       return __sysconfig (_CONFIG_OPEN_FILES);
 
     case _SC_TZNAME_MAX:
-      return __tzname_max ();
+#ifdef TZNAME_MAX
+      return __tzname_max > TZNAME_MAX ? __tzname_max : TZNAME_MAX;
+#else
+      return __tzname_max;
+#endif
 
     case _SC_JOB_CONTROL:
 #ifdef	_POSIX_JOB_CONTROL
