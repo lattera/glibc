@@ -25,8 +25,11 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#include <asm/page.h>
 #include "kernel-features.h"
+
+/* This is always the constant 12 for this routine, even if the actual
+   page size is larger.  */
+#define PAGE_SHIFT 12
 
 #ifdef __NR_mmap2
 extern void *__unbounded __syscall_mmap2(void *__unbounded, size_t,
@@ -44,12 +47,11 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 # ifndef __ASSUME_MMAP2_SYSCALL
       ! have_no_mmap2 &&
 # endif
-      ! (offset & ~PAGE_MASK))
+      ! (offset & -(1 << (PAGE_SHIFT+1))))
     {
 # ifndef __ASSUME_MMAP2_SYSCALL
       int saved_errno = errno;
 # endif
-      /* This will be always 12, no matter what page size is.  */
       __ptr_t result;
       __ptrvalue (result) = INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr), len, prot,
 					    flags, fd, (off_t) (offset >> PAGE_SHIFT));
