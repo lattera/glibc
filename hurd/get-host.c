@@ -63,6 +63,14 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
       __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
     }
 
+  /* If the file is empty, give an empty value.  */
+  if (nread == 0)
+    {
+      if (buflen != 0)
+	*buf = '\0';
+      return 0;
+    }
+    
   /* Remove newlines in case someone wrote the file by hand.  */
   while (buf[nread - 1] == '\n')
     buf[--nread] = '\0';
