@@ -37,6 +37,7 @@ in the future, are:
 	arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 	mips*-*-linux-gnu	Linux-2.x on MIPS
 	ia64-*-linux-gnu	Linux-2.x on ia64
+	s390-*-linux-gnu	Linux-2.x on IBM S/390
 
 Ports to other Linux platforms are in development, and may in fact work
 already, but no one has sent us success reports for them.  Currently no
@@ -63,7 +64,7 @@ a local mirror first.
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.3 and 1.1.1) should work with the GNU C library (for powerpc see
-?powerpc; for ARM see ?arm).
+?powerpc; for ARM see ?arm; for MIPS see ?mips).
 
 While the GNU CC should be able to compile glibc it is nevertheless adviced
 to use EGCS.  Comparing the sizes of glibc on Intel compiled with a recent
@@ -380,6 +381,18 @@ You might encounter this bug also in other situations where make scans
 directories.  I strongly advise to upgrade your make version to 3.79 or
 newer.
 
+
+??mips	Which tools should I use for MIPS?
+
+{AJ} Either use as compiler egcs 1.1.2 (with Ralf Baechle's MIPS patches) or
+the current development version of gcc 2.96 from CVS.  gcc 2.95.x does not
+work correctly on mips-linux.
+
+You need recent binutils, anything before and including 2.10 will not work
+correctly.  Either try the Linux binutils 2.10.0.33 from HJ Lu or the
+current development version from CVS of binutils.
+
+For details check also my page <http://www.suse.de/~aj/glibc-mips.html>.
 
 ? Installation and configuration issues
 
