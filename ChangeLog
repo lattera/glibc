@@ -1,3 +1,7 @@
+Sun Dec 17 15:56:35 1995  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* misc/getpass.c (getpass): Don't barf if getline returns a null BUF.
+
 Sat Dec 16 10:33:11 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules: Use $(do-install-so) for installing shared objects.
