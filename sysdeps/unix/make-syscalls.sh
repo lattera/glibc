@@ -193,8 +193,8 @@ shared-only-routines += $file
   x-,-,* | x*,*.[sS],*V*) ;;
   x*,-,*$ptrlet* | x*,*.[sS],*$ptrlet*)
 
-    # find the name without leading underscores
-    set `echo $strong $weak |tr -s ' \t' '\12' |sed '/^_/d'`
+    # choose the name with the fewest leading underscores, preferably none
+    set `echo $strong $weak |tr ' \t' '\n' |sort -r`
     callname=$1
 
     # convert signature string to individual numbered arg names
