@@ -1,3 +1,9 @@
+2005-02-14  Andreas Schwab  <schwab@suse.de>
+
+	* manual/filesys.texi (Random Access Directory): Fix type of file
+	position value for telldir and seekdir.
+	(Attribute Meanings): Fix typo.
+
 2005-02-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* csu/elf-init.c (__libc_csu_fini): Enable if LIBC_NONSHARED
