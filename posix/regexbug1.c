@@ -22,9 +22,29 @@ main (void)
 
   if (regexec (&re, "002", 2, ma, 0) != 0)
     {
-      error (0, 0, "\"0*[0-9][0-9]\" did not match \"002\"");
+      error (0, 0, "\"0*[0-9][0-9]\" does not match \"002\"");
       res = 1;
     }
+  puts ("Succesful match with \"0*[0-9][0-9]\"");
+
+  regfree (&re);
+
+  reerr = regcomp (&re, "[0a]*[0-9][0-9]", 0);
+  if (reerr != 0)
+    {
+      char buf[100];
+      regerror (reerr, &re, buf, sizeof buf);
+      error (EXIT_FAILURE, 0, buf);
+    }
+
+  if (regexec (&re, "002", 2, ma, 0) != 0)
+    {
+      error (0, 0, "\"[0a]*[0-9][0-9]\" does not match \"002\"");
+      res = 1;
+    }
+  puts ("Succesful match with \"[0a]*[0-9][0-9]\"");
+
+  regfree (&re);
 
   return res;
 }
