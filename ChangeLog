@@ -1,3 +1,7 @@
+2002-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sk.po: Update from translation team.
+
 2002-09-26  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-load.c (_dl_dst_count, _dl_dst_substitute): Handle $LIB
