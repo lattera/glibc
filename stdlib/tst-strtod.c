@@ -47,6 +47,7 @@ static void expand __P ((char *dst, int c));
 int
 main (int argc, char ** argv)
 {
+  char buf[100];
   register const struct ltest *lt;
   char *ep;
   int status = 0;
@@ -81,6 +82,13 @@ main (int argc, char ** argv)
 		    lt->err, strerror (lt->err));
 	  status = 1;
 	}
+    }
+
+  sprintf (buf, "%f", strtod ("-0.0", NULL));
+  if (strcmp (buf, "-0.000000") != 0)
+    {
+      printf ("  strtod (\"-0.0\', NULL) returns \"%s\"\n", buf);
+      status = 1;
     }
 
   exit (status ? EXIT_FAILURE : EXIT_SUCCESS);
