@@ -190,7 +190,7 @@ typedef struct
 
 /* Special symbol index.  */
 
-#define STN_UNDEF	0		/* Undefined symbol */
+#define SHN_UNDEF	0		/* Undefined symbol */
 
 /* How to extract and insert information held in the st_info field.  */
 
@@ -309,6 +309,7 @@ typedef struct
 #define DT_DEBUG	21		/* For debugging; unspecified */
 #define DT_TEXTREL	22		/* Reloc might modify .text */
 #define DT_JMPREL	23		/* Address of PLT relocs */
+#define	DT_NUM		24		/* Number used.  */
 #define DT_LOPROC	0x70000000	/* Start of processor-specific */
 #define DT_HIPROC	0x7fffffff	/* End of processor-specific */
 

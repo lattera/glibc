@@ -40,10 +40,11 @@ _nl_postload_ctype (void)
 #else
 #error bizarre byte order
 #endif
-#define eval(x) x
+#define paste(a,b) paste1(a,b)
+#define paste1(a,b) a##b
 
 #define current(unsigned,x) \
-  ((const unsigned int *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_##eval(x)) \
+  ((const unsigned int *) _NL_CURRENT (LC_CTYPE, paste(_NL_CTYPE_,x)) \
    + 128)
 
   __ctype_b = current (unsigned short, CLASS);

@@ -1,3 +1,15 @@
+Thu Mar  9 22:29:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/elf.h (STN_UNDEF): Renamed to SHN_UNDEF (typo).
+	(DT_NUM): New macro.
+
+	* locale/nl_langinfo.c: Include errno.h and stddef.h.  Fix typos.
+
+	* locale/lc-ctype.c (_nl_postload_ctype): Fix macro insanity.
+
+	* locale/loadlocale.c (_nl_load_locale) [! MAP_COPY]: Define
+ 	MAP_COPY to MAP_PRIVATE.
+
 Thu Mar  9 17:16:53 1995  Brendan Kehoe  (brendan@zen.org)
 
 	* sysdeps/alpha/divrem.m4: Undefine `ret' to avoid the definition

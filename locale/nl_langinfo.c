@@ -18,6 +18,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <langinfo.h>
+#include <errno.h>
+#include <stddef.h>
+#include "localeinfo.h"
 
 /* This array duplicates `_nl_current' defined in setlocale.c; but since
    the references here are not weak references, this guarantees that the
@@ -49,7 +52,7 @@ nl_langinfo (item)
       return NULL;
     }
 
-  data = nldata[category];
+  data = *nldata[category];
 
   if (index >= data->nstrings)
     {
@@ -59,5 +62,5 @@ nl_langinfo (item)
     }
 
   /* Return the string for the specified item.  */
-  return (char *) nldata->strings[index];
+  return (char *) data->strings[index];
 }
