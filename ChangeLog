@@ -1,3 +1,7 @@
+2003-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c: Include <stdint.h>.
+
 2003-09-20  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c (build_word_op): Rename like...
