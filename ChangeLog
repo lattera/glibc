@@ -1,3 +1,17 @@
+1998-09-14 15:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/Makefile (headers): Remove bits/stdio_lim.h.
+	(install-others): Add bits/stdio_lim.h.
+	Add rule to install bits/stdio_lim.h.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/Dist: New file.
+
+	* Makefile (distribute): Add include/sys/mman.h.
+
+	* sysdeps/powerpc/Dist: Add dl-machine.c and dl-start.S.
+	* sysdeps/unix/sysv/linux/Dist: Add sys/sendfile.h.
+	* sysdeps/unix/sysv/linux/arm/Dist: Add init-first.h.
+
 1998-09-14 22:46  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: Chet Ramey confirmed that bash's behaviour

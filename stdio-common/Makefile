@@ -21,7 +21,7 @@
 #
 subdir	:= stdio-common
 
-headers	:= bits/stdio_lim.h printf.h
+headers	:= printf.h
 
 routines	:=							      \
 	ctermid cuserid							      \
@@ -35,6 +35,8 @@ routines	:=							      \
 	getline getw putw						      \
 	remove rename							      \
 	lockfile
+
+install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist
 distribute := _itoa.h printf-parse.h stdio_lim.h.in
@@ -55,6 +57,12 @@ CFLAGS-tstdiomisc.c = -Wno-format
 CFLAGS-scanf4.c = -Wno-format
 CFLAGS-scanf7.c = -Wno-format
 CFLAGS-tst-printfsz.c = -Wno-format
+
+$(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h
+	$(make-target-directory)
+	if test -r $@ && cmp -s $< $@; \
+	then echo 'gnu/lib-names.h unchanged'; \
+	else $(INSTALL_DATA) $< $@; fi
 
 ifeq ($(stdio),libio)
 ifneq (,$(filter %REENTRANT, $(defines)))

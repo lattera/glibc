@@ -253,6 +253,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		version.h shlib-versions rpm/Makefile rpm/template	\
 		rpm/rpmrc glibcbug.in abi-tags stub-tag.h		\
 		test-skeleton.c include/des.h Versions.def		\
+		include/sys/mman.h					\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
 			    mkinstalldirs move-if-change install-sh	\

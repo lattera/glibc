@@ -962,10 +962,12 @@ Ordinary programs can perform word expansion just like the shell by
 calling the library function @code{wordexp}.
 
 @menu
-* Expansion Stages::	What word expansion does to a string.
-* Calling Wordexp::	How to call @code{wordexp}.
-* Flags for Wordexp::   Options you can enable in @code{wordexp}.
-* Wordexp Example::	A sample program that does word expansion.
+* Expansion Stages::            What word expansion does to a string.
+* Calling Wordexp::             How to call @code{wordexp}.
+* Flags for Wordexp::           Options you can enable in @code{wordexp}.
+* Wordexp Example::             A sample program that does word expansion.
+* Tilde Expansion::             Details of how tilde expansion works.
+* Variable Substitution::       Different types of variable substitution.
 @end menu
 
 @node Expansion Stages
@@ -1254,9 +1256,6 @@ expand_and_execute (const char *program, const char *options)
 @}
 @end smallexample
 
-
-@c No sense finishing this for here.
-@ignore
 @node Tilde Expansion
 @subsection Details of Tilde Expansion
 
@@ -1325,6 +1324,7 @@ Otherwise, print @var{message} as an error message on the standard error
 stream, and consider word expansion a failure.
 
 @c ??? How does wordexp report such an error?
+@c WRDE_BADVAL is returned.
 
 @item $@{@var{variable}:+@var{replacement}@}
 Substitute @var{replacement}, but only if @var{variable} is defined and
@@ -1386,4 +1386,4 @@ If there is more than one alternative for how to match against
 Thus, @samp{$@{foo%%r*@}} substitutes @samp{tracto}, because the shortest
 match for @samp{r*} at the end of @samp{tractor} is just @samp{r}.
 
-@end ignore
+@end table

@@ -59,6 +59,7 @@ sys/pci.h
 sys/prctl.h
 sys/procfs.h
 sys/quota.h
+sys/sendfile.h
 sys/socketvar.h
 sys/soundcard.h
 sys/sysctl.h
