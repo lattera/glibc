@@ -1,3 +1,14 @@
+2000-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getopt.c (_getopt_internal): Don't recognize an option
+	name as ambiguous if it's a prefix for more than one name but the
+	other struct option values are identical.
+
+	* posix/tstgetopt.c: Add test for improved ambiguity recognition.
+	Don't depend on visual inspection of the output file to recognize
+	errors.
+	* posix/Makefile (tstgetopt-ARGS): Add a few more parameters.
+
 2000-09-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/alpha/soft-fp/Dist: New file.

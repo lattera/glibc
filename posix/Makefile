@@ -109,7 +109,7 @@ endif
 CFLAGS-regex.c = -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
-		--none random
+		--none random --col --color --colour
 
 tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
