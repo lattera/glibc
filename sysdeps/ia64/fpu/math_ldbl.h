@@ -13,7 +13,7 @@ typedef union
   struct
   {
     unsigned int empty0:32;
-    unsigned int sign_exponent:16;
+    int sign_exponent:16;
     unsigned int empty1:16;
     u_int32_t msw;
     u_int32_t lsw;
@@ -31,7 +31,7 @@ typedef union
   {
     u_int32_t lsw;
     u_int32_t msw;
-    unsigned int sign_exponent:16;
+    int sign_exponent:16;
     unsigned int empty1:16;
     unsigned int empty0:32;
   } parts;

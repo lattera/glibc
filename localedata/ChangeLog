@@ -1,3 +1,7 @@
+2000-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* tests/test5.cm: Define code_set_name.
+
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/SJIS: Add mapping for FULLWIDTH REVERSE SOLIDUS.

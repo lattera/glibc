@@ -88,14 +88,10 @@ static char rcsid[] = "$NetBSD: $";
 	      /* x < y, x -= ulp */
 		if(lx==0) {
 		    if (hx <= 0x80000000) {
-		      if (esx == 0)
-			hx = 0;
-		      else {
 			esx -= 1;
 			hx = hx - 1;
 			if ((esx&0x7fff) > 0)
 			  hx |= 0x80000000;
-		      }
 		    } else
 		      hx -= 1;
 		}

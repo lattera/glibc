@@ -1,3 +1,13 @@
+2000-12-21  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/fpu/math_ldbl.h (ieee_long_double_shape_type):
+	Make sign_exponent element signed.
+
+	* sysdeps/ieee754/ldbl-96/math_ldbl.h (ieee_long_double_shape_type):
+	Fix a typo.
+
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Remove dead branch.
+
 2000-12-21  Andreas Jaeger  <aj@suse.de>
 
 	* nis/nss_nisplus/nisplus-ethers.c (struct etherent): Removed.
