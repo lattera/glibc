@@ -206,7 +206,7 @@ inline_outb (unsigned char b, unsigned long int port, iosys_t iosys)
   unsigned long int addr = port_to_cpu_addr (port, iosys, 1);
 
   inline_sethae (0, iosys);
-  asm ("insbl %2,%1,%0" : "r=" (w) : "ri" (port & 0x3), "r" (b));
+  asm ("insbl %2,%1,%0" : "=r" (w) : "ri" (port & 0x3), "r" (b));
   *(vuip)addr = w;
   mb ();
 }
@@ -219,7 +219,7 @@ inline_outw (unsigned short int b, unsigned long int port, iosys_t iosys)
   unsigned long int addr = port_to_cpu_addr (port, iosys, 2);
 
   inline_sethae (0, iosys);
-  asm ("inswl %2,%1,%0" : "r=" (w) : "ri" (port & 0x3), "r" (b));
+  asm ("inswl %2,%1,%0" : "=r" (w) : "ri" (port & 0x3), "r" (b));
   *(vuip)addr = w;
   mb ();
 }
