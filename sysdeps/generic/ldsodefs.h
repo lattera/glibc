@@ -38,10 +38,10 @@ __BEGIN_DECLS
 
 /* All references to the value of l_info[DT_PLTGOT],
   l_info[DT_STRTAB], l_info[DT_SYMTAB], l_info[DT_RELA],
-  l_info[DT_REL], l_info[DT_JMPREL], l_info[VERSYMIDX (DT_VERSYM)],
-  and l_info[DT_INIT_ARRAY] have to accessed via the D_PTR macro.  The
-  macro is needed since for most architectures the entry is already
-  relocated - but for some not and we need to relocate at access time.  */
+  l_info[DT_REL], l_info[DT_JMPREL], and l_info[VERSYMIDX (DT_VERSYM)]
+  have to accessed via the D_PTR macro.  The macro is needed since for
+  most architectures the entry is already relocated - but for some not
+  and we need to relocate at access time.  */
 #ifdef DL_RO_DYN_SECTION
 # define D_PTR(map,i) (map->i->d_un.d_ptr + map->l_addr)
 #else

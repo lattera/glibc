@@ -1,5 +1,8 @@
 2000-03-31  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/generic/ldsodefs.h: DT_INIT_ARRAY is not relocated
+	  anymore, update comment.
+
 	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/semctl.c (struct __old_semid_ds): Remove
