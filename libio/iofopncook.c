@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -74,10 +74,9 @@ _IO_cookie_seek (fp, offset, dir)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
 
-  if (cfile->__io_functions.seek == NULL)
-    return _IO_pos_BAD;
-
-  return cfile->__io_functions.seek (cfile->__cookie, offset, dir);
+  return ((cfile->__io_functions.seek == NULL
+	   || cfile->__io_functions.seek (cfile->__cookie, &offset, dir))
+	  ? _IO_pos_BAD : offset);
 }
 
 static int
@@ -115,6 +114,29 @@ static struct _IO_jump_t _IO_cookie_jumps = {
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue),
 };
+
+
+void
+_IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
+		 void *cookie, _IO_cookie_io_functions_t io_functions)
+{
+  _IO_init (&cfile->__file, 0);
+  _IO_JUMPS (&cfile->__file) = &_IO_cookie_jumps;
+
+  cfile->__cookie = cookie;
+  cfile->__io_functions = io_functions;
+
+  _IO_file_init(&cfile->__file);
+
+  cfile->__file._IO_file_flags =
+    _IO_mask_flags (&cfile->__file, read_write,
+		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
+
+  /* We use a negative number different from -1 for _fileno to mark that
+     this special stream is not associated with a real file, but still has
+     to be treated as such.  */
+  cfile->__file._fileno = -2;
+}
 
 
 _IO_FILE *
@@ -156,21 +178,7 @@ fopencookie (cookie, mode, io_functions)
   new_f->cfile.__file._lock = &new_f->lock;
 #endif
 
-  _IO_init (&new_f->cfile.__file, 0);
-  _IO_JUMPS (&new_f->cfile.__file) = &_IO_cookie_jumps;
-  new_f->cfile.__cookie = cookie;
-  new_f->cfile.__io_functions = io_functions;
-
-  _IO_file_init(&new_f->cfile.__file);
-
-  new_f->cfile.__file._IO_file_flags =
-    _IO_mask_flags (&new_f->cfile.__file, read_write,
-		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
-
-  /* We use a negative number different from -1 for _fileno to mark that
-     this special stream is not associated with a real file, but still has
-     to be treated as such.  */
-  new_f->cfile.__file._fileno = -2;
+  _IO_cookie_init (&new_f->cfile, read_write, cookie, io_functions);
 
   return &new_f->cfile.__file;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,94,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,6 @@ pwrite (void *cookie,
   return n;
 }
 
-
 /* Write formatted output to PORT, a Mach port supporting the i/o protocol,
    according to the format string FORMAT, using the argument list in ARG.  */
 int
@@ -42,6 +41,27 @@ vpprintf (io_t port,
 	  va_list arg)
 {
   int done;
+
+#ifdef USE_IN_LIBIO
+
+  struct locked_FILE
+  {
+    struct _IO_cookie_file cfile;
+#ifdef _IO_MTSAFE_IO
+    _IO_lock_t lock;
+#endif
+  } temp_f;
+#ifdef _IO_MTSAFE_IO
+  temp_f.cfile.__file._lock = &temp_f.lock;
+#endif
+
+  _IO_cookie_init (&temp_f.cfile, _IO_NO_READS,
+		   (void *) port, (cookie_io_functions_t) { write: pwrite });
+
+  done = _IO_vfprintf (&temp_f.cfile.__file, format, arg);
+
+#else
+
   FILE f;
 
   /* Create an unbuffered stream talking to PORT on the stack.  */
@@ -56,6 +76,8 @@ vpprintf (io_t port,
 
   /* vfprintf will use a buffer on the stack for the life of the call.  */
   done = vfprintf (&f, format, arg);
+
+#endif
 
   return done;
 }

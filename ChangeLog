@@ -1,15 +1,41 @@
+2000-03-10  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* mach/devstream.c (devstream_write, devstream_read): New functions.
+	(input, output): Functions removed.
+	(mach_open_devstream): Use devstream_{read,write} as cookie functions,
+	using only the vanilla fopencookie interface.
+
+	* hurd/fopenport.c [! USE_IN_LIBIO] (cookie_io_functions_t): Define
+	as macro for __io_functions.
+	(funcsio): Use cookie_io_functions_t type name.
+	(fopenport): Renamed from __fopenport.  Rewrite to call fopencookie.
+
+	* libio/iofopncook.c (_IO_cookie_init): New function, broken out of
+	fopencookie.
+	(fopencookie): Use it.
+	* libio/libio.h: Declare _IO_cookie_init.
+	* hurd/vpprintf.c (vpprintf) [USE_IN_LIBIO]: Implement using
+	_IO_cookie_init.
+
+	* libio/libio.h (__io_seek_fn): Fix second argument type
+	to be a pointer, in line with the manual and the old stdio.
+	* libio/iofopncook.c (_IO_cookie_seek): Fix (sole) caller.
+
+	* sysdeps/generic/bits/stdio-lock.h: New file.
+	This is a stub with #error, but that's better than no file at all.
+
 2000-03-09  Martin Buchholz  <martin@xemacs.org>
 
-	* sysdeps/unix/sysv/linux/alpha/syscall.S: 
-	* manual/message.texi (Using gettextized software): 
+	* sysdeps/unix/sysv/linux/alpha/syscall.S:
+	* manual/message.texi (Using gettextized software):
 	* manual/message.texi (Message Translation): Doc Fixes.
-	* manual/filesys.texi (File Size): 
-	* manual/charset.texi (glibc iconv Implementation): 
-	* locale/programs/ld-collate.c (collate_output): 
+	* manual/filesys.texi (File Size):
+	* manual/charset.texi (glibc iconv Implementation):
+	* locale/programs/ld-collate.c (collate_output):
 	* iconv/gconv_db.c (find_derivation):
 	* manual/install.texi:
 	* manual/search.texi (Hash Search Function):
-	* manual/stdio.texi (Output Conversion Syntax): 
+	* manual/stdio.texi (Output Conversion Syntax):
 	* FAQ.in:
 	* config.h.in:
 	* sysdeps/generic/dl-sysdep.c:

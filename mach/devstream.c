@@ -1,6 +1,6 @@
 /* stdio on a Mach device port.
    Translates \n to \r\n on output, echos and translates \r to \n on input.
-   Copyright (C) 1992, 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992,93,94,96,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,126 +24,13 @@
 #include <errno.h>
 #include <string.h>
 
-static int
-input (FILE *f)
+
+static ssize_t
+devstream_write (void *cookie, const char *buffer, size_t n)
 {
-  kern_return_t err;
-  char *buffer;
-  size_t to_read;
-  mach_msg_type_number_t nread;
-  char c;
+  const device_t dev = (device_t) cookie;
 
-  if (f->__buffer == NULL)
-    {
-      buffer = &c;
-      to_read = 1;
-    }
-  else
-    {
-      buffer = f->__buffer;
-      to_read = f->__bufsize;
-    }
-
-  f->__eof = 0;
-
-  nread = to_read;
-  err = device_read_inband ((device_t) f->__cookie, 0, f->__target,
-			    to_read, buffer, &nread);
-
-  if (err)
-    {
-      f->__error = 1;
-      f->__bufp = f->__get_limit = f->__put_limit = f->__buffer;
-      errno = err;
-      return EOF;
-    }
-
-  /* Echo it back.  */
-  err = device_write_inband ((device_t) f->__cookie, 0, f->__target,
-			     buffer, nread, (int *) &to_read);
-
-  /* Translate LF to CR.  */
-  {
-    char *p;
-    for (p = memchr (buffer, '\r', nread); p;
-	 p = memchr (p + 1, '\r', (buffer + nread) - (p + 1)))
-      *p = '\n';
-  }
-
-  if (f->__buffer == NULL)
-    return (unsigned char) c;
-
-  f->__get_limit = f->__buffer + nread;
-  f->__bufp = f->__buffer;
-  f->__put_limit = f->__buffer + (f->__mode.__write ? f->__bufsize : 0);
-  return (unsigned char) *f->__bufp++;
-}
-
-
-#if 0
-static void
-output (FILE *f, int c)
-{
-  inline void write_some (const char *p, size_t to_write)
-    {
-      kern_return_t err;
-      int wrote;
-      while (to_write > 0)
-	{
-	  if (err = device_write ((device_t) f->__cookie, 0,
-				  f->__target, (char *)p,
-				  to_write, &wrote))
-	    {
-	      errno = err;
-	      f->__error = 1;
-	      break;
-	    }
-	  p += wrote;
-	  to_write -= wrote;
-	  f->__target += wrote;
-	}
-    }
-
-  if (f->__buffer != NULL)
-    {
-      if (f->__put_limit == f->__buffer)
-	{
-	  /* Prime the stream for writing.  */
-	  f->__put_limit = f->__buffer + f->__bufsize;
-	  f->__bufp = f->__buffer;
-	  if (c != EOF)
-	    {
-	      *f->__bufp++ = (unsigned char) c;
-	      c = EOF;
-	    }
-	}
-
-
-      /* Write out the buffer.  */
-
-      write_some (f->__buffer, f->__bufp - f->__buffer);
-
-      f->__bufp = f->__buffer;
-    }
-
-  if (c != EOF && !ferror (f))
-    {
-      if (f->__linebuf && (unsigned char) c == '\n')
-	{
-	  static const char nl = '\n';
-	  write_some (&nl, 1);
-	}
-      else
-	*f->__bufp++ = (unsigned char) c;
-    }
-}
-#endif
-
-
-static void
-output (FILE *f, int c)
-{
-  void write_some (const char *p, size_t to_write)
+  int write_some (const char *p, size_t to_write)
     {
       kern_return_t err;
       int wrote;
@@ -155,85 +42,71 @@ output (FILE *f, int c)
 	  if (thiswrite > IO_INBAND_MAX)
 	    thiswrite = IO_INBAND_MAX;
 
-	  if (err = device_write_inband ((device_t) f->__cookie, 0,
-					 f->__target, p, thiswrite, &wrote))
+	  if (err = device_write_inband (dev, 0, 0, p, thiswrite, &wrote))
 	    {
 	      errno = err;
-	      f->__error = 1;
-	      break;
+	      return 0;
 	    }
 	  p += wrote;
 	  to_write -= wrote;
-	  f->__target += wrote;
 	}
+      return 1;
     }
-  void write_crlf (void)
+  int write_crlf (void)
     {
       static const char crlf[] = "\r\n";
-      write_some (crlf, 2);
+      return write_some (crlf, 2);
     }
 
-  if (f->__buffer == NULL)
+  /* Search for newlines (LFs) in the buffer.  */
+
+  const char *start = buffer, *p;
+  while ((p = memchr (start, '\n', n)) != NULL)
     {
-      /* The stream is unbuffered.  */
+      /* Found one.  Write out through the preceding character,
+	 and then write a CR/LF pair.  */
 
-      if (c == '\n')
-	write_crlf ();
-      else if (c != EOF)
-	{
-	  char cc = (unsigned char) c;
-	  write_some (&cc, 1);
-	}
+      if ((p > start && !write_some (start, p - start))
+	  || !write_crlf ())
+	return (start - buffer) ?: -1;
 
-      return;
+      n -= p + 1 - start;
+      start = p + 1;
     }
 
-  if (f->__put_limit == f->__buffer)
+  /* Write the remainder of the buffer.  */
+  if (write_some (start, n))
+    start += n;
+  return (start - buffer) ?: -1;
+}
+
+static ssize_t
+devstream_read (void *cookie, char *buffer, size_t to_read)
+{
+  const device_t dev = (device_t) cookie;
+
+  kern_return_t err;
+  mach_msg_type_number_t nread = to_read;
+
+  err = device_read_inband (dev, 0, 0, to_read, buffer, &nread);
+  if (err)
     {
-      /* Prime the stream for writing.  */
-      f->__put_limit = f->__buffer + f->__bufsize;
-      f->__bufp = f->__buffer;
-      if (c != EOF)
-	{
-	  *f->__bufp++ = (unsigned char) c;
-	  c = EOF;
-	}
+      errno = err;
+      return -1;
     }
 
+  /* Translate CR to LF.  */
   {
-    /* Search for newlines (LFs) in the buffer.  */
-
-    char *start = f->__buffer, *p = start;
-
-    while (!ferror (f) && (p = memchr (p, '\n', f->__bufp - start)))
-      {
-	/* Found one.  Replace it with a CR and write out through that CR.  */
-
-	*p = '\r';
-	write_some (start, p + 1 - start);
-
-	/* Change it back to an LF; the next iteration will write it out
-	   first thing.  Start the next searching iteration one char later.  */
-
-	start = p;
-	*p++ = '\n';
-      }
-
-    /* Write the remainder of the buffer.  */
-
-    if (!ferror (f))
-      write_some (start, f->__bufp - start);
+    char *p;
+    for (p = memchr (buffer, '\r', nread); p;
+	 p = memchr (p + 1, '\r', (buffer + nread) - (p + 1)))
+      *p = '\n';
   }
 
-  f->__bufp = f->__buffer;
+  /* Echo back what we read.  */
+  (void) devstream_write (cookie, buffer, nread);
 
-  if (c != EOF && !ferror (f))
-    {
-      if (f->__linebuf && (unsigned char) c == '\n')
-	write_crlf ();
-      else
-	*f->__bufp++ = (unsigned char) c;
-    }
+  return nread;
 }
 
 static int
@@ -247,6 +120,12 @@ dealloc_ref (void *cookie)
   return 0;
 }
 
+#ifndef USE_IN_LIBIO
+#define cookie_io_functions_t __io_functions
+#define write __write
+#define read __read
+#define close __close
+#endif
 
 FILE *
 mach_open_devstream (mach_port_t dev, const char *mode)
@@ -259,19 +138,15 @@ mach_open_devstream (mach_port_t dev, const char *mode)
       return NULL;
     }
 
-  stream = fopencookie ((void *) dev, mode, __default_io_functions);
+  stream = fopencookie ((void *) dev, mode,
+			(cookie_io_functions_t) { write: devstream_write,
+						  read: devstream_read,
+						  close: dealloc_ref });
   if (stream == NULL)
     {
       mach_port_deallocate (mach_task_self (), dev);
       return NULL;
     }
-
-  stream->__room_funcs.__input = input;
-  stream->__room_funcs.__output = output;
-  stream->__io_funcs.__close = dealloc_ref;
-  stream->__io_funcs.__seek = NULL; /* Cannot seek.  */
-  stream->__io_funcs.__fileno = NULL; /* No corresponding POSIX.1 fd.  */
-  stream->__seen = 1;
 
   return stream;
 }

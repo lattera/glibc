@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -346,7 +346,7 @@ typedef __ssize_t __io_write_fn (void *__cookie, __const char *__buf,
    or the end of the file (if W is SEEK_END).
    Set *POS to the new file position.
    Returns zero if successful, nonzero if not.  */
-typedef int __io_seek_fn (void *__cookie, _IO_off_t __pos, int __w);
+typedef int __io_seek_fn (void *__cookie, _IO_off64_t *__pos, int __w);
 
 /* Close COOKIE.  */
 typedef int __io_close_fn (void *__cookie);
@@ -377,6 +377,10 @@ struct _IO_cookie_file
   void *__cookie;
   _IO_cookie_io_functions_t __io_functions;
 };
+
+/* Initialize one of those.  */
+extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
+			     void *__cookie, _IO_cookie_io_functions_t __fns);
 #endif
 
 
