@@ -377,8 +377,12 @@ extern int pthread_cancel (pthread_t __th) __THROW;
 
 /* Test for pending cancellation for the current thread and terminate
    the thread as per pthread_exit(PTHREAD_CANCELED) if it has been
-   cancelled.  */
-extern void pthread_testcancel (void) __THROW;
+   cancelled.
+
+   Note that this function is explicitly not marked to not throw an
+   exception in C++ code.  If cancellation is implemented by unwinding
+   this is necessary to have the compiler generate the unwind information.  */
+extern void pthread_testcancel (void);
 
 
 /* Cancellation handling with integration into exception handling.  */
