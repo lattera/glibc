@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,11 +39,11 @@ func (__isxdigit_l, _ISxdigit)
 int
 (__tolower_l) (int c, __locale_t l)
 {
-  return __tolower_l (c, l);
+  return l->__ctype_tolower[c];
 }
 
 int
 (__toupper_l) (int c, __locale_t l)
 {
-  return __toupper_l (c, l);
+  return l->__ctype_toupper[c];
 }

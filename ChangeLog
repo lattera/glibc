@@ -1,5 +1,8 @@
 2001-04-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* ctype/ctype_l.c: Fix definitions of __tolower_l and __toupper_l.
+	Reported by Konstantin Osipov <rabid@spylog.ru>.
+
 	* sysdeps/i386/fpu/libm-test-ulps: Add deltas for tgamma to help
 	the lousy AMD FPU.
 
