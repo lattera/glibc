@@ -1,0 +1,78 @@
+comment_char %
+escape_char  /
+%
+% Swedish Language Locale for Finland
+% Source: RAP
+% Address: Sankt Jo//rgens Alle 8
+%    DK-1615 Ko//benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 33256543
+% Language: sv
+% Territory: FI
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "fi_FI"
+END LC_COLLATE
+
+LC_MESSAGES
+copy "sv_SE"
+END LC_MESSAGES
+
+LC_MONETARY
+copy "fi_FI"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "fi_FI"
+END LC_NUMERIC
+
+LC_TIME
+% copy "sv_SE"
+abday     "<s><o:><n>";"<m><aa><n>";/
+          "<t><i><s>";"<o><n><s>";/
+          "<t><o><r>";"<f><r><e>";/
+          "<l><o:><r>"
+day       "<s><o:><n><d><a><g>";/
+          "<m><aa><n><d><a><g>";/
+          "<t><i><s><d><a><g>";/
+          "<o><n><s><d><a><g>";/
+          "<t><o><r><s><d><a><g>";/
+          "<f><r><e><d><a><g>";/
+          "<l><o:><r><d><a><g>"
+abmon     "<j><a><n>";"<f><e><b>";/
+          "<m><a><r>";"<a><p><r>";/
+          "<m><a><j>";"<j><u><n>";/
+          "<j><u><l>";"<a><u><g>";/
+          "<s><e><p>";"<o><k><t>";/
+          "<n><o><v>";"<d><e><c>"
+mon       "<j><a><n><u><a><r><i>";/
+          "<f><e><b><r><u><a><r><i>";/
+          "<m><a><r><s>";/
+          "<a><p><r><i><l>";/
+          "<m><a><j>";/
+          "<j><u><n><i>";/
+          "<j><u><l><i>";/
+          "<a><u><g><u><s><t><i>";/
+          "<s><e><p><t><e><m><b><e><r>";/
+          "<o><k><t><o><b><e><r>";/
+          "<n><o><v><e><m><b><e><r>";/
+          "<d><e><c><e><m><b><e><r>"
+d_t_fmt   "<%><a><SP><%><e><SP><%><b><SP><%><Y><SP><%><H><.><%><M><.><%><S>"
+d_fmt     "<%><Y><-><%><m><-><%><d>"
+t_fmt     "<%><H><.><%><M><.><%><S>"
+am_pm     "";""
+t_fmt_ampm  ""
+END LC_TIME

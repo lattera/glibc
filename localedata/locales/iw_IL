@@ -1,0 +1,93 @@
+comment_char %
+escape_char  /
+%
+% Hebrew Language Locale for Israel
+% Source: RAP
+% Address: Sankt Jo/rgens Alle 8
+%    DK-1615 Ko/benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 33256543
+% Language: iw
+% Territory: IL
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-8
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol   "<I><L><S><SP>"
+currency_symbol   "<Sh><X+>"
+mon_decimal_point "<.>"
+mon_thousands_sep "<,>"
+mon_grouping      3;0
+positive_sign     ""
+negative_sign     "<->"
+int_frac_digits   2
+frac_digits       2
+p_cs_precedes     1
+p_sep_by_space    1
+n_cs_precedes     1
+n_sep_by_space    1
+p_sign_posn       2
+n_sign_posn       2
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point     "<.>"
+thousands_sep     "<,>"
+grouping          3;0
+END LC_NUMERIC
+
+LC_TIME
+abday   "<A+><'>";"<B+><'>";"<G+><'>";/
+        "<D+><'>";"<H+><'>";"<W+><'>";/
+	"<Sh><'>"
+day     "<R+><A+><Sh><W+><N%>";/
+        "<Sh><N+><J+>";/
+        "<Sh><L+><J+><Sh><J+>";/
+        "<R+><B+><J+><E+><J+>";/
+        "<X+><M+><J+><Sh><J+>";/
+        "<Sh><J+><Sh><J+>";/
+        "<Sh><B+><T+>"
+mon     "<J+><N+><W+><A+><R+>";/
+        "<P+><B+><R+><W+><A+><R+>";/
+        "<M+><R+><Zj>";/
+        "<A+><P+><R+><J+><L+>";/
+        "<M+><A+><J+>";/
+        "<J+><W+><N+><J+>";/
+        "<J+><W+><L+><J+>";/
+        "<A+><W+><G+><W+><S+><Tj>";/
+        "<S+><P+><Tj><M+><B+><R+>";/
+        "<A+><W+><Q+><Tj><W+><B+><R+>";/
+        "<N+><W+><B+><M+><B+><R+>";/
+        "<D+><ZJ><M+><B+><R+>"
+abmon   "<J+><N+><W+>";"<P+><B+><R+>";/
+        "<M+><R+><Zj>";"<A+><P+><R+>";/
+        "<M+><A+><J+>";"<J+><W+><N+>";/
+        "<J+><W+><L+>";"<A+><W+><G+>";/
+        "<S+><P+><Tj>";"<A+><W+><Q+>";/
+        "<N+><W+><B+>";"<D+><ZJ><M+>"
+d_t_fmt "<%><Z><SP><%><H><:><%><M><:><%><S><SP><%><Y><SP><%><b><SP><%><d><SP><%><a>"
+d_fmt   "<%><d></><%><m></><%><y>"
+t_fmt   "<%><H><:><%><M><:><%><S>"
+am_pm   "<A><M>";"<P><M>"
+t_fmt_ampm  "<%><I><:><%><M><:><%><S><SP><%><P>"
+END LC_TIME
+
+LC_MESSAGES
+yesexpr "<<(><Y><y><K+><)><.><*>"
+noexpr  "<<(><N><n><L+><)><.><*>"
+END LC_MESSAGES

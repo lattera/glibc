@@ -1,0 +1,298 @@
+# POSIX Standard Locale
+#
+# As per ISO/IEC 9945-2:1993 specifications
+# except for these additional identifying comments
+#
+# Source: ISO/IEC JTC1/SC22/WG15 RIN
+# Address: C/O DKUUG, Fruebjergvej 3
+#    DK-2900 Copenhagen O, Denmark
+# Contact: Keld Simonsen
+# Email: Keld.Simonsen@dkuug.dk
+# Tel: +45 - 39179944
+# Fax: +45 - 39179897
+# Language: POSIX
+# Territory:
+# Revision: 1.0
+# Date: 1994-04-02
+# Application: general
+# Users: general
+# Repertoiremap: POSIX
+# Charset: ISO646:1993
+# Distribution and use is free, also for
+# commercial purposes.
+
+LC_CTYPE
+# The following is the POSIX Locale LC_CTYPE.
+# "alpha" is by default "upper" and "lower"
+# "alnum" is by definiton "alpha" and "digit"
+# "print" is by default "alnum", "punct" and the <space> character
+# "graph" is by default "alnum" and "punct"
+#
+upper   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;\
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>
+#
+lower   <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;\
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>
+#
+digit   <zero>;<one>;<two>;<three>;<four>;\
+        <five>;<six>;<seven>;<eight>;<nine>
+#
+space   <tab>;<newline>;<vertical-tab>;<form-feed>;\
+        <carriage-return>;<space>
+#
+cntrl   <alert>;<backspace>;<tab>;<newline>;<vertical-tab>;\
+        <form-feed>;<carriage-return>;\
+        <NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;<SO>;<SI>;\
+        <DLE>;<DC1>;<DC2>;<DC3>;<DC4>;<NAK>;<SYN>;<ETB>;<CAN>;\
+        <EM>;<SUB>;<ESC>;<IS4>;<IS3>;<IS2>;<IS1>;<DEL>
+#
+punct   <exclamation-mark>;<quotation-mark>;<number-sign>;\
+        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;\
+        <left-parenthesis>;<right-parenthesis>;<asterisk>;\
+        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;\
+        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;\
+        <greater-than-sign>;<question-mark>;<commercial-at>;\
+        <left-square-bracket>;<backslash>;<right-square-bracket>;\
+        <circumflex>;<underscore>;<grave-accent>;\
+        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;
+#
+xdigit  <zero>;<one>;<two>;<three>;<four>;<five>;<six>;<seven>;<eight>;\
+        <nine>;<A>;<B>;<C>;<D>;<E>;<F>;<a>;<b>;<c>;<d>;<e>;<f>
+#
+blank   <space>;<tab>
+#
+tolower (<A>,<a>);(<B>,<b>);(<C>,<c>);(<D>,<d>);(<E>,<e>);\
+        (<F>,<f>);(<G>,<g>);(<H>,<h>);(<I>,<i>);(<J>,<j>);\
+        (<K>,<k>);(<L>,<l>);(<M>,<m>);(<N>,<n>);(<O>,<o>);\
+        (<P>,<p>);(<Q>,<q>);(<R>,<r>);(<S>,<s>);(<T>,<t>);\
+        (<U>,<u>);(<V>,<v>);(<W>,<w>);(<X>,<x>);(<Y>,<y>);(<Z>,<z>)
+#
+toupper (<a>,<A>);(<b>,<B>);(<c>,<C>);(<d>,<D>);(<e>,<E>);\
+        (<f>,<F>);(<g>,<G>);(<h>,<H>);(<i>,<I>);(<j>,<J>);\
+        (<k>,<K>);(<l>,<L>);(<m>,<M>);(<n>,<N>);(<o>,<O>);\
+        (<p>,<P>);(<q>,<Q>);(<r>,<R>);(<s>,<S>);(<t>,<T>);\
+        (<u>,<U>);(<v>,<V>);(<w>,<W>);(<x>,<X>);(<y>,<Y>);(<z>,<Z>)
+END LC_CTYPE
+
+LC_COLLATE
+# This is the POSIX Locale definition for the LC_COLLATE category.
+# The order is the same as in the ASCII code set.
+order_start forward
+<NUL>
+<SOH>
+<STX>
+<ETX>
+<EOT>
+<ENQ>
+<ACK>
+<alert>
+<backspace>
+<tab>
+<newline>
+<vertical-tab>
+<form-feed>
+<carriage-return>
+<SI>
+<SO>
+<DLE>
+<DC1>
+<DC2>
+<DC3>
+<DC4>
+<NAK>
+<SYN>
+<ETB>
+<CAN>
+<EM>
+<SUB>
+<ESC>
+<IS4>
+<IS3>
+<IS2>
+<IS1>
+<space>
+<exclamation-mark>
+<quotation-mark>
+<number-sign>
+<dollar-sign>
+<percent-sign>
+<ampersand>
+<apostrophe>
+<left-parenthesis>
+<right-parenthesis>
+<asterisk>
+<plus-sign>
+<comma>
+<hyphen>
+<period>
+<slash>
+<zero>
+<one>
+<two>
+<three>
+<four>
+<five>
+<seven>
+<eight>
+<nine>
+<colon>
+<semicolon>
+<less-than-sign>
+<equals-sign>
+<greater-than-sign>
+<question-mark>
+<commercial-at>
+<A>
+<B>
+<C>
+<D>
+<E>
+<F>
+<G>
+<H>
+<I>
+<J>
+<K>
+<L>
+<M>
+<N>
+<O>
+<P>
+<Q>
+<R>
+<S>
+<T>
+<U>
+<V>
+<W>
+<X>
+<Y>
+<Z>
+<left-square-bracket>
+<backslash>
+<right-square-bracket>
+<circumflex>
+<underscore>
+<grave-accent>
+<a>
+<b>
+<c>
+<d>
+<e>
+<f>
+<g>
+<h>
+<i>
+<j>
+<k>
+<l>
+<m>
+<n>
+<o>
+<p>
+<q>
+<r>
+<s>
+<t>
+<u>
+<v>
+<w>
+<y>
+<z>
+<left-curly-bracket>
+<vertical-line>
+<right-curly-bracket>
+<tilde>
+<DEL>
+order_end
+#
+END LC_COLLATE
+
+LC_MONETARY
+# This is the POSIX Locale definition for
+# the LC_MONETARY category.
+#
+int_curr_symbol     ""
+currency_symbol     ""
+mon_decimal_point   "."
+mon_thousands_sep   ""
+mon_grouping        -1
+positive_sign       ""
+negative_sign       ""
+int_frac_digits     -1
+frac_digits         -1
+p_cs_precedes       -1
+p_sep_by_space      -1
+n_cs_precedes       -1
+n_sep_by_space      -1
+p_sign_posn         -1
+n_sign_posn         -1
+#
+END LC_MONETARY
+
+LC_NUMERIC
+# This is the POSIX Locale definition for
+# the LC_NUMERIC category.
+#
+decimal_point   "<period>"
+thousands_sep   ""
+grouping        -1
+#
+END LC_NUMERIC
+
+LC_TIME
+# This is the POSIX Locale definition for
+# the LC_TIME category.
+#
+# Abbreviated weekday names (%s)
+abday   "<S><u><n>";"<M><o><n>";"<T><u><e>";"<W><e><d>";\
+        "<T><h><u>";"<F><r><i>";"<S><a><t>"
+#
+# Full weekday names (%A)
+day     "<S><u><n><d><a><y>";"<M><o><n><d><a><y>";\
+        "<T><u><e><s><d><a><y>";"<W><e><d><n><e><s><d><a><y>";\
+        "<T><h><u><r><s><d><a><y>";"<F><r><i><d><a><y>";\
+        "<S><a><t><u><r><d><a><y>"
+#
+# Abbreviated month names (%b)
+abmon   "<J><a><n>";"<F><e><b>";"<M><a><r>";\
+	"<A><p><r>";"<M><a><y>";"<J><u><n>";\
+        "<J><u><l>";"<A><u><g>";"<S><e><p>";\
+        "<O><c><t>";"<N><o><v>";"<D><e><c>"
+#
+# Full month names (%B)
+mon     "<J><a><n><u><a><r><y>";"<F><e><b><r><u><a><r><y>";\
+        "<M><a><r><c><h>";"<A><p><r><i><l>";\
+        "<M><a><y>";"<J><u><n><e>";\
+        "<J><u><l><y>";"<A><u><g><u><s><t>";\
+        "<S><e><p><t><e><m><b><e><r>";"<O><c><t><o><b><e><r>";\
+        "<N><o><v><e><m><b><e><r>";"<D><e><c><e><m><b><e><r>"
+#
+# Equivalent of AM/PM (%p)      "AM"/"PM"
+am_pm   "<A><M>";"<P><M>"
+#
+# Appropriate date and time representation (%c)
+#       "%a %b %e %H:%M:%S %Y"
+d_t_fmt "<percent-sign><a><space><percent-sign><b><space><percent-sign><e>\
+<space><percent-sign><H><colon><percent-sign><M>\
+<colon><percent-sign><S><space><percent-sign><Y>"
+#
+# Appropriate date representation (%x)   "%m/%d/%y"
+d_fmt   "<percent-sign><m><slash><percent-sign><d><slash><percent-sign><y>"
+#
+# Appropriate time representation (%X)   "%H:%M:%S"
+t_fmt   "<percent-sign><H><colon><percent-sign><M><colon><percent-sign><S>"
+#
+# Appropriate 12 h time representation (%Xr   "%I:%M:%S %p"
+t_fmt_ampm "<percent-sign><I><colon><percent-sign><M><colon><percent-sign><S><space><percent-sign><p>"
+#
+END LC_TIME
+
+LC_MESSAGES
+# This is the POSIX Locale definition for
+# the LC_NUMERIC category.
+#
+yesexpr "<circumflex><left-square-bracket><y><Y><right-square-bracket>"
+#
+noexpr  "<circumflex><left-square-bracket><n><N><right-square-bracket>"
+END LC_MESSAGES

@@ -1,0 +1,92 @@
+escape_char  /
+comment_char  %
+% Irish language locale for Ireland
+% Source: NSAI
+% Address: Glasnevin, Dublin 9, Ireland
+% Contact: Michael Everson
+% Email: everson@irlearn.ucd.ie
+% Tel: +353 1 280-0701
+% Fax: +353 1 830-9821
+% Language: ga
+% Territory: IE
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol         "<I><E><P><SP>"
+currency_symbol         "<Pd>"
+mon_decimal_point       "<.>"
+mon_thousands_sep       "<,>"
+mon_grouping            3;3
+positive_sign           ""
+negative_sign           "<->"
+int_frac_digits         2
+frac_digits             2
+p_cs_precedes           1
+p_sep_by_space          0
+n_cs_precedes           1
+n_sep_by_space          0
+p_sign_posn             1
+n_sign_posn             1
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point           "<.>"
+thousands_sep           "<,>"
+grouping                3;3
+END LC_NUMERIC
+
+LC_TIME
+abday       "<D><o><m><h>";"<L><u><a><n>";/
+            "<M><a'><i><r><t>";"<C><e'><a><d>";/
+            "<D><e'><a><r>";"<A><o><i><n><e>";/
+            "<S><a><t><h>"
+day         "<D><e'><SP><D><o><m><h><n><a><i><g><h>";/
+            "<D><e'><SP><L><u><a><i><n>";/
+            "<D><e'><SP><M><a'><i><r><t>";/
+            "<D><e'><SP><C><e'><a><d><a><o><i><n>";/
+            "<D><e'><a><r><d><a><o><i><n>";/
+            "<D><e'><SP><h><A><o><i><n><e>";/
+            "<D><e'><SP><S><a><t><h><a><i><r><n>"
+abmon       "<E><a><n>";"<F><e><a><b><h>";/
+            "<M><a'><r><t><a>";"<A><i><b>";/
+            "<B><e><a><l>";"<M><e><i><t><h>";/
+            "<I><u'><i><l>";"<L><u'><n>";/
+            "<M><F><o'><m><h>";"<D><F><o'><m><h>";/
+            "<S><a><m><h>";"<N><o><l><l>"
+mon         "<E><a><n><a'><i><r>";/
+            "<F><e><a><b><h><r><a>";/
+            "<M><a'><r><t><a>";/
+            "<A><i><b><r><e><a'><n>";/
+            "<M><i'><SP><n><a><SP><B><e><a><l><t><a><i><n><e>";/
+            "<M><e><i><t><h>";/
+            "<I><u'><i><l>";/
+            "<L><u'><n><a><s><a>";/
+            "<M><e><a'><n><SP><F><o'><m><h><a><i><r>";/
+            "<D><e><i><r><e><a><d><h><SP><F><o'><m><h><a><i><r>";/
+            "<M><i'><SP><n><a><SP><S><a><m><h><n><a>";/
+            "<M><i'><SP><n><a><SP><N><o><l><l><a><g>"
+d_t_fmt     "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt       "<%><d><.><%><m><.><%><y>"
+t_fmt       "<%><T>"
+am_pm       "";""
+t_fmt_ampm  ""
+END LC_TIME
+
+LC_MESSAGES
+yesexpr     "<<(><t><T><y><Y><)/>><.><*>"
+noexpr      "<<(><n><N><)/>><.><*>"
+END LC_MESSAGES

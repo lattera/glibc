@@ -1,0 +1,81 @@
+escape_char /
+comment_char %
+
+% Faroese language locale for Faroe Islands
+% Source: Danish Standards Association
+% Address: Kollegievej 6
+%    DK-2920 Charlottenlund, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 39966101
+% Fax: +45 - 39966102
+% Language: fo
+% Territory: FO
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+%
+% Only LC_TIME and LC_MESSAGES are
+% specified here, else use the da_DK locale
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "da_DK"
+END LC_COLLATE
+
+LC_MONETARY
+copy "da_DK"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "da_DK"
+END LC_NUMERIC
+
+LC_TIME
+abday   "<s><u><n>";"<m><a'><n>";/
+        "<t><y'><s>";"<m><i><k>";/
+        "<h><o'><s>";"<f><r><i'>";/
+        "<l><e><y>"
+day     "<s><u><n><n><u><d><a><g><u><r>";/
+        "<m><a'><n><a><d><a><g><u><r>";/
+        "<t><y'><s><d><a><g><u><r>";/
+        "<m><i><k><u><d><a><g><u><r>";/
+        "<h><o'><s><d><a><g><u><r>";/
+        "<f><r><i'><g><g><j><a><d><a><g><u><r>";/
+        "<l><e><y><g><a><r><d><a><g><u><r>"
+abmon   "<j><a><n>";"<f><e><b>";/
+        "<m><a><r>";"<a><p><r>";/
+        "<m><a><i>";"<j><u><n>";/
+        "<j><u><l>";"<a><u><g>";/
+        "<s><e><p>";"<o><k><t>";/
+        "<n><o><v>";"<d><e><s>"
+mon     "<j><a><n><u><a><r>";/
+        "<f><e><b><r><u><a><r>";/
+        "<m><a><r><s>";/
+        "<a><p><r><i'><l>";/
+        "<m><a><i>";/
+        "<j><u><n><i>";/
+        "<j><u><l><i>";/
+        "<a><u><g><u><s><t>";/
+        "<s><e><p><t><e><m><b><e><r>";/
+        "<o><k><t><o><b><e><r>";/
+        "<n><o><v><e><m><b><e><r>";/
+        "<d><e><s><e><m><b><e><r>"
+d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt   "<%><d><//><%><m><-><%><Y>"
+t_fmt   "<%><T>"
+am_pm   "";""
+t_fmt_ampm  ""
+END LC_TIME
+
+LC_MESSAGES
+yesexpr "<<(><J><j><Y><y><)/>><.><*>"
+noexpr  "<<(><N><n><)/>><.><*>"
+END LC_MESSAGES

@@ -1,0 +1,101 @@
+comment_char %
+escape_char  /
+%
+% Basque Language Locale for Spain
+% Source: RAP
+% Address: Sankt Jo//rgens Alle 8
+%    DK-1615 Ko//benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 33256543
+% Language: eu
+% Territory: ES
+% Revision: 4.3
+% Date: 1996-10-15
+% Application: general
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_MESSAGES
+yesexpr "<<(><b><B><s><S><y><Y><)/>><.><*>"
+noexpr  "<<(><e><E><n><N><)/>><.><*>"
+END LC_MESSAGES
+
+LC_MONETARY
+int_curr_symbol      "<E><S><P><SP>"
+currency_symbol      "<P><t><s>"
+mon_decimal_point    "<,>"
+mon_thousands_sep    "<.>"
+mon_grouping         3;3
+positive_sign        ""
+negative_sign        "<->"
+int_frac_digits      0
+frac_digits          0
+p_cs_precedes        1
+p_sep_by_space       1
+n_cs_precedes        1
+n_sep_by_space       1
+p_sign_posn          1
+n_sign_posn          1
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point        "<,>"
+thousands_sep        ""
+grouping             0;0
+END LC_NUMERIC
+
+LC_TIME
+abday   "<i><g><a><n><d><e><a>";/
+        "<a><s><t><e><l><e><h><e><n><a>";/
+        "<a><s><t><e><a><r><t><e><a>";/
+        "<a><s><t><e><a><z><k><e><n><a>";/
+        "<o><s><t><e><g><u><n><a>";/
+        "<o><s><t><i><r><a><l><a>";/
+        "<l><a><r><u><n><b><a><t><a>"
+day     "<i><g><a><n><d><e><a>";/
+        "<a><s><t><e><l><e><h><e><n><a>";/
+        "<a><s><t><e><a><r><t><e><a>";/
+        "<a><s><t><e><a><z><k><e><n><a>";/
+        "<o><s><t><e><g><u><n><a>";/
+        "<o><s><t><i><r><a><l><a>";/
+        "<l><a><r><u><n><b><a><t><a>"
+abmon   "<u><r><t>";"<o><t><s>";/
+        "<m><a><r>";"<a><p><i>";/
+        "<m><a><i>";"<e><k><a>";/
+        "<u><z><t>";"<a><b><u>";/
+        "<i><r><a>";"<u><r><r>";/
+        "<a><z><a>";"<a><b><e>"
+mon     "<u><r><t><a><r><r><i><l><a>";/
+        "<o><t><s><a><i><l><a>";/
+        "<m><a><r><t><x><o><a>";/
+        "<a><p><i><r><i><l><a>";/
+        "<m><a><i><a><t><z><a>";/
+        "<e><k><a><i><n><a>";/
+        "<u><z><t><a><i><l><a>";/
+        "<a><b><u><z><t><u><a>";/
+        "<i><r><a><i><l><a>";/
+        "<u><r><r><i><a>";/
+        "<a><z><a><r><o><a>";/
+        "<a><b><e><n><d><u><a>"
+% YY-MM-DD
+d_t_fmt "<%><y><-><%><m><-><%><d><SP><%><T><SP><%><Z>"
+% dddddddddd,   19YYeko  mmmmmmmren   XXa
+% day of the week,   year+eko   month+ren   day+a
+d_fmt   "<%><a><,><SP><%><Y><e><k><o><SP><%><b><r><e><n><SP><%><d><a>"
+t_fmt   "<%><T>"
+am_pm   "";""
+t_fmt_ampm ""
+END LC_TIME

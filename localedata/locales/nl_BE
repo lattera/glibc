@@ -1,0 +1,77 @@
+comment_char %
+escape_char  /
+%
+% Dutch Language Locale for Belgium
+% Source: RAP
+% Address: Sankt Jo//rgens Alle 8
+%    DK-1615 Ko//benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 31205521
+% Language: nl
+% Territory: BE
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_MESSAGES
+copy "nl_NL"
+END LC_MESSAGES
+
+LC_MONETARY
+copy "fr_BE"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "fr_BE"
+END LC_NUMERIC
+
+LC_TIME
+% copy "nl_NL"
+abday   "<z><o>";"<m><a>";"<d><i>";/
+        "<w><o>";"<d><o>";"<v><r>";/
+        "<z><a>"
+day     "<z><o><n><d><a><g>";/
+        "<m><a><a><n><d><a><g>";/
+        "<d><i><n><s><d><a><g>";/
+        "<w><o><e><n><s><d><a><g>";/
+        "<d><o><n><d><e><r><d><a><g>";/
+        "<v><r><i><j><d><a><g>";/
+        "<z><a><t><e><r><d><a><g>"
+abmon   "<j><a><n>";"<f><e><b>";/
+        "<m><r><t>";"<a><p><r>";/
+        "<m><e><i>";"<j><u><n>";/
+        "<j><u><l>";"<a><u><g>";/
+        "<s><e><p>";"<o><k><t>";/
+        "<n><o><v>";"<d><e><c>"
+mon     "<j><a><n><u><a><r><i>";/
+        "<f><e><b><r><u><a><r><i>";/
+        "<m><a><a><r><t>";/
+        "<a><p><r><i><l>";/
+        "<m><e><i>";/
+        "<j><u><n><i>";/
+        "<j><u><l><i>";/
+        "<a><u><g><u><s><t><u><s>";/
+        "<s><e><p><t><e><m><b><e><r>";/
+        "<o><k><t><o><b><e><r>";/
+        "<n><o><v><e><m><b><e><r>";/
+        "<d><e><c><e><m><b><e><r>"
+d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt   "<%><d><-><%><m><-><%><y>"
+t_fmt   "<%><T>"
+am_pm   "";""
+t_fmt_ampm ""
+END LC_TIME

@@ -1,0 +1,82 @@
+escape_char /
+comment_char %
+
+% Greenlandic language locale for Greenland
+% Source: Danish Standards Association
+% Address: Kollegievej 6
+%  DK-2920 Charlottenlund, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 39966101
+% Fax: +45 - 39966102
+% Language: kl
+% Territory: GL
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+%
+% Only LC_TIME and LC_MESSAGES are
+% specified here, else the da_DK locale
+% is used.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "da_DK"
+END LC_COLLATE
+
+LC_MONETARY
+copy "da_DK"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "da_DK"
+END LC_NUMERIC
+
+LC_TIME
+abday    "<s><a><b>";"<a><t><a>";/
+         "<m><a><r>";"<p><i><n>";/
+         "<s><i><s>";"<t><a><l>";/
+         "<a><r><f>"
+day      "<s><a><b><a><a><t>";/
+         "<a><t><a><a><s><i><n><n><g><o><r><n><e><q>";/
+         "<m><a><r><l><u><n><n><g><o><r><n><e><q>";/
+         "<p><i><n><g><a><s><u><n><n><g><o><r><n><e><q>";/
+         "<s><i><s><a><m><a><n><n><g><o><r><n><e><q>";/
+         "<t><a><l><l><i><m><a><n><n><g><o><r><n><e><q>";/
+         "<a><r><f><i><n><i><n><n><g><o><r><n><e><q>"
+abmon    "<j><a><n>";"<f><e><b>";/
+         "<m><a><r>";"<a><p><r>";/
+         "<m><a><j>";"<j><u><n>";/
+         "<j><u><l>";"<a><u><g>";/
+         "<s><e><p>";"<o><k><t>";/
+         "<n><o><v>";"<d><e><c>"
+mon      "<j><a><n><u><a><r><i>";/
+         "<f><e><b><r><u><a><r><i>";/
+         "<m><a><r><t><s><i>";/
+         "<a><p><r><i><l><i>";/
+         "<m><a><j><i>";/
+         "<j><u><n><i>";/
+         "<j><u><l><i>";/
+         "<a><u><g><u><s><t><u><s><i>";/
+         "<s><e><p><t><e><m><b><e><r><i>";/
+         "<o><k><t><o><b><e><r><i>";/
+         "<n><o><v><e><m><b><e><r><i>";/
+         "<d><e><c><e><m><b><e><r><i>"
+d_t_fmt     "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt       "<%><d><SP><%><b><SP><%><Y>"
+t_fmt       "<%><T>"
+am_pm       "";""
+t_fmt_ampm  ""
+END LC_TIME
+
+LC_MESSAGES
+yesexpr  "<<(><J><j><Y><y><A><a><)/>><.><*>"
+noexpr   "<<(><N><n><)/>><.><*>"
+END LC_MESSAGES

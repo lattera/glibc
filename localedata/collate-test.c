@@ -1,0 +1,125 @@
+/* Test collation function using real data.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <ctype.h>
+#include <locale.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct lines
+{
+  const char *key;
+  const char *line;
+};
+
+static int xstrcoll __P ((const void *, const void *));
+
+int
+main (int argc, char *argv[])
+{
+  int result = 0;
+  size_t nstrings, nstrings_max;
+  struct lines *strings;
+  char *line = NULL;
+  size_t len = 0;
+  size_t n;
+
+  setlocale (LC_ALL, "");
+
+  nstrings_max = 100;
+  nstrings = 0;
+  strings = (struct lines *) malloc (nstrings_max * sizeof (struct lines));
+  if (strings == NULL)
+    {
+      perror (argv[0]);
+      exit (1);
+    }
+
+  while (1)
+    {
+      int l;
+      if (getline (&line, &len, stdin) < 0)
+	break;
+
+      if (nstrings == nstrings_max)
+	{
+	  strings = (struct lines *) realloc (strings,
+					      (nstrings_max *= 2
+					       * sizeof (*strings)));
+	  if (strings == NULL)
+	    {
+	      perror (argv[0]);
+	      exit (1);
+	    }
+	}
+      strings[nstrings].line = strdup (line);
+      l = strcspn (line, ":(;");
+      while (l > 0 && isspace (line[l - 1]))
+	--l;
+      strings[nstrings].key = strndup (line, l);
+      ++nstrings;
+    }
+
+  /* First shuffle.  */
+  srandom (atoi (argv[1]));
+  for (n = 0; n < 10 * nstrings; ++n)
+    {
+      int r1, r2, r;
+      size_t idx1 = random () % nstrings;
+      size_t idx2 = random () % nstrings;
+      struct lines tmp = strings[idx1];
+      strings[idx1] = strings[idx2];
+      strings[idx2] = tmp;
+
+      /* While we are at it a first little test.  */
+      r1 = strcoll (strings[idx1].key, strings[idx2].key);
+      r2 = strcoll (strings[idx2].key, strings[idx1].key);
+      r = -(r1 * r2);
+      if (r)
+	r /= abs (r1 * r2);
+
+      if (r < 0 || abs (r1) != r || abs (r2) != r)
+	printf ("`%s' and `%s' collate wrong: %d vs. %d\n",
+		strings[idx1].key, strings[idx2].key, r1, r2);
+    }
+
+  /* Now sort.  */
+  qsort (strings, nstrings, sizeof (struct lines), xstrcoll);
+
+  /* Print the result.  */
+  for (n = 0; n < nstrings; ++n)
+    fputs (strings[n].line, stdout);
+
+  return result;
+}
+
+
+static int
+xstrcoll (ptr1, ptr2)
+     const void *ptr1;
+     const void *ptr2;
+{
+  struct lines *l1 = (struct lines *) ptr1;
+  struct lines *l2 = (struct lines *) ptr2;
+
+  return strcoll (l1->key, l2->key);
+}

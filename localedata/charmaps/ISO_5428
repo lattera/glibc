@@ -1,0 +1,199 @@
+<code_set_name> ISO_5428
+<comment_char> %
+<escape_char> /
+%  source: ECMA registry
+
+% alias ISO-IR-55
+% alias ISO_5428:1980
+CHARMAP
+<NU>                   /x00   <U0000> NULL (NUL)
+<SH>                   /x01   <U0001> START OF HEADING (SOH)
+<SX>                   /x02   <U0002> START OF TEXT (STX)
+<EX>                   /x03   <U0003> END OF TEXT (ETX)
+<ET>                   /x04   <U0004> END OF TRANSMISSION (EOT)
+<EQ>                   /x05   <U0005> ENQUIRY (ENQ)
+<AK>                   /x06   <U0006> ACKNOWLEDGE (ACK)
+<BL>                   /x07   <U0007> BELL (BEL)
+<BS>                   /x08   <U0008> BACKSPACE (BS)
+<HT>                   /x09   <U0009> CHARACTER TABULATION (HT)
+<LF>                   /x0A   <U000A> LINE FEED (LF)
+<VT>                   /x0B   <U000B> LINE TABULATION (VT)
+<FF>                   /x0C   <U000C> FORM FEED (FF)
+<CR>                   /x0D   <U000D> CARRIAGE RETURN (CR)
+<SO>                   /x0E   <U000E> SHIFT OUT (SO)
+<SI>                   /x0F   <U000F> SHIFT IN (SI)
+<DL>                   /x10   <U0010> DATALINK ESCAPE (DLE)
+<D1>                   /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<D2>                   /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<D3>                   /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<D4>                   /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NK>                   /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SY>                   /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<EB>                   /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CN>                   /x18   <U0018> CANCEL (CAN)
+<EM>                   /x19   <U0019> END OF MEDIUM (EM)
+<SB>                   /x1A   <U001A> SUBSTITUTE (SUB)
+<EC>                   /x1B   <U001B> ESCAPE (ESC)
+<FS>                   /x1C   <U001C> FILE SEPARATOR (IS4)
+<GS>                   /x1D   <U001D> GROUP SEPARATOR (IS3)
+<RS>                   /x1E   <U001E> RECORD SEPARATOR (IS2)
+<US>                   /x1F   <U001F> UNIT SEPARATOR (IS1)
+<SP>                   /x20   <U0020> SPACE
+<"!>                   /x21   <UE002> NON-SPACING GRAVE ACCENT <ISO-IR-103_C1> (not a real character)
+<"'>                   /x22   <UE003> NON-SPACING ACUTE ACCENT <ISO-IR-103_C2> (not a real character)
+<":>                   /x23   <UE009> NON-SPACING DIAERESIS <ISO-IR-103_C8> (not a real character)
+<"?>                   /x24   <UE005> NON-SPACING TILDE <ISO-IR-103_C4> (not a real character)
+<"p>                   /x25   <UE012> GREEK NON-SPACING PSILI PNEUMATA <ISO-IR-55_25> (not a real character)
+<"d>                   /x26   <UE013> GREEK NON-SPACING DASIA PNEUMATA <ISO-IR-55_26> (not a real character)
+<"i>                   /x27   <UE014> GREEK NON-SPACING IOTA BELOW <ISO-IR-55_27> (not a real character)
+<<<>                   /x30   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+</>/>>                 /x31   <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+<"9>                   /x32   <U201D> RIGHT DOUBLE QUOTATION MARK
+<"6>                   /x33   <U201C> LEFT DOUBLE QUOTATION MARK
+<'G>                   /x34   <U0374> GREEK NUMERAL SIGN (Dexia keraia)
+<,G>                   /x35   <U0375> GREEK LOWER NUMERAL SIGN (Aristeri keraia)
+<.M>                   /x3B   <U00B7> MIDDLE DOT
+<;>                    /x3F   <U003B> SEMICOLON
+<A*>                   /x41   <U0391> GREEK CAPITAL LETTER ALPHA
+<B*>                   /x42   <U0392> GREEK CAPITAL LETTER BETA
+<G*>                   /x44   <U0393> GREEK CAPITAL LETTER GAMMA
+<D*>                   /x45   <U0394> GREEK CAPITAL LETTER DELTA
+<E*>                   /x46   <U0395> GREEK CAPITAL LETTER EPSILON
+<T3>                   /x47   <U03DA> GREEK LETTER STIGMA
+<M3>                   /x48   <U03DC> GREEK LETTER DIGAMMA
+<Z*>                   /x49   <U0396> GREEK CAPITAL LETTER ZETA
+<Y*>                   /x4A   <U0397> GREEK CAPITAL LETTER ETA
+<H*>                   /x4B   <U0398> GREEK CAPITAL LETTER THETA
+<I*>                   /x4C   <U0399> GREEK CAPITAL LETTER IOTA
+<K*>                   /x4D   <U039A> GREEK CAPITAL LETTER KAPPA
+<L*>                   /x4E   <U039B> GREEK CAPITAL LETTER LAMDA
+<M*>                   /x4F   <U039C> GREEK CAPITAL LETTER MU
+<N*>                   /x50   <U039D> GREEK CAPITAL LETTER NU
+<C*>                   /x51   <U039E> GREEK CAPITAL LETTER XI
+<O*>                   /x52   <U039F> GREEK CAPITAL LETTER OMICRON
+<P*>                   /x53   <U03A0> GREEK CAPITAL LETTER PI
+<K3>                   /x54   <U03DE> GREEK LETTER KOPPA
+<R*>                   /x55   <U03A1> GREEK CAPITAL LETTER RHO
+<S*>                   /x56   <U03A3> GREEK CAPITAL LETTER SIGMA
+<T*>                   /x58   <U03A4> GREEK CAPITAL LETTER TAU
+<U*>                   /x59   <U03A5> GREEK CAPITAL LETTER UPSILON
+<F*>                   /x5A   <U03A6> GREEK CAPITAL LETTER PHI
+<X*>                   /x5B   <U03A7> GREEK CAPITAL LETTER CHI
+<Q*>                   /x5C   <U03A8> GREEK CAPITAL LETTER PSI
+<W*>                   /x5D   <U03A9> GREEK CAPITAL LETTER OMEGA
+<P3>                   /x5E   <U03E0> GREEK LETTER SAMPI
+<a*>                   /x61   <U03B1> GREEK SMALL LETTER ALPHA
+<b*>                   /x62   <U03B2> GREEK SMALL LETTER BETA
+<b3>                   /x63   <U03D0> GREEK BETA SYMBOL
+<g*>                   /x64   <U03B3> GREEK SMALL LETTER GAMMA
+<d*>                   /x65   <U03B4> GREEK SMALL LETTER DELTA
+<e*>                   /x66   <U03B5> GREEK SMALL LETTER EPSILON
+<t3>                   /x67   <UE01A> GREEK SMALL LETTER STIGMA <ISO-IR-55_47>
+<m3>                   /x68   <UE01B> GREEK SMALL LETTER DIGAMMA <ISO-IR-55_48>
+<z*>                   /x69   <U03B6> GREEK SMALL LETTER ZETA
+<y*>                   /x6A   <U03B7> GREEK SMALL LETTER ETA
+<h*>                   /x6B   <U03B8> GREEK SMALL LETTER THETA
+<i*>                   /x6C   <U03B9> GREEK SMALL LETTER IOTA
+<k*>                   /x6D   <U03BA> GREEK SMALL LETTER KAPPA
+<l*>                   /x6E   <U03BB> GREEK SMALL LETTER LAMDA
+<m*>                   /x6F   <U03BC> GREEK SMALL LETTER MU
+<n*>                   /x70   <U03BD> GREEK SMALL LETTER NU
+<c*>                   /x71   <U03BE> GREEK SMALL LETTER XI
+<o*>                   /x72   <U03BF> GREEK SMALL LETTER OMICRON
+<p*>                   /x73   <U03C0> GREEK SMALL LETTER PI
+<k3>                   /x74   <UE01C> GREEK SMALL LETTER KOPPA <ISO-IR-55_54>
+<r*>                   /x75   <U03C1> GREEK SMALL LETTER RHO
+<s*>                   /x76   <U03C3> GREEK SMALL LETTER SIGMA
+<*s>                   /x77   <U03C2> GREEK SMALL LETTER FINAL SIGMA
+<t*>                   /x78   <U03C4> GREEK SMALL LETTER TAU
+<u*>                   /x79   <U03C5> GREEK SMALL LETTER UPSILON
+<f*>                   /x7A   <U03C6> GREEK SMALL LETTER PHI
+<x*>                   /x7B   <U03C7> GREEK SMALL LETTER CHI
+<q*>                   /x7C   <U03C8> GREEK SMALL LETTER PSI
+<w*>                   /x7D   <U03C9> GREEK SMALL LETTER OMEGA
+<p3>                   /x7E   <UE01D> GREEK SMALL LETTER SAMPI <ISO-IR-55_5E>
+<DT>                   /x7F   <U007F> DELETE (DEL)
+<NUL>                  /x00   <U0000> NUL
+<SOH>                  /x01   <U0001> START OF HEADING (SOH)
+<STX>                  /x02   <U0002> START OF TEXT (STX)
+<ETX>                  /x03   <U0003> END OF TEXT (ETX)
+<EOT>                  /x04   <U0004> END OF TRANSMISSION (EOT)
+<ENQ>                  /x05   <U0005> ENQUIRY (ENQ)
+<ACK>                  /x06   <U0006> ACKNOWLEDGE (ACK)
+<alert>                /x07   <U0007> BELL (BEL)
+<BEL>                  /x07   <U0007> BELL (BEL)
+<backspace>            /x08   <U0008> BACKSPACE (BS)
+<tab>                  /x09   <U0009> CHARACTER TABULATION (HT)
+<newline>              /x0A   <U000A> LINE FEED (LF)
+<vertical-tab>         /x0B   <U000B> LINE TABULATION (VT)
+<form-feed>            /x0C   <U000C> FORM FEED (FF)
+<carriage-return>      /x0D   <U000D> CARRIAGE RETURN (CR)
+<DLE>                  /x10   <U0010> DATALINK ESCAPE (DLE)
+<DC1>                  /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<DC2>                  /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<DC3>                  /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<DC4>                  /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NAK>                  /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SYN>                  /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<ETB>                  /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CAN>                  /x18   <U0018> CANCEL (CAN)
+<SUB>                  /x1A   <U001A> SUBSTITUTE (SUB)
+<ESC>                  /x1B   <U001B> ESCAPE (ESC)
+<IS4>                  /x1C   <U001C> FILE SEPARATOR (IS4)
+<IS3>                  /x1D   <U001D> GROUP SEPARATOR (IS3)
+<intro>                /x1D   <U001D> GROUP SEPARATOR (IS3)
+<IS2>                  /x1E   <U001E> RECORD SEPARATOR (IS2)
+<IS1>                  /x1F   <U001F> UNIT SEPARATOR (IS1)
+<DEL>                  /x7F   <U007F> DELETE (DEL)
+<space>                /x20   <U0020> SPACE
+<exclamation-mark>     /x00   <U0021> EXCLAMATION MARK
+<quotation-mark>       /x00   <U0022> QUOTATION MARK
+<number-sign>          /x00   <U0023> NUMBER SIGN
+<dollar-sign>          /x00   <U0024> DOLLAR SIGN
+<percent-sign>         /x00   <U0025> PERCENT SIGN
+<ampersand>            /x00   <U0026> AMPERSAND
+<apostrophe>           /x00   <U0027> APOSTROPHE
+<left-parenthesis>     /x00   <U0028> LEFT PARENTHESIS
+<right-parenthesis>    /x00   <U0029> RIGHT PARENTHESIS
+<asterisk>             /x00   <U002A> ASTERISK
+<plus-sign>            /x00   <U002B> PLUS SIGN
+<comma>                /x00   <U002C> COMMA
+<hyphen>               /x00   <U002D> HYPHEN-MINUS
+<hyphen-minus>         /x00   <U002D> HYPHEN-MINUS
+<period>               /x00   <U002E> FULL STOP
+<full-stop>            /x00   <U002E> FULL STOP
+<slash>                /x00   <U002F> SOLIDUS
+<solidus>              /x00   <U002F> SOLIDUS
+<zero>                 /x00   <U0030> DIGIT ZERO
+<one>                  /x00   <U0031> DIGIT ONE
+<two>                  /x00   <U0032> DIGIT TWO
+<three>                /x00   <U0033> DIGIT THREE
+<four>                 /x00   <U0034> DIGIT FOUR
+<five>                 /x00   <U0035> DIGIT FIVE
+<six>                  /x00   <U0036> DIGIT SIX
+<seven>                /x00   <U0037> DIGIT SEVEN
+<eight>                /x00   <U0038> DIGIT EIGHT
+<nine>                 /x00   <U0039> DIGIT NINE
+<colon>                /x00   <U003A> COLON
+<semicolon>            /x3F   <U003B> SEMICOLON
+<less-than-sign>       /x00   <U003C> LESS-THAN SIGN
+<equals-sign>          /x00   <U003D> EQUALS SIGN
+<greater-than-sign>    /x00   <U003E> GREATER-THAN SIGN
+<question-mark>        /x00   <U003F> QUESTION MARK
+<commercial-at>        /x00   <U0040> COMMERCIAL AT
+<left-square-bracket>  /x00   <U005B> LEFT SQUARE BRACKET
+<backslash>            /x00   <U005C> REVERSE SOLIDUS
+<reverse-solidus>      /x00   <U005C> REVERSE SOLIDUS
+<right-square-bracket> /x00   <U005D> RIGHT SQUARE BRACKET
+<circumflex>           /x00   <U005E> CIRCUMFLEX ACCENT
+<circumflex-accent>    /x00   <U005E> CIRCUMFLEX ACCENT
+<underscore>           /x00   <U005F> LOW LINE
+<low-line>             /x00   <U005F> LOW LINE
+<grave-accent>         /x00   <U0060> GRAVE ACCENT
+<left-brace>           /x00   <U007B> LEFT CURLY BRACKET
+<left-curly-bracket>   /x00   <U007B> LEFT CURLY BRACKET
+<vertical-line>        /x00   <U007C> VERTICAL LINE
+<right-brace>          /x00   <U007D> RIGHT CURLY BRACKET
+<right-curly-bracket>  /x00   <U007D> RIGHT CURLY BRACKET
+<tilde>                /x00   <U007E> TILDE
+END CHARMAP

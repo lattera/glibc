@@ -1,0 +1,348 @@
+<code_set_name> IBM437
+<comment_char> %
+<escape_char> /
+%  source: IBM NLS RM Vol2 SE09-8002-01, March 1990
+
+% alias CP437
+% alias 437
+CHARMAP
+<NU>                   /x00   <U0000> NULL (NUL)
+<SH>                   /x01   <U0001> START OF HEADING (SOH)
+<SX>                   /x02   <U0002> START OF TEXT (STX)
+<EX>                   /x03   <U0003> END OF TEXT (ETX)
+<ET>                   /x04   <U0004> END OF TRANSMISSION (EOT)
+<EQ>                   /x05   <U0005> ENQUIRY (ENQ)
+<AK>                   /x06   <U0006> ACKNOWLEDGE (ACK)
+<BL>                   /x07   <U0007> BELL (BEL)
+<BS>                   /x08   <U0008> BACKSPACE (BS)
+<HT>                   /x09   <U0009> CHARACTER TABULATION (HT)
+<LF>                   /x0A   <U000A> LINE FEED (LF)
+<VT>                   /x0B   <U000B> LINE TABULATION (VT)
+<FF>                   /x0C   <U000C> FORM FEED (FF)
+<CR>                   /x0D   <U000D> CARRIAGE RETURN (CR)
+<SO>                   /x0E   <U000E> SHIFT OUT (SO)
+<SI>                   /x0F   <U000F> SHIFT IN (SI)
+<DL>                   /x10   <U0010> DATALINK ESCAPE (DLE)
+<D1>                   /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<D2>                   /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<D3>                   /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<D4>                   /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NK>                   /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SY>                   /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<EB>                   /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CN>                   /x18   <U0018> CANCEL (CAN)
+<EM>                   /x19   <U0019> END OF MEDIUM (EM)
+<SB>                   /x1A   <U001A> SUBSTITUTE (SUB)
+<EC>                   /x1B   <U001B> ESCAPE (ESC)
+<FS>                   /x1C   <U001C> FILE SEPARATOR (IS4)
+<GS>                   /x1D   <U001D> GROUP SEPARATOR (IS3)
+<RS>                   /x1E   <U001E> RECORD SEPARATOR (IS2)
+<US>                   /x1F   <U001F> UNIT SEPARATOR (IS1)
+<SP>                   /x20   <U0020> SPACE
+<!>                    /x21   <U0021> EXCLAMATION MARK
+<">                    /x22   <U0022> QUOTATION MARK
+<Nb>                   /x23   <U0023> NUMBER SIGN
+<DO>                   /x24   <U0024> DOLLAR SIGN
+<%>                    /x25   <U0025> PERCENT SIGN
+<&>                    /x26   <U0026> AMPERSAND
+<'>                    /x27   <U0027> APOSTROPHE
+<(>                    /x28   <U0028> LEFT PARENTHESIS
+<)>                    /x29   <U0029> RIGHT PARENTHESIS
+<*>                    /x2A   <U002A> ASTERISK
+<+>                    /x2B   <U002B> PLUS SIGN
+<,>                    /x2C   <U002C> COMMA
+<->                    /x2D   <U002D> HYPHEN-MINUS
+<.>                    /x2E   <U002E> FULL STOP
+<//>                   /x2F   <U002F> SOLIDUS
+<0>                    /x30   <U0030> DIGIT ZERO
+<1>                    /x31   <U0031> DIGIT ONE
+<2>                    /x32   <U0032> DIGIT TWO
+<3>                    /x33   <U0033> DIGIT THREE
+<4>                    /x34   <U0034> DIGIT FOUR
+<5>                    /x35   <U0035> DIGIT FIVE
+<6>                    /x36   <U0036> DIGIT SIX
+<7>                    /x37   <U0037> DIGIT SEVEN
+<8>                    /x38   <U0038> DIGIT EIGHT
+<9>                    /x39   <U0039> DIGIT NINE
+<:>                    /x3A   <U003A> COLON
+<;>                    /x3B   <U003B> SEMICOLON
+<<>                    /x3C   <U003C> LESS-THAN SIGN
+<=>                    /x3D   <U003D> EQUALS SIGN
+</>>                   /x3E   <U003E> GREATER-THAN SIGN
+<?>                    /x3F   <U003F> QUESTION MARK
+<At>                   /x40   <U0040> COMMERCIAL AT
+<A>                    /x41   <U0041> LATIN CAPITAL LETTER A
+<B>                    /x42   <U0042> LATIN CAPITAL LETTER B
+<C>                    /x43   <U0043> LATIN CAPITAL LETTER C
+<D>                    /x44   <U0044> LATIN CAPITAL LETTER D
+<E>                    /x45   <U0045> LATIN CAPITAL LETTER E
+<F>                    /x46   <U0046> LATIN CAPITAL LETTER F
+<G>                    /x47   <U0047> LATIN CAPITAL LETTER G
+<H>                    /x48   <U0048> LATIN CAPITAL LETTER H
+<I>                    /x49   <U0049> LATIN CAPITAL LETTER I
+<J>                    /x4A   <U004A> LATIN CAPITAL LETTER J
+<K>                    /x4B   <U004B> LATIN CAPITAL LETTER K
+<L>                    /x4C   <U004C> LATIN CAPITAL LETTER L
+<M>                    /x4D   <U004D> LATIN CAPITAL LETTER M
+<N>                    /x4E   <U004E> LATIN CAPITAL LETTER N
+<O>                    /x4F   <U004F> LATIN CAPITAL LETTER O
+<P>                    /x50   <U0050> LATIN CAPITAL LETTER P
+<Q>                    /x51   <U0051> LATIN CAPITAL LETTER Q
+<R>                    /x52   <U0052> LATIN CAPITAL LETTER R
+<S>                    /x53   <U0053> LATIN CAPITAL LETTER S
+<T>                    /x54   <U0054> LATIN CAPITAL LETTER T
+<U>                    /x55   <U0055> LATIN CAPITAL LETTER U
+<V>                    /x56   <U0056> LATIN CAPITAL LETTER V
+<W>                    /x57   <U0057> LATIN CAPITAL LETTER W
+<X>                    /x58   <U0058> LATIN CAPITAL LETTER X
+<Y>                    /x59   <U0059> LATIN CAPITAL LETTER Y
+<Z>                    /x5A   <U005A> LATIN CAPITAL LETTER Z
+<<(>                   /x5B   <U005B> LEFT SQUARE BRACKET
+<////>                 /x5C   <U005C> REVERSE SOLIDUS
+<)/>>                  /x5D   <U005D> RIGHT SQUARE BRACKET
+<'/>>                  /x5E   <U005E> CIRCUMFLEX ACCENT
+<_>                    /x5F   <U005F> LOW LINE
+<'!>                   /x60   <U0060> GRAVE ACCENT
+<a>                    /x61   <U0061> LATIN SMALL LETTER A
+<b>                    /x62   <U0062> LATIN SMALL LETTER B
+<c>                    /x63   <U0063> LATIN SMALL LETTER C
+<d>                    /x64   <U0064> LATIN SMALL LETTER D
+<e>                    /x65   <U0065> LATIN SMALL LETTER E
+<f>                    /x66   <U0066> LATIN SMALL LETTER F
+<g>                    /x67   <U0067> LATIN SMALL LETTER G
+<h>                    /x68   <U0068> LATIN SMALL LETTER H
+<i>                    /x69   <U0069> LATIN SMALL LETTER I
+<j>                    /x6A   <U006A> LATIN SMALL LETTER J
+<k>                    /x6B   <U006B> LATIN SMALL LETTER K
+<l>                    /x6C   <U006C> LATIN SMALL LETTER L
+<m>                    /x6D   <U006D> LATIN SMALL LETTER M
+<n>                    /x6E   <U006E> LATIN SMALL LETTER N
+<o>                    /x6F   <U006F> LATIN SMALL LETTER O
+<p>                    /x70   <U0070> LATIN SMALL LETTER P
+<q>                    /x71   <U0071> LATIN SMALL LETTER Q
+<r>                    /x72   <U0072> LATIN SMALL LETTER R
+<s>                    /x73   <U0073> LATIN SMALL LETTER S
+<t>                    /x74   <U0074> LATIN SMALL LETTER T
+<u>                    /x75   <U0075> LATIN SMALL LETTER U
+<v>                    /x76   <U0076> LATIN SMALL LETTER V
+<w>                    /x77   <U0077> LATIN SMALL LETTER W
+<x>                    /x78   <U0078> LATIN SMALL LETTER X
+<y>                    /x79   <U0079> LATIN SMALL LETTER Y
+<z>                    /x7A   <U007A> LATIN SMALL LETTER Z
+<(!>                   /x7B   <U007B> LEFT CURLY BRACKET
+<!!>                   /x7C   <U007C> VERTICAL LINE
+<!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
+<'?>                   /x7E   <U007E> TILDE
+<DT>                   /x7F   <U007F> DELETE (DEL)
+<C,>                   /x80   <U00C7> LATIN CAPITAL LETTER C WITH CEDILLA
+<u:>                   /x81   <U00FC> LATIN SMALL LETTER U WITH DIAERESIS
+<e'>                   /x82   <U00E9> LATIN SMALL LETTER E WITH ACUTE
+<a/>>                  /x83   <U00E2> LATIN SMALL LETTER A WITH CIRCUMFLEX
+<a:>                   /x84   <U00E4> LATIN SMALL LETTER A WITH DIAERESIS
+<a!>                   /x85   <U00E0> LATIN SMALL LETTER A WITH GRAVE
+<aa>                   /x86   <U00E5> LATIN SMALL LETTER A WITH RING ABOVE
+<c,>                   /x87   <U00E7> LATIN SMALL LETTER C WITH CEDILLA
+<e/>>                  /x88   <U00EA> LATIN SMALL LETTER E WITH CIRCUMFLEX
+<e:>                   /x89   <U00EB> LATIN SMALL LETTER E WITH DIAERESIS
+<e!>                   /x8A   <U00E8> LATIN SMALL LETTER E WITH GRAVE
+<i:>                   /x8B   <U00EF> LATIN SMALL LETTER I WITH DIAERESIS
+<i/>>                  /x8C   <U00EE> LATIN SMALL LETTER I WITH CIRCUMFLEX
+<i!>                   /x8D   <U00EC> LATIN SMALL LETTER I WITH GRAVE
+<A:>                   /x8E   <U00C4> LATIN CAPITAL LETTER A WITH DIAERESIS
+<AA>                   /x8F   <U00C5> LATIN CAPITAL LETTER A WITH RING ABOVE
+<E'>                   /x90   <U00C9> LATIN CAPITAL LETTER E WITH ACUTE
+<ae>                   /x91   <U00E6> LATIN SMALL LETTER AE
+<AE>                   /x92   <U00C6> LATIN CAPITAL LETTER AE
+<o/>>                  /x93   <U00F4> LATIN SMALL LETTER O WITH CIRCUMFLEX
+<o:>                   /x94   <U00F6> LATIN SMALL LETTER O WITH DIAERESIS
+<o!>                   /x95   <U00F2> LATIN SMALL LETTER O WITH GRAVE
+<u/>>                  /x96   <U00FB> LATIN SMALL LETTER U WITH CIRCUMFLEX
+<u!>                   /x97   <U00F9> LATIN SMALL LETTER U WITH GRAVE
+<y:>                   /x98   <U00FF> LATIN SMALL LETTER Y WITH DIAERESIS
+<O:>                   /x99   <U00D6> LATIN CAPITAL LETTER O WITH DIAERESIS
+<U:>                   /x9A   <U00DC> LATIN CAPITAL LETTER U WITH DIAERESIS
+<Ct>                   /x9B   <U00A2> CENT SIGN
+<Pd>                   /x9C   <U00A3> POUND SIGN
+<Ye>                   /x9D   <U00A5> YEN SIGN
+<Pt>                   /x9E   <U20A7> PESETA SIGN
+<f2>                   /x9F   <U0192> LATIN SMALL LETTER F WITH HOOK
+<a'>                   /xA0   <U00E1> LATIN SMALL LETTER A WITH ACUTE
+<i'>                   /xA1   <U00ED> LATIN SMALL LETTER I WITH ACUTE
+<o'>                   /xA2   <U00F3> LATIN SMALL LETTER O WITH ACUTE
+<u'>                   /xA3   <U00FA> LATIN SMALL LETTER U WITH ACUTE
+<n?>                   /xA4   <U00F1> LATIN SMALL LETTER N WITH TILDE
+<N?>                   /xA5   <U00D1> LATIN CAPITAL LETTER N WITH TILDE
+<-a>                   /xA6   <U00AA> FEMININE ORDINAL INDICATOR
+<-o>                   /xA7   <U00BA> MASCULINE ORDINAL INDICATOR
+<?I>                   /xA8   <U00BF> INVERTED QUESTION MARK
+<NI>                   /xA9   <U2310> REVERSED NOT SIGN
+<NO>                   /xAA   <U00AC> NOT SIGN
+<12>                   /xAB   <U00BD> VULGAR FRACTION ONE HALF
+<14>                   /xAC   <U00BC> VULGAR FRACTION ONE QUARTER
+<!I>                   /xAD   <U00A1> INVERTED EXCLAMATION MARK
+<<<>                   /xAE   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+</>/>>                 /xAF   <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+<.S>                   /xB0   <U2591> LIGHT SHADE
+<:S>                   /xB1   <U2592> MEDIUM SHADE
+<?S>                   /xB2   <U2593> DARK SHADE
+<vv>                   /xB3   <U2502> BOX DRAWINGS LIGHT VERTICAL
+<vl>                   /xB4   <U2524> BOX DRAWINGS LIGHT VERTICAL AND LEFT
+<vL>                   /xB5   <U2561> BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE
+<Vl>                   /xB6   <U2562> BOX DRAWINGS VERTICAL DOUBLE AND LEFT SINGLE
+<Dl>                   /xB7   <U2556> BOX DRAWINGS DOWN DOUBLE AND LEFT SINGLE
+<dL>                   /xB8   <U2555> BOX DRAWINGS DOWN SINGLE AND LEFT DOUBLE
+<VL>                   /xB9   <U2563> BOX DRAWINGS DOUBLE VERTICAL AND LEFT
+<VV>                   /xBA   <U2551> BOX DRAWINGS DOUBLE VERTICAL
+<LD>                   /xBB   <U2557> BOX DRAWINGS DOUBLE DOWN AND LEFT
+<UL>                   /xBC   <U255D> BOX DRAWINGS DOUBLE UP AND LEFT
+<Ul>                   /xBD   <U255C> BOX DRAWINGS UP DOUBLE AND LEFT SINGLE
+<uL>                   /xBE   <U255B> BOX DRAWINGS UP SINGLE AND LEFT DOUBLE
+<dl>                   /xBF   <U2510> BOX DRAWINGS LIGHT DOWN AND LEFT
+<ur>                   /xC0   <U2514> BOX DRAWINGS LIGHT UP AND RIGHT
+<uh>                   /xC1   <U2534> BOX DRAWINGS LIGHT UP AND HORIZONTAL
+<dh>                   /xC2   <U252C> BOX DRAWINGS LIGHT DOWN AND HORIZONTAL
+<vr>                   /xC3   <U251C> BOX DRAWINGS LIGHT VERTICAL AND RIGHT
+<hh>                   /xC4   <U2500> BOX DRAWINGS LIGHT HORIZONTAL
+<vh>                   /xC5   <U253C> BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL
+<vR>                   /xC6   <U255E> BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE
+<Vr>                   /xC7   <U255F> BOX DRAWINGS VERTICAL DOUBLE AND RIGHT SINGLE
+<UR>                   /xC8   <U255A> BOX DRAWINGS DOUBLE UP AND RIGHT
+<DR>                   /xC9   <U2554> BOX DRAWINGS DOUBLE DOWN AND RIGHT
+<UH>                   /xCA   <U2569> BOX DRAWINGS DOUBLE UP AND HORIZONTAL
+<DH>                   /xCB   <U2566> BOX DRAWINGS DOUBLE DOWN AND HORIZONTAL
+<VR>                   /xCC   <U2560> BOX DRAWINGS DOUBLE VERTICAL AND RIGHT
+<HH>                   /xCD   <U2550> BOX DRAWINGS DOUBLE HORIZONTAL
+<VH>                   /xCE   <U256C> BOX DRAWINGS DOUBLE VERTICAL AND HORIZONTAL
+<uH>                   /xCF   <U2567> BOX DRAWINGS UP SINGLE AND HORIZONTAL DOUBLE
+<Uh>                   /xD0   <U2568> BOX DRAWINGS UP DOUBLE AND HORIZONTAL SINGLE
+<dH>                   /xD1   <U2564> BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE
+<Dh>                   /xD2   <U2565> BOX DRAWINGS DOWN DOUBLE AND HORIZONTAL SINGLE
+<Ur>                   /xD3   <U2559> BOX DRAWINGS UP DOUBLE AND RIGHT SINGLE
+<uR>                   /xD4   <U2558> BOX DRAWINGS UP SINGLE AND RIGHT DOUBLE
+<dR>                   /xD5   <U2552> BOX DRAWINGS DOWN SINGLE AND RIGHT DOUBLE
+<Dr>                   /xD6   <U2553> BOX DRAWINGS DOWN DOUBLE AND RIGHT SINGLE
+<Vh>                   /xD7   <U256B> BOX DRAWINGS VERTICAL DOUBLE AND HORIZONTAL SINGLE
+<vH>                   /xD8   <U256A> BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE
+<ul>                   /xD9   <U2518> BOX DRAWINGS LIGHT UP AND LEFT
+<dr>                   /xDA   <U250C> BOX DRAWINGS LIGHT DOWN AND RIGHT
+<FB>                   /xDB   <U2588> FULL BLOCK
+<LB>                   /xDC   <U2584> LOWER HALF BLOCK
+<lB>                   /xDD   <U258C> LEFT HALF BLOCK
+<RB>                   /xDE   <U2590> RIGHT HALF BLOCK
+<TB>                   /xDF   <U2580> UPPER HALF BLOCK
+<a*>                   /xE0   <U03B1> GREEK SMALL LETTER ALPHA
+<ss>                   /xE1   <U00DF> LATIN SMALL LETTER SHARP S (German)
+<G*>                   /xE2   <U0393> GREEK CAPITAL LETTER GAMMA
+<p*>                   /xE3   <U03C0> GREEK SMALL LETTER PI
+<S*>                   /xE4   <U03A3> GREEK CAPITAL LETTER SIGMA
+<s*>                   /xE5   <U03C3> GREEK SMALL LETTER SIGMA
+<My>                   /xE6   <U00B5> MICRO SIGN
+<t*>                   /xE7   <U03C4> GREEK SMALL LETTER TAU
+<F*>                   /xE8   <U03A6> GREEK CAPITAL LETTER PHI
+<H*>                   /xE9   <U0398> GREEK CAPITAL LETTER THETA
+<W*>                   /xEA   <U03A9> GREEK CAPITAL LETTER OMEGA
+<d*>                   /xEB   <U03B4> GREEK SMALL LETTER DELTA
+<00>                   /xEC   <U221E> INFINITY
+<f*>                   /xED   <U03C6> GREEK SMALL LETTER PHI
+<e*>                   /xEE   <U03B5> GREEK SMALL LETTER EPSILON
+<(U>                   /xEF   <U2229> INTERSECTION
+<=3>                   /xF0   <U2261> IDENTICAL TO
+<+->                   /xF1   <U00B1> PLUS-MINUS SIGN
+</>=>                  /xF2   <U2265> GREATER-THAN OR EQUAL TO
+<=<>                   /xF3   <U2264> LESS-THAN OR EQUAL TO
+<Iu>                   /xF4   <U2320> TOP HALF INTEGRAL
+<Il>                   /xF5   <U2321> BOTTOM HALF INTEGRAL
+<-:>                   /xF6   <U00F7> DIVISION SIGN
+<?2>                   /xF7   <U2248> ALMOST EQUAL TO
+<DG>                   /xF8   <U00B0> DEGREE SIGN
+<.M>                   /xF9   <U00B7> MIDDLE DOT
+<sb>                   /xFA   <U2022> BULLET
+<RT>                   /xFB   <U221A> SQUARE ROOT
+<nS>                   /xFC   <U207F> SUPERSCRIPT LATIN SMALL LETTER N
+<2S>                   /xFD   <U00B2> SUPERSCRIPT TWO
+<fS>                   /xFE   <U25A0> BLACK SQUARE
+<NS>                   /xFF   <U00A0> NO-BREAK SPACE
+<NUL>                  /x00   <U0000> NUL
+<SOH>                  /x01   <U0001> START OF HEADING (SOH)
+<STX>                  /x02   <U0002> START OF TEXT (STX)
+<ETX>                  /x03   <U0003> END OF TEXT (ETX)
+<EOT>                  /x04   <U0004> END OF TRANSMISSION (EOT)
+<ENQ>                  /x05   <U0005> ENQUIRY (ENQ)
+<ACK>                  /x06   <U0006> ACKNOWLEDGE (ACK)
+<alert>                /x07   <U0007> BELL (BEL)
+<BEL>                  /x07   <U0007> BELL (BEL)
+<backspace>            /x08   <U0008> BACKSPACE (BS)
+<tab>                  /x09   <U0009> CHARACTER TABULATION (HT)
+<newline>              /x0A   <U000A> LINE FEED (LF)
+<vertical-tab>         /x0B   <U000B> LINE TABULATION (VT)
+<form-feed>            /x0C   <U000C> FORM FEED (FF)
+<carriage-return>      /x0D   <U000D> CARRIAGE RETURN (CR)
+<DLE>                  /x10   <U0010> DATALINK ESCAPE (DLE)
+<DC1>                  /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<DC2>                  /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<DC3>                  /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<DC4>                  /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NAK>                  /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SYN>                  /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<ETB>                  /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CAN>                  /x18   <U0018> CANCEL (CAN)
+<SUB>                  /x1A   <U001A> SUBSTITUTE (SUB)
+<ESC>                  /x1B   <U001B> ESCAPE (ESC)
+<IS4>                  /x1C   <U001C> FILE SEPARATOR (IS4)
+<IS3>                  /x1D   <U001D> GROUP SEPARATOR (IS3)
+<intro>                /x1D   <U001D> GROUP SEPARATOR (IS3)
+<IS2>                  /x1E   <U001E> RECORD SEPARATOR (IS2)
+<IS1>                  /x1F   <U001F> UNIT SEPARATOR (IS1)
+<DEL>                  /x7F   <U007F> DELETE (DEL)
+<space>                /x20   <U0020> SPACE
+<exclamation-mark>     /x21   <U0021> EXCLAMATION MARK
+<quotation-mark>       /x22   <U0022> QUOTATION MARK
+<number-sign>          /x23   <U0023> NUMBER SIGN
+<dollar-sign>          /x24   <U0024> DOLLAR SIGN
+<percent-sign>         /x25   <U0025> PERCENT SIGN
+<ampersand>            /x26   <U0026> AMPERSAND
+<apostrophe>           /x27   <U0027> APOSTROPHE
+<left-parenthesis>     /x28   <U0028> LEFT PARENTHESIS
+<right-parenthesis>    /x29   <U0029> RIGHT PARENTHESIS
+<asterisk>             /x2A   <U002A> ASTERISK
+<plus-sign>            /x2B   <U002B> PLUS SIGN
+<comma>                /x2C   <U002C> COMMA
+<hyphen>               /x2D   <U002D> HYPHEN-MINUS
+<hyphen-minus>         /x2D   <U002D> HYPHEN-MINUS
+<period>               /x2E   <U002E> FULL STOP
+<full-stop>            /x2E   <U002E> FULL STOP
+<slash>                /x2F   <U002F> SOLIDUS
+<solidus>              /x2F   <U002F> SOLIDUS
+<zero>                 /x30   <U0030> DIGIT ZERO
+<one>                  /x31   <U0031> DIGIT ONE
+<two>                  /x32   <U0032> DIGIT TWO
+<three>                /x33   <U0033> DIGIT THREE
+<four>                 /x34   <U0034> DIGIT FOUR
+<five>                 /x35   <U0035> DIGIT FIVE
+<six>                  /x36   <U0036> DIGIT SIX
+<seven>                /x37   <U0037> DIGIT SEVEN
+<eight>                /x38   <U0038> DIGIT EIGHT
+<nine>                 /x39   <U0039> DIGIT NINE
+<colon>                /x3A   <U003A> COLON
+<semicolon>            /x3B   <U003B> SEMICOLON
+<less-than-sign>       /x3C   <U003C> LESS-THAN SIGN
+<equals-sign>          /x3D   <U003D> EQUALS SIGN
+<greater-than-sign>    /x3E   <U003E> GREATER-THAN SIGN
+<question-mark>        /x3F   <U003F> QUESTION MARK
+<commercial-at>        /x40   <U0040> COMMERCIAL AT
+<left-square-bracket>  /x5B   <U005B> LEFT SQUARE BRACKET
+<backslash>            /x5C   <U005C> REVERSE SOLIDUS
+<reverse-solidus>      /x5C   <U005C> REVERSE SOLIDUS
+<right-square-bracket> /x5D   <U005D> RIGHT SQUARE BRACKET
+<circumflex>           /x5E   <U005E> CIRCUMFLEX ACCENT
+<circumflex-accent>    /x5E   <U005E> CIRCUMFLEX ACCENT
+<underscore>           /x5F   <U005F> LOW LINE
+<low-line>             /x5F   <U005F> LOW LINE
+<grave-accent>         /x60   <U0060> GRAVE ACCENT
+<left-brace>           /x7B   <U007B> LEFT CURLY BRACKET
+<left-curly-bracket>   /x7B   <U007B> LEFT CURLY BRACKET
+<vertical-line>        /x7C   <U007C> VERTICAL LINE
+<right-brace>          /x7D   <U007D> RIGHT CURLY BRACKET
+<right-curly-bracket>  /x7D   <U007D> RIGHT CURLY BRACKET
+<tilde>                /x7E   <U007E> TILDE
+END CHARMAP

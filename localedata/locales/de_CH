@@ -1,0 +1,92 @@
+comment_char %
+escape_char  /
+%
+% German Language Locale for Switzerland
+% Source: RAP
+% Address: Sankt Jo//rgens Alle 8
+%    DK-1615 Ko//benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 33256543
+% Language: de
+% Territory: CH
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_MESSAGES
+copy "de_DE"
+END LC_MESSAGES
+
+LC_MONETARY
+int_curr_symbol           "<C><H><F><SP>"
+currency_symbol           "<F><r><.>"
+mon_decimal_point         "<,>"
+mon_thousands_sep         "<.>"
+mon_grouping              3;3
+positive_sign             ""
+negative_sign             "<->"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             1
+p_sep_by_space            1
+n_cs_precedes             1
+n_sep_by_space            1
+p_sign_posn               4
+n_sign_posn               4
+END LC_MONETARY
+
+LC_NUMERIC
+copy "de_DE"
+END LC_NUMERIC
+
+LC_TIME
+% copy "de_DE"
+abday   "<S><o><n>";"<M><o><n>";/
+        "<D><i><e>";"<M><i><t>";/
+        "<D><o><n>";"<F><r><e>";/
+        "<S><a><m>"
+day     "<S><o><n><n><t><a><g>";/
+        "<M><o><n><t><a><g>";/
+        "<D><i><e><n><s><t><a><g>";/
+        "<M><i><t><t><w><o><c><h>";/
+        "<D><o><n><n><e><r><s><t><a><g>";/
+        "<F><r><e><i><t><a><g>";/
+        "<S><a><m><s><t><a><g>"
+abmon   "<J><a><n>";"<F><e><b>";/
+        "<M><a:><r>";"<A><p><r>";/
+        "<M><a><i>";"<J><u><n>";/
+        "<J><u><l>";"<A><u><g>";/
+        "<S><e><p>";"<O><k><t>";/
+        "<N><o><v>";"<D><e><z>"
+mon     "<J><a><n><u><a><r>";/
+        "<F><e><b><r><u><a><r>";/
+        "<M><a:><r><z>";/
+        "<A><p><r><i><l>";/
+        "<M><a><i>";/
+        "<J><u><n><i>";/
+        "<J><u><l><i>";/
+        "<A><u><g><u><s><t>";/
+        "<S><e><p><t><e><m><b><e><r>";/
+        "<O><k><t><o><b><e><r>";/
+        "<N><o><v><e><m><b><e><r>";/
+        "<D><e><z><e><m><b><e><r>"
+d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt   "<%><Y><-><%><m><-><%><d>"
+t_fmt   "<%><T>"
+am_pm   "";""
+t_fmt_ampm ""
+END LC_TIME

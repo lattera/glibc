@@ -1,0 +1,94 @@
+comment_char %
+escape_char  /
+%
+% Greek Language Locale for Greece
+% Source: RAP
+% Address: Sankt Jo//rgens Alle 8
+%    DK-1615 Ko//benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 33256543
+% Language: gr
+% Territory: GR
+% Revision: 4.3
+% Date: 1996-10-15
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-7
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_MESSAGES
+yesexpr "<<(><n*><N*><)/>><.><*>"
+noexpr  "<<(><o*><O*><)/>><.><*>" 
+END LC_MESSAGES
+
+LC_MONETARY
+int_curr_symbol           "<G><R><D><SP>"
+currency_symbol           "<d*><r*><x*>"
+mon_decimal_point         "<,>"
+mon_thousands_sep         "<.>"
+mon_grouping              3;3
+positive_sign             ""
+negative_sign             "<->"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             0
+p_sep_by_space            1
+n_cs_precedes             0
+n_sep_by_space            1
+p_sign_posn               1
+n_sign_posn               1
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point             "<,>"
+thousands_sep             "<.>"
+grouping                  0;0
+END LC_NUMERIC
+
+LC_TIME
+abday   "<K*><u*><r*>";"<D*><e*><u*>";/
+        "<T*><r*><i*>";"<T*><e*><t*>";/
+        "<P*><e*><m*>";"<P*><a*><r*>";/
+        "<S*><a*><b*>"
+day     "<K*><u*><r*><i*><a*><k*><y*>";/
+        "<D*><e*><u*><t*><e%><r*><a*>";/
+        "<T*><r*><i%><t*><y*>";/
+        "<T*><e*><t*><a%><r*><t*><y*>";/
+        "<P*><e%><m*><p*><t*><y*>";/
+        "<P*><a*><r*><a*><s*><k*><e*><u*><y%>";/
+        "<S*><a*><b*><b*><a%><t*><o*>"
+abmon   "<I*><a*><n*><SP>";"<F*><e*><b*><SP>";/
+        "<M*><a%><r*><SP>";"<A*><p*><r*><SP>";/
+        "<M*><a%><i*><SP>";"<I*><o*><u%><n*>";/
+        "<I*><o*><u%><l*>";"<A*><u%><g*><SP>";/
+        "<S*><e*><p*><SP>";"<O*><k*><t*><SP>";/
+        "<N*><o*><e%><SP>";"<D*><e*><k*><SP>"
+mon     "<I*><a*><n*><o*><a%><r*><i*><o*><*s>";/
+        "<F*><e*><b*><r*><o*><a%><r*><i*><o*><*s>";/
+        "<M*><a%><r*><t*><i*><o*><*s>";/
+        "<A*><p*><r*><i%><l*><i*><o*><*s>";/
+        "<M*><a%><i*><o*><*s>";/
+        "<I*><o*><u%><n*><i*><o*><*s>";/
+        "<I*><o*><u%><l*><i*><o*><*s>";/
+        "<A*><u%><g*><o*><u*><s*><t*><o*><*s>";/
+        "<S*><e*><p*><t*><e%><m*><b*><r*><i*><o*><*s>";/
+        "<O*><k*><t*><w%><b*><r*><i*><o*><*s>";/
+        "<N*><o*><e%><m*><b*><r*><i*><o*><*s>";/
+        "<D*><e*><k*><e%><m*><b*><r*><i*><o*><*s>"
+d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt   "<%><d><//><%><m><//><%><Y>"
+t_fmt   "<%><T>"
+am_pm   "";""
+t_fmt_ampm ""
+END LC_TIME
