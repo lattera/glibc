@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Douglas C. Schmidt (schmidt@ics.uci.edu).
 
@@ -17,11 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* If you consider tuning this algorithm, you should consult first:
+   Engineering a sort function; Jon Bentley and M. Douglas McIlroy;
+   Software - Practice and Experience; Vol. 23 (11), 1249-1265, 1993.  */
+
+#include <alloca.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
-
-extern void _quicksort __P ((void *const pbase, size_t total_elems,
-			     size_t size, __compar_fn_t cmp));
 
 /* Byte-wise swap two items of size SIZE. */
 #define SWAP(a, b, size)						      \
@@ -49,7 +52,11 @@ typedef struct
   } stack_node;
 
 /* The next 4 #defines implement a very fast in-line stack abstraction. */
-#define STACK_SIZE	(8 * sizeof(unsigned long int))
+/* The stack needs log (total_elements) entries (we could even subtract
+   log(MAX_THRESH)).  Since total_elements has type size_t, we get as
+   upper bound for log (total_elements):
+   bits per byte (CHAR_BIT) * sizeof(size_t).  */
+#define STACK_SIZE	(CHAR_BIT * sizeof(size_t))
 #define PUSH(low, high)	((void) ((top->lo = (low)), (top->hi = (high)), ++top))
 #define	POP(low, high)	((void) (--top, (low = top->lo), (high = top->hi)))
 #define	STACK_NOT_EMPTY	(stack < top)
@@ -60,9 +67,10 @@ typedef struct
 
    1. Non-recursive, using an explicit stack of pointer that store the
       next array partition to sort.  To save time, this maximum amount
-      of space required to store an array of MAX_INT is allocated on the
-      stack.  Assuming a 32-bit integer, this needs only 32 *
-      sizeof(stack_node) == 136 bits.  Pretty cheap, actually.
+      of space required to store an array of SIZE_MAX is allocated on the
+      stack.  Assuming a 32-bit (64 bit) integer for size_t, this needs
+      only 32 * sizeof(stack_node) == 256 bytes (for 64 bit: 1024 bytes).
+      Pretty cheap, actually.
 
    2. Chose the pivot element using a median-of-three decision tree.
       This reduces the probability of selecting a bad pivot value and
@@ -75,15 +83,12 @@ typedef struct
 
    4. The larger of the two sub-partitions is always pushed onto the
       stack first, with the algorithm then concentrating on the
-      smaller partition.  This *guarantees* no more than log (n)
+      smaller partition.  This *guarantees* no more than log (total_elems)
       stack size is needed (actually O(1) in this case)!  */
 
 void
-_quicksort (pbase, total_elems, size, cmp)
-     void *const pbase;
-     size_t total_elems;
-     size_t size;
-     __compar_fn_t cmp;
+_quicksort (void *const pbase, size_t total_elems, size_t size,
+	    __compar_fn_t cmp)
 {
   register char *base_ptr = (char *) pbase;
 
@@ -100,7 +105,6 @@ _quicksort (pbase, total_elems, size, cmp)
     {
       char *lo = base_ptr;
       char *hi = &lo[size * (total_elems - 1)];
-      /* Largest size needed for 32-bit int!!! */
       stack_node stack[STACK_SIZE];
       stack_node *top = stack + 1;
 
@@ -114,7 +118,8 @@ _quicksort (pbase, total_elems, size, cmp)
 	  /* Select median value from among LO, MID, and HI. Rearrange
 	     LO and HI so the three values are sorted. This lowers the
 	     probability of picking a pathological pivot value and
-	     skips a comparison for both the LEFT_PTR and RIGHT_PTR. */
+	     skips a comparison for both the LEFT_PTR and RIGHT_PTR in
+	     the while loops. */
 
 	  char *mid = lo + size * ((hi - lo) / size >> 1);
 

@@ -49,6 +49,10 @@ extern int __getpt (void) __THROW;
 
 extern int __add_to_environ (const char *name, const char *value,
 			     const char *combines, int replace);
+
+extern void _quicksort (void *const pbase, size_t total_elems,
+			size_t size, __compar_fn_t cmp);
+
 #endif
 #undef __Need_M_And_C
 

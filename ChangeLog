@@ -1,3 +1,17 @@
+1999-10-26  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/msort.c: Include <alloca.h> for prototype.
+	Remove K&R compatibility and _quicksort prototype.
+
+	* stdlib/qsort.c: Make code and comments 64 bit clean; clarify
+	some comments.
+	Reported by Bernd Löchner <loechner@informatik.uni-kl.de>.
+	Remove K&R compatibility.
+	Move prototype declaration to include/stdlib.h.
+	Include <alloca.h> for prototype; include <limits.h> for CHAR_BIT.
+
+	* include/stdlib.h: Prototype declaration for _quicksort.
+
 1999-10-27  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/rand_r.c (rand_r): Really use 31 bits, the result was

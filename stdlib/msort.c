@@ -1,6 +1,6 @@
 /* An alternative to qsort, with an identical interface.
    This file is part of the GNU C Library.
-   Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    Written by Mike Haertel, September 1988.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,21 +18,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <alloca.h>
 #include <stdlib.h>
 #include <string.h>
 #include <memcopy.h>
 #include <errno.h>
 
-static void msort_with_tmp __P ((void *b, size_t n, size_t s,
-				 __compar_fn_t cmp, char *t));
+static void msort_with_tmp (void *b, size_t n, size_t s,
+			    __compar_fn_t cmp, char *t);
 
 static void
-msort_with_tmp (b, n, s, cmp, t)
-     void *b;
-     size_t n;
-     size_t s;
-     __compar_fn_t cmp;
-     char *t;
+msort_with_tmp (void *b, size_t n, size_t s, __compar_fn_t cmp,
+		char *t)
 {
   char *tmp;
   char *b1, *b2;
@@ -88,11 +85,7 @@ msort_with_tmp (b, n, s, cmp, t)
 }
 
 void
-qsort (b, n, s, cmp)
-     void *b;
-     size_t n;
-     size_t s;
-     __compar_fn_t cmp;
+qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
 {
   const size_t size = n * s;
 
@@ -108,9 +101,6 @@ qsort (b, n, s, cmp)
 	{
 	  /* Couldn't get space, so use the slower algorithm
 	     that doesn't need a temporary array.  */
-	  extern void _quicksort __P ((void *const __base,
-				       size_t __nmemb, size_t __size,
-				       __compar_fn_t __compar));
 	  _quicksort (b, n, s, cmp);
 	}
       else
