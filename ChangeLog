@@ -1,3 +1,11 @@
+2000-01-09  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (CLEAR_CACHE): System calls clobber R0.
+	(dl_platform_init): Allow _dl_platform to be NULL.
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (UNDOARGS_5): Fix error in
+	last change.
+
 2000-01-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/connections.c (handle_request): Handle systems without
