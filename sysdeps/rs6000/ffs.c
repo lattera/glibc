@@ -26,7 +26,7 @@
 #ifdef	__GNUC__
 
 int
-ffs (x)
+__ffs (x)
      int x;
 {
   int cnt;
@@ -34,6 +34,7 @@ ffs (x)
   asm ("cntlz %0,%1" : "=r" (cnt) : "r" (x & -x));
   return 32 - cnt;
 }
+weak_alias (__ffs, ffs)
 
 #else
 #include <sysdeps/generic/ffs.c>
