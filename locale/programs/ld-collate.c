@@ -724,8 +724,10 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 	    {
 	      if (*cp == '<')
 		{
-		  /* Ahh, it's a bsymbol.  That's what we want.  */
+		  /* Ahh, it's a bsymbol or an UCS4 value.  If it's
+                     the latter we have to unify the name.  */
 		  const char *startp = ++cp;
+		  size_t len;
 
 		  while (*cp != '>')
 		    {
@@ -738,9 +740,24 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 		      ++cp;
 		    }
 
-		    charelem = find_element (ldfile, collate, startp,
-					     cp - startp);
-		    ++cp;
+		  if (cp - startp == 5 && startp[0] == 'U'
+		      && isxdigit (startp[1]) && isxdigit (startp[2])
+		      && isxdigit (startp[3]) && isxdigit (startp[4]))
+		    {
+		      unsigned int ucs4 = strtoul (startp + 1, NULL, 16);
+		      char *newstr;
+
+		      newstr = (char *) xmalloc (10);
+		      snprintf (newstr, 10, "U%08X", ucs4);
+		      startp = newstr;
+
+		      len = 9;
+		    }
+		  else
+		    len = cp - startp;
+
+		  charelem = find_element (ldfile, collate, startp, len);
+		  ++cp;
 		}
 	      else
 		{
