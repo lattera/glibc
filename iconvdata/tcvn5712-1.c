@@ -357,6 +357,7 @@ static const struct
 
 /* First define the conversion function from TCVN5712-1 to UCS4.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
