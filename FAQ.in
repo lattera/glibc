@@ -366,11 +366,11 @@ newer.
 
 ??mips	Which tools should I use for MIPS?
 
-{AJ} You should use the current development version of gcc 2.97 from CVS.
-gcc 2.95.x does not work correctly on mips-linux.
+{AJ} You should use the current development version of gcc 3.0 or newer from
+CVS.  gcc 2.95.x does not work correctly on mips-linux.
 
-You need also recent binutils, anything before and including 2.10 will not
-work correctly.  Either try the Linux binutils 2.10.0.33 from HJ Lu or the
+You need also recent binutils, anything before and including 2.11 will not
+work correctly.  Either try the Linux binutils 2.11.90.0.5 from HJ Lu or the
 current development version of binutils from CVS.
 
 Please note that `make check' might fail for a number of the math tests

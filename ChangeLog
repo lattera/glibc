@@ -1,3 +1,11 @@
+2001-05-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Check binutils version on
+	MIPS.
+
+	* sysdeps/mips/rtld-ldscript.in: Removed unneeded binary output
+	format directive.  Patch by Steven J. Hill <sjhill@cotw.com>.
+
 2001-05-11  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/Makefile ($(link-rpcuserlibs)): Don't use
