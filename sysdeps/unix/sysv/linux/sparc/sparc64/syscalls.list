@@ -32,7 +32,7 @@ shutdown	-	shutdown	2	__shutdown	shutdown
 socketpair	-	socketpair	4	__socketpair	socketpair
 
 getresuid	-	getresuid	3	getresuid
-getresgid	-	getresgid	3	getresuid
+getresgid	-	getresgid	3	getresgid
 
 # System calls with wrappers.
 rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction

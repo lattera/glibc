@@ -1,3 +1,15 @@
+2000-01-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (getresgid):
+	Fix a typo.
+
+2000-01-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/lxstat.c (__lxstat): Avoid warning
+	about unitialised variable kbuf.
+	* sysdeps/unix/sysv/linux/i386/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c (__fxstat): Likewise.
+
 2000-01-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (check_duplicate): Fix printing of error

@@ -46,7 +46,9 @@ extern int __have_no_stat64;
 int
 __fxstat (int vers, int fd, struct stat *buf)
 {
+#if __ASSUME_STAT64_SYSCALL == 0
   struct kernel_stat kbuf;
+#endif
   int result;
 
   if (vers == _STAT_VER_KERNEL)
