@@ -45,6 +45,7 @@ int __libc_enable_secure;
 int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 static ElfW(auxv_t) *_dl_auxv;
+static unsigned long hwcap;
 
 
 #ifndef DL_FIND_ARG_COMPONENTS
@@ -235,10 +236,10 @@ _dl_show_auxv (void)
 	_dl_sysdep_message ("AT_PLATFORM: ", av->a_un.a_ptr, "\n", NULL);
 	break;
       case AT_HWCAP:
-	if (_dl_procinfo (av->a_un.a_val) < 0)
+	hwcap = av->a_un.a_val;
+	if (_dl_procinfo (hwcap) < 0)
 	  _dl_sysdep_message ("AT_HWCAP:    ",
-			      _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
-					  16, 0),
+			      _itoa_word (hwcap, buf + sizeof buf - 1, 16, 0),
 			      "\n", NULL);
 	break;
       }
@@ -266,6 +267,33 @@ _dl_next_ld_env_entry (char ***position)
 
   /* Save current position for next visit.  */
   *position = current;
+
+  return result;
+}
+
+/* Return an array of useful/necessary hardware capability names.  */
+char **
+_dl_important_hwcaps (size_t *sz)
+{
+  /* Determine how many important bits are set.  */
+  unsigned long int important = hwcap & HWCAP_IMPORTANT;
+  size_t cnt = 0;
+  size_t n;
+  char **result;
+
+  for (n = 0; (~((1UL << n) - 1) & important) != 0; ++n)
+    if ((important & (1UL << n)) != 0)
+      ++cnt;
+
+  *sz = 0;
+  if (cnt == 0)
+    return NULL;
+
+  result = (char **) malloc (cnt * sizeof (char *));
+  if (result != NULL)
+    for (n = 0; (~((1UL << n) - 1) & important) != 0; ++n)
+      if ((important & (1UL << n)) != 0)
+	result[*sz++] = _dl_hwcap_string (n);
 
   return result;
 }

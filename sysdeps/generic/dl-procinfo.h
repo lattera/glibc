@@ -24,4 +24,7 @@
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(word) -1
 
+/* By default there is no important hardware capability.  */
+#define HWCAP_IMPORTANT (0)
+
 #endif /* dl-procinfo.h */

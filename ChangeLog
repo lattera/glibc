@@ -1,3 +1,19 @@
+1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): New
+	function.
+
+	* sysdeps/generic/dl-procinfo.h (HWCAP_IMPORTANT): New definition.
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (_dl_hwcap_string):
+	New function.
+	(HWCAP_IMPORTANT): New definition.
+
+1998-03-30 17:26  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-open.c (_dl_open): Fix a typo.
+	(_dl_global_scope_alloc): Make it static.
+
 1998-03-30 17:20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules: Remove duplicate rules to handle stamp.oS.
@@ -157,6 +173,8 @@
 1998-03-29 09:26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* setjmp/tst-setjmp.c: Don't test __setjmp, test _setjmp instead.
+
+	* nss/getXXent_r.c (REENTRANT_GETNAME): Avoid endless loop.
 
 1998-03-29 02:02  H.J. Lu  <hjl@gnu.org>
 

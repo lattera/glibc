@@ -21,19 +21,20 @@
 #ifndef _DL_PROCINFO_H
 #define _DL_PROCINFO_H	1
 
+static const char *x86_cap_flags[] =
+  {
+    "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
+    "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
+    "fcmov", "17", "18", "19", "20", "21", "22", "mmx",
+    "osfxsr", "25", "26", "27", "28", "29", "30", "amd3d"
+  };
+
 static inline int
 __attribute__ ((unused))
 _dl_procinfo (int word)
 {
   /* This table should match the information from arch/i386/kernel/setup.c
      in the kernel sources.  */
-  static const char *x86_cap_flags[] =
-  {
-    "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
-    "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
-    "fcmov", "17", "18", "19", "20", "21", "22", "mmx",
-    "cxmmx", "25", "26", "27", "28", "29", "30", "amd3d"
-  };
   int i;
 
   _dl_sysdep_message ("AT_HWCAP:   ", NULL);
@@ -46,6 +47,13 @@ _dl_procinfo (int word)
 
   return 0;
 }
+
+static inline const char *
+__attribute__ ((unused))
+_dl_hwcap_string (int idx)
+{
+  return x86_cap_flags[idx];
+};
 
 enum
 {
@@ -66,8 +74,11 @@ enum
   HWCAP_I386_CMOV  = 1 << 15,
   HWCAP_I386_FCMOV = 1 << 16,
   HWCAP_I386_MMX   = 1 << 23,
-  HWCAP_I386_CXMMX = 1 << 24,
-  HWCAP_I386_AMD3D = 1 << 31
+  HWCAP_I386_OSFXSR = 1 << 24,
+  HWCAP_I386_AMD3D = 1 << 31,
+
+  /* XXX Which others to add here?  */
+  HWCAP_IMPORTANT = (HWCAP_I386_MMX)
 };
 
 #endif /* dl-procinfo.h */

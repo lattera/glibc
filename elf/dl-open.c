@@ -37,7 +37,7 @@ extern char **__libc_argv;
 
 extern char **__environ;
 
-size_t _dl_global_scope_alloc;
+static size_t _dl_global_scope_alloc;
 
 
 /* During the program run we must not modify the global data of
@@ -121,7 +121,8 @@ _dl_open (const char *file, int mode)
 	{
 	  /* This is the first dynamic object given global scope.  */
 	  _dl_global_scope_alloc = 8;
-	  _dl_global_scope = malloc (8 * sizeof (struct link_map *));
+	  _dl_global_scope = malloc (_dl_global_scope_alloc
+				     * sizeof (struct link_map *));
 	  if (! _dl_global_scope)
 	    {
 	      _dl_global_scope = _dl_default_scope;
@@ -142,7 +143,8 @@ _dl_open (const char *file, int mode)
 	    {
 	      /* Must extend the list.  */
 	      struct link_map **new = realloc (_dl_global_scope,
-					       _dl_global_scope_alloc * 2);
+					       _dl_global_scope_alloc * 2
+					       * sizeof (struct link_map *));
 	      if (! new)
 		goto nomem;
 	      _dl_global_scope_end = new + (_dl_global_scope_end -
