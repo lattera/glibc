@@ -66,7 +66,7 @@ print_entry (const char *lib, int flag, unsigned int osversion,
       fputs (flag_descr[flag & FLAG_TYPE_MASK], stdout);
       break;
     default:
-      fputs ("unknown", stdout);
+      fputs (_("unknown"), stdout);
       break;
     }
   switch (flag & FLAG_REQUIRED_MASK)
@@ -78,6 +78,10 @@ print_entry (const char *lib, int flag, unsigned int osversion,
 #if defined __ia64__ || defined __i386__
     case FLAG_IA64_LIB64:
       fputs (",IA-64", stdout);
+#endif
+#if defined __s390__ || defined __s390x__
+    case FLAG_S390_LIB64:
+      fputs(",64bit", stdout);
 #endif
     case 0:
       break;
@@ -94,12 +98,12 @@ print_entry (const char *lib, int flag, unsigned int osversion,
 	[0] = "Linux",
 	[1] = "Hurd",
 	[2] = "Solaris",
-	[3] = "Unknown OS"
+	[3] = N_("Unknown OS")
       };
       unsigned int os = osversion >> 24;
 
-      printf (", OS ABI: %s %d.%d.%d",
-	      abi_tag_os[os > 3 ? 3 : os],
+      printf (_(", OS ABI: %s %d.%d.%d"),
+	      _(abi_tag_os[os > 3 ? 3 : os]),
 	      (osversion >> 16) & 0xff,
 	      (osversion >> 8) & 0xff,
 	      osversion & 0xff);

@@ -30,6 +30,7 @@
 #define FLAG_SPARC_LIB64	0x0100
 #define FLAG_IA64_LIB64		0x0200
 #define FLAG_X8664_LIB64	0x0300
+#define FLAG_S390_LIB64		0x0400
 
 /* Declared in cache.c.  */
 extern void print_cache (const char *cache_name);

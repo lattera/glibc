@@ -1,5 +1,16 @@
 2001-03-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/cache.c: Mark and have translated a few more messages.
+
+2001-03-19  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* elf/cache.c: Add case for FLAG_S390_LIB64.
+	* sysdeps/generic/ldconfig.h: Add define for FLAG_S390_LIB64.
+	* sysdeps/unix/sysv/linux/s390/ldconfig.h: New file.
+	* sysdeps/unix/sysv/linux/s390/readelflib.c: New file.
+
+2001-03-19  Ulrich Drepper  <drepper@redhat.com>
+
 	* string/Makefile (tests): Add tst-strxfrm.
 	* string/tst-strxfrm.c: New file.  Based on a test case by Paul Eggert.
 	* string/Depend: New file.
