@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -17,6 +17,7 @@
 static char rcsid[] = "$NetBSD: e_scalbf.c,v 1.3 1995/05/10 20:46:12 jtc Exp $";
 #endif
 
+#include <fenv.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -45,10 +46,17 @@ static char rcsid[] = "$NetBSD: e_scalbf.c,v 1.3 1995/05/10 20:46:12 jtc Exp $";
 	    else if (x == 0)
 	      return x;
 	    else if (!__finitef (x))
-	      return __nanf ("");
+	      {
+		feraiseexcept (FE_INVALID);
+		return __nanf ("");
+	      }
 	    else       return x/(-fn);
 	}
-	if (__rintf(fn)!=fn) return __nanf ("");
+	if (__rintf(fn)!=fn)
+	  {
+	    feraiseexcept (FE_INVALID);
+	    return __nanf ("");
+	  }
 	if ( fn > (float)65000.0) return __scalbnf(x, 65000);
 	if (-fn > (float)65000.0) return __scalbnf(x,-65000);
 	return __scalbnf(x,(int)fn);

@@ -24,6 +24,7 @@ static char rcsid[] = "$NetBSD: $";
  * should use scalbnl() instead.
  */
 
+#include <fenv.h>
 #include "math.h"
 #include "math_private.h"
 
@@ -52,10 +53,17 @@ static char rcsid[] = "$NetBSD: $";
 	    else if (x == 0)
 	      return x;
 	    else if (!__finitel (x))
-	      return __nanl ("");
+	      {
+		feraiseexcept (FE_INVALID);
+		return __nanl ("");
+	      }
 	    else       return x/(-fn);
 	}
-	if (__rintl(fn)!=fn) return __nanl ("");
+	if (__rintl(fn)!=fn)
+	  {
+	    feraiseexcept (FE_INVALID);
+	    return __nanl ("");
+	  }
 	if ( fn > 65000.0) return __scalbnl(x, 65000);
 	if (-fn > 65000.0) return __scalbnl(x,-65000);
 	return __scalbnl(x,(int)fn);
