@@ -81,7 +81,7 @@
 #if TLS_TCB_AT_TP
 # define TLS_TPADJ(pd) (pd)
 #elif TLS_DTV_AT_TP
-# define TLS_TPADJ(pd) ((pd) + 1)
+# define TLS_TPADJ(pd) ((struct pthread *)((char *) (pd) + TLS_PRE_TCB_SIZE))
 #endif
 
 /* Cache handling for not-yet free stacks.  */
@@ -296,8 +296,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd = (struct pthread *) ((uintptr_t) attr->stackaddr
 			       - TLS_TCB_SIZE - adj);
 #elif TLS_DTV_AT_TP
-      pd = (struct pthread *) ((uintptr_t) attr->stackaddr
-			       - __static_tls_size - adj) - 1;
+      pd = (struct pthread *) (((uintptr_t) attr->stackaddr
+			        - __static_tls_size - adj)
+			       - TLS_PRE_TCB_SIZE);
 #endif
 
       /* The user provided stack memory needs to be cleared.  */
@@ -321,7 +322,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
       /* This is at least the second thread.  */
-      pd->header.multiple_threads = 1;
+      p_multiple_threads (pd) = 1;
 #else
       __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
@@ -426,9 +427,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #if TLS_TCB_AT_TP
 	  pd = (struct pthread *) ((char *) mem + size - coloring) - 1;
 #elif TLS_DTV_AT_TP
-	  pd = (struct pthread *) (((uintptr_t) mem + size - coloring
+	  pd = (struct pthread *) ((((uintptr_t) mem + size - coloring
 				    - __static_tls_size)
-				   & ~__static_tls_align_m1) - 1;
+				    & ~__static_tls_align_m1)
+				   - TLS_PRE_TCB_SIZE);
 #endif
 
 	  /* Remember the stack-related values.  */
@@ -447,7 +449,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 	  /* This is at least the second thread.  */
-	  pd->header.multiple_threads = 1;
+	  p_multiple_threads (pd) = 1;
 #else
 	  __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif

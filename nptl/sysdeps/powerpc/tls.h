@@ -69,22 +69,19 @@ typedef struct
 } tcbhead_t;
 
 /* This is the size of the initial TCB.  */
-# define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
+# define TLS_INIT_TCB_SIZE	0
 
 /* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN	__alignof__ (tcbhead_t)
+# define TLS_INIT_TCB_ALIGN	__alignof__ (struct pthread)
 
 /* This is the size of the TCB.  */
-# define TLS_TCB_SIZE		sizeof (tcbhead_t)
+# define TLS_TCB_SIZE		0
 
 /* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN		__alignof__ (tcbhead_t)
+# define TLS_TCB_ALIGN		__alignof__ (struct pthread)
 
 /* This is the size we need before TCB.  */
-# define TLS_PRE_TCB_SIZE	sizeof (struct pthread)
-
-/* XXX if __alignof__ (struct pthread) > __alignof (tcbhead_t)
-   we could be in trouble.  -- paulus */
+# define TLS_PRE_TCB_SIZE	(sizeof (struct pthread) + 32)
 
 # ifndef __powerpc64__
 /* Register r2 (tp) is reserved by the ABI as "thread pointer". */
@@ -98,37 +95,37 @@ register void *__thread_register __asm__ ("r13");
 
 /* The following assumes that TP (R2 or R13) points to the end of the
    TCB + 0x7000 (per the ABI).  This implies that TCB address is
-   TP-(TLS_TCB_SIZE + 0x7000).  As we define TLS_DTV_AT_TP we can
+   TP - 0x7000.  As we define TLS_DTV_AT_TP we can
    assume that the pthread struct is allocated immediately ahead of the
    TCB.  This implies that the pthread_descr address is
-   TP-(TLS_PRE_TCB_SIZE + TLS_TCB_SIZE + 0x7000).  */
+   TP - (TLS_PRE_TCB_SIZE + 0x7000).  */
 # define TLS_TCB_OFFSET	0x7000
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(tcbp, dtvp) \
-  ((tcbhead_t *) (tcbp))->dtv = dtvp + 1
+  ((tcbhead_t *) (tcbp))[-1].dtv = dtvp + 1
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) (THREAD_DTV() = (dtv))
 
 /* Return dtv of given thread descriptor.  */
-# define GET_DTV(tcbp)	(((tcbhead_t *) (tcbp))->dtv)
+# define GET_DTV(tcbp)	(((tcbhead_t *) (tcbp))[-1].dtv)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp, secondcall) \
-    (__thread_register = (void *) (tcbp) + TLS_TCB_OFFSET + TLS_TCB_SIZE, NULL)
+    (__thread_register = (void *) (tcbp) + TLS_TCB_OFFSET, NULL)
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-     (((tcbhead_t *) (__thread_register - TLS_TCB_OFFSET - TLS_TCB_SIZE))->dtv)
+     (((tcbhead_t *) (__thread_register - TLS_TCB_OFFSET))[-1].dtv)
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
     ((struct pthread *) (__thread_register \
-			 - TLS_TCB_OFFSET - TLS_TCB_SIZE - TLS_PRE_TCB_SIZE))
+			 - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
 
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) ((void)(descr), (THREAD_SELF)->member)
@@ -144,6 +141,10 @@ register void *__thread_register __asm__ ("r13");
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
     ((void)(descr), (THREAD_SELF)->member[idx] = (value))
+
+/* l_tls_offset == 0 is perfectly valid on PPC, so we have to use some
+   different value to mean unset l_tls_offset.  */
+# define NO_TLS_OFFSET		-1
 
 #endif /* __ASSEMBLER__ */
 

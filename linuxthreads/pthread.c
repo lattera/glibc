@@ -571,7 +571,7 @@ int __pthread_initialize_manager(void)
 
   __pthread_multiple_threads = 1;
 #if TLS_MULTIPLE_THREADS_IN_TCB || !defined USE_TLS || !TLS_DTV_AT_TP
-  __pthread_main_thread->p_multiple_threads = 1;
+  p_multiple_threads (__pthread_main_thread) = 1;
 #endif
   *__libc_multiple_threads_ptr = 1;
 
@@ -612,7 +612,7 @@ int __pthread_initialize_manager(void)
 # elif TLS_DTV_AT_TP
   /* pthread_descr is located right below tcbhead_t which _dl_allocate_tls
      returns.  */
-  mgr = (pthread_descr) tcbp - 1;
+  mgr = (pthread_descr) ((char *) tcbp - TLS_PRE_TCB_SIZE);
 # endif
   __pthread_handles[1].h_descr = manager_thread = mgr;
 
@@ -620,9 +620,9 @@ int __pthread_initialize_manager(void)
 #if !defined USE_TLS || !TLS_DTV_AT_TP
   mgr->p_header.data.tcb = tcbp;
   mgr->p_header.data.self = mgr;
-  mgr->p_header.data.multiple_threads = 1;
+  p_multiple_threads (mgr) = 1;
 #elif TLS_MULTIPLE_THREADS_IN_TCB
-  mgr->p_multiple_threads = 1;
+  p_multiple_threads (mgr) = 1;
 #endif
   mgr->p_lock = &__pthread_handles[1].h_lock;
 # ifndef HAVE___THREAD

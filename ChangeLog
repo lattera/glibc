@@ -1,3 +1,15 @@
+2003-04-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/link.h (NO_TLS_OFFSET): Define to 0 if not defined.
+	* elf/dl-close.c (_dl_close): Use NO_TLS_OFFSET.
+	* elf/dl-object.c (_dl_new_object): Initialize l_tls_offset to
+	NO_TLS_OFFSET.
+	* elf/rtld.c (_dl_start_final, _dl_start): Likewise.
+	* elf/dl-reloc.c (CHECK_STATIC_TLS): Use NO_TLS_OFFSET.
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Likewise.
+	* sysdeps/powerpc/dl-tls.h (TLS_TPREL_VALUE): Don't subtract
+	TLS_TCB_SIZE.
+
 2003-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getent.c: Implement alternative host database lookup via

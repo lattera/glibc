@@ -359,7 +359,7 @@ _dl_allocate_tls_init (void *result)
 	    /* Unused entry.  */
 	    continue;
 
-	  if (map->l_tls_offset == 0)
+	  if (map->l_tls_offset == NO_TLS_OFFSET)
 	    {
 	      /* For dynamically loaded modules we simply store
 		 the value indicating deferred allocation.  */

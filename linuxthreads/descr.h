@@ -120,17 +120,14 @@ struct _pthread_descr_struct
       union dtv *dtvp;
       pthread_descr self;	/* Pointer to this structure */
       int multiple_threads;
-#ifdef NEED_DL_SYSINFO
+# define p_multiple_threads(descr) (descr)->p_header.data.multiple_threads
+# ifdef NEED_DL_SYSINFO
       uintptr_t sysinfo;
-#endif
+# endif
     } data;
     void *__padding[16];
   } p_header;
-# define p_multiple_threads p_header.data.multiple_threads
-#elif TLS_MULTIPLE_THREADS_IN_TCB
-  int p_multiple_threads;
 #endif
-
   pthread_descr p_nextlive, p_prevlive;
                                 /* Double chaining of active threads */
   pthread_descr p_nextwaiting;  /* Next element in the queue holding the thr */
@@ -189,7 +186,22 @@ struct _pthread_descr_struct
 #endif
   size_t p_alloca_cutoff;	/* Maximum size which should be allocated
 				   using alloca() instead of malloc().  */
-  /* New elements must be added at the end.  */
+  /* New elements must be added at the end before __multiple_threads.  */
+#if TLS_MULTIPLE_THREADS_IN_TCB
+  /* This field here isn't necessarily multiple_threads, which is really
+     the last integer in struct _pthread_descr_struct.  */
+  int __multiple_threads;
+# define p_multiple_threads(descr) \
+  (((union								      \
+     {									      \
+       struct _pthread_descr_struct s;					      \
+       struct								      \
+       {								      \
+	 char dummy[sizeof (struct _pthread_descr_struct) - sizeof (int)];    \
+	 int multiple_threads;						      \
+       } m;								      \
+     } *)(descr))->m.multiple_threads)
+#endif
 } __attribute__ ((aligned(32))); /* We need to align the structure so that
 				    doubles are aligned properly.  This is 8
 				    bytes on MIPS and 16 bytes on MIPS64.

@@ -1,3 +1,38 @@
+2003-04-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* descr.h (p_multiple_threads): Define as function-like macro.
+	(struct _pthread_descr_struct) [TLS_MULTIPLE_THREADS_IN_TCB]:
+	Move multiple_threads to last int in the structure.
+	* pthread.c (__pthread_initialize_manager): Use p_multiple_threads
+	macro.  Subtract TLS_PRE_TCB_SIZE bytes from tcbp to get to descr.
+	* manager.c (pthread_handle_create): Use p_multiple_threads macro.
+	Subtract or add TLS_PRE_TCB_SIZE instead of sizeof (pthread_descr).
+	(pthread_free): Add TLS_PRE_TCB_SIZE instead of
+	sizeof (pthread_descr).
+	* sysdeps/powerpc/tls.h: Don't include tcb-offsets.h.
+	(TLS_INIT_TCB_SIZE, TLS_TCB_SIZE): Define to 0.
+	(TLS_INIT_TCB_ALIGN, TLS_TCB_ALIGN): Define to alignment of
+	pthread_descr.
+	(TLS_PRE_TCB_SIZE): Increase to cover tcbhead_t preceeded by pad
+	to TLS_TCB_ALIGN.
+	(INSTALL_DTV, GET_DTV, THREAD_DTV): tcbhead_t is immediately before
+	tcbp.
+	(TLS_INIT_TP, THREAD_SELF, INIT_THREAD_SELF): Don't add TLS_TCB_SIZE
+	unneccessarily.
+	(NO_TLS_OFFSET): Define.
+	* sysdeps/powerpc/powerpc32/tcb-offsets.sym: New file.
+	* sysdeps/powerpc/tcb-offsets.sym: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: Include
+	tcb-offsets.h if __ASSEMBLER__.
+	(SINGLE_THREAD_P): Use p_multiple_threads macro.
+	* sysdeps/ia64/tcb-offsets.sym (MULTIPLE_THREADS): Define to
+	-sizeof(int).
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (SINGLE_THREAD_P):
+	Use p_multiple_threads macro.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (SINGLE_THREAD_P):
+	Likewise.
+	* sysdeps/sh/tcb-offsets.sym (MULTIPLE_THREADS): Likewise.
+
 2003-04-22  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (shared-thread-library): Reverse link order to work

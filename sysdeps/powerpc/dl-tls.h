@@ -35,7 +35,7 @@ typedef struct
 /* Compute the value for a @tprel reloc.  */
 #define TLS_TPREL_VALUE(sym_map, sym, reloc) \
   ((sym_map)->l_tls_offset + (sym)->st_value + (reloc)->r_addend \
-   - TLS_TCB_SIZE - TLS_TP_OFFSET)
+   - TLS_TP_OFFSET)
 
 /* Compute the value for a @dtprel reloc.  */
 #define TLS_DTPREL_VALUE(sym, reloc) \

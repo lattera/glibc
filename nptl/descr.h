@@ -99,11 +99,7 @@ struct pthread
 #if !TLS_DTV_AT_TP
     /* This overlaps the TCB as used for TLS without threads (see tls.h).  */
     tcbhead_t header;
-#elif TLS_MULTIPLE_THREADS_IN_TCB
-    struct
-    {
-      int multiple_threads;
-    } header;
+# define p_multiple_threads(descr) (descr)->header.multiple_threads
 #endif
 
     /* This extra padding has no special purpose, and this structure layout
@@ -232,6 +228,21 @@ struct pthread
   size_t stackblock_size;
   /* Size of the included guard area.  */
   size_t guardsize;
+
+#if TLS_DTV_AT_TP && TLS_MULTIPLE_THREADS_IN_TCB
+  /* Must come last.  */
+  int __multiple_threads;
+# define p_multiple_threads(descr) \
+  ((union							\
+    {								\
+      struct pthread s;						\
+      struct							\
+	{							\
+	  char dummy[sizeof (struct pthread) - sizeof (int)];   \
+	  int multiple_threads;					\
+	} m;							\
+    } *)(descr)->m.multiple_threads)
+#endif
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 

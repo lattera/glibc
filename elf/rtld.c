@@ -233,6 +233,9 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_tls_modid = 1;
 # else
   assert (info->l.l_tls_modid == 0);
+#  if NO_TLS_OFFSET != 0
+  GL(dl_rtld_map).l_tls_offset = NO_TLS_OFFSET;
+#  endif
 # endif
 
 #endif
@@ -315,6 +318,10 @@ _dl_start (void *arg)
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
   elf_get_dynamic_info (&bootstrap_map);
+
+#if defined USE_TLS && NO_TLS_OFFSET != 0
+  bootstrap_map.l_tls_offset = NO_TLS_OFFSET;
+#endif
 
 #if USE___THREAD
   /* Get the dynamic linker's own program header.  First we need the ELF

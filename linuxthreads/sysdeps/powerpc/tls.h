@@ -32,8 +32,6 @@ typedef union dtv
   void *pointer;
 } dtv_t;
 
-#else /* __ASSEMBLER__ */
-# include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
 #ifdef HAVE_TLS_SUPPORT
@@ -52,27 +50,29 @@ typedef struct
 } tcbhead_t;
 
 /* This is the size of the initial TCB.  */
-#  define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
+#  define TLS_INIT_TCB_SIZE	0
 
 /* Alignment requirements for the initial TCB.  */
-#  define TLS_INIT_TCB_ALIGN	__alignof__ (tcbhead_t)
+#  define TLS_INIT_TCB_ALIGN	__alignof__ (struct _pthread_descr_struct)
 
 /* This is the size of the TCB.  */
-#  define TLS_TCB_SIZE		sizeof (tcbhead_t)
+#  define TLS_TCB_SIZE		0
 
 /* Alignment requirements for the TCB.  */
-#  define TLS_TCB_ALIGN		__alignof__ (tcbhead_t)
+#  define TLS_TCB_ALIGN		__alignof__ (struct _pthread_descr_struct)
 
 /* This is the size we need before TCB.  */
-#  define TLS_PRE_TCB_SIZE	sizeof (struct _pthread_descr_struct)
+#  define TLS_PRE_TCB_SIZE \
+  (sizeof (struct _pthread_descr_struct)				      \
+   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
 
 /* The following assumes that TP (R2 or R13) is points to the end of the
    TCB + 0x7000 (per the ABI).  This implies that TCB address is
-   TP-(TLS_TCB_SIZE + 0x7000).  As we define TLS_DTV_AT_TP we can
+   TP - 0x7000.  As we define TLS_DTV_AT_TP we can
    assume that the pthread_descr is allocated immediately ahead of the
    TCB.  This implies that the pthread_descr address is
-   TP-(TLS_PRE_TCB_SIZE + TLS_TCB_SIZE + 0x7000).  */
-#  define TLS_TCB_OFFSET	0x7000
+   TP - (TLS_PRE_TCB_SIZE + 0x7000).  */
+#define TLS_TCB_OFFSET		0x7000
 
 /* The DTV is allocated at the TP; the TCB is placed elsewhere.  */
 /* This is not really true for powerpc64.  We are following alpha
@@ -82,13 +82,13 @@ typedef struct
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 #  define INSTALL_DTV(TCBP, DTVP) \
-  (((tcbhead_t *) (TCBP))->dtv = (DTVP) + 1)
+  (((tcbhead_t *) (TCBP))[-1].dtv = (DTVP) + 1)
 
 /* Install new dtv for current thread.  */
 #  define INSTALL_NEW_DTV(DTV) (THREAD_DTV() = (DTV))
 
 /* Return dtv of given thread descriptor.  */
-#  define GET_DTV(TCBP)	(((tcbhead_t *) (TCBP))->dtv)
+#  define GET_DTV(TCBP)	(((tcbhead_t *) (TCBP))[-1].dtv)
 
 /* The global register variable is declared in pt-machine.h with
    the wrong type, but the compiler doesn't like us declaring another.  */
@@ -98,22 +98,22 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(TCBP, SECONDCALL) \
-    (__thread_register = (void *) (TCBP) + TLS_TCB_OFFSET + TLS_TCB_SIZE, NULL)
+    (__thread_register = (void *) (TCBP) + TLS_TCB_OFFSET, NULL)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
-     (((tcbhead_t *) (__thread_register - TLS_TCB_OFFSET - TLS_TCB_SIZE))->dtv)
+     (((tcbhead_t *) (__thread_register - TLS_TCB_OFFSET))[-1].dtv)
 
 /* Return the thread descriptor for the current thread.  */
 #  undef THREAD_SELF
 #  define THREAD_SELF \
     ((pthread_descr) (__thread_register \
-		      - TLS_TCB_OFFSET - TLS_TCB_SIZE - TLS_PRE_TCB_SIZE))
+		      - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
 
 #  undef INIT_THREAD_SELF
 #  define INIT_THREAD_SELF(DESCR, NR) \
      (__thread_register = ((void *) (DESCR) \
-		           + TLS_TCB_OFFSET + TLS_TCB_SIZE + TLS_PRE_TCB_SIZE))
+		           + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE))
 
 /* Make sure we have the p_multiple_threads member in the thread structure.
    See below.  */
@@ -123,6 +123,10 @@ typedef struct
 
 /* Get the thread descriptor definition.  */
 #  include <linuxthreads/descr.h>
+
+/* l_tls_offset == 0 is perfectly valid on PPC, so we have to use some
+   different value to mean unset l_tls_offset.  */
+#  define NO_TLS_OFFSET	-1
 
 # endif /* __ASSEMBLER__ */
 

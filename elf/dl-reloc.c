@@ -209,7 +209,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
        intended to produce.  */
 #define CHECK_STATIC_TLS(map, sym_map)					      \
     do {								      \
-      if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0))		      \
+      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET, 0))     \
 	_dl_allocate_static_tls (sym_map);				      \
     } while (0)
 

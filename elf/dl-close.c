@@ -365,7 +365,7 @@ _dl_close (void *_map)
 		/* All dynamically loaded modules with TLS are unloaded.  */
 		GL(dl_tls_max_dtv_idx) = GL(dl_tls_static_nelem);
 
-	      if (imap->l_tls_offset != 0)
+	      if (imap->l_tls_offset != NO_TLS_OFFSET)
 		{
 		  /* Collect a contiguous chunk built from the objects in
 		     this search list, going in either direction.  When the

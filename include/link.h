@@ -268,6 +268,9 @@ struct link_map
     size_t l_tls_blocksize;
     /* Alignment requirement of the TLS block.  */
     size_t l_tls_align;
+# ifndef NO_TLS_OFFSET
+#  define NO_TLS_OFFSET	0
+# endif
     /* For objects present at startup time: offset in the static TLS block.  */
     ptrdiff_t l_tls_offset;
     /* Index of the module in the dtv array.  */

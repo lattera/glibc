@@ -591,8 +591,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   if (new_thread == NULL)
     return EAGAIN;
 # if TLS_DTV_AT_TP
-  /* pthread_descr is right below TP.  */
-  --new_thread;
+  /* pthread_descr is below TP.  */
+  new_thread = (pthread_descr) ((char *) new_thread - TLS_PRE_TCB_SIZE);
 # endif
 #else
   /* Prevent warnings.  */
@@ -612,7 +612,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	{
 #ifdef USE_TLS
 # if TLS_DTV_AT_TP
-	  ++new_thread;
+	  new_thread = (pthread_descr) ((char *) new_thread + TLS_PRE_TCB_SIZE);
 # endif
 	  _dl_deallocate_tls (new_thread, true);
 #endif
@@ -643,7 +643,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_header.data.self = new_thread;
 #endif
 #if TLS_MULTIPLE_THREADS_IN_TCB || !defined USE_TLS || !TLS_DTV_AT_TP
-  new_thread->p_multiple_threads = 1;
+  p_multiple_threads (new_thread) = 1;
 #endif
   new_thread->p_tid = new_thread_id;
   new_thread->p_lock = &(__pthread_handles[sseg].h_lock);
@@ -806,7 +806,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
       }
 #ifdef USE_TLS
 # if TLS_DTV_AT_TP
-    ++new_thread;
+    new_thread = (pthread_descr) ((char *) new_thread + TLS_PRE_TCB_SIZE);
 # endif
     _dl_deallocate_tls (new_thread, true);
 #endif
@@ -896,7 +896,7 @@ static void pthread_free(pthread_descr th)
 
 #ifdef USE_TLS
 # if TLS_DTV_AT_TP
-      ++th;
+      th = (pthread_descr) ((char *) th + TLS_PRE_TCB_SIZE);
 # endif
       _dl_deallocate_tls (th, true);
 #endif
