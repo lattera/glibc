@@ -19,9 +19,7 @@
 #include <assert.h>
 #include <sys/stat.h>
 
-/* this is #define'd in <sys/stat.h> - why #define it again?
 #define STX_LINK        0x01
- */
 
 extern int statx (const char *pathname, struct stat *st, int len, int cmd);
 
