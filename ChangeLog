@@ -1,3 +1,8 @@
+1999-02-10  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/pipe.c (__pipe): Don't call __socket_shutdown on
+	the "unused" ends of the sockets.  Let pipes be bidirectional.
+
 1999-02-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Correct test for
