@@ -4353,13 +4353,14 @@ This is the type of an object that can encode information about the
 file position of a stream, for use by the functions @code{fgetpos} and
 @code{fsetpos}.
 
-In the GNU system, @code{fpos_t} is equivalent to @code{off_t} or
-@code{long int}.  In other systems, it might have a different internal
+In the GNU system, @code{fpos_t} is an opaque data structure that
+contains internal data to represent file offset and conversion state
+information.  In other systems, it might have a different internal
 representation.
 
 When compiling with @code{_FILE_OFFSET_BITS == 64} on a 32 bit machine
-this type is in fact equivalent to @code{off64_t} since the LFS
-interface transparently replaced the old interface.
+this type is in fact equivalent to @code{fpos64_t} since the LFS
+interface transparently replaces the old interface.
 @end deftp
 
 @comment stdio.h
@@ -4369,8 +4370,9 @@ This is the type of an object that can encode information about the
 file position of a stream, for use by the functions @code{fgetpos64} and
 @code{fsetpos64}.
 
-In the GNU system, @code{fpos64_t} is equivalent to @code{off64_t} or
-@code{long long int}.  In other systems, it might have a different internal
+In the GNU system, @code{fpos64_t} is an opaque data structure that
+contains internal data to represent file offset and conversion state
+information.  In other systems, it might have a different internal
 representation.
 @end deftp
 
@@ -4385,7 +4387,7 @@ value in @code{errno}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bit system the function is in fact @code{fgetpos64}.  I.e., the LFS
-interface transparently replaced the old interface.
+interface transparently replaces the old interface.
 @end deftypefun
 
 @comment stdio.h
@@ -4413,7 +4415,7 @@ an implementation-defined positive value in @code{errno}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bit system the function is in fact @code{fsetpos64}.  I.e., the LFS
-interface transparently replaced the old interface.
+interface transparently replaces the old interface.
 @end deftypefun
 
 @comment stdio.h
