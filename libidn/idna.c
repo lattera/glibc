@@ -115,9 +115,11 @@ idna_to_ascii_4i (const uint32_t * in, size_t inlen, char *out, int flags)
     len = strlen (p);
     do
       {
+	char *newp;
+
 	len = 2 * len + 10;	/* XXX better guess? */
-	char *newp = realloc (p, len);
-	if (p == NULL)
+	newp = realloc (p, len);
+	if (newp == NULL)
 	  {
 	    free (p);
 	    return IDNA_MALLOC_ERROR;
