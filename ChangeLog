@@ -1,3 +1,9 @@
+2004-06-05  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c (__makecontext):
+	Handle more than 6 args correctly.  Based on a patch by Masahide
+	Washizawa.
+
 2004-06-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use __nss_not_use_nscd_hosts
