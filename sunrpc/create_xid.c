@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <bits/libc-lock.h>
+#include <rpc/rpc.h>
 
 /* The RPC code is not threadsafe, but new code should be threadsafe. */
 

@@ -58,7 +58,7 @@ static int undefined2 (const char *type, const char *stop);
 /* store away enough information to allow the XDR functions to be spat
     out at the end of the file */
 
-void
+static void
 storexdrfuncdecl (const char *name, int pointerp)
 {
   xdrfunc * xdrptr;

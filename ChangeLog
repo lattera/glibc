@@ -1,5 +1,14 @@
 2000-12-31  Andreas Jaeger  <aj@suse.de>
 
+	* sunrpc/rpc_main.c: Add noreturn attributes.
+	* sunrpc/rpc_scan.h: Likewise.
+
+	* sunrpc/rpc_hout.c (storexdrfuncdecl): Make static.
+
+	* sunrpc/rpcinfo.c: Add noreturn attribute to brdcst.
+
+	* sunrpc/proto.h: Add noreturn attributes to error and crash.
+
 	* posix/bsd-getpgrp.c: Add prototype to avoid warning.
 
 	* sunrpc/svc_unix.c: Include <rpc/svc.h> for prototypes.
