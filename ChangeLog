@@ -1,5 +1,8 @@
 2000-10-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile (tests): Add tst-fseek.
+	* stdio-common/tst-fseek.c: New file.
+
 	* posix/regex.c (gettext): Use correct translation domain for glibc.
 
 	* argp/argp-parse.c: Use __dcgettext instead of dcgettext for glibc.
