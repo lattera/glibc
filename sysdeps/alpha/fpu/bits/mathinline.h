@@ -46,7 +46,8 @@
 #if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
     && defined __OPTIMIZE__
 
-#define __inline_copysign(NAME, TYPE)					\
+#if !__GNUC_PREREQ (4, 0)
+# define __inline_copysign(NAME, TYPE)					\
 __MATH_INLINE TYPE							\
 __NTH (NAME (TYPE __x, TYPE __y))					\
 {									\
@@ -60,19 +61,11 @@ __inline_copysign (copysignf, float)
 __inline_copysign (__copysign, double)
 __inline_copysign (copysign, double)
 
-#undef __MATH_INLINE_copysign
+# undef __inline_copysign
+#endif
 
 
-#if __GNUC_PREREQ (2, 8)
-__MATH_INLINE float
-__NTH (__fabsf (float __x)) { return __builtin_fabsf (__x); }
-__MATH_INLINE float
-__NTH (fabsf (float __x)) { return __builtin_fabsf (__x); }
-__MATH_INLINE double
-__NTH (__fabs (double __x)) { return __builtin_fabs (__x); }
-__MATH_INLINE double
-__NTH (fabs (double __x)) { return __builtin_fabs (__x); }
-#else
+#if !__GNUC_PREREQ (2, 8)
 # define __inline_fabs(NAME, TYPE)			\
 __MATH_INLINE TYPE					\
 __NTH (NAME (TYPE __x))					\
