@@ -1,3 +1,10 @@
+2004-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PUSHARGS_6, DOARGS_6,
+	POPARGS_6, _PUSHARGS_6, _DOARGS_6, _POPARGS_6): Define.
+	* sysdeps/unix/sysv/linux/i386/syscall.S (syscall): Handle 6 argument
+	syscalls.
+
 2004-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.h (_PATH_NSCD_PASSWD_DB): Move to /var/db.

@@ -297,6 +297,13 @@ __i686.get_pc_thunk.reg:						      \
 #define _DOARGS_5(n)	movl n(%esp), %edi; _DOARGS_4 (n-4)
 #define _POPARGS_5	_POPARGS_4; popl %edi; L(POPDI1):
 
+#define PUSHARGS_6	_PUSHARGS_6
+#define DOARGS_6	_DOARGS_6 (36)
+#define POPARGS_6	_POPARGS_6
+#define _PUSHARGS_6	pushl %ebp; L(PUSHBP1): _PUSHARGS_5
+#define _DOARGS_6(n)	movl n(%esp), %ebp; _DOARGS_5 (n-4)
+#define _POPARGS_6	_POPARGS_5; popl %ebp; L(POPBP1):
+
 #else	/* !__ASSEMBLER__ */
 
 /* We need some help from the assembler to generate optimal code.  We
