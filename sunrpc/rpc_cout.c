@@ -801,7 +801,7 @@ static char *
 upcase (const char *str)
 {
   char *ptr, *hptr;
-  ptr = malloc (strlen (str));
+  ptr = malloc (strlen (str) + 1);
   if (ptr == NULL)
     {
       f_print (stderr, "malloc failed\n");

@@ -90,13 +90,21 @@ extern size_t strtaboffset (struct Strent *se);
 struct Strtab *
 strtabinit (void)
 {
+  struct Strtab *ret;
+
   if (ps == 0)
     {
       ps = sysconf (_SC_PAGESIZE) - 2 * sizeof (void *);
       assert (sizeof (struct memoryblock) < ps);
     }
 
-  return (struct Strtab *) calloc (1, sizeof (struct Strtab));
+  ret = (struct Strtab *) calloc (1, sizeof (struct Strtab));
+  if (ret != NULL)
+    {
+      ret->null.len = 1;
+      ret->null.string = "";
+    }
+  return ret;
 }
 
 
@@ -140,10 +148,6 @@ newstring (struct Strtab *st, const char *str, size_t len)
   struct Strent *newstr;
   size_t align;
   int i;
-
-  /* Compute the string length if the caller doesn't know it.  */
-  if (len == 0)
-    len = strlen (str) + 1;
 
   /* Compute the amount of padding needed to make the structure aligned.  */
   align = ((__alignof__ (struct Strent)
@@ -211,6 +215,14 @@ strtabadd (struct Strtab *st, const char *str, size_t len)
   struct Strent *newstr;
   struct Strent **sep;
 
+  /* Compute the string length if the caller doesn't know it.  */
+  if (len == 0)
+    len = strlen (str) + 1;
+
+  /* Make sure all "" strings get offset 0.  */
+  if (len == 1)
+    return &st->null;
+
   /* Allocate memory for the new string and its associated information.  */
   newstr = newstring (st, str, len);
 
@@ -223,6 +235,19 @@ strtabadd (struct Strtab *st, const char *str, size_t len)
       /* This is not the same entry.  This means we have a prefix match.  */
       if ((*sep)->len > newstr->len)
 	{
+	  struct Strent *subs;
+
+	  for (subs = (*sep)->next; subs; subs = subs->next)
+	    if (subs->len == newstr->len)
+	      {
+		/* We have an exact match with a substring.  Free the memory
+		   we allocated.  */
+		st->left += st->backp - (char *) newstr;
+		st->backp = (char *) newstr;
+
+		return subs;
+	      }
+
 	  /* We have a new substring.  This means we don't need the reverse
 	     string of this entry anymore.  */
 	  st->backp -= newstr->len;
@@ -238,6 +263,8 @@ strtabadd (struct Strtab *st, const char *str, size_t len)
 	     it is longer.  In this case we have to put it first.  */
 	  st->total += newstr->len - (*sep)->len;
 	  newstr->next = *sep;
+	  newstr->left = (*sep)->left;
+	  newstr->right = (*sep)->right;
 	  *sep = newstr;
 	}
       else
