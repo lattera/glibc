@@ -1,5 +1,8 @@
 2001-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/C-monetary.c (_nl_C_LC_MONETARY): Provide correct value
+	of CRNCYSTR.
+
 	* locale/programs/ld-messages.c (messages_finish): Provide POSIX
 	locale compliant default values for fields without definition.
 	* locale/programs/ld-time.c (time_finish): Likewise.

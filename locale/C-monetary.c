@@ -52,7 +52,7 @@ const struct locale_data _nl_C_LC_MONETARY =
     { string: not_available },
     { string: not_available },
     { string: not_available },
-    { string: "" },
+    { string: "-" },
     { string: not_available },
     { string: not_available },
     { string: not_available },
