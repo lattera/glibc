@@ -1,3 +1,8 @@
+2000-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c (process_string_arg): Correct handling
+	of multibyte character strings in %s format with precision.
+
 2000-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (collate_read): Allow collating
