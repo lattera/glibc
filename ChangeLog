@@ -1,3 +1,9 @@
+2002-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/mach/hurd/Versions: Add _dl_init_first to libc and ld export
+	list.
+	* elf/Versions: Remove it here.
+
 2002-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/tcvn5712-1.c (MAX_NEEDED_INPUT): Define for from

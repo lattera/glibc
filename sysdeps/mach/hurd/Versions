@@ -3,6 +3,9 @@ libc {
     # functions with a weak definition in the dynamic linker
     __getcwd; __mmap;
   }
+  GLIBC_PRIVATE {
+    _dl_init_first;
+  }
 }
 
 ld {
@@ -17,5 +20,8 @@ ld {
     __lseek; __mmap; __open; __xstat;
     _exit; _hurd_intr_rpc_mach_msg;
     abort;
+  }
+  GLIBC_PRIVATE {
+    _dl_init_first;
   }
 }
