@@ -1,5 +1,5 @@
 /* Definition of `struct stat' used in the kernel.  64 bit S/390 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -26,21 +26,18 @@ struct kernel_stat
     unsigned int st_nlink;
     unsigned int st_uid;
     unsigned int st_gid;
-    unsigned int st_rdev;
     unsigned int __pad1;
+    unsigned int st_rdev;
     unsigned long int st_size;
-    unsigned long int st_atime;
-    unsigned long int st_mtime;
-    unsigned long int st_ctime;
+    struct timespec st_atim;
+    struct timespec st_mtim;
+    struct timespec st_ctim;
     unsigned int  st_blksize;
     int st_blocks;
-    unsigned long __unused1;
-    unsigned long __unused2;
+    unsigned long __unused[3];
   };
 
 extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
 
 #define XSTAT_IS_XSTAT64 1
-#define _HAVE___UNUSED1
-#define _HAVE___UNUSED2
-
+#define _HAVE_STAT_NSEC
