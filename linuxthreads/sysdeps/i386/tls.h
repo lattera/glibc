@@ -90,6 +90,13 @@ typedef struct
       asm ("hlt");							      \
   } while (0)
 
+
+/* Return the address of the dtv for the current thread.  */
+# define THREAD_DTV() \
+  ({ struct _pthread_descr_struct *__descr;				      \
+     THREAD_GETMEM (__descr, p_header.data.dtvp); })
+
+
 #endif
 
 #endif	/* tls.h */

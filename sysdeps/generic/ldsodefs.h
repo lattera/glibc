@@ -22,6 +22,7 @@
 
 #include <features.h>
 
+#include <stdbool.h>
 #define __need_size_t
 #define __need_NULL
 #include <stddef.h>
@@ -230,7 +231,7 @@ struct rtld_global
 #define DL_DEBUG_RELOC      (1 << 5)
 #define DL_DEBUG_FILES      (1 << 6)
 #define DL_DEBUG_STATISTICS (1 << 7)
-/* This one is used only internally.  */
+/* These two are used only internally.  */
 #define DL_DEBUG_HELP       (1 << 8)
 #define DL_DEBUG_PRELINK    (1 << 9)
 
@@ -293,8 +294,10 @@ struct rtld_global
      initialize new TLS blocks.  */
   EXTERN struct link_map *_dl_initimage_list;
 
-  /* Count the number of modules which define TLS data.  */
-  EXTERN size_t _dl_tls_module_cnt;
+  /* Highest dtv index currently needed.  */
+  EXTERN size_t _dl_tls_max_dtv_idx;
+  /* Flag signalling whether there are gaps in the module ID allocation.  */
+  EXTERN bool _dl_tls_dtv_gaps;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */
@@ -648,6 +651,14 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Addr) *user_entry));
 
 extern void _dl_sysdep_start_cleanup (void)
+     internal_function;
+
+
+/* Determine next available module ID.  */
+extern size_t _dl_next_tls_modid (void) internal_function;
+
+/* Calculate offset of the TLS blocks in the static TLS block.  */
+extern void _dl_determine_tlsoffset (struct link_map *firstp)
      internal_function;
 
 

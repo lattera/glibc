@@ -143,8 +143,10 @@ __libc_lock_define_initialized_recursive (, _dl_load_lock)
    initialize new TLS blocks.  */
 struct link_map *_dl_initimage_list;
 
-/* Count the number of modules which define TLS data.  */
-size_t _dl_tls_module_cnt;
+/* Highest dtv index currently needed.  */
+size_t _dl_tls_max_dtv_idx;
+/* Flag signalling whether there are gaps in the module ID allocation.  */
+bool _dl_tls_dtv_gaps;
 #endif
 
 

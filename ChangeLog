@@ -1,3 +1,28 @@
+2002-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def [ld]: Add GLIBC_2.3.
+	* elf/Versions [ld]: Add __tls_get_addr to GLIBC_2.3.
+	* elf/Makefile (dl-routines): Add dl-tls.
+	(distribute): Add dl-tls.h.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Remove
+	_dl_tls_module_cnt, add _dl_tls_max_dtv_idx and _dl_tls_dtv_gaps.
+	Add prototypes for _dl_next_tls_modid and _dl_determine_tlsoffset.
+	* elf/dl-load.c (_dl_map_object_from_fd): Store alignment requirement
+	along with the other info in the link map.  Change queueing of init
+	images for double linked list.  Use _dl_next_tls_modid to compute
+	l_tls_modid.
+	* elf/rtld.c (_dl_start_final): Store alignment requirement
+	along with the other info in rtld map and executable map.
+	(dl_main): Add ld.so to the init image list if necessary.  Compute
+	final module ID with _dl_next_tls_modid.
+	* include/link.h (struct link_map): Add l_tls_previmage and
+	l_tls_align.
+	* eld/dl-support.c: Define _dl_tls_max_dtv_idx and _dl_tls_dtv_gaps.
+	* sysdeps/i386/elf/Versions: New file.
+	* sysdeps/generic/dl-tls.c: New file.
+	* sysdeps/generic/dl-tls.h: New file.
+	* sysdeps/i386/dl-tls.h: New file.
+
 2002-02-06  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/unix/sysv/linux/netinet/ip.h: Moved to ...
@@ -19,7 +44,7 @@
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/stat.h (struct stat): Add
-	attribute((packed)) to counter stupid people misuing gcc options.
+	attribute((packed)) to counter stupid people misusing gcc options.
 	(struct stat64): Likewise.
 
 2002-02-05  Ulrich Drepper  <drepper@redhat.com>

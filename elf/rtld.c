@@ -259,9 +259,11 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
     if (phdr[cnt].p_type == PT_TLS)
       {
 	void *tlsblock;
-	size_t align = MAX (TLS_INIT_TCB_ALIGN, phdr[cnt].p_align);
+	size_t max_align = MAX (TLS_INIT_TCB_ALIGN, phdr[cnt].p_align);
 
 	GL(dl_rtld_map).l_tls_blocksize = phdr[cnt].p_memsz;
+	GL(dl_rtld_map).l_tls_align = phdr[cnt].p_align;
+	assert (GL(dl_rtld_map).l_tls_blocksize != 0);
 	GL(dl_rtld_map).l_tls_initimage_size = phdr[cnt].p_filesz;
 	GL(dl_rtld_map).l_tls_initimage = (void *) (GL(dl_rtld_map).l_map_start
 						    + phdr[cnt].p_offset);
@@ -274,19 +276,20 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 	tlsblock = alloca (roundup (GL(dl_rtld_map).l_tls_blocksize,
 				    TLS_INIT_TCB_ALIGN)
 			   + TLS_INIT_TCB_SIZE
-			   + align);
+			   + max_align);
 # elif TLS_DTV_AT_TP
-	tlsblock = alloca (roundup (TLS_INIT_TCB_SIZE, phdr[cnt].p_align)
+	tlsblock = alloca (roundup (TLS_INIT_TCB_SIZE,
+				    GL(dl_rtld_map).l_tls_align)
 			   + GL(dl_rtld_map).l_tls_blocksize
-			   + align);
+			   + max_align);
 # else
 	/* In case a model with a different layout for the TCB and DTV
 	   is defined add another #elif here and in the following #ifs.  */
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 	/* Align the TLS block.  */
-	tlsblock = (void *) (((uintptr_t) tlsblock + align - 1)
-			     & ~(align - 1));
+	tlsblock = (void *) (((uintptr_t) tlsblock + max_align - 1)
+			     & ~(max_align - 1));
 
 	/* Initialize the dtv.  */
 	initdtv[0].counter = 1;
@@ -296,7 +299,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 	initdtv[1].pointer = tlsblock;
 # elif TLS_DTV_AT_TP
 	GL(dl_rtld_map).l_tls_offset = roundup (TLS_INIT_TCB_SIZE,
-						phdr[cnt].p_align);
+						GL(dl_rtld_map).l_tls_align);
 	initdtv[1].pointer = (char *) tlsblock + GL(dl_rtld_map).l_tls_offset);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
@@ -716,16 +719,18 @@ of this helper program; chances are you did not intend to run this program.\n\
 	   _dl_start_final.  But the result is repeatable so do not
 	   check for this special but unimportant case.  */
 	GL(dl_loaded)->l_tls_blocksize = ph->p_memsz;
+	GL(dl_loaded)->l_tls_align = ph->p_align;
 	GL(dl_loaded)->l_tls_initimage_size = ph->p_filesz;
 	GL(dl_loaded)->l_tls_initimage = (void *) (GL(dl_loaded)->l_addr
 						   + ph->p_offset);
 	/* This is the first element of the initialization image list.
-	   It is created as a circular list so that we can easily
-	   append to it.  */
-	GL(dl_initimage_list) = GL(dl_loaded)->l_tls_nextimage = GL(dl_loaded);
+	   We create the list as circular since we have to append at
+	   the end.  */
+	GL(dl_initimage_list) = GL(dl_loaded)->l_tls_nextimage
+	  = GL(dl_loaded)->l_tls_previmage = GL(dl_loaded);
 
-	/* This image get the ID one.  */
-	GL(dl_tls_module_cnt) = GL(dl_loaded)->l_tls_modid = 1;
+	/* This image gets the ID one.  */
+	GL(dl_tls_max_dtv_idx) = GL(dl_loaded)->l_tls_modid = 1;
 	break;
 #endif
       }
@@ -736,7 +741,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* We were invoked directly, so the program might not have a
 	 PT_INTERP.  */
       _dl_rtld_libname.name = GL(dl_rtld_map).l_name;
-      /* _dl_rtld_libname.next = NULL; 	Alread zero.  */
+      /* _dl_rtld_libname.next = NULL; 	Already zero.  */
       GL(dl_rtld_map).l_libname =  &_dl_rtld_libname;
     }
   else
@@ -973,7 +978,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       assert (GL(dl_rtld_map).l_prev->l_next == GL(dl_rtld_map).l_next);
       GL(dl_rtld_map).l_prev->l_next = &GL(dl_rtld_map);
-      if (GL(dl_rtld_map).l_next)
+      if (GL(dl_rtld_map).l_next != NULL)
 	{
 	  assert (GL(dl_rtld_map).l_next->l_prev == GL(dl_rtld_map).l_prev);
 	  GL(dl_rtld_map).l_next->l_prev = &GL(dl_rtld_map);
@@ -1328,6 +1333,41 @@ of this helper program; chances are you did not intend to run this program.\n\
      we need it in the memory handling later.  */
   GL(dl_initial_searchlist) = *GL(dl_main_searchlist);
 
+#ifdef USE_TLS
+  /* Now it is time to determine the layout of the static TLS block
+     and allocate it for the initial thread.  Note that we always
+     allocate the static block, we never defer it even if no
+     DF_STATIC_TLS bit is set.  The reason is that we know glibc will
+     use the static model.  First add the dynamic linker to the list
+     if it also uses TLS.  */
+  if (GL(dl_rtld_map).l_tls_blocksize != 0)
+    {
+      /* At to the list.  */
+      if (GL(dl_initimage_list) == NULL)
+	GL(dl_initimage_list) = GL(dl_rtld_map).l_tls_nextimage
+	  = GL(dl_rtld_map).l_tls_previmage = &GL(dl_rtld_map);
+	  else
+	    {
+	      GL(dl_rtld_map).l_tls_nextimage
+		= GL(dl_initimage_list)->l_tls_nextimage;
+	      GL(dl_rtld_map).l_tls_nextimage->l_tls_previmage
+		= &GL(dl_rtld_map);
+	      GL(dl_rtld_map).l_tls_previmage = GL(dl_initimage_list);
+	      GL(dl_rtld_map).l_tls_previmage->l_tls_nextimage
+		= &GL(dl_rtld_map);
+	      GL(dl_initimage_list) = &GL(dl_rtld_map);
+	    }
+
+      /* Assign a module ID.  */
+      GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+    }
+
+  if (GL(dl_initimage_list) != NULL)
+    /* This means we actually have some modules which use TLS.
+       Computer the TLS offsets for the various blocks.  */
+    _dl_determine_tlsoffset (GL(dl_initimage_list)->l_tls_nextimage);
+#endif
+
   {
     /* Initialize _r_debug.  */
     struct r_debug *r = _dl_debug_initialize (GL(dl_rtld_map).l_addr);
@@ -1344,14 +1384,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 
 #else
 
-    if (l->l_info[DT_DEBUG])
+    if (l->l_info[DT_DEBUG] != NULL)
       /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
 	 with the run-time address of the r_debug structure  */
       l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
 
     /* Fill in the pointer in the dynamic linker's own dynamic section, in
        case you run gdb on the dynamic linker directly.  */
-    if (GL(dl_rtld_map).l_info[DT_DEBUG])
+    if (GL(dl_rtld_map).l_info[DT_DEBUG] != NULL)
       GL(dl_rtld_map).l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
 
 #endif

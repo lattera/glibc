@@ -256,20 +256,26 @@ struct link_map
       const ElfW(Sym) *ret;
     } l_lookup_cache;
 
+#ifdef USE_TLS
     /* Thread-local storage related info.  */
 
     /* Next module in list of initialization images.  */
     struct link_map *l_tls_nextimage;
+    /* Previous module in list of initialization images.  */
+    struct link_map *l_tls_previmage;
     /* Start of the initialization image.  */
     void *l_tls_initimage;
     /* Size of the initialization image.  */
     size_t l_tls_initimage_size;
     /* Size of the TLS block.  */
     size_t l_tls_blocksize;
+    /* Alignment rquirement of the TLS block.  */
+    size_t l_tls_align;
     /* For objects present at startup time: offset in the static TLS block.  */
     ptrdiff_t l_tls_offset;
     /* Index of the module in the dtv array.  */
     size_t l_tls_modid;
+#endif
   };
 
 struct dl_phdr_info
