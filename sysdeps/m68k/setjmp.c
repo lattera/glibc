@@ -26,7 +26,7 @@ __sigsetjmp (jmp_buf env, int savemask)
   asm volatile ("movem%.l d1-d7, %0" : : "m" (env[0].__jmpbuf[0].__dregs[0]));
 
   /* Save return address in place of register A0.  */
-  env[0].__jmp_buf[0].__aregs[0] = (PTR) ((PTR *) &env)[-1];
+  env[0].__jmpbuf[0].__aregs[0] = ((void **) &env)[-1];
 
   /* Save address registers A1 through A5.  */
   asm volatile ("movem%.l a1-a5, %0" : : "m" (env[0].__jmpbuf[0].__aregs[1]));
