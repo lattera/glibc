@@ -37,18 +37,9 @@ s(__remquo) (float_type x, float_type y, int *quo)
   float_type result;
   int cquo, fpsr;
 
-  /* FIXME: Which of frem and fmod is correct?  */
-#if 1
   __asm ("frem%.x %2,%0\n\tfmove%.l %/fpsr,%1"
 	 : "=f" (result), "=dm" (fpsr) : "f" (y), "0" (x));
   cquo = (fpsr >> 16) & 0x7f;
-  if ((result > 0) != (x > 0))
-    cquo--;
-#else
-  __asm ("fmod%.x %2,%0\n\tfmove%.l %/fpsr,%1"
-	 : "=f" (result), "=dm" (fpsr) : "f" (y), "0" (x));
-  cquo = (fpsr >> 16) & 0x7f;
-#endif
   if (fpsr & (1 << 23))
     cquo = -cquo;
   *quo = cquo;
