@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -29,25 +29,13 @@ __srand48_r (seedval, buffer)
   if (sizeof (long int) > 4)
     seedval &= 0xffffffffl;
 
-#if USHRT_MAX == 0xffffU
-  buffer->x[2] = seedval >> 16;
-  buffer->x[1] = seedval & 0xffffl;
-  buffer->x[0] = 0x330e;
+  buffer->__x[2] = seedval >> 16;
+  buffer->__x[1] = seedval & 0xffffl;
+  buffer->__x[0] = 0x330e;
 
-  buffer->a[2] = 0x5;
-  buffer->a[1] = 0xdeec;
-  buffer->a[0] = 0xe66d;
-#else
-  buffer->x[2] = seedval;
-  buffer->x[1] = 0x330e0000UL;
-  buffer->x[0] = 0;
-
-  buffer->a[2] = 0x5deecUL;
-  buffer->a[1] = 0xe66d0000UL;
-  buffer->a[0] = 0;
-#endif
-  buffer->c = 0xb;
-  buffer->init = 1;
+  buffer->__a = 0x5deece66dull;
+  buffer->__c = 0xb;
+  buffer->__init = 1;
 
   return 0;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
@@ -27,20 +28,11 @@ __lcong48_r (param, buffer)
      struct drand48_data *buffer;
 {
   /* Store the given values.  */
-#if USHRT_MAX == 0xffffU
-  memcpy (buffer->x, &param[0], sizeof (buffer->x));
-  memcpy (buffer->a, &param[3], sizeof (buffer->a));
-#else
-  buffer->x[2] = (param[2] << 16) | param[1];
-  buffer->x[1] = param[0] << 16;
-  buffer->x[0] = 0;
-
-  buffer->a[2] = (param[5] << 16) | param[4];
-  buffer->a[1] = param[3] << 16;
-  buffer->a[0] = 0;
-#endif
-  buffer->c = param[6];
-  buffer->init = 1;
+  memcpy (buffer->__x, &param[0], sizeof (buffer->__x));
+  buffer->__a = ((uint64_t) param[5] << 32 | (uint32_t) param[4] << 16
+		 | param[3]);
+  buffer->__c = param[6];
+  buffer->__init = 1;
 
   return 0;
 }

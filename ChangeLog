@@ -1,5 +1,26 @@
 2001-01-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/stdlib.h (drand48_data): Make available only for
+	__USE_MISC.  Rename elements to protect namespace.  Change type
+	and position of a and init element.
+	* stdlib/drand48-iter.c: Don't handle unsigned short > 16 bit
+	differently.  Adjust for drand48_data change.  Don't compute a here,
+	it comes from drand48_data.
+	* stdlib/lcong48_r.c: Don't handle unsigned short > 16 bit
+	differently.  Adjust for drand48_data change.  Compute a here.
+	* stdlib/srand48_r.c: Likewise.
+	* stdlib/drand48.c: Adjust for drand48_data change.
+	* stdlib/lrand48.c: Likewise.
+	* stdlib/mrand48.c: Likewise.
+	* stdlib/seek48.c: Likewise.
+	* stdlib/drand48_r.c: Likewise.
+	* stdlib/lrand48_r.c: Likewise.
+	* stdlib/mrand48_r.c: Likewise.
+	* stdlib/seed48_r.c: Likewise.  Don't handle unsigned short > 16 bit
+	differently.
+	* stdlib/erand48_r.c: Don't handle unsigned short > 16 bit differently.
+	* stdlib/jrand48_r.c: Likewise.
+
 	* po/sv.po: Update from translation team.
 
 2001-01-21  Andreas Jaeger  <aj@suse.de>

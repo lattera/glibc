@@ -474,17 +474,19 @@ extern void srand48 (long int __seedval) __THROW;
 extern unsigned short int *seed48 (unsigned short int __seed16v[3]) __THROW;
 extern void lcong48 (unsigned short int __param[7]) __THROW;
 
-/* Data structure for communication with thread safe versions.  */
+# ifdef __USE_MISC
+/* Data structure for communication with thread safe versions.  This
+   type is to be regarded as opaque.  It's only exported because users
+   have to allocate objects of this type.  */
 struct drand48_data
   {
-    unsigned short int x[3];	/* Current state.  */
-    unsigned short int a[3];	/* Factor in congruential formula.  */
-    unsigned short int c;	/* Additive const. in congruential formula.  */
-    unsigned short int old_x[3]; /* Old state.  */
-    int init;			/* Flag for initializing.  */
+    unsigned short int __x[3];	/* Current state.  */
+    unsigned short int __old_x[3]; /* Old state.  */
+    unsigned short int __c;	/* Additive const. in congruential formula.  */
+    unsigned short int __init;	/* Flag for initializing.  */
+    unsigned long long int __a;	/* Factor in congruential formula.  */
   };
 
-# ifdef __USE_MISC
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
 extern int drand48_r (struct drand48_data *__restrict __buffer,
 		      double *__restrict __result) __THROW;

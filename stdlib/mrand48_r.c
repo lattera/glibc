@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -28,5 +28,5 @@ mrand48_r (buffer, result)
   if (buffer == NULL)
    return -1;
 
-  return __jrand48_r (buffer->x, buffer, result);
+  return __jrand48_r (buffer->__x, buffer, result);
 }

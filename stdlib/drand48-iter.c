@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 /* Global state for non-reentrant functions.  */
@@ -31,50 +32,28 @@ __drand48_iterate (xsubi, buffer)
      unsigned short int xsubi[3];
      struct drand48_data *buffer;
 {
-  u_int64_t X, a, result;
+  uint64_t X;
+  uint64_t result;
 
   /* Initialize buffer, if not yet done.  */
-  if (!buffer->init)
+  if (__builtin_expect (!buffer->__init, 0))
     {
-#if (USHRT_MAX == 0xffffU)
-      buffer->a[2] = 0x5;
-      buffer->a[1] = 0xdeec;
-      buffer->a[0] = 0xe66d;
-#else
-      buffer->a[2] = 0x5deecUL;
-      buffer->a[1] = 0xe66d0000UL;
-      buffer->a[0] = 0;
-#endif
-      buffer->c = 0xb;
-      buffer->init = 1;
+      buffer->__a = 0x5deece66dull;
+      buffer->__c = 0xb;
+      buffer->__init = 1;
     }
 
   /* Do the real work.  We choose a data type which contains at least
      48 bits.  Because we compute the modulus it does not care how
      many bits really are computed.  */
 
-  if (sizeof (unsigned short int) == 2)
-    {
-      X = (u_int64_t)xsubi[2] << 32 | (u_int64_t)xsubi[1] << 16 | xsubi[0];
-      a = ((u_int64_t)buffer->a[2] << 32 | (u_int64_t)buffer->a[1] << 16
-	   | buffer->a[0]);
+  X = (uint64_t) xsubi[2] << 32 | (uint32_t) xsubi[1] << 16 | xsubi[0];
 
-      result = X * a + buffer->c;
+  result = X * buffer->__a + buffer->__c;
 
-      xsubi[0] = result & 0xffff;
-      xsubi[1] = (result >> 16) & 0xffff;
-      xsubi[2] = (result >> 32) & 0xffff;
-    }
-  else
-    {
-      X = (u_int64_t)xsubi[2] << 16 | xsubi[1] >> 16;
-      a = (u_int64_t)buffer->a[2] << 16 | buffer->a[1] >> 16;
-
-      result = X * a + buffer->c;
-
-      xsubi[0] = result >> 16 & 0xffffffffl;
-      xsubi[1] = result << 16 & 0xffff0000l;
-    }
+  xsubi[0] = result & 0xffff;
+  xsubi[1] = (result >> 16) & 0xffff;
+  xsubi[2] = (result >> 32) & 0xffff;
 
   return 0;
 }

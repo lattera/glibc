@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -27,7 +27,7 @@ drand48 ()
 {
   double result;
 
-  (void) __erand48_r (__libc_drand48_data.x, &__libc_drand48_data, &result);
+  (void) __erand48_r (__libc_drand48_data.__x, &__libc_drand48_data, &result);
 
   return result;
 }

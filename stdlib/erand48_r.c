@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -37,19 +37,10 @@ __erand48_r (xsubi, buffer, result)
   /* Construct a positive double with the 48 random bits distributed over
      its fractional part so the resulting FP number is [0.0,1.0).  */
 
-#if USHRT_MAX == 65535
   temp.ieee.negative = 0;
   temp.ieee.exponent = IEEE754_DOUBLE_BIAS;
   temp.ieee.mantissa0 = (xsubi[2] << 4) | (xsubi[1] >> 12);
   temp.ieee.mantissa1 = ((xsubi[1] & 0xfff) << 20) | (xsubi[0] << 4);
-#elif USHRT_MAX == 2147483647
-  temp.ieee.negative = 0;
-  temp.ieee.exponent = IEEE754_DOUBLE_BIAS;
-  temp.ieee.mantissa0 = (xsubi[1] << 4) | (xsubi[0] >> 28);
-  temp.ieee.mantissa1 = ((xsubi[0] & 0xfffffff) << 4);
-#else
-# error Unsupported size of short int
-#endif
 
   /* Please note the lower 4 bits of mantissa1 are always 0.  */
   *result = temp.d - 1.0;

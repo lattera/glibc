@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -28,5 +28,5 @@ seed48 (seed16v)
 {
   (void) __seed48_r (seed16v, &__libc_drand48_data);
 
-  return __libc_drand48_data.old_x;
+  return __libc_drand48_data.__old_x;
 }
