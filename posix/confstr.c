@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,96,97,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991,96,97,2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <confstr.h>
+#include "../version.h"
 
 /* If BUF is not NULL and LEN > 0, fill in at most LEN - 1 bytes
    of BUF with the value corresponding to NAME and zero-terminate BUF.
@@ -139,6 +140,21 @@ confstr (name, buf, len)
       string = "";
       string_len = 1;
       break;
+
+    case _CS_GNU_LIBC_VERSION:
+      string = "glibc " VERSION;
+      string_len = strlen (string);
+
+    case _CS_GNU_LIBPTHREAD_VERSION:
+#ifdef LIBPTHREAD_VERSION
+      string = LIBPTHREAD_VERSION;
+      string_len = strlen (string);
+      break;
+#else
+      /* No thread library.  */
+      __set_errno (EINVAL);
+      return 0;
+#endif
 
     default:
       __set_errno (EINVAL);

@@ -859,6 +859,12 @@ static const struct conf vars[] =
 #ifdef _PC_SYMLINK_MAX
     { "SYMLINK_MAX", _PC_SYMLINK_MAX, PATHCONF },
 #endif
+#ifdef _CS_GNU_LIBC_VERSION
+    { "GNU_LIBC_VERSION", _CS_GNU_LIBC_VERSION, CONFSTR },
+#endif
+#ifdef _CS_GNU_LIBPTHREAD_VERSION
+    { "GNU_LIBPTHREAD_VERSION", _CS_GNU_LIBPTHREAD_VERSION, CONFSTR },
+#endif
 
     { NULL, 0, SYSCONF }
   };

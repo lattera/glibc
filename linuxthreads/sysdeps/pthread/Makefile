@@ -7,3 +7,7 @@ else
 $(objpfx)tst-timer: $(objpfx)librt.a $(static-thread-library)
 endif
 endif
+
+ifeq ($(subdir),posix)
+CFLAGS-confstr.c += -DLIBPTHREAD_VERSION="\"$(shell sed 's/\(.*\) by .*/\1/' ../nptl/Banner)\""
+endif

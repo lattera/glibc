@@ -1,4 +1,4 @@
-# Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -30,4 +30,8 @@ $(objpfx)tst-timer: $(objpfx)librt.so $(shared-thread-library)
 else
 $(objpfx)tst-timer: $(objpfx)librt.a $(static-thread-library)
 endif
+endif
+
+ifeq ($(subdir),posix)
+CFLAGS-confstr.c += -DLIBPTHREAD_VERSION="\"$(shell sed 's/\(.*\) by .*/\1/' ../nptl/Banner)\""
 endif
