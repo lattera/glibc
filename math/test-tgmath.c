@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <tgmath.h>
 
-#define DEBUG
+//#define DEBUG
 
 static void compile_test (void);
 static void compile_testf (void);

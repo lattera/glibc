@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,16 +41,16 @@
 
 /* 1 if 'type' is a floating type, 0 if 'type' is an integer type.
    Allows for _Bool.  Expands to an integer constant expression.  */
-#define __floating_type(type) (((type) 0.25) && ((type) 0.25 - 1))
+# define __floating_type(type) (((type) 0.25) && ((type) 0.25 - 1))
 
 /* The tgmath real type for T, where E is 0 if T is an integer type and
    1 for a floating type.  */
-#define __tgmath_real_type_sub(T, E) \
-  __typeof__(*(0 ? (__typeof__(0 ? (double *)0 : (void *)(E)))0		      \
-		 : (__typeof__(0 ? (T *)0 : (void *)(!(E))))0))
+# define __tgmath_real_type_sub(T, E) \
+  __typeof__(*(0 ? (__typeof__ (0 ? (double *) 0 : (void *) (E))) 0	      \
+		 : (__typeof__ (0 ? (T *) 0 : (void *) (!(E)))) 0))
 
 /* The tgmath real type of EXPR.  */
-#define __tgmath_real_type(expr) \
+# define __tgmath_real_type(expr) \
   __tgmath_real_type_sub(__typeof__(expr), __floating_type(__typeof__(expr)))
 
 
