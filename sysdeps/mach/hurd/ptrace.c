@@ -94,6 +94,7 @@ ptrace (enum __ptrace_request request, ... )
     case PTRACE_TRACEME:
       /* Make this process be traced.  */
       _hurd_exec_flags |= EXEC_TRACED;
+      __USEPORT (PROC, __proc_mark_traced (port));
       break;
 
     case PTRACE_CONT:
