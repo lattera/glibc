@@ -70,7 +70,7 @@ libc {
     qecvt; qecvt_r; qfcvt; qfcvt_r; qgcvt;
 
     # r*
-    readv; remque; revoke;
+    readv; reboot; remque; revoke;
 
     # s*
     sbrk; select; setdomainname; setfsent; sethostent; sethostid; sethostname;

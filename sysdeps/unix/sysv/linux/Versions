@@ -42,9 +42,6 @@ libc {
     # q*
     query_module; quotactl;
 
-    # r*
-    reboot;
-
     # s*
     setfsgid; setfsuid;
 
