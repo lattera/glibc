@@ -9,7 +9,7 @@
 
 	* string/string.h (strndupa): Add cast for C++ conformance.
 	(strdupa): Likewise.
-	Fixes PR libc/2173, reported by tbrowder@home.com. 
+	Fixes PR libc/2173, reported by tbrowder@home.com.
 
 2001-03-30  Roland McGrath  <roland@frob.com>
 
