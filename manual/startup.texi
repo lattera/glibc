@@ -310,7 +310,7 @@ pointer.
 
 @comment stdlib.h
 @comment SVID
-@deftypefun int putenv (const char *@var{string})
+@deftypefun int putenv (char *@var{string})
 The @code{putenv} function adds or removes definitions from the environment.
 If the @var{string} is of the form @samp{@var{name}=@var{value}}, the
 definition is added to the environment.  Otherwise, the @var{string} is
