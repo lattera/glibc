@@ -31,11 +31,6 @@ main ()
   puts ("#include \"ansidecl.h\"\n#include <stddef.h>\n");
   puts ("\n/* This is a list of all known `errno' codes.  */\n");
 
-  puts ("#ifndef HAVE_WEAK_SYMBOLS");
-  puts ("#define _sys_nerr\tsys_nerr");
-  puts ("#define _sys_errlist\tsys_errlist");
-  puts ("#endif");
-
   printf ("\nCONST int _sys_nerr = %d;\n\n", sys_nerr);
   puts ("CONST char *CONST _sys_errlist[] =\n  {");
 
