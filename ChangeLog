@@ -1,5 +1,15 @@
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/sys/mman.h: Add prototypes for shm_open and shm_unlink.
+	* rt/Makefile (librt-routines): Add shm_open and shm_unlink.
+	* rt/Versions [librt] (GLIBC_2.2): Add shm_open and shm_unlink.
+	* sysdeps/generic/shm_open.c: New file.
+	* sysdeps/generic/shm_unlink.c: New file.
+	* sysdeps/unix/sysv/linux/shm_open.c: New file.
+	* sysdeps/unix/sysv/linux/shm_unlink.c: New file.
+	* sysdeps/unix/sysv/linux/Versions [libc] (GLIBC_2.2): Export
+	 __endmntent, __getmntent_r, __setmntent, and __statfs.
+
 	* libio/vasprintf.c (_IO_vasprintf): Try to avoid memory
 	fragmentation by allocating new memory at the end instead of
 	reallocating.

@@ -29,7 +29,8 @@ librt-routines := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_notify get_clockfreq clock_getcpuclockid		\
 		  clock_getres clock_gettime clock_settime		\
 		  timer_create timer_delete timer_getoverr		\
-		  timer_gettime timer_settime
+		  timer_gettime timer_settime				\
+		  shm_open shm_unlink
 
 # Make sure that everything is distributed independent of configuration.
 distribute := aio_misc.h $(librt-routines:=.c) $(librt-map)

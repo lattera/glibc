@@ -9,6 +9,9 @@ librt {
     # c*
     clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
 
+    # s*
+    shm_open; shm_unlink;
+
     # t*
     timer_create; timer_delete; timer_getoverrun; timer_gettime;
     timer_settime;
