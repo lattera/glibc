@@ -5,6 +5,23 @@
 
 2003-03-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/pthread_once.c: Use __builtin_expect.
+	Use __lll_add instead of spelling it out.  Use protected symbol names.
+	* sysdeps/unix/sysv/linux/ia64/sem_post.c: Use __builtin_expect.
+	Use __lll_add.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (__lll_compare_and_swap):
+	Renamed from lll_compare_and_swap.  Use new name where necessary.
+	(__lll_add): Defined.
+	(__lll_dec_if_positive): Defined.
+	(__lll_test_and_set): Defined.
+	* sysdeps/ia64/pthread_spin_init.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/lowlevelmutex.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/sem_trywait.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/sem_wait.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/libc-lowlevellock.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/libc-lowlevelmutex.c: Removed.
+	* sysdeps/unix/sysv/linux/ia64/sem_timedwait.c: Removed.
 	* sysdeps/ia64/bits/atomic.h: Add __builtin_expect where appropriate.
 	* sysdeps/ia64/pthread_spin_unlock.c (pthread_spin_unlock): Use
 	__sync_lock_release_si.

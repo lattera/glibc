@@ -52,10 +52,10 @@ __pthread_once (once_control, init_routine)
 
 	  oldval = val;
 	  newval = (oldval & 3) | __fork_generation | 1;
+	  val = __lll_compare_and_swap (once_control, oldval, newval);
 	}
-      while ((val = lll_compare_and_swap (once_control, oldval, newval))
-	     != oldval);
-      
+      while (__builtin_expect (val != oldval, 0));
+
       /* Check if another thread already runs the initializer.	*/
       if ((oldval & 1) != 0)
 	{
@@ -80,11 +80,7 @@ __pthread_once (once_control, init_routine)
 
 
       /* Add one to *once_control.  */
-      val = *once_control;
-      do
-	oldval = val;
-      while ((val = lll_compare_and_swap (once_control, oldval, oldval + 1))
-	     != oldval);
+      __lll_add (once_control, 1);
 
       /* Wake up all other threads.  */
       lll_futex_wake (once_control, INT_MAX);

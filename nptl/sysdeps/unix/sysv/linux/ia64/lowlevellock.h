@@ -86,54 +86,85 @@
      __r10 == -1 ? -__r8 : __r8;					      \
   })
 
-#define lll_compare_and_swap(futex, oldval, newval) \
+#define __lll_compare_and_swap(futex, oldval, newval) \
   __sync_val_compare_and_swap_si ((futex), (oldval), (newval))
+
+/* Add inc to *futex atomically and return the old value.  */
+#define __lll_add(futex, inc) \
+  ({									      \
+    int __val, __oldval;						      \
+    int *__futex = (futex);						      \
+    int __inc = inc;							      \
+									      \
+    __val = *__futex;							      \
+    do									      \
+      {									      \
+        __oldval = __val;						      \
+	__val = __lll_compare_and_swap (__futex, __oldval, __oldval + __inc); \
+      }									      \
+    while (__builtin_expect (__val != __oldval, 0));			      \
+    __val;								      \
+  })
+
+/* Decrement *futex if it is > 0, and return the old value.  */
+#define __lll_dec_if_positive(futex)					      \
+  ({									      \
+    int __val, __oldval;						      \
+    int *__futex = (futex);						      \
+									      \
+    __val = *__futex;							      \
+    do									      \
+      {									      \
+	if (__builtin_expect (__val <= 0, 0))				      \
+	  break;							      \
+	__oldval = __val;						      \
+	__val = __lll_compare_and_swap (__futex, __oldval, __oldval - 1);     \
+      }									      \
+    while (__builtin_expect (__val != __oldval, 0));			      \
+    __val;								      \
+  })    
+
+/* Atomically store newval and return the old value.  */
+#define __lll_test_and_set(futex, newval) \
+  __sync_lock_test_and_set_si ((futex), (newval)) 
 
 static inline int
 __attribute__ ((always_inline))
 __lll_mutex_trylock (int *futex)
 {
-  return lll_compare_and_swap (futex, 0, 1) != 0;
+  return __lll_compare_and_swap (futex, 0, 1) != 0;
 }
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
 
 
-extern void ___lll_mutex_lock (int *, int) attribute_hidden;
+extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
 
 
 static inline void
 __attribute__ ((always_inline))
 __lll_mutex_lock (int *futex)
 {
-  int oldval;
-  int val = *futex;
+  int val = __lll_add (futex, 1);
 
-  do
-    oldval = val;
-  while ((val = lll_compare_and_swap (futex, oldval, oldval + 1)) != oldval);
-  if (oldval > 0)
-    ___lll_mutex_lock (futex, oldval + 1);
+  if (__builtin_expect (val != 0, 0))
+    __lll_lock_wait (futex, val);
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
 
 
-extern int ___lll_mutex_timedlock (int *, const struct timespec *, int)
-  attribute_hidden;
+extern int __lll_timedlock_wait (int *futex, int val, const struct timespec *)
+     attribute_hidden;
 
 
 static inline int
 __attribute__ ((always_inline))
 __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 {
-  int oldval;
-  int val = *futex;
+  int val = __lll_add (futex, 1);
   int result = 0;
 
-  do
-    oldval = val;
-  while ((val = lll_compare_and_swap (futex, oldval, oldval + 1)) != oldval);
-  if (oldval > 0)
-    result = ___lll_mutex_timedlock (futex, abstime, oldval + 1);
+  if (__builtin_expect (val != 0, 0))
+    result = __lll_timedlock_wait (futex, val, abstime);
 
   return result;
 }
@@ -145,13 +176,9 @@ static inline void
 __attribute__ ((always_inline))
 __lll_mutex_unlock (int *futex)
 {
-  int oldval;
-  int val = *futex;
+  int val = __lll_test_and_set (futex, 0);
 
-  do
-    oldval = val;
-  while ((val = lll_compare_and_swap (futex, oldval, 0)) != oldval);
-  if (oldval > 1)
+  if (__builtin_expect (val > 1, 0))
     lll_futex_wake (futex, 1);
 }
 #define lll_mutex_unlock(futex) __lll_mutex_unlock(&(futex))
@@ -182,30 +209,25 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
    wakeup when the clone terminates.  The memory location contains the
    thread ID while the clone is running and is reset to zero
    afterwards.	*/
-static inline void
-__attribute__ ((always_inline))
-__lll_wait_tid (int *ptid)
-{
-  int tid;
+#define lll_wait_tid(tid) \
+  do						\
+    {						\
+      __typeof (tid) __tid;			\
+      while ((__tid = (tid)) != 0)		\
+	lll_futex_wait (&(tid), __tid);		\
+    }						\
+  while (0)
 
-  while ((tid = *ptid) != 0)
-    lll_futex_wait (ptid, tid);
-}
-#define lll_wait_tid(tid) __lll_wait_tid(&(tid))
-
-
-extern int ___lll_timedwait_tid (int *, const struct timespec *)
+extern int __lll_timedwait_tid (int *, const struct timespec *)
      attribute_hidden;
-static inline int
-__attribute__ ((always_inline))
-__lll_timedwait_tid (int *ptid, const struct timespec *abstime)
-{
-  if (*ptid == 0)
-    return 0;
 
-  return ___lll_timedwait_tid (ptid, abstime);
-}
-#define lll_timedwait_tid(tid, abstime) __lll_timedwait_tid (&(tid), abstime)
+#define lll_timedwait_tid(tid, abstime) \
+  ({							\
+    int __res = 0;					\
+    if ((tid) != 0)					\
+      __res = __lll_timedwait_tid (&(tid), (abstime));	\
+    __res;						\
+  })
 
 
 /* Conditional variable handling.  */

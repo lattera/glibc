@@ -26,4 +26,3 @@ pthread_spin_unlock (pthread_spinlock_t *lock)
   __sync_lock_release_si ((int *) lock);
   return 0;
 }
-strong_alias (pthread_spin_unlock, pthread_spin_init)

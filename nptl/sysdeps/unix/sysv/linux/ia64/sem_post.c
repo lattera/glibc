@@ -1,4 +1,5 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* sem_post -- post to a POSIX semaphore.  IA-64 version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -25,20 +26,15 @@
 
 #include <shlib-compat.h>
 
-
 int
 __new_sem_post (sem_t *sem)
 {
-  int oldval, val;
-  int err;
+  int *futex = (int *) sem;
+  int err, nr;
 
-  val = *(int *) sem;
-  do
-    oldval = val;
-  while ((val = lll_compare_and_swap ((int *) sem, oldval, oldval + 1))
-	 != oldval);
-  err = lll_futex_wake ((int *) sem, oldval + 1);
-  if (err < 0)
+  nr = __lll_add (futex, 1);
+  err = lll_futex_wake (futex, nr + 1);
+  if (__builtin_expect (err, 0) < 0)
     {
       __set_errno (-err);
       return -1;
@@ -46,7 +42,7 @@ __new_sem_post (sem_t *sem)
   return 0;
 }
 versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
-#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
 strong_alias (__new_sem_post, __old_sem_post)
 compat_symbol (libpthread, __old_sem_post, sem_post, GLIBC_2_0);
 #endif

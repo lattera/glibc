@@ -83,11 +83,10 @@ hidden_proto (__lll_timedlock_wait)
 int
 lll_unlock_wake_cb (int *futex)
 {
-  if (__lll_add (futex, -1) - 1 != 0)
-    {
-      *futex = 0;
-      lll_futex_wake (futex, 1);
-    }
+  int val = __lll_test_and_set (futex, 0);
+
+  if (__builtin_expect (val > 1, 0))
+    lll_futex_wake (futex, 1);
 
   return 0;
 }
