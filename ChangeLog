@@ -1,3 +1,8 @@
+2001-03-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Add missing comma.
+	Patch by kaz Kojima <kkojima@rr.iij4u.or.jp>.
+
 2001-03-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/Versions: Remove __new_exitfn again.  Not needed.
