@@ -59,4 +59,7 @@ libc {
     # these internal names are used by libstdc++
     __strftime_l; __wcsftime_l;
   }
+  GLIBC_2.3.2 {
+    strptime_l;
+  }
 }

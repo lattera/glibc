@@ -1,3 +1,7 @@
+2003-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/Versions [GLIBC_2.3.2] (libc): Export strptime_l.
+
 2003-01-06  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/arm/sysdep.S (syscall_error): Optimise a little.
