@@ -95,7 +95,7 @@ __lll_mutex_timedlock_wait:
 	movq	%rsp, %rdi
 	xorq	%rsi, %rsi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
-	/* This is a regular function call, all calleer-save registers
+	/* This is a regular function call, all caller-save registers
 	   might be clobbered.  */
 	callq	*%rax
 
@@ -132,15 +132,13 @@ __lll_mutex_timedlock_wait:
 	syscall
 	movq	%rax, %rcx
 
-	movl	$1, %eax
+8:				/* NB: %edx == 2 */
+	xorl	%eax, %eax
 	LOCK
 	cmpxchgl %edx, (%rdi)
 	jnz	7f
 
-	movl	$2, (%rdi)
-	xorl	%eax, %eax
-
-8:	addq	$16, %rsp
+6:	addq	$16, %rsp
 	popq	%r14
 	popq	%r13
 	popq	%r12
@@ -151,13 +149,19 @@ __lll_mutex_timedlock_wait:
 	/* Check whether the time expired.  */
 7:	cmpq	$-ETIMEDOUT, %rcx
 	je	5f
+
+	/* Make sure the current holder knows we are going to sleep.  */
+	movl	%edx, %eax
+	xchgl	%eax, (%ebx)
+	testl	%eax, %eax
+	jz	6b
 	jmp	1b
 
 3:	movl	$EINVAL, %eax
 	retq
 
 5:	movl	$ETIMEDOUT, %eax
-	jmp	8b
+	jmp	6b
 	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
 #endif
 

@@ -132,9 +132,8 @@ __lll_mutex_timedlock_wait:
 	ENTER_KERNEL
 	movl	%eax, %ecx
 
-8:
+8:				/* NB: %edx == 2 */
 	xorl	%eax, %eax
-	movl	$2, %edx
 	LOCK
 	cmpxchgl %edx, (%ebx)
 
@@ -150,6 +149,12 @@ __lll_mutex_timedlock_wait:
 	/* Check whether the time expired.  */
 7:	cmpl	$-ETIMEDOUT, %ecx
 	je	5f
+
+	/* Make sure the current holder knows we are going to sleep.  */
+	movl	%edx, %eax
+	xchgl	%eax, (%ebx)
+	testl	%eax, %eax
+	jz	6b
 	jmp	1b
 
 3:	movl	$EINVAL, %eax
