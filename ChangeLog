@@ -2,7 +2,7 @@
 
 	* sysdeps/generic/libc-tls.c (static_dtv): Size the same as the
 	slotinfo array.
-	(__libc_setup_tls_): Initializer length of DTV based on array length.
+	(__libc_setup_tls): Initialize length of DTV based on array length.
 	* elf/dl-load.c: Revert last change.
 	* sysdeps/generic/dl-tls.c: Revert last change.
 
@@ -479,7 +479,7 @@
 
 2005-02-07  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-load.c (_dl_map_object_from_fd): Makre sure registers are
+	* elf/dl-load.c (_dl_map_object_from_fd): Make sure registers are
 	set correctly.
 
 2005-01-07  Richard Henderson  <rth@redhat.com>
