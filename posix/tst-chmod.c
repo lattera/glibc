@@ -1,5 +1,5 @@
 /* Test for chmod functions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -72,7 +72,7 @@ do_test (int argc, char *argv[])
   buf = (char *) alloca (buflen);
 
   /* Create the directory name.  */
-  snprintf (buf, buflen, "%schmoddirXXXXXX", builddir);
+  snprintf (buf, buflen, "%s/chmoddirXXXXXX", builddir);
 
   if (mkdtemp (buf) == NULL)
     {

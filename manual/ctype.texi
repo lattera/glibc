@@ -159,10 +159,10 @@ vertical tab
 
 @cindex blank character
 @comment ctype.h
-@comment GNU
+@comment ISO
 @deftypefun int isblank (int @var{c})
 Returns true if @var{c} is a blank character; that is, a space or a tab.
-This function is a GNU extension.
+This function has been added in @w{ISO C99}.
 @end deftypefun
 
 @cindex graphic character
@@ -595,10 +595,11 @@ characters as well.
 
 @cindex blank character
 @comment wctype.h
-@comment GNU
+@comment ISO
 @deftypefun int iswblank (wint_t @var{wc})
 Returns true if @var{wc} is a blank character; that is, a space or a tab.
-This function is a GNU extension.  It is declared in @file{wchar.h}.
+This function has been added in @w{ISO C99}.  It is declared in
+@file{wchar.h}.
 @end deftypefun
 
 @node Using Wide Char Classes, Wide Character Case Conversion, Classification of Wide Characters, Character Handling

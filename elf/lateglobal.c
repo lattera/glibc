@@ -13,14 +13,14 @@ main (void)
   mtrace ();
 
   h[0] = dlopen ("ltglobmod1.so", RTLD_LAZY);
-  if (h == NULL)
+  if (h[0] == NULL)
     {
       printf ("%s: cannot open %s: %s",
 	      __FUNCTION__, "ltglobmod1.so", dlerror ());
       exit (EXIT_FAILURE);
     }
   h[1] = dlopen ("ltglobmod2.so", RTLD_LAZY);
-  if (h == NULL)
+  if (h[1] == NULL)
     {
       printf ("%s: cannot open %s: %s",
 	      __FUNCTION__, "ltglobmod2.so", dlerror ());

@@ -45,7 +45,7 @@ typedef union { unsigned char __c[16]; long double __ld; } __huge_vall_t;
 #  define HUGE_VALL	(__extension__ \
 			 ((__huge_vall_t) { __c : __HUGE_VALL_bytes }).__ld)
 # else
-static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
-#  define HUGE_VALL	(__huge_val.__d)
+static __huge_vall_t __huge_vall = { __HUGE_VALL_bytes };
+#  define HUGE_VALL	(__huge_vall.__ld)
 # endif
 #endif 
