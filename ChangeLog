@@ -1,3 +1,12 @@
+2003-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Also set l_map_start.
+
+2003-09-30  Daniel Jacobowitz  <drow@mvista.com>
+
+	* elf/rtld.c (dl_main): Set l_libname and l_name for the sysinfo DSO
+	to work around kernel problem.
+
 2003-09-27  Wolfram Gloger  <wg@malloc.de>
 
 	* sysdeps/pthread/malloc-machine.h: New file.

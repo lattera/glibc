@@ -1153,7 +1153,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL);
       if (__builtin_expect (l != NULL, 1))
 	{
-	  static ElfW(Dyn) dyn_temp [DL_RO_DYN_TEMP_CNT];
+	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT];
 
 	  l->l_phdr = ((const void *) GL(dl_sysinfo_dso)
 		       + GL(dl_sysinfo_dso)->e_phoff);
@@ -1173,12 +1173,22 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);
 	  l->l_relocated = 1;
+	  l->l_map_start = GL(dl_sysinfo_dso);
 
 	  /* Now that we have the info handy, use the DSO image's soname
 	     so this object can be looked up by name.  */
 	  if (l->l_info[DT_SONAME] != NULL)
-	    l->l_libname->name = ((char *) D_PTR (l, l_info[DT_STRTAB])
-				  + l->l_info[DT_SONAME]->d_un.d_val);
+	    {
+	      /* Work around a kernel problem.  The kernel cannot handle
+		 addresses in the vsyscall DSO pages in writev() calls.  */
+	      const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
+				     + l->l_info[DT_SONAME]->d_un.d_val);
+	      size_t len = strlen (dsoname);
+	      l->l_name = (char *) malloc (len);
+	      if (l->l_name == NULL)
+		_dl_fatal_printf ("out of memory\n");
+	      l->l_libname->name = memcpy (l->l_name, dsoname, len);
+	    }
 	}
     }
 #endif
