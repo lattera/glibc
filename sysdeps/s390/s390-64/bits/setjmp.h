@@ -25,9 +25,9 @@
 #define __JB_GPR7	1
 #define __JB_GPR8	2
 #define __JB_GPR9	3
-#define __JB_GPR10	4 
+#define __JB_GPR10	4
 #define __JB_GPR11	5
-#define __JB_GPR12	6 
+#define __JB_GPR12	6
 #define __JB_GPR13	7
 #define __JB_GPR14	8
 #define __JB_GPR15	9
@@ -47,7 +47,6 @@ typedef struct {
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((int) (address) < (jmpbuf)->gregs[__JB_GPR15])
+  ((int) (address) < (jmpbuf)->__gregs[__JB_GPR15])
 
 #endif /* __S390_SETJMP_H__ */
-

@@ -1,3 +1,12 @@
+2001-07-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h (SC_GPRS): Fix
+	value following change from 2001-05-30.
+
+	* sysdeps/s390/s390-64/bits/setjmp.h (_JMPBUF_UNWINDS): Follow
+	rename change from 2001-07-12 for __jmp_buf.
+	Patches by Ulrich Weigand <Ulrich.Weigand@de.ibm.com>.
+
 2001-07-26  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/bits/termios.h (EXTA, EXTB): Make these conditional
