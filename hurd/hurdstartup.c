@@ -137,12 +137,10 @@ _hurd_startup (void **argptr, void (*main) (int *data))
       *argcptr = argc;
       argv = (void *) (argcptr + 1);
       __argz_extract (args, argslen, argv);
-      argv[argc] = 0;
 
       /* There was some environment.  */
       envp = &argv[argc + 1];
       __argz_extract (env, envlen, envp);
-      envp[envc] = 0;
     }
 
   if (err || in_bootstrap == MACH_PORT_NULL)
