@@ -122,10 +122,13 @@ __start_helper_thread (void)
   (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
 
   /* Block all signals in the helper thread.  To do this thoroughly we
-     temporarily have to block all signals here.  */
+     temporarily have to block all signals here.  The helper can lose
+     wakeups if SIGCANCEL is not blocked throughout, but sigfillset omits
+     it.  So, we add it back explicitly here.  */
   sigset_t ss;
   sigset_t oss;
   sigfillset (&ss);
+  __sigaddset (&ss, SIGCANCEL);
   INTERNAL_SYSCALL_DECL (err);
   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
 
