@@ -54,6 +54,14 @@ res_init(void) {
 		_res.retry = 4;
 	if (!(_res.options & RES_INIT))
 		_res.options = RES_DEFAULT;
+	else if (_res.nscount > 0) {
+		__res_nclose (&_res);	/* Close any VC sockets.  */
+
+		for (int ns = 0; ns < MAXNS; ns++) {
+			free (_res._u._ext.nsaddrs[ns]);
+			_res._u._ext.nsaddrs[ns] = NULL;
+		}
+	}
 
 	/*
 	 * This one used to initialize implicitly to zero, so unless the app

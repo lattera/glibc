@@ -33,8 +33,9 @@ routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
 	    res_hconf res_libc res-state
 
 tests = tst-aton tst-leaks
+xtests = tst-leaks2
 
-generate := mtrace-tst-leaks tst-leaks.mtrace
+generate := mtrace-tst-leaks tst-leaks.mtrace tst-leaks2.mtrace
 
 include ../Makeconfig
 
@@ -65,7 +66,8 @@ ifeq (yesyes,$(build-shared)$(have-thread-library))
 tests: $(objpfx)ga_test
 endif
 
-generated := mtrace-tst-leaks tst-leaks.mtrace
+generated := mtrace-tst-leaks tst-leaks.mtrace \
+	     mtrace-tst-leaks2 tst-leaks2.mtrace
 
 include ../Rules
 
@@ -102,5 +104,14 @@ $(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
 ifeq (no,$(cross-compiling))
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-leaks
+endif
+endif
+
+tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
+$(objpfx)mtrace-tst-leaks2: $(objpfx)tst-leaks2.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@
+ifeq (no,$(cross-compiling))
+ifneq (no,$(PERL))
+xtests: $(objpfx)mtrace-tst-leaks2
 endif
 endif
