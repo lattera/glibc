@@ -25,8 +25,10 @@
 #include <stddef.h>
 
 
+#if defined _LIBC && !defined NOT_IN_libc
 /* Nonzero if locking is needed.  */
 extern int __libc_locking_needed attribute_hidden;
+#endif
 
 
 /* Fortunately Linux now has a mean to do locking which is realtime
@@ -152,7 +154,7 @@ typedef pthread_key_t __libc_key_t;
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
-# define __libc_lock_init(NAME) (NAME) = LLL_LOCK_INITIALIZER;
+# define __libc_lock_init(NAME) ((NAME) = LLL_LOCK_INITIALIZER, 0)
 #else
 # define __libc_lock_init(NAME) \
   __libc_maybe_call (__pthread_mutex_init, (&(NAME), NULL), 0)
@@ -163,7 +165,7 @@ typedef pthread_key_t __libc_key_t;
 /* Same as last but this time we initialize a recursive mutex.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_init_recursive(NAME) \
-    (NAME) = (__libc_lock_recursive_t) _LIBC_LOCK_RECURSIVE_INITIALIZER
+  ((NAME) = (__libc_lock_recursive_t) _LIBC_LOCK_RECURSIVE_INITIALIZER, 0)
 #else
 # define __libc_lock_init_recursive(NAME) \
   do {									      \
@@ -213,7 +215,7 @@ typedef pthread_key_t __libc_key_t;
 /* Lock the named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_lock(NAME) \
-  lll_lock (NAME);
+  ({ lll_lock (NAME); 0; })
 #else
 # define __libc_lock_lock(NAME) \
   __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
@@ -287,7 +289,7 @@ typedef pthread_key_t __libc_key_t;
 /* Unlock the named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_unlock(NAME) \
-  lll_unlock (NAME);
+  lll_unlock (NAME)
 #else
 # define __libc_lock_unlock(NAME) \
   __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
