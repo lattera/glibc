@@ -1,3 +1,19 @@
+2004-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h: Define libresolv_hidden_proto and friends.
+	* include/resolv.h: Add libresolv_hidden_proto for symbols defined,
+	used, and exported in libresolv.
+	* resolv/base64.c: Add libresolv_hidden_def.
+	* resolv/gethnamaddr.c: Likewise.
+	* resolv/ns_name.c: Likewise.
+	* resolv/ns_netint.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_data.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+
 2004-10-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-minimal.c (__chk_fail): New.  Add rtld_hidden_def.

@@ -487,6 +487,9 @@ getanswer(answer, anslen, qname, qtype)
 	return (NULL);
 }
 
+extern struct hostent *gethostbyname2(const char *name, int af);
+libresolv_hidden_proto (gethostbyname2)
+
 struct hostent *
 gethostbyname(name)
 	const char *name;
@@ -637,6 +640,7 @@ gethostbyname2(name, af)
 		free (buf.buf);
 	return ret;
 }
+libresolv_hidden_def (gethostbyname2)
 
 struct hostent *
 gethostbyaddr(addr, len, af)
@@ -795,6 +799,7 @@ _sethtent(f)
 		rewind(hostf);
 	stayopen = f;
 }
+libresolv_hidden_def (_sethtent)
 
 void
 _endhtent()
@@ -869,6 +874,7 @@ _gethtent()
 	__set_h_errno (NETDB_SUCCESS);
 	return (&host);
 }
+libresolv_hidden_def (_gethtent)
 
 struct hostent *
 _gethtbyname(name)
@@ -907,6 +913,7 @@ _gethtbyname2(name, af)
 	_endhtent();
 	return (p);
 }
+libresolv_hidden_def (_gethtbyname2)
 
 struct hostent *
 _gethtbyaddr(addr, len, af)
@@ -923,6 +930,7 @@ _gethtbyaddr(addr, len, af)
 	_endhtent();
 	return (p);
 }
+libresolv_hidden_def (_gethtbyaddr)
 
 static void
 map_v4v6_address(src, dst)

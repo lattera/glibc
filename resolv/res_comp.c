@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,14 +29,14 @@
 
 /*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -96,6 +96,7 @@ dn_expand(const u_char *msg, const u_char *eom, const u_char *src,
 		dst[0] = '\0';
 	return (n);
 }
+libresolv_hidden_def (dn_expand)
 
 /*
  * Pack domain name 'exp_dn' in presentation form into 'comp_dn'.
@@ -110,6 +111,7 @@ dn_comp(const char *src, u_char *dst, int dstsiz,
 				 (const u_char **)dnptrs,
 				 (const u_char **)lastdnptr));
 }
+libresolv_hidden_def (dn_comp)
 
 /*
  * Skip over a compressed domain name. Return the size or -1.
@@ -122,6 +124,7 @@ dn_skipname(const u_char *ptr, const u_char *eom) {
 		return (-1);
 	return (ptr - saveptr);
 }
+libresolv_hidden_def (dn_skipname)
 
 /*
  * Verify that a domain name uses an acceptable character set.
@@ -170,6 +173,7 @@ res_hnok(const char *dn) {
 	}
 	return (1);
 }
+libresolv_hidden_def (res_hnok)
 
 /*
  * hostname-like (A, MX, WKS) owners can have "*" as their first label
@@ -227,6 +231,7 @@ res_dnok(const char *dn) {
 			return (0);
 	return (1);
 }
+libresolv_hidden_def (res_dnok)
 
 #ifdef BIND_4_COMPAT
 /*
@@ -238,7 +243,9 @@ res_dnok(const char *dn) {
  * Note that one _ comes from C and the others come from us.
  */
 void __putlong(u_int32_t src, u_char *dst) { ns_put32(src, dst); }
+libresolv_hidden_def (__putlong)
 void __putshort(u_int16_t src, u_char *dst) { ns_put16(src, dst); }
+libresolv_hidden_def (__putshort)
 #ifndef __ultrix__
 u_int32_t _getlong(const u_char *src) { return (ns_get32(src)); }
 u_int16_t _getshort(const u_char *src) { return (ns_get16(src)); }

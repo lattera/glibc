@@ -118,8 +118,8 @@ static const char rcsid[] = "$BINDId: res_debug.c,v 8.34 2000/02/29 05:30:55 vix
 # define SPRINTF(x) sprintf x
 #endif
 
-extern const char *_res_opcodes[];
-extern const char *_res_sectioncodes[];
+extern const char *_res_opcodes[] attribute_hidden;
+extern const char *_res_sectioncodes[] attribute_hidden;
 
 /*
  * Print the current options.
@@ -298,6 +298,7 @@ p_cdnname(const u_char *cp, const u_char *msg, int len, FILE *file) {
 		fputs(name, file);
 	return (cp + n);
 }
+libresolv_hidden_def (p_cdnname)
 
 const u_char *
 p_cdname(const u_char *cp, const u_char *msg, FILE *file) {
@@ -327,6 +328,7 @@ p_fqnname(cp, msg, msglen, name, namelen)
 	}
 	return (cp + n);
 }
+libresolv_hidden_def (p_fqnname)
 
 /* XXX:	the rest of these functions need to become length-limited, too. */
 
@@ -347,7 +349,7 @@ p_fqname(const u_char *cp, const u_char *msg, FILE *file) {
  * that C_ANY is a qclass but not a class.  (You can ask for records of class
  * C_ANY, but you can't have any records of that class in the database.)
  */
-const struct res_sym __p_class_syms[] = {
+const struct res_sym __p_class_syms[] attribute_hidden = {
 	{C_IN,		"IN"},
 	{C_CHAOS,	"CHAOS"},
 	{C_HS,		"HS"},
@@ -360,7 +362,7 @@ const struct res_sym __p_class_syms[] = {
 /*
  * Names of message sections.
  */
-const struct res_sym __p_default_section_syms[] = {
+const struct res_sym __p_default_section_syms[] attribute_hidden = {
 	{ns_s_qd,	"QUERY"},
 	{ns_s_an,	"ANSWER"},
 	{ns_s_ns,	"AUTHORITY"},
@@ -368,7 +370,7 @@ const struct res_sym __p_default_section_syms[] = {
 	{0,             (char *)0}
 };
 
-const struct res_sym __p_update_section_syms[] = {
+const struct res_sym __p_update_section_syms[] attribute_hidden = {
 	{S_ZONE,	"ZONE"},
 	{S_PREREQ,	"PREREQUISITE"},
 	{S_UPDATE,	"UPDATE"},
@@ -376,7 +378,7 @@ const struct res_sym __p_update_section_syms[] = {
 	{0,             (char *)0}
 };
 
-const struct res_sym __p_key_syms[] = {
+const struct res_sym __p_key_syms[] attribute_hidden = {
 	{NS_ALG_MD5RSA,		"RSA",		"RSA KEY with MD5 hash"},
 	{NS_ALG_DH,		"DH",		"Diffie Hellman"},
 	{NS_ALG_DSA,		"DSA",		"Digital Signature Algorithm"},
@@ -385,7 +387,7 @@ const struct res_sym __p_key_syms[] = {
 	{0,			NULL,		NULL}
 };
 
-const struct res_sym __p_cert_syms[] = {
+const struct res_sym __p_cert_syms[] attribute_hidden = {
 	{cert_t_pkix,	"PKIX",		"PKIX (X.509v3) Certificate"},
 	{cert_t_spki,	"SPKI",		"SPKI certificate"},
 	{cert_t_pgp,	"PGP",		"PGP certificate"},
@@ -399,7 +401,7 @@ const struct res_sym __p_cert_syms[] = {
  * that T_ANY is a qtype but not a type.  (You can ask for records of type
  * T_ANY, but you can't have any records of that type in the database.)
  */
-const struct res_sym __p_type_syms[] = {
+const struct res_sym __p_type_syms[] attribute_hidden = {
 	{ns_t_a,	"A",		"address"},
 	{ns_t_ns,	"NS",		"name server"},
 	{ns_t_md,	"MD",		"mail destination (deprecated)"},
@@ -450,7 +452,7 @@ const struct res_sym __p_type_syms[] = {
 /*
  * Names of DNS rcodes.
  */
-const struct res_sym __p_rcode_syms[] = {
+const struct res_sym __p_rcode_syms[] attribute_hidden = {
 	{ns_r_noerror,	"NOERROR",		"no error"},
 	{ns_r_formerr,	"FORMERR",		"format error"},
 	{ns_r_servfail,	"SERVFAIL",		"server failed"},
@@ -500,6 +502,7 @@ sym_ntos(const struct res_sym *syms, int number, int *success) {
 		*success = 0;
 	return (unname);
 }
+libresolv_hidden_def (sym_ntos)
 
 const char *
 sym_ntop(const struct res_sym *syms, int number, int *success) {
@@ -525,6 +528,7 @@ const char *
 p_type(int type) {
 	return (sym_ntos(__p_type_syms, type, (int *)0));
 }
+libresolv_hidden_def (p_type)
 
 /*
  * Return a string for the type.
@@ -551,6 +555,7 @@ const char *
 p_class(int class) {
 	return (sym_ntos(__p_class_syms, class, (int *)0));
 }
+libresolv_hidden_def (p_class)
 
 /*
  * Return a mnemonic for an option
@@ -581,6 +586,7 @@ p_option(u_long option) {
 				return (nbuf);
 	}
 }
+libresolv_hidden_def (p_option)
 
 /*
  * Return a mnemonic for a time to live.
@@ -601,6 +607,7 @@ const char *
 p_rcode(int rcode) {
 	return (sym_ntos(__p_rcode_syms, rcode, (int *)0));
 }
+libresolv_hidden_def (p_rcode)
 
 /*
  * routines to convert between on-the-wire RR format and zone file format.
@@ -608,8 +615,9 @@ p_rcode(int rcode) {
  * by 60*60*1000 for that.
  */
 
-static unsigned int poweroften[10] = {1, 10, 100, 1000, 10000, 100000,
-				      1000000,10000000,100000000,1000000000};
+static const unsigned int poweroften[10]=
+  { 1, 10, 100, 1000, 10000, 100000,
+    1000000,10000000,100000000,1000000000};
 
 /* takes an XeY precision/size value, returns a string representation. */
 static const char *
@@ -988,6 +996,7 @@ loc_ntoa(binary, ascii)
 
 	return (ascii);
 }
+libresolv_hidden_def (loc_ntoa)
 
 
 /* Return the number of DNS hierarchy levels in the name. */

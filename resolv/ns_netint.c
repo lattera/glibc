@@ -22,6 +22,7 @@ static const char rcsid[] = "$BINDId: ns_netint.c,v 8.4 1999/10/13 16:39:35 vixi
 /* Import. */
 
 #include <arpa/nameser.h>
+#include <resolv.h>
 
 /* Public. */
 
@@ -32,6 +33,7 @@ ns_get16(const u_char *src) {
 	NS_GET16(dst, src);
 	return (dst);
 }
+libresolv_hidden_def (ns_get16)
 
 u_long
 ns_get32(const u_char *src) {
@@ -40,6 +42,7 @@ ns_get32(const u_char *src) {
 	NS_GET32(dst, src);
 	return (dst);
 }
+libresolv_hidden_def (ns_get32)
 
 void
 ns_put16(u_int src, u_char *dst) {

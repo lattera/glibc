@@ -219,3 +219,4 @@ res_nmkquery(res_state statp,
 	}
 	return (cp - buf);
 }
+libresolv_hidden_def (res_nmkquery)

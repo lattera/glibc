@@ -312,6 +312,7 @@ res_nameinquery(const char *name, int type, int class,
 	}
 	return (0);
 }
+libresolv_hidden_def (res_nameinquery)
 
 /* int
  * res_queriesmatch(buf1, eom1, buf2, eom2)
@@ -361,6 +362,7 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 	}
 	return (1);
 }
+libresolv_hidden_def (res_queriesmatch)
 
 int
 __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
@@ -689,6 +691,7 @@ res_nsend(res_state statp,
 {
 	return __libc_res_nsend(statp, buf, buflen, ans, anssiz, NULL);
 }
+libresolv_hidden_def (res_nsend)
 
 /* Private */
 

@@ -145,6 +145,7 @@ ns_name_ntop(const u_char *src, char *dst, size_t dstsiz) {
 	*dn++ = '\0';
 	return (dn - dst);
 }
+libresolv_hidden_def (ns_name_ntop)
 
 /*
  * ns_name_pton(src, dst, dstsiz)
@@ -421,6 +422,7 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 		len = srcp - src;
 	return (len);
 }
+libresolv_hidden_def (ns_name_unpack)
 
 /*
  * ns_name_pack(src, dst, dstsiz, dnptrs, lastdnptr)

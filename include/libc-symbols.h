@@ -744,6 +744,24 @@ for linking")
 # define libm_hidden_data_ver(local, name)
 #endif
 
+#if defined NOT_IN_libc && defined IS_IN_libresolv
+# define libresolv_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define libresolv_hidden_def(name) hidden_def (name)
+# define libresolv_hidden_weak(name) hidden_weak (name)
+# define libresolv_hidden_ver(local, name) hidden_ver (local, name)
+# define libresolv_hidden_data_def(name) hidden_data_def (name)
+# define libresolv_hidden_data_weak(name) hidden_data_weak (name)
+# define libresolv_hidden_data_ver(local, name) hidden_data_ver (local, name)
+#else
+# define libresolv_hidden_proto(name, attrs...)
+# define libresolv_hidden_def(name)
+# define libresolv_hidden_weak(name)
+# define libresolv_hidden_ver(local, name)
+# define libresolv_hidden_data_def(name)
+# define libresolv_hidden_data_weak(name)
+# define libresolv_hidden_data_ver(local, name)
+#endif
+
 #ifdef HAVE_BUILTIN_REDIRECTION
 # define libc_hidden_builtin_proto(name, attrs...) libc_hidden_proto (name, ##attrs)
 # define libc_hidden_builtin_def(name) libc_hidden_def (name)

@@ -39,7 +39,7 @@ static const char rcsid[] = "$BINDId: res_data.c,v 8.17 1999/10/13 17:11:31 vixi
 #include <string.h>
 #include <unistd.h>
 
-const char *_res_opcodes[] = {
+const char *_res_opcodes[] attribute_hidden = {
 	"QUERY",
 	"IQUERY",
 	"CQUERYM",
@@ -59,7 +59,7 @@ const char *_res_opcodes[] = {
 };
 
 #ifdef BIND_UPDATE
-const char *_res_sectioncodes[] = {
+const char *_res_sectioncodes[] attribute_hidden = {
 	"ZONE",
 	"PREREQUISITES",
 	"UPDATE",
@@ -138,6 +138,7 @@ void
 fp_query(const u_char *msg, FILE *file) {
 	fp_nquery(msg, PACKETSZ, file);
 }
+libresolv_hidden_def (fp_query)
 
 void
 fp_nquery(const u_char *msg, int len, FILE *file) {
@@ -146,6 +147,7 @@ fp_nquery(const u_char *msg, int len, FILE *file) {
 
 	res_pquery(&_res, msg, len, file);
 }
+libresolv_hidden_def (fp_nquery)
 
 int
 res_mkquery(int op,			/* opcode of query */
@@ -295,6 +297,7 @@ hostalias(const char *name) {
 
 	return (res_hostalias(&_res, name, abuf, sizeof abuf));
 }
+libresolv_hidden_def (hostalias)
 
 #ifdef ultrix
 int

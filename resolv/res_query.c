@@ -190,6 +190,7 @@ __libc_res_nquery(res_state statp,
 	}
 	return (n);
 }
+libresolv_hidden_def (__libc_res_nquery)
 
 int
 res_nquery(res_state statp,
@@ -201,6 +202,7 @@ res_nquery(res_state statp,
 	return __libc_res_nquery(statp, name, class, type, answer, anslen,
 				 NULL);
 }
+libresolv_hidden_def (res_nquery)
 
 /*
  * Formulate a normal query, send, and retrieve answer in supplied buffer.
@@ -365,6 +367,7 @@ __libc_res_nsearch(res_state statp,
 		RES_SET_H_ERRNO(statp, TRY_AGAIN);
 	return (-1);
 }
+libresolv_hidden_def (__libc_res_nsearch)
 
 int
 res_nsearch(res_state statp,
@@ -376,6 +379,7 @@ res_nsearch(res_state statp,
 	return __libc_res_nsearch(statp, name, class, type, answer,
 				  anslen, NULL);
 }
+libresolv_hidden_def (res_nsearch)
 
 /*
  * Perform a call on res_query on the concatenation of name and domain,
@@ -439,6 +443,7 @@ res_nquerydomain(res_state statp,
 	return __libc_res_nquerydomain(statp, name, domain, class, type,
 				       answer, anslen, NULL);
 }
+libresolv_hidden_def (res_nquerydomain)
 
 const char *
 res_hostalias(const res_state statp, const char *name, char *dst, size_t siz) {
@@ -476,3 +481,4 @@ res_hostalias(const res_state statp, const char *name, char *dst, size_t siz) {
 	fclose(fp);
 	return (NULL);
 }
+libresolv_hidden_def (res_hostalias)
