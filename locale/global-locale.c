@@ -1,7 +1,6 @@
-/* C locale object.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Locale object representing the global locale controlled by setlocale.
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -22,7 +21,7 @@
 #include "localeinfo.h"
 
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct locale_data _nl_C_##category;
+extern struct locale_data _nl_C_##category; weak_extern (_nl_C_##category)
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
@@ -30,9 +29,15 @@ extern struct locale_data _nl_C_##category;
 extern const char _nl_C_LC_CTYPE_class[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_toupper[] attribute_hidden;
 extern const char _nl_C_LC_CTYPE_tolower[] attribute_hidden;
+weak_extern (_nl_C_LC_CTYPE_class)
+weak_extern (_nl_C_LC_CTYPE_toupper)
+weak_extern (_nl_C_LC_CTYPE_tolower)
 
+/* Here we define the locale object maintained by setlocale.
+   The references in the initializer are weak, so the parts of
+   the structure that are never referred to will be zero.  */
 
-struct __locale_struct _nl_C_locobj attribute_hidden =
+struct __locale_struct _nl_global_locale attribute_hidden =
   {
     .__locales =
     {
@@ -45,3 +50,14 @@ struct __locale_struct _nl_C_locobj attribute_hidden =
     .__ctype_tolower = (const int *) _nl_C_LC_CTYPE_tolower + 128,
     .__ctype_toupper = (const int *) _nl_C_LC_CTYPE_toupper + 128
   };
+
+#include <tls.h>
+#if USE_TLS && HAVE___THREAD
+/* The tsd macros don't permit an initializer.  */
+__thread void *__libc_tsd_LOCALE = &_nl_global_locale;
+#else
+__libc_tsd_define (, LOCALE)
+/* This is a bad kludge presuming the variable name used by the macros.
+   Using typeof makes sure to barf if we do not match the macro definition.  */
+__typeof (__libc_tsd_LOCALE_data) __libc_tsd_LOCALE_data = &_nl_global_locale;
+#endif

@@ -155,53 +155,80 @@ extern const char _nl_C_codeset[] attribute_hidden;
    Each is malloc'd unless it is _nl_C_name.  */
 extern const char *_nl_current_names[] attribute_hidden;
 
+/* This is the internal locale_t object that holds the global locale
+   controlled by calls to setlocale.  A thread's TSD locale pointer
+   points to this when `uselocale (LC_GLOBAL_LOCALE)' is in effect.  */
+extern struct __locale_struct _nl_global_locale attribute_hidden;
 
-#ifndef SHARED
+/* This fetches the thread-local locale_t pointer, either one set with
+   uselocale or &_nl_global_locale.  */
+#define _NL_CURRENT_LOCALE	((__locale_t) __libc_tsd_get (LOCALE))
+#include <bits/libc-tsd.h>
+__libc_tsd_define (extern, LOCALE)
 
-/* For each category declare the variable for the current locale data.  */
-/* XXX _nl_current_LC_CTYPE and _nl_current_LC_COLLATE were exported
-   but where are they used?  */
+
+/* For static linking it is desireable to avoid always linking in the code
+   and data for every category when we can tell at link time that they are
+   unused.  We can manage this playing some tricks with weak references.
+   But with thread-local locale settings, it becomes quite ungainly unless
+   we can use __thread variables.  So only in that case do we attempt this.  */
+#if !defined SHARED && defined HAVE___THREAD && defined HAVE_WEAK_SYMBOLS
+# include <tls.h>
+# if USE_TLS
+#  define NL_CURRENT_INDIRECT	1
+# endif
+#endif
+
+#ifdef NL_CURRENT_INDIRECT
+
+/* For each category declare the thread-local variable for the current
+   locale data.  This has an extra indirection so it points at the
+   __locales[CATEGORY] element in either _nl_global_locale or the current
+   locale object set by uselocale, which points at the actual data.  The
+   reason for having these variables is so that references to particular
+   categories will link in the lc-CATEGORY.c module to define this symbol,
+   and we arrange that linking that module is what brings in all the code
+   associated with this category.  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct locale_data *_nl_current_##category attribute_hidden;
+extern __thread struct locale_data *const *_nl_current_##category \
+  attribute_hidden;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
-extern struct locale_data * *const _nl_current[__LC_LAST] attribute_hidden;
 
 /* Return a pointer to the current `struct locale_data' for CATEGORY.  */
-#define _NL_CURRENT_DATA(category)	_nl_current_##category
-/* Hackety hack, don't talk back.  */
-#define _nl_current_category		(*_nl_current[category])
+#define _NL_CURRENT_DATA(category)	(*_nl_current_##category)
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
-  (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)
+  ((*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].string)
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT_WSTR(category, item) \
-  ((wchar_t *) _nl_current_##category->values[_NL_ITEM_INDEX (item)].wstr)
+  ((wchar_t *) (*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].wstr)
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 #define _NL_CURRENT_WORD(category, item) \
-  (_nl_current_##category->values[_NL_ITEM_INDEX (item)].word)
+  ((*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].word)
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 #define _NL_CURRENT_DEFINE(category) \
-  extern struct locale_data _nl_C_##category attribute_hidden; \
-  struct locale_data *_nl_current_##category = &_nl_C_##category
+  __thread struct locale_data *const *_nl_current_##category \
+    attribute_hidden = &_nl_global_locale.__locales[category]; \
+  asm (_NL_CURRENT_DEFINE_STRINGIFY (ASM_GLOBAL_DIRECTIVE) \
+       " " __SYMBOL_PREFIX "_nl_current_" #category "_used\n" \
+       _NL_CURRENT_DEFINE_ABS (_nl_current_##category##_used, 1));
+#define _NL_CURRENT_DEFINE_STRINGIFY(x) _NL_CURRENT_DEFINE_STRINGIFY_1 (x)
+#define _NL_CURRENT_DEFINE_STRINGIFY_1(x) #x
+#ifdef HAVE_ASM_SET_DIRECTIVE
+# define _NL_CURRENT_DEFINE_ABS(sym, val) ".set " #sym ", " #val
+#else
+# define _NL_CURRENT_DEFINE_ABS(sym, val) #sym " = " #val
+#endif
 
 #else
 
 /* All categories are always loaded in the shared library, so there is no
    point in having lots of separate symbols for linking.  */
-
-# include <bits/libc-tsd.h>
-
-__libc_tsd_define (extern, LOCALE)
-
-extern struct __locale_struct _nl_global_locale attribute_hidden;
-
-# define _NL_CURRENT_LOCALE \
-  ((__locale_t) __libc_tsd_get (LOCALE))
 
 /* Return a pointer to the current `struct locale_data' for CATEGORY.  */
 # define _NL_CURRENT_DATA(category) \

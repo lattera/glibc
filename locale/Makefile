@@ -42,7 +42,7 @@ tests		= tst-C-locale
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name \
-		  xlocale localename
+		  xlocale localename global-locale
 others		= localedef locale
 #others-static	= localedef locale
 install-bin	= localedef locale

@@ -1,5 +1,38 @@
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
+	Make uselocale support static linking.
+	* locale/xlocale.c: Revert changes putting _nl_global_locale here.
+	This file again just defines _nl_C_locobj.
+	(_nl_C_locobj): Use a categories.def iterator in the initializer.
+	* locale/global-locale.c: New file.  Define _nl_global_locale here,
+	using all weak references in the initializer.
+	* locale/Makefile (aux): Add global-locale.
+	* locale/localeinfo.h (_nl_global_locale, _NL_CURRENT_LOCALE): Make
+	these unconditional, along with the tsd decl.
+	[!SHARED && HAVE___THREAD && HAVE_WEAK_SYMBOLS] (NL_CURRENT_INDIRECT):
+	Define it under these conditions.
+	[NL_CURRENT_INDIRECT]: Test this instead of [! SHARED].
+	Don't declare _nl_current.  Declare _nl_current_LC_FOO as
+	`extern __thread struct locale_data *const *'.
+	[NL_CURRENT_INDIRECT]
+	(_NL_CURRENT_DATA, _NL_CURRENT, _NL_CURRENT_WSTR): Add indirection.
+	[NL_CURRENT_INDIRECT] (_NL_CURRENT_DEFINE): Rewritten.  Define
+	the thread variable _nl_current_LC_FOO and also a special absolute
+	symbol _nl_current_LC_FOO_used.
+	* locale/uselocale.c (__uselocale) [NL_CURRENT_INDIRECT]:
+	Set each _nl_current_LC_FOO symbol to point into the new locale,
+	using weak references to test if _nl_current_LC_FOO_used was linked in.
+	* locale/setlocale.c [! SHARED]: Replace this conditional ...
+	[NL_CURRENT_INDIRECT]: ... with this one.
+	(_nl_current, _nl_C): Variables removed.
+	[NL_CURRENT_INDIRECT] (_nl_current_used): New variable, table of
+	weak references to _nl_current_LC_FOO_used.
+	[NL_CURRENT_INDIRECT] (CATEGORY_USED): Define using that table.
+	(free_category): New function, broken out of ...
+	(free_mem): ... here.  Call that.
+	(free_mem) [NL_CURRENT_INDIRECT]: Use a categories.def iterator
+	instead of a loop.
+
 	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Don't check for
 	PT_LOAD program headers and don't try to relocate PT_TLS's p_vaddr;
 	it is already absolute.
@@ -64,7 +97,7 @@
 
 	* misc/sys/cdefs.h: Define __BEGIN_NAMESPACE_STD, __END_NAMESPACE_STD,
 	__USING_NAMESPACE_STD, __BEGIN_NAMESPACE_C99, __END_NAMESPACE_C99, and
-	__USING_NAMESPACE_C99 dependingon _GLIBCPP_USE_NAMESPACES.
+	__USING_NAMESPACE_C99 depending on _GLIBCPP_USE_NAMESPACES.
 	* ctype/ctype.h: Prepare headers for use in ISO C++ compliant
 	implementations.
 	* libio/stdio.h: Likewise.

@@ -27,54 +27,38 @@
 
 #include "localeinfo.h"
 
-#ifndef SHARED
+#ifdef NL_CURRENT_INDIRECT
 
-/* For each category declare two external variables (with weak references):
-     extern const struct locale_data *_nl_current_CATEGORY;
-   This points to the current locale's in-core data for CATEGORY.
-     extern const struct locale_data _nl_C_CATEGORY;
-   This contains the built-in "C"/"POSIX" locale's data for CATEGORY.
-   Both are weak references; if &_nl_current_CATEGORY is zero,
-   then nothing is using the locale data.  */
-#define DEFINE_CATEGORY(category, category_name, items, a) \
-weak_extern (_nl_current_##category)					      \
-weak_extern (_nl_C_##category)						      \
-extern struct locale_data *_nl_current_##category;			      \
-extern struct locale_data _nl_C_##category;
-#include "categories.def"
-#undef	DEFINE_CATEGORY
+/* For each category declare a special external symbol
+   _nl_current_CATEGORY_used with a weak reference.
+   This symbol will is defined in lc-CATEGORY.c and will be linked in
+   if anything uses _nl_current_CATEGORY (also defined in that module).
+   Also use a weak reference for the _nl_current_CATEGORY thread variable.  */
 
-/* Array indexed by category of pointers to _nl_current_CATEGORY slots.
-   Elements are zero for categories whose data is never used.  */
-struct locale_data * *const _nl_current[] =
+# define DEFINE_CATEGORY(category, category_name, items, a) \
+    extern char _nl_current_##category##_used; \
+    weak_extern (_nl_current_##category##_used) \
+    weak_extern (_nl_current_##category)
+# include "categories.def"
+# undef	DEFINE_CATEGORY
+
+/* Now define a table of flags based on those special weak symbols' values.
+   _nl_current_used[CATEGORY] will be zero if _nl_current_CATEGORY is not
+   linked in.  */
+static char *const _nl_current_used[] =
   {
-#define DEFINE_CATEGORY(category, category_name, items, a) \
-    [category] = &_nl_current_##category,
-#include "categories.def"
-#undef	DEFINE_CATEGORY
-    /* We need this additional element to simplify the code.  It must
-       simply be != NULL.  */
-    [LC_ALL] = (struct locale_data **) ~0ul
+# define DEFINE_CATEGORY(category, category_name, items, a) \
+    [category] = &_nl_current_##category##_used,
+# include "categories.def"
+# undef	DEFINE_CATEGORY
   };
 
-/* Array indexed by category of pointers to _nl_C_CATEGORY slots.
-   Elements are zero for categories whose data is never used.  */
-struct locale_data *const _nl_C[] attribute_hidden =
-  {
-#define DEFINE_CATEGORY(category, category_name, items, a) \
-    [category] = &_nl_C_##category,
-#include "categories.def"
-#undef	DEFINE_CATEGORY
-  };
-
-# define CATEGORY_USED(category)	(_nl_current[category] != NULL)
+# define CATEGORY_USED(category)	(_nl_current_used[category] != 0)
 
 #else
 
 /* The shared library always loads all the categories,
    and the current global settings are kept in _nl_global_locale.  */
-
-# define _nl_C		(_nl_C_locobj.__locales)
 
 # define CATEGORY_USED(category)	(1)
 
@@ -211,13 +195,7 @@ setdata (int category, struct locale_data *data)
 {
   if (CATEGORY_USED (category))
     {
-#ifdef SHARED
       _nl_global_locale.__locales[category] = data;
-#endif
-#ifndef SHARED
-# warning when uselocale exists it will need the line above too
-      *_nl_current[category] = data;
-#endif
       if (_nl_category_postload[category])
 	(*_nl_category_postload[category]) ();
     }
@@ -444,38 +422,57 @@ setlocale (int category, const char *locale)
 }
 libc_hidden_def (setlocale)
 
+static void
+free_category (int category,
+	       struct locale_data *here, struct locale_data *c_data)
+{
+  struct loaded_l10nfile *runp = _nl_locale_file_list[category];
+
+  /* If this category is already "C" don't do anything.  */
+  if (here != c_data)
+    {
+      /* We have to be prepared that sometime later we still
+	 might need the locale information.  */
+      setdata (category, c_data);
+      setname (category, _nl_C_name);
+    }
+
+  while (runp != NULL)
+    {
+      struct loaded_l10nfile *curr = runp;
+      struct locale_data *data = (struct locale_data *) runp->data;
+
+      if (data != NULL && data != c_data)
+	_nl_unload_locale (data);
+      runp = runp->next;
+      free ((char *) curr->filename);
+      free (curr);
+    }
+}
+
 static void __attribute__ ((unused))
 free_mem (void)
 {
+#ifdef NL_CURRENT_INDIRECT
+  /* We don't use the loop because we want to have individual weak
+     symbol references here.  */
+# define DEFINE_CATEGORY(category, category_name, items, a)		      \
+  if (CATEGORY_USED (category))						      \
+    {									      \
+      extern struct locale_data _nl_C_##category;			      \
+      weak_extern (_nl_C_##category)					      \
+      free_category (category, *_nl_current_##category, &_nl_C_##category);   \
+    }
+# include "categories.def"
+# undef	DEFINE_CATEGORY
+#else
   int category;
 
   for (category = 0; category < __LC_LAST; ++category)
     if (category != LC_ALL)
-      {
-	struct locale_data *here = _NL_CURRENT_DATA (category);
-	struct loaded_l10nfile *runp = _nl_locale_file_list[category];
-
-	/* If this category is already "C" don't do anything.  */
-	if (here != _nl_C[category])
-	  {
-	    /* We have to be prepared that sometime later we still
-	       might need the locale information.  */
-	    setdata (category, _nl_C[category]);
-	    setname (category, _nl_C_name);
-	  }
-
-	while (runp != NULL)
-	  {
-	    struct loaded_l10nfile *curr = runp;
-	    struct locale_data *data = (struct locale_data *) runp->data;
-
-	    if (data != NULL && data != _nl_C[category])
-	      _nl_unload_locale (data);
-	    runp = runp->next;
-	    free ((char *) curr->filename);
-	    free (curr);
-	  }
-      }
+      free_category (category, _NL_CURRENT_DATA (category),
+		     _nl_C_locobj.__locales[category]);
+#endif
 
   setname (LC_ALL, _nl_C_name);
 
