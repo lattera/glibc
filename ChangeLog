@@ -1,3 +1,8 @@
+2003-07-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_TGKILL for Alpha appropriately.
+
 2003-07-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/statfs.h (_STATFS_F_FRSIZE): Define.

@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <kernel-features.h>
 #include <bp-sym.h>
 #include <bp-asm.h>
 
@@ -44,7 +45,11 @@ ENTRY (BP_SYM (__clone))
 
 	/* Set up stack frame for parent.  */
 	stwu	r1,-32(r1)
+#ifndef __ASSUME_FIXED_CLONE_SYSCALL
 	stmw	r29,16(r1)
+#else
+	stmw	r30,16(r1)
+#endif
 
 	/* Set up stack frame for child.  */
 	clrrwi	r4,r4,4
@@ -52,8 +57,10 @@ ENTRY (BP_SYM (__clone))
 	stwu	r0,-16(r4)
 
 	/* Save fn, args, stack across syscall.  */
-	mr	r29,r3			/* Function in r29.  */
-	mr	r30,r4			/* Stack pointer in r30.  */
+	mr	r30,r3			/* Function in r30.  */
+#ifndef __ASSUME_FIXED_CLONE_SYSCALL
+	mr	r29,r4			/* Stack pointer in r29.  */
+#endif
 	mr	r31,r6			/* Argument in r31.  */
 
 	/* 'flags' argument is first parameter to clone syscall. (The other
@@ -73,13 +80,16 @@ ENTRY (BP_SYM (__clone))
 	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
 
+#ifndef __ASSUME_FIXED_CLONE_SYSCALL
 	/* On at least mklinux DR3a5, clone() doesn't actually change
 	   the stack pointer.  I'm pretty sure this is a bug, because
 	   it adds a race condition if a signal is sent to a thread
 	   just after it is created (in the previous three instructions).  */
-	mr	r1,r30
+	mr	r1,r29
+#endif
+
 	/* Call procedure.  */
-	mtctr	r29
+	mtctr	r30
 	mr	r3,r31
 	bctrl
 	/* Call _exit with result from procedure.  */
@@ -87,7 +97,11 @@ ENTRY (BP_SYM (__clone))
 
 L(parent):
 	/* Parent.  Restore registers & return.  */
+#ifndef __ASSUME_FIXED_CLONE_SYSCALL
 	lmw	r29,16(r1)
+#else
+	lmw	r30,16(r1)
+#endif
 	addi	r1,r1,32
 	bnslr+
 	b	JUMPTARGET(__syscall_error)

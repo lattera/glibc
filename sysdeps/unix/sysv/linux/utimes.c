@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <utime.h>
 #include <sys/time.h>
+#include <sysdep.h>
 #include "kernel-features.h"
 
 

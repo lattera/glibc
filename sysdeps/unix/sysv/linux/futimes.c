@@ -36,7 +36,7 @@ __futimes (int fd, const struct timeval tvp[2])
   static const char selffd[] = "/proc/self/fd/";
   char fname[sizeof (selffd) + 3 * sizeof (int)];
   fname[sizeof (fname) - 1] = '\0';
-  char *cp = _itoa_word (fd, fname + sizeof (fname) - 1, 10, 0);
+  char *cp = _itoa_word ((unsigned int) fd, fname + sizeof (fname) - 1, 10, 0);
   cp = memcpy (cp - sizeof (selffd) + 1, selffd, sizeof (selffd) - 1);
 
 #ifdef __NR_utimes
