@@ -128,6 +128,9 @@ int _dl_debug_fd = STDERR_FILENO;
 
 int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
+struct ElfW(Phdr) *_dl_phdr;
+size_t _dl_phnum;
+
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we
    protect `_dl_open' and `_dl_close' in dl-close.c.
@@ -172,6 +175,12 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	break;
       case AT_CLKTCK:
 	GL(dl_clktck) = av->a_un.a_val;
+	break;
+      case AT_PHDR:
+	GL(dl_phdr) = av->a_un.a_ptr;
+	break;
+      case AT_PHNUM:
+	GL(dl_phnum) = av->a_un.a_val;
 	break;
       }
 }
