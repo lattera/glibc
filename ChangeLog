@@ -4,8 +4,9 @@
 	* Makefile (distribute): Add it.
 	* Makerules ($(objpfx)%.dynsym, $(objpfx)%.symlist): New rules.
 	(tests): Depend on .symlist file for each $(install-lib.so-versioned).
-	[! subdir] (tests): Depend on libc.symlist.
-	(generated): Add those files.
+	[$(subdir) = elf] (tests): Depend on libc.symlist.
+	(generated, common-generated): Add those files.
+
 	* aclocal.m4 (LIBC_PROG_BINUTILS): Check for objdump, set OBJDUMP.
 	* configure: Regenerated.
 	* config.make.in (OBJDUMP): New variable, substituted by configure.
