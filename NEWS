@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2005-2-21
+GNU C Library NEWS -- history of user-visible changes.  2005-3-19
 Copyright (C) 1992-2004, 2005 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -11,6 +11,9 @@ Version 2.4
 
 * New iconv converters for IBM1025, IBM1122, IBM1137, IBM1153,
   IBM1154, IBM1155, IBM1156, IBM1157, and IBM1158 contributed by Jiro Sekiba.
+
+* It is now possible to install audit libraries for the dynamic linker using
+  LD_AUDIT.  Implemented by Ulrich Drepper.
 
 Version 2.3.4
 

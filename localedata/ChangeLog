@@ -1,3 +1,10 @@
+2005-02-27  Denis Barbier  <barbier@debian.org>
+
+	[BZ #38]
+	* locales/sr_CS: New file.
+	Contributed by Danilo Segan <dsegan@gmx.net>
+	* SUPPORTED: Add sr_CS/ISO-8859-5 and sr_CS.UTF-8/UTF-8.
+
 2005-03-18  Andreas Schwab  <schwab@suse.de>
 
 	* locales/pa_IN (am_pm): Fix character names.

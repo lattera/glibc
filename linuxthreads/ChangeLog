@@ -1,3 +1,8 @@
+2005-02-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Add local _init
+	and _fini labels.
+
 2005-03-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/Makefile (CFLAGS-pt-initfini.s): Unconditionally

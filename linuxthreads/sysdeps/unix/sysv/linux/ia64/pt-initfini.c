@@ -87,6 +87,7 @@ _init:\n\
 /*@_init_EPILOG_BEGINS*/\n\
 	.section .init\n\
 	.proc _init#\n\
+_init:\n\
 	.prologue\n\
 	.save ar.pfs, r34\n\
 	.vframe r32\n\
@@ -122,6 +123,7 @@ _fini:\n\
 /*@_fini_EPILOG_BEGINS*/\n\
 	.section .fini\n\
 	.proc _fini#\n\
+_fini:\n\
 	.prologue\n\
 	.save ar.pfs, r34\n\
 	.vframe r32\n\
