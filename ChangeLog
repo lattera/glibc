@@ -1,5 +1,8 @@
 2003-04-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigsuspend.c: Use the
+	IA-64 version.
+
 	* elf/tls-macros.h [__ia64__] (TLS_IE, TLS_LD, TLS_GD): Add gp
 	register as input to asm.
 

@@ -1,3 +1,18 @@
+2003-04-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread.c (__pthread_wait_for_restart_signal): Use
+	__pthread_sigsuspend instead of sigsuspend.
+	* internals.h (__pthread_sigsuspend): New prototype.
+	* Makefile (libpthread-routines): Add pt-sigsuspend.
+	(tests): Add tst-cancel7.
+	* sysdeps/unix/sysv/linux/pt-sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/pt-sigsuspend.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/pt-sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pt-sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/pt-sigsuspend.c: New file.
+	* tst-cancel7.c: New test.
+
 2003-03-31  Alexandre Oliva  <aoliva@redhat.com>
 
 	* alloca_cutoff.c: Include internals.h.

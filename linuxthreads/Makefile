@@ -36,8 +36,8 @@ extra-libs-others := $(extra-libs)
 install-lib-ldscripts := libpthread.so
 
 libpthread-routines := attr cancel condvar join manager mutex ptfork \
-		       ptlongjmp pthread signals specific errno lockfile \
-		       semaphore spinlock rwlock pt-machine \
+		       ptlongjmp pthread pt-sigsuspend signals specific errno \
+		       lockfile semaphore spinlock rwlock pt-machine \
 		       oldsemaphore events getcpuclockid pspinlock barrier \
 		       ptclock_gettime ptclock_settime sighandler \
 		       pthandles libc-tls-loc pt-allocrtsig \
@@ -89,7 +89,7 @@ tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15 ex16 \
 	ex17 ex18 tst-cancel tst-context bug-sleep \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
-	tst-cancel6 tst-popen tst-popen2
+	tst-cancel6 tst-cancel7 tst-popen tst-popen2
 test-srcs = tst-signal
 # These tests are linked with libc before libpthread
 tests-reverse += tst-cancel5

@@ -1144,7 +1144,8 @@ void __pthread_wait_for_restart_signal(pthread_descr self)
   sigdelset(&mask, __pthread_sig_restart); /* Unblock the restart signal */
   THREAD_SETMEM(self, p_signal, 0);
   do {
-    sigsuspend(&mask);                   /* Wait for signal */
+    __pthread_sigsuspend(&mask);	/* Wait for signal.  Must not be a
+					   cancellation point. */
   } while (THREAD_GETMEM(self, p_signal) !=__pthread_sig_restart);
 
   READ_MEMORY_BARRIER(); /* See comment in __pthread_restart_new */
