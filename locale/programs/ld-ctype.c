@@ -1663,7 +1663,7 @@ charclass_charcode_ellipsis (struct linereader *ldfile,
   if (now->val.charcode.nbytes != last_charcode_len)
     {
       lr_error (ldfile, _("\
-start end end character sequence of range must have the same length"));
+start and end character sequence of range must have the same length"));
       return;
     }
 
