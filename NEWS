@@ -28,6 +28,9 @@ Version 2.3
 
 * Isamu Hasegawa contributed a completely new and POSIX conforming
   implementation of regex.
+
+* Bruno Haible upgraded the iconv and locale implementation to support
+  Unicode 3.2.
 
 Version 2.2.5
 

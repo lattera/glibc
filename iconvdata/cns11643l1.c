@@ -1,5 +1,5 @@
 /* Mapping tables for CNS 11643, plane 1 handling.
-   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -20,9 +20,9 @@
 
 #include <stdint.h>
 
-/* To generate a Unicode 3.1 CNS11643.TXT, take
+/* To generate a Unicode 3.2 CNS11643.TXT, take
    http://www.unicode.org/Public/Mappings/EASTASIA/OTHER/CNS11643.TXT
-   and add the following lines (see Unicode 3.1 UNIHAN.TXT):
+   and add the following lines (see Unicode 3.2 UNIHAN.TXT):
    0x12728	0x4EA0	#	<CJK Ideograph>
    0x1272F	0x51AB	#	<CJK Ideograph>
    0x12734	0x52F9	#	<CJK Ideograph>

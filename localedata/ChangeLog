@@ -1,5 +1,131 @@
 2002-04-15  Bruno Haible  <bruno@clisp.org>
 
+	* charmaps/EUC-JISX0213: New file.
+	* charmaps/SHIFT_JISX0213: New file.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/BIG5-HKSCS: Update to Unicode 3.2.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/EUC-TW: Add many mappings for characters introduced in
+	Unicode 3.1 and 3.2.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/GB18030: Update for Unicode 3.2:
+	Add <U0220>, <U034F>, <U0363>..<U036F>, <U03D8>..<U03D9>,
+	<U03F6>, <U048A>..<U048B>, <U04C5>..<U04C6>, <U04C9>..<U04CA>,
+	<U04CD>..<U04CE>, <U0500>..<U050F>, <U066E>..<U066F>, <U07B1>,
+	<U10F7>..<U10F8>, <U1700>..<U170C>, <U170E>..<U1714>, <U1720>..<U1736>,
+	<U1740>..<U1753>, <U1760>..<U1770>, <U1772>..<U1773>, <U2047>,
+	<U204E>..<U2052>, <U2057>, <U205F>..<U2063>, <U2071>, <U20B0>..<U20B1>,
+	<U20E4>..<U20EA>, <U213D>..<U214B>, <U21F4>..<U21FF>, <U22F2>..<U22FF>,
+	<U237C>, <U239B>..<U23CE>, <U24EB>..<U24FE>, <U2596>..<U259F>,
+	<U25F8>..<U25FF>, <U2616>..<U2617>, <U2672>..<U267D>, <U2680>..<U2689>,
+	<U2768>..<U2775>, <U27D0>..<U27EB>, <U27F0>..<U27FF>, <U2900>..<U2AFF>,
+	<U303B>..<U303D>, <U3095>..<U3096>, <U309F>..<U30A0>, <U30FF>,
+	<U31F0>..<U31FF>, <U3251>..<U325F>, <U32B1>..<U32BF>, <UA4A2>..<UA4A3>,
+	<UA4B4>, <UA4C1>, <UA4C5>, <UFA30>..<UFA6A>, <UFDFC>, <UFE00>..<UFE0F>,
+	<UFE45>..<UFE46>, <UFE73>, <UFF5F>..<UFF60>.  Update width table.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/UTF-8: Update for Unicode 3.2:
+	Add <U0220>, <U034F>, <U0363>..<U036F>, <U03D8>..<U03D9>,
+	<U03F6>, <U048A>..<U048B>, <U04C5>..<U04C6>, <U04C9>..<U04CA>,
+	<U04CD>..<U04CE>, <U0500>..<U050F>, <U066E>..<U066F>, <U07B1>,
+	<U10F7>..<U10F8>, <U1700>..<U170C>, <U170E>..<U1714>, <U1720>..<U1736>,
+	<U1740>..<U1753>, <U1760>..<U1770>, <U1772>..<U1773>, <U2047>,
+	<U204E>..<U2052>, <U2057>, <U205F>..<U2063>, <U2071>, <U20B0>..<U20B1>,
+	<U20E4>..<U20EA>, <U213D>..<U214B>, <U21F4>..<U21FF>, <U22F2>..<U22FF>,
+	<U237C>, <U239B>..<U23CE>, <U24EB>..<U24FE>, <U2596>..<U259F>,
+	<U25F8>..<U25FF>, <U2616>..<U2617>, <U2672>..<U267D>, <U2680>..<U2689>,
+	<U2768>..<U2775>, <U27D0>..<U27EB>, <U27F0>..<U27FF>, <U2900>..<U2AFF>,
+	<U303B>..<U303D>, <U3095>..<U3096>, <U309F>..<U30A0>, <U30FF>,
+	<U31F0>..<U31FF>, <U3251>..<U325F>, <U32B1>..<U32BF>, <UA4A2>..<UA4A3>,
+	<UA4B4>, <UA4C1>, <UA4C5>, <UFA30>..<UFA6A>, <UFDFC>, <UFE00>..<UFE0F>,
+	<UFE45>..<UFE46>, <UFE73>, <UFF5F>..<UFF60>.  Update width table.
+	Assign width 2 to <U3008>..<U300B>, <U3014>..<U3015>, <U3018>..<U301B>.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	Update to Unicode 3.2.
+	* locales/translit_circle: Add <U3251>..<U325F>, <U32B1>..<U32BF>.
+	* locales/translit_cjk_compat: Change <UF951>.  Add <UFA30>..<UFA6A>.
+	* locales/translit_combining: Add more combining characters.
+	* locales/translit_compat: Add <U2047>, <U2057>, <U205F>, <U2A0C>,
+	<U2A74>..<U2A76>.
+	* locales/translit_font: Add <U213D>..<U2140>, <U2145>..<U2149>.
+	* locales/translit_neutral: Add <U2060>..<U2063>, <U30A0>,
+	<UFE00>..<UFE0F>.
+	* locales/translit_small: Add small Hiragana letters and small
+	Katakana letters.
+	* locales/translit_wide: Add <UFF5F>..<UFF60>.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* locales/i18n (LC_CTYPE): Update to Unicode 3.2. In detail:
+	(upper): Add <U0220>, <U03D8>, <U048A>, <U04C5>, <U04C9>, <U04CD>,
+	<U0500>, <U0502>, <U0504>, <U0506>, <U0508>, <U050A>, <U050C>, <U050E>.
+	(lower): Add <U019E>, <U03D9>, <U048B>, <U04C6>, <U04CA>, <U04CE>,
+	<U0501>, <U0503>, <U0505>, <U0507>, <U0509>, <U050B>, <U050D>, <U050F>.
+	(alpha): Add <U0220>, <U03D8>..<U03D9>, <U048A>..<U048B>,
+	<U04C5>..<U04C6>, <U04C9>..<U04CA>, <U04CD>..<U04CE>, <U0500>..<U050F>,
+	<U066E>..<U066F>, <U07B1>, <U0B83>, <U10F7>..<U10F8>, <U1700>..<U170C>,
+	<U170E>..<U1711>, <U1720>..<U1731>, <U1740>..<U1751>, <U1760>..<U1770>,
+	<U17D7>, <U17DC>, <U2071>, <U213D>..<U213F>, <U2145>..<U2149>,
+	<U303B>..<U303C>, <U3095>..<U3096>, <U309F>, <U30FF>, <U31F0>..<U31FF>,
+	<UFA30>..<UFA6A>, <UFE73>.
+	(space): Add <U205F>.
+	(punct): Add <U034F>, <U0363>..<U036F>, <U03F6>, <U1712>..<U1714>,
+	<U1732>..<U1736>, <U1752>..<U1753>, <U1772>..<U1773>, <U2047>,
+	<U204E>..<U2052>, <U2057>, <U2060>..<U2063>, <U20B0>..<U20B1>,
+	<U20E4>..<U20EA>, <U2140>..<U2144>, <U214A>..<U214B>, <U21F4>..<U21FF>,
+	<U22F2>..<U22FF>, <U237C>, <U239B>..<U23CE>, <U24EB>..<U24FE>,
+	<U2596>..<U259F>, <U25F8>..<U25FF>, <U2616>..<U2617>, <U2672>..<U267D>,
+	<U2680>..<U2689>, <U2768>..<U2775>, <U27D0>..<U27EB>, <U27F0>..<U27FF>,
+	<U2900>..<U2AFF>, <U303D>, <U30A0>, <U3251>..<U325F>, <U32B1>..<U32BF>,
+	<UA4A2>..<UA4A3>, <UA4B4>, <UA4C1>, <UA4C5>, <UFDFC>, <UFE00>..<UFE0F>,
+	<UFF5F>..<UFF60>. Remove <U0B83>, <U17D7>, <U17DC>.
+	(graph): Add <U0220>, <U034F>, <U0363>..<U036F>, <U03D8>..<U03D9>,
+	<U03F6>, <U048A>..<U048B>, <U04C5>..<U04C6>, <U04C9>..<U04CA>,
+	<U04CD>..<U04CE>, <U0500>..<U050F>, <U066E>..<U066F>, <U07B1>,
+	<U10F7>..<U10F8>, <U1700>..<U170C>, <U170E>..<U1714>, <U1720>..<U1736>,
+	<U1740>..<U1753>, <U1760>..<U1770>, <U1772>..<U1773>, <U2047>,
+	<U204E>..<U2052>, <U2057>, <U2060>..<U2063>, <U2071>, <U20B0>..<U20B1>,
+	<U20E4>..<U20EA>, <U213D>..<U214B>, <U21F4>..<U21FF>, <U22F2>..<U22FF>,
+	<U237C>, <U239B>..<U23CE>, <U24EB>..<U24FE>, <U2596>..<U259F>,
+	<U25F8>..<U25FF>, <U2616>..<U2617>, <U2672>..<U267D>, <U2680>..<U2689>,
+	<U2768>..<U2775>, <U27D0>..<U27EB>, <U27F0>..<U27FF>, <U2900>..<U2AFF>,
+	<U303B>..<U303D>, <U3095>..<U3096>, <U309F>..<U30A0>, <U30FF>,
+	<U31F0>..<U31FF>, <U3251>..<U325F>, <U32B1>..<U32BF>, <UA4A2>..<UA4A3>,
+	<UA4B4>, <UA4C1>, <UA4C5>, <UFA30>..<UFA6A>, <UFDFC>, <UFE00>..<UFE0F>,
+	<UFE45>..<UFE46>, <UFE73>, <UFF5F>..<UFF60>.
+	(print): Likewise. Also add <U205F>.
+	(blank): Add <U205F>.
+	(toupper): Add (<U019E>,<U0220>), (<U03D9>,<U03D8>), (<U048B>,<U048A>),
+	(<U04C6>,<U04C5>), (<U04CA>,<U04C9>), (<U04CE>,<U04CD>),
+	(<U0501>,<U0500>), (<U0503>,<U0502>), (<U0505>,<U0504>),
+	(<U0507>,<U0506>), (<U0509>,<U0508>), (<U050B>,<U050A>),
+	(<U050D>,<U050C>), (<U050F>,<U050E>).
+	(totitle): Likewise.
+	(tolower): Add (<U0220>,<U019E>), (<U03D8>,<U03D9>), (<U048A>,<U048B>),
+	(<U04C5>,<U04C6>), (<U04C9>,<U04CA>), (<U04CD>,<U04CE>),
+	(<U0500>,<U0501>), (<U0502>,<U0503>), (<U0504>,<U0505>),
+	(<U0506>,<U0507>), (<U0508>,<U0509>), (<U050A>,<U050B>),
+	(<U050C>,<U050D>), (<U050E>,<U050F>).
+	(combining): Add <U034F>, <U0363>..<U036F>, <U1712>..<U1714>,
+	<U1732>..<U1734>, <U1752>..<U1753>, <U1772>..<U1773>, <U180B>..<U180D>,
+	<U20E4>..<U20EA>, <UFE00>..<UFE0F>. Remove <U06DD>, <U0B83>.
+	(combining_level3): Add <U034F>, <U1712>..<U1714>, <U1732>..<U1734>,
+	<U1752>..<U1753>, <U1772>..<U1773>, <U180B>..<U180D>, <U20E4>..<U20E6>,
+	<U20EA>, <UFE00>..<UFE0F>. Remove <U06DD>, <U0B83>.
+	* locales/tr_TR: Likewise.
+
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
 	* charmaps/IBM856: New file.
 	* charmaps/IBM922: New file.
 	* charmaps/IBM1124: New file.

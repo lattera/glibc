@@ -1,3 +1,10 @@
+2002-04-18  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/euc-jisx0213.c (EMIT_SHIFT_TO_INIT, BODY for
+	FROM_DIRECTION): Make the FROM direction stateless.
+	* iconvdata/shift_jisx0213.c (EMIT_SHIFT_TO_INIT, BODY for
+	FROM_DIRECTION): Likewise.
+
 2002-04-15  Bruno Haible  <bruno@clisp.org>
 
 	* iconvdata/JISX0213.TXT: New file.
@@ -45,6 +52,7 @@
 	(__cns11643l2*_to_ucs4_tab, __cns11643_from_ucs4p0_tab,
 	__cns11643_from_ucs4p2_tab): Regenerated.
 	(__cns11643_from_ucs4p2c_tab): New array.
+	* iconvdata/cvs11643l1.c: Update comments.
 	* iconvdata/EUC-TW.irreversible: Remove two entries.
 
 2002-04-15  Bruno Haible  <bruno@clisp.org>
@@ -96,6 +104,7 @@
 	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
 
