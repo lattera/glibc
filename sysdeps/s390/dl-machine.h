@@ -223,9 +223,6 @@ _dl_runtime_profile:\n\
 ");
 #endif
 
-/* The PLT uses Elf32_Rela relocs.  */
-#define elf_machine_relplt elf_machine_rela
-
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
 #define ELF_MACHINE_USER_ADDRESS_MASK   0xf8000000UL
@@ -305,10 +302,6 @@ _dl_start_user:\n\
 #ifndef RTLD_START_SPECIAL_INIT
 #define RTLD_START_SPECIAL_INIT /* nothing */
 #endif
-
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
-#define elf_machine_pltrel_p(type) ((type) == R_390_JMP_SLOT)
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */
@@ -432,7 +425,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  }
 
 	case R_390_PC32:
-	  *reloc_addr = value +reloc->r_addend - (Elf32_Addr) reloc_addr;
+	  *reloc_addr = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
 	  break;
 	case R_390_NONE:
 	  break;

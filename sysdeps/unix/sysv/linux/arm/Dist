@@ -1,4 +1,6 @@
 clone.S
+dl-procinfo.c
+dl-procinfo.h
 ioperm.c
 setresuid.c
 setresgid.c
