@@ -69,7 +69,9 @@ __libc_fork (void)
 
   _IO_list_lock ();
 
+#ifndef NDEBUG
   pid_t ppid = THREAD_GETMEM (THREAD_SELF, tid);
+#endif
 
 #ifdef ARCH_FORK
   pid = ARCH_FORK ();
