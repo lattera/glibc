@@ -994,9 +994,9 @@ These macro definitions can be accessed by including the header file
 Macro names starting with @samp{FLT_} refer to the @code{float} type,
 while names beginning with @samp{DBL_} refer to the @code{double} type
 and names beginning with @samp{LDBL_} refer to the @code{long double}
-type.  (Currently GCC does not support @code{long double} as a distinct
-data type, so the values for the @samp{LDBL_} constants are equal to the
-corresponding constants for the @code{double} type.)@refill
+type.  (If GCC does not support @code{long double} as a distinct data
+type on a target machine then the values for the @samp{LDBL_} constants
+are equal to the corresponding constants for the @code{double} type.)
 
 Of these macros, only @code{FLT_RADIX} is guaranteed to be a constant
 expression.  The other macros listed here cannot be reliably used in

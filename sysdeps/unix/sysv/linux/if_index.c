@@ -29,7 +29,7 @@
 #include "kernel-features.h"
 
 /* Try to get a socket to talk to the kernel.  */
-#if defined SIOGIFINDEX || defined SIOGIFNAME
+#if defined SIOCGIFINDEX || defined SIOCGIFNAME
 static int
 internal_function
 opensock (void)
@@ -73,7 +73,7 @@ opensock (void)
 unsigned int
 if_nametoindex (const char *ifname)
 {
-#ifndef SIOGIFINDEX
+#ifndef SIOCGIFINDEX
   __set_errno (ENOSYS);
   return 0;
 #else
@@ -84,7 +84,7 @@ if_nametoindex (const char *ifname)
     return 0;
 
   strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
-  if (__ioctl (fd, SIOGIFINDEX, &ifr) < 0)
+  if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
     {
       int saved_errno = errno;
       __close (fd);
@@ -113,7 +113,7 @@ if_freenameindex (struct if_nameindex *ifn)
 struct if_nameindex *
 if_nameindex (void)
 {
-#ifndef SIOGIFINDEX
+#ifndef SIOCGIFINDEX
   __set_errno (ENOSYS);
   return NULL;
 #else
@@ -180,7 +180,7 @@ if_nameindex (void)
       struct ifreq *ifr = &ifc.ifc_req[i];
       idx[i].if_name = __strdup (ifr->ifr_name);
       if (idx[i].if_name == NULL
-	  || __ioctl (fd, SIOGIFINDEX, ifr) < 0)
+	  || __ioctl (fd, SIOCGIFINDEX, ifr) < 0)
 	{
 	  int saved_errno = errno;
 	  unsigned int j;
@@ -207,7 +207,7 @@ if_nameindex (void)
 char *
 if_indextoname (unsigned int ifindex, char *ifname)
 {
-#if !defined SIOGIFINDEX && __ASSUME_SIOCGIFNAME == 0
+#if !defined SIOCGIFINDEX && __ASSUME_SIOCGIFNAME == 0
   __set_errno (ENOSYS);
   return NULL;
 #else

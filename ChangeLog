@@ -1,3 +1,30 @@
+1999-06-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/if_index.c: Use SIGIOCGIFINDEX and fix
+	another SIOGIFNAME typo.
+
+1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-lookup.c: Remove duplicated assert.h inclusion.
+
+	* sysdeps/generic/printf_fphex.c (__printf_fphex): Optimize a little
+	bit.
+
+1999-06-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/generic/printf_fphex.c (__printf_fphex): Don't ignore
+	the precision if the mantissa is zero.
+
+1999-06-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/lang.texi (Floating Point Parameters): GCC already
+	supports long double for a long time.
+
+1999-06-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* math/libm-test.c (j0_test, j1_test, jn_test, y0_test, y1_test,
+	yn_test): Increase some epsilons.
+
 1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sys/sysmacros.h (makedev): Handle signed
