@@ -1,5 +1,10 @@
 2003-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c
+	(__fe_nomask_env): Use __prctl not prctl.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __prctl alias for
+	prctl syscall.
+
 	* elf/dl-reloc.c (CHECK_STATIC_TLS): Improve error message.
 
 	* elf/dl-open.c (_dl_tls_static_size): Bump to 2048.

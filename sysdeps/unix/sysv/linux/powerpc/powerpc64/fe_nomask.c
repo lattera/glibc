@@ -24,7 +24,7 @@
 const fenv_t *
 __fe_nomask_env (void)
 {
-  prctl (PR_SET_FPEXC, PR_FP_EXC_PRECISE);
+  __prctl (PR_SET_FPEXC, PR_FP_EXC_PRECISE);
 
   return FE_ENABLED_ENV;
 }
