@@ -1,5 +1,10 @@
 Fri Apr 14 18:49:03 1995  Brendan Kehoe  (brendan@zen.org)
 
+	* sysdeps/ieee754/mpn2dbl.c (__mpn_construct_double)
+	[BITS_PER_MP_LIMB == 64]: Refer to `u', not to non-existent `i'.
+	* sysdeps/ieee754/mpn2ldbl.c (__mpn_construct_long_double)
+	[BITS_PER_MP_LIMB == 64]: Likewise.
+
 	* sysdeps/unix/bsd/osf/alpha/killpg.S (killpg): Add .end directive.
 	* sysdeps/unix/bsd/osf/alpha/sigblock.S (__sigblock): Likewise.
 	* sysdeps/unix/bsd/osf/alpha/sigsetmask.S (__sigsetmask): Likewise.

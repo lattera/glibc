@@ -37,7 +37,7 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
   u.ieee.mantissa0 = frac_ptr[1];
 #elif BITS_PER_MP_LIMB == 64
   u.ieee.mantissa1 = frac_ptr[0] & ((1 << 32) - 1);
-  i.ieee.mantissa0 = frac_ptr[0] >> 32;
+  u.ieee.mantissa0 = frac_ptr[0] >> 32;
 #else
   #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
