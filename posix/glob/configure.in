@@ -8,8 +8,8 @@ AC_PROG_CPP			dnl Later checks need this.
 dnl These two want to come early.
 AC_AIX
 AC_MINIX
-AC_CONST
 AC_ISC_POSIX
+AC_CONST
 AC_HEADER_STDC
 AC_CHECK_HEADERS(memory.h unistd.h string.h)
 AC_HEADER_DIRENT
