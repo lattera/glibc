@@ -123,22 +123,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   return lazy;
 }
 
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-   // macro for handling PIC situation....
-#ifdef PIC
-#define CALL_ROUTINE(x) "\
-	ldr sl,0f\n\
-	add 	sl, pc, sl\n\
-1:	ldr	r2, 2f\n\
-	mov	lr, pc\n\
-	add	pc, sl, r2\n\
-	b	3f\n\
-0:	.word	_GLOBAL_OFFSET_TABLE_ - 1b - 4\n\
-2:	.word " #x "(GOTOFF)\n\
-3:	"
+#if defined(__THUMB_INTERWORK__)
+#define BX(x) "bx\t" #x
 #else
-#define CALL_ROUTINE(x) " bl " #x
+#define BX(x) "mov\tpc, " #x
 #endif
 
 #ifndef PROF
@@ -153,8 +141,11 @@ _dl_runtime_resolve:\n\
 	@	ip contains &GOT[n+3] (pointer to function)\n\
 	@	lr points to &GOT[2]\n\
 \n\
-	@ save almost everything; lr is already on the stack\n\
-	stmdb	sp!,{r0-r3,sl,fp}\n\
+	@ stack arguments\n\
+	stmdb	sp!,{r0-r3}\n\
+\n\
+	@ get pointer to linker struct\n\
+	ldr	r0, [lr, #-4]\n\
 \n\
 	@ prepare to call fixup()\n\
 	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each\n\
@@ -162,20 +153,17 @@ _dl_runtime_resolve:\n\
 	sub	r1, r1, #4\n\
 	add	r1, r1, r1\n\
 \n\
-	@ get pointer to linker struct\n\
-	ldr	r0, [lr, #-4]\n\
-\n\
 	@ call fixup routine\n\
-	" CALL_ROUTINE(fixup) "\n\
+	bl	fixup\n\
 \n\
 	@ save the return\n\
 	mov	ip, r0\n\
 \n\
-	@ restore the stack\n\
-	ldmia	sp!,{r0-r3,sl,fp,lr}\n\
+	@ get arguments and return address back\n\
+	ldmia	sp!, {r0-r3,lr}\n\
 \n\
 	@ jump to the newly found address\n\
-	mov	pc, ip\n\
+	" BX(ip) "\n\
 \n\
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
 \n\
@@ -183,8 +171,11 @@ _dl_runtime_resolve:\n\
 	.type _dl_runtime_profile, #function\n\
 	.align 2\n\
 _dl_runtime_profile:\n\
-	@ save almost everything; lr is already on the stack\n\
-	stmdb	sp!,{r0-r3,sl,fp}\n\
+	@ stack arguments\n\
+	stmdb	sp!, {r0-r3}\n\
+\n\
+	@ get pointer to linker struct\n\
+	ldr	r0, [lr, #-4]\n\
 \n\
 	@ prepare to call fixup()\n\
 	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each\n\
@@ -192,20 +183,17 @@ _dl_runtime_profile:\n\
 	sub	r1, r1, #4\n\
 	add	r1, r1, r1\n\
 \n\
-	@ get pointer to linker struct\n\
-	ldr	r0, [lr, #-4]\n\
-\n\
 	@ call profiling fixup routine\n\
-	" CALL_ROUTINE(profile_fixup) "\n\
+	bl	profile_fixup\n\
 \n\
 	@ save the return\n\
 	mov	ip, r0\n\
 \n\
-	@ restore the stack\n\
-	ldmia	sp!,{r0-r3,sl,fp,lr}\n\
+	@ get arguments and return address back\n\
+	ldmia	sp!, {r0-r3,lr}\n\
 \n\
 	@ jump to the newly found address\n\
-	mov	pc, ip\n\
+	" BX(ip) "\n\
 \n\
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
 	.previous\n\
@@ -225,8 +213,11 @@ _dl_runtime_profile:\n\
 	@	ip contains &GOT[n+3] (pointer to function)\n\
 	@	lr points to &GOT[2]\n\
 \n\
-	@ save almost everything; return add is already on the stack\n\
-	stmdb	sp!,{r0-r3,sl,fp}\n\
+	@ stack arguments\n\
+	stmdb	sp!, {r0-r3}\n\
+\n\
+	@ get pointer to linker struct\n\
+	ldr	r0, [lr, #-4]\n\
 \n\
 	@ prepare to call fixup()\n\
 	@ change &GOT[n+3] into 8*n        NOTE: reloc are 8 bytes each\n\
@@ -234,20 +225,17 @@ _dl_runtime_profile:\n\
 	sub	r1, r1, #4\n\
 	add	r1, r1, r1\n\
 \n\
-	@ get pointer to linker struct\n\
-	ldr	r0, [lr, #-4]\n\
-\n\
 	@ call profiling fixup routine\n\
-	" CALL_ROUTINE(fixup) "\n\
+	bl	fixup\n\
 \n\
 	@ save the return\n\
 	mov	ip, r0\n\
 \n\
-	@ restore the stack\n\
-	ldmia	sp!,{r0-r3,sl,fp,lr}\n\
+	@ get arguments and return address back\n\
+	ldmia	sp!, {r0-r3,lr}\n\
 \n\
 	@ jump to the newly found address\n\
-	mov	pc, ip\n\
+	" BX(ip) "\n\
 \n\
 	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
 	.previous\n\
