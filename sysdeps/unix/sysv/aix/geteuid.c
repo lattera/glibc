@@ -17,9 +17,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <unistd.h>
-/* is there a reason *NOT* to include <sys/id.h>? If so #define ID_EFFECTIVE */
-#include <sys/id.h>
-
 
 uid_t
 __geteuid (void)
