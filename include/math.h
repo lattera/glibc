@@ -9,17 +9,21 @@ extern int __finite_internal (double __value)
      __attribute__ ((__const__)) attribute_hidden;
 extern int __finitef_internal (float __value)
      __attribute__ ((__const__)) attribute_hidden;
-extern int __finitel_internal (long double __value)
-     __attribute__ ((__const__)) attribute_hidden;
 
 extern int __isinf_internal (double __value)
      __attribute__ ((__const__)) attribute_hidden;
-extern int __isinfl_internal (long double __value)
-     __attribute__ ((__const__)) attribute_hidden;
 extern int __isnan_internal (double __value)
+     __attribute__ ((__const__)) attribute_hidden;
+
+#ifndef __NO_LONG_DOUBLE_MATH
+extern int __finitel_internal (long double __value)
+     __attribute__ ((__const__)) attribute_hidden;
+
+extern int __isinfl_internal (long double __value)
      __attribute__ ((__const__)) attribute_hidden;
 extern int __isnanl_internal (long double __value)
      __attribute__ ((__const__)) attribute_hidden;
+#endif
 
 #if !defined NOT_IN_libc || defined IS_IN_libm
 # undef isfinite

@@ -1,3 +1,23 @@
+2002-04-15  H.J. Lu  <hjl@gnu.org>
+
+	* include/math.h (__finitel_internal): Declare only if
+	__NO_LONG_DOUBLE_MATH is not defined.
+	(__isinfl_internal): Likewise.
+	(__isnanl_internal): Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add __connect_internal.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __chown_internal and
+	__fcntl_internal.
+
+	* sysdeps/unix/sysv/linux/fxstat.c (__fxstat64_internal): Added.
+	* sysdeps/unix/sysv/linux/lxstat.c (__lxstat64_internal): Added.
+
 2002-04-15  Bruno Haible  <bruno@clisp.org>
 
 	* iconvdata/armscii-8.c (BODY for FROM_LOOP): Fix array access.

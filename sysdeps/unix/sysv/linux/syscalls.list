@@ -60,3 +60,6 @@ swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
 uselib		EXTRA	uselib		i:s	uselib
 wait4		-	wait4		i:iWiP	__wait4		wait4
+
+chown		-	chown		i:sii	__chown_internal __chown chown
+fcntl		-	fcntl		i:iiF	__libc_fcntl	__fcntl_internal __fcntl fcntl

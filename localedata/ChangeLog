@@ -1,3 +1,18 @@
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/IBM856: New file.
+	* charmaps/IBM922: New file.
+	* charmaps/IBM1124: New file.
+	* charmaps/IBM1129: New file.
+	* charmaps/IBM1160: New file.
+	* charmaps/IBM1161: New file.
+	* charmaps/IBM1132: New file.
+	* charmaps/IBM1133: New file.
+	* charmaps/IBM1162: New file.
+	* charmaps/IBM1163: New file.
+	* charmaps/IBM1164: New file.
+	* charmaps/ARMSCII-8: New file.
+
 2002-04-14  Wolfram Gloger  <wg@malloc.de>
 
 	* tests-mbwc/tst_types.h: Increase MONSIZE.

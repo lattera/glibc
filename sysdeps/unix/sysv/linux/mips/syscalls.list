@@ -16,7 +16,7 @@ s_sigsuspend	sigsuspend sigsuspend	i:p	__syscall_sigsuspend
 #
 accept		-	accept		i:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		i:ipi	__libc_connect	__connect connect
+connect		-	connect		i:ipi	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt

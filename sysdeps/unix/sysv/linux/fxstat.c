@@ -20,9 +20,11 @@
 /* Ho hum, if xstat == xstat64 we must get rid of the prototype or gcc
    will complain since they don't strictly match.  */
 #define __fxstat64 __fxstat64_disable
+#define __fxstat64_internal __fxstat64_internal_disable
 
 #include <errno.h>
 #include <stddef.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <kernel_stat.h>
 
@@ -57,6 +59,7 @@ INTDEF(__fxstat)
 weak_alias (__fxstat, _fxstat);
 #ifdef XSTAT_IS_XSTAT64
 #undef __fxstat64
+#undef __fxstat64_internal
 strong_alias (__fxstat, __fxstat64);
 INTDEF(__fxstat64)
 #endif
