@@ -1094,7 +1094,7 @@ example because these are designed to provide information for debugging
 @comment signal.h
 @comment GNU
 @deftypefun sighandler_t sysv_signal (int @var{signum}, sighandler_t @var{action})
-The @code{sysv_signal} implements the behaviour of the standard
+The @code{sysv_signal} implements the behavior of the standard
 @code{signal} function as found on SVID systems.  The difference to BSD
 systems is that the handler is deinstalled after a delivery of a signal.
 

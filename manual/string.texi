@@ -688,15 +688,15 @@ this case there is no null terminator written into @var{to}.
 
 If the length of @var{from} is less than @var{size}, then @code{stpncpy}
 copies all of @var{from}, followed by enough null characters to add up
-to @var{size} characters in all.  This behaviour is rarely useful, but it
-is implemented to be useful in contexts where this behaviour of the
+to @var{size} characters in all.  This behavior is rarely useful, but it
+is implemented to be useful in contexts where this behavior of the
 @code{strncpy} is used.  @code{stpncpy} returns a pointer to the
 @emph{first} written null character.
 
 This function is not part of ISO or POSIX but was found useful while
 developing the GNU C Library itself.
 
-Its behaviour is undefined if the strings overlap.  The function is
+Its behavior is undefined if the strings overlap.  The function is
 declared in @file{string.h}.
 @end deftypefun
 
@@ -714,15 +714,15 @@ written into @var{wto}.
 
 If the length of @var{wfrom} is less than @var{size}, then @code{wcpncpy}
 copies all of @var{wfrom}, followed by enough null characters to add up
-to @var{size} characters in all.  This behaviour is rarely useful, but it
-is implemented to be useful in contexts where this behaviour of the
+to @var{size} characters in all.  This behavior is rarely useful, but it
+is implemented to be useful in contexts where this behavior of the
 @code{wcsncpy} is used.  @code{wcpncpy} returns a pointer to the
 @emph{first} written null character.
 
 This function is not part of ISO or POSIX but was found useful while
 developing the GNU C Library itself.
 
-Its behaviour is undefined if the strings overlap.
+Its behavior is undefined if the strings overlap.
 
 @code{wcpncpy} is a GNU extension and is declared in @file{wchar.h}.
 @end deftypefun
@@ -1278,7 +1278,7 @@ than the other one; else the comparison behaves normally.
 
 @smallexample
 strverscmp ("no digit", "no digit")
-    @result{} 0    /* @r{same behaviour as strcmp.} */
+    @result{} 0    /* @r{same behavior as strcmp.} */
 strverscmp ("item#99", "item#100")
     @result{} <0   /* @r{same prefix, but 99 < 100.} */
 strverscmp ("alpha1", "alpha001")

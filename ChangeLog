@@ -1,3 +1,8 @@
+2001-05-21  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/ld-collate.c (handle_ellipsis): Fix message.
+	Patch by Philipp Thomas <pthomas@suse.de>.
+
 2001-05-17  Bruce Mitchener  <bruce@cubik.org>
 
 	* manual/arpg.texi: Spelling, misc fixes.

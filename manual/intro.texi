@@ -442,8 +442,8 @@ been redefined by the user.  Some library facilities, such as those for
 dealing with variadic arguments (@pxref{Variadic Functions})
 and non-local exits (@pxref{Non-Local Exits}), actually require a
 considerable amount of cooperation on the part of the C compiler, and
-implementationally it might be easier for the compiler to treat these as
-built-in parts of the language.
+with respect to the implementation, it might be easier for the compiler
+to treat these as built-in parts of the language.
 @end itemize
 
 In addition to the names documented in this manual, reserved names

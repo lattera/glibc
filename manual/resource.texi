@@ -220,7 +220,7 @@ limit.
 
 @pindex sys/resource.h
 The symbols for use with @code{getrlimit}, @code{setrlimit},
-@code{getrlimit64}, and @code{seterlimit64} are defined in
+@code{getrlimit64}, and @code{setrlimit64} are defined in
 @file{sys/resource.h}.
 
 @comment sys/resource.h
@@ -574,7 +574,7 @@ The higher the number, the higher the absolute priority.
 On systems of the past, and most systems today, all processes have
 absolute priority 0 and this section is irrelevant.  In that case,
 @xref{Traditional Scheduling}.  Absolute priorities were invented to
-accomodate realtime systems, in which it is vital that certain processes
+accommodate realtime systems, in which it is vital that certain processes
 be able to respond to external events happening in real time, which
 means they cannot wait around while some other process that @emph{wants
 to}, but doesn't @emph{need to} run occupies the CPU.
@@ -594,7 +594,7 @@ for something like I/O, its absolute priority is irrelevant.
 
 When two processes are running or ready to run and both have the same
 absolute priority, it's more interesting.  In that case, who gets the
-CPU is determined by the scheduling policy.  If the processeses have
+CPU is determined by the scheduling policy.  If the processes have
 absolute priority 0, the traditional scheduling policy described in
 @ref{Traditional Scheduling} applies.  Otherwise, the policies described
 in @ref{Realtime Scheduling} apply.
@@ -656,8 +656,8 @@ the high priority process group.  All the priority in the world won't
 stop an interrupt handler from running and delivering a signal to the
 process if you hit Control-C.
 
-Some systems use absolute priority as a means of allocating a fixed per
-centage of CPU time to a process.  To do this, a super high priority
+Some systems use absolute priority as a means of allocating a fixed 
+percentage of CPU time to a process.  To do this, a super high priority
 privileged process constantly monitors the process' CPU usage and raises
 its absolute priority when the process isn't getting its entitled share
 and lowers it when the process is exceeding it.
@@ -787,7 +787,7 @@ for a process.
 It assigns the absolute priority value given by @var{param} and the
 scheduling policy @var{policy} to the process with Process ID @var{pid},
 or the calling process if @var{pid} is zero.  If @var{policy} is
-negative, @code{sched_setschedule} keeps the existing scheduling policy.
+negative, @code{sched_setscheduler} keeps the existing scheduling policy.
 
 The following macros represent the valid values for @var{policy}:
 
@@ -1021,7 +1021,7 @@ function, so there are no specific @code{errno} values.
 
 This section is about the scheduling among processes whose absolute
 priority is 0.  When the system hands out the scraps of CPU time that
-are left over after the processes with higher absolulte priority have
+are left over after the processes with higher absolute priority have
 taken all they want, the scheduling described herein determines who
 among the great unwashed processes gets them.
 
@@ -1035,7 +1035,7 @@ among the great unwashed processes gets them.
 
 Long before there was absolute priority (See @ref{Absolute Priority}),
 Unix systems were scheduling the CPU using this system.  When Posix came
-in like the Romans and imposed absolute priorities to accomodate the
+in like the Romans and imposed absolute priorities to accommodate the
 needs of realtime processing, it left the indigenous Absolute Priority
 Zero processes to govern themselves by their own familiar scheduling
 policy.

@@ -88,7 +88,7 @@ is treated specially.  It permits arguments that are not options to be
 returned as if they were associated with option character @samp{\1}.
 
 @item
-POSIX demands the following behaviour: The first non-option stops option
+POSIX demands the following behavior: The first non-option stops option
 processing.  This mode is selected by either setting the environment
 variable @code{POSIXLY_CORRECT} or beginning the @var{options} argument
 string with a plus sign (@samp{+}).

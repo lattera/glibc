@@ -112,7 +112,7 @@ follow these examples: @code{INT32_MAX}, @code{UINT8_MAX},
 @code{INTMAX_MAX}, @code{INTMAX_MIN}.  Note that there are no macros for
 unsigned integer minima.  These are always zero.
 @cindex maximum possible integer
-@cindex mininum possible integer
+@cindex minimum possible integer
 
 There are similar macros for use with C's built in integer types which
 should come with your C compiler.  These are described in @ref{Data Type

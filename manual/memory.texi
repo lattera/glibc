@@ -810,7 +810,7 @@ track down.
 
 There is one problem with @code{MALLOC_CHECK_}: in SUID or SGID binaries
 it could possibly be exploited since diverging from the normal programs
-behaviour it now writes something to the standard error desriptor.
+behavior it now writes something to the standard error descriptor.
 Therefore the use of @code{MALLOC_CHECK_} is disabled by default for
 SUID and SGID binaries.  It can be enabled again by the system
 administrator by adding a file @file{/etc/suid-debug} (the content is
@@ -971,7 +971,7 @@ my_malloc_hook (size_t size, const void *caller)
   __free_hook = old_free_hook;
   /* Call recursively */
   result = malloc (size);
-  /* Save underlaying hooks */
+  /* Save underlying hooks */
   old_malloc_hook = __malloc_hook;
   old_free_hook = __free_hook;
   /* @r{@code{printf} might call @code{malloc}, so protect it too.} */
@@ -990,7 +990,7 @@ my_free_hook (void *ptr, const void *caller)
   __free_hook = old_free_hook;
   /* Call recursively */
   free (ptr);
-  /* Save underlaying hooks */
+  /* Save underlying hooks */
   old_malloc_hook = __malloc_hook;
   old_free_hook = __free_hook;
   /* @r{@code{printf} might call @code{free}, so protect it too.} */
@@ -1166,7 +1166,7 @@ variable named @code{MALLOC_TRACE}.  This variable is supposed to
 contain a valid file name.  The user must have write access.  If the
 file already exists it is truncated.  If the environment variable is not
 set or it does not name a valid file which can be opened for writing
-nothing is done.  The behaviour of @code{malloc} etc. is not changed.
+nothing is done.  The behavior of @code{malloc} etc. is not changed.
 For obvious reasons this also happens if the application is installed
 with the SUID or SGID bit set.
 
@@ -1185,7 +1185,7 @@ systems.  The prototype can be found in @file{mcheck.h}.
 @comment GNU
 @deftypefun void muntrace (void)
 The @code{muntrace} function can be called after @code{mtrace} was used
-to enable tracing the @code{malloc} calls.  If no (succesful) call of
+to enable tracing the @code{malloc} calls.  If no (successful) call of
 @code{mtrace} was made @code{muntrace} does nothing.
 
 Otherwise it deinstalls the handlers for @code{malloc}, @code{realloc},
@@ -1200,7 +1200,7 @@ systems.  The prototype can be found in @file{mcheck.h}.
 @subsubsection Example program excerpts
 
 Even though the tracing functionality does not influence the runtime
-behaviour of the program it is not a good idea to call @code{mtrace} in
+behavior of the program it is not a good idea to call @code{mtrace} in
 all programs.  Just imagine that you debug a program using @code{mtrace}
 and all other programs used in the debugging session also trace their
 @code{malloc} calls.  The output file would be the same for all programs
@@ -2622,7 +2622,7 @@ executed this function and specified @code{MCL_CURRENT}, any system call
 by the process that requires space be added to its virtual address space
 fails with @code{errno} = @code{ENOMEM} if locking the additional space
 would cause the process to exceed its locked page limit.  In the case
-that the address space addition that can't be accomodated is stack
+that the address space addition that can't be accommodated is stack
 expansion, the stack expansion fails and the kernel sends a
 @code{SIGSEGV} signal to the process.
 

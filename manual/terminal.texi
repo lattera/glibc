@@ -1734,12 +1734,12 @@ The @var{filedes} is not associated with a terminal device.
 The @code{tcdrain} function waits until all queued
 output to the terminal @var{filedes} has been transmitted.
 
-This function is a cancelation point in multi-threaded programs.  This
+This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
 descriptors, semaphores or whatever) at the time @code{tcdrain} is
 called.  If the thread gets canceled these resources stay allocated
 until the program ends.  To avoid this calls to @code{tcdrain} should be
-protected using cancelation handlers.
+protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The return value is normally zero.  In the event of an error, a value
@@ -1964,11 +1964,11 @@ error conditions are defined for this function:
 @item EBADF
 The @var{filedes} argument is not a valid file descriptor.
 
-@item ENINVAL
+@item EINVAL
 The @var{filedes} argument is not associated with a master pseudo-terminal
 device.
 
-@item EACCESS
+@item EACCES
 The slave pseudo-terminal device corresponding to the master associated
 with @var{filedes} could not be accessed.
 @end table

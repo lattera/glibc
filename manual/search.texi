@@ -557,5 +557,5 @@ Since the functions used for the @var{action} parameter to @code{twalk}
 must not modify the tree data, it is safe to run @code{twalk} in more
 than one thread at the same time, working on the same tree.  It is also
 safe to call @code{tfind} in parallel.  Functions which modify the tree
-must not be used, otherwise the behaviour is undefined.
+must not be used, otherwise the behavior is undefined.
 @end deftypefun

@@ -112,19 +112,19 @@ separated list of patterns.
 
 @table @code
 @item ?(@var{pattern-list})
-The pattern matches if zero or one occurences of any of the patterns
+The pattern matches if zero or one occurrences of any of the patterns
 in the @var{pattern-list} allow matching the input string.
 
 @item *(@var{pattern-list})
-The pattern matches if zero or more occurences of any of the patterns
+The pattern matches if zero or more occurrences of any of the patterns
 in the @var{pattern-list} allow matching the input string.
 
 @item +(@var{pattern-list})
-The pattern matches if one or more occurences of any of the patterns
+The pattern matches if one or more occurrences of any of the patterns
 in the @var{pattern-list} allow matching the input string.
 
 @item @@(@var{pattern-list})
-The pattern matches if exactly one occurence of any of the patterns in
+The pattern matches if exactly one occurrence of any of the patterns in
 the @var{pattern-list} allows matching the input string.
 
 @item !(@var{pattern-list})
@@ -376,7 +376,7 @@ It was impossible to allocate memory to hold the result.
 In the event of an error, @code{glob} stores information in
 @code{*@var{vector-ptr}} about all the matches it has found so far.
 
-It is important to notive that the @code{glob} function will not fail if
+It is important to notice that the @code{glob} function will not fail if
 it encounters directories or files which cannot be handled without the
 LFS interfaces.  The implementation of @code{glob} is supposed to use
 these functions internally.  This at least is the assumptions made by
@@ -548,7 +548,7 @@ there is one).
 
 The string between the matching braces is separated into single
 expressions by splitting at @code{,} (comma) characters.  The commas
-themself are discarded.  Please note what we said above about recursive
+themselves are discarded.  Please note what we said above about recursive
 brace expressions.  The commas used to separate the subexpressions must
 be at the same level.  Commas in brace subexpressions are not matched.
 They are used during expansion of the brace expression of the deeper

@@ -810,7 +810,7 @@ Don't print error messages for unknown options to @code{stderr}; unless
 this flag is set, @code{ARGP_PARSE_ARGV0} is ignored, as @code{argv[0]}
 is used as the program name in the error messages.  This flag implies
 @code{ARGP_NO_EXIT} (on the assumption that silent exiting upon errors
-is bad behaviour).
+is bad behavior).
 
 @comment argp.h
 @comment GNU

@@ -1246,7 +1246,7 @@ order for `%.*s' already defined at %s:%Zu"),
 		  "LC_COLLATE");
       else if (endp == NULL)
 	lr_error (ldfile, _("\
-%s: symbolic range ellipsis must not be direct followed by `order_end'"),
+%s: symbolic range ellipsis must not be directly followed by `order_end'"),
 		  "LC_COLLATE");
       else
 	{

@@ -1402,7 +1402,74 @@ not support mapping at all.  Thus, programs using @code{mmap} should
 have a fallback method to use should it fail. @xref{Mmap,,,standards,GNU
 Coding Standards}.
 
-@c XXX madvise documentation missing
+@comment sys/mman.h
+@comment POSIX
+@deftypefun int madvise (void *@var{addr}, size_t @var{length}, int @var{advice})
+
+This function can be used to provide the system with @var{advice} about
+the intended usage patterns of the memory region starting at @var{addr}
+and extending @var{length} bytes.
+
+The valid BSD values for @var{advice} are:
+
+@table @code
+
+@item MADV_NORMAL
+The region should receive no further special treatment.
+
+@item MADV_RANDOM
+The region will be accessed via random page references. The kernel
+should page-in the minimal number of pages for each page fault.
+
+@item MADV_SEQUENTIAL
+The region will be accessed via sequential page references. This
+may cause the kernel to aggressively read-ahead, expecting further
+sequential references after any page fault within this region.
+
+@item MADV_WILLNEED
+The region will be needed.  The pages within this region may
+be pre-faulted in by the kernel.
+
+@item MADV_DONTNEED
+The region is no longer needed.  The kernel may free these pages,
+causing any changes to the pages to be lost, as well as swapped
+out pages to be discarded.
+
+@end table
+
+The POSIX names are slightly different, but with the same meanings:
+
+@table @code
+
+@item POSIX_MADV_NORMAL
+This corresponds with BSD's @code{MADV_NORMAL}.
+
+@item POSIX_MADV_RANDOM
+This corresponds with BSD's @code{MADV_RANDOM}.
+
+@item POSIX_MADV_SEQUENTIAL
+This corresponds with BSD's @code{MADV_SEQUENTIAL}.
+
+@item POSIX_MADV_WILLNEED
+This corresponds with BSD's @code{MADV_WILLNEED}.
+
+@item POSIX_MADV_DONTNEED
+This corresponds with BSD's @code{MADV_DONTNEED}.
+
+@end table
+
+@code{msync} returns @math{0} for success and @math{-1} for
+error.  Errors include:
+@table @code
+
+@item EINVAL
+An invalid region was given, or the @var{advice} was invalid.
+
+@item EFAULT
+There is no existing mapping in at least part of the given region.
+
+@end table
+@end deftypefun
 
 @node Waiting for I/O
 @section Waiting for Input or Output

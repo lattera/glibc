@@ -374,7 +374,7 @@ This function is declared in @file{stdio_ext.h}.
 
 @cindex closing a stream
 When a stream is closed with @code{fclose}, the connection between the
-stream and the file is cancelled.  After you have closed a stream, you
+stream and the file is canceled.  After you have closed a stream, you
 cannot perform any additional operations on it.
 
 @comment stdio.h
@@ -439,7 +439,7 @@ and implementation of many stream functions is heavily influenced by the
 requirements added by multi-threaded programming.
 
 The POSIX standard requires that by default the stream operations are
-atomic.  I.e., issueing two stream operations for the same stream in two
+atomic.  I.e., issuing two stream operations for the same stream in two
 threads at the same time will cause the operations to be executed as if
 they were issued sequentially.  The buffer operations performed while
 reading or writing are protected from other uses of the same stream.  To
@@ -570,7 +570,7 @@ with the name without the suffix except that they are not locking the
 stream.  Using these functions is very desirable since they are
 potentially much faster.  This is not only because the locking
 operation itself is avoided.  More importantly, functions like
-@code{putc} and @code{getc} are very simple and tradionally (before the
+@code{putc} and @code{getc} are very simple and traditionally (before the
 introduction of threads) were implemented as macros which are very fast
 if the buffer is not empty.  With locking required these functions are
 now no macros anymore (the code generated would be too much).  But these
@@ -1655,7 +1655,7 @@ systems.  The GNU C library has no real limit.
 @end defvr
 
 If any of the formats has a specification for the parameter position all
-of them in the format string shall have one.  Otherwise the behaviour is
+of them in the format string shall have one.  Otherwise the behavior is
 undefined.
 
 @item
@@ -2387,7 +2387,7 @@ address of a @code{char *} object, and @code{asprintf} stores a pointer
 to the newly allocated string at that location.
 
 The return value is the number of characters allocated for the buffer, or
-less than zero if an error occured. Usually this means that the buffer
+less than zero if an error occurred. Usually this means that the buffer
 could not be allocated.
 
 Here is how to use @code{asprintf} to get the same result as the
@@ -5227,7 +5227,7 @@ Ignore @var{tag} parameter.
 
 There is another way certain fields can be omitted from the output to
 standard error.  This is described below in the description of
-environment variables influencing the behaviour.
+environment variables influencing the behavior.
 
 The @var{severity} parameter can have one of the values in the following
 table:
@@ -5275,7 +5275,7 @@ all outputs fail this last value is also returned if a parameter value
 is incorrect.
 @end deftypefun
 
-There are two environment variables which influence the behaviour of
+There are two environment variables which influence the behavior of
 @code{fmtmsg}.  The first is @code{MSGVERB}.  It is used to control the
 output actually happening on standard error (@emph{not} the console
 output).  Each of the five fields can explicitly be enabled.  To do
@@ -5292,9 +5292,9 @@ Valid @var{keyword}s are @code{label}, @code{severity}, @code{text},
 or is the empty string, a not supported keyword is given or the value is
 somehow else invalid, no part of the message is masked out.
 
-The second environment variable which influences the behaviour of
+The second environment variable which influences the behavior of
 @code{fmtmsg} is @code{SEV_LEVEL}.  This variable and the change in the
-behaviour of @code{fmtmsg} is not specified in the X/Open Portability
+behavior of @code{fmtmsg} is not specified in the X/Open Portability
 Guide.  It is available in System V systems, though.  It can be used to
 introduce new severity levels.  By default, only the five severity levels
 described above are available.  Any other numeric value would make
@@ -5373,7 +5373,7 @@ The second call to @code{fmtmsg} illustrates a use of this function as
 it usually occurs on System V systems, which heavily use this function.
 It seems worthwhile to give a short explanation here of how this system
 works on System V.  The value of the
-@var{label} field (@code{UX:cat}) says that the error occured in the
+@var{label} field (@code{UX:cat}) says that the error occurred in the
 Unix program @code{cat}.  The explanation of the error follows and the
 value for the @var{action} parameter is @code{"refer to manual"}.  One
 could be more specific here, if necessary.  The @var{tag} field contains,

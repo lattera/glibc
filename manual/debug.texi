@@ -46,9 +46,9 @@ and is at most @var{size}.
 The pointers placed in @var{buffer} are actually return addresses
 obtained by inspecting the stack, one return address per stack frame.
 
-Note that certain compiler optimisations may interfere with obtaining a
+Note that certain compiler optimizations may interfere with obtaining a
 valid backtrace.  Function inlining causes the inlined function to not
-have a stack frame; tail call optimisation replaces one stack frame with
+have a stack frame; tail call optimization replaces one stack frame with
 another; frame pointer elimination will stop @code{backtrace} from
 interpreting the stack contents correctly.
 @end deftypefun

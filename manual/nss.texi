@@ -487,7 +487,7 @@ the next three arguments are:
 pointer to buffer where the result is stored.  @code{STRUCT_TYPE} is
 normally a struct which corresponds to the database.
 @item char *buffer
-pointer to a buffer where the function can store additional adata for
+pointer to a buffer where the function can store additional data for
 the result etc.
 @item size_t buflen
 length of the buffer pointed to by @var{buffer}.
@@ -541,7 +541,7 @@ Modules using the old interface will still be usable.
 
 Developers of a new service will have to make sure that their module is
 created using the correct interface number.  This means the file itself
-must have the correct name and on ElF systems the @dfn{soname} (Shared
+must have the correct name and on ELF systems the @dfn{soname} (Shared
 Object Name) must also have this number.  Building a module from a bunch
 of object files on an ELF system using GNU CC could be done like this:
 
@@ -650,7 +650,7 @@ If there is additional data to return (say strings, where the
 @var{buffer} or length @var{buflen}.  There must not be any references
 to non-constant global data.
 
-The implementation of this function should honour the @var{stayopen}
+The implementation of this function should honor the @var{stayopen}
 flag set by the @code{set@var{DB}ent} function whenever this makes sense.
 
 Before the function returns the implementation should store the value of

@@ -774,7 +774,7 @@ The symbols in this section are declared in @file{sys/mount.h}.
 @deftypefun {int} mount (const char *@var{special_file}, const char *@var{dir}, const char *@var{fstype}, unsigned long int @var{options}, const void *@var{data})
 
 @code{mount} mounts or remounts a filesystem.  The two operations are
-quite different and are merged rather unnnaturally into this one function.
+quite different and are merged rather unnaturally into this one function.
 The @code{MS_REMOUNT} option, explained below, determines whether
 @code{mount} mounts or remounts.
 
@@ -946,7 +946,7 @@ The supposed filesystem has an invalid superblock.
 
 @end itemize
 
-@item EACCESS
+@item EACCES
 @itemize @bullet
 
 @item
@@ -1140,7 +1140,7 @@ The process is not permitted to access one of the components of the
 path of the system parameter or is not permitted to access the system parameter
 itself in the way (read or write) that it requested.
 @c There is some indication in the Linux 2.2 code that the code is trying to
-@c return EACCESS here, but the EACCESS value never actually makes it to the
+@c return EACCES here, but the EACCES value never actually makes it to the
 @c user.
 @item ENOTDIR
 There is no system parameter corresponding to @var{name}.

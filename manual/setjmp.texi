@@ -272,7 +272,7 @@ the content of the registers, the signal mask, and the current stack.
 Executing the contents would start at the point where the
 @code{getcontext} call just returned.
 
-The function returns @code{0} if succesful.  Otherwise it returns
+The function returns @code{0} if successful.  Otherwise it returns
 @code{-1} and sets @var{errno} accordingly.
 @end deftypefun
 

@@ -839,7 +839,7 @@ An IPv4 Internet host address is a number containing four bytes of data.
 Historically these are divided into two parts, a @dfn{network number} and a
 @dfn{local network address number} within that network.  In the
 mid-1990s classless addresses were introduced which changed this
-behaviour.  Since some functions implicitly expect the old definitions,
+behavior.  Since some functions implicitly expect the old definitions,
 we first describe the class-based network and will then describe
 classless addresses.  IPv6 uses only classless addresses and therefore
 the following paragraphs don't apply.
@@ -1789,7 +1789,7 @@ The process already has too many file descriptors open.
 @item ENFILE
 The system already has too many file descriptors open.
 
-@item EACCESS
+@item EACCES
 The process does not have the privilege to create a socket of the specified
 @var{style} or @var{protocol}.
 

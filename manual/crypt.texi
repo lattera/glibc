@@ -9,7 +9,7 @@ authentication; for instance, a workstation which is not connected to a
 network probably does not need any user authentication, because to use
 the machine an intruder must have physical access.
 
-Sometimes, however, it is necessary to be sure that a user is authorised
+Sometimes, however, it is necessary to be sure that a user is authorized
 to use some service a machine provides---for instance, to log in as a
 particular user id (@pxref{Users and Groups}).  One traditional way of
 doing this is for each user to choose a secret @dfn{password}; then, the
@@ -45,7 +45,7 @@ to provide a definitive survey of the laws affecting cryptography.
 Instead, this section warns you of some of the known trouble spots; this
 may help you when you try to find out what the laws of your country are.
 
-Some countries require that you have a licence to use, posess, or import
+Some countries require that you have a licence to use, possess, or import
 cryptography.  These countries are believed to include Byelorussia,
 Burma, India, Indonesia, Israel, Kazakhstan, Pakistan, Russia, and Saudi
 Arabia.
@@ -203,13 +203,13 @@ header @file{crypt.h}.
 The Data Encryption Standard is described in the US Government Federal
 Information Processing Standards (FIPS) 46-3 published by the National
 Institute of Standards and Technology.  The DES has been very thoroughly
-analysed since it was developed in the late 1970s, and no new
+analyzed since it was developed in the late 1970s, and no new
 significant flaws have been found.
 
 However, the DES uses only a 56-bit key (plus 8 parity bits), and a
 machine has been built in 1998 which can search through all possible
 keys in about 6 days, which cost about US$200000; faster searches would
-be possible with more money.  This makes simple DES unsecure for most
+be possible with more money.  This makes simple DES insecure for most
 purposes, and NIST no longer permits new US government systems
 to use simple DES.
 
@@ -261,7 +261,7 @@ stored in a @code{char}, but there are no parity bits in @var{block}.
 These are reentrant versions of @code{setkey} and @code{encrypt}.  The
 only difference is the extra parameter, which stores the expanded
 version of @var{key}.  Before calling @code{setkey_r} the first time,
-@code{data->initialised} must be cleared to zero.
+@code{data->initialized} must be cleared to zero.
 @end deftypefun
 
 The @code{setkey_r} and @code{encrypt_r} functions are GNU extensions.

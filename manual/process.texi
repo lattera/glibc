@@ -66,12 +66,12 @@ status code can be interpreted.
 If the @var{command} argument is a null pointer, a return value of zero
 indicates that no command processor is available.
 
-This function is a cancelation point in multi-threaded programs.  This
+This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
 descriptors, semaphores or whatever) at the time @code{system} is
 called.  If the thread gets canceled these resources stay allocated
 until the program ends.  To avoid this calls to @code{system} should be
-protected using cancelation handlers.
+protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 @pindex stdlib.h
@@ -492,12 +492,12 @@ processes as well as processes that have terminated.
 The status information from the child process is stored in the object
 that @var{status-ptr} points to, unless @var{status-ptr} is a null pointer.
 
-This function is a cancelation point in multi-threaded programs.  This
+This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
 descriptors, semaphores or whatever) at the time @code{waitpid} is
 called.  If the thread gets canceled these resources stay allocated
 until the program ends.  To avoid this calls to @code{waitpid} should be
-protected using cancelation handlers.
+protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The return value is normally the process ID of the child process whose
@@ -579,12 +579,12 @@ is exactly equivalent to:
 waitpid (-1, &status, 0)
 @end smallexample
 
-This function is a cancelation point in multi-threaded programs.  This
+This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
 descriptors, semaphores or whatever) at the time @code{wait} is
 called.  If the thread gets canceled these resources stay allocated
 until the program ends.  To avoid this calls to @code{wait} should be
-protected using cancelation handlers.
+protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 @end deftypefun
 
