@@ -1,3 +1,8 @@
+2004-11-17  Randolph Chung  <tausq@debian.org>
+
+	* sysdeps/hppa/dl-machine.h (TRAMPOLINE_TEMPLATE): Add unwind
+	annotations.
+
 2004-11-18  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #544]

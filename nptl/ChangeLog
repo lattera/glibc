@@ -1,3 +1,8 @@
+2004-11-18  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tls.h (DB_THREAD_SELF): Set the correct bias
+	parameter to REGISTER macro.
+
 2004-11-17  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/timer_routines.c (__start_helper_thread):
