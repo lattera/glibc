@@ -1,3 +1,23 @@
+2004-01-26  David Mosberger  <davidm@hpl.hp.com>
+
+	* elf/link.h (struct dl_phdr_info): Fix typo in comment.
+	* elf/rtld.c (dl_main): After incrementing dl_nloaded, also
+	increment dl_load_adds.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Replace GL(dl_load_subs)
+	with equivalent GL(dl_load_adds - GL(dl_nloaded).
+	(dl_iterate_phdr): Likewise.
+	* elf/dl-close.c (_dl_close): Delete increment of GL(dl_load_subs).
+	* elf/dl-support.c: Remove global variable _dl_load_subs.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Remove
+	_dl_load_subs member.
+
+2004-01-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (_dl_start_final): Don't set l_relro_* here.
+	(_dl_start): And neither here.
+	(dl_main): Set GL(dl_loaded)->l_relro_* and
+	GL(dl_rtld_map)->l_relro_*.
+
 2004-01-23  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add members

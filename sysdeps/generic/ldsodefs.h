@@ -267,8 +267,6 @@ struct rtld_global
 
   /* Incremented whenever something may have been added to dl_loaded.  */
   EXTERN unsigned long long _dl_load_adds;
-  /* Incremented whenever something may have been removed from dl_loaded.  */
-  EXTERN unsigned long long _dl_load_subs;
 
 #ifndef MAP_ANON
   /* File descriptor referring to the zero-fill device.  */

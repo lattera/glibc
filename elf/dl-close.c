@@ -319,7 +319,6 @@ _dl_close (void *_map)
   /* Notify the debugger we are about to remove some loaded objects.  */
   _r_debug.r_state = RT_DELETE;
   _dl_debug_state ();
-  ++GL(dl_load_subs);
 
 #ifdef USE_TLS
   size_t tls_free_start;

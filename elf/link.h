@@ -103,7 +103,7 @@ struct dl_phdr_info
 
     /* Note: the next two members were introduced after the first
        version of this structure was available.  Check the SIZE
-       argument pass to the dl_iterate_phdr() callback to determine
+       argument passed to the dl_iterate_phdr() callback to determine
        whether or not they are provided.  */
 
     /* Incremented when a new object may have been added.  */

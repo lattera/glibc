@@ -224,8 +224,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   memcpy (GL(dl_rtld_map).l_info, info->l.l_info,
 	  sizeof GL(dl_rtld_map).l_info);
   GL(dl_rtld_map).l_mach = info->l.l_mach;
-  GL(dl_rtld_map).l_relro_addr = info->l.l_relro_addr;
-  GL(dl_rtld_map).l_relro_size = info->l.l_relro_size;
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_opencount = 1;
@@ -351,17 +349,16 @@ _dl_start (void *arg)
      on the `l_addr' value, which is not the value we want when prelinked.  */
 #if USE___THREAD
   dtv_t initdtv[3];
-#endif	/* USE___THREAD */
   ElfW(Ehdr) *ehdr
 # ifdef DONT_USE_BOOTSTRAP_MAP
     = (ElfW(Ehdr) *) &_begin;
 # else
+#  error This will not work with prelink.
     = (ElfW(Ehdr) *) bootstrap_map.l_addr;
 # endif
   ElfW(Phdr) *phdr = (ElfW(Phdr) *) ((void *) ehdr + ehdr->e_phoff);
   size_t cnt = ehdr->e_phnum;	/* PT_TLS is usually the last phdr.  */
   while (cnt-- > 0)
-#if USE___THREAD
     if (phdr[cnt].p_type == PT_TLS)
       {
 	void *tlsblock;
@@ -456,14 +453,11 @@ _dl_start (void *arg)
 
 	/* So far this is module number one.  */
 	bootstrap_map.l_tls_modid = 1;
+
+	/* There can only be one PT_TLS entry.  */
+	break;
       }
-    else
 #endif	/* USE___THREAD */
-      if (phdr[cnt].p_type == PT_GNU_RELRO)
-	{
-	  bootstrap_map.l_relro_addr = phdr[cnt].p_vaddr;
-	  bootstrap_map.l_relro_size = phdr[cnt].p_memsz;
-	}
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
@@ -958,6 +952,11 @@ of this helper program; chances are you did not intend to run this program.\n\
       case PT_GNU_STACK:
 	GL(dl_stack_flags) = ph->p_flags;
 	break;
+
+      case PT_GNU_RELRO:
+	GL(dl_loaded)->l_relro_addr = ph->p_vaddr;
+	GL(dl_loaded)->l_relro_size = ph->p_memsz;
+	break;
       }
 #ifdef USE_TLS
     /* Adjust the address of the TLS initialization image in case
@@ -1020,6 +1019,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   GL(dl_loaded)->l_next = &GL(dl_rtld_map);
   GL(dl_rtld_map).l_prev = GL(dl_loaded);
   ++GL(dl_nloaded);
+  ++GL(dl_load_adds);
 
   /* If LD_USE_LOAD_BIAS env variable has not been seen, default
      to not using bias for non-prelinked PIEs and libraries
@@ -1030,9 +1030,20 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* Set up the program header information for the dynamic linker
      itself.  It is needed in the dl_iterate_phdr() callbacks.  */
   ElfW(Ehdr) *rtld_ehdr = (ElfW(Ehdr) *) GL(dl_rtld_map).l_map_start;
-  GL(dl_rtld_map).l_phdr = (ElfW(Phdr) *) (GL(dl_rtld_map).l_map_start
-					   + rtld_ehdr->e_phoff);
+  ElfW(Phdr) *rtld_phdr = (ElfW(Phdr) *) (GL(dl_rtld_map).l_map_start
+					  + rtld_ehdr->e_phoff);
+  GL(dl_rtld_map).l_phdr = rtld_phdr;
   GL(dl_rtld_map).l_phnum = rtld_ehdr->e_phnum;
+
+  /* PT_GNU_RELRO is usually the last phdr.  */
+  size_t cnt = rtld_ehdr->e_phnum;
+  while (cnt-- > 0)
+    if (rtld_phdr[cnt].p_type == PT_GNU_RELRO)
+      {
+	GL(dl_rtld_map).l_relro_addr = rtld_phdr[cnt].p_vaddr;
+	GL(dl_rtld_map).l_relro_size = rtld_phdr[cnt].p_memsz;
+	break;
+      }
 
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The latter can also

@@ -49,7 +49,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
       info.dlpi_phdr = l->l_phdr;
       info.dlpi_phnum = l->l_phnum;
       info.dlpi_adds = GL(dl_load_adds);
-      info.dlpi_subs = GL(dl_load_subs);
+      info.dlpi_subs = GL(dl_load_adds) - GL(dl_nloaded);
       ret = callback (&info, sizeof (struct dl_phdr_info), data);
       if (ret)
 	break;
@@ -87,7 +87,7 @@ dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
       info.dlpi_phdr = _dl_phdr;
       info.dlpi_phnum = _dl_phnum;
       info.dlpi_adds = GL(dl_load_adds);
-      info.dlpi_subs = GL(dl_load_subs);
+      info.dlpi_subs = GL(dl_load_adds) - GL(dl_nloaded);
       ret = (*callback) (&info, sizeof (struct dl_phdr_info), data);
       if (ret)
 	return ret;
