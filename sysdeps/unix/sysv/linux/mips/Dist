@@ -6,6 +6,7 @@ entry.h
 regdef.h
 fpregdef.h
 sgidefs.h
+xstatconv.c
 sys/acct.h
 sys/asm.h
 sys/cachectl.h
