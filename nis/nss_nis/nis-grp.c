@@ -64,7 +64,7 @@ _nss_nis_setgrent (int stayopen)
 }
 /* Make _nss_nis_endgrent an alias of _nss_nis_setgrent.  We do this
    even though the prototypes don't match.  The argument of setgrent
-   is used so this makes no difference.  */
+   is not used so this makes no difference.  */
 strong_alias (_nss_nis_setgrent, _nss_nis_endgrent)
 
 static enum nss_status

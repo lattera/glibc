@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -21,7 +21,11 @@
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
+/* The following is an ugly trick to avoid a prototype declaration for
+   _nss_nis_endspent.  */
+#define _nss_nis_endspent _nss_nis_endspent_XXX
 #include <shadow.h>
+#undef _nss_nis_endspent
 #include <bits/libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
@@ -47,35 +51,18 @@ _nss_nis_setspent (int stayopen)
   __libc_lock_lock (lock);
 
   new_start = 1;
-  if (oldkey != NULL)
-    {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
-    }
+  free (oldkey);
+  oldkey = NULL;
+  oldkeylen = 0;
 
   __libc_lock_unlock (lock);
 
   return NSS_STATUS_SUCCESS;
 }
-
-enum nss_status
-_nss_nis_endspent (void)
-{
-  __libc_lock_lock (lock);
-
-  new_start = 1;
-  if (oldkey != NULL)
-    {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
-    }
-
-  __libc_lock_unlock (lock);
-
-  return NSS_STATUS_SUCCESS;
-}
+/* Make _nss_nis_endspent an alias of _nss_nis_setspent.  We do this
+   even though the prototypes don't match.  The argument of setspent
+   is not used so this makes no difference.  */
+strong_alias (_nss_nis_setspent, _nss_nis_endspent)
 
 static enum nss_status
 internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen,

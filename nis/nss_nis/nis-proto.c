@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998, 2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -78,6 +78,19 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
   return 0;
 }
 
+static void
+internal_nis_endprotoent (void)
+{
+  while (start != NULL)
+    {
+      if (start->val != NULL)
+        free (start->val);
+      next = start;
+      start = start->next;
+      free (next);
+    }
+}
+
 static enum nss_status
 internal_nis_setprotoent (void)
 {
@@ -87,15 +100,7 @@ internal_nis_setprotoent (void)
 
   yp_get_default_domain (&domainname);
 
-  while (start != NULL)
-    {
-      if (start->val != NULL)
-        free (start->val);
-      next = start;
-      start = start->next;
-      free (next);
-    }
-  start = NULL;
+  internal_nis_endprotoent ();
 
   ypcb.foreach = saveit;
   ypcb.data = NULL;
@@ -124,15 +129,7 @@ _nss_nis_endprotoent (void)
 {
   __libc_lock_lock (lock);
 
-  while (start != NULL)
-    {
-      if (start->val != NULL)
-        free (start->val);
-      next = start;
-      start = start->next;
-      free (next);
-    }
-  start = NULL;
+  internal_nis_endprotoent ();
   next = NULL;
 
   __libc_lock_unlock (lock);

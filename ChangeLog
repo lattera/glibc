@@ -1,3 +1,23 @@
+2003-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-spwd.c: Make _nss_nis_endspent an alias of
+	_nss_nis_setspent.  Work around the different prototypes.
+	* nis/nss_nis/nis-rpc.c (internal_nis_setrpcent): Use
+	internal_nis_endrpcent.
+	(internal_nis_endrpcent): Change return type to void.  Change callers.
+	* nis/nss_nis/nis-pwd.c: Make _nss_nis_endpwent an alias of
+	_nss_nis_setpwent.  Work around the different prototypes.
+	* nis/nss_nis/nis-proto.c (_nss_nis_endprotoent): Split out body
+	of the function to...
+	(internal_nis_endprotoent): ... here.  New function.
+	(internal_nis_setprotoent): Use internal_nis_endprotoent.
+	* nis/nss_nis/nis-network.c: Make _nss_nis_endnetent an alias of
+	_nss_nis_setnetent.  Work around the different prototypes.
+	* nis/nss_nis/nis-netgrp.c (_nss_nis_endnetgrent): Split out body
+	of the function to...
+	(internal_nis_endnetgrent): ... here.  New function.
+	(_nss_nis_setnetgrent): Use internal_nis_endnetgrent.
+
 2003-01-19  Jim Meyering  <jim@meyering.net>
 
 	* time/strftime.c: (widen): Merge nearly-identical definitions.

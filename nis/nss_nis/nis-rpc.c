@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -86,6 +86,19 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
   return 0;
 }
 
+static void
+internal_nis_endrpcent (intern_t *intern)
+{
+  while (intern->start != NULL)
+    {
+      if (intern->start->val != NULL)
+        free (intern->start->val);
+      intern->next = intern->start;
+      intern->start = intern->start->next;
+      free (intern->next);
+    }
+}
+
 static enum nss_status
 internal_nis_setrpcent (intern_t *intern)
 {
@@ -96,15 +109,7 @@ internal_nis_setrpcent (intern_t *intern)
   if (yp_get_default_domain (&domainname))
     return NSS_STATUS_UNAVAIL;
 
-  while (intern->start != NULL)
-    {
-      if (intern->start->val != NULL)
-        free (intern->start->val);
-      intern->next = intern->start;
-      intern->start = intern->start->next;
-      free (intern->next);
-    }
-  intern->start = NULL;
+  internal_nis_endrpcent (intern);
 
   ypcb.foreach = saveit;
   ypcb.data = (char *)intern;
@@ -128,34 +133,16 @@ _nss_nis_setrpcent (int stayopen)
   return status;
 }
 
-static enum nss_status
-internal_nis_endrpcent (intern_t *intern)
-{
-  while (intern->start != NULL)
-    {
-      if (intern->start->val != NULL)
-        free (intern->start->val);
-      intern->next = intern->start;
-      intern->start = intern->start->next;
-      free (intern->next);
-    }
-  intern->start = NULL;
-
-  return NSS_STATUS_SUCCESS;
-}
-
 enum nss_status
 _nss_nis_endrpcent (void)
 {
-  enum nss_status status;
-
   __libc_lock_lock (lock);
 
-  status = internal_nis_endrpcent (&intern);
+  internal_nis_endrpcent (&intern);
 
   __libc_lock_unlock (lock);
 
-  return status;
+  return NSS_STATUS_SUCCESS;
 }
 
 static enum nss_status
