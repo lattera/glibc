@@ -1,3 +1,9 @@
+2002-12-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-fork2 and tst-fork3.
+	* tst-fork2.c: New file.
+	* tst-fork3.c: New file.
+
 2002-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: New file.

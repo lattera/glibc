@@ -124,7 +124,7 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-basic1 tst-basic2 \
 	tst-join1 tst-join2 tst-join3 \
 	tst-tsd1 tst-tsd2 \
-	tst-fork1 \
+	tst-fork1 tst-fork2 tst-fork3 \
 	tst-atfork1 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 \
 	tst-flock1 tst-flock2 \

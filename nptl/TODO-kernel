@@ -10,8 +10,9 @@
 
 - getppid(() must return process ID of parent process of the thread
   group leader
-  + test syscall
-  + test core file content (psinfo)
+  + test core file content (psinfo, prstatus)
+    The question is: do we really want this?  The "wrong" information
+    actually provides some information one cannot get easily otherwise.
 
 - rlimit should be process-wide and SIGXCPU should be sent if all threads
   together exceed the limit
