@@ -39,13 +39,13 @@ extern ssize_t __pread64_chk (int __fd, void *__buf, size_t __nbytes,
   (__bos0 (buf) != (size_t) -1						      \
    && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
    ? __pread64_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
-   : pread (fd, buf, offset, nbytes))
+   : pread (fd, buf, nbytes, offset))
 # else
 #  define pread(fd, buf, nbytes, offset) \
   (__bos0 (buf) != (size_t) -1						      \
    && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
    ? __pread_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
-   : pread (fd, buf, offset, nbytes))
+   : pread (fd, buf, nbytes, offset))
 # endif
 
 # ifdef __USE_LARGEFILE64
@@ -53,7 +53,7 @@ extern ssize_t __pread64_chk (int __fd, void *__buf, size_t __nbytes,
   (__bos0 (buf) != (size_t) -1						      \
    && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
    ? __pread64_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
-   : pread64 (fd, buf, offset, nbytes))
+   : pread64 (fd, buf, nbytes, offset))
 # endif
 #endif
 

@@ -1,3 +1,7 @@
+2005-03-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/unistd.h (pread, pread64): Don't swap function arguments.
+
 2005-03-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #776]
