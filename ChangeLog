@@ -4,6 +4,23 @@
 
 2003-12-30  Paul Eggert  <eggert@twinsun.com>
 
+	* time/mktime.c: (my_mktime_localtime_r):
+	Remove.  All uses changed to __localtime_r.
+	(__localtime_r) [!defined _LIBC]: New macro.  Include "time_r.h" to
+	get its implementation.
+	Fix compile-command to allow for TIME_R_POSIX.
+
+	* time/strftime.c (my_strftime_gmtime_r, my_strftime_localtime_r):
+	Remove.  All uses changed to __localtime_r and __gmtime_r.
+	(__gmtime_r, __localtime_r) [!HAVE_TM_GMTOFF]: New macros.
+	Include "time_r.h" to get their implementations.
+
+	* time/timegm.c: Allow use in GNU applications outside glibc.
+	[defined HAVE_CONFIG_H]: Include <config.h>.
+	[!defined _LIBC]: Include "timegm.h", <time_r.h>.
+	Define __gmtime_r, and declare __mktime_internal.
+	(timegm): Define via a prototype, since we can safely assume C89 now.
+
 	* time/mktime.c (check_result): Use less-confusing report format.
 	"long" -> "long int", as per usual GNU style.
 	(main): Likewise.

@@ -167,44 +167,22 @@ extern char *tzname[];
 
 
 #ifdef _LIBC
-# define my_strftime_gmtime_r __gmtime_r
-# define my_strftime_localtime_r __localtime_r
 # define tzname __tzname
 # define tzset __tzset
-#else
+#endif
 
-/* If we're a strftime substitute in a GNU program, then prefer gmtime
-   to gmtime_r, since many gmtime_r implementations are buggy.
-   Similarly for localtime_r.  */
-
-# if ! HAVE_TM_GMTOFF
-static struct tm *my_strftime_gmtime_r __P ((const time_t *, struct tm *));
-static struct tm *
-my_strftime_gmtime_r (t, tp)
-     const time_t *t;
-     struct tm *tp;
-{
-  struct tm *l = gmtime (t);
-  if (! l)
-    return 0;
-  *tp = *l;
-  return tp;
-}
-# endif /* ! HAVE_TM_GMTOFF */
-
-static struct tm *my_strftime_localtime_r __P ((const time_t *, struct tm *));
-static struct tm *
-my_strftime_localtime_r (t, tp)
-     const time_t *t;
-     struct tm *tp;
-{
-  struct tm *l = localtime (t);
-  if (! l)
-    return 0;
-  *tp = *l;
-  return tp;
-}
-#endif /* ! defined _LIBC */
+#if !HAVE_TM_GMTOFF
+/* Portable standalone applications should supply a "time_r.h" that
+   declares a POSIX-compliant localtime_r, for the benefit of older
+   implementations that lack localtime_r or have a nonstandard one.
+   Similarly for gmtime_r.  See the gnulib time_r module for one way
+   to implement this.  */
+# include "time_r.h"
+# undef __gmtime_r
+# undef __localtime_r
+# define __gmtime_r gmtime_r
+# define __localtime_r localtime_r
+#endif
 
 
 #if !defined memset && !defined HAVE_MEMSET && !defined _LIBC
@@ -1388,7 +1366,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 		       occurred.  */
 		    struct tm tm;
 
-		    if (! my_strftime_localtime_r (&lt, &tm)
+		    if (! __localtime_r (&lt, &tm)
 			|| ((ltm.tm_sec ^ tm.tm_sec)
 			    | (ltm.tm_min ^ tm.tm_min)
 			    | (ltm.tm_hour ^ tm.tm_hour)
@@ -1398,7 +1376,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 		      break;
 		  }
 
-		if (! my_strftime_gmtime_r (&lt, &gtm))
+		if (! __gmtime_r (&lt, &gtm))
 		  break;
 
 		diff = tm_diff (&ltm, &gtm);

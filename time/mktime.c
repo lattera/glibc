@@ -84,22 +84,15 @@ const unsigned short int __mon_yday[2][13] =
   };
 
 
-#ifdef _LIBC
-# define my_mktime_localtime_r __localtime_r
-#else
-/* If we're a mktime substitute in a GNU program, then prefer
-   localtime to localtime_r, since many localtime_r implementations
-   are buggy.  */
-static struct tm *
-my_mktime_localtime_r (const time_t *t, struct tm *tp)
-{
-  struct tm *l = localtime (t);
-  if (! l)
-    return 0;
-  *tp = *l;
-  return tp;
-}
-#endif /* ! _LIBC */
+#ifndef _LIBC
+/* Portable standalone applications should supply a "time_r.h" that
+   declares a POSIX-compliant localtime_r, for the benefit of older
+   implementations that lack localtime_r or have a nonstandard one.
+   See the gnulib time_r module for one way to implement this.  */
+# include "time_r.h"
+# undef __localtime_r
+# define __localtime_r localtime_r
+#endif
 
 
 /* Yield the difference between (YEAR-YDAY HOUR:MIN:SEC) and (*TP),
@@ -188,9 +181,6 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
    Use *OFFSET to keep track of a guess at the offset of the result,
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.  */
-#ifndef _LIBC
-static
-#endif
 time_t
 __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
@@ -376,7 +366,7 @@ mktime (struct tm *tp)
   __tzset ();
 #endif
 
-  return __mktime_internal (tp, my_mktime_localtime_r, &localtime_offset);
+  return __mktime_internal (tp, __localtime_r, &localtime_offset);
 }
 
 #ifdef weak_alias
@@ -525,6 +515,6 @@ main (int argc, char **argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG -Wall -W -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -DHAVE_TIME_R_POSIX -Wall -W -O -g mktime.c -o mktime"
 End:
 */
