@@ -129,7 +129,7 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() 							      \
-  ({ void *_dtv;							      \
+  ({ dtv_t *_dtv;							      \
      asm ("movl %%gs:%P1,%0" : "=q" (_dtv) : "i" (offsetof (tcbhead_t, dtv)));\
      _dtv; })
 
