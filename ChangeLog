@@ -1,5 +1,7 @@
 2001-03-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex.c: Remove unnecessary ifs.
+
 	* math/bits/mathcalls.h: Remove infnan declaration.
 
 2001-03-29  H.J. Lu  <hjl@gnu.org>
