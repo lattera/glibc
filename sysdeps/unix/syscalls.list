@@ -1,0 +1,54 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+access		-	access		2	__access	access
+acct		-	acct		1	acct
+chdir		-	chdir		1	__chdir		chdir
+chmod		-	chmod		2	__chmod		chmod
+chown		-	chown		3	__chown		chown
+chroot		-	chroot		1	chroot
+close		-	close		1	__close		close
+dup		-	dup		2	__dup		dup
+dup2		-	dup2		2	__dup2	dup2
+fchdir		-	fchdir		1	fchdir
+fcntl		-	fcntl		3	__fcntl		fcntl
+fsync		-	fsync		1	fsync
+getdomain	-	getdomainname	2	getdomainname
+getgid		-	getgid		0	__getgid	getgid
+getgroups	-	getgroups	2	__getgroups	getgroups
+getitimer	-	getitimer	2	__getitimer	getitimer
+getpid		-	getpid		0	__getpid	getpid
+getpriority	-	getpriority	2	getpriority
+getrlimit	-	getrlimit	2	getrlimit
+getuid		-	getuid		0	__getuid	getuid
+ioctl		-	ioctl		3	__ioctl		ioctl
+kill		-	kill		2	__kill		kill
+link		-	link		2	__link		link
+lseek		-	lseek		3	__lseek		lseek
+mkdir		-	mkdir		2	__mkdir	mkdir
+open		-	open		3	__open		open
+profil		-	profil		4	profil
+ptrace		-	ptrace		4	ptrace
+read		-	read		3	__read		read
+readlink	-	readlink	3	__readlink	readlink
+readv		-	readv		3	readv
+reboot		-	reboot		1	reboot
+rename		-	rename		2	rename
+rmdir		-	rmdir		1	__rmdir	rmdir
+select		-	select		5	__select	select
+setdomain	-	setdomainname	2	setdomainname
+setgid		-	setgid		1	__setgid	setgid
+setgroups	-	setgroups	2	setgroups
+setitimer	-	setitimer	3	__setitimer	setitimer
+setpriority	-	setpriority	3	setpriority
+setrlimit	-	setrlimit	2	setrlimit
+setuid		-	setuid		1	__setuid	setuid
+swapon		-	swapon		1	swapon
+symlink		-	symlink		2	__symlink	symlink
+sync		-	sync		0	sync
+sys_fstat	fxstat	fstat		2	__syscall_fstat
+sys_mknod	xmknod	mknod		3	__syscall_mknod
+sys_stat	xstat	stat		2	__syscall_stat
+umask		-	umask		1	__umask		umask
+unlink		-	unlink		1	__unlink	unlink
+write		-	write		3	__write		write
+writev		-	writev		3	writev

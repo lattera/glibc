@@ -1,0 +1,12 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+chflags		-	chflags		2	chflags
+fchflags	-	fchflags	2	fchflags
+getdents	-	getdirentries	4	__getdirentries	getdirentries
+revoke		-	revoke		1	revoke
+setegid		-	setegid		1	setegid
+seteuid		-	seteuid		1	seteuid
+setlogin	-	setlogin	2	setlogin
+setsid		-	setsid		0	__setsid	setsid
+sigaltstack	-	sigaltstack	2	sigaltstack
+wait4		-	wait4		4	__wait4		wait4

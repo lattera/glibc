@@ -1,0 +1,13 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+flock		-	flock		2	__flock		flock
+getdtsz		-	getdtablesize	0	__getdtablesize	getdtablesize
+getpagesize	-	getpagesize	0	__getpagesize	getpagesize
+killpg		-	killpg		2	killpg
+settimeofday	-	settimeofday	2	__settimeofday	settimeofday
+sigblock	-	sigblock	1	__sigblock	sigblock
+sigpause	-	sigpause	1	__sigpause	sigpause
+sigsetmask	-	sigsetmask	1	__sigsetmask	sigsetmask
+sigstack	-	sigstack	2	sigstack
+sigvec		-	sigvec		3	__sigvec	sigvec
+utimes		-	utimes		2	__utimes	utimes

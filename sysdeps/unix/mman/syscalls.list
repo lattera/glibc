@@ -1,0 +1,7 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+madvise		-	madvise		3	madvise
+mmap		-	mmap		5	__mmap		mmap
+mprotect	-	mprotect	3	mprotect
+msync		-	msync		2	msync
+munmap		-	munmap		2	__munmap	munmap

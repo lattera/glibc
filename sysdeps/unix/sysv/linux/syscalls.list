@@ -1,0 +1,22 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+adjtimex	adjtime	adjtimex	1	__adjtimex
+fork		-	fork		0	__fork		fork
+getpgid		-	getpgid		1	getpgid
+getpgrp		-	getpgrp		0	getpgrp
+getsid		-	getsid		1	getsid
+gtty		-	gtty		2	gtty
+mlock		-	mlock		2	__mlock	mlock
+mlockall	-	mlockall	1	__mlockall	mlockall
+mount		-	mount		5	__mount	mount
+munlock		-	munlock		2	__munlock	munlock
+munlockall	-	munlockall	0	__munlockall	munlockall
+pipe		-	pipe		1	__pipe	pipe
+s_ptrace	ptrace	ptrace		4	__syscall_ptrace
+setpgid		-	setpgid		2	setpgid
+setsid		-	setsid		0	__setsid	setsid
+settimeofday	-	settimeofday	2	__settimeofday	settimeofday
+sigpending	-	sigpending	1	sigpending
+stty		-	stty		2	stty
+umount		-	umount		1	__umount	umount
+wait4		-	wait4		4	__wait4		wait4

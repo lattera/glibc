@@ -1,0 +1,15 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+adjtime		-	adjtime		2	__adjtime	adjtime
+fchmod		-	fchmod		2	__fchmod	fchmod
+fchown		-	fchown		3	__fchown	fchown
+ftruncate	-	ftruncate	2	ftruncate
+getpgid		-	getpgrp		1	__getpgid	getpgid
+getrusage	-	getrusage	2	__getrusage	getrusage
+gettimeofday	-	gettimeofday	2	__gettimeofday	gettimeofday
+setpgid		-	setpgrp		2	__setpgid	setpgid setpgrp
+setregid	-	setregid	2	__setregid	setregid
+setreuid	-	setreuid	2	__setreuid	setreuid
+sys_lstat	lxstat	lstat		2	__syscall_lstat
+truncate	-	truncate	2	truncate
+vhangup		-	vhangup		1	vhangup

@@ -1,0 +1,23 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+accept		-	accept		3	accept
+bind		-	bind		3	bind
+connect		-	connect		3	connect
+gethostid	-	gethostid	0	gethostid
+gethostname	-	gethostname	2	__gethostname	gethostname
+getpeername	-	getpeername	3	getpeername
+getsockname	-	getsockname	3	getsockname
+getsockopt	-	getsockopt	5	getsockopt
+listen		-	listen		2	listen
+recv		-	recv		4	recv
+recvfrom	-	recvfrom	6	recvfrom
+recvmsg		-	recvmsg		3	recvmsg
+send		-	send		4	send
+sendmsg		-	sendmsg		3	sendmsg
+sendto		-	sendto		6	sendto
+sethostid	-	sethostid	1	sethostid
+sethostname	-	sethostname	2	sethostname
+setsockopt	-	setsockopt	5	setsockopt
+shutdown	-	shutdown	2	shutdown
+socket		-	socket		3	socket
+socketpair	-	socketpair	4	socketpair

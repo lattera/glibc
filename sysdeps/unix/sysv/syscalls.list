@@ -1,0 +1,15 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+alarm		-	alarm		1	alarm
+ftime		-	ftime		1	ftime
+nice		-	nice		1	nice
+pause		-	pause		0	pause
+poll		-	poll		3	poll
+s_getdents	getdents getdents	3	__getdents
+signal		-	signal		2	signal
+stime		-	stime		1	stime
+time		-	time		1	time
+times		-	times		1	__times	times
+ulimit		-	ulimit		2	ulimit
+uname		-	uname		1	uname
+utime		-	utime		2	utime
