@@ -20,7 +20,7 @@
 #define HAVE_WEAK_SYMBOLS
 #endif
 #endif
-
+/*  */
 /* These symbols might be defined by some sysdeps configures.  */
 
 /* sysdeps/generic/configure.in */

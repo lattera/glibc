@@ -1,3 +1,7 @@
+Tue Feb 21 11:50:37 1995  Brendan Kehoe  (brendan@zen.org)
+
+	* config.h.in: Put comment around ^L to pacify Solaris as here too.
+
 Tue Feb 21 00:10:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* string/Makefile (distribute): Add pagecopy.h.
