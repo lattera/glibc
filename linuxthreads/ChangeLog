@@ -1,6 +1,13 @@
+2001-07-16  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile (before-compile): Don't add $(objpfx)crti.o.
+	(omit-deps): Add crti.
+	($(objpfx)libpthread.so): Depend on $(objpfx)crti.o, but make sure
+	it is filtered out of the link command.
+
 2001-07-16  Ulrich Drepper  <drepper@redhat.com>
 
-	* pthread.c (pthread_initialize): For FLOATING_STACKS do't bother
+	* pthread.c (pthread_initialize): For FLOATING_STACKS don't bother
 	to find the right value for __pthread_initial_thread_bos, it's not
 	used.  If not FLOATING_STACKS first run
 	__pthread_init_max_stacksize.

@@ -51,8 +51,8 @@ CFLAGS-tst-cancel.c = -fno-inline
 include ../Makeconfig
 
 ifeq ($(build-shared),yes)
-before-compile := $(objpfx)crti.o
-extra-objs = crti.o
+extra-objs += crti.o
+omit-deps += crti
 
 CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
 endif
@@ -69,6 +69,8 @@ endif
 include ../Rules
 
 extra-B-pthread.so = -B$(common-objpfx)linuxthreads/
+$(objpfx)libpthread.so: $(objpfx)crti.o
+$(objpfx)libpthread.so: +preinit += $(objpfx)crti.o
 
 znodelete-yes = -DHAVE_Z_NODELETE
 CFLAGS-mutex.c += -D__NO_WEAK_PTHREAD_ALIASES
