@@ -107,6 +107,8 @@ please let me know.
 	before `_IO_seekoff'").  How should I fix this?
 2.30.	After upgrading to glibc 2.1, libraries that were compiled against
 	glibc 2.0.x don't work anymore.
+2.31.	What happened to the Berkeley DB libraries?  Can I still use db
+	in /etc/nsswitch.conf?
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -137,6 +139,8 @@ please let me know.
 3.13.	When using the db-2 library which comes with glibc is used in
 	the Perl db modules the testsuite is not passed.  This did not
 	happen with db-1, gdbm, or ndbm.
+
+Removed.  Does not apply anymore.
 3.14.	The pow() inline function I get when including <math.h> is broken.
 	I get segmentation faults when I run the program.
 3.15.	The sys/sem.h file lacks the definition of `union semun'.
@@ -150,6 +154,8 @@ please let me know.
 	libc5.  What can be done?
 3.20.	Programs compiled with glibc 2.1 can't read db files made with glibc
 	2.0.  What has changed that programs like rpm break?
+
+Removed.  Does not apply anymore.
 3.21.	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
 	when I try to use it, it always returns -1 and sets errno to ENOSYS.
 3.22.	My program segfaults when I call fclose() on the FILE* returned
@@ -915,7 +921,7 @@ necessary conversion and calls to create those files.  The file is
 `db-Makefile' in the subdirectory `nss' and you can call it with `make -f
 db-Makefile'.  Please note that not all services are capable of using a
 database.  Currently passwd, group, ethers, protocol, rpc, services shadow
-and netgroup are implemented.
+and netgroup are implemented.  See also question question 2.31.
 
 
 2.17.	I have /usr/include/net and /usr/include/scsi as symlinks
@@ -1162,6 +1168,31 @@ installed by glibc 2.1 in your include directory.
 	glibc 2.0.x don't work anymore.
 
 {AJ} See question 2.27.
+
+
+2.31.	What happened to the Berkeley DB libraries?  Can I still use db
+	in /etc/nsswitch.conf?
+
+{AJ} Due to too many incompatible changes in disk layout and API of Berkeley
+DB and a too tight coupling of libc and libdb, the db library has been
+removed completely from glibc 2.2.  The only place that really used the
+Berkeley DB was the NSS db module.
+
+The NSS db module has been rewritten to support a number of different
+versions of Berkeley DB for the NSS db module.  Currently the releases 2.x
+and 3.x of Berkeley DB are supported.  The older db 1.85 library is not
+supported.  You can use the version from glibc 2.1.x or download a version
+from Sleepycat Software (http://www.sleepycat.com).  The library has to be
+compiled as shared library and installed in the system lib directory
+(normally /lib).  The library needs to have a special soname to be found by
+the NSS module.
+
+If public structures change in a new Berkeley db release, this needs to be
+reflected in glibc.
+
+Currently the code searches for libraries with a soname of "libdb.so.3"
+(that's the name from db 2.4.14 which comes with glibc 2.1.x) and
+"libdb-3.0.so" (the name used by db 3.0.55 as default).
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -1469,10 +1500,9 @@ completely.
 	the Perl db modules the testsuite is not passed.  This did not
 	happen with db-1, gdbm, or ndbm.
 
-{MK} Db-2 does not support zero-sized keys.  The Perl testsuite
-tests the support for zero-sized keys and therefore fails when db-2 is
-used.  The Perl folks are looking for a solution, but thus far have
-not found a satisfactory one.
+Removed.  Does not apply anymore.
+
+
 
 
 3.14.	The pow() inline function I get when including <math.h> is broken.
@@ -1570,17 +1600,9 @@ benchmark program for measuring disk access).
 3.20.	Programs compiled with glibc 2.1 can't read db files made with glibc
 	2.0.  What has changed that programs like rpm break?
 
-{AJ} The GNU C library 2.1 uses db2 instead of db1 which was used in version
-2.0.  The internal formats of the actual db files are different.  To convert
-the db files from db1 format to db2 format, you can use the programs
-`db_dump185' and `db_load'.  Alternativly programs can be linked with db1
-using `-ldb1' instead of linking with db2 which uses `-ldb'.  Linking with
-db1 might be preferable if older programs need to access the db file.
+Removed.  Does not apply anymore.
 
-db2 supports the old db1 programming interface and also a new programming
-interface.  For compilation with the old API, <db_185.h> has to be included
-(and not <db.h>) and you can link with either `-ldb1' or `-ldb' for either
-of the db formats.
+
 
 
 3.21.	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
@@ -1676,7 +1698,7 @@ reading the POSIX standards.
 <http://www.gnu.org/software/libc/>.  The problem data base of open and
 solved bugs in GNU libc is available at
 <http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  Eric Green has written
-a HowTo for converting from Linux libc5 to glibc2.  The HowTo is accessable
+a HowTo for converting from Linux libc5 to glibc2.  The HowTo is accessible
 via the FSF page and at <http://www.imaxx.net/~thrytis/glibc>.  Frodo
 Looijaard describes a different way installing glibc2 as secondary libc at
 <http://huizen.dds.nl/~frodol/glibc>.
@@ -1755,7 +1777,7 @@ Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
 {RM} Roland McGrath, <roland@gnu.org>
-{AJ} Andreas Jaeger, <aj@arthur.rhein-neckar.de>
+{AJ} Andreas Jaeger, <aj@suse.de>
 {EY} Eric Youngdale, <eric@andante.jic.com>
 {PB} Phil Blundell, <Philip.Blundell@pobox.com>
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>

@@ -247,8 +247,9 @@ FCT (pattern, string, no_leading_period, flags)
 		  return FNM_NOMATCH;
 		else
 		  {
+		    c = FOLD (c);
 		  normal_bracket:
-		    if (FOLD (c) == fn)
+		    if (c == fn)
 		      goto matched;
 
 		    cold = c;
@@ -257,14 +258,26 @@ FCT (pattern, string, no_leading_period, flags)
 		    if (c == L('-') && *p != L(']'))
 		      {
 			/* It is a range.  */
+			CHAR lo[2];
+			CHAR fc[2];
 			UCHAR cend = *p++;
 			if (!(flags & FNM_NOESCAPE) && cend == L('\\'))
 			  cend = *p++;
 			if (cend == L('\0'))
 			  return FNM_NOMATCH;
 
-			if (cold <= fn && fn <= FOLD (cend))
-			  goto matched;
+			lo[0] = cold;
+			lo[1] = L('\0');
+			fc[0] = fn;
+			fc[1] = L('\0');
+			if (STRCOLL (lo, fc) <= 0)
+			  {
+			    CHAR hi[2];
+			    hi[0] = FOLD (cend);
+			    hi[1] = L('\0');
+			    if (STRCOLL (fc, hi) <= 0)
+			      goto matched;
+			  }
 
 			c = *p++;
 		      }

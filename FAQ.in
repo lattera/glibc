@@ -1269,6 +1269,12 @@ e.g. __ivaliduser).  If a program uses these interfaces, it's broken.  These
 internal interfaces might change between glibc releases or dropped
 completely.
 
+??	When using the db-2 library which comes with glibc is used in
+	the Perl db modules the testsuite is not passed.  This did not
+	happen with db-1, gdbm, or ndbm.
+
+Removed.  Does not apply anymore.
+
 ??	The pow() inline function I get when including <math.h> is broken.
 	I get segmentation faults when I run the program.
 
@@ -1355,6 +1361,11 @@ non thread safe versions.  The non thread safe functions have in glibc the
 suffix `_unlocked', for details check <stdio.h>.  Using `putc_unlocked' etc.
 instead of `putc' should give nearly the same speed with bonnie (bonnie is a
 benchmark program for measuring disk access).
+
+??	Programs compiled with glibc 2.1 can't read db files made with glibc
+	2.0.  What has changed that programs like rpm break?
+
+Removed.  Does not apply anymore.
 
 ??	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
 	when I try to use it, it always returns -1 and sets errno to ENOSYS.

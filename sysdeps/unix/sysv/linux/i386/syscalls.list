@@ -2,5 +2,3 @@
 
 modify_ldt	EXTRA	modify_ldt	3	__modify_ldt	modify_ldt
 vm86		-	vm86		1	__vm86		vm86
-oldgetrlimit	EXTRA	getrlimit	2	__old_getrlimit	getrlimit@GLIBC_2.0
-oldsetrlimit	EXTRA	setrlimit	2	__old_setrlimit	setrlimit@GLIBC_2.0
