@@ -141,11 +141,13 @@ ENTRY (BP_SYM (strcat))
 2:
 	/* Second step: Copy source to destination.  */
 
-	movq	%rax, %rcx	/* duplicate  */
+	movq	%rsi, %rcx	/* duplicate  */
 	andl	$7,%ecx		/* mask alignment bits */
 	movq	%rax, %rdx	/* move around */
 	jz	22f		/* aligned => start loop */
 
+	neg	%ecx		/* align to 8 bytes.  */
+	addl	$8, %ecx
 	/* Align the source pointer.  */
 21:
 	movb	(%rsi), %al	/* Fetch a byte */
