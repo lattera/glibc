@@ -897,7 +897,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (now->val.num == 0)
 	    {
 	    invalid_conversion_rate:
-	      lr_error (ldfile, _("conversion rate valze cannot be zero"));
+	      lr_error (ldfile, _("conversion rate value cannot be zero"));
 	      if (!ignore_content)
 		{
 		  monetary->conversion_rate[0] = 1;

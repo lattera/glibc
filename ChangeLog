@@ -1,5 +1,11 @@
 2000-09-04  Andreas Jaeger  <aj@suse.de>
 
+	* locale/programs/ld-monetary.c (monetary_read): Fix typo.
+	* iconv/iconv_prog.c (options): Fix typo.
+	Reported by dyky@kondara.org, closes PR libc/1885.
+
+2000-09-04  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/generic/fegetenv.c: It's __fegetenv.
         Reported by Rob Levin <lilo@transvirtual.com>.
 
