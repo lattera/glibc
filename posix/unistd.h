@@ -171,6 +171,7 @@ extern int access __P ((__const char *__name, int __type));
 #ifdef __USE_GNU
 /* Test for access to NAME using the effective UID and GID
    (as normal file operations use).  */
+extern int __euidaccess __P ((__const char *__name, int __type));
 extern int euidaccess __P ((__const char *__name, int __type));
 #endif
 

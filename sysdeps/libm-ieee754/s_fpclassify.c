@@ -29,7 +29,7 @@ __fpclassify (double x)
   u_int32_t hx, lx;
   int retval = FP_NORMAL;
 
-  GET_WORDS (hx, lx, x);
+  EXTRACT_WORDS (hx, lx, x);
   lx |= hx & 0xfffff;
   hx &= 0x7ff00000;
   if ((hx | lx) == 0)

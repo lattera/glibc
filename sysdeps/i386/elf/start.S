@@ -73,6 +73,8 @@ nofini:
 	   boundary to avoid penalties from misaligned accesses.  Thanks
 	   to Edward Seidl <seidl@janed.com> for pointing this out.  */
 	andl $0xfffffff8, %esp
+	pushl %eax		/* Push garbage because we allocate
+				   twelve more bytes.  */
 
 	pushl %eax		/* Push third argument: envp.  */
 	pushl %edx		/* Push second argument: argv.  */

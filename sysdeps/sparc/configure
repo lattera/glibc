@@ -1,0 +1,4 @@
+ # Local configure fragment for sysdeps/sparc.
+
+# The assembler on SPARC needs the -fPIC flag even when it's assembler code.
+ASFLAGS_SO = -fPIC

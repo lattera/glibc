@@ -51,6 +51,9 @@ AR = @AR@
 RANLIB = @RANLIB@
 AS = $(CC) -c
 
+# Build tool flags.
+ASFLAGS-.so = @ASFLAGS_SO@
+
 # Installation tools.
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@

@@ -240,21 +240,23 @@ main (int argc, char *argv[])
 
 	  if (! avail)
 	    {
-	      const char *locale_names[] = { "LC_COLLATE", "LC_CTYPE",
-					     "LC_MONETARY", "LC_NUMERIC",
-					     "LC_TIME", "LC_MESSAGES" };
+	      static const char *locale_names[] =
+	      {
+		"LC_COLLATE", "LC_CTYPE", "LC_MONETARY",
+		"LC_NUMERIC", "LC_TIME", "LC_MESSAGES"
+	      };
 	      char *fname;
 	      int fd;
 	      struct stat st;
 
-	      asprintf (&fname, LOCALE_PATH "/%s/%s", act_add_locdef->name,
+	      asprintf (&fname, LOCALEDIR "/%s/%s", act_add_locdef->name,
 			locale_names[cat]);
 	      fd = open (fname, O_RDONLY);
 	      if (fd == -1)
 		{
 		  free (fname);
 
-		  asprintf (&fname, LOCALE_PATH "/%s/%s/SYS_%s",
+		  asprintf (&fname, LOCALEDIR "/%s/%s/SYS_%s",
 			    act_add_locdef->name, locale_names[cat],
 			    locale_names[cat]);
 

@@ -294,8 +294,10 @@ endif
 
 # GCC can grok options after the file name, and it looks nicer that way.
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
-compile.S = $(CC) $< -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS)
-COMPILE.S = $(CC) -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS)
+compile.S = \
+  $(CC) $< -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS) $(ASFLAGS-$(suffix $@))
+COMPILE.S = \
+  $(CC) -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.s = $(filter-out -pipe,$(CC)) -c $(ASFLAGS)
 
 # We need this for the output to go in the right place.  It will default to

@@ -18,9 +18,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_LINK_H
+
 #define	_LINK_H	1
+#include <features.h>
 
 #define __need_size_t
+#define __need_NULL
 #include <stddef.h>
 
 #include <elf.h>

@@ -368,7 +368,8 @@ setlocale (int category, const char *locale)
 
 	  /* We must not simply free a global locale since we have no
 	     control over the usage.  So we mark it as un-deletable.  */
-	  newdata->usage_count = MAX_USAGE_COUNT;
+	  if (newdata->usage_count != MAX_USAGE_COUNT)
+	    newdata->usage_count = MAX_USAGE_COUNT;
 	}
 
       /* Create new composite name.  */

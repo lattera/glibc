@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -35,26 +35,81 @@
 
 __libc_lock_define_initialized (static, lock)
 
-static bool_t new_start = 1;
-static char *oldkey = NULL;
-static int oldkeylen = 0;
+struct response
+{
+  char *val;
+  struct response *next;
+};
+
+static struct response *start = NULL;
+static struct response *next = NULL;
+
+static int
+saveit (int instatus, char *inkey, int inkeylen, char *inval, 
+        int invallen, char *indata)
+{
+  if (instatus != YP_TRUE)
+    return instatus;
+
+  if (inkey && inkeylen > 0 && inval && invallen > 0)
+    {
+      if (start == NULL)
+        {
+          start = malloc (sizeof (struct response));
+          next = start;
+        }
+      else
+        {
+          next->next = malloc (sizeof (struct response));
+          next = next->next;
+        }
+      next->next = NULL;
+      next->val = malloc (invallen + 1);
+      strncpy (next->val, inval, invallen);
+      next->val[invallen] = '\0';
+    }
+  
+  return 0;
+}
+
+enum nss_status
+internal_nis_setprotoent (void)
+{
+  char *domainname;
+  struct ypall_callback ypcb;
+  
+  yp_get_default_domain (&domainname);
+  
+  while (start != NULL)
+    {
+      if (start->val != NULL)
+        free (start->val);
+      next = start;
+      start = start->next;
+      free (next);
+    }
+  start = NULL;
+  
+  ypcb.foreach = saveit;
+  ypcb.data = NULL;
+  yp_all (domainname, "protocols.bynumber", &ypcb);
+  next = start;
+  
+  return NSS_STATUS_SUCCESS;
+}
 
 enum nss_status
 _nss_nis_setprotoent (void)
 {
+  enum nss_status status;
+
   __libc_lock_lock (lock);
 
-  new_start = 1;
-  if (oldkey != NULL)
-    {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
-    }
+  status = internal_nis_setprotoent ();
 
   __libc_lock_unlock (lock);
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
@@ -62,16 +117,19 @@ _nss_nis_endprotoent (void)
 {
   __libc_lock_lock (lock);
 
-  new_start = 1;
-  if (oldkey != NULL)
+  while (start != NULL)
     {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
+      if (start->val != NULL)
+        free (start->val);
+      next = start;
+      start = start->next;
+      free (next);
     }
-
+  start = NULL;
+  next = NULL;
+  
   __libc_lock_unlock (lock);
-
+  
   return NSS_STATUS_SUCCESS;
 }
 
@@ -80,57 +138,30 @@ internal_nis_getprotoent_r (struct protoent *proto,
 			    char *buffer, size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
-  char *domain, *result, *outkey;
-  int len, keylen, parse_res;
+  int parse_res;
 
-  if (yp_get_default_domain (&domain))
-    return NSS_STATUS_UNAVAIL;
+  if (start == NULL)
+    internal_nis_setprotoent ();
 
   /* Get the next entry until we found a correct one. */
   do
     {
-      enum nss_status retval;
       char *p;
-
-      if (new_start)
-        retval = yperr2nss (yp_first (domain, "protocols.bynumber",
-                                      &outkey, &keylen, &result, &len));
-      else
-        retval = yperr2nss ( yp_next (domain, "protocols.bynumber",
-                                      oldkey, oldkeylen,
-                                      &outkey, &keylen, &result, &len));
-
-      if (retval != NSS_STATUS_SUCCESS)
-        {
-          if (retval == NSS_STATUS_TRYAGAIN)
-            __set_errno (EAGAIN);
-          return retval;
-        }
-
-      if ((size_t) (len + 1) > buflen)
-        {
-          free (result);
-          __set_errno (ERANGE);
-          return NSS_STATUS_TRYAGAIN;
-        }
-
-      p = strncpy (buffer, result, len);
-      buffer[len] = '\0';
+      
+      if (next == NULL)
+        return NSS_STATUS_NOTFOUND;
+      p = strcpy (buffer, next->val);
+      next = next->next;
+      
       while (isspace (*p))
         ++p;
-      free (result);
 
       parse_res = _nss_files_parse_protoent (p, proto, data, buflen);
       if (!parse_res && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
-
-      free (oldkey);
-      oldkey = outkey;
-      oldkeylen = keylen;
-      new_start = 0;
     }
   while (!parse_res);
-
+  
   return NSS_STATUS_SUCCESS;
 }
 

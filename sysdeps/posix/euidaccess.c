@@ -1,22 +1,21 @@
-/* euidaccess -- check if effective user id can access file
-   Copyright (C) 1990, 1991, 1995, 1996 Free Software Foundation, Inc.
+/* Check if effective user id can access file
+   Copyright (C) 1990, 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-This file is part of the GNU C Library.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
-
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Written by David MacKenzie and Torbjorn Granlund.
    Adapted for GNU C library by Roland McGrath.  */
@@ -95,6 +94,7 @@ extern int errno;
 #ifdef _LIBC
 
 #define group_member __group_member
+#define euidaccess __euidaccess
 
 #else
 
@@ -104,6 +104,14 @@ static uid_t uid;
 /* The user's real group id. */
 static gid_t gid;
 
+#ifdef HAVE_GETGROUPS
+int group_member ();
+#else
+#define group_member(gid)	0
+#endif
+
+#endif
+
 /* The user's effective user id. */
 static uid_t euid;
 
@@ -112,14 +120,6 @@ static gid_t egid;
 
 /* Nonzero if UID, GID, EUID, and EGID have valid values. */
 static int have_ids = 0;
-
-#ifdef HAVE_GETGROUPS
-int group_member ();
-#else
-#define group_member(gid)	0
-#endif
-
-#endif
 
 
 /* Return 0 if the user has permission of type MODE on file PATH;
@@ -137,9 +137,6 @@ euidaccess (path, mode)
   int granted;
 
 #ifdef	_LIBC
-  uid_t euid;
-  gid_t egid;
-
   if (! __libc_enable_secure)
     /* If we are not set-uid or set-gid, access does the same.  */
     return access (path, mode);
@@ -171,8 +168,12 @@ euidaccess (path, mode)
 
 #ifdef	_LIBC
   /* Now we need the IDs.  */
-  euid = geteuid ();
-  egid = getegid ();
+  if (have_ids == 0)
+    {
+      have_ids = 1;
+      euid = geteuid ();
+      egid = getegid ();
+    }
 #endif
 
   /* The super-user can read and write any file, and execute any file
@@ -192,6 +193,10 @@ euidaccess (path, mode)
   __set_errno (EACCESS);
   return -1;
 }
+#undef euidaccess
+#ifdef weak_alias
+weak_alias (__euidaccess, euidaccess)
+#endif
 
 #ifdef TEST
 #include <stdio.h>

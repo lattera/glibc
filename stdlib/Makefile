@@ -21,7 +21,7 @@
 #
 subdir	:= stdlib
 
-headers	:= stdlib.h alloca.h monetary.h
+headers	:= stdlib.h alloca.h monetary.h inttypes.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \

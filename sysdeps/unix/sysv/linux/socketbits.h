@@ -55,6 +55,7 @@ enum __socket_type
 #define	PF_UNSPEC	0	/* Unspecified.  */
 #define	PF_LOCAL	1	/* Local to host (pipes and file-domain).  */
 #define	PF_UNIX		PF_LOCAL /* Old BSD name for PF_LOCAL.  */
+#define	PF_FILE		PF_LOCAL /* POSIX name for PF_LOCAL.  */
 #define	PF_INET		2	/* IP protocol family.  */
 #define	PF_AX25		3	/* Amateur Radio AX.25.  */
 #define	PF_IPX		4	/* Novell Internet Protocol.  */
@@ -70,6 +71,7 @@ enum __socket_type
 #define	AF_UNSPEC	PF_UNSPEC
 #define	AF_LOCAL	PF_LOCAL
 #define	AF_UNIX		PF_UNIX
+#define	AF_FILE		PF_FILE
 #define	AF_INET		PF_INET
 #define	AF_AX25		PF_AX25
 #define	AF_IPX		PF_IPX

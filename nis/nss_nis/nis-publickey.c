@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -130,6 +130,7 @@ parse_netid_str (const char *s, uid_t *uidp, gid_t *gidp, int *gidlenp,
 		 gid_t *gidlist)
 {
   char *p;
+  int gidlen;
 
   if (!s || !isdigit (*s))
     {
@@ -162,14 +163,15 @@ parse_netid_str (const char *s, uid_t *uidp, gid_t *gidp, int *gidlenp,
 
   *gidp = (atoi (p));
 
-  *gidlenp = 0;
-#if 0
+  gidlen = 0;
+
   while ((p = strchr (p, ',')) != NULL)
     {
       p++;
-      gidlist[*gidlenp++] = atoi (p);
+      gidlist[gidlen++] = atoi (p);
     }
-#endif
+
+  *gidlenp = gidlen;
 
   return NSS_STATUS_SUCCESS;
 }

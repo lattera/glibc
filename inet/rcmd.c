@@ -326,7 +326,7 @@ again:
 		char *buffer = __alloca (buflen);
 
 		first = 0;
-		if (getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) < 0)
+		if (__getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) < 0)
 			return -1;
 
 		dirlen = strlen (pwd->pw_dir);
@@ -339,7 +339,7 @@ again:
 		 * reading an NFS mounted file system, can't read files that
 		 * are protected read/write owner only.
 		 */
-		if (euidaccess (pbuf, R_OK) != 0)
+		if (__euidaccess (pbuf, R_OK) != 0)
 		  hostf = NULL;
 		else
 		  hostf = fopen(pbuf, "r");

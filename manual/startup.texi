@@ -830,7 +830,7 @@ unsuccessful program completion in a general sense.
 
 On POSIX systems, the value of this macro is @code{1}.  On other
 systems, the value might be some other (possibly non-constant) integer
-expression.  Other nonzero status values also indicate future.  Certain
+expression.  Other nonzero status values also indicate failures.  Certain
 programs use different nonzero status values to indicate particular
 kinds of "non-success".  For example, @code{diff} uses status value
 @code{1} to mean that the files are different, and @code{2} or more to

@@ -179,14 +179,20 @@ CFLAGS-tzset.c = $(tz-cflags)
 
 # We have to make sure the data for testing the tz functions is available.
 .PHONY: install-test-data
-install-test-data: northamerica $(objpfx)zic $(leapseconds) yearistype \
-		   etcetera simplebackw
+install-test-data: $(addprefx $(objpfx)testdata/, America/New_York \
+						  Etc/UTC UTC)
+
+$(objpfx)testdata/America/New_York: $(objpfx)zic $(leapseconds) yearistype
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
 	  -y yearistype northamerica
+$(objpfx)testdata/Etc/UTC: $(objpfx)zic $(leapseconds) yearistype
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
 	  -y yearistype etcetera
+$(objpfx)testdata/UTC: $(objpfx)testdata/Etc/UTC $(objpfx)zic	\
+		       $(leapseconds) yearistype
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
 	  -y yearistype simplebackw
+
 test-tz-ENV = TZDIR=$(objpfx)testdata
 
 

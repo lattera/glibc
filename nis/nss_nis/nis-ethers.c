@@ -43,43 +43,101 @@ struct ether
 #define EXTERN_PARSER
 #include "../nss/nss_files/files-parse.c"
 
-static bool_t new_start = 1;
-static char *oldkey = NULL;
-static int oldkeylen = 0;
+struct response
+{
+  char *val;
+  struct response *next;
+};
+
+static struct response *start = NULL;
+static struct response *next = NULL;
+
+static int
+saveit (int instatus, char *inkey, int inkeylen, char *inval, 
+	int invallen, char *indata)
+{
+  if (instatus != YP_TRUE)
+    return instatus;
+
+  if (inkey && inkeylen > 0 && inval && invallen > 0)
+    {
+      if (start == NULL)
+	{
+	  start = malloc (sizeof (struct response));
+	  next = start;
+	}
+      else
+	{
+	  next->next = malloc (sizeof (struct response));
+	  next = next->next;
+	}
+      next->next = NULL;
+      next->val = malloc (invallen + 1);
+      strncpy (next->val, inval, invallen);
+      next->val[invallen] = '\0';
+    }
+  
+  return 0;
+}
 
 enum nss_status
-_nss_nis_setetherent (void)
+internal_nis_setetherent (void)
 {
-  __libc_lock_lock (lock);
-
-  new_start = 1;
-  if (oldkey != NULL)
+  char *domainname;
+  struct ypall_callback ypcb;
+  
+  yp_get_default_domain(&domainname);
+  
+  while (start != NULL)
     {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
+      if (start->val != NULL)
+	free (start->val);
+      next = start;
+      start = start->next;
+      free (next);
     }
+  start = NULL;
 
-  __libc_lock_unlock (lock);
+  ypcb.foreach = saveit;
+  ypcb.data = NULL;
+  yp_all(domainname, "ethers.byname", &ypcb);
+  next = start;
 
   return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
+_nss_nis_setetherent (void)
+{
+  enum nss_status result;
+
+  __libc_lock_lock (lock);
+
+  result = internal_nis_setetherent ();
+
+  __libc_lock_unlock (lock);
+
+  return result;
+}
+  
+enum nss_status
 _nss_nis_endetherent (void)
 {
   __libc_lock_lock (lock);
 
-  new_start = 1;
-  if (oldkey != NULL)
+  while (start != NULL)
     {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
+      if (start->val != NULL)
+	free (start->val);
+      next = start;
+      start = start->next;
+      free (next);
     }
-
+  start = NULL;
+  next = NULL;
+  
   __libc_lock_unlock (lock);
-
+  
   return NSS_STATUS_SUCCESS;
 }
 
@@ -87,54 +145,27 @@ static enum nss_status
 internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
-  char *domain, *result, *outkey;
-  int len, keylen, parse_res;
+  int parse_res;
 
-  if (yp_get_default_domain (&domain))
-    return NSS_STATUS_UNAVAIL;
+  if (start == NULL)
+    internal_nis_setetherent ();
 
   /* Get the next entry until we found a correct one. */
   do
     {
-      enum nss_status retval;
       char *p;
-
-      if (new_start)
-        retval = yperr2nss (yp_first (domain, "ethers.byaddr",
-                                      &outkey, &keylen, &result, &len));
-      else
-        retval = yperr2nss ( yp_next (domain, "ethers.byaddr",
-                                      oldkey, oldkeylen,
-                                      &outkey, &keylen, &result, &len));
-
-      if (retval != NSS_STATUS_SUCCESS)
-        {
-          if (retval == NSS_STATUS_TRYAGAIN)
-            __set_errno (EAGAIN);
-          return retval;
-        }
-
-      if ((size_t) (len + 1) > buflen)
-        {
-          free (result);
-          __set_errno (ERANGE);
-          return NSS_STATUS_TRYAGAIN;
-        }
-
-      p = strncpy (buffer, result, len);
-      buffer[len] = '\0';
+      
+      if (next == NULL)
+	return NSS_STATUS_NOTFOUND;
+      p = strcpy (buffer, next->val);
+      next = next->next;
+      
       while (isspace (*p))
         ++p;
-      free (result);
-
+      
       parse_res = _nss_files_parse_etherent (p, eth, data, buflen);
       if (!parse_res && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
-
-      free (oldkey);
-      oldkey = outkey;
-      oldkeylen = keylen;
-      new_start = 0;
     }
   while (!parse_res);
 

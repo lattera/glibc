@@ -176,14 +176,13 @@ extern int errno;
 ** Private function declarations.
 */
 char *	icalloc P((int nelem, int elsize));
-char *	icatalloc P((char * old, const char * new));
-char *	icpyalloc P((const char * string));
-char *	imalloc P((int n));
-void *	irealloc P((void * pointer, int size));
-void	icfree P((char * pointer));
-void	ifree P((char * pointer));
-char *  scheck P((const char *string, char *format));
-
+char *	icatalloc P((char * old, const char * const new));
+char *	icpyalloc P((const char * const string));
+char *	imalloc P((const int n));
+void *	irealloc P((void * const pointer, const int size));
+void	icfree P((char * const pointer));
+void	ifree P((char * const pointer));
+char *	scheck P((const char * const string, const char * const format));
 
 /*
 ** Finally, some convenience items.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -35,26 +35,75 @@
 
 __libc_lock_define_initialized (static, lock)
 
+struct response_t
+{
+  char *val;
+  struct response_t *next;
+};
+
 struct intern_t
 {
-  bool_t new_start;
-  char *oldkey;
-  int oldkeylen;
+  struct response_t *start;
+  struct response_t *next;
 };
 typedef struct intern_t intern_t;
 
-static intern_t intern = {TRUE, NULL, 0};
+static intern_t intern = {NULL, NULL};
+
+static int
+saveit (int instatus, char *inkey, int inkeylen, char *inval, 
+        int invallen, char *indata)
+{
+  intern_t *intern = (intern_t *)indata;
+
+  if (instatus != YP_TRUE)
+    return instatus;
+
+  if (inkey && inkeylen > 0 && inval && invallen > 0)
+    {
+      if (intern->start == NULL)
+        {
+          intern->start = malloc (sizeof (struct response_t));
+          intern->next = intern->start;
+        }
+      else
+        {
+          intern->next->next = malloc (sizeof (struct response_t));
+          intern->next = intern->next->next;
+        }
+      intern->next->next = NULL;
+      intern->next->val = malloc (invallen + 1);
+      strncpy (intern->next->val, inval, invallen);
+      intern->next->val[invallen] = '\0';
+    }
+  
+  return 0;
+}
 
 static enum nss_status
-internal_nis_setrpcent (intern_t *data)
+internal_nis_setrpcent (intern_t *intern)
 {
-  data->new_start = 1;
-  if (data->oldkey != NULL)
+  char *domainname;
+  struct ypall_callback ypcb;
+  
+  if (yp_get_default_domain (&domainname))
+    return NSS_STATUS_UNAVAIL;
+  
+  while (intern->start != NULL)
     {
-      free (data->oldkey);
-      data->oldkey = NULL;
-      data->oldkeylen = 0;
+      if (intern->start->val != NULL)
+        free (intern->start->val);
+      intern->next = intern->start;
+      intern->start = intern->start->next;
+      free (intern->next);
     }
+  intern->start = NULL;
+
+  ypcb.foreach = saveit;
+  ypcb.data = (char *)intern;
+  yp_all(domainname, "rpc.bynumber", &ypcb);
+  intern->next = intern->start;
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -73,15 +122,18 @@ _nss_nis_setrpcent (void)
 }
 
 static enum nss_status
-internal_nis_endrpcent (intern_t *data)
+internal_nis_endrpcent (intern_t *intern)
 {
-  data->new_start = 1;
-  if (data->oldkey != NULL)
+  while (intern->start != NULL)
     {
-      free (data->oldkey);
-      data->oldkey = NULL;
-      data->oldkeylen = 0;
+      if (intern->start->val != NULL)
+        free (intern->start->val);
+      intern->next = intern->start;
+      intern->start = intern->start->next;
+      free (intern->next);
     }
+  intern->start = NULL;
+  
   return NSS_STATUS_SUCCESS;
 }
 
@@ -104,60 +156,28 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
 			  intern_t *data)
 {
   struct parser_data *pdata = (void *) buffer;
-  char *domain;
-  char *result;
-  int len, parse_res;
-  char *outkey;
-  int keylen;
+  int parse_res;
   char *p;
-
-  if (yp_get_default_domain (&domain))
-    return NSS_STATUS_UNAVAIL;
-
+  
+  if (data->start == NULL)
+    internal_nis_setrpcent (data);
+  
   /* Get the next entry until we found a correct one. */
   do
     {
-      enum nss_status retval;
-
-      if (data->new_start)
-        retval = yperr2nss (yp_first (domain, "rpc.bynumber",
-                                      &outkey, &keylen, &result, &len));
-      else
-        retval = yperr2nss ( yp_next (domain, "rpc.bynumber",
-				      data->oldkey, data->oldkeylen,
-				      &outkey, &keylen, &result, &len));
-
-      if (retval != NSS_STATUS_SUCCESS)
-        {
-          if (retval == NSS_STATUS_TRYAGAIN)
-            __set_errno (EAGAIN);
-          return retval;
-        }
-
-      if ((size_t) (len + 1) > buflen)
-        {
-          free (result);
-          __set_errno (ERANGE);
-          return NSS_STATUS_TRYAGAIN;
-        }
-
-      p = strncpy (buffer, result, len);
-      buffer[len] = '\0';
+      if (data->next == NULL)
+        return NSS_STATUS_NOTFOUND;
+      p = strcpy (buffer, data->next->val);
+      data->next = data->next->next;
       while (isspace (*p))
         ++p;
-      free (result);
-
+      
       parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen);
       if (!parse_res && errno == ERANGE)
 	return NSS_STATUS_TRYAGAIN;
-
-      free (data->oldkey);
-      data->oldkey = outkey;
-      data->oldkeylen = keylen;
-      data->new_start = 0;
     }
   while (!parse_res);
-
+  
   return NSS_STATUS_SUCCESS;
 }
 
@@ -179,7 +199,7 @@ enum nss_status
 _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 			 char *buffer, size_t buflen)
 {
-  intern_t data = {TRUE, NULL, 0};
+  intern_t data = {NULL, NULL};
   enum nss_status status;
   int found;
 
