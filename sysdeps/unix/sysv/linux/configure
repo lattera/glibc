@@ -13,7 +13,7 @@ if test -n "$sysheaders"; then
 fi
 echo $ac_n "checking installed Linux kernel header files""... $ac_c" 1>&6
 echo "configure:16: checking installed Linux kernel header files" >&5
-if eval "test \"`echo '$''{'libc_cv_linux2010'+set}'`\" = set"; then
+if eval "test \"\${libc_cv_linux2010+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
@@ -143,11 +143,8 @@ if test "$message"; then
   fi
 fi
 
-# Check whether `ldconfig' sources are available.  This will go away as soon
-# as ldconfig is available in GNU libc.
-if test -f $srcdir/elf/ldconfig.c; then
-  has_ldconfig=yes
-fi
+# One Linux we use ldconfig.
+use_ldconfig=yes
 
 # We need some extensions to the `ldd' script.
 
@@ -173,7 +170,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:177: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:174: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message

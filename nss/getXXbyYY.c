@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <bits/libc-lock.h>
 #include <stdlib.h>
+#include <resolv.h>
 
 #include "nsswitch.h"
 
@@ -104,7 +105,7 @@ FUNCTION_NAME (ADD_PARAMS)
 #ifdef HANDLE_DIGITS_DOTS
       /* We have to test for the use of IPv6 which can only be done by
 	 examining `_res'.  */
-      if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+      if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
 	{
 # ifdef NEED_H_ERRNO
 	  h_errno_tmp = NETDB_INTERNAL;

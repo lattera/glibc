@@ -30,3 +30,10 @@ int * __h_errno_location()
   pthread_descr self = thread_self();
   return THREAD_GETMEM (self, p_h_errnop);
 }
+
+/* Return thread specific resolver state.  */
+struct __res_state * __res_state()
+{
+  pthread_descr self = thread_self();
+  return THREAD_GETMEM (self, p_resp);
+}

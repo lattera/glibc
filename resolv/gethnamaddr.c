@@ -259,11 +259,11 @@ getanswer(answer, anslen, qname, qtype)
 		}
 		cp += n;			/* name */
 		BOUNDS_CHECK(cp, 3 * INT16SZ + INT32SZ);
-		type = _getshort(cp);
+		type = ns_get16(cp);
  		cp += INT16SZ;			/* type */
-		class = _getshort(cp);
+		class = ns_get16(cp);
  		cp += INT16SZ + INT32SZ;	/* class, TTL */
-		n = _getshort(cp);
+		n = ns_get16(cp);
 		cp += INT16SZ;			/* len */
 		BOUNDS_CHECK(cp, n);
 		erdata = cp + n;
@@ -491,7 +491,7 @@ gethostbyname(name)
 {
 	struct hostent *hp;
 
-	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+	if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
        }
@@ -514,7 +514,7 @@ gethostbyname2(name, af)
 	int n, size, type, len;
 	extern struct hostent *_gethtbyname2();
 
-	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+	if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
@@ -613,8 +613,8 @@ gethostbyname2(name, af)
 				break;
 		}
 
-	if ((n = res_search(name, C_IN, type, buf.buf, sizeof(buf.buf))) < 0) {
-		dprintf("res_search failed (%d)\n", n);
+	if ((n = res_nsearch(&_res, name, C_IN, type, buf.buf, sizeof(buf.buf))) < 0) {
+		dprintf("res_nsearch failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyname2(name, af));
 		return (NULL);
@@ -643,7 +643,7 @@ gethostbyaddr(addr, len, af)
 #endif /*SUNSECURITY*/
 	extern struct hostent *_gethtbyaddr();
 
-	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
+	if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
@@ -693,9 +693,9 @@ gethostbyaddr(addr, len, af)
 	default:
 		abort();
 	}
-	n = res_query(qbuf, C_IN, T_PTR, (u_char *)buf.buf, sizeof buf.buf);
+	n = res_nquery(&_res, qbuf, C_IN, T_PTR, (u_char *)buf.buf, sizeof buf.buf);
 	if (n < 0) {
-		dprintf("res_query failed (%d)\n", n);
+		dprintf("res_nquery failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyaddr(addr, len, af));
 		return (NULL);

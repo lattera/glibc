@@ -1,3 +1,63 @@
+1999-12-03  Andreas Jaeger  <aj@suse.de>
+
+	* nss/getXXbyYY.c: Include <resolv.h>
+	(FUNCTION_NAME): Use res_ninit instead of res_init.
+
+	* nss/getXXbyYY_r.c [NEED__RES]: Include <resolv.h> for _res
+	declaration and prototypes.
+	Remove extra _res declaration.
+	(INTERNAL): Use thread aware res_ninit function.
+
+	* inet/gethstbyad_r.c: Include <resolv.h>.
+
+	* resolv/res_data.c: Update from Bind 8.2.2-P5.  Moved res_init to
+	res_libc.c.  Disabled unneeded functions.
+
+	* resolv/res_libc.c: New file.
+
+	* Versions.def: Add version GLIBC_2.2 for libpthread.
+	Add versions GLIBC_2.1 and GLIBC_2.2 for libresolv.
+
+	* include/resolv.h: Add internal interfaces.
+
+	* resolv/Makefile (routines): Add new files.
+	(libresolv-routines): Likewise.
+	(distribute): Likewise.
+
+	* resolv/gethnamaddr.c: Use thread safe resolver functions.
+	* resolv/nss_dns/dns-host.c: Likewise.
+	* resolv/nss_dns/dns-network.c: Likewise.
+
+	* resolv/arpa/nameser.h: Update from Bind 8.2.2-P5.
+	* resolv/nsap_addr.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+	* resolv/resolv.h: Likewise.
+
+	* resolv/Versions: Add __res_state and __res_ninit with version
+	GLIBC_2.2 to libc.
+	Add new interfaces with version GLIBC_2.2 to libresolv.
+
+	* resolv/Banner: Update.
+
+	* include/arpa/nameser_compat.h: New file.
+
+	* resolv/ns_name.c: New file from Bind 8.2.2-P5.
+	* resolv/ns_netint.c: Likewise.
+	* resolv/ns_parse.c: Likewise.
+	* resolv/ns_print.c: Likewise.
+	* resolv/ns_samedomain.c: Likewise.
+	* resolv/ns_ttl.c: Likewise.
+	* resolv/arpa/nameser_compat.h: Likewise.
+	* resolv/res_debug.h: Likewise.
+
+	Some patches are based on work done by Adam D. Bradley
+	<artdodge@cs.bu.edu>.
+
 1999-11-30  Andreas Jaeger  <aj@suse.de>
 
 	Add ldconfig:
@@ -24,6 +84,9 @@
 
 	* config.make.in (has-ldconfig): Renamed to use-ldconfig, changed
 	comment.
+
+	* sysdeps/unix/sysv/linux/configure.in: Remove check for ldconfig,
+	set always use_ldconfig instead.
 
 1999-12-03  Ulrich Drepper  <drepper@cygnus.com>
 

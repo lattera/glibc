@@ -113,9 +113,12 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   int anslen;
   char *qbuf;
 
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+    return NSS_STATUS_UNAVAIL;
+
   qbuf = strdupa (name);
-  anslen = res_search (qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
-		       sizeof (querybuf));
+  anslen = res_nsearch (&_res, qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
+			sizeof (querybuf));
   if (anslen < 0)
     {
       /* Nothing found.  */
@@ -146,6 +149,9 @@ _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
   if (type != AF_INET)
     return NSS_STATUS_UNAVAIL;
 
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+    return NSS_STATUS_UNAVAIL;
+  
   net2 = (u_int32_t) net;
   for (cnt = 4; net2 != 0; net2 >>= 8)
     net_bytes[--cnt] = net2 & 0xff;
@@ -172,8 +178,8 @@ _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
       break;
     }
 
-  anslen = res_query (qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
-		      sizeof (querybuf));
+  anslen = res_nquery (&_res, qbuf, C_IN, T_PTR, (u_char *) &net_buffer,
+		       sizeof (querybuf));
   if (anslen < 0)
     {
       /* Nothing found.  */

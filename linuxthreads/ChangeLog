@@ -1,3 +1,18 @@
+1999-12-03  Andreas Jaeger  <aj@suse.de>
+
+	* Versions: Add __res_state with version GLIBC_2.2.
+
+	* errno.c (__res_state): New function to return thread specific
+	resolver state.
+
+	* pthread.c (pthread_initialize): Initialize p_resp.
+	(__pthread_reset_main_thread): Also set p_resp.
+
+	* manager.c (pthread_handle_create): Initialize p_resp.
+
+	* internals.h: Add thread specific resolver state.
+	Based on patches by Adam D. Bradley <artdodge@cs.bu.edu>.
+
 1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/pt-machine.h: Move stack_pointer definition to the

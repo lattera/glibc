@@ -1,6 +1,4 @@
 /*
- * ++Copyright++ 1985, 1989, 1993
- * -
  * Copyright (c) 1985, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
  *
@@ -27,7 +25,9 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * -
+ */
+
+/*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -45,21 +45,29 @@
  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
- * -
- * --Copyright--
+ */
+
+/*
+ * Portions Copyright (c) 1996-1999 by Internet Software Consortium.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS
+ * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE
+ * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ * SOFTWARE.
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)res_send.c	8.1 (Berkeley) 6/4/93";
-static char rcsid[] = "$Id$";
+static const char sccsid[] = "@(#)res_send.c	8.1 (Berkeley) 6/4/93";
+static const char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
-
-	/* change this to "0"
-	 * if you talk to a lot
-	 * of multi-homed SunOS
-	 * ("broken") name servers.
-	 */
-#define	CHECK_SRVR_ADDR	1	/* XXX - should be in options.h */
 
 /*
  * Send query to name server and wait for reply.
@@ -67,111 +75,135 @@ static char rcsid[] = "$Id$";
 
 #include <sys/types.h>
 #include <sys/param.h>
-#include <sys/poll.h>
 #include <sys/time.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
+
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <arpa/inet.h>
 
-#include <stdio.h>
-#include <netdb.h>
 #include <errno.h>
+#include <netdb.h>
 #include <resolv.h>
-#if defined(BSD) && (BSD >= 199306)
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
-#else
-# include "../conf/portability.h"
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <sys/poll.h>
+
+/* Options.  Leave them on. */
+/* #undef DEBUG */
+#include "res_debug.h"
+
+#ifdef NEED_PSELECT
+static int		pselect(int, void *, void *, void *,
+				struct timespec *,
+				const sigset_t *);
 #endif
 
-#include <bits/libc-lock.h>
+#define	CHECK_SRVR_ADDR
 
-/* Lock to protect the connection use.  */
-__libc_lock_define_initialized (static, lock)
+/* From bind lib/isc/ev_timers.c:  */
+#define BILLION 1000000000
+static struct timespec
+evTimeSpec(struct timeval tv) {
+	struct timespec ts;
 
-static void res_close_internal (void);
+	ts.tv_sec = tv.tv_sec;
+	ts.tv_nsec = tv.tv_usec * 1000;
+	return (ts);
+}
 
-#if defined(USE_OPTIONS_H)
-# include <../conf/options.h>
-#endif
+static struct timespec
+evConsTime(time_t sec, long nsec) {
+	struct timespec x;
 
-static int s = -1;	/* socket used for communications */
-static int connected = 0;	/* is the socket connected */
-static int vc = 0;	/* is the socket a virtual circuit? */
+	x.tv_sec = sec;
+	x.tv_nsec = nsec;
+	return (x);
+}
 
-/* XXX - this should be done in portability.h */
-#if (defined(BSD) && (BSD >= 199103)) || defined(linux)
-# define CAN_RECONNECT 1
-#else
-# define CAN_RECONNECT 0
-#endif
+static struct timespec
+evAddTime(struct timespec addend1, struct timespec addend2) {
+	struct timespec x;
 
-#ifndef DEBUG
-#   define Dprint(cond, args) /*empty*/
-#   define DprintQ(cond, args, query, size) /*empty*/
-#   define Aerror(file, string, error, address) /*empty*/
-#   define Perror(file, string, error) /*empty*/
-#else
-#   define Dprint(cond, args) if (cond) {fprintf args;} else {}
-#   define DprintQ(cond, args, query, size) if (cond) {\
-			fprintf args;\
-			__fp_nquery(query, size, stdout);\
-		} else {}
+	x.tv_sec = addend1.tv_sec + addend2.tv_sec;
+	x.tv_nsec = addend1.tv_nsec + addend2.tv_nsec;
+	if (x.tv_nsec >= BILLION) {
+		x.tv_sec++;
+		x.tv_nsec -= BILLION;
+	}
+	return (x);
+}
+
+static struct timespec
+evSubTime(struct timespec minuend, struct timespec subtrahend) {
+	struct timespec x;
+
+	x.tv_sec = minuend.tv_sec - subtrahend.tv_sec;
+	if (minuend.tv_nsec >= subtrahend.tv_nsec)
+		x.tv_nsec = minuend.tv_nsec - subtrahend.tv_nsec;
+	else {
+		x.tv_nsec = BILLION - subtrahend.tv_nsec + minuend.tv_nsec;
+		x.tv_sec--;
+	}
+	return (x);
+}
+
+static int
+evCmpTime(struct timespec a, struct timespec b) {
+	long x = a.tv_sec - b.tv_sec;
+
+	if (x == 0L)
+		x = a.tv_nsec - b.tv_nsec;
+	return (x < 0L ? (-1) : x > 0L ? (1) : (0));
+}
+
+static struct timespec
+evNowTime() {
+	struct timeval now;
+
+	if (gettimeofday(&now, NULL) < 0)
+		return (evConsTime(0, 0));
+	return (evTimeSpec(now));
+}
+/* End of code from bind lib/isc/ev_timers.c.  */
+
+#ifdef DEBUG
     static void
-    Aerror(file, string, error, address)
-	FILE *file;
-	char *string;
-	int error;
-	struct sockaddr_in address;
+    Aerror(const res_state statp, FILE *file, const char *string, int error,
+	   struct sockaddr_in address)
     {
 	int save = errno;
 
-	if (_res.options & RES_DEBUG) {
+	if ((statp->options & RES_DEBUG) != 0) {
+		char tmp[sizeof "255.255.255.255"];
+
 		fprintf(file, "res_send: %s ([%s].%u): %s\n",
 			string,
-			inet_ntoa(address.sin_addr),
+			inet_ntop(address.sin_family, &address.sin_addr,
+				  tmp, sizeof tmp),
 			ntohs(address.sin_port),
 			strerror(error));
 	}
 	__set_errno (save);
     }
     static void
-    Perror(file, string, error)
-	FILE *file;
-	char *string;
-	int error;
-    {
+    Perror(const res_state statp, FILE *file, const char *string, int error) {
 	int save = errno;
 
-	if (_res.options & RES_DEBUG) {
+	if ((statp->options & RES_DEBUG) != 0)
 		fprintf(file, "res_send: %s: %s\n",
 			string, strerror(error));
-	}
 	__set_errno (save);
     }
 #endif
 
-static res_send_qhook Qhook = NULL;
-static res_send_rhook Rhook = NULL;
-
-void
-res_send_setqhook(hook)
-	res_send_qhook hook;
-{
-
-	Qhook = hook;
-}
-
-void
-res_send_setrhook(hook)
-	res_send_rhook hook;
-{
-
-	Rhook = hook;
-}
+static int cmpsock(struct sockaddr_in *a1, struct sockaddr_in *a2);
+void res_pquery(const res_state, const u_char *, int, FILE *);
 
 /* int
  * res_isourserver(ina)
@@ -183,33 +215,28 @@ res_send_setrhook(hook)
  *	paul vixie, 29may94
  */
 int
-res_isourserver(inp)
-	const struct sockaddr_in *inp;
-{
+res_ourserver_p(const res_state statp, const struct sockaddr_in *inp) {
 	struct sockaddr_in ina;
-	register int ns, ret;
+	int ns;
 
 	ina = *inp;
-	ret = 0;
-	for (ns = 0;  ns < _res.nscount;  ns++) {
-		register const struct sockaddr_in *srv = &_res.nsaddr_list[ns];
+	for (ns = 0;  ns < statp->nscount;  ns++) {
+		const struct sockaddr_in *srv = &statp->nsaddr_list[ns];
 
 		if (srv->sin_family == ina.sin_family &&
 		    srv->sin_port == ina.sin_port &&
 		    (srv->sin_addr.s_addr == INADDR_ANY ||
-		     srv->sin_addr.s_addr == ina.sin_addr.s_addr)) {
-			ret++;
-			break;
-		}
+		     srv->sin_addr.s_addr == ina.sin_addr.s_addr))
+			return (1);
 	}
-	return (ret);
+	return (0);
 }
 
 /* int
  * res_nameinquery(name, type, class, buf, eom)
  *	look for (name,type,class) in the query section of packet (buf,eom)
  * requires:
- *	buf + HFIXESDZ <= eom
+ *	buf + HFIXEDSZ <= eom
  * returns:
  *	-1 : format error
  *	0  : not found
@@ -218,17 +245,15 @@ res_isourserver(inp)
  *	paul vixie, 29may94
  */
 int
-res_nameinquery(name, type, class, buf, eom)
-	const char *name;
-	register int type, class;
-	const u_char *buf, *eom;
+res_nameinquery(const char *name, int type, int class,
+		const u_char *buf, const u_char *eom)
 {
-	register const u_char *cp = buf + HFIXEDSZ;
+	const u_char *cp = buf + HFIXEDSZ;
 	int qdcount = ntohs(((HEADER*)buf)->qdcount);
 
 	while (qdcount-- > 0) {
 		char tname[MAXDNAME+1];
-		register int n, ttype, tclass;
+		int n, ttype, tclass;
 
 		n = dn_expand(buf, eom, cp, tname, sizeof tname);
 		if (n < 0)
@@ -236,11 +261,10 @@ res_nameinquery(name, type, class, buf, eom)
 		cp += n;
 		if (cp + 2 * INT16SZ > eom)
 			return (-1);
-		ttype = _getshort(cp); cp += INT16SZ;
-		tclass = _getshort(cp); cp += INT16SZ;
-		if (ttype == type &&
-		    tclass == class &&
-		    strcasecmp(tname, name) == 0)
+		ttype = ns_get16(cp); cp += INT16SZ;
+		tclass = ns_get16(cp); cp += INT16SZ;
+		if (ttype == type && tclass == class &&
+		    ns_samename(tname, name) == 1)
 			return (1);
 	}
 	return (0);
@@ -258,21 +282,28 @@ res_nameinquery(name, type, class, buf, eom)
  *	paul vixie, 29may94
  */
 int
-res_queriesmatch(buf1, eom1, buf2, eom2)
-	const u_char *buf1, *eom1;
-	const u_char *buf2, *eom2;
+res_queriesmatch(const u_char *buf1, const u_char *eom1,
+		 const u_char *buf2, const u_char *eom2)
 {
-	register const u_char *cp = buf1 + HFIXEDSZ;
+	const u_char *cp = buf1 + HFIXEDSZ;
 	int qdcount = ntohs(((HEADER*)buf1)->qdcount);
 
 	if (buf1 + HFIXEDSZ > eom1 || buf2 + HFIXEDSZ > eom2)
 		return (-1);
 
+	/*
+	 * Only header section present in replies to
+	 * dynamic update packets.
+	 */
+	if ( (((HEADER *)buf1)->opcode == ns_o_update) &&
+	     (((HEADER *)buf2)->opcode == ns_o_update) )
+		return (1);
+
 	if (qdcount != ntohs(((HEADER*)buf2)->qdcount))
 		return (0);
 	while (qdcount-- > 0) {
 		char tname[MAXDNAME+1];
-		register int n, ttype, tclass;
+		int n, ttype, tclass;
 
 		n = dn_expand(buf1, eom1, cp, tname, sizeof tname);
 		if (n < 0)
@@ -280,8 +311,8 @@ res_queriesmatch(buf1, eom1, buf2, eom2)
 		cp += n;
 		if (cp + 2 * INT16SZ > eom1)
 			return (-1);
-		ttype = _getshort(cp);	cp += INT16SZ;
-		tclass = _getshort(cp); cp += INT16SZ;
+		ttype = ns_get16(cp);	cp += INT16SZ;
+		tclass = ns_get16(cp); cp += INT16SZ;
 		if (!res_nameinquery(tname, ttype, tclass, buf2, eom2))
 			return (0);
 	}
@@ -289,67 +320,69 @@ res_queriesmatch(buf1, eom1, buf2, eom2)
 }
 
 int
-res_send(buf, buflen, ans, anssiz)
-	const u_char *buf;
-	int buflen;
-	u_char *ans;
-	int anssiz;
+res_nsend(res_state statp,
+	  const u_char *buf, int buflen, u_char *ans, int anssiz)
 {
 	HEADER *hp = (HEADER *) buf;
 	HEADER *anhp = (HEADER *) ans;
-	int gotsomewhere, connreset, terrno, try, v_circuit, resplen, ns;
-	register int n;
-	u_int badns;	/* XXX NSMAX can't exceed #/bits in this var */
-	int result = -1;
+	int gotsomewhere, connreset, terrno, try, v_circuit, resplen, ns, n;
+	u_int badns;	/* XXX NSMAX can't exceed #/bits in this variable */
+	static int highestFD = FD_SETSIZE - 1;
 
-	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		/* errno should have been set by res_init() in this case. */
-		return (-1);
-	}
 	if (anssiz < HFIXEDSZ) {
 		__set_errno (EINVAL);
 		return (-1);
 	}
-	DprintQ((_res.options & RES_DEBUG) || (_res.pfcode & RES_PRF_QUERY),
+	DprintQ((statp->options & RES_DEBUG) || (statp->pfcode & RES_PRF_QUERY),
 		(stdout, ";; res_send()\n"), buf, buflen);
-	v_circuit = (_res.options & RES_USEVC) || buflen > PACKETSZ;
+	v_circuit = (statp->options & RES_USEVC) || buflen > PACKETSZ;
 	gotsomewhere = 0;
 	connreset = 0;
 	terrno = ETIMEDOUT;
 	badns = 0;
 
-	__libc_lock_lock (lock);
+	/*
+	 * Some callers want to even out the load on their resolver list.
+	 */
+	if (statp->nscount > 0 && (statp->options & RES_ROTATE) != 0) {
+		struct sockaddr_in ina;
+		int lastns = statp->nscount - 1;
+
+		ina = statp->nsaddr_list[0];
+		for (ns = 0; ns < lastns; ns++)
+			statp->nsaddr_list[ns] = statp->nsaddr_list[ns + 1];
+		statp->nsaddr_list[lastns] = ina;
+	}
 
 	/*
 	 * Send request, RETRY times, or until successful
 	 */
-	for (try = 0; try < _res.retry; try++) {
-	    for (ns = 0; ns < _res.nscount; ns++) {
-		struct sockaddr_in *nsap = &_res.nsaddr_list[ns];
-    same_ns:
+	for (try = 0; try < statp->retry; try++) {
+	    for (ns = 0; ns < statp->nscount; ns++) {
+		struct sockaddr_in *nsap = &statp->nsaddr_list[ns];
+ same_ns:
 		if (badns & (1 << ns)) {
-			res_close_internal();
+			res_nclose(statp);
 			goto next_ns;
 		}
 
-		if (Qhook) {
+		if (statp->qhook) {
 			int done = 0, loops = 0;
 
 			do {
 				res_sendhookact act;
 
-				act = (*Qhook)(&nsap, &buf, &buflen,
-					       ans, anssiz, &resplen);
+				act = (*statp->qhook)(&nsap, &buf, &buflen,
+						      ans, anssiz, &resplen);
 				switch (act) {
 				case res_goahead:
 					done = 1;
 					break;
 				case res_nextns:
-					res_close_internal();
+					res_nclose(statp);
 					goto next_ns;
 				case res_done:
-					result = resplen;
-					goto and_out;
+					return (resplen);
 				case res_modified:
 					/* give the hook another try */
 					if (++loops < 42) /*doug adams*/
@@ -358,12 +391,12 @@ res_send(buf, buflen, ans, anssiz)
 				case res_error:
 					/*FALLTHROUGH*/
 				default:
-					goto and_out;
+					return (-1);
 				}
 			} while (!done);
 		}
 
-		Dprint(_res.options & RES_DEBUG,
+		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
 			ns + 1, inet_ntoa(nsap->sin_addr)));
 
@@ -373,33 +406,53 @@ res_send(buf, buflen, ans, anssiz)
 			u_short len;
 			u_char *cp;
 
-			/*
-			 * Use virtual circuit;
-			 * at most one attempt per server.
-			 */
-			try = _res.retry;
+			/* Use VC; at most one attempt per server. */
+			try = statp->retry;
 			truncated = 0;
-			if ((s < 0) || (!vc)) {
-				if (s >= 0)
-					res_close_internal();
 
-				s = socket(PF_INET, SOCK_STREAM, 0);
-				if (s < 0) {
+			/* Are we still talking to whom we want to talk to? */
+			if (statp->_sock >= 0 &&
+			    (statp->_flags & RES_F_VC) != 0) {
+				struct sockaddr_in peer;
+				int size = sizeof(peer);
+
+				if (getpeername(statp->_sock,
+						(struct sockaddr *)&peer,
+						&size) < 0) {
+					res_nclose(statp);
+					statp->_flags &= ~RES_F_VC;
+				} else if (!cmpsock(&peer, nsap)) {
+					res_nclose(statp);
+					statp->_flags &= ~RES_F_VC;
+				}
+			}
+
+			if (statp->_sock < 0 ||
+			    (statp->_flags & RES_F_VC) == 0) {
+				if (statp->_sock >= 0)
+					res_nclose(statp);
+
+				statp->_sock = socket(PF_INET,
+						       SOCK_STREAM, 0);
+				if (statp->_sock < 0 ||
+				    statp->_sock > highestFD) {
 					terrno = errno;
-					Perror(stderr, "socket(vc)", errno);
-					goto and_out;
+					Perror(statp, stderr,
+					       "socket(vc)", errno);
+					return (-1);
 				}
 				__set_errno (0);
-				if (connect(s, (struct sockaddr *)nsap,
-					    sizeof(struct sockaddr)) < 0) {
+				if (connect(statp->_sock,
+					    (struct sockaddr *)nsap,
+					    sizeof *nsap) < 0) {
 					terrno = errno;
-					Aerror(stderr, "connect/vc",
+					Aerror(statp, stderr, "connect/vc",
 					       errno, *nsap);
 					badns |= (1 << ns);
-					res_close_internal();
+					res_nclose(statp);
 					goto next_ns;
 				}
-				vc = 1;
+				statp->_flags |= RES_F_VC;
 			}
 			/*
 			 * Send length & message
@@ -409,28 +462,30 @@ res_send(buf, buflen, ans, anssiz)
 			iov[0].iov_len = INT16SZ;
 			iov[1].iov_base = (caddr_t)buf;
 			iov[1].iov_len = buflen;
-			if (writev(s, iov, 2) != (INT16SZ + buflen)) {
+			if (writev(statp->_sock, iov, 2) !=
+			    (INT16SZ + buflen)) {
 				terrno = errno;
-				Perror(stderr, "write failed", errno);
+				Perror(statp, stderr, "write failed", errno);
 				badns |= (1 << ns);
-				res_close_internal();
+				res_nclose(statp);
 				goto next_ns;
 			}
 			/*
 			 * Receive length & response
 			 */
-read_len:
+ read_len:
 			cp = ans;
 			len = INT16SZ;
-			while ((n = read(s, (char *)cp, (int)len)) > 0) {
+			while ((n = read(statp->_sock,
+					 (char *)cp, (int)len)) > 0) {
 				cp += n;
 				if ((len -= n) <= 0)
 					break;
 			}
 			if (n <= 0) {
 				terrno = errno;
-				Perror(stderr, "read failed", errno);
-				res_close_internal();
+				Perror(statp, stderr, "read failed", errno);
+				res_nclose(statp);
 				/*
 				 * A long running process might get its TCP
 				 * connection reset if the remote server was
@@ -442,15 +497,15 @@ read_len:
 				 */
 				if (terrno == ECONNRESET && !connreset) {
 					connreset = 1;
-					res_close_internal();
+					res_nclose(statp);
 					goto same_ns;
 				}
-				res_close_internal();
+				res_nclose(statp);
 				goto next_ns;
 			}
-			resplen = _getshort(ans);
+			resplen = ns_get16(ans);
 			if (resplen > anssiz) {
-				Dprint(_res.options & RES_DEBUG,
+				Dprint(statp->options & RES_DEBUG,
 				       (stdout, ";; response truncated\n")
 				       );
 				truncated = 1;
@@ -461,23 +516,24 @@ read_len:
 				/*
 				 * Undersized message.
 				 */
-				Dprint(_res.options & RES_DEBUG,
+				Dprint(statp->options & RES_DEBUG,
 				       (stdout, ";; undersized: %d\n", len));
 				terrno = EMSGSIZE;
 				badns |= (1 << ns);
-				res_close_internal();
+				res_nclose(statp);
 				goto next_ns;
 			}
 			cp = ans;
 			while (len != 0 &&
-			       (n = read(s, (char *)cp, (int)len)) > 0) {
+			       (n = read(statp->_sock, (char *)cp, (int)len))
+			       > 0) {
 				cp += n;
 				len -= n;
 			}
 			if (n <= 0) {
 				terrno = errno;
-				Perror(stderr, "read(vc)", errno);
-				res_close_internal();
+				Perror(statp, stderr, "read(vc)", errno);
+				res_nclose(statp);
 				goto next_ns;
 			}
 			if (truncated) {
@@ -490,10 +546,11 @@ read_len:
 				while (len != 0) {
 					char junk[PACKETSZ];
 
-					n = ((size_t) len > sizeof(junk)
+					n = ((size_t)len > sizeof(junk)
 					     ? sizeof(junk)
 					     : len);
-					if ((n = read(s, junk, n)) > 0)
+					n = read(statp->_sock, junk, n);
+					if (n > 0)
 						len -= n;
 					else
 						break;
@@ -507,8 +564,8 @@ read_len:
 			 * wait for the correct one.
 			 */
 			if (hp->id != anhp->id) {
-				DprintQ((_res.options & RES_DEBUG) ||
-					(_res.pfcode & RES_PRF_REPLY),
+				DprintQ((statp->options & RES_DEBUG) ||
+					(statp->pfcode & RES_PRF_REPLY),
 					(stdout, ";; old answer (unexpected):\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
 				goto read_len;
@@ -517,27 +574,34 @@ read_len:
 			/*
 			 * Use datagrams.
 			 */
-			int timeout;
+			struct timespec start, timeout, finish;
+#ifdef _LIBC
 			struct pollfd pfd[1];
+			int ptimeout;
+#else			
+			fd_set dsmask;
+#endif
 			struct sockaddr_in from;
-			socklen_t fromlen;
-			time_t curtime;
-			time_t endtime;
+			int fromlen, seconds;
 
-			if ((s < 0) || vc) {
-				if (vc)
-					res_close_internal();
-				s = socket(PF_INET, SOCK_DGRAM, 0);
-				if (s < 0) {
-#if !CAN_RECONNECT
+			if (statp->_sock < 0 ||
+			    (statp->_flags & RES_F_VC) != 0) {
+				if ((statp->_flags & RES_F_VC) != 0)
+					res_nclose(statp);
+				statp->_sock = socket(PF_INET, SOCK_DGRAM, 0);
+				if (statp->_sock < 0 ||
+				    statp->_sock > highestFD) {
+#ifndef CAN_RECONNECT
  bad_dg_sock:
 #endif
 					terrno = errno;
-					Perror(stderr, "socket(dg)", errno);
-					goto and_out;
+					Perror(statp, stderr,
+					       "socket(dg)", errno);
+					return (-1);
 				}
-				connected = 0;
+				statp->_flags &= ~RES_F_CONN;
 			}
+#ifndef CANNOT_CONNECT_DGRAM
 			/*
 			 * On a 4.3BSD+ machine (client and server,
 			 * actually), sending to a nameserver datagram
@@ -553,28 +617,29 @@ read_len:
 			 * as we wish to receive answers from the first
 			 * server to respond.
 			 */
-			if (_res.nscount == 1 || (try == 0 && ns == 0)) {
+			if (statp->nscount == 1 || (try == 0 && ns == 0)) {
 				/*
 				 * Connect only if we are sure we won't
 				 * receive a response from another server.
 				 */
-				if (!connected) {
-					if (connect(s, (struct sockaddr *)nsap,
-						    sizeof(struct sockaddr)
-						    ) < 0) {
-						Aerror(stderr,
+				if ((statp->_flags & RES_F_CONN) == 0) {
+					if (connect(statp->_sock,
+						    (struct sockaddr *)nsap,
+						    sizeof *nsap) < 0) {
+						Aerror(statp, stderr,
 						       "connect(dg)",
 						       errno, *nsap);
 						badns |= (1 << ns);
-						res_close_internal();
+						res_nclose(statp);
 						goto next_ns;
 					}
-					connected = 1;
+					statp->_flags |= RES_F_CONN;
 				}
-				if (send(s, (char*)buf, buflen, 0) != buflen) {
-					Perror(stderr, "send", errno);
+                              if (send(statp->_sock, (char*)buf, buflen, 0)
+				  != buflen) {
+					Perror(statp, stderr, "send", errno);
 					badns |= (1 << ns);
-					res_close_internal();
+					res_nclose(statp);
 					goto next_ns;
 				}
 			} else {
@@ -582,90 +647,130 @@ read_len:
 				 * Disconnect if we want to listen
 				 * for responses from more than one server.
 				 */
-				if (connected) {
-#if CAN_RECONNECT
+				if ((statp->_flags & RES_F_CONN) != 0) {
+#ifdef CAN_RECONNECT
 					struct sockaddr_in no_addr;
 
 					no_addr.sin_family = AF_INET;
 					no_addr.sin_addr.s_addr = INADDR_ANY;
 					no_addr.sin_port = 0;
-					(void) connect(s,
+					(void) connect(statp->_sock,
 						       (struct sockaddr *)
 						        &no_addr,
-						       sizeof(no_addr));
+						       sizeof no_addr);
 #else
-					int s1 = socket(PF_INET, SOCK_DGRAM,0);
+					struct sockaddr_in local_addr;
+					int len, result, s1;
+
+					len = sizeof(local_addr);
+					s1 = socket(PF_INET, SOCK_DGRAM, 0);
+					result = getsockname(statp->_sock,
+						(struct sockaddr *)&local_addr,
+							     &len);
 					if (s1 < 0)
 						goto bad_dg_sock;
-					(void) dup2(s1, s);
+					(void) dup2(s1, statp->_sock);
 					(void) close(s1);
-					Dprint(_res.options & RES_DEBUG,
+					if (result == 0) {
+						/*
+						 * Attempt to rebind to old
+						 * port.  Note connected socket
+						 * has an sin_addr set.
+						 */
+						local_addr.sin_addr.s_addr =
+							htonl(0);
+						(void)bind(statp->_sock,
+							   (struct sockaddr *)
+							   &local_addr, len);
+					}
+					Dprint(statp->options & RES_DEBUG,
 					       (stdout, ";; new DG socket\n"))
-#endif
-					connected = 0;
+#endif /* CAN_RECONNECT */
+					statp->_flags &= ~RES_F_CONN;
 					__set_errno (0);
 				}
-				if (sendto(s, (char*)buf, buflen, 0,
+#endif /* !CANNOT_CONNECT_DGRAM */
+				if (sendto(statp->_sock,
+					   (char*)buf, buflen, 0,
 					   (struct sockaddr *)nsap,
-					   sizeof(struct sockaddr))
+					   sizeof *nsap)
 				    != buflen) {
-					Aerror(stderr, "sendto", errno, *nsap);
+					Aerror(statp, stderr, "sendto", errno, *nsap);
 					badns |= (1 << ns);
-					res_close_internal();
+					res_nclose(statp);
 					goto next_ns;
 				}
+#ifndef CANNOT_CONNECT_DGRAM
+			}
+#endif /* !CANNOT_CONNECT_DGRAM */
+
+			if (statp->_sock < 0 || statp->_sock > highestFD) {
+				Perror(statp, stderr,
+				       "fd out-of-bounds", EMFILE);
+				res_nclose(statp);
+				goto next_ns;
 			}
 
 			/*
 			 * Wait for reply
 			 */
-			curtime = time (NULL);
+			seconds = (statp->retrans << try);
 			if (try > 0)
-				endtime = (_res.retrans << try) / _res.nscount;
-			else {
-				endtime = _res.retrans;
-				if (endtime <= 0)
-					endtime = 1;
-			}
-			endtime += curtime;
-    wait:
-			timeout = MAX (endtime - curtime, 0) * 1000;
-#if 0
-			if (s < 0 || s >= FD_SETSIZE) {
-				Perror(stderr, "s out-of-bounds", EMFILE);
-				res_close_internal();
-				goto next_ns;
-			}
-#endif
-			pfd[0].fd = s;
+				seconds /= statp->nscount;
+			if (seconds <= 0)
+				seconds = 1;
+
+			start = evNowTime();
+			timeout = evConsTime(seconds, 0);
+			finish = evAddTime(start, timeout);
+ wait:
+#ifdef _LIBC
+			/* Convert struct timespec in milliseconds.  */
+			ptimeout = timeout.tv_sec * 1000
+			  + timeout.tv_nsec / 1000000;
+			
+			pfd[0].fd = statp->_sock;
 			pfd[0].events = POLLIN;
-			n = __poll(pfd, 1, timeout);
-			if (n < 0) {
-				if (errno == EINTR) {
-					curtime = time (NULL);
-					goto wait;
-				}
-				Perror(stderr, "poll", errno);
-				res_close_internal();
-				goto next_ns;
-			}
+			n = __poll (pfd, 1, ptimeout);
+#else
+			FD_ZERO(&dsmask);
+			FD_SET(statp->_sock, &dsmask);
+			n = pselect(statp->_sock + 1,
+				    &dsmask, NULL, NULL,
+				    &timeout, NULL);
+#endif
 			if (n == 0) {
-				/*
-				 * timeout
-				 */
-				Dprint(_res.options & RES_DEBUG,
+				Dprint(statp->options & RES_DEBUG,
 				       (stdout, ";; timeout\n"));
 				gotsomewhere = 1;
-				res_close_internal();
+				goto next_ns;
+			}
+			if (n < 0) {
+				if (errno == EINTR) {
+					struct timespec now;
+
+					now = evNowTime();
+					if (evCmpTime(finish, now) >= 0) {
+						timeout = evSubTime(finish,
+								    now);
+						goto wait;
+					}
+				}
+#ifdef _LIBC
+				Perror(statp, stderr, "poll", errno);
+#else
+				Perror(statp, stderr, "select", errno);
+#endif
+				res_nclose(statp);
 				goto next_ns;
 			}
 			__set_errno (0);
 			fromlen = sizeof(struct sockaddr_in);
-			resplen = recvfrom(s, (char*)ans, anssiz, 0,
+			resplen = recvfrom(statp->_sock, (char*)ans, anssiz,0,
 					   (struct sockaddr *)&from, &fromlen);
 			if (resplen <= 0) {
-				Perror(stderr, "recvfrom", errno);
-				res_close_internal();
+				Perror(statp, stderr, "recvfrom", errno);
+				res_nclose(statp);
 				goto next_ns;
 			}
 			gotsomewhere = 1;
@@ -673,12 +778,12 @@ read_len:
 				/*
 				 * Undersized message.
 				 */
-				Dprint(_res.options & RES_DEBUG,
+				Dprint(statp->options & RES_DEBUG,
 				       (stdout, ";; undersized: %d\n",
 					resplen));
 				terrno = EMSGSIZE;
 				badns |= (1 << ns);
-				res_close_internal();
+				res_nclose(statp);
 				goto next_ns;
 			}
 			if (hp->id != anhp->id) {
@@ -687,30 +792,28 @@ read_len:
 				 * XXX - potential security hazard could
 				 *	 be detected here.
 				 */
-				DprintQ((_res.options & RES_DEBUG) ||
-					(_res.pfcode & RES_PRF_REPLY),
+				DprintQ((statp->options & RES_DEBUG) ||
+					(statp->pfcode & RES_PRF_REPLY),
 					(stdout, ";; old answer:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
-				curtime = time (NULL);
 				goto wait;
 			}
-#if CHECK_SRVR_ADDR
-			if (!(_res.options & RES_INSECURE1) &&
-			    !res_isourserver(&from)) {
+#ifdef CHECK_SRVR_ADDR
+			if (!(statp->options & RES_INSECURE1) &&
+			    !res_ourserver_p(statp, &from)) {
 				/*
 				 * response from wrong server? ignore it.
 				 * XXX - potential security hazard could
 				 *	 be detected here.
 				 */
-				DprintQ((_res.options & RES_DEBUG) ||
-					(_res.pfcode & RES_PRF_REPLY),
+				DprintQ((statp->options & RES_DEBUG) ||
+					(statp->pfcode & RES_PRF_REPLY),
 					(stdout, ";; not our server:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
-				curtime = time (NULL);
 				goto wait;
 			}
 #endif
-			if (!(_res.options & RES_INSECURE2) &&
+			if (!(statp->options & RES_INSECURE2) &&
 			    !res_queriesmatch(buf, buf + buflen,
 					      ans, ans + anssiz)) {
 				/*
@@ -718,43 +821,42 @@ read_len:
 				 * XXX - potential security hazard could
 				 *	 be detected here.
 				 */
-				DprintQ((_res.options & RES_DEBUG) ||
-					(_res.pfcode & RES_PRF_REPLY),
+				DprintQ((statp->options & RES_DEBUG) ||
+					(statp->pfcode & RES_PRF_REPLY),
 					(stdout, ";; wrong query name:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
-				curtime = time (NULL);
 				goto wait;
 			}
 			if (anhp->rcode == SERVFAIL ||
 			    anhp->rcode == NOTIMP ||
 			    anhp->rcode == REFUSED) {
-				DprintQ(_res.options & RES_DEBUG,
+				DprintQ(statp->options & RES_DEBUG,
 					(stdout, "server rejected query:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
 				badns |= (1 << ns);
-				res_close_internal();
+				res_nclose(statp);
 				/* don't retry if called from dig */
-				if (!_res.pfcode)
+				if (!statp->pfcode)
 					goto next_ns;
 			}
-			if (!(_res.options & RES_IGNTC) && anhp->tc) {
+			if (!(statp->options & RES_IGNTC) && anhp->tc) {
 				/*
 				 * get rest of answer;
 				 * use TCP with same server.
 				 */
-				Dprint(_res.options & RES_DEBUG,
+				Dprint(statp->options & RES_DEBUG,
 				       (stdout, ";; truncated answer\n"));
 				v_circuit = 1;
-				res_close_internal();
+				res_nclose(statp);
 				goto same_ns;
 			}
 		} /*if vc/dg*/
-		Dprint((_res.options & RES_DEBUG) ||
-		       ((_res.pfcode & RES_PRF_REPLY) &&
-			(_res.pfcode & RES_PRF_HEAD1)),
+		Dprint((statp->options & RES_DEBUG) ||
+		       ((statp->pfcode & RES_PRF_REPLY) &&
+			(statp->pfcode & RES_PRF_HEAD1)),
 		       (stdout, ";; got answer:\n"));
-		DprintQ((_res.options & RES_DEBUG) ||
-			(_res.pfcode & RES_PRF_REPLY),
+		DprintQ((statp->options & RES_DEBUG) ||
+			(statp->pfcode & RES_PRF_REPLY),
 			(stdout, ""),
 			ans, (resplen>anssiz)?anssiz:resplen);
 		/*
@@ -765,25 +867,25 @@ read_len:
 		 * or if we haven't been asked to keep a socket open,
 		 * close the socket.
 		 */
-		if ((v_circuit && (!(_res.options & RES_USEVC) || ns != 0)) ||
-		    !(_res.options & RES_STAYOPEN)) {
-			res_close_internal();
+		if ((v_circuit && (!(statp->options & RES_USEVC) || ns != 0)) ||
+		    !(statp->options & RES_STAYOPEN)) {
+			res_nclose(statp);
 		}
-		if (Rhook) {
+		if (statp->rhook) {
 			int done = 0, loops = 0;
 
 			do {
 				res_sendhookact act;
 
-				act = (*Rhook)(nsap, buf, buflen,
-					       ans, anssiz, &resplen);
+				act = (*statp->rhook)(nsap, buf, buflen,
+						      ans, anssiz, &resplen);
 				switch (act) {
 				case res_goahead:
 				case res_done:
 					done = 1;
 					break;
 				case res_nextns:
-					res_close_internal();
+					res_nclose(statp);
 					goto next_ns;
 				case res_modified:
 					/* give the hook another try */
@@ -793,29 +895,24 @@ read_len:
 				case res_error:
 					/*FALLTHROUGH*/
 				default:
-					goto and_out;
+					return (-1);
 				}
 			} while (!done);
 
 		}
-		result = resplen;
-		goto and_out;
-    next_ns: ;
+		return (resplen);
+ next_ns: ;
 	   } /*foreach ns*/
 	} /*foreach retry*/
-	res_close_internal();
+	res_nclose(statp);
 	if (!v_circuit) {
 		if (!gotsomewhere)
-			__set_errno (ECONNREFUSED); /* no nameservers found */
+			__set_errno (ECONNREFUSED);	/* no nameservers found */
 		else
-			__set_errno (ETIMEDOUT);    /* no answer obtained */
+			__set_errno (ETIMEDOUT);	/* no answer obtained */
 	} else
 		__set_errno (terrno);
-
- and_out:
-	__libc_lock_unlock (lock);
-
-	return result;
+	return (-1);
 }
 
 /*
@@ -825,44 +922,46 @@ read_len:
  *
  * This routine is not expected to be user visible.
  */
-static void
-res_close_internal()
-{
-	if (s >= 0) {
-		(void) close(s);
-		s = -1;
-		connected = 0;
-		vc = 0;
+void
+res_nclose(res_state statp) {
+	if (statp->_sock >= 0) {
+		(void) close(statp->_sock);
+		statp->_sock = -1;
+		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
 	}
 }
 
-void
-res_close ()
-{
-	__libc_lock_lock (lock);
-	res_close_internal ();
-	__libc_lock_unlock (lock);
+/* Private */
+static int
+cmpsock(struct sockaddr_in *a1, struct sockaddr_in *a2) {
+	return ((a1->sin_family == a2->sin_family) &&
+		(a1->sin_port == a2->sin_port) &&
+		(a1->sin_addr.s_addr == a2->sin_addr.s_addr));
 }
 
-#ifdef ultrix
-/* ultrix 4.0 had some icky packaging in its libc.a.  alias for it here.
- * there is more gunk of this kind over in res_debug.c.
- */
-
-void
-_res_close()
+#ifdef NEED_PSELECT
+/* XXX needs to move to the porting library. */
+static int
+pselect(int nfds, void *rfds, void *wfds, void *efds,
+	struct timespec *tsp,
+	const sigset_t *sigmask)
 {
-	res_close();
-}
+	struct timeval tv, *tvp;
+	sigset_t sigs;
+	int n;
 
-#undef res_send
-int
-res_send(buf, buflen, ans, anssiz)
-	const u_char *buf;
-	int buflen;
-	u_char *ans;
-	int anssiz;
-{
-	return (__res_send(buf, buflen, ans, anssiz));
+	if (tsp) {
+		tvp = &tv;
+		tv = evTimeVal(*tsp);
+	} else
+		tvp = NULL;
+	if (sigmask)
+		sigprocmask(SIG_SETMASK, sigmask, &sigs);
+	n = select(nfds, rfds, wfds, efds, tvp);
+	if (sigmask)
+		sigprocmask(SIG_SETMASK, &sigs, NULL);
+	if (tsp)
+		*tsp = evTimeSpec(tv);
+	return (n);
 }
-#endif /* Ultrix 4.0 hackery */
+#endif

@@ -114,11 +114,8 @@ if test "$message"; then
   fi
 fi
 
-# Check whether `ldconfig' sources are available.  This will go away as soon
-# as ldconfig is available in GNU libc.
-if test -f $srcdir/elf/ldconfig.c; then
-  has_ldconfig=yes
-fi
+# One Linux we use ldconfig.
+use_ldconfig=yes
 
 # We need some extensions to the `ldd' script.
 changequote(,)

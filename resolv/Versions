@@ -18,6 +18,10 @@ libc {
     # r*
     res_init;
   }
+  GLIBC_2.2 {
+    # r*
+    __res_state; __res_ninit;
+  }
 }
 
 libresolv {
@@ -46,6 +50,9 @@ libresolv {
     # Needed in libnss_dns.
     __ns_name_unpack; __ns_name_ntop;
   }
+  GLIBC_2.2 {
+    __res_nmkquery; __res_nquery; __res_nquerydomain; __res_nsearch;
+    __ns_get16;
 }
 
 libnss_dns {

@@ -133,6 +133,9 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   int size, type, n;
   const char *cp;
 
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+    return NSS_STATUS_UNAVAIL;
+
   switch (af) {
   case AF_INET:
     size = INADDRSZ;
@@ -159,7 +162,8 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   if (strchr (name, '.') == NULL && (cp = __hostalias (name)) != NULL)
     name = cp;
 
-  n = res_search (name, C_IN, type, host_buffer.buf, sizeof (host_buffer.buf));
+  n = res_nsearch (&_res, name, C_IN, type, host_buffer.buf,
+		   sizeof (host_buffer.buf));
   if (n < 0)
     {
       *h_errnop = h_errno;
@@ -211,6 +215,9 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
   size_t size;
   int n, status;
 
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+    return NSS_STATUS_UNAVAIL;
+
   if (af == AF_INET6 && len == IN6ADDRSZ
       && (memcmp (uaddr, mapped, sizeof mapped) == 0
 	  || (memcmp (uaddr, tunnelled, sizeof tunnelled) == 0
@@ -259,8 +266,8 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
       /* Cannot happen.  */
     }
 
-  n = res_query (qbuf, C_IN, T_PTR, (u_char *)host_buffer.buf,
-		 sizeof host_buffer);
+  n = res_nquery (&_res, qbuf, C_IN, T_PTR, (u_char *)host_buffer.buf,
+		  sizeof host_buffer);
   if (n < 0)
     {
       *h_errnop = h_errno;
@@ -435,11 +442,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  continue;
 	}
       cp += n;				/* name */
-      type = _getshort (cp);
+      type = ns_get16 (cp);
       cp += INT16SZ;			/* type */
-      class = _getshort (cp);
+      class = ns_get16 (cp);
       cp += INT16SZ + INT32SZ;		/* class, TTL */
-      n = _getshort (cp);
+      n = ns_get16 (cp);
       cp += INT16SZ;			/* len */
       if (class != C_IN)
 	{

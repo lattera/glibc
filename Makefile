@@ -94,7 +94,7 @@ $(inst_slibdir)/libc-$(version).so: elf/ldso_install
 elf/ldso_install:
 	$(MAKE) -C $(@D) $(@F)
 
-# Create links for shared libraries using the `ldconfig' program is possible.
+# Create links for shared libraries using the `ldconfig' program if possible.
 # Ignore the error if we cannot update /etc/ld.so.cache.
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
@@ -106,7 +106,7 @@ install-symbolic-link: subdir_install
 
 install:
 	-test ! -x $(common-objpfx)elf/ldconfig || \
-	  $(common-objpfx)elf/ldconfig -d $(inst_slibdir) $(inst_libdir)
+	  $(common-objpfx)elf/ldconfig $(inst_slibdir) $(inst_libdir)
 ifneq (no,$(PERL))
 ifeq (/usr,$(prefix))
 ifeq (,$(install_root))

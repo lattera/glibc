@@ -118,4 +118,7 @@ libpthread {
     __pthread_kill_other_threads_np;
     __vfork;
   }
+  GLIBC_2.2 {
+    __res_state;
+  }
 }

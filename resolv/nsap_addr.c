@@ -28,31 +28,14 @@ static char rcsid[] = "$Id$";
 #include <ctype.h>
 #include <resolv.h>
 
-#include "../conf/portability.h"
-
-#if !defined(isxdigit)	/* XXX - could be a function */
-static int
-isxdigit(c)
-	register int c;
-{
-	return ((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'F'));
-}
-#endif
-
 static char
-xtob(c)
-	register int c;
-{
+xtob(int c) {
 	return (c - (((c >= '0') && (c <= '9')) ? '0' : '7'));
 }
 
 u_int
-inet_nsap_addr(ascii, binary, maxlen)
-	const char *ascii;
-	u_char *binary;
-	int maxlen;
-{
-	register u_char c, nib;
+inet_nsap_addr(const char *ascii, u_char *binary, int maxlen) {
+	u_char c, nib;
 	u_int len = 0;
 
 	while ((c = *ascii++) != '\0' && (int) len < maxlen) {
@@ -63,7 +46,8 @@ inet_nsap_addr(ascii, binary, maxlen)
 		c = toupper(c);
 		if (isxdigit(c)) {
 			nib = xtob(c);
-			if ((c = *ascii++)) {
+			c = *ascii++;
+			if (c != '\0') {
 				c = toupper(c);
 				if (isxdigit(c)) {
 					*binary++ = (nib << 4) | xtob(c);
@@ -81,12 +65,8 @@ inet_nsap_addr(ascii, binary, maxlen)
 }
 
 char *
-inet_nsap_ntoa(binlen, binary, ascii)
-	int binlen;
-	register const u_char *binary;
-	register char *ascii;
-{
-	register int nib;
+inet_nsap_ntoa(int binlen, const u_char *binary, char *ascii) {
+	int nib;
 	int i;
 	static char tmpbuf[255*3];
 	char *start;

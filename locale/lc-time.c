@@ -218,7 +218,7 @@ _nl_get_era_year_start (int cnt)
 
   __libc_lock_lock (__libc_setlocale_lock);
 
-  _nl_init_era_entry();
+  init_era_entry ();
 
   result = eras[cnt]->start_date[0];
 

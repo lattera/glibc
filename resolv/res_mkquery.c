@@ -1,6 +1,4 @@
 /*
- * ++Copyright++ 1985, 1993
- * -
  * Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
  *
@@ -27,7 +25,9 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * -
+ */
+
+/*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
  *
  * Permission to use, copy, modify, and distribute this software for any
@@ -45,72 +45,79 @@
  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
- * -
- * --Copyright--
+ */
+
+/*
+ * Portions Copyright (c) 1996-1999 by Internet Software Consortium.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS
+ * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE
+ * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ * SOFTWARE.
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)res_mkquery.c	8.1 (Berkeley) 6/4/93";
-static char rcsid[] = "$Id$";
+static const char sccsid[] = "@(#)res_mkquery.c	8.1 (Berkeley) 6/4/93";
+static const char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
-
-#include <stdio.h>
 #include <netdb.h>
 #include <resolv.h>
-#if defined(BSD) && (BSD >= 199103)
-# include <string.h>
-#else
-# include "../conf/portability.h"
-#endif
+#include <stdio.h>
+#include <string.h>
 
-#if defined(USE_OPTIONS_H)
-# include <../conf/options.h>
-#endif
+/* Options.  Leave them on. */
+/* #define DEBUG */
+
+extern const char *_res_opcodes[];
 
 /*
  * Form all types of queries.
  * Returns the size of the result or -1.
  */
 int
-res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
-	int op;			/* opcode of query */
-	const char *dname;	/* domain name */
-	int class, type;	/* class and type of query */
-	const u_char *data;	/* resource record data */
-	int datalen;		/* length of data */
-	const u_char *newrr_in;	/* new rr for modify or append */
-	u_char *buf;		/* buffer to put query */
-	int buflen;		/* size of buffer */
+res_nmkquery(res_state statp,
+	     int op,			/* opcode of query */
+	     const char *dname,		/* domain name */
+	     int class, int type,	/* class and type of query */
+	     const u_char *data,	/* resource record data */
+	     int datalen,		/* length of data */
+	     const u_char *newrr_in,	/* new rr for modify or append */
+	     u_char *buf,		/* buffer to put query */
+	     int buflen)		/* size of buffer */
 {
 	register HEADER *hp;
 	register u_char *cp;
 	register int n;
 	u_char *dnptrs[20], **dpp, **lastdnptr;
 
-	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		__set_h_errno (NETDB_INTERNAL);
-		return (-1);
-	}
 #ifdef DEBUG
-	if (_res.options & RES_DEBUG)
-		printf(";; res_mkquery(%d, %s, %d, %d)\n",
-		       op, dname, class, type);
+	if (statp->options & RES_DEBUG)
+		printf(";; res_nmkquery(%s, %s, %s, %s)\n",
+		       _res_opcodes[op], dname, p_class(class), p_type(type));
 #endif
 	/*
 	 * Initialize header fields.
 	 */
 	if ((buf == NULL) || (buflen < HFIXEDSZ))
 		return (-1);
-	bzero(buf, HFIXEDSZ);
+	memset(buf, 0, HFIXEDSZ);
 	hp = (HEADER *) buf;
-	hp->id = htons(++_res.id);
+	hp->id = htons(++statp->id);
 	hp->opcode = op;
-	hp->rd = (_res.options & RES_RECURSE) != 0;
+	hp->rd = (statp->options & RES_RECURSE) != 0;
 	hp->rcode = NOERROR;
 	cp = buf + HFIXEDSZ;
 	buflen -= HFIXEDSZ;
@@ -173,7 +180,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 		__putshort(datalen, cp);
 		cp += INT16SZ;
 		if (datalen) {
-			bcopy(data, cp, datalen);
+			memcpy(cp, data, datalen);
 			cp += datalen;
 		}
 		hp->ancount = htons(1);

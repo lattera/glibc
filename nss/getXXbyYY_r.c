@@ -26,7 +26,9 @@
 #ifdef NEED__RES_HCONF
 # include <resolv/res_hconf.h>
 #endif
-
+#ifdef NEED__RES
+# include <resolv.h>
+#endif
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
 |* 								   *|
@@ -95,9 +97,6 @@
 typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
 					    size_t, int * H_ERRNO_PARM);
 
-/* Some usages of this file might use this variable.  */
-extern struct __res_state _res;
-
 /* The lookup function for the first entry of this service.  */
 extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
 
@@ -126,7 +125,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #ifdef HANDLE_DIGITS_DOTS
   /* We have to test for the use of IPv6 which can only be done by
      examining `_res'.  */
-  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     {
       *h_errnop = NETDB_INTERNAL;
       *result = NULL;
@@ -166,7 +165,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #ifdef NEED__RES
 	  /* The resolver code will really be used so we have to
 	     initialize it.  */
-	  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+	  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
 	    {
 	      *h_errnop = NETDB_INTERNAL;
 	      *result = NULL;

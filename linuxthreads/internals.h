@@ -26,6 +26,9 @@
 #include <sys/types.h>
 #include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 
+#include <resolv.h> /* for per-thread resolver context */
+
+
 #include "pt-machine.h"
 #include "semaphore.h"
 #include "../linuxthreads_db/thread_dbP.h"
@@ -119,9 +122,11 @@ struct _pthread_descr_struct {
   size_t p_guardsize;		/* size of guard area */
   pthread_descr p_self;		/* Pointer to this structure */
   int p_nr;                     /* Index of descriptor in __pthread_handles */
-  /* New elements must be added at the end.  */
   int p_report_events;		/* Nonzero if events must be reported.  */
   td_eventbuf_t p_eventbuf;     /* Data for event.  */
+  struct __res_state *p_resp;	/* Pointer to resolver state */
+  struct __res_state p_res;	/* per-thread resolver state */
+  /* New elements must be added at the end.  */
 } __attribute__ ((aligned(32))); /* We need to align the structure so that
 				    doubles are aligned properly.  This is 8
 				    bytes on MIPS and 16 bytes on MIPS64.

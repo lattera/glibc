@@ -1,4 +1,4 @@
-# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1994,95,96,97,98,1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +23,10 @@ subdir	:= resolv
 
 headers	:= resolv.h netdb.h arpa/nameser.h sys/bitypes.h
 distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
-	      Banner res_hconf.h
+	      Banner res_hconf.h res_debug.h
 
-routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init res_hconf
+routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
+	    res_hconf res_libc
 
 tests = tst-aton
 
@@ -35,7 +36,9 @@ extra-libs := libresolv libnss_dns
 extra-libs-others = $(extra-libs)
 libresolv-routines := gethnamaddr res_comp res_debug	\
 		      res_data res_mkquery res_query res_send		\
-		      inet_net_ntop inet_net_pton inet_neta base64
+		      inet_net_ntop inet_net_pton inet_neta base64	\
+		      ns_parse ns_name ns_netint ns_ttl ns_print	\
+		      ns_samedomain
 
 subdir-dirs = nss_dns
 vpath %.c nss_dns

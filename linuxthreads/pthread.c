@@ -318,6 +318,8 @@ static void pthread_initialize(void)
   /* The errno/h_errno variable of the main thread are the global ones.  */
   __pthread_initial_thread.p_errnop = &_errno;
   __pthread_initial_thread.p_h_errnop = &_h_errno;
+  /* Likewise for the resolver state _res.  */
+  __pthread_initial_thread.p_resp = &_res;
 #ifdef __SIGRTMIN
   /* Initialize real-time signals. */
   init_rtsigs ();
@@ -725,6 +727,7 @@ void __pthread_reset_main_thread()
   /* Now this thread modifies the global variables.  */
   THREAD_SETMEM(self, p_errnop, &_errno);
   THREAD_SETMEM(self, p_h_errnop, &_h_errno);
+  THREAD_SETMEM(self, p_resp, &_res);
 }
 
 /* Process-wide exec() request */
