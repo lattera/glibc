@@ -26,9 +26,9 @@ and their reentrant counterparts.
 Configuring your systems
 ========================
 
-Configuring your systems to make use use the Hesiod name service
-requires one or more of the following steps, depending on whether you
-are already running Hesiod in your network.
+Configuring your systems to make use the Hesiod name service requires
+one or more of the following steps, depending on whether you are
+already running Hesiod in your network.
 
 Configuring NSS
 ---------------

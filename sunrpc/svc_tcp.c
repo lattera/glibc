@@ -284,13 +284,19 @@ svctcp_destroy (SVCXPRT *xprt)
  * All read operations timeout after 35 seconds.
  * A timeout is fatal for the connection.
  */
-static struct timeval wait_per_try =
-{35, 0};
+static struct timeval wait_per_try = {35, 0};
 
 /*
  * reads data from the tcp connection.
  * any error is fatal and the connection is closed.
  * (And a read of zero bytes is a half closed stream => error.)
+ *
+ * Note: we have to be careful here not to allow ourselves to become
+ * blocked too long in this routine.  While we're waiting for data from one
+ * client, another client may be trying to connect.  To avoid this situation,
+ * some code from svc_run() is transplanted here: the select() loop checks
+ * all RPC descriptors including the one we want and calls svc_getreqset2()
+ * to handle new requests if any are detected.
  */
 static int
 readtcp (char *xprtptr, char *buf, int len)
@@ -298,39 +304,41 @@ readtcp (char *xprtptr, char *buf, int len)
   SVCXPRT *xprt = (SVCXPRT *)xprtptr;
   int sock = xprt->xp_sock;
 #ifdef FD_SETSIZE
-  fd_set mask;
   fd_set readfds;
-
-  FD_ZERO (&mask);
-  FD_SET (sock, &mask);
 #else
   int mask = 1 << sock;
   int readfds;
 #endif /* def FD_SETSIZE */
-  do
+  while (1)
     {
       struct timeval timeout = wait_per_try;
-      readfds = mask;
+      readfds = svc_fdset;
+#ifdef FD_SETSIZE
+      FD_SET (sock, &readfds);
+#else
+      readfds |= (1 << sock);
+#endif /* def FD_SETSIZE */
       if (select (_rpc_dtablesize (), &readfds, (fd_set *) NULL,
 		  (fd_set *) NULL, &timeout) <= 0)
 	{
 	  if (errno == EINTR)
-	    {
-	      continue;
-	    }
+	    continue;
 	  goto fatal_err;
 	}
+
 #ifdef FD_SETSIZE
-    }
-  while (!FD_ISSET (sock, &readfds));
+      if (FD_ISSET (sock, &readfds))
 #else
-    }
-  while (readfds != mask);
+      if (readfds == mask)
 #endif /* def FD_SETSIZE */
-  if ((len = read (sock, buf, len)) > 0)
-    {
-      return len;
+	break;
+
+      svc_getreqset (&readfds);
     }
+
+  if ((len = read (sock, buf, len)) > 0)
+    return len;
+
 fatal_err:
   ((struct tcp_conn *) (xprt->xp_p1))->strm_stat = XPRT_DIED;
   return -1;

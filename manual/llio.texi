@@ -142,7 +142,7 @@ or @code{O_CREAT} is set and the file does not already exist.
 If on a 32 bits machine the sources are translated with
 @code{_FILE_OFFSET_BITS == 64} the function @code{open} returns a file
 descriptor opened in the large file mode which enables the file handling
-functions to use files up to @math{2^63} in size and offset from
+functions to use files up to @math{2^63} bytes in size and offset from
 @math{-2^63} to @math{2^63}.  This happens transparently for the user
 since all of the lowlevel file handling functions are equally replaced.
 
@@ -266,7 +266,7 @@ on their meaning.
 
 Please note that there is @emph{no} separate @code{close64} function.
 This is not necessary since this function does not determine nor depend
-on the more of the file.  The kernel which performs the @code{close}
+on the mode of the file.  The kernel which performs the @code{close}
 operation knows for which mode the descriptor is used and can handle
 this situation.
 @end deftypefun
@@ -1402,7 +1402,7 @@ These functions are part of the library with realtime functions named
 The implementation of these functions can be done using support in the
 kernel (if available) or using an implementation based on threads at
 userlevel.  In the latter case it might be necessary to link applications
-with the thread library @file{libthread} in addition to @file{librt}.
+with the thread library @file{libpthread} in addition to @file{librt}.
 
 All AIO operations operate on files which were opened previously.  There
 might be arbitrary many operations for one file running.  The
@@ -1429,8 +1429,8 @@ I.e., it is not possible to use any of the AIO operations on devices
 like terminals where an @code{lseek} call would lead to an error.
 
 @item off_t aio_offset
-This element specified at which offset in the file the operation (input
-or output) is performed.  Since the operation are carried in arbitrary
+This element specifies at which offset in the file the operation (input
+or output) is performed.  Since the operations are carried out in arbitrary
 order and more than one operation for one file descriptor can be
 started, one cannot expect a current read/write position of the file
 descriptor.
@@ -1451,10 +1451,10 @@ AIO operation.
 
 @item struct sigevent aio_sigevent
 This element specifies how the calling process is notified once the
-operation terminated.  If the @code{sigev_notify} element is
+operation terminates.  If the @code{sigev_notify} element is
 @code{SIGEV_NONE} no notification is send.  If it is @code{SIGEV_SIGNAL}
 the signal determined by @code{sigev_signo} is send.  Otherwise
-@code{sigev_notify} must be @code{SIGEV_THREAD} in which case a thread
+@code{sigev_notify} must be @code{SIGEV_THREAD}.  In this case a thread
 is created which starts executing the function pointed to by
 @code{sigev_notify_function}.
 
@@ -1478,12 +1478,12 @@ Start a write operation.  Write @code{aio_nbytes} bytes starting at
 @item LIO_NOP
 Do nothing for this control block.  This value is useful sometimes when
 an array of @code{struct aiocb} values contains holes, i.e., some of the
-values must not be handled allthough the whole array is presented to the
+values must not be handled although the whole array is presented to the
 @code{lio_listio} function.
 @end vtable
 @end table
 
-When the sourcs are compiled using @code{_FILE_OFFSET_BITS == 64} on a
+When the sources are compiled using @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this type is in fact @code{struct aiocb64} since the LFS
 interface transparently replaces the @code{struct aiocb} definition.
 @end deftp
@@ -1529,7 +1529,7 @@ AIO operation.
 
 @item struct sigevent aio_sigevent
 This element specifies how the calling process is notified once the
-operation terminated.  If the @code{sigev_notify} element is
+operation terminates.  If the @code{sigev_notify} element is
 @code{SIGEV_NONE} no notification is send.  If it is @code{SIGEV_SIGNAL}
 the signal determined by @code{sigev_signo} is send.  Otherwise
 @code{sigev_notify} must be @code{SIGEV_THREAD} in which case a thread
@@ -1539,7 +1539,7 @@ which starts executing the function pointeed to by
 @item int aio_lio_opcode
 This element is only used by the @code{lio_listio} and
 @code{[lio_listio64} functions.  Since these functions allow to start an
-arbitrary number of operations at once and since each operationcan be
+arbitrary number of operations at once and since each operation can be
 input or output (or nothing) the information must be stored in the
 control block.  See the description of @code{struct aiocb} for a description
 of the possible values.
@@ -1566,7 +1566,7 @@ aiocb64} since the LFS replaces transparently the old interface.
 @deftypefun int aio_read (struct aiocb *@var{aiocbp})
 This function initiates an asynchronous read operation.  The function
 call immediately returns after the operation was enqueued or when an
-error was encoutered.
+error was encountered.
 
 The first @code{aiocbp->aio_nbytes} bytes of the file for which
 @code{aiocbp->aio_fildes} is a descriptor are written to the buffer
@@ -1593,8 +1593,8 @@ limitations.
 The @code{aio_read} function is not implemented.
 @item EBADF
 The @code{aiocbp->aio_fildes} descriptor is not valid.  This condition
-need not be recognized before enqueueing the request and so this error
-might also be signaled asynchrously.
+needs not be recognized before enqueueing the request and so this error
+might also be signaled asynchronously.
 @item EINVAL
 The @code{aiocbp->aio_offset} or @code{aiocbp->aio_reqpiro} value is
 invalid.  This condition need not be recognized before enqueueing the
@@ -1609,7 +1609,7 @@ functions.  As long as the value returned by @code{aio_error} is
 otherwise the value is to be interpreted as an error code.  If the
 function terminated the result of the operation can be get using a call
 to @code{aio_return}.  The returned value is the same as an equivalent
-call to @code{read} would have returned.  Possible error code returned
+call to @code{read} would have returned.  Possible error codes returned
 by @code{aio_error} are:
 
 @table @code
@@ -1635,7 +1635,7 @@ difference is that on @w{32 bits} machines the file descriptor should
 be opened in the large file mode.  Internally @code{aio_read64} uses
 functionality equivalent to @code{lseek64} (@pxref{File Position
 Primitive}) to position the file descriptor correctly for the reading,
-as opposed to @code{lseek} funcationality used in @code{aio_read}.
+as opposed to @code{lseek} functionality used in @code{aio_read}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{aio_read} and so transparently
@@ -1650,7 +1650,7 @@ of functions with a very similar interface.
 @deftypefun int aio_write (struct aiocb *@var{aiocbp})
 This function initiates an asynchronous write operation.  The function
 call immediately returns after the operation was enqueued or if before
-this happens an error was encoutered.
+this happens an error was encountered.
 
 The first @code{aiocbp->aio_nbytes} bytes from the buffer starting at
 @code{aiocbp->aio_buf} are written to the file for which
@@ -1677,12 +1677,12 @@ limitations.
 The @code{aio_write} function is not implemented.
 @item EBADF
 The @code{aiocbp->aio_fildes} descriptor is not valid.  This condition
-need not be recognized before enqueueing the request and so this error
-might also be signaled asynchrously.
+needs not be recognized before enqueueing the request and so this error
+might also be signaled asynchronously.
 @item EINVAL
 The @code{aiocbp->aio_offset} or @code{aiocbp->aio_reqpiro} value is
-invalid.  This condition need not be recognized before enqueueing the
-request and so this error might also be signaled asynchrously.
+invalid.  This condition needs not be recognized before enqueueing the
+request and so this error might also be signaled asynchronously.
 @end table
 
 In the case @code{aio_write} returns zero the current status of the
@@ -1715,11 +1715,11 @@ replaces the normal implementation.
 @comment Unix98
 @deftypefun int aio_write64 (struct aiocb *@var{aiocbp})
 This function is similar to the @code{aio_write} function.  The only
-difference is that only @w{32 bits} machines the file descriptor should
+difference is that on @w{32 bits} machines the file descriptor should
 be opened in the large file mode.  Internally @code{aio_write64} uses
 functionality equivalent to @code{lseek64} (@pxref{File Position
 Primitive}) to position the file descriptor correctly for the writing,
-as opposed to @code{lseek} funcationality used in @code{aio_write}.
+as opposed to @code{lseek} functionality used in @code{aio_write}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
 function is available under the name @code{aio_write} and so transparently
@@ -1755,14 +1755,14 @@ a time.  Another situation is where the @code{lio_listio} call was
 cancelled before all requests are processed (@pxref{Cancel AIO
 Operations}) and the remaining requests have to be reissued.
 
-The the other members of each element of the array pointed to by
+The other members of each element of the array pointed to by
 @code{list} must have values suitable for the operation as described in
 the documentation for @code{aio_read} and @code{aio_write} above.
 
 The @var{mode} argument determines how @code{lio_listio} behaves after
 having enqueued all the requests.  If @var{mode} is @code{LIO_WAIT} it
 waits until all requests terminated.  Otherwise @var{mode} must be
-@code{LIO_NOWAIT} and in this case the function returns immeditely after
+@code{LIO_NOWAIT} and in this case the function returns immediately after
 having enqueued all the requests.  In this case the caller gets a
 notification of the termination of all requests according to the
 @var{sig} parameter.  If @var{sig} is @code{NULL} no notification is
@@ -1793,7 +1793,7 @@ The resources necessary to queue all the requests are not available in
 the moment.  The error status for each element of @var{list} must be
 checked which request failed.
 
-Another reason could be that the systemwide limit of AIO requests is
+Another reason could be that the system wide limit of AIO requests is
 exceeded.  This cannot be the case for the implementation on GNU systems
 since no arbitrary limits exist.
 @item EINVAL
@@ -1801,7 +1801,7 @@ The @var{mode} parameter is invalid or @var{nent} is larger than
 @code{AIO_LISTIO_MAX}.
 @item EIO
 One or more of the request's I/O operations failed.  The error status of
-each request should be checked which one failed.
+each request should be checked for which one failed.
 @item ENOSYS
 The @code{lio_listio} function is not supported.
 @end table
@@ -1823,7 +1823,7 @@ difference is that only @w{32 bits} machines the file descriptor should
 be opened in the large file mode.  Internally @code{lio_listio64} uses
 functionality equivalent to @code{lseek64} (@pxref{File Position
 Primitive}) to position the file descriptor correctly for the reading or
-writing, as opposed to @code{lseek} funcationality used in
+writing, as opposed to @code{lseek} functionality used in
 @code{lio_listio}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
@@ -1835,7 +1835,7 @@ machines.
 @node Status of AIO Operations
 @subsection Getting the Status of AIO Operations
 
-As already decsribes in the documentation of the functions in the last
+As already described in the documentation of the functions in the last
 section it must be possible to get information about the status of a I/O
 request.  When the operation is performed really asynchronous (as with
 @code{aio_read} and @code{aio_write} and with @code{aio_listio} when the
@@ -1847,11 +1847,11 @@ The following two function allow to get this kind of information.
 @comment POSIX.1b
 @deftypefun int aio_error (const struct aiocb *@var{aiocbp})
 This function determines the error state of the request described by the
-@code{struct aiocb} variable pointed to by @var{aiocbp}.  If the the
+@code{struct aiocb} variable pointed to by @var{aiocbp}.  If the
 request has not yet terminated the value returned is always
 @code{EINPROGRESS}.  Once the request has terminated the value
 @code{aio_error} returns is either @math{0} if the request completed
-successfully or it returns the the value which would be stored in the
+successfully or it returns the value which would be stored in the
 @code{errno} variable if the request would have been done using
 @code{read}, @code{write}, or @code{fsync}.
 
@@ -1886,8 +1886,8 @@ carried out by the request described in the variable pointed to by
 by @code{aio_error} is @code{EINPROGRESS} the return of this function is
 undefined.
 
-Once the request is finished this function can used used exactly once to
-retriece the return value.  Following calls might lead to undefined
+Once the request is finished this function can be used exactly once to
+retrieve the return value.  Following calls might lead to undefined
 behaviour.  The return value itself is the value which would have been
 returned by the @code{read}, @code{write}, or @code{fsync} call.
 
@@ -1917,10 +1917,10 @@ machines.
 @subsection Getting into a Consistent State
 
 When dealing with asynchronous operations it is sometimes necessary to
-get into a consistent state.  This would mean for AIO that ones wants to
+get into a consistent state.  This would mean for AIO that one wants to
 know whether a certain request or a group of request were processed.
 This could be done by waiting for the notification sent by the system
-after the operation terminated but this sometimes would been a wasting
+after the operation terminated but this sometimes would mean wasting
 resources (mainly computation time).  Instead POSIX.1b defines two
 functions which will help with most kinds of consistency.
 
@@ -1933,7 +1933,7 @@ defined.
 @comment POSIX.1b
 @deftypefun int aio_fsync (int @var{op}, struct aiocb *@var{aiocbp})
 Calling this function forces all I/O operations operating queued at the
-time of the function call operating on the file desriptor
+time of the function call operating on the file descriptor
 @code{aiocbp->aio_fildes} into the synchronized I/O completion state
 (@pxref{Synchronizing I/O}).  The @code{aio_fsync} function return
 immediately but the notification through the method described in
@@ -1944,12 +1944,12 @@ after the synchronization request are not effected.
 
 If @var{op} is @code{O_DSYNC} the synchronization happens as with a call
 to @code{fdatasync}.  Otherwise @var{op} should be @code{O_SYNC} and
-thee synchronization happens as with @code{fsync}.
+the synchronization happens as with @code{fsync}.
 
-As long as the synchronization hasn't happened a call to
+As long as the synchronization has not happened a call to
 @code{aio_error} with the reference to the object pointed to by
-@var{aiocbp} returns @code{EINPROGRESS}.  Once the synchronizatio is
-done @code{aio_error} return @math{0} if the synchronization wasn
+@var{aiocbp} returns @code{EINPROGRESS}.  Once the synchronization is
+done @code{aio_error} return @math{0} if the synchronization was not
 successful.  Otherwise the value returned is the value to which the
 @code{fsync} or @code{fdatasync} function would have set the
 @code{errno} variable.  In this case nothing can be assumed about the
@@ -1961,7 +1961,7 @@ successfully filed.  Otherwise the return value is @math{-1} and
 
 @table @code
 @item EAGAIN
-The request coulnd't be enqueued due to temporary lack of resources.
+The request could not be enqueued due to temporary lack of resources.
 @item EBADF
 The file descriptor @code{aiocbp->aio_fildes} is not valid or not open
 for writing.
@@ -1990,7 +1990,7 @@ transparently replaces the interface for small files on 32 bits
 machines.
 @end deftypefun
 
-Another method of synchronization is to until one or more requests of a
+Another method of synchronization is to wait until one or more requests of a
 specific set terminated.  This could be achieved by the @code{aio_*}
 functions to notify the initiating process about the termination but in
 some situations this is not the ideal solution.  In a program which
@@ -2020,7 +2020,7 @@ finished.  If @var{timeout} is not @code{NULL} the process remains
 suspended at as long as specified in @var{timeout}.  In this case
 @code{aio_suspend} returns with an error.
 
-The return value of the function is @math{0} is one or more requests
+The return value of the function is @math{0} if one or more requests
 from the @var{list} have terminated.  Otherwise the function returns
 @math{-1} and @code{errno} is set to one of the following values:
 
@@ -2135,7 +2135,7 @@ The POSIX standard does not specify how the AIO functions are
 implemented.  They could be system calls but it is also possible to
 emulate them at userlevel.
 
-At least the available implementatio at the point of this writing is a
+At least the available implementation at the point of this writing is a
 userlevel implementation which uses threads for handling the enqueued
 requests.  This implementation requires to make some decisions about
 limitations but hard limitations are something which better should be

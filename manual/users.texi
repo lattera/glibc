@@ -86,7 +86,7 @@ about a group ID or group name.
 @c When Hurd is more widely used, explain multiple effective user IDs
 @c here. -zw
 At any time, each process has an @dfn{effective user ID}, a @dfn{effective
-group ID}, and a set of @dfn{supplementary group IDs}.  These IDs 
+group ID}, and a set of @dfn{supplementary group IDs}.  These IDs
 determine the privileges of the process.  They are collectively
 called the @dfn{persona} of the process, because they determine ``who it
 is'' for purposes of access control.
@@ -325,7 +325,7 @@ old effective user ID.)
 
 If the process is not privileged, and the system supports the
 @code{_POSIX_SAVED_IDS} feature, then this function behaves like
-@code{seteuid}. 
+@code{seteuid}.
 
 The return values and error conditions are the same as for @code{seteuid}.
 @end deftypefun
@@ -392,7 +392,7 @@ to @var{newgid}, provided that the process is privileged.  It also
 deletes the file group ID, if any.
 
 If the process is not privileged, then @code{setgid} behaves like
-@code{setegid}. 
+@code{setegid}.
 
 The return values and error conditions for @code{setgid} are the same
 as those for @code{seteuid}.
@@ -463,7 +463,7 @@ This function works by scanning the group database for all the groups
 has constructed.
 
 The return values and error conditions are the same as for
-@code{setgroups}. 
+@code{setgroups}.
 @end deftypefun
 
 @node Enable/Disable Setuid
@@ -1170,7 +1170,7 @@ database specified by @var{wtmp_file}.  For possible values for the
 subset of these functions, they are not standardized.  There are often
 subtle differences in the return types, and there are considerable
 differences between the various definitions of @code{struct utmp}.  When
-programming for the GNU system, it is probably probably best to stick
+programming for the GNU system, it is probably best to stick
 with the functions described in this section.  If however, you want your
 program to be portable, consider using the XPG functions described in
 @ref{XPG Functions}, or take a look at the BSD compatible functions in
@@ -1974,4 +1974,3 @@ found in the netgroup.  The return value is @code{0} if the netgroup
 itself is not found, the netgroup does not contain the triple or
 internal errors occurred.
 @end deftypefun
-

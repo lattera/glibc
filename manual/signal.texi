@@ -2176,7 +2176,7 @@ provided only for compatibility with SVID.
 One convenient use for @code{raise} is to reproduce the default behavior
 of a signal that you have trapped.  For instance, suppose a user of your
 program types the SUSP character (usually @kbd{C-z}; @pxref{Special
-Characters}) to send it an interactive stop stop signal
+Characters}) to send it an interactive stop signal
 (@code{SIGTSTP}), and you want to clean up some internal data buffers
 before stopping.  You might set this up like this:
 

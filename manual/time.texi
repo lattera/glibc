@@ -1064,7 +1064,7 @@ The second format is used when there is Daylight Saving Time:
 
 The initial @var{std} and @var{offset} specify the standard time zone, as
 described above.  The @var{dst} string and @var{offset} specify the name
-and offset for the corresponding daylight saving time time zone; if the
+and offset for the corresponding daylight saving time zone; if the
 @var{offset} is omitted, it defaults to one hour ahead of standard time.
 
 The remainder of the specification describes when daylight saving time is

@@ -27,7 +27,7 @@ As mentioned above the message catalog handling provides easy
 extendibility by using external data files which contain the message
 translations.  I.e., these files contain for each of the messages used
 in the program a translation for the appropriate language.  So the tasks
-of the message handling functions functions are
+of the message handling functions are
 
 @itemize @bullet
 @item
@@ -537,7 +537,7 @@ following slavishly the X/Open specs and not relying on the extension
 and by using the GNU extensions.  We will take a look at the former
 method first to understand the benefits of extensions.
 
-@subsubsection Not using symbolic symbolic names
+@subsubsection Not using symbolic names
 
 Since the X/Open format of the message catalog files does not allow
 symbol names we have to work with numbers all the time.  When we start
@@ -673,7 +673,7 @@ int
 main (void)
 @{
   nl_catd catdesc = catopen ("hello.cat", NL_CAT_LOCALE);
-  printf (catgets (catdesc, SetMainSet, SetMainHello, 
+  printf (catgets (catdesc, SetMainSet, SetMainHello,
                    "Hello, world!\n"));
   catclose (catdesc);
   return 0;

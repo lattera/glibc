@@ -1,3 +1,69 @@
+1998-06-15 18:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/ksc5601.h: Clean up a bit.
+
+1998-06-15 14:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/svc_tcp.c (readtcp): Also listen to all the other connections
+	and process incoming data.
+	* sunrpc/xdr_rec.c (set_input_fragment): Only recognize zero length
+	fragments as invalid.
+	Patches by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
+
+1998-06-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	Removal of duplicates like "the the".
+	* manual/time.texi (TZ Variable): Likewise.
+	* manual/users.texi (Manipulating the Database): Likewise.
+	* manual/sysinfo.texi (Filesystem handling): Likewise.
+	* manual/signal.texi (Signaling Yourself): Likewise.
+	* manual/message.texi (Message Translation): Likewise.
+	(Common Usage): Likewise.
+	* manual/llio.texi: Likewise.
+	* manual/arith.texi (Old-style number conversion): Likewise.
+	* manual/argp.texi (Argp): Likewise.
+	(Argp Parsers): Likewise.
+	(Argp Help Filtering): Likewise.
+
+	* hesiod/README.hesiod: Correct typo.
+
+	* manual/llio.texi: Correct typos.
+	* manual/sysinfo.texi: Likewise.
+
+1998-06-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* rt/aio.h: Rename __op to __operation for g++.
+
+1998-06-13 20:17 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* iconvdata/gen-8bit-gap.sh: Use awk not perl.  Clean up sed
+	script.
+	* iconvdata/gen-8bit-gap-1.sh: Likewise.
+	* iconvdata/gen-8bit.sh: Clean up sed script.
+
+	* iconvdata/Makefile: Remove all PERL conditionals; build all
+	the modules all the time.  Export AWK.
+	(gen-8bit-gap): Delete setting of PERL.
+	(gen-8bit-gap-1): Likewise.
+	(perl-generated-headers): Renamed awk-generated-headers.
+
+	* iconvdata/gap.pl: Removed.
+	* iconvdata/gaptab.pl: Removed.
+	* iconvdata/gap.awk: New file.
+	* iconvdata/gaptab.awk: New file.
+
+1998-06-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/Dist: Add errno-loc.c.
+
+	* sysdeps/unix/sysv/linux/alpha/glob.c: Add prototypes for the
+	__new_* functions.
+
+1998-06-14 14:21 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* stdio-common/bug12.c: New test for fread()/fseek().
+	* stdio-common/Makefile (tests): Add bug12.
+
 1998-06-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/generic/elf/backtracesyms.c: Make array elements

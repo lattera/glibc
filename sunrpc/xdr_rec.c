@@ -565,16 +565,20 @@ set_input_fragment (RECSTREAM *rstrm)
 {
   u_long header;
 
-  if (!get_input_bytes (rstrm, (caddr_t) & header, BYTES_PER_XDR_UNIT))
+  if (! get_input_bytes (rstrm, (caddr_t)&header, BYTES_PER_XDR_UNIT))
     return FALSE;
   header = ntohl (header);
   rstrm->last_frag = ((header & LAST_FRAG) == 0) ? FALSE : TRUE;
   /*
    * Sanity check. Try not to accept wildly incorrect
-   * record sizes.
+   * record sizes. Unfortunately, the only record size
+   * we can positively identify as being 'wildly incorrect'
+   * is zero.  Ridiculously large record sizes may look wrong,
+   * but we don't have any way to be certain that they aren't
+   * what the client actually intended to send us.
    */
-  if ((header & (~LAST_FRAG)) > rstrm->recvsize)
-    return(FALSE);
+  if ((header & (~LAST_FRAG)) == 0)
+    return FALSE;
   rstrm->fbtbc = header & ~LAST_FRAG;
   return TRUE;
 }

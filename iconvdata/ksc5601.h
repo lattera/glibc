@@ -85,13 +85,12 @@ static inline size_t
 ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
-  int m;
   int u = KSC5601_HANGUL - 1;
   uint32_t try;
 
   while (l <= u)
     {
-      m = (l + u) / 2;
+      int m = (l + u) / 2;
       try = (uint32_t) __ksc5601_hangul_to_ucs[m];
       if (try > wch)
 	u = m - 1;
@@ -109,7 +108,7 @@ ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char *s, size_t avail)
 	}
     }
 
-  return  UNKNOWN_10646_CHAR;
+  return UNKNOWN_10646_CHAR;
 }
 
 
@@ -117,13 +116,12 @@ static inline size_t
 ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
-  int m;
   int u = KSC5601_HANJA - 1;
   uint32_t try;
 
   while (l <= u)
     {
-      m = (l + u) / 2;
+      int m = (l + u) / 2;
       try = (uint32_t) __ksc5601_hanja_from_ucs[m].ucs;
       if (try > wch)
 	u=m-1;
@@ -148,13 +146,12 @@ static inline  size_t
 ucs4_to_ksc5601_sym (uint32_t wch, unsigned char *s, size_t avail)
 {
   int l = 0;
-  int m;
   int u = KSC5601_SYMBOL - 1;
   uint32_t try;
 
   while (l <= u)
     {
-      m = (l + u) / 2;
+      int m = (l + u) / 2;
       try = __ksc5601_sym_from_ucs[m].ucs;
       if (try > wch)
 	u = m - 1;

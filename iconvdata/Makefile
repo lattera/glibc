@@ -31,17 +31,15 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
 	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423	 \
 	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
-	   CP874 CP737 CP775 ISO-2022-KR
-ifneq ($(PERL),no)
-modules += KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
+	   CP874 CP737 CP775 ISO-2022-KR				 \
+	   KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM424	 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
 	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
 	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
 	   CP1255 CP1256 CP1257 ISO-2022-JP
-endif
-modules.so := $(addsuffix .so, $(modules))
 
+modules.so := $(addsuffix .so, $(modules))
 
 include ../Makeconfig
 
@@ -173,7 +171,7 @@ LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
 LDFLAGS-libGB.so = -Wl,-soname,$(@F)
 LDFLAGS-libCNS.so = -Wl,-soname,$(@F)
 
-distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
+distribute := 8bit-generic.c 8bit-gap.c gap.awk gaptab.awk gconv-modules    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
 	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
 	      t61.c iso6937.c sjis.c jis0201.h jis0208.h jis0212.h	    \
@@ -245,12 +243,14 @@ sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-6.h \
 
 define generate-8bit-gap-table
 $(make-target-directory)
-PERL="$(PERL)" $(SHELL) ./gen-8bit-gap.sh $< > $(@:stmp=T)
+$(SHELL) ./gen-8bit-gap.sh $< > $(@:stmp=T)
 $(move-if-change) $(@:stmp=T) $(@:stmp=h)
 touch $@
 endef
 
-perl-generated-headers := koi8-r.h latin-greek.h latin-greek-1.h	 \
+export AWK
+
+awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  ibm256.h ibm273.h ibm277.h ibm278.h ibm280.h	 \
 			  ibm281.h ibm284.h ibm285.h ibm290.h ibm297.h	 \
 			  ibm420.h ibm424.h ibm437.h ibm850.h ibm851.h	 \
@@ -263,17 +263,15 @@ perl-generated-headers := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  iso8859-10.h iso8859-7jp.h
 
 generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
-	    $(perl-generated-headers) $(perl-generated-headers:%.h=%.stmp) \
+	    $(awk-generated-headers) $(awk-generated-headers:%.h=%.stmp) \
 	    iconv-test.out
 ifdef objpfx
 generated += $(objpfx)gconv-modules
 endif
 
 # The headers must be generated before the compilation.
-before-compile = $(addprefix $(objpfx),$(sed-generated-headers))
-ifneq ($(PERL),no)
-before-compile += $(addprefix $(objpfx),$(perl-generated-headers))
-endif
+before-compile = $(addprefix $(objpfx),\
+			$(sed-generated-headers) $(awk-generated-headers))
 
 # Rules to generate the headers.
 $(sed-generated-headers:%=$(objpfx)%): $(objpfx)%.h: $(objpfx)%.stmp
@@ -355,8 +353,7 @@ $(objpfx)ibm905.stmp: ../localedata/charmaps/IBM905 gen-8bit.sh
 $(objpfx)ibm1047.stmp: ../localedata/charmaps/IBM1047 gen-8bit.sh
 	$(generate-8bit-table)
 
-ifneq ($(PERL),no)
-$(perl-generated-headers:%=$(objpfx)%): $(objpfx)%.h: $(objpfx)%.stmp
+$(awk-generated-headers:%=$(objpfx)%): $(objpfx)%.h: $(objpfx)%.stmp
 	@:
 
 $(objpfx)iso8859-5.stmp: ../localedata/charmaps/ISO-8859-5 gen-8bit-gap.sh
@@ -365,7 +362,7 @@ $(objpfx)iso8859-7.stmp: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)iso8859-7jp.stmp: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap-1.sh
 	$(make-target-directory)
-	PERL="$(PERL)" $(SHELL) ./gen-8bit-gap-1.sh $< >$(@:stmp=T)
+	$(SHELL) ./gen-8bit-gap-1.sh $< >$(@:stmp=T)
 	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 
@@ -460,13 +457,9 @@ $(objpfx)cp1256.stmp: ../localedata/charmaps/CP1256 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)cp1257.stmp: ../localedata/charmaps/CP1257 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-endif
 
-headers: $(addprefix $(objpfx),$(sed-generated-headers))
-ifneq ($(PERL),no)
-headers: $(addprefix $(objpfx),$(perl-generated-headers))
-endif
-
+headers: $(addprefix $(objpfx),\
+		$(sed-generated-headers) $(awk-generated-headers))
 
 $(addprefix $(inst_gconvdir)/, $(modules.so)): \
     $(inst_gconvdir)/%: $(objpfx)% $(+force)

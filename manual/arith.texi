@@ -1339,7 +1339,7 @@ library also provides these functions together with some useful
 extensions in the same sense.
 
 Generally, you should avoid using these functions unless the really fit
-into the problem you have to to solve.  Otherwise it is almost always
+into the problem you have to solve.  Otherwise it is almost always
 better to use @code{sprintf} since its greater availability (it is an
 @w{ISO C} function).
 

@@ -225,7 +225,7 @@ This structure is used with the @code{getfsent}, @code{getfsspec}, and
 
 @table @code
 @item char *fs_spec
-This element desribes the device from which the filesystem is mounted.
+This element describes the device from which the filesystem is mounted.
 Normally this is the name of a special device, such as a hard disk
 partition, but it could also be a more or less generic string.  For
 @dfn{NFS} it would be a hostname and directory name combination.
@@ -236,8 +236,8 @@ function predates @w{ISO C}.  The same is true for the other string
 elements of this structure.
 
 @item char *fs_file
-This desribes the mount point on the local system.  I.e., accessing any
-file in this filesystem has this string implicitly or explicitly as a
+This describes the mount point on the local system.  I.e., accessing any
+file in this filesystem has implicitly or explicitly this string as a
 prefix.
 
 @item char *fs_vfstype
@@ -422,10 +422,10 @@ Expands to @code{"defaults"}.  This option should be used alone since it
 indicates all values for the custumizable values are chosen to be the
 default.
 @item MNTOPT_RO
-Expands to @code{"ro"}.  See the the @code{FSTAB_RO} value, it means the
+Expands to @code{"ro"}.  See the @code{FSTAB_RO} value, it means the
 filesystem is mounted read-only.
 @item MNTOPT_RW
-Expand to @code{"rw"}.  See the the @code{FSTAB_RW} value, it means the
+Expand to @code{"rw"}.  See the @code{FSTAB_RW} value, it means the
 filesystem is mounted with read and write permissions.
 @item MNTOPT_SUID
 Expands to @code{"suid"}.  This means that the SUID bit (@pxref{How
