@@ -1,3 +1,7 @@
+2000-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-dir.c: Test a few error cases of chdir.
+
 2000-09-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/math_private.h: Don't add long double prototypes if

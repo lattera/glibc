@@ -1,4 +1,24 @@
+/* Copyright (C) 2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
 #include <dirent.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <mcheck.h>
 #include <stdio.h>
@@ -338,7 +358,7 @@ main (int argc, char *argv[])
       result = 1;
     }
 
-  if (chdir (buf)< 0)
+  if (chdir (buf) < 0)
     {
       printf ("cannot change to new directory: %m\n");
       exit (1);
@@ -376,6 +396,43 @@ main (int argc, char *argv[])
       exit (1);
     }
   close (fd);
+
+  /* Some tests about error reporting.  */
+  errno = 0;
+  if (chdir ("and-a-file") >= 0)
+    {
+      printf ("chdir to \"and-a-file\" succeeded\n");
+      exit (1);
+    }
+  if (errno != ENOTDIR)
+    {
+      printf ("chdir to \"and-a-file\" didn't set correct error\n");
+      result = 1;
+    }
+
+  errno = 0;
+  if (chdir ("and-a-file/..") >= 0)
+    {
+      printf ("chdir to \"and-a-file/..\" succeeded\n");
+      exit (1);
+    }
+  if (errno != ENOTDIR)
+    {
+      printf ("chdir to \"and-a-file/..\" didn't set correct error\n");
+      result = 1;
+    }
+
+  errno = 0;
+  if (chdir ("another-dir/../and-a-file") >= 0)
+    {
+      printf ("chdir to \"another-dir/../and-a-file\" succeeded\n");
+      exit (1);
+    }
+  if (errno != ENOTDIR)
+    {
+      printf ("chdir to \"another-dir/../and-a-file\" didn't set correct error\n");
+      result = 1;
+    }
 
   /* We now should have a directory and a file in the new directory.  */
   rewinddir (dir2);
