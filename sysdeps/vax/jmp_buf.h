@@ -4,4 +4,4 @@ typedef struct
   {
     PTR __fp;
     PTR __pc;
-  } jmp_buf[1];
+  } __jmp_buf[1];
