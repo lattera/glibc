@@ -4,7 +4,7 @@
 /*@end group*/
 
 static int
-one (struct dirent *unused)
+one (const struct dirent *unused)
 {
   return 1;
 }
