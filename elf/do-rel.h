@@ -48,6 +48,10 @@ elf_dynamic_do_rel (struct link_map *map,
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
   ElfW(Addr) l_addr = map->l_addr;
 
+#ifndef RTLD_BOOTSTRAP
+  /* We never bind lazily during ld.so bootstrap.  Unfortunately gcc is
+     not clever enough to see through all the function calls to realize
+     that.  */
   if (lazy)
     {
       /* Doing lazy PLT relocations; they need very little info.  */
@@ -55,17 +59,14 @@ elf_dynamic_do_rel (struct link_map *map,
 	elf_machine_lazy_rel (map, l_addr, r);
     }
   else
+#endif
     {
       const ElfW(Sym) *const symtab =
 	(const void *) D_PTR (map, l_info[DT_SYMTAB]);
-#ifndef RTLD_BOOTSTRAP
       ElfW(Word) nrelative = (map->l_info[RELCOUNT_IDX] == NULL
 			      ? 0 : map->l_info[RELCOUNT_IDX]->d_un.d_val);
-#else
-      ElfW(Word) nrelative = 0;
-#endif
       const ElfW(Rel) *relative = r;
-      r += nrelative;
+      r = MIN (r + nrelative, end);
 
 #ifndef RTLD_BOOTSTRAP
       /* This is defined in rtld.c, but nowhere in the static libc.a; make
