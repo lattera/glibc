@@ -1,5 +1,10 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Implement handling of recursive
+	allow-header.
+
+	* conform/data/locale.h-data: Add new struct lconv members.
+
 	* posix/wordexp.h: Correct definition of wordexp_t.
 	* posix/wordexp.c: Moved to ...
 	* sysdeps/generic/wordexp.c: ...here.  New file.

@@ -268,6 +268,7 @@ while ($#headers >= 0) {
   my($missing);
   my(@allow) = ();
   my(@allowheader) = ();
+  my(%seenheader) = ();
   my($prepend) = $mustprepend{$h};
 
   printf ("Testing <$h>\n");
@@ -730,7 +731,10 @@ while ($#headers >= 0) {
 		   "Macro \"$macro\" is not available.", $missing, 0);
     } elsif (/^allow-header *(.*)/) {
       my($pattern) = $1;
-      push @allowheader, $pattern;
+      if ($seenheader{$pattern} != 1) {
+	push @allowheader, $pattern;
+	$seenheader{$pattern} = 1;
+      }
       next control;
     } elsif (/^allow *(.*)/) {
       my($pattern) = $1;
@@ -782,8 +786,10 @@ while ($#headers >= 0) {
       } elsif (/^macro *([^	]*)/) {
 	push @allow, $1;
       } elsif (/^allow-header *(.*)/) {
-	# XXX We should have a test for recursive dependencies here.
-	push @allowheader, $1;
+	if ($seenheader{$1} != 1) {
+	  push @allowheader, $1;
+	  $seenheader{$1} = 1;
+	}
       } elsif (/^allow *(.*)/) {
 	push @allow, $1;
       }

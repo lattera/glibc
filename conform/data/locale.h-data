@@ -17,6 +17,14 @@ element {struct lconv} char p_cs_precedes
 element {struct lconv} char p_sep_by_space
 element {struct lconv} char p_sign_posn
 element {struct lconv} {char*} thousands_sep
+#ifdef XOPEN2K
+element {struct lconv} char int_n_cs_precedes
+element {struct lconv} char int_n_sep_by_space
+element {struct lconv} char int_n_sign_posn
+element {struct lconv} char int_p_cs_precedes
+element {struct lconv} char int_p_sep_by_space
+element {struct lconv} char int_p_sign_posn
+#endif
 
 constant NULL
 
