@@ -52,17 +52,12 @@ _init:
 	mov r32 = r12
 	mov r33 = b0
 	adds r12 = -16, r12
-	addl r14 = @ltoff(@fptr(__gmon_start__#)), gp
 	;;
-	ld8 r15 = [r14]
 /* we could use r35 to save gp, but we use the stack since that's what
  * all the other init routines will do --davidm 00/04/05 */
 	st8 [r12] = gp, -16
 	br.call.sptk.many b0 = __pthread_initialize_minimal# ;;
 	;;
-	cmp.ne p6, p0 = 0, r15
-
-(p6)	br.call.sptk.many b0 = __gmon_start__# ;;
 	adds r12 = 16, r12
 	;;
 	ld8 gp = [r12]
@@ -97,8 +92,6 @@ _fini:
 	.endp _fini#
 
 /*@_fini_PROLOG_ENDS*/
-	br.call.sptk.many b0 = i_am_not_a_leaf# ;;
-	;;
 
 /*@_fini_EPILOG_BEGINS*/
 	.section .fini

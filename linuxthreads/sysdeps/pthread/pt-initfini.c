@@ -70,16 +70,6 @@ call_initialize_minimal (void)
   __pthread_initialize_minimal ();
 }
 
-static void
-call_gmon_start(void)
-{
-  extern void __gmon_start__ (void) __attribute__ ((weak)); /*weak_extern (__gmon_start__);*/
-  void (*gmon_start) (void) = __gmon_start__;
-
-  if (gmon_start)
-    gmon_start ();
-}
-
 SECTION (".init");
 extern void _init (void);
 void
@@ -87,14 +77,6 @@ _init (void)
 {
   /* The very first thing we must do is to set up the registers.  */
   call_initialize_minimal ();
-
-  /* We cannot use the normal constructor mechanism in gcrt1.o because it
-     appears before crtbegin.o in the link, so the header elt of .ctors
-     would come after the elt for __gmon_start__.  One approach is for
-     gcrt1.o to reference a symbol which would be defined by some library
-     module which has a constructor; but then user code's constructors
-     would come first, and not be profiled.  */
-  call_gmon_start ();
 
   asm ("ALIGN");
   asm("END_INIT");
