@@ -1,3 +1,8 @@
+2002-02-08  Daniel Jacobowitz  <drow@mvista.com>
+
+	* sysdeps/mips/machine-gmon.h: Update MCOUNT for current GCC
+	behavior.
+
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Define R_386_TLS_GD and R_386_TLS_LDM.
