@@ -1,5 +1,8 @@
 2003-03-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/timer_create.c (timer_create): Return correct
+	error for CPU clocks.
+
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
 	_POSIX_MONOTONIC_CLOCK.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.

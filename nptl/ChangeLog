@@ -1,5 +1,9 @@
 2003-03-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
+	_POSIX_MONOTONIC_CLOCK.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+
 	* tst-cancel4.c (tf_sleep): Lower sleep time a bit to not upset
 	recent kernels.
 

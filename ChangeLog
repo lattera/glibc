@@ -1,3 +1,28 @@
+2003-03-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/time.h: Define CLOCK_MONOTONIC.
+	* sysdeps/posix/clock_getres.c: Define code for CLOCK_REALTIME only
+	if not already defined.  Use SYSDEP_GETRES to allow other files to
+	provide alternative implementations.
+	* sysdeps/unix/sysv/linux/clock_getres.c: New file
+	* sysdeps/unix/clock_gettime.c: Define code for CLOCK_REALTIME only
+	if not already defined.  Use SYSDEP_GETTIME to allow other files to
+	provide alternative implementations.
+	* sysdeps/unix/sysv/linux/clock_gettime.c: New file.
+	* sysdeps/unix/clock_settime.c: Define code for CLOCK_REALTIME only
+	if not already defined.  Use SYSDEP_GETTIME to allow other files to
+	provide alternative implementations.
+	* sysdeps/unix/sysv/linux/clock_settime.c: New file.
+	* sysdeps/unix/clock_nanosleep.c: Use SYSDEP_NANOSLEEP to allow
+	other files to provide alternative implementations.  Rearrange
+	tests for invalid parameters.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c: New file.
+	* sysdeps/unix/sysv/linux/sysconf.c: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_POSIX_TIMERS for Linux 2.4.63 and up.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
+	_POSIX_MONOTONIC_CLOCK.
+
 2003-03-02  Roland McGrath  <roland@redhat.com>
 
 	* scripts/merge-abilist.awk: More checks for bogus input.
