@@ -1,5 +1,8 @@
 2003-05-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* csu/Makefile: Do compile elf-init with PIC flag since in dynamic
+	binaries it has to be relocatable.
+
 	* sysdeps/unix/sysv/linux/waitpid.c: Use waitpid syscall is available.
 
 2003-05-12  Steven Munroe  <sjmunroe@us.ibm.com>
