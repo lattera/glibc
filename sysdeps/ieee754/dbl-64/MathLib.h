@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /********************************************************************/
 /* Ultimate math functions. Each function computes the exact        */
@@ -33,7 +33,7 @@
 /* It returns the original status of these modes.                   */
 /* See further explanations of usage in DPChange.h                  */
 /********************************************************************/
-unsigned short Init_Lib();
+unsigned short Init_Lib(void);
 
 /********************************************************************/
 /* Function that changes the precision and rounding modes to the    */
@@ -68,7 +68,7 @@ double uatan(double );
 /* and y (x is the right argument and y is the left one).The signs of both   */
 /* arguments are used to determine the quadrant of the result.               */
 /* The function returns the result in radians, which is between -PI and PI   */
-double uatan2(double ,double ); 
+double uatan2(double ,double );
 
 /* Compute log(x). The base of log is e (natural logarithm)         */
 double ulog(double );
