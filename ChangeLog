@@ -1,3 +1,13 @@
+2004-09-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rela_relative): Replace
+	static inline by auto inline, add always_inline attribute.
+	(elf_machine_rel): Likewise.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	(elf_machine_lazy_rela): Likewise.
+	(elf_machine_rel_relative): Likewise.
+
 2004-09-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/xdr_intXX_t.c: Add xdr_quad_t and xdr_u_quad_t aliases.
