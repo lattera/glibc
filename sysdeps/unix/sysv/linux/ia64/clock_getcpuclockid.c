@@ -34,6 +34,8 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   if (pid != 0 && pid != getpid ())
     return EPERM;
 
+  int retval = ENOENT;
+
   if (has_cpuclock () > 0)
     {
       /* Store the number.  */
