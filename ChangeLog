@@ -1,3 +1,7 @@
+1999-12-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c (regex_compile): Implement equivalence class handling.
+
 1999-12-30  Geoffrey Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/dl-machine.c: Many minor formatting changes.
@@ -5,8 +9,8 @@
 	(OPCODE_ADDIS_HI): New macro.
 	(OPCODE_LIS_HI): New macro.
 	(__elf_machine_runtime_setup): Change PLT code-generation scheme
- 	for thread safety even with very large PLTs, better efficiency,
- 	and to fix a cache-flushing bug.  Also support the Motorola
+	for thread safety even with very large PLTs, better efficiency,
+	and to fix a cache-flushing bug.  Also support the Motorola
 	8xx processors which have a different cache line size than all
 	the others.
 	(__elf_machine_fixup_plt): Likewise.
