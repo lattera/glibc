@@ -1,3 +1,11 @@
+Thu Aug 15 02:08:59 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/nss.texi: New file.  Document NSS.
+	* manual/nsswitch.texi: New file.  Example configuration.
+
+	* manual/string.texi: Document stpncpy, strdupa, and strndupa.
+	* manual/example/strdupa.c: New file.  Example for strdupa.
+
 Wed Aug 14 21:36:16 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/strtod.c (STRTOD): Correct assertion about size of
