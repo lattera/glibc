@@ -344,6 +344,8 @@ innetgr (const char *netgroup, const char *host, const char *user,
   const char *current_group = netgroup;
   int real_entry = 0;
 
+  __libc_lock_lock (lock);
+
   /* Walk through the services until we found an answer or we shall
      not work further.  We can do some optimization here.  Since all
      services must provide the `setnetgrent' function we can do all
@@ -444,6 +446,8 @@ innetgr (const char *netgroup, const char *host, const char *user,
       /* No way out.  */
       break;
     }
+
+  __libc_lock_unlock (lock);
 
   /* Free the memory.  */
   while (known != NULL)

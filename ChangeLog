@@ -1,5 +1,10 @@
 2004-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/getnetgrent_r.c (innetgr): We must get the lock used for
+	the set/get/end interfaces since we call all these functions in
+	succession and must not be interrupted doing this.
+	Reported by Chuck Simmons.
+
 	* inet/netgroup.h (struct name_list): Replace name pointer with
 	zero-sized array.
 	* inet/getnetgrent_r.c: Adjust code for change in name_list
