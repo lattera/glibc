@@ -289,12 +289,11 @@ _dl_start_user:\n\
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #ifdef USE_TLS
-# define elf_machine_type_class(type) \
-  ((((type) == R_X86_64_JUMP_SLOT
-     || (type) == R_X86_64_DTPMOD64
-     || (type) == R_X86_64_DTPOFF64 || (type) == R_X86_64_DTPOFF32
-     || (type) == R_X86_64_TPOFF64 || (type) == R_X86_64_TPOFF32)
-    * ELF_RTYPE_CLASS_PLT)  \
+# define elf_machine_type_class(type)					      \
+  ((((type) == R_X86_64_JUMP_SLOT					      \
+     || (type) == R_X86_64_DTPMOD64					      \
+     || (type) == R_X86_64_DTPOFF64 || (type) == R_X86_64_TPOFF64)	      \
+    * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
 # define elf_machine_type_class(type) \

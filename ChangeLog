@@ -1,3 +1,8 @@
+2002-09-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_type_class): Remove
+	unneeded TLS cases.
+
 2002-09-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-addr.c (_dl_addr): Set dli_fbase to l_map_start
