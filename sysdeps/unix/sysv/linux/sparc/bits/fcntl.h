@@ -37,11 +37,24 @@
 #define O_NONBLOCK	0x4000
 #define O_NDELAY	(0x0004 | O_NONBLOCK)
 #define O_NOCTTY	0x8000	/* not fcntl */
-#define O_DIRECTORY	0x10000 /* must be a directory */
-#define O_NOFOLLOW	0x20000 /* don't follow links */
 
+#ifdef __USE_GNU
+# define O_DIRECTORY	0x10000 /* must be a directory */
+# define O_NOFOLLOW	0x20000 /* don't follow links */
+#endif
+
+#ifdef __USE_LARGEFILE64
 /* XXX missing */
-#define O_LARGEFILE	0
+# define O_LARGEFILE	0
+#endif
+
+/* For now Linux has no synchronisity options for data and read
+   operations.  We define the symbols here but let them do the same as
+   O_SYNC since this is a superset.  */
+#if defined __USE_POSIX199309 || defined __USE_UNIX98
+# define O_DSYNC	O_SYNC	/* Synchronize data.  */
+# define O_RSYNC	O_SYNC	/* Synchronize read operations.  */
+#endif
 
 /* Values for the second argument to `fcntl'.  */
 #define F_DUPFD		0	/* Duplicate file descriptor.  */

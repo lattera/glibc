@@ -1,3 +1,14 @@
+1999-08-06  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_DSYNC, O_RSYNC):
+	New definitions.
+	(O_DIRECTORY, O_NOFOLLOW): Define only if __USE_GNU.
+	(O_LARGEFILE): Define only if __USE_LARGEFILE64.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (O_DSYNC, O_RSYNC):
+	New definitions.
+	(O_LARGEFILE): Define only if __USE_LARGEFILE64.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_LARGEFILE): Likewise.
+
 1999-08-06  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/ieee754/ldbl-128/e_expl.c: New file.
