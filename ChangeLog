@@ -1,3 +1,8 @@
+2001-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (SHMFS_SUPER_MAGIC):
+	Update for real 2.4 kernels.
+
 2001-03-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c: Pretty printing.
