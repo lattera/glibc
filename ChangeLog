@@ -1,3 +1,9 @@
+1998-09-13  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/bits/types.h: Include <features.h>.  Make sure
+	size_t is defined.  Some reordering of defenitions to make
+	maintaining this file in parallel with the linux-specific file easier.
+
 1998-09-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/pwd.c (main): Add call to mtrace.
