@@ -282,6 +282,13 @@ __inline_functions (float,f)
 __inline_functions (long double,l)
 #undef __inline_functions
 
+__m81_defun (long int, __rinttol, (long double __x))
+{
+  long int __result;
+  __asm ("fmove%.l %1, %0" : "=dm" (__result) : "f" (__x));
+  return __result;
+}
+
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 /* Define inline versions of the user visible functions.  */
@@ -349,6 +356,7 @@ __inline_forward_c(int,ilogbl, (long double __value), (__value))
 #endif
 #ifdef __USE_ISOC9X
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
+__inline_forward_c(long int,rinttol, (long double __value), (__value))
 #endif
 
 #endif /* Use misc or ISO C9X */
