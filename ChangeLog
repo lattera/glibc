@@ -1,3 +1,8 @@
+Tue Mar 12 03:15:02 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/fpu_control.h (_FPU_DEFAULT): Change
+	default to double precision, all interrupts masked; fdlibm requires.
+
 Sat Mar  9 18:44:27 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/setfpucw.c: Obsolete file removed.

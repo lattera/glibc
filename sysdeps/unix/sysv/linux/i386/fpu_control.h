@@ -63,8 +63,8 @@ Boston, MA 02111-1307, USA.  */
 #define _FPU_MASK_PM  0x20
 
 /* precision control */
-#define _FPU_EXTENDED 0x300   /* RECOMMENDED */
-#define _FPU_DOUBLE   0x200
+#define _FPU_EXTENDED 0x300
+#define _FPU_DOUBLE   0x200	/* fdlibm requires double precision */
 #define _FPU_SINGLE   0x0     /* DO NOT USE */
 
 /* rounding control */
@@ -76,16 +76,13 @@ Boston, MA 02111-1307, USA.  */
 #define _FPU_RESERVED 0xF0C0  /* Reserved bits in cw */
 
 
-/* Now two recommended cw */
+/* The fdlibm code requires strict IEEE double precision arithmetic,
+   and no interrupts for exceptions, rounding to nearest.  */
 
-/* Linux default:
-     - extended precision
-     - rounding to nearest
-     - exceptions on overflow, zero divide and NaN */
-#define _FPU_DEFAULT  0x1372
+#define _FPU_DEFAULT  0x127f
 
 /* IEEE:  same as above, but exceptions */
-#define _FPU_IEEE     0x137f
+#define _FPU_IEEE     0x127f
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
