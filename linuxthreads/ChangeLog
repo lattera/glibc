@@ -1,3 +1,8 @@
+2000-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/pt-machine.h (testandset): Adjust for prototype change.
+	* sysdeps/i386/i686/pt-machine.h (testandset): Likewise.
+
 2000-12-17  Andreas Jaeger  <aj@suse.de>
 
 	* internals.h: Add prototypes for testandset and
