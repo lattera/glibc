@@ -1,3 +1,8 @@
+1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/clnt_udp.c (clntudp_call): Move initialization of anyup
+	so that it is redone for each sending.
+
 1999-04-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sunrpc/clnt_udp.c (clntudp_call): Initialize anyup.
