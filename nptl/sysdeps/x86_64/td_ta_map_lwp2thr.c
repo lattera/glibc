@@ -32,13 +32,8 @@ td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
   if (! ta_ok (ta))
     return TD_BADTA;
 
-  prgregset_t regs;
-  if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
-    return TD_ERR;
-
-  /* Get the thread area for the addressed thread.  */
-  if (ps_get_thread_area (ta->ph, lwpid, regs[FS] >> 3, &th->th_unique)
-      != PS_OK)
+  /* Get the %fs segment register base address for the addressed thread.  */
+  if (ps_get_thread_area (ta->ph, lwpid, FS, &th->th_unique) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* Found it.  Now complete the `td_thrhandle_t' object.  */
