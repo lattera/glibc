@@ -31,8 +31,8 @@
 /* Processes have a saved set-user-ID and a saved set-group-ID.  */
 #define	_POSIX_SAVED_IDS	1
 
-/* Synchronizing file data is supported.  */
-#define	_POSIX_SYNCHRONIZED_IO	1
+/* Synchronizing file data is supported, but msync is missing.  */
+#undef _POSIX_SYNCHRONIZED_IO
 
 /* The fsync function is present.  */
 #define	_POSIX_FSYNC	1
