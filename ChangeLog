@@ -4,9 +4,6 @@
 	* include/libc-symbols.h (weak_extern): Add extra level of expansion.
 	(symbol_version, default_symbol_version): Factor redundant
 	definitions out of conditional.
-	* linuxthreads/sysdeps/pthread/bits/libc-lock.h:
-	Wrap BP_SYM () around weak extern declarations of pthread
-	functions that have pointers in their return+arg signatures.
 
 2000-06-27  Jakub Jelinek  <jakub@redhat.com>
 
