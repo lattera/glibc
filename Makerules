@@ -883,6 +883,20 @@ $(inst_slibdir)/libc-$(version).so: $(common-objpfx)libc.so $(+force)
 	$(do-install-program)
 install: $(inst_slibdir)/libc.so$(libc.so-version)
 
+# This fragment of linker script gives the OUTPUT_FORMAT statement
+# for the configuration we are building.  We put this statement into
+# the linker scripts we install for -lc et al so that they will not be
+# used by a link for a different format on a multi-architecture system.
+$(common-objpfx)format.lds: $(..)scripts/output-format.sed \
+			    $(common-objpfx)config.make \
+			    $(common-objpfx)config.h $(..)Makerules
+	$(LINK.o) -shared $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
+		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>&1 \
+	| sed -n -f $< > $@.new
+	rm -f $@.so
+	mv -f $@.new $@
+common-generated += format.lds
+
 ifndef subdir
 # What we install as libc.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
@@ -891,13 +905,15 @@ ifndef subdir
 # We need to use absolute paths since otherwise local copies (if they exist)
 # of the files are taken by the linker.
 install: $(inst_libdir)/libc.so
-$(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
+$(inst_libdir)/libc.so: $(common-objpfx)format.lds \
+			$(common-objpfx)libc.so$(libc.so-version) \
 			$(inst_libdir)/$(patsubst %,$(libtype.oS),\
 						  $(libprefix)$(libc-name)) \
 			$(+force)
 	(echo '/* GNU ld script';\
 	 echo '   Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.  */';\
+	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
 	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)$(libc-name))'\
 	      ')' \
