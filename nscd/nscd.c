@@ -159,7 +159,10 @@ main (int argc, char **argv)
     {
       int i;
 
-      if (fork ())
+      pid_t pid = fork ();
+      if (pid == -1)
+	error (EXIT_FAILURE, errno, _("cannot fork"));
+      if (pid != 0)
 	exit (0);
 
       int nullfd = open (_PATH_DEVNULL, O_RDWR);
@@ -211,7 +214,10 @@ main (int argc, char **argv)
 	for (i = min_close_fd; i < getdtablesize (); i++)
 	  close (i);
 
-      if (fork ())
+      pid = fork ();
+      if (pid == -1)
+	error (EXIT_FAILURE, errno, _("cannot fork"));
+      if (pid != 0)
 	exit (0);
 
       setsid ();
@@ -237,7 +243,7 @@ main (int argc, char **argv)
   signal (SIGTERM, termination_handler);
   signal (SIGPIPE, SIG_IGN);
 
-  /* Cleanup files created by a previous `bind'.  */
+  /* Cleanup files created by a previous 'bind'.  */
   unlink (_PATH_NSCDSOCKET);
 
   /* Make sure we do not get recursive calls.  */
@@ -394,13 +400,13 @@ termination_handler (int signum)
 {
   close_sockets ();
 
-  /* Clean up the file created by `bind'.  */
+  /* Clean up the file created by 'bind'.  */
   unlink (_PATH_NSCDSOCKET);
 
   /* Clean up pid file.  */
   unlink (_PATH_NSCDPID);
 
-  exit (EXIT_SUCCESS);
+  _exit (EXIT_SUCCESS);
 }
 
 /* Returns 1 if the process in pid file FILE is running, 0 if not.  */

@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 #if defined USE_TLS && defined SHARED
       if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
 	/* The found symbol is a thread-local storage variable.
-	   Return the address for to the current thread.  */
+	   Return the address for the current thread.  */
 	return _dl_tls_symaddr (result, ref);
 #endif
 

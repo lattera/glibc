@@ -1,4 +1,10 @@
+2004-02-20  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/nscd.c (termination_handler): Use _exit instead of exit
+
 2004-02-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.c (main): Report fork errors.
 
 	* dlfcn/dlsym.c: Get ld.so loading lock before the call into ld.so.
 	* dlfcn/dlvsym.c: Likewise.
