@@ -72,10 +72,13 @@ timer_delete (timerid)
 	 Return the error.  */
 # ifndef __ASSUME_POSIX_TIMERS
       if (errno != ENOSYS)
+	{
+	  __no_posix_timers = 1;
 # endif
-	return -1;
-
+	  return -1;
 # ifndef __ASSUME_POSIX_TIMERS
+	}
+
       __no_posix_timers = -1;
 # endif
     }

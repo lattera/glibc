@@ -115,6 +115,12 @@ timer_create (clock_id, evp, timerid)
 	    }
 
 	  free (newp);
+
+# ifndef __ASSUME_POSIX_TIMERS
+	  /* When we come here the syscall does not exist.  Make sure we
+	     do not try to use it again.  */
+	  __no_posix_timers = -1;
+# endif
 	}
       else
 	{
@@ -224,12 +230,6 @@ timer_create (clock_id, evp, timerid)
 	      return -1;
 	    }
 	}
-
-# ifndef __ASSUME_POSIX_TIMERS
-      /* When we come here the syscall does not exist.  Make sure we
-	 do not try to use it again.  */
-      __no_posix_timers = -1;
-# endif
     }
 
 # ifndef __ASSUME_POSIX_TIMERS

@@ -1,3 +1,12 @@
+2003-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_delete.c (timer_delete): Even if
+	timer_delete syscall fails, but not with ENOSYS, set
+	__no_posix_timers.
+
+	* sysdeps/unix/sysv/linux/timer_settime.c [!__ASSUME_POSIX_TIMERS]
+	(timer_settime): Fix typo.
+
 2003-03-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Fix
