@@ -1,3 +1,10 @@
+2001-04-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/be_BY: Fix syntax in LC_COLLATE section.
+	* locales/ru_UA: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/uk_UA: Likewise.
+
 2001-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/fa_IR: Add outdigit information and collation.
