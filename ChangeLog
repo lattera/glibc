@@ -1,3 +1,8 @@
+2003-01-25  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h (_dl_start_user): Use pc-relative
+	addressing to save GOT entries.
+
 2003-01-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h (inline_syscall0,
