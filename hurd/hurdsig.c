@@ -112,7 +112,7 @@ _hurd_thread_sigstate (thread_t thread)
 /* Signal delivery itself is on this page.  */
 
 #include <hurd/fd.h>
-#include <hurd/core.h>
+#include <hurd/crash.h>
 #include <hurd/paths.h>
 #include <setjmp.h>
 #include <fcntl.h>
@@ -125,7 +125,7 @@ _hurd_thread_sigstate (thread_t thread)
 
 int _hurd_core_limit;	/* XXX */
 
-/* Call the core server to mummify us before we die.
+/* Call the crash dump server to mummify us before we die.
    Returns nonzero if a core file was written.  */
 static int
 write_corefile (int signo, long int sigcode, int sigerror)
@@ -142,11 +142,11 @@ write_corefile (int signo, long int sigcode, int sigerror)
 
   /* First get a port to the core dumping server.  */
   coreserver = MACH_PORT_NULL;
-  name = _hurdsig_getenv ("CORESERVER");
+  name = _hurdsig_getenv ("CRASHSERVER");
   if (name != NULL)
     coreserver = __file_name_lookup (name, 0, 0);
   if (coreserver == MACH_PORT_NULL)
-    coreserver = __file_name_lookup (_SERVERS_CORE, 0, 0);
+    coreserver = __file_name_lookup (_SERVERS_CRASH, 0, 0);
   if (coreserver == MACH_PORT_NULL)
     return 0;
 
@@ -164,10 +164,10 @@ write_corefile (int signo, long int sigcode, int sigerror)
     return 0;
 
   /* Call the core dumping server to write the core file.  */
-  err = __core_dump_task (coreserver,
-			  __mach_task_self (),
-			  file, _hurdsig_getenv ("GNUTARGET"),
-			  signo, sigcode, sigerror);
+  err = __crash_dump_task (coreserver,
+			   __mach_task_self (),
+			   file, _hurdsig_getenv ("GNUTARGET"),
+			   signo, sigcode, sigerror);
   __mach_port_deallocate (__mach_task_self (), coreserver);
   if (! err)
     /* The core dump into FILE succeeded, so now link it into the

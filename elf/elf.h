@@ -112,7 +112,7 @@ typedef struct
 #define EM_486		6		/* Intel 80486 */
 #define EM_860		7		/* Intel 80860 */
 #define EM_MIPS		8		/* MIPS R3000 big-endian */
-#define EM_S370		9		/* Amdhal */
+#define EM_S370		9		/* Amdahl */
 #define EM_MIPS_RS4_BE 10		/* MIPS R4000 big-endian */
 
 #define EM_SPARC64     11		/* SPARC v9 (not official) 64-bit */

@@ -35,7 +35,7 @@ interface-library := libhurduser
 user-interfaces		:= $(addprefix hurd/,\
 				       auth process startup \
 				       msg msg_reply msg_request \
-				       exec core interrupt \
+				       exec crash interrupt \
 				       fs fsys io term socket ifsock)
 server-interfaces	:= hurd/msg
 

@@ -1,3 +1,10 @@
+Fri Sep 15 21:34:28 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c: Include <hurd/crash.h> in place of <hurd/core.h>.
+	(write_corefile): Call __crash_dump_task instead of __core_dump_task.
+	Use envariable CRASHSERVER instead of CORESERVER.
+	* hurd/Makefile (user-interfaces): Replace hurd/core with hurd/crash.
+
 Tue Sep 12 14:30:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* misc/mntent.c: New file.
