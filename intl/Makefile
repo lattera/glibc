@@ -1,6 +1,6 @@
 # Makefile for intl subdirectory: message handling code from GNU gettext.
 
-# Copyright (C) 1995 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,12 +31,12 @@ CPPFLAGS += -D'GNULOCALEDIR="$(localedir)"' \
 
 ifdef gettext-srcdir
 
-%.h:: $(gettext-srcdir)/intl/%.glibc; $(copysrc)
-%.c:: $(gettext-srcdir)/intl/%.c; $(copysrc)
-%.h:: $(gettext-srcdir)/intl/%.h; $(copysrc)
+%.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.glibc; $(copysrc)
+%.c:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.c; $(copysrc)
+%.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.h; $(copysrc)
 
 define copysrc
-cp -f $< $@.new
+sed -f $^ $@.new
 chmod a-w $@.new
 mv -f $@.new $@
 test ! -d CVS || cvs commit -m'Updated from $<' $@

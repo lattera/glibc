@@ -1,3 +1,7 @@
+Mon Mar 25 13:10:04 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* intl/Makefile [gettext-srcdir]: Use gpl2lgpl.sed on copied sources.
+
 Mon Mar 25 03:35:16 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* malloc/malloc.c (morecore): Don't attempt recursive realloc of info
