@@ -73,6 +73,24 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	    if (__result) \
 	      __lll_mutex_lock_wait (__result, __futex); })
 
+/* Special version of lll_mutex_lock which causes the unlock function to
+   always wakeup waiters.  */
+#define lll_mutex_cond_lock(futex) \
+  (void) ({ int __result, val, *__futex = &(futex); \
+	    __asm __volatile ("\
+		.align 2\n\
+		mova 1f,r0\n\
+		mov r15,r1\n\
+		mov #-6,r15\n\
+	     0: mov.l @%2,%0\n\
+		add %0,%1\n\
+		mov.l %1,@%2\n\
+	     1: mov r1,r15"\
+		: "=&r" (__result), "=&r" (val) : "r" (__futex), "1" (2) \
+		: "r0", "r1", "memory"); \
+	    if (__result) \
+	      __lll_mutex_lock_wait (__result, __futex); })
+
 #define lll_mutex_timedlock(futex, timeout) \
   ({ int __result, val, *__futex = &(futex); \
      __asm __volatile ("\
@@ -119,6 +137,46 @@ typedef int lll_lock_t;
 /* Initializers for lock.  */
 #define LLL_LOCK_INITIALIZER		(1)
 #define LLL_LOCK_INITIALIZER_LOCKED	(0)
+
+
+# ifdef NEED_SYSCALL_INST_PAD
+#  define SYSCALL_WITH_INST_PAD "\
+	trapa #0x14; or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0"
+# else
+#  define SYSCALL_WITH_INST_PAD "\
+	trapa #0x14"
+# endif
+
+#define lll_futex_wait(futex, val) \
+  do { \
+    int __ignore; \
+    register unsigned long __r3 asm ("r3") = SYS_futex; \
+    register unsigned long __r4 asm ("r4") = (unsigned long) (futex); \
+    register unsigned long __r5 asm ("r5") = FUTEX_WAIT; \
+    register unsigned long __r6 asm ("r6") = (unsigned long) (val); \
+    register unsigned long __r7 asm ("r7") = 0; \
+    __asm __volatile (SYSCALL_WITH_INST_PAD \
+		      : "=z" (__ignore) \
+		      : "r" (__r3), "r" (__r4), "r" (__r5), \
+			"r" (__r6), "r" (__r7) \
+		      : "memory", "t"); \
+  } while (0)
+
+
+#define lll_futex_wake(futex, nr) \
+  do { \
+    int __ignore; \
+    register unsigned long __r3 asm ("r3") = SYS_futex; \
+    register unsigned long __r4 asm ("r4") = (unsigned long) (futex); \
+    register unsigned long __r5 asm ("r5") = FUTEX_WAKE; \
+    register unsigned long __r6 asm ("r6") = (unsigned long) (nr); \
+    register unsigned long __r7 asm ("r7") = 0; \
+    __asm __volatile (SYSCALL_WITH_INST_PAD \
+		      : "=z" (__ignore) \
+		      : "r" (__r3), "r" (__r4), "r" (__r5), \
+			"r" (__r6), "r" (__r7) \
+		      : "memory", "t"); \
+  } while (0)
 
 
 extern int __lll_lock_wait (int val, int *__futex) attribute_hidden;

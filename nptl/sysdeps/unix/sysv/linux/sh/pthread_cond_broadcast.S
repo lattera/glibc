@@ -19,12 +19,15 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
+#include <kernel-features.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_REQUEUE		3
 
+#define EINVAL			22
 
 	.text
 
@@ -33,6 +36,7 @@
 	.type	__pthread_cond_broadcast, @function
 	.align	5
 __pthread_cond_broadcast:
+	mov.l   r9, @-r15
 	mov.l	r8, @-r15
 	sts.l	pr, @-r15
 	mov	r4, r8
@@ -64,6 +68,9 @@ __pthread_cond_broadcast:
 	mov.l	r1, @(wakeup_seq,r8)
 	mov.l	r0, @(wakeup_seq+4,r8)
 
+	/* Get the address of the mutex used.  */
+	mov.l	@(dep_mutex,r8), r9
+
 	/* Unlock.  */
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
@@ -76,6 +83,19 @@ __pthread_cond_broadcast:
 	/* Wake up all threads.  */
 	mov	r8, r4
 	add	#wakeup_seq, r4
+#ifdef __ASSUME_FUTEX_REQUEUE
+	mov	#FUTEX_REQUEUE, r5
+	mov	#1, r6
+	mov	#-1, r7
+	shlr	r7		/* r7 = 0x7fffffff */
+	mov	r9, r0
+# if MUTEX_FUTEX != 0
+	add	#MUTEX_FUTEX, r0
+# endif
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x15
+#else
 	mov	#FUTEX_WAKE, r5
 	mov	#-1, r6
 	shlr	r6		/* r6 = 0x7fffffff */
@@ -83,12 +103,14 @@ __pthread_cond_broadcast:
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x14
+#endif
 	SYSCALL_INST_PAD
 
 	mov	#0, r0
 	lds.l	@r15+, pr
+	mov.l	@r15+, r8
 	rts
-	 mov.l	@r15+, r8
+	 mov.l	@r15+, r9
 
 4:
 	/* Unlock.  */
@@ -102,8 +124,9 @@ __pthread_cond_broadcast:
 6:
 	mov	#0, r0
 	lds.l	@r15+, pr
+	mov.l	@r15+, r8
 	rts
-	 mov.l	@r15+, r8
+	 mov.l	@r15+, r9
 
 1:
 	/* Initial locking failed.  */

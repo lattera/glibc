@@ -58,6 +58,10 @@ __pthread_cond_timedwait:
 	bra	1f
 	 nop
 2:
+	/* Store the reference to the mutex.  If there is already a
+	   different value in there this is a bad user bug.  */
+	mov.l	r9, @(dep_mutex,r8)
+	
 	/* Unlock the mutex.  */
 	mov.l	.Lmunlock1, r1
 	bsrf	r1
@@ -117,12 +121,11 @@ __pthread_cond_timedwait:
 	bra	3f
 	 nop
 4:
-	mov	r15, r4
 	mov.l	.Lenable1, r1
 	bsrf	r1
-	 add	#8, r4
-
+	 nop
 .Lenable1b:
+	mov.l	r0, @(8,r15)
 
 	/* Get current time.  */
 	mov	r15, r4
@@ -258,7 +261,7 @@ __pthread_cond_timedwait:
 	mov	r9, r4
 	mov.l	.Lmlocki1, r1
 	bsrf	r1
-	 mov	#0, r5
+	 nop
 .Lmlocki1b:
 
 	/* We return the result of the mutex_lock operation if it failed.  */
@@ -293,13 +296,13 @@ __pthread_cond_timedwait:
 .Lccpush1:
 	.long	__pthread_cleanup_push-.Lccpush1b
 .Lenable1:
-	.long	__pthread_enable_asynccancel_2-.Lenable1b
+	.long	__pthread_enable_asynccancel-.Lenable1b
 .Ldisable1:
 	.long	__pthread_disable_asynccancel-.Ldisable1b
 .Lcpop1:
 	.long	__pthread_cleanup_pop-.Lcpop1b
 .Lmlocki1:
-	.long	__pthread_mutex_lock_internal-.Lmlocki1b
+	.long	__pthread_mutex_cond_lock-.Lmlocki1b
 .L1g:
 	.long	1000000000
 

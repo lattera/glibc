@@ -108,18 +108,11 @@ __condvar_cleanup:
 	trapa	#0x14
 	SYSCALL_INST_PAD
 
-	/* Lock the mutex unless asynchronous cancellation is in effect.  */
-	mov.l	@(8,r9), r0
-	and	#2, r0
-	tst	r0, r0
-	bf	3f
-
 	mov.l	.Lmlocki1, r1
 	bsrf	r1
-	 mov.l	@r9, r4
+	 mov.l	@(8,r9), r4
 .Lmlocki1b:
 
-3:
 	lds.l	@r15+, pr
 	mov.l	@r15+, r9
 	rts
@@ -131,7 +124,7 @@ __condvar_cleanup:
 .Lwake0:
 	.long	__lll_mutex_unlock_wake-.Lwake0b
 .Lmlocki1:
-	.long	__pthread_mutex_lock_internal-.Lmlocki1b
+	.long	__pthread_mutex_cond_lock-.Lmlocki1b
 	.size	__condvar_cleanup, .-__condvar_cleanup
 
 
@@ -157,7 +150,11 @@ __pthread_cond_wait:
 #endif
 	tst	r2, r2
 	bf	1f
-2:	
+
+	/* Store the reference to the mutex.  If there is already a
+	   different value in there this is a bad user bug.  */
+	mov.l	r9, @(dep_mutex,r8)
+
 	/* Unlock the mutex.  */
 	mov.l	.Lmunlock0, r1
 	bsrf	r1
@@ -215,11 +212,11 @@ __pthread_cond_wait:
 	tst	r2, r2
 	bf	3f
 4:
-	mov	r15, r4
 	mov.l	.Lenable0, r1
 	bsrf	r1
-	 add	#8, r4
+	 nop
 .Lenable0b:
+	mov.l	r0, @(8,r15)
 
 	mov	#0, r7
 	mov	#FUTEX_WAIT, r5
@@ -300,7 +297,7 @@ __pthread_cond_wait:
 	mov	r9, r4
 	mov.l	.Lmlocki0, r1
 	bsrf	r1
-	 mov	#0, r5
+	 nop
 .Lmlocki0b:
 	/* We return the result of the mutex_lock operation.  */
 
@@ -327,13 +324,13 @@ __pthread_cond_wait:
 .Lccpush0:
 	.long	__pthread_cleanup_push-.Lccpush0b
 .Lenable0:
-	.long	__pthread_enable_asynccancel_2-.Lenable0b
+	.long	__pthread_enable_asynccancel-.Lenable0b
 .Ldisable0:
 	.long	__pthread_disable_asynccancel-.Ldisable0b
 .Lcpop0:
 	.long	__pthread_cleanup_pop-.Lcpop0b
 .Lmlocki0:
-	.long	__pthread_mutex_lock_internal-.Lmlocki0b
+	.long	__pthread_mutex_cond_lock-.Lmlocki0b
 
 1:
 	/* Initial locking failed.  */

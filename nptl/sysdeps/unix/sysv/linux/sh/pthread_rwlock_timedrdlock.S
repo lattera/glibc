@@ -18,7 +18,6 @@
 
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
-#include <tcb-offsets.h>
 #include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
 
@@ -35,6 +34,7 @@
 	.align	5
 pthread_rwlock_timedrdlock:
 	mov.l	r12, @-r15
+	mov.l	r10, @-r15
 	mov.l	r9, @-r15
 	mov.l	r8, @-r15
 	sts.l	pr, @-r15
@@ -73,6 +73,8 @@ pthread_rwlock_timedrdlock:
 	mov.l	r0, @(READERS_QUEUED,r8)
 	tst	r0, r0
 	bt	4f
+
+	mov.l	@(READERS_WAKEUP,r8), r10
 
 #if MUTEX == 0
 	DEC (@r8, r2)
@@ -115,7 +117,7 @@ pthread_rwlock_timedrdlock:
 	/* Futex call.  */
 	mov	r15, r7
 	mov	#FUTEX_WAIT, r5
-	mov.l	@(READERS_WAKEUP,r8), r6
+	mov	r10, r6
 	mov	r8, r4
 	add	#READERS_WAKEUP, r4
 	mov	#SYS_futex, r3
@@ -169,6 +171,7 @@ pthread_rwlock_timedrdlock:
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
 	mov.l	@r15+, r9
+	mov.l	@r15+, r10
 	mov.l	@r15+, r12
 	rts
 	 mov	r3, r0
@@ -193,8 +196,6 @@ pthread_rwlock_timedrdlock:
 	 nop
 14:
 	stc	gbr, r1
-	mov.w	.Ltcboff,r2
-	sub	r2,r1
 	cmp/eq	r1, r0
 	bf	3b
 	/* Deadlock detected.  */
@@ -262,8 +263,6 @@ pthread_rwlock_timedrdlock:
 	bra	9b
 	 mov	#EINVAL, r3
 
-.Ltcboff:
-	.word	TLS_PRE_TCB_SIZE
 	.align	2
 .Lwait2:
 	.long	__lll_mutex_lock_wait-.Lwait2b

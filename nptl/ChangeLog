@@ -1,3 +1,30 @@
+2003-05-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tcb-offsets.sym: Define MUTEX_FUTEX.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
+        Add __mutex field.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (SYSCALL_WITH_INST_PAD):
+	Define.
+	(lll_futex_wait, lll_futex_wake): Define.
+	* sysdeps/unix/sysv/linux/sh/sh4/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: Try using
+	FUTEX_REQUEUE instead of FUTEX_WAIT.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Remember
+	mutex which was used in condvar structure.  Call
+	__pthread_mutex_cond_lock instead of __pthread_mutex_lock_internal.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Don't
+	include tcb-offsets.h.  Read wakeup value in locked region.
+	Use the value of gbr register as THREAD_ID.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S: Remove futex related
+	macros.
+
 2003-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread_cond_broadcast.c

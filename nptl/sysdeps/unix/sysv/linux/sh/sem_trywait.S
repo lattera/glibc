@@ -22,11 +22,6 @@
 #include "lowlevel-atomic.h"
 
 
-#define SYS_gettimeofday	__NR_gettimeofday
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-
 	.text
 
 	.globl	__new_sem_trywait
