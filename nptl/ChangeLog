@@ -1,3 +1,8 @@
+2004-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getpid.c (really_getpid): Reorganize
+	code to avoid warning.
+
 2004-03-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/pthread_attr_setaffinity.c
@@ -44,7 +49,7 @@
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
 	(__lll_mutex_timedlock_wait): Preserve r8 and r9 since the
-	vgettimeofday call miht destroy the content.
+	vgettimeofday call might destroy the content.
 
 	* sysdeps/ia64/pthread_spin_lock.c (pthread_spin_lock): Use hint
 	@pause in the loop.
