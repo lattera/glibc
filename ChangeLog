@@ -1,5 +1,7 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/spawn.h-data: Allow all of <sched.h>.
+
 	* sysdeps/ia64/fpu/fraiseexcpt.c: Include <float.h>.  Removed
 	unused variable.
 

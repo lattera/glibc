@@ -31,6 +31,7 @@ function int posix_spawn_file_actions_init (posix_spawn_file_actions_t*)
 function int posix_spawn (pid_t*, const char*, const posix_spawn_file_actions_t*, const posix_spawnattr_t*, char *const[], char *const[]);
 function int posix_spawnp (pid_t*, const char*, const posix_spawn_file_actions_t*, const posix_spawnattr_t*, char *const[], char *const[]);
 
+allow-header sched.h
 allow-header signal.h
 allow-header sys/types.h
 #endif
