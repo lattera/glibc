@@ -1,3 +1,8 @@
+2003-04-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/check_fds.c (check_one_fd): Cast first parameter
+	of open_not_cancel explicitly to const char*.
+
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/Makefile ($(objpfx)msgs.h): Use C locale for sed run.
