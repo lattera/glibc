@@ -17,10 +17,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* These are the bits used by 4.4 BSD and its derivatives.  On systems
-   (such as GNU) where these facilities are not system services but can be
-   emulated in the C library, these are the definitions we emulate.  */
-
 #ifndef	_SYS_MMAN_H
 
 #define	_SYS_MMAN_H	1
@@ -70,6 +66,10 @@ Cambridge, MA 02139, USA.  */
 #define	MADV_WILLNEED	3	/* Will need these pages.  */
 #define	MADV_DONTNEED	4	/* Don't need these pages.  */
 
+/* Flags to `mlockall'.  */
+#define MCL_CURRENT     1	/* Lock all current mappings.  */
+#define MCL_FUTURE      2	/* Lock all future mappings.  */
+
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
@@ -105,6 +105,22 @@ int msync __P ((__caddr_t __addr, size_t __len));
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
 int madvise __P ((__caddr_t __addr, size_t __len, int __advice));
+
+/* Cause all currently mapped pages of the process to be memory resident
+   until unlocked by a call to the `munlockall', until the process exits,
+   or until the process calls `execve'.  */
+int mlockall __P ((int __flags));
+
+/* All currently mapped pages of the process' address space become
+   unlocked.  */
+int munlockall __P ((void));
+
+/* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
+   be memory resident.  */
+int mlock __P ((__caddr_t __addr, size_t __len));
+
+/* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
+int munlock __P ((__caddr_t __addr, size_t __len));
 
 __END_DECLS
 

@@ -122,8 +122,14 @@ vsyslog(pri, fmt, ap)
 	f = open_memstream (&buf, &bufsize);
 	prioff = fprintf (f, "<%d>", pri);
 	(void) time (&now);
+#ifdef USE_IN_LIBIO
+        f->_IO_write_ptr += strftime (f->_IO_write_ptr,
+                                      f->_IO_write_end - f->_IO_write_ptr,
+                                      "%h %e %T ", localtime (&now));
+#else
 	f->__bufp += strftime (f->__bufp, f->__put_limit - f->__bufp,
 			       "%h %e %T ", localtime (&now));
+#endif
 	msgoff = ftell (f);
 	if (LogTag == NULL)
 	  LogTag = __progname;

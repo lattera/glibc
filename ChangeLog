@@ -1,3 +1,14 @@
+Sun Nov 26 02:00:02 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* misc/syslog.c (vsyslog) [USE_IN_LIBIO]: Adapted for libio.
+
+Thu Nov 23 02:21:55 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/{mlock,munlock,mlockall,munlockall}.S:
+	New files.
+	* sysdeps/unix/sysv/linux/mman.h: Add prototypes for new functions
+	mlock, munlock, mlockall, and munlockall.
+
 Thu Nov 23 18:26:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* configure.in (--enable-libio): Set $stdio based on $enableval,
