@@ -41,11 +41,11 @@
   ({						\
     long ret, err;				\
     LOADARGS_##nr(name, args);			\
-    __asm__ ("sc\n\t"				\
-	     "mfcr	%1\n\t"			\
-	     : "=r" (r3), "=r" (err)		\
-	     : ASM_INPUT_##nr			\
-	     : "cc", "memory");			\
+    __asm __volatile ("sc\n\t"			\
+		      "mfcr	%1\n\t"		\
+		      : "=r" (r3), "=r" (err)	\
+		      : ASM_INPUT_##nr		\
+		      : "cc", "memory");	\
     ret = r3;					\
     if (err & 1 << 28)				\
       {						\

@@ -1,3 +1,20 @@
+2002-09-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (inline_syscall0): Make asm
+	volatile.
+	(inline_syscall1, inline_syscall2, inline_syscall3, inline_syscall4,
+	inline_syscall5, inline_syscall6): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (INLINE_SYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h (INLINE_SYSCALL):
+	Likewise.
+
+2002-09-29  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (libc_cv_ranlib_necessary check): Put the .o file in
+	the archive, not the .c file.
+	* configure: Regenerated.
+
 2002-09-29  Roland McGrath  <roland@redhat.com>
 
 	* configure: Regenerated after aclocal.m4 change.

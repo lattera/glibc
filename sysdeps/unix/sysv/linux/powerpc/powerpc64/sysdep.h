@@ -57,11 +57,11 @@
     DECLARGS_##nr;				\
     long ret, err;				\
     LOADARGS_##nr(name, args);			\
-    __asm__ ("sc\n\t"				\
-	     "mfcr	%1\n\t"			\
-	     : "=r" (r3), "=r" (err)		\
-	     : ASM_INPUT_##nr			\
-	     : "cc", "memory");			\
+    __asm __volatile ("sc\n\t"			\
+		      "mfcr	%1\n\t"		\
+		      : "=r" (r3), "=r" (err)	\
+		      : ASM_INPUT_##nr		\
+		      : "cc", "memory");	\
     ret = r3;					\
     if (err & 1 << 28)				\
       {						\
@@ -123,18 +123,20 @@
     register long r8 __asm__ ("r8");				\
     long ret, err;						\
     LOADARGS_##nr(name, args);					\
-    __asm__ ("sc\n\t"						\
-	     "mfcr	%7\n\t"					\
-	     : "=r" (r0), "=r" (r3), "=r" (r4), "=r" (r5),	\
-	       "=r" (r6), "=r" (r7), "=r" (r8), "=r" (err)	\
-	     : ASM_INPUT_##nr					\
-	     : "r9", "r10", "r11", "r12",			\
-	       "fr0", "fr1", "fr2", "fr3",			\
-	       "fr4", "fr5", "fr6", "fr7",			\
-	       "fr8", "fr9", "fr10", "fr11",			\
-	       "fr12", "fr13",					\
-	       "ctr", "lr",					\
-	       "cr0", "cr1", "cr5", "cr6", "cr7", "memory");	\
+    __asm __volatile ("sc\n\t"					\
+		      "mfcr	%7\n\t"				\
+		      : "=r" (r0), "=r" (r3), "=r" (r4),	\
+		        "=r" (r5), "=r" (r6), "=r" (r7),	\
+		        "=r" (r8), "=r" (err)			\
+		      : ASM_INPUT_##nr				\
+		      : "r9", "r10", "r11", "r12",		\
+		        "fr0", "fr1", "fr2", "fr3",		\
+			"fr4", "fr5", "fr6", "fr7",		\
+			"fr8", "fr9", "fr10", "fr11",		\
+			"fr12", "fr13",				\
+			"ctr", "lr",				\
+			"cr0", "cr1", "cr5", "cr6", "cr7",	\
+			"memory");				\
     ret = r3;							\
     if (err & 1 << 28)						\
       {								\

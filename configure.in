@@ -651,7 +651,7 @@ char b;
 void c(void) {}
 EOF
 $CC $CFLAGS -c conftest.c
-$AR cr conftest.a conftest.c
+$AR cr conftest.a conftest.o
 cp conftest.a conftest2.a
 $RANLIB conftest.a
 if cmp -s conftest.a conftest2.a; then
@@ -1588,7 +1588,7 @@ fi
 
 dnl Check whether the compiler supports the __thread keyword.
 AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
-[cat > conftest.c <<EOF
+[cat > conftest.c <<\EOF
 __thread int a = 42;
 EOF
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS -c conftest.c >&AC_FD_CC]); then

@@ -3697,36 +3697,11 @@ if test "$libc_cv_gcc___thread" = yes; then
 #define HAVE___THREAD 1
 EOF
 
-
-  echo $ac_n "checking whether __attribute__((tls_model())) is supported ""... $ac_c" 1>&6
-echo "configure:3703: checking whether __attribute__((tls_model())) is supported " >&5
-if eval "test \"`echo '$''{'libc_cv_gcc_attribute_tls_model'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  cat > conftest.c <<\EOF
-  extern __thread int a __attribute__ ((tls_model ("initial-exec")));
-  int foo (void) { return a; }
-  EOF
-  if { ac_try='${CC-cc} $CFLAGS -c conftest.c >&5'; { (eval echo configure:3711: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
-    libc_cv_gcc_attribute_tls_model=yes
-  else
-    libc_cv_gcc_attribute_tls_model=no
-  fi
-  rm -f conftest*
-fi
-
-echo "$ac_t""$libc_cv_gcc_attribute_tls_model" 1>&6
-  if test "$libc_cv_gcc_attribute_tls_model" = yes; then
-    cat >> confdefs.h <<\EOF
-#define HAVE_ATTRIBUTE_TLS_MODEL 1
-EOF
-
-  fi
 fi
 
 
 echo $ac_n "checking for libgd""... $ac_c" 1>&6
-echo "configure:3730: checking for libgd" >&5
+echo "configure:3705: checking for libgd" >&5
 if test "$with_gd" != "no"; then
   old_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS $libgd_include"
@@ -3735,14 +3710,14 @@ if test "$with_gd" != "no"; then
   old_LIBS="$LIBS"
   LIBS="$LIBS -lgd -lpng -lz -lm"
   cat > conftest.$ac_ext <<EOF
-#line 3739 "configure"
+#line 3714 "configure"
 #include "confdefs.h"
 #include <gd.h>
 int main() {
 gdImagePng (0, 0)
 ; return 0; }
 EOF
-if { (eval echo configure:3746: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:3721: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   LIBGD=yes
 else
@@ -3762,7 +3737,7 @@ echo "$ac_t""$LIBGD" 1>&6
 
 
 echo $ac_n "checking size of long double""... $ac_c" 1>&6
-echo "configure:3766: checking size of long double" >&5
+echo "configure:3741: checking size of long double" >&5
 if eval "test \"`echo '$''{'ac_cv_sizeof_long_double'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3770,7 +3745,7 @@ else
   ac_cv_sizeof_long_double=0
 else
   cat > conftest.$ac_ext <<EOF
-#line 3774 "configure"
+#line 3749 "configure"
 #include "confdefs.h"
 #include <stdio.h>
 int main()
@@ -3781,7 +3756,7 @@ int main()
   return(0);
 }
 EOF
-if { (eval echo configure:3785: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:3760: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   ac_cv_sizeof_long_double=`cat conftestval`
 else
@@ -3859,7 +3834,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:3863: checking OS release for uname" >&5
+echo "configure:3838: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3881,7 +3856,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:3885: checking OS version for uname" >&5
+echo "configure:3860: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3910,7 +3885,7 @@ EOF
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
 echo $ac_n "checking for old glibc 2.0.x headers""... $ac_c" 1>&6
-echo "configure:3914: checking for old glibc 2.0.x headers" >&5
+echo "configure:3889: checking for old glibc 2.0.x headers" >&5
 if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
 then
   old_glibc_headers=yes
@@ -3971,7 +3946,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:3975: checking whether -fPIC is default" >&5
+echo "configure:3950: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else

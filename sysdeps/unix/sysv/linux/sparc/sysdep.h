@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2000.
 
@@ -27,9 +27,9 @@
 ({									\
 	register long __o0 __asm__ ("o0");				\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm__ (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :		\
-		 "0" (__g1) :						\
-		 __SYSCALL_CLOBBERS);					\
+	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+			  "0" (__g1) :					\
+			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
@@ -37,9 +37,9 @@
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm__ (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :		\
-		 "0" (__g1), "1" (__o0) :				\
-		 __SYSCALL_CLOBBERS);					\
+	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+			  "0" (__g1), "1" (__o0) :			\
+			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
@@ -48,9 +48,9 @@
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm__ (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :		\
-		 "0" (__g1), "1" (__o0), "r" (__o1) :			\
-		 __SYSCALL_CLOBBERS);					\
+	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+			  "0" (__g1), "1" (__o0), "r" (__o1) :		\
+			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
@@ -60,9 +60,10 @@
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm__ (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :		\
-		 "0" (__g1), "1" (__o0), "r" (__o1), "r" (__o2) :	\
-		 __SYSCALL_CLOBBERS);					\
+	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+			  "r" (__o2) :					\
+			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
@@ -73,10 +74,10 @@
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm__ (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :		\
-		 "0" (__g1), "1" (__o0), "r" (__o1), "r" (__o2),	\
-		 "r" (__o3) :						\
-		 __SYSCALL_CLOBBERS);					\
+	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+			  "r" (__o2), "r" (__o3) :			\
+			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
@@ -88,10 +89,10 @@
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm__ (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :		\
-		 "0" (__g1), "1" (__o0), "r" (__o1), "r" (__o2),	\
-		 "r" (__o3), "r" (__o4) :				\
-		 __SYSCALL_CLOBBERS);					\
+	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
+			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
@@ -104,10 +105,11 @@
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
 	register long __o5 __asm__ ("o5") = (long)(arg6);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm__ (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :		\
-		 "0" (__g1), "1" (__o0), "r" (__o1), "r" (__o2),	\
-		 "r" (__o3), "r" (__o4), "r" (__o5) :			\
-		 __SYSCALL_CLOBBERS);					\
+	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+			  "0" (__g1), "1" (__o0), "r" (__o1),		\
+			  "r" (__o2), "r" (__o3), "r" (__o4),		\
+			  "r" (__o5) :					\
+			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
