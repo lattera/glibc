@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +19,22 @@
 #include <errno.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <internals.h>
 
 int
-pthread_getcpuclockid (pthread_t pthread_id, clockid_t *clock_id)
+pthread_getcpuclockid (pthread_t thread_id, clockid_t *clock_id)
 {
+  /* We don't allow any process ID but our own.  */
+  if (thread_handle (thread_id)->h_descr != thread_self ())
+    return EPERM;
+
+#ifdef CLOCK_THREAD_CPUTIME_ID
+  /* Store the number.  */
+  *clock_id = CLOCK_THREAD_CPUTIME_ID;
+
+  return 0;
+#else
   /* We don't have a timer for that.  */
   return ENOENT;
+#endif
 }

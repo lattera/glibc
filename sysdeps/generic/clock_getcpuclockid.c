@@ -22,6 +22,17 @@
 int
 clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 {
+  /* We don't allow any process ID but our own.  */
+  if (pid != 0 && pid != getpid ())
+    return EPERM;
+
+#ifdef CLOCK_PROCESS_CPUTIME_ID
+  /* Store the number.  */
+  *clock_id = CLOCK_PROCESS_CPUTIME_ID;
+
+  return 0;
+#else
   /* We don't have a timer for that.  */
   return ENOENT;
+#endif
 }

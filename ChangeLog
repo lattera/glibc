@@ -1,5 +1,19 @@
 2001-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/Makefile [subdir=csu] (sysdep_routines): Add hp-timing.
+	* sysdeps/ia64/Versions: Add _dl_cpuclock_offset for ld in 2.2.3.
+	* sysdeps/ia64/hp-timing.c: New file.
+	* sysdeps/ia64/hp-timing.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/time.h: Add definitions for
+	CLOCK_PROCESS_CPUTIME_ID and CLOCK_THREAD_CPUTIME_ID.
+
+	* sysdeps/generic/clock_getcpuclockid.c: Make function generic, test
+	using #ifdef whether the clock is available.
+	* sysdeps/unix/i386/clock_getcpuclockid.c: Not needed anymore.
+
+	* sysdeps/generic/dl-sysdep.c: Initialize _dl_cpuclock_offset to move
+	it into data section.
+
 	* sysdeps/unix/i386/i586/clock_getres.c: Removed.
 	* sysdeps/unix/i386/i586/clock_gettime.c: Removed.
 	* sysdeps/unix/i386/i586/clock_nanosleep.c: Removed.

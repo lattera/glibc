@@ -7,6 +7,7 @@ endif
 
 ifeq ($(subdir), csu)
 CPPFLAGS-start.S = -D__ASSEMBLY__
+sysdep_routines += hp-timing
 endif
 
 ifeq ($(subdir),elf)

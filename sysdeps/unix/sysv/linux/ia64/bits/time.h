@@ -43,10 +43,14 @@ extern long int __sysconf (int);
 
 #  ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */
-#   define CLOCK_REALTIME	0
+#   define CLOCK_REALTIME		0
+/* High-resolution timer from the CPU.  */
+#   define CLOCK_PROCESS_CPUTIME_ID     2
+/* Thread-specific CPU-time clock.  */
+#   define CLOCK_THREAD_CPUTIME_ID      3
 
 /* Flag to indicate time is absolute.  */
-#   define TIMER_ABSTIME	1
+#   define TIMER_ABSTIME		1
 #  endif
 
 # endif	/* bits/time.h */

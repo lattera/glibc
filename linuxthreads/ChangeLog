@@ -1,5 +1,7 @@
 2001-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/Versions: New file.
+
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c (_init): We don't
 	have to call __gmon_start__ in the libpthread DSO.
 	* sysdeps/pthread/pt-initfini.c (_init): Likewise.

@@ -1,5 +1,7 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Support for high precision, low overhead timing functions.  IA-64 version.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,22 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <sys/time.h>
+#include <hp-timing.h>
 
-#include <internals.h>
-
-int
-pthread_getcpuclockid (pthread_t thread_id, clockid_t *clock_id)
-{
-  /* We don't allow any process ID but our own.  */
-  if (thread_handle (thread_id)->h_descr != thread_self ())
-    return EPERM;
-
-  /* Store the number.  */
-  *clock_id = CLOCK_THREAD_CPUTIME_ID;
-
-  return 0;
-}
+/* We have to define the variable for the overhead.  */
+hp_timing_t __libc_hp_timing_overhead;
