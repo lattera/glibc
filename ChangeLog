@@ -11,6 +11,12 @@
 	symidx correctly.
 
 	* sysdeps/mips/add_n.S: Use __PIC__, add .end directive.
+	* sysdeps/mips/addmul_1.S: Likewise.
+	* sysdeps/mips/lshift.S: Likewise.
+	* sysdeps/mips/mul_1.S: Likewise.
+	* sysdeps/mips/rshift.S: Likewise.
+	* sysdeps/mips/sub_n.S: Likewise.
+	* sysdeps/mips/submul_1.S: Likewise.
 
 	* stdlib/stdlib.h: Fix typo in comment.
 
