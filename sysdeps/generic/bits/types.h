@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,6 +85,13 @@ typedef long int __suseconds_t;
 typedef long int __swblk_t;	/* Type of a swap block maybe?  */
 typedef long int __key_t;	/* Type of an IPC key */
 
+
+/* Clock ID used in clock and timer functions.  */
+typedef int __clockid_t;
+
+/* Timer ID returned by `timer_create'.  */
+typedef int __timer_t;
+
 
 /* One element in the file descriptor mask array.  */
 typedef unsigned long int __fd_mask;

@@ -1,5 +1,15 @@
 2000-08-15  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/mach/hurd/i386/bits/time.h (__clockid_t, __timer_t):
+	Remove typedefs.
+	* sysdeps/mach/hurd/bits/time.h (__clockid_t, __timer_t): Remove
+	typedefs.
+	* sysdeps/generic/bits/time.h (__clockid_t, __timer_t): Remove
+	typedefs.
+	* sysdeps/generic/bits/types.h (__clockid_t, __timer_t): New typedefs.
+
+2000-08-15  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/mach/hurd/xstatconv.c: New file.
 	* sysdeps/mach/hurd/fxstat64.c: New file.
 	* sysdeps/mach/hurd/lxstat64.c: New file.
