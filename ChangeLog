@@ -2,6 +2,9 @@
 
 	* version.h (VERSION): Bump to 2.0.99.
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove duplicate
+	ustat definition.
+
 	* sysdeps/unix/sysv/linux/i386/Dist: Remove s_pread64.c and
 	s_pwrite64.c.
 

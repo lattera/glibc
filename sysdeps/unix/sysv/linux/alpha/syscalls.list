@@ -102,7 +102,6 @@ s_sigpending	sigpending sigpending	1	__syscall_sigpending
 s_sigprocmask	sigprocmask sigprocmask	3	__syscall_sigprocmask
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
-s_ustat		ustat	ustat		2	__syscall_ustat
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_lstat	lxstat	lstat		2	__syscall_lstat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
