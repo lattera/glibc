@@ -249,11 +249,7 @@ __pthread_initialize_minimal_internal (void)
        default.  */
     limit.rlim_cur = ARCH_STACK_DEFAULT_SIZE;
 
-#ifdef NEED_SEPARATE_REGISTER_STACK
-  __default_stacksize = MAX (limit.rlim_cur / 2, PTHREAD_STACK_MIN);
-#else
   __default_stacksize = MAX (limit.rlim_cur, PTHREAD_STACK_MIN);
-#endif
   /* The maximum page size better should be a multiple of the page
      size.  */
   assert (__default_stacksize % __sysconf (_SC_PAGESIZE) == 0);
