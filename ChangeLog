@@ -1,3 +1,7 @@
+2002-08-25  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-reloc.c (_dl_reloc_bad_type): Nul-terminate message.
+
 2002-08-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/utmp_file.c (UNLOCK_FILE): Clear alarm before
@@ -5,7 +9,7 @@
 	delivered to the user's handler.
 	Reported by Amit D. Chaudhary <amitc@brocade.com>,
 
-	* misc/Makefile (CFLAGS-init-misc.c): Varaible removed.  It served to
+	* misc/Makefile (CFLAGS-init-misc.c): Variable removed.  It served to
 	set -fkeep-inline-functions, which is not needed for the current file.
 
 	* sysdeps/generic/ldsodefs.h: Add attribute_hidden to *_internal decls.
