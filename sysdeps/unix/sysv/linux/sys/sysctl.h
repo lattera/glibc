@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,9 @@
 #define _LINUX_KERNEL_H	1
 #define _LINUX_TYPES_H	1
 #define _LINUX_LIST_H	1
+/* We do need this one for the declarations in <linux/sysctl.h>,
+   since we've elided the inclusion of <linux/kernel.h> that gets them.  */
+#include <linux/compiler.h>
 #include <linux/sysctl.h>
 
 __BEGIN_DECLS
