@@ -1,3 +1,7 @@
+2002-12-07  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: Added SHMLBA #define.
+
 2002-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/output-format.sed: Fix bug in one of the s expressions
