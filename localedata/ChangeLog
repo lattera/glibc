@@ -1,3 +1,7 @@
+2004-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_ZA: Update by Dwayne Bailey.
+
 2004-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/pa_IN: Add some missing fields and fix some spelling

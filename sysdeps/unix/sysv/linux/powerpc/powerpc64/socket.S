@@ -51,6 +51,7 @@
 
 	.text
 ENTRY(__socket)
+	CALL_MCOUNT NARGS
 	cfi_startproc
 	stdu r1,-144(r1)
 	cfi_adjust_cfa_offset(144)

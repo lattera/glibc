@@ -26,6 +26,7 @@
 #include <asm/errno.h>
 
 ENTRY(__makecontext)
+	CALL_MCOUNT 3
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   /* Save parameters into the parameter save area of callers frame.  */
   std  r3,FRAME_PARM1_SAVE(r1) /* ucontext_t *ucp  */

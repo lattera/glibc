@@ -29,6 +29,7 @@
 
 #if SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
 ENTRY(__novec_setcontext)
+	CALL_MCOUNT 1
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   mflr  r0
   std   r31,-8(1)
@@ -194,6 +195,7 @@ compat_symbol (libc, __novec_setcontext, setcontext, GLIBC_2_3)
 
 	.machine	"altivec"
 ENTRY(__setcontext)
+	CALL_MCOUNT 1
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   mflr  r0
   std   r31,-8(1)

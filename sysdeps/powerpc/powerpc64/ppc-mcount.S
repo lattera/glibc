@@ -17,11 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* This would be bad.  */
-#ifdef PROF
-#undef PROF
-#endif
-
 #include <sysdep.h>
 /* We don't need to save the parameter-passing registers as gcc takes
    care of that for us.  Thus this function looks fairly normal.

@@ -30,6 +30,7 @@
 
 #if SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
 ENTRY(__novec_getcontext)
+	CALL_MCOUNT 1
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
@@ -167,6 +168,7 @@ compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3)
 
 	.machine	"altivec"
 ENTRY(__getcontext)
+	CALL_MCOUNT 1
 #ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)

@@ -29,6 +29,7 @@
 	.tc __curbrk[TC],__curbrk
 	.section ".text"
 ENTRY (BP_SYM (__brk))
+	CALL_MCOUNT 1
 	DISCARD_BOUNDS (r3)	/* the bounds are meaningless, so toss 'em.  */
 
 	stdu    r1,-64(r1)

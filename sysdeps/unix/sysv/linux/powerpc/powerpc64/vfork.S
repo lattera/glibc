@@ -27,6 +27,7 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
+	CALL_MCOUNT 0
 
 #ifdef __NR_vfork
 

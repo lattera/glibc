@@ -1,3 +1,15 @@
+2004-10-06  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc64/ppc-mcount.S (PROF): Don't undef.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S: Invoke CALL_MOUNT.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: Likewise.
+
 2004-10-19  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/hooks.c (mem2chunk_check, top_check): Handle

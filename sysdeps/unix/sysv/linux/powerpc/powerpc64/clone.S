@@ -32,6 +32,7 @@
                   void *tls [r8], void *child_tid [r9]); */
 
 ENTRY (BP_SYM (__clone))
+	CALL_MCOUNT 7
 	/* GKM FIXME: add bounds checks, where sensible.  */
 	DISCARD_BOUNDS (r4)
 	DISCARD_BOUNDS (r6)
