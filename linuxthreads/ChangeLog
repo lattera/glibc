@@ -1,3 +1,7 @@
+2000-12-31  H.J. Lu  <hjl@gnu.org>
+
+	* manager.c (pthread_allocate_stack): Fix a typo.
+
 2000-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/pspinlock.c: Don't include pt-machine.h here.
