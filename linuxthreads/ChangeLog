@@ -1,3 +1,7 @@
+2001-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions: Remove __pthread_initialize_minimal.
+
 2001-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add rules to build crti.o and make it being used in

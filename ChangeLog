@@ -1,5 +1,8 @@
 2001-02-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex.c: Implement multibyte character handling.
+	Patch by Isamu Hasegawa <isamu@yamato.ibm.co.jp>.
+
 	* string/tst-svc.input: Add two more test cases.
 	* string/tst-svc.expect: Modify to reflect new test cases.
 

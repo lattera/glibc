@@ -151,8 +151,5 @@ libpthread {
 
     # Extensions.
     pthread_yield;
-
-    # New internal function.
-    __pthread_initialize_minimal;
   }
 }
