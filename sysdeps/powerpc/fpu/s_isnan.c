@@ -24,6 +24,9 @@
 #include "math.h"
 #include <fenv_libc.h>
 
+#undef __isnanf
+#undef isnanf
+
 int
 __isnan (x)
      double x;
