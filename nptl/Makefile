@@ -209,8 +209,25 @@ $(objpfx)libpthread_nonshared.a: $(addprefix $(objpfx),$(addsuffix .os,$(libpthr
 	$(AR) $(ARFLAGS) $@ $^
 
 ifeq ($(build-shared),yes)
-extra-objs += crti.o
-omit-deps += crti
+
+# Set the `multidir' variable by grabbing the variable from the compiler.
+# We do it once and save the result in a generated makefile.
+-include $(objpfx)multidir.mk
+$(objpfx)multidir.mk: $(common-objpfx)config.make
+	dir=`$(CC) $(CFLAGS) $(CPPFLAGS) -print-multi-directory`; \
+	echo "multidir := $$dir" > $@T
+	mv -f $@T $@
+
+crti-objs := crti.o
+crtn-objs := crtn.o
+ifneq (,$(patsubst .,,$(multidir)))
+generated-dirs := $(firstword $(subst /, , $(multidir)))
+crti-objs += $(multidir)/crti.o
+crtn-objs += $(multidir)/crtn.o
+omit-deps += $(multidir)/crti $(multidir)/crtn
+endif
+extra-objs += $(crti-objs) $(crtn-objs)
+omit-deps += crti crtn
 
 CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
 endif
@@ -292,8 +309,9 @@ $(objpfx)tst-cond11: $(common-objpfx)rt/librt.a
 endif
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
-$(objpfx)libpthread.so: $(objpfx)crti.o
-$(objpfx)libpthread.so: +preinit += $(objpfx)crti.o
+$(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))
+$(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
+$(objpfx)libpthread.so: +postinit += $(addprefix $(objpfx),$(crtn-objs))
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
@@ -339,6 +357,10 @@ $(objpfx)crti.S: $(objpfx)pt-initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \
 	       -e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
 	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+$(objpfx)crtn.S: $(objpfx)pt-initfini.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
 
 $(objpfx)defs.h: $(objpfx)pt-initfini.s
 	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
@@ -347,25 +369,18 @@ $(objpfx)defs.h: $(objpfx)pt-initfini.s
 $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
-# Set the `multidir' variable by grabbing the variable from the compiler.
-# We do it once and save the result in a generated makefile.
--include $(objpfx)multidir.mk
-$(objpfx)multidir.mk: $(common-objpfx)config.make
-	dir=`$(CC) $(CFLAGS) $(CPPFLAGS) -print-multi-directory`; \
-	echo "multidir := $$dir" > $@T
-	mv -f $@T $@
+$(objpfx)crtn.o: $(objpfx)crtn.S $(objpfx)defs.h
+	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
-generated += crti.S defs.h pt-initfini.s multidir.mk
-
-extra-objs += crti.o
-omit-deps += crti
-ifneq (,$(filter-out .,$(multidir)))
-generated-dirs := $(firstword $(subst /, , $(multidir)))
-extra-objs += $(multidir)/crti.o
-omit-deps += $(multidir)/crti
+ifneq ($(multidir),.)
 $(objpfx)$(multidir)/crti.o: $(objpfx)crti.o $(objpfx)$(multidir)/
 	ln -f $< $@
+
+$(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)/
+	ln -f $< $@
 endif
+
+generated += crti.S crtn.S defs.h pt-initfini.s
 
 generated += $(objpfx)tst-atfork2.mtrace \
 	     $(addsuffix .so,$(strip $(modules-names)))

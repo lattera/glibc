@@ -1,3 +1,11 @@
+2003-05-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (crti-objs, crtn-objs): New variables.
+	(omit-deps, extra-objs): Add crtn.
+	($(objpfx)libpthread.so): Depend on both crti and crtn
+	and links to them in multidir.
+	($(objpfx)crtn.S, $(objpfx)crtn.o): New rules.
+
 2003-05-12  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h

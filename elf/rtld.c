@@ -1262,56 +1262,51 @@ cannot allocate TLS data structures for initial thread");
 	 important that we do this before real relocation, because the
 	 functions we call below for output may no longer work properly
 	 after relocation.  */
-      if (! GL(dl_loaded)->l_info[DT_NEEDED])
+      struct link_map *l;
+
+      if (GL(dl_debug_mask) & DL_DEBUG_PRELINK)
+	{
+	  struct r_scope_elem *scope = &GL(dl_loaded)->l_searchlist;
+
+	  for (i = 0; i < scope->r_nlist; i++)
+	    {
+	      l = scope->r_list [i];
+	      if (l->l_faked)
+		{
+		  _dl_printf ("\t%s => not found\n", l->l_libname->name);
+		  continue;
+		}
+	      if (_dl_name_match_p (GL(dl_trace_prelink), l))
+		GL(dl_trace_prelink_map) = l;
+	      _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)",
+			  l->l_libname->name[0] ? l->l_libname->name
+			  : rtld_progname ?: "<main program>",
+			  l->l_name[0] ? l->l_name
+			  : rtld_progname ?: "<main program>",
+			  (int) sizeof l->l_map_start * 2, l->l_map_start,
+			  (int) sizeof l->l_addr * 2, l->l_addr);
+#ifdef USE_TLS
+	      if (l->l_tls_modid)
+		_dl_printf (" TLS(0x%Zx, 0x%0*Zx)\n", l->l_tls_modid,
+			    (int) sizeof l->l_tls_offset * 2,
+			    l->l_tls_offset);
+	      else
+#endif
+		_dl_printf ("\n");
+	    }
+	}
+      else if (! GL(dl_loaded)->l_info[DT_NEEDED])
 	_dl_printf ("\tstatically linked\n");
       else
 	{
-	  struct link_map *l;
-
-	  if (GL(dl_debug_mask) & DL_DEBUG_PRELINK)
-	    {
-	      struct r_scope_elem *scope = &GL(dl_loaded)->l_searchlist;
-
-	      for (i = 0; i < scope->r_nlist; i++)
-		{
-		  l = scope->r_list [i];
-		  if (l->l_faked)
-		    {
-		      _dl_printf ("\t%s => not found\n", l->l_libname->name);
-		      continue;
-		    }
-		  if (_dl_name_match_p (GL(dl_trace_prelink), l))
-		    GL(dl_trace_prelink_map) = l;
-		  _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)",
-			      l->l_libname->name[0] ? l->l_libname->name
-			      : rtld_progname ?: "<main program>",
-			      l->l_name[0] ? l->l_name
-			      : rtld_progname ?: "<main program>",
-			      (int) sizeof l->l_map_start * 2,
-			      l->l_map_start,
-			      (int) sizeof l->l_addr * 2,
-			      l->l_addr);
-#ifdef USE_TLS
-		  if (l->l_tls_modid)
-		    _dl_printf (" TLS(0x%Zx, 0x%0*Zx)\n", l->l_tls_modid,
-				(int) sizeof l->l_tls_offset * 2,
-				l->l_tls_offset);
-		  else
-#endif
-		    _dl_printf ("\n");
-		}
-	    }
-	  else
-	    {
-	      for (l = GL(dl_loaded)->l_next; l; l = l->l_next)
-		if (l->l_faked)
-		  /* The library was not found.  */
-		  _dl_printf ("\t%s => not found\n", l->l_libname->name);
-		else
-		  _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
-			      l->l_name, (int) sizeof l->l_map_start * 2,
-			      l->l_map_start);
-	    }
+	  for (l = GL(dl_loaded)->l_next; l; l = l->l_next)
+	    if (l->l_faked)
+	      /* The library was not found.  */
+	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
+	    else
+	      _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
+			  l->l_name, (int) sizeof l->l_map_start * 2,
+			  l->l_map_start);
 	}
 
       if (__builtin_expect (mode, trace) != trace)
