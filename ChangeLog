@@ -1,3 +1,8 @@
+2003-03-06  Roland McGrath  <roland@redhat.com>
+
+	* rt/tst-aio7.c (do_test): Revert last change.  Instead, give CB1
+	permanent extent and add a comment about testing its implicit teardown.
+
 2003-03-06  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* rt/tst-aio7.c (do_test): Cancel i/o on CB1 before it's out of scope.

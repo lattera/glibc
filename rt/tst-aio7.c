@@ -1,5 +1,5 @@
 /* Test for AIO POSIX compliance.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001,02, 03 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -122,7 +122,7 @@ do_test (void)
     char buff[BYTES];
     char name[] = "/tmp/aio7.XXXXXX";
     struct timespec timeout;
-    struct aiocb cb0, cb1;
+    static struct aiocb cb0, cb1;
     struct aiocb *list[ELEMS];
 
     fd = mkstemp (name);
@@ -181,13 +181,8 @@ do_test (void)
 	++result;
       }
 
-    /* Cancel i/o on cb1. */
-    r = aio_cancel (piped[0], &cb1);
-    if (r != AIO_CANCELED)
-      {
-	puts ("aio_cancel did not return AIO_CANCELED");
-	++result;
-      }
+    /* Note that CB1 is still pending, and so cannot be an auto variable.
+       Thus we also test that exiting with an outstanding request works.  */
   }
 
   return result;
