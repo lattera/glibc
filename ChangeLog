@@ -1,3 +1,7 @@
+2004-11-05  Roland McGrath  <roland@redhat.com>
+
+	* manual/errno.texi (Error Codes): Revert last change for now.
+
 2004-11-04  Roland McGrath  <roland@frob.com>
 
 	* Makeconfig (link-libc, rpath-dirs): Remove AIX cruft definitions.
