@@ -1709,7 +1709,7 @@ struct malloc_chunk {
     chunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             |             Size of previous chunk, if allocated            | |
             +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-            |             Size of chunk, in bytes                         |P|
+            |             Size of chunk, in bytes                       |M|P|
       mem-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             |             User data starts here...                          .
             .                                                               .
@@ -1771,7 +1771,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         MINSIZE bytes long, it is replenished.
 
      2. Chunks allocated via mmap, which have the second-lowest-order
-        bit (IS_MMAPPED) set in their size fields.  Because they are
+        bit M (IS_MMAPPED) set in their size fields.  Because they are
         allocated one-by-one, each must contain its own trailing size field.
 
 */
@@ -3530,6 +3530,13 @@ public_vALLOc(size_t bytes)
 
   if(__malloc_initialized < 0)
     ptmalloc_init ();
+
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
+					__const __malloc_ptr_t)) =
+    __memalign_hook;
+  if (hook != NULL)
+    return (*hook)(mp_.pagesize, bytes, RETURN_ADDRESS (0));
+
   arena_get(ar_ptr, bytes + mp_.pagesize + MINSIZE);
   if(!ar_ptr)
     return 0;
@@ -3546,6 +3553,15 @@ public_pVALLOc(size_t bytes)
 
   if(__malloc_initialized < 0)
     ptmalloc_init ();
+
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
+					__const __malloc_ptr_t)) =
+    __memalign_hook;
+  if (hook != NULL)
+    return (*hook)(mp_.pagesize,
+		   (bytes + mp_.pagesize - 1) & ~(mp_.pagesize - 1),
+		   RETURN_ADDRESS (0));
+
   arena_get(ar_ptr, bytes + 2*mp_.pagesize + MINSIZE);
   p = _int_pvalloc(ar_ptr, bytes);
   (void)mutex_unlock(&ar_ptr->mutex);
