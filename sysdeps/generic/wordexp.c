@@ -329,7 +329,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 
 	  while ((result = __getpwuid_r (uid, &pwd, buffer, buflen, &tpwd)) != 0
 		 && errno == ERANGE)
-	    extend_alloca (buffer, buflen, buflen + 1000);
+	    buffer = extend_alloca (buffer, buflen, buflen + 1000);
 
 	  if (result == 0 && tpwd != NULL && pwd.pw_dir != NULL)
 	    {
@@ -356,7 +356,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 
       while ((result = __getpwnam_r (user, &pwd, buffer, buflen, &tpwd)) != 0
 	     && errno == ERANGE)
-	extend_alloca (buffer, buflen, buflen + 1000);
+	buffer = extend_alloca (buffer, buflen, buflen + 1000);
 
       if (result == 0 && tpwd != NULL && pwd.pw_dir)
 	*word = w_addstr (*word, word_length, max_length, pwd.pw_dir);
