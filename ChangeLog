@@ -1,3 +1,46 @@
+1998-09-23 17:28 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* misc/sys/mman.h: New file.
+
+	* sysdeps/generic/bits/mman.h: New file.
+	* sysdeps/unix/bsd/osf/bits/mman.h: New file.
+	* sysdeps/unix/bsd/sun/sunos4/bits/mman.h: New file.
+	* sysdeps/unix/bsd/ultrix4/bits/mman.h: New file.
+	* sysdeps/unix/sysv/irix4/bits/mman.h: New file.
+
+	* sysdeps/generic/sys/mman.h: Removed.
+	* sysdeps/unix/bsd/osf/sys/mman.h: Removed.
+	* sysdeps/unix/bsd/sun/sunos4/sys/mman.h: Removed.
+	* sysdeps/unix/bsd/ultrix4/sys/mman.h: Removed.
+	* sysdeps/unix/sysv/irix4/sys/mman.h: Removed.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Removed.
+
+	* include/sys/mman.h: Look directly for misc/sys/mman.h.
+	* misc/Makefile (headers): Add bits/mman.h.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove
+	bits/mman.h.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Don't mention bits/mman.h.
+	* sysdeps/unix/sysv/linux/arm/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: Likewise.
+
+1998-09-23 16:27 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/mach/alpha/sysdep.h: Don't use #include_next.
+	* sysdeps/mach/alpha/thread_state.h: Likewise.
+	* sysdeps/mach/i386/sysdep.h: Likewise.
+	* sysdeps/mach/i386/thread_state.h: Likewise.
+	* sysdeps/mach/mips/sysdep.h: Likewise.
+	* sysdeps/mach/mips/thread_state.h: Likewise.
+	* sysdeps/posix/profil.c: Likewise.
+	* sysdeps/i386/i586/memcopy.h: Likewise.
+	* sysdeps/mach/pagecopy.h: Likewise.
+
 1998-09-23 15:25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/stdio.h: Define __need_getopt and include getopt.h to define

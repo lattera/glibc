@@ -1,5 +1,5 @@
 #ifndef _SYS_MMAN_H
-#include_next <sys/mman.h>
+#include <misc/sys/mman.h>
 
 /* Now define the internal interfaces.  */
 extern __ptr_t __mmap __P ((__ptr_t __addr, size_t __len, int __prot,

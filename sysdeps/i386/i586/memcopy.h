@@ -19,8 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /* Get the i386 definitions.  We will override some of them below.  */
-#include_next <memcopy.h>
-
+#include <sysdeps/i386/memcopy.h>
 
 /* Written like this, the Pentium pipeline can execute the loop at a
    sustained rate of 2 instructions/clock, or asymptotically 480

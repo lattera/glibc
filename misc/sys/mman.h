@@ -1,4 +1,4 @@
-/* Definitions for BSD-style memory management.  Ultrix 4 version.
+/* Definitions for BSD-style memory management.
    Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,48 +18,17 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_MMAN_H
-
 #define	_SYS_MMAN_H	1
-#include <features.h>
 
+#include <features.h>
 #include <bits/types.h>
 #define __need_size_t
 #include <stddef.h>
 
-
-/* Protections are chosen from these bits, OR'd together.  The
-   implementation does not necessarily support PROT_EXEC or PROT_WRITE
-   without PROT_READ.  The only guarantees are that no writing will be
-   allowed without PROT_WRITE and no access will be allowed for PROT_NONE. */
-
-#define	PROT_NONE	0x00	/* No access.  */
-#define	PROT_READ	0x01	/* Pages can be read.  */
-#define	PROT_WRITE	0x02	/* Pages can be written.  */
-#define	PROT_EXEC	0x04	/* Pages can be executed.  */
-
-
-/* Sharing types (must choose one and only one of these).  */
-#define	MAP_SHARED	0x01	/* Share changes.  */
-#define	MAP_PRIVATE	0x02	/* Changes private; copy pages on write.  */
-#ifdef __USE_BSD
-# define MAP_TYPE	0x0f	/* Mask for sharing type.  */
-#endif
-
-/* Other flags.  */
-#define	MAP_FIXED	0x10	/* Map address must be exactly as requested. */
-
-/* Advice to `madvise'.  */
-#ifdef __USE_BSD
-# define MADV_NORMAL	0	/* No further special treatment.  */
-# define MADV_RANDOM	1	/* Expect random page references.  */
-# define MADV_SEQUENTIAL	2	/* Expect sequential page references.  */
-# define MADV_WILLNEED	3	/* Will need these pages.  */
-# define MADV_DONTNEED	4	/* Don't need these pages.  */
-#endif
+#include <bits/mman.h>
 
 /* Return value of `mmap' in case of an error.  */
 #define MAP_FAILED	((__ptr_t) -1)
-
 
 __BEGIN_DECLS
 /* Map addresses starting near ADDR and extending for LEN bytes.  from
@@ -71,8 +40,18 @@ __BEGIN_DECLS
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
+#ifndef __USE_FILE_OFFSET64
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			int __flags, int __fd, off_t __offset));
+			int __flags, int __fd, __off_t __offset));
+#else
+extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
+			int __flags, int __fd, __off_t __offset))
+     __asm__ ("mmap64");
+#endif
+#ifdef __USE_LARGEFILE64
+extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
+			  int __flags, int __fd, __off64_t __offset));
+#endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
@@ -83,12 +62,10 @@ extern int munmap __P ((__ptr_t __addr, size_t __len));
    (and sets errno).  */
 extern int mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 
-/* Ultrix 4 does not implement `msync' or `madvise'.  */
-
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
-   unpredictable before this is done.  */
-extern int msync __P ((__ptr_t __addr, size_t __len));
+   unpredictable before this is done.  Flags are from the MS_* set.  */
+extern int msync __P ((__ptr_t __addr, size_t __len, int __flags));
 
 #ifdef __USE_BSD
 /* Advise the system about particular usage patterns the program follows
@@ -96,7 +73,30 @@ extern int msync __P ((__ptr_t __addr, size_t __len));
 extern int madvise __P ((__ptr_t __addr, size_t __len, int __advice));
 #endif
 
-__END_DECLS
+/* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
+   be memory resident.  */
+extern int mlock __P ((__const __ptr_t __addr, size_t __len));
 
+/* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
+extern int munlock __P ((__const __ptr_t __addr, size_t __len));
+
+/* Cause all currently mapped pages of the process to be memory resident
+   until unlocked by a call to the `munlockall', until the process exits,
+   or until the process calls `execve'.  */
+extern int mlockall __P ((int __flags));
+
+/* All currently mapped pages of the process' address space become
+   unlocked.  */
+extern int munlockall __P ((void));
+
+#ifdef __USE_MISC
+/* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
+   NEW_LEN.  If MAY_MOVE is MREMAP_MAYMOVE the returned address may
+   differ from ADDR.  */
+extern __ptr_t mremap __P ((__ptr_t __addr, size_t __old_len,
+			  size_t __new_len, int __may_move));
+#endif
+
+__END_DECLS
 
 #endif	/* sys/mman.h */

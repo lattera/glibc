@@ -33,4 +33,4 @@
 		     : 0)))
 
 /* Get the generic macro.  */
-#include_next <pagecopy.h>
+#include <sysdeps/generic/pagecopy.h>

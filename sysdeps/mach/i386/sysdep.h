@@ -50,7 +50,7 @@
 #define STACK_GROWTH_DOWN
 
 /* Get the machine-independent Mach definitions.  */
-#include_next <sysdep.h>
+#include <sysdeps/mach/sysdep.h>
 
 
 /* This should be rearranged, but at the moment this file provides

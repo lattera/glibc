@@ -29,7 +29,7 @@ headers	:= sys/uio.h bits/uio.h sys/ioctl.h bits/ioctls.h bits/ioctl-types.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h err.h error.h \
 	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
 	   sys/select.h ustat.h sys/ustat.h bits/ustat.h sys/sysinfo.h \
-	   regexp.h bits/select.h
+	   regexp.h bits/select.h bits/mman.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \

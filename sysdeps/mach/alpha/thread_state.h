@@ -36,4 +36,4 @@ struct machine_thread_all_state
     struct alpha_float_state fpu;
   };
 
-#include_next <thread_state.h>
+#include <sysdeps/mach/thread_state.h>

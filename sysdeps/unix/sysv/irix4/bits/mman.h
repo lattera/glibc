@@ -17,13 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef	_SYS_MMAN_H
-
-#define	_SYS_MMAN_H	1
-#include <features.h>
-
-#include <bits/types.h>
-
+#ifndef	_BITS_MMAN_H
+#define	_BITS_MMAN_H	1
 
 /* Protections are chosen from these bits, OR'd together.  The
    implementation does not necessarily support PROT_EXEC or PROT_WRITE
@@ -37,7 +32,6 @@
 #ifdef __USE_MISC
 # define PROT_EXECUTE	 PROT_EXEC
 #endif
-
 
 /* Sharing types (must choose one and only one of these).  */
 #define	MAP_SHARED	 0x01	/* Share changes.  */
@@ -67,44 +61,4 @@
 #define	MS_ASYNC	 0x1		/* Return immediately, don't fsync.  */
 #define	MS_INVALIDATE	 0x2		/* Invalidate caches.  */
 
-/* Return value of `mmap' in case of an error.  */
-#define MAP_FAILED	((__ptr_t) -1)
-
-
-__BEGIN_DECLS
-/* Map addresses starting near ADDR and extending for LEN bytes.  from
-   OFFSET into the file FD describes according to PROT and FLAGS.  If ADDR
-   is nonzero, it is the desired mapping address.  If the MAP_FIXED bit is
-   set in FLAGS, the mapping will be at ADDR exactly (which must be
-   page-aligned); otherwise the system chooses a convenient nearby address.
-   The return value is the actual mapping address chosen or MAP_FAILED
-   for errors (in which case `errno' is set).  A successful `mmap' call
-   deallocates any previous mapping for the affected region.  */
-
-extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			int __flags, int __fd, __off_t __offset));
-
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-extern int munmap __P ((__ptr_t __addr, size_t __len));
-
-/* Change the memory protection of the region starting at ADDR and
-   extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
-   (and sets errno).  */
-extern int mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
-
-/* Synchronize the region starting at ADDR and extending LEN bytes with the
-   file it maps.  Filesystem operations on a file being mapped are
-   unpredictable before this is done.  */
-extern int msync __P ((__ptr_t __addr, size_t __len, int __flags));
-
-#ifdef __USE_BSD
-/* Advise the system about particular usage patterns the program follows
-   for the region starting at ADDR and extending LEN bytes.  */
-extern int madvise __P ((__ptr_t __addr, size_t __len, int __advice));
-#endif
-
-__END_DECLS
-
-
-#endif	/* sys/mman.h */
+#endif /* bits/mman.h */

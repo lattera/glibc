@@ -1,6 +1,5 @@
 alpha/ptrace.h
 alpha/regdef.h
-bits/mman.h
 clone.S
 ieee_get_fp_control.S
 ieee_set_fp_control.S

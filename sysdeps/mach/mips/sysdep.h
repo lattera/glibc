@@ -80,4 +80,4 @@ _start:\n\
 #define ret	j ra; nop
 #endif
 
-#include_next <sysdep.h>
+#include <sysdeps/mach/sysdep.h>

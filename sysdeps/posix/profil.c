@@ -25,7 +25,7 @@
 
 #ifndef SIGPROF
 
-#include_next <profil.c>
+#include <sysdeps/generic/profil.c>
 
 #else
 
