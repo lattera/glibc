@@ -162,7 +162,7 @@ Input/output error; usually used for physical read or write errors.
 @end deftypevr
 
 @comment errno.h
-@comment POSIX.1: Device not configured
+@comment POSIX.1: No such device or address
 @deftypevr Macro int ENXIO
 @comment errno 6 @c DO NOT REMOVE
 No such device or address.  The system tried to use the device

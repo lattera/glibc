@@ -30,7 +30,7 @@ feclearexcept (int excepts)
   __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
 
   /* Clear the relevant bits.  */
-  fpsr &= ~(((unsigned long int) ((excepts & FE_ALL_EXCEPT) << 13)));
+  fpsr &= ~(((fenv_t) ((excepts & FE_ALL_EXCEPT) << 13)));
   /* Put the new state in effect.  */
   __asm__ __volatile__ ("mov.m ar.fpsr=%0" :: "r" (fpsr) : "memory");
 

@@ -28,7 +28,7 @@ fegetexceptflag (fexcept_t *flagp, int excepts)
   /* Get the current exceptions.  */
   __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
 
-  *flagp = (fpsr ^ FE_ALL_EXCEPT) & excepts & FE_ALL_EXCEPT;
+  *flagp = (fexcept_t) ((fpsr >> 13) & excepts & FE_ALL_EXCEPT);
 
   /* Success.  */
   return 0;

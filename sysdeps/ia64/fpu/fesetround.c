@@ -23,7 +23,7 @@
 int
 fesetround (int round)
 {
-  unsigned long int fpsr;
+  fenv_t fpsr;
 
   if (round & ~3)
     return 0;
@@ -32,7 +32,7 @@ fesetround (int round)
   __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
 
   /* Set the relevant bits.  */
-  fpsr = (fpsr & ~(3UL << 10)) | ((unsigned long int) round << 10);
+  fpsr = (fpsr & ~(3UL << 10)) | ((fenv_t) round << 10);
 
   /* Put the new state in effect.  */
   __asm__ __volatile__ ("mov.m ar.fpsr=%0" :: "r" (fpsr) : "memory");

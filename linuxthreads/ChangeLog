@@ -1,5 +1,9 @@
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* mutex.c (__pthread_mutex_unlock): For PTHREAD_MUTEX_RECURSIVE_NP
+	test for owner first.
+	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 	* cancel.c (pthread_cancel): Don't do anything if cancelation is
 	disabled.
 

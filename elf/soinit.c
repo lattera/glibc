@@ -3,6 +3,10 @@
    the `.ctors' and `.dtors' sections so the lists are terminated, and
    calling those lists of functions.  */
 
+# ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
+# include <gccframe.h>
+# endif
+
 static void (*const __CTOR_LIST__[1]) (void)
      __attribute__ ((section (".ctors")))
      = { (void (*) (void)) -1 };
@@ -22,16 +26,6 @@ static char __EH_FRAME_BEGIN__[]
      __attribute__ ((section (".eh_frame")))
      = { };
 # ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
-/* This must match what's in frame.h in gcc. How can one do that? */
-struct object
-{
-  void *pc_begin;
-  void *pc_end;
-  void *fde_begin;
-  void *fde_array;
-  __SIZE_TYPE__ count;
-  struct object *next;
-};
 extern void __register_frame_info (const void *, struct object *);
 extern void __deregister_frame_info (const void *);
 # else

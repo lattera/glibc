@@ -30,8 +30,8 @@ fesetenv (const fenv_t *envp)
      Magic encoding of default values: bit 62+63 set (which will never
      happen for a user-space address) means it's not indirect.
   */
-  if (((unsigned long int) envp >> 62) == 0x03)
-    env = (unsigned long int) envp & 0x3fffffffffffffff;
+  if (((fenv_t) envp >> 62) == 0x03)
+    env = (fenv_t) envp & 0x3fffffffffffffff;
   else
     env = *envp;
 

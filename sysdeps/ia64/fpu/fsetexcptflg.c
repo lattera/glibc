@@ -19,7 +19,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv.h>
-#include <math.h>
 
 int
 fesetexceptflag (const fexcept_t *flagp, int excepts)
@@ -29,12 +28,10 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
   /* Get the current exception state.  */
   __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
 
-  /* Get the reverse bits so we can enable the exceptions flagged
-     rather than disable them.  */
-  excepts ^= FE_ALL_EXCEPT;
+  fpsr &= ~(((fenv_t) excepts & FE_ALL_EXCEPT) << 13);
 
   /* Set all the bits that were called for.  */
-  fpsr = (fpsr & ~FE_ALL_EXCEPT) | (*flagp & excepts & FE_ALL_EXCEPT);
+  fpsr |= ((*flagp & excepts & FE_ALL_EXCEPT) << 13);
 
   /* And store it back.  */
   __asm__ __volatile__ ("mov.m ar.fpsr=%0" :: "r" (fpsr) : "memory");

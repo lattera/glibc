@@ -83,6 +83,7 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
+distribute += $(test-longdouble-yes:=.c)
 
 ifneq (no,$(PERL))
 libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \

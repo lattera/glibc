@@ -67,10 +67,10 @@ enum
 
 
 /* Type representing exception flags.  */
-typedef unsigned long fexcept_t;
+typedef unsigned long int fexcept_t;
 
 /* Type representing floating-point environment.  */
-typedef unsigned long fenv_t;
+typedef unsigned long int fenv_t;
 
 /* If the default argument is used we use this value.  */
 #define FE_DFL_ENV	((__const fenv_t *) 0xc009804c0270033fUL)

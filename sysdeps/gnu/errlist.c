@@ -59,7 +59,7 @@ TRANS represented by a file you specified, and it couldn't find the device.
 TRANS This can mean that the device file was installed incorrectly, or that
 TRANS the physical device is missing or not correctly attached to the
 TRANS computer. */
-    [ERR_REMAP (ENXIO)] = N_("Device not configured"),
+    [ERR_REMAP (ENXIO)] = N_("No such device or address"),
 #endif
 #ifdef E2BIG
 /*

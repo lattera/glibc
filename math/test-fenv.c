@@ -400,6 +400,7 @@ static void
 feexcp_mask_test (const char *flag_name, int fe_exc)
 {
   int status;
+  int exception;
   pid_t pid;
 
   printf ("Test: after fedisable (%s) processes will not abort\n", flag_name);
@@ -415,7 +416,22 @@ feexcp_mask_test (const char *flag_name, int fe_exc)
       setrlimit (RLIMIT_CORE, &core_limit);
 #endif
       feenableexcept (FE_ALL_EXCEPT);
-      fedisableexcept (fe_exc);
+      exception = fe_exc;
+#ifdef FE_INEXACT
+      /* The standard allows the inexact exception to be set together with the
+	 underflow and overflow exceptions.  So add FE_INEXACT to the set of
+	 exceptions to be disabled if we will be raising underflow or
+	 overflow.  */
+# ifdef FE_OVERFLOW
+      if (fe_exc & FE_OVERFLOW)
+	exception |= FE_INEXACT;
+# endif
+# ifdef FE_UNDERFLOW
+      if (fe_exc & FE_UNDERFLOW)
+	exception |= FE_INEXACT;
+# endif
+#endif
+      fedisableexcept (exception);
       feraiseexcept (fe_exc);
       exit (2);
     }

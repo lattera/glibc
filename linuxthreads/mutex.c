@@ -163,6 +163,8 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
     __pthread_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
+    if (mutex->__m_owner != thread_self())
+      return EPERM;
     if (mutex->__m_count > 0) {
       mutex->__m_count--;
       return 0;
