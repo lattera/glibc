@@ -27,7 +27,8 @@
 struct fork_block;
 
 /* Data type shared with libc.  The libc uses it to pass on calls to
-   the thread functions.  */
+   the thread functions.  Wine pokes directly into this structure,
+   so if possible avoid breaking it and append new hooks to the end.  */
 struct pthread_functions
 {
   pid_t (*ptr_pthread_fork) (struct fork_block *);
@@ -54,8 +55,6 @@ struct pthread_functions
 				  const pthread_condattr_t *);
   int (*ptr___pthread_cond_signal) (pthread_cond_t *);
   int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
-  int (*ptr___pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
-				       const struct timespec *);
   int (*ptr_pthread_equal) (pthread_t, pthread_t);
   void (*ptr___pthread_exit) (void *);
   int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
@@ -82,6 +81,8 @@ struct pthread_functions
 				struct sigaction *oact);
   int (*ptr_pthread_sigwait) (const sigset_t *set, int *sig);
   int (*ptr_pthread_raise) (int sig);
+  int (*ptr___pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
+				       const struct timespec *);
 };
 
 /* Variable in libc.so.  */

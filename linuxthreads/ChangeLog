@@ -1,3 +1,9 @@
+2003-09-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions): Move
+	ptr___pthread_cond_timedwait to the end of the structure to avoid
+	breaking Wine unnecessarily.
+
 2003-09-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h: Remove.
