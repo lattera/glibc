@@ -27,40 +27,37 @@ do_test (void)
 {
   int ret;
   const int incr = 10;
-  const int expected = 10;
+  int old;
 
   /* Discover current nice value.  */
   errno = 0;
-  ret = nice (0);
-  if (ret == -1 && errno != 0)
+  old = nice (0);
+  if (old == -1 && errno != 0)
     {
-      printf ("break: nice(%d) return: %d, errno: %d\n", 0, ret, errno);
+      printf ("break: nice(%d) return: %d, %m\n", 0, old);
       return 1;
     }
-  /* We cannot generally add up the increments since the values are
-     capped.  So we run the test only if we initially run at level
-     0.  */
-  if (ret != 0)
-    return 0;
 
   /* Nice ourselves up.  */
   errno = 0;
   ret = nice (incr);
   if (ret == -1 && errno != 0)
     {
-      printf ("break: nice(%d) return: %d, errno: %d\n", incr, ret, errno);
+      printf ("break: nice(%d) return: %d, %m\n", incr, ret);
       return 1;
     }
 
   /* Check for return value being zero when it shouldn't.  Cannot simply
-     check for expected value since nice values are capped at 2^n-1.  */
-  if (ret != expected)
+     check for expected value since nice values are capped at 2^n-1.
+     But we assume that we didn't start at the cap and so should have
+     increased some.  */
+  if (ret <= old)
     {
-      printf ("fail: retval (%d) of nice(%d) != %d\n", ret, incr, expected);
+      printf ("FAIL: retval (%d) of nice(%d) != %d\n", ret, incr, old + incr);
       return 1;
     }
 
-  printf ("pass: nice(%d) return: %d\n", incr, ret);
+  printf ("PASS: nice(%d) from %d return: %d\n", incr, old, ret);
 
   return 0;
 }
