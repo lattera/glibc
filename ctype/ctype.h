@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -150,12 +150,26 @@ __exctype (_tolower);
 # define isblank(c)	__isctype((c), _ISblank)
 #endif
 
-#define	tolower(c)	__tolower(c)
-#define	toupper(c)	__toupper(c)
+#if __GNUC__ >= 2
+extern inline int
+tolower (int __c)
+{
+  return __c >= -128 && __c < 256 ? __tolower (__c) : __c;
+}
+
+extern inline int
+toupper (int __c)
+{
+  return __c >= -128 && __c < 256 ? __toupper (__c) : __c;
+}
+#endif
 
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
 # define isascii(c)	__isascii(c)
 # define toascii(c)	__toascii(c)
+
+# define _tolower(c)	__tolower(c)
+# define _toupper(c)	__toupper(c)
 #endif
 
 #endif /* Not __NO_CTYPE.  */
