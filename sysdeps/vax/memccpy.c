@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,22 +22,22 @@ Cambridge, MA 02139, USA.  */
 
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
    Return the position in DEST one byte past where C was copied,
-   or NULL if C was not found in the first NBYTES bytes of SRC.  */
+   or NULL if C was not found in the first N bytes of SRC.  */
 PTR
 DEFUN(__memccpy, (dest, src, c, n),
       PTR dest AND CONST PTR src AND int c AND size_t nbytes)
 {
-  /* Except when NBYTES > 65535, this is what a hand-coded version would
+  /* Except when N > 65535, this is what a hand-coded version would
      do anyway.  */
 
-  PTR found = memchr(src, c, n);
+  PTR found = memchr (src, c, n);
 
   if (found == NULL)
     {
-      (void) memcpy(dest, src, n);
+      (void) memcpy (dest, src, n);
       return NULL;
     }
 
-  (void) memcpy(dest, src, (char *) found + 1 - (char *) src);
+  (void) memcpy (dest, src, (char *) found + 1 - (char *) src);
   return (PTR) ((char *) dest + ((char *) found + 1 - (char *) src));
 }

@@ -22,17 +22,24 @@ Cambridge, MA 02139, USA.  */
 #define	SYS_brk	17
 #endif
 
+#ifndef	HAVE_GNU_LD
+#define	__end	_end
+#endif
+
 .data
 .globl ___curbrk
 ___curbrk:
-#ifdef	__GNU_STAB__
-	.long ___end
-#else
-	.long _end
-#endif
+	.long __end
 
 .text
-SYSCALL__ (brk)
-	movl r0, ___curbrk
+ENTRY (__brk)
+	cmpl 4(ap), __end
+	bgeq 0f
+	movl __env, 4(ap)
+0:	chmk $SYS_brk
+	bcs 1f
+	movl 4(ap), ___curbrk
 	clrl r0
 	ret
+1:
+	jmp syscall_error
