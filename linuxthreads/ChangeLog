@@ -1,3 +1,9 @@
+2000-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* semaphore.c (sem_timedwait): New function.
+	Patch by Carl Mailloux <carlm@oricom.ca>.
+	* semaphore.h: Declare sem_timedwait.
+
 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/pthread/Makefile: File removed.
