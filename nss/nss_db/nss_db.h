@@ -22,10 +22,17 @@
 
 #include <stdint.h>
 
-/* The error values kept the same values though new values were added.
-   Define only those which we need.  */
-#define DB_KEYEXIST	( -3)
-#define DB_NOTFOUND	( -7)
+/* Variables which keep track of the error values.  */
+extern int db_keyexist;
+extern int db_notfound;
+
+/* Constants which vary from version to version are actually variables
+   here.  */
+extern int db_first;
+extern int db_next;
+extern int db_nooverwrite;
+extern int db_truncate;
+extern int db_rdonly;
 
 /* Flags are also unchanged.  */
 #define DB_CREATE	0x000001
@@ -69,5 +76,9 @@ typedef struct {
 
 extern enum nss_status internal_setent (const char *file, NSS_DB **dbp);
 extern void internal_endent (NSS_DB **dbp);
+extern int db_cursor (void *db, void *txn, NSS_DBC **dbcp);
+extern int load_db (void);
+extern int dbopen (const char *fname, int oper, int mode, NSS_DB **dbp);
+
 
 #endif	/* nss_db.h */

@@ -1,3 +1,41 @@
+2000-01-07  Andreas Jaeger  <aj@suse.de>
+
+	Add support for Berkeley db 3.0.x and merge db support:
+	* nss/nss_db/dummy-db.h (struct db30): New.
+	(struct dbc30): New.
+	Added DB30* flags.
+
+	* nss/makedb.c: Move all database routines to db-open.c.
+	(main): Adjust to interface changes.
+	Load database early to initialize version dependend variables.
+
+	* nss/db-open.c: Merge database routines from makedb.c.
+	Define version dependend constansts as variables.
+	(load_db): Check also for db 3.
+	(internal_setent): Call dbopen.
+	(db_cursor): New function from makedb; handles db 3 now.
+	(dbopen): New function from makedb; handles db 3.
+
+	* nss/nss_db/db-XXX.c: Use db_notfound since the value is
+	different in different DB versions.
+
+	* nss/nss_db/nss_db.h: Add version dependend constants as
+	variables, add exportet interfaces from db-open.c.
+
+	* nss/Makefile ($(objpfx)makedb): Link against db-open.
+
+2000-01-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/error.c: Don't use `defined _LIBC', only `_LIBC'.
+	Reported by Jim Meyering.
+
+	* time/strftime.c: Pretty printing.
+
+2000-01-07  Andreas Jaeger  <aj@suse.de>
+
+	* manual/socket.texi (Host Names): Fix example.
+	Reported by Marco Budde <budde@telos.de>.
+
 2000-01-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* localedata/Makefile (install-locales): Create locale directory

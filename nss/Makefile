@@ -72,7 +72,7 @@ generated		+= $(filter-out db-alias.c db-netgrp.c, \
 distribute		+= db-XXX.c nss_db.h dummy-db.h
 
 
-$(objpfx)makedb: $(libdl)
+$(objpfx)makedb: $(libdl) $(objpfx)db-open.o
 
 # Build static module if requested
 ifneq ($(build-static-nss),yes)

@@ -50,23 +50,6 @@ static int be_quiet;
 /* Name of output file.  */
 static const char *output_name;
 
-/* Various definitions for the libdb handling.  */
-enum {
-  nodb,
-  db24,
-  db27
-} libdb_version;
-static int (*db_open) (const char *, int,
-		       uint32_t, int, void *, void *, void **);
-
-/* Constants which vary from version to version are actually variables
-   here.  */
-static int db_first;
-static int db_next;
-static int db_nooverwrite;
-static int db_truncate;
-
-
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
@@ -107,7 +90,6 @@ static struct argp argp =
 static int process_input (FILE *input, const char *inname, NSS_DB *output,
 			  int to_lowercase, int be_quiet);
 static int print_database (NSS_DB *db);
-static NSS_DB *dbopen (const char *fname, int oper, int mode);
 
 
 int
@@ -154,10 +136,15 @@ main (int argc, char *argv[])
       output_name = argv[remaining];
     }
 
+  /* First load the shared object to initialize version dependend
+     variables.  */
+  if (load_db ())
+    error (EXIT_FAILURE, 0, gettext ("No usable database library found."));
+
   /* Special handling if we are asked to print the database.  */
   if (do_undo)
     {
-      db_file = dbopen (input_name, DB_RDONLY, 0666);
+      dbopen (input_name, db_rdonly, 0666, &db_file);
       if (db_file == NULL)
 	error (EXIT_FAILURE, 0, gettext ("cannot open database file `%s': %s"),
 	       input_name,
@@ -191,7 +178,7 @@ main (int argc, char *argv[])
 
   /* Open output file.  This must not be standard output so we don't
      handle "-" and "/dev/stdout" special.  */
-  db_file = dbopen (output_name, DB_CREATE | db_truncate, mode);
+  dbopen (output_name, DB_CREATE | db_truncate, mode, &db_file);
   if (db_file == NULL)
     error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"),
 	   output_name);
@@ -336,7 +323,7 @@ process_input (input, inname, output, to_lowercase, be_quiet)
       status = output->put (output->db, NULL, &key, &val, db_nooverwrite);
       if (status != 0)
 	{
-	  if (status == DB_KEYEXIST)
+	  if (status == db_keyexist)
 	    {
 	      if (!be_quiet)
 		error_at_line (0, 0, inname, linenr,
@@ -392,186 +379,11 @@ print_database (db)
       status = cursor->c_get (cursor->cursor, &key, &val, db_next);
     }
 
-  if (status != DB_NOTFOUND)
+  if (status != db_notfound)
     {
       error (0, status, gettext ("while reading database"));
       return EXIT_FAILURE;
     }
 
   return EXIT_SUCCESS;
-}
-
-
-static int
-load_db (void)
-{
-  static const char *libnames[] = { "libdb.so.3" };
-  int x;
-  void *handle;
-
-  for(x = 0; x < sizeof (libnames) / sizeof (libnames[0]); ++x)
-    {
-      handle = dlopen (libnames[x], RTLD_LAZY);
-      if (handle == NULL)
-	continue;
-
-      db_open = dlsym (handle, "db_open");
-      if (db_open != NULL)
-	{
-	  /* Alright, we got a library.  Now find out which version it is.  */
-	  const char *(*db_version) (int *, int *, int *);
-
-	  db_version = dlsym (handle, "db_version");
-	  if (db_version != NULL)
-	    {
-	      /* Call the function and get the information.  */
-	      int major, minor, subminor;
-
-	      DL_CALL_FCT (db_version, (&major, &minor, &subminor));
-	      if (major == 2)
-		{
-		  /* We currently cannot handle other versions than the
-		     2.x series.  */
-		  if (minor < 6 || (minor == 6 && subminor < 4))
-		    {
-		      libdb_version = db24;
-		      db_first = DB24_FIRST;
-		      db_next = DB24_NEXT;
-		      db_nooverwrite = DB24_NOOVERWRITE;
-		      db_truncate = DB24_TRUNCATE;
-		    }
-		  else
-		    {
-		      libdb_version = db27;
-		      db_first = DB27_FIRST;
-		      db_next = DB27_NEXT;
-		      db_nooverwrite = DB27_NOOVERWRITE;
-		      db_truncate = DB27_TRUNCATE;
-		    }
-		}
-	    }
-
-	  if (libdb_version != nodb)
-	    return 0;
-	}
-
-      dlclose (handle);
-    }
-
-  (void) dlerror ();
-  return 1;
-}
-
-
-static int
-db_cursor (void *db, void *txn, NSS_DBC **dbcp)
-{
-  void *ptr;
-  NSS_DBC *dbc = NULL;
-  int ret;
-
-  switch (libdb_version)
-    {
-    case db24:
-      ret = ((struct db24 *) db)->cursor (db, txn, &ptr);
-      break;
-    case db27:
-      ret = ((struct db27 *) db)->cursor (db, txn, &ptr, 0);
-      break;
-    default:
-      abort ();
-    }
-
-  if (ret == 0)
-    {
-      dbc = (NSS_DBC *) malloc (sizeof (NSS_DBC));
-      if (dbc == NULL)
-	error (EXIT_FAILURE, errno, gettext ("while reading database"));
-      dbc->cursor = ptr;
-
-      switch (libdb_version)
-	{
-	case db24:
-	  dbc->c_get =
-	    (int (*) (void *, void *, void *, uint32_t))
-	    ((struct dbc24 *) ptr)->c_get;
-	  break;
-	case db27:
-	  dbc->c_get =
-	    (int (*) (void *, void *, void *, uint32_t))
-	    ((struct dbc27 *) ptr)->c_get;
-	  break;
-	default:
-	  abort ();
-	}
-    }
-
-  *dbcp = dbc;
-
-  return ret;
-}
-
-
-static NSS_DB *
-dbopen (const char *fname, int oper, int mode)
-{
-  int err;
-  void *odb;
-  NSS_DB *db;
-
-  /* First load the shared object.  */
-  load_db ();
-
-  if (db_open == NULL)
-    return NULL;
-
-  /* Actually open the database.  */
-  err = DL_CALL_FCT (db_open, (fname, DB_BTREE, oper, mode, NULL, NULL, &odb));
-  if (err != 0)
-    {
-      errno = err;
-      return NULL;
-    }
-
-  /* Construct the object we pass up.  */
-  db = (NSS_DB *) malloc (sizeof (NSS_DB));
-  if (db != NULL)
-    {
-      db->db = odb;
-
-      /* The functions are at different positions for the different
-	 versions.  Sigh.  */
-      switch (libdb_version)
-	{
-	case db24:
-	  db->close =
-	    (int (*) (void *, uint32_t)) ((struct db24 *) odb)->close;
-	  db->fd =
-	    (int (*) (void *, int *)) ((struct db24 *) odb)->fd;
-	  db->get =
-	    (int (*) (void *, void *, void *, void *, uint32_t))
-	    ((struct db24 *) odb)->get;
-	  db->put =
-	    (int (*) (void *, void *, void *, void *, uint32_t))
-	    ((struct db24 *) odb)->put;
-	  break;
-	case db27:
-	  db->close =
-	    (int (*) (void *, uint32_t)) ((struct db27 *) odb)->close;
-	  db->fd =
-	    (int (*) (void *, int *)) ((struct db27 *) odb)->fd;
-	  db->get =
-	    (int (*) (void *, void *, void *, void *, uint32_t))
-	    ((struct db27 *) odb)->get;
-	  db->put =
-	    (int (*) (void *, void *, void *, void *, uint32_t))
-	    ((struct db27 *) odb)->put;
-	  break;
-	default:
-	  abort ();
-	}
-      db->cursor = db_cursor;
-    }
-
-  return db;
 }

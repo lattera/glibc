@@ -122,7 +122,7 @@ lookup (DBT *key, struct STRUCTURE *result,
   err = DL_CALL_FCT (db->get, (db->db, NULL, key, &value, 0));
   if (err != 0)
     {
-      if (err == DB_NOTFOUND)
+      if (err == db_notfound)
 	{
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  status = NSS_STATUS_NOTFOUND;

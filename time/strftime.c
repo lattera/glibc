@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -495,11 +495,11 @@ my_strftime (s, maxsize, format, tp ut_argument)
 # define ap_len STRLEN (ampm)
 #else
 # if !HAVE_STRFTIME
-# define f_wkday (weekday_name[tp->tm_wday])
-# define f_month (month_name[tp->tm_mon])
-# define a_wkday f_wkday
-# define a_month f_month
-# define ampm (L_("AMPM") + 2 * (tp->tm_hour > 11))
+#  define f_wkday (weekday_name[tp->tm_wday])
+#  define f_month (month_name[tp->tm_mon])
+#  define a_wkday f_wkday
+#  define a_month f_month
+#  define ampm (L_("AMPM") + 2 * (tp->tm_hour > 11))
 
   size_t aw_len = 3;
   size_t am_len = 3;
