@@ -1,5 +1,8 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (process_envvars): Place output files for profiling
+	in SUID binaries in /var/profile.
+
 	* elf/dl-load.c (_dl_map_object): Don't look in cache for
 	preloading in SUID binaries.
 

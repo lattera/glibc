@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1322,7 +1322,7 @@ process_envvars (enum mode *modep, int *lazyp)
   char *debug_output = NULL;
 
   /* This is the default place for profiling data file.  */
-  _dl_profile_output = "/var/tmp";
+  _dl_profile_output = __libc_enable_secure ? "/var/profile" : "/var/tmp";
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
