@@ -157,7 +157,7 @@ CHARMAP
 <nj>                   /x92   <U045A> CYRILLIC SMALL LETTER NJE
 <NJ>                   /x93   <U040A> CYRILLIC CAPITAL LETTER NJE
 <ts>                   /x94   <U045B> CYRILLIC SMALL LETTER TSHE (Serbocroatian)
-<TS>                   /x95   <U0093> SET TRANSMIT STATE (STS)
+<Ts>                   /x95   <U040B> CYRILLIC CAPITAL LETTER TSHE
 <kj>                   /x96   <U045C> CYRILLIC SMALL LETTER KJE
 <KJ>                   /x97   <U040C> CYRILLIC CAPITAL LETTER KJE
 <v%>                   /x98   <U045E> CYRILLIC SMALL LETTER SHORT U (Byelorussian)
@@ -247,7 +247,7 @@ CHARMAP
 <V=>                   /xEC   <U0412> CYRILLIC CAPITAL LETTER VE
 <%'>                   /xED   <U044C> CYRILLIC SMALL LETTER SOFT SIGN
 <%">                   /xEE   <U042C> CYRILLIC CAPITAL LETTER SOFT SIGN
-<''>                   /xEF   <U00B4> ACUTE ACCENT
+<N0>                   /xEF   <U2116> NUMERO SIGN
 <-->                   /xF0   <U00AD> SOFT HYPHEN
 <y=>                   /xF1   <U044B> CYRILLIC SMALL LETTER YERU
 <Y=>                   /xF2   <U042B> CYRILLIC CAPITAL LETTER YERU
@@ -261,6 +261,7 @@ CHARMAP
 <Sc>                   /xFA   <U0429> CYRILLIC CAPITAL LETTER SHCHA
 <c%>                   /xFB   <U0447> CYRILLIC SMALL LETTER CHE
 <C%>                   /xFC   <U0427> CYRILLIC CAPITAL LETTER CHE
+<SE>                   /xFD   <U00A7> SECTION SIGN
 <fS>                   /xFE   <U25A0> BLACK SQUARE
 <NS>                   /xFF   <U00A0> NO-BREAK SPACE
 <NUL>                  /x00   <U0000> NUL

@@ -257,8 +257,8 @@ CHARMAP
 <-:>                   /xF6   <U00F7> DIVISION SIGN
 <?2>                   /xF7   <U2248> ALMOST EQUAL TO
 <DG>                   /xF8   <U00B0> DEGREE SIGN
-<.M>                   /xF9   <U00B7> MIDDLE DOT
-<sb>                   /xFA   <U2022> BULLET
+<Sb>                   /xF9   <U2219> BULLET OPERATOR
+<.M>                   /xFA   <U00B7> MIDDLE DOT
 <RT>                   /xFB   <U221A> SQUARE ROOT
 <nS>                   /xFC   <U207F> SUPERSCRIPT LATIN SMALL LETTER N
 <2S>                   /xFD   <U00B2> SUPERSCRIPT TWO

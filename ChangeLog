@@ -1,5 +1,10 @@
 1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/bits/types.h: Correct
+	signed/unsigned-ness of blkcnt and fsblkcnt.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h: Add SOL_PACKET, SOL_ATM,
 	SOL_AAL, and SOL_IRDA.
 

@@ -1,5 +1,11 @@
 1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/IBM855: Correct entries 95, ef, and fd.
+
+	* charmaps/IBM437: Correct entries f9 and fa.
+
+	* charmaps/UTF8: Correct BULLET OPERATOR mnemonic.
+
 	* locales/th_TH: New file.  Thai locale description.
 	* th_TH.in: New file.
 	Contributed by Theppitak Karoonboonyanan <thep@links.nectec.or.th>.
