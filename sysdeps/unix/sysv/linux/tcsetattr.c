@@ -71,10 +71,10 @@ tcsetattr (fd, optional_actions, termios_p)
   k_termios.c_cflag = termios_p->c_cflag;
   k_termios.c_lflag = termios_p->c_lflag;
   k_termios.c_line = termios_p->c_line;
-#ifdef _HAVE_C_ISPEED
+#if defined _HAVE_C_ISPEED && defined _HAVE_STRUCT_TERMIOS_C_ISPEED
   k_termios.c_ispeed = termios_p->c_ispeed;
 #endif
-#ifdef _HAVE_C_OSPEED
+#if defined _HAVE_C_OSPEED && defined _HAVE_STRUCT_TERMIOS_C_OSPEED
   k_termios.c_ospeed = termios_p->c_ospeed;
 #endif
   memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],

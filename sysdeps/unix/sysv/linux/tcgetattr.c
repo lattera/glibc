@@ -45,15 +45,19 @@ __tcgetattr (fd, termios_p)
   termios_p->c_cflag = k_termios.c_cflag;
   termios_p->c_lflag = k_termios.c_lflag;
   termios_p->c_line = k_termios.c_line;
-#ifdef _HAVE_C_ISPEED
+#ifdef _HAVE_STRUCT_TERMIOS_C_ISPEED
+# ifdef _HAVE_C_ISPEED
   termios_p->c_ispeed = k_termios.c_ispeed;
-#else
+# else
   termios_p->c_ispeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
+# endif
 #endif
-#ifdef _HAVE_C_OSPEED
+#ifdef _HAVE_STRUCT_TERMIOS_C_OSPEED
+# ifdef _HAVE_C_OSPEED
   termios_p->c_ospeed = k_termios.c_ospeed;
-#else
+# else
   termios_p->c_ospeed = k_termios.c_cflag & (CBAUD | CBAUDEX);
+# endif
 #endif
   if (sizeof (cc_t) == 1 || _POSIX_VDISABLE == 0
       || (unsigned char) _POSIX_VDISABLE == (unsigned char) -1)
