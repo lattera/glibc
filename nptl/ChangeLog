@@ -1,3 +1,8 @@
+2003-04-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-rwlock6.c (do_test): Use correct printf format specifiers.
+	* tst-rwlock7.c (do_test): Likewise.
+
 2003-04-26  Roland McGrath  <roland@redhat.com>
 
 	* Makefile ($(test-modules)): Depend on $(common-objpfx)shlib.lds.
