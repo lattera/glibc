@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,23 +17,30 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <pthread.h>
+#include <pthreadP.h>
 #include <sys/time.h>
 #include <tls.h>
 
 
 int
-pthread_getcpuclockid (thread_id, clock_id)
-     pthread_t thread_id;
-     clockid_t *clock_id;
+pthread_getcpuclockid (threadid, clockid)
+     pthread_t threadid;
+     clockid_t *clockid;
 {
+  struct pthread *pd = (struct pthread *) threadid;
+
+  /* Make sure the descriptor is valid.  */
+  if (INVALID_TD_P (pd))
+    /* Not a valid thread handle.  */
+    return ESRCH;
+
   /* We don't allow any process ID but our own.  */
-  if ((struct pthread *) thread_id != THREAD_SELF)
+  if (pd != THREAD_SELF)
     return EPERM;
 
 #ifdef CLOCK_THREAD_CPUTIME_ID
   /* Store the number.  */
-  *clock_id = CLOCK_THREAD_CPUTIME_ID;
+  *clockid = CLOCK_THREAD_CPUTIME_ID;
 
   return 0;
 #else

@@ -1,5 +1,17 @@
 2003-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthreadP.h: Define INVALID_TD_P and INVALID_NOT_TERMINATED_TD_P.
+	* pthread_cancel.c: Use INVALID_TD_P.
+	* pthread_detach.c: Likewise.
+	* pthread_getschedparam.c: Likewise.
+	* pthread_setschedparam.c: Likewise.
+	* sysdeps/pthread/pthread_getcpuclockid.c: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_kill.c: Likewise.
+	* pthread_join.c: Use INVALID_NOT_TERMINATED_TD_P.
+	* pthread_timedjoin.c: Likewise.
+
+	* tst-basic7.c: Include <signal.h>.
+
 	* pthread_join.c (pthread_join): Limited checking for invalid
 	descriptors.
 	* pthread_timedjoin.c (pthread_timedjoin_np): Likewise.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,33 +25,39 @@
 
 
 int
-__pthread_setschedparam (thread_id, policy, param)
-     pthread_t thread_id;
+__pthread_setschedparam (threadid, policy, param)
+     pthread_t threadid;
      int policy;
      const struct sched_param *param;
 {
-  struct pthread *thread = (struct pthread *) thread_id;
+  struct pthread *pd = (struct pthread *) threadid;
+
+  /* Make sure the descriptor is valid.  */
+  if (INVALID_TD_P (pd))
+    /* Not a valid thread handle.  */
+    return ESRCH;
+
   int result = 0;
 
   /* We have to handle cancellation in the following code since we are
      locking another threads desriptor.  */
-  pthread_cleanup_push ((void (*) (void *)) lll_unlock_wake_cb, &thread->lock);
+  pthread_cleanup_push ((void (*) (void *)) lll_unlock_wake_cb, &pd->lock);
 
-  lll_lock (thread->lock);
+  lll_lock (pd->lock);
 
   /* Try to set the scheduler information.  */
-  if (__builtin_expect (__sched_setscheduler (thread->tid, policy,
+  if (__builtin_expect (__sched_setscheduler (pd->tid, policy,
 					      param) == -1, 0))
     result = errno;
   else
     {
       /* We succeeded changing the kernel information.  Reflect this
 	 change in the thread descriptor.  */
-      thread->schedpolicy = policy;
-      memcpy (&thread->schedparam, param, sizeof (struct sched_param));
+      pd->schedpolicy = policy;
+      memcpy (&pd->schedparam, param, sizeof (struct sched_param));
     }
 
-  lll_unlock (thread->lock);
+  lll_unlock (pd->lock);
 
   pthread_cleanup_pop (0);
 

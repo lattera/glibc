@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -27,6 +27,12 @@ pthread_detach (th)
      pthread_t th;
 {
   struct pthread *pd = (struct pthread *) th;
+
+  /* Make sure the descriptor is valid.  */
+  if (INVALID_TD_P (pd))
+    /* Not a valid thread handle.  */
+    return ESRCH;
+
   int result = 0;
 
   /* Mark the thread as detached.  */

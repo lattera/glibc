@@ -31,13 +31,13 @@ __pthread_kill (threadid, signo)
 {
   struct pthread *pd = (struct pthread *) threadid;
 
+  /* Make sure the descriptor is valid.  */
+  if (INVALID_TD_P (pd))
+    /* Not a valid thread handle.  */
+    return ESRCH;
+
   /* We have a special syscall to do the work.  */
   INTERNAL_SYSCALL_DECL (err);
-
-  /* The kernel returns EINVAL for PIDs <= 0.  This is not nice since
-     the user would expect ESRCH.  Correct it here.  */
-  if (pd->tid <= 0)
-    return ESRCH;
 
   int val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, signo);
 

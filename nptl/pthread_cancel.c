@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <signal.h>
 #include "pthreadP.h"
 #include "atomic.h"
@@ -27,8 +28,13 @@ pthread_cancel (th)
      pthread_t th;
 {
   volatile struct pthread *pd = (volatile struct pthread *) th;
-  int result = 0;
 
+  /* Make sure the descriptor is valid.  */
+  if (INVALID_TD_P (pd))
+    /* Not a valid thread handle.  */
+    return ESRCH;
+
+  int result = 0;
   while (1)
     {
       int oldval = pd->cancelhandling;

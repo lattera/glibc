@@ -70,8 +70,15 @@ extern int __pthread_debug attribute_hidden;
 /** For now disable debugging support.  */
 #if 0
 # define DEBUGGING_P __builtin_expect (__pthread_debug, 0)
+# define INVALID_TD_P(pd) (DEBUGGING_P && __find_in_stack_list (pd) == NULL)
+# define INVALID_NOT_TERMINATED_TD_P(pd) INVALID_TD_P (pd)
 #else
 # define DEBUGGING_P 0
+/* Simplified test.  This will not catch all invalid descriptors but
+   is better than nothing.  And if the test triggers the thread
+   descriptor is guaranteed to be invalid.  */
+# define INVALID_TD_P(pd) __builtin_expect ((pd)->tid <= 0, 0)
+# define INVALID_NOT_TERMINATED_TD_P(pd) __builtin_expect ((pd)->tid < 0, 0)
 #endif
 
 

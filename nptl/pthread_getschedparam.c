@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,33 +17,39 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <string.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
 
 int
-__pthread_getschedparam (thread_id, policy, param)
-     pthread_t thread_id;
+__pthread_getschedparam (threadid, policy, param)
+     pthread_t threadid;
      int *policy;
      struct sched_param *param;
 {
-  struct pthread *thread = (struct pthread *) thread_id;
+  struct pthread *pd = (struct pthread *) threadid;
+
+  /* Make sure the descriptor is valid.  */
+  if (INVALID_TD_P (pd))
+    /* Not a valid thread handle.  */
+    return ESRCH;
 
   /* We have to handle cancellation in the following code since we are
      locking another threads desriptor.  */
-  pthread_cleanup_push ((void (*) (void *)) lll_unlock_wake_cb, &thread->lock);
+  pthread_cleanup_push ((void (*) (void *)) lll_unlock_wake_cb, &pd->lock);
 
-  lll_lock (thread->lock);
+  lll_lock (pd->lock);
 
   /* The library is responsible for maintaining the values at all
      times.  If the user uses a interface other than
      pthread_setschedparam to modify the scheduler setting it is not
      the library's problem.  */
-  *policy = thread->schedpolicy;
-  memcpy (param, &thread->schedparam, sizeof (struct sched_param));
+  *policy = pd->schedpolicy;
+  memcpy (param, &pd->schedparam, sizeof (struct sched_param));
 
-  lll_unlock (thread->lock);
+  lll_unlock (pd->lock);
 
   pthread_cleanup_pop (0);
 
