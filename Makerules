@@ -1181,7 +1181,7 @@ define check-abi
 	| diff -pu0 - $(filter %.symlist,$^)
 endef
 
-ifeq ($(sysd-sorted-done)$(generating),t)
+ifeq ($(firstword $(sysd-sorted-done) f)$(firstword $(generating) f),tf)
 -include $(common-objpfx)tls.make
 config-tls-yes := tls
 config-tls-no := notls
