@@ -137,12 +137,16 @@ ENDFUNC_NAME (void)
 {
   int save;
 
-  __libc_lock_lock (lock);
-  __nss_endent (ENDFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
-		&last_nip, NEED__RES);
-  save = errno;
-  __libc_lock_unlock (lock);
-  __set_errno (save);
+  /* If the service has not been used before do not do anything.  */
+  if (startp != NULL)
+    {
+      __libc_lock_lock (lock);
+      __nss_endent (ENDFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
+		    &last_nip, NEED__RES);
+      save = errno;
+      __libc_lock_unlock (lock);
+      __set_errno (save);
+    }
 }
 
 
