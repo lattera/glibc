@@ -1,5 +1,7 @@
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locales/en_ZA: New file.  Contributed by nic@sig.co.za.
+
 	* charmaps/CP1256: Cosmetic changes.
 	* charmaps/CP1257: Likewise.
 

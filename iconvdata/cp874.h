@@ -1,5 +1,5 @@
 /* Mapping table for CP874.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -155,6 +155,7 @@ static const uint32_t to_ucs4[256] =
   [0x7d] = 0x007d,
   [0x7e] = 0x007e,
   [0x7f] = 0x007f,
+  [0x80] = 0x20ac,
   [0x85] = 0x2026,
   [0x91] = 0x2018,
   [0x92] = 0x2019,

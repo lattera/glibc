@@ -1,6 +1,6 @@
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
-	* localedata/locales/en_ZA: New file.  Contributed by nic@sig.co.za.
+	* iconvdata/cp874.h (to_ucs4): Add Euro sign.
 
 	* timezone/africa: Update from tzdata1999d.
 	* timezone/europe: Likewise.
