@@ -218,7 +218,7 @@ LDLIBS-testobj5.so = -ldl
 LDLIBS-testobj6.so = -ldl
 LDLIBS-failobj.so = $(objpfx)testobj6.so
 
-$(test-modules): $(objpfx)%.so: %.c
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
 
 $(objpfx)loadtest: $(objpfx)libdl.so

@@ -1,3 +1,5 @@
+extern int obj1func2 (int);
+
 int
 obj1func1 (int a)
 {

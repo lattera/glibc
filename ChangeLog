@@ -1,3 +1,15 @@
+1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile: Change rule to make test module so that they are
+	compiled using -fPIC.
+	* elf/testobj1.c: Add missing prototype.
+	* elf/testobj1_1.c: Likewise.
+	* elf/testobj2.c: Likewise.
+	* elf/testobj3.c: Likewise.
+	* elf/testobj4.c: Likewise.
+	* elf/testobj5.c: Likewise.
+	* elf/testobj6.c: Likewise.
+
 1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile (tests): Add loadfail.

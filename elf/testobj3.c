@@ -1,6 +1,8 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 
+extern int foo (int);
+
 int
 obj3func1 (int a __attribute__ ((unused)))
 {
