@@ -726,7 +726,7 @@ re_compile_internal (preg, pattern, length, syntax)
 
   /* Initialize the dfa.  */
   dfa = (re_dfa_t *) preg->buffer;
-  if (preg->allocated < sizeof (re_dfa_t))
+  if (BE (preg->allocated < sizeof (re_dfa_t), 0))
     {
       /* If zero allocated, but buffer is non-null, try to realloc
 	 enough space.  This loses if buffer's address is bogus, but
@@ -736,8 +736,8 @@ re_compile_internal (preg, pattern, length, syntax)
       if (dfa == NULL)
 	return REG_ESPACE;
       preg->allocated = sizeof (re_dfa_t);
+      preg->buffer = (unsigned char *) dfa;
     }
-  preg->buffer = (unsigned char *) dfa;
   preg->used = sizeof (re_dfa_t);
 
   err = init_dfa (dfa, length);
@@ -2269,7 +2269,7 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
   bin_tree_t *tree, *left_par, *right_par;
   size_t cur_nsub;
   cur_nsub = preg->re_nsub++;
-  if (dfa->subexps_alloc < preg->re_nsub)
+  if (BE (dfa->subexps_alloc < preg->re_nsub, 0))
     {
       re_subexp_t *new_array;
       dfa->subexps_alloc *= 2;
@@ -2537,7 +2537,7 @@ build_range_exp (sbcset, start_elem, end_elem)
       return REG_ERANGE;
 
     /* Check the space of the arrays.  */
-    if (*range_alloc == mbcset->nranges)
+    if (BE (*range_alloc == mbcset->nranges, 0))
       {
 	/* There are not enough space, need realloc.  */
 	wchar_t *new_array_start, *new_array_end;
@@ -2764,7 +2764,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
 # ifdef RE_ENABLE_I18N
       /* Check the space of the arrays.  */
-      if (*range_alloc == mbcset->nranges)
+      if (BE (*range_alloc == mbcset->nranges, 0))
 	{
 	  /* There are not enough space, need realloc.  */
 	  uint32_t *new_array_start;
@@ -2870,17 +2870,19 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 # ifdef RE_ENABLE_I18N
 	  /* Got valid collation sequence, add it as a new entry.  */
 	  /* Check the space of the arrays.  */
-	  if (*coll_sym_alloc == mbcset->ncoll_syms)
+	  if (BE (*coll_sym_alloc == mbcset->ncoll_syms, 0))
 	    {
 	      /* Not enough, realloc it.  */
 	      /* +1 in case of mbcset->ncoll_syms is 0.  */
-	      *coll_sym_alloc = 2 * mbcset->ncoll_syms + 1;
+	      int new_coll_sym_alloc = 2 * mbcset->ncoll_syms + 1;
 	      /* Use realloc since mbcset->coll_syms is NULL
 		 if *alloc == 0.  */
-	      mbcset->coll_syms = re_realloc (mbcset->coll_syms, int32_t,
-					      *coll_sym_alloc);
-	      if (BE (mbcset->coll_syms == NULL, 0))
+	      int32_t *new_coll_syms = re_realloc (mbcset->coll_syms, int32_t,
+						   new_coll_sym_alloc);
+	      if (BE (new_coll_syms == NULL, 0))
 		return REG_ESPACE;
+	      mbcset->coll_syms = new_coll_syms;
+	      *coll_sym_alloc = new_coll_sym_alloc;
 	    }
 	  mbcset->coll_syms[mbcset->ncoll_syms++] = idx;
 # endif /* RE_ENABLE_I18N */
@@ -3058,16 +3060,18 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 #ifdef RE_ENABLE_I18N
 	    case MB_CHAR:
 	      /* Check whether the array has enough space.  */
-	      if (mbchar_alloc == mbcset->nmbchars)
+	      if (BE (mbchar_alloc == mbcset->nmbchars, 0))
 		{
+		  wchar_t *new_mbchars;
 		  /* Not enough, realloc it.  */
 		  /* +1 in case of mbcset->nmbchars is 0.  */
 		  mbchar_alloc = 2 * mbcset->nmbchars + 1;
 		  /* Use realloc since array is NULL if *alloc == 0.  */
-		  mbcset->mbchars = re_realloc (mbcset->mbchars, wchar_t,
-						mbchar_alloc);
-		  if (BE (mbcset->mbchars == NULL, 0))
+		  new_mbchars = re_realloc (mbcset->mbchars, wchar_t,
+					    mbchar_alloc);
+		  if (BE (new_mbchars == NULL, 0))
 		    goto parse_bracket_exp_espace;
+		  mbcset->mbchars = new_mbchars;
 		}
 	      mbcset->mbchars[mbcset->nmbchars++] = start_elem.opr.wch;
 	      break;
@@ -3339,16 +3343,19 @@ build_equiv_class (sbcset, name)
 	    }
 	}
       /* Check whether the array has enough space.  */
-      if (*equiv_class_alloc == mbcset->nequiv_classes)
+      if (BE (*equiv_class_alloc == mbcset->nequiv_classes, 0))
 	{
 	  /* Not enough, realloc it.  */
 	  /* +1 in case of mbcset->nequiv_classes is 0.  */
-	  *equiv_class_alloc = 2 * mbcset->nequiv_classes + 1;
+	  int new_equiv_class_alloc = 2 * mbcset->nequiv_classes + 1;
 	  /* Use realloc since the array is NULL if *alloc == 0.  */
-	  mbcset->equiv_classes = re_realloc (mbcset->equiv_classes, int32_t,
-					      *equiv_class_alloc);
-	  if (BE (mbcset->equiv_classes == NULL, 0))
+	  int32_t *new_equiv_classes = re_realloc (mbcset->equiv_classes,
+						   int32_t,
+						   new_equiv_class_alloc);
+	  if (BE (new_equiv_classes == NULL, 0))
 	    return REG_ESPACE;
+	  mbcset->equiv_classes = new_equiv_classes;
+	  *equiv_class_alloc = new_equiv_class_alloc;
 	}
       mbcset->equiv_classes[mbcset->nequiv_classes++] = idx1;
     }
@@ -3392,16 +3399,18 @@ build_charclass (trans, sbcset, class_name, syntax)
 
 #ifdef RE_ENABLE_I18N
   /* Check the space of the arrays.  */
-  if (*char_class_alloc == mbcset->nchar_classes)
+  if (BE (*char_class_alloc == mbcset->nchar_classes, 0))
     {
       /* Not enough, realloc it.  */
       /* +1 in case of mbcset->nchar_classes is 0.  */
-      *char_class_alloc = 2 * mbcset->nchar_classes + 1;
+      int new_char_class_alloc = 2 * mbcset->nchar_classes + 1;
       /* Use realloc since array is NULL if *alloc == 0.  */
-      mbcset->char_classes = re_realloc (mbcset->char_classes, wctype_t,
-					 *char_class_alloc);
-      if (BE (mbcset->char_classes == NULL, 0))
+      wctype_t *new_char_classes = re_realloc (mbcset->char_classes, wctype_t,
+					       new_char_class_alloc);
+      if (BE (new_char_classes == NULL, 0))
 	return REG_ESPACE;
+      mbcset->char_classes = new_char_classes;
+      *char_class_alloc = new_char_class_alloc;
     }
   mbcset->char_classes[mbcset->nchar_classes++] = __wctype (name);
 #endif /* RE_ENABLE_I18N */

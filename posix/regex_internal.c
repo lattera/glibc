@@ -756,10 +756,12 @@ re_node_set_add_intersect (dest, src1, src2)
     {
       if (src1->nelem + src2->nelem + dest->nelem > dest->alloc)
 	{
-	  dest->alloc = src1->nelem + src2->nelem + dest->nelem;
-	  dest->elems = re_realloc (dest->elems, int, dest->alloc);
-	  if (BE (dest->elems == NULL, 0))
+	  int new_alloc = src1->nelem + src2->nelem + dest->nelem;
+	  int *new_elems = re_realloc (dest->elems, int, new_alloc);
+	  if (BE (new_elems == NULL, 0))
 	    return REG_ESPACE;
+	  dest->elems = new_elems;
+	  dest->alloc = new_alloc;
 	}
     }
   else
@@ -857,12 +859,12 @@ re_node_set_merge (dest, src)
     return REG_NOERROR;
   if (dest->alloc < src->nelem + dest->nelem)
     {
-      int *new_buffer;
-      dest->alloc = 2 * (src->nelem + dest->alloc);
-      new_buffer = re_realloc (dest->elems, int, dest->alloc);
+      int new_alloc = 2 * (src->nelem + dest->alloc);
+      int *new_buffer = re_realloc (dest->elems, int, new_alloc);
       if (BE (new_buffer == NULL, 0))
 	return REG_ESPACE;
       dest->elems = new_buffer;
+      dest->alloc = new_alloc;
     }
 
   for (si = 0, di = 0 ; si < src->nelem && di < dest->nelem ;)
@@ -1042,25 +1044,24 @@ re_dfa_add_node (dfa, token, mode)
 {
   if (BE (dfa->nodes_len >= dfa->nodes_alloc, 0))
     {
-      re_token_t *new_array;
-      dfa->nodes_alloc *= 2;
-      new_array = re_realloc (dfa->nodes, re_token_t, dfa->nodes_alloc);
+      int new_nodes_alloc = dfa->nodes_alloc * 2;
+      re_token_t *new_array = re_realloc (dfa->nodes, re_token_t,
+					  new_nodes_alloc);
       if (BE (new_array == NULL, 0))
 	return -1;
-      else
-	dfa->nodes = new_array;
+      dfa->nodes = new_array;
       if (mode)
 	{
 	  int *new_nexts, *new_indices;
 	  re_node_set *new_edests, *new_eclosures, *new_inveclosures;
 
-	  new_nexts = re_realloc (dfa->nexts, int, dfa->nodes_alloc);
-	  new_indices = re_realloc (dfa->org_indices, int, dfa->nodes_alloc);
-	  new_edests = re_realloc (dfa->edests, re_node_set, dfa->nodes_alloc);
+	  new_nexts = re_realloc (dfa->nexts, int, new_nodes_alloc);
+	  new_indices = re_realloc (dfa->org_indices, int, new_nodes_alloc);
+	  new_edests = re_realloc (dfa->edests, re_node_set, new_nodes_alloc);
 	  new_eclosures = re_realloc (dfa->eclosures, re_node_set,
-				      dfa->nodes_alloc);
+				      new_nodes_alloc);
 	  new_inveclosures = re_realloc (dfa->inveclosures, re_node_set,
-					 dfa->nodes_alloc);
+					 new_nodes_alloc);
 	  if (BE (new_nexts == NULL || new_indices == NULL
 		  || new_edests == NULL || new_eclosures == NULL
 		  || new_inveclosures == NULL, 0))
@@ -1071,6 +1072,7 @@ re_dfa_add_node (dfa, token, mode)
 	  dfa->eclosures = new_eclosures;
 	  dfa->inveclosures = new_inveclosures;
 	}
+      dfa->nodes_alloc = new_nodes_alloc;
     }
   dfa->nodes[dfa->nodes_len] = token;
   dfa->nodes[dfa->nodes_len].duplicated = 0;
@@ -1223,14 +1225,15 @@ register_state (dfa, newstate, hash)
   struct re_state_table_entry *spot;
   spot = dfa->state_table + (hash & dfa->state_hash_mask);
 
-  if (spot->alloc <= spot->num)
+  if (BE (spot->alloc <= spot->num, 0))
     {
-      re_dfastate_t **new_array;
-      spot->alloc = 2 * spot->num + 2;
-      new_array = re_realloc (spot->array, re_dfastate_t *, spot->alloc);
+      int new_alloc = 2 * spot->num + 2;
+      re_dfastate_t **new_array = re_realloc (spot->array, re_dfastate_t *,
+					      new_alloc);
       if (BE (new_array == NULL, 0))
 	return REG_ESPACE;
       spot->array = new_array;
+      spot->alloc = new_alloc;
     }
   spot->array[spot->num++] = newstate;
   return REG_NOERROR;

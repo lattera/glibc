@@ -469,7 +469,7 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
     { /* Yes.  If we need more elements than were already
 	 allocated, reallocate them.  If we need fewer, just
 	 leave it alone.  */
-      if (need_regs > regs->num_regs)
+      if (BE (need_regs > regs->num_regs, 0))
 	{
 	  regs->start = re_realloc (regs->start, regoff_t, need_regs);
 	  if (BE (regs->start == NULL, 0))
@@ -2666,14 +2666,17 @@ check_arrival (preg, mctx, path, top_node, top_str, last_node, last_str,
 
   subexp_num = dfa->nodes[top_node].opr.idx;
   /* Extend the buffer if we need.  */
-  if (path->alloc < last_str + mctx->max_mb_elem_len + 1)
+  if (BE (path->alloc < last_str + mctx->max_mb_elem_len + 1, 0))
     {
       re_dfastate_t **new_array;
       int old_alloc = path->alloc;
       path->alloc += last_str + mctx->max_mb_elem_len + 1;
       new_array = re_realloc (path->array, re_dfastate_t *, path->alloc);
       if (new_array == NULL)
-	return REG_ESPACE;
+	{
+	  path->alloc = old_alloc;
+	  return REG_ESPACE;
+	}
       path->array = new_array;
       memset (new_array + old_alloc, '\0',
 	      sizeof (re_dfastate_t *) * (path->alloc - old_alloc));
@@ -3818,9 +3821,11 @@ extend_buffers (mctx)
   if (mctx->state_log != NULL)
     {
       /* And double the length of state_log.  */
-      re_dfastate_t **new_array;
-      new_array = re_realloc (mctx->state_log, re_dfastate_t *,
-			      pstr->bufs_len + 1);
+      /* XXX We have no indication of the size of this buffer.  If this
+	 allocation fail we have no indication that the state_log array
+	 does not have the right size.  */
+      re_dfastate_t **new_array = re_realloc (mctx->state_log, re_dfastate_t *,
+					      pstr->bufs_len + 1);
       if (BE (new_array == NULL, 0))
 	return REG_ESPACE;
       mctx->state_log = new_array;
@@ -3995,9 +4000,7 @@ match_ctx_clear_flag (mctx)
 {
   int i;
   for (i = 0; i < mctx->nbkref_ents; ++i)
-    {
-      mctx->bkref_ents[i].flag = 0;
-    }
+    mctx->bkref_ents[i].flag = 0;
 }
 
 /* Register the node NODE, whose type is OP_OPEN_SUBEXP, and which matches
@@ -4012,18 +4015,19 @@ match_ctx_add_subtop (mctx, node, str_idx)
   assert (mctx->sub_tops != NULL);
   assert (mctx->asub_tops > 0);
 #endif
-  if (mctx->nsub_tops == mctx->asub_tops)
+  if (BE (mctx->nsub_tops == mctx->asub_tops, 0))
     {
-      re_sub_match_top_t **new_array;
-      mctx->asub_tops *= 2;
-      new_array = re_realloc (mctx->sub_tops, re_sub_match_top_t *,
-			      mctx->asub_tops);
+      int new_asub_tops = mctx->asub_tops * 2;
+      re_sub_match_top_t **new_array = re_realloc (mctx->sub_tops,
+						   re_sub_match_top_t *,
+						   new_asub_tops);
       if (BE (new_array == NULL, 0))
 	return REG_ESPACE;
       mctx->sub_tops = new_array;
+      mctx->asub_tops = new_asub_tops;
     }
   mctx->sub_tops[mctx->nsub_tops] = calloc (1, sizeof (re_sub_match_top_t));
-  if (mctx->sub_tops[mctx->nsub_tops] == NULL)
+  if (BE (mctx->sub_tops[mctx->nsub_tops] == NULL, 0))
     return REG_ESPACE;
   mctx->sub_tops[mctx->nsub_tops]->node = node;
   mctx->sub_tops[mctx->nsub_tops++]->str_idx = str_idx;
@@ -4039,23 +4043,25 @@ match_ctx_add_sublast (subtop, node, str_idx)
      int node, str_idx;
 {
   re_sub_match_last_t *new_entry;
-  if (subtop->nlasts == subtop->alasts)
+  if (BE (subtop->nlasts == subtop->alasts, 0))
     {
-      re_sub_match_last_t **new_array;
-      subtop->alasts = 2 * subtop->alasts + 1;
-      new_array = re_realloc (subtop->lasts, re_sub_match_last_t *,
-			      subtop->alasts);
+      int new_alasts = 2 * subtop->alasts + 1;
+      re_sub_match_last_t **new_array = re_realloc (subtop->lasts,
+						    re_sub_match_last_t *,
+						    new_alasts);
       if (BE (new_array == NULL, 0))
 	return NULL;
       subtop->lasts = new_array;
+      subtop->alasts = new_alasts;
     }
   new_entry = calloc (1, sizeof (re_sub_match_last_t));
-  if (BE (new_entry == NULL, 0))
-    return NULL;
-  subtop->lasts[subtop->nlasts] = new_entry;
-  new_entry->node = node;
-  new_entry->str_idx = str_idx;
-  ++subtop->nlasts;
+  if (BE (new_entry != NULL, 1))
+    {
+      subtop->lasts[subtop->nlasts] = new_entry;
+      new_entry->node = node;
+      new_entry->str_idx = str_idx;
+      ++subtop->nlasts;
+    }
   return new_entry;
 }
 

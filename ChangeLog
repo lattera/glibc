@@ -1,5 +1,10 @@
 2003-11-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regexec.c: Correct several memory allocation problems.
+	Add more BE.
+	* posix/regex_internal.c: Likewise.
+	* posix/regcomp.c: Likewise.
+
 	* posix/regexec.c: Add const in a number of places.
 	* posix/regex_internal.h: Make EPSILON_BIT a macro to help
 	debugging.  Its value isn't important.

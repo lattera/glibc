@@ -265,6 +265,7 @@
   { 1, 63, "a\\{1,63\\}", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",  },
   { 0, 0, "2.8.3.4  BRE Precedence", NULL, },
   { 0, 0, "GA143", NULL, },
+  { 0, 0, NULL, "There are numerous bugs in the original version." },
   { 2, 19, "\\^\\[[[.].]]\\\\(\\\\1\\\\)\\*\\\\{1,2\\\\}\\$", "a^[]\\(\\1\\)*\\{1,2\\}$b",  },
   { 1, 6, "[[=*=]][[=\\=]][[=]=]][[===]][[...]][[:punct:]]", "*\\]=.;",  },
   { 1, 6, "[$\\(*\\)^]*", "$\\()*^",  },
