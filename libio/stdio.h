@@ -211,13 +211,15 @@ extern FILE *fdopen __P ((int __fd, __const char *__modes));
 #ifdef	__USE_GNU
 /* Create a new stream that refers to the given magic cookie,
    and uses the given functions for input and output.  */
-extern FILE *fopencookie __P ((void *__magic_cookie, __const char *__modes,
+extern FILE *fopencookie __P ((void *__restrict __magic_cookie,
+			       __const char *__restrict __modes,
 			       _IO_cookie_io_functions_t __io_funcs));
 
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
-extern FILE *open_memstream __P ((char **__bufloc, size_t *__sizeloc));
+extern FILE *open_memstream __P ((char **__restrict __bufloc,
+				  size_t *__restrict __sizeloc));
 #endif
 
 
@@ -233,7 +235,8 @@ extern int setvbuf __P ((FILE *__restrict __stream, char *__restrict __buf,
 #ifdef	__USE_BSD
 /* If BUF is NULL, make STREAM unbuffered.
    Else make it use SIZE bytes of BUF for buffering.  */
-extern void setbuffer __P ((FILE *__stream, char *__buf, size_t __size));
+extern void setbuffer __P ((FILE *__restrict __stream, char *__restrict __buf,
+			    size_t __size));
 
 /* Make STREAM line-buffered.  */
 extern void setlinebuf __P ((FILE *__stream));
@@ -398,14 +401,17 @@ extern char *gets __P ((char *__s));
    NULL), pointing to *N characters of space.  It is realloc'd as
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
-extern _IO_ssize_t __getdelim __P ((char **__lineptr, size_t *__n,
-				    int __delimiter, FILE *__stream));
-extern _IO_ssize_t getdelim __P ((char **__lineptr, size_t *__n,
-				  int __delimiter, FILE *__stream));
+extern _IO_ssize_t __getdelim __P ((char **__restrict __lineptr,
+				    size_t *__restrict __n, int __delimiter,
+				    FILE *__restrict __stream));
+extern _IO_ssize_t getdelim __P ((char **__restrict __lineptr,
+				  size_t *__restrict __n, int __delimiter,
+				  FILE *__restrict __stream));
 
 /* Like `getdelim', but reads up to a newline.  */
-extern _IO_ssize_t getline __P ((char **__lineptr, size_t *__n,
-				 FILE *__stream));
+extern _IO_ssize_t getline __P ((char **__restrict __lineptr,
+				 size_t *__restrict __n,
+				 FILE *__restrict __stream));
 #endif
 
 
@@ -584,10 +590,10 @@ extern char *cuserid __P ((char *__s));
 struct obstack;			/* See <obstack.h>.  */
 
 /* Write formatted output to an obstack.  */
-extern int obstack_printf __P ((struct obstack *__obstack,
-				__const char *__format, ...));
-extern int obstack_vprintf __P ((struct obstack *__obstack,
-				 __const char *__format,
+extern int obstack_printf __P ((struct obstack *__restrict __obstack,
+				__const char *__restrict __format, ...));
+extern int obstack_vprintf __P ((struct obstack *__restrict __obstack,
+				 __const char *__restrict __format,
 				 _G_va_list __args));
 #endif /* Use GNU.  */
 

@@ -81,7 +81,8 @@ extern struct passwd *getpwent __P ((void));
 extern struct passwd *fgetpwent __P ((FILE *__stream));
 
 /* Write the given entry onto the given stream.  */
-extern int putpwent __P ((__const struct passwd *__p, FILE *__f));
+extern int putpwent __P ((__const struct passwd *__restrict __p,
+			  FILE *__restrict __f));
 #endif
 
 /* Search for an entry with a matching user ID.  */
@@ -107,25 +108,29 @@ extern struct passwd *getpwnam __P ((__const char *__name));
    POSIX people would choose.  */
 
 # if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
-extern int getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
-			    size_t __buflen, struct passwd **__result));
+extern int getpwent_r __P ((struct passwd *__restrict __resultbuf,
+			    char *__restrict __buffer, size_t __buflen,
+			    struct passwd **__restrict __result));
 # endif
 
-extern int getpwuid_r __P ((__uid_t __uid, struct passwd *__resultbuf,
-			    char *__buffer, size_t __buflen,
-			    struct passwd **__result));
+extern int getpwuid_r __P ((__uid_t __uid,
+			    struct passwd *__restrict __resultbuf,
+			    char *__restrict __buffer, size_t __buflen,
+			    struct passwd **__restrict __result));
 
-extern int getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
-			    char *__buffer, size_t __buflen,
-			    struct passwd **__result));
+extern int getpwnam_r __P ((__const char *__restrict __name,
+			    struct passwd *__restrict __resultbuf,
+			    char *__restrict __buffer, size_t __buflen,
+			    struct passwd **__restrict __result));
 
 
 # ifdef	__USE_SVID
 /* Read an entry from STREAM.  This function is not standardized and
    probably never will.  */
-extern int fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
-			     char *__buffer, size_t __buflen,
-			     struct passwd **__result));
+extern int fgetpwent_r __P ((FILE *__restrict __stream,
+			     struct passwd *__restrict __resultbuf,
+			     char *__restrict __buffer, size_t __buflen,
+			     struct passwd **__restrict __result));
 # endif
 
 #endif	/* POSIX or reentrant */

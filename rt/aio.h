@@ -143,8 +143,9 @@ extern int aio_read __P ((struct aiocb *__aiocbp));
 extern int aio_write __P ((struct aiocb *__aiocbp));
 
 /* Initiate list of I/O requests.  */
-extern int lio_listio __P ((int __mode, struct aiocb *__const __list[],
-			    int __nent, struct sigevent *__sig));
+extern int lio_listio __P ((int __mode,
+			    struct aiocb *__const __list[],
+			    int __nent, struct sigevent *__restrict __sig));
 
 /* Retrieve error status associated with AIOCBP.  */
 extern int aio_error __P ((__const struct aiocb *__aiocbp));
@@ -158,7 +159,8 @@ extern int aio_cancel __P ((int __fildes, struct aiocb *__aiocbp));
 /* Suspend calling thread until at least one of the asynchronous I/O
    operations referenced by LIST has completed.  */
 extern int aio_suspend __P ((__const struct aiocb *__const __list[],
-			     int __nent, __const struct timespec *__timeout));
+			     int __nent,
+			     __const struct timespec *__restrict __timeout));
 
 /* Force all operations associated with file desriptor described by
    `aio_fildes' member of AIOCBP.  */
@@ -168,9 +170,10 @@ extern int aio_fsync __P ((int __operation, struct aiocb *__aiocbp));
 extern int __REDIRECT (aio_read, __P ((struct aiocb *__aiocbp)), aio_read64);
 extern int __REDIRECT (aio_write, __P ((struct aiocb *__aiocbp)), aio_write64);
 
-extern int __REDIRECT (lio_listio, __P ((int __mode,
-					 struct aiocb *__const __list[],
-					 int __nent, struct sigevent *__sig)),
+extern int __REDIRECT (lio_listio,
+		       __P ((int __mode,
+			     struct aiocb *__const __restrict __list[],
+			     int __nent, struct sigevent *__restrict __sig)),
 		       lio_listio64);
 
 extern int __REDIRECT (aio_error, __P ((__const struct aiocb *__aiocbp)),
@@ -183,8 +186,9 @@ extern int __REDIRECT (aio_cancel, __P ((int __fildes,
 		       aio_cancel64);
 
 extern int __REDIRECT (aio_suspend,
-		       __P ((__const struct aiocb *__const __list[],
-			     int __nent, __const struct timespec *__timeout)),
+		       __P ((__const struct aiocb *__const __restrict __list[],
+			     int __nent,
+			     __const struct timespec *__restrict __timeout)),
 		       aio_suspend64);
 
 extern int __REDIRECT (aio_fsync __P ((int __operation,
@@ -207,8 +211,9 @@ extern int __REDIRECT (aio_fsync __P ((int __operation,
 extern int aio_read64 __P ((struct aiocb64 *__aiocbp));
 extern int aio_write64 __P ((struct aiocb64 *__aiocbp));
 
-extern int lio_listio64 __P ((int __mode, struct aiocb64 *__const __list[],
-			      int __nent, struct sigevent *__sig));
+extern int lio_listio64 __P ((int __mode,
+			      struct aiocb64 *__const __list[], int __nent,
+			      struct sigevent *__restrict __sig));
 
 extern int aio_error64 __P ((__const struct aiocb64 *__aiocbp));
 extern __ssize_t aio_return64 __P ((struct aiocb64 *__aiocbp));
@@ -217,7 +222,7 @@ extern int aio_cancel64 __P ((int __fildes, struct aiocb64 *__aiocbp));
 
 extern int aio_suspend64 __P ((__const struct aiocb64 *__const __list[],
 			       int __nent,
-			       __const struct timespec *__timeout));
+			       __const struct timespec *__restrict __timeout));
 
 extern int aio_fsync64 __P ((int __operation, struct aiocb64 *__aiocbp));
 #endif

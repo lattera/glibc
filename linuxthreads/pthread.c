@@ -147,8 +147,13 @@ const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
                                             p_pid);
 
 /* Signal numbers used for the communication.  */
+#ifdef SIGRTMIN
+int __pthread_sig_restart;
+int __pthread_sig_cancel;
+#else
 int __pthread_sig_restart = DEFAULT_SIG_RESTART;
 int __pthread_sig_cancel = DEFAULT_SIG_CANCEL;
+#endif
 
 /* These variables are used by the setup code.  */
 extern int _errno;

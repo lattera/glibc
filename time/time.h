@@ -214,15 +214,15 @@ extern struct tm *localtime __P ((__const time_t *__timer));
 # if defined __USE_POSIX || defined __USE_MISC
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
-extern struct tm *__gmtime_r __P ((__const time_t *__timer,
-				   struct tm *__tp));
-extern struct tm *gmtime_r __P ((__const time_t *__timer,
-				 struct tm *__tp));
+extern struct tm *__gmtime_r __P ((__const time_t *__restrict __timer,
+				   struct tm *__restrict __tp));
+extern struct tm *gmtime_r __P ((__const time_t *__restrict __timer,
+				 struct tm *__restrict __tp));
 
 /* Return the `struct tm' representation of *TIMER in local time,
    using *TP to store the result.  */
-extern struct tm *localtime_r __P ((__const time_t *__timer,
-				    struct tm *__tp));
+extern struct tm *localtime_r __P ((__const time_t *__restrict __timer,
+				    struct tm *__restrict __tp));
 # endif	/* POSIX or misc */
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
@@ -237,10 +237,12 @@ extern char *ctime __P ((__const time_t *__timer));
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
-extern char *asctime_r __P ((__const struct tm *__tp, char *__buf));
+extern char *asctime_r __P ((__const struct tm *__restrict __tp,
+			     char *__restrict __buf));
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
-extern char *ctime_r __P ((__const time_t *__timer, char *__buf));
+extern char *ctime_r __P ((__const time_t *__restrict __timer,
+			   char *__restrict __buf));
 # endif	/* POSIX or misc */
 
 
@@ -326,7 +328,8 @@ extern struct tm *getdate __P ((__const char *__string));
    variant.  The functionality is the same.  The result is returned in
    the buffer pointed to by RESBUFP and in case of an error the return
    value is != 0 with the same values as given above for `getdate_err'.  */
-extern int getdate_r __P ((__const char *__string, struct tm *__resbufp));
+extern int getdate_r __P ((__const char *__restrict __string,
+			   struct tm *__restrict __resbufp));
 # endif
 
 

@@ -372,14 +372,18 @@ struct random_data
     int32_t *end_ptr;		/* Pointer behind state table.  */
   };
 
-extern int random_r __P ((struct random_data *__buf, int32_t *__result));
+extern int random_r __P ((struct random_data *__restrict __buf,
+			  int32_t *__restrict __result));
 
 extern int srandom_r __P ((unsigned int __seed, struct random_data *__buf));
 
-extern int initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
-			     size_t __statelen, struct random_data *__buf));
+extern int initstate_r __P ((unsigned int __seed,
+			     __ptr_t __restrict __statebuf,
+			     size_t __statelen,
+			     struct random_data *__restrict __buf));
 
-extern int setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
+extern int setstate_r __P ((__ptr_t __restrict __statebuf,
+			    struct random_data *__restrict __buf));
 # endif	/* Use misc.  */
 #endif	/* Use SVID || extended X/Open.  */
 
@@ -427,19 +431,25 @@ struct drand48_data
 
 # ifdef __USE_MISC
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
-extern int drand48_r __P ((struct drand48_data *__buffer, double *__result));
+extern int drand48_r __P ((struct drand48_data *__restrict __buffer,
+			   double *__restrict __result));
 extern int erand48_r __P ((unsigned short int __xsubi[3],
-			   struct drand48_data *__buffer, double *__result));
+			   struct drand48_data *__restrict __buffer,
+			   double *__restrict __result));
 
 /* Return non-negative, long integer in [0,2^31).  */
-extern int lrand48_r __P ((struct drand48_data *__buffer, long int *__result));
+extern int lrand48_r __P ((struct drand48_data *__restrict __buffer,
+			   long int *__restrict __result));
 extern int nrand48_r __P ((unsigned short int __xsubi[3],
-			   struct drand48_data *__buffer, long int *__result));
+			   struct drand48_data *__restrict __buffer,
+			   long int *__restrict __result));
 
 /* Return signed, long integers in [-2^31,2^31).  */
-extern int mrand48_r __P ((struct drand48_data *__buffer, long int *__result));
+extern int mrand48_r __P ((struct drand48_data *__restrict __buffer,
+			   long int *__restrict __result));
 extern int jrand48_r __P ((unsigned short int __xsubi[3],
-			   struct drand48_data *__buffer, long int *__result));
+			   struct drand48_data *__restrict __buffer,
+			   long int *__restrict __result));
 
 /* Seed random number generator.  */
 extern int srand48_r __P ((long int __seedval, struct drand48_data *__buffer));
@@ -572,7 +582,8 @@ extern char *canonicalize_file_name __P ((__const char *__name));
    name is PATH_MAX chars or more, returns null with `errno' set to
    ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars, returns the
    name in RESOLVED.  */
-extern char *realpath __P ((__const char *__name, char *__resolved));
+extern char *realpath __P ((__const char *__restrict __name,
+			    char *__restrict __resolved));
 #endif
 
 
@@ -627,14 +638,14 @@ __extension__ extern lldiv_t lldiv __P ((long long int __numer,
 /* Convert VALUE to a string with NDIGIT digits and return a pointer to
    this.  Set *DECPT with the position of the decimal character and *SIGN
    with the sign of the number.  */
-extern char *ecvt __P ((double __value, int __ndigit, int *__decpt,
-			int *__sign));
+extern char *ecvt __P ((double __value, int __ndigit, int *__restrict __decpt,
+			int *__restrict __sign));
 
 /* Convert VALUE to a string rounded to NDIGIT decimal digits.  Set *DECPT
    with the position of the decimal character and *SIGN with the sign of
    the number.  */
-extern char *fcvt __P ((double __value, int __ndigit, int *__decpt,
-			int *__sign));
+extern char *fcvt __P ((double __value, int __ndigit, int *__restrict __decpt,
+			int *__restrict __sign));
 
 /* If possible convert VALUE to a string with NDIGIT significant digits.
    Otherwise use exponential representation.  The resulting string will
@@ -642,25 +653,29 @@ extern char *fcvt __P ((double __value, int __ndigit, int *__decpt,
 extern char *gcvt __P ((double __value, int __ndigit, char *__buf));
 
 /* Long double versions of above functions.  */
-extern char *qecvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
-			 int *__sign));
-extern char *qfcvt __P ((__long_double_t __value, int __ndigit, int *__decpt,
-			 int *__sign));
+extern char *qecvt __P ((__long_double_t __value, int __ndigit,
+			 int *__restrict __decpt, int *__restrict __sign));
+extern char *qfcvt __P ((__long_double_t __value, int __ndigit,
+			 int *__restrict __decpt, int *__restrict __sign));
 extern char *qgcvt __P ((__long_double_t __value, int __ndigit, char *__buf));
 
 
 # ifdef __USE_MISC
 /* Reentrant version of the functions above which provide their own
    buffers.  */
-extern int ecvt_r __P ((double __value, int __ndigit, int *__decpt,
-			int *__sign, char *__buf, size_t __len));
-extern int fcvt_r __P ((double __value, int __ndigit, int *__decpt,
-			int *__sign, char *__buf, size_t __len));
+extern int ecvt_r __P ((double __value, int __ndigit, int *__restrict __decpt,
+			int *__restrict __sign, char *__restrict __buf,
+			size_t __len));
+extern int fcvt_r __P ((double __value, int __ndigit, int *__restrict __decpt,
+			int *__restrict __sign, char *__restrict __buf,
+			size_t __len));
 
-extern int qecvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
-			 int *__sign, char *__buf, size_t __len));
-extern int qfcvt_r __P ((__long_double_t __value, int __ndigit, int *__decpt,
-			 int *__sign, char *__buf, size_t __len));
+extern int qecvt_r __P ((__long_double_t __value, int __ndigit,
+			 int *__restrict __decpt, int *__restrict __sign,
+			 char *__restrict __buf, size_t __len));
+extern int qfcvt_r __P ((__long_double_t __value, int __ndigit,
+			 int *__restrict __decpt, int *__restrict __sign,
+			 char *__restrict __buf, size_t __len));
 # endif	/* misc */
 #endif	/* use MISC || use X/Open Unix */
 
@@ -701,8 +716,9 @@ extern int rpmatch __P ((__const char *__response));
    not part of TOKENS return in *VALUEP beginning of unknown
    suboption.  On exit *OPTIONP is set to the beginning of the next
    token or at the terminating NUL character.  */
-extern int getsubopt __P ((char **__optionp, __const char *__const *__tokens,
-			   char **__valuep));
+extern int getsubopt __P ((char **__restrict __optionp,
+			   __const char *__const *__restrict __tokens,
+			   char **__restrict __valuep));
 #endif
 
 

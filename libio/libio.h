@@ -325,8 +325,10 @@ extern int _IO_ftrylockfile __P ((_IO_FILE *));
 # define _IO_cleanup_region_end(_Doit) /**/
 #endif /* !_IO_MTSAFE_IO */
 
-extern int _IO_vfscanf __P ((_IO_FILE *, const char *, _IO_va_list, int *));
-extern int _IO_vfprintf __P ((_IO_FILE *, const char *, _IO_va_list));
+extern int _IO_vfscanf __P ((_IO_FILE * __restrict, const char * __restrict,
+			     _IO_va_list, int *__restrict));
+extern int _IO_vfprintf __P ((_IO_FILE *__restrict, const char *__restrict,
+			      _IO_va_list));
 extern _IO_ssize_t _IO_padn __P ((_IO_FILE *, int, _IO_ssize_t));
 extern _IO_size_t _IO_sgetn __P ((_IO_FILE *, void *, _IO_size_t));
 

@@ -1,3 +1,62 @@
+1998-12-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp.h: Add __retrict.
+	* dirent/dirent.h: Likewise.
+	* elf/dlfcn.h: Likewise.
+	* grp/grp.h: Likewise.
+	* iconv/iconv.h: Likewise.
+	* inet/aliases.h: Likewise.
+	* libio/libio.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* locale/locale.h: Likewise.
+	* misc/mntent.h: Likewise.
+	* posix/wordexp.h: Likewise.
+	* pwd/pwd.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* rt/aio.h: Likewise.
+	* stdio-common/printf.h: Likewise.
+	* stdlib/monetary.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/envz.h: Likewise.
+	* string/string.h: Likewise.
+	* time/time.h: Likewise.
+
+1998-12-04  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* misc/sys/cdefs.h: Only include features.h if _FEATURES_H isn't
+	defined.  gcc's redundant include optimizer isn't clever enough to
+	prevent a reinclusion here.
+	Define __restrict to the empty string only if not GCC or
+	GCC version less than 2.92.
+
+1998-12-03  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Fix last change.
+
+1998-12-03  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* time/strptime.c (strptime_internal): Make use of `%C' format
+	specifier if it is seen together with the `%y' specifier.
+
+1998-12-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/sk.po: New file.
+
+1998-12-03  Scott Bambrough  <scottb@corelcomputer.com>
+
+	* sysdeps/arm/dl-machine.h (dl_start_user): Incorrect address
+	for _dl_main_searchlist passed to _dl_init_next.
+
+1998-12-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* math/libm-test.c: Expand literal tabs in strings.  Normalize
+	whitespace.
+
+1998-12-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/fsuid.h: Fix spelling.
+
 1998-12-04  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	Provide backwards binary compatibility for the Hurd.

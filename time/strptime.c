@@ -203,10 +203,13 @@ strptime_internal (buf, format, tm, decided)
   int cnt;
   size_t val;
   int have_I, is_pm;
+  int century, want_century;
 
   rp = buf;
   fmt = format;
   have_I = is_pm = 0;
+  century = -1;
+  want_century = 0;
 
   while (*fmt != '\0')
     {
@@ -343,7 +346,7 @@ strptime_internal (buf, format, tm, decided)
 	case 'C':
 	  /* Match century number.  */
 	  get_number (0, 99);
-	  /* We don't need the number.  */
+	  century = val;
 	  break;
 	case 'd':
 	case 'e':
@@ -548,11 +551,14 @@ strptime_internal (buf, format, tm, decided)
 	  /* The "Year 2000 :The Millennium Rollover" paper suggests that
 	     values in the range 69-99 refer to the twentieth century.  */
 	  tm->tm_year = val >= 69 ? val : val + 100;
+	  /* Indicate that we want to use the century, if specified
+	  want_century = 1;
 	  break;
 	case 'Y':
 	  /* Match year including century number.  */
 	  get_number (0, 9999);
 	  tm->tm_year = val - 1900;
+	  want_century = 0;
 	  break;
 	case 'Z':
 	  /* XXX How to handle this?  */
@@ -724,6 +730,9 @@ strptime_internal (buf, format, tm, decided)
 
   if (have_I && is_pm)
     tm->tm_hour += 12;
+
+  if (want_century && century != -1)
+    tm->tm_year = tm->tm_year % 100 + (century - 19) * 100;
 
   return (char *) rp;
 }

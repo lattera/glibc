@@ -91,9 +91,9 @@ extern int register_printf_function __P ((int __spec, printf_function __func,
    array it is passed with the types of the arguments it wants, and return
    the number of arguments it wants.  */
 
-extern size_t parse_printf_format __P ((__const char *__fmt,
+extern size_t parse_printf_format __P ((__const char *__restrict __fmt,
 					size_t __n,
-					int *__argtypes));
+					int *__restrict __argtypes));
 
 
 /* Codes returned by `parse_printf_format' for basic types.
@@ -130,12 +130,14 @@ enum
    of magnitude used for numbers ('k' for kilo, 'm' for mega etc).  If
    the format specifier is a uppercase character powers of 1000 are
    used.  Otherwise powers of 1024.  */
-extern int printf_size __P ((FILE *__fp, __const struct printf_info *__info,
-			     __const void *__const *args));
+extern int printf_size __P ((FILE *__restrict __fp,
+			     __const struct printf_info *__info,
+			     __const void *__const *__restrict __args));
 
 /* This is the appropriate argument information function for `printf_size'.  */
-extern int printf_size_info __P ((__const struct printf_info *__info,
-				  size_t __n, int *__argtypes));
+extern int printf_size_info __P ((__const struct printf_info *__restrict
+				  __info, size_t __n,
+				  int *__restrict __argtypes));
 
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -115,8 +115,8 @@ extern struct lconv *localeconv __P ((void));
    BASE is non-null the appropriate category information in the BASE
    record is replaced.  */
 extern __locale_t __newlocale __P ((int __category_mask,
-				     __const char *__locale,
-				     __locale_t __base));
+				    __const char *__locale,
+				    __locale_t __base));
 
 /* Return a duplicate of the set of locale in DATASET.  All usage
    counters are increased if necessary.  */

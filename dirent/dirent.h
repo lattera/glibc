@@ -143,12 +143,14 @@ extern struct dirent64 *readdir64 __P ((DIR *__dirp));
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
 # ifndef __USE_FILE_OFFSET64
-extern int readdir_r __P ((DIR *__dirp, struct dirent *__entry,
-			   struct dirent **__result));
+extern int readdir_r __P ((DIR *__restrict __dirp,
+			   struct dirent *__restrict __entry,
+			   struct dirent **__restrict __result));
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (readdir_r, __P ((DIR *__dirp, struct dirent *__entry,
-				    struct dirent **__result)),
+extern int __REDIRECT (readdir_r, __P ((DIR *__restrict __dirp,
+					struct dirent *__restrict __entry,
+					struct dirent **__restrict __result)),
 		    readdir64_r);
 #  else
 #   define readdir_r readdir64_r
@@ -156,8 +158,9 @@ extern int __REDIRECT (readdir_r, __P ((DIR *__dirp, struct dirent *__entry,
 # endif
 
 # ifdef __USE_LARGEFILE64
-extern int readdir64_r __P ((DIR *__dirp, struct dirent64 *__entry,
-			     struct dirent64 **__result));
+extern int readdir64_r __P ((DIR *__restrict __dirp,
+			     struct dirent64 *__restrict __entry,
+			     struct dirent64 **__restrict __result));
 # endif
 #endif	/* POSIX or misc */
 
@@ -203,14 +206,15 @@ extern int dirfd __P ((DIR *__dirp));
    sorted using qsort with CMP, and collected in a malloc'd array in
    *NAMELIST.  Returns the number of entries selected, or -1 on error.  */
 # ifndef __USE_FILE_OFFSET64
-extern int scandir __P ((__const char *__dir, struct dirent ***__namelist,
+extern int scandir __P ((__const char *__restrict __dir,
+			 struct dirent ***__restrict __namelist,
 			 int (*__selector) (__const struct dirent *),
 			 int (*__cmp) (__const __ptr_t, __const __ptr_t)));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (scandir,
-		       __P ((__const char *__dir,
-			     struct dirent ***__namelist,
+		       __P ((__const char *__restrict __dir,
+			     struct dirent ***__restrict __namelist,
 			     int (*__selector) (__const struct dirent *),
 			     int (*__cmp) (__const __ptr_t, __const __ptr_t))),
 		       scandir64);
@@ -222,7 +226,8 @@ extern int __REDIRECT (scandir,
 # if defined __USE_GNU && defined __USE_LARGEFILE64
 /* This function is like `scandir' but it uses the 64bit dirent structure.
    Please note that the CMP function must now work with struct dirent64 **.  */
-extern int scandir64 __P ((__const char *__dir, struct dirent64 ***__namelist,
+extern int scandir64 __P ((__const char *__restrict __dir,
+			   struct dirent64 ***__restrict __namelist,
 			   int (*__selector) (__const struct dirent64 *),
 			   int (*__cmp) (__const __ptr_t, __const __ptr_t)));
 # endif
@@ -267,8 +272,9 @@ extern int versionsort64 __P ((__const __ptr_t __e1, __const __ptr_t __e2));
    Reading starts at offset *BASEP, and *BASEP is updated with the new
    position after reading.  Returns the number of bytes read; zero when at
    end of directory; or -1 for errors.  */
-extern __ssize_t getdirentries __P ((int __fd, char *__buf,
-				     size_t __nbytes, __off_t *__basep));
+extern __ssize_t getdirentries __P ((int __fd, char *__restrict __buf,
+				     size_t __nbytes,
+				     __off_t *__restrict __basep));
 
 
 #endif /* Use BSD or misc.  */

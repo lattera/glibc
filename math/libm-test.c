@@ -157,10 +157,10 @@ typedef MATHTYPE (*mathfunc) (MATHTYPE);
 
 
 #define ISINF(x) \
-(sizeof (x) == sizeof (float) ?						      \
- isinff (x)								      \
- : sizeof (x) == sizeof (double) ?					      \
- isinf (x) : isinfl (x))
+(sizeof (x) == sizeof (float)						      \
+ ? isinff (x)								      \
+ : sizeof (x) == sizeof (double)					      \
+ ? isinf (x) : isinfl (x))
 
 
 /* Test if Floating-Point stack hasn't changed */
@@ -171,7 +171,7 @@ fpstack_test (const char *test_name)
   static int old_stack;
   int sw;
 
-  asm ("fnstsw":"=a" (sw));
+  asm ("fnstsw" : "=a" (sw));
   sw >>= 11;
   sw &= 7;
 
@@ -213,7 +213,7 @@ random_value (MATHTYPE min_value, MATHTYPE max_value)
 static MATHTYPE
 random_greater (MATHTYPE min_value)
 {
-  return random_value (min_value, 1e6);		/* CHOOSE(LDBL_MAX, DBL_MAX, FLT_MAX) */
+  return random_value (min_value, 1e6);		/* CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX) */
 }
 
 
@@ -451,12 +451,12 @@ output_result (const char *test_name, int result,
       if (verbose > 1 && print_values)
 	{
 	  printf ("Result:\n");
-	  printf (" is:		% .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
+	  printf (" is:         % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
 		  computed, computed);
-	  printf (" should be:	% .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
+	  printf (" should be:  % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
 		  expected, expected);
 	  if (print_diff)
-	    printf (" difference: % .20" PRINTF_EXPR "	% .20" PRINTF_XEXPR
+	    printf (" difference: % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR
 		    "\n", difference, difference);
 	}
       ++noErrors;
@@ -484,14 +484,14 @@ output_result_ext (const char *test_name, int result,
       if (verbose > 1 && print_values)
 	{
 	  printf ("Result:\n");
-	  printf (" is:		% .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
+	  printf (" is:         % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
 		  computed, computed);
-	  printf (" should be:	% .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
+	  printf (" should be:  % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
 		  expected, expected);
 	  if (print_diff)
-	    printf (" difference: % .20" PRINTF_EXPR "	% .20" PRINTF_XEXPR
+	    printf (" difference: % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR
 		    "\n", difference, difference);
-	  printf ("Parameter:	% .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
+	  printf ("Parameter:   % .20" PRINTF_EXPR "  % .20" PRINTF_XEXPR "\n",
 		  parameter, parameter);
 	}
       ++noErrors;
@@ -596,8 +596,8 @@ check_int (const char *test_name, int computed, int expected)
       if (verbose > 1)
 	{
 	  printf ("Result:\n");
-	  printf (" is:		%d\n", computed);
-	  printf (" should be:	%d\n", expected);
+	  printf (" is:         %d\n", computed);
+	  printf (" should be:  %d\n", expected);
 	}
       noErrors++;
     }
@@ -627,8 +627,8 @@ check_long (const char *test_name, long int computed, long int expected)
       if (verbose > 1)
 	{
 	  printf ("Result:\n");
-	  printf (" is:		%ld\n", computed);
-	  printf (" should be:	%ld\n", expected);
+	  printf (" is:         %ld\n", computed);
+	  printf (" should be:  %ld\n", expected);
 	}
       noErrors++;
     }
@@ -659,8 +659,8 @@ check_longlong (const char *test_name, long long int computed,
       if (verbose > 1)
 	{
 	  printf ("Result:\n");
-	  printf (" is:		%lld\n", computed);
-	  printf (" should be:	%lld\n", expected);
+	  printf (" is:         %lld\n", computed);
+	  printf (" should be:  %lld\n", expected);
 	}
       noErrors++;
     }
@@ -825,12 +825,12 @@ acos_test (void)
   check ("acos (-1) == pi", FUNC(acos) (-1), M_PIl);
 
   check_eps ("acos (0.5) == pi/3", FUNC(acos) (0.5), M_PI_6l * 2.0,
-	     CHOOSE(1e-18, 0, 0));
+	     CHOOSE (1e-18, 0, 0));
   check_eps ("acos (-0.5) == 2*pi/3", FUNC(acos) (-0.5), M_PI_6l * 4.0,
-	     CHOOSE(1e-17, 0, 0));
+	     CHOOSE (1e-17, 0, 0));
 
   check_eps ("acos (0.7) == 0.795398830...", FUNC(acos) (0.7),
-	     0.7953988301841435554L, CHOOSE(7e-17L, 0, 0));
+	     0.7953988301841435554L, CHOOSE (7e-17L, 0, 0));
 }
 
 
@@ -849,7 +849,7 @@ acosh_test (void)
 
   check ("acosh(1) == 0", FUNC(acosh) (1), 0);
   check_eps ("acosh(7) == 2.633915793...", FUNC(acosh) (7),
-	     2.6339157938496334172L, CHOOSE(3e-19, 0, 0));
+	     2.6339157938496334172L, CHOOSE (3e-19, 0, 0));
 }
 
 
@@ -873,13 +873,13 @@ asin_test (void)
   check ("asin (0) == 0", FUNC(asin) (0), 0);
   check ("asin (-0) == -0", FUNC(asin) (minus_zero), minus_zero);
   check_eps ("asin (0.5) ==  pi/6", FUNC(asin) (0.5), M_PI_6l,
-	     CHOOSE(3.5e-18, 0, 2e-7));
+	     CHOOSE (3.5e-18, 0, 2e-7));
   check_eps ("asin (-0.5) ==  -pi/6", FUNC(asin) (-0.5), -M_PI_6l,
-	     CHOOSE(3.5e-18, 0, 2e-7));
-  check ("asin (1.0) ==	 pi/2", FUNC(asin) (1.0), M_PI_2l);
+	     CHOOSE (3.5e-18, 0, 2e-7));
+  check ("asin (1.0) ==  pi/2", FUNC(asin) (1.0), M_PI_2l);
   check ("asin (-1.0) ==  -pi/2", FUNC(asin) (-1.0), -M_PI_2l);
   check_eps ("asin (0.7) ==  0.775397496...", FUNC(asin) (0.7),
-	     0.7753974966107530637L, CHOOSE(7e-17L, 2e-16, 2e-7));
+	     0.7753974966107530637L, CHOOSE (7e-17L, 2e-16, 2e-7));
 }
 
 
@@ -893,7 +893,7 @@ asinh_test (void)
   check_isinfn ("asinh(-inf) == -inf", FUNC(asinh) (minus_infty));
 #endif
   check_eps ("asinh(0.7) == 0.652666566...", FUNC(asinh) (0.7),
-	     0.652666566082355786L, CHOOSE(4e-17L, 0, 6e-8));
+	     0.652666566082355786L, CHOOSE (4e-17L, 0, 6e-8));
 }
 
 
@@ -907,12 +907,12 @@ atan_test (void)
   check ("atan (-inf) == -pi/2", FUNC(atan) (minus_infty), -M_PI_2l);
 
   check_eps ("atan (1) == pi/4", FUNC(atan) (1), M_PI_4l,
-	     CHOOSE(1e-18, 0, 0));
+	     CHOOSE (1e-18, 0, 0));
   check_eps ("atan (-1) == -pi/4", FUNC(atan) (1), M_PI_4l,
-	     CHOOSE(1e-18, 0, 0));
+	     CHOOSE (1e-18, 0, 0));
 
   check_eps ("atan (0.7) == 0.610725964...", FUNC(atan) (0.7),
-	     0.6107259643892086165L, CHOOSE(3e-17L, 0, 0));
+	     0.6107259643892086165L, CHOOSE (3e-17L, 0, 0));
 }
 
 
@@ -992,9 +992,9 @@ atan2_test (void)
 
   /* FIXME: Add some specific tests */
   check_eps ("atan2 (0.7,1) == 0.61072...", FUNC(atan2) (0.7, 1),
-	     0.6107259643892086165L, CHOOSE(3e-17L, 0, 0));
+	     0.6107259643892086165L, CHOOSE (3e-17L, 0, 0));
   check_eps ("atan2 (0.4,0.0003) == 1.57004...", FUNC(atan2) (0.4, 0.0003),
-	     1.5700463269355215718L, CHOOSE(2e-19L, 0, 1.2e-7));
+	     1.5700463269355215718L, CHOOSE (2e-19L, 0, 1.2e-7));
 }
 
 
@@ -1024,7 +1024,7 @@ atanh_test (void)
 
 #endif
   check_eps ("atanh(0.7) == 0.867300527...", FUNC(atanh) (0.7),
-	     0.8673005276940531944L, CHOOSE(9e-17L, 2e-16, 0));
+	     0.8673005276940531944L, CHOOSE (9e-17L, 2e-16, 0));
 }
 
 
@@ -1040,14 +1040,14 @@ cbrt_test (void)
   check_isnan ("cbrt (NaN) == NaN", FUNC(cbrt) (nan_value));
 #endif
   check_eps ("cbrt (-0.001) == -0.1", FUNC(cbrt) (-0.001), -0.1,
-	     CHOOSE(5e-18L, 0, 0));
-  check_eps ("cbrt (8) == 2", FUNC(cbrt) (8), 2, CHOOSE(5e-17L, 0, 0));
+	     CHOOSE (5e-18L, 0, 0));
+  check_eps ("cbrt (8) == 2", FUNC(cbrt) (8), 2, CHOOSE (5e-17L, 0, 0));
   check_eps ("cbrt (-27) == -3", FUNC(cbrt) (-27.0), -3.0,
-	     CHOOSE(3e-16L, 5e-16, 0));
+	     CHOOSE (3e-16L, 5e-16, 0));
   check_eps ("cbrt (0.970299) == 0.99", FUNC(cbrt) (0.970299), 0.99,
-	     CHOOSE(2e-17L, 2e-16, 0));
+	     CHOOSE (2e-17L, 2e-16, 0));
   check_eps ("cbrt (0.7) == .8879040017...", FUNC(cbrt) (0.7),
-	     0.8879040017426007084L, CHOOSE(2e-17L, 6e-16, 0));
+	     0.8879040017426007084L, CHOOSE (2e-17L, 6e-16, 0));
 }
 
 
@@ -1077,14 +1077,14 @@ cos_test (void)
 		   INVALID_EXCEPTION);
 
   check_eps ("cos (pi/3) == 0.5", FUNC(cos) (M_PI_6l * 2.0),
-	     0.5, CHOOSE(4e-18L, 1e-15L, 1e-7L));
+	     0.5, CHOOSE (4e-18L, 1e-15L, 1e-7L));
   check_eps ("cos (2*pi/3) == -0.5", FUNC(cos) (M_PI_6l * 4.0),
-	     -0.5, CHOOSE(4e-18L, 1e-15L, 1e-7L));
+	     -0.5, CHOOSE (4e-18L, 1e-15L, 1e-7L));
   check_eps ("cos (pi/2) == 0", FUNC(cos) (M_PI_2l),
-	     0, CHOOSE(1e-19L, 1e-16L, 1e-7L));
+	     0, CHOOSE (1e-19L, 1e-16L, 1e-7L));
 
   check_eps ("cos (0.7) == 0.7648421872...", FUNC(cos) (0.7),
-	     0.7648421872844884262L, CHOOSE(3e-17, 2e-16, 6e-8));
+	     0.7648421872844884262L, CHOOSE (3e-17, 2e-16, 6e-8));
 }
 
 
@@ -1100,7 +1100,7 @@ cosh_test (void)
 #endif
 
   check_eps ("cosh (0.7) ==  1.2551690056...", FUNC(cosh) (0.7),
-	     1.255169005630943018L, CHOOSE(4e-17L, 0, 0));
+	     1.255169005630943018L, CHOOSE (4e-17L, 0, 0));
 }
 
 
@@ -1119,7 +1119,7 @@ erf_test (void)
   check ("erf (-inf) == -1", FUNC(erf) (minus_infty), -1);
 
   check_eps ("erf (0.7) == 0.6778011938...", FUNC(erf) (0.7),
-	     0.67780119383741847297L, CHOOSE(0, 2e-16, 0));
+	     0.67780119383741847297L, CHOOSE (0, 2e-16, 0));
 }
 
 
@@ -1138,7 +1138,7 @@ erfc_test (void)
   check ("erfc (-0) == 1", FUNC(erfc) (minus_zero), 1.0);
 
   check_eps ("erfc (0.7) == 0.3221988061...", FUNC(erfc) (0.7),
-	     0.32219880616258152702L, CHOOSE(0, 6e-17, 0));
+	     0.32219880616258152702L, CHOOSE (0, 6e-17, 0));
 }
 
 
@@ -1152,14 +1152,14 @@ exp_test (void)
   check_isinfp ("exp (+inf) == +inf", FUNC(exp) (plus_infty));
   check ("exp (-inf) == 0", FUNC(exp) (minus_infty), 0);
 #endif
-  check_eps ("exp (1) == e", FUNC(exp) (1), M_El, CHOOSE(4e-18L, 0, 0));
+  check_eps ("exp (1) == e", FUNC(exp) (1), M_El, CHOOSE (4e-18L, 0, 0));
 
   check_eps ("exp (2) == e^2", FUNC(exp) (2), M_E2l,
-	     CHOOSE(1e-18, 0, 0));
+	     CHOOSE (1e-18, 0, 0));
   check_eps ("exp (3) == e^3", FUNC(exp) (3), M_E3l,
-	     CHOOSE(1.5e-17, 0, 0));
+	     CHOOSE (1.5e-17, 0, 0));
   check_eps ("exp (0.7) == 2.0137527074...", FUNC(exp) (0.7),
-	     2.0137527074704765216L, CHOOSE(9e-17L, 0, 0));
+	     2.0137527074704765216L, CHOOSE (9e-17L, 0, 0));
 }
 
 
@@ -1178,13 +1178,13 @@ exp10_test (void)
   check_isinfp ("exp10 (+inf) == +inf", FUNC(exp10) (plus_infty));
   check ("exp10 (-inf) == 0", FUNC(exp10) (minus_infty), 0);
   check_eps ("exp10 (3) == 1000", FUNC(exp10) (3), 1000,
-	     CHOOSE(5e-16, 7e-13, 2e-4));
+	     CHOOSE (5e-16, 7e-13, 2e-4));
   check_eps ("exp10 (-1) == 0.1", FUNC(exp10) (-1), 0.1,
-	     CHOOSE(6e-18, 3e-17, 8e-09));
+	     CHOOSE (6e-18, 3e-17, 8e-09));
   check_isinfp ("exp10 (1e6) == +inf", FUNC(exp10) (1e6));
   check ("exp10 (-1e6) == 0", FUNC(exp10) (-1e6), 0);
   check_eps ("exp10 (0.7) == 5.0118723...", FUNC(exp10) (0.7),
-	     5.0118723362727228500L, CHOOSE(6e-16, 9e-16, 5e-7));
+	     5.0118723362727228500L, CHOOSE (6e-16, 9e-16, 5e-7));
 }
 
 
@@ -1207,7 +1207,7 @@ exp2_test (void)
   check_isinfp ("exp2 (1e6) == +inf", FUNC(exp2) (1e6));
   check ("exp2 (-1e6) == 0", FUNC(exp2) (-1e6), 0);
   check_eps ("exp2 (0.7) == 1.6245047927...", FUNC(exp2) (0.7),
-	     1.6245047927124710452L, CHOOSE(6e-17L, 0, 6e-8));
+	     1.6245047927124710452L, CHOOSE (6e-17L, 0, 6e-8));
 }
 
 
@@ -1223,10 +1223,10 @@ expm1_test (void)
 #endif
 
   check_eps ("expm1 (1) == e-1", FUNC(expm1) (1), M_El - 1.0,
-	     CHOOSE(4e-18L, 0, 2e-7));
+	     CHOOSE (4e-18L, 0, 2e-7));
 
   check_eps ("expm1 (0.7) == 1.01375...", FUNC(expm1) (0.7),
-	     1.0137527074704765216L, CHOOSE(9e-17L, 0, 0));
+	     1.0137527074704765216L, CHOOSE (9e-17L, 0, 0));
 }
 
 
@@ -1252,10 +1252,10 @@ check_frexp (const char *test_name, MATHTYPE computed, MATHTYPE expected,
       if (verbose > 1)
 	{
 	  printf ("Result:\n");
-	  printf (" is:		%.20" PRINTF_EXPR " *2^%d  %.20"
+	  printf (" is:         %.20" PRINTF_EXPR " *2^%d  %.20"
 		  PRINTF_XEXPR "*2^%d\n",
 		  computed, comp_int, computed, comp_int);
-	  printf (" should be:	%.20" PRINTF_EXPR " *2^%d  %.20"
+	  printf (" should be:  %.20" PRINTF_EXPR " *2^%d  %.20"
 		  PRINTF_XEXPR "*2^%d\n",
 		  expected, exp_int, expected, exp_int);
 	  printf (" difference: %.20" PRINTF_EXPR "  %.20" PRINTF_XEXPR "\n",
@@ -1393,12 +1393,12 @@ gamma_test (void)
 
   signgam = 0;
   check_eps ("gamma (0.5) == log(sqrt(pi))", FUNC(gamma) (0.5),
-	     FUNC(log) (FUNC(sqrt) (M_PIl)), CHOOSE(0, 1e-15, 1e-7));
+	     FUNC(log) (FUNC(sqrt) (M_PIl)), CHOOSE (0, 1e-15, 1e-7));
   check_int ("gamma (0.5) sets signgam to 1", signgam, 1);
 
   signgam = 0;
   check_eps ("gamma (-0.5) == log(2*sqrt(pi))", FUNC(gamma) (-0.5),
-	     FUNC(log) (2*FUNC(sqrt) (M_PIl)), CHOOSE(0, 1e-15, 0));
+	     FUNC(log) (2*FUNC(sqrt) (M_PIl)), CHOOSE (0, 1e-15, 0));
 
   check_int ("gamma (-0.5) sets signgam to -1", signgam, -1);
 }
@@ -1424,15 +1424,15 @@ tgamma_test (void)
 		   FUNC(tgamma) (minus_infty), INVALID_EXCEPTION);
 
   check_eps ("tgamma (0.5) == sqrt(pi)", FUNC(tgamma) (0.5),
-	     FUNC(sqrt) (M_PIl), CHOOSE(0, 5e-16, 2e-7));
+	     FUNC(sqrt) (M_PIl), CHOOSE (0, 5e-16, 2e-7));
   check_eps ("tgamma (-0.5) == -2*sqrt(pi)", FUNC(tgamma) (-0.5),
-	     -2*FUNC(sqrt) (M_PIl), CHOOSE(0, 5e-16, 3e-7));
+	     -2*FUNC(sqrt) (M_PIl), CHOOSE (0, 5e-16, 3e-7));
 
   check ("tgamma (1) == 1", FUNC(tgamma) (1), 1);
   check ("tgamma (4) == 6", FUNC(tgamma) (4), 6);
 
   check_eps ("tgamma (0.7) == 1.29805...", FUNC(tgamma) (0.7),
-	     1.29805533264755778568L, CHOOSE(0, 3e-16, 2e-7));
+	     1.29805533264755778568L, CHOOSE (0, 3e-16, 2e-7));
   check ("tgamma (1.2) == 0.91816...", FUNC(tgamma) (1.2),
 	 0.91816874239976061064L);
 }
@@ -1467,23 +1467,23 @@ lgamma_test (void)
 
   signgam = 0;
   check_eps ("lgamma (0.5) == log(sqrt(pi))", FUNC(lgamma) (0.5),
-	     FUNC(log) (FUNC(sqrt) (M_PIl)), CHOOSE(0, 1e-15, 1e-7));
+	     FUNC(log) (FUNC(sqrt) (M_PIl)), CHOOSE (0, 1e-15, 1e-7));
   check_int ("lgamma (0.5) sets signgam to 1", signgam, 1);
 
   signgam = 0;
   check_eps ("lgamma (-0.5) == log(2*sqrt(pi))", FUNC(lgamma) (-0.5),
-	     FUNC(log) (2*FUNC(sqrt) (M_PIl)), CHOOSE(0, 1e-15, 0));
+	     FUNC(log) (2*FUNC(sqrt) (M_PIl)), CHOOSE (0, 1e-15, 0));
 
   check_int ("lgamma (-0.5) sets signgam to -1", signgam, -1);
 
   signgam = 0;
   check_eps ("lgamma (0.7) == 0.26086...", FUNC(lgamma) (0.7),
-	     0.26086724653166651439L, CHOOSE(0, 6e-17, 3e-8));
+	     0.26086724653166651439L, CHOOSE (0, 6e-17, 3e-8));
   check_int ("lgamma (0.7) sets signgam to 1", signgam, 1);
 
   signgam = 0;
   check_eps ("lgamma (1.2) == -0.08537...", FUNC(lgamma) (1.2),
-	     -0.853740900033158497197e-1L, CHOOSE(0, 2e-17, 2e-8));
+	     -0.853740900033158497197e-1L, CHOOSE (0, 2e-17, 2e-8));
   check_int ("lgamma (1.2) sets signgam to 1", signgam, 1);
 }
 
@@ -1542,15 +1542,15 @@ log_test (void)
 		   FUNC(log) (-1), INVALID_EXCEPTION);
   check_isinfp ("log (+inf) == +inf", FUNC(log) (plus_infty));
 
-  check_eps ("log (e) == 1", FUNC(log) (M_El), 1, CHOOSE(1e-18L, 0, 9e-8L));
+  check_eps ("log (e) == 1", FUNC(log) (M_El), 1, CHOOSE (1e-18L, 0, 9e-8L));
   check_eps ("log (1/e) == -1", FUNC(log) (1.0 / M_El), -1,
-	     CHOOSE(2e-18L, 0, 0));
+	     CHOOSE (2e-18L, 0, 0));
   check_eps ("log (2) == M_LN2", FUNC(log) (2), M_LN2l,
-	     CHOOSE(6e-20L, 0, 0));
+	     CHOOSE (6e-20L, 0, 0));
   check_eps ("log (10) == M_LN10", FUNC(log) (10), M_LN10l,
-	     CHOOSE(1e-18L, 0, 0));
+	     CHOOSE (1e-18L, 0, 0));
   check_eps ("log (0.7) == -0.3566749439...", FUNC(log) (0.7),
-	     -0.35667494393873237891L, CHOOSE(7e-17L, 6e-17, 3e-8));
+	     -0.35667494393873237891L, CHOOSE (7e-17L, 6e-17, 3e-8));
 }
 
 
@@ -1570,16 +1570,16 @@ log10_test (void)
   check_isinfp ("log10 (+inf) == +inf", FUNC(log10) (plus_infty));
 
   check_eps ("log10 (0.1) == -1", FUNC(log10) (0.1L), -1,
-	     CHOOSE(1e-18L, 0, 0));
+	     CHOOSE (1e-18L, 0, 0));
   check_eps ("log10 (10) == 1", FUNC(log10) (10.0), 1,
-	     CHOOSE(1e-18L, 0, 0));
+	     CHOOSE (1e-18L, 0, 0));
   check_eps ("log10 (100) == 2", FUNC(log10) (100.0), 2,
-	     CHOOSE(1e-18L, 0, 0));
+	     CHOOSE (1e-18L, 0, 0));
   check ("log10 (10000) == 4", FUNC(log10) (10000.0), 4);
   check_eps ("log10 (e) == M_LOG10E", FUNC(log10) (M_El), M_LOG10El,
-	     CHOOSE(1e-18, 0, 9e-8));
+	     CHOOSE (1e-18, 0, 9e-8));
   check_eps ("log10 (0.7) == -0.1549019599...", FUNC(log10) (0.7),
-	     -0.15490195998574316929L, CHOOSE(3e-17L, 3e-17, 2e-8));
+	     -0.15490195998574316929L, CHOOSE (3e-17L, 3e-17, 2e-8));
 }
 
 
@@ -1597,10 +1597,10 @@ log1p_test (void)
   check_isinfp ("log1p (+inf) == +inf", FUNC(log1p) (plus_infty));
 
   check_eps ("log1p (e-1) == 1", FUNC(log1p) (M_El - 1.0), 1,
-	     CHOOSE(1e-18L, 0, 6e-8));
+	     CHOOSE (1e-18L, 0, 6e-8));
 
   check_eps ("log1p (-0.3) == -0.35667...", FUNC(log1p) (-0.3),
-	     -0.35667494393873237891L, CHOOSE(2e-17L, 6e-17, 3e-8));
+	     -0.35667494393873237891L, CHOOSE (2e-17L, 6e-17, 3e-8));
 }
 
 
@@ -1620,12 +1620,12 @@ log2_test (void)
   check_isinfp ("log2 (+inf) == +inf", FUNC(log2) (plus_infty));
 
   check_eps ("log2 (e) == M_LOG2E", FUNC(log2) (M_El), M_LOG2El,
-	     CHOOSE(1e-18L, 0, 0));
+	     CHOOSE (1e-18L, 0, 0));
   check ("log2 (2) == 1", FUNC(log2) (2.0), 1);
-  check_eps ("log2 (16) == 4", FUNC(log2) (16.0), 4, CHOOSE(1e-18L, 0, 0));
+  check_eps ("log2 (16) == 4", FUNC(log2) (16.0), 4, CHOOSE (1e-18L, 0, 0));
   check ("log2 (256) == 8", FUNC(log2) (256.0), 8);
   check_eps ("log2 (0.7) == -0.5145731728...", FUNC(log2) (0.7),
-	     -0.51457317282975824043L, CHOOSE(1e-16L, 2e-16, 6e-8));
+	     -0.51457317282975824043L, CHOOSE (1e-16L, 2e-16, 6e-8));
 }
 
 
@@ -1695,7 +1695,7 @@ modf_test (void)
 
   result = FUNC(modf) (89.6, &intpart);
   check_eps ("modf (89.6, &x) returns 0.6", result, 0.6,
-	     CHOOSE(6e-15L, 6e-15, 2e-6));
+	     CHOOSE (6e-15L, 6e-15, 2e-6));
   check ("modf (89.6, &x) sets x to 89", intpart, 89);
 }
 
@@ -1803,13 +1803,13 @@ sin_test (void)
 		   INVALID_EXCEPTION);
 
   check_eps ("sin (pi/6) == 0.5", FUNC(sin) (M_PI_6l),
-	     0.5, CHOOSE(4e-18L, 0, 0));
+	     0.5, CHOOSE (4e-18L, 0, 0));
   check_eps ("sin (-pi/6) == -0.5", FUNC(sin) (-M_PI_6l),
-	     -0.5, CHOOSE(4e-18L, 0, 0));
+	     -0.5, CHOOSE (4e-18L, 0, 0));
   check ("sin (pi/2) == 1", FUNC(sin) (M_PI_2l), 1);
   check ("sin (-pi/2) == -1", FUNC(sin) (-M_PI_2l), -1);
   check_eps ("sin (0.7) == 0.6442176872...", FUNC(sin) (0.7),
-	     0.64421768723769105367L, CHOOSE(4e-17L, 0, 0));
+	     0.64421768723769105367L, CHOOSE (4e-17L, 0, 0));
 }
 
 
@@ -1826,7 +1826,7 @@ sinh_test (void)
 #endif
 
   check_eps ("sinh (0.7) == 0.7585837018...", FUNC(sinh) (0.7),
-	     0.75858370183953350346L, CHOOSE(6e-17L, 2e-16, 6e-8));
+	     0.75858370183953350346L, CHOOSE (6e-17L, 2e-16, 6e-8));
 }
 
 
@@ -1869,21 +1869,21 @@ sincos_test (void)
   check ("sincos (pi/2, &sin, &cos) puts 1 in sin", sin_res, 1);
   fesetenv (&fenv);
   check_eps ("sincos (pi/2, &sin, &cos) puts 0 in cos", cos_res, 0,
-	     CHOOSE(1e-18L, 1e-16, 1e-7));
+	     CHOOSE (1e-18L, 1e-16, 1e-7));
 
   FUNC(sincos) (M_PI_6l, &sin_res, &cos_res);
   check_eps ("sincos (pi/6, &sin, &cos) puts 0.5 in sin", sin_res, 0.5,
-	     CHOOSE(5e-18L, 0, 0));
+	     CHOOSE (5e-18L, 0, 0));
 
   FUNC(sincos) (M_PI_6l*2.0, &sin_res, &cos_res);
   check_eps ("sincos (pi/3, &sin, &cos) puts 0.5 in cos", cos_res, 0.5,
-	     CHOOSE(5e-18L, 1e-15, 1e-7));
+	     CHOOSE (5e-18L, 1e-15, 1e-7));
 
   FUNC(sincos) (0.7, &sin_res, &cos_res);
   check_eps ("sincos (0.7, &sin, &cos) puts 0.6442176872... in sin", sin_res,
-	     0.64421768723769105367L, CHOOSE(4e-17L, 0, 0));
+	     0.64421768723769105367L, CHOOSE (4e-17L, 0, 0));
   check_eps ("sincos (0.7, &sin, &cos) puts 0.7648421872... in cos", cos_res,
-	     0.76484218728448842626L, CHOOSE(3e-17L, 2e-16, 6e-8));
+	     0.76484218728448842626L, CHOOSE (3e-17L, 2e-16, 6e-8));
 }
 
 
@@ -1898,9 +1898,9 @@ tan_test (void)
 		   FUNC(tan) (minus_infty), INVALID_EXCEPTION);
 
   check_eps ("tan (pi/4) == 1", FUNC(tan) (M_PI_4l), 1,
-	     CHOOSE(2e-18L, 1e-15L, 2e-7));
+	     CHOOSE (2e-18L, 1e-15L, 2e-7));
   check_eps ("tan (0.7) == 0.8422883804...", FUNC(tan) (0.7),
-	     0.84228838046307944813L, CHOOSE(8e-17L, 0, 0));
+	     0.84228838046307944813L, CHOOSE (8e-17L, 0, 0));
 }
 
 
@@ -1915,7 +1915,7 @@ tanh_test (void)
   check ("tanh (-inf) == -1", FUNC(tanh) (minus_infty), -1);
 #endif
   check_eps ("tanh (0.7) == 0.6043677771...", FUNC(tanh) (0.7),
-	     0.60436777711716349631L, CHOOSE(3e-17L, 2e-16, 6e-8));
+	     0.60436777711716349631L, CHOOSE (3e-17L, 2e-16, 6e-8));
 }
 
 
@@ -1976,7 +1976,7 @@ hypot_test (void)
   check ("hypot (x,0) == fabs (x)", FUNC(hypot) (5.7e7L, 0), 5.7e7L);
 
   check_eps ("hypot (0.7,1.2) == 1.38924...", FUNC(hypot) (0.7, 1.2),
-	     1.3892443989449804508L, CHOOSE(7e-17L, 3e-16, 0));
+	     1.3892443989449804508L, CHOOSE (7e-17L, 3e-16, 0));
 }
 
 
@@ -2171,7 +2171,7 @@ pow_test (void)
 	     FUNC(pow) (minus_zero, x), 0.0, x);
 
   check_eps ("pow (0.7, 1.2) == 0.65180...", FUNC(pow) (0.7, 1.2),
-	     0.65180494056638638188L, CHOOSE(4e-17L, 0, 0));
+	     0.65180494056638638188L, CHOOSE (4e-17L, 0, 0));
 
 #ifdef TEST_DOUBLE
   check ("pow (-7.49321e+133, -9.80818e+16) == 0",
@@ -2304,13 +2304,13 @@ fmod_test (void)
 	     FUNC(fmod) (x, minus_infty), x, x);
 
   check_eps ("fmod (6.5, 2.3) == 1.9", FUNC(fmod) (6.5, 2.3), 1.9,
-	     CHOOSE(5e-16, 1e-15, 2e-7));
+	     CHOOSE (5e-16, 1e-15, 2e-7));
   check_eps ("fmod (-6.5, 2.3) == -1.9", FUNC(fmod) (-6.5, 2.3), -1.9,
-	     CHOOSE(5e-16, 1e-15, 2e-7));
+	     CHOOSE (5e-16, 1e-15, 2e-7));
   check_eps ("fmod (6.5, -2.3) == 1.9", FUNC(fmod) (6.5, -2.3), 1.9,
-	     CHOOSE(5e-16, 1e-15, 2e-7));
+	     CHOOSE (5e-16, 1e-15, 2e-7));
   check_eps ("fmod (-6.5, -2.3) == -1.9", FUNC(fmod) (-6.5, -2.3), -1.9,
-	     CHOOSE(5e-16, 1e-15, 2e-7));
+	     CHOOSE (5e-16, 1e-15, 2e-7));
 }
 
 
@@ -2435,9 +2435,9 @@ sqrt_test (void)
   check ("sqrt (0.25) == 0.5", FUNC(sqrt) (0.25), 0.5);
   check ("sqrt (6642.25) == 81.5", FUNC(sqrt) (6642.25), 81.5);
   check_eps ("sqrt (15239.903) == 123.45", FUNC(sqrt) (15239.903), 123.45,
-	     CHOOSE(3e-6L, 3e-6, 8e-6));
+	     CHOOSE (3e-6L, 3e-6, 8e-6));
   check_eps ("sqrt (0.7) == 0.8366600265", FUNC(sqrt) (0.7),
-	     0.83666002653407554798L, CHOOSE(3e-17L, 0, 0));
+	     0.83666002653407554798L, CHOOSE (3e-17L, 0, 0));
 }
 
 
@@ -2535,158 +2535,158 @@ cexp_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_zero, plus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_zero, plus_zero));
   check ("real(cexp(0 + 0i)) = 1", __real__ result, 1);
   check ("imag(cexp(0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_zero, plus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_zero, plus_zero));
   check ("real(cexp(-0 + 0i)) = 1", __real__ result, 1);
   check ("imag(cexp(-0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_zero, minus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_zero, minus_zero));
   check ("real(cexp(0 - 0i)) = 1", __real__ result, 1);
   check ("imag(cexp(0 - 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(cexp(-0 - 0i)) = 1", __real__ result, 1);
   check ("imag(cexp(-0 - 0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_infty, plus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, plus_zero));
   check_isinfp ("real(cexp(+inf + 0i)) = +inf", __real__ result);
   check ("imag(cexp(+inf + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(cexp(+inf - 0i)) = +inf", __real__ result);
   check ("imag(cexp(+inf - 0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_infty, plus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, plus_zero));
   check ("real(cexp(-inf + 0i)) = 0", __real__ result, 0);
   check ("imag(cexp(-inf + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(cexp(-inf - 0i)) = 0", __real__ result, 0);
   check ("imag(cexp(-inf - 0i)) = -0", __imag__ result, minus_zero);
 
 
-  result = FUNC(cexp) (BUILD_COMPLEX(0.0, plus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (0.0, plus_infty));
   check_isnan_exc ("real(cexp(0 + i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(0 + i inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isnan_exc ("real(cexp(-0 + i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(-0 + i inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(0.0, minus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (0.0, minus_infty));
   check_isnan_exc ("real(cexp(0 - i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(0 - i inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isnan_exc ("real(cexp(-0 - i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(-0 - i inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(100.0, plus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (100.0, plus_infty));
   check_isnan_exc ("real(cexp(100.0 + i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(100.0 + i inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(-100.0, plus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (-100.0, plus_infty));
   check_isnan_exc ("real(cexp(-100.0 + i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(-100.0 + i inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(100.0, minus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (100.0, minus_infty));
   check_isnan_exc ("real(cexp(100.0 - i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(100.0 - i inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(-100.0, minus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (-100.0, minus_infty));
   check_isnan_exc ("real(cexp(-100.0 - i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(-100.0 - i inf)) = NaN", __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_infty, 2.0));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, 2.0));
   check ("real(cexp(-inf + 2.0i)) = -0", __real__ result, minus_zero);
   check ("imag(cexp(-inf + 2.0i)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_infty, 4.0));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, 4.0));
   check ("real(cexp(-inf + 4.0i)) = -0", __real__ result, minus_zero);
   check ("imag(cexp(-inf + 4.0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_infty, 2.0));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, 2.0));
   check_isinfn ("real(cexp(+inf + 2.0i)) = -inf", __real__ result);
   check_isinfp ("imag(cexp(+inf + 2.0i)) = +inf", __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_infty, 4.0));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, 4.0));
   check_isinfn ("real(cexp(+inf + 4.0i)) = -inf", __real__ result);
   check_isinfn ("imag(cexp(+inf + 4.0i)) = -inf", __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp_exc ("real(cexp(+inf + i inf)) = +inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(+inf + i inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp_exc ("real(cexp(+inf - i inf)) = +inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(+inf - i inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, plus_infty));
   check ("real(cexp(-inf + i inf)) = 0", __real__ result, 0);
   check ("imag(cexp(-inf + i inf)) = 0", __imag__ result, 0);
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, minus_infty));
   check ("real(cexp(-inf - i inf)) = 0", __real__ result, 0);
   check ("imag(cexp(-inf - i inf)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(cexp) (BUILD_COMPLEX (minus_infty, nan_value));
   check ("real(cexp(-inf + i NaN)) = 0", __real__ result, 0);
   check ("imag(cexp(-inf + i NaN)) = 0", fabs (__imag__ result), 0);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(cexp) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(cexp(+inf + i NaN)) = +inf", __real__ result);
   check_isnan ("imag(cexp(+inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(nan_value, 0.0));
+  result = FUNC(cexp) (BUILD_COMPLEX (nan_value, 0.0));
   check_isnan_maybe_exc ("real(cexp(NaN + i0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(NaN + i0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(nan_value, 1.0));
+  result = FUNC(cexp) (BUILD_COMPLEX (nan_value, 1.0));
   check_isnan_maybe_exc ("real(cexp(NaN + 1i)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(NaN + 1i)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(cexp) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isnan_maybe_exc ("real(cexp(NaN + i inf)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(NaN + i inf)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(cexp) (BUILD_COMPLEX (0, nan_value));
   check_isnan_maybe_exc ("real(cexp(0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(cexp) (BUILD_COMPLEX(1, nan_value));
+  result = FUNC(cexp) (BUILD_COMPLEX (1, nan_value));
   check_isnan_maybe_exc ("real(cexp(1 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(1 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(cexp) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(cexp(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(cexp(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(cexp) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(cexp) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(cexp(0.7 + i 1.2)) == 0.72969...", __real__ result,
-	     0.7296989091503236012L, CHOOSE(6e-17L, 2e-16, 2e-7));
+	     0.7296989091503236012L, CHOOSE (6e-17L, 2e-16, 2e-7));
   check_eps ("imag(cexp(0.7 + i 1.2)) == 1.87689...", __imag__ result,
-	     1.8768962328348102821L, CHOOSE(2e-16L, 2.5e-16, 3e-7));
+	     1.8768962328348102821L, CHOOSE (2e-16L, 2.5e-16, 3e-7));
 
-  result = FUNC(cexp) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(cexp) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(cexp(-2 - i 3)) == -0.13398...", __real__ result,
-	     -0.1339809149295426134L, CHOOSE(6.8e-20L, 0, 2e-8));
+	     -0.1339809149295426134L, CHOOSE (6.8e-20L, 0, 2e-8));
   check_eps ("imag(cexp(-2 - i 3)) == -0.01909...", __imag__ result,
-	     -0.0190985162611351964L, CHOOSE(4e-20L, 0, 2e-9));
+	     -0.0190985162611351964L, CHOOSE (4e-20L, 0, 2e-9));
 }
 
 
@@ -2695,179 +2695,179 @@ csin_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(csin) (BUILD_COMPLEX(0.0, 0.0));
+  result = FUNC(csin) (BUILD_COMPLEX (0.0, 0.0));
   check ("real(csin(0 + 0i)) = 0", __real__ result, 0);
   check ("imag(csin(0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_zero, 0.0));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_zero, 0.0));
   check ("real(csin(-0 + 0i)) = -0", __real__ result, minus_zero);
   check ("imag(csin(-0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(csin) (BUILD_COMPLEX(0.0, minus_zero));
+  result = FUNC(csin) (BUILD_COMPLEX (0.0, minus_zero));
   check ("real(csin(0 - 0i)) = 0", __real__ result, 0);
   check ("imag(csin(0 - 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(csin(-0 - 0i)) = -0", __real__ result, minus_zero);
   check ("imag(csin(-0 - 0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(csin) (BUILD_COMPLEX(0.0, plus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (0.0, plus_infty));
   check ("real(csin(0 + i Inf)) = 0", __real__ result, 0);
   check_isinfp ("imag(csin(0 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_zero, plus_infty));
   check ("real(csin(-0 + i Inf)) = -0", __real__ result, minus_zero);
   check_isinfp ("imag(csin(-0 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(0.0, minus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (0.0, minus_infty));
   check ("real(csin(0 - i Inf)) = 0", __real__ result, 0);
   check_isinfn ("imag(csin(0 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_zero, minus_infty));
   check ("real(csin(-0 - i Inf)) = -0", __real__ result, minus_zero);
   check_isinfn ("imag(csin(-0 - i Inf)) = -Inf", __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(plus_infty, 0.0));
+  result = FUNC(csin) (BUILD_COMPLEX (plus_infty, 0.0));
   check_isnan_exc ("real(csin(+Inf + 0i)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(csin(+Inf + 0i)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_infty, 0.0));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_infty, 0.0));
   check_isnan_exc ("real(csin(-Inf + 0i)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(csin(-Inf + 0i)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(csin) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(csin) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isnan_exc ("real(csin(+Inf - 0i)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(csin(+Inf - 0i)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0.0);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isnan_exc ("real(csin(-Inf - 0i)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(csin(-Inf - 0i)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0.0);
 
-  result = FUNC(csin) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isnan_exc ("real(csin(+Inf + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isinfp ("imag(csin(+Inf + i Inf)) = +-Inf plus invalid exception",
 		FUNC(fabs) (__imag__ result));
-  result = FUNC(csin) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isnan_exc ("real(csin(-Inf + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isinfp ("imag(csin(-Inf + i Inf)) = +-Inf plus invalid exception",
 		FUNC(fabs) (__imag__ result));
-  result = FUNC(csin) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isnan_exc ("real(csin(Inf - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isinfp ("imag(csin(Inf - i Inf)) = +-Inf plus invalid exception",
 		FUNC(fabs) (__imag__ result));
-  result = FUNC(csin) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isnan_exc ("real(csin(-Inf - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isinfp ("imag(csin(-Inf - i Inf)) = +-Inf plus invalid exception",
 		FUNC(fabs) (__imag__ result));
 
-  result = FUNC(csin) (BUILD_COMPLEX(plus_infty, 6.75));
+  result = FUNC(csin) (BUILD_COMPLEX (plus_infty, 6.75));
   check_isnan_exc ("real(csin(+Inf + i 6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(+Inf + i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(plus_infty, -6.75));
+  result = FUNC(csin) (BUILD_COMPLEX (plus_infty, -6.75));
   check_isnan_exc ("real(csin(+Inf - i 6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(+Inf - i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_infty, 6.75));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_infty, 6.75));
   check_isnan_exc ("real(csin(-Inf + i6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(-Inf + i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_infty, -6.75));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_infty, -6.75));
   check_isnan_exc ("real(csin(-Inf - i6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(-Inf - i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(4.625, plus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (4.625, plus_infty));
   check_isinfn ("real(csin(4.625 + i Inf)) = -Inf", __real__ result);
   check_isinfn ("imag(csin(4.625 + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(4.625, minus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (4.625, minus_infty));
   check_isinfn ("real(csin(4.625 - i Inf)) = -Inf", __real__ result);
   check_isinfp ("imag(csin(4.625 - i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(-4.625, plus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (-4.625, plus_infty));
   check_isinfp ("real(csin(-4.625 + i Inf)) = +Inf", __real__ result);
   check_isinfn ("imag(csin(-4.625 + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(-4.625, minus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (-4.625, minus_infty));
   check_isinfp ("real(csin(-4.625 - i Inf)) = +Inf", __real__ result);
   check_isinfp ("imag(csin(-4.625 - i Inf)) = +Inf", __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, 0.0));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, 0.0));
   check_isnan ("real(csin(NaN + i0)) = NaN", __real__ result);
   check ("imag(csin(NaN + i0)) = +-0", FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(csin(NaN - i0)) = NaN", __real__ result);
   check ("imag(csin(NaN - i0)) = +-0", FUNC(fabs) (__imag__ result), 0);
 
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isnan ("real(csin(NaN + i Inf)) = NaN", __real__ result);
   check_isinfp ("imag(csin(NaN + i Inf)) = +-Inf",
 		FUNC(fabs) (__imag__ result));
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isnan ("real(csin(NaN - i Inf)) = NaN", __real__ result);
   check_isinfp ("real(csin(NaN - i Inf)) = +-Inf",
 		FUNC(fabs) (__imag__ result));
 
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, 9.0));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, 9.0));
   check_isnan_maybe_exc ("real(csin(NaN + i9.0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(NaN + i9.0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, -9.0));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, -9.0));
   check_isnan_maybe_exc ("real(csin(NaN - i9.0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(NaN - i9.0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(0.0, nan_value));
+  result = FUNC(csin) (BUILD_COMPLEX (0.0, nan_value));
   check ("real(csin(0 + i NaN))", __real__ result, 0.0);
   check_isnan ("imag(csin(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_zero, nan_value));
   check ("real(csin(-0 + i NaN)) = -0", __real__ result, minus_zero);
   check_isnan ("imag(csin(-0 + NaN)) = NaN", __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(10.0, nan_value));
+  result = FUNC(csin) (BUILD_COMPLEX (10.0, nan_value));
   check_isnan_maybe_exc ("real(csin(10 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(10 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, -10.0));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, -10.0));
   check_isnan_maybe_exc ("real(csin(-10 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(-10 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(csin) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isnan_maybe_exc ("real(csin(+Inf + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(+Inf + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csin) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(csin) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isnan_maybe_exc ("real(csin(-Inf + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csin(-Inf + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(csin) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(csin(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(csin(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(csin) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(csin) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(csin(0.7 + i 1.2)) = 1.166456341...", __real__ result,
-	     1.1664563419657581376L, CHOOSE(2e-16L, 0, 0));
+	     1.1664563419657581376L, CHOOSE (2e-16L, 0, 0));
   check_eps ("imag(csin(0.7 + i 1.2)) = 1.154499724...", __imag__ result,
-	     1.1544997246948547371L, CHOOSE(2e-17L, 0, 2e-7));
+	     1.1544997246948547371L, CHOOSE (2e-17L, 0, 2e-7));
 
-  result = FUNC(csin) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(csin) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(csin(-2 - i 3)) == -9.15449...", __real__ result,
-	     -9.1544991469114295734L, CHOOSE(4e-18L, 0, 1e-6));
+	     -9.1544991469114295734L, CHOOSE (4e-18L, 0, 1e-6));
   check_eps ("imag(csin(-2 - i 3)) == -4.16890...", __imag__ result,
-	     4.1689069599665643507L, CHOOSE(2e-17L, 0, 5e-7));
+	     4.1689069599665643507L, CHOOSE (2e-17L, 0, 5e-7));
 }
 
 
@@ -2876,179 +2876,179 @@ csinh_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(csinh) (BUILD_COMPLEX(0.0, 0.0));
+  result = FUNC(csinh) (BUILD_COMPLEX (0.0, 0.0));
   check ("real(csinh(0 + 0i)) = 0", __real__ result, 0);
   check ("imag(csinh(0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_zero, 0.0));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_zero, 0.0));
   check ("real(csinh(-0 + 0i)) = -0", __real__ result, minus_zero);
   check ("imag(csinh(-0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(csinh) (BUILD_COMPLEX(0.0, minus_zero));
+  result = FUNC(csinh) (BUILD_COMPLEX (0.0, minus_zero));
   check ("real(csinh(0 - 0i)) = 0", __real__ result, 0);
   check ("imag(csinh(0 - 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(csinh(-0 - 0i)) = -0", __real__ result, minus_zero);
   check ("imag(csinh(-0 - 0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(0.0, plus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (0.0, plus_infty));
   check_exc ("real(csinh(0 + i Inf)) = +-0 plus invalid exception",
 	     FUNC(fabs) (__real__ result), 0, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(0 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_exc ("real(csinh(-0 + i Inf)) = +-0 plus invalid exception",
 	     FUNC(fabs) (__real__ result), 0, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(-0 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(0.0, minus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (0.0, minus_infty));
   check_exc ("real(csinh(0 - i Inf)) = +-0 plus invalid exception",
 	     FUNC(fabs) (__real__ result), 0, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(0 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_exc ("real(csinh(-0 - i Inf)) = +-0 plus invalid exception",
 	     FUNC(fabs) (__real__ result), 0, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(-0 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(plus_infty, 0.0));
+  result = FUNC(csinh) (BUILD_COMPLEX (plus_infty, 0.0));
   check_isinfp ("real(csinh(+Inf + 0i)) = +Inf", __real__ result);
   check ("imag(csinh(+Inf + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_infty, 0.0));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_infty, 0.0));
   check_isinfn ("real(csinh(-Inf + 0i)) = -Inf", __real__ result);
   check ("imag(csinh(-Inf + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(csinh) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(csinh) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(csinh(+Inf - 0i)) = +Inf", __real__ result);
   check ("imag(csinh(+Inf - 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isinfn ("real(csinh(-Inf - 0i)) = -Inf", __real__ result);
   check ("imag(csinh(-Inf - 0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp_exc ("real(csinh(+Inf + i Inf)) = +-Inf plus invalid exception",
 		    FUNC(fabs) (__real__ result), INVALID_EXCEPTION);
   check_isnan ("imag(csinh(+Inf + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp_exc ("real(csinh(-Inf + i Inf)) = +-Inf plus invalid exception",
 		    FUNC(fabs) (__real__ result), INVALID_EXCEPTION);
   check_isnan ("imag(csinh(-Inf + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp_exc ("real(csinh(Inf - i Inf)) = +-Inf plus invalid exception",
 		    FUNC(fabs) (__real__ result), INVALID_EXCEPTION);
   check_isnan ("imag(csinh(Inf - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfp_exc ("real(csinh(-Inf - i Inf)) = +-Inf plus invalid exception",
 		    FUNC(fabs) (__real__ result), INVALID_EXCEPTION);
   check_isnan ("imag(csinh(-Inf - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(plus_infty, 4.625));
+  result = FUNC(csinh) (BUILD_COMPLEX (plus_infty, 4.625));
   check_isinfn ("real(csinh(+Inf + i4.625)) = -Inf", __real__ result);
   check_isinfn ("imag(csinh(+Inf + i4.625)) = -Inf", __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_infty, 4.625));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_infty, 4.625));
   check_isinfp ("real(csinh(-Inf + i4.625)) = +Inf", __real__ result);
   check_isinfn ("imag(csinh(-Inf + i4.625)) = -Inf", __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(plus_infty, -4.625));
+  result = FUNC(csinh) (BUILD_COMPLEX (plus_infty, -4.625));
   check_isinfn ("real(csinh(+Inf - i4.625)) = -Inf", __real__ result);
   check_isinfp ("imag(csinh(+Inf - i4.625)) = +Inf", __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_infty, -4.625));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_infty, -4.625));
   check_isinfp ("real(csinh(-Inf - i4.625)) = +Inf", __real__ result);
   check_isinfp ("imag(csinh(-Inf - i4.625)) = +Inf", __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(6.75, plus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (6.75, plus_infty));
   check_isnan_exc ("real(csinh(6.75 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(6.75 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(-6.75, plus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (-6.75, plus_infty));
   check_isnan_exc ("real(csinh(-6.75 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(-6.75 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(6.75, minus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (6.75, minus_infty));
   check_isnan_exc ("real(csinh(6.75 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(6.75 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(-6.75, minus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (-6.75, minus_infty));
   check_isnan_exc ("real(csinh(-6.75 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(-6.75 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(0.0, nan_value));
+  result = FUNC(csinh) (BUILD_COMPLEX (0.0, nan_value));
   check ("real(csinh(0 + i NaN)) = +-0", FUNC(fabs) (__real__ result), 0);
   check_isnan ("imag(csinh(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_zero, nan_value));
   check ("real(csinh(-0 + i NaN)) = +-0", FUNC(fabs) (__real__ result), 0);
   check_isnan ("imag(csinh(-0 + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(csinh) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(csinh(+Inf + i NaN)) = +-Inf",
 		FUNC(fabs) (__real__ result));
   check_isnan ("imag(csinh(+Inf + i NaN)) = NaN", __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(csinh) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isinfp ("real(csinh(-Inf + i NaN)) = +-Inf",
 		FUNC(fabs) (__real__ result));
   check_isnan ("imag(csinh(-Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(9.0, nan_value));
+  result = FUNC(csinh) (BUILD_COMPLEX (9.0, nan_value));
   check_isnan_maybe_exc ("real(csinh(9.0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(9.0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(-9.0, nan_value));
+  result = FUNC(csinh) (BUILD_COMPLEX (-9.0, nan_value));
   check_isnan_maybe_exc ("real(csinh(-9.0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(-9.0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(nan_value, 0.0));
+  result = FUNC(csinh) (BUILD_COMPLEX (nan_value, 0.0));
   check_isnan ("real(csinh(NaN + i0)) = NaN", __real__ result);
   check ("imag(csinh(NaN + i0)) = 0", __imag__ result, 0.0);
-  result = FUNC(csinh) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(csinh) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(csinh(NaN - i0)) = NaN", __real__ result);
   check ("imag(csinh(NaN - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(nan_value, 10.0));
+  result = FUNC(csinh) (BUILD_COMPLEX (nan_value, 10.0));
   check_isnan_maybe_exc ("real(csinh(NaN + i10)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(NaN + i10)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(nan_value, -10.0));
+  result = FUNC(csinh) (BUILD_COMPLEX (nan_value, -10.0));
   check_isnan_maybe_exc ("real(csinh(NaN - i10)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(NaN - i10)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isnan_maybe_exc ("real(csinh(NaN + i Inf)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(NaN + i Inf)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csinh) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(csinh) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isnan_maybe_exc ("real(csinh(NaN - i Inf)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csinh(NaN - i Inf)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(csinh) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(csinh(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(csinh(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(csinh) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(csinh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(csinh(0.7 + i 1.2)) = 0.274878686...", __real__ result,
-	     0.27487868678117583582L, CHOOSE(2e-17L, 6e-17, 3e-8));
+	     0.27487868678117583582L, CHOOSE (2e-17L, 6e-17, 3e-8));
   check_eps ("imag(csinh(0.7 + i 1.2)) = 1.169866572...", __imag__ result,
-	     1.1698665727426565139L, CHOOSE(6e-17L, 0, 2e-7));
+	     1.1698665727426565139L, CHOOSE (6e-17L, 0, 2e-7));
 
-  result = FUNC(csinh) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(csinh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(csinh(-2 - i 3)) == -3.59056...", __real__ result,
-	     3.5905645899857799520L, CHOOSE(7e-19L, 5e-16, 3e-7));
+	     3.5905645899857799520L, CHOOSE (7e-19L, 5e-16, 3e-7));
   check_eps ("imag(csinh(-2 - i 3)) == -0.53092...", __imag__ result,
-	     -0.5309210862485198052L, CHOOSE(3e-19L, 2e-16, 6e-8));
+	     -0.5309210862485198052L, CHOOSE (3e-19L, 2e-16, 6e-8));
 }
 
 
@@ -3057,177 +3057,177 @@ ccos_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(ccos) (BUILD_COMPLEX(0.0, 0.0));
+  result = FUNC(ccos) (BUILD_COMPLEX (0.0, 0.0));
   check ("real(ccos(0 + 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccos(0 + 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_zero, 0.0));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, 0.0));
   check ("real(ccos(-0 + 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccos(-0 + 0i)) = 0", __imag__ result, 0.0);
-  result = FUNC(ccos) (BUILD_COMPLEX(0.0, minus_zero));
+  result = FUNC(ccos) (BUILD_COMPLEX (0.0, minus_zero));
   check ("real(ccos(0 - 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccos(0 - 0i)) = 0", __imag__ result, 0.0);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(ccos(-0 - 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccos(-0 - 0i)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(plus_infty, 0.0));
+  result = FUNC(ccos) (BUILD_COMPLEX (plus_infty, 0.0));
   check_isnan_exc ("real(ccos(+Inf + i0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccos(Inf + i0)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccos) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(ccos) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isnan_exc ("real(ccos(Inf - i0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccos(Inf - i0)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_infty, 0.0));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_infty, 0.0));
   check_isnan_exc ("real(ccos(-Inf + i0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccos(-Inf + i0)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isnan_exc ("real(ccos(-Inf - i0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccos(-Inf - i0)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(0.0, plus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (0.0, plus_infty));
   check_isinfp ("real(ccos(0 + i Inf)) = +Inf", __real__ result);
   check ("imag(ccos(0 + i Inf)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ccos) (BUILD_COMPLEX(0.0, minus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (0.0, minus_infty));
   check_isinfp ("real(ccos(0 - i Inf)) = +Inf", __real__ result);
   check ("imag(ccos(0 - i Inf)) = 0", __imag__ result, 0);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isinfp ("real(ccos(-0 + i Inf)) = +Inf", __real__ result);
   check ("imag(ccos(-0 + i Inf)) = 0", __imag__ result, 0.0);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isinfp ("real(ccos(-0 - i Inf)) = +Inf", __real__ result);
   check ("imag(ccos(-0 - i Inf)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp_exc ("real(ccos(+Inf + i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(+Inf + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp_exc ("real(ccos(-Inf + i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(-Inf + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp_exc ("real(ccos(Inf - i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(Inf - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfp_exc ("real(ccos(-Inf - i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(-Inf - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(4.625, plus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (4.625, plus_infty));
   check_isinfn ("real(ccos(4.625 + i Inf)) = -Inf", __real__ result);
   check_isinfp ("imag(ccos(4.625 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(4.625, minus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (4.625, minus_infty));
   check_isinfn ("real(ccos(4.625 - i Inf)) = -Inf", __real__ result);
   check_isinfn ("imag(ccos(4.625 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(-4.625, plus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (-4.625, plus_infty));
   check_isinfn ("real(ccos(-4.625 + i Inf)) = -Inf", __real__ result);
   check_isinfn ("imag(ccos(-4.625 + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(-4.625, minus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (-4.625, minus_infty));
   check_isinfn ("real(ccos(-4.625 - i Inf)) = -Inf", __real__ result);
   check_isinfp ("imag(ccos(-4.625 - i Inf)) = +Inf", __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(plus_infty, 6.75));
+  result = FUNC(ccos) (BUILD_COMPLEX (plus_infty, 6.75));
   check_isnan_exc ("real(ccos(+Inf + i6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(+Inf + i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(plus_infty, -6.75));
+  result = FUNC(ccos) (BUILD_COMPLEX (plus_infty, -6.75));
   check_isnan_exc ("real(ccos(+Inf - i6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(+Inf - i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_infty, 6.75));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_infty, 6.75));
   check_isnan_exc ("real(ccos(-Inf + i6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(-Inf + i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_infty, -6.75));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_infty, -6.75));
   check_isnan_exc ("real(ccos(-Inf - i6.75)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(-Inf - i6.75)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(nan_value, 0.0));
+  result = FUNC(ccos) (BUILD_COMPLEX (nan_value, 0.0));
   check_isnan ("real(ccos(NaN + i0)) = NaN", __real__ result);
   check ("imag(ccos(NaN + i0)) = +-0", FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccos) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(ccos) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(ccos(NaN - i0)) = NaN", __real__ result);
   check ("imag(ccos(NaN - i0)) = +-0", FUNC(fabs) (__imag__ result), 0);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isinfp ("real(ccos(NaN + i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(ccos(NaN + i Inf)) = NaN", __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(ccos) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isinfp ("real(ccos(NaN - i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(ccos(NaN - i Inf)) = NaN", __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(nan_value, 9.0));
+  result = FUNC(ccos) (BUILD_COMPLEX (nan_value, 9.0));
   check_isnan_maybe_exc ("real(ccos(NaN + i9.0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(NaN + i9.0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(nan_value, -9.0));
+  result = FUNC(ccos) (BUILD_COMPLEX (nan_value, -9.0));
   check_isnan_maybe_exc ("real(ccos(NaN - i9.0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(NaN - i9.0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(0.0, nan_value));
+  result = FUNC(ccos) (BUILD_COMPLEX (0.0, nan_value));
   check_isnan ("real(ccos(0 + i NaN)) = NaN", __real__ result);
   check ("imag(ccos(0 + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0.0);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan ("real(ccos(-0 + i NaN)) = NaN", __real__ result);
   check ("imag(ccos(-0 + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0.0);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(10.0, nan_value));
+  result = FUNC(ccos) (BUILD_COMPLEX (10.0, nan_value));
   check_isnan_maybe_exc ("real(ccos(10 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(10 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(-10.0, nan_value));
+  result = FUNC(ccos) (BUILD_COMPLEX (-10.0, nan_value));
   check_isnan_maybe_exc ("real(ccos(-10 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(-10 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(ccos) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isnan_maybe_exc ("real(ccos(+Inf + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(+Inf + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ccos) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(ccos) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isnan_maybe_exc ("real(ccos(-Inf + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccos(-Inf + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(ccos) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(ccos(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(ccos(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(ccos) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(ccos) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ccos(0.7 + i 1.2)) = 1.384865764...", __real__ result,
-	     1.3848657645312111080L, CHOOSE(4e-18L, 3e-16, 2e-7));
+	     1.3848657645312111080L, CHOOSE (4e-18L, 3e-16, 2e-7));
   check_eps ("imag(ccos(0.7 + i 1.2)) = -0.972421703...", __imag__ result,
-	     -0.97242170335830028619L, CHOOSE(2e-16L, 2e-16, 0));
+	     -0.97242170335830028619L, CHOOSE (2e-16L, 2e-16, 0));
 
-  result = FUNC(ccos) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(ccos) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ccos(-2 - i 3)) == -4.18962...", __real__ result,
-	     -4.1896256909688072301L, CHOOSE(2e-17L, 0, 5e-7));
+	     -4.1896256909688072301L, CHOOSE (2e-17L, 0, 5e-7));
   check_eps ("imag(ccos(-2 - i 3)) == -9.10922...", __imag__ result,
-	     -9.1092278937553365979L, CHOOSE(3e-18L, 0, 1e-6));
+	     -9.1092278937553365979L, CHOOSE (3e-18L, 0, 1e-6));
 }
 
 
@@ -3236,177 +3236,177 @@ ccosh_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(0.0, 0.0));
+  result = FUNC(ccosh) (BUILD_COMPLEX (0.0, 0.0));
   check ("real(ccosh(0 + 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccosh(0 + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_zero, 0.0));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_zero, 0.0));
   check ("real(ccosh(-0 + 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccosh(-0 + 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ccosh) (BUILD_COMPLEX(0.0, minus_zero));
+  result = FUNC(ccosh) (BUILD_COMPLEX (0.0, minus_zero));
   check ("real(ccosh(0 - 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccosh(0 - 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(ccosh(-0 - 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccosh(-0 - 0i)) = 0", __imag__ result, 0.0);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(0.0, plus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (0.0, plus_infty));
   check_isnan_exc ("real(ccosh(0 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccosh(0 + i Inf)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isnan_exc ("real(ccosh(-0 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccosh(-0 + i Inf)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccosh) (BUILD_COMPLEX(0.0, minus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (0.0, minus_infty));
   check_isnan_exc ("real(ccosh(0 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccosh(0 - i Inf)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isnan_exc ("real(ccosh(-0 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check ("imag(ccosh(-0 - i Inf)) = +-0 plus invalid exception",
 	 FUNC(fabs) (__imag__ result), 0);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(plus_infty, 0.0));
+  result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, 0.0));
   check_isinfp ("real(ccosh(+Inf + 0i)) = +Inf", __real__ result);
   check ("imag(ccosh(+Inf + 0i)) = 0", __imag__ result, 0);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_infty, 0.0));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, 0.0));
   check_isinfp ("real(ccosh(-Inf + 0i)) = +Inf", __real__ result);
   check ("imag(ccosh(-Inf + 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ccosh) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(ccosh(+Inf - 0i)) = +Inf", __real__ result);
   check ("imag(ccosh(+Inf - 0i)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isinfp ("real(ccosh(-Inf - 0i)) = +Inf", __real__ result);
   check ("imag(ccosh(-Inf - 0i)) = 0", __imag__ result, 0.0);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp_exc ("real(ccosh(+Inf + i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(+Inf + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp_exc ("real(ccosh(-Inf + i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(-Inf + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp_exc ("real(ccosh(Inf - i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(Inf - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfp_exc ("real(ccosh(-Inf - i Inf)) = +Inf plus invalid exception",
 		    __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(-Inf - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(plus_infty, 4.625));
+  result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, 4.625));
   check_isinfn ("real(ccosh(+Inf + i4.625)) = -Inf", __real__ result);
   check_isinfn ("imag(ccosh(+Inf + i4.625)) = -Inf", __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_infty, 4.625));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, 4.625));
   check_isinfn ("real(ccosh(-Inf + i4.625)) = -Inf", __real__ result);
   check_isinfp ("imag(ccosh(-Inf + i4.625)) = Inf", __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(plus_infty, -4.625));
+  result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, -4.625));
   check_isinfn ("real(ccosh(+Inf - i4.625)) = -Inf", __real__ result);
   check_isinfp ("imag(ccosh(+Inf - i4.625)) = +Inf", __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_infty, -4.625));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, -4.625));
   check_isinfn ("real(ccosh(-Inf - i4.625)) = -Inf", __real__ result);
   check_isinfn ("imag(ccosh(-Inf - i4.625)) = -Inf", __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(6.75, plus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (6.75, plus_infty));
   check_isnan_exc ("real(ccosh(6.75 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(6.75 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(-6.75, plus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (-6.75, plus_infty));
   check_isnan_exc ("real(ccosh(-6.75 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(-6.75 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(6.75, minus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (6.75, minus_infty));
   check_isnan_exc ("real(ccosh(6.75 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(6.75 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(-6.75, minus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (-6.75, minus_infty));
   check_isnan_exc ("real(ccosh(-6.75 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(-6.75 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(0.0, nan_value));
+  result = FUNC(ccosh) (BUILD_COMPLEX (0.0, nan_value));
   check_isnan ("real(ccosh(0 + i NaN)) = NaN", __real__ result);
   check ("imag(ccosh(0 + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan ("real(ccosh(-0 + i NaN)) = NaN", __real__ result);
   check ("imag(ccosh(-0 + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(ccosh(+Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(ccosh(+Inf + i NaN)) = NaN", __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isinfp ("real(ccosh(-Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(ccosh(-Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(9.0, nan_value));
+  result = FUNC(ccosh) (BUILD_COMPLEX (9.0, nan_value));
   check_isnan_maybe_exc ("real(ccosh(9.0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(9.0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(-9.0, nan_value));
+  result = FUNC(ccosh) (BUILD_COMPLEX (-9.0, nan_value));
   check_isnan_maybe_exc ("real(ccosh(-9.0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(-9.0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(nan_value, 0.0));
+  result = FUNC(ccosh) (BUILD_COMPLEX (nan_value, 0.0));
   check_isnan ("real(ccosh(NaN + i0)) = NaN", __real__ result);
   check ("imag(ccosh(NaN + i0)) = +-0", FUNC(fabs) (__imag__ result), 0.0);
-  result = FUNC(ccosh) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(ccosh) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(ccosh(NaN - i0)) = NaN", __real__ result);
   check ("imag(ccosh(NaN - i0)) = +-0", FUNC(fabs) (__imag__ result), 0.0);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(nan_value, 10.0));
+  result = FUNC(ccosh) (BUILD_COMPLEX (nan_value, 10.0));
   check_isnan_maybe_exc ("real(ccosh(NaN + i10)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(NaN + i10)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(nan_value, -10.0));
+  result = FUNC(ccosh) (BUILD_COMPLEX (nan_value, -10.0));
   check_isnan_maybe_exc ("real(ccosh(NaN - i10)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(NaN - i10)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isnan_maybe_exc ("real(ccosh(NaN + i Inf)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(NaN + i Inf)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ccosh) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(ccosh) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isnan_maybe_exc ("real(ccosh(NaN - i Inf)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ccosh(NaN - i Inf)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(ccosh) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(ccosh(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(ccosh(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(ccosh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ccosh(0.7 + i 1.2)) == 0.45482...", __real__ result,
-	     0.4548202223691477654L, CHOOSE(5e-17L, 6e-17, 9e-8));
+	     0.4548202223691477654L, CHOOSE (5e-17L, 6e-17, 9e-8));
   check_eps ("imag(ccosh(0.7 + i 1.2)) == 0.70702...", __imag__ result,
-	     0.7070296600921537682L, CHOOSE(7e-17L, 2e-16, 0));
+	     0.7070296600921537682L, CHOOSE (7e-17L, 2e-16, 0));
 
-  result = FUNC(ccosh) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(ccosh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ccosh(-2 - i 3)) == -3.72454...", __real__ result,
-	     -3.7245455049153225654L, CHOOSE(7e-19L, 0, 3e-7));
+	     -3.7245455049153225654L, CHOOSE (7e-19L, 0, 3e-7));
   check_eps ("imag(ccosh(-2 - i 3)) == -0.51182...", __imag__ result,
-	     0.5118225699873846088L, CHOOSE(3e-19L, 2e-16, 6e-8));
+	     0.5118225699873846088L, CHOOSE (3e-19L, 2e-16, 6e-8));
 }
 
 
@@ -3415,140 +3415,140 @@ cacos_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(cacos) (BUILD_COMPLEX(0, 0));
+  result = FUNC(cacos) (BUILD_COMPLEX (0, 0));
   check ("real(cacos(0 + i0)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(cacos(0 + i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(cacos(-0 + i0)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(cacos(-0 + i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(cacos) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(cacos) (BUILD_COMPLEX (0, minus_zero));
   check ("real(cacos(0 - i0)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(cacos(0 - i0)) = 0", __imag__ result, 0);
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(cacos(-0 - i0)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(cacos(-0 - i0)) = 0", __imag__ result, 0);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_infty, plus_infty));
   check ("real(cacos(-Inf + i Inf)) = 3*pi/4", __real__ result,
 	 M_PIl - M_PI_4l);
   check_isinfn ("imag(cacos(-Inf + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_infty, minus_infty));
   check ("real(cacos(-Inf - i Inf)) = 3*pi/4", __real__ result,
 	 M_PIl - M_PI_4l);
   check_isinfp ("imag(cacos(-Inf - i Inf)) = +Inf", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (plus_infty, plus_infty));
   check ("real(cacos(+Inf + i Inf)) = pi/4", __real__ result, M_PI_4l);
   check_isinfn ("imag(cacos(+Inf + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (plus_infty, minus_infty));
   check ("real(cacos(+Inf - i Inf)) = pi/4", __real__ result, M_PI_4l);
   check_isinfp ("imag(cacos(+Inf - i Inf)) = +Inf", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(-10.0, plus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (-10.0, plus_infty));
   check ("real(cacos(-10.0 + i Inf)) = pi/2", __real__ result, M_PI_2l);
   check_isinfn ("imag(cacos(-10.0 + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(-10.0, minus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (-10.0, minus_infty));
   check ("real(cacos(-10.0 - i Inf)) = pi/2", __real__ result, M_PI_2l);
   check_isinfp ("imag(cacos(-10.0 - i Inf)) = +Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (0, plus_infty));
   check ("real(cacos(0 + i Inf)) = pi/2", __real__ result, M_PI_2l);
   check_isinfn ("imag(cacos(0 + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (0, minus_infty));
   check ("real(cacos(0 - i Inf)) = pi/2", __real__ result, M_PI_2l);
   check_isinfp ("imag(cacos(0 - i Inf)) = +Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(0.1, plus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (0.1, plus_infty));
   check ("real(cacos(0.1 + i Inf)) = pi/2", __real__ result, M_PI_2l);
   check_isinfn ("imag(cacos(0.1 + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(0.1, minus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (0.1, minus_infty));
   check ("real(cacos(0.1 - i Inf)) = pi/2", __real__ result, M_PI_2l);
   check_isinfp ("imag(cacos(0.1 - i Inf)) = +Inf", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_infty, 0));
   check ("real(cacos(-Inf + i0)) = pi", __real__ result, M_PIl);
   check_isinfn ("imag(cacos(-Inf + i0)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(cacos(-Inf - i0)) = pi", __real__ result, M_PIl);
   check_isinfp ("imag(cacos(-Inf - i0)) = +Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_infty, 100));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_infty, 100));
   check ("real(cacos(-Inf + i100)) = pi", __real__ result, M_PIl);
   check_isinfn ("imag(cacos(-Inf + i100)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_infty, -100));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_infty, -100));
   check ("real(cacos(-Inf - i100)) = pi", __real__ result, M_PIl);
   check_isinfp ("imag(cacos(-Inf - i100)) = +Inf", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(cacos) (BUILD_COMPLEX (plus_infty, 0));
   check ("real(cacos(+Inf + i0)) = 0", __real__ result, 0);
   check_isinfn ("imag(cacos(+Inf + i0)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(cacos) (BUILD_COMPLEX (plus_infty, minus_zero));
   check ("real(cacos(+Inf - i0)) = 0", __real__ result, 0);
   check_isinfp ("imag(cacos(+Inf - i0)) = +Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(plus_infty, 0.5));
+  result = FUNC(cacos) (BUILD_COMPLEX (plus_infty, 0.5));
   check ("real(cacos(+Inf + i0.5)) = 0", __real__ result, 0);
   check_isinfn ("imag(cacos(+Inf + i0.5)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(plus_infty, -0.5));
+  result = FUNC(cacos) (BUILD_COMPLEX (plus_infty, -0.5));
   check ("real(cacos(+Inf - i0.5)) = 0", __real__ result, 0);
   check_isinfp ("imag(cacos(+Inf - i0.5)) = +Inf", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isnan ("real(cacos(+Inf + i NaN)) = NaN", __real__ result);
   check_isinfp ("imag(cacos(+Inf + i NaN)) = +-Inf",
 		FUNC(fabs) (__imag__ result));
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isnan ("real(cacos(-Inf + i NaN)) = NaN", __real__ result);
   check_isinfp ("imag(cacos(-Inf + i NaN)) = +-Inf",
 		FUNC(fabs) (__imag__ result));
 
-  result = FUNC(cacos) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (0, nan_value));
   check ("real(cacos(0 + i NaN)) = pi/2", __real__ result, M_PI_2l);
   check_isnan ("imag(cacos(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (minus_zero, nan_value));
   check ("real(cacos(-0 + i NaN)) = pi/2", __real__ result, M_PI_2l);
   check_isnan ("imag(cacos(-0 + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isnan ("real(cacos(NaN + i Inf)) = NaN", __real__ result);
   check_isinfn ("imag(cacos(NaN + i Inf)) = -Inf", __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(cacos) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isnan ("real(cacos(NaN - i Inf)) = NaN", __real__ result);
   check_isinfp ("imag(cacos(NaN - i Inf)) = +Inf", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(10.5, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (10.5, nan_value));
   check_isnan_maybe_exc ("real(cacos(10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacos(10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(-10.5, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (-10.5, nan_value));
   check_isnan_maybe_exc ("real(cacos(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacos(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(nan_value, 0.75));
+  result = FUNC(cacos) (BUILD_COMPLEX (nan_value, 0.75));
   check_isnan_maybe_exc ("real(cacos(NaN + i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacos(NaN + i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(cacos) (BUILD_COMPLEX(-10.5, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (-10.5, nan_value));
   check_isnan_maybe_exc ("real(cacos(NaN - i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacos(NaN - i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(cacos) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(cacos(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(cacos(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(cacos) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(cacos) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(cacos(0.7 + i 1.2)) == 1.13518...", __real__ result,
-	     1.1351827477151551089L, CHOOSE(2e-17L, 3e-16, 2e-7));
+	     1.1351827477151551089L, CHOOSE (2e-17L, 3e-16, 2e-7));
   check_eps ("imag(cacos(0.7 + i 1.2)) == -1.09276...", __imag__ result,
-	     -1.0927647857577371459L, CHOOSE(4e-17L, 3e-16, 3e-7));
+	     -1.0927647857577371459L, CHOOSE (4e-17L, 3e-16, 3e-7));
 
-  result = FUNC(cacos) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(cacos) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(cacos(-2 - i 3)) == 2.14144...", __real__ result,
-	     2.1414491111159960199L, CHOOSE(3e-19L, 0, 0));
+	     2.1414491111159960199L, CHOOSE (3e-19L, 0, 0));
   check_eps ("imag(cacos(-2 - i 3)) == -1.98338...", __imag__ result,
-	     1.9833870299165354323L, CHOOSE(3e-19L, 0, 0));
+	     1.9833870299165354323L, CHOOSE (3e-19L, 0, 0));
 }
 
 
@@ -3557,138 +3557,138 @@ cacosh_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(0, 0));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0, 0));
   check ("real(cacosh(0 + i0)) = 0", __real__ result, 0);
   check ("imag(cacosh(0 + i0)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(cacosh(-0 + i0)) = 0", __real__ result, 0);
   check ("imag(cacosh(-0 + i0)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0, minus_zero));
   check ("real(cacosh(0 - i0)) = 0", __real__ result, 0);
   check ("imag(cacosh(0 - i0)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(cacosh(-0 - i0)) = 0", __real__ result, 0);
   check ("imag(cacosh(-0 - i0)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp ("real(cacosh(-Inf + i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(-Inf + i Inf)) = 3*pi/4", __imag__ result,
 	 M_PIl - M_PI_4l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfp ("real(cacosh(-Inf - i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(-Inf - i Inf)) = -3*pi/4", __imag__ result,
 	 M_PI_4l - M_PIl);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp ("real(cacosh(+Inf + i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(+Inf + i Inf)) = pi/4", __imag__ result, M_PI_4l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp ("real(cacosh(+Inf - i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(+Inf - i Inf)) = -pi/4", __imag__ result, -M_PI_4l);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(-10.0, plus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (-10.0, plus_infty));
   check_isinfp ("real(cacosh(-10.0 + i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(-10.0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(-10.0, minus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (-10.0, minus_infty));
   check_isinfp ("real(cacosh(-10.0 - i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(-10.0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0, plus_infty));
   check_isinfp ("real(cacosh(0 + i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0, minus_infty));
   check_isinfp ("real(cacosh(0 - i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(0.1, plus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0.1, plus_infty));
   check_isinfp ("real(cacosh(0.1 + i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(0.1 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(cacosh) (BUILD_COMPLEX(0.1, minus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0.1, minus_infty));
   check_isinfp ("real(cacosh(0.1 - i Inf)) = +Inf", __real__ result);
   check ("imag(cacosh(0.1 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_infty, 0));
   check_isinfp ("real(cacosh(-Inf + i0)) = +Inf", __real__ result);
   check ("imag(cacosh(-Inf + i0)) = pi", __imag__ result, M_PIl);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isinfp ("real(cacosh(-Inf - i0)) = +Inf", __real__ result);
   check ("imag(cacosh(-Inf - i0)) = -pi", __imag__ result, -M_PIl);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_infty, 100));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_infty, 100));
   check_isinfp ("real(cacosh(-Inf + i100)) = +Inf", __real__ result);
   check ("imag(cacosh(-Inf + i100)) = pi", __imag__ result, M_PIl);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_infty, -100));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_infty, -100));
   check_isinfp ("real(cacosh(-Inf - i100)) = +Inf", __real__ result);
   check ("imag(cacosh(-Inf - i100)) = -pi", __imag__ result, -M_PIl);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(cacosh) (BUILD_COMPLEX (plus_infty, 0));
   check_isinfp ("real(cacosh(+Inf + i0)) = +Inf", __real__ result);
   check ("imag(cacosh(+Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(cacosh) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(cacosh) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(cacosh(+Inf - i0)) = +Inf", __real__ result);
   check ("imag(cacosh(+Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(cacosh) (BUILD_COMPLEX(plus_infty, 0.5));
+  result = FUNC(cacosh) (BUILD_COMPLEX (plus_infty, 0.5));
   check_isinfp ("real(cacosh(+Inf + i0.5)) = +Inf", __real__ result);
   check ("imag(cacosh(+Inf + i0.5)) = 0", __imag__ result, 0);
-  result = FUNC(cacosh) (BUILD_COMPLEX(plus_infty, -0.5));
+  result = FUNC(cacosh) (BUILD_COMPLEX (plus_infty, -0.5));
   check_isinfp ("real(cacosh(+Inf - i0.5)) = +Inf", __real__ result);
   check ("imag(cacosh(+Inf - i0.5)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(cacosh(+Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(cacosh(+Inf + i NaN)) = NaN", __imag__ result);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isinfp ("real(cacosh(-Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(cacosh(-Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0, nan_value));
   check_isnan ("real(cacosh(0 + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(cacosh(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(cacosh) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan ("real(cacosh(-0 + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(cacosh(-0 + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isinfp ("real(cacosh(NaN + i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(cacosh(NaN + i Inf)) = NaN", __imag__ result);
-  result = FUNC(cacosh) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(cacosh) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isinfp ("real(cacosh(NaN - i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(cacosh(NaN - i Inf)) = NaN", __imag__ result);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(10.5, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (10.5, nan_value));
   check_isnan_maybe_exc ("real(cacosh(10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacosh(10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(cacosh) (BUILD_COMPLEX(-10.5, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (-10.5, nan_value));
   check_isnan_maybe_exc ("real(cacosh(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacosh(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(nan_value, 0.75));
+  result = FUNC(cacosh) (BUILD_COMPLEX (nan_value, 0.75));
   check_isnan_maybe_exc ("real(cacosh(NaN + i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacosh(NaN + i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(cacosh) (BUILD_COMPLEX(-10.5, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (-10.5, nan_value));
   check_isnan_maybe_exc ("real(cacosh(NaN - i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cacosh(NaN - i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(cacosh) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(cacosh(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(cacosh(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(cacosh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(cacosh(0.7 + i 1.2)) == 1.09276...", __real__ result,
-	     1.0927647857577371459L, CHOOSE(4e-17L, 3e-16, 2e-7));
+	     1.0927647857577371459L, CHOOSE (4e-17L, 3e-16, 2e-7));
   check_eps ("imag(cacosh(0.7 + i 1.2)) == 1.13518...", __imag__ result,
-	     1.1351827477151551089L, CHOOSE(2e-17L, 0, 1.2e-7));
+	     1.1351827477151551089L, CHOOSE (2e-17L, 0, 1.2e-7));
 
-  result = FUNC(cacosh) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(cacosh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(cacosh(-2 - i 3)) == -1.98338...", __real__ result,
-	     -1.9833870299165354323L, CHOOSE(2e-18L, 3e-16, 9e-7));
+	     -1.9833870299165354323L, CHOOSE (2e-18L, 3e-16, 9e-7));
   check_eps ("imag(cacosh(-2 - i 3)) == 2.14144...", __imag__ result,
-	     2.1414491111159960199L, CHOOSE(4.5e-19, 5e-16, 1e-6));
+	     2.1414491111159960199L, CHOOSE (4.5e-19, 5e-16, 1e-6));
 }
 
 
@@ -3697,143 +3697,143 @@ casin_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(casin) (BUILD_COMPLEX(0, 0));
+  result = FUNC(casin) (BUILD_COMPLEX (0, 0));
   check ("real(casin(0 + i0)) = 0", __real__ result, 0);
   check ("imag(casin(0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(casin(-0 + i0)) = -0", __real__ result, minus_zero);
   check ("imag(casin(-0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(casin) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(casin) (BUILD_COMPLEX (0, minus_zero));
   check ("real(casin(0 - i0)) = 0", __real__ result, 0);
   check ("imag(casin(0 - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(casin(-0 - i0)) = -0", __real__ result, minus_zero);
   check ("imag(casin(-0 - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(casin) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (plus_infty, plus_infty));
   check ("real(casin(+Inf + i Inf)) = pi/4", __real__ result, M_PI_4l);
   check_isinfp ("imag(casin(+Inf + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (plus_infty, minus_infty));
   check ("real(casin(+Inf - i Inf)) = pi/4", __real__ result, M_PI_4l);
   check_isinfn ("imag(casin(+Inf - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_infty, plus_infty));
   check ("real(casin(-Inf + i Inf)) = -pi/4", __real__ result, -M_PI_4l);
   check_isinfp ("imag(casin(-Inf + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_infty, minus_infty));
   check ("real(casin(-Inf - i Inf)) = -pi/4", __real__ result, -M_PI_4l);
   check_isinfn ("imag(casin(-Inf - i Inf)) = -Inf", __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(-10.0, plus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (-10.0, plus_infty));
   check ("real(casin(-10.0 + i Inf)) = -0", __real__ result, minus_zero);
   check_isinfp ("imag(casin(-10.0 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(-10.0, minus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (-10.0, minus_infty));
   check ("real(casin(-10.0 - i Inf)) = -0", __real__ result, minus_zero);
   check_isinfn ("imag(casin(-10.0 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (0, plus_infty));
   check ("real(casin(0 + i Inf)) = 0", __real__ result, 0.0);
   check_isinfp ("imag(casin(0 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (0, minus_infty));
   check ("real(casin(0 - i Inf)) = 0", __real__ result, 0.0);
   check_isinfn ("imag(casin(0 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_zero, plus_infty));
   check ("real(casin(-0 + i Inf)) = -0", __real__ result, minus_zero);
   check_isinfp ("imag(casin(-0 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_zero, minus_infty));
   check ("real(casin(-0 - i Inf)) = -0", __real__ result, minus_zero);
   check_isinfn ("imag(casin(-0 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(0.1, plus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (0.1, plus_infty));
   check ("real(casin(0.1 + i Inf)) = 0", __real__ result, 0);
   check_isinfp ("imag(casin(0.1 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(0.1, minus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (0.1, minus_infty));
   check ("real(casin(0.1 - i Inf)) = 0", __real__ result, 0);
   check_isinfn ("imag(casin(0.1 - i Inf)) = -Inf", __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_infty, 0));
   check ("real(casin(-Inf + i0)) = -pi/2", __real__ result, -M_PI_2l);
   check_isinfp ("imag(casin(-Inf + i0)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(casin(-Inf - i0)) = -pi/2", __real__ result, -M_PI_2l);
   check_isinfn ("imag(casin(-Inf - i0)) = -Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_infty, 100));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_infty, 100));
   check ("real(casin(-Inf + i100)) = -pi/2", __real__ result, -M_PI_2l);
   check_isinfp ("imag(casin(-Inf + i100)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_infty, -100));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_infty, -100));
   check ("real(casin(-Inf - i100)) = -pi/2", __real__ result, -M_PI_2l);
   check_isinfn ("imag(casin(-Inf - i100)) = -Inf", __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(casin) (BUILD_COMPLEX (plus_infty, 0));
   check ("real(casin(+Inf + i0)) = pi/2", __real__ result, M_PI_2l);
   check_isinfp ("imag(casin(+Inf + i0)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(casin) (BUILD_COMPLEX (plus_infty, minus_zero));
   check ("real(casin(+Inf - i0)) = pi/2", __real__ result, M_PI_2l);
   check_isinfn ("imag(casin(+Inf - i0)) = -Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(plus_infty, 0.5));
+  result = FUNC(casin) (BUILD_COMPLEX (plus_infty, 0.5));
   check ("real(casin(+Inf + i0.5)) = pi/2", __real__ result, M_PI_2l);
   check_isinfp ("imag(casin(+Inf + i0.5)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(plus_infty, -0.5));
+  result = FUNC(casin) (BUILD_COMPLEX (plus_infty, -0.5));
   check ("real(casin(+Inf - i0.5)) = pi/2", __real__ result, M_PI_2l);
   check_isinfn ("imag(casin(+Inf - i0.5)) = -Inf", __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isnan ("real(casin(NaN + i Inf)) = NaN", __real__ result);
   check_isinfp ("imag(casin(NaN + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(casin) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isnan ("real(casin(NaN - i Inf)) = NaN", __real__ result);
   check_isinfn ("imag(casin(NaN - i Inf)) = -Inf", __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(0.0, nan_value));
+  result = FUNC(casin) (BUILD_COMPLEX (0.0, nan_value));
   check ("real(casin(0 + i NaN)) = 0", __real__ result, 0.0);
   check_isnan ("imag(casin(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_zero, nan_value));
   check ("real(casin(-0 + i NaN)) = -0", __real__ result, minus_zero);
   check_isnan ("imag(casin(-0 + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(casin) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isnan ("real(casin(+Inf + i NaN)) = NaN", __real__ result);
   check_isinfp ("imag(casin(+Inf + i NaN)) = +-Inf",
 		FUNC(fabs) (__imag__ result));
-  result = FUNC(casin) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(casin) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isnan ("real(casin(-Inf + i NaN)) = NaN", __real__ result);
   check_isinfp ("imag(casin(-Inf + NaN)) = +-Inf",
 		FUNC(fabs) (__imag__ result));
 
-  result = FUNC(casin) (BUILD_COMPLEX(nan_value, 10.5));
+  result = FUNC(casin) (BUILD_COMPLEX (nan_value, 10.5));
   check_isnan_maybe_exc ("real(casin(NaN + i10.5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casin(NaN + i10.5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(nan_value, -10.5));
+  result = FUNC(casin) (BUILD_COMPLEX (nan_value, -10.5));
   check_isnan_maybe_exc ("real(casin(NaN - i10.5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casin(NaN - i10.5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(0.75, nan_value));
+  result = FUNC(casin) (BUILD_COMPLEX (0.75, nan_value));
   check_isnan_maybe_exc ("real(casin(0.75 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casin(0.75 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(casin) (BUILD_COMPLEX(-0.75, nan_value));
+  result = FUNC(casin) (BUILD_COMPLEX (-0.75, nan_value));
   check_isnan_maybe_exc ("real(casin(-0.75 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casin(-0.75 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(casin) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(casin(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(casin(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(casin) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(casin) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(casin(0.7 + i 1.2)) == 0.43561...", __real__ result,
-	     0.4356135790797415103L, CHOOSE(2e-17L, 2e-16, 2e-7));
+	     0.4356135790797415103L, CHOOSE (2e-17L, 2e-16, 2e-7));
   check_eps ("imag(casin(0.7 + i 1.2)) == 1.09276...", __imag__ result,
-	     1.0927647857577371459L, CHOOSE(4e-17L, 3e-16, 3e-7));
+	     1.0927647857577371459L, CHOOSE (4e-17L, 3e-16, 3e-7));
 
-  result = FUNC(casin) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(casin) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(casin(-2 - i 3)) == -0.57065...", __real__ result,
-	     -0.5706527843210994007L, CHOOSE(4e-19L, 0, 0));
+	     -0.5706527843210994007L, CHOOSE (4e-19L, 0, 0));
   check_eps ("imag(casin(-2 - i 3)) == -1.98338...", __imag__ result,
-	     -1.9833870299165354323L, CHOOSE(3e-19L, 0, 0));
+	     -1.9833870299165354323L, CHOOSE (3e-19L, 0, 0));
 }
 
 
@@ -3842,143 +3842,143 @@ casinh_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(casinh) (BUILD_COMPLEX(0, 0));
+  result = FUNC(casinh) (BUILD_COMPLEX (0, 0));
   check ("real(casinh(0 + i0)) = 0", __real__ result, 0);
   check ("imag(casinh(0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(casinh(-0 + i0)) = -0", __real__ result, minus_zero);
   check ("imag(casinh(-0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(casinh) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(casinh) (BUILD_COMPLEX (0, minus_zero));
   check ("real(casinh(0 - i0)) = 0", __real__ result, 0);
   check ("imag(casinh(0 - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(casinh(-0 - i0)) = -0", __real__ result, minus_zero);
   check ("imag(casinh(-0 - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp ("real(casinh(+Inf + i Inf)) = +Inf", __real__ result);
   check ("imag(casinh(+Inf + i Inf)) = pi/4", __imag__ result, M_PI_4l);
-  result = FUNC(casinh) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp ("real(casinh(+Inf - i Inf)) = +Inf", __real__ result);
   check ("imag(casinh(+Inf - i Inf)) = -pi/4", __imag__ result, -M_PI_4l);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfn ("real(casinh(-Inf + i Inf)) = -Inf", __real__ result);
   check ("imag(casinh(-Inf + i Inf)) = pi/4", __imag__ result, M_PI_4l);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfn ("real(casinh(-Inf - i Inf)) = -Inf", __real__ result);
   check ("imag(casinh(-Inf - i Inf)) = -pi/4", __imag__ result, -M_PI_4l);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(-10.0, plus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (-10.0, plus_infty));
   check_isinfn ("real(casinh(-10.0 + i Inf)) = -Inf", __real__ result);
   check ("imag(casinh(-10.0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(casinh) (BUILD_COMPLEX(-10.0, minus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (-10.0, minus_infty));
   check_isinfn ("real(casinh(-10.0 - i Inf)) = -Inf", __real__ result);
   check ("imag(casinh(-10.0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(casinh) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (0, plus_infty));
   check_isinfp ("real(casinh(0 + i Inf)) = +Inf", __real__ result);
   check ("imag(casinh(0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(casinh) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (0, minus_infty));
   check_isinfp ("real(casinh(0 - i Inf)) = +Inf", __real__ result);
   check ("imag(casinh(0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isinfn ("real(casinh(-0 + i Inf)) = -Inf", __real__ result);
   check ("imag(casinh(-0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isinfn ("real(casinh(-0 - i Inf)) = -Inf", __real__ result);
   check ("imag(casinh(-0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(casinh) (BUILD_COMPLEX(0.1, plus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (0.1, plus_infty));
   check_isinfp ("real(casinh(0.1 + i Inf)) = +Inf", __real__ result);
   check ("imag(casinh(0.1 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(casinh) (BUILD_COMPLEX(0.1, minus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (0.1, minus_infty));
   check_isinfp ("real(casinh(0.1 - i Inf)) = +Inf", __real__ result);
   check ("imag(casinh(0.1 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_infty, 0));
   check_isinfn ("real(casinh(-Inf + i0)) = -Inf", __real__ result);
   check ("imag(casinh(-Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isinfn ("real(casinh(-Inf - i0)) = -Inf", __real__ result);
   check ("imag(casinh(-Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_infty, 100));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_infty, 100));
   check_isinfn ("real(casinh(-Inf + i100)) = -Inf", __real__ result);
   check ("imag(casinh(-Inf + i100)) = 0", __imag__ result, 0);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_infty, -100));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_infty, -100));
   check_isinfn ("real(casinh(-Inf - i100)) = -Inf", __real__ result);
   check ("imag(casinh(-Inf - i100)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(casinh) (BUILD_COMPLEX (plus_infty, 0));
   check_isinfp ("real(casinh(+Inf + i0)) = +Inf", __real__ result);
   check ("imag(casinh(+Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(casinh) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(casinh) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(casinh(+Inf - i0)) = +Inf", __real__ result);
   check ("imag(casinh(+Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(casinh) (BUILD_COMPLEX(plus_infty, 0.5));
+  result = FUNC(casinh) (BUILD_COMPLEX (plus_infty, 0.5));
   check_isinfp ("real(casinh(+Inf + i0.5)) = +Inf", __real__ result);
   check ("imag(casinh(+Inf + i0.5)) = 0", __imag__ result, 0);
-  result = FUNC(casinh) (BUILD_COMPLEX(plus_infty, -0.5));
+  result = FUNC(casinh) (BUILD_COMPLEX (plus_infty, -0.5));
   check_isinfp ("real(casinh(+Inf - i0.5)) = +Inf", __real__ result);
   check ("imag(casinh(+Inf - i0.5)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(casinh) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(casinh(+Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(casinh(+Inf + i NaN)) = NaN", __imag__ result);
-  result = FUNC(casinh) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(casinh) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isinfn ("real(casinh(-Inf + i NaN)) = -Inf", __real__ result);
   check_isnan ("imag(casinh(-Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(nan_value, 0));
+  result = FUNC(casinh) (BUILD_COMPLEX (nan_value, 0));
   check_isnan ("real(casinh(NaN + i0)) = NaN", __real__ result);
   check ("imag(casinh(NaN + i0)) = 0", __imag__ result, 0);
-  result = FUNC(casinh) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(casinh) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(casinh(NaN - i0)) = NaN", __real__ result);
   check ("imag(casinh(NaN - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isinfp ("real(casinh(NaN + i Inf)) = +-Inf",
 		FUNC(fabs) (__real__ result));
   check_isnan ("imag(casinh(NaN + i Inf)) = NaN", __imag__ result);
-  result = FUNC(casinh) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(casinh) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isinfp ("real(casinh(NaN - i Inf)) = +-Inf",
 		FUNC(fabs) (__real__ result));
   check_isnan ("imag(casinh(NaN - i Inf)) = NaN", __imag__ result);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(10.5, nan_value));
+  result = FUNC(casinh) (BUILD_COMPLEX (10.5, nan_value));
   check_isnan_maybe_exc ("real(casinh(10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casinh(10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(casinh) (BUILD_COMPLEX(-10.5, nan_value));
+  result = FUNC(casinh) (BUILD_COMPLEX (-10.5, nan_value));
   check_isnan_maybe_exc ("real(casinh(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casinh(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(nan_value, 0.75));
+  result = FUNC(casinh) (BUILD_COMPLEX (nan_value, 0.75));
   check_isnan_maybe_exc ("real(casinh(NaN + i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casinh(NaN + i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(casinh) (BUILD_COMPLEX(-0.75, nan_value));
+  result = FUNC(casinh) (BUILD_COMPLEX (-0.75, nan_value));
   check_isnan_maybe_exc ("real(casinh(NaN - i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(casinh(NaN - i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(casinh) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(casinh(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(casinh(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(casinh) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(casinh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(casinh(0.7 + i 1.2)) == 0.97865...", __real__ result,
-	     0.9786545955936738768L, CHOOSE(5e-17L, 2e-16, 0));
+	     0.9786545955936738768L, CHOOSE (5e-17L, 2e-16, 0));
   check_eps ("imag(casinh(0.7 + i 1.2)) == 0.91135...", __imag__ result,
-	     0.9113541895315601156L, CHOOSE(7e-19L, 2e-16, 2e-7));
+	     0.9113541895315601156L, CHOOSE (7e-19L, 2e-16, 2e-7));
 
-  result = FUNC(casinh) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(casinh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(casinh(-2 - i 3)) == -1.96863...", __real__ result,
-	     -1.9686379257930962917L, CHOOSE(7e-19L, 2e-15, 3e-6));
+	     -1.9686379257930962917L, CHOOSE (7e-19L, 2e-15, 3e-6));
   check_eps ("imag(casinh(-2 - i 3)) == -0.96465...", __imag__ result,
-	     -0.9646585044076027920L, CHOOSE(4e-19L, 2e-15, 4.5e-7));
+	     -0.9646585044076027920L, CHOOSE (4e-19L, 2e-15, 4.5e-7));
 }
 
 
@@ -3987,148 +3987,148 @@ catan_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(catan) (BUILD_COMPLEX(0, 0));
+  result = FUNC(catan) (BUILD_COMPLEX (0, 0));
   check ("real(catan(0 + i0)) = 0", __real__ result, 0);
   check ("imag(catan(0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(catan(-0 + i0)) = -0", __real__ result, minus_zero);
   check ("imag(catan(-0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(catan) (BUILD_COMPLEX (0, minus_zero));
   check ("real(catan(0 - i0)) = 0", __real__ result, 0);
   check ("imag(catan(0 - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(catan(-0 - i0)) = -0", __real__ result, minus_zero);
   check ("imag(catan(-0 - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(catan) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (plus_infty, plus_infty));
   check ("real(catan(+Inf + i Inf)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(+Inf + i Inf)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (plus_infty, minus_infty));
   check ("real(catan(+Inf - i Inf)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(+Inf - i Inf)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_infty, plus_infty));
   check ("real(catan(-Inf + i Inf)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-Inf + i Inf)) = 0", __imag__ result, 0.0);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_infty, minus_infty));
   check ("real(catan(-Inf - i Inf)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-Inf - i Inf)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(catan) (BUILD_COMPLEX(plus_infty, -10.0));
+  result = FUNC(catan) (BUILD_COMPLEX (plus_infty, -10.0));
   check ("real(catan(+Inf - i10.0)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(+Inf - i10.0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_infty, -10.0));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_infty, -10.0));
   check ("real(catan(-Inf - i10.0)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-Inf - i10.0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(catan) (BUILD_COMPLEX (plus_infty, minus_zero));
   check ("real(catan(Inf - i0)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(catan(-Inf - i0)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(plus_infty, 0.0));
+  result = FUNC(catan) (BUILD_COMPLEX (plus_infty, 0.0));
   check ("real(catan(Inf + i0)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(Inf + i0)) = 0", __imag__ result, 0.0);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_infty, 0.0));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_infty, 0.0));
   check ("real(catan(-Inf + i0)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-Inf + i0)) = 0", __imag__ result, 0.0);
-  result = FUNC(catan) (BUILD_COMPLEX(plus_infty, 0.1));
+  result = FUNC(catan) (BUILD_COMPLEX (plus_infty, 0.1));
   check ("real(catan(+Inf + i0.1)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(+Inf + i0.1)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_infty, 0.1));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_infty, 0.1));
   check ("real(catan(-Inf + i0.1)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-Inf + i0.1)) = 0", __imag__ result, 0);
 
-  result = FUNC(catan) (BUILD_COMPLEX(0.0, minus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (0.0, minus_infty));
   check ("real(catan(0 - i Inf)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(0 - i Inf)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_zero, minus_infty));
   check ("real(catan(-0 - i Inf)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-0 - i Inf)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(100.0, minus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (100.0, minus_infty));
   check ("real(catan(100 - i Inf)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(100 - i Inf)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catan) (BUILD_COMPLEX(-100.0, minus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (-100.0, minus_infty));
   check ("real(catan(-100 - i Inf)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-100 - i Inf)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(catan) (BUILD_COMPLEX(0.0, plus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (0.0, plus_infty));
   check ("real(catan(0 + i Inf)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(0 + i Inf)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_zero, plus_infty));
   check ("real(catan(-0 + i Inf)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-0 + i Inf)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(0.5, plus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (0.5, plus_infty));
   check ("real(catan(0.5 + i Inf)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(0.5 + i Inf)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(-0.5, plus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (-0.5, plus_infty));
   check ("real(catan(-0.5 + i Inf)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-0.5 + i Inf)) = 0", __imag__ result, 0);
 
-  result = FUNC(catan) (BUILD_COMPLEX(nan_value, 0.0));
+  result = FUNC(catan) (BUILD_COMPLEX (nan_value, 0.0));
   check_isnan ("real(catan(NaN + i0)) = NaN", __real__ result);
   check ("imag(catan(NaN + i0)) = 0", __imag__ result, 0.0);
-  result = FUNC(catan) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(catan) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(catan(NaN - i0)) = NaN", __real__ result);
   check ("imag(catan(NaN - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(catan) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isnan ("real(catan(NaN + i Inf)) = NaN", __real__ result);
   check ("imag(catan(NaN + i Inf)) = 0", __imag__ result, 0);
-  result = FUNC(catan) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(catan) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isnan ("real(catan(NaN - i Inf)) = NaN", __real__ result);
   check ("imag(catan(NaN - i Inf)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(catan) (BUILD_COMPLEX(0.0, nan_value));
+  result = FUNC(catan) (BUILD_COMPLEX (0.0, nan_value));
   check_isnan ("real(catan(0 + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(catan(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan ("real(catan(-0 + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(catan(-0 + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(catan) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(catan) (BUILD_COMPLEX (plus_infty, nan_value));
   check ("real(catan(+Inf + i NaN)) = pi/2", __real__ result, M_PI_2l);
   check ("imag(catan(+Inf + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(catan) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(catan) (BUILD_COMPLEX (minus_infty, nan_value));
   check ("real(catan(-Inf + i NaN)) = -pi/2", __real__ result, -M_PI_2l);
   check ("imag(catan(-Inf + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0);
 
-  result = FUNC(catan) (BUILD_COMPLEX(nan_value, 10.5));
+  result = FUNC(catan) (BUILD_COMPLEX (nan_value, 10.5));
   check_isnan_maybe_exc ("real(catan(NaN + i10.5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catan(NaN + i10.5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(catan) (BUILD_COMPLEX(nan_value, -10.5));
+  result = FUNC(catan) (BUILD_COMPLEX (nan_value, -10.5));
   check_isnan_maybe_exc ("real(catan(NaN - i10.5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catan(NaN - i10.5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(catan) (BUILD_COMPLEX(0.75, nan_value));
+  result = FUNC(catan) (BUILD_COMPLEX (0.75, nan_value));
   check_isnan_maybe_exc ("real(catan(0.75 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catan(0.75 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(catan) (BUILD_COMPLEX(-0.75, nan_value));
+  result = FUNC(catan) (BUILD_COMPLEX (-0.75, nan_value));
   check_isnan_maybe_exc ("real(catan(-0.75 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catan(-0.75 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(catan) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(catan) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(catan(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(catan(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(catan) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(catan) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(catan(0.7 + i 1.2)) == 1.07857...", __real__ result,
-	     1.0785743834118921877L, CHOOSE(3e-17, 0, 5e-7));
+	     1.0785743834118921877L, CHOOSE (3e-17, 0, 5e-7));
   check_eps ("imag(catan(0.7 + i 1.2)) == 0.57705...", __imag__ result,
-	     0.5770573776534306764L, CHOOSE(3e-17L, 2e-16, 6e-8));
+	     0.5770573776534306764L, CHOOSE (3e-17L, 2e-16, 6e-8));
 
-  result = FUNC(catan) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(catan) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(catan(-2 - i 3)) == -1.40992...", __real__ result,
-	     -1.4099210495965755225L, CHOOSE(0, 0, 4e-7));
+	     -1.4099210495965755225L, CHOOSE (0, 0, 4e-7));
   check_eps ("imag(catan(-2 - i 3)) == -0.22907...", __imag__ result,
-	     -0.2290726829685387662L, CHOOSE(1.1e-19L, 3e-17, 2e-8));
+	     -0.2290726829685387662L, CHOOSE (1.1e-19L, 3e-17, 2e-8));
 }
 
 
@@ -4137,148 +4137,148 @@ catanh_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(catanh) (BUILD_COMPLEX(0, 0));
+  result = FUNC(catanh) (BUILD_COMPLEX (0, 0));
   check ("real(catanh(0 + i0)) = 0", __real__ result, 0);
   check ("imag(catanh(0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(catanh(-0 + i0)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(catanh) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(catanh) (BUILD_COMPLEX (0, minus_zero));
   check ("real(catanh(0 - i0)) = 0", __real__ result, 0);
   check ("imag(catanh(0 - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(catanh(-0 - i0)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-0 - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (plus_infty, plus_infty));
   check ("real(catanh(+Inf + i Inf)) = 0", __real__ result, 0);
   check ("imag(catanh(+Inf + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (plus_infty, minus_infty));
   check ("real(catanh(+Inf - i Inf)) = 0", __real__ result, 0);
   check ("imag(catanh(+Inf - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_infty, plus_infty));
   check ("real(catanh(-Inf + i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-Inf + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_infty, minus_infty));
   check ("real(catanh(-Inf - i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-Inf - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(-10.0, plus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (-10.0, plus_infty));
   check ("real(catanh(-10.0 + i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-10.0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(-10.0, minus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (-10.0, minus_infty));
   check ("real(catanh(-10.0 - i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-10.0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_zero, plus_infty));
   check ("real(catanh(-0 + i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_zero, minus_infty));
   check ("real(catanh(-0 - i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (0, plus_infty));
   check ("real(catanh(0 + i Inf)) = 0", __real__ result, 0);
   check ("imag(catanh(0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (0, minus_infty));
   check ("real(catanh(0 - i Inf)) = 0", __real__ result, 0);
   check ("imag(catanh(0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(0.1, plus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (0.1, plus_infty));
   check ("real(catanh(0.1 + i Inf)) = 0", __real__ result, 0);
   check ("imag(catanh(0.1 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(0.1, minus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (0.1, minus_infty));
   check ("real(catanh(0.1 - i Inf)) = 0", __real__ result, 0);
   check ("imag(catanh(0.1 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_infty, 0));
   check ("real(catanh(-Inf + i0)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-Inf + i0)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(catanh(-Inf - i0)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-Inf - i0)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_infty, 100));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_infty, 100));
   check ("real(catanh(-Inf + i100)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-Inf + i100)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_infty, -100));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_infty, -100));
   check ("real(catanh(-Inf - i100)) = -0", __real__ result, minus_zero);
   check ("imag(catanh(-Inf - i100)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(catanh) (BUILD_COMPLEX (plus_infty, 0));
   check ("real(catanh(+Inf + i0)) = 0", __real__ result, 0);
   check ("imag(catanh(+Inf + i0)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(catanh) (BUILD_COMPLEX (plus_infty, minus_zero));
   check ("real(catanh(+Inf - i0)) = 0", __real__ result, 0);
   check ("imag(catanh(+Inf - i0)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(plus_infty, 0.5));
+  result = FUNC(catanh) (BUILD_COMPLEX (plus_infty, 0.5));
   check ("real(catanh(+Inf + i0.5)) = 0", __real__ result, 0);
   check ("imag(catanh(+Inf + i0.5)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(plus_infty, -0.5));
+  result = FUNC(catanh) (BUILD_COMPLEX (plus_infty, -0.5));
   check ("real(catanh(+Inf - i0.5)) = 0", __real__ result, 0);
   check ("imag(catanh(+Inf - i0.5)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(catanh) (BUILD_COMPLEX (0, nan_value));
   check ("real(catanh(0 + i NaN)) = 0", __real__ result, 0);
   check_isnan ("imag(catanh(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_zero, nan_value));
   check ("real(catanh(-0 + i NaN)) = -0", __real__ result, minus_zero);
   check_isnan ("imag(catanh(-0 + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(catanh) (BUILD_COMPLEX (plus_infty, nan_value));
   check ("real(catanh(+Inf + i NaN)) = 0", __real__ result, 0);
   check_isnan ("imag(catanh(+Inf + i NaN)) = NaN", __imag__ result);
-  result = FUNC(catanh) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(catanh) (BUILD_COMPLEX (minus_infty, nan_value));
   check ("real(catanh(-Inf + i NaN)) = -0", __real__ result, minus_zero);
   check_isnan ("imag(catanh(-Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(nan_value, 0));
+  result = FUNC(catanh) (BUILD_COMPLEX (nan_value, 0));
   check_isnan ("real(catanh(NaN + i0)) = NaN", __real__ result);
   check_isnan ("imag(catanh(NaN + i0)) = NaN", __imag__ result);
-  result = FUNC(catanh) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(catanh) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(catanh(NaN - i0)) = NaN", __real__ result);
   check_isnan ("imag(catanh(NaN - i0)) = NaN", __imag__ result);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (nan_value, plus_infty));
   check ("real(catanh(NaN + i Inf)) = +-0", FUNC(fabs) (__real__ result), 0);
   check ("imag(catanh(NaN + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(catanh) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(catanh) (BUILD_COMPLEX (nan_value, minus_infty));
   check ("real(catanh(NaN - i Inf)) = +-0", FUNC(fabs) (__real__ result), 0);
   check ("imag(catanh(NaN - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(10.5, nan_value));
+  result = FUNC(catanh) (BUILD_COMPLEX (10.5, nan_value));
   check_isnan_maybe_exc ("real(catanh(10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catanh(10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(catanh) (BUILD_COMPLEX(-10.5, nan_value));
+  result = FUNC(catanh) (BUILD_COMPLEX (-10.5, nan_value));
   check_isnan_maybe_exc ("real(catanh(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catanh(-10.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(nan_value, 0.75));
+  result = FUNC(catanh) (BUILD_COMPLEX (nan_value, 0.75));
   check_isnan_maybe_exc ("real(catanh(NaN + i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catanh(NaN + i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(catanh) (BUILD_COMPLEX(nan_value, -0.75));
+  result = FUNC(catanh) (BUILD_COMPLEX (nan_value, -0.75));
   check_isnan_maybe_exc ("real(catanh(NaN - i0.75)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(catanh(NaN - i0.75)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(catanh) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(catanh(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(catanh(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(catanh) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(catanh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(catanh(0.7 + i 1.2)) == 0.26007...", __real__ result,
-	     0.2600749516525135959L, CHOOSE(2e-18, 6e-17, 3e-8));
+	     0.2600749516525135959L, CHOOSE (2e-18, 6e-17, 3e-8));
   check_eps ("imag(catanh(0.7 + i 1.2)) == 0.97024...", __imag__ result,
-	     0.9702403077950989849L, CHOOSE(3e-17, 2e-16, 4e-7));
+	     0.9702403077950989849L, CHOOSE (3e-17, 2e-16, 4e-7));
 
-  result = FUNC(catanh) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(catanh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(catanh(-2 - i 3)) == -0.14694...", __real__ result,
-	     -0.1469466662255297520L, CHOOSE(9e-20L, 2e-16, 2e-8));
+	     -0.1469466662255297520L, CHOOSE (9e-20L, 2e-16, 2e-8));
   check_eps ("imag(catanh(-2 - i 3)) == -1.33897...", __imag__ result,
-	     -1.3389725222944935611L, CHOOSE(7e-19L, 0, 5e-7));
+	     -1.3389725222944935611L, CHOOSE (7e-19L, 0, 5e-7));
 }
 
 
@@ -4287,148 +4287,148 @@ ctan_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(ctan) (BUILD_COMPLEX(0, 0));
+  result = FUNC(ctan) (BUILD_COMPLEX (0, 0));
   check ("real(ctan(0 + i0)) = 0", __real__ result, 0);
   check ("imag(ctan(0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(ctan) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(ctan) (BUILD_COMPLEX (0, minus_zero));
   check ("real(ctan(0 - i0)) = 0", __real__ result, 0);
   check ("imag(ctan(0 - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(ctan(-0 + i0)) = -0", __real__ result, minus_zero);
   check ("imag(ctan(-0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(ctan(-0 - i0)) = -0", __real__ result, minus_zero);
   check ("imag(ctan(-0 - i0)) = -0", __imag__ result, minus_zero);
 
 
-  result = FUNC(ctan) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (0, plus_infty));
   check ("real(ctan(0 + i Inf)) = 0", __real__ result, 0);
   check ("imag(ctan(0 + i Inf)) = 1", __imag__ result, 1);
-  result = FUNC(ctan) (BUILD_COMPLEX(1, plus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (1, plus_infty));
   check ("real(ctan(1 + i Inf)) = 0", __real__ result, 0);
   check ("imag(ctan(1 + i Inf)) = 1", __imag__ result, 1);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_zero, plus_infty));
   check ("real(ctan(-0 + i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(ctan(-0 + i Inf)) = 1", __imag__ result, 1);
-  result = FUNC(ctan) (BUILD_COMPLEX(-1, plus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (-1, plus_infty));
   check ("real(ctan(-1 + i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(ctan(-1 + i Inf)) = 1", __imag__ result, 1);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (0, minus_infty));
   check ("real(ctan(0 - i Inf)) = 0", __real__ result, 0);
   check ("imag(ctan(0 - i Inf)) = -1", __imag__ result, -1);
-  result = FUNC(ctan) (BUILD_COMPLEX(1, minus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (1, minus_infty));
   check ("real(ctan(1 - i Inf)) = 0", __real__ result, 0);
   check ("imag(ctan(1 - i Inf)) = -1", __imag__ result, -1);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_zero, minus_infty));
   check ("real(ctan(-0 - i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(ctan(-0 - i Inf)) = -1", __imag__ result, -1);
-  result = FUNC(ctan) (BUILD_COMPLEX(-1, minus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (-1, minus_infty));
   check ("real(ctan(-1 - i Inf)) = -0", __real__ result, minus_zero);
   check ("imag(ctan(-1 - i Inf)) = -1", __imag__ result, -1);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(ctan) (BUILD_COMPLEX (plus_infty, 0));
   check_isnan_exc ("real(ctan(Inf + i 0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(Inf + i 0)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(plus_infty, 2));
+  result = FUNC(ctan) (BUILD_COMPLEX (plus_infty, 2));
   check_isnan_exc ("real(ctan(Inf + i 2)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(Inf + i 2)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_infty, 0));
   check_isnan_exc ("real(ctan(-Inf + i 0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(-Inf + i 0)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_infty, 2));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_infty, 2));
   check_isnan_exc ("real(ctan(- Inf + i 2)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(- Inf + i 2)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(ctan) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isnan_exc ("real(ctan(Inf - i 0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(Inf - i 0)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(plus_infty, -2));
+  result = FUNC(ctan) (BUILD_COMPLEX (plus_infty, -2));
   check_isnan_exc ("real(ctan(Inf - i 2)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(Inf - i 2)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isnan_exc ("real(ctan(-Inf - i 0)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(-Inf - i 0)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_infty, -2));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_infty, -2));
   check_isnan_exc ("real(ctan(-Inf - i 2)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(-Inf - i 2)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (nan_value, plus_infty));
   check ("real(ctan(NaN + i Inf)) = +-0", FUNC(fabs) (__real__ result), 0);
   check ("imag(ctan(NaN + i Inf)) = 1", __imag__ result, 1);
-  result = FUNC(ctan) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(ctan) (BUILD_COMPLEX (nan_value, minus_infty));
   check ("real(ctan(NaN - i Inf)) = +-0", FUNC(fabs) (__real__ result), 0);
   check ("imag(ctan(NaN - i Inf)) = -1", __imag__ result, -1);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(ctan) (BUILD_COMPLEX (0, nan_value));
   check ("real(ctan(0 + i NaN)) = 0", __real__ result, 0);
   check_isnan ("imag(ctan(0 + i NaN)) = NaN", __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(ctan) (BUILD_COMPLEX (minus_zero, nan_value));
   check ("real(ctan(-0 + i NaN)) = -0", __real__ result, minus_zero);
   check_isnan ("imag(ctan(-0 + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(0.5, nan_value));
+  result = FUNC(ctan) (BUILD_COMPLEX (0.5, nan_value));
   check_isnan_maybe_exc ("real(ctan(0.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(0.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(-4.5, nan_value));
+  result = FUNC(ctan) (BUILD_COMPLEX (-4.5, nan_value));
   check_isnan_maybe_exc ("real(ctan(-4.5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(-4.5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(nan_value, 0));
+  result = FUNC(ctan) (BUILD_COMPLEX (nan_value, 0));
   check_isnan_maybe_exc ("real(ctan(NaN + i 0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(NaN + i 0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(nan_value, 5));
+  result = FUNC(ctan) (BUILD_COMPLEX (nan_value, 5));
   check_isnan_maybe_exc ("real(ctan(NaN + i 5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(NaN + i 5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(ctan) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan_maybe_exc ("real(ctan(NaN - i 0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(NaN - i 0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctan) (BUILD_COMPLEX(nan_value, -0.25));
+  result = FUNC(ctan) (BUILD_COMPLEX (nan_value, -0.25));
   check_isnan_maybe_exc ("real(ctan(NaN -i 0.25)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctan(NaN -i 0.25)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(ctan) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(ctan(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(ctan(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(ctan) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(ctan) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ctan(0.7 + i 1.2)) == 0.17207...", __real__ result,
-	     0.1720734197630349001L, CHOOSE(1e-17L, 3e-17, 2e-8));
+	     0.1720734197630349001L, CHOOSE (1e-17L, 3e-17, 2e-8));
   check_eps ("imag(ctan(0.7 + i 1.2)) == 0.95448...", __imag__ result,
-	     0.9544807059989405538L, CHOOSE(2e-17L, 2e-16, 6e-8));
+	     0.9544807059989405538L, CHOOSE (2e-17L, 2e-16, 6e-8));
 
-  result = FUNC(ctan) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(ctan) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ctan(-2 - i 3)) == -0.00376...", __real__ result,
-	     0.0037640256415042482L, CHOOSE(1e-19L, 5e-19, 0));
+	     0.0037640256415042482L, CHOOSE (1e-19L, 5e-19, 0));
   check_eps ("imag(ctan(-2 - i 3)) == -1.00323...", __imag__ result,
-	     -1.0032386273536098014L, CHOOSE(2e-19L, 0, 2e-7));
+	     -1.0032386273536098014L, CHOOSE (2e-19L, 0, 2e-7));
 }
 
 
@@ -4437,151 +4437,151 @@ ctanh_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(0, 0));
+  result = FUNC(ctanh) (BUILD_COMPLEX (0, 0));
   check ("real(ctanh(0 + i0)) = 0", __real__ result, 0);
   check ("imag(ctanh(0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(ctanh) (BUILD_COMPLEX (0, minus_zero));
   check ("real(ctanh(0 - i0)) = 0", __real__ result, 0);
   check ("imag(ctanh(0 - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(ctanh(-0 + i0)) = -0", __real__ result, minus_zero);
   check ("imag(ctanh(-0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(ctanh(-0 - i0)) = -0", __real__ result, minus_zero);
   check ("imag(ctanh(-0 - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(ctanh) (BUILD_COMPLEX (plus_infty, 0));
   check ("real(ctanh(+Inf + i0)) = 1", __real__ result, 1);
   check ("imag(ctanh(+Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(plus_infty, 1));
+  result = FUNC(ctanh) (BUILD_COMPLEX (plus_infty, 1));
   check ("real(ctanh(+Inf + i1)) = 1", __real__ result, 1);
   check ("imag(ctanh(+Inf + i1)) = 0", __imag__ result, 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(ctanh) (BUILD_COMPLEX (plus_infty, minus_zero));
   check ("real(ctanh(+Inf - i0)) = 1", __real__ result, 1);
   check ("imag(ctanh(+Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ctanh) (BUILD_COMPLEX(plus_infty, -1));
+  result = FUNC(ctanh) (BUILD_COMPLEX (plus_infty, -1));
   check ("real(ctanh(+Inf - i1)) = 1", __real__ result, 1);
   check ("imag(ctanh(+Inf - i1)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_infty, 0));
   check ("real(ctanh(-Inf + i0)) = -1", __real__ result, -1);
   check ("imag(ctanh(-Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_infty, 1));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_infty, 1));
   check ("real(ctanh(-Inf + i1)) = -1", __real__ result, -1);
   check ("imag(ctanh(-Inf + i1)) = 0", __imag__ result, 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(ctanh(-Inf - i0)) = -1", __real__ result, -1);
   check ("imag(ctanh(-Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_infty, -1));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_infty, -1));
   check ("real(ctanh(-Inf - i1)) = -1", __real__ result, -1);
   check ("imag(ctanh(-Inf - i1)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (0, plus_infty));
   check_isnan_exc ("real(ctanh(0 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(0 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(2, plus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (2, plus_infty));
   check_isnan_exc ("real(ctanh(2 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(2 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (0, minus_infty));
   check_isnan_exc ("real(ctanh(0 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(0 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(2, minus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (2, minus_infty));
   check_isnan_exc ("real(ctanh(2 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(2 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isnan_exc ("real(ctanh(-0 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(-0 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(-2, plus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (-2, plus_infty));
   check_isnan_exc ("real(ctanh(-2 + i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(-2 + i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isnan_exc ("real(ctanh(-0 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(-0 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(-2, minus_infty));
+  result = FUNC(ctanh) (BUILD_COMPLEX (-2, minus_infty));
   check_isnan_exc ("real(ctanh(-2 - i Inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(-2 - i Inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(ctanh) (BUILD_COMPLEX (plus_infty, nan_value));
   check ("real(ctanh(+Inf + i NaN)) = 1", __real__ result, 1);
   check ("imag(ctanh(+Inf + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_infty, nan_value));
   check ("real(ctanh(-Inf + i NaN)) = -1", __real__ result, -1);
   check ("imag(ctanh(-Inf + i NaN)) = +-0", FUNC(fabs) (__imag__ result), 0);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(nan_value, 0));
+  result = FUNC(ctanh) (BUILD_COMPLEX (nan_value, 0));
   check_isnan ("real(ctanh(NaN + i0)) = NaN", __real__ result);
   check ("imag(ctanh(NaN + i0)) = 0", __imag__ result, 0);
-  result = FUNC(ctanh) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(ctanh) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan ("real(ctanh(NaN - i0)) = NaN", __real__ result);
   check ("imag(ctanh(NaN - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(nan_value, 0.5));
+  result = FUNC(ctanh) (BUILD_COMPLEX (nan_value, 0.5));
   check_isnan_maybe_exc ("real(ctanh(NaN + i0.5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(NaN + i0.5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(nan_value, -4.5));
+  result = FUNC(ctanh) (BUILD_COMPLEX (nan_value, -4.5));
   check_isnan_maybe_exc ("real(ctanh(NaN - i4.5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(NaN - i4.5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(ctanh) (BUILD_COMPLEX (0, nan_value));
   check_isnan_maybe_exc ("real(ctanh(0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(5, nan_value));
+  result = FUNC(ctanh) (BUILD_COMPLEX (5, nan_value));
   check_isnan_maybe_exc ("real(ctanh(5 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(5 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(ctanh) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan_maybe_exc ("real(ctanh(-0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(-0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(ctanh) (BUILD_COMPLEX(-0.25, nan_value));
+  result = FUNC(ctanh) (BUILD_COMPLEX (-0.25, nan_value));
   check_isnan_maybe_exc ("real(ctanh(-0.25 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(ctanh(-0.25 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(ctanh) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(ctanh(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(ctanh(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(0, M_PI_4l));
+  result = FUNC(ctanh) (BUILD_COMPLEX (0, M_PI_4l));
   check ("real(ctanh (0 + i pi/4)) == 0", __real__ result, 0);
   check_eps ("imag(ctanh (0 + i pi/4)) == 1", __imag__ result, 1,
-	     CHOOSE(0, 2e-16, 2e-7));
+	     CHOOSE (0, 2e-16, 2e-7));
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(ctanh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ctanh(0.7 + i 1.2)) == 1.34721...", __real__ result,
-	     1.3472197399061191630L, CHOOSE(4e-17L, 5e-16, 2e-7));
+	     1.3472197399061191630L, CHOOSE (4e-17L, 5e-16, 2e-7));
   check_eps ("imag(ctanh(0.7 + i 1.2)) == -0.47786...", __imag__ result,
-	     0.4778641038326365540L, CHOOSE(9e-17L, 2e-16, 9e-8));
+	     0.4778641038326365540L, CHOOSE (9e-17L, 2e-16, 9e-8));
 
-  result = FUNC(ctanh) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(ctanh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ctanh(-2 - i 3)) == -0.96538...", __real__ result,
-	     -0.9653858790221331242L, CHOOSE(2e-19L, 2e-16, 2e-7));
+	     -0.9653858790221331242L, CHOOSE (2e-19L, 2e-16, 2e-7));
   check_eps ("imag(ctanh(-2 - i 3)) == 0.00988...", __imag__ result,
-	     0.0098843750383224937L, CHOOSE(7e-20L, 2e-16, 1e-9));
+	     0.0098843750383224937L, CHOOSE (7e-20L, 2e-16, 1e-9));
 }
 
 
@@ -4590,166 +4590,166 @@ clog_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(clog) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_zero, 0));
   check_isinfn_exc ("real(clog(-0 + i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog(-0 + i0)) = pi plus divide-by-zero exception",
 	 __imag__ result, M_PIl);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_zero, minus_zero));
   check_isinfn_exc ("real(clog(-0 - i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog(-0 - i0)) = -pi plus divide-by-zero exception",
 	 __imag__ result, -M_PIl);
 
-  result = FUNC(clog) (BUILD_COMPLEX(0, 0));
+  result = FUNC(clog) (BUILD_COMPLEX (0, 0));
   check_isinfn_exc ("real(clog(0 + i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog(0 + i0)) = 0 plus divide-by-zero exception",
 	 __imag__ result, 0);
-  result = FUNC(clog) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(clog) (BUILD_COMPLEX (0, minus_zero));
   check_isinfn_exc ("real(clog(0 - i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog(0 - i0)) = -0 plus divide-by-zero exception",
 	 __imag__ result, minus_zero);
 
-  result = FUNC(clog) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp ("real(clog(-Inf + i Inf)) = +Inf", __real__ result);
   check ("imag(clog(-Inf + i Inf)) = 3*pi/4", __imag__ result,
 	 M_PIl - M_PI_4l);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfp ("real(clog(-Inf - i Inf)) = +Inf", __real__ result);
   check ("imag(clog(-Inf - i Inf)) = -3*pi/4", __imag__ result,
 	 M_PI_4l - M_PIl);
 
-  result = FUNC(clog) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp ("real(clog(+Inf + i Inf)) = +Inf", __real__ result);
   check ("imag(clog(+Inf + i Inf)) = pi/4", __imag__ result, M_PI_4l);
-  result = FUNC(clog) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp ("real(clog(+Inf - i Inf)) = +Inf", __real__ result);
   check ("imag(clog(+Inf - i Inf)) = -pi/4", __imag__ result, -M_PI_4l);
 
-  result = FUNC(clog) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (0, plus_infty));
   check_isinfp ("real(clog(0 + i Inf)) = +Inf", __real__ result);
   check ("imag(clog(0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(clog) (BUILD_COMPLEX(3, plus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (3, plus_infty));
   check_isinfp ("real(clog(3 + i Inf)) = +Inf", __real__ result);
   check ("imag(clog(3 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isinfp ("real(clog(-0 + i Inf)) = +Inf", __real__ result);
   check ("imag(clog(-0 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(clog) (BUILD_COMPLEX(-3, plus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (-3, plus_infty));
   check_isinfp ("real(clog(-3 + i Inf)) = +Inf", __real__ result);
   check ("imag(clog(-3 + i Inf)) = pi/2", __imag__ result, M_PI_2l);
-  result = FUNC(clog) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (0, minus_infty));
   check_isinfp ("real(clog(0 - i Inf)) = +Inf", __real__ result);
   check ("imag(clog(0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(clog) (BUILD_COMPLEX(3, minus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (3, minus_infty));
   check_isinfp ("real(clog(3 - i Inf)) = +Inf", __real__ result);
   check ("imag(clog(3 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isinfp ("real(clog(-0 - i Inf)) = +Inf", __real__ result);
   check ("imag(clog(-0 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
-  result = FUNC(clog) (BUILD_COMPLEX(-3, minus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (-3, minus_infty));
   check_isinfp ("real(clog(-3 - i Inf)) = +Inf", __real__ result);
   check ("imag(clog(-3 - i Inf)) = -pi/2", __imag__ result, -M_PI_2l);
 
-  result = FUNC(clog) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_infty, 0));
   check_isinfp ("real(clog(-Inf + i0)) = +Inf", __real__ result);
   check ("imag(clog(-Inf + i0)) = pi", __imag__ result, M_PIl);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_infty, 1));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_infty, 1));
   check_isinfp ("real(clog(-Inf + i1)) = +Inf", __real__ result);
   check ("imag(clog(-Inf + i1)) = pi", __imag__ result, M_PIl);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isinfp ("real(clog(-Inf - i0)) = +Inf", __real__ result);
   check ("imag(clog(-Inf - i0)) = -pi", __imag__ result, -M_PIl);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_infty, -1));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_infty, -1));
   check_isinfp ("real(clog(-Inf - i1)) = +Inf", __real__ result);
   check ("imag(clog(-Inf - i1)) = -pi", __imag__ result, -M_PIl);
 
-  result = FUNC(clog) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(clog) (BUILD_COMPLEX (plus_infty, 0));
   check_isinfp ("real(clog(+Inf + i0)) = +Inf", __real__ result);
   check ("imag(clog(+Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(clog) (BUILD_COMPLEX(plus_infty, 1));
+  result = FUNC(clog) (BUILD_COMPLEX (plus_infty, 1));
   check_isinfp ("real(clog(+Inf + i1)) = +Inf", __real__ result);
   check ("imag(clog(+Inf + i1)) = 0", __imag__ result, 0);
-  result = FUNC(clog) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(clog) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(clog(+Inf - i0)) = +Inf", __real__ result);
   check ("imag(clog(+Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(clog) (BUILD_COMPLEX(plus_infty, -1));
+  result = FUNC(clog) (BUILD_COMPLEX (plus_infty, -1));
   check_isinfp ("real(clog(+Inf - i1)) = +Inf", __real__ result);
   check ("imag(clog(+Inf - i1)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(clog) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(clog) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(clog(+Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(clog(+Inf + i NaN)) = NaN", __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isinfp ("real(clog(-Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(clog(-Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(clog) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isinfp ("real(clog(NaN + i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(clog(NaN + i Inf)) = NaN", __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(clog) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isinfp ("real(clog(NaN - i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(clog(NaN - i Inf)) = NaN", __imag__ result);
 
-  result = FUNC(clog) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(clog) (BUILD_COMPLEX (0, nan_value));
   check_isnan_maybe_exc ("real(clog(0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(3, nan_value));
+  result = FUNC(clog) (BUILD_COMPLEX (3, nan_value));
   check_isnan_maybe_exc ("real(clog(3 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(3 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(clog) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan_maybe_exc ("real(clog(-0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(-0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(-3, nan_value));
+  result = FUNC(clog) (BUILD_COMPLEX (-3, nan_value));
   check_isnan_maybe_exc ("real(clog(-3 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(-3 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(clog) (BUILD_COMPLEX(nan_value, 0));
+  result = FUNC(clog) (BUILD_COMPLEX (nan_value, 0));
   check_isnan_maybe_exc ("real(clog(NaN + i0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(NaN + i0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(nan_value, 5));
+  result = FUNC(clog) (BUILD_COMPLEX (nan_value, 5));
   check_isnan_maybe_exc ("real(clog(NaN + i5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(NaN + i5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(clog) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan_maybe_exc ("real(clog(NaN - i0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(NaN - i0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog) (BUILD_COMPLEX(nan_value, -5));
+  result = FUNC(clog) (BUILD_COMPLEX (nan_value, -5));
   check_isnan_maybe_exc ("real(clog(NaN - i5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog(NaN - i5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(clog) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(clog) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(clog(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(clog(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(clog) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(clog) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(clog(0.7 + i 1.2)) == 0.32876...", __real__ result,
-	     0.3287600014583970919L, CHOOSE(5e-17L, 6e-17, 3e-8));
+	     0.3287600014583970919L, CHOOSE (5e-17L, 6e-17, 3e-8));
   check_eps ("imag(clog(0.7 + i 1.2)) == 1.04272...", __imag__ result,
-	     1.0427218783685369524L, CHOOSE(2e-17L, 2.5e-16, 1.2e-7));
+	     1.0427218783685369524L, CHOOSE (2e-17L, 2.5e-16, 1.2e-7));
 
-  result = FUNC(clog) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(clog) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(clog(-2 - i 3)) == 1.28247...", __real__ result,
-	     1.2824746787307683680L, CHOOSE(3e-19L, 0, 0));
+	     1.2824746787307683680L, CHOOSE (3e-19L, 0, 0));
   check_eps ("imag(clog(-2 - i 3)) == -2.15879...", __imag__ result,
-	     -2.1587989303424641704L, CHOOSE(2e-18L, 5e-16, 8e-7));
+	     -2.1587989303424641704L, CHOOSE (2e-18L, 5e-16, 8e-7));
 }
 
 
@@ -4758,180 +4758,180 @@ clog10_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, 0));
   check_isinfn_exc ("real(clog10(-0 + i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog10(-0 + i0)) = pi plus divide-by-zero exception",
 	 __imag__ result, M_PIl);
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, minus_zero));
   check_isinfn_exc ("real(clog10(-0 - i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog10(-0 - i0)) = -pi plus divide-by-zero exception",
 	 __imag__ result, -M_PIl);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(0, 0));
+  result = FUNC(clog10) (BUILD_COMPLEX (0, 0));
   check_isinfn_exc ("real(clog10(0 + i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog10(0 + i0)) = 0 plus divide-by-zero exception",
 	 __imag__ result, 0);
-  result = FUNC(clog10) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(clog10) (BUILD_COMPLEX (0, minus_zero));
   check_isinfn_exc ("real(clog10(0 - i0)) = -Inf plus divide-by-zero exception",
 		    __real__ result, DIVIDE_BY_ZERO_EXCEPTION);
   check ("imag(clog10(0 - i0)) = -0 plus divide-by-zero exception",
 	 __imag__ result, minus_zero);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp ("real(clog10(-Inf + i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-Inf + i Inf)) = 3*pi/4*M_LOG10E", __imag__ result,
-	     (M_PIl - M_PI_4l) * M_LOG10El, CHOOSE(0, 3e-16, 0));
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_infty, minus_infty));
+	     (M_PIl - M_PI_4l) * M_LOG10El, CHOOSE (0, 3e-16, 0));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfp ("real(clog10(-Inf - i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-Inf - i Inf)) = -3*pi/4*M_LOG10E", __imag__ result,
-	     (M_PI_4l - M_PIl) * M_LOG10El, CHOOSE(0, 3e-16, 0));
+	     (M_PI_4l - M_PIl) * M_LOG10El, CHOOSE (0, 3e-16, 0));
 
-  result = FUNC(clog10) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp ("real(clog10(+Inf + i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(+Inf + i Inf)) = pi/4*M_LOG10E", __imag__ result,
-	     M_PI_4l * M_LOG10El, CHOOSE(0, 6e-17, 3e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(plus_infty, minus_infty));
+	     M_PI_4l * M_LOG10El, CHOOSE (0, 6e-17, 3e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp ("real(clog10(+Inf - i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(+Inf - i Inf)) = -pi/4*M_LOG10E", __imag__ result,
-	     -M_PI_4l * M_LOG10El, CHOOSE(0, 6e-17, 3e-8));
+	     -M_PI_4l * M_LOG10El, CHOOSE (0, 6e-17, 3e-8));
 
-  result = FUNC(clog10) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(clog10) (BUILD_COMPLEX (0, plus_infty));
   check_isinfp ("real(clog10(0 + i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(0 + i Inf)) = pi/2*M_LOG10E", __imag__ result,
-	     M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(3, plus_infty));
+	     M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (3, plus_infty));
   check_isinfp ("real(clog10(3 + i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(3 + i Inf)) = pi/2*M_LOG10E", __imag__ result,
-	     M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_zero, plus_infty));
+	     M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isinfp ("real(clog10(-0 + i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-0 + i Inf)) = pi/2*M_LOG10E", __imag__ result,
-	     M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(-3, plus_infty));
+	     M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (-3, plus_infty));
   check_isinfp ("real(clog10(-3 + i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-3 + i Inf)) = pi/2*M_LOG10E", __imag__ result,
-	     M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(0, minus_infty));
+	     M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (0, minus_infty));
   check_isinfp ("real(clog10(0 - i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(0 - i Inf)) = -pi/2*M_LOG10E", __imag__ result,
-	     -M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(3, minus_infty));
+	     -M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (3, minus_infty));
   check_isinfp ("real(clog10(3 - i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(3 - i Inf)) = -pi/2*M_LOG10E", __imag__ result,
-	     -M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_zero, minus_infty));
+	     -M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isinfp ("real(clog10(-0 - i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-0 - i Inf)) = -pi/2*M_LOG10E", __imag__ result,
-	     -M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
-  result = FUNC(clog10) (BUILD_COMPLEX(-3, minus_infty));
+	     -M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
+  result = FUNC(clog10) (BUILD_COMPLEX (-3, minus_infty));
   check_isinfp ("real(clog10(-3 - i Inf)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-3 - i Inf)) = -pi/2*M_LOG10E", __imag__ result,
-	     -M_PI_2l * M_LOG10El, CHOOSE(0, 2e-16, 6e-8));
+	     -M_PI_2l * M_LOG10El, CHOOSE (0, 2e-16, 6e-8));
 
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, 0));
   check_isinfp ("real(clog10(-Inf + i0)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-Inf + i0)) = pi*M_LOG10E", __imag__ result,
-	     M_PIl * M_LOG10El, CHOOSE(0, 3e-16, 2e-7));
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_infty, 1));
+	     M_PIl * M_LOG10El, CHOOSE (0, 3e-16, 2e-7));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, 1));
   check_isinfp ("real(clog10(-Inf + i1)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-Inf + i1)) = pi*M_LOG10E", __imag__ result,
-	     M_PIl * M_LOG10El, CHOOSE(0, 3e-16, 2e-7));
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_infty, minus_zero));
+	     M_PIl * M_LOG10El, CHOOSE (0, 3e-16, 2e-7));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isinfp ("real(clog10(-Inf - i0)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-Inf - i0)) = -pi*M_LOG10E", __imag__ result,
-	     -M_PIl * M_LOG10El, CHOOSE(0, 3e-16, 2e-7));
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_infty, -1));
+	     -M_PIl * M_LOG10El, CHOOSE (0, 3e-16, 2e-7));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, -1));
   check_isinfp ("real(clog10(-Inf - i1)) = +Inf", __real__ result);
   check_eps ("imag(clog10(-Inf - i1)) = -pi*M_LOG10E", __imag__ result,
-	     -M_PIl * M_LOG10El, CHOOSE(0, 3e-16, 2e-7));
+	     -M_PIl * M_LOG10El, CHOOSE (0, 3e-16, 2e-7));
 
-  result = FUNC(clog10) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, 0));
   check_isinfp ("real(clog10(+Inf + i0)) = +Inf", __real__ result);
   check ("imag(clog10(+Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(clog10) (BUILD_COMPLEX(plus_infty, 1));
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, 1));
   check_isinfp ("real(clog10(+Inf + i1)) = +Inf", __real__ result);
   check ("imag(clog10(+Inf + i1)) = 0", __imag__ result, 0);
-  result = FUNC(clog10) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(clog10(+Inf - i0)) = +Inf", __real__ result);
   check ("imag(clog10(+Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(clog10) (BUILD_COMPLEX(plus_infty, -1));
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, -1));
   check_isinfp ("real(clog10(+Inf - i1)) = +Inf", __real__ result);
   check ("imag(clog10(+Inf - i1)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(clog10) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(clog10(+Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(clog10(+Inf + i NaN)) = NaN", __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isinfp ("real(clog10(-Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(clog10(-Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(nan_value, plus_infty));
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, plus_infty));
   check_isinfp ("real(clog10(NaN + i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(clog10(NaN + i Inf)) = NaN", __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(nan_value, minus_infty));
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, minus_infty));
   check_isinfp ("real(clog10(NaN - i Inf)) = +Inf", __real__ result);
   check_isnan ("imag(clog10(NaN - i Inf)) = NaN", __imag__ result);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(clog10) (BUILD_COMPLEX (0, nan_value));
   check_isnan_maybe_exc ("real(clog10(0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(3, nan_value));
+  result = FUNC(clog10) (BUILD_COMPLEX (3, nan_value));
   check_isnan_maybe_exc ("real(clog10(3 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(3 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(clog10) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan_maybe_exc ("real(clog10(-0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(-0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(-3, nan_value));
+  result = FUNC(clog10) (BUILD_COMPLEX (-3, nan_value));
   check_isnan_maybe_exc ("real(clog10(-3 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(-3 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(nan_value, 0));
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, 0));
   check_isnan_maybe_exc ("real(clog10(NaN + i0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(NaN + i0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(nan_value, 5));
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, 5));
   check_isnan_maybe_exc ("real(clog10(NaN + i5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(NaN + i5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan_maybe_exc ("real(clog10(NaN - i0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(NaN - i0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(clog10) (BUILD_COMPLEX(nan_value, -5));
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, -5));
   check_isnan_maybe_exc ("real(clog10(NaN - i5)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(clog10(NaN - i5)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(clog10) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(clog10(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(clog10(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(clog10) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(clog10) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(clog10(0.7 + i 1.2)) == 0.14277...", __real__ result,
-	     0.1427786545038868803L, CHOOSE(2e-17L, 6e-17, 2e-8));
+	     0.1427786545038868803L, CHOOSE (2e-17L, 6e-17, 2e-8));
   check_eps ("imag(clog10(0.7 + i 1.2)) == 0.45284...", __imag__ result,
-	     0.4528483579352493248L, CHOOSE(6e-18, 6e-17, 6e-8));
+	     0.4528483579352493248L, CHOOSE (6e-18, 6e-17, 6e-8));
 
-  result = FUNC(clog10) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(clog10) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(clog10(-2 - i 3)) == 0.55697...", __real__ result,
-	     0.5569716761534183846L, CHOOSE(6e-20L, 0, 0));
+	     0.5569716761534183846L, CHOOSE (6e-20L, 0, 0));
   check_eps ("imag(clog10(-2 - i 3)) == -0.93755...", __imag__ result,
-	     -0.9375544629863747085L, CHOOSE(7e-19L, 2e-16, 3e-7));
+	     -0.9375544629863747085L, CHOOSE (7e-19L, 2e-16, 3e-7));
 }
 
 
@@ -4940,170 +4940,170 @@ csqrt_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(0, 0));
+  result = FUNC(csqrt) (BUILD_COMPLEX (0, 0));
   check ("real(csqrt(0 + i0)) = 0", __real__ result, 0);
   check ("imag(csqrt(0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(csqrt) (BUILD_COMPLEX(0, minus_zero));
+  result = FUNC(csqrt) (BUILD_COMPLEX (0, minus_zero));
   check ("real(csqrt(0 - i0)) = 0", __real__ result, 0);
   check ("imag(csqrt(0 - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_zero, 0));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_zero, 0));
   check ("real(csqrt(-0 + i0)) = 0", __real__ result, 0);
   check ("imag(csqrt(-0 + i0)) = 0", __imag__ result, 0);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_zero, minus_zero));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(csqrt(-0 - i0)) = 0", __real__ result, 0);
   check ("imag(csqrt(-0 - i0)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_infty, 0));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_infty, 0));
   check ("real(csqrt(-Inf + i0)) = 0", __real__ result, 0);
   check_isinfp ("imag(csqrt(-Inf + i0)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_infty, 6));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_infty, 6));
   check ("real(csqrt(-Inf + i6)) = 0", __real__ result, 0);
   check_isinfp ("imag(csqrt(-Inf + i6)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_infty, minus_zero));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_infty, minus_zero));
   check ("real(csqrt(-Inf - i0)) = 0", __real__ result, 0);
   check_isinfn ("imag(csqrt(-Inf - i0)) = -Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_infty, -6));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_infty, -6));
   check ("real(csqrt(-Inf - i6)) = 0", __real__ result, 0);
   check_isinfn ("imag(csqrt(-Inf - i6)) = -Inf", __imag__ result);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(plus_infty, 0));
+  result = FUNC(csqrt) (BUILD_COMPLEX (plus_infty, 0));
   check_isinfp ("real(csqrt(+Inf + i0)) = +Inf", __real__ result);
   check ("imag(csqrt(+Inf + i0)) = 0", __imag__ result, 0);
-  result = FUNC(csqrt) (BUILD_COMPLEX(plus_infty, 6));
+  result = FUNC(csqrt) (BUILD_COMPLEX (plus_infty, 6));
   check_isinfp ("real(csqrt(+Inf + i6)) = +Inf", __real__ result);
   check ("imag(csqrt(+Inf + i6)) = 0", __imag__ result, 0);
-  result = FUNC(csqrt) (BUILD_COMPLEX(plus_infty, minus_zero));
+  result = FUNC(csqrt) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(csqrt(+Inf - i0)) = +Inf", __real__ result);
   check ("imag(csqrt(+Inf - i0)) = -0", __imag__ result, minus_zero);
-  result = FUNC(csqrt) (BUILD_COMPLEX(plus_infty, -6));
+  result = FUNC(csqrt) (BUILD_COMPLEX (plus_infty, -6));
   check_isinfp ("real(csqrt(+Inf - i6)) = +Inf", __real__ result);
   check ("imag(csqrt(+Inf - i6)) = -0", __imag__ result, minus_zero);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(0, plus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (0, plus_infty));
   check_isinfp ("real(csqrt(0 + i Inf)) = +Inf", __real__ result);
   check_isinfp ("imag(csqrt(0 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(4, plus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (4, plus_infty));
   check_isinfp ("real(csqrt(4 + i Inf)) = +Inf", __real__ result);
   check_isinfp ("imag(csqrt(4 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(plus_infty, plus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp ("real(csqrt(+Inf + i Inf)) = +Inf", __real__ result);
   check_isinfp ("imag(csqrt(+Inf + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_zero, plus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isinfp ("real(csqrt(-0 + i Inf)) = +Inf", __real__ result);
   check_isinfp ("imag(csqrt(-0 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(-4, plus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (-4, plus_infty));
   check_isinfp ("real(csqrt(-4 + i Inf)) = +Inf", __real__ result);
   check_isinfp ("imag(csqrt(-4 + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_infty, plus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_infty, plus_infty));
   check_isinfp ("real(csqrt(-Inf + i Inf)) = +Inf", __real__ result);
   check_isinfp ("imag(csqrt(-Inf + i Inf)) = +Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(0, minus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (0, minus_infty));
   check_isinfp ("real(csqrt(0 - i Inf)) = +Inf", __real__ result);
   check_isinfn ("imag(csqrt(0 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(4, minus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (4, minus_infty));
   check_isinfp ("real(csqrt(4 - i Inf)) = +Inf", __real__ result);
   check_isinfn ("imag(csqrt(4 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(plus_infty, minus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (plus_infty, minus_infty));
   check_isinfp ("real(csqrt(+Inf - i Inf)) = +Inf", __real__ result);
   check_isinfn ("imag(csqrt(+Inf - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_zero, minus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isinfp ("real(csqrt(-0 - i Inf)) = +Inf", __real__ result);
   check_isinfn ("imag(csqrt(-0 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(-4, minus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (-4, minus_infty));
   check_isinfp ("real(csqrt(-4 - i Inf)) = +Inf", __real__ result);
   check_isinfn ("imag(csqrt(-4 - i Inf)) = -Inf", __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_infty, minus_infty));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_infty, minus_infty));
   check_isinfp ("real(csqrt(-Inf - i Inf)) = +Inf", __real__ result);
   check_isinfn ("imag(csqrt(-Inf - i Inf)) = -Inf", __imag__ result);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_infty, nan_value));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_infty, nan_value));
   check_isnan ("real(csqrt(-Inf + i NaN)) = NaN", __real__ result);
   check_isinfp ("imag(csqrt(-Inf + i NaN)) = +-Inf",
 		FUNC(fabs) (__imag__ result));
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(plus_infty, nan_value));
+  result = FUNC(csqrt) (BUILD_COMPLEX (plus_infty, nan_value));
   check_isinfp ("real(csqrt(+Inf + i NaN)) = +Inf", __real__ result);
   check_isnan ("imag(csqrt(+Inf + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(0, nan_value));
+  result = FUNC(csqrt) (BUILD_COMPLEX (0, nan_value));
   check_isnan_maybe_exc ("real(csqrt(0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(1, nan_value));
+  result = FUNC(csqrt) (BUILD_COMPLEX (1, nan_value));
   check_isnan_maybe_exc ("real(csqrt(1 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(1 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(minus_zero, nan_value));
+  result = FUNC(csqrt) (BUILD_COMPLEX (minus_zero, nan_value));
   check_isnan_maybe_exc ("real(csqrt(-0 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(-0 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(-1, nan_value));
+  result = FUNC(csqrt) (BUILD_COMPLEX (-1, nan_value));
   check_isnan_maybe_exc ("real(csqrt(-1 + i NaN)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(-1 + i NaN)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(nan_value, 0));
+  result = FUNC(csqrt) (BUILD_COMPLEX (nan_value, 0));
   check_isnan_maybe_exc ("real(csqrt(NaN + i0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(NaN + i0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(nan_value, 8));
+  result = FUNC(csqrt) (BUILD_COMPLEX (nan_value, 8));
   check_isnan_maybe_exc ("real(csqrt(NaN + i8)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(NaN + i8)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(nan_value, minus_zero));
+  result = FUNC(csqrt) (BUILD_COMPLEX (nan_value, minus_zero));
   check_isnan_maybe_exc ("real(csqrt(NaN - i0)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(NaN - i0)) = NaN plus maybe invalid exception",
 	       __imag__ result);
-  result = FUNC(csqrt) (BUILD_COMPLEX(nan_value, -8));
+  result = FUNC(csqrt) (BUILD_COMPLEX (nan_value, -8));
   check_isnan_maybe_exc ("real(csqrt(NaN - i8)) = NaN plus maybe invalid exception",
 			 __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(csqrt(NaN - i8)) = NaN plus maybe invalid exception",
 	       __imag__ result);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(nan_value, nan_value));
+  result = FUNC(csqrt) (BUILD_COMPLEX (nan_value, nan_value));
   check_isnan ("real(csqrt(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(csqrt(NaN + i NaN)) = NaN", __imag__ result);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(16.0, -30.0));
+  result = FUNC(csqrt) (BUILD_COMPLEX (16.0, -30.0));
   check ("real(csqrt(16 - 30i)) = 5", __real__ result, 5.0);
   check ("imag(csqrt(16 - 30i)) = -3", __imag__ result, -3.0);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(-1, 0));
+  result = FUNC(csqrt) (BUILD_COMPLEX (-1, 0));
   check ("real(csqrt(1 + i0) = 0", __real__ result, 0);
   check ("imag(csqrt(1 + i0) = 1", __imag__ result, 1);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(0, 2));
+  result = FUNC(csqrt) (BUILD_COMPLEX (0, 2));
   check ("real(csqrt(0 + i 2) = 1", __real__ result, 1);
   check ("imag(csqrt(0 + i 2) = 1", __imag__ result, 1);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(119, 120));
+  result = FUNC(csqrt) (BUILD_COMPLEX (119, 120));
   check ("real(csqrt(119 + i 120) = 12", __real__ result, 12);
   check ("imag(csqrt(119 + i 120) = 5", __imag__ result, 5);
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(0.7, 1.2));
+  result = FUNC(csqrt) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(csqrt(0.7 + i 1.2)) == 1.02206...", __real__ result,
-	     1.0220676100300264507L, CHOOSE(3e-17L, 3e-16, 2e-7));
+	     1.0220676100300264507L, CHOOSE (3e-17L, 3e-16, 2e-7));
   check_eps ("imag(csqrt(0.7 + i 1.2)) == 0.58704...", __imag__ result,
-	     0.5870453129635652115L, CHOOSE(7e-18L, 0, 6e-8));
+	     0.5870453129635652115L, CHOOSE (7e-18L, 0, 6e-8));
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(-2, -3));
+  result = FUNC(csqrt) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(csqrt(-2 - i 3)) == 0.89597...", __real__ result,
-	     0.8959774761298381247L, CHOOSE(6e-16L, 4e-16, 6e-8));
+	     0.8959774761298381247L, CHOOSE (6e-16L, 4e-16, 6e-8));
   check_eps ("imag(csqrt(-2 - i 3)) == -1.67414...", __imag__ result,
-	     -1.6741492280355400404L, CHOOSE(0, 5e-16, 0));
+	     -1.6741492280355400404L, CHOOSE (0, 5e-16, 0));
 
-  result = FUNC(csqrt) (BUILD_COMPLEX(-2, 3));
+  result = FUNC(csqrt) (BUILD_COMPLEX (-2, 3));
   check_eps ("real(csqrt(-2 + i 3)) == 0.89597...", __real__ result,
-	     0.8959774761298381247L, CHOOSE(6e-20L, 4e-16, 6e-8));
+	     0.8959774761298381247L, CHOOSE (6e-20L, 4e-16, 6e-8));
   check_eps ("imag(csqrt(-2 + i 3)) == 1.67414...", __imag__ result,
-	     1.6741492280355400404L, CHOOSE(0, 5e-16, 0));
+	     1.6741492280355400404L, CHOOSE (0, 5e-16, 0));
 }
 
 
@@ -5112,26 +5112,26 @@ cpow_test (void)
 {
   __complex__ MATHTYPE result;
 
-  result = FUNC(cpow) (BUILD_COMPLEX(1, 0), BUILD_COMPLEX(0, 0));
+  result = FUNC(cpow) (BUILD_COMPLEX (1, 0), BUILD_COMPLEX (0, 0));
   check ("real(cpow (1 + i0), (0 + i0)) == 0", __real__ result, 1);
   check ("imag(cpow (1 + i0), (0 + i0)) == 0", __imag__ result, 0);
 
-  result = FUNC(cpow) (BUILD_COMPLEX(2, 0), BUILD_COMPLEX(10, 0));
+  result = FUNC(cpow) (BUILD_COMPLEX (2, 0), BUILD_COMPLEX (10, 0));
   check_eps ("real(cpow (2 + i0), (10 + i0)) == 1024", __real__ result, 1024,
-	     CHOOSE(6e-16L, 0, 0));
+	     CHOOSE (6e-16L, 0, 0));
   check ("imag(cpow (2 + i0), (10 + i0)) == 0", __imag__ result, 0);
 
-  result = FUNC(cpow) (BUILD_COMPLEX(M_El, 0), BUILD_COMPLEX(0, 2 * M_PIl));
+  result = FUNC(cpow) (BUILD_COMPLEX (M_El, 0), BUILD_COMPLEX (0, 2 * M_PIl));
   check_eps ("real(cpow (e + i0), (0 + i 2*PI)) == 1", __real__ result, 1,
-	     CHOOSE(0, 0, 6e-8));
+	     CHOOSE (0, 0, 6e-8));
   check_eps ("imag(cpow (e + i0), (0 + i 2*PI)) == 0", __imag__ result, 0,
-	     CHOOSE(3e-18L, 3e-16, 4e-7));
+	     CHOOSE (3e-18L, 3e-16, 4e-7));
 
-  result = FUNC(cpow) (BUILD_COMPLEX(2, 3), BUILD_COMPLEX(4, 0));
+  result = FUNC(cpow) (BUILD_COMPLEX (2, 3), BUILD_COMPLEX (4, 0));
   check_eps ("real(cpow (2 + i3), (4 + i0)) == -119", __real__ result, -119,
-	     CHOOSE(9e-16L, 2e-14, 4e-5));
+	     CHOOSE (9e-16L, 2e-14, 4e-5));
   check_eps ("imag(cpow (2 + i3), (4 + i0)) == -120", __imag__ result, -120,
-	     CHOOSE(1e-15L, 0, 5e-5));
+	     CHOOSE (1e-15L, 0, 5e-5));
 }
 
 
@@ -5142,40 +5142,40 @@ cabs_test (void)
   MATHTYPE a;
   a = random_greater (0);
   check_isinfp_ext ("cabs (+inf + i x) == +inf",
-		    FUNC(cabs) (BUILD_COMPLEX(plus_infty, a)), a);
+		    FUNC(cabs) (BUILD_COMPLEX (plus_infty, a)), a);
   check_isinfp_ext ("cabs (-inf + i x) == +inf",
-		    FUNC(cabs) (BUILD_COMPLEX(minus_infty, a)), a);
+		    FUNC(cabs) (BUILD_COMPLEX (minus_infty, a)), a);
 
   check_isinfp ("cabs (+inf+ iNaN) == +inf",
-		FUNC(cabs) (BUILD_COMPLEX(minus_infty, nan_value)));
+		FUNC(cabs) (BUILD_COMPLEX (minus_infty, nan_value)));
   check_isinfp ("cabs (-inf+ iNaN) == +inf",
-		FUNC(cabs) (BUILD_COMPLEX(minus_infty, nan_value)));
+		FUNC(cabs) (BUILD_COMPLEX (minus_infty, nan_value)));
 
   check_isnan ("cabs (NaN+ iNaN) == NaN",
-	       FUNC(cabs) (BUILD_COMPLEX(nan_value, nan_value)));
+	       FUNC(cabs) (BUILD_COMPLEX (nan_value, nan_value)));
 
-  a = FUNC(cabs) (BUILD_COMPLEX(12.4L, 0.7L));
+  a = FUNC(cabs) (BUILD_COMPLEX (12.4L, 0.7L));
   check ("cabs (x,y) == cabs (y,x)",
-	 FUNC(cabs) (BUILD_COMPLEX(0.7L, 12.4L)), a);
+	 FUNC(cabs) (BUILD_COMPLEX (0.7L, 12.4L)), a);
   check ("cabs (x,y) == cabs (-x,y)",
-	 FUNC(cabs) (BUILD_COMPLEX(-12.4L, 0.7L)), a);
+	 FUNC(cabs) (BUILD_COMPLEX (-12.4L, 0.7L)), a);
   check ("cabs (x,y) == cabs (-y,x)",
-	 FUNC(cabs) (BUILD_COMPLEX(-0.7L, 12.4L)), a);
+	 FUNC(cabs) (BUILD_COMPLEX (-0.7L, 12.4L)), a);
   check ("cabs (x,y) == cabs (-x,-y)",
-	 FUNC(cabs) (BUILD_COMPLEX(-12.4L, -0.7L)), a);
+	 FUNC(cabs) (BUILD_COMPLEX (-12.4L, -0.7L)), a);
   check ("cabs (x,y) == cabs (-y,-x)",
-	 FUNC(cabs) (BUILD_COMPLEX(-0.7L, -12.4L)), a);
-  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX(-0.7L, 0)), 0.7L);
-  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX(0.7L, 0)), 0.7L);
-  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX(-1.0L, 0)), 1.0L);
-  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX(1.0L, 0)), 1.0L);
-  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX(-5.7e7L, 0)),
+	 FUNC(cabs) (BUILD_COMPLEX (-0.7L, -12.4L)), a);
+  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX (-0.7L, 0)), 0.7L);
+  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX (0.7L, 0)), 0.7L);
+  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX (-1.0L, 0)), 1.0L);
+  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX (1.0L, 0)), 1.0L);
+  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX (-5.7e7L, 0)),
 	 5.7e7L);
-  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX(5.7e7L, 0)),
+  check ("cabs (x,0) == fabs (x)", FUNC(cabs) (BUILD_COMPLEX (5.7e7L, 0)),
 	 5.7e7L);
 
-  check_eps ("cabs (0.7 + i 1.2) == 1.38924...", FUNC(cabs) (BUILD_COMPLEX(0.7, 1.2)),
-	     1.3892443989449804508L, CHOOSE(7e-17L, 3e-16, 0));
+  check_eps ("cabs (0.7 + i 1.2) == 1.38924...", FUNC(cabs) (BUILD_COMPLEX (0.7, 1.2)),
+	     1.3892443989449804508L, CHOOSE (7e-17L, 3e-16, 0));
 }
 
 
@@ -5187,79 +5187,79 @@ carg_test (void)
 
   x = random_greater (0);
   check ("carg (x + i 0) == 0 for x > 0",
-	 FUNC(carg) (BUILD_COMPLEX(x, 0)), 0);
+	 FUNC(carg) (BUILD_COMPLEX (x, 0)), 0);
   x = random_greater (0);
   check ("carg (x - i 0) == -0 for x > 0",
-	 FUNC(carg) (BUILD_COMPLEX(x, minus_zero)), minus_zero);
+	 FUNC(carg) (BUILD_COMPLEX (x, minus_zero)), minus_zero);
 
-  check ("carg (+0 + i 0) == +0", FUNC(carg) (BUILD_COMPLEX(0, 0)), 0);
-  check ("carg (+0 - i 0) == -0", FUNC(carg) (BUILD_COMPLEX(0, minus_zero)),
+  check ("carg (+0 + i 0) == +0", FUNC(carg) (BUILD_COMPLEX (0, 0)), 0);
+  check ("carg (+0 - i 0) == -0", FUNC(carg) (BUILD_COMPLEX (0, minus_zero)),
 	 minus_zero);
 
   x = -random_greater (0);
-  check ("carg (x + i 0) == +pi for x < 0", FUNC(carg) (BUILD_COMPLEX(x, 0)),
+  check ("carg (x + i 0) == +pi for x < 0", FUNC(carg) (BUILD_COMPLEX (x, 0)),
 	 M_PIl);
 
   x = -random_greater (0);
   check ("carg (x - i 0) == -pi for x < 0",
-	 FUNC(carg) (BUILD_COMPLEX(x, minus_zero)), -M_PIl);
+	 FUNC(carg) (BUILD_COMPLEX (x, minus_zero)), -M_PIl);
 
-  check ("carg (-0 + i 0) == +pi", FUNC(carg) (BUILD_COMPLEX(minus_zero, 0)),
+  check ("carg (-0 + i 0) == +pi", FUNC(carg) (BUILD_COMPLEX (minus_zero, 0)),
 	 M_PIl);
   check ("carg (-0 - i 0) == -pi",
-	 FUNC(carg) (BUILD_COMPLEX(minus_zero, minus_zero)), -M_PIl);
+	 FUNC(carg) (BUILD_COMPLEX (minus_zero, minus_zero)), -M_PIl);
 
   x = random_greater (0);
-  check ("carg (+0 + i y) == pi/2 for y > 0", FUNC(carg) (BUILD_COMPLEX(0, x)),
+  check ("carg (+0 + i y) == pi/2 for y > 0", FUNC(carg) (BUILD_COMPLEX (0, x)),
 	 M_PI_2l);
 
   x = random_greater (0);
   check ("carg (-0 + i y) == pi/2 for y > 0",
-	 FUNC(carg) (BUILD_COMPLEX(minus_zero, x)), M_PI_2l);
+	 FUNC(carg) (BUILD_COMPLEX (minus_zero, x)), M_PI_2l);
 
   x = random_less (0);
-  check ("carg (+0 + i y) == -pi/2 for y < 0", FUNC(carg) (BUILD_COMPLEX(0, x)),
+  check ("carg (+0 + i y) == -pi/2 for y < 0", FUNC(carg) (BUILD_COMPLEX (0, x)),
 	 -M_PI_2l);
 
   x = random_less (0);
   check ("carg (-0 + i y) == -pi/2 for y < 0",
-	 FUNC(carg) (BUILD_COMPLEX(minus_zero, x)), -M_PI_2l);
+	 FUNC(carg) (BUILD_COMPLEX (minus_zero, x)), -M_PI_2l);
 
   x = random_greater (0);
   check ("carg (inf + i y) == +0 for finite y > 0",
-	 FUNC(carg) (BUILD_COMPLEX(plus_infty, x)), 0);
+	 FUNC(carg) (BUILD_COMPLEX (plus_infty, x)), 0);
 
   x = -random_greater (0);
   check ("carg (inf + i y) == -0 for finite y < 0",
-	 FUNC(carg) (BUILD_COMPLEX(plus_infty, x)), minus_zero);
+	 FUNC(carg) (BUILD_COMPLEX (plus_infty, x)), minus_zero);
 
   x = random_value (-1e4, 1e4);
   check ("carg(x + i inf) == pi/2 for finite x",
-	 FUNC(carg) (BUILD_COMPLEX(x, plus_infty)), M_PI_2l);
+	 FUNC(carg) (BUILD_COMPLEX (x, plus_infty)), M_PI_2l);
 
   x = random_value (-1e4, 1e4);
   check ("carg(x - i inf) == -pi/2 for finite x",
-	 FUNC(carg) (BUILD_COMPLEX(x, minus_infty)), -M_PI_2l);
+	 FUNC(carg) (BUILD_COMPLEX (x, minus_infty)), -M_PI_2l);
 
   x = random_greater (0);
   check ("carg (-inf + i y) == +pi for finite y > 0",
-	 FUNC(carg) (BUILD_COMPLEX(minus_infty, x)), M_PIl);
+	 FUNC(carg) (BUILD_COMPLEX (minus_infty, x)), M_PIl);
 
   x = -random_greater (0);
   check ("carg (-inf + i y) == -pi for finite y < 0",
-	 FUNC(carg) (BUILD_COMPLEX(minus_infty, x)), -M_PIl);
+	 FUNC(carg) (BUILD_COMPLEX (minus_infty, x)), -M_PIl);
 
   check ("carg (+inf + i inf) == +pi/4",
-	 FUNC(carg) (BUILD_COMPLEX(plus_infty, plus_infty)), M_PI_4l);
+	 FUNC(carg) (BUILD_COMPLEX (plus_infty, plus_infty)), M_PI_4l);
 
   check ("carg (+inf -i inf) == -pi/4",
-	 FUNC(carg) (BUILD_COMPLEX(plus_infty, minus_infty)), -M_PI_4l);
+	 FUNC(carg) (BUILD_COMPLEX (plus_infty, minus_infty)), -M_PI_4l);
 
   check ("carg (-inf +i inf) == +3*pi/4",
-	 FUNC(carg) (BUILD_COMPLEX(minus_infty, plus_infty)), 3 * M_PI_4l);
+	 FUNC(carg) (BUILD_COMPLEX (minus_infty, plus_infty)), 3 * M_PI_4l);
 
   check ("carg (-inf -i inf) == -3*pi/4",
-	 FUNC(carg) (BUILD_COMPLEX(minus_infty, minus_infty)), -3 * M_PI_4l);
+	 FUNC(carg) (BUILD_COMPLEX (minus_infty, minus_infty)), -3 * M_PI_4l);
 }
 
 
@@ -5616,38 +5616,38 @@ inverse_functions (void)
 {
   inverse_func_pair_test ("asin(sin(x)) == x",
 			  FUNC(sin), FUNC(asin), 1.0,
-			  CHOOSE(2e-18L, 0, 3e-7L));
+			  CHOOSE (2e-18L, 0, 3e-7L));
   inverse_func_pair_test ("sin(asin(x)) == x",
 			  FUNC(asin), FUNC(sin), 1.0, 0.0);
 
   inverse_func_pair_test ("acos(cos(x)) == x",
 			  FUNC(cos), FUNC(acos), 1.0,
-			  CHOOSE(4e-18L, 1e-15L, 0));
+			  CHOOSE (4e-18L, 1e-15L, 0));
   inverse_func_pair_test ("cos(acos(x)) == x",
 			  FUNC(acos), FUNC(cos), 1.0, 0.0);
   inverse_func_pair_test ("atan(tan(x)) == x",
 			  FUNC(tan), FUNC(atan), 1.0,
-			  CHOOSE(2e-18L, 0, 0));
+			  CHOOSE (2e-18L, 0, 0));
   inverse_func_pair_test ("tan(atan(x)) == x",
 			  FUNC(atan), FUNC(tan), 1.0,
-			  CHOOSE(2e-18L, 1e-15L, 2e-7));
+			  CHOOSE (2e-18L, 1e-15L, 2e-7));
 
   inverse_func_pair_test ("asinh(sinh(x)) == x",
 			  FUNC(sinh), FUNC(asinh), 1.0,
-			  CHOOSE(1e-18L, 0, 1e-7));
+			  CHOOSE (1e-18L, 0, 1e-7));
   inverse_func_pair_test ("sinh(asinh(x)) == x",
 			  FUNC(asinh), FUNC(sinh), 1.0,
-			  CHOOSE(2e-18L, 2e-16L, 2e-7));
+			  CHOOSE (2e-18L, 2e-16L, 2e-7));
 
   inverse_func_pair_test ("acosh(cosh(x)) == x",
 			  FUNC(cosh), FUNC(acosh), 1.0,
-			  CHOOSE(1e-18L, 1e-15L, 6e-8));
+			  CHOOSE (1e-18L, 1e-15L, 6e-8));
   inverse_func_pair_test ("cosh(acosh(x)) == x",
 			  FUNC(acosh), FUNC(cosh), 1.0, 0.0);
 
   inverse_func_pair_test ("atanh(tanh(x)) == x",
 			  FUNC(tanh), FUNC(atanh), 1.0,
-			  CHOOSE(1e-18L, 1e-15L, 0));
+			  CHOOSE (1e-18L, 1e-15L, 0));
   inverse_func_pair_test ("tanh(atanh(x)) == x",
 			  FUNC(atanh), FUNC(tanh), 1.0, 0.0);
 }
@@ -5723,20 +5723,20 @@ identities3_test (MATHTYPE x, MATHTYPE epsilon)
 static void
 identities (void)
 {
-  identities1_test (0.2L, CHOOSE(1e-18L, 0, 2e-7));
-  identities1_test (0.9L, CHOOSE(1e-18L, 2e-16, 2e-7));
+  identities1_test (0.2L, CHOOSE (1e-18L, 0, 2e-7));
+  identities1_test (0.9L, CHOOSE (1e-18L, 2e-16, 2e-7));
   identities1_test (0, 0);
-  identities1_test (-1, CHOOSE(1e-18L, 0, 1e-7));
+  identities1_test (-1, CHOOSE (1e-18L, 0, 1e-7));
 
-  identities2_test (0.2L, CHOOSE(1e-19L, 1e-16, 0));
-  identities2_test (0.9L, CHOOSE(3e-19L, 1e-15, 2e-7));
+  identities2_test (0.2L, CHOOSE (1e-19L, 1e-16, 0));
+  identities2_test (0.9L, CHOOSE (3e-19L, 1e-15, 2e-7));
   identities2_test (0, 0);
-  identities2_test (-1, CHOOSE(1e-18L, 1e-15, 2e-7));
+  identities2_test (-1, CHOOSE (1e-18L, 1e-15, 2e-7));
 
-  identities3_test (0.2L, CHOOSE(1e-18L, 0, 1e-7));
-  identities3_test (0.9L, CHOOSE(1e-18L, 1e-15, 1e-6));
-  identities3_test (0, CHOOSE(0, 0, 1e-6));
-  identities3_test (-1, CHOOSE(1e-18L, 7e-16, 1e-6));
+  identities3_test (0.2L, CHOOSE (1e-18L, 0, 1e-7));
+  identities3_test (0.9L, CHOOSE (1e-18L, 1e-15, 1e-6));
+  identities3_test (0, CHOOSE (0, 0, 1e-6));
+  identities3_test (-1, CHOOSE (1e-18L, 7e-16, 1e-6));
 }
 
 
@@ -5801,17 +5801,17 @@ basic_tests (void)
 
   /* test if EPSILON is ok */
   x1 = MATHCONST (1.0);
-  x2 = x1 + CHOOSE(LDBL_EPSILON, DBL_EPSILON, FLT_EPSILON);
+  x2 = x1 + CHOOSE (LDBL_EPSILON, DBL_EPSILON, FLT_EPSILON);
   check_bool ("1 != 1+EPSILON", x1 != x2);
 
   x1 = MATHCONST (1.0);
-  x2 = x1 - CHOOSE(LDBL_EPSILON, DBL_EPSILON, FLT_EPSILON);
+  x2 = x1 - CHOOSE (LDBL_EPSILON, DBL_EPSILON, FLT_EPSILON);
   check_bool ("1 != 1-EPSILON", x1 != x2);
 
   /* test if HUGE_VALx is ok */
-  x1 = CHOOSE(HUGE_VALL, HUGE_VAL, HUGE_VALF);
+  x1 = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
   check_bool ("isinf (HUGE_VALx) == +1", ISINF (x1) == +1);
-  x1 = -CHOOSE(HUGE_VALL, HUGE_VAL, HUGE_VALF);
+  x1 = -CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
   check_bool ("isinf (-HUGE_VALx) == -1", ISINF (x1) == -1);
 }
 
@@ -5824,8 +5824,8 @@ initialize (void)
   nan_value = plus_zero / plus_zero;	/* Suppress GCC warning */
 
   minus_zero = FUNC(copysign) (0.0, -1.0);
-  plus_infty = CHOOSE(HUGE_VALL, HUGE_VAL, HUGE_VALF);
-  minus_infty = -CHOOSE(HUGE_VALL, HUGE_VAL, HUGE_VALF);
+  plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
+  minus_infty = CHOOSE (-HUGE_VALL, -HUGE_VAL, -HUGE_VALF);
 
   (void) &plus_zero;
   (void) &nan_value;
@@ -6011,7 +6011,7 @@ main (int argc, char *argv[])
 	  noTests, noExcTests);
   if (noErrors)
     {
-      printf ("	 %d errors occured.\n", noErrors);
+      printf ("  %d errors occured.\n", noErrors);
       exit (1);
     }
   printf ("  All tests passed successfully.\n");

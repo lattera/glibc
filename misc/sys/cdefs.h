@@ -19,7 +19,10 @@
 #ifndef	_SYS_CDEFS_H
 #define	_SYS_CDEFS_H	1
 
+/* We are almost always included from features.h. */
+#ifndef _FEATURES_H
 #include <features.h>
+#endif
 
 /* Some user header file might have defined this before.  */
 #undef	__P
@@ -152,8 +155,11 @@
 
 #endif
 
-/* No current version of gcc knows the `restrict' keyword.  Define it
-   for now unconditionally to the empty string.  */
-#define __restrict
+/* __restrict is known in EGCS 1.2 and above. */
+#if !defined __GNUC__ || __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 92)
+
+# define __restrict	/* Ignore */
+
+#endif
 
 #endif	 /* sys/cdefs.h */

@@ -1,3 +1,9 @@
+1998-12-02  H.J. Lu  <hjl@gnu.org>
+
+	* pthread.c (__pthread_sig_restart): Initiliaze to 0 if
+	SIGRTMIN is defined.
+	(__pthread_sig_cancel): Likewise.
+
 1998-12-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* wrapsyscall.c: Include <sys/mman.h> for msync,

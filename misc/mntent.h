@@ -73,14 +73,16 @@ extern struct mntent *getmntent __P ((FILE *__stream));
 
 #ifdef __USE_MISC
 /* Reentrant version of the above function.  */
-extern struct mntent *getmntent_r __P ((FILE *__stream,
-					struct mntent *__result,
-					char *__buffer, int __bufsize));
+extern struct mntent *getmntent_r __P ((FILE *__restrict __stream,
+					struct mntent *__restrict __result,
+					char *__restrict __buffer,
+					int __bufsize));
 #endif
 
 /* Write the mount table entry described by MNT to STREAM.
    Return zero on success, nonzero on failure.  */
-extern int addmntent __P ((FILE *__stream, __const struct mntent *__mnt));
+extern int addmntent __P ((FILE *__restrict __stream,
+			   __const struct mntent *__restrict __mnt));
 
 /* Close a stream opened with `setmntent'.  */
 extern int endmntent __P ((FILE *__stream));

@@ -25,7 +25,7 @@
 __BEGIN_DECLS
 
 /* Change uid used for file access control to UID, without affecting
-   other priveledges (such as who can send signals at the process).  */
+   other privileges (such as who can send signals at the process).  */
 extern int setfsuid __P ((__uid_t __uid));
 
 /* Ditto for group id. */

@@ -73,7 +73,8 @@ extern struct group *fgetgrent __P ((FILE *__stream));
 
 #ifdef __USE_GNU
 /* Write the given entry onto the given stream.  */
-extern int putgrent __P ((__const struct group *__p, FILE *__f));
+extern int putgrent __P ((__const struct group *__restrict __p,
+			  FILE *__restrict __f));
 #endif
 
 /* Search for an entry with a matching group ID.  */
@@ -99,26 +100,30 @@ extern struct group *getgrnam __P ((__const char *__name));
    POSIX people would choose.  */
 
 # if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern int getgrent_r __P ((struct group *__resultbuf, char *__buffer,
-			    size_t __buflen, struct group **__result));
+extern int getgrent_r __P ((struct group *__restrict __resultbuf,
+			    char *__restrict __buffer, size_t __buflen,
+			    struct group **__restrict __result));
 # endif
 
 /* Search for an entry with a matching group ID.  */
-extern int getgrgid_r __P ((__gid_t __gid, struct group *__resultbuf,
-			    char *__buffer, size_t __buflen,
-			    struct group **__result));
+extern int getgrgid_r __P ((__gid_t __gid,
+			    struct group *__restrict __resultbuf,
+			    char *__restrict __buffer, size_t __buflen,
+			    struct group **__restrict __result));
 
 /* Search for an entry with a matching group name.  */
-extern int getgrnam_r __P ((__const char *__name, struct group *__resultbuf,
-			    char *__buffer, size_t __buflen,
-			    struct group **__result));
+extern int getgrnam_r __P ((__const char *__restrict __name,
+			    struct group *__restrict __resultbuf,
+			    char *__restrict __buffer, size_t __buflen,
+			    struct group **__restrict __result));
 
 # ifdef	__USE_SVID
 /* Read a group entry from STREAM.  This function is not standardized
    an probably never will.  */
-extern int fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
-			     char *__buffer, size_t __buflen,
-			     struct group **__result));
+extern int fgetgrent_r __P ((FILE *__restrict __stream,
+			     struct group *__restrict __resultbuf,
+			     char *__restrict __buffer, size_t __buflen,
+			     struct group **__restrict __result));
 # endif
 
 #endif	/* POSIX or reentrant */

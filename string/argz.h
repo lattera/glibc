@@ -40,19 +40,23 @@ __BEGIN_DECLS
 /* Make a '\0' separated arg vector from a unix argv vector, returning it in
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,
    ENOMEM is returned, otherwise 0.  The result can be destroyed using free. */
-extern error_t __argz_create __P ((char *__const __argv[], char **__argz,
-				   size_t *__len));
-extern error_t argz_create __P ((char *__const __argv[], char **__argz,
-				 size_t *__len));
+extern error_t __argz_create __P ((char *__const __argv[],
+				   char **__restrict __argz,
+				   size_t *__restrict __len));
+extern error_t argz_create __P ((char *__const __argv[],
+				 char **__restrict __argz,
+				 size_t *__restrict __len));
 
 /* Make a '\0' separated arg vector from a SEP separated list in
    STRING, returning it in ARGZ, and the total length in LEN.  If a
    memory allocation error occurs, ENOMEM is returned, otherwise 0.
    The result can be destroyed using free.  */
-extern error_t __argz_create_sep __P ((__const char *__string, int __sep,
-				       char **__argz, size_t *__len));
-extern error_t argz_create_sep __P ((__const char *__string, int __sep,
-				     char **__argz, size_t *__len));
+extern error_t __argz_create_sep __P ((__const char *__restrict __string,
+				       int __sep, char **__restrict __argz,
+				       size_t *__restrict __len));
+extern error_t argz_create_sep __P ((__const char *__restrict __string,
+				     int __sep, char **__restrict __argz,
+				     size_t *__restrict __len));
 
 /* Returns the number of strings in ARGZ.  */
 extern size_t __argz_count __P ((__const char *__argz, size_t __len));
@@ -60,10 +64,10 @@ extern size_t argz_count __P ((__const char *__argz, size_t __len));
 
 /* Puts pointers to each string in ARGZ into ARGV, which must be large enough
    to hold them all.  */
-extern void __argz_extract __P ((__const char *__argz, size_t __len,
-				 char **__argv));
-extern void argz_extract __P ((__const char *__argz, size_t __len,
-			       char **__argv));
+extern void __argz_extract __P ((__const char *__restrict __argz, size_t __len,
+				 char **__restrict __argv));
+extern void argz_extract __P ((__const char *__restrict __argz, size_t __len,
+			       char **__restrict __argv));
 
 /* Make '\0' separated arg vector ARGZ printable by converting all the '\0's
    except the last into the character SEP.  */
@@ -71,29 +75,41 @@ extern void __argz_stringify __P ((char *__argz, size_t __len, int __sep));
 extern void argz_stringify __P ((char *__argz, size_t __len, int __sep));
 
 /* Append BUF, of length BUF_LEN to the argz vector in ARGZ & ARGZ_LEN.  */
-extern error_t __argz_append __P ((char **__argz, size_t *__argz_len,
-				   __const char *__buf, size_t _buf_len));
-extern error_t argz_append __P ((char **__argz, size_t *__argz_len,
-				 __const char *__buf, size_t __buf_len));
+extern error_t __argz_append __P ((char **__restrict __argz,
+				   size_t *__restrict __argz_len,
+				   __const char *__restrict __buf,
+				   size_t _buf_len));
+extern error_t argz_append __P ((char **__restrict __argz,
+				 size_t *__restrict __argz_len,
+				 __const char *__restrict __buf,
+				 size_t __buf_len));
 
 /* Append STR to the argz vector in ARGZ & ARGZ_LEN.  */
-extern error_t __argz_add __P ((char **__argz, size_t *__argz_len,
-				__const char *__str));
-extern error_t argz_add __P ((char **__argz, size_t *__argz_len,
-			      __const char *__str));
+extern error_t __argz_add __P ((char **__restrict __argz,
+				size_t *__restrict __argz_len,
+				__const char *__restrict __str));
+extern error_t argz_add __P ((char **__restrict __argz,
+			      size_t *__restrict __argz_len,
+			      __const char *__restrict __str));
 
 /* Append SEP separated list in STRING to the argz vector in ARGZ &
    ARGZ_LEN.  */
-extern error_t __argz_add_sep __P ((char **__argz, size_t *__argz_len,
-				    __const char *__string, int __delim));
-extern error_t argz_add_sep __P ((char **__argz, size_t *__argz_len,
-				  __const char *__string, int __delim));
+extern error_t __argz_add_sep __P ((char **__restrict __argz,
+				    size_t *__restrict __argz_len,
+				    __const char *__restrict __string,
+				    int __delim));
+extern error_t argz_add_sep __P ((char **__restrict __argz,
+				  size_t *__restrict __argz_len,
+				  __const char *__restrict __string,
+				  int __delim));
 
 /* Delete ENTRY from ARGZ & ARGZ_LEN, if it appears there.  */
-extern void __argz_delete __P ((char **__argz, size_t *__argz_len,
-				char *__entry));
-extern void argz_delete __P ((char **__argz, size_t *__argz_len,
-			      char *__entry));
+extern void __argz_delete __P ((char **__restrict __argz,
+				size_t *__restrict __argz_len,
+				char *__restrict __entry));
+extern void argz_delete __P ((char **__restrict __argz,
+			      size_t *__restrict __argz_len,
+			      char *__restrict __entry));
 
 /* Insert ENTRY into ARGZ & ARGZ_LEN before BEFORE, which should be an
    existing entry in ARGZ; if BEFORE is NULL, ENTRY is appended to the end.
@@ -101,20 +117,28 @@ extern void argz_delete __P ((char **__argz, size_t *__argz_len,
    ARGZ, ENTRY) will insert ENTRY at the beginning of ARGZ.  If BEFORE is not
    in ARGZ, EINVAL is returned, else if memory can't be allocated for the new
    ARGZ, ENOMEM is returned, else 0.  */
-extern error_t __argz_insert __P ((char **__argz, size_t *__argz_len,
-				   char *__before, __const char *__entry));
-extern error_t argz_insert __P ((char **__argz, size_t *__argz_len,
-				 char *__before, __const char *__entry));
+extern error_t __argz_insert __P ((char **__restrict __argz,
+				   size_t *__restrict __argz_len,
+				   char *__restrict __before,
+				   __const char *__restrict __entry));
+extern error_t argz_insert __P ((char **__restrict __argz,
+				 size_t *__restrict __argz_len,
+				 char *__restrict __before,
+				 __const char *__restrict __entry));
 
 /* Replace any occurances of the string STR in ARGZ with WITH, reallocating
    ARGZ as necessary.  If REPLACE_COUNT is non-zero, *REPLACE_COUNT will be
    incremented by number of replacements performed.  */
-extern error_t __argz_replace (char **__argz, size_t *__argz_len,
-			       __const char *__str, __const char *__with,
-			       unsigned *__replace_count);
-extern error_t argz_replace (char **__argz, size_t *__argz_len,
-			     __const char *__str, __const char *__with,
-			     unsigned *__replace_count);
+extern error_t __argz_replace (char **__restrict __argz,
+			       size_t *__restrict __argz_len,
+			       __const char *__restrict __str,
+			       __const char *__restrict __with,
+			       unsigned int *__restrict __replace_count);
+extern error_t argz_replace (char **__restrict __argz,
+			     size_t *__restrict __argz_len,
+			     __const char *__restrict __str,
+			     __const char *__restrict __with,
+			     unsigned int *__restrict __replace_count);
 
 /* Returns the next entry in ARGZ & ARGZ_LEN after ENTRY, or NULL if there
    are no more.  If entry is NULL, then the first entry is returned.  This
@@ -130,10 +154,12 @@ extern error_t argz_replace (char **__argz, size_t *__argz_len,
     for (entry = argz; entry; entry = argz_next (argz, argz_len, entry))
       ...;
 */
-extern char *__argz_next __P ((__const char *argz, size_t __argz_len,
-			       __const char *entry));
-extern char *argz_next __P ((__const char *argz, size_t __argz_len,
-			     __const char *entry));
+extern char *__argz_next __P ((__const char *__restrict __argz,
+			       size_t __argz_len,
+			       __const char *__restrict __entry));
+extern char *argz_next __P ((__const char *__restrict __argz,
+			     size_t __argz_len,
+			     __const char *__restrict __entry));
 
 #ifdef __USE_EXTERN_INLINES
 extern inline char *

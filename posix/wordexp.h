@@ -58,8 +58,8 @@ enum
   };
 
 /* Do word expansion of WORDS into PWORDEXP.  */
-extern int wordexp __P ((__const char *__words, wordexp_t *__pwordexp,
-			 int __flags));
+extern int wordexp __P ((__const char *__restrict __words,
+			 wordexp_t *__restrict __pwordexp, int __flags));
 
 /* Free the storage allocated by a `wordexp' call.  */
 extern void wordfree __P ((wordexp_t *__wordexp));

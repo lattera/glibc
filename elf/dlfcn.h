@@ -50,13 +50,15 @@ extern int dlclose __P ((void *__handle));
 
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME.  */
-extern void *dlsym __P ((void *__handle, __const char *__name));
+extern void *dlsym __P ((void *__restrict __handle,
+			 __const char *__restrict __name));
 
 #ifdef __USE_GNU
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME with VERSION.  */
-extern void *dlvsym __P ((void *__handle, __const char *__name,
-			  __const char *__version));
+extern void *dlvsym __P ((void *__restrict __handle,
+			  __const char *__restrict __name,
+			  __const char *__restrict __version));
 #endif
 
 /* When any of the above functions fails, call this function

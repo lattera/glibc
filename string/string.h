@@ -167,11 +167,13 @@ extern char *strtok __P ((char *__restrict __s,
 
 /* Divide S into tokens separated by characters in DELIM.  Information
    passed between calls are stored in SAVE_PTR.  */
-extern char *__strtok_r __P ((char *__s, __const char *__delim,
-			      char **__save_ptr));
+extern char *__strtok_r __P ((char *__restrict __s,
+			      __const char *__restrict __delim,
+			      char **__restrict __save_ptr));
 #if defined __USE_POSIX || defined __USE_MISC
-extern char *strtok_r __P ((char *__s, __const char *__delim,
-			    char **__save_ptr));
+extern char *strtok_r __P ((char *__restrict __s,
+			    __const char *__restrict __delim,
+			    char **__restrict __save_ptr));
 #endif
 
 #ifdef __USE_GNU
@@ -268,7 +270,8 @@ extern int __strncasecmp_l __P ((__const char *__s1, __const char *__s2,
 #ifdef	__USE_BSD
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
-extern char *strsep __P ((char **__stringp, __const char *__delim));
+extern char *strsep __P ((char **__restrict __stringp,
+			  __const char *__restrict __delim));
 #endif
 
 #ifdef	__USE_GNU
@@ -279,13 +282,17 @@ extern int strverscmp __P ((__const char *__s1, __const char *__s2));
 extern char *strsignal __P ((int __sig));
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
-extern char *__stpcpy __P ((char *__dest, __const char *__src));
-extern char *stpcpy __P ((char *__dest, __const char *__src));
+extern char *__stpcpy __P ((char *__restrict __dest,
+			    __const char *__restrict __src));
+extern char *stpcpy __P ((char *__restrict __dest,
+			  __const char *__restrict __src));
 
 /* Copy no more than N characters of SRC to DEST, returning the address of
    the last character written into DEST.  */
-extern char *__stpncpy __P ((char *__dest, __const char *__src, size_t __n));
-extern char *stpncpy __P ((char *__dest, __const char *__src, size_t __n));
+extern char *__stpncpy __P ((char *__restrict __dest,
+			     __const char *__restrict __src, size_t __n));
+extern char *stpncpy __P ((char *__restrict __dest,
+			   __const char *__restrict __src, size_t __n));
 
 /* Sautee STRING briskly.  */
 extern char *strfry __P ((char *__string));
