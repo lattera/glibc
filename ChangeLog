@@ -1,3 +1,9 @@
+2001-08-22  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/generic/dl-environ.c: Include <stdlib.h> and <unistd.h>,
+	and don't declare unsetenv or _environ directly.
+	(unsetenv): Return int, not void.  Use __environ instead of _environ.
+
 2001-08-01  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/bsd/bsd4.4/Makefile: New file.
