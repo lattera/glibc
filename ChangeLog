@@ -1,3 +1,34 @@
+2001-06-11  Michael Deutschmann <michael@talamasca.ocis.net>
+
+	* rt/tst-aio4.c (do_test): Test whether rt signals are supported.
+	Use my_signo instead of MY_SIGNO and initialize it so that the
+	used signal is always available.
+
+2001-06-11  Andreas Jaeger  <aj@suse.de>, 
+	    Michael Deutschmann <michael@talamasca.ocis.net>
+
+	* io/test-lfs.c (do_prepare): Clean up error messages.
+	(test_ftello): Check for EFBIG and ENOSP, clean up error messages.
+	(do_test): Likewise.
+
+2001-06-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h (IXANY, IUCLC,
+	IMAXBEL): Make always visible since they're needed by POSIX.
+	Closes PR libc/2320, reported by Chris Yeoh <cyeoh@samba.org>.
+
+2001-06-10  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/arm/elf/start.S: Use #function, not @function, for
+	.type of _start.
+
+	* sysdeps/ieee754/ldbl-128/s_ilogbl.c: Include limits.h to get
+	INT_MAX.
+
+2001-06-07  H.J. Lu  <hjl@gnu.org>
+
+	* sunrpc/rpc/rpc.h: Add __BEGIN_DECLS/__END_DECLS.
+
 2001-06-10  Roland McGrath  <roland@frob.com>
 
 	* elf/reldep4mod2.c: Use fully typed decls to avoid warnings.

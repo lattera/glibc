@@ -1,5 +1,5 @@
 /* Test for completion signal handling.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 /* We might need a bit longer timeout.  */
 #define TIMEOUT 10 /* sec */
 
-#define MY_SIGNO (SIGRTMIN + 11)
+int my_signo;
 
 volatile sig_atomic_t flag;
 
@@ -46,7 +46,7 @@ wait_flag (void)
       sleep (1);
     }
 
-  if (flag != MY_SIGNO)
+  if (flag != my_signo)
     {
       printf ("signal handler received wrong signal, flag is %d\n", flag);
       return 1;
@@ -67,6 +67,15 @@ do_test (int argc, char *argv[])
   struct aioinit init = {10, 20, 0};
   struct sigaction sa;
   struct sigevent ev;
+
+  if (SIGRTMIN == -1)
+  {
+      printf ("RT signals not supported.\n");
+      return 0;
+  }
+
+  /* Select a signal from the middle of the available choices... */
+  my_signo = (SIGRTMAX + SIGRTMIN) / 2;
 
   fd = mkstemp (name);
   if (fd == -1)
@@ -90,19 +99,19 @@ do_test (int argc, char *argv[])
   cb.aio_sigevent.sigev_notify = SIGEV_SIGNAL;
   cb.aio_sigevent.sigev_notify_function = NULL;
   cb.aio_sigevent.sigev_notify_attributes = NULL;
-  cb.aio_sigevent.sigev_signo = MY_SIGNO;
+  cb.aio_sigevent.sigev_signo = my_signo;
   cb.aio_sigevent.sigev_value.sival_ptr = NULL;
 
   ev.sigev_notify = SIGEV_SIGNAL;
   ev.sigev_notify_function = NULL;
   ev.sigev_notify_attributes = NULL;
-  ev.sigev_signo = MY_SIGNO;
+  ev.sigev_signo = my_signo;
 
   sa.sa_handler = sighandler;
   sigemptyset (&sa.sa_mask);
   sa.sa_flags = SA_RESTART;
 
-  if (sigaction (MY_SIGNO, &sa, NULL) < 0)
+  if (sigaction (my_signo, &sa, NULL) < 0)
     {
       printf ("sigaction failed: %m\n");
       return 1;

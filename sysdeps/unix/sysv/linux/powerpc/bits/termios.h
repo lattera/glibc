@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,12 +74,9 @@ struct termios {
 #define ICRNL	0000400
 #define IXON	0001000
 #define IXOFF	0002000
-/* POSIX.1 doesn't want these... */
-#ifdef __USE_BSD
-# define IXANY		0004000
-# define IUCLC		0010000
-# define IMAXBEL	0020000
-#endif
+#define IXANY	0004000
+#define IUCLC	0010000
+#define IMAXBEL	0020000
 
 /* c_oflag bits */
 #define OPOST	0000001

@@ -43,7 +43,7 @@
 
 	.text
 	.globl _start
-	.type _start,@function
+	.type _start,#function
 _start:
 	/* Clear the frame pointer since this is the outermost frame.  */
 	mov fp, #0

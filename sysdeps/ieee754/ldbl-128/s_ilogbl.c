@@ -24,6 +24,7 @@ static char rcsid[] = "$NetBSD: $";
  * ilogbl(+-Inf) = INT_MAX (no signal is raised)
  */
 
+#include <limits.h>
 #include "math.h"
 #include "math_private.h"
 

@@ -65,7 +65,7 @@ do_prepare (int argc, char *argv[])
       if (errno == ENOSYS)
 	{
 	  /* Fail silently.  */
-	  error (0, errno, "open64 is not supported");
+	  error (0, 0, "open64 is not supported");
 	  exit (EXIT_SUCCESS);
 	}
       else
@@ -100,29 +100,35 @@ test_ftello (void)
   ret = fseeko64 (f, TWO_GB+100, SEEK_SET);
   if (ret == -1 && errno == ENOSYS)
     {
-      error (0, errno, "fseeko64 is not supported");
+      error (0, 0, "fseeko64 is not supported.");
       exit (EXIT_SUCCESS);
     }
   if (ret == -1 && errno == EINVAL)
     {
-      error (0, errno, "LFS seems not to be supported ");
+      error (0, 0, "LFS seems not to be supported");
       exit (EXIT_SUCCESS);
     }
   if (ret == -1)
     {
-      error (0, errno, "fseeko64 failed with error: ");
+      error (0, errno, "fseeko64 failed with error");
       exit (EXIT_FAILURE);
     }
 
   ret = fwrite ("Hello", 1, 5, f);
-  if (ret == -1 && errno == EINVAL)
+  if (ret == -1 && errno == EFBIG)
     {
-      error (0, errno, "LFS seems not to be supported.");
+      error (0, errno, "LFS seems not to be supported");
+      exit (EXIT_SUCCESS);
+    }
+
+  if (ret == -1 && errno == ENOSPC)
+    {
+      error (0, 0, "Not enough space to write file.");
       exit (EXIT_SUCCESS);
     }
 
   if (ret != 5)
-    error (EXIT_FAILURE, errno, "cannot write test string to large file");
+    error (EXIT_FAILURE, errno, "Cannot write test string to large file");
 
   pos = ftello64 (f);
 
@@ -144,24 +150,30 @@ do_test (int argc, char *argv[])
   ret = lseek64 (fd, TWO_GB+100, SEEK_SET);
   if (ret == -1 && errno == ENOSYS)
     {
-      error (0, errno, "lseek64 is not supported");
+      error (0, 0, "lseek64 is not supported.");
       exit (EXIT_SUCCESS);
     }
   if (ret == -1 && errno == EINVAL)
     {
-      error (0, errno, "LFS seems not to be supported ");
+      error (0, 0, "LFS seems not to be supported.");
       exit (EXIT_SUCCESS);
     }
   if (ret == -1)
     {
-      error (0, errno, "lseek64 failed with error: ");
+      error (0, errno, "lseek64 failed with error");
       exit (EXIT_FAILURE);
     }
 
   ret = write (fd, "Hello", 5);
-  if (ret == -1 && errno == EINVAL)
+  if (ret == -1 && errno == EFBIG)
     {
-      error (0, errno, "LFS seems not to be supported.");
+      error (0, 0, "LFS seems not to be supported.");
+      exit (EXIT_SUCCESS);
+    }
+
+  if (ret == -1 && errno == ENOSPC)
+    {
+      error (0, 0, "Not enough space to write file.");
       exit (EXIT_SUCCESS);
     }
 
@@ -176,7 +188,7 @@ do_test (int argc, char *argv[])
   ret = stat64 (name, &statbuf);
 
   if (ret == -1 && (errno == ENOSYS || errno == EOVERFLOW))
-    error (0, errno, "stat64 is not supported");
+    error (0, 0, "stat64 is not supported.");
   else if (ret == -1)
     error (EXIT_FAILURE, errno, "cannot stat file `%s'", name);
   else if (statbuf.st_size != (TWO_GB + 100 + 5))
