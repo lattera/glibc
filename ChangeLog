@@ -1,3 +1,8 @@
+1999-03-14  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): Under O_NOFOLLOW,
+	check for root-owned symlinks and reject them too.
+
 1999-03-09  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* stdio-common/printf_fphex.c: Move to ...
