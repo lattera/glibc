@@ -1,3 +1,13 @@
+2001-06-19  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: New file.
+
+	* math/libm-test.inc (tanh_test): Test for 2^-56.
+
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c (__tanhl): Make sure result
+	equals argument when x < 2^-55.
+	Patches by Stephen L. Moshier <moshier@na-net.ornl.gov>.
+
 2001-06-17  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/hppa/dl-machine.h (elf_machine_rela): handle relocs

@@ -78,7 +78,7 @@ static long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 	    if ((ix|j0|j1) == 0)
 		return x;		/* x == +- 0 */
 	    if (ix<0x3fc8)		/* |x|<2**-55 */
-		return x*(one+x);	/* tanh(small) = small */
+		return x*(one+tiny);	/* tanh(small) = small */
 	    if (ix>=0x3fff) {	/* |x|>=1  */
 		t = __expm1l(two*fabsl(x));
 		z = one - two/(t+two);

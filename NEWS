@@ -8,8 +8,8 @@ Please send GNU C library bug reports using the `glibcbug' script to
 
 Version 2.2.4
 
-* Stephen Moshier implemented cosh, expm1, log1p, acos, sinh for the
-  128-bit long double format.
+* Stephen Moshier implemented cosh, expm1, log1p, acos, sinh, tanh for
+  the 128-bit long double format.
 
 * Bruno Haible updated all the code handling Unicode in some form to
   support Unicode 3.1.
