@@ -1,5 +1,7 @@
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cancel1.c (tf): Block all signals.
+
 	* Makefile (tests): Add tst-basic6.
 	* tst-basic6.c: New file.
 

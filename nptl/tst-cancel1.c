@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,11 +43,21 @@ cleanup (void *arg)
 static void *
 tf (void *arg)
 {
-  int err;
+  /* Ignore all signals.  This must not have any effect on delivering
+     the cancellation signal.  */
+  sigset_t ss;
+
+  sigfillset (&ss);
+
+  if (pthread_sigmask (SIG_BLOCK, &ss, NULL) != 0)
+    {
+      puts ("pthread_sigmask failed");
+      exit (1);
+    }
 
   pthread_cleanup_push (cleanup, (void *) 42l);
 
-  err = pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  int err = pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
   if (err != 0)
     {
       printf ("setcanceltype failed: %s\n", strerror (err));
