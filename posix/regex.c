@@ -4627,9 +4627,16 @@ static unsigned char
 truncate_wchar (c)
      CHAR_T c;
 {
-  unsigned char buf[MB_LEN_MAX];
-  int retval = wctomb(buf, c);
-  return retval > 0 ? buf[0] : (unsigned char)c;
+  unsigned char buf[MB_CUR_MAX];
+  mbstate_t state;
+  int retval;
+  memset (&state, '\0', sizeof (state));
+# ifdef _LIBC
+  retval = __wcrtomb (buf, c, &state);
+# else
+  retval = wcrtomb (buf, c, &state);
+# endif
+  return retval > 0 ? buf[0] : (unsigned char) c;
 }
 #endif /* WCHAR */
 

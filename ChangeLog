@@ -1,4 +1,16 @@
+2001-08-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Revert the
+	change of the gregset_t type.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/ucontext.h: Likewise.
+
+2001-08-20  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.S: Align errno.
+
 2001-08-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c (truncate_wchar): Use wcrtomb not wctomb.
 
 	* string/strnlen.c: Fix the implementation.  We cannot use memchr.
 

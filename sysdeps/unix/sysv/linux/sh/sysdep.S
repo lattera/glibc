@@ -21,6 +21,7 @@
 /* We define errno here, to be consistent with Linux/i386.  */
 
 	.section .bss
+	.align 2
 	.globl C_SYMBOL_NAME(errno)
 	.type C_SYMBOL_NAME(errno), @object
 	.size C_SYMBOL_NAME(errno), 4

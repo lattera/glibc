@@ -39,29 +39,35 @@ typedef struct
 /* Type for a general-purpose register.  */
 typedef unsigned long greg_t;
 
-#define NGREG 16
-
-typedef greg_t gregset_t[NGREG];
+/* And the whole bunch of them.  We should have used `struct s390_regs',
+   but to avoid name space pollution and since the tradition says that
+   the register set is an array, we make gregset_t a simple array
+   that has the same size as s390_regs.  This is needed for the
+   elf_prstatus structure.  */
+#define NGREG 27
+/* Must match kernels psw_t alignment.  */
+typedef greg_t gregset_t[NGREG] __attribute__ ((aligned(8)));
 
 typedef union
-{
-  double  d;
-  float   f;
-} fpreg_t;
+  {
+    double  d;
+    float   f;
+  } fpreg_t;
 
 /* Register set for the floating-point registers.  */
-typedef struct {
-  unsigned int fpc;
-  fpreg_t fprs[16];
-} fpregset_t;
+typedef struct
+  {
+    unsigned int fpc;
+    fpreg_t fprs[16];
+  } fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    __psw_t      psw;
-    gregset_t    gregs;
+    __psw_t psw;
+    unsigned long gregs[16];
     unsigned int aregs[16];
-    fpregset_t   fpregs;
+    fpregset_t fpregs;
   } mcontext_t;
 
 /* Userlevel context.  */
