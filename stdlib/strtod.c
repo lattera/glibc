@@ -698,10 +698,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
      decimal point, exponent character or any non-FP number character.  */
   startp = cp;
   dig_no = 0;
-  while (dig_no < (base == 16 ? HEXNDIG : NDIG) ||
-	 /* If parsing grouping info, keep going past useful digits
-	    so we can check all the grouping separators.  */
-	 grouping)
+  while (1)
     {
       if ((c >= L_('0') && c <= L_('9'))
 	  || (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
@@ -760,11 +757,6 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	}
     }
 
-  if (dig_no >= (base == 16 ? HEXNDIG : NDIG))
-    /* Too many digits to be representable.  Assigning this to EXPONENT
-       allows us to read the full number but return HUGE_VAL after parsing.  */
-    exponent = MAX_10_EXP;
-
   /* We have the number digits in the integer part.  Whether these are all or
      any is really a fractional digit will be decided later.  */
   int_no = dig_no;
@@ -820,11 +812,11 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	  /* Get the exponent limit. */
 	  if (base == 16)
 	    exp_limit = (exp_negative ?
-			 -MIN_EXP + MANT_DIG - 4 * int_no :
+			 -MIN_EXP + MANT_DIG + 4 * int_no :
 			 MAX_EXP - 4 * int_no + lead_zero);
 	  else
 	    exp_limit = (exp_negative ?
-			 -MIN_10_EXP + MANT_DIG - int_no :
+			 -MIN_10_EXP + MANT_DIG + int_no :
 			 MAX_10_EXP - int_no + lead_zero);
 
 	  do
@@ -881,6 +873,22 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	}
       assert (dig_no >= int_no);
     }
+
+  if (dig_no == int_no && dig_no > 0 && exponent < 0)
+    do
+      {
+	while (expp[-1] < L_('0') || expp[-1] > L_('9'))
+	  --expp;
+
+	if (expp[-1] != L_('0'))
+	  break;
+
+	--expp;
+	--dig_no;
+	--int_no;
+	++exponent;
+      }
+    while (dig_no > 0 && exponent < 0);
 
  number_parsed:
 
