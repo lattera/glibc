@@ -1,5 +1,7 @@
 2000-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED: Add th_TH.TIS-620.
+
 	* locales/el_GR (toupper): Don't map *s to S*.
 	* locales/en_DK: Likewise.
 	* locales/en_DK.com: Likewise.
