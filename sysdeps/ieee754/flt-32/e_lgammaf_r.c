@@ -162,8 +162,6 @@ static float zero=  0.0000000000e+00;
 
     /* purge off +-inf, NaN, +-0, and negative arguments */
 	*signgamp = 1;
-	if ((unsigned int)hx==0xff800000)
-	  return x-x;
 	ix = hx&0x7fffffff;
 	if(ix>=0x7f800000) return x*x;
 	if(ix==0) return one/fabsf(x);

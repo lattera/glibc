@@ -164,7 +164,7 @@ main (int argc, char *argv[])
   if (remaining == argc)
     {
       if (process_file (cd, stdin, output) != 0)
-	status = 1;
+	status = EXIT_FAILURE;
     }
   else
     do

@@ -1,3 +1,21 @@
+1999-10-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/s_nextafterl.c: Add __nextafterl and nextafterl
+	aliases.
+
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c: Don't handle -Inf special.
+
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (__ieee754_gammaf_r): Check
+	for -Inf and return NaN.
+
+	* math/gen-libm-test.pl: Fix program name in help message.
+
+	* math/libm-test.inc (check_complex): It's Imaginary, not Complex.
+
+	* math/libm-test.inc (gamma_test): Result of gamma(-inf) is +inf.
+
+	* sysdeps/i386/Implies: Correct order of libm directories.
+
 1999-10-19  Andreas Jaeger  <aj@suse.de>
 
 	* include/bits/ipc.h: Remove K&R compatibility.

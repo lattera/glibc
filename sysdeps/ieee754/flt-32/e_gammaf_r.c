@@ -44,6 +44,9 @@ __ieee754_gammaf_r (float x, int *signgamp)
       *signgamp = 0;
       return (x - x) / (x - x);
     }
+  if (hx == 0xff800000)
+    /* x == -Inf.  According to ISO this is NaN.  */
+    return x - x;
 
   /* XXX FIXME.  */
   return __ieee754_expf (__ieee754_lgammaf_r (x, signgamp));

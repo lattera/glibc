@@ -79,7 +79,7 @@ $ulps_file = 'libm-test-ulps';
 $output_dir = '';
 
 if ($opt_h) {
-  print "Usage: generate.pl [OPTIONS]\n";
+  print "Usage: gen-libm-test.pl [OPTIONS]\n";
   print " -h         print this help, then exit\n";
   print " -o DIR     directory where generated files will be placed\n";
   print " -n         generate sorted file NewUlps from libm-test-ulps\n";
