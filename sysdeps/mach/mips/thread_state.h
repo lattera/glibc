@@ -36,3 +36,5 @@ struct machine_thread_all_state
     struct mips_exc_state exc;
     struct mips_float_state fpu;
   };
+
+#include_next <thread_state.h>
