@@ -96,4 +96,4 @@ struct mach_msg_trap_args
 	  0;								  \
 	})								  \
     );									  \
-})									  \
+})
