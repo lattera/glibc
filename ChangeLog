@@ -1,3 +1,9 @@
+1998-03-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/nis_call.c (__do_niscall): Safe and reset errno.
+
+	* nis/ypclnt.c (__yp_bind): Safe and reset errno.
+
 1998-03-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/generic/getresuid.c (__getresuid): Use ISO C

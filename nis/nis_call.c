@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <fcntl.h>
 #include <string.h>
 #include <rpc/rpc.h>
@@ -559,6 +560,7 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
   nis_server *server;
   u_int server_len;
   cache2_info cinfo = {-1, -1, -1};
+  int saved_errno = errno;
 
   if (name == NULL)
     return NIS_BADNAME;
@@ -572,7 +574,10 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
       nis_error status;
       dir = readColdStartFile ();
       if (dir == NULL) /* No /var/nis/NIS_COLD_START->no NIS+ installed */
-	return NIS_UNAVAIL;
+	{
+	  __set_errno (saved_errno);
+	  return NIS_UNAVAIL;
+	}
 
       dir = rec_dirsearch (name, dir, flags, &status);
       if (dir == NULL)

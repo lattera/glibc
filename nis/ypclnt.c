@@ -104,6 +104,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 	  struct iovec vec[2];
 	  u_short port;
 	  int fd;
+	  int saved_errno = errno;
 
 	  sprintf (path, "%s/%s.%ld", BINDINGDIR, domain, YPBINDVERS);
 	  fd = open (path, O_RDONLY);
@@ -132,17 +133,20 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 		}
 	      close (fd);
 	    }
+	  __set_errno (saved_errno);
 	}
 #endif /* USE_BINDINGDIR */
 
       if (ysd->dom_vers == -1)
-        {
-          if(ysd->dom_client)
-            {
-              clnt_destroy(ysd->dom_client);
-              ysd->dom_client = NULL;
-              ysd->dom_socket = -1;
-            }
+	{
+	  int saved_errno = errno;
+
+	  if(ysd->dom_client)
+	    {
+	      clnt_destroy(ysd->dom_client);
+	      ysd->dom_client = NULL;
+	      ysd->dom_socket = -1;
+	    }
           memset (&clnt_saddr, '\0', sizeof clnt_saddr);
           clnt_saddr.sin_family = AF_INET;
           clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
@@ -153,6 +157,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
             {
               if (is_new)
                 free (ysd);
+	      __set_errno (saved_errno);
               return YPERR_YPBIND;
             }
           /*
@@ -165,6 +170,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
               clnt_destroy (client);
               if (is_new)
                 free (ysd);
+	      __set_errno (saved_errno);
               return YPERR_YPBIND;
             }
 
