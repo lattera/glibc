@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -21,6 +21,70 @@
 #ifndef _REGEX_INTERNAL_H
 #define _REGEX_INTERNAL_H 1
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <assert.h>
+#include <ctype.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#if defined HAVE_LOCALE_H || defined _LIBC
+# include <locale.h>
+#endif
+#if defined HAVE_WCHAR_H || defined _LIBC
+# include <wchar.h>
+#endif /* HAVE_WCHAR_H || _LIBC */
+#if defined HAVE_WCTYPE_H || defined _LIBC
+# include <wctype.h>
+#endif /* HAVE_WCTYPE_H || _LIBC */
+
+/* In case that the system doesn't have isblank().  */
+#if !defined _LIBC && !defined HAVE_ISBLANK && !defined isblank
+# define isblank(ch) ((ch) == ' ' || (ch) == '\t')
+#endif
+
+#ifdef _LIBC
+# ifndef _RE_DEFINE_LOCALE_FUNCTIONS
+#  define _RE_DEFINE_LOCALE_FUNCTIONS 1
+#   include <locale/localeinfo.h>
+#   include <locale/elem-hash.h>
+#   include <locale/coll-lookup.h>
+# endif
+#endif
+
+/* This is for other GNU distributions with internationalized messages.  */
+#if HAVE_LIBINTL_H || defined _LIBC
+# include <libintl.h>
+# ifdef _LIBC
+#  undef gettext
+#  define gettext(msgid) \
+  INTUSE(__dcgettext) (INTUSE(_libc_intl_domainname), msgid, LC_MESSAGES)
+# endif
+#else
+# define gettext(msgid) (msgid)
+#endif
+
+#ifndef gettext_noop
+/* This define is so xgettext can find the internationalizable
+   strings.  */
+# define gettext_noop(String) String
+#endif
+
+#if (defined (MB_CUR_MAX) && HAVE_LOCALE_H && HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_WCRTOMB && HAVE_MBRTOWC && HAVE_WCSCOLL) || _LIBC
+#define RE_ENABLE_I18N
+#endif
+
+#if __GNUC__ >= 3
+# define BE(expr, val) __builtin_expect (expr, val)
+#else
+# define BE(expr, val) (expr)
+# define inline
+#endif
+
 /* Number of bits in a byte.  */
 #define BYTE_BITS 8
 /* Number of single byte character.  */
@@ -37,7 +101,8 @@
 # define __wctype wctype
 # define __iswctype iswctype
 # define __btowc btowc
-# define __mempcpy memcpy
+# define __mempcpy mempcpy
+# define __wcrtomb wcrtomb
 # define attribute_hidden
 #endif /* not _LIBC */
 

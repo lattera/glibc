@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -17,31 +17,6 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
-
-#include <assert.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#if defined HAVE_WCHAR_H || defined _LIBC
-# include <wchar.h>
-#endif /* HAVE_WCHAR_H || _LIBC */
-#if defined HAVE_WCTYPE_H || defined _LIBC
-# include <wctype.h>
-#endif /* HAVE_WCTYPE_H || _LIBC */
-
-#ifdef _LIBC
-# ifndef _RE_DEFINE_LOCALE_FUNCTIONS
-#  define _RE_DEFINE_LOCALE_FUNCTIONS 1
-#  include <locale/localeinfo.h>
-#  include <locale/elem-hash.h>
-#  include <locale/coll-lookup.h>
-# endif
-#endif
-
-#include "regex.h"
-#include "regex_internal.h"
 
 static reg_errcode_t match_ctx_init (re_match_context_t *cache, int eflags,
 				     re_string_t *input, int n);
@@ -174,7 +149,7 @@ static reg_errcode_t get_subexp_sub (const regex_t *preg,
 				     int bkref_node, int bkref_str);
 static int find_subexp_node (re_dfa_t *dfa, re_node_set *nodes,
 			     int subexp_idx, int fl_open);
-static reg_errcode_t check_arrival (const regex_t *preg, 
+static reg_errcode_t check_arrival (const regex_t *preg,
 				    re_match_context_t *mctx,
 				    state_array_t *path, int top_node,
 				    int top_str, int last_node, int last_str,

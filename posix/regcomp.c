@@ -18,56 +18,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
-#include <ctype.h>
-#include <limits.h>
-#include <locale.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#if defined HAVE_WCHAR_H || defined _LIBC
-# include <wchar.h>
-#endif /* HAVE_WCHAR_H || _LIBC */
-#if defined HAVE_WCTYPE_H || defined _LIBC
-# include <wctype.h>
-#endif /* HAVE_WCTYPE_H || _LIBC */
-
-/* In case that the system doesn't have isblank().  */
-#if !defined _LIBC && !defined HAVE_ISBLANK && !defined isblank
-# define isblank(ch) ((ch) == ' ' || (ch) == '\t')
-#endif
-
-#ifdef _LIBC
-# ifndef _RE_DEFINE_LOCALE_FUNCTIONS
-#  define _RE_DEFINE_LOCALE_FUNCTIONS 1
-#   include <locale/localeinfo.h>
-#   include <locale/elem-hash.h>
-#   include <locale/coll-lookup.h>
-# endif
-#endif
-
-/* This is for other GNU distributions with internationalized messages.  */
-#if HAVE_LIBINTL_H || defined _LIBC
-# include <libintl.h>
-# ifdef _LIBC
-#  undef gettext
-#  define gettext(msgid) \
-  INTUSE(__dcgettext) (INTUSE(_libc_intl_domainname), msgid, LC_MESSAGES)
-# endif
-#else
-# define gettext(msgid) (msgid)
-#endif
-
-#ifndef gettext_noop
-/* This define is so xgettext can find the internationalizable
-   strings.  */
-# define gettext_noop(String) String
-#endif
-
-#include <regex.h>
-#include "regex_internal.h"
-
 static reg_errcode_t re_compile_internal (regex_t *preg, const char * pattern,
 					  int length, reg_syntax_t syntax);
 static void re_compile_fastmap_iter (regex_t *bufp,
@@ -1995,7 +1945,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	      mbc_remain = create_tree (NULL, NULL, 0, new_idx);
 	      tree = create_tree (tree, mbc_remain, CONCAT, 0);
 	      if (BE (new_idx == -1 || mbc_remain == NULL || tree == NULL, 0))
-		return *err = REG_ESPACE, NULL;
+		{
+		  *err = REG_ESPACE;
+		  return NULL;
+		}
 	    }
 	}
 #endif
@@ -2097,7 +2050,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  new_idx = re_dfa_add_node (dfa, *token, 0);
 	  tree = create_tree (NULL, NULL, 0, new_idx);
 	  if (BE (new_idx == -1 || tree == NULL, 0))
-	    return *err = REG_ESPACE, NULL;
+	    {
+	      *err = REG_ESPACE;
+	      return NULL;
+	    }
 	}
       /* We must return here, since ANCHORs can't be followed
 	 by repetition operators.

@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -41,16 +41,15 @@
 #  define re_compile_fastmap(bufp) __re_compile_fastmap (bufp)
 #endif
 
-#if __GNUC__ >= 3
-# define BE(expr, val) __builtin_expect (expr, val)
-#else
-# define BE(expr, val) (expr)
-# define inline
-#endif
+/* POSIX says that <sys/types.h> must be included (by the caller) before
+   <regex.h>.  */
+#include <sys/types.h>
+#include <regex.h>
+#include "regex_internal.h"
 
+#include "regex_internal.c"
 #include "regcomp.c"
 #include "regexec.c"
-#include "regex_internal.c"
 
 /* Binary backward compatibility.  */
 #if _LIBC

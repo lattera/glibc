@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -17,50 +17,6 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
-
-#include <assert.h>
-#include <ctype.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#if defined HAVE_WCHAR_H || defined _LIBC
-# include <wchar.h>
-#endif /* HAVE_WCHAR_H || _LIBC */
-#if defined HAVE_WCTYPE_H || defined _LIBC
-# include <wctype.h>
-#endif /* HAVE_WCTYPE_H || _LIBC */
-
-#ifdef _LIBC
-# ifndef _RE_DEFINE_LOCALE_FUNCTIONS
-#  define _RE_DEFINE_LOCALE_FUNCTIONS 1
-#  include <locale/localeinfo.h>
-#  include <locale/elem-hash.h>
-#  include <locale/coll-lookup.h>
-# endif
-#endif
-
-/* This is for other GNU distributions with internationalized messages.  */
-#if HAVE_LIBINTL_H || defined _LIBC
-# include <libintl.h>
-# ifdef _LIBC
-#  undef gettext
-#  define gettext(msgid) \
-  INTUSE(__dcgettext) (_libc_intl_domainname_internal, msgid, LC_MESSAGES)
-# endif
-#else
-# define gettext(msgid) (msgid)
-#endif
-
-#ifndef gettext_noop
-/* This define is so xgettext can find the internationalizable
-   strings.  */
-# define gettext_noop(String) String
-#endif
-
-#include "regex.h"
-#include "regex_internal.h"
 
 static void re_string_construct_common (const char *str, int len,
 					re_string_t *pstr,

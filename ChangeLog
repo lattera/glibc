@@ -1,5 +1,27 @@
 2003-02-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/rcmd.c (rresvport_af): Avoid using invliad values.  Wrap
+	around in search if port IPPORT_RESERVED/2 has been test.
+
+2002-02-20  Paolo Bonzini <bonzini@gnu.org>
+
+	* posix/regcomp.c: Remove inclusions.
+	* posix/regexec.c: Likewise.
+	* posix/regex_internal.c: Likewise.
+	* posix/regex_internal.h: Add inclusions here.
+	* posix/regex.c: Only include sys/types.h before regex.h.  Include
+	regex_internal.h here.  Include regex_internal.c before regcomp.c
+	and regexec.c (might expose more opportunities to the C compiler).
+
+	* posix/regcomp.c (parse_expression): Fix construct rejected by SGI CC.
+
+	* posix/regex_internal.h [!_LIBC] (__mempcpy): Fix typo.
+	[!_LIBC] (__wcrtomb): New definition.
+	[!_LIBC]: Conditionalize enabling of I18N on HAVE_WCSCOLL and
+	HAVE_LOCALE_H as well.
+
+2003-02-20  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Remove obsolete
 	patch to check for system call errors.
 

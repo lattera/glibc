@@ -464,7 +464,14 @@ rresvport_af(alport, family)
 #endif
 	ss.ss_family = family;
 
-	for (;;) {
+	/* Ignore invalid values.  */
+	if (*alport < IPPORT_RESERVED / 2)
+		*alport = IPPORT_RESERVED / 2;
+	else if (*alport >= IPPORT_RESERVED)
+		*alport = IPPORT_RESERVED - 1;
+
+	int start = *alport;
+	do {
 		*sport = htons((uint16_t) *alport);
 		if (__bind(s, (struct sockaddr *)&ss, len) >= 0)
 			return s;
@@ -472,10 +479,9 @@ rresvport_af(alport, family)
 			(void)__close(s);
 			return -1;
 		}
-		(*alport)--;
-		if (*alport == IPPORT_RESERVED/2)
-			break;
-	}
+		if ((*alport)-- == IPPORT_RESERVED/2)
+			*alport = IPPORT_RESERVED - 1;
+	} while (*alport != start);
 	(void)__close(s);
 	__set_errno (EAGAIN);
 	return -1;
