@@ -55,13 +55,16 @@ extern int __libc_missing_32bit_uids;
 int
 __real_chown (const char *file, uid_t owner, gid_t group)
 {
+#if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
+#else
   static int __libc_old_chown;
   int result;
 
   if (!__libc_old_chown)
     {
       int saved_errno = errno;
-#ifdef __NR_chown32
+# ifdef __NR_chown32
       if (__libc_missing_32bit_uids <= 0)
 	{
 	  int result;
@@ -74,7 +77,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 	  __set_errno (saved_errno);
 	  __libc_missing_32bit_uids = 1;
 	}
-#endif /* __NR_chown32 */
+# endif /* __NR_chown32 */
       if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
 	  || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
 	{
@@ -92,6 +95,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
     }
 
   return __lchown (file, owner, group);
+#endif
 }
 
 
