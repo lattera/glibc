@@ -53,7 +53,7 @@ define nl
 
 
 endef
-ifndef avoid-generated
+ifndef no_deps
 -include $(addprefix $(objpfx)z.,$(tzfiles))
 endif
 
@@ -178,7 +178,7 @@ $(objpfx)test-tz.out: $(addprefix $(testdata)/, America/New_York Etc/UTC UTC)
 $(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
 				       Europe/Berlin Universal \
 				       Australia/Melbourne \
-				       America/Sao_Paulo Asia/Tokyo)
+				       America/Sao_Paulo Asia/Tokyo GB)
 
 test-tz-ENV = TZDIR=$(testdata)
 tst-timezone-ENV = TZDIR=$(testdata)
@@ -203,6 +203,8 @@ $(testdata)/America/Sao_Paulo: southamerica $(objpfx)zic $(leapseconds) \
 			       yearistype
 	$(build-testdata)
 $(testdata)/Asia/Tokyo: asia $(objpfx)zic $(leapseconds) yearistype
+	$(build-testdata)
+$(testdata)/GB: europe $(objpfx)zic $(leapseconds) yearistype
 	$(build-testdata)
 
 

@@ -16,11 +16,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
+#include <assert.h>
 #include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #define	NOID
@@ -172,7 +173,7 @@ __tzfile_read (const char *file)
 
   if (num_transitions > 0)
     {
-      transitions = (time_t *) malloc (num_transitions * sizeof(time_t));
+      transitions = (time_t *) malloc (num_transitions * sizeof (time_t));
       if (transitions == NULL)
 	goto lose;
       type_idxs = (unsigned char *) malloc (num_transitions);
@@ -219,7 +220,7 @@ __tzfile_read (const char *file)
 	 processed when sizeof (time_t) > 4.  */
       i = num_transitions;
       while (i-- > 0)
-	transitions[i] = decode ((char *) transitions + i*4);
+	transitions[i] = decode ((char *) transitions + i * 4);
     }
 
   for (i = 0; i < num_types; ++i)
@@ -270,12 +271,36 @@ __tzfile_read (const char *file)
 
   fclose (f);
 
+  /* First "register" all timezone names.  */
+  for (i = 0; i < num_types; ++i)
+    (void) __tzstring (&zone_names[types[i].idx]);
+
   /* Find the standard and daylight time offsets used by the rule file.
      We choose the offsets in the types of each flavor that are
      transitioned to earliest in time.  */
+  __tzname[0] = NULL;
   __tzname[1] = NULL;
-  for (i = 0; i < num_types; ++i)
-    __tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
+  for (i = num_transitions; i > 0; )
+    {
+      int type = type_idxs[--i];
+      int dst = types[type].isdst;
+      int idx = types[type].idx;
+
+      if (__tzname[dst] == NULL)
+	{
+	  __tzname[dst] = __tzstring (&zone_names[idx]);
+
+	  if (__tzname[1 - dst] != NULL)
+	    break;
+	}
+    }
+  if (__tzname[0] == NULL)
+    {
+      /* This should only happen if there are no transition rules.
+	 In this case there should be only one single type.  */
+      assert (num_types == 1);
+      __tzname[0] = __tzstring (zone_names);
+    }
   if (__tzname[1] == NULL)
     __tzname[1] = __tzname[0];
 
@@ -438,9 +463,29 @@ __tzfile_compute (time_t timer, int use_localtime,
       struct ttinfo *info = find_transition (timer);
       __daylight = rule_stdoff != rule_dstoff;
       __timezone = -rule_stdoff;
+      __tzname[0] = NULL;
       __tzname[1] = NULL;
-      for (i = 0; i < num_types; ++i)
-	__tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
+      for (i = num_transitions; i > 0; )
+	{
+	  int type = type_idxs[--i];
+	  int dst = types[type].isdst;
+	  int idx = types[type].idx;
+
+	  if (__tzname[dst] == NULL)
+	    {
+	      __tzname[dst] = __tzstring (&zone_names[idx]);
+
+	      if (__tzname[1 - dst] != NULL)
+		break;
+	    }
+	}
+      if (__tzname[0] == NULL)
+	{
+	  /* This should only happen if there are no transition rules.
+	     In this case there should be only one single type.  */
+	  assert (num_types == 1);
+	  __tzname[0] = __tzstring (zone_names);
+	}
       if (__tzname[1] == NULL)
 	/* There is no daylight saving time.  */
 	__tzname[1] = __tzname[0];

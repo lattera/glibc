@@ -1,4 +1,17 @@
-Fri Nov 13 11:57:21 1998  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/bits/stdio.h: Correct and improve fread_unlocked and
+	fwrite_unlocked optimizations.
+
+	* time/tzfile.c (__tzfile_read): Set __tzname based on last names
+	in time not to last entries in the file.
+	(__tzfile_compute): Likewise.  Fix for PR libc/863.
+
+	* timezone/Makefile: Generate GB timezone data for test.
+	* timezone/tst-timezone.c: More tests for DST switching time (disabled
+	for now).
+
+1998-11-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INLINE_SYSCALL): Remove
 	d0 from clobber list.
@@ -21,7 +34,7 @@ Fri Nov 13 11:57:21 1998  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 	__exit_status with `__'.  Rename pad member of struct utmpx to
 	__unused.
 	(RUN_LVL): Define unconditionally.
-	* sysdeps/gnu/bits/utmp.h: Rename pad member of struct utmpx to
+	* sysdeps/gnu/bits/utmp.h: Rename pad member of struct utmp to
 	__unused.
 
 1998-11-12  Philip Blundell  <philb@gnu.org>

@@ -39,6 +39,7 @@ static const struct test_times tests[] =
   { "Universal", 0, 0, {"UTC", "UTC" }},
   { "Australia/Melbourne", 1, -36000, { "EST", "EST" }},
   { "America/Sao_Paulo", 1, 10800, {"EST", "EDT" }},
+  { "America/Chicago", 1, 21600, {"CST", "CDT" }},
   { "America/Los_Angeles", 1, 28800, {"PST", "PDT" }},
   { "Asia/Tokyo", 0, -32400, {"JST", "JST" }},
   { NULL, 0, 0 }
@@ -112,6 +113,44 @@ main (int argc, char ** argv)
       print_tzvars ();
       check_tzvars (pt->name, pt->daylight, pt->timezone, pt->tzname);
     }
+
+#if 0
+  /* From a port of Scott Harrington <seh4@ix.netcom.com> to the timezone
+     mailing list.  */
+  {
+    struct tm tmBuf = {0, 0, 0, 10, 3, 98, 0, 0, -1};
+    char buf[200];
+    putenv ("TZ=GB");
+    t = mktime (&tmBuf);
+    snprintf (buf, sizeof (buf), "TZ=%s %ld %d %d %d %d %d %d %d %d %d",
+	      getenv ("TZ"), t,
+	      tmBuf.tm_sec, tmBuf.tm_min, tmBuf.tm_hour,
+	      tmBuf.tm_mday, tmBuf.tm_mon, tmBuf.tm_year,
+	      tmBuf.tm_wday, tmBuf.tm_yday, tmBuf.tm_isdst);
+    fputs (buf, stdout);
+    puts (" should be");
+    puts ("TZ=GB 892162800 0 0 0 10 3 98 5 99 1");
+    failed |= strcmp (buf, "TZ=GB 892162800 0 0 0 10 3 98 5 99 1") != 0;
+  }
+
+  printf("\n");
+
+  {
+    struct tm tmBuf = {0, 0, 0, 10, 3, 98, 0, 0, -1};
+    char buf[200];
+    putenv ("TZ=GMT");
+    t = mktime (&tmBuf);
+    snprintf (buf, sizeof (buf), "TZ=%s %ld %d %d %d %d %d %d %d %d %d",
+	      getenv ("TZ"), t,
+	      tmBuf.tm_sec, tmBuf.tm_min, tmBuf.tm_hour,
+	      tmBuf.tm_mday, tmBuf.tm_mon, tmBuf.tm_year,
+	      tmBuf.tm_wday, tmBuf.tm_yday, tmBuf.tm_isdst);
+    fputs (buf, stdout);
+    puts (" should be");
+    puts ("TZ=GMT 892166400 0 0 0 10 3 98 5 99 0");
+    failed |= strcmp (buf, "TZ=GMT 892166400 0 0 0 10 3 98 5 99 0") != 0;
+  }
+#endif
 
   return failed ? EXIT_FAILURE : EXIT_SUCCESS;
 }
