@@ -1,3 +1,12 @@
+2000-05-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Versions: Change posix_spawnattr_getdefault and
+	posix_spawnattr_setdefault to posix_spawnattr_getsigdefault
+	and posix_spawnattr_setsigdefault respectively.
+	* posix/spawn.h: Likewise.
+	* posix/spawnattr_getdefault.h: Likewise.
+	* posix/spawnattr_setdefault.h: Likewise.
+
 2000-05-01  Andreas Jaeger  <aj@suse.de>
 
 	* nscd/nscd.c: Include <grp.h> for setgroups prototype.
