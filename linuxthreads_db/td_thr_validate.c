@@ -1,5 +1,5 @@
 /* Validate a thread handle.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -41,9 +41,15 @@ td_thr_validate (const td_thrhandle_t *th)
 
       if (phc.h_descr != NULL && phc.h_descr == th->th_unique)
 	{
+	  struct _pthread_descr_struct pds;
+
+	  if (ps_pdread (th->th_ta_p->ph, phc.h_descr, &pds,
+			 th->th_ta_p->sizeof_descr) != PS_OK)
+	    return TD_ERR;	/* XXX Other error value?  */
+
 	  /* XXX There should be another test using the TID but this is
 	     currently not available.  */
-	  return TD_OK;
+	  return pds.p_terminated != 0 ? TD_NOTHR : TD_OK;
 	}
     }
 

@@ -1,3 +1,8 @@
+2001-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_ta_map_id2thr.c: If thread terminated return TD_NOTHR.
+	* td_thr_validate.c: Likewise.
+
 2001-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_thr_getfpregs.c: If p_pid is zero use ps_getpid().

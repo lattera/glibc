@@ -1,5 +1,5 @@
 /* Map thread ID to thread handle.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -54,6 +54,9 @@ td_ta_map_id2thr (const td_thragent_t *ta, pthread_t pt, td_thrhandle_t *th)
 
   if (pds.p_tid != pt)
     return TD_BADTH;
+
+  if (pds.p_terminated != 0)
+    return TD_NOTHR;
 
   /* Create the `td_thrhandle_t' object.  */
   th->th_ta_p = (td_thragent_t *) ta;

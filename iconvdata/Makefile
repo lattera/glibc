@@ -96,7 +96,7 @@ LDFLAGS-libISOIR165.so = -Wl,-soname,$(@F)
 distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
 	      TESTS $(filter-out testdata/CVS%, $(wildcard testdata/*))	    \
-	      run-iconv-test.sh tst-tables.sh tst-table.sh		    \
+	      TESTS2 run-iconv-test.sh tst-tables.sh tst-table.sh	    \
 	      tst-table-charmap.sh tst-table-from.c tst-table-to.c	    \
 	      EUC-JP.irreversible ISIRI-3342.irreversible SJIS.irreversible \
 	      EUC-KR.irreversible BIG5HKSCS.irreversible BIG5.irreversible  \

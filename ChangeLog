@@ -1,3 +1,9 @@
+2001-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/Dist: Add elf/entry.h.
+
+	* iconvdata/Makefile (distribute): Add TESTS2.
+
 2001-04-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address):
