@@ -1,5 +1,6 @@
 /* hairy bits of Hurd file name lookup
-   Copyright (C) 1992,93,94,95,96,97,99,2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1992,1993,1994,1995,1996,1997,1999,2001,2002,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -193,7 +194,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  char *end;
 		  int save = errno;
 		  errno = 0;
-		  fd = (int) strtol (&retryname[3], &end, 10);
+		  fd = (int) strtoul (&retryname[3], &end, 10);
 		  if (end == NULL || errno || /* Malformed number.  */
 		      /* Check for excess text after the number.  A slash
 			 is valid; it ends the component.  Anything else

@@ -1,5 +1,8 @@
 2003-01-12  Roland McGrath  <roland@redhat.com>
 
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Use strtoul,
+	not strtol.  The former is usable in ld.so, the latter not.
+
 	* include/fcntl.h: Declare __libc_creat.
 
 	* sysdeps/mach/hurd/Makefile (libmachuser-link.so-no-z-defs,
