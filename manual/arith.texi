@@ -69,14 +69,14 @@ If you don't need a specific storage size, but want the smallest data
 structure with @emph{at least} N bits, use one of these:
 
 @itemize @bullet
-@item int8_least_t
-@item int16_least_t
-@item int32_least_t
-@item int64_least_t
-@item uint8_least_t
-@item uint16_least_t
-@item uint32_least_t
-@item uint64_least_t
+@item int_least8_t
+@item int_least16_t
+@item int_least32_t
+@item int_least64_t
+@item uint_least8_t
+@item uint_least16_t
+@item uint_least32_t
+@item uint_least64_t
 @end itemize
 
 If you don't need a specific storage size, but want the data structure
@@ -85,14 +85,14 @@ among data structures with the same access speed, the smallest one), use
 one of these:
 
 @itemize @bullet
-@item int8_fast_t
-@item int16_fast_t
-@item int32_fast_t
-@item int64_fast_t
-@item uint8_fast_t
-@item uint16_fast_t
-@item uint32_fast_t
-@item uint64_fast_t
+@item int_fast8_t
+@item int_fast16_t
+@item int_fast32_t
+@item int_fast64_t
+@item uint_fast8_t
+@item uint_fast16_t
+@item uint_fast32_t
+@item uint_fast64_t
 @end itemize
 
 If you want an integer with the widest range possible on the platform on
