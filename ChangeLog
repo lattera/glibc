@@ -1,3 +1,8 @@
+Wed Jul 17 23:56:35 1996  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Replace ../
+	with $(..) in output.
+
 Wed Jul 17 21:53:45 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/Makefile (dl-routines): Add dl-cache.
