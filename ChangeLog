@@ -1,3 +1,22 @@
+2003-03-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/make-syscalls.sh: Generate $(compile-syscall) for
+	assembler command.
+	* sysdeps/unix/Makefile (compile-syscall): New variable.
+	Pass -g0 to compiler for assembling syscall stubs from stdin.
+
+	* sysdeps/i386/sysdep.h [HAVE_CPP_ASM_DEBUGINFO]
+	(STABS_CURRENT_FILE, STABS_CURRENT_FILE1, STABS_FUN, STABS_FUN_END):
+	Define these to do nothing.
+
+	* configure.in: New check for -g on .S files.
+	* configure: Regenerated.
+	* config.make.in (have-cpp-asm-debuginfo): New variable.
+	* config.h.in (HAVE_CPP_ASM_DEBUGINFO): New #undef.
+	* Makeconfig (ASFLAGS): New variable, if undefined and
+	$(have-cpp-asm-debuginfo), take options matching -g% from $(CFLAGS).
+	* Makerules (compile.S, COMPILE.S): Use $(ASFLAGS).
+
 2003-03-09  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Take 3 new args

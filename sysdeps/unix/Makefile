@@ -1,4 +1,5 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991,1992,1993,1994,1995,1996,1997,1998,1999,2003
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -285,6 +286,11 @@ endif
 
 export sysdirs
 export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
+
+# This is the end of the pipeline for compiling the syscall stubs.
+# The stdin in assembler with cpp using sysdep.h macros.
+# Be sure to disable debugging info since it would all just say "<stdin>".
+compile-syscall = $(filter-out -g%,$(COMPILE.S)) -x assembler-with-cpp -o $@ -
 
 ifndef avoid-generated
 $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \

@@ -1,3 +1,36 @@
+2003-03-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevelcond.sym: New file.
+	* sysdeps/unix/sysv/linux/Makefile (gen-as-const-headers): Add it.
+	* sysdeps/unix/sysv/linux/sh/lowlevelcond.h: File removed.
+	* sysdeps/unix/sysv/linux/i386/lowlevelcond.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelcond.h: Likewise.
+
+	* allocatestack.c (allocate_stack) [!TLS_MULTIPLE_THREADS_IN_TCB]:
+	Instead of setting PD->multiple_threads, set globals
+	__pthread_multiple_threads and __libc_multiple_threads.
+	* sysdeps/pthread/createthread.c (create_thread): Likewise.
+	* sysdeps/i386/tls.h (TLS_MULTIPLE_THREADS_IN_TCB): Define it.
+	* sysdeps/s390/tls.h (TLS_MULTIPLE_THREADS_IN_TCB): Likewise.
+
+	* descr.h (struct pthread): Conditionalize first member on
+	[!TLS_DTV_AT_TP].  Replace the `header' member with an anonymous union
+	containing an anonymous tcbhead_t.  Move `list' member out.
+	[TLS_MULTIPLE_THREADS_IN_TCB]: Define a `multiple_threads' member.
+	* allocatestack.c: Remove use of `header.data.' prefix.
+	* pthread_create.c: Likewise.
+	* init.c (__pthread_initialize_minimal_internal): Likewise.
+	* sysdeps/pthread/createthread.c (create_thread): Likewise.
+	* sysdeps/i386/tls.h (INSTALL_DTV): Add parens.
+	(THREAD_SELF, THREAD_DTV, INSTALL_NEW_DTV): No `header.data.' prefix.
+	* sysdeps/x86_64/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/i386/tls.h (tcbhead_t): Remove `list' member.
+	* sysdeps/s390/tls.h (tcbhead_t): Likewise.
+
 2003-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: New file.

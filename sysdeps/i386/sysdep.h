@@ -64,6 +64,14 @@
   ASM_SIZE_DIRECTIVE(name)						      \
   STABS_FUN_END(name)
 
+#ifdef HAVE_CPP_ASM_DEBUGINFO
+/* Disable that goop, because we just pass -g through to the assembler
+   and it generates proper line number information directly.  */
+# define STABS_CURRENT_FILE1(name)
+# define STABS_CURRENT_FILE(name)
+# define STABS_FUN(name)
+# define STABS_FUN_END(name)
+#else
 /* Remove the following two lines once the gdb bug is fixed.  */
 #define STABS_CURRENT_FILE(name)					      \
   STABS_CURRENT_FILE1 (#name)
@@ -77,6 +85,7 @@
   .stabs #namestr,36,0,0,name;
 #define STABS_FUN_END(name)						      \
   1: .stabs "",36,0,0,1b-name;
+#endif
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF

@@ -198,7 +198,7 @@ shared-only-routines += $file
   done
 
   # And finally, pipe this all into the compiler.
-  echo '	) | $(COMPILE.S) -x assembler-with-cpp -o $@ -'
+  echo '	) | $(compile-syscall)'
 
   case $weak in
   *@*)
