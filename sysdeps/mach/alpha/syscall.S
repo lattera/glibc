@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+#include <mach/machine/alpha_instruction.h>
 
 ENTRY (syscall)
 	.frame sp,0,ra
