@@ -32,7 +32,7 @@ static long int linux_sysconf (int name);
 long int
 __sysconf (int name)
 {
-  if (name == _SC_CPUTIME || name == SC_THREAD_CPUTIME)
+  if (name == _SC_CPUTIME || name == _SC_THREAD_CPUTIME)
     return has_cpuclock () ? 200112L : -1;
 
   /* Everything else is handled by the more general code.  */
