@@ -44,6 +44,10 @@ $2 == "g" || $2 == "w" && NF == 7 {
     print symbol, version, weak, "?", type, $4, $5;
     next;
   }
+  if (size == " 0x") {
+    print symbol, version, weak, "?", type, $4, $5;
+    next;
+  }
 
   # Disabled -- weakness should not matter to shared library ABIs any more.
   #if (weak == "w") type = tolower(type);
