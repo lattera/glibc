@@ -1,8 +1,8 @@
 1999-05-24  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/bits/wordsize.h: New file.
-	* sysdeps/sparc/bits/fenv.h: New file.
-	* sysdeps/sparc/fpu_control.h: New file.
+	* sysdeps/sparc/fpu/bits/fenv.h: New file.
+	* sysdeps/sparc/fpu/fpu_control.h: New file.
 	* sysdeps/sparc/gmp-mparam.h: New file.
 
 	* sysdeps/sparc/sparc32/fpu/bits/fenv.h: Remove.
