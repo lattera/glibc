@@ -1,3 +1,9 @@
+1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wctype/wctype.h (_ISwbit): Cast result of shift operations to
+	int to avoid warning about `ISO C restricts enumerator values to
+	range of `int''.
+
 1999-02-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* elf/dlfcn.h: Fix typo.
