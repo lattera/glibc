@@ -1,5 +1,8 @@
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/bits/socket.h: Add AF_IRDA, PF_IRDA and
+	MSG_TRYHARD.
+
 	* sunrpc/clnt_unix.c (clntunix_destroy): Use __close not close.
 	* libio/oldtmpfile.c: Likewise.
 	* libio/oldiofdopen.c: Use __fcntl instead fcntl.

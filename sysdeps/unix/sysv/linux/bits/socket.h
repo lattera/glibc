@@ -81,6 +81,7 @@ enum __socket_type
 #define	PF_ECONET	19	/* Acorn Econet.  */
 #define	PF_ATMSVC	20	/* ATM SVCs.  */
 #define	PF_SNA		22	/* Linux SNA Project */
+#define PF_IRDA		23	/* IRDA sockets.  */
 #define	PF_MAX		32	/* For now..  */
 
 /* Address families.  */
@@ -109,6 +110,7 @@ enum __socket_type
 #define	AF_ECONET	PF_ECONET
 #define	AF_ATMSVC	PF_ATMSVC
 #define	AF_SNA		PF_SNA
+#define AF_IRDA		PF_IRDA
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -142,6 +144,11 @@ enum
 #define MSG_PEEK	MSG_PEEK
     MSG_DONTROUTE	= 0x04,	/* Don't use local routing.  */
 #define MSG_DONTROUTE	MSG_DONTROUTE
+#ifdef __USE_GNU
+    /* DECnet uses a different name.  */
+    MSG_TRYHARD		= MSG_DONTROUTE,
+# define MSG_TRYHARD	MSG_DONTROUTE
+#endif
     MSG_CTRUNC		= 0x08,	/* Control data lost before delivery.  */
 #define MSG_CTRUNC	MSG_CTRUNC
     MSG_PROXY		= 0x10	/* Supply or ask second address.  */
