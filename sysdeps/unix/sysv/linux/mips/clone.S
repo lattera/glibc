@@ -91,8 +91,8 @@ ENTRY(__thread_start)
 	.cprestore	16
 	/* The stackframe has been created on entry of clone().  */
 	/* Resort the arg for user's function.  */
-	lw		a0,0(sp)	/* Function pointer.  */
-	lw		t9,4(sp)	/* Argument pointer.  */
+	lw		t9,0(sp)	/* Function pointer.  */
+	lw		a0,4(sp)	/* Argument pointer.  */
 
 	/* Call the user's function.  */
 	jalr		t9
