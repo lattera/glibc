@@ -1,5 +1,8 @@
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-signal5.
+	* tst-signal5.c: New file.
+
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Define TTY_NAME_MAX
 	and LOGIN_NAME_MAX.
 
