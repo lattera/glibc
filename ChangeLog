@@ -1,3 +1,10 @@
+1998-10-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/select.h [!__USE_XOPEN]: Add special version
+	of __FD_* macros which use __fds_bits.
+	* sysdeps/generic/bits/select.h: Likewise.
+	Reported by Matt McLean <keys@yikes.com>.
+
 1998-10-27  Philip Blundell  <pb@nexus.co.uk>
 
 	* elf/elf.h: Update ARM definitions.
