@@ -53,4 +53,4 @@ struct _pthread_descr_struct;
 
 /* Initialize the thread-unique value.  */
 #define INIT_THREAD_SELF(descr, nr) \
-  ({ __asm__("ldc %0,gbr" : : "r" (descr));})
+  ({ __asm__ __volatile__("ldc %0,gbr" : : "r" (descr));})
