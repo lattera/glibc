@@ -1,5 +1,7 @@
 2001-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/sv.po: Update from translation team.
+
 	* stdio-common/vfscanf.c: Fix handling of %l[].
 	Reported by Mitsuru Chinen <mchinen@yamato.ibm.com>.
 
