@@ -1,3 +1,8 @@
+2002-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* argp/argp-fmtstream.c (__argp_fmtstream_update): Avoid crash in
+	handling of overly long words.
+
 2002-06-25  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86-64/dl-machine.h (elf_machine_load_address): Rewrite
