@@ -1,3 +1,15 @@
+1998-04-29 12:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/mbsnrtowcs.c: Remove variable to pass to conversion function
+	by letting the later modify the variable computing the total directly.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+
+	* wcsmbs/btowc.c (converted): Rename variable to dummy to make clear
+	it is not used.
+	* wcsmbs/wctoc.c: Likewise.
+
 1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/skeleton.c: Correct counting of actually converted

@@ -229,16 +229,16 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
       char *outend = data->outbufend;
       char *outptr;
 
+      /* This variable is used to count the number of characters we
+	 actually converted.  */
+      size_t converted = 0;
+
 #ifdef PREPARE_LOOP
       PREPARE_LOOP
 #endif
 
       do
 	{
-	  /* This variable is used to count the number of characters we
-	     actually converted.  */
-	  size_t converted = 0;
-
 	  /* Remember the start value for this round.  */
 	  inptr = *inbuf;
 	  /* The outbuf buffer is empty.  */

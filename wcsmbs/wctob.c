@@ -32,7 +32,7 @@ wctob (c)
   struct gconv_step_data data;
   wchar_t inbuf[1];
   wchar_t *inptr = inbuf;
-  size_t converted;
+  size_t dummy;
   int status;
 
   /* Tell where we want the result.  */
@@ -53,7 +53,7 @@ wctob (c)
   status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb, &data,
 					     (const char **) &inptr,
 					     (const char *) &inbuf[1],
-					     &converted, 0);
+					     &dummy, 0);
   /* The conversion failed or the output is too long.  */
   if ((status != GCONV_OK && status != GCONV_FULL_OUTPUT
        && status != GCONV_EMPTY_INPUT)

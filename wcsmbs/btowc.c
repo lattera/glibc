@@ -32,7 +32,7 @@ __btowc (c)
   struct gconv_step_data data;
   char inbuf[1];
   const char *inptr = inbuf;
-  size_t converted;
+  size_t dummy;
   int status;
 
   /* If the parameter does not fit into one byte or it is the EOF value
@@ -55,9 +55,8 @@ __btowc (c)
   /* Create the input string.  */
   inbuf[0] = c;
 
-  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-					     &data, &inptr, inptr + 1,
-					     &converted, 0);
+  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc, &data,
+					     &inptr, inptr + 1, &dummy, 0);
   /* The conversion failed.  */
   if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
       && status != GCONV_EMPTY_INPUT)
