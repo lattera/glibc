@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
 #include <sys/statvfs.h>
 
 int
-fstatvfs (int fd, struct statvfs *buf)
+statvfs64 (const char *file, struct statvfs64 *buf)
 {
-  /* `struct statvfs' is in fact identical to `struct statfs' so we
-     can simply call fstatfs.  */
-  return __fstatfs (fd, (struct statfs *)buf);
+  /* `struct statvfs64' is in fact identical to `struct statfs64' so
+     we can simply call statfs64.  */
+  return __statfs64 (file, (struct statfs64 *)buf);
 }
