@@ -36,17 +36,18 @@
    This is safe because there are no concurrent __pthread_unlock
    operations -- only the thread that locked the mutex can unlock it. */
 
-void __pthread_lock(struct _pthread_fastlock * lock)
+void internal_function __pthread_lock(struct _pthread_fastlock * lock,
+				      pthread_descr self)
 {
   long oldstatus, newstatus;
-  pthread_descr self = NULL;
 
   do {
     oldstatus = lock->__status;
     if (oldstatus == 0) {
       newstatus = 1;
     } else {
-      self = thread_self();
+      if (self == NULL)
+	self = thread_self();
       newstatus = (long) self;
     }
     if (self != NULL)
@@ -56,18 +57,7 @@ void __pthread_lock(struct _pthread_fastlock * lock)
   if (oldstatus != 0) suspend(self);
 }
 
-int __pthread_trylock(struct _pthread_fastlock * lock)
-{
-  long oldstatus;
-
-  do {
-    oldstatus = lock->__status;
-    if (oldstatus != 0) return EBUSY;
-  } while(! compare_and_swap(&lock->__status, 0, 1, &lock->__spinlock));
-  return 0;
-}
-
-void __pthread_unlock(struct _pthread_fastlock * lock)
+void internal_function __pthread_unlock(struct _pthread_fastlock * lock)
 {
   long oldstatus;
   pthread_descr thr, * ptr, * maxptr;

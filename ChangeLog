@@ -1,3 +1,14 @@
+1998-10-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/ttyname_r.c (ttyname_r): Try reading
+	/prof/self/fd/FD first.
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Likewise.
+
+	* stdio-common/_itoa.h (_fitoa_word): New inline function.  Write
+	formatted number starting at given position and return pointer to
+	following byte.
+	(_fitoa): Likewise, for long long.
+
 1998-10-29  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/unix/sysv/linux/bits/sem.h,

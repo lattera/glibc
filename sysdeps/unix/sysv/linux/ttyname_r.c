@@ -26,6 +26,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <stdio-common/_itoa.h>
+
 static int getttyname_r __P ((int fd, char *buf, size_t buflen,
 			      dev_t mydev, ino_t myino, int save,
 			      int *dostat)) internal_function;
@@ -102,6 +104,7 @@ __ttyname_r (fd, buf, buflen)
      char *buf;
      size_t buflen;
 {
+  char procname[30];
   struct stat st, st1;
   int dostat = 0;
   int save = errno;
@@ -125,6 +128,18 @@ __ttyname_r (fd, buf, buflen)
     {
       __set_errno (ENOTTY);
       return ENOTTY;
+    }
+
+  /* We try using the /proc filesystem.  */
+  *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
+
+  ret = __readlink (procname, buf, buflen - 1);
+  if (ret != -1)
+    return 0;
+  if (errno == ENAMETOOLONG)
+    {
+      __set_errno (ERANGE);
+      return ERANGE;
     }
 
   if (fstat (fd, &st) < 0)

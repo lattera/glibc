@@ -35,7 +35,7 @@ void pthread_exit(void * retval)
   __pthread_perform_cleanup();
   __pthread_destroy_specifics();
   /* Store return value */
-  __pthread_lock(THREAD_GETMEM(self, p_lock));
+  __pthread_lock(THREAD_GETMEM(self, p_lock), self);
   THREAD_SETMEM(self, p_retval, retval);
   /* Say that we've terminated */
   THREAD_SETMEM(self, p_terminated, 1);
@@ -65,7 +65,7 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
   pthread_handle handle = thread_handle(thread_id);
   pthread_descr th;
 
-  __pthread_lock(&handle->h_lock);
+  __pthread_lock(&handle->h_lock, self);
   if (invalid_handle(handle, thread_id)) {
     __pthread_unlock(&handle->h_lock);
     return ESRCH;
@@ -91,7 +91,7 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
       th->p_joining = NULL;
       pthread_exit(PTHREAD_CANCELED);
     }
-    __pthread_lock(&handle->h_lock);
+    __pthread_lock(&handle->h_lock, self);
   }
   /* Get return value */
   if (thread_return != NULL) *thread_return = th->p_retval;
@@ -114,7 +114,7 @@ int pthread_detach(pthread_t thread_id)
   pthread_handle handle = thread_handle(thread_id);
   pthread_descr th;
 
-  __pthread_lock(&handle->h_lock);
+  __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread_id)) {
     __pthread_unlock(&handle->h_lock);
     return ESRCH;

@@ -417,7 +417,7 @@ static void pthread_free(pthread_descr th)
   ASSERT(th->p_exited);
   /* Make the handle invalid */
   handle =  thread_handle(th->p_tid);
-  __pthread_lock(&handle->h_lock);
+  __pthread_lock(&handle->h_lock, NULL);
   handle->h_descr = NULL;
   handle->h_bottom = (char *)(-1L);
   __pthread_unlock(&handle->h_lock);
@@ -452,7 +452,7 @@ static void pthread_exited(pid_t pid)
       th->p_nextlive->p_prevlive = th->p_prevlive;
       th->p_prevlive->p_nextlive = th->p_nextlive;
       /* Mark thread as exited, and if detached, free its resources */
-      __pthread_lock(th->p_lock);
+      __pthread_lock(th->p_lock, NULL);
       th->p_exited = 1;
       detached = th->p_detached;
       __pthread_unlock(th->p_lock);
@@ -494,7 +494,7 @@ static void pthread_handle_free(pthread_t th_id)
   pthread_handle handle = thread_handle(th_id);
   pthread_descr th;
 
-  __pthread_lock(&handle->h_lock);
+  __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, th_id)) {
     /* pthread_reap_children has deallocated the thread already,
        nothing needs to be done */

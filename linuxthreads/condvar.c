@@ -43,7 +43,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
   volatile pthread_descr self = thread_self();
 
-  __pthread_lock(&cond->__c_lock);
+  __pthread_lock(&cond->__c_lock, self);
   enqueue(&cond->__c_waiting, self);
   __pthread_unlock(&cond->__c_lock);
   pthread_mutex_unlock(mutex);
@@ -53,7 +53,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   if (THREAD_GETMEM(self, p_canceled)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     /* Remove ourselves from the waiting queue if we're still on it */
-    __pthread_lock(&cond->__c_lock);
+    __pthread_lock(&cond->__c_lock, self);
     remove_from_queue(&cond->__c_waiting, self);
     __pthread_unlock(&cond->__c_lock);
     pthread_exit(PTHREAD_CANCELED);
@@ -72,7 +72,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   sigjmp_buf jmpbuf;
 
   /* Wait on the condition */
-  __pthread_lock(&cond->__c_lock);
+  __pthread_lock(&cond->__c_lock, self);
   enqueue(&cond->__c_waiting, self);
   __pthread_unlock(&cond->__c_lock);
   pthread_mutex_unlock(mutex);
@@ -107,7 +107,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   /* This is a cancellation point */
   if (THREAD_GETMEM(self, p_canceled)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
-    __pthread_lock(&cond->__c_lock);
+    __pthread_lock(&cond->__c_lock, self);
     remove_from_queue(&cond->__c_waiting, self);
     __pthread_unlock(&cond->__c_lock);
     pthread_mutex_lock(mutex);
@@ -115,7 +115,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   }
   /* If not signaled: also remove ourselves and return an error code */
   if (THREAD_GETMEM(self, p_signal) == 0) {
-    __pthread_lock(&cond->__c_lock);
+    __pthread_lock(&cond->__c_lock, self);
     remove_from_queue(&cond->__c_waiting, self);
     __pthread_unlock(&cond->__c_lock);
     pthread_mutex_lock(mutex);
@@ -147,7 +147,7 @@ int pthread_cond_signal(pthread_cond_t *cond)
 {
   pthread_descr th;
 
-  __pthread_lock(&cond->__c_lock);
+  __pthread_lock(&cond->__c_lock, NULL);
   th = dequeue(&cond->__c_waiting);
   __pthread_unlock(&cond->__c_lock);
   if (th != NULL) restart(th);
@@ -158,7 +158,7 @@ int pthread_cond_broadcast(pthread_cond_t *cond)
 {
   pthread_descr tosignal, th;
 
-  __pthread_lock(&cond->__c_lock);
+  __pthread_lock(&cond->__c_lock, NULL);
   /* Copy the current state of the waiting queue and empty it */
   tosignal = cond->__c_waiting;
   cond->__c_waiting = NULL;

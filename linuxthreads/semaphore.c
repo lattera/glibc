@@ -40,15 +40,14 @@ int sem_init(sem_t *sem, int pshared, unsigned int value)
 
 int sem_wait(sem_t * sem)
 {
-  volatile pthread_descr self;
+  volatile pthread_descr self = thread_self();
 
-  __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock);
+  __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock, self);
   if (sem->sem_value > 0) {
     sem->sem_value--;
     __pthread_unlock((struct _pthread_fastlock *) &sem->sem_lock);
     return 0;
   }
-  self = thread_self();
   enqueue(&sem->sem_waiting, self);
   /* Wait for sem_post or cancellation */
   __pthread_unlock((struct _pthread_fastlock *) &sem->sem_lock);
@@ -57,7 +56,7 @@ int sem_wait(sem_t * sem)
   if (THREAD_GETMEM(self, p_canceled)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     /* Remove ourselves from the waiting list if we're still on it */
-    __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock);
+    __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock, self);
     remove_from_queue(&sem->sem_waiting, self);
     __pthread_unlock((struct _pthread_fastlock *) &sem->sem_lock);
     pthread_exit(PTHREAD_CANCELED);
@@ -70,7 +69,7 @@ int sem_trywait(sem_t * sem)
 {
   int retval;
 
-  __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock);
+  __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock, NULL);
   if (sem->sem_value == 0) {
     errno = EAGAIN;
     retval = -1;
@@ -88,7 +87,7 @@ int sem_post(sem_t * sem)
   struct pthread_request request;
 
   if (THREAD_GETMEM(self, p_in_sighandler) == NULL) {
-    __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock);
+    __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock, self);
     if (sem->sem_waiting == NULL) {
       if (sem->sem_value >= SEM_VALUE_MAX) {
         /* Overflow */

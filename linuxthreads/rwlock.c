@@ -57,7 +57,7 @@ pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
   int readers;
   _pthread_descr writer;
 
-  __pthread_lock (&rwlock->__rw_lock);
+  __pthread_lock (&rwlock->__rw_lock, NULL);
   readers = rwlock->__rw_readers;
   writer = rwlock->__rw_writer;
   __pthread_unlock (&rwlock->__rw_lock);
@@ -72,11 +72,11 @@ pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
 int
 pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
 {
-  pthread_descr self;
+  pthread_descr self = NULL;
 
   while (1)
     {
-      __pthread_lock (&rwlock->__rw_lock);
+      __pthread_lock (&rwlock->__rw_lock, self);
       if (rwlock->__rw_writer == NULL
 	  || (rwlock->__rw_kind == PTHREAD_RWLOCK_PREFER_READER_NP
 	      && rwlock->__rw_readers != 0))
@@ -84,7 +84,8 @@ pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
 	break;
 
       /* Suspend ourselves, then try again */
-      self = thread_self ();
+      if (self == NULL)
+	self = thread_self ();
       enqueue (&rwlock->__rw_read_waiting, self);
       __pthread_unlock (&rwlock->__rw_lock);
       suspend (self); /* This is not a cancellation point */
@@ -102,7 +103,7 @@ pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 {
   int result = EBUSY;
 
-  __pthread_lock (&rwlock->__rw_lock);
+  __pthread_lock (&rwlock->__rw_lock, NULL);
   if (rwlock->__rw_writer == NULL
       || (rwlock->__rw_kind == PTHREAD_RWLOCK_PREFER_READER_NP
 	  && rwlock->__rw_readers != 0))
@@ -123,7 +124,7 @@ pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
 
   while(1)
     {
-      __pthread_lock (&rwlock->__rw_lock);
+      __pthread_lock (&rwlock->__rw_lock, self);
       if (rwlock->__rw_readers == 0 && rwlock->__rw_writer == NULL)
 	{
 	  rwlock->__rw_writer = self;
@@ -144,7 +145,7 @@ pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
 {
   int result = EBUSY;
 
-  __pthread_lock (&rwlock->__rw_lock);
+  __pthread_lock (&rwlock->__rw_lock, NULL);
   if (rwlock->__rw_readers == 0 && rwlock->__rw_writer == NULL)
     {
       rwlock->__rw_writer = thread_self ();
@@ -162,7 +163,7 @@ pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
   pthread_descr torestart;
   pthread_descr th;
 
-  __pthread_lock (&rwlock->__rw_lock);
+  __pthread_lock (&rwlock->__rw_lock, NULL);
   if (rwlock->__rw_writer != NULL)
     {
       /* Unlocking a write lock.  */

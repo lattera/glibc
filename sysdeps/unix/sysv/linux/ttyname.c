@@ -26,6 +26,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <stdio-common/_itoa.h>
+
 char *__ttyname = NULL;
 
 static char * getttyname __P ((const char *dev, int fd, dev_t mydev,
@@ -104,6 +106,9 @@ char *
 ttyname (fd)
      int fd;
 {
+  static char *buf;
+  static size_t buflen = 0;
+  char procname[30];
   struct stat st, st1;
   int dostat = 0;
   char *name;
@@ -111,6 +116,23 @@ ttyname (fd)
 
   if (!__isatty (fd))
     return NULL;
+
+  /* We try using the /proc filesystem.  */
+  *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
+
+  if (buflen == 0)
+    {
+      buflen = 4095;
+      buf = (char *) malloc (buflen + 1);
+      if (buf == NULL)
+	{
+	  buflen = 0;
+	  return NULL;
+	}
+    }
+
+  if (__readlink (procname, buf, buflen) != -1)
+    return buf;
 
   if (fstat (fd, &st) < 0)
     return NULL;

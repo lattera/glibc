@@ -53,7 +53,7 @@ int pthread_kill(pthread_t thread, int signo)
   pthread_handle handle = thread_handle(thread);
   int pid;
 
-  __pthread_lock(&handle->h_lock);
+  __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread)) {
     __pthread_unlock(&handle->h_lock);
     return ESRCH;
