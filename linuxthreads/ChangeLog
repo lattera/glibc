@@ -1,3 +1,12 @@
+2002-12-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* forward.c: Make all functions available by default again.  It
+	caused too much trouble.
+	* internals.h (struct pthread_functions): Rename ptr_pthread_exit
+	and ptr_pthread_attr_init_2_* to ptr___pthread_exit and
+	ptr___pthread_attr_init_2_*.
+	* pthread.c (pthread_functions): Adjust.
+
 2002-12-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* libc_pthread_init.c (__libc_pthread_init): Remove

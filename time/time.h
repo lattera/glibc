@@ -107,8 +107,10 @@ typedef __timer_t timer_t;
 #undef	__need_timer_t
 
 
-#if !defined __timespec_defined && \
-    ((defined _TIME_H && defined __USE_POSIX199309) || defined __need_timespec)
+#if !defined __timespec_defined &&				\
+    ((defined _TIME_H &&					\
+      (defined __USE_POSIX199309 || defined __USE_MISC)) ||	\
+      defined __need_timespec)
 # define __timespec_defined	1
 
 /* POSIX.1b structure for a time value.  This is like a `struct timeval' but

@@ -60,18 +60,12 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_size = kbuf->st_size;
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
-	buf->st_atime = kbuf->st_atime;
-#ifdef _HAVE_STAT___UNUSED1
-	buf->__unused1 = 0;
-#endif
-	buf->st_mtime = kbuf->st_mtime;
-#ifdef _HAVE_STAT___UNUSED2
-	buf->__unused2 = 0;
-#endif
-	buf->st_ctime = kbuf->st_ctime;
-#ifdef _HAVE_STAT___UNUSED3
-	buf->__unused3 = 0;
-#endif
+	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
+	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
+	buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
+	buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
+	buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
+	buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
 #ifdef _HAVE_STAT___UNUSED4
 	buf->__unused4 = 0;
 #endif
@@ -121,18 +115,12 @@ xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_size = kbuf->st_size;
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
-	buf->st_atime = kbuf->st_atime;
-#ifdef _HAVE_STAT64___UNUSED1
-	buf->__unused1 = 0;
-#endif
-	buf->st_mtime = kbuf->st_mtime;
-#ifdef _HAVE_STAT64___UNUSED2
-	buf->__unused2 = 0;
-#endif
-	buf->st_ctime = kbuf->st_ctime;
-#ifdef _HAVE_STAT64___UNUSED3
-	buf->__unused3 = 0;
-#endif
+	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
+	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
+	buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
+	buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
+	buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
+	buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
 #ifdef _HAVE_STAT64___UNUSED4
 	buf->__unused4 = 0;
 #endif
@@ -216,18 +204,12 @@ xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 	    __set_errno (EOVERFLOW);
 	    return -1;
 	  }
-	buf->st_atime = kbuf->st_atime;
-#ifdef _HAVE_STAT___UNUSED1
-	buf->__unused1 = 0;
-#endif
-	buf->st_mtime = kbuf->st_mtime;
-#ifdef _HAVE_STAT___UNUSED2
-	buf->__unused2 = 0;
-#endif
-	buf->st_ctime = kbuf->st_ctime;
-#ifdef _HAVE_STAT___UNUSED3
-	buf->__unused3 = 0;
-#endif
+	buf->st_atim.tv_sec = kbuf->st_atim.tv_sec;
+	buf->st_atim.tv_nsec = kbuf->st_atim.tv_nsec;
+	buf->st_mtim.tv_sec = kbuf->st_mtim.tv_sec;
+	buf->st_mtim.tv_nsec = kbuf->st_mtim.tv_nsec;
+	buf->st_ctim.tv_sec = kbuf->st_ctim.tv_sec;
+	buf->st_ctim.tv_nsec = kbuf->st_ctim.tv_nsec;
 #ifdef _HAVE_STAT___UNUSED4
 	buf->__unused4 = 0;
 #endif
