@@ -27,6 +27,9 @@
 
 #ifdef __NR_timer_settime
 # ifndef __ASSUME_POSIX_TIMERS
+static int compat_timer_settime (timer_t timerid, int flags,
+				 const struct itimerspec *value,
+				 struct itimerspec *ovalue);
 #  define timer_settime static compat_timer_settime
 #  include <nptl/sysdeps/pthread/timer_settime.c>
 #  undef timer_settime

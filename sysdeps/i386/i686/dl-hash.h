@@ -1,5 +1,5 @@
 /* Compute hash alue for given string according to ELF standard.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -26,7 +26,7 @@
    optimized for the PII processors.  Though it will run on i586 it
    would be much slower than the generic C implementation.  So don't
    use it.  */
-static inline unsigned int
+static unsigned int
 _dl_elf_hash (const unsigned char *name)
 {
   unsigned int result;
@@ -71,10 +71,9 @@ _dl_elf_hash (const unsigned char *name)
      "jnz 2b\n"
      "1:\t"
      : "=&r" (result), "=r" (name), "=&c" (temp0), "=&r" (temp1)
-     : "0" (0), "1" (name));		
+     : "0" (0), "1" (name));
 
   return result;
 }
 
 #endif /* dl-hash.h */
-

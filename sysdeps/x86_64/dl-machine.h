@@ -81,7 +81,7 @@ elf_machine_load_address (void)
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline int __attribute__ ((unused))
+static inline int __attribute__ ((unused, always_inline))
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf64_Addr *got;

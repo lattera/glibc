@@ -1,5 +1,5 @@
 /* Compute hash value for given string according to ELF standard.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 /* This is the hashing function specified by the ELF ABI.  In the
    first five operations no overflow is possible so we optimized it a
    bit.  */
-static inline unsigned int
+static unsigned int
 _dl_elf_hash (const unsigned char *name)
 {
   unsigned long int hash = 0;

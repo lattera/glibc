@@ -27,6 +27,7 @@
 
 #ifdef __NR_timer_delete
 # ifndef __ASSUME_POSIX_TIMERS
+static int compat_timer_delete (timer_t timerid);
 #  define timer_delete static compat_timer_delete
 #  include <nptl/sysdeps/pthread/timer_delete.c>
 #  undef timer_delete

@@ -1,5 +1,14 @@
 2003-06-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/timer_settime.c: Add prototype for
+	compat_timer_settime.
+	* sysdeps/unix/sysv/linux/timer_gettime.c: Add prototype for
+	compat_timer_gettime.
+	* sysdeps/unix/sysv/linux/timer_getoverr.c: Add prototype for
+	compat_timer_getoverrun.o
+	* sysdeps/unix/sysv/linux/timer_delete.c: Add prototype for
+	compat_timer_delete.
+
 	* pthread_mutex_destroy.c (__pthread_mutex_destroy): For
 	error-checking mutex detect busy mutexes.
 

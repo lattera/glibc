@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995,1997,1998,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -131,9 +131,6 @@ static int memcmp_common_alignment __P((long, long, size_t));
 /* memcmp_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN `op_t'
    objects (not LEN bytes!).  Both SRCP1 and SRCP2 should be aligned for
    memory operations on `op_t's.  */
-#ifdef	__GNUC__
-__inline
-#endif
 static int
 memcmp_common_alignment (srcp1, srcp2, len)
      long int srcp1;
@@ -221,9 +218,6 @@ static int memcmp_not_common_alignment __P((long, long, size_t));
 /* memcmp_not_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN
    `op_t' objects (not LEN bytes!).  SRCP2 should be aligned for memory
    operations on `op_t', but SRCP1 *should be unaligned*.  */
-#ifdef	__GNUC__
-__inline
-#endif
 static int
 memcmp_not_common_alignment (srcp1, srcp2, len)
      long int srcp1;

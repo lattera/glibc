@@ -27,6 +27,7 @@
 
 #ifdef __NR_timer_gettime
 # ifndef __ASSUME_POSIX_TIMERS
+static int compat_timer_gettime (timer_t timerid, struct itimerspec *value);
 #  define timer_gettime static compat_timer_gettime
 #  include <nptl/sysdeps/pthread/timer_gettime.c>
 #  undef timer_gettime

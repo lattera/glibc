@@ -1,5 +1,18 @@
 2003-06-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
+	Fix completely broken impleentation.  The second parameter is of
+	type struct ucontext*.
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup): Always
+	inline.
+
+	* sysdeps/i386/i686/dl-hash.h: Don't inline _dl_elf_hash.
+	* sysdeps/generic/dl-hash.h: Likewise.
+
+	* sysdeps/generic/memcmp.c: Remove inline from
+	memcmp_common_alignment and memcmp_not_common_alignment definition.
+
 	* intl/localealias.c (read_alias_file): Determine whether line is
 	read incompletely early, before we modify the line.
 

@@ -26,6 +26,7 @@
 
 #ifdef __NR_timer_getoverrun
 # ifndef __ASSUME_POSIX_TIMERS
+static int compat_timer_getoverrun (timer_t timerid);
 #  define timer_getoverrun static compat_timer_getoverrun
 #  include <nptl/sysdeps/pthread/timer_getoverr.c>
 #  undef timer_getoverrun
