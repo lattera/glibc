@@ -29,12 +29,6 @@ Cambridge, MA 02139, USA.  */
    don't actually need a trampoline.  */
 
 #include <ansidecl.h>
-
-#ifndef	__GNUC__
-  #error This file uses GNU C extensions; you must compile with GCC.
-#endif
-
-/* This will also get us sigcontext.h.  */
 #include <signal.h>
 #include <stddef.h>
 #include <errno.h>
