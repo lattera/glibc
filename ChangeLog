@@ -1,3 +1,9 @@
+1999-03-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/llio.texi (Open-time Flags): Clarify that O_SHLOCK and
+	O_EXLOCK are BSD extensions.
+	Reported by Jochen Voss <voss@mathematik.uni-kl.de> [PR libc/985].
+
 1999-03-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/signal.texi (Termination in Handler): Correct example.

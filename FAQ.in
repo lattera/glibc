@@ -395,10 +395,11 @@ prefix to something like /usr/local/glibc2 which is not used for anything.)
 The dangers when installing glibc in /usr are twofold:
 
 * glibc will overwrite the headers in /usr/include.  Other C libraries
-  install a different but overlapping set of headers there, so the
-  effect will probably be that you can't compile anything.  You need to
-  rename /usr/include out of the way first.  (Do not throw it away; you
-  will then lose the ability to compile programs against your old libc.)
+  install a different but overlapping set of headers there, so the effect
+  will probably be that you can't compile anything.  You need to rename
+  /usr/include out of the way before running `make install'.  (Do not throw
+  it away; you will then lose the ability to compile programs against your
+  old libc.)
 
 * None of your old libraries, static or shared, can be used with a
   different C library major version.  For shared libraries this is not a

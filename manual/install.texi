@@ -222,11 +222,11 @@ from underneath.
 If you are upgrading from a previous installation of glibc 2.0 or 2.1,
 @samp{make install} will do the entire job.  If you're upgrading from
 Linux libc5 or some other C library, you need to rename the old
-@file{/usr/include} directory out of the way first, or you will end up
-with a mixture of header files from both libraries, and you won't be
-able to compile anything.  You may also need to reconfigure GCC to work
-with the new library.  The easiest way to do that is to figure out the
-compiler switches to make it work again
+@file{/usr/include} directory out of the way before running @samp{make
+install}, or you will end up with a mixture of header files from both
+libraries, and you won't be able to compile anything.  You may also need
+to reconfigure GCC to work with the new library.  The easiest way to do
+that is to figure out the compiler switches to make it work again
 (@samp{-Wl,-dynamic-linker=/lib/ld-linux.so.2} should work on Linux
 systems) and use them to recompile gcc.  You can also edit the specs
 file (@file{/usr/lib/gcc-lib/@var{TARGET}/@var{VERSION}/specs}), but

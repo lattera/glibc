@@ -3070,6 +3070,9 @@ Unix before @code{ftruncate} was invented, and is retained for backward
 compatibility.
 @end deftypevr
 
+The remaining operating modes are BSD extensions.  They exist only
+on some systems.  On other systems, these macros are not defined.
+
 @comment fcntl.h
 @comment BSD
 @deftypevr Macro int O_SHLOCK
