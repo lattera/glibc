@@ -1,3 +1,9 @@
+1998-09-09 18:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/powerpc/dl-start.S (_start): Pass pointer to
+	_dl_main_searchlist not _dl_default_scope to _dl_init_next.
+	Patch by Benjamin Kosnik <bkoz@cygnus.com>.
+
 1998-09-09  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* elf/dl-close.c (_dl_close): Don't free imap->l_origin if it is

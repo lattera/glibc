@@ -49,13 +49,13 @@ ENTRY(_start)
 	mflr	%r31
 /*  the address of _start in r30, */
 	mr	%r30,%r3
-/*  &_dl_argc in 29, &_dl_argv in 27, and _dl_default_scope in 28.  */
-	lwz	%r28,_dl_default_scope@got(%r31)
+/*  &_dl_argc in 29, &_dl_argv in 27, and _dl_main_searchlist in 28.  */
+	lwz	%r28,_dl_main_searchlist@got(%r31)
 	lwz	%r29,_dl_argc@got(%r31)
 	lwz	%r27,_dl_argv@got(%r31)
 0:
-/*  Set initfunc = _dl_init_next(_dl_default_scope[2]) */
-	lwz	%r3,8(%r28)
+/*  Set initfunc = _dl_init_next(_dl_main_searchlist) */
+	lwz	%r3,0(%r28)
 	bl	_dl_init_next@plt
 /* If initfunc is NULL, we exit the loop; otherwise, */
 	cmpwi	%r3,0
