@@ -43,9 +43,9 @@ Cambridge, MA 02139, USA.  */
 
 #define DO_CALL(syscall, args)						      \
   movel syscall, d0;							      \
-  linkw fp, POUND(0);							      \
+  linkw a6, POUND(0);							      \
   trap POUND(0);							      \
-  unlk fp;								      \
+  unlk a6;								      \
   bcs error
 
 #define	ret	rts
