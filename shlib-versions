@@ -28,7 +28,7 @@ x86_64-.*-linux.*       DEFAULT			GLIBC_2.2.5
 // If you use configure --enable-libio --enable-oldest-abi=2.0 then we
 // won't rename the old version sets and all the libraries except libc
 // itself ought to be binary compatible with the libc.so.0.2 ABI.
-.*-.*-gnu-gnu.*		DEFAULT			GLIBC_2.2.5
+.*-.*-gnu-gnu.*		DEFAULT			GLIBC_2.2.6
 %endif
 
 # Configuration		Library=version		Earliest symbol set (optional)

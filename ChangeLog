@@ -1,3 +1,10 @@
+2002-03-22  Roland McGrath  <roland@frob.com>
+
+	* shlib-versions [USE_IN_LIBIO] (.*-.*-gnu-gnu.*): Make 2.2.6 default.
+	* sysdeps/mach/hurd/configure.in: Default oldest ABI is 2.2.6
+	under --enable-libio.
+	* sysdeps/mach/hurd/configure: Regenerated.
+
 2002-03-23  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/i386/Makefile
