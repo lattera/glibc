@@ -30,7 +30,7 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    stime dysize timegm ftime			 \
 	    strptime getdate strfxtime
 
-tests	:= test_time clocktest
+tests	:= test_time clocktest tst-posixtz
 
 include ../Rules
 

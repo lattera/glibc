@@ -524,7 +524,7 @@ tz_compute (timer, tm)
      For the later the daylight saving time ends in the next year.
      It is easier to detect this after first computing the time for the
      wrong year since now we simply can compare the times to switch.  */
-  if (tz_rules[0].change < tz_rules[1].change
+  if (tz_rules[0].change > tz_rules[1].change
       && ! compute_change (&tz_rules[1], 1900 + tm->tm_year + 1))
     return 0;
 

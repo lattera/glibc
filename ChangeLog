@@ -1,3 +1,49 @@
+1998-10-26 11:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/Makefile (tests): Add tst-posixtz.
+	* time/tst-posixtz.c: New file.
+
+1998-10-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/rtld.c (process_envvars): Accept any non-null value of
+	LD_BIND_NOW, as mandated by the ABI.
+
+1998-10-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/pread.c: Rename __syscall_pread64 to
+	__syscall_pread.
+	* sysdeps/unix/sysv/linux/pwrite.c: Rename __syscall_pwrite64 to
+	__syscall_pwrite.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Likewise.  Remove
+	duplicate entries.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Remove
+	s_pread64 and s_pwrite64.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Likewise.
+
+1998-10-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/llseek.c: Use INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Rename __sys_llseek
+	to __syscall__llseek.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Remove entry for
+	__sys_llseek.
+
+1998-10-26  Cristian Gafton  <gafton@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add s_setfsgid
+	and s_setfsuid.
+
+1998-10-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzset.c (tz_compute): Correct last patch and describe this
+	in a comment.
+
 1998-10-24  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/Makefile [subdir=signal]: Remove

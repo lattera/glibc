@@ -25,8 +25,8 @@
 
 #ifdef __NR_pread
 
-extern ssize_t __syscall_pread64 (int fd, void *buf, size_t count,
-				  off_t offset_hi, off_t offset_lo);
+extern ssize_t __syscall_pread (int fd, void *buf, size_t count,
+				off_t offset_hi, off_t offset_lo);
 
 static ssize_t __emulate_pread (int fd, void *buf, size_t count,
 				off_t offset) internal_function;

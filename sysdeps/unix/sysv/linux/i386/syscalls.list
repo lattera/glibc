@@ -1,5 +1,4 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 modify_ldt	EXTRA	modify_ldt	3	__modify_ldt	modify_ldt
-s_llseek	llseek	_llseek		5	__sys_llseek
 vm86		-	vm86		1	__vm86		vm86

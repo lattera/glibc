@@ -1170,12 +1170,8 @@ process_envvars (enum mode *modep, int *lazyp)
 
 	case 8:
 	  /* Do we bind early?  */
-	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0
-	      && (envline[12] == '1' || envline[12] == 'y'
-		  || envline[12] == 'Y'
-		  || ((envline[12] == 'o' || envline[12] == 'O')
-		      && (envline[13] == 'n' || envline[13] == 'N'))))
-	    bind_now = 1;
+	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0)
+	    bind_now = envline[12] != '\0';
 	  break;
 
 	case 9:

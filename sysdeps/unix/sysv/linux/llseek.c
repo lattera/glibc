@@ -17,11 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/types.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
 
-extern int __sys_llseek (int fd, off_t offset_hi, off_t offset_lo,
-			 loff_t *result, int whence);
+extern int __syscall__llseek (int fd, off_t offset_hi, off_t offset_lo,
+			      loff_t *result, int whence);
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 loff_t
@@ -29,9 +32,9 @@ __llseek (int fd, loff_t offset, int whence)
 {
   loff_t result;
 
-  return (loff_t) (__sys_llseek (fd, (off_t) (offset >> 32),
-				 (off_t) (offset & 0xffffffff),
-				 &result, whence) ?: result);
+  return (loff_t) (INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 32),
+				   (off_t) (offset & 0xffffffff),
+				   &result, whence) ?: result);
 }
 weak_alias (__llseek, llseek)
 weak_alias (__llseek, __lseek64)

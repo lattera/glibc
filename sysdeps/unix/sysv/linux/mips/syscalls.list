@@ -40,7 +40,7 @@ getresgid	-	getresgid	3	getresgid
 #
 # There are defined locally because the caller is also defined in this dir.
 #
-s_llseek	llseek	_llseek		5	__sys_llseek
+s_llseek	llseek	_llseek		5	__syscall__llseek
 
 # System calls with wrappers.
 rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction
@@ -55,9 +55,9 @@ s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid
 s_getresuid	getresuid getresuid	3	__syscall_getresuid
 s_poll		poll	poll		3	__syscall_poll
-s_pread64	pread64	pread		5	__syscall_pread64
+s_pread64	pread64	pread		5	__syscall_pread
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
-s_pwrite64	pwrite64 pwrite		5	__syscall_pwrite64
+s_pwrite64	pwrite64 pwrite		5	__syscall_pwrite
 s_reboot	reboot	reboot		3	__syscall_reboot
 s_sigaction	sigaction sigaction	3	__syscall_sigaction
 s_sigpending	sigpending sigpending	1	__syscall_sigpending
