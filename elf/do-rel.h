@@ -70,7 +70,7 @@ elf_dynamic_do_rel (struct link_map *map,
       ElfW(Word) nrelative = (map->l_info[RELCOUNT_IDX] == NULL
 			      ? 0 : map->l_info[RELCOUNT_IDX]->d_un.d_val);
       const ElfW(Rel) *relative = r;
-      r = MIN (r + nrelative, end);
+      r = r + MIN (nrelative, relsize / sizeof (ElfW(Rel)));
 
 #ifndef RTLD_BOOTSTRAP
       /* This is defined in rtld.c, but nowhere in the static libc.a; make
