@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <unistd.h>
 #include <sys/param.h>
 
@@ -27,19 +28,12 @@
    determine the page size to ensure proper alignment for calls such
    as mmap and friends.  --davidm 99/11/30 */
 
-/* If we are not a static program, this value is collected from the system
-   via the AT_PAGESZ auxiliary argument.  If we are a static program, we
-   use the getpagesize system call.  */
-
 extern size_t _dl_pagesize;
-
-extern size_t __syscall_getpagesize (void);
 
 int
 __getpagesize ()
 {
-  if (_dl_pagesize == 0)
-    _dl_pagesize = INLINE_SYSCALL (getpagesize, 0);
+  assert (_dl_pagesize != 0);
   return _dl_pagesize;
 }
 

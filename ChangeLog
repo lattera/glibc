@@ -1,5 +1,9 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/getpagesize.c (__getpagesize):
+	Remove getpagesize syscall.  We assume that the pagesize is always
+	determined from the auxiliary vector.
+
 	* intl/dcigettext.c: Fix a few warnings.
 	Patch by Bruno Haible <haible@ilog.fr>.
 
