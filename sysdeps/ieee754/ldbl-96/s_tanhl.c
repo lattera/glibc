@@ -77,8 +77,8 @@ static long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 	if (ix < 0x4003 || (ix == 0x4003 && j0 < 0xb8000000u)) {/* |x|<23 */
 	    if ((ix|j0|j1) == 0)
 		return x;		/* x == +- 0 */
-	    if (ix<0x3fc8) 		/* |x|<2**-55 */
-		return x*(one+x);    	/* tanh(small) = small */
+	    if (ix<0x3fc8)		/* |x|<2**-55 */
+		return x*(one+x);	/* tanh(small) = small */
 	    if (ix>=0x3fff) {	/* |x|>=1  */
 		t = __expm1l(two*fabsl(x));
 		z = one - two/(t+two);
@@ -90,6 +90,6 @@ static long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 	} else {
 	    z = one - tiny;		/* raised inexact flag */
 	}
-	return (se>0x7fff)? -z: z;
+	return (se&0x8000)? -z: z;
 }
 weak_alias (__tanhl, tanhl)

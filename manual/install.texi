@@ -495,12 +495,14 @@ switches via @var{CFLAGS}.
 @cindex upgrading from libc5
 @cindex kernel header files
 
-If you are installing GNU libc on a Linux system, you need to have
-the header files from a 2.2 kernel around for reference.  You do not
-need to use the 2.2 kernel, just have its headers where glibc can access
-at them.  The easiest way to do this is to unpack it in a directory
-such as @file{/usr/src/linux-2.2.1}.  In that directory, run
-@samp{make config} and accept all the defaults.  Then run @samp{make
+If you are installing GNU libc on a Linux system, you need to have the
+header files from a 2.2 or newer kernel around for reference.  For some
+architectures, like ia64, sh and hppa, you need at least headers from
+kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not need to use
+that kernel, just have its headers where glibc can access at them.  The
+easiest way to do this is to unpack it in a directory such as
+@file{/usr/src/linux-2.2.1}.  In that directory, run @samp{make config}
+and accept all the defaults.  Then run @samp{make
 include/linux/version.h}.  Finally, configure glibc with the option
 @samp{--with-headers=/usr/src/linux-2.2.1/include}.  Use the most recent
 kernel you can get your hands on.
