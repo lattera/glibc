@@ -179,7 +179,7 @@ getbroadcastnets (struct in_addr *addrs, int naddrs)
 {
   struct ifaddrs *ifa;
 
-  if (getifaddrs (&ifa) == 0)
+  if (getifaddrs (&ifa) != 0)
     {
       perror ("broadcast: getifaddrs");
       return 0;

@@ -3,6 +3,7 @@
 	* sunrpc/get_myaddr.c (get_myaddress): Fix test for failing
 	getifaddrs call.
 	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.
+	* sunrpc/pmap_rmt.c (getbroadcastnets): Likewise.
 
 	* malloc/arena.c (ptmalloc_init): Allow MALLOC_CHECK_==0 to
 	disable all checking.
