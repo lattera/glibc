@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 /* State of this thread when the signal was taken.  */
 struct sigcontext
   {
+    /* These first members are machine-independent.  */
+
     int sc_onstack;		/* Nonzero if running on sigstack.  */
     sigset_t sc_mask;		/* Blocked signals to restore.  */
 
@@ -31,8 +33,11 @@ struct sigcontext
     /* Port this thread is doing an interruptible RPC on.  */
     unsigned int sc_intr_port;
 
-    /* The rest of this structure is written to be laid out identically
-       to:
+    /* Error code associated with this signal (interpreted as `error_t').  */
+    int sc_err;
+
+    /* All following members are machine-dependent.  The rest of this
+       structure is written to be laid out identically to:
     	{
 	  struct mips_thread_state ts;
 	  struct mips_exc_state es;
@@ -54,7 +59,9 @@ struct sigcontext
 #define SC_COPROC_USE_COP2	4
 #define SC_COPROC_USE_COP3	8
 
-    /* struct mips_float_state */
+    /* struct mips_float_state
+       This is only filled in if the SC_COPROC_USE_FPU bit
+       is set in sc_coproc_used.  */
     int sc_fpr[32];		/* FP registers.  */
     int sc_fpcsr;		/* FPU status register.  */
     int sc_fpeir;		/* FP exception instruction register.  */
