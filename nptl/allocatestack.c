@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -661,10 +661,16 @@ __deallocate_stack (struct pthread *pd)
 }
 
 
+extern void *__libc_stack_end;
+
 int
 internal_function
-__make_stacks_executable (void)
+__make_stacks_executable (void **stack_endp)
 {
+  /* Challenge the caller.  */
+  if (*stack_endp != __libc_stack_end)
+    return EPERM;
+
 #ifdef NEED_SEPARATE_REGISTER_STACK
   const size_t pagemask = ~(__getpagesize () - 1);
 #endif
@@ -702,7 +708,7 @@ __make_stacks_executable (void)
   lll_unlock (stack_cache_lock);
 
   if (err == 0)
-    err = _dl_make_stack_executable ();
+    err = _dl_make_stack_executable (stack_endp);
 
   return err;
 }

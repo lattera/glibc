@@ -811,7 +811,7 @@ static
 struct link_map *
 _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 			char *realname, struct link_map *loader, int l_type,
-			int mode)
+			int mode, void **stack_endp)
 {
   struct link_map *l = NULL;
   const ElfW(Ehdr) *header;
@@ -1351,7 +1351,7 @@ cannot allocate TLS data structures for initial thread");
     {
       /* The stack is presently not executable, but this module
 	 requires that it be executable.  */
-      errval = (*GL(dl_make_stack_executable_hook)) ();
+      errval = (*GL(dl_make_stack_executable_hook)) (stack_endp);
       if (errval)
 	{
 	  errstring = N_("\
@@ -1949,7 +1949,10 @@ cannot create shared object descriptor"));
 				  N_("cannot open shared object file"));
     }
 
-  return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode);
+  extern void *__libc_stack_end;
+  void *stack_end = __libc_stack_end;
+  return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode,
+				 &stack_end);
 }
 INTDEF (_dl_map_object)
 

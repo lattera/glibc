@@ -1,3 +1,14 @@
+2004-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-execstack.c: Change interface.  Add
+	challenge for caller.
+	* sysdeps/generic/ldsodefs.h: Change declaration and type of hook
+	member in rtld_global appropriately.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-load.c (_dl_map_object_from_fd): Take additional paramter.
+	Pass it on to the changed function.
+	(_dl_map_object): Pass new parameter to _dl_map_object_from_fd.
+
 2004-01-13  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/bits/atomic.h (__arch_compare_and_exchange_xxx_8_int):

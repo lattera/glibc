@@ -1,12 +1,18 @@
+2004-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (__make_stacks_executable): Change interface.
+	Check parameters.  Pass parameter on to libc counterpart.
+	* pthreadP.h: Change declaration.
+
 2004-01-13  Richard Henderson  <rth@redhat.com>
 
-        * sysdeps/alpha/Makefile: New file.
-        * sysdeps/alpha/tcb-offsets.sym: New file.
-        * sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (SINGLE_THREAD_P):
-        Use MULTIPLE_THREADS_OFFSET to implement !libpthread !libc version.
+	* sysdeps/alpha/Makefile: New file.
+	* sysdeps/alpha/tcb-offsets.sym: New file.
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (SINGLE_THREAD_P):
+	Use MULTIPLE_THREADS_OFFSET to implement !libpthread !libc version.
 
-        * sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Rewrite based
-        on powerpc version.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: Rewrite based
+	on powerpc version.
 
 2004-01-08  Jakub Jelinek  <jakub@redhat.com>
 

@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -136,7 +136,7 @@ ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;
 /* If loading a shared object requires that we make the stack executable
    when it was not, we do it by calling this function.
    It returns an errno code or zero on success.  */
-int (*_dl_make_stack_executable_hook) (void) internal_function
+int (*_dl_make_stack_executable_hook) (void **) internal_function
   = _dl_make_stack_executable;
 
 

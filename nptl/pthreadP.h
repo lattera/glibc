@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -216,7 +216,8 @@ extern void __deallocate_stack (struct pthread *pd)
 extern void __reclaim_stacks (void) attribute_hidden;
 
 /* Make all threads's stacks executable.  */
-int __make_stacks_executable (void) internal_function attribute_hidden;
+extern int __make_stacks_executable (void **stack_endp)
+     internal_function attribute_hidden;
 
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
