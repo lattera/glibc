@@ -1,3 +1,10 @@
+2004-01-23  Richard Henderson  <rth@redhat.com>
+
+	* Versions.def (libm): Replace GLIBC_2.3.3 with GLIBC_2.3.4.
+	* sysdeps/alpha/fpu/Versions (libm): Likewise.
+	* sysdeps/alpha/fpu/cfloat-compat.h (cfloat_versions): Likewise.
+	* sysdeps/alpha/fpu/s_clog10f.c (clog10f): Likewise.
+
 2004-01-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/dbl-64/e_pow.c (log2): Rename to my_log2 to

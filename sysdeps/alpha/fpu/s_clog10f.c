@@ -51,11 +51,11 @@ __c2_clog10f (c2_cfloat_decl (x))
 /* Ug.  __clog10f was exported from GLIBC_2.1.  This is the only
    complex function whose double-underscore symbol was exported,
    so we get to handle that specially.  */
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_3_3)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_3_4)
 strong_alias (__c1_clog10f, __c1_clog10f_2);
 compat_symbol (libm, __c1_clog10f, clog10f, GLIBC_2_1);
 compat_symbol (libm, __c1_clog10f_2, __clog10f, GLIBC_2_1);
 #endif
-versioned_symbol (libm, __c2_clog10f, clog10f, GLIBC_2_3_3);
+versioned_symbol (libm, __c2_clog10f, clog10f, GLIBC_2_3_4);
 extern typeof(__c2_clog10f) __clog10f attribute_hidden;
 strong_alias (__c2_clog10f, __clog10f)
