@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/PowerPC version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,27 +46,27 @@
 #define MAP_FIXED	0x10		/* Interpret addr exactly.  */
 #ifdef __USE_MISC
 # define MAP_FILE	0x00
-# define MAP_ANONYMOUS	0x20		/* Don't use a file.  */
+# define MAP_ANONYMOUS	0x0800		/* Don't use a file.  */
 # define MAP_ANON	MAP_ANONYMOUS
 # define MAP_RENAME	MAP_ANONYMOUS
 #endif
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
-# define MAP_GROWSDOWN	0x0100		/* Stack-like segment.  */
-# define MAP_DENYWRITE	0x0800		/* ETXTBSY */
-# define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
-# define MAP_NORESERVE	0x0040		/* Don't check for reservations.  */
+# define MAP_GROWSDOWN	0x1000		/* Stack-like segment.  */
+# define MAP_DENYWRITE	0x2000		/* ETXTBSY */
+# define MAP_EXECUTABLE	0x4000		/* Mark it as an executable.  */
+# define MAP_NORESERVE	0x0400		/* Don't check for reservations.  */
 #endif
 
 /* Flags to `msync'.  */
 #define MS_ASYNC	1		/* Sync memory asynchronously.  */
-#define MS_SYNC		4		/* Synchronous memory sync.  */
+#define MS_SYNC		0		/* Synchronous memory sync.  */
 #define MS_INVALIDATE	2		/* Invalidate the caches.  */
 
 /* Flags for `mlockall'.  */
-#define MCL_CURRENT	0x2000		/* Lock all currently mapped pages.  */
-#define MCL_FUTURE	0x4000		/* Lock all additions to address
+#define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
+#define MCL_FUTURE	2		/* Lock all additions to address
 					   space.  */
 
 /* Flags for `mremap'.  */
