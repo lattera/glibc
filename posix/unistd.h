@@ -952,9 +952,6 @@ extern int fdatasync (int __fildes) __THROW;
 /* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
 extern char *crypt (__const char *__key, __const char *__salt) __THROW;
 
-/* Setup DES tables according KEY.  */
-extern void setkey (__const char *__key) __THROW;
-
 /* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
    block in place.  */
 extern void encrypt (char *__block, int __edflag) __THROW;
@@ -968,18 +965,11 @@ extern void swab (__const void *__from, void *__to, ssize_t __n) __THROW;
 #endif
 
 
-/* The Single Unix specification, version 2, demands these prototypes
-   to be here.  They are also found in <stdio.h>.  */
+/* The Single Unix specification demands this prototype to be here.
+   It is also found in <stdio.h>.  */
 #ifdef __USE_XOPEN
 /* Return the name of the controlling terminal.  */
 extern char *ctermid (char *__s) __THROW;
-
-/* Return the name of the current user.  This function should not be
-   used and might go away some time.  */
-extern char *cuserid (char *__s) __THROW;
-
-/* Rename file OLD to NEW.  */
-extern int rename (__const char *__old, __const char *__new) __THROW;
 #endif
 
 

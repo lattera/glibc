@@ -1,5 +1,8 @@
 2000-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h: Remove setkey, rename, and cuserid prototypes as
+	they are not anymore required here.
+
 	* nss/Makefile: Remove rules to build and distribute nss_db.
 
 	* sysdeps/generic/alphasort64.c: Remove unnecessary versioning.
