@@ -1,5 +1,8 @@
 2004-10-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/tst-dlopenrpath.c (do_test): Enable code which was disabled
+	for debugging.
+
 	* elf/dl-sym.c (do_sym): Avoid using global variable.
 
 	* elf/dl-addr.c (_dl_addr): Really use match everywhere.

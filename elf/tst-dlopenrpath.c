@@ -62,10 +62,8 @@ do_test (void)
   result = foo ();
 
  out:
-#if 0
   unlink (PFX "test-subdir/in-subdir.so");
   rmdir (testsubdir);
-#endif
 
   return result;
 }
