@@ -106,8 +106,8 @@ outb_p (unsigned char value, unsigned short int port)
 			"Nd" (port));
 }
 
-static __INLINE void
-outw (unsigned short value, unsigned short int port)
+static __inline void
+outw (unsigned short int value, unsigned short int port)
 {
   __asm__ __volatile__ ("outw %w0,%w1": :"a" (value), "Nd" (port));
 
