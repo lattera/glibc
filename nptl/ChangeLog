@@ -1,5 +1,8 @@
 2003-03-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/createthread.c: Moved to...
+	* sysdeps/unix/sysv/linux/createthread.c: ...here.
+
 	* Makefile (tests): Add tst-cond10.
 	* tst-cond10.c: New file.
 
