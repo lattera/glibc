@@ -20,6 +20,7 @@
 
 ifeq (bare,$(subdir))
 install-others += $(inst_libdir)/force_cpu386.ld
-$(inst_libdir)/force_cpu386.ld: $(sysdep_dir)/standalone/i386/target.ld
+$(inst_libdir)/force_cpu386.ld: $(sysdep_dir)/standalone/i386/target.ld \
+				$(+force)
 	$(do-install)
 endif
