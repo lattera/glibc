@@ -18,7 +18,6 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#include <tls.h>
 
 	.text
 
@@ -27,14 +26,16 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 
-#define ETIMEDOUT               110
+#define EWOULDBLOCK		11
+#define EINVAL			22
+#define ETIMEDOUT		110
 
 
-	.globl	__lll_lock_wait
-	.type	__lll_lock_wait,@function
-	.hidden	__lll_lock_wait
+	.globl	__lll_mutex_lock_wait
+	.type	__lll_mutex_lock_wait,@function
+	.hidden	__lll_mutex_lock_wait
 	.align	16
-__lll_lock_wait:
+__lll_mutex_lock_wait:
 	pushl	%esi
 	pushl	%ebx
 	pushl	%edx
@@ -43,11 +44,11 @@ __lll_lock_wait:
 	xorl	%esi, %esi	/* No timeout.  */
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 1:
-	leal	-1(%eax), %edx	/* account for the preceeded xadd.  */
+	leal	1(%eax), %edx	/* account for the preceeded xadd.  */
 	movl	$SYS_futex, %eax
 	int	$0x80
 
-	orl	$-1, %eax	/* Load -1.  */
+	movl	$1, %eax
 #ifndef UP
 	cmpl	$0, %gs:MULTIPLE_THREADS_OFFSET
 	je,pt	0f
@@ -55,85 +56,42 @@ __lll_lock_wait:
 0:
 #endif
 	xaddl	%eax, (%ebx)
+	testl	%eax, %eax
 	jne	1b
 
-	movl	$-1, (%ebx)
+	movl	$2, (%ebx)
 
 	popl	%edx
 	popl	%ebx
 	popl	%esi
 	ret
-	.size	__lll_lock_wait,.-__lll_lock_wait
+	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait
 
 
-	.globl	lll_unlock_wake_cb
-	.type	lll_unlock_wake_cb,@function
-	.hidden	lll_unlock_wake_cb
+	.globl	__lll_mutex_timedlock_wait
+	.type	__lll_mutex_timedlock_wait,@function
+	.hidden	__lll_mutex_timedlock_wait
 	.align	16
-lll_unlock_wake_cb:
-	pushl	%esi
-	pushl	%ebx
-	pushl	%ecx
-	pushl	%edx
+__lll_mutex_timedlock_wait:
+	/* Check for a valid timeout value.  */
+	cmpl	$1000000000, 4(%edx)
+	jae	3f
 
-	movl	20(%esp), %ebx
-#ifndef UP
-	cmpl	$0, %gs:MULTIPLE_THREADS_OFFSET
-	je,pt	0f
-	lock
-0:
-#endif
-	incl	(%ebx)
-	jng	1f
-
-	popl	%edx
-	popl	%ecx
-	popl	%ebx
-	popl	%esi
-	ret
-	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
-
-
-	.globl	__lll_unlock_wake
-	.type	__lll_unlock_wake,@function
-	.hidden	__lll_unlock_wake
-__lll_unlock_wake:
-	pushl	%esi
-	pushl	%ebx
-	pushl	%ecx
-	pushl	%edx
-
-	movl	%eax, %ebx
-1:	movl	$FUTEX_WAKE, %ecx
-	movl	$1, %edx	/* Wake one thread.  */
-	xorl	%esi, %esi
-	movl	%edx, (%ebx)	/* Stores '$1'.  */
-	movl	$SYS_futex, %eax
-	int	$0x80
-
-	popl	%edx
-	popl	%ecx
-	popl	%ebx
-	popl	%esi
-	ret
-	.size	__lll_unlock_wake,.-__lll_unlock_wake
-
-
-	.globl	__lll_timedwait_tid
-	.type	__lll_timedwait_tid,@function
-	.hidden	__lll_timedwait_tid
-__lll_timedwait_tid:
 	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
 	pushl	%ebp
 
-	movl	%eax, %ebp
-	movl	%edx, %edi
+	/* Stack frame for the timespec and timeval structs.  */
 	subl	$8, %esp
 
+	movl	%ecx, %ebp
+	movl	%edx, %edi
+	leal	1(%eax), %esi
+
 	/* Get current time.  */
-2:	movl	%esp, %ebx
+1:
+	movl	%esp, %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
 	int	$0x80
@@ -146,40 +104,77 @@ __lll_timedwait_tid:
 	movl	4(%edi), %edx
 	subl	(%esp), %ecx
 	subl	%eax, %edx
-	jns	5f
+	jns	4f
 	addl	$1000000000, %edx
 	decl	%ecx
-5:	testl	%ecx, %ecx
-	js	6f		/* Time is already up.  */
+4:	testl	%ecx, %ecx
+	js	5f		/* Time is already up.  */
 
+	/* Futex call.  */
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
-
-	movl	(%ebp), %edx
-	testl	%edx, %edx
-	jz	4f
-
+	movl	%esi, %edx
 	movl	%esp, %esi
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%ebp, %ebx
 	movl	$SYS_futex, %eax
 	int	$0x80
 
-	movl	%eax, %edx
+	movl	$1, %esi
+#ifndef UP
+	cmpl	$0, %gs:MULTIPLE_THREADS_OFFSET
+	je,pt	0f
+	lock
+0:
+#endif
+	xaddl	%esi, (%ebx)
+	testl	%esi, %esi
+	jne	7f
 
-	cmpl	$0, (%ebx)
-	jne	1f
-4:	xorl	%eax, %eax
+	movl	$2, (%ebx)
+	xorl	%eax, %eax
 
-3:	addl	$8, %esp
+6:	addl	$8, %esp
 	popl	%ebp
 	popl	%ebx
 	popl	%esi
 	popl	%edi
 	ret
 
-1:	cmpl	$-ETIMEDOUT, %edx
-	jne	2b
-6:	movl	$ETIMEDOUT, %eax
-	jmp	3b
-	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
+	/* Check whether the time expired.  */
+7:	cmpl	$-ETIMEDOUT, %eax
+	je	5f
+	jmp	1b
+
+3:	movl	$EINVAL, %eax
+	ret
+
+5:	movl	$ETIMEDOUT, %eax
+	jmp	6b
+	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
+
+
+	.globl	__lll_mutex_unlock_wake
+	.type	__lll_mutex_unlock_wake,@function
+	.hidden	__lll_mutex_unlock_wake
+	.align	16
+__lll_mutex_unlock_wake:
+	pushl	%esi
+	pushl	%ebx
+	pushl	%ecx
+	pushl	%edx
+
+	movl	$FUTEX_WAKE, %ecx
+	movl	%eax, %ebx
+	xorl	%esi, %esi
+	movl	$0, (%ebx)
+	movl	$1, %edx	/* Wake one thread.  */
+	movl	$SYS_futex, %eax
+	int	$0x80
+
+	popl	%edx
+	popl	%ecx
+	popl	%ebx
+	popl	%esi
+	ret
+	.size	__lll_mutex_unlock_wake,.-__lll_mutex_unlock_wake

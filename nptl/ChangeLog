@@ -1,3 +1,14 @@
+2002-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/stdio-lock.h: New file.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevelmutex.S: New file.
+	* sysdeps/unix/sysv/linux/i386/i586/libc-lowlevelmutex.S: New file.
+	* sysdeps/unix/sysv/linux/i386/i686/libc-lowlevelmutex.S: New file.
+	* Makefile (routines): Add libc-lowlevelmutex.
+
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Remove
+	__i686.get_pc_thunk.dx.
+
 2002-12-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (libpthread-shared-only-routines): Add pt-allocrtsig.
