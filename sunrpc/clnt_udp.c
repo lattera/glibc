@@ -191,7 +191,7 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
 	  goto fooy;
 	}
       /* attempt to bind to prov port */
-      (void) INTUSE(bindresvport) (*sockp, (struct sockaddr_in *) 0);
+      (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
       /* the sockets rpc controls are non-blocking */
       (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
 #ifdef IP_RECVERR

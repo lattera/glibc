@@ -450,8 +450,8 @@
 #  endif
 #  define hidden_proto(name) __hidden_proto (name, __GI_##name)
 #  define __hidden_proto(name, internal) \
-  __typeof (name) internal; \
-  __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
+  extern __typeof (name) internal; \
+  extern __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
   __hidden_proto_hiddenattr;
 #  define __hidden_asmname(name) \
   __hidden_asmname1 (__USER_LABEL_PREFIX__, name)

@@ -433,7 +433,7 @@ dl_open_worker (void *a)
   /* Bump the generation number if necessary.  */
   if (any_tls)
     if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
-      __libc_fatal (gettext ("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
+      __libc_fatal (_("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
 #endif
 
   /* Run the initializer functions of new objects.  */

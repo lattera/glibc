@@ -426,3 +426,4 @@ innetgr (const char *netgroup, const char *host, const char *user,
 
   return result == 1;
 }
+libc_hidden_def (innetgr)

@@ -1,5 +1,41 @@
 2002-08-05  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/posix/system.c (do_system): New function, guts broken out of
+	__libc_system.
+	(__libc_system): Call it, putting just the line == NULL test here.
+
+	* include/libc-symbols.h (__hidden_proto): Add extern keywords so
+	variables work right.
+
+	* elf/dl-open.c (dl_open_worker): Use _ macro instead of gettext.
+	* elf/dl-close.c (_dl_close): Likewise.
+
+	* include/netinet/in.h: Use libc_hidden_proto for bindresvport,
+	in6addr_any, in6addr_loopback.  Remove decls for
+	bindresvport_internal, in6addr_any_internal, in6addr_loopback_internal.
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Nix INTUSE for bindresvport.
+	* sunrpc/svc_tcp.c (svctcp_create): Likewise.
+	* sunrpc/clnt_udp.c (clntudp_bufcreate): Likewise.
+	* sunrpc/bindrsvprt.c: Change INTDEF to libc_hidden_def.
+	* inet/in6_addr.c: Change INTVARDEF to libc_hidden_def.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Nix INTUSE for
+	in6addr_loopback.
+	* inet/gethstbyad_r.c (PREPROCESS): Nix INTUSE for in6addr_any.
+
+	* include/netinet/ether.h: Use libc_hidden_proto for ether_ntoa_r,
+	ether_aton_r.
+	* inet/ether_aton_r.c: Add libc_hidden_def.
+	* inet/ether_ntoa_r.c: Likewise.
+
+	* include/rpc/auth.h: Use libc_hidden_proto for getnetname,
+	netname2user, host2netname.
+	* sunrpc/netname.c: Add libc_hidden_def.
+
+	* include/netdb.h: Use libc_hidden_proto for innetgr, rcmd_af,
+	rexec_af, rresvport_af, ruserok_af.
+	* inet/rcmd.c: Add libc_hidden_def.
+	* inet/getnetgrent_r.c: Likewise.
+
 	* include/rpc/svc.h: Use libc_hidden_proto for xprt_register,
 	xprt_unregister.
 	* sunrpc/svc.c: Add libc_hidden_def.

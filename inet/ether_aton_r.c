@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -61,3 +61,4 @@ ether_aton_r (const char *asc, struct ether_addr *addr)
 
   return addr;
 }
+libc_hidden_def (ether_aton_r)

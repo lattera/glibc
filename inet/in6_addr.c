@@ -21,7 +21,7 @@
 
 const struct in6_addr in6addr_any =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } } };
-INTVARDEF(in6addr_any)
+libc_hidden_def (in6addr_any)
 const struct in6_addr in6addr_loopback =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 } } };
-INTVARDEF(in6addr_loopback)
+libc_hidden_def (in6addr_loopback)

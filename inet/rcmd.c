@@ -398,6 +398,7 @@ bad:
 	freeaddrinfo(res);
 	return -1;
 }
+libc_hidden_def (rcmd_af)
 
 int
 rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
@@ -458,6 +459,7 @@ rresvport_af(alport, family)
 	__set_errno (EAGAIN);
 	return -1;
 }
+libc_hidden_def (rresvport_af)
 
 int
 rresvport(alport)
@@ -494,6 +496,8 @@ ruserok_af(rhost, superuser, ruser, luser, af)
 	freeaddrinfo(res0);
 	return (ret);
 }
+libc_hidden_def (ruserok_af)
+
 int
 ruserok(rhost, superuser, ruser, luser)
 	const char *rhost, *ruser, *luser;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@
 #define	SHELL_NAME	"sh"		/* Name to give it.  */
 
 /* Execute LINE as a shell command, returning its status.  */
-int
-__libc_system (const char *line)
+static int
+do_system (const char *line)
 {
   int status, save;
   pid_t pid;
@@ -42,11 +42,6 @@ __libc_system (const char *line)
 #ifndef WAITPID_CANNOT_BLOCK_SIGCHLD
   sigset_t block, omask;
 #endif
-
-  if (line == NULL)
-    /* Check that we have a command processor available.  It might
-       not be available after a chroot(), for example.  */
-    return __libc_system ("exit 0") == 0;
 
   sa.sa_handler = SIG_IGN;
   sa.sa_flags = 0;
@@ -153,5 +148,16 @@ __libc_system (const char *line)
     }
 
   return status;
+}
+
+int
+__libc_system (const char *line)
+{
+  if (line == NULL)
+    /* Check that we have a command processor available.  It might
+       not be available after a chroot(), for example.  */
+    return do_system ("exit 0") == 0;
+
+  return do_system (line);
 }
 weak_alias (__libc_system, system)

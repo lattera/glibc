@@ -1,6 +1,10 @@
 #ifndef _RPC_AUTH_H
 #include <sunrpc/rpc/auth.h>
 
+libc_hidden_proto (getnetname)
+libc_hidden_proto (netname2user)
+libc_hidden_proto (host2netname)
+
 /* Now define the internal interfaces.  */
 struct key_netstarg;
 extern int key_setnet (struct key_netstarg *arg);

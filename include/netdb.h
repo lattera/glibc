@@ -21,6 +21,12 @@ __set_h_errno (int __err)
 #  define __set_h_errno(x) (h_errno = (x))
 # endif	/* _LIBC_REENTRANT */
 
+libc_hidden_proto (innetgr)
+libc_hidden_proto (rcmd_af)
+libc_hidden_proto (rexec_af)
+libc_hidden_proto (rresvport_af)
+libc_hidden_proto (ruserok_af)
+
 /* Document internal interfaces.  */
 extern int __gethostent_r (struct hostent *__restrict __result_buf,
 			   char *__restrict __buf, size_t __buflen,

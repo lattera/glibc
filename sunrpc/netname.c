@@ -115,6 +115,7 @@ host2netname (char netname[MAXNETNAMELEN + 1], const char *host,
   sprintf (netname, "%s.%s@%s", OPSYS, hostname, domainname);
   return 1;
 }
+libc_hidden_def (host2netname)
 
 int
 getnetname (char name[MAXNETNAMELEN + 1])
@@ -129,6 +130,7 @@ getnetname (char name[MAXNETNAMELEN + 1])
     dummy = user2netname (name, uid, NULL);
   return (dummy);
 }
+libc_hidden_def (getnetname)
 
 /* Type of the lookup function for netname2user.  */
 typedef int (*netname2user_function) (const char netname[MAXNETNAMELEN + 1],
@@ -174,6 +176,7 @@ netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
 
   return status == NSS_STATUS_SUCCESS;
 }
+libc_hidden_def (netname2user)
 
 int
 netname2host (const char netname[MAXNETNAMELEN + 1], char *hostname,

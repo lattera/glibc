@@ -159,7 +159,7 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
     }
   __bzero ((char *) &addr, sizeof (addr));
   addr.sin_family = AF_INET;
-  if (INTUSE(bindresvport) (sock, &addr))
+  if (bindresvport (sock, &addr))
     {
       addr.sin_port = 0;
       (void) __bind (sock, (struct sockaddr *) &addr, len);

@@ -83,4 +83,4 @@ bindresvport (int sd, struct sockaddr_in *sin)
 
   return res;
 }
-INTDEF (bindresvport)
+libc_hidden_def (bindresvport)

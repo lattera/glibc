@@ -354,7 +354,7 @@ _dl_close (void *_map)
      counter.  */
   if (any_tls)
     if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
-      __libc_fatal (gettext ("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
+      __libc_fatal (_("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
 #endif
 
   /* Notify the debugger those objects are finalized and gone.  */
