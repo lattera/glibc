@@ -1,6 +1,6 @@
 /* Convert characters in input buffer using conversion descriptor to
    output buffer.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -45,7 +45,7 @@ __gconv (gconv_t cd, const unsigned char **inbuf, const unsigned char *inbufend,
 			   (cd->steps, cd->data, NULL, NULL, converted, 1));
   else
     {
-      const char *last_start;
+      const unsigned char *last_start;
 
       assert (outbuf != NULL && *outbuf != NULL);
       cd->data[last_step].outbuf = *outbuf;

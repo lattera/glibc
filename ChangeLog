@@ -1,3 +1,8 @@
+1999-03-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* iconv/gconv.c (__gconv): Change type of last_start to unsigned
+	char to avoid warning.
+
 1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/iconv.c (iconv): Correctly cast parameters for __gconv.
