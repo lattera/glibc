@@ -1,3 +1,7 @@
+2005-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-getpid1.c (do_test): Align stack passed to clone{2,}.
+
 2005-02-25  Roland McGrath  <roland@redhat.com>
 
 	* alloca_cutoff.c: Correct license text.

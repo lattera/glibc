@@ -1,3 +1,8 @@
+2005-03-10  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/hppa/configure.in: Remove old Makefile leftovers.
+	* sysdeps/hppa/configure: Regenerated.
+
 2005-03-08  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/gnu/errlist-compat.awk: Use NERR in all array decls, so

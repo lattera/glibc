@@ -1,6 +1,5 @@
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
 
-hppa*linux*)
 echo "$as_me:$LINENO: checking for assembler line separator" >&5
 echo $ECHO_N "checking for assembler line separator... $ECHO_C" >&6
 if test "${libc_cv_asm_line_sep+set}" = set; then
