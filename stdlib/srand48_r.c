@@ -21,7 +21,7 @@
 #include <limits.h>
 
 int
-srand48_r (seedval, buffer)
+__srand48_r (seedval, buffer)
      long int seedval;
      struct drand48_data *buffer;
 {
@@ -51,3 +51,4 @@ srand48_r (seedval, buffer)
 
   return 0;
 }
+weak_alias (__srand48_r, srand48_r)

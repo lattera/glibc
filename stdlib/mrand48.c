@@ -22,12 +22,12 @@
 /* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
 extern struct drand48_data __libc_drand48_data;
 
-long
+long int
 mrand48 ()
 {
-  long result;
+  long int result;
 
-  (void) jrand48_r (__libc_drand48_data.X, &__libc_drand48_data, &result);
+  (void) __jrand48_r (__libc_drand48_data.X, &__libc_drand48_data, &result);
 
   return result;
 }

@@ -22,7 +22,7 @@
 int
 lrand48_r (buffer, result)
      struct drand48_data *buffer;
-     long *result;
+     long int *result;
 {
   /* Be generous for the arguments, detect some errors.  */
   if (buffer == NULL)

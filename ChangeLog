@@ -1,3 +1,26 @@
+1997-04-21 16:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/drand48.c: Cleanup namespace.
+	* stdlib/drand48_r.c: Cleanup namespace.
+	* stdlib/erand48.c: Cleanup namespace.
+	* stdlib/erand48_r.c: Cleanup namespace.
+	* stdlib/jrand48.c: Cleanup namespace.
+	* stdlib/jrand48_r.c: Cleanup namespace.
+	* stdlib/lrand48.c: Cleanup namespace.
+	* stdlib/lrand48_r.c: Cleanup namespace.
+	* stdlib/mrand48.c: Cleanup namespace.
+	* stdlib/mrand48_r.c: Cleanup namespace.
+	* stdlib/nrand48.c: Cleanup namespace.
+	* stdlib/nrand48_r.c: Cleanup namespace.
+	* stdlib/lcong48.c: Cleanup namespace.
+	* stdlib/lcong48_r.c: Cleanup namespace.
+	* stdlib/srand48.c: Cleanup namespace.
+	* stdlib/srand48_r.c: Cleanup namespace.
+	* stdlib/seed48.c: Cleanup namespace.
+	* stdlib/seed48_r.c: Cleanup namespace.
+
+	* stdlib/stdlib.h: Provide new prototypes.
+
 1997-04-21 13:25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/arith.texi: Add description for INFINITY, _Imaginary_I,

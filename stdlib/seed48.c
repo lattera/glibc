@@ -26,7 +26,7 @@ unsigned short int *
 seed48 (seed16v)
      unsigned short int seed16v[3];
 {
-  (void) seed48_r (seed16v, &__libc_drand48_data);
+  (void) __seed48_r (seed16v, &__libc_drand48_data);
 
   return __libc_drand48_data.old_X;
 }

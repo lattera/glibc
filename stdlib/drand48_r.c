@@ -26,5 +26,5 @@ drand48_r (buffer, result)
      struct drand48_data *buffer;
      double *result;
 {
-  return erand48_r (buffer->X, buffer, result);
+  return __erand48_r (buffer->X, buffer, result);
 }

@@ -21,15 +21,26 @@
 #include <string.h>
 
 int
-lcong48_r (param, buffer)
+__lcong48_r (param, buffer)
      unsigned short int param[7];
      struct drand48_data *buffer;
 {
   /* Store the given values.  */
+#if USHRT_MAX == 0xffffU
   memcpy (buffer->X, &param[0], sizeof (buffer->X));
   memcpy (buffer->a, &param[3], sizeof (buffer->a));
+#else
+  buffer->X[2] = (param[2] << 16) | param[1];
+  buffer->X[1] = param[0] << 16;
+  buffer->X[0] = 0;
+
+  buffer->a[2] = (param[5] << 16) | param[4];
+  buffer->a[1] = param[3] << 16;
+  buffer->a[0] = 0;
+#endif
   buffer->c = param[6];
   buffer->init = 1;
 
   return 0;
 }
+weak_alias (__lcong48_r, lcong48_r)

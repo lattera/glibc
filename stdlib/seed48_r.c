@@ -21,7 +21,7 @@
 #include <string.h>
 
 int
-seed48_r (seed16v, buffer)
+__seed48_r (seed16v, buffer)
      unsigned short int seed16v[3];
      struct drand48_data *buffer;
 {
@@ -51,3 +51,4 @@ seed48_r (seed16v, buffer)
 
   return 0;
 }
+weak_alias (__seed48_r, seed48_r)

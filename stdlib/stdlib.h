@@ -211,7 +211,7 @@ extern __inline int atoi (__const char *__nptr)
 extern __inline long int atol (__const char *__nptr)
 { return strtol (__nptr, (char **) NULL, 10); }
 
-#if defined __USE_ISOC9X && (defined __GNUC__ || defined __USE_MISC)
+#if defined __USE_MISC || defined __USE_ISOC9X
 extern __inline long long int atoll (__const char *__nptr)
 { return strtoll (__nptr, (char **) NULL, 10); }
 #endif
@@ -335,23 +335,39 @@ struct drand48_data
 #ifdef __USE_MISC
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
 extern int drand48_r __P ((struct drand48_data *__buffer, double *__result));
+extern int __erand48_r __P ((unsigned short int __xsubi[3],
+			     struct drand48_data *__buffer, double *__result));
 extern int erand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, double *__result));
 
 /* Return non-negative, long integer in [0,2^31).  */
 extern int lrand48_r __P ((struct drand48_data *__buffer, long int *__result));
+extern int __nrand48_r __P ((unsigned short int __xsubi[3],
+			     struct drand48_data *__buffer,
+			     long int *__result));
 extern int nrand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, long int *__result));
 
 /* Return signed, long integers in [-2^31,2^31).  */
 extern int mrand48_r __P ((struct drand48_data *__buffer, long int *__result));
+extern int __jrand48_r __P ((unsigned short int __xsubi[3],
+			     struct drand48_data *__buffer,
+			     long int *__result));
 extern int jrand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, long int *__result));
 
 /* Seed random number generator.  */
+extern int __srand48_r __P ((long int __seedval,
+			     struct drand48_data *__buffer));
 extern int srand48_r __P ((long int __seedval, struct drand48_data *__buffer));
+
+extern int __seed48_r __P ((unsigned short int __seed16v[3],
+			    struct drand48_data *__buffer));
 extern int seed48_r __P ((unsigned short int __seed16v[3],
 			  struct drand48_data *__buffer));
+
+extern int __lcong48_r __P ((unsigned short int __param[7],
+			     struct drand48_data *__buffer));
 extern int lcong48_r __P ((unsigned short int __param[7],
 			   struct drand48_data *__buffer));
 #endif	/* Use misc.  */

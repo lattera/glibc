@@ -26,5 +26,5 @@ void
 srand48 (seedval)
      long seedval;
 {
-  (void) srand48_r (seedval, &__libc_drand48_data);
+  (void) __srand48_r (seedval, &__libc_drand48_data);
 }

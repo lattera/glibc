@@ -28,7 +28,7 @@ erand48 (xsubi)
 {
   double result;
 
-  (void) erand48_r (xsubi, &__libc_drand48_data, &result);
+  (void) __erand48_r (xsubi, &__libc_drand48_data, &result);
 
   return result;
 }

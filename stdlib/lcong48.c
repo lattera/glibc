@@ -26,5 +26,5 @@ void
 lcong48 (param)
      unsigned short int param[7];
 {
-  (void) lcong48_r (param, &__libc_drand48_data);
+  (void) __lcong48_r (param, &__libc_drand48_data);
 }

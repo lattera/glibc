@@ -20,10 +20,10 @@
 #include <stdlib.h>
 
 int
-nrand48_r (xsubi, buffer, result)
+__nrand48_r (xsubi, buffer, result)
      unsigned short int xsubi[3];
      struct drand48_data *buffer;
-     long *result;
+     long int *result;
 {
   /* Compute next state.  */
   if (__drand48_iterate (xsubi, buffer) < 0)
@@ -37,3 +37,4 @@ nrand48_r (xsubi, buffer, result)
 
   return 0;
 }
+weak_alias (__nrand48_r, nrand48_r)

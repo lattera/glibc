@@ -23,7 +23,7 @@
 
 
 int
-erand48_r (xsubi, buffer, result)
+__erand48_r (xsubi, buffer, result)
      unsigned short int xsubi[3];
      struct drand48_data *buffer;
      double *result;
@@ -50,3 +50,4 @@ erand48_r (xsubi, buffer, result)
 
   return 0;
 }
+weak_alias (__erand48_r, erand48_r)

@@ -27,7 +27,7 @@ drand48 ()
 {
   double result;
 
-  (void) erand48_r (__libc_drand48_data.X, &__libc_drand48_data, &result);
+  (void) __erand48_r (__libc_drand48_data.X, &__libc_drand48_data, &result);
 
   return result;
 }
