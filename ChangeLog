@@ -1,7 +1,11 @@
+2001-04-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: New file.
+	Contributed by Stephen L Moshier <moshier@mediaone.net>.
+
 2001-04-20  Andreas Jaeger  <aj@suse.de>
 
-	* intl/Makefile (tests): Reorder conditions, tst-gettext needs
-	msgfmt.
+	* intl/Makefile (tests): Reorder conditions, tst-gettext needs msgfmt.
 
 2001-04-20  Andreas Schwab  <schwab@suse.de>
 

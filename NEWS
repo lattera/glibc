@@ -1,5 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-4-16
-
+GNU C Library NEWS -- history of user-visible changes.  2001-4-20
 Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -14,8 +13,8 @@ Version 2.2.3
   in float, double, and long double format.
 
 * Stephen Moshier implemented j0, j1, jn, y0, y1, yn, lgamma, erf, erfc,
-  and asin for the 96-bit long double format and logl, tanl for the 128-bit
-  long double format.
+  and asin for the 96-bit long double format and asin, log, tan for the
+  128-bit long double format.
 
 * The beginning of a last-bit accurate math library by IBM Haifa were added.
   The basic double functions exist today.  Contributed by Abraham Ziv
