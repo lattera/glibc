@@ -1,3 +1,8 @@
+2003-12-04  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Test using thread local p_multiple_threads field.
+
 2003-12-10  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Update copyright

@@ -1,3 +1,8 @@
+2003-12-11  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/generic/dl-fptr.c (COMPARE_AND_SWAP): Pass new and old
+	in the right order.
+
 2003-12-01  Jes Sorensen  <jes@wildopensource.com>
 
 	* rt/tst-clock.c (do_test): Print message when skipping

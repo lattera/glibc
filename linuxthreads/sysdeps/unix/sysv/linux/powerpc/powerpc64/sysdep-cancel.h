@@ -89,22 +89,12 @@
 # endif
 
 # ifndef __ASSEMBLER__
-extern int __local_multiple_threads
-#  if !defined NOT_IN_libc || defined IS_IN_libpthread
-  attribute_hidden;
-#  else
-  ;
-#  endif
-#  define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
+#  define SINGLE_THREAD_P						\
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, p_multiple_threads) == 0, 1)
 # else
-#   define SINGLE_THREAD_P						\
-	.section	".toc","aw";  \
-.LC__local_multiple_threads:; \
-	.tc __local_multiple_threads[TC],__local_multiple_threads; \
-  .previous;              \
-  ld    10,.LC__local_multiple_threads@toc(2);				\
-  ld    10,0(10);								\
-  cmpdi 10,0
+#  define SINGLE_THREAD_P						\
+  lwz 10,MULTIPLE_THREADS_OFFSET(13);					\
+  cmpwi 10,0
 # endif
 
 #elif !defined __ASSEMBLER__

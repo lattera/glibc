@@ -31,7 +31,7 @@
 #ifndef ELF_MACHINE_BOOT_FPTR_TABLE_LEN
 /* ELF_MACHINE_BOOT_FPTR_TABLE_LEN should be greater than the number of
    dynamic symbols in ld.so.  */
-#define ELF_MACHINE_BOOT_FPTR_TABLE_LEN 256
+# define ELF_MACHINE_BOOT_FPTR_TABLE_LEN 256
 #endif
 
 #ifndef ELF_MACHINE_LOAD_ADDRESS
@@ -39,8 +39,8 @@
 #endif
 
 #ifndef COMPARE_AND_SWAP
-#define COMPARE_AND_SWAP(ptr,old,new) \
-  atomic_compare_and_exchange_bool_acq ((ptr), (old), (new))
+# define COMPARE_AND_SWAP(ptr, old, new) \
+  (atomic_compare_and_exchange_bool_acq (ptr, new, old) == 0)
 #endif
 
 ElfW(Addr) _dl_boot_fptr_table [ELF_MACHINE_BOOT_FPTR_TABLE_LEN];
