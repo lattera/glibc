@@ -29,7 +29,7 @@ distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 	      Banner res_hconf.h res_debug.h README gai_misc.h ga_test.c
 
 routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
-	    res_hconf res_libc gai_sigqueue
+	    res_hconf res_libc
 
 tests = tst-aton
 
@@ -38,6 +38,7 @@ include ../Makeconfig
 extra-libs := libresolv libnss_dns
 ifeq ($(have-thread-library),yes)
 extra-libs += libanl
+routines += gai_sigqueue
 endif
 extra-libs-others = $(extra-libs)
 libresolv-routines := gethnamaddr res_comp res_debug	\

@@ -1,3 +1,8 @@
+2001-03-07  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/Makefile (routines): Only build gai_sigqueue when threads
+	are available.
+
 2001-03-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldconfig.c (_dl_sysdep_message): Remove.
