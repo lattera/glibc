@@ -33,18 +33,23 @@
 
 #include <xstatconv.c>
 
-extern int __syscall_stat (const char *__unbounded, struct kernel_stat *__unbounded);
+extern int __syscall_stat (const char *__unbounded,
+			   struct kernel_stat *__unbounded);
 
 /* Get information about the file NAME in BUF.  */
 int
 __xstat (int vers, const char *name, struct stat *buf)
 {
-  struct kernel_stat kbuf;
-  int result;
-
   if (vers == _STAT_VER_KERNEL)
     return INLINE_SYSCALL (stat, 2, CHECK_STRING (name),
 			   CHECK_1 ((struct kernel_stat *) buf));
+
+#ifdef STAT_IS_KERNEL_STAT
+  errno = EINVAL;
+  return -1;
+#else
+  struct kernel_stat kbuf;
+  int result;
 
   result = INLINE_SYSCALL (stat, 2, CHECK_STRING (name),
 			   __ptrvalue (&kbuf));
@@ -52,6 +57,7 @@ __xstat (int vers, const char *name, struct stat *buf)
     result = xstat_conv (vers, &kbuf, buf);
 
   return result;
+#endif
 }
 hidden_def (__xstat)
 weak_alias (__xstat, _xstat);

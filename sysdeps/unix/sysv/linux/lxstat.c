@@ -39,18 +39,23 @@ extern int __syscall_lstat (const char *__unbounded,
 int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
-  struct kernel_stat kbuf;
-  int result;
-
   if (vers == _STAT_VER_KERNEL)
     return INLINE_SYSCALL (lstat, 2, CHECK_STRING (name),
 			   CHECK_1 ((struct kernel_stat *) buf));
+
+#ifdef STAT_IS_KERNEL_STAT
+  errno = EINVAL;
+  return -1;
+#else
+  struct kernel_stat kbuf;
+  int result;
 
   result = INLINE_SYSCALL (lstat, 2, CHECK_STRING (name), __ptrvalue (&kbuf));
   if (result == 0)
     result = xstat_conv (vers, &kbuf, buf);
 
   return result;
+#endif
 }
 
 hidden_def (__lxstat)

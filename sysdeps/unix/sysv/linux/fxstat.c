@@ -39,17 +39,22 @@ extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
 int
 __fxstat (int vers, int fd, struct stat *buf)
 {
-  struct kernel_stat kbuf;
-  int result;
-
   if (vers == _STAT_VER_KERNEL)
     return INLINE_SYSCALL (fstat, 2, fd, CHECK_1 ((struct kernel_stat *) buf));
+
+#ifdef STAT_IS_KERNEL_STAT
+  errno = EINVAL;
+  return -1;
+#else
+  struct kernel_stat kbuf;
+  int result;
 
   result = INLINE_SYSCALL (fstat, 2, fd, __ptrvalue (&kbuf));
   if (result == 0)
     result = xstat_conv (vers, &kbuf, buf);
 
   return result;
+#endif
 }
 
 hidden_def (__fxstat)
