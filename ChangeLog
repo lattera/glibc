@@ -1,6 +1,23 @@
 2000-05-21  Ulrich Drepper  <drepper@redhat.com>
 
-	* manual/memory.texi: Document memory handling functions.
+	* sysdeps/ia64/memccpy.S: New file.
+	* sysdeps/ia64/memchr.S: New file.
+	* sysdeps/ia64/memcmp.S: New file.
+	* sysdeps/ia64/memcpy.S: New file.
+	* sysdeps/ia64/memmove.S: New file.
+	* sysdeps/ia64/memset.S: New file.
+	* sysdeps/ia64/strcat.S: New file.
+	* sysdeps/ia64/strchr.S: New file.
+	* sysdeps/ia64/strcmp.S: New file.
+	* sysdeps/ia64/strcpy.S: New file.
+	* sysdeps/ia64/strlen.S: New file.
+	* sysdeps/ia64/strncmp.S: New file.
+	* sysdeps/ia64/strncpy.S: New file.
+	* sysdeps/ia64/softpipe.h: New file.
+	Patches by Dan Pop <Dan.Pop@cern.ch>.
+
+	* manual/memory.texi: Document memory handling functions (mlock,
+	munlock, mlockall, munlockall, brk, and sbrk)
 	* manual/time.texi: Document timespec and friends.
 	* manual/conf.texi: Fix references.
 	* manual/ctype.texi: Likewise.
