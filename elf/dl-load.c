@@ -408,10 +408,12 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	{
 	  size_t cnt;
 	  enum r_dir_status init_val;
+	  size_t where_len = strlen (where) + 1;
 
 	  /* It's a new directory.  Create an entry and add it.  */
 	  dirp = (struct r_search_path_elem *)
-	    malloc (sizeof (*dirp) + ncapstr * sizeof (enum r_dir_status));
+	    malloc (sizeof (*dirp) + ncapstr * sizeof (enum r_dir_status)
+		    + where_len);
 	  if (dirp == NULL)
 	    _dl_signal_error (ENOMEM, NULL,
 			      N_("cannot create cache for search path"));
@@ -430,7 +432,9 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	    dirp->status[cnt] = init_val;
 
 	  dirp->what = what;
-	  dirp->where = where;
+	  dirp->where = memcpy ((char *) dirp + sizeof (*dirp)
+				+ ncapstr * sizeof (enum r_dir_status),
+				where, where_len);
 
 	  dirp->next = all_dirs;
 	  all_dirs = dirp;

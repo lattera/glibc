@@ -1,5 +1,8 @@
 2000-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (fillin_rpath): Make local copy of where string
+	since the object being loaded can be unloaded.
+
 	* iconvdata/Makefile (tests): Add tst-loading.
 	* iconvdata/tst-loading.c: New file.
 
