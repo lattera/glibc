@@ -1,5 +1,5 @@
 /* Return run-time value of CLK_TCK for Hurd.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,17 @@
 #include <errno.h>
 #include <time.h>
 #include <unistd.h>
+
 #include <mach.h>
 #include <mach/host_info.h>
 
+#ifndef SYSTEM_CLK_TCK
+# define SYSTEM_CLK_TCK 100
+#endif
+
+/* Return frequency of times().  */
 int
-__libc_clk_tck ()
+__getclktck ()
 {
   struct host_sched_info hsi;
   mach_msg_type_number_t count;
@@ -34,7 +40,16 @@ __libc_clk_tck ()
   err = __host_info (__mach_task_self (), HOST_SCHED_INFO,
 		     (host_info_t) &hsi, &count);
   if (err)
-    return 100;
+    return SYSTEM_CLK_TCK;
 
   return hsi.min_quantum;
 }
+
+/* Before glibc 2.2, the Hurd actually did this differently, so we
+   need to keep a compatibility symbol.  */
+
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_2)
+compat_symbol (libc, __getclktck, __libc_clk_tck, GLIBC_2_1_1);
+#endif

@@ -42,7 +42,7 @@ quantize_timeval (struct timeval *tv)
   static time_t quantum = -1;
   
   if (quantum == -1)
-    quantum = 1000000 / __libc_clk_tck ();
+    quantum = 1000000 / __getclktck ();
 
   tv->tv_usec = ((tv->tv_usec + (quantum - 1)) / quantum) * quantum;
   if (tv->tv_usec >= 1000000)

@@ -1,3 +1,17 @@
+2000-11-04  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/Versions [libc] (GLIBC_2.1.1): Remove
+	__libc_clk_tck.
+	* sysdeps/mach/hurd/Makefile [$(subdir)==posix] (sysdep_routines):
+	Remove clk_tck.
+	* sysdeps/mach/hurd/clk_tck.c: Removed.
+	* sysdeps/mach/hurd/getclktck.c: New file.
+	* sysdeps/mach/hurd/setitimer.c (quantize_timeval): Use
+	__getclktck instead of __libc_clk_tck.
+	* sysdeps/mach/hurd/bits/time.h: Use __sysconf for CLK_TCK instead
+	of __libc_clk_tck.
+	* sysdeps/mach/hurd/i386/bits/time.h: Likewise.
+
 2000-11-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Versions: Export __sysconf.

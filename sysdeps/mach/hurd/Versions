@@ -3,10 +3,6 @@ libc {
     # functions with a weak definition in the dynamic linker
     __getcwd; __mmap;
   }
-  GLIBC_2.1.1 {
-    # functions used in inline functions or macros
-    __libc_clk_tck;
-  }
 }
 
 ld {

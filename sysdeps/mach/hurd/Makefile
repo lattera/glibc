@@ -183,10 +183,6 @@ ifeq (hurd, $(subdir))
 sysdep_routines += cthreads
 endif
 
-ifeq (posix, $(subdir))
-sysdep_routines += clk_tck
-endif
-
 ifeq ($(subdir),sunrpc)
 sysdep_headers += nfs/nfs.h
 endif
