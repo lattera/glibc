@@ -26,6 +26,6 @@ ${common_objpfx}elf/ld.so --library-path $common_objpfx \
   ${common_objpfx}stdio-common/tst-unbputc \
     2> ${common_objpfx}stdio-common/tst-unbputc.out || status=1
 
-(echo 12 | cmp ${common_objpfx}stdio-common/tst-unbputc.out -) || status=1
+(echo -n 12 | cmp ${common_objpfx}stdio-common/tst-unbputc.out -) || status=1
 
 exit $status

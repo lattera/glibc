@@ -37,6 +37,7 @@ tests = glrefmain failtest
 endif
 modules-names = glreflib1 glreflib2 failtestmod
 extra-objs += $(modules-names:=.os) eval.os
+generated := $(modules-names:=.so)
 
 include ../Rules
 
