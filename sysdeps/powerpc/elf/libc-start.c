@@ -49,6 +49,7 @@ __aux_init_cache (ElfW(auxv_t) *av)
 
 /* The main work is done in the generic function.  */
 #define LIBC_START_MAIN generic_start_main
+#define LIBC_START_DISABLE_INLINE
 #define LIBC_START_MAIN_AUXVEC_ARG
 #define MAIN_AUXVEC_ARG
 #define INIT_MAIN_ARGS

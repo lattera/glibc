@@ -1,7 +1,27 @@
+2004-02-19  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/generic/libc-start.c [LIBC_START_DISABLE_INLINE] (STATIC):
+	Define as static.
+	* sysdeps/powerpc/elf/libc-start.c: Define LIBC_START_DISABLE_INLINE
+	because gcc does not allow inline of functions that call setjmp.
+
+2004-02-19  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/Makefile: Use -finline-limit.
+
+2004-02-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (_dl_argv): If DL_ARGV_NOT_RELRO defined, don't
+	use attribute_relro for _dl_argv.
+	* sysdeps/alpha/dl-machine.h (DL_ARGV_NOT_RELRO): Define.
+	* sysdeps/ia64/dl-machine.h (DL_ARGV_NOT_RELRO): Define.
+	* sysdeps/sparc/sparc32/dl-machine.h (DL_ARGV_NOT_RELRO): Define.
+	* sysdeps/sparc/sparc64/dl-machine.h (DL_ARGV_NOT_RELRO): Define.
+
 2004-02-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iopopen.c (_IO_new_proc_open): It's not kosher to use
-	cfork instead of fork.
+	vfork instead of fork.
 	* libio/oldiopopen.c (_IO_old_proc_open): Likewise.
 
 	* sysdeps/unix/clock_settime.c (clock_settime): Fix typo which

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -252,6 +252,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    value we want in __libc_stack_end.  */
 #define DL_STACK_END(cookie) \
   ((void *) (((long) (cookie)) - (22 - 6) * 4))
+
+/* _dl_argv cannot be attribute_relro, because _dl_start_user below
+   might write into it after _dl_start returns.  */
+#define DL_ARGV_NOT_RELRO 1
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;

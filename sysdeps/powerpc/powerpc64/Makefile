@@ -20,5 +20,5 @@ endif
 
 ifeq ($(subdir),elf)
 # help gcc inline asm code from dl-machine.h
-+cflags += --param max-inline-insns=2000
++cflags += -finline-limit=2000
 endif

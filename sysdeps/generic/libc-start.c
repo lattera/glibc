@@ -44,7 +44,11 @@ extern void __pthread_initialize_minimal (void)
 
 
 #ifdef LIBC_START_MAIN
-# define STATIC static inline __attribute__ ((always_inline))
+# ifdef LIBC_START_DISABLE_INLINE
+#  define STATIC static
+# else
+#  define STATIC static inline __attribute__ ((always_inline))
+# endif
 #else
 # define STATIC
 # define LIBC_START_MAIN BP_SYM (__libc_start_main)
