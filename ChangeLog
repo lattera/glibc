@@ -1,5 +1,13 @@
 2002-08-15  Roland McGrath  <roland@redhat.com>
 
+	* libio/fileops.c (_IO_file_seekoff_mmap): Leave read pointers at EOF
+	if seek would go past it.
+	(mmap_remap_check): If file position is at or past EOF after check,
+	leave read pointers at EOF and don't seek.
+
+	* libio/tst-mmap-offend.c: New file.
+	* libio/Makefile (tests): Add it.
+
 	* locale/loadarchive.c (_nl_load_locale_from_archive) Store strdup of
 	the name as passed, rather than the name in the archive dictionary.
 

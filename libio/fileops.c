@@ -665,22 +665,30 @@ mmap_remap_check (_IO_FILE *fp)
 # undef ROUNDED
 
       fp->_offset -= fp->_IO_read_end - fp->_IO_read_ptr;
-      _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + fp->_offset,
+      _IO_setg (fp, fp->_IO_buf_base,
+		fp->_offset < fp->_IO_buf_end - fp->_IO_buf_base
+		? fp->_IO_buf_base + fp->_offset : fp->_IO_buf_end,
 		fp->_IO_buf_end);
 
-      if (
-# ifdef _G_LSEEK64
-	  _G_LSEEK64
-# else
-	  __lseek
-# endif
-	  (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base, SEEK_SET)
-	  != fp->_IO_buf_end - fp->_IO_buf_base)
+      /* If we are already positioned at or past the end of the file, don't
+	 change the current offset.  If not, seek past what we have mapped,
+	 mimicking the position left by a normal underflow reading into its
+	 buffer until EOF.  */
+
+      if (fp->_offset < fp->_IO_buf_end - fp->_IO_buf_base)
 	{
-	  fp->_flags |= _IO_ERR_SEEN;
-	  return EOF;
+	  if (
+# ifdef _G_LSEEK64
+	      _G_LSEEK64
+# else
+	      __lseek
+# endif
+	      (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base, SEEK_SET)
+	      != fp->_IO_buf_end - fp->_IO_buf_base)
+	    fp->_flags |= _IO_ERR_SEEN;
+	  else
+	    fp->_offset = fp->_IO_buf_end - fp->_IO_buf_base;
 	}
-      fp->_offset = fp->_IO_buf_end - fp->_IO_buf_base;
 
       return 0;
     }
@@ -1152,8 +1160,17 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
   if (result < 0)
     return EOF;
 
-  _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + offset,
-	    fp->_IO_buf_base + offset);
+  if (offset > fp->_IO_buf_end - fp->_IO_buf_base)
+    /* One can fseek arbitrarily past the end of the file
+       and it is meaningless until one attempts to read.
+       Leave the buffer pointers in EOF state until underflow.  */
+    _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_end, fp->_IO_buf_end);
+  else
+    /* Adjust the read pointers to match the file position,
+       but so the next read attempt will call underflow.  */
+    _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + offset,
+	      fp->_IO_buf_base + offset);
+
   fp->_offset = result;
 
   _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
