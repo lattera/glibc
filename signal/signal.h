@@ -78,10 +78,10 @@ typedef void (*__sighandler_t) (int);
    the additional function `sysv_signal' when X/Open compatibility is
    requested.  */
 extern __sighandler_t __sysv_signal (int __sig, __sighandler_t __handler)
-     __THROW __nonnull ((2));
+     __THROW;
 #ifdef __USE_GNU
 extern __sighandler_t sysv_signal (int __sig, __sighandler_t __handler)
-     __THROW __nonnull ((2));
+     __THROW;
 #endif
 
 /* Set the handler for the signal SIG to HANDLER, returning the old
@@ -90,13 +90,13 @@ extern __sighandler_t sysv_signal (int __sig, __sighandler_t __handler)
 __BEGIN_NAMESPACE_STD
 #ifdef __USE_BSD
 extern __sighandler_t signal (int __sig, __sighandler_t __handler)
-     __THROW __nonnull ((2));
+     __THROW;
 #else
 /* Make sure the used `signal' implementation is the SVID version. */
 # ifdef __REDIRECT_NTH
 extern __sighandler_t __REDIRECT_NTH (signal,
 				      (int __sig, __sighandler_t __handler),
-				      __sysv_signal) __nonnull ((2));
+				      __sysv_signal);
 # else
 #  define signal __sysv_signal
 # endif
@@ -107,7 +107,7 @@ __END_NAMESPACE_STD
 /* The X/Open definition of `signal' conflicts with the BSD version.
    So they defined another function `bsd_signal'.  */
 extern __sighandler_t bsd_signal (int __sig, __sighandler_t __handler)
-     __THROW __nonnull ((2));
+     __THROW;
 #endif
 
 /* Send signal SIG to process number PID.  If PID is zero,
@@ -132,7 +132,7 @@ __END_NAMESPACE_STD
 #ifdef __USE_SVID
 /* SVID names for the same things.  */
 extern __sighandler_t ssignal (int __sig, __sighandler_t __handler)
-     __THROW __nonnull ((2));
+     __THROW;
 extern int gsignal (int __sig) __THROW;
 #endif /* Use SVID.  */
 
