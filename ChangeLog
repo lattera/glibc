@@ -1,3 +1,8 @@
+2004-05-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* malloc/obstack.c (_obstack) [!defined _LIBC]: Remove; not used.
+	Add comment explaining why libc still defines it.
+
 2004-05-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* malloc/obstack.h (_obstack_free, obstack_1grow, obstack_1grow_fast,
