@@ -34,6 +34,10 @@
 #define PROT_WRITE	  0x2		/* Page can be written.  */
 #define PROT_EXEC	  0x4		/* Page can be executed.  */
 #define PROT_NONE	  0x0		/* Page can not be accessed.  */
+#define PROT_GROWSDOWN	  0x01000000	/* Extend change to start of
+					   growsdown vma (mprotect only).  */
+#define PROT_GROWSUP	  0x02000000	/* Extend change to start of
+					   growsup vma (mprotect only).  */
 
 /* Sharing types (must choose one and only one of these).  */
 #define MAP_SHARED	  0x01		/* Share changes.  */
@@ -52,7 +56,7 @@
 
 /* Not used by Linux, but here to make sure we don't clash with
    OSF/1 defines.  */
-#if 0 && defined(__USE_BSD)
+#if 0 && defined __USE_BSD
 # define MAP_HASSEMAPHORE 0x0200
 # define MAP_INHERIT	  0x0400
 # define MAP_UNALIGNED	  0x0800
@@ -104,7 +108,7 @@
 
 /* Not used by Linux, but here to make sure we don't clash with
    OSF/1 defines.  */
-#if 0 && defined(__USE_BSD)
+#if 0 && defined __USE_BSD
 # define MADV_DONTNEED_COMPAT 4	/* Old version?  */
 # define MADV_SPACEAVAIL 5	/* Ensure resources are available.  */
 #endif
