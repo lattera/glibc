@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_68881_SWITCH_H
 
 #define	_68881_SWITCH_H	1
-
+#include <sys/cdefs.h>
 
 /* This is the format of the data at the code label for a function which
    wants to switch depending on whether or not a 68881 is present.
@@ -33,9 +33,9 @@ Cambridge, MA 02139, USA.  */
 struct switch_caller
   {
     unsigned short int insn;	/* The `jsr' or `jmp' instruction.  */
-    PTR target;			/* The target of the instruction.  */
-    PTR soft;			/* The address of the soft function.  */
-    PTR fpu;			/* The address of the 68881 function.  */
+    __ptr_t target;		/* The target of the instruction.  */
+    __ptr_t soft;		/* The address of the soft function.  */
+    __ptr_t fpu;		/* The address of the 68881 function.  */
   };
 
 /* These are opcodes (values for `insn', above) for `jmp' and `jsr'
@@ -50,20 +50,14 @@ struct switch_caller
 extern void EXFUN(__68881_switch, (int __dummy));
 
 
-#ifdef	__STDC__
-#define	__paste(a, b)	a ## b
-#else
-#define	__paste(a, b)	a/**/b
-#endif
-
 /* Define FUNCTION as a `struct switch_caller' which will call
    `__FUNCTION_68881' if a 68881 is present, and `__FUNCTION_soft' if not.
 #define	switching_function(FUNCTION) 					      \
   struct switch_caller FUNCTION =					      \
     {									      \
-      JSR, (PTR) __68881_switch,					      \
-      __paste(__paste(__, FUNCTION), _soft),				      \
-      __paste(__paste(__, FUNCTION), _68881)				      \
+      JSR, (__ptr_t) __68881_switch,					      \
+      __CONCAT(__CONCAT(__,FUNCTION),_soft),				      \
+      __CONCAT(__CONCAT(__,FUNCTION),_68881)				      \
     }
 
 
