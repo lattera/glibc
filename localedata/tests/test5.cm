@@ -1,0 +1,13 @@
+<comment_char> %
+<escape_char> /
+<mb_cur_max> 2
+<mb_cur_min> 1
+CHARMAP
+<k0101>...<k0194>       /xa1/xa1
+<k0201>...<k0294>       /xa2/xa1
+<k1601>...<k1694>       /xa3/xa1
+<k1701>...<k1794>       /xa4/xa1
+<k4001>...<k4094>       /xa5/xa1
+<k5001>...<k5094>       /xa6/xa1
+<k6001>...<k6094>       /xa7/xa1
+END CHARMAP

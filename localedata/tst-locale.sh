@@ -39,12 +39,14 @@ test_locale ()
 }
 
 # I take this out for now since it is a known problem
-# (see [PR libc/229] and [PR libc/454].
+# (see [PR libc/229] and [PR libc/454]. --drepper
 # test_locale IBM437 de_DE de_DE.437
 test_locale tests/test1.cm tests/test1.def test1
 test_locale tests/test2.cm tests/test2.def test2
 test_locale tests/test3.cm tests/test3.def test3
 test_locale tests/test4.cm tests/test4.def test4
+# I know that multi-byte charsets do not yet work. --drepper
+# test_locale tests/test5.cm tests/test5.def test5
 
 exit 0
 

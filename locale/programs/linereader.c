@@ -317,7 +317,7 @@ get_toplvl_escape (struct linereader *lr)
       if (base != 16 && isdigit (ch))
 	{
 	  byte *= base;
-	  base += ch - '0';
+	  byte += ch - '0';
 
 	  ch = lr_getc (lr);
 	}

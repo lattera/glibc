@@ -1,3 +1,11 @@
+1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* tst-locale.sh: Add comment for when multi-byte charsets in
+	locales work.
+	* tests/test5.cm: New file.
+	* tests/test5.def: New file.
+	* Makefile (ld-test-names): Add test5.
+
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/de_DE: Use . as thousands separator and 3;3 groups for

@@ -37,7 +37,7 @@ test-output := $(foreach s, .out .xout, \
 generated := $(test-input) $(test-output)
 generated-dirs := $(basename $(test-input)) en_US
 
-ld-test-names := test1 test2 test3 test4
+ld-test-names := test1 test2 test3 test4 test5
 ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .def,$(ld-test-names)))
 
