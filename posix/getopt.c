@@ -569,6 +569,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		     argv[0], argv[optind]);
 	  nextchar += strlen (nextchar);
 	  optind++;
+	  optopt = 0;
 	  return '?';
 	}
 
@@ -597,6 +598,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		     argv[0], argv[optind - 1][0], pfound->name);
 
 		  nextchar += strlen (nextchar);
+
+		  optopt = pfound->val;
 		  return '?';
 		}
 	    }
@@ -611,6 +614,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 			   _("%s: option `%s' requires an argument\n"),
 			   argv[0], argv[optind - 1]);
 		  nextchar += strlen (nextchar);
+		  optopt = pfound->val;
 		  return optstring[0] == ':' ? ':' : '?';
 		}
 	    }
@@ -645,6 +649,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	    }
 	  nextchar = (char *) "";
 	  optind++;
+	  optopt = 0;
 	  return '?';
 	}
     }
