@@ -2,6 +2,8 @@
 
 	* version.h (VERSION): Bump to 2.1.92.
 
+	* sysdeps/unix/sysv/linux/s390/Dist: Remove nonexisting files.
+
 	* posix/regex.c (compile_range): Transliate range start and end
 	characters to avoid empty range in case of REG_ICASE [PR libc/1842].
 
