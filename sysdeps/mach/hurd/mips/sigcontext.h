@@ -29,7 +29,7 @@ struct sigcontext
     unsigned int sc_reply_port;
 
     /* Port this thread is doing an interruptible RPC on.  */
-    unsigned long int sc_intr_port;
+    unsigned int sc_intr_port;
   
     /* "General" registers.  */
     int sc_gpr[32];
