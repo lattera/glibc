@@ -1,3 +1,12 @@
+2004-02-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (check_node_accept_bytes): Return 0 if char_len is 0.
+	(find_collation_sequence_value): Don't look beyond end of
+	SYMB_EXTRAMB table.
+	* posix/Makefile (tests): Add bug-regex23.
+	(bug-regex23-ENV): New.
+	* posix/bug-regex23.c: New file.
+
 2004-02-10  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/times.c (__times): Use union instead of cast.
@@ -81,8 +90,7 @@
 
 2004-02-09  Andreas Schwab  <schwab@suse.de>
 
-	* include/rpc/rpc.h: Declare thread variables with their correct
-	type.
+	* include/rpc/rpc.h: Declare thread variables with their correct type.
 	* sunrpc/clnt_perr.c: Don't cast thread variables.
 	* sunrpc/clnt_raw.c: Likewise.
 	* sunrpc/clnt_simp.c: Likewise.

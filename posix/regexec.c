@@ -3666,7 +3666,7 @@ check_node_accept_bytes (dfa, node_idx, input, str_idx)
     }
 
   elem_len = re_string_elem_size_at (input, str_idx);
-  if (elem_len <= 1 && char_len <= 1)
+  if ((elem_len <= 1 && char_len <= 1) || char_len == 0)
     return 0;
 
   if (node->type == COMPLEX_BRACKET)
@@ -3847,8 +3847,10 @@ find_collation_sequence_value (mbs, mbs_len)
       int32_t idx;
       const unsigned char *extra = (const unsigned char *)
 	_NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
+      int32_t extrasize = (const unsigned char *)
+	_NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB + 1) - extra;
 
-      for (idx = 0; ;)
+      for (idx = 0; idx < extrasize;)
 	{
 	  int mbs_cnt, found = 0;
 	  int32_t elem_mbs_len;
@@ -3878,6 +3880,7 @@ find_collation_sequence_value (mbs, mbs_len)
 	  /* Skip the collation sequence value.  */
 	  idx += sizeof (uint32_t);
 	}
+      return UINT_MAX;
     }
 }
 # endif /* _LIBC */

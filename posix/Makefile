@@ -79,7 +79,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
-		   bug-regex21 bug-regex22 tst-nice tst-nanosleep \
+		   bug-regex21 bug-regex22 bug-regex23 tst-nice tst-nanosleep \
 		   transbug tst-rxspencer tst-pcre tst-boost
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -163,6 +163,7 @@ bug-regex18-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex19-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex20-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex22-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex23-ENV = LOCPATH=$(common-objpfx)localedata
 tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests
