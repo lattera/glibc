@@ -1,3 +1,8 @@
+2000-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (test-input): Add en_US.ISO-8859-1.
+	* en_US.in: New file.
+
 2000-06-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (test-input): Remove everything but de_DE.ISO-8859-1
