@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,4 +52,5 @@ _exit (status)
 {
   _hurd_exit (W_EXITCODE (status, 0));
 }
+libc_hidden_def (_exit)
 weak_alias (_exit, _Exit)

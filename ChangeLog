@@ -1,3 +1,18 @@
+2002-09-16  Roland McGrath  <roland@redhat.com>
+
+	* include/unistd.h: Uncomment libc_hidden_proto for _exit.
+	* sysdeps/mach/hurd/_exit.c: Add libc_hidden_def.
+	* sysdeps/generic/_exit.c: Likewise.
+
+2002-09-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (struct dl_start_final_info): New.
+	(_dl_start_final): Change second argument to struct
+	dl_start_final_info *.  Set start_time from info.
+	(_dl_start): Remove bootstrap_map variable, add info.
+	Define bootstrap_map as macro.  If not DONT_USE_BOOTSTRAP_MAP,
+	store HP_TIMING_NOW result into info.start_time.
+
 2002-09-16  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/_exit.c: Add libc_hidden_def and weak_alias

@@ -146,8 +146,15 @@ TLS_INIT_HELPER
 #ifdef DONT_USE_BOOTSTRAP_MAP
 static ElfW(Addr) _dl_start_final (void *arg);
 #else
+struct dl_start_final_info
+{
+  struct link_map l;
+#if !defined HP_TIMING_NONAVAIL && HP_TIMING_INLINE
+  hp_timing_t start_time;
+#endif
+};
 static ElfW(Addr) _dl_start_final (void *arg,
-				   struct link_map *bootstrap_map_p);
+				   struct dl_start_final_info *info);
 #endif
 
 /* These defined magically in the linker script.  */
@@ -181,7 +188,7 @@ static inline ElfW(Addr) __attribute__ ((always_inline))
 _dl_start_final (void *arg)
 #else
 static ElfW(Addr) __attribute__ ((noinline))
-_dl_start_final (void *arg, struct link_map *bootstrap_map_p)
+_dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
 {
   ElfW(Addr) start_addr;
@@ -191,6 +198,10 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p)
       /* If it hasn't happen yet record the startup time.  */
       if (! HP_TIMING_INLINE)
 	HP_TIMING_NOW (start_time);
+#ifndef DONT_USE_BOOTSTRAP_MAP
+      else
+	start_time = info->start_time;
+#endif
 
       /* Initialize the timing functions.  */
       HP_TIMING_DIFF_INIT ();
@@ -198,11 +209,11 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p)
 
   /* Transfer data about ourselves to the permanent link_map structure.  */
 #ifndef DONT_USE_BOOTSTRAP_MAP
-  GL(dl_rtld_map).l_addr = bootstrap_map_p->l_addr;
-  GL(dl_rtld_map).l_ld = bootstrap_map_p->l_ld;
-  memcpy (GL(dl_rtld_map).l_info, bootstrap_map_p->l_info,
+  GL(dl_rtld_map).l_addr = info->l.l_addr;
+  GL(dl_rtld_map).l_ld = info->l.l_ld;
+  memcpy (GL(dl_rtld_map).l_info, info->l.l_info,
 	  sizeof GL(dl_rtld_map).l_info);
-  GL(dl_rtld_map).l_mach = bootstrap_map_p->l_mach;
+  GL(dl_rtld_map).l_mach = info->l.l_mach;
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_opencount = 1;
@@ -211,20 +222,19 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p)
   /* Copy the TLS related data if necessary.  */
 #if USE_TLS && !defined DONT_USE_BOOTSTRAP_MAP
 # ifdef HAVE___THREAD
-  assert (bootstrap_map_p->l_tls_modid != 0);
+  assert (info->l.l_tls_modid != 0);
 # else
-  if (bootstrap_map_p->l_tls_modid != 0)
+  if (info->l.l_tls_modid != 0)
 # endif
     {
-      GL(dl_rtld_map).l_tls_blocksize = bootstrap_map_p->l_tls_blocksize;
-      GL(dl_rtld_map).l_tls_align = bootstrap_map_p->l_tls_align;
-      GL(dl_rtld_map).l_tls_initimage_size
-	= bootstrap_map_p->l_tls_initimage_size;
-      GL(dl_rtld_map).l_tls_initimage = bootstrap_map_p->l_tls_initimage;
-      GL(dl_rtld_map).l_tls_offset = bootstrap_map_p->l_tls_offset;
+      GL(dl_rtld_map).l_tls_blocksize = info->l.l_tls_blocksize;
+      GL(dl_rtld_map).l_tls_align = info->l.l_tls_align;
+      GL(dl_rtld_map).l_tls_initimage_size = info->l.l_tls_initimage_size;
+      GL(dl_rtld_map).l_tls_initimage = info->l.l_tls_initimage;
+      GL(dl_rtld_map).l_tls_offset = info->l.l_tls_offset;
       GL(dl_rtld_map).l_tls_modid = 1;
       GL(dl_rtld_map).l_tls_tp_initialized
-	= bootstrap_map_p->l_tls_tp_initialized;
+	= info->l.l_tls_tp_initialized;
     }
 #endif
 
@@ -263,7 +273,8 @@ _dl_start (void *arg)
 #ifdef DONT_USE_BOOTSTRAP_MAP
 # define bootstrap_map GL(dl_rtld_map)
 #else
-  struct link_map bootstrap_map;
+  struct dl_start_final_info info;
+# define bootstrap_map info.l
 #endif
 #if !defined HAVE_BUILTIN_MEMSET || defined USE_TLS
   size_t cnt;
@@ -284,7 +295,11 @@ _dl_start (void *arg)
 #include "dynamic-link.h"
 
   if (HP_TIMING_INLINE && HP_TIMING_AVAIL)
+#ifdef DONT_USE_BOOTSTRAP_MAP
     HP_TIMING_NOW (start_time);
+#else
+    HP_TIMING_NOW (info.start_time);
+#endif
 
   /* Partly clean the `bootstrap_map' structure up.  Don't use
      `memset' since it might not be built in or inlined and we cannot
@@ -450,7 +465,7 @@ _dl_start (void *arg)
 #ifdef DONT_USE_BOOTSTRAP_MAP
     ElfW(Addr) entry = _dl_start_final (arg);
 #else
-    ElfW(Addr) entry = _dl_start_final (arg, &bootstrap_map);
+    ElfW(Addr) entry = _dl_start_final (arg, &info);
 #endif
 
 #ifndef ELF_MACHINE_START_ADDRESS

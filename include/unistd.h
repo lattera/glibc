@@ -1,10 +1,7 @@
 #ifndef _UNISTD_H
 # include <posix/unistd.h>
 
-// XXX Normally we should be able to hide _exit.  But in the thread library
-// XXX we might need to overload this function so that all threads can be
-// XXX killed.
-// libc_hidden_proto (_exit)
+libc_hidden_proto (_exit)
 libc_hidden_proto (alarm)
 libc_hidden_proto (confstr)
 libc_hidden_proto (execl)
