@@ -90,6 +90,11 @@ iterate_thread_list (const td_thragent_t *ta, td_thr_iter_f *callback,
 		return TD_DBERR;
 	    }
 	}
+
+      /* Get the pointer to the next element.  */
+      if (ps_pdread (ta->ph, &((struct pthread *) addr)->header.data.list,
+		     &list, sizeof (list_t)) != PS_OK)
+	return TD_ERR;	/* XXX Other error value?  */
     }
 
   return result;

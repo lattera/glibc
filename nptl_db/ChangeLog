@@ -1,3 +1,8 @@
+2002-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_ta_thr_iter.c (iterate_thread_list): At end of iteration read
+	pointer to the next element from inferior.
+
 2002-12-02  Roland McGrath  <roland@redhat.com>
 
 	* td_symbol_list.c (symbol_list_arr): pthread_keys -> __pthread_keys

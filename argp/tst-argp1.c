@@ -97,7 +97,7 @@ int
 main (void)
 {
   int argc = 2;
-  char *argv[3] = { "tst-argp1", "--help", NULL };
+  char *argv[3] = { (char *) "tst-argp1", (char *) "--help", NULL };
   int remaining;
 
   /* Parse and process arguments.  */
