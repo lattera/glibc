@@ -19,8 +19,8 @@ do_test (void)
   void *h1;
   void *h2;
   int i;
-  int modid1 = -1;
-  int modid2 = -1;
+  size_t modid1 = (size_t) -1;
+  size_t modid2 = (size_t) -1;
   int *bazp;
 
   for (i = 0; i < 10; ++i)
@@ -35,7 +35,7 @@ do_test (void)
       /* Dirty test code here: we peek into a private data structure.
 	 We make sure that the module gets assigned the same ID every
 	 time.  The value of the first round is used.  */
-      if (modid1 == -1)
+      if (modid1 == (size_t) -1)
 	modid1 = ((struct link_map *) h1)->l_tls_modid;
       else if (((struct link_map *) h1)->l_tls_modid != modid1)
 	{
@@ -65,7 +65,7 @@ do_test (void)
       /* Dirty test code here: we peek into a private data structure.
 	 We make sure that the module gets assigned the same ID every
 	 time.  The value of the first round is used.  */
-      if (modid2 == -1)
+      if (modid2 == (size_t) -1)
 	modid2 = ((struct link_map *) h1)->l_tls_modid;
       else if (((struct link_map *) h1)->l_tls_modid != modid2)
 	{

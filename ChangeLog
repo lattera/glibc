@@ -1,3 +1,16 @@
+2003-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c [USE_TLS && TLS_TCB_AT_TP] (_dl_close): Reimplement
+	tracking of freed memory in static TLS block.
+	* elf/Makefile: Add rules to build and run tst-tls13.
+	* elf/tst-tls13.c: New file.
+	* elf/tst-tlsmod13.c: New file.
+	* elf/tst-tlsmod13a.c: New file.
+
+	* elf/tst-tls8.c: Adjust types of variables to avoid warnings.
+
+	* elf/dl-reloc.c: Pretty printing.
+
 2003-04-26  Roland McGrath  <roland@redhat.com>
 
 	* Makerules ($(common-objpfx)shlib.lds): New target.

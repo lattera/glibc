@@ -145,7 +145,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
-	 tst-tls10 tst-tls11 tst-tls12
+	 tst-tls10 tst-tls11 tst-tls12 tst-tls13
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -168,6 +168,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4 \
 		tst-tlsmod5 tst-tlsmod6 tst-tlsmod7 tst-tlsmod8 \
 		tst-tlsmod9 tst-tlsmod10 tst-tlsmod11 tst-tlsmod12 \
+		tst-tlsmod13 tst-tlsmod13a \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
@@ -383,6 +384,7 @@ $(objpfx)tst-tlsmod3.so: $(objpfx)tst-tlsmod2.so
 $(objpfx)tst-tlsmod8.so: $(objpfx)tst-tlsmod7.so
 $(objpfx)tst-tlsmod10.so: $(objpfx)tst-tlsmod9.so
 $(objpfx)tst-tlsmod12.so: $(objpfx)tst-tlsmod11.so
+$(objpfx)tst-tlsmod13a.so: $(objpfx)tst-tlsmod13.so
 # For tst-tls9-static, make sure the modules it dlopens have libc.so in DT_NEEDED
 $(objpfx)tst-tlsmod5.so: $(common-objpfx)libc.so
 $(objpfx)tst-tlsmod6.so: $(common-objpfx)libc.so
@@ -589,6 +591,9 @@ $(objpfx)tst-tls10: $(objpfx)tst-tlsmod8.so
 $(objpfx)tst-tls11: $(objpfx)tst-tlsmod10.so
 
 $(objpfx)tst-tls12: $(objpfx)tst-tlsmod12.so
+
+$(objpfx)tst-tls13: $(libdl)
+$(objpfx)tst-tls13.out: $(objpfx)tst-tlsmod13a.so
 
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
