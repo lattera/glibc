@@ -158,7 +158,8 @@ $(objpfx)g$(start-installed-name): $(objpfx)$(start-installed-name) \
 # These extra files are sometimes expected by system standard linking
 # procedures, but we have nothing for them to do.  So compile empty files.
 $(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
-	cp /dev/null $(@:.o=.c)
+	@-rm -f $(@:.o=.c)
+	echo > $(@:.o=.c)
 	$(COMPILE.c) $(@:.o=.c) $(OUTPUT_OPTION)
 	rm -f $(@:.o=.c)
 

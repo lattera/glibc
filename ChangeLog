@@ -1,5 +1,7 @@
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* csu/Makefile: Work around a gcc bug when creating csu-dummies.
+
 	* sysdeps/unix/sysv/linux/getdents.c: Pretty print.
 
 2000-09-01  Jes Sorensen  <jes@linuxcare.com>
