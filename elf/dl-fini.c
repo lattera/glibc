@@ -126,6 +126,14 @@ _dl_fini (void)
 	}
     }
 
+  /* We do not rely on the linked list of loaded object anymore from
+     this point on.  We have our own list here (maps).  The various
+     members of this list cannot vanish since the open count is too
+     high and will be decremented in this loop.  So we release the
+     lock so that some code which might be called from a destructor
+     can directly or indirectly access the lock.  */
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+
   /* 'maps' now contains the objects in the right order.  Now call the
      destructors.  We have to process this array from the front.  */
   for (i = 0; i < GL(dl_nloaded); ++i)
@@ -170,8 +178,6 @@ _dl_fini (void)
       /* Correct the previous increment.  */
       --l->l_opencount;
     }
-
-  __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
     _dl_debug_printf ("\nruntime linker statistics:\n"

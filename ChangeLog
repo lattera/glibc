@@ -1,3 +1,8 @@
+2004-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Move the unlock of the ld.so lock
+	before the loop running the destructors.
+
 2004-05-18  Andreas Schwab  <schwab@suse.de>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Use the end address of

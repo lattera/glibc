@@ -263,7 +263,8 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-oncex3 tst-oncex4
 endif
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1
+tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1 tst-fini1
+tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
 endif
@@ -272,7 +273,7 @@ endif
 modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf \
-		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod
+		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod
 extra-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
@@ -450,6 +451,8 @@ endif
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 
+$(objpfx)tst-fini1: $(shared-thread-library) $(objpfx)tst-fini1mod.so
+
 ifeq (yes,$(build-shared))
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cond19: $(common-objpfx)rt/librt.so
@@ -578,6 +581,8 @@ tst-exec4-ARGS = $(built-program-cmd)
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
+
+$(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
 # The tests here better do not run in parallel
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)
