@@ -346,6 +346,7 @@ line_wrap_stream (FILE *stream, size_t lmargin, size_t rmargin, ssize_t wmargin)
   d->output = stream->__room_funcs.__output;
   d->close = stream->__io_funcs.__close;
   d->fileno = stream->__io_funcs.__fileno;
+  d->seek = stream->__io_funcs.__seek;
 
   /* Take over the stream.  */
   wrap_stream (stream, d);
