@@ -42,7 +42,7 @@ BEGIN { print "#include <sgidefs.h>"; }
 	name = $2;
 	sub (/_O32_/, "_", name);
 	print;
-	print "#if _MIPS_SIM == _MIPS_SIM_ABI32";
+	print "#if _MIPS_SIM == _ABIO32";
 	print "# define " name " " $2;
 	print "#endif";
 	next;
@@ -51,7 +51,7 @@ BEGIN { print "#include <sgidefs.h>"; }
 	name = $2;
 	sub (/_N32_/, "_", name);
 	print;
-	print "#if _MIPS_SIM == _MIPS_SIM_NABI32";
+	print "#if _MIPS_SIM == _ABIN32";
 	print "# define " name " " $2;
 	print "#endif";
 	next;
@@ -60,7 +60,7 @@ BEGIN { print "#include <sgidefs.h>"; }
 	name = $2;
 	sub (/_N64_/, "_", name);
 	print;
-	print "#if _MIPS_SIM == _MIPS_SIM_ABI64";
+	print "#if _MIPS_SIM == _ABI64";
 	print "# define " name " " $2;
 	print "#endif";
 	next;
