@@ -25,6 +25,9 @@ Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* sysdeps/unix/Makefile: Find sysd-syscalls and s-proto.d with
 	$(common-objpfx) instead of $(objpfx).
 
+	* sysdeps/unix/bsd/telldir.c (seekdir, telldir): Use new struct member
+	names without __.
+
 	* Makerules [install-lib-non.a]: Find these things with $(objpfx)
 	instead of $(common-objpfx).
 
