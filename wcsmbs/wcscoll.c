@@ -19,26 +19,18 @@
 
 #include <wchar.h>
 
+#define STRING_TYPE wchar_t
+#define USTRING_TYPE wint_t
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
 # define STRCOLL __wcscoll_l
 #else
 # define STRCOLL wcscoll
 #endif
 #define STRCMP wcscmp
+#define STRLEN wcslen
+#define WEIGHT_H "../locale/weightwc.h"
+#define SUFFIX	WC
+#define L(arg) L##arg
+#define WIDE_CHAR_VERSION 1
 
-
-#ifndef USE_IN_EXTENDED_LOCALE_MODEL
-int
-STRCOLL (s1, s2)
-     const wchar_t *s1;
-     const wchar_t *s2;
-#else
-int
-STRCOLL (s1, s2, l)
-     const wchar_t *s1;
-     const wchar_t *s2;
-     __locale_t l;
-#endif
-{
-  return STRCMP (s1, s2);
-}
+#include "../string/strcoll.c"

@@ -1,6 +1,6 @@
 /* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,23 +19,19 @@
 
 #include <wchar.h>
 
+#define STRING_TYPE wchar_t
+#define USTRING_TYPE wint_t
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
 # define STRXFRM __wcsxfrm_l
 #else
 # define STRXFRM wcsxfrm
 #endif
+#define STRCMP wcscmp
+#define STRLEN wcslen
+#define STPNCPY __wcpncpy
+#define WEIGHT_H "../locale/weightwc.h"
+#define SUFFIX	WC
+#define L(arg) L##arg
+#define WIDE_CHAR_VERSION 1
 
-
-#ifndef USE_IN_EXTENDED_LOCALE_MODEL
-size_t
-STRXFRM (wchar_t *dest, const wchar_t *src, size_t n)
-#else
-size_t
-STRXFRM (wchar_t *dest, const wchar_t *src, size_t n, __locale_t l)
-#endif
-{
-  if (n != 0)
-    __wcpncpy (dest, src, n);
-
-  return __wcslen (src);
-}
+#include "../string/strxfrm.c"

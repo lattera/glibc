@@ -1,3 +1,11 @@
+1999-12-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcscoll.c: Use multibyte character version.
+	* wcsmbs/wcsxfrm.c: Likewise.
+	* string/strcoll.c: Prepare to be used for the wide character version.
+	* string/strxfrm.c: Likewise.
+	* locale/weightwc.h: New file.
+
 1999-12-30  Geoff Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/fpu/bits/fenvinline.h (feraiseexcept): Remove

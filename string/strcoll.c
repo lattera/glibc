@@ -24,24 +24,36 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../locale/localeinfo.h"
-
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define STRCOLL __strcoll_l
-#else
-# define STRCOLL strcoll
+#ifndef STRING_TYPE
+# define STRING_TYPE char
+# define USTRING_TYPE unsigned char
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define STRCOLL __strcoll_l
+# else
+#  define STRCOLL strcoll
+# endif
+# define STRCMP strcmp
+# define STRLEN strlen
+# define WEIGHT_H "../locale/weight.h"
+# define SUFFIX	MB
+# define L(arg) arg
 #endif
+
+#define CONCAT(a,b) CONCAT1(a,b)
+#define CONCAT1(a,b) a##b
+
+#include "../locale/localeinfo.h"
 
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
 int
 STRCOLL (s1, s2)
-     const char *s1;
-     const char *s2;
+     const STRING_TYPE *s1;
+     const STRING_TYPE *s2;
 #else
 int
 STRCOLL (s1, s2, l)
-     const char *s1;
-     const char *s2;
+     const STRING_TYPE *s1;
+     const STRING_TYPE *s2;
      __locale_t l;
 #endif
 {
@@ -49,19 +61,19 @@ STRCOLL (s1, s2, l)
   struct locale_data *current = l->__locales[LC_COLLATE];
   uint_fast32_t nrules = *((uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].string);
 #else
-  uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+  uint_fast32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 #endif
   /* We don't assign the following values right away since it might be
      unnecessary in case there are no rules.  */
   const unsigned char *rulesets;
   const int32_t *table;
-  const unsigned char *weights;
-  const unsigned char *extra;
+  const USTRING_TYPE *weights;
+  const USTRING_TYPE *extra;
   const int32_t *indirect;
   uint_fast32_t pass;
   int result = 0;
-  const unsigned char *us1;
-  const unsigned char *us2;
+  const USTRING_TYPE *us1;
+  const USTRING_TYPE *us2;
   size_t s1len;
   size_t s2len;
   int32_t *idx1arr;
@@ -83,45 +95,62 @@ STRCOLL (s1, s2, l)
   int position;
   int seq1len;
   int seq2len;
-  int use_malloc = 0;
+  int use_malloc;
+#ifdef WIDE_CHAR_VERSION
+  size_t size;
+  size_t layers;
+  const wint_t *names;
+#endif
 
-#include "../locale/weight.h"
+#include WEIGHT_H
 
   if (nrules == 0)
-    return strcmp (s1, s2);
+    return STRCMP (s1, s2);
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   rulesets = (const unsigned char *)
     current->values[_NL_ITEM_INDEX (_NL_COLLATE_RULESETS)].string;
   table = (const int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLEMB)].string;
-  weights = (const unsigned char *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_WEIGHTMB)].string;
-  extra = (const unsigned char *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRAMB)].string;
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_TABLE,SUFFIX))].string;
+  weights = (const USTRING_TYPE *)
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_WEIGHT,SUFFIX))].string;
+  extra = (const USTRING_TYPE *)
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_EXTRA,SUFFIX))].string;
   indirect = (const int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_INDIRECTMB)].string;
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_INDIRECT,SUFFIX))].string;
+# ifdef WIDE_CHAR_VERSION
+  names = (const wint_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_NAMES)].string;
+  size = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].word;
+  layers = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].word;
+# endif
 #else
   rulesets = (const unsigned char *)
     _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULESETS);
   table = (const int32_t *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
-  weights = (const unsigned char *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
-  extra = (const unsigned char *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_TABLE,SUFFIX));
+  weights = (const USTRING_TYPE *)
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_WEIGHT,SUFFIX));
+  extra = (const USTRING_TYPE *)
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_EXTRA,SUFFIX));
   indirect = (const int32_t *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_INDIRECT,SUFFIX));
+# ifdef WIDE_CHAR_VERSION
+  names = (const wint_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_NAMES);
+  size = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_SIZE);
+  layers = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_LAYERS);
+# endif
 #endif
+  use_malloc = 0;
 
   /* We need this a few times.  */
-  s1len = strlen (s1);
-  s2len = strlen (s2);
+  s1len = STRLEN (s1);
+  s2len = STRLEN (s2);
 
   /* We need the elements of the strings as unsigned values since they
      are used as indeces.  */
-  us1 = (const unsigned char *) s1;
-  us2 = (const unsigned char *) s2;
+  us1 = (const USTRING_TYPE *) s1;
+  us2 = (const USTRING_TYPE *) s2;
 
   /* Perform the first pass over the string and while doing this find
      and store the weights for each character.  Since we want this to
@@ -204,7 +233,7 @@ STRCOLL (s1, s2, l)
 	      {
 		backw1_stop = idx1max;
 
-		while (*us1 != '\0')
+		while (*us1 != L('\0'))
 		  {
 		    int32_t tmp = findidx (&us1);
 		    rule1arr[idx1max] = tmp >> 24;
@@ -263,7 +292,7 @@ STRCOLL (s1, s2, l)
 	      {
 		backw2_stop = idx2max;
 
-		while (*us2 != '\0')
+		while (*us2 != L('\0'))
 		  {
 		    int32_t tmp = findidx (&us2);
 		    rule2arr[idx2max] = tmp >> 24;

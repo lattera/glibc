@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -23,15 +23,29 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../locale/localeinfo.h"
-
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define STRXFRM __strxfrm_l
-#else
-# define STRXFRM strxfrm
+#ifndef STRING_TYPE
+# define STRING_TYPE char
+# define USTRING_TYPE unsigned char
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define STRXFRM __strxfrm_l
+# else
+#  define STRXFRM strxfrm
+# endif
+# define STRCMP strcmp
+# define STRLEN strlen
+# define STPNCPY __stpncpy
+# define WEIGHT_H "../locale/weight.h"
+# define SUFFIX	MB
+# define L(arg) arg
 #endif
 
+#define CONCAT(a,b) CONCAT1(a,b)
+#define CONCAT1(a,b) a##b
 
+#include "../locale/localeinfo.h"
+
+
+#ifndef WIDE_CHAR_VERSION
 /* These are definitions used by some of the functions for handling
    UTF-8 encoding below.  */
 static const uint32_t encoding_mask[] =
@@ -79,14 +93,15 @@ utf8_encode (char *buf, int val)
 
   return buf - startp;
 }
+#endif
 
 
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
 size_t
-STRXFRM (char *dest, const char *src, size_t n)
+STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
 #else
 size_t
-STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
+STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 #endif
 {
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
@@ -99,25 +114,30 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
      unnecessary in case there are no rules.  */
   const unsigned char *rulesets;
   const int32_t *table;
-  const unsigned char *weights;
-  const unsigned char *extra;
+  const USTRING_TYPE *weights;
+  const USTRING_TYPE *extra;
   const int32_t *indirect;
   uint_fast32_t pass;
   size_t needed;
-  const unsigned char *usrc;
-  size_t srclen = strlen (src);
+  const USTRING_TYPE *usrc;
+  size_t srclen = STRLEN (src);
   int32_t *idxarr;
   unsigned char *rulearr;
   size_t idxmax;
   size_t idxcnt;
-  int use_malloc = 0;
+  int use_malloc;
+#ifdef WIDE_CHAR_VERSION
+  size_t size;
+  size_t layers;
+  const wint_t *names;
+#endif
 
-#include "../locale/weight.h"
+#include WEIGHT_H
 
   if (nrules == 0)
     {
       if (n != 0)
-	__stpncpy (dest, src, n);
+	STPNCPY (dest, src, n);
 
       return srclen;
     }
@@ -126,37 +146,49 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
   rulesets = (const unsigned char *)
     current->values[_NL_ITEM_INDEX (_NL_COLLATE_RULESETS)].string;
   table = (const int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLEMB)].string;
-  weights = (const unsigned char *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_WEIGHTMB)].string;
-  extra = (const unsigned char *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRAMB)].string;
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_TABLE,SUFFIX))].string;
+  weights = (const USTRING_TYPE *)
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_WEIGHT,SUFFIX))].string;
+  extra = (const USTRING_TYPE *)
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_EXTRA,SUFFIX))].string;
   indirect = (const int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_INDIRECTMB)].string;
+    current->values[_NL_ITEM_INDEX (CONCAT(_NL_COLLATE_INDIRECT,SUFFIX))].string;
+# ifdef WIDE_CHAR_VERSION
+  names = (const wint_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_NAMES)].string;
+  size = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].word;
+  layers = current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].word;
+# endif
 #else
   rulesets = (const unsigned char *)
     _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULESETS);
   table = (const int32_t *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
-  weights = (const unsigned char *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
-  extra = (const unsigned char *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_TABLE,SUFFIX));
+  weights = (const USTRING_TYPE *)
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_WEIGHT,SUFFIX));
+  extra = (const USTRING_TYPE *)
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_EXTRA,SUFFIX));
   indirect = (const int32_t *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
+    _NL_CURRENT (LC_COLLATE, CONCAT(_NL_COLLATE_INDIRECT,SUFFIX));
+# ifdef WIDE_CHAR_VERSION
+  names = (const wint_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_NAMES);
+  size = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_SIZE);
+  layers = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_LAYERS);
+# endif
 #endif
+  use_malloc = 0;
 
   /* Handle an empty string as a special case.  */
   if (srclen == 0)
     {
       if (n != 0)
-        *dest = '\0';
+        *dest = L('\0');
       return 1;
     }
 
   /* We need the elements of the string as unsigned values since they
      are used as indeces.  */
-  usrc = (const unsigned char *) src;
+  usrc = (const USTRING_TYPE *) src;
 
   /* Perform the first pass over the string and while doing this find
      and store the weights for each character.  Since we want this to
@@ -195,7 +227,7 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 
       ++idxmax;
     }
-  while (*usrc != '\0');
+  while (*usrc != L('\0'));
 
   /* Now the passes over the weights.  We now use the indeces we found
      before.  */
@@ -287,8 +319,10 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
       else
 	{
 	  int val = 1;
+#ifndef WIDE_CHAR_VERSION
 	  char buf[7];
 	  size_t buflen;
+#endif
 	  size_t i;
 
 	  for (idxcnt = 0; idxcnt < idxmax; ++idxcnt)
@@ -307,6 +341,16 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 			  len = weights[idxarr[backw]++];
 			  if (len != 0)
 			    {
+#ifdef WIDE_CHAR_VERSION
+			      if (needed + 1 + len < n)
+				{
+				  dest[needed] = val;
+				  for (i = 0; i < len; ++i)
+				    dest[needed + 1 + i] =
+				      weights[idxarr[backw] + i];
+				}
+			      needed += 1 + len;
+#else
 			      buflen = utf8_encode (buf, val);
 			      if (needed + buflen + len < n)
 				{
@@ -316,8 +360,9 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 				    dest[needed + buflen + i] =
 				      weights[idxarr[backw] + i];
 				}
-			      idxarr[backw] += len;
 			      needed += buflen + len;
+#endif
+			      idxarr[backw] += len;
 			      val = 1;
 			    }
 			  else
@@ -331,6 +376,16 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 		  len = weights[idxarr[idxcnt]++];
 		  if (len != 0)
 		    {
+#ifdef WIDE_CHAR_VERSION
+		      if (needed + 1+ len < n)
+			{
+			  dest[needed] = val;
+			  for (i = 0; i < len; ++i)
+			    dest[needed + 1 + i] =
+			      weights[idxarr[idxcnt] + i];
+			}
+		      needed += 1 + len;
+#else
 		      buflen = utf8_encode (buf, val);
 		      if (needed + buflen + len < n)
 			{
@@ -340,8 +395,9 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 			    dest[needed + buflen + i] =
 			      weights[idxarr[idxcnt] + i];
 			}
-		      idxarr[idxcnt] += len;
 		      needed += buflen + len;
+#endif
+		      idxarr[idxcnt] += len;
 		      val = 1;
 		    }
 		  else
@@ -370,6 +426,16 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 		  size_t len = weights[idxarr[--backw]++];
 		  if (len != 0)
 		    {
+#ifdef WIDE_CHAR_VERSION
+		      if (needed + 1 + len < n)
+			{
+			  dest[needed] = val;
+			  for (i = 0; i < len; ++i)
+			    dest[needed + 1 + i] =
+			      weights[idxarr[backw] + i];
+			}
+		      needed += 1 + len;
+#else
 		      buflen = utf8_encode (buf, val);
 		      if (needed + buflen + len < n)
 			{
@@ -379,8 +445,9 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 			    dest[needed + buflen + i] =
 			      weights[idxarr[backw] + i];
 			}
-		      idxarr[backw] += len;
 		      needed += buflen + len;
+#endif
+		      idxarr[backw] += len;
 		      val = 1;
 		    }
 		  else
@@ -392,7 +459,7 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
       /* Finally store the byte to separate the passes or terminate
 	 the string.  */
       if (needed < n)
-	dest[needed] = pass + 1 < nrules ? '\1' : '\0';
+	dest[needed] = pass + 1 < nrules ? L('\1') : L('\0');
       ++needed;
     }
 
@@ -400,11 +467,11 @@ STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
      a `position' rule at the end and if no non-ignored character
      is found the last \1 byte is immediately followed by a \0 byte
      signalling this.  We can avoid the \1 byte(s).  */
-  if (needed <= n && needed > 2 && dest[needed - 2] == '\1')
+  if (needed <= n && needed > 2 && dest[needed - 2] == L('\1'))
     {
       /* Remove the \1 byte.  */
       --needed;
-      dest[needed - 1] = '\0';
+      dest[needed - 1] = L('\0');
     }
 
   /* Free the memory if needed.  */
