@@ -40,8 +40,8 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM866 CP1258 IBM922 IBM1124 IBM1129 IBM932 IBM943		 \
 	   IBM856 IBM930 IBM933 IBM935 IBM937 IBM939 IBM1046		 \
 	   IBM1132 IBM1133 IBM1160 IBM1161 IBM1162 IBM1163 IBM1164	 \
-	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
-	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1		 \
+	   IBM918 IBM1004 IBM1026 CP1125 CP1250 CP1251 CP1252 CP1253	 \
+	   CP1254 CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1	 \
 	   ASMO_449 ANSI_X3.110 CSN_369103 CWI DEC-MCS ECMA-CYRILLIC	 \
 	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
@@ -128,8 +128,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
-	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \
-	      cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c		    \
+	      cns11643l1.c cns11643l1.h cp1125.c cp1250.c cp1251.c cp1252.c \
+	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c	    \
 	      csn_369103.c cwi.c dec-mcs.c ebcdic-at-de.c ebcdic-at-de-a.c  \
 	      ebcdic-ca-fr.c ebcdic-dk-no.c ebcdic-dk-no-a.c ebcdic-es.c    \
 	      ebcdic-es-a.c ebcdic-es-s.c ebcdic-fr.c ebcdic-fi-se.c	    \
@@ -198,7 +198,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm297 ibm420 ibm424 ibm437 ibm850 ibm851 ibm852   \
 			ibm855 ibm857 ibm860 ibm861 ibm862 ibm863 ibm864   \
 			ibm865 ibm868 ibm869 ibm875 ibm880 ibm918 ibm1004  \
-			ibm1026 cp1250 cp1251 cp1252 cp1253 cp1254	   \
+			ibm1026 cp1125 cp1250 cp1251 cp1252 cp1253 cp1254  \
 			cp1256 cp1257 ibm866 iso8859-5 iso8859-7 iso8859-8 \
 			iso8859-10 macintosh iec_p27-1 asmo_449		   \
 			csn_369103 cwi dec-mcs ecma-cyrillic gost_19768-74 \

@@ -1,3 +1,8 @@
+2002-12-03  Roland McGrath  <roland@redhat.com>
+
+	* charmaps/CP1125: New file.
+	* CHECKSUMS: Add it.
+
 2002-11-06  Thorsten Kukuk  <kukuk@suse.de>
 
         * locales/tl_PH: Fix typo: Philipines -> Philippines.

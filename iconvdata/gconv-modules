@@ -1130,6 +1130,12 @@ module	EUC-TW//		INTERNAL		EUC-TW		1
 module	INTERNAL		EUC-TW//		EUC-TW		1
 
 #	from			to			module		cost
+alias	RUSCII//		CP1125//
+alias	IBM848//		CP1125//
+module	CP1125//		INTERNAL		CP1125		1
+module	INTERNAL		CP1125//		CP1125		1
+
+#	from			to			module		cost
 alias	MS-EE//			CP1250//
 alias	WINDOWS-1250//		CP1250//
 module	CP1250//		INTERNAL		CP1250		1
