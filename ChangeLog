@@ -1,3 +1,10 @@
+1999-05-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXbyYY.c: Add free_mem function which disposes all
+	statically allocated memory when debugging.
+	* nss/getXXent.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+
 1999-05-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/gnu/getutmpx.c: New file.

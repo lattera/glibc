@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,11 +62,13 @@ extern int INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer,
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);
 
+/* This points to the static buffer used.  */
+static char *buffer;
+
 
 LOOKUP_TYPE *
 GETFUNC_NAME (void)
 {
-  static char *buffer;
   static size_t buffer_size;
   static LOOKUP_TYPE resbuf;
   LOOKUP_TYPE *result;
@@ -113,3 +115,14 @@ GETFUNC_NAME (void)
 
   return result;
 }
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (buffer != NULL)
+    free (buffer);
+}
+
+text_set_element (__libc_subfreeres, free_mem);

@@ -19,7 +19,10 @@
 #include <assert.h>
 #include <string.h>
 #include <utmp.h>
+/* This is an ugly hack but we must not see the getutmpx declaration.  */
+#define getutmpx XXXgetutmpx
 #include <utmpx.h>
+#undef getutmpx
 
 void
 getutmp (const struct utmpx *utmpx, struct utmp *utmp)

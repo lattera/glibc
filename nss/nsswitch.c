@@ -753,3 +753,62 @@ nss_new_service (name_database *database, const char *name)
 
   return *currentp;
 }
+
+
+static void
+nothing (void *ptr __attribute__ ((unused)))
+{
+}
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  name_database *top = service_table;
+  name_database_entry *entry;
+  service_library *library;
+
+  if (top == NULL)
+    /* Maybe we have not read the nsswitch.conf file.  */
+    return;
+
+  /* Don't disturb ongoing other threads (if there are any).  */
+  service_table = NULL;
+
+  entry = top->entry;
+  while (entry != NULL)
+    {
+      name_database_entry *olde = entry;
+      service_user *service = entry->service;
+
+      while (service != NULL)
+	{
+	  service_user *olds = service;
+
+	  if (service->known != NULL)
+	    __tdestroy (service->known, nothing);
+
+	  service = service->next;
+	  free (olds);
+	}
+
+      entry = entry->next;
+      free (olde);
+    }
+
+  library = top->library;
+  while (library != NULL)
+    {
+      service_library *oldl = library;
+
+      _dl_close (library->lib_handle);
+
+      library = library->next;
+      free (oldl);
+    }
+
+  free (top);
+}
+
+text_set_element (__libc_subfreeres, free_mem);

@@ -72,11 +72,13 @@ extern int INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf,
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);
 
+/* This points to the static buffer used.  */
+static char *buffer;
+
 
 LOOKUP_TYPE *
 FUNCTION_NAME (ADD_PARAMS)
 {
-  static char *buffer;
   static size_t buffer_size;
   static LOOKUP_TYPE resbuf;
   LOOKUP_TYPE *result;
@@ -151,3 +153,14 @@ done:
 
   return result;
 }
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (buffer != NULL)
+    free (buffer);
+}
+
+text_set_element (__libc_subfreeres, free_mem);
