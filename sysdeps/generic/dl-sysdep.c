@@ -219,15 +219,15 @@ _dl_show_auxv (void)
   buf[63] = '\0';
 
   /* The following code assumes that the AT_* values are encoded
-  starting from 0 with AT_NULL, 1 for AT_IGNORE, and all other values
-  close by (otherwise the array will be too large).  In case we have
-  to support a platform where these requirements are not fulfilled
-  some alternative implementation has to be used.  */
+     starting from 0 with AT_NULL, 1 for AT_IGNORE, and all other values
+     close by (otherwise the array will be too large).  In case we have
+     to support a platform where these requirements are not fulfilled
+     some alternative implementation has to be used.  */
   for (av = _dl_auxv; av->a_type != AT_NULL; ++av)
     {
       static const struct
       {
-	const char label[20];
+	const char label[23];
 	enum { dec, hex, str } form;
       } auxvars[] =
 	{

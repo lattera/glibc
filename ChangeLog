@@ -2,7 +2,7 @@
 
 	* elf/elf.h: Define AT_SYSINFO_EH_FRAME.
 	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Handle
-	AT_SYSINFO_EH_FRAME.
+	AT_SYSINFO_EH_FRAME.  Adjust string width.
 	(_dl_show_auxv):Display AT_SYSINFO_EH_FRAME value.
 	* sysdeps/generic/ldsodefs.h [NEED_DL_SYSINFO] (struct rtld_global):
 	Add _dl_sysinfo_eh_frame field.
