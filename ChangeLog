@@ -1,3 +1,9 @@
+2002-10-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ,
+	SIGSTKSZ): Changed to match kernel.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigstack.h: New file.
+
 2002-10-01  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h
