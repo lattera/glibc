@@ -1,3 +1,42 @@
+1998-08-12  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/usleep.c: Include <unistd.h>.
+	(usleep): Return void.
+
+1998-08-11  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/if_index.c (struct if_freenameindex): Add forward
+	decl to inhibit warning in if_freenameindex defn.
+
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Remove unused variable.
+
+	* sysdeps/mach/hurd/getdomain.c (getdomainname): Renamed from __ name.
+
+	* sysdeps/mach/hurd/reboot.c: Include <sys/reboot.h>.
+	* sysdeps/mach/hurd/getdents.c: Include <unistd.h>.
+	* sysdeps/mach/hurd/sbrk.c: Include <unistd.h>.
+	* sysdeps/mach/usleep.c: Likewise.
+
+	* sysdeps/mach/hurd/bind.c (bind): Add a const.
+
+	* sysdeps/mach/hurd/getdents.c (__getdirentries): Use prototype defn.
+	* sysdeps/unix/bsd/init-posix.c (__init_posix): Likewise.
+	* sysdeps/unix/bsd/times.c (timeval_to_clock_t): Likewise.
+	* sysdeps/mach/hurd/reboot.c (reboot): Likewise.
+	* sysdeps/mach/usleep.c (usleep): Likewise.
+	* sysdeps/mach/hurd/chflags.c (chflags): Likewise.
+	* sysdeps/mach/hurd/fchflags.c (fchflags): Likewise.
+	* sysdeps/mach/hurd/sbrk.c (__sbrk): Likewise.
+	* sysdeps/mach/hurd/stdio_init.c (__stdio_init_stream): Likewise.
+
+1998-08-11  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/glob64.c: Include <sys/types.h>, <glob.h>, <errno.h>.
+	(glob64): Fix typo.
+
+	* malloc/malloc.c (free_check, realloc_check): Don't cast to long for
+	%p arg to fprintf, since `void *' is the right type already.
+
 1998-07-25 19:47  Jose M. Moya  <josem@gnu.org>
 
 	* sysdeps/mach/hurd/getcwd.c

@@ -23,13 +23,9 @@
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
 int
-__getdomainname (name, len)
-     char *name;
-     size_t len;
+getdomainname (char *name, size_t len)
 {
   /* The NIS domain name is just the contents of the file /etc/nisdomain.  */
   ssize_t n = _hurd_get_host_config ("/etc/nisdomain", name, len);
   return n < 0 ? -1 : 0;
 }
-
-weak_alias (__getdomainname, getdomainname)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ bind (fd, addrarg, len)
 {
   addr_port_t aport;
   error_t err;
-  struct sockaddr_un *addr = addrarg.__sockaddr_un__;
+  const struct sockaddr_un *addr = addrarg.__sockaddr_un__;
 
   if (addr->sun_family == AF_LOCAL)
     {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
 }
 stub_warning (if_indextoname)
 
+struct if_nameindex;		/* inhibit warning */
 void
 if_freenameindex (struct if_nameindex *ifn)
 {

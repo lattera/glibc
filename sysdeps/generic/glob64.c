@@ -16,6 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <sys/types.h>
+#include <glob.h>
+#include <errno.h>
+
 /* Do glob searching for PATTERN, placing results in PGLOB.
    The bits defined above may be set in FLAGS.
    If a directory cannot be opened or read and ERRFUNC is not nil,
@@ -26,7 +30,7 @@
    Otherwise, `glob' returns zero.  */
 int
 glob64 (const char *pattern, int flags,
-	int (*errfunc) (const char *, int), glib64_t *pglob);
+	int (*errfunc) (const char *, int), glob64_t *pglob)
 {
   if (pattern == NULL || pglob == NULL || (flags & ~__GLOB_FLAGS) != 0)
     {

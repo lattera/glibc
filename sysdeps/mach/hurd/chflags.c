@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,9 +25,7 @@
 
 /* XXX shouldn't this be __chflags? */
 int
-chflags (file, flags)
-     const char *file;
-     int flags;
+chflags (const char *file, int flags)
 {
   error_t err;
   file_t port = __file_name_lookup (file, 0, 0);

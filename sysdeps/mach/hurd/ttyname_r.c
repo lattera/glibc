@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 95, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@ __ttyname_r (int fd, char *buf, size_t buflen)
 {
   error_t err;
   char nodename[1024];	/* XXX */
-  char *cp;
   size_t len;
 
   nodename[0] = '\0';

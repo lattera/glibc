@@ -4330,7 +4330,7 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
     (void)mutex_unlock(&main_arena.mutex);
     switch(check_action) {
     case 1:
-      fprintf(stderr, "free(): invalid pointer %p!\n", (long)(mem));
+      fprintf(stderr, "free(): invalid pointer %p!\n", mem);
       break;
     case 2:
       abort();
@@ -4369,7 +4369,7 @@ realloc_check(oldmem, bytes, caller)
     (void)mutex_unlock(&main_arena.mutex);
     switch(check_action) {
     case 1:
-      fprintf(stderr, "realloc(): invalid pointer %p!\n", (long)(oldmem));
+      fprintf(stderr, "realloc(): invalid pointer %p!\n", oldmem);
       break;
     case 2:
       abort();

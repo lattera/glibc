@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 94, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 time_t _posix_start_time = -1;
 
 void
-__init_posix ()
+__init_posix (void)
 {
   _posix_start_time = time ((time_t *) NULL);
 }

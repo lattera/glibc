@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 94, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,13 @@
 
 #include <errno.h>
 #include <hurd.h>
+#include <unistd.h>
 
 /* Extend the process's data space by INCREMENT.
    If INCREMENT is negative, shrink data space by - INCREMENT.
    Return the address of the start of the new data space, or -1 for errors.  */
 void *
-__sbrk (increment)
-     int increment;
+__sbrk (int increment)
 {
   void *result;
 

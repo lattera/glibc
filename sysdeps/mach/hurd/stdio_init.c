@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,8 +29,7 @@
    If no buffer is allocated, but the bufsize is set,
    the bufsize will be used to allocate the buffer.  */
 void
-__stdio_init_stream (stream)
-     FILE *stream;
+__stdio_init_stream (FILE *stream)
 {
   struct hurd_fd *const d = stream->__cookie;
   struct stat statb;
