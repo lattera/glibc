@@ -1,3 +1,8 @@
+2000-04-07  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h: Updated for
+	newer kernels.
+
 2000-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/wchar.h (__mbstate_t): Rename elements.  Make __value
