@@ -358,6 +358,13 @@ module	ISO-8859-15//		INTERNAL		ISO8859-15	1
 module	INTERNAL		ISO-8859-15//		ISO8859-15	1
 
 #	from			to			module		cost
+alias	ISO-IR-226//		ISO-8859-16//
+alias	LATIN10//		ISO-8859-16//
+alias	L10//			ISO-8859-16//
+module	ISO-8859-16//		INTERNAL		ISO8859-16	1
+module	INTERNAL		ISO-8859-16//		ISO8859-16	1
+
+#	from			to			module		cost
 alias	T.61//			T.61-8BIT//
 alias	ISO-IR-103//		T.61-8BIT//
 alias	CSISO103T618BIT//	T.61-8BIT//

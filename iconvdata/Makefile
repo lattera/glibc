@@ -24,7 +24,7 @@ subdir	:= iconvdata
 # Names of all the shared objects which implement the transformations.
 modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		 \
-	   ISO8859-11 ISO8859-13 ISO8859-14 ISO8859-15			 \
+	   ISO8859-11 ISO8859-13 ISO8859-14 ISO8859-15 ISO8859-16	 \
 	   T.61 ISO_6937 SJIS KOI-8 HP-ROMAN8 EBCDIC-AT-DE		 \
 	   EBCDIC-AT-DE-A EBCDIC-CA-FR EUC-KR UHC JOHAB libJIS libKSC	 \
 	   BIG5 EUC-JP libGB EUC-CN libCNS EUC-TW ISO646 EBCDIC-DK-NO	 \
@@ -115,7 +115,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      koi8-r.c ksc5601.c ksc5601.h latin-greek.c latin-greek-1.c    \
 	      macintosh.c mac-is.c mac-uk.c nats-dano.c nats-sefi.c sjis.c  \
 	      t.61.c uhc.c sami-ws2.c iso-ir-197.c tis-620.c koi8-u.c	    \
-	      isiri-3342.c gbgbk.c iso-2022-cn.c cns11643l2.h
+	      isiri-3342.c gbgbk.c iso-2022-cn.c cns11643l2.h iso8859-16.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -140,7 +140,7 @@ gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
 		    ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a ebcdic-fr	    \
 		    ebcdic-is-friss ebcdic-it ebcdic-pt ebcdic-uk ebcdic-us \
 		    ibm037 ibm038 ibm274 ibm275 ibm423 ibm500 ibm870 ibm871 \
-		    ibm891 ibm903 ibm904 ibm905 ibm1047
+		    ibm891 ibm903 ibm904 ibm905 ibm1047 iso8859-16
 
 gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm277 ibm278 ibm280 ibm281 ibm284 ibm285 ibm290   \
