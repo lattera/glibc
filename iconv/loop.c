@@ -45,11 +45,88 @@
      UPDATE_PARAMS	code to store result in params.
 */
 
+#include <endian.h>
 #include <gconv.h>
+#include <stdint.h>
+#include <string.h>
 #include <wchar.h>
 #include <sys/param.h>		/* For MIN.  */
 #define __need_size_t
 #include <stddef.h>
+
+
+/* We have to provide support for machines which are not able to handled
+   unaligned memory accesses.  Some of the character encodings have
+   representations with a fixed width of 2 or 4 bytes.  But if we cannot
+   access unaligned memory we still have to read byte-wise.  */
+#undef FCTNAME2
+#if defined _STRING_ARCH_unaligned || !defined DEFINE_UNALIGNED
+/* We can handle unaligned memory access.  */
+# define get16(addr) *((uint16_t *) (addr))
+# define get32(addr) *((uint32_t *) (addr))
+
+/* We need no special support for writing values either.  */
+# define put16(addr, val) *((uint16_t *) (addr)) = (val)
+# define put32(addr, val) *((uint32_t *) (addr)) = (val)
+
+# define FCTNAME2(name) name
+#else
+/* Distinguish between big endian and little endian.  */
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+#  define get16(addr) \
+     (((__const unsigned char *) (addr))[1] << 8			      \
+      | ((__const unsigned char *) (addr))[0])
+#  define get32(addr) \
+     (((((__const unsigned char *) (addr))[3] << 8			      \
+	| ((__const unsigned char *) (addr))[2]) << 8			      \
+       | ((__const unsigned char *) (addr))[1]) << 8			      \
+      | ((__const unsigned char *) (addr))[0])
+
+# define put16(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[0] = __val;			      \
+	((__const unsigned char *) (addr))[1] = __val >> 8;		      \
+	(void) 0; })
+# define put32(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[0] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[1] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[2] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[3] = __val;			      \
+	(void) 0; })
+# else
+#  define get16(addr) \
+     (((__const unsigned char *) (addr))[0] << 8			      \
+      | ((__const unsigned char *) (addr))[1])
+#  define get32(addr) \
+     (((((__const unsigned char *) (addr))[0] << 8			      \
+	| ((__const unsigned char *) (addr))[1]) << 8			      \
+       | ((__const unsigned char *) (addr))[2]) << 8			      \
+      | ((__const unsigned char *) (addr))[3])
+
+# define put16(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[1] = __val;			      \
+	((__const unsigned char *) (addr))[2] = __val >> 8;		      \
+	(void) 0; })
+# define put32(addr, val) \
+     ({ uint16_t __val = (val);						      \
+	((__const unsigned char *) (addr))[3] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[2] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[1] = __val;			      \
+	__val >>= 8;							      \
+	((__const unsigned char *) (addr))[0] = __val;			      \
+	(void) 0; })
+# endif
+
+# define FCTNAME2(name) name##_unaligned
+#endif
+#define FCTNAME(name) FCTNAME2(name)
 
 
 /* We need at least one byte for the next round.  */
@@ -92,9 +169,10 @@
 
 /* The function returns the status, as defined in gconv.h.  */
 static inline int
-LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
-	 unsigned char **outptrp, unsigned char *outend, mbstate_t *state,
-	 void *data, size_t *converted EXTRA_LOOP_DECLS)
+FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
+		   unsigned char **outptrp, unsigned char *outend,
+		   mbstate_t *state, void *data, size_t *converted
+		   EXTRA_LOOP_DECLS)
 {
   int result = __GCONV_OK;
   const unsigned char *inptr = *inptrp;
@@ -183,6 +261,15 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 }
 
 
+/* Include the file a second time to define the function to define the
+   function to handle unaligned access.  */
+#if !defined _STRING_ARCH_unaligned && !defined DEFINE_UNALIGNED
+# define DEFINE_UNALIGNED
+# include "loop.c"
+# undef DEFINE_UNALIGNED
+#endif
+
+
 /* We remove the macro definitions so that we can include this file again
    for the definition of another function.  */
 #undef MIN_NEEDED_INPUT
@@ -195,3 +282,8 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 #undef EXTRA_LOOP_DECLS
 #undef INIT_PARAMS
 #undef UPDATE_PARAMS
+
+#undef get16
+#undef get32
+#undef put16
+#undef put32
