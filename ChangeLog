@@ -1,5 +1,8 @@
 Wed Jan 17 11:04:58 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* elf/dynamic-link.h [ELF_MACHINE_NO_REL] (ELF_DYNAMIC_DO_REL):
+	Define this instead of ELF_DYNAMIC_DO_RELA.
+
 	* sysdeps/unix/sysv/time.S: Moved from sysv4.
 	* sysdeps/unix/sysv/irix4/time.S: File removed.
 

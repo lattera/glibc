@@ -70,7 +70,7 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM + DT_PROCNUM])
       (map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)			      \
     elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (resolve), (lazy));
 #else
-#define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */
+#define ELF_DYNAMIC_DO_REL(map, lazy, resolve) /* Nothing to do.  */
 #endif
 
 #if ! ELF_MACHINE_NO_RELA
