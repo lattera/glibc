@@ -662,11 +662,19 @@ endif
 
 move-if-change = $(SHELL) $(..)scripts/move-if-change
 
+-include $(common-objpfx)sysd-dirs
+
+ifeq ($(sysd-dirs-done),t)
+-include $(common-objpfx)sysd-sorted
+subdirs = $(sorted-subdirs)
+endif
 
 ifeq (yes, $(build-shared))
 
 # Process the shlib-versions file, which tells us what shared library
 # version numbers to use when we install shared objects on this system.
+# We need to wait until $(subdirs) is complete.
+ifeq ($(sysd-sorted-done),t)
 -include $(common-objpfx)soversions.mk
 ifndef avoid-generated
 $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
@@ -698,6 +706,7 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 	   done; \
 	 done;) > $@T; exit 0
 	mv -f $@T $@
+endif
 endif
 
 postclean-generated += soversions.mk
@@ -753,8 +762,6 @@ have-thread-library = yes
 rpath-dirs += linuxthreads
 endif
 
--include $(common-objpfx)sysd-dirs
-
 ifeq ($(elf),yes)
 dlfcn = dlfcn
 ifeq ($(build-shared),yes)
@@ -779,11 +786,6 @@ all-subdirs = csu assert ctype db db2 locale intl catgets math setjmp signal\
 	      $(add-ons) nss localedata timezone rt debug $(sysdep-subdirs) \
 	      $(dlfcn) $(binfmt-subdir)
 all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
-
-ifeq ($(sysd-dirs-done),t)
--include $(common-objpfx)sysd-sorted
-subdirs = $(sorted-subdirs)
-endif
 
 # The mach and hurd subdirectories have many generated header files which
 # much of the rest of the library depends on, so it is best to build them
@@ -810,16 +812,18 @@ $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 all-Depend-files = $(wildcard $(..)*/Depend)
 $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 			     $(common-objpfx)sysd-dirs $(..)Makeconfig
-	(dirs='$(patsubst $(..)%/Depend,$(..)%,$(filter %/Depend, $^))';\
-	 for d in $$dirs; do						\
-	   while read on; do						\
-	     echo "depend $$d $$on";					\
-	   done < $$d/Depend;						\
-	 done;								\
-	 for f in $(all-subdirs); do					\
-	   echo $$f;							\
-	 done								\
-	) | $(AWK) -f $< > $@-tmp
+	{ { dirs='$(patsubst $(..)%/Depend,$(..)%,$(filter %/Depend,$^))';\
+	    for d in $$dirs; do						  \
+	      while read on; do						  \
+		echo "depend $$d $$on";					  \
+	      done < $$d/Depend;					  \
+	    done;							  \
+	    for f in $(all-subdirs); do					  \
+	      echo $$f;							  \
+	    done;							  \
+	  } | $(AWK) -f $< &&						  \
+	  echo sysd-sorted-done = t;					  \
+	} > $@-tmp
 	mv -f $@-tmp $@
 endif
 

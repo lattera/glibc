@@ -1,3 +1,10 @@
+1999-11-25  Andreas Schwab  <schwab@suse.de>
+
+	* Makeconfig: Include sys-dirs and sys-sorted earlier.
+	($(common-objpfx)soversions.mk): Wait until subdirs is complete.
+	($(common-objpfx)sysd-sorted): Emit marker when this file is
+	complete.
+
 1999-11-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/setjmp.texi: Many changes to correct bad English introduced
