@@ -43,7 +43,7 @@ syscall_error:
 #ifdef _LIBC_REENTRANT
 	stmdb sp!, {r0, lr}
 	/* put another copy of r0 at a specific errno location */
-	bl __errno_location
+	bl C_SYMBOL_NAME(__errno_location)
 	ldmia sp!, {r1, lr}
 	str r1, [r0]
 #endif
