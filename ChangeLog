@@ -250,14 +250,14 @@
 
 1997-05-25 21:57  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* argp-parse.c (parser_init): For the special case where no
+	* argp/argp-parse.c (parser_init): For the special case where no
 	parsing function is supplied for an argp, propagate its input to
 	its first child, if any.
 
-	* argp.h (struct argp_state): `argp' field renamed to `root_argp'.
-	* argp-help.c (__argp_state_help, argp_args_usage, hol_help):
+	* argp/argp.h (struct argp_state): `argp' field renamed to `root_argp'.
+	* argp/argp-help.c (__argp_state_help, argp_args_usage, hol_help):
 	Replace references to STATE->argp with STATE->root_argp.
-	* argp-parse.c (parser_init): Likewise.
+	* argp/argp-parse.c (parser_init): Likewise.
 
 1997-05-26 14:17  Ulrich Drepper  <drepper@cygnus.com>
 
