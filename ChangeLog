@@ -1,3 +1,8 @@
+2002-10-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Use */lib64 for s390x too.
+	* sysdeps/unix/sysv/linux/configure: Rebuilt.
+
 2002-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.
