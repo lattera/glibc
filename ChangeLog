@@ -1,5 +1,8 @@
 2002-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/rpc_svcout.c (write_real_program): Write "result, "
+	parameter if mtflag.  Patch by <jeongyun@innovay.com>.
+
 	* sunrpc/rpc_svcout.c (printif): Remove third parameter.  It was
 	always "&".  Adjust callers.
 	Add "_" prefix to several generated definitions.
@@ -110,10 +113,10 @@
 
 2002-03-28  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: New.
-	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: New.
-	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: New.
-	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: New file.
 
 2002-03-27  Andreas Jaeger  <aj@suse.de>
 

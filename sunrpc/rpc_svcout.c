@@ -414,6 +414,8 @@ write_real_program (const definition * def)
 	      for (l = proc->args.decls; l != NULL; l = l->next)
 		f_print (fout, "argp->%s, ", l->decl.name);
 	    }
+	  if (mtflag)
+	    f_print (fout, "%s, ", RESULT);
 	  f_print (fout, "%s));\n}\n", RQSTP);
 	}
     }
