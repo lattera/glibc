@@ -1,3 +1,12 @@
+2002-12-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/thread-m.h (mutex_init, mutex_lock, mutex_trylock,
+	mutex_unlock): If not building NPTL, use __libc_maybe_call2 if
+	available, otherwise __libc_maybe_call.
+	* sysdeps/unix/sysv/linux/x86_64/recv.c: Add support for
+	cancellation handling.
+	* sysdeps/unix/sysv/linux/x86_64/send.c: Likewise.
+
 2002-12-17  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regcomp.c (free_workarea_compile): Free the new member

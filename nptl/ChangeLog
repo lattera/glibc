@@ -1,5 +1,19 @@
 2002-12-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* Makefile (libpthread-shared-only-routines): Add pt-allocrtsig.
+	(tests): Depend on $(objpfx)tst-cancel-wrappers.out.
+	($(objpfx)tst-cancel-wrappers.out): New rule.
+	* tst-cancel-wrappers.sh: New test.
+	* tst-locale1.c: Include signal.h.
+	(uselocale): Test static linking of __libc_current_sigrt*.
+
+2002-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-cancel6.
+	* tst-cancel6.c: New file
+
+2002-12-17  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (SINGLE_THREAD_P):
 	Define meaningfully for assembler as well.
 	* pthreadP.h (struct pthread_functions): Remove

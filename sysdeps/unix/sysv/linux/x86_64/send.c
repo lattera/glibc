@@ -18,13 +18,22 @@
 
 #include <errno.h>
 #include <sys/socket.h>
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 ssize_t
 __libc_send (int fd, const void *buf, size_t n, int flags)
 {
-  return INLINE_SYSCALL (sendto, 6, fd, buf, n, flags, NULL, NULL);
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (sendto, 6, fd, buf, n, flags, NULL, NULL);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  ssize_t result = INLINE_SYSCALL (sendto, 6, fd, buf, n, flags, NULL, NULL);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 
 weak_alias (__libc_send, __send)

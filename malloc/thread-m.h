@@ -35,21 +35,42 @@
 
 #ifdef PTHREAD_MUTEX_INITIALIZER
 
-/* mutex */
 __libc_lock_define (typedef, mutex_t)
 
-/* Even if not linking with libpthread, ensure usability of mutex as
-   an `in use' flag, see also the NO_THREADS case below.  Assume
-   pthread_mutex_t is at least one int wide.  */
+#if defined(LLL_LOCK_INITIALIZER) && !defined(NOT_IN_libc)
+
+/* Assume NPTL.  */
+
+#define mutex_init(m)		__libc_lock_init (*(m))
+#define mutex_lock(m)		__libc_lock_lock (*(m))
+#define mutex_trylock(m)	__libc_lock_trylock (*(m))
+#define mutex_unlock(m)		__libc_lock_unlock (*(m))
+
+#elif defined(__libc_maybe_call2)
 
 #define mutex_init(m)		\
-  __libc_lock_init (*m)
+  __libc_maybe_call2 (pthread_mutex_init, (m, NULL), (*(int *)(m) = 0))
 #define mutex_lock(m)		\
-  __libc_lock_lock (*m)
+  __libc_maybe_call2 (pthread_mutex_lock, (m), ((*(int *)(m) = 1), 0))
 #define mutex_trylock(m)	\
-  __libc_lock_trylock (*m)
+  __libc_maybe_call2 (pthread_mutex_trylock, (m), \
+		      (*(int *)(m) ? 1 : ((*(int *)(m) = 1), 0)))
 #define mutex_unlock(m)		\
-  __libc_lock_unlock (*m)
+  __libc_maybe_call2 (pthread_mutex_unlock, (m), (*(int *)(m) = 0))
+
+#else
+
+#define mutex_init(m)		\
+  __libc_maybe_call (__pthread_mutex_init, (m, NULL), (*(int *)(m) = 0))
+#define mutex_lock(m)		\
+  __libc_maybe_call (__pthread_mutex_lock, (m), ((*(int *)(m) = 1), 0))
+#define mutex_trylock(m)	\
+  __libc_maybe_call (__pthread_mutex_trylock, (m), \
+		     (*(int *)(m) ? 1 : ((*(int *)(m) = 1), 0)))
+#define mutex_unlock(m)		\
+  __libc_maybe_call (__pthread_mutex_unlock, (m), (*(int *)(m) = 0))
+
+#endif
 
 #define thread_atfork(prepare, parent, child) \
    (__pthread_atfork != NULL ? __pthread_atfork(prepare, parent, child) : 0)

@@ -107,6 +107,8 @@ libpthread-routines = init events \
 		      herrno res pt-allocrtsig \
 		      pthread_kill_other_threads
 
+libpthread-shared-only-routines = pt-allocrtsig
+
 libpthread-nonshared = pthread_atfork
 
 
@@ -126,6 +128,7 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-fork1 tst-fork2 tst-fork3 \
 	tst-atfork1 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
+	tst-cancel6 \
 	tst-cleanup1 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 \
@@ -240,4 +243,15 @@ $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
 generated += crti.S defs.h pt-initfini.s
+endif
+
+ifeq (no,$(cross-compiling))
+ifeq (yes,$(build-shared))
+tests: $(objpfx)tst-cancel-wrappers.out
+$(objpfx)tst-cancel-wrappers.out: tst-cancel-wrappers.sh
+	$(SHELL) $< $(common-objpfx)libc_pic.a \
+		    $(common-objpfx)libc.a \
+		    $(objpfx)libpthread_pic.a \
+		    $(objpfx)libpthread.a > $@
+endif
 endif
