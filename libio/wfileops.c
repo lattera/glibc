@@ -62,39 +62,46 @@ _IO_wdo_write (fp, data, to_do)
   struct _IO_codecvt *cc = &fp->_wide_data->_codecvt;
   _IO_size_t count = 0;
 
-  while (to_do > 0)
+  if (to_do > 0)
     {
-      enum __codecvt_result result;
-      const wchar_t *new_data;
-
       if (fp->_IO_write_end == fp->_IO_write_ptr
 	  && fp->_IO_write_end != fp->_IO_write_base)
 	{
-	  _IO_new_file_overflow (fp, EOF);
-	  assert (fp->_IO_write_end > fp->_IO_write_ptr);
+	  if (_IO_new_do_write (fp, fp->_IO_write_base,
+				fp->_IO_write_ptr - fp->_IO_write_base) == EOF)
+	    return EOF;
 	}
 
-      /* Now convert from the internal format into the external buffer.  */
-      result = (*cc->__codecvt_do_out) (cc, &fp->_wide_data->_IO_state,
-					data, data + to_do, &new_data,
-					fp->_IO_write_ptr,
-					fp->_IO_buf_end,
-					&fp->_IO_write_ptr);
+      do
+	{
+	  enum __codecvt_result result;
+	  const wchar_t *new_data;
 
-      /* Write out what we produced so far.  */
-      if (_IO_new_do_write (fp, fp->_IO_write_base,
-			    fp->_IO_write_ptr - fp->_IO_write_base) == EOF)
-	/* Something went wrong.  */
-	return EOF;
+	  /* Now convert from the internal format into the external buffer.  */
+	  result = (*cc->__codecvt_do_out) (cc, &fp->_wide_data->_IO_state,
+					    data, data + to_do, &new_data,
+					    fp->_IO_write_ptr,
+					    fp->_IO_buf_end,
+					    &fp->_IO_write_ptr);
 
-      count += new_data - data;
-      to_do -= new_data - data;
-      data = new_data;
+	  /* Write out what we produced so far.  */
+	  if (_IO_new_do_write (fp, fp->_IO_write_base,
+				fp->_IO_write_ptr - fp->_IO_write_base) == EOF)
+	    /* Something went wrong.  */
+	    return EOF;
 
-      /* Next see whether we had problems during the conversion.  If yes,
-	 we cannot go on.  */
-      if (result != __codecvt_ok)
-	break;
+	  count += new_data - data;
+	  to_do -= new_data - data;
+
+	  /* Next see whether we had problems during the conversion.  If yes,
+	     we cannot go on.  */
+	  if (result != __codecvt_ok
+	      && (result != __codecvt_partial || new_data - data == 0))
+	    break;
+
+	  data = new_data;
+	}
+      while (to_do > 0);
     }
 
   _IO_wsetg (fp, fp->_wide_data->_IO_buf_base, fp->_wide_data->_IO_buf_base,

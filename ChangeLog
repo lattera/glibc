@@ -1,3 +1,10 @@
+2000-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wfileops.c (_IO_wdo_write): Allow partial conversions in the
+	loop.
+
+	* libio/fileops.c: Pretty print.
+
 2000-07-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* wctype/wchar-lookup.h: New file.
