@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -14,7 +14,7 @@
 static char rcsid[] = "$NetBSD: w_sinh.c,v 1.6 1995/05/10 20:49:51 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper sinh(x)
  */
 
@@ -31,7 +31,7 @@ static char rcsid[] = "$NetBSD: w_sinh.c,v 1.6 1995/05/10 20:49:51 jtc Exp $";
 #ifdef _IEEE_LIBM
 	return __ieee754_sinh(x);
 #else
-	double z; 
+	double z;
 	z = __ieee754_sinh(x);
 	if(_LIB_VERSION == _IEEE_) return z;
 	if(!__finite(z)&&__finite(x)) {
@@ -41,3 +41,7 @@ static char rcsid[] = "$NetBSD: w_sinh.c,v 1.6 1995/05/10 20:49:51 jtc Exp $";
 #endif
 }
 weak_alias (__sinh, sinh)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__sinh, __sinhl)
+weak_alias (__sinh, sinhl)
+#endif

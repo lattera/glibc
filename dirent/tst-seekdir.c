@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 int
-main ()
+main (int argc, char *argv[])
 {
 
   DIR * dirp;
@@ -31,7 +31,7 @@ main ()
   /* go back to saved entry */
   seekdir (dirp, save3);
 
-  
+
   /* print remaining files (3-last) */
   for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp))
     printf("%s\n", dp->d_name);

@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -42,3 +42,7 @@ static char rcsid[] = "$NetBSD: w_hypot.c,v 1.6 1995/05/10 20:49:07 jtc Exp $";
 #endif
 }
 weak_alias (__hypot, hypot)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__hypot, __hypotl)
+weak_alias (__hypot, hypotl)
+#endif

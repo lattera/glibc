@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -34,3 +34,7 @@ static char rcsid[] = "$NetBSD: s_finite.c,v 1.8 1995/05/10 20:47:17 jtc Exp $";
 	return (int)((u_int32_t)((hx&0x7fffffff)-0x7ff00000)>>31);
 }
 weak_alias (__finite, finite)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__finite, __finitel)
+weak_alias (__finite, finitel)
+#endif

@@ -57,5 +57,6 @@ ENTRY (P(__,socket))
 
 	/* Successful; return the syscall's value.  */
 	ret
+	.size P(__,socket),.-P(__,socket)
 
 weak_alias (P(__,socket), socket)

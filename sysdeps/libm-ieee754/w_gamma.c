@@ -48,3 +48,7 @@ extern int signgam;
 #endif
 }
 weak_alias (__gamma, gamma)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__gamma, __gammal)
+weak_alias (__gamma, gammal)
+#endif

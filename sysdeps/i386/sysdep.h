@@ -29,6 +29,7 @@ Cambridge, MA 02139, USA.  */
 #define ALIGNARG(log2) 1<<log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
 #define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg;
+#define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
 /* In ELF C symbols are asm symbols.  */
 #undef	NO_UNDERSCORES
@@ -37,7 +38,8 @@ Cambridge, MA 02139, USA.  */
 #else
 
 #define ALIGNARG(log2) log2
-#define ASM_TYPE_DIRECTIVE(name,type) /* Nothing is specified.  */
+#define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
+#define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
 
 #endif
 
@@ -75,6 +77,10 @@ lose: SYSCALL_PIC_SETUP							      \
   ENTRY (name)								      \
   DO_CALL (syscall_name, args);						      \
   jb lose
+
+#undef	PSEUDO_END
+#define	PSEUDO_END(name)						      \
+  ASM_SIZE_DIRECTIVE(name)
 
 #ifdef PIC
 #define JUMPTARGET(name)	name##@PLT

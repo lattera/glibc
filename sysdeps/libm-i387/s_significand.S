@@ -12,4 +12,5 @@ ENTRY(__significand)
 	fxtract
 	fstpl	%st(1)
 	ret
+PSEUDO_END (__significand)
 weak_alias (__significand, significand)

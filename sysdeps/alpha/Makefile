@@ -21,17 +21,21 @@ sysdep_routines += _mcount
 endif
 
 ifeq ($(subdir),setjmp)
-sysdep_routines := $(sysdep_routines) setjmp_aux
+sysdep_routines += setjmp_aux
 endif
 
 ifeq ($(subdir),gnulib)
-routines = $(divrem)
-endif	# gnulib
+sysdep_routines += $(divrem)
+endif
+
+ifeq ($(subdir),string)
+sysdep_routines += stxcpy stxncpy
+endif
 
 ifeq ($(subdir),elf)
-# The ld.so code cannot use literals until it self-relocates.
+# The ld.so startup code cannot use literals until it self-relocates.
  ifeq ($(elf),yes)
-CFLAGS-rtld.c = -mbuild-constants
+  CFLAGS-rtld.c = -mbuild-constants
  endif
 # The rest of ld.so shouldn't use FP regs for block moves so
 # that the lazy link trampoline doesn't have to save them.

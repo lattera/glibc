@@ -42,5 +42,6 @@ ENTRY (__mmap)
 
 	/* Successful; return the syscall's value.  */
 	ret
+	.size __mmap,.-__mmap
 
 weak_alias (__mmap, mmap)

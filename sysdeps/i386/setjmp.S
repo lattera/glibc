@@ -53,3 +53,4 @@ here:	popl %ecx
 #else
 	jmp __sigjmp_save
 #endif
+PSEUDO_END (__sigsetjmp)

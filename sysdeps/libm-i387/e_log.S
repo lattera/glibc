@@ -12,3 +12,4 @@ ENTRY(__ieee754_log)
 	fldl	4(%esp)
 	fyl2x
 	ret
+PSEUDO_END (__ieee754_log)

@@ -1,7 +1,7 @@
 /* stpcpy -- copy SRC to DEST returning the address of the terminating '\0'
 	     in DEST.
 For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper (drepper@gnu.ai.mit.edu).
 This file is part of the GNU C Library.
 
@@ -83,5 +83,6 @@ L4:	incl %eax
 L3:	incl %eax
 L2:
 	ret
+PSEUDO_END (__stpcpy)
 
 weak_alias (__stpcpy, stpcpy)

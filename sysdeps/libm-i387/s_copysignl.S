@@ -15,6 +15,7 @@ ENTRY(__copysignl)
 	andl	$0x7fff,%eax
 	orl	%edx,%eax
 	movl	%eax,12(%esp)
-	fldl	4(%esp)
+	fldt	4(%esp)
 	ret
+PSEUDO_END (__copysignl)
 weak_alias (__copysignl, copysignl)

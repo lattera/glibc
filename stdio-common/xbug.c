@@ -1,9 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 typedef struct _Buffer {
   char *buff;
   int  room, used;
 } Buffer;
+
+#if __STDC__ - 0
+void InitBuffer (Buffer *b);
+void AppendToBuffer (register Buffer *b, const char *str, register int len);
+void ReadFile (register Buffer *buffer, FILE *input);
+#endif
 
 #define INIT_BUFFER_SIZE 10000
 
@@ -17,7 +26,7 @@ void InitBuffer(b)
 
 void AppendToBuffer(b, str, len)
      register Buffer *b;
-     char *str;
+     const char *str;
      register int len;
 {
   while (b->used + len > b->room) {
@@ -42,20 +51,21 @@ void ReadFile(buffer, input)
   AppendToBuffer(buffer, "", 1);
 }
 
-main() 
+int
+main(int argc, char *argv[])
 {
   char * filename = "xbug.c";
   FILE *input;
   Buffer buffer;
-  
+
   InitBuffer(&buffer);
-    
+
   if (!freopen (filename, "r", stdin))
     fprintf(stderr, "cannot open file\n");
-  
+
   if (!(input = popen("/bin/cat", "r")))
     fprintf(stderr, "cannot run \n");
-  
+
   ReadFile(&buffer, input);
   pclose(input);
 

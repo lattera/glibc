@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+/* Please consult the file sysdeps/unix/sysv/linux/i386/sysdep.h for
+   more information about the value -125 used below.*/
+
 	.text
 	SYSCALL_ERROR_HANDLER	/* Define error handler for PIC.  */
 ENTRY (syscall)
@@ -26,6 +29,7 @@ ENTRY (syscall)
 	movl 16(%esp), %eax	/* Load syscall number into %eax.  */
 	int $0x80		/* Do the system call.  */
 	POPARGS_5		/* Restore register contents.  */
-	testl %eax, %eax	/* Check %eax for error.  */
-	jl syscall_error	/* Jump to error handler if negative.  */
+	cmpl $-125, %eax	/* Check %eax for error.  */
+	jae syscall_error	/* Jump to error handler if error.  */
 	ret			/* Return to caller.  */
+	.size syscall,.-syscall

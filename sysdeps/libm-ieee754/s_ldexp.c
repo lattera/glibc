@@ -31,3 +31,7 @@ static char rcsid[] = "$NetBSD: s_ldexp.c,v 1.6 1995/05/10 20:47:40 jtc Exp $";
 	return value;
 }
 weak_alias (__ldexp, ldexp)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__ldexp, __ldexpl)
+weak_alias (__ldexp, ldexpl)
+#endif

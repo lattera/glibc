@@ -26,4 +26,5 @@ ENTRY(__sinl)
 	fstp	%st(1)
 	fsin
 	ret
+PSEUDO_END (__sinl)
 weak_alias (__sinl, sinl)

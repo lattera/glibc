@@ -26,4 +26,5 @@ ENTRY(__tan)
 	fptan
 	fstp	%st(0)
 	ret
+PSEUDO_END (__tan)
 weak_alias (__tan, tan)

@@ -59,3 +59,7 @@ static char rcsid[] = "$NetBSD: w_scalb.c,v 1.6 1995/05/10 20:49:48 jtc Exp $";
 #endif
 }
 weak_alias (__scalb, scalb)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__scalb, __scalbl)
+weak_alias (__scalb, scalbl)
+#endif

@@ -65,6 +65,7 @@ ENTRY(__clone)
 	jz	thread_start
 
 	ret
+	.size	__clone,.-__clone
 
 	SYSCALL_ERROR_HANDLER
 

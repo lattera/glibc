@@ -65,3 +65,7 @@ tiny   = 1.0e-300;
         return x*twom54;
 }
 weak_alias (__scalbn, scalbn)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__scalbn, __scalbnl)
+weak_alias (__scalbn, scalbnl)
+#endif

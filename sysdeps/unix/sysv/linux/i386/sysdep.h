@@ -37,16 +37,25 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef ASSEMBLER
 
-/* Linux uses a negative return value to indicate syscall errors, unlike
-   most Unices, which use the condition codes' carry flag.  */
+/* Linux uses a negative return value to indicate syscall errors,
+   unlike most Unices, which use the condition codes' carry flag.
+
+   Since version 2.1 the return value of a system call might be
+   negative even if the call succeeded.  E.g., the `lseek' system call
+   might return a large offset.  Therefore we must not anymore test
+   for < 0, but test for a real error by making sure the value in %eax
+   is a real error number.  For now (as of 2.1.1) 122 is the largest
+   defined error number.  Given a bit room for development, Linus
+   chose in <asm/unistd.h> to use the values -125 to -1 for error
+   values.  We follow him here.  */
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   SYSCALL_ERROR_HANDLER							      \
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
-    testl %eax, %eax;							      \
-    jl syscall_error;
+    cmpl $-125, %eax;							      \
+    jae syscall_error;
 
 #ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
@@ -70,9 +79,10 @@ syscall_error:								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
   movl $-1, %eax;							      \
-  ret;
+  ret;									      \
+  .size syscall_error,.-syscall-error;
 /* A quick note: it is assumed that the call to `__errno_location' does
-   not modify the parameter value!  */
+   not modify the stack!  */
 #else
 #define SYSCALL_ERROR_HANDLER						      \
   .type syscall_error,@function;					      \
@@ -85,7 +95,8 @@ syscall_error:								      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \
   movl $-1, %eax;							      \
-  ret;
+  ret;									      \
+  .size syscall_error,.-syscall-error;
 #endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 

@@ -47,3 +47,6 @@ alpha-*-linux*		libc=6
 
 # We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
 *-*-*			libdb=2
+
+# This file defines the shared library version numbers we will install.
+*-*-*			libcrypt=1

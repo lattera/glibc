@@ -1,7 +1,7 @@
 /* stpncpy -- copy no more then N bytes from SRC to DEST, returning the
 	      address of the terminating '\0' in DEST.
 For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 Some bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
   - original wrote n+1 chars in some cases.
@@ -139,5 +139,6 @@ L3:	decl %ecx		/* all bytes written? */
 L9:	popl %esi		/* restore saved register content */
 
 	ret
+PSEUDO_END (__stpncpy)
 
 weak_alias (__stpncpy, stpncpy)

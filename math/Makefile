@@ -49,9 +49,9 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 		$(long-m-$(long-double-fcts))
-long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l)) # not ready yet
-#long-m-yes = $(long-m-routines) # uncomment this when code works
-#distribute += $(long-m-routines:=.c) # and this when at least all files exist
+long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l))
+long-m-yes = $(long-m-routines)
+distribute += $(long-m-yes:=.c)
 
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,

@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
 For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 This file is part of the GNU C Library.
@@ -274,5 +274,6 @@ L7:	testb %cl, %cl		/* is first byte C? */
 L6:	popl %edi		/* restore saved register content */
 
 	ret
+PSEUDO_END (strchr)
 
 weak_alias (strchr, index)

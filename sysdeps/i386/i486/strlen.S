@@ -1,6 +1,6 @@
 /* strlen(str) -- determine the length of the string STR.
 Optimized for Intel 80x86, x>=4.
-Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>.
 This file is part of the GNU C Library.
 
@@ -130,3 +130,4 @@ L3:	testb %cl, %cl		/* is first byte NUL? */
 L2:	subl 4(%esp), %eax	/* compute difference to string start */
 
 	ret
+PSEUDO_END (strlen)

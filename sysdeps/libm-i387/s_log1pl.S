@@ -22,4 +22,5 @@ ENTRY(__log1pl)
 	faddp
 	fyl2x
 	ret
+PSEUDO_END (__log1pl)
 weak_alias (__log1pl, log1pl)

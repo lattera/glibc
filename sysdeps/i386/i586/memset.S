@@ -99,3 +99,4 @@ L2:	shrl	$2, %ecx	/* convert byte count to longword count */
 	popl	%edi
 
 	ret
+PSEUDO_END (memset)

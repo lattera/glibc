@@ -24,4 +24,5 @@ ENTRY(__sin)
 	fstp	%st(1)
 	fsin
 	ret
+PSEUDO_END (__sin)
 weak_alias (__sin, sin)

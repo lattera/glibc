@@ -1,7 +1,7 @@
 /* strcspn (str, ss) -- Return the length of the initial segement of STR
 			which contains only characters from SS.
 For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 This file is part of the GNU C Library.
@@ -174,3 +174,4 @@ L4:	subl %edx, %eax		/* we have to return the number of valid
 	addl $256, %esp		/* remove stopset */
 
 	ret
+PSEUDO_END (strspn)

@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -34,3 +34,7 @@ static char rcsid[] = "$NetBSD: s_fabs.c,v 1.7 1995/05/10 20:47:13 jtc Exp $";
         return x;
 }
 weak_alias (__fabs, fabs)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__fabs, __fabsl)
+weak_alias (__fabs, fabsl)
+#endif

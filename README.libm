@@ -4,7 +4,6 @@ function have to be written:
 e_acosl.c
 e_asinl.c
 e_atan2l.c
-e_acoshl.c
 e_expl.c
 e_fmodl.c
 e_hypotl.c

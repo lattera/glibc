@@ -10,7 +10,7 @@ RCSID("$NetBSD: s_log1p.S,v 1.7 1995/05/09 00:10:58 jtc Exp $")
 /*
  * Since the fyl2xp1 instruction has such a limited range:
  *	-(1 - (sqrt(2) / 2)) <= x <= sqrt(2) - 1
- * it's not worth trying to use it.  
+ * it's not worth trying to use it.
  */
 
 ENTRY(__log1p)
@@ -20,4 +20,5 @@ ENTRY(__log1p)
 	faddp
 	fyl2x
 	ret
+PSEUDO_END (__log1p)
 weak_alias (__log1p, log1p)

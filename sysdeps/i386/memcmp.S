@@ -63,6 +63,7 @@ L1:	popl %esi		/* Restore registers.  */
 	movl %edx, %edi
 
 	ret
+PSEUDO_END (memcmp)
 
 #undef bcmp
 weak_alias (memcmp, bcmp)

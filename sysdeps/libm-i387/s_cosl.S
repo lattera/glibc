@@ -26,4 +26,5 @@ ENTRY(__cosl)
 	fstp	%st(1)
 	fcos
 	ret
+PSEUDO_END (__cosl)
 weak_alias (__cosl, cosl)

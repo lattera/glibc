@@ -43,10 +43,7 @@ strtok (s, delim)
   /* Scan leading delimiters.  */
   s += strspn (s, delim);
   if (*s == '\0')
-    {
-      olds = NULL;
-      return NULL;
-    }
+    return NULL;
 
   /* Find the end of the token.  */
   token = s;

@@ -1073,7 +1073,7 @@ typedef struct
    REGEX_REALLOCATE_STACK requires `destination' be declared.   */
 
 #define DOUBLE_FAIL_STACK(fail_stack)					\
-  ((fail_stack).size > re_max_failures * MAX_FAILURE_ITEMS		\
+  ((fail_stack).size > (unsigned) (re_max_failures * MAX_FAILURE_ITEMS)	\
    ? 0									\
    : ((fail_stack).stack = (fail_stack_elt_t *)				\
         REGEX_REALLOCATE_STACK ((fail_stack).stack, 			\
@@ -1430,7 +1430,7 @@ static reg_errcode_t compile_range ();
 
 /* Make sure we have at least N more bytes of space in buffer.  */
 #define GET_BUFFER_SPACE(n)						\
-    while (b - bufp->buffer + (n) > bufp->allocated)			\
+    while ((unsigned long) (b - bufp->buffer + (n)) > bufp->allocated)	\
       EXTEND_BUFFER ()
 
 /* Make sure we have one more byte of buffer space and then add C to it.  */
@@ -2859,7 +2859,7 @@ compile_range (p_ptr, pend, translate, syntax, b)
   unsigned this_char;
 
   const char *p = *p_ptr;
-  int range_start, range_end;
+  unsigned int range_start, range_end;
 
   if (p == pend)
     return REG_ERANGE;
@@ -3718,7 +3718,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
   /* Initialize subexpression text positions to -1 to mark ones that no
      start_memory/stop_memory has been seen for. Also initialize the
      register information struct.  */
-  for (mcnt = 1; mcnt < num_regs; mcnt++)
+  for (mcnt = 1; (unsigned) mcnt < num_regs; mcnt++)
     {
       regstart[mcnt] = regend[mcnt]
         = old_regstart[mcnt] = old_regend[mcnt] = REG_UNSET_VALUE;
@@ -3818,7 +3818,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
                       DEBUG_PRINT1 ("\nSAVING match as best so far.\n");
 
-                      for (mcnt = 1; mcnt < num_regs; mcnt++)
+                      for (mcnt = 1; (unsigned) mcnt < num_regs; mcnt++)
                         {
                           best_regstart[mcnt] = regstart[mcnt];
                           best_regend[mcnt] = regend[mcnt];
@@ -3844,7 +3844,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
                   dend = ((d >= string1 && d <= end1)
 		           ? end_match_1 : end_match_2);
 
-		  for (mcnt = 1; mcnt < num_regs; mcnt++)
+		  for (mcnt = 1; (unsigned) mcnt < num_regs; mcnt++)
 		    {
 		      regstart[mcnt] = best_regstart[mcnt];
 		      regend[mcnt] = best_regend[mcnt];
@@ -3909,7 +3909,8 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
               /* Go through the first `min (num_regs, regs->num_regs)'
                  registers, since that is all we initialized.  */
-	      for (mcnt = 1; mcnt < MIN (num_regs, regs->num_regs); mcnt++)
+	      for (mcnt = 1; (unsigned) mcnt < MIN (num_regs, regs->num_regs);
+		   mcnt++)
 		{
                   if (REG_UNSET (regstart[mcnt]) || REG_UNSET (regend[mcnt]))
                     regs->start[mcnt] = regs->end[mcnt] = -1;
@@ -3927,7 +3928,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
                  we (re)allocated the registers, this is the case,
                  because we always allocate enough to have at least one
                  -1 at the end.  */
-              for (mcnt = num_regs; mcnt < regs->num_regs; mcnt++)
+              for (mcnt = num_regs; (unsigned) mcnt < regs->num_regs; mcnt++)
                 regs->start[mcnt] = regs->end[mcnt] = -1;
 	    } /* regs && !bufp->no_sub */
 
@@ -4199,7 +4200,8 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
                       EVER_MATCHED_SOMETHING (reg_info[*p]) = 0;
 
 		      /* Restore this and inner groups' (if any) registers.  */
-                      for (r = *p; r < *p + *(p + 1); r++)
+                      for (r = *p; r < (unsigned) *p + (unsigned) *(p + 1);
+			   r++)
                         {
                           regstart[r] = old_regstart[r];
 

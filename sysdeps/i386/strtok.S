@@ -282,3 +282,4 @@ LreturnNULL:
 # endif
 #endif
 	ret
+PSEUDO_END (FUNCTION)

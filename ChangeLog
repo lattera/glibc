@@ -1,3 +1,454 @@
+Sun Oct  6 02:05:52 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/getopt.c: Add casts to prevent warnings.
+	* posix/regex.c: Likewise.
+
+	* math/Makefile (long-m-routines, long-m-yes): Define to correct
+	values to make `long double' functions available.
+	(distribute): Add $(long-m-yes:=.c).
+
+	* sysdeps/libm-i387/s_ceill.S: Correct loading of return value.
+	Use long double instruction.
+
+	* sysdeps/libm-ieee754/e_atanhl.c (huge): Correct constant.
+	* sysdeps/libm-ieee754/e_asinhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_tanhl.c: Likewise.
+
+	* sysdeps/libm-ieee754/e_coshl.c: New file.
+
+	* sysdeps/libm-ieee754/s_asinh.c [!NO_LONG_DOUBLE]: Define names
+	for `long double' version as alias.
+	* sysdeps/libm-ieee754/s_atan.c: Likewise.
+	* sysdeps/libm-ieee754/s_cbrt.c: Likewise.
+	* sysdeps/libm-ieee754/s_ceil.c: Likewise.
+	* sysdeps/libm-ieee754/s_copysign.c: Likewise.
+	* sysdeps/libm-ieee754/s_cos.c: Likewise.
+	* sysdeps/libm-ieee754/s_erf.c: Likewise.
+	* sysdeps/libm-ieee754/s_expm1.c: Likewise.
+	* sysdeps/libm-ieee754/s_fabs.c: Likewise.
+	* sysdeps/libm-ieee754/s_finite.c: Likewise.
+	* sysdeps/libm-ieee754/s_floor.c: Likewise.
+	* sysdeps/libm-ieee754/s_frexp.c: Likewise.
+	* sysdeps/libm-ieee754/s_ilogb.c: Likewise.
+	* sysdeps/libm-ieee754/s_ldexp.c: Likewise.
+	* sysdeps/libm-ieee754/s_log1p.c: Likewise.
+	* sysdeps/libm-ieee754/s_logb.c: Likewise.
+	* sysdeps/libm-ieee754/s_modf.c: Likewise.
+	* sysdeps/libm-ieee754/s_nextafter.c: Likewise.
+	* sysdeps/libm-ieee754/s_rint.c: Likewise.
+	* sysdeps/libm-ieee754/s_scalbn.c: Likewise.
+	* sysdeps/libm-ieee754/s_significand.c: Likewise.
+	* sysdeps/libm-ieee754/s_sin.c: Likewise.
+	* sysdeps/libm-ieee754/s_tan.c: Likewise.
+	* sysdeps/libm-ieee754/s_tanh.c: Likewise.
+	* sysdeps/libm-ieee754/w_acos.c: Likewise.
+	* sysdeps/libm-ieee754/w_acosh.c: Likewise.
+	* sysdeps/libm-ieee754/w_sin.c: Likewise.
+	* sysdeps/libm-ieee754/w_atan2.c: Likewise.
+	* sysdeps/libm-ieee754/w_atanh.c: Likewise.
+	* sysdeps/libm-ieee754/w_cabs.c: Likewise.
+	* sysdeps/libm-ieee754/w_cosh.c: Likewise.
+	* sysdeps/libm-ieee754/w_drem.c: Likewise.
+	* sysdeps/libm-ieee754/w_exp.c: Likewise.
+	* sysdeps/libm-ieee754/w_fmod.c: Likewise.
+	* sysdeps/libm-ieee754/w_gamma.c: Likewise.
+	* sysdeps/libm-ieee754/w_gamma_r.c: Likewise.
+	* sysdeps/libm-ieee754/w_hypot.c: Likewise.
+	* sysdeps/libm-ieee754/w_j0.c: Likewise.
+	* sysdeps/libm-ieee754/w_j1.c: Likewise.
+	* sysdeps/libm-ieee754/w_jn.c: Likewise.
+	* sysdeps/libm-ieee754/w_lgamma.c: Likewise.
+	* sysdeps/libm-ieee754/w_lgamma_r.c: Likewise.
+	* sysdeps/libm-ieee754/w_log.c: Likewise.
+	* sysdeps/libm-ieee754/w_log10.c: Likewise.
+	* sysdeps/libm-ieee754/w_pow.c: Likewise.
+	* sysdeps/libm-ieee754/w_remainder.c: Likewise.
+	* sysdeps/libm-ieee754/w_scalb.c: Likewise.
+	* sysdeps/libm-ieee754/w_sinh.c: Likewise.
+	* sysdeps/libm-ieee754/w_sqrt.c: Likewise.
+
+	Stub files for missing long double math functions.
+	* sysdeps/stub/e_acoshl.c: New file.
+	* sysdeps/stub/e_hypotl.c: New file.
+	* sysdeps/stub/e_j0l.c: New file.
+	* sysdeps/stub/e_j1l.c: New file.
+	* sysdeps/stub/e_jnl.c: New file.
+	* sysdeps/stub/e_lgammal_r.c: New file.
+	* sysdeps/stub/e_powl.c: New file.
+	* sysdeps/stub/e_rem_pio2l.c: New file.
+	* sysdeps/stub/e_sinhl.c: New file.
+	* sysdeps/stub/k_cosl.c: New file.
+	* sysdeps/stub/k_rem_pio2l.c: New file.
+	* sysdeps/stub/k_sinl.c: New file.
+	* sysdeps/stub/k_tanl.c: New file.
+	* sysdeps/stub/s_erfl.c: New file.
+	* sysdeps/stub/s_expm1l.c: New file.
+
+	* sysdeps/i386/__longjmp.S: Use PSEUDO_END macro to provide
+	.size directive.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/i386/stpcpy.S: Likewise.
+	* sysdeps/i386/stpncpy.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	* sysdeps/i386/strcspn.S: Likewise.
+	* sysdeps/i386/strpbrk.S: Likewise.
+	* sysdeps/i386/strrchr.S: Likewise.
+	* sysdeps/i386/strspn.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/i486/strcat.S: Likewise.
+	* sysdeps/i386/i486/strlen.S: Likewise.
+	* sysdeps/i386/i586/memset.S: Likewise.
+	* sysdeps/i386/i586/strchr.S: Likewise.
+	* sysdeps/i386/i586/strlen.S: Likewise.
+	* sysdeps/libm-i387/e_acos.S: Likewise.
+	* sysdeps/libm-i387/e_acosl.S: Likewise.
+	* sysdeps/libm-i387/e_asin.S: Likewise.
+	* sysdeps/libm-i387/e_asinl.S: Likewise.
+	* sysdeps/libm-i387/e_atan2.S: Likewise.
+	* sysdeps/libm-i387/e_atan2l.S: Likewise.
+	* sysdeps/libm-i387/e_exp.S: Likewise.
+	* sysdeps/libm-i387/e_expl.S: Likewise.
+	* sysdeps/libm-i387/e_fmod.S: Likewise.
+	* sysdeps/libm-i387/e_fmodl.S: Likewise.
+	* sysdeps/libm-i387/e_log.S: Likewise.
+	* sysdeps/libm-i387/e_log10.S: Likewise.
+	* sysdeps/libm-i387/e_log10l.S: Likewise.
+	* sysdeps/libm-i387/e_logl.S: Likewise.
+	* sysdeps/libm-i387/e_remainder.S: Likewise.
+	* sysdeps/libm-i387/e_remainderf.S: Likewise.
+	* sysdeps/libm-i387/e_remainderl.S: Likewise.
+	* sysdeps/libm-i387/e_scalb.S: Likewise.
+	* sysdeps/libm-i387/e_scalbl.S: Likewise.
+	* sysdeps/libm-i387/e_sqrt.S: Likewise.
+	* sysdeps/libm-i387/e_sqrtf.S: Likewise.
+	* sysdeps/libm-i387/e_sqrtl.S: Likewise.
+	* sysdeps/libm-i387/s_atan.S: Likewise.
+	* sysdeps/libm-i387/s_atanf.S: Likewise.
+	* sysdeps/libm-i387/s_atanl.S: Likewise.
+	* sysdeps/libm-i387/s_ceil.S: Likewise.
+	* sysdeps/libm-i387/s_ceilf.S: Likewise.
+	* sysdeps/libm-i387/s_ceill.S: Likewise.
+	* sysdeps/libm-i387/s_copysign.S: Likewise.
+	* sysdeps/libm-i387/s_copysignf.S: Likewise.
+	* sysdeps/libm-i387/s_copysignl.S: Likewise.
+	* sysdeps/libm-i387/s_cos.S: Likewise.
+	* sysdeps/libm-i387/s_cosf.S: Likewise.
+	* sysdeps/libm-i387/s_cosl.S: Likewise.
+	* sysdeps/libm-i387/s_finite.S: Likewise.
+	* sysdeps/libm-i387/s_finitef.S: Likewise.
+	* sysdeps/libm-i387/s_finitel.S: Likewise.
+	* sysdeps/libm-i387/s_floor.S: Likewise.
+	* sysdeps/libm-i387/s_floorf.S: Likewise.
+	* sysdeps/libm-i387/s_floorl.S: Likewise.
+	* sysdeps/libm-i387/s_ilogb.S: Likewise.
+	* sysdeps/libm-i387/s_ilogbf.S: Likewise.
+	* sysdeps/libm-i387/s_ilogbl.S: Likewise.
+	* sysdeps/libm-i387/s_log1p.S: Likewise.
+	* sysdeps/libm-i387/s_log1pf.S: Likewise.
+	* sysdeps/libm-i387/s_log1pl.S: Likewise.
+	* sysdeps/libm-i387/s_logb.S: Likewise.
+	* sysdeps/libm-i387/s_logbf.S: Likewise.
+	* sysdeps/libm-i387/s_logbl.S: Likewise.
+	* sysdeps/libm-i387/s_rint.S: Likewise.
+	* sysdeps/libm-i387/s_rintf.S: Likewise.
+	* sysdeps/libm-i387/s_rintl.S: Likewise.
+	* sysdeps/libm-i387/s_scalbn.S: Likewise.
+	* sysdeps/libm-i387/s_scalbnf.S: Likewise.
+	* sysdeps/libm-i387/s_scalbnl.S: Likewise.
+	* sysdeps/libm-i387/s_significand.S: Likewise.
+	* sysdeps/libm-i387/s_significandf.S: Likewise.
+	* sysdeps/libm-i387/s_significandl.S: Likewise.
+	* sysdeps/libm-i387/s_sin.S: Likewise.
+	* sysdeps/libm-i387/s_sinf.S: Likewise.
+	* sysdeps/libm-i387/s_sinl.S: Likewise.
+	* sysdeps/libm-i387/s_tan.S: Likewise.
+	* sysdeps/libm-i387/s_tanf.S: Likewise.
+	* sysdeps/libm-i387/s_tanl.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: Add .size directive.
+	* sysdeps/unix/sysv/linux/i386/mmap.S. Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S. Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S. More compact .size line.
+
+	* sysdeps/i386/sysdep.h (ASM_SIZE_DIRECTIVE): New macro.  Used
+	to provide .size directive on ELF systems.
+
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h: Include
+	<sigcontext.h> and rename parameter type to sigcontext.
+	* sysdeps/unix/sysv/linux/i386/sigcontext.h New file.
+
+	* sysdeps/unix/sysv/linux/i386/syscall.S: From Linux 2.1 on
+	negative values might occur as positive results.  Test against
+	-125 to decide for error or not.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise for system calls.
+
+Thu Oct  3 21:07:58 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-open.c: Use _DYNAMIC instead of _dl_start to decide
+	whether this is a statically linked program.  The latter is now
+	always defined.
+
+Fri Oct  4 02:08:10 1996  Bang Jun-Young  <bangjy@nownuri.nowcom.co.kr>
+
+	* po/ko.po: Update.
+
+Fri Oct  4 02:07:46 1996  Michel Robitaille  <robitail@IRO.UMontreal.CA>
+
+	* po/fr.po: New file.
+
+Fri Oct  4 05:04:52 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigcontext.h: New file.
+
+	Add support for MD5 crypt replacement.
+	* Makefile (subdirs): Add crypt.
+	* shlib-versions: Add entry for libcrypt.
+	* crypt/md5-crypt.c: New file.
+	* crypt/md5.c: New file.
+	* crypt/md5.h: New file.
+	* sysdeps/generic/crypt-entry.c: New file.
+	* sysdeps/generic/crypt.h: New file.
+
+Thu Oct  3 20:53:23 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* dirent/tst-seekdir.c: Provide correct prototypes.
+	* io/test-utime.c: Likewise.
+	* malloc/mallocbug.c: Likewise.
+	* posix/testfnm.c: Likewise.
+	* stdio-common/xbug.c: Likewise.
+	* sysdeps/posix/cuserid.c: Likewise.
+
+Wed Oct  2 13:33:48 1996  Richard Henderson  <rth@tamu.edu>
+
+	Provide optimized string functions for Alpha processors.
+	* sysdeps/alpha/bzero.S: New file.
+	* sysdeps/alpha/memset.S: New file.
+	* sysdeps/alpha/stpcpy.S: New file.
+	* sysdeps/alpha/stpncpy.S: New file.
+	* sysdeps/alpha/strcat.S: New file.
+	* sysdeps/alpha/strchr.S: New file.
+	* sysdeps/alpha/strcpy.S: New file.
+	* sysdeps/alpha/strncat.S: New file.
+	* sysdeps/alpha/strncpy.S: New file.
+	* sysdeps/alpha/strrchr.S: New file.
+	* sysdeps/alpha/stxcpy.S: New file.
+	* sysdeps/alpha/stxncpy.S: New file.
+
+	* sysdeps/alpha/Makefile [$(sudir)==string]: Add stxcpy and
+	stxncpy to sysdep_routines.
+	Minor correction.
+
+Wed Oct  2 13:41:48 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/strtok.c: Don't set stored pointer to NULL when
+ 	notheing is found.  This guarantees all subsequent calls behave
+ 	the same.
+	* sysdeps/generic/strtok_r.c: Likewise.
+
+Mon Sep 30 22:27:36 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/tempname.c (__stdio_gen_tempname): Don't declare
+	`i' as const.
+
+Mon Sep 30 22:38:29 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/generic/strtok.c: When we hit EOS, don't set olds to
+	NULL immediately; we're going to get called one more time.
+	* sysdeps/generic/strtok_r.c: Likewise.
+
+Tue Oct  1 09:12:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-time.c: Always write some bytes at the end of
+ 	the file even if no `era's are specified.
+
+	* stdio-common/tmpname.c (tmpbuf): Don't define as array of
+ 	pointers.
+
+Tue Oct  1 01:43:11 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/iofclose.c: Move unlocking to right position.
+
+Mon Sep 30 03:08:34 1996  Richard Henderson  <rth@tamu.edu>
+
+	* misc/Makefile: Kill force-wrapper.
+	* misc/force-wrapper.c: Delete.
+
+	* elf/eval.c: Add <string.h>.
+
+	* gmon/sys/gmon_out.h: Nonsense like `char foo[sizeof(char*)]'
+	followed by `bcopy(&ptr, &foo, sizeof(foo))' helps portability
+	and binary compatibility not at all.  Better to do `char *foo'
+	followed by `foo = ptr' as it is much cleaner.
+	(struct gmon_hdr): Fix version.
+	(struct gmon_hist_hdr): Fix low_pc, high_pc, hist_size, prof_rate.
+	(struct gmon_cg_arc_record): Fix from_pc, self_pc, count.
+	* gmon/gmon.c: De-ansidecl-ify.
+	(write_hist): De-bcopy-fy.
+	(write_call_graph): Likewise.
+
+	* gmon/mcount.c: Assume _MCOUNT_DECL does the entire declaration.
+	* sysdeps/alpha/machine-gmon.h: Update _MCOUNT_DECL.
+	* sysdeps/generic/machine-gmon.h: Likewise.
+
+	* resolv/netdb.h: Add __set_h_errno to mimic __set_errno.
+	* nss/getXXent_r.c: Use __set_h_errno to set h_errno in all funcs.
+	* nss/nss_dns/dns-network.c: Likewise.
+	* resolv/getunamaddr.c: Likewise.  Also use __set_errno where needed.
+	* resolv/getnetnamadr.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+
+	* libio/clearerr_u.c: It's not necessary to define __ protected
+	function so don't do it.
+	* libio/feof_u.c, libio/ferror_u.c, libio/fputc_u.c,
+	  libio/getc_u.c, libio/getchar_u.c, libio/iofflush_u.c: Likewise.
+
+	* libio/fgetc.c: Avoid a warning by casting _IO_funlockfile for
+	the cleanup registrar.
+	* libio/fputc.c, libio/freopen.c, libio/fseek.c, libio/getc.c,
+	  libio/getchar.c, libio/iofclose.c, libio/iofflush.c,
+	  libio/iofgetpos.c, libio/iofgets.c, libio/iofputs.c,
+	  libio/iofread.c, libio/iofsetpos.c, libio/ioftell.c,
+	  libio/iofwrite.c, libio/iogetdelim.c, libio/iogets.c,
+	  libio/ioputs.c, libio/iosetbuffer.c, libio/iosetvbuf.c,
+	  libio/ioungetc.c, libio/putc.c, libio/putchar.c, libio/rewind.c:
+	Likewise.
+
+	* locale/programs/ld-ctype.c: Include <alloca.h>.
+
+	* login/login_tty.c: Get login_tty prototype from <utmp.h>.
+
+	* posix/sys/types.h: Change #defines to typedefs.  This is looking
+	forward to more comprehensive namespace cleanups for C++.
+	* posix/unistd.h: Likewise for ssize_t.
+
+	* pwd/getpw.c: Prototype and rename getpw -> __getpw and add a
+	weak alias.
+
+	* resolv/base64.c: Don't do `for (NULL; ...)' as it causes
+	`statement with no effect' warnings.
+	* resolv/inet_neta.c: Include <string.h> for strlen.
+
+	* stdio-common/getline.c: Undef ssize_t before libio redefinition.
+	* stdio-common/tstgetln.c: Same.  De-ansidecl-ify.
+	* stdio-common/vfprintf.c: Same for va_list.
+	* stdio-common/vfscanf.c: Same.
+	* stdio-common/reg-printf.c: Prototype the __ function.
+	* stdio-common/scanf.c [USE_IN_LIBIO]: Include <libioP.h> for
+	_IO_vscanf declaration.
+
+	* string/tester.c: Tsk, tsk.  Don't cast pointers to int,
+	but to unsigned long for the health of 64-bit systems.
+
+	* sunrpc/svc_udp.c: Define MAX only if we don't have it yet.
+	Many system's <sys/param.h> pulls this in.
+
+	* sysdeps/generic/dl-cache.c: Kill the bottom half of the
+	patch doubled file.
+
+	* sysdeps/generic/pty.c (forkpty): Get login_tty decl from <utmp.h>
+	instead of defining it locally.
+
+	* sysdeps/posix/sigvec.c: Prototype wrapper_handler and convert_mask.
+	* sysdeps/stub/chflags.c: Prototype chflags.
+	* sysdeps/stub/fchflags.c: Prototype fchflags.
+	* sysdeps/stub/sstk.c: Prototype sstk.
+
+	* sysdeps/unix/alpha/sysdep.S:  Add strong alias from errno
+	variable to __errno.  Update __syscall_error to store to both
+	the global and per-thread variables.
+
+	* sysdeps/unix/sysv/linux/init-first.c: Change include of
+	init-first.h from "" to <> as "" does not search the include path.
+	Prototype _dl_start.
+
+Sun Sep 29 14:41:17 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/Makefile ($(common-objpfx)s-proto.d): Make it a
+	pattern rule to get the right stem.
+
+Sat Sep 28 01:30:06 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(objpfx)version-info.h): Fix typo in previous change.
+
+Sat Sep 28 00:44:38 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/euidaccess.c (__set_errno): Fix typo.
+
+Sat Sep 28 00:40:38 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/free.c (_free_internal): Don't call free recursively, use
+	the internal functions instead.
+
+Sat Sep 28 00:23:20 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/tempname.c (__stdio_gen_tempname) [USE_IN_LIBIO &&
+	_IO_MTSAFE_IO]: Allocate and initialize the file lock.
+
+Fri Sep 27 23:58:17 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* catgets/gencat.c (main): Print version information on stdout,
+	not stderr.
+	* db/makedb.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
+Mon Sep 30 00:14:26 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Add implementation of netgroup.
+	* inet/Makefile (distributes): Add netgroup.h.
+	(routines): Add getnetgrent.c and getnetgrent_r.c.
+	* inet/getnetgrent.c: New file.
+	* inet/getnetgrent_r.c: New file.
+	* inet/netgroup.h: New file.
+	* netgroup.h: New file.
+	* nsswitch.h: New file.
+	* nss/Makefile (databases): Add getgrp.
+	* nss/databases.def: Add netgroup.
+	* nss/db-Makefile: Add rules for netgroup.
+	* nss/netgrp-lookup.c: New file.
+	* nss/nss.h: Add new status value NSS_STATUS_RETURN which will
+	always return without a check of the transition table.
+	* nss/nsswitch.h (struct service_user): Extend actions array to
+	five elements.
+	* nss/nsswitch.c (__nss_next): Allow NSS_STATUS_RETURN as legal
+	status value.
+	(nss_parse_service_list): Initialize action for NSS_STATUS_RETURN
+	to NSS_ACTION_RETURN.
+	* nss/nss_db/db-netgrp.c: New file.
+	* nss/nss_files/files-netgrp.c: New file.
+	* nss/nsswitch.conf: Add entry for netgroup.
+	* resolv/netdb.h: Add prototypes for netgroup functions.
+
+	* nss/nss_db/db-XXX.c: Use `enum nss_status' type when status
+	value is used.
+
+Sun Sep 29 12:55:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Change funciton name for
+ 	_llseek to _llseek (not llseek).
+	Reported by Matthias Urlichs <smurf@smurf.noris.de>.
+
+Sun Sep 29 05:34:32 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rcmd.c: Remove definition of MIN.
+
+Sat Sep 28 14:22:51 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/readdir_r.c: Removed.  We indeed need a real implementation.
+	* sysdeps/unix/readdir_r.c: New file.
+	* sysdeps/unix/readdir.c: Remove check for correct parameter
+	values.  Let them simply die.
+	* manual/filesys.texi: Document readdir_r.
+
+	* sysdeps/gnu/errlist.awk: Define _sys_errlist as `const char* const'.
+	Proposed by Per Abrahamsen <abraham@dina.kvl.dk>.
+
 Sat Sep 28 03:02:49 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* dirent/Makefile (routines): Add readdir_r.

@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -14,7 +14,7 @@
 static char rcsid[] = "$NetBSD: w_atanh.c,v 1.6 1995/05/10 20:48:43 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper atanh(x)
  */
 
@@ -39,10 +39,14 @@ static char rcsid[] = "$NetBSD: w_atanh.c,v 1.6 1995/05/10 20:48:43 jtc Exp $";
 	if(y>=1.0) {
 	    if(y>1.0)
 	        return __kernel_standard(x,x,30); /* atanh(|x|>1) */
-	    else 
+	    else
 	        return __kernel_standard(x,x,31); /* atanh(|x|==1) */
 	} else
 	    return z;
 #endif
 }
 weak_alias (__atanh, atanh)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__atanh, __atanhl)
+weak_alias (__atanh, atanhl)
+#endif

@@ -17,3 +17,4 @@ ENTRY(__ieee754_remainderl)
 	sahf
 	jp	1b
 	ret
+PSEUDO_END (__ieee754_remainderl)

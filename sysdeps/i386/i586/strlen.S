@@ -180,3 +180,4 @@ L2:	subl 4(%esp), %eax	/* now compute the length as difference
 				   character */
 
 	ret
+PSEUDO_END (strlen)

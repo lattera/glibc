@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -14,7 +14,7 @@
 static char rcsid[] = "$NetBSD: w_atan2.c,v 1.6 1995/05/10 20:48:39 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper atan2(y,x)
  */
 
@@ -42,3 +42,7 @@ static char rcsid[] = "$NetBSD: w_atan2.c,v 1.6 1995/05/10 20:48:39 jtc Exp $";
 #endif
 }
 weak_alias (__atan2, atan2)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__atan2, __atan2l)
+weak_alias (__atan2, atan2l)
+#endif

@@ -12,6 +12,7 @@ ENTRY(__ieee754_exp)
 	fldl	4(%esp)
 /* I added the following ugly construct because exp(+-Inf) resulted
    in NaN.  The ugliness results from the bright minds at Intel.
+   For the i686 the code can be written better.
    -- drepper@cygnus.com.  */
 	fxam				/* Is NaN or +-Inf?  */
 	fstsw	%ax
@@ -36,3 +37,4 @@ ENTRY(__ieee754_exp)
 	jz	.LpInf			/* If positive, jump.  */
 	fldz				/* Set result to 0.  */
 .LpInf:	ret
+PSEUDO_END (__ieee754_exp)

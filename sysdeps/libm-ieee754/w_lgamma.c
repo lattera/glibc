@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -46,5 +46,9 @@ extern int signgam;
         } else
             return y;
 #endif
-}             
+}
 weak_alias (__lgamma, lgamma)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__lgamma, __lgammal)
+weak_alias (__lgamma, lgammal)
+#endif

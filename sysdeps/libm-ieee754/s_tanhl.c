@@ -46,9 +46,9 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 
 #ifdef __STDC__
-static const long double one=1.0, two=2.0, tiny = 1.0e-16380L;
+static const long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 #else
-static long double one=1.0, two=2.0, tiny = 1.0e-16380L;
+static long double one=1.0, two=2.0, tiny = 1.0e-4900L;
 #endif
 
 #ifdef __STDC__
@@ -59,7 +59,8 @@ static long double one=1.0, two=2.0, tiny = 1.0e-16380L;
 #endif
 {
 	long double t,z;
-	int32_t se,j0,j1,ix;
+	int32_t se;
+	u_int32_t j0,j1,ix;
 
     /* High word of |x|. */
 	GET_LDOUBLE_WORDS(se,j0,j1,x);
@@ -72,7 +73,7 @@ static long double one=1.0, two=2.0, tiny = 1.0e-16380L;
 	}
 
     /* |x| < 23 */
-	if (ix < 0x4003 || (ix == 0x4003 && j0 < 0xb8000000)) {	/* |x|<23 */
+	if (ix < 0x4003 || (ix == 0x4003 && j0 < 0xb8000000u)) {/* |x|<23 */
 	    if (ix<0x3fc8) 		/* |x|<2**-55 */
 		return x*(one+x);    	/* tanh(small) = small */
 	    if (ix>=0x3fff) {	/* |x|>=1  */

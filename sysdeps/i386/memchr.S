@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
    than N.
 For Intel 80x86, x>=3.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 This file is part of the GNU C Library.
@@ -313,3 +313,4 @@ L9:	popl %edi		/* pop saved registers */
 	popl %esi
 
 	ret
+PSEUDO_END (memchr)

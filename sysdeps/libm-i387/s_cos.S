@@ -13,7 +13,7 @@ ENTRY(__cos)
 	fnstsw	%ax
 	andw	$0x400,%ax
 	jnz	1f
-	ret	
+	ret
 1:	fldpi
 	fadd	%st(0)
 	fxch	%st(1)
@@ -24,4 +24,5 @@ ENTRY(__cos)
 	fstp	%st(1)
 	fcos
 	ret
+PSEUDO_END (__cos)
 weak_alias (__cos, cos)

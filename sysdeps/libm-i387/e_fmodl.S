@@ -18,3 +18,4 @@ ENTRY(__ieee754_fmodl)
 	jp	1b
 	fstpl	%st(1)
 	ret
+PSEUDO_END (__ieee754_fmodl)

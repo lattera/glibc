@@ -9,7 +9,7 @@
 
 
 /* acosl = atanl (sqrtl(1 - x^2) / x) */
-ENTRY(__ieee754_acos)
+ENTRY(__ieee754_acosl)
 	fldt	4(%esp)			/* x */
 	fst	%st(1)
 	fmul	%st(0)			/* x^2 */
@@ -19,3 +19,4 @@ ENTRY(__ieee754_acos)
 	fxch	%st(1)
 	fpatan
 	ret
+PSEUDO_END (__ieee754_acosl)

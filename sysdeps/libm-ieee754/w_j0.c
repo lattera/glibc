@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -40,6 +40,11 @@ static char rcsid[] = "$NetBSD: w_j0.c,v 1.6 1995/05/10 20:49:11 jtc Exp $";
 #endif
 }
 weak_alias (__j0, j0)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__j0, __j0l)
+weak_alias (__j0, j0l)
+#endif
+
 
 #ifdef __STDC__
 	double __y0(double x)		/* wrapper y0 */
@@ -69,3 +74,7 @@ weak_alias (__j0, j0)
 #endif
 }
 weak_alias (__y0, y0)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__y0, __y0l)
+weak_alias (__y0, y0l)
+#endif

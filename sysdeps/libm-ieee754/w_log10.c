@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -14,7 +14,7 @@
 static char rcsid[] = "$NetBSD: w_log10.c,v 1.6 1995/05/10 20:49:35 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper log10(X)
  */
 
@@ -38,10 +38,14 @@ static char rcsid[] = "$NetBSD: w_log10.c,v 1.6 1995/05/10 20:49:35 jtc Exp $";
 	if(x<=0.0) {
 	    if(x==0.0)
 	        return __kernel_standard(x,x,18); /* log10(0) */
-	    else 
+	    else
 	        return __kernel_standard(x,x,19); /* log10(x<0) */
 	} else
 	    return z;
 #endif
 }
 weak_alias (__log10, log10)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__log10, __log10l)
+weak_alias (__log10, log10)
+#endif

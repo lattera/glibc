@@ -5,7 +5,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -14,7 +14,7 @@
 static char rcsid[] = "$NetBSD: w_exp.c,v 1.6 1995/05/10 20:48:51 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper exp(x)
  */
 
@@ -47,8 +47,12 @@ u_threshold= -7.45133219101941108420e+02;  /* 0xc0874910, 0xD52D3051 */
 	        return __kernel_standard(x,x,6); /* exp overflow */
 	    else if(x<u_threshold)
 	        return __kernel_standard(x,x,7); /* exp underflow */
-	} 
+	}
 	return z;
 #endif
 }
 weak_alias (__exp, exp)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__exp, __expl)
+weak_alias (__exp, expl)
+#endif

@@ -11,5 +11,6 @@ RCSID("$NetBSD: s_cosf.S,v 1.3 1995/05/08 23:55:16 jtc Exp $")
 ENTRY(__cosf)
 	flds	4(%esp)
 	fcos
-	ret	
+	ret
+PSEUDO_END (__cosf)
 weak_alias (__cosf, cosf)

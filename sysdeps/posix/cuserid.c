@@ -16,9 +16,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <pwd.h>
 #include <stdio.h>
 #include <string.h>
-#include <pwd.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 /* Return the username of the caller.
    If S is not NULL, it points to a buffer of at least L_cuserid bytes
