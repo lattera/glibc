@@ -98,6 +98,13 @@ extern struct hurd_sigstate *_hurd_thread_sigstate (thread_t);
 
 /* Get the sigstate of the current thread.
    This uses a per-thread variable to optimize the lookup.  */
+
+extern struct hurd_sigstate *_hurd_self_sigstate (void)
+     /* This declaration tells the compiler that the value is constant.
+	We assume this won't be called twice from the same stack frame
+	by different threads.  */
+     __attribute__ ((__const__));
+
 _EXTERN_INLINE struct hurd_sigstate *
 _hurd_self_sigstate (void)
 {

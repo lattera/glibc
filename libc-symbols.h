@@ -181,11 +181,11 @@ Cambridge, MA 02139, USA.  */
    because it will need to be relocated at run time anyway.  */
 #define _elf_set_element(set, symbol) \
   static const void *__elf_set_##set##_element_##symbol##__ \
-    __attribute__ ((section (#set))) = &(symbol)
+    __attribute__ ((unused, section (#set))) = &(symbol)
 #else
 #define _elf_set_element(set, symbol) \
   static const void *const __elf_set_##set##_element_##symbol##__ \
-    __attribute__ ((section (#set))) = &(symbol)
+    __attribute__ ((unused, section (#set))) = &(symbol)
 #endif
 
 /* Define SET as a symbol set.  This may be required (it is in a.out) to

@@ -1,3 +1,19 @@
+Wed Jun 14 03:45:24 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/stdio.h (__validfp): Use ({...}) rather than a comma
+ 	expression, to avoid gcc's "value computed is not used" warning.
+
+	* libc-symbols.h (_elf_set_element): Give the set-element variable
+ 	an `unused' attribute.
+
+	* hurd/hurd/threadvar.h (__hurd_threadvar_location): Declare with
+ 	__attribute__ ((__const__)).
+	* hurd/hurd/signal.h (_hurd_self_sigstate): Likewise.
+
+	* hurd/hurd/userlink.h (_hurd_userlink_link): Properly set
+ 	LINK->resource.next->resource.prevp when appropriate, not
+ 	LINK->resource.next->thread.prevp!!!
+
 Tue Jun 13 15:45:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* configure.in (libc_cv_asm_set_directive): Make sure that the

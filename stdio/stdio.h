@@ -213,9 +213,9 @@ struct __stdio_file
    See stdio/glue.c for what the confusing bit is about.  */
 #define	__validfp(stream)						      \
   (stream != NULL &&							      \
-   ((stream->__magic == _GLUEMAGIC &&					      \
-     (stream = *(((struct { int __magic; FILE **__p; } *) stream)->__p))),    \
-    (stream->__magic == _IOMAGIC)))
+   ({ if (stream->__magic == _GLUEMAGIC)				      \
+	stream = *((struct { int __magic; FILE **__p; } *) stream)->__p;      \
+      stream->__magic == _IOMAGIC; }))
 
 /* Clear the error and EOF indicators of STREAM.  */
 #define	__clearerr(stream)	((stream)->__error = (stream)->__eof = 0)
