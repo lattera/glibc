@@ -69,7 +69,6 @@ $(objpfx)tst-gettext2.out: tst-gettext2.sh $(objpfx)tst-gettext2
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 endif
 endif
-endif
 
 $(objpfx)msgs.h: po2test.sed ../po/de.po
 	$(make-target-directory)
