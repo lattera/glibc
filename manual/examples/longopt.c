@@ -21,10 +21,10 @@ main (argc, argv)
 	  {"brief",   no_argument,       &verbose_flag, 0},
 	  /* These options don't set a flag.
 	     We distinguish them by their indices.  */
-	  {"add",     required_argument, 0, 'a'},
+	  {"add",     no_argument,       0, 'a'},
 	  {"append",  no_argument,       0, 'b'},
 	  {"delete",  required_argument, 0, 'd'},
-	  {"create",  no_argument,       0, 'c'},
+	  {"create",  required_argument, 0, 'c'},
 	  {"file",    required_argument, 0, 'f'},
 	  {0, 0, 0, 0}
 	};
