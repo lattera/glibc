@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -62,5 +62,5 @@ wctob (c)
       || data.__outbuf != (unsigned char *) (buf + 1))
     return EOF;
 
-  return buf[0];
+  return (unsigned char) buf[0];
 }

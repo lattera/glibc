@@ -1,5 +1,8 @@
 1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/wctob.c: Avoid sign extension when returning character.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 	* wcsmbs/wcsrtombs.c (__wcsrtombs): When computing maximum number
 	of wide characters to convert do it right and don't overestimate
 	by multiplying with MB_CUR_MAX.
