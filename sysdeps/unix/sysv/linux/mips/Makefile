@@ -24,18 +24,22 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/s
 	 echo '#include <sgidefs.h>'; \
 	 rm -f $(@:.d=.h).newt; \
 	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t -MT '$(@:.d=.h) $(@:.h=.d)' \
-	       -x c -I $(common-objdir) $(sysincludes) $< -D_LIBC -dM | \
+	       -x c $(+includes) $(sysincludes) $< -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' \
 	     > $(@:.d=.h).newt; \
 	 if grep SYS_O32_ $(@:.d=.h).newt > /dev/null; then \
-	   echo '#if _MIPS_SIM == _MIPS_SIM_ABI64'; \
-	   sed -n 's/^\(#define SYS_\)N64_/\1/p' < $(@:.d=.h).newt; \
-	   echo '#elif _MIPS_SIM == _MIPS_SIM_NABI32'; \
-	   sed -n 's/^\(#define SYS_\)N32_/\1/p' < $(@:.d=.h).newt; \
+	   echo '#if _MIPS_SIM == _MIPS_SIM_NABI32'; \
+	   sed -n 's/^\(#define SYS_\)N32_/\1/p' < $(@:.d=.h).newt | \
+		LC_ALL=C sort; \
+	   echo '#elif _MIPS_SIM == _MIPS_SIM_ABI64'; \
+	   sed -n 's/^\(#define SYS_\)N64_/\1/p' < $(@:.d=.h).newt | \
+		LC_ALL=C sort; \
 	   echo '#else'; \
-	   sed -n 's/^\(#define SYS_\)O32_/\1/p' < $(@:.d=.h).newt; \
+	   sed -n 's/^\(#define SYS_\)O32_/\1/p' < $(@:.d=.h).newt | \
+		LC_ALL=C sort; \
 	   echo '#endif'; \
-	   sed -n '/^#define SYS_\([ON]32\|N64\)_/p' < $(@:.d=.h).newt; \
+	   sed -n '/^#define SYS_\([ON]32\|N64\)_/p' < $(@:.d=.h).newt | \
+		LC_ALL=C sort +1.8; \
 	 else \
 	   cat $(@:.d=.h).newt; \
 	 fi; \
