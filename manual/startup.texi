@@ -776,6 +776,18 @@ execute cleanup functions registered with @code{atexit} or
 @code{on_exit}.
 @end deftypefun
 
+@comment stdlib.h
+@comment ISO
+@deftypefun void _Exit (int @var{status})
+The @code{_Exit} function is the @w{ISO C} equivalent to @code{_exit}.
+The @w{ISO C} committee members were not sure whether the definitions of
+@code{_exit} and @code{_Exit} were compatible so they have not used the
+POSIX name.
+
+This function was introduced in @w{ISO C9x} and is declared in
+@file{stdlib.h}.
+@end deftypefun
+
 When a process terminates for any reason---either by an explicit
 termination call, or termination as a result of a signal---the
 following things happen:

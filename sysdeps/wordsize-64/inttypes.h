@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -251,6 +251,28 @@
 
 __BEGIN_DECLS
 
+/* We have to define the `uintmax_t' type using `ldiv_t'.  */
+#ifndef _STDLIB_H
+/* Returned by `ldiv'.  */
+typedef struct
+  {
+    long int quot;		/* Quotient.  */
+    long int rem;		/* Remainder.  */
+  } ldiv_t;
+# define __ldiv_t_defined	1
+#endif
+
+/* Returned by `imaxdiv'.  */
+typedef ldiv_t imaxdiv_t;
+
+
+/* Compute absolute value of N.  */
+extern intmax_t imaxabs __P ((intmax_t __n)) __attribute__ ((__const__));
+
+/* Return the `imaxdiv_t' representation of the value of NUMER over DENOM. */
+extern imaxdiv_t imaxdiv __P ((intmax_t __numer, intmax_t __denom))
+     __attribute__ ((__const__));
+
 /* Like `strtol' but convert to `intmax_t'.  */
 extern intmax_t strtoimax __P ((__const char *__restrict __nptr,
 				char **__restrict __endptr, int __base));
@@ -268,6 +290,28 @@ extern uintmax_t wcstoumax __P ((__const wchar_t * __restrict __nptr,
 				 wchar_t ** __restrict __endptr, int __base));
 
 #ifdef __USE_EXTERN_INLINES
+
+/* We ant to use the appropriate functions from <stdlib.h> but cannot
+   assume the header is read already.  */
+__extension__ extern long int labs __P ((long int __x))
+     __attribute__ ((__const__));
+__extension__ extern ldiv_t ldiv __P ((long int __numer, long int __denom))
+     __attribute__ ((__const__));
+
+
+/* Compute absolute value of N.  */
+extern __inline intmax_t
+imaxabs (intmax_t __n) __THROW
+{
+  return labs (__n);
+}
+
+/* Return the `imaxdiv_t' representation of the value of NUMER over DENOM. */
+extern __inline imaxdiv_t
+imaxdiv (intmax_t __numer, intmax_t __denom) __THROW
+{
+  return ldiv (__numer, __denom);
+}
 
 /* Like `strtol' but convert to `intmax_t'.  */
 # ifndef __strtol_internal_defined

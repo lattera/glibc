@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
@@ -47,3 +47,4 @@ _exit (status)
   M68Kvec[ 45 ] = __exit_trap;   /* install exit_trap handler */
   asm volatile( "trap #13" );  /* insures SUPV mode */
 }
+weak_alias (_exit, _Exit)

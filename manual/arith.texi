@@ -826,6 +826,7 @@ whose imaginary part is @var{y}, the absolute value is @w{@code{sqrt
 @pindex math.h
 @pindex stdlib.h
 Prototypes for @code{abs}, @code{labs} and @code{llabs} are in @file{stdlib.h};
+@code{imaxabs} is declared in @file{inttypes.h};
 @code{fabs}, @code{fabsf} and @code{fabsl} are declared in @file{math.h}.
 @code{cabs}, @code{cabsf} and @code{cabsl} are declared in @file{complex.h}.
 
@@ -838,13 +839,16 @@ Prototypes for @code{abs}, @code{labs} and @code{llabs} are in @file{stdlib.h};
 @comment stdlib.h
 @comment ISO
 @deftypefunx {long long int} llabs (long long int @var{number})
+@comment inttypes.h
+@comment ISO
+@deftypefunx intmax_t imaxabs (intmax_t @var{number})
 These functions return the absolute value of @var{number}.
 
 Most computers use a two's complement integer representation, in which
 the absolute value of @code{INT_MIN} (the smallest possible @code{int})
 cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 
-@code{llabs} is new to @w{ISO C 9x}
+@code{llabs} and @code{imaxdiv} are new to @w{ISO C 9x}.
 @end deftypefun
 
 @comment math.h
@@ -1818,6 +1822,34 @@ arguments are of type @code{long long int} and the result is returned as
 a structure of type @code{lldiv_t}.
 
 The @code{lldiv} function was added in @w{ISO C 9x}.
+@end deftypefun
+
+@comment inttypes.h
+@comment ISO
+@deftp {Data Type} imaxdiv_t
+This is a structure type used to hold the result returned by the @code{imaxdiv}
+function.  It has the following members:
+
+@table @code
+@item intmax_t quot
+The quotient from the division.
+
+@item intmax_t rem
+The remainder from the division.
+@end table
+
+(This is identical to @code{div_t} except that the components are of
+type @code{intmax_t} rather than @code{int}.)
+@end deftp
+
+@comment inttypes.h
+@comment ISO
+@deftypefun imaxdiv_t imaxdiv (intmax_t @var{numerator}, intmax_t @var{denominator})
+The @code{imaxdiv} function is like the @code{div} function, but the
+arguments are of type @code{intmax_t} and the result is returned as
+a structure of type @code{imaxdiv_t}.
+
+The @code{imaxdiv} function was added in @w{ISO C 9x}.
 @end deftypefun
 
 

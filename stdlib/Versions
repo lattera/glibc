@@ -83,4 +83,11 @@ libc {
     # s*
     strtoimax; strtoumax; swapcontext;
   }
+  GLIBC_2.1.1 {
+    # _*
+    _Exit;
+
+    # i*
+    imaxabs; imaxdiv;
+  }
 }

@@ -45,19 +45,23 @@ typedef struct
   } div_t;
 
 /* Returned by `ldiv'.  */
+#ifndef __ldiv_t_defined
 typedef struct
   {
     long int quot;		/* Quotient.  */
     long int rem;		/* Remainder.  */
   } ldiv_t;
+# define __ldiv_t_defined	1
+#endif
 
-#ifdef __USE_ISOC9X
+#if defined __USE_ISOC9X && !defined __lldiv_t_defined
 /* Returned by `lldiv'.  */
 __extension__ typedef struct
   {
     long long int quot;		/* Quotient.  */
     long long int rem;		/* Remainder.  */
   } lldiv_t;
+# define __lldiv_t_defined	1
 #endif
 
 
@@ -514,6 +518,12 @@ extern int on_exit __P ((void (*__func) (int __status, __ptr_t __arg),
    in the reverse of the order in which they were registered
    perform stdio cleanup, and terminate program execution with STATUS.  */
 extern void exit __P ((int __status)) __attribute__ ((__noreturn__));
+
+#ifdef __USE_ISOC9X
+/* Terminate the program with STATUS without calling any of the
+   functions registered with `atexit' or `on_exit'.  */
+extern void _Exit __P ((int __status)) __attribute__ ((__noreturn__));
+#endif
 
 
 /* Return the value of envariable NAME, or NULL if it doesn't exist.  */

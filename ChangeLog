@@ -1,3 +1,33 @@
+1999-02-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Versions.def: New version GLIBC_2.1.1 for libc.
+	* stdlib/Versions: Add _Exit, imaxdiv, and imaxdiv to GLIBC_2.1.1.
+	* stdlib/labs.c: Moved to...
+	* sysdeps/generic/labs.c: ...here.
+	* stdlib/llabs.c: Moved to...
+	* sysdeps/generic/llabs.c: ...here.
+	* stdlib/stdlib.h: Allow definition of ldiv_t and lldiv_t in other
+	header.  Declare _Exit.
+	* sysdeps/generic/_exit.c: Add alias _Exit.
+	* sysdeps/mach/hurd/_exit.c: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/_exit.c: Likewise.
+	* sysdeps/standalone/i960/nindy960/_exit.c: Likewise.
+	* sysdeps/standalone/m68k/m68020/mvme136/_exit.c: Likewise.
+	* sysdeps/unix/_exit.c: Likewise.
+	* sysdeps/wordsize-32/inttypes.h: Define imaxdiv_t and declare
+	imaxdiv and imaxabs.  Declare lldiv_t if necessary.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	* sysdeps/wordsize-32/llabs.c: New file.
+	* sysdeps/wordsize-32/lldiv.c: New file.
+	* sysdeps/wordsize-64/labs.c: New file.
+	* sysdeps/wordsize-64/ldiv.c: New file.
+	* manual/arith.texi: Document imaxabs, imaxdiv_t, and imaxdiv.
+	* manual/startup.texi: Document _Exit.
+
+1999-02-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/cache.c: Include <arpa/inet.h> for inet_ntop.
+
 1999-02-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions.def: Add versions for ld.so.

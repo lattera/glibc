@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  1999-02-02
+GNU C Library NEWS -- history of user-visible changes.  1999-02-07
 
 Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -6,6 +6,10 @@ See the end for copying conditions.
 Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.org>.  Questions and suggestions should be send to
 <bug-glibc@gnu.org>.
+
+Version 2.1.1
+
+* New ISO C 9x function _exit, imaxabs, and imaxdiv are added.
 
 Version 2.1
 

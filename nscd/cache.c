@@ -1,4 +1,4 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,6 +23,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <arpa/inet.h>
 #include <rpcsvc/nis.h>
 #include <sys/param.h>
 #include <sys/stat.h>
