@@ -1,5 +1,5 @@
 /* Return basename of given pathname according to the weird XPG specification.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -62,6 +62,9 @@ __xpg_basename (char *filename)
 		while (p[1] != '\0')
 		  ++p;
 	    }
+	  else
+	    /* Go to the first character of the name.  */
+	    ++p;
 	}
     }
 

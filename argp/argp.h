@@ -445,9 +445,9 @@ extern error_t argp_err_exit_status;
 extern void argp_help (__const struct argp *__restrict __argp,
 		       FILE *__restrict __stream,
 		       unsigned __flags, char *__restrict __name) __THROW;
-extern void __argp_help __P (__const struct argp *__restrict __argp,
-			     FILE *__restrict __stream, unsigned __flags,
-			     char *__name) __THROW;
+extern void __argp_help (__const struct argp *__restrict __argp,
+			 FILE *__restrict __stream, unsigned __flags,
+			 char *__name) __THROW;
 
 /* The following routines are intended to be called from within an argp
    parsing routine (thus taking an argp_state structure as the first

@@ -1,5 +1,10 @@
 1999-10-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/xpg_basename.c (__xpg_basename): Don't return pointer to
+	slash before the basename [PR libc/1383].
+
+	* argp/argp.h: Fix typo in last patch.
+
 	* sysdeps/powerpc/sysdep.h: New file.
 	* sysdeps/unix/powerpc/sysdep.h: New file.
 	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Include
