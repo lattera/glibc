@@ -154,11 +154,11 @@ struct here_fromstruct
     uint16_t link;
   };
 
-static uint16_t *tos;
+static volatile uint16_t *tos;
 
 static struct here_fromstruct *froms;
-static size_t fromlimit;
-static size_t fromidx;
+static uint32_t fromlimit;
+static volatile uint32_t fromidx;
 
 static uintptr_t lowpc;
 static size_t textsize;
@@ -431,12 +431,15 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 void
 _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 {
-  uint16_t *topcindex;
+  volatile uint16_t *topcindex;
   size_t i, fromindex;
   struct here_fromstruct *fromp;
 
+#if 0
+  /* XXX I think this is now not necessary anymore.  */
   if (! compare_and_swap (&state, GMON_PROF_ON, GMON_PROF_BUSY))
     return;
+#endif
 
   /* Compute relative addresses.  The shared object can be loaded at
      any address.  The value of frompc could be anything.  We cannot
@@ -491,31 +494,32 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	      size_t newfromidx;
 	      to_index = (data[narcs].self_pc
 			  / (hashfraction * sizeof (*tos)));
-	      newfromidx = fromidx++;
+	      newfromidx = exchange_and_add (&fromidx, 1) + 1;
 	      froms[newfromidx].here = &data[narcs];
 	      froms[newfromidx].link = tos[to_index];
 	      tos[to_index] = newfromidx;
-	      ++narcs;
+	      atomic_add (&narcs, 1);
 	    }
 
 	  /* If we still have no entry stop searching and insert.  */
 	  if (*topcindex == 0)
 	    {
-	      size_t newarc = 1 + exchange_and_add (narcsp, 1);
+	      uint_fast32_t newarc = 1 + exchange_and_add (narcsp, 1);
 
 	      /* In rare cases it could happen that all entries in FROMS are
 		 occupied.  So we cannot count this anymore.  */
 	      if (newarc >= fromlimit)
 		goto done;
 
-	      fromp = &froms[*topcindex = fromidx++];
+	      *topcindex = exchange_and_add (&fromidx, 1) + 1;
+	      fromp = &froms[*topcindex];
 
 	      fromp->here = &data[newarc];
 	      data[newarc].from_pc = frompc;
 	      data[newarc].self_pc = selfpc;
 	      data[newarc].count = 0;
 	      fromp->link = 0;
-	      ++narcs;
+	      atomic_add (&narcs, 1);
 
 	      break;
 	    }
@@ -531,5 +535,8 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
   atomic_add (&fromp->here->count, 1);
 
  done:
+#if 0
+  /* XXX See above,  Shouldn't be necessary anymore.  */
   state = GMON_PROF_ON;
+#endif
 }

@@ -1,3 +1,8 @@
+2000-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/pt-machine.h: Do not use "../useldt.h" for
+	now.  First gcc must be fixed (more concrete: libgcc).
+
 2000-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c: Remove special treatement for interrupt handlers on x86.

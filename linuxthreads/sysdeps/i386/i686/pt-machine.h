@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    i686 version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -64,4 +64,4 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 
 
 /* Use the LDT implementation only if the kernel is fixed.  */
-#include "../useldt.h"
+//#include "../useldt.h"

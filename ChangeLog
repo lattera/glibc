@@ -1,3 +1,8 @@
+2000-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-profile.c (_dl_mcount): Try to be thread-safe while not
+	setting the state to GMON_PROF_BUSY.
+
 2000-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-profile.c (_dl_start_profile): define all variables which
