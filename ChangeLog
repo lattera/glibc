@@ -686,6 +686,7 @@
 	* shadow/sgetspent_r.c (FALSE): Macro renamed to ...
 	(FALSEP): ... this.  Updated all references.
 
+	[BZ #765]
 	* libio/fmemopen.c: Include <stdint.h>.
 
 2005-01-30  Ulrich Drepper  <drepper@redhat.com>
