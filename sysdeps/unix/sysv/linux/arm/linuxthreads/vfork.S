@@ -32,9 +32,9 @@ rocess,
 
 ENTRY (__vfork)
 
-#ifdef __NR_vfork
 	SINGLE_THREAD_P
 	bne	HIDDEN_JUMPTARGET (__fork)
+#ifdef __NR_vfork
 	swi	__NR_vfork
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
