@@ -530,7 +530,16 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       if (map == &_dl_rtld_map)
 	return;
 #endif
-      /* Otherwise, nothing more to do here. */
+      /* .eh_frame can have unaligned relocs.  */
+      if (reloc_addr & 3)
+	{
+	  char *rel_addr = (char *) reloc_addr;
+	  rel_addr[0] = value >> 24;
+	  rel_addr[1] = value >> 16;
+	  rel_addr[2] = value >> 8;
+	  rel_addr[3] = value;
+	  return;
+	}
       break;
 
     case R_PARISC_PLABEL32:
