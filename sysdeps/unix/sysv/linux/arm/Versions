@@ -4,4 +4,8 @@ libc {
     inb; inw; inl;
     outb; outw; outl;
   }
+  GLIBC_2.1.2 {
+    _inb; _inw; _inl;
+    _outb; _outw; _outl;
+  }
 }
