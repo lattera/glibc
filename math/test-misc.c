@@ -42,8 +42,10 @@ main (void)
 
 # if __GNUC__ >= 3 || __GNUC_MINOR__ >= 96
   {
-    long double x = LDBL_MAX / ldexpl (1.0L, LDBL_MANT_DIG + 1);
+    long double x;
     long double m;
+    long double r;
+    int e;
     int i;
 
 #  if LDBL_MANT_DIG == 64
@@ -52,12 +54,9 @@ main (void)
 #   error "Please adjust"
 #  endif
 
-    for (i = 0; i < LDBL_MANT_DIG + 1; ++i, x *= 2.0L)
+    for (i = LDBL_MAX_EXP, x = LDBL_MAX; i >= LDBL_MIN_EXP; --i, x /= 2.0L)
       {
-	long double r;
-	int e;
-
-	printf ("2^%d: ", LDBL_MAX_EXP - (LDBL_MANT_DIG + 1) + i);
+	printf ("2^%d: ", i);
 
 	r = frexpl (x, &e);
 	if (r != m)
@@ -66,7 +65,7 @@ main (void)
 	    result = 1;
 	    continue;
 	  }
-	if (e != LDBL_MAX_EXP - (LDBL_MANT_DIG + 1) + i)
+	if (e != i)
 	  {
 	    printf ("exponent wrong %d (%.20Lg)\n", e, x);
 	    result = 1;
@@ -90,6 +89,60 @@ main (void)
 	result = 1;
       }
   }
+
+  if (fpclassify (FLT_MIN) != FP_NORMAL)
+    {
+      printf ("fpclassify (FLT_MIN) failed: %d\n", fpclassify (FLT_MIN));
+      result = 1;
+    }
+  if (fpclassify (nextafterf (FLT_MIN, FLT_MIN / 2.0f)) != FP_SUBNORMAL)
+    {
+      printf ("fpclassify (FLT_MIN-epsilon) failed: %d\n",
+	      fpclassify (nextafterf (FLT_MIN, FLT_MIN / 2.0f)));
+      result = 1;
+    }
+  if (fpclassify (DBL_MIN) != FP_NORMAL)
+    {
+      printf ("fpclassify (DBL_MIN) failed: %d\n", fpclassify (DBL_MIN));
+      result = 1;
+    }
+  if (fpclassify (nextafter (DBL_MIN, DBL_MIN / 2.0)) != FP_SUBNORMAL)
+    {
+      printf ("fpclassify (DBL_MIN-epsilon) failed: %d\n",
+	      fpclassify (nextafter (DBL_MIN, DBL_MIN / 2.0)));
+      result = 1;
+    }
+#ifndef NO_LONG_DOUBLE
+  if (fpclassify (LDBL_MIN) != FP_NORMAL)
+    {
+      printf ("fpclassify (LDBL_MIN) failed: %d\n", fpclassify (LDBL_MIN));
+      result = 1;
+    }
+  if (fpclassify (nextafterl (LDBL_MIN, LDBL_MIN / 2.0)) != FP_SUBNORMAL)
+    {
+      printf ("fpclassify (LDBL_MIN-epsilon) failed: %d\n",
+	      fpclassify (nextafterl (LDBL_MIN, LDBL_MIN / 2.0)));
+      result = 1;
+    }
+#endif
+
+  if (! isnormal (FLT_MIN))
+    {
+      puts ("isnormal (FLT_MIN) failed");
+      result = 1;
+    }
+  if (! isnormal (DBL_MIN))
+    {
+      puts ("isnormal (DBL_MIN) failed");
+      result = 1;
+    }
+#ifndef NO_LONG_DOUBLE
+  if (! isnormal (LDBL_MIN))
+    {
+      puts ("isnormal (LDBL_MIN) failed");
+      result = 1;
+    }
+#endif
 
   return result;
 }

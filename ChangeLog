@@ -1,5 +1,8 @@
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/test-misc.c (main): More tests for frexp and some for
+	fpclassify and isnormal.
+
 	* sysdeps/ieee754/flt-32/s_fpclassifyf.c (__fpclassifyf): Correct
 	test for subnormal.
 	Reported by Fred J. Tydeman <tydeman@tybor.com>.
