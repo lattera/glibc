@@ -156,6 +156,12 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 # define La_regs La_s390_64_regs
 # define La_retval La_s390_64_retval
 # define int_retval lrv_r2
+#elif defined __ia64__
+# define pltenter la_ia64_gnu_pltenter
+# define pltexit la_ia64_gnu_pltexit
+# define La_regs La_ia64_regs
+# define La_retval La_ia64_retval
+# define int_retval lrv_r8
 #else
 # error "architecture specific code needed"
 #endif

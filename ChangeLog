@@ -1,3 +1,19 @@
+2005-01-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/tst-auditmod1.c: Add ia64 entries.
+	* sysdeps/generic/ldsodefs.h (La_ia64_regs): New.
+	(La_ia64_retval): New.
+	(audit_ifaces): Add ia64 entries.
+	* sysdeps/ia64/bits/link.h: New file.
+	* sysdeps/ia64/dl-machine.h (elf_machine_runtime_setup): Test
+	for dl_profile non-null.
+	(ARCH_LA_PLTENTER): New.
+	(ARCH_LA_PLTEXIT): New.
+	* sysdeps/ia64/dl-trampoline.S (_dl_runtime_resolve): Allocate
+	only 2 output registers. Allocate stack to save/restore
+	8 incoming fp registers. Call _dl_fixup instead of fixup.
+	(_dl_runtime_profile): Rewrite.
+
 2005-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/bits/link.h: New file.
