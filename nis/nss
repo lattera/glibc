@@ -1,0 +1,12 @@
+# /etc/default/nss
+# This file can theoretically contain a bunch of customization variables
+# for Name Service Switch in the GNU C library.  For now there is only one
+# variable:
+#
+# NETID_AUTHORITATIVE
+#   If set to TRUE the initgroups() function will accept the information
+#   from the netid.byname NIS map as authoritative.  This can speed up the
+#   function significantly if the group.byname map is large.  The content
+#   of the netid.byname map is used AS IS.  The system administrator has
+#   to make sure it is correctly generated.
+#NETID_AUTHORITATIVE=TRUE

@@ -162,6 +162,10 @@ check_default_nss (void)
 	  while (isspace (*cp))
 	    ++cp;
 
+	  /* Recognize comment lines.  */
+	  if (*cp == '#')
+	    continue;
+
 	  static const char netid_authoritative[] = "NETID_AUTHORITATIVE";
 	  if (strncmp (cp, netid_authoritative,
 		       sizeof (netid_authoritative) - 1) != 0)

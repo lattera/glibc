@@ -2,6 +2,8 @@
 
 	* nis/nss_nis/nis-initgroups.c: Implement getting the information
 	from the netid.byname map if the system administrator allows this.
+	* nis/Makefile (distribute): Add nss.
+	* nis/nss: New file.
 
 	* grp/initgroups.c (initgroups): Limit the initial allocation to 64
 	entries to not allocate too much on systems with really high limits.

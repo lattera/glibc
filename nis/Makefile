@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 2001, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ subdir	:= nis
 
 headers			:= $(wildcard rpcsvc/*.[hx])
 distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner \
-			nisplus-parser.h nis_xdr.h
+			   nisplus-parser.h nis_xdr.h nss
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
