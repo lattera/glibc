@@ -1,3 +1,13 @@
+1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/skeleton.c: It's __is_last, not is_last.
+
+	* locale/programs/ld-ctype.c (ctype_finish): Correct method to find
+	the UCS value.
+	(allocate_arrays): Likewise.
+	(find_idx): Correctly increase array size.
+	Patches by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 1999-11-23  Thorsten Kukuk  <kukuk@suse.de>
 
 	* iconv/skeleton.c: Don't access next_step->fct if data->is_last
