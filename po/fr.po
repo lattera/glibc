@@ -924,7 +924,7 @@ msgid ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 "Copyright © %s Free Software Foundation, Inc.\n"
-"Ce logiciel est gratuit; voir les sources pour les conditions de\n"
+"Ce logiciel est libre; voir les sources pour les conditions de\n"
 "reproduction. AUCUNE garantie n'est donnée; tant pour des raisons\n"
 "COMMERÇIALES que pour RÉPONDRE À UN BESOIN PARTICULIER.\n"
 

@@ -1,5 +1,8 @@
 2001-05-18  Andreas Jaeger  <aj@suse.de>
 
+	* po/fr.po: Free software is "logiciel libre".
+	Patch by Martin Michlmayr <tbm@cyrius.com>.
+
 	* sysdeps/powerpc/elf/libc-start.c: Use __cxa_atexit.
 	Patch by ekato@ees.hokudai.ac.jp, closes PR libc/2271.
 
