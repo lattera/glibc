@@ -53,7 +53,7 @@ _dl_init_next (void)
 	    if (d->d_tag == DT_NEEDED)
 	      {
 		struct link_map *needed
-		  = _dl_map_object (l, strtab + d->d_un.d_val, NULL);
+		  = _dl_map_object (l, strtab + d->d_un.d_val);
 		Elf32_Addr init;
 		--needed->l_opencount;
 		init = next_init (needed); /* Recurse on this dependency.  */

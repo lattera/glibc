@@ -104,8 +104,7 @@ open_path (const char *name, size_t namelen,
 /* Map in the shared object file NAME.  */
 
 struct link_map *
-_dl_map_object (struct link_map *loader, const char *name,
-		Elf32_Addr *entry_point)
+_dl_map_object (struct link_map *loader, const char *name)
 {
   int fd;
   char *realname;
@@ -152,7 +151,7 @@ _dl_map_object (struct link_map *loader, const char *name,
   if (fd == -1)
     _dl_signal_error (errno, name, "cannot open shared object file");
 
-  return _dl_map_object_from_fd (name, fd, realname, entry_point);
+  return _dl_map_object_from_fd (name, fd, realname);
 }
 
 
@@ -160,8 +159,7 @@ _dl_map_object (struct link_map *loader, const char *name,
    opened on FD.  */
 
 struct link_map *
-_dl_map_object_from_fd (const char *name, int fd, char *realname, 
-			Elf32_Addr *entry_point)
+_dl_map_object_from_fd (const char *name, int fd, char *realname)
 {
   struct link_map *l = NULL;
   const size_t pagesize = getpagesize ();
@@ -249,16 +247,15 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
        the headers.  */
     Elf32_Phdr phdr[header->e_phnum];
     const Elf32_Phdr *ph;
-    int anywhere;
+    int anywhere, type;
+
+    type = header->e_type;
+    anywhere = type == ET_DYN || type == ET_REL;
+    l->l_entry = header->e_entry;
 
     ph = map (header->e_phoff, header->e_phnum * sizeof (Elf32_Phdr));
     memcpy (phdr, ph, sizeof phdr);
     l->l_phnum = header->e_phnum;
-
-    anywhere = header->e_type == ET_DYN || header->e_type == ET_REL;
-
-    if (entry_point)
-      *entry_point = header->e_entry;
 
     /* We are done reading the file's headers now.  Unmap them.  */
     munmap (file_mapping, mapping_size);
@@ -375,12 +372,18 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	}
 
     if (l->l_ld == 0)
-      LOSE ("object file has no dynamic section");
-    (Elf32_Addr) l->l_ld += l->l_addr;
+      {
+	if (type == ET_DYN)
+	  LOSE ("object file has no dynamic section");
+      }
+    else
+      (Elf32_Addr) l->l_ld += l->l_addr;
 
     if (l->l_phdr == 0)
       l->l_phdr = (void *) ((const Elf32_Ehdr *) l->l_addr)->e_phoff;
     (Elf32_Addr) l->l_phdr += l->l_addr;
+
+    l->l_entry += l->l_addr;
   }
 
   elf_get_dynamic_info (l->l_ld, l->l_info);

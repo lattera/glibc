@@ -151,11 +151,12 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  interpreter_name = _dl_argv[0];
 	  --_dl_argc;
 	  ++_dl_argv;
-	  l = _dl_map_object (NULL, _dl_argv[0], user_entry);
+	  l = _dl_map_object (NULL, _dl_argv[0]);
 	  phdr = l->l_phdr;
 	  phent = l->l_phnum;
 	  l->l_type = lt_executable;
 	  l->l_libname = (char *) "";
+	  *user_entry = l->l_entry;
 	}
       else
 	{
@@ -165,6 +166,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  l->l_phdr = phdr;
 	  l->l_phnum = phent;
 	  interpreter_name = 0;
+	  l->l_entry = *user_entry;
 	}
 
       if (l != _dl_loaded)
@@ -228,7 +230,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      const Elf32_Dyn *d;
 	      for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
 		if (d->d_tag == DT_NEEDED)
-		  _dl_map_object (l, strtab + d->d_un.d_val, NULL);
+		  _dl_map_object (l, strtab + d->d_un.d_val);
 	    }
 	  l->l_deps_loaded = 1;
 	}

@@ -85,6 +85,7 @@ struct link_map
     Elf32_Dyn *l_info[DT_NUM];	/* Indexed pointers to dynamic section.  */
     const Elf32_Phdr *l_phdr;	/* Pointer to program header table in core.  */
     Elf32_Word l_phnum;		/* Number of program header entries.  */
+    Elf32_Addr l_entry;		/* Entry point location.  */
 
     /* Symbol hash table.  */
     Elf32_Word l_nbuckets;
@@ -158,17 +159,14 @@ extern int _dlerror_run (void (*operate) (void));
 
 /* Open the shared object NAME and map in its segments.
    LOADER's DT_RPATH is used in searching for NAME.
-   If ENTRY_POINT is not null, fill it in with the object's entry point.
    If the object is already opened, returns its existing map.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
-					const char *name,
-					Elf32_Addr *entry_point);
+					const char *name);
 
 /* Similar, but file found at REALNAME and opened on FD.
    REALNAME must malloc'd storage and is used in internal data structures.  */
 extern struct link_map *_dl_map_object_from_fd (const char *name,
-						int fd, char *realname,
-						Elf32_Addr *entry_point);
+						int fd, char *realname);
 
 /* Cache the locations of MAP's hash table.  */
 extern void _dl_setup_hash (struct link_map *map);

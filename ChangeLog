@@ -1,5 +1,21 @@
 Sat Sep 30 11:47:05 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): If started by
+	kernel with args on stack, point _dl_hurd_data at zero data
+	instead of garbage.  When ld.so run as program, grok args
+	-LIB=MEMOBJ and pre-load shared object files found in memory
+	objects loaded by the boot loader.
+
+	* elf/link.h (struct link_map): New member `l_entry'.
+	(_dl_map_object, _dl_map_object_from_fd): Remove last arg ENTRY_POINT.
+	* elf/dl-load.c (_dl_map_object, _dl_map_object_from_fd): Remove
+	last arg ENTRY_POINT.  Store the entry point location in the
+	`l_entry' member of the new map.
+	* elf/rtld.c (dl_main): Don't pass USER_ENTRY arg to
+	_dl_map_object.  When run as program, set *USER_ENTRY to L->l_entry.
+	* elf/dl-init.c (_dl_init_next): Don't pass ENTRY_POINT arg to
+	_dl_map_object.
+
 	* posix/tstgetopt.c, posix/tstgetopt.args: Test long options too.
 
 	* sysdeps/unix/sysv/linux/i386/init-first.c (init): Save, set, and
