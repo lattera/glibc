@@ -1,3 +1,18 @@
+2002-12-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/open.c: Removed.
+	* sysdeps/unix/sysv/linux/fsync.c: Removed.
+	* sysdeps/unix/sysv/linux/lseek.c: Removed.
+	* sysdeps/unix/sysv/linux/msync.c: Removed.
+	* sysdeps/unix/sysv/linux/read.c: Removed.
+	* sysdeps/unix/sysv/linux/close.c: Removed.
+	* sysdeps/unix/sysv/linux/creat.c: Removed.
+	* sysdeps/unix/sysv/linux/nanosleep.c: Removed.
+	* sysdeps/unix/sysv/linux/pause.c: Removed.
+	* sysdeps/unix/sysv/linux/select.c: Removed.
+	* sysdeps/unix/sysv/linux/write.c: Removed.
+
 2002-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/pt-socket.S: Check multiple_threads

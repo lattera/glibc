@@ -1,5 +1,38 @@
 2002-12-14  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/generic/sysdep-cancel.h: New file.
+	* sysdeps/unix/make-syscalls.sh: Handle C at start of args as
+	cancelable syscall.
+	* sysdeps/unix/inet/syscalls.list (accept, connect, recv, recvfrom,
+	recvmsg, send, sendmsg, sendto): Make cancelable.
+	* sysdeps/unix/mman/syscalls.list (msync): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (llseek, pread,
+	pwrite, accept, connect, recv, recvfrom, recvmsg, send, sendmsg,
+	sendto, osf_select): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (accept, connect, recv,
+	recvfrom, recvmsg, send, sendmsg, sendto): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (llseek, pread,
+	pwrite, accept, connect, recv, recvfrom, recvmsg, send, sendmsg,
+	sendto): Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (accept, connect, recv,
+	recvfrom, recvmsg, send, sendmsg, sendto): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (llseek, pread,
+	pwrite, accept, connect, recv, recvfrom, recvmsg, send, sendmsg,
+	sendto): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (llseek, pread,
+	pwrite, accept, connect, recv, recvfrom, recvmsg, send, sendmsg,
+	sendto, select): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (llseek, pread,
+	pwrite, accept, connect, recvfrom, recvmsg, sendmsg, sendto):
+	Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list (creat, nanosleep, pause,
+	select, fcntl): Likewise.
+	* sysdeps/unix/sysv/syscalls.list (pause, poll): Likewise.
+	* sysdeps/unix/syscalls.list (close, fcntl, fsync, lseek, open,
+	read, readv, select, sigsuspend, write, writev): Likewise.
+
+2002-12-14  Jakub Jelinek  <jakub@redhat.com>
+
 	* dirent/bug-readdir1.c: Include unistd.h.
 
 2002-12-13  Jakub Jelinek  <jakub@redhat.com>

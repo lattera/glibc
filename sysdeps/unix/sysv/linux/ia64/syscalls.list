@@ -3,10 +3,10 @@
 umount2		-	umount		2	__umount2	umount2
 
 # Whee! 64-bit systems naturally implement llseek.
-llseek		EXTRA	lseek		3	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
+llseek		EXTRA	lseek		C:3	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
 lseek		llseek	-
-pread		-	pread		4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite		4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
+pread		-	pread		C:4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
+pwrite		-	pwrite		C:4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
@@ -33,19 +33,19 @@ semget		-	semget		i:iii	__semget	semget
 semctl		-	semctl		i:iiii	__semctl	semctl
 
 # proper socket implementations:
-accept		-	accept		i:iBN	__libc_accept	__accept accept
+accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		i:ipi	__libc_connect	__connect_internal __connect connect
+connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
-recv		-	recv		i:ibni	__libc_recv	__recv recv
-recvfrom	-	recvfrom	i:ibniBN	__libc_recvfrom	__recvfrom recvfrom
-recvmsg		-	recvmsg		i:ipi	__libc_recvmsg	__recvmsg recvmsg
-send		-	send		i:ibni	__libc_send	__send send
-sendmsg		-	sendmsg		i:ipi	__libc_sendmsg	__sendmsg sendmsg
-sendto		-	sendto		i:ibnibn	__libc_sendto	__sendto sendto
+recv		-	recv		Ci:ibni	__libc_recv	__recv recv
+recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
+recvmsg		-	recvmsg		Ci:ipi	__libc_recvmsg	__recvmsg recvmsg
+send		-	send		Ci:ibni	__libc_send	__send send
+sendmsg		-	sendmsg		Ci:ipi	__libc_sendmsg	__sendmsg sendmsg
+sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket

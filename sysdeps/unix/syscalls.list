@@ -6,13 +6,13 @@ chdir		-	chdir		i:s	__chdir		chdir
 chmod		-	chmod		i:si	__chmod		chmod
 chown		-	chown		i:sii	__chown		__chown_internal chown
 chroot		-	chroot		i:s	chroot
-close		-	close		i:i	__libc_close	__close close
+close		-	close		Ci:i	__libc_close	__close close
 dup		-	dup		i:i	__dup		dup
 dup2		-	dup2		i:ii	__dup2		dup2
 fchdir		-	fchdir		i:i	__fchdir	fchdir
-fcntl		-	fcntl		i:iiF	__libc_fcntl	__fcntl __fcntl_internal fcntl
+fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl __fcntl_internal fcntl
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
-fsync		-	fsync		i:i	__libc_fsync	fsync
+fsync		-	fsync		Ci:i	__libc_fsync	fsync
 getdomain	-	getdomainname	i:si	getdomainname
 getgid		-	getgid		i:	__getgid	getgid
 getgroups	-	getgroups	i:ip	__getgroups	getgroups
@@ -24,18 +24,18 @@ getuid		-	getuid		i:	__getuid	getuid
 ioctl		-	ioctl		i:iiI	__ioctl		ioctl
 kill		-	kill		i:ii	__kill		kill
 link		-	link		i:ss	__link		link
-lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek
+lseek		-	lseek		Ci:iii	__libc_lseek	__lseek lseek
 mkdir		-	mkdir		i:si	__mkdir		mkdir
-open		-	open		i:siv	__libc_open __open open
+open		-	open		Ci:siv	__libc_open __open open
 profil		-	profil		i:piii	__profil	profil
 ptrace		-	ptrace		i:iiii	ptrace
-read		-	read		i:ibn	__libc_read	__read read
+read		-	read		Ci:ibn	__libc_read	__read read
 readlink	-	readlink	i:spi	__readlink	readlink
-readv		-	readv		i:ipi	__readv		readv
+readv		-	readv		Ci:ipi	__readv		readv
 reboot		-	reboot		i:i	reboot
 rename		-	rename		i:ss	rename
 rmdir		-	rmdir		i:s	__rmdir		rmdir
-select		-	select		i:iPPPP	__select	__libc_select select
+select		-	select		Ci:iPPPP	__select	__libc_select select
 setdomain	-	setdomainname	i:si	setdomainname
 setegid		-	setegid		i:i	__setegid	setegid
 seteuid		-	seteuid		i:i	__seteuid	seteuid
@@ -47,7 +47,7 @@ setrlimit	-	setrlimit	i:ip	__setrlimit setrlimit
 setsid		-	setsid		i:	__setsid	setsid
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 setuid		-	setuid		i:i	__setuid	setuid
-sigsuspend	-	sigsuspend	i:p	sigsuspend
+sigsuspend	-	sigsuspend	Ci:p	sigsuspend
 sstk		-	sstk		b:i	sstk
 statfs		-	statfs		i:sp	__statfs	statfs
 swapoff		-	swapoff		i:s	swapoff
@@ -61,5 +61,5 @@ umask		-	umask		i:i	__umask		umask
 uname		-	uname		i:p	__uname		uname
 unlink		-	unlink		i:s	__unlink	unlink
 utimes		-	utimes		i:sp	__utimes	utimes
-write		-	write		i:ibn	__libc_write	__write write
-writev		-	writev		i:ipi	__writev	writev
+write		-	write		Ci:ibn	__libc_write	__write write
+writev		-	writev		Ci:ipi	__writev	writev

@@ -7,5 +7,5 @@
 madvise		-	madvise		i:pii	madvise
 mmap		-	mmap		b:aniiii __mmap		mmap
 mprotect	-	mprotect	i:aii	__mprotect	mprotect
-msync		-	msync		i:aii	__libc_msync	msync
+msync		-	msync		Ci:aii	__libc_msync	msync
 munmap		-	munmap		i:ai	__munmap	munmap

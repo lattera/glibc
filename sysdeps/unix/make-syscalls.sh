@@ -83,6 +83,11 @@ while read file srcfile caller syscall args strong weak; do
   ;;
   esac
 
+  cancellable=
+  case $args in
+  C*) cancellable=-cancel; args=`echo $args | sed 's/C:\?//'`;;
+  esac
+
   # Derive the number of arguments from the argument signature
   case $args in
   [0-9]) nargs=$args;;
@@ -142,7 +147,7 @@ shared-only-routines += $file
   x*)
   echo "\
 	\$(make-target-directory)
-	(echo '#include <sysdep.h>'; \\
+	(echo '#include <sysdep$cancellable.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\
 	 echo 'PSEUDO_END($strong)'; \\

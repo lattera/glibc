@@ -4,7 +4,7 @@ adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime __adjtimex_interna
 bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		i:pp	capget
 capset		EXTRA	capset		i:pp	capset
-creat		-	creat		i:si	__libc_creat creat
+creat		-	creat		Ci:si	__libc_creat creat
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
 fdatasync	-	fdatasync	i:i	fdatasync
@@ -33,9 +33,9 @@ mount		EXTRA	mount		i:sssip	__mount	mount
 mremap		EXTRA	mremap		b:aini	__mremap	mremap
 munlock		-	munlock		i:ai	munlock
 munlockall	-	munlockall	i:	munlockall
-nanosleep	-	nanosleep	i:pp	__libc_nanosleep	__nanosleep nanosleep
+nanosleep	-	nanosleep	Ci:pp	__libc_nanosleep	__nanosleep nanosleep
 nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
-pause		-	pause		i:	__libc_pause	pause
+pause		-	pause		Ci:	__libc_pause	pause
 personality	init-first personality	i:i	__personality	personality
 pipe		-	pipe		i:f	__pipe		pipe
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
@@ -52,7 +52,7 @@ sched_setaffinity -	sched_setaffinity	i:iip	sched_setaffinity
 sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
 sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
-select		-	_newselect	i:iPPPP	__select	__libc_select select
+select		-	_newselect	Ci:iPPPP	__select	__libc_select select
 sendfile	-	sendfile	i:iipi	sendfile
 sendfile64	-	sendfile64	i:iipi	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
@@ -68,7 +68,7 @@ uselib		EXTRA	uselib		i:s	uselib
 wait4		-	wait4		i:iWiP	__wait4		wait4
 
 chown		-	chown		i:sii	__libc_chown	__chown chown
-fcntl		-	fcntl		i:iiF	__libc_fcntl	__fcntl fcntl
+fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl fcntl
 
 setxattr	EXTRA	setxattr	i:sspii	setxattr
 lsetxattr	EXTRA	lsetxattr	i:sspii	lsetxattr

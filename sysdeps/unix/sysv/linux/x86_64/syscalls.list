@@ -3,9 +3,9 @@
 arch_prctl	EXTRA	arch_prctl	i:ii	__arch_prctl	arch_prctl
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 modify_ldt	EXTRA	modify_ldt	i:ipi	__modify_ldt	modify_ldt
-llseek		EXTRA	lseek		i:iii	__libc_lseek64	__llseek llseek __lseek64 lseek64
-pread		-	pread		i:ibni	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite		i:ibni	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
+llseek		EXTRA	lseek		Ci:iii	__libc_lseek64	__llseek llseek __lseek64 lseek64
+pread		-	pread		Ci:ibni	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
+pwrite		-	pwrite		Ci:ibni	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs __fstatfs64 fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit getrlimit64
@@ -30,17 +30,17 @@ semctl		-	semctl		i:iiii	__semctl	semctl
 
 
 # proper socket implementations:
-accept		-	accept		i:iBN	__libc_accept	__accept accept
+accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		i:ipi	__libc_connect	__connect_internal __connect connect
+connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
-recvfrom	-	recvfrom	i:ibniBN	__libc_recvfrom	__recvfrom recvfrom
-recvmsg		-	recvmsg		i:ipi	__libc_recvmsg	__recvmsg recvmsg
-sendmsg		-	sendmsg		i:ipi	__libc_sendmsg	__sendmsg sendmsg
-sendto		-	sendto		i:ibnibn	__libc_sendto	__sendto sendto
+recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
+recvmsg		-	recvmsg		Ci:ipi	__libc_recvmsg	__recvmsg recvmsg
+sendmsg		-	sendmsg		Ci:ipi	__libc_sendmsg	__sendmsg sendmsg
+sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket

@@ -3,8 +3,8 @@
 alarm		-	alarm		i:i	alarm
 ftime		-	ftime		i:p	ftime
 nice		-	nice		i:i	nice
-pause		-	pause		i:	pause
-poll		-	poll		i:pii	poll
+pause		-	pause		Ci:	pause
+poll		-	poll		Ci:pii	poll
 s_getdents	getdents getdents	i:ipi	__getdents
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
