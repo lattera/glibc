@@ -27,10 +27,13 @@
 #define POLLPRI		02              /* There is urgent data to read.  */
 #define POLLOUT		04              /* Writing now will not block.  */
 
-/* Some aliases.  */
-#define POLLWRNORM	POLLOUT
-#define POLLRDNORM	POLLIN
-#define POLLRDBAND	POLLPRI
+#ifdef __USE_XOPEN
+/* These values are defined in XPG4.2.  */
+# define POLLRDNORM	POLLIN		/* Normal data may be read.  */
+# define POLLRDBAND	POLLPRI		/* Priority data may be read.  */
+# define POLLWRNORM	POLLOUT		/* Writing now will not block.  */
+# define POLLWRBAND	POLLOUT		/* Priority data may be written.  */
+#endif
 
 /* Event types always implicitly polled for.  These bits need not be set in
    `events', but they will appear in `revents' to indicate the status of

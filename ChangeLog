@@ -1,3 +1,15 @@
+2001-08-22  Roland McGrath  <roland@frob.com>
+
+	* conform/conformtest.pl (checknamespace): Sort the output list.
+
+	* sysdeps/generic/bits/poll.h (POLLWRBAND): New alias for POLLOUT.
+	(POLLRDNORM, POLLRDBAND, POLLWRNORM, POLLWRBAND): Make these
+	definitions conditional on [__USE_XOPEN].
+
+	* sysdeps/mach/hurd/bits/fcntl.h (O_ASYNC, O_FSYNC, O_SYNC): Define
+	these unconditionally, not only use [__USE_BSD], so as to match
+	the sysdeps/unix/sysv/linux files.
+
 2001-08-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* test-skeleton.c (add_temp_file): Add __attribute__ ((unused)) to

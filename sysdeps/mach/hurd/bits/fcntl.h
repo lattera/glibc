@@ -65,11 +65,9 @@
    returned by `fcntl' with the F_GETFL command.  */
 
 #define	O_APPEND	0x0100	/* Writes always append to the file.  */
-#ifdef __USE_BSD
-# define O_ASYNC	0x0200	/* Send SIGIO to owner when data is ready.  */
-# define O_FSYNC	0x0400	/* Synchronous writes.  */
-# define O_SYNC		O_FSYNC
-#endif
+#define O_ASYNC		0x0200	/* Send SIGIO to owner when data is ready.  */
+#define O_FSYNC		0x0400	/* Synchronous writes.  */
+#define O_SYNC		O_FSYNC
 #ifdef __USE_GNU
 # define O_NOATIME	0x0800	/* Don't set access time on read (owner).  */
 #endif
