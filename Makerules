@@ -286,7 +286,7 @@ $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 			       $(wildcard $(sysdirs:%=%/Versions)) \
 			       $(sysd-versions-force)
 	{ echo 'sysd-versions-subdirs = $(all-subdirs) $(config-sysdirs)' ; \
-	  $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
+	  LC_ALL=C $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
 		 -v move_if_change='$(move-if-change)' \
 		 -f $(filter-out $< $(sysd-versions-force),$^); \
 	} > $@T

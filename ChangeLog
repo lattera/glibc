@@ -1,3 +1,18 @@
+1999-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makerules: Set LANGUAGE and LC_ALL explicitly to archieve
+	correct sorting of map files.
+	Closes PR libc/1147.
+
+1999-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (main): Add new test functions.
+	(jn_test): New tests.
+	(j1_test): Add some more tests.
+	(j0_test): Add some more tests.
+	(y0_test): Add some more tests.
+	(y1_test): Add some more tests.
+
 1999-06-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/libm-ieee754/e_j0.c (__ieee754_y0): Fix array indices.
