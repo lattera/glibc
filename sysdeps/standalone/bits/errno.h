@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,6 @@
 # define ENOMSG  11
 # define ENAMETOOLONG 12
 # define ELOOP 13
-# define ENOMSG 14
 # define E2BIG 15
 # define EINTR 16
 # define ENOEXEC 18
