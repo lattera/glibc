@@ -2,7 +2,7 @@
 
 	* locales/mk_MK: New file.
 	Contributed by Damjan Georgievski <gdamjan@freemail.org.mk>
-	* SUPPORTED: Add mk_MK ISO-8859-1.
+	* SUPPORTED: Add mk_MK ISO-8859-5.
 
 2000-02-12  Ulrich Drepper  <drepper@redhat.com>
 
