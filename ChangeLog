@@ -1,5 +1,7 @@
 2000-08-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/annexc.c: Correct test for unavailable feature.
+
 	* sysdeps/unix/sysv/linux/i386/sys/io.h (outw): Fix __INLINE ->
 	__inline.
 

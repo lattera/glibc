@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -618,7 +618,7 @@ echo \"#include <%s>\" |\
 -isystem `%s --print-prog-name=include` - > %s";
 
 static const char testfmt[] = "\
-echo \"#include <unistd.h>\n#ifndef %s\n#error not defined\n#endif\n\" |\
+echo \"#include <unistd.h>\n#if !defined %s || %s == -1\n#error not defined\n#endif\n\" |\
 %s -E -dM -D_POSIX_SOURCE -D_LIBC %s \
 -isystem `%s --print-prog-name=include` - 2> /dev/null > %s";
 
@@ -814,7 +814,8 @@ check_header (const struct header *header, const char **except)
   /* First see whether this subset is supported at all.  */
   if (header->subset != NULL)
     {
-      sprintf (line, testfmt, header->subset, CC, INC, CC, TMPFILE);
+      sprintf (line, testfmt, header->subset, header->subset, CC, INC, CC,
+	       TMPFILE);
       if (xsystem (line))
 	{
 	  printf ("!! not available\n");
