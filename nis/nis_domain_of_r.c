@@ -54,4 +54,4 @@ nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
 
   return memcpy (buffer, cptr, cptr_len + 1);
 }
-libnsl_hidden_proto (nis_domain_of_r)
+libnsl_hidden_def (nis_domain_of_r)

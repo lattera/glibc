@@ -104,12 +104,14 @@ L(nomoregetpid):
 L(oldpid):
 #endif
 
+	std	r2,40(r1)
 	/* Call procedure.  */
 	ld	r0,0(r29)
 	ld	r2,8(r29)
 	mtctr	r0
 	mr	r3,r31
 	bctrl
+	ld	r2,40(r1)
 	/* Call _exit with result from procedure.  */
 #ifdef SHARED
 	b	JUMPTARGET(__GI__exit)

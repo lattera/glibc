@@ -22,6 +22,7 @@
    and invokes a function in the right context after its all over.  */
 
 #include <sysdep.h>
+#include <tls.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
@@ -55,6 +56,20 @@ error:
 PSEUDO_END (__clone)
 
 thread_start:
+#ifdef RESET_PID
+	tmh	%r3,1		/* CLONE_THREAD == 0x00010000 */
+	jne	1f
+	lhi	%r2,-1
+	tml	%r3,256		/* CLONE_VM == 0x00000100 */
+	jne	2f
+	svc	SYS_ify(getpid)
+2:	ear	%r3,%a0
+	sllg	%r3,%r3,32
+	ear	%r3,%a1
+	st	%r2,PID(%r3)
+	st	%r2,TID(%r3)
+1:
+#endif
 	/* fn is in gpr 1, arg in gpr 0 */
 	lgr	%r2,%r0		/* set first parameter to void *arg */
 	aghi	%r15,-160	/* make room on the stack for the save area */
