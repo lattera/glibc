@@ -3,7 +3,10 @@
 +postctor += /lib/syscalls.exp
 
 ifeq ($(subdir),misc)
-sysdep_routines  += dl-libc dl-open dl-sym dl-close uitrunc 
+sysdep_routines  += dl-error dl-support dl-libc dl-open dl-sym \
+		    dl-close dl-addr uitrunc
+
+static-only-routines = gprsave0 gprrest0 gprsave1 gprrest1 fprsave fprrest
 endif
 
 ifeq ($(subdir),login)

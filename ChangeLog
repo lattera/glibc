@@ -1,3 +1,26 @@
+2001-05-09  Michael Keezer  <mkeezer@redhat.com>
+
+	* Makeconfig: Added AIX-ld support for DSO.
+	* Makerules: Likewise.
+	* dlfcn/Makefile (defaultmod1.so): Added libc_nonshared.
+	(defaultmod2.so): Likewise.
+	* debug/Makefile: Conditionalize use of elf/ld.so.
+	* iconvdata/Makefile: Moved LDFLAG rpath/soname info into Makeconfig.
+
+	* sysdeps/unix/sysv/aix/Makefile: Added dl-support.c and dl-error.c.
+	* sysdeps/unix/sysv/aix/Makefile: Made (f/g)rsave(0/1) &
+	(f/g)prrest(0/1) static only.
+	* sysdeps/unix/sysv/aix/gettimeofday.c: Removed #if 0.
+	* sysdeps/unix/sysv/aix/start.c: Define __dso_handle if not ELF but
+	shared.
+	* sysdeps/unix/sysv/aix/setitimer.c: New file.
+	* sysdeps/unix/sysv/aix/sleep.c: New file.
+	* sysdeps/unix/sysv/aix/usleep.c: New file.
+	* sysdeps/unix/sysv/aix/dl-addr.c: New file.
+	* sysdeps/unix/sysv/aix/dl-error.c: New file.
+	* sysdeps/unix/sysv/aix/dl-support.c: New file.
+	* sysdeps/unix/sysv/aix/powerpc/register-dump.h: New file.
+
 2001-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/es.po: Update from translation team.
@@ -423,9 +446,9 @@
 	(cvlist_t): New type.
 	(CVLIST, CVLIST_FIRST, CVLIST_REST): New macros.
 	(conversion_lists): New array.
-	(BODY for TO_LOOP): Keep track of Unicode 3.1 language tag. If "ja",
-	prefer conversion to Japanese character sets. If "zh", prefer
-	conversion to GB2312. If "ko", prefer conversion to KSC5601. Small
+	(BODY for TO_LOOP): Keep track of Unicode 3.1 language tag. I f "ja",
+	prefer conversion to Japanese character sets.  If "zh", prefer
+	conversion to GB2312. I f "ko", prefer conversion to KSC5601.  Small
 	optimizations.
 	(INIT_PARAMS): Add tag.
 	(UPDATE_PARAMS): Add tag.

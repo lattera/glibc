@@ -63,35 +63,35 @@ libGB-routines := gb2312
 libCNS-routines := cns11643l1 cns11643
 libISOIR165-routines := iso-ir-165
 
-LDFLAGS-EUC-KR.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-EUC-KR.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-KR.so: $(objpfx)libKSC.so
-LDFLAGS-JOHAB.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-JOHAB.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)JOHAB.so: $(objpfx)libKSC.so
-LDFLAGS-UHC.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-UHC.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)UHC.so: $(objpfx)libKSC.so
-LDFLAGS-EUC-JP.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-EUC-JP.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-JP.so: $(objpfx)libJIS.so
-LDFLAGS-EUC-CN.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-EUC-CN.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-CN.so: $(objpfx)libGB.so
-LDFLAGS-EUC-TW.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-EUC-TW.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-TW.so: $(objpfx)libCNS.so
 
-LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-ISO-2022-JP.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
 			 $(objpfx)libCNS.so $(objpfx)libKSC.so
-LDFLAGS-ISO-2022-KR.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-ISO-2022-KR.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)ISO-2022-KR.so: $(objpfx)libKSC.so
-LDFLAGS-ISO-2022-CN.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-ISO-2022-CN.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)ISO-2022-CN.so: $(objpfx)libGB.so $(objpfx)libCNS.so
-LDFLAGS-ISO-2022-CN-EXT.so = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-ISO-2022-CN-EXT.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)ISO-2022-CN-EXT.so: $(objpfx)libGB.so $(objpfx)libCNS.so \
 			     $(objpfx)libISOIR165.so
 
-LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
-LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
-LDFLAGS-libGB.so = -Wl,-soname,$(@F)
-LDFLAGS-libCNS.so = -Wl,-soname,$(@F)
-LDFLAGS-libISOIR165.so = -Wl,-soname,$(@F)
+LDFLAGS-libJIS.so = $(LDFLAGS-soname-fname)
+LDFLAGS-libKSC.so = $(LDFLAGS-soname-fname)
+LDFLAGS-libGB.so = $(LDFLAGS-soname-fname)
+LDFLAGS-libCNS.so = $(LDFLAGS-soname-fname)
+LDFLAGS-libISOIR165.so = $(LDFLAGS-soname-fname)
 
 distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \

@@ -423,6 +423,7 @@ endif
 endif
 ifndef link-libc
 ifeq (yes,$(build-shared))
+ifeq ($(elf),yes)
 # We need the versioned name of libc.so in the deps of $(others) et al
 # so that the symlink to libc.so is created before anything tries to
 # run the linked programs.
@@ -431,6 +432,13 @@ link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
+else
+ifneq (,$(findstring aix,$(config-os)))
+link-libc = $(common-objpfx)libc.so \
+	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
+rpath-dirs = math dlfcn nss nis rt resolv crypt
+endif
+endif
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
@@ -438,6 +446,21 @@ else
 nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
 resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)
 link-libc = $(common-objpfx)libc.a $(otherlibs) $(gnulib) $(common-objpfx)libc.a $(gnulib)
+endif
+endif
+
+# Differences in the linkers on the various platforms.
+ifeq ($(elf),yes)
+LDFLAGS-rpath-ORIGIN = -Wl,-rpath,'$$ORIGIN'
+LDFLAGS-soname-fname = -Wl,-soname,$(@F)
+LDFLAGS-rdynamic = -rdynamic
+LDFLAGS-Bsymbolic = -Bsymbolic
+else
+ifneq (,$(findstring aix,$(config-os)))
+LDFLAGS-rpath-ORIGIN =
+LDFLAGS-soname-fname =
+LDFLAGS-rdynamic = -Wl,-bdynamic
+LDFLAGS-Bsymbolic = -Wl,-bsymbolic
 endif
 endif
 
@@ -493,7 +516,7 @@ elf-objpfx = $(common-objpfx)elf/
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
-ifeq (yes,$(build-shared))
+ifeq (yesyes,$(build-shared)$(elf))
 comma = ,
 sysdep-library-path = \
 $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
@@ -758,6 +781,13 @@ postclean-generated += soversions.mk
 before-compile += $(common-objpfx)gnu/lib-names.h
 ifeq ($(soversions.mk-done),t)
 $(common-objpfx)gnu/lib-names.h: $(common-objpfx)gnu/lib-names.stmp; @:
+ifneq (,$(findstring aix,$(config-os)))
+$(common-objpfx)gnu/lib-names.stmp: $(..)sysdeps/unix/sysv/aix/gnu/lib-names.h
+	$(make-target-directory)
+	@rm -f ${@:stmp=T} $@
+	@cp $(..)sysdeps/unix/sysv/aix/gnu/lib-names.h $(common-objpfx)gnu
+	touch $@
+else
 $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	$(make-target-directory)
 	@rm -f ${@:stmp=T} $@
@@ -785,6 +815,7 @@ $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	 echo '#endif	/* gnu/lib-names.h */';) > ${@:stmp=T}
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
+endif
 endif
 
 common-generated += gnu/lib-names.h gnu/lib-names.stmp
@@ -815,9 +846,20 @@ else
 libdl = $(common-objpfx)dlfcn/libdl.a
 endif
 else
-# No ELF - no libdl, at least for now.
+ifneq (,$(findstring aix,$(config-os)))
+ifeq ($(build-shared),yes)
+dlfcn = dlfcn
+libdl = $(common-objpfx)dlfcn/libdl.so$(libdl.so-version)
+else
+# No libdl without shared libs on AIX
 dlfcn =
 libdl =
+endif
+else
+# No ELF, no AIX - no libdl, at least for now.
+dlfcn =
+libdl =
+endif
 endif
 
 # These are the subdirectories containing the library source.  The order

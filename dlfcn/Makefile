@@ -63,11 +63,11 @@ $(objpfx)failtest.out: $(objpfx)failtestmod.so
 $(objpfx)tst-dladdr: $(libdl)
 $(objpfx)tst-dladdr.out: $(objpfx)glreflib1.so
 
-LDFLAGS-default = -rdynamic
+LDFLAGS-default = $(LDFLAGS-rdynamic)
 $(objpfx)default: $(libdl) $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so
-$(objpfx)defaultmod1.so: $(libdl)
-LDFLAGS-defaultmod2.so = -Bsymbolic
-$(objpfx)defaultmod2.so: $(libdl)
+$(objpfx)defaultmod1.so: $(libdl) $(common-objpfx)libc_nonshared.a
+LDFLAGS-defaultmod2.so = $(LDFLAGS-Bsymbolic)
+$(objpfx)defaultmod2.so: $(libdl) $(common-objpfx)libc_nonshared.a
 
 $(objpfx)errmsg1: $(libdl)
 $(objpfx)errmsg1.out: $(objpfx)errmsg1 $(objpfx)errmsg1mod.so

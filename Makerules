@@ -351,7 +351,7 @@ endif
 
 # Modify the list of routines we build for different targets
 
-ifeq (yes,$(build-shared))
+ifeq (yesyes,$(build-shared)$(elf))
 ifndef libc.so-version
 # Undefine this because it can't work when we libc.so is unversioned.
 static-only-routines =
@@ -392,8 +392,13 @@ endif
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
 lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp)
+ifneq (,$(findstring aix,$(config-os)))
+	(echo '#!'; \
+	 dump -g $< | sed '1,6d' | cut -f2 | sort | uniq) > $(<:a=exp)
+endif
 	$(build-shlib)
 
+ifeq ($(elf),yes)
 define build-shlib-helper
 $(LINK.o) -shared -Wl,-O1 $(sysdep-LDFLAGS) $(config-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
@@ -402,6 +407,18 @@ $(LINK.o) -shared -Wl,-O1 $(sysdep-LDFLAGS) $(config-LDFLAGS) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
 endef
+else
+ifneq (,$(findstring aix,$(config-os)))
+define build-shlib-helper
+$(LINK.o) -G -bM:SRE -bnoentry -bE:$(<:a=exp) \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(extra-B-$(@F:lib%.so=%).so) \
+	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
+	  -L$(subst :, -L,$(rpath-link))
+endef
+else
+endif
+endif
 
 ifeq (yes,$(elf))
 # binutils only position loadable notes into the first page for binaries,
@@ -419,18 +436,36 @@ $(build-shlib-helper) -o $@ -T $@.lds \
 rm -f $@.lds
 endef
 else
+ifneq (,$(findstring aix,$(config-os)))
+define build-shlib
+$(build-shlib-helper) \
+	-o $@ \
+	$(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
+	$(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
+endef
 define build-shlib
 $(build-shlib-helper) \
 	  $(build-shlib-objlist)
 endef
 endif
+endif
 
+ifneq (,$(findstring aix,$(config-os)))
+define build-module-helper
+$(LINK.o) -Wl,-G -Wl,-bM:SRE -Wl,-bnoentry -Wl,-bexpall \
+	  $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(load-map-file) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-L=$(rpath-link)
+endef
+else
 define build-module-helper
 $(LINK.o) -shared $(sysdep-LDFLAGS) $(config-LDFLAGS) \
 	  -B$(csu-objpfx) $(load-map-file) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
 endef
+endif
 
 # This macro is similar to build-shlib but it does not define a soname
 # and it does not depend on the destination name to start with `lib'.
@@ -450,11 +485,21 @@ $(build-module-helper) -o $@ -T $@.lds \
 rm -f $@.lds
 endef
 else
+ifneq (,$(findstring aix,$(config-os)))
+define build-module
+$(build-module-helper) \
+	  -o $@ \
+	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
+	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
+endef
+else
+define build-module
 define build-module
 $(build-module-helper) \
 	  -o $@ \
 	  $(build-module-objlist)
 endef
+endif
 endif
 
 build-module-helper-objlist = \
@@ -481,6 +526,7 @@ LDFLAGS-c.so += -u __register_frame
 # contains some of libc_pic.a already, which will prevent the COMMONs
 # from being allocated in libc.so, which introduces evil dependencies
 # between libc.so and ld.so, which can make it impossible to upgrade.
+ifeq ($(elf),yes)
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
@@ -498,6 +544,23 @@ ifdef libc.so-version
 $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
 	$(make-link)
 common-generated += libc.so$(libc.so-version)
+endif
+endif
+else
+ifneq (,$(findstring aix,$(config-os)))
+$(common-objpfx)libc.so: $(common-objpfx)libc_pic.a
+	@rm -f $@
+	(echo '#!'; \
+	 dump -g $^ | sed '1,6d' | cut -f2 | sort | uniq) > $(^:a=exp)
+	sed '/__mulh/d;/__mull/d;/__divss/d;/__divus/d;/__quoss/d;/__quous/d' \
+	    /lib/syscalls.exp > $(common-objpfx)syscalls.exp
+	$(LINK.o) -G -bM:SRE -bnoentry -bE:$(^:a=exp) \
+		  -bE:$(common-objpfx)syscalls.exp \
+		  -bI:$(common-objpfx)syscalls.exp \
+		  -L$(common-objpfx) -o $@ $^
+# AIX runtime ld wants libc.so to be libc.a(shr.o) hardwired
+	cp $@ $(common-objpfx)shr.o
+	$(AR) $(ARFLAGS) $(common-objpfx)libc.a $(common-objpfx)shr.o
 endif
 endif
 

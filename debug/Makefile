@@ -73,7 +73,7 @@ $(objpfx)xtrace: xtrace.sh
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libSegFault.so: $(common-objpfx)libc.so \
 			 $(common-objpfx)libc_nonshared.a \
-			 $(common-objpfx)elf/ld.so
+			 $(elf-objpfx)$(rtld-installed-name)
 $(objpfx)libpcprofile.so: $(common-objpfx)libc.so \
 			  $(common-objpfx)libc_nonshared.a \
-			  $(common-objpfx)elf/ld.so
+			  $(elf-objpfx)$(rtld-installed-name)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 1995-1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 1995-1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,12 @@ typedef unsigned char   uchar;   /* sb in libc/posix/types.h */
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
+
++#ifndef HAVE_ELF
+/* Since gcc/crtstuff.c won't define it unless the ELF format is used
+   we will need to define it here.  */
+void *__dso_handle = NULL;
+#endif
 
 extern int errno;
 
@@ -108,12 +114,12 @@ asm("
 #endif
        crt0_info.p_argc = (int*)&argc;
 
-/*     crt0_info.threads_init = (FPV) &__pthread_init;  */  
+/*     crt0_info.threads_init = (FPV) &__pthread_init;  */
 
      /*
       * Do run-time linking, if enabled and call the init()
       * for all loaded modules.
-      */ 
+      */
       argc = modinit(argc,&crt0_info,module_count,text_origin,data_origin);
 
       errno=0;
@@ -131,9 +137,9 @@ asm("
  * int modinit(argc,crt0_info,module_count,text,data)
  *
  * argc         - current value of argc.
- * info         - crt0 information passed 
+ * info         - crt0 information passed
  * module_count - number of modules loaded.
- * text         - Beginning of text address 
+ * text         - Beginning of text address
  * data         - Beginning of data address
  */
 
@@ -287,4 +293,3 @@ __RTINIT *find_rtinit(caddr_t text_origin, caddr_t data_origin, int module_count
                      (data_origin - data_sec_hdr->s_vaddr));
   return(rtl);
 }
-
