@@ -4007,7 +4007,7 @@ that a custom stream needs.
 You should define the function to read data from the cookie as:
 
 @smallexample
-ssize_t @var{reader} (void *@var{cookie}, void *@var{buffer}, size_t @var{size})
+ssize_t @var{reader} (void *@var{cookie}, char *@var{buffer}, size_t @var{size})
 @end smallexample
 
 This is very similar to the @code{read} function; see @ref{I/O
@@ -4019,7 +4019,7 @@ an error.
 You should define the function to write data to the cookie as:
 
 @smallexample
-ssize_t @var{writer} (void *@var{cookie}, const void *@var{buffer}, size_t @var{size})
+ssize_t @var{writer} (void *@var{cookie}, const char *@var{buffer}, size_t @var{size})
 @end smallexample
 
 This is very similar to the @code{write} function; see @ref{I/O
