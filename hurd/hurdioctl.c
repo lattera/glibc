@@ -21,7 +21,7 @@
 #include <hurd/fd.h>
 #include <sys/ioctl.h>
 #include <hurd/ioctl.h>
-
+#include <string.h>
 
 
 /* Symbol set of ioctl handler lists.  If there are user-registered
