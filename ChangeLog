@@ -1,5 +1,13 @@
 Fri Jul  5 12:22:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* hurd/hurdsig.c (_hurd_internal_post_signal): In case of handled
+	signal during critical section doing interruptible RPC, if
+	_hurdsig_abort_rpcs wants to change thread state, do thread_set_state
+	before thread_resume.  If in critical section, pass 0 for SIGNO to
+	_hurdsig_abort_rpcs so rpc is interrupted regardless of SA_RESTART.
+
+	* extra-lib.mk: Fix typo in $(extra-libs-others) conditional.
+
 	* sysdeps/unix/sysv/linux/sys/user.h: New file.
 	* sysdeps/unix/sysv/linux/Dist: Add it.
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add sys/user.h.
