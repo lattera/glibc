@@ -1,3 +1,8 @@
+2003-07-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/elf/start.S: Set section flags of
+	.data.rel.ro.local to "aw".
+
 2003-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/m68k/Makefile: Remove CLFAGS-.oS addition.

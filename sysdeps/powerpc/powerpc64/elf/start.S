@@ -22,7 +22,7 @@
 
  /* These are the various addresses we require.  */
 #ifdef PIC
-	.section ".data.rel.ro.local"
+	.section ".data.rel.ro.local","aw"
 #else
 	.section ".rodata"
 #endif
