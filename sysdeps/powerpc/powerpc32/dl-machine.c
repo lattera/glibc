@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -368,12 +368,12 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
   return finaladdr;
 }
 
-static void
-dl_reloc_overflow (struct link_map *map,
-		   const char *name,
-		   Elf32_Addr *const reloc_addr,
-		   const Elf32_Sym *sym,
-		   const Elf32_Sym *refsym)
+void
+_dl_reloc_overflow (struct link_map *map,
+		    const char *name,
+		    Elf32_Addr *const reloc_addr,
+		    const Elf32_Sym *sym,
+		    const Elf32_Sym *refsym)
 {
   char buffer[128];
   char *t;
@@ -423,19 +423,19 @@ __process_machine_rela (struct link_map *map,
 
     case R_PPC_ADDR24:
       if (__builtin_expect (finaladdr > 0x01fffffc && finaladdr < 0xfe000000, 0))
-	dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr, sym, refsym);
       *reloc_addr = (*reloc_addr & 0xfc000003) | (finaladdr & 0x3fffffc);
       break;
 
     case R_PPC_ADDR16:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
-	dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, sym, refsym);
       *(Elf32_Half*) reloc_addr = finaladdr;
       break;
 
     case R_PPC_UADDR16:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
-	dl_reloc_overflow (map,  "R_PPC_UADDR16", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_UADDR16", reloc_addr, sym, refsym);
       ((char *) reloc_addr)[0] = finaladdr >> 8;
       ((char *) reloc_addr)[1] = finaladdr;
       break;
@@ -456,7 +456,7 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_ADDR14_BRTAKEN:
     case R_PPC_ADDR14_BRNTAKEN:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
-	dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr, sym, refsym);
       *reloc_addr = (*reloc_addr & 0xffff0003) | (finaladdr & 0xfffc);
       if (rinfo != R_PPC_ADDR14)
 	*reloc_addr = ((*reloc_addr & 0xffdfffff)
@@ -468,7 +468,7 @@ __process_machine_rela (struct link_map *map,
       {
 	Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
 	if (delta << 6 >> 6 != delta)
-	  dl_reloc_overflow (map,  "R_PPC_REL24", reloc_addr, sym, refsym);
+	  _dl_reloc_overflow (map,  "R_PPC_REL24", reloc_addr, sym, refsym);
 	*reloc_addr = (*reloc_addr & 0xfc000003) | (delta & 0x3fffffc);
       }
       break;

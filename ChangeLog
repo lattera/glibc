@@ -1,5 +1,12 @@
 2003-03-02  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/powerpc/powerpc32/dl-machine.c (_dl_reloc_overflow): Renamed
+	from dl_reloc_overflow, make global.
+	(__process_machine_rela): Update callers.
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Declare _dl_reloc_overflow.
+	Add attribute_hidden to __process_machine_rela decl.
+	(elf_machine_type_class, elf_machine_rela): Handle 16-bit TLS relocs.
+
 	* sysdeps/generic/libc-start.c (__libc_start_main): Don't assign const
 	variable.
 

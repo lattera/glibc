@@ -280,9 +280,8 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 #define elf_machine_type_class(type)			\
   ((((type) == R_PPC_JMP_SLOT				\
     || (type) == R_PPC_REL24				\
-    || (type) == R_PPC_DTPMOD32				\
-    || (type) == R_PPC_DTPREL32				\
-    || (type) == R_PPC_TPREL32				\
+    || ((type) >= R_PPC_DTPMOD32 /* contiguous TLS */	\
+	&& (type) <= R_PPC_DTPREL32)			\
     || (type) == R_PPC_ADDR24) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_PPC_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
@@ -341,7 +340,14 @@ extern void __process_machine_rela (struct link_map *map,
 				    const Elf32_Sym *refsym,
 				    Elf32_Addr *const reloc_addr,
 				    Elf32_Addr finaladdr,
-				    int rinfo);
+				    int rinfo) attribute_hidden;
+
+/* Call _dl_signal_error when a resolved value overflows a relocated area.  */
+extern void _dl_reloc_overflow (struct link_map *map,
+				const char *name,
+				Elf32_Addr *const reloc_addr,
+				const Elf32_Sym *sym,
+				const Elf32_Sym *refsym) attribute_hidden;
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    LOADADDR is the load address of the object; INFO is an array indexed
@@ -402,24 +408,59 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	*reloc_addr = sym_map->l_tls_modid;
 # endif
       break;
-    case R_PPC_DTPREL32:
-      /* During relocation all TLS symbols are defined and used.
-	 Therefore the offset is already correct.  */
-# ifndef RTLD_BOOTSTRAP
-      *reloc_addr = TLS_DTPREL_VALUE (sym, reloc);
+
+# ifdef RTLD_BOOTSTRAP
+#  define NOT_BOOTSTRAP 0
+# else
+#  define NOT_BOOTSTRAP 1
 # endif
+# define DO_TLS_RELOC(suffix)						      \
+    case R_PPC_DTPREL##suffix:						      \
+      /* During relocation all TLS symbols are defined and used.	      \
+	 Therefore the offset is already correct.  */			      \
+      if (NOT_BOOTSTRAP)						      \
+	do_reloc##suffix ("R_PPC_DTPREL"#suffix,			      \
+			  TLS_DTPREL_VALUE (sym, reloc));		      \
+      break;								      \
+    case R_PPC_TPREL##suffix:						      \
+      if (!NOT_BOOTSTRAP || sym_map)					      \
+	{								      \
+	  if (NOT_BOOTSTRAP)						      \
+	    CHECK_STATIC_TLS (map, sym_map);				      \
+	  do_reloc##suffix ("R_PPC_TPREL"#suffix,			      \
+			    TLS_TPREL_VALUE (sym_map, sym, reloc));	      \
+	}								      \
       break;
-    case R_PPC_TPREL32:
-# ifndef RTLD_BOOTSTRAP
-      if (sym_map)
+
+      inline void do_reloc32 (const char *r_name, Elf32_Addr value)
 	{
-	  CHECK_STATIC_TLS (map, sym_map);
-# endif
-	  *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
-# ifndef RTLD_BOOTSTRAP
+	  *reloc_addr = value;
 	}
+    DO_TLS_RELOC (32)
+# ifndef RTLD_BOOTSTRAP		/* PIC code like ld.so doesn't use these.  */
+    inline void do_reloc16 (const char *r_name, Elf32_Addr value)
+      {
+	if (__builtin_expect (value > 0x7fff && value < 0xffff8000, 0))
+	  _dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, sym, refsym);
+	*(Elf32_Half *) reloc_addr = value;
+      }
+    inline void do_reloc16_LO (const char *r_name, Elf32_Addr value)
+      {
+	*(Elf32_Half *) reloc_addr = value;
+      }
+    inline void do_reloc16_HI (const char *r_name, Elf32_Addr value)
+      {
+	*(Elf32_Half *) reloc_addr = value >> 16;
+      }
+    inline void do_reloc16_HA (const char *r_name, Elf32_Addr value)
+      {
+	*(Elf32_Half *) reloc_addr = (value + 0x8000) >> 16;
+      }
+    DO_TLS_RELOC (16)
+    DO_TLS_RELOC (16_LO)
+    DO_TLS_RELOC (16_HI)
+    DO_TLS_RELOC (16_HA)
 # endif
-      break;
 #endif /* USE_TLS etc. */
 
 #ifdef RESOLVE_CONFLICT_FIND_MAP
