@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.  Hurd version.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,14 +24,11 @@
 
 #define __libc_tsd_define(CLASS, KEY) /* nothing, always have threadvars */
 
-#define __libc_tsd_threadvar_location(KEY) \
+#define __libc_tsd_address(KEY) \
   ((void **) __hurd_threadvar_location (_HURD_THREADVAR_##KEY))
 
-#define __libc_tsd_get(KEY) \
-  (*__libc_tsd_threadvar_location (KEY))
-
-#define __libc_tsd_set(KEY, VALUE) \
-  (*__libc_tsd_threadvar_location (KEY) = (VALUE))
+#define __libc_tsd_get(KEY)		(*__libc_tsd_address (KEY))
+#define __libc_tsd_set(KEY, VALUE)	(*__libc_tsd_address (KEY) = (VALUE))
 
 
 #endif	/* bits/libc-tsd.h */

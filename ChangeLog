@@ -1,3 +1,32 @@
+2002-09-01  Roland McGrath  <roland@redhat.com>
+
+	* ctype/ctype.h (__ctype_b, __ctype_toupper, __ctype_tolower):
+	Variable declarations removed.
+	(__ctype_b_loc, __ctype_toupper_loc, __ctype_tolower_loc): Declare
+	these functions to replace them.
+	(__isctype, tolower, toupper, _tolower, _toupper): Use those accessor
+	functions plus an indirection rather than the old global variables.
+	* include/ctype.h (__isctype, tolower, _tolower, toupper, _toupper):
+	Macros removed.
+	(__ctype_b_loc, __ctype_toupper_loc, __ctype_tolower_loc): New extern
+	inline functions.
+	* ctype/ctype-info.c: Revert last reversion back the other way.
+	Define tsd vars CTYPE_B, CTYPE_TOLOWER, CTYPE_TOUPPER.
+	Define real function versions of include/ctype.h inlines here.
+	* ctype/Versions (libc: GLIBC_2.3): Add __ctype_b_loc,
+	__ctype_tolower_loc, __ctype_toupper_loc.
+	* locale/lc-ctype.c: Revert last reversion back the other way.
+	(_nl_postload_ctype): If current thread uses the global locale,
+	update its tsd vars.
+	* locale/uselocale.c (__uselocale): Update tsd vars from new locale.
+	* hurd/hurd/threadvar.h (enum __hurd_threadvar_index): Add CTYPE_B,
+	CTYPE_TOLOWER, CTYPE_TOUPPER.
+
+	* sysdeps/generic/bits/libc-tsd.h (__libc_tsd_address): New macro.
+	* sysdeps/mach/hurd/bits/libc-tsd.h (__libc_tsd_address): Renamed
+	from __libc_tsd_threadvar_location.
+	(__libc_tsd_set, __libc_tsd_get): Update uses.
+
 2002-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* ctype/ctype.h: Undo the patch before the last one.  Put back the

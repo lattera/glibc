@@ -28,6 +28,8 @@
 					   keys used in only one source file,
 					   empty for global definitions, or
 					   `extern' for global declarations.
+   __libc_tsd_address(KEY)		-- Return the `void **' pointing to
+   					   the current thread's datum for KEY.
    __libc_tsd_get(KEY)			-- Return the `void *' datum for KEY.
    __libc_tsd_set(KEY, VALUE)		-- Set the datum for KEY to VALUE.
 
@@ -52,11 +54,13 @@
 #if USE_TLS && HAVE___THREAD
 # define __libc_tsd_define(CLASS, KEY)	CLASS __thread void *__libc_tsd_##KEY;
 
+# define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY)
 # define __libc_tsd_get(KEY)		(__libc_tsd_##KEY)
 # define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
 #else
 # define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY##_data;
 
+# define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY)
 # define __libc_tsd_get(KEY)		(__libc_tsd_##KEY##_data)
 # define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY##_data = (VALUE))
 #endif

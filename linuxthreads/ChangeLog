@@ -1,3 +1,16 @@
+2002-09-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/bits/libc-tsd.h (enum __libc_tsd_key_t): Add new keys
+	CTYPE_B, CTYPE_TOLOWER, CTYPE_TOUPPER.
+
+	* sysdeps/pthread/bits/libc-tsd.h (__libc_tsd_address): New macro.
+	(__libc_internal_tsd_address): Declare it.
+	* Versions (libc, ld, libpthread: GLIBC_PRIVATE): Add
+	__libc_internal_tsd_address.
+	* specific.c (libc_internal_tsd_address): New function.
+	(__libc_internal_tsd_address): New variable.
+	* no-tsd.c (__libc_internal_tsd_address): New variable.
+
 2002-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Don't use rule for crt%.o, spell it out as rules for

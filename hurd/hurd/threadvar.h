@@ -65,7 +65,10 @@ enum __hurd_threadvar_index
     _HURD_THREADVAR_MALLOC,	/* For use of malloc.  */
     _HURD_THREADVAR_DL_ERROR,	/* For use of -ldl and dynamic linker.  */
     _HURD_THREADVAR_RPC_VARS,	/* For state of RPC functions.  */
-    _HURD_THREADVAR_LOCALE,	/* For thread-locale locale setting.  */
+    _HURD_THREADVAR_LOCALE,	/* For thread-local locale setting.  */
+    _HURD_THREADVAR_CTYPE_B,	/* Cache of thread-local locale data.  */
+    _HURD_THREADVAR_CTYPE_TOLOWER, /* Cache of thread-local locale data.  */
+    _HURD_THREADVAR_CTYPE_TOUPPER, /* Cache of thread-local locale data.  */
     _HURD_THREADVAR_MAX		/* Default value for __hurd_threadvar_max.  */
   };
 

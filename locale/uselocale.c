@@ -19,6 +19,7 @@
 
 #include <locale.h>
 #include "localeinfo.h"
+#include <ctype.h>
 
 /* Switch the current thread's locale to DATASET.
    If DATASET is null, instead just return the current setting.
@@ -60,6 +61,11 @@ __uselocale (locale_t newloc)
 # include "categories.def"
 # undef	DEFINE_CATEGORY
 #endif
+
+      /* Update the special tsd cache of some locale data.  */
+      __libc_tsd_set (CTYPE_B, (void *) locobj->__ctype_b);
+      __libc_tsd_set (CTYPE_TOLOWER, (void *) locobj->__ctype_tolower);
+      __libc_tsd_set (CTYPE_TOUPPER, (void *) locobj->__ctype_toupper);
     }
 
   return oldloc == &_nl_global_locale ? LC_GLOBAL_LOCALE : oldloc;

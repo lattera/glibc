@@ -25,6 +25,9 @@ enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
 			_LIBC_TSD_KEY_DL_ERROR,
 			_LIBC_TSD_KEY_RPC_VARS,
 			_LIBC_TSD_KEY_LOCALE,
+			_LIBC_TSD_KEY_CTYPE_B,
+			_LIBC_TSD_KEY_CTYPE_TOLOWER,
+			_LIBC_TSD_KEY_CTYPE_TOUPPER,
 			_LIBC_TSD_KEY_N };
 
 #include <tls.h>
@@ -39,6 +42,13 @@ enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
 extern void *(*__libc_internal_tsd_get) (enum __libc_tsd_key_t) __THROW;
 extern int (*__libc_internal_tsd_set) (enum __libc_tsd_key_t,
 				       __const void *)  __THROW;
+extern void **(*const __libc_internal_tsd_address) (enum __libc_tsd_key_t)
+     __THROW __attribute__ ((__const__));
+
+#define __libc_tsd_address(KEY) \
+  (__libc_internal_tsd_address != NULL \
+   ? __libc_internal_tsd_address (_LIBC_TSD_KEY_##KEY) \
+   : &__libc_tsd_##KEY##_data)
 
 #define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY##_data;
 #define __libc_tsd_get(KEY) \

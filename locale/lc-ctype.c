@@ -25,46 +25,48 @@
 _NL_CURRENT_DEFINE (LC_CTYPE);
 
 /* We are called after loading LC_CTYPE data to load it into
-   the variables used by the ctype.h macros.
-
-   There are three arrays of short ints which need to be indexable
-   from -128 to 255 inclusive.  Stored in the locale data file are
-   a copy of each for each byte order.  */
+   the variables used by the ctype.h macros.  */
 
 void
 _nl_postload_ctype (void)
 {
-  const struct locale_data *data = _NL_CURRENT_DATA (LC_CTYPE);
-
-#define paste(a,b) paste1(a,b)
-#define paste1(a,b) a##b
-
 #define current(type,x,offset) \
-  ((const type *) _NL_CURRENT (LC_CTYPE, paste(_NL_CTYPE_,x)) + offset)
+  ((const type *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_##x) + offset)
 
-  extern const uint32_t *__ctype32_b;
-  extern const uint32_t *__ctype32_toupper;
-  extern const uint32_t *__ctype32_tolower;
-  extern const char *__ctype32_wctype[12] attribute_hidden;
-  extern const char *__ctype32_wctrans[2] attribute_hidden;
-  extern const char *__ctype32_width attribute_hidden;
+/* These are defined in ctype-info.c.
+   The declarations here must match those in localeinfo.h.
 
-  size_t offset, cnt;
+   These point into arrays of 384, so they can be indexed by any `unsigned
+   char' value [0,255]; by EOF (-1); or by any `signed char' value
+   [-128,-1).  ISO C requires that the ctype functions work for `unsigned
+   char' values and for EOF; we also support negative `signed char' values
+   for broken old programs.  The case conversion arrays are of `int's
+   rather than `unsigned char's because tolower (EOF) must be EOF, which
+   doesn't fit into an `unsigned char'.  But today more important is that
+   the arrays are also used for multi-byte character sets.  */
 
-  __ctype_b = current (uint16_t, CLASS, 128);
-  __ctype_toupper = current (uint32_t, TOUPPER, 128);
-  __ctype_tolower = current (uint32_t, TOLOWER, 128);
-  __ctype32_b = current (uint32_t, CLASS32, 0);
-  __ctype32_toupper = current (uint32_t, TOUPPER32, 0);
-  __ctype32_tolower = current (uint32_t, TOLOWER32, 0);
+  if (_NL_CURRENT_LOCALE == &_nl_global_locale)
+    {
+      __libc_tsd_set (CTYPE_B, (void *) current (uint16_t, CLASS, 128));
+      __libc_tsd_set (CTYPE_TOUPPER, (void *) current (int32_t, TOUPPER, 128));
+      __libc_tsd_set (CTYPE_TOLOWER, (void *) current (int32_t, TOLOWER, 128));
+    }
 
-  offset = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET);
-  for (cnt = 0; cnt < 12; cnt++)
-    __ctype32_wctype[cnt] = data->values[offset + cnt].string;
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3)
+  extern __const unsigned short int *__ctype_old_b; /* Characteristics.  */
+  extern __const __int32_t *__ctype_old_tolower; /* Case conversions.  */
+  extern __const __int32_t *__ctype_old_toupper; /* Case conversions.  */
 
-  offset = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET);
-  for (cnt = 0; cnt < 2; cnt++)
-    __ctype32_wctrans[cnt] = data->values[offset + cnt].string;
+  extern const uint32_t *__ctype32_old_b;
+  extern const uint32_t *__ctype32_old_toupper;
+  extern const uint32_t *__ctype32_old_tolower;
 
-  __ctype32_width = current (char, WIDTH, 0);
+  __ctype_old_b = current (uint16_t, CLASS, 128);
+  __ctype_old_toupper = current (uint32_t, TOUPPER, 128);
+  __ctype_old_tolower = current (uint32_t, TOLOWER, 128);
+  __ctype32_old_b = current (uint32_t, CLASS32, 0);
+  __ctype32_old_toupper = current (uint32_t, TOUPPER32, 0);
+  __ctype32_old_tolower = current (uint32_t, TOLOWER32, 0);
+#endif
 }
