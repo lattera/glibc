@@ -1,5 +1,7 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/wchar.h: Get FILE definition for XPG5.
+
 	* conform/data/ctype.h-data: Use correct comment form.
 	* conform/data/errno.h-data: Likewise.
 	* conform/data/math.h-data: Likewise.
