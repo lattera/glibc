@@ -1,3 +1,24 @@
+2002-12-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-librecon.h (EXTRA_LD_ENVVARS): Refer to
+	and move contents to ...
+	(EXTRA_LD_ENVVARS_LINUX): ... this new macro.  Add break for nonmatch.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h (EXTRA_LD_ENVVARS): Use
+	it instead of duplicating its contents.
+	(EXTRA_LD_ENVVARS): Likewise.  Add break for nonmatch.
+
+2002-12-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-support.c (_dl_non_dynamic_init): Add DL_OSVERSION_INIT if
+	defined.
+	* sysdeps/unix/sysv/linux/dl-librecon.h (_dl_osversion_init): New
+	function.
+	(EXTRA_LD_ENVVARS): Use it.
+	(DL_OSVERSION_INIT): Define.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Include linux
+	dl-librecon.h.
+	(EXTRA_LD_ENVVARS): Undef before defining.  Use _dl_osversion_init.
+
 2002-12-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/closedir.c (__closedir): Remove __libc_lock_lock

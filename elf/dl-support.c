@@ -214,6 +214,10 @@ _dl_non_dynamic_init (void)
   DL_PLATFORM_INIT;
 #endif
 
+#ifdef DL_OSVERSION_INIT
+  DL_OSVERSION_INIT;
+#endif
+
   /* Now determine the length of the platform string.  */
   if (_dl_platform != NULL)
     _dl_platformlen = strlen (_dl_platform);
