@@ -1,3 +1,38 @@
+1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/select.h (__FD_ZERO): Remove early clobbers
+	from c and D register output.
+
+1999-01-07  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h: Fix bug in last change.
+
+1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Correct type for
+	__fsfilcnt_t.  Patch by Bruce Elliott <bde@nwlink.com>.
+
+1999-01-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/conf.texi: Remove pointers from first @node.  Move old
+	@node spec inside comment.
+	* manual/lang.texi: Likewise.
+	* manual/libc-texinfo.sh: Also find `@node.*Top' in a comment.
+	* manual/stdio.texi: Fix typo.
+
+1999-01-04  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* wcsmbs/btowc.c: Accept all values in the range [SCHAR_MIN
+	.. UCHAR_MAX].  Local var buf renamed to result and its type
+	changed from char[] to wchar_t to get proper alignment.
+
+	* posix/fnmatch.c: Also cast the arguments of the other ctype
+	functions to unsigned char.
+
+1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Rules: Add rules for empty.{o,os,op} back.
+
 1999-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules (common-mostlyclean): Add missing parentheses.

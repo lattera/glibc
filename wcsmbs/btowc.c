@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -22,13 +22,14 @@
 #include <string.h>
 #include <wchar.h>
 #include <wcsmbsload.h>
+#include <limits.h>
 
 
 wint_t
 __btowc (c)
      int c;
 {
-  char buf[sizeof (wchar_t)];
+  wchar_t result;
   struct gconv_step_data data;
   char inbuf[1];
   const char *inptr = inbuf;
@@ -37,11 +38,11 @@ __btowc (c)
 
   /* If the parameter does not fit into one byte or it is the EOF value
      we can give the answer now.  */
-  if (c < -128 || c > 127 || c == EOF)
+  if (c < SCHAR_MIN || c > UCHAR_MAX || c == EOF)
     return WEOF;
 
   /* Tell where we want the result.  */
-  data.outbuf = (char *) buf;
+  data.outbuf = (char *) &result;
   data.outbufend = data.outbuf + sizeof (wchar_t);
   data.invocation_counter = 0;
   data.internal_use = 1;
@@ -62,8 +63,8 @@ __btowc (c)
   /* The conversion failed.  */
   if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
       && status != GCONV_EMPTY_INPUT)
-    return WEOF;
+    result = WEOF;
 
-  return *(wchar_t *)buf;
+  return result;
 }
 weak_alias (__btowc, btowc)

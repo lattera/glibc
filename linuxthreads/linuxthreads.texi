@@ -1,4 +1,5 @@
-@node POSIX Threads, , Top, Top
+@node POSIX Threads
+@c @node POSIX Threads, , Top, Top
 @chapter POSIX Threads
 @c %MENU% The standard threads library
 

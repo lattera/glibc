@@ -1,3 +1,8 @@
+1999-01-05  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* linuxthreads.texi: Remove pointers from first @node.  Move old
+	@node spec inside comment.
+
 1998-12-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/pthread/bits/stdio-lock.h: Define _IO_lock_lock and

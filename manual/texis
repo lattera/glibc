@@ -66,6 +66,7 @@ users.texi \
 db.c.texi \
 sysinfo.texi \
 conf.texi \
+../crypt/crypt.texi \
 ../linuxthreads/linuxthreads.texi \
 lang.texi \
 add.c.texi \

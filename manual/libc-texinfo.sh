@@ -19,8 +19,8 @@ build_menu () {
 }
 
 collect_nodes () {
-  grep '^@node.*Top' "$@" /dev/null | cut -d, -f-2 |
-  sed 's/, /:/; s/:@node /:/; s/ /_/g; s/:/ /g' |
+  egrep '^(@c )?@node.*Top' "$@" /dev/null | cut -d, -f-2 |
+  sed 's/@c //; s/, /:/; s/:@node /:/; s/ /_/g; s/:/ /g' |
   $AWK '{ file[$2] = $1; nnode[$2] = $3 }
 	END  { for (x in file)
 		 if (file[x] != "")
@@ -34,8 +34,8 @@ if [ -n "$2" ]; then
 
   { echo; echo 'Add-ons'; echo; } >&4
 
-  grep '^@node.*Top' `echo $2 /dev/null | tr ' ' '\n' | sort` |
-  cut -d, -f1 | sed 's/@node //' | build_menu
+  egrep '^(@c )?@node.*Top' `echo $2 /dev/null | tr ' ' '\n' | sort` |
+  cut -d, -f1 | sed 's/@c //;s/@node //' | build_menu
 
 fi
 

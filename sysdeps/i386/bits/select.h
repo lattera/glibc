@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
     int __d0, __d1;							      \
     __asm__ __volatile__ ("cld; rep; stosl"				      \
 			  : "=m" (__FDS_BITS (fdsp)[__FDELT (__FD_SETSIZE)]), \
-			    "=&c" (__d0), "=&D" (__d1)			      \
+			    "=c" (__d0), "=D" (__d1)			      \
 			  : "a" (0), "1" (sizeof (__fd_set)		      \
 					  / sizeof (__fd_mask)),	      \
 			    "2" (&__FDS_BITS (fdsp)[0])			      \

@@ -172,6 +172,13 @@ before-compile: $(before-compile)
 $(common-objpfx)dummy.o: $(common-objpfx)dummy.c $(before-compile);
 	$(compile-command.c)
 
+define o-iterator-doit
+$(common-objpfx)empty$o: $(common-objpfx)empty.c $(before-compile);
+	$$(compile-command.c)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
+
 # There's no good place to put this - here will do.
 # The dependencies are wrong if it's run from the top level.
 ifeq ($(filter %posix, $(sysdirs)),)

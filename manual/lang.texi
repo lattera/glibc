@@ -1,5 +1,6 @@
-@c This node must not have a prev pointer.
-@node Language Features, Library Summary, , Top
+@c This node must have no pointers.
+@node Language Features
+@c @node Language Features, Library Summary, , Top
 @c %MENU% C language features provided by the library
 @appendix C Language Facilities in the Library
 

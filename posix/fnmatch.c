@@ -239,7 +239,7 @@ fnmatch (pattern, string, flags)
 	    c = *p++;
 	    for (;;)
 	      {
-		unsigned int fn = FOLD (*n);
+		unsigned char fn = FOLD ((unsigned char) *n);
 
 		if (!(flags & FNM_NOESCAPE) && c == '\\')
 		  {
@@ -283,21 +283,21 @@ fnmatch (pattern, string, flags)
 		      /* Invalid character class name.  */
 		      return FNM_NOMATCH;
 
-		    if (__iswctype (__btowc (*n), wt))
+		    if (__iswctype (__btowc ((unsigned char) *n), wt))
 		      goto matched;
 # else
-		    if ((STREQ (str, "alnum") && ISALNUM (*n))
-			|| (STREQ (str, "alpha") && ISALPHA (*n))
-			|| (STREQ (str, "blank") && ISBLANK (*n))
-			|| (STREQ (str, "cntrl") && ISCNTRL (*n))
-			|| (STREQ (str, "digit") && ISDIGIT (*n))
-			|| (STREQ (str, "graph") && ISGRAPH (*n))
-			|| (STREQ (str, "lower") && ISLOWER (*n))
-			|| (STREQ (str, "print") && ISPRINT (*n))
-			|| (STREQ (str, "punct") && ISPUNCT (*n))
-			|| (STREQ (str, "space") && ISSPACE (*n))
-			|| (STREQ (str, "upper") && ISUPPER (*n))
-			|| (STREQ (str, "xdigit") && ISXDIGIT (*n)))
+		    if ((STREQ (str, "alnum") && ISALNUM ((unsigned char) *n))
+			|| (STREQ (str, "alpha") && ISALPHA ((unsigned char) *n))
+			|| (STREQ (str, "blank") && ISBLANK ((unsigned char) *n))
+			|| (STREQ (str, "cntrl") && ISCNTRL ((unsigned char) *n))
+			|| (STREQ (str, "digit") && ISDIGIT ((unsigned char) *n))
+			|| (STREQ (str, "graph") && ISGRAPH ((unsigned char) *n))
+			|| (STREQ (str, "lower") && ISLOWER ((unsigned char) *n))
+			|| (STREQ (str, "print") && ISPRINT ((unsigned char) *n))
+			|| (STREQ (str, "punct") && ISPUNCT ((unsigned char) *n))
+			|| (STREQ (str, "space") && ISSPACE ((unsigned char) *n))
+			|| (STREQ (str, "upper") && ISUPPER ((unsigned char) *n))
+			|| (STREQ (str, "xdigit") && ISXDIGIT ((unsigned char) *n)))
 		      goto matched;
 # endif
 		  }

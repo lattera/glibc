@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ typedef __int32_t  __blkcnt_t;		/* Type to count nr disk blocks.  */
 typedef __int64_t  __blkcnt64_t;	/*  "" (LFS) */
 typedef __uint32_t __fsblkcnt_t;	/* Type to count file system blocks.  */
 typedef __uint64_t __fsblkcnt64_t;	/*  "" (LFS) */
-typedef __uint64_t __fsfilcnt_t;	/* Type to count file system inodes.  */
+typedef __uint32_t __fsfilcnt_t;	/* Type to count file system inodes.  */
 typedef __uint64_t __fsfilcnt64_t;	/*  "" (LFS) */
 typedef __uint32_t __id_t;		/* General type for IDs.  */
 
