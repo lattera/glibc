@@ -1,3 +1,14 @@
+1999-11-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/setrlimit.c: COrrectly use rlimits.
+
+1999-11-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/getlogin_r.c (getlogin_r): Sync with getlogin
+	implementation for ttyname_r call; fix inverted condition; return
+	ut_user.
+        Closes PR libc/1438.
+
 1999-11-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/fenv.h: Include bits/fenvinline.h if optimizing.

@@ -60,10 +60,10 @@ __setrlimit (resource, rlimits)
 #ifndef __ASSUME_NEW_GETRLIMIT_SYSCALL
   /* We might have to correct the limits values.  Since the old values
      were signed the new values are too large.  */
-  rlimits.rlim_cur = MIN ((unsigned long int) rlimits.rlim_cur,
-			  RLIM_INFINITY >> 2);
-  rlimits.rlim_max = MIN ((unsigned long int) rlimits.rlim_max,
-			  RLIM_INFINITY >> 2);
+  rlimits->rlim_cur = MIN ((unsigned long int) rlimits->rlim_cur,
+			   RLIM_INFINITY >> 2);
+  rlimits->rlim_max = MIN ((unsigned long int) rlimits->rlim_max,
+			   RLIM_INFINITY >> 2);
 
   /* Fall back on the old system call.  */
   return INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
