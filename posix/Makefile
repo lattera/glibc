@@ -31,7 +31,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
-	      globtest.c globtest.sh wordexp-tst.sh annexc.c
+	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c
 
 routines :=								      \
 	uname								      \
