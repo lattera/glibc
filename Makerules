@@ -974,7 +974,3 @@ ifeq ($(with-cvs),yes)
 endif
 endif
 endif
-
-# Local Variables:
-# mode: makefile
-# End:

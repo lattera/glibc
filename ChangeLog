@@ -15,8 +15,8 @@
 	* autolock.sh: Removed.
 	* manual/move-if-change: Removed.
 
-	* scripts: new directory.
-	* =__ify: moved to scripts.
+	* scripts: New directory.
+	* =__ify: Moved to scripts.
 	* config.guess: Likewise.
 	* config.sub: Likewise.
 	* gen-FAQ.pl: Likewise.
@@ -65,10 +65,7 @@
 	* munch.awk: Likewise.
 	* version.c: Likewise.
 
-	* Makeconfig: Add emacs mode marker.
-	* Makerules: Likewise.
-	* Rules: Likewise, and also unconfuse syntax highlighting with
-	a fake comment.
+	* Rules: Unconfuse syntax highlighting with a fake comment.
 
 1998-05-08  Ulrich Drepper  <drepper@cygnus.com>
 

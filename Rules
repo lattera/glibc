@@ -189,7 +189,3 @@ $(common-objpfx)dummy$o: $(common-objpfx)dummy.c $(before-compile);
 endef
 object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
-
-# Local Variables:
-# mode: makefile
-# End:
