@@ -1,5 +1,5 @@
 /* BSD-like signal function.
-   Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,8 @@ __bsd_signal (sig, handler)
     }
 
   act.sa_handler = handler;
-  if (__sigemptyset (&act.sa_mask) < 0)
+  if (__sigemptyset (&act.sa_mask) < 0
+      || __sigaddset (&act.sa_mask, sig) < 0)
     return SIG_ERR;
   act.sa_flags = __sigismember (&_sigintr, sig) ? 0 : SA_RESTART;
   if (__sigaction (sig, &act, &oact) < 0)

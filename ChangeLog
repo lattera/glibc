@@ -1,5 +1,7 @@
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/signal.c: Add sig to act.sa_mask for completeness.
+
 	* stdlib/Makefile (tests): Add tst-bsearch.
 	* stdlib/tst-bsearch.c: New file.
 
