@@ -1,3 +1,12 @@
+1998-07-16  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (open_file): Return a Hurd I/O
+	port instead of a Mach memory object.
+	(__open): Likewise.
+	(__libc_read): New function.
+	(__mmap): Change to take a Hurd I/O port instead of a Mach memory
+	object.
+
 1998-07-16 20:01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* debug/Makefile (routines): Add backtracesymsfd.

@@ -225,11 +225,11 @@ _dl_sysdep_start_cleanup (void)
    dynamic linker re-relocates itself to be user-visible (for -ldl),
    it will get the user's definition (i.e. usually libc's).  */
 
-/* Open FILE_NAME and return a read-mmappable port in MEMOBJ_RD for it, or
+/* Open FILE_NAME and return a Hurd I/O for it in *PORT, or
    return an error.  If STAT is non-zero, stat the file into that stat buffer.  */
 static error_t
 open_file (const char *file_name, int mode,
-	   mach_port_t *memobj_rd, struct stat *stat)
+	   mach_port_t *port, struct stat *stat)
 {
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
@@ -288,27 +288,26 @@ open_file (const char *file_name, int mode,
 	  /* An empty RETRYNAME indicates we have the final port.  */
 	  if (retryname[0] == '\0')
 	    {
-	      mach_port_t memobj_wr;
-
 	      dealloc_dir = 1;
-
 	    opened:
 	      /* We have the file open.  Now map it.  */
-
 	      if (stat)
 		err = __io_stat (fileport, stat);
-	      if (! err)
-		err = __io_map (fileport, memobj_rd, &memobj_wr);
 
-	      if (dealloc_dir)
-		__mach_port_deallocate (__mach_task_self (), fileport);
 	      if (err)
-		return err;
+		{
+		  if (dealloc_dir)
+		    __mach_port_deallocate (__mach_task_self (), fileport);
+		}
+	      else
+		{
+		  if (!dealloc_dir)
+		    __mach_port_mod_refs (__mach_task_self (), fileport,
+					  MACH_PORT_RIGHT_SEND, 1);
+		  *port = fileport;
+		}
 
-	      if (memobj_wr != MACH_PORT_NULL)
-		__mach_port_deallocate (__mach_task_self (), memobj_wr);
-
-	      return 0;
+	      return err;
 	    }
 
 	  startdir = fileport;
@@ -462,12 +461,12 @@ open_file (const char *file_name, int mode,
 int weak_function
 __open (const char *file_name, int mode, ...)
 {
-  mach_port_t memobj_rd;
-  error_t err = open_file (file_name, mode, &memobj_rd, 0);
+  mach_port_t port;
+  error_t err = open_file (file_name, mode, &port, 0);
   if (err)
     return __hurd_fail (err);
   else
-    return (int)memobj_rd;
+    return (int)port;
 }
 
 int weak_function
@@ -478,12 +477,34 @@ __close (int fd)
   return 0;
 }
 
+__ssize_t weak_function
+__libc_read (int fd, void *buf, size_t nbytes)
+{
+  error_t err;
+  char *data;
+  mach_msg_type_number_t nread;
+
+  data = buf;
+  err = __io_read ((mach_port_t) fd, &data, &nread, -1, nbytes);
+  if (err)
+    return __hurd_fail (err);
+
+  if (data != buf)
+    {
+      memcpy (buf, data, nread);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
+    }
+
+  return nread;
+}
+
 __ptr_t weak_function
 __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
   vm_prot_t vmprot;
   vm_address_t mapaddr;
+  mach_port_t memobj_rd, memobj_wr;
 
   vmprot = VM_PROT_NONE;
   if (prot & PROT_READ)
@@ -493,11 +514,21 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   if (prot & PROT_EXEC)
     vmprot |= VM_PROT_EXECUTE;
 
+  if (flags & MAP_ANON)
+    memobj_rd = MACH_PORT_NULL;
+  else
+    {
+      err = __io_map ((mach_port_t) fd, &memobj_rd, &memobj_wr);
+      if (err)
+	return (__ptr_t) __hurd_fail (err);
+      __mach_port_deallocate (__mach_task_self (), memobj_wr);
+    }
+
   mapaddr = (vm_address_t) addr;
   err = __vm_map (__mach_task_self (),
 		  &mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
 		  !(flags & MAP_FIXED),
-		  (flags & MAP_ANON) ? MACH_PORT_NULL : (mach_port_t) fd,
+		  memobj_rd,
 		  (vm_offset_t) offset,
 		  flags & (MAP_COPY|MAP_PRIVATE),
 		  vmprot, VM_PROT_ALL,
@@ -511,12 +542,15 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	err = __vm_map (__mach_task_self (),
 			&mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
 			!(flags & MAP_FIXED),
-			(mach_port_t) fd, (vm_offset_t) offset,
+			memobj_rd, (vm_offset_t) offset,
 			flags & (MAP_COPY|MAP_PRIVATE),
 			vmprot, VM_PROT_ALL,
 			(flags & MAP_SHARED)
 			? VM_INHERIT_SHARE : VM_INHERIT_COPY);
     }
+
+  if ((flags & MAP_ANON) == 0)
+    __mach_port_deallocate (__mach_task_self (), memobj_rd);
 
   return err ? (__ptr_t) __hurd_fail (err) : (__ptr_t) mapaddr;
 }
