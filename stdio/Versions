@@ -62,4 +62,9 @@ libc {
     # p*
     putc_unlocked; putchar_unlocked;
   }
+  GLIBC_2.2.4 {
+    # Functions to access FILE internals.
+    __fbufsize; __freading; __fwriting; __freadable; __fwritable; __flbf;
+    __fpurge; __fpending; __fsetlocking; _flushlbf;
+  }
 }

@@ -21,7 +21,7 @@
 #
 subdir	:= stdio-common
 
-headers	:= printf.h
+headers	:= printf.h stdio_ext.h
 
 routines	:=							      \
 	ctermid cuserid							      \

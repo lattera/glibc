@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,8 @@ routines	:=							      \
 	fclose fcloseall fflush						      \
 	vdprintf vsnprintf vsprintf vasprintf vsscanf vscanf		      \
 	memstream obstream linewrap					      \
+	__fbufsize __freading __fwriting __freadable __fwritable __flbf	      \
+	__fpurge __fpending __fsetlocking				      \
 	internals sysd-stdio pipestream stdio_init libc_fatal
 aux	:= defs glue
 
