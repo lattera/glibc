@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@ extern int __syscall_rt_sigpending (sigset_t *, size_t);
 
 
 /* The variable is shared between all wrappers around signal handling
-   functions which have RT equivalents.  */
-int __libc_missing_rt_sigs;
+   functions which have RT equivalents.  The definition is in sigaction.c.  */
+extern int __libc_missing_rt_sigs;
 
 
 /* Change the set of blocked signals to SET,

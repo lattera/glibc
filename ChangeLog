@@ -1,3 +1,12 @@
+1999-01-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sigaction.c: Update comment to say the
+	__libc_missing_rt_sigs is defined here.
+	* sysdeps/unix/sysv/linux/sigpending.c: Only declare
+	__libc_missing_rt_sigs.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+
 1999-01-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* scripts/config.guess: Changes for ARM/Linux.
