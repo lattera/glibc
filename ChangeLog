@@ -1,3 +1,9 @@
+Tue Jul 30 14:35:17 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-sysdep.c	(__open): Use open_file.
+ 	(open_file): New function, contents mostly from __open.
+	(_dl_sysdep_read_whole_file): New function.
+
 Sat Jul 27 11:23:59 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Quote
