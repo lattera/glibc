@@ -1,3 +1,7 @@
+2002-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/tr.po: Update from translation team.
+
 2002-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (tests): Add tst-tls1.
