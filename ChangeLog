@@ -2,6 +2,11 @@
 
 	* version.h (VERSION): Bump to 2.2.2.
 
+	* iconv/Makefile (distribute): Add iconv_charmap.c and
+	dummy-repertoire.c.
+	* elf/Makefile (distribute): Add firstobj.c.
+	* Makefile (distribute): Add include/pthread.h.
+
 	* configure.in: Require makeinfo version 4.
 
 	* libio/tst_wscanf.c (main): Add cast to avoid warning.

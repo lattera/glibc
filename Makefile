@@ -260,7 +260,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		libc-symbols.h version.h shlib-versions rpm/Makefile	\
 		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
 		test-skeleton.c include/des.h include/libc-internal.h	\
-		include/shlib-compat.h Versions.def			\
+		include/shlib-compat.h include/pthread.h Versions.def	\
 		INTERFACE CONFORMANCE NAMESPACE				\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
