@@ -1,3 +1,7 @@
+2001-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ja.po: Update from translation team.
+
 2001-06-04  Bruno Haible  <haible@clisp.cons.org>
 
 	* locale/programs/locfile.c (siblings_uncached, siblings, full_read,
