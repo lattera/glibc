@@ -101,7 +101,9 @@ struct rtld_global _rtld_global =
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
+#ifdef _LIBC_REENTRANT
     ._dl_load_lock = _LIBC_LOCK_RECURSIVE_INITIALIZER
+#endif
   };
 strong_alias (_rtld_global, _rtld_local);
 

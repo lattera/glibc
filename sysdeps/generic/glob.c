@@ -191,6 +191,14 @@ extern void abort (), exit ();
 
 #endif	/* Standard headers.  */
 
+/* NAME_MAX is usually defined in <dirent.h> or <limits.h>.  */
+#if defined HAVE_LIMITS_H || defined __GNU_LIBRARY__
+# include <limits.h>
+#endif
+#ifndef NAME_MAX
+# define NAME_MAX (sizeof (((struct dirent *) 0)->d_name))
+#endif
+
 #ifndef	ANSI_STRING
 
 # ifndef bzero
@@ -1330,15 +1338,21 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		  size_t len;
 #if defined HAVE_DIRENT64 && !defined COMPILE_GLOB64
 		  struct dirent64 *d;
-		  struct dirent64 d64;
+		  union
+		    {
+		      struct dirent64 d64;
+		      char room [offsetof (struct dirent64, d_name[0])
+				 + NAME_MAX + 1];
+		    }
+		  d64buf;
 
 		  if (flags & GLOB_ALTDIRFUNC)
 		    {
 		      struct dirent *d32 = (*pglob->gl_readdir) (stream);
 		      if (d32 != NULL)
 			{
-			  CONVERT_DIRENT_DIRENT64 (&d64, d32);
-			  d = &d64;
+			  CONVERT_DIRENT_DIRENT64 (&d64buf.d64, d32);
+			  d = &d64buf.d64;
 			}
 		      else
 			d = NULL;

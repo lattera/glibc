@@ -60,6 +60,11 @@ do_test (void)
   /* Try to read from stdin where nothing will be available.  */
   if (aio_read (arr[0]) < 0)
     {
+      if (errno == ENOSYS)
+	{
+	  puts ("no aio support in this configuration");
+	  return 0;
+	}
       printf ("aio_read failed: %m\n");
       return 1;
     }

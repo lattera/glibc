@@ -4,7 +4,6 @@ adjtime		-	adjtime		i:pp	__adjtime	adjtime
 fchmod		-	fchmod		i:ii	__fchmod	fchmod
 fchown		-	fchown		i:iii	__fchown	fchown
 ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate
-getpgid		-	getpgrp		i:i	__getpgid	getpgid
 getrusage	-	getrusage	i:ip	__getrusage	getrusage
 gettimeofday	-	gettimeofday	i:PP	__gettimeofday	gettimeofday __gettimeofday_internal
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday

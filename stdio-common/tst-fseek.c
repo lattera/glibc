@@ -167,7 +167,7 @@ main (void)
     }
 
   /* Go back to the beginning of the file: relative.  */
-  if (fseek (fp, -(sizeof (outstr) - 1), SEEK_CUR) != 0)
+  if (fseek (fp, -((int) sizeof (outstr) - 1), SEEK_CUR) != 0)
     {
       printf ("%d: fseek(fp, 0, SEEK_SET) failed\n", __LINE__);
       result = 1;
@@ -194,7 +194,7 @@ main (void)
     }
 
   /* Now with fseeko.  */
-  if (fseeko (fp, -(sizeof (outstr) - 1), SEEK_CUR) != 0)
+  if (fseeko (fp, -((int) sizeof (outstr) - 1), SEEK_CUR) != 0)
     {
       printf ("%d: fseeko(fp, 0, SEEK_SET) failed\n", __LINE__);
       result = 1;
@@ -221,7 +221,7 @@ main (void)
     }
 
   /* Go back to the beginning of the file: from the end.  */
-  if (fseek (fp, -(sizeof (outstr) - 1), SEEK_END) != 0)
+  if (fseek (fp, -((int) sizeof (outstr) - 1), SEEK_END) != 0)
     {
       printf ("%d: fseek(fp, 0, SEEK_SET) failed\n", __LINE__);
       result = 1;
@@ -248,7 +248,7 @@ main (void)
     }
 
   /* Now with fseeko.  */
-  if (fseeko (fp, -(sizeof (outstr) - 1), SEEK_END) != 0)
+  if (fseeko (fp, -((int) sizeof (outstr) - 1), SEEK_END) != 0)
     {
       printf ("%d: fseeko(fp, 0, SEEK_SET) failed\n", __LINE__);
       result = 1;

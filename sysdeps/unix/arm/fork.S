@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,6 @@ SYSCALL__ (fork, 0)
 	sub r1, r1, $1
 	and r0, r0, r1
 	RETINSTR(mov, pc, r14)
-PSEUDO_END(fork)
+PSEUDO_END (__fork)
 
 weak_alias (__fork, fork)

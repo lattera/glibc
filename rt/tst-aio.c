@@ -1,5 +1,5 @@
 /* Tests for AIO in librt.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -162,7 +162,11 @@ do_test (int argc, char *argv[])
 
   /* First a simple test.  */
   for (cnt = 10; cnt > 0; )
-    aio_write (cbp[--cnt]);
+    if (aio_write (cbp[--cnt]) < 0 && errno == ENOSYS)
+      {
+	error (0, 0, "no aio support in this configuration");
+	return 0;
+      }
   /* Wait 'til the results are there.  */
   result |= do_wait (cbp, 10, 0);
   /* Test this.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1996,98,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1996,98,2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -135,15 +135,13 @@ __opendir (const char *name)
     goto lose;
 
 #ifdef _STATBUF_ST_BLKSIZE
-  if (__builtin_expect ((size_t) statbuf.st_blksize < sizeof (struct dirent),
-			0))
-    allocation = sizeof (struct dirent);
-  else
+  if (__builtin_expect ((size_t) statbuf.st_blksize >= sizeof (struct dirent),
+			1))
     allocation = statbuf.st_blksize;
-#else
-  allocation = (BUFSIZ < sizeof (struct dirent)
-		? sizeof (struct dirent) : BUFSIZ);
+  else
 #endif
+    allocation = (BUFSIZ < sizeof (struct dirent)
+		  ? sizeof (struct dirent) : BUFSIZ);
 
   dirp = (DIR *) calloc (1, sizeof (DIR) + allocation); /* Zero-fill.  */
   if (dirp == NULL)

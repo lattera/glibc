@@ -1,6 +1,6 @@
 /* Test the GNU extensions in glob which allow the user to provide callbacks
    for the filesystem access functions.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -93,6 +93,7 @@ typedef struct
   int level;
   int idx;
   struct dirent d;
+  char room_for_dirent[NAME_MAX];
 } my_DIR;
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,12 +44,10 @@ fileno (fp)
 }
 libc_hidden_def (fileno)
 
-#ifdef _IO_MTSAFE_IO
 #ifdef weak_alias
 /* The fileno implementation for libio does not require locking because
    it only accesses once a single variable and this is already atomic
-   (at least at thread level).  */
+   (at least at thread level).  Therefore we don't test _IO_MTSAFE_IO here.  */
 
 weak_alias (fileno, fileno_unlocked)
-#endif
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1995-2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,95,96,97,98,99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -35,10 +35,6 @@
 
 #ifdef __ASSEMBLER__
 
-/* ELF-like local names start with `.L'.  */
-#undef L
-#define L(name)	.L##name
-
 /* Linux uses a negative return value to indicate syscall errors,
    unlike most Unices, which use the condition codes' carry flag.
 
@@ -62,7 +58,7 @@
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
-    DO_CALL (args, syscall_name);					      \
+    DO_CALL (syscall_name, args);					      \
     cmpl $-4095, %eax;							      \
     jae SYSCALL_ERROR_LABEL;						      \
   L(pseudo_end):
@@ -187,7 +183,7 @@ __i686.get_pc_thunk.reg:						      \
    other processors though.  */
 
 #undef	DO_CALL
-#define DO_CALL(args, syscall_name)			      		      \
+#define DO_CALL(syscall_name, args)			      		      \
     PUSHARGS_##args							      \
     DOARGS_##args							      \
     movl $SYS_ify (syscall_name), %eax;					      \

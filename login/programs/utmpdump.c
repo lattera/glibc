@@ -1,5 +1,5 @@
 /* utmpdump - dump utmp-like files.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -29,15 +29,47 @@
 static void
 print_entry (struct utmp *up)
 {
-#if _HAVE_UT_TV - 0
-  printf ("[%d] [%05d] [%-4.4s] [%-8.8s] [%-12.12s] [%-15.15s] [%ld]\n",
-	  up->ut_type, up->ut_pid, up->ut_id, up->ut_user,
-	  up->ut_line, 4 + ctime (&up->ut_tv.tv_sec), up->ut_tv.tv_usec);
-#else
-  printf ("[%d] [%05d] [%-4.4s] [%-8.8s] [%-12.12s] [%-15.15s]\n",
-	  up->ut_type, up->ut_pid, up->ut_id, up->ut_user,
-	  up->ut_line, 4 + ctime (&up->ut_time));
+  (printf) (
+	    /* The format string.  */
+#if _HAVE_UT_TYPE
+	    "[%d] "
 #endif
+#if _HAVE_UT_PID
+	    "[%05d] "
+#endif
+#if _HAVE_UT_ID
+	    "[%-4.4s] "
+#endif
+	    "[%-8.8s] [%-12.12s]"
+#if _HAVE_UT_HOST
+	    " [%-16.16s]"
+#endif
+	    " [%-15.15s]"
+#if _HAVE_UT_TV
+	    " [%ld]"
+#endif
+	    "\n"
+	    /* The arguments.  */
+#if _HAVE_UT_TYPE
+	    , up->ut_type
+#endif
+#if _HAVE_UT_PID
+	    , up->ut_pid
+#endif
+#if _HAVE_UT_ID
+	    , up->ut_id
+#endif
+	    , up->ut_user, up->ut_line
+#if _HAVE_UT_HOST
+	    , up->ut_host
+#endif
+#if _HAVE_UT_TV
+	    , 4 + ctime (&up->ut_tv.tv_sec)
+	    , up->ut_tv.tv_usec
+#else
+	    , 4 + ctime (&up->ut_time)
+#endif
+	   );
 }
 
 int

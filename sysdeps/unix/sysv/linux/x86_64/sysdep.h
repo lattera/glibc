@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
-    DO_CALL (args, syscall_name);					      \
+    DO_CALL (syscall_name, args);					      \
     cmpq $-4095, %rax;							      \
     jae SYSCALL_ERROR_LABEL;						      \
   L(pseudo_end):
@@ -134,7 +134,7 @@
      Syscalls of more than 6 arguments are not supported.  */
 
 #undef	DO_CALL
-#define DO_CALL(args, syscall_name)		\
+#define DO_CALL(syscall_name, args)		\
     DOARGS_##args				\
     movq $SYS_ify (syscall_name), %rax;		\
     syscall;

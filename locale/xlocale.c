@@ -64,7 +64,9 @@ struct __locale_struct _nl_global_locale attribute_hidden = NL_C_INITIALIZER;
 __thread void *__libc_tsd_LOCALE = &_nl_global_locale;
 # else
 __libc_tsd_define (, LOCALE)
-void *__libc_tsd_LOCALE_data = &_nl_global_locale;
+/* This is a bad kludge presuming the variable name used by the macros.
+   Using typeof makes sure to barf if we do not match the macro definition.  */
+__typeof (__libc_tsd_LOCALE) __libc_tsd_LOCALE = &_nl_global_locale;
 # endif
 
 #endif

@@ -1,5 +1,5 @@
 /* Tests for UTMP functions.
-   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1998.
 
@@ -39,6 +39,8 @@
 # include <utmp.h>
 #endif
 
+
+#if _HAVE_UT_TYPE || defined UTMPX
 
 /* Prototype for our test function.  */
 static int do_test (int argc, char *argv[]);
@@ -165,7 +167,7 @@ simulate_login (const char *line, const char *user)
 	  if (entry[n].ut_pid == DEAD_PROCESS)
 	    entry[n].ut_pid = (entry_pid += 27);
 	  entry[n].ut_type = USER_PROCESS;
-	  strcpy (entry[n].ut_user, user);
+	  strncpy (entry[n].ut_user, user, sizeof (entry[n].ut_user));
 #if _HAVE_UT_TV - 0 || defined UTMPX
 	  entry[n].ut_tv.tv_sec = (entry_time += 1000);
 #else
@@ -199,7 +201,7 @@ simulate_logout (const char *line)
       if (strcmp (line, entry[n].ut_line) == 0)
 	{
 	  entry[n].ut_type = DEAD_PROCESS;
-	  entry[n].ut_user[0] = '\0';
+	  strncpy (entry[n].ut_user, "", sizeof (entry[n].ut_user));
 #if _HAVE_UT_TV - 0 || defined UTMPX
           entry[n].ut_tv.tv_sec = (entry_time += 1000);
 #else
@@ -389,3 +391,14 @@ do_test (int argc, char *argv[])
 
   return result;
 }
+
+#else
+
+/* No field 'ut_type' in struct utmp.  */
+int
+main ()
+{
+  return 0;
+}
+
+#endif

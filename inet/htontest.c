@@ -1,5 +1,5 @@
 /* Test hton/ntoh functions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,6 +20,7 @@
 
 #include <endian.h>
 #include <stdio.h>
+#include <sys/types.h>
 #include <netinet/in.h>
 
 #if BYTE_ORDER == BIG_ENDIAN

@@ -52,5 +52,6 @@ weak_alias (_IO_fputs, fputs)
 
 # ifndef _IO_MTSAFE_IO
 weak_alias (_IO_fputs, fputs_unlocked)
+libc_hidden_ver (_IO_fputs, fputs_unlocked)
 # endif
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -39,7 +39,7 @@ __ptsname_r (fd, buf, len)
      size_t len __attribute__ ((unused));
 {
   __set_errno (ENOSYS);
-  return 0;
+  return ENOSYS;
 }
 weak_alias (__ptsname_r, ptsname_r)
 

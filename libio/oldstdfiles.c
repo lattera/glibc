@@ -44,7 +44,6 @@
     = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, NULL), &_IO_old_file_jumps};
 #else
 #define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
-  static struct _IO_wide_data _IO_wide_data_##FD; \
   struct _IO_FILE_plus NAME \
     = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, NULL), &_IO_old_file_jumps};
 #endif

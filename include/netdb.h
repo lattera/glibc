@@ -19,6 +19,7 @@ __set_h_errno (int __err)
 # else
 #  undef  h_errno
 #  define __set_h_errno(x) (h_errno = (x))
+extern int h_errno;
 # endif	/* _LIBC_REENTRANT */
 
 libc_hidden_proto (hstrerror)

@@ -30,10 +30,7 @@
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
 ssize_t
-__readv (fd, vector, count)
-     int fd;
-     const struct iovec *vector;
-     int count;
+__readv (int fd, const struct iovec *vector, int count)
 {
   char *buffer;
   char *buffer_start;

@@ -49,10 +49,18 @@ pts_name (int fd, char **pts, size_t buf_len)
       if (buf_len)
 	{
 	  rv = __ptsname_r (fd, buf, buf_len);
+	  if (rv != 0)
+	    {
+	      if (rv == ENOTTY)
+		/* ptsname_r returns with ENOTTY to indicate
+		   a descriptor not referring to a pty master.
+		   For this condition, grantpt must return EINVAL.  */
+		errno = EINVAL;
+	      break;
+	    }
 
-	  if (rv != 0 || memchr (buf, '\0', buf_len))
-	    /* We either got an error, or we succeeded and the
-	       returned name fit in the buffer.  */
+	  if (memchr (buf, '\0', buf_len))
+	    /* We succeeded and the returned name fit in the buffer.  */
 	    break;
 
 	  /* Try again with a longer buffer.  */

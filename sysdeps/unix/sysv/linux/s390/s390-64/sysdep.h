@@ -1,5 +1,5 @@
 /* Assembler macros for 64 bit S/390.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -56,7 +56,7 @@
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
-    DO_CALL (args, syscall_name);					      \
+    DO_CALL (syscall_name, args);					      \
     lghi %r4,-4095 ;							      \
     clgr %r2,%r4 ;							      \
     jnl SYSCALL_ERROR_LABEL ;						      \
@@ -83,8 +83,8 @@
     st	    %r2,0(%r1) ;						      \
     lghi    %r2,-1 ;							      \
     br	    %r14
-#endif /* PIC */ 
-#else 
+#endif /* PIC */
+#else
 #define SYSCALL_ERROR_HANDLER						      \
 0:  jg	    __syscall_error@PLT
 #endif /* _LIBC_REENTRANT */
@@ -104,7 +104,7 @@
    right.
  */
 
-#define DO_CALL(args, syscall)						      \
+#define DO_CALL(syscall, args)						      \
     svc	    SYS_ify (syscall)
 
 #define ret								      \
@@ -131,7 +131,7 @@
      }									      \
     (int) err; })
 
-#define DECLARGS_0() 
+#define DECLARGS_0()
 #define DECLARGS_1(arg1) \
 	unsigned long gpr2 = (unsigned long) (arg1);
 #define DECLARGS_2(arg1, arg2) \

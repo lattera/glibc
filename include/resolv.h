@@ -20,6 +20,7 @@ extern __thread struct __res_state _res;
 #  endif
 # else
 #  ifndef __BIND_NOSTATIC
+#   undef _res
 extern struct __res_state _res;
 #  endif
 # endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000,01,02 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -55,7 +55,7 @@
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;                                                                      \
   ENTRY (name)							              \
-    DO_CALL (args, syscall_name);                                             \
+    DO_CALL (syscall_name, args);                                             \
     lhi  %r4,-4095 ;                                                          \
     clr  %r2,%r4 ;		                                              \
     jnl  SYSCALL_ERROR_LABEL ;                                                \
@@ -110,7 +110,7 @@
    right.
  */
 
-#define DO_CALL(args, syscall)						      \
+#define DO_CALL(syscall, args)						      \
     svc     SYS_ify (syscall)
 
 #define ret                                                                   \

@@ -332,16 +332,20 @@ openlog_internal(const char *ident, int logstat, int logfac)
 void
 openlog (const char *ident, int logstat, int logfac)
 {
+#ifdef _LIBC_REENTRANT
   /* Protect against multiple users.  */
   __libc_cleanup_region_start (1,
 			       (void (*) __P ((void *))) __libc_mutex_unlock,
 			       &syslog_lock);
   __libc_lock_lock (syslog_lock);
+#endif
 
   openlog_internal (ident, logstat, logfac);
 
+#ifdef _LIBC_REENTRANT
   /* Free the lock.  */
   __libc_cleanup_region_end (1);
+#endif
 }
 
 static void
@@ -364,18 +368,22 @@ closelog_internal()
 void
 closelog ()
 {
+#ifdef _LIBC_REENTRANT
   /* Protect against multiple users.  */
   __libc_cleanup_region_start (1,
 			       (void (*) __P ((void *))) __libc_mutex_unlock,
 			       &syslog_lock);
   __libc_lock_lock (syslog_lock);
+#endif
 
   closelog_internal ();
   LogTag = NULL;
   LogType = SOCK_DGRAM; /* this is the default */
 
+#ifdef _LIBC_REENTRANT
   /* Free the lock.  */
   __libc_cleanup_region_end (1);
+#endif
 }
 
 #ifdef _LIBC_REENTRANT

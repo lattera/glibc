@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 95-99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,95-99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    ARM changes by Philip Blundell, <pjb27@cam.ac.uk>, May 1997.
@@ -51,7 +51,7 @@
   .text;								      \
   .type syscall_error,%function;					      \
   ENTRY (name);								      \
-    DO_CALL (args, syscall_name);					      \
+    DO_CALL (syscall_name, args);					      \
     cmn r0, $4096;
 
 #define PSEUDO_RET							      \
@@ -95,7 +95,7 @@
 */
 
 #undef	DO_CALL
-#define DO_CALL(args, syscall_name)		\
+#define DO_CALL(syscall_name, args)		\
     DOARGS_##args				\
     swi SYS_ify (syscall_name); 		\
     UNDOARGS_##args

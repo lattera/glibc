@@ -1,5 +1,5 @@
 /* Test for notification mechanism in lio_listio.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 int flag;
 
@@ -67,6 +68,11 @@ do_test (int argc, char *argv[])
 
   if (lio_listio (LIO_WAIT, arr, 1, NULL) < 0)
     {
+      if (errno == ENOSYS)
+	{
+	  puts ("no aio support in this configuration");
+	  return 0;
+	}
       printf ("lio_listio failed: %m\n");
       return 1;
     }

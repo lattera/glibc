@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <mcheck.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,7 +49,12 @@ main (int argc, char *argv[])
   DIR *dir2;
   int result = 0;
   struct dirent64 *d;
-  struct dirent64 direntbuf;
+  union
+    {
+      struct dirent64 d;
+      char room [offsetof (struct dirent64, d_name[0]) + NAME_MAX + 1];
+    }
+    direntbuf;
   char *objdir_copy1;
   char *objdir_copy2;
   char *buf;
@@ -316,7 +322,7 @@ main (int argc, char *argv[])
 
   /* Try to find the new directory.  */
   rewinddir (dir1);
-  while (readdir64_r (dir1, &direntbuf, &d) == 0 && d != NULL)
+  while (readdir64_r (dir1, &direntbuf.d, &d) == 0 && d != NULL)
     {
 #ifdef _DIRENT_HAVE_D_TYPE
       if (d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
@@ -436,7 +442,7 @@ main (int argc, char *argv[])
 
   /* We now should have a directory and a file in the new directory.  */
   rewinddir (dir2);
-  while (readdir64_r (dir2, &direntbuf, &d) == 0 && d != NULL)
+  while (readdir64_r (dir2, &direntbuf.d, &d) == 0 && d != NULL)
     {
       if (strcmp (d->d_name, ".") == 0
 	  || strcmp (d->d_name, "..") == 0

@@ -1,3 +1,147 @@
+2002-08-26  Roland McGrath  <roland@redhat.com>
+
+	* locale/programs/ld-ctype.c (ctype_read): When given a repertoire
+	name of "", store a null pointer instead.
+
+	* configure.in (elf): Set to yes for freebsd*, netbsd*.
+	* configure: Regenerated.
+
+	* locale/xlocale.c [! (USE_TLS && HAVE___THREAD)] (__libc_tsd_LOCALE):
+	Initialize this instead of __libc_tsd_LOCALE_data.
+
+	* sysdeps/unix/grantpt.c (pts_name): Convert ENOTTY return from
+	ptsname_r to EINVAL.
+
+	* sysdeps/generic/ptsname.c (__ptsname_r): Return ENOSYS instead of 0.
+
+	* rt/Makefile: Revert last change, it was inappropriate to presume aio
+	implementations depend on pthreads.
+	* rt/tst-aio.c (do_test): Exit happy if first failure is ENOSYS.
+	* rt/tst-aio64.c (do_test): Likewise.
+	* rt/tst-aio2.c (do_test): Likewise.
+	* rt/tst-aio3.c (do_test): Likewise.
+	* rt/tst-aio4.c (do_test): Likewise.
+	* rt/tst-aio5.c (do_test): Likewise.
+	* rt/tst-aio6.c (do_test): Likewise.
+	* rt/tst-aio7.c (do_test): Likewise.
+
+	* sysdeps/generic/bits/libc-lock.h (__libc_setspecific): Use a cast to
+	void so as to avoid compiler warnings.
+
+	* libio/oldstdfiles.c [! _IO_MTSAFE_IO] (DEF_STDFILE): Don't define
+	_IO_wide_data_FD, which is never used here.
+
+	* libio/iofread.c
+	[! _IO_MTSAFE_IO] (fread_unlocked): Add libc_hidden_ver defn.
+	* libio/iofputs.c [! _IO_MTSAFE_IO] (fputs_unlocked): Likewise.
+	* libio/iofgets.c [! _IO_MTSAFE_IO] (fgets_unlocked): Likewise.
+
+	* include/resolv.h [! _LIBC_REENTRANT] (_res): #undef it before decl.
+	* include/netdb.h [! _LIBC_REENTRANT] (h_errno): Declare normal extern.
+
+	* misc/syslog.c (openlog): Conditionalize locking on [_LIBC_REENTRANT].
+	(closelog): Likewise.
+
+2002-07-06  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/alpha/fpu/fpu_control.h: Comment fix.
+
+	* sysdeps/unix/sysv/linux/alpha/pipe.S: Moved to ...
+	* sysdeps/unix/alpha/pipe.S: ... here.
+	* sysdeps/unix/bsd/osf/alpha/pipe.S: File removed.
+
+	* sysdeps/unix/i386/brk.S: Rename local label to '.Lhere' in ELF.
+
+	* sysdeps/unix/i386/brk.S: Add PSEUDO_END invocation.
+	* sysdeps/unix/i386/fork.S: Likewise.
+	* sysdeps/unix/i386/pipe.S: Likewise.
+	* sysdeps/unix/i386/wait.S: Likewise.
+
+	* sysdeps/unix/fork.S: Fix PSEUDO_END argument.
+	* sysdeps/unix/arm/fork.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO): Swap DO_CALL
+	arguments.
+	(DO_CALL): Swap argument order.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (PSEUDO): Swap DO_CALL
+	arguments.
+	(DO_CALL): Swap argument order.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PSEUDO): Swap DO_CALL
+	arguments.
+	(DO_CALL): Swap argument order.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (PSEUDO): Swap DO_CALL
+	arguments.
+	(DO_CALL): Swap argument order.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (PSEUDO): Swap DO_CALL
+	arguments.
+	(DO_CALL): Swap argument order.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (PSEUDO): Swap DO_CALL
+	arguments.
+	(DO_CALL): Swap argument order.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (PSEUDO): Swap DO_CALL
+	arguments.
+	(DO_CALL): Swap argument order.
+
+	* sysdeps/i386/sysdep.h (PSEUDO): Fix syntax error.
+	(L): Define right for ELF.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (L): Remove definition.
+	Now defined in sysdeps/i386/sysdep.h.
+
+	* sysdeps/posix/readv.c: Ansify function definition.
+	* sysdeps/posix/writev.c: Likewise.
+
+	* stdio-common/tst-fseek.c (main): Don't assume that off_t and size_t
+	have the same size. Avoid direct cast from size_t to off_t.
+
+	* login/tst-utmp.c (simulate_login): Don't leave garbage after the
+	nul byte in entry[n].ut_user.
+	(simulate_logout): Likewise.
+
+	* login/programs/utmpdump.c (print_entry): Test _HAVE_UT_TYPE,
+	_HAVE_UT_PID, _HAVE_UT_ID, _HAVE_UT_HOST, instead of assuming the
+	existence of corresponding members of 'struct utmp'.
+	* login/tst-utmp.c: Trivialize the test if testing 'struct utmp' and
+	!_HAVE_UT_TYPE.
+
+	* sysdeps/unix/opendir.c (__opendir): If st_blksize is 0 or too small,
+	allocate a buffer of at least BUFSIZ bytes, not just of
+	sizeof (struct dirent).
+
+	* sysdeps/generic/glob.c: Include <limits.h>.
+	(NAME_MAX): Define a fallback.
+	(glob_in_dir): Allocate enough room for a 'struct dirent64' on the
+	stack.
+	* posix/tst-dir.c: Include <stddef.h>, for offsetof.
+	(main): Allocate enough room for a 'struct dirent64' on the stack.
+	* posix/tst-gnuglob.c (my_DIR): Allocate enough room for a
+	'struct dirent'.
+
+	* sysdeps/unix/sysv/linux/init-first.c: Don't include
+	kernel-features.h.
+
+	* inet/htontest.c: Include <sys/types.h>.
+
+	* sysdeps/generic/sys/sysinfo.h: Surround with __{BEGIN,END}_DECLS.
+
+	* include/sys/sysctl.h: Comment fix.
+
+	* elf/rtld.c (_rtld_global) [! _LIBC_REENTRANT]: Don't initialize
+	_dl_load_lock.
+	* libio/fileno.c (fileno_unlocked): Define regardless of _IO_MTSAFE_IO.
+
+	* sysdeps/unix/bsd/bsd4.4/syscalls.list (__sigaltstack): New alias.
+
+	* sysdeps/unix/inet/syscalls.list (__connect_internal): New alias.
+	(__getpeername): New alias.
+	(__getsockname): New alias.
+	(__socket): New alias.
+
+	* sysdeps/unix/common/syscalls.list (getpgid): Remove.
+
+	* sysdeps/unix/syscalls.list (__chown_internal): New alias.
+	(__fcntl_internal): New alias.
+	(__profil): New alias.
+
 2002-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/hstcache.c (cache_addhst): Add new parameter saying whether

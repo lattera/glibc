@@ -1,5 +1,5 @@
 /* Test for completion signal handling.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 /* We might need a bit longer timeout.  */
 #define TIMEOUT 10 /* sec */
@@ -126,6 +127,11 @@ do_test (int argc, char *argv[])
   /* First use aio_write.  */
   if (aio_write (arr[0]) < 0)
     {
+      if (errno == ENOSYS)
+	{
+	  puts ("no aio support in this configuration");
+	  return 0;
+	}
       printf ("aio_write failed: %m\n");
       return 1;
     }

@@ -2,11 +2,11 @@
 
 accept		-	accept		i:iBN	__libc_accept	accept
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		i:ipi	__libc_connect	__connect connect
+connect		-	connect		i:ipi	__libc_connect	__connect __connect_internal connect
 gethostid	-	gethostid	i:	gethostid
 gethostname	-	gethostname	i:bn	__gethostname	gethostname
-getpeername	-	getpeername	i:ibN	getpeername
-getsockname	-	getsockname	i:ibN	getsockname
+getpeername	-	getpeername	i:ibN	__getpeername	getpeername
+getsockname	-	getsockname	i:ibN	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	getsockopt
 listen		-	listen		i:ii	__listen	listen
 recv		-	recv		i:ibni	__libc_recv	recv
@@ -19,7 +19,7 @@ sethostid	-	sethostid	i:i	sethostid
 sethostname	-	sethostname	i:pi	sethostname
 setsockopt	-	setsockopt	i:iiibn	setsockopt	__setsockopt
 shutdown	-	shutdown	i:ii	shutdown
-socket		-	socket		i:iii	socket
+socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	socketpair
 
 

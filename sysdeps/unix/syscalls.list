@@ -4,13 +4,13 @@ access		-	access		i:si	__access	access
 acct		-	acct		i:S	acct
 chdir		-	chdir		i:s	__chdir		chdir
 chmod		-	chmod		i:si	__chmod		chmod
-chown		-	chown		i:sii	__chown		chown
+chown		-	chown		i:sii	__chown		__chown_internal chown
 chroot		-	chroot		i:s	chroot
 close		-	close		i:i	__libc_close	__close close
 dup		-	dup		i:i	__dup		dup
 dup2		-	dup2		i:ii	__dup2		dup2
 fchdir		-	fchdir		i:i	__fchdir	fchdir
-fcntl		-	fcntl		i:iiF	__libc_fcntl __fcntl fcntl
+fcntl		-	fcntl		i:iiF	__libc_fcntl	__fcntl __fcntl_internal fcntl
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
 fsync		-	fsync		i:i	__libc_fsync	fsync
 getdomain	-	getdomainname	i:si	getdomainname
@@ -27,7 +27,7 @@ link		-	link		i:ss	__link		link
 lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek
 mkdir		-	mkdir		i:si	__mkdir		mkdir
 open		-	open		i:siv	__libc_open __open open
-profil		-	profil		i:piii	profil
+profil		-	profil		i:piii	__profil	profil
 ptrace		-	ptrace		i:iiii	ptrace
 read		-	read		i:ibn	__libc_read	__read read
 readlink	-	readlink	i:spi	__readlink	readlink

@@ -1,5 +1,5 @@
 /* Test for AIO POSIX compliance.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,6 +52,12 @@ do_test (void)
     /* Case one: invalid fds that match.  */
     if (aio_cancel (fd, &cb) != -1 || errno != EBADF)
       {
+	if (errno == ENOSYS)
+	  {
+	    puts ("no aio support in this configuration");
+	    return 0;
+	  }
+
 	puts ("aio_cancel( -1, {-1..} ) did not return -1 or errno != EBADF");
 	++result;
       }

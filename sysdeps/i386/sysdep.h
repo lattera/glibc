@@ -1,5 +1,5 @@
 /* Assembler macros for i386.
-   Copyright (C) 1991, 92, 93, 95, 96, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,95,96,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,9 +97,9 @@
 #endif
 
 #define	PSEUDO(name, syscall_name, args)				      \
-lose: SYSCALL_PIC_SETUP							      \
-  jmp JUMPTARGET(syscall_error)						      \
   .globl syscall_error;							      \
+lose: SYSCALL_PIC_SETUP							      \
+  jmp JUMPTARGET(syscall_error);					      \
   ENTRY (name)								      \
   DO_CALL (syscall_name, args);						      \
   jb lose
@@ -122,7 +122,11 @@ lose: SYSCALL_PIC_SETUP							      \
 
 /* Local label name for asm code. */
 #ifndef L
+#ifdef HAVE_ELF
+#define L(name)		.L##name
+#else
 #define L(name)		name
+#endif
 #endif
 
 #endif	/* __ASSEMBLER__ */

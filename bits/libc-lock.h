@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Stub version.
-   Copyright (C) 1996,97,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -123,7 +123,7 @@ typedef int __libc_key_t;
 #define __libc_key_create(KEY,DEST) -1
 
 /* Set thread-specific data associated with KEY to VAL.  */
-#define __libc_setspecific(KEY,VAL) -1
+#define __libc_setspecific(KEY,VAL) ((void)0)
 
 /* Get thread-specific data associated with KEY.  */
 #define __libc_getspecific(KEY) 0

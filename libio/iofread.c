@@ -53,5 +53,6 @@ weak_alias (_IO_fread, fread)
 
 # ifndef _IO_MTSAFE_IO
 weak_alias (_IO_fread, fread_unlocked)
+libc_hidden_ver (_IO_fread, fread_unlocked)
 # endif
 #endif

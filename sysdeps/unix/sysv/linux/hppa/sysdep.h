@@ -1,5 +1,5 @@
 /* Assembler macros for PA-RISC.
-   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@cygnus.com>, August 1999.
    Linux/PA-RISC changes by Philipp Rumpf, <prumpf@tux.org>, March 2000.
@@ -108,7 +108,7 @@
 
 #define	PSEUDO(name, syscall_name, args)				      \
   ENTRY (name)								      \
-  DO_CALL(args, syscall_name)					ASM_LINE_SEP  \
+  DO_CALL(syscall_name, args)					ASM_LINE_SEP  \
   nop
 
 #undef	PSEUDO_END
@@ -145,7 +145,7 @@
  */
 
 #undef	DO_CALL
-#define DO_CALL(args, syscall_name)				\
+#define DO_CALL(syscall_name, args)				\
 	DOARGS_##args						\
 	ble  0x100(%sr2,%r0)			ASM_LINE_SEP	\
 	ldi SYS_ify (syscall_name), %r20	ASM_LINE_SEP	\

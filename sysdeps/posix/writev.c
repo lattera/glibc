@@ -30,10 +30,7 @@
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
 ssize_t
-__writev (fd, vector, count)
-     int fd;
-     const struct iovec *vector;
-     int count;
+__writev (int fd, const struct iovec *vector, int count)
 {
   char *buffer;
   register char *bp;

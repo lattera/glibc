@@ -38,10 +38,9 @@ librt-routines = $(aio-routines) \
 		 $(clock-routines) $(timer-routines) \
 		 $(shm-routines)
 
-tests := tst-shm tst-clock tst-timer
-ifeq ($(have-thread-library),yes)
-tests += tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6
-endif
+tests := tst-shm tst-clock tst-timer \
+	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
+	 tst-aio7
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)

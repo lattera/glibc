@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,9 @@ SYSCALL__ (brk, 1)
 	movl 4(%esp), %eax
 #ifdef	PIC
 	/* Standard PIC nonsense to store into `__curbrk' through the GOT.  */
-	call here
-here:	popl %ecx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-here], %ecx
+	call L(here)
+L(here): popl %ecx
+	addl $_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ecx
 	movl C_SYMBOL_NAME(__curbrk@GOT)(%ecx), %ecx
 	movl %eax, (%ecx)
 #else
@@ -46,5 +46,6 @@ here:	popl %ecx
 #endif
 	xorl %eax, %eax
 	ret
+PSEUDO_END (__brk)
 
 weak_alias (__brk, brk)

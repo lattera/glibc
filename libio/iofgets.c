@@ -69,5 +69,6 @@ weak_alias (_IO_fgets, fgets)
 
 # ifndef _IO_MTSAFE_IO
 weak_alias (_IO_fgets, fgets_unlocked)
+libc_hidden_weak (fgets_unlocked)
 # endif
 #endif

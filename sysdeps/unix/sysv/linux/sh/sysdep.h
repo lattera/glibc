@@ -1,5 +1,4 @@
-/* Copyright (C) 1992, 93, 95-99, 2000 Free Software Foundation,
-   Inc.
+/* Copyright (C) 1992,93,95-99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    Changed by Kaz Kojima, <kkojima@rr.iij4u.or.jp>.
@@ -52,7 +51,7 @@
 #define	PSEUDO(name, syscall_name, args) \
  .text; \
  ENTRY (name); \
-    DO_CALL (args, syscall_name); \
+    DO_CALL (syscall_name, args); \
     mov r0,r1; \
     mov _IMM12,r2; \
     shad r2,r1; \
@@ -81,7 +80,7 @@
 #define	PSEUDO(name, syscall_name, args) \
  .text; \
  ENTRY (name); \
-    DO_CALL (args, syscall_name); \
+    DO_CALL (syscall_name, args); \
     mov r0,r1; \
     mov _IMM12,r2; \
     shad r2,r1; \
@@ -112,7 +111,7 @@
 #define SYSCALL_INST6	mov.l @(0,r15),r0; mov.l @(4,r15),r1; trapa #0x16
 
 #undef	DO_CALL
-#define DO_CALL(args, syscall_name)	\
+#define DO_CALL(syscall_name, args)	\
     mov.l 1f,r3;			\
     SYSCALL_INST##args;			\
     bra 2f;				\
