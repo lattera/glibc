@@ -1,3 +1,7 @@
+2003-04-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-cancel4.c (do_test): Use %zd instead of %d when printing cnt.
+
 2003-04-15  Roland McGrath  <roland@redhat.com>
 
 	* forward.c (__pthread_unwind): Tweak to avoid warning.
