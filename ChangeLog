@@ -1,3 +1,8 @@
+2001-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/Makefile (tests): Add scanf11.
+	* stdio-common/scanf11.c: New file.
+
 2001-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (RELEASE): Define as development.
