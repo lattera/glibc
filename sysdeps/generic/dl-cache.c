@@ -1,5 +1,5 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,6 @@
 #include <dl-procinfo.h>
 
 #include <stdio-common/_itoa.h>
-
-extern const char *_dl_platform;
 
 #ifndef _DL_PLATFORMS_COUNT
 # define _DL_PLATFORMS_COUNT 0
@@ -154,7 +152,7 @@ _dl_load_cache_lookup (const char *name)
   const char *best;
 
   /* Print a message if the loading of libs is traced.  */
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
     _dl_debug_printf (" search cache=%s\n", LD_SO_CACHE);
 
   if (cache == NULL)
@@ -213,7 +211,9 @@ _dl_load_cache_lookup (const char *name)
       /* This file ends in static libraries where we don't have a hwcap.  */
       unsigned long int *hwcap;
       uint64_t platform;
+#ifndef SHARED
       weak_extern (_dl_hwcap);
+#endif
 
       /* This is where the strings start.  */
       cache_data = (const char *) cache_new;
@@ -221,14 +221,15 @@ _dl_load_cache_lookup (const char *name)
       /* Now we can compute how large the string table is.  */
       cache_data_size = (const char *) cache + cachesize - cache_data;
 
-      hwcap = &_dl_hwcap;
-      platform = _dl_string_platform (_dl_platform);
+      hwcap = &GL(dl_hwcap);
+      platform = _dl_string_platform (GL(dl_platform));
       if (platform != -1)
 	platform = 1ULL << platform;
 
       /* Only accept hwcap if it's for the right platform.  */
 #define HWCAP_CHECK \
-      if (_dl_osversion	&& cache_new->libs[middle].osversion > _dl_osversion) \
+      if (GL(dl_osversion)						      \
+	  && cache_new->libs[middle].osversion > GL(dl_osversion))	      \
 	continue;							      \
       if (_DL_PLATFORMS_COUNT && platform != -1				      \
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
@@ -253,7 +254,7 @@ _dl_load_cache_lookup (const char *name)
     }
 
   /* Print our result if wanted.  */
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0) && best != NULL)
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0) && best != NULL)
     _dl_debug_printf ("  trying file=%s\n", best);
 
   return best;

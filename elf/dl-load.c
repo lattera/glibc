@@ -111,18 +111,6 @@ struct filebuf
   char buf[1024];
 };
 
-size_t _dl_pagesize;
-
-unsigned int _dl_osversion;
-
-int _dl_clktck;
-
-extern const char *_dl_platform;
-extern size_t _dl_platformlen;
-
-/* The object to be initialized first.  */
-struct link_map *_dl_initfirst;
-
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
 static struct r_search_path_struct env_path_list;
 
@@ -240,7 +228,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	    repl = l->l_origin;
 	  else if ((len = is_dst (start, name + 1, "{PLATFORM}", 10, is_path,
 				  0)) != 0)
-	    repl = _dl_platform;
+	    repl = GL(dl_platform);
 
 	  if (repl != NULL && repl != (const char *) -1)
 	    {
@@ -344,12 +332,6 @@ add_name_to_object (struct link_map *l, const char *name)
   lastp->next = newname;
 }
 
-/* All known directories in sorted order.  */
-struct r_search_path_elem *_dl_all_dirs;
-
-/* All directories after startup.  */
-struct r_search_path_elem *_dl_init_all_dirs;
-
 /* Standard search directories.  */
 static struct r_search_path_struct rtld_search_dirs;
 
@@ -413,7 +395,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	}
 
       /* See if this directory is already known.  */
-      for (dirp = _dl_all_dirs; dirp != NULL; dirp = dirp->next)
+      for (dirp = GL(dl_all_dirs); dirp != NULL; dirp = dirp->next)
 	if (dirp->dirnamelen == len && memcmp (cp, dirp->dirname, len) == 0)
 	  break;
 
@@ -460,13 +442,13 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	  dirp->what = what;
 	  if (__builtin_expect (where != NULL, 1))
 	    dirp->where = memcpy ((char *) dirp + sizeof (*dirp) + len + 1
-				  + ncapstr * sizeof (enum r_dir_status),
+				  + (ncapstr * sizeof (enum r_dir_status)),
 				  where, where_len);
 	  else
 	    dirp->where = NULL;
 
-	  dirp->next = _dl_all_dirs;
-	  _dl_all_dirs = dirp;
+	  dirp->next = GL(dl_all_dirs);
+	  GL(dl_all_dirs) = dirp;
 
 	  /* Put it in the result array.  */
 	  result[nelems++] = dirp;
@@ -496,13 +478,14 @@ decompose_rpath (struct r_search_path_struct *sps,
 
   /* First see whether we must forget the RUNPATH and RPATH from this
      object.  */
-  if (__builtin_expect (_dl_inhibit_rpath != NULL, 0) && !__libc_enable_secure)
+  if (__builtin_expect (GL(dl_inhibit_rpath) != NULL, 0)
+      && !__libc_enable_secure)
     {
-      const char *found = strstr (_dl_inhibit_rpath, where);
+      const char *found = strstr (GL(dl_inhibit_rpath), where);
       if (found != NULL)
 	{
 	  size_t len = strlen (where);
-	  if ((found == _dl_inhibit_rpath || found[-1] == ':')
+	  if ((found == GL(dl_inhibit_rpath) || found[-1] == ':')
 	      && (found[len] == '\0' || found[len] == ':'))
 	    {
 	      /* This object is on the list of objects for which the
@@ -579,7 +562,7 @@ _dl_init_paths (const char *llp)
      directories addressed by the LD_LIBRARY_PATH environment variable.  */
 
   /* Get the capabilities.  */
-  capstr = _dl_important_hwcaps (_dl_platform, _dl_platformlen,
+  capstr = _dl_important_hwcaps (GL(dl_platform), GL(dl_platformlen),
 				 &ncapstr, &max_capstrlen);
 
   /* First set up the rest of the default search directory entries.  */
@@ -606,7 +589,7 @@ _dl_init_paths (const char *llp)
     }
 
   rtld_search_dirs.malloced = 0;
-  pelem = _dl_all_dirs = rtld_search_dirs.dirs[0];
+  pelem = GL(dl_all_dirs) = rtld_search_dirs.dirs[0];
   strp = system_dirs;
   idx = 0;
 
@@ -639,7 +622,7 @@ _dl_init_paths (const char *llp)
 
 #ifdef SHARED
   /* This points to the map of the main object.  */
-  l = _dl_loaded;
+  l = GL(dl_loaded);
   if (l != NULL)
     {
       assert (l->l_type != lt_loaded);
@@ -715,7 +698,7 @@ _dl_init_paths (const char *llp)
     env_path_list.dirs = (void *) -1;
 
   /* Remember the last search directory added at startup.  */
-  _dl_init_all_dirs = _dl_all_dirs;
+  GL(dl_init_all_dirs) = GL(dl_all_dirs);
 }
 
 
@@ -746,11 +729,11 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 #ifndef SHARED
       if (l->l_prev == NULL)
 	/* No other module loaded.  */
-	_dl_loaded = NULL;
+	GL(dl_loaded) = NULL;
       else
 #endif
 	l->l_prev->l_next = NULL;
-      --_dl_nloaded;
+      --GL(dl_nloaded);
       free (l);
     }
   free (realname);
@@ -791,7 +774,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     }
 
   /* Look again to see if the real name matched another already loaded.  */
-  for (l = _dl_loaded; l; l = l->l_next)
+  for (l = GL(dl_loaded); l; l = l->l_next)
     if (l->l_ino == st.st_ino && l->l_dev == st.st_dev)
       {
 	/* The object is already loaded.
@@ -812,7 +795,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     return NULL;
 
   /* Print debugging message.  */
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
     _dl_debug_printf ("file=%s;  generating link map\n", name);
 
   /* This is the ELF header.  We read it in `open_verify'.  */
@@ -892,7 +875,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	case PT_LOAD:
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
-	  if ((ph->p_align & (_dl_pagesize - 1)) != 0)
+	  if ((ph->p_align & (GL(dl_pagesize) - 1)) != 0)
 	    {
 	      errstring = N_("ELF load command alignment not page-aligned");
 	      goto call_lose;
@@ -907,8 +890,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  {
 	    struct loadcmd *c = &loadcmds[nloadcmds++];
 	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-	    c->mapend = ((ph->p_vaddr + ph->p_filesz + _dl_pagesize - 1)
-			 & ~(_dl_pagesize - 1));
+	    c->mapend = ((ph->p_vaddr + ph->p_filesz + GL(dl_pagesize) - 1)
+			 & ~(GL(dl_pagesize) - 1));
 	    c->dataend = ph->p_vaddr + ph->p_filesz;
 	    c->allocend = ph->p_vaddr + ph->p_memsz;
 	    c->mapoff = ph->p_offset & ~(ph->p_align - 1);
@@ -1023,7 +1006,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
 	    zero = l->l_addr + c->dataend;
 	    zeroend = l->l_addr + c->allocend;
-	    zeropage = (zero + _dl_pagesize - 1) & ~(_dl_pagesize - 1);
+	    zeropage = ((zero + GL(dl_pagesize) - 1)
+			& ~(GL(dl_pagesize) - 1));
 
 	    if (zeroend < zeropage)
 	      /* All the extra data is in the last page of the segment.
@@ -1036,8 +1020,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		if ((c->prot & PROT_WRITE) == 0)
 		  {
 		    /* Dag nab it.  */
-		    if (__mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
-				    _dl_pagesize, c->prot|PROT_WRITE) < 0)
+		    if (__mprotect ((caddr_t) (zero & ~(GL(dl_pagesize) - 1)),
+				    GL(dl_pagesize), c->prot|PROT_WRITE) < 0)
 		      {
 			errstring = N_("cannot change memory protections");
 			goto call_lose_errno;
@@ -1045,8 +1029,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		  }
 		memset ((void *) zero, '\0', zeropage - zero);
 		if ((c->prot & PROT_WRITE) == 0)
-		  __mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
-			      _dl_pagesize, c->prot);
+		  __mprotect ((caddr_t) (zero & ~(GL(dl_pagesize) - 1)),
+			      GL(dl_pagesize), c->prot);
 	      }
 
 	    if (zeroend > zeropage)
@@ -1110,7 +1094,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   l->l_entry += l->l_addr;
 
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
     _dl_debug_printf ("  dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n"
 		      "    entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
 		      (int) sizeof (void *) * 2, (unsigned long int) l->l_ld,
@@ -1176,7 +1160,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* Remember whether this object must be initialized first.  */
   if (l->l_flags_1 & DF_1_INITFIRST)
-    _dl_initfirst = l;
+    GL(dl_initfirst) = l;
 
   /* Finally the file information.  */
   l->l_dev = st.st_dev;
@@ -1397,7 +1381,7 @@ open_verify (const char *name, struct filebuf *fbp)
 			+ (abi_note[6] & 0xff) * 256
 			+ (abi_note[7] & 0xff);
 	    if (abi_note[4] != __ABI_TAG_OS
-		|| (_dl_osversion && _dl_osversion < osversion))
+		|| (GL(dl_osversion) && GL(dl_osversion) < osversion))
 	      {
 	      close_and_out:
 		__close (fd);
@@ -1442,7 +1426,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
-      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0)
+      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0)
 	  && current_what != this_dir->what)
 	{
 	  current_what = this_dir->what;
@@ -1457,13 +1441,13 @@ open_path (const char *name, size_t namelen, int preloaded,
 	    continue;
 
 	  buflen =
-	    ((char *) __mempcpy (__mempcpy (edp,
-					    capstr[cnt].str, capstr[cnt].len),
+	    ((char *) __mempcpy (__mempcpy (edp, capstr[cnt].str,
+					    capstr[cnt].len),
 				 name, namelen)
 	     - buf);
 
 	  /* Print name we try if this is wanted.  */
-	  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
+	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	    _dl_debug_printf ("  trying file=%s\n", buf);
 
 	  fd = open_verify (buf, fbp);
@@ -1566,7 +1550,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   struct filebuf fb;
 
   /* Look for this name among those already loaded.  */
-  for (l = _dl_loaded; l; l = l->l_next)
+  for (l = GL(dl_loaded); l; l = l->l_next)
     {
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
@@ -1596,7 +1580,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
     }
 
   /* Display information if we are debugging.  */
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0) && loader != NULL)
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0) && loader != NULL)
     _dl_debug_printf ("\nfile=%s;  needed by %s\n", name,
 		      loader->l_name[0] ? loader->l_name : _dl_argv[0]);
 
@@ -1606,7 +1590,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       size_t namelen = strlen (name) + 1;
 
-      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
+      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	_dl_debug_printf ("find library=%s; searching\n", name);
 
       fd = -1;
@@ -1644,7 +1628,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
              itself.  */
-	  l = _dl_loaded;
+	  l = GL(dl_loaded);
 	  if (fd == -1 && l && l->l_type != lt_loaded && l != loader
 	      && l->l_rpath_dirs.dirs != (void *) -1)
 	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
@@ -1698,7 +1682,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if (cached != NULL)
 	    {
 #ifdef SHARED
-	      l = loader ?: _dl_loaded;
+	      l = loader ?: GL(dl_loaded);
 #else
 	      l = loader;
 #endif
@@ -1748,14 +1732,14 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Finally, try the default path.  */
       if (fd == -1
-	  && ((l = loader ?: _dl_loaded) == NULL
+	  && ((l = loader ?: GL(dl_loaded)) == NULL
 	      || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
 			&realname, &fb);
 
       /* Add another newline when we a tracing the library loading.  */
-      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
+      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
         _dl_debug_printf ("\n");
     }
   else
@@ -1777,7 +1761,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   if (__builtin_expect (fd, 0) == -1)
     {
       if (trace_mode
-	  && __builtin_expect (_dl_debug_mask & DL_DEBUG_PRELINK, 0) == 0)
+	  && __builtin_expect (GL(dl_debug_mask) & DL_DEBUG_PRELINK, 0) == 0)
 	{
 	  /* We haven't found an appropriate library.  But since we
 	     are only interested in the list of libraries this isn't

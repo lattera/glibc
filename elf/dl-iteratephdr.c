@@ -1,5 +1,5 @@
 /* Get loaded objects program headers.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -34,7 +34,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
   /* Make sure we are alone.  */
   __libc_lock_lock_recursive (_dl_load_lock);
 
-  for (l = _dl_loaded; l != NULL; l = l->l_next)
+  for (l = GL(dl_loaded); l != NULL; l = l->l_next)
     {
       /* Skip the dynamic linker.  */
       if (l->l_phdr == NULL)

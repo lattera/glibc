@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,15 +50,11 @@ extern char **__libc_argv;
 
 extern char **__environ;
 
-extern int _dl_lazy;			/* Do we do lazy relocations?  */
-
 /* Undefine the following for debugging.  */
 /* #define SCOPE_DEBUG 1 */
 #ifdef SCOPE_DEBUG
 static void show_scope (struct link_map *new);
 #endif
-
-extern size_t _dl_platformlen;
 
 /* We must be carefull not to leave us in an inconsistent state.  Thus we
    catch any error and re-raise it after cleaning up.  */
@@ -98,15 +94,15 @@ add_to_global (struct link_map *new)
      in an realloc() call.  Therefore we allocate a completely new
      array the first time we have to add something to the locale scope.  */
 
-  if (_dl_global_scope_alloc == 0)
+  if (GL(dl_global_scope_alloc) == 0)
     {
       /* This is the first dynamic object given global scope.  */
-      _dl_global_scope_alloc = _dl_main_searchlist->r_nlist + to_add + 8;
+      GL(dl_global_scope_alloc) = GL(dl_main_searchlist)->r_nlist + to_add + 8;
       new_global = (struct link_map **)
-	malloc (_dl_global_scope_alloc * sizeof (struct link_map *));
+	malloc (GL(dl_global_scope_alloc) * sizeof (struct link_map *));
       if (new_global == NULL)
 	{
-	  _dl_global_scope_alloc = 0;
+	  GL(dl_global_scope_alloc) = 0;
 	nomem:
 	  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
 			    N_("cannot extend global scope"));
@@ -114,24 +110,25 @@ add_to_global (struct link_map *new)
 	}
 
       /* Copy over the old entries.  */
-      memcpy (new_global, _dl_main_searchlist->r_list,
-	      (_dl_main_searchlist->r_nlist * sizeof (struct link_map *)));
+      memcpy (new_global, GL(dl_main_searchlist)->r_list,
+	      (GL(dl_main_searchlist)->r_nlist * sizeof (struct link_map *)));
 
-      _dl_main_searchlist->r_list = new_global;
+      GL(dl_main_searchlist)->r_list = new_global;
     }
-  else if (_dl_main_searchlist->r_nlist + to_add > _dl_global_scope_alloc)
+  else if (GL(dl_main_searchlist)->r_nlist + to_add
+	   > GL(dl_global_scope_alloc))
     {
       /* We have to extend the existing array of link maps in the
 	 main map.  */
       new_global = (struct link_map **)
-	realloc (_dl_main_searchlist->r_list,
-		 ((_dl_global_scope_alloc + to_add + 8)
+	realloc (GL(dl_main_searchlist)->r_list,
+		 ((GL(dl_global_scope_alloc) + to_add + 8)
 		  * sizeof (struct link_map *)));
       if (new_global == NULL)
 	goto nomem;
 
-      _dl_global_scope_alloc += to_add + 8;
-      _dl_main_searchlist->r_list = new_global;
+      GL(dl_global_scope_alloc) += to_add + 8;
+      GL(dl_main_searchlist)->r_list = new_global;
     }
 
   /* Now add the new entries.  */
@@ -142,8 +139,9 @@ add_to_global (struct link_map *new)
       if (map->l_global == 0)
 	{
 	  map->l_global = 1;
-	  _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist] = map;
-	  ++_dl_main_searchlist->r_nlist;
+	  GL(dl_main_searchlist)->r_list[GL(dl_main_searchlist)->r_nlist]
+	    = map;
+	  ++GL(dl_main_searchlist)->r_nlist;
 	}
     }
 
@@ -180,7 +178,7 @@ dl_open_worker (void *a)
 
       /* We have to find out from which object the caller is calling.  */
       call_map = NULL;
-      for (l = _dl_loaded; l; l = l->l_next)
+      for (l = GL(dl_loaded); l; l = l->l_next)
 	if (caller >= (const void *) l->l_map_start
 	    && caller < (const void *) l->l_map_end)
 	  {
@@ -192,7 +190,7 @@ dl_open_worker (void *a)
 
       if (call_map == NULL)
 	/* In this case we assume this is the main application.  */
-	call_map = _dl_loaded;
+	call_map = GL(dl_loaded);
 
       /* Determine how much space we need.  We have to allocate the
 	 memory locally.  */
@@ -233,7 +231,7 @@ dl_open_worker (void *a)
   if (new->l_searchlist.r_list != NULL)
     {
       /* Let the user know about the opencount.  */
-      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("opening file=%s; opencount == %u\n\n",
 			  new->l_name, new->l_opencount);
 
@@ -274,20 +272,20 @@ dl_open_worker (void *a)
       if (! l->l_relocated)
 	{
 #ifdef SHARED
-	  if (_dl_profile != NULL)
+	  if (GL(dl_profile) != NULL)
 	    {
 	      /* If this here is the shared object which we want to profile
 		 make sure the profile is started.  We can find out whether
 	         this is necessary or not by observing the `_dl_profile_map'
 	         variable.  If was NULL but is not NULL afterwars we must
 		 start the profiling.  */
-	      struct link_map *old_profile_map = _dl_profile_map;
+	      struct link_map *old_profile_map = GL(dl_profile_map);
 
 	      _dl_relocate_object (l, l->l_scope, 1, 1);
 
-	      if (old_profile_map == NULL && _dl_profile_map != NULL)
+	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
 		/* We must prepare the profiling.  */
-		_dl_start_profile (_dl_profile_map, _dl_profile_output);
+		_dl_start_profile (GL(dl_profile_map), GL(dl_profile_output));
 	    }
 	  else
 #endif
@@ -382,7 +380,7 @@ dl_open_worker (void *a)
     __libc_multiple_libcs = 1;
 
   /* Let the user know about the opencount.  */
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
     _dl_debug_printf ("opening file=%s; opencount == %u\n\n",
 		      new->l_name, new->l_opencount);
 }

@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ _dl_close (void *_map)
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
       /* There are still references to this object.  Do nothing more.  */
-      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
 			  map->l_name, map->l_opencount);
 
@@ -125,7 +125,7 @@ _dl_close (void *_map)
 	  && imap->l_init_called)
 	{
 	  /* When debugging print a message first.  */
-	  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
 	    _dl_debug_printf ("\ncalling fini: %s\n\n", imap->l_name);
 
 	  /* Call its termination function.  */
@@ -192,18 +192,18 @@ _dl_close (void *_map)
 	  if (__builtin_expect (imap->l_global, 0))
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
-	      unsigned int cnt = _dl_main_searchlist->r_nlist;
+	      unsigned int cnt = GL(dl_main_searchlist)->r_nlist;
 
 	      do
 		--cnt;
-	      while (_dl_main_searchlist->r_list[cnt] != imap);
+	      while (GL(dl_main_searchlist)->r_list[cnt] != imap);
 
 	      /* The object was already correctly registered.  */
-	      while (++cnt < _dl_main_searchlist->r_nlist)
-		_dl_main_searchlist->r_list[cnt - 1]
-		  = _dl_main_searchlist->r_list[cnt];
+	      while (++cnt < GL(dl_main_searchlist)->r_nlist)
+		GL(dl_main_searchlist)->r_list[cnt - 1]
+		  = GL(dl_main_searchlist)->r_list[cnt];
 
-	      --_dl_main_searchlist->r_nlist;
+	      --GL(dl_main_searchlist)->r_nlist;
 	    }
 
 	  /* We can unmap all the maps at once.  We determined the
@@ -221,9 +221,9 @@ _dl_close (void *_map)
 	  if (imap->l_prev != NULL)
 	    imap->l_prev->l_next = imap->l_next;
 	  else
-	    _dl_loaded = imap->l_next;
+	    GL(dl_loaded) = imap->l_next;
 #endif
-	  --_dl_nloaded;
+	  --GL(dl_nloaded);
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
 
@@ -305,17 +305,17 @@ _dl_close (void *_map)
 static void
 free_mem (void)
 {
-  if (__builtin_expect (_dl_global_scope_alloc, 0) != 0
-      && _dl_main_searchlist->r_nlist == _dl_initial_searchlist.r_nlist)
+  if (__builtin_expect (GL(dl_global_scope_alloc), 0) != 0
+      && GL(dl_main_searchlist)->r_nlist == GL(dl_initial_searchlist).r_nlist)
     {
       /* All object dynamically loaded by the program are unloaded.  Free
 	 the memory allocated for the global scope variable.  */
-      struct link_map **old = _dl_main_searchlist->r_list;
+      struct link_map **old = GL(dl_main_searchlist)->r_list;
 
       /* Put the old map in.  */
-      _dl_main_searchlist->r_list = _dl_initial_searchlist.r_list;
+      GL(dl_main_searchlist)->r_list = GL(dl_initial_searchlist).r_list;
       /* Signal that the original map is used.  */
-      _dl_global_scope_alloc = 0;
+      GL(dl_global_scope_alloc) = 0;
 
       /* Now free the old map.  */
       free (old);

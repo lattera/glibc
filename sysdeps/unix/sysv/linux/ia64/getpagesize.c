@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 
+#include <ldsodefs.h>
 #include <sysdep.h>
 #include <sys/syscall.h>
 
@@ -28,13 +29,11 @@
    determine the page size to ensure proper alignment for calls such
    as mmap and friends.  --davidm 99/11/30 */
 
-extern size_t _dl_pagesize;
-
 int
 __getpagesize ()
 {
-  assert (_dl_pagesize != 0);
-  return _dl_pagesize;
+  assert (GL(dl_pagesize) != 0);
+  return GL(dl_pagesize);
 }
 
 weak_alias (__getpagesize, getpagesize)

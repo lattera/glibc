@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,12 +39,6 @@
 #define FILTERTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
 		   + DT_EXTRATAGIDX (DT_FILTER))
 
-/* This is zero at program start to signal that the global scope map is
-   allocated by rtld.  Later it keeps the size of the map.  It might be
-   reset if in _dl_close if the last global object is removed.  */
-size_t _dl_global_scope_alloc;
-
-extern size_t _dl_platformlen;
 
 /* When loading auxiliary objects we must ignore errors.  It's ok if
    an object is missing.  */
@@ -131,7 +125,7 @@ empty dynamics string token substitution"));				      \
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
-		if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))     \
+		if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))  \
 		  _dl_debug_printf ("cannot load auxiliary `%s' because of"   \
 				    "empty dynamic string token "	      \
 				    "substitution\n", __str);		      \
@@ -294,7 +288,8 @@ _dl_map_object_deps (struct link_map *map,
 		    int err;
 
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
+		    if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS,
+					  0))
 		      _dl_debug_printf ("load auxiliary object=%s"
 					" requested by file=%s\n", name,
 					l->l_name[0]
@@ -320,7 +315,8 @@ _dl_map_object_deps (struct link_map *map,
 		    int err;
 
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
+		    if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS,
+					  0))
 		      _dl_debug_printf ("load filtered object=%s"
 					" requested by file=%s\n", name,
 					l->l_name[0]
@@ -507,8 +503,8 @@ _dl_map_object_deps (struct link_map *map,
       runp->map->l_reserved = 0;
     }
 
-  if (__builtin_expect(_dl_debug_mask & DL_DEBUG_PRELINK, 0) != 0
-      && map == _dl_loaded)
+  if (__builtin_expect(GL(dl_debug_mask) & DL_DEBUG_PRELINK, 0) != 0
+      && map == GL(dl_loaded))
     {
       /* If we are to compute conflicts, we have to build local scope
 	 for each library, not just the ultimate loader.  */

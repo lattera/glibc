@@ -1,5 +1,5 @@
 /* Return the next shared object initializer function not yet run.
-   Copyright (C) 1995,1996,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,9 +27,6 @@ typedef void (*init_t) (int, char **, char **);
 /* Flag, nonzero during startup phase.  */
 extern int _dl_starting_up;
 
-/* The object to be initialized first.  */
-extern struct link_map *_dl_initfirst;
-
 
 static void
 call_init (struct link_map *l, int argc, char **argv, char **env)
@@ -53,7 +50,7 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
     return;
 
   /* Print a debug message if wanted.  */
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ncalling init: %s\n\n",
 		      l->l_name[0] ? l->l_name : _dl_argv[0]);
 
@@ -95,10 +92,10 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   struct r_debug *r;
   unsigned int i;
 
-  if (__builtin_expect (_dl_initfirst != NULL, 0))
+  if (__builtin_expect (GL(dl_initfirst) != NULL, 0))
     {
-      call_init (_dl_initfirst, argc, argv, env);
-      _dl_initfirst = NULL;
+      call_init (GL(dl_initfirst), argc, argv, env);
+      GL(dl_initfirst) = NULL;
     }
 
   /* Don't do anything if there is no preinit array.  */
@@ -108,7 +105,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
       ElfW(Addr) *addrs;
       unsigned int cnt;
 
-      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
 	_dl_debug_printf ("\ncalling preinit: %s\n\n",
 			  main_map->l_name[0]
 			  ? main_map->l_name : _dl_argv[0]);

@@ -27,10 +27,9 @@
 #include <sys/types.h>
 #include "dynamic-link.h"
 
-#ifdef SHARED
 /* Statistics function.  */
-unsigned long int _dl_num_cache_relocations;
-# define bump_num_cache_relocations() ++_dl_num_cache_relocations
+#ifdef SHARED
+# define bump_num_cache_relocations() ++GL(dl_num_cache_relocations)
 #else
 # define bump_num_cache_relocations() ((void) 0)
 #endif
@@ -59,9 +58,10 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
       && __builtin_expect (l->l_info[DT_BIND_NOW] != NULL, 0))
     lazy = 0;
 
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_RELOC, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_RELOC, 0))
     _dl_printf ("\nrelocation processing: %s%s\n",
-		l->l_name[0] ? l->l_name : _dl_argv[0], lazy ? " (lazy)" : "");
+		l->l_name[0] ? l->l_name : _dl_argv[0],
+		lazy ? " (lazy)" : "");
 
   /* DT_TEXTREL is now in level 2 and might phase out at some time.
      But we rewrite the DT_FLAGS entry to a DT_TEXTREL entry to make
@@ -77,10 +77,10 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    struct textrels *newp;
 
 	    newp = (struct textrels *) alloca (sizeof (*newp));
-	    newp->len = (((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
-			  & ~(_dl_pagesize - 1))
-			 - (ph->p_vaddr & ~(_dl_pagesize - 1)));
-	    newp->start = ((ph->p_vaddr & ~(_dl_pagesize - 1))
+	    newp->len = (((ph->p_vaddr + ph->p_memsz + GL(dl_pagesize) - 1)
+			  & ~(GL(dl_pagesize) - 1))
+			 - (ph->p_vaddr & ~(GL(dl_pagesize) - 1)));
+	    newp->start = ((ph->p_vaddr & ~(GL(dl_pagesize) - 1))
 			   + (caddr_t) l->l_addr);
 
 	    if (__mprotect (newp->start, newp->len, PROT_READ|PROT_WRITE) < 0)

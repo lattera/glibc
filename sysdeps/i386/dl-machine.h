@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  l->l_mach.plt = got[1] + l->l_addr;
 	  l->l_mach.gotplt = (Elf32_Addr) &got[3];
-	}	  
+	}
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets
@@ -107,10 +107,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (_dl_profile, l))
+	  if (_dl_name_match_p (GL(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
-	    _dl_profile_map = l;
+	    GL(dl_profile_map) = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -237,7 +237,7 @@ _dl_start_user:\n\
 " RTLD_START_SPECIAL_INIT "\n\
 	# Load the parameters again.\n\
 	# (eax, edx, ecx, *--esp) = (_dl_loaded, argc, argv, envp)\n\
-	movl _dl_loaded@GOT(%ebx), %esi\n\
+	movl _rtld_global@GOT(%ebx), %esi\n\
 	leal 8(%esp,%edx,4), %eax\n\
 	leal 4(%esp), %ecx\n\
 	pushl %eax\n\
@@ -274,14 +274,12 @@ _dl_start_user:\n\
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
 
-extern const char *_dl_platform;
-
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform != NULL && *_dl_platform == '\0')
+  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    _dl_platform = NULL;
+    GL(dl_platform) = NULL;
 }
 
 static inline Elf32_Addr
@@ -372,7 +370,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    break;
 	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
 	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
-		  && _dl_verbose))
+		  && GL(dl_verbose)))
 	    {
 	      const char *strtab;
 

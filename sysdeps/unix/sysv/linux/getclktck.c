@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 #include <time.h>
 
+#include <ldsodefs.h>
+
 #ifndef SYSTEM_CLK_TCK
 # define SYSTEM_CLK_TCK	100
 #endif
@@ -26,7 +28,5 @@
 int
 __getclktck ()
 {
-  extern int _dl_clktck;	/* Defined in dl-load.c.  */
-
-  return _dl_clktck ?: SYSTEM_CLK_TCK;
+  return GL(dl_clktck) ?: SYSTEM_CLK_TCK;
 }

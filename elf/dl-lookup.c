@@ -59,12 +59,11 @@ struct sym_val
     result;								      \
   })
 
-#ifdef SHARED
 /* Statistics function.  */
-unsigned long int _dl_num_relocations;
-# define bump_num_relocation() ++_dl_num_relocations
+#ifdef SHARED
+# define bump_num_relocations() ++GL(dl_num_relocations)
 #else
-# define bump_num_relocation() ((void) 0)
+# define bump_num_relocations() ((void) 0)
 #endif
 
 
@@ -122,7 +121,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
      reference is still available.  There is a brief period in
      which the object could have been removed since we found the
      definition.  */
-  runp = _dl_loaded;
+  runp = GL(dl_loaded);
   while (runp != NULL && runp != map)
     runp = runp->l_next;
 
@@ -168,7 +167,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	  ++(*list)->l_opencount;
 
       /* Display information if we are debugging.  */
-      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+      if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
 	_dl_debug_printf ("\
 \nfile=%s;  needed by %s (relocation dependency)\n\n",
 			  map->l_name[0] ? map->l_name : _dl_argv[0],
@@ -281,7 +280,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	}
     }
 
-  if (__builtin_expect (_dl_debug_mask
+  if (__builtin_expect (GL(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, NULL, type_class, protected);
@@ -352,7 +351,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 	}
     }
 
-  if (__builtin_expect (_dl_debug_mask
+  if (__builtin_expect (GL(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, NULL, 0, protected);
@@ -471,7 +470,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	}
     }
 
-  if (__builtin_expect (_dl_debug_mask
+  if (__builtin_expect (GL(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, version, type_class, protected);
@@ -557,7 +556,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	}
     }
 
-  if (__builtin_expect (_dl_debug_mask
+  if (__builtin_expect (GL(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
     _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
 			&current_value, version, 0, protected);
@@ -596,7 +595,7 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 {
   const char *reference_name = undef_map->l_name;
 
-  if (_dl_debug_mask & DL_DEBUG_BINDINGS)
+  if (GL(dl_debug_mask) & DL_DEBUG_BINDINGS)
     {
       _dl_debug_printf ("binding file %s to %s: %s symbol `%s'",
 			(reference_name[0]
@@ -610,14 +609,14 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	_dl_debug_printf_c ("\n");
     }
 #ifdef SHARED
-  if (_dl_debug_mask & DL_DEBUG_PRELINK)
+  if (GL(dl_debug_mask) & DL_DEBUG_PRELINK)
     {
       int conflict = 0;
       struct sym_val val = { NULL, NULL };
 
-      if ((_dl_trace_prelink_map == NULL
-	   || _dl_trace_prelink_map == _dl_loaded)
-	  && undef_map != _dl_loaded)
+      if ((GL(dl_trace_prelink_map) == NULL
+	   || GL(dl_trace_prelink_map) == GL(dl_loaded))
+	  && undef_map != GL(dl_loaded))
 	{
 	  const unsigned long int hash = _dl_elf_hash (undef_name);
 
@@ -634,8 +633,8 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	}
 
       if (conflict
-	  || _dl_trace_prelink_map == undef_map
-	  || _dl_trace_prelink_map == NULL)
+	  || GL(dl_trace_prelink_map) == undef_map
+	  || GL(dl_trace_prelink_map) == NULL)
 	{
 	  _dl_printf ("%s 0x%0*Zx 0x%0*Zx -> 0x%0*Zx 0x%0*Zx ",
 		      conflict ? "conflict" : "lookup",

@@ -1,5 +1,5 @@
 /* Optional code to distinguish library flavours.
-   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -27,15 +27,15 @@
       /* We have to find out whether the binary is linked against	      \
 	 libc 5 or glibc.  We do this by looking at all the DT_NEEDED	      \
 	 entries.  If one is libc.so.5 this is a libc 5 linked binary.  */    \
-      if (_dl_loaded->l_info[DT_NEEDED])				      \
+      if (GL(dl_loaded)->l_info[DT_NEEDED])				      \
 	{								      \
 	  /* We have dependencies.  */					      \
 	  const ElfW(Dyn) *d;						      \
 	  const char *strtab;						      \
 									      \
-	  strtab = (const char *) D_PTR (_dl_loaded, l_info[DT_STRTAB]);      \
+	  strtab = (const char *) D_PTR (GL(dl_loaded), l_info[DT_STRTAB]);   \
 									      \
-	  for (d = _dl_loaded->l_ld; d->d_tag != DT_NULL; ++d)		      \
+	  for (d = GL(dl_loaded)->l_ld; d->d_tag != DT_NULL; ++d)	      \
 	    if (d->d_tag == DT_NEEDED					      \
 		&& strcmp (strtab + d->d_un.d_val, "libc.so.5") == 0)	      \
 	      break;							      \
@@ -67,14 +67,14 @@
 	      break;							      \
 	  }								      \
 	if (osversion)							      \
-	  _dl_osversion = osversion;					      \
+	  GL(dl_osversion) = osversion;					      \
 	break;								      \
       }									      \
 									      \
   case 15:								      \
     if (memcmp (envline, "LIBRARY_VERSION", 15) == 0)			      \
       {									      \
-	_dl_correct_cache_id = envline[16] == '5' ? 2 : 3;		      \
+	GL(dl_correct_cache_id) = envline[16] == '5' ? 2 : 3;		      \
 	break;								      \
       }
 

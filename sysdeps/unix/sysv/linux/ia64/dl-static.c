@@ -33,8 +33,8 @@ _dl_var_init (void *array[])
       DL_CLKTCK
     };
 
-  _dl_pagesize = *((size_t *) array[DL_PAGESIZE]);
-  _dl_clktck = *((int *) array[DL_CLKTCK]);
+  GL(dl_pagesize) = *((size_t *) array[DL_PAGESIZE]);
+  GL(dl_clktck) = *((int *) array[DL_CLKTCK]);
 }
 
 #else

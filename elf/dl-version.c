@@ -1,5 +1,5 @@
 /* Handle symbol and library versioning.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -58,7 +58,7 @@ find_needed (const char *name, struct link_map *map)
   struct link_map *tmap;
   unsigned int n;
 
-  for (tmap = _dl_loaded; tmap != NULL; tmap = tmap->l_next)
+  for (tmap = GL(dl_loaded); tmap != NULL; tmap = tmap->l_next)
     if (_dl_name_match_p (name, tmap))
       return tmap;
 
@@ -86,11 +86,11 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
   int result = 0;
 
   /* Display information about what we are doing while debugging.  */
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_VERSIONS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_VERSIONS, 0))
     _dl_debug_printf ("\
 checking for version `%s' in file %s required by file %s\n",
-		      string, map->l_name[0] ? map->l_name : _dl_argv[0],
-		      name);
+		      string, map->l_name[0]
+		      ? map->l_name : _dl_argv[0], name);
 
   if (__builtin_expect (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL, 0))
     {
@@ -166,8 +166,8 @@ no version information available (required by ", name, ")");
 			   name, ")");
   result = 1;
  call_cerror:
-  _dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0], NULL,
-		     errstring);
+  _dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
+		     NULL, errstring);
   return result;
 }
 
@@ -214,7 +214,8 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 					       &buf[sizeof (buf) - 1], 10, 0),
 				   " of Verneed record\n");
 	call_error:
-	  _dl_signal_error (errval, (*map->l_name ? map->l_name : _dl_argv[0]),
+	  _dl_signal_error (errval, (*map->l_name
+				     ? map->l_name : _dl_argv[0]),
 			    NULL, errstring);
 	}
 

@@ -42,7 +42,7 @@
 	      break;							      \
 	  }								      \
 	if (osversion)							      \
-	  _dl_osversion = osversion;					      \
+	  GL(dl_osversion) = osversion;					      \
 	break;								      \
       }
 

@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 
 #include <elf.h>
 #include <dlfcn.h>
+#include <sys/mman.h>
 #include <link.h>
 #include <dl-lookupcfg.h>
 #include <bits/libc-lock.h>
@@ -189,29 +190,35 @@ typedef void (*receiver_fct) (int, const char *, const char *);
    user interface to run-time dynamic linking.  */
 
 
-/* Parameters passed to the dynamic linker.  */
-extern char **_dl_argv;
+#ifndef SHARED
+# define EXTERN extern
+# define GL(name) _##name
+#else
+# define EXTERN
+# define GL(name) _rtld_global._##name
+struct rtld_global
+{
+#endif
+  /* Don't change the order of the following elements.  'dl_loaded'
+     must remain the first element.  Forever.  */
 
-/* Cached value of `getpagesize ()'.  */
-extern size_t _dl_pagesize;
+  /* And a pointer to the map for the main map.  */
+  EXTERN struct link_map *_dl_loaded;
+  /* Number of object in the _dl_loaded list.  */
+  EXTERN unsigned int _dl_nloaded;
+  /* Array representing global scope.  */
+  EXTERN struct r_scope_elem *_dl_global_scope[2];
+  /* Direct pointer to the searchlist of the main object.  */
+  EXTERN struct r_scope_elem *_dl_main_searchlist;
+  /* Copy of the content of `_dl_main_searchlist'.  */
+  EXTERN struct r_scope_elem _dl_initial_searchlist;
+  /* This is zero at program start to signal that the global scope map is
+     allocated by rtld.  Later it keeps the size of the map.  It might be
+     reset if in _dl_close if the last global object is removed.  */
+  EXTERN size_t _dl_global_scope_alloc;
 
-/* OS version.  */
-extern unsigned int _dl_osversion;
-
-/* File descriptor referring to the zero-fill device.  */
-extern int _dl_zerofd;
-
-/* Name of the shared object to be profiled (if any).  */
-extern const char *_dl_profile;
-/* Map of shared object to be profiled.  */
-extern struct link_map *_dl_profile_map;
-/* Filename of the output file.  */
-extern const char *_dl_profile_output;
-/* Map of shared object to be prelink traced.  */
-extern struct link_map *_dl_trace_prelink_map;
-
-/* If nonzero the appropriate debug information is printed.  */
-extern int _dl_debug_mask;
+  /* If nonzero the appropriate debug information is printed.  */
+  EXTERN int _dl_debug_mask;
 #define DL_DEBUG_LIBS	    (1 << 0)
 #define DL_DEBUG_IMPCALLS   (1 << 1)
 #define DL_DEBUG_BINDINGS   (1 << 2)
@@ -224,33 +231,94 @@ extern int _dl_debug_mask;
 #define DL_DEBUG_HELP       (1 << 8)
 #define DL_DEBUG_PRELINK    (1 << 9)
 
-/* Expect cache ID.  */
-extern int _dl_correct_cache_id;
+  /* Cached value of `getpagesize ()'.  */
+  EXTERN size_t _dl_pagesize;
 
-/* Mask for hardware capabilities that are available.  */
-extern unsigned long int _dl_hwcap;
+  /* OS version.  */
+  EXTERN unsigned int _dl_osversion;
+  /* Platform name.  */
+  EXTERN const char *_dl_platform;
+  EXTERN size_t _dl_platformlen;
 
-/* Mask for important hardware capabilities we honour. */
-extern unsigned long int _dl_hwcap_mask;
+#ifndef MAP_ANON
+  /* File descriptor referring to the zero-fill device.  */
+  EXTERN int _dl_zerofd;
+#endif
 
-/* File descriptor to write debug messages to.  */
-extern int _dl_debug_fd;
+  /* CLK_TCK as reported by the kernel.  */
+  EXTERN int _dl_clktck;
 
-/* Names of shared object for which the RPATH should be ignored.  */
-extern const char *_dl_inhibit_rpath;
+  /* If nonzero print warnings messages.  */
+  EXTERN int _dl_verbose;
 
-/* Nonzero if references should be treated as weak during runtime linking.  */
-extern int _dl_dynamic_weak;
+  /* Nonzero if runtime lookups should not update the .got/.plt.  */
+  EXTERN int _dl_bind_not;
+
+  /* The object to be initialized first.  */
+  EXTERN struct link_map *_dl_initfirst;
+
+  /* Name of the shared object to be profiled (if any).  */
+  EXTERN const char *_dl_profile;
+  /* Map of shared object to be profiled.  */
+  EXTERN struct link_map *_dl_profile_map;
+  /* Filename of the output file.  */
+  EXTERN const char *_dl_profile_output;
+  /* Map of shared object to be prelink traced.  */
+  EXTERN struct link_map *_dl_trace_prelink_map;
+  /* Name of the object we want to trace the prelinking.  */
+  EXTERN const char *_dl_trace_prelink;
+
+  /* Expect cache ID.  */
+  EXTERN int _dl_correct_cache_id;
+
+  /* Counters for the number of relocations performed.  */
+  EXTERN unsigned long int _dl_num_relocations;
+  EXTERN unsigned long int _dl_num_cache_relocations;
+
+  /* Mask for hardware capabilities that are available.  */
+  EXTERN unsigned long int _dl_hwcap;
+
+  /* Mask for important hardware capabilities we honour. */
+  EXTERN unsigned long int _dl_hwcap_mask;
+
+  /* Names of shared object for which the RPATH should be ignored.  */
+  EXTERN const char *_dl_inhibit_rpath;
+
+  /* Location of the binary.  */
+  EXTERN const char *_dl_origin_path;
+
+  /* List of search directories.  */
+  EXTERN struct r_search_path_elem *_dl_all_dirs;
+  EXTERN struct r_search_path_elem *_dl_init_all_dirs;
+
+  /* Structure describing the dynamic linker itself.  */
+  EXTERN struct link_map _dl_rtld_map;
+#ifdef SHARED
+};
+extern struct rtld_global _rtld_global;
+#endif
+#undef EXTERN
+
+/* Parameters passed to the dynamic linker.  */
+extern int _dl_argc;
+extern char **_dl_argv;
+
+/* Do we do lazy relocations?  */
+extern int _dl_lazy;
 
 /* The array with message we print as a last resort.  */
 extern const char _dl_out_of_memory[];
 
-/* Nonzero if runtime lookups should not update the .got/.plt.  */
-extern int _dl_bind_not;
+/* File descriptor to write debug messages to.  */
+extern int _dl_debug_fd;
 
-/* List of search directories.  */
-extern struct r_search_path_elem *_dl_all_dirs;
-extern struct r_search_path_elem *_dl_init_all_dirs;
+/* Nonzero if references should be treated as weak during runtime
+   linking.
+
+   XXX Once we can set the default for this variable to zero move it
+   into _rtld_global.  */
+extern int _dl_dynamic_weak;
+
 
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
@@ -399,24 +467,6 @@ extern lookup_t _dl_lookup_versioned_symbol_skip (const char *undef,
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name)
      internal_function;
-
-
-/* Structure describing the dynamic linker itself.  */
-extern struct link_map _dl_rtld_map;
-/* And a pointer to the map for the main map.  */
-extern struct link_map *_dl_loaded;
-/* Number of object in the _dl_loaded list.  */
-extern unsigned int _dl_nloaded;
-/* Array representing global scope.  */
-extern struct r_scope_elem *_dl_global_scope[2];
-/* Direct pointer to the searchlist of the main object.  */
-extern struct r_scope_elem *_dl_main_searchlist;
-/* Copy of the content of `_dl_main_searchlist'.  */
-extern struct r_scope_elem _dl_initial_searchlist;
-/* This is zero at program start to signal that the global scope map is
-   allocated by rtld.  Later it keeps the size of the map.  It might be
-   reset if in _dl_close if the last global object is removed.  */
-extern size_t _dl_global_scope_alloc;
 
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_main_map list.  */

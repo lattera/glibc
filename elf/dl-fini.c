@@ -1,5 +1,5 @@
 /* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995,96,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,15 +47,15 @@ _dl_fini (void)
   struct link_map **maps;
 
   /* XXX Could it be (in static binaries) that there is no object loaded?  */
-  assert (_dl_nloaded > 0);
+  assert (GL(dl_nloaded) > 0);
 
   /* Now we can allocate an array to hold all the pointers and copy
      the pointers in.  */
-  maps = (struct link_map **) alloca (_dl_nloaded
+  maps = (struct link_map **) alloca (GL(dl_nloaded)
 				      * sizeof (struct link_map *));
-  for (l = _dl_loaded, i = 0; l != NULL; l = l->l_next)
+  for (l = GL(dl_loaded), i = 0; l != NULL; l = l->l_next)
     {
-      assert (i < _dl_nloaded);
+      assert (i < GL(dl_nloaded));
 
       maps[i++] = l;
 
@@ -63,10 +63,10 @@ _dl_fini (void)
 	 from underneath us.  */
       ++l->l_opencount;
     }
-  assert (i == _dl_nloaded);
+  assert (i == GL(dl_nloaded));
 
   /* Now we have to do the sorting.  */
-  for (l = _dl_loaded->l_next; l != NULL; l = l->l_next)
+  for (l = GL(dl_loaded)->l_next; l != NULL; l = l->l_next)
     {
       unsigned int j;
       unsigned int k;
@@ -77,7 +77,7 @@ _dl_fini (void)
 
       /* Find all object for which the current one is a dependency and
 	 move the found object (if necessary) in front.  */
-      for (k = j + 1; k < _dl_nloaded; ++k)
+      for (k = j + 1; k < GL(dl_nloaded); ++k)
 	{
 	  struct link_map **runp;
 
@@ -128,7 +128,7 @@ _dl_fini (void)
 
   /* `maps' now contains the objects in the right order.  Now call the
      destructors.  We have to process this array from the front.  */
-  for (i = 0; i < _dl_nloaded; ++i)
+  for (i = 0; i < GL(dl_nloaded); ++i)
     {
       l = maps[i];
 
@@ -146,7 +146,7 @@ _dl_fini (void)
 	    continue;
 
 	  /* When debugging print a message first.  */
-	  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
 	    _dl_debug_printf ("\ncalling fini: %s\n\n",
 			      l->l_name[0] ? l->l_name : _dl_argv[0]);
 

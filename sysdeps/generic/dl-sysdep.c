@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,14 +38,7 @@
 #include <dl-osinfo.h>
 #include <hp-timing.h>
 
-extern int _dl_argc;
-extern char **_dl_argv;
 extern char **_environ;
-extern size_t _dl_pagesize;
-extern int _dl_clktck;
-extern const char *_dl_platform;
-extern unsigned long int _dl_hwcap;
-extern size_t _dl_platformlen;
 extern fpu_control_t _dl_fpu_control;
 extern void _end;
 
@@ -61,7 +54,7 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 /* This variable contains the lowest stack address ever used.  */
 void *__libc_stack_end;
 static ElfW(auxv_t) *_dl_auxv;
-unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
+//Xunsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 #if HP_TIMING_AVAIL
 hp_timing_t _dl_cpuclock_offset;
 #endif
@@ -109,7 +102,7 @@ _dl_sysdep_start (void **start_argptr,
 			  _dl_auxv);
 
   user_entry = (ElfW(Addr)) ENTRY_POINT;
-  _dl_platform = NULL; /* Default to nothing known about the platform.  */
+  GL(dl_platform) = NULL; /* Default to nothing known about the platform.  */
 
   for (av = _dl_auxv; av->a_type != AT_NULL; set_seen (av++))
     switch (av->a_type)
@@ -121,7 +114,7 @@ _dl_sysdep_start (void **start_argptr,
 	phnum = av->a_un.a_val;
 	break;
       case AT_PAGESZ:
-	_dl_pagesize = av->a_un.a_val;
+	GL(dl_pagesize) = av->a_un.a_val;
 	break;
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;
@@ -144,13 +137,13 @@ _dl_sysdep_start (void **start_argptr,
 	egid = av->a_un.a_val;
 	break;
       case AT_PLATFORM:
-	_dl_platform = av->a_un.a_ptr;
+	GL(dl_platform) = av->a_un.a_ptr;
 	break;
       case AT_HWCAP:
-	_dl_hwcap = av->a_un.a_val;
+	GL(dl_hwcap) = av->a_un.a_val;
 	break;
       case AT_CLKTCK:
-	_dl_clktck = av->a_un.a_val;
+	GL(dl_clktck) = av->a_un.a_val;
 	break;
       case AT_FPUCW:
 	_dl_fpu_control = av->a_un.a_val;
@@ -188,8 +181,8 @@ _dl_sysdep_start (void **start_argptr,
 #endif
 
   /* Determine the length of the platform name.  */
-  if (_dl_platform != NULL)
-    _dl_platformlen = strlen (_dl_platform);
+  if (GL(dl_platform) != NULL)
+    GL(dl_platformlen) = strlen (GL(dl_platform));
 
   if (__sbrk (0) == &_end)
     /* The dynamic linker was run as a program, and so the initial break
@@ -197,7 +190,7 @@ _dl_sysdep_start (void **start_argptr,
        will consume the rest of this page, so tell the kernel to move the
        break up that far.  When the user program examines its break, it
        will see this new value and not clobber our data.  */
-    __sbrk (_dl_pagesize - ((&_end - (void *) 0) & (_dl_pagesize - 1)));
+    __sbrk (GL(dl_pagesize) - ((&_end - (void *) 0) & (GL(dl_pagesize) - 1)));
 
   /* If this is a SUID program we make sure that FDs 0, 1, and 2 are
      allocated.  If necessary we are doing it ourself.  If it is not
@@ -288,7 +281,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		      size_t *max_capstrlen)
 {
   /* Determine how many important bits are set.  */
-  unsigned long int masked = _dl_hwcap & _dl_hwcap_mask;
+  unsigned long int masked = GL(dl_hwcap) & GL(dl_hwcap_mask);
   size_t cnt = platform != NULL;
   size_t n, m;
   size_t total;

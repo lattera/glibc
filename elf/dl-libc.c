@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -129,8 +129,8 @@ free_mem (void)
   struct r_search_path_elem *d;
 
   /* Remove all search directories.  */
-  d = _dl_all_dirs;
-  while (d != _dl_init_all_dirs)
+  d = GL(dl_all_dirs);
+  while (d != GL(dl_init_all_dirs))
     {
       struct r_search_path_elem *old = d;
       d = d->next;
@@ -138,7 +138,7 @@ free_mem (void)
     }
 
   /* Remove all additional names added to the objects.  */
-  for (l = _dl_loaded; l != NULL; l = l->l_next)
+  for (l = GL(dl_loaded); l != NULL; l = l->l_next)
     {
       struct libname_list *lnp = l->l_libname->next;
 

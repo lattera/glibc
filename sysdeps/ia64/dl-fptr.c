@@ -101,7 +101,7 @@ local =
 static struct ia64_fdesc *
 new_fdesc_table (struct local *l)
 {
-  size_t size = l->npages * _dl_pagesize;
+  size_t size = l->npages * GL(dl_pagesize);
   struct ia64_fdesc_table *new_table;
   struct ia64_fdesc *fdesc;
 
@@ -174,7 +174,8 @@ make_fptr_table (struct link_map *map)
      symbol section is to assume that the string table follows right
      afterwards...  */
   len = ((strtab - (char *) symtab) / map->l_info[DT_SYMENT]->d_un.d_val);
-  size = ((len * sizeof (fptr_table[0]) + _dl_pagesize - 1) & -_dl_pagesize);
+  size = ((len * sizeof (fptr_table[0]) + GL(dl_pagesize) - 1)
+	  & -GL(dl_pagesize));
   /* XXX We don't support here in the moment systems without MAP_ANON.
      There probably are none for IA-64.  In case this is proven wrong
      we will have to open /dev/null here and use the file descriptor

@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995,96,97,98,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,8 +60,9 @@ malloc (size_t n)
       /* Consume any unused space in the last page of our data segment.  */
       extern int _end;
       alloc_ptr = &_end;
-      alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0) + _dl_pagesize - 1)
-				& ~(_dl_pagesize - 1));
+      alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0)
+				 + GL(dl_pagesize) - 1)
+				& ~(GL(dl_pagesize) - 1));
     }
 
   /* Make sure the allocation pointer is ideally aligned.  */
@@ -72,7 +73,7 @@ malloc (size_t n)
     {
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
-      size_t nup = (n + _dl_pagesize - 1) & ~(_dl_pagesize - 1);
+      size_t nup = (n + GL(dl_pagesize) - 1) & ~(GL(dl_pagesize) - 1);
       page = __mmap (0, nup, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
       assert (page != MAP_FAILED);

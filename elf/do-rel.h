@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,8 +79,10 @@ elf_dynamic_do_rel (struct link_map *map,
 	 RTLD_BOOTSTRAP) because rtld.c contains the common defn for
 	 _dl_rtld_map, which is incompatible with a weak decl in the same
 	 file.  */
-      weak_extern (_dl_rtld_map);
-      if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+# ifndef SHARED
+      weak_extern (GL(dl_rtld_map));
+# endif
+      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
 # ifndef DO_RELA
 	/* Rela platforms get the offset from r_addend and this must
 	   be copied in the relocation address.  Therefore we can skip

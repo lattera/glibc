@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,6 @@
 #ifndef VERSYMIDX
 # define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
-
-
-/* Global read-only variable defined in rtld.c which is nonzero if we
-   shall give more warning messages.  */
-extern int _dl_verbose __attribute__ ((unused));
 
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */

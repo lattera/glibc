@@ -1,5 +1,5 @@
 /* Helper definitions for profiling of shared libraries.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -24,7 +24,7 @@
 
 /* This is the map for the shared object we profile.  It is defined here
    only because we test for this value being NULL or not.  */
-extern struct link_map *_dl_profile_map;
+//Xextern struct link_map *_dl_profile_map;
 
 
 void
@@ -37,6 +37,6 @@ _dl_mcount_wrapper (void *selfpc)
 void
 _dl_mcount_wrapper_check (void *selfpc)
 {
-  if (_dl_profile_map != NULL)
+  if (GL(dl_profile_map) != NULL)
     _dl_mcount ((ElfW(Addr)) RETURN_ADDRESS (0), (ElfW(Addr)) selfpc);
 }

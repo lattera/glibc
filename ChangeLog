@@ -1,3 +1,51 @@
+2002-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def [ld]: Add GLIBC_2.3.
+	* elf/dl-addr.c: Move global variables for SHARED code in struct
+	_rtld_global.  Export this struct, remove all exports for the
+	signal variables.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-conflict.c: Likewise.
+	* elf/dl-debug.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-dst.h: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-iteratephdr.c: Likewise.
+	* elf/dl-libc.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-minimal.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-profstub.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* elf/do-rel.h: Likewise.
+	* elf/dynamic-link.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-fptr.c: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/dl-librecon.h: Likewise.
+	* sysdeps/unix/sysv/linux/dl-origin.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/getclktck.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpagesize.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/dl-static.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/getpagesize.c: Likewise.
+
 2002-01-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/dl-lookupcfg.h (DL_AUTO_FUNCTION_ADDRESS): Add cast
@@ -33,6 +81,7 @@
 
 	* malloc/malloc.c: Rewrite, adapted from Doug Lea's malloc-2.7.0.c.
 	* malloc/malloc.h: Likewise.
+	* malloc/thread-m.h: Spinlock definitions for x86/x86_64.
 	* malloc/arena.c: New file.
 	* malloc/hooks.c: New file.
 	* malloc/tst-mallocstate.c: New file.

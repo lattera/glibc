@@ -1,8 +1,8 @@
 /* Basic platform-independent macro definitions for mutexes and
    thread-specific data.
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>, 1996.
+   Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -117,6 +117,61 @@ __libc_tsd_define (, MALLOC)	/* declaration/common definition */
 typedef pthread_t thread_id;
 
 /* mutex */
+#if (defined __i386__ || defined __x86_64__) && defined __GNUC__ && \
+    !defined USE_NO_SPINLOCKS
+
+#include <time.h>
+
+/* Use fast inline spinlocks.  */
+typedef struct {
+  volatile unsigned int lock;
+  int pad0_;
+} mutex_t;
+
+#define MUTEX_INITIALIZER          { 0 }
+#define mutex_init(m)              ((m)->lock = 0)
+static inline int mutex_lock(mutex_t *m) {
+  int cnt = 0, r;
+  struct timespec tm;
+
+  for(;;) {
+    __asm__ __volatile__
+      ("xchgl %0, %1"
+       : "=r"(r), "=m"(m->lock)
+       : "0"(1), "m"(m->lock)
+       : "memory");
+    if(!r)
+      return 0;
+    if(cnt < 50) {
+      sched_yield();
+      cnt++;
+    } else {
+      tm.tv_sec = 0;
+      tm.tv_nsec = 2000001;
+      nanosleep(&tm, NULL);
+      cnt = 0;
+    }
+  }
+}
+static inline int mutex_trylock(mutex_t *m) {
+  int r;
+
+  __asm__ __volatile__
+    ("xchgl %0, %1"
+     : "=r"(r), "=m"(m->lock)
+     : "0"(1), "m"(m->lock)
+     : "memory");
+  return r;
+}
+static inline int mutex_unlock(mutex_t *m) {
+  m->lock = 0;
+  __asm __volatile ("" : "=m" (m->lock) : "0" (m->lock));
+  return 0;
+}
+
+#else
+
+/* Normal pthread mutex.  */
 typedef pthread_mutex_t mutex_t;
 
 #define MUTEX_INITIALIZER          PTHREAD_MUTEX_INITIALIZER
@@ -124,6 +179,8 @@ typedef pthread_mutex_t mutex_t;
 #define mutex_lock(m)              pthread_mutex_lock(m)
 #define mutex_trylock(m)           pthread_mutex_trylock(m)
 #define mutex_unlock(m)            pthread_mutex_unlock(m)
+
+#endif /* (__i386__ || __x86_64__) && __GNUC__ && !USE_NO_SPINLOCKS */
 
 /* thread specific data */
 #if defined(__sgi) || defined(USE_TSD_DATA_HACK)

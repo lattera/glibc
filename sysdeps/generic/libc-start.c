@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -115,14 +115,14 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ninitialize program: %s\n\n", argv[0]);
 #endif
   if (init)
     (*init) ();
 
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 

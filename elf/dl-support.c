@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996, 97, 98, 99, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,9 +52,6 @@ int _dl_dynamic_weak = 1;
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;
 
-/* Structure to store information about search paths.  */
-struct r_search_path *_dl_search_paths;
-
 /* We never do profiling.  */
 const char *_dl_profile;
 
@@ -104,6 +101,24 @@ int _dl_starting_up = 1;
 hp_timing_t _dl_cpuclock_offset;
 #endif
 
+/* This is zero at program start to signal that the global scope map is
+   allocated by rtld.  Later it keeps the size of the map.  It might be
+   reset if in _dl_close if the last global object is removed.  */
+size_t _dl_global_scope_alloc;
+
+size_t _dl_pagesize;
+
+unsigned int _dl_osversion;
+
+/* All known directories in sorted order.  */
+struct r_search_path_elem *_dl_all_dirs;
+
+/* All directories after startup.  */
+struct r_search_path_elem *_dl_init_all_dirs;
+
+/* The object to be initialized first.  */
+struct link_map *_dl_initfirst;
+
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we
    protect `_dl_open' and `_dl_close' in dl-close.c.
@@ -115,7 +130,7 @@ __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 
 #ifdef HAVE_AUX_VECTOR
-extern int _dl_clktck;
+int _dl_clktck;
 
 void
 internal_function
@@ -125,10 +140,10 @@ _dl_aux_init (ElfW(auxv_t) *av)
     switch (av->a_type)
       {
       case AT_PAGESZ:
-	_dl_pagesize = av->a_un.a_val;
+	GL(dl_pagesize) = av->a_un.a_val;
 	break;
       case AT_CLKTCK:
-	_dl_clktck = av->a_un.a_val;
+	GL(dl_clktck) = av->a_un.a_val;
 	break;
       }
 }

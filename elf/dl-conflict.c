@@ -1,5 +1,5 @@
 /* Resolve conflicts against already prelinked libraries.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -28,13 +28,12 @@
 #include <sys/types.h>
 #include "dynamic-link.h"
 
-extern unsigned long int _dl_num_cache_relocations;	/* in dl-lookup.c */
 
 void
 _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
 		       ElfW(Rela) *conflictend)
 {
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_RELOC, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_RELOC, 0))
     _dl_printf ("\nconflict processing: %s\n",
 		l->l_name[0] ? l->l_name : _dl_argv[0]);
 
@@ -45,25 +44,21 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE_MAP(ref, version, flags) (*ref = NULL, 0)
 #define RESOLVE(ref, version, flags) (*ref = NULL, 0)
-#define RESOLVE_CONFLICT_FIND_MAP(map, r_offset)		\
-do								\
-  {								\
-    while ((resolve_conflict_map->l_map_end			\
-	    < (ElfW(Addr))(r_offset))				\
-	   || (resolve_conflict_map->l_map_start		\
-	       > (ElfW(Addr))(r_offset)))			\
-      resolve_conflict_map					\
-	= resolve_conflict_map->l_next;				\
-    (map) = resolve_conflict_map;				\
+#define RESOLVE_CONFLICT_FIND_MAP(map, r_offset) \
+  do {									      \
+    while ((resolve_conflict_map->l_map_end < (ElfW(Addr)) (r_offset))	      \
+	   || (resolve_conflict_map->l_map_start > (ElfW(Addr)) (r_offset)))  \
+      resolve_conflict_map = resolve_conflict_map->l_next;		      \
+									      \
+    (map) = resolve_conflict_map;					      \
   } while (0)
 
     struct link_map *resolve_conflict_map __attribute__ ((__unused__))
-      = _dl_loaded;
-    
+      = GL(dl_loaded);
 
 #include "dynamic-link.h"
 
-    _dl_num_cache_relocations += conflictend - conflict;
+    GL(dl_num_cache_relocations) += conflictend - conflict;
 
     for (; conflict < conflictend; ++conflict)
       elf_machine_rela (l, conflict, NULL, NULL, (void *) conflict->r_offset);

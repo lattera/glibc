@@ -145,11 +145,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	doit = (Elf64_Addr) ((struct ia64_fdesc *) &_dl_runtime_resolve)->ip;
       else
 	{
-	  if (_dl_name_match_p (_dl_profile, l))
+	  if (_dl_name_match_p (GL(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
-	      _dl_profile_map = l;
+	      GL(dl_profile_map) = l;
 	    }
 	  doit = (Elf64_Addr) ((struct ia64_fdesc *) &_dl_runtime_profile)->ip;
 	}
@@ -381,7 +381,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	{ .mmi\n"							      \
 "	  mov out3 = r11\n"						      \
 "	  sub r17 = r17, r3	/* Substract _dl_skip_args. */\n"	      \
-"	  addl out0 = @ltoff(_dl_loaded), gp\n"				      \
+"	  addl out0 = @ltoff(_rtld_global), gp\n"			      \
 "	}\n"								      \
 "1:	/* Copy env. */\n"						      \
 "	{ .mfi\n"							      \
@@ -528,7 +528,7 @@ elf_machine_rela (struct link_map *map,
       value = *reloc_addr;
 # if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       /* Already done in dynamic linker.  */
-      if (map != &_dl_rtld_map)
+      if (map != &GL(dl_rtld_map))
 # endif
         value += map->l_addr;
     }
