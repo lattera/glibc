@@ -1,3 +1,15 @@
+2002-03-11  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurd/threadvar.h: Include <features.h> for __THROW macro.
+
+	* Versions.def (libc): Add GLIBC_2.2.6.
+	* hurd/Versions (libc: GLIBC_2.2.6): Add __errno_location.
+	* sysdeps/mach/hurd/errnos.awk: In generated macro, use
+	__errno_location instead of __hurd_errno_location, and don't inline it.
+	* sysdeps/mach/hurd/bits/errno.h: Regenerated.
+	* hurd/errno.c: New file.
+	* hurd/Makefile (routines): Add errno.
+
 2002-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (vfprintf): Avoid crashing for
