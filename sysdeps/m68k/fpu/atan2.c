@@ -70,5 +70,5 @@ DEFUN(atan2, (y, x), double y AND double x)
 }
 
 #else
-#include <sysdeps/ieee754/atan2.c>
+#include <sysdeps/generic/atan2.c>
 #endif
