@@ -1451,7 +1451,10 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
           buffer[buflen - 1] = '\xff';
           p = fgets (buffer, buflen, ent->stream);
           if (p == NULL && feof (ent->stream))
-            return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
           if (p == NULL || buffer[buflen - 1] != '\xff')
             {
               fsetpos (ent->stream, &pos);

@@ -1,3 +1,8 @@
+1999-09-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_compat/compat-pwd.c (internal_getpwuid_r): Set errno in
+	one more case.
+
 1999-09-22  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/tstscanf.c (main): Add test case from PR libc/1313
