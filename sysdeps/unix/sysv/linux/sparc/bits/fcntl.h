@@ -79,9 +79,15 @@
 # define F_GETOWN	5	/* Get owner of socket (receiver of SIGIO).  */
 # define F_SETOWN	6	/* Set owner of socket (receiver of SIGIO).  */
 #endif
-#define F_GETLK		7	/* Get record locking info.  */
-#define F_SETLK		8	/* Set record locking info (non-blocking).  */
-#define F_SETLKW	9	/* Set record locking info (blocking).  */
+#ifndef __USE_FILE_OFFSET64
+# define F_GETLK	7	/* Get record locking info.  */
+# define F_SETLK	8	/* Set record locking info (non-blocking).  */
+# define F_SETLKW	9	/* Set record locking info (blocking).  */
+#else
+# define F_GETLK	F_GETLK64  /* Get record locking info.  */
+# define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
+# define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
+#endif
 
 #ifdef __USE_GNU
 # define F_SETSIG	10	/* Set number of signal to be sent.  */
@@ -89,13 +95,13 @@
 #endif
 
 #if __WORDSIZE == 64
-#define F_GETLK64	F_GETLK	/* Get record locking info.  */
-#define F_SETLK64	F_SETLK	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	F_SETLKW /* Set record locking info (blocking).  */
+# define F_GETLK64	7	/* Get record locking info.  */
+# define F_SETLK64	8	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	9	/* Set record locking info (blocking).  */
 #else
-#define F_GETLK64	12	/* Get record locking info.  */
-#define F_SETLK64	13	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	14	/* Set record locking info (blocking).  */
+# define F_GETLK64	12	/* Get record locking info.  */
+# define F_SETLK64	13	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	14	/* Set record locking info (blocking).  */
 #endif
 
 /* for F_[GET|SET]FL */

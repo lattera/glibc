@@ -1,3 +1,9 @@
+2000-08-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Handle
+	__USE_FILE_OFFSET64 correctly for locking.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+
 2000-08-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FCNTL64):
