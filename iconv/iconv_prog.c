@@ -166,7 +166,7 @@ main (int argc, char *argv[])
 
       newp = (char *) alloca (errhand - to_code + nslash + 6 + 1);
       cp = mempcpy (newp, to_code, errhand - to_code);
-      while (nslash > 0)
+      while (nslash-- > 0)
 	*cp++ = '/';
       memcpy (cp, "NEEDED", sizeof ("NEEDED"));
 
