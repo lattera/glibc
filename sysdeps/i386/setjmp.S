@@ -25,11 +25,6 @@
 #include "bp-sym.h"
 #include "bp-asm.h"
 
-	/* Binary compatibility entry point.  */
-ENTRY (BP_SYM (__setjmp))
-	PUSH_SIGNAL_MASK (0)
-	/* FALL THROUGH */
-
 #define PARMS	LINKAGE		/* no space for saved regs */
 #define JMPBUF	PARMS
 #define SIGMSK	JMPBUF+PTR_SIZE

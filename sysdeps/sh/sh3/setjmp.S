@@ -22,9 +22,6 @@
 #define _ASM
 #include <bits/setjmp.h>
 
-	/* Binary compatibility entry point.  */
-ENTRY (__setjmp)
-	mov	#0, r5
 ENTRY (__sigsetjmp)
 	/* Save registers */
 	add	#(JB_SIZE - 4 * 5), r4

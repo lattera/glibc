@@ -81,13 +81,13 @@ setjmp:	alloc r8=ar.pfs,2,0,0,0
 	br.cond.sptk.many __sigsetjmp
 	.endp setjmp
 
-	.global __setjmp
-	.proc __setjmp
-__setjmp:
+	.global _setjmp
+	.proc _setjmp
+_setjmp:
 	alloc r8=ar.pfs,2,0,0,0
 	mov in1=0
 	br.cond.sptk.many __sigsetjmp
-	.endp __setjmp
+	.endp _setjmp
 
 	/* __sigsetjmp(__jmp_buf buf, int savemask) */
 	.align 32
@@ -183,5 +183,5 @@ __sigsetjmp:
 	ret
 	.endp __sigsetjmp
 
-weak_alias(__setjmp, _setjmp)
+weak_extern(_setjmp)
 weak_extern(setjmp)

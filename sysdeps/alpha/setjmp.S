@@ -72,11 +72,11 @@ END(__sigsetjmp)
 /* Put these traditional entry points in the same file so that we can
    elide much of the nonsense in trying to jmp to the real function.  */
 
-ENTRY(__setjmp)
+ENTRY(_setjmp)
 	ldgp	gp, 0(pv)
 	mov	0, a1
 	br	$sigsetjmp_local
-END(__setjmp)
+END(_setjmp)
 
 ENTRY(setjmp)
 	ldgp	gp, 0(pv)
@@ -84,5 +84,5 @@ ENTRY(setjmp)
 	br	$sigsetjmp_local
 END(setjmp)
 
-weak_alias(__setjmp, _setjmp)
+weak_extern(_setjmp)
 weak_extern(setjmp)

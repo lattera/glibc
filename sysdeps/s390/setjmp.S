@@ -28,12 +28,6 @@
 /* Save the current program position in ENV and return 0.  */
 /* R2 = pointer to jmp_buf, R3 = savemask */
 
-/* Binary compatibility entry point. */
-
-ENTRY(__setjmp)
-	sr     %r3,%r3              /* set savemask to zero */
-END (__setjmp)
-
 ENTRY(__sigsetjmp)
 	stm    %r6,%r15,0(%r2)      /* store registers in jmp_buf */
 #ifdef PIC

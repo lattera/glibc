@@ -22,9 +22,6 @@
 #define _ASM
 #include <bits/setjmp.h>
 
-	/* Binary compatibility entry point.  */
-ENTRY (__setjmp)
-	mov	r1, #0
 ENTRY (__sigsetjmp)
 	/* Save registers */
 	sfmea	f4, 4, [r0]!
@@ -35,4 +32,4 @@ ENTRY (__sigsetjmp)
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
-END (__setjmp)
+END (__sigsetjmp)

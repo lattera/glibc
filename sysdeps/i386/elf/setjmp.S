@@ -35,10 +35,8 @@ ENTRY (BP_SYM (setjmp))
 	jmp .Linternal_sigsetjmp
 END (BP_SYM (setjmp))
 
-	/* Binary compatibility entry point.  */
 ENTRY (BP_SYM (_setjmp))
 	.weak C_SYMBOL_NAME (BP_SYM (_setjmp))
-ENTRY (BP_SYM (__setjmp))
 	PUSH_SIGNAL_MASK (0)
 	/* FALL THROUGH */
 

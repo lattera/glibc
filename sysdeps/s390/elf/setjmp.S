@@ -31,10 +31,8 @@ ENTRY (setjmp)
 	j      __sigsetjmp          /* branch relativ to __sigsetjmp */
 END (setjmp)
 
-	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
 	.weak  C_SYMBOL_NAME (_setjmp)
-ENTRY(__setjmp)
 	lhi    %r3,0                /* second argument of zero */
 
 ENTRY(__sigsetjmp)

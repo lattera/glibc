@@ -29,10 +29,10 @@
 
 /* int _setjmp(jmp_buf) */
 
-ENTRY(__setjmp)
+ENTRY(_setjmp)
 	ba	__sigsetjmp_local
 	 set	0, %o1
-END(__setjmp)
+END(_setjmp)
 
 /* int setjmp(jmp_buf) */
 
@@ -60,5 +60,5 @@ __sigsetjmp_local:
 
 END(__sigsetjmp)
 
-weak_alias(__setjmp, _setjmp)
+weak_extern(_setjmp)
 weak_extern(setjmp)

@@ -23,10 +23,10 @@
 #define _SETJMP_H
 #include <bits/setjmp.h>
 
-ENTRY(__setjmp)
+ENTRY(_setjmp)
 	b	1f
 	 set	0, %o1
-END(__setjmp)
+END(_setjmp)
 
 ENTRY(setjmp)
 	set	1, %o1
@@ -47,5 +47,5 @@ ENTRY (__sigsetjmp)
 	 mov	%g1, %o7
 END(__sigsetjmp)
 
-weak_alias(__setjmp, _setjmp)
+weak_extern(_setjmp)
 weak_extern(setjmp)
