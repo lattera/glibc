@@ -1,5 +1,5 @@
 /* Fmemopen implementation.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by  Hanno Mueller, kontakt@hanno.de, 2000.
 
@@ -26,8 +26,6 @@
  * I needed fmemopen() for an application that I currently work on,
  * but couldn't find it in libio. The following snippet of code is an
  * attempt to implement what glibc's documentation describes.
- *
- * No, it isn't really tested yet. :-)
  *
  *
  *
@@ -176,9 +174,9 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
   if (np < 0 || (size_t) np > c->size)
     return -1;
 
-  c->pos = np;
+  *p = c->pos = np;
 
-  return np;
+  return 0;
 }
 
 

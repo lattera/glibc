@@ -1,4 +1,5 @@
-/* Copyright (C) 1993,95,97,99,2000,2002,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,99,2000,2002,2004, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,6 +95,20 @@ _IO_cookie_close (fp)
 }
 
 
+static _IO_off64_t
+_IO_cookie_seekoff (fp, offset, dir, mode)
+     _IO_FILE *fp;
+     _IO_off64_t offset;
+     int dir;
+     int mode;
+{
+  /* We must force the fileops code to always use seek to determine
+     the position.  */
+  fp->_offset = _IO_pos_BAD;
+  return INTUSE(_IO_file_seekoff) (fp, offset, dir, mode);
+}
+
+
 static const struct _IO_jump_t _IO_cookie_jumps = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, INTUSE(_IO_file_finish)),
@@ -103,7 +118,7 @@ static const struct _IO_jump_t _IO_cookie_jumps = {
   JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
   JUMP_INIT(xsputn, INTUSE(_IO_file_xsputn)),
   JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
-  JUMP_INIT(seekoff, INTUSE(_IO_file_seekoff)),
+  JUMP_INIT(seekoff, _IO_cookie_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, INTUSE(_IO_file_setbuf)),
   JUMP_INIT(sync, INTUSE(_IO_file_sync)),
@@ -223,7 +238,7 @@ static const struct _IO_jump_t _IO_old_cookie_jumps = {
   JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
   JUMP_INIT(xsputn, INTUSE(_IO_file_xsputn)),
   JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
-  JUMP_INIT(seekoff, INTUSE(_IO_file_seekoff)),
+  JUMP_INIT(seekoff, _IO_cookie_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, INTUSE(_IO_file_setbuf)),
   JUMP_INIT(sync, INTUSE(_IO_file_sync)),
