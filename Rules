@@ -136,7 +136,8 @@ subdir_dist: dist
 
 # Convenient target to update all the generated source files.
 .PHONY: generated
-generated: $(addprefix $(common-objpfx),$(common-generated))
+generated: $(addprefix $(common-objpfx),$(common-generated)) \
+	$(addprefix $(objpfx),$(generated))
 
 ifndef libc.so-version
 # Undefine this because it can't work when we libc.so is unversioned.

@@ -1,3 +1,38 @@
+Thu Sep  5 13:18:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/init-first.c (__libc_argc, __libc_argv):
+	New variables.
+	(init1): Initialize them.
+	* hurd/hurdinit.c (_hurd_setproc): Now that happens to be
+	available, pass __libc_argv in call to __proc_set_arg_locations.
+
+	* gmon/gmon.c (write_hist): Call __profile_frequency instead of
+	hertz. 
+	(hertz): Delete function.
+	* gmon/Makefile (routines): Add `prof-freq'.
+	* sysdeps/generic/prof-freq.c: New file.
+	* sysdeps/mach/hurd/prof-freq.c: New (stubby) file.
+	* sysdeps/mach/hurd/profil.c (profile_tick): New variable.
+	(update_waiter): Store frequency in profile_tick.
+	(__profile_frequency): New function.
+
+	* sysdeps/mach/hurd/sendto.c (sendto): Use prototype definition
+	syntax.
+
+	* Rules (generated): Restore reference to $(generated).
+
+	* mach/Machrules (mig.uh, mig.__h): Don't include $(user-MIGFLAGS)
+	here. 
+
+ 	* malloc/free.c (free): __lib_malloc_lock -> __libc_malloc_lock.
+	
+	* malloc/free.c: Provide extern decl of __libc_malloc_lock.
+	* malloc/realloc.c: Likewise.
+	* malloc/malloc-find.c: Likewise.
+	* malloc/malloc-size.c: Likewise.
+	* malloc/malloc-walk.c: Likewise.
+	* malloc/memalign.c: Likewise.
+
 Thu Sep  5 03:20:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	Change configuration and Makefiles to allow add-ons to have a
@@ -276,7 +311,7 @@ Thu Aug 29 12:00:30 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
  	spelling error of _hurd_itimerval.
 
 	* mach/Makefile (MIGFLAGS-mach/mach4): Define variable.
-  	mach/Machrules (mig.uh, mig.__h): Include $(user-MIGFLAGS) and
+  	* mach/Machrules (mig.uh, mig.__h): Include $(user-MIGFLAGS) and
  	$(MIGFLAGS-$*) here too, as well as in the code-generating MiG calls. 
 	
 	* hurd/hurdinline.c: Include "hurd.h" for function definitions too. 

@@ -31,14 +31,15 @@ extern void __libc_global_ctors (void);
 
 int __libc_multiple_libcs = 1;
 
+int __libc_argc;
+char **__libc_argv;
+
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
-
 
 /* Things that want to be run before _hurd_init or much anything else.
    Importantly, these are called before anything tries to use malloc.  */
 DEFINE_HOOK (_hurd_preinit_hook, (void));
-
 
 static void
 init1 (int argc, char *arg0, ...)
@@ -47,6 +48,8 @@ init1 (int argc, char *arg0, ...)
   char **envp = &argv[argc + 1];
   struct hurd_startup_data *d;
 
+  __libc_argc = argc;
+  __libc_argv = argv;
   __environ = envp;
   while (*envp)
     ++envp;

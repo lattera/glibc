@@ -27,13 +27,12 @@ Cambridge, MA 02139, USA.  */
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 int
-sendto (fd, buf, n, flags, addr, addr_len)
-     int fd;
-     const void *buf;
-     size_t n;
-     int flags;
-     const struct sockaddr_un *addr;
-     size_t addr_len;
+sendto (int fd,
+	const void *buf,
+	size_t n,
+	int flags,
+	const struct sockaddr_un *addr,
+	size_t addr_len)
 {
   addr_port_t aport;
   error_t err;

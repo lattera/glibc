@@ -165,6 +165,7 @@ _hurd_setproc (process_t procserver)
 {
   error_t err;
   mach_port_t oldmsg;
+  extern char **__libc_argv;
 
   /* Give the proc server our message port.  */
   if (err = __proc_setmsgport (procserver, _hurd_msgport, &oldmsg))
@@ -175,8 +176,8 @@ _hurd_setproc (process_t procserver)
 
   /* Tell the proc server where our args and environment are.  */
   if (err = __proc_set_arg_locations (procserver,
-				      /* We don't know the ARGV location.  */
-				      (vm_address_t) 0,
+				      _hide_arguments ? 0 :
+				      (vm_address_t) __libc_argv,
 				      _hide_environment ? 0 :
 				      (vm_address_t) __environ))
     return err;

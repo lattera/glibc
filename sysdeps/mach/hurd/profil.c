@@ -36,6 +36,7 @@ static size_t sample_scale;
 static sampled_pc_seqno_t seqno;
 static struct mutex lock = MUTEX_INITIALIZER;
 static mach_msg_timeout_t collector_timeout; /* ms between collections.  */
+static int profile_tick;
 
 /* Enable statistical profiling, writing samples of the PC into at most
    SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
@@ -62,8 +63,7 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 
   if (! err)
     {
-      int tick;			/* Microseconds per sample.  */
-      err = __task_enable_pc_sampling (__mach_task_self (), &tick,
+      err = __task_enable_pc_sampling (__mach_task_self (), &profile_tick,
 				       SAMPLED_PC_PERIODIC);
       if (!err && sample_scale == 0)
 	/* Profiling was not turned on, so the collector thread was
@@ -79,11 +79,17 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 	     and the kernel buffer size we get the length of time it takes
 	     to fill the buffer; translate that to milliseconds for
 	     mach_msg, and chop it in half for general lag factor.  */
-	  collector_timeout = MAX_PC_SAMPLES * tick / 1000 / 2;
+	  collector_timeout = MAX_PC_SAMPLES * profile_tick / 1000 / 2;
 	}
     }
 
   return err;
+}
+
+int
+__profile_frequency ()
+{
+  return profile_tick;
 }
 
 int

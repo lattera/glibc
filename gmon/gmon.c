@@ -58,27 +58,6 @@ static int	s_scale;
 #define ERR(s) write(2, s, sizeof(s) - 1)
 
 /*
- * Discover the tick frequency of the machine if something goes wrong,
- * we return 0, an impossible hertz.
- */
-static int
-DEFUN_VOID(hertz)
-{
-  struct itimerval tim;
-
-  tim.it_interval.tv_sec = 0;
-  tim.it_interval.tv_usec = 1;
-  tim.it_value.tv_sec = 0;
-  tim.it_value.tv_usec = 0;
-  setitimer(ITIMER_REAL, &tim, 0);
-  setitimer(ITIMER_REAL, 0, &tim);
-  if (tim.it_interval.tv_usec < 2)
-    return 0;
-  return (1000000 / tim.it_interval.tv_usec);
-}
-
-
-/*
  * Control profiling
  *	profiling is what mcount checks to see if
  *	all the data structures are ready.
@@ -183,7 +162,7 @@ DEFUN(write_hist, (fd), int fd)
   if (_gmonparam.kcountsize > 0)
     {
       size = _gmonparam.kcountsize / sizeof(HISTCOUNTER);
-      rate = hertz();
+      rate = __profile_frequency();
       bcopy(&_gmonparam.lowpc, &thdr.low_pc, sizeof(thdr.low_pc));
       bcopy(&_gmonparam.highpc, &thdr.high_pc, sizeof(thdr.high_pc));
       bcopy(&size, &thdr.hist_size, sizeof(thdr.hist_size));

@@ -23,7 +23,7 @@ subdir	:= gmon
 
 headers	:= sys/gmon.h sys/gmon_out.h
 distribute := machine-gmon.h profil-counter.h
-routines := gmon mcount profil bb_init_func bb_exit_func
+routines := gmon mcount profil bb_init_func bb_exit_func prof-freq
 
 include ../Rules
 
