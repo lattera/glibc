@@ -1,3 +1,10 @@
+2001-10-29  Kevin Ryde <user42@zip.com.au>
+
+	* stdio.texi (Integer Conversions): Corrections to sample printf
+	output, clarify `#' behaviour on 0.
+	(Floating-Point Conversions): Clarify that %g only uses %e when
+	the exponent would be greater than 1.
+
 2001-10-28  Roland McGrath  <roland@frob.com>
 
 	Support for Mach/PowerPC contributed by Peter Bruin <pjbruin@dds.nl>.
