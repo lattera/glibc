@@ -525,9 +525,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	  /* When this is a SUID binary we must not allow accessing files
 	     outside the dedicated directories.  */
 	  if (ENABLE_SECURE
-	      && (memchr (single_locale, '/',
-			  _nl_find_language (single_locale) - single_locale)
-		  != NULL))
+	      && memchr (single_locale, '/', single_locale) != NULL)
 	    /* Ingore this entry.  */
 	    continue;
 	}
