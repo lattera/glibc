@@ -28,7 +28,7 @@ distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
 routines		= nsswitch $(addsuffix -lookup,$(databases))
 
 # These are the databases that go through nss dispatch.
-databases		= proto service host network grp pwd rpc ethers
+databases		= proto service hosts network grp pwd rpc ethers
 
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files dns

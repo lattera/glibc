@@ -249,8 +249,8 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 		       + strlen (fct_name) + 1);
       char name[namlen];
       struct link_map *map = ni->library->lib_handle;
-      Elf32_Addr loadbase;
-      const Elf32_Sym *ref = NULL;
+      ElfW(Addr) loadbase;
+      const ElfW(Sym) *ref = NULL;
       void get_sym (void)
 	{
 	  struct link_map *scope[2] = { map, NULL };
@@ -397,7 +397,7 @@ nss_parse_service_list (const char *line)
   while (1)
     {
       service_user *new_service;
-      char *name;
+      const char *name;
 
       while (isspace (line[0]))
 	++line;

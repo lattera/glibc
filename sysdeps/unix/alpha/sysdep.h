@@ -99,22 +99,12 @@ name/**/:					\
 
 #undef PSEUDO_END
 
-#ifdef PIC
-/* When building a shared library, we can use a branch since the text
-   section of the library is much smaller than 4MB.  If we ever break
-   this assumption, the linker will tell us.  */
-# define PSEUDO_END(sym)			\
-1996:						\
-    br		zero, __syscall_error;		\
-    END(sym)
-#else
-# define PSEUDO_END(sym)			\
+#define PSEUDO_END(sym)				\
 1996:						\
     br		gp, 2f;				\
 2:  ldgp	gp, 0(gp);			\
     jmp		zero, __syscall_error;		\
     END(sym)
-#endif
 
 #define r0	v0
 #define r1	a4

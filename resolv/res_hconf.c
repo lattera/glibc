@@ -69,24 +69,6 @@ static struct cmd {
 };
 
 
-/*
- * Why isn't this in stdlib?
- */
-char *
-strndup (const char * s, size_t n)
-{
-  char * retval;
-
-  retval = malloc (n + 1);
-  if (!retval)
-    return retval;
-
-  memcpy (retval, s, n);
-  retval[n] = '\0';		/* ensure return value is terminated */
-  return retval;
-}
-
-
 /* Skip white space.  */
 static const char *
 skip_ws (const char * str)
@@ -194,7 +176,7 @@ arg_trimdomain_list (const char * fname, int line_num, const char * args,
 	  return 0;
 	}
       _res_hconf.trimdomain[_res_hconf.num_trimdomains++] =
-	strndup (start, len);
+	  strndup (start, len);
       args = skip_ws (args);
       switch (*args)
 	{

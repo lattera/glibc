@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)xdr.c 1.35 87/08/12";
  */
 
 #include <stdio.h>
+#include <limits.h>
 char *malloc();
 
 #include <rpc/types.h>
@@ -99,34 +100,28 @@ xdr_int(xdrs, ip)
 	(void) (xdr_short(xdrs, (short *)ip));
 	return (xdr_long(xdrs, (long *)ip));
 #else
-	if (sizeof (int) < sizeof (long)) {
-		long l;
+# if INT_MAX < LONG_MAX
+	long l;
 
-		switch (xdrs->x_op) {
-		      case XDR_ENCODE:
-			l = (long) *ip;
-			return XDR_PUTLONG(xdrs, &l);
+	switch (xdrs->x_op) {
+	      case XDR_ENCODE:
+		l = (long) *ip;
+		return XDR_PUTLONG(xdrs, &l);
 
-		      case XDR_DECODE:
-			if (!XDR_GETLONG(xdrs, &l)) {
-				return FALSE;
-			}
-			*ip = (int) l;
-			return TRUE;
+	      case XDR_DECODE:
+		if (!XDR_GETLONG(xdrs, &l)) {
+			return FALSE;
 		}
-	} else if (sizeof (int) == sizeof (long)) {
-		return (xdr_long(xdrs, (long *)ip));
-	} else if (sizeof (int) == sizeof (short)) {
-		return (xdr_short(xdrs, (short *)ip));
-	} else {
-	  abort ();		/* roland@gnu */
-#if 0
-		/* force unresolved reference (link-time error): */
-		extern unexpected_sizes_in_xdr_int ();
-
-		unexpected_sizes_in_xdr_int();
-#endif
+		*ip = (int) l;
+		return TRUE;
 	}
+# elif INT_MAX == LONG_MAX
+	return xdr_long(xdrs, (long *)ip);
+# elif INT_MAX == SHRT_MAX
+	return xdr_short(xdrs, (short *)ip);
+# else
+#	error unexpected integer sizes in_xdr_int()
+# endif
 #endif
 }
 
@@ -142,34 +137,28 @@ xdr_u_int(xdrs, up)
 	(void) (xdr_short(xdrs, (short *)up));
 	return (xdr_u_long(xdrs, (u_long *)up));
 #else
-	if (sizeof (u_int) < sizeof (u_long)) {
-		u_long l;
+# if UINT_MAX < ULONG_MAX
+	u_long l;
 
-		switch (xdrs->x_op) {
-		      case XDR_ENCODE:
-			l = (u_long) *up;
-			return XDR_PUTLONG(xdrs, &l);
+	switch (xdrs->x_op) {
+	      case XDR_ENCODE:
+		l = (u_long) *up;
+		return XDR_PUTLONG(xdrs, &l);
 
-		      case XDR_DECODE:
-			if (!XDR_GETLONG(xdrs, &l)) {
-				return FALSE;
-			}
-			*up = (u_int) l;
-			return TRUE;
+	      case XDR_DECODE:
+		if (!XDR_GETLONG(xdrs, &l)) {
+			return FALSE;
 		}
-	} else if (sizeof (u_int) == sizeof (u_long)) {
-		return (xdr_u_long(xdrs, (u_long *)up));
-	} else if (sizeof (u_int) == sizeof (u_short)) {
-		return (xdr_short(xdrs, (short *)up));
-	} else {
-	  abort ();		/* drepper@gnu */
-#if 0
-		/* force unresolved reference (link-time error): */
-		extern unexpected_sizes_in_xdr_u_int ();
-
-		unexpected_sizes_in_xdr_u_int();
-#endif
+		*up = (u_int) l;
+		return TRUE;
 	}
+# elif UINT_MAX == ULONG_MAX
+	return xdr_u_long(xdrs, (u_long *)up);
+# elif UINT_MAX == USHRT_MAX
+	return xdr_short(xdrs, (short *)up);
+# else
+#	error unexpected integer sizes in_xdr_u_int()
+# endif
 #endif
 }
 

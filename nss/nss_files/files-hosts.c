@@ -32,6 +32,7 @@ Cambridge, MA 02139, USA.  */
 #define ENTNAME		hostent
 #define DATAFILE	_PATH_HOSTS
 
+#define ENTDATA hostent_data
 struct hostent_data
   {
     unsigned char host_addr[16]; /* IPv4 or IPv6 address.  */
@@ -73,7 +74,7 @@ LINE_PARSER
     /* Illegal address: ignore line.  */
     return 0;
 
-  /* Store a pointer to the addressin the expected form.  */
+  /* Store a pointer to the address in the expected form.  */
   entdata->h_addr_ptrs[0] = entdata->host_addr;
   entdata->h_addr_ptrs[1] = NULL;
   result->h_addr_list = entdata->h_addr_ptrs;

@@ -33,17 +33,31 @@ Cambridge, MA 02139, USA.  */
 
 struct parser_data
   {
-    struct CONCAT(ENTNAME,_data) entdata;
+#ifdef ENTDATA
+    struct ENTDATA entdata;
+#define ENTDATA_DECL(data) struct ENTDATA *const entdata = &data->entdata
+#else
+#define ENTDATA_DECL(data)
+#endif
     char linebuffer[0];
   };
 
+#ifdef ENTDATA
+/* The function can't be exported, because the entdata structure
+   is defined only in files-foo.c.  */
+#define parser_stclass static inline
+#else
+/* Export the line parser function so it can be used in nss_db.  */
+#define parser_stclass /* Global */
+#define parse_line CONCAT(_nss_files_parse_,ENTNAME)
+#endif
+
 #define LINE_PARSER(BODY)						      \
-static inline int							      \
+parser_stclass int							      \
 parse_line (char *line, struct STRUCTURE *result,			      \
 	    struct parser_data *data, int datalen)			      \
 {									      \
-  struct CONCAT(ENTNAME,_data) *const entdata __attribute__ ((unused))	      \
-    = &data->entdata;		      					      \
+  ENTDATA_DECL (data);							      \
   BODY;									      \
   TRAILING_LIST_PARSER;							      \
   return 1;								      \
@@ -107,9 +121,10 @@ parse_list (char *line, struct parser_data *data, int datalen)
   char *eol, **list, **p;
 
   /* Find the end of the line buffer.  */
-  eol = strchr (line, '\0') + 1;
+  eol = strchr (data->linebuffer, '\0') + 1;
   /* Adjust the pointer so it is aligned for storing pointers.  */
-  eol += (eol - (char *) 0) % __alignof__ (char *);
+  eol += __alignof__ (char *) - 1;
+  eol -= (eol - (char *) 0) % __alignof__ (char *);
   /* We will start the storage here for the vector of pointers.  */
   list = (char **) eol;
 

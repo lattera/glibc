@@ -26,10 +26,10 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 LEAF(__syscall_error, 0)
+	ldgp	gp, 0(t12)
 	.prologue 1
 
 	/* Store return value in errno... */
-	ldgp	gp, 0(t12)
 	stl	v0, errno
 
 	/* And just kick back a -1.  */

@@ -108,7 +108,7 @@ extern char *strndup __P ((__const char *__string, size_t __n));
 ({									      \
   __const char *__old = (s);						      \
   char *__new;								      \
-  size_t __len = strnlen (__old);					      \
+  size_t __len = strnlen (__old, (n));					      \
   __new = memcpy (__builtin_alloca (__len + 1), __old, __len);		      \
   __new[__len] = '\0';							      \
   __new;								      \

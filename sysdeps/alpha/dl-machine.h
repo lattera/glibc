@@ -106,7 +106,7 @@ elf_alpha_fix_plt(struct link_map *l,
   if (edisp >= -0x100000 && edisp < 0x100000)
     {
       /* If we are in range, use br to perfect branch prediction and
-	 elide the dependancy on the address load.  This case happens,
+	 elide the dependency on the address load.  This case happens,
 	 e.g., when a shared library call is resolved to the same library.  */
 
       int hi, lo;
@@ -179,7 +179,7 @@ elf_machine_rela (struct link_map *map,
 
       if (resolve)
 	{
-	  loadbase = (*resolve)(&sym, (Elf64_Addr)reloc_addr, 
+	  loadbase = (*resolve)(&sym, (Elf64_Addr)reloc_addr,
 				r_info == R_ALPHA_JMP_SLOT);
 	}
       else
