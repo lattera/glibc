@@ -462,12 +462,13 @@ extern struct link_map *_dl_map_object_internal (struct link_map *loader,
    but before its dependencies.  */
 extern void _dl_map_object_deps (struct link_map *map,
 				 struct link_map **preloads,
-				 unsigned int npreloads, int trace_mode)
+				 unsigned int npreloads, int trace_mode,
+				 int open_mode)
      internal_function;
 extern void _dl_map_object_deps_internal (struct link_map *map,
 					  struct link_map **preloads,
 					  unsigned int npreloads,
-					  int trace_mode)
+					  int trace_mode, int open_mode)
      internal_function;
 
 /* Cache the locations of MAP's hash table.  */

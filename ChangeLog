@@ -1,7 +1,20 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-deps.c (struct openaux_args): Add open_mode element.
+	(openaux): Pass open_mode as new last argument to _dl_map_object.
+	(_dl_map_object_deps): Add new argument open_mode.  Initialize
+	open_mode element of args variable with it.
+	* elf/dl-open.c (dl_open_worker): Pass __RTLD_DLOPEN flag is set to
+	_dl_map_object_deps.
+	* elf/rtld.c (dl_main): Add zero as last parameter to
+	_dl_map_object_deps call.
+	* sysdeps/generic/ldsodefs.h: Adjust prototype of _dl_map_object_deps.
+	* elf/nodlopen2.c: New file.
+	* elf/nodlopenmod2.c: New file.
+	* elf/Makefile: Add rules to build and run nodlopen2.
+
 	* elf/tst-tls1.c: Move TLS helper macros to...
-	* elf/tls-macros.h: ...here.  New file.
+	* elf/tls-macros.hgg: ...here.  New file.
 	* elf/tst-tls2.c: New file.
 	* elf/Makefile (tests): Add tst-tls2.
 	(distribute): Add tls-macros.h.
@@ -27,7 +40,7 @@
 	* sysdeps/generic/dl-tls.c (_dl_allocate_tls): Correctly terminate
 	loop to initialize TLS block.
 
-2002-02-08  Richard Henderson  <rth@twiddle.net>
+2002-02-08  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Also include
 	_dl_cpuclock_offset if HP_SMALL_TIMING_AVAIL.

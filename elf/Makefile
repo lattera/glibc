@@ -122,7 +122,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
-tests-nodlopen-yes = nodlopen
+tests-nodlopen-yes = nodlopen nodlopen2
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
@@ -138,7 +138,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 	        reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
-modules-nodlopen-yes = nodlopenmod
+modules-nodlopen-yes = nodlopenmod nodlopenmod2
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 
 include ../Rules
@@ -381,6 +381,10 @@ $(objpfx)nodelete.out: $(objpfx)nodelmod1.so $(objpfx)nodelmod2.so \
 LDFLAGS-nodlopenmod.so = -Wl,--enable-new-dtags,-z,nodlopen
 $(objpfx)nodlopen: $(libdl)
 $(objpfx)nodlopen.out: $(objpfx)nodlopenmod.so
+
+$(objpfx)nodlopenmod2.so: $(objpfx)nodlopenmod.so
+$(objpfx)nodlopen2: $(libdl)
+$(objpfx)nodlopen2.out: $(objpfx)nodlopenmod2.so
 
 $(objpfx)filtmod1.so: $(objpfx)filtmod1.os $(objpfx)filtmod2.so
 	$(LINK.o) -shared -o $@ -B$(csu-objpfx) $(LDFLAGS.so) \

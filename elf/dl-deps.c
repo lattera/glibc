@@ -47,6 +47,7 @@ struct openaux_args
     /* The arguments to openaux.  */
     struct link_map *map;
     int trace_mode;
+    int open_mode;
     const char *strtab;
     const char *name;
 
@@ -62,7 +63,7 @@ openaux (void *a)
   args->aux = INTUSE(_dl_map_object) (args->map, args->name, 0,
 				      (args->map->l_type == lt_executable
 				       ? lt_library : args->map->l_type),
-				      args->trace_mode, 0);
+				      args->trace_mode, args->open_mode);
 }
 
 static ptrdiff_t
@@ -107,8 +108,8 @@ struct list
 									      \
 	/* DST must not appear in SUID/SGID programs.  */		      \
 	if (__libc_enable_secure)					      \
-	  INTUSE(_dl_signal_error) (0, __str, NULL,			      \
-				    N_("DST not allowed in SUID/SGID programs"));\
+	  INTUSE(_dl_signal_error) (0, __str, NULL, N_("\
+DST not allowed in SUID/SGID programs"));				      \
 									      \
 	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
 						   __cnt));		      \
@@ -141,7 +142,7 @@ void
 internal_function
 _dl_map_object_deps (struct link_map *map,
 		     struct link_map **preloads, unsigned int npreloads,
-		     int trace_mode)
+		     int trace_mode, int open_mode)
 {
   struct list known[1 + npreloads + 1];
   struct list *runp, *tail;
@@ -225,6 +226,7 @@ _dl_map_object_deps (struct link_map *map,
 	  args.strtab = strtab;
 	  args.map = l;
 	  args.trace_mode = trace_mode;
+	  args.open_mode = open_mode;
 	  orig = runp;
 
 	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
@@ -292,14 +294,15 @@ _dl_map_object_deps (struct link_map *map,
 		    if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
 		      INTUSE(_dl_debug_printf) ("load auxiliary object=%s"
-						" requested by file=%s\n", name,
+						" requested by file=%s\n",
+						name,
 						l->l_name[0]
 						? l->l_name : _dl_argv[0]);
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
-		    err = INTUSE(_dl_catch_error) (&objname, &errstring, openaux,
-						&args);
+		    err = INTUSE(_dl_catch_error) (&objname, &errstring,
+						   openaux, &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			/* We are not interested in the error message.  */
@@ -319,13 +322,14 @@ _dl_map_object_deps (struct link_map *map,
 		    if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
 		      INTUSE(_dl_debug_printf) ("load filtered object=%s"
-						" requested by file=%s\n", name,
+						" requested by file=%s\n",
+						name,
 						l->l_name[0]
 						? l->l_name : _dl_argv[0]);
 
 		    /* For filter objects the dependency must be available.  */
-		    err = INTUSE(_dl_catch_error) (&objname, &errstring, openaux,
-						&args);
+		    err = INTUSE(_dl_catch_error) (&objname, &errstring,
+						   openaux, &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			if (err)

@@ -821,8 +821,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    && (__builtin_expect (! __libc_enable_secure, 1)
 		|| strchr (p, '/') == NULL))
 	  {
-	    struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded), p,
-							       1, lt_library,
+	    struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded),
+							       p, 1,
+							       lt_library,
 							       0, 0);
 	    if (++new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
@@ -903,8 +904,9 @@ of this helper program; chances are you did not intend to run this program.\n\
       if (problem != NULL)
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
-	  struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded), p, 1,
-							     lt_library, 0, 0);
+	  struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded), p,
+							     1, lt_library,
+							     0, 0);
 	  if (++new_map->l_opencount == 1)
 	    /* It is no duplicate.  */
 	    ++npreloads;
@@ -937,7 +939,8 @@ of this helper program; chances are you did not intend to run this program.\n\
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
   HP_TIMING_NOW (start);
-  INTUSE(_dl_map_object_deps) (GL(dl_loaded), preloads, npreloads, mode == trace);
+  INTUSE(_dl_map_object_deps) (GL(dl_loaded), preloads, npreloads,
+			       mode == trace, 0);
   HP_TIMING_NOW (stop);
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);

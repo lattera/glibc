@@ -158,7 +158,7 @@ dl_open_worker (void *a)
 
   /* Maybe we have to expand a DST.  */
   dst = strchr (file, '$');
-  if (dst != NULL)
+  if (__builtin_expect (dst != NULL, 0))
     {
       const void *caller = args->caller;
       size_t len = strlen (file);
@@ -208,8 +208,7 @@ dl_open_worker (void *a)
     }
 
   /* Load the named object.  */
-  args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0,
-				    mode);
+  args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0, mode);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
      set and the object is not already loaded.  */
@@ -243,7 +242,7 @@ dl_open_worker (void *a)
     }
 
   /* Load that object's dependencies.  */
-  _dl_map_object_deps (new, NULL, 0, 0);
+  _dl_map_object_deps (new, NULL, 0, 0, mode & __RTLD_DLOPEN);
 
   /* So far, so good.  Now check the versions.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)
@@ -413,7 +412,7 @@ _dl_open (const char *file, int mode, const void *caller)
   /* Release the lock.  */
   __libc_lock_unlock_recursive (GL(dl_load_lock));
 
-  if (errstring)
+  if (__builtin_expect (errstring != NULL, 0))
     {
       /* Some error occurred during loading.  */
       char *local_errstring;
