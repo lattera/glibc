@@ -294,9 +294,7 @@ $(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
 	                      $(..)Versions.def \
 			      $(wildcard $(add-ons:%=$(..)%/Versions.def)) \
 			      $(common-objpfx)soversions.mk
-	{ for map in $(map-firstversions); do \
-	    echo $$map; \
-	  done | sed 's/:/ : /'; \
+	{ $(foreach map,$(map-firstversions),echo '$(subst :, : ,$(map))';) \
 	  cat $(filter-out $< $(common-objpfx)soversions.mk,$^); \
 	} | LC_ALL=C $(AWK) -f $< > $@T
 	mv -f $@T $@

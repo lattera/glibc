@@ -1,5 +1,8 @@
 2000-03-19  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* Makerules (Versions.all): Use $(foreach ...) instead of sh for loop
+	for $(map-firstversions), which better handles it being empty.
+
 	* shlib-versions [USE_IN_LIBIO] (.*-.*-gnu-gnu*): Set earliest
 	supported version for libc 0.2.90.libio to GLIBC_2.2.
 
