@@ -1,3 +1,9 @@
+2000-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/sh/sh3/bits/setjmp.h: Removed.
+	* sysdeps/sh/sh4/bits/setjmp.h: Moved to...
+	* sysdeps/sh/bits/setjmp.h: ...here.  New file.
+
 2000-06-12  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 	    Yutaka Niibe  <gniibe@chroot.org>
 
