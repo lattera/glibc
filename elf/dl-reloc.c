@@ -95,7 +95,7 @@ cannot make segment writable for relocation"));
       {
 	/* Allocate the array which will contain the already found
 	   relocations.  If the shared object lacks a PLT (for example
-	   if it inly contains lead function) the l_info[DT_PLTRELSZ]
+	   if it only contains lead function) the l_info[DT_PLTRELSZ]
 	   will be NULL.  */
 	if (l->l_info[DT_PLTRELSZ] == NULL)
 	  _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
@@ -107,7 +107,7 @@ cannot make segment writable for relocation"));
 				 l->l_info[DT_PLTRELSZ]->d_un.d_val);
 	if (l->l_reloc_result == NULL)
 	  _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
-			    ": profiler outof memory shadowing PLTREL of ",
+			    ": profiler out of memory shadowing PLTREL of ",
 			    l->l_name, "\n", NULL);
       }
   }
