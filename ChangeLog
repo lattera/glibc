@@ -1,6 +1,7 @@
 2004-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/bug-if1.c (do_test): Simply use 0 as invalid index.
+	Workaround for [BZ #232].
 
 	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Use extend_alloca.
 
