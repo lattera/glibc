@@ -35,7 +35,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 #ifdef	__STDC__
-#define	PSEUDO(name, syscall_name)					      \
+#define	PSEUDO(name, syscall_name, args)				      \
   .even;								      \
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
@@ -44,7 +44,7 @@ Cambridge, MA 02139, USA.  */
   trap POUND(0);							      \
   bcs error
 #else
-#define	PSEUDO(name, syscall_name)					      \
+#define	PSEUDO(name, syscall_name, args)				      \
   .even;								      \
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
