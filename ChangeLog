@@ -1,5 +1,22 @@
 Sun Jun 16 03:22:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* hurd/hurdinit.c (map0): Remove [!PIC] conditional.
+
+	* shlib-versions (*-*-*): Add libutil=1.
+
+	* rpm/Makefile (install-lib): Add libc.a et al.
+	(install-others): Only add libc.so if $(build-shared) is yes.
+
+	* math/Makefile (install-lib): New variable, list libieee.a.
+	(non-lib.a): Likewise.
+	(extra-objs): Likewise, and ieee-math.o.
+	($(objpfx)libieee.a): New target, link to ieee-math.o.
+	* math/ieee-math.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=math]: Remove setfpucw
+	and libieee.a stuff.
+	* sysdeps/unix/sysv/linux/ieee-fpucw.c: File removed.
+	* sysdeps/unix/sysv/linux/i386/ieee_fpu.c: File removed.
+
 	* sysdeps/unix/sysv/Makefile (sysdep_headers): Make append of termio.h
 	and rule for it conditional on termio.h not already being in
 	sysdep_headers.

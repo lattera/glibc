@@ -38,6 +38,11 @@ install-lib += $(foreach lib,$(versioned),\
 			 $(patsubst %.so,%-$(version).so,$(lib)) \
 			 $(lib)$($(lib)-version) $(lib))
 
+# Add libc.a and libc_p.a.
+install-lib += $(foreach o,$(filter-out .so,$(object-suffixes)),\
+			 $(patsubst %,$(libtype$o),c))
+
+ifeq (yes,$(build-shared))
 # Add libc.so itself, which is a special case in Makerules.
 ifndef libc.so-version
 install-others += $(slibdir)/libc.so
@@ -45,6 +50,7 @@ else
 install-others += $(libdir)/libc.so \
 		  $(slibdir)/libc-$(version).so \
 		  $(slibdir)/libc.so$(libc.so-version)
+endif
 endif
 
 

@@ -52,7 +52,6 @@ long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l)) # not ready yet
 #long-m-yes = $(long-m-routines) # uncomment this when code works
 #distribute += $(long-m-routines:=.c) # and this when at least all files exist
 
-
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,
 # and we don't want to have to link every program with -lm.
@@ -61,6 +60,12 @@ routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
 distribute += $(long-c-yes:=.c)
 
+
+# The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
+# for error handling in the -lm functions.
+install-lib += libieee.a
+non-lib.a += libieee.a
+extra-objs += libieee.a ieee-math.o
 
 include ../Rules
 
@@ -82,3 +87,10 @@ endif
 
 # The fdlibm code generates a lot of these warnings but is otherwise clean.
 override CFLAGS += -Wno-uninitialized -Wno-write-strings
+
+# The -lieee library is actually an object file.
+# The module just defines the _LIB_VERSION_ variable.
+# It's not a library to make sure it is linked in instead of s_lib_version.o.
+$(objpfx)libieee.a: $(objpfx)ieee-math.o
+	rm -f $@
+	ln $< $@

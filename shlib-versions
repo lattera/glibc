@@ -26,3 +26,7 @@ alpha-*-linux*		libc=6
 
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
 *-*-*			libdl=2
+
+# So far the -lutil interface is the same on all platforms, except for the
+# `struct utmp' format, which depends on libc.
+*-*-*			libutil=1

@@ -1,14 +1,3 @@
-ifeq ($(subdir), math)
-sysdep_routines += setfpucw
-extra-objs += ieee-fpucw.o
-install-lib += libieee.a
-non-lib.a += libieee.a
-
-$(objpfx)libieee.a: $(objpfx)ieee-fpucw.o
-	rm -f $@
-	ln $< $@
-endif
-
 ifeq ($(subdir), io)
 sysdep_routines += fxstat lxstat xstat
 endif
