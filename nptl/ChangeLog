@@ -1,3 +1,8 @@
+2003-05-16  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/register-atfork.c (libc_freeres_fn): Fix
+	uninitialized variable braino.
+
 2003-05-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/timer_gettime.c (timer_gettime): Correct
