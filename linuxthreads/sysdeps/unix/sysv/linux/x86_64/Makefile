@@ -6,5 +6,7 @@ LDFLAGS-pthread.so += -specs=$(objpfx)specs
 before-compile += $(objpfx)specs
 generated += specs
 $(objpfx)specs:
-	$(CC) $(CFLAGS) $(CPPFLAGS) -dumpspecs | sed 's_/usr/lib64/crti.o_crti.o_g' > $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) -dumpspecs \
+	| sed 's,/usr/lib64/\(crt[in]\.o\),\1,g' > $@.new
+	mv -f $@.new $@
 endif
