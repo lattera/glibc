@@ -1,5 +1,9 @@
 2001-05-07  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/generic/bits/confname.h: Remove extra comma at end of
+	enumeration.
+	Closes PR libc/2240.
+
 	* scripts/config.guess: Imported from gnu.org.
 	* scripts/config.sub: Likewise.
 	
