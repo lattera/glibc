@@ -1,3 +1,8 @@
+2000-10-25  Andreas Jaeger  <aj@suse.de>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Remove unused variable.
+	(_dl_map_object): Likewise.
+
 2000-10-24  Paul Eggert  <eggert@twinsun.com>
 
 	* time/strftime.c (my_strftime macro)
