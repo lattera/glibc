@@ -1,3 +1,8 @@
+2000-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/mk_MK: Updated (not to new format).
+	Patch by Damjan Georgievski <gdamjan@freemail.org.mk>.
+
 2000-06-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/fr_FR: Update for new format.
@@ -42,8 +47,7 @@
 
 	* tests-mbwc/dat_mbrlen.c: New file.
 
-	* tests-mbwc/tst_types.h (struct TIN_MBSTOWCS_REC): Use const
-	char*.
+	* tests-mbwc/tst_types.h (struct TIN_MBSTOWCS_REC): Use const char*.
 	(struct TST_HEAD): Use const char* instead of an array.
 
 	* tests-mbwc/tst_wcsstr.c (tst_wcsstr): ws2 has size WCSSIZE.

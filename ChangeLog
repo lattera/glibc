@@ -1,3 +1,8 @@
+2000-06-27  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Change argument
+	count into signatures for most calls.
+
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/getsysstats.c: Removed.  We can use
