@@ -25,19 +25,6 @@
 
 #include <features.h>
 
-#ifdef	__USE_POSIX
-/* POSIX adds things to <limits.h>.  */
-# include <bits/posix1_lim.h>
-#endif
-
-#ifdef	__USE_POSIX2
-# include <bits/posix2_lim.h>
-#endif
-
-#ifdef	__USE_XOPEN
-# include <bits/xopen_lim.h>
-#endif
-
 
 /* Maximum length of any multibyte character in any locale.
    We define this value here since the gcc header does not define
@@ -133,4 +120,32 @@
 #if defined __GNUC__ && !defined _GCC_LIMITS_H_
 /* `_GCC_LIMITS_H_' is what GCC's file defines.  */
 # include_next <limits.h>
+
+/* The <limits.h> files in some gcc versions don't define LLONG_MIN,
+   LLONG_MAX, and ULLONG_MAX.  Instead only the values gcc defined for
+   ages are available.  */
+# ifdef __USE_ISOC99
+#  ifndef LLONG_MIN
+#   define LLONG_MIN	LONG_LONG_MIN
+#  endif
+#  ifndef LLONG_MAX
+#   define LLONG_MAX	LONG_LONG_MAX
+#  endif
+#  ifndef ULLONG_MAX
+#   define ULLONG_MAX	ULONG_LONG_MAX
+#  endif
+# endif
+#endif
+
+#ifdef	__USE_POSIX
+/* POSIX adds things to <limits.h>.  */
+# include <bits/posix1_lim.h>
+#endif
+
+#ifdef	__USE_POSIX2
+# include <bits/posix2_lim.h>
+#endif
+
+#ifdef	__USE_XOPEN
+# include <bits/xopen_lim.h>
 #endif
