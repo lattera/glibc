@@ -1,3 +1,7 @@
+1999-08-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/s_nexttowardf.c: Fix typo.
+
 1999-08-02  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c (__sigaction):
