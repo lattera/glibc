@@ -21,13 +21,15 @@
 #include <errno.h>
 #include <tls.h>
 
-#if !(USE_TLS && HAVE___THREAD)
+#if ! USE___THREAD
 #undef errno
 extern int errno;
 #endif
 
 int *
+#if ! USE___THREAD
 weak_const_function
+#endif
 __errno_location (void)
 {
   return &errno;

@@ -1,3 +1,9 @@
+2002-11-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/errno-loc.c [! USE___THREAD]: Use this conditional
+	in place of [!(USE_TLS && HAVE___THREAD)].
+	(__errno_location) [! USE___THREAD]: Define as strong, not weak.
+
 2002-10-31  Roger Sayle  <roger@eyesopen.com>
 
 	* sysdeps/i386/soft-fp/sfp-machine.h (_FP_NANFRAC_Q, _FP_NANSIGN_Q):
