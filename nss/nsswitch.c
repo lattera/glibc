@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -39,6 +39,7 @@
 #endif
 
 #include "nsswitch.h"
+#include "../nscd/nscd_proto.h"
 
 /* Prototypes for the local functions.  */
 static name_database *nss_parse_file (const char *fname) internal_function;
@@ -693,6 +694,17 @@ nss_new_service (name_database *database, const char *name)
   (*currentp)->next = NULL;
 
   return *currentp;
+}
+
+
+/* Called by nscd and nscd alone.  */
+void
+__nss_disable_nscd (void)
+{
+  /* Disable all uses of NSCD.  */
+  __nss_not_use_nscd_passwd = -1;
+  __nss_not_use_nscd_group = -1;
+  __nss_not_use_nscd_hosts = -1;
 }
 
 

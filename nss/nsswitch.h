@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,14 +101,15 @@ typedef struct name_database
    If there is no configuration for this database in the file,
    parse a service list from DEFCONFIG and use that.  More
    than one function can use the database.  */
-int __nss_database_lookup (const char *database, const char *alternative_name,
-			   const char *defconfig, service_user **ni);
+extern int __nss_database_lookup (const char *database,
+				  const char *alternative_name,
+				  const char *defconfig, service_user **ni);
 libc_hidden_proto (__nss_database_lookup)
 
 /* Put first function with name FCT_NAME for SERVICE in FCTP.  The
    position is remembered in NI.  The function returns a value < 0 if
    an error occurred or no such function exists.  */
-int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
+extern int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
 
 /* Determine the next step in the lookup process according to the
    result STATUS of the call to the last function returned by
@@ -123,13 +124,17 @@ int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
    services.  In other words, only if all four lookup results have
    the action RETURN associated the lookup process stops before the
    natural end.  */
-int __nss_next (service_user **ni, const char *fct_name, void **fctp,
-		int status, int all_values);
+extern int __nss_next (service_user **ni, const char *fct_name, void **fctp,
+		       int status, int all_values);
 libc_hidden_proto (__nss_next)
 
 /* Search for the service described in NI for a function named FCT_NAME
    and return a pointer to this function if successful.  */
-void *__nss_lookup_function (service_user *ni, const char *fct_name);
+extern void *__nss_lookup_function (service_user *ni, const char *fct_name);
+
+
+/* Called by NSCD to disable recursive calls.  */
+extern void __nss_disable_nscd (void);
 
 
 typedef int (*db_lookup_function) (service_user **, const char *, void **)

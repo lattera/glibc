@@ -1,3 +1,12 @@
+2003-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getXXbyYY_r.c [USE_NSCD] (REENTRANT_NAME): Only retry
+	contacting nscd if NOT_USENSCD_NAME > 0.
+	* nss/nsswitch.c (__nss_disable_nscd): New function.
+	* nss/nsswitch.h: Declare it.
+	* nss/Versions [GLIBC_PRIVATE]: Export __nss_disable_nscd.
+	* nscd/nscd.c (main): Call __nss_disable_nscd.
+
 2003-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/perror.c (perror): We don't need to set the offset

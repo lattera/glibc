@@ -41,6 +41,7 @@
 
 #include "dbg_log.h"
 #include "nscd.h"
+#include "../nss/nsswitch.h"
 #include <device-nrs.h>
 
 /* Get libc version number.  */
@@ -212,6 +213,9 @@ main (int argc, char **argv)
 
   /* Cleanup files created by a previous `bind'.  */
   unlink (_PATH_NSCDSOCKET);
+
+  /* Make sure we do not get recursive calls.  */
+  __nss_disable_nscd ();
 
   /* Init databases.  */
   nscd_init (conffile);

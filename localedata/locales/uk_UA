@@ -14,6 +14,8 @@ escape_char  /
 % Charset: KOI8-U
 % Distribution and use is free, also
 % for commercial purposes.
+%
+% Some collate fixes by Valentyn Solomko vesna@slovnyk.org
 
 LC_IDENTIFICATION
 title      "Ukrainian locale for Ukraine"
@@ -25,8 +27,8 @@ tel        ""
 fax        ""
 language   "Ukrainian"
 territory  "Ukraine"
-revision   "1.0"
-date       "2000-06-29"
+revision   "1.3"
+date       "2003-01-31"
 %
 category  "uk_UA:2000";LC_IDENTIFICATION
 category  "uk_UA:2000";LC_CTYPE
@@ -47,19 +49,30 @@ copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE
+
 copy "iso14651_t1"
 
 % iso14651_t1 is missing Ukrainian ghe
 collating-symbol <UKR-GHE>
 
-reorder-after <CYR-GZHE>
+reorder-after <CYR-GHE>
 <UKR-GHE>
 
-reorder-after <U0453>
-<U0491> <UKR-GHE>;<BAS>;<MIN>;IGNORE
+reorder-after <U0433>
+% <U0491> <UKR-GHE>;<BAS>;<MIN>;IGNORE
+<U0491> <CYR-GHE>;<UKR-GHE>;<MIN>;IGNORE
 
-reorder-after <U0403>
-<U0490> <UKR-GHE>;<BAS>;<CAP>;IGNORE
+reorder-after <U0438>
+% <U0456> <UKR-I>;<BAS>;<MIN>;IGNORE
+<U0456> <CYR-I>;<UKR-I>;<MIN>;IGNORE
+
+reorder-after <U0413>
+% <U0490> <UKR-GHE>;<BAS>;<CAP>;IGNORE
+<U0490> <CYR-GHE>;<UKR-GHE>;<CAP>;IGNORE
+
+reorder-after <U0418>
+% <U0406> <UKR-I>;<BAS>;<CAP>;IGNORE
+<U0406> <CYR-I>;<UKR-I>;<CAP>;IGNORE
 
 reorder-end
 END LC_COLLATE
