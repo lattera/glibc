@@ -21,10 +21,12 @@
 
 	.text
 
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
+#ifndef LOCK
+# ifdef UP
+#  define LOCK
+# else
+#  define LOCK lock
+# endif
 #endif
 
 #define SYS_gettimeofday	__NR_gettimeofday
@@ -69,6 +71,7 @@ __lll_mutex_lock_wait:
 	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait
 
 
+#ifdef NOT_IN_libc
 	.globl	__lll_mutex_timedlock_wait
 	.type	__lll_mutex_timedlock_wait,@function
 	.hidden	__lll_mutex_timedlock_wait
@@ -148,6 +151,7 @@ __lll_mutex_timedlock_wait:
 5:	movl	$ETIMEDOUT, %eax
 	jmp	6b
 	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
+#endif
 
 
 	.globl	__lll_mutex_unlock_wake

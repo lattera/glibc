@@ -1,5 +1,12 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S: Don't define
+	LOCK is already defined.  Don't define __lll_mutex_timedlock_wait
+	for libc.so.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevelmutex.S: Only
+	define LOCK here (if UP is not defined).  The actual code is in
+	lowlevelmutex.S.
+
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Don't define
 	LOCK is already defined.  Don't define lll_unlock_wake_cb and
 	__lll_timedwait_tid for libc.so.
