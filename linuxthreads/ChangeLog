@@ -16,7 +16,6 @@
 	* sysdeps/i386/tls.h: Add TLS definitions also for !FLOATING_STACKS.
 	Define THREAD_GETMEM accordingly.
 
->>>>>>> 1.469
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tls.h: Include <stddef.h> for size_t.

@@ -1,3 +1,12 @@
+2002-02-05  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/atomicity.h (exchange_and_add): Not use branch
+	likely.
+	(atomic_add): Likewise.
+	(compare_and_swap): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set):
+	Likewise.
+
 2002-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Account for
