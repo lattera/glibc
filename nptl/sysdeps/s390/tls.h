@@ -136,13 +136,13 @@ typedef struct
 
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) \
-  THREAD_SELF->member
+  descr->member
 #define THREAD_GETMEM_NC(descr, member, idx) \
-  THREAD_SELF->member[idx]
+  descr->member[idx]
 #define THREAD_SETMEM(descr, member, value) \
-  THREAD_SELF->member = (value)
+  descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
-  THREAD_SELF->member[idx] = (value)
+  descr->member[idx] = (value)
 
 #endif /* __ASSEMBLER__ */
 

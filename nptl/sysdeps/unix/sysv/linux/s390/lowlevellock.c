@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <sysdep.h>
 #include <lowlevellock.h>
+#include <sys/time.h>
 
 
 void

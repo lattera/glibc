@@ -1,3 +1,8 @@
+2003-02-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Add instead of
+	subtracting map->l_tls_offset.
+
 2003-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/confname.h: Define _CS_GNU_LIBC_VERSION and

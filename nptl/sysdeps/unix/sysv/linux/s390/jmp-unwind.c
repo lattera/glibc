@@ -34,7 +34,7 @@ _longjmp_unwind (jmp_buf env, int val)
 # define fptr __pthread_cleanup_upto
 #endif
 
-  unsigned int local_var;
+  unsigned char local_var;
 
   if (fptr != NULL)
     fptr (env, &local_var);

@@ -627,12 +627,12 @@ elf_machine_rela (struct link_map *map,
       else if (r_type == R_ALPHA_TPREL64)
 	{
 #ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = sym_raw_value - map->l_tls_offset;
+	  *reloc_addr = sym_raw_value + map->l_tls_offset;
 #else
 	  if (sym_map)
 	    {
 	      CHECK_STATIC_TLS (map, sym_map);
-	      *reloc_addr = sym_raw_value - sym_map->l_tls_offset;
+	      *reloc_addr = sym_raw_value + sym_map->l_tls_offset;
 	    }
 #endif
 	}

@@ -30,9 +30,16 @@ __new_sem_post (sem_t *sem)
 {
   int oldval;
   int newval;
+  int err;
 
   lll_compare_and_swap ((int *) sem, oldval, newval, "lr %2,%1; ahi %2,1");
-  lll_futex_wake ((int *) sem, newval);
+  err = lll_futex_wake(((int *) sem), newval);
+  if (err != 0)
+    {
+      __set_errno(-err);
+      return -1;
+    }
+  return 0;
 }
 versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
