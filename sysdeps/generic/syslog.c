@@ -77,6 +77,9 @@ static void closelog_internal(void);
 static void sigpipe_handler (int);
 #endif
 
+#ifndef send_flags
+# define send_flags 0
+#endif
 
 struct cleanup_arg
 {

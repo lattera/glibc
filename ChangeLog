@@ -1,3 +1,16 @@
+2005-02-02  Alfred M. Szmidt  <ams@gnu.org>
+
+	* sysdeps/mach/hurd/tls.h: Include <stdbool.h>
+	(dtv_t): Change pointer type to be a struct which also contains
+	information whether the memory pointed to is static TLS or not.
+
+	* sysdeps/generic/syslog.c (send_flags) [!send_flags]: Define it.
+
+	* shadow/sgetspent_r.c (FALSE): Macro renamed to ...
+	(FALSEP): ... this.  Updated all references.
+
+	* libio/fmemopen.c: Include <stdint.h>.
+
 2005-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_helper.c (get_mapping): Use MSG_NOSIGNAL if available.
