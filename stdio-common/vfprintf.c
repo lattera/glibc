@@ -687,19 +687,15 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    }								      \
 	}								      \
 									      \
-      prec -= workend - string;						      \
-									      \
-      if (prec > 0)							      \
-	/* Add zeros to the precision.  */				      \
-	while (prec-- > 0)						      \
-	  *string-- = L_('0');						      \
-      else if (number.word != 0 && alt && base == 8)			      \
+      if (prec <= workend - string && number.word != 0 && alt && base == 8)   \
 	/* Add octal marker.  */					      \
 	*string-- = L_('0');						      \
 									      \
+      prec = MAX (0, prec - (workend - string));			      \
+									      \
       if (!left)							      \
 	{								      \
-	  width -= workend - string;					      \
+	  width -= workend - string + prec;				      \
 									      \
 	  if (number.word != 0 && alt && base == 16)			      \
 	    /* Account for 0X hex marker.  */				      \
@@ -708,42 +704,27 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  if (is_negative || showsign || space)				      \
 	    --width;							      \
 									      \
-	  if (pad == L_('0'))						      \
+	  if (pad == L_(' '))						      \
 	    {								      \
-	      while (width-- > 0)					      \
-		*string-- = L_('0');					      \
-									      \
-	      if (number.word != 0 && alt && base == 16)		      \
-		{							      \
-		  *string-- = spec;					      \
-		  *string-- = L_('0');					      \
-		}							      \
-									      \
-	      if (is_negative)						      \
-		*string-- = L_('-');					      \
-	      else if (showsign)					      \
-		*string-- = L_('+');					      \
-	      else if (space)						      \
-		*string-- = L_(' ');					      \
+	      PAD (L_(' '));						      \
+	      width = 0;						      \
 	    }								      \
-	  else								      \
+									      \
+	  if (is_negative)						      \
+	    PUTC (L_('-'), s);						      \
+	  else if (showsign)						      \
+	    PUTC (L_('+'), s);						      \
+	  else if (space)						      \
+	    PUTC (L_(' '), s);						      \
+									      \
+	  if (number.word != 0 && alt && base == 16)			      \
 	    {								      \
-	      if (number.word != 0 && alt && base == 16)		      \
-		{							      \
-		  *string-- = spec;					      \
-		  *string-- = L_('0');					      \
-		}							      \
-									      \
-	      if (is_negative)						      \
-		*string-- = L_('-');					      \
-	      else if (showsign)					      \
-		*string-- = L_('+');					      \
-	      else if (space)						      \
-		*string-- = L_(' ');					      \
-									      \
-	      while (width-- > 0)					      \
-		*string-- = L_(' ');					      \
+	      PUTC (L_('0'), s);					      \
+	      PUTC (spec, s);						      \
 	    }								      \
+									      \
+	  width += prec;						      \
+	  PAD (L_('0'));						      \
 									      \
 	  outstring (string + 1, workend - string);			      \
 									      \
@@ -751,20 +732,39 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	}								      \
       else								      \
 	{								      \
-	  if (number.word != 0 && alt && base == 16)			      \
+	  if (is_negative)						      \
 	    {								      \
-	      *string-- = spec;						      \
-	      *string-- = L_('0');					      \
+	      PUTC (L_('-'), s);					      \
+	      --width;							      \
+	    }								      \
+	  else if (showsign)						      \
+	    {								      \
+	      PUTC (L_('+'), s);					      \
+	      --width;							      \
+	    }								      \
+	  else if (space)						      \
+	    {								      \
+	      PUTC (L_(' '), s);					      \
+	      --width;							      \
 	    }								      \
 									      \
-	  if (is_negative)						      \
-	    *string-- = L_('-');					      \
-	  else if (showsign)						      \
-	    *string-- = L_('+');					      \
-	  else if (space)						      \
-	    *string-- = L_(' ');					      \
+	  if (number.word != 0 && alt && base == 16)			      \
+	    {								      \
+	      PUTC (L_('0'), s);					      \
+	      PUTC (spec, s);						      \
+	      width -= 2;						      \
+	    }								      \
 									      \
-	  width -= workend - string;					      \
+	  width -= workend - string + prec;				      \
+									      \
+	  if (prec > 0)							      \
+	    {								      \
+	      int temp = width;						      \
+	      width = prec;						      \
+	      PAD (L_('0'));;						      \
+	      width = temp;						      \
+	    }								      \
+									      \
 	  outstring (string + 1, workend - string);			      \
 									      \
 	  PAD (L_(' '));						      \

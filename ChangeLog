@@ -1,5 +1,8 @@
 1999-09-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/vfprintf.c: Remove limitation on size of precision
+	for integers.
+
 	* posix/fnmatch.c (internal_fnmatch): Make it compilable outside
 	glibc by defining internal_function if it isn't already.
 
