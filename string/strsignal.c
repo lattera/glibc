@@ -60,12 +60,15 @@ strsignal (int signum)
       signum < 0 || signum >= NSIG || (desc = _sys_siglist[signum]) == NULL)
     {
       char *buffer = getbuffer ();
-      int len = __snprintf (buffer, BUFFERSIZ - 1,
+      int len;
 #ifdef SIGRTMIN
-			    signum >= SIGRTMIN && signum <= SIGRTMAX
-			    ? _("Real-time signal %d") :
+      if (signum >= SIGRTMIN && signum <= SIGRTMAX)
+	len = __snprintf (buffer, BUFFERSIZ - 1, _("Real-time signal %d"),
+			  signum - SIGRTMIN);
+      else
 #endif
-			    _("Unknown signal %d"), signum);
+	len = __snprintf (buffer, BUFFERSIZ - 1, _("Unknown signal %d"),
+			  signum);
       if (len < 0)
 	buffer = NULL;
       else

@@ -40,11 +40,11 @@ stub_warning (__path_search)
    in DIR (if applicable), using template TMPL.
    If OPENIT is 1, open the file and return a fd.  If LARGEFILE is 1,
    use open64() to do that. */
-     int
-       __gen_tempname (tmpl, openit, largefile)
+int
+__gen_tempname (tmpl, openit, largefile)
      char *tmpl;
      int openit;
-     int large_file;
+     int largefile;
 {
   __set_errno (ENOSYS);
   return -1;

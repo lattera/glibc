@@ -1,4 +1,4 @@
-# @(#)europe	7.54
+# @(#)europe	7.55
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -1610,10 +1610,15 @@ Zone	Europe/Vilnius	1:41:16	-	LMT	1880
 			1:00	C-Eur	CE%sT	1944 Aug
 			3:00	Russia	MSK/MSD	1991 Mar 31 2:00s
 			2:00	1:00	EEST	1991 Sep 29 2:00s
-			2:00	C-Eur	EE%sT
+			2:00	C-Eur	EE%sT	1998 Mar 29 2:00s
+			1:00	C-Eur	CE%sT
 # From Paul Eggert (1996-11-22):
 # IATA SSIM (1992/1996) says Lithuania uses W-Eur rules, but since it is
 # known to be wrong about Estonia and Latvia, assume it's wrong here too.
+
+# From Marius Gedminas <mgedmin@pub.osf.lt> (1998-08-07):
+# I would like to inform that in this year Lithuanian time zone
+# (Europe/Vilnius) was changed.
 
 # Luxembourg
 # Whitman disagrees with most of these dates in minor ways; go with Shanks.
