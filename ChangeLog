@@ -1,3 +1,11 @@
+1998-07-25 19:47  Jose M. Moya  <josem@gnu.org>
+
+	* sysdeps/mach/hurd/getcwd.c
+ 	(_hurd_canonicalize_directory_name_internal): Do not loop forever
+ 	for unknown root directories.
+	(__getcwd): Return NULL when the current root directory could not
+ 	be reached.
+
 1998-08-11 18:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/strsignal.c (strsignal): Count real-time signals from zero.
