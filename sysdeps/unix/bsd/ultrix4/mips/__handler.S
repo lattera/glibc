@@ -1,5 +1,5 @@
 /* Copyright (C) 1992 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@cs.widener.edu).
+   Contributed by Brendan Kehoe (brendan@zen.org).
    Also hacked by Ian Lance Taylor (ian@airs.com).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -51,8 +51,8 @@ ENTRY (__handler)
 	sw t3, 56(a2)
 	sw t4, 60(a2)
 	sw t5, 64(a2)
-	sw t6, 48(a2)
-	sw t7, 52(a2)
+	sw t6, 68(a2)
+	sw t7, 72(a2)
 
 	/* Save the callee saved registers in sc_regs[16..23].  */
 	sw s0, 76(a2)
@@ -78,9 +78,13 @@ ENTRY (__handler)
 	/* ... and also the return address in sc_regs[31].  */
 	sw ra, 136(a2)
 
-	/* Save the floating pointer and the stack pointer in
-	   sc_regs[29] and sc_regs[30].  */
+	/* Note: we don't save the stack pointer in sc_regs[29];
+	   instead, we use the one that was already there.  */
+#if 0
 	sw sp, 128(a2)
+#endif
+
+	/* Save the floating pointer in sc_regs[30].  */
 	sw $fp, 132(a2)
 
 	/* Save the mul/div stuff in sc_mdlo and sc_mdhi.  */
