@@ -1,5 +1,5 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-% $Id: texinfo.tex,v 2.217 1998/06/30 13:22:33 drepper Exp $
+% $Id: texinfo.tex,v 2.218 1998/07/22 10:59:56 drepper Exp $
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -58,7 +58,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.217 $
+\deftexinfoversion$Revision: 2.218 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -130,11 +130,21 @@
 % since that produces some useless output on the terminal.
 %
 \def\gloggingall{\begingroup \globaldefs = 1 \loggingall \endgroup}%
+\ifx\eTeXversion\undefined
 \def\loggingall{\tracingcommands2 \tracingstats2
    \tracingpages1 \tracingoutput1 \tracinglostchars1
    \tracingmacros2 \tracingparagraphs1 \tracingrestores1
    \showboxbreadth\maxdimen\showboxdepth\maxdimen
 }%
+\else
+\def\loggingall{\tracingcommands3 \tracingstats2
+   \tracingpages1 \tracingoutput1 \tracinglostchars1
+   \tracingmacros2 \tracingparagraphs1 \tracingrestores1
+   \tracingscantokens1 \tracingassigns1 \tracingifs1
+   \tracinggroups1 \tracingnesting2
+   \showboxbreadth\maxdimen\showboxdepth\maxdimen
+}%
+\fi
 
 % For @cropmarks command.
 % Do @cropmarks to get crop marks.
@@ -688,10 +698,10 @@ where each line of input produces a line of output.}
 % @c is the same as @comment
 % @ignore ... @end ignore  is another way to write a comment
 
-\def\comment{\catcode 64=\other \catcode 123=\other \catcode 125=\other%
-\parsearg \commentxxx}
-
-\def\commentxxx #1{\catcode 64=0 \catcode 123=1 \catcode 125=2 }
+\def\comment{\begingroup \catcode`\^^M=\other%
+\catcode`\@=\other \catcode`\{=\other \catcode`\}=\other%
+\commentxxx}
+{\catcode`\^^M=\other \gdef\commentxxx#1^^M{\endgroup}}
 
 \let\c=\comment
 
@@ -912,6 +922,9 @@ where each line of input produces a line of output.}
     %
     % Do not execute instructions in @tex
     \def\tex{\doignore{tex}}%
+    % Do not execute macro definitions.
+    % `c' is a comment character, so the word `macro' will get cut off.
+    \def\macro{\doignore{ma}}%
 }
 
 % @set VAR sets the variable VAR to an empty value.
@@ -1793,11 +1806,6 @@ July\or August\or September\or October\or November\or December\fi
   \itemindex{#1}%
   \nobreak % This prevents a break before @itemx.
   %
-  % Be sure we are not still in the middle of a paragraph.
-  %{\parskip = 0in
-  %\par
-  %}%
-  %
   % If the item text does not fit in the space we have, put it on a line
   % by itself, and do not allow a page break either before or after that
   % line.  We do not start a paragraph here because then if the next
@@ -1830,9 +1838,15 @@ July\or August\or September\or October\or November\or December\fi
     % text will be indented by \tableindent, we make the item text be in
     % a zero-width box.
     \noindent
-    \rlap{\hskip -\tableindent\box0}\ignorespaces%
-    \endgroup%
-    \itemxneedsnegativevskiptrue%
+    % Do this with kerns and \unhbox so that if there is a footnote in
+    % the item text, it can migrate to the main vertical list and
+    % eventually be printed.
+    \nobreak\kern-\tableindent
+    \dimen0 = \itemmax  \advance\dimen0 by -\wd0
+    \unhbox0
+    \nobreak\kern\dimen0
+    \endgroup
+    \itemxneedsnegativevskiptrue
   \fi
 }
 
@@ -1843,9 +1857,10 @@ July\or August\or September\or October\or November\or December\fi
 \def\xitem{\errmessage{@xitem while not in a table}}
 \def\xitemx{\errmessage{@xitemx while not in a table}}
 
-%% Contains a kludge to get @end[description] to work
+% Contains a kludge to get @end[description] to work.
 \def\description{\tablez{\dontindex}{1}{}{}{}{}}
 
+% @table, @ftable, @vtable.
 \def\table{\begingroup\inENV\obeylines\obeyspaces\tablex}
 {\obeylines\obeyspaces%
 \gdef\tablex #1^^M{%
@@ -2554,10 +2569,22 @@ width0pt\relax} \fi
         % will have extra space inserted, because the \medbreak in the
         % start of the @defun won't see the skip inserted by the @end of
         % the previous defun.
+        % 
+        % But don't do any of this if we're not in vertical mode.  We
+        % don't want to do a \vskip and prematurely end a paragraph.
+        % 
+        % Avoid page breaks due to these extra skips, too.
+        % 
         \iflinks
-          \skip0 = \lastskip \ifdim\lastskip = 0pt \else \vskip-\lastskip \fi
-          \temp
-          \ifdim\skip0 = 0pt \else \vskip\skip0 \fi
+          \ifvmode
+            \skip0 = \lastskip
+            \ifdim\lastskip = 0pt \else \nobreak\vskip-\lastskip \fi
+          \fi
+          %
+          \temp % do the write
+          %
+          % 
+          \ifvmode \ifdim\skip0 = 0pt \else \nobreak\vskip\skip0 \fi \fi
         \fi
       }%
     }%
@@ -2980,7 +3007,7 @@ width0pt\relax} \fi
 \def\chapteryyy #1{\numhead0{#1}} % normally numhead0 calls chapterzzz
 \def\chapterzzz #1{%
 \secno=0 \subsecno=0 \subsubsecno=0
-\global\advance \chapno by 1 \message{\putwordChapter \the\chapno}%
+\global\advance \chapno by 1 \message{\putwordChapter\space \the\chapno}%
 \chapmacro {#1}{\the\chapno}%
 \gdef\thissection{#1}%
 \gdef\thischaptername{#1}%
@@ -3001,7 +3028,8 @@ width0pt\relax} \fi
 \def\appendixyyy #1{\apphead0{#1}} % normally apphead0 calls appendixzzz
 \def\appendixzzz #1{%
 \secno=0 \subsecno=0 \subsubsecno=0
-\global\advance \appendixno by 1 \message{Appendix \appendixletter}%
+\global\advance \appendixno by 1
+\message{\putwordAppendix\space \appendixletter}%
 \chapmacro {#1}{\putwordAppendix{} \appendixletter}%
 \gdef\thissection{#1}%
 \gdef\thischaptername{#1}%
@@ -3387,10 +3415,13 @@ width0pt\relax} \fi
   \iflinks \write\tocfile{#1{\folio}}\fi
 }
 
+\newskip\contentsrightmargin \contentsrightmargin=1in
+\newcount\savepageno
+\newcount\lastnegativepageno \lastnegativepageno = -1
+
 % Finish up the main text and prepare to read what we've written
 % to \tocfile.
-
-\newskip\contentsrightmargin \contentsrightmargin=1in
+% 
 \def\startcontents#1{%
    % If @setchapternewpage on, and @headings double, the contents should
    % start on an odd page, unlike chapters.  Thus, we maintain
@@ -3398,12 +3429,11 @@ width0pt\relax} \fi
    % From: Torbjorn Granlund <tege@matematik.su.se>
    \contentsalignmacro
    \immediate\closeout\tocfile
-   \ifnum \pageno>0
-      \pageno = -1              % Request roman numbered pages.
-   \fi
+   %
    % Don't need to put `Contents' or `Short Contents' in the headline.
    % It is abundantly clear what they are.
    \unnumbchapmacro{#1}\def\thischapter{}%
+   \savepageno = \pageno
    \begingroup                  % Set up to handle contents files properly.
       \catcode`\\=0  \catcode`\{=1  \catcode`\}=2  \catcode`\@=11
       % We can't do this, because then an actual ^ in a section
@@ -3411,15 +3441,24 @@ width0pt\relax} \fi
       %\catcode`\^=7 % to see ^^e4 as \"a etc. juha@piuha.ydi.vtt.fi
       \raggedbottom             % Worry more about breakpoints than the bottom.
       \advance\hsize by -\contentsrightmargin % Don't use the full line length.
+      %
+      % Roman numerals for page numbers.
+      \ifnum \pageno>0 \pageno = \lastnegativepageno \fi
 }
 
 
 % Normal (long) toc.
 \def\contents{%
    \startcontents{\putwordTableofContents}%
-      \input \jobname.toc
+     \openin 1 \jobname.toc
+     \ifeof 1 \else
+       \closein 1
+       \input \jobname.toc
+     \fi
+     \vfill \eject
    \endgroup
-   \vfill \eject
+   \lastnegativepageno = \pageno
+   \pageno = \savepageno
 }
 
 % And just the chapters.
@@ -3440,9 +3479,15 @@ width0pt\relax} \fi
       \def\unnumbsubsecentry ##1##2{}
       \def\subsubsecentry ##1##2##3##4##5##6{}
       \def\unnumbsubsubsecentry ##1##2{}
-      \input \jobname.toc
+      \openin 1 \jobname.toc
+      \ifeof 1 \else
+        \closein 1
+        \input \jobname.toc
+      \fi
+     \vfill \eject
    \endgroup
-   \vfill \eject
+   \lastnegativepageno = \pageno
+   \pageno = \savepageno
 }
 \let\shortcontents = \summarycontents
 
@@ -4399,19 +4444,27 @@ width0pt\relax} \fi
 % which we arrange to emulate with a temporary file in ordinary TeX.
 \ifx\eTeXversion\undefined
  \newwrite\macscribble
- \def\scantokens#1{%
+ \def\scanmacro#1{%
+   \begingroup \newlinechar`\^^M
    \immediate\openout\macscribble=\jobname.tmp
    \immediate\write\macscribble{#1}%
    \immediate\closeout\macscribble
+   \let\xeatspaces\eatspaces
    \input \jobname.tmp
+   \endgroup
 }
+\else
+\def\scanmacro#1{%
+\begingroup \newlinechar`\^^M
+\let\xeatspaces\eatspaces\scantokens{#1}\endgroup}
 \fi
 
 \newcount\paramno   % Count of parameters
 \newtoks\macname    % Macro name
 \newif\ifrecursive  % Is it recursive?
 
-% Utility: does \let #1 = #2, except with \csnames.
+% Utility routines.
+% Thisdoes \let #1 = #2, except with \csnames.
 \def\cslet#1#2{%
 \expandafter\expandafter
 \expandafter\let
@@ -4419,13 +4472,30 @@ width0pt\relax} \fi
 \csname#1\endcsname
 \csname#2\endcsname}
 
+% Trim leading and trailing spaces off a string.
+% Concepts from aro-bend problem 15 (see CTAN).
+{\catcode`\@=11
+\gdef\eatspaces #1{\expandafter\trim@\expandafter{#1 }}
+\gdef\trim@ #1{\trim@@ @#1 @ #1 @ @@}
+\gdef\trim@@ #1@ #2@ #3@@{\trim@@@\empty #2 @}
+\def\unbrace#1{#1}
+\unbrace{\gdef\trim@@@ #1 } #2@{#1}
+}
+
+% Trim a single trailing ^^M off a string.
+{\catcode`\^^M=12\catcode`\Q=3%
+\gdef\eatcr #1{\eatcra #1Q^^MQ}%
+\gdef\eatcra#1^^MQ{\eatcrb#1Q}%
+\gdef\eatcrb#1Q#2Q{#1}%
+}
+
 % Macro bodies are absorbed as an argument in a context where
 % all characters are catcode 10, 11 or 12, except \ which is active
 % (as in normal texinfo). It is necessary to change the definition of \.
 
-% It's necessary to get hard CRs in the scribble file when using Knuth
-% TeX, and it can't hurt with e-TeX.  Texinfo sets \newlinechar=`^^J,
-% so we redefine the \endlinechar to ^^J when reading the macro body.
+% It's necessary to have hard CRs when the macro is executed. This is 
+% done by  making ^^M (\endlinechar) catcode 12 when reading the macro 
+% body, and then making it the \newlinechar in \scanmacro.
 
 \def\macrobodyctxt{%
   \catcode`\~=12
@@ -4438,7 +4508,7 @@ width0pt\relax} \fi
   \catcode`\{=12
   \catcode`\}=12
   \catcode`\@=12
-  \endlinechar`^^J%
+  \catcode`\^^M=12
   \usembodybackslash}
 
 % \mbodybackslash is the definition of \ in @macro bodies.
@@ -4500,78 +4570,77 @@ width0pt\relax} \fi
 % The technique used is stolen from LaTeX:  let \hash be something
 % unexpandable, insert that wherever you need a #, and then redefine
 % it to # just before using the token list produced.
+%
+% The same technique is used to protect \eatspaces till just before
+% the macro is used.
 
 \def\parsemargdef#1;{\paramno=0\def\paramlist{}%
-        \let\hash\relax\parsemargdefxxx#1,;,}
+        \let\hash\relax\let\xeatspaces\relax\parsemargdefxxx#1,;,}
 \def\parsemargdefxxx#1,{%
   \if#1;\let\next=\relax
   \else \let\next=\parsemargdefxxx
     \advance\paramno by 1%
-    \eatspaces#1 \relax% output to \toks0
-    \expandafter\edef\csname macarg.\the\toks0\endcsname
-        {\ignorespaces \hash\the\paramno}%
+    \expandafter\edef\csname macarg.\eatspaces{#1}\endcsname
+        {\xeatspaces{\hash\the\paramno}}%
     \edef\paramlist{\paramlist\hash\the\paramno,}%
   \fi\next}
-\def\eatspaces#1 #2\relax{\def\temp{#1}%
-  \ifx\temp\empty \let\nexteat\eatspaces
-  \else \toks0={#1}\let\nexteat\eatspacesx \fi
-  \nexteat#2 \relax}
-\def\eatspacesx#1 \relax{}
 
 % These two commands read recursive and nonrecursive macro bodies.
 % (They're different since rec and nonrec macros end differently.)
 
-\long\def\parsemacbody#1^^J@end macro^^J%
-{\xdef\temp{#1}\endgroup\defmacro}%
-\long\def\parsermacbody#1^^J@end rmacro^^J%
-{\xdef\temp{#1}\endgroup\defmacro}%
+\long\def\parsemacbody#1@end macro%
+{\xdef\temp{\eatcr{#1}}\endgroup\defmacro}%
+\long\def\parsermacbody#1@end rmacro%
+{\xdef\temp{\eatcr{#1}}\endgroup\defmacro}%
 
 % This defines the macro itself. There are six cases: recursive and
 % nonrecursive macros of zero, one, and many arguments.
 % Much magic with \expandafter here.
+% \xdef is used so that macro definitions will survive the file
+% they're defined in; @include reads the file inside a group.
 \def\defmacro{%
   \let\hash=##% convert placeholders to macro parameter chars
   \ifrecursive
     \ifcase\paramno
     % 0
-      \expandafter\edef\csname\the\macname\endcsname{%
-        \noexpand\scantokens{\temp}}%
+      \expandafter\xdef\csname\the\macname\endcsname{%
+        \noexpand\scanmacro{\temp}}%
     \or % 1
-      \expandafter\edef\csname\the\macname\endcsname{%
+      \expandafter\xdef\csname\the\macname\endcsname{%
          \noexpand\braceorline\csname\the\macname xxx\endcsname}%
-      \expandafter\edef\csname\the\macname xxx\endcsname##1{%
-         \noexpand\scantokens{\temp}}%
+      \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
+         \noexpand\scanmacro{\temp}}%
     \else % many
-      \expandafter\edef\csname\the\macname\endcsname##1{%
+      \expandafter\xdef\csname\the\macname\endcsname##1{%
           \csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
-      \expandafter\edef
+      \expandafter\xdef
       \expandafter\expandafter
         \csname\the\macname xxx\endcsname 
-          \paramlist{\noexpand\scantokens{\temp}}%
+          \paramlist{\noexpand\scanmacro{\temp}}%
     \fi
   \else
     \ifcase\paramno
     % 0
-      \expandafter\edef\csname\the\macname\endcsname{%
+      \expandafter\xdef\csname\the\macname\endcsname{%
         \noexpand\norecurse{\the\macname}%
-        \noexpand\scantokens{\temp}\egroup}%
+        \noexpand\scanmacro{\temp}\egroup}%
     \or % 1
-      \expandafter\edef\csname\the\macname\endcsname{%
+      \expandafter\xdef\csname\the\macname\endcsname{%
          \noexpand\braceorline\csname\the\macname xxx\endcsname}%
-      \expandafter\edef\csname\the\macname xxx\endcsname##1{%
+      \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
         \noexpand\norecurse{\the\macname}%
-        \noexpand\scantokens{\temp}\egroup}%
+        \noexpand\scanmacro{\temp}\egroup}%
     \else % many
-      \expandafter\edef\csname\the\macname\endcsname##1{%
+      \expandafter\xdef\csname\the\macname\endcsname##1{%
           \csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
-      \expandafter\edef
+      \expandafter\xdef
       \expandafter\expandafter
       \csname\the\macname xxx\endcsname
       \paramlist{%
           \noexpand\norecurse{\the\macname}%
-          \noexpand\scantokens{\temp}\egroup}%
+          \noexpand\scanmacro{\temp}\egroup}%
     \fi
   \fi}
 
@@ -4623,10 +4692,16 @@ width0pt\relax} \fi
 \def\appendixnoderef{%
   \ifx\lastnode\relax\else
     \expandafter\expandafter\expandafter\setref{\lastnode}%
-      {Yappendixletterandtype}
+      {Yappendixletterandtype}%
     \global\let\lastnode=\relax
   \fi
 }
+
+
+% @anchor{NAME} -- define xref target at arbitrary point.
+% 
+\def\anchor#1{\setref{#1}{Ynothing}}
+
 
 % \setref{NAME}{SNT} defines a cross-reference point NAME, namely
 % NAME-title, NAME-pg, and NAME-SNT.  Called from \foonoderef.  We have
@@ -4662,7 +4737,7 @@ width0pt\relax} \fi
     \else
       % Use the actual chapter/section title appear inside
       % the square brackets.  Use the real section title if we have it.
-      \ifdim \wd1>0pt%
+      \ifdim \wd1 > 0pt
         % It is in another manual, so we don't have it.
         \def\printednodename{\ignorespaces #1}%
       \else
@@ -4691,8 +4766,15 @@ width0pt\relax} \fi
     % into the usual \leavevmode...\vrule stuff for purposes of
     % printing. So we \turnoffactive for the \refx-snt, back on for the
     % printing, back off for the \refx-pg.
-    {\normalturnoffactive \refx{#1-snt}{}}%
-    \space [\printednodename],\space
+    {\normalturnoffactive
+     % Only output a following space if the -snt ref is nonempty; for
+     % @unnumbered and @anchor, it won't be.
+     \setbox2 = \hbox{\ignorespaces \refx{#1-snt}{}}%
+     \ifdim \wd2 > 0pt \refx{#1-snt}\space\fi
+    }%
+    % [mynode], 
+    [\printednodename],\space
+    % page 3
     \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
   \fi
 \endgroup}
@@ -5045,7 +5127,10 @@ width0pt\relax} \fi
   \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
   % If the image is by itself, center it.
   \ifvmode
+    \nobreak\medskip
+    \nobreak
     \centerline{\epsfbox{#1.eps}}%
+    \bigbreak
   \else
     \epsfbox{#1.eps}%
   \fi
