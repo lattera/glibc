@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,14 +36,14 @@ DEFUN(strsignal, (signum), int signum)
 {
   if (signum < 0 || signum > NSIG)
     {
-      static char unknown_signal[] = "Unknown signal 000000000000000000";
-      static char fmt[] = "Unknown signal%d";
-      size_t len = sprintf(unknown_signal, fmt, signum);
-      if (len < sizeof(fmt) - 2)
+      static char buf[512];
+      static char fmt[] = ;
+      int len = __snprintf (buf, sizeof buf, _("Unknown signal %d"), signum);
+      if (len < 0)
 	return NULL;
-      unknown_signal[len] = '\0';
-      return unknown_signal;
+      buf[len - 1] = '\0';
+      return buf;
     }
 
-  return (char *) _sys_siglist[signum];
+  return (char *) _(_sys_siglist[signum]);
 }

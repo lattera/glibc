@@ -48,10 +48,11 @@ Cambridge, MA 02139, USA.  */
 #define _LIBC	1
 /*
 
+*/
 
-  Define the macro `_' for conveniently marking translatable strings
-  in the libc source code.  */
-
+#ifndef	ASSEMBLER
+/*  Define the macro `_' for conveniently marking translatable strings
+    in the libc source code.  */
 #include <libintl.h>
 extern const char _libc_intl_domainname[];
 #ifdef dgettext
@@ -61,6 +62,7 @@ extern const char _libc_intl_domainname[];
 /* Be sure to use only the __ name when `dgettext' is a plain function
    instead of an optimizing macro.  */
 #define	_(msgid)	__dgettext (_libc_intl_domainname, (msgid))
+#endif
 #endif
 
 /*

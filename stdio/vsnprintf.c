@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +28,7 @@ Cambridge, MA 02139, USA.  */
  * than MAXLEN characters.
  */
 int
-DEFUN(vsnprintf, (s, maxlen, format, arg),
-	char *s AND size_t maxlen AND CONST char *format AND va_list arg)
+__vsnprintf (char *s, size_t maxlen, const char *format, va_list arg)
 {
   int done;
   FILE f;
@@ -54,3 +53,4 @@ DEFUN(vsnprintf, (s, maxlen, format, arg),
 
   return done;
 }
+weak_alias (__vsnprintf, vsnprintf)

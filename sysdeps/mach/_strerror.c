@@ -40,12 +40,12 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
 
   if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
     {
-      static const char unk[] = "Error in unknown error system: ";
+      const char *unk = _("Error in unknown error system: ");
+      const size_t unklen = strlen (unk);
       char *p = buf + buflen;
       *p-- = '\0';
       p = _itoa (errnum, p, 16, 1);
-      p -= sizeof unk - 1;
-      return memcpy (p, unk, sizeof unk - 1);
+      return memcpy (p - unklen, unk, unklen);
     }
 
   es = &__mach_error_systems[system];
@@ -55,15 +55,16 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
 
   if (code >= es->subsystem[sub].max_code)
     {
-      static const char unk[] = "Unknown error ";
+      const char *unk = _("Unknown error ");
+      const size_t unklen = strlen (unk);
       char *p = buf + buflen;
       size_t len = strlen (es->subsystem[sub].subsys_name);
       *p-- = '\0';
       p = _itoa (errnum, p, 16, 1);
       *p-- = ' ';
       p = memcpy (p - len, es->subsystem[sub].subsys_name, len);
-      return memcpy (p - sizeof unk - 1, unk, sizeof unk - 1);
+      return memcpy (p - unklen, unk, unklen);
     }
 
-  return (char *) es->subsystem[sub].codes[code];
+  return (char *) _(es->subsystem[sub].codes[code]);
 }

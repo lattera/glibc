@@ -1302,7 +1302,7 @@ extern int glibc_conftest_frobozz;
 main () { printf ("%d\n", glibc_conftest_frobozz); }
 EOF
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    conftest.s conftest1.c 1>&5 2>&5; then
+	    -o conftest conftest.s conftest1.c 1>&5 2>&5; then
   libc_cv_asm_set_directive=yes
 else
   libc_cv_asm_set_directive=no

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ DEFUN(psignal, (sig, s), int sig AND register CONST char *s)
     colon = ": ";
 
   if (sig >= 0 && sig < NSIG)
-    (void) fprintf(stderr, "%s%s%s\n", s, colon, _sys_siglist[sig]);
+    (void) fprintf (stderr, "%s%s%s\n", s, colon, _(_sys_siglist[sig]));
   else
-    (void) fprintf(stderr, "%s%sUnknown signal %d\n", s, colon, sig);
+    (void) fprintf (stderr, _("%s%sUnknown signal %d\n"), s, colon, sig);
 }

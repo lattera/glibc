@@ -26,9 +26,7 @@ Cambridge, MA 02139, USA.  */
 /* Write formatted output to D, according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-dprintf (d, format)
-     int d;
-     const char *format;
+dprintf (int d, const char *format, ...)
 {
   va_list arg;
   int done;

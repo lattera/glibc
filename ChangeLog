@@ -1,3 +1,17 @@
+Tue Oct 17 01:21:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio-common/psignal.c: Translate signal description strings.
+	* string/strsignal.c: Likewise.
+	* sysdeps/generic/_strerror.c (_strerror_internal): Translate
+	error strings.
+	* sysdeps/mach/_strerror.c: Likewise.
+
+	* stdio-common/snprintf.c (__snprintf): Renamed from snprintf;
+	call __vsnprintf.
+	(snprintf): Define as weak alias.
+	* stdio/vsnprintf.c (__vsnprintf): Renamed from vsnprintf.
+	(vsnprintf): Define as weak alias.
+
 Mon Oct 16 03:22:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (install-lib): Filter out %_pic.a; install only the
@@ -5,7 +19,7 @@ Mon Oct 16 03:22:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* locale/Makefile (aux): Add SYS_libc.
 	* locale/SYS_libc.c: New file.
-	* libc-symbols.h (_): New macro.
+	* libc-symbols.h [! ASSEMBLER] (_): New macro.
 
 	* configure.in (libc_cv_asm_set_directive): Link program into
 	conftest instead of letting it default to a.out.

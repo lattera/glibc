@@ -20,14 +20,14 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 #ifdef USE_IN_LIBIO
-# define vsnprintf _IO_vsnprintf
+# define __vsnprintf _IO_vsnprintf
 #endif
 
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */
 /* VARARGS3 */
 int
-snprintf (s, maxlen, format)
+__snprintf (s, maxlen, format)
       char *s;
       size_t maxlen;
       const char *format;
@@ -36,8 +36,9 @@ snprintf (s, maxlen, format)
   int done;
 
   va_start (arg, format);
-  done = vsnprintf (s, maxlen, format, arg);
+  done = __vsnprintf (s, maxlen, format, arg);
   va_end (arg);
 
   return done;
 }
+weak_alias (__snprintf, snprintf)

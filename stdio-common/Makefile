@@ -26,10 +26,8 @@ headers	:= stdio_lim.h printf.h
 routines	:=							      \
 	ctermid cuserid							      \
 	vfprintf vprintf printf_fp reg-printf printf-prs _itoa		      \
-	vsnprintf vsprintf vasprintf	      				      \
-	fprintf printf snprintf sprintf asprintf			      \
-	dprintf vdprintf						      \
-	vfscanf vscanf vsscanf						      \
+	fprintf printf snprintf sprintf asprintf dprintf		      \
+	vfscanf vscanf 							      \
 	fscanf scanf sscanf						      \
 	perror psignal							      \
 	tmpfile tmpnam tempnam tempname					      \

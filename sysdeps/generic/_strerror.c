@@ -33,13 +33,12 @@ _strerror_internal (errnum, buf, buflen)
 {
   if (errnum < 0 || errnum > _sys_nerr)
     {
-      static char fmt[] = "Unknown error %d";
-      size_t len = snprintf (buf, buflen, fmt, errnum);
-      if (len < sizeof (fmt) - 2)
+      int len = __snprintf (buf, buflen, _("Unknown error %d"), errnum);
+      if (len < 0)
 	return NULL;
       buf[len - 1] = '\0';
       return buf;
     }
 
-  return (char *) _sys_errlist[errnum];
+  return (char *) _(_sys_errlist[errnum]);
 }

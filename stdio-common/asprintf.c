@@ -27,9 +27,7 @@ Cambridge, MA 02139, USA.  */
    allocated with malloc and stored in *STRING_PTR.  */
 /* VARARGS2 */
 int
-asprintf (string_ptr, format)
-     char **string_ptr;
-     const char *format;
+asprintf (char **string_ptr, const char *format, ...)
 {
   va_list arg;
   int done;
