@@ -149,7 +149,7 @@ extern int errno;
 # endif
 
 # define CONVERT_DIRENT_DIRENT64(d64, d32) \
-  memcpy ((d64)->d_name, (d32)->d_name, NAMLEN (d32));			      \
+  memcpy ((d64)->d_name, (d32)->d_name, NAMLEN (d32) + 1);		      \
   CONVERT_D_NAMLEN (d64, d32)						      \
   CONVERT_D_INO (d64, d32)						      \
   CONVERT_D_TYPE (d64, d32)

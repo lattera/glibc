@@ -1,3 +1,11 @@
+2001-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c (CONVERT_DIRENT_DIRENT64): Fix copying of
+	name.
+
+	* posix/Makefile (tests): Add tst-gnuglob.
+	* posix/tst-gnuglob.c: New file.
+
 2001-02-13  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add __ftruncate64.
