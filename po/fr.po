@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 2.2.4\n"
-"POT-Creation-Date: 2001-08-13 15:08-0700\n"
-"PO-Revision-Date: 2001-09-19 08:00-0500\n"
+"Project-Id-Version: GNU libc 2.2.5\n"
+"POT-Creation-Date: 2001-08-17 13:03-0700\n"
+"PO-Revision-Date: 2002-02-10 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -14,6 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: locale/programs/ld-monetary.c:278
+#, c-format
 msgid "\t\t\t\t\t\t\t      %s: value for field `%s' must be in range %d...%d"
 msgstr "\t\t\t\t\t\t\t      %s: valeur du champ `%s' doit être dans la gamme %d...%d"
 
@@ -305,17 +306,17 @@ msgstr "%s n,est pas un lien symbolique\n"
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s n'est pas un fichier de type ELF - il a le mauvais nombre d'octet au début.\n"
 
-#: assert/assert.c:52
+#: assert/assert.c:54
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%s l'assertion `%s' a échoué.\n"
 
-#: assert/assert-perr.c:54
+#: assert/assert-perr.c:56
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%s erreur imprévue: %s.\n"
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:62
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%ssignal inconnu %d.\n"
@@ -631,7 +632,7 @@ msgstr "%s: rebut à la fin de la date finale dans la chaîne %Zd du champ `era'"
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: rebut à la fin de la date finale dans la chaîne %Zd du champ `era'"
 
-#: posix/getopt.c:788
+#: posix/getopt.c:887 posix/getopt.c:890
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: option illégale -- %c\n"
@@ -667,7 +668,7 @@ msgstr "%s: nombre illégal pour la valeur de saut dans la chaîne %Zd du champ `e
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: nombre invalide de règles de tri"
 
-#: posix/getopt.c:791
+#: posix/getopt.c:896 posix/getopt.c:899
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: option invalide -- %c\n"
@@ -691,6 +692,46 @@ msgstr "%s:  valeur invalide pour le champ `%s'"
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "%s: abréviation de la langue `%s' n'est pas définie"
+
+#: resolv/res_hconf.c:366
+#, c-format
+msgid "%s: line %d: bad command `%s'\n"
+msgstr "%s: ligne %d: commande erronée`%s'\n"
+
+#: resolv/res_hconf.c:165
+#, c-format
+msgid "%s: line %d: cannot specify more than %d services"
+msgstr "%s: ligne %d: ne peut spécifier plus que %d services"
+
+#: resolv/res_hconf.c:231
+#, c-format
+msgid "%s: line %d: cannot specify more than %d trim domains"
+msgstr "%s: ligne %d: ne peut spécifier plus que %d domaines coupés"
+
+#: resolv/res_hconf.c:319
+#, c-format
+msgid "%s: line %d: expected `on' or `off', found `%s'\n"
+msgstr "%s: ligne %d: attendait `on' ou `off', `%s' trouvé\n"
+
+#: resolv/res_hconf.c:147
+#, c-format
+msgid "%s: line %d: expected service, found `%s'\n"
+msgstr "%s: ligne %d: attendait service, `%s' trouvé\n"
+
+#: resolv/res_hconf.c:395
+#, c-format
+msgid "%s: line %d: ignoring trailing garbage `%s'\n"
+msgstr "%s: ligne %d: rebut en suffixe ignoré `%s'\n"
+
+#: resolv/res_hconf.c:256
+#, c-format
+msgid "%s: line %d: list delimiter not followed by domain"
+msgstr "%s: ligne %d: délimiteur de liste non suivi par un domaine"
+
+#: resolv/res_hconf.c:191
+#, c-format
+msgid "%s: line %d: list delimiter not followed by keyword"
+msgstr "%s: ligne %d: délimiteur de liste non suivi par un mot clé"
 
 #: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365
 #: locale/programs/ld-collate.c:3716
@@ -753,37 +794,39 @@ msgstr "%s: pas assez de règles de tri"
 msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: code numérique invalide pour le pays `%d'"
 
-#: posix/getopt.c:711
+#: posix/getopt.c:743 posix/getopt.c:748
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: l'option `%c%s' ne permet pas de paramètre.\n"
 
-#: posix/getopt.c:681
+#: posix/getopt.c:688 posix/getopt.c:698
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: l'option `%s' est ambiguë\n"
 
-#: posix/getopt.c:729 posix/getopt.c:902
+#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070
+#: posix/getopt.c:1082
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: l'option `%s' requiert un paramètre\n"
 
-#: posix/getopt.c:706
+#: posix/getopt.c:730 posix/getopt.c:734
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: l'option `--%s' ne permet pas de paramètre\n"
 
-#: posix/getopt.c:886
+#: posix/getopt.c:1038 posix/getopt.c:1049
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: l'option `-W %s' ne permet pas de paramètre\n"
 
-#: posix/getopt.c:868
+#: posix/getopt.c:1004 posix/getopt.c:1014
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: l'option `-W %s' est ambiguë\n"
 
-#: posix/getopt.c:821 posix/getopt.c:951
+#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136
+#: posix/getopt.c:1147
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: l'option requiert un paramètre -- %c\n"
@@ -842,6 +885,7 @@ msgid "%s: stopping date is invalid in string %Zd in `era' field"
 msgstr "%s: date finale invalide dans la chaîne %Zd du champ `era'"
 
 #: locale/programs/ld-collate.c:1261
+#, c-format
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
 msgstr "%s: plage de l'ellipse symbolique ne doit pas être suivie directement de `order_end'"
 
@@ -905,6 +949,7 @@ msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr "%s: le 3e opérande pour la valeur du champ `%s' ne peut être plus grand que %d"
 
 #: locale/programs/ld-time.c:983
+#, c-format
 msgid "%s: too few values for field `%s'"
 msgstr "%s: trop peu de valeurs pour le champ `%s'"
 
@@ -919,6 +964,7 @@ msgid "%s: too many values"
 msgstr "%s: trop de valeurs"
 
 #: locale/programs/ld-time.c:1030
+#, c-format
 msgid "%s: too many values for field `%s'"
 msgstr "%s:  trop de valeurs pour le champ `%s'"
 
@@ -967,12 +1013,12 @@ msgstr "%s: nom de section inconnu `%s'"
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: symbole inconnu `%s' dans une définition équivalente"
 
-#: posix/getopt.c:762
+#: posix/getopt.c:841 posix/getopt.c:844
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: option non reconnue `%c%s'\n"
 
-#: posix/getopt.c:758
+#: posix/getopt.c:830 posix/getopt.c:833
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: option non reconnue `--%s'\n"
@@ -992,10 +1038,12 @@ msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: usage: %s [ -v ] [ -c seuil ] nom_du_fuseau_horaire ...\n"
 
 #: locale/programs/ld-monetary.c:740 locale/programs/ld-numeric.c:274
+#, c-format
 msgid "%s: value for field `%s' must be a single character"
 msgstr "%s: valeur du champ `%s' doit être un caractère simple"
 
 #: locale/programs/ld-monetary.c:308
+#, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
 msgstr "%s: valeurs du champ `%s' doivent être dans la gamme %d..%d"
 
@@ -1056,7 +1104,7 @@ msgstr "(ERREUR DU PROGRAMME) L'option aurait dûe être reconnue!?"
 msgid "(Unknown object)\n"
 msgstr "(Objet inconnu)\n"
 
-#: sunrpc/clnt_perr.c:132
+#: sunrpc/clnt_perr.c:133
 #, c-format
 msgid "(unknown authentication error - %d)"
 msgstr "(erreur inconnue d'authentification - %d)"
@@ -1092,12 +1140,12 @@ msgstr ""
 msgid ".lib section in a.out corrupted"
 msgstr "La section .lib dans a.out est corrompue."
 
-#: sunrpc/clnt_perr.c:118 sunrpc/clnt_perr.c:139
+#: sunrpc/clnt_perr.c:119 sunrpc/clnt_perr.c:140
 #, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr "; version basse = %lu, version haute = %lu"
 
-#: sunrpc/clnt_perr.c:125
+#: sunrpc/clnt_perr.c:126
 msgid "; why = "
 msgstr "; pourquoi = "
 
@@ -1214,7 +1262,7 @@ msgstr "Tentative d'édition de liens à partir de trop de librairies partagées qu
 msgid "Attempting to link in too many shared libraries"
 msgstr "Tentative d'édition de liens à partir de trop de librairies partagées"
 
-#: sunrpc/clnt_perr.c:338
+#: sunrpc/clnt_perr.c:354
 msgid "Authentication OK"
 msgstr "Succès d'authentification"
 
@@ -1393,6 +1441,7 @@ msgid "Can't remove old temporary cache file %s"
 msgstr "Ne peut enlever le vieux fichier temporaire %s"
 
 #: elf/ldconfig.c:344
+#, c-format
 msgid "Can't stat %s"
 msgstr "Ne peut évaluer par stat %s"
 
@@ -1438,6 +1487,7 @@ msgid "Cannot have more than one file generation flag!\n"
 msgstr "Ne peut avoir plus d'un fichier de génération de sémaphores!\n"
 
 #: elf/ldconfig.c:689 elf/ldconfig.c:732
+#, c-format
 msgid "Cannot lstat %s"
 msgstr "Ne peut évaluer par lstat %s"
 
@@ -1476,6 +1526,7 @@ msgid "Cannot specify more than one input file!\n"
 msgstr "Ne peut spécifier plus d'un fichier d'entrée!\n"
 
 #: elf/ldconfig.c:701
+#, c-format
 msgid "Cannot stat %s"
 msgstr "Ne peut évaluer par stat %s"
 
@@ -1496,6 +1547,7 @@ msgid "Change to and use ROOT as root directory"
 msgstr "Positionné et utilisation de ROOT comme répertoire racine"
 
 #: elf/cache.c:426
+#, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "ÉCHEC de modification des droits d'accès de %s à %#o"
 
@@ -1513,7 +1565,7 @@ msgstr "Caractère de séparation : %c\n"
 msgid "Child exited"
 msgstr "Le processus `enfant' a terminé."
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:373
 msgid "Client credential too weak"
 msgstr "Identité du client peu fiable"
 
@@ -1942,7 +1994,7 @@ msgstr "ERREUR FATALE: le système ne peut définir `_POSIX2_LOCALEDEF'"
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "FICHIER contient la table d'adressage des noms symboliques vers les valeurs UCS4"
 
-#: sunrpc/clnt_perr.c:365
+#: sunrpc/clnt_perr.c:381
 msgid "Failed (unspecified error)"
 msgstr "Échec (erreur non spécifiée)"
 
@@ -2270,27 +2322,27 @@ msgstr "Appel système interrompu, il aurait dû être relancé"
 msgid "Invalid argument"
 msgstr "Paramètre invalide"
 
-#: posix/regex.c:1380
+#: posix/regex.c:1384
 msgid "Invalid back reference"
 msgstr "Référence arrière invalide"
 
-#: posix/regex.c:1374
+#: posix/regex.c:1378
 msgid "Invalid character class name"
 msgstr "Nom de classe de caractères invalide"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid client credential"
 msgstr "Identité du client invalide"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:365
 msgid "Invalid client verifier"
 msgstr "Vérificateur du client invalide"
 
-#: posix/regex.c:1371
+#: posix/regex.c:1375
 msgid "Invalid collation character"
 msgstr "Caractère de fusionnement invalide"
 
-#: posix/regex.c:1392
+#: posix/regex.c:1396
 msgid "Invalid content of \\{\\}"
 msgstr "Contenu invalide de \\{\\}"
 
@@ -2315,15 +2367,15 @@ msgstr "Objet invalide pour l'opération"
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Chaîne multi-octets ou étendue de caractères invalide ou incomplète"
 
-#: posix/regex.c:1401
+#: posix/regex.c:1405
 msgid "Invalid preceding regular expression"
 msgstr "Expression régulière précédente invalide"
 
-#: posix/regex.c:1395
+#: posix/regex.c:1399
 msgid "Invalid range end"
 msgstr "Fin d'intervalle invalide"
 
-#: posix/regex.c:1368
+#: posix/regex.c:1372
 msgid "Invalid regular expression"
 msgstr "Expression régulière invalide"
 
@@ -2335,7 +2387,7 @@ msgstr "Code de requête invalide"
 msgid "Invalid request descriptor"
 msgstr "Descripteur de requête invalide"
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:377
 msgid "Invalid server verifier"
 msgstr "Vérificateur du serveur invalide"
 
@@ -2462,7 +2514,7 @@ msgstr "Serveur maître occupé, vidange complète reportée"
 msgid "Memory allocation failure"
 msgstr "Échec d'allocation mémoire"
 
-#: posix/regex.c:1398
+#: posix/regex.c:1402
 msgid "Memory exhausted"
 msgstr "Mémoire épuisée"
 
@@ -2682,7 +2734,7 @@ msgstr "Aucun lien créé étant donné qu'il n'a pas été repéré pour %s"
 msgid "No locks available"
 msgstr "Aucun verrou disponible"
 
-#: posix/regex.c:1365
+#: posix/regex.c:1369
 msgid "No match"
 msgstr "Pas de concordance"
 
@@ -2699,7 +2751,7 @@ msgstr "Aucun message du type désiré"
 msgid "No more records in map database"
 msgstr "Aucun autre enregistrement dans la table de la base de données"
 
-#: posix/regex.c:7919
+#: posix/regex.c:7956
 msgid "No previous regular expression"
 msgstr "Aucune expression régulière précédente"
 
@@ -3028,7 +3080,7 @@ msgstr "Permission non accordée"
 msgid "Power failure"
 msgstr "Panne d'alimentation"
 
-#: posix/regex.c:1404
+#: posix/regex.c:1408
 msgid "Premature end of regular expression"
 msgstr "Fin prématurée de l'expression régulière"
 
@@ -3145,79 +3197,79 @@ msgstr "La déclaration struct RPC est erronée"
 msgid "RPC version wrong"
 msgstr "Mauvaise version RPC"
 
-#: sunrpc/clnt_perr.c:278
+#: sunrpc/clnt_perr.c:284
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (code d'erreur inconnu)"
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:203
 msgid "RPC: Authentication error"
 msgstr "RPC: erreur d'authentification"
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:183
 msgid "RPC: Can't decode result"
 msgstr "RPC: ne peut décoder le résultat"
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:179
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: ne peut encoder les paramètres"
 
-#: sunrpc/clnt_perr.c:237
+#: sunrpc/clnt_perr.c:243
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: échec (erreur non spécifiée)"
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:199
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: versions incompatibles de RPC"
 
-#: sunrpc/clnt_perr.c:229
+#: sunrpc/clnt_perr.c:235
 msgid "RPC: Port mapper failure"
 msgstr "RPC: échec de conversion de ports"
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:215
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: la procédure n'est pas disponible"
 
-#: sunrpc/clnt_perr.c:233
+#: sunrpc/clnt_perr.c:239
 msgid "RPC: Program not registered"
 msgstr "RPC: le programme n'est pas enregistré"
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:207
 msgid "RPC: Program unavailable"
 msgstr "RPC: le programme n'est pas disponible"
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:211
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: non concordance de programme ou de version"
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:223
 msgid "RPC: Remote system error"
 msgstr "RPC: erreur système sur l'hôte cible"
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:219
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: le serveur ne peut décoder les paramètres"
 
-#: sunrpc/clnt_perr.c:170
+#: sunrpc/clnt_perr.c:176
 msgid "RPC: Success"
 msgstr "RPC: succès"
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:195
 msgid "RPC: Timed out"
 msgstr "RPC: expiration du délai de la minuterie"
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:191
 msgid "RPC: Unable to receive"
 msgstr "RPC: incapable d'effectuer la réception"
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:187
 msgid "RPC: Unable to send"
 msgstr "RPC: incapable d'effectuer la transmission"
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:227
 msgid "RPC: Unknown host"
 msgstr "RPC: hôte inconnu"
 
-#: sunrpc/clnt_perr.c:225
+#: sunrpc/clnt_perr.c:231
 msgid "RPC: Unknown protocol"
 msgstr "RPC: protocole inconnu"
 
@@ -3249,7 +3301,7 @@ msgstr "Système de fichiers accessible en lecture seulement"
 msgid "Real-time signal %d"
 msgstr "Signal de Temps-Réel %d"
 
-#: posix/regex.c:1407
+#: posix/regex.c:1411
 msgid "Regular expression too big"
 msgstr "Expression régulière trop grosse"
 
@@ -3391,11 +3443,11 @@ msgstr "Serveur occupé, essayer plus tard"
 msgid "Server out of memory"
 msgstr "Mémoire du serveur épuisée"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:361
 msgid "Server rejected credential"
 msgstr "Le serveur a rejeté l'identité."
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:369
 msgid "Server rejected verifier"
 msgstr "Le server a rejeté la vérification."
 
@@ -3493,7 +3545,7 @@ msgstr "Erreur de relais de type streams"
 msgid "Structure needs cleaning"
 msgstr "La structure a besoin d'un nettoyage."
 
-#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1362
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366
 #: stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr "Succès"
@@ -3664,7 +3716,7 @@ msgstr "Trop d'usagers"
 msgid "Trace/breakpoint trap"
 msgstr "Trappe pour point d'arrêt et de trace"
 
-#: posix/regex.c:1377
+#: posix/regex.c:1381
 msgid "Trailing backslash"
 msgstr "Barre oblique inverse en suffixe"
 
@@ -3695,6 +3747,11 @@ msgstr "Noeud final de transport n'est pas connecté"
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Pour en savoir davantage, faites: `%s --help ou `%s --usage'.\n"
+
+#: inet/rcmd.c:223
+#, c-format
+msgid "Trying %s...\n"
+msgstr "On tente %s...\n"
 
 #: nis/nis_print.c:167
 #, c-format
@@ -3785,7 +3842,7 @@ msgstr "Erreur du serveur inconnu"
 msgid "Unknown signal %d"
 msgstr "Signal inconnu %d"
 
-#: misc/error.c:113 timezone/zic.c:390
+#: misc/error.c:117 timezone/zic.c:390
 msgid "Unknown system error"
 msgstr "Erreur système inconnue"
 
@@ -3793,19 +3850,19 @@ msgstr "Erreur système inconnue"
 msgid "Unknown ypbind error"
 msgstr "Erreur inconnue de ypbind"
 
-#: posix/regex.c:1386
+#: posix/regex.c:1390
 msgid "Unmatched ( or \\("
 msgstr "Échec du pairage de ( ou de \\("
 
-#: posix/regex.c:1410
+#: posix/regex.c:1414
 msgid "Unmatched ) or \\)"
 msgstr "Échec du pairage de ) ou de \\)"
 
-#: posix/regex.c:1383
+#: posix/regex.c:1387
 msgid "Unmatched [ or [^"
 msgstr "Échec du pairage de [ ou de [^"
 
-#: posix/regex.c:1389
+#: posix/regex.c:1393
 msgid "Unmatched \\{"
 msgstr "Échec du pairage de \\{"
 
@@ -3823,6 +3880,7 @@ msgid "Usage:"
 msgstr "Usage:"
 
 #: posix/getconf.c:883
+#, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Usage: %s [-v spécification] nom_de_variable [chemin_d_accès]\n"
 
@@ -4005,11 +4063,12 @@ msgstr "Le paramètre de <%s> doit être un caractère simple."
 msgid "argument to `%s' must be a single character"
 msgstr "Le paramètre de `%s' doit être un caractère simple."
 
-#: sunrpc/auth_unix.c:311
+#: sunrpc/auth_unix.c:322
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr "auth_none.c - problème fatal de mise en ordre"
 
-#: sunrpc/auth_unix.c:106 sunrpc/auth_unix.c:112 sunrpc/auth_unix.c:142
+#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150
+#: sunrpc/auth_unix.c:153
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: mémoire épuisée\n"
 
@@ -4018,7 +4077,7 @@ msgstr "authunix_create: mémoire épuisée\n"
 msgid "bad argument"
 msgstr "Mauvais paramètre"
 
-#: inet/rcmd.c:425
+#: inet/rcmd.c:514
 msgid "bad owner"
 msgstr "Mauvais propriétaire"
 
@@ -4046,15 +4105,15 @@ msgstr "Diffusion: ioctl (a obtenu la configuration de l'interface)"
 msgid "broadcast: ioctl (get interface flags)"
 msgstr "Diffusion: ioctl (a obtenu la valeur des sémaphores de l'interface)"
 
-#: sunrpc/svc_udp.c:528
+#: sunrpc/svc_udp.c:541
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr "cache_set: ne peut allouer une nouveau tampon rpc_buffer"
 
-#: sunrpc/svc_udp.c:522
+#: sunrpc/svc_udp.c:535
 msgid "cache_set: victim alloc failed"
 msgstr "cache_set: échec d'allocation de `victim'"
 
-#: sunrpc/svc_udp.c:511
+#: sunrpc/svc_udp.c:524
 msgid "cache_set: victim not found"
 msgstr "cache_set: `victim' non repéré"
 
@@ -4064,7 +4123,7 @@ msgstr ""
 "Ne peut déterminer l'abréviation du fuseau horaire à utiliser\n"
 "juste après telle date"
 
-#: sunrpc/svc_simple.c:85
+#: sunrpc/svc_simple.c:88
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "Ne peut réassigner le numéro de procédure %ld\n"
@@ -4124,6 +4183,7 @@ msgid "cannot create internal descriptors"
 msgstr "Ne peut créer les descripteurs internes"
 
 #: locale/programs/locfile.c:693
+#, c-format
 msgid "cannot create output file `%s' for category `%s'"
 msgstr "Ne peut créer le fichier de sortie `%s' de catégorie `%s'"
 
@@ -4186,7 +4246,7 @@ msgstr "Ne peut rendre le segment inscritible lors d'une relocalisation"
 msgid "cannot map zero-fill pages"
 msgstr "Ne peut adresser des pages rempliez de zéros"
 
-#: inet/rcmd.c:421
+#: inet/rcmd.c:510
 msgid "cannot open"
 msgstr "Ne peut ouvrir"
 
@@ -4356,17 +4416,22 @@ msgstr "Dépendance circulaires entre les définitions locales"
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - Erreur fatale de sérialisation d'en-tête"
 
-#: sunrpc/clnt_tcp.c:127 sunrpc/clnt_tcp.c:136
+#: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
 msgid "clnttcp_create: out of memory\n"
 msgstr "clnttcp_create: mémoire épuisée\n"
 
-#: sunrpc/clnt_udp.c:132 sunrpc/clnt_udp.c:143
+#: sunrpc/clnt_udp.c:141 sunrpc/clnt_udp.c:144
 msgid "clntudp_create: out of memory\n"
 msgstr "clntudp_create: mémoire épuisée\n"
 
-#: sunrpc/clnt_unix.c:125 sunrpc/clnt_unix.c:134
+#: sunrpc/clnt_unix.c:131 sunrpc/clnt_unix.c:134
 msgid "clntunix_create: out of memory\n"
 msgstr "clntunix_create: mémoire épuisée\n"
+
+#: inet/rcmd.c:209
+#, c-format
+msgid "connect to address %s: "
+msgstr "Connexion établie à l'adresse %s: "
 
 #: sunrpc/rpc_scan.c:116
 msgid "constant or identifier expected"
@@ -4389,11 +4454,11 @@ msgstr "Le taux de conversion ne peut être zéro"
 msgid "conversion stopped due to problem in writing the output"
 msgstr "Conversion stoppée en raison d'un problème d'écriture à la sortie"
 
-#: sunrpc/svc_simple.c:93
+#: sunrpc/svc_simple.c:97
 msgid "couldn't create an rpc server\n"
 msgstr "Ne peut créer un serveur RPC\n"
 
-#: sunrpc/svc_simple.c:101
+#: sunrpc/svc_simple.c:105
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr "Ne peut enregistrer le programme %ld de version %ld\n"
@@ -4455,19 +4520,19 @@ msgstr "La chaîne dynamique d'un jeton de substition est vide."
 msgid "empty dynamics string token substitution"
 msgstr "chaîne dynamique vide de jeton de substition"
 
-#: sunrpc/svc_udp.c:454
+#: sunrpc/svc_udp.c:467
 msgid "enablecache: cache already enabled"
 msgstr "enablecache: cache déjà activée"
 
-#: sunrpc/svc_udp.c:460
+#: sunrpc/svc_udp.c:473
 msgid "enablecache: could not allocate cache"
 msgstr "enablecache: ne peut allouer une cache"
 
-#: sunrpc/svc_udp.c:468
+#: sunrpc/svc_udp.c:481
 msgid "enablecache: could not allocate cache data"
 msgstr "enablecache: ne peut allouer une cache de données"
 
-#: sunrpc/svc_udp.c:475
+#: sunrpc/svc_udp.c:488
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: ne peut allouer une cache de type fifo"
 
@@ -4499,29 +4564,29 @@ msgstr "Erreur lors de la fermeture du fichier de sortie"
 
 #: elf/sprof.c:706
 msgid "error while closing the profiling data file"
-msgstr "Erreur lors de la fermeture du fichier de données de profilage"
+msgstr "erreur lors de la fermeture du fichier de données de profilage"
 
 #: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:538 iconv/iconv_prog.c:516
 #: iconv/iconv_prog.c:547
 msgid "error while reading the input"
-msgstr "Erreur lors de la lecture de l'entrée"
+msgstr "erreur lors de la lecture de l'entrée"
 
 #: locale/programs/locfile.h:59
 msgid "expect string argument for `copy'"
-msgstr "Chaîne attendue pour le paramètre de `copy'"
+msgstr "chaîne attendue pour le paramètre de `copy'"
 
 #: timezone/zic.c:899
 msgid "expected continuation line not found"
-msgstr "Ligne de continuation attendue, non repérée"
+msgstr "ligne de continuation attendue, non repérée"
 
 #: locale/programs/ld-time.c:1027
 msgid "extra trailing semicolon"
-msgstr "points virgule de terminaison superflus"
+msgstr "point virgule de terminaison superflu"
 
 #: elf/sprof.c:404
 #, c-format
 msgid "failed to load shared object `%s'"
-msgstr "Échec de chargement de l'objet partagé `%s'"
+msgstr "échec de chargement de l'objet partagé `%s'"
 
 #: elf/sprof.c:600
 msgid "failed to load symbol data"
@@ -4560,7 +4625,7 @@ msgstr "Le fichier '%s' existe déjà et peut avoir été écrasé.\n"
 msgid "file too short"
 msgstr "Fichier trop court"
 
-#: inet/rcmd.c:423
+#: inet/rcmd.c:512
 msgid "fstat failed"
 msgstr "Échec d'évaluation fstat()"
 
@@ -4597,7 +4662,7 @@ msgstr "handle_request: requête reçue (Version = %d)"
 msgid "hard link failed, symbolic link used"
 msgstr "Échec de création du lien direct, création d'un lien symbolique"
 
-#: inet/rcmd.c:429
+#: inet/rcmd.c:518
 msgid "hard linked somewhere"
 msgstr "lien direct rencontré"
 
@@ -4622,6 +4687,7 @@ msgid "illegal escape sequence at end of string"
 msgstr "Séquence d'échappement illégale à la fin de la chaîne"
 
 #: iconv/iconv_charmap.c:443
+#, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr "Séquence d'échappement d'entrée illégale à la position %Zd"
 
@@ -4800,7 +4866,7 @@ msgstr "Liste tous les jeux de code de caractères"
 msgid "locale name should consist only of portable characters"
 msgstr "Nom de locale doit être composé de caractères portables"
 
-#: inet/rcmd.c:414
+#: inet/rcmd.c:503
 msgid "lstat failed"
 msgstr "Échec d'évaluation lstat()"
 
@@ -4836,7 +4902,8 @@ msgstr "Mémoire écrasée avant le bloc alloué\n"
 msgid "memory clobbered past end of allocated block\n"
 msgstr "Mémoire écrasée après la fin du bloc alloué\n"
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:484 posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493
+#: posix/getconf.c:996
 msgid "memory exhausted"
 msgstr "Mémoire épuisée"
 
@@ -4888,7 +4955,7 @@ msgstr "netname2user: nom principal `%s' est trop long"
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: ne devrait pas avoir le UID 0"
 
-#: sunrpc/svc_simple.c:168
+#: sunrpc/svc_simple.c:183
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "Le programme %d n'a jamais été enregistré.\n"
@@ -4948,7 +5015,7 @@ msgstr "Pas tous les caractères utilisés dans `outdigit' sont disponibles dans l
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "Pas tous les caractères utilisés dans `outdigit' sont disponibles dans le répertoire"
 
-#: inet/rcmd.c:416
+#: inet/rcmd.c:505
 msgid "not regular file"
 msgstr "N'est pas un fichier régulier"
 
@@ -4998,11 +5065,15 @@ msgstr "Mémoire épuisée"
 msgid "output file"
 msgstr "fichier de sortie"
 
+#: posix/../sysdeps/generic/wordexp.c:1801
+msgid "parameter null or not set"
+msgstr "paramètre nul ou non initialisé"
+
 #: sunrpc/pm_getmaps.c:74
 msgid "pmap_getmaps rpc problem"
 msgstr "problème RPC avec pmap_getmaps()"
 
-#: inet/rcmd.c:234
+#: inet/rcmd.c:293
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: échec du protocole dans la configuration du circuit\n"
 
@@ -5048,26 +5119,26 @@ msgstr "Le programme %lu de version %lu n'est pas disponible.\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "Le programme %lu de version %lu est prêt et en attente.\n"
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:354
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: lecture écourtée"
 
-#: inet/rcmd.c:231
+#: inet/rcmd.c:290
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (configuration de stderr): %m\n"
 
-#: inet/rcmd.c:159
+#: inet/rcmd.c:172 inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: tous les ports sont occupés\n"
 
-#: inet/rcmd.c:221
+#: inet/rcmd.c:270
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: écriture (configuration de stderr): %m\n"
 
-#: sunrpc/svc_simple.c:108
+#: sunrpc/svc_simple.c:112
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: mémoire épuisée\n"
 
@@ -5143,7 +5214,7 @@ msgstr "Lecture écourtée lors de la lecture de la requête: `%s'"
 msgid "short write in %s: %s"
 msgstr "Écriture écourtée dans %s: %s"
 
-#: inet/rcmd.c:261
+#: inet/rcmd.c:335
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: échec de protocole dans la configuration du circuit.\n"
 
@@ -5175,51 +5246,51 @@ msgstr "Suppression des AVERTISSEMENTS"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - ÉCHEC de scrutation"
 
-#: sunrpc/svc_tcp.c:170
+#: sunrpc/svc_tcp.c:171
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr "svc_tcp.c - ne peut repérer le nom du socket par getsockname() ou listen()"
 
-#: sunrpc/svc_tcp.c:155
+#: sunrpc/svc_tcp.c:156
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr "svc_tcp.c - problème de création d'un socket TCP"
 
-#: sunrpc/svc_tcp.c:219 sunrpc/svc_tcp.c:225
+#: sunrpc/svc_tcp.c:224 sunrpc/svc_tcp.c:227
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr "svc_tcp: makefd_xprt: mémoire épuisée\n"
 
-#: sunrpc/svc_unix.c:146
+#: sunrpc/svc_unix.c:150
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr "svc_unix.c - problème de création d'un socket `AF_UNIX'"
 
-#: sunrpc/svc_unix.c:162
+#: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - ne peut repérer le nom du socket par getsockname() ou listen()"
 
-#: sunrpc/svc_unix.c:212 sunrpc/svc_unix.c:218
+#: sunrpc/svc_unix.c:220 sunrpc/svc_unix.c:223
 msgid "svc_unix: makefd_xprt: out of memory\n"
 msgstr "svc_unix: makefd_xprt: mémoire épuisée\n"
 
-#: sunrpc/svc_tcp.c:178 sunrpc/svc_tcp.c:186
+#: sunrpc/svc_tcp.c:182 sunrpc/svc_tcp.c:185
 msgid "svctcp_create: out of memory\n"
 msgstr "svctcp_create: mémoire épuisée\n"
 
-#: sunrpc/svc_udp.c:141
+#: sunrpc/svc_udp.c:143
 msgid "svcudp_create - cannot getsockname"
 msgstr "svcudp_create - ne peut repérer le nom du socket par getsockname()"
 
-#: sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:161
+#: sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:158
 msgid "svcudp_create: out of memory\n"
 msgstr "svctcp_create: mémoire épuisée\n"
 
-#: sunrpc/svc_udp.c:127
+#: sunrpc/svc_udp.c:129
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: problème de création du socket"
 
-#: sunrpc/svc_udp.c:177
+#: sunrpc/svc_udp.c:179 sunrpc/svc_udp.c:182
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr "svcudp_create: xp_pad est trop petit pour IP_PKTINFO\n"
 
-#: sunrpc/svc_unix.c:171 sunrpc/svc_unix.c:179
+#: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
 msgid "svcunix_create: out of memory\n"
 msgstr "svcunix_create: mémoire épuisée\n"
 
@@ -5309,32 +5380,32 @@ msgstr "Trop d'octets pour l'encodage des caractères"
 
 #: timezone/zic.c:1874
 msgid "too many leap seconds"
-msgstr "Trop de délai en secondes"
+msgstr "trop de délai en secondes"
 
 #: timezone/zic.c:1846
 msgid "too many local time types"
-msgstr "Trop de types localisés pour la représentation du temps"
+msgstr "trop de types localisés pour la représentation du temps"
 
 #: timezone/zic.c:1800
 msgid "too many transitions?!"
-msgstr "Trop de transitions définies?!"
+msgstr "trop de transitions définies?!"
 
 #: timezone/zic.c:2171
 msgid "too many, or too long, time zone abbreviations"
-msgstr "Trop ou de trop longues abréviations de fuseaux horaires"
+msgstr "trop ou de trop longues abréviations de fuseaux horaires"
 
 #: locale/programs/linereader.h:160
 msgid "trailing garbage at end of line"
-msgstr "Suffixe en rebut à la fin de la ligne"
+msgstr "rebut en suffixe à la fin de la ligne"
 
-#: sunrpc/svc_simple.c:160
+#: sunrpc/svc_simple.c:175
 #, c-format
 msgid "trouble replying to prog %d\n"
-msgstr "Problème à répondre au programme %d.\n"
+msgstr "problème à répondre au programme %d.\n"
 
 #: timezone/zic.c:1338
 msgid "typed single year"
-msgstr "Une seule année fournie"
+msgstr "une seule année fournie"
 
 #: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:533
 msgid "unable to allocate buffer for input"
@@ -5373,6 +5444,7 @@ msgid "unknown set `%s'"
 msgstr "Jeu inconnu `%s'"
 
 #: posix/getconf.c:941
+#, c-format
 msgid "unknown specification \"%s\""
 msgstr "spécification inconnu \"%s\""
 
@@ -5485,7 +5557,7 @@ msgstr "Les valeurs d'une plage de noms symboliques d'une ellipse absolue `....'
 msgid "write incomplete"
 msgstr "écriture incomplète"
 
-#: inet/rcmd.c:427
+#: inet/rcmd.c:516
 msgid "writeable by other than owner"
 msgstr "accessible en écriture par d'autres que le propriétaire"
 
@@ -5513,11 +5585,23 @@ msgstr "Mauvais nombre de champs sur la ligne de type continuation de `Zone'"
 msgid "wrong number of fields on Zone line"
 msgstr "Mauvais nombre de champs sur la ligne de type `Zone'"
 
-#: sunrpc/xdr_ref.c:85
+#: sunrpc/xdr_array.c:106 sunrpc/xdr_array.c:109
+msgid "xdr_array: out of memory\n"
+msgstr "xdr_array: mémoire épuisée\n"
+
+#: sunrpc/xdr.c:558 sunrpc/xdr.c:561
+msgid "xdr_bytes: out of memory\n"
+msgstr "xdr_bytes: mémoire épuisée\n"
+
+#: sunrpc/xdr_ref.c:89 sunrpc/xdr_ref.c:92
 msgid "xdr_reference: out of memory\n"
 msgstr "xdr_reference: mémoire épuisée\n"
 
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+#: sunrpc/xdr.c:710 sunrpc/xdr.c:713
+msgid "xdr_string: out of memory\n"
+msgstr "xdr_string: mémoire épuisée\n"
+
+#: sunrpc/xdr_rec.c:155 sunrpc/xdr_rec.c:158
 msgid "xdrrec_create: out of memory\n"
 msgstr "xdrrec_create: mémoire épuisée\n"
 
@@ -5620,9 +5704,6 @@ msgstr "yp_update: ne peut obtenir l'adresse du serveur\n"
 #~ msgid "Print content of database file, one entry a line"
 #~ msgstr "Afficher le contenu du fichier de base de données, une entrée par ligne"
 
-#~ msgid "Trying %s...\n"
-#~ msgstr "On tente %s...\n"
-
 #~ msgid "`...' must only be used in `...' and `UNDEFINED' entries"
 #~ msgstr "`...' doit être utilisé seulement avec les entrées `...' et  `UNDEFINED'"
 
@@ -5667,9 +5748,6 @@ msgstr "yp_update: ne peut obtenir l'adresse du serveur\n"
 
 #~ msgid "collation symbol expected after `%s'"
 #~ msgstr "Symbole de fusionnement attendu après `%s'"
-
-#~ msgid "connect to address %s: "
-#~ msgstr "Connexion établie à l'adresse %s: "
 
 #~ msgid "duplicate character name `%s'"
 #~ msgstr "Duplicité du nom de caractère `%s'"

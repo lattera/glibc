@@ -1,5 +1,9 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/fr.po: Update from translation team.
+
+	* elf/tls-macros.h: Add alternative macros for use in PIC.
+
 	* elf/dl-lookup.c: Include <tls.h>.
 	* elf/do-lookup.h (FCT): Don't discard STT_TLS symbols.
 
