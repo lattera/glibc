@@ -1,3 +1,9 @@
+2003-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/lo_LA: Update collation info for U0EAF and U0EC6.
+	Update era_t_fmt, era_d_t_fmt, country_name, and lang_name fields.
+	Patch by Anousak Souphavanh <anousak@muanglao.com>.
+
 2003-06-25  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/an_ES: Change default charset from ISO-8859-1 to

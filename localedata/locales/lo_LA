@@ -2,7 +2,7 @@ escape_char /
 comment_char %
 
 %
-% Lao Language Locale for Laos
+% Lao Lanuage Locale for Laos
 %
 % Name:         lo_LA
 % Author:       Anousak Souphavanh
@@ -11,8 +11,8 @@ comment_char %
 % Language:     Lao
 % Territory:    Laos
 % Charset:      UTF-8
-% Revision:     1.0
-% Date:         2002-11-10 
+% Revision:     1.1
+% Date:         2003-02-06
 %
 
 %
@@ -39,7 +39,7 @@ comment_char %
 %
 %
 %
-%  Note: I would like to give a special Thanks to Mr. Pablo Salatxaga @ Mandrake , email "srtxg@chanae.alphanet.ch"
+%  Note: I would like to give a special thank to Mr. Pablo Salatxaga @ Mandrake , email "srtxg@chanae.alphanet.ch"
 %        & Theppitak Karoonboonyanan, email: 'thep@linux.thai.net', all had guided me in the right direction.
 
 LC_IDENTIFICATION
@@ -318,6 +318,9 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 <U0ECB>        IGNORE;<U0ECB>;<BLANK>;<BLANK>  % Lao CHARACTER MAI CHATTAWA
 <U0EBB>        IGNORE;<U0ECA>;<BLANK>;<BLANK>  % Lao CHARACTER MAI Kon
 <U0ECD>        IGNORE;<U0ECA>;<BLANK>;<BLANK>  % Lao CHARACTER MAI Niggahita
+<U0EC6>        IGNORE;<U0ECA>;<BLANK>;<BLANK>  % Lao CHARACTER MAI Ko Lao
+
+
 
 
 % Arabic and Lao decimal digits
@@ -604,6 +607,8 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 <mor-ai-maimuan>  "<U0EDD><U0EC3>";<BLANK>;<BLANK>;<BLANK>
 <mor-ai-maimalai> "<U0EDD><U0EC4>";<BLANK>;<BLANK>;<BLANK>
 
+<U0EAF> <U0EAF>;<BLANK>;<BLANK>;<BLANK>  % Lao CHARACTER Ellipsis
+
 
 % order of Lao vowels
 <U0EB0> <U0EB0>;<BLANK>;<BLANK>;<BLANK>  % Lao CHARACTER SAlA A
@@ -707,8 +712,8 @@ t_fmt_ampm  "%I<U003A>%M<U003A>%S<U0020>%p"
 % Era : Buddhist Era
 era     "+:1:-543<U002F>01<U002F>01:+*:<U0E9E><U002E><U0EAA><U002E>:%EC<U0020>%Ey"
 era_d_fmt       "%e<U0020>%b<U0020>%Ey"
-era_t_fmt       "%H<U002E>%M<U002E>%S<U0020><U0E19><U002E>"
-era_d_t_fmt     "<U0EA7><U0EB1><U0E99>%A<U0E97><U0EB5><U0EC8><U0020>%e<U0020>%B<U0020>%EC<U0020>%Ey<U002C><U0020>%H<U002E>%M<U002E>%S<U0020><U0E19><U002E>"
+era_t_fmt       "%H<U002E>%M<U002E>%S<U0020><U0E99><U002E>"
+era_d_t_fmt     "<U0EA7><U0EB1><U0E99>%A<U0E97><U0EB5><U0EC8><U0020>%e<U0020>%B<U0020>%EC<U0020>%Ey<U002C><U0020>%H<U002E>%M<U002E>%S<U0020><U0E99><U002E>"
 % Appropriate date representation (date(1))   "%a %e %b %Ey %H:%M:%S %Z"
 date_fmt       "<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
 <U0020><U0025><U0045><U0079><U0020><U0025><U0048><U003A><U0025><U004D>/
@@ -764,7 +769,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0074><U0025><U0062><U0025><U004E><U0025><U0068><U0025><U0074>/
 <U0025><U0073><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0053>/
 <U0025><U004E><U0025><U007A><U0025><U0063><U0025><U004E>"
-country_name  "<U0EA5><U0EB2><U0EA5>"
+country_name  "<U0EA5><U0EB2><U0EA7>"
 %FIXME
 %country_post  ""
 country_ab2   "<U004C><U0041>"
@@ -773,7 +778,7 @@ country_num   418
 country_car   "<U004C><U0041><U004F>"
 %FIXME
 %country_isbn  ""
-lang_name     "<U0EA5><U0EB2><U0EA5>"
+lang_name     "<U0EA5><U0EB2><U0EA7>"
 lang_ab       "<U006C><U006F>"
 lang_term     "<U006c><U0061><U006F>"
 lang_lib      "<U006C><U0061><U006F>"
