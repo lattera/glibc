@@ -1,5 +1,16 @@
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
+	* configure.in (libc_cv_visibility_attribute): Use AC_TRY_COMMAND,
+	get errors into the log file.
+	(libc_cv_broken_visibility_attribute): Likewise.
+	(libc_cv_broken_alias_attribute): Likewise.
+	(libc_cv_asm_weak_directive): Likewise.
+	(libc_cv_need_minus_P): Likewise.
+	(libc_cv_dot_text): Likewise.
+	(libc_cv_asm_global_directive): Likewise.
+	(libc_cv_asm_type_prefix): Likewise.
+	* configure: Regenerated.
+
 	* nscd/cache.c (cache_search): Give first arg type `request_type'.
 	* nscd/nscd.h: Update decl.
 
