@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-ENTRY(__htonl)
+ENTRY(htonl)
 #ifdef PROF
 	ldgp	gp, 0(pv)
 	.set noat
@@ -43,6 +43,4 @@ ENTRY(__htonl)
 
 	END(__htonl)
 
-strong_alias_asm(__htonl, __ntohl)
-weak_alias(__htonl, htonl)
-weak_alias(__htonl, ntohl)
+weak_alias(htonl, ntohl)
