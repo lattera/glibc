@@ -1,3 +1,10 @@
+2000-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* lockfile.c (__flockfile): If _IO_USER_LOCK bit is set don't do
+	anything.
+	(__funlockfile): Likewise.
+	(__ftrylockfile): If _IO_USER_LOCK bit is set return always 0.
+
 2000-08-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* manager.c (pthread_allocate_stack): Clear descriptor only if not

@@ -29,7 +29,8 @@ void
 __flockfile (FILE *stream)
 {
 #ifdef USE_IN_LIBIO
-  __pthread_mutex_lock (stream->_lock);
+  if ((stream->_flags & _IO_USER_LOCK) == 0)
+    __pthread_mutex_lock (stream->_lock);
 #else
 #endif
 }
@@ -44,7 +45,8 @@ void
 __funlockfile (FILE *stream)
 {
 #ifdef USE_IN_LIBIO
-  __pthread_mutex_unlock (stream->_lock);
+  if ((stream->_flags & _IO_USER_LOCK) == 0)
+    __pthread_mutex_unlock (stream->_lock);
 #else
 #endif
 }
@@ -59,7 +61,10 @@ int
 __ftrylockfile (FILE *stream)
 {
 #ifdef USE_IN_LIBIO
-  return __pthread_mutex_trylock (stream->_lock);
+  if ((stream->_flags & _IO_USER_LOCK) == 0)
+    return __pthread_mutex_trylock (stream->_lock);
+  else
+    return 0;
 #else
 #endif
 }
