@@ -60,6 +60,8 @@ static char rcsid[] = "$Id$";
 #include <arpa/inet.h>
 #include <ctype.h>
 #ifdef _LIBC
+# include <endian.h>
+# include <stdint.h>
 # include <stdlib.h>
 # include <limits.h>
 # include <errno.h>
@@ -100,17 +102,24 @@ inet_aton(cp, addr)
 #ifndef _LIBC
 	register int base;
 #endif
-	register int n;
 	register char c;
-	u_int32_t parts[4];
-	register u_int32_t *pp = parts;
+	union iaddr {
+	  uint8_t bytes[4];
+	  uint32_t word;
+	} res;
+#if BYTE_ORDER == LITTLE_ENDIAN
+	register uint8_t *pp = res.bytes;
+#else
+	register uint8_t *pp = &res.bytes[4];
+#endif
+	int digit;
 
 #ifdef _LIBC
 	int saved_errno = errno;
 	__set_errno (0);
 #endif
 
-	memset (parts, '\0', sizeof (parts));
+	res.word = 0;
 
 	c = *cp;
 	for (;;) {
@@ -123,12 +132,15 @@ inet_aton(cp, addr)
 			goto ret_0;
 #ifdef _LIBC
 		{
-			unsigned long ul = strtoul (cp, (char **) &cp, 0);
+			char *endp;
+			unsigned long ul = strtoul (cp, (char **) &endp, 0);
 			if (ul == ULONG_MAX && errno == ERANGE)
 				goto ret_0;
 			if (ul > 0xfffffffful)
 				goto ret_0;
 			val = ul;
+			digit = cp != endp;
+			cp = endp;
 		}
 		c = *cp;
 #else
@@ -160,9 +172,17 @@ inet_aton(cp, addr)
 			 *	a.b.c	(with c treated as 16 bits)
 			 *	a.b	(with b treated as 24 bits)
 			 */
-			if (pp >= parts + 3)
+			if ((BYTE_ORDER == LITTLE_ENDIAN
+			     && pp >= res.bytes + 3)
+			    || (BYTE_ORDER == BIG_ENDIAN
+				&& pp == res.bytes)
+			    || val > 0xff)
 				goto ret_0;
+#if BYTE_ORDER == LITTLE_ENDIAN
 			*pp++ = val;
+#else
+			*--pp = val;
+#endif
 			c = *++cp;
 		} else
 			break;
@@ -172,21 +192,21 @@ inet_aton(cp, addr)
 	 */
 	if (c != '\0' && (!isascii(c) || !isspace(c)))
 		goto ret_0;
-	/*
-	 * Concoct the address according to
-	 * the number of parts specified.
-	 */
-	n = pp - parts + 1;
 
-	if (n == 0	/* initial nondigit */
-	    || parts[0] > 0xff || parts[1] > 0xff || parts[2] > 0xff
-	    || val > max[n - 1])
+	/*
+	 * Did we get a valid digit?
+	 */
+	if (!digit)
+		goto ret_0;
+
+	/* Check whether the last part is in its limits depending on
+	   the number of parts in total.  */
+	if ((BYTE_ORDER == LITTLE_ENDIAN && val > max[pp - res.bytes])
+	    || (BYTE_ORDER == BIG_ENDIAN && val > max[res.bytes - pp]))
 	  goto ret_0;
 
-	val |= (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8);
-
 	if (addr)
-		addr->s_addr = htonl(val);
+		addr->s_addr = res.word | htonl (val);
 
 #ifdef _LIBC
 	__set_errno (saved_errno);

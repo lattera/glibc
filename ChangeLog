@@ -1,3 +1,10 @@
+1999-10-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/tst-aton.c (main): Add more tests.
+
+	* resolv/inet_addr.c (inet_aton): Correct some problems with to
+	large numbers.  Optimize a bit.
+
 1999-10-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/inet_net_ntop.c (inet_net_ntop_ipv4): If BITS is zero
