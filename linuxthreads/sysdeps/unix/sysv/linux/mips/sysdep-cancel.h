@@ -22,7 +22,7 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 #ifdef __PIC__
 # undef PSEUDO
@@ -35,14 +35,14 @@
     .cpload t9;								      \
     .set reorder;							      \
     SINGLE_THREAD_P(t0);						      \
-    bne zero, t0, Lpseudo_cancel;					      \
+    bne zero, t0, L(pseudo_cancel);					      \
     .set noreorder;							      \
     li v0, SYS_ify(syscall_name);					      \
     syscall;								      \
     .set reorder;							      \
     bne a3, zero, SYSCALL_ERROR_LABEL;			       		      \
     ret;								      \
-  Lpseudo_cancel:							      \
+  L(pseudo_cancel):							      \
     SAVESTK_##args;						              \
     sw ra, 28(sp);							      \
     sw gp, 32(sp);							      \
@@ -65,7 +65,7 @@
     lw ra, 28(sp);			/* restore return address */	      \
     RESTORESTK;							              \
     bne a3, zero, SYSCALL_ERROR_LABEL;					      \
-  Lpseudo_end:
+  L(pseudo_end):
 #endif
 
 # define PUSHARGS_0	/* nothing to do */

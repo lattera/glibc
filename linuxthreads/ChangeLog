@@ -1,3 +1,8 @@
+2003-07-14  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h: Add IS_IN_librt,
+	use L() for local labels.
+
 2003-07-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* descr.h (struct _pthread_descr_struct): Provide p_res member
