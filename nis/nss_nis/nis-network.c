@@ -115,7 +115,7 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
       if ((size_t) (len + 1) > buflen)
         {
           free (result);
-          __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  *herrnop = NETDB_INTERNAL;
           return NSS_STATUS_TRYAGAIN;
         }
@@ -171,7 +171,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       *herrnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }

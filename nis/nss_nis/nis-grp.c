@@ -166,7 +166,7 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -197,13 +197,14 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
   free (result);
 
   parse_res = _nss_files_parse_grent (p, grp, data, buflen, errnop);
-  if (parse_res == -1)
-    return NSS_STATUS_TRYAGAIN;
-
-  if (parse_res)
-    return NSS_STATUS_SUCCESS;
-  else
-    return NSS_STATUS_NOTFOUND;
+  if (parse_res < 1)
+    {
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
+      else
+	return NSS_STATUS_NOTFOUND;
+    }
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
@@ -245,11 +246,12 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
   free (result);
 
   parse_res = _nss_files_parse_grent (p, grp, data, buflen, errnop);
-  if (parse_res == -1)
-    return NSS_STATUS_TRYAGAIN;
-
-  if (parse_res)
-    return NSS_STATUS_SUCCESS;
-  else
-    return NSS_STATUS_NOTFOUND;
+  if (parse_res < 1)
+    {
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
+      else
+	return NSS_STATUS_NOTFOUND;
+    }
+  return NSS_STATUS_SUCCESS;
 }

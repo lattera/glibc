@@ -207,7 +207,7 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 

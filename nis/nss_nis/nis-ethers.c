@@ -200,7 +200,7 @@ _nss_nis_gethostton_r (const char *name, struct ether *eth,
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -231,13 +231,14 @@ _nss_nis_gethostton_r (const char *name, struct ether *eth,
   free (result);
 
   parse_res = _nss_files_parse_etherent (p, eth, data, buflen, errnop);
-  if (parse_res == -1)
-    return NSS_STATUS_TRYAGAIN;
-
-  if (!parse_res)
-    return NSS_STATUS_NOTFOUND;
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res < 1)
+    {
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
+      else
+	return NSS_STATUS_NOTFOUND;
+    }
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
@@ -252,7 +253,7 @@ _nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
 
   if (addr == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -291,11 +292,12 @@ _nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
   free (result);
 
   parse_res = _nss_files_parse_etherent (p, eth, data, buflen, errnop);
-  if (parse_res == -1)
-    return NSS_STATUS_TRYAGAIN;
-
-  if (!parse_res)
-    return NSS_STATUS_NOTFOUND;
-  else
-    return NSS_STATUS_SUCCESS;
+  if (parse_res < 1)
+    {
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
+      else
+	return NSS_STATUS_NOTFOUND;
+    }
+  return NSS_STATUS_SUCCESS;
 }

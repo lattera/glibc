@@ -171,8 +171,11 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 	return status;
     }
 
-  if (name == NULL || strlen (name) > 8)
-    return NSS_STATUS_NOTFOUND;
+  if (name == NULL)
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_NOTFOUND;
+    }
   else
     {
       nis_result *result;
@@ -193,16 +196,17 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
       parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen,
 					    errnop);
       nis_freeresult (result);
-
-      if (parse_res == -1)
+      if (parse_res < 1)
 	{
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
+	  if (parse_res == -1)
+	    {
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	  else
+	    return NSS_STATUS_NOTFOUND;
 	}
-      if (parse_res)
-	return NSS_STATUS_SUCCESS;
-
-      return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_SUCCESS;
     }
 }
 
@@ -239,16 +243,16 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
 					  errnop);
 
     nis_freeresult (result);
-
-    if (parse_res == -1)
+    if (parse_res < 1)
       {
-	*errnop = ERANGE;
-	return NSS_STATUS_TRYAGAIN;
+	if (parse_res == -1)
+	  {
+	    *errnop = ERANGE;
+	    return NSS_STATUS_TRYAGAIN;
+	  }
+	else
+	  return NSS_STATUS_NOTFOUND;
       }
-
-    if (parse_res)
-      return NSS_STATUS_SUCCESS;
-
-    return NSS_STATUS_NOTFOUND;
+    return NSS_STATUS_SUCCESS;
   }
 }

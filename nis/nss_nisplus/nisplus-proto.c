@@ -323,15 +323,17 @@ _nss_nisplus_getprotobyname_r (const char *name, struct protoent *proto,
 
       nis_freeresult (result);
 
-      if (parse_res == -1)
+      if (parse_res < 1)
 	{
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
+	  if (parse_res == -1)
+	    {
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	  else
+	    return NSS_STATUS_NOTFOUND;
 	}
-      if (parse_res)
-	return NSS_STATUS_SUCCESS;
-
-      return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_SUCCESS;
     }
 }
 
@@ -369,15 +371,16 @@ _nss_nisplus_getprotobynumber_r (const int number, struct protoent *proto,
 
     nis_freeresult (result);
 
-    if (parse_res == -1)
+    if (parse_res < 1)
       {
-	*errnop = ERANGE;
-	return NSS_STATUS_TRYAGAIN;
+	if (parse_res == -1)
+	  {
+	    *errnop = ERANGE;
+	    return NSS_STATUS_TRYAGAIN;
+	  }
+	else
+	  return NSS_STATUS_NOTFOUND;
       }
-
-    if (parse_res)
-      return NSS_STATUS_SUCCESS;
-
-    return NSS_STATUS_NOTFOUND;
+    return NSS_STATUS_SUCCESS;
   }
 }

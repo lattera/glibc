@@ -320,16 +320,16 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
       nis_freeresult (result);
 
-      if (parse_res == -1)
+      if (parse_res < 1)
 	{
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
+	  if (parse_res == -1)
+	    {
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	  return NSS_STATUS_NOTFOUND;
 	}
-
-      if (parse_res)
-	return NSS_STATUS_SUCCESS;
-
-      return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_SUCCESS;
     }
 }
 
@@ -367,15 +367,16 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
 
     nis_freeresult (result);
 
-    if (parse_res == -1)
+    if (parse_res < 1)
       {
-	*errnop = ERANGE;
-	return NSS_STATUS_TRYAGAIN;
+	if (parse_res == -1)
+	  {
+	    *errnop = ERANGE;
+	    return NSS_STATUS_TRYAGAIN;
+	  }
+	else
+	  return NSS_STATUS_NOTFOUND;
       }
-
-    if (parse_res)
-      return NSS_STATUS_SUCCESS;
-
-    return NSS_STATUS_NOTFOUND;
+    return NSS_STATUS_SUCCESS;
   }
 }

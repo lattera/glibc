@@ -285,7 +285,7 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
       if (parse_res < 1 && *errnop != ERANGE)
 	parse_res = _nss_nisplus_parse_hostent (result, AF_INET, host,
 						buffer, buflen, errnop);
-      if (parse_res < 1 && *errnop == ERANGE)
+      if (parse_res == -1)
         {
 	  nis_freeresult (result);
 	  result = saved_res;

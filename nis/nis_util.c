@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -32,12 +32,12 @@ __nis_finddirectory (directory_obj *dir, const_nis_name name)
   fd_args.requester = nis_local_host();
   fd_res = calloc (1, sizeof (fd_result));
 
-  if ((status = __do_niscall2 (dir->do_servers.do_servers_val,
-			       dir->do_servers.do_servers_len,
-			       NIS_FINDDIRECTORY, (xdrproc_t) xdr_fd_args,
-			       (caddr_t) &fd_args, (xdrproc_t) xdr_fd_result,
-			       (caddr_t) fd_res,
-			       NO_AUTHINFO|USE_DGRAM, NULL)) != NIS_SUCCESS)
+  status = __do_niscall2 (dir->do_servers.do_servers_val,
+			  dir->do_servers.do_servers_len,
+			  NIS_FINDDIRECTORY, (xdrproc_t) xdr_fd_args,
+			  (caddr_t) &fd_args, (xdrproc_t) xdr_fd_result,
+			  (caddr_t) fd_res, NO_AUTHINFO|USE_DGRAM, NULL, NULL);
+  if (status != NIS_SUCCESS)
     fd_res->status = status;
 
   return fd_res;

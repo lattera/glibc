@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -39,7 +39,7 @@ nis_servstate (const nis_server *serv, const nis_tag *tags,
 
   if (__do_niscall2 (serv, 1, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
 		     (caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
-		     (caddr_t) &tagres, 0, NULL) != RPC_SUCCESS)
+		     (caddr_t) &tagres, 0, NULL, NULL) != RPC_SUCCESS)
     return NIS_RPCERROR;
 
   *result = tagres.tags.tags_val;
@@ -65,7 +65,7 @@ nis_stats (const nis_server *serv, const nis_tag *tags,
 
   if (__do_niscall2 (serv, 1, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
 		     (caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
-		     (caddr_t) &tagres, 0, NULL) != RPC_SUCCESS)
+		     (caddr_t) &tagres, 0, NULL, NULL) != RPC_SUCCESS)
     return NIS_RPCERROR;
 
   *result = tagres.tags.tags_val;

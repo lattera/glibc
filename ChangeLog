@@ -1,3 +1,50 @@
+1998-01-24  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/Makefile: Distribute nis_cache2.h, add nis cache functions
+	to routines.
+	* nis/nis_cache.c: New.
+	* nis/nis_cache2.h: New.
+	* nis/nis_cache2_xdr.c: New.
+	* nis/nis_call.c: Changes for cache2_info parameter.
+	* nis/nis_checkpoint.c: Likewise.
+	* nis/nis_intern.h: Likewise.
+	* nis/nis_mkdir.c: Likewise.
+	* nis/nis_ping.c: Likewise.
+	* nis/nis_rmdir.c: Likewise.
+	* nis/nis_server.c: Likewise.
+	* nis/nis_util.c: Likewise.
+
+1997-12-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nisplus/nisplus-alias.c: Fix bogus if case and
+	return/errnop codes.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+
+1997-12-28  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nis/nis-alias.c: Use errnop, not __set_errno().
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+
 1998-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/net/if.h (ifr_bandwidth, ifr_qlen):

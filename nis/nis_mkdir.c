@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -33,7 +33,7 @@ nis_mkdir (const_nis_name dir, const nis_server *server)
     res2 = __do_niscall2 (server, 1, NIS_MKDIR,
 			  (xdrproc_t) xdr_nis_name,
 			  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-			  (caddr_t) &res, 0, NULL);
+			  (caddr_t) &res, 0, NULL, NULL);
   if (res2 != NIS_SUCCESS)
     return res2;
 

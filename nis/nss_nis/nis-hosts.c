@@ -246,7 +246,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 

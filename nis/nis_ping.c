@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -59,7 +59,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
     __do_niscall2 (&obj->DI_data.do_servers.do_servers_val[i], 1,
 		   NIS_PING, (xdrproc_t) xdr_ping_args,
 		   (caddr_t) &args, (xdrproc_t) xdr_void,
-		   (caddr_t) NULL, 0, NULL);
+		   (caddr_t) NULL, 0, NULL, NULL);
   if (res)
     nis_freeresult (res);
 }

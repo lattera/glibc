@@ -166,7 +166,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 

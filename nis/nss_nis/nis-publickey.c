@@ -42,7 +42,7 @@ _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 
   if (netname == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -84,7 +84,7 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
 
   if (netname == NULL || passwd == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -51,7 +51,7 @@ nis_checkpoint(const_nis_name dirname)
 	  if (__do_niscall2 (&NIS_RES_OBJECT(res2)->DI_data.do_servers.do_servers_val[i],
 			     1, NIS_CHECKPOINT, (xdrproc_t) xdr_nis_name,
 			     (caddr_t) &dirname, (xdrproc_t) xdr_cp_result,
-			     (caddr_t) &cpres, 0, NULL) != RPC_SUCCESS)
+			     (caddr_t) &cpres, 0, NULL, NULL) != RPC_SUCCESS)
 	    NIS_RES_STATUS (res) = NIS_RPCERROR;
 	  else
 	    {

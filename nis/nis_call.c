@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -186,7 +186,8 @@ __bind_connect (dir_binding *dbp)
 }
 
 static dir_binding *
-__bind_create (const nis_server *serv_val, u_int serv_len, u_long flags)
+__bind_create (const nis_server *serv_val, u_int serv_len, u_long flags,
+	       cache2_info *cinfo)
 {
   dir_binding *dbp;
   u_int i;
@@ -268,7 +269,14 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags)
 	dbp->server_val[i].pkey.n_bytes = NULL;
     }
 
-  if (__nis_findfastest (dbp) < 1)
+  dbp->class = -1;
+  if (cinfo != NULL && cinfo->server_used >= 0)
+    {
+      dbp->server_used = cinfo->server_used;
+      dbp->current_ep = cinfo->current_ep;
+      dbp->class = cinfo->class;
+    }
+  else if (__nis_findfastest (dbp) < 1)
     {
       __bind_destroy (dbp);
       return NULL;
@@ -280,7 +288,7 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags)
 nis_error
 __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	       xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
-	       u_long flags, nis_cb *cb)
+	       u_long flags, nis_cb *cb, cache2_info *cinfo)
 {
   enum clnt_stat result;
   nis_error retcode;
@@ -289,7 +297,8 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
   if (flags & MASTER_ONLY)
     server_len = 1;
 
-  if ((dbp = __bind_create (server, server_len, flags)) == NULL)
+  dbp = __bind_create (server, server_len, flags, cinfo);
+  if (dbp == NULL)
     return NIS_NAMEUNREACHABLE;
   while (__bind_connect (dbp) != NIS_SUCCESS)
     {
@@ -549,9 +558,14 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
   directory_obj *dir = NULL;
   nis_server *server;
   u_int server_len;
+  cache2_info cinfo = {-1, -1, -1};
 
   if (name == NULL)
     return NIS_BADNAME;
+
+  /* Search in local cache. In the moment, we ignore the fastest server */
+  if (!(flags & NO_CACHE))
+    dir = __nis_cache_search (name, flags, &cinfo);
 
   if (dir == NULL)
     {
@@ -578,7 +592,7 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 
 
   retcode = __do_niscall2 (server, server_len, prog, xargs, req, xres, resp,
-			   flags, cb);
+			   flags, cb, &cinfo);
 
   nis_free_directory (dir);
 

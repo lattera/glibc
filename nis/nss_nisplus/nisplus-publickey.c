@@ -290,8 +290,8 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
     return NSS_STATUS_UNAVAIL;
 
   /*
-   *      3.  Use principal name to look up uid/gid information in
-   *      LOCAL entry in **local** cred table.
+   * 3.  Use principal name to look up uid/gid information in
+   *     LOCAL entry in **local** cred table.
    */
   domain = nis_local_directory ();
   if ((strlen (principal) + strlen (domain) + 45) > (size_t) NIS_MAXNAMELEN)

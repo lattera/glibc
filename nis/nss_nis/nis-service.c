@@ -34,7 +34,6 @@ extern int _nss_files_parse_servent (char *line, struct servent *result,
 				     char *data, size_t datalen, int *errnop);
 
 
-
 __libc_lock_define_initialized (static, lock)
 
 struct response_t
@@ -208,7 +207,7 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -252,7 +251,7 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
 
   if (protocol == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 

@@ -115,7 +115,7 @@ _nss_nisplus_parse_servent (nis_result *result, struct servent *serv,
     {
       /* Skip leading blanks.  */
       while (isspace (*line))
-        line++;
+        ++line;
 
       if (*line == '\0')
         break;
@@ -332,16 +332,17 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 					      errnop);
       nis_freeresult (result);
 
-      if (parse_res == -1)
+      if (parse_res < 1)
 	{
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
+	  if (parse_res == -1)
+	    {
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	  else
+	    return NSS_STATUS_NOTFOUND;
 	}
-
-      if (parse_res)
-	return NSS_STATUS_SUCCESS;
-
-      return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_SUCCESS;
     }
 }
 
@@ -386,15 +387,16 @@ _nss_nisplus_getservbynumber_r (const int number, const char *protocol,
 					      errnop);
       nis_freeresult (result);
 
-      if (parse_res == -1)
+      if (parse_res < 1)
 	{
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
+	  if (parse_res == -1)
+	    {
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	  else
+	    return NSS_STATUS_NOTFOUND;
 	}
-
-      if (parse_res)
-	return NSS_STATUS_SUCCESS;
-
-      return NSS_STATUS_NOTFOUND;
+      return NSS_STATUS_SUCCESS;
     }
 }

@@ -127,7 +127,7 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
 	{
 	  /* Skip leading blanks.  */
 	  while (isspace (*line))
-	    line++;
+	    ++line;
 
 	  if (*line == '\0')
 	    break;
@@ -138,12 +138,11 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
 	  alias->alias_members[alias->alias_members_len] = line;
 
 	  while (*line != '\0' && *line != ',')
-	    line++;
+	    ++line;
 
 	  if (line != alias->alias_members[alias->alias_members_len])
 	    {
-	      *line = '\0';
-	      line++;
+	      *line++ = '\0';
 	      alias->alias_members_len++;
 	    }
 	}
@@ -265,7 +264,12 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
 	return status;
     }
 
-  if (name != NULL || strlen (name) <= 8)
+  if (name != NULL)
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_UNAVAIL;
+    }
+  else
     {
       nis_result *result;
       char buf[strlen (name) + 30 + tablename_len];
@@ -279,11 +283,13 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
 
       parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
 					       buffer, buflen, errnop);
-      if (parse_res == -1)
-	return NSS_STATUS_TRYAGAIN;
-
-      if (parse_res)
-	return NSS_STATUS_SUCCESS;
+      if (parse_res < 1)
+	{
+	  if (parse_res == -1)
+	    return NSS_STATUS_TRYAGAIN;
+	  else
+	    return NSS_STATUS_NOTFOUND;
+	}
+      return NSS_STATUS_SUCCESS;
     }
-  return NSS_STATUS_NOTFOUND;
 }
