@@ -22,7 +22,6 @@
 #ifndef __ASSEMBLER__
 #include <stddef.h>	/* For offsetof.  */
 #include <stdlib.h>	/* For abort().	 */
-#include <sysdep.h>	/* For INLINE_SYSCALL.	*/
 
 
 /* We don't want to include the kernel header.	So duplicate the
@@ -75,17 +74,25 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   asm ("movw %w0, %%gs" : : "q" (nr * 8 + 7));				      \
 })
 
+#ifdef __PIC__
+# define USETLS_EBX_ARG "r"
+# define USETLS_LOAD_EBX "xchgl %3, %%ebx\n\t"
+#else
+# define USETLS_EBX_ARG "b"
+# define USETLS_LOAD_EBX
+#endif
+
 /* When using the new set_thread_area call, we don't need to change %gs
    because we inherited the value set up in the main thread by TLS setup.
    We need to extract that value and set up the same segment in this
    thread.  */
-# if USE_TLS
-#  define DO_SET_THREAD_AREA_REUSE(nr)	1
-# else
+#if USE_TLS
+# define DO_SET_THREAD_AREA_REUSE(nr)	1
+#else
 /* Without TLS, we do the initialization of the main thread, where NR == 0.  */
-#  define DO_SET_THREAD_AREA_REUSE(nr)	(!__builtin_constant_p (nr) || (nr))
-# endif
-# define DO_SET_THREAD_AREA(descr, nr)					      \
+# define DO_SET_THREAD_AREA_REUSE(nr)	(!__builtin_constant_p (nr) || (nr))
+#endif
+#define DO_SET_THREAD_AREA(descr, nr) \
 ({									      \
   int __gs;								      \
   if (DO_SET_THREAD_AREA_REUSE (nr))					      \
@@ -95,8 +102,15 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 	{ (__gs & 0xffff) >> 3,						      \
 	  (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
 	  1, 0, 0, 1, 0, 1, 0 };					      \
-      if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry),  \
-			    0) == 0)					      \
+									      \
+      int __result;							      \
+      __asm (USETLS_LOAD_EBX						      \
+	     "movl %2, %%eax\n\t"					      \
+	     "int $0x80\n\t"						      \
+	     USETLS_LOAD_EBX						      \
+	     : "&a" (__result)						      \
+	     : USETLS_EBX_ARG (&ldt_entry), "i" (__NR_set_thread_area));      \
+      if (__result == 0)						      \
 	asm ("movw %w0, %%gs" :: "q" (__gs));				      \
       else								      \
 	__gs = -1;							      \
@@ -107,8 +121,14 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 	{ -1,								      \
 	  (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
 	  1, 0, 0, 1, 0, 1, 0 };					      \
-      if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry),  \
-			    0) == 0)					      \
+      int __result;							      \
+      __asm (USETLS_LOAD_EBX						      \
+	     "movl %2, %%eax\n\t"					      \
+	     "int $0x80\n\t"						      \
+	     USETLS_LOAD_EBX						      \
+	     : "&a" (__result)						      \
+	     : USETLS_EBX_ARG (&ldt_entry), "i" (__NR_set_thread_area));      \
+      if (__result == 0)						      \
 	{								      \
 	  __gs = (ldt_entry.entry_number << 3) + 3;			      \
 	  asm ("movw %w0, %%gs" : : "q" (__gs));			      \
