@@ -1,5 +1,5 @@
 /* Test for getdate.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
@@ -26,13 +26,15 @@
 static const struct
 {
   const char *str;
+  const char *tz;
   int err;
   struct tm tm;
 } tests [] =
 {
-  {"21:01:10 1999-1-31", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
-  {"21:01:10 1999-2-28", 0, {10, 1, 21, 28, 1, 99, 0, 0, 0}},
-  {"16:30:46 2000-2-29", 0, {46, 30,16, 29, 1, 100, 0, 0, 0}}
+  {"21:01:10 1999-1-31", "Universal", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
+  {"21:01:10 1999-2-28", "Universal", 0, {10, 1, 21, 28, 1, 99, 0, 0, 0}},
+  {"16:30:46 2000-2-29", "Universal", 0, {46, 30,16, 29, 1, 100, 0, 0, 0}},
+  {"01-08-2000 05:06:07", "Europe/Berlin", 0, {7, 6, 5, 1, 7, 100, 0, 0, 0}}
 };
 
 static void
@@ -78,10 +80,11 @@ main (void)
   int i;
   struct tm *tm;
 
-  setenv ("TZ", "Universal", 1);
 
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
+      setenv ("TZ", tests[i].tz, 1);
+      
       tm = getdate (tests[i].str);
 
       if (getdate_err != tests[i].err)

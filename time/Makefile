@@ -47,5 +47,5 @@ CFLAGS-tzset.c = $(tz-cflags)
 # Don't warn about Y2k problem in strftime format string.
 CFLAGS-test_time.c = -Wno-format
 
-tst-getdate-ENV= DATEMSK=datemsk
+tst-getdate-ENV= DATEMSK=datemsk TZDIR=${common-objpfx}timezone/testdata
 test_time-ARGS= EST5EDT CST
