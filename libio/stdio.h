@@ -189,13 +189,16 @@ extern int fcloseall __P ((void));
 
 /* Open a file and create a new stream for it.  */
 #ifndef __USE_FILE_OFFSET64
-extern FILE *fopen __P ((__const char *__filename, __const char *__modes));
+extern FILE *fopen __P ((__const char *__restrict __filename,
+			 __const char *__restrict __modes));
 #else
-extern FILE *fopen __P ((__const char *__filename, __const char *__modes))
+extern FILE *fopen __P ((__const char *__restrict __filename,
+			 __const char *__restrict __modes))
      __asm__ ("fopen64");
 #endif
 #ifdef __USE_LARGEFILE64
-extern FILE *fopen64 __P ((__const char *__filename, __const char *__modes));
+extern FILE *fopen64 __P ((__const char *__restrict __filename,
+			   __const char *__restrict __modes));
 #endif
 /* Open a file, replacing an existing stream with it. */
 #ifndef __USE_FILE_OFFSET64

@@ -136,7 +136,7 @@ main (int argc, char ** argv)
   errno = 0;
   if (realpath ("", buf) != NULL || errno != ENOENT)
     {
-      printf ("%s: expected return value NULL and set errno to ENOENT",
+      printf ("%s: expected return value NULL and set errno to ENOENT"
 	      " for realpath(\"\",...)\n", argv[0]);
       ++errors;
     }

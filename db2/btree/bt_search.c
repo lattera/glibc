@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_search.c	10.7 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_search.c	10.8 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -323,7 +323,7 @@ __bam_stkgrow(t)
 
 	entries = t->bt_esp - t->bt_sp;
 
-	if ((p = (EPG *)calloc(entries * 2, sizeof(EPG))) == NULL)
+	if ((p = (EPG *)__db_calloc(entries * 2, sizeof(EPG))) == NULL)
 		return (ENOMEM);
 	memcpy(p, t->bt_sp, entries * sizeof(EPG));
 	if (t->bt_sp != t->bt_stack)

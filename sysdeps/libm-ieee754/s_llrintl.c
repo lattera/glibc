@@ -45,12 +45,12 @@ __llrintl (long double x)
   sx = (se >> 15) & 1;
   j0 = (se & 0x7fff) - 0x3fff;
 
-  if (j0 < (int32_t) (8 * sizeof (long long int)))
+  if (j0 < (int32_t) (8 * sizeof (long long int)) - 1)
     {
       if (j0 < -1)
 	return 0;
       else if (j0 >= 63)
-	result = ((long long int) i0 << (j0 - 31)) | (i1 << (j0 - 63));
+	result = (((long long int) i0 << 32) | i1) << (j0 - 63);
       else
 	{
 	  w = two63[sx] + x;

@@ -1,3 +1,350 @@
+1997-11-11 21:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/sys/stat.h: Define stat, fstat, lstat and *64 variants
+	as macros so the the library compiles correctly even without
+	optimization.
+	* io/fstat.c: Undef fstat.
+	* io/fstat64.c: Undef fstat64
+	* io/lstat.c: Undef lstat.
+	* io/lstat64.c: Undef lstat64
+	* io/stat.c: Undef stat.
+	* io/stat64.c: Undef stat64
+	* io/fts.c: Include <include/sys/stat.h> to get macro definitions.
+	* io/ftw.c: Likewise.
+	* io/getdirname.c: Likewise.
+
+	* Makefile (install): Run test-installation.pl if possible.
+
+	* db2/Makefile: Update from db-2.3.12.
+	* db2/db.h: Likewise.
+	* db2/db_int.h: Likewise.
+	* db2/btree/bt_cursor.c: Likewise.
+	* db2/btree/bt_delete.c: Likewise.
+	* db2/btree/bt_open.c: Likewise.
+	* db2/btree/bt_put.c: Likewise.
+	* db2/btree/bt_rec.c: Likewise.
+	* db2/btree/bt_recno.c: Likewise.
+	* db2/btree/bt_search.c: Likewise.
+	* db2/btree/bt_split.c: Likewise.
+	* db2/btree/bt_stat.c: Likewise.
+	* db2/btree/btree.src: Likewise.
+	* db2/btree/btree_auto.c: Likewise.
+	* db2/btree/bt_cursor.c: Likewise.
+	* db2/btree/bt_delete.c: Likewise.
+	* db2/btree/bt_open.c: Likewise.
+	* db2/btree/bt_put.c: Likewise.
+	* db2/btree/bt_rec.c: Likewise.
+	* db2/btree/bt_recno.c: Likewise.
+	* db2/btree/bt_search.c: Likewise.
+	* db2/btree/bt_split.c: Likewise.
+	* db2/btree/bt_stat.c: Likewise.
+	* db2/btree/btree.src: Likewise.
+	* db2/btree/btree_auto.c: Likewise.
+	* db2/common/db_appinit.c: Likewise.
+	* db2/common/db_apprec.c: Likewise.
+	* db2/common/db_byteorder.c: Likewise.
+	* db2/common/db_region.c: Likewise.
+	* db2/db/db.c: Likewise
+	* db2/db/db.src: Likewise
+	* db2/db/db_auto.c: Likewise
+	* db2/db/db_dispatch.c: Likewise
+	* db2/db/db_dup.c: Likewise
+	* db2/db/db_overflow.c: Likewise
+	* db2/db/db_pr.c: Likewise
+	* db2/db/db_rec.c: Likewise
+	* db2/db/db_ret.c: Likewise
+	* db2/db/db_thread.c: Likewise
+	* db2/db185/db185.c: Likewise.
+	* db2/hash/hash.c: Likewise.
+	* db2/hash/hash.src: Likewise.
+	* db2/hash/hash_auto.c: Likewise.
+	* db2/hash/hash_dup.c: Likewise.
+	* db2/hash/hash_page.c: Likewise.
+	* db2/hash/hash_rec.c: Likewise.
+	* db2/include/btree_auto.h: Likewise.
+	* db2/include/btree_ext.h: Likewise.
+	* db2/include/clib_ext.h: Likewise.
+	* db2/include/common_ext.h: Likewise.
+	* db2/include/db.h.src: Likewise.
+	* db2/include/db_am.h: Likewise.
+	* db2/include/db_auto.h: Likewise.
+	* db2/include/db_cxx.h: Likewise.
+	* db2/include/db_ext.h: Likewise.
+	* db2/include/db_int.h.src: Likewise.
+	* db2/include/hash.h: Likewise.
+	* db2/include/hash_auto.h: Likewise.
+	* db2/include/hash_ext.h: Likewise.
+	* db2/include/lock.h: Likewise.
+	* db2/include/lock_ext.h: Likewise.
+	* db2/include/log.h: Likewise.
+	* db2/include/log_ext.h: Likewise.
+	* db2/include/mp.h: Likewise.
+	* db2/include/mp_ext.h: Likewise.
+	* db2/include/mutex_ext.h: Likewise.
+	* db2/include/os_ext.h: Likewise.
+	* db2/include/os_func.h: Likewise.
+	* db2/include/txn.h: Likewise.
+	* db2/include/txn_ext.h: Likewise.
+	* db2/lock/lock.c: Likewise.
+	* db2/lock/lock_deadlock.c: Likewise.
+	* db2/log/log.c: Likewise.
+	* db2/log/log_archive.c: Likewise.
+	* db2/log/log_auto.c: Likewise.
+	* db2/log/log_findckp.c: Likewise.
+	* db2/log/log_get.c: Likewise.
+	* db2/log/log_put.c: Likewise.
+	* db2/log/log_rec.c: Likewise.
+	* db2/log/log_register.c: Likewise.
+	* db2/mp/mp_bh.c: Likewise.
+	* db2/mp/mp_fget.c: Likewise.
+	* db2/mp/mp_fopen.c: Likewise.
+	* db2/mp/mp_fput.c: Likewise.
+	* db2/mp/mp_fset.c: Likewise.
+	* db2/mp/mp_open.c: Likewise.
+	* db2/mp/mp_pr.c: Likewise.
+	* db2/mp/mp_region.c: Likewise.
+	* db2/mp/mp_sync.c: Likewise.
+	* db2/mutex/mutex.c: Likewise.
+	* db2/os/os_abs.c: Likewise.
+	* db2/os/os_dir.c: Likewise.
+	* db2/os/os_fid.c: Likewise.
+	* db2/os/os_fsync.c: Likewise.
+	* db2/os/os_func.c: Likewise.
+	* db2/os/os_map.c: Likewise.
+	* db2/os/os_oflags.c: Likewise.
+	* db2/os/os_open.c: Likewise.
+	* db2/os/os_rpath.c: Likewise.
+	* db2/os/os_rw.c: Likewise.
+	* db2/os/os_seek.c: Likewise.
+	* db2/os/os_sleep.c: Likewise.
+	* db2/os/os_stat.c: Likewise.
+	* db2/os/os_unlink.c: Likewise.
+	* db2/progs/db_deadlock/db_deadlock.c: Likewise.
+	* db2/progs/db_dump/db_dump.c: Likewise.
+	* db2/progs/db_load/db_load.c: Likewise.
+	* db2/progs/db_recover/db_recover.c: Likewise.
+	* db2/progs/db_stat/db_stat.c: Likewise.
+	* db2/txn/txn.c: Likewise.
+	* db2/txn/txn_auto.c: Likewise.
+	* db2/txn/txn_rec.c: Likewise.
+	* db2/os/db_os_abs.c: Removed.
+	* db2/os/db_os_dir.c: Removed.
+	* db2/os/db_os_fid.c: Removed.
+	* db2/os/db_os_lseek.c: Removed.
+	* db2/os/db_os_mmap.c: Removed.
+	* db2/os/db_os_open.c: Removed.
+	* db2/os/db_os_rw.c: Removed.
+	* db2/os/db_os_sleep.c: Removed.
+	* db2/os/db_os_stat.c: Removed.
+	* db2/os/db_os_unlink.c: Removed.
+
+	* libio/stdio.h (fopen): Add __restrict to parameters.
+
+	* manual/process.texi (system): Describe behaviour for NULL argument.
+
+	* stdio-common/printf-parse.h: Parse hh modifier.
+	* stdio-common/vfprintf.c: Handle hh modifier.
+	* stdio-common/vfscanf.c: Likewise.
+	* manual/stdio.texi: Describe hh modifier for scanf/printf.
+
+	* math/complex.h: Don't define _Imaginary_I, but instead _Complex_I.
+	gcc does no yet know the `imaginary' keyword.
+
+	* math/test-math.c: Add little test for know gcc bug.
+
+	* math/tgmath.h: Make complex versions of log10() only available
+	if __USE_GNU.
+
+	* stdlib/test-canon.c: Fix typo.
+
+	* sysdeps/generic/setenv.c: Avoid compilation warnings.
+	Reported by Jim Meyering.
+
+	* sysdeps/generic/bits/errno.h: EILSEQ is an ISO C error number.
+	* sysdeps/mach/hurd/bits/errno.h: Likewise.
+	* sysdeps/standalone/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Likewise.
+
+	* sysdeps/i386/i586/memcpy.S: New file.
+	* sysdeps/i386/i586/mempcpy.S: New file.
+
+	* sysdeps/i386/i586/memset.S: Fix typo.
+
+	* sysdeps/posix/getcwd.c: Define HAVE_MEMPCPY for _LIBC.  Add casts.
+
+	* sysdeps/posix/system.c: Add comment to explain code.
+
+	* sysdeps/wordsize-32/inttypes.h: Include <stddef.h> for wchar_t.
+	Define PTRDIFF_{MIN,MAX}, SIG_ATOMIC_{MIN,MAX}, SIZE_MAX,
+	WCHAR_{MIN,MAX}, WINT_{MIN,MAX}.
+	Define wcstoimax, wcstoumax.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+
+	* wcsmbs/wchar.h: Define WCHAR_{MIN,MAX} if not already defined.
+	Declare __wcsto{l,ul,ll,ull}_internal only if not already done.
+
+	* time/Makefile (routines): Add strfxtime.
+	* time/strftime.c: Implement %F and %f format.
+	* time/strfxtime.c: New file.
+	* time/time.h: Define new types and symbols from ISO C 9X.
+
+	* time/mktime.c: Little comment correction.
+
+1997-11-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/s_sincosl.c: Fix typo.
+
+	* sysdeps/libm-ieee754/s_tanl.c: Fix typo.
+
+	* sysdeps/libm-ieee754/s_floorl.c: Correct typos.
+
+	* sysdeps/libm-ieee754/e_remainderl.c: Replace
+	EXTRACT_LDOUBLE_WORDS by GET_LDOUBLE_WORDS.
+
+	* sysdeps/libm-ieee754/e_atan2l.c: Replace EXTRACT_LDOUBLE_WORDS
+	by GET_LDOUBLE_WORDS.
+
+	* sysdeps/libm-ieee754/s_scalbnl.c: Replace ";" by "," for correct
+	variable declaration.
+	* sysdeps/libm-ieee754/s_scalblnl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_lrint.c (__lrint): Correct function.
+
+	* math/libm-test.c (sqrt_test): Add test for sqrt (0.25).
+	(asin_test): Add more test.
+
+1997-11-10 23:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/e_asin.c: Add braces to make code clearer
+	and to not confuse the poor compiler.
+	* sysdeps/libm-ieee754/e_asinf.c: Likewise.
+	Reported by vertex@cagent.com.
+
+1997-11-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-lookup.c (do_lookup): Don't accept the base version if we
+	require a specific one.
+
+	* libio/oldfreopen.c: Bind old symbols to version GLIBC_2.0.
+	* libio/oldiofopen.c: Likewise.
+	* libio/oldstdfiles.c: Likewise.
+	* libc.map: Export them.
+
+1997-11-10 07:40  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* stdlib/exit.c (exit): Handle recursive calls to exit ().
+
+1997-11-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/s_llrint.c: Fixed to take double argument
+	instead of long double.
+	* sysdeps/m68k/fpu/s_llrintf.c: New file.
+	* sysdeps/m68k/fpu/s_llrintl.c: New file.
+
+	* sysdeps/libm-ieee754/s_llrint.c: Make compilable and fix
+	overflow condition.
+	* sysdeps/libm-ieee754/s_llrintf.c: Fix overflow condition.
+	* sysdeps/libm-ieee754/s_llrintl.c: Likewise.
+	* sysdeps/libm-ieee754/s_llround.c: Likewise.
+	* sysdeps/libm-ieee754/s_llroundf.c: Likewise.
+	* sysdeps/libm-ieee754/s_llroundl.c: Likewise.
+	* sysdeps/libm-ieee754/s_lrint.c: Likewise.
+	* sysdeps/libm-ieee754/s_lrintf.c: Likewise.
+	* sysdeps/libm-ieee754/s_lrintl.c: Likewise.
+	* sysdeps/libm-ieee754/s_lround.c: Likewise.
+	* sysdeps/libm-ieee754/s_lroundf.c: Likewise.
+	* sysdeps/libm-ieee754/s_lroundl.c: Likewise.
+
+	* math/libm-test.c: Test all three variants of lrint and llrint.
+	Fix typos in lround and llround tests.  Add tests for boundary
+	cases for lrint and llround.
+
+1997-11-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/arith.texi: Misc doc fixes.
+	* manual/ctype.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/terminal.texi: Likewise.
+
+1997-11-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/xstatconv.c: Use struct assignment
+	instead of memcpy to let the compiler use whatever it regards as
+	optimal.
+	* sysdeps/unix/sysv/linux/alpha/xstatconv.c: Likewise.
+
+1997-11-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers)
+	[$(subdir)=misc]: Add sys/prctl.h.
+	* sysdeps/unix/sysv/linux/Dist: Distribute it.
+
+1997-11-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* io/ftwtest-sh: Don't use the unknown which command, instead try
+	pwd as /bin/pwd and /usr/bin/pwd.
+
+1997-11-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/maint.texi (Tools for Installation): Don't recommend
+	broken version 3.76.1 of make.
+	(Porting): Fix wording.
+
+1997-11-06 06:13  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* config.make.in (build-pic-default): New, defined with
+	pic_default.
+
+	* configure.in (pic_default): New, set to yes if PIC is
+	default.
+
+	* Makeconfig (CPPFLAGS-.o, CPPFLAGS-.op, CPPFLAGS-.og,
+	CPPFLAGS-.ob): Add -DPIC if $(build-pic-default) is yes.
+
+1997-11-09 18:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules (libc.so): Fix typo.
+
+	* csu/Makefile (CFLAGS-initfini.s): Correctly fix moving function
+	definition.  Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* stdlib/strtod.c: Handle numbers like 0.0e10000 correctly which
+	produce ±0.0.  Reported by Joe Keane <jgk@jgk.org>.
+
+	* sysdeps/libm-ieee754/s_ceill.c: Fix typos.
+	* sysdeps/libm-ieee754/s_llrint.c: Correct code, it never worked.
+
+1997-11-06 07:00  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/i386/i686/time.S: Removed.
+
+1997-11-08 14:07  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/libnsl.map: Add __do_niscall2 for nis_cachemgr.
+
+	* nis/nis_call.c: Set UDP resend timeout correct.
+
+	* nis/nss_compat/compat-grp.c: Rewritten to make it faster.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/ypclnt.c: Fix UDP resend timeout, fix yp_bind/do_ypcall
+	interaction.
+
+	* inet/protocols/routed.h: Include sys/socket.h.
+	* inet/protocols/talkd.h: Likewise.
+	* inet/protocols/timed.h: Include rpc/types.h.
+	* sunrpc/rpc/pmap_clnt.h: Include rpc/clnt.h.
+
+1997-11-06 01:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules (libc.so): Add missing closing brace.
+
+1997-11-05  Brendan Kehoe  <brendan@lisa.cygnus.com>
+
+	* libio.h (__P): Name its arg `p' instead of `params'.
+	This was added solely to work around problems with
+	the definition of __P in the Solaris math.h header.
+
 1997-11-06 00:06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* argp/argp-help.c: Optimize a bit by using mempcpy.

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <unistd.h>
-#include <sys/stat.h>
+#include <include/sys/stat.h>
 #include <stdlib.h>
 #include <string.h>
 

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
- *	@(#)db.src	10.3 (Sleepycat) 8/18/97
+ *	@(#)db.src	10.4 (Sleepycat) 11/2/97
  */
 #include "config.h"
 
@@ -81,15 +81,17 @@ POINTER	nextlsn		DB_LSN *	lu
 END
 
 /*
- * ovref -- Handles increment of overflow page reference count.
+ * ovref -- Handles increment/decrement of overflow page reference count.
  *
  * fileid:	identifies the file being modified.
- * pgno:	page number being incremented.
- * lsn		the page's original lsn.
+ * pgno:	page number whose ref count is being incremented/decremented.
+ * adjust:	the adjustment being made.
+ * lsn:		the page's original lsn.
  */
 BEGIN ovref
 ARG	fileid		u_int32_t	lu
 ARG	pgno		db_pgno_t	lu
+ARG	adjust		int32_t		ld
 POINTER	lsn		DB_LSN *	lu
 END
 

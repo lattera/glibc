@@ -91,7 +91,6 @@ setenv (name, value, replace)
   if (__environ == NULL || *ep == NULL)
     {
       char **new_environ;
-      char *tmp;
 
       if (__environ == last_environ && __environ != NULL)
 	/* We allocated this space; we can extend it.  */
@@ -120,9 +119,11 @@ setenv (name, value, replace)
 		size * sizeof (char *));
 
 #ifdef _LIBC
-      tmp = __mempcpy (new_environ[size], name, namelen);
-      *tmp++ = '=';
-      __mempcpy (tmp, value, vallen);
+      {
+	char *tmp = __mempcpy (new_environ[size], name, namelen);
+	*tmp++ = '=';
+	__mempcpy (tmp, value, vallen);
+      }
 #else
       memcpy (new_environ[size], name, namelen);
       new_environ[size][namelen] = '=';

@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_deadlock.c	10.15 (Sleepycat) 9/4/97";
+static const char sccsid[] = "@(#)db_deadlock.c	10.16 (Sleepycat) 10/14/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -53,13 +53,13 @@ main(argc, argv)
 	DB_ENV *dbenv;
 	u_int32_t atype;
 	time_t now;
-	long seconds;
+	long usecs;
 	int ch, flags, verbose;
 	char *home, *logfile;
 
 	atype = DB_LOCK_DEFAULT;
 	home = logfile = NULL;
-	seconds = 0;
+	usecs = 0;
 	flags = verbose = 0;
 	while ((ch = getopt(argc, argv, "a:h:L:t:vw")) != EOF)
 		switch (ch) {
@@ -85,7 +85,8 @@ main(argc, argv)
 			logfile = optarg;
 			break;
 		case 't':
-			get_long(optarg, 1, LONG_MAX, &seconds);
+			get_long(optarg, 1, LONG_MAX, &usecs);
+			usecs *= 1000000;
 			break;
 		case 'v':
 			verbose = 1;
@@ -103,16 +104,17 @@ main(argc, argv)
 	if (argc != 0)
 		usage();
 
-	if (seconds == 0 && !LF_ISSET(DB_LOCK_CONFLICT)) {
+	if (usecs == 0 && !LF_ISSET(DB_LOCK_CONFLICT)) {
 		warnx("at least one of -t and -w must be specified");
 		usage();
 	}
 
 	/*
-	 * We detect every second when we're running in DB_LOCK_CONFLICT mode.
+	 * We detect every 100ms (100000 us) when we're running in
+	 * DB_LOCK_CONFLICT mode.
 	 */
-	if (seconds == 0)
-		seconds = 1;
+	if (usecs == 0)
+		usecs = 100000;
 
 	/* Initialize the deadlock detector by opening the lock manager. */
 	dbenv = db_init(home, verbose);
@@ -125,14 +127,14 @@ main(argc, argv)
 	while (!interrupted) {
 		if (dbenv->db_verbose != 0) {
 			time(&now);
-			__db_err(dbenv, "Running at %s", ctime(&now));
+			__db_err(dbenv, "Running at %.24s", ctime(&now));
 		}
 
 		if ((errno = lock_detect(dbenv->lk_info, flags, atype)) != 0)
 			break;
 
-		/* Make a pass every "seconds" seconds. */
-		(void)__db_sleep(seconds, 0);
+		/* Make a pass every "usecs" usecs. */
+		(void)__db_sleep(0, usecs);
 	}
 
 	if (logfile != NULL)

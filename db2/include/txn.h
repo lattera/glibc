@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)txn.h	10.10 (Sleepycat) 9/23/97
+ *	@(#)txn.h	10.11 (Sleepycat) 10/25/97
  */
 #ifndef	_TXN_H_
 #define	_TXN_H_
@@ -96,15 +96,13 @@ struct __db_txnregion {
 /* Macros to lock/unlock the region and threads. */
 #define	LOCK_TXNTHREAD(tmgrp)						\
 	if (F_ISSET(tmgrp, DB_THREAD))					\
-		(void)__db_mutex_lock((tmgrp)->mutexp, -1,		\
-		    (tmgrp)->dbenv == NULL ? NULL : (tmgrp)->dbenv->db_yield)
+		(void)__db_mutex_lock((tmgrp)->mutexp, -1)
 #define	UNLOCK_TXNTHREAD(tmgrp)						\
 	if (F_ISSET(tmgrp, DB_THREAD))					\
 		(void)__db_mutex_unlock((tmgrp)->mutexp, -1)
 
 #define	LOCK_TXNREGION(tmgrp)						\
-	(void)__db_mutex_lock(&(tmgrp)->region->hdr.lock,(tmgrp)->fd,	\
-	    (tmgrp)->dbenv == NULL ? NULL : (tmgrp)->dbenv->db_yield)
+	(void)__db_mutex_lock(&(tmgrp)->region->hdr.lock, (tmgrp)->fd)
 #define	UNLOCK_TXNREGION(tmgrp)						\
 	(void)__db_mutex_unlock(&(tmgrp)->region->hdr.lock, (tmgrp)->fd)
 

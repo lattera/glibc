@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_archive.c	10.26 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)log_archive.c	10.28 (Sleepycat) 10/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -68,7 +68,7 @@ log_archive(dblp, listp, flags, db_malloc)
 	 * but that's just not possible.
 	 */
 	if (LF_ISSET(DB_ARCH_ABS)) {
-		__set_errno (0);
+		errno = 0;
 		if ((pref = getcwd(buf, sizeof(buf))) == NULL)
 			return (errno == 0 ? ENOMEM : errno);
 	} else
@@ -84,7 +84,7 @@ log_archive(dblp, listp, flags, db_malloc)
 		if ((ret = log_get(dblp, &stable_lsn, &rec, DB_LAST)) != 0)
 			return (ret);
 		if (F_ISSET(dblp, DB_AM_THREAD))
-			free(rec.data);
+			__db_free(rec.data);
 		fnum = stable_lsn.file;
 		break;
 	case 0:
@@ -102,7 +102,7 @@ log_archive(dblp, listp, flags, db_malloc)
 #define	LIST_INCREMENT	64
 	/* Get some initial space. */
 	if ((array =
-	    (char **)malloc(sizeof(char *) * (array_size = 10))) == NULL)
+	    (char **)__db_malloc(sizeof(char *) * (array_size = 10))) == NULL)
 		return (ENOMEM);
 	array[0] = NULL;
 
@@ -115,7 +115,7 @@ log_archive(dblp, listp, flags, db_malloc)
 
 		if (n >= array_size - 1) {
 			array_size += LIST_INCREMENT;
-			if ((array = (char **)realloc(array,
+			if ((array = (char **)__db_realloc(array,
 			    sizeof(char *) * array_size)) == NULL) {
 				ret = ENOMEM;
 				goto err;
@@ -127,7 +127,7 @@ log_archive(dblp, listp, flags, db_malloc)
 				goto err;
 			FREES(name);
 		} else if ((p = __db_rpath(name)) != NULL) {
-			if ((array[n] = (char *)strdup(p + 1)) == NULL) {
+			if ((array[n] = (char *)__db_strdup(p + 1)) == NULL) {
 				ret = ENOMEM;
 				goto err;
 			}
@@ -158,7 +158,7 @@ log_archive(dblp, listp, flags, db_malloc)
 err:	if (array != NULL) {
 		for (arrayp = array; *arrayp != NULL; ++arrayp)
 			FREES(*arrayp);
-		free(array);
+		__db_free(array);
 	}
 	return (ret);
 }
@@ -182,7 +182,7 @@ __build_data(dblp, pref, listp, db_malloc)
 
 	/* Get some initial space. */
 	if ((array =
-	    (char **)malloc(sizeof(char *) * (array_size = 10))) == NULL)
+	    (char **)__db_malloc(sizeof(char *) * (array_size = 10))) == NULL)
 		return (ENOMEM);
 	array[0] = NULL;
 
@@ -200,7 +200,7 @@ __build_data(dblp, pref, listp, db_malloc)
 		memcpy(&rectype, rec.data, sizeof(rectype));
 		if (rectype != DB_log_register) {
 			if (F_ISSET(dblp, DB_AM_THREAD)) {
-				free(rec.data);
+				__db_free(rec.data);
 				rec.data = NULL;
 			}
 			continue;
@@ -214,25 +214,25 @@ __build_data(dblp, pref, listp, db_malloc)
 
 		if (n >= array_size - 1) {
 			array_size += LIST_INCREMENT;
-			if ((array = (char **)realloc(array,
+			if ((array = (char **)__db_realloc(array,
 			    sizeof(char *) * array_size)) == NULL) {
 				ret = ENOMEM;
 				goto lg_free;
 			}
 		}
 
-		if ((array[n] = (char *)strdup(argp->name.data)) == NULL) {
+		if ((array[n] = (char *)__db_strdup(argp->name.data)) == NULL) {
 			ret = ENOMEM;
 lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
-				free(rec.data);
+				__db_free(rec.data);
 			goto err1;
 		}
 
 		array[++n] = NULL;
-		free(argp);
+		__db_free(argp);
 
 		if (F_ISSET(dblp, DB_AM_THREAD)) {
-			free(rec.data);
+			__db_free(rec.data);
 			rec.data = NULL;
 		}
 	}
@@ -289,7 +289,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 			if (ret != 0)
 				goto err2;
 		} else if ((p = __db_rpath(real_name)) != NULL) {
-			array[last] = (char *)strdup(p + 1);
+			array[last] = (char *)__db_strdup(p + 1);
 			FREES(real_name);
 			if (array[last] == NULL)
 				goto err2;
@@ -321,7 +321,7 @@ err2:	/*
 err1:	if (array != NULL) {
 		for (arrayp = array; *arrayp != NULL; ++arrayp)
 			FREES(*arrayp);
-		free(array);
+		__db_free(array);
 	}
 	return (ret);
 }
@@ -341,7 +341,7 @@ __absname(pref, name, newnamep)
 	l_name = strlen(name);
 
 	/* Malloc space for concatenating the two. */
-	if ((newname = (char *)malloc(l_pref + l_name + 2)) == NULL)
+	if ((newname = (char *)__db_malloc(l_pref + l_name + 2)) == NULL)
 		return (ENOMEM);
 
 	/* Build the name. */
@@ -379,7 +379,7 @@ __usermem(listp, func)
 	 * Don't simplify this expression, SunOS compilers don't like it.
 	 */
 	if (func == NULL)
-		array = (char **)malloc(len);
+		array = (char **)__db_malloc(len);
 	else
 		array = (char **)func(len);
 	if (array == NULL)
@@ -399,7 +399,7 @@ __usermem(listp, func)
 	/* NULL-terminate the list. */
 	*arrayp = NULL;
 
-	free(*listp);
+	__db_free(*listp);
 	*listp = array;
 
 	return (0);

@@ -41,6 +41,7 @@
 #include <features.h>
 #include <rpc/types.h>
 #include <rpc/xdr.h>
+#include <rpc/clnt.h>
 
 __BEGIN_DECLS
 

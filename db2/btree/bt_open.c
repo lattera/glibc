@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_open.c	10.20 (Sleepycat) 8/19/97";
+static const char sccsid[] = "@(#)bt_open.c	10.21 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 /*
@@ -95,7 +95,7 @@ __bam_open(dbp, type, dbinfo)
 	int ret;
 
 	/* Allocate the btree internal structure. */
-	if ((t = (BTREE *)calloc(1, sizeof(BTREE))) == NULL)
+	if ((t = (BTREE *)__db_calloc(1, sizeof(BTREE))) == NULL)
 		return (ENOMEM);
 
 	t->bt_sp = t->bt_csp = t->bt_stack;
@@ -179,7 +179,7 @@ einval:	ret = EINVAL;
 err:	if (t != NULL) {
 		/* If we allocated room for key/data return, discard it. */
 		if (t->bt_rkey.data != NULL)
-			free(t->bt_rkey.data);
+			__db_free(t->bt_rkey.data);
 
 		FREE(t, sizeof(BTREE));
 	}
@@ -201,7 +201,7 @@ __bam_bdup(orig, new)
 
 	ot = orig->internal;
 
-	if ((t = (BTREE *)calloc(1, sizeof(*t))) == NULL)
+	if ((t = (BTREE *)__db_calloc(1, sizeof(*t))) == NULL)
 		return (ENOMEM);
 
 	/*
@@ -248,7 +248,7 @@ __bam_keyalloc(t)
 	 * Recno keys are always the same size, and we don't want to have
 	 * to check for space on each return.  Allocate it now.
 	 */
-	if ((t->bt_rkey.data = (void *)malloc(sizeof(db_recno_t))) == NULL)
+	if ((t->bt_rkey.data = (void *)__db_malloc(sizeof(db_recno_t))) == NULL)
 		return (ENOMEM);
 	t->bt_rkey.ulen = sizeof(db_recno_t);
 	return (0);

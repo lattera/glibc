@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_stat.c	10.12 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_stat.c	10.14 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -61,7 +61,7 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 
 	/* Allocate and clear the structure. */
 	if ((sp = db_malloc == NULL ?
-	    (DB_BTREE_STAT *)malloc(sizeof(*sp)) :
+	    (DB_BTREE_STAT *)__db_malloc(sizeof(*sp)) :
 	    (DB_BTREE_STAT *)db_malloc(sizeof(*sp))) == NULL) {
 		ret = ENOMEM;
 		goto err;
@@ -100,14 +100,13 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 	if (F_ISSET(meta, BTM_RENUMBER))
 		sp->bt_flags |= DB_RENUMBER;
 
-	/*
-	 * Get the maxkey, minkey, re_len and re_pad fields from the
-	 * metadata.
-	 */
+	/* Get the remaining metadata fields. */
 	sp->bt_minkey = meta->minkey;
 	sp->bt_maxkey = meta->maxkey;
 	sp->bt_re_len = meta->re_len;
 	sp->bt_re_pad = meta->re_pad;
+	sp->bt_magic = meta->magic;
+	sp->bt_version = meta->version;
 
 	/* Get the page size from the DB. */
 	sp->bt_pagesize = dbp->pgsize;

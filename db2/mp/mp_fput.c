@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fput.c	10.12 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)mp_fput.c	10.14 (Sleepycat) 10/5/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -35,10 +35,12 @@ memp_fput(dbmfp, pgaddr, flags)
 {
 	BH *bhp;
 	DB_MPOOL *dbmp;
+	MPOOL *mp;
 	MPOOLFILE *mfp;
 	int wrote, ret;
 
 	dbmp = dbmfp->dbmp;
+	mp = dbmp->mp;
 
 	/* Validate arguments. */
 	if (flags) {
@@ -82,10 +84,16 @@ memp_fput(dbmfp, pgaddr, flags)
 	LOCKREGION(dbmp);
 
 	/* Set/clear the page bits. */
-	if (LF_ISSET(DB_MPOOL_CLEAN))
+	if (LF_ISSET(DB_MPOOL_CLEAN) && F_ISSET(bhp, BH_DIRTY)) {
+		++mp->stat.st_page_clean;
+		--mp->stat.st_page_dirty;
 		F_CLR(bhp, BH_DIRTY);
-	if (LF_ISSET(DB_MPOOL_DIRTY))
+	}
+	if (LF_ISSET(DB_MPOOL_DIRTY) && !F_ISSET(bhp, BH_DIRTY)) {
+		--mp->stat.st_page_clean;
+		++mp->stat.st_page_dirty;
 		F_SET(bhp, BH_DIRTY);
+	}
 	if (LF_ISSET(DB_MPOOL_DISCARD))
 		F_SET(bhp, BH_DISCARD);
 
@@ -108,11 +116,11 @@ memp_fput(dbmfp, pgaddr, flags)
 	}
 
 	/* Move the buffer to the head/tail of the LRU chain. */
-	SH_TAILQ_REMOVE(&dbmp->mp->bhq, bhp, q, __bh);
+	SH_TAILQ_REMOVE(&mp->bhq, bhp, q, __bh);
 	if (F_ISSET(bhp, BH_DISCARD))
-		SH_TAILQ_INSERT_HEAD(&dbmp->mp->bhq, bhp, q, __bh);
+		SH_TAILQ_INSERT_HEAD(&mp->bhq, bhp, q, __bh);
 	else
-		SH_TAILQ_INSERT_TAIL(&dbmp->mp->bhq, bhp, q);
+		SH_TAILQ_INSERT_TAIL(&mp->bhq, bhp, q);
 
 	/*
 	 * If this buffer is scheduled for writing because of a checkpoint,
@@ -125,14 +133,14 @@ memp_fput(dbmfp, pgaddr, flags)
 		if (F_ISSET(bhp, BH_DIRTY)) {
 			if (__memp_bhwrite(dbmp,
 			    dbmfp->mfp, bhp, NULL, &wrote) != 0 || !wrote)
-				F_SET(dbmp->mp, MP_LSN_RETRY);
+				F_SET(mp, MP_LSN_RETRY);
 		} else {
 			F_CLR(bhp, BH_WRITE);
 
-			mfp = ADDR(dbmp, bhp->mf_offset);
+			mfp = R_ADDR(dbmp, bhp->mf_offset);
 			--mfp->lsn_cnt;
 
-			--dbmp->mp->lsn_cnt;
+			--mp->lsn_cnt;
 		}
 
 	UNLOCKREGION(dbmp);

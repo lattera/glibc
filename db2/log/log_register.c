@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_register.c	10.11 (Sleepycat) 9/15/97";
+static const char sccsid[] = "@(#)log_register.c	10.12 (Sleepycat) 9/29/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -72,7 +72,7 @@ log_register(dblp, dbp, name, type, idp)
 		if (fid <= fnp->id)
 			fid = fnp->id + 1;
 		if (!memcmp(dbp->lock.fileid,
-		    ADDR(dblp, fnp->fileid_off), DB_FILE_ID_LEN)) {
+		    R_ADDR(dblp, fnp->fileid_off), DB_FILE_ID_LEN)) {
 			++fnp->ref;
 			fid = fnp->id;
 			if (!F_ISSET(dblp, DB_AM_RECOVER) &&
@@ -95,13 +95,13 @@ log_register(dblp, dbp, name, type, idp)
 	 * XXX Now that uids are fixed size, we can put them in the fnp
 	 * structure.
 	 */
-	fnp->fileid_off = OFFSET(dblp, fidp);
+	fnp->fileid_off = R_OFFSET(dblp, fidp);
 	memcpy(fidp, dbp->lock.fileid, DB_FILE_ID_LEN);
 
 	len = strlen(name) + 1;
 	if ((ret = __db_shalloc(dblp->addr, len, 0, &namep)) != 0)
 		goto err;
-	fnp->name_off = OFFSET(dblp, namep);
+	fnp->name_off = R_OFFSET(dblp, namep);
 	memcpy(namep, name, len);
 
 	SH_TAILQ_INSERT_HEAD(&dblp->lp->fq, fnp, q, __fname);
@@ -185,8 +185,8 @@ log_unregister(dblp, fid)
 	}
 
 	/* Free the unique file information, name and structure. */
-	__db_shalloc_free(dblp->addr, ADDR(dblp, fnp->fileid_off));
-	__db_shalloc_free(dblp->addr, ADDR(dblp, fnp->name_off));
+	__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->fileid_off));
+	__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->name_off));
 	SH_TAILQ_REMOVE(&dblp->lp->fq, fnp, q, __fname);
 	__db_shalloc_free(dblp->addr, fnp);
 

@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __log_find __P((DB_LOG *, int *));
 int __log_valid __P((DB_LOG *, LOG *, int));
 int __log_register_log

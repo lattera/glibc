@@ -4,12 +4,11 @@
  * Copyright (c) 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_cxx.h	10.8 (Sleepycat) 9/20/97
+ *	@(#)db_cxx.h	10.12 (Sleepycat) 10/25/97
  */
 
 #ifndef _DB_CXX_H_
 #define _DB_CXX_H_
-
 //
 // C++ assumptions:
 //
@@ -264,7 +263,7 @@ public:
     // Normally these would be called register and unregister to
     // parallel the C interface, but "register" is a reserved word.
     //
-    int db_register(Db *dbp, const char *name, u_int32_t *fidp);
+    int db_register(Db *dbp, const char *name, DBTYPE type, u_int32_t *fidp);
     int db_unregister(u_int32_t fid);
 
     // Create or remove new log files
@@ -353,6 +352,7 @@ public:
     int stat(DB_MPOOL_STAT **gsp, DB_MPOOL_FSTAT ***fsp,
              void *(*db_malloc)(size_t));
     int sync(DbLsn *lsn);
+    int trickle(int pct, int *nwrotep);
 
     // Create or remove new mpool files
     //
@@ -598,6 +598,11 @@ public:
     //
     int appinit(const char *homeDir, char *const *db_config, int flags);
 
+    // Called automatically when DbEnv is destroyed, or can be
+    // called at any time to shut down Db.
+    //
+    int appexit();
+
     ////////////////////////////////////////////////////////////////
     // simple get/set access methods
     //
@@ -674,11 +679,6 @@ public:
     // Deadlock detect on every conflict.
     u_int32_t get_lk_detect() const;
     void set_lk_detect(u_int32_t);
-
-    // Yield function for threads.
-    typedef int (*db_yield_fcn) (void);
-    db_yield_fcn get_yield() const;
-    void set_yield(db_yield_fcn);
 
 
     ////////////////////////////////////////////////////////////////
@@ -783,7 +783,7 @@ class _exported Db
 public:
     int close(int flags);
     int cursor(DbTxn *txnid, Dbc **cursorp);
-    int del(Dbt *key, DbTxn *txnid);
+    int del(DbTxn *txnid, Dbt *key, int flags);
     int fd(int *fdp);
     int get(DbTxn *txnid, Dbt *key, Dbt *data, int flags);
     int put(DbTxn *txnid, Dbt *key, Dbt *data, int flags);
@@ -884,5 +884,4 @@ private:
     Dbc(const Dbc &);
     Dbc &operator = (const Dbc &);
 };
-
 #endif /* !_DB_CXX_H_ */

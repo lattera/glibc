@@ -26,7 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
-#include <sys/stat.h>
+#include <include/sys/stat.h>
 
 /* #define NDEBUG 1 */
 #include <assert.h>

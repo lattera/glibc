@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_recno.c	10.19 (Sleepycat) 9/20/97";
+static const char sccsid[] = "@(#)bt_recno.c	10.22 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -75,7 +75,7 @@ __ram_open(dbp, type, dbinfo)
 	ret = 0;
 
 	/* Allocate and initialize the private RECNO structure. */
-	if ((rp = (RECNO *)calloc(1, sizeof(*rp))) == NULL)
+	if ((rp = (RECNO *)__db_calloc(1, sizeof(*rp))) == NULL)
 		return (ENOMEM);
 
 	if (dbinfo != NULL) {
@@ -140,7 +140,7 @@ __ram_open(dbp, type, dbinfo)
 
 err:	/* If we mmap'd a source file, discard it. */
 	if (rp->re_smap != NULL)
-		(void)__db_munmap(rp->re_smap, rp->re_msize);
+		(void)__db_unmap(rp->re_smap, rp->re_msize);
 
 	/* If we opened a source file, discard it. */
 	if (rp->re_fd != -1)
@@ -151,7 +151,7 @@ err:	/* If we mmap'd a source file, discard it. */
 	/* If we allocated room for key/data return, discard it. */
 	t = dbp->internal;
 	if (t != NULL && t->bt_rkey.data != NULL)
-		free(t->bt_rkey.data);
+		__db_free(t->bt_rkey.data);
 
 	FREE(rp, sizeof(*rp));
 
@@ -175,10 +175,10 @@ __ram_cursor(dbp, txn, dbcp)
 
 	DEBUG_LWRITE(dbp, txn, "ram_cursor", NULL, NULL, 0);
 
-	if ((dbc = (DBC *)calloc(1, sizeof(DBC))) == NULL)
+	if ((dbc = (DBC *)__db_calloc(1, sizeof(DBC))) == NULL)
 		return (ENOMEM);
-	if ((cp = (RCURSOR *)calloc(1, sizeof(RCURSOR))) == NULL) {
-		free(dbc);
+	if ((cp = (RCURSOR *)__db_calloc(1, sizeof(RCURSOR))) == NULL) {
+		__db_free(dbc);
 		return (ENOMEM);
 	}
 
@@ -359,7 +359,7 @@ __ram_close(argdbp)
 
 	/* Close any underlying mmap region. */
 	if (rp->re_smap != NULL)
-		(void)__db_munmap(rp->re_smap, rp->re_msize);
+		(void)__db_unmap(rp->re_smap, rp->re_msize);
 
 	/* Close any backing source file descriptor. */
 	if (rp->re_fd != -1)
@@ -814,8 +814,8 @@ __ram_update(dbp, recno, can_create)
 	if (F_ISSET(dbp, DB_RE_FIXEDLEN)) {
 		if (t->bt_rdata.ulen < rp->re_len) {
 			t->bt_rdata.data = t->bt_rdata.data == NULL ?
-			    (void *)malloc(rp->re_len) :
-			    (void *)realloc(t->bt_rdata.data, rp->re_len);
+			    (void *)__db_malloc(rp->re_len) :
+			    (void *)__db_realloc(t->bt_rdata.data, rp->re_len);
 			if (t->bt_rdata.data == NULL) {
 				t->bt_rdata.ulen = 0;
 				return (ENOMEM);
@@ -853,7 +853,7 @@ __ram_source(dbp, rp, fname)
 
 	oflags = F_ISSET(dbp, DB_AM_RDONLY) ? DB_RDONLY : 0;
 	if ((ret =
-	    __db_fdopen(rp->re_source, oflags, oflags, 0, &rp->re_fd)) != 0) {
+	    __db_open(rp->re_source, oflags, oflags, 0, &rp->re_fd)) != 0) {
 		__db_err(dbp->dbenv, "%s: %s", rp->re_source, strerror(ret));
 		goto err;
 	}
@@ -866,15 +866,16 @@ __ram_source(dbp, rp, fname)
 	 * compiler will perpetrate, doing the comparison in a portable way is
 	 * flatly impossible.  Hope that mmap fails if the file is too large.
 	 */
-	if ((ret =
-	    __db_stat(dbp->dbenv, rp->re_source, rp->re_fd, &size, NULL)) != 0)
+	if ((ret = __db_ioinfo(rp->re_source, rp->re_fd, &size, NULL)) != 0) {
+		__db_err(dbp->dbenv, "%s: %s", rp->re_source, strerror(ret));
 		goto err;
+	}
 	if (size == 0) {
 		F_SET(rp, RECNO_EOF);
 		return (0);
 	}
 
-	if ((ret = __db_mmap(rp->re_fd, (size_t)size, 1, 1, &rp->re_smap)) != 0)
+	if ((ret = __db_map(rp->re_fd, (size_t)size, 1, 1, &rp->re_smap)) != 0)
 		goto err;
 	rp->re_cmap = rp->re_smap;
 	rp->re_emap = (u_int8_t *)rp->re_smap + (rp->re_msize = size);
@@ -940,7 +941,7 @@ __ram_writeback(dbp)
 	 * open will fail.
 	 */
 	if (rp->re_smap != NULL) {
-		(void)__db_munmap(rp->re_smap, rp->re_msize);
+		(void)__db_unmap(rp->re_smap, rp->re_msize);
 		rp->re_smap = NULL;
 	}
 
@@ -951,7 +952,7 @@ __ram_writeback(dbp)
 	}
 
 	/* Open the file, truncating it. */
-	if ((ret = __db_fdopen(rp->re_source,
+	if ((ret = __db_open(rp->re_source,
 	    DB_SEQUENTIAL | DB_TRUNCATE,
 	    DB_SEQUENTIAL | DB_TRUNCATE, 0, &fd)) != 0) {
 		__db_err(dbp->dbenv, "%s: %s", rp->re_source, strerror(ret));
@@ -974,7 +975,7 @@ __ram_writeback(dbp)
 	 */
 	delim = rp->re_delim;
 	if (F_ISSET(dbp, DB_RE_FIXEDLEN)) {
-		if ((pad = malloc(rp->re_len)) == NULL) {
+		if ((pad = (u_int8_t *)__db_malloc(rp->re_len)) == NULL) {
 			ret = ENOMEM;
 			goto err;
 		}
@@ -1051,8 +1052,8 @@ __ram_fmap(dbp, top)
 	rp = t->bt_recno;
 	if (t->bt_rdata.ulen < rp->re_len) {
 		t->bt_rdata.data = t->bt_rdata.data == NULL ?
-		    (void *)malloc(rp->re_len) :
-		    (void *)realloc(t->bt_rdata.data, rp->re_len);
+		    (void *)__db_malloc(rp->re_len) :
+		    (void *)__db_realloc(t->bt_rdata.data, rp->re_len);
 		if (t->bt_rdata.data == NULL) {
 			t->bt_rdata.ulen = 0;
 			return (ENOMEM);

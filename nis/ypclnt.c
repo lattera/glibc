@@ -17,16 +17,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <bits/libc-lock.h>
-#include <rpc/auth.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 #include <rpcsvc/ypupd.h>
+#include <bits/libc-lock.h>
 
 struct dom_binding
   {
@@ -39,7 +38,8 @@ struct dom_binding
   };
 typedef struct dom_binding dom_binding;
 
-static struct timeval TIMEOUT = {25, 0};
+static struct timeval RPCTIMEOUT = {25, 0};
+static struct timeval UDPTIMEOUT = {5, 0};
 static int const MAXTRIES = 5;
 static char __ypdomainname[NIS_MAXNAMELEN + 1] = "\0";
 __libc_lock_define_initialized (static, ypbindlist_lock)
@@ -47,28 +47,28 @@ static dom_binding *__ypbindlist = NULL;
 
 
 static int
-__yp_bind (const char *domain, dom_binding ** ypdb)
+__yp_bind (const char *domain, dom_binding **ypdb)
 {
   struct sockaddr_in clnt_saddr;
   struct ypbind_resp ypbr;
-  dom_binding *ysd;
+  dom_binding *ysd = NULL;
   int clnt_sock;
   CLIENT *client;
   int is_new = 0;
   int try;
 
-  if (ypdb != NULL)
-    *ypdb = NULL;
-
   if ((domain == NULL) || (strlen (domain) == 0))
     return YPERR_BADARGS;
 
-  ysd = __ypbindlist;
-  while (ysd != NULL)
+  if (ypdb != NULL)
     {
-      if (strcmp (domain, ysd->dom_domain) == 0)
-        break;
-      ysd = ysd->dom_pnext;
+      ysd = *ypdb;
+      while (ysd != NULL)
+	{
+	  if (strcmp (domain, ysd->dom_domain) == 0)
+	    break;
+	  ysd = ysd->dom_pnext;
+	}
     }
 
   if (ysd == NULL)
@@ -128,7 +128,7 @@ __yp_bind (const char *domain, dom_binding ** ypdb)
           if (clnt_call (client, YPBINDPROC_DOMAIN,
                          (xdrproc_t) xdr_domainname, (caddr_t) &domain,
                          (xdrproc_t) xdr_ypbind_resp,
-                         (caddr_t) &ypbr, TIMEOUT) != RPC_SUCCESS)
+                         (caddr_t) &ypbr, RPCTIMEOUT) != RPC_SUCCESS)
             {
               clnt_destroy (client);
 	      close (clnt_sock);
@@ -142,28 +142,12 @@ __yp_bind (const char *domain, dom_binding ** ypdb)
 
           if (ypbr.ypbind_status != YPBIND_SUCC_VAL)
             {
-              switch (ypbr.ypbind_resp_u.ypbind_error)
-                {
-                case YPBIND_ERR_ERR:
-                  fputs (_("YPBINDPROC_DOMAIN: Internal error\n"), stderr);
-                  break;
-                case YPBIND_ERR_NOSERV:
-                  fprintf (stderr,
-                           _("YPBINDPROC_DOMAIN: No server for domain %s\n"),
-                           domain);
-                  break;
-                case YPBIND_ERR_RESC:
-                  fputs (_("YPBINDPROC_DOMAIN: Resource allocation failure\n"),
-                         stderr);
-                  break;
-                default:
-                  fputs (_("YPBINDPROC_DOMAIN: Unknown error\n"), stderr);
-                  break;
-                }
-              if (is_new)
-                free (ysd);
-              return YPERR_DOMAIN;
-            }
+	      fprintf (stderr, _("YPBINDPROC_DOMAIN: %s\n"),
+		       ypbinderr_string (ypbr.ypbind_resp_u.ypbind_error));
+	      if (is_new)
+		free (ysd);
+	      return YPERR_DOMAIN;
+	    }
           memset (&ysd->dom_server_addr, '\0', sizeof ysd->dom_server_addr);
           ysd->dom_server_addr.sin_family = AF_INET;
           memcpy (&ysd->dom_server_addr.sin_port,
@@ -184,7 +168,7 @@ __yp_bind (const char *domain, dom_binding ** ypdb)
 	}
       ysd->dom_socket = RPC_ANYSOCK;
       ysd->dom_client = clntudp_create (&ysd->dom_server_addr, YPPROG, YPVERS,
-                                        TIMEOUT, &ysd->dom_socket);
+                                        UDPTIMEOUT, &ysd->dom_socket);
       if (ysd->dom_client == NULL)
         ysd->dom_vers = -1;
 
@@ -195,14 +179,11 @@ __yp_bind (const char *domain, dom_binding ** ypdb)
   if (fcntl (ysd->dom_socket, F_SETFD, 1) == -1)
     perror (_("fcntl: F_SETFD"));
 
-  if (is_new)
+  if (is_new && ypdb != NULL)
     {
-      ysd->dom_pnext = __ypbindlist;
-      __ypbindlist = ysd;
+      ysd->dom_pnext = *ypdb;
+      *ypdb = ysd;
     }
-
-  if (NULL != ypdb)
-    *ypdb = ysd;
 
   return YPERR_SUCCESS;
 }
@@ -220,35 +201,66 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	   caddr_t req, xdrproc_t xres, caddr_t resp)
 {
   dom_binding *ydb = NULL;
+  bool_t use_ypbindlist = FALSE;
   int try, result;
 
   try = 0;
   result = YPERR_YPERR;
 
+  __libc_lock_lock (ypbindlist_lock);
+  if (__ypbindlist != NULL)
+    {
+      ydb = __ypbindlist;
+      while (ydb != NULL)
+        {
+          if (strcmp (domain, ydb->dom_domain) == 0)
+            break;
+          ydb = ydb->dom_pnext;
+        }
+      if (ydb != NULL)
+	use_ypbindlist = TRUE;
+      else
+	__libc_lock_unlock (ypbindlist_lock);
+    }
+  else
+    __libc_lock_unlock (ypbindlist_lock);
+
   while (try < MAXTRIES && result != RPC_SUCCESS)
     {
-      __libc_lock_lock (ypbindlist_lock);
-
       if (__yp_bind (domain, &ydb) != 0)
 	{
-	  __libc_lock_unlock (ypbindlist_lock);
+	  if (use_ypbindlist)
+	    __libc_lock_unlock (ypbindlist_lock);
 	  return YPERR_DOMAIN;
 	}
 
       result = clnt_call (ydb->dom_client, prog,
-			  xargs, req, xres, resp, TIMEOUT);
+			  xargs, req, xres, resp, RPCTIMEOUT);
 
       if (result != RPC_SUCCESS)
 	{
 	  clnt_perror (ydb->dom_client, "do_ypcall: clnt_call");
 	  ydb->dom_vers = -1;
-	  __yp_unbind (ydb);
+	  if (!use_ypbindlist)
+	    {
+	      __yp_unbind (ydb);
+	      free (ydb);
+	      ydb = NULL;
+	    }
 	  result = YPERR_RPC;
 	}
-
-      __libc_lock_unlock (ypbindlist_lock);
-
       try++;
+    }
+  if (use_ypbindlist)
+    {
+      __libc_lock_unlock (ypbindlist_lock);
+      use_ypbindlist = FALSE;
+    }
+  else
+    {
+      __yp_unbind (ydb);
+      free (ydb);
+      ydb = NULL;
     }
 
   return result;
@@ -261,7 +273,7 @@ yp_bind (const char *indomain)
 
   __libc_lock_lock (ypbindlist_lock);
 
-  status = __yp_bind (indomain, NULL);
+  status = __yp_bind (indomain, &__ypbindlist);
 
   __libc_lock_unlock (ypbindlist_lock);
 
@@ -597,7 +609,7 @@ yp_all (const char *indomain, const char *inmap,
 	const struct ypall_callback *incallback)
 {
   struct ypreq_nokey req;
-  dom_binding *ydb;
+  dom_binding *ydb = NULL;
   int try, result;
   struct sockaddr_in clnt_sin;
   CLIENT *clnt;
@@ -613,11 +625,8 @@ yp_all (const char *indomain, const char *inmap,
 
   while (try < MAXTRIES && result != RPC_SUCCESS)
     {
-      __libc_lock_lock (ypbindlist_lock);
-
       if (__yp_bind (indomain, &ydb) != 0)
 	{
-	  __libc_lock_unlock (ypbindlist_lock);
 	  return YPERR_DOMAIN;
 	}
 
@@ -629,7 +638,6 @@ yp_all (const char *indomain, const char *inmap,
       if (clnt == NULL)
 	{
 	  puts (_("yp_all: clnttcp_create failed"));
-	  __libc_lock_unlock (ypbindlist_lock);
 	  return YPERR_PMAP;
 	}
       req.domain = (char *) indomain;
@@ -640,7 +648,7 @@ yp_all (const char *indomain, const char *inmap,
 
       result = clnt_call (clnt, YPPROC_ALL, (xdrproc_t) xdr_ypreq_nokey,
 			  (caddr_t) &req, (xdrproc_t) __xdr_ypresp_all,
-			  (caddr_t) &status, TIMEOUT);
+			  (caddr_t) &status, RPCTIMEOUT);
 
       clnt_destroy (clnt);
       close (clnt_sock);
@@ -648,12 +656,11 @@ yp_all (const char *indomain, const char *inmap,
 	{
 	  clnt_perror (ydb->dom_client, "yp_all: clnt_call");
 	  __yp_unbind (ydb);
+	  free (ydb);
 	  result = YPERR_RPC;
 	}
       else
 	result = YPERR_SUCCESS;
-
-      __libc_lock_unlock (ypbindlist_lock);
 
       if (status != YP_NOMORE)
 	return ypprot_err (status);
@@ -854,7 +861,7 @@ yp_update (char *domain, char *map, unsigned ypop,
 
 again:
   r = clnt_call (clnt, ypop, xdr_argument, (caddr_t) &args,
-		 (xdrproc_t) xdr_u_int, (caddr_t) &res, TIMEOUT);
+		 (xdrproc_t) xdr_u_int, (caddr_t) &res, RPCTIMEOUT);
 
   if (r == RPC_AUTHERROR)
     {

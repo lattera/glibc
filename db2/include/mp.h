@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)mp.h	10.16 (Sleepycat) 9/23/97
+ *	@(#)mp.h	10.19 (Sleepycat) 10/25/97
  */
 
 struct __bh;		typedef struct __bh BH;
@@ -22,30 +22,36 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 #define	DB_CACHESIZE_DEF	(128 * 1024)
 #define	DB_CACHESIZE_MIN	( 20 * 1024)
 
-/* Macro to return per-process address, offsets. */
-#define	ADDR(base, offset)	((void *)((u_int8_t *)((base)->addr) + offset))
-#define	OFFSET(base, p)		((u_int8_t *)(p) - (u_int8_t *)(base)->addr)
-
 #define	INVALID		0		/* Invalid shared memory offset. */
 #define	TEMPORARY	"<tmp>"		/* Temporary file name. */
 
 /*
- * There are two kinds of locks in the mpool code.  The first is the region
- * lock, used to serialize modifications to all data structures.  The second
- * is a per-buffer header lock.  The locking order is as follows:
+ * There are three ways we do locking in the mpool code:
  *
- * Process searching for a buffer:
+ * Locking a handle mutex to provide concurrency for DB_THREAD operations.
+ * Locking the region mutex to provide mutual exclusion while reading and
+ *    writing structures in the shared region.
+ * Locking buffer header mutexes during I/O.
+ *
+ * The first will not be further described here.  We use the shared mpool
+ * region lock to provide mutual exclusion while reading/modifying all of
+ * the data structures, including the buffer headers.  We use a per-buffer
+ * header lock to wait on buffer I/O.  The order of locking is as follows:
+ *
+ * Searching for a buffer:
  *	Acquire the region lock.
  *	Find the buffer header.
  *	Increment the reference count (guarantee the buffer stays).
- *	If the BH_LOCKED flag is set:
+ *	If the BH_LOCKED flag is set (I/O is going on):
  *		Release the region lock.
+ *		Request the buffer lock.
+ *		The I/O will complete...
  *		Acquire the buffer lock.
  *		Release the buffer lock.
  *		Acquire the region lock.
  *	Return the buffer.
  *
- * Process reading/writing a buffer:
+ * Reading/writing a buffer:
  *	Acquire the region lock.
  *	Find/create the buffer header.
  *	If reading, increment the reference count (guarantee the buffer stays).
@@ -69,8 +75,7 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 
 #define	LOCKHANDLE(dbmp, mutexp)					\
 	if (F_ISSET(dbmp, MP_LOCKHANDLE))				\
-		(void)__db_mutex_lock(mutexp, (dbmp)->fd,		\
-		(dbmp)->dbenv == NULL ? NULL : (dbmp)->dbenv->db_yield)
+		(void)__db_mutex_lock(mutexp, (dbmp)->fd)
 #define	UNLOCKHANDLE(dbmp, mutexp)					\
 	if (F_ISSET(dbmp, MP_LOCKHANDLE))				\
 		(void)__db_mutex_unlock(mutexp, (dbmp)->fd)
@@ -78,8 +83,7 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 #define	LOCKREGION(dbmp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
 		(void)__db_mutex_lock(&((RLAYOUT *)(dbmp)->mp)->lock,	\
-		    (dbmp)->fd,						\
-		    (dbmp)->dbenv == NULL ? NULL : (dbmp)->dbenv->db_yield)
+		    (dbmp)->fd)
 #define	UNLOCKREGION(dbmp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
 		(void)__db_mutex_unlock(&((RLAYOUT *)(dbmp)->mp)->lock,	\
@@ -87,8 +91,7 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 
 #define	LOCKBUFFER(dbmp, bhp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
-		(void)__db_mutex_lock(&(bhp)->mutex, (dbmp)->fd,	\
-		    (dbmp)->dbenv == NULL ? NULL : (dbmp)->dbenv->db_yield)
+		(void)__db_mutex_lock(&(bhp)->mutex, (dbmp)->fd)
 #define	UNLOCKBUFFER(dbmp, bhp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
 		(void)__db_mutex_unlock(&(bhp)->mutex, (dbmp)->fd)
@@ -250,8 +253,8 @@ struct __bh {
 #define	BH_WRITE	0x020		/* Page scheduled for writing. */
 	u_int16_t  flags;
 
-	SH_TAILQ_ENTRY	q;		/* LRU list of bucket headers. */
-	SH_TAILQ_ENTRY	mq;		/* MPOOLFILE list of bucket headers. */
+	SH_TAILQ_ENTRY	q;		/* LRU queue. */
+	SH_TAILQ_ENTRY	hq;		/* MPOOL hash bucket queue. */
 
 	db_pgno_t pgno;			/* Underlying MPOOLFILE page number. */
 	size_t	  mf_offset;		/* Associated MPOOLFILE offset. */

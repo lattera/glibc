@@ -36,7 +36,7 @@ static char sccsid[] = "@(#)fts.c	8.2 (Berkeley) 1/2/94";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
-#include <sys/stat.h>
+#include <include/sys/stat.h>
 #include <fcntl.h>
 #include <dirent.h>
 #include <errno.h>

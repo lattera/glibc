@@ -25,6 +25,9 @@
 #define _INTTYPES_H	1
 #include <features.h>
 
+#define __need_wchar_t
+#include <stddef.h>
+
 /* Exact integral types.  */
 
 /* Signed.  */
@@ -342,6 +345,31 @@ typedef unsigned long int uint_fast64_t;
 #define SCNxPTR		"lx"
 
 
+/* Limits of other integer types.  */
+
+/* Limits of `ptrdiff_t' type.  */
+#define PTRDIFF_MIN	(-9223372036854775807L-1)
+#define PTRDIFF_MAX	(9223372036854775807L)
+
+/* Limits of `sig_atomic_t'.  */
+#define SIG_ATOMIC_MIN	(-2147483647-1)
+#define SIG_ATOMIC_MAX	(-2147483647-1)
+
+/* Limit of `size_t' type.  */
+#define SIZE_MAX	(18446744073709551615uL)
+
+/* Limits of `wchar_t'.  */
+#ifndef WCHAR_MIN
+/* These constants might also be defined in <wchar.h>.  */
+# define WCHAR_MIN	(-2147483647-1)
+# define WCHAR_MAX	(2147483647)
+#endif
+
+/* Limits of `wint_t'.  */
+#define WINT_MIN	(0)
+#define WINT_MAX	(4294967295U)
+
+
 /* Macros for string conversion.  */
 
 /* Like `strtol' but convert to `intmax_t'.  */
@@ -366,6 +394,32 @@ extern unsigned long int __strtoul_internal __P ((__const char *
 						  char **__restrict __endptr,
 						  int __base, int __group));
 # define __strtoul_internal_defined	1
+#endif
+
+
+/* Like `wcstol' but convert to `intmax_t'.  */
+#define wcstoimax(nptr, endptr, base) \
+    __wcstol_internal (nptr, endptr, base, 0)
+
+#ifndef __wcstol_internal_defined
+extern long int __wcstol_internal __P ((__const wchar_t *__restrict __nptr,
+					wchar_t **__restrict __endptr,
+					int __base, int __group));
+# define __wcstol_internal_defined	1
+#endif
+
+
+/* Like `wcstoul' but convert to `uintmax_t'.  */
+#define wcstoumax(nptr, endptr, base) \
+    __wcstoul_internal (nptr, endptr, base, 0)
+
+#ifndef __wcstoul_internal_defined
+extern unsigned long int __wcstoul_internal __P ((__const wchar_t *
+						  __restrict __nptr,
+						  wchar_t **
+						  __restrict __endptr,
+						  int __base, int __group));
+# define __wcstoul_internal_defined	1
 #endif
 
 #endif /* inttypes.h */

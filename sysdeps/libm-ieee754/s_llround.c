@@ -48,17 +48,20 @@ __llround (double x)
 	  result = i0 >> (20 - j0);
 	}
     }
-  else if (j0 < (int32_t) (8 * sizeof (long long int)))
+  else if (j0 < (int32_t) (8 * sizeof (long long int)) - 1)
     {
       if (j0 >= 52)
-	result = ((long long int) i0 << (j0 - 20)) | (i1 << (j0 - 52));
+	result = (((long long int) i0 << 32) | i1) << (j0 - 52);
       else
 	{
 	  u_int32_t j = i1 + (0x80000000 >> (j0 - 20));
 	  if (j < i1)
 	    ++i0;
 
-	  result = ((long long int) i0 << (j0 - 20)) | (j >> (52 - j0));
+	  if (j0 == 20)
+	    result = (long long int) i0;
+	  else
+	    result = ((long long int) i0 << (j0 - 20)) | (j >> (52 - j0));
 	}
     }
   else

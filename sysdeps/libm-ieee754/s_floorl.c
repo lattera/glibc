@@ -53,7 +53,7 @@ static long double huge = 1.0e4930;
 		if(huge+x>0.0) {/* return 0*sign(x) if |x|<1 */
 		    if(sx==0) {se=0;i0=i1=0;}
 		    else if(((se&0x7fff)|i0|i1)!=0)
-			{ se=0xbfff;i0;i1=0;}
+			{ se=0xbfff;i0=i1=0;}
 		}
 	    } else {
 		i = (0x7fffffff)>>j0;
@@ -62,6 +62,7 @@ static long double huge = 1.0e4930;
 		    if(sx) {
 			if (j0>0) i0 += (0x80000000)>>j0;
 			else ++se;
+		    }
 		    i0 &= (~i); i1=0;
 		}
 	    }

@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db.h.src	10.77 (Sleepycat) 9/24/97
+ *	@(#)db.h.src	10.91 (Sleepycat) 11/3/97
  */
 
 #ifndef _DB_H_
@@ -28,9 +28,15 @@
  * XXX
  * Handle function prototypes and the keyword "const".  This steps on name
  * space that DB doesn't control, but all of the other solutions are worse.
+ *
+ * XXX
+ * While Microsoft's compiler is ANSI C compliant, it doesn't have _STDC_
+ * defined by default, you specify a command line flag or #pragma to turn
+ * it on.  Don't do that, however, because some of Microsoft's own header
+ * files won't compile.
  */
 #undef	__P
-#if defined(__STDC__) || defined(__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus) || defined(_MSC_VER)
 #define	__P(protos)	protos		/* ANSI C prototypes */
 #else
 #define	const
@@ -67,8 +73,8 @@
 
 #define	DB_VERSION_MAJOR	2
 #define	DB_VERSION_MINOR	3
-#define	DB_VERSION_PATCH	10
-#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.10: (9/24/97)"
+#define	DB_VERSION_PATCH	12
+#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.12: (11/3/97)"
 
 typedef	u_int32_t	db_pgno_t;	/* Page number type. */
 typedef	u_int16_t	db_indx_t;	/* Page offset type. */
@@ -93,6 +99,7 @@ struct __db_lockregion;	typedef struct __db_lockregion DB_LOCKREGION;
 struct __db_lockreq;	typedef struct __db_lockreq DB_LOCKREQ;
 struct __db_locktab;	typedef struct __db_locktab DB_LOCKTAB;
 struct __db_log;	typedef struct __db_log DB_LOG;
+struct __db_log_stat;	typedef struct __db_log_stat DB_LOG_STAT;
 struct __db_lsn;	typedef struct __db_lsn DB_LSN;
 struct __db_mpool;	typedef struct __db_mpool DB_MPOOL;
 struct __db_mpool_fstat;typedef struct __db_mpool_fstat DB_MPOOL_FSTAT;
@@ -122,6 +129,31 @@ struct __db_dbt {
 };
 
 /*
+ * DB configuration.  There are a set of functions which the application
+ * can replace with its own versions.
+ */
+#define	DB_FUNC_CALLOC	 1		/* ANSI C calloc. */
+#define	DB_FUNC_CLOSE	 2		/* POSIX 1003.1 close. */
+#define	DB_FUNC_DIRFREE	 3		/* DB: free directory list. */
+#define	DB_FUNC_DIRLIST	 4		/* DB: create directory list. */
+#define	DB_FUNC_EXISTS	 5		/* DB: return if file exists. */
+#define	DB_FUNC_FREE	 6		/* ANSI C free. */
+#define	DB_FUNC_FSYNC	 7		/* POSIX 1003.1 fsync. */
+#define	DB_FUNC_IOINFO	 8		/* DB: return file I/O information. */
+#define	DB_FUNC_MALLOC	 9		/* ANSI C malloc. */
+#define	DB_FUNC_MAP	10		/* DB: map file into shared memory. */
+#define	DB_FUNC_OPEN	11		/* POSIX 1003.1 open. */
+#define	DB_FUNC_READ	12		/* POSIX 1003.1 read. */
+#define	DB_FUNC_REALLOC	13		/* ANSI C realloc. */
+#define	DB_FUNC_SEEK	14		/* POSIX 1003.1 lseek. */
+#define	DB_FUNC_SLEEP	15		/* DB: sleep secs/usecs. */
+#define	DB_FUNC_STRDUP	16		/* ANSI C strdup. */
+#define	DB_FUNC_UNLINK	17		/* POSIX 1003.1 unlink. */
+#define	DB_FUNC_UNMAP	18		/* DB: unmap shared memory file. */
+#define	DB_FUNC_WRITE	19		/* POSIX 1003.1 write. */
+#define	DB_FUNC_YIELD	20		/* DB: yield thread to scheduler. */
+
+/*
  * Database configuration and initialization.
  */
  /*
@@ -134,21 +166,20 @@ struct __db_dbt {
 /*
  * Flags understood by db_appinit(3).
  *
- * DB_APP_INIT and DB_MUTEXDEBUG are internal only, and not documented.
+ * DB_MUTEXDEBUG is internal only, and not documented.
  */
 /*				0x00007	   COMMON MASK. */
-#define	DB_APP_INIT		0x00008	/* Appinit called, paths initialized. */
-#define	DB_INIT_LOCK		0x00010	/* Initialize locking. */
-#define	DB_INIT_LOG		0x00020	/* Initialize logging. */
-#define	DB_INIT_MPOOL		0x00040	/* Initialize mpool. */
-#define	DB_INIT_TXN		0x00080	/* Initialize transactions. */
-#define	DB_MPOOL_PRIVATE	0x00100	/* Mpool: private memory pool. */
-#define	DB_MUTEXDEBUG		0x00200	/* Do not get/set mutexes in regions. */
-#define	DB_RECOVER		0x00400	/* Run normal recovery. */
-#define	DB_RECOVER_FATAL	0x00800 /* Run catastrophic recovery. */
-#define	DB_TXN_NOSYNC		0x01000	/* Do not sync log on commit. */
-#define	DB_USE_ENVIRON		0x02000	/* Use the environment. */
-#define	DB_USE_ENVIRON_ROOT	0x04000	/* Use the environment if root. */
+#define	DB_INIT_LOCK		0x00008	/* Initialize locking. */
+#define	DB_INIT_LOG		0x00010	/* Initialize logging. */
+#define	DB_INIT_MPOOL		0x00020	/* Initialize mpool. */
+#define	DB_INIT_TXN		0x00040	/* Initialize transactions. */
+#define	DB_MPOOL_PRIVATE	0x00080	/* Mpool: private memory pool. */
+#define	DB_MUTEXDEBUG		0x00100	/* Do not get/set mutexes in regions. */
+#define	DB_RECOVER		0x00200	/* Run normal recovery. */
+#define	DB_RECOVER_FATAL	0x00400 /* Run catastrophic recovery. */
+#define	DB_TXN_NOSYNC		0x00800	/* Do not sync log on commit. */
+#define	DB_USE_ENVIRON		0x01000	/* Use the environment. */
+#define	DB_USE_ENVIRON_ROOT	0x02000	/* Use the environment if root. */
 
 /* CURRENTLY UNUSED LOCK FLAGS. */
 #define	DB_TXN_LOCK_2PL		0x00000	/* Two-phase locking. */
@@ -209,7 +240,6 @@ struct __db_env {
 	int		 lk_modes;	/* Number of lock modes in table. */
 	unsigned int	 lk_max;	/* Maximum number of locks. */
 	u_int32_t	 lk_detect;	/* Deadlock detect on every conflict. */
-	int (*db_yield) __P((void));	/* Yield function for threads. */
 
 	/* Logging. */
 	DB_LOG		*lg_info;	/* Return from log_open(). */
@@ -226,6 +256,9 @@ struct __db_env {
 	int (*tx_recover)		/* Dispatch function for recovery. */
 	    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 
+#define	DB_ENV_APPINIT		0x01	/* Paths initialized by db_appinit(). */
+#define	DB_ENV_STANDALONE	0x02	/* Test: freestanding environment. */
+#define	DB_ENV_THREAD		0x04	/* DB_ENV is multi-threaded. */
 	u_int32_t	 flags;		/* Flags. */
 };
 
@@ -301,7 +334,7 @@ struct __db_info {
 #define	DB_CURRENT	0x000010	/* c_get(), c_put(), log_get() */
 #define	DB_FIRST	0x000020	/* c_get(), log_get() */
 #define	DB_FLUSH	0x000040	/* log_put() */
-#define	DB_GET_RECNO	0x000080	/* c_get() */
+#define	DB_GET_RECNO	0x000080	/* get(), c_get() */
 #define	DB_KEYFIRST	0x000100	/* c_put() */
 #define	DB_KEYLAST	0x000200	/* c_put() */
 #define	DB_LAST		0x000400	/* c_get(), log_get() */
@@ -312,7 +345,7 @@ struct __db_info {
 #define	DB_RECORDCOUNT	0x008000	/* stat() */
 #define	DB_SET		0x010000	/* c_get(), log_get() */
 #define	DB_SET_RANGE	0x020000	/* c_get() */
-#define	DB_SET_RECNO	0x040000	/* get(), c_get() */
+#define	DB_SET_RECNO	0x040000	/* c_get() */
 
 /* DB (user visible) error return codes. */
 #define	DB_INCOMPLETE		( -1)	/* Sync didn't finish. */
@@ -472,6 +505,8 @@ struct __db_bt_stat {
 	u_int32_t bt_get;		/* Items retrieved. */
 	u_int32_t bt_cache_hit;		/* Hits in fast-insert code. */
 	u_int32_t bt_cache_miss;	/* Misses in fast-insert code. */
+	u_int32_t bt_magic;		/* Magic number. */
+	u_int32_t bt_version;		/* Version number. */
 };
 
 #if defined(__cplusplus)
@@ -479,6 +514,7 @@ extern "C" {
 #endif
 int   db_appinit __P((const char *, char * const *, DB_ENV *, int));
 int   db_appexit __P((DB_ENV *));
+int   db_jump_set __P((void *, int));
 int   db_open __P((const char *, DBTYPE, int, int, DB_ENV *, DB_INFO *, DB **));
 char *db_version __P((int *, int *, int *));
 #if defined(__cplusplus)
@@ -576,6 +612,22 @@ struct __db_lsn {
 	u_int32_t	offset;		/* File offset. */
 };
 
+/* Log statistics structure. */
+struct __db_log_stat {
+	u_int32_t st_magic;		/* Log file magic number. */
+	u_int32_t st_version;		/* Log file version number. */
+	int st_mode;			/* Log file mode. */
+	u_int32_t st_lg_max;		/* Maximum log file size. */
+	u_int32_t st_w_bytes;		/* Bytes to log. */
+	u_int32_t st_w_mbytes;		/* Megabytes to log. */
+	u_int32_t st_wc_bytes;		/* Bytes to log since checkpoint. */
+	u_int32_t st_wc_mbytes;		/* Megabytes to log since checkpoint. */
+	u_int32_t st_wcount;		/* Total syncs to the log. */
+	u_int32_t st_scount;		/* Total writes to the log. */
+	u_int32_t st_region_wait;	/* Region lock granted after wait. */
+	u_int32_t st_region_nowait;	/* Region lock granted without wait. */
+};
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -588,6 +640,7 @@ int	 log_get __P((DB_LOG *, DB_LSN *, DBT *, int));
 int	 log_open __P((const char *, int, int, DB_ENV *, DB_LOG **));
 int	 log_put __P((DB_LOG *, DB_LSN *, const DBT *, int));
 int	 log_register __P((DB_LOG *, DB *, const char *, DBTYPE, u_int32_t *));
+int	 log_stat __P((DB_LOG *, DB_LOG_STAT **, void *(*)(size_t)));
 int	 log_unlink __P((const char *, int, DB_ENV *));
 int	 log_unregister __P((DB_LOG *, u_int32_t));
 #if defined(__cplusplus)
@@ -610,30 +663,35 @@ int	 log_unregister __P((DB_LOG *, u_int32_t));
 /* Mpool statistics structure. */
 struct __db_mpool_stat {
 	size_t st_cachesize;		/* Cache size. */
-	unsigned long st_cache_hit;	/* Pages found in the cache. */
-	unsigned long st_cache_miss;	/* Pages not found in the cache. */
-	unsigned long st_map;		/* Pages from mapped files. */
-	unsigned long st_page_create;	/* Pages created in the cache. */
-	unsigned long st_page_in;	/* Pages read in. */
-	unsigned long st_page_out;	/* Pages written out. */
-	unsigned long st_ro_evict;	/* Read-only pages evicted. */
-	unsigned long st_rw_evict;	/* Read-write pages evicted. */
-	unsigned long st_hash_buckets;	/* Number of hash buckets. */
-	unsigned long st_hash_searches;	/* Total hash chain searches. */
-	unsigned long st_hash_longest;	/* Longest hash chain searched. */
-	unsigned long st_hash_examined;	/* Total hash entries searched. */
+	u_int32_t st_cache_hit;		/* Pages found in the cache. */
+	u_int32_t st_cache_miss;	/* Pages not found in the cache. */
+	u_int32_t st_map;		/* Pages from mapped files. */
+	u_int32_t st_page_create;	/* Pages created in the cache. */
+	u_int32_t st_page_in;		/* Pages read in. */
+	u_int32_t st_page_out;		/* Pages written out. */
+	u_int32_t st_ro_evict;		/* Clean pages forced from the cache. */
+	u_int32_t st_rw_evict;		/* Dirty pages forced from the cache. */
+	u_int32_t st_hash_buckets;	/* Number of hash buckets. */
+	u_int32_t st_hash_searches;	/* Total hash chain searches. */
+	u_int32_t st_hash_longest;	/* Longest hash chain searched. */
+	u_int32_t st_hash_examined;	/* Total hash entries searched. */
+	u_int32_t st_page_clean;	/* Clean pages. */
+	u_int32_t st_page_dirty;	/* Dirty pages. */
+	u_int32_t st_page_trickle;	/* Pages written by memp_trickle. */
+	u_int32_t st_region_wait;	/* Region lock granted after wait. */
+	u_int32_t st_region_nowait;	/* Region lock granted without wait. */
 };
 
 /* Mpool file statistics structure. */
 struct __db_mpool_fstat {
 	char *file_name;		/* File name. */
 	size_t st_pagesize;		/* Page size. */
-	unsigned long st_cache_hit;	/* Pages found in the cache. */
-	unsigned long st_cache_miss;	/* Pages not found in the cache. */
-	unsigned long st_map;		/* Pages from mapped files. */
-	unsigned long st_page_create;	/* Pages created in the cache. */
-	unsigned long st_page_in;	/* Pages read in. */
-	unsigned long st_page_out;	/* Pages written out. */
+	u_int32_t st_cache_hit;		/* Pages found in the cache. */
+	u_int32_t st_cache_miss;	/* Pages not found in the cache. */
+	u_int32_t st_map;		/* Pages from mapped files. */
+	u_int32_t st_page_create;	/* Pages created in the cache. */
+	u_int32_t st_page_in;		/* Pages read in. */
+	u_int32_t st_page_out;		/* Pages written out. */
 };
 
 #if defined(__cplusplus)
@@ -654,6 +712,7 @@ int	memp_register __P((DB_MPOOL *, int,
 int	memp_stat __P((DB_MPOOL *,
 	    DB_MPOOL_STAT **, DB_MPOOL_FSTAT ***, void *(*)(size_t)));
 int	memp_sync __P((DB_MPOOL *, DB_LSN *));
+int	memp_trickle __P((DB_MPOOL *, int, int *));
 int	memp_unlink __P((const char *, int, DB_ENV *));
 #if defined(__cplusplus)
 };

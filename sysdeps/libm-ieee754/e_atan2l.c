@@ -71,10 +71,10 @@ pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 	int32_t k,m,hx,hy,ix,iy;
 	u_int32_t sx,sy,lx,ly;
 
-	EXTRACT_LDOUBLE_WORDS(sx,hx,lx,x);
+	GET_LDOUBLE_WORDS(sx,hx,lx,x);
 	ix = sx&0x7fff;
 	lx |= hx & 0x7fffffff;
-	EXTRACT_LDOUBLE_WORDS(sy,hy,ly,y);
+	GET_LDOUBLE_WORDS(sy,hy,ly,y);
 	iy = sy&0x7fff;
 	ly |= hy & 0x7fffffff;
 	if(((2*ix|((lx|-lx)>>31))>0xfffe)||

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_region.c	10.11 (Sleepycat) 8/2/97";
+static const char sccsid[] = "@(#)mp_region.c	10.16 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -51,7 +51,7 @@ __memp_ralloc(dbmp, len, offsetp, retp)
 	nomore = 0;
 alloc:	if ((ret = __db_shalloc(dbmp->addr, len, MUTEX_ALIGNMENT, &p)) == 0) {
 		if (offsetp != NULL)
-			*offsetp = OFFSET(dbmp, p);
+			*offsetp = R_OFFSET(dbmp, p);
 		*(void **)retp = p;
 		return (0);
 	}
@@ -68,7 +68,7 @@ alloc:	if ((ret = __db_shalloc(dbmp->addr, len, MUTEX_ALIGNMENT, &p)) == 0) {
 		if (__db_shsizeof(bhp) == len) {
 			SH_TAILQ_REMOVE(&mp->bhfq, bhp, q, __bh);
 			if (offsetp != NULL)
-				*offsetp = OFFSET(dbmp, bhp);
+				*offsetp = R_OFFSET(dbmp, bhp);
 			*(void **)retp = bhp;
 			return (0);
 		}
@@ -82,6 +82,7 @@ alloc:	if ((ret = __db_shalloc(dbmp->addr, len, MUTEX_ALIGNMENT, &p)) == 0) {
 
 		SH_TAILQ_REMOVE(&mp->bhfq, bhp, q, __bh);
 		__db_shalloc_free(dbmp->addr, bhp);
+		--mp->stat.st_page_clean;
 
 		/*
 		 * Retry as soon as we've freed up sufficient space.  If we
@@ -104,7 +105,7 @@ retry:	/* Find a buffer we can flush; pure LRU. */
 			continue;
 
 		/* Find the associated MPOOLFILE. */
-		mfp = ADDR(dbmp, bhp->mf_offset);
+		mfp = R_ADDR(dbmp, bhp->mf_offset);
 
 		/*
 		 * Write the page if it's dirty.
@@ -135,8 +136,7 @@ retry:	/* Find a buffer we can flush; pure LRU. */
 			else {
 				if (restart)
 					goto retry;
-				else
-					continue;
+				continue;
 			}
 		} else
 			++mp->stat.st_ro_evict;
@@ -150,7 +150,7 @@ retry:	/* Find a buffer we can flush; pure LRU. */
 			__memp_bhfree(dbmp, mfp, bhp, 0);
 
 			if (offsetp != NULL)
-				*offsetp = OFFSET(dbmp, bhp);
+				*offsetp = R_OFFSET(dbmp, bhp);
 			*(void **)retp = bhp;
 			return (0);
 		}
@@ -225,9 +225,13 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 		 * be possible for DB_THREAD to be set if HAVE_SPINLOCKS aren't
 		 * defined.
 		 */
-		if (F_ISSET(dbmp, MP_ISPRIVATE))
-			ret = (dbmp->maddr = malloc(rlen)) == NULL ? ENOMEM : 0;
-		else
+		if (F_ISSET(dbmp, MP_ISPRIVATE)) {
+			if ((dbmp->maddr = __db_malloc(rlen)) == NULL)
+				ret = ENOMEM;
+			else
+				ret = __db_rinit(dbmp->dbenv,
+				    dbmp->maddr, 0, rlen, 0);
+		} else
 			ret = __db_rcreate(dbmp->dbenv, DB_APP_NONE, path,
 			    DB_DEFAULT_MPOOL_FILE, mode, rlen, &fd,
 			    &dbmp->maddr);
@@ -259,7 +263,10 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 			    0, &dbmp->htab)) != 0)
 				goto err;
 			__db_hashinit(dbmp->htab, mp->htab_buckets);
-			mp->htab = OFFSET(dbmp, dbmp->htab);
+			mp->htab = R_OFFSET(dbmp, dbmp->htab);
+
+			ZERO_LSN(mp->lsn);
+			mp->lsn_cnt = 0;
 
 			memset(&mp->stat, 0, sizeof(mp->stat));
 			mp->stat.st_cachesize = cachesize;
@@ -303,7 +310,7 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 	 * Get the hash table address; it's on the shared page, so we have
 	 * to lock first.
 	 */
-	dbmp->htab = ADDR(dbmp, dbmp->mp->htab);
+	dbmp->htab = R_ADDR(dbmp, dbmp->mp->htab);
 
 	dbmp->fd = fd;
 
@@ -333,7 +340,7 @@ __memp_rclose(dbmp)
 	DB_MPOOL *dbmp;
 {
 	if (F_ISSET(dbmp, MP_ISPRIVATE)) {
-		free(dbmp->maddr);
+		__db_free(dbmp->maddr);
 		return (0);
 	}
 	return (__db_rclose(dbmp->dbenv, dbmp->fd, dbmp->maddr));

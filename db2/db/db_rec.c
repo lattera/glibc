@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_rec.c	10.8 (Sleepycat) 8/22/97";
+static const char sccsid[] = "@(#)db_rec.c	10.10 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -330,7 +330,7 @@ out:	REC_CLOSE;
 
 /*
  * __db_ovref_recover --
- *	Recovery function for __db_ioff().
+ *	Recovery function for __db_ovref().
  *
  * PUBLIC: int __db_ovref_recover __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
@@ -357,22 +357,21 @@ __db_ovref_recover(logp, dbtp, lsnp, redo, info)
 	}
 
 	modified = 0;
-	if (log_compare(lsnp, &argp->lsn) == 0 && redo) {
+	if (log_compare(&LSN(pagep), &argp->lsn) == 0 && redo) {
 		/* Need to redo update described. */
-		++OV_REF(pagep);
+		OV_REF(pagep) += argp->adjust;
 
 		pagep->lsn = *lsnp;
 		modified = 1;
 	} else if (log_compare(lsnp, &LSN(pagep)) == 0 && !redo) {
 		/* Need to undo update described. */
-		--OV_REF(pagep);
+		OV_REF(pagep) -= argp->adjust;
 
 		pagep->lsn = argp->lsn;
 		modified = 1;
 	}
-	ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0);
-
-	*lsnp = argp->prev_lsn;
+	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) == 0)
+		*lsnp = argp->prev_lsn;
 
 out:	REC_CLOSE;
 }
@@ -413,7 +412,7 @@ __db_relink_recover(logp, dbtp, lsnp, redo, info)
 		goto next;
 	}
 	modified = 0;
-	if (log_compare(lsnp, &argp->lsn) == 0 && redo) {
+	if (log_compare(&LSN(pagep), &argp->lsn) == 0 && redo) {
 		/* Redo the relink. */
 		pagep->lsn = *lsnp;
 		modified = 1;
@@ -438,7 +437,7 @@ next:	if ((ret = memp_fget(mpf, &argp->next, 0, &pagep)) != 0) {
 		goto prev;
 	}
 	modified = 0;
-	if (log_compare(lsnp, &argp->lsn_next) == 0 && redo) {
+	if (log_compare(&LSN(pagep), &argp->lsn_next) == 0 && redo) {
 		/* Redo the relink. */
 		pagep->prev_pgno = argp->prev;
 
@@ -464,7 +463,7 @@ prev:	if ((ret = memp_fget(mpf, &argp->prev, 0, &pagep)) != 0) {
 		goto done;
 	}
 	modified = 0;
-	if (log_compare(lsnp, &argp->lsn_prev) == 0 && redo) {
+	if (log_compare(&LSN(pagep), &argp->lsn_prev) == 0 && redo) {
 		/* Redo the relink. */
 		pagep->next_pgno = argp->next;
 

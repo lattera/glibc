@@ -34,7 +34,7 @@ static const long double
 static long double
 #endif
 two63   =  4.50359962737049600000e+15,
-twom63  =  1.08420217248550443400e-19;
+twom63  =  1.08420217248550443400e-19,
 huge   = 1.0e+4900L,
 tiny   = 1.0e-4900L;
 

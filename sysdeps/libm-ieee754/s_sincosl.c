@@ -38,7 +38,7 @@ __sincosl (long double x, long double *sinx, long double *cosx)
       *sinx = __kernel_sinl (x, 0.0, 0);
       *cosx = __kernel_cosl (x, 0.0);
     }
-  else if (ix == 0x7fff)
+  else if (se == 0x7fff)
     {
       /* sin(Inf or NaN) is NaN */
       *sinx = *cosx = x - x;

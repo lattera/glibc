@@ -1140,6 +1140,13 @@ promotions.  For arguments of other integer types, you can use these
 modifiers:
 
 @table @samp
+@item hh
+Specifies that the argument is a @code{signed char} or @code{unsigned
+char}, as appropriate.  A @code{char} argument is converted to an
+@code{int} or @code{unsigned int} by the default argument promotions
+anyway, but the @samp{h} modifier says to convert it back to a
+@code{char} again.
+
 @item h
 Specifies that the argument is a @code{short int} or @code{unsigned
 short int}, as appropriate.  A @code{short} argument is converted to an
@@ -2596,6 +2603,10 @@ other integer conversions.  You can use the following type modifiers to
 specify other sizes of integer:
 
 @table @samp
+@item hh
+Specifies that the argument is a @code{signed char *} or @code{unsigned
+char *}.
+
 @item h
 Specifies that the argument is a @code{short int *} or @code{unsigned
 short int *}.

@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)txn.c	10.30 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)txn.c	10.35 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 
@@ -187,7 +187,7 @@ retry1:	if ((ret = __db_ropen(dbenv, DB_APP_NONE, path, DEFAULT_TXN_FILE,
 	}
 
 	/* Now, create the transaction manager structure and set its fields. */
-	if ((tmgrp = (DB_TXNMGR *)malloc(sizeof(DB_TXNMGR))) == NULL) {
+	if ((tmgrp = (DB_TXNMGR *)__db_malloc(sizeof(DB_TXNMGR))) == NULL) {
 		__db_err(dbenv, "txn_open: %s", strerror(ENOMEM));
 		ret = ENOMEM;
 		goto out;
@@ -205,7 +205,7 @@ retry1:	if ((ret = __db_ropen(dbenv, DB_APP_NONE, path, DEFAULT_TXN_FILE,
 	TAILQ_INIT(&tmgrp->txn_chain);
 	if (LF_ISSET(DB_THREAD)) {
 		LOCK_TXNREGION(tmgrp);
-		if ((ret = __db_shalloc(tmgrp->mem, sizeof(db_mutex_t), 
+		if ((ret = __db_shalloc(tmgrp->mem, sizeof(db_mutex_t),
 		    MUTEX_ALIGNMENT, &tmgrp->mutexp)) == 0)
 			__db_mutex_init(tmgrp->mutexp, -1);
 		UNLOCK_TXNREGION(tmgrp);
@@ -225,7 +225,7 @@ out:	if (txn_regionp != NULL)
 			__db_shalloc_free(tmgrp->mem, tmgrp->mutexp);
 			UNLOCK_TXNREGION(tmgrp);
 		}
-		free(tmgrp);
+		__db_free(tmgrp);
 	}
 	return (ret);
 }
@@ -254,7 +254,7 @@ txn_begin(tmgrp, parent, txnpp)
 	if ((ret = __db_shalloc(tmgrp->mem, sizeof(TXN_DETAIL), 0, &txnp)) != 0
 	    && ret == ENOMEM && (ret = __txn_grow_region(tmgrp)) == 0)
 	    	ret = __db_shalloc(tmgrp->mem, sizeof(TXN_DETAIL), 0, &txnp);
-		
+
 	if (ret != 0)
 		goto err;
 
@@ -262,7 +262,7 @@ txn_begin(tmgrp, parent, txnpp)
 	if (tmgrp->region->last_txnid == TXN_INVALID)
 		return (EINVAL);
 
-	if ((retp = (DB_TXN *)malloc(sizeof(DB_TXN))) == NULL) {
+	if ((retp = (DB_TXN *)__db_malloc(sizeof(DB_TXN))) == NULL) {
 		__db_err(tmgrp->dbenv, "txn_begin : %s", strerror(ENOMEM));
 		ret = ENOMEM;
 		goto err1;
@@ -297,7 +297,7 @@ txn_begin(tmgrp, parent, txnpp)
 		    txnp, links, __txn_detail);
 		__db_shalloc_free(tmgrp->mem, txnp);
 		UNLOCK_TXNREGION(tmgrp);
-		free (retp);
+		__db_free(retp);
 		return (ret);
 	}
 
@@ -433,7 +433,7 @@ txn_close(tmgrp)
 		ret = t_ret;
 
 	if (ret == 0)
-		free (tmgrp);
+		__db_free(tmgrp);
 
 	return (ret);
 }
@@ -561,7 +561,7 @@ __txn_undo(txnp)
 			ret =
 			    mgr->recover(logp, &rdbt, &key_lsn, TXN_UNDO, NULL);
 			if (F_ISSET(logp, DB_AM_THREAD) && rdbt.data != NULL) {
-				free(rdbt.data);
+				__db_free(rdbt.data);
 				rdbt.data = NULL;
 			}
 		}
@@ -590,7 +590,7 @@ txn_checkpoint(mgr, kbytes, minutes)
 	TXN_DETAIL *txnp;
 	DB_LSN ckp_lsn, last_ckp;
 	DB_LOG *dblp;
-	u_int32_t bytes_written;
+	u_int32_t kbytes_written;
 	time_t last_ckp_time, now;
 	int ret;
 
@@ -616,10 +616,12 @@ txn_checkpoint(mgr, kbytes, minutes)
 	if (kbytes != 0) {
 		dblp = mgr->dbenv->lg_info;
 		LOCK_LOGREGION(dblp);
-		bytes_written = dblp->lp->written;
+		kbytes_written =
+		    dblp->lp->stat.st_wc_mbytes * 1024 +
+		    dblp->lp->stat.st_wc_bytes / 1024;
 		ckp_lsn = dblp->lp->lsn;
 		UNLOCK_LOGREGION(dblp);
-		if (bytes_written >= (u_int32_t)(kbytes * 1024))
+		if (kbytes_written >= (u_int32_t)kbytes)
 			goto do_ckp;
 	}
 
@@ -726,12 +728,14 @@ __txn_grow_region(tp)
 	DB_TXNMGR *tp;
 {
 	size_t incr;
+	off_t mutex_offset;
 	u_int32_t oldmax;
 	u_int8_t *curaddr;
 	int ret;
 
 	oldmax = tp->region->maxtxns;
 	incr = oldmax * sizeof(DB_TXN);
+	mutex_offset = (u_int8_t *)tp->mutexp - (u_int8_t *)tp->region;
 
 	if ((ret = __db_rgrow(tp->dbenv, tp->fd, incr)) != 0)
 		return (ret);
@@ -744,6 +748,7 @@ __txn_grow_region(tp)
 	curaddr = (u_int8_t *)tp->region + tp->reg_size;
 	tp->mem = &tp->region[1];
 	tp->reg_size += incr;
+	tp->mutexp = (db_mutex_t *)((u_int8_t *)tp->region + mutex_offset);
 
 	*((size_t *)curaddr) = incr - sizeof(size_t);
 	curaddr += sizeof(size_t);
@@ -776,7 +781,7 @@ txn_stat(mgr, statp, db_malloc)
 	 */
 	nbytes = sizeof(DB_TXN_STAT) + sizeof(DB_TXN_ACTIVE) * (nactive + 200);
 	if (db_malloc == NULL)
-		stats = (DB_TXN_STAT *)malloc(nbytes);
+		stats = (DB_TXN_STAT *)__db_malloc(nbytes);
 	else
 		stats = (DB_TXN_STAT *)db_malloc(nbytes);
 

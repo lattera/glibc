@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_region.c	10.13 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_region.c	10.15 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -114,7 +114,7 @@ __db_rcreate(dbenv, appname, path, file, mode, size, fdp, retp)
 	 * attempts to create the region will return failure in one of the
 	 * attempts.
 	 */
-	if (fd == -1 && (ret = __db_fdopen(name,
+	if (fd == -1 && (ret = __db_open(name,
 	    DB_CREATE | DB_EXCL, DB_CREATE | DB_EXCL, mode, &fd)) != 0) {
 		if (ret != EEXIST)
 			__db_err(dbenv,
@@ -131,6 +131,42 @@ __db_rcreate(dbenv, appname, path, file, mode, size, fdp, retp)
 	if ((ret = __db_rmap(dbenv, fd, size, &rp)) != 0)
 		goto err;
 
+	/* Initialize the region. */
+	if ((ret = __db_rinit(dbenv, rp, fd, size, 1)) != 0)
+		goto err;
+
+	if (name != NULL)
+		FREES(name);
+
+	*(void **)retp = rp;
+	return (0);
+
+err:	if (fd != -1) {
+		if (rp != NULL)
+			(void)__db_unmap(rp, rp->size);
+		(void)__db_unlink(name);
+		(void)__db_close(fd);
+	}
+	if (name != NULL)
+		FREES(name);
+	return (ret);
+}
+
+/*
+ * __db_rinit --
+ *	Initialize the region.
+ *
+ * PUBLIC: int __db_rinit __P((DB_ENV *, RLAYOUT *, int, size_t, int));
+ */
+int
+__db_rinit(dbenv, rp, fd, size, lock_region)
+	DB_ENV *dbenv;
+	RLAYOUT *rp;
+	size_t size;
+	int fd, lock_region;
+{
+	int ret;
+
 	/*
 	 * Initialize the common information.
 	 *
@@ -141,9 +177,12 @@ __db_rcreate(dbenv, appname, path, file, mode, size, fdp, retp)
 	 * file permissions games, but we can't because WNT filesystems won't
 	 * open a file mode 0.
 	 *
-	 * So, the process that's creating the region always acquires the lock
-	 * before the setting the version number.  Any process joining always
-	 * checks the version number before attempting to acquire the lock.
+	 * If the lock_region flag is set, the process creating the region
+	 * acquires the lock before the setting the version number.  Any
+	 * process joining the region checks the version number before
+	 * attempting to acquire the lock.  (The lock_region flag may not be
+	 * set -- the mpool code sometimes malloc's private regions but still
+	 * needs to initialize them, specifically, the mutex for threads.)
 	 *
 	 * We have to check the version number first, because if the version
 	 * number has not been written, it's possible that the mutex has not
@@ -151,30 +190,16 @@ __db_rcreate(dbenv, appname, path, file, mode, size, fdp, retp)
 	 * random behavior.  If the version number isn't there (the file size
 	 * is too small) or it's 0, we know that the region is being created.
 	 */
-	(void)__db_mutex_init(&rp->lock, MUTEX_LOCK_OFFSET(rp, &rp->lock));
-	(void)__db_mutex_lock(&rp->lock,
-	    fd, dbenv == NULL ? NULL : dbenv->db_yield);
+	__db_mutex_init(&rp->lock, MUTEX_LOCK_OFFSET(rp, &rp->lock));
+	if (lock_region && (ret = __db_mutex_lock(&rp->lock, fd)) != 0)
+		return (ret);
 
 	rp->refcnt = 1;
 	rp->size = size;
 	rp->flags = 0;
 	db_version(&rp->majver, &rp->minver, &rp->patch);
 
-	if (name != NULL)
-		FREES(name);
-
-	*(void **)retp = rp;
 	return (0);
-
-err:	if (fd != -1) {
-		if (rp != NULL)
-			(void)__db_munmap(rp, rp->size);
-		(void)__db_unlink(name);
-		(void)__db_close(fd);
-	}
-	if (name != NULL)
-		FREES(name);
-	return (ret);
 }
 
 /*
@@ -205,7 +230,7 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 		return (ret);
 
 	/* Open the file. */
-	if ((ret = __db_fdopen(name, flags, DB_MUTEXDEBUG, 0, &fd)) != 0) {
+	if ((ret = __db_open(name, flags, DB_MUTEXDEBUG, 0, &fd)) != 0) {
 		__db_err(dbenv, "region open: %s: %s", name, strerror(ret));
 		goto err2;
 	}
@@ -225,8 +250,10 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 	 * flatly impossible.  Hope that mmap fails if the file is too large.
 	 *
 	 */
-	if ((ret = __db_stat(dbenv, name, fd, &size1, NULL)) != 0)
+	if ((ret = __db_ioinfo(name, fd, &size1, NULL)) != 0) {
+		__db_err(dbenv, "%s: %s", name, strerror(ret));
 		goto err2;
+	}
 
 	/* Check to make sure the first block has been written. */
 	if ((size_t)size1 < sizeof(RLAYOUT)) {
@@ -249,16 +276,17 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 
 	/* Get the region lock. */
 	if (!LF_ISSET(DB_MUTEXDEBUG))
-		(void)__db_mutex_lock(&rp->lock,
-		    fd, dbenv == NULL ? NULL : dbenv->db_yield);
+		(void)__db_mutex_lock(&rp->lock, fd);
 
 	/*
 	 * The file may have been half-written if we were descheduled between
 	 * getting the size of the file and checking the major version.  Check
 	 * to make sure we got the entire file.
 	 */
-	if ((ret = __db_stat(dbenv, name, fd, &size2, NULL)) != 0)
+	if ((ret = __db_ioinfo(name, fd, &size2, NULL)) != 0) {
+		__db_err(dbenv, "%s: %s", name, strerror(ret));
 		goto err1;
+	}
 	if (size1 != size2) {
 		ret = EAGAIN;
 		goto err1;
@@ -285,7 +313,7 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 err1:	if (!LF_ISSET(DB_MUTEXDEBUG))
 		(void)__db_mutex_unlock(&rp->lock, fd);
 err2:	if (rp != NULL)
-		(void)__db_munmap(rp, rp->size);
+		(void)__db_unmap(rp, rp->size);
 	if (fd != -1)
 		(void)__db_close(fd);
 	FREES(name);
@@ -312,8 +340,7 @@ __db_rclose(dbenv, fd, ptr)
 	fail = NULL;
 
 	/* Get the lock. */
-	if ((ret = __db_mutex_lock(&rp->lock,
-	    fd, dbenv == NULL ? NULL : dbenv->db_yield)) != 0) {
+	if ((ret = __db_mutex_lock(&rp->lock, fd)) != 0) {
 		fail = "lock get";
 		goto err;
 	}
@@ -328,7 +355,7 @@ __db_rclose(dbenv, fd, ptr)
 	}
 
 	/* Discard the region. */
-	if ((t_ret = __db_munmap(ptr, rp->size)) != 0 && fail == NULL) {
+	if ((t_ret = __db_unmap(ptr, rp->size)) != 0 && fail == NULL) {
 		ret = t_ret;
 		fail = "munmap";
 	}
@@ -392,8 +419,7 @@ __db_runlink(dbenv, appname, path, file, force)
 	/* Open and lock the region. */
 	if ((ret = __db_ropen(dbenv, appname, path, file, 0, &fd, &rp)) != 0)
 		goto err1;
-	(void)__db_mutex_lock(&rp->lock,
-	    fd, dbenv == NULL ? NULL : dbenv->db_yield);
+	(void)__db_mutex_lock(&rp->lock, fd);
 
 	/* If the region is currently being deleted, fail. */
 	if (F_ISSET(rp, DB_R_DELETED)) {
@@ -434,8 +460,7 @@ __db_runlink(dbenv, appname, path, file, force)
 	/* Not a clue.  Try to clear the DB_R_DELETED flag. */
 	if ((ret = __db_ropen(dbenv, appname, path, file, 0, &fd, &rp)) != 0)
 		goto err1;
-	(void)__db_mutex_lock(&rp->lock,
-	    fd, dbenv == NULL ? NULL : dbenv->db_yield);
+	(void)__db_mutex_lock(&rp->lock, fd);
 	F_CLR(rp, DB_R_DELETED);
 	/* FALLTHROUGH */
 
@@ -472,7 +497,7 @@ __db_rgrow(dbenv, fd, incr)
 	char buf[__DB_VMPAGESIZE];
 
 	/* Seek to the end of the region. */
-	if ((ret = __db_lseek(fd, 0, 0, 0, SEEK_END)) != 0)
+	if ((ret = __db_seek(fd, 0, 0, 0, SEEK_END)) != 0)
 		goto err;
 
 	/* Write nuls to the new bytes. */
@@ -500,7 +525,7 @@ __db_rgrow(dbenv, fd, incr)
 	incr -= incr % __DB_VMPAGESIZE;
 
 	/* Write the last page, not the page after the last. */
-	if ((ret = __db_lseek(fd, 0, 0, incr - __DB_VMPAGESIZE, SEEK_CUR)) != 0)
+	if ((ret = __db_seek(fd, 0, 0, incr - __DB_VMPAGESIZE, SEEK_CUR)) != 0)
 		goto err;
 	if ((ret = __db_write(fd, buf, sizeof(buf), &nw)) != 0)
 		goto err;
@@ -531,7 +556,7 @@ __db_rremap(dbenv, ptr, oldsize, newsize, fd, retp)
 {
 	int ret;
 
-	if ((ret = __db_munmap(ptr, oldsize)) != 0) {
+	if ((ret = __db_unmap(ptr, oldsize)) != 0) {
 		__db_err(dbenv, "region remap: munmap: %s", strerror(ret));
 		return (ret);
 	}
@@ -553,7 +578,7 @@ __db_rmap(dbenv, fd, size, retp)
 	RLAYOUT *rp;
 	int ret;
 
-	if ((ret = __db_mmap(fd, size, 0, 0, &rp)) != 0) {
+	if ((ret = __db_map(fd, size, 0, 0, (void **)&rp)) != 0) {
 		__db_err(dbenv, "region map: mmap %s", strerror(ret));
 		return (ret);
 	}

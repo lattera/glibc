@@ -36,6 +36,7 @@
    functions in the shared library can adapt without needing to recompile
    all callers.  */
 
+#undef lstat64
 int
 lstat64 (const char *file, struct stat64 *buf)
 {

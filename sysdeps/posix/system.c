@@ -44,6 +44,7 @@ __libc_system (const char *line)
 #endif
 
   if (line == NULL)
+    /* This signals that we have a command processor available.  */
     return 1;
 
   sa.sa_handler = SIG_IGN;

@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)lock_deadlock.c	10.21 (Sleepycat) 9/6/97";
+static const char sccsid[] = "@(#)lock_deadlock.c	10.25 (Sleepycat) 11/1/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -50,15 +50,18 @@ typedef struct {
 	int		valid;
 	u_int32_t	id;
 	DB_LOCK		last_lock;
+	db_pgno_t	pgno;
 } locker_info;
 
 static int  __dd_abort __P((DB_ENV *, locker_info *));
-static int  __dd_build __P((DB_ENV *, u_int32_t **, int *, locker_info **));
-#ifdef DEBUG
-static void __dd_debug __P((DB_ENV *, locker_info *, u_int32_t *, int));
-#endif
+static int  __dd_build
+	__P((DB_ENV *, u_int32_t **, u_int32_t *, locker_info **));
 static u_int32_t
 	   *__dd_find __P((u_int32_t *, locker_info *, u_int32_t));
+
+#ifdef DEBUG
+static void __dd_debug __P((DB_ENV *, locker_info *, u_int32_t *, u_int32_t));
+#endif
 
 int
 lock_detect(lt, flags, atype)
@@ -68,8 +71,8 @@ lock_detect(lt, flags, atype)
 {
 	DB_ENV *dbenv;
 	locker_info *idmap;
-	u_int32_t *bitmap, *deadlock, killid;
-	int do_pass, i, nlockers, nentries, ret;
+	u_int32_t *bitmap, *deadlock, i, killid, nentries, nlockers;
+	int do_pass, ret;
 
 	/* Validate arguments. */
 	if ((ret =
@@ -77,17 +80,16 @@ lock_detect(lt, flags, atype)
 		return (ret);
 
 	/* Check if a detector run is necessary. */
-	do_pass = 1;
 	dbenv = lt->dbenv;
 	if (LF_ISSET(DB_LOCK_CONFLICT)) {
 		/* Make a pass every time a lock waits. */
 		LOCK_LOCKREGION(lt);
 		do_pass = dbenv->lk_info->region->need_dd != 0;
 		UNLOCK_LOCKREGION(lt);
-	}
 
-	if (!do_pass)
-		return (0);
+		if (!do_pass)
+			return (0);
+	}
 
 	/* Build the waits-for bitmap. */
 	if ((ret = __dd_build(dbenv, &bitmap, &nlockers, &idmap)) != 0)
@@ -118,8 +120,7 @@ lock_detect(lt, flags, atype)
 
 			if (killid == BAD_KILLID) {
 				__db_err(dbenv,
-				    "warning: could not find %s",
-				    "locker to abort");
+				    "warning: could not find locker to abort");
 				break;
 			}
 
@@ -137,11 +138,8 @@ lock_detect(lt, flags, atype)
 			/*
 			 * We are trying to calculate the id of the
 			 * locker whose entry is indicated by deadlock.
-			 * We know that this is less than nlockers, so
-			 * the cast below is valid.
 			 */
-			killid =
-			    (u_int32_t)((deadlock - bitmap) / nentries);
+			killid = (deadlock - bitmap) / nentries;
 			break;
 		case DB_LOCK_YOUNGEST:
 			/*
@@ -155,8 +153,7 @@ lock_detect(lt, flags, atype)
 
 			if (killid == BAD_KILLID) {
 				__db_err(dbenv,
-				    "warning: could not find %s",
-				    "locker to abort");
+				    "warning: could not find locker to abort");
 				break;
 			}
 			/*
@@ -184,8 +181,8 @@ lock_detect(lt, flags, atype)
 			    "warning: unable to abort locker %lx",
 			    (u_long)idmap[killid].id);
 	}
-	free(bitmap);
-	free(idmap);
+	__db_free(bitmap);
+	__db_free(idmap);
 
 	return (ret);
 }
@@ -197,15 +194,15 @@ lock_detect(lt, flags, atype)
 static int
 __dd_build(dbenv, bmp, nlockers, idmap)
 	DB_ENV *dbenv;
-	u_int32_t **bmp;
-	int *nlockers;
+	u_int32_t **bmp, *nlockers;
 	locker_info **idmap;
 {
-	DB_LOCKTAB *lt;
-	DB_LOCKOBJ *op, *lockerp;
 	struct __db_lock *lp;
-	u_int32_t *bitmap, count, *entryp, i, id, nentries, *tmpmap;
+	DB_LOCKTAB *lt;
+	DB_LOCKOBJ *op, *lo, *lockerp;
+	u_int8_t *pptr;
 	locker_info *id_array;
+	u_int32_t *bitmap, count, *entryp, i, id, nentries, *tmpmap;
 	int is_first, ret;
 
 	lt = dbenv->lk_info;
@@ -238,24 +235,24 @@ retry:	count = lt->region->nlockers;
 	 * We can probably save the malloc's between iterations just
 	 * reallocing if necessary because count grew by too much.
 	 */
-	if ((bitmap = (u_int32_t *)calloc((size_t)count,
+	if ((bitmap = (u_int32_t *)__db_calloc((size_t)count,
 	    sizeof(u_int32_t) * nentries)) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return (ENOMEM);
 	}
 
 	if ((tmpmap =
-	    (u_int32_t *)calloc(sizeof(u_int32_t), nentries)) == NULL) {
+	    (u_int32_t *)__db_calloc(sizeof(u_int32_t), nentries)) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
-		free(bitmap);
+		__db_free(bitmap);
 		return (ENOMEM);
 	}
 
-	if ((id_array = (locker_info *)calloc((size_t)count,
+	if ((id_array = (locker_info *)__db_calloc((size_t)count,
 	    sizeof(locker_info))) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
-		free(bitmap);
-		free(tmpmap);
+		__db_free(bitmap);
+		__db_free(tmpmap);
 		return (ENOMEM);
 	}
 
@@ -264,9 +261,9 @@ retry:	count = lt->region->nlockers;
 	 */
 	LOCK_LOCKREGION(lt);
 	if (lt->region->nlockers > count) {
-		free(bitmap);
-		free(tmpmap);
-		free(id_array);
+		__db_free(bitmap);
+		__db_free(tmpmap);
+		__db_free(id_array);
 		goto retry;
 	}
 
@@ -326,9 +323,8 @@ retry:	count = lt->region->nlockers;
 			    lp != NULL;
 			    is_first = 0,
 			    lp = SH_TAILQ_NEXT(lp, links, __db_lock)) {
-				if ((ret = __lock_getobj(lt,
-				    lp->holder, NULL, DB_LOCK_LOCKER, &lockerp))
-				    != 0) {
+				if ((ret = __lock_getobj(lt, lp->holder,
+				    NULL, DB_LOCK_LOCKER, &lockerp)) != 0) {
 					__db_err(dbenv,
 					    "warning unable to find object");
 					continue;
@@ -369,8 +365,16 @@ retry:	count = lt->region->nlockers;
 			continue;
 		}
 		lp = SH_LIST_FIRST(&lockerp->heldby, __db_lock);
-		if (lp != NULL)
+		if (lp != NULL) {
 			id_array[id].last_lock = LOCK_TO_OFFSET(lt, lp);
+			lo = (DB_LOCKOBJ *)((u_int8_t *)lp + lp->obj);
+			pptr = SH_DBT_PTR(&lo->lockobj);
+			if (lo->lockobj.size >= sizeof(db_pgno_t))
+				memcpy(&id_array[id].pgno, pptr,
+				    sizeof(db_pgno_t));
+			else
+				id_array[id].pgno = 0;
+		}
 	}
 
 	/* Pass complete, reset the deadlock detector bit. */
@@ -384,21 +388,20 @@ retry:	count = lt->region->nlockers;
 	*nlockers = id;
 	*idmap = id_array;
 	*bmp = bitmap;
-	free(tmpmap);
+	__db_free(tmpmap);
 	return (0);
 }
 
 static u_int32_t *
 __dd_find(bmp, idmap, nlockers)
-	u_int32_t *bmp;
+	u_int32_t *bmp, nlockers;
 	locker_info *idmap;
-	u_int32_t nlockers;
 {
 	u_int32_t i, j, nentries, *mymap, *tmpmap;
 
 	/*
-	 * For each locker, or in the bits from the lockers
-	 * on which that locker is waiting.
+	 * For each locker, OR in the bits from the lockers on which that
+	 * locker is waiting.
 	 */
 	nentries = ALIGN(nlockers, 32) / 32;
 	for (mymap = bmp, i = 0; i < nlockers; i++, mymap += nentries) {
@@ -422,9 +425,9 @@ __dd_abort(dbenv, info)
 	DB_ENV *dbenv;
 	locker_info *info;
 {
+	struct __db_lock *lockp;
 	DB_LOCKTAB *lt;
 	DB_LOCKOBJ *lockerp, *sh_obj;
-	struct __db_lock *lockp;
 	int ret;
 
 	lt = dbenv->lk_info;
@@ -459,19 +462,17 @@ static void
 __dd_debug(dbenv, idmap, bitmap, nlockers)
 	DB_ENV *dbenv;
 	locker_info *idmap;
-	u_int32_t *bitmap;
-	int nlockers;
+	u_int32_t *bitmap, nlockers;
 {
-	u_int32_t *mymap;
-	int i, j, nentries;
+	u_int32_t i, j, *mymap, nentries;
 	char *msgbuf;
 
 	__db_err(dbenv, "Waitsfor array");
 	__db_err(dbenv, "waiter\twaiting on");
 	/*
-	 * Alloc space to print 10 bytes per item waited on.
+	 * Allocate space to print 10 bytes per item waited on.
 	 */
-	if ((msgbuf = (char *)malloc((nlockers + 1) * 10 + 64)) == NULL) {
+	if ((msgbuf = (char *)__db_malloc((nlockers + 1) * 10 + 64)) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return;
 	}
@@ -480,7 +481,8 @@ __dd_debug(dbenv, idmap, bitmap, nlockers)
 	for (mymap = bitmap, i = 0; i < nlockers; i++, mymap += nentries) {
 		if (!idmap[i].valid)
 			continue;
-		sprintf(msgbuf, "%lx\t\t", (u_long)idmap[i].id);/* Waiter. */
+		sprintf(msgbuf,					/* Waiter. */
+		    "%lx/%lu:\t", (u_long)idmap[i].id, (u_long)idmap[i].pgno);
 		for (j = 0; j < nlockers; j++)
 			if (ISSET_MAP(mymap, j))
 				sprintf(msgbuf, "%s %lx", msgbuf,
@@ -490,6 +492,6 @@ __dd_debug(dbenv, idmap, bitmap, nlockers)
 		__db_err(dbenv, msgbuf);
 	}
 
-	free(msgbuf);
+	__db_free(msgbuf);
 }
 #endif

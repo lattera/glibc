@@ -124,6 +124,13 @@ ifeq (yes,$(build-shared))
 install:
 	-test ! -x $(common-objpfx)elf/ldconfig || \
 	  $(common-objpfx)elf/ldconfig -d $(inst_slibdir) $(inst_libdir)
+ifneq (no,$(PERL))
+ifeq (/usr,$(prefix))
+ifeq (,$(install_root))
+	CC=$(CC) $(PERL) test-installation.pl $(common-objpfx)
+endif
+endif
+endif
 endif
 endif
 

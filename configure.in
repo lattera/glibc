@@ -971,6 +971,20 @@ if test $shared = default; then
     shared=no
   fi
 fi
+
+AC_CACHE_CHECK([whether -fPIC is default], pic_default,
+[pic_default=yes
+cat > conftest.c <<EOF
+#if defined(__PIC__) || defined(__pic__) || defined(PIC) || defined(pic)
+# error PIC is default.
+#endif
+EOF
+if eval "${CC-cc} -S conftest.c 2>&AC_FD_CC 1>&AC_FD_CC"; then
+  pic_default=no
+fi
+rm -f conftest.*])
+AC_SUBST(pic_default)
+
 AC_SUBST(profile)
 AC_SUBST(omitfp)
 AC_SUBST(bounded)

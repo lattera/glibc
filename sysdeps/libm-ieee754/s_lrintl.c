@@ -59,7 +59,7 @@ __lrintl (long double x)
 	  result = i0 >> (31 - j0);
 	}
     }
-  else if (j0 < (int32_t) (8 * sizeof (long int)))
+  else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {
       if (j0 >= 63)
 	result = ((long int) i0 << (j0 - 31)) | (i1 << (j0 - 63));

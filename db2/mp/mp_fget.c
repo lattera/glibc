@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fget.c	10.25 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)mp_fget.c	10.30 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -87,14 +87,14 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	 * We want to switch threads as often as possible.  Sleep every time
 	 * we get a new page to make it more likely.
 	 */
-	if (__sleep_on_every_page_get && (dbmp->dbenv == NULL ||
-	    dbmp->dbenv->db_yield == NULL || dbmp->dbenv->db_yield() != 0))
+	if (__sleep_on_every_page_get &&
+	    (__db_yield == NULL || __db_yield() != 0))
 		__db_sleep(0, 1);
 #endif
 
 	mp = dbmp->mp;
 	mfp = dbmfp->mfp;
-	mf_offset = OFFSET(dbmp, mfp);
+	mf_offset = R_OFFSET(dbmp, mfp);
 	addr = NULL;
 	bhp = NULL;
 	b_incr = b_inserted = readonly_alloc = ret = 0;
@@ -137,7 +137,7 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 			}
 		}
 		if (!readonly_alloc) {
-			addr = ADDR(dbmfp, *pgnoaddr * mfp->stat.st_pagesize);
+			addr = R_ADDR(dbmfp, *pgnoaddr * mfp->stat.st_pagesize);
 
 			++mp->stat.st_map;
 			++mfp->stat.st_map;
@@ -159,9 +159,12 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 		 */
 		if (dbmfp->fd == -1)
 			size = 0;
-		else if ((ret = __db_stat(dbmp->dbenv,
-		    dbmfp->path, dbmfp->fd, &size, NULL)) != 0)
+		else if ((ret =
+		    __db_ioinfo(dbmfp->path, dbmfp->fd, &size, NULL)) != 0) {
+			__db_err(dbmp->dbenv,
+			    "%s: %s", dbmfp->path, strerror(ret));
 			goto err;
+		}
 
 		*pgnoaddr = size == 0 ? 0 : (size - 1) / mfp->stat.st_pagesize;
 
@@ -190,26 +193,29 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 		goto found;
 	}
 
-	/* If we haven't checked the BH list yet, do the search. */
+	/* If we haven't checked the BH hash bucket queue, do the search. */
 	if (!LF_ISSET(DB_MPOOL_LAST | DB_MPOOL_NEW)) {
-		++mp->stat.st_hash_searches;
 		bucket = BUCKET(mp, mf_offset, *pgnoaddr);
 		for (cnt = 0,
 		    bhp = SH_TAILQ_FIRST(&dbmp->htab[bucket], __bh);
-		    bhp != NULL; bhp = SH_TAILQ_NEXT(bhp, mq, __bh)) {
+		    bhp != NULL; bhp = SH_TAILQ_NEXT(bhp, hq, __bh)) {
 			++cnt;
 			if (bhp->pgno == *pgnoaddr &&
 			    bhp->mf_offset == mf_offset) {
 				addr = bhp->buf;
+				++mp->stat.st_hash_searches;
 				if (cnt > mp->stat.st_hash_longest)
 					mp->stat.st_hash_longest = cnt;
 				mp->stat.st_hash_examined += cnt;
 				goto found;
 			}
 		}
-		if (cnt > mp->stat.st_hash_longest)
-			mp->stat.st_hash_longest = cnt;
-		mp->stat.st_hash_examined += cnt;
+		if (cnt != 0) {
+			++mp->stat.st_hash_searches;
+			if (cnt > mp->stat.st_hash_longest)
+				mp->stat.st_hash_longest = cnt;
+			mp->stat.st_hash_examined += cnt;
+		}
 	}
 
 	/*
@@ -239,8 +245,9 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	 * our region lock without screwing up the world.
 	 */
 	bucket = BUCKET(mp, mf_offset, *pgnoaddr);
-	SH_TAILQ_INSERT_HEAD(&dbmp->htab[bucket], bhp, mq, __bh);
+	SH_TAILQ_INSERT_HEAD(&dbmp->htab[bucket], bhp, hq, __bh);
 	SH_TAILQ_INSERT_TAIL(&mp->bhq, bhp, q);
+	++mp->stat.st_page_clean;
 	b_inserted = 1;
 
 	/* Set the page number, and associated MPOOLFILE. */
@@ -281,7 +288,8 @@ reread:		if ((ret = __memp_pgread(dbmfp,
 		 * !!!
 		 * The __memp_pgread call discarded and reacquired the region
 		 * lock.  Because the buffer reference count was incremented
-		 * before the region lock was discarded the buffer didn't move.
+		 * before the region lock was discarded the buffer can't move
+		 * and its contents can't change.
 		 */
 		++mp->stat.st_cache_miss;
 		++mfp->stat.st_cache_miss;
@@ -305,7 +313,8 @@ found:		/* Increment the reference count. */
 		 * BH_LOCKED --
 		 * I/O in progress, wait for it to finish.  Because the buffer
 		 * reference count was incremented before the region lock was
-		 * discarded we know the buffer didn't move.
+		 * discarded we know the buffer can't move and its contents
+		 * can't change.
 		 */
 		if (F_ISSET(bhp, BH_LOCKED)) {
 			UNLOCKREGION(dbmp);

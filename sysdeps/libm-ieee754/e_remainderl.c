@@ -47,8 +47,8 @@ static long double zero = 0.0;
 	u_int32_t sx,sex,sep,x0,x1,p0,p1;
 	long double p_half;
 
-	EXTRACT_LDOUBLE_WORDS(sex,x0,x1,x);
-	EXTRACT_LDOUBLE_WORDS(sep,p0,p1,p);
+	GET_LDOUBLE_WORDS(sex,x0,x1,x);
+	GET_LDOUBLE_WORDS(sep,p0,p1,p);
 	sx = sex&0x8000;
 	sep &= 0x7fff;
 	sex &= 0x7fff;

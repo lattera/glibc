@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)lock.h	10.8 (Sleepycat) 9/23/97
+ *	@(#)lock.h	10.9 (Sleepycat) 10/25/97
  */
 
 typedef struct __db_lockobj	DB_LOCKOBJ;
@@ -54,8 +54,7 @@ struct __db_lockregion {
 
 /* Macros to lock/unlock the region. */
 #define	LOCK_LOCKREGION(lt)						\
-	(void)__db_mutex_lock(&(lt)->region->hdr.lock,(lt)->fd,		\
-	    (lt)->dbenv == NULL ? NULL : (lt)->dbenv->db_yield)
+	(void)__db_mutex_lock(&(lt)->region->hdr.lock, (lt)->fd)
 #define	UNLOCK_LOCKREGION(lt)						\
 	(void)__db_mutex_unlock(&(lt)->region->hdr.lock, (lt)->fd)
 

@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_split.c	10.14 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_split.c	10.17 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -255,7 +255,7 @@ __bam_page(dbp, pp, cp)
 	    cp->page->level, TYPE(cp->page));
 
 	/* Create new left page for the split. */
-	if ((lp = (PAGE *)malloc(dbp->pgsize)) == NULL) {
+	if ((lp = (PAGE *)__db_malloc(dbp->pgsize)) == NULL) {
 		ret = ENOMEM;
 		goto err;
 	}
@@ -389,6 +389,9 @@ __bam_broot(dbp, rootp, lp, rp)
 	P_INIT(rootp, dbp->pgsize,
 	    PGNO_ROOT, PGNO_INVALID, PGNO_INVALID, lp->level + 1, P_IBTREE);
 
+	memset(&data, 0, sizeof(data));
+	memset(&hdr, 0, sizeof(hdr));
+
 	/*
 	 * The btree comparison code guarantees that the left-most key on any
 	 * level of the tree is never used, so it doesn't need to be filled in.
@@ -399,15 +402,12 @@ __bam_broot(dbp, rootp, lp, rp)
 	if (F_ISSET(dbp, DB_BT_RECNUM)) {
 		bi.nrecs = __bam_total(lp);
 		RE_NREC_SET(rootp, bi.nrecs);
-	}
-	memset(&hdr, 0, sizeof(hdr));
+	} else
+		bi.nrecs = 0;
 	hdr.data = &bi;
 	hdr.size = SSZA(BINTERNAL, data);
-	memset(&data, 0, sizeof(data));
-	data.data = (char *)"";
-	data.size = 0;
 	if ((ret =
-	    __db_pitem(dbp, rootp, 0, BINTERNAL_SIZE(0), &hdr, &data)) != 0)
+	    __db_pitem(dbp, rootp, 0, BINTERNAL_SIZE(0), &hdr, NULL)) != 0)
 		return (ret);
 
 	switch (TYPE(rp)) {
@@ -431,9 +431,10 @@ __bam_broot(dbp, rootp, lp, rp)
 			return (ret);
 
 		/* Increment the overflow ref count. */
-		if (B_TYPE(child_bi->type) == B_OVERFLOW && (ret =
-		    __db_ioff(dbp, ((BOVERFLOW *)(child_bi->data))->pgno)) != 0)
-			return (ret);
+		if (B_TYPE(child_bi->type) == B_OVERFLOW)
+			if ((ret = __db_ovref(dbp,
+			    ((BOVERFLOW *)(child_bi->data))->pgno, 1)) != 0)
+				return (ret);
 		break;
 	case P_LBTREE:
 		/* Copy the first key of the child page onto the root page. */
@@ -473,9 +474,10 @@ __bam_broot(dbp, rootp, lp, rp)
 				return (ret);
 
 			/* Increment the overflow ref count. */
-			if (B_TYPE(child_bk->type) == B_OVERFLOW && (ret =
-			    __db_ioff(dbp, ((BOVERFLOW *)child_bk)->pgno)) != 0)
-				return (ret);
+			if (B_TYPE(child_bk->type) == B_OVERFLOW)
+				if ((ret = __db_ovref(dbp,
+				    ((BOVERFLOW *)child_bk)->pgno, 1)) != 0)
+					return (ret);
 			break;
 		default:
 			return (__db_pgfmt(dbp, rp->pgno));
@@ -604,9 +606,10 @@ __bam_pinsert(dbp, parent, lchild, rchild)
 			return (ret);
 
 		/* Increment the overflow ref count. */
-		if (B_TYPE(child_bi->type) == B_OVERFLOW && (ret =
-		    __db_ioff(dbp, ((BOVERFLOW *)(child_bi->data))->pgno)) != 0)
-			return (ret);
+		if (B_TYPE(child_bi->type) == B_OVERFLOW)
+			if ((ret = __db_ovref(dbp,
+			    ((BOVERFLOW *)(child_bi->data))->pgno, 1)) != 0)
+				return (ret);
 		break;
 	case P_LBTREE:
 		child_bk = GET_BKEYDATA(rchild, 0);
@@ -673,9 +676,10 @@ noprefix:			nksize = child_bk->len;
 				return (ret);
 
 			/* Increment the overflow ref count. */
-			if (B_TYPE(child_bk->type) == B_OVERFLOW && (ret =
-			    __db_ioff(dbp, ((BOVERFLOW *)child_bk)->pgno)) != 0)
-				return (ret);
+			if (B_TYPE(child_bk->type) == B_OVERFLOW)
+				if ((ret = __db_ovref(dbp,
+				    ((BOVERFLOW *)child_bk)->pgno, 1)) != 0)
+					return (ret);
 			break;
 		default:
 			return (__db_pgfmt(dbp, rchild->pgno));

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_os_open.c	10.14 (Sleepycat) 7/5/97";
+static const char sccsid[] = "@(#)os_open.c	10.19 (Sleepycat) 10/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -20,44 +20,15 @@ static const char sccsid[] = "@(#)db_os_open.c	10.14 (Sleepycat) 7/5/97";
 #endif
 
 #include "db_int.h"
-#include "os_ext.h"
 
 /*
- * __db_oflags --
- *	Convert open(2) flags to DB flags.
- *
- * PUBLIC: int __db_oflags __P((int));
- */
-int
-__db_oflags(oflags)
-	int oflags;
-{
-	int dbflags;
-
-	/*
-	 * XXX
-	 * Convert POSIX 1003.1 open(2) flags to DB flags.  Not an exact
-	 * science as most POSIX implementations don't have a flag value
-	 * for O_RDONLY, it's simply the lack of a write flag.
-	 */
-	dbflags = 0;
-	if (oflags & O_CREAT)
-		dbflags |= DB_CREATE;
-	if (!(oflags & (O_RDWR | O_WRONLY)) || oflags & O_RDONLY)
-		dbflags |= DB_RDONLY;
-	if (oflags & O_TRUNC)
-		dbflags |= DB_TRUNCATE;
-	return (dbflags);
-}
-
-/*
- * __db_fdopen --
+ * __db_open --
  *	Open a file descriptor.
  *
- * PUBLIC: int __db_fdopen __P((const char *, int, int, int, int *));
+ * PUBLIC: int __db_open __P((const char *, int, int, int, int *));
  */
 int
-__db_fdopen(name, arg_flags, ok_flags, mode, fdp)
+__db_open(name, arg_flags, ok_flags, mode, fdp)
 	const char *name;
 	int arg_flags, ok_flags, mode, *fdp;
 {
@@ -95,13 +66,13 @@ __db_fdopen(name, arg_flags, ok_flags, mode, fdp)
 		flags |= O_TRUNC;
 
 	/* Open the file. */
-	if ((fd = open(name, flags, mode)) == -1)
+	if ((fd = __os_open(name, flags, mode)) == -1)
 		return (errno);
 
 #ifndef _WIN32
 	/* Delete any temporary file; done for Win32 by _O_TEMPORARY. */
 	if (arg_flags & DB_TEMPORARY)
-		(void)unlink(name);
+		(void)__os_unlink(name);
 #endif
 
 #if !defined(_WIN32) && !defined(macintosh)
@@ -112,25 +83,12 @@ __db_fdopen(name, arg_flags, ok_flags, mode, fdp)
 	if (fcntl(fd, F_SETFD, 1) == -1) {
 		int ret = errno;
 
-		(void)__db_close(fd);
+		(void)__os_close(fd);
 		return (ret);
 	}
 #endif
 	*fdp = fd;
 	return (0);
-}
-
-/*
- * __db_fsync --
- *	Flush a file descriptor.
- *
- * PUBLIC: int __db_fsync __P((int));
- */
-int
-__db_fsync(fd)
-	int fd;
-{
-	return (fsync(fd) ? errno : 0);
 }
 
 /*
@@ -143,5 +101,5 @@ int
 __db_close(fd)
 	int fd;
 {
-	return (close(fd) ? errno : 0);
+	return (__os_close(fd) ? errno : 0);
 }

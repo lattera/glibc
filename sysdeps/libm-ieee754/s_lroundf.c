@@ -37,7 +37,7 @@ __lroundf (float x)
   i &= 0x7fffff;
   i |= 0x800000;
 
-  if (j0 < (int32_t) (8 * sizeof (long int)))
+  if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {
       if (j0 < 0)
 	return j0 < -1 ? 0 : sign;

@@ -189,14 +189,14 @@ build the GNU C library:
 
 @itemize @bullet
 @item
-@code{make} 3.76.1
+@code{make} 3.75
 
 You need the latest version of GNU @code{make}.  Modifying the GNU C
 Library to work with other @code{make} programs would be so hard that we
 recommend you port GNU @code{make} instead.  @strong{Really.}  We
-recommend version GNU @code{make} version 3.75, 3.76.1 or later.
-Version 3.76 is known to have a bug which only shows up in big projects
-like GNU @code{libc}.
+recommend version GNU @code{make} version 3.75.  Versions 3.76 and
+3.76.1 are known to have bugs which only show up in big projects like
+GNU @code{libc}.
 
 @item
 GCC 2.7.2.3
@@ -538,11 +538,11 @@ include the file @code{<stub-tag.h>} into your file.  This causes the
 function to be listed in the installed @code{<gnu/stubs.h>}, and
 makes GNU ld warn when the function is used.
 
-Some rare functions are only useful on specific systems and
-aren't defined at all on others; these do not appear anywhere
-in the system-independent source code or makefiles (including the
-@file{generic}), only in the system-dependent @file{Makefile} in the
-specific system's subdirectory.
+Some rare functions are only useful on specific systems and aren't
+defined at all on others; these do not appear anywhere in the
+system-independent source code or makefiles (including the
+@file{generic} directory), only in the system-dependent @file{Makefile}
+in the specific system's subdirectory.
 
 If you come across a file that is in one of the main source directories
 (@file{string}, @file{stdio}, etc.), and you want to write a machine- or

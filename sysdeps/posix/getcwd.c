@@ -135,6 +135,11 @@ extern void free ();
 # define memmove memcpy
 #endif	/* Not ANSI_STRING.  */
 
+#ifdef _LIBC
+# define mempcpy __mempcpy
+# define HAVE_MEMPCPY	1
+#endif
+
 #if !defined __alloca && !defined __GNU_LIBRARY__
 
 # ifdef	__GNUC__
@@ -277,10 +282,10 @@ __getcwd (buf, size)
 	      dotp = &new[dotsize];
 	    }
 #ifdef HAVE_MEMPCPY
-	  *((char *) mempcpy (dotp, new, dotsize)) = '\0';
+	  *((char *) mempcpy ((char *) dotp, new, dotsize)) = '\0';
 	  dotsize *= 2;
 #else
-	  memcpy (dotp, new, dotsize);
+	  memcpy ((char *) dotp, new, dotsize);
 	  dotsize *= 2;
 	  new[dotsize] = '\0';
 #endif

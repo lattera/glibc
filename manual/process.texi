@@ -62,6 +62,10 @@ possible to create the shell process, and otherwise is the status of the
 shell process.  @xref{Process Completion}, for details on how this
 status code can be interpreted.
 
+If the @var{command} argument is a null pointer a non-zero return value
+indicates that a command processor is available and this function can be
+used at all.
+
 This function is a cancelation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
 descriptors, semaphores or whatever) at the time @code{system} is

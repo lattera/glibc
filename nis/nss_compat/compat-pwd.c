@@ -30,6 +30,10 @@
 #include <rpcsvc/nis.h>
 #include <nsswitch.h>
 
+/* Comment out the following line for the production version.  */
+/* #define NDEBUG 1 */
+#include <assert.h>
+
 #include "netgroup.h"
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
@@ -43,7 +47,7 @@ static size_t pwdtablelen = 0;
 #define ENTNAME pwent
 #define STRUCTURE passwd
 #define EXTERN_PARSER
-#include "../../nss/nss_files/files-parse.c"
+#include <nss/nss_files/files-parse.c>
 
 /* Structure for remembering -@netgroup and -user members ... */
 #define BLACKLIST_INITIAL_SIZE 512
@@ -211,15 +215,22 @@ internal_setpwent (ent_t *ent)
 
   if (pwdtable == NULL)
     {
-      char buf [20 + strlen (nis_local_directory ())];
-      char *p;
+      static const char key[] = "passwd.org_dir.";
+      const char *local_dir = nis_local_directory ();
+      size_t len_local_dir = strlen (local_dir);
 
-      p = stpcpy (buf, "passwd.org_dir.");
-      p = stpcpy (p, nis_local_directory ());
-      pwdtable = strdup (buf);
+      pwdtable = malloc (sizeof (key) + len_local_dir);
       if (pwdtable == NULL)
-	return NSS_STATUS_TRYAGAIN;
-      pwdtablelen = strlen (pwdtable);
+        return NSS_STATUS_TRYAGAIN;
+
+      pwdtablelen = ((char *) mempcpy (mempcpy (pwdtable,
+						key, sizeof (key) - 1),
+				       local_dir, len_local_dir + 1)
+		     - pwdtable) - 1;
+
+      /* *Maybe* (I'm no NIS expert) we have to duplicate the `local_dir'
+	 value since it might change during our work.  So add a test here.  */
+      assert (pwdtablelen == sizeof (key) + len_local_dir);
     }
 
   ent->blacklist.current = 0;
@@ -334,8 +345,8 @@ _nss_compat_endpwent (void)
 }
 
 static enum nss_status
-getpwent_next_nis_netgr (struct passwd *result, ent_t *ent, char *group,
-			 char *buffer, size_t buflen)
+getpwent_next_nis_netgr (const char *name, struct passwd *result, ent_t *ent,
+			 char *group, char *buffer, size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
   char *ypdomain, *host, *user, *domain, *outval, *p, *p2;
@@ -379,6 +390,11 @@ getpwent_next_nis_netgr (struct passwd *result, ent_t *ent, char *group,
       if (domain != NULL && strcmp (ypdomain, domain) != 0)
 	continue;
 
+      /* If name != NULL, we are called from getpwnam */
+      if (name != NULL)
+	if (strcmp (user, name) != 0)
+	  continue;
+
       if (yp_match (ypdomain, "passwd.byname", user,
 		    strlen (user), &outval, &outvallen)
 	  != YPERR_SUCCESS)
@@ -404,6 +420,9 @@ getpwent_next_nis_netgr (struct passwd *result, ent_t *ent, char *group,
 
       if (parse_res)
 	{
+	  /* Store the User in the blacklist for the "+" at the end of
+	     /etc/passwd */
+	  blacklist_store_name (result->pw_name, ent);
 	  copy_pwd_changes (result, &ent->pwd, p2, p2len);
 	  break;
 	}
@@ -413,8 +432,9 @@ getpwent_next_nis_netgr (struct passwd *result, ent_t *ent, char *group,
 }
 
 static enum nss_status
-getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
-			     char *buffer, size_t buflen)
+getpwent_next_nisplus_netgr (const char *name, struct passwd *result,
+			     ent_t *ent, char *group, char *buffer,
+			     size_t buflen)
 {
   char *ypdomain, *host, *user, *domain, *p2;
   int status, parse_res;
@@ -459,6 +479,11 @@ getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
       if (domain != NULL && strcmp (ypdomain, domain) != 0)
 	continue;
 
+      /* If name != NULL, we are called from getpwnam */
+      if (name != NULL)
+	if (strcmp (user, name) != 0)
+	  continue;
+
       p2len = pwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
 	{
@@ -488,22 +513,15 @@ getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
 
       if (parse_res)
 	{
+	  /* Store the User in the blacklist for the "+" at the end of
+	     /etc/passwd */
+	  blacklist_store_name (result->pw_name, ent);
 	  copy_pwd_changes (result, &ent->pwd, p2, p2len);
 	  break;
 	}
     }
 
   return NSS_STATUS_SUCCESS;
-}
-
-static enum nss_status
-getpwent_next_netgr (struct passwd *result, ent_t *ent, char *group,
-		     char *buffer, size_t buflen)
-{
-  if (use_nisplus)
-    return getpwent_next_nisplus_netgr (result, ent, group, buffer, buflen);
-  else
-    return getpwent_next_nis_netgr (result, ent, group, buffer, buflen);
 }
 
 static enum nss_status
@@ -683,8 +701,8 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 
 /* This function handle the +user entrys in /etc/passwd */
 static enum nss_status
-getpwent_next_file_plususer (struct passwd *result, char *buffer,
-			     size_t buflen)
+getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
+		   size_t buflen)
 {
   struct parser_data *data = (void *) buffer;
   struct passwd pwd;
@@ -708,9 +726,9 @@ getpwent_next_file_plususer (struct passwd *result, char *buffer,
   if (use_nisplus) /* Do the NIS+ query here */
     {
       nis_result *res;
-      char buf[strlen (result->pw_name) + 24 + pwdtablelen];
+      char buf[strlen (name) + 24 + pwdtablelen];
 
-      sprintf(buf, "[name=%s],%s", &result->pw_name[1], pwdtable);
+      sprintf(buf, "[name=%s],%s", name, pwdtable);
       res = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
       if (niserr2nss (res->status) != NSS_STATUS_SUCCESS)
 	{
@@ -730,23 +748,24 @@ getpwent_next_file_plususer (struct passwd *result, char *buffer,
     }
   else /* Use NIS */
     {
-      char *domain;
-      char *outval;
+      char *domain, *outval, *ptr;
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
 	return NSS_STATUS_TRYAGAIN;
 
-      if (yp_match (domain, "passwd.byname", &result->pw_name[1],
-		    strlen (result->pw_name) - 1, &outval, &outvallen)
+      if (yp_match (domain, "passwd.byname", name, strlen (name),
+		    &outval, &outvallen)
 	  != YPERR_SUCCESS)
 	return NSS_STATUS_TRYAGAIN;
-      p = strncpy (buffer, outval,
-		   buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
+      ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
+		     buflen : (size_t) outvallen);
+      buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
       free (outval);
-      while (isspace (*p))
-	p++;
-      if ((parse_res = _nss_files_parse_pwent (p, result, data, buflen)) == -1)
+      while (isspace (*ptr))
+	ptr++;
+      if ((parse_res = _nss_files_parse_pwent (ptr, result, data, buflen))
+	  == -1)
 	{
 	  __set_errno (ERANGE);
 	  return NSS_STATUS_TRYAGAIN;
@@ -841,8 +860,14 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  ent->first = TRUE;
 	  copy_pwd_changes (&ent->pwd, result, NULL, 0);
 
-	  status = getpwent_next_netgr (result, ent, &result->pw_name[2],
-					buffer, buflen);
+	  if (use_nisplus)
+	    status =  getpwent_next_nisplus_netgr (NULL, result, ent,
+						   &result->pw_name[2],
+						   buffer, buflen);
+	  else
+	    status =  getpwent_next_nis_netgr (NULL, result, ent,
+					       &result->pw_name[2],
+					       buffer, buflen);
 	  if (status == NSS_STATUS_RETURN)
 	    continue;
 	  else
@@ -863,7 +888,11 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	{
 	  enum nss_status status;
 
-	  status = getpwent_next_file_plususer (result, buffer, buflen);
+	  /* Store the User in the blacklist for the "+" at the end of
+	     /etc/passwd */
+	  blacklist_store_name (&result->pw_name[1], ent);
+	  status = getpwnam_plususer (&result->pw_name[1], result, buffer,
+				      buflen);
 	  if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
 	    break;
 	  else
@@ -901,26 +930,30 @@ internal_getpwent_r (struct passwd *pw, ent_t *ent, char *buffer,
 
       /* We are searching members in a netgroup */
       /* Since this is not the first call, we don't need the group name */
-      status = getpwent_next_netgr (pw, ent, NULL, buffer, buflen);
+      if (use_nisplus)
+	status = getpwent_next_nisplus_netgr (NULL, pw, ent, NULL, buffer,
+					      buflen);
+      else
+	status = getpwent_next_nis_netgr (NULL, pw, ent, NULL, buffer, buflen);
       if (status == NSS_STATUS_RETURN)
 	return getpwent_next_file (pw, ent, buffer, buflen);
       else
 	return status;
     }
-  else if (ent->nis)
-    {
-      if (use_nisplus)
-	return getpwent_next_nisplus (pw, ent, buffer, buflen);
-      else
-	return getpwent_next_nis (pw, ent, buffer, buflen);
-    }
   else
-    return getpwent_next_file (pw, ent, buffer, buflen);
+    if (ent->nis)
+      {
+	if (use_nisplus)
+	  return getpwent_next_nisplus (pw, ent, buffer, buflen);
+	else
+	  return getpwent_next_nis (pw, ent, buffer, buflen);
+      }
+    else
+      return getpwent_next_file (pw, ent, buffer, buflen);
 }
 
 enum nss_status
-_nss_compat_getpwent_r (struct passwd *pwd, char *buffer,
-			size_t buflen)
+_nss_compat_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
@@ -944,6 +977,158 @@ _nss_compat_getpwent_r (struct passwd *pwd, char *buffer,
   return status;
 }
 
+/* Searches in /etc/passwd and the NIS/NIS+ map for a special user */
+static enum nss_status
+internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
+		     char *buffer, size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+
+  while (1)
+    {
+      fpos_t pos;
+      char *p;
+      int parse_res;
+
+      do
+	{
+	  fgetpos (ent->stream, &pos);
+	  p = fgets (buffer, buflen, ent->stream);
+	  if (p == NULL)
+	    {
+	      if (feof (ent->stream))
+		return NSS_STATUS_NOTFOUND;
+	      else
+		{
+		  __set_errno (ERANGE);
+		  return NSS_STATUS_TRYAGAIN;
+		}
+	    }
+
+	  /* Terminate the line for any case.  */
+	  buffer[buflen - 1] = '\0';
+
+	  /* Skip leading blanks.  */
+	  while (isspace (*p))
+	    ++p;
+	}
+      while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines.  */
+	     /* Parse the line.  If it is invalid, loop to
+		get the next line of the file to parse.  */
+	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen)));
+
+      if (parse_res == -1)
+	{
+	  /* The parser ran out of space.  */
+	  fsetpos (ent->stream, &pos);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* This is a real entry.  */
+      if (result->pw_name[0] != '+' && result->pw_name[0] != '-')
+	{
+	  if (strcmp (result->pw_name, name) == 0)
+	    return NSS_STATUS_SUCCESS;
+	  else
+	    continue;
+	}
+
+      /* -@netgroup */
+      if (result->pw_name[0] == '-' && result->pw_name[1] == '@'
+	  && result->pw_name[2] != '\0')
+	{
+	  char buf2[1024];
+	  char *user, *host, *domain;
+	  struct __netgrent netgrdata;
+
+	  bzero (&netgrdata, sizeof (struct __netgrent));
+	  __internal_setnetgrent (&result->pw_name[2], &netgrdata);
+	  while (__internal_getnetgrent_r (&host, &user, &domain,
+					   &netgrdata, buf2, sizeof (buf2)))
+	    {
+	      if (user != NULL && user[0] != '-')
+		if (strcmp (user, name) == 0)
+		  return NSS_STATUS_NOTFOUND;
+	    }
+	  __internal_endnetgrent (&netgrdata);
+	  continue;
+	}
+
+      /* +@netgroup */
+      if (result->pw_name[0] == '+' && result->pw_name[1] == '@'
+	  && result->pw_name[2] != '\0')
+	{
+	  char buf[strlen (result->pw_name)];
+	  int status;
+
+	  strcpy (buf, &result->pw_name[2]);
+	  ent->netgroup = TRUE;
+	  ent->first = TRUE;
+	  copy_pwd_changes (&ent->pwd, result, NULL, 0);
+
+	  do
+	    {
+	      if (use_nisplus)
+		status = getpwent_next_nisplus_netgr (name, result, ent, buf,
+						      buffer, buflen);
+	      else
+		status = getpwent_next_nis_netgr (name, result, ent, buf,
+						  buffer, buflen);
+	      if (status == NSS_STATUS_RETURN)
+		continue;
+
+	      if (status == NSS_STATUS_SUCCESS &&
+		  strcmp (result->pw_name, name) == 0)
+		return NSS_STATUS_SUCCESS;
+	    } while (status == NSS_STATUS_SUCCESS);
+	  continue;
+	}
+
+      /* -user */
+      if (result->pw_name[0] == '-' && result->pw_name[1] != '\0'
+	  && result->pw_name[1] != '@')
+	{
+	  if (strcmp (&result->pw_name[1], name) == 0)
+	    return NSS_STATUS_NOTFOUND;
+	  else
+	    continue;
+	}
+
+      /* +user */
+      if (result->pw_name[0] == '+' && result->pw_name[1] != '\0'
+	  && result->pw_name[1] != '@')
+	{
+	  if (strcmp (name, &result->pw_name[1]) == 0)
+	    {
+	      enum nss_status status;
+
+	      status = getpwnam_plususer (name, result, buffer, buflen);
+	      if (status == NSS_STATUS_RETURN)
+		/* We couldn't parse the entry */
+		return NSS_STATUS_NOTFOUND;
+	      else
+		return status;
+	    }
+	}
+
+      /* +:... */
+      if (result->pw_name[0] == '+' && result->pw_name[1] == '\0')
+	{
+	  enum nss_status status;
+
+	  status = getpwnam_plususer (name, result, buffer, buflen);
+	  if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
+	    break;
+	  else
+	    if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+	      return NSS_STATUS_NOTFOUND;
+	    else
+	      return status;
+	}
+    }
+  return NSS_STATUS_SUCCESS;
+}
 
 enum nss_status
 _nss_compat_getpwnam_r (const char *name, struct passwd *pwd,
@@ -970,15 +1155,244 @@ _nss_compat_getpwnam_r (const char *name, struct passwd *pwd,
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  while ((status = internal_getpwent_r (pwd, &ent, buffer, buflen))
-	 == NSS_STATUS_SUCCESS)
-    if (strcmp (pwd->pw_name, name) == 0)
-      break;
+  status = internal_getpwnam_r (name, pwd, &ent, buffer, buflen);
 
   internal_endpwent (&ent);
+
   return status;
 }
 
+/* This function handle the + entry in /etc/passwd for getpwuid */
+static enum nss_status
+getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
+		   size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+  struct passwd pwd;
+  int parse_res;
+  char *p;
+  size_t plen;
+
+  memset (&pwd, '\0', sizeof (struct passwd));
+
+  copy_pwd_changes (&pwd, result, NULL, 0);
+
+  plen = pwd_need_buflen (&pwd);
+  if (plen > buflen)
+    {
+      __set_errno (ERANGE);
+      return NSS_STATUS_TRYAGAIN;
+    }
+  p = buffer + (buflen - plen);
+  buflen -= plen;
+
+  if (use_nisplus) /* Do the NIS+ query here */
+    {
+      nis_result *res;
+      char buf[1024 + pwdtablelen];
+
+      sprintf(buf, "[uid=%d],%s", uid, pwdtable);
+      res = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+      if (niserr2nss (res->status) != NSS_STATUS_SUCCESS)
+	{
+	  enum nss_status status =  niserr2nss (res->status);
+
+	  nis_freeresult (res);
+	  return status;
+	}
+      if ((parse_res = _nss_nisplus_parse_pwent (res, result, buffer,
+						 buflen)) == -1)
+	{
+	  nis_freeresult (res);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      nis_freeresult (res);
+    }
+  else /* Use NIS */
+    {
+      char buf[1024];
+      char *domain, *outval, *ptr;
+      int outvallen;
+
+      if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
+	return NSS_STATUS_TRYAGAIN;
+
+      sprintf (buf, "%d", uid);
+      if (yp_match (domain, "passwd.byuid", buf, strlen (buf),
+		    &outval, &outvallen)
+	  != YPERR_SUCCESS)
+	return NSS_STATUS_TRYAGAIN;
+      ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
+		     buflen : (size_t) outvallen);
+      buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
+      free (outval);
+      while (isspace (*ptr))
+	ptr++;
+      if ((parse_res = _nss_files_parse_pwent (ptr, result, data, buflen))
+	  == -1)
+	{
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+    }
+
+  if (parse_res > 0)
+    {
+      copy_pwd_changes (result, &pwd, p, plen);
+      give_pwd_free (&pwd);
+      /* We found the entry.  */
+      return NSS_STATUS_SUCCESS;
+    }
+  else
+    {
+      /* Give buffer the old len back */
+      buflen += plen;
+      give_pwd_free (&pwd);
+    }
+  return NSS_STATUS_RETURN;
+}
+
+/* Searches in /etc/passwd and the NIS/NIS+ map for a special user id */
+static enum nss_status
+internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
+		     char *buffer, size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+
+  while (1)
+    {
+      fpos_t pos;
+      char *p;
+      int parse_res;
+
+      do
+	{
+	  fgetpos (ent->stream, &pos);
+	  p = fgets (buffer, buflen, ent->stream);
+	  if (p == NULL)
+	    return NSS_STATUS_NOTFOUND;
+
+	  /* Terminate the line for any case.  */
+	  buffer[buflen - 1] = '\0';
+
+	  /* Skip leading blanks.  */
+	  while (isspace (*p))
+	    ++p;
+	}
+      while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines.  */
+	     /* Parse the line.  If it is invalid, loop to
+		get the next line of the file to parse.  */
+	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen)));
+
+      if (parse_res == -1)
+	{
+	  /* The parser ran out of space.  */
+	  fsetpos (ent->stream, &pos);
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* This is a real entry.  */
+      if (result->pw_name[0] != '+' && result->pw_name[0] != '-')
+	{
+	  if (result->pw_uid == uid)
+	    return NSS_STATUS_SUCCESS;
+	  else
+	    continue;
+	}
+
+      /* -@netgroup */
+      if (result->pw_name[0] == '-' && result->pw_name[1] == '@'
+	  && result->pw_name[2] != '\0')
+	{
+	  char buf2[1024];
+	  char *user, *host, *domain;
+	  struct __netgrent netgrdata;
+
+	  bzero (&netgrdata, sizeof (struct __netgrent));
+	  __internal_setnetgrent (&result->pw_name[2], &netgrdata);
+	  while (__internal_getnetgrent_r (&host, &user, &domain,
+					   &netgrdata, buf2, sizeof (buf2)))
+	    {
+              if (user != NULL && user[0] != '-')
+                blacklist_store_name (user, ent);
+	    }
+	  __internal_endnetgrent (&netgrdata);
+	  continue;
+	}
+
+      /* +@netgroup */
+      if (result->pw_name[0] == '+' && result->pw_name[1] == '@'
+	  && result->pw_name[2] != '\0')
+	{
+	  char buf[strlen (result->pw_name)];
+	  int status;
+
+	  strcpy (buf, &result->pw_name[2]);
+	  ent->netgroup = TRUE;
+	  ent->first = TRUE;
+	  copy_pwd_changes (&ent->pwd, result, NULL, 0);
+
+	  do
+	    {
+	      if (use_nisplus)
+		status = getpwent_next_nisplus_netgr (NULL, result, ent, buf,
+						      buffer, buflen);
+	      else
+		status = getpwent_next_nis_netgr (NULL, result, ent, buf,
+						  buffer, buflen);
+	      if (status == NSS_STATUS_RETURN)
+		continue;
+
+	      if (status == NSS_STATUS_SUCCESS && uid == result->pw_uid)
+		return NSS_STATUS_SUCCESS;
+	    } while (status == NSS_STATUS_SUCCESS);
+	  continue;
+	}
+
+      /* -user */
+      if (result->pw_name[0] == '-' && result->pw_name[1] != '\0'
+	  && result->pw_name[1] != '@')
+	{
+          blacklist_store_name (&result->pw_name[1], ent);
+          continue;
+	}
+
+      /* +user */
+      if (result->pw_name[0] == '+' && result->pw_name[1] != '\0'
+	  && result->pw_name[1] != '@')
+	{
+	  enum nss_status status;
+
+	  /* Store the User in the blacklist for the "+" at the end of
+             /etc/passwd */
+          blacklist_store_name (&result->pw_name[1], ent);
+	  status = getpwnam_plususer (&result->pw_name[1], result, buffer,
+				      buflen);
+	  if (status == NSS_STATUS_SUCCESS && result->pw_uid == uid)
+	    break;
+	  else
+	    continue;
+	}
+
+      /* +:... */
+      if (result->pw_name[0] == '+' && result->pw_name[1] == '\0')
+	{
+	  enum nss_status status;
+
+	  status = getpwuid_plususer (uid, result, buffer, buflen);
+	  if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
+	    break;
+	  else
+	    if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+	      return NSS_STATUS_NOTFOUND;
+	    else
+	      return status;
+	}
+    }
+  return NSS_STATUS_SUCCESS;
+}
 
 enum nss_status
 _nss_compat_getpwuid_r (uid_t uid, struct passwd *pwd,
@@ -1002,12 +1416,10 @@ _nss_compat_getpwuid_r (uid_t uid, struct passwd *pwd,
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  while ((status = internal_getpwent_r (pwd, &ent, buffer, buflen))
-	 == NSS_STATUS_SUCCESS)
-    if (pwd->pw_uid == uid && pwd->pw_name[0] != '+' && pwd->pw_name[0] != '-')
-      break;
+  status = internal_getpwuid_r (uid, pwd, &ent, buffer, buflen);
 
   internal_endpwent (&ent);
+
   return status;
 }
 

@@ -41,15 +41,15 @@ these situations.  There is a special value for infinity.
 @comment math.h
 @comment ISO
 @deftypevr Macro float_t INFINITY
-A expression representing the infinite value.  @code{INFINITY} values are
-produce by mathematical operations like @code{1.0 / 0.0}.  It is
+An expression representing the infinite value.  @code{INFINITY} values are
+produced by mathematical operations like @code{1.0 / 0.0}.  It is
 possible to continue the computations with this value since the basic
 operations as well as the mathematical library functions are prepared to
 handle values like this.
 
 Beside @code{INFINITY} also the value @code{-INFINITY} is representable
 and it is handled differently if needed.  It is possible to test a
-variables for infinite value using a simple comparison but the
+value for infiniteness using a simple comparison but the
 recommended way is to use the the @code{isinf} function.
 
 This macro was introduced in the @w{ISO C 9X} standard.
@@ -357,7 +357,8 @@ cut along the negative real axis.
 @deftypefunx {complex long double} cprojl (complex long double @var{z})
 Return the projection of the complex value @var{z} on the Riemann
 sphere.  Values with a infinite complex part (even if the real part
-is NaN) are projected to positive infinite on the real axis.  If the real part is infinite, the result is equivalent to
+is NaN) are projected to positive infinite on the real axis.  If the
+real part is infinite, the result is equivalent to
 
 @smallexample
 INFINITY + I * copysign (0.0, cimag (z))
@@ -1060,13 +1061,13 @@ format supports this; and to the largest representable value otherwise.
 If the input string is @code{"nan"} or
 @code{"nan(@var{n-char-sequence})"} the return value of @code{strtod} is
 the representation of the NaN (not a number) value (if the
-floating-point formats supports this.  The form with the
-@var{n-char-sequence} enables in an implementation specific way to
-specify the form of the NaN value.  When using the @w{IEEE 754}
+floating-point format supports this).  In the second form the part
+@var{n-char-sequence} allows to specify the form of the NaN value in an
+implementation specific way.  When using the @w{IEEE 754}
 floating-point format, the NaN value can have a lot of forms since only
 at least one bit in the mantissa must be set.  In the GNU C library
 implementation of @code{strtod} the @var{n-char-sequence} is interpreted
-as a number (as recognized by @code{strtol}, @pxref{Parsing of Integers})
+as a number (as recognized by @code{strtol}, @pxref{Parsing of Integers}).
 The mantissa of the return value corresponds to this given number.
 
 Since the value zero which is returned in the error case is also a valid

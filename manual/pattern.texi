@@ -477,7 +477,7 @@ is easily available non-directories will be rejected but no extra
 work will be done to determine the information for each file.  I.e.,
 the caller must still be able to filter directories out.
 
-This functionality is only available witht eh GNU @code{glob}
+This functionality is only available with the GNU @code{glob}
 implementation.  It is mainly used internally to increase the
 performance but might be useful for a user as well and therefore is
 documented here.

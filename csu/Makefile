@@ -64,7 +64,7 @@ omit-deps += $(crtstuff)
 $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
-CFLAGS-initfini.s = -O0 -g0 -fPIC
+CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions
 
 $(objpfx)initfini.s: initfini.c
 	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_ret.c	10.7 (Sleepycat) 9/15/97";
+static const char sccsid[] = "@(#)db_ret.c	10.8 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -122,7 +122,7 @@ __db_retcopy(dbt, data, len, memp, memsize, db_malloc)
 	 */
 	if (F_ISSET(dbt, DB_DBT_MALLOC)) {
 		dbt->data = db_malloc == NULL ?
-		    (void *)malloc(len + 1) :
+		    (void *)__db_malloc(len + 1) :
 		    (void *)db_malloc(len + 1);
 		if (dbt->data == NULL)
 			return (ENOMEM);
@@ -134,8 +134,8 @@ __db_retcopy(dbt, data, len, memp, memsize, db_malloc)
 	} else {
 		if (*memsize == 0 || *memsize < len) {
 			*memp = *memp == NULL ?
-			    (void *)malloc(len + 1) :
-			    (void *)realloc(*memp, len + 1);
+			    (void *)__db_malloc(len + 1) :
+			    (void *)__db_realloc(*memp, len + 1);
 			if (*memp == NULL) {
 				*memsize = 0;
 				return (ENOMEM);

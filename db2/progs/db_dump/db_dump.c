@@ -31,6 +31,8 @@ static const char sccsid[] = "@(#)db_dump.c	10.16 (Sleepycat) 8/27/97";
 #include "hash.h"
 #include "clib_ext.h"
 
+#undef stat
+
 void	configure __P((char *));
 DB_ENV *db_init __P((char *));
 void	dbt_dump __P((DBT *));

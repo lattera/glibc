@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_get.c	10.19 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)log_get.c	10.21 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -170,7 +170,8 @@ __log_get(dblp, alsn, dbt, flags, silent)
 		if (!IS_ZERO_LSN(nlsn)) {
 			/* If at start-of-file, move to the previous file. */
 			if (nlsn.offset == 0) {
-				if (nlsn.file == 1)
+				if (nlsn.file == 1 ||
+				    __log_valid(dblp, NULL, nlsn.file - 1) != 0)
 					return (DB_NOTFOUND);
 
 				--nlsn.file;
@@ -215,27 +216,21 @@ retry:
 		goto cksum;
 	}
 
-	/*
-	 * Move the file descriptor to the page that has the hdr.  We dealt
-	 * with moving to a previous log file in the flags switch code, but
-	 * we don't yet know if we'll need to move to a subsequent file.
-	 *
-	 * Acquire a file descriptor.
-	 */
+	/* Acquire a file descriptor. */
 	if (dblp->c_fd == -1) {
 		if ((ret = __log_name(dblp, nlsn.file, &np)) != 0)
 			goto err1;
-		if ((ret = __db_fdopen(np, DB_RDONLY | DB_SEQUENTIAL,
+		if ((ret = __db_open(np, DB_RDONLY | DB_SEQUENTIAL,
 		    DB_RDONLY | DB_SEQUENTIAL, 0, &dblp->c_fd)) != 0) {
 			fail = np;
 			goto err1;
 		}
-		free(np);
+		__db_free(np);
 		np = NULL;
 	}
 
 	/* Seek to the header offset and read the header. */
-	if ((ret = __db_lseek(dblp->c_fd, 0, 0, nlsn.offset, SEEK_SET)) != 0) {
+	if ((ret = __db_seek(dblp->c_fd, 0, 0, nlsn.offset, SEEK_SET)) != 0) {
 		fail = "seek";
 		goto err1;
 	}
@@ -289,7 +284,7 @@ retry:
 	}
 
 	/* Allocate temporary memory to hold the record. */
-	if ((tbuf = (char *)malloc(len)) == NULL) {
+	if ((tbuf = (char *)__db_malloc(len)) == NULL) {
 		ret = ENOMEM;
 		goto err1;
 	}
@@ -318,7 +313,7 @@ retry:
 	if ((ret = __db_retcopy(dbt, tbuf, len,
 	    &dblp->c_dbt.data, &dblp->c_dbt.ulen, NULL)) != 0)
 		goto err1;
-	free(tbuf);
+	__db_free(tbuf);
 	tbuf = NULL;
 
 cksum:	if (hdr.cksum != __ham_func4(dbt->data, dbt->size)) {
@@ -349,8 +344,8 @@ err1:	if (!silent)
 			__db_err(dblp->dbenv,
 			    "log_get: %s: %s", fail, strerror(ret));
 err2:	if (np != NULL)
-		free(np);
+		__db_free(np);
 	if (tbuf != NULL)
-		free(tbuf);
+		__db_free(tbuf);
 	return (ret);
 }

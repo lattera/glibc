@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dup.c	10.9 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)db_dup.c	10.10 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -217,7 +217,7 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 	indx = *indxp;
 
 	/* Create a temporary page to do compaction onto. */
-	if ((tp = (PAGE *)malloc(dbp->pgsize)) == NULL)
+	if ((tp = (PAGE *)__db_malloc(dbp->pgsize)) == NULL)
 		return (ENOMEM);
 #ifdef DEBUG
 	memset(tp, 0xff, dbp->pgsize);

@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __memp_bhwrite
     __P((DB_MPOOL *, MPOOLFILE *, BH *, int *, int *));
 int __memp_pgread __P((DB_MPOOLFILE *, BH *, int));

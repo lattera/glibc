@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_pr.c	10.17 (Sleepycat) 9/15/97";
+static const char sccsid[] = "@(#)db_pr.c	10.19 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -183,7 +183,6 @@ __db_prbtree(dbp)
 	};
 	BTMETA *mp;
 	BTREE *t;
-	DB_LOCK lock;
 	EPG *epg;
 	FILE *fp;
 	RECNO *rp;
@@ -195,8 +194,6 @@ __db_prbtree(dbp)
 
 	(void)fprintf(fp, "%s\nOn-page metadata:\n", DB_LINE);
 	i = PGNO_METADATA;
-	if ((ret = __bam_lget(dbp, 0, PGNO_METADATA, DB_LOCK_READ, &lock)) != 0)
-		return (ret);
 
 	if ((ret = __bam_pget(dbp, (PAGE **)&mp, &i, 0)) != 0)
 		return (ret);
@@ -211,7 +208,6 @@ __db_prbtree(dbp)
 	__db_prflags(mp->flags, mfn);
 	(void)fprintf(fp, "\n");
 	(void)memp_fput(dbp->mpf, mp, 0);
-	(void)__bam_lput(dbp, lock);
 
 	(void)fprintf(fp, "%s\nDB_INFO:\n", DB_LINE);
 	(void)fprintf(fp, "bt_maxkey: %lu bt_minkey: %lu\n",
@@ -416,7 +412,8 @@ __db_prpage(h, all)
 	    (TYPE(h) == P_LRECNO && h->pgno == PGNO_ROOT))
 		fprintf(fp, " total records: %4lu", (u_long)RE_NREC(h));
 	fprintf(fp, "\n");
-	if (TYPE(h) == P_LBTREE || TYPE(h) == P_LRECNO)
+	if (TYPE(h) == P_LBTREE || TYPE(h) == P_LRECNO ||
+	    TYPE(h) == P_DUPLICATE || TYPE(h) == P_OVERFLOW)
 		fprintf(fp, "    prev: %4lu next: %4lu",
 		    (u_long)PREV_PGNO(h), (u_long)NEXT_PGNO(h));
 	if (TYPE(h) == P_IBTREE || TYPE(h) == P_LBTREE)

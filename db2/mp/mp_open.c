@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_open.c	10.13 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)mp_open.c	10.15 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -54,7 +54,7 @@ memp_open(path, flags, mode, dbenv, retp)
 	cachesize = dbenv == NULL ? 0 : dbenv->mp_size;
 
 	/* Create and initialize the DB_MPOOL structure. */
-	if ((dbmp = (DB_MPOOL *)calloc(1, sizeof(DB_MPOOL))) == NULL)
+	if ((dbmp = (DB_MPOOL *)__db_calloc(1, sizeof(DB_MPOOL))) == NULL)
 		return (ENOMEM);
 	LIST_INIT(&dbmp->dbregq);
 	TAILQ_INIT(&dbmp->dbmfq);
@@ -62,8 +62,7 @@ memp_open(path, flags, mode, dbenv, retp)
 	dbmp->dbenv = dbenv;
 
 	/* Decide if it's possible for anyone else to access the pool. */
-	if ((dbenv == NULL && path == NULL) ||
-	    (dbenv != NULL && F_ISSET(dbenv, DB_MPOOL_PRIVATE)))
+	if ((dbenv == NULL && path == NULL) || LF_ISSET(DB_MPOOL_PRIVATE))
 		F_SET(dbmp, MP_ISPRIVATE);
 
 	/*
@@ -183,7 +182,7 @@ memp_register(dbmp, ftype, pgin, pgout)
 {
 	DB_MPREG *mpr;
 
-	if ((mpr = (DB_MPREG *)malloc(sizeof(DB_MPREG))) == NULL)
+	if ((mpr = (DB_MPREG *)__db_malloc(sizeof(DB_MPREG))) == NULL)
 		return (ENOMEM);
 
 	mpr->ftype = ftype;

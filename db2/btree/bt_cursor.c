@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_cursor.c	10.33 (Sleepycat) 9/24/97";
+static const char sccsid[] = "@(#)bt_cursor.c	10.35 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -62,10 +62,10 @@ __bam_cursor(dbp, txn, dbcp)
 
 	DEBUG_LWRITE(dbp, txn, "bam_cursor", NULL, NULL, 0);
 
-	if ((dbc = (DBC *)calloc(1, sizeof(DBC))) == NULL)
+	if ((dbc = (DBC *)__db_calloc(1, sizeof(DBC))) == NULL)
 		return (ENOMEM);
-	if ((cp = (CURSOR *)calloc(1, sizeof(CURSOR))) == NULL) {
-		free(dbc);
+	if ((cp = (CURSOR *)__db_calloc(1, sizeof(CURSOR))) == NULL) {
+		__db_free(dbc);
 		return (ENOMEM);
 	}
 
@@ -474,7 +474,7 @@ __bam_c_rget(dbp, cp, key, data, flags)
 	__bam_stkrel(dbp);
 
 err:	(void)memp_fput(dbp->mpf, cp->page, 0);
-	free(dbt.data);
+	__db_free(dbt.data);
 	return (ret);
 }
 
@@ -1422,7 +1422,7 @@ __bam_c_physdel(dbp, cp, h)
 	DB_LOCK lock;
 	db_indx_t indx;
 	db_pgno_t pgno, next_pgno, prev_pgno;
-	int local, ret;
+	int local, normal, ret;
 
 	t = dbp->internal;
 	ret = 0;
@@ -1457,51 +1457,65 @@ __bam_c_physdel(dbp, cp, h)
 		local = 0;
 
 	/*
-	 * If we're deleting a duplicate entry, call the common code to do
-	 * the work.
+	 * If we're deleting a duplicate entry and there are other duplicate
+	 * entries remaining, call the common code to do the work and fix up
+	 * the parent page as necessary.  Otherwise, do a normal btree delete.
+	 *
+	 * There are 5 possible cases:
+	 *
+	 * 1. It's not a duplicate item: do a normal btree delete.
+	 * 2. It's a duplicate item:
+	 *	2a: We delete an item from a page of duplicates, but there are
+	 *	    more items on the page.
+	 *      2b: We delete the last item from a page of duplicates, deleting
+	 *	    the last duplicate.
+	 *      2c: We delete the last item from a page of duplicates, but there
+	 *	    is a previous page of duplicates.
+	 *      2d: We delete the last item from a page of duplicates, but there
+	 *	    is a following page of duplicates.
+	 *
+	 * In the case of:
+	 *
+	 *  1: There's nothing further to do.
+	 * 2a: There's nothing further to do.
+	 * 2b: Do the normal btree delete instead of a duplicate delete, as
+	 *     that deletes both the duplicate chain and the parent page's
+	 *     entry.
+	 * 2c: There's nothing further to do.
+	 * 2d: Delete the duplicate, and update the parent page's entry.
 	 */
 	if (TYPE(h) == P_DUPLICATE) {
 		pgno = PGNO(h);
 		prev_pgno = PREV_PGNO(h);
 		next_pgno = NEXT_PGNO(h);
-		if ((ret = __db_drem(dbp, &h, indx, __bam_free)) != 0)
-			goto err;
 
-		/*
-		 * There are 4 cases:
-		 *
-		 * 1. We removed an item on a page, but there are more items
-		 *    on the page.
-		 * 2. We removed the last item on a page, removing the last
-		 *    duplicate.
-		 * 3. We removed the last item on a page, but there is a
-		 *    following page of duplicates.
-		 * 4. We removed the last item on a page, but there is a
-		 *    previous page of duplicates.
-		 *
-		 * In case 1, h != NULL, h->pgno == pgno
-		 * In case 2, h == NULL,
-		 *    prev_pgno == PGNO_INVALID, next_pgno == PGNO_INVALID
-		 * In case 3, h != NULL, next_pgno != PGNO_INVALID
-		 * In case 4, h == NULL, prev_pgno != PGNO_INVALID
-		 *
-		 * In case 1, there's nothing else to do.
-		 * In case 2, remove the entry from the parent page.
-		 * In case 3 or 4, if the deleted page was the first in a chain
-		 *    of duplicate pages, update the parent page's entry.
-		 *
-		 * Test:
-		 *	If there were previous pages of duplicates or we didn't
-		 *	empty the current page of duplicates, we don't need to
-		 *	touch the parent page.
-		 */
-		if (prev_pgno != PGNO_INVALID || (h != NULL && pgno == h->pgno))
-			goto done;
+		if (NUM_ENT(h) == 1 &&
+		    prev_pgno == PGNO_INVALID && next_pgno == PGNO_INVALID)
+			normal = 1;
+		else {
+			normal = 0;
 
-		/*
-		 * Release any page we're holding and the lock on the deleted
-		 * page.
-		 */
+			/* Delete the duplicate. */
+			if ((ret = __db_drem(dbp, &h, indx, __bam_free)) != 0)
+				goto err;
+
+			/*
+			 * 2a: h != NULL, h->pgno == pgno
+			 * 2b: We don't reach this clause, as the above test
+			 *     was true.
+			 * 2c: h == NULL, prev_pgno != PGNO_INVALID
+			 * 2d: h != NULL, next_pgno != PGNO_INVALID
+			 *
+			 * Test for 2a and 2c: if we didn't empty the current
+			 * page or there was a previous page of duplicates, we
+			 * don't need to touch the parent page.
+			 */
+			if ((h != NULL && pgno == h->pgno) ||
+			    prev_pgno != PGNO_INVALID)
+				goto done;
+		}
+
+		/* Release any page we're holding and its lock. */
 		if (local) {
 			if (h != NULL)
 				(void)memp_fput(dbp->mpf, h, 0);
@@ -1519,37 +1533,33 @@ __bam_c_physdel(dbp, cp, h)
 		}
 		local = 1;
 
-		/*
-		 * If we deleted the last duplicate, we can fall out and do a
-		 * normal btree delete in the context of the parent page.  If
-		 * not, we have to update the parent's page.
-		 */
+		/* Switch to the parent page's entry. */
 		indx = cp->indx;
-		if (next_pgno != PGNO_INVALID) {
-			/*
-			 * Copy, delete, update and re-insert the parent page's
-			 * entry.
-			 */
-			bo = *GET_BOVERFLOW(h, indx);
-			(void)__db_ditem(dbp, h, indx, BOVERFLOW_SIZE);
-			bo.pgno = next_pgno;
-			memset(&dbt, 0, sizeof(dbt));
-			dbt.data = &bo;
-			dbt.size = BOVERFLOW_SIZE;
-			(void)__db_pitem(dbp,
-			    h, indx, BOVERFLOW_SIZE, &dbt, NULL);
+		if (normal)
+			goto btd;
 
-			/* Discard the parent page. */
-			(void)memp_fput(dbp->mpf, h, 0);
-			(void)__BT_TLPUT(dbp, lock);
-			local = 0;
-
-			goto done;
-		}
+		/*
+		 * Copy, delete, update, add-back the parent page's data entry.
+		 *
+		 * XXX
+		 * This may be a performance/logging problem.  We should add a
+		 * log message which simply logs/updates a random set of bytes
+		 * on a page, and use it instead of doing a delete/add pair.
+		 */
+		indx += O_INDX;
+		bo = *GET_BOVERFLOW(h, indx);
+		(void)__db_ditem(dbp, h, indx, BOVERFLOW_SIZE);
+		bo.pgno = next_pgno;
+		memset(&dbt, 0, sizeof(dbt));
+		dbt.data = &bo;
+		dbt.size = BOVERFLOW_SIZE;
+		(void)__db_pitem(dbp, h, indx, BOVERFLOW_SIZE, &dbt, NULL);
+		(void)memp_fset(dbp->mpf, h, DB_MPOOL_DIRTY);
+		goto done;
 	}
 
 	/* Otherwise, do a normal btree delete. */
-	if ((ret = __bam_ditem(dbp, h, indx)) != 0)
+btd:	if ((ret = __bam_ditem(dbp, h, indx)) != 0)
 		goto err;
 	if ((ret = __bam_ditem(dbp, h, indx)) != 0)
 		goto err;
@@ -1584,7 +1594,7 @@ __bam_c_physdel(dbp, cp, h)
 		}
 
 		ret = __bam_dpage(dbp, &dbt);
-		free(dbt.data);
+		__db_free(dbt.data);
 	}
 
 err:

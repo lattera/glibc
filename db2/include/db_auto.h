@@ -59,6 +59,7 @@ typedef struct _db_ovref_args {
 	DB_LSN prev_lsn;
 	u_int32_t	fileid;
 	db_pgno_t	pgno;
+	int32_t	adjust;
 	DB_LSN 	lsn;
 } __db_ovref_args;
 

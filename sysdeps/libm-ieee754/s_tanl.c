@@ -66,7 +66,7 @@ static char rcsid[] = "$NetBSD: $";
 
     /* |x| ~< pi/4 */
 	se &= 0x7fff;
-	if(ix <= 0x3ffe) return __kernel_tanl(x,z,1);
+	if(se <= 0x3ffe) return __kernel_tanl(x,z,1);
 
     /* tan(Inf or NaN) is NaN */
 	else if (se==0x7fff) return x-x;		/* NaN */

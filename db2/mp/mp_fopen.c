@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fopen.c	10.27 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)mp_fopen.c	10.30 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -92,7 +92,7 @@ __memp_fopen(dbmp, path,
 
 	/* Allocate and initialize the per-process structure. */
 	if ((dbmfp =
-	    (DB_MPOOLFILE *)calloc(1, sizeof(DB_MPOOLFILE))) == NULL) {
+	    (DB_MPOOLFILE *)__db_calloc(1, sizeof(DB_MPOOLFILE))) == NULL) {
 		__db_err(dbenv, "%s: %s",
 		    path == NULL ? TEMPORARY : path, strerror(ENOMEM));
 		return (ENOMEM);
@@ -120,7 +120,7 @@ __memp_fopen(dbmp, path,
 
 
 		/* Open the file. */
-		if ((ret = __db_fdopen(dbmfp->path,
+		if ((ret = __db_open(dbmfp->path,
 		    LF_ISSET(DB_CREATE | DB_RDONLY), DB_CREATE | DB_RDONLY,
 		    mode, &dbmfp->fd)) != 0) {
 			__db_err(dbenv, "%s: %s", dbmfp->path, strerror(ret));
@@ -128,9 +128,11 @@ __memp_fopen(dbmp, path,
 		}
 
 		/* Don't permit files that aren't a multiple of the pagesize. */
-		if ((ret = __db_stat(dbenv,
-		     dbmfp->path, dbmfp->fd, &size, NULL)) != 0)
+		if ((ret =
+		    __db_ioinfo(dbmfp->path, dbmfp->fd, &size, NULL)) != 0) {
+			__db_err(dbenv, "%s: %s", dbmfp->path, strerror(ret));
 			goto err;
+		}
 		if (size % pagesize) {
 			__db_err(dbenv,
 			    "%s: file size not a multiple of the pagesize",
@@ -198,7 +200,7 @@ __memp_fopen(dbmp, path,
 	dbmfp->addr = NULL;
 	if (mfp->can_mmap) {
 		dbmfp->len = size;
-		if (__db_mmap(dbmfp->fd, dbmfp->len, 1, 1, &dbmfp->addr) != 0) {
+		if (__db_map(dbmfp->fd, dbmfp->len, 1, 1, &dbmfp->addr) != 0) {
 			mfp->can_mmap = 0;
 			dbmfp->addr = NULL;
 		}
@@ -264,7 +266,7 @@ __memp_mf_open(dbmp, dbmfp,
 	for (mfp = SH_TAILQ_FIRST(&dbmp->mp->mpfq, __mpoolfile);
 	    mfp != NULL; mfp = SH_TAILQ_NEXT(mfp, q, __mpoolfile))
 		if (!memcmp(fileid,
-		    ADDR(dbmp, mfp->fileid_off), DB_FILE_ID_LEN)) {
+		    R_ADDR(dbmp, mfp->fileid_off), DB_FILE_ID_LEN)) {
 			if (ftype != mfp->ftype ||
 			    pagesize != mfp->stat.st_pagesize) {
 				__db_err(dbmp->dbenv,
@@ -325,10 +327,10 @@ alloc:	if ((ret = __memp_ralloc(dbmp, sizeof(MPOOLFILE), NULL, &mfp)) != 0)
 	if (0) {
 err:		if (mfp->path_off != 0)
 			__db_shalloc_free(dbmp->addr,
-			    ADDR(dbmp, mfp->path_off));
+			    R_ADDR(dbmp, mfp->path_off));
 		if (!istemp)
 			__db_shalloc_free(dbmp->addr,
-			    ADDR(dbmp, mfp->fileid_off));
+			    R_ADDR(dbmp, mfp->fileid_off));
 		if (mfp != NULL)
 			__db_shalloc_free(dbmp->addr, mfp);
 		mfp = NULL;
@@ -367,7 +369,7 @@ memp_fclose(dbmfp)
 
 	/* Discard any mmap information. */
 	if (dbmfp->addr != NULL &&
-	    (ret = __db_munmap(dbmfp->addr, dbmfp->len)) != 0)
+	    (ret = __db_unmap(dbmfp->addr, dbmfp->len)) != 0)
 		__db_err(dbmp->dbenv, "%s: %s", dbmfp->path, strerror(ret));
 
 	/* Close the file; temporary files may not yet have been created. */
@@ -423,7 +425,7 @@ __memp_mf_close(dbmp, dbmfp)
 	 * fairly expensive to reintegrate the buffers back into the region for
 	 * no purpose.
 	 */
-	mf_offset = OFFSET(dbmp, mfp);
+	mf_offset = R_OFFSET(dbmp, mfp);
 	for (bhp = SH_TAILQ_FIRST(&mp->bhq, __bh); bhp != NULL; bhp = nbhp) {
 		nbhp = SH_TAILQ_NEXT(bhp, q, __bh);
 
@@ -436,6 +438,10 @@ __memp_mf_close(dbmp, dbmfp)
 #endif
 
 		if (bhp->mf_offset == mf_offset) {
+			if (F_ISSET(bhp, BH_DIRTY)) {
+				++mp->stat.st_page_clean;
+				--mp->stat.st_page_dirty;
+			}
 			__memp_bhfree(dbmp, mfp, bhp, 0);
 			SH_TAILQ_INSERT_HEAD(&mp->bhfq, bhp, q, __bh);
 		}
@@ -446,11 +452,11 @@ __memp_mf_close(dbmp, dbmfp)
 
 	/* Free the space. */
 	__db_shalloc_free(dbmp->addr, mfp);
-	__db_shalloc_free(dbmp->addr, ADDR(dbmp, mfp->path_off));
+	__db_shalloc_free(dbmp->addr, R_ADDR(dbmp, mfp->path_off));
 	if (mfp->fileid_off != 0)
-		__db_shalloc_free(dbmp->addr, ADDR(dbmp, mfp->fileid_off));
+		__db_shalloc_free(dbmp->addr, R_ADDR(dbmp, mfp->fileid_off));
 	if (mfp->pgcookie_off != 0)
-		__db_shalloc_free(dbmp->addr, ADDR(dbmp, mfp->pgcookie_off));
+		__db_shalloc_free(dbmp->addr, R_ADDR(dbmp, mfp->pgcookie_off));
 
 ret1:	UNLOCKREGION(dbmp);
 	return (0);

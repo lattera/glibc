@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_apprec.c	10.16 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_apprec.c	10.18 (Sleepycat) 9/30/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -31,12 +31,6 @@ static const char sccsid[] = "@(#)db_apprec.c	10.16 (Sleepycat) 8/27/97";
 #include "txn.h"
 #include "common_ext.h"
 
-#define	FREE_DBT(L, D) {						\
-	if (F_ISSET((L), DB_AM_THREAD) && (D).data != NULL)		\
-		free((D).data);						\
-		(D).data = NULL;					\
-	}								\
-
 /*
  * __db_apprec --
  *	Perform recovery.
@@ -52,12 +46,21 @@ __db_apprec(dbenv, flags)
 	DB_LOG *lp;
 	DB_LSN ckp_lsn, first_lsn, lsn, tmp_lsn;
 	time_t now;
-	int first_flag, ret;
+	int first_flag, is_thread, ret;
 	void *txninfo;
+
+	lp = dbenv->lg_info;
 
 	/* Initialize the transaction list. */
 	if ((ret = __db_txnlist_init(&txninfo)) != 0)
 		return (ret);
+
+	/*
+	 * Save the state of the thread flag -- we don't need it on at the
+	 * moment because we're single-threaded until recovery is complete.
+	 */
+	is_thread = F_ISSET(lp, DB_AM_THREAD);
+	F_CLR(lp, DB_AM_THREAD);
 
 	/*
 	 * Read forward through the log, opening the appropriate files so that
@@ -66,20 +69,18 @@ __db_apprec(dbenv, flags)
 	 * recovery, we begin at the first LSN that appears in any log file
 	 * (log_get figures this out for us when we pass it the DB_FIRST flag).
 	 */
-	lp = dbenv->lg_info;
 	if (LF_ISSET(DB_RECOVER_FATAL))
 		first_flag = DB_FIRST;
 	else {
-		if ((ret = __log_findckp(lp, &lsn)) == DB_NOTFOUND)
+		if ((ret = __log_findckp(lp, &lsn)) == DB_NOTFOUND) {
+			F_SET(lp, is_thread);
 			return (0);
+		}
 		first_flag = DB_SET;
 	}
 
 	/* If we're a threaded application, we have to allocate space. */
 	memset(&data, 0, sizeof(data));
-	if (F_ISSET(lp, DB_AM_THREAD))
-		F_SET(&data, DB_DBT_MALLOC);
-
 	if ((ret = log_get(lp, &lsn, &data, first_flag)) != 0) {
 		__db_err(dbenv, "Failure: unable to get log record");
 		if (first_flag == DB_SET)
@@ -93,7 +94,6 @@ __db_apprec(dbenv, flags)
 	first_lsn = lsn;
 	for (;;) {
 		ret = __db_dispatch(lp, &data, &lsn, TXN_OPENFILES, txninfo);
-		FREE_DBT(lp, data);
 		if (ret != 0 && ret != DB_TXN_CKP)
 			goto msgerr;
 		if ((ret =
@@ -103,7 +103,6 @@ __db_apprec(dbenv, flags)
 			break;
 		}
 	}
-	FREE_DBT(lp, data);
 
 	/*
 	 * Initialize the ckp_lsn to 0,0.  If we never find a valid
@@ -116,7 +115,6 @@ __db_apprec(dbenv, flags)
 		tmp_lsn = lsn;
 		ret = __db_dispatch(lp,
 		    &data, &lsn, TXN_BACKWARD_ROLL, txninfo);
-		FREE_DBT(lp, data);
 		if (ret == DB_TXN_CKP) {
 			if (IS_ZERO_LSN(ckp_lsn))
 				ckp_lsn = tmp_lsn;
@@ -124,20 +122,17 @@ __db_apprec(dbenv, flags)
 		} else if (ret != 0)
 			goto msgerr;
 	}
-	FREE_DBT(lp, data);
 	if (ret != 0 && ret != DB_NOTFOUND)
 		goto err;
 
 	for (ret = log_get(lp, &lsn, &data, DB_NEXT);
 	    ret == 0; ret = log_get(lp, &lsn, &data, DB_NEXT)) {
 		ret = __db_dispatch(lp, &data, &lsn, TXN_FORWARD_ROLL, txninfo);
-		FREE_DBT(lp, data);
 		if (ret == DB_TXN_CKP)
 			ret = 0;
 		else if (ret != 0)
 			goto msgerr;
 	}
-	FREE_DBT(lp, data);
 	if (ret != DB_NOTFOUND)
 		goto err;
 
@@ -165,11 +160,12 @@ __db_apprec(dbenv, flags)
 		    (u_long)dbenv->tx_info->region->last_ckp.offset);
 	}
 
+	F_SET(lp, is_thread);
 	return (0);
 
 msgerr:	__db_err(dbenv, "Recovery function for LSN %lu %lu failed",
 	    (u_long)lsn.file, (u_long)lsn.offset);
 
-err:	FREE_DBT(lp, data);
+err:	F_SET(lp, is_thread);
 	return (ret);
 }

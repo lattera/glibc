@@ -40,7 +40,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_rec.c	10.13 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)log_rec.c	10.14 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -99,7 +99,7 @@ __log_register_recover(logp, dbtp, lsnp, redo, info)
 
 out:	F_CLR(logp, DB_AM_RECOVER);
 	if (argp != NULL)
-		free(argp);
+		__db_free(argp);
 	return (ret);
 }
 
@@ -150,7 +150,7 @@ __log_unregister_recover(logp, dbtp, lsnp, redo, info)
 
 out:	F_CLR(logp, DB_AM_RECOVER);
 	if (argp != NULL)
-		free(argp);
+		__db_free(argp);
 	return (ret);
 }
 
@@ -227,14 +227,14 @@ __log_add_logid(logp, dbp, ndx)
 	 */
 	if (logp->dbentry_cnt <= ndx) {
 		if (logp->dbentry_cnt == 0) {
-			logp->dbentry =
-			    (DB_ENTRY *)malloc(DB_GROW_SIZE * sizeof(DB_ENTRY));
+			logp->dbentry = (DB_ENTRY *)
+			    __db_malloc(DB_GROW_SIZE * sizeof(DB_ENTRY));
 			if (logp->dbentry == NULL) {
 				ret = ENOMEM;
 				goto err;
 			}
 		} else {
-			temp_entryp = (DB_ENTRY *)realloc(logp->dbentry,
+			temp_entryp = (DB_ENTRY *)__db_realloc(logp->dbentry,
 			    (DB_GROW_SIZE + logp->dbentry_cnt) *
 			    sizeof(DB_ENTRY));
 			if (temp_entryp == NULL) {

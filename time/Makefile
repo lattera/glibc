@@ -32,7 +32,7 @@ routines	:= offtime asctime clock ctime ctime_r difftime	\
 		   tzfile gettimeofday settimeofday adjtime	\
 		   getitimer setitimer				\
 		   stime dysize timegm ftime			\
-		   strptime getdate
+		   strptime getdate strfxtime
 
 others	:= ap zdump zic
 tests	:= test_time clocktest test-tz

@@ -46,7 +46,7 @@ int __txn_regop_log(logp, txnid, ret_lsnp, flags,
 		lsnp = &txnid->last_lsn;
 	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN)
 	    + sizeof(opcode);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -65,7 +65,7 @@ int __txn_regop_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -103,7 +103,7 @@ __txn_regop_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->prev_lsn.offset);
 	printf("\topcode: %lu\n", (u_long)argp->opcode);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -118,7 +118,7 @@ __txn_regop_read(recbuf, argpp)
 	__txn_regop_args *argp;
 	u_int8_t *bp;
 
-	argp = (__txn_regop_args *)malloc(sizeof(__txn_regop_args) +
+	argp = (__txn_regop_args *)__db_malloc(sizeof(__txn_regop_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -167,7 +167,7 @@ int __txn_ckp_log(logp, txnid, ret_lsnp, flags,
 	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN)
 	    + sizeof(*ckp_lsn)
 	    + sizeof(*last_ckp);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -194,7 +194,7 @@ int __txn_ckp_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -235,7 +235,7 @@ __txn_ckp_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tlast_ckp: [%lu][%lu]\n",
 	    (u_long)argp->last_ckp.file, (u_long)argp->last_ckp.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -250,7 +250,7 @@ __txn_ckp_read(recbuf, argpp)
 	__txn_ckp_args *argp;
 	u_int8_t *bp;
 
-	argp = (__txn_ckp_args *)malloc(sizeof(__txn_ckp_args) +
+	argp = (__txn_ckp_args *)__db_malloc(sizeof(__txn_ckp_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);

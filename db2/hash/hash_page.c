@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_page.c	10.24 (Sleepycat) 9/17/97";
+static const char sccsid[] = "@(#)hash_page.c	10.29 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 /*
@@ -489,19 +489,20 @@ __ham_putitem(p, dbt, type)
 
 
 /*
- * PUBLIC: int __ham_del_pair __P((HTAB *, HASH_CURSOR *));
+ * PUBLIC: int __ham_del_pair __P((HTAB *, HASH_CURSOR *, int));
  * XXX TODO: if the item is an offdup, delete the other pages and
  * then remove the pair. If the offpage page is 0, then you can
  * just remove the pair.
  */
 int
-__ham_del_pair(hashp, cursorp)
+__ham_del_pair(hashp, cursorp, reclaim_page)
 	HTAB *hashp;
 	HASH_CURSOR *cursorp;
+	int reclaim_page;
 {
 	DBT data_dbt, key_dbt;
 	DB_ENV *dbenv;
-	DB_LSN new_lsn, *n_lsn;
+	DB_LSN new_lsn, *n_lsn, tmp_lsn;
 	PAGE *p;
 	db_indx_t ndx;
 	db_pgno_t chg_pgno, pgno;
@@ -542,6 +543,15 @@ __ham_del_pair(hashp, cursorp)
 			    HOFFDUP_PGNO(P_ENTRY(p, H_DATAINDEX(ndx))),
 			    sizeof(db_pgno_t));
 			ret = __db_ddup(hashp->dbp, pgno, __ham_del_page);
+			F_CLR(cursorp, H_ISDUP);
+			break;
+		case H_DUPLICATE:
+			/*
+			 * If we delete a pair that is/was a duplicate, then
+			 * we had better clear the flag so that we update the
+			 * cursor appropriately.
+			 */
+			F_CLR(cursorp, H_ISDUP);
 			break;
 		}
 
@@ -578,13 +588,13 @@ __ham_del_pair(hashp, cursorp)
 		--hashp->hdr->nelem;
 
 	/*
-	 * Check if the page is empty.  There are two cases.  If it's
-	 * empty and it's not the first chain in the bucket (i.e., the
-	 * bucket page) then we can simply remove it. If it is the first
-	 * chain in the bucket, then we need to copy the second page into
-	 * it and remove the second page.
+	 * If we need to reclaim the page, then check if the page is empty.
+	 * There are two cases.  If it's empty and it's not the first page
+	 * in the bucket (i.e., the bucket page) then we can simply remove
+	 * it. If it is the first chain in the bucket, then we need to copy
+	 * the second page into it and remove the second page.
 	 */
-	if (NUM_ENT(p) == 0 && PREV_PGNO(p) == PGNO_INVALID &&
+	if (reclaim_page && NUM_ENT(p) == 0 && PREV_PGNO(p) == PGNO_INVALID &&
 	    NEXT_PGNO(p) != PGNO_INVALID) {
 		PAGE *n_pagep, *nn_pagep;
 		db_pgno_t tmp_pgno;
@@ -592,7 +602,6 @@ __ham_del_pair(hashp, cursorp)
 		/*
 		 * First page in chain is empty and we know that there
 		 * are more pages in the chain.
-		 * XXX Need to log this.
 		 */
 		if ((ret =
 		    __ham_get_page(hashp->dbp, NEXT_PGNO(p), &n_pagep)) != 0)
@@ -605,13 +614,35 @@ __ham_del_pair(hashp, cursorp)
 				(void) __ham_put_page(hashp->dbp, n_pagep, 0);
 				return (ret);
 			}
+		}
+
+		if (DB_LOGGING(hashp->dbp)) {
+			key_dbt.data = n_pagep;
+			key_dbt.size = hashp->hdr->pagesize;
+			if ((ret = __ham_copypage_log(dbenv->lg_info,
+			    (DB_TXN *)hashp->dbp->txn, &new_lsn, 0,
+			    hashp->dbp->log_fileid, PGNO(p), &LSN(p),
+			    PGNO(n_pagep), &LSN(n_pagep), NEXT_PGNO(n_pagep),
+			    NEXT_PGNO(n_pagep) == PGNO_INVALID ? NULL :
+			    &LSN(nn_pagep), &key_dbt)) != 0)
+				return (ret);
+
+			/* Move lsn onto page. */
+			LSN(p) = new_lsn;	/* Structure assignment. */
+			LSN(n_pagep) = new_lsn;
+			if (NEXT_PGNO(n_pagep) != PGNO_INVALID)
+				LSN(nn_pagep) = new_lsn;
+		}
+		if (NEXT_PGNO(n_pagep) != PGNO_INVALID) {
 			PREV_PGNO(nn_pagep) = PGNO(p);
 			(void)__ham_put_page(hashp->dbp, nn_pagep, 1);
 		}
 
 		tmp_pgno = PGNO(p);
+		tmp_lsn = LSN(p);
 		memcpy(p, n_pagep, hashp->hdr->pagesize);
 		PGNO(p) = tmp_pgno;
+		LSN(p) = tmp_lsn;
 		PREV_PGNO(p) = PGNO_INVALID;
 
 		/*
@@ -623,7 +654,8 @@ __ham_del_pair(hashp, cursorp)
 		if ((ret = __ham_dirty_page(hashp, p)) != 0 ||
 		    (ret = __ham_del_page(hashp->dbp, n_pagep)) != 0)
 			return (ret);
-	} else if (NUM_ENT(p) == 0 && PREV_PGNO(p) != PGNO_INVALID) {
+	} else if (reclaim_page &&
+	    NUM_ENT(p) == 0 && PREV_PGNO(p) != PGNO_INVALID) {
 		PAGE *n_pagep, *p_pagep;
 
 		if ((ret =
@@ -690,13 +722,22 @@ __ham_del_pair(hashp, cursorp)
 	}
 	__ham_c_update(hashp, cursorp, chg_pgno, 0, 0, 0);
 
+	/*
+	 * Since we just deleted a pair from the master page, anything
+	 * in cursorp->dpgno should be cleared.
+	 */
+	cursorp->dpgno = PGNO_INVALID;
+
 	F_CLR(cursorp, H_OK);
 	return (ret);
 }
+
 /*
+ * __ham_replpair --
+ *	Given the key data indicated by the cursor, replace part/all of it
+ *	according to the fields in the dbt.
+ *
  * PUBLIC: int __ham_replpair __P((HTAB *, HASH_CURSOR *, DBT *, u_int32_t));
- * Given the key data indicated by the cursor, replace part/all of it
- * according to the fields in the dbt.
  */
 int
 __ham_replpair(hashp, hcp, dbt, make_dup)
@@ -768,7 +809,7 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 			return (ret);
 
 		if (dbt->doff == 0 && dbt->dlen == len) {
-			ret = __ham_del_pair(hashp, hcp);
+			ret = __ham_del_pair(hashp, hcp, 0);
 			if (ret == 0)
 			    ret = __ham_add_el(hashp,
 			        hcp, &tmp, dbt, H_KEYDATA);
@@ -784,15 +825,15 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 				goto err;
 
 			/* Now we can delete the item. */
-			if ((ret = __ham_del_pair(hashp, hcp)) != 0) {
-				free(tdata.data);
+			if ((ret = __ham_del_pair(hashp, hcp, 0)) != 0) {
+				__db_free(tdata.data);
 				goto err;
 			}
 
 			/* Now shift old data around to make room for new. */
 			if (change > 0) {
-				tdata.data = (void *)
-				    realloc(tdata.data, tdata.size + change);
+				tdata.data = (void *)__db_realloc(tdata.data,
+				    tdata.size + change);
 				memset((u_int8_t *)tdata.data + tdata.size,
 				    0, change);
 			}
@@ -812,9 +853,9 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 
 			/* Now add the pair. */
 			ret = __ham_add_el(hashp, hcp, &tmp, &tdata, type);
-			free(tdata.data);
+			__db_free(tdata.data);
 		}
-err:		free(tmp.data);
+err:		__db_free(tmp.data);
 		return (ret);
 	}
 
@@ -1025,7 +1066,7 @@ __ham_split_page(hashp, obucket, nbucket)
 		}
 	}
 	if (big_buf != NULL)
-		free(big_buf);
+		__db_free(big_buf);
 
 	/*
 	 * If the original bucket spanned multiple pages, then we've got
@@ -1549,17 +1590,20 @@ __ham_init_ovflpages(hp)
 {
 	DB_LSN new_lsn;
 	PAGE *p;
-	db_pgno_t last_pgno;
-	u_int32_t i, numpages;
+	db_pgno_t last_pgno, new_pgno;
+	u_int32_t i, curpages, numpages;
 
-	numpages = hp->hdr->ovfl_point + 1;
+	curpages = hp->hdr->spares[hp->hdr->ovfl_point] - 
+	    hp->hdr->spares[hp->hdr->ovfl_point - 1];
+	numpages = hp->hdr->ovfl_point + 1 - curpages;
 
 	last_pgno = hp->hdr->last_freed;
+	new_pgno = PGNO_OF(hp, hp->hdr->ovfl_point, curpages + 1);
 	if (DB_LOGGING(hp->dbp)) {
 		(void)__ham_ovfl_log(hp->dbp->dbenv->lg_info,
 		    (DB_TXN *)hp->dbp->txn, &new_lsn, 0,
-		    hp->dbp->log_fileid, PGNO_OF(hp, hp->hdr->ovfl_point, 1),
-		    numpages, last_pgno, &hp->hdr->lsn);
+		    hp->dbp->log_fileid, new_pgno,
+		    numpages, last_pgno, hp->hdr->ovfl_point, &hp->hdr->lsn);
 		hp->hdr->lsn = new_lsn;
 	} else
 		ZERO_LSN(new_lsn);
@@ -1567,7 +1611,8 @@ __ham_init_ovflpages(hp)
 	hp->hdr->spares[hp->hdr->ovfl_point] += numpages;
 	for (i = numpages; i > 0; i--) {
 		if (__ham_new_page(hp,
-		    PGNO_OF(hp, hp->hdr->ovfl_point, i), P_INVALID, &p) != 0)
+		    PGNO_OF(hp, hp->hdr->ovfl_point, curpages + i),
+		    P_INVALID, &p) != 0)
 			break;
 		LSN(p) = new_lsn;
 		NEXT_PGNO(p) = last_pgno;

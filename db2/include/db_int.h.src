@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_int.h.src	10.30 (Sleepycat) 9/23/97
+ *	@(#)db_int.h.src	10.36 (Sleepycat) 10/31/97
  */
 
 #ifndef _DB_INTERNAL_H_
@@ -12,6 +12,7 @@
 
 #include "db.h"				/* Standard DB include file. */
 #include "queue.h"
+#include "os_func.h"
 #include "os_ext.h"
 
 /*******************************************************
@@ -64,12 +65,16 @@
 #undef	SSZA
 #define SSZA(name, field)	((int)&(((name *)0)->field[0]))
 
+/* Macros to return per-process address, offsets based on shared regions. */
+#define	R_ADDR(base, offset)	((void *)((u_int8_t *)((base)->addr) + offset))
+#define	R_OFFSET(base, p)	((u_int8_t *)(p) - (u_int8_t *)(base)->addr)
+
 /* Free and free-string macros that overwrite memory during debugging. */
 #ifdef DEBUG
 #undef	FREE
 #define	FREE(p, len) {							\
 	memset(p, 0xff, len);						\
-	free(p);							\
+	__db_free(p);							\
 }
 #undef	FREES
 #define	FREES(p) {							\
@@ -78,18 +83,18 @@
 #else
 #undef	FREE
 #define	FREE(p, len) {							\
-	free(p);							\
+	__db_free(p);							\
 }
 #undef	FREES
 #define	FREES(p) {							\
-	free(p);							\
+	__db_free(p);							\
 }
 #endif
 
 /* Structure used to print flag values. */
 typedef struct __fn {
 	u_int32_t mask;			/* Flag value. */
-	char	 *name;			/* Flag name. */
+	const char *name;		/* Flag name. */
 } FN;
 
 /* Set, clear and test flags. */
@@ -163,10 +168,8 @@ typedef struct _db_mutex_t {
 	off_t	off;			/* Backing file offset. */
 	u_long	pid;			/* Lock holder: 0 or process pid. */
 #endif
-#ifdef MUTEX_STATISTICS
-	u_long	mutex_set_wait;		/* Blocking mutex: required waiting. */
-	u_long	mutex_set_nowait;	/* Blocking mutex: without waiting. */
-#endif
+	u_int32_t mutex_set_wait;	/* Granted after wait. */
+	u_int32_t mutex_set_nowait;	/* Granted without waiting. */
 } db_mutex_t;
 
 #include "mutex_ext.h"
@@ -177,11 +180,10 @@ typedef struct _db_mutex_t {
 /* Lock/unlock a DB thread. */
 #define	DB_THREAD_LOCK(dbp)						\
 	(F_ISSET(dbp, DB_AM_THREAD) ?					\
-	    __db_mutex_lock((db_mutex_t *)(dbp)->mutexp,  -1,		\
-	        (dbp)->dbenv == NULL ? NULL : (dbp)->dbenv->db_yield) : 0)
+	    __db_mutex_lock((db_mutex_t *)(dbp)->mutexp, -1) : 0)
 #define	DB_THREAD_UNLOCK(dbp)						\
 	(F_ISSET(dbp, DB_AM_THREAD) ?					\
-	    __db_mutex_unlock((db_mutex_t *)(dbp)->mutexp,  -1) : 0)
+	    __db_mutex_unlock((db_mutex_t *)(dbp)->mutexp, -1) : 0)
 
 /* Btree/recno local statistics structure. */
 struct __db_bt_lstat;	typedef struct __db_bt_lstat DB_BTREE_LSTAT;
@@ -260,7 +262,7 @@ typedef struct __dbpginfo {
 #define	IS_ZERO_LSN(LSN)	((LSN).file == 0)
 
 /* Test if we need to log a change. */
-#define	DB_LOGGING(dbp) \
+#define	DB_LOGGING(dbp)							\
 	(F_ISSET(dbp, DB_AM_LOGGING) && !F_ISSET(dbp, DB_AM_RECOVER))
 
 #ifdef DEBUG

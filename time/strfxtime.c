@@ -1,5 +1,7 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* ISO C extended string formatting.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,12 +18,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-#include <asm-syntax.h>
+#include <time.h>
 
-SYSCALL (time, 1)
-	movl 4(%esp), %edx	/* Put passed pointer in %edx.  */
-	testl %edx, %edx	/* Is it non-nil?  */
-	cmovnel %eax, (%edx)	/* Yes; store the time there.  */
-	ret
-PSEUDO_END (time)
+/* The ISO C 9X standard extended the `struct tm' structure to contain some
+   more information necessary for the new formats.  But the struct format
+   we used so far already contains the information and since the `struct tm'
+   and `struct tmx' structures match exactly in the first part.  So we can
+   simply use `strftime' to implement `strfxtime'.  */
+size_t
+strfxtime (char *s, size_t maxsize, const char *format,
+	   const struct tmx *timeptr)
+{
+  return strftime (s, maxsize, format, (const struct tm *) timeptr);
+}

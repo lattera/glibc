@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_findckp.c	10.11 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)log_findckp.c	10.12 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -77,13 +77,13 @@ __log_findckp(lp, lsnp)
 	next_lsn = last_ckp;
 	do {
 		if (F_ISSET(lp, DB_AM_THREAD))
-			free(data.data);
+			__db_free(data.data);
 
 		if ((ret = log_get(lp, &next_lsn, &data, DB_SET)) != 0)
 			return (ret);
 		if ((ret = __txn_ckp_read(data.data, &ckp_args)) != 0) {
 			if (F_ISSET(lp, DB_AM_THREAD))
-				free(data.data);
+				__db_free(data.data);
 			return (ret);
 		}
 		if (IS_ZERO_LSN(ckp_lsn))
@@ -100,12 +100,12 @@ __log_findckp(lp, lsnp)
 		}
 		last_ckp = next_lsn;
 		next_lsn = ckp_args->last_ckp;
-		free(ckp_args);
+		__db_free(ckp_args);
 	} while (!IS_ZERO_LSN(next_lsn) &&
 	    log_compare(&last_ckp, &ckp_lsn) > 0);
 
 	if (F_ISSET(lp, DB_AM_THREAD))
-		free(data.data);
+		__db_free(data.data);
 
 	/*
 	 * At this point, either, next_lsn is ZERO or ckp_lsn is the
@@ -118,7 +118,7 @@ __log_findckp(lp, lsnp)
 		if ((ret = log_get(lp, &last_ckp, &data, DB_FIRST)) != 0)
 			return (ret);
 		if (F_ISSET(lp, DB_AM_THREAD))
-			free(data.data);
+			__db_free(data.data);
 	}
 	*lsnp = last_ckp;
 

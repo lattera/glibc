@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __lock_getobj  __P((DB_LOCKTAB *,
     u_int32_t, DBT *, u_int32_t type, DB_LOCKOBJ **));
 int __lock_cmp __P((DBT *, DB_LOCKOBJ *));

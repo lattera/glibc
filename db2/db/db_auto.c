@@ -62,7 +62,7 @@ int __db_addrem_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(u_int32_t) + (hdr == NULL ? 0 : hdr->size)
 	    + sizeof(u_int32_t) + (dbt == NULL ? 0 : dbt->size)
 	    + sizeof(*pagelsn);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -114,7 +114,7 @@ int __db_addrem_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -176,7 +176,7 @@ __db_addrem_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tpagelsn: [%lu][%lu]\n",
 	    (u_long)argp->pagelsn.file, (u_long)argp->pagelsn.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -191,7 +191,7 @@ __db_addrem_read(recbuf, argpp)
 	__db_addrem_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_addrem_args *)malloc(sizeof(__db_addrem_args) +
+	argp = (__db_addrem_args *)__db_malloc(sizeof(__db_addrem_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -266,7 +266,7 @@ int __db_split_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(pgno)
 	    + sizeof(u_int32_t) + (pageimage == NULL ? 0 : pageimage->size)
 	    + sizeof(*pagelsn);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -304,7 +304,7 @@ int __db_split_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -355,7 +355,7 @@ __db_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tpagelsn: [%lu][%lu]\n",
 	    (u_long)argp->pagelsn.file, (u_long)argp->pagelsn.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -370,7 +370,7 @@ __db_split_read(recbuf, argpp)
 	__db_split_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_split_args *)malloc(sizeof(__db_split_args) +
+	argp = (__db_split_args *)__db_malloc(sizeof(__db_split_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -447,7 +447,7 @@ int __db_big_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(*pagelsn)
 	    + sizeof(*prevlsn)
 	    + sizeof(*nextlsn);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -499,7 +499,7 @@ int __db_big_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -556,7 +556,7 @@ __db_big_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tnextlsn: [%lu][%lu]\n",
 	    (u_long)argp->nextlsn.file, (u_long)argp->nextlsn.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -571,7 +571,7 @@ __db_big_read(recbuf, argpp)
 	__db_big_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_big_args *)malloc(sizeof(__db_big_args) +
+	argp = (__db_big_args *)__db_malloc(sizeof(__db_big_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -610,16 +610,17 @@ __db_big_read(recbuf, argpp)
 /*
  * PUBLIC: int __db_ovref_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
- * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *));
+ * PUBLIC:     u_int32_t, db_pgno_t, int32_t, DB_LSN *));
  */
 int __db_ovref_log(logp, txnid, ret_lsnp, flags,
-	fileid, pgno, lsn)
+	fileid, pgno, adjust, lsn)
 	DB_LOG *logp;
 	DB_TXN *txnid;
 	DB_LSN *ret_lsnp;
 	u_int32_t flags;
 	u_int32_t fileid;
 	db_pgno_t pgno;
+	int32_t adjust;
 	DB_LSN * lsn;
 {
 	DBT logrec;
@@ -639,8 +640,9 @@ int __db_ovref_log(logp, txnid, ret_lsnp, flags,
 	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN)
 	    + sizeof(fileid)
 	    + sizeof(pgno)
+	    + sizeof(adjust)
 	    + sizeof(*lsn);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -654,6 +656,8 @@ int __db_ovref_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(fileid);
 	memcpy(bp, &pgno, sizeof(pgno));
 	bp += sizeof(pgno);
+	memcpy(bp, &adjust, sizeof(adjust));
+	bp += sizeof(adjust);
 	if (lsn != NULL)
 		memcpy(bp, lsn, sizeof(*lsn));
 	else
@@ -666,7 +670,7 @@ int __db_ovref_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -704,10 +708,11 @@ __db_ovref_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->prev_lsn.offset);
 	printf("\tfileid: %lu\n", (u_long)argp->fileid);
 	printf("\tpgno: %lu\n", (u_long)argp->pgno);
+	printf("\tadjust: %ld\n", (long)argp->adjust);
 	printf("\tlsn: [%lu][%lu]\n",
 	    (u_long)argp->lsn.file, (u_long)argp->lsn.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -722,7 +727,7 @@ __db_ovref_read(recbuf, argpp)
 	__db_ovref_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_ovref_args *)malloc(sizeof(__db_ovref_args) +
+	argp = (__db_ovref_args *)__db_malloc(sizeof(__db_ovref_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -738,6 +743,8 @@ __db_ovref_read(recbuf, argpp)
 	bp += sizeof(argp->fileid);
 	memcpy(&argp->pgno, bp, sizeof(argp->pgno));
 	bp += sizeof(argp->pgno);
+	memcpy(&argp->adjust, bp, sizeof(argp->adjust));
+	bp += sizeof(argp->adjust);
 	memcpy(&argp->lsn, bp,  sizeof(argp->lsn));
 	bp += sizeof(argp->lsn);
 	*argpp = argp;
@@ -787,7 +794,7 @@ int __db_relink_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(*lsn_prev)
 	    + sizeof(next)
 	    + sizeof(*lsn_next);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -827,7 +834,7 @@ int __db_relink_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -874,7 +881,7 @@ __db_relink_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tlsn_next: [%lu][%lu]\n",
 	    (u_long)argp->lsn_next.file, (u_long)argp->lsn_next.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -889,7 +896,7 @@ __db_relink_read(recbuf, argpp)
 	__db_relink_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_relink_args *)malloc(sizeof(__db_relink_args) +
+	argp = (__db_relink_args *)__db_malloc(sizeof(__db_relink_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -957,7 +964,7 @@ int __db_addpage_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(*lsn)
 	    + sizeof(nextpgno)
 	    + sizeof(*nextlsn);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -990,7 +997,7 @@ int __db_addpage_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -1034,7 +1041,7 @@ __db_addpage_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tnextlsn: [%lu][%lu]\n",
 	    (u_long)argp->nextlsn.file, (u_long)argp->nextlsn.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -1049,7 +1056,7 @@ __db_addpage_read(recbuf, argpp)
 	__db_addpage_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_addpage_args *)malloc(sizeof(__db_addpage_args) +
+	argp = (__db_addpage_args *)__db_malloc(sizeof(__db_addpage_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -1114,7 +1121,7 @@ int __db_debug_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(u_int32_t) + (key == NULL ? 0 : key->size)
 	    + sizeof(u_int32_t) + (data == NULL ? 0 : data->size)
 	    + sizeof(arg_flags);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -1165,7 +1172,7 @@ int __db_debug_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -1231,7 +1238,7 @@ __db_debug_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\n");
 	printf("\targ_flags: %lu\n", (u_long)argp->arg_flags);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -1246,7 +1253,7 @@ __db_debug_read(recbuf, argpp)
 	__db_debug_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_debug_args *)malloc(sizeof(__db_debug_args) +
+	argp = (__db_debug_args *)__db_malloc(sizeof(__db_debug_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -1303,7 +1310,7 @@ int __db_noop_log(logp, txnid, ret_lsnp, flags)
 	} else
 		lsnp = &txnid->last_lsn;
 	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -1320,7 +1327,7 @@ int __db_noop_log(logp, txnid, ret_lsnp, flags)
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -1357,7 +1364,7 @@ __db_noop_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->prev_lsn.file,
 	    (u_long)argp->prev_lsn.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -1372,7 +1379,7 @@ __db_noop_read(recbuf, argpp)
 	__db_noop_args *argp;
 	u_int8_t *bp;
 
-	argp = (__db_noop_args *)malloc(sizeof(__db_noop_args) +
+	argp = (__db_noop_args *)__db_malloc(sizeof(__db_noop_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);

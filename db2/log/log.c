@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log.c	10.27 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)log.c	10.33 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -67,11 +67,11 @@ log_open(path, flags, mode, dbenv, lpp)
 	}
 
 	/* Create and initialize the DB_LOG structure. */
-	if ((dblp = (DB_LOG *)calloc(1, sizeof(DB_LOG))) == NULL)
+	if ((dblp = (DB_LOG *)__db_calloc(1, sizeof(DB_LOG))) == NULL)
 		return (ENOMEM);
 
-	if (path != NULL && (dblp->dir = strdup(path)) == NULL) {
-		free(dblp);
+	if (path != NULL && (dblp->dir = __db_strdup(path)) == NULL) {
+		__db_free(dblp);
 		return (ENOMEM);
 	}
 
@@ -329,10 +329,12 @@ __log_find(dblp, valp)
 	}
 
 	/* Get the list of file names. */
-	ret = __db_dir(dblp->dbenv, dir, &names, &fcnt);
+	ret = __db_dirlist(dir, &names, &fcnt);
 	FREES(p);
-	if (ret != 0)
+	if (ret != 0) {
+		__db_err(dblp->dbenv, "%s: %s", dir, strerror(ret));
 		return (ret);
+	}
 
 	/*
 	 * Search for a valid log file name, return a value of 0 on
@@ -350,7 +352,7 @@ __log_find(dblp, valp)
 		}
 
 	/* Discard the list. */
-	__db_dirf(dblp->dbenv, names, fcnt);
+	__db_dirfree(names, fcnt);
 
 	return (ret);
 }
@@ -376,10 +378,10 @@ __log_valid(dblp, lp, cnt)
 		return (ret);
 
 	fd = -1;
-	if ((ret = __db_fdopen(p,
+	if ((ret = __db_open(p,
 	    DB_RDONLY | DB_SEQUENTIAL,
 	    DB_RDONLY | DB_SEQUENTIAL, 0, &fd)) != 0 ||
-	    (ret = __db_lseek(fd, 0, 0, sizeof(HDR), SEEK_SET)) != 0 ||
+	    (ret = __db_seek(fd, 0, 0, sizeof(HDR), SEEK_SET)) != 0 ||
 	    (ret = __db_read(fd, &persist, sizeof(LOGP), &nw)) != 0 ||
 	    nw != sizeof(LOGP)) {
 		if (ret == 0)
@@ -473,4 +475,40 @@ log_unlink(path, force, dbenv)
 {
 	return (__db_runlink(dbenv,
 	    DB_APP_LOG, path, DB_DEFAULT_LOG_FILE, force));
+}
+
+/*
+ * log_stat --
+ *	Return LOG statistics.
+ */
+int
+log_stat(dblp, gspp, db_malloc)
+	DB_LOG *dblp;
+	DB_LOG_STAT **gspp;
+	void *(*db_malloc) __P((size_t));
+{
+	LOG *lp;
+
+	*gspp = NULL;
+	lp = dblp->lp;
+
+	if ((*gspp = db_malloc == NULL ?
+	    (DB_LOG_STAT *)__db_malloc(sizeof(**gspp)) :
+	    (DB_LOG_STAT *)db_malloc(sizeof(**gspp))) == NULL)
+		return (ENOMEM);
+
+	/* Copy out the global statistics. */
+	LOCK_LOGREGION(dblp);
+	**gspp = lp->stat;
+
+	(*gspp)->st_magic = lp->persist.magic;
+	(*gspp)->st_version = lp->persist.version;
+	(*gspp)->st_mode = lp->persist.mode;
+	(*gspp)->st_lg_max = lp->persist.lg_max;
+
+	(*gspp)->st_region_nowait = lp->rlayout.lock.mutex_set_nowait;
+	(*gspp)->st_region_wait = lp->rlayout.lock.mutex_set_wait;
+	UNLOCK_LOGREGION(dblp);
+
+	return (0);
 }

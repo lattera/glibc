@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_pr.c	10.13 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)mp_pr.c	10.18 (Sleepycat) 11/1/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -53,7 +53,7 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 		*gspp = NULL;
 
 		if ((*gspp = db_malloc == NULL ?
-		    (DB_MPOOL_STAT *)malloc(sizeof(**gspp)) :
+		    (DB_MPOOL_STAT *)__db_malloc(sizeof(**gspp)) :
 		    (DB_MPOOL_STAT *)db_malloc(sizeof(**gspp))) == NULL)
 			return (ENOMEM);
 
@@ -62,6 +62,10 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 		/* Copy out the global statistics. */
 		**gspp = dbmp->mp->stat;
 		(*gspp)->st_hash_buckets = dbmp->mp->htab_buckets;
+		(*gspp)->st_region_wait =
+		    dbmp->mp->rlayout.lock.mutex_set_wait;
+		(*gspp)->st_region_nowait =
+		    dbmp->mp->rlayout.lock.mutex_set_nowait;
 
 		UNLOCKREGION(dbmp);
 	}
@@ -85,7 +89,7 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 		/* Allocate space for the pointers. */
 		len = (len + 1) * sizeof(DB_MPOOL_FSTAT *);
 		if ((*fspp = db_malloc == NULL ?
-		    (DB_MPOOL_FSTAT **)malloc(len) :
+		    (DB_MPOOL_FSTAT **)__db_malloc(len) :
 		    (DB_MPOOL_FSTAT **)db_malloc(len)) == NULL)
 			return (ENOMEM);
 
@@ -96,11 +100,11 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 		    mfp = SH_TAILQ_FIRST(&dbmp->mp->mpfq, __mpoolfile);
 		    mfp != NULL;
 		    ++tfsp, mfp = SH_TAILQ_NEXT(mfp, q, __mpoolfile)) {
-			name = ADDR(dbmp, mfp->path_off);
+			name = R_ADDR(dbmp, mfp->path_off);
 			nlen = strlen(name);
 			len = sizeof(DB_MPOOL_FSTAT) + nlen + 1;
 			if ((*tfsp = db_malloc == NULL ?
-			    (DB_MPOOL_FSTAT *)malloc(len) :
+			    (DB_MPOOL_FSTAT *)__db_malloc(len) :
 			    (DB_MPOOL_FSTAT *)db_malloc(len)) == NULL)
 				return (ENOMEM);
 			**tfsp = mfp->stat;
@@ -200,18 +204,19 @@ __memp_pmp(fp, dbmp, mp, data)
 	(void)fprintf(fp, "references: %lu; cachesize: %lu\n",
 	    (u_long)mp->rlayout.refcnt, (u_long)mp->stat.st_cachesize);
 	(void)fprintf(fp,
-	    "    %lu pages created\n", mp->stat.st_page_create);
+	    "    %lu pages created\n", (u_long)mp->stat.st_page_create);
 	(void)fprintf(fp,
-	    "    %lu mmap pages returned\n", mp->stat.st_map);
+	    "    %lu mmap pages returned\n", (u_long)mp->stat.st_map);
 	(void)fprintf(fp, "    %lu I/O's (%lu read, %lu written)\n",
-	    mp->stat.st_page_in + mp->stat.st_page_out,
-	    mp->stat.st_page_in, mp->stat.st_page_out);
+	    (u_long)mp->stat.st_page_in + mp->stat.st_page_out,
+	    (u_long)mp->stat.st_page_in, (u_long)mp->stat.st_page_out);
 	if (mp->stat.st_cache_hit + mp->stat.st_cache_miss != 0)
 		(void)fprintf(fp,
 		    "    %.0f%% cache hit rate (%lu hit, %lu miss)\n",
 		    ((double)mp->stat.st_cache_hit /
 	    (mp->stat.st_cache_hit + mp->stat.st_cache_miss)) * 100,
-		    mp->stat.st_cache_hit, mp->stat.st_cache_miss);
+		    (u_long)mp->stat.st_cache_hit,
+		    (u_long)mp->stat.st_cache_miss);
 
 	/* Display the MPOOLFILE structures. */
 	for (cnt = 0, mfp = SH_TAILQ_FIRST(&dbmp->mp->mpfq, __mpoolfile);
@@ -230,17 +235,18 @@ __memp_pmp(fp, dbmp, mp, data)
 	(void)fprintf(fp, "%s\nHASH table of BH's (%lu buckets):\n",
 	    DB_LINE, (u_long)mp->htab_buckets);
 	(void)fprintf(fp,
-	    "longest chain searched %lu\n", mp->stat.st_hash_longest);
+	    "longest chain searched %lu\n", (u_long)mp->stat.st_hash_longest);
 	(void)fprintf(fp, "average chain searched %lu (total/calls: %lu/%lu)\n",
-	    mp->stat.st_hash_examined /
+	    (u_long)mp->stat.st_hash_examined /
 	    (mp->stat.st_hash_searches ? mp->stat.st_hash_searches : 1),
-	    mp->stat.st_hash_examined, mp->stat.st_hash_searches);
+	    (u_long)mp->stat.st_hash_examined,
+	    (u_long)mp->stat.st_hash_searches);
 	for (htabp = dbmp->htab,
 	    bucket = 0; bucket < mp->htab_buckets; ++htabp, ++bucket) {
 		if (SH_TAILQ_FIRST(&dbmp->htab[bucket], __bh) != NULL)
 			(void)fprintf(fp, "%lu:\n", (u_long)bucket);
 		for (bhp = SH_TAILQ_FIRST(&dbmp->htab[bucket], __bh);
-		    bhp != NULL; bhp = SH_TAILQ_NEXT(bhp, mq, __bh))
+		    bhp != NULL; bhp = SH_TAILQ_NEXT(bhp, hq, __bh))
 			__memp_pbh(fp, dbmp, bhp, data);
 	}
 
@@ -249,7 +255,7 @@ __memp_pmp(fp, dbmp, mp, data)
 	for (sep = "\n    ", bhp = SH_TAILQ_FIRST(&dbmp->mp->bhq, __bh);
 	    bhp != NULL; sep = ", ", bhp = SH_TAILQ_NEXT(bhp, q, __bh))
 		(void)fprintf(fp, "%s%lu/%lu", sep,
-		    (u_long)bhp->pgno, (u_long)OFFSET(dbmp, bhp));
+		    (u_long)bhp->pgno, (u_long)R_OFFSET(dbmp, bhp));
 	(void)fprintf(fp, "\n");
 }
 
@@ -263,16 +269,18 @@ __memp_pmf(fp, mfp, data)
 	MPOOLFILE *mfp;
 	int data;
 {
-	(void)fprintf(fp, "    %lu pages created\n", mfp->stat.st_page_create);
+	(void)fprintf(fp, "    %lu pages created\n",
+	    (u_long)mfp->stat.st_page_create);
 	(void)fprintf(fp, "    %lu I/O's (%lu read, %lu written)\n",
-	    mfp->stat.st_page_in + mfp->stat.st_page_out,
-	    mfp->stat.st_page_in, mfp->stat.st_page_out);
+	    (u_long)mfp->stat.st_page_in + mfp->stat.st_page_out,
+	    (u_long)mfp->stat.st_page_in, (u_long)mfp->stat.st_page_out);
 	if (mfp->stat.st_cache_hit + mfp->stat.st_cache_miss != 0)
 		(void)fprintf(fp,
 		    "    %.0f%% cache hit rate (%lu hit, %lu miss)\n",
 		    ((double)mfp->stat.st_cache_hit /
 		    (mfp->stat.st_cache_hit + mfp->stat.st_cache_miss)) * 100,
-		    mfp->stat.st_cache_hit, mfp->stat.st_cache_miss);
+		    (u_long)mfp->stat.st_cache_hit,
+		    (u_long)mfp->stat.st_cache_miss);
 	if (!data)
 		return;
 
@@ -298,7 +306,7 @@ __memp_pbh(fp, dbmp, bhp, data)
 		return;
 
 	(void)fprintf(fp, "    BH @ %lu (mf: %lu): page %lu; ref %lu",
-	    (u_long)OFFSET(dbmp, bhp),
+	    (u_long)R_OFFSET(dbmp, bhp),
 	    (u_long)bhp->mf_offset, (u_long)bhp->pgno, (u_long)bhp->ref);
 	sep = "; ";
 	if (F_ISSET(bhp, BH_DIRTY)) {

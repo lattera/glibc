@@ -33,14 +33,16 @@ DEFINE_HOOK (__libc_atexit, (void))
 void
 exit (int status)
 {
-  const struct exit_function_list *l;
-
-  for (l = __exit_funcs; l != NULL; l = l->next)
+  /* We do it this way to handle recursive calls to exit () made by
+     the functions registered with `atexit' and `on_exit'. We call
+     everyone on the list and use the status value in the last
+     exit (). */
+  for (; __exit_funcs; __exit_funcs = __exit_funcs->next)
     {
-      size_t i = l->idx;
-      while (i-- > 0)
+      while ((__exit_funcs->idx)-- > 0)
 	{
-	  const struct exit_function *const f = &l->fns[i];
+	  const struct exit_function *const f =
+	    &__exit_funcs->fns[__exit_funcs->idx];
 	  switch (f->flavor)
 	    {
 	    case ef_free:

@@ -62,7 +62,7 @@ __lrint (double x)
 	  result = i0 >> (20 - j0);
 	}
     }
-  else if (j0 < (int32_t) (8 * sizeof (long int)))
+  else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {
       if (j0 >= 52)
 	result = ((long int) i0 << (j0 - 20)) | (i1 << (j0 - 52));
@@ -75,7 +75,7 @@ __lrint (double x)
 	  i0 |= 0x100000;
 	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
 
-	  result = ((long int) i0 << (j0 - 20)) | (j >> (52 - j0));
+	  result = ((long int) i0 << (j0 - 20)) | (i1 >> (52 - j0));
 	}
     }
   else

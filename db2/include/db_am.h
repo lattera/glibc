@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_am.h	10.6 (Sleepycat) 8/27/97
+ *	@(#)db_am.h	10.7 (Sleepycat) 10/25/97
  */
 #ifndef _DB_AM_H
 #define _DB_AM_H
@@ -49,7 +49,7 @@
 }
 #define	REC_CLOSE {							\
 	if (argp != NULL)						\
-		free (argp);						\
+		__db_free(argp);					\
 	if (file_dbp != NULL) {						\
 		F_CLR(file_dbp, DB_AM_RECOVER);				\
 		if (F_ISSET(file_dbp, DB_AM_THREAD))			\
@@ -67,7 +67,7 @@
 }
 #define	REC_NOOP_CLOSE {						\
 	if (argp != NULL)						\
-		free (argp);						\
+		__db_free(argp);					\
 	return (ret);							\
 }
 

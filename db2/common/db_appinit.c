@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_appinit.c	10.33 (Sleepycat) 8/28/97";
+static const char sccsid[] = "@(#)db_appinit.c	10.36 (Sleepycat) 10/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -93,6 +93,10 @@ db_appinit(db_home, db_config, dbenv, flags)
 	    LF_ISSET(RECOVERY_FLAGS) != RECOVERY_FLAGS)
 		return (__db_ferr(dbenv, "db_appinit", 1));
 
+	/* Convert the db_appinit(3) flags. */
+	if (LF_ISSET(DB_THREAD))
+		F_SET(dbenv, DB_ENV_THREAD);
+
 	fp = NULL;
 
 	/* Set the database home. */
@@ -126,7 +130,7 @@ db_appinit(db_home, db_config, dbenv, flags)
 		goto err;
 
 	/* Indicate that the path names have been set. */
-	F_SET(dbenv, DB_APP_INIT);
+	F_SET(dbenv, DB_ENV_APPINIT);
 
 	/*
 	 * If we are doing recovery, remove all the regions.
@@ -300,7 +304,8 @@ __db_appname(dbenv, appname, dir, file, fdp, namep)
 	 * return.
 	 */
 	if (file != NULL && __db_abspath(file))
-		return ((*namep = (char *)strdup(file)) == NULL ? ENOMEM : 0);
+		return ((*namep =
+		    (char *)__db_strdup(file)) == NULL ? ENOMEM : 0);
 	if (dir != NULL && __db_abspath(dir)) {
 		a = dir;
 		goto done;
@@ -335,7 +340,7 @@ __db_appname(dbenv, appname, dir, file, fdp, namep)
 	 */
 retry:	switch (appname) {
 	case DB_APP_NONE:
-		if (dbenv == NULL || !F_ISSET(dbenv, DB_APP_INIT)) {
+		if (dbenv == NULL || !F_ISSET(dbenv, DB_ENV_APPINIT)) {
 			if (dir == NULL)
 				goto tmp;
 			a = dir;
@@ -355,7 +360,7 @@ retry:	switch (appname) {
 			tmp_create = 1;
 			goto tmp;
 		}
-		if (dbenv == NULL || !F_ISSET(dbenv, DB_APP_INIT))
+		if (dbenv == NULL || !F_ISSET(dbenv, DB_ENV_APPINIT))
 			a = PATH_DOT;
 		else {
 			a = dbenv->db_home;
@@ -367,7 +372,7 @@ retry:	switch (appname) {
 		}
 		break;
 	case DB_APP_LOG:
-		if (dbenv == NULL || !F_ISSET(dbenv, DB_APP_INIT)) {
+		if (dbenv == NULL || !F_ISSET(dbenv, DB_ENV_APPINIT)) {
 			if (dir == NULL)
 				goto tmp;
 			a = dir;
@@ -385,7 +390,7 @@ retry:	switch (appname) {
 		}
 
 		tmp_create = 1;
-		if (dbenv == NULL || !F_ISSET(dbenv, DB_APP_INIT))
+		if (dbenv == NULL || !F_ISSET(dbenv, DB_ENV_APPINIT))
 			goto tmp;
 		else {
 			a = dbenv->db_home;
@@ -396,7 +401,7 @@ retry:	switch (appname) {
 
 	/* Reference a file from the appropriate temporary directory. */
 	if (0) {
-tmp:		if (dbenv == NULL || !F_ISSET(dbenv, DB_APP_INIT)) {
+tmp:		if (dbenv == NULL || !F_ISSET(dbenv, DB_ENV_APPINIT)) {
 			memset(&etmp, 0, sizeof(etmp));
 			if ((ret = __db_tmp_dir(&etmp, DB_USE_ENVIRON)) != 0)
 				return (ret);
@@ -412,7 +417,7 @@ done:	len =
 	    (c == NULL ? 0 : strlen(c) + 1) +
 	    (file == NULL ? 0 : strlen(file) + 1);
 
-	if ((start = (char *)malloc(len)) == NULL) {
+	if ((start = (char *)__db_malloc(len)) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		if (tmp_free)
 			FREES(etmp.db_tmp_dir);
@@ -484,7 +489,7 @@ __db_home(dbenv, db_home, flags)
 	if (p == NULL)
 		return (0);
 
-	if ((dbenv->db_home = (char *)strdup(p)) == NULL) {
+	if ((dbenv->db_home = (char *)__db_strdup(p)) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return (ENOMEM);
 	}
@@ -509,7 +514,7 @@ __db_parse(dbenv, s)
 	 * We need to strdup the argument in case the caller passed us
 	 * static data.
 	 */
-	if ((local_s = (char *)strdup(s)) == NULL)
+	if ((local_s = (char *)__db_strdup(s)) == NULL)
 		return (ENOMEM);
 
 	tp = local_s;
@@ -526,14 +531,15 @@ illegal:	ret = EINVAL;
 #define	DATA_INIT_CNT	20			/* Start with 20 data slots. */
 	if (!strcmp(name, "DB_DATA_DIR")) {
 		if (dbenv->db_data_dir == NULL) {
-			if ((dbenv->db_data_dir = (char **)calloc(DATA_INIT_CNT,
+			if ((dbenv->db_data_dir =
+			    (char **)__db_calloc(DATA_INIT_CNT,
 			    sizeof(char **))) == NULL)
 				goto nomem;
 			dbenv->data_cnt = DATA_INIT_CNT;
 		} else if (dbenv->data_next == dbenv->data_cnt - 1) {
 			dbenv->data_cnt *= 2;
 			if ((dbenv->db_data_dir =
-			    (char **)realloc(dbenv->db_data_dir,
+			    (char **)__db_realloc(dbenv->db_data_dir,
 			    dbenv->data_cnt * sizeof(char **))) == NULL)
 				goto nomem;
 		}
@@ -549,7 +555,7 @@ illegal:	ret = EINVAL;
 	} else
 		goto err;
 
-	if ((*p = (char *)strdup(value)) == NULL) {
+	if ((*p = (char *)__db_strdup(value)) == NULL) {
 nomem:		ret = ENOMEM;
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 	}
@@ -623,7 +629,7 @@ __db_tmp_dir(dbenv, flags)
 		if (!Special2FSSpec(kTemporaryFolderType,
 		    kOnSystemDisk, 0, &spec)) {
 			p = FSp2FullPath(&spec);
-			sTempFolder = malloc(strlen(p) + 1);
+			sTempFolder = __db_malloc(strlen(p) + 1);
 			strcpy(sTempFolder, p);
 			p = sTempFolder;
 		}
@@ -639,7 +645,7 @@ __db_tmp_dir(dbenv, flags)
 	if (p == NULL)
 		return (0);
 
-	if ((dbenv->db_tmp_dir = (char *)strdup(p)) == NULL) {
+	if ((dbenv->db_tmp_dir = (char *)__db_strdup(p)) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return (ENOMEM);
 	}
@@ -722,7 +728,7 @@ __db_tmp_open(dbenv, dir, fdp)
 		(void)sigprocmask(SIG_BLOCK, &set, &oset);
 #endif
 #define	DB_TEMPOPEN	DB_CREATE | DB_EXCL | DB_TEMPORARY
-		if ((ret = __db_fdopen(buf,
+		if ((ret = __db_open(buf,
 		    DB_TEMPOPEN, DB_TEMPOPEN, S_IRUSR | S_IWUSR, fdp)) == 0) {
 #ifdef HAVE_SIGFILLSET
 			(void)sigprocmask(SIG_SETMASK, &oset, NULL);

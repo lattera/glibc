@@ -50,10 +50,11 @@ __set_errno (int __err)
 # endif /* !__ASSEMBLER__ */
 #endif /* _ERRNO_H */
 
-#if !defined (_ERRNO_H) && defined (__need_Emath)
+#if !defined _ERRNO_H && defined __need_Emath
 /* This is ugly but the kernel header is not clean enough.  We must
    define only the values EDOM and ERANGE in case __need_Emath is
    defined.  The value is the same for all Linux ports.  */
 # define EDOM	33	/* Math argument out of domain of function.  */
+# define EILSEQ	84	/* Illegal byte sequence.  */
 # define ERANGE	34	/* Math result not representable.  */
 #endif /* !_ERRNO_H && __need_Emath */

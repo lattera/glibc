@@ -1,5 +1,5 @@
 /* memset/bzero -- set memory area to CH/0
-   Highly optimized version for ix85, x>=5.
+   Highly optimized version for ix86, x>=5.
    Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund, <tege@matematik.su.se>

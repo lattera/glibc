@@ -43,7 +43,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)hash.src	10.1 (Sleepycat) 4/12/97
+ *	@(#)hash.src	10.2 (Sleepycat) 11/2/97
  */
 
 #include "config.h"
@@ -207,5 +207,27 @@ ARG	fileid		u_int32_t	lu
 ARG	start_pgno	db_pgno_t	lu
 ARG	npages		u_int32_t	lu
 ARG	free_pgno	db_pgno_t	lu
+ARG	ovflpoint	u_int32_t	lu
 POINTER	metalsn		DB_LSN *	lu
+END
+
+/*
+ * Used when we empty the first page in a bucket and there are pages
+ * after it.  The page after it gets copied into the bucket page (since
+ * bucket pages have to be in fixed locations).
+ * pgno: the bucket page
+ * pagelsn: the old LSN on the bucket page
+ * next_pgno: the page number of the next page
+ * nnext_pgno: page after next_pgno (may need to change its prev)
+ * nnextlsn: the LSN of nnext_pgno.
+ */
+BEGIN copypage
+ARG	fileid		u_int32_t	lu
+ARG	pgno		db_pgno_t	lu
+POINTER	pagelsn		DB_LSN *	lu
+ARG	next_pgno	db_pgno_t	lu
+POINTER	nextlsn		DB_LSN *	lu
+ARG	nnext_pgno	db_pgno_t	lu
+POINTER	nnextlsn	DB_LSN *	lu
+DBT	page		DBT		s
 END

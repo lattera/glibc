@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_overflow.c	10.4 (Sleepycat) 7/2/97";
+static const char sccsid[] = "@(#)db_overflow.c	10.7 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -121,14 +121,14 @@ __db_goff(dbp, dbt, tlen, pgno, bpp, bpsz)
 		}
 	} else if (F_ISSET(dbt, DB_DBT_MALLOC)) {
 		dbt->data = dbp->db_malloc == NULL ?
-		    (void *)malloc(needed + 1) :
+		    (void *)__db_malloc(needed + 1) :
 		    (void *)dbp->db_malloc(needed + 1);
 		if (dbt->data == NULL)
 			return (ENOMEM);
 	} else if (*bpsz == 0 || *bpsz < needed) {
 		*bpp = (*bpp == NULL ?
-		    (void *)malloc(needed + 1) :
-		    (void *)realloc(*bpp, needed + 1));
+		    (void *)__db_malloc(needed + 1) :
+		    (void *)__db_realloc(*bpp, needed + 1));
 		if (*bpp == NULL)
 			return (ENOMEM);
 		*bpsz = needed + 1;
@@ -256,15 +256,16 @@ __db_poff(dbp, dbt, pgnop, newfunc)
 }
 
 /*
- * __db_ioff --
- *	Increment the reference count on an overflow page.
+ * __db_ovref --
+ *	Increment/decrement the reference count on an overflow page.
  *
- * PUBLIC: int __db_ioff __P((DB *, db_pgno_t));
+ * PUBLIC: int __db_ovref __P((DB *, db_pgno_t, int));
  */
 int
-__db_ioff(dbp, pgno)
+__db_ovref(dbp, pgno, adjust)
 	DB *dbp;
 	db_pgno_t pgno;
+	int adjust;
 {
 	PAGE *h;
 	int ret;
@@ -274,10 +275,12 @@ __db_ioff(dbp, pgno)
 		return (ret);
 	}
 
-	++OV_REF(h);
-	if (DB_LOGGING(dbp) && (ret = __db_ovref_log(dbp->dbenv->lg_info,
-	    dbp->txn, &LSN(h), 0, dbp->log_fileid, h->pgno, &LSN(h))) != 0)
-		return (ret);
+	if (DB_LOGGING(dbp))
+		if ((ret = __db_ovref_log(dbp->dbenv->lg_info, dbp->txn,
+		    &LSN(h), 0, dbp->log_fileid, h->pgno, (int32_t)adjust,
+		    &LSN(h))) != 0)
+			return (ret);
+	OV_REF(h) += adjust;
 
 	(void)memp_fput(dbp->mpf, h, DB_MPOOL_DIRTY);
 	return (0);
@@ -311,9 +314,8 @@ __db_doff(dbp, pgno, freefunc)
 		 * one key/data item, decrement the reference count and return.
 		 */
 		if (TYPE(pagep) == P_OVERFLOW && OV_REF(pagep) > 1) {
-			--OV_REF(pagep);
-			(void)memp_fput(dbp->mpf, pagep, DB_MPOOL_DIRTY);
-			return (0);
+			(void)memp_fput(dbp->mpf, pagep, 0);
+			return (__db_ovref(dbp, pgno, -1));
 		}
 
 		if (DB_LOGGING(dbp)) {

@@ -53,7 +53,7 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(u_int32_t) + (uid == NULL ? 0 : uid->size)
 	    + sizeof(id)
 	    + sizeof(ftype);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -94,7 +94,7 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
 	ret = __log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -151,7 +151,7 @@ __log_register_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tid: %lu\n", (u_long)argp->id);
 	printf("\tftype: 0x%lx\n", (u_long)argp->ftype);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -166,7 +166,7 @@ __log_register_read(recbuf, argpp)
 	__log_register_args *argp;
 	u_int8_t *bp;
 
-	argp = (__log_register_args *)malloc(sizeof(__log_register_args) +
+	argp = (__log_register_args *)__db_malloc(sizeof(__log_register_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -223,7 +223,7 @@ int __log_unregister_log(logp, txnid, ret_lsnp, flags,
 		lsnp = &txnid->last_lsn;
 	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN)
 	    + sizeof(id);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -242,7 +242,7 @@ int __log_unregister_log(logp, txnid, ret_lsnp, flags,
 	ret = __log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -280,7 +280,7 @@ __log_unregister_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->prev_lsn.offset);
 	printf("\tid: %lu\n", (u_long)argp->id);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -295,7 +295,7 @@ __log_unregister_read(recbuf, argpp)
 	__log_unregister_args *argp;
 	u_int8_t *bp;
 
-	argp = (__log_unregister_args *)malloc(sizeof(__log_unregister_args) +
+	argp = (__log_unregister_args *)__db_malloc(sizeof(__log_unregister_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);

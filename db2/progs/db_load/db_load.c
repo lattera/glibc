@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_load.c	10.13 (Sleepycat) 9/15/97";
+static const char sccsid[] = "@(#)db_load.c	10.14 (Sleepycat) 10/19/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -352,7 +352,7 @@ dbt_rprint(dbtp)
 				escape = 1;
 				continue;
 			}
-		if (++len >= dbtp->ulen - 10) {
+		if (len >= dbtp->ulen - 10) {
 			dbtp->ulen *= 2;
 			if ((dbtp->data =
 			    (void *)realloc(dbtp->data, dbtp->ulen)) == NULL) {
@@ -361,6 +361,7 @@ dbt_rprint(dbtp)
 			}
 			p = (u_int8_t *)dbtp->data + len;
 		}
+		++len;
 		*p++ = c1;
 	}
 	dbtp->size = len;
@@ -420,7 +421,7 @@ dbt_rdump(dbtp)
 		}
 		if ((c2 = getchar()) == EOF)
 			err(1, "unexpected end of key/data pair");
-		if (++len >= dbtp->ulen - 10) {
+		if (len >= dbtp->ulen - 10) {
 			dbtp->ulen *= 2;
 			if ((dbtp->data =
 			    (void *)realloc(dbtp->data, dbtp->ulen)) == NULL) {
@@ -429,6 +430,7 @@ dbt_rdump(dbtp)
 			}
 			p = (u_int8_t *)dbtp->data + len;
 		}
+		++len;
 		*p++ = digitize(c1) << 4 | digitize(c2);
 	}
 	dbtp->size = len;

@@ -275,7 +275,10 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
       {
       case L_('h'):
 	/* int's are short int's.  */
-	spec->info.is_short = 1;
+	if (spec->info.is_short == 0)
+	  spec->info.is_short = 1;
+	else
+	  spec->info.is_short = 2;
 	break;
       case L_('l'):
 	/* int's are long int's.  */

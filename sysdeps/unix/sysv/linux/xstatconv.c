@@ -29,7 +29,7 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
       /* Nothing to do.  The struct is in the form the kernel expects.
          We should have short-circuted before we got here, but for
          completeness... */
-      memcpy ((struct kernel_stat *) ubuf, kbuf, sizeof (*kbuf));
+      *(struct kernel_stat *) ubuf = *kbuf;
       break;
 
     case _STAT_VER_LINUX:

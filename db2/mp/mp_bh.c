@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_bh.c	10.16 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)mp_bh.c	10.21 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -94,10 +94,10 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	 * files that we have previously tried (and failed) to open.
 	 */
 	dbt.size = mfp->pgcookie_len;
-	dbt.data = ADDR(dbmp, mfp->pgcookie_off);
-	if (__memp_fopen(dbmp, ADDR(dbmp, mfp->path_off),
+	dbt.data = R_ADDR(dbmp, mfp->pgcookie_off);
+	if (__memp_fopen(dbmp, R_ADDR(dbmp, mfp->path_off),
 	    mfp->ftype, 0, 0, mfp->stat.st_pagesize,
-	    mfp->lsn_off, &dbt, ADDR(dbmp, mfp->fileid_off), 0, &dbmfp) != 0)
+	    mfp->lsn_off, &dbt, R_ADDR(dbmp, mfp->fileid_off), 0, &dbmfp) != 0)
 		return (0);
 
 found:	return (__memp_pgwrite(dbmfp, bhp, restartp, wrotep));
@@ -137,7 +137,7 @@ __memp_pgread(dbmfp, bhp, can_create)
 	ret = 0;
 	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (dbmfp->fd == -1 || (ret =
-	    __db_lseek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0) {
+	    __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0) {
 		if (!can_create) {
 			if (dbmfp->fd == -1)
 				ret = EINVAL;
@@ -230,6 +230,7 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 
 	dbmp = dbmfp->dbmp;
 	dbenv = dbmp->dbenv;
+	mp = dbmp->mp;
 	mfp = dbmfp->mfp;
 
 	if (restartp != NULL)
@@ -277,8 +278,7 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	}
 
 	/* Write the page out. */
-	if ((ret =
-	    __db_lseek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0)
+	if ((ret = __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0)
 		fail = "seek";
 	else if ((ret = __db_write(dbmfp->fd, bhp->buf, pagesize, &nw)) != 0)
 		fail = "write";
@@ -309,13 +309,21 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	/* Clean up the flags based on a successful write. */
 	F_SET(bhp, BH_CALLPGIN);
 	F_CLR(bhp, BH_DIRTY | BH_LOCKED);
+
+	++mp->stat.st_page_clean;
+	--mp->stat.st_page_dirty;
+
 	UNLOCKBUFFER(dbmp, bhp);
 
 	/*
-	 * If we wrote a buffer which a checkpoint is waiting for, update
+	 * If we write a buffer for which a checkpoint is waiting, update
 	 * the count of pending buffers (both in the mpool as a whole and
 	 * for this file).  If the count for this file goes to zero, flush
 	 * the writes.
+	 *
+	 * XXX:
+	 * Don't lock the region around the sync, fsync(2) has no atomicity
+	 * issues.
 	 *
 	 * XXX:
 	 * We ignore errors from the sync -- it makes no sense to return an
@@ -325,21 +333,15 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	 * If the buffer we wrote has a LSN larger than the current largest
 	 * we've written for this checkpoint, update the saved value.
 	 */
-	mp = dbmp->mp;
 	if (F_ISSET(bhp, BH_WRITE)) {
 		if (log_compare(&lsn, &mp->lsn) > 0)
 			mp->lsn = lsn;
 		F_CLR(bhp, BH_WRITE);
 
 		--mp->lsn_cnt;
-		if (--mfp->lsn_cnt == 0) {
-			/*
-			 * Don't lock -- there are no atomicity issues for
-			 * fsync(2).
-			 */
-			if (__db_fsync(dbmfp->fd) != 0)
-				F_SET(mp, MP_LSN_RETRY);
-		}
+
+		if (--mfp->lsn_cnt == 0 && __db_fsync(dbmfp->fd) != 0)
+			F_SET(mp, MP_LSN_RETRY);
 	}
 
 	/* Update I/O statistics. */
@@ -391,7 +393,7 @@ __memp_pg(dbmfp, bhp, is_pgin)
 			dbtp = NULL;
 		else {
 			dbt.size = mfp->pgcookie_len;
-			dbt.data = ADDR(dbmp, mfp->pgcookie_off);
+			dbt.data = R_ADDR(dbmp, mfp->pgcookie_off);
 			dbtp = &dbt;
 		}
 		UNLOCKHANDLE(dbmp, dbmp->mutexp);
@@ -433,19 +435,21 @@ __memp_bhfree(dbmp, mfp, bhp, free_mem)
 {
 	size_t off;
 
-	/* Delete the buffer header from the MPOOL hash list. */
-	off = BUCKET(dbmp->mp, OFFSET(dbmp, mfp), bhp->pgno);
-	SH_TAILQ_REMOVE(&dbmp->htab[off], bhp, mq, __bh);
+	/* Delete the buffer header from the hash bucket queue. */
+	off = BUCKET(dbmp->mp, R_OFFSET(dbmp, mfp), bhp->pgno);
+	SH_TAILQ_REMOVE(&dbmp->htab[off], bhp, hq, __bh);
 
-	/* Delete the buffer header from the LRU chain. */
+	/* Delete the buffer header from the LRU queue. */
 	SH_TAILQ_REMOVE(&dbmp->mp->bhq, bhp, q, __bh);
 
 	/*
 	 * If we're not reusing it immediately, free the buffer header
 	 * and data for real.
 	 */
-	if (free_mem)
+	if (free_mem) {
 		__db_shalloc_free(dbmp->addr, bhp);
+		--dbmp->mp->stat.st_page_clean;
+	}
 }
 
 /*
@@ -474,13 +478,13 @@ __memp_upgrade(dbmp, dbmfp, mfp)
 		return (1);
 
 	/* Try the open. */
-	if (__db_fdopen(ADDR(dbmp, mfp->path_off), 0, 0, 0, &fd) != 0) {
+	if (__db_open(R_ADDR(dbmp, mfp->path_off), 0, 0, 0, &fd) != 0) {
 		F_SET(dbmfp, MP_UPGRADE_FAIL);
 		return (1);
 	}
 
 	/* Swap the descriptors and set the upgrade flag. */
-	(void)close(dbmfp->fd);
+	(void)__db_close(dbmfp->fd);
 	dbmfp->fd = fd;
 	F_SET(dbmfp, MP_UPGRADE);
 

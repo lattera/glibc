@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fset.c	10.9 (Sleepycat) 9/20/97";
+static const char sccsid[] = "@(#)mp_fset.c	10.10 (Sleepycat) 10/5/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -34,9 +34,13 @@ memp_fset(dbmfp, pgaddr, flags)
 {
 	BH *bhp;
 	DB_MPOOL *dbmp;
+	MPOOL *mp;
+	MPOOLFILE *mfp;
 	int ret;
 
 	dbmp = dbmfp->dbmp;
+	mfp = dbmfp->mfp;
+	mp = dbmp->mp;
 
 	/* Validate arguments. */
 	if (flags != 0) {
@@ -60,10 +64,16 @@ memp_fset(dbmfp, pgaddr, flags)
 
 	LOCKREGION(dbmp);
 
-	if (LF_ISSET(DB_MPOOL_DIRTY))
-		F_SET(bhp, BH_DIRTY);
-	if (LF_ISSET(DB_MPOOL_CLEAN))
+	if (LF_ISSET(DB_MPOOL_CLEAN) && F_ISSET(bhp, BH_DIRTY)) {
+		++mp->stat.st_page_clean;
+		--mp->stat.st_page_dirty;
 		F_CLR(bhp, BH_DIRTY);
+	}
+	if (LF_ISSET(DB_MPOOL_DIRTY) && !F_ISSET(bhp, BH_DIRTY)) {
+		--mp->stat.st_page_clean;
+		++mp->stat.st_page_dirty;
+		F_SET(bhp, BH_DIRTY);
+	}
 	if (LF_ISSET(DB_MPOOL_DISCARD))
 		F_SET(bhp, BH_DISCARD);
 

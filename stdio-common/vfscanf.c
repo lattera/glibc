@@ -44,8 +44,9 @@
 # define WIDTH		0x040	/* width was given */
 # define GROUP		0x080	/* ': group numbers */
 # define MALLOC		0x100	/* a: malloc strings */
+# define CHAR		0x200	/* hh: char */
 
-# define TYPEMOD	(LONG|LONGDBL|SHORT)
+# define TYPEMOD	(LONG|LONGDBL|SHORT|CHAR)
 
 
 #ifdef USE_IN_LIBIO
@@ -400,13 +401,19 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  {
 	  case 'h':
 	    /* int's are short int's.  */
-	    if (flags & TYPEMOD)
+	    if (flags & (LONG|LONGDBL|CHAR))
 	      /* Signal illegal format element.  */
 	      conv_error ();
-	    flags |= SHORT;
+	    if (flags & SHORT)
+	      {
+		flags &= ~SHORT;
+		flags |= CHAR;
+	      }
+	    else
+	      flags |= SHORT;
 	    break;
 	  case 'l':
-	    if (flags & (SHORT|LONGDBL))
+	    if (flags & (SHORT|LONGDBL|CHAR))
 	      conv_error ();
 	    else if (flags & LONG)
 	      {
@@ -883,6 +890,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  else if (flags & SHORT)
 		    *ARG (unsigned short int *)
 		      = (unsigned short int) num.ul;
+		  else if (flags & CHAR)
+		    *ARG (unsigned char *) = (unsigned char) num.ul;
 		  else
 		    *ARG (unsigned int *) = (unsigned int) num.ul;
 		}
@@ -894,6 +903,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    *ARG (long int *) = num.l;
 		  else if (flags & SHORT)
 		    *ARG (short int *) = (short int) num.l;
+		  else if (flags & CHAR)
+		    *ARG (signed char *) = (signed char) num.ul;
 		  else
 		    *ARG (int *) = (int) num.l;
 		}

@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db.c	10.41 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)db.c	10.44 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -125,13 +125,19 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	if ((ret = __db_fchk(dbenv, "db_open", flags, OKFLAGS)) != 0)
 		return (ret);
 
+	if (dbenv != NULL &&
+	    LF_ISSET(DB_THREAD) && !F_ISSET(dbenv, DB_ENV_THREAD)) {
+		__db_err(dbenv, "environment not created using DB_THREAD");
+		return (EINVAL);
+	}
+
 	/* Initialize for error return. */
 	fd = -1;
 	need_fileid = 1;
 	real_name = NULL;
 
 	/* Allocate the DB structure, reference the DB_ENV structure. */
-	if ((dbp = (DB *)calloc(1, sizeof(DB))) == NULL) {
+	if ((dbp = (DB *)__db_calloc(1, sizeof(DB))) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return (ENOMEM);
 	}
@@ -239,7 +245,7 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 		 */
 		retry_cnt = 0;
 open_retry:	if (LF_ISSET(DB_CREATE)) {
-			if ((ret = __db_fdopen(real_name, flags | DB_EXCL,
+			if ((ret = __db_open(real_name, flags | DB_EXCL,
 			    OKFLAGS | DB_EXCL, mode, &fd)) != 0)
 				if (ret == EEXIST) {
 					LF_CLR(DB_CREATE);
@@ -250,7 +256,7 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 					goto err;
 				}
 		} else
-			if ((ret = __db_fdopen(real_name,
+			if ((ret = __db_open(real_name,
 			    flags, OKFLAGS, mode, &fd)) != 0) {
 				__db_err(dbenv, "%s: %s", fname, strerror(ret));
 				goto err;
@@ -264,8 +270,11 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 		 */
 		if (dbp->pgsize == 0) {
 			if ((ret =
-			    __db_stat(dbenv, real_name, fd, NULL, &io)) != 0)
+			    __db_ioinfo(real_name, fd, NULL, &io)) != 0) {
+				__db_err(dbenv,
+				    "%s: %s", real_name, strerror(ret));
 				goto err;
+			}
 			if (io < 512)
 				io = 512;
 			if (io > 16 * 1024)
@@ -477,7 +486,7 @@ empty:	/*
 
 		if (dbenv == NULL) {
 			if ((dbp->mp_dbenv =
-			    (DB_ENV *)calloc(sizeof(DB_ENV), 1)) == NULL) {
+			    (DB_ENV *)__db_calloc(sizeof(DB_ENV), 1)) == NULL) {
 				ret = ENOMEM;
 				goto err;
 			}
@@ -491,9 +500,9 @@ empty:	/*
 			restore = 1;
 		}
 		envp->mp_size = cachesize;
-		F_SET(envp, DB_MPOOL_PRIVATE);
-		if ((ret = memp_open(NULL,
-		    DB_CREATE, S_IRUSR | S_IWUSR, envp, &dbp->mp)) != 0)
+		if ((ret = memp_open(NULL, DB_CREATE | DB_MPOOL_PRIVATE |
+		    (F_ISSET(dbp, DB_AM_THREAD) ? DB_THREAD : 0),
+		    S_IRUSR | S_IWUSR, envp, &dbp->mp)) != 0)
 			goto err;
 		if (restore)
 			*dbenv = t_dbenv;
@@ -725,7 +734,8 @@ db_close(dbp, flags)
 	}
 
 	/* Sync the memory pool. */
-	if ((t_ret = memp_fsync(dbp->mpf)) != 0 && ret == 0)
+	if ((t_ret = memp_fsync(dbp->mpf)) != 0 &&
+	    t_ret != DB_INCOMPLETE && ret == 0)
 		ret = t_ret;
 
 	/* Close the memory pool file. */

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock.c	10.36 (Sleepycat) 9/24/97";
+static const char sccsid[] = "@(#)lock.c	10.38 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -200,7 +200,7 @@ lock_open(path, flags, mode, dbenv, ltp)
 	/*
 	 * Create the lock table structure.
 	 */
-	if ((lt = (DB_LOCKTAB *)calloc(1, sizeof(DB_LOCKTAB))) == NULL) {
+	if ((lt = (DB_LOCKTAB *)__db_calloc(1, sizeof(DB_LOCKTAB))) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return (ENOMEM);
 	}
@@ -269,7 +269,7 @@ out:	if (lt->region != NULL)
 		(void)__db_rclose(lt->dbenv, lt->fd, lt->region);
 	if (LF_ISSET(DB_CREATE))
 		(void)lock_unlink(path, 1, lt->dbenv);
-	free(lt);
+	__db_free(lt);
 	return (ret);
 }
 
@@ -505,7 +505,7 @@ lock_close(lt)
 		return (ret);
 
 	/* Free lock table. */
-	free(lt);
+	__db_free(lt);
 	return (0);
 }
 
@@ -728,8 +728,7 @@ __lock_get_internal(lt, locker, flags, obj, lock_mode, lockp)
 	 */
 	(void)__db_mutex_init(&newl->mutex,
 	    MUTEX_LOCK_OFFSET(lt->region, &newl->mutex));
-	(void)__db_mutex_lock(&newl->mutex, lt->fd,
-	    lt->dbenv == NULL ? NULL : lt->dbenv->db_yield);
+	(void)__db_mutex_lock(&newl->mutex, lt->fd);
 
 	/*
 	 * Now, insert the lock onto its locker's list.
@@ -760,8 +759,7 @@ __lock_get_internal(lt, locker, flags, obj, lock_mode, lockp)
 		if (lrp->detect != DB_LOCK_NORUN)
 			ret = lock_detect(lt, 0, lrp->detect);
 
-		(void)__db_mutex_lock(&newl->mutex,
-		    lt->fd, lt->dbenv == NULL ? NULL : lt->dbenv->db_yield);
+		(void)__db_mutex_lock(&newl->mutex, lt->fd);
 
 		LOCK_LOCKREGION(lt);
 		if (newl->status != DB_LSTAT_PENDING) {
@@ -975,11 +973,9 @@ __lock_dump_region(lt, flags)
 #ifndef HAVE_SPINLOCKS
 	printf("Mutex: off %lu", (u_long)lrp->hdr.lock.off);
 #endif
-#ifdef MUTEX_STATISTICS
 	printf(" waits %lu nowaits %lu",
 	    (u_long)lrp->hdr.lock.mutex_set_wait,
 	    (u_long)lrp->hdr.lock.mutex_set_nowait);
-#endif
 	printf("\n%s:%lu\t%s:%lu\t%s:%lu\t%s:%lu\n",
 	    "nconflicts ", (u_long)lrp->nconflicts,
 	    "nrequests  ", (u_long)lrp->nrequests,

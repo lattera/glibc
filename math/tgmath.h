@@ -167,7 +167,11 @@
 #define log(Val) __TGMATH_UNARY_REAL_IMAG (Val, log, clog)
 
 /* Base-ten logarithm of X.  */
-#define log10(Val) __TGMATH_UNARY_REAL_IMAG (Val, log10, __clog10)
+#ifdef __USE_GNU
+# define log10(Val) __TGMATH_UNARY_REAL_IMAG (Val, log10, __clog10)
+#else
+# define log10(Val) __TGMATH_UNARY_REAL_ONLY (Val, log10)
+#endif
 
 /* Return exp(X) - 1.  */
 #define expm1(Val) __TGMATH_UNARY_REAL_ONLY (Val, expm1)

@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __txn_regop_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     u_int32_t));

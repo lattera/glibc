@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mutex.c	10.25 (Sleepycat) 9/23/97";
+static const char sccsid[] = "@(#)mutex.c	10.28 (Sleepycat) 10/31/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -65,6 +65,10 @@ static const char sccsid[] = "@(#)mutex.c	10.25 (Sleepycat) 9/23/97";
 #define	TSL_INIT(x)
 #define	TSL_SET(x)	(_lock_try(x))
 #define	TSL_UNSET(x)	_lock_clear(x)
+#endif
+
+#ifdef HAVE_ASSEM_SCO_CC
+#include "sco.cc"
 #endif
 
 #ifdef HAVE_ASSEM_SPARC_GCC
@@ -138,13 +142,12 @@ __db_mutex_init(mp, off)
  * __db_mutex_lock
  *	Lock on a mutex, logically blocking if necessary.
  *
- * PUBLIC: int __db_mutex_lock __P((db_mutex_t *, int, int (*)(void)));
+ * PUBLIC: int __db_mutex_lock __P((db_mutex_t *, int));
  */
 int
-__db_mutex_lock(mp, fd, yield)
+__db_mutex_lock(mp, fd)
 	db_mutex_t *mp;
 	int fd;
-	int (*yield) __P((void));
 {
 	u_long usecs;
 
@@ -166,17 +169,15 @@ __db_mutex_lock(mp, fd, yield)
 				}
 				mp->pid = getpid();
 #endif
-#ifdef MUTEX_STATISTICS
 				if (usecs == MS(10))
 					++mp->mutex_set_nowait;
 				else
 					++mp->mutex_set_wait;
-#endif
 				return (0);
 			}
 
 		/* Yield the processor; wait 10ms initially, up to 1 second. */
-		if (yield == NULL || yield() != 0) {
+		if (__db_yield == NULL || __db_yield() != 0) {
 			(void)__db_sleep(0, usecs);
 			if ((usecs <<= 1) > SECOND)
 				usecs = SECOND;
@@ -200,7 +201,7 @@ __db_mutex_lock(mp, fd, yield)
 		 * up to 1 second.
 		 */
 		for (usecs = MS(10); mp->pid != 0;)
-			if (yield == NULL || yield() != 0) {
+			if (__db_yield == NULL || __db_yield() != 0) {
 				(void)__db_sleep(0, usecs);
 				if ((usecs <<= 1) > SECOND)
 					usecs = SECOND;
@@ -234,10 +235,6 @@ __db_mutex_lock(mp, fd, yield)
 		if (locked)
 			break;
 	}
-
-#ifdef MUTEX_STATISTICS
-	++mp->mutex_set_wait;
-#endif
 	return (0);
 #endif /* !HAVE_SPINLOCKS */
 }

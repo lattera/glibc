@@ -23,6 +23,7 @@
 #define	__Emath_defined	1
 
 # define EDOM	XXX	<--- fill in what is actually needed
+# define EILSEQ	XXX	<--- fill in what is actually needed
 # define ERANGE	XXX	<--- fill in what is actually needed
 #endif
 

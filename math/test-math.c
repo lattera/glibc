@@ -7,10 +7,14 @@
 void print_trig_stuff __P ((void));
 
 int
-main (void)
+main (int argc, char *argv[])
 {
   const char str[] = "123.456";
   double x,h,li,lr,a,lrr;
+
+  if (signbit (argc < 1 ? -0.0 : 0.0))
+    /* I don't make this an error for now.  --drepper */
+    fputs ("\n*** Your compiler has a bug.  Consider upgrading\n\n", stderr);
 
   x = atof (str);
 

@@ -42,7 +42,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_dup.c	10.7 (Sleepycat) 9/15/97";
+static const char sccsid[] = "@(#)hash_dup.c	10.8 (Sleepycat) 10/14/97";
 #endif /* not lint */
 
 /*
@@ -480,7 +480,7 @@ __ham_check_move(hashp, hcp, add_len)
 	__ham_copy_item(hashp, hcp->pagep, H_DATAINDEX(hcp->bndx), next_pagep);
 
 	/* Now delete the pair from the current page. */
-	ret = __ham_del_pair(hashp, hcp);
+	ret = __ham_del_pair(hashp, hcp, 0);
 
 	(void)__ham_put_page(hashp->dbp, hcp->pagep, 1);
 	hcp->pagep = next_pagep;

@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __db_appname __P((DB_ENV *,
    APPNAME, const char *, const char *, int *, char **));
 int __db_apprec __P((DB_ENV *, int));
@@ -24,6 +24,7 @@ int __db_ferr __P((const DB_ENV *, const char *, int));
 u_int32_t __db_log2 __P((u_int32_t));
 int __db_rcreate __P((DB_ENV *, APPNAME,
    const char *, const char *, int, size_t, int *, void *));
+int __db_rinit __P((DB_ENV *, RLAYOUT *, int, size_t, int));
 int __db_ropen __P((DB_ENV *,
    APPNAME, const char *, const char *, int, int *, void *));
 int __db_rclose __P((DB_ENV *, int, void *));

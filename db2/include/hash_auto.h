@@ -108,7 +108,25 @@ typedef struct _ham_ovfl_args {
 	db_pgno_t	start_pgno;
 	u_int32_t	npages;
 	db_pgno_t	free_pgno;
+	u_int32_t	ovflpoint;
 	DB_LSN 	metalsn;
 } __ham_ovfl_args;
+
+
+#define	DB_ham_copypage	(DB_ham_BEGIN + 8)
+
+typedef struct _ham_copypage_args {
+	u_int32_t type;
+	DB_TXN *txnid;
+	DB_LSN prev_lsn;
+	u_int32_t	fileid;
+	db_pgno_t	pgno;
+	DB_LSN 	pagelsn;
+	db_pgno_t	next_pgno;
+	DB_LSN 	nextlsn;
+	db_pgno_t	nnext_pgno;
+	DB_LSN 	nnextlsn;
+	DBT	page;
+} __ham_copypage_args;
 
 #endif

@@ -58,6 +58,7 @@ typedef struct _bam_rsplit_args {
 	u_int32_t	fileid;
 	db_pgno_t	pgno;
 	DBT	pgdbt;
+	db_pgno_t	nrec;
 	DBT	rootent;
 	DB_LSN 	rootlsn;
 } __bam_rsplit_args;
@@ -104,5 +105,23 @@ typedef struct _bam_cdel_args {
 	DB_LSN 	lsn;
 	u_int32_t	indx;
 } __bam_cdel_args;
+
+
+#define	DB_bam_repl	(DB_bam_BEGIN + 8)
+
+typedef struct _bam_repl_args {
+	u_int32_t type;
+	DB_TXN *txnid;
+	DB_LSN prev_lsn;
+	u_int32_t	fileid;
+	db_pgno_t	pgno;
+	DB_LSN 	lsn;
+	u_int32_t	indx;
+	u_int32_t	isdeleted;
+	DBT	orig;
+	DBT	repl;
+	u_int32_t	prefix;
+	u_int32_t	suffix;
+} __bam_repl_args;
 
 #endif

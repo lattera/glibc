@@ -55,27 +55,27 @@ __llrint (double x)
 	  w = two52[sx] + x;
 	  t = w - two52[sx];
 	  EXTRACT_WORDS (i0, i1, t);
-	  i0 = i & 0xfffff;
-	  i0 |= 0x100000;
 	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+	  i0 &= 0xfffff;
+	  i0 |= 0x100000;
 
 	  result = i0 >> (20 - j0);
 	}
     }
-  else if (j0 < (int32_t) (8 * sizeof (long long int)))
+  else if (j0 < (int32_t) (8 * sizeof (long long int)) - 1)
     {
       if (j0 >= 52)
-	result = ((long long int) i0 << (j0 - 20)) | (i1 << (j0 - 52));
+	result = (((long long int) i0 << 32) | i1) << (j0 - 52);
       else
 	{
 	  w = two52[sx] + x;
 	  t = w - two52[sx];
 	  EXTRACT_WORDS (i0, i1, t);
-	  i0 = i & 0xfffff;
-	  i0 |= 0x100000;
 	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+	  i0 &= 0xfffff;
+	  i0 |= 0x100000;
 
-	  result = ((long long int) i0 << (j0 - 20)) | (j >> (52 - j0));
+	  result = ((long long int) i0 << (j0 - 20)) | (i1 >> (52 - j0));
 	}
     }
   else

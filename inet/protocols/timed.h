@@ -36,6 +36,8 @@
 #ifndef	_PROTOCOLS_TIMED_H
 #define	_PROTOCOLS_TIMED_H 1
 
+#include <rpc/types.h>
+
 /*
  * Time Synchronization Protocol
  */

@@ -55,8 +55,11 @@ typedef struct
   wint_t value;		/* Value so far.  */
 } mbstate_t;
 
-#define WCHAR_MIN ((wchar_t) 0)
-#define WCHAR_MAX (~WCHAR_MIN)
+#ifndef WCHAR_MIN
+/* These constants might also be defined in <inttypes.h>.  */
+# define WCHAR_MIN ((wchar_t) 0)
+# define WCHAR_MAX (~WCHAR_MIN)
+#endif
 
 #ifndef WEOF
 # define WEOF (0xffffffffu)
@@ -388,26 +391,36 @@ extern __long_double_t __wcstold_internal __P ((__const wchar_t *
 						wchar_t **__restrict __endptr,
 						int __group));
 
+#ifndef __wcstol_internal_defined
 extern long int __wcstol_internal __P ((__const wchar_t *__restrict __nptr,
 					wchar_t **__restrict __endptr,
 					int __base, int __group));
+# define __wcstol_internal_defined	1
+#endif
+#ifndef __wcstoul_internal_defined
 extern unsigned long int __wcstoul_internal __P ((__const wchar_t *
 						  __restrict __nptr,
 						  wchar_t **
 						  __restrict __endptr,
 						  int __base, int __group));
-#if defined __GNUC__ && defined __USE_GNU
+# define __wcstoul_internal_defined	1
+#endif
+#ifndef __wcstoll_internal_defined
 extern long long int __wcstoll_internal __P ((__const wchar_t *
 					      __restrict __nptr,
 					      wchar_t **__restrict __endptr,
 					      int __base, int __group));
+# define __wcstoll_internal_defined	1
+#endif
+#ifndef __wcstoull_internal_defined
 extern unsigned long long int __wcstoull_internal __P ((__const wchar_t *
 							__restrict __nptr,
 							wchar_t **
 							__restrict __endptr,
 							int __base,
 							int __group));
-#endif /* GCC and use GNU.  */
+# define __wcstoull_internal_defined	1
+#endif
 
 
 #if defined __OPTIMIZE__ && __GNUC__ >= 2

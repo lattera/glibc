@@ -108,8 +108,7 @@ LD_LIBRARY_PATH=$objpfx $ldso $testprogram --chdir $tmpdir |
     sort > $testout
 
 # perhaps $tmp involves some symlinks...
-pwdprogram=`which pwd`
-tmpreal=`( cd $tmp ; $pwdprogram )`
+tmpreal=`cd $tmp; /bin/pwd 2>/dev/null || /usr/bin/pwd`
 
 cat <<EOF | cmp $testout - || exit 1
 base = "$tmp/", file = "ftwtest.d", flag = FTW_D, cwd = $tmpreal, level = 0

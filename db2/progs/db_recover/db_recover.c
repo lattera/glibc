@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_recover.c	10.15 (Sleepycat) 9/21/97";
+static const char sccsid[] = "@(#)db_recover.c	10.16 (Sleepycat) 10/28/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -82,7 +82,7 @@ main(argc, argv)
 		    (u_long)dbenv->tx_info->region->last_ckp.offset);
 	}
 
-	exit (db_appexit(dbenv));
+	return (db_appexit(dbenv));
 }
 
 DB_ENV *

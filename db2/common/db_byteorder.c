@@ -8,20 +8,20 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_byteorder.c	10.3 (Sleepycat) 6/21/97";
+static const char sccsid[] = "@(#)db_byteorder.c	10.4 (Sleepycat) 9/4/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
-#include <errno.h>
+#ifdef HAVE_ENDIAN_H
+#include <endian.h>
+#if BYTE_ORDER == BIG_ENDIAN
+#define	WORDS_BIGENDIAN	1
+#endif
 #endif
 
-#ifdef HAVE_ENDIAN_H
-# include <endian.h>
-# if BYTE_ORDER == BIG_ENDIAN
-#  define WORDS_BIGENDIAN 1
-# endif
+#include <errno.h>
 #endif
 
 #include "db_int.h"

@@ -692,7 +692,7 @@ $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 	 echo '   dependencies of $(<F) to find $(rtld-installed-name).  */';\
 	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
 	      '$(slibdir)/$(rtld-installed-name)' \
-	      '$(libdir)/lib$(libc-name).a' \
+	      '$(libdir)/lib$(libc-name).a )' \
 	      ) > $@.new
 	mv -f $@.new $@
 

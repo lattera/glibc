@@ -27,7 +27,8 @@
 #include <arpa/inet.h>
 #include "nis_intern.h"
 
-static struct timeval TIMEOUT = {10, 0};
+static struct timeval RPCTIMEOUT = {10, 0};
+static struct timeval UDPTIMEOUT = {5, 0};
 
 unsigned long
 inetstr2int (const char *str)
@@ -135,7 +136,7 @@ __bind_connect (dir_binding *dbp)
   dbp->socket = RPC_ANYSOCK;
   if (dbp->use_udp)
     dbp->clnt = clntudp_create (&dbp->addr, NIS_PROG, NIS_VERSION,
-				 TIMEOUT, &dbp->socket);
+				 UDPTIMEOUT, &dbp->socket);
   else
     dbp->clnt = clnttcp_create (&dbp->addr, NIS_PROG, NIS_VERSION,
 				 &dbp->socket, 0, 0);
@@ -143,7 +144,7 @@ __bind_connect (dir_binding *dbp)
   if (dbp->clnt == NULL)
     return NIS_RPCERROR;
 
-  clnt_control (dbp->clnt, CLSET_TIMEOUT, (caddr_t)&TIMEOUT);
+  clnt_control (dbp->clnt, CLSET_TIMEOUT, (caddr_t)&RPCTIMEOUT);
   /* If the program exists, close the socket */
   if (fcntl (dbp->socket, F_SETFD, 1) == -1)
     perror (_("fcntl: F_SETFD"));
@@ -302,7 +303,7 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
   do
     {
     again:
-      result = clnt_call (dbp->clnt, prog, xargs, req, xres, resp, TIMEOUT);
+      result = clnt_call (dbp->clnt, prog, xargs, req, xres, resp, RPCTIMEOUT);
 
       if (result != RPC_SUCCESS)
 	{

@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __db_pgerr __P((DB *, db_pgno_t));
 int __db_pgfmt __P((DB *, db_pgno_t));
 int __db_addrem_log
@@ -25,7 +25,7 @@ int __db_big_print
 int __db_big_read __P((void *, __db_big_args **));
 int __db_ovref_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
-    u_int32_t, db_pgno_t, DB_LSN *));
+    u_int32_t, db_pgno_t, int32_t, DB_LSN *));
 int __db_ovref_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_ovref_read __P((void *, __db_ovref_args **));
@@ -79,7 +79,7 @@ int __db_goff __P((DB *, DBT *,
     u_int32_t, db_pgno_t, void **, u_int32_t *));
 int __db_poff __P((DB *, const DBT *, db_pgno_t *,
     int (*)(DB *, u_int32_t, PAGE **)));
-int __db_ioff __P((DB *, db_pgno_t));
+int __db_ovref __P((DB *, db_pgno_t, int));
 int __db_doff __P((DB *, db_pgno_t, int (*)(DB *, PAGE *)));
 int __db_moff __P((DB *, const DBT *, db_pgno_t));
 void __db_loadme __P((void));

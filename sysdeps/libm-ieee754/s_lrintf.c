@@ -47,7 +47,7 @@ __lrintf (float x)
   i0 = i & 0x7fffff;
   i0 |= 0x800000;
 
-  if (j0 < (int32_t) (sizeof (long int) * 8))
+  if (j0 < (int32_t) (sizeof (long int) * 8) - 1)
     {
       if (j0 < -1)
 	return 0;

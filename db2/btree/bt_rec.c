@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_rec.c	10.14 (Sleepycat) 9/6/97";
+static const char sccsid[] = "@(#)bt_rec.c	10.17 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -298,8 +298,8 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 			goto done;
 
 		/* Allocate and initialize new left/right child pages. */
-		if ((_lp = (PAGE *)malloc(file_dbp->pgsize)) == NULL ||
-		    (_rp = (PAGE *)malloc(file_dbp->pgsize)) == NULL) {
+		if ((_lp = (PAGE *)__db_malloc(file_dbp->pgsize)) == NULL ||
+		    (_rp = (PAGE *)__db_malloc(file_dbp->pgsize)) == NULL) {
 			ret = ENOMEM;
 			__db_err(file_dbp->dbenv, "%s", strerror(ret));
 			goto out;
@@ -490,9 +490,9 @@ out:	/* Free any pages that weren't dirtied. */
 
 	/* Free any allocated space. */
 	if (_lp != NULL)
-		free(_lp);
+		__db_free(_lp);
 	if (_rp != NULL)
-		free(_rp);
+		__db_free(_rp);
 
 	REC_CLOSE;
 }
@@ -541,7 +541,8 @@ __bam_rsplit_recover(logp, dbtp, lsnp, redo, info)
 	} else if (cmp_n == 0 && !redo) {
 		/* Need to undo update described. */
 		P_INIT(pagep, file_dbp->pgsize, PGNO_ROOT,
-		    PGNO_INVALID, PGNO_INVALID, pagep->level + 1, TYPE(pagep));
+		    argp->nrec, PGNO_INVALID, pagep->level + 1,
+		    file_dbp->type == DB_BTREE ? P_IBTREE : P_IRECNO);
 		if ((ret = __db_pitem(file_dbp, pagep, 0,
 		    argp->rootent.size, &argp->rootent, NULL)) != 0)
 			goto out;
@@ -762,5 +763,108 @@ __bam_cdel_recover(logp, dbtp, lsnp, redo, info)
 	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) == 0)
 		*lsnp = argp->prev_lsn;
 
+out:	REC_CLOSE;
+}
+
+/*
+ * __bam_repl_recover --
+ *	Recovery function for page item replacement.
+ *
+ * PUBLIC: int __bam_repl_recover
+ * PUBLIC:   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+ */
+int
+__bam_repl_recover(logp, dbtp, lsnp, redo, info)
+	DB_LOG *logp;
+	DBT *dbtp;
+	DB_LSN *lsnp;
+	int redo;
+	void *info;
+{
+	__bam_repl_args *argp;
+	BKEYDATA *bk;
+	DB *file_dbp, *mdbp;
+	DBT dbt;
+	DB_MPOOLFILE *mpf;
+	PAGE *pagep;
+	int cmp_n, cmp_p, modified, ret;
+	u_int8_t *p;
+
+	REC_PRINT(__bam_repl_print);
+	REC_INTRO(__bam_repl_read);
+
+	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
+		(void)__db_pgerr(file_dbp, argp->pgno);
+		pagep = NULL;
+		goto out;
+	}
+	bk = GET_BKEYDATA(pagep, argp->indx);
+
+	modified = 0;
+	cmp_n = log_compare(lsnp, &LSN(pagep));
+	cmp_p = log_compare(&LSN(pagep), &argp->lsn);
+	if (cmp_p == 0 && redo) {
+		/*
+		 * Need to redo update described.
+		 *
+		 * Re-build the replacement item.
+		 */
+		memset(&dbt, 0, sizeof(dbt));
+		dbt.size = argp->prefix + argp->suffix + argp->repl.size;
+		if ((dbt.data = __db_malloc(dbt.size)) == NULL) {
+			ret = ENOMEM;
+			goto err;
+		}
+		p = dbt.data;
+		memcpy(p, bk->data, argp->prefix);
+		p += argp->prefix;
+		memcpy(p, argp->repl.data, argp->repl.size);
+		p += argp->repl.size;
+		memcpy(p, bk->data + (bk->len - argp->suffix), argp->suffix);
+
+		ret = __bam_ritem(file_dbp, pagep, argp->indx, &dbt);
+		__db_free(dbt.data);
+		if (ret != 0)
+			goto err;
+
+		LSN(pagep) = *lsnp;
+		modified = 1;
+	} else if (cmp_n == 0 && !redo) {
+		/*
+		 * Need to undo update described.
+		 *
+		 * Re-build the original item.
+		 */
+		memset(&dbt, 0, sizeof(dbt));
+		dbt.size = argp->prefix + argp->suffix + argp->orig.size;
+		if ((dbt.data = __db_malloc(dbt.size)) == NULL) {
+			ret = ENOMEM;
+			goto err;
+		}
+		p = dbt.data;
+		memcpy(p, bk->data, argp->prefix);
+		p += argp->prefix;
+		memcpy(p, argp->orig.data, argp->orig.size);
+		p += argp->orig.size;
+		memcpy(p, bk->data + (bk->len - argp->suffix), argp->suffix);
+
+		ret = __bam_ritem(file_dbp, pagep, argp->indx, &dbt);
+		__db_free(dbt.data);
+		if (ret != 0)
+			goto err;
+
+		/* Reset the deleted flag, if necessary. */
+		if (argp->isdeleted)
+			B_DSET(GET_BKEYDATA(pagep, argp->indx)->type);
+
+		LSN(pagep) = argp->lsn;
+		modified = 1;
+	}
+	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) == 0)
+		*lsnp = argp->prev_lsn;
+
+	if (0) {
+err:		(void)memp_fput(mpf, pagep, 0);
+	}
 out:	REC_CLOSE;
 }

@@ -43,7 +43,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)hash.h	10.6 (Sleepycat) 8/18/97
+ *	@(#)hash.h	10.7 (Sleepycat) 11/1/97
  */
 
 /* Cursor structure definitions. */
@@ -179,8 +179,8 @@ typedef struct htab {		/* Memory resident data structure. */
 /* Constraints about number of pages and how much data goes on a page. */
 
 #define	MAX_PAGES(H)	UINT32_T_MAX
-#define	MINFILL		0.25
-#define	ISBIG(H, N)	(((N) > ((H)->hdr->pagesize * MINFILL)) ? 1 : 0)
+#define	MINFILL		4
+#define	ISBIG(H, N)	(((N) > ((H)->hdr->pagesize / MINFILL)) ? 1 : 0)
 
 /* Shorthands for accessing structure */
 #define	NDX_INVALID	0xFFFF

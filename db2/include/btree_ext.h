@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __bam_close __P((DB *));
 int __bam_sync __P((DB *, int));
 int __bam_cmp __P((DB *, const DBT *, EPG *));
@@ -35,6 +35,7 @@ int __bam_pget __P((DB *, PAGE **, db_pgno_t *, int));
 int __bam_put __P((DB *, DB_TXN *, DBT *, DBT *, int));
 int __bam_iitem __P((DB *,
    PAGE **, db_indx_t *, DBT *, DBT *, int, int));
+int __bam_ritem __P((DB *, PAGE *, u_int32_t, DBT *));
 int __bam_pg_alloc_recover
   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __bam_pg_free_recover
@@ -48,6 +49,8 @@ int __bam_adj_recover
 int __bam_cadjust_recover
   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __bam_cdel_recover
+  __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+int __bam_repl_recover
   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ram_open __P((DB *, DBTYPE, DB_INFO *));
 int __ram_cursor __P((DB *, DB_TXN *, DBC **));
@@ -94,8 +97,8 @@ int __bam_split_print
 int __bam_split_read __P((void *, __bam_split_args **));
 int __bam_rsplit_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
-    u_int32_t, db_pgno_t, DBT *, DBT *,
-    DB_LSN *));
+    u_int32_t, db_pgno_t, DBT *, db_pgno_t,
+    DBT *, DB_LSN *));
 int __bam_rsplit_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __bam_rsplit_read __P((void *, __bam_rsplit_args **));
@@ -119,5 +122,13 @@ int __bam_cdel_log
 int __bam_cdel_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __bam_cdel_read __P((void *, __bam_cdel_args **));
+int __bam_repl_log
+    __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
+    u_int32_t, db_pgno_t, DB_LSN *, u_int32_t,
+    u_int32_t, DBT *, DBT *, u_int32_t,
+    u_int32_t));
+int __bam_repl_print
+   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+int __bam_repl_read __P((void *, __bam_repl_args **));
 int __bam_init_print __P((DB_ENV *));
 int __bam_init_recover __P((DB_ENV *));

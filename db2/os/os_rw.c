@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_os_rw.c	10.4 (Sleepycat) 6/28/97";
+static const char sccsid[] = "@(#)os_rw.c	10.6 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,7 +19,6 @@ static const char sccsid[] = "@(#)db_os_rw.c	10.4 (Sleepycat) 6/28/97";
 #endif
 
 #include "db_int.h"
-#include "os_ext.h"
 
 /*
  * __db_read --
@@ -40,7 +39,7 @@ __db_read(fd, addr, len, nrp)
 
 	for (taddr = addr,
 	    offset = 0; offset < len; taddr += nr, offset += nr) {
-		if ((nr = read(fd, taddr, len - offset)) < 0)
+		if ((nr = __os_read(fd, taddr, len - offset)) < 0)
 			return (errno);
 		if (nr == 0)
 			break;
@@ -68,7 +67,7 @@ __db_write(fd, addr, len, nwp)
 
 	for (taddr = addr,
 	    offset = 0; offset < len; taddr += nw, offset += nw)
-		if ((nw = write(fd, taddr, len - offset)) < 0)
+		if ((nw = __os_write(fd, taddr, len - offset)) < 0)
 			return (errno);
 	*nwp = len;
 	return (0);

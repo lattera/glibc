@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 int __ham_open __P((DB *, DB_INFO *));
 int  __ham_close __P((DB *));
 int __ham_c_iclose __P((DB *, DBC *));
@@ -54,10 +54,17 @@ int __ham_newpgno_read __P((void *, __ham_newpgno_args **));
 int __ham_ovfl_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     u_int32_t, db_pgno_t, u_int32_t, db_pgno_t,
-    DB_LSN *));
+    u_int32_t, DB_LSN *));
 int __ham_ovfl_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ham_ovfl_read __P((void *, __ham_ovfl_args **));
+int __ham_copypage_log
+    __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
+    u_int32_t, db_pgno_t, DB_LSN *, db_pgno_t,
+    DB_LSN *, db_pgno_t, DB_LSN *, DBT *));
+int __ham_copypage_print
+   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+int __ham_copypage_read __P((void *, __ham_copypage_args **));
 int __ham_init_print __P((DB_ENV *));
 int __ham_init_recover __P((DB_ENV *));
 int __ham_pgin __P((db_pgno_t, void *, DBT *));
@@ -81,7 +88,7 @@ int __ham_item_first __P((HTAB *, HASH_CURSOR *, db_lockmode_t));
 int __ham_item_prev __P((HTAB *, HASH_CURSOR *, db_lockmode_t));
 int __ham_item_next __P((HTAB *, HASH_CURSOR *, db_lockmode_t));
 void __ham_putitem __P((PAGE *p, const DBT *, int));
-int __ham_del_pair __P((HTAB *, HASH_CURSOR *));
+int __ham_del_pair __P((HTAB *, HASH_CURSOR *, int));
 int __ham_replpair __P((HTAB *, HASH_CURSOR *, DBT *, u_int32_t));
 void __ham_onpage_replace __P((PAGE *, size_t, u_int32_t, int32_t,
     int32_t,  DBT *));
@@ -118,4 +125,6 @@ int __ham_splitdata_recover
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ham_ovfl_recover
     __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+int __ham_copypage_recover
+  __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __ham_stat __P((DB *, FILE *));

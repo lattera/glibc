@@ -856,6 +856,8 @@ asin_test (void)
 #endif
 
   check ("asin (0) == 0", FUNC(asin) (0), 0);
+  check ("asin (0.5) ==  pi/6", FUNC(asin) (0.5), M_PI_6);
+  check ("asin (1.0) ==  pi/2", FUNC(asin) (1.0), M_PI_2);
 }
 
 
@@ -2297,6 +2299,7 @@ sqrt_test (void)
   x = random_value (0, 10000);
   check_ext ("sqrt (x*x) == x", FUNC(sqrt) (x*x), x, x);
   check ("sqrt (4) == 2", FUNC(sqrt) (4), 2);
+  check ("sqrt (0.25) == 0.5", FUNC(sqrt) (0.25), 0.5);
 
 }
 
@@ -4638,16 +4641,16 @@ lrint_test (void)
      the rounding method and test the critical cases.  So far, only
      unproblematic numbers are tested.  */
 
-  check_long ("lrint(0) = 0", lrint (0.0), 0);
-  check_long ("lrint(-0) = 0", lrint (minus_zero), 0);
-  check_long ("lrint(0.2) = 0", lrint (0.2), 0);
-  check_long ("lrint(-0.2) = 0", lrint (-0.2), 0);
+  check_long ("lrint(0) = 0", FUNC(lrint) (0.0), 0);
+  check_long ("lrint(-0) = 0", FUNC(lrint) (minus_zero), 0);
+  check_long ("lrint(0.2) = 0", FUNC(lrint) (0.2), 0);
+  check_long ("lrint(-0.2) = 0", FUNC(lrint) (-0.2), 0);
 
-  check_long ("lrint(1.4) = 1", lrint (1.4), 1);
-  check_long ("lrint(-1.4) = -1", lrint (-1.4), -1);
+  check_long ("lrint(1.4) = 1", FUNC(lrint) (1.4), 1);
+  check_long ("lrint(-1.4) = -1", FUNC(lrint) (-1.4), -1);
 
-  check_long ("lrint(8388600.3) = 8388600", lrint (8388600.3), 8388600);
-  check_long ("lrint(-8388600.3) = -8388600", lrint (-8388600.3),
+  check_long ("lrint(8388600.3) = 8388600", FUNC(lrint) (8388600.3), 8388600);
+  check_long ("lrint(-8388600.3) = -8388600", FUNC(lrint) (-8388600.3),
 	      -8388600);
 }
 
@@ -4659,18 +4662,50 @@ llrint_test (void)
      the rounding method and test the critical cases.  So far, only
      unproblematic numbers are tested.  */
 
-  check_longlong ("llrint(0) = 0", llrint (0.0), 0);
-  check_longlong ("llrint(-0) = 0", llrint (minus_zero), 0);
-  check_longlong ("llrint(0.2) = 0", llrint (0.2), 0);
-  check_longlong ("llrint(-0.2) = 0", llrint (-0.2), 0);
+  check_longlong ("llrint(0) = 0", FUNC(llrint) (0.0), 0);
+  check_longlong ("llrint(-0) = 0", FUNC(llrint) (minus_zero), 0);
+  check_longlong ("llrint(0.2) = 0", FUNC(llrint) (0.2), 0);
+  check_longlong ("llrint(-0.2) = 0", FUNC(llrint) (-0.2), 0);
 
-  check_longlong ("llrint(1.4) = 1", llrint (1.4), 1);
-  check_longlong ("llrint(-1.4) = -1", llrint (-1.4), -1);
+  check_longlong ("llrint(1.4) = 1", FUNC(llrint) (1.4), 1);
+  check_longlong ("llrint(-1.4) = -1", FUNC(llrint) (-1.4), -1);
 
-  check_longlong ("llrint(8388600.3) = 8388600", llrint (8388600.3),
+  check_longlong ("llrint(8388600.3) = 8388600", FUNC(llrint) (8388600.3),
 		  8388600);
-  check_longlong ("llrint(-8388600.3) = -8388600", llrint (-8388600.3),
+  check_longlong ("llrint(-8388600.3) = -8388600", FUNC(llrint) (-8388600.3),
 		  -8388600);
+
+  /* Test boundary conditions.  */
+  /* 0x1FFFFF */
+  check_longlong ("llrint(2097151.0) = 2097151", FUNC(llrint) (2097151.0),
+		  2097151LL);
+  /* 0x800000 */
+  check_longlong ("llrint(8388608.0) = 8388608", FUNC(llrint) (8388608.0),
+		  8388608LL);
+  /* 0x1000000 */
+  check_longlong ("llrint(16777216.0) = 16777216",
+		  FUNC(llrint) (16777216.0), 16777216LL);
+  /* 0x20000000000 */
+  check_longlong ("llrint(2199023255552.0) = 2199023255552",
+		  FUNC(llrint) (2199023255552.0), 2199023255552LL);
+  /* 0x40000000000 */
+  check_longlong ("llrint(4398046511104.0) = 4398046511104",
+		  FUNC(llrint) (4398046511104.0), 4398046511104LL);
+  /* 0x10000000000000 */
+  check_longlong ("llrint(4503599627370496.0) = 4503599627370496",
+		  FUNC(llrint) (4503599627370496.0), 4503599627370496LL);
+  /* 0x10000080000000 */
+  check_longlong ("llrint(4503601774854144.0) = 4503601774854144",
+		  FUNC(llrint) (4503601774854144.0), 4503601774854144LL);
+  /* 0x20000000000000 */
+  check_longlong ("llrint(9007199254740992.0) = 9007199254740992",
+		  FUNC(llrint) (9007199254740992.0), 9007199254740992LL);
+  /* 0x80000000000000 */
+  check_longlong ("llrint(36028797018963968.0) = 36028797018963968",
+		  FUNC(llrint) (36028797018963968.0), 36028797018963968LL);
+  /* 0x100000000000000 */
+  check_longlong ("llrint(72057594037927936.0) = 72057594037927936",
+		  FUNC(llrint) (72057594037927936.0), 72057594037927936LL);
 }
 
 
@@ -4705,8 +4740,8 @@ lround_test (void)
   check_long ("lround(-0.8) = -1", FUNC(lround) (-0.8), -1);
   check_long ("lround(1.5) = 2", FUNC(lround) (1.5), 2);
   check_long ("lround(-1.5) = -2", FUNC(lround) (-1.5), -2);
-  check_long ("lround(22514.5) = 22514", FUNC(lround) (1.5), 2);
-  check_long ("lround(-22514.5) = -22514", FUNC(lround) (-1.5), -2);
+  check_long ("lround(22514.5) = 22515", FUNC(lround) (22514.5), 22515);
+  check_long ("lround(-22514.5) = -22515", FUNC(lround) (-22514.5), -22515);
 #ifndef TEST_FLOAT
   check_long ("lround(2097152.5) = 2097153", FUNC(lround) (2097152.5),
 	      2097153);
@@ -4729,8 +4764,9 @@ llround_test (void)
   check_longlong ("llround(-0.8) = -1", FUNC(llround) (-0.8), -1);
   check_longlong ("llround(1.5) = 2", FUNC(llround) (1.5), 2);
   check_longlong ("llround(-1.5) = -2", FUNC(llround) (-1.5), -2);
-  check_longlong ("llround(22514.5) = 22514", FUNC(llround) (1.5), 2);
-  check_longlong ("llround(-22514.5) = -22514", FUNC(llround) (-1.5), -2);
+  check_longlong ("llround(22514.5) = 22515", FUNC(llround) (22514.5), 22515);
+  check_longlong ("llround(-22514.5) = -22515", FUNC(llround) (-22514.5),
+		  -22515);
 #ifndef TEST_FLOAT
   check_longlong ("llround(2097152.5) = 2097153",
 		  FUNC(llround) (2097152.5), 2097153);
@@ -4741,6 +4777,38 @@ llround_test (void)
   check_longlong ("llround(-34359738368.5) = -34359738369",
 		  FUNC(llround) (-34359738368.5), -34359738369ll);
 #endif
+
+  /* Test boundary conditions.  */
+  /* 0x1FFFFF */
+  check_longlong ("llround(2097151.0) = 2097151", FUNC(llround) (2097151.0),
+		  2097151LL);
+  /* 0x800000 */
+  check_longlong ("llround(8388608.0) = 8388608", FUNC(llround) (8388608.0),
+		  8388608LL);
+  /* 0x1000000 */
+  check_longlong ("llround(16777216.0) = 16777216",
+		  FUNC(llround) (16777216.0), 16777216LL);
+  /* 0x20000000000 */
+  check_longlong ("llround(2199023255552.0) = 2199023255552",
+		  FUNC(llround) (2199023255552.0), 2199023255552LL);
+  /* 0x40000000000 */
+  check_longlong ("llround(4398046511104.0) = 4398046511104",
+		  FUNC(llround) (4398046511104.0), 4398046511104LL);
+  /* 0x10000000000000 */
+  check_longlong ("llround(4503599627370496.0) = 4503599627370496",
+		  FUNC(llround) (4503599627370496.0), 4503599627370496LL);
+  /* 0x10000080000000 */
+  check_longlong ("llrint(4503601774854144.0) = 4503601774854144",
+		  FUNC(llrint) (4503601774854144.0), 4503601774854144LL);
+  /* 0x20000000000000 */
+  check_longlong ("llround(9007199254740992.0) = 9007199254740992",
+		  FUNC(llround) (9007199254740992.0), 9007199254740992LL);
+  /* 0x80000000000000 */
+  check_longlong ("llround(36028797018963968.0) = 36028797018963968",
+		  FUNC(llround) (36028797018963968.0), 36028797018963968LL);
+  /* 0x100000000000000 */
+  check_longlong ("llround(72057594037927936.0) = 72057594037927936",
+		  FUNC(llround) (72057594037927936.0), 72057594037927936LL);
 }
 
 

@@ -75,7 +75,7 @@ Returns true if @var{c} is an alphabetic character (a letter).  If
 @code{isalpha} is also true.
 
 In some locales, there may be additional characters for which
-@code{isalpha} is true--letters which are neither upper case nor lower
+@code{isalpha} is true---letters which are neither upper case nor lower
 case.  But in the standard @code{"C"} locale, there are no such
 additional characters.
 @end deftypefun

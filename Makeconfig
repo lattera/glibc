@@ -529,6 +529,12 @@ LDFLAGS	:= -g
 endif
 
 
+# If everything is compiled with -fPIC (implicitly) we must tell this by
+# defining the PIC symbol.
+ifeq (yes,$(build-pic-default))
+pic-default = -DPIC
+endif
+
 # Enable object files for different versions of the library.
 # Various things use $(object-suffixes) to know what all to make.
 # The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
@@ -537,6 +543,7 @@ libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
 all-object-suffixes := .o .os .op .og .ob
 object-suffixes :=
 ifeq (yes,$(build-static))
+CPPFLAGS-.o = $(pic-default)
 libtype.o := lib%.a
 object-suffixes += .o
 endif
@@ -554,7 +561,7 @@ ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.
 # The profiled object files are named foo.op.
 object-suffixes += .op
-CPPFLAGS-.op = -DPROF
+CPPFLAGS-.op = -DPROF $(pic-default)
 CFLAGS-.op = -pg
 libtype.op = lib%_p.a
 endif
@@ -563,6 +570,7 @@ ifeq (yes,$(build-omitfp))
 # debugging information using -fomit-frame-pointer, and build an extra
 # library with debugging information.  The debuggable objects are named foo.og.
 object-suffixes += .og
+CPPFLAGS-.og = $(pic-default)
 CFLAGS-.og = -g
 CFLAGS-.o = -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
 CFLAGS-.os += $(CFLAGS-.o)
@@ -572,7 +580,7 @@ ifeq (yes,$(build-bounded))
 # Under --enable-bounded, we build the library with `-fbounded-pointers -g'
 # to runtime bounds checking.  The bounded-pointer objects are named foo.ob.
 object-suffixes += .ob
-CPPFLAGS-.ob = -DBOUNDED_POINTERS
+CPPFLAGS-.ob = -DBOUNDED_POINTERS $(pic-default)
 CFLAGS-.ob = -g -fbounded-pointers
 libtype.ob = lib%_b.a
 endif

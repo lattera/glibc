@@ -2,7 +2,7 @@
 
 /* The Hurd uses Mach error system 0x10, currently only subsystem 0. */
 #ifndef _HURD_ERRNO
-#define _HURD_ERRNO(n)	((0x10 << 26) | ((n) & 0x3fff))
+# define _HURD_ERRNO(n)	((0x10 << 26) | ((n) & 0x3fff))
 #endif
 
 #ifdef _ERRNO_H
@@ -293,24 +293,25 @@ enum __error_t_codes
 
 };
 
-#define	_HURD_ERRNOS	118
+# define _HURD_ERRNOS	118
 
 /* User-visible type of error codes.  It is ok to use `int' or
    `kern_return_t' for these, but with `error_t' the debugger prints
    symbolic values.  */
-#ifdef __USE_GNU
+# ifdef __USE_GNU
 typedef enum __error_t_codes error_t;
-#define __error_t_defined	1
-#endif
+#  define __error_t_defined	1
+# endif
 
 /* errno is a per-thread variable.  */
-#include <hurd/threadvar.h>
-#define errno	(*__hurd_errno_location ())
-#define __set_errno(val) errno = (val)
+# include <hurd/threadvar.h>
+# define errno	(*__hurd_errno_location ())
+# define __set_errno(val) errno = (val)
 
 #endif /* <errno.h> included.  */
 
-#if !defined (_ERRNO_H) && defined (__need_Emath)
-#define	EDOM            _HURD_ERRNO (33)/* Numerical argument out of domain */
-#define	ERANGE          _HURD_ERRNO (34)/* Numerical result out of range */
+#if !defined _ERRNO_H && defined __need_Emath
+# define EDOM            _HURD_ERRNO (33)/* Numerical argument out of domain */
+# define EILSEQ          _HURD_ERRNO (106)/* Invalid or incomplete multibyte or wide character */
+# define ERANGE          _HURD_ERRNO (34)/* Numerical result out of range */
 #endif /* <errno.h> not included and need math error codes.  */

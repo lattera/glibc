@@ -57,7 +57,7 @@ int __bam_pg_alloc_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(pgno)
 	    + sizeof(ptype)
 	    + sizeof(next);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -92,7 +92,7 @@ int __bam_pg_alloc_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -137,7 +137,7 @@ __bam_pg_alloc_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tptype: %lu\n", (u_long)argp->ptype);
 	printf("\tnext: %lu\n", (u_long)argp->next);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -152,7 +152,7 @@ __bam_pg_alloc_read(recbuf, argpp)
 	__bam_pg_alloc_args *argp;
 	u_int8_t *bp;
 
-	argp = (__bam_pg_alloc_args *)malloc(sizeof(__bam_pg_alloc_args) +
+	argp = (__bam_pg_alloc_args *)__db_malloc(sizeof(__bam_pg_alloc_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -219,7 +219,7 @@ int __bam_pg_free_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(*meta_lsn)
 	    + sizeof(u_int32_t) + (header == NULL ? 0 : header->size)
 	    + sizeof(next);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -257,7 +257,7 @@ int __bam_pg_free_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -308,7 +308,7 @@ __bam_pg_free_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\n");
 	printf("\tnext: %lu\n", (u_long)argp->next);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -323,7 +323,7 @@ __bam_pg_free_read(recbuf, argpp)
 	__bam_pg_free_args *argp;
 	u_int8_t *bp;
 
-	argp = (__bam_pg_free_args *)malloc(sizeof(__bam_pg_free_args) +
+	argp = (__bam_pg_free_args *)__db_malloc(sizeof(__bam_pg_free_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -400,7 +400,7 @@ int __bam_split_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(npgno)
 	    + sizeof(*nlsn)
 	    + sizeof(u_int32_t) + (pg == NULL ? 0 : pg->size);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -452,7 +452,7 @@ int __bam_split_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -509,7 +509,7 @@ __bam_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	}
 	printf("\n");
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -524,7 +524,7 @@ __bam_split_read(recbuf, argpp)
 	__bam_split_args *argp;
 	u_int8_t *bp;
 
-	argp = (__bam_split_args *)malloc(sizeof(__bam_split_args) +
+	argp = (__bam_split_args *)__db_malloc(sizeof(__bam_split_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -563,11 +563,11 @@ __bam_split_read(recbuf, argpp)
 /*
  * PUBLIC: int __bam_rsplit_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
- * PUBLIC:     u_int32_t, db_pgno_t, DBT *, DBT *,
- * PUBLIC:     DB_LSN *));
+ * PUBLIC:     u_int32_t, db_pgno_t, DBT *, db_pgno_t,
+ * PUBLIC:     DBT *, DB_LSN *));
  */
 int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
-	fileid, pgno, pgdbt, rootent, rootlsn)
+	fileid, pgno, pgdbt, nrec, rootent, rootlsn)
 	DB_LOG *logp;
 	DB_TXN *txnid;
 	DB_LSN *ret_lsnp;
@@ -575,6 +575,7 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
 	u_int32_t fileid;
 	db_pgno_t pgno;
 	DBT *pgdbt;
+	db_pgno_t nrec;
 	DBT *rootent;
 	DB_LSN * rootlsn;
 {
@@ -597,9 +598,10 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(fileid)
 	    + sizeof(pgno)
 	    + sizeof(u_int32_t) + (pgdbt == NULL ? 0 : pgdbt->size)
+	    + sizeof(nrec)
 	    + sizeof(u_int32_t) + (rootent == NULL ? 0 : rootent->size)
 	    + sizeof(*rootlsn);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -623,6 +625,8 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
 		memcpy(bp, pgdbt->data, pgdbt->size);
 		bp += pgdbt->size;
 	}
+	memcpy(bp, &nrec, sizeof(nrec));
+	bp += sizeof(nrec);
 	if (rootent == NULL) {
 		zero = 0;
 		memcpy(bp, &zero, sizeof(u_int32_t));
@@ -645,7 +649,7 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -692,6 +696,7 @@ __bam_rsplit_print(notused1, dbtp, lsnp, notused3, notused4)
 			printf("%#x ", c);
 	}
 	printf("\n");
+	printf("\tnrec: %lu\n", (u_long)argp->nrec);
 	printf("\trootent: ");
 	for (i = 0; i < argp->rootent.size; i++) {
 		c = ((char *)argp->rootent.data)[i];
@@ -704,7 +709,7 @@ __bam_rsplit_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\trootlsn: [%lu][%lu]\n",
 	    (u_long)argp->rootlsn.file, (u_long)argp->rootlsn.offset);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -719,7 +724,7 @@ __bam_rsplit_read(recbuf, argpp)
 	__bam_rsplit_args *argp;
 	u_int8_t *bp;
 
-	argp = (__bam_rsplit_args *)malloc(sizeof(__bam_rsplit_args) +
+	argp = (__bam_rsplit_args *)__db_malloc(sizeof(__bam_rsplit_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -739,6 +744,8 @@ __bam_rsplit_read(recbuf, argpp)
 	bp += sizeof(u_int32_t);
 	argp->pgdbt.data = bp;
 	bp += argp->pgdbt.size;
+	memcpy(&argp->nrec, bp, sizeof(argp->nrec));
+	bp += sizeof(argp->nrec);
 	memcpy(&argp->rootent.size, bp, sizeof(u_int32_t));
 	bp += sizeof(u_int32_t);
 	argp->rootent.data = bp;
@@ -789,7 +796,7 @@ int __bam_adj_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(indx)
 	    + sizeof(indx_copy)
 	    + sizeof(is_insert);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -821,7 +828,7 @@ int __bam_adj_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -865,7 +872,7 @@ __bam_adj_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tindx_copy: %lu\n", (u_long)argp->indx_copy);
 	printf("\tis_insert: %lu\n", (u_long)argp->is_insert);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -880,7 +887,7 @@ __bam_adj_read(recbuf, argpp)
 	__bam_adj_args *argp;
 	u_int8_t *bp;
 
-	argp = (__bam_adj_args *)malloc(sizeof(__bam_adj_args) +
+	argp = (__bam_adj_args *)__db_malloc(sizeof(__bam_adj_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -948,7 +955,7 @@ int __bam_cadjust_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(indx)
 	    + sizeof(adjust)
 	    + sizeof(total);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -980,7 +987,7 @@ int __bam_cadjust_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -1024,7 +1031,7 @@ __bam_cadjust_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tadjust: %ld\n", (long)argp->adjust);
 	printf("\ttotal: %ld\n", (long)argp->total);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -1039,7 +1046,7 @@ __bam_cadjust_read(recbuf, argpp)
 	__bam_cadjust_args *argp;
 	u_int8_t *bp;
 
-	argp = (__bam_cadjust_args *)malloc(sizeof(__bam_cadjust_args) +
+	argp = (__bam_cadjust_args *)__db_malloc(sizeof(__bam_cadjust_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -1102,7 +1109,7 @@ int __bam_cdel_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(pgno)
 	    + sizeof(*lsn)
 	    + sizeof(indx);
-	if ((logrec.data = (void *)malloc(logrec.size)) == NULL)
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
 	bp = logrec.data;
@@ -1130,7 +1137,7 @@ int __bam_cdel_log(logp, txnid, ret_lsnp, flags,
 	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	free(logrec.data);
+	__db_free(logrec.data);
 	return (ret);
 }
 
@@ -1172,7 +1179,7 @@ __bam_cdel_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->lsn.file, (u_long)argp->lsn.offset);
 	printf("\tindx: %lu\n", (u_long)argp->indx);
 	printf("\n");
-	free(argp);
+	__db_free(argp);
 	return (0);
 }
 
@@ -1187,7 +1194,7 @@ __bam_cdel_read(recbuf, argpp)
 	__bam_cdel_args *argp;
 	u_int8_t *bp;
 
-	argp = (__bam_cdel_args *)malloc(sizeof(__bam_cdel_args) +
+	argp = (__bam_cdel_args *)__db_malloc(sizeof(__bam_cdel_args) +
 	    sizeof(DB_TXN));
 	if (argp == NULL)
 		return (ENOMEM);
@@ -1207,6 +1214,225 @@ __bam_cdel_read(recbuf, argpp)
 	bp += sizeof(argp->lsn);
 	memcpy(&argp->indx, bp, sizeof(argp->indx));
 	bp += sizeof(argp->indx);
+	*argpp = argp;
+	return (0);
+}
+
+/*
+ * PUBLIC: int __bam_repl_log
+ * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
+ * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *, u_int32_t,
+ * PUBLIC:     u_int32_t, DBT *, DBT *, u_int32_t,
+ * PUBLIC:     u_int32_t));
+ */
+int __bam_repl_log(logp, txnid, ret_lsnp, flags,
+	fileid, pgno, lsn, indx, isdeleted, orig,
+	repl, prefix, suffix)
+	DB_LOG *logp;
+	DB_TXN *txnid;
+	DB_LSN *ret_lsnp;
+	u_int32_t flags;
+	u_int32_t fileid;
+	db_pgno_t pgno;
+	DB_LSN * lsn;
+	u_int32_t indx;
+	u_int32_t isdeleted;
+	DBT *orig;
+	DBT *repl;
+	u_int32_t prefix;
+	u_int32_t suffix;
+{
+	DBT logrec;
+	DB_LSN *lsnp, null_lsn;
+	u_int32_t zero;
+	u_int32_t rectype, txn_num;
+	int ret;
+	u_int8_t *bp;
+
+	rectype = DB_bam_repl;
+	txn_num = txnid == NULL ? 0 : txnid->txnid;
+	if (txnid == NULL) {
+		null_lsn.file = 0;
+		null_lsn.offset = 0;
+		lsnp = &null_lsn;
+	} else
+		lsnp = &txnid->last_lsn;
+	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN)
+	    + sizeof(fileid)
+	    + sizeof(pgno)
+	    + sizeof(*lsn)
+	    + sizeof(indx)
+	    + sizeof(isdeleted)
+	    + sizeof(u_int32_t) + (orig == NULL ? 0 : orig->size)
+	    + sizeof(u_int32_t) + (repl == NULL ? 0 : repl->size)
+	    + sizeof(prefix)
+	    + sizeof(suffix);
+	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
+		return (ENOMEM);
+
+	bp = logrec.data;
+	memcpy(bp, &rectype, sizeof(rectype));
+	bp += sizeof(rectype);
+	memcpy(bp, &txn_num, sizeof(txn_num));
+	bp += sizeof(txn_num);
+	memcpy(bp, lsnp, sizeof(DB_LSN));
+	bp += sizeof(DB_LSN);
+	memcpy(bp, &fileid, sizeof(fileid));
+	bp += sizeof(fileid);
+	memcpy(bp, &pgno, sizeof(pgno));
+	bp += sizeof(pgno);
+	if (lsn != NULL)
+		memcpy(bp, lsn, sizeof(*lsn));
+	else
+		memset(bp, 0, sizeof(*lsn));
+	bp += sizeof(*lsn);
+	memcpy(bp, &indx, sizeof(indx));
+	bp += sizeof(indx);
+	memcpy(bp, &isdeleted, sizeof(isdeleted));
+	bp += sizeof(isdeleted);
+	if (orig == NULL) {
+		zero = 0;
+		memcpy(bp, &zero, sizeof(u_int32_t));
+		bp += sizeof(u_int32_t);
+	} else {
+		memcpy(bp, &orig->size, sizeof(orig->size));
+		bp += sizeof(orig->size);
+		memcpy(bp, orig->data, orig->size);
+		bp += orig->size;
+	}
+	if (repl == NULL) {
+		zero = 0;
+		memcpy(bp, &zero, sizeof(u_int32_t));
+		bp += sizeof(u_int32_t);
+	} else {
+		memcpy(bp, &repl->size, sizeof(repl->size));
+		bp += sizeof(repl->size);
+		memcpy(bp, repl->data, repl->size);
+		bp += repl->size;
+	}
+	memcpy(bp, &prefix, sizeof(prefix));
+	bp += sizeof(prefix);
+	memcpy(bp, &suffix, sizeof(suffix));
+	bp += sizeof(suffix);
+#ifdef DEBUG
+	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
+		fprintf(stderr, "Error in log record length");
+#endif
+	ret = log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
+	if (txnid != NULL)
+		txnid->last_lsn = *ret_lsnp;
+	__db_free(logrec.data);
+	return (ret);
+}
+
+/*
+ * PUBLIC: int __bam_repl_print
+ * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+ */
+
+int
+__bam_repl_print(notused1, dbtp, lsnp, notused3, notused4)
+	DB_LOG *notused1;
+	DBT *dbtp;
+	DB_LSN *lsnp;
+	int notused3;
+	void *notused4;
+{
+	__bam_repl_args *argp;
+	u_int32_t i;
+	int c, ret;
+
+	i = 0;
+	c = 0;
+	notused1 = NULL;
+	notused3 = 0;
+	notused4 = NULL;
+
+	if ((ret = __bam_repl_read(dbtp->data, &argp)) != 0)
+		return (ret);
+	printf("[%lu][%lu]bam_repl: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
+	    (u_long)lsnp->file,
+	    (u_long)lsnp->offset,
+	    (u_long)argp->type,
+	    (u_long)argp->txnid->txnid,
+	    (u_long)argp->prev_lsn.file,
+	    (u_long)argp->prev_lsn.offset);
+	printf("\tfileid: %lu\n", (u_long)argp->fileid);
+	printf("\tpgno: %lu\n", (u_long)argp->pgno);
+	printf("\tlsn: [%lu][%lu]\n",
+	    (u_long)argp->lsn.file, (u_long)argp->lsn.offset);
+	printf("\tindx: %lu\n", (u_long)argp->indx);
+	printf("\tisdeleted: %lu\n", (u_long)argp->isdeleted);
+	printf("\torig: ");
+	for (i = 0; i < argp->orig.size; i++) {
+		c = ((char *)argp->orig.data)[i];
+		if (isprint(c) || c == 0xa)
+			putchar(c);
+		else
+			printf("%#x ", c);
+	}
+	printf("\n");
+	printf("\trepl: ");
+	for (i = 0; i < argp->repl.size; i++) {
+		c = ((char *)argp->repl.data)[i];
+		if (isprint(c) || c == 0xa)
+			putchar(c);
+		else
+			printf("%#x ", c);
+	}
+	printf("\n");
+	printf("\tprefix: %lu\n", (u_long)argp->prefix);
+	printf("\tsuffix: %lu\n", (u_long)argp->suffix);
+	printf("\n");
+	__db_free(argp);
+	return (0);
+}
+
+/*
+ * PUBLIC: int __bam_repl_read __P((void *, __bam_repl_args **));
+ */
+int
+__bam_repl_read(recbuf, argpp)
+	void *recbuf;
+	__bam_repl_args **argpp;
+{
+	__bam_repl_args *argp;
+	u_int8_t *bp;
+
+	argp = (__bam_repl_args *)__db_malloc(sizeof(__bam_repl_args) +
+	    sizeof(DB_TXN));
+	if (argp == NULL)
+		return (ENOMEM);
+	argp->txnid = (DB_TXN *)&argp[1];
+	bp = recbuf;
+	memcpy(&argp->type, bp, sizeof(argp->type));
+	bp += sizeof(argp->type);
+	memcpy(&argp->txnid->txnid,  bp, sizeof(argp->txnid->txnid));
+	bp += sizeof(argp->txnid->txnid);
+	memcpy(&argp->prev_lsn, bp, sizeof(DB_LSN));
+	bp += sizeof(DB_LSN);
+	memcpy(&argp->fileid, bp, sizeof(argp->fileid));
+	bp += sizeof(argp->fileid);
+	memcpy(&argp->pgno, bp, sizeof(argp->pgno));
+	bp += sizeof(argp->pgno);
+	memcpy(&argp->lsn, bp,  sizeof(argp->lsn));
+	bp += sizeof(argp->lsn);
+	memcpy(&argp->indx, bp, sizeof(argp->indx));
+	bp += sizeof(argp->indx);
+	memcpy(&argp->isdeleted, bp, sizeof(argp->isdeleted));
+	bp += sizeof(argp->isdeleted);
+	memcpy(&argp->orig.size, bp, sizeof(u_int32_t));
+	bp += sizeof(u_int32_t);
+	argp->orig.data = bp;
+	bp += argp->orig.size;
+	memcpy(&argp->repl.size, bp, sizeof(u_int32_t));
+	bp += sizeof(u_int32_t);
+	argp->repl.data = bp;
+	bp += argp->repl.size;
+	memcpy(&argp->prefix, bp, sizeof(argp->prefix));
+	bp += sizeof(argp->prefix);
+	memcpy(&argp->suffix, bp, sizeof(argp->suffix));
+	bp += sizeof(argp->suffix);
 	*argpp = argp;
 	return (0);
 }
@@ -1241,6 +1467,9 @@ __bam_init_print(dbenv)
 	if ((ret = __db_add_recovery(dbenv,
 	    __bam_cdel_print, DB_bam_cdel)) != 0)
 		return (ret);
+	if ((ret = __db_add_recovery(dbenv,
+	    __bam_repl_print, DB_bam_repl)) != 0)
+		return (ret);
 	return (0);
 }
 
@@ -1273,6 +1502,9 @@ __bam_init_recover(dbenv)
 		return (ret);
 	if ((ret = __db_add_recovery(dbenv,
 	    __bam_cdel_recover, DB_bam_cdel)) != 0)
+		return (ret);
+	if ((ret = __db_add_recovery(dbenv,
+	    __bam_repl_recover, DB_bam_repl)) != 0)
 		return (ret);
 	return (0);
 }

@@ -26,8 +26,9 @@ GLIBC_2.0 {
     # This functions are needed by the NIS+ tools and rpc.nisd,
     # they should never be used in a normal user program !
     __nis_default_access; __nis_default_group; __nis_default_owner;
-    __nis_default_ttl;    __free_fdresult; __nis_finddirectory;
+    __nis_default_ttl;    __free_fdresult;     __nis_finddirectory;
     __nis_hash;		  readColdStartFile;   writeColdStartFile;
+    __do_niscall2;
 
     # Many programs expect this, but every user program should
     # have it's own version, since the interface is different on

@@ -1,4 +1,4 @@
-/* Do not edit: automatically built by dist/distrib. */
+/* DO NOT EDIT: automatically built by dist/distrib. */
 #ifdef __STDC__
 void err __P((int eval, const char *, ...));
 #else

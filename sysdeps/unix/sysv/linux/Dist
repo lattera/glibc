@@ -38,6 +38,7 @@ sys/klog.h
 sys/module.h
 sys/mount.h
 sys/mtio.h
+sys/prctl.h
 sys/procfs.h
 sys/quota.h
 sys/socketvar.h

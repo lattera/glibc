@@ -26,7 +26,7 @@
 #include <bits/libc-lock.h>
 #include <sys/param.h>
 #include "_itoa.h"
-#include "../locale/localeinfo.h"
+#include <locale/localeinfo.h>
 
 /* This code is shared between the standard stdio implementation found
    in GNU C library and the libio implementation originally found in
@@ -364,8 +364,39 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_wcharacter),	/* for 'C' */				      \
       REF (form_floathex)	/* for 'A', 'a' */			      \
     };									      \
-    /* Step 3: after processing first 'l' modifier.  */			      \
-    static const void *step3_jumps[27] =				      \
+    /* Step 3a: after processing first 'h' modifier.  */		      \
+    static const void *step3a_jumps[27] =				      \
+    {									      \
+      REF (form_unknown),						      \
+      REF (form_unknown),	/* for ' ' */				      \
+      REF (form_unknown),	/* for '+' */				      \
+      REF (form_unknown),	/* for '-' */				      \
+      REF (form_unknown),	/* for '<hash>' */			      \
+      REF (form_unknown),	/* for '0' */				      \
+      REF (form_unknown),	/* for '\'' */				      \
+      REF (form_unknown),	/* for '*' */				      \
+      REF (form_unknown),	/* for '1'...'9' */			      \
+      REF (form_unknown),	/* for '.' */				      \
+      REF (mod_halfhalf),	/* for 'h' */				      \
+      REF (form_unknown),	/* for 'l' */				      \
+      REF (form_unknown),	/* for 'L', 'q' */			      \
+      REF (form_unknown),	/* for 'Z' */				      \
+      REF (form_percent),	/* for '%' */				      \
+      REF (form_integer),	/* for 'd', 'i' */			      \
+      REF (form_unsigned),	/* for 'u' */				      \
+      REF (form_octal),		/* for 'o' */				      \
+      REF (form_hexa),		/* for 'X', 'x' */			      \
+      REF (form_unknown),	/* for 'E', 'e', 'f', 'G', 'g' */	      \
+      REF (form_unknown),	/* for 'c' */				      \
+      REF (form_unknown),	/* for 's', 'S' */			      \
+      REF (form_unknown),	/* for 'p' */				      \
+      REF (form_number),	/* for 'n' */				      \
+      REF (form_unknown),	/* for 'm' */				      \
+      REF (form_unknown),	/* for 'C' */				      \
+      REF (form_unknown)	/* for 'A', 'a' */			      \
+    };									      \
+    /* Step 3b: after processing first 'l' modifier.  */		      \
+    static const void *step3b_jumps[27] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -463,7 +494,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  if (fspec == NULL)						      \
 	    if (is_long)						      \
 	      signed_number = va_arg (ap, long int);			      \
-	    else	/* `short int' will be promoted to `int'.  */	      \
+	    else  /* `char' and `short int' will be promoted to `int'.  */    \
 	      signed_number = va_arg (ap, int);				      \
 	  else								      \
 	    if (is_long)						      \
@@ -496,7 +527,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
     LABEL (unsigned_number):	  /* Unsigned number of base BASE.  */	      \
 									      \
-      /* ANSI specifies the `+' and ` ' flags only for signed		      \
+      /* ISO specifies the `+' and ` ' flags only for signed		      \
 	 conversions.  */						      \
       is_negative = 0;							      \
       showsign = 0;							      \
@@ -547,6 +578,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    if (is_long)						      \
 	      number.word = args_value[fspec->data_arg].pa_u_long_int;	      \
+	    else if (is_char)						      \
+	      number.word = (unsigned char)				      \
+		args_value[fspec->data_arg].pa_char;			      \
 	    else if (!is_short)						      \
 	      number.word = args_value[fspec->data_arg].pa_u_int;	      \
 	    else							      \
@@ -989,6 +1023,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       int is_long_double = 0; /* Argument is long double/ long long int.  */
       int is_short = 0;	/* Argument is long int.  */
       int is_long = 0;	/* Argument is short int.  */
+      int is_char = 0;	/* Argument is promoted (unsigned) char.  */
       int width = 0;	/* Width of output; 0 means none specified.  */
       int prec = -1;	/* Precision of output; -1 means none specified.  */
       char pad = ' ';	/* Padding character.  */
@@ -1097,16 +1132,21 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	prec = 0;
       JUMP (*f, step2_jumps);
 
-      /* Process 'h' modifier.  No other modifier is allowed to
-	 follow.  */
+      /* Process 'h' modifier.  There might another 'h' following.  */
     LABEL (mod_half):
       is_short = 1;
+      JUMP (*++f, step3a_jumps);
+
+      /* Process 'hh' modifier.  */
+    LABEL (mod_halfhalf):
+      is_short = 0;
+      is_char = 1;
       JUMP (*++f, step4_jumps);
 
-      /* Process 'l' modifier.  There might another 'l' follow.  */
+      /* Process 'l' modifier.  There might another 'l' following.  */
     LABEL (mod_long):
       is_long = 1;
-      JUMP (*++f, step3_jumps);
+      JUMP (*++f, step3b_jumps);
 
       /* Process 'L', 'q', or 'll' modifier.  No other modifier is
 	 allowed to follow.  */
@@ -1320,7 +1360,8 @@ do_positional:
 	int showsign = specs[nspecs_done].info.showsign;
 	int group = specs[nspecs_done].info.group;
 	int is_long_double = specs[nspecs_done].info.is_long_double;
-	int is_short = specs[nspecs_done].info.is_short;
+	int is_short = specs[nspecs_done].info.is_short == 1;
+	int is_char = specs[nspecs_done].info.is_short == 2;
 	int is_long = specs[nspecs_done].info.is_long;
 	int width = specs[nspecs_done].info.width;
 	int prec = specs[nspecs_done].info.prec;

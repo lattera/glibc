@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash.c	10.27 (Sleepycat) 9/15/97";
+static const char sccsid[] = "@(#)hash.c	10.33 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -79,7 +79,7 @@ static int  __ham_cursor __P((DB *, DB_TXN *, DBC **));
 static int  __ham_delete __P((DB *, DB_TXN *, DBT *, int));
 static int  __ham_dup_return __P((HTAB *, HASH_CURSOR *, DBT *, int));
 static int  __ham_get __P((DB *, DB_TXN *, DBT *, DBT *, int));
-static void __ham_init_htab __P((HTAB *));
+static void __ham_init_htab __P((HTAB *, u_int));
 static int  __ham_lookup __P((HTAB *,
 		HASH_CURSOR *, const DBT *, u_int32_t, db_lockmode_t));
 static int  __ham_overwrite __P((HTAB *, HASH_CURSOR *, DBT *));
@@ -106,7 +106,7 @@ __ham_open(dbp, dbinfo)
 
 	dbenv = dbp->dbenv;
 
-	if ((hashp = (HTAB *)calloc(1, sizeof(HTAB))) == NULL)
+	if ((hashp = (HTAB *)__db_calloc(1, sizeof(HTAB))) == NULL)
 		return (ENOMEM);
 	hashp->dbp = dbp;
 
@@ -175,10 +175,9 @@ __ham_open(dbp, dbinfo)
 			goto out;
 		}
 
-		hashp->hdr->nelem = dbinfo != NULL ? dbinfo->h_nelem : 0;
 		hashp->hdr->ffactor =
 		    dbinfo != NULL && dbinfo->h_ffactor ? dbinfo->h_ffactor : 0;
-		__ham_init_htab(hashp);
+		__ham_init_htab(hashp, dbinfo != NULL ? dbinfo->h_nelem : 0);
 		if (F_ISSET(dbp, DB_AM_DUP))
 			F_SET(hashp->hdr, DB_HASH_DUP);
 		if ((ret = __ham_dirty_page(hashp, (PAGE *)hashp->hdr)) != 0)
@@ -190,7 +189,7 @@ __ham_open(dbp, dbinfo)
 	TAILQ_INSERT_TAIL(&dbp->curs_queue, curs, links);
 
 	/* Allocate memory for our split buffer. */
-	if ((hashp->split_buf = (PAGE *)malloc(dbp->pgsize)) == NULL) {
+	if ((hashp->split_buf = (PAGE *)__db_malloc(dbp->pgsize)) == NULL) {
 		ret = ENOMEM;
 		goto out;
 	}
@@ -265,13 +264,13 @@ __ham_close(dbp)
  * Returns 0 on No Error
  */
 static void
-__ham_init_htab(hashp)
+__ham_init_htab(hashp, nelem)
 	HTAB *hashp;
+	u_int nelem;
 {
-	u_int32_t nelem;
 	int32_t l2, nbuckets;
 
-	nelem = hashp->hdr->nelem;
+	hashp->hdr->nelem = 0;
 	hashp->hdr->pagesize = hashp->dbp->pgsize;
 	ZERO_LSN(hashp->hdr->lsn);
 	hashp->hdr->magic = DB_HASHMAGIC;
@@ -502,11 +501,11 @@ __ham_c_init(dbp, txnid, dbcp)
 	DBC *db_curs;
 	HASH_CURSOR *new_curs;
 
-	if ((db_curs = (DBC *)calloc(sizeof(DBC), 1)) == NULL)
+	if ((db_curs = (DBC *)__db_calloc(sizeof(DBC), 1)) == NULL)
 		return (ENOMEM);
 
 	if ((new_curs =
-	    (HASH_CURSOR *)calloc(sizeof(struct cursor_t), 1)) == NULL) {
+	    (HASH_CURSOR *)__db_calloc(sizeof(struct cursor_t), 1)) == NULL) {
 		FREE(db_curs, sizeof(DBC));
 		return (ENOMEM);
 	}
@@ -555,7 +554,7 @@ __ham_delete(dbp, txn, key, flags)
 	hashp->hash_accesses++;
 	if ((ret = __ham_lookup(hashp, hcp, key, 0, DB_LOCK_WRITE)) == 0)
 		if (F_ISSET(hcp, H_OK))
-			ret = __ham_del_pair(hashp, hcp);
+			ret = __ham_del_pair(hashp, hcp, 1);
 		else
 			ret = DB_NOTFOUND;
 
@@ -669,7 +668,34 @@ __ham_c_del(cursor, flags)
 	if ((ret = __ham_get_cpage(hashp, hcp, DB_LOCK_WRITE)) != 0)
 		goto out;
 	if (F_ISSET(hcp, H_ISDUP) && hcp->dpgno != PGNO_INVALID) {
+		/*
+		 * We are about to remove a duplicate from offpage.
+		 *
+		 * There are 4 cases.
+		 * 1. We will remove an item on a page, but there are more
+		 *    items on that page.
+		 * 2. We will remove the last item on a page, but there is a
+		 *    following page of duplicates.
+		 * 3. We will remove the last item on a page, this page was the
+		 *    last page in a duplicate set, but there were dups before
+		 *    it.
+		 * 4. We will remove the last item on a page, removing the last
+		 *    duplicate.
+		 * In case 1 hcp->dpagep is unchanged.
+		 * In case 2 hcp->dpagep comes back pointing to the next dup
+		 *     page.
+		 * In case 3 hcp->dpagep comes back NULL.
+		 * In case 4 hcp->dpagep comes back NULL.
+		 *
+		 * Case 4 results in deleting the pair off the master page.
+		 * The normal code for doing this knows how to delete the
+		 * duplicates, so we will handle this case in the normal code.
+		 */
 		ppgno = PREV_PGNO(hcp->dpagep);
+		if (ppgno == PGNO_INVALID &&
+		    NEXT_PGNO(hcp->dpagep) == PGNO_INVALID &&
+		    NUM_ENT(hcp->dpagep) == 1)
+			goto normal;
 
 		/* Remove item from duplicate page. */
 		chg_pgno = hcp->dpgno;
@@ -677,22 +703,6 @@ __ham_c_del(cursor, flags)
 		    &hcp->dpagep, hcp->dndx, __ham_del_page)) != 0)
 			goto out;
 
-		/*
-		 * There are 4 cases.
-		 * 1. We removed an item on a page, but nothing else changed.
-		 * 2. We removed the last item on a page, but there is a
-		 *    following page of duplicates.
-		 * 3. We removed the last item on a page, this page was the
-		 *    last page in a duplicate set, but there were dups before
-		 *    it.
-		 * 4. We removed the last item on a page, removing the last
-		 *    duplicate.
-		 * In case 1 hcp->dpagep is unchanged.
-		 * In case 2 hcp->dpagep comes back pointing to the next dup
-		 *     page.
-		 * In case 3 hcp->dpagep comes back NULL.
-		 * In case 4 hcp->dpagep comes back NULL.
-		 */
 		if (hcp->dpagep == NULL) {
 			if (ppgno != PGNO_INVALID) {		/* Case 3 */
 				hcp->dpgno = ppgno;
@@ -702,7 +712,7 @@ __ham_c_del(cursor, flags)
 				hcp->dndx = NUM_ENT(hcp->dpagep);
 				F_SET(hcp, H_DELETED);
 			} else {				/* Case 4 */
-				ret = __ham_del_pair(hashp, hcp);
+				ret = __ham_del_pair(hashp, hcp, 1);
 				hcp->dpgno = PGNO_INVALID;
 				/*
 				 * Delpair updated the cursor queue, so we
@@ -718,14 +728,14 @@ __ham_c_del(cursor, flags)
 				    H_DATAINDEX(hcp->bndx))),
 				    &hcp->dpgno, sizeof(db_pgno_t));
 			F_SET(hcp, H_DELETED);
-		} else					/* Case 1 */
+		} else						/* Case 1 */
 			F_SET(hcp, H_DELETED);
 		if (chg_pgno != PGNO_INVALID)
 			__ham_c_update(hashp, hcp, chg_pgno, 0, 0, 1);
 	} else if (F_ISSET(hcp, H_ISDUP)) {			/* on page */
 		if (hcp->dup_off == 0 && DUP_SIZE(hcp->dup_len) ==
 		    LEN_HDATA(hcp->pagep, hashp->hdr->pagesize, hcp->bndx))
-			ret = __ham_del_pair(hashp, hcp);
+			ret = __ham_del_pair(hashp, hcp, 1);
 		else {
 			DBT repldbt;
 
@@ -736,14 +746,14 @@ __ham_c_del(cursor, flags)
 			repldbt.size = 0;
 			ret = __ham_replpair(hashp, hcp, &repldbt, 0);
 			hcp->dup_tlen -= DUP_SIZE(hcp->dup_len);
+			F_SET(hcp, H_DELETED);
 			__ham_c_update(hashp, hcp, hcp->pgno,
 			    DUP_SIZE(hcp->dup_len), 0, 1);
-			F_SET(hcp, H_DELETED);
 		}
 
 	} else
 		/* Not a duplicate */
-		ret = __ham_del_pair(hashp, hcp);
+normal:		ret = __ham_del_pair(hashp, hcp, 1);
 
 out:	if ((t_ret = __ham_item_done(hashp, hcp, ret == 0)) != 0 && ret == 0)
 		t_ret = ret;
@@ -975,8 +985,8 @@ int
 __ham_expand_table(hashp)
 	HTAB *hashp;
 {
-	u_int32_t old_bucket, new_bucket;
-	u_int32_t spare_ndx;
+	DB_LSN new_lsn;
+	u_int32_t old_bucket, new_bucket, spare_ndx;
 	int ret;
 
 	ret = 0;
@@ -984,9 +994,30 @@ __ham_expand_table(hashp)
 	if (ret)
 		return (ret);
 
-	if (DB_LOGGING(hashp->dbp)) {
-		DB_LSN new_lsn;
+	/*
+	 * If the split point is about to increase, make sure that we
+	 * have enough extra pages.  The calculation here is weird.
+	 * We'd like to do this after we've upped max_bucket, but it's
+	 * too late then because we've logged the meta-data split.  What
+	 * we'll do between then and now is increment max bucket and then
+	 * see what the log of one greater than that is; here we have to
+	 * look at the log of max + 2.  VERY NASTY STUFF.
+	 */
+	if (__db_log2(hashp->hdr->max_bucket + 2) > hashp->hdr->ovfl_point) {
+		/*
+		 * We are about to shift the split point.  Make sure that
+		 * if the next doubling is going to be big (more than 8
+		 * pages), we have some extra pages around.
+		 */
+		if (hashp->hdr->max_bucket + 1 >= 8 && 
+		    hashp->hdr->spares[hashp->hdr->ovfl_point] <
+		    hashp->hdr->spares[hashp->hdr->ovfl_point - 1] + 
+		    hashp->hdr->ovfl_point + 1)
+			__ham_init_ovflpages(hashp);
+	}
 
+	/* Now we can log the meta-data split. */
+	if (DB_LOGGING(hashp->dbp)) {
 		if ((ret = __ham_splitmeta_log(hashp->dbp->dbenv->lg_info,
 		    (DB_TXN *)hashp->dbp->txn, &new_lsn, 0,
 		    hashp->dbp->log_fileid,
@@ -1003,22 +1034,11 @@ __ham_expand_table(hashp)
 	old_bucket = (hashp->hdr->max_bucket & hashp->hdr->low_mask);
 
 	/*
-	 * If the split point is increasing (hdr.max_bucket's log base 2
-	 * increases), max sure that we have enough extra pages, then
-	 * copy the current contents of the spare split bucket to the
-	 * next bucket.
+	 * If the split point is increasing, copy the current contents
+	 * of the spare split bucket to the next bucket.
 	 */
 	spare_ndx = __db_log2(hashp->hdr->max_bucket + 1);
 	if (spare_ndx > hashp->hdr->ovfl_point) {
-		/*
-		 * We are about to shift the split point.  Make sure that
-		 * if the next doubling is going to be big (more than 8
-		 * pages), we have some extra pages around.
-		 */
-		if (hashp->hdr->spares[hashp->hdr->ovfl_point] == 0 &&
-		    new_bucket >= 8)
-			__ham_init_ovflpages(hashp);
-
 		hashp->hdr->spares[spare_ndx] =
 		    hashp->hdr->spares[hashp->hdr->ovfl_point];
 		hashp->hdr->ovfl_point = spare_ndx;
@@ -1306,7 +1326,7 @@ __ham_init_dbt(dbt, size, bufp, sizep)
 	memset(dbt, 0, sizeof(*dbt));
 	if (*sizep < size) {
 		if ((*bufp = (void *)(*bufp == NULL ?
-		    malloc(size) : realloc(*bufp, size))) == NULL) {
+		    __db_malloc(size) : __db_realloc(*bufp, size))) == NULL) {
 			*sizep = 0;
 			return (ENOMEM);
 		}
@@ -1352,9 +1372,20 @@ __ham_c_update(hashp, hcp, chg_pgno, len, add, dup)
 	if (!dup && add)
 		return;
 
-	page_deleted = chg_pgno != PGNO_INVALID &&
-	    ((!dup && chg_pgno != hcp->pgno) ||
-	    (dup && chg_pgno != hcp->dpgno));
+	/*
+	 * Determine if a page was deleted.    If this is a regular update
+	 * (i.e., not dup) then the deleted page's number will be that in
+	 * chg_pgno, and the pgno in the cursor will be different.  If this
+	 * was an onpage-duplicate, then the same conditions apply.  If this
+	 * was an off-page duplicate, then we need to verify if hcp->dpgno
+	 * is the same (no delete) or different (delete) than chg_pgno.
+	 */
+	if (!dup || hcp->dpgno == PGNO_INVALID)
+		page_deleted =
+		    chg_pgno != PGNO_INVALID && chg_pgno != hcp->pgno;
+	else
+		page_deleted =
+		    chg_pgno != PGNO_INVALID && chg_pgno != hcp->dpgno;
 
 	hp = hcp->db_cursor->dbp->master->internal;
 	DB_THREAD_LOCK(hp->dbp);
@@ -1432,7 +1463,7 @@ __ham_hdup(orig, new)
 	DBC *curs;
 	int ret;
 
-	if ((hashp = (HTAB *)malloc(sizeof(HTAB))) == NULL)
+	if ((hashp = (HTAB *)__db_malloc(sizeof(HTAB))) == NULL)
 		return (ENOMEM);
 
 	new->internal = hashp;
@@ -1441,7 +1472,7 @@ __ham_hdup(orig, new)
 	hashp->hlock = 0;
 	hashp->hdr = NULL;
 	hashp->hash = ((HTAB *)orig->internal)->hash;
-	if ((hashp->split_buf = (PAGE *)malloc(orig->pgsize)) == NULL)
+	if ((hashp->split_buf = (PAGE *)__db_malloc(orig->pgsize)) == NULL)
 		return (ENOMEM);
 	hashp->local_errno = 0;
 	hashp->hash_accesses = 0;

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_delete.c	10.21 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_delete.c	10.22 (Sleepycat) 11/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -266,9 +266,10 @@ __bam_ditem(dbp, h, indx)
 		case B_DUPLICATE:
 		case B_OVERFLOW:
 			nbytes = BINTERNAL_SIZE(bi->len);
+			bo = (BOVERFLOW *)bi->data;
 			goto offpage;
 		case B_KEYDATA:
-			nbytes = BKEYDATA_SIZE(bi->len);
+			nbytes = BINTERNAL_SIZE(bi->len);
 			break;
 		default:
 			return (__db_pgfmt(dbp, h->pgno));
@@ -289,7 +290,7 @@ __bam_ditem(dbp, h, indx)
 			if (indx > 0 && h->inp[indx] == h->inp[indx - P_INDX])
 				return (__bam_adjindx(dbp,
 				    h, indx, indx - P_INDX, 0));
-			if (indx < (u_int32_t)(NUM_ENT(h) - P_INDX) &&
+			if (indx + P_INDX < (u_int32_t)NUM_ENT(h) &&
 			    h->inp[indx] == h->inp[indx + P_INDX])
 				return (__bam_adjindx(dbp,
 				    h, indx, indx + O_INDX, 0));
@@ -301,9 +302,9 @@ __bam_ditem(dbp, h, indx)
 		case B_DUPLICATE:
 		case B_OVERFLOW:
 			nbytes = BOVERFLOW_SIZE;
+			bo = GET_BOVERFLOW(h, indx);
 
 offpage:		/* Delete duplicate/offpage chains. */
-			bo = GET_BOVERFLOW(h, indx);
 			if (B_TYPE(bo->type) == B_DUPLICATE) {
 				if ((ret =
 				    __db_ddup(dbp, bo->pgno, __bam_free)) != 0)
@@ -523,7 +524,7 @@ __bam_dpages(dbp, t)
 
 	/*
 	 * If we deleted the next-to-last item from the root page, the tree
-	 * has collapsed a level.  Try and write lock the remaining root + 1
+	 * can collapse a level.  Try and write lock the remaining root + 1
 	 * page and copy it onto the root page.  If we can't get the lock,
 	 * that's okay, the tree just stays a level deeper than we'd like.
 	 */
@@ -546,8 +547,8 @@ __bam_dpages(dbp, t)
 			b.data = P_ENTRY(epg->page, 0);
 			b.size = BINTERNAL_SIZE(((BINTERNAL *)b.data)->len);
 			__bam_rsplit_log(dbp->dbenv->lg_info, dbp->txn,
-			   &h->lsn, 0, dbp->log_fileid, h->pgno, &a, &b,
-			   &epg->page->lsn);
+			   &h->lsn, 0, dbp->log_fileid, h->pgno, &a,
+			   RE_NREC(epg->page), &b, &epg->page->lsn);
 		}
 
 		/*
@@ -565,15 +566,19 @@ __bam_dpages(dbp, t)
 		if (TYPE(h) == P_IRECNO ||
 		    (TYPE(h) == P_IBTREE && F_ISSET(dbp, DB_BT_RECNUM)))
 			RE_NREC_SET(epg->page, rcnt);
+		(void)memp_fset(dbp->mpf, epg->page, DB_MPOOL_DIRTY);
 
-		/* Free the last page in that level of the btree. */
-		++t->lstat.bt_freed;
+		/*
+		 * Free the last page in that level of the btree and discard
+		 * the lock.  (The call to __bam_free discards our reference
+		 * to the page.)
+		 */
 		(void)__bam_free(dbp, h);
+		(void)__BT_TLPUT(dbp, lock);
+		++t->lstat.bt_freed;
 
 		/* Adjust the cursors. */
 		__bam_ca_move(dbp, t, h->pgno, PGNO_ROOT);
-
-		(void)__BT_TLPUT(dbp, lock);
 	}
 
 	/* Release the top page in the subtree. */

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_os_unlink.c	10.2 (Sleepycat) 6/28/97";
+static const char sccsid[] = "@(#)os_unlink.c	10.4 (Sleepycat) 10/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,7 +19,6 @@ static const char sccsid[] = "@(#)db_os_unlink.c	10.2 (Sleepycat) 6/28/97";
 #endif
 
 #include "db_int.h"
-#include "os_ext.h"
 
 /*
  * __db_unlink --
@@ -31,5 +30,5 @@ int
 __db_unlink(path)
 	const char *path;
 {
-	return (unlink(path) == -1 ? errno : 0);
+	return (__os_unlink(path) == -1 ? errno : 0);
 }

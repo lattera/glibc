@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.h	10.9 (Sleepycat) 9/23/97
+ *	@(#)log.h	10.15 (Sleepycat) 11/2/97
  */
 
 #ifndef _LOG_H_
@@ -15,6 +15,8 @@ struct __hdr;		typedef struct __hdr HDR;
 struct __log;		typedef struct __log LOG;
 struct __log_persist;	typedef struct __log_persist LOGP;
 
+#define	MEGABYTE	(1024 * 1024)
+
 #define	MAXLFNAME	99999		/* Maximum log file name. */
 #define	LFNAME		"log.%05d"	/* Log file name template. */
 
@@ -23,21 +25,15 @@ struct __log_persist;	typedef struct __log_persist LOGP;
 
 #define	DEFAULT_MAX	(10 * 1048576)	/* 10 Mb. */
 
-/* Macros to return per-process address, offsets. */
-#define	ADDR(base, offset)	((void *)((u_int8_t *)((base)->addr) + offset))
-#define	OFFSET(base, p)		((u_int8_t *)(p) - (u_int8_t *)(base)->addr)
-
 /* Macros to lock/unlock the region and threads. */
 #define	LOCK_LOGTHREAD(dblp)						\
 	if (F_ISSET(dblp, DB_AM_THREAD))				\
-		(void)__db_mutex_lock((dblp)->mutexp, -1,		\
-		    (dblp)->dbenv == NULL ? NULL : (dblp)->dbenv->db_yield)
+		(void)__db_mutex_lock((dblp)->mutexp, -1)
 #define	UNLOCK_LOGTHREAD(dblp)						\
 	if (F_ISSET(dblp, DB_AM_THREAD))				\
 		(void)__db_mutex_unlock((dblp)->mutexp, -1);
 #define	LOCK_LOGREGION(dblp)						\
-	(void)__db_mutex_lock(&((RLAYOUT *)(dblp)->lp)->lock,		\
-	    (dblp)->fd, (dblp)->dbenv == NULL ? NULL : (dblp)->dbenv->db_yield)
+	(void)__db_mutex_lock(&((RLAYOUT *)(dblp)->lp)->lock, (dblp)->fd)
 #define	UNLOCK_LOGREGION(dblp)						\
 	(void)__db_mutex_unlock(&((RLAYOUT *)(dblp)->lp)->lock, (dblp)->fd)
 
@@ -124,7 +120,7 @@ struct __log {
 	DB_LSN	  lsn;			/* LSN at current file offset. */
 	DB_LSN	  c_lsn;		/* LSN of the last checkpoint. */
 	DB_LSN	  s_lsn;		/* LSN of the last sync. */
-	DB_LSN	  span_lsn;		/* LSN spanning buffer write. */
+	DB_LSN	  uw_lsn;		/* LSN of 1st rec not fully on disk. */
 
 	u_int32_t len;			/* Length of the last record. */
 
@@ -132,7 +128,8 @@ struct __log {
 	u_int32_t w_off;		/* Current write offset in the file. */
 
 	time_t	  chkpt;		/* Time of the last checkpoint. */
-	u_int32_t written;		/* Bytes written since checkpoint. */
+
+	DB_LOG_STAT stat;		/* Log statistics. */
 
 	u_int8_t buf[4 * 1024];		/* Log buffer. */
 };

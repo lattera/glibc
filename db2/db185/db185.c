@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db185.c	8.13 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)db185.c	8.14 (Sleepycat) 10/25/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -52,7 +52,7 @@ __dbopen(file, oflags, mode, type, openinfo)
 	DB_INFO dbinfo, *dbinfop;
 	int s_errno;
 
-	if ((db185p = (DB185 *)calloc(1, sizeof(DB185))) == NULL)
+	if ((db185p = (DB185 *)__db_calloc(1, sizeof(DB185))) == NULL)
 		return (NULL);
 	dbinfop = NULL;
 	memset(&dbinfo, 0, sizeof(dbinfo));
@@ -119,7 +119,7 @@ __dbopen(file, oflags, mode, type, openinfo)
 		 */
 		if (file != NULL) {
 			if (oflags & O_CREAT && __db_exists(file, NULL) != 0)
-				(void)close(open(file, oflags, mode));
+				(void)__os_close(open(file, oflags, mode));
 			dbinfop->re_source = (char *)file;
 			file = NULL;
 		}
@@ -131,7 +131,7 @@ __dbopen(file, oflags, mode, type, openinfo)
 			 */
 #define	BFMSG	"DB: DB 1.85's recno bfname field is not supported.\n"
 			if (ri->bfname != NULL) {
-				(void)write(2, BFMSG, sizeof(BFMSG) - 1);
+				(void)__os_write(2, BFMSG, sizeof(BFMSG) - 1);
 				goto einval;
 			}
 
@@ -183,7 +183,7 @@ __dbopen(file, oflags, mode, type, openinfo)
 	 */
 	if ((__set_errno(db_open(file,
 	    type, __db_oflags(oflags), mode, NULL, dbinfop, &dbp))) != 0) {
-		free(db185p);
+		__db_free(db185p);
 		return (NULL);
 	}
 
@@ -192,7 +192,7 @@ __dbopen(file, oflags, mode, type, openinfo)
 	    != 0) {
 		s_errno = errno;
 		(void)dbp->close(dbp, 0);
-		free(db185p);
+		__db_free(db185p);
 		__set_errno(s_errno);
 		return (NULL);
 	}
@@ -200,7 +200,7 @@ __dbopen(file, oflags, mode, type, openinfo)
 	db185p->internal = dbp;
 	return (db185p);
 
-einval:	free(db185p);
+einval:	__db_free(db185p);
 	__set_errno(EINVAL);
 	return (NULL);
 }
@@ -216,7 +216,7 @@ db185_close(db185p)
 
 	__set_errno(dbp->close(dbp, 0));
 
-	free(db185p);
+	__db_free(db185p);
 
 	return (errno == 0 ? 0 : -1);
 }
@@ -461,7 +461,7 @@ db185_sync(db185p, flags)
 		 * We can't support the R_RECNOSYNC flag.
 		 */
 #define	RSMSG	"DB: DB 1.85's R_RECNOSYNC sync flag is not supported.\n"
-		(void)write(2, RSMSG, sizeof(RSMSG) - 1);
+		(void)__os_write(2, RSMSG, sizeof(RSMSG) - 1);
 		goto einval;
 	default:
 		goto einval;

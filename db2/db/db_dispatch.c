@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dispatch.c	10.5 (Sleepycat) 7/2/97";
+static const char sccsid[] = "@(#)db_dispatch.c	10.6 (Sleepycat) 10/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -155,12 +155,12 @@ __db_add_recovery(dbenv, func, ndx)
 	if (ndx >= dispatch_size) {
 		if (dispatch_table == NULL)
 			dispatch_table = (int (**)
-			    __P((DB_LOG *, DBT *, DB_LSN *, int, void *)))
-			    malloc(DB_user_BEGIN * sizeof(dispatch_table[0]));
+			 __P((DB_LOG *, DBT *, DB_LSN *, int, void *)))
+			 __db_malloc(DB_user_BEGIN * sizeof(dispatch_table[0]));
 		else
 			dispatch_table = (int (**)
 			    __P((DB_LOG *, DBT *, DB_LSN *, int, void *)))
-			    realloc(dispatch_table, (DB_user_BEGIN +
+			    __db_realloc(dispatch_table, (DB_user_BEGIN +
 			    dispatch_size) * sizeof(dispatch_table[0]));
 		if (dispatch_table == NULL) {
 			__db_err(dbenv, "%s", strerror(ENOMEM));
@@ -187,8 +187,8 @@ __db_txnlist_init(retp)
 {
 	__db_txnhead *headp;
 
-	if ((headp =
-	    (struct __db_txnhead *)malloc(sizeof(struct __db_txnhead))) == NULL)
+	if ((headp = (struct __db_txnhead *)
+	    __db_malloc(sizeof(struct __db_txnhead))) == NULL)
 		return (ENOMEM);
 
 	LIST_INIT(&headp->head);
@@ -212,7 +212,7 @@ __db_txnlist_add(listp, txnid)
 	__db_txnhead *hp;
 	__db_txnlist *elp;
 
-	if ((elp = (__db_txnlist *)malloc(sizeof(__db_txnlist))) == NULL)
+	if ((elp = (__db_txnlist *)__db_malloc(sizeof(__db_txnlist))) == NULL)
 		return (ENOMEM);
 
 	elp->txnid = txnid;

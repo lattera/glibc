@@ -36,6 +36,7 @@
 #ifndef _PROTOCOLS_ROUTED_H
 #define	_PROTOCOLS_ROUTED_H 1
 
+#include <sys/socket.h>
 /*
  * Routing Information Protocol
  *
