@@ -50,39 +50,24 @@
  */
 
 #ifndef _RESOLV_H_
-#define	_RESOLV_H_
+#ifndef __need_res_state
+# define _RESOLV_H_
 
-#include <sys/param.h>
-#if (!defined(BSD)) || (BSD < 199306)
-# include <sys/bitypes.h>
-#else
-# include <sys/types.h>
+# include <sys/param.h>
+# if (!defined(BSD)) || (BSD < 199306)
+#  include <sys/bitypes.h>
+# else
+#  include <sys/types.h>
+# endif
+# include <sys/cdefs.h>
+# include <stdio.h>
+# include <arpa/nameser.h>
 #endif
-#include <sys/cdefs.h>
-#include <stdio.h>
 
 #include <netinet/in.h>
-#include <arpa/nameser.h>
 
-/*
- * Revision information.  This is the release date in YYYYMMDD format.
- * It can change every day so the right thing to do with it is use it
- * in preprocessor commands such as "#if (__RES > 19931104)".  Do not
- * compare for equality; rather, use it to determine whether your resolver
- * is new enough to contain a certain feature.
- */
-
-#define	__RES	19991006
-
-/*
- * Resolver configuration file.
- * Normally not present, but may contain the address of the
- * inital name server(s) to query and the domain search list.
- */
-
-#ifndef _PATH_RESCONF
-#define _PATH_RESCONF        "/etc/resolv.conf"
-#endif
+#ifndef __res_state_defined
+# define __res_state_defined
 
 typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
 	res_sendhookact;
@@ -101,27 +86,21 @@ typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *ns,
 					   int anssiz,
 					   int *resplen);
 
-struct res_sym {
-	int	number;		/* Identifying number, like T_MX */
-	char *	name;		/* Its symbolic name, like "MX" */
-	char *	humanname;	/* Its fun name, like "mail exchanger" */
-};
-
 /*
  * Global defines and variables for resolver stub.
  */
-#define	MAXNS			3	/* max # name servers we'll track */
-#define	MAXDFLSRCH		3	/* # default domain levels to try */
-#define	MAXDNSRCH		6	/* max # domains in search path */
-#define	LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
+# define MAXNS			3	/* max # name servers we'll track */
+# define MAXDFLSRCH		3	/* # default domain levels to try */
+# define MAXDNSRCH		6	/* max # domains in search path */
+# define LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
 
-#define	RES_TIMEOUT		5	/* min. seconds between retries */
-#define	MAXRESOLVSORT		10	/* number of net to sort on */
-#define	RES_MAXNDOTS		15	/* should reflect bit field size */
-#define	RES_MAXRETRANS		30	/* only for resolv.conf/RES_OPTIONS */
-#define	RES_MAXRETRY		5	/* only for resolv.conf/RES_OPTIONS */
-#define	RES_DFLRETRY		2	/* Default #/tries. */
-#define	RES_MAXTIME		65535	/* Infinity, in milliseconds. */
+# define RES_TIMEOUT		5	/* min. seconds between retries */
+# define MAXRESOLVSORT		10	/* number of net to sort on */
+# define RES_MAXNDOTS		15	/* should reflect bit field size */
+# define RES_MAXRETRANS		30	/* only for resolv.conf/RES_OPTIONS */
+# define RES_MAXRETRY		5	/* only for resolv.conf/RES_OPTIONS */
+# define RES_DFLRETRY		2	/* Default #/tries. */
+# define RES_MAXTIME		65535	/* Infinity, in milliseconds. */
 
 struct __res_state {
 	int	retrans;	 	/* retransmition time interval */
@@ -130,7 +109,7 @@ struct __res_state {
 	int	nscount;		/* number of name servers */
 	struct sockaddr_in
 		nsaddr_list[MAXNS];	/* address of name server */
-#define	nsaddr	nsaddr_list[0]		/* for backward compatibility */
+# define nsaddr	nsaddr_list[0]		/* for backward compatibility */
 	u_short	id;			/* current message id */
 	char	*dnsrch[MAXDNSRCH+1];	/* components of domain to search */
 	char	defdname[256];		/* default domain (deprecated) */
@@ -161,6 +140,35 @@ struct __res_state {
 };
 
 typedef struct __res_state *res_state;
+# undef __need_res_state
+#endif
+
+#ifdef _RESOLV_H_
+/*
+ * Revision information.  This is the release date in YYYYMMDD format.
+ * It can change every day so the right thing to do with it is use it
+ * in preprocessor commands such as "#if (__RES > 19931104)".  Do not
+ * compare for equality; rather, use it to determine whether your resolver
+ * is new enough to contain a certain feature.
+ */
+
+#define	__RES	19991006
+
+/*
+ * Resolver configuration file.
+ * Normally not present, but may contain the address of the
+ * inital name server(s) to query and the domain search list.
+ */
+
+#ifndef _PATH_RESCONF
+#define _PATH_RESCONF        "/etc/resolv.conf"
+#endif
+
+struct res_sym {
+	int	number;		/* Identifying number, like T_MX */
+	char *	name;		/* Its symbolic name, like "MX" */
+	char *	humanname;	/* Its fun name, like "mail exchanger" */
+};
 
 /*
  * Resolver flags (used to be discrete per-module statics ints).
@@ -374,5 +382,6 @@ int		res_nmkquery __P((res_state,
 int		res_nsend __P((res_state, const u_char *, int, u_char *, int));
 void		res_nclose __P((res_state));
 __END_DECLS
+#endif
 
 #endif /* !_RESOLV_H_ */

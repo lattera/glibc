@@ -5,7 +5,7 @@
 #include <string.h>
 #include "proc_service.h"
 #include "thread_db.h"
-#include "../linuxthreads/internals.h"
+#include "../linuxthreads/descr.h"
 
 
 /* Indeces for the symbol names.  */

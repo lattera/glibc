@@ -1,3 +1,9 @@
+2002-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h: Move thread descriptor definition...
+	* descr.h.: ...here.  New file.
+	* sysdeps/i386/tls.h: New file.
+
 2002-02-01  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Use a

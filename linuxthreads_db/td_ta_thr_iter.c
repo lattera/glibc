@@ -1,5 +1,5 @@
 /* Iterate over a process's threads.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include "thread_dbP.h"
+#include <linuxthreads/internals.h>
 #include <alloca.h>
 
 static int

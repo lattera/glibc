@@ -35,6 +35,7 @@
 #include <dl-lookupcfg.h>
 #include <bits/libc-lock.h>
 #include <hp-timing.h>
+#include <tls.h>
 
 __BEGIN_DECLS
 
@@ -284,6 +285,11 @@ struct rtld_global
 
   /* Overhead of a high-precision timing measurement.  */
   EXTERN hp_timing_t _dl_hp_timing_overhead;
+#endif
+
+#ifdef USE_TLS
+  /* Offset of the TLS block for ld.so from the thread-pointer.  */
+  EXTERN size_t _rtld_tlsoffset;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */

@@ -1,3 +1,14 @@
+2002-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* thread_dbP.h: Include descr.h instead of internals.h.
+	* td_ta_event_getmsg.c: Also include <linuxthreads/internals.h>.
+	* td_ta_map_id2thr.c: Likewise.
+	* td_ta_map_lwp2thr.c: Likewise.
+	* td_ta_thr_iter.c: Likewise.
+	* td_ta_tsd_iter.c: Likewise.
+	* td_thr_tsd.c: Likewise.
+	* td_thr_validate.c: Likewise.
+
 2001-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* td_init.c (td_init): Don't use __FUNCTION__ as literal.

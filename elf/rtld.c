@@ -218,6 +218,16 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
      which use `alloca'.  */
   ElfW(Addr) *start_addr = alloca (sizeof (ElfW(Addr)));
   extern char _begin[], _end[];
+#ifdef USE_TLS
+  ElfW(Ehdr) *ehdr;
+  ElfW(Phdr) *phdr;
+  size_t cnt;
+  size_t tlssize = 0;
+  size_t tlsimagesize = 0;
+  const void *tlsimage = NULL;
+  void *tlsblock = NULL;
+  dtv_t initdtv[2];
+#endif
 
   if (HP_TIMING_AVAIL)
     {
@@ -244,11 +254,76 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   HP_TIMING_NOW (GL(dl_cpuclock_offset));
 #endif
 
+#if USE_TLS
+  /* Get the dynamic linkers program header.  */
+  ehdr = (ElfW(Ehdr) *) bootstrap_map_p->l_addr;
+  phdr = (ElfW(Phdr) *) (bootstrap_map_p->l_addr + ehdr->e_phoff);
+  for (cnt = 0; cnt < ehdr->e_phnum; ++cnt)
+    if (phdr[cnt].p_type == PT_TLS)
+      {
+	size_t align = MAX (TLS_INIT_TCB_ALIGN,  phdr[cnt].p_align);
+
+	tlssize = phdr[cnt].p_memsz;
+	tlsimagesize = phdr[cnt].p_filesz;
+	tlsimage = (void *) (bootstrap_map_p->l_addr + phdr[cnt].p_offset);
+
+	/* We can now allocate the initial TLS block.  This can happen
+	   on the stack.  We'll get the final memory later when we
+	   know all about the various objects loaded at startup
+	   time.  */
+# if TLS_TCB_AT_TP
+	tlsblock = alloca (roundup (tlssize, TLS_INIT_TCB_ALIGN)
+			   + TLS_INIT_TCB_SIZE
+			   + align);
+# elif TLS_DTV_AT_TP
+	tlsblock = alloca (roundup (TLS_INIT_TCB_SIZE, phdr[cnt].p_align)
+			   + tlssize
+			   + align);
+# else
+	/* In case a model with a different layout for the TCB and DTV
+	   is defined add another #elif here and in the following #ifs.  */
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+	/* Align the TLS block.  */
+	tlsblock = (void *) (((uintptr_t) tlsblock + align - 1)
+			     & ~(align - 1));
+
+	/* Initialize the dtv.  */
+	initdtv[0].counter = 1;
+
+	/* Initialize the TLS block.  */
+# if TLS_TCB_AT_TP
+	initdtv[1].pointer = tlsblock;
+# elif TLS_DTV_AT_TP
+	GL(rtld_tlsoffset) = roundup (TLS_INIT_TCB_SIZE, phdr[cnt].p_align);
+	initdtv[1].pointer = (char *) tlsblock + GL(rtld_tlsoffset);
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+	memset (__mempcpy (initdtv[1].pointer, tlsimage, tlsimagesize),
+		'\0', tlssize - tlsimagesize);
+
+	/* Initialize the thread pointer.  */
+# if TLS_TCB_AT_TP
+	GL(rtld_tlsoffset) = roundup (tlssize, TLS_INIT_TCB_ALIGN);
+	TLS_INIT_TP ((char *) tlsblock + GL(rtld_tlsoffset), initdtv);
+# elif TLS_DTV_AT_TP
+	TLS_INIT_TP (tlsblock, intidtv);
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+	/* There can only be one PT_TLS entry.  */
+	break;
+      }
+#endif	/* use TLS */
+
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
      entry point on the same stack we entered on.  */
   *start_addr =  _dl_sysdep_start (arg, &dl_main);
+
 #ifndef HP_TIMING_NONAVAIL
   if (HP_TIMING_AVAIL)
     {

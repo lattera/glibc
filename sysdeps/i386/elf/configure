@@ -9,16 +9,18 @@ if eval "test \"`echo '$''{'libc_cv_386_tls'+set}'`\" = set"; then
 else
   cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
+	.globl foo
 foo:	.long	1
 	.section ".tbss", "awT", @nobits
-	.comm	bar,4,4
+	.globl bar
+bar:	.skip	4
 	.text
 baz:	leal	bar@TLSLDM(%ebx), %eax
 	leal	bar@DTPOFF(%eax), %edx
 	subl	foo@GOTTPOFF(%edx), %eax
 	subl	$bar@TPOFF, %eax
 EOF
-if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'; { (eval echo configure:22: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'; { (eval echo configure:24: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_386_tls=yes
 else
   libc_cv_386_tls=no

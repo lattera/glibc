@@ -342,7 +342,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
   else
 #endif
     {
-#ifdef RTLD_BOOTSTRAP
+#if defined RTLD_BOOTSTRAP && !defined USE_TLS
       Elf32_Addr value;
 
       assert (r_type == R_386_GLOB_DAT || r_type == R_386_JMP_SLOT);
@@ -352,7 +352,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #else
       const Elf32_Sym *const refsym = sym;
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
+# ifndef RTLD_BOOTSTRAP
       if (sym)
+# endif
 	value += sym->st_value;
 
       switch (r_type)
@@ -361,6 +363,40 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	case R_386_JMP_SLOT:
 	  *reloc_addr = value;
 	  break;
+
+	  /* XXX Remove TLS relocations which are not needed.  */
+
+	case R_386_TLS_DTPMOD32:
+# ifdef RTLD_BOOTSTRAP
+	  /* During startup the dynamic linker is always the module
+	     with index 1.
+	     XXX If this relocation is necessary move before RESOLVE
+	     call.  */
+	  *reloc_addr = 1;
+# else
+	  /* XXX Implement.  RESOLVE must return the map from which we
+	     get the module ID.  */
+	  _exit (99);
+# endif
+	  break;
+	case R_386_TLS_DTPOFF32:
+# ifndef RTLD_BOOTSTRAP
+	  /* During relocation all TLS symbols are defined and used.
+	     Therefore the offset is already correct.  */
+	  *reloc_addr = sym->st_value;
+# endif
+	  break;
+	case R_386_TLS_TPOFF32:
+	  /* The offset is positive, backward from the thread pointer.  */
+# ifdef RTLD_BOOTSTRAP
+	  *reloc_addr = GL(rtld_tlsoffset) - sym->st_value;
+# else
+	  /* XXX Implement.  */
+	  _exit (98);
+# endif
+	  break;
+
+# ifndef RTLD_BOOTSTRAP
 	case R_386_32:
 	  *reloc_addr += value;
 	  break;
@@ -390,6 +426,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
+# endif
 	}
 #endif
     }
