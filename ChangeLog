@@ -1,3 +1,10 @@
+2001-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/dcigettext.c (guess_category_value): Rewrite so that LANGUAGE
+	value is ignored if the selected locale is the C locale.
+	* intl/tst-gettext.c: Set locale for above change.
+	* intl/tst-translit.c: Likewise.
+
 2001-01-02  Andreas Jaeger  <aj@suse.de>
 
 	* libio/wgenops.c (_IO_wdoallocbuf): Use correct wide access macro.

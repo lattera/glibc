@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <libintl.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,6 +32,7 @@ main (void)
 
   setenv ("LANGUAGE", "existing-locale", 1);
   unsetenv ("OUTPUT_CHARSET");
+  setlocale (LC_ALL, "en_US.ANSI_X3.4-1968");
   textdomain ("translit");
   bindtextdomain ("translit", OBJPFX "domaindir");
 
