@@ -18,13 +18,10 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, write to the Free Software Foundation, Inc.,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-   TODO: This version makes use of MIPS ISA 2 features.  It won't
-   work on ISA 1.  These machines will have to take the overhead of
-   a sysmips(MIPS_ATOMIC_SET, ...) syscall which isn't implemented
-   yet correctly.  There is however a better solution for R3000
-   uniprocessor machines possible.  */
+#include <sgidefs.h>
+#include <sys/tas.h>
 
 #ifndef PT_EI
 # define PT_EI extern inline
@@ -35,29 +32,42 @@
 
 
 /* Spinlock implementation; required.  */
+
+#if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
+
 PT_EI long int
 testandset (int *spinlock)
 {
   long int ret, temp;
 
-  __asm__ __volatile__(
-	"# Inline spinlock test & set\n\t"
-	".set\tmips2\n"
-	"1:\tll\t%0,%3\n\t"
-	"bnez\t%0,2f\n\t"
-	".set\tnoreorder\n\t"
-	"li\t%1,1\n\t"
-	".set\treorder\n\t"
-	"sc\t%1,%2\n\t"
-	"beqz\t%1,1b\n"
-	"2:\t.set\tmips0\n\t"
-	"/* End spinlock test & set */"
-	: "=&r"(ret), "=&r" (temp), "=m"(*spinlock)
-	: "m"(*spinlock)
-	: "memory");
+  __asm__ __volatile__
+    ("/* Inline spinlock test & set */\n\t"
+     "1:\n\t"
+     "ll	%0,%3\n\t"
+     ".set	push\n\t"
+     ".set	noreorder\n\t"
+     "bnez	%0,2f\n\t"
+     " li	%1,1\n\t"
+     ".set	pop\n\t"
+     "sc	%1,%2\n\t"
+     "beqz	%1,1b\n"
+     "2:\n\t"
+     "/* End spinlock test & set */"
+     : "=&r" (ret), "=&r" (temp), "=m" (*spinlock)
+     : "m" (*spinlock)
+     : "memory");
 
   return ret;
 }
+
+#else /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
+
+PT_EI long int
+testandset (int *spinlock)
+{
+  return _test_and_set (spinlock, 1);
+}
+#endif /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
 
 
 /* Get some notion of the current stack.  Need not be exactly the top
@@ -68,27 +78,32 @@ register char * stack_pointer __asm__ ("$29");
 
 /* Compare-and-swap for semaphores. */
 
+#if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
+
 #define HAS_COMPARE_AND_SWAP
 PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
 {
-  long ret;
+  long int ret;
 
-  __asm__ __volatile__ (
-	"/* Inline compare & swap */\n\t"
-	".set\tmips2\n"
-	"1:\tll\t%0,%4\n\t"
-	".set\tnoreorder\n\t"
-	"bne\t%0,%2,2f\n\t"
-	"move\t%0,%3\n\t"
-	".set\treorder\n\t"
-	"sc\t%0,%1\n\t"
-	"beqz\t%0,1b\n"
-	"2:\t.set\tmips0\n\t"
-	"/* End compare & swap */"
-	: "=&r"(ret), "=m"(*p)
-	: "r"(oldval), "r"(newval), "m"(*p)
-	: "memory");
+  __asm__ __volatile__
+    ("/* Inline compare & swap */\n\t"
+     "1:\n\t"
+     "ll	%0,%4\n\t"
+     ".set	push\n"
+     ".set	noreorder\n\t"
+     "bne	%0,%2,2f\n\t"
+     " move	%0,%3\n\t"
+     ".set	pop\n\t"
+     "sc	%0,%1\n\t"
+     "beqz	%0,1b\n"
+     "2:\n\t"
+     "/* End compare & swap */"
+     : "=&r" (ret), "=m" (*p)
+     : "r" (oldval), "r" (newval), "m" (*p)
+     : "memory");
 
   return ret;
 }
+
+#endif /* (_MIPS_ISA >= _MIPS_ISA_MIPS2) */

@@ -19,7 +19,11 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include <sgidefs.h>
+#include <sys/tas.h>
 
+
+#if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
 
 /* This implementation is similar to the one used in the Linux kernel.  */
 int
@@ -28,22 +32,34 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
   unsigned int tmp;
 
   asm volatile
-    (".set\tnoreorder\t\t\t# spin_lock\n"
-     ".set\tpush\n"
-     ".set\tmips2\n"
-     "1:\tll\t%1, %2\n\t"
-     "bnez\t%1, 1b\n\t"
-     " li\t%1, 1\n\t"
-     "sc\t%1, %0\n\t"
-     "beqz\t%1, 1b\n\t"
-     ".set\tpop\n"
-     ".set\treorder"
-     : "=o" (*lock), "=&r" (tmp)
-     : "o" (*lock)
+    ("\t\t\t# spin_lock\n\t"
+     "1:\n\t"
+     "ll	%1,%2\n\t"
+     ".set	push\n\t"
+     ".set	noreorder\n\t"
+     "bnez	%1,1b\n\t"
+     " li	%1,1\n\t"
+     ".set	pop\n\t"
+     "sc	%1,%0\n\t"
+     "beqz	%1,1b"
+     : "=m" (*lock), "=&r" (tmp)
+     : "m" (*lock)
      : "memory");
 
   return 0;
 }
+
+#else /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
+
+int
+__pthread_spin_lock (pthread_spinlock_t *lock)
+{
+  while (_test_and_set (lock, 1));
+  return 0;
+}
+
+#endif /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
+
 weak_alias (__pthread_spin_lock, pthread_spin_lock)
 
 
@@ -60,11 +76,10 @@ int
 __pthread_spin_unlock (pthread_spinlock_t *lock)
 {
   asm volatile
-    (".set\tnoreorder\t\t\t# spin_unlock\n\t"
-     "sw\t$0, %0\n\t"
-     ".set\treorder" 
-     : "=o" (*lock)
-     : "o" (*lock)
+    ("\t\t\t# spin_unlock\n\t"
+     "sw	$0,%0"
+     : "=m" (*lock)
+     :
      : "memory");
   return 0;
 }

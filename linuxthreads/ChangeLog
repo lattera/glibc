@@ -1,3 +1,9 @@
+2000-07-12  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Implement for
+	R3K.
+	* sysdeps/mips/pt-machine.h (testandset): Likewise.
+
 2000-07-26  Andreas Jaeger  <aj@suse.de>
 
 	* pthread.c: Initialize p_sem_avail.
