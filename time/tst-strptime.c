@@ -42,6 +42,10 @@ static const struct
   { "C", "19990502123412", "%Y%m%d%H%M%S", 0, 121, 4, 2 },
   { "C", "2001 20 Mon", "%Y %U %a", 1, 140, 4, 21 },
   { "C", "2001 21 Mon", "%Y %W %a", 1, 140, 4, 21 },
+  { "ja_JP.EUC-JP", "2000-01-01 08:12:21 AM", "%Y-%m-%d %I:%M:%S %p",
+    6, 0, 0, 1 },
+  { "en_US.ISO-8859-1", "2000-01-01 08:12:21 PM", "%Y-%m-%d %I:%M:%S %p",
+    6, 0, 0, 1 },
   { "ja_JP.EUC-JP", "2001 20 \xb7\xee", "%Y %U %a", 1, 140, 4, 21 },
   { "ja_JP.EUC-JP", "2001 21 \xb7\xee", "%Y %W %a", 1, 140, 4, 21 },
 };
@@ -73,7 +77,14 @@ test_tm (void)
     {
       memset (&tm, '\0', sizeof (tm));
 
-      if (*strptime (tm_tests[i].input, tm_tests[i].format, &tm) != '\0')
+      char *ret = strptime (tm_tests[i].input, tm_tests[i].format, &tm);
+      if (ret == NULL)
+	{
+	  printf ("strptime returned NULL for `%s'\n", tm_tests[i].input);
+	  result = 1;
+	  continue;
+	}
+      else if (*ret != '\0')
 	{
 	  printf ("not all of `%s' read\n", tm_tests[i].input);
 	  result = 1;
@@ -127,7 +138,14 @@ main (int argc, char *argv[])
 	  exit (EXIT_FAILURE);
 	}
 
-      if (*strptime (day_tests[i].input, day_tests[i].format, &tm) != '\0')
+      char *ret = strptime (day_tests[i].input, day_tests[i].format, &tm);
+      if (ret == NULL)
+	{
+	  printf ("strptime returned NULL for `%s'\n", day_tests[i].input);
+	  result = 1;
+	  continue;
+	}
+      else if (*ret != '\0')
 	{
 	  printf ("not all of `%s' read\n", day_tests[i].input);
 	  result = 1;

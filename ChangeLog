@@ -1,3 +1,34 @@
+2005-01-11  Thorsten Kukuk  <kukuk@suse.de>
+
+	* grp/putgrent.c (putgrent): Don't write 0 as group
+	ID if groupname starts with + or -.
+	* pwd/putpwent.c (putpwent): Don't write 0 as user or
+	group ID if user name starts with + or -.
+
+2005-01-09  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add sh variants.
+	* sysdeps/elf/tst-auditmod1.c: Add sh support.
+	* sysdeps/sh/bits/link.h: New.
+	* sysdeps/sh/dl-machine.h: Remove trampoline code here.  Define
+	ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.  Remove obsolete comments.
+	(RTLD_START): Define __fpscr_values.
+	* sysdeps/sh/dl-trampoline.S: New file.
+	* sysdeps/sh/sh4/dl-trampoline.S: New file.
+	* sysdeps/sh/sh4/Versions [ld]: Add __fpscr_values.
+	* sysdeps/sh/sh4/dl-machine.h: Remove.
+
+2005-01-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tst-strptime.c (day_tests): Add 2 new tests.
+	(test_tm, main): Issue an error instead of segfaulting if
+	strptime returns NULL.
+
+2005-01-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/alpha/libc-tls.c (__tls_get_addr): Updated for dtv_t union.
+	* sysdeps/ia64/libc-tls.c (__tls_get_addr): Likewise.
+
 2005-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.h: Remove no-glibc support.

@@ -194,6 +194,29 @@ la_ppc64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 
   return 0;
 }
+#elif defined __sh__
+uintptr_t
+la_sh_gnu_pltenter (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+		    uintptr_t *defcook, La_sh_regs *regs,
+		    unsigned int *flags, const char *symname,
+		    long int *framesizep)
+{
+  printf ("sh_pltenter: symname=%s, st_value=%#lx, ndx=%u, flags=%u\n",
+	  symname, (long int) sym->st_value, ndx, *flags);
+
+  return sym->st_value;
+}
+
+unsigned int
+la_sh_gnu_pltexit (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+		   uintptr_t *defcook, const La_sh_regs *inregs,
+		   La_sh_retval *outregs, const char *symname)
+{
+  printf ("sh_pltexit: symname=%s, st_value=%#lx, ndx=%u, retval=%tu\n",
+	  symname, (long int) sym->st_value, ndx, outregs->lrv_r0);
+
+  return 0;
+}
 #else
 # error "architecture specific code needed"
 #endif

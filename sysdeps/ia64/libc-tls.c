@@ -30,7 +30,7 @@ void *
 __tls_get_addr (size_t m, size_t offset)
 {
   dtv_t *dtv = THREAD_DTV ();
-  return (char *) dtv[1].pointer + offset;
+  return (char *) dtv[1].pointer.val + offset;
 }
 
 #endif

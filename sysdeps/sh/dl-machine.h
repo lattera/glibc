@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SH version.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,8 +20,6 @@
 
 #ifndef dl_machine_h
 #define dl_machine_h
-
-/* Only dummy. This doesn't work. */
 
 #define ELF_MACHINE_NAME "SH"
 
@@ -106,7 +104,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 	  /* Say that we really want profiling and the timers are started.  */
-	  GL(dl_profile_map) = l;
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
+	    GL(dl_profile_map) = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -116,272 +116,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   return lazy;
 }
 
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.	 */
-
 #define ELF_MACHINE_RUNTIME_FIXUP_ARGS int plt_type
-
-#ifdef SHARED
-#define FUN_ADDR	"\
-	mov.l 1f,r2\n\
-	mova 1f,r0\n\
-        bra 2f\n\
-	 add r0,r2		! Get GOT address in r2\n\
-0:	.align 2\n\
-1:	.long _GLOBAL_OFFSET_TABLE_\n\
-2:	mov.l 3f,r0\n\
-	add r2,r0"
-#define GOTJMP(x)	#x "@GOTOFF"
-#else
-#define FUN_ADDR	"\
-	mov.l 3f,r0"
-#define GOTJMP(x)	#x
-#endif
-
-#ifdef HAVE_FPU
-#define FGR_SAVE	"\
-	sts.l	fpscr, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov	#8,r3\n\
-	swap.w	r3, r3\n\
-	lds	r3, fpscr\n\
-	fmov.s	fr11, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	fmov.s	fr10, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	fmov.s	fr9, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	fmov.s	fr8, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	fmov.s	fr7, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	fmov.s	fr6, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	fmov.s	fr5, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	fmov.s	fr4, @-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4)
-#define FGR_LOAD	"\
-	fmov.s	@r15+, fr4\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	fmov.s	@r15+, fr5\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	fmov.s	@r15+, fr6\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	fmov.s	@r15+, fr7\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	fmov.s	@r15+, fr8\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	fmov.s	@r15+, fr9\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	fmov.s	@r15+, fr10\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	fmov.s	@r15+, fr11\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	lds.l	@r15+, fpscr\n\
-	" CFI_ADJUST_CFA_OFFSET (-4)
-#else
-#define FGR_SAVE	""
-#define FGR_LOAD	""
-#endif
-
-#ifndef PROF
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.type _dl_runtime_resolve, @function\n\
-	" CFI_STARTPROC "\n\
-	.align 5\n\
-_dl_runtime_resolve:\n\
-	mov.l r2,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r3,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r4,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r5,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r6,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r7,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r12,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	movt r3			! Save T flag.\n\
-	mov.l r3,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	" FGR_SAVE "\n\
-	sts.l pr,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	tst r0,r0\n\
-	bt 1f\n\
-	mov r0,r2\n\
-1:\n\
-	mov r0,r4		! PLT type\n\
-	mov r2,r5		! link map address\n\
-	" FUN_ADDR "\n\
-	jsr @r0			! Call resolver.\n\
-	 mov r1,r6		! reloc offset\n\
-	lds.l @r15+,pr		! Get register content back.\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	" FGR_LOAD "\n\
-	mov.l @r15+,r3\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	shal r3			! Lode T flag.\n\
-	mov.l @r15+,r12\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r7\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r6\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r5\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r4\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r3\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	jmp @r0			! Jump to function address.\n\
-	 mov.l @r15+,r2\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	.align 2\n\
-3:\n\
-	.long " GOTJMP (fixup) "\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_profile, @function\n\
-	" CFI_STARTPROC "\n\
-	.align 5\n\
-_dl_runtime_profile:\n\
-	mov.l r2,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r3,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r4,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r5,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r6,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r7,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r12,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	movt r3			! Save T flag.\n\
-	mov.l r3,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	" FGR_SAVE "\n\
-	sts.l pr,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	tst r0,r0\n\
-	bt 1f\n\
-	mov r0,r2\n\
-1:\n\
-	mov r0,r4		! PLT type\n\
-	mov r2,r5		! link map address\n\
-	sts pr,r7		! return address\n\
-	" FUN_ADDR "\n\
-	jsr @r0			! Call resolver.\n\
-	 mov r1,r6		! reloc offset\n\
-	lds.l @r15+,pr		! Get register content back.\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	" FGR_LOAD "\n\
-	mov.l @r15+,r3\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	shal r3			! Lode T flag.\n\
-	mov.l @r15+,r12\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r7\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r6\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r5\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r4\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r3\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	jmp @r0			! Jump to function address.\n\
-	 mov.l @r15+,r2\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	.align 2\n\
-3:\n\
-	.long " GOTJMP (profile_fixup) "\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
-	.previous\n\
-");
-#else
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text\n\
-	.globl _dl_runtime_resolve\n\
-	.globl _dl_runtime_profile\n\
-	.type _dl_runtime_resolve, @function\n\
-	.type _dl_runtime_profile, @function\n\
-	.align 5\n\
-_dl_runtime_resolve:\n\
-_dl_runtime_profile:\n\
-	mov.l r2,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r3,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r4,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r5,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r6,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r7,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	mov.l r12,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	movt r3			! Save T flag.\n\
-	mov.l r3,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	" FGR_SAVE "\n\
-	sts.l pr,@-r15\n\
-	" CFI_ADJUST_CFA_OFFSET (4) "\n\
-	tst r0,r0\n\
-	bt 1f\n\
-	mov r0,r2\n\
-1:\n\
-	mov r0,r4		! PLT type\n\
-	mov r2,r5		! link map address\n\
-	sts pr,r7		! return address\n\
-	" FUN_ADDR "\n\
-	jsr @r0			! Call resolver.\n\
-	 mov r1,r6		! reloc offset\n\
-	lds.l @r15+,pr		! Get register content back.\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	" FGR_LOAD "\n\
-	mov.l @r15+,r3\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	shal r3			! Lode T flag.\n\
-	mov.l @r15+,r12\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r7\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r6\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r5\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r4\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	mov.l @r15+,r3\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	jmp @r0			! Jump to function address.\n\
-	 mov.l @r15+,r2\n\
-	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
-	.align 2\n\
-3:\n\
-	.long " GOTJMP (fixup) "\n\
-	" CFI_ENDPROC "\n\
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
-	.previous\n\
-");
-#endif
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
@@ -459,6 +194,12 @@ _dl_start_user:\n\
 	.long _rtld_local@GOT\n\
 .L_dl_fini:\n\
 	.long _dl_fini@GOT\n\
+	.type __fpscr_values,@object\n\
+	.global __fpscr_values\n\
+__fpscr_values:\n\
+	.long   0\n\
+	.long   0x80000\n\
+	.weak __fpscr_values\n\
 .previous\n\
 ");
 
@@ -510,9 +251,12 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
   return value + reloc->r_addend;
 }
 
+#define ARCH_LA_PLTENTER sh_gnu_pltenter
+#define ARCH_LA_PLTEXIT sh_gnu_pltexit
+
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* SH never uses Elf32_Rel relocations.	 */
 #define ELF_MACHINE_NO_REL 1
@@ -579,17 +323,14 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   else
     {
       const Elf32_Sym *const refsym = sym;
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
 
       value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
 #else
 
       value = RESOLVE (&sym, version, r_type);
-# ifndef RTLD_BOOTSTRAP
-      if (sym != NULL)
-# endif
-	value += sym->st_value;
+      value += sym->st_value;
 #endif
       value += reloc->r_addend;
 
@@ -736,4 +477,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 1);
 }
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */
