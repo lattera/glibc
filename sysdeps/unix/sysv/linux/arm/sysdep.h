@@ -104,6 +104,52 @@
 #define UNDOARGS_4 /* nothing */
 #define UNDOARGS_5 ldr r4, [sp];
 
+#else /* not __ASSEMBLER__ */
+
+/* Define a macro which expands into the inline wrapper code for a system
+   call.  */
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...)			\
+  ({ unsigned int _sys_result;					\
+     {								\
+       register int _a1 asm ("a1");				\
+       LOAD_ARGS_##nr (args)					\
+       asm volatile ("swi %1"					\
+		     : "=r" (_a1)				\
+		     : "i" (SYS_ify(name)) ASM_ARGS_##nr	\
+		     : "a1");					\
+       _sys_result = _a1;					\
+     }								\
+     if (_sys_result >= (unsigned int) -4095)			\
+       {							\
+	 __set_errno (-_sys_result);				\
+	 _sys_result = (unsigned int) -1;			\
+       }							\
+     (int) _sys_result; })
+
+#define LOAD_ARGS_0()
+#define ASM_ARGS_0
+#define LOAD_ARGS_1(a1)				\
+  _a1 = (int) (a1);				\
+  LOAD_ARGS_0 ()
+#define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
+#define LOAD_ARGS_2(a1, a2)			\
+  register int _a2 asm ("a2") = (int) (a2);	\
+  LOAD_ARGS_1 (a1)
+#define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
+#define LOAD_ARGS_3(a1, a2, a3)			\
+  register int _a3 asm ("a3") = (int) (a3);	\
+  LOAD_ARGS_2 (a1, a2)
+#define ASM_ARGS_3	ASM_ARGS_2, "r" (_a3)
+#define LOAD_ARGS_4(a1, a2, a3, a4)		\
+  register int _a4 asm ("a4") = (int) (a4);	\
+  LOAD_ARGS_3 (a1, a2, a3)
+#define ASM_ARGS_4	ASM_ARGS_3, "r" (_a4)
+#define LOAD_ARGS_5(a1, a2, a3, a4, a5)		\
+  register int _v1 asm ("v1") = (int) (a5);	\
+  LOAD_ARGS_4 (a1, a2, a3, a4)
+#define ASM_ARGS_5	ASM_ARGS_4, "r" (_v1)
+
 #endif	/* __ASSEMBLER__ */
 
 #endif /* linux/arm/sysdep.h */

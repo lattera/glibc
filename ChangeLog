@@ -1,3 +1,18 @@
+1998-12-20  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Add
+	implementation.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Remove wrappers for
+	now-inlined calls.
+        
+1998-12-22  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c: New file.
+	Implementation of inb, outb etc for ARM systems.
+	* sysdeps/unix/sysv/linux/arm/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/Versions: Add appropriate
+	entries for the above.
+
 1998-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/db-Makefile (shadow.db): Create file with correct protections.

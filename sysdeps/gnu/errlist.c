@@ -495,7 +495,7 @@ TRANS @c This can probably happen in a GNU system when using NFS. */
 #ifdef EDQUOT
 /*
 TRANS The user's disk quota was exceeded. */
-    [ERR_REMAP (EDQUOT)] = N_("Disc quota exceeded"),
+    [ERR_REMAP (EDQUOT)] = N_("Disk quota exceeded"),
 #endif
 #ifdef ESTALE
 /*
