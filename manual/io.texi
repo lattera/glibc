@@ -35,7 +35,7 @@ facility with support for networking.
 
 @item
 @ref{Low-Level Terminal Interface}, which covers functions for changing
-how input and output to terminal or other serial devices are processed.
+how input and output to terminals or other serial devices are processed.
 @end itemize
 
 
