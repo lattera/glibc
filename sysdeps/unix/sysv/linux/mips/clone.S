@@ -21,7 +21,6 @@
    and invokes a function in the right context after its all over.  */
 
 #include <sys/asm.h>
-#include <asm/unistd.h>
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>

@@ -1,5 +1,16 @@
 2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/unix/sysv/linux/mips/configure.in: New.  Pre-process
+	asm/unistd.h into asm-unistd.h.
+	* sysdeps/unix/sysv/linux/mips/configure: Generated.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Do custom processing
+	of syscall list.
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: New file.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Don't include
+	asm/unistd.h.
+
+2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
+
 	* sysdeps/unix/sysv/linux/mips/sys/ptrace.h: New file.
 	* sysdeps/unix/sysv/linux/mips/ptrace.c: New file.  Use long
 	long type for registers on n32.
