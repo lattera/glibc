@@ -1,5 +1,10 @@
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sunrpc/clnt_unix.c (clntunix_destroy): Use __close not close.
+	* libio/oldtmpfile.c: Likewise.
+	* libio/oldiofdopen.c: Use __fcntl instead fcntl.
+	* sysdeps/posix/profil.c: Use __sigaction instead of sigaction.
+
 	* iconvdata/iso646.c (gconv_init): Return correct error value if we
 	run out of memory.
 	* iconvdata/iso-2022-jp.c: Likewise.
@@ -16,7 +21,7 @@
 
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
-	* login/login.c: Determine pts/3 and terminal name if path is
+	* login/login.c: Determine pts/3 as terminal name if path is
 	/dev/pts/3.  This is consistent with getlogin.  [PR libc/906]
 
 1998-12-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>

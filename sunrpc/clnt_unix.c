@@ -427,7 +427,7 @@ clntunix_destroy (CLIENT *h)
 
   if (ct->ct_closeit)
     {
-      (void) close (ct->ct_sock);
+      (void) __close (ct->ct_sock);
     }
   XDR_DESTROY (&(ct->ct_xdrs));
   mem_free ((caddr_t) ct, sizeof (struct ct_data));

@@ -25,13 +25,13 @@
 
 #define _IO_USE_OLD_IO_FILE
 #ifdef __STDC__
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 #include "libioP.h"
 #include <fcntl.h>
 
 #ifndef _IO_fcntl
-#define _IO_fcntl fcntl
+# define _IO_fcntl __fcntl
 #endif
 
 _IO_FILE *

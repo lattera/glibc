@@ -43,7 +43,7 @@ __old_tmpfile (void)
   (void) remove (buf);
 
   if ((f = _IO_old_fdopen (fd, "w+b")) == NULL)
-    close (fd);
+    __close (fd);
 
   return f;
 }
