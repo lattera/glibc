@@ -1,0 +1,10 @@
+/* We have to irritate the compiler a bit.  */
+#define __wcstoll_internal __wcstoll_internal_XXX
+#define wcstoll wcstoll_XXX
+
+#include <sysdeps/generic/wcstol.c>
+
+#undef __wcstoll_internal
+#undef wcstoll
+strong_alias (__wcstol_internal, __wcstoll_internal)
+weak_alias (__wcstoll_internal, wcstoll)

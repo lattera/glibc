@@ -446,7 +446,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      /* A double `l' is equivalent to an `L'.  */
 	      ++f;
-	      flags |= need_longlong ? LONGDBL | LONG;
+	      flags |= need_longlong ? LONGDBL : LONG;
 	    }
 	  else
 	    /* ints are long ints.  */
@@ -455,7 +455,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'q':
 	case 'L':
 	  /* doubles are long doubles, and ints are long long ints.  */
-	  flags |= need_longlong ? LONGDBL | LONG;
+	  flags |= need_longlong ? LONGDBL : LONG;
 	  break;
 	case 'a':
 	  /* The `a' is used as a flag only if followed by `s', `S' or

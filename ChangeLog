@@ -33,6 +33,32 @@
 	* sysdeps/wordexp-64/strtoll_l.c: New file.
 	* sysdeps/wordexp-64/strtoull_l.c: New file.
 
+	* wcsmbs/wcstol.c: Moved to ...
+	* sysdeps/generic/wcstol.c: ...here.
+	* wcsmbs/wcstoul.c: Moved to ...
+	* sysdeps/generic/wcstoul.c: ...here.
+	* wcsmbs/wcstoll.c: Moved to ...
+	* sysdeps/generic/wcstoll.c: ...here.
+	* wcsmbs/wcstoull.c: Moved to ...
+	* sysdeps/generic/wcstoull.c: ...here.
+	* wcsmbs/wcstol_l.c: Moved to ...
+	* sysdeps/generic/wcstol_l.c: ...here.
+	* wcsmbs/wcstoul_l.c: Moved to ...
+	* sysdeps/generic/wcstoul_l.c: ...here.
+	* wcsmbs/wcstoll_l.c: Moved to ...
+	* sysdeps/generic/wcstoll_l.c: ...here.
+	* wcsmbs/wcstoull_l.c: Moved to ...
+	* sysdeps/generic/wcstoull_l.c: ...here.
+
+	* sysdeps/wordexp-64/wcstol.c: New file.
+	* sysdeps/wordexp-64/wcstoul.c: New file.
+	* sysdeps/wordexp-64/wcstoll.c: New file.
+	* sysdeps/wordexp-64/wcstoull.c: New file.
+	* sysdeps/wordexp-64/wcstol_l.c: New file.
+	* sysdeps/wordexp-64/wcstoul_l.c: New file.
+	* sysdeps/wordexp-64/wcstoll_l.c: New file.
+	* sysdeps/wordexp-64/wcstoull_l.c: New file.
+
 1999-05-24  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/bits/wordsize.h: New file.
