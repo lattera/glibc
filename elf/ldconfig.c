@@ -127,12 +127,12 @@ static const struct argp_option options[] =
   { "verbose", 'v', NULL, 0, N_("Generate verbose messages"), 0},
   { NULL, 'N', NULL, 0, N_("Don't build cache"), 0},
   { NULL, 'X', NULL, 0, N_("Don't generate links"), 0},
-  { NULL, 'r', "ROOT", 0, N_("Change to and use ROOT as root directory"), 0},
-  { NULL, 'C', "CACHE", 0, N_("Use CACHE as cache file"), 0},
-  { NULL, 'f', "CONF", 0, N_("Use CONF as configuration file"), 0},
+  { NULL, 'r', N_("ROOT"), 0, N_("Change to and use ROOT as root directory"), 0},
+  { NULL, 'C', N_("CACHE"), 0, N_("Use CACHE as cache file"), 0},
+  { NULL, 'f', N_("CONF"), 0, N_("Use CONF as configuration file"), 0},
   { NULL, 'n', NULL, 0, N_("Only process directories specified on the command line.  Don't build cache."), 0},
   { NULL, 'l', NULL, 0, N_("Manually link individual libraries."), 0},
-  { "format", 'c', "FORMAT", 0, N_("Format to use: new, old or compat (default)"), 0},
+  { "format", 'c', N_("FORMAT"), 0, N_("Format to use: new, old or compat (default)"), 0},
   { NULL, 0, NULL, 0, NULL, 0 }
 };
 
