@@ -22,6 +22,7 @@
 #include <mntent.h>
 #include <paths.h>
 #include <pthread.h>
+#include <search.h>
 #include <semaphore.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -122,11 +123,105 @@ __where_is_shmfs (void)
 }
 
 
+/* Comparison function for search of existing mapping.  */
+int
+attribute_hidden
+__sem_search (const void *a, const void *b)
+{
+  const struct inuse_sem *as = (const struct inuse_sem *) a;
+  const struct inuse_sem *bs = (const struct inuse_sem *) b;
+
+  if (as->ino != bs->ino)
+    /* Cannot return the difference the type is larger than int.  */
+    return as->ino < bs->ino ? -1 : (as->ino == bs->ino ? 0 : 1);
+
+  if (as->dev != bs->dev)
+    /* Cannot return the difference the type is larger than int.  */
+    return as->dev < bs->dev ? -1 : (as->dev == bs->dev ? 0 : 1);
+
+  return strcmp (as->name, bs->name);
+}
+
+
+/* The search tree for existing mappings.  */
+void *__sem_mappings attribute_hidden;
+
+/* Lock to protect the search tree.  */
+lll_lock_t __sem_mappings_lock = LLL_LOCK_INITIALIZER;
+
+
+/* Search for existing mapping and if possible add the one provided.  */
+static sem_t *
+check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
+{
+  sem_t *result = SEM_FAILED;
+
+  /* Get the information about the file.  */
+  struct stat64 st;
+  if (__fxstat64 (_STAT_VER, fd, &st) == 0)
+    {
+      /* Get the lock.  */
+      lll_lock (__sem_mappings_lock);
+
+      /* Search for an existing mapping given the information we have.  */
+      struct inuse_sem *fake;
+      fake = (struct inuse_sem *) alloca (sizeof (*fake) + namelen);
+      memcpy (fake->name, name, namelen);
+      fake->dev = st.st_dev;
+      fake->ino = st.st_ino;
+
+      struct inuse_sem **foundp = tfind (fake, &__sem_mappings, __sem_search);
+      if (foundp != NULL)
+	{
+	  /* There is already a mapping.  Use it.  */
+	  result = (*foundp)->sem;
+	  ++(*foundp)->refcnt;
+	}
+      else if (existing != SEM_FAILED)
+	{
+	  /* We haven't found a mapping but the caller has a mapping.
+	     Install it.  */
+	  struct inuse_sem *newp;
+
+	  newp = (struct inuse_sem *) malloc (sizeof (*newp) + namelen);
+	  if (newp != NULL)
+	    {
+	      newp->dev = st.st_dev;
+	      newp->ino = st.st_ino;
+	      newp->refcnt = 1;
+	      newp->sem = existing;
+	      memcpy (newp->name, name, namelen);
+
+	      /* Insert the new value.  */
+	      if (tsearch (newp, &__sem_mappings, __sem_search) != NULL)
+		/* Successful.  */
+		result = existing;
+	      else
+		/* Something went wrong while inserting the new
+		   value.  We fail completely.  */
+		free (newp);
+	    }
+	}
+
+      /* Release the lock.  */
+      lll_unlock (__sem_mappings_lock);
+    }
+
+  if (result != existing && existing != SEM_FAILED)
+    {
+      /* Do not disturb errno.  */
+      INTERNAL_SYSCALL_DECL (err);
+      INTERNAL_SYSCALL (munmap, err, 2, existing, sizeof (sem_t));
+    }
+
+  return result;
+}
+
+
 sem_t *
 sem_open (const char *name, int oflag, ...)
 {
   char *finalname;
-  size_t namelen;
   sem_t *result = SEM_FAILED;
   int fd;
 
@@ -150,12 +245,12 @@ sem_open (const char *name, int oflag, ...)
       __set_errno (EINVAL);
       return SEM_FAILED;
     }
-  namelen = strlen (name);
+  size_t namelen = strlen (name) + 1;
 
   /* Create the name of the final file.  */
-  finalname = (char *) alloca (mountpoint.dirlen + namelen + 1);
+  finalname = (char *) alloca (mountpoint.dirlen + namelen);
   __mempcpy (__mempcpy (finalname, mountpoint.dir, mountpoint.dirlen),
-	     name, namelen + 1);
+	     name, namelen);
 
   /* If the semaphore object has to exist simply open it.  */
   if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
@@ -167,15 +262,22 @@ sem_open (const char *name, int oflag, ...)
       if (fd == -1)
 	{
 	  /* If we are supposed to create the file try this next.  */
-	  if ((oflag & O_CREAT) != 0)
+	  if ((oflag & O_CREAT) != 0 && errno == ENOENT)
 	    goto try_create;
 
 	  /* Return.  errno is already set.  */
 	}
       else
-	/* Map the sem_t structure from the file.  */
-	result = (sem_t *) mmap (NULL, sizeof (sem_t), PROT_READ | PROT_WRITE,
-				 MAP_SHARED, fd, 0);
+	{
+	  /* Check whether we already have this semaphore mapped.  */
+	  result = check_add_mapping (name, namelen, fd, SEM_FAILED);
+
+	  /* Map the sem_t structure from the file.  */
+	  if (result == SEM_FAILED)
+	    result = (sem_t *) mmap (NULL, sizeof (sem_t),
+				     PROT_READ | PROT_WRITE, MAP_SHARED,
+				     fd, 0);
+	}
     }
   else
     {
@@ -200,14 +302,6 @@ sem_open (const char *name, int oflag, ...)
 	  return SEM_FAILED;
 	}
 
-      tmpfname = (char *) alloca (mountpoint.dirlen + 6 + 1);
-      strcpy (__mempcpy (tmpfname, mountpoint.dir, mountpoint.dirlen),
-	      "XXXXXX");
-
-      fd = mkstemp (tmpfname);
-      if (fd == -1)
-	return SEM_FAILED;
-
       /* Create the initial file content.  */
       sem_t initsem;
 
@@ -218,10 +312,44 @@ sem_open (const char *name, int oflag, ...)
       memset ((char *) &initsem + sizeof (struct sem), '\0',
 	      sizeof (sem_t) - sizeof (struct sem));
 
+      tmpfname = (char *) alloca (mountpoint.dirlen + 6 + 1);
+      char *xxxxxx = __mempcpy (tmpfname, mountpoint.dir, mountpoint.dirlen);
+
+      int retries = 0;
+#define NRETRIES 50
+      while (1)
+	{
+	  /* Add the suffix for mktemp.  */
+	  strcpy (xxxxxx, "XXXXXX");
+
+	  /* We really want to use mktemp here.  We cannot use mkstemp
+	     since the file must be opened with a specific mode.  The
+	     mode cannot later be set since then we cannot apply the
+	     file create mask.  */
+	  if (mktemp (tmpfname) == NULL)
+	    return SEM_FAILED;
+
+	  /* Open the file.  Make sure we do not overwrite anything.  */
+	  fd = __libc_open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
+	  if (fd == -1)
+	    {
+	      if (errno == EEXIST)
+		{
+		  if (++retries < NRETRIES)
+		    continue;
+
+		  __set_errno (EAGAIN);
+		}
+
+	      return SEM_FAILED;
+	    }
+
+	  /* We got a file.  */
+	  break;
+	}
+
       if (TEMP_FAILURE_RETRY (__libc_write (fd, &initsem, sizeof (sem_t)))
 	  == sizeof (sem_t)
-	  /* Adjust the permission.  */
-	  && fchmod (fd, mode) == 0
 	  /* Map the sem_t structure from the file.  */
 	  && (result = (sem_t *) mmap (NULL, sizeof (sem_t),
 				       PROT_READ | PROT_WRITE, MAP_SHARED,
@@ -249,6 +377,11 @@ sem_open (const char *name, int oflag, ...)
 		  goto try_again;
 		}
 	    }
+	  else
+	    /* Insert the mapping into the search tree.  This also
+	       determines whether another thread sneaked by and already
+	       added such a mapping despite the fact that we created it.  */
+	    result = check_add_mapping (name, namelen, fd, result);
 	}
 
       /* Now remove the temporary name.  This should never fail.  If
@@ -262,7 +395,11 @@ sem_open (const char *name, int oflag, ...)
 
   /* We don't need the file descriptor anymore.  */
   if (fd != -1)
-    (void) __libc_close (fd);
+    {
+      /* Do not disturb errno.  */
+      INTERNAL_SYSCALL_DECL (err);
+      INTERNAL_SYSCALL (close, err, 1, fd);
+    }
 
   return result;
 }

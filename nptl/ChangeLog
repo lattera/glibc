@@ -1,3 +1,13 @@
+2003-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sem_open.c: Fix one endless loop.  Implement correct semantics
+	wrt opening the same semaphore more then once.
+	* sem_close.c: Adjust for sem_open change.
+	* semaphoreP.h: Include <semaphore.h>.  Define struct inuse_sem.
+	Declare __sem_mappings, __sem_mappings_lock, __sem_search.
+	* Makefile (tests): Add tst-sem7.
+	* tst-sem7.c: New file.
+
 2003-05-16  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/register-atfork.c (libc_freeres_fn): Fix
