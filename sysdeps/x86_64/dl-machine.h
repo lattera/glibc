@@ -400,7 +400,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-#ifdef USE_TLS
+#if defined USE_TLS && !defined RESOLVE_CONFLICT_FIND_MAP
 	case R_X86_64_DTPMOD64:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
@@ -459,6 +459,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 				strtab + refsym->st_name);
 	    }
 	  break;
+# ifndef RESOLVE_CONFLICT_FIND_MAP
+	  /* Not needed for dl-conflict.c.  */
 	case R_X86_64_PC32:
 	  *(unsigned int *) reloc_addr = value + reloc->r_addend
 	    - (Elf64_Addr) reloc_addr;
@@ -495,6 +497,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
 	  break;
+# endif
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;

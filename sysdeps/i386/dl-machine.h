@@ -521,7 +521,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
 # else
-      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym != NULL)
 	value += sym->st_value;
 # endif
@@ -533,11 +533,13 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_386_32:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
+# ifndef RESOLVE_CONFLICT_FIND_MAP
+	  /* Not needed for dl-conflict.c.  */
 	case R_386_PC32:
 	  *reloc_addr = (value + reloc->r_addend - (Elf32_Addr) reloc_addr);
 	  break;
 
-# ifdef USE_TLS
+#  ifdef USE_TLS
 	case R_386_TLS_DTPMOD32:
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
@@ -570,9 +572,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	    = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
 	      + reloc->r_addend;
 	  break;
-# endif	/* use TLS */
-# ifndef RESOLVE_CONFLICT_FIND_MAP
-	  /* Not needed for dl-conflict.c.  */
+#  endif	/* use TLS */
 	case R_386_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be

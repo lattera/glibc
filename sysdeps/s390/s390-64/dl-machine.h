@@ -392,7 +392,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD) \
+    && !defined RESOLVE_CONFLICT_FIND_MAP
 	case R_390_TLS_DTPMOD:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
@@ -434,6 +435,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #endif  /* use TLS */
 
 #ifndef RTLD_BOOTSTRAP
+# ifndef RESOLVE_CONFLICT_FIND_MAP
+	/* Not needed for dl-conflict.c.  */
 	case R_390_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be
@@ -454,6 +457,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
 	  break;
+# endif
 	case R_390_64:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
@@ -466,6 +470,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	case R_390_8:
 	  *(char *) reloc_addr = value + reloc->r_addend;
 	  break;
+# ifndef RESOLVE_CONFLICT_FIND_MAP
 	case R_390_PC64:
 	  *reloc_addr = value +reloc->r_addend - (Elf64_Addr) reloc_addr;
 	  break;
@@ -489,6 +494,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 	case R_390_NONE:
 	  break;
+# endif
 #endif
 #if !defined(RTLD_BOOTSTRAP) || defined(_NDEBUG)
 	default:

@@ -1,3 +1,26 @@
+2003-04-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-reloc.c (allocate_static_tls): Rename to...
+	(_dl_allocate_static_tls): ... this function.  No longer static.
+	(CHECK_STATIC_TLS): Adjust.
+	* sysdeps/generic/ldsodefs.h (_dl_allocate_static_tls): New prototype.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (__process_machine_rela):
+	Add SYM_MAP argument.
+	(elf_machine_rela): Adjust caller.  Declare SYM_MAP unconditionally.
+	Check if SYM_MAP != NULL for R_PPC_DTPREL32.  Only handle 32-bit
+	TLS relocs here.  #ifdef out relocs which never appear in
+	.gnu.conflict section from dl-conflict.c processing.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela):
+	Add SYM_MAP argument.  Handle 16-bit TLS relocs here.
+
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela): #ifdef
+	out relocs which never appear in .gnu.conflict section from
+	dl-conflict.c processing.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_rela): Likewise.
+	Use r_type in RESOLVE macro.
+
 2003-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/ypclnt.c (__yp_bind): Expect ypdb parameter to always we !=
