@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #define SIGCONTEXT __siginfo_t *
-#define GET_PC(ctx)	((void *) ctx->si_regs.pc)
-#define ADVANCE_STACK_FRAME(next) \
-	((void *)&((struct reg_window *) (next)->ins[6]))
-#define GET_STACK(ctx)	((void *) ctx->si_regs.u_regs[14])
-#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME (GET_STACK(ctx))
+#define GET_PC(__ctx)	((void *) ((__ctx)->si_regs.pc))
+#define ADVANCE_STACK_FRAME(__next) \
+	((void *)&(((struct reg_window *) (__next))->ins[6]))
+#define GET_STACK(__ctx)	((void *) (__ctx)->si_regs.u_regs[14])
+#define GET_FRAME(__ctx)	ADVANCE_STACK_FRAME (GET_STACK(__ctx))

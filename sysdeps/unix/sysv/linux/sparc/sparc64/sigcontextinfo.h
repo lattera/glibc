@@ -21,9 +21,9 @@
 #define STACK_BIAS 2047
 #endif
 #define SIGCONTEXT __siginfo_t *
-#define GET_PC(ctx)	((void *) ctx->si_regs.tpc)
-#define ADVANCE_STACK_FRAME(next) \
-	((void *) &((struct reg_window *) (((unsigned long int) next)	      \
+#define GET_PC(__ctx)	((void *) ((__ctx)->si_regs.tpc))
+#define ADVANCE_STACK_FRAME(__next) \
+	((void *) &((struct reg_window *) (((unsigned long int) (__next))     \
 					   + STACK_BIAS))->ins[6])
-#define GET_STACK(ctx)	((void *) ctx->si_regs.u_regs[14])
-#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME (GET_STACK (ctx))
+#define GET_STACK(__ctx)	((void *) ((__ctx)->si_regs.u_regs[14]))
+#define GET_FRAME(__ctx)	ADVANCE_STACK_FRAME (GET_STACK (__ctx))

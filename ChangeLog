@@ -1,3 +1,9 @@
+1999-02-21  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h: Fix
+	parentheses in Feb 2 changes.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h: Likewise.
+
 1999-02-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/generic/glob.c (glob): Save previous errno.
