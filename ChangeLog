@@ -1,5 +1,7 @@
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* po/cs.po: New file.
+
 	* resolv/res_hconf.c (_res_hconf_init): Don't use ENV_HOSTCONF for
 	SUID binaries.
 
