@@ -1,3 +1,8 @@
+2000-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-ctype.c: Add support for more definitions after
+	copy statement.
+
 2000-08-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* dirent/Versions (getdirentries64): Export at GLIBC_2.2.

@@ -197,7 +197,9 @@ struct locale_ctype_t
 
 /* Prototypes for local functions.  */
 static void ctype_startup (struct linereader *lr, struct localedef_t *locale,
-			   struct charmap_t *charmap, int ignore_content);
+			   struct charmap_t *charmap,
+			   struct localedef_t *copy_locale,
+			   int ignore_content);
 static void ctype_class_new (struct linereader *lr,
 			     struct locale_ctype_t *ctype, const char *name);
 static void ctype_map_new (struct linereader *lr,
@@ -228,90 +230,98 @@ static const unsigned char digits[] = "0123456789";
 
 static void
 ctype_startup (struct linereader *lr, struct localedef_t *locale,
-	       struct charmap_t *charmap, int ignore_content)
+	       struct charmap_t *charmap, struct localedef_t *copy_locale,
+	       int ignore_content)
 {
   unsigned int cnt;
   struct locale_ctype_t *ctype;
 
-  if (!ignore_content)
+  if (!ignore_content && locale->categories[LC_CTYPE].ctype == NULL)
     {
-      /* Allocate the needed room.  */
-      locale->categories[LC_CTYPE].ctype = ctype =
-	(struct locale_ctype_t *) xcalloc (1, sizeof (struct locale_ctype_t));
-
-      /* We have seen no names yet.  */
-      ctype->charnames_max = charmap->mb_cur_max == 1 ? 256 : 512;
-      ctype->charnames =
-	(unsigned int *) xmalloc (ctype->charnames_max
-				  * sizeof (unsigned int));
-      for (cnt = 0; cnt < 256; ++cnt)
-	ctype->charnames[cnt] = cnt;
-      ctype->charnames_act = 256;
-
-      /* Fill character class information.  */
-      ctype->last_class_char = ILLEGAL_CHAR_VALUE;
-      /* The order of the following instructions determines the bit
-	 positions!  */
-      ctype_class_new (lr, ctype, "upper");
-      ctype_class_new (lr, ctype, "lower");
-      ctype_class_new (lr, ctype, "alpha");
-      ctype_class_new (lr, ctype, "digit");
-      ctype_class_new (lr, ctype, "xdigit");
-      ctype_class_new (lr, ctype, "space");
-      ctype_class_new (lr, ctype, "print");
-      ctype_class_new (lr, ctype, "graph");
-      ctype_class_new (lr, ctype, "blank");
-      ctype_class_new (lr, ctype, "cntrl");
-      ctype_class_new (lr, ctype, "punct");
-      ctype_class_new (lr, ctype, "alnum");
-#ifdef PREDEFINED_CLASSES
-      /* The following are extensions from ISO 14652.  */
-      ctype_class_new (lr, ctype, "left_to_right");
-      ctype_class_new (lr, ctype, "right_to_left");
-      ctype_class_new (lr, ctype, "num_terminator");
-      ctype_class_new (lr, ctype, "num_separator");
-      ctype_class_new (lr, ctype, "segment_separator");
-      ctype_class_new (lr, ctype, "block_separator");
-      ctype_class_new (lr, ctype, "direction_control");
-      ctype_class_new (lr, ctype, "sym_swap_layout");
-      ctype_class_new (lr, ctype, "char_shape_selector");
-      ctype_class_new (lr, ctype, "num_shape_selector");
-      ctype_class_new (lr, ctype, "non_spacing");
-      ctype_class_new (lr, ctype, "non_spacing_level3");
-      ctype_class_new (lr, ctype, "normal_connect");
-      ctype_class_new (lr, ctype, "r_connect");
-      ctype_class_new (lr, ctype, "no_connect");
-      ctype_class_new (lr, ctype, "no_connect-space");
-      ctype_class_new (lr, ctype, "vowel_connect");
-#endif
-
-      ctype->class_collection_max = charmap->mb_cur_max == 1 ? 256 : 512;
-      ctype->class_collection
-	= (uint32_t *) xcalloc (sizeof (unsigned long int),
-				ctype->class_collection_max);
-      ctype->class_collection_act = 256;
-
-      /* Fill character map information.  */
-      ctype->last_map_idx = MAX_NR_CHARMAP;
-      ctype_map_new (lr, ctype, "toupper", charmap);
-      ctype_map_new (lr, ctype, "tolower", charmap);
-#ifdef PREDEFINED_CLASSES
-      ctype_map_new (lr, ctype, "tosymmetric", charmap);
-#endif
-
-      /* Fill first 256 entries in `toXXX' arrays.  */
-      for (cnt = 0; cnt < 256; ++cnt)
+      if (copy_locale == NULL)
 	{
-	  ctype->map_collection[0][cnt] = cnt;
-	  ctype->map_collection[1][cnt] = cnt;
-#ifdef PREDEFINED_CLASSES
-	  ctype->map_collection[2][cnt] = cnt;
-#endif
-	  ctype->map256_collection[0][cnt] = cnt;
-	  ctype->map256_collection[1][cnt] = cnt;
-	}
+	  /* Allocate the needed room.  */
+	  locale->categories[LC_CTYPE].ctype = ctype =
+	    (struct locale_ctype_t *) xcalloc (1,
+					       sizeof (struct locale_ctype_t));
 
-      obstack_init (&ctype->mempool);
+	  /* We have seen no names yet.  */
+	  ctype->charnames_max = charmap->mb_cur_max == 1 ? 256 : 512;
+	  ctype->charnames =
+	    (unsigned int *) xmalloc (ctype->charnames_max
+				      * sizeof (unsigned int));
+	  for (cnt = 0; cnt < 256; ++cnt)
+	    ctype->charnames[cnt] = cnt;
+	  ctype->charnames_act = 256;
+
+	  /* Fill character class information.  */
+	  ctype->last_class_char = ILLEGAL_CHAR_VALUE;
+	  /* The order of the following instructions determines the bit
+	     positions!  */
+	  ctype_class_new (lr, ctype, "upper");
+	  ctype_class_new (lr, ctype, "lower");
+	  ctype_class_new (lr, ctype, "alpha");
+	  ctype_class_new (lr, ctype, "digit");
+	  ctype_class_new (lr, ctype, "xdigit");
+	  ctype_class_new (lr, ctype, "space");
+	  ctype_class_new (lr, ctype, "print");
+	  ctype_class_new (lr, ctype, "graph");
+	  ctype_class_new (lr, ctype, "blank");
+	  ctype_class_new (lr, ctype, "cntrl");
+	  ctype_class_new (lr, ctype, "punct");
+	  ctype_class_new (lr, ctype, "alnum");
+#ifdef PREDEFINED_CLASSES
+	  /* The following are extensions from ISO 14652.  */
+	  ctype_class_new (lr, ctype, "left_to_right");
+	  ctype_class_new (lr, ctype, "right_to_left");
+	  ctype_class_new (lr, ctype, "num_terminator");
+	  ctype_class_new (lr, ctype, "num_separator");
+	  ctype_class_new (lr, ctype, "segment_separator");
+	  ctype_class_new (lr, ctype, "block_separator");
+	  ctype_class_new (lr, ctype, "direction_control");
+	  ctype_class_new (lr, ctype, "sym_swap_layout");
+	  ctype_class_new (lr, ctype, "char_shape_selector");
+	  ctype_class_new (lr, ctype, "num_shape_selector");
+	  ctype_class_new (lr, ctype, "non_spacing");
+	  ctype_class_new (lr, ctype, "non_spacing_level3");
+	  ctype_class_new (lr, ctype, "normal_connect");
+	  ctype_class_new (lr, ctype, "r_connect");
+	  ctype_class_new (lr, ctype, "no_connect");
+	  ctype_class_new (lr, ctype, "no_connect-space");
+	  ctype_class_new (lr, ctype, "vowel_connect");
+#endif
+
+	  ctype->class_collection_max = charmap->mb_cur_max == 1 ? 256 : 512;
+	  ctype->class_collection
+	    = (uint32_t *) xcalloc (sizeof (unsigned long int),
+				    ctype->class_collection_max);
+	  ctype->class_collection_act = 256;
+
+	  /* Fill character map information.  */
+	  ctype->last_map_idx = MAX_NR_CHARMAP;
+	  ctype_map_new (lr, ctype, "toupper", charmap);
+	  ctype_map_new (lr, ctype, "tolower", charmap);
+#ifdef PREDEFINED_CLASSES
+	  ctype_map_new (lr, ctype, "tosymmetric", charmap);
+#endif
+
+	  /* Fill first 256 entries in `toXXX' arrays.  */
+	  for (cnt = 0; cnt < 256; ++cnt)
+	    {
+	      ctype->map_collection[0][cnt] = cnt;
+	      ctype->map_collection[1][cnt] = cnt;
+#ifdef PREDEFINED_CLASSES
+	      ctype->map_collection[2][cnt] = cnt;
+#endif
+	      ctype->map256_collection[0][cnt] = cnt;
+	      ctype->map256_collection[1][cnt] = cnt;
+	    }
+
+	  obstack_init (&ctype->mempool);
+	}
+      else
+	ctype = locale->categories[LC_CTYPE].ctype =
+	  copy_locale->categories[LC_CTYPE].ctype;
     }
 }
 
@@ -383,7 +393,7 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	{
 	  if (! be_quiet)
 	    error (0, 0, _("No definition for %s category found"), "LC_CTYPE");
-	  ctype_startup (NULL, locale, charmap, 0);
+	  ctype_startup (NULL, locale, charmap, NULL, 0);
 	  ctype = locale->categories[LC_CTYPE].ctype;
 	}
 
@@ -400,7 +410,7 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
   if (ctype->codeset_name == NULL)
     {
       if (! be_quiet)
-	error (0, 0, "no character set name specified in charmap");
+	error (0, 0, _("No character set name specified in charmap"));
       ctype->codeset_name = "//UNKNOWN//";
     }
 
@@ -2047,6 +2057,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   size_t last_charcode_len = 0;
   const char *last_str = NULL;
   int mapidx;
+  struct localedef_t *copy_locale = NULL;
 
   /* Get the repertoire we have to use.  */
   if (repertoire_name != NULL)
@@ -2066,13 +2077,52 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   /* If we see `copy' now we are almost done.  */
   if (nowtok == tok_copy)
     {
-      handle_copy (ldfile, charmap, repertoire_name, result, tok_lc_ctype,
-		   LC_CTYPE, "LC_CTYPE", ignore_content);
-      return;
+      now = lr_token (ldfile, charmap, NULL);
+      if (now->tok != tok_string)
+	{
+	  SYNTAX_ERROR (_("%s: syntax error"), "LC_CTYPE");
+
+	skip_category:
+	  do
+	    now = lr_token (ldfile, charmap, NULL);
+	  while (now->tok != tok_eof && now->tok != tok_end);
+
+	  if (now->tok != tok_eof
+	      || (now = lr_token (ldfile, charmap, NULL), now->tok == tok_eof))
+	    lr_error (ldfile, _("%s: premature end of file"), "LC_CTYPE");
+	  else if (now->tok != tok_lc_ctype)
+	    {
+	      lr_error (ldfile, _("\
+%1$s: definition does not end with `END %1$s'"), "LC_CTYPE");
+	      lr_ignore_rest (ldfile, 0);
+	    }
+	  else
+	    lr_ignore_rest (ldfile, 1);
+
+	  return;
+	}
+
+      if (! ignore_content)
+	{
+	  /* Get the locale definition.  */
+	  copy_locale = load_locale (LC_CTYPE, now->val.str.startmb,
+				     repertoire_name, charmap, NULL);
+	  if ((copy_locale->avail & CTYPE_LOCALE) == 0)
+	    {
+	      /* Not yet loaded.  So do it now.  */
+	      if (locfile_read (copy_locale, charmap) != 0)
+		goto skip_category;
+	    }
+	}
+
+      lr_ignore_rest (ldfile, 1);
+
+      now = lr_token (ldfile, charmap, NULL);
+      nowtok = now->tok;
     }
 
   /* Prepare the data structures.  */
-  ctype_startup (ldfile, result, charmap, ignore_content);
+  ctype_startup (ldfile, result, charmap, copy_locale, ignore_content);
   ctype = result->categories[LC_CTYPE].ctype;
 
   /* Remember the repertoire we use.  */
