@@ -1,5 +1,10 @@
 2004-06-28  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/alpha/tcb-offsets.sym (MULTIPLE_THREADS_OFFSET): Define
+	unconditionally.
+
+2004-06-28  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/pthread/pthread_rwlock_timedwrlock.c
 	(pthread_rwlock_timedwrlock): Return EINVAL if tv_nsec is negative,
 	instead of tv_sec.

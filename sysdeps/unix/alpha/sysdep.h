@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1995, 1996, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 2000, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -364,7 +365,7 @@ __LABEL(name)						\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"		\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
-	     "=r"(_sc_19) "=r"(_sc_16), "=r"(_sc_17),		\
+	     "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),		\
 	     "=r"(_sc_18), "=r"(_sc_20), "=r"(_sc_21)		\
 	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17), "4"(_sc_18),	\
 	     "1"(_sc_19), "5"(_sc_20), "6"(_sc_21)		\

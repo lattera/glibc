@@ -1,3 +1,15 @@
+2004-06-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall6): Fix a typo.
+
+	[BZ #231]
+	* sysdeps/unix/alpha/sysdep.S (__syscall_error): Avoid !samegp
+	relocation in librt.so.
+
+	[BZ #230]
+	* sysdeps/alpha/dl-machine.h (_dl_start_user): Use ldah/ldl to load
+	_dl_skip_args.  Patch by Jakub Bogusz <qboosh@pld-linux.org>.
+
 2004-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/ldconfig.c (add_dir): Take chroot into account.
