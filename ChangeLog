@@ -1,3 +1,7 @@
+1998-08-26  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* csu/init.c: Don't drag _IO_2_1_stdin_ into the executable.
+
 1998-09-14 11:26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcsmbs-tst1.c: Include stdlib.h.

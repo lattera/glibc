@@ -28,10 +28,9 @@
 
 #if defined USE_IN_LIBIO && defined __GNUC__ && __GNUC__ >= 2
 
-#undef _LIBC
-#include <libio.h>
+#include <_G_config.h>
 
 /* This records which stdio is linked against in the application. */
-const void *const _IO_stdin_used = _IO_stdin;
+const int _IO_stdin_used = _G_IO_IO_FILE_VERSION;
 
 #endif
