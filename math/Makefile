@@ -49,7 +49,7 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
 	     s_signbit s_fpclassify s_fmax s_fmin s_fdim s_nan s_trunc	\
 	     s_remquo							\
-	     conj cimag creal cabs
+	     conj cimag creal cabs s_cexp
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 		$(long-m-$(long-double-fcts))
@@ -73,6 +73,9 @@ tests = test-float test-double $(test-longdouble-$(long-double-fcts))
 # XXX This test is disabled for now since the functions are too buggy.
 #test-longdouble-yes = test-longdouble
 
+CFLAGS-test-float.c = -fno-inline
+CFLAGS-test-double.c = -fno-inline
+CFLAGS-test-longdouble.c = -fno-inline
 LDLIBS-test-float = libm
 LDLIBS-test-double = libm
 LDLIBS-test-longdouble = libm
@@ -116,3 +119,9 @@ override CFLAGS += -Wno-uninitialized -Wno-write-strings
 $(objpfx)libieee.a: $(objpfx)ieee-math.o
 	rm -f $@
 	ln $< $@
+
+ifeq ($(build-shared),yes)
+$(addprefix $(objpfx),$(tests)): $(objpfx)libm.so$(libm.so-version)
+else
+$(addprefix $(objpfx),$(tests)): $(objpfx)libm.a
+endif

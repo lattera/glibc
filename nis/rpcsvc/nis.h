@@ -998,7 +998,11 @@ extern  nis_error * nis_updkeys_3();
 extern  nis_error * nis_updkeys_3_svc();
 #endif /* Old Style C */
 struct rpcgen_table {
+#if defined __cplusplus || __STDC__
+	char	*(*proc)(void);
+#else
 	char	*(*proc)();
+#endif
 	xdrproc_t	xdr_arg;
 	unsigned	len_arg;
 	xdrproc_t	xdr_res;

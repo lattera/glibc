@@ -176,7 +176,10 @@ __do_niscall (const nis_server *serv, int serv_len, u_long prog,
     {
       dir = readColdStartFile ();
       if (dir == NULL)
-	return NIS_UNAVAIL;
+	{
+	  fputs (_("Error: could not find a NIS_COLD_START file\n"), stderr);
+	  return NIS_UNAVAIL;
+	}
       server = dir->do_servers.do_servers_val;
       server_len = dir->do_servers.do_servers_len;
     }

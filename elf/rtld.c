@@ -266,6 +266,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       main_map->l_phdr = phdr;
       main_map->l_phnum = phent;
       main_map->l_entry = *user_entry;
+      main_map->l_opencount = 1;
     }
 
   /* Scan the program header table for the dynamic section.  */

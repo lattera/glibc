@@ -195,16 +195,23 @@ write_call_graph (fd)
      int fd;
 {
   u_char tag = GMON_TAG_CG_ARC;
-  struct gmon_cg_arc_record raw_arc
+  struct gmon_cg_arc_record raw_arc[4]
     __attribute__ ((aligned (__alignof__ (char*))));
   int from_index, to_index, from_len;
   u_long frompc;
 
-  struct iovec iov[2] =
+  struct iovec iov[8] =
     {
       { &tag, sizeof (tag) },
-      { &raw_arc, sizeof (struct gmon_cg_arc_record) }
+      { &raw_arc[0], sizeof (struct gmon_cg_arc_record) },
+      { &tag, sizeof (tag) },
+      { &raw_arc[1], sizeof (struct gmon_cg_arc_record) },
+      { &tag, sizeof (tag) },
+      { &raw_arc[2], sizeof (struct gmon_cg_arc_record) },
+      { &tag, sizeof (tag) },
+      { &raw_arc[3], sizeof (struct gmon_cg_arc_record) },
     };
+  int nfilled = 0;
 
   from_len = _gmonparam.fromssize / sizeof (*_gmonparam.froms);
   for (from_index = 0; from_index < from_len; ++from_index)
@@ -219,13 +226,19 @@ write_call_graph (fd)
 	   to_index != 0;
 	   to_index = _gmonparam.tos[to_index].link)
 	{
-	  *(char **) raw_arc.from_pc = (char *)frompc;
-	  *(char **) raw_arc.self_pc = (char *)_gmonparam.tos[to_index].selfpc;
-	  *(int *) raw_arc.count = _gmonparam.tos[to_index].count;
-
-	  __writev (fd, iov, 2);
+	  if (nfilled > 3)
+	    {
+	      __writev (fd, iov, 2 * nfilled);
+	      nfilled = 0;
+	    }
+	  *(char **) raw_arc[nfilled].from_pc = (char *)frompc;
+	  *(char **) raw_arc[nfilled].self_pc =
+	    (char *)_gmonparam.tos[to_index].selfpc;
+	  *(int *) raw_arc[nfilled].count = _gmonparam.tos[to_index].count;
+	  ++nfilled;
 	}
     }
+  __writev (fd, iov, 2 * nfilled);
 }
 
 
@@ -235,33 +248,50 @@ write_bb_counts (fd)
 {
   struct __bb *grp;
   u_char tag = GMON_TAG_BB_COUNT;
-  int ncounts;
-  int i;
+  size_t ncounts;
+  size_t i;
 
   struct iovec bbhead[2] =
     {
       { &tag, sizeof (tag) },
       { &ncounts, sizeof (ncounts) }
     };
-  struct iovec bbbody[2];
+  struct iovec bbbody[8];
+  size_t nfilled;
 
-  bbbody[0].iov_len = sizeof (grp->addresses[0]);
-  bbbody[1].iov_len = sizeof (grp->addresses[0]);
+  for (i = 0; i < (sizeof (bbbody) / sizeof (bbbody[0])); i += 2)
+    {
+      bbbody[i].iov_len = sizeof (grp->addresses[0]);
+      bbbody[i + 1].iov_len = sizeof (grp->counts[0]);
+    }
 
   /* Write each group of basic-block info (all basic-blocks in a
      compilation unit form a single group). */
 
+  nfilled = 0;
   for (grp = __bb_head; grp; grp = grp->next)
     {
       ncounts = grp->ncounts;
+      if (nfilled > 0)
+	{
+	  __writev (fd, bbbody, nfilled);
+	  nfilled = 0;
+	}
       __writev (fd, bbhead, 2);
       for (i = 0; i < ncounts; ++i)
 	{
-	  bbbody[0].iov_base = (char *) &grp->addresses[i];
-	  bbbody[1].iov_base = &grp->counts[i];
-	  __writev (fd, bbbody, 2);
+	  if (nfilled > (sizeof (bbbody) / sizeof (bbbody[0])) - 2)
+	    {
+	      __writev (fd, bbbody, nfilled);
+	      nfilled = 0;
+	    }
+
+	  bbbody[nfilled++].iov_base = (char *) &grp->addresses[i];
+	  bbbody[nfilled++].iov_base = &grp->counts[i];
 	}
     }
+  if (nfilled > 0)
+    __writev (fd, bbbody, nfilled);
 }
 
 

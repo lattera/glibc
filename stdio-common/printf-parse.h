@@ -1,5 +1,5 @@
 /* Internal header for parsing printf format strings.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,8 +106,9 @@ find_spec (const char *format, mbstate_t *ps)
 }
 
 
-/* This is defined in reg-printf.c.  */
-extern printf_arginfo_function **__printf_arginfo_table;
+/* These are defined in reg-printf.c.  */
+extern printf_arginfo_function *__printf_arginfo_table[];
+extern printf_function **__printf_function_table;
 
 
 /* FORMAT must point to a '%' at the beginning of a spec.  Fills in *SPEC
@@ -299,8 +300,9 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 
   /* Get the format specification.  */
   spec->info.spec = (wchar_t) *format++;
-  if (__printf_arginfo_table != NULL &&
-      __printf_arginfo_table[spec->info.spec] != NULL)
+  if (__printf_function_table != NULL
+      && spec->info.spec <= UCHAR_MAX
+      && __printf_arginfo_table[spec->info.spec] != NULL)
     /* We don't try to get the types for all arguments if the format
        uses more than one.  The normal case is covered though.  */
     spec->ndata_args = (*__printf_arginfo_table[spec->info.spec])
@@ -362,15 +364,14 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	  spec->ndata_args = 0;
 	  break;
 	}
+    }
 
-      if (spec->data_arg == -1 && spec->ndata_args > 0)
-	{
-	  /* There are args consumed, but no positional spec.
-	     Use the next sequential arg position.  */
-	  spec->data_arg = posn;
-	  posn += spec->ndata_args;
-	  nargs += spec->ndata_args;
-	}
+  if (spec->data_arg == -1 && spec->ndata_args > 0)
+    {
+      /* There are args consumed, but no positional spec.  Use the
+	 next sequential arg position.  */
+      spec->data_arg = posn;
+      nargs += spec->ndata_args;
     }
 
   if (spec->info.spec == L'\0')

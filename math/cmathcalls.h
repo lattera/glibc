@@ -103,10 +103,10 @@ __MATHCALL (csqrt, (_Mdouble_complex_ __z));
 /* Absolute value, projections, conjugates, and projection.  */
 
 /* Absolute value of Z.  */
-__MATHDECL (_Mdouble_, cabs, (_Mdouble_complex_ __z));
+__MATHDECL (_Mdouble_,cabs, (_Mdouble_complex_ __z));
 
 /* Argument value of Z.  */
-__MATHDECL (_Mdouble_, carg, (_Mdouble_complex_ __z));
+__MATHDECL (_Mdouble_,carg, (_Mdouble_complex_ __z));
 
 /* Complex conjugate of Z.  */
 __MATHCALL (conj, (_Mdouble_complex_ __z));
@@ -118,10 +118,10 @@ __MATHCALL (cproj, (_Mdouble_complex_ __z));
 /* Decomposing complex values.  */
 
 /* Imaginary part of Z.  */
-__MATHDECL (_Mdouble_, cimag, (_Mdouble_complex_ __z));
+__MATHDECL (_Mdouble_,cimag, (_Mdouble_complex_ __z));
 
 /* Real part of Z.  */
-__MATHDECL (_Mdouble_, creal, (_Mdouble_complex_ __z));
+__MATHDECL (_Mdouble_,creal, (_Mdouble_complex_ __z));
 
 
 /* Now some optimized versions.  GCC has handy notations for these

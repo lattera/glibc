@@ -158,26 +158,29 @@ nis_local_host (void)
 
   if (__nishostname[0] == '\0')
     {
-      char *cp = __nishostname;
-
       if (gethostname (__nishostname, NIS_MAXNAMELEN) < 0)
-	cp = stpcpy (cp, "\0");
-
-      len = cp - __nishostname;
-
-      /* Hostname already fully qualified? */
-      if (__nishostname[len - 1] == '.')
-	return __nishostname;
-
-      if (strlen (__nishostname + strlen (nis_local_directory ()) + 1) >
-	  NIS_MAXNAMELEN)
+	__nishostname[0] = '\0';
+      else
 	{
-	  __nishostname[0] = '\0';
-	  return __nishostname;
-	}
+	  char *cp;
+	  len = strlen(__nishostname);
 
-      *cp++ = '.';
-      stpcpy (cp, nis_local_directory ());
+	  /* Hostname already fully qualified? */
+	  if (__nishostname[len - 1] == '.')
+	    return __nishostname;
+
+	  if ((strlen (__nishostname) + strlen (nis_local_directory ()) + 1) >
+	      NIS_MAXNAMELEN)
+	    {
+	      __nishostname[0] = '\0';
+	      return __nishostname;
+	    }
+
+	  cp = &__nishostname[len];
+	  *cp++ = '.';
+	  strncpy (cp, nis_local_directory (), NIS_MAXNAMELEN - len -1);
+	  __nishostname[NIS_MAXNAMELEN] = '\0';
+	}
     }
 
   return __nishostname;

@@ -1,2 +1,3 @@
-#define FUNC __ieee754_atan2l
-#include <e_fmodl.c>
+#define SUFF l
+#define float_type long double
+#include <e_atan2.c>

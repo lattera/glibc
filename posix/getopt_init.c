@@ -29,8 +29,8 @@
 
 #include "../stdio-common/_itoa.h"
 
-/* External variable to synchronize work.  */
-extern char *__getopt_nonoption_flags;
+/* Variable to synchronize work.  */
+char *__getopt_nonoption_flags;
 
 extern pid_t __libc_pid;
 

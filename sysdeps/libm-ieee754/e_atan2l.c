@@ -126,7 +126,7 @@ pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 	    case 1: {
 	    	      u_int32_t sz;
 		      GET_LDOUBLE_EXP(sz,z);
-		      SET_LDOUBLE_EXP(z,sy ^ 0x8000);
+		      SET_LDOUBLE_EXP(z,sz ^ 0x8000);
 		    }
 		    return       z  ;	/* atan(-,+) */
 	    case 2: return  pi-(z-pi_lo);/* atan(+,-) */

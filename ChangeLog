@@ -1,3 +1,190 @@
+1997-03-25 02:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* gmon/gmon.c: Optimize a bit by using more sets of records to
+	write in a single writev call.
+
+	* math/math.h: Add definitions of macros __MATHCALLX and __MATHDECLX.
+	* math/mathcalls.h: Use __MATHCALLX for fabs, infnan, copysign,
+	nan, isnan, nextafter, trunc, __fpclassify and signbit to mark as
+	`const'.
+	Use __MATHDECLX for isinf and finite.
+
+	* sysdeps/generic/setenv.c [_LIBC]: Define __clearenv and make
+	clearenv a weak alias.
+
+	Implement complex exponential function.
+	* sysdeps/libm-ieee754/s_cexp.c: New file.
+	* sysdeps/libm-ieee754/s_cexpf.c: New file.
+	* sysdeps/libm-ieee754/s_cexpl.c: New file.
+
+	* sysdeps/libm-ieee754/s_nan.c: Define function as __nan and make
+	nan a weak alias.
+	* sysdeps/libm-ieee754/s_nanf.c: Likewise for nanf.
+	* sysdeps/libm-ieee754/s_nanl.c: Likewise for nanl.
+
+	* sysdeps/unix/sysv/linux/iovec.h: Don't use kernel header because
+	of type clashes.  Add all definitions here.
+
+	* sysdeps/unix/sysv/linux/shmat.c: Likewise.  Correct types according
+	to XPG4.2.
+	* sysdeps/unix/sysv/linux/shmdt.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+
+	* sysvipc/sys/shm.h (shmat, shmdt): Correct types.
+
+	* sysdeps/unix/sysv/linux/sys/kd.h: Define _LINUX_TYPES_H to avoid
+	use of kernel types.
+
+1997-03-25 00:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h (struct ip_timestamp):
+	Correct typos.  Reported by a sun <asun@zoology.washington.edu>.
+
+1997-03-20 21:58  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_asinhl.c: Fix sign of result.
+
+1997-03-20 16:20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/e_atan2l.c: Fix typo.
+
+1997-03-20 14:23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h (__logb, logb): Don't define.
+	* sysdeps/m68k/fpu/s_logb.c: Removed.
+	* sysdeps/m68k/fpu/s_logbf.c: Removed.
+	* sysdeps/m68k/fpu/s_logbl.c: Removed.
+
+	* sysdeps/m68k/fpu/__math.h (__ieee754_atan2, __ieee754_pow):
+	Don't define here.
+	* sysdeps/m68k/fpu/e_atan2.c: Rewritten.
+	* sysdeps/m68k/fpu/e_pow.c: Likewise.
+	* sysdeps/m68k/fpu/e_atan2f.c: Based on e_atan2.c.
+	* sysdeps/m68k/fpu/e_atan2l.c: Likewise.
+	* sysdeps/m68k/fpu/e_powf.c: Based on e_pow.c.
+	* sysdeps/m68k/fpu/e_powl.c: Likewise.
+
+	* sysdeps/m68k/fpu/s_log2.c: New file.
+	* sysdeps/m68k/fpu/s_log2f.c: New file.
+	* sysdeps/m68k/fpu/s_log2l.c: New file.
+	* sysdeps/m68k/fpu/s_exp2.c: New file.
+	* sysdeps/m68k/fpu/s_exp2f.c: New file.
+	* sysdeps/m68k/fpu/s_exp2l.c: New file.
+
+1997-03-20 14:46  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (all): Make sure this is always the default goal.
+
+1997-03-20 11:09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c: Increase epsilon in many places.  Fix many
+	typos.  Allow optinal argument also for short option.
+
+1997-03-20 11:09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/Makefile ($(objpfx)$(tests)): Link against libm.
+
+1997-03-24 23:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_fpclassifyl.c: Correct recognition of
+	denormalized numbers.
+
+	* sysdeps/i386/huge_val.h: Remove references to byte order macros.
+	Don't include <endian.h>.
+
+1997-03-19 15:18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+	* sysdeps/m68k/huge_val.h: Remove references to byte order macros.
+	Don't include <endian.h>.
+
+1997-03-24 23:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rcmd.c (iruserok): Use access instead of euidaccess.
+
+1997-03-15 18:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/cmathcalls.h: Remove whitespace before function name in use
+	of __MATHDECL macro, to make it compilable with a traditional
+	preprocessor.
+
+1997-03-24 15:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Use AC_PROG_CC instead of AC_PROG_TOOL to find
+	compiler.
+
+1997-03-24 02:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_finitel.c (__finitel): Shift return value
+	by 31 positions to get 0/1 result.
+	Patch by Joe Keane <jgk@jgk.org>.
+
+1997-03-23 12:15  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* posix/getopt.c (__getopt_nonoption_flags): Make it extern
+	to prevent from ld linking in getopt.o even if there is another
+	incompatible one.
+
+	* posix/getopt_init.c (__getopt_nonoption_flags): Remove extern.
+
+1997-03-23 23:30   Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_call.c (__do_niscall): Print message if cold start file
+	does not exist.
+	* nis/nis_file.c: Don't print error messages.
+	* nis/nis_local_name.c (nis_local_host): Fix pointer errors.
+	* nis/rpcsvc/ypclnt.h: Fix copyright and prototypes.
+	* nis/rpcsvc/nis.h: Likewise.
+	* nis/ypclnt.c: Fix prototypes.
+
+1997-03-24 01:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_scalb.S: Pop additional result before
+	returning.
+	* sysdeps/libm-i387/e_scalbf.S: Likewise.
+	* sysdeps/libm-i387/e_scalbl.S: Likewise.
+	Reported by Andreas Jaeger <aj@arthur.pfalz.de>.
+
+	* elf/rtld.c (dl_main): Set main_map->l_opencount to 1 also if
+	dynamic linker was called implicitly by the kernel.
+	Reported by Eric Youngdale <eric@andante.jic.com>.
+
+	* math/Makefile (CFLAGS-test-float.c, CFLAGS-test-double.c,
+	CFLAGS-test-longdouble.c): New variables.  Set to -fno-inline to
+	prevent clever optimizations which corrupt the tests.
+
+1997-03-23 21:33  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* math/libm-test.c (scalb_test): New function.
+	(sqrt_test): New function.
+	(scalbn_test): New function.
+	(ilogb_test): New function.
+	(main): Added calls for new test functions.
+	(ldexp_test): Add another test for ldexp(x,0).
+
+1997-03-23 12:35  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* math/libm-test.c (remquo_test): Correct messages so that they
+	match the tests.
+	(copysign_test): Likewise.
+
+1997-03-23 16:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/Makefile (routines): Add printf_size.
+
+	* stdio-common/printf.h: Add declarations for printf_size and
+	printf_size_info.
+
+	* stdio-common/printf-parse.h (__printf_arginfo_table): Correct
+	declaration.
+	(parse_one_spec): Test whether __printf_function_table is not NULL
+	before using registered handlers and don't test
+	__printf_arginfo_table.  Update nargs also when handler is
+	registered.
+
+	* stdio-common/vfprintf.c (vfprintf): Count number of specifiers
+	processed in fast loop.
+
+	* stdio-common/printf_size: New file.
+
 1997-03-23 02:11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/sys/time.h: Make values ITIMER_* also available as macros.
@@ -43,7 +230,7 @@
 	New functions.  Test these functions.
 	(main): Call above new functions.
 
-1997-03-22 04:53  Ulrich Drepper  <drepper@cygnus.com>
+1997-03-22 04:53  Ulgmon_out_readrich Drepper  <drepper@cygnus.com>
 
 	* Net release 2.0.2.
 

@@ -1,23 +1,22 @@
-/*
-** Copyright (c) 1996 Thorsten Kukuk, Germany
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Library General Public
-** License as published by the Free Software Foundation; either
-** version 2 of the License, or (at your option) any later version.
-** 
-** This library is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-** Library General Public License for more details.
-** 
-** You should have received a copy of the GNU Library General Public
-** License along with this library; if not, write to the Free
-** Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-**
-** Author: Thorsten Kukuk <kukuk@vt.uni-paderborn.de>
-**
-*/
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
 
 #ifndef	__RPCSVC_YPCLNT_H__
 #define	__RPCSVC_YPCLNT_H__
@@ -52,24 +51,26 @@
 __BEGIN_DECLS
 
 /* struct ypall_callback * is the arg which must be passed to yp_all */
-struct ypall_callback {
-	int (*foreach)();
-	char *data;
-};
+struct ypall_callback
+  {
+    int (*foreach) __P ((int __status, char *__key, int __keylen,
+			 char *__val, int __vallen, char *__data));
+    char *data;
+  };
 
 /* External NIS client function references. */
 extern int yp_bind __P ((__const char *));
 extern void yp_unbind __P ((__const char *));
 extern int yp_get_default_domain __P ((char **));
-extern int yp_match __P ((__const char *, __const char *, __const char *, 
+extern int yp_match __P ((__const char *, __const char *, __const char *,
 			  __const int, char **, int *));
-extern int yp_first __P ((__const char *, __const char *, char **, 
+extern int yp_first __P ((__const char *, __const char *, char **,
 			  int *, char **, int *));
-extern int yp_next __P ((__const char *, __const char *, __const char *, 
+extern int yp_next __P ((__const char *, __const char *, __const char *,
 			 __const int, char **, int *, char **, int *));
 extern int yp_master __P ((__const char *, __const char *, char **));
 extern int yp_order __P ((__const char *, __const char *, unsigned int *));
-extern int yp_all __P ((__const char *, __const char *, 
+extern int yp_all __P ((__const char *, __const char *,
 			__const struct ypall_callback *));
 extern __const char *yperr_string __P ((__const int));
 extern __const char *ypbinderr_string __P ((__const int));
@@ -81,7 +82,7 @@ extern int yp_maplist __P ((__const char *, struct ypmaplist **));
 #endif
 
 /* Exist only under BSD and Linux systems */
-extern int __yp_check __P ((char **)); 
+extern int __yp_check __P ((char **));
 
 __END_DECLS
 

@@ -35,6 +35,6 @@ static char rcsid[] = "$NetBSD: $";
 {
 	int32_t exp;
 	GET_LDOUBLE_EXP(exp,x);
-	return (int)((u_int32_t)((exp&0x7fff)-0x7fff)>>15);
+	return (int)((u_int32_t)((exp&0x7fff)-0x7fff)>>31);
 }
 weak_alias (__finitel, finitel)

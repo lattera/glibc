@@ -12,5 +12,6 @@ ENTRY(__ieee754_scalbf)
 	flds	8(%esp)
 	flds	4(%esp)
 	fscale
+	fstp	%st(1)
 	ret
 END(__ieee754_scalbf)

@@ -31,7 +31,7 @@
 
 
 long double
-nanl (const char *tagp)
+__nanl (const char *tagp)
 {
 #ifdef HANDLE_TAGP
   /* If we ever should have use of the TAGP parameter we will use the
@@ -46,3 +46,4 @@ nanl (const char *tagp)
   return nan_value.d;
 #endif
 }
+weak_alias (__nanl, nanl)

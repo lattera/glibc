@@ -1,2 +1,3 @@
-#define FUNC __ieee754_powf
-#include <e_fmodf.c>
+#define SUFF f
+#define float_type float
+#include <e_pow.c>

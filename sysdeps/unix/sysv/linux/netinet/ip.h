@@ -163,11 +163,11 @@ struct ip_timestamp
     u_int8_t ipt_len;			/* size of structure (variable) */
     u_int8_t ipt_ptr;			/* index of current entry */
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-    u_int8_t ipt_flg:4,			/* flags, see below */
+    u_int8_t ipt_flg:4;			/* flags, see below */
     u_int8_t ipt_oflw:4;		/* overflow counter */
 #endif
 #if __BYTE_ORDER == __BIG_ENDIAN
-    u_int8_t ipt_oflw:4,		/* overflow counter */
+    u_int8_t ipt_oflw:4;		/* overflow counter */
     u_int8_t ipt_flg:4;			/* flags, see below */
 #endif
     u_int32_t data[9];

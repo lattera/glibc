@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,6 +120,21 @@ enum
 #define	PA_FLAG_LONG		(1 << 9)
 #define	PA_FLAG_SHORT		(1 << 10)
 #define	PA_FLAG_PTR		(1 << 11)
+
+
+
+/* Function which can be registered as `printf'-handlers.  */
+
+/* Print floating point value using using abbreviations for the orders
+   of magnitude used for numbers ('k' for kilo, 'm' for mega etc).  If
+   the format specifier is a uppercase character powers of 1000 are
+   used.  Otherwise powers of 1024.  */
+extern int printf_size __P ((FILE *__fp, __const struct printf_info *__info,
+			     __const void *__const *args));
+
+/* This is the appropriate argument information function for `printf_size'.  */
+extern int printf_size_info __P ((__const struct printf_info *__info,
+				  size_t __n, int *__argtypes));
 
 
 __END_DECLS

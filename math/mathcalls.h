@@ -147,7 +147,7 @@ __MATHCALL (cbrt,, (_Mdouble_ __x));
 __MATHCALL (ceil,, (_Mdouble_ __x));
 
 /* Absolute value of X.  */
-__MATHCALL (fabs,, (_Mdouble_ __x));
+__MATHCALLX (fabs,, (_Mdouble_ __x), (__const__));
 
 /* Largest integer not greater than X.  */
 __MATHCALL (floor,, (_Mdouble_ __x));
@@ -159,10 +159,10 @@ __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
 #ifdef __USE_MISC
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
-__MATHDECL (int,isinf,, (_Mdouble_ __value));
+__MATHDECLX (int,isinf,, (_Mdouble_ __value), (__const__));
 
 /* Return nonzero if VALUE is finite and not NaN.  */
-__MATHDECL (int,finite,, (_Mdouble_ __value));
+__MATHDECLX (int,finite,, (_Mdouble_ __value), (__const__));
 
 /* Deal with an infinite or NaN result.
    If ERROR is ERANGE, result is +Inf;
@@ -170,7 +170,7 @@ __MATHDECL (int,finite,, (_Mdouble_ __value));
    otherwise result is NaN.
    This will set `errno' to either ERANGE or EDOM,
    and may return an infinity or NaN, or may do something else.  */
-__MATHCALL (infnan,, (int __error));
+__MATHCALLX (infnan,, (int __error), (__const__));
 
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
@@ -185,18 +185,18 @@ __MATHCALL (significand,, (_Mdouble_ __x));
 
 #if defined __USE_MISC || defined __USE_ISOC9X
 /* Return X with its signed changed to Y's.  */
-__MATHCALL (copysign,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALLX (copysign,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 #endif
 
 #ifdef __USE_ISOC9X
 /* Return representation of NaN for double type.  */
-__MATHCALL (nan,, (__const char *__tagb));
+__MATHCALLX (nan,, (__const char *__tagb), (__const__));
 #endif
 
 
 #if defined __USE_MISC || defined __USE_XOPEN
 /* Return nonzero if VALUE is not a number.  */
-__MATHDECL (int,isnan,, (_Mdouble_ __value));
+__MATHDECLX (int,isnan,, (_Mdouble_ __value), (__const__));
 
 /* Return the binary exponent of X, which must be nonzero.  */
 __MATHDECL (int,ilogb,, (_Mdouble_ __x));
@@ -235,7 +235,7 @@ __MATHCALL (lgamma,_r, (_Mdouble_, int *));
 __MATHCALL (rint,, (_Mdouble_ __x));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
-__MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
@@ -257,7 +257,7 @@ __MATHCALL (round,, (_Mdouble_ __x));
 
 /* Round X to the integral value in floating-point format nearest but
    not larger in magnitude.  */
-__MATHCALL (trunc,, (_Mdouble_ __x));
+__MATHCALLX (trunc,, (_Mdouble_ __x), (__const__));
 
 /* Compute remainder of X and Y and put in *QUO a value with sign of x/y
    and magnitude congruent `mod 2^n' to the magnitude of the integral
@@ -276,8 +276,10 @@ __MATHCALL (fmin,, (_Mdouble_ __x, _Mdouble_ __y));
 
 
 /* Classify given number.  */
-__MATHDECL_1 (int, __fpclassify,, (_Mdouble_ __value));
+__MATHDECL_1 (int, __fpclassify,, (_Mdouble_ __value))
+     __attribute__ ((__const__));
 
 /* Test for negative number.  */
-__MATHDECL_1 (int, __signbit,, (_Mdouble_ __value));
+__MATHDECL_1 (int, __signbit,, (_Mdouble_ __value))
+     __attribute__ ((__const__));
 #endif /* Use ISO C 9X.  */

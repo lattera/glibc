@@ -2,6 +2,7 @@
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Fixed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -26,19 +27,18 @@
 int
 __fpclassifyl (long double x)
 {
-  u_int32_t ex, hx, lx;
+  u_int32_t ex, hx, lx, m;
   int retval = FP_NORMAL;
 
   GET_LDOUBLE_WORDS (ex, hx, lx, x);
-  hx &= 0x7fffffff;
-  hx |= lx;
+  m = (hx & 0x7fffffff) | lx;
   ex &= 0x7fff;
-  if ((ex | hx) == 0)
+  if ((ex | m) == 0)
     retval = FP_ZERO;
-  else if (ex == 0)
+  else if (ex == 0 && (hx & 0x80000000) == 0)
     retval = FP_SUBNORMAL;
   else if (ex == 0x7fff)
-    retval = hx != 0 ? FP_NAN : FP_INFINITE;
+    retval = m != 0 ? FP_NAN : FP_INFINITE;
 
   return retval;
 }

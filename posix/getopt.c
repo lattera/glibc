@@ -253,7 +253,9 @@ static int last_nonopt;
 /* Bash 2.0 gives us an environment variable containing flags
    indicating ARGV elements that should not be considered arguments.  */
 
-char *__getopt_nonoption_flags;
+/* Defined in getopt_init.c  */
+extern char *__getopt_nonoption_flags;
+
 static int nonoption_flags_max_len;
 static int nonoption_flags_len;
 

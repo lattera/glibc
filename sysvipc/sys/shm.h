@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -38,7 +38,7 @@
 __BEGIN_DECLS
 
 /* The following System V style IPC functions implement a shared memory
-   facility.  The definition is found in XPG2.  */
+   facility.  The definition is found in XPG4.2.  */
 
 /* Shared memory control operation.  */
 extern int shmctl __P ((int __shmid, int __cmd, struct shmid_ds *__buf));
@@ -47,10 +47,10 @@ extern int shmctl __P ((int __shmid, int __cmd, struct shmid_ds *__buf));
 extern int shmget __P ((key_t __key, int __size, int __shmflg));
 
 /* Attach shared memory segment.  */
-extern char *shmat __P ((int __shmid, char *__shmaddr, int __shmflg));
+extern void *shmat __P ((int __shmid, __const void *__shmaddr, int __shmflg));
 
 /* Detach shared memory segment.  */
-extern int shmdt __P ((char *__shmaddr));
+extern int shmdt __P ((__const void *__shmaddr));
 
 __END_DECLS
 

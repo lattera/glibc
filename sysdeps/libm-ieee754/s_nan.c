@@ -31,7 +31,7 @@
 
 
 double
-nan (const char *tagp)
+__nan (const char *tagp)
 {
 #ifdef HANDLE_TAGP
   /* If we ever should have use of the TAGP parameter we will use the
@@ -45,3 +45,4 @@ nan (const char *tagp)
   return nan_value.d;
 #endif
 }
+weak_alias (__nan, nan)

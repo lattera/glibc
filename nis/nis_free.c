@@ -69,7 +69,7 @@ nis_free_request (ib_request *ibreq)
 void
 nis_free_endpoints (endpoint *ep, unsigned int len)
 {
-  int i;
+  unsigned int i;
 
   if (ep == NULL)
     return;
@@ -97,7 +97,7 @@ nis_free_endpoints (endpoint *ep, unsigned int len)
 void
 nis_free_servers (nis_server *obj, unsigned int len)
 {
-  int i;
+  unsigned int i;
 
   if (obj == NULL)
     return;

@@ -1117,7 +1117,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       is_long = sizeof (size_t) > sizeof (unsigned int);
       JUMP (*++f, step4_jumps);
 
-
       /* Process current format.  */
       while (1)
 	{
@@ -1135,6 +1134,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	     one.  */
 	  goto do_positional;
 	}
+
+      /* The format is correctly handled.  */
+      ++nspecs_done;
 
       /* Look for next format specifier.  */
       f = find_spec ((end_of_spec = ++f), &mbstate);

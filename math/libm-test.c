@@ -40,10 +40,11 @@
 
 /* This program isn't finished yet.
    It has tests for acos, acosh, asin, asinh, atan, atan2, atanh,
-   cbrt, ceil, cos, cosh, exp, exp2, expm1, fabs, floor, fpclassify,
-   frexp, hypot, ldexp,
-   log, log10, log1p, log2, logb, modf,
-   pow, sin, sinh, tan, tanh.
+   cbrt, ceil, copysign, cos, cosh, exp, exp2, expm1,
+   fabs, fdim, floor, fmin, fmax, fpclassify,
+   frexp, hypot, ilogb, ldexp,
+   log, log10, log1p, log2, logb, modf, nextafter,
+   pow, scalb, scalbn, sin, sinh, sqrt, tan, tanh, trunc.
    Tests for the other libm-functions will come later.
 
    The routines using random variables are still under construction. I don't
@@ -70,6 +71,7 @@
 # define _GNU_SOURCE
 #endif
 
+#include <complex.h>
 #include <math.h>
 #include <float.h>
 
@@ -612,8 +614,8 @@ cos_test (void)
 		   INVALID_EXCEPTION);
 
   check_eps ("cos (pi/3) == 0.5", FUNC(cos) (M_PI / 3.0),
-	     0.5, CHOOSE (0, 1e-15L, 1e-7L));
-  check_eps ("cos (pi/2) == 0.5", FUNC(cos) (M_PI_2),
+	     0.5, CHOOSE (4e-18L, 1e-15L, 1e-7L));
+  check_eps ("cos (pi/2) == 0", FUNC(cos) (M_PI_2),
 	     0, CHOOSE (1e-19L, 1e-16L, 1e-7L));
 
 }
@@ -638,7 +640,7 @@ exp_test (void)
   check_isinfp ("exp (+inf) == +inf", FUNC(exp) (plus_infty));
   check ("exp (-inf) == 0", FUNC(exp) (minus_infty), 0);
 
-  check ("exp (1) == e", FUNC(exp) (1), M_E);
+  check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 0, 0));
 }
 
 
@@ -665,7 +667,8 @@ expm1_test (void)
   check_isinfp ("expm1 (+inf) == +inf", FUNC(expm1) (plus_infty));
   check ("expm1 (-inf) == -1", FUNC(expm1) (minus_infty), -1);
 
-  check ("expm1 (1) == e-1", FUNC(expm1) (1), M_E - 1.0);
+  check_eps ("expm1 (1) == e-1", FUNC(expm1) (1), M_E - 1.0,
+	     CHOOSE (4e-18L, 0, 0));
 }
 
 
@@ -776,8 +779,35 @@ fpclassify_test (void)
 
 
 static void
+ilogb_test (void)
+{
+
+  /* XXX Are these tests correct? I couldn't find any specification */
+#if 0
+  /* the source suggests that the following calls should fail -
+     but shall we test these special cases or just ignore them? */
+  check_isinfp ("ilogb (+inf) == +inf", FUNC(ilogb) (plus_infty));
+  check_isinfp ("ilogb (-inf) == +inf", FUNC(ilogb) (minus_infty));
+
+  check_isinfn_exc ("ilogb (+0) == -inf plus divide-by-zero exception",
+		    FUNC(ilogb) (0), DIVIDE_BY_ZERO_EXCEPTION);
+
+  check_isinfn_exc ("ilogb (-0) == -inf plus divide-by-zero exception",
+		    FUNC(ilogb) (minus_zero), DIVIDE_BY_ZERO_EXCEPTION);
+#endif
+  check ("ilogb (1) == 0", FUNC(ilogb) (1), 0);
+  check ("ilogb (e) == 1", FUNC(ilogb) (M_E), 1);
+  check ("ilogb (1024) == 10", FUNC(ilogb) (1024), 10);
+  check ("ilogb (-2000) == 10", FUNC(ilogb) (-2000), 10);
+
+}
+
+
+static void
 ldexp_test (void)
 {
+  MATHTYPE x;
+
   check ("ldexp (0, 0) == 0", FUNC(ldexp) (0, 0), 0);
 
   check_isinfp ("ldexp (+inf, 1) == +inf", FUNC(ldexp) (plus_infty, 1));
@@ -786,6 +816,10 @@ ldexp_test (void)
 
   check ("ldexp (0.8, 4) == 12.8", FUNC(ldexp) (0.8L, 4), 12.8L);
   check ("ldexp (-0.854375, 5) == -27.34", FUNC(ldexp) (-0.854375L, 5), -27.34L);
+
+  x = random_greater (0.0);
+  check_ext ("ldexp (x, 0) == x", FUNC(ldexp) (x, 0L), x, x);
+
 }
 
 
@@ -803,10 +837,12 @@ log_test (void)
 		   FUNC(log) (-1), INVALID_EXCEPTION);
   check_isinfp ("log (+inf) == +inf", FUNC(log) (plus_infty));
 
-  check_eps ("log (e) == 1", FUNC(log) (M_E), 1, CHOOSE (0, 0, 9e-8L));
-  check ("log (1/e) == -1", FUNC(log) (1.0 / M_E), -1);
+  check_eps ("log (e) == 1", FUNC(log) (M_E), 1, CHOOSE (1e-18L, 0, 9e-8L));
+  check_eps ("log (1/e) == -1", FUNC(log) (1.0 / M_E), -1,
+	     CHOOSE (2e-18L, 0, 0));
   check ("log (2) == M_LN2", FUNC(log) (2), M_LN2);
-  check ("log (10) == M_LN10", FUNC(log) (10), M_LN10);
+  check_eps ("log (10) == M_LN10", FUNC(log) (10), M_LN10,
+	     CHOOSE (1e-18L, 0, 0));
 }
 
 
@@ -825,12 +861,15 @@ log10_test (void)
 
   check_isinfp ("log10 (+inf) == +inf", FUNC(log10) (plus_infty));
 
-  check ("log10 (0.1) == -1", FUNC(log10) (0.1L), -1);
-  check ("log10 (10) == 1", FUNC(log10) (10.0), 1);
-  check ("log10 (100) == 2", FUNC(log10) (100.0), 2);
+  check_eps ("log10 (0.1) == -1", FUNC(log10) (0.1L), -1,
+	     CHOOSE (1e-18L, 0, 0));
+  check_eps ("log10 (10) == 1", FUNC(log10) (10.0), 1,
+	     CHOOSE (1e-18L, 0, 0));
+  check_eps ("log10 (100) == 2", FUNC(log10) (100.0), 2,
+	     CHOOSE (1e-18L, 0, 0));
   check ("log10 (10000) == 4", FUNC(log10) (10000.0), 4);
   check_eps ("log10 (e) == M_LOG10E", FUNC(log10) (M_E), M_LOG10E,
-	     CHOOSE (9e-20, 0, 9e-8));
+	     CHOOSE (1e-18, 0, 9e-8));
 }
 
 
@@ -847,7 +886,8 @@ log1p_test (void)
 
   check_isinfp ("log1p (+inf) == +inf", FUNC(log1p) (plus_infty));
 
-  check ("log1p (e-1) == 1", FUNC(log1p) (M_E - 1.0), 1);
+  check_eps ("log1p (e-1) == 1", FUNC(log1p) (M_E - 1.0), 1,
+	     CHOOSE (1e-18L, 0, 0));
 
 }
 
@@ -934,6 +974,44 @@ modf_test (void)
 
 
 static void
+scalb_test (void)
+{
+  MATHTYPE x;
+
+  check ("scalb (0, 0) == 0", FUNC(scalb) (0, 0), 0);
+
+  check_isinfp ("scalb (+inf, 1) == +inf", FUNC(scalb) (plus_infty, 1));
+  check_isinfn ("scalb (-inf, 1) == -inf", FUNC(scalb) (minus_infty, 1));
+  check_isnan ("scalb (NaN, 1) == NaN", FUNC(scalb) (nan_value, 1));
+
+  check ("scalb (0.8, 4) == 12.8", FUNC(scalb) (0.8L, 4), 12.8L);
+  check ("scalb (-0.854375, 5) == -27.34", FUNC(scalb) (-0.854375L, 5), -27.34L);
+
+  x = random_greater (0.0);
+  check_ext ("scalb (x, 0) == x", FUNC(scalb) (x, 0L), x, x);
+}
+
+
+static void
+scalbn_test (void)
+{
+  MATHTYPE x;
+
+  check ("scalbn (0, 0) == 0", FUNC(scalbn) (0, 0), 0);
+
+  check_isinfp ("scalbn (+inf, 1) == +inf", FUNC(scalbn) (plus_infty, 1));
+  check_isinfn ("scalbn (-inf, 1) == -inf", FUNC(scalbn) (minus_infty, 1));
+  check_isnan ("scalbn (NaN, 1) == NaN", FUNC(scalbn) (nan_value, 1));
+
+  check ("scalbn (0.8, 4) == 12.8", FUNC(scalbn) (0.8L, 4), 12.8L);
+  check ("scalbn (-0.854375, 5) == -27.34", FUNC(scalbn) (-0.854375L, 5), -27.34L);
+
+  x = random_greater (0.0);
+  check_ext ("scalbn (x, 0) == x", FUNC(scalbn) (x, 0L), x, x);
+}
+
+
+static void
 sin_test (void)
 {
   check ("sin (+0) == +0", FUNC(sin) (0), 0);
@@ -945,7 +1023,8 @@ sin_test (void)
 		   FUNC(sin) (minus_infty),
 		   INVALID_EXCEPTION);
 
-  check ("sin (pi/6) == 0.5", FUNC(sin) (M_PI / 6.0), 0.5);
+  check_eps ("sin (pi/6) == 0.5", FUNC(sin) (M_PI / 6.0), 0.5,
+	     CHOOSE (4e-18L, 0, 0));
   check ("sin (pi/2) == 1", FUNC(sin) (M_PI_2), 1);
 }
 
@@ -964,14 +1043,15 @@ sinh_test (void)
 static void
 tan_test (void)
 {
-  check ("tan (+0) == -0", FUNC(tan) (0), 0);
+  check ("tan (+0) == +0", FUNC(tan) (0), 0);
   check ("tan (-0) == -0", FUNC(tan) (minus_zero), minus_zero);
   check_isnan_exc ("tan (+inf) == NaN plus invalid exception",
 		   FUNC(tan) (plus_infty), INVALID_EXCEPTION);
   check_isnan_exc ("tan (-inf) == NaN plus invalid exception",
 		   FUNC(tan) (minus_infty), INVALID_EXCEPTION);
 
-  check_eps ("tan (pi/4) == 1", FUNC(tan) (M_PI_4), 1, CHOOSE (0, 1e-15L, 0));
+  check_eps ("tan (pi/4) == 1", FUNC(tan) (M_PI_4), 1,
+	     CHOOSE (2e-18L, 1e-15L, 0));
 }
 
 
@@ -1067,15 +1147,15 @@ pow_test (void)
   check ("pow (-0.9, +inf) == +0", FUNC(pow) (-0.9L, plus_infty), 0);
   check ("pow (-1e-7, +inf) == +0", FUNC(pow) (-1e-7L, plus_infty), 0);
 
-  check ("pow (+1.1, -inf) == +inf", FUNC(pow) (1.1, minus_infty), 0);
-  check ("pow (+inf, -inf) == +inf", FUNC(pow) (plus_infty, minus_infty), 0);
-  check ("pow (-1.1, -inf) == +inf", FUNC(pow) (-1.1, minus_infty), 0);
-  check ("pow (-inf, -inf) == +inf", FUNC(pow) (minus_infty, minus_infty), 0);
+  check ("pow (+1.1, -inf) == 0", FUNC(pow) (1.1, minus_infty), 0);
+  check ("pow (+inf, -inf) == 0", FUNC(pow) (plus_infty, minus_infty), 0);
+  check ("pow (-1.1, -inf) == 0", FUNC(pow) (-1.1, minus_infty), 0);
+  check ("pow (-inf, -inf) == 0", FUNC(pow) (minus_infty, minus_infty), 0);
 
-  check_isinfp ("pow (0.9, -inf) == +0", FUNC(pow) (0.9L, minus_infty));
-  check_isinfp ("pow (1e-7, -inf) == +0", FUNC(pow) (1e-7L, minus_infty));
-  check_isinfp ("pow (-0.9, -inf) == +0", FUNC(pow) (-0.9L, minus_infty));
-  check_isinfp ("pow (-1e-7, -inf) == +0", FUNC(pow) (-1e-7L, minus_infty));
+  check_isinfp ("pow (0.9, -inf) == +inf", FUNC(pow) (0.9L, minus_infty));
+  check_isinfp ("pow (1e-7, -inf) == +inf", FUNC(pow) (1e-7L, minus_infty));
+  check_isinfp ("pow (-0.9, -inf) == +inf", FUNC(pow) (-0.9L, minus_infty));
+  check_isinfp ("pow (-1e-7, -inf) == +inf", FUNC(pow) (-1e-7L, minus_infty));
 
   check_isinfp ("pow (+inf, 1e-7) == +inf", FUNC(pow) (plus_infty, 1e-7L));
   check_isinfp ("pow (+inf, 1) == +inf", FUNC(pow) (plus_infty, 1));
@@ -1121,11 +1201,11 @@ pow_test (void)
 
   check_isnan_exc ("pow (+1, +inf) == NaN", FUNC(pow) (1, plus_infty),
 		   INVALID_EXCEPTION);
-  check_isnan_exc ("pow (-1, +inf) == NaN", FUNC(pow) (1, plus_infty),
+  check_isnan_exc ("pow (-1, +inf) == NaN", FUNC(pow) (-1, plus_infty),
 		   INVALID_EXCEPTION);
-  check_isnan_exc ("pow (+1, -inf) == NaN", FUNC(pow) (1, plus_infty),
+  check_isnan_exc ("pow (+1, -inf) == NaN", FUNC(pow) (1, minus_infty),
 		   INVALID_EXCEPTION);
-  check_isnan_exc ("pow (-1, -inf) == NaN", FUNC(pow) (1, plus_infty),
+  check_isnan_exc ("pow (-1, -inf) == NaN", FUNC(pow) (-1, minus_infty),
 		   INVALID_EXCEPTION);
 
   check_isnan_exc ("pow (-0.1, 1.1) == NaN", FUNC(pow) (-0.1, 1.1),
@@ -1165,7 +1245,7 @@ pow_test (void)
   check ("pow (-0, 2) == +0", FUNC(pow) (minus_zero, 2), 0);
   check ("pow (-0, 11.1) == +0", FUNC(pow) (minus_zero, 11.1), 0);
 
-  x = random_greater (0.0);
+  x = random_greater (1.0);
   check_isinfp_ext ("pow (x, +inf) == +inf for |x| > 1",
 		    FUNC(pow) (x, plus_infty), x);
 
@@ -1173,7 +1253,7 @@ pow_test (void)
   check_ext ("pow (x, +inf) == +0 for |x| < 1",
 	     FUNC(pow) (x, plus_infty), 0.0, x);
 
-  x = random_greater (0.0);
+  x = random_greater (1.0);
   check_ext ("pow (x, -inf) == +0 for |x| > 1",
 	     FUNC(pow) (x, minus_infty), 0.0, x);
 
@@ -1202,7 +1282,7 @@ pow_test (void)
 	     FUNC(pow) (minus_infty, x), minus_zero, x);
 
   x = ((rand () % 1000000) + 1) * -2.0;	/* Get random even integer < 0 */
-  check_ext ("pow (-inf, y) == 0 for y < 0 and not an odd integer",
+  check_ext ("pow (-inf, y) == +0 for y < 0 and not an odd integer",
 	     FUNC(pow) (minus_infty, x), 0.0, x);
 
   x = (rand () % 1000000) * 2.0 + 1;	/* Get random odd integer > 0 */
@@ -1372,11 +1452,11 @@ copysign_test (void)
 	 minus_zero);
 
   /* XXX More correctly we would have to check the sign of the NaN.  */
-  check_isnan ("copysign (+NaN, 0) = +inf", FUNC(copysign) (nan_value, 0));
-  check_isnan ("copysign (+NaN, -0) = -inf", FUNC(copysign) (nan_value,
+  check_isnan ("copysign (+NaN, 0) = +NaN", FUNC(copysign) (nan_value, 0));
+  check_isnan ("copysign (+NaN, -0) = -NaN", FUNC(copysign) (nan_value,
 							     minus_zero));
-  check_isnan ("copysign (-NaN, 0) = +inf", FUNC(copysign) (-nan_value, 0));
-  check_isnan ("copysign (-NaN, -0) = -inf", FUNC(copysign) (-nan_value,
+  check_isnan ("copysign (-NaN, 0) = +NaN", FUNC(copysign) (-nan_value, 0));
+  check_isnan ("copysign (-NaN, -0) = -NaN", FUNC(copysign) (-nan_value,
 							     minus_zero));
 }
 
@@ -1415,6 +1495,23 @@ trunc_test (void)
 
 
 static void
+sqrt_test (void)
+{
+  MATHTYPE x;
+
+
+  /* XXX Tests fuer negative x are missing */
+  check ("sqrt (0) == 0", FUNC(sqrt) (0), 0);
+  check_isnan ("sqrt (NaN) == NaN", FUNC(sqrt) (nan_value));
+  check_isinfp ("sqrt (+inf) == +inf", FUNC(sqrt) (plus_infty));
+
+  x = random_value (0, 10000);
+  check_ext ("sqrt (x*x) == x", sqrt (x*x), x, x);
+  check ("sqrt (4) == 2", FUNC(sqrt) (4), 2);
+}
+
+
+static void
 remquo_test (void)
 {
   int quo;
@@ -1426,15 +1523,49 @@ remquo_test (void)
 
   result = FUNC(remquo) (-1.625, 1.0, &quo);
   check ("remquo(-1.625, 1.0, &x) == 0.375", result, 0.375);
-  check ("remquo(-1.625, 1.0, &x) puts 1 in x", quo, -1);
+  check ("remquo(-1.625, 1.0, &x) puts -1 in x", quo, -1);
 
   result = FUNC(remquo) (1.625, -1.0, &quo);
   check ("remquo(1.125, -1.0, &x) == 0.125", result, 0.125);
-  check ("remquo(1.125, -1.0, &x) puts 1 in x", quo, -1);
+  check ("remquo(1.125, -1.0, &x) puts -1 in x", quo, -1);
 
   result = FUNC(remquo) (-1.625, -1.0, &quo);
   check ("remquo(-1.125, -1.0, &x) == 0.125", result, 0.125);
   check ("remquo(-1.125, -1.0, &x) puts 1 in x", quo, 1);
+}
+
+
+static void
+cexp_test (void)
+{
+  __complex__ MATHTYPE result;
+
+  result = FUNC(cexp) (plus_zero + 1.0i * plus_zero);
+  check ("real(cexp(0 + 0i)) = 1", __real__ result, 1);
+  check ("imag(cexp(0 + 0i)) = 0", __imag__ result, 0);
+  result = FUNC(cexp) (minus_zero + 1.0i * plus_zero);
+  check ("real(cexp(-0 + 0i)) = 1", __real__ result, 1);
+  check ("imag(cexp(-0 + 0i)) = 0", __imag__ result, 0);
+  result = FUNC(cexp) (plus_zero + 1.0i * minus_zero);
+  check ("real(cexp(0 - 0i)) = 1", __real__ result, 1);
+  check ("imag(cexp(0 - 0i)) = 0", __imag__ result, 0);
+  result = FUNC(cexp) (minus_zero + 1.0i * minus_zero);
+  check ("real(cexp(-0 - 0i)) = 1", __real__ result, 1);
+  check ("imag(cexp(-0 - 0i)) = 0", __imag__ result, 0);
+
+  result = FUNC(cexp) (plus_infty + 1.0i * plus_zero);
+  check_isinfp ("real(cexp(+inf + 0i)) = +inf", __real__ result);
+  check ("imag(cexp(+inf + 0i)) = 0", __imag__ result, 0);
+  result = FUNC(cexp) (plus_infty + 1.0i * minus_zero);
+  check_isinfp ("real(cexp(+inf - 0i)) = +inf", __real__ result);
+  check ("imag(cexp(+inf - 0i)) = 0", __imag__ result, 0);
+
+  result = FUNC(cexp) (minus_infty + 1.0i * plus_zero);
+  check ("real(cexp(-inf + 0i)) = 0", __real__ result, 0);
+  check ("imag(cexp(-inf + 0i)) = 0", __imag__ result, 0);
+  result = FUNC(cexp) (minus_infty + 1.0i * minus_zero);
+  check ("real(cexp(-inf - 0i)) = 0", __real__ result, 0);
+  check ("imag(cexp(-inf - 0i)) = 0", __imag__ result, 0);
 }
 
 
@@ -1461,23 +1592,23 @@ static void
 inverse_functions (void)
 {
   inverse_func_pair_test ("asin(sin(x)) == x",
-			FUNC(sin), FUNC(asin), 1.0, CHOOSE (0, 0, 1e-7L));
+			FUNC(sin), FUNC(asin), 1.0, CHOOSE (2e-18L, 0, 1e-7L));
   inverse_func_pair_test ("sin(asin(x)) == x",
 			  FUNC(asin), FUNC(sin), 1.0, 0.0);
 
   inverse_func_pair_test ("acos(cos(x)) == x",
-		       FUNC(cos), FUNC(acos), 1.0, CHOOSE (0, 1e-15L, 0));
+		       FUNC(cos), FUNC(acos), 1.0, CHOOSE (4e-18L, 1e-15L, 0));
   inverse_func_pair_test ("cos(acos(x)) == x",
 			  FUNC(acos), FUNC(cos), 1.0, 0.0);
   inverse_func_pair_test ("atan(tan(x)) == x",
-			  FUNC(tan), FUNC(atan), 1.0, 0.0);
+			  FUNC(tan), FUNC(atan), 1.0, CHOOSE (2e-18L, 0, 0));
   inverse_func_pair_test ("tan(atan(x)) == x",
-		       FUNC(atan), FUNC(tan), 1.0, CHOOSE (0, 1e-15L, 0));
+		       FUNC(atan), FUNC(tan), 1.0, CHOOSE (2e-18L, 1e-15L, 0));
 
   inverse_func_pair_test ("asinh(sinh(x)) == x",
-		     FUNC(sinh), FUNC(asinh), 1.0, CHOOSE (1e-18L, 0, 0));
+		     FUNC(sinh), FUNC(asinh), 1.0, CHOOSE (1e-18L, 0, 1e-7));
   inverse_func_pair_test ("sinh(asinh(x)) == x",
-			  FUNC(asinh), FUNC(sinh), 1.0, 0.0);
+			  FUNC(asinh), FUNC(sinh), 1.0, CHOOSE (2e-18L, 0, 0));
 
   inverse_func_pair_test ("acosh(cosh(x)) == x",
 		FUNC(cosh), FUNC(acosh), 1.0, CHOOSE (1e-18L, 1e-15L, 0));
@@ -1485,7 +1616,7 @@ inverse_functions (void)
 			  FUNC(acosh), FUNC(cosh), 1.0, 0.0);
 
   inverse_func_pair_test ("atanh(tanh(x)) == x",
-		     FUNC(tanh), FUNC(atanh), 1.0, CHOOSE (0, 1e-15L, 0));
+		     FUNC(tanh), FUNC(atanh), 1.0, CHOOSE (1e-18L, 1e-15L, 0));
   inverse_func_pair_test ("tanh(atanh(x)) == x",
 			  FUNC(atanh), FUNC(tanh), 1.0, 0.0);
 
@@ -1556,17 +1687,17 @@ identities3_test (MATHTYPE x, MATHTYPE epsilon)
 static void
 identities (void)
 {
-  identities1_test (0.2L, CHOOSE (1e-19L, 0, 0));
-  identities1_test (0.9L, 0);
+  identities1_test (0.2L, CHOOSE (1e-18L, 0, 2e-7));
+  identities1_test (0.9L, CHOOSE (1e-18L, 0, 0));
   identities1_test (0, 0);
-  identities1_test (-1, CHOOSE (0, 0, 1e-7));
+  identities1_test (-1, CHOOSE (1e-18L, 0, 1e-7));
 
   identities2_test (0.2L, CHOOSE (0, 1e-16, 0));
   identities2_test (0.9L, CHOOSE (0, 1e-15, 0));
   identities2_test (0, 0);
   identities2_test (-1, CHOOSE (1e-18L, 1e-15, 0));
 
-  identities3_test (0.2L, CHOOSE (0, 0, 1e-7));
+  identities3_test (0.2L, CHOOSE (1e-18L, 0, 1e-7));
   identities3_test (0.9L, CHOOSE (1e-18L, 1e-15, 1e-6));
   identities3_test (0, CHOOSE (0, 0, 1e-6));
   identities3_test (-1, CHOOSE (1e-18L, 0, 1e-6));
@@ -1592,15 +1723,15 @@ basic_tests (void)
 
   this_does_nothing ();
 
-  check_isinfp ("isinf (1/0) == +1", Inf_var);
-  check_isinfn ("isinf (-1/0) == -1", -Inf_var);
+  check_isinfp ("isinf (inf) == +1", Inf_var);
+  check_isinfn ("isinf (-inf) == -1", -Inf_var);
   check_bool ("!isinf (1)", !(FUNC(isinf) (one_var)));
-  check_bool ("!isinf (0/0)", !(FUNC(isinf) (NaN_var)));
+  check_bool ("!isinf (NaN)", !(FUNC(isinf) (NaN_var)));
 
-  check_isnan ("isnan (0/0)", NaN_var);
-  check_isnan ("isnan (-(0/0))", -NaN_var);
+  check_isnan ("isnan (NaN)", NaN_var);
+  check_isnan ("isnan (-NaN)", -NaN_var);
   check_bool ("!isnan (1)", !(FUNC(isnan) (one_var)));
-  check_bool ("!isnan (0/0)", !(FUNC(isnan) (Inf_var)));
+  check_bool ("!isnan (inf)", !(FUNC(isnan) (Inf_var)));
 
   check_bool ("inf == inf", Inf_var == Inf_var);
   check_bool ("-inf == -inf", -Inf_var == -Inf_var);
@@ -1647,10 +1778,11 @@ basic_tests (void)
 static void
 initialize (void)
 {
+  fpstack_test ("*init*");
   plus_zero = 0.0;
   nan_value = plus_zero / plus_zero;	/* Suppress GCC warning */
 
-  minus_zero = copysign (0.0, -1.0);
+  minus_zero = FUNC (copysign) (0.0, -1.0);
   plus_infty = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
   minus_infty = -CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
 
@@ -1677,7 +1809,7 @@ parse_options (int argc, char *argv[])
 
   while (1)
     {
-      c = getopt_long (argc, argv, "vs",
+      c = getopt_long (argc, argv, "v::s",
 		       long_options, &option_index);
 
       /* Detect the end of the options. */
@@ -1727,6 +1859,7 @@ main (int argc, char *argv[])
 #endif
   expm1_test ();
   frexp_test ();
+  ilogb_test ();
   ldexp_test ();
   log_test ();
   log10_test ();
@@ -1736,6 +1869,8 @@ main (int argc, char *argv[])
 #endif
   logb_test ();
   modf_test ();
+  scalb_test ();
+  scalbn_test ();
   sin_test ();
   sinh_test ();
   tan_test ();
@@ -1750,11 +1885,13 @@ main (int argc, char *argv[])
   fmax_test ();
   nextafter_test ();
   copysign_test ();
+  sqrt_test ();
   trunc_test ();
 #if 0
   /* XXX I'm not sure what is the correct result.  */
   remquo_test ();
 #endif
+  cexp_test ();
 
   identities ();
   inverse_functions ();

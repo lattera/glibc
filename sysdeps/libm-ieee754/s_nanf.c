@@ -31,7 +31,7 @@
 
 
 float
-nanf (const char *tagp)
+__nanf (const char *tagp)
 {
 #ifdef HANDLE_TAGP
   /* If we ever should have use of the TAGP parameter we will use the
@@ -45,3 +45,4 @@ nanf (const char *tagp)
   return nan_value.f;
 #endif
 }
+weak_alias (__nanf, nanf)

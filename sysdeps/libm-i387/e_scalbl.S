@@ -13,5 +13,6 @@ ENTRY(__ieee754_scalbl)
 	fldt	16(%esp)
 	fldt	4(%esp)
 	fscale
+	fstp	%st(1)
 	ret
 END(__ieee754_scalbl)

@@ -23,6 +23,8 @@ ifneq (,)
 This makefile requires GNU Make.
 endif
 
+all: # Make this the default goal
+
 ifneq "$(origin +included-Makeconfig)" "file"
 
 +included-Makeconfig := yes

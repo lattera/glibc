@@ -35,17 +35,11 @@ readColdStartFile (void)
 
   in = fopen (cold_start_file, "rb");
   if (in == NULL)
-    {
-      printf (_("Error while opening %s for reading: %m"), cold_start_file);
-      return NULL;
-    }
+    return NULL;
   memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
   if (!xdr_directory_obj (&xdrs, &obj))
-    {
-      printf (_("Error while reading %s: %m"), cold_start_file);
-      return NULL;
-    }
+    return NULL;
 
   return nis_clone_directory (&obj, NULL);
 }
@@ -58,19 +52,11 @@ writeColdStartFile (const directory_obj *obj)
 
   out = fopen (cold_start_file, "wb");
   if (out == NULL)
-    {
-      printf (_("Error while opening %s for writing: %m"), cold_start_file);
-      return FALSE;
-    }
+    return FALSE;
 
   xdrstdio_create (&xdrs, out, XDR_ENCODE);
-  /* XXX The following cast is bad!  Shouldn't the XDR functions take
-     pointers to const objects?  */
   if (!xdr_directory_obj (&xdrs, (directory_obj *) obj))
-    {
-      printf (_("Error while writing %s: %m"), cold_start_file);
-      return FALSE;
-    }
+    return FALSE;
 
   return TRUE;
 }

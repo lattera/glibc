@@ -56,6 +56,12 @@ __libc_lock_define_initialized (static, envlock)
 # define UNLOCK
 #endif
 
+/* In the GNU C library we must keep the namespace clean.  */
+#ifdef _LIBC
+# define clearenv __clearenv
+#endif
+
+
 /* If this variable is not a null pointer we allocated the current
    environment.  */
 static char **last_environ;
@@ -188,3 +194,7 @@ clearenv ()
 
   return 0;
 }
+#ifdef _LIBC
+# undef clearenv
+weak_alias (__clearenv, clearenv)
+#endif

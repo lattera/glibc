@@ -123,9 +123,9 @@ __yp_bind (const char *domain, dom_binding ** ypdb)
             }
 
           if (clnt_call (client, YPBINDPROC_DOMAIN,
-                         (xdrproc_t) xdr_domainname, &domain,
+                         (xdrproc_t) xdr_domainname, (caddr_t) &domain,
                          (xdrproc_t) xdr_ypbind_resp,
-                         &ypbr, TIMEOUT) != RPC_SUCCESS)
+                         (caddr_t) &ypbr, TIMEOUT) != RPC_SUCCESS)
             {
               clnt_destroy (client);
               if (is_new)
@@ -526,7 +526,8 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
 }
 
 static void *ypall_data;
-static int (*ypall_foreach) ();
+static int (*ypall_foreach) __P ((int status, char *key, int keylen,
+				  char *val, int vallen, char *data));
 
 static bool_t
 __xdr_ypresp_all (XDR * xdrs, u_long * objp)
@@ -628,8 +629,9 @@ yp_all (const char *indomain, const char *inmap,
       ypall_foreach = incallback->foreach;
       ypall_data = (void *) incallback->data;
 
-      result = clnt_call (clnt, YPPROC_ALL, (xdrproc_t) xdr_ypreq_nokey, &req,
-			  (xdrproc_t) __xdr_ypresp_all, &status, TIMEOUT);
+      result = clnt_call (clnt, YPPROC_ALL, (xdrproc_t) xdr_ypreq_nokey,
+			  (caddr_t) &req, (xdrproc_t) __xdr_ypresp_all,
+			  (caddr_t) &status, TIMEOUT);
 
       if (result != RPC_SUCCESS)
 	{
