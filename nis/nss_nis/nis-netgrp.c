@@ -34,9 +34,9 @@
 /* Locks the static variables in this file.  */
 __libc_lock_define_initialized (static, lock)
 
-static char *data = NULL;
-static size_t data_size = 0;
-static char *cursor = NULL;;
+static char *data;
+static size_t data_size;
+static char *cursor;
 
 extern enum nss_status
 _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
