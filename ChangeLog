@@ -1,7 +1,7 @@
 2000-05-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-reloc.c (_dl_reloc_bad_type): Write type into the message
-	at proper place.
+	at proper place.  Compute the high nibble correctly.
 
 2000-05-09  Jakub Jelinek  <jakub@redhat.com>
 
