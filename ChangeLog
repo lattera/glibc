@@ -1,3 +1,8 @@
+2004-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/arena.c (arena_get2): Prevent endless loop if arenas and
+	list lock are taken.
+
 2004-12-08  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_nisplus/nisplus-netgrp.c (_nss_nisplus_getnetgrent_r):

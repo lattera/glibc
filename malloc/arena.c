@@ -782,9 +782,12 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
   }
 
   /* Check the global, circularly linked list for available arenas. */
+  bool retried = false;
  repeat:
   do {
     if(!mutex_trylock(&a->mutex)) {
+      if (retried)
+	(void)mutex_unlock(&list_lock);
       THREAD_STAT(++(a->stat_lock_loop));
       tsd_setspecific(arena_key, (Void_t *)a);
       return a;
@@ -796,29 +799,33 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
      happen during `atfork', or for example on systems where thread
      creation makes it temporarily impossible to obtain _any_
      locks. */
-  if(mutex_trylock(&list_lock)) {
+  if(!retried && mutex_trylock(&list_lock)) {
+    /* We will block to not run in a busy loop.  */
+    (void)mutex_lock(&list_lock);
+
+    /* Since we blocked there might be an arena available now.  */
+    retried = true;
     a = a_tsd;
     goto repeat;
   }
-  (void)mutex_unlock(&list_lock);
 
   /* Nothing immediately available, so generate a new arena.  */
   a = _int_new_arena(size);
-  if(!a)
-    return 0;
+  if(a)
+    {
+      tsd_setspecific(arena_key, (Void_t *)a);
+      mutex_init(&a->mutex);
+      mutex_lock(&a->mutex); /* remember result */
 
-  tsd_setspecific(arena_key, (Void_t *)a);
-  mutex_init(&a->mutex);
-  mutex_lock(&a->mutex); /* remember result */
+      /* Add the new arena to the global list.  */
+      a->next = main_arena.next;
+      atomic_write_barrier ();
+      main_arena.next = a;
 
-  /* Add the new arena to the global list.  */
-  (void)mutex_lock(&list_lock);
-  a->next = main_arena.next;
-  atomic_write_barrier ();
-  main_arena.next = a;
+      THREAD_STAT(++(a->stat_lock_loop));
+    }
   (void)mutex_unlock(&list_lock);
 
-  THREAD_STAT(++(a->stat_lock_loop));
   return a;
 }
 
