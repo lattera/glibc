@@ -561,7 +561,6 @@ internal_ucs4le_loop_single (struct __gconv_step *step,
   (*outptrp)[2] = state->__value.__wchb[1];
   (*outptrp)[3] = state->__value.__wchb[0];
 
-  *outptrp += 4;
 #else
   /* XXX unaligned */
   (*outptrp)[0] = state->__value.__wchb[0];
@@ -570,6 +569,7 @@ internal_ucs4le_loop_single (struct __gconv_step *step,
   (*outptrp)[3] = state->__value.__wchb[3];
 
 #endif
+
   *outptrp += 4;
 
   /* Clear the state buffer.  */
