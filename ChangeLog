@@ -1,3 +1,8 @@
+2000-09-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/fegetenv.c: It's __fegetenv.
+        Reported by Rob Levin <lilo@transvirtual.com>.
+
 2000-09-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/sys/time.h (gettimeofday): Move restrict for tz parameter
