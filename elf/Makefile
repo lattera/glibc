@@ -139,12 +139,7 @@ endif
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static
 ifeq (yes,$(have-initfini-array))
-tests-static += tst-array1-static 
-endif
-ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
-tests-static += tst-tls9-static
-tst-tls9-static-ENV = \
-	LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+tests-static += tst-array1-static
 endif
 tests += $(tests-static)
 endif

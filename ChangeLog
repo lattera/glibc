@@ -1,18 +1,18 @@
+2005-02-21  Alan Modra <amodra@bigpond.net.au>
+
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Assert that dtv
+	array index is within bounds.
+
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c: Do not allow PT_TLS in modules loaded in statically
+	linked code.
+	* sysdeps/generic/dl-tls.c [!SHARED]: Don't build _dl_next_tls_modid.
+	* elf/Makefile: Remove rules to build and run tst-tls9-static.
 
 	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Avoid using
 	THREAD_DTV multiple times, this minimally reduces code size on
 	some archs.
-
-2005-02-12  Simon Josefsson  <jas@extundo.com >
-
-	* iconvme.h: New file, extracted from toutf8.c but improved.
-	* iconvme.c: New file.
-	* toutf8.c: Include stringprep.h first, to make the compiler check
-	that stringprep.h is standalone.  Improve comments.  Replace
-	#include of errno.h and sys/param.h with iconvme.h.  Don't define
-	ICONV_CONST.
-	(stringprep_convert): Rewrite to use iconvme.h.
 
 2005-02-21  Jakub Jelinek  <jakub@redhat.com>
 

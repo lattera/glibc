@@ -49,7 +49,6 @@ oom (void)
 {
   _dl_fatal_printf ("cannot allocate memory for thread-local data: ABORT\n");
 }
-# endif
 
 
 
@@ -115,7 +114,6 @@ _dl_next_tls_modid (void)
   return result;
 }
 
-# ifdef SHARED
 
 void
 internal_function
