@@ -916,29 +916,27 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	      goto call_lose;
 	    }
 
-	  {
-	    struct loadcmd *c = &loadcmds[nloadcmds++];
-	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-	    c->mapend = ((ph->p_vaddr + ph->p_filesz + GL(dl_pagesize) - 1)
-			 & ~(GL(dl_pagesize) - 1));
-	    c->dataend = ph->p_vaddr + ph->p_filesz;
-	    c->allocend = ph->p_vaddr + ph->p_memsz;
-	    c->mapoff = ph->p_offset & ~(ph->p_align - 1);
+	  c = &loadcmds[nloadcmds++];
+	  c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
+	  c->mapend = ((ph->p_vaddr + ph->p_filesz + GL(dl_pagesize) - 1)
+		       & ~(GL(dl_pagesize) - 1));
+	  c->dataend = ph->p_vaddr + ph->p_filesz;
+	  c->allocend = ph->p_vaddr + ph->p_memsz;
+	  c->mapoff = ph->p_offset & ~(ph->p_align - 1);
 
-	    /* Optimize a common case.  */
+	  /* Optimize a common case.  */
 #if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
-	    c->prot = (PF_TO_PROT
-		       >> ((ph->p_flags & (PF_R | PF_W | PF_X)) * 4)) & 0xf;
+	  c->prot = (PF_TO_PROT
+		     >> ((ph->p_flags & (PF_R | PF_W | PF_X)) * 4)) & 0xf;
 #else
-	    c->prot = 0;
-	    if (ph->p_flags & PF_R)
-	      c->prot |= PROT_READ;
-	    if (ph->p_flags & PF_W)
-	      c->prot |= PROT_WRITE;
-	    if (ph->p_flags & PF_X)
-	      c->prot |= PROT_EXEC;
+	  c->prot = 0;
+	  if (ph->p_flags & PF_R)
+	    c->prot |= PROT_READ;
+	  if (ph->p_flags & PF_W)
+	    c->prot |= PROT_WRITE;
+	  if (ph->p_flags & PF_X)
+	    c->prot |= PROT_EXEC;
 #endif
-	  }
 	  break;
 
 	case PT_TLS:

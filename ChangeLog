@@ -1,15 +1,17 @@
 2002-10-11  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): Use
-	INTERNAL_SYSCALL is possible.
+	* elf/dl-load.c (_dl_map_object_from_fd): Remove unnecessarily
+	duplicated variable c.
+
+	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): Use INTERNAL_SYSCALL
+	if possible.
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h
 	(INTERNAL_SYSCALL_ERROR_P): New define.
 	(INTERNAL_SYSCALL_ERRNO): Likewise.
 
 	* sysdeps/unix/sysv/linux/i386/profil-counter.h (profil_counter):
-	Add hack to prevent the compiler from clobbering the signal
-	context.
+	Add hack to prevent the compiler from clobbering the signal context.
 
 2002-10-11  Roland McGrath  <roland@redhat.com>
 

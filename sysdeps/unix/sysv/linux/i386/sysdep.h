@@ -316,7 +316,7 @@ asm (".L__X'%ebx = 1\n\t"
     (int) resultvar; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((val) >= 0xfffff001)
+#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= 0xfffff001u)
 
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
