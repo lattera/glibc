@@ -1,5 +1,5 @@
 /* Return the offset of one string within another.
-   Copyright (C) 1994,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996-2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,13 @@
 # include <string.h>
 #endif
 
+#ifdef _LIBC
+# include <locale/localeinfo.h>
+# define TOLOWER(c) __tolower_l (c, loc)
+#else
+# define TOLOWER(c) _tolower (c)
+#endif
+
 typedef unsigned chartype;
 
 #undef strcasestr
@@ -48,11 +55,14 @@ __strcasestr (phaystack, pneedle)
 {
   register const unsigned char *haystack, *needle;
   register chartype b, c;
+#ifdef _LIBC
+  __locale_t loc = _NL_CURRENT_LOCALE;
+#endif
 
   haystack = (const unsigned char *) phaystack;
   needle = (const unsigned char *) pneedle;
 
-  b = _tolower (*needle);
+  b = TOLOWER (*needle);
   if (b != '\0')
     {
       haystack--;				/* possible ANSI violation */
@@ -62,9 +72,9 @@ __strcasestr (phaystack, pneedle)
 	  if (c == '\0')
 	    goto ret0;
 	}
-      while (_tolower (c) != (int) b);
+      while (TOLOWER (c) != (int) b);
 
-      c = _tolower (*++needle);
+      c = TOLOWER (*++needle);
       if (c == '\0')
 	goto foundneedle;
       ++needle;
@@ -80,7 +90,7 @@ __strcasestr (phaystack, pneedle)
 	      a = *++haystack;
 	      if (a == '\0')
 		goto ret0;
-	      if (_tolower (a) == (int) b)
+	      if (TOLOWER (a) == (int) b)
 		break;
 	      a = *++haystack;
 	      if (a == '\0')
@@ -88,34 +98,34 @@ __strcasestr (phaystack, pneedle)
 shloop:
 	      ;
 	    }
-          while (_tolower (a) != (int) b);
+          while (TOLOWER (a) != (int) b);
 
 jin:	  a = *++haystack;
 	  if (a == '\0')
 	    goto ret0;
 
-	  if (_tolower (a) != (int) c)
+	  if (TOLOWER (a) != (int) c)
 	    goto shloop;
 
 	  rhaystack = haystack-- + 1;
 	  rneedle = needle;
-	  a = _tolower (*rneedle);
+	  a = TOLOWER (*rneedle);
 
-	  if (_tolower (*rhaystack) == (int) a)
+	  if (TOLOWER (*rhaystack) == (int) a)
 	    do
 	      {
 		if (a == '\0')
 		  goto foundneedle;
 		++rhaystack;
-		a = _tolower (*++needle);
-		if (_tolower (*rhaystack) != (int) a)
+		a = TOLOWER (*++needle);
+		if (TOLOWER (*rhaystack) != (int) a)
 		  break;
 		if (a == '\0')
 		  goto foundneedle;
 		++rhaystack;
-		a = _tolower (*++needle);
+		a = TOLOWER (*++needle);
 	      }
-	    while (_tolower (*rhaystack) == (int) a);
+	    while (TOLOWER (*rhaystack) == (int) a);
 
 	  needle = rneedle;		/* took the register-poor approach */
 

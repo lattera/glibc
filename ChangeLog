@@ -1,3 +1,8 @@
+2004-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/strcasestr.c (__strcasestr): Optimize use of
+	tolower function.
+
 2004-03-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Add const.
