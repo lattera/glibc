@@ -1,3 +1,8 @@
+2002-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Return
+	immediately if result == NULL.
+
 2002-08-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
@@ -14,7 +19,7 @@
 
 2002-08-16  Jakub Jelinek  <jakub@redhat.com>
 
-        * locale/loadarchive.c (_nl_load_locale_from_archive): Braino fix
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Braino fix
 	in change before last: MAX -> MIN.
 
 2002-08-15  Roland McGrath  <roland@redhat.com>
