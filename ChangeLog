@@ -1,3 +1,8 @@
+2001-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Use sizeof
+	where appropriate instead of numbers.  Little optimizations.
+
 2001-12-10  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/bind.c (bind): Don't deallocate IFSOCK if we never
