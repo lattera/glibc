@@ -124,6 +124,9 @@ _IO_fwide (fp, mode)
 	cc->__cd_in.__cd.__data[0].__internal_use = 1;
 	cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_in.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
+	/* XXX For now no transliteration.  */
+	memset (&cc->__cd_in.__cd.__data[0].__trans, '\0',
+		sizeof (struct __gconv_trans_data));
 
 	cc->__cd_out.__cd.__nsteps = 1; /* Only one step allowed.  */
 	cc->__cd_out.__cd.__steps = fcts.tomb;
@@ -132,6 +135,9 @@ _IO_fwide (fp, mode)
 	cc->__cd_out.__cd.__data[0].__internal_use = 1;
 	cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
+	/* XXX For now no transliteration.  */
+	memset (&cc->__cd_out.__cd.__data[0].__trans, '\0',
+		sizeof (struct __gconv_trans_data));
       }
 #else
 # error "somehow determine this from LC_CTYPE"

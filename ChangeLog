@@ -1,5 +1,16 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/iofwide.c (_IO_fwide): Initialize transliteration part of
+	step data structure.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/sh/Dist: There is no ioperm file.
 	* sysdeps/unix/sysv/linux/sh/oldgetrlimit64.c: Removed.
 

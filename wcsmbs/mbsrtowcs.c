@@ -53,6 +53,7 @@ __mbsrtowcs (dst, src, len, ps)
   data.__internal_use = 1;
   data.__flags = __GCONV_IS_LAST;
   data.__statep = ps ?: &state;
+  memset (&data.__trans, '\0', sizeof (struct __gconv_trans_data));
 
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
