@@ -92,7 +92,12 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
   /* Note the waitid() is a cancellation point.  But since we call
      waitpid() which itself is a cancellation point we do not have
      to do anything here.  */
-  child = __waitpid (pid, &status, options);
+  child = __waitpid (pid, &status,
+		     options
+#ifdef WEXITED
+		     &~ WEXITED
+#endif
+		     );
 
   if (child == -1)
     /* `waitpid' set `errno' for us.  */
