@@ -78,3 +78,5 @@ _IO_setvbuf (fp, buf, mode, size)
     }
   return _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
 }
+
+weak_alias (_IO_setvbuf, setvbuf)
