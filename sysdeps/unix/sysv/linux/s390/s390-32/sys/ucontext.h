@@ -65,7 +65,7 @@ typedef struct
 struct ucontext
   {
     unsigned long int uc_flags;
-    struct ucontext *uc_links;
+    struct ucontext *uc_link;
     __sigset_t uc_sigmask;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
