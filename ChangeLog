@@ -1,5 +1,9 @@
 2000-04-05  Andreas Schwab  <schwab@suse.de>
 
+	* nss/Makefile ($(objpfx)makedb): Move $(libdl) after db-open.o.
+
+2000-04-05  Andreas Schwab  <schwab@suse.de>
+
 	* sysdeps/m68k/dl-machine.h (RTLD_START): Readd _dl_start_user
 	entry point, used on Hurd.
 
