@@ -62,49 +62,48 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   __self;								      \
 })
 
-#define DO_MODIFY_LDT(descr, nr) \
+
+/* Initialize the thread-unique value.  Two possible ways to do it.  */
+
+#define DO_MODIFY_LDT(descr, nr)					      \
 ({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { nr, (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
       1, 0, 0, 0, 0, 1, 0 };						      \
   if (__modify_ldt (1, &ldt_entry, sizeof (ldt_entry)) != 0)		      \
     abort ();								      \
-  nr * 8 + 7;								      \
+  asm ("movw %w0, %%gs" : : "q" (nr * 8 + 7));				      \
 })
 
-/* Initialize the thread-unique value.  */
-#ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
-#define INIT_THREAD_SELF(descr, nr) \
-{									      \
-  int __gs = INLINE_SYSCALL (set_thread_area, 2, descr, 1);		      \
-  if (__gs == -1)							      \
-    abort ();								      \
-  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (__gs));		      \
-}
-#elif defined __NR_set_thread_area
+/* When using the new set_thread_area call, we don't need to change %gs
+   because we inherited the value set up in the main thread by TLS setup.
+   We need to extract that value and set up the same segment in this
+   thread.  */
+# define DO_SET_THREAD_AREA(descr)					      \
+({									      \
+  int __gs;								      \
+  struct modify_ldt_ldt_s ldt_entry =					      \
+    { ({ asm ("movw %%gs, %w0" : "=q" (__gs)); __gs >> 2; }),		      \
+      (unsigned long int) descr, sizeof (struct _pthread_descr_struct),	      \
+      1, 0, 0, 0, 0, 1, 0 };						      \
+  __builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry) == 0, 1)  \
+  ? __gs : -1;	      							      \
+})
 
+#if defined __ASSUME_SET_THREAD_AREA_SYSCALL && defined HAVE_TLS_SUPPORT
+# define INIT_THREAD_SELF(descr, nr)	DO_SET_THREAD_AREA (descr)
+#elif defined __NR_set_thread_area && defined HAVE_TLS_SUPPORT
+# define INIT_THREAD_SELF(descr, nr)					      \
+({									      \
+  if (__builtin_expect (__have_no_set_thread_area, 0)			      \
+      || (DO_SET_THREAD_AREA (descr) == -1				      \
+	  && (__have_no_set_thread_area = 1)))				      \
+    DO_MODIFY_LDT (descr, nr);						      \
+})
 /* Defined in pspinlock.c.  */
 extern int __have_no_set_thread_area;
-
-#define INIT_THREAD_SELF(descr, nr) \
-{									      \
-  int __gs = -1;							      \
-  if (! __builtin_expect (__have_no_set_thread_area, 0))		      \
-    {									      \
-      if ((__gs = INLINE_SYSCALL (set_thread_area, 2, descr, 1)) == -1	      \
-	  && errno == ENOSYS)						      \
-	__have_no_set_thread_area = 1;					      \
-    }									      \
-  if (__builtin_expect (__gs == -1, 0))					      \
-    __gs = DO_MODIFY_LDT (descr, nr);					      \
-  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (__gs));		      \
-}
 #else
-#define INIT_THREAD_SELF(descr, nr) \
-{									      \
-  int __gs = DO_MODIFY_LDT (descr, nr);					      \
-  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (__gs));		      \
-}
+# define INIT_THREAD_SELF(descr, nr)	DO_MODIFY_LDT (descr, nr)
 #endif
 
 /* Free resources associated with thread descriptor.  */

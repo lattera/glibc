@@ -1,3 +1,17 @@
+2002-08-16  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_DO_MODIFY_LDT): Rewrite asm to use %ebx
+	optimally conditional on [__PIC__].
+	(TLS_DO_SET_THREAD_AREA): New macro, implement inline syscall
+	without touching errno, and use latest modify_ldt-like interface.
+	(TLS_SETUP_GS_SEGMENT): Use that instead of INLINE_SYSCALL.
+	* sysdeps/i386/useldt.h (DO_MODIFY_LDT): Set %gs in this macro.
+	(DO_SET_THREAD_AREA): New macro, uses current syscall interface with
+	existing %gs value as the segment to set.
+	(INIT_THREAD_SELF): Rewritten using those.  Use set_thread_area only
+	under [HAVE_TLS_SUPPORT] so we can rely on the initialization done
+	by the first thread's early TLS setup.
+
 2002-08-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/tls.h (TLS_INIT_TP): Use statement expression and

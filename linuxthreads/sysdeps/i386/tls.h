@@ -88,35 +88,59 @@ typedef struct
 #  define GET_DTV(descr) \
   (((tcbhead_t *) (descr))->dtv)
 
+#  ifdef __PIC__
+#   define TLS_EBX_ARG "r"
+#   define TLS_LOAD_EBX "xchgl %3, %%ebx\n\t"
+#  else
+#   define TLS_EBX_ARG "b"
+#   define TLS_LOAD_EBX
+#  endif
+
 #  define TLS_DO_MODIFY_LDT(descr, nr)					      \
 ({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { nr, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
       1, 0, 0, 0, 0, 1, 0 };						      \
   int result;								      \
-  asm volatile (							      \
-       "pushl %%ebx\n\t"						      \
-       "movl $1, %%ebx\n\t"						      \
-       "int $0x80\n\t"							      \
-       "popl %%ebx"							      \
-       : "=a" (result)							      \
-       : "0" (__NR_modify_ldt),						      \
-         /* The extra argument with the "m" constraint is necessary	      \
-	    to let the compiler know that we are accessing LDT_ENTRY here.  */\
-         "m" (ldt_entry), "c" (&ldt_entry), "d" (sizeof (ldt_entry)));	      \
+  asm volatile (TLS_LOAD_EBX						      \
+		"int $0x80\n\t"						      \
+		TLS_LOAD_EBX						      \
+		: "=a" (result)						      \
+		: "0" (__NR_modify_ldt),				      \
+		/* The extra argument with the "m" constraint is necessary    \
+		   to let the compiler know that we are accessing LDT_ENTRY   \
+		   here.  */						      \
+		"m" (ldt_entry), TLS_EBX_ARG (1), "c" (&ldt_entry),	      \
+		"d" (sizeof (ldt_entry)));				      \
   __builtin_expect (result, 0) != 0 ? -1 : nr * 8 + 7;			      \
 })
 
+#  define TLS_DO_SET_THREAD_AREA(descr)					      \
+({									      \
+  struct modify_ldt_ldt_s ldt_entry =					      \
+    { -1, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
+      1, 0, 0, 0, 0, 1, 0 };						      \
+  int result;								      \
+  asm volatile (TLS_LOAD_EBX						      \
+		"int $0x80\n\t"						      \
+		TLS_LOAD_EBX						      \
+		: "=a" (result), "=m" (ldt_entry.entry_number)		      \
+		: "0" (__NR_set_thread_area),				      \
+		/* The extra argument with the "m" constraint is necessary    \
+		   to let the compiler know that we are accessing LDT_ENTRY   \
+		   here.  */						      \
+		TLS_EBX_ARG (&ldt_entry), "m" (ldt_entry));		      \
+    __builtin_expect (result, 0) == 0 ? ldt_entry.entry_number : -1;	      \
+})
+
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
-#   define TLS_SETUP_GS_SEGMENT(descr) \
-  INLINE_SYSCALL (set_thread_area, 2, descr, 1)
+#   define TLS_SETUP_GS_SEGMENT(descr) TLS_DO_SET_THREAD_AREA (descr)
 #  elif defined __NR_set_thread_area
 #   define TLS_SETUP_GS_SEGMENT(descr) \
-  ({ int __seg = INLINE_SYSCALL (set_thread_area, 2, descr, 1); \
+  ({ int __seg = TLS_DO_SET_THREAD_AREA (descr); \
      __seg == -1 ? TLS_DO_MODIFY_LDT (descr, 0) : __seg; })
 #  else
-#   define TLS_SETUP_GS_SEGMENT(descr) \
-  TLS_DO_MODIFY_LDT (descr, 0)
+#   define TLS_SETUP_GS_SEGMENT(descr) TLS_DO_MODIFY_LDT ((descr), 0)
 #  endif
 
 /* Code to initially initialize the thread pointer.  This might need
