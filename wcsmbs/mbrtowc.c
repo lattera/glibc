@@ -42,7 +42,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   size_t dummy;
   const unsigned char *inbuf;
   char *outbuf = (char *) (pwc ?: buf);
-  int flush;
+  int flush = 0;
 
   /* Set information for this step.  */
   data.__invocation_counter = 0;
@@ -60,8 +60,6 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
       n = 1;
       flush = 1;
     }
-  else
-    flush = *s == '\0' ? 1 : 0;
 
   /* Tell where we want the result.  */
   data.__outbuf = outbuf;

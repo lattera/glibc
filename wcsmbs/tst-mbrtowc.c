@@ -1,0 +1,108 @@
+/* Copyright (C) 2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <locale.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <wchar.h>
+
+
+static int check_ascii (const char *locname);
+
+
+int
+main (void)
+{
+  int result = 0;
+
+  /* Check mapping of ASCII range for some character sets which have
+     ASCII as a subset.  For those the wide char generated must have
+     the same value.  */
+  setlocale (LC_ALL, "C");
+  result |= check_ascii (setlocale (LC_ALL, NULL));
+
+  setlocale (LC_ALL, "de_DE.UTF-8");
+  result |= check_ascii (setlocale (LC_ALL, NULL));
+
+  setlocale (LC_ALL, "ja_JP.EUC-JP");
+  result |= check_ascii (setlocale (LC_ALL, NULL));
+
+  return result;
+}
+
+
+static int
+check_ascii (const char *locname)
+{
+  int c;
+  int res = 0;
+
+  printf ("Testing locale \"%s\":\n", locname);
+
+  for (c = 0; c <= 127; ++c)
+    {
+      char buf[MB_CUR_MAX];
+      wchar_t wc = 0xffffffff;
+      mbstate_t s;
+      size_t n;
+      int i;
+
+      for (i = 0; i < MB_CUR_MAX; ++i)
+	buf[i] = c + i;
+
+      memset (&s, '\0', sizeof (s));
+
+      n = mbrtowc (&wc, buf, MB_CUR_MAX, &s);
+      if (n == (size_t) -1)
+	{
+	  printf ("%s: '\\x%x': encoding error\n", locname, c);
+	  ++res;
+	}
+      else if (n == (size_t) -2)
+	{
+	  printf ("%s: '\\x%x': incomplete character\n", locname, c);
+	  ++res;
+	}
+      else if (n == 0 && c != 0)
+	{
+	  printf ("%s: '\\x%x': 0 returned\n", locname, c);
+	  ++res;
+	}
+      else if (n != 0 && c == 0)
+	{
+	  printf ("%s: '\\x%x': not 0 returned\n", locname, c);
+	  ++res;
+	}
+      else if (c != 0 && n != 1)
+	{
+	  printf ("%s: '\\x%x': not 1 returned\n", locname, c);
+	  ++res;
+	}
+      else if (wc != (wchar_t) c)
+	{
+	  printf ("%s: '\\x%x': wc != L'\\x%x'\n", locname, c, c);
+	  ++res;
+	}
+    }
+
+  printf (res == 1 ? "%d error\n" : "%d errors\n", res);
+
+  return res != 0;
+}

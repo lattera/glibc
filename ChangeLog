@@ -1,3 +1,13 @@
+2000-11-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/mbrtowc.c (__mbrtowc): Do not only flush if input is '\0'.
+
+	* wcsmbs/Makefile (tests): Add tst-mbrtowc and tst-wcrtomb.
+	(tst-mbrtowc-ENV): New variable.
+	(tst-wcrtomb-ENV): New variable.
+	* wcsmbs/tst-mbrtowc.c: New file.
+	* wcsmbs/tst-wcrtomb.c: New file.
+
 2000-11-16  Andreas Jaeger  <aj@suse.de>
 
 	* manual/install.texi (Tools for Compilation): Update

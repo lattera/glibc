@@ -39,7 +39,8 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l \
 	    wcsmbsload
 
-tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc
+tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
+	 tst-wcrtomb
 
 include ../Rules
 
@@ -62,3 +63,5 @@ CFLAGS-wcstold_l.c = -I../stdlib
 CFLAGS-wcstof_l.c = -I../stdlib
 
 tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
+tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata
+tst-wcrtomb-ENV = LOCPATH=$(common-objpfx)localedata

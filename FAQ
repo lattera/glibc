@@ -236,21 +236,8 @@ a local mirror first.
 
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
-egcs (1.0.3 and 1.1.1) should work with the GNU C library (for powerpc see
+gcc (2.95 or newer) should work with the GNU C library (for powerpc see
 question 1.5; for ARM see question 1.6; for MIPS see question 1.20).
-
-While the GNU CC should be able to compile glibc it is nevertheless adviced
-to use EGCS.  Comparing the sizes of glibc on Intel compiled with a recent
-EGCS and gcc 2.8.1 shows this:
-
-		  text    data     bss     dec     hex filename
-   egcs-2.93.10	862897   15944   12824  891665   d9b11 libc.so
-   gcc-2.8.1	959965   16468   12152  988585   f15a9 libc.so
-
-Make up your own decision.
-
-GNU CC versions 2.95 and above are derived from egcs, and they may do even
-better.
 
 Please note that gcc 2.95 and 2.95.x cannot compile glibc on Alpha due to
 problems in the complex float support.
@@ -328,19 +315,19 @@ Binutils 2.9.1.0.16 or later is also required.
 * lots of disk space (~400MB for i?86-linux; more for RISC platforms).
 
 * plenty of time.  Compiling just the shared and static libraries for
-  i?86-linux takes approximately 1h on an AMD-K6@225MHz w/ 96MB of RAM,
-  45mins on a Celeron@400MHz w/ 128MB, and 55mins on a Alpha@533MHz w/ 256MB.
-  Multiply this by 1.5 or 2.0 if you build profiling and/or the highly
-  optimized version as well.  For Hurd systems times are much higher.
+  35mins on a 2xPIII@550Mhz w/ 512MB RAM.  On a 2xUltraSPARC-II@360Mhz
+  w/ 1GB RAM it takes about 14 minutes.  Multiply this by 1.5 or 2.0
+  if you build profiling and/or the highly optimized version as well.
+  For Hurd systems times are much higher.
 
   You should avoid compiling in a NFS mounted filesystem.  This is
   very slow.
 
-  James Troup <J.J.Troup@comp.brad.ac.uk> reports a compile time of
-  45h34m for a full build (shared, static, and profiled) on Atari
-  Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) and Jan Barte
-  <yann@plato.uni-paderborn.de> reports 22h48m on Atari TT030
-  (Motorola 68030 @ 32 Mhz, 34 Mb memory)
+  James Troup <J.J.Troup@comp.brad.ac.uk> reports a compile time for
+  an earlier (and smaller!) version of glibc of 45h34m for a full build
+  (shared, static, and profiled) on Atari Falcon (Motorola 68030 @ 16 Mhz,
+  14 Mb memory) and Jan Barte <yann@plato.uni-paderborn.de> reports
+  22h48m on Atari TT030 (Motorola 68030 @ 32 Mhz, 34 Mb memory)
 
   A full build of the PowerPC library took 1h on a PowerPC 750@400Mhz w/
   64MB of RAM, and about 9h on a 601@60Mhz w/ 72Mb.
@@ -373,11 +360,7 @@ to the root of the 2.2 tree and do `make include/linux/version.h'.
 1.9.	The compiler hangs while building iconvdata modules.  What's
 	wrong?
 
-{ZW} This is a problem with old versions of GCC.  Initialization of large
-static arrays is very slow.  The compiler will eventually finish; give it
-time.
-
-The problem is fixed in egcs 1.1.
+{} Removed.  Does not apply anymore.
 
 
 1.10.	When I run `nm -u libc.so' on the produced library I still
@@ -843,8 +826,7 @@ you got with your distribution.
 	glibc 2.x?
 
 {AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3 or later.
-But you should get at least gcc 2.8.1 or egcs 1.1 (or later versions)
-instead.
+But you should get at least gcc 2.95.2 (or later versions) instead.
 
 
 2.10.	The `gencat' utility cannot process the catalog sources which
