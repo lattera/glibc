@@ -1,3 +1,8 @@
+Fri Jan 26 12:20:45 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdlib/strtol.c: Undo last change.  ANSI C changed since the
+	draft I checked yesterday.  Sigh.
+
 Thu Jan 25 18:58:25 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdlib/strtol.c [UNSIGNED]: Don't recognize + or - as sign.
