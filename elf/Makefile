@@ -235,11 +235,12 @@ $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
 $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	@rm -f $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared			\
-		  $(LDFLAGS-rtld) -Wl,--verbose 2>&1 |			\
+		  $(LDFLAGS-rtld) -Wl,-z,defs -Wl,--verbose 2>&1 |	\
 		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
 		      -e 's/\. = 0 + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
 		  > $@.lds
-	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $(LDFLAGS-rtld)	\
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@			\
+		  $(LDFLAGS-rtld) -Wl,-z,defs				\
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
 		  -Wl,-soname=$(rtld-installed-name) -T $@.lds
 	rm -f $@.lds

@@ -1,3 +1,30 @@
+2003-01-14  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (check-abi-%): Use two rules for $(common-objpfx) and
+	$(objpfx) directories, and get rid of vpath directives.  The previous
+	arrangement resulted in files being written to the source directories
+	when run in a clean build.  Find all .abilist files in $(..)abilist/.
+	(update-abi-%): Likewise.
+	(generated): Don't add .symlist files, they'll be intermediates.
+
+	* sysdeps/generic/init-first.c: Add a comment.
+
+	* elf/Makefile ($(objpfx)ld.so): Pass -z defs in link.
+
+	* scripts/gen-as-const.awk: Grok lone "--" as a separator between
+	#includes and expressions.
+
+	* scripts/merge-abilist.awk: Omit cpu-.*-os.*/modifier from merged
+	config list when it already contains cpu-.*-os.* without / part.
+
+	* Makerules (sed-remove-dotdot): New variable.
+	($(common-objpfx)%.make): Use it.  Depend on $(before-compile).
+	($(common-objpfx)%.h $(common-objpfx)%.h.d): Likewise.
+	(check-abi-config): New variable, append /tls or /notls to the tuple.
+	(check-abi-%): Use that for -v config value.
+	Find .abilist files in abilist/libfoo.abilist, not in subdir.
+	* Rules: Move bits/stdio_lim.h generation rules to Makerules.
+
 2003-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/install.texi: Correct description of header preparation for

@@ -17,6 +17,9 @@ NF >= 1 && !started {
   started = 1;
 }
 
+# Separator.
+$1 == "--" { next }
+
 NF == 1 { sub(/^.*$/, "& &"); }
 
 NF > 1 {

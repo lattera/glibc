@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1991-2000,2002,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -184,65 +184,6 @@ before-compile: $(before-compile)
 
 $(common-objpfx)dummy.o: $(common-objpfx)dummy.c $(before-compile);
 	$(compile-command.c)
-
-# There's no good place to put this - here will do.
-# The dependencies are wrong if it's run from the top level.
-ifeq ($(filter %posix, $(sysdirs)),)
-L_tmpnam  = 1
-TMP_MAX   = 0
-L_ctermid = 1
-L_cuserid = 1
-else
-L_tmpnam  = 20
-TMP_MAX   = 238328
-L_ctermid = 9
-L_cuserid = 9
-endif
-stdio_lim = $(common-objpfx)bits/stdio_lim.h
-
-$(stdio_lim:lim.h=%.h) $(stdio_lim:lim.h=%.d): $(stdio_lim:lim.h=%.st); @:
-$(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
-		   $(common-objpfx)config.make
-	$(make-target-directory)
-	echo '#include "$(..)posix/bits/posix1_lim.h"' |		\
-	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
-	$(CC) $(+includes) -E -dM -xc - -o $(@:st=hT)
-	echo '#include "$(..)misc/sys/uio.h"' |				\
-	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
-	$(CC) -D_LIBC=1 $(+includes) -E -dM -xc - | cat - >> $(@:st=hT)
-ifdef sed-remove-objpfx
-	sed $(sed-remove-objpfx) $(@:st=dT) > $(@:st=dt)
-	cat $(@:st=dt) >> $(@:st=d)
-else
-	cat $(@:st=dT) >> $(@:st=d)
-endif
-	fopen_max=`sed -n 's/^#define OPEN_MAX //1p' $(@:st=hT)`; 	\
-	filename_max=`sed -n 's/^#define PATH_MAX //1p' $(@:st=hT)`;	\
-	iov_max=`sed -n 's/^#define UIO_MAXIOV //p' $(@:st=hT)`;	\
-	fopen_max=$${fopen_max:-16};					\
-	filename_max=$${filename_max:-1024};				\
-	if [ -z $$iov_max ]; then					\
-	  define_iov_max="# undef IOV_MAX";				\
-	else								\
-	  define_iov_max="# define IOV_MAX $$iov_max";			\
-	fi;								\
-	sed -e "s/@FOPEN_MAX@/$$fopen_max/"				\
-	    -e "s/@FILENAME_MAX@/$$filename_max/"			\
-	    -e "s/@L_tmpnam@/$(L_tmpnam)/"				\
-	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
-	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
-	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
-	    -e "s/@define_IOV_MAX@/$$define_iov_max/"			\
-	    $< > $(@:st=h.new)
-	$(move-if-change) $(@:st=h.new) $(@:st=h)
-# Remove these last so that they can be examined if something went wrong.
-	rm -f $(@:st=hT) $(@:st=dT) $(@:st=dt)
-	touch $@
-# Get dependencies.
-ifndef no_deps
--include $(stdio_lim:h=d)
-endif
-common-generated += bits/stdio_lim.h bits/stdio_lim.d bits/stdio_lim.st
 
 # Local Variables:
 # mode: makefile

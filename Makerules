@@ -151,15 +151,19 @@ endif
 # can only be figured out from headers, write a FOO.make.c input
 # file that uses cpp contructs and contains @@@ LINE @@@ for each LINE
 # to emit in the generated makefile, and use -include $(common-objpfx)FOO.make.
-$(common-objpfx)%.make: $(..)%.make.c $(..)Makerules
+$(common-objpfx)%.make: $(..)%.make.c $(..)Makerules $(before-compile)
 	rm -f $@T $@.dT
 	(echo '# Generated from $*.make.c by Makerules.'; \
 	 SUNPRO_DEPENDENCIES='$@.dT $$(common-objpfx)$*.make' \
 	 $(CC) $(CFLAGS) $(CPPFLAGS) -E $< \
 	 | sed -n '/@@@/{s/@@@[	 ]*\(.*\)@@@/\1/;s/[	 ]*$$//p;}'; \
 	 echo 'common-generated += $(@F)'; \
-	 sed $(sed-remove-objpfx) $@.dT; rm -f $@.dT) > $@T
+	 sed $(sed-remove-objpfx) $(sed-remove-dotdot) $@.dT; \
+	 rm -f $@.dT) > $@T
 	mv -f $@T $@
+
+sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g' \
+		     -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g'
 
 # Generate an ordered list of implicit rules which find the source files in
 # each sysdep directory.  The old method was to use vpath to search all the
@@ -662,8 +666,13 @@ ifeq ($(build-programs),yes)
 endif
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
-				      $(+depfiles))) \
-	     $(addprefix $(common-objpfx),$(gen-as-const-headers:.sym=.h.d))
+				      $(+depfiles)))
+
+# Avoid the .h.d files for any .sym files whose .h files don't exist yet.
+# They will be generated when they're needed, and trying too early won't work.
++gen-as-const := $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
++depfiles += $(addsuffix .d,$(filter $(wildcard $(+gen-as-const)),\
+						$(+gen-as-const)))
 
 ifdef +depfiles
 ifneq ($(no_deps),t)
@@ -1137,24 +1146,48 @@ ifeq ($(versioning),yes)
 	$(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
-vpath %.symlist $(objpfx) $(common-objpfx)
-vpath %.dynsym $(objpfx) $(common-objpfx)
-vpath %.so $(objpfx) $(common-objpfx)
 check-abi-%: $(..)scripts/extract-abilist.awk $(common-objpfx)config.make \
-	     %.abilist %.symlist
+	     $(..)abilist/%.abilist $(objpfx)%.symlist
+	$(check-abi)
+check-abi-%: $(..)scripts/extract-abilist.awk $(common-objpfx)config.make \
+	     $(..)abilist/%.abilist $(common-objpfx)%.symlist
+	$(check-abi)
+define check-abi
 	LC_ALL=C \
-	$(AWK) -f $< \
-	       -v 'config=$(config-machine)-$(config-vendor)-$(config-os)' \
+	$(AWK) -f $< -v 'config=$(check-abi-config)' \
 	       $(filter %.abilist,$^) \
 	| diff -pu0 - $(filter %.symlist,$^)
+endef
 
-update-abi-%: $(..)scripts/merge-abilist.awk %.abilist %.symlist
+ifeq ($(sysd-sorted-done),t)
+include $(common-objpfx)tls.make
+config-tls-yes := tls
+config-tls-no := notls
+check-abi-config := \
+  $(config-machine)-$(config-vendor)-$(config-os)/$(config-tls-$(use-thread))
+endif
+
+update-abi-%: $(..)scripts/merge-abilist.awk $(..)abilist/%.abilist \
+	      $(objpfx)%.symlist
+	$(update-abi)
+update-abi-%: $(..)scripts/merge-abilist.awk $(..)abilist/%.abilist \
+	      $(common-objpfx)%.symlist
+	$(update-abi)
 ifndef update-abi-config
+define update-abi
 	@echo 'Run $(MAKE) $@ update-abi-config=REGEXP'; exit 2
+endef
 else
-	LC_ALL=C $(AWK) -v config=$(update-abi-config) -f $^ > $*.abilist.new
-	mv -f $*.abilist.new $*.abilist
-	@echo '*** Now check $*.abilist changes for correctness ***'
+define update-abi
+LC_ALL=C $(AWK) -v config=$(update-abi-config) -f $^ \
+	 > $(..)abilist/$*.abilist.new
+@if cmp -s $(..)abilist/$*.abilist.new $(..)abilist/$*.abilist 2> /dev/null; \
+ then rm -f $(..)abilist/$*.abilist.new; \
+      echo '+++ $(..)abilist/$*.abilist is unchanged'; \
+ else mv -f $(..)abilist/$*.abilist.new $(..)abilist/$*.abilist; \
+      echo '*** Now check $*.abilist changes for correctness ***'; \
+ fi
+endef
 endif
 
 .PHONY: update-abi check-abi
@@ -1168,9 +1201,8 @@ check-abi: subdir_check-abi
 update-abi: subdir_update-abi
 endif
 
-# Enable this well all the .abilist files are in place.
+# Enable this when all the .abilist files are in place.
 #tests: check-abi
-generated += $(install-lib.so-versioned:.so=.symlist)
 
 ifeq ($(subdir),elf)
 check-abi: check-abi-libc
@@ -1181,21 +1213,82 @@ endif
 endif
 
 # Generating headers for assembly constants.
-$(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk %.sym
+$(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
+					   %.sym $(before-compile)
 	$(AWK) -f $< $(filter %.sym,$^) \
 	| $(CC) -S -o - $(CFLAGS) $(CPPFLAGS) -x c - \
 		-MD -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
 	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
-	sed $(sed-remove-objpfx) \
-	    -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g' \
-	    -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g' \
+	sed $(sed-remove-objpfx) $(sed-remove-dotdot) \
 	    $(@:.h=.h.d)T > $(@:.h=.h.d)T2
 	rm -f $(@:.h=.h.d)T
 	mv -f $(@:.h=.h.d)T2 $(@:.h=.h.d)
 	mv -f $(@:.h.d=.h)T $(@:.h.d=.h)
 vpath %.sym $(sysdirs)
 
+ifeq (,$(wildcard $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)))
 before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
+endif
+
+
+# There's no good place to put this - here will do.
+# The dependencies are wrong if it's run from the top level.
+ifeq ($(filter %posix, $(sysdirs)),)
+L_tmpnam  = 1
+TMP_MAX   = 0
+L_ctermid = 1
+L_cuserid = 1
+else
+L_tmpnam  = 20
+TMP_MAX   = 238328
+L_ctermid = 9
+L_cuserid = 9
+endif
+stdio_lim = $(common-objpfx)bits/stdio_lim.h
+
+$(stdio_lim:lim.h=%.h) $(stdio_lim:lim.h=%.d): $(stdio_lim:lim.h=%.st); @:
+$(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
+		   $(common-objpfx)config.make
+	$(make-target-directory)
+	echo '#include "$(..)posix/bits/posix1_lim.h"' |		\
+	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
+	$(CC) $(+includes) -E -dM -xc - -o $(@:st=hT)
+	echo '#include "$(..)misc/sys/uio.h"' |				\
+	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
+	$(CC) -D_LIBC=1 $(+includes) -E -dM -xc - | cat - >> $(@:st=hT)
+ifdef sed-remove-objpfx
+	sed $(sed-remove-objpfx) $(@:st=dT) > $(@:st=dt)
+	cat $(@:st=dt) >> $(@:st=d)
+else
+	cat $(@:st=dT) >> $(@:st=d)
+endif
+	fopen_max=`sed -n 's/^#define OPEN_MAX //1p' $(@:st=hT)`; 	\
+	filename_max=`sed -n 's/^#define PATH_MAX //1p' $(@:st=hT)`;	\
+	iov_max=`sed -n 's/^#define UIO_MAXIOV //p' $(@:st=hT)`;	\
+	fopen_max=$${fopen_max:-16};					\
+	filename_max=$${filename_max:-1024};				\
+	if [ -z $$iov_max ]; then					\
+	  define_iov_max="# undef IOV_MAX";				\
+	else								\
+	  define_iov_max="# define IOV_MAX $$iov_max";			\
+	fi;								\
+	sed -e "s/@FOPEN_MAX@/$$fopen_max/"				\
+	    -e "s/@FILENAME_MAX@/$$filename_max/"			\
+	    -e "s/@L_tmpnam@/$(L_tmpnam)/"				\
+	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
+	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
+	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
+	    -e "s/@define_IOV_MAX@/$$define_iov_max/"			\
+	    $< > $(@:st=h.new)
+	$(move-if-change) $(@:st=h.new) $(@:st=h)
+# Remove these last so that they can be examined if something went wrong.
+	rm -f $(@:st=hT) $(@:st=dT) $(@:st=dt)
+	touch $@
+# Get dependencies.
+ifndef no_deps
+-include $(stdio_lim:h=d)
+endif
+common-generated += bits/stdio_lim.h bits/stdio_lim.d bits/stdio_lim.st
 
 .PHONY: TAGS
 TAGS: $(objpfx)distinfo $(..)MakeTAGS

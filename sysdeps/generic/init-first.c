@@ -20,6 +20,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 
+/* Set nonzero if we have to be prepared for more then one libc being
+   used in the process.  Safe assumption if initializer never runs.  */
 int __libc_multiple_libcs attribute_hidden = 1;
 
 extern void __libc_init (int, char **, char **);
