@@ -1,3 +1,8 @@
+2002-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/sys/xattr.h: Include <sys/types.h> instead of <stddef.h>
+	since ssize_t is needed as well.  Replace const with __const.
+
 2002-08-23  Roland McGrath  <roland@redhat.com>
 
 	* malloc/hooks.c (__malloc_initialize_hook, __free_hook,
