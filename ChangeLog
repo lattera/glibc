@@ -1,5 +1,8 @@
 2004-02-10  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/times.c (__times): Use union instead of cast.
+	* sysdeps/mach/hurd/sendmsg.c (__libc_sendmsg): Likewise.
+
 	* sysdeps/mach/hurd/configure.in: Move `retcode' check to ...
 	* sysdeps/mach/configure.in: ... here.
 	* sysdeps/mach/hurd/configure: Regenerated.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,11 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
   struct sockaddr_un *addr = message->msg_name;
   socklen_t addr_len = message->msg_namelen;
   addr_port_t aport = MACH_PORT_NULL;
-  char *data = NULL;
+  union
+  {
+    char *ptr;
+    vm_address_t addr;
+  } data = { .ptr = NULL };
   char data_buf[2048];
   mach_msg_type_number_t len;
   mach_msg_type_number_t amount;
@@ -51,15 +55,15 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	  /* As an optimization, if we only have a single non-empty
              iovec, we set DATA and LEN from it.  */
 	  if (len == 0)
-	    data = message->msg_iov[i].iov_base;
+	    data.ptr = message->msg_iov[i].iov_base;
 	  else
-	    data = NULL;
+	    data.ptr = NULL;
 
 	  len += message->msg_iov[i].iov_len;
 	}
     }
 
-  if (data == NULL)
+  if (data.ptr == NULL)
     {
       size_t to_copy;
       char *buf;
@@ -70,8 +74,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
          limit of 2048 bytes is inspired by the MiG stubs.  */
       if (len > 2048)
 	{
-	  err = __vm_allocate (__mach_task_self (),
-			       (vm_address_t *) &data, len, 1);
+	  err = __vm_allocate (__mach_task_self (), &data.addr, len, 1);
 	  if (err)
 	    {
 	      __set_errno (err);
@@ -80,11 +83,11 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	  dealloc = 1;
 	}
       else
-	data = data_buf;
+	data.ptr = data_buf;
 
       /* Copy the data into DATA.  */
       to_copy = len;
-      buf = data;
+      buf = data.ptr;
       for (i = 0; i < len; i++)
 	{
 #define	min(a, b)	((a) > (b) ? (b) : (a))
@@ -131,7 +134,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 			    {
 			      /* Send the data.  */
 			      err = __socket_send (port, aport,
-						   flags, data, len,
+						   flags, data.ptr, len,
 						   NULL,
 						   MACH_MSG_TYPE_COPY_SEND, 0,
 						   message->msg_control,
@@ -144,7 +147,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 			}));
 
   if (dealloc)
-    __vm_deallocate (__mach_task_self (), (vm_address_t) data, len);
+    __vm_deallocate (__mach_task_self (), data.addr, len);
 
   return err ? __hurd_dfail (fd, err) : amount;
 }
