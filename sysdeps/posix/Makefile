@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -20,19 +20,14 @@ $(common-objpfx)stdio_lim.h: $(common-objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
 
-ifdef subdir
-objdir-CPPFLAGS = $(CPPFLAGS) # Already has appropriate `..'s.
-else
-objdir-CPPFLAGS = $(patsubst -I/..//%,-I/%,$(CPPFLAGS:-I%=-I../%))
-endif
 # Turn into a version that works when cd'd into $(objdir).
-cded-objdir-CPPFLAGS = $(patsubst -I$$cwd//%,-I/%,\
-				  $(patsubst -I%,-I$$cwd/%,$(CPPFLAGS)))
+cded-objdir-includes = $(patsubst -I$$cwd//%,-I/%,\
+				  $(patsubst -I%,-I$$cwd/%,$(+includes)))
 # $(BUILD_CFLAGS) needs to come last because it contains unwanted -Is.
 $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 			     posix1_lim.h local_lim.h
 	cwd=`pwd`; cd $(common-objdir); \
-	$(BUILD_CC) $(cded-objdir-CPPFLAGS) $(BUILD_CFLAGS) \
+	$(BUILD_CC) $(cded-objdir-includes) $(BUILD_CFLAGS) \
 	  $$cwd/$< -o $(patsubst $(common-objpfx)%,%,$@)
 
 
