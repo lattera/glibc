@@ -1,3 +1,7 @@
+1998-06-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_send.c (res_send): Fix typo.
+
 1998-06-25  Andi Kleen <ak@muc.de>
 
 	* inet/rcmd.c (rcmd): Change to use __poll instead of select.

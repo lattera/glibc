@@ -511,7 +511,7 @@ read_len:
 			 * Use datagrams.
 			 */
 			int timeout;
-			fd_set dsmask;
+			struct pollfd pfd[1];
 			struct sockaddr_in from;
 			socklen_t fromlen;
 
