@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
@@ -36,10 +36,6 @@ catopen (const char *cat_name, int flag)
   __nl_catd result;
   const char *env_var = NULL;
   const char *nlspath = NULL;
-  size_t cat_name_len = strlen (cat_name) + 1;
-  size_t env_var_len = 0;
-  size_t nlspath_len = 0;
-  char *endp;
 
   if (strchr (cat_name, '/') == NULL)
     {
@@ -54,8 +50,6 @@ catopen (const char *cat_name, int flag)
 	  || (__libc_enable_secure && strchr (env_var, '/') != NULL))
 	env_var = "C";
 
-      env_var_len = strlen (env_var) + 1;
-
       nlspath = getenv ("NLSPATH");
       if (nlspath != NULL && *nlspath != '\0')
 	{
@@ -65,34 +59,19 @@ catopen (const char *cat_name, int flag)
 
 	  __stpcpy (__stpcpy (__stpcpy (tmp, nlspath), ":"), NLSPATH);
 	  nlspath = tmp;
-
-	  nlspath_len = len;
 	}
       else
-	{
-	  nlspath = NLSPATH;
-
-	  nlspath_len = sizeof NLSPATH;
-	}
+	nlspath = NLSPATH;
     }
 
-  result = (__nl_catd) malloc (sizeof (*result) + cat_name_len
-			       + env_var_len + nlspath_len);
+  result = (__nl_catd) malloc (sizeof (*result));
   if (result == NULL)
     /* We cannot get enough memory.  */
     return (nl_catd) -1;
 
-  result->status = closed;
-  result->cat_name = endp = (char *) (result + 1);
-  endp = __mempcpy (endp, cat_name, cat_name_len);
-
-  result->env_var = cat_name_len != 0 ? endp : NULL;
-  endp = __mempcpy (endp, env_var, env_var_len);
-
-  result->nlspath = nlspath_len != 0 ? endp : NULL;
-  memcpy (endp, nlspath, nlspath_len);
-
-  __libc_lock_init (result->lock);
+  if (__open_catalog (cat_name, nlspath, env_var, result) != 0)
+    /* Couldn't open the file.  */
+    return (nl_catd) -1;
 
   return (nl_catd) result;
 }
@@ -111,15 +90,6 @@ catgets (nl_catd catalog_desc, int set, int message, const char *string)
     return (char *) string;
 
   catalog = (__nl_catd) catalog_desc;
-
-  if (catalog->status == closed)
-    __open_catalog (catalog);
-
-  if (catalog->status == nonexisting)
-    {
-      __set_errno (EBADF);
-      return (char *) string;
-    }
 
   idx = ((set * message) % catalog->plane_size) * 3;
   cnt = 0;
@@ -153,7 +123,7 @@ catclose (nl_catd catalog_desc)
 #endif	/* _POSIX_MAPPED_FILES */
     if (catalog->status == malloced)
       free ((void *) catalog->file_ptr);
-    else if (catalog->status != closed && catalog->status != nonexisting)
+    else
       {
 	__set_errno (EBADF);
 	return -1;

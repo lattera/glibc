@@ -12,6 +12,12 @@ main (void)
   printf ("LC_MESSAGES = %s\n", setlocale (LC_MESSAGES, NULL));
 
   catalog = catopen ("sample", NL_CAT_LOCALE);
+  if (catalog == (nl_catd) -1)
+    {
+      printf ("no catalog: %m\n");
+      exit (1);
+    }
+
   printf ("%s\n", catgets(catalog, 1, 1, "sample 1"));
   printf ("%s\n", catgets(catalog, 1, 2, "sample 2"));
   printf ("%s\n", catgets(catalog, 1, 3, "sample 3"));

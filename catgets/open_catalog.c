@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
@@ -35,8 +35,9 @@
 #define SWAPU32(w) bswap_32 (w)
 
 
-void
-__open_catalog (__nl_catd catalog)
+int
+__open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
+		__nl_catd catalog)
 {
   int fd = -1;
   struct stat64 st;
@@ -45,20 +46,13 @@ __open_catalog (__nl_catd catalog)
   size_t max_offset;
   size_t tab_size;
   const char *lastp;
+  int result = -1;
 
-  /* Make sure we are alone.  */
-  __libc_lock_lock (catalog->lock);
-
-  /* Check whether there was no other thread faster.  */
-  if (__builtin_expect (catalog->status != closed, 0))
-    /* While we waited some other thread tried to open the catalog.  */
-    goto unlock_return;
-
-  if (strchr (catalog->cat_name, '/') != NULL || catalog->nlspath == NULL)
-    fd = __open (catalog->cat_name, O_RDONLY);
+  if (strchr (cat_name, '/') != NULL || nlspath == NULL)
+    fd = __open (cat_name, O_RDONLY);
   else
     {
-      const char *run_nlspath = catalog->nlspath;
+      const char *run_nlspath = nlspath;
 #define ENOUGH(n)							      \
   if (__builtin_expect (bufact + (n) >= bufmax, 0))			      \
     {									      \
@@ -88,9 +82,9 @@ __open_catalog (__nl_catd catalog)
 	  if (*run_nlspath == ':')
 	    {
 	      /* Leading colon or adjacent colons - treat same as %N.  */
-	      len = strlen (catalog->cat_name);
+	      len = strlen (cat_name);
 	      ENOUGH (len);
-	      memcpy (&buf[bufact], catalog->cat_name, len);
+	      memcpy (&buf[bufact], cat_name, len);
 	      bufact += len;
 	    }
 	  else
@@ -104,21 +98,21 @@ __open_catalog (__nl_catd catalog)
 		    {
 		    case 'N':
 		      /* Use the catalog name.  */
-		      len = strlen (catalog->cat_name);
+		      len = strlen (cat_name);
 		      ENOUGH (len);
-		      memcpy (&buf[bufact], catalog->cat_name, len);
+		      memcpy (&buf[bufact], cat_name, len);
 		      bufact += len;
 		      break;
 		    case 'L':
 		      /* Use the current locale category value.  */
-		      len = strlen (catalog->env_var);
+		      len = strlen (env_var);
 		      ENOUGH (len);
-		      memcpy (&buf[bufact], catalog->env_var, len);
+		      memcpy (&buf[bufact], env_var, len);
 		      bufact += len;
 		      break;
 		    case 'l':
 		      /* Use language element of locale category value.  */
-		      tmp = catalog->env_var;
+		      tmp = env_var;
 		      do
 			{
 			  ENOUGH (1);
@@ -128,7 +122,7 @@ __open_catalog (__nl_catd catalog)
 		      break;
 		    case 't':
 		      /* Use territory element of locale category value.  */
-		      tmp = catalog->env_var;
+		      tmp = env_var;
 		      do
 			++tmp;
 		      while (*tmp != '\0' && *tmp != '_' && *tmp != '.');
@@ -145,7 +139,7 @@ __open_catalog (__nl_catd catalog)
 		      break;
 		    case 'c':
 		      /* Use code set element of locale category value.  */
-		      tmp = catalog->env_var;
+		      tmp = env_var;
 		      do
 			++tmp;
 		      while (*tmp != '\0' && *tmp != '.');
@@ -194,23 +188,17 @@ __open_catalog (__nl_catd catalog)
 
   /* Avoid dealing with directories and block devices */
   if (__builtin_expect (fd, 0) < 0)
-    {
-      catalog->status = nonexisting;
-      goto unlock_return;
-    }
+    return -1;
 
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
-    {
-      catalog->status = nonexisting;
-      goto close_unlock_return;
-    }
+    goto close_unlock_return;
+
   if (__builtin_expect (!S_ISREG (st.st_mode), 0)
       || st.st_size < sizeof (struct catalog_obj))
     {
       /* `errno' is not set correctly but the file is not usable.
 	 Use an reasonable error value.  */
       __set_errno (EINVAL);
-      catalog->status = nonexisting;
       goto close_unlock_return;
     }
 
@@ -243,10 +231,8 @@ __open_catalog (__nl_catd catalog)
       size_t todo;
       catalog->file_ptr = malloc (st.st_size);
       if (catalog->file_ptr == NULL)
-	{
-	  catalog->status = nonexisting;
-	  goto close_unlock_return;
-	}
+	goto close_unlock_return;
+
       todo = st.st_size;
       /* Save read, handle partial reads.  */
       do
@@ -260,7 +246,6 @@ __open_catalog (__nl_catd catalog)
 		continue;
 #endif
 	      free ((void *) catalog->file_ptr);
-	      catalog->status = nonexisting;
 	      goto close_unlock_return;
 	    }
 	  todo -= now;
@@ -288,7 +273,6 @@ __open_catalog (__nl_catd catalog)
       else
 #endif	/* _POSIX_MAPPED_FILES */
 	free (catalog->file_ptr);
-      catalog->status = nonexisting;
       goto close_unlock_return;
     }
 
@@ -339,9 +323,12 @@ __open_catalog (__nl_catd catalog)
       ++lastp;
     }
 
+  /* We succeeded.  */
+  result = 0;
+
   /* Release the lock again.  */
  close_unlock_return:
   __close (fd);
- unlock_return:
-  __libc_lock_unlock (catalog->lock);
+
+  return result;
 }

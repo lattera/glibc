@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -18,7 +18,6 @@
    02111-1307 USA.  */
 
 #include <sys/types.h>
-#include <bits/libc-lock.h>
 
 
 struct catalog_obj
@@ -35,11 +34,7 @@ struct catalog_obj
 /* This structure will be filled after loading the catalog.  */
 typedef struct catalog_info
 {
-  enum { closed, nonexisting, mmapped, malloced } status;
-
-  const char *cat_name;
-  const char *env_var;
-  const char *nlspath;
+  enum { mmapped, malloced } status;
 
   size_t plane_size;
   size_t plane_depth;
@@ -48,8 +43,6 @@ typedef struct catalog_info
 
   struct catalog_obj *file_ptr;
   size_t file_size;
-
-  __libc_lock_define (,lock);
 } *__nl_catd;
 
 
@@ -59,4 +52,5 @@ typedef struct catalog_info
 
 
 /* Prototypes for helper functions.  */
-void __open_catalog (__nl_catd __catalog);
+extern int __open_catalog (const char *cat_name, const char *nlspath,
+			   const char *env_var, __nl_catd __catalog);

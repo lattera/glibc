@@ -1187,21 +1187,15 @@ read_old (struct catalog *catalog, const char *file_name)
   int last_set = -1;
   size_t cnt;
 
-  old_cat_obj.status = closed;
-  old_cat_obj.cat_name = file_name;
-  old_cat_obj.nlspath = NULL;
-  __libc_lock_init (old_cat_obj.lock);
-
   /* Try to open catalog, but don't look through the NLSPATH.  */
-  __open_catalog (&old_cat_obj);
-
-  if (old_cat_obj.status != mmapped && old_cat_obj.status != malloced)
+  if (__open_catalog (file_name, NULL, NULL, &old_cat_obj) != 0)
     {
       if (errno == ENOENT)
 	/* No problem, the catalog simply does not exist.  */
 	return;
       else
-	error (EXIT_FAILURE, errno, gettext ("while opening old catalog file"));
+	error (EXIT_FAILURE, errno,
+	       gettext ("while opening old catalog file"));
     }
 
   /* OK, we have the catalog loaded.  Now read all messages and merge
