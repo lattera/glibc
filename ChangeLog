@@ -1,3 +1,8 @@
+2004-10-19  Alfred M. Szmidt  <ams@gnu.org>
+
+	* sysdeps/generic/readonly-area.c (__readonly_str): Renamed to ...
+	(__readonly_area): ... this.
+
 2004-10-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/strcpy_chk.c (__strcpy_chk): Speed up by checking

@@ -16,14 +16,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stdlib.h>
+
 /* Return 1 if the whole area PTR .. PTR+SIZE is not writable.
    Return -1 if it is writable.  */
 
-#include <stdlib.h>
-
 int
-__readonly_str (const void *ptr, size_t size)
+__readonly_area (const void *ptr, size_t size)
 {
-  /* The conservative answer is that all strings are writable.  */
-  return -1;
+  /* We cannot determine in general whether memory is writable or not.
+     This must be handled in a system-dependent manner.  to not
+     unconditionally break code we need to return here a positive
+     answer.  This disables this security measure but that is the
+     price people have to pay for using systems without a real
+     implementation of this interface.  */
+  return 1;
 }
