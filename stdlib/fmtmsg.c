@@ -316,7 +316,7 @@ internal_addseverity (int severity, const char *string)
   int result = MM_OK;
 
   /* First see if there is already a record for the severity level.  */
-  for (runp = severity_list, lastp = NULL; runp != NULL; runp = runp-> next)
+  for (runp = severity_list, lastp = NULL; runp != NULL; runp = runp->next)
     if (runp->severity == severity)
       break;
     else
@@ -364,33 +364,16 @@ int
 addseverity (int severity, const char *string)
 {
   int result;
-  const char *new_string;
 
   /* Prevent illegal SEVERITY values.  */
   if (severity <= MM_INFO)
     return MM_NOTOK;
-
-  if (string == NULL)
-    /* We want to remove the severity class.  */
-    new_string = NULL;
-  else
-    {
-      new_string = __strdup (string);
-
-      if (new_string == NULL)
-	/* Allocation failed or illegal value.  */
-	return MM_NOTOK;
-    }
 
   /* Protect the global data.  */
   __libc_lock_lock (lock);
 
   /* Do the real work.  */
   result = internal_addseverity (severity, string);
-
-  if (result != MM_OK)
-    /* Free the allocated string.  */
-    free ((char *) new_string);
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);
@@ -408,7 +391,6 @@ libc_freeres_fn (free_mem)
       {
 	/* This is data we have to release.  */
 	struct severity_info *here = runp;
-	free ((char *) runp->string);
 	runp = runp->next;
 	free (here);
       }

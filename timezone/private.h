@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.54";
+static char	privatehid[] = "@(#)private.h	7.55";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -208,6 +208,7 @@ extern char *	asctime_r();
 /*
 ** Private function declarations.
 */
+
 char *	icalloc P((int nelem, int elsize));
 char *	icatalloc P((char * old, const char * new));
 char *	icpyalloc P((const char * string));
@@ -216,7 +217,6 @@ void *	irealloc P((void * pointer, int size));
 void	icfree P((char * pointer));
 void	ifree P((char * pointer));
 char *	scheck P((const char *string, const char *format));
-
 
 /*
 ** Finally, some convenience items.
@@ -237,6 +237,15 @@ char *	scheck P((const char *string, const char *format));
 #ifndef TYPE_SIGNED
 #define TYPE_SIGNED(type) (((type) -1) < 0)
 #endif /* !defined TYPE_SIGNED */
+
+/*
+** Since the definition of TYPE_INTEGRAL contains floating point numbers,
+** it cannot be used in preprocessor directives.
+*/
+
+#ifndef TYPE_INTEGRAL
+#define TYPE_INTEGRAL(type) (((type) 0.5) != 0.5)
+#endif /* !defined TYPE_INTEGRAL */
 
 #ifndef INT_STRLEN_MAXIMUM
 /*

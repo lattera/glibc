@@ -1,3 +1,23 @@
+2005-01-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/fmtmsg.c (addseverity): Remove new_string variable.
+	(free_mem): Don't free string.
+	* stdlib/tst-fmtmsg.c: Include string.h.
+	(main): Add some more tests.
+
+2005-01-25  Andreas Schwab  <schwab@suse.de>
+
+	* timezone/asia: Update from tzdata2005c.
+	* timezone/backward: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+
+	* timezone/private.h: Update from tzcode2005c.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 2005-01-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Remove code using
