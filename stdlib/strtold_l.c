@@ -34,6 +34,8 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 
 #else
 /* There is no `long double' type, use the `double' implementations.  */
+extern double ____strtod_l_internal (const char *, char **, int,
+				     __locale_t);
 long double
 ____strtold_l_internal (const char *nptr, char **endptr, int group,
 			__locale_t loc)
@@ -44,6 +46,6 @@ ____strtold_l_internal (const char *nptr, char **endptr, int group,
 long double
 __strtold_l (const char *nptr, char **endptr, __locale_t loc)
 {
-  return __strtod_internal (nptr, endptr, 0, loc);
+  return ____strtod_l_internal (nptr, endptr, 0, loc);
 }
 #endif

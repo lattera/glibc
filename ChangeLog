@@ -1,3 +1,14 @@
+1999-02-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* wcsmbs/wcstold_l.c [__NO_LONG_DOUBLE_MATH]: Add prototype
+	declaration for ____wcstod_l_internal.
+
+	* stdlib/strtold.c [__NO_LONG_DOUBLE_MATH]: Include <stdlib.h> for
+	__strtod_internal prototype.
+	* stdlib/strtold_l.c [__NO_LONG_DOUBLE_MATH]
+	(____strtold_l_internal): Add prototype declaration.
+	(__strtold_l): Call correct function.
+
 1999-02-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Add 32bit HPPA definitions.

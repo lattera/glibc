@@ -37,6 +37,8 @@ extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
 # include <wcstold.c>
 #else
 /* There is no `long double' type, use the `double' implementations.  */
+extern double ____wcstod_l_internal (const wchar_t *, wchar_t **, int,
+				     __locale_t);
 long double
 ____wcstold_l_internal (const wchar_t *nptr, wchar_t **endptr, int group,
 			__locale_t loc)

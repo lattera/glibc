@@ -25,6 +25,7 @@
 
 # include "strtod.c"
 #else
+# include <stdlib.h>
 /* There is no `long double' type, use the `double' implementations.  */
 long double
 __strtold_internal (const char *nptr, char **endptr, int group)
