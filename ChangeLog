@@ -1,3 +1,8 @@
+2000-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/netdb.h: Add stuff removed from resolv/netdb.h here for
+	now.
+
 2000-07-31  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/ia64/elf/initfini.c: Kill dummy section since align and
