@@ -10,7 +10,7 @@ it.
 
 @c This table runs wide.  Shrink fonts.
 @iftex
-@indexfonts @rm
+@smallfonts @rm
 @end iftex
 @table @code
 @comment summary.texi is generated from the other Texinfo files.
