@@ -755,12 +755,6 @@ nss_new_service (name_database *database, const char *name)
 }
 
 
-static void
-nothing (void *ptr __attribute__ ((unused)))
-{
-}
-
-
 /* Free all resources if necessary.  */
 static void __attribute__ ((unused))
 free_mem (void)
@@ -787,7 +781,7 @@ free_mem (void)
 	  service_user *olds = service;
 
 	  if (service->known != NULL)
-	    __tdestroy (service->known, nothing);
+	    __tdestroy (service->known, free);
 
 	  service = service->next;
 	  free (olds);

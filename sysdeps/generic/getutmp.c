@@ -16,25 +16,31 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <string.h>
 #include <utmp.h>
 #include <utmpx.h>
 
+/* Copy the information in UTMPX to UTMP. */
 void
 getutmp (const struct utmpx *utmpx, struct utmp *utmp)
 {
+#if _HAVE_UT_TYPE - 0
   utmp->ut_type = utmpx->ut_type;
-  utmp->ut_pid = utmpx->ut_pid;
-  memcpy (utmp->ut_line, utmpx->ut_line, sizeof (utmp->ut_line));
-  memcpy (utmp->ut_id, utmpx->ut_id, sizeof (utmp->ut_id));
-  memcpy (utmp->ut_user, utmpx->ut_user, sizeof (utmp->ut_user));
-  memcpy (utmp->ut_host, utmpx->ut_host, sizeof (utmp->ut_host));
-#ifdef _GNU_SOURCE
-  utmp->ut_exit.e_termination = utmpx->ut_exit.e_termination;
-  utmp->ut_exit.e_exit = utmpx->ut_exit.e_exit;
-#else
-  utmp->ut_exit.__e_termination = utmpx->ut_exit.e_termination;
-  utmp->ut_exit.__e_exit = utmpx->ut_exit.e_exit;
 #endif
-  utmp->ut_session = utmpx->ut_session;
+#if _HAVE_UT_PID - 0
+  utmp->ut_pid = utmpx->ut_pid;
+#endif
+  memcpy (utmp->ut_line, utmpx->ut_line, sizeof (utmp->ut_line));
+  memcpy (utmp->ut_user, utmpx->ut_user, sizeof (utmp->ut_user));
+#if _HAVE_UT_ID - 0
+  memcpy (utmp->ut_id, utmpx->ut_id, sizeof (utmp->ut_id));
+#endif
+#if _HAVE_UT_HOST - 0
+  memcpy (utmp->ut_host, utmpx->ut_host, sizeof (utmp->ut_host));
+#endif
+#if _HAVE_UT_TV - 0
   utmp->ut_tv = utmpx->ut_tv;
+#else
+  utmp->ut_time = utmpx->ut_time;
+#endif
 }

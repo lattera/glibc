@@ -1,3 +1,10 @@
+1999-05-14  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/generic/getutmp.c: Include <string.h>
+	(getutmp): Rewrite to only copy those members that are really
+	present in `struct utmp'.
+	* sysdeps/generic/getutmpx.c: Likewise.
+
 1999-05-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/getXXbyYY.c: Add free_mem function which disposes all
