@@ -1,5 +1,8 @@
 2002-12-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* forward.c: Make all functions available by default again.  It
+	caused too much trouble.
+
 	* pt-siglongjmp.c: Removed.
 
 2002-12-28  Jakub Jelinek  <jakub@redhat.com>
