@@ -1,3 +1,7 @@
+2003-06-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/sysdep.h: Define cfi_rel_offset and CFI_REL_OFFSET.
+
 2003-06-30  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/bits/atomic.h (__arch_compare_and_exchange_bool_*_int):
@@ -52,8 +56,8 @@
 
 2003-06-07  Thorsten Kukuk  <kukuk@suse.de>
 
-	* nis/nss_compat/compat-grp.c: Remove unused nis_first variable
-	(getgrent_next_file) Don't store group name to early in blacklist.
+	* nis/nss_compat/compat-grp.c: Remove unused nis_first variable.
+	(getgrent_next_file): Don't store group name to early in blacklist.
 
 	* nis/nss_compat/compat-pwd.c (internal_getpwuid_r): Save strlen result
 	and use memcpy instead of strcpy.
