@@ -327,7 +327,8 @@ _nl_load_locale_from_archive (int category, const char **namep)
 
 	  /* Determine whether the appropriate page is already mapped.  */
 	  while (mapped != NULL
-		 && mapped->from + mapped->len <= ranges[cnt].from)
+		 && (mapped->from + mapped->len
+		     <= ranges[cnt].from + ranges[cnt].len))
 	    {
 	      last = mapped;
 	      mapped = mapped->next;
@@ -336,8 +337,8 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  /* Do we have a match?  */
 	  if (mapped != NULL
 	      && mapped->from <= ranges[cnt].from
-	      && ((char *) ranges[cnt].from + ranges[cnt].len
-		  <= (char *) mapped->from + mapped->len))
+	      && (ranges[cnt].from + ranges[cnt].len
+		  <= mapped->from + mapped->len))
 	    {
 	      /* Yep, already loaded.  */
 	      results[ranges[cnt].category].addr = ((char *) mapped->ptr
@@ -356,6 +357,9 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  upper = cnt;
 	  do
 	    {
+	      /* If a range is already mmaped in, stop.	 */
+	      if (mapped != NULL && ranges[upper].from >= mapped->from)
+		break;
 	      to = ((ranges[upper].from + ranges[upper].len + ps - 1)
 		    & ~(ps - 1));
 	      ++upper;
