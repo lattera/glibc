@@ -19,7 +19,7 @@
 #
 #	Sub-makefile for libdb.
 #
-#	The code is lifted straight from the db 2.3.12 distribution
+#	The code is lifted straight from the db 2.7.5 distribution
 #	with minimal changes.
 #
 
@@ -28,7 +28,7 @@ subdir = db2
 subdir-dirs = btree common db db185 dbm hash lock log mp mutex os txn \
 	progs/db_archive progs/db_checkpoint  progs/db_deadlock \
 	progs/db_dump progs/db_dump185 progs/db_load progs/db_printlog \
-	progs/db_recover progs/db_stat clib
+	progs/db_recover progs/db_stat clib xa
 
 headers = db.h db_185.h
 
@@ -37,15 +37,15 @@ distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
 	     txn/txn.src README LICENSE \
 	     $(addprefix include/,btree.h btree_auto.h btree_ext.h \
 				  clib_ext.h common_ext.h cxx_int.h \
-				  db.h.src db_185.h.src db_am.h db_auto.h \
+				  db_am.h db_auto.h \
 				  db_cxx.h db_dispatch.h db_ext.h \
-				  db_int.h.src db_page.h db_shash.h db_swap.h \
+				  db_page.h db_shash.h db_swap.h \
 				  hash.h hash_auto.h hash_ext.h lock.h \
 				  lock_ext.h log.h log_auto.h log_ext.h \
 				  mp.h mp_ext.h mutex_ext.h os_ext.h queue.h \
 				  shqueue.h txn.h txn_auto.h txn_ext.h \
-				  os_func.h) \
-	     $(addprefix mutex/,x86.gcc uts4.cc.s sparc.gcc parisc.hp \
+				  os.h os_jump.h xa.h xa_ext.h) \
+	     $(addprefix mutex/,x86.gcc uts4_cc.s sparc.gcc parisc.hp \
 				parisc.gcc alpha.gcc alpha.dec README \
 				68020.gcc tsl_parisc.s sco.cc)
 
@@ -55,21 +55,21 @@ extra-libs := libdb
 extra-libs-others := $(extra-libs)
 extra-objs = getlong.o
 
-libdb-routines := bt_close bt_compare bt_conv bt_cursor bt_delete \
+libdb-routines := bt_compare bt_conv bt_curadj bt_cursor bt_delete \
 	bt_open bt_page bt_put bt_rec bt_recno bt_rsearch bt_search \
 	bt_split bt_stat btree_auto db db_appinit db_apprec \
-	db_auto \
+	db_auto db_iface db_am db_join \
 	db_byteorder db_conv db_dispatch db_dup db_err db_log2 os_alloc \
 	os_abs os_config os_dir os_fid os_fsync os_map os_oflags \
 	os_open os_rpath os_rw os_seek os_sleep os_stat os_unlink \
-	os_spin db_overflow db_pr db_rec db_region db_ret db_salloc \
-	db_shash db_thread hash hash_auto hash_conv hash_debug \
+	os_spin os_tmpdir db_overflow db_pr db_rec db_region db_ret \
+	db_salloc db_shash hash hash_auto hash_conv \
 	hash_dup hash_func hash_page hash_rec hash_stat lock \
 	lock_conflict lock_deadlock lock_region lock_util log log_archive \
 	log_auto log_compare log_findckp log_get log_put log_rec \
 	log_register mp_bh mp_fget mp_fopen mp_fput mp_fset \
 	mp_open mp_pr mp_region mp_sync mutex txn txn_auto \
-	txn_rec dbm db185
+	txn_rec dbm db185 xa xa_db xa_map
 
 others		:= makedb db_dump185 db_archive db_checkpoint db_deadlock \
 		db_dump db_load db_recover db_stat db_printlog

@@ -51,4 +51,8 @@ libdb {
     __db_dbm_delete; __db_dbm_fetch; __db_dbm_firstkey; __db_dbm_init;
     __db_dbm_nextkey; __db_dbm_store;
   }
+  GLIBC_2.2 {
+    # Internal functions.
+    __ham_get_page; __ham_put_page;
+  }
 }

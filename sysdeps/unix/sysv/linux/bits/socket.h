@@ -174,8 +174,28 @@ enum
 #endif
     MSG_CTRUNC		= 0x08,	/* Control data lost before delivery.  */
 #define MSG_CTRUNC	MSG_CTRUNC
-    MSG_PROXY		= 0x10	/* Supply or ask second address.  */
+    MSG_PROXY		= 0x10,	/* Supply or ask second address.  */
 #define MSG_PROXY	MSG_PROXY
+    MSG_TRUNC		= 0x20,
+#define	MSG_TRUNC	MSG_TRUNC
+    MSG_DONTWAIT	= 0x40, /* Nonblocking IO.  */
+#define	MSG_DONTWAIT	MSG_TRUNC
+    MSG_EOR		= 0x80, /* End of record.  */
+#define	MSG_EOR		MSG_EOR
+    MSG_WAITALL		= 0x100, /* Wait for a full request.  */
+#define	MSG_WAITALL	MSG_WAITALL
+    MSG_FIN		= 0x200,
+#define	MSG_FIN		MSG_FIN
+    MSG_SYN		= 0x400,
+#define	MSG_SYN		MSG_SYN
+    MSG_URG		= 0x800,
+#define	MSG_URG		MSG_URG
+    MSG_RST		= 0x1000,
+#define	MSG_RST		MSG_RST
+    MSG_ERRQUEUE	= 0x2000,
+#define	MSG_ERRQUEUE	MSG_ERRQUEUE
+    MSG_NOSIGNAL	= 0x4000
+#define	MSG_NOSIGNAL	MSG_NOSIGNAL
   };
 
 

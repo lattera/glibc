@@ -359,7 +359,7 @@ print_database (db)
   DBC *cursor;
   int status;
 
-  status = db->cursor (db, NULL, &cursor);
+  status = db->cursor (db, NULL, &cursor, 0);
   if (status != 0)
     {
       error (0, status, gettext ("while reading database"));
