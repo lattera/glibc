@@ -1,3 +1,29 @@
+2003-04-07  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/dl-fptr.c: Modify to remove the lock.
+
+2003-04-03  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/dl-fptr.c: Moved to ...
+	* sysdeps/generic/dl-fptr.c: Here.
+
+	* sysdeps/generic/dl-fptr.h: New.
+	* sysdeps/ia64/dl-fptr.h: New.
+
+	* sysdeps/ia64/dl-symaddr.c: Moved to ...
+	* sysdeps/generic/dl-symaddr.c: here.
+
+	* sysdeps/ia64/dl-machine.h: Include <dl-fptr.h>.
+	(IA64_BOOT_FPTR_TABLE_LEN): Removed.
+	(ia64_fdesc): Likewise.
+	(ia64_fdesc_table): Likewise.
+	(__ia64_make_fptr): Likewise.
+	(__ia64_init_bootstrap_fdesc_table): Replace __ia64_boot_fptr_table
+	with _dl_boot_fptr_table.
+	(elf_machine_runtime_setup): Replace `struct ia64_fdesc' with
+	`struct fdesc'.
+	(elf_machine_rela): Replace __ia64_make_fptr with _dl_make_fptr.
+
 2003-05-01  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/bp-thunks.h: Protect includes with [!__ASSEMBLER__].

@@ -1,5 +1,5 @@
-/* Get the symbol address.  IA-64 version.
-   Copyright (C) 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Function descriptors. Generic version.
+   Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,28 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <ldsodefs.h>
-#include <dl-machine.h>
+#ifndef dl_fptr_h
+#define dl_fptr_h 1
 
-void *
-_dl_symbol_address (struct link_map *map, const Elf64_Sym *ref)
-{
-  Elf64_Addr value = (map ? map->l_addr : 0) + ref->st_value;
+/* An FDESC is a function descriptor.  */
 
-  /* On ia64, we have to return the pointer to function descriptor. */
-  if (ELFW(ST_TYPE) (ref->st_info) == STT_FUNC)
-    return (void *) __ia64_make_fptr (map, ref, value);
-  else
-    return (void *) value;
-}
+struct fdesc
+  {
+    ElfW(Addr) ip;	/* code entry point */
+    ElfW(Addr) gp;	/* global pointer */
+  };
+
+struct fdesc_table
+  {
+    struct fdesc_table *next;
+    unsigned int len;			/* # of entries in fdesc table */
+    volatile unsigned int first_unused;	/* index of first available entry */
+    struct fdesc fdesc[0];
+  };
+
+extern ElfW(Addr) _dl_boot_fptr_table [];
+
+extern ElfW(Addr) _dl_make_fptr (struct link_map *, const ElfW(Sym) *,
+				 ElfW(Addr));
+
+#endif /* !dl_fptr_h */

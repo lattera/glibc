@@ -26,34 +26,12 @@
 #include <string.h>
 #include <link.h>
 #include <errno.h>
+#include <dl-fptr.h>
 #include <tls.h>
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
 #define DT_IA_64(x) (DT_IA_64_##x - DT_LOPROC + DT_NUM)
-
-/* There are currently 123 dynamic symbols in ld.so.
-   IA64_BOOT_FPTR_TABLE_LEN needs to be at least that big.  */
-#define IA64_BOOT_FPTR_TABLE_LEN	200
-
-/* An FDESC is a function descriptor.  */
-
-struct ia64_fdesc
-  {
-    Elf64_Addr ip;	/* code entry point */
-    Elf64_Addr gp;	/* global pointer */
-  };
-
-struct ia64_fdesc_table
-  {
-    struct ia64_fdesc_table *next;
-    unsigned int len;			/* # of entries in fdesc table */
-    volatile unsigned int first_unused;	/* index of first available entry */
-    struct ia64_fdesc fdesc[0];
-  };
-
-extern Elf64_Addr __ia64_make_fptr (struct link_map *, const Elf64_Sym *,
-				    Elf64_Addr);
 
 static inline void
 __ia64_init_bootstrap_fdesc_table (struct link_map *map)
@@ -61,9 +39,9 @@ __ia64_init_bootstrap_fdesc_table (struct link_map *map)
   Elf64_Addr *boot_table;
 
   /* careful: this will be called before got has been relocated... */
-  asm (";; addl %0 = @gprel (__ia64_boot_fptr_table), gp" : "=r"(boot_table));
+  asm (";; addl %0 = @gprel (_dl_boot_fptr_table), gp" : "=r"(boot_table));
 
-  map->l_mach.fptr_table_len = IA64_BOOT_FPTR_TABLE_LEN;
+  map->l_mach.fptr_table_len = ELF_MACHINE_BOOT_FPTR_TABLE_LEN;
   map->l_mach.fptr_table = boot_table;
 }
 
@@ -142,7 +120,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
       /* This function will be called to perform the relocation.  */
       if (!profile)
-	doit = (Elf64_Addr) ((struct ia64_fdesc *) &_dl_runtime_resolve)->ip;
+	doit = (Elf64_Addr) ((struct fdesc *) &_dl_runtime_resolve)->ip;
       else
 	{
 	  if (_dl_name_match_p (GL(dl_profile), l))
@@ -151,7 +129,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 		 want profiling and the timers are started.  */
 	      GL(dl_profile_map) = l;
 	    }
-	  doit = (Elf64_Addr) ((struct ia64_fdesc *) &_dl_runtime_profile)->ip;
+	  doit = (Elf64_Addr) ((struct fdesc *) &_dl_runtime_profile)->ip;
 	}
 
       reserve[1] = doit;
@@ -579,7 +557,7 @@ elf_machine_rela (struct link_map *map,
 	      return;
 	    }
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_FPTR64LSB))
-	    value = __ia64_make_fptr (sym_map, sym, value);
+	    value = _dl_make_fptr (sym_map, sym, value);
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_PCREL64LSB))
 	    value -= (Elf64_Addr) reloc_addr & -16;
 #if defined USE_TLS && (!defined RTLD_BOOTSTRAP || defined USE___THREAD)
