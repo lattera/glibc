@@ -40,7 +40,6 @@ rt_sigprocmask	-	rt_sigprocmask	4	__syscall_rt_sigprocmask
 rt_sigqueueinfo	-	rt_sigqueueinfo	3	__syscall_rt_sigqueueinfo
 rt_sigsuspend	-	rt_sigsuspend	2	__syscall_rt_sigsuspend
 rt_sigtimedwait	-	rt_sigtimedwait	4	__syscall_rt_sigtimedwait
-s_chown		chown	chown		3	__syscall_chown
 s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid

@@ -1,4 +1,43 @@
-Mon Mar  9 12:16:42 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-03-09 08:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/chown.c: Moved to ...
+	* sysdeps/unix/sysv/linux/i386/chown.c: ...here.
+
+	* sysdeps/unix/sysv/linux/i386/chown.c: Correct versioning information.
+	* libc.map: Add chown to GLIBC_2.1.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add s_chown here.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove s_chown here.
+
+1998-03-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/ffs.S: Rename function to __ffs and make ffs a
+	weak alias.
+	* sysdeps/alpha/ffs.c: Likewise.
+	* sysdeps/am29k/ffs.c: Likewise.
+	* sysdeps/i386/ffs.c: Likewise.
+	* sysdeps/i960/ffs.c: Likewise.
+	* sysdeps/m68k/ffs.c: Likewise.
+	* sysdeps/m88k/ffs.c: Likewise.
+	* sysdeps/powerpc/ffs.c: Likewise.
+	* sysdeps/rs6000/ffs.c: Likewise.
+	* sysdeps/vax/ffs.s: Likewise.
+	* string/string.h: Declare __ffs.
+	* libc.map: Export it.
+	* elf/dl-profile.c (_dl_start_profile): Use __ffs instead of
+	__builtin_ffs, which is not guaranteed to be namespace clean.
+
+1998-03-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/sprof.c: Rewrite symbol handling to use the normal symbol
+	table, which is much more likely to exist than debugging symbols.
+	(printsym): Remove const.
+	(load_shobj): Don't use _dl_pagesize.  Fix mapping of section
+	header table.
+
+	* libc.map: Export __profile_frequency, used by elf/sprof, to
+	avoid infinite recursion during startup.
+
+1998-03-09 12:16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (SYSCALL_ERROR_HANDLER):
 	Readd lost negate.

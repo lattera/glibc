@@ -26,7 +26,7 @@
 #if	defined (__GNUC__) && defined (__mc68020__)
 
 int
-ffs (x)
+__ffs (x)
      int x;
 {
   int cnt;
@@ -35,6 +35,7 @@ ffs (x)
 
   return 32 - cnt;
 }
+weak_alias (__ffs, ffs)
 
 #else
 

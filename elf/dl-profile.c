@@ -223,7 +223,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   if ((HASHFRACTION & (HASHFRACTION - 1)) == 0)
     /* If HASHFRACTION is a power of two, mcount can use shifting
        instead of integer division.  Precompute shift amount.  */
-    log_hashfraction = __builtin_ffs (hashfraction * sizeof (*froms)) - 1;
+    log_hashfraction = __ffs (hashfraction * sizeof (*froms)) - 1;
   else
     log_hashfraction = -1;
   tossize = textsize / HASHFRACTION;

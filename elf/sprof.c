@@ -21,7 +21,6 @@
 #include <argp.h>
 #include <dlfcn.h>
 #include <elf.h>
-#include <endian.h>
 #include <error.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -30,7 +29,6 @@
 #include <locale.h>
 #include <obstack.h>
 #include <search.h>
-#include <stab.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,15 +127,6 @@ struct here_cg_arc_record
     uint32_t count;
   } __attribute__ ((packed));
 
-/* Information about the stab debugging info.  This should be in a
-   head but it is not.  */
-#define STRDXOFF (0)
-#define TYPEOFF (4)
-#define OTHEROFF (5)
-#define DESCOFF (6)
-#define VALOFF (8)
-#define STABSIZE (12)
-
 
 struct known_symbol
 {
@@ -154,7 +143,7 @@ struct shobj
   const char *name;		/* User-provided name.  */
 
   struct link_map *map;
-  const char *strtab;		/* String table of shared object.  */
+  const char *dynstrtab;	/* Dynamic string table of shared object.  */
   const char *soname;		/* Soname of shared object.  */
 
   uintptr_t lowpc;
@@ -167,12 +156,11 @@ struct shobj
   unsigned int hashfraction;
   int s_scale;
 
-  void *stab_map;
-  size_t stab_mapsize;
-  const char *stab;
-  size_t stab_size;
-  const char *stabstr;
-  size_t stabstr_size;
+  void *symbol_map;
+  size_t symbol_mapsize;
+  const ElfW(Sym) *symtab;
+  size_t symtab_size;
+  const char *strtab;
 
   struct obstack ob_str;
   struct obstack ob_sym;
@@ -360,8 +348,7 @@ load_shobj (const char *name)
   size_t pagesize = getpagesize ();
   const char *shstrtab;
   int idx;
-  ElfW(Shdr) *stab_entry;
-  ElfW(Shdr) *stabstr_entry;
+  ElfW(Shdr) *symtab_entry;
 
   /* Since we use dlopen() we must be prepared to work around the sometimes
      strange lookup rules for the shared objects.  If we have a file foo.so
@@ -402,9 +389,9 @@ load_shobj (const char *name)
   for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
     if (ph->p_type == PT_LOAD && (ph->p_flags & PF_X))
       {
-	ElfW(Addr) start = (ph->p_vaddr & ~(_dl_pagesize - 1));
-	ElfW(Addr) end = ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
-			  & ~(_dl_pagesize - 1));
+	ElfW(Addr) start = (ph->p_vaddr & ~(pagesize - 1));
+	ElfW(Addr) end = ((ph->p_vaddr + ph->p_memsz + pagesize - 1)
+			  & ~(pagesize - 1));
 
 	if (start < mapstart)
 	  mapstart = start;
@@ -480,25 +467,24 @@ load_shobj (const char *name)
   if (do_test)
     printf ("s_scale: %d\n", result->s_scale);
 
-  /* Determine the string table.  */
+  /* Determine the dynamic string table.  */
   if (map->l_info[DT_STRTAB] == NULL)
-    result->strtab = NULL;
+    result->dynstrtab = NULL;
   else
-    result->strtab = (const char *) (map->l_addr
-				     + map->l_info[DT_STRTAB]->d_un.d_ptr);
+    result->dynstrtab = (const char *) (map->l_addr
+					+ map->l_info[DT_STRTAB]->d_un.d_ptr);
   if (do_test)
-    printf ("string table: %p\n", result->strtab);
+    printf ("string table: %p\n", result->dynstrtab);
 
   /* Determine the soname.  */
   if (map->l_info[DT_SONAME] == NULL)
     result->soname = NULL;
   else
-    result->soname = result->strtab + map->l_info[DT_SONAME]->d_un.d_val;
+    result->soname = result->dynstrtab + map->l_info[DT_SONAME]->d_un.d_val;
   if (do_test)
     printf ("soname: %s\n", result->soname);
 
-  /* Now the hard part, we have to load the debugging data.  For now
-     we support stabs only.
+  /* Now we have to load the symbol table.
 
      First load the section header table.  */
   ehdr = (ElfW(Ehdr) *) map->l_addr;
@@ -514,7 +500,7 @@ load_shobj (const char *name)
     error (EXIT_FAILURE, errno, _("Reopening shared object `%s' failed"));
 
   /* Now map the section header.  */
-  ptr = mmap (NULL, (ehdr->e_phnum * sizeof (ElfW(Shdr))
+  ptr = mmap (NULL, (ehdr->e_shnum * sizeof (ElfW(Shdr))
 		     + (ehdr->e_shoff & (pagesize - 1))), PROT_READ,
 	      MAP_SHARED|MAP_FILE, fd, ehdr->e_shoff & ~(pagesize - 1));
   if (ptr == MAP_FAILED)
@@ -532,58 +518,64 @@ load_shobj (const char *name)
   shstrtab = ((const char *) ptr
 	      + (shdr[ehdr->e_shstrndx].sh_offset & (pagesize - 1)));
 
-  /* Search for the ".stab" and ".stabstr" section (and ".rel.stab" ?).  */
-  stab_entry = NULL;
-  stabstr_entry = NULL;
+  /* Search for the ".symtab" section.  */
+  symtab_entry = NULL;
   for (idx = 0; idx < ehdr->e_shnum; ++idx)
-    /* We only have to look for sections which are not loaded.  */
-    if (shdr[idx].sh_addr == 0)
+    if (shdr[idx].sh_type == SHT_SYMTAB
+	&& strcmp (shstrtab + shdr[idx].sh_name, ".symtab") == 0)
       {
-	if (strcmp (shstrtab + shdr[idx].sh_name, ".stab") == 0)
-	  stab_entry = &shdr[idx];
-	else if (strcmp (shstrtab + shdr[idx].sh_name, ".stabstr") == 0)
-	  stabstr_entry = &shdr[idx];
+	symtab_entry = &shdr[idx];
+	break;
       }
 
-  /* We don't need the sectin header string table anymore.  */
+  /* We don't need the section header string table anymore.  */
   munmap (ptr, (shdr[ehdr->e_shstrndx].sh_size
 		+ (shdr[ehdr->e_shstrndx].sh_offset & (pagesize - 1))));
 
-  if (stab_entry == NULL || stabstr_entry == NULL)
+  if (symtab_entry == NULL)
     {
       fprintf (stderr, _("\
 *** The file `%s' is stripped: no detailed analysis possible\n"),
 	      name);
-      result->stab = NULL;
-      result->stabstr = NULL;
+      result->symtab = NULL;
+      result->strtab = NULL;
     }
   else
     {
-      if (stab_entry->sh_offset + stab_entry->sh_size
-	  != stabstr_entry->sh_offset)
-	abort ();
-      if (stab_entry->sh_size % STABSIZE != 0)
-	abort ();
+      ElfW(Off) min_offset, max_offset;
+      ElfW(Shdr) *strtab_entry;
 
-      result->stab_map = mmap (NULL, (stab_entry->sh_size
-				      + stabstr_entry->sh_size
-				      + (stab_entry->sh_offset
-					 & (pagesize - 1))),
-			       PROT_READ, MAP_SHARED|MAP_FILE, fd,
-			       stab_entry->sh_offset & ~(pagesize - 1));
-      if (result->stab_map == NULL)
-	error (EXIT_FAILURE, errno, _("failed to load stab data:"));
+      strtab_entry = &shdr[symtab_entry->sh_link];
 
-      result->stab = ((const char *) result->stab_map
-		      + (stab_entry->sh_offset & (pagesize - 1)));
-      result->stab_size = stab_entry->sh_size;
-      result->stabstr = result->stab + stab_entry->sh_size;
-      result->stabstr_size = stabstr_entry->sh_size;
-      result->stab_mapsize = (stab_entry->sh_size + stabstr_entry->sh_size
-			      + (stab_entry->sh_offset & (pagesize - 1)));
+      /* Find the minimum and maximum offsets that include both the symbol
+	 table and the string table.  */
+      if (symtab_entry->sh_offset < strtab_entry->sh_offset)
+	{
+	  min_offset = symtab_entry->sh_offset & ~(pagesize - 1);
+	  max_offset = strtab_entry->sh_offset + strtab_entry->sh_size;
+	}
+      else
+	{
+	  min_offset = strtab_entry->sh_offset & ~(pagesize - 1);
+	  max_offset = symtab_entry->sh_offset + symtab_entry->sh_size;
+	}
+
+      result->symbol_map = mmap (NULL, max_offset - min_offset,
+				 PROT_READ, MAP_SHARED|MAP_FILE, fd,
+				 min_offset);
+      if (result->symbol_map == NULL)
+	error (EXIT_FAILURE, errno, _("failed to load symbol data"));
+
+      result->symtab
+	= (const ElfW(Sym) *) ((const char *) result->symbol_map
+			       + (symtab_entry->sh_offset - min_offset));
+      result->symtab_size = symtab_entry->sh_size;
+      result->strtab = ((const char *) result->symbol_map
+			+ (strtab_entry->sh_offset - min_offset));
+      result->symbol_mapsize = max_offset - min_offset;
     }
 
-  /* Now we also don't need the sectio header table anymore.  */
+  /* Now we also don't need the section header table anymore.  */
   munmap ((char *) shdr - (ehdr->e_shoff & (pagesize - 1)),
 	  (ehdr->e_phnum * sizeof (ElfW(Shdr))
 	   + (ehdr->e_shoff & (pagesize - 1))));
@@ -598,7 +590,7 @@ load_shobj (const char *name)
 static void
 unload_shobj (struct shobj *shobj)
 {
-  munmap (shobj->stab_map, shobj->stab_mapsize);
+  munmap (shobj->symbol_map, shobj->symbol_mapsize);
   dlclose (shobj->map);
 }
 
@@ -824,7 +816,7 @@ static void
 printsym (const void *node, VISIT value, int level)
 {
   if (value == leaf || value == postorder)
-    sortsym[symidx++] = *(const struct known_symbol **) node;
+    sortsym[symidx++] = *(struct known_symbol **) node;
 }
 
 
@@ -833,9 +825,6 @@ read_symbols (struct shobj *shobj)
 {
   void *load_addr = (void *) shobj->map->l_addr;
   int n = 0;
-  int idx;
-  const char *last_name = NULL;
-  uintptr_t last_addr = 0;
 
   /* Initialize the obstacks.  */
 #define obstack_chunk_alloc malloc
@@ -843,55 +832,33 @@ read_symbols (struct shobj *shobj)
   obstack_init (&shobj->ob_str);
   obstack_init (&shobj->ob_sym);
 
-  /* Process the stabs.  */
-  for (idx = 0; idx < shobj->stab_size; idx += 12)
-    if (*(shobj->stab + idx + TYPEOFF) == N_FUN)
-      {
-	const char *str = (shobj->stabstr
-			   + *((uint32_t *) (shobj->stab + idx + STRDXOFF)));
-
-	if (*str != '\0')
+  /* Process the symbols.  */
+  if (shobj->symtab)
+    {
+      const ElfW(Sym) *sym = shobj->symtab;
+      const ElfW(Sym) *sym_end
+	= (const ElfW(Sym) *) ((const char *) sym + shobj->symtab_size);
+      for (; sym < sym_end; sym++)
+	if ((ELFW(ST_TYPE) (sym->st_info) == STT_FUNC
+	     || ELFW(ST_TYPE) (sym->st_info) == STT_NOTYPE)
+	    && sym->st_size != 0)
 	  {
-	    last_name = str;
-	    last_addr = *((uint32_t *) (shobj->stab + idx + VALOFF));
-	  }
-	else
-	  {
-	    const char *endp;
-	    char *name0;
-	    struct known_symbol *newsym;
-
-	    if (last_name == NULL)
-	      abort ();
-
-	    endp = strchr (last_name, ':');
-
-	    name0 = (char *) obstack_copy0 (&shobj->ob_str, last_name,
-					    endp - last_name);
-	    if (name0 != NULL)
-	      newsym =
-		(struct known_symbol *) obstack_alloc (&shobj->ob_sym,
+	    struct known_symbol *newsym
+	      = (struct known_symbol *) obstack_alloc (&shobj->ob_sym,
 						       sizeof (*newsym));
-	    else
-	      /* Keep the stupid compiler happy.  */
-	      newsym = NULL;
-	    if (name0 == NULL || newsym == NULL)
+	    if (newsym == NULL)
 	      error (EXIT_FAILURE, errno, _("cannot allocate symbol data"));
 
-	    newsym->name = name0;
-	    newsym->addr = last_addr;
-	    newsym->size = *((uint32_t *) (shobj->stab + idx + VALOFF));
+	    newsym->name = &shobj->strtab[sym->st_name];
+	    newsym->addr = sym->st_value;
+	    newsym->size = sym->st_size;
 	    newsym->ticks = 0;
 
 	    tsearch (newsym, &symroot, symorder);
 	    ++n;
-
-	    last_name = NULL;
-	    last_addr = 0;
 	  }
-      }
-
-  if (shobj->stab == NULL)
+    }
+  else
     {
       /* Blarg, the binary is stripped.  We have to rely on the
 	 information contained in the dynamic section of the object.  */

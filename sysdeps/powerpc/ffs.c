@@ -21,10 +21,11 @@
 #include <string.h>
 
 int
-ffs (int x)
+__ffs (int x)
 {
   int cnt;
 
   asm ("cntlzw %0,%1" : "=r" (cnt) : "r" (x & -x));
   return 32 - cnt;
 }
+weak_alias (__ffs, ffs)

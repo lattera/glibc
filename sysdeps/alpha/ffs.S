@@ -25,7 +25,7 @@
 	.set noreorder
 	.set noat
 
-ENTRY(ffs)
+ENTRY(__ffs)
 #ifdef PROF
 	ldgp	gp, 0(pv)
 	lda	AT, _mcount
@@ -69,4 +69,5 @@ ENTRY(ffs)
 
 $done:	ret
 
-	END(ffs)
+	END(__ffs)
+weak_alias (__ffs, ffs)

@@ -232,6 +232,7 @@ extern char *rindex __P ((__const char *__s, int __c));
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
+extern int __ffs __P ((int __i));
 extern int ffs __P ((int __i));
 
 /* Compare S1 and S2, ignoring case.  */

@@ -24,7 +24,7 @@
 
 /* Find the first bit set in I.  */
 int
-ffs (i)
+__ffs (i)
      int i;
 {
   static const unsigned char table[] =
@@ -45,3 +45,4 @@ ffs (i)
 
   return table[x >> a] + a;
 }
+weak_alias (__ffs, ffs)
