@@ -2,7 +2,6 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
 dnl The standard hppa assembler uses `;' to start comments and `!'
 dnl as a line separator.
-hppa*linux*)
 AC_CACHE_CHECK(for assembler line separator,
 	       libc_cv_asm_line_sep, [dnl
 cat > conftest.s <<EOF
