@@ -13,12 +13,6 @@
 	These are now handled by generic magic from
 	libpthread-static-only-routines being set.
 
-2004-11-17  Roland McGrath  <roland@redhat.com>
-
-	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): Handle
-	CLOCK_PROCESS_CPUTIME_ID and CLOCK_PROCESS_THREAD_ID specially,
-	translating to the kernel clockid_t for our own process/thread clock.
-
 2004-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_PRIORITIZED_IO,
