@@ -2,17 +2,17 @@ comment_char %
 escape_char  /
 %
 % Persian Language Locale for Iran with UTF-8 character set
-% Source: The Persian Internet Project
+% Source: The FarsiWeb Project
 % Address: Computing Center, Sharif University of Technology
 %    Azadi Ave, Tehran, Iran
 % Contact: Roozbeh Pournader
-% Email: roozbeh@sina.sharif.ac.ir
+% Email: roozbeh@sharif.edu
 % Tel: +98 21 6022378
 % Fax: +98 21 6019568
 % Language: fa
 % Territory: IR
-% Revision: 2.0
-% Date: 2000-10-17
+% Revision: 2.1
+% Date: 2001-03-18
 % Users: general
 % Repertoiremap:
 % Charset: UTF-8
@@ -21,37 +21,147 @@ escape_char  /
 
 LC_IDENTIFICATION
 title      "Persian locale for Iran"
-source     "The Persian Internet Project"
+source     "The FarsiWeb Project"
 address    "Computing Center, Sharif University of Technology, Azadi Ave, Tehran, Iran"
 contact    "Roozbeh Pournader"
-email      "roozbeh@sina.sharif.ac.ir"
+email      "roozbeh@sharif.edu"
 tel        "+98 21 6022378"
 fax        "+98 21 6019568"
 language   "Persian"
 territory  "Iran"
-revision   "2.0"
-date       "2000-10-17"
+revision   "2.1"
+date       "2001-03-18"
 %
-category  "fa_IR:2000";LC_IDENTIFICATION
-category  "fa_IR:2000";LC_CTYPE
-category  "fa_IR:2000";LC_COLLATE
-category  "fa_IR:2000";LC_TIME
-category  "fa_IR:2000";LC_NUMERIC
-category  "fa_IR:2000";LC_MONETARY
-category  "fa_IR:2000";LC_MESSAGES
-category  "fa_IR:2000";LC_PAPER
-category  "fa_IR:2000";LC_NAME
-category  "fa_IR:2000";LC_ADDRESS
-category  "fa_IR:2000";LC_TELEPHONE
+category  "fa_IR:2001";LC_IDENTIFICATION
+category  "fa_IR:2001";LC_CTYPE
+category  "fa_IR:2001";LC_COLLATE
+category  "fa_IR:2001";LC_TIME
+category  "fa_IR:2001";LC_NUMERIC
+category  "fa_IR:2001";LC_MONETARY
+category  "fa_IR:2001";LC_MESSAGES
+category  "fa_IR:2001";LC_PAPER
+category  "fa_IR:2001";LC_NAME
+category  "fa_IR:2001";LC_ADDRESS
+category  "fa_IR:2001";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+outdigit <U06F0>..<U06F9>
 END LC_CTYPE
 
 LC_COLLATE
 copy "iso14651_t1"
+
+% The Persian alphabet order is: ALEF WITH MADDA ABOVE, ALEF, HAMZA (all
+% kinds), BEH, PEH, TEH, JEEM, TCHEH, HAH, KHAH, DAL, THAL, REH, ZAIN, JEH,
+% SEEN, SHEEN, SAD, DAD, TAH, ZAH, AIN, GHAIN, FEH, QAF, KAF, GAF, LAM,
+% MEEM, NOON, WAW, HEH, YEH.
+% The various kind of HAMZA are sorted as ALEF WITH HAMZA ABOVE, ALEF WITH
+% HAMZA BELOW, WAW WITH HAMZA ABOVE, YEH WITH HAMZA ABOVE.
+%
+% TODO: add "Waw + Hamza Above -> Waw With Hamza Above" suport and things
+% like that.
+%
+% TODO: add Arabic contextual forms support.
+
+collating-symbol <AHY> % accent hamza over yeh
+collating-symbol <ADL> % dotless
+collating-symbol <ADO> % with dots over
+collating-symbol <AWO> % with wasla over
+collating-symbol <alef_madda>
+collating-symbol <yeh>
+
+reorder-after <BAS>
+<AHA>
+
+<AHS>
+<AWO>
+<AHY>
+<ADL>
+<ADO>
+<AYE>
+<YBA>
+
+reorder-after <th>
+<alef_madda>
+<alef>
+<hamza>
+
+reorder-after <waw>
+<heh>
+<yeh>
+
+% Persian uses fatha, kasra, damma, fathatan, kasratan, dammatan order.
+
+reorder-after <U066D>
+<U064E> IGNORE;IGNORE;IGNORE;<U064E> %<fatha_no>
+<UFE76> IGNORE;IGNORE;IGNORE;<UFE76> %<fatha_is>
+<UFE77> IGNORE;IGNORE;IGNORE;<UFE77> %<fatha_me>
+<U0650> IGNORE;IGNORE;IGNORE;<U0650> %<kasra_no>
+<UFE7A> IGNORE;IGNORE;IGNORE;<UFE7A> %<kasra_is>
+<UFE7B> IGNORE;IGNORE;IGNORE;<UFE7B> %<kasra_me>
+<U064F> IGNORE;IGNORE;IGNORE;<U064F> %<damma_no>
+<UFE78> IGNORE;IGNORE;IGNORE;<UFE78> %<damma_is>
+<UFE79> IGNORE;IGNORE;IGNORE;<UFE79> %<damma_me>
+<U064B> IGNORE;IGNORE;IGNORE;<U064B> %<fathatan_no>
+<UFE70> IGNORE;IGNORE;IGNORE;<UFE70> %<fathatan_is>
+<UFE71> IGNORE;IGNORE;IGNORE;<UFE71> %<fathatan_me>
+<U064D> IGNORE;IGNORE;IGNORE;<U064D> %<kasratan_no>
+<UFE74> IGNORE;IGNORE;IGNORE;<UFE74> %<kasratan_is>
+<U064C> IGNORE;IGNORE;IGNORE;<U064C> %<dammatan_no>
+<UFE72> IGNORE;IGNORE;IGNORE;<UFE72> %<dammatan_is>
+
+reorder-after <UFE7F>
+<U0653> IGNORE;IGNORE;IGNORE;<U0653> %<madda_no>   
+<U0654> IGNORE;IGNORE;IGNORE;<U0654> %<hamzaabove_no>
+<U0655> IGNORE;IGNORE;IGNORE;<U0655> %<hamzabelow_no>
+<U0670> IGNORE;IGNORE;IGNORE;<U0670> %<supalef_no>
+
+% Persian digits are sorted before Arabic ones: they are the basic forms.
+reorder-after <U0621>
+<U06F0> <0>;<BAS>;<MIN>;IGNORE
+<U0660> <0>;<PCL>;<MIN>;IGNORE
+<U06F1> <1>;<BAS>;<MIN>;IGNORE
+<U0661> <1>;<PCL>;<MIN>;IGNORE
+<U06F2> <2>;<BAS>;<MIN>;IGNORE
+<U0662> <2>;<PCL>;<MIN>;IGNORE
+<U06F3> <3>;<BAS>;<MIN>;IGNORE
+<U0663> <3>;<PCL>;<MIN>;IGNORE
+<U06F4> <4>;<BAS>;<MIN>;IGNORE
+<U0664> <4>;<PCL>;<MIN>;IGNORE
+<U06F5> <5>;<BAS>;<MIN>;IGNORE
+<U0665> <5>;<PCL>;<MIN>;IGNORE
+<U06F6> <6>;<BAS>;<MIN>;IGNORE
+<U0666> <6>;<PCL>;<MIN>;IGNORE
+<U06F7> <7>;<BAS>;<MIN>;IGNORE
+<U0667> <7>;<PCL>;<MIN>;IGNORE
+<U06F8> <8>;<BAS>;<MIN>;IGNORE
+<U0668> <8>;<PCL>;<MIN>;IGNORE
+<U06F9> <9>;<BAS>;<MIN>;IGNORE
+<U0669> <9>;<PCL>;<MIN>;IGNORE
+
+% And then the letters:
+
+<U0622> <alef_madda>;<BAS>;<MIN>;IGNORE
+<U0623> <hamza>;<AHA>;<MIN>;IGNORE
+<U0624> <hamza>;<AHW>;<MIN>;IGNORE
+<U0625> <hamza>;<AHS>;<MIN>;IGNORE
+<U0626> <hamza>;<AHY>;<MIN>;IGNORE
+reorder-after <U0648>
+<U0629> <heh>;<ADO>;<MIN>;IGNORE
+<U06C0> <heh>;<AHA>;<MIN>;IGNORE
+reorder-after <U0642>
+<U06A9> <kaf>;<BAS>;<MIN>;IGNORE
+<U0643> <kaf>;<PCL>;<MIN>;IGNORE
+reorder-after <U0648>
+<U06CC> <yeh>;<BAS>;<MIN>;IGNORE
+<U0649> <yeh>;<ADL>;<MIN>;IGNORE
+<U064A> <yeh>;<AYE>;<MIN>;IGNORE
+reorder-end
+
 END LC_COLLATE
 
 LC_MONETARY
@@ -125,9 +235,9 @@ d_fmt   "<U0025><U0059><U002F><U0025><U006D><U002F><U0025><U0064>"
 t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 t_fmt_ampm    "<U202B><U0025><U0049><U003A><U0025><U004D><U003A><U0025>/
 <U0053><U0020><U0025><U0070><U202C>"
-date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020>/
-<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025>/
-<U005A><U0020><U0025><U0059>"
+%date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020>/
+%<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025>/
+%<U005A><U0020><U0025><U0059>"
 first_weekday 7
 first_workday 7
 cal_direction 3
@@ -175,11 +285,9 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
 country_name   "<U0627><U06CC><U0631><U0627><U0646>"
-%country_post   "???"
 country_ab2    "<U0049><U0052>"
 country_ab3    "<U0049><U0052><U004E>"
 country_num    364
-% right?
 country_car    "<U0049><U0052>"
 country_isbn   "<U0039><U0036><U0034>"
 lang_name      "<U0641><U0627><U0631><U0633><U06CC>"

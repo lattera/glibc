@@ -178,14 +178,14 @@ ifneq ($(strip $(MAKEINFO)),:)
 ifneq ($(OLD_DEBIAN_INSTALL_INFO),yes)
 install: $(inst_infodir)/libc.info dir-add.info
 	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
-	 test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
+	 test -f $(inst_infodir)/dir || $(INSTALL_DATA) dir $(inst_infodir);\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) dir-add.info;\
 	else : ; fi
 else
 install: $(inst_infodir)/libc.info dir-add.info
 	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
-	  test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
+	  test -f $(inst_infodir)/dir || $(INSTALL_DATA) dir $(inst_infodir);\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) \
 	     --section '^GNU Libraries:' 'GNU Libraries:' \
 	     $(inst_infodir)/libc.info;\

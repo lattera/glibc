@@ -1,3 +1,8 @@
+2001-03-17  H.J. Lu  <hjl@gnu.org>
+
+	* manual/Makefile (install): Use $(INSTALL_DATA) instead of
+	cp to install `dir'.
+
 2001-03-19  Andreas Schwab  <schwab@suse.de>
 
 	* Makerules (build-shlib): Make sure exit codes get checked

@@ -1,3 +1,8 @@
+2001-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/fa_IR: Add outdigit information and collation.
+	Patch by Roozbeh Pournader <roozbeh@sharif.edu>.
+
 2001-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/i18n: Don't define outdigit.
