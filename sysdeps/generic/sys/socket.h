@@ -69,7 +69,8 @@ enum __socket_type
 #define	PF_IPX		23	/* Novell Internet Protocol.  */
 #define	PF_SIP		24	/* Simple Internet Protocol.  */
 #define PF_PIP		25	/* Help Identify PIP packets.  */
-#define	PF_MAX		26
+#define PF_INET6	26	/* IP version 6.  */
+#define	PF_MAX		27
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC
@@ -100,6 +101,7 @@ enum __socket_type
 #define	AF_IPX		PF_IPX
 #define	AF_SIP		PF_SIP
 #define pseudo_AF_PIP	PF_PIP
+#define AF_INET6	PF_INET6
 #define	AF_MAX		PF_MAX
 
 
