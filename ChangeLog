@@ -1,3 +1,10 @@
+2004-10-31  Mariusz Mazur <mmazur@kernel.pl>
+
+	* sysdeps/unix/sysv/linux/alpha/setregid.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/setresgid.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/setreuid.c: New file.
+
 2004-10-27  Derek R. Price  <derek@ximbiot.com>
 
 	[BZ #487] This change is imported from gnulib.
