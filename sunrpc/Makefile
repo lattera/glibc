@@ -1,4 +1,4 @@
-# Copyright (C) 1994, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1994,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -76,7 +76,8 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_tblout.o rpc_sample.o
 # These headers are part of rpcgen.
 distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h \
-	      $(rpcgen-objs:.o=.c) etc.rpc
+	      $(rpcgen-objs:.o=.c) etc.rpc \
+	      errqueue.h
 extra-objs = $(rpcgen-objs)
 
 all: # Make this the default target; it will be defined in Rules.

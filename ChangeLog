@@ -1,3 +1,7 @@
+2001-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/Makefile (distribute): Add errqueue.h.
+
 2001-01-10  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ia64/dl-machine.h (TRAMPOLINE_TEMPLATE): Also preserve
