@@ -30,30 +30,34 @@
 # define PSEUDO(name, syscall_name, args)				\
   .section ".text";							\
   ENTRY (name)								\
+    cfi_startproc;							\
     SINGLE_THREAD_P;							\
     bne- .Lpseudo_cancel;						\
     DO_CALL (SYS_ify (syscall_name));					\
     PSEUDO_RET;								\
   .Lpseudo_cancel:							\
     stdu 1,-128(1);							\
+    cfi_adjust_cfa_offset (128);					\
     mflr 9;								\
     std  9,128+16(1);							\
+    cfi_offset (lr, 16);						\
     DOCARGS_##args;	/* save syscall args around CENABLE.  */	\
     CENABLE;								\
     std  3,72(1);	/* store CENABLE return value (MASK).  */	\
     UNDOCARGS_##args;	/* restore syscall args.  */			\
     DO_CALL (SYS_ify (syscall_name));					\
     mfcr 0;		/* save CR/R3 around CDISABLE.  */		\
-    std  3,64(1);								\
+    std  3,64(1);							\
     std  0,8(1);							\
     ld   3,72(1);	/* pass MASK to CDISABLE.  */			\
     CDISABLE;								\
     ld   9,128+16(1);							\
     ld   0,8(1);	/* restore CR/R3. */				\
-    ld   3,64(1);								\
+    ld   3,64(1);							\
     mtlr 9;								\
     mtcr 0;								\
-    addi 1,1,128;
+    addi 1,1,128;							\
+    cfi_endproc;
 
 # define DOCARGS_0
 # define UNDOCARGS_0

@@ -68,7 +68,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler2)			      \
 # ifdef IS_IN_libpthread
 #  define CENABLE	call __pthread_enable_asynccancel
 #  define CDISABLE	call __pthread_disable_asynccancel
-# elif defined !NOT_IN_libc
+# elif !defined NOT_IN_libc
 #  define CENABLE	call __libc_enable_asynccancel
 #  define CDISABLE	call __libc_disable_asynccancel
 # else
