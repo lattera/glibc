@@ -1,3 +1,7 @@
+2004-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/ypclnt.c (yp_bind_file): Optimize a bit.  Minimal cleanups.
+
 2004-09-23  Andreas Jaeger  <aj@suse.de>
 
 	* locale/weight.h (findidx): Remove static, it's not supported

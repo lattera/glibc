@@ -74,7 +74,7 @@ yp_bind_client_create (const char *domain, dom_binding *ysd,
   if (ysd->dom_client != NULL)
     {
       /* If the program exits, close the socket */
-      if (fcntl (ysd->dom_socket, F_SETFD, 1) == -1)
+      if (fcntl (ysd->dom_socket, F_SETFD, FD_CLOEXEC) == -1)
 	perror ("fcntl: F_SETFD");
     }
 }
@@ -83,23 +83,18 @@ yp_bind_client_create (const char *domain, dom_binding *ysd,
 static void
 yp_bind_file (const char *domain, dom_binding *ysd)
 {
-  struct ypbind_resp ypbr;
-  char path[sizeof (BINDINGDIR) + strlen (domain) + 10];
-  struct iovec vec[2];
-  unsigned short port;
-  int fd;
+  char path[sizeof (BINDINGDIR) + strlen (domain) + 3 * sizeof (unsigned) + 3];
 
-  sprintf (path, "%s/%s.%d", BINDINGDIR, domain, YPBINDVERS);
-  fd = open (path, O_RDONLY);
+  snprintf (path, sizeof (path), "%s/%s.%u", BINDINGDIR, domain, YPBINDVERS);
+  int fd = open (path, O_RDONLY);
   if (fd >= 0)
     {
-      /* We have a binding file and could save a RPC call */
-      vec[0].iov_base = &port;
-      vec[0].iov_len = sizeof (port);
-      vec[1].iov_base = &ypbr;
-      vec[1].iov_len = sizeof (ypbr);
+      /* We have a binding file and could save a RPC call.  The file
+	 contains a port number and the YPBIND_RESP record.  The port
+	 number (16 bits) can be ignored.  */
+      struct ypbind_resp ypbr;
 
-      if (readv (fd, vec, 2) == sizeof (port) + sizeof (ypbr))
+      if (pread (fd, &ypbr, sizeof (ypbr), 2) == sizeof (ypbr))
 	yp_bind_client_create (domain, ysd, &ypbr);
 
       close (fd);
@@ -183,9 +178,9 @@ __yp_bind (const char *domain, dom_binding **ypdb)
     }
 
 #if USE_BINDINGDIR
-      /* Try binding dir at first if we have no binding */
+  /* Try binding dir at first if we have no binding */
   if (ysd->dom_client == NULL)
-	yp_bind_file (domain, ysd);
+    yp_bind_file (domain, ysd);
 #endif /* USE_BINDINGDIR */
 
   if (ysd->dom_client == NULL)
