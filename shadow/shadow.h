@@ -74,31 +74,31 @@ extern int putspent __P ((__const struct spwd *__p, FILE *__stream));
 
 #ifdef	__USE_REENTRANT
 /* Reentrant versions of some of the functions above.  */
-extern struct spwd *__getspent_r __P ((struct spwd *__result_buf,
-				       char *__buffer, int __buflen));
-extern struct spwd *getspent_r __P ((struct spwd *__result_buf,
-				     char *__buffer, int __buflen));
+extern int __getspent_r __P ((struct spwd *__result_buf, char *__buffer,
+			      size_t __buflen, struct spwd **__result));
+extern int getspent_r __P ((struct spwd *__result_buf, char *__buffer,
+			    size_t __buflen, struct spwd **__result));
 
-extern struct spwd *__getspnam_r __P ((__const char *__name,
-				       struct spwd *__result_buf,
-				       char *__buffer, int __buflen));
-extern struct spwd *getspnam_r __P ((__const char *__name,
-				     struct spwd *__result_buf,
-				     char *__buffer, int __buflen));
+extern int __getspnam_r __P ((__const char *__name, struct spwd *__result_buf,
+			      char *__buffer, size_t __buflen,
+			      struct spwd **__result));
+extern int getspnam_r __P ((__const char *__name, struct spwd *__result_buf,
+			    char *__buffer, size_t __buflen,
+			    struct spwd **__result));
 
-extern struct spwd *__sgetspent_r __P ((__const char *__string,
-					struct spwd *__result_buf,
-					char *__buffer, int __buflen));
-extern struct spwd *sgetspent_r __P ((__const char *__string,
-				      struct spwd *__result_buf,
-				      char *__buffer, int __buflen));
+extern int __sgetspent_r __P ((__const char *__string,
+			       struct spwd *__result_buf, char *__buffer,
+			       size_t __buflen, struct spwd **__result));
+extern int sgetspent_r __P ((__const char *__string, struct spwd *__result_buf,
+			     char *__buffer, size_t __buflen,
+			     struct spwd **__result));
 
-extern struct spwd *__fgetspent_r __P ((FILE *__stream,
-					struct spwd *__result_buf,
-					char *__buffer, int __buflen));
-extern struct spwd *fgetspent_r __P ((FILE *__stream,
-				      struct spwd *__result_buf,
-				      char *__buffer, int __buflen));
+extern int __fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
+			       char *__buffer, size_t __buflen,
+			       struct spwd **__result));
+extern int fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
+			     char *__buffer, size_t __buflen,
+			     struct spwd **__result));
 #endif	/* reentrant */
 
 

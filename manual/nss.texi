@@ -57,6 +57,7 @@ The databases available in the NSS are
 @cindex ethers
 @cindex group
 @cindex hosts
+@cindex netgroup
 @cindex network
 @cindex protocols
 @cindex passwd
@@ -71,6 +72,8 @@ Ethernet numbers,
 Groups of users, @pxref{Group Database}.
 @item hosts
 Host names and numbers, @pxref{Host Names}.
+@item netgroup
+Network wide list of host and users, @pxref{Netgroup Database}.
 @item network
 Network names and numbers, @pxref{Networks Database}.
 @item protocols
@@ -89,8 +92,7 @@ Shadow user passwords,
 
 @noindent
 There will be some more added later (@code{aliases}, @code{automount},
-@code{bootparams}, @code{netgroup}, @code{netmasks}, and
-@code{publickey}).
+@code{bootparams}, @code{netmasks}, and @code{publickey}).
 
 @node NSS Configuration File, NSS Module Internals, NSS Basics, Name Service Switch
 @section The NSS Configuration File
@@ -122,7 +124,7 @@ the reaction on lookup result line @code{[NOTFOUND=return]}.
 @end itemize
 
 @menu
-* Services in the NSS configuration::  Service names in the NSS configuratin.
+* Services in the NSS configuration::  Service names in the NSS configuration.
 * Actions in the NSS configuration::  React approprite on the lookup result.
 * Notes on NSS Configuration File::  Things to take care about while
                                      configuring NSS.
@@ -256,6 +258,20 @@ all supported databases there is a default value so it should normally
 be possible to get the system running even if the file is corrupted or
 missing.
 
+@cindex default value, and NSS
+For the @code{hosts} and @code{network} databases the default value is
+@code{dns [!UNAVAIL=return] files}.  I.e., the system is prepared for
+the DNS service not to be available but if it is available the answer it
+returns is ultimative.
+
+For all other databases the default value is
+@code{compat [NOTFOUND=return] files}.  This solution give the best
+chance to be correct since NIS and file based lookup is used.  The
+@code{compat} service is available in a separate add-on to GNU C
+library, available in the same place you got the GNU C library source
+from.
+
+@cindex optimizing NSS
 A second point is that the user should try to optimize the lookup
 process.  The different service have different response times.  A simple
 file look up on a local file could be fast, but if the file is long and the
@@ -365,17 +381,19 @@ struct hostent *gethostbyname_r (const char *name,
 @end smallexample
 
 @noindent
-The actual prototype of the function is the NSS modules in this case is
+The actual prototype of the function in the NSS modules in this case is
 
 @smallexample
-int _nss_files_gethostbyname_r (const char *name,
-                                struct hostent *result_buf, char *buf,
-                                int buflen, int *h_errnop)
+enum nss_status _nss_files_gethostbyname_r (const char *name,
+                                            struct hostent *result_buf,
+                                            char *buf, int buflen,
+                                            int *h_errnop)
 @end smallexample
 
-I.e., the interface function is in fact the reentrant function with
-the change of the return value.  While the user-level function returns a
-pointer to the result the reentrant function return an @code{int} value:
+I.e., the interface function is in fact the reentrant function with the
+change of the return value.  While the user-level function returns a
+pointer to the result the reentrant function return an @code{enum
+nss_status} value:
 
 @cindex NSS_STATUS_TRYAGAIN
 @cindex NSS_STATUS_UNAVAIL
@@ -399,7 +417,12 @@ numeric value @code{1}
 Now you see where the action items of the @file{/etc/nsswitch.conf} file
 are used.
 
-The above function has somthing special which is missing for almost all
+If you study the source code you will find there is a fifth value:
+@code{NSS_STATUS_RETURN}.  This is an internal use only value, used by a
+few functions in places where none of the above value can be used.  If
+necessary the source code should be examined to learn about the details.
+
+The above function has something special which is missing for almost all
 the other module functions.  There is an argument @var{h_errnop}.  This
 points to a variable which will be filled with the error code in case
 the execution of the function fails for some reason.  The reentrant

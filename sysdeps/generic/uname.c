@@ -44,7 +44,7 @@ uname (name)
 	{
 	  /* Hostname is meaningless for this machine.  */
 	  name->nodename[0] = '\0';
-	  errno = save;
+	  __set_errno (save);
 	}
 #ifdef	ENAMETOOLONG
       else if (errno == ENAMETOOLONG)

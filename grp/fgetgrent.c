@@ -25,7 +25,11 @@ struct group *
 fgetgrent (FILE *stream)
 {
   static char buffer[BUFSIZ];
-  static struct group result;
+  static struct group resbuf;
+  struct group *result;
 
-  return __fgetgrent_r (stream, &result, buffer, sizeof buffer);
+  if (__fgetgrent_r (stream, &resbuf, buffer, sizeof buffer, &result) != 0)
+    return NULL;
+
+  return result;
 }

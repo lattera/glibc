@@ -51,7 +51,7 @@ extern FILE *__grpopen __P ((void));
 
 /* Read a group entry from STREAM, filling in G.
    Return the `struct group' of G if successful, NULL on failure.  */
-extern struct group *__grpread __P ((FILE * __stream, __ptr_t __g));
+extern struct group *__grpread __P ((FILE *__stream, __ptr_t __g));
 
 /* Return a chunk of memory containing pre-initialized data for __grpread.  */
 extern __ptr_t __grpalloc __P ((void));
@@ -76,7 +76,7 @@ extern struct group *getgrent __P ((void));
 
 #ifdef	__USE_SVID
 /* Read a group entry from STREAM.  */
-extern struct group *fgetgrent __P ((FILE * __stream));
+extern struct group *fgetgrent __P ((FILE *__stream));
 #endif
 
 /* Search for an entry with a matching group ID.  */
@@ -96,28 +96,28 @@ extern struct group *getgrnam __P ((__const char *__name));
    may change in later versions of this library.  */
 
 #if defined(__USE_SVID) || defined(__USE_MISC) || defined (__USE_BSD)
-extern struct group *getgrent_r __P ((struct group *__resultbuf,
-				      char *buffer, int __buflen));
+extern int getgrent_r __P ((struct group *__resultbuf, char *buffer,
+			    size_t __buflen, struct group **__result));
 #endif
 
 /* Search for an entry with a matching group ID.  */
-extern struct group *getgrgid_r __P ((__gid_t __gid,
-				      struct group *__resultbuf,
-				      char *buffer, int __buflen));
+extern int getgrgid_r __P ((__gid_t __gid, struct group *__resultbuf,
+			    char *buffer, size_t __buflen,
+			    struct group **__result));
 
 /* Search for an entry with a matching group name.  */
-extern struct group *getgrnam_r __P ((__const char *__name,
-				      struct group *__resultbuf,
-				      char *buffer, int __buflen));
+extern int getgrnam_r __P ((__const char *__name, struct group *__resultbuf,
+			    char *buffer, size_t __buflen,
+			    struct group **__result));
 
 #ifdef	__USE_SVID
 /* Read a group entry from STREAM.  */
-extern struct group *__fgetgrent_r __P ((FILE * __stream,
-					 struct group *__resultbuf,
-					 char *buffer, int __buflen));
-extern struct group *fgetgrent_r __P ((FILE * __stream,
-				       struct group *__resultbuf,
-				       char *buffer, int __buflen));
+extern int __fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
+			       char *buffer, size_t __buflen,
+			       struct group **__result));
+extern int fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
+			     char *buffer, size_t __buflen,
+			     struct group **__result));
 #endif
 
 #endif	/* reentrant */
@@ -129,12 +129,12 @@ extern struct group *fgetgrent_r __P ((FILE * __stream,
 #include <stddef.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
-extern int setgroups __P ((size_t __n, __const __gid_t * groups));
+extern int setgroups __P ((size_t __n, __const __gid_t *__groups));
 
 /* Initialize the group set for the current user
    by reading the group database and using all groups
    of which USER is a member.  Also include GROUP.  */
-extern int initgroups __P ((__const char *user, __gid_t group));
+extern int initgroups __P ((__const char *__user, __gid_t __group));
 
 #endif /* Use BSD.  */
 

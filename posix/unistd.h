@@ -513,8 +513,8 @@ extern char *ttyname __P ((int __fd));
 #ifdef __USE_REENTRANT
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success, -1 otherwise.  */
-extern int __ttyname_r __P ((int __fd, char *__buf, int __buflen));
-extern int ttyname_r __P ((int __fd, char *__buf, int __buflen));
+extern int __ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
+extern int ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
 #endif
 
 /* Return 1 if FD is a valid descriptor associated

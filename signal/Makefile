@@ -25,7 +25,7 @@ headers	:= signal.h sys/signal.h signum.h sigcontext.h sigaction.h sigset.h
 
 routines	:= signal raise killpg \
 		   sigaction sigprocmask kill \
-		   sigpending sigsuspend \
+		   sigpending sigsuspend sigwait \
 		   sigblock sigsetmask sigpause sigvec \
 		   sigstack sigaltstack sigintr \
 		   sigsetops sigempty sigfillset sigaddset sigdelset sigismem \

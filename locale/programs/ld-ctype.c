@@ -75,7 +75,7 @@ struct locale_ctype_t
 
   /* We will allow up to 8 * sizeof(u_int32_t) - 1 character classes.  */
 #define MAX_NR_CHARCLASS (8 * sizeof (u_int32_t) - 1)
-  int nr_charclass;
+  size_t nr_charclass;
   const char *classnames[MAX_NR_CHARCLASS];
   unsigned long int current_class_mask;
   unsigned int last_class_char;
@@ -306,7 +306,7 @@ character %s'%s' in class `%s' must not be in class `%s'"),
 
   /* ... and now test <SP> as a special case.  */
   space_value = charset_find_value (charset, "SP", 2);
-  if (space_value == ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) space_value == ILLEGAL_CHAR_VALUE)
     error (0, 0, _("character <SP> not defined in character map"));
   else if ((cnt = BITPOS (tok_space),
             (ELEM (ctype, class_collection, , space_value)
@@ -537,7 +537,7 @@ int
 ctype_is_charclass (struct linereader *lr, struct localedef_t *locale,
 		    const char *name)
 {
-  int cnt;
+  size_t cnt;
 
   for (cnt = 0; cnt < locale->categories[LC_CTYPE].ctype->nr_charclass; ++cnt)
     if (strcmp (name, locale->categories[LC_CTYPE].ctype->classnames[cnt])
@@ -554,7 +554,7 @@ ctype_class_start (struct linereader *lr, struct localedef_t *locale,
 		   struct charset_t *charset)
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
-  int cnt;
+  size_t cnt;
 
   switch (tok)
     {
@@ -625,7 +625,7 @@ ctype_class_from (struct linereader *lr, struct localedef_t *locale,
 
   ctype->last_class_char = value;
 
-  if (value == ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
     /* In the LC_CTYPE category it is no error when a character is
        not found.  This has to be ignored silently.  */
     return;
@@ -737,7 +737,7 @@ ctype_map_from (struct linereader *lr, struct localedef_t *locale,
 
   value = charset_find_value (charset, code->val.str.start, code->val.str.len);
 
-  if (value == ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
     /* In the LC_CTYPE category it is no error when a character is
        not found.  This has to be ignored silently.  */
     return;
@@ -757,8 +757,8 @@ ctype_map_to (struct linereader *lr, struct localedef_t *locale,
 
   value = charset_find_value (charset, code->val.str.start, code->val.str.len);
 
-  if (ctype->from_map_char == ILLEGAL_CHAR_VALUE
-      || value == ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) ctype->from_map_char == ILLEGAL_CHAR_VALUE
+      || (wchar_t) value == ILLEGAL_CHAR_VALUE)
     {
       /* In the LC_CTYPE category it is no error when a character is
 	 not found.  This has to be ignored silently.  */
@@ -790,7 +790,7 @@ static void
 ctype_class_newP (struct linereader *lr, struct locale_ctype_t *ctype,
 		  const char *name)
 {
-  int cnt;
+  size_t cnt;
 
   for (cnt = 0; cnt < ctype->nr_charclass; ++cnt)
     if (strcmp (ctype->classnames[cnt], name) == 0)
@@ -798,7 +798,7 @@ ctype_class_newP (struct linereader *lr, struct locale_ctype_t *ctype,
 
   if (cnt < ctype->nr_charclass)
     {
-      lr_error (lr, _("character class `%s' already defined"));
+      lr_error (lr, _("character class `%s' already defined"), name);
       return;
     }
 
@@ -817,7 +817,7 @@ ctype_map_newP (struct linereader *lr, struct locale_ctype_t *ctype,
 		const char *name, struct charset_t *charset)
 {
   size_t max_chars = 0;
-  int cnt;
+  size_t cnt;
 
   for (cnt = 0; cnt < ctype->map_collection_nr; ++cnt)
     {
@@ -830,7 +830,7 @@ ctype_map_newP (struct linereader *lr, struct locale_ctype_t *ctype,
 
   if (cnt < ctype->map_collection_nr)
     {
-      lr_error (lr, _("character map `%s' already defined"));
+      lr_error (lr, _("character map `%s' already defined"), name);
       return;
     }
 
@@ -934,7 +934,7 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charset_t *charset)
 	  tmp[0] = ch;
 
 	  value = charset_find_value (charset, tmp, 1);
-	  if (value == ILLEGAL_CHAR_VALUE)
+	  if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	    {
 	      error (0, 0, _("\
 character `%s' not defined while needed as default value"),
@@ -998,7 +998,7 @@ character `%s' not defined while needed as default value"),
       unsigned int value;
 
       value = charset_find_value (charset, "space", 5);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<space>");
@@ -1006,7 +1006,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "form-feed", 9);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<form-feed>");
@@ -1014,7 +1014,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "newline", 7);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<newline>");
@@ -1022,7 +1022,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "carriage-return", 15);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<carriage-return>");
@@ -1030,7 +1030,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "tab", 3);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<tab>");
@@ -1038,7 +1038,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "vertical-tab", 12);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<vertical-tab>");
@@ -1064,7 +1064,7 @@ character `%s' not defined while needed as default value"),
       unsigned int value;
 
       value = charset_find_value (charset, "space", 5);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<space>");
@@ -1072,7 +1072,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
 
       value = charset_find_value (charset, "tab", 3);
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<tab>");
@@ -1103,7 +1103,7 @@ character `%s' not defined while needed as default value"),
       unsigned long int mask = BIT (tok_upper) | BIT (tok_lower) |
 	BIT (tok_alpha) | BIT (tok_digit) | BIT (tok_xdigit) | BIT (tok_punct);
       size_t cnt;
-      int space;
+      wchar_t space;
 
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
 	if ((ctype->class_collection[cnt] & mask) != 0)
@@ -1136,10 +1136,10 @@ character `%s' not defined while needed as default value"),
 	  tmp[1] = (char) ch;
 
 	  value_from = charset_find_value (charset, &tmp[1], 1);
-	  if (value_from == ILLEGAL_CHAR_VALUE)
+	  if ((wchar_t) value_from == ILLEGAL_CHAR_VALUE)
 	    {
 	      error (0, 0, _("\
-character `%c' not defined while needed as default value"),
+character `%s' not defined while needed as default value"),
 		     tmp);
 	      continue;
 	    }
@@ -1147,7 +1147,7 @@ character `%c' not defined while needed as default value"),
 	  /* This conversion is implementation defined.  */
 	  tmp[1] = (char) (ch + ('A' - 'a'));
 	  value_to = charset_find_value (charset, &tmp[1], 1);
-	  if (value_to == -1)
+	  if ((wchar_t) value_to == ILLEGAL_CHAR_VALUE)
 	    {
 	      error (0, 0, _("\
 character `%s' not defined while needed as default value"),

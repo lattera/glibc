@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,11 +23,11 @@ Cambridge, MA 02139, USA.  */
 
 
 int
-DEFUN(main, (argc, argv), int argc AND char **argv)
+main (int argc, char **argv)
 {
-  static CONST char hello[] = "Hello, world.\n";
-  static CONST char replace[] = "Hewwo, world.\n";
-  static CONST size_t replace_from = 2, replace_to = 4;
+  static const char hello[] = "Hello, world.\n";
+  static const char replace[] = "Hewwo, world.\n";
+  static const size_t replace_from = 2, replace_to = 4;
   char filename[FILENAME_MAX];
   char *name = strrchr(*argv, '/');
   char buf[BUFSIZ];
@@ -78,7 +77,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   {
     long int where = ftell(f);
-    if (where == replace_from)
+    if (where == (long int) replace_from)
       {
 	register size_t i;
 	for (i = replace_from; i < replace_to; ++i)

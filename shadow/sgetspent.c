@@ -28,9 +28,10 @@ Cambridge, MA 02139, USA.  */
 struct spwd *
 sgetspent (const char *string)
 {
-  static struct spwd result;
+  static struct spwd resbuf;
   static int max_size = 0;
   static char *buffer = NULL;
+  struct spwd *result;
   int len;
 
   len = strlen (string) + 1;
@@ -42,5 +43,6 @@ sgetspent (const char *string)
 	return NULL;
     }
 
-  return __sgetspent_r (string, &result, buffer, max_size);
+  return __sgetspent_r (string, &resbuf, buffer, max_size, &result)
+    ? NULL : result;
 }

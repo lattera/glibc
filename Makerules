@@ -596,11 +596,18 @@ versioned := $(strip $(foreach so,$(install-lib.so),\
 			       $(patsubst %,$(so),$($(so)-version))))
 
 # Install all the unversioned shared libraries.
-$(addprefix $(libdir)/,$(filter-out $(versioned),$(install-lib.so))): \
-$(libdir)/%.so: $(objpfx)%.so; $(do-install-program)
+$(addprefix $(slibdir)/,$(filter-out $(versioned),$(install-lib.so))): \
+$(slibdir)/%.so: $(objpfx)%.so; $(do-install-program)
 
 define make-link
-cd $(@D); rm -f $(@F).new; $(LN_S) $(<F) $(@F).new; mv -f $(@F).new $(@F)
+cd $(@D); \
+rm -f $(@F).new; \
+if test '$(@D)' = '$(<D)'; then \
+  $(LN_S) $(<F) $(@F).new; \
+else \
+  $(LN_S) $< $(@F).new; \
+fi; \
+mv -f $(@F).new $(@F)
 endef
 
 ifdef libc.so-version
@@ -642,7 +649,7 @@ ifneq (,$(versioned))
 # Produce three sets of rules as above for all the smaller versioned libraries.
 
 define o-iterator-doit
-$(libdir)/$o: $(libdir)/$o$($o-version); $$(make-link)
+$(libdir)/$o: $(slibdir)/$o$($o-version); $$(make-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
@@ -658,26 +665,26 @@ include $(o-iterator)
 
 ifeq (,$($(subdir)-version))
 define o-iterator-doit
-$(libdir)/$o$($o-version): $(libdir)/$(o:.so=)-$(version).so; $$(make-link)
+$(slibdir)/$o$($o-version): $(slibdir)/$(o:.so=)-$(version).so; $$(make-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
 
 define o-iterator-doit
-$(libdir)/$(o:.so=)-$(version).so: $(objpfx)$o; $$(do-install-program)
+$(slibdir)/$(o:.so=)-$(version).so: $(objpfx)$o; $$(do-install-program)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
 else
 define o-iterator-doit
-$(libdir)/$o$($o-version): $(libdir)/$(o:.so=)-$($(subdir)-version).so;
+$(slibdir)/$o$($o-version): $(slibdir)/$(o:.so=)-$($(subdir)-version).so;
 	$$(make-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
 
 define o-iterator-doit
-$(libdir)/$(o:.so=)-$($(subdir)-version).so: $(objpfx)$o;
+$(slibdir)/$(o:.so=)-$($(subdir)-version).so: $(objpfx)$o;
 	$$(do-install-program)
 endef
 object-suffixes-left := $(versioned)
@@ -693,10 +700,10 @@ endef
 
 so-versions := $(sort $(foreach so,$(install-lib.so),.so$($(so)-version)))
 $(foreach v,$(so-versions),\
-	  $(libdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so
+	  $(slibdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so
 	$(do-install-so)
 $(foreach v,$(so-versions),\
-	  $(libdir)/$(libprefix)%$v): $(common-objpfx)%.so
+	  $(slibdir)/$(libprefix)%$v): $(common-objpfx)%.so
 	$(do-install-so)
 endif
 

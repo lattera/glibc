@@ -39,7 +39,7 @@ tags_sources = $(all-sources) $(all-headers) $(all-dist)
 endif	# ctype
 endif	# No tags_sources
 
-sysdep-dirs := $(full-config-subdirs)
+sysdep-dirs := $(full-config-sysdirs)
 
 ifndef sysdep_dirs
 # Find all sysdep directories.

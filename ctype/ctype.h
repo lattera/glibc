@@ -1,23 +1,23 @@
 /* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
- *	ANSI Standard 4.3: CHARACTER HANDLING	<ctype.h>
+ *	ISO C Standard 4.3: CHARACTER HANDLING	<ctype.h>
  */
 
 #ifndef	_CTYPE_H
@@ -65,7 +65,7 @@ enum
 
    These point into arrays of 384, so they can be indexed by any `unsigned
    char' value [0,255]; by EOF (-1); or by any `signed char' value
-   [-128,-1).  ANSI requires that the ctype functions work for `unsigned
+   [-128,-1).  ISO C requires that the ctype functions work for `unsigned
    char' values and for EOF; we also support negative `signed char' values
    for broken old programs.  The case conversion arrays are of `int's
    rather than `unsigned char's because tolower (EOF) must be EOF, which

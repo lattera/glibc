@@ -22,6 +22,7 @@
  * Rewritten to use reentrant functions by Ulrich Drepper, 1995.
  */
 
+#include <libc-lock.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -162,6 +163,11 @@ static struct random_data unsafe_state =
     end_ptr : &randtbl[sizeof (randtbl) / sizeof (randtbl[0])]
 };
 
+/* POSIX.1c requires that there is mutual exclusion for the `rand' and
+   `srand' functions to prevent concurrent calls from modifying common
+   data.  */
+__libc_lock_define_initialized (static, lock)
+
 /* Initialize the random number generator based on the given seed.  If the
    type is the trivial no-state-information type, just remember the seed.
    Otherwise, initializes state[] based on the given "seed" via a linear
@@ -174,7 +180,9 @@ void
 __srandom (x)
      unsigned int x;
 {
+  __libc_lock_lock (lock)
   (void) __srandom_r (x, &unsafe_state);
+  __libc_lock_unlock (lock)
 }
 
 weak_alias (__srandom, srandom)
@@ -197,9 +205,15 @@ __initstate (seed, arg_state, n)
      void *arg_state;
      size_t n;
 {
-  void *ostate = (void *) &unsafe_state.state[-1];
+  void *ostate;
+
+  __libc_lock_lock (lock)
+
+  ostate = (void *) &unsafe_state.state[-1];
 
   __initstate_r (seed, arg_state, n, &unsafe_state);
+
+  __libc_lock_unlock (lock)
 
   return ostate;
 }
@@ -218,10 +232,16 @@ void *
 __setstate (arg_state)
      void *arg_state;
 {
-  void *ostate = (void *) &unsafe_state.state[-1];
+  void *ostate;
+
+  __libc_lock_lock (lock)
+
+  ostate = (void *) &unsafe_state.state[-1];
 
   if (__setstate_r (arg_state, &unsafe_state) < 0)
-    return NULL;
+    ostate = NULL;
+
+  __libc_lock_unlock (lock)
 
   return ostate;
 }
@@ -244,7 +264,11 @@ __random ()
 {
   int32_t retval;
 
+  __libc_lock_lock (lock)
+
   (void) __random_r (&unsafe_state, &retval);
+
+  __libc_lock_unlock (lock)
 
   return retval;
 }

@@ -30,6 +30,8 @@ routines := setutent endutent getutent getutid getutline pututline	\
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil
+extra-libs-others := $(extra-libs)
+
 libutil-routines:= login login_tty logout logwtmp pty
 
 

@@ -43,7 +43,7 @@ struct charset_t
   struct width_rule *width_rules;
   size_t nwidth_rules;
   size_t nwidth_rules_max;
-  int width_default;
+  unsigned int width_default;
 
   struct obstack mem_pool;
   hash_table char_table;

@@ -1,4 +1,4 @@
-@node Users and Groups, System Information, Name Service Switch, Top
+@node Users and Groups
 @chapter Users and Groups
 
 Every user who can log in on the system is identified by a unique number
@@ -46,11 +46,12 @@ can use to examine these databases.
                         	 accessing the user database.
 * Group Database::              Functions and data structures for
                         	 accessing the group database.
+* Netgroup Database::           Functions for accessing the netgroup database.
 * Database Example::            Example program showing use of database
 				 inquiry functions.
 @end menu
 
-@node User and Group IDs
+@node User and Group IDs, Process Persona, Users and Groups, Users and Groups
 @section User and Group IDs
 
 @cindex login name
@@ -71,7 +72,7 @@ not accessible to users who are not a member of that group.  Each group
 has a @dfn{group name} and @dfn{group ID}.  @xref{Group Database},
 for how to find information about a group ID or group name.
 
-@node Process Persona
+@node Process Persona, Why Change Persona, User and Group IDs, Users and Groups
 @section The Persona of a Process
 @cindex persona
 @cindex effective user ID
@@ -113,7 +114,7 @@ its permission to access files, see @ref{Access Permission}.
 The user ID of a process also controls permissions for sending signals
 using the @code{kill} function.  @xref{Signaling Another Process}.
 
-@node Why Change Persona
+@node Why Change Persona, How Change Persona, Process Persona, Users and Groups
 @section Why Change the Persona of a Process?
 
 The most obvious situation where it is necessary for a process to change
@@ -145,7 +146,7 @@ the game program wants to update this file, it can change its effective
 user ID to be that for @code{games}.  In effect, the program must
 adopt the persona of @code{games} so it can write the scores file.
 
-@node How Change Persona
+@node How Change Persona, Reading Persona, Why Change Persona, Users and Groups
 @section How an Application Can Change Persona
 @cindex @code{setuid} programs
 
@@ -176,7 +177,7 @@ when they are not needed, which makes for more robustness.
 
 @c !!! talk about _POSIX_SAVED_IDS
 
-@node Reading Persona
+@node Reading Persona, Setting User ID, How Change Persona, Users and Groups
 @section Reading the Persona of a Process
 
 Here are detailed descriptions of the functions for reading the user and
@@ -261,7 +262,7 @@ read_all_groups (void)
 @end smallexample
 @end deftypefun
 
-@node Setting User ID
+@node Setting User ID, Setting Groups, Reading Persona, Users and Groups
 @section Setting the User ID
 
 This section describes the functions for altering the user ID (real
@@ -324,7 +325,7 @@ have permission to change to the specified ID.
 @end table
 @end deftypefun
 
-@node Setting Groups
+@node Setting Groups, Enable/Disable Setuid, Setting User ID, Users and Groups
 @section Setting the Group IDs
 
 This section describes the functions for altering the group IDs (real
@@ -399,7 +400,7 @@ the user name @var{user}.  The group ID @var{gid} is also included.
 @c groups USER is a member of.
 @end deftypefun
 
-@node Enable/Disable Setuid
+@node Enable/Disable Setuid, Setuid Program Example, Setting Groups, Users and Groups
 @section Enabling and Disabling Setuid Access
 
 A typical setuid program does not need its special access all of the
@@ -465,7 +466,7 @@ feature with a preprocessor conditional, like this:
 #endif
 @end smallexample
 
-@node Setuid Program Example
+@node Setuid Program Example, Tips for Setuid, Enable/Disable Setuid, Users and Groups
 @section Setuid Program Example
 
 Here's an example showing how to set up a program that changes its
@@ -605,7 +606,7 @@ record_score (int score)
 @end group
 @end smallexample
 
-@node Tips for Setuid
+@node Tips for Setuid, Who Logged In, Setuid Program Example, Users and Groups
 @section Tips for Writing Setuid Programs
 
 It is easy for setuid programs to give the user access that isn't
@@ -649,7 +650,7 @@ would ordinarily have permission to access those files.  You can use the
 uses the real user and group IDs, rather than the effective IDs.
 @end itemize
 
-@node Who Logged In
+@node Who Logged In, User Database, Tips for Setuid, Users and Groups
 @section Identifying Who Logged In
 @cindex login name, determining
 @cindex user ID, determining
@@ -703,7 +704,7 @@ For most purposes, it is more useful to use the environment variable
 precisely because the user can set @code{LOGNAME} arbitrarily.
 @xref{Standard Environment}.
 
-@node User Database
+@node User Database, Group Database, Who Logged In, Users and Groups
 @section User Database
 @cindex user database
 @cindex password database
@@ -721,7 +722,7 @@ network server gives access to it.
 * Writing a User Entry::        How a program can rewrite a user's record.
 @end menu
 
-@node User Data Structure
+@node User Data Structure, Lookup User, User Database, User Database
 @subsection The Data Structure that Describes a User
 
 The functions and data structures for accessing the system user database
@@ -762,7 +763,7 @@ be used.
 @end table
 @end deftp
 
-@node Lookup User
+@node Lookup User, Scanning All Users, User Data Structure, User Database
 @subsection Looking Up One User
 @cindex converting user ID to user name
 @cindex converting user name to user ID
@@ -783,6 +784,27 @@ user ID @var{uid}.
 @end deftypefun
 
 @comment pwd.h
+@comment POSIX.1c
+@deftypefun int getpwuid_r (uid_t @var{uid}, struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
+This function is similar to @code{getpwuid} in that is returns
+information about the user whose user ID is @var{uid}.  But the result
+is not placed in a static buffer.  Instead the user supplied structure
+pointed to by @var{result_buf} is filled with the information.  The
+first @var{buflen} bytes of the additional buffer pointed to by
+@var{buffer} are used to contain additional information, normally
+strings which are pointed to by the elements of the result structure.
+
+If the return value is @code{0} the pointer returned in @var{result}
+points to the record which contains the wanted data (i.e., @var{result}
+contains the value @var{result_buf}).  In case the return value is non
+null there is no user in the data base with user ID @var{uid} or the
+buffer @var{buffer} is too small to contain all the needed information.
+In the later case the global @var{errno} variable is set to
+@code{ERANGE}.
+@end deftypefun
+
+
+@comment pwd.h
 @comment POSIX.1
 @deftypefun {struct passwd *} getpwnam (const char *@var{name})
 This function returns a pointer to a statically-allocated structure
@@ -793,7 +815,28 @@ This structure may be overwritten on subsequent calls to
 A null pointer value indicates there is no user named @var{name}.
 @end deftypefun
 
-@node Scanning All Users
+@comment pwd.h
+@comment POSIX.1c
+@deftypefun int getpwnam_r (const char *@var{name}, struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
+This function is similar to @code{getpwnam} in that is returns
+information about the user whose user name is @var{name}.  But the result
+is not placed in a static buffer.  Instead the user supplied structure
+pointed to by @var{result_buf} is filled with the information.  The
+first @var{buflen} bytes of the additional buffer pointed to by
+@var{buffer} are used to contain additional information, normally
+strings which are pointed to by the elements of the result structure.
+
+If the return value is @code{0} the pointer returned in @var{result}
+points to the record which contains the wanted data (i.e., @var{result}
+contains the value @var{result_buf}).  In case the return value is non
+null there is no user in the data base with user name @var{name} or the
+buffer @var{buffer} is too small to contain all the needed information.
+In the later case the global @var{errno} variable is set to
+@code{ERANGE}.
+@end deftypefun
+
+
+@node Scanning All Users, Writing a User Entry, Lookup User, User Database
 @subsection Scanning the List of All Users
 @cindex scanning the user list
 
@@ -816,14 +859,33 @@ This stream must correspond to a file in the same format as the standard
 password database file.  This function comes from System V.
 @end deftypefun
 
+@comment pwd.h
+@comment GNU
+@deftypefun int fgetpwent_r (FILE *@var{stream}, struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
+This function is similar to @code{fgetpwent} in that it reads the next
+user entry from @var{stream}.  But the result is returned in the
+structure pointed to by @var{result_buf}.  The
+first @var{buflen} bytes of the additional buffer pointed to by
+@var{buffer} are used to contain additional information, normally
+strings which are pointed to by the elements of the result structure.
+
+This stream must correspond to a file in the same format as the standard
+password database file.
+
+If the funciton returns null @var{result} points to the structure with
+the wanted data (normally this is in @var{result_buf}).  If errors
+occured the return value is non-null and @var{result} contains a null
+pointer.
+@end deftypefun
+
 The way to scan all the entries in the user database is with
 @code{setpwent}, @code{getpwent}, and @code{endpwent}.
 
 @comment pwd.h
 @comment SVID, BSD
 @deftypefun void setpwent (void)
-This function initializes a stream which @code{getpwent} uses to read
-the user database.
+This function initializes a stream which @code{getpwent} and
+@code{getpwent_r} use to read the user database.
 @end deftypefun
 
 @comment pwd.h
@@ -834,15 +896,35 @@ initialized by @code{setpwent}.  It returns a pointer to the entry.  The
 structure is statically allocated and is rewritten on subsequent calls
 to @code{getpwent}.  You must copy the contents of the structure if you
 wish to save the information.
+
+A null pointer is returned in case no further entry is available.
+@end deftypefun
+
+@comment pwd.h
+@comment GNU
+@deftypefun int getpwent_r (struct passwd *@var{result_buf}, char *@var{buffer}, int @var{buflen}, struct passwd **@var{result})
+This function is similar to @code{getpwent} in that it returns the next
+entry from the stream initialized by @code{setpwent}.  But in contrast
+to the @code{getpwent} function this function is reentrant since the
+result is placed in the user supplied structure pointed to by
+@var{result_buf}.  Additional data, normally the strings pointed to by
+the elements of the result structure, are placed in the additional
+buffer or length @var{buflen} starting at @var{buffer}.
+
+If the function returns null @var{result} points to the structure with
+the wanted data (normally this is in @var{result_buf}).  If errors
+occured the return value is non-null and @var{result} contains a null
+pointer.
 @end deftypefun
 
 @comment pwd.h
 @comment SVID, BSD
 @deftypefun void endpwent (void)
-This function closes the internal stream used by @code{getpwent}.
+This function closes the internal stream used by @code{getpwent} or
+@code{getpwent_r}.
 @end deftypefun
 
-@node Writing a User Entry
+@node Writing a User Entry,  , Scanning All Users, User Database
 @subsection Writing a User Entry
 
 @comment pwd.h
@@ -862,7 +944,7 @@ would inevitably leave out much of the important information.
 The function @code{putpwent} is declared in @file{pwd.h}.
 @end deftypefun
 
-@node Group Database
+@node Group Database, Netgroup Database, User Database, Users and Groups
 @section Group Database
 @cindex group database
 @pindex /etc/group
@@ -878,7 +960,7 @@ service provides access to it.
 * Scanning All Groups::         Scanning the list of all groups.
 @end menu
 
-@node Group Data Structure
+@node Group Data Structure, Lookup Group, Group Database, Group Database
 @subsection The Data Structure for a Group
 
 The functions and data structures for accessing the system group
@@ -905,7 +987,7 @@ null pointer.
 @end table
 @end deftp
 
-@node Lookup Group
+@node Lookup Group, Scanning All Groups, Group Data Structure, Group Database
 @subsection Looking Up One Group
 @cindex converting group name to group ID
 @cindex converting group ID to group name
@@ -926,6 +1008,26 @@ A null pointer indicates there is no group with ID @var{gid}.
 @end deftypefun
 
 @comment grp.h
+@comment POSIX.1c
+@deftypefun int getgrgid_r (gid_t @var{gid}, struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+This function is similar to @code{getgrgid} in that is returns
+information about the group whose group ID is @var{gid}.  But the result
+is not placed in a static buffer.  Instead the user supplied structure
+pointed to by @var{result_buf} is filled with the information.  The
+first @var{buflen} bytes of the additional buffer pointed to by
+@var{buffer} are used to contain additional information, normally
+strings which are pointed to by the elements of the result structure.
+
+If the return value is @code{0} the pointer returned in @var{result}
+points to the record which contains the wanted data (i.e., @var{result}
+contains the value @var{result_buf}).  In case the return value is non
+null there is no group in the data base with group ID @var{gid} or the
+buffer @var{buffer} is too small to contain all the needed information.
+In the later case the global @var{errno} variable is set to
+@code{ERANGE}.
+@end deftypefun
+
+@comment grp.h
 @comment SVID, BSD
 @deftypefun {struct group *} getgrnam (const char *@var{name})
 This function returns a pointer to a statically-allocated structure
@@ -936,7 +1038,27 @@ This structure may be overwritten by subsequent calls to
 A null pointer indicates there is no group named @var{name}.
 @end deftypefun
 
-@node Scanning All Groups
+@comment grp.h
+@comment POSIX.1c
+@deftypefun int getgrnam_r (const char *@var{name}, struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+This function is similar to @code{getgrnam} in that is returns
+information about the group whose group name is @var{name}.  But the result
+is not placed in a static buffer.  Instead the user supplied structure
+pointed to by @var{result_buf} is filled with the information.  The
+first @var{buflen} bytes of the additional buffer pointed to by
+@var{buffer} are used to contain additional information, normally
+strings which are pointed to by the elements of the result structure.
+
+If the return value is @code{0} the pointer returned in @var{result}
+points to the record which contains the wanted data (i.e., @var{result}
+contains the value @var{result_buf}).  In case the return value is non
+null there is no group in the data base with group name @var{name} or the
+buffer @var{buffer} is too small to contain all the needed information.
+In the later case the global @var{errno} variable is set to
+@code{ERANGE}.
+@end deftypefun
+
+@node Scanning All Groups,  , Lookup Group, Group Database
 @subsection Scanning the List of All Groups
 @cindex scanning the group list
 
@@ -960,6 +1082,25 @@ The stream must correspond to a file in the same format as the standard
 group database file.
 @end deftypefun
 
+@comment grp.h
+@comment GNU
+@deftypefun int fgetgrent_r (FILE *@var{stream}, struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+This function is similar to @code{fgetgrent} in that it reads the next
+user entry from @var{stream}.  But the result is returned in the
+structure pointed to by @var{result_buf}.  The
+first @var{buflen} bytes of the additional buffer pointed to by
+@var{buffer} are used to contain additional information, normally
+strings which are pointed to by the elements of the result structure.
+
+This stream must correspond to a file in the same format as the standard
+group database file.
+
+If the funciton returns null @var{result} points to the structure with
+the wanted data (normally this is in @var{result_buf}).  If errors
+occured the return value is non-null and @var{result} contains a null
+pointer.
+@end deftypefun
+
 The way to scan all the entries in the group database is with
 @code{setgrent}, @code{getgrent}, and @code{endgrent}.
 
@@ -967,7 +1108,7 @@ The way to scan all the entries in the group database is with
 @comment SVID, BSD
 @deftypefun void setgrent (void)
 This function initializes a stream for reading from the group data base.
-You use this stream by calling @code{getgrent}.
+You use this stream by calling @code{getgrent} or @code{getgrent_r}.
 @end deftypefun
 
 @comment grp.h
@@ -981,12 +1122,177 @@ wish to save the information.
 @end deftypefun
 
 @comment grp.h
-@comment SVID, BSD
-@deftypefun void endgrent (void)
-This function closes the internal stream used by @code{getgrent}.
+@comment GNU
+@deftypefun int getgrent_r (struct group *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct group **@var{result})
+This function is similar to @code{getgrent} in that it returns the next
+entry from the stream initialized by @code{setgrent}.  But in contrast
+to the @code{getgrent} function this function is reentrant since the
+result is placed in the user supplied structure pointed to by
+@var{result_buf}.  Additional data, normally the strings pointed to by
+the elements of the result structure, are placed in the additional
+buffer or length @var{buflen} starting at @var{buffer}.
+
+If the function returns null @var{result} points to the structure with
+the wanted data (normally this is in @var{result_buf}).  If errors
+occured the return value is non-null and @var{result} contains a null
+pointer.
 @end deftypefun
 
-@node Database Example
+@comment grp.h
+@comment SVID, BSD
+@deftypefun void endgrent (void)
+This function closes the internal stream used by @code{getgrent} or
+@code{getgrent_r}.
+@end deftypefun
+
+@node Netgroup Database, Database Example, Group Database, Users and Groups
+@section Netgroup Database
+
+@menu
+* Netgroup Data::                  Data in the Netgroup database and where
+                                   it comes from.
+* Lookup Netgroup::                How to look for a particular netgroup.
+* Netgroup Membership::            How to test for netgroup membership.
+@end menu
+
+@node Netgroup Data, Lookup Netgroup, Netgroup Database, Netgroup Database
+@subsection Netgroup Data
+
+@cindex{Netgroup}
+Sometimes it is useful group users according to other criterias like the
+ones used in the @xref{Group Database}.  E.g., it is useful to associate
+a certain group of users with a certain machine.  On the other hand
+grouping of host names is not supported so far.
+
+In Sun Microsystems SunOS appeared a new kind of database, the netgroup
+database.  It allows to group hosts, users, and domain freely, giving
+them individual names.  More concrete: a netgroup is a list of triples
+consisting of a host name, a user name, and a domain name, where any of
+the entries can be a wildcard entry, matching all inputs.  A last
+possibility is that names of other netgroups can also be given in the
+list specifying a netgroup.  So one can construct arbitrary hierachies
+without loops.
+
+Sun's implementation allows netgroups only for the @code{nis} or
+@code{nisplus} service @pxref{Services in the NSS configuration}.  The
+implementation in the GNU C library has no such restriction.  An entry
+in either of the input services must have the following form:
+
+@smallexample
+@var{groupname} ( @var{groupname} | @code{(}@var{hostname}@code{,}@var{username}@code{,}@code{domainname}@code{)} )+
+@end smallexample
+
+Any of the fields in the triple can be empty which means anything
+matches.  While describing te functions we will see that the opposite
+case is useful as well.  I.e., there shall be entries which will not
+match any input.  For entries like a name consisting of the single
+character @code{-} shall be used.
+
+@node Lookup Netgroup, Netgroup Membership, Netgroup Data, Netgroup Database
+@subsection Looking up one Netgroup
+
+The lookup functions for netgroups are a bit different to all other
+system database handling functions.  Since a single netgroup can contain
+many entries a two-step process is needed.  First a single netgroup is
+selected and then one can iterate over all entries in this netgroup.
+These functions are declared in @file{netdb.h}.
+
+@comment netdb.h
+@deftypefun int setnetgrent (const char *@var{netgroup})
+A call to this function initializes the internal state of the library to
+allow following calls of the @code{getnetgrent} iterate over all entries
+in the netgroup with name @var{netgroup}.
+
+When the call is successful (i.e., when a netgroup with this name exist)
+the return value is @code{1}.  When the return value is @code{0} no
+netgroup of this name is known or some other error occured.
+@end deftypefun
+
+It is important to remember that there is only one single state for
+iterating the netgroups.  Even if the programmer uses the
+@code{getnetgrent_r} function the result is not really reentrant since
+always only one single netgroup at a time can be processed.  If the
+program needs to process more than one netgroup simultaneously she
+must protect this by using external locking.  This problem was
+introduced in the original netgroups implementation in SunOS and since
+we must stay compatible it is not possible to change this.
+
+Some other functions also use the netgroups state.  Currently these are
+the @code{innetgr} function and parts of the implementation of the
+@code{compat} service part of the NSS implementation.
+
+@comment netdb.h
+@deftypefun int getnetgrent (char **@var{hostp}, char **@var{userp}, char **@var{domainp})
+This function returns the next unprocessed entry of the currently
+selected netgroup.  The string pointers, which addresses are passed in
+the arguments @var{hostp}, @var{userp}, and @var{domainp}, will contain
+after a successful call pointers to appropriate strings.  If the string
+in the next entry is empty the pointer has the value @code{NULL}.
+The returned string pointers are only valid unless no of the netgroup
+related functions are called.
+
+The return value is @code{1} if the next entry was successfully read.  A
+value of @code{0} means no further entry exist or internal errors occured.
+@end deftypefun
+
+@comment netdb.h
+@deftypefun int getnetgrent_r (char **@var{hostp}, char **@var{userp}, char **@var{domainp}, char *@var{buffer}, int @var{buflen})
+This function is similar to @code{getnetgrent} with only one exception:
+the strings the three string pointers @var{hostp}, @var{userp}, and
+@var{domainp} point to, are placed in the buffer of @var{buflen} bytes
+starting at @var{buffer}.  This means the returned values are valid
+even after other netgroup related functions are called.
+
+The return value is @code{1} if the next entry was successfully read and
+the buffer contains enough room to place the strings in it.  @code{0} is
+returned in case no more entries are found, the buffer is too small, or
+internal errors occured.
+
+This function is a GNU extension.  The original implementation in the
+SunOS libc does not provide this function.
+@end deftypefun
+
+@comment netdb.h
+@deftypefun void endnetgrent (void)
+This function free all buffers which were allocated to process the last
+selected netgroup.  As a result all string pointers returned by calls
+to @code{getnetgrent} are invalid afterwards.
+@end deftypefun
+
+@node Netgroup Membership,  , Lookup Netgroup, Netgroup Database
+@subsection Testing for Netgroup Membership
+
+It is often not necessary to scan the whole netgroup since often the
+only interesting question is whether a given entry is part of the
+selected netgroup.
+
+@comment netdb.h
+@deftypefun int innetgr (const char *@var{netgroup}, const char *@var{host}, const char *@var{user}, const char *@var{domain})
+This function tests whether the triple specified by the parameters
+@var{hostp}, @var{userp}, and @var{domainp} is part of the netgroup
+@var{netgroup}.  Using this function has the advantage that
+
+@enumerate
+@item
+no other netgroup function can use the global netgroup state since
+internal locking is used and
+@item
+the function is implemented more efficiently than successive calls
+to the other @code{set}/@code{get}/@code{endnetgrent} functions.
+@end enumerate
+
+Any of the pointers @var{hostp}, @var{userp}, and @var{domainp} can be
+@code{NULL} which means any value is excepted in this position.  This is
+also true for the name @code{-} which should not match any other string
+otherwise.
+
+The return value is @code{1} if an entry matching the given triple is
+found in the netgroup.  The return value is @code{0} is the netgroup
+itself is not found, the netgroup does not contain the triple or
+internal errors occured.
+@end deftypefun
+
+@node Database Example,  , Netgroup Database, Users and Groups
 @section User and Group Database Example
 
 Here is an example program showing the use of the system database inquiry

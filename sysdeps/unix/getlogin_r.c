@@ -72,8 +72,18 @@ getlogin_r (name, name_len)
     }
   else
     {
-      strncpy (name, ut->ut_line, name_len);
-      result = 0;
+      size_t needed = strlen (ut->ut_line) + 1;
+
+      if (needed < name_len)
+	{
+	  __set_errno (ERANGE);
+	  result = ERANGE;
+	}
+      else
+	{
+	  memcpy (name, ut->ut_line, needed);
+	  result = 0;
+	}
     }
   endutent_r (&utmp_data);
 

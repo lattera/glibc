@@ -14,12 +14,14 @@ int
 main (int argc, char *argv[])
 {
   size_t size = sysconf (_SC_PAGESIZE);
-  char *adr;
+  char *adr, *dest;
   int result = 0;
 
-  adr = (char *) mmap (NULL, size, PROT_READ|PROT_WRITE,
-                       MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-  if (adr == NULL)
+  adr = (char *) mmap (NULL, 3 * size, PROT_READ|PROT_WRITE,
+		       MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  dest = (char *) mmap (NULL, 3*size, PROT_READ|PROT_WRITE,
+			MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  if (adr == (char *)-1L || dest == (char *)-1L)
     {
       if (errno == ENOSYS)
         puts ("No test, mmap not available.");
@@ -31,8 +33,15 @@ main (int argc, char *argv[])
     }
   else
     {
-      char dest[size];
       int inner, middle, outer;
+
+      mprotect(adr, size, PROT_NONE);
+      mprotect(adr+2*size, size, PROT_NONE);
+      adr += size;
+
+      mprotect(dest, size, PROT_NONE);
+      mprotect(dest+2*size, size, PROT_NONE);
+      dest += size;
 
       memset (adr, 'T', size);
 

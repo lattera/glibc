@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <features.h>
 #define __need_FILE
 #include <stdio.h>
+#include <paths.h>
 
 
 /* File listing canonical interesting mount points.  */

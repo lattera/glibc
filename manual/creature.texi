@@ -93,6 +93,20 @@ compiler or linker.  @strong{Note:} If you forget to do this, you may
 get very strange errors at run time.
 @end defvr
 
+@comment (none)
+@comment GNU
+@defvr Macro _REENTRANT,_THREAD_SAFE
+If you define this macro, reentrant versions of several functions get
+declared.  Some of the functions is specified in POSIX.1c but many others
+are only available on a few other systems or are unique to GNU libc.
+The problem is that the standardization of the thread safe C library
+interface still is behind.
+
+Unlike on some other systems no special version of the C library must be
+used for linking.  There is only one version but while compiling this
+it must have been specified to compile as thread safe.
+@end defvr
+
 We recommend you use @code{_GNU_SOURCE} in new programs.  If you don't
 specify the @samp{-ansi} option to GCC and don't define any of these macros
 explicitly, the effect is the same as defining @code{_GNU_SOURCE}.

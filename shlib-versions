@@ -19,13 +19,13 @@ m68k-*-linux*		libc=6
 alpha-*-linux*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
-*-*-gnu*		libmachuser=1
+*-*-gnu?*		libmachuser=1
 
 # libhurduser.so.0.0 corresponds to hurd/*.defs as of 7 May 1996.
-*-*-gnu*		libhurduser=0.0
+*-*-gnu?*		libhurduser=0.0
 
 # libc.so.0.2 is for the Hurd alpha release 0.2.
-*-*-gnu*		libc=0.2
+*-*-gnu?*		libc=0.2
 
 # The dynamic loader also requires different names.
 i?86-*-linux*		ld=ld-linux.so.2
@@ -53,5 +53,5 @@ i?86-*-linux*		ld=ld-linux.so.2
 # We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
 *-*-*			libdb=2
 
-# This file defines the shared library version numbers we will install.
+# This defines the shared library version numbers we will install.
 *-*-*			libcrypt=1

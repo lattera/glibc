@@ -278,10 +278,7 @@ extern void _IO_flockfile __P ((_IO_FILE *));
 extern void _IO_funlockfile __P ((_IO_FILE *));
 extern int _IO_ftrylockfile __P ((_IO_FILE *));
 
-#ifdef _IO_MTSAFE_IO
-weak_extern (_IO_flockfile)
-weak_extern (_IO_funlockfile)
-#else
+#ifndef _IO_MTSAFE_IO
 # define _IO_flockfile(_fp) /**/
 # define _IO_funlockfile(_fp) /**/
 # define _IO_ftrylockfile(_fp) /**/

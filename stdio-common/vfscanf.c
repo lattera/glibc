@@ -172,8 +172,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       unsigned long int ul;
     } num;
   /* Character-buffer pointer.  */
-  register char *str, **strptr;
-  size_t strsize;
+  char *str = NULL;
+  char **strptr = NULL;
+  size_t strsize = 0;
   /* We must not react on white spaces immediately because they can
      possibly be matched even if in the input stream no character is
      available anymore.  */

@@ -60,16 +60,21 @@ Boston, MA 02111-1307, USA.  */
 
 
 /* Prototype for reentrant version we use here.  */
-extern LOOKUP_TYPE *INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *result,
-					       char *buffer, int buflen
-					       H_ERRNO_PARM);
+extern int INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf,
+				      char *buffer, size_t buflen,
+				      LOOKUP_TYPE **result H_ERRNO_PARM);
 
 LOOKUP_TYPE *
 FUNCTION_NAME (ADD_PARAMS)
 {
-  static LOOKUP_TYPE result;
   static char buffer[BUFLEN];
+  static LOOKUP_TYPE resbuf;
+  LOOKUP_TYPE *result;
 
-  return INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &result, buffer,
-				    BUFLEN H_ERRNO_VAR);
+  if (INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &resbuf, buffer,
+				 BUFLEN, &result H_ERRNO_VAR) != 0)
+    /* Error occured.  */
+    return NULL;
+
+  return result;
 }

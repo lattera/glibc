@@ -279,7 +279,7 @@ get_toplvl_escape (struct linereader *lr)
 	}
 
       if ((base == 16 && !isxdigit (ch))
-	  || (base != 16 && (ch < '0' || ch >= '0' + base)))
+	  || (base != 16 && (ch < '0' || ch >= (int) ('0' + base))))
 	{
 	esc_error:
 	  lr->token.val.str.start = &lr->buf[start_idx];
@@ -299,7 +299,7 @@ get_toplvl_escape (struct linereader *lr)
 
       ch = lr_getc (lr);
       if ((base == 16 && !isxdigit (ch))
-	  || (base != 16 && (ch < '0' || ch >= '0' + base)))
+	  || (base != 16 && (ch < '0' || ch >= (int) ('0' + base))))
 	goto esc_error;
 
       byte *= base;
@@ -521,7 +521,7 @@ get_string (struct linereader *lr, const struct charset_t *charset)
 	  {
 	    value = charset_find_value (charset, &buf[startidx],
 					bufact - startidx);
-	    if (value == ILLEGAL_CHAR_VALUE)
+	    if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	      illegal_string = 1;
 	    bufact = startidx;
 

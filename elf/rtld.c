@@ -285,9 +285,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   if (mode == verify)
     /* We were called just to verify that this is a dynamic executable
        using us as the program interpreter.  */
-    _exit ((strcmp (_dl_rtld_map.l_libname, _dl_rtld_map.l_name) ||
-	    l->l_ld == NULL)
-	   ? EXIT_FAILURE : EXIT_SUCCESS);
+    _exit (l->l_ld == NULL ? EXIT_FAILURE : EXIT_SUCCESS);
 
   /* Extract the contents of the dynamic section for easy access.  */
   elf_get_dynamic_info (l->l_ld, l->l_info);

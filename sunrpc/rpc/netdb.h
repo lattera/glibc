@@ -38,27 +38,33 @@
 #define _RPC_NETDB_H	1
 #include <features.h>
 
+#define __need_size_t
+#include <stddef.h>
+
 __BEGIN_DECLS
 
-struct rpcent {
-      char    *r_name;        /* name of server for this rpc program */
-      char    **r_aliases;    /* alias list */
-      int     r_number;       /* rpc program number */
+struct rpcent
+{
+  char *r_name;		/* Name of server for this rpc program.  */
+  char **r_aliases;	/* Alias list.  */
+  int r_number;		/* RPC program number.  */
 };
 
-struct rpcent	*getrpcbyname __P ((const char *__name));
-struct rpcent	*getrpcbynumber __P ((int __number));
-struct rpcent	*getrpcent __P ((void));
+extern struct rpcent *getrpcbyname __P ((__const char *__name));
+extern struct rpcent *getrpcbynumber __P ((int __number));
+extern struct rpcent *getrpcent __P ((void));
 
 #ifdef __USE_REENTRANT
-struct rpcent	*getrpcbyname_r __P ((const char *__name,
-				      struct rpcent *__result,
-				      char *__buffer, int __buflen));
-struct rpcent	*getrpcbynumber_r __P ((int __number,
-					struct rpcent *__result,
-					char *__buffer, int __buflen));
-struct rpcent	*getrpcent_r __P ((struct rpcent *__result, char *__buffer,
-				   int __buflen));
+extern int getrpcbyname_r __P ((__const char *__name,
+				struct rpcent *__result_buf, char *__buffer,
+				size_t __buflen, struct rpcent **__result));
+
+extern int getrpcbynumber_r __P ((int __number, struct rpcent *__result_buf,
+				  char *__buffer, size_t __buflen,
+				  struct rpcent **__result));
+
+extern int getrpcent_r __P ((struct rpcent *__result_buf, char *__buffer,
+			     size_t __buflen, struct rpcent **__result));
 #endif
 
 __END_DECLS

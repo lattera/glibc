@@ -455,7 +455,7 @@ gethostbyname2(name, af)
 		break;
 	default:
 		__set_h_errno (NETDB_INTERNAL);
-		errno = EAFNOSUPPORT;
+		__set_errno (EAFNOSUPPORT);
 		return (NULL);
 	}
 

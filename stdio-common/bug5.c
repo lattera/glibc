@@ -3,7 +3,6 @@
    exhibits itself, outfile will be missing the 2nd through 1023rd
    characters.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -11,14 +10,15 @@
 static char buf[8192];
 
 int
-DEFUN_VOID(main)
+main (void)
 {
   FILE *in;
   FILE *out;
   static char inname[] = "/tmp/bug5.in";
   static char outname[] = "/tmp/bug5.out";
   char *printbuf;
-  int i, result;
+  size_t i;
+  int result;
 
   /* Create a test file.  */
   in = fopen (inname, "w+");
@@ -28,7 +28,7 @@ DEFUN_VOID(main)
       return 1;
     }
   for (i = 0; i < 1000; ++i)
-    fprintf (in, "%d\n", i);
+    fprintf (in, "%u\n", i);
 
   out = fopen (outname, "w");
   if (out == NULL)

@@ -10,7 +10,7 @@ main (int argc, char *argv[])
 {
   uid_t me;
   struct passwd *my_passwd;
-  struct group *my_group;
+  struct group *my_group = NULL;
   char **members;
 
   me = getuid ();

@@ -177,6 +177,11 @@ extern int sigaction __P ((int __sig, __const struct sigaction *__act,
 /* Put in SET all signals that are blocked and waiting to be delivered.  */
 extern int sigpending __P ((sigset_t *__set));
 
+
+/* Select any of pending signals from SET or wait for any to arrive.  */
+extern int __sigwait __P ((__const sigset_t *__set, int *__sig));
+extern int sigwait __P ((__const sigset_t *__set, int *__sig));
+
 #endif /* <signal.h> included.  */
 
 #endif /* Use POSIX.  */

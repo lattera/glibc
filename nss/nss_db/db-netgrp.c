@@ -52,7 +52,7 @@ _nss_db_setnetgrent (const char *group)
       db = dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
 
       if (db == NULL)
-	status = errno = EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
     }
 
   if (status == NSS_STATUS_SUCCESS)

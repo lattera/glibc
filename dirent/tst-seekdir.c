@@ -7,7 +7,7 @@ main (int argc, char *argv[])
 {
 
   DIR * dirp;
-  long save3;
+  long int save3 = 0;
   int i = 0;
   struct dirent *dp;
 

@@ -57,7 +57,7 @@ Foundation.
 @sp 2
 @center Sandra Loosemore
 @center with
-@center Richard M. Stallman, Roland McGrath, and Andrew Oram
+@center Richard M. Stallman, Roland McGrath, Andrew Oram, and Ulrich Drepper
 @sp 3
 @center Edition @value{EDITION}
 @sp 1
@@ -988,7 +988,12 @@ Porting the GNU C Library
 @node Concept Index, Type Index, Copying, Top
 @unnumbered Concept Index
 
-@printindex cp
+@comment Could somebody with better texinfo knowledge look into this?
+@comment When I comment out the following line I get
+@comment        Misplaced `{'.
+@comment        Misplaced `}'.
+@comment This happens even if the libc.cp file is empty.
+@comment @printindex cp
 
 @node Type Index, Function Index, Concept Index, Top
 @unnumbered Type Index

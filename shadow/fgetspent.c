@@ -25,7 +25,9 @@ struct spwd *
 fgetspent (FILE *stream)
 {
   static char buffer[BUFSIZ];
-  static struct spwd result;
+  static struct spwd resbuf;
+  struct spwd *result;
 
-  return __fgetspent_r (stream, &result, buffer, sizeof buffer);
+  return __fgetspent_r (stream, &resbuf, buffer, sizeof buffer, &result)
+    ? NULL : result;
 }

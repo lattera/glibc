@@ -25,7 +25,11 @@ struct passwd *
 fgetpwent (FILE *stream)
 {
   static char buffer[BUFSIZ];
-  static struct passwd result;
+  static struct passwd resbuf;
+  struct passwd *result;
 
-  return __fgetpwent_r (stream, &result, buffer, sizeof buffer);
+  if (__fgetpwent_r (stream, &resbuf, buffer, sizeof buffer, &result) != 0)
+    return NULL;
+
+  return result;
 }

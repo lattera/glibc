@@ -82,9 +82,9 @@ extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
 
 
 
-LOOKUP_TYPE *
-INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *result, char *buffer,
-			   int buflen H_ERRNO_PARM)
+int
+INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
+			   size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM)
 {
   static service_user *startp = NULL;
   static lookup_function start_fct;
@@ -122,13 +122,14 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *result, char *buffer,
 
   while (no_more == 0)
     {
-      status = (*fct) (ADD_VARIABLES, result, buffer, buflen H_ERRNO_VAR);
+      status = (*fct) (ADD_VARIABLES, resbuf, buffer, buflen H_ERRNO_VAR);
 
       no_more = __nss_next (&nip, REENTRANT_NAME_STRING,
 			    (void **) &fct, status, 0);
     }
 
-  return status == NSS_STATUS_SUCCESS ? result : NULL;
+  *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
+  return status == NSS_STATUS_SUCCESS ? 0 : -1;
 }
 
 #define do_weak_alias(n1, n2) weak_alias ((n1), (n2))

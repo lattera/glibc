@@ -27,7 +27,7 @@ setrlimit (resource, rlimits)
      enum __rlimit_resource resource;
      struct rlimit *rlimits;
 {
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return -1;
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -32,25 +31,26 @@ DEFINE_HOOK (__libc_atexit, (void))
    in the reverse of the order in which they were registered
    perform stdio cleanup, and terminate program execution with STATUS.  */
 void
-DEFUN(exit, (status), int status)
+exit (int status)
 {
-  register CONST struct exit_function_list *l;
+  const struct exit_function_list *l;
 
   for (l = __exit_funcs; l != NULL; l = l->next)
     {
-      register size_t i = l->idx;
+      size_t i = l->idx;
       while (i-- > 0)
 	{
-	  CONST struct exit_function *CONST f = &l->fns[i];
+	  const struct exit_function *const f = &l->fns[i];
 	  switch (f->flavor)
 	    {
 	    case ef_free:
+	    case ef_us:
 	      break;
 	    case ef_on:
-	      (*f->func.on.fn)(status, f->func.on.arg);
+	      (*f->func.on.fn) (status, f->func.on.arg);
 	      break;
 	    case ef_at:
-	      (*f->func.at)();
+	      (*f->func.at) ();
 	      break;
 	    }
 	}
@@ -60,11 +60,10 @@ DEFUN(exit, (status), int status)
   RUN_HOOK (__libc_atexit, ());
 #else
   {
-    extern void EXFUN(_cleanup, (NOARGS));
-    _cleanup();
+    extern void _cleanup (void);
+    _cleanup ();
   }
 #endif
 
-  _exit(status);
+  _exit (status);
 }
-

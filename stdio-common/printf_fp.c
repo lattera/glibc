@@ -156,7 +156,7 @@ __printf_fp (FILE *fp,
      position.	*/
   mp_limb_t fp_input[(LDBL_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB];
   /* We need to shift the contents of fp_input by this amount of bits.	*/
-  int to_shift;
+  int to_shift = 0;
 
   /* The significant of the floting-point value in question  */
   MPN_VAR(frac);

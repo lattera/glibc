@@ -19,34 +19,40 @@ Boston, MA 02111-1307, USA.  */
 
 #ifdef _ERRNO_H
 
-#undef EDOM
-#undef ERANGE
-#include <linux/errno.h>
+# undef EDOM
+# undef ERANGE
+# include <linux/errno.h>
 
-#ifndef __ASSEMBLER__
-#if defined __USE_REENTRANT && (!defined _LIBC || defined _LIBC_REENTRANT)
-/* Declare alias of `errno' variable so it is accessible even if macro
-   with name `errno' is defined.  */
-extern int __errno;
+# ifndef __ASSEMBLER__
+#  ifdef _LIBC
+/* We now need a declaration of the `errno' variable.  */
+extern int errno;
 
-/* When using threads, errno is a per-thread value.  */
+/* Function to get address of global `errno' variable.  */
 extern int *__errno_location __P ((void)) __attribute__ ((__const__));
-#define errno	(*__errno_location ())
 
-#define __set_errno(val) errno = __errno = (val)
+#   ifdef _LIBC_REENTRANT
+static inline int
+__set_errno (int __err)
+{
+  return *__errno_location () = errno = __err;
+}
+#   else /* !_LIBC_REENTRANT */
+#    define __set_errno(val) errno = (val)
+#   endif /* _LIBC_REENTRANT */
+#  endif /* _LIBC */
 
-#else /* !__USE_REENTRENT || (_LIBC && !_LIBC_REENTRANT) */
-
-#define __set_errno(val) errno = (val)
-
-#endif /* __USE_REENTRANT && (!_LIBC || _LIBC_REENTRANT) */
-#endif /* !__ASSEMBLER */
+#  if defined __USE_REENTRANT && (!defined _LIBC || defined _LIBC_REENTRANT)
+/* When using threads, errno is a per-thread value.  */
+#   define errno (*__errno_location ())
+#  endif
+# endif /* !__ASSEMBLER__ */
 #endif /* _ERRNO_H */
 
 #if !defined (_ERRNO_H) && defined (__need_Emath)
 /* This is ugly but the kernel header is not clean enough.  We must
    define only the values EDOM and ERANGE in case __need_Emath is
    defined.  The value is the same for all Linux ports.  */
-#define EDOM	33	/* Math argument out of domain of function.  */
-#define ERANGE	34	/* Math result not representable.  */
+# define EDOM	33	/* Math argument out of domain of function.  */
+# define ERANGE	34	/* Math result not representable.  */
 #endif /* !_ERRNO_H && __need_Emath */

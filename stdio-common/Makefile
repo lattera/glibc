@@ -50,6 +50,7 @@ include ../Rules
 
 CFLAGS-_itoa.c = -Wno-unused
 CFLAGS-tst-printf.c = -Wno-format
+CFLAGS-tstdiomisc.c = -Wno-format
 
 ifeq ($(stdio),libio)
 ifneq (,$(filter %REENTRANT, $(defines)))

@@ -110,7 +110,7 @@ extern char *argz_next __P ((char *argz, size_t __argz_len,
 
 #if defined (__OPTIMIZE__) && __GNUC__ >= 2
 extern inline char *
-__argz_next (char *__argz, size_t __argz_len, const char *__entry)
+__argz_next (char *__argz, size_t __argz_len, __const char *__entry)
 {
   if (__entry)
     {
@@ -120,13 +120,10 @@ __argz_next (char *__argz, size_t __argz_len, const char *__entry)
       return __entry >= __argz + __argz_len ? NULL : (char *) __entry;
     }
   else
-    if (__argz_len > 0)
-      return __argz;
-    else
-      return 0;
+    return __argz_len > 0 ? __argz : 0;
 }
 extern inline char *
-argz_next (char *__argz, size_t __argz_len, const char *__entry)
+argz_next (char *__argz, size_t __argz_len, __const char *__entry)
 {
   return __argz_next (__argz, __argz_len, __entry);
 }

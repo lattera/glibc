@@ -117,7 +117,7 @@ lr_ungetc (struct linereader *lr, int ch)
 
 
 static inline int
-lr_ungetn (struct linereader *lr, int n)
+lr_ungetn (struct linereader *lr, size_t n)
 {
   if (lr->idx < n)
     return -1;

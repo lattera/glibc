@@ -68,11 +68,13 @@ LINE_PARSER
 
 
 /* Read one shadow entry from the given stream.  */
-struct spwd *
-__sgetspent_r (const char *string, struct spwd *result, char *buffer,
-	       int buflen)
+int
+__sgetspent_r (const char *string, struct spwd *resbuf, char *buffer,
+	       size_t buflen, struct spwd **result)
 {
-  return parse_line (strncpy (buffer, string, buflen), result, NULL, 0)
-    ? result : NULL;
+  *result = parse_line (strncpy (buffer, string, buflen), resbuf, NULL, 0)
+    ? resbuf : NULL;
+
+  return *result == NULL ? errno : 0;
 }
 weak_alias (__sgetspent_r, sgetspent_r)

@@ -1,3 +1,210 @@
+Thu Oct 31 00:01:39 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/Makefile (routines): Add sigwait.
+	* signal/signal.h: Add prototype for sigwait.
+	* sysdeps/posix/sigwait.c: New file.  Implementation of sigwait
+	function from POSIX.1c.
+	* sysdeps/stub/sigwait.c: New file.  Stub version of sigwait.
+
+Wed Oct 30 02:01:17 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sunrpc/xdr_float.c (xdr_float): Handle sizeof(float)!=sizeof(long),
+	but don't bother going farther than sizeof(float)==sizeof(int).
+	(xdr_double): Handle little-endian machines!  Handle sizeof(double)
+	!= 2*sizeof(long), though again don't bother with more than int.
+
+Thu Oct 29 16:09:42 1996  Craig Metz  <cmetz@inner.net>
+
+	* sysdeps/posix/getaddrinfo.c: Use buffer limits for inet_ntop
+	function.
+
+Tue Oct 29 12:37:22 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Create symbolic links for linking in $(libdir).
+	(make-link): Use absolute path for destination if this is not in
+	the same directory.
+
+	* elf/rtld.c (dl_main): When verifying don't check the name of
+	the dynamic linker.
+
+	* shlib-versions: Change entries for Hurd specific libs from
+	*-*-gnu* to *-*-gnu?* so that i586-pc-linux-gnu does not match
+	these entries.
+
+	* assert/assert.h: Reformat copyright.
+	Change reference to ANSI into reference to ISO C.
+	* ctype/ctype.h: Likewise.
+	* errno.h: Likewise.
+	* limits.h: Likewise.
+	* math/math.h: Likewise.
+	* setjmp/setjmp.h: Likewise.
+	* stdio/stdio.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/string.h: Likewise.
+	* time/time.h: Likewise.
+
+	* string/argz.h: Use __const is definitions.
+
+	* elf/dlfcn.h: Use __const and __P.  Reformat copyright.
+	* misc/err.h: Likewise.
+
+	* wctype/wctype.h (wctrans_t): Use __const instead of const.
+
+	* Makeconfig ($(common-objpfx)soversions.mk): Generate list of
+	sonames for versioned libraries.
+	* Makefile: Remove code to generate libc-version.h.
+	Generate gnu/lib-names.h with info from soversions.mk.
+	* features.h: Define __GLIBC__ and __GLIBC_MINOR__.
+
+	* dirent/tst-seekdir.c: Initialize save3.
+	* grp/testgrp.c: Initialize my_group.
+
+	* grp/fgetgrent_r.c: Change interface to follow POSIX.1c.
+	* grp/grp.h: Likewise.
+	* nss/getXXbyYY.c: Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* pwd/fgetpwent_r.c: Likewise.
+	* pwd/pwd.h: Likewise.
+	* shadow/fgetspent_r.c: Likewise.
+	* shadow/sgetspent.c: Likewise.
+	* shadow/sgetspent_r.c: Likewise.
+	* grp/fgetgrent.c: Adapt for change in interface of fgetgrent_r.
+	* pwd/fgetpwent.c: Likewise, for fgetpwent_r.c.
+	* shadow/fgetspent.c: Likewise, for fgetpwent_r.c.
+	* resolv/netdb.h: Adapt prototypes for reentrant functions to
+	follow POSIX.1c.
+	* sunrpc/rpc/netdb.h: Likewise,
+	* shadow/shadow.h: Likewise.
+
+	* inet/getnetgrent_r.c: Follow change in pwd/grp function interface.
+
+	* sysdeps/unix/getlogin_r.c: Return ERANGE when buffer is too small.
+
+	* inet/herrno.c: Don't define __h_errno.  Only h_errno otherwise the
+	ELF aliasing creates strange situations.
+	* sysdeps/unix/sysv/linux/errnos.H: Define __set_errno as inline
+	function.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Don't define __errno.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+
+	* libio/libio.h: Don't declare _IO_flockfile and _IO_funlockfile
+	weak.
+
+	* locale/programs/charmap.c: Add casts to prevent warnings.
+	* locale/programs/linereader.h: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/stringtrans.c: Likewise.
+	Change types for various variables to prevent warnings.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/linereader.h (lr_ungetc): Likewise.
+	* locale/programs/charset.h (struct charset): Use `unsigned int'
+	as type for width_default.
+	* posix/regex.c: Change type of `this_reg' variables.
+	* stdio-common/Makefile: Use -Wno-format for tstdiomisc.c.
+	* stdio-common/bug5.c: De-ANSI-fy.  Use correct types for
+	variables.
+	* stdio-common/printf_fp.c: Initialize to_shift.
+	* stdio-common/test_rdwr.c: Add cast.
+	* stdio-common/vfprintf.c: Add casts and use correct types to
+	prevent warnings.
+	* stdio-common/vfscanf.c: Initialize str and strptr.
+	* sysdeps/libm-ieee754/e_jnf.c: Use correct types to prevent warnings.
+	* sysdeps/libm-ieee754/e_pow.c: Likewise.
+	* sysdeps/libm-ieee754/e_powf.c: Likewise.
+	* sysdeps/libm-ieee754/e_rem_pio2f.c: Likewise.
+	* time/test-tz.c: Likewise.
+
+	* manual/creature.texi: Document _REENTRANT and _THREAD_SAFE.
+	* manual/libc.texinfo: Prevent makeinfo failure by avoiding
+	libc.cp index.  This must be fixed.
+	* manual/nss.texi: Adapt for correct POSIX.1c interface of
+	reentrant functions.
+	* manual/users.texi: Document netgroup functions.
+
+	* po/es.po: Updated.
+	* po/fr.po: Updated.
+
+	* posix/fnmatch.c: Change to match libit version.
+
+	* posix/unistd.h: Change prototype for ttyname_r to match POSIX.1c.
+	* sysdep/posix/ttyname_r.c: Likewise.
+
+	* stdlib/atexit.h (__new_exitfn): Add internal locking.
+	* stdlib/exit.c: De-ANSI-fy.  Handle new ef_us value for flavor.
+	* stdlib/exit.h: De-ANSI-fy.  Define new ef_us value for flavor.
+	* stdlib/random.c (__srandom): Add internal locking.
+	(__initstate): Likewise.
+	(__setstate): Likewise.
+	(__random): Likewise.
+
+Mon Oct 28 22:28:37 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* sysdeps/generic/crypt-entry.c (crypt_r): Use __set_errno.
+	(crypt): Likewise.
+	* resolv/gethnamaddr.c (gethostbyname2): Likewise.
+	* sysdeps/generic/uname.c: Likewise.
+	* sysdeps/posix/rename.c: Likewise.
+	* sysdeps/stub/setrlimit.c: Likewise.
+
+	* nss/nss_db/db-netgrp.c (_nss_db_setnetgrent): Fix typo.
+
+Sun Oct 27 11:12:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/programs/ld-collate.c (collate_order_elem): Fix format
+	string.
+	(collate_element_to): Cast field width argument to `int' for
+	format string.
+	(collate_symbol): Likewise.
+	(collate_order_elem): Likewise.
+	(collate_weight_bsymbol): Likewise.
+	(collate_simple_weight): Likewise.
+
+	* locale/programs/ld-time.c (STRARR_ELEM): Fix format string.
+
+	* locale/programs/ld-ctype.c (ctype_class_newP): Add missing
+	argument for format string.
+	(ctype_map_newP): Likewise.
+	(set_class_defaults): Fix format string.
+
+	* locale/programs/localedef.c (construct_output_path): Putting an
+	explicit \0 into the format string does not work, use %c.
+
+Sat Oct 26 20:38:36 1996  Richard Henderson  <rth@tamu.edu>
+
+	* Makerules: Install all shared libraries in $(slibdir).
+
+	* login/Makefile: Build libutil.so in others pass after
+	libc.so is created.
+
+	* misc/mntent.h: Include <paths.h> for _PATH_MNTTAB & _PATH_MOUNTED.
+
+	* string/stratcliff.c: Allocate 3 pages instead of one, then use
+	mprotect so that we know that the adjacent pages are inaccessible.
+
+	* resource/sys/resource.h: Move all structures and enums to ...
+	* sysdeps/generic/resourcebits.h: ... here ...
+	* sysdeps/unix/bsd/sun/sunos4/resourcebits.h: ... and here.
+	* sysdeps/unix/sysv/linux/alpha/resourcebits.h: Remove.
+	* sysdeps/unix/sysv/linux/i386/resourcebits.h: Remove.
+	* sysdeps/unix/sysv/linux/m68k/resourcebits.h: Remove.
+	* sysdeps/unix/sysv/linux/mips/resourcebits.h: Remove.
+	* sysdeps/unix/sysv/linux/resourcebits.h: New file.  Use kernel
+	header for RLIMIT_* definitions.  The members of struct rlimit
+	are longs.
+
+
+Thu Oct 24 17:43:34 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* MakeTAGS (sysdep-dirs): Fix typo.
+
+Wed Oct 23 03:45:22 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (headers): Don't mention libc-version.h.
+	(install-others): ...but here.
+
 Tue Oct 22 21:38:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h: Bump version number to 1.97.
@@ -449,7 +656,7 @@ Sat Oct 12 23:10:43 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/fr.po: Update.
 
-cd	* time/strptime.c: Recognize %s, %u, %g, and %G format.
+	* time/strptime.c: Recognize %s, %u, %g, and %G format.
 
 	* posix/getopt.c: Add some more casts and initializations to
 	prevent warnings.
@@ -1039,7 +1246,7 @@ Thu Oct  3 13:33:31 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 Wed Oct  2 13:41:48 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/strtok.c: Don't set stored pointer to NULL when
- 	notheing is found.  This guarantees all subsequent calls behave
+ 	nothing is found.  This guarantees all subsequent calls behave
  	the same.
 	* sysdeps/generic/strtok_r.c: Likewise.
 
@@ -1224,7 +1431,7 @@ Mon Sep 30 00:14:26 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 Sun Sep 29 12:55:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/unix/sysv/linux/syscalls.list: Change funciton name for
+	* sysdeps/unix/sysv/linux/syscalls.list: Change function name for
  	_llseek to _llseek (not llseek).
 	Reported by Matthias Urlichs <smurf@smurf.noris.de>.
 
@@ -3792,10 +3999,10 @@ Mon Aug 12 19:03:22 1996  Thomas Bushnell n/BSG  <thomas@psilocin.gnu.ai.mit.edu
 
 Mon Aug 12 16:41:52 1996  Thomas Bushnell n/BSG  <thomas@gnu.ai.mit.edu>
 
-        * io/getwd.c (getwd) [! PATH_MAX]: Don't assume that the user's
-        buffer is any longer than the amount necessary to hold the
-        filename; the Hurd getcwd uses the *entire* contents of the
-        buffer, however long it is specified to be.
+	* io/getwd.c (getwd) [! PATH_MAX]: Don't assume that the user's
+	buffer is any longer than the amount necessary to hold the
+	filename; the Hurd getcwd uses the *entire* contents of the
+	buffer, however long it is specified to be.
 
 Mon Aug 12 04:33:09 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -4662,13 +4869,13 @@ Fri Jul 26 03:46:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* stdlib/stdlib.h: Ditto.
 	* string/string.h: Ditto.
 
-	* posix/getconf.c: De-ASNI-fy.  Recognize POSIX.2 constant names.
+	* posix/getconf.c: De-ANSI-fy.  Recognize POSIX.2 constant names.
 	Use `error' function instead of doing it by hand.
 	* sysdeps/posix/sysconf.c: De-ANSI-fy.
 	Handle _SC_COLL_WEIGHTS_MAX.
 	* sysdeps/stub/sysconf.c: Handle _SC_CHARCLASS_NAME_MAX,
 	_SC_COLL_WEIGHTS_MAX, _SC_EQUIV_CLASS_MAX, _SC_2_LOCALEDEF
-	since these do depend on the platform.
+	since these do not depend on the platform.
 	Add POSIX.4 symbols.
 
 	* posix/posix2_lim.h: Add missing definition of

@@ -1144,7 +1144,7 @@ typedef struct
     char *destination;							\
     /* Must be int, so when we don't save any registers, the arithmetic	\
        of 0 + -1 isn't done as unsigned.  */				\
-    int this_reg;							\
+    unsigned this_reg;							\
     									\
     DEBUG_STATEMENT (failure_id++);					\
     DEBUG_STATEMENT (nfailure_points_pushed++);				\
@@ -1257,7 +1257,7 @@ typedef struct
 #define POP_FAILURE_POINT(str, pat, low_reg, high_reg, regstart, regend, reg_info)\
 {									\
   DEBUG_STATEMENT (fail_stack_elt_t failure_id;)			\
-  int this_reg;								\
+  unsigned this_reg;							\
   const unsigned char *string_temp;					\
 									\
   assert (!FAIL_STACK_EMPTY ());					\
@@ -5436,7 +5436,8 @@ regerror (errcode, preg, errbuf, errbuf_size)
   size_t msg_size;
 
   if (errcode < 0
-      || errcode >= (sizeof (re_error_msgid) / sizeof (re_error_msgid[0])))
+      || errcode >= (int) (sizeof (re_error_msgid)
+			   / sizeof (re_error_msgid[0])))
     /* Only error codes returned by the rest of the code should be passed
        to this routine.  If we are given anything else, or if other regex
        code generates an invalid error code, then the program has a bug.

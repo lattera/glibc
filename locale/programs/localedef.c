@@ -463,10 +463,10 @@ construct_output_path (char *path)
 	 the end of the function we need another byte for the trailing
 	 '/'.  */
       if (normal == NULL)
-	asprintf (&result, "%s/%s\0", LOCALE_PATH, path);
+	asprintf (&result, "%s/%s%c", LOCALE_PATH, path, '\0');
       else
-	asprintf (&result, "%s/%.*s%s%s\0", LOCALE_PATH, startp - path, path,
-		  normal, endp);
+	asprintf (&result, "%s/%.*s%s%s%c", LOCALE_PATH, startp - path, path,
+		  normal, endp, '\0');
     }
   else
     {

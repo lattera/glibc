@@ -1,20 +1,20 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
  *	ISO/IEC 9899:1990/Amendment 1:1995 7.15:
@@ -44,7 +44,7 @@ typedef unsigned int wint_t;
 
 /* Scalar type that can hold values which represent locale-specific
    character mappings.  */
-typedef const unsigned int *wctrans_t;
+typedef __const unsigned int *wctrans_t;
 
 /* Scalar type that can hold values which represent locale-specific
    character classifications.  */
@@ -96,52 +96,52 @@ enum
 
 /* Test for any wide character for which `iswalpha' or `iswdigit' is
    true.  */
-int iswalnum __P ((wint_t __wc));
+extern int iswalnum __P ((wint_t __wc));
 
 /* Test for any wide character for which `iswupper' or 'iswlower' is
    true, or any wide character that is one of a locale-specific set of
    wide-characters for which none of `iswcntrl', `iswdigit',
    `iswpunct', or `iswspace' is true.  */
-int iswalpha __P ((wint_t __wc));
+extern int iswalpha __P ((wint_t __wc));
 
 /* Test for any control wide character.  */
-int iswcntrl __P ((wint_t __wc));
+extern int iswcntrl __P ((wint_t __wc));
 
 /* Test for any wide character that corresponds to a decimal-digit
    character.  */
-int iswdigit __P ((wint_t __wc));
+extern int iswdigit __P ((wint_t __wc));
 
 /* Test for any wide character for which `iswprint' is true and
    `iswspace' is false.  */
-int iswgraph __P ((wint_t __wc));
+extern int iswgraph __P ((wint_t __wc));
 
 /* Test for any wide character that corresponds to a lowercase letter
    or is one of a locale-specific set of wide characters for which
    none of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-int iswlower __P ((wint_t __wc));
+extern int iswlower __P ((wint_t __wc));
 
 /* Test for any printing wide character.  */
-int iswprint __P ((wint_t __wc));
+extern int iswprint __P ((wint_t __wc));
 
 /* Test for any printing wide character that is one of a
    locale-specific et of wide characters for which neither `iswspace'
    nor `iswalnum' is true.  */
-int iswpunct __P ((wint_t __wc));
+extern int iswpunct __P ((wint_t __wc));
 
 /* Test for any wide character that corresponds to a locale-specific
    set of wide characters for which none of `iswalnum', `iswgraph', or
    `iswpunct' is true.  */
-int iswspace __P ((wint_t __wc));
+extern int iswspace __P ((wint_t __wc));
 
 /* Test for any wide character that corresponds to an uppercase letter
    or is one of a locale-specific set of wide character for which none
    of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-int iswupper __P ((wint_t __wc));
+extern int iswupper __P ((wint_t __wc));
 
 /* Test for any wide character that corresponds to a hexadecimal-digit
    character equivalent to that performed be the functions described
    in the previous subclause.  */
-int iswxdigit __P ((wint_t __wc));
+extern int iswxdigit __P ((wint_t __wc));
 
 /*
  * Extensible wide-character classification functions: 7.15.2.2.
@@ -149,11 +149,11 @@ int iswxdigit __P ((wint_t __wc));
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
-wctype_t wctype __P ((__const char *__property));
+extern wctype_t wctype __P ((__const char *__property));
 
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
-int iswctype __P ((wint_t __wc, wctype_t __desc));
+extern int iswctype __P ((wint_t __wc, wctype_t __desc));
 
 
 /*
@@ -161,10 +161,10 @@ int iswctype __P ((wint_t __wc, wctype_t __desc));
  */
 
 /* Converts an uppercase letter to the corresponding lowercase letter.  */
-wint_t towlower __P ((wint_t __wc));
+extern wint_t towlower __P ((wint_t __wc));
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
-wint_t towupper __P ((wint_t __wc));
+extern wint_t towupper __P ((wint_t __wc));
 
 /*
  * Extensible wide-character mapping functions: 7.15.3.2.
@@ -172,10 +172,10 @@ wint_t towupper __P ((wint_t __wc));
 
 /* Construct value that describes a mapping between wide characters
    identified by the string argument PROPERTY.  */
-wctrans_t wctrans __P ((__const char *__property));
+extern wctrans_t wctrans __P ((__const char *__property));
 
 /* Map the wide character WC using the mapping described by DESC.  */
-wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
+extern wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
 
 
 

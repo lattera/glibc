@@ -63,6 +63,11 @@ please let me know.
 	  functions `stat', `lstat', `fstat', and `mknod' and while
 	  linking on my Linux system I get error messages.  How is
 	  this supposed to work?''
+
+[Q18]	``The prototypes for `connect', `accept', `getsockopt',
+	  `setsockopt', `getsockname', `getpeername', `send',
+	  `sendto', and `recvfrom' are different in GNU libc than
+	  on any other system I saw.  This is a bug, isn't it?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -75,9 +80,9 @@ The systems glibc is known to work on in the moment and most probably
 in the future are:
 
 	*-*-gnu			GNU Hurd
-	i[3456]86-*-linux	Linux-2.0 on Intel
-	m68k-*-linux		Linux-2.0 on Motorola 680x0
-	alpha-*-linux		Linux-2.0 on DEC Alpha
+	i[3456]86-*-linux-gnu	Linux-2.0 on Intel
+	m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
+	alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
 
 Other Linux platforms are also on the way to be supported but I need
 some success reports first.
@@ -159,13 +164,9 @@ Library.
   slow.
 
 * plenty of time (approx 1h for i?86-linux on i586@133 or 2.5h on
-  i486@66 or 4.5h on i486@33).
+  i486@66 or 4.5h on i486@33).  For Hurd systems times are much higher.
 
   If you have some more measurements let me know.
-
-* Some files depend on special tools.  E.g., files ending in .gperf
-  need a `gperf' program.  The GNU version (part of libg++) is known
-  to work while some vendor versions do not.
 
 * When compiling for Linux:
 
@@ -175,6 +176,8 @@ Library.
 * Some files depend on special tools.  E.g., files ending in .gperf
   need a `gperf' program.  The GNU version (part of libg++) is known
   to work while some vendor versions do not.
+
+  You should not need these tools unless you change the source files.
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q7]	``When I run `nm -u libc.so' on the produced library I still
@@ -407,7 +410,7 @@ libc binaries from the US.
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q15]	``What are these `add-ons'?''
 
-[A15] {UD} To avoid complications with external or external source
+[A15] {UD} To avoid complications with export rules or external source
 code some optional parts of the libc are distributed as separate
 packages (e.g., the crypt package, see Q14).
 
@@ -416,7 +419,7 @@ the package and tell the configuration script about these additional
 subdirectories using the --enable-add-ons option.  When you add the
 crypt add-on you just have to use
 
-	configure --enable-add-ons=crypt,XXX ...
+	configure --enable-add-ons=des-crypt,XXX ...
 
 where XXX are possible other add-ons and ... means the rest of the
 normal option list.
@@ -549,6 +552,22 @@ GROUP ( libc.so.6 ld.so.1 libc.a )
 libc.so.6 in /lib.  This is not correct.  There must not be such a
 link.  The linker script with the above contents is placed in
 /usr/lib which is enough for the linker.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q18]	``The prototypes for `connect', `accept', `getsockopt',
+	  `setsockopt', `getsockname', `getpeername', `send',
+	  `sendto', and `recvfrom' are different in GNU libc from
+	  any other system I saw.  This is a bug, isn't it?''
+
+[A18] {UD} No, this is no bug.  This version of the GNU libc already
+follows the to-be-released POSIX.1g standard.  In this standard
+the type `size_t' is used for all parameters which describe a size.
+So better change now.
+
+This change is critical for system which have
+	sizeof (int) != sizeof (size_t)
+like the Alpha.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

@@ -51,15 +51,22 @@ Boston, MA 02111-1307, USA.  */
 #endif
 
 /* Prototype of the reentrant version.  */
-LOOKUP_TYPE *INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *result, char *buffer,
-					   int buflen H_ERRNO_PARM);
+extern int INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer,
+					 size_t buflen, LOOKUP_TYPE **result
+					 H_ERRNO_PARM);
 
 
 LOOKUP_TYPE *
 GETFUNC_NAME (void)
 {
   static char buffer[BUFLEN];
-  static LOOKUP_TYPE result;
+  static LOOKUP_TYPE resbuf;
+  LOOKUP_TYPE *result;
 
-  return INTERNAL (REENTRANT_GETNAME) (&result, buffer, BUFLEN H_ERRNO_VAR);
+  if (INTERNAL (REENTRANT_GETNAME) (&resbuf, buffer, BUFLEN, &result
+				    H_ERRNO_VAR) != 0)
+    /* Errors occured.  */
+    return NULL;
+
+  return result;
 }

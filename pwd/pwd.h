@@ -54,7 +54,7 @@ extern FILE *__pwdopen __P ((void));
 
 /* Read a password entry from STREAM, filling in P.
    Return the `struct passwd' of P if successful, NULL on failure.  */
-extern struct passwd *__pwdread __P ((FILE * __stream, __ptr_t __p));
+extern struct passwd *__pwdread __P ((FILE *__stream, __ptr_t __p));
 
 /* Return a chunk of memory containing pre-initialized data for __pwdread.  */
 extern __ptr_t __pwdalloc __P ((void));
@@ -80,10 +80,10 @@ extern struct passwd *getpwent __P ((void));
 
 #ifdef	__USE_SVID
 /* Read an entry from STREAM.  */
-extern struct passwd *fgetpwent __P ((FILE * __stream));
+extern struct passwd *fgetpwent __P ((FILE *__stream));
 
 /* Write the given entry onto the given stream.  */
-extern int putpwent __P ((__const struct passwd * __p, FILE * __f));
+extern int putpwent __P ((__const struct passwd *__p, FILE *__f));
 #endif
 
 /* Search for an entry with a matching user ID.  */
@@ -103,35 +103,35 @@ extern struct passwd *getpwnam __P ((__const char *__name));
    may change in later versions of this library.  */
 
 #if defined(__USE_SVID) || defined(__USE_MISC)
-extern struct passwd *__getpwent_r __P ((struct passwd *__resultbuf,
-					 char *__buffer, int __buflen));
-extern struct passwd *getpwent_r __P ((struct passwd *__resultbuf,
-				       char *__buffer, int __buflen));
+extern int __getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
+			      size_t __buflen, struct passwd **__result));
+extern int getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
+			    size_t __buflen, struct passwd **__result));
 #endif
 
-extern struct passwd *__getpwuid_r __P ((__uid_t __uid,
-					 struct passwd *__resultbuf,
-					 char *__buffer, int __buflen));
-extern struct passwd *getpwuid_r __P ((__uid_t __uid,
-				       struct passwd *__resultbuf,
-				       char *__buffer, int __buflen));
+extern int __getpwuid_r __P ((__uid_t __uid, struct passwd *__resultbuf,
+			      char *__buffer, size_t __buflen,
+			      struct passwd **__result));
+extern int getpwuid_r __P ((__uid_t __uid, struct passwd *__resultbuf,
+			    char *__buffer, size_t __buflen,
+			    struct passwd **__result));
 
-extern struct passwd *__getpwnam_r __P ((__const char *__name,
-					 struct passwd *__resultbuf,
-					 char *__buffer, int __buflen));
-extern struct passwd *getpwnam_r __P ((__const char *__name,
-				       struct passwd *__resultbuf,
-				       char *__buffer, int __buflen));
+extern int __getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
+			      char *__buffer, size_t __buflen,
+			      struct passwd **__result));
+extern int getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
+			    char *__buffer, size_t __buflen,
+			    struct passwd **__result));
 
 
 #ifdef	__USE_SVID
 /* Read an entry from STREAM.  */
-extern struct passwd *__fgetpwent_r __P ((FILE * __stream,
-					  struct passwd *__resultbuf,
-					  char *__buffer, int __buflen));
-extern struct passwd *fgetpwent_r __P ((FILE * __stream,
-					struct passwd *__resultbuf,
-					char *__buffer, int __buflen));
+extern int __fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
+			       char *__buffer, size_t __buflen,
+			       struct passwd **__result));
+extern int fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
+			     char *__buffer, size_t __buflen,
+			     struct passwd **__result));
 #endif
 
 #endif	/* reentrant */

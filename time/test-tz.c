@@ -21,7 +21,7 @@ main(int argc, char ** argv)
   int errors = 0;
   struct tm tm;
   time_t t;
-  int i;
+  unsigned int i;
 
   memset (&tm, 0, sizeof (tm));
   tm.tm_isdst = 0;
@@ -39,7 +39,7 @@ main(int argc, char ** argv)
       t = mktime(&tm);
       if (t != tests[i].expected)
 	{
-	  printf ("%s: flunked test %d (expected %lu, got %lu)\n",
+	  printf ("%s: flunked test %u (expected %lu, got %lu)\n",
 		  argv[0], i, (long) tests[i].expected, (long) t);
 	  ++errors;
 	}

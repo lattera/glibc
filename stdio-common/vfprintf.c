@@ -145,9 +145,9 @@ extern void __funlockfile (FILE *);
 #define outstring(String, Len)						      \
   do									      \
     {									      \
-      if (PUT (s, String, Len) != Len)					      \
+      if ((size_t) PUT (s, (String), (Len)) != (size_t) (Len))		      \
 	return -1;							      \
-      done += Len;							      \
+      done += (Len);							      \
     }									      \
   while (0)
 
@@ -1075,7 +1075,7 @@ do_positional:
     size_t max_ref_arg = 0;
 
     /* Just a counter.  */
-    int cnt;
+    size_t cnt;
 
 
     if (grouping == (const char *) -1)
@@ -1194,7 +1194,7 @@ do_positional:
 	}
 
     /* Now walk through all format specifiers and process them.  */
-    for (; nspecs_done < nspecs; ++nspecs_done)
+    for (; (size_t) nspecs_done < nspecs; ++nspecs_done)
       {
 #undef REF
 #define REF(Name) &&do2_##Name
@@ -1501,7 +1501,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   /* Now flush anything from the helper to the S. */
   if ((to_flush = hp->_IO_write_ptr - hp->_IO_write_base) > 0)
     {
-      if (_IO_sputn (s, hp->_IO_write_base, to_flush) != to_flush)
+      if ((int) _IO_sputn (s, hp->_IO_write_base, to_flush) != to_flush)
 	return -1;
     }
 

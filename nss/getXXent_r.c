@@ -187,9 +187,9 @@ ENDFUNC_NAME (void)
 }
 
 
-LOOKUP_TYPE *
-INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *result, char *buffer, int buflen
-			      H_ERRNO_PARM)
+int
+INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
+			      LOOKUP_TYPE **result H_ERRNO_PARM)
 {
   get_function fct;
   int no_more;
@@ -214,7 +214,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *result, char *buffer, int buflen
   no_more = setup ((void **) &fct, GETFUNC_NAME_STRING, 0);
   while (! no_more)
     {
-      status = (*fct) (result, buffer, buflen H_ERRNO_VAR);
+      status = (*fct) (resbuf, buffer, buflen H_ERRNO_VAR);
 
       no_more = __nss_next (&nip, GETFUNC_NAME_STRING, (void **) &fct,
 			    status, 0);
@@ -222,7 +222,8 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *result, char *buffer, int buflen
 
   __libc_lock_unlock (lock);
 
-  return status == NSS_STATUS_SUCCESS ? result : NULL;
+  *result = NSS_STATUS_SUCCESS ? resbuf : NULL;
+  return status == NSS_STATUS_SUCCESS ? 0 : -1;
 }
 #define do_weak_alias(n1, n2) weak_alias (n1, n2)
 do_weak_alias (INTERNAL (REENTRANT_GETNAME), REENTRANT_GETNAME)

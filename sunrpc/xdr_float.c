@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)xdr_float.c 1.12 87/08/11 Copyr 1984 Sun Micro";
  */
 
 #include <stdio.h>
+#include <endian.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
@@ -50,6 +51,8 @@ static char sccsid[] = "@(#)xdr_float.c 1.12 87/08/11 Copyr 1984 Sun Micro";
  * NB: Not portable.
  * This routine works on Suns (Sky / 68000's) and Vaxen.
  */
+
+#define LSW	(__BYTE_ORDER == __BIG_ENDIAN)
 
 #ifdef vax
 
@@ -96,9 +99,7 @@ xdr_float(xdrs, fp)
 	switch (xdrs->x_op) {
 
 	case XDR_ENCODE:
-#ifndef vax
-		return (XDR_PUTLONG(xdrs, (long *)fp));
-#else
+#ifdef vax
 		vs = *((struct vax_single *)fp);
 		for (i = 0, lim = sgl_limits;
 			i < sizeof(sgl_limits)/sizeof(struct sgl_limits);
@@ -115,12 +116,18 @@ xdr_float(xdrs, fp)
 	shipit:
 		is.sign = vs.sign;
 		return (XDR_PUTLONG(xdrs, (long *)&is));
+#else
+		if (sizeof(float) == sizeof(long))
+			return (XDR_PUTLONG(xdrs, (long *)fp));
+		else if (sizeof(float) == sizeof(int)) {
+			long tmp = *(int *)fp;
+			return (XDR_PUTLONG(xdrs, &tmp));
+		}
+		break;
 #endif
 
 	case XDR_DECODE:
-#ifndef vax
-		return (XDR_GETLONG(xdrs, (long *)fp));
-#else
+#ifdef vax
 		vsp = (struct vax_single *)fp;
 		if (!XDR_GETLONG(xdrs, (long *)&is))
 			return (FALSE);
@@ -139,6 +146,17 @@ xdr_float(xdrs, fp)
 	doneit:
 		vsp->sign = is.sign;
 		return (TRUE);
+#else
+		if (sizeof(float) == sizeof(long))
+			return (XDR_GETLONG(xdrs, (long *)fp));
+		else if (sizeof(float) == sizeof(int)) {
+			long tmp;
+			if (XDR_GETLONG(xdrs, &tmp)) {
+				*(int *)fp = tmp;
+				return (TRUE);
+			}
+		}
+		break;
 #endif
 
 	case XDR_FREE:
@@ -192,7 +210,6 @@ xdr_double(xdrs, dp)
 	register XDR *xdrs;
 	double *dp;
 {
-	register long *lp;
 #ifdef vax
 	struct	ieee_double id;
 	struct	vax_double vd;
@@ -203,9 +220,7 @@ xdr_double(xdrs, dp)
 	switch (xdrs->x_op) {
 
 	case XDR_ENCODE:
-#ifndef vax
-		lp = (long *)dp;
-#else
+#ifdef vax
 		vd = *((struct vax_double *)dp);
 		for (i = 0, lim = dbl_limits;
 			i < sizeof(dbl_limits)/sizeof(struct dbl_limits);
@@ -226,15 +241,24 @@ xdr_double(xdrs, dp)
 				((vd.mantissa4 >> 3) & MASK(13));
 	shipit:
 		id.sign = vd.sign;
-		lp = (long *)&id;
+		dp = (double *)&id;
 #endif
-		return (XDR_PUTLONG(xdrs, lp++) && XDR_PUTLONG(xdrs, lp));
+		if (2*sizeof(long) == sizeof(double)) {
+			long *lp = (long *)dp;
+			return (XDR_PUTLONG(xdrs, lp+!LSW) &&
+				XDR_PUTLONG(xdrs, lp+LSW));
+		} else if (2*sizeof(int) == sizeof(double)) {
+			int *ip = (int *)dp;
+			long tmp[2];
+			tmp[0] = ip[!LSW];
+			tmp[1] = ip[LSW];
+			return (XDR_PUTLONG(xdrs, tmp) &&
+				XDR_PUTLONG(xdrs, tmp+1));
+		}
+		break;
 
 	case XDR_DECODE:
-#ifndef vax
-		lp = (long *)dp;
-		return (XDR_GETLONG(xdrs, lp++) && XDR_GETLONG(xdrs, lp));
-#else
+#ifdef vax
 		lp = (long *)&id;
 		if (!XDR_GETLONG(xdrs, lp++) || !XDR_GETLONG(xdrs, lp))
 			return (FALSE);
@@ -258,6 +282,22 @@ xdr_double(xdrs, dp)
 		vd.sign = id.sign;
 		*dp = *((double *)&vd);
 		return (TRUE);
+#else
+		if (2*sizeof(long) == sizeof(double)) {
+			long *lp = (long *)dp;
+			return (XDR_GETLONG(xdrs, lp+!LSW) &&
+				XDR_GETLONG(xdrs, lp+LSW));
+		} else if (2*sizeof(int) == sizeof(double)) {
+			int *ip = (int *)dp;
+			long tmp[2];
+			if (XDR_GETLONG(xdrs, tmp+!LSW) &&
+			    XDR_GETLONG(xdrs, tmp+LSW)) {
+				ip[0] = tmp[0];
+				ip[1] = tmp[1];
+				return (TRUE);
+			}
+		}
+		break;
 #endif
 
 	case XDR_FREE:

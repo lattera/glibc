@@ -113,7 +113,7 @@ internal_setnetgrent (const char *group)
 
   /* Add the current group to the list of known groups.  */
   new_elem = (struct name_list *) malloc (sizeof (struct name_list));
-  if (new_elem == NULL || (new_elem->name = strdup (group)) == NULL)
+  if (new_elem == NULL || (new_elem->name = __strdup (group)) == NULL)
     {
       if (new_elem != NULL)
 	free (new_elem);
@@ -178,7 +178,7 @@ endnetgrent (void)
 
 int
 __getnetgrent_r (char **hostp, char **userp, char **domainp,
-		 char *buffer, int buflen)
+		 char *buffer, size_t buflen)
 {
   enum nss_status (*fct) (struct __netgrent *, char *, int);
   struct __netgrent result;
@@ -230,7 +230,7 @@ __getnetgrent_r (char **hostp, char **userp, char **domainp,
 
 	  namep = (struct name_list *) malloc (sizeof (struct name_list));
 	  if (namep == NULL
-	      || (namep->name = strdup (result.val.group)) == NULL)
+	      || (namep->name = __strdup (result.val.group)) == NULL)
 	    {
 	      /* We are out of memory.  */
 	      if (namep != NULL)
@@ -315,7 +315,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
 			  namep =
 			    (struct name_list *) malloc (sizeof (*namep));
 			  if (namep == NULL
-			      || ((namep->name = strdup (entry.val.group))
+			      || ((namep->name = __strdup (entry.val.group))
 				  == NULL))
 			    {
 			      /* Out of memory, simply return.  */

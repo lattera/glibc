@@ -42,8 +42,9 @@ LINE_PARSER
 
 
 /* Read one entry from the given stream.  */
-struct group *
-__fgetgrent_r (FILE *stream, struct group *result, char *buffer, int buflen)
+int
+__fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
+	       struct group **result)
 {
   char *p;
 
@@ -51,7 +52,10 @@ __fgetgrent_r (FILE *stream, struct group *result, char *buffer, int buflen)
     {
       p = fgets (buffer, buflen, stream);
       if (p == NULL)
-	return NULL;
+	{
+	  *result = NULL;
+	  return errno;
+	}
 
       /* Skip leading blanks.  */
       while (isspace (*p))
@@ -59,8 +63,9 @@ __fgetgrent_r (FILE *stream, struct group *result, char *buffer, int buflen)
     } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (p, result, (void *) buffer, buflen));
+	     ! parse_line (p, resbuf, (void *) buffer, buflen));
 
-  return result;
+  *result = resbuf;
+  return 0;
 }
 weak_alias (__fgetgrent_r, fgetgrent_r)

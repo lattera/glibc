@@ -48,7 +48,7 @@ crypt_r (key, salt, data)
     return md5_crypt_r (key, salt, (char *) data, sizeof (struct crypt_data));
 
   /* We don't have DES encryption.  */
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return NULL;
 }
 
@@ -63,6 +63,6 @@ crypt (key, salt)
     return md5_crypt (key, salt);
 
   /* We don't have DES encryption.  */
-  errno = ENOSYS;
+  __set_errno (ENOSYS);
   return NULL;
 }

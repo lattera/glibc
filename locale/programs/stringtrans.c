@@ -93,7 +93,7 @@ translate_string (char *str, struct charset_t *charset)
 	}
 
       value = charset_find_value (charset, str + 1, tp - (str + 1));
-      if (value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	{
 	  free (buf);
 	  return NULL;

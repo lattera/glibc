@@ -36,7 +36,7 @@ int
 __ttyname_r (fd, buf, buflen)
      int fd;
      char *buf;
-     int buflen;
+     size_t buflen;
 {
   static const char dev[] = "/dev";
   struct stat st;
@@ -50,21 +50,24 @@ __ttyname_r (fd, buf, buflen)
      the loop.  */
   if (buflen < (int) (sizeof (dev) + 1))
     {
-      __set_errno (EINVAL);
-      return -1;
+      __set_errno (ERANGE);
+      return ERANGE;
     }
 
   if (!__isatty (fd))
-    return -1;
+    {
+      __set_errno (ENOTTY);
+      return ENOTTY;
+    }
 
   if (fstat (fd, &st) < 0)
-    return -1;
+    return errno;
   mydev = st.st_dev;
   myino = st.st_ino;
 
   dirstream = opendir (dev);
   if (dirstream == NULL)
-    return -1;
+    return errno;
 
   /* Prepare the result buffer.  */
   memcpy (buf, dev, sizeof (dev) - 1);
@@ -75,9 +78,16 @@ __ttyname_r (fd, buf, buflen)
     if ((ino_t) d->d_fileno == myino)
       {
 	char *cp;
+	size_t needed = _D_EXACT_NAMLEN (d) + 1;
 
-	cp = __stpncpy (&buf[sizeof (dev)], d->d_name,
-			MIN ((int) (_D_EXACT_NAMLEN (d) + 1), buflen));
+	if (needed > buflen)
+	  {
+	    (void) closedir (dirstream);
+	    __set_errno (ERANGE);
+	    return ERANGE;
+	  }
+
+	cp = __stpncpy (&buf[sizeof (dev)], d->d_name, needed);
 	cp[0] = '\0';
 
 	if (stat (buf, &st) == 0 && st.st_dev == mydev)
@@ -90,6 +100,8 @@ __ttyname_r (fd, buf, buflen)
 
   (void) closedir (dirstream);
   __set_errno (save);
-  return -1;
+  /* It is not clear what to return in this case.  `isatty' says FD
+     refers to a TTY but no entry in /dev has this inode.  */
+  return ENOTTY;
 }
 weak_alias (__ttyname_r, ttyname_r)

@@ -672,7 +672,7 @@ time_add (struct linereader *lr, struct localedef_t *locale,
     case tok_##cat:							      \
       if (time->cur_num_##cat >= max)					      \
 	lr_error (lr, _("\
-too many values for field `%s' in category `LC_TIME'"),			      \
+too many values for field `%s' in category `%s'"),			      \
 		  #cat, "LC_TIME");					      \
       else if (code->val.str.start == NULL)				      \
 	{								      \

@@ -1,0 +1,92 @@
+/* sigwait - implementation of sigwait function from POSIX.1c.
+   Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <assert.h>
+#include <errno.h>
+#include <signal.h>
+
+
+/* This is our dummy signal handler we use here.  */
+static void ignore_signal (int sig);
+
+/* Place where to remember which signal we got.  Please note that this
+   implementation cannot be used for the threaded libc.  The
+   libpthread must provide an own version.  */
+static int was_sig;
+
+
+int
+__sigwait (const sigset_t *set, int *sig)
+{
+  sigset_t tmp_mask;
+  struct sigaction saved[NSIG];
+  struct sigaction action;
+  int save_errno;
+  int this;
+
+  /* Prepare set.  */
+  sigfillset (&tmp_mask);
+
+  /* Unblock all signals in the SET and register our nice handler.  */
+  action.sa_handler = ignore_signal;
+  action.sa_flags = 0;
+  sigfillset (&action.sa_mask);		/* Block all signals for handler.  */
+
+  /* Make sure we recognize error conditions by setting WAS_SIG to a
+     value which does not describe a legal signal number.  */
+  was_sig = -1;
+
+  for (this = 0; this < NSIG; ++this)
+    if (sigismember (set, this))
+      {
+	/* Unblock this signal.  */
+	sigdelset (&tmp_mask, this);
+
+	/* Register temporary action handler.  */
+	if (sigaction (this, &action, &saved[this]) != 0)
+	  goto restore_handler;
+      }
+
+  /* Now we can wait for signals.  */
+  sigsuspend (&tmp_mask);
+
+ restore_handler:
+  save_errno = errno;
+
+  while (--this >= 0)
+    if (sigismember (set, this))
+      /* We ignore errors here since we must restore all handlers.  */
+      sigaction (this, &saved[this], NULL);
+
+  __set_errno (save_errno);
+
+  /* Store the result and return.  */
+  *sig = was_sig;
+  return was_sig == -1 ? -1 : 0;
+}
+weak_alias (__sigwait, sigwait)
+
+
+static void
+ignore_signal (int sig)
+{
+  /* Remember the signal.  */
+  was_sig = sig;
+}

@@ -238,9 +238,9 @@ parse_charmap (const char *filename)
 		  continue;
 		}
 	      if ((nowtok == tok_mb_cur_max && result->mb_cur_min != 0
-		   && arg->val.num < result->mb_cur_min)
+		   && (int) arg->val.num < result->mb_cur_min)
 		  || (nowtok == tok_mb_cur_min && result->mb_cur_max != 0
-		      && arg->val.num > result->mb_cur_max))
+		      && (int) arg->val.num > result->mb_cur_max))
 		{
 		  lr_error (cmfile, _("\
 value of <mb_cur_max> must be greater than the value of <mb_cur_min>"));
@@ -612,7 +612,7 @@ new_width (struct linereader *cmfile, struct charset_t *result,
   unsigned int from_val, to_val;
 
   from_val = charset_find_value (result, from, strlen (from));
-  if (from_val == ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) from_val == ILLEGAL_CHAR_VALUE)
     {
       lr_error (cmfile, _("unknown character `%s'"), from);
       return;
@@ -623,7 +623,7 @@ new_width (struct linereader *cmfile, struct charset_t *result,
   else
     {
       to_val = charset_find_value (result, to, strlen (to));
-      if (to_val == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) to_val == ILLEGAL_CHAR_VALUE)
 	{
 	  lr_error (cmfile, _("unknown character `%s'"), to);
 	  return;

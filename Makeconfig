@@ -532,8 +532,10 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 		 eval vers_lib$${lib}=yes; \
 		 number=`echo $$v | sed "s/^.*=//"`; \
 		 case $$number in \
-		   [0-9]*) echo "$$lib.so-version=.$$number";;  \
-		   *) echo "$$lib.so-version=$$number";;  \
+		   [0-9]*) echo "$$lib.so-version=.$$number"; \
+			   echo "all-sonames+=$$lib.so\$$($$lib.so-version)";;\
+		   *) echo "$$lib.so-version=$$number"; \
+		      echo "all-sonames+=\$$($$lib.so-version)";;  \
 		 esac; \
 	       fi; \
 	   done ;; esac; done; \

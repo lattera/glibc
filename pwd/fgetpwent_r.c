@@ -49,8 +49,9 @@ LINE_PARSER
 
 
 /* Read one entry from the given stream.  */
-struct passwd *
-__fgetpwent_r (FILE *stream, struct passwd *result, char *buffer, int buflen)
+int
+__fgetpwent_r (FILE *stream, struct passwd *resbuf, char *buffer,
+	       size_t buflen, struct passwd **result)
 {
   char *p;
 
@@ -58,7 +59,10 @@ __fgetpwent_r (FILE *stream, struct passwd *result, char *buffer, int buflen)
     {
       p = fgets (buffer, buflen, stream);
       if (p == NULL)
-	return NULL;
+	{
+	  *result = NULL;
+	  return errno;
+	}
 
       /* Skip leading blanks.  */
       while (isspace (*p))
@@ -66,8 +70,9 @@ __fgetpwent_r (FILE *stream, struct passwd *result, char *buffer, int buflen)
     } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (p, result, (void *) buffer, buflen));
+	     ! parse_line (p, resbuf, (void *) buffer, buflen));
 
-  return result;
+  *result = resbuf;
+  return 0;
 }
 weak_alias (__fgetpwent_r, fgetpwent_r)

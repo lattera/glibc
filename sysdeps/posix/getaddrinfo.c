@@ -287,6 +287,10 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
     struct gaih_servtuple *st2;
     struct gaih_addrtuple *at2 = at;
     int j;
+#ifndef MAXHOSTNAMELEN
+# define MAXHOSTNAMELEN 128
+#endif /* MAXHOSTNAMELEN */
+    char buffer[MAXHOSTNAMELEN];
 
     while(at2) {
       if (req->ai_flags & AI_CANONNAME) {
@@ -308,9 +312,9 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	    sizeof(struct in_addr), at2->family);
 #endif /* HOSTTABLE */
 
-	if (!h) {
-	  c = inet_ntop(at2->family, at2->addr, NULL, 0);
-	} else
+	if (!h)
+	  c = inet_ntop(at2->family, at2->addr, buffer, sizeof(buffer));
+	else
           c = h->h_name;
 
 	if (!c) {

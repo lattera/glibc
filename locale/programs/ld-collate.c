@@ -98,8 +98,8 @@ struct locale_collate_t
   hash_table result;
 
   /* Sorting rules given in order_start line.  */
-  int nrules;
-  int nrules_max;
+  u_int32_t nrules;
+  u_int32_t nrules_max;
   enum coll_sort_rule *rules;
 
   /* Used while recognizing symbol composed of multiple tokens
@@ -122,10 +122,10 @@ struct locale_collate_t
   /* While collecting the weigths we need some temporary space.  */
   unsigned int current_order;
   int *weight_cnt;
-  int weight_idx;
+  unsigned int weight_idx;
   unsigned int *weight;
-  int nweight;
-  int nweight_max;
+  size_t nweight;
+  size_t nweight_max;
 
   /* Patch lists.  */
   patch_t *current_patch;
@@ -241,7 +241,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
 
       if (value == 0)
 	error_at_line (0, 0, patch->fname, patch->lineno,
-			_("no weight defined for symbol `%s'"), patch->token);
+		       _("no weight defined for symbol `%s'"), patch->token);
       else
 	*patch->where.pos = value;
     }
@@ -482,7 +482,8 @@ Computing table size for collation information might take a while..."),
 	    ADD_VALUE (collate->undefined.ordering[cnt]);		      \
 	    for (disp = 0; disp < collate->undefined.ordering[cnt]; ++disp)   \
 	      {								      \
-		if (collate->undefined.ordering[idx] == ELLIPSIS_CHAR)	      \
+		if ((wchar_t) collate->undefined.ordering[idx]		      \
+		    == ELLIPSIS_CHAR)					      \
 		  ADD_VALUE ((pelem)->name[0]);				      \
 		else							      \
 		  ADD_VALUE (collate->undefined.ordering[idx++]);	      \
@@ -540,7 +541,7 @@ Computing table size for collation information might take a while..."),
 	    size_t inner;
 
 	    for (inner = 0; inner < collate->nrules; ++inner)
-	      if (collate->undefined.ordering[collate->nrules + inner]
+	      if ((wchar_t)collate->undefined.ordering[collate->nrules + inner]
 		  == ELLIPSIS_CHAR)
 		table[cnt * entry_size + 1 + inner] = cnt;
 	      else
@@ -1049,11 +1050,11 @@ collate_element_to (struct linereader *lr, struct localedef_t *locale,
     }
 
   value = charset_find_value (charset, code->val.str.start, code->val.str.len);
-  if (value != ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) value != ILLEGAL_CHAR_VALUE)
     {
       lr_error (lr, _("symbol for multicharacter collating element "
 		      "`%.*s' duplicates symbolic name in charset"),
-		code->val.str.len, code->val.str.start);
+		(int) code->val.str.len, code->val.str.start);
       return;
     }
 
@@ -1062,7 +1063,7 @@ collate_element_to (struct linereader *lr, struct localedef_t *locale,
     {
       lr_error (lr, _("symbol for multicharacter collating element "
 		      "`%.*s' duplicates other element definition"),
-		code->val.str.len, code->val.str.start);
+		(int) code->val.str.len, code->val.str.start);
       return;
     }
 
@@ -1071,7 +1072,7 @@ collate_element_to (struct linereader *lr, struct localedef_t *locale,
     {
       lr_error (lr, _("symbol for multicharacter collating element "
 		      "`%.*s' duplicates symbol definition"),
-		code->val.str.len, code->val.str.start);
+		(int) code->val.str.len, code->val.str.start);
       return;
     }
 
@@ -1180,7 +1181,7 @@ collate_symbol (struct linereader *lr, struct localedef_t *locale,
     {
       lr_error (lr, _("symbol for multicharacter collating element "
 		      "`%.*s' duplicates symbolic name in charset"),
-		code->val.str.len, code->val.str.start);
+		(int) code->val.str.len, code->val.str.start);
       return;
     }
 
@@ -1189,7 +1190,7 @@ collate_symbol (struct linereader *lr, struct localedef_t *locale,
     {
       lr_error (lr, _("symbol for multicharacter collating element "
 		      "`%.*s' duplicates element definition"),
-		code->val.str.len, code->val.str.start);
+		(int) code->val.str.len, code->val.str.start);
       return;
     }
 
@@ -1198,7 +1199,7 @@ collate_symbol (struct linereader *lr, struct localedef_t *locale,
     {
       lr_error (lr, _("symbol for multicharacter collating element "
 		      "`%.*s' duplicates other symbol definition"),
-		code->val.str.len, code->val.str.start);
+		(int) code->val.str.len, code->val.str.start);
       return;
     }
 
@@ -1256,7 +1257,7 @@ collate_order_elem (struct linereader *lr, struct localedef_t *locale,
   int result = 0;
   wchar_t value;
   void *tmp;
-  int i;
+  unsigned int i;
 
   switch (code->tok)
     {
@@ -1284,7 +1285,7 @@ collate_order_elem (struct linereader *lr, struct localedef_t *locale,
 	      if (lastp->name[0] == value && lastp->name[1] == L'\0')
 		{
 		  lr_error (lr, _("duplicate definition for character `%.*s'"),
-			    code->val.str.len, code->val.str.start);
+			    (int) code->val.str.len, code->val.str.start);
 		  lr_ignore_rest (lr, 0);
 		  result = -1;
 		  break;
@@ -1311,7 +1312,7 @@ collate_order_elem (struct linereader *lr, struct localedef_t *locale,
 				(void *) collate->current_element) < 0)
 		{
 		  lr_error (lr, _("cannot insert collation element `%.*s'"),
-			    code->val.str.len, code->val.str.start);
+			    (int) code->val.str.len, code->val.str.start);
 		  exit (4);
 		}
 	    }
@@ -1344,8 +1345,8 @@ collation element `%.*s' appears more than once: ignore line"),
 	  if ((unsigned long int) tmp != 0ul)
 	    {
 	      lr_error (lr, _("\
-collation symbol `.*s' appears more than once: ignore line"),
-			code->val.str.len, code->val.str.start);
+collation symbol `%.*s' appears more than once: ignore line"),
+			(int) code->val.str.len, code->val.str.start);
 	      lr_ignore_rest (lr, 0);
 	      result = -1;
 	      break;
@@ -1364,7 +1365,7 @@ collation symbol `.*s' appears more than once: ignore line"),
 	{
 	  if (verbose)
 	    lr_error (lr, _("unknown symbol `%.*s': line ignored"),
-		      code->val.str.len, code->val.str.start);
+		      (int) code->val.str.len, code->val.str.start);
           lr_ignore_rest (lr, 0);
 
           result = -1;
@@ -1454,7 +1455,7 @@ line after ellipsis must contain character definition"));
 	    data[collate->nrules + cnt] = collate->weight[cnt];
 
 	  for (cnt = 0; cnt < collate->nrules; ++cnt)
-	    if (data[ptr[cnt]] != ELLIPSIS_CHAR)
+	    if ((wchar_t) data[ptr[cnt]] != ELLIPSIS_CHAR)
 	      ptr[cnt] = 0;
 
 	  while (name[0] <= value)
@@ -1555,7 +1556,7 @@ collate_weight_bsymbol (struct linereader *lr, struct localedef_t *locale,
     {
       if (verbose)
 	lr_error (lr, _("unknown symbol `%.*s': line ignored"),
-		  code->val.str.len, code->val.str.start);
+		  (int) code->val.str.len, code->val.str.start);
       lr_ignore_rest (lr, 0);
       return -1;
     }
@@ -1729,7 +1730,7 @@ collate_simple_weight (struct linereader *lr, struct localedef_t *locale,
 		  {
 		    if (verbose)
 		      lr_error (lr, _("unknown symbol `%.*s': line ignored"),
-				putp - startp, startp);
+				(int) (putp - startp), startp);
 		    lr_ignore_rest (lr, 0);
 		    return -1;
 		  }
@@ -1741,8 +1742,8 @@ collate_simple_weight (struct linereader *lr, struct localedef_t *locale,
 
 		if (*runp == lr->escape_char)
 		  {
-		    static char digits[] = "0123456789abcdef";
-		    char *dp;
+		    static const char digits[] = "0123456789abcdef";
+		    const char *dp;
 		    int base;
 
 		    ++runp;

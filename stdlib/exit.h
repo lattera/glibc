@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,14 @@ Cambridge, MA 02139, USA.  */
 
 struct exit_function
   {
-    enum { ef_free, ef_on, ef_at } flavor;	/* `ef_free' MUST be zero!  */
+    enum { ef_free, ef_us, ef_on, ef_at } flavor; /* `ef_free' MUST be zero! */
     union
       {
-	void EXFUN((*at), (NOARGS));
+	void (*at) (void);
 	struct
 	  {
-	    void EXFUN((*fn), (int status, PTR arg));
-	    PTR arg;
+	    void (*fn) (int status, void *arg);
+	    void *arg;
 	  } on;
       } func;
   };
@@ -39,6 +39,6 @@ struct exit_function_list
   };
 extern struct exit_function_list *__exit_funcs;
 
-extern struct exit_function *EXFUN(__new_exitfn, (NOARGS));
+extern struct exit_function *__new_exitfn (void);
 
 #endif	/* exit.h  */
