@@ -210,56 +210,56 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 #define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
      unsigned int *__ts = (unsigned int *) __s;				      \
-     unsigned char __c = (unsigned char) (c);				      \
+     unsigned int __c = ((unsigned char) (c)) * 0x01010101;		      \
 									      \
      /* We apply a trick here.  `gcc' would implement the following	      \
 	assignments using absolute operands.  But this uses to much	      \
 	memory (7, instead of 4 bytes).  */				      \
-     if (n >= 5)							      \
+     if (n == 3 || n >= 5)						      \
        __asm__ __volatile__ ("" : "=r" (__c) : "0" (__c));		      \
 									      \
      /* This `switch' statement will be removed at compile-time.  */	      \
      switch (n)								      \
        {								      \
        case 15:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 11:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 7:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 3:								      \
-	 *((unsigned short int *) __ts)++ = __c * 0x0101;		      \
-	 *((unsigned char *) __ts) = __c;				      \
+	 *((unsigned short int *) __ts)++ = (unsigned short int) __c;	      \
+	 *((unsigned char *) __ts) = (unsigned char) __c;		      \
 	 break;								      \
 									      \
        case 14:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 10:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 6:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 2:								      \
-	 *((unsigned short int *) __ts) = __c * 0x0101;			      \
+	 *((unsigned short int *) __ts) = (unsigned short int) __c;	      \
 	 break;								      \
 									      \
        case 13:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 9:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 5:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 1:								      \
-	 *((unsigned char *) __ts) = __c;				      \
+	 *((unsigned char *) __ts) = (unsigned char) __c;		      \
 	 break;								      \
 									      \
        case 16:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 12:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 8:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 *__ts++ = __c;							      \
        case 4:								      \
-	 *__ts = __c * 0x01010101;					      \
+	 *__ts = __c;							      \
        case 0:								      \
 	 break;								      \
        }								      \
