@@ -94,58 +94,6 @@ endif
 
 include ../Rules
 
-
-ifdef gmp-srcdir
-
-gmp-srcdir := $(firstword $(filter-out ..//%,$(..)$(gmp-srcdir) $(gmp-srcdir)))
-
-# Copy the mpn source files we use from the GNU MP source directory.
-# `gmp-srcdir' is set by doing `configure --with-gmp=DIR'.
-# (Do not try this at home.  You need an as yet unreleased version of GNU MP.)
-
-mpn-sysdep := $(addsuffix .c,$(mpn-routines)) \
-	      $(addsuffix .S,$(mpn-routines)) \
-	      $(addsuffix .s,$(mpn-routines)) gmp-mparam.h asm-syntax.h
-
-mpn-try := $(addprefix $(gmp-srcdir)/mpn/*/,$(mpn-sysdep)) \
-	   $(addprefix $(gmp-srcdir)/mpn/*/*/,$(mpn-sysdep))
-mpn-found = $(wildcard $(mpn-try))
-
-include mpn-copy.mk
-%.mk: gen-%; sh $< > $@
-
-mpn-copy-1 := $(patsubst $(gmp-srcdir)/mpn/%,$(sysdep_dir)/%,$(mpn-found))
-mpn-copy-sysdep := $(mpn-copy-sysdep) $(mpn-copy-1)
-mpn-copy-sysdep := $(filter $(addsuffix %,\
-		     $(wildcard $(sort $(dir $(mpn-copy-sysdep))))), \
-		    $(mpn-copy-sysdep))
-$(mpn-copy-1): $(sysdep_dir)/%: $(ignore gmp2glibc.sed) $(gmp-srcdir)/mpn/%
-	$(gmp2glibc)
-
-mpn-stuff = $(mpn-copy-sysdep) $(mpn-copy)
-
-# chmod so I don't edit them by mistake.
-define gmp2glibc
-$(ignore sed -f $^ > $@-tmp)
-cp $< $@-tmp
-chmod a-w $@-tmp
-mv -f $@-tmp $@
-endef
-
-mpn-copy = $(filter-out $(mpn-sysdep),$(mpn-headers))# mp_clz_tab.c)
-$(mpn-copy): %: $(ignore gmp2glibc.sed) $(gmp-srcdir)/%; $(gmp2glibc)
-
-.PHONY: copy-mpn clean-mpn mpn-stuff
-mpn-stuff: $(mpn-stuff)
-copy-mpn: $(mpn-stuff)
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -m'Updated from $(gmp-srcdir)' $+
-endif
-clean-mpn:
-	rm -f $(mpn-stuff)
-
-endif
-
 # Testdir has to be named stdlib and needs to be writable
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 

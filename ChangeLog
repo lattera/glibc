@@ -1,5 +1,7 @@
 2002-12-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/Makefile: Remove code to automatically import GMP.
+
 	* elf/Makefile (tests): Add rules to build and run check-textrel.
 	* elf/check-textrel.c: New file.
 
