@@ -1,3 +1,8 @@
+1998-10-20  H.J. Lu  <hjl@gnu.org> 
+ 
+        * sysdeps/unix/sysv/linux/i386/setresuid.c (__setresuid): Fix 
+        argument types.
+ 
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/tgmath.h: Make nested function calls work.

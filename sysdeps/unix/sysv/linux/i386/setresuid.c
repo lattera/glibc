@@ -29,7 +29,7 @@ extern int __syscall_setresuid (__kernel_uid_t rgid, __kernel_uid_t egid,
 				__kernel_uid_t sgid);
 
 int
-__setresuid (gid_t ruid, gid_t euid, gid_t suid)
+__setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
   if ((ruid != (uid_t) ((__kernel_uid_t) ruid))
       || (euid != (uid_t) ((__kernel_uid_t) euid))
