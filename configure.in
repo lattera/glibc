@@ -81,12 +81,18 @@ config_machine=$host_cpu config_vendor=$host_vendor config_os=$host_os
 case "$host_os" in
 gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
   # These systems always use GNU tools.
-  gnu_ld=yes gnu_as=yes
+  gnu_ld=yes gnu_as=yes ;;
 esac
 case "$host_os" in
 gnu* | linux* | sysv4* | solaris2*)
   # These systems always use the ELF format.
-  elf=yes
+  elf=yes ;;
+esac
+
+# Linux/Alpha does not use ELF yet.
+case "$host_cpu-$host_os" in
+alpha*-linux*)
+  gnu_ld=no elf=no ;;
 esac
 
 # Compute the list of sysdep directories for this configuration.
@@ -436,7 +442,7 @@ EOF
   fi
   rm -f conftest*])
 
-if $libc_cv_asm_weak_directive = no; then
+if test $libc_cv_asm_weak_directive = no; then
   AC_CACHE_CHECK(for assembler .weakext directive,
 		 libc_cv_asm_weakext_directive,
 		 [dnl

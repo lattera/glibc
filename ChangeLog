@@ -1,9 +1,12 @@
 Tue Mar 19 14:18:42 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* configure.in (alpha*-*-linux*): Unset $gnu_ld and $elf.
+
 	* config.make.in (weak-symbols): Variable removed.
 	* configure.in (--with-weak-symbols): Option removed.
 	(NO_UNDERSCORES, HAVE_ASM_WEAK_DIRECTIVE, HAVE_ASM_WEAKEXT_DIRECTIVE):
 	New tests.
+
 	* config.h.in (HAVE_WEAK_SYMBOLS): #undef removed.
 	(NO_UNDERSCORES, HAVE_ASM_WEAK_DIRECTIVE, HAVE_ASM_WEAKEXT_DIRECTIVE):
 	New #undefs.
