@@ -1,5 +1,12 @@
 1999-11-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wctype/wctrans.c (wctrans): Use correct base index to access
+	extra mapping tables.
+
+	* locale/loadlocale.c (_nl_load_locale): Use actual number of
+	entries from file and not the fixed (minimal number from the
+	langinfo.h list.
+
 	* locale/programs/ld-ctype.c (ctype_read): Fix reading of <U....>
 	values in charmaps.
 

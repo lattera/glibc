@@ -176,8 +176,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     }
 
   newdata = malloc (sizeof *newdata
-		    + (_nl_category_num_items[category]
-		       * sizeof (union locale_data_value)));
+		    + filedata->nstrings * sizeof (union locale_data_value));
   if (! newdata)
     goto puntmap;
 
@@ -186,7 +185,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   newdata->filesize = st.st_size;
   newdata->mmaped = mmaped;
   newdata->usage_count = 0;
-  newdata->nstrings = _nl_category_num_items[category];
+  newdata->nstrings = filedata->nstrings;
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
       off_t idx = filedata->strindex[cnt];
