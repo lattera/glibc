@@ -55,17 +55,13 @@ pthread_barrier_wait (barrier)
       /* The number of the event we are waiting for.  The barrier's event
 	 number must be bumped before we continue.  */
       unsigned int event = ibarrier->curr_event;
+
+      /* Before suspending, make the barrier available to others.  */
+      lll_unlock (ibarrier->lock);
+
+      /* Wait for the event counter of the barrier to change.  */
       do
-	{
-	  /* Before suspending, make the barrier available to others.  */
-	  lll_unlock (ibarrier->lock);
-
-	  /* Wait for the event counter of the barrier to change.  */
-	  lll_futex_wait (&ibarrier->curr_event, event);
-
-	  /* We are going to access shared data.  */
-	  lll_lock (ibarrier->lock);
-	}
+	lll_futex_wait (&ibarrier->curr_event, event);
       while (event == ibarrier->curr_event);
     }
 

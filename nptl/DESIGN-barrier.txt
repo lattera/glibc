@@ -31,12 +31,9 @@ pthread_barrier_wait(barrier_t *barrier)
     result = BARRIER_SERIAL_THREAD;
   } else {
     event = barrier->curr_event;
+    lll_unlock(barrier->lock);
     do {
-      lll_unlock(barrier->lock);
-
       futex_wait(&barrier->curr_event, event)
-
-      lll_lock(barrier->lock);
     } while (event == barrier->curr_event);
   }
 

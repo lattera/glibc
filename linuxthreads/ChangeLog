@@ -1,5 +1,8 @@
 2004-02-20  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Add ulps for the
+	2003-11-27 atan2 test.
+
 	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h (DL_ARGV_NOT_RELRO): Define.
 
 2004-02-10  Steven Munroe  <sjmunroe@us.ibm.com>

@@ -1,5 +1,6 @@
 /* Inline math functions for powerpc.
-   Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,6 +59,8 @@
 #endif  /* __cplusplus */
 
 #ifdef __USE_ISOC99
+
+# ifndef __powerpc64__
 __MATH_INLINE long int lrint (double __x) __THROW;
 __MATH_INLINE long int
 lrint (double __x) __THROW
@@ -81,6 +84,7 @@ lrintf (float __x) __THROW
   __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
   return __u.__ll[1];
 }
+# endif
 
 __MATH_INLINE double fdim (double __x, double __y) __THROW;
 __MATH_INLINE double
