@@ -49,7 +49,7 @@ static inline int compare_and_swap(long * ptr, long oldval, long newval,
 #elif defined(HAS_COMPARE_AND_SWAP)
 
 #ifdef IMPLEMENT_TAS_WITH_CAS
-#define testandset(p) !__compare_and_swap(p, 0, 1)
+#define testandset(p) !__compare_and_swap((long int *) p, 0, 1)
 #endif
 
 #ifdef HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS

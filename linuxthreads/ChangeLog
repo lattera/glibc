@@ -1,3 +1,8 @@
+2000-09-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* spinlock.h (testandset): Add cast to avoid warning.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 2000-09-02  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/pthread/timer_routines.c: Include stdlib.h for abort
