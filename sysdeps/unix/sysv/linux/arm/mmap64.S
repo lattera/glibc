@@ -27,38 +27,44 @@
 	.text
 ENTRY (__mmap64)
 #ifdef __NR_mmap2
-	stmfd	sp!, {r4, r5, lr}
-	ldr	r5, [sp, $16]
-	ldr	r4, [sp, $12]
-	movs	ip, r5, lsl $20		@ check that offset is page-aligned
+	ldr	ip, [sp, $4]		@ offset low part
+	str	r5, [sp, #-4]!
+	ldr	r5, [sp, $12]		@ offset high part
+	str	r4, [sp, #-4]!
+	movs	r4, ip, lsl $20		@ check that offset is page-aligned
+	mov	ip, ip, lsr $12
+	moveqs	r4, r5, lsr $12		@ check for overflow
 	bne	.Linval
-	ldr	ip, [sp, $20]
-	mov	r5, r5, lsr $12
-	orr	r5, r5, ip, lsl $20	@ compose page offset
-	movs	ip, ip, lsr $12
-	bne	.Linval			@ check for overflow
+	ldr	r4, [sp, $8]		@ load fd
+	orr	r5, ip, r5, lsl $20	@ compose page offset
 	mov	ip, r0
 	swi	SYS_ify (mmap2)
 	cmn	r0, $4096
-	LOADREGS(ccfd, sp!, {r4, r5, pc})
 # ifdef __ASSUME_MMAP2_SYSCALL
-	ldmfd	sp!, {r4, r5, lr}
+	ldr	r4, [sp], #4
+	ldr	r5, [sp], #4
+	RETINSTR(movcc, pc, lr)	
 	b	PLTJMP(syscall_error)
 # else
+	ldrcc	r4, [sp], #4
+	ldrcc	r5, [sp], #4
+	RETINSTR(movcc, pc, lr)
 	cmn	r0, $ENOSYS
-	ldmnefd	sp!, {r4, r5, lr}
-	bne	PLTJMP(syscall_error)
+	bne	.Lerror
 	/* The current kernel does not support mmap2.  Fall back to plain
 	   mmap if the offset is small enough.  */
-	ldr	r5, [sp, $20]
+	ldr	r5, [sp, $16]
 	mov	r0, ip			@ first arg was clobbered
 	teq	r5, $0
-	ldmeqfd	sp!, {r4, r5, lr}
+	ldreq	r4, [sp], #4
+	ldreq	r5, [sp], #4
 	beq	PLTJMP(__mmap)
 # endif
 .Linval:
 	mov	r0, $-EINVAL
-	ldmfd	sp!, {r4, r5, lr}
+.Lerror:
+	ldr	r4, [sp], #4
+	ldr	r5, [sp], #4
 	b	PLTJMP(syscall_error)
 #else
 	/* The kernel headers do not support mmap2.  Fall back to plain

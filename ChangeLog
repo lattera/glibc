@@ -1,3 +1,16 @@
+2003-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* dirent/dirent.h: Remove __THROW from scandir.
+
+2003-09-14  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/mmap.S: Use sys_mmap2 if it's known
+	to be available.
+
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Optimise code a little.
+
+	* sysdeps/arm/memset.S: Rewrite.
+
 2003-09-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h: New.
