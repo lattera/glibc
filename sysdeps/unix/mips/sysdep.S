@@ -60,8 +60,8 @@ L(skip):
 	jal	__errno_location
 
 	/* Store the error value.  */
-	REG_L	t4, V0OFF(sp)
-	sw	t4, 0(v0)
+	REG_L	t0, V0OFF(sp)
+	sw	t0, 0(v0)
 
 	/* And just kick back a -1.  */
 	REG_L	ra, RAOFF(sp)

@@ -36,33 +36,33 @@
 ENTRY (memset)
 	.set	noreorder
 
-	slti	t5, a2, 16		# Less than 16?
-	bne	t5, zero, L(last16)
+	slti	ta1, a2, 16		# Less than 16?
+	bne	ta1, zero, L(last16)
 	move	v0, a0			# Setup exit value before too late
 
 	beq	a1, zero, L(ueven)	# If zero pattern, no need to extend
 	andi	a1, 0xff		# Avoid problems with bogus arguments
-	dsll	t4, a1, 8
-	or	a1, t4
-	dsll	t4, a1, 16
-	or	a1, t4			# a1 is now pattern in full word
-	dsll	t4, a1, 32
-	or	a1, t4			# a1 is now pattern in double word
+	dsll	ta0, a1, 8
+	or	a1, ta0
+	dsll	ta0, a1, 16
+	or	a1, ta0			# a1 is now pattern in full word
+	dsll	ta0, a1, 32
+	or	a1, ta0			# a1 is now pattern in double word
 
 L(ueven):
-	PTR_SUBU t4, zero, a0		# Unaligned address?
-	andi	t4, 0x7
-	beq	t4, zero, L(chkw)
-	PTR_SUBU a2, t4
+	PTR_SUBU ta0, zero, a0		# Unaligned address?
+	andi	ta0, 0x7
+	beq	ta0, zero, L(chkw)
+	PTR_SUBU a2, ta0
 	SDHI	a1, 0(a0)		# Yes, handle first unaligned part
-	PTR_ADDU a0, t4			# Now both a0 and a2 are updated
+	PTR_ADDU a0, ta0		# Now both a0 and a2 are updated
 
 L(chkw):
-	andi	t4, a2, 0xf		# Enough left for one loop iteration?
-	beq	t4, a2, L(chkl)
-	PTR_SUBU a3, a2, t4
+	andi	ta0, a2, 0xf		# Enough left for one loop iteration?
+	beq	ta0, a2, L(chkl)
+	PTR_SUBU a3, a2, ta0
 	PTR_ADDU a3, a0			# a3 is last loop address +1
-	move	a2, t4			# a2 is now # of bytes left after loop
+	move	a2, ta0			# a2 is now # of bytes left after loop
 L(loopw):
 	PTR_ADDIU a0, 16		# Handle 2 dwords pr. iteration
 	sd	a1, -16(a0)
@@ -70,9 +70,9 @@ L(loopw):
 	sd	a1,  -8(a0)
 
 L(chkl):
-	andi	t4, a2, 0x8		# Check if there is at least a double
-	beq	t4, zero, L(last16)	#  word remaining after the loop
-	PTR_SUBU a2, t4
+	andi	ta0, a2, 0x8		# Check if there is at least a double
+	beq	ta0, zero, L(last16)	#  word remaining after the loop
+	PTR_SUBU a2, ta0
 	sd	a1, 0(a0)		# Yes...
 	PTR_ADDIU a0, 8
 
