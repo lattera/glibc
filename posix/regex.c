@@ -2339,7 +2339,6 @@ regex_compile (pattern, size, syntax, bufp)
 #ifdef MBS_SUPPORT
   /* Initialize the wchar_t PATTERN and offset_buffer.  */
   p = pend = pattern = TALLOC(csize + 1, CHAR_TYPE);
-  pattern[csize] = L'\0';	/* sentinel */
   mbs_offset = TALLOC(csize + 1, int);
   is_binary = TALLOC(csize + 1, char);
   if (pattern == NULL || mbs_offset == NULL || is_binary == NULL)
@@ -2349,6 +2348,7 @@ regex_compile (pattern, size, syntax, bufp)
       free(is_binary);
       return REG_ESPACE;
     }
+  pattern[csize] = L'\0';	/* sentinel */
   size = convert_mbs_to_wcs(pattern, cpattern, csize, mbs_offset, is_binary);
   pend = p + size;
   if (size < 0)
