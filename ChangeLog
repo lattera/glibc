@@ -1,3 +1,8 @@
+2003-05-20  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Change SI_ASYNCNL
+	to -60 and define SI_TKILL.
+
 2003-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* math/test-fenv.c (feexcp_nomask_test): Fix comment
