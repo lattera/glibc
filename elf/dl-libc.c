@@ -121,7 +121,6 @@ do_dlsym_private (void *ptr)
   vers.hidden = 1;
   /* vers.hash = _dl_elf_hash (version);  */
   vers.hash = 0x0963cf85;
-  /* FIXME: Shouldn't we use libc.so.6* here?  */
   vers.filename = NULL;
 
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
@@ -156,23 +155,36 @@ __libc_dlopen_mode (const char *name, int mode)
   if (dlerror_run (do_dlopen, &args))
     return NULL;
 
-  struct do_dlsym_args sargs;
-  sargs.map = args.map;
-  sargs.name = "_dl_open_hook";
-
-  if (! dlerror_run (do_dlsym_private, &sargs))
-    {
-      struct dl_open_hook **hook
-	= (struct dl_open_hook **)
-	  (DL_SYMBOL_ADDRESS (sargs.loadbase, sargs.ref));
-      if (hook != NULL)
-	*hook = &_dl_open_hook;
-    }
-
+  __libc_register_dl_open_hook (args.map);
+  __libc_register_dlfcn_hook (args.map);
   return (void *) args.map;
 #endif
 }
 libc_hidden_def (__libc_dlopen_mode)
+
+#ifndef SHARED
+void *
+__libc_dlsym_private (struct link_map *map, const char *name)
+{
+  struct do_dlsym_args sargs;
+  sargs.map = map;
+  sargs.name = name;
+
+  if (! dlerror_run (do_dlsym_private, &sargs))
+    return DL_SYMBOL_ADDRESS (sargs.loadbase, sargs.ref);
+  return NULL;
+}
+
+void
+__libc_register_dl_open_hook (struct link_map *map)
+{
+  struct dl_open_hook **hook;
+
+  hook = (struct dl_open_hook **) __libc_dlsym_private (map, "_dl_open_hook");
+  if (hook != NULL)
+    *hook = &_dl_open_hook;
+}
+#endif
 
 void *
 __libc_dlsym (void *map, const char *name)
