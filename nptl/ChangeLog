@@ -1,3 +1,11 @@
+2003-03-03  Roland McGrath  <roland@redhat.com>
+
+	* forward.c: Fix typo in __pthread_attr_init_2_0 compat_symbol decl.
+
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Argument to ptr___pthread_cleanup_upto is __jmp_buf, not jmp_buf.
+	* sysdeps/unix/sysv/linux/jmp-unwind.c: Likewise.
+
 2003-03-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/timer_create.c (timer_create): Return correct

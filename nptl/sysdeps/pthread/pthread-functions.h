@@ -71,7 +71,7 @@ struct pthread_functions
   pthread_t (*ptr_pthread_self) (void);
   int (*ptr_pthread_setcancelstate) (int, int *);
   int (*ptr_pthread_setcanceltype) (int, int *);
-  void (*ptr___pthread_cleanup_upto) (jmp_buf, char *);
+  void (*ptr___pthread_cleanup_upto) (__jmp_buf, char *);
   int (*ptr___pthread_once) (pthread_once_t *, void (*) (void));
   int (*ptr___pthread_rwlock_rdlock) (pthread_rwlock_t *);
   int (*ptr___pthread_rwlock_wrlock) (pthread_rwlock_t *);

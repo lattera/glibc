@@ -1,3 +1,8 @@
+2003-03-03  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ia64/dl-fptr.c (__ia64_make_fptr): Add const to MAP arg.
+	* sysdeps/ia64/dl-machine.h: Update decl.
+
 2003-03-03  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/clock_settime.c (HANDLE_REALTIME): Add missing

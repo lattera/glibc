@@ -52,8 +52,8 @@ struct ia64_fdesc_table
     struct ia64_fdesc fdesc[0];
   };
 
-extern Elf64_Addr __ia64_make_fptr (struct link_map *, const Elf64_Sym *,
-				    Elf64_Addr);
+extern Elf64_Addr __ia64_make_fptr (const struct link_map *,
+				    const Elf64_Sym *, Elf64_Addr);
 
 static inline void
 __ia64_init_bootstrap_fdesc_table (struct link_map *map)
@@ -583,7 +583,7 @@ elf_machine_rela (struct link_map *map,
 # ifdef RTLD_BOOTSTRAP
 	    /* During startup the dynamic linker is always index 1.  */
 	    value = 1;
-# else	      
+# else
 	    /* Get the information from the link map returned by the
 	       resolv function.  */
 	    value = sym_map->l_tls_modid;
