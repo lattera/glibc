@@ -1,5 +1,5 @@
 /* Definitions of inline math functions implemented by the m68881/2.
-   Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -116,22 +116,6 @@
     return __result;							      \
   }
 
-#ifdef __LIBC_INTERNAL_MATH_INLINES
-/* ieee style elementary functions */
-/* These are internal to the implementation of libm.  */
-__inline_mathop(__ieee754_acos, acos)
-__inline_mathop(__ieee754_asin, asin)
-__inline_mathop(__ieee754_cosh, cosh)
-__inline_mathop(__ieee754_sinh, sinh)
-__inline_mathop(__ieee754_exp, etox)
-__inline_mathop(__ieee754_exp2, twotox)
-__inline_mathop(__ieee754_exp10, tentox)
-__inline_mathop(__ieee754_log10, log10)
-__inline_mathop(__ieee754_log, logn)
-__inline_mathop(__ieee754_sqrt, sqrt)
-__inline_mathop(__ieee754_atanh, atanh)
-#endif
-
 __inline_mathop(__atan, atan)
 __inline_mathop(__cos, cos)
 __inline_mathop(__sin, sin)
@@ -180,51 +164,8 @@ __inline_mathop(trunc, intrz)
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
 /* This macro contains the definition for the rest of the inline
-   functions, using __FLOAT_TYPE as the domain type and __S as the suffix
+   functions, using FLOAT_TYPE as the domain type and S as the suffix
    for the function names.  */
-
-#ifdef __LIBC_INTERNAL_MATH_INLINES
-/* Internally used functions.  */
-# define __internal_inline_functions(float_type, s)			     \
-__m81_defun (float_type, __CONCAT(__ieee754_remainder,s),		     \
-	     (float_type __x, float_type __y))				     \
-{									     \
-  float_type __result;							     \
-  __asm("frem%.x %1, %0" : "=f" (__result) : "f" (__y), "0" (__x));	     \
-  return __result;							     \
-}									     \
-									     \
-__m81_defun (float_type, __CONCAT(__ieee754_fmod,s),			     \
-	     (float_type __x, float_type __y))				     \
-{									     \
-  float_type __result;							     \
-  __asm("fmod%.x %1, %0" : "=f" (__result) : "f" (__y), "0" (__x));	     \
-  return __result;							     \
-}
-
-__internal_inline_functions (double,)
-__internal_inline_functions (float,f)
-__internal_inline_functions (long double,l)
-# undef __internal_inline_functions
-
-/* Get the m68881 condition codes, to quickly check multiple conditions.  */
-static __inline__ unsigned long
-__m81_test (long double __val)
-{
-  unsigned long __fpsr;
-  __asm ("ftst%.x %1; fmove%.l %/fpsr,%0" : "=dm" (__fpsr) : "f" (__val));
-  return __fpsr;
-}
-
-/* Bit values returned by __m81_test.  */
-# define __M81_COND_NAN (1 << 24)
-# define __M81_COND_INF (2 << 24)
-# define __M81_COND_ZERO (4 << 24)
-# define __M81_COND_NEG (8 << 24)
-
-#endif /* __LIBC_INTENRAL_MATH_INLINES */
-
-/* The rest of the functions are available to the user.  */
 
 #define __inline_functions(float_type, s)				  \
 __m81_inline float_type							  \
