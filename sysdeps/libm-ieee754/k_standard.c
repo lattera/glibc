@@ -83,6 +83,8 @@ static double zero = 0.0;	/* used as const */
  *	43-- +0**neg
  *	44-- exp2 overflow
  *	45-- exp2 underflow
+ *	46-- exp10 overflow
+ *	47-- exp10 underflow
  */
 
 
@@ -874,7 +876,7 @@ static double zero = 0.0;	/* used as const */
 		/* exp(finite) overflow */
 		exc.type = OVERFLOW;
 		exc.name = type < 100 ? "exp2" : (type < 200
-						 ? "exp2f" : "exp2l");
+						  ? "exp2f" : "exp2l");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = HUGE;
 		else
@@ -891,7 +893,7 @@ static double zero = 0.0;	/* used as const */
 		/* exp(finite) underflow */
 		exc.type = UNDERFLOW;
 		exc.name = type < 100 ? "exp2" : (type < 200
-						 ? "exp2f" : "exp2l");
+						  ? "exp2f" : "exp2l");
 		exc.retval = zero;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
@@ -899,7 +901,39 @@ static double zero = 0.0;	/* used as const */
 			__set_errno (ERANGE);
 		}
 		break;
-		/* #### Last used is 44/144/244 ### */
+
+	    case 46:
+	    case 146:
+	    case 246:
+		/* exp(finite) overflow */
+		exc.type = OVERFLOW;
+		exc.name = type < 100 ? "exp10" : (type < 200
+						   ? "exp10f" : "exp10l");
+		if (_LIB_VERSION == _SVID_)
+		  exc.retval = HUGE;
+		else
+		  exc.retval = HUGE_VAL;
+		if (_LIB_VERSION == _POSIX_)
+		  __set_errno (ERANGE);
+		else if (!matherr(&exc)) {
+			__set_errno (ERANGE);
+		}
+		break;
+	    case 47:
+	    case 147:
+	    case 247:
+		/* exp(finite) underflow */
+		exc.type = UNDERFLOW;
+		exc.name = type < 100 ? "exp10" : (type < 200
+						   ? "exp10f" : "exp10l");
+		exc.retval = zero;
+		if (_LIB_VERSION == _POSIX_)
+		  __set_errno (ERANGE);
+		else if (!matherr(&exc)) {
+			__set_errno (ERANGE);
+		}
+		break;
+		/* #### Last used is 47/147/247 ### */
 	}
 	return exc.retval;
 }

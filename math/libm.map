@@ -72,6 +72,7 @@ GLIBC_2.1 {
 
     # mathematical functions
     exp2; exp2f; exp2l;
+    exp10; exp10f; exp10l;
     fdim; fdimf; fdiml;
     fma; fmaf; fmal;
     fmax; fmaxf; fmaxl;
@@ -80,6 +81,7 @@ GLIBC_2.1 {
     nan; nanf; nanl;
     nearbyint; nearbyintf; nearbyintl;
     nextafterx; nextafterxf; nextafterxl;
+    pow10; pow10f; pow10l;
     remquo; remquof; remquol;
     lrint; lrintf; lrintl;
     llrint; llrintf; llrintl;

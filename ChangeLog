@@ -1,3 +1,33 @@
+1998-06-09 18:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile (libm-calls): Add w_exp10 and e_exp10.
+	* math/libm.map: Add exp10{,f,l} and pow10{,f,l}.
+	* math/math_private.h: Add prototypes for __ieee754_exp10{,f,l}.
+	* math/bits/mathcalls.h: Add definitions for exp10 and pow10
+	prototypes.
+	* sysdeps/libm-i387/e_exp10.S: New file.
+	* sysdeps/libm-i387/e_exp10f.S: New file.
+	* sysdeps/libm-i387/e_exp10l.S: New file.
+	* sysdeps/libm-ieee754/e_exp10.c: New file.
+	* sysdeps/libm-ieee754/e_exp10f.c: New file.
+	* sysdeps/libm-ieee754/e_exp10l.c: New file.
+	* sysdeps/libm-ieee754/w_exp10.c: New file.
+	* sysdeps/libm-ieee754/w_exp10f.c: New file.
+	* sysdeps/libm-ieee754/w_exp10l.c: New file.
+	* sysdeps/libm-ieee754/k_standard.c: Add exception code for exp10.
+
+1998-05-25 22:18  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile (sysdep_headers): Add
+	sys/elf.h and sys/reg.h.
+	* sysdeps/unix/sysv/linux/i386/sys/elf.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sys/reg.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sys/user.h: New file.
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_GETREGS,
+	PTRACE_SETREGS, PTRACE_GETFPREGS, PTRACE_SETFPREGS): Added.
+
 1998-06-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/netinet/ip.h (struct ip_options): Define

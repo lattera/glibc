@@ -48,15 +48,15 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_floor s_frexp s_ilogb s_ldexp s_log1p s_logb 		\
 	     s_modf s_nextafter s_nextafterx s_rint s_scalbn s_scalbln	\
 	     s_significand s_sin s_tan s_tanh w_acos w_acosh w_asin	\
-	     w_atan2 w_atanh w_cosh w_drem w_exp w_exp2 w_fmod w_gamma	\
-	     w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r			\
+	     w_atan2 w_atanh w_cosh w_drem w_exp w_exp2 w_exp10 w_fmod	\
+	     w_gamma w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r		\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
 	     s_signbit s_fpclassify s_fmax s_fmin s_fdim s_nan s_trunc	\
 	     s_remquo s_log2 s_exp2 s_round s_nearbyint s_sincos	\
 	     conj cimag creal cabs carg s_cexp s_csinh s_ccosh s_clog	\
 	     s_catan s_casin s_ccos s_csin s_ctan s_ctanh s_cacos	\
 	     s_casinh s_cacosh s_catanh s_csqrt s_cpow s_cproj s_clog10 \
-	     s_fma s_lrint s_llrint s_lround s_llround
+	     s_fma s_lrint s_llrint s_lround s_llround e_exp10
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 		$(long-m-$(long-double-fcts))

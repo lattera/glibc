@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@
    This is just like __MATHCALL but for a function returning `TYPE'
    instead of `_Mdouble_'.  In all of these cases, there is still
    both a `NAME' and a `NAMEf' that takes `float' arguments.
-   
+
    Note that there must be no whitespace before the argument passed for
    NAME, to make token pasting work with -traditional.  */
 
@@ -94,6 +94,13 @@ __MATHCALL (atanh,, (_Mdouble_ __x));
 
 /* Exponential function of X.  */
 __MATHCALL (exp,, (_Mdouble_ __x));
+
+#ifdef __USE_GNU
+/* A function missing in all standards: compute exponent to base ten.  */
+__MATHCALL (exp10,, (_Mdouble_ __x));
+/* Another name occasionally used.  */
+__MATHCALL (pow10,, (_Mdouble_ __x));
+#endif
 
 /* Break VALUE into a normalized fraction and an integral power of 2.  */
 __MATHCALL (frexp,, (_Mdouble_ __x, int *__exponent));
