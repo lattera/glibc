@@ -1,5 +1,8 @@
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/CP1256: Cosmetic changes.
+	* charmaps/CP1257: Likewise.
+
 	* charmaps/CP1258: New file.
 
 	* charmaps/CP1257: Add some marks.

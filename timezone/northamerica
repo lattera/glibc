@@ -1,4 +1,4 @@
-# @(#)northamerica	7.43
+# @(#)northamerica	7.44
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -1150,16 +1150,17 @@ Zone America/Costa_Rica	-5:36:20 -	LMT	1890		# San Jose
 
 # Cuba
 
-# From Bob Devine (1988-01-28):
-# . . .DST is from 2nd Sunday in May to 2nd Sunday in October since 1981.
-# Change at midnight.  In 1979 & 1980, started at 3rd Sunday in March
-# (I think).
+# From Arthur David Olson (1999-03-29):
+# The 1999-03-28 exhibition baseball game held in Havana, Cuba, between
+# the Cuban National Team and the Baltimore Orioles was carried live on
+# the Orioles Radio Network, including affiliate WTOP in Washington, DC.
+# During the game, play-by-play announcer Jim Hunter noted that
+# "We'll be losing two hours of sleep...Cuba switched to Daylight Saving
+# Time today."  (The "two hour" remark referred to losing one hour of
+# sleep on 1999-03-28--when the announcers were in Cuba as it switched
+# to DST--and one more hour on 1999-04-04--when the announcers will have
+# returned to Baltimore, which switches on that date.)
 
-# From U. S. Naval Observatory (1989-01-19):
-# CUBA                5 H  BEHIND UTC
-# CUBA                4 H  BEHIND UTC    MAR 20 - OCT 8
-
-# From Shanks (1991):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Cuba	1928	only	-	Jun	10	0:00	1:00	D
 Rule	Cuba	1928	only	-	Oct	10	0:00	0	S
@@ -1187,9 +1188,8 @@ Rule	Cuba	1990	1997	-	Apr	Sun>=1	0:00	1:00	D
 Rule	Cuba	1991	1995	-	Oct	Sun>=8	0:00s	0	S
 Rule	Cuba	1996	only	-	Oct	 6	0:00s	0	S
 Rule	Cuba	1997	only	-	Oct	12	0:00s	0	S
-Rule	Cuba	1998	only	-	Mar	29	0:00	1:00	D
+Rule	Cuba	1998	max	-	Mar	lastSun	0:00s	1:00	D
 Rule	Cuba	1998	max	-	Oct	lastSun	0:00s	0	S
-Rule	Cuba	1999	max	-	Apr	Sun>=1	0:00s	1:00	D
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	America/Havana	-5:29:28 -	LMT	1890

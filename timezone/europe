@@ -1,4 +1,4 @@
-# @(#)europe	7.59
+# @(#)europe	7.60
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -746,6 +746,20 @@
 #
 #
 # Whitman says Dublin Mean Time was -0:25:21, which is more precise than Shanks.
+
+# From Paul Eggert (1999-03-28):
+# Clive Feather (<news:859845706.26043.0@office.demon.net>, 1997-03-31)
+# reports that Cheriton Shuttle Terminal uses Concession Time (CT),
+# equivalent to French civil time.
+# Julian Hill (<news:36118128.5A14@virgin.net>, 1998-09-30) reports that
+# trains between Dollands Moor (the freight facility just outside Cheriton)
+# and Frethun run in CT.
+# My admittedly uninformed guess is that the terminal has two authorities,
+# the French concession operators and the British civil authorities,
+# and that the time depends on who you're talking to.
+# If, say, the British police were called to the station for some reason,
+# I would expect the official police report to use GMT/BST and not CET/CEST.
+# This is a borderline case, but for now let's stick to GMT/BST for Cheriton.
 
 # From an anonymous contributor (1996-06-02):
 # The law governing time in Ireland is under Statutory Instrument SI 395/94,

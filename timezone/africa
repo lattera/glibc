@@ -1,4 +1,4 @@
-# @(#)africa	7.27
+# @(#)africa	7.28
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -25,7 +25,6 @@
 #
 # A reliable and entertaining source about time zones is
 # Derek Howse, Greenwich time and longitude, Antique Collectors Club (1997).
-# Oxford University Press (1980).
 #
 # Previous editions of this database used WAT, CAT, SAT, and EAT
 # for +0:00 through +3:00, respectively,
