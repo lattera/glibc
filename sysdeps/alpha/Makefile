@@ -26,7 +26,7 @@ sysdep_routines += _mcount
 endif
 
 ifeq ($(subdir),gnulib)
-sysdep_routines += $(divrem)
+sysdep_routines += divl divlu divq divqu reml remlu remq remqu
 endif
 
 ifeq ($(subdir),string)
@@ -37,8 +37,6 @@ ifeq ($(subdir),elf)
 # The ld.so startup code cannot use literals until it self-relocates.
 CFLAGS-rtld.c = -mbuild-constants
 endif
-
-divrem := divl divq reml remq
 
 # For now, build everything with full IEEE math support.
 # TODO: build separate libm and libm-ieee.
