@@ -1088,8 +1088,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       int showsign = 0;	/* Always begin with plus or minus sign.  */
       int group = 0;	/* Print numbers according grouping rules.  */
       int is_long_double = 0; /* Argument is long double/ long long int.  */
-      int is_short = 0;	/* Argument is long int.  */
-      int is_long = 0;	/* Argument is short int.  */
+      int is_short = 0;	/* Argument is short int.  */
+      int is_long = 0;	/* Argument is long int.  */
       int is_char = 0;	/* Argument is promoted (unsigned) char.  */
       int width = 0;	/* Width of output; 0 means none specified.  */
       int prec = -1;	/* Precision of output; -1 means none specified.  */

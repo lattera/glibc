@@ -22,9 +22,9 @@ static char rcsid[] = "$NetBSD: w_j1.c,v 1.6 1995/05/10 20:49:15 jtc Exp $";
 #include "math_private.h"
 
 #ifdef __STDC__
-	double __j1(double x)		/* wrapper j1 */
+	double j1(double x)		/* wrapper j1 */
 #else
-	double __j1(x)			/* wrapper j1 */
+	double j1(x)			/* wrapper j1 */
 	double x;
 #endif
 {
@@ -40,17 +40,15 @@ static char rcsid[] = "$NetBSD: w_j1.c,v 1.6 1995/05/10 20:49:15 jtc Exp $";
 	    return z;
 #endif
 }
-weak_alias (__j1, j1)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__j1, __j1l)
-weak_alias (__j1, j1l)
+strong_alias (j1, j1l)
 #endif
 
 
 #ifdef __STDC__
-	double __y1(double x)		/* wrapper y1 */
+	double y1(double x)		/* wrapper y1 */
 #else
-	double __y1(x)			/* wrapper y1 */
+	double y1(x)			/* wrapper y1 */
 	double x;
 #endif
 {
@@ -74,8 +72,6 @@ weak_alias (__j1, j1l)
 	    return z;
 #endif
 }
-weak_alias (__y1, y1)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__y1, __y1l)
-weak_alias (__y1, y1l)
+strong_alias (y1, y1l)
 #endif

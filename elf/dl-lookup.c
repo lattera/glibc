@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
+#include <assert.h>
 #include <string.h>
 #include <unistd.h>
 #include <elf/ldsodefs.h>

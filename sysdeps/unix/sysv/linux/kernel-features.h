@@ -69,3 +69,8 @@
 #if __LINUX_KERNEL_VERSION >= 131584
 # define __ASSUME_SETRESUID_SYSCALL	1
 #endif
+
+/* The SIOCGIFNAME ioctl is available starting with 2.1.50.  */
+#if __LINUX_KERNEL_VERSION >= 131408
+# define __ASSUME_SIOCGIFNAME		1
+#endif

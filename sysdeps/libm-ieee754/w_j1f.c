@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -17,17 +17,17 @@
 static char rcsid[] = "$NetBSD: w_j1f.c,v 1.3 1995/05/10 20:49:17 jtc Exp $";
 #endif
 
-/* 
- * wrapper of j1f,y1f 
+/*
+ * wrapper of j1f,y1f
  */
 
 #include "math.h"
 #include "math_private.h"
 
 #ifdef __STDC__
-	float __j1f(float x)		/* wrapper j1f */
+	float j1f(float x)		/* wrapper j1f */
 #else
-	float __j1f(x)			/* wrapper j1f */
+	float j1f(x)			/* wrapper j1f */
 	float x;
 #endif
 {
@@ -44,12 +44,11 @@ static char rcsid[] = "$NetBSD: w_j1f.c,v 1.3 1995/05/10 20:49:17 jtc Exp $";
 	    return z;
 #endif
 }
-weak_alias (__j1f, j1f)
 
 #ifdef __STDC__
-	float __y1f(float x)		/* wrapper y1f */
+	float y1f(float x)		/* wrapper y1f */
 #else
-	float __y1f(x)			/* wrapper y1f */
+	float y1f(x)			/* wrapper y1f */
 	float x;
 #endif
 {
@@ -74,4 +73,3 @@ weak_alias (__j1f, j1f)
 	    return z;
 #endif
 }
-weak_alias (__y1f, y1f)

@@ -1,5 +1,31 @@
 1999-06-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_SIOCGIFNAME for kernel >= 2.1.50.
+	* sysdeps/unix/sysv/linux/if_index.c: Correct typo (SIOGIFNAME ->
+	SIOCGIFNAME) and use __ASSUME_SIOCGIFNAME.
+
+	* sysdeps/libm-ieee754/w_j0.c: Remove __ from symbol definitions.
+	* sysdeps/libm-ieee754/w_j0f.c: Likewise.
+	* sysdeps/libm-ieee754/w_j0l.c: Likewise.
+	* sysdeps/libm-ieee754/w_j1.c: Likewise.
+	* sysdeps/libm-ieee754/w_j1f.c: Likewise.
+	* sysdeps/libm-ieee754/w_j1l.c: Likewise.
+	* sysdeps/libm-ieee754/w_jn.c: Likewise.
+	* sysdeps/libm-ieee754/w_jnf.c: Likewise.
+	* sysdeps/libm-ieee754/w_jnl.c: Likewise.
+
+	* stdio-common.c: Correct typos.
+
+	* math/libm-test.c (jn_test): Adjust delta.
+	(y1_test): Likewise.
+	(yn_test): Likewise.
+
+	* elf/do-lookup.h: It should never happen that if we expect a versioned
+	symbol from a file the file has no version table.  This should have
+	been checked in dl-version.c.
+	* elf/dl-lookup.c: Include assert.h.
+
 	* sysdeps/unix/sysv/linux/i386/sigaction.c: Correct restorer
 	function handling.
 

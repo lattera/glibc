@@ -75,7 +75,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 	{
 	  kact.k_sa_handler = act->sa_handler;
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-	  kact.sa_flags = act->sa_flags;
+	  kact.sa_flags = act->sa_flags | SA_RESTORER;
 
 	  kact.sa_restorer = ((act->sa_flags & SA_SIGINFO)
 			      ? &restore_rt : &restore);

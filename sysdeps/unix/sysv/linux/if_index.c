@@ -26,6 +26,8 @@
 #include <sys/ioctl.h>
 #include <bits/libc-lock.h>
 
+#include "kernel-features.h"
+
 /* Try to get a socket to talk to the kernel.  */
 #if defined SIOGIFINDEX || defined SIOGIFNAME
 static int
@@ -120,8 +122,12 @@ if_nameindex (void)
   unsigned int nifs, i;
   int rq_len;
   struct if_nameindex *idx = NULL;
+# if __ASSUME_SIOCGIFNAME == 0
   static int old_siocgifconf;
-#define RQ_IFS	4
+# else
+#  define old_siocgifconf 0
+# endif
+# define RQ_IFS	4
 
   if (fd < 0)
     return NULL;
@@ -136,7 +142,9 @@ if_nameindex (void)
       ifc.ifc_len = 0;
       if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0 || ifc.ifc_len == 0)
 	{
+# if __ASSUME_SIOCGIFNAME == 0
 	  old_siocgifconf = 1;
+# endif
 	  rq_len = RQ_IFS * sizeof (struct ifreq);
 	}
       else
@@ -199,24 +207,31 @@ if_nameindex (void)
 char *
 if_indextoname (unsigned int ifindex, char *ifname)
 {
-#ifndef SIOGIFINDEX
+#if !defined SIOGIFINDEX && __ASSUME_SIOCGIFNAME == 0
   __set_errno (ENOSYS);
   return NULL;
 #else
+# if __ASSUME_SIOCGIFNAME == 0
   struct if_nameindex *idx;
   struct if_nameindex *p;
   char *result = NULL;
+# endif
 
-#ifdef SIOGIFNAME
+# if defined SIOCGIFNAME || __ASSUME_SIOCGIFNAME > 0
   /* We may be able to do the conversion directly, rather than searching a
      list.  This ioctl is not present in kernels before version 2.1.50.  */
   struct ifreq ifr;
   int fd;
-  static int siogifname_works_not;
+#  if __ASSUME_SIOCGIFNAME == 0
+  static int siocgifname_works_not;
 
-  if (!siogifname_works_not)
+  if (!siocgifname_works_not)
+#  endif
     {
+#  if __ASSUME_SIOCGIFNAME == 0
       int serrno = errno;
+#  endif
+      int status;
 
       fd = opensock ();
 
@@ -224,23 +239,27 @@ if_indextoname (unsigned int ifindex, char *ifname)
 	return NULL;
 
       ifr.ifr_ifindex = ifindex;
-      if (__ioctl (fd, SIOGIFNAME, &ifr) < 0)
-	{
-	  if (errno == EINVAL)
-	    siogifname_works_not = 1; /* Don't make the same mistake twice. */
-	}
-      else
-	{
-	  __close (fd);
-	  return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
-	}
+      status = __ioctl (fd, SIOCGIFNAME, &ifr);
 
       __close (fd);
 
-      __set_errno (serrno);
-    }
-#endif
+#  if __ASSUME_SIOCGIFNAME == 0
+      if (status  < 0)
+	{
+	  if (errno == EINVAL)
+	    siocgifname_works_not = 1; /* Don't make the same mistake twice. */
+	}
+      else
+	return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 
+      __set_errno (serrno);
+#  else
+      return status < 0 ? NULL : strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
+#  endif
+    }
+# endif
+
+# if __ASSUME_SIOCGIFNAME == 0
   idx = if_nameindex ();
 
   if (idx != NULL)
@@ -255,5 +274,6 @@ if_indextoname (unsigned int ifindex, char *ifname)
       if_freenameindex (idx);
     }
   return result;
+# endif
 #endif
 }

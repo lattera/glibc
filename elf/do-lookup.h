@@ -99,10 +99,14 @@ FCT (const char *undef_name, unsigned long int hash,
 	      /* We need a versioned symbol but haven't found any.  If
 		 this is the object which is referenced in the verneed
 		 entry it is a bug in the library since a symbol must
-		 not simply disappear.  */
-	      if (version->filename != NULL
-		  && _dl_name_match_p (version->filename, map))
-		return -2;
+		 not simply disappear.
+
+		 It would also be a bug in the object since it means that
+		 the list of required versions is incomplete and so the
+		 tests in dl-version.c haven't found a problem.*/
+	      assert (version->filename == NULL
+		      || ! _dl_name_match_p (version->filename, map));
+
 	      /* Otherwise we accept the symbol.  */
 	    }
 	  else

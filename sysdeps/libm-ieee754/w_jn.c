@@ -44,9 +44,9 @@ static char rcsid[] = "$NetBSD: w_jn.c,v 1.6 1995/05/10 20:49:19 jtc Exp $";
 #include "math_private.h"
 
 #ifdef __STDC__
-	double __jn(int n, double x)	/* wrapper jn */
+	double jn(int n, double x)	/* wrapper jn */
 #else
-	double __jn(n,x)			/* wrapper jn */
+	double jn(n,x)			/* wrapper jn */
 	double x; int n;
 #endif
 {
@@ -62,17 +62,15 @@ static char rcsid[] = "$NetBSD: w_jn.c,v 1.6 1995/05/10 20:49:19 jtc Exp $";
 	    return z;
 #endif
 }
-weak_alias (__jn, jn)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__jn, __jnl)
-weak_alias (__jn, jnl)
+strong_alias (jn, jnl)
 #endif
 
 
 #ifdef __STDC__
-	double __yn(int n, double x)	/* wrapper yn */
+	double yn(int n, double x)	/* wrapper yn */
 #else
-	double __yn(n,x)			/* wrapper yn */
+	double yn(n,x)			/* wrapper yn */
 	double x; int n;
 #endif
 {
@@ -96,8 +94,6 @@ weak_alias (__jn, jnl)
 	    return z;
 #endif
 }
-weak_alias (__yn, yn)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__yn, __ynl)
-weak_alias (__yn, ynl)
+strong_alias (yn, ynl)
 #endif
