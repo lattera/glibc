@@ -1,5 +1,7 @@
 2002-12-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile: Also check all iconv modules for text relocations.
+
 	* stdlib/Makefile: Remove code to automatically import GMP.
 
 	* elf/Makefile (tests): Add rules to build and run check-textrel.

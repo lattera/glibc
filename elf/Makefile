@@ -579,6 +579,7 @@ tests: $(objpfx)check-textrel.out
 
 $(objpfx)check-textrel.out: $(objpfx)check-textrel
 	$(dir $<)$(notdir $<) $(common-objpfx)libc.so \
-			      $(wildcard $(common-objpfx)/*/lib*.so) > $@
+	  $(sort $(wildcard $(common-objpfx)*/lib*.so \
+			    $(common-objpfx)iconvdata/*.so)) > $@
 generated += check-textrel check-textrel.out
 endif
