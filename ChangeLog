@@ -1,3 +1,8 @@
+2004-12-20  Roland McGrath  <roland@frob.com>
+
+	* version.h (RELEASE, VERSION): development, 2.3.90
+	* include/features.h (__GLIBC_MINOR__): Now 4.
+
 2004-12-20  Jakub Jelinek  <jakub@redhat.com>,
 	    Jim Gifford  <giffordj@linkline.com>
 
