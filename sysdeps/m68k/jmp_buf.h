@@ -2,7 +2,6 @@
 
 typedef struct
   {
-
     /* There are eight 4-byte data registers, but D0 is not saved.  */
     long int __dregs[7];
 
@@ -17,4 +16,4 @@ typedef struct
     char __fpregs[8 * (96 / 8)];
 #endif
 
-  } jmp_buf[1];
+  } __jmp_buf[1];
