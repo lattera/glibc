@@ -28,6 +28,10 @@
 # endif
 #endif
 
+#ifndef internal_function
+# define internal_function
+#endif
+
 /* Encoding of locale name parts.  */
 #define CEN_REVISION		1
 #define CEN_SPONSOR		2

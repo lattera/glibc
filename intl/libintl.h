@@ -60,7 +60,7 @@ extern char *dngettext (__const char *__domainname, __const char *__msgid1,
 			__const char *__msgid2, unsigned long int __n)
      __THROW __attribute__ ((__format_arg__ (2)));
 
-/* Similar to `dxgettext' but select the plural form corresponding to the
+/* Similar to `dcgettext' but select the plural form corresponding to the
    number N.  */
 extern char *dcngettext (__const char *__domainname, __const char *__msgid1,
 			 __const char *__msgid2, unsigned long int __n,

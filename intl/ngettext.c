@@ -55,7 +55,7 @@
 # define NGETTEXT __ngettext
 # define DCNGETTEXT __dcngettext
 #else
-# define NGETTEXT gettext__
+# define NGETTEXT ngettext__
 # define DCNGETTEXT dcngettext__
 #endif
 
