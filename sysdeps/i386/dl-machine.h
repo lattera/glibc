@@ -99,7 +99,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 to intercept the calls to collect information.  In this case we
 	 don't store the address in the GOT so that all future calls also
 	 end in this function.  */
-      if (profile)
+      if (__builtin_expect (profile, 0))
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
