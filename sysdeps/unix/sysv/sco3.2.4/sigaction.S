@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.globla C_SYMBOL_NAME(__sigreturn)
+.global C_SYMBOL_NAME(__sigreturn)
 
 ENTRY (__sigaction)
 	movl $C_SYMBOL_NAME(__sigreturn), %ecx
