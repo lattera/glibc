@@ -1,3 +1,13 @@
+2004-09-02  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #610]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S
+	(__novec_getcontext): Fix typo in store of fp29.
+	(__getcontext): Fix typo in store of fp29.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__novec_swapcontext): Fix typo in store of fp29.
+	(__swapcontext): Fix typo in store of fp29.
+
 2004-12-17  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): Fix
