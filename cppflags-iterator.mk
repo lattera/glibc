@@ -4,4 +4,4 @@
 cpp-src := $(firstword $(cpp-srcs-left))
 cpp-srcs-left := $(filter-out $(cpp-src),$(cpp-srcs-left))
 
-libof-$(cpp-src) := $(lib)
+libof-$(notdir $(cpp-src)) := $(lib)
