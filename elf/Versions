@@ -19,7 +19,7 @@ libc {
 ld {
   GLIBC_2.0 {
     # global variables
-    _dl_debug_impcalls; _dl_debug_fd;
+    _dl_debug_fd;
 
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure; _dl_catch_error; _dl_check_all_versions;
@@ -52,8 +52,6 @@ ld {
     _dl_dst_count; _dl_dst_substitute;
   }
   GLIBC_2.2 {
-    _dl_debug_files;
-
     _dl_init; _dl_load_lock; _dl_argv; _dl_nloaded; _dl_check_map_versions;
 
     # this is defined in ld.so and overridden by libc
@@ -62,5 +60,8 @@ ld {
     # variables used elsewhere
     _dl_out_of_memory; _dl_all_dirs; _dl_init_all_dirs;
     _dl_clktck; _dl_pagesize;
+  }
+  GLIBC_2.2.3 {
+    _dl_debug_mask;
   }
 }

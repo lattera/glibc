@@ -90,6 +90,7 @@ ld {
   GLIBC_2.1.1
   GLIBC_2.2
   GLIBC_2.2.1
+  GLIBC_2.2.3
 }
 libthread_db {
   GLIBC_2.1.3

@@ -1,3 +1,24 @@
+2001-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c: Replace _dl_debug_* variables with _dl_debug_mask.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* elf/Versions: Don't export _dl_debug_impcalls and _dl_debug_files.
+	Export _dl_debug_mask.
+	* Versions.def: Define GLIBC_2.2.3 for ld.
+
 2001-02-26  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/unix/make-syscalls.sh (ptr): Handle `V' keyletter.
