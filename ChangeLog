@@ -1,3 +1,18 @@
+2001-08-21  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/i386/machine-sp.h (__thread_stack_pointer): Define this
+	as a macro, not an extern inline function.
+
+	* hurd/Versions (GLIBC_2.2.5): New set, define __hurd_fail here.
+	* Versions.def (libc): Add GLIBC_2.2.5 set.
+	* hurd/hurd.h (_HURD_H_EXTERN_INLINE): New macro.
+	(__hurd_fail): Use that instead of _EXTERN_INLINE in decl.
+
+2001-08-20  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup): Fail with ENOENT for "".
+	(__hurd_file_name_split, __hurd_directory_name_split): Likewise.
+
 2001-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/bits/string2.h: Remove strnlen optimization here.

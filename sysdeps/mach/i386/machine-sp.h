@@ -22,17 +22,10 @@
 
 /* Return the current stack pointer.  */
 
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
-#endif
-
-extern void *__thread_stack_pointer (void);
-_EXTERN_INLINE void *
-__thread_stack_pointer (void)
-{
-  void *__sp__;
-  __asm__ ("movl %%esp, %0" : "=r" (__sp__));
-  return __sp__;
-}
+#define __thread_stack_pointer() ({					      \
+  void *__sp__;								      \
+  __asm__ ("movl %%esp, %0" : "=r" (__sp__));				      \
+  __sp__;								      \
+})
 
 #endif	/* machine-sp.h */
