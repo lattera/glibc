@@ -58,7 +58,7 @@ rtmin_handler (int sig, siginfo_t *info, void *ctx)
 }
 
 #define mqsend(q) (mqsend) (q, __LINE__)
-static inline int
+static int
 (mqsend) (mqd_t q, int line)
 {
   char c;
@@ -71,7 +71,7 @@ static inline int
 }
 
 #define mqrecv(q) (mqrecv) (q, __LINE__)
-static inline int
+static int
 (mqrecv) (mqd_t q, int line)
 {
   char c;
@@ -472,7 +472,7 @@ do_child (const char *name, pthread_barrier_t *b2, pthread_barrier_t *b3,
   /* Thread opens a new O_RDONLY mqd_t (q4).  */
   /* Thread calls mq_notify (q4, NULL), which should unregister the above
      notification.  */
-  /* Thread calls mq_close (q4).  */ 
+  /* Thread calls mq_close (q4).  */
 
   (void) pthread_barrier_wait (b3);
 
@@ -501,7 +501,7 @@ do_child (const char *name, pthread_barrier_t *b2, pthread_barrier_t *b3,
   /* Thread opens a new O_WRONLY mqd_t (q5).  */
   /* Thread calls mq_notify (q5, NULL), which should unregister the above
      notification.  */
-  /* Thread calls mq_close (q5).  */ 
+  /* Thread calls mq_close (q5).  */
 
   (void) pthread_barrier_wait (b3);
 

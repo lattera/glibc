@@ -1,5 +1,12 @@
 2004-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/rt-sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (librt-routines): Add
+	rt-sysdep.
+
+	* rt/tst-mqueue5.c (mqsend): Don't inline.
+	(mqrecv): Likewise.
+
 	* rt/tst-timer4.c: Include <string.h>.
 
 2004-04-17  Jakub Jelinek  <jakub@redhat.com>
