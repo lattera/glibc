@@ -1,5 +1,8 @@
 1999-07-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/oldtmpfile.c: Adjust call of __gen_tempname to match new
+	convention.
+
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Update for some more
 	motherboards.
 	Patch by Jay Estabrook.
