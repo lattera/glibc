@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -29,7 +29,27 @@
 float
 __floorf (float x)
 {
-  return __i_floorf(x);
+  /* Check not zero since floor(-0) == -0.  */
+  if (x != 0 && fabsf (x) < 16777216.0f)  /* 1 << FLT_MANT_DIG */
+    {
+      /* Note that Alpha S_Floating is stored in registers in a
+	 restricted T_Floating format, so we don't even need to
+	 convert back to S_Floating in the end.  The initial
+	 conversion to T_Floating is needed to handle denormals.  */
+
+      float __tmp1, __tmp2;
+
+      __asm ("cvtst/s %3,%2\n\t"
+#ifdef _IEEE_FP_INEXACT
+	     "cvttq/svim %2,%1\n\t"
+#else
+	     "cvttq/svm %2,%1\n\t"
+#endif
+	     "cvtqt/m %1,%0\n\t"
+	     : "=f"(x), "=&f"(__tmp1), "=&f"(__tmp2)
+	     : "f"(x));
+    }
+  return x;
 }
 
 weak_alias (__floorf, floorf)
