@@ -234,14 +234,13 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      clobbered by running the handler).  We use this saved value to pass to
      __sigreturn, so the handler can clobber the argument registers if it
      likes.  */
-#define A(line) asm volatile (#line)
   /* Call the handler function, saving return address in ra ($26).  */
-  A (jsr $26, $26);
+  asm volatile ("jsr $26, ($26)");
   /* Reset gp ($29) from the return address (here) in ra ($26).  */
-  A (ldgp $29, 0($26));
-  A (mov $25, $16);		/* Move saved SCP to argument register.  */
+  asm volatile ("ldgp $29, 0($26)");
+  asm volatile ("mov $25, $16"); /* Move saved SCP to argument register.  */
   /* Call __sigreturn (SCP); this cannot return.  */
-  A (jmp $31, $27);
+  asm volatile ("jmp $31, ($27)");
 
   /* NOTREACHED */
   return NULL;
