@@ -290,7 +290,9 @@ typedef struct
 #define SHT_INIT_ARRAY	  14		/* Array of constructors */
 #define SHT_FINI_ARRAY	  15		/* Array of destructors */
 #define SHT_PREINIT_ARRAY 16		/* Array of pre-constructors */
-#define	SHT_NUM		  17		/* Number of defined types.  */
+#define SHT_GROUP	  17		/* Section group */
+#define SHT_SYMTAB_SHNDX  18		/* Extended section indeces */
+#define	SHT_NUM		  19		/* Number of defined types.  */
 #define SHT_LOOS	  0x60000000	/* Start OS-specific */
 #define SHT_LOSUNW	  0x6ffffffa	/* Sun-specific low bound.  */
 #define SHT_SUNW_move	  0x6ffffffa
@@ -319,6 +321,9 @@ typedef struct
 					   required */
 #define SHF_MASKOS	     0x0ff00000	/* OS-specific.  */
 #define SHF_MASKPROC	     0xf0000000	/* Processor-specific */
+
+/* Section group handling.  */
+#define GRP_COMDAT	0x1		/* Mark group as COMDAT.  */
 
 /* Symbol table entry.  */
 

@@ -1,5 +1,7 @@
 2000-10-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h: Add a few section-related symbols.
+
 	* include/features.h (__STDC_ISO_10646__): Set to correct date.
 	Patch by Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>.
 
