@@ -1,7 +1,20 @@
+2000-09-17  H.J. Lu  <hjl@gnu.org>
+
+	* catgets/Makefile ($(objpfx)de/libc.cat): Use
+	$(make-target-directory) instead of mkdir.
+
+2000-09-17  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Always define
+	__ASSUME_32BITUIDS for __powerpc__.
+	* sysdeps/unix/sysv/linux/powerpc/ipc_priv.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add ipc_priv.h.
+
 2000-09-17  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Fix last
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INLINE_SYSCALL): Fix last
 	patch.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Likewise.
 
 2000-09-16  Jakub Jelinek  <jakub@redhat.com>
 

@@ -110,8 +110,9 @@
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
-/* Linux 2.3.39 introduced 32bit UID/GIDs.  */
-#if __LINUX_KERNEL_VERSION >= 131879
+/* Linux 2.3.39 introduced 32bit UID/GIDs.  Some platforms had 32 bit
+   type all along.  */
+#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__
 # define __ASSUME_32BITUIDS		1
 # ifdef __sparc__
 #  define __ASSUME_SETRESUID_SYSCALL	1

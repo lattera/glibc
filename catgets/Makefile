@@ -55,7 +55,7 @@ tests: $(objpfx)de/libc.cat $(objpfx)test1.cat
 $(objpfx)test1.cat: test1.msg $(objpfx)gencat
 	$(built-program-cmd) -H $(objpfx)test1.h $@ $<
 $(objpfx)de/libc.cat: $(objpfx)de.msg $(objpfx)gencat
-	-mkdir $(objpfx)de
+	$(make-target-directory)
 	$(built-program-cmd) $@ $<
 $(objpfx)tst-catgets.out: $(objpfx)de/libc.cat
 
