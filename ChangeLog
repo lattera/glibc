@@ -1,3 +1,9 @@
+1999-11-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (_dl_init_paths): Allocate correct number of
+	entries for rtld_search_dirs[0].
+	Patch by David Mosberger <davidm@hpl.hp.com>.
+
 1999-11-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c: Don't predefine the character

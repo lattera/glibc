@@ -542,7 +542,7 @@ _dl_init_paths (const char *llp)
 		/ sizeof (struct r_search_path_elem));
 
   rtld_search_dirs[0] = (struct r_search_path_elem *)
-    malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]) - 1)
+    malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
 	    * round_size * sizeof (struct r_search_path_elem));
   if (rtld_search_dirs[0] == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
