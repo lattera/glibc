@@ -50,7 +50,7 @@
 #define MAX_NEEDED_TO		4
 #define PREPARE_LOOP \
   int save_set;								      \
-  int *setp = &data->__statep->count;
+  int *setp = &data->__statep->__count;
 #define EXTRA_LOOP_ARGS		, setp
 
 
@@ -73,12 +73,12 @@ enum
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->count != ASCII_set)				      \
+  if (data->__statep->__count != ASCII_set)				      \
     {									      \
       if (FROM_DIRECTION)						      \
 	/* It's easy, we don't have to emit anything, we just reset the	      \
 	   state for the input.  */					      \
-	data->__statep->count = ASCII_set;				      \
+	data->__statep->__count = ASCII_set;				      \
       else								      \
 	{								      \
 	  unsigned char *outbuf = data->__outbuf;			      \
@@ -95,7 +95,7 @@ enum
 	      if (data->__is_last)					      \
 		*written += 1;						      \
 	      data->__outbuf = outbuf;					      \
-	      data->__statep->count = ASCII_set;			      \
+	      data->__statep->__count = ASCII_set;			      \
 	    }								      \
 	}								      \
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,8 +61,12 @@ typedef unsigned int wint_t;
 /* Conversion state information.  */
 typedef struct
 {
-  int count;		/* Number of bytes needed for the current character. */
-  wint_t value;		/* Value so far.  */
+  int __count;
+  union
+  {
+    wint_t __wch;
+    char __wchb[4];
+  } __value;		/* Value so far.  */
 } __mbstate_t;
 #endif
 #undef __need_mbstate_t

@@ -1,3 +1,12 @@
+2000-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wchar.h (__mbstate_t): Rename elements.  Make __value
+	element a union to allow byte access.
+	* iconvdata/iso-2022-cn.c: Adjust for change of element name in
+	mbstate_t.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+
 2000-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getdents.c (__getdents): The Linux

@@ -56,7 +56,7 @@ struct gap
   enum direction dir = ((struct iso2022jp_data *) step->__data)->dir;	      \
   enum variant var = ((struct iso2022jp_data *) step->__data)->var;	      \
   int save_set;								      \
-  int *setp = &data->__statep->count;
+  int *setp = &data->__statep->__count;
 #define EXTRA_LOOP_ARGS		, var, setp
 
 
@@ -188,7 +188,7 @@ gconv_end (struct __gconv_step *data)
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->count != ASCII_set)				      \
+  if (data->__statep->__count != ASCII_set)				      \
     {									      \
       enum direction dir = ((struct iso2022jp_data *) step->__data)->dir;     \
 									      \
@@ -196,7 +196,7 @@ gconv_end (struct __gconv_step *data)
 	/* It's easy, we don't have to emit anything, we just reset the	      \
 	   state for the input.  Note that this also clears the G2	      \
 	   designation.  */						      \
-	data->__statep->count = ASCII_set;				      \
+	data->__statep->__count = ASCII_set;				      \
       else								      \
 	{								      \
 	  unsigned char *outbuf = data->__outbuf;			      \
@@ -216,7 +216,7 @@ gconv_end (struct __gconv_step *data)
 	        *written += 3;						      \
 	      data->__outbuf = outbuf;					      \
 	      /* Note that this also clears the G2 designation.  */	      \
-	      data->__statep->count = ASCII_set;			      \
+	      data->__statep->__count = ASCII_set;			      \
 	    }								      \
 	}								      \
     }
