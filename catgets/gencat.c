@@ -152,10 +152,11 @@ static void write_out (struct catalog *result, const char *output_name,
 		       const char *header_name);
 static struct set_list *find_set (struct catalog *current, int number);
 static void normalize_line (const char *fname, size_t line, iconv_t cd,
-			    wchar_t *string, wchar_t quote_char);
+			    wchar_t *string, wchar_t quote_char,
+			    wchar_t escape_char);
 static void read_old (struct catalog *catalog, const char *file_name);
 static int open_conversion (const char *codesetp, iconv_t *cd_towcp,
-			    iconv_t *cd_tombp);
+			    iconv_t *cd_tombp, wchar_t *escape_charp);
 
 
 int
@@ -272,6 +273,7 @@ read_input_file (struct catalog *current, const char *fname)
   size_t wbufsize;
   iconv_t cd_towc = (iconv_t) -1;
   iconv_t cd_tomb = (iconv_t) -1;
+  wchar_t escape_char = L'\\';
   char *codeset = NULL;
 
   if (strcmp (fname, "-") == 0 || strcmp (fname, "/dev/stdin") == 0)
@@ -522,7 +524,8 @@ this is the first definition"));
 
 	      /* We need the conversion.  */
 	      if (cd_towc == (iconv_t) -1
-		  && open_conversion (codeset, &cd_towc, &cd_tomb) != 0)
+		  && open_conversion (codeset, &cd_towc, &cd_tomb,
+				      &escape_char) != 0)
 		/* Something is wrong.  */
 		goto out;
 
@@ -648,7 +651,8 @@ duplicated message identifier"));
 
 	      /* We need the conversion.  */
 	      if (cd_towc == (iconv_t) -1
-		  && open_conversion (codeset, &cd_towc, &cd_tomb) != 0)
+		  && open_conversion (codeset, &cd_towc, &cd_tomb,
+				      &escape_char) != 0)
 		/* Something is wrong.  */
 		goto out;
 
@@ -694,7 +698,7 @@ invalid character: message ignored"));
 	      /* Strip quote characters, change escape sequences into
 		 correct characters etc.  */
 	      normalize_line (fname, start_line, cd_towc, wbuf,
-			      current->quote_char);
+			      current->quote_char, escape_char);
 
 	      /* Now the string is free of escape sequences.  Convert it
 		 back into a multibyte character string.  First free the
@@ -1053,7 +1057,7 @@ find_set (struct catalog *current, int number)
    and quote characters.  */
 static void
 normalize_line (const char *fname, size_t line, iconv_t cd, wchar_t *string,
-		wchar_t quote_char)
+		wchar_t quote_char, wchar_t escape_char)
 {
   int is_quoted;
   wchar_t *rp = string;
@@ -1072,7 +1076,7 @@ normalize_line (const char *fname, size_t line, iconv_t cd, wchar_t *string,
       /* We simply end the string when we find the first time an
 	 not-escaped quote character.  */
 	break;
-    else if (*rp == L'\\')
+    else if (*rp == escape_char)
       {
 	++rp;
 	if (quote_char != L'\0' && *rp == quote_char)
@@ -1104,10 +1108,6 @@ normalize_line (const char *fname, size_t line, iconv_t cd, wchar_t *string,
 	      break;
 	    case L'f':
 	      *wp++ = L'\f';
-	      ++rp;
-	      break;
-	    case L'\\':
-	      *wp++ = L'\\';
 	      ++rp;
 	      break;
 	    case L'0' ... L'7':
@@ -1147,7 +1147,13 @@ normalize_line (const char *fname, size_t line, iconv_t cd, wchar_t *string,
 	      }
 	      break;
 	    default:
-	      /* Simply ignore the backslash character.  */
+	      if (*rp == escape_char)
+		{
+		  *wp++ = escape_char;
+		  ++rp;
+		}
+	      else
+		/* Simply ignore the backslash character.  */;
 	      break;
 	    }
       }
@@ -1255,8 +1261,16 @@ read_old (struct catalog *catalog, const char *file_name)
 
 
 static int
-open_conversion (const char *codeset, iconv_t *cd_towcp, iconv_t *cd_tombp)
+open_conversion (const char *codeset, iconv_t *cd_towcp, iconv_t *cd_tombp,
+		 wchar_t *escape_charp)
 {
+  char buf[2];
+  char *bufptr;
+  size_t bufsize;
+  wchar_t wbuf[2];
+  char *wbufptr;
+  size_t wbufsize;
+
   /* If the input file does not specify the codeset use the locale's.  */
   if (codeset == NULL)
     {
@@ -1276,6 +1290,31 @@ open_conversion (const char *codeset, iconv_t *cd_towcp, iconv_t *cd_tombp)
 
       return 1;
     }
+
+  /* One special case for historical reasons is the backslash
+     character.  In some codesets the byte value 0x5c is not mapped to
+     U005c in Unicode.  These charsets then don't have a backslash
+     character at all.  Therefore we have to live with whatever the
+     codeset provides and recognize, instead of the U005c, the character
+     the byte value 0x5c is mapped to.  */
+  buf[0] = '\\';
+  buf[1] = '\0';
+  bufptr = buf;
+  bufsize = 2;
+
+  wbufptr = (char *) wbuf;
+  wbufsize = sizeof (wbuf);
+
+  iconv (*cd_towcp, &bufptr, &bufsize, &wbufptr, &wbufsize);
+  if (bufsize != 0 || wbufsize != 0)
+    {
+      /* Something went wrong, we couldn't convert the byte 0x5c.  Go
+	 on with using U005c.  */
+      error (0, 0, gettext ("cannot determine escape character"));
+      *escape_charp = L'\\';
+    }
+  else
+    *escape_charp = wbuf[0];
 
   return 0;
 }
