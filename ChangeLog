@@ -1,5 +1,8 @@
 2000-01-10  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Remove greg_t,
+	gregset_t, fpregset_t, and NGREG definitions.
+
 	* sysdeps/mips/Implies: Add wordsize-32.
 
 	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h: Add missing
