@@ -222,10 +222,6 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   ElfW(Ehdr) *ehdr;
   ElfW(Phdr) *phdr;
   size_t cnt;
-  size_t tlssize = 0;
-  size_t tlsimagesize = 0;
-  const void *tlsimage = NULL;
-  void *tlsblock = NULL;
   dtv_t initdtv[2];
 #endif
 
@@ -261,23 +257,26 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   for (cnt = 0; cnt < ehdr->e_phnum; ++cnt)
     if (phdr[cnt].p_type == PT_TLS)
       {
+	void *tlsblock;
 	size_t align = MAX (TLS_INIT_TCB_ALIGN,  phdr[cnt].p_align);
 
-	tlssize = phdr[cnt].p_memsz;
-	tlsimagesize = phdr[cnt].p_filesz;
-	tlsimage = (void *) (bootstrap_map_p->l_addr + phdr[cnt].p_offset);
+	GL(dl_rtld_map).l_tls_blocksize = phdr[cnt].p_memsz;
+	GL(dl_rtld_map).l_tls_initimage_size = phdr[cnt].p_filesz;
+	GL(dl_rtld_map).l_tls_initimage = (void *) (bootstrap_map_p->l_addr
+						    + phdr[cnt].p_offset);
 
 	/* We can now allocate the initial TLS block.  This can happen
 	   on the stack.  We'll get the final memory later when we
 	   know all about the various objects loaded at startup
 	   time.  */
 # if TLS_TCB_AT_TP
-	tlsblock = alloca (roundup (tlssize, TLS_INIT_TCB_ALIGN)
+	tlsblock = alloca (roundup (GL(dl_rtld_map).l_tls_blocksize,
+				    TLS_INIT_TCB_ALIGN)
 			   + TLS_INIT_TCB_SIZE
 			   + align);
 # elif TLS_DTV_AT_TP
 	tlsblock = alloca (roundup (TLS_INIT_TCB_SIZE, phdr[cnt].p_align)
-			   + tlssize
+			   + GL(dl_rtld_map).l_tls_blocksize
 			   + align);
 # else
 	/* In case a model with a different layout for the TCB and DTV
@@ -295,23 +294,31 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 # if TLS_TCB_AT_TP
 	initdtv[1].pointer = tlsblock;
 # elif TLS_DTV_AT_TP
-	GL(rtld_tlsoffset) = roundup (TLS_INIT_TCB_SIZE, phdr[cnt].p_align);
-	initdtv[1].pointer = (char *) tlsblock + GL(rtld_tlsoffset);
+	GL(dl_rtld_map).l_tls_offset = roundup (TLS_INIT_TCB_SIZE,
+						phdr[cnt].p_align);
+	initdtv[1].pointer = (char *) tlsblock + GL(dl_rtld_map).l_tls_offset);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-	memset (__mempcpy (initdtv[1].pointer, tlsimage, tlsimagesize),
-		'\0', tlssize - tlsimagesize);
+	memset (__mempcpy (initdtv[1].pointer, GL(dl_rtld_map).l_tls_initimage,
+			   GL(dl_rtld_map).l_tls_initimage_size),
+		'\0', (GL(dl_rtld_map).l_tls_blocksize
+		       - GL(dl_rtld_map).l_tls_initimage_size));
 
 	/* Initialize the thread pointer.  */
 # if TLS_TCB_AT_TP
-	GL(rtld_tlsoffset) = roundup (tlssize, TLS_INIT_TCB_ALIGN);
-	TLS_INIT_TP ((char *) tlsblock + GL(rtld_tlsoffset), initdtv);
+	GL(dl_rtld_map).l_tls_offset
+	  = roundup (GL(dl_rtld_map).l_tls_blocksize, TLS_INIT_TCB_ALIGN);
+	TLS_INIT_TP ((char *) tlsblock + GL(dl_rtld_map).l_tls_offset,
+		     initdtv);
 # elif TLS_DTV_AT_TP
-	TLS_INIT_TP (tlsblock, intidtv);
+	TLS_INIT_TP (tlsblock, initdtv);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
+
+	/* So far this is module number one.  */
+	GL(dl_rtld_map).l_tls_modid = 1;
 
 	/* There can only be one PT_TLS entry.  */
 	break;

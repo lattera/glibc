@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,9 @@
 #ifndef	_LINK_H
 #define	_LINK_H	1
 
-#include <features.h>
 #include <elf.h>
 #include <dlfcn.h>
+#include <stddef.h>
 #include <sys/types.h>
 
 /* We use this macro to refer to ELF types independent of the native wordsize.
@@ -254,6 +254,21 @@ struct link_map
 #endif
       const ElfW(Sym) *ret;
     } l_lookup_cache;
+
+    /* Thread-local storage related info.  */
+
+    /* Next module in list of initialization images.  */
+    struct link_map *l_tls_nextimage;
+    /* Start of the initialization image.  */
+    void *l_tls_initimage;
+    /* Size of the initialization image.  */
+    size_t l_tls_initimage_size;
+    /* Size of the TLS block.  */
+    size_t l_tls_blocksize;
+    /* For objects present at startup time: offset in the static TLS block.  */
+    ptrdiff_t l_tls_offset;
+    /* Index of the module in the dtv array.  */
+    size_t l_tls_modid;
   };
 
 struct dl_phdr_info

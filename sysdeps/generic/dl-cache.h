@@ -1,5 +1,5 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -98,6 +98,7 @@ struct cache_file_new
  & (~(__alignof__ (struct cache_file_new) - 1)))
 
 static int
+__attribute__ ((__unused__))
 _dl_cache_libcmp (const char *p1, const char *p2)
 {
   while (*p1 != '\0')

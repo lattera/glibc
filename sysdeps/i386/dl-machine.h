@@ -342,20 +342,18 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
   else
 #endif
     {
-#if defined RTLD_BOOTSTRAP && !defined USE_TLS
-      Elf32_Addr value;
-
-      assert (r_type == R_386_GLOB_DAT || r_type == R_386_JMP_SLOT);
-
-      value = RESOLVE (&sym, version, r_type);
-      *reloc_addr = value + sym->st_value;
-#else
       const Elf32_Sym *const refsym = sym;
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+#else
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
+
 # ifndef RTLD_BOOTSTRAP
-      if (sym)
+      if (sym != NULL)
 # endif
 	value += sym->st_value;
+#endif
 
       switch (r_type)
 	{
@@ -366,6 +364,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 
 	  /* XXX Remove TLS relocations which are not needed.  */
 
+#ifdef USE_TLS
 	case R_386_TLS_DTPMOD32:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
@@ -374,29 +373,36 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     call.  */
 	  *reloc_addr = 1;
 # else
-	  /* XXX Implement.  RESOLVE must return the map from which we
-	     get the module ID.  */
-	  _exit (99);
+	  /* Get the information from the link map returned by the
+	     resolv function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
 # endif
 	  break;
 	case R_386_TLS_DTPOFF32:
 # ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
-	  *reloc_addr = sym->st_value;
+	  if (sym != NULL)
+	    *reloc_addr = sym->st_value;
 # endif
 	  break;
 	case R_386_TLS_TPOFF32:
 	  /* The offset is positive, backward from the thread pointer.  */
 # ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = GL(rtld_tlsoffset) - sym->st_value;
+	  *reloc_addr = GL(dl_rtld_map).l_tls_offset - sym->st_value;
 # else
-	  /* XXX Implement.  */
-	  _exit (98);
+	  /* We know the offset of object the symbol is contained is.
+	     It is a positive value which will be subtracted from the
+	     thread pointer.  To get the variable position in the TLS
+	     block we subtract the offset from that of the TLS block.  */
+	  if (sym_map != NULL && sym != NULL)
+	    *reloc_addr = sym_map->l_tls_offset - sym->st_value;
 # endif
 	  break;
+#endif	/* use TLS */
 
-# ifndef RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
 	case R_386_32:
 	  *reloc_addr += value;
 	  break;
@@ -426,9 +432,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
-# endif
-	}
 #endif
+	}
     }
 }
 
@@ -438,13 +443,20 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)
 {
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+
   if (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE)
     *reloc_addr = map->l_addr + reloc->r_addend;
-  else if (ELF32_R_TYPE (reloc->r_info) != R_386_NONE)
+  else if (r_type != R_386_NONE)
     {
+# ifdef USE_TLS
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+# else
       Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
-      if (sym)
+      if (sym != NULL)
 	value += sym->st_value;
+#endif
 
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
@@ -456,10 +468,11 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_386_PC32:
 	  *reloc_addr = (value + reloc->r_addend - (Elf32_Addr) reloc_addr);
 	  break;
+	  /* XXX Do we have to handle the TLS relocation here?  */
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.  */
-	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 	}
     }

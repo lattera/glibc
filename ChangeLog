@@ -1,5 +1,19 @@
 2002-02-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (_dl_start): Fill TLS values in link map for rtld.
+	* include/link.h (struct link_map): Add various members for TLS
+	information.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Remove
+	_rtld_tlsoffset, add _dl_initimage_list.
+	* sysdeps/i386/dl-lookupcfg.h: New file.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Implement missing
+	TLS relocation.  When using TLS we now use RESOLVE_MAP.
+	(elf_machine_rela): Use RESOLVE_MAP instead of RESOLVE_MAP if TLS
+	is used.
+
+	* sysdeps/generic/dl-cache.c (_dl_cache_libcmp): Mark as possibly
+	unused.
+
 	* elf/rtld.c (_dl_start_final): Allocate TLS and initialize
 	thread-pointer as soon as possible.
 	* sysdeps/generic/ldsodefs.h: Include <tls.h>.  Define first TLS

@@ -288,8 +288,10 @@ struct rtld_global
 #endif
 
 #ifdef USE_TLS
-  /* Offset of the TLS block for ld.so from the thread-pointer.  */
-  EXTERN size_t _rtld_tlsoffset;
+  /* Beginning of the list of link maps for objects which contain
+     thread-local storage sections.  This will be traversed to
+     initialize new TLS blocks.  */
+  EXTERN struct link_map *_dl_initimage_list;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */
