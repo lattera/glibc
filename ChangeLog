@@ -1,3 +1,15 @@
+2005-01-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h: Remove trampoline code.  Define
+	ARCH_LA_PLTENTER and ARCH_LA_PLTEXIT.
+	(elf_machine_runtime_setup): If profile != 0 does not anymore mean
+	GLRO(dl_profile) != NULL.
+	* sysdeps/m68k/dl-trampoline.S: New file.
+	* sysdeps/m68k/bits/link.h: New file.
+	* sysdeps/generic/ldsodefs.h (struct audit_ifaces): Add m68k
+	variants.
+	* elf/tst-auditmod1.c: Add m68k support.
+
 2005-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c [!_LIBC] (init_dfa): Fix determining of relevant
