@@ -1,3 +1,11 @@
+2002-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-sysconf.
+	* tst-sysconf.c: New file.
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefine
+	PTHREAD_THREADS_MAX.
+
 2002-12-02  Roland McGrath  <roland@redhat.com>
 
 	* pthreadP.h (__stack_user, __nptl_create_event, __nptl_death_event):
