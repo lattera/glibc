@@ -48,6 +48,7 @@ include ../Makeconfig
 
 ifeq ($(build-shared),yes)
 before-compile := $(objpfx)crti.o
+extra-objs = crti.o
 
 CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
 endif
