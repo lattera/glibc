@@ -29,6 +29,7 @@ distribute := internals.h queue.h restart.h spinlock.h smp.h tst-signal.sh \
 	      libc-tsd.c
 
 routines := weaks no-tsd
+shared-only-routines = weaks
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)

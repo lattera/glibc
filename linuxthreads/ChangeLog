@@ -1,3 +1,10 @@
+2002-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions (libc:GLIBC_2.0): Remove names of functions which are
+	not defined in libc.
+	* Makefile (shared-only-routines): Add weaks.
+	* weaks.c: Remove functions which are not exported from libc.so.
+
 2002-11-14  Roland McGrath  <roland@redhat.com>
 
 	* libc-tsd.c: New file.
