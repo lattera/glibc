@@ -1,3 +1,14 @@
+2002-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/dlfcn.h: __libc_dlopen is now a macro calling
+	__libc_dlopen_mode with the extra parameter RTLD_LAZY.
+	(__libc_dlopen_mode): New prototype.
+	* elf/dl-libc.c (__libc_dlopen_mode): Renamed from __libc_dlopen.  Add
+	new parameter.  Store new parameter in mode field of structure passed
+	to do_dlopen.
+	(struct do_dlopen_args): Add new field mode.
+	(do_dlopen): Pass mode from parameter structure to _dl_open.
+
 2002-11-11  Randolf Chung  <tausq@debian.org>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h [__USE_FILE_OFFSET64]
@@ -16,8 +27,8 @@
 	from gcc-3.0 era for backwards compatibility.
 	* sysdeps/unix/sysv/linux/configure: Regenerate.
 
-        * sysdeps/unix/sysv/linux/hppa/sys/ucontext.h:
-        Define mcontext_t as a sigcontext.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h:
+	Define mcontext_t as a sigcontext.
 
 2002-11-18  Roland McGrath  <roland@redhat.com>
 
@@ -139,8 +150,8 @@
 
 2002-11-11  Paul Eggert  <eggert@twinsun.com>
 
-        * manual/crypt.texi (Cryptographic Functions): Mention that
-        the MD5 one-way algorithm is compatible with BSD's.
+	* manual/crypt.texi (Cryptographic Functions): Mention that
+	the MD5 one-way algorithm is compatible with BSD's.
 
 2002-11-11  Isamu Hasegawa  <isamu@yamato.ibm.com>
 

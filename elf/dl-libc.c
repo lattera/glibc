@@ -54,6 +54,8 @@ struct do_dlopen_args
 {
   /* Argument to do_dlopen.  */
   const char *name;
+  /* Opening mode.  */
+  int mode;
 
   /* Return from do_dlopen.  */
   struct link_map *map;
@@ -75,7 +77,7 @@ do_dlopen (void *ptr)
 {
   struct do_dlopen_args *args = (struct do_dlopen_args *) ptr;
   /* Open and relocate the shared object.  */
-  args->map = _dl_open (args->name, RTLD_LAZY, NULL);
+  args->map = _dl_open (args->name, args->mode, NULL);
 }
 
 static void
@@ -97,29 +99,30 @@ do_dlclose (void *ptr)
 /* ... and these functions call dlerror_run. */
 
 void *
-__libc_dlopen (const char *__name)
+__libc_dlopen_mode (const char *name, int mode)
 {
   struct do_dlopen_args args;
-  args.name = __name;
+  args.name = name;
+  args.mode = mode;
 
   return (dlerror_run (do_dlopen, &args) ? NULL : (void *) args.map);
 }
 
 void *
-__libc_dlsym (void *__map, const char *__name)
+__libc_dlsym (void *map, const char *name)
 {
   struct do_dlsym_args args;
-  args.map = __map;
-  args.name = __name;
+  args.map = map;
+  args.name = name;
 
   return (dlerror_run (do_dlsym, &args) ? NULL
 	  : (void *) (DL_SYMBOL_ADDRESS (args.loadbase, args.ref)));
 }
 
 int
-__libc_dlclose (void *__map)
+__libc_dlclose (void *map)
 {
-  return dlerror_run (do_dlclose, __map);
+  return dlerror_run (do_dlclose, map);
 }
 
 
