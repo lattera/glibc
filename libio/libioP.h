@@ -588,7 +588,7 @@ extern int _IO_vscanf __P ((const char *, _IO_va_list));
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, FD, \
-	   0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, _IO_pos_BAD }
+	   0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD }
 # endif
 #endif
 

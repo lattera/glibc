@@ -1,3 +1,17 @@
+1998-10-01  Philip Blundell  <pb@nexus.co.uk> 
+ 
+	* sysdeps/arm/machine-gmon.h: Correct args to mcount().  Patch 
+	from Scott Bambrough. 
+ 
+	* sysdeps/unix/sysv/linux/arm/register-dump.h: New file. 
+ 
+	* libio/libioP.h (FILEBUF_LITERAL) [! _IO_MTSAFE_IO]: Don't 
+	include the lock member. 
+ 
+1998-09-03  Philip Blundell  <pb@nexus.co.uk> 
+ 
+	* sysdeps/arm/fpu/__longjmp.S: Cope with fussy assembler. 
+ 
 1998-10-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/zic.c: Update from tzcode1998h.
