@@ -69,6 +69,7 @@
 	* include/pwd.h: Likewise.
 	* include/shadow.h: Likewise.
 	* include/rpc/netdb.h: Likewise.
+	* include/setjmp.h: Likewise.
 
 	* include/stdio.h: Add prototypes for compatibility functions.
 	* include/grp.h: Likewise.

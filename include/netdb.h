@@ -151,6 +151,22 @@ extern int ruserpass (const char *host, const char **aname,
 
 #include <inet/netgroup.h>
 
+struct parser_data;
+extern int _nss_files_parse_protoent (char *line, struct protoent *result,
+				      struct parser_data *data,
+				      size_t datalen, int *errnop);
+extern int _nss_files_parse_servent (char *line, struct servent *result,
+				     struct parser_data *data,
+				     size_t datalen, int *errnop);
+extern int _nss_files_parse_netent (char *line, struct netent *result,
+				    struct parser_data *data,
+				    size_t datalen, int *errnop);
+extern enum nss_status _nss_netgroup_parseline (char **cursor,
+						struct __netgrent *result,
+						char *buffer, size_t buflen,
+						int *errnop);
+
+
 #define DECLARE_NSS_PROTOTYPES(service)					      \
 extern enum nss_status _nss_ ## service ## _setprotoent (int);		      \
 extern enum nss_status _nss_ ## service ## _endprotoent (void);		      \

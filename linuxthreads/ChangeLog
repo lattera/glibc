@@ -2,6 +2,7 @@
 
 	* Examples/ex13.c: Make local functions static.
 	* ecmutex.c: Likewise.
+	* joinrace.c: Likewise.
 	* Examples/ex14.c: Likewise.
 
 	* Examples/ex2.c: Make local functions static; reformat.

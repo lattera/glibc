@@ -21,6 +21,11 @@ extern int __getrpcent_r (struct rpcent *__result_buf, char *__buffer,
 extern int __old_getrpcent_r (struct rpcent *__result_buf, char *__buffer,
 			      size_t __buflen, struct rpcent **__result);
 
+struct parser_data;
+extern int _nss_files_parse_rpcent (char *line, struct rpcent *result,
+				    struct parser_data *data,
+				    size_t datalen, int *errnop);
+
 #define DECLARE_NSS_PROTOTYPES(service)					      \
 extern enum nss_status _nss_ ## service ## _setrpcent (int);		      \
 extern enum nss_status _nss_ ## service ## _endrpcent (void);		      \
