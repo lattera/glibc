@@ -8,6 +8,7 @@
 	* iconvdata/iso-2022-kr.c: Likewise.
 	* wcsmbs/mbsinit.c: Likewise.
 	* stdlib/mblen.c: Likewise.
+	* stdio-common/printf-parse.h: Likewise.
 
 2000-04-06  Ulrich Drepper  <drepper@redhat.com>
 

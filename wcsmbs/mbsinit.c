@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -32,6 +32,6 @@ int
 __mbsinit (ps)
      const mbstate_t *ps;
 {
-  return ps == NULL || ps->count == 0;
+  return ps == NULL || ps->__count == 0;
 }
 weak_alias (__mbsinit, mbsinit)

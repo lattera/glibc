@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,8 +53,7 @@ mblen (const char *s, size_t n)
     result = 0;
   else
     {
-      state.count = 0;
-      state.value = 0;
+      memset (&state, '\0', sizeof state);
 
       result = __mbrtowc (NULL, s, n, &state);
 
