@@ -1,5 +1,10 @@
 2000-02-01  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/init-first.h: New file, from Ralf
+	Baechle <ralf@gnu.org>.
+
+	* sysdeps/unix/sysv/linux/mips/brk.c: New file.
+
 	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Add missing ints.
 
 	* sysdeps/mips/elf/start.S: Rewritten for __libc_start_main.
