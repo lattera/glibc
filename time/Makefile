@@ -52,3 +52,4 @@ tst-getdate-ENV= DATEMSK=datemsk TZDIR=${common-objpfx}timezone/testdata
 test_time-ARGS= EST5EDT CST
 
 tst-strptime-ENV = LOCPATH=${common-objpfx}localedata
+tst-ftime_l-ENV = LOCPATH=${common-objpfx}localedata
