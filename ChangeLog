@@ -1,3 +1,52 @@
+Tue Dec  5 02:27:32 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* libio/Makefile [routines]: Remove iofscanf, add iopopen, pclose.
+
+	* libio/iofscanf.c: Remove file.
+
+	* libio/iogetdelim.c (_IO_getdelim): Correct stupid bug at string
+        termination.
+
+	* libio/iopopen.c: New file from GNU libio.
+
+	* libio/memstream.c: Fixed bug in fclose handling.  Instead of
+	providing a close callback we need a finish callback.
+
+	* libio/pclose.c: New file.  Derived from popen.c in GNU libio.
+
+	* posix/gnu/types.h: Fixed typo.
+
+	* stdio-common/errnobug.c: fputs returns EOF in error case.  Do
+	not test for != 0.
+
+	* stdio-common/printf-parse.h (parse_one_spec): Do not force
+	padding with ' ' if precision is given.  Fix by HJ Lu.
+
+	* stdio-common/printf_fp.c: Fix comment.
+
+	* stdio-common/tfformat.c, stdio-common/tiformat.c,
+	stdio-common/tstdiomisc.c: New files from GNU libio test suite.
+
+	* stdio-common/tstgetln.c: Provide ssize_t type when testing
+	libio.
+
+	* stdio-common/vfprintf.c (outchar): Use PUTC instead of putc.
+	(vfprintf): Cleasr args_type array before using it.
+	When printing 0 as an integer with precision 0 nothing must be
+	written for the number.
+	Based on patch by HJ Lu.
+
+	* stdio-common/vfscanf.c: Remove fixed input buffer.  Now we
+        have a dynamically extended buffer.
+
+	* stdlib/strtod.c: Merge with version in Linux libc.  This fixes
+        some bugs with handling of very small numbers and has different
+        solution for formaer patches.
+
+	* sysdeps/i386/i586/add_n.S, sysdeps/i386/i586/sub_n.S: Rename
+        macros r1 and r2 to t1, and t2 resp.  This is necessary because
+        glibc headers also define r1.
+
 Mon Dec  4 12:10:28 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdlib/gen-mpn-copy (translations): Updated for new layout in

@@ -30,13 +30,13 @@ struct _IO_FILE_memstream
 
 
 static int _IO_mem_sync __P ((_IO_FILE* fp));
-static int _IO_mem_close __P ((_IO_FILE* fp));
+static void _IO_mem_finish __P ((_IO_FILE* fp));
 
 
 static const struct _IO_jump_t _IO_mem_jumps =
 {
   JUMP_INIT_DUMMY,
-  JUMP_INIT (finish, _IO_str_finish),
+  JUMP_INIT (finish, _IO_mem_finish),
   JUMP_INIT (overflow, _IO_str_overflow),
   JUMP_INIT (underflow, _IO_str_underflow),
   JUMP_INIT (uflow, _IO_default_uflow),
@@ -51,7 +51,7 @@ static const struct _IO_jump_t _IO_mem_jumps =
   JUMP_INIT (read, _IO_default_read),
   JUMP_INIT (write, _IO_default_write),
   JUMP_INIT (seek, _IO_default_seek),
-  JUMP_INIT (close, _IO_mem_close),
+  JUMP_INIT (close, _IO_default_close),
   JUMP_INIT (stat, _IO_default_stat)
 };
 
@@ -79,6 +79,9 @@ open_memstream (bufloc, sizeloc)
   fp->_sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   fp->_sf._s._free_buffer = (_IO_free_type) free;
 
+  fp->bufloc = bufloc;
+  fp->sizeloc = sizeloc;
+
   return &fp->_sf._f;
 }
 
@@ -102,28 +105,28 @@ _IO_mem_sync (fp)
   else
     *fp->_IO_write_ptr = '\0';
 
-  *mp->bufloc = fp->_IO_buf_base;
-  *mp->sizeloc = _IO_blen (fp);
+  *mp->bufloc = fp->_IO_write_base;
+  *mp->sizeloc = fp->_IO_write_ptr - fp->_IO_write_base;
 
   return 0;
 }
 
 
-static int _IO_mem_close (fp)
+static void
+_IO_mem_finish (fp)
      _IO_FILE* fp;
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
-  int res;
 
-  res = _IO_default_close (fp);
-  if (res < 0)
-    return res;
+  *mp->bufloc = (char *) realloc (fp->_IO_write_base,
+				  fp->_IO_write_ptr - fp->_IO_write_base + 1);
+  if (*mp->bufloc != NULL)
+    {
+      (*mp->bufloc)[fp->_IO_write_ptr - fp->_IO_write_base] = '\0';
+      *mp->sizeloc = fp->_IO_write_ptr - fp->_IO_write_base;
+    }
 
-  *mp->bufloc = (char *) realloc (fp->_IO_buf_base, _IO_blen (fp) + 1);
-  if (*mp->bufloc == NULL)
-    return -1;
-  (*mp->bufloc)[_IO_blen (fp)] = '\0';
-  *mp->sizeloc = _IO_blen (fp);
+  fp->_IO_buf_base = NULL;
 
-  return 0;
+  _IO_default_finish (fp);
 }

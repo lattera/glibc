@@ -345,7 +345,7 @@ __printf_fp (fp, info, args)
   scalesize = 0;
   if (exponent > 2)
     {
-      /* |FP| >= 1.0.  */
+      /* |FP| >= 8.0.  */
       int scaleexpo = 0;
       int explog = LDBL_MAX_10_EXP_LOG;
       int exp10 = 0;

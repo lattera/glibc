@@ -79,11 +79,11 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       t = (char *) memchr ((void *) fp->_IO_read_ptr, delimiter, len);
       if (t != NULL)
 	len = (t - fp->_IO_read_ptr) + 1;
-      /* make enough space for len+1 (for final NUL) bytes. */
+      /* Make enough space for len+1 (for final NUL) bytes.  */
       needed = cur_len + len + 1;
       if (needed > *n)
 	{
-	  if (t == NULL && needed < 2 * *n)
+	  if (needed < 2 * *n)
 	    needed = 2 * *n;  /* Be generous. */
 	  *n = needed;
 	  *lineptr = (char *) realloc (*lineptr, needed);
@@ -97,7 +97,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
 	break;
       len = fp->_IO_read_end - fp->_IO_read_ptr;
     }
-  lineptr[cur_len] = '\0';
+  (*lineptr)[cur_len] = '\0';
   return cur_len;
 }
 

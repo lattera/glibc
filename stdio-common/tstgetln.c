@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <stdio.h>
+
+#ifdef USE_IN_LIBIO
+# define ssize_t _IO_ssize_t
+#endif
 
 int
 DEFUN_VOID(main)

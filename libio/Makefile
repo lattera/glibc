@@ -25,14 +25,14 @@ headers	:= stdio.h libio.h
 
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \
-	iofopncook iofprintf iofputs iofread iofscanf iofsetpos ioftell	      \
-	iofwrite iogetdelim iogetline iogets iopadn ioprims ioputs	      \
+	iofopncook iofprintf iofputs iofread iofsetpos ioftell		      \
+	iofwrite iogetdelim iogetline iogets iopadn iopopen ioprims ioputs    \
 	ioseekoff ioseekpos iosetbuffer iosetvbuf iosprintf ioungetc	      \
 	iovsprintf iovsscanf						      \
 									      \
 	clearerr feof ferror fgetc fileno fputc freopen fseek getc getchar    \
-	memstream putc putchar rewind setbuf setlinebuf vasprintf vdprintf    \
-	vscanf vsnprintf						      \
+	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
+	vdprintf vscanf vsnprintf					      \
 									      \
 	libc_fatal
 

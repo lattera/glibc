@@ -32,7 +32,7 @@ Cambridge, MA 02139, USA.  */
 
 struct printf_spec
   {
-    /* Information parsed from the format spec.  */ 
+    /* Information parsed from the format spec.  */
     struct printf_info info;
 
     /* Pointers into the format string for the end of this format
@@ -260,10 +260,6 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
       else
 	/* "%.?" is treated like "%.0?".  */
 	spec->info.prec = 0;
-
-      /* If there was a precision specified, ignore the 0 flag and always
-	 pad with spaces.  */
-      spec->info.pad = ' ';
     }
 
   /* Check for type modifiers.  */
@@ -364,7 +360,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 	  break;
 	}
 
-      if (spec->data_arg == -1 && spec->ndata_args > 0) 
+      if (spec->data_arg == -1 && spec->ndata_args > 0)
 	{
 	  /* There are args consumed, but no positional spec.
 	     Use the next sequential arg position.  */

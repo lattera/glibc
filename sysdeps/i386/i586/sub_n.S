@@ -27,15 +27,15 @@ the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
    size		(sp + 16)
 */
 
-#define r1	%eax
-#define r2	%edx
+#include "sysdep.h"
+#include "asm-syntax.h"
+
+#define t1	%eax
+#define t2	%edx
 #define src1	%esi
 #define src2	%ebp
 #define dst	%edi
 #define x	%ebx
-
-#include "sysdep.h"
-#include "asm-syntax.h"
 
 .text
 	ALIGN (3)
@@ -54,77 +54,77 @@ C_SYMBOL_NAME(__mpn_sub_n:)
 	movl	(src2),x
 
 	decl	%ecx
-	movl	%ecx,r2
+	movl	%ecx,t2
 	shrl	$3,%ecx
-	andl	$7,r2
+	andl	$7,t2
 	testl	%ecx,%ecx		/* zero carry flag */
 	jz	Lend
-	pushl	r2
+	pushl	t2
 
 	ALIGN (3)
 Loop:	movl	28(dst),%eax		/* fetch destination cache line */
 	leal	32(dst),dst
 
-L1:	movl	(src1),r1
-	movl	4(src1),r2
-	sbbl	x,r1
+L1:	movl	(src1),t1
+	movl	4(src1),t2
+	sbbl	x,t1
 	movl	4(src2),x
-	sbbl	x,r2
+	sbbl	x,t2
 	movl	8(src2),x
-	movl	r1,-32(dst)
-	movl	r2,-28(dst)
+	movl	t1,-32(dst)
+	movl	t2,-28(dst)
 
-L2:	movl	8(src1),r1
-	movl	12(src1),r2
-	sbbl	x,r1
+L2:	movl	8(src1),t1
+	movl	12(src1),t2
+	sbbl	x,t1
 	movl	12(src2),x
-	sbbl	x,r2
+	sbbl	x,t2
 	movl	16(src2),x
-	movl	r1,-24(dst)
-	movl	r2,-20(dst)
+	movl	t1,-24(dst)
+	movl	t2,-20(dst)
 
-L3:	movl	16(src1),r1
-	movl	20(src1),r2
-	sbbl	x,r1
+L3:	movl	16(src1),t1
+	movl	20(src1),t2
+	sbbl	x,t1
 	movl	20(src2),x
-	sbbl	x,r2
+	sbbl	x,t2
 	movl	24(src2),x
-	movl	r1,-16(dst)
-	movl	r2,-12(dst)
+	movl	t1,-16(dst)
+	movl	t2,-12(dst)
 
-L4:	movl	24(src1),r1
-	movl	28(src1),r2
-	sbbl	x,r1
+L4:	movl	24(src1),t1
+	movl	28(src1),t2
+	sbbl	x,t1
 	movl	28(src2),x
-	sbbl	x,r2
+	sbbl	x,t2
 	movl	32(src2),x
-	movl	r1,-8(dst)
-	movl	r2,-4(dst)
+	movl	t1,-8(dst)
+	movl	t2,-4(dst)
 
 	leal	32(src1),src1
 	leal	32(src2),src2
 	decl	%ecx
 	jnz	Loop
 
-	popl	r2
+	popl	t2
 Lend:
-	decl	r2			/* test r2 w/o clobbering carry */
+	decl	t2			/* test t2 w/o clobbering carry */
 	js	Lend2
-	incl	r2
+	incl	t2
 Loop2:
 	leal	4(dst),dst
-	movl	(src1),r1
-	sbbl	x,r1
+	movl	(src1),t1
+	sbbl	x,t1
 	movl	4(src2),x
-	movl	r1,-4(dst)
+	movl	t1,-4(dst)
 	leal	4(src1),src1
 	leal	4(src2),src2
-	decl	r2
+	decl	t2
 	jnz	Loop2
 Lend2:
-	movl	(src1),r1
-	sbbl	x,r1
-	movl	r1,(dst)
+	movl	(src1),t1
+	sbbl	x,t1
+	movl	t1,(dst)
 
 	sbbl	%eax,%eax
 	negl	%eax

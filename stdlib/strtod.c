@@ -359,7 +359,10 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	}
     }
   else
-    grouping = NULL;
+    {
+      grouping = NULL;
+      thousands = L'\0';
+    }
 
   /* Find the locale's decimal point character.  */
   if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
@@ -373,7 +376,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   bits = 0;
 
   /* Parse string to get maximal legal prefix.  We need the number of
-     characters of the interger part, the fractional part and the exponent.  */
+     characters of the integer part, the fractional part and the exponent.  */
   cp = nptr - 1;
   /* Ignore leading white space.  */
   do
@@ -470,7 +473,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   int_no = dig_no;
   lead_zero = int_no == 0 ? -1 : 0;
 
-  /* Read the fractional digits.  */
+  /* Read the fractional digits.  A special case are the 'american style'
+     numbers like `16.' i.e. with decimal but without trailing digits.  */
   if (c == decimal)
     {
       if (isdigit (cp[1]))
@@ -506,11 +510,18 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
       if (isdigit (c))
 	{
+	  int exp_limit;
+
+	  /* Get the exponent limit. */
+	  exp_limit = exp_negative ?
+		-MIN_10_EXP + MANT_DIG - int_no :
+		MAX_10_EXP - int_no + lead_zero;
+
 	  do
 	    {
-	      if ((!exp_negative && exponent * 10 + int_no > MAX_10_EXP)
-		  || (exp_negative
-		      && exponent * 10 + int_no > -MIN_10_EXP + MANT_DIG))
+	      exponent *= 10;
+
+	      if (exponent > exp_limit)
 		/* The exponent is too large/small to represent a valid
 		   number.  */
 		{
@@ -530,7 +541,6 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		  /* NOTREACHED */
 		}
 
-	      exponent *= 10;
 	      exponent += c - '0';
 	      c = *++cp;
 	    }
@@ -563,6 +573,15 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   if (dig_no == 0)
     return 0.0;
 
+  if (lead_zero)
+    {
+      /* Find the decimal point */
+      while (*startp != decimal) startp++;
+      startp += lead_zero + 1;
+      exponent -= lead_zero;
+      dig_no -= lead_zero;
+    }
+
   /* Now we have the number of digits in total and the integer digits as well
      as the exponent and its sign.  We can decide whether the read digits are
      really integer digits or belong to the fractional part; i.e. we normalize
@@ -580,7 +599,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
     }
 
-  if (exponent - MAX(0, lead_zero) < MIN_10_EXP - (DIG + 1))
+  if (exponent < MIN_10_EXP - (DIG + 1))
     {
       errno = ERANGE;
       return 0.0;
@@ -728,7 +747,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     /* We construct a fraction and the result of the division gives us
        the needed digits.  The denominator is 1.0 multiplied by the
        exponent of the lowest digit; i.e. 0.123 gives 123 / 1000 and
-       123e6 gives 123 / 1000000.  */
+       123e-6 gives 123 / 1000000.  */
 
     int expbit;
     int cnt;
@@ -748,9 +767,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
        digits we should have enough bits for the result.  The remaining
        decimal digits give us the information that more bits are following.
        This can be used while rounding.  (One added as a safety margin.)  */
-    if (dig_no - int_no - lead_zero > (MANT_DIG - bits + 2) / 3 + 1)
+    if (dig_no - int_no > (MANT_DIG - bits + 2) / 3 + 1)
       {
-        dig_no = int_no + lead_zero + (MANT_DIG - bits + 2) / 3 + 1;
+        dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 1;
         more_bits = 1;
       }
     else
@@ -788,14 +807,6 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
     if (psrc == num)
       memcpy (den, num, densize * sizeof (mp_limb));
-
-    /* If we have leading zeroes now reduce the number of significant digits
-       and set the pointer to the first non-0 digit.  */
-    if (lead_zero > 0)
-      {
-	startp += lead_zero + 1;	/* +1 for radix character */
-	dig_no -= lead_zero;
-      }
 
     /* Read the fractional digits from the string.  */
     (void) str_to_mpn (startp, dig_no - int_no, num, &numsize, &exponent);
@@ -898,23 +909,34 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
 	  if (numsize < densize)
 	    {
-	      if (bits <= 0)
-		exponent -= BITS_PER_MP_LIMB;
+	      if (num[0] >= d1)
+		{
+		  /* The nominator of the number occupies fewer bits than
+		     the denominator but the one limb is bigger than the
+		     high limb of the nominator.  */
+		  n1 = 0;
+		  n0 = num[0];
+		}
 	      else
 		{
-		  if (bits + BITS_PER_MP_LIMB <= MANT_DIG)
-		    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE,
-				    BITS_PER_MP_LIMB, 0);
+		  if (bits <= 0)
+		    exponent -= BITS_PER_MP_LIMB;
 		  else
 		    {
-		      used = MANT_DIG - bits;
-		      if (used > 0)
-			__mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used, 0);
+		      if (bits + BITS_PER_MP_LIMB <= MANT_DIG)
+			__mpn_lshift_1 (retval, RETURN_LIMB_SIZE,
+					BITS_PER_MP_LIMB, 0);
+		      else
+			{
+			  used = MANT_DIG - bits;
+			  if (used > 0)
+			    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used, 0);
+			}
+		      bits += BITS_PER_MP_LIMB;
 		    }
-		  bits += BITS_PER_MP_LIMB;
+		  n1 = num[0];
+		  n0 = 0;
 		}
-	      n1 = num[0];
-	      n0 = 0;
 	    }
 	  else
 	    {

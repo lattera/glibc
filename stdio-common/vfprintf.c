@@ -96,7 +96,7 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
   do									      \
     {									      \
       register const int outc = (x);					      \
-      if (putc (outc, s) == EOF)					      \
+      if (PUTC (outc, s) == EOF)					      \
 	return -1;							      \
       else								      \
 	++done;								      \
@@ -230,11 +230,12 @@ vfprintf (s, format, ap)
 
   /* Allocate memory for the argument descriptions.  */
   args_type = alloca (nargs * sizeof (int));
+  memset (args_type, 0, nargs * sizeof (int));
   args_value = alloca (nargs * sizeof (union printf_arg));
 
-  /* XXX Could do sanity check here:
-     Initialize args_type elts to zero.
-     If any is still zero after this loop, format is invalid.  */
+  /* XXX Could do sanity check here: If any element in ARGS_TYPE is
+     still zero after this loop, format is invalid.  For now we simply
+     use 0 as the value.  */
 
   /* Fill in the types of all the arguments.  */
   for (cnt = 0; cnt < nspecs; ++cnt)
@@ -287,6 +288,8 @@ vfprintf (s, format, ap)
       default:
 	if ((args_type[cnt] & PA_FLAG_PTR) != 0)
 	  args_value[cnt].pa_pointer = va_arg (ap, void *);
+	else
+	  args_value[cnt].pa_long_double = 0.0;
 	break;
       }
 
@@ -420,15 +423,27 @@ vfprintf (s, format, ap)
               char *const workend = &work[sizeof(work) - 1];
               register char *w;
 
-              /* Supply a default precision if none was given.  */
               if (specs[cnt].info.prec == -1)
-                specs[cnt].info.prec = 1;
+		  /* Supply a default precision if none was given.  */
+		  specs[cnt].info.prec = 1;
+	      else
+		/* We have to take care for the '0' flag.  If a
+		   precision is given it must be ignored.  */
+		specs[cnt].info.pad = ' ';
 
-              /* Put the number in WORK.  */
-              w = _itoa (num, workend + 1, base, specs[cnt].info.spec == 'X');
-	      w -= 1;
-              if (specs[cnt].info.group && grouping)
-                w = group_number (w, workend, grouping, thousands_sep);
+	      /* If the precision is 0 and the number is 0 nothing has
+		 to be written for the number.  */
+	      if (specs[cnt].info.prec == 0 && num == 0)
+		w = workend;
+	      else
+		{
+		  /* Put the number in WORK.  */
+		  w = _itoa (num, workend + 1, base,
+			     specs[cnt].info.spec == 'X');
+		  w -= 1;
+		  if (specs[cnt].info.group && grouping)
+		    w = group_number (w, workend, grouping, thousands_sep);
+		}
               specs[cnt].info.width -= workend - w;
               specs[cnt].info.prec -= workend - w;
 
@@ -618,8 +633,18 @@ vfprintf (s, format, ap)
 }
 
 #ifdef USE_IN_LIBIO
-#undef vfprintf
+# undef vfprintf
+# ifdef strong_alias
+/* This is for glibc.  */
 strong_alias (_IO_vfprintf, vfprintf)
+# else
+#  if defined __ELF__ || defined __GNU_LIBRARY__
+#   include <gnu-stabs.h>
+#   ifdef weak_alias
+weak_alias (_IO_vfprintf, vfprintf);
+#   endif
+#  endif
+# endif
 #endif
 
 

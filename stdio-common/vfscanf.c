@@ -132,6 +132,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   int base;
   /* Signedness for integral numbers.  */
   int number_signed;
+  /* Decimal point character.  */
+  wchar_t decimal;
   /* Integral holding variables.  */
   union
     {
@@ -144,9 +146,24 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   register char *str, **strptr;
   size_t strsize;
   /* Workspace.  */
-  char work[200];
-  char *w;			/* Pointer into WORK.  */
-  wchar_t decimal;		/* Decimal point character.  */
+  char *tw;			/* Temporary pointer.  */
+  char *wp = NULL;		/* Workspace.  */
+  size_t wpsize = 0;		/* Currently used bytes in workspace.  */
+  size_t wpmax = 0;		/* Maximal size of workspace.  */
+#define ADDW(Ch)							    \
+  do									    \
+    {									    \
+      if (wpsize == wpmax)						    \
+	{								    \
+	  char *old = wp;						    \
+	  wpmax = 200 > 2 * wpmax ? 200 : 2 * wpmax;			    \
+	  wp = (char *) alloca (wpmax);					    \
+	  if (wpsize > 0)						    \
+	    memcpy (wp, old, wpsize);					    \
+	}								    \
+      wp[wpsize++] = (Ch);						    \
+    }									    \
+  while (0)
 
   ARGCHECK (s, format);
 
@@ -338,7 +355,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	conv_error ();
 
       /* Find the conversion specifier.  */
-      w = work;
       fc = *f++;
       if (fc != '[' && fc != 'c' && fc != 'n')
 	/* Eat whitespace.  */
@@ -490,7 +506,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  /* Check for a sign.  */
 	  if (c == '-' || c == '+')
 	    {
-	      *w++ = c;
+	      ADDW (c);
 	      if (width > 0)
 		--width;
 	      (void) inchar ();
@@ -501,7 +517,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      if (width > 0)
 		--width;
-	      *w++ = '0';
+	      ADDW ('0');
 
 	      (void) inchar ();
 
@@ -523,40 +539,40 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (base == 0)
 	    base = 10;
 
-	  /* Read the number into WORK.  */
+	  /* Read the number into workspace.  */
 	  do
 	    {
 	      if (base == 16 ? !isxdigit (c) :
 		  (!isdigit (c) || c - '0' >= base))
 		break;
-	      *w++ = c;
+	      ADDW (c);
 	      if (width > 0)
 		--width;
 	    }
 	  while (inchar () != EOF && width != 0);
 
-	  if (w == work ||
-	      (w - work == 1 && (work[0] == '+' || work[0] == '-')))
+	  if (wpsize == 0 ||
+	      (wpsize == 1 && (wp[0] == '+' || wp[0] == '-')))
 	    /* There was no number.  */
 	    conv_error ();
 
 	  /* Convert the number.  */
-	  *w = '\0';
+	  ADDW ('\0');
 	  if (is_longlong)
 	    {
 	      if (number_signed)
-		num.q = __strtoq_internal (work, &w, base, group_flag);
+		num.q = __strtoq_internal (wp, &tw, base, group_flag);
 	      else
-		num.uq = __strtouq_internal (work, &w, base, group_flag);
+		num.uq = __strtouq_internal (wp, &tw, base, group_flag);
 	    }
 	  else
 	    {
 	      if (number_signed)
-		num.l = __strtol_internal (work, &w, base, group_flag);
+		num.l = __strtol_internal (wp, &tw, base, group_flag);
 	      else
-		num.ul = __strtoul_internal (work, &w, base, group_flag);
+		num.ul = __strtoul_internal (wp, &tw, base, group_flag);
 	    }
-	  if (w == work)
+	  if (wp == tw)
 	    conv_error ();
 
 	  if (do_assign)
@@ -599,7 +615,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  /* Check for a sign.  */
 	  if (c == '-' || c == '+')
 	    {
-	      *w++ = c;
+	      ADDW (c);
 	      if (inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
@@ -611,17 +627,18 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  do
 	    {
 	      if (isdigit (c))
-		*w++ = c;
-	      else if (got_e && w[-1] == 'e' && (c == '-' || c == '+'))
-		*w++ = c;
+		ADDW (c);
+	      else if (got_e && wp[wpsize - 1] == 'e'
+		       && (c == '-' || c == '+'))
+		ADDW (c);
 	      else if (!got_e && tolower (c) == 'e')
 		{
-		  *w++ = 'e';
+		  ADDW ('e');
 		  got_e = got_dot = 1;
 		}
 	      else if (c == decimal && !got_dot)
 		{
-		  *w++ = c;
+		  ADDW (c);
 		  got_dot = 1;
 		}
 	      else
@@ -630,33 +647,34 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		--width;
 	    } while (inchar () != EOF && width != 0);
 
-	  if (w == work)
+	  if (wpsize == 0)
 	    conv_error();
-	  if (w[-1] == '-' || w[-1] == '+' || w[-1] == 'e')
+	  if (wp[wpsize - 1] == '-' || wp[wpsize - 1] == '+'
+	      || wp[wpsize - 1] == 'e')
 	    conv_error ();
 
 	  /* Convert the number.  */
-	  *w = '\0';
+	  ADDW ('\0');
 	  if (is_long_double)
 	    {
-	      long double d = __strtold_internal (work, &w, group_flag);
-	      if (do_assign && w != work)
+	      long double d = __strtold_internal (wp, &tw, group_flag);
+	      if (do_assign && tw != wp)
 		*ARG (long double *) = d;
 	    }
 	  else if (is_long)
 	    {
-	      double d = __strtod_internal (work, &w, group_flag);
-	      if (do_assign && w != work)
+	      double d = __strtod_internal (wp, &tw, group_flag);
+	      if (do_assign && tw != wp)
 		*ARG (double *) = d;
 	    }
 	  else
 	    {
-	      float d = __strtof_internal (work, &w, group_flag);
-	      if (do_assign && w != work)
+	      float d = __strtof_internal (wp, &tw, group_flag);
+	      if (do_assign && tw != wp)
 		*ARG (float *) = d;
 	    }
 
-	  if (w == work)
+	  if (tw == wp)
 	    conv_error ();
 
 	  if (do_assign)
@@ -680,23 +698,23 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  while ((fc = *f++) != '\0' && fc != ']')
 	    {
 	      if (fc == '-' && *f != '\0' && *f != ']' &&
-		  w > work && w[-1] <= *f)
+		  wpsize > 0 && wp[wpsize - 1] <= *f)
 		/* Add all characters from the one before the '-'
 		   up to (but not including) the next format char.  */
-		for (fc = w[-1] + 1; fc < *f; ++fc)
-		  *w++ = fc;
+		for (fc = wp[wpsize - 1] + 1; fc < *f; ++fc)
+		  ADDW (fc);
 	      else
 		/* Add the character to the list.  */
-		*w++ = fc;
+		ADDW (fc);
 	    }
 	  if (fc == '\0')
 	    conv_error();
 
-	  *w = '\0';
+	  ADDW ('\0');
 	  num.ul = read_in;
 	  do
 	    {
-	      if ((strchr (work, c) == NULL) != not_in)
+	      if ((strchr (wp, c) == NULL) != not_in)
 		break;
 	      STRING_ADD_CHAR (c);
 	      if (width > 0)

@@ -1,5 +1,5 @@
 /* Regression test for reported old bug that errno is clobbered
-   by the first successful output to a stream on an unseekable object. 
+   by the first successful output to a stream on an unseekable object.
 Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -43,7 +43,7 @@ main (void)
     }
 
   errno = 0;
-  if (fputs ("fnord", f))
+  if (fputs ("fnord", f) == EOF)
     {
       perror ("fputs");
       return 1;
