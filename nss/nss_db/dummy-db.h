@@ -14,6 +14,11 @@
 /* Permission flags are also not changed.  */
 #define DB_RDONLY	0x010000
 
+/* Access methods.  */
+#define DB24_FIRST		0x000020
+#define DB24_NEXT		0x000800
+#define DB24_NOOVERWRITE	0x001000
+
 
 /* This is for the db-2.x version up to 2.x.y.  We use the name `db24' since
    this is the version which was shipped with glibc 2.1.  */
@@ -68,7 +73,27 @@ struct db24
 };
 
 
-/* Version 2.7, slightly incompatible with version 2.4.  */
+struct dbc24
+{
+  void *dbp;
+  void *txn;
+  struct
+  {
+    void *tqe_next;
+    void **tqe_prev;
+  } links;
+  void *internal;
+  void *c_close;
+  void *c_del;
+  int (*c_get) (void *, void *, void *, uint32_t);
+  void *c_put;
+};
+
+/* Flags which changed.  */
+#define DB24_TRUNCATE	0x080000
+
+
+/* Versions for 2.7, slightly incompatible with version 2.4.  */
 struct db27
 {
   void	*mutexp;
@@ -109,3 +134,38 @@ struct db27
   int (*stat) (void *, void *, void *(*)(size_t), uint32_t);
   int (*sync) (void *, uint32_t);
 };
+
+
+struct dbc27
+{
+  void *dbp;
+  void *txn;
+  struct
+  {
+    void *tqe_next;
+    void **tqe_prev;
+  } links;
+  uint32_t lid;
+  uint32_t locker;
+  DBT lock_dbt;
+  uint32_t lock[14];
+  size_t mylock;
+  DBT rkey;
+  DBT rdata;
+  void *c_am_close;
+  void *c_am_destroy;
+  void *c_close;
+  void *c_del;
+  int (*c_get) (void *, void *, void *, uint32_t);
+  void *c_put;
+  void *internal;
+  uint32_t flags;
+};
+
+/* Flags which changed.  */
+#define DB27_TRUNCATE	0x020000
+
+/* Access methods.  */
+#define DB27_FIRST		7
+#define DB27_NEXT		15
+#define DB27_NOOVERWRITE	17

@@ -24,7 +24,21 @@
 
 /* The error values kept the same values though new values were added.
    Define only those which we need.  */
+#define DB_KEYEXIST	( -3)
 #define DB_NOTFOUND	( -7)
+
+/* Flags are also unchanged.  */
+#define DB_CREATE	0x000001
+
+
+/* Similarly we have to handle the cursor object.  It is also very
+   different from version to version.  */
+typedef struct
+{
+  void *cursor;
+  int (*c_get) (void *, void *, void *, uint32_t);
+} NSS_DBC;
+
 
 /* This is the wrapper we put around the `DB' structures to provide a
    uniform interface to the higher-level functions.  */
@@ -32,9 +46,10 @@ typedef struct
 {
   void *db;
   int (*close) (void *, uint32_t);
+  int (*cursor) (void *, void *, NSS_DBC **);
   int (*fd) (void *, int *);
   int (*get) (void *, void *, void *, void *, uint32_t);
-
+  int (*put) (void *, void *, void *, void *, uint32_t);
 } NSS_DB;
 
 

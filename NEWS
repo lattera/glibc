@@ -11,7 +11,7 @@ Version 2.2
 
 * Thorsten Kukuk added secure mode support to nscd.
 
-* Update from Berkeley db 2.7.5.
+* The Berkeley db libraries have been removed.
 
 * Wide character I/O streams implemented by Ulrich Drepper.
 

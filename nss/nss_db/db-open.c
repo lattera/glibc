@@ -57,14 +57,14 @@ load_db (void)
   static const char *libnames[] = { "libdb.so.3" };
   int x;
 
-  for(x = 0; x < 1; ++x)
+  for(x = 0; x < sizeof (libnames) / sizeof (libnames[0]); ++x)
     {
       libdb_handle = dlopen (libnames[x], RTLD_LAZY);
       if (libdb_handle == NULL)
 	continue;
 
       libdb_db_open = dlsym (libdb_handle, "db_open");
-      if (libdb_db_open)
+      if (libdb_db_open != NULL)
 	{
 	  /* Alright, we got a library.  Now find out which version it is.  */
 	  const char *(*db_version) (int *, int *, int *);
