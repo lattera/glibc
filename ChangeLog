@@ -1,3 +1,9 @@
+2000-03-02  Andreas Jaeger  <aj@suse.de>
+
+	* posix/unistd.h: __THROW has to precede __attribute__, otherwise
+	g++ fails to parse this.
+	Reported by Sean Chen <sean.chen@turbolinux.com>.
+
 2000-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/creat.c: Moved to...
