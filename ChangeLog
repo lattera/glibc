@@ -1,3 +1,8 @@
+2004-03-31  Andreas Jaeger  <aj@suse.de>
+
+        * libio/fileops.c (new_do_write): Return _IO_size_t to make 64-bit
+        clean.
+
 2004-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/localedef.c (construct_output_path): Remove
