@@ -1,3 +1,8 @@
+2000-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Only inline sinh, cosh and tanh
+	if -ffast-math.
+
 2000-06-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/big5hkscs.c: New file.

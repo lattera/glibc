@@ -1,3 +1,9 @@
+2000-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/sparcv9/pspinlock.c (__pthread_spin_lock):
+	Add missing register.
+	* sysdeps/sparc/sparc64/pspinlock.c (__pthread_spin_lock): Likewise.
+
 2000-06-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc32/pspinlock.c: Implement spinlocks.

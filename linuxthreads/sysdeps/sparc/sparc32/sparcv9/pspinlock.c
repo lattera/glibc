@@ -31,7 +31,7 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
      "    membar #StoreLoad | #StoreStore\n"
      ".subsection 2\n"
      "2: ldub    [%0], %%g2\n"
-     "   brnz,pt 2b\n"
+     "   brnz,pt %%g2, 2b\n"
      "    membar #LoadLoad\n"
      "   b,a,pt  %%xcc, 1b\n"
      ".previous"
