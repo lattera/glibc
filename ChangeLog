@@ -1,6 +1,10 @@
+2001-06-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Add ULPs for tanh (-0.7).
+
 2001-06-11  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/ieee754/ldbl-128/e_coshl.c: New file.  Contributed by 
+	* sysdeps/ieee754/ldbl-128/e_coshl.c: New file.  Contributed by
 	Stephen L Moshier <moshier@mediaone.net>.
 
 	* aclocal.m4: Quote AC_FD_MSG and AC_FD_CC.
@@ -14,7 +18,7 @@
 	Use my_signo instead of MY_SIGNO and initialize it so that the
 	used signal is always available.
 
-2001-06-11  Andreas Jaeger  <aj@suse.de>, 
+2001-06-11  Andreas Jaeger  <aj@suse.de>,
 	    Michael Deutschmann <michael@talamasca.ocis.net>
 
 	* io/test-lfs.c (do_prepare): Clean up error messages.
