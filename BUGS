@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1999-02-03T17:51:49-0800 drepper>
+Time-stamp: <1999-04-19T17:58:10-0700 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -26,6 +26,9 @@ Severity: [  *] to [***]
 
 
 [ **]  There are problems with signal handling when using LinuxThreads.
+
+[ **]  The RPC code is not 64 bit clean.  This is getting slowly fixed
+       but expect incompatible changes on 64 bit platforms like Alpha.
 
 [  *]  The precision of the `sinhl' and/or `asinhl' function do not seem
        to be the best.

@@ -1,3 +1,8 @@
+1999-04-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/wordexp.c (parse_param): Fix type of offset to allow it to
+	be used correctly as parameter for parse_dollars/parse_tilde.
+
 1999-04-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* manual/conf.texi (Utility Limits): Remove duplicate description

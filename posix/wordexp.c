@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -1446,7 +1446,7 @@ envsubst:
 	  expanded = w_newword (&exp_len, &exp_maxl);
 	  for (p = pattern; p && *p; p++)
 	    {
-	      int offset;
+	      size_t offset;
 
 	      switch (*p)
 		{
