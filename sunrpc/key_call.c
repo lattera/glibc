@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 1988 by Sun Microsystems, Inc.
- */
-/*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
  * media and as a part of the software program in whole or part.  Users
@@ -29,11 +26,15 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-
+/*
+ * Copyright (c) 1988 by Sun Microsystems, Inc.
+ */
 /*
  * The original source is from the RPCSRC 4.0 package from Sun Microsystems.
- * The Interface to keyserver protocoll 2, RPC over AF_UNIX und Linux/doors
- * was added by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>
+ * The Interface to keyserver protocoll 2, RPC over AF_UNIX and Linux/doors
+ * was added by Thorsten Kukuk <kukuk@suse.de>
+ * Since the Linux/doors project was stopped, I doubt that this code will
+ * ever be useful <kukuk@suse.de>.
  */
 
 #include <stdio.h>
@@ -59,8 +60,9 @@
 
 #define debug(msg)		/* turn off debugging */
 
+#ifndef SO_PASSCRED
 extern int _openchild (const char *command, FILE **fto, FILE **ffrom);
-
+#endif
 
 static int key_call (u_long, xdrproc_t xdr_arg, char *,
 		     xdrproc_t xdr_rslt, char *) internal_function;
@@ -272,6 +274,7 @@ cryptkeyres *(*__key_encryptsession_pk_LOCAL) (uid_t, char *);
 cryptkeyres *(*__key_decryptsession_pk_LOCAL) (uid_t, char *);
 des_block *(*__key_gendes_LOCAL) (uid_t, char *);
 
+#ifndef SO_PASSCRED
 static int
 internal_function
 key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
@@ -349,6 +352,7 @@ key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
 
   return success;
 }
+#endif
 
 struct  key_call_private {
   CLIENT  *client;        /* Client handle */
@@ -556,7 +560,9 @@ internal_function
 key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
 	  xdrproc_t xdr_rslt, char *rslt)
 {
+#ifndef SO_PASSCRED
   static int use_keyenvoy;
+#endif
 #ifdef HAVE_DOORS
   static int not_use_doors;
 #endif
@@ -591,6 +597,10 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
       not_use_doors = 1;
     }
 #endif
+
+#ifdef SO_PASSCRED
+  return key_call_socket (proc, xdr_arg, arg, xdr_rslt, rslt);
+#else
   if (!use_keyenvoy)
     {
       if (key_call_socket (proc, xdr_arg, arg, xdr_rslt, rslt))
@@ -598,4 +608,5 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
       use_keyenvoy = 1;
     }
   return key_call_keyenvoy (proc, xdr_arg, arg, xdr_rslt, rslt);
+#endif
 }

@@ -65,6 +65,7 @@
 #define SIGPROF		27
 #define SIGWINCH	28
 #define SIGLOST		29
+#define SIGPWR          SIGLOST
 #define SIGUSR1		30
 #define SIGUSR2		31
 
