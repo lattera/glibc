@@ -22,6 +22,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+extern int __syscall_execve (const char *file, char **argv, char **envp);
 extern void __pthread_kill_other_threads_np __P ((void));
 weak_extern (__pthread_kill_other_threads_np)
 
