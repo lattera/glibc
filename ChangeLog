@@ -1,7 +1,7 @@
 2001-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Always use C
-	locale to parse /proc/loadavg.
+	locale to parse /proc/loadavg [PR libc/2760].
 
 2001-12-31  Jakub Jelinek  <jakub@redhat.com>
 
