@@ -1,3 +1,11 @@
+2000-06-03  Andreas Jaeger  <aj@suse.de>
+
+ 	* sysdeps/powerpc/dl-start.S: Close open comment.
+
+2000-06-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/Versions: Fix typo in rresvport_af export.
+
 2000-06-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/tgmath.h: Pretty print.

@@ -64,7 +64,7 @@ ENTRY(_dl_start_user)
 	add	r6,r5,r6
 	addi	r6,r6,4
 	bl	_dl_init@local
-	
+
 /* Now, to conform to the ELF ABI, we have to: */
 /* Pass argc (actually _dl_argc) in r3; */
 	lwz	r3,0(r29)
