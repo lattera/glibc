@@ -51,7 +51,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
 	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI ARMSCII-8	 \
 	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
-	   ISO-2022-JP-3
+	   ISO-2022-JP-3 TSCII
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -166,7 +166,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
 	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
 	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c		    \
-	      tcvn5712-1.c armscii-8.c
+	      tcvn5712-1.c armscii-8.c tscii.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

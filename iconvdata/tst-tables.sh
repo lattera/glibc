@@ -202,6 +202,7 @@ cat <<EOF |
   MAC-SAMI
   ARMSCII-8
   TCVN5712-1
+  TSCII
   #
   # Multibyte encodings come here
   #

@@ -1,5 +1,33 @@
 2002-09-22  Bruno Haible  <bruno@clisp.org>
 
+	* iconv/iconv_prog.c (main): Provide an error message that identifies
+	the wrong encoding.
+
+2002-09-22  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/tscii.c: New file.
+	* iconvdata/testdata/TSCII: New file.
+	* iconvdata/testdata/TSCII..UTF8: New file.
+	* iconvdata/TSCII.precomposed: New file.
+	* iconvdata/TSCII.irreversible: New file.
+	* iconvdata/gconv-modules (TSCII): New module.
+	* iconvdata/Makefile (modules): Add TSCII.
+	(distribute): Add tscii.c.
+	* iconvdata/tst-table-from.c (try, utf8_decode, main): Double output
+	buffer size.
+	* iconvdata/tst-tables.sh: Add TSCII.
+	* iconvdata/TESTS: Add TSCII.
+
+2002-09-22  Bruno Haible  <bruno@clisp.org>
+
+	Revert 2002-04-18 patch.
+	* iconvdata/euc-jisx0213.c (EMIT_SHIFT_TO_INIT, BODY for
+	FROM_DIRECTION): Make the FROM direction stateful again.
+	* iconvdata/shift_jisx0213.c (EMIT_SHIFT_TO_INIT, BODY for
+	FROM_DIRECTION): Likewise.
+
+2002-09-22  Bruno Haible  <bruno@clisp.org>
+
 	* iconvdata/tst-e2big.c: New file.
 	* iconvdata/Makefile (tests): Add tst-e2big.
 

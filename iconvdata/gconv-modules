@@ -1523,3 +1523,7 @@ module	INTERNAL		EUC-JISX0213//		EUC-JISX0213	1
 #	from			to			module		cost
 module	Shift_JISX0213//	INTERNAL		SHIFT_JISX0213	1
 module	INTERNAL		Shift_JISX0213//	SHIFT_JISX0213	1
+
+#	from			to			module		cost
+module	TSCII//			INTERNAL		TSCII		1
+module	INTERNAL		TSCII//			TSCII		1

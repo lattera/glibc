@@ -28,6 +28,7 @@
 #include <langinfo.h>
 #include <locale.h>
 #include <search.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -216,10 +217,47 @@ main (int argc, char *argv[])
       if (cd == (iconv_t) -1)
 	{
 	  if (errno == EINVAL)
-	    error (EXIT_FAILURE, 0,
-		   _("conversion from `%s' to `%s' not supported"),
-		   from_code[0] ? from_code : nl_langinfo (CODESET),
-		   orig_to_code[0] ? orig_to_code : nl_langinfo (CODESET));
+	    {
+	      /* Try to be nice with the user and tell her which of the
+		 two encoding names is wrong.  This is possible because
+		 all supported encodings can be converted from/to Unicode,
+		 in other words, because the graph of encodings is
+		 connected.  */
+	      bool from_wrong =
+		(iconv_open ("UTF-8", from_code) == (iconv_t) -1
+		 && errno == EINVAL);
+	      bool to_wrong =
+		(iconv_open (to_code, "UTF-8") == (iconv_t) -1
+		 && errno == EINVAL);
+	      const char *from_pretty =
+		(from_code[0] ? from_code : nl_langinfo (CODESET));
+	      const char *to_pretty =
+		(orig_to_code[0] ? orig_to_code : nl_langinfo (CODESET));
+
+	      if (from_wrong)
+		{
+		  if (to_wrong)
+		    error (EXIT_FAILURE, 0,
+			   _("\
+conversions from `%s' and to `%s' are not supported"),
+			   from_pretty, to_pretty);
+		  else
+		    error (EXIT_FAILURE, 0,
+			   _("conversion from `%s' is not supported"),
+			   from_pretty);
+		}
+	      else
+		{
+		  if (to_wrong)
+		    error (EXIT_FAILURE, 0,
+			   _("conversion to `%s' is not supported"),
+			   to_pretty);
+		  else
+		    error (EXIT_FAILURE, 0,
+			   _("conversion from `%s' to `%s' is not supported"),
+			   from_pretty, to_pretty);
+		}
+	    }
 	  else
 	    error (EXIT_FAILURE, errno,
 		   _("failed to start conversion processing"));

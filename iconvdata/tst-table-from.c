@@ -57,7 +57,7 @@ hexbuf (unsigned char buf[], unsigned int buflen)
   return msg;
 }
 
-/* Attempts to convert a byte buffer BUF (BUFLEN bytes) to OUT (6 bytes)
+/* Attempts to convert a byte buffer BUF (BUFLEN bytes) to OUT (12 bytes)
    using the conversion descriptor CD.  Returns the number of written bytes,
    or 0 if ambiguous, or -1 if invalid.  */
 static int
@@ -66,7 +66,7 @@ try (iconv_t cd, unsigned char buf[], unsigned int buflen, unsigned char *out)
   const char *inbuf = (const char *) buf;
   size_t inbytesleft = buflen;
   char *outbuf = (char *) out;
-  size_t outbytesleft = 6;
+  size_t outbytesleft = 12;
   size_t result;
 
   iconv (cd, NULL, NULL, NULL, NULL);
@@ -100,10 +100,10 @@ try (iconv_t cd, unsigned char buf[], unsigned int buflen, unsigned char *out)
 	  fprintf (stderr, "%s: inbytes = %ld, outbytes = %ld\n",
 		   hexbuf (buf, buflen),
 		   (long) (buflen - inbytesleft),
-		   (long) (6 - outbytesleft));
+		   (long) (12 - outbytesleft));
 	  exit (1);
 	}
-      return 6 - outbytesleft;
+      return 12 - outbytesleft;
     }
 }
 
@@ -111,7 +111,7 @@ try (iconv_t cd, unsigned char buf[], unsigned int buflen, unsigned char *out)
 static const char *
 utf8_decode (const unsigned char *out, unsigned int outlen)
 {
-  static char hexbuf[42];
+  static char hexbuf[84];
   char *p = hexbuf;
 
   while (outlen > 0)
@@ -203,7 +203,7 @@ main (int argc, char *argv[])
   search_depth = (strcmp (charset, "UTF-8") == 0 ? 3 : 4);
 
   {
-    unsigned char out[6];
+    unsigned char out[12];
     unsigned char buf[4];
     unsigned int i0, i1, i2, i3;
     int result;

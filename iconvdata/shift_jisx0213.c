@@ -67,7 +67,9 @@
     *statep = saved_state
 
 
-/* During UCS-4 to Shift_JISX0213 conversion, the COUNT element of the state
+/* During Shift_JISX0213 to UCS-4 conversion, the COUNT element of the state
+   contains the last UCS-4 character, shifted by 3 bits.
+   During UCS-4 to Shift_JISX0213 conversion, the COUNT element of the state
    contains the last two bytes to be output, shifted by 3 bits.  */
 
 /* Since this is a stateful encoding we have to provide code which resets
@@ -77,8 +79,17 @@
   if (data->__statep->__count != 0)					      \
     {									      \
       if (FROM_DIRECTION)						      \
-	/* We don't use shift states in the FROM_DIRECTION.  */		      \
-	data->__statep->__count = 0;					      \
+	{								      \
+	  if (__builtin_expect (outbuf + 4 <= outend, 1))		      \
+	    {								      \
+	      /* Write out the last character.  */			      \
+	      *((uint32_t *) outbuf)++ = data->__statep->__count >> 3;	      \
+	      data->__statep->__count = 0;				      \
+	    }								      \
+	  else								      \
+	    /* We don't have enough room in the output buffer.  */	      \
+	    status = __GCONV_FULL_OUTPUT;				      \
+	}								      \
       else								      \
 	{								      \
 	  if (__builtin_expect (outbuf + 2 <= outend, 1))		      \
@@ -104,106 +115,116 @@
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *inptr;						      \
+    uint32_t ch;							      \
 									      \
-    if (ch < 0x80)							      \
+    /* Determine whether there is a buffered character pending.  */	      \
+    ch = *statep >> 3;							      \
+    if (__builtin_expect (ch == 0, 1))					      \
       {									      \
-	/* Plain ISO646-JP character.  */				      \
-	if (__builtin_expect (ch == 0x5c, 0))				      \
-	  ch = 0xa5;							      \
-	else if (__builtin_expect (ch == 0x7e, 0))			      \
-	  ch = 0x203e;							      \
-	++inptr;							      \
-      }									      \
-    else if (ch >= 0xa1 && ch <= 0xdf)					      \
-      {									      \
-	/* Half-width katakana.  */					      \
-	ch += 0xfec0;							      \
-	++inptr;							      \
-      }									      \
-    else if ((ch >= 0x81 && ch <= 0x9f) || (ch >= 0xe0 && ch <= 0xfc))	      \
-      {									      \
-	/* Two byte character.  */					      \
-	uint32_t ch2;							      \
-									      \
-	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
-	  {								      \
-	    /* The second byte is not available.  */			      \
-	    result = __GCONV_INCOMPLETE_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	ch2 = inptr[1];							      \
-									      \
-	/* The second byte must be in the range 0x{40..7E,80..FC}.  */	      \
-	if (__builtin_expect (ch2 < 0x40 || ch2 == 0x7f || ch2 > 0xfc, 0))    \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
-	  }								      \
-									      \
-	/* Convert to row and column.  */				      \
-	if (ch < 0xe0)							      \
-	  ch -= 0x81;							      \
-	else								      \
-	  ch -= 0xc1;							      \
-	if (ch2 < 0x80)							      \
-	  ch2 -= 0x40;							      \
-	else								      \
-	  ch2 -= 0x41;							      \
-	/* Now 0 <= ch <= 0x3b, 0 <= ch2 <= 0xbb.  */			      \
-	ch = 2 * ch;							      \
-	if (ch2 >= 0x5e)						      \
-	  ch2 -= 0x5e, ch++;						      \
-	ch2 += 0x21;							      \
-	if (ch >= 0x5e)							      \
-	  {								      \
-	    /* Handling of JISX 0213 plane 2 rows.  */			      \
-	    if (ch >= 0x67)						      \
-	      ch += 230;						      \
-	    else if (ch >= 0x63 || ch == 0x5f)				      \
-	      ch += 168;						      \
-	    else 							      \
-	      ch += 162;						      \
-	  }								      \
-									      \
-	ch = jisx0213_to_ucs4 (0x121 + ch, ch2);			      \
-									      \
-	if (ch == 0)							      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
-	  }								      \
+	/* No - so look at the next input byte.  */			      \
+	ch = *inptr;							      \
 									      \
 	if (ch < 0x80)							      \
 	  {								      \
-	    /* It's a combining character.  */				      \
-	    uint32_t u1 = __jisx0213_to_ucs_combining[ch - 1][0];	      \
-	    uint32_t u2 = __jisx0213_to_ucs_combining[ch - 1][1];	      \
+	    /* Plain ISO646-JP character.  */				      \
+	    if (__builtin_expect (ch == 0x5c, 0))			      \
+	      ch = 0xa5;						      \
+	    else if (__builtin_expect (ch == 0x7e, 0))			      \
+	      ch = 0x203e;						      \
+	    ++inptr;							      \
+	  }								      \
+	else if (ch >= 0xa1 && ch <= 0xdf)				      \
+	  {								      \
+	    /* Half-width katakana.  */					      \
+	    ch += 0xfec0;						      \
+	    ++inptr;							      \
+	  }								      \
+	else if ((ch >= 0x81 && ch <= 0x9f) || (ch >= 0xe0 && ch <= 0xfc))    \
+	  {								      \
+	    /* Two byte character.  */					      \
+	    uint32_t ch2;						      \
 									      \
-	    /* See whether we have room for two characters.  */		      \
-	    if (outptr + 8 <= outend)					      \
+	    if (__builtin_expect (inptr + 1 >= inend, 0))		      \
 	      {								      \
-		inptr += 2;						      \
+		/* The second byte is not available.  */		      \
+		result = __GCONV_INCOMPLETE_INPUT;			      \
+		break;							      \
+	      }								      \
+									      \
+	    ch2 = inptr[1];						      \
+									      \
+	    /* The second byte must be in the range 0x{40..7E,80..FC}.  */    \
+	    if (__builtin_expect (ch2 < 0x40 || ch2 == 0x7f || ch2 > 0xfc, 0))\
+	      {								      \
+		/* This is an illegal character.  */			      \
+		STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
+	      }								      \
+									      \
+	    /* Convert to row and column.  */				      \
+	    if (ch < 0xe0)						      \
+	      ch -= 0x81;						      \
+	    else							      \
+	      ch -= 0xc1;						      \
+	    if (ch2 < 0x80)						      \
+	      ch2 -= 0x40;						      \
+	    else							      \
+	      ch2 -= 0x41;						      \
+	    /* Now 0 <= ch <= 0x3b, 0 <= ch2 <= 0xbb.  */		      \
+	    ch = 2 * ch;						      \
+	    if (ch2 >= 0x5e)						      \
+	      ch2 -= 0x5e, ch++;					      \
+	    ch2 += 0x21;						      \
+	    if (ch >= 0x5e)						      \
+	      {								      \
+		/* Handling of JISX 0213 plane 2 rows.  */		      \
+		if (ch >= 0x67)						      \
+		  ch += 230;						      \
+		else if (ch >= 0x63 || ch == 0x5f)			      \
+		  ch += 168;						      \
+		else 							      \
+		  ch += 162;						      \
+	      }								      \
+									      \
+	    ch = jisx0213_to_ucs4 (0x121 + ch, ch2);			      \
+									      \
+	    if (ch == 0)						      \
+	      {								      \
+		/* This is an illegal character.  */			      \
+		STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
+	      }								      \
+									      \
+	    inptr += 2;							      \
+									      \
+	    if (ch < 0x80)						      \
+	      {								      \
+		/* It's a combining character.  */			      \
+		uint32_t u1 = __jisx0213_to_ucs_combining[ch - 1][0];	      \
+		uint32_t u2 = __jisx0213_to_ucs_combining[ch - 1][1];	      \
+									      \
 		put32 (outptr, u1);					      \
 		outptr += 4;						      \
-		put32 (outptr, u2);					      \
-		outptr += 4;						      \
-		continue;						      \
-	      }								      \
-	    else							      \
-	      {								      \
+									      \
+		/* See whether we have room for two characters.  */	      \
+		if (outptr + 4 <= outend)				      \
+		  {							      \
+		    put32 (outptr, u2);					      \
+		    outptr += 4;					      \
+		    continue;						      \
+		  }							      \
+									      \
+		/* Otherwise store only the first character now, and	      \
+		   put the second one into the queue.  */		      \
+		*statep = u2 << 3;					      \
+		/* Tell the caller why we terminate the loop.  */	      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	  }								      \
-									      \
-	inptr += 2;							      \
-      }									      \
-    else								      \
-      {									      \
-	/* This is illegal.  */						      \
-	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
+	else								      \
+	  {								      \
+	    /* This is illegal.  */					      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
+	  }								      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
