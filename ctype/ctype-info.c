@@ -48,18 +48,18 @@ extern const char _nl_C_LC_CTYPE_class_alnum[] attribute_hidden;
 
 #define b(t,x,o) (((const t *) _nl_C_LC_CTYPE_##x) + o)
 
-const unsigned short int *__ctype_old_b = b (unsigned short int, class, 128);
-const __uint32_t *__ctype32_old_b = b (__uint32_t, class32, 0);
-const __int32_t *__ctype_old_tolower = b (__int32_t, tolower, 128);
-const __int32_t *__ctype_old_toupper = b (__int32_t, toupper, 128);
-const __uint32_t *__ctype32_old_tolower = b (__uint32_t, tolower, 128);
-const __uint32_t *__ctype32_old_toupper = b (__uint32_t, toupper, 128);
+const unsigned short int *__ctype_b = b (unsigned short int, class, 128);
+const __uint32_t *__ctype32_b = b (__uint32_t, class32, 0);
+const __int32_t *__ctype_tolower = b (__int32_t, tolower, 128);
+const __int32_t *__ctype_toupper = b (__int32_t, toupper, 128);
+const __uint32_t *__ctype32_tolower = b (__uint32_t, tolower, 128);
+const __uint32_t *__ctype32_toupper = b (__uint32_t, toupper, 128);
 
-compat_symbol (libc, __ctype_old_b, __ctype_b, GLIBC_2_0);
-compat_symbol (libc, __ctype_old_tolower, __ctype_tolower, GLIBC_2_0);
-compat_symbol (libc, __ctype_old_toupper, __ctype_toupper, GLIBC_2_0);
-compat_symbol (libc, __ctype32_old_b, __ctype32_b, GLIBC_2_0);
-compat_symbol (libc, __ctype32_old_tolower, __ctype32_tolower, GLIBC_2_2);
-compat_symbol (libc, __ctype32_old_toupper, __ctype32_toupper, GLIBC_2_2);
+compat_symbol (libc, __ctype_b, __ctype_b, GLIBC_2_0);
+compat_symbol (libc, __ctype_tolower, __ctype_tolower, GLIBC_2_0);
+compat_symbol (libc, __ctype_toupper, __ctype_toupper, GLIBC_2_0);
+compat_symbol (libc, __ctype32_b, __ctype32_b, GLIBC_2_0);
+compat_symbol (libc, __ctype32_tolower, __ctype32_tolower, GLIBC_2_2);
+compat_symbol (libc, __ctype32_toupper, __ctype32_toupper, GLIBC_2_2);
 
 #endif

@@ -54,19 +54,22 @@ _nl_postload_ctype (void)
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3)
-  extern __const unsigned short int *__ctype_old_b; /* Characteristics.  */
-  extern __const __int32_t *__ctype_old_tolower; /* Case conversions.  */
-  extern __const __int32_t *__ctype_old_toupper; /* Case conversions.  */
+  /* We must use the exported names to access these so we are sure to
+     be accessing the main executable's copy if it has COPY relocs.  */
 
-  extern const uint32_t *__ctype32_old_b;
-  extern const uint32_t *__ctype32_old_toupper;
-  extern const uint32_t *__ctype32_old_tolower;
+  extern __const unsigned short int *__ctype_b; /* Characteristics.  */
+  extern __const __int32_t *__ctype_tolower; /* Case conversions.  */
+  extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 
-  __ctype_old_b = current (uint16_t, CLASS, 128);
-  __ctype_old_toupper = current (uint32_t, TOUPPER, 128);
-  __ctype_old_tolower = current (uint32_t, TOLOWER, 128);
-  __ctype32_old_b = current (uint32_t, CLASS32, 0);
-  __ctype32_old_toupper = current (uint32_t, TOUPPER32, 0);
-  __ctype32_old_tolower = current (uint32_t, TOLOWER32, 0);
+  extern const uint32_t *__ctype32_b;
+  extern const uint32_t *__ctype32_toupper;
+  extern const uint32_t *__ctype32_tolower;
+
+  __ctype_b = current (uint16_t, CLASS, 128);
+  __ctype_toupper = current (uint32_t, TOUPPER, 128);
+  __ctype_tolower = current (uint32_t, TOLOWER, 128);
+  __ctype32_b = current (uint32_t, CLASS32, 0);
+  __ctype32_toupper = current (uint32_t, TOUPPER32, 0);
+  __ctype32_tolower = current (uint32_t, TOLOWER32, 0);
 #endif
 }

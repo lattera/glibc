@@ -166,12 +166,7 @@ __wcsmbs_load_conv (struct locale_data *new_category)
       /* Allocate the gconv_fcts structure.  */
       new_fcts = malloc (sizeof *new_fcts);
       if (new_fcts == NULL)
-	{
-	failed:
-	  new_category->private.ctype = &__wcsmbs_gconv_fcts_c;
-	  __libc_lock_unlock (__libc_setlocale_lock);
-	  return;
-	}
+	goto failed;
 
       /* Get name of charset of the locale.  */
       charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
@@ -203,11 +198,15 @@ __wcsmbs_load_conv (struct locale_data *new_category)
 	    __gconv_close_transform (new_fcts->towc, new_fcts->towc_nsteps);
 
 	  free (new_fcts);
-	  goto failed;
-	}
 
-      new_category->private.ctype = new_fcts;
-      new_category->private.cleanup = &_nl_cleanup_ctype;
+	failed:
+	  new_category->private.ctype = &__wcsmbs_gconv_fcts_c;
+	}
+      else
+	{
+	  new_category->private.ctype = new_fcts;
+	  new_category->private.cleanup = &_nl_cleanup_ctype;
+	}
     }
 
   __libc_lock_unlock (__libc_setlocale_lock);

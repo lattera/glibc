@@ -1,3 +1,8 @@
+2002-09-05  Roland McGrath  <roland@redhat.com>
+
+	* ctype/ctype-info.c: Renamed __ctype_old_* symbols to __ctype_*.
+	* locale/lc-ctype.c (_nl_postload_ctype): Likewise.
+
 2002-09-05  Jakub Jelinek  <jakub@redhat.com>
 
         * wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Unlock and return in
