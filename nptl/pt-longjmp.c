@@ -20,7 +20,7 @@
 #include <setjmp.h>
 #include <stdlib.h>
 #include "pthreadP.h"
-
+#include "jmpbuf-unwind.h"
 
 void
 __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
@@ -28,18 +28,24 @@ __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
   struct pthread *self = THREAD_SELF;
   struct _pthread_cleanup_buffer *cbuf;
 
+  /* Adjust all pointers used in comparisons, so that top of thread's
+     stack is at the top of address space.  Without that, things break
+     if stack is allocated above the main stack.  */
+  uintptr_t adj = (uintptr_t) self->stackblock + self->stackblock_size;
+  uintptr_t targetframe_adj = (uintptr_t) targetframe - adj;
+
   for (cbuf = THREAD_GETMEM (self, cleanup);
-       cbuf != NULL && _JMPBUF_UNWINDS (target, cbuf);
+       cbuf != NULL && _JMPBUF_UNWINDS_ADJ (target, cbuf, adj);
        cbuf = cbuf->__prev)
     {
 #if _STACK_GROWS_DOWN
-      if ((char *) cbuf <= targetframe)
+      if ((uintptr_t) cbuf - adj <= targetframe_adj)
         {
           cbuf = NULL;
           break;
         }
 #elif _STACK_GROWS_UP
-      if ((char *) cbuf >= targetframe)
+      if ((uintptr_t) cbuf - adj >= targetframe_adj)
         {
           cbuf = NULL;
           break;

@@ -217,6 +217,14 @@ __pthread_initialize_minimal_internal (void)
   THREAD_SETMEM (pd, cpuclock_offset, GL(dl_cpuclock_offset));
 #endif
 
+  /* Defined in ld.so.  */
+  extern void *__libc_stack_end;
+
+  /* Set initial thread's stack block from 0 up to __libc_stack_end.
+     It will be bigger than it actually is, but for unwind.c/pt-longjmp.c
+     purposes this is good enough.  */
+  THREAD_SETMEM (pd, stackblock_size, (size_t) __libc_stack_end);
+
   /* Initialize the list of all running threads with the main thread.  */
   INIT_LIST_HEAD (&__stack_user);
   list_add (&pd->list, &__stack_user);

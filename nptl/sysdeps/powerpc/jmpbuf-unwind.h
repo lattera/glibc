@@ -22,12 +22,7 @@
 #include <unwind.h>
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
-  ({ uintptr_t _cfa = (uintptr_t) _Unwind_GetCFA (_context) - (_adj);	\
-     (_cfa < (uintptr_t)(((long *)(_jmpbuf))[0]) - (_adj)		\
-      || (_cfa == (uintptr_t)(((long *)(_jmpbuf))[0]) - (_adj)		\
-	  && (uintptr_t) _Unwind_GetBSP (_context) - (_adj)		\
-	     >= (uintptr_t)(((long *)(_jmpbuf))[17]) - (_adj)));	\
-  })
+  _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
 
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \
-  ((uintptr_t)(_address) - (_adj) < (uintptr_t)(((long *)_jmpbuf)[0]) - (_adj))
+  ((uintptr_t) (_address) - (_adj) < (uintptr_t) (_jmpbuf)[JB_GPR1] - (_adj))

@@ -1,3 +1,45 @@
+2003-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-eintr1.c: Better error messages.
+
+	* Makefile (tests): Add tst-eintr2.
+	* tst-eintr2.c: New file.
+
+2003-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Add tst-cancel21 and tst-cancelx21.
+	(CFLAGS-tst-cancelx21.c): Set.
+	* tst-cancel21.c: New test.
+	* tst-cancelx21.c: New test.
+
+	* unwind.c (FRAME_LEFT): Add adj argument.  Subtract it from each
+	comparison operand.
+	(unwind_stop): Use _JMPBUF_CFA_UNWINDS_ADJ macro instead of
+	_JMPBUF_CFA_UNWINDS.  Adjust FRAME_LEFT invocations.
+	* pt-longjmp.c: Include jmpbuf-unwind.h.
+	(__pthread_cleanup_upto): Use _JMPBUF_UNWINDS_ADJ macro instead of
+	_JMPBUF_UNWINDS.  Adjust compared pointers.
+	* init.c (__pthread_initialize_minimal_internal): Initialize
+	pd->stackblock_size.
+	* sysdeps/pthread/jmpbuf-unwind.h: Removed.
+	* sysdeps/alpha/jmpbuf-unwind.h: New file.
+	* sysdeps/i386/jmpbuf-unwind.h: New file.
+	* sysdeps/powerpc/jmpbuf-unwind.h: New file.
+	* sysdeps/s390/jmpbuf-unwind.h: New file.
+	* sysdeps/sh/jmpbuf-unwind.h: New file.
+	* sysdeps/sparc/sparc32/jmpbuf-unwind.h: New file.
+	* sysdeps/x86_64/jmpbuf-unwind.h: New file.
+	* sysdeps/ia64/jmpbuf-unwind.h: Include stdint.h.
+	(_JMPBUF_CFA_UNWINDS): Remove.
+	(_JMPBUF_CFA_UNWINDS_ADJ, _JMPBUF_UNWINDS_ADJ): Define.
+
+2003-12-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Add tst-cancel20 and tst-cancelx20.
+	(CFLAGS-tst-cancelx20.c): Set.
+	* tst-cancel20.c: New test.
+	* tst-cancelx20.c: New test.
+
 2003-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Don't treat

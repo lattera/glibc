@@ -28,9 +28,11 @@
 #ifdef HAVE_FORCED_UNWIND
 
 #ifdef _STACK_GROWS_DOWN
-# define FRAME_LEFT(frame, other) ((char *) frame >= (char *) other)
+# define FRAME_LEFT(frame, other, adj) \
+  ((uintptr_t) frame - adj >= (uintptr_t) other - adj)
 #elif _STACK_GROWS_UP
-# define FRAME_LEFT(frame, other) ((char *) frame <= (char *) other)
+# define FRAME_LEFT(frame, other, adj) \
+  ((uintptr_t) frame - adj <= (uintptr_t) other - adj)
 #else
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
@@ -45,6 +47,11 @@ unwind_stop (int version, _Unwind_Action actions,
   struct pthread *self = THREAD_SELF;
   struct _pthread_cleanup_buffer *curp = THREAD_GETMEM (self, cleanup);
   int do_longjump = 0;
+  
+  /* Adjust all pointers used in comparisons, so that top of thread's
+     stack is at the top of address space.  Without that, things break
+     if stack is allocated above the main stack.  */
+  uintptr_t adj = (uintptr_t) self->stackblock + self->stackblock_size;
 
   /* Do longjmp if we're at "end of stack", aka "end of unwind data".
      We assume there are only C frame without unwind data in between
@@ -52,7 +59,8 @@ unwind_stop (int version, _Unwind_Action actions,
      of a function is NOT within it's stack frame; it's the SP of the
      previous frame.  */
   if ((actions & _UA_END_OF_STACK)
-      || ! _JMPBUF_CFA_UNWINDS  (buf->cancel_jmp_buf[0].jmp_buf, context))
+      || ! _JMPBUF_CFA_UNWINDS_ADJ (buf->cancel_jmp_buf[0].jmp_buf, context,
+				    adj))
     do_longjump = 1;
 
   if (__builtin_expect (curp != NULL, 0))
@@ -63,7 +71,7 @@ unwind_stop (int version, _Unwind_Action actions,
       struct _pthread_cleanup_buffer *oldp = buf->priv.data.cleanup;
       void *cfa = (void *) _Unwind_GetCFA (context);
 
-      if (curp != oldp && (do_longjump || FRAME_LEFT (cfa, curp)))
+      if (curp != oldp && (do_longjump || FRAME_LEFT (cfa, curp, adj)))
 	{
 	  do
 	    {
@@ -76,7 +84,8 @@ unwind_stop (int version, _Unwind_Action actions,
 	      /* To the next.  */
 	      curp = nextp;
 	    }
-	  while (curp != oldp && (do_longjump || FRAME_LEFT (cfa, curp)));
+	  while (curp != oldp
+		 && (do_longjump || FRAME_LEFT (cfa, curp, adj)));
 
 	  /* Mark the current element as handled.  */
 	  THREAD_SETMEM (self, cleanup, curp);
