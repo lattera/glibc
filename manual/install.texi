@@ -394,7 +394,7 @@ If you change any of the @file{configure.in} files you will also need
 
 @itemize @bullet
 @item
-GNU @code{autoconf} 2.12 or higher
+GNU @code{autoconf} 2.53 or higher
 @end itemize
 
 @noindent
@@ -431,6 +431,7 @@ s390-@var{*}-linux
 s390x-@var{*}-linux
 sparc-@var{*}-linux
 sparc64-@var{*}-linux
+x86_64-@var{*}-linux
 @end smallexample
 
 Former releases of this library (version 2.1 and/or 2.0) used to run on
