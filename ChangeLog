@@ -1,3 +1,19 @@
+1999-11-02  Andreas Jaeger  <aj@suse.de>
+
+	* Versions.def: Add version GLIBC_2.2 for libm.
+	* math/fenv.h: Add prototypes for fegetexcept, feenableexcept and
+	fedisableexcept.
+	* sysdeps/generic/feenablxcpt.c: Stub file.
+	* sysdeps/generic/fedisblxcpt.c: Stub file.
+	* sysdeps/generic/fegetexcept.c: Stub file.
+	* sysdeps/i386/fpu/fedisblxcpt.c: New file.
+	* sysdeps/i386/fpu/feenablxcpt.c: New file.
+	* sysdeps/i386/fpu/fegetexcept.c: New file.
+	* math/Makefile (libm-support): Add new files.
+	* math/Versions: Add new functions with version GLIBC_2.2.
+	* manual/arith.texi (Control Functions): Document fegetexcept,
+	feenableexcept and fedisableexcept.
+
 1999-11-01  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.h: Describe __malloc_initialize_hook.

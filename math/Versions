@@ -158,4 +158,8 @@ libm {
     feclearexcept; fegetenv; fegetexceptflag; feraiseexcept;
     fesetenv; fesetexceptflag; feupdateenv;
   }
+  GLIBC_2.2 {
+    # fp environment function
+    feenableexcept; fedisableexcept; fegetexcept;
+  }
 }

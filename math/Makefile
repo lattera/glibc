@@ -39,7 +39,8 @@ extra-libs-others = $(extra-libs)
 libm-support = k_standard s_lib_version s_matherr s_signgam		\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
-	       fesetenv feupdateenv t_exp
+	       fesetenv feupdateenv t_exp fedisblxcpt feenablxcpt	\
+	       fegetexcept
 libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     e_hypot e_j0 e_j1 e_jn e_lgamma_r e_log e_log10 e_pow	\
 	     e_rem_pio2 e_remainder e_scalb e_sinh e_sqrt e_gamma_r	\

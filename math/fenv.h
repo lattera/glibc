@@ -115,6 +115,22 @@ extern int feupdateenv (__const fenv_t *__envp) __THROW;
 # include <bits/fenvinline.h>
 #endif
 
+#ifdef __USE_GNU
+
+/* Enable individual exceptions.  Will not enable more exceptions than
+   EXCEPTS specifies.  Returns the previous enabled exceptions if all
+   exceptions are successfull set, otherwise returns -1.  */
+extern int feenableexcept (int __excepts) __THROW;
+
+/* Disable individual exceptions.  Will not disable more exceptions than
+   EXCEPTS specifies.  Returns the previous enabled exceptions if all
+   exceptions are successfull disabled, otherwise returns -1.  */
+extern int fedisableexcept (int __excepts) __THROW;
+
+/* Return enabled exceptions.  */
+extern int fegetexcept (void) __THROW;
+#endif
+
 __END_DECLS
 
 #endif /* fenv.h */
