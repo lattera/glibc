@@ -1,3 +1,11 @@
+2000-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* condvar.c (pthread_cond_timedwait_relative_old): Get remaining time
+	from nanosleep call so that in case we restart we only wait for the
+	remaining time.
+	(pthread_cond_timedwait_relative_new): Likewise.
+	Patch by khendricks@ivey.uwo.ca (PR libc/1561).
+
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_allocate_stack): Compute guard page address

@@ -38,9 +38,15 @@ extern int ioperm (unsigned long int __from, unsigned long int __num,
    privileges. */
 extern int iopl (int __level) __THROW;
 
+#if defined __GNUC__ && __GNUC__ >= 2
 
-extern inline unsigned char
-inb (unsigned short port)
+# ifndef _EXTERN_INLINE
+#  define _EXTERN_INLINE extern __inline
+# endif
+
+
+_EXTERN_INLINE unsigned char
+inb (unsigned short int port)
 {
   unsigned char _v;
 
@@ -48,8 +54,8 @@ inb (unsigned short port)
   return _v;
 }
 
-extern inline unsigned char
-inb_p (unsigned short port)
+_EXTERN_INLINE unsigned char
+inb_p (unsigned short int port)
 {
   unsigned char _v;
 
@@ -57,8 +63,8 @@ inb_p (unsigned short port)
   return _v;
 }
 
-extern inline unsigned short
-inw (unsigned short port)
+_EXTERN_INLINE unsigned short int
+inw (unsigned short int port)
 {
   unsigned short _v;
 
@@ -66,17 +72,17 @@ inw (unsigned short port)
   return _v;
 }
 
-extern inline unsigned short
-inw_p (unsigned short port)
+_EXTERN_INLINE unsigned short int
+inw_p (unsigned short int port)
 {
-  unsigned short _v;
+  unsigned short int _v;
 
   __asm__ __volatile__ ("inw %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (port));
   return _v;
 }
 
-extern inline unsigned int
-inl (unsigned short port)
+_EXTERN_INLINE unsigned int
+inl (unsigned short int port)
 {
   unsigned int _v;
 
@@ -84,95 +90,97 @@ inl (unsigned short port)
   return _v;
 }
 
-extern inline unsigned int
-inl_p (unsigned short port)
+_EXTERN_INLINE unsigned int
+inl_p (unsigned short int port)
 {
   unsigned int _v;
   __asm__ __volatile__ ("inl %w1,%0\noutb %%al,$0x80":"=a" (_v):"Nd" (port));
   return _v;
 }
 
-extern inline void
-outb (unsigned char value, unsigned short port)
+_EXTERN_INLINE void
+outb (unsigned char value, unsigned short int port)
 {
-  __asm__ __volatile__ ("outb %b0,%w1"::"a" (value), "Nd" (port));
+  __asm__ __volatile__ ("outb %b0,%w1": :"a" (value), "Nd" (port));
 }
 
-extern inline void
-outb_p (unsigned char value, unsigned short port)
+_EXTERN_INLINE void
+outb_p (unsigned char value, unsigned short int port)
 {
-  __asm__ __volatile__ ("outb %b0,%w1\noutb %%al,$0x80"::"a" (value),
+  __asm__ __volatile__ ("outb %b0,%w1\noutb %%al,$0x80": :"a" (value),
 			"Nd" (port));
 }
 
-extern inline void
-outw (unsigned short value, unsigned short port)
+_EXTERN_INLINE void
+outw (unsigned short value, unsigned short int port)
 {
-  __asm__ __volatile__ ("outw %w0,%w1"::"a" (value), "Nd" (port));
+  __asm__ __volatile__ ("outw %w0,%w1": :"a" (value), "Nd" (port));
 
 }
 
-extern inline void
-outw_p (unsigned short value, unsigned short port)
+_EXTERN_INLINE void
+outw_p (unsigned short int value, unsigned short int port)
 {
-  __asm__ __volatile__ ("outw %w0,%w1\noutb %%al,$0x80"::"a" (value),
+  __asm__ __volatile__ ("outw %w0,%w1\noutb %%al,$0x80": :"a" (value),
 			"Nd" (port));
 }
 
-extern inline void
-outl (unsigned int value, unsigned short port)
+_EXTERN_INLINE void
+outl (unsigned int value, unsigned short int port)
 {
-  __asm__ __volatile__ ("outl %0,%w1"::"a" (value), "Nd" (port));
+  __asm__ __volatile__ ("outl %0,%w1": :"a" (value), "Nd" (port));
 }
 
-extern inline void
-outl_p (unsigned int value, unsigned short port)
+_EXTERN_INLINE void
+outl_p (unsigned int value, unsigned short int port)
 {
-  __asm__ __volatile__ ("outl %0,%w1\noutb %%al,$0x80"::"a" (value),
+  __asm__ __volatile__ ("outl %0,%w1\noutb %%al,$0x80": :"a" (value),
 			"Nd" (port));
 }
 
-extern inline void
-insb (unsigned short port, void *addr, unsigned long count)
+_EXTERN_INLINE void
+insb (unsigned short int port, void *addr, unsigned long int count)
 {
   __asm__ __volatile__ ("cld ; rep ; insb":"=D" (addr),
 			"=c" (count):"d" (port), "0" (addr), "1" (count));
 }
 
-extern inline void
-insw (unsigned short port, void *addr, unsigned long count)
+_EXTERN_INLINE void
+insw (unsigned short int port, void *addr, unsigned long int count)
 {
   __asm__ __volatile__ ("cld ; rep ; insw":"=D" (addr),
 			"=c" (count):"d" (port), "0" (addr), "1" (count));
 }
 
-extern inline void
-insl (unsigned short port, void *addr, unsigned long count)
+_EXTERN_INLINE void
+insl (unsigned short int port, void *addr, unsigned long int count)
 {
   __asm__ __volatile__ ("cld ; rep ; insl":"=D" (addr),
 			"=c" (count):"d" (port), "0" (addr), "1" (count));
 }
 
-extern inline void
-outsb (unsigned short port, const void *addr, unsigned long count)
+_EXTERN_INLINE void
+outsb (unsigned short int port, const void *addr, unsigned long int count)
 {
   __asm__ __volatile__ ("cld ; rep ; outsb":"=S" (addr),
 			"=c" (count):"d" (port), "0" (addr), "1" (count));
 }
 
-extern inline void
-outsw (unsigned short port, const void *addr, unsigned long count)
+_EXTERN_INLINE void
+outsw (unsigned short int port, const void *addr, unsigned long int count)
 {
   __asm__ __volatile__ ("cld ; rep ; outsw":"=S" (addr),
 			"=c" (count):"d" (port), "0" (addr), "1" (count));
 }
 
-extern inline void
-outsl (unsigned short port, const void *addr, unsigned long count)
+_EXTERN_INLINE void
+outsl (unsigned short int port, const void *addr, unsigned long int count)
 {
   __asm__ __volatile__ ("cld ; rep ; outsl":"=S" (addr),
 			"=c" (count):"d" (port), "0" (addr), "1" (count));
 }
+
+#endif	/* GNU C */
 
 __END_DECLS
 #endif /* _SYS_IO_H */

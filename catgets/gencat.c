@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -32,6 +32,7 @@
 #include <limits.h>
 #include <nl_types.h>
 #include <obstack.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -237,7 +238,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1999");
+"), "2000");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -492,13 +493,12 @@ this is the first definition"));
 	{
 	  const char *ident = this_line;
 	  int message_number;
-	  int any_space;
 
 	  do
 	    ++this_line;
 	  while (this_line[0] != '\0' && !isspace (this_line[0]));
-	  any_space = isspace (*this_line);
-	  *this_line++ = '\0';	/* Terminate the identifier.  */
+	  if (this_line[0] != '\0')
+	    *this_line++ = '\0';	/* Terminate the identifier.  */
 
 	  /* Now we found the beginning of the message itself.  */
 
@@ -522,24 +522,12 @@ this is the first definition"));
 		  }
 	      if (runp != NULL)
 		{
-		  if (any_space)
-		    {
-		      /* Oh, oh.  There is already a message with this
-			 number in the message set.  */
-		      error_at_line (0, 0, fname, start_line,
-				     gettext ("duplicated message number"));
-		      error_at_line (0, 0, runp->fname, runp->line,
-				     gettext ("this is the first definition"));
-		    }
-		  else
-		    {
-		      /* We have to remove this message.  */
-		      if (lastp != NULL)
-			lastp->next = runp->next;
-		      else
-			current->current_set->messages = runp->next;
-		      free (runp);
-		    }
+		  /* Oh, oh.  There is already a message with this
+		     number in the message set.  */
+		  error_at_line (0, 0, fname, start_line,
+				 gettext ("duplicated message number"));
+		  error_at_line (0, 0, runp->fname, runp->line,
+				 gettext ("this is the first definition"));
 		  message_number = 0;
 		}
 	      ident = NULL;	/* We don't have a symbol.  */
@@ -564,24 +552,11 @@ this is the first definition"));
 		  runp = runp->next;
 	      if (runp != NULL)
 		{
-		  if (any_space)
-		    {
-		      /* The name is already used.  */
-		      error_at_line (0, 0, fname, start_line,
-				     gettext ("\
+		  /* The name is already used.  */
+		  error_at_line (0, 0, fname, start_line, gettext ("\
 duplicated message identifier"));
-		      error_at_line (0, 0, runp->fname, runp->line,
-				     gettext ("this is the first definition"));
-		    }
-		  else
-		    {
-		      /* We have to remove this message.  */
-		      if (lastp != NULL)
-			lastp->next = runp->next;
-		      else
-			current->current_set->messages = runp->next;
-		      free (runp);
-		    }
+		  error_at_line (0, 0, runp->fname, runp->line,
+				 gettext ("this is the first definition"));
 		  message_number = 0;
 		}
 	      else
@@ -673,7 +648,7 @@ write_out (struct catalog *catalog, const char *output_name,
   struct obstack string_pool;
   const char *strings;
   size_t strings_size;
-  u_int32_t *array1, *array2;
+  uint32_t *array1, *array2;
   size_t cnt;
   int fd;
 
@@ -751,10 +726,10 @@ write_out (struct catalog *catalog, const char *output_name,
 
   /* Allocate room for all needed arrays.  */
   array1 =
-    (u_int32_t *) alloca (best_size * best_depth * sizeof (u_int32_t) * 3);
-  memset (array1, '\0', best_size * best_depth * sizeof (u_int32_t) * 3);
+    (uint32_t *) alloca (best_size * best_depth * sizeof (uint32_t) * 3);
+  memset (array1, '\0', best_size * best_depth * sizeof (uint32_t) * 3);
   array2
-    = (u_int32_t *) alloca (best_size * best_depth * sizeof (u_int32_t) * 3);
+    = (uint32_t *) alloca (best_size * best_depth * sizeof (uint32_t) * 3);
   obstack_init (&string_pool);
 
   set_run = catalog->all_sets;
@@ -812,11 +787,11 @@ write_out (struct catalog *catalog, const char *output_name,
   /* We always write out the little endian version of the index
      arrays.  */
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-  write (fd, array1, best_size * best_depth * sizeof (u_int32_t) * 3);
-  write (fd, array2, best_size * best_depth * sizeof (u_int32_t) * 3);
+  write (fd, array1, best_size * best_depth * sizeof (uint32_t) * 3);
+  write (fd, array2, best_size * best_depth * sizeof (uint32_t) * 3);
 #elif __BYTE_ORDER == __BIG_ENDIAN
-  write (fd, array2, best_size * best_depth * sizeof (u_int32_t) * 3);
-  write (fd, array1, best_size * best_depth * sizeof (u_int32_t) * 3);
+  write (fd, array2, best_size * best_depth * sizeof (uint32_t) * 3);
+  write (fd, array1, best_size * best_depth * sizeof (uint32_t) * 3);
 #else
 # error Cannot handle __BYTE_ORDER byte order
 #endif
@@ -1034,7 +1009,8 @@ read_old (struct catalog *catalog, const char *file_name)
 
   /* OK, we have the catalog loaded.  Now read all messages and merge
      them.  When set and message number clash for any message the new
-     one is used.  */
+     one is used.  If the new one is empty it indicates that the
+     message should be deleted.  */
   for (cnt = 0; cnt < old_cat_obj.plane_size * old_cat_obj.plane_depth; ++cnt)
     {
       struct message_list *message, *last;
@@ -1043,7 +1019,7 @@ read_old (struct catalog *catalog, const char *file_name)
 	/* No message in this slot.  */
 	continue;
 
-      if (old_cat_obj.name_ptr[cnt * 3 + 0] - 1 != (u_int32_t) last_set)
+      if (old_cat_obj.name_ptr[cnt * 3 + 0] - 1 != (uint32_t) last_set)
 	{
 	  last_set = old_cat_obj.name_ptr[cnt * 3 + 0] - 1;
 	  set = find_set (catalog, old_cat_obj.name_ptr[cnt * 3 + 0] - 1);
@@ -1053,14 +1029,14 @@ read_old (struct catalog *catalog, const char *file_name)
       message = set->messages;
       while (message != NULL)
 	{
-	  if ((u_int32_t) message->number >= old_cat_obj.name_ptr[cnt * 3 + 1])
+	  if ((uint32_t) message->number >= old_cat_obj.name_ptr[cnt * 3 + 1])
 	    break;
 	  last = message;
 	  message = message->next;
 	}
 
       if (message == NULL
-	  || (u_int32_t) message->number > old_cat_obj.name_ptr[cnt * 3 + 1])
+	  || (uint32_t) message->number > old_cat_obj.name_ptr[cnt * 3 + 1])
 	{
 	  /* We have found a message which is not yet in the catalog.
 	     Insert it at the right position.  */
@@ -1081,6 +1057,15 @@ read_old (struct catalog *catalog, const char *file_name)
 	    last->next = newp;
 
 	  ++catalog->total_messages;
+	}
+      else if (*message->message == '\0')
+	{
+	  /* The new empty message has overridden the old one thus
+	     "deleting" it as required.  Now remove the empty remains. */
+	  if (last == NULL)
+	    set->messages = message->next;
+	  else
+	    last->next = message->next;
 	}
     }
 }

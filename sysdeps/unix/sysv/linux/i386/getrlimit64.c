@@ -22,7 +22,7 @@
 
 #undef getrlimit64
 #if defined PIC && defined DO_VERSIONING
-default_symbol_version (__new_getrlimit64, getrlimit64, GLIBC_2.1.3);
+default_symbol_version (__new_getrlimit64, getrlimit64, GLIBC_2.2);
 #else
 weak_alias (__new_getrlimit64, getrlimit64);
 #endif

@@ -26,13 +26,13 @@
 #include "restart.h"
 
 static int pthread_cond_timedwait_relative_old(pthread_cond_t *,
-    pthread_mutex_t *, const struct timespec *);
+    pthread_mutex_t *, struct timespec *);
 
 static int pthread_cond_timedwait_relative_new(pthread_cond_t *,
-    pthread_mutex_t *, const struct timespec *);
+    pthread_mutex_t *, struct timespec *);
 
 static int (*pthread_cond_tw_rel)(pthread_cond_t *, pthread_mutex_t *,
-    const struct timespec *) = pthread_cond_timedwait_relative_old;
+    struct timespec *) = pthread_cond_timedwait_relative_old;
 
 /* initialize this module */
 void __pthread_init_condvar(int rt_sig_available)
@@ -130,7 +130,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 static int
 pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
 				pthread_mutex_t *mutex,
-				const struct timespec * reltime)
+				struct timespec * reltime)
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
@@ -179,7 +179,7 @@ requeue_and_wait_again:
       sigaddset(&unblock, __pthread_sig_restart);
       sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
       /* Sleep for the required duration */
-      retsleep = __libc_nanosleep(reltime, NULL);
+      retsleep = __libc_nanosleep(reltime, reltime);
       /* Block the restart signal again */
       sigprocmask(SIG_SETMASK, &initial_mask, NULL);
       was_signalled = 0;
@@ -219,8 +219,8 @@ requeue_and_wait_again:
 
 	if (retsleep == 0)
 	  return ETIMEDOUT;
-	/* Woken by a signal: resume waiting as
-	   required by Single Unix Specification. */
+	/* Woken by a signal: resume waiting as required by Single Unix
+	   Specification.  */
 	goto requeue_and_wait_again;
       }
 
@@ -250,7 +250,7 @@ requeue_and_wait_again:
 static int
 pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 				pthread_mutex_t *mutex,
-				const struct timespec * reltime)
+				struct timespec * reltime)
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
@@ -298,7 +298,7 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
     sigaddset(&unblock, __pthread_sig_restart);
     sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
     /* Sleep for the required duration */
-    retsleep = __libc_nanosleep(reltime, NULL);
+    retsleep = __libc_nanosleep(reltime, reltime);
     /* Block the restart signal again */
     sigprocmask(SIG_SETMASK, &initial_mask, NULL);
     was_signalled = 0;
@@ -335,8 +335,8 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 
       if (retsleep == 0)
 	return ETIMEDOUT;
-      /* Woken by a signal: resume waiting as
-	 required by Single Unix Specification. */
+      /* Woken by a signal: resume waiting as required by Single Unix
+	 Specification.  */
       goto requeue_and_wait_again;
     }
 

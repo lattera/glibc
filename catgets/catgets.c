@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
@@ -19,6 +19,7 @@
 
 #include <alloca.h>
 #include <errno.h>
+#include <locale.h>
 #include <nl_types.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,20 +44,15 @@ catopen (const char *cat_name, int flag)
   if (strchr (cat_name, '/') == NULL)
     {
       if (flag == NL_CAT_LOCALE)
-	{
-	  env_var = getenv ("LC_ALL");
-	  if (env_var == NULL)
-	    env_var = getenv ("LC_MESSAGES");
+	/* Use the current locale setting for LC_MESSAGES.  */
+	env_var = setlocale (LC_MESSAGES, NULL);
+      else
+	/* Use the LANG environment variable.  */
+	env_var = getenv ("LANG");
 
-	  if (env_var != NULL)
-	    goto have_env_var;
-	}
-
-      env_var = getenv ("LANG");
       if (env_var == NULL)
 	env_var = "C";
 
-    have_env_var:
       env_var_len = strlen (env_var) + 1;
 
       nlspath = __secure_getenv ("NLSPATH");

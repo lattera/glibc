@@ -76,7 +76,7 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 
 weak_alias (__new_setrlimit, __setrlimit);
 #if defined PIC && DO_VERSIONING
-default_symbol_version (__new_setrlimit, setrlimit, GLIBC_2.1.3);
+default_symbol_version (__new_setrlimit, setrlimit, GLIBC_2.2);
 #else
 weak_alias (__new_setrlimit, setrlimit);
 #endif

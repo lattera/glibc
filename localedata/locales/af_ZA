@@ -1938,14 +1938,14 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <8a>	<8>;<8a>;IGNORE;IGNORE
 <9a>	<9>;<9a>;IGNORE;IGNORE
 
-<lM->	<l+><aM>;<l+><aM>;<lM-><lM->;IGNORE
-<lM.>	<l+><aM>;<l+><aM.>;<lM.><lM.>;IGNORE
-<lH->	<l+><aH>;<l+><aH>;<lH-><lH->;IGNORE
-<lH.>	<l+><aH>;<l+><aH.>;<lH.><lH.>;IGNORE
-<lh->	<l+><ah>;<l+><ah>;<lh-><lh->;IGNORE
-<lh.>	<l+><ah>;<l+><ah.>;<lh.><lh.>;IGNORE
-<la->	<l+><a+>;<l+><a+->;<la-><la->;IGNORE
-<la.>	<l+><a+>;<l+><a+.>;<la.><la.>;IGNORE
+<lM->	"<l+><aM>";"<l+><aM>";"<lM-><lM->";IGNORE
+<lM.>	"<l+><aM>";"<l+><aM.>";"<lM.><lM.>";IGNORE
+<lH->	"<l+><aH>";"<l+><aH>";"<lH-><lH->";IGNORE
+<lH.>	"<l+><aH>";"<l+><aH.>";"<lH.><lH.>";IGNORE
+<lh->	"<l+><ah>";"<l+><ah>";"<lh-><lh->";IGNORE
+<lh.>	"<l+><ah>";"<l+><ah.>";"<lh.><lh.>";IGNORE
+<la->	"<l+><a+>";"<l+><a+->";"<la-><la->";IGNORE
+<la.>	"<l+><a+>";"<l+><a+.>";"<la.><la.>";IGNORE
 
 % katakana/hiragana sorting
 % base is katakana, as this is present in most charsets

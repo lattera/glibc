@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
@@ -84,89 +84,100 @@ __open_catalog (__nl_catd catalog)
       while (*run_nlspath != '\0')
 	{
 	  bufact = 0;
-	  while (*run_nlspath != ':' && *run_nlspath != '\0')
-	    if (*run_nlspath == '%')
-	      {
-		const char *tmp;
 
-		++run_nlspath;	/* We have seen the `%'.  */
-		switch (*run_nlspath++)
-		  {
-		  case 'N':
-		    /* Use the catalog name.  */
-		    len = strlen (catalog->cat_name);
-		    ENOUGH (len);
-		    memcpy (&buf[bufact], catalog->cat_name, len);
-		    bufact += len;
-		    break;
-		  case 'L':
-		    /* Use the current locale category value.  */
-		    len = strlen (catalog->env_var);
-		    ENOUGH (len);
-		    memcpy (&buf[bufact], catalog->env_var, len);
-		    bufact += len;
-		    break;
-		  case 'l':
-		    /* Use language element of locale category value.  */
-		    tmp = catalog->env_var;
-		    do
-		      {
-			ENOUGH (1);
-			buf[bufact++] = *tmp++;
-		      }
-		    while (*tmp != '\0' && *tmp != '_' && *tmp != '.');
-		    break;
-		  case 't':
-		    /* Use territory element of locale category value.  */
-		    tmp = catalog->env_var;
-		    do
-		      ++tmp;
-		    while (*tmp != '\0' && *tmp != '_' && *tmp != '.');
-		    if (*tmp == '_')
-		      {
+	  if (*run_nlspath == ':')
+	    {
+	      /* Leading colon or adjacent colons - treat same as %N.  */
+	      len = strlen (catalog->cat_name);
+	      ENOUGH (len);
+	      memcpy (&buf[bufact], catalog->cat_name, len);
+	      bufact += len;
+	    }
+	  else
+	    while (*run_nlspath != ':' && *run_nlspath != '\0')
+	      if (*run_nlspath == '%')
+		{
+		  const char *tmp;
+
+		  ++run_nlspath;	/* We have seen the `%'.  */
+		  switch (*run_nlspath++)
+		    {
+		    case 'N':
+		      /* Use the catalog name.  */
+		      len = strlen (catalog->cat_name);
+		      ENOUGH (len);
+		      memcpy (&buf[bufact], catalog->cat_name, len);
+		      bufact += len;
+		      break;
+		    case 'L':
+		      /* Use the current locale category value.  */
+		      len = strlen (catalog->env_var);
+		      ENOUGH (len);
+		      memcpy (&buf[bufact], catalog->env_var, len);
+		      bufact += len;
+		      break;
+		    case 'l':
+		      /* Use language element of locale category value.  */
+		      tmp = catalog->env_var;
+		      do
+			{
+			  ENOUGH (1);
+			  buf[bufact++] = *tmp++;
+			}
+		      while (*tmp != '\0' && *tmp != '_' && *tmp != '.');
+		      break;
+		    case 't':
+		      /* Use territory element of locale category value.  */
+		      tmp = catalog->env_var;
+		      do
 			++tmp;
-			do
-			  {
-			    ENOUGH (1);
-			    buf[bufact++] = *tmp;
-			  }
-			while (*tmp != '\0' && *tmp != '.');
-		      }
-		    break;
-		  case 'c':
-		    /* Use code set element of locale category value.  */
-		    tmp = catalog->env_var;
-		    do
-		      ++tmp;
-		    while (*tmp != '\0' && *tmp != '.');
-		    if (*tmp == '.')
-		      {
+		      while (*tmp != '\0' && *tmp != '_' && *tmp != '.');
+		      if (*tmp == '_')
+			{
+			  ++tmp;
+			  do
+			    {
+			      ENOUGH (1);
+			      buf[bufact++] = *tmp++;
+			    }
+			  while (*tmp != '\0' && *tmp != '.');
+			}
+		      break;
+		    case 'c':
+		      /* Use code set element of locale category value.  */
+		      tmp = catalog->env_var;
+		      do
 			++tmp;
-			do
-			  {
-			    ENOUGH (1);
-			    buf[bufact++] = *tmp;
-			  }
-			while (*tmp != '\0');
-		      }
-		    break;
-		  case '%':
-		    ENOUGH (1);
-		    buf[bufact++] = '%';
-		    break;
-		  default:
-		    /* Unknown variable: ignore this path element.  */
-		    bufact = 0;
-		    while (*run_nlspath != '\0' && *run_nlspath != ':')
-		      ++run_nlspath;
-		    break;
-		  }
-	      }
-	    else
-	      {
-		ENOUGH (1);
-		buf[bufact++] = *run_nlspath++;
-	      }
+		      while (*tmp != '\0' && *tmp != '.');
+		      if (*tmp == '.')
+			{
+			  ++tmp;
+			  do
+			    {
+			      ENOUGH (1);
+			      buf[bufact++] = *tmp++;
+			    }
+			  while (*tmp != '\0');
+			}
+		      break;
+		    case '%':
+		      ENOUGH (1);
+		      buf[bufact++] = '%';
+		      break;
+		    default:
+		      /* Unknown variable: ignore this path element.  */
+		      bufact = 0;
+		      while (*run_nlspath != '\0' && *run_nlspath != ':')
+			++run_nlspath;
+		      break;
+		    }
+		}
+	      else
+		{
+		  ENOUGH (1);
+		  buf[bufact++] = *run_nlspath++;
+		}
+
 	  ENOUGH (1);
 	  buf[bufact] = '\0';
 

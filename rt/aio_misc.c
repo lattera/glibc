@@ -98,7 +98,7 @@ get_elem (void)
       struct requestlist *new_row;
       size_t new_size;
 
-      assert(sizeof(struct aiocb) == sizeof(struct aiocb64));
+      assert (sizeof (struct aiocb) == sizeof (struct aiocb64));
 
       /* Compute new size.  */
       new_size = pool_size ? pool_size + ENTRIES_PER_ROW : optim.aio_num;
@@ -139,7 +139,7 @@ get_elem (void)
 	  if (new_row == NULL)
 	    return NULL;
 
-	  pool[new_size / ENTRIES_PER_ROW] = new_row;
+	  pool[new_size / ENTRIES_PER_ROW - 1] = new_row;
 	}
 
       /* Put all the new entries in the freelist.  */

@@ -1,3 +1,7 @@
+2000-01-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/af_ZA: Fix syntax errors.
+
 2000-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* tst-locale.sh: Also enable test5.

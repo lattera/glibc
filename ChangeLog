@@ -1,5 +1,54 @@
 2000-01-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/loadlocale.c (_nl_load_locale): Optimize a bit.  Pretty
+	print.  Add checks for _POSIX_MMAPPED_FILES where necessary.
+	(_nl_unload_locale): If locale data was mmapped use munmap.
+
+2000-01-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/sys/io.h: Add missing ints, use
+	_EXTERN_INLINE, compile inline assembler functions only with gcc.
+
+2000-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/catgets.c (catopen): Handle NL_CAT_LOCALE correctly.
+	* catgets/gencat.c (read_input_file): Remove messages correctly.
+	* catgets/open_catalog.c (__open_catalog): Handle trailing colons and
+	adjacent colons correctly.  Correct loops to read territory and
+	and codeset part.
+	Patches by Geoff Clare <gwc@unisoft.com> (PR libc/1559).
+
+	* rt/aio_misc.c (get_elem): Assign pointer to new row to correct
+	pool entry.
+	Patch by Jens Moeller <jens.moeller@waii.com> (PR libc/1558).
+
+2000-01-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/Versions: Export the new *rlimit
+	interface with symbol version GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/i386/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Likewise.
+
+2000-01-27  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/unix/sysv/linux/arm/Makefile: Backout rlimit changes for
+	resource directory.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Backout changes for
+	versioning setrlimit and getrlimit.
+
+2000-01-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/powerpc/fpu/libm-ulps: Renamed to ...
+	* sysdeps/powerpc/fpu/libm-test-ulps: ...this.
+
+2000-01-27  Ruediger Oertel  <ro@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/sys/io.h: Change "::" to ": :" for g++.
+
+2000-01-29  Ulrich Drepper  <drepper@redhat.com>
+
 	* locale/programs/ld-numeric.c (numeric_output): Increment cnt in
 	correct place to avoid uninitialized memory passed to writev.
 
