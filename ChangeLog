@@ -5,6 +5,9 @@
 
 2000-08-12  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Add .set
+	mips2 for assembler.
+
 	* sysdeps/unix/sysv/linux/i386/fcntl.c (__libc_fcntl): Try fcntl
 	if fnctl64 is not available for F_*LK*64.
 
