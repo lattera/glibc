@@ -419,6 +419,69 @@ main (void)
       result = 1;
     }
 
+  fclose (fp);
+
+#ifdef USE_IN_LIBIO
+  fp = fopen (fname, "r");
+  if (fp == NULL)
+    {
+      puts ("fopen() failed\n");
+      result = 1;
+    }
+  else if (fstat64 (fileno (fp), &st1) < 0)
+    {
+      puts ("fstat64() before fseeko() failed\n");
+      result = 1;
+    }
+  else if (fseeko (fp, 0, SEEK_END) != 0)
+    {
+      puts ("fseeko(fp, 0, SEEK_END) failed");
+      result = 1;
+    }
+  else if (ftello (fp) != st1.st_size)
+    {
+      printf ("fstat64 st_size %zd ftello %zd\n", st1.st_size,
+	      ftello (fp));
+      result = 1;
+    }
+  else
+    puts ("SEEK_END works");
+  if (fp != NULL)
+    fclose (fp);
+
+  fp = fopen (fname, "r");
+  if (fp == NULL)
+    {
+      puts ("fopen() failed\n");
+      result = 1;
+    }
+  else if (fstat64 (fileno (fp), &st1) < 0)
+    {
+      puts ("fstat64() before fgetc() failed\n");
+      result = 1;
+    }
+  else if (fgetc (fp) == EOF)
+    {
+      puts ("fgetc() before fseeko() failed\n");
+      result = 1;
+    }
+  else if (fseeko (fp, 0, SEEK_END) != 0)
+    {
+      puts ("fseeko(fp, 0, SEEK_END) failed");
+      result = 1;
+    }
+  else if (ftello (fp) != st1.st_size)
+    {
+      printf ("fstat64 st_size %zd ftello %zd\n", st1.st_size,
+	      ftello (fp));
+      result = 1;
+    }
+  else
+    puts ("SEEK_END works");
+  if (fp != NULL)
+    fclose (fp);
+#endif
+
  out:
   unlink (fname);
 

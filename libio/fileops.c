@@ -880,7 +880,7 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
     case _IO_seek_set:
       break;
     case _IO_seek_end:
-      offset = fp->_IO_read_end - fp->_IO_read_base + offset;
+      offset += fp->_IO_buf_end - fp->_IO_buf_base;
       break;
     }
   /* At this point, dir==_IO_seek_set. */
