@@ -1,3 +1,9 @@
+1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signals.c (sigaction): Correct last patch.  Don't select
+	pthread_sighandler_rt based on the signal number but instead of
+	the SA_SIGINFO flag.
+
 1999-09-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pthread.c (pthread_handle_sigrestart_rt): New function.  Use

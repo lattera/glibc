@@ -139,10 +139,10 @@ int sigaction(int sig, const struct sigaction * act,
       if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL
 	  && sig > 0 && sig < NSIG)
 	{
-	  if (sig >= SIGRTMIN)
-	   newact.sa_handler = (__sighandler_t) pthread_sighandler_rt;
+	  if (act->sa_flags & SA_SIGINFO)
+	    newact.sa_handler = (__sighandler_t) pthread_sighandler_rt;
 	  else
-	   newact.sa_handler = (__sighandler_t) pthread_sighandler;
+	    newact.sa_handler = (__sighandler_t) pthread_sighandler;
 	}
       newactp = &newact;
     }

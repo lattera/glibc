@@ -68,3 +68,8 @@ endif
 ifeq ($(build-static-nss),yes)
 CFLAGS += -DSTATIC_NSS
 endif
+
+ifeq (yes,$(build-static-nss))
+otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
+             $(resolvobjdir)/libresolv.a
+endif

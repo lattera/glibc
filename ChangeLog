@@ -1,3 +1,32 @@
+1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/pl.po: Updated.
+
+1999-09-17  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile (clean): Also remove $(postclean) files.
+
+1999-09-15  Andreas Jaeger  <aj@suse.de>
+
+	* pwd/Makefile (otherlibs): Add for building with static-nss.
+	* inet/Makefile (otherlibs): Likewise.
+
+1999-09-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/aio_sigqueue.c (__aio_sigqueue): Use old style
+	function definition to avoid a compilation failure.
+
+1999-09-15  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/tst-environ.c (main): Add getenv regression test for
+	environment variable that's one character long.
+
+1999-09-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Protect real time
+	signal definitions to let glibc compile with older Linux versions
+	(2.0.10 to 2.1.100 or so).
+
 1999-09-18  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/wait4.c (__wait4): When proc_wait returns EAGAIN,

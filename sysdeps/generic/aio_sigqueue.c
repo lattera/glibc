@@ -23,7 +23,10 @@
 #include "aio_misc.h"
 
 int
-__aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
+__aio_sigqueue (sig, val, caller_pid)
+     int sig;
+     const union sigval val;
+     pid_t caller_pid;
 {
   __set_errno (ENOSYS);
   return -1;

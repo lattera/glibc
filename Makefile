@@ -205,6 +205,7 @@ clean: parent-clean
 # subdirectories are dealt with and so they won't try to remove object
 # files from it when it's going to be removed anyway.
 	@$(MAKE) subdir_clean no_deps=t
+	-rm -f $(postclean)
 mostlyclean: parent-mostlyclean
 	@$(MAKE) subdir_mostlyclean no_deps=t
 	-rm -f $(postclean)
