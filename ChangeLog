@@ -1,3 +1,8 @@
+1999-08-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Add new constants from
+	Linux 2.3.15.
+
 1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add execve
