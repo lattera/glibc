@@ -26,7 +26,7 @@ do_test (void)
   size_t n = iconv (cd, &inptr, &inlen, &outptr, &outlen);
   if (n != (size_t) -1)
     {
-      puts ("n != (size_t) -1");
+      printf ("n (= %zu) != (size_t) -1\n", n);
       exit (EXIT_FAILURE);
     }
   if (errno != EINVAL)
