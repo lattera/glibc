@@ -1236,7 +1236,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	}
     }
 
-  if (p && i < maxsize)
+  if (p && maxsize != 0)
     *p = '\0';
   return i;
 }

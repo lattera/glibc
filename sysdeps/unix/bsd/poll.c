@@ -62,6 +62,32 @@ __poll (fds, nfds, timeout)
   for (f = fds; f < &fds[nfds]; ++f)
     if (f->fd >= 0)
       {
+	if (f->fd >= max_fd_size)
+	  {
+	    /* The user provides a file descriptor number which is higher
+	       than the maximum we got from the `getdtablesize' call.
+	       Maybe this is ok so enlarge the arrays.  */
+	    fd_set *nrset, *nwset, *nxset;
+	    int nbytes;
+
+	    max_fd_size = roundup (f->fd, __NFDBITS);
+	    nbytes = howmany (max_fd_size, __NFDBITS);
+
+	    nrset = alloca (nbytes);
+	    nwset = alloca (nbytes);
+	    nxset = alloca (nbytes);
+
+	    __bzero ((char *) nrset + bytes, nbytes - bytes);
+	    __bzero ((char *) nwset + bytes, nbytes - bytes);
+	    __bzero ((char *) nxset + bytes, nbytes - bytes);
+
+	    rset = memcpy (nrset, rset, bytes);
+	    wset = memcpy (nwset, wset, bytes);
+	    xset = memcpy (nxset, xset, bytes);
+
+	    bytes = nbytes;
+	  }
+
 	if (f->events & POLLIN)
 	  FD_SET (f->fd, rset);
 	if (f->events & POLLOUT)

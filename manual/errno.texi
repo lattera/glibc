@@ -277,7 +277,7 @@ also when you rename a file with @code{rename} (@pxref{Renaming Files}).
 @end deftypevr
 
 @comment errno.h
-@comment POSIX.1: Operation not supported by device
+@comment POSIX.1: No such device
 @deftypevr Macro int ENODEV
 @comment errno 19 @c DO NOT REMOVE
 The wrong type of device was given to a function that expects a

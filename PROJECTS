@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: July 1998
+Status: November 1998
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@gnu.org>.
@@ -159,3 +159,6 @@ contact <bug-glibc@gnu.org>.
      treated as the `Eastern Australia Time' instead of the US `Eastern
      Standard Time' if the current TZ variable is set to, say,
      Australia/Canberra or if the current locale is en_AU.
+
+[24] Allow add-ons to specify dependencies and generate the content of
+     `all-subdirs' in Makeconfig dynamically.

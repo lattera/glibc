@@ -1,5 +1,18 @@
 1998-11-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/bsd/poll.c (__poll): Add code to extend sets if any
+	passed file descriptor exceeds the size determined by
+	getdtablesize.
+
+	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c (__cmsg_nxthdr): Update
+	from inline version in bits/socket.h.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define __cmsg_nxthdr as
+	inline function only is __USE_EXTERN_INLINES is defined.
+
+	* time/strftime.c (my_strftime): Make code a bit clearer.
+	Patch by Paul Eggert <eggert@twinsun.com>.
+
 	* io/Makefile (CFLAGS-ftw.c): Removed.
 
 1998-11-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
@@ -28,7 +41,7 @@
 1998-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Make Unix98 compliant
-	by working removing SIG_IGN handler for SIGCHLD if necessary.
+	by removing SIG_IGN handler for SIGCHLD if necessary.
 	Patch by H.J. Lu <hjl@lucon.org>.
 
 	* stdio-common/printf_fphex.c (__printf_fphex): Correct printing

@@ -144,7 +144,7 @@ TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}). *
 /*
 TRANS The wrong type of device was given to a function that expects a
 TRANS particular sort of device. */
-    [ERR_REMAP (ENODEV)] = N_("Operation not supported by device"),
+    [ERR_REMAP (ENODEV)] = N_("No such device"),
 #endif
 #ifdef ENOTDIR
 /*

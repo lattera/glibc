@@ -194,11 +194,12 @@ struct cmsghdr
 			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
 #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
 
-#ifndef _EXTERN_INLINE
-# define _EXTERN_INLINE extern __inline
-#endif
 extern struct cmsghdr *__cmsg_nxthdr __P ((struct msghdr *__mhdr,
 					   struct cmsghdr *__cmsg));
+#ifdef __USE_EXTERN_INLINES
+# ifndef _EXTERN_INLINE
+#  define _EXTERN_INLINE extern __inline
+# endif
 _EXTERN_INLINE struct cmsghdr *
 __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
 {
@@ -216,6 +217,7 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
     return NULL;
   return __cmsg;
 }
+#endif	/* Use `extern inline'.  */
 
 /* Socket level message types.  This must match the definitions in
    <linux/socket.h>.  */
