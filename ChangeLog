@@ -1,5 +1,8 @@
 2000-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (_dl_close): Don't run destructors of objects
+	marked DF_1_NODELETE.
+
 	* sysdeps/posix/system.c (__libc_system): We cannot use vfork here
 	since we call sigaction in the child.
 

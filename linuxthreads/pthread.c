@@ -1,3 +1,4 @@
+
 /* Linuxthreads - a simple clone()-based implementation of Posix        */
 /* threads for Linux.                                                   */
 /* Copyright (C) 1996 Xavier Leroy (Xavier.Leroy@inria.fr)              */
@@ -724,10 +725,10 @@ weak_alias (__pthread_yield, pthread_yield)
 
 static void pthread_exit_process(int retcode, void *arg)
 {
-  struct pthread_request request;
-  pthread_descr self = thread_self();
-
   if (__builtin_expect (__pthread_manager_request, 0) >= 0) {
+    struct pthread_request request;
+    pthread_descr self = thread_self();
+
     request.req_thread = self;
     request.req_kind = REQ_PROCESS_EXIT;
     request.req_args.exit.code = retcode;
