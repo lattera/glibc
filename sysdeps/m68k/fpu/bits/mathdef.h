@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
-
+#ifdef __USE_ISOC9X
 /* The m68k FPUs evaluate all values in the 96 bit floating-point format
    which is also available for the user as `long double'.  Therefore we
    define: */
@@ -30,14 +30,16 @@ typedef long double double_t;	/* `double' expressions are evaluated as
 				   `long double'.  */
 
 /* Signal that both types are `long double'.  */
-#define FLT_EVAL_METHOD	2
+# define FLT_EVAL_METHOD	2
 
 /* Define `INFINITY' as value of type `float'.  */
-#define INFINITY	HUGE_VALF
+# define INFINITY	HUGE_VALF
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
-#define FP_ILOGB0	0x80000000
-#define FP_ILOGBNAN	0x7fffffff
+# define FP_ILOGB0	0x80000000
+# define FP_ILOGBNAN	0x7fffffff
 
 /* Number of decimal digits for the `long double' type.  */
-#define DECIMAL_DIG	18
+# define DECIMAL_DIG	18
+
+#endif	/* ISO C 9X */

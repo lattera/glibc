@@ -36,6 +36,8 @@ __BEGIN_DECLS
 #ifdef	 __USE_ISOC9X
 # include <bits/nan.h>
 #endif
+/* Get general and ISO C 9X specific information.  */
+#include <bits/mathdef.h>
 
 
 /* The file <bits/mathcalls.h> contains the prototypes for all the
@@ -81,7 +83,7 @@ __BEGIN_DECLS
 # undef	_Mdouble_
 # undef	__MATH_PRECNAME
 
-# if __STDC__ - 0 || __GNUC__ - 0
+# if __STDC__ - 0 || __GNUC__ - 0 && !defined __NO_LONG_DOUBLE_MATH
 /* Include the file of declarations again, this time using `long double'
    instead of `double' and appending l to each function name.  */
 
@@ -147,7 +149,6 @@ extern int signgam;
 		decimal and all internal floating-point formats.
 
 */
-# include <bits/mathdef.h>
 
 /* All floating-point numbers can be put in one of these categories.  */
 enum
