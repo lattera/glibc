@@ -1,3 +1,14 @@
+2005-02-25  Roland McGrath  <roland@redhat.com>
+
+	* alloca_cutoff.c: Correct license text.
+	* tst-unload.c: Likewise.
+	* sysdeps/pthread/allocalim.h: Likewise.
+	* sysdeps/pthread/pt-initfini.c: Likewise.
+	* sysdeps/pthread/bits/libc-lock.h: Likewise.
+	* sysdeps/pthread/bits/sigthread.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
+
 2005-02-16  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
