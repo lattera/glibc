@@ -1,3 +1,7 @@
+2000-05-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/arm/atomicity.h (compare_and_swap): Return result.
+
 2000-05-04  Andreas Jaeger  <aj@suse.de>
 
 	* string/string.h: Remove __strdup prototype, it's not needed in

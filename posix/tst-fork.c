@@ -38,6 +38,7 @@ main (void)
   char *name;
   int fd;
   pid_t pid;
+  pid_t ppid;
   off_t off;
   int status;
 
@@ -69,10 +70,24 @@ main (void)
   if (off == (off_t) -1 || off != strlen (testdata))
     error (EXIT_FAILURE, errno, "wrong file position");
 
+  /* Get the parent PID.  */
+  ppid = getpid ();
+
   /* Now fork of the process.  */
   pid = fork ();
   if (pid == 0)
     {
+      /* One little test first: the PID must have changed.  */
+      if (getpid () == ppid)
+	error (EXIT_FAILURE, 0, "child and parent have same PID");
+
+      /* Test the `getppid' function.  */
+      pid = getppid ();
+      if (pid == (pid_t) -1 ? errno != ENOSYS : pid != ppid)
+	error (EXIT_FAILURE, 0,
+	       "getppid returned wrong PID (%ld, should be %ld)",
+	       (long int) pid, (long int) ppid);
+
       /* This is the child.  First get the position of the descriptor.  */
       off = lseek (fd, 0, SEEK_CUR);
       if (off == (off_t) -1 || off != strlen (testdata))

@@ -81,6 +81,7 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
 	   : "=&r" (result), "=&r" (tmp)
 	   : "r" (p), "r" (newval), "r" (oldval)
 	   : "cc", "memory");
+  return result;
 }
 
 #endif /* atomicity.h */
