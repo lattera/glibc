@@ -1,3 +1,8 @@
+2000-11-10  Andreas Jaeger  <aj@suse.de>
+
+	* elf/ldconfig.c (create_links): Fix alloca calculation.
+	Patch by Ben Collins <bcollins@debian.org>.
+
 2000-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/getnameinfo.c (getnameinfo): Use correct destination
