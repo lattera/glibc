@@ -1,3 +1,15 @@
+2004-07-16  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #269]
+	* setjmp/Makefile (tests): Add  bug269-setjmp.
+	* setjmp/bug269-setjmp.c: New file.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S [SHARED && !IS_IN_rtld]:
+	Store R2 from jmpbuf in callers TOC save area.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S [SHARED && !IS_IN_rtld]:
+	Store R2 in TOC save area.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S [SHARED && !IS_IN_rtld]:
+	Copy TOC save area from previous frame as R2 (TOC) in jmpbuf.
+
 2004-07-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/newlocale.c: Include bits/libc-lock.h.

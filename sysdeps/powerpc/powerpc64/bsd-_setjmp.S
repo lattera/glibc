@@ -47,6 +47,9 @@ default_symbol_version (__vmx_setjmp,_setjmp,GLIBC_2.3.4)
    as a libc_hidden_proto & is used in sysdeps/generic/libc-start.c
    if HAVE_CLEANUP_JMP_BUF is defined */
 ENTRY (BP_SYM (__GI__setjmp))
+#if defined SHARED && !defined IS_IN_rtld
+	std r2,40(r1)	/* Save the callers TOC in the save area.  */
+#endif
 	li r4,0			/* Set second argument to 0.  */
 	b JUMPTARGET(BP_SYM (__vmx__sigsetjmp))
 END (BP_SYM (__GI__setjmp))

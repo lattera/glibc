@@ -44,7 +44,12 @@ ENTRY (BP_SYM (__sigsetjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 	std  r1,(JB_GPR1*8)(3)
 	mflr r0
+#if defined SHARED && !defined IS_IN_rtld
+	ld   r5,40(r1)	/* Retrieve the callers TOC.  */
+	std  r5,(JB_GPR2*8)(3)
+#else
 	std  r2,(JB_GPR2*8)(3)
+#endif
 	std  r14,((JB_GPRS+0)*8)(3)
 	stfd fp14,((JB_FPRS+0)*8)(3)
 	std  r0,(JB_LR*8)(3)

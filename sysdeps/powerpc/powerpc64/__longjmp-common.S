@@ -112,6 +112,9 @@ no_vmx:
 	ld r0,(JB_LR*8)(r3)
 	ld r14,((JB_GPRS+0)*8)(r3)
 	lfd fp14,((JB_FPRS+0)*8)(r3)
+#if defined SHARED && !defined IS_IN_rtld
+	std r2,40(r1)	/* Restore the callers TOC save area.  */
+#endif
 	ld r15,((JB_GPRS+1)*8)(r3)
 	lfd fp15,((JB_FPRS+1)*8)(r3)
 	ld r16,((JB_GPRS+2)*8)(r3)
@@ -125,6 +128,7 @@ no_vmx:
 	ld r20,((JB_GPRS+6)*8)(r3)
 	lfd fp20,((JB_FPRS+6)*8)(r3)
 	mtlr r0
+/* 	std r2,40(r1)	Restore the TOC save area.  */
 	ld r21,((JB_GPRS+7)*8)(r3)
 	lfd fp21,((JB_FPRS+7)*8)(r3)
 	ld r22,((JB_GPRS+8)*8)(r3)
