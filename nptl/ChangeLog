@@ -1,3 +1,9 @@
+2003-05-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (__lll_mutex_cond_lock):
+	New function.
+	(lll_mutex_cond_lock): Define.
+
 2003-05-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-signal6.
