@@ -1,8 +1,26 @@
+1998-09-10 11:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/Makefile: Add rules to generate Asia/Tokyo zoneinfo files
+	for test.
+	* timezone/tst-timezone.c (tests): Fix typo in last patch.
+
+	* time/tzfile.c (__tzfile_read): Handle case when there are no
+	transitions.  Set __timezone based on computed offset.
+	* time/tzset.c (tzset_internal): Set __timezone before returning.
+
+	* time/tzset.c (tzset_internal): Optimize handling of local string
+	copy.
+
+1998-09-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* timezone/tst-timezone.c (tests): Add test for Asia/Tokyo (see PR
+	libc/776).
+
 1998-09-09  Benjamin Kosnik  <bkoz@tintin.cygnus.com>
 
 	* math/libm-test.c (exp10_test): Adapt epsilons for powerpc.
 	(csqrt_test): Likewise.
-	* sysdeps/powerpc/bits/fenv.h: Add parens. .
+	* sysdeps/powerpc/bits/fenv.h: Add parens.
 
 1998-09-09 18:48  Ulrich Drepper  <drepper@cygnus.com>
 

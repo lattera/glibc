@@ -40,6 +40,7 @@ static const struct test_times tests[] =
   { "Australia/Melbourne", 1, -36000, { "EST", "EST" }},
   { "America/Sao_Paulo", 1, 10800, {"EST", "EDT" }},
   { "America/Los_Angeles", 1, 28800, {"PST", "PDT" }},
+  { "Asia/Tokyo", 0, -32400, {"JST", "JST" }},
   { NULL, 0, 0 }
 };
 

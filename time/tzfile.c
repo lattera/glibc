@@ -281,15 +281,21 @@ __tzfile_read (const char *file)
 
   compute_tzname_max (chars);
 
-  rule_stdoff = rule_dstoff = 0;
-  for (i = 0; i < num_transitions; ++i)
+  if (num_transitions == 0)
+    /* Use the first rule (which should also be the only one.  */
+    rule_stdoff = rule_dstoff = types[0].offset;
+  else
     {
-      if (!rule_stdoff && !types[type_idxs[i]].isdst)
-	rule_stdoff = types[type_idxs[i]].offset;
-      if (!rule_dstoff && types[type_idxs[i]].isdst)
-	rule_dstoff = types[type_idxs[i]].offset;
-      if (rule_stdoff && rule_dstoff)
-	break;
+      rule_stdoff = rule_dstoff = 0;
+      for (i = 0; i < num_transitions; ++i)
+	{
+	  if (!rule_stdoff && !types[type_idxs[i]].isdst)
+	    rule_stdoff = types[type_idxs[i]].offset;
+	  if (!rule_dstoff && types[type_idxs[i]].isdst)
+	    rule_dstoff = types[type_idxs[i]].offset;
+	  if (rule_stdoff && rule_dstoff)
+	    break;
+	}
     }
 
   __daylight = rule_stdoff != rule_dstoff;
@@ -380,6 +386,9 @@ __tzfile_default (const char *std, const char *dst,
   /* Reset the zone names to point to the user's names.  */
   __tzname[0] = (char *) std;
   __tzname[1] = (char *) dst;
+
+  /* Set the timezone.  */
+  __timezone = -types[0].offset;
 
   compute_tzname_max (stdlen + dstlen);
 }

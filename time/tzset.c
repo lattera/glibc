@@ -207,21 +207,11 @@ tzset_internal (always)
   tz_rules[0].name = tz_rules[1].name = "";
 
   /* Get the standard timezone name.  */
-  tzbuf = malloc (strlen (tz) + 1);
-  if (! tzbuf)
-    {
-      /* Clear the old tz name so we will try again.  */
-      free (old_tz);
-      old_tz = NULL;
-      return;
-    }
+  tzbuf = strdupa (tz);
 
   if (sscanf (tz, "%[^0-9,+-]", tzbuf) != 1 ||
       (l = strlen (tzbuf)) < 3)
-    {
-      free (tzbuf);
-      return;
-    }
+    return;
 
   tz_rules[0].name = __tzstring (tzbuf);
 
@@ -229,10 +219,7 @@ tzset_internal (always)
 
   /* Figure out the standard offset from UTC.  */
   if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz)))
-    {
-      free (tzbuf);
-      return;
-    }
+    return;
 
   if (*tz == '-' || *tz == '+')
     tz_rules[0].offset = *tz++ == '-' ? 1L : -1L;
@@ -241,7 +228,6 @@ tzset_internal (always)
   switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
     {
     default:
-      free (tzbuf);
       return;
     case 1:
       mm = 0;
@@ -311,7 +297,6 @@ tzset_internal (always)
 	    {
 	      free (old_tz);
 	      old_tz = NULL;
-	      free (tzbuf);
 	      return;
 	    }
 	}
@@ -321,13 +306,10 @@ tzset_internal (always)
       /* There is no DST.  */
       tz_rules[1].name = tz_rules[0].name;
       tz_rules[1].offset = tz_rules[0].offset;
-      free (tzbuf);
-      return;
+      goto out;
     }
 
  done_names:
-  free (tzbuf);
-
   /* Figure out the standard <-> DST rules.  */
   for (whichrule = 0; whichrule < 2; ++whichrule)
     {
@@ -343,12 +325,12 @@ tzset_internal (always)
 	  char *end;
 	  tzr->type = *tz == 'J' ? J1 : J0;
 	  if (tzr->type == J1 && !isdigit (*++tz))
-	    return;
+	    goto out;
 	  tzr->d = (unsigned short int) strtoul (tz, &end, 10);
 	  if (end == tz || tzr->d > 365)
-	    return;
+	    goto out;
 	  else if (tzr->type == J1 && tzr->d == 0)
-	    return;
+	    goto out;
 	  tz = end;
 	}
       else if (*tz == 'M')
@@ -359,7 +341,7 @@ tzset_internal (always)
 		      &tzr->m, &tzr->n, &tzr->d, &n) != 3 ||
 	      tzr->m < 1 || tzr->m > 12 ||
 	      tzr->n < 1 || tzr->n > 5 || tzr->d > 6)
-	    return;
+	    goto out;
 	  tz += n;
 	}
       else if (*tz == '\0')
@@ -380,16 +362,16 @@ tzset_internal (always)
 	    }
 	}
       else
-	return;
+	goto out;
 
       if (*tz != '\0' && *tz != '/' && *tz != ',')
-	return;
+	goto out;
       else if (*tz == '/')
 	{
 	  /* Get the time of day of the change.  */
 	  ++tz;
 	  if (*tz == '\0')
-	    return;
+	    goto out;
 	  switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
 	    {
 	    default:
@@ -416,6 +398,10 @@ tzset_internal (always)
 
       tzr->computed_for = -1;
     }
+
+ out:
+  /* We know the offset now, set `__timezone'.  */
+  __timezone = -tz_rules[0].offset;
 }
 
 /* Maximum length of a timezone name.  __tz_compute keeps this up to date

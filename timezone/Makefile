@@ -178,7 +178,7 @@ $(objpfx)test-tz.out: $(addprefix $(testdata)/, America/New_York Etc/UTC UTC)
 $(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
 				       Europe/Berlin Universal \
 				       Australia/Melbourne \
-				       America/Sao_Paulo)
+				       America/Sao_Paulo Asia/Tokyo)
 
 test-tz-ENV = TZDIR=$(testdata)
 tst-timezone-ENV = TZDIR=$(testdata)
@@ -201,6 +201,8 @@ $(testdata)/Australia/Melbourne: australasia $(objpfx)zic $(leapseconds) \
 	$(build-testdata)
 $(testdata)/America/Sao_Paulo: southamerica $(objpfx)zic $(leapseconds) \
 			       yearistype
+	$(build-testdata)
+$(testdata)/Asia/Tokyo: asia $(objpfx)zic $(leapseconds) yearistype
 	$(build-testdata)
 
 
