@@ -85,8 +85,6 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
   spurious_wakeup_count = 0;
   spin_count = 0;
 
-again:
-
   /* On SMP, try spinning to get the lock. */
 
   if (__pthread_smp_kernel) {
@@ -114,6 +112,8 @@ again:
     lock->__spinlock += (spin_count - lock->__spinlock) / 8;
   }
 
+again:
+
   /* No luck, try once more or suspend. */
 
   do {
@@ -130,7 +130,7 @@ again:
     }
 
     if (self != NULL) {
-      THREAD_SETMEM(self, p_nextlock, (pthread_descr) (oldstatus & ~1L));
+      THREAD_SETMEM(self, p_nextlock, (pthread_descr) (oldstatus));
       /* Make sure the store in p_nextlock completes before performing
          the compare-and-swap */
       MEMORY_BARRIER();
@@ -214,7 +214,7 @@ again:
       maxprio = thr->p_priority;
     }
     ptr = &(thr->p_nextlock);
-    thr = *ptr;
+    thr = (pthread_descr)((long)(thr->p_nextlock) & ~1L);
   }
 
   /* Remove max prio thread from waiting list. */
@@ -226,13 +226,13 @@ again:
        least significant bit is clear. */
     thr = (pthread_descr) (oldstatus & ~1L);
     if (! __compare_and_swap_with_release_semantics
-	    (&lock->__status, oldstatus, (long)(thr->p_nextlock)))
+	    (&lock->__status, oldstatus, (long)(thr->p_nextlock) & ~1L))
       goto again;
   } else {
     /* No risk of concurrent access, remove max prio thread normally.
        But in this case we must also flip the least significant bit
        of the status to mark the lock as released. */
-    thr = *maxptr;
+    thr = (pthread_descr)((long)*maxptr & ~1L);
     *maxptr = thr->p_nextlock;
 
     /* Ensure deletion from linked list completes before we

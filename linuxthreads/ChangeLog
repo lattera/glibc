@@ -1,3 +1,13 @@
+2002-04-24  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* spinlock.c (__pthread_lock): Fix spurious wakeup
+	handling.  Don't clear lowest bit of list pointer as sign the thread
+	is still on the wait list.  Don't restart after spurious wakeup
+	with spinning to get the lock.
+	(__pthread_unlock): Take set lowest bit into account when handling
+	pointer to list elements.
+	Patch by Steve Munroe <sjmunroe@us.ibm.com>.
+
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/timer_routines.c (thread_func): Fix type in cast.

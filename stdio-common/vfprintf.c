@@ -1084,7 +1084,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	outstring (string, len);					      \
 	if (left)							      \
 	  PAD (L' ');							      \
-	if (string_malloced)						      \
+	if (__builin_expect (string_malloced, 0))			      \
 	  free (string);						      \
       }									      \
       break;
@@ -1255,7 +1255,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	outstring (string, len);					      \
 	if (left)							      \
 	  PAD (' ');							      \
-	if (string_malloced)						      \
+	if (__builtin_expect (string_malloced, 0))			      \
 	  free (string);						      \
       }									      \
       break;
@@ -1595,7 +1595,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* The format is correctly handled.  */
       ++nspecs_done;
 
-      free (workstart);
+      if (__builtin_expect (workstart != NULL, 0))
+	free (workstart);
       workstart = NULL;
 
       /* Look for next format specifier.  */
@@ -1893,7 +1894,8 @@ do_positional:
 	    break;
 	  }
 
-	free (workstart);
+	if (__builtin_expect (workstart != NULL, 0))
+	  free (workstart);
 	workstart = NULL;
 
 	/* Write the following constant string.  */
@@ -1904,7 +1906,8 @@ do_positional:
   }
 
 all_done:
-  free (workstart);
+  if (__builtin_expect (workstart != NULL, 0))
+    free (workstart);
   /* Unlock the stream.  */
 #ifdef USE_IN_LIBIO
   _IO_funlockfile (s);

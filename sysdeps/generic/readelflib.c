@@ -37,7 +37,7 @@ do								\
       }								\
   }								\
  while (0);
- 
+
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
@@ -46,15 +46,15 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 {
   int i;
   unsigned int j;
-  int loadaddr;
+  ElfW(Addr) loadaddr;
   unsigned int dynamic_addr;
   size_t dynamic_size;
   char *program_interpreter;
-  
+
   ElfW(Ehdr) *elf_header;
   ElfW(Phdr) *elf_pheader, *segment;
   ElfW(Dyn) *dynamic_segment, *dyn_entry;
-  char *dynamic_strings;  
+  char *dynamic_strings;
 
   elf_header = (ElfW(Ehdr) *) file_contents;
   *osversion = 0;
@@ -79,7 +79,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	     elf_header->e_type);
       return 1;
     }
-  
+
   /* Get information from elf program header.  */
   elf_pheader = (ElfW(Phdr) *) (elf_header->e_phoff + file_contents);
   check_ptr (elf_pheader);
@@ -87,7 +87,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
   /* The library is an elf library, now search for soname and
      libc5/libc6.  */
   *flag = FLAG_ELF;
-  
+
   loadaddr = -1;
   dynamic_addr = 0;
   dynamic_size = 0;
@@ -101,8 +101,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	{
 	case PT_LOAD:
 	  if (loadaddr == -1)
-	    loadaddr = (segment->p_vaddr & 0xfffff000)
-	      - (segment->p_offset & 0xfffff000);
+	    loadaddr = segment->p_vaddr - segment_p_offset;
 	  break;
 
 	case PT_DYNAMIC:
@@ -144,7 +143,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	default:
 	  break;
 	}
-      
+
     }
   if (loadaddr == -1)
     {
@@ -155,7 +154,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
   /* Now we can read the dynamic sections.  */
   if (dynamic_size == 0)
     return 1;
-  
+
   dynamic_segment = (ElfW(Dyn) *) (file_contents + dynamic_addr);
   check_ptr (dynamic_segment);
 
@@ -187,7 +186,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 
 	  if (dyn_entry->d_tag == DT_NEEDED)
 	    {
-	      
+
 	      if (*flag == FLAG_ELF)
 		{
 		  /* Check if this is enough to classify the binary.  */
@@ -204,7 +203,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 
 	  else if (dyn_entry->d_tag == DT_SONAME)
 	    *soname = xstrdup (name);
-	  
+
 	  /* Do we have everything we need?  */
 	  if (*soname && *flag != FLAG_ELF)
 	    return 0;
