@@ -63,10 +63,10 @@ static struct object *seen_objects;
 
 #ifdef _LIBC
 
-__libc_lock_define_initialized_recursive (static, object_mutex)
+__libc_lock_define_initialized (static, object_mutex)
 #define init_object_mutex_once()
-#define __gthread_mutex_lock(m) __libc_lock_lock_recursive (*(m))
-#define __gthread_mutex_unlock(m) __libc_lock_unlock_recursive (*(m))
+#define __gthread_mutex_lock(m) __libc_lock_lock (*(m))
+#define __gthread_mutex_unlock(m) __libc_lock_unlock (*(m))
 
 #else
 

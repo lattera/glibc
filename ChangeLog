@@ -1,3 +1,7 @@
+2001-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/unwind-dw2-fde.c: Don't use recursive mutexes.
+
 2001-10-02  Jakub Jelinek  <jakub@redhat.com>
 	    H.J. Lu  <hjl@gnu.org>
 

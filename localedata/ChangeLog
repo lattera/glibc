@@ -1,3 +1,7 @@
+2001-11-15  Børre Gaup  <boerre.gaup@pc.nu>
+
+	* locales/se_NO: New file.
+
 2001-10-08  Won-kyu Park  <wkpark@chem.skku.ac.kr>
 
 	* locales/ko_KR: Fixed a typo in Hangul portion of LC_COLLATE.
