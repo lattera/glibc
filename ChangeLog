@@ -1,3 +1,8 @@
+Sat May 27 16:23:22 1995  Jim Meyering  (meyering@comco.com)
+
+	* sysdeps/generic/memchr.c: Cast RHS to const unsigned char *
+	to avoid error from Irix-4.0.5's C compiler.  From Kaveh Ghazi.
+
 Fri May 26 13:00:08 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): Don't loop to check
