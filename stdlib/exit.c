@@ -62,7 +62,10 @@ exit (int status)
 
       old = __exit_funcs;
       __exit_funcs = __exit_funcs->next;
-      free (old);
+      if (__exit_funcs != NULL)
+	/* Don't free the last element in the chain, this is the statically
+	   allocate element.  */
+	free (old);
     }
 
 #ifdef	HAVE_GNU_LD

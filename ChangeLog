@@ -2,7 +2,7 @@
 
 	* stdlib/atexit.c (initial): New variable.  Use to initialize
 	__exit_funcs.
-	* stdlib/exit.c (exit): Beware to not free statically allocale
+	* stdlib/exit.c (exit): Beware to not free statically allocated
 	list element [PR libc/1305].
 
 	* stdlib/xpg_basename.c (__xpg_basename): Don't return pointer to
