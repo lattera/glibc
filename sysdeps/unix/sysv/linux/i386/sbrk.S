@@ -77,6 +77,6 @@ ENTRY (__sbrk)
 	.align 16
 .L3:
 	movl %edx, %ebx
-	jmp JUMPTARGET(syscall_error)
+	jmp syscall_error
 
 weak_alias (__sbrk, sbrk)

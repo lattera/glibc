@@ -53,7 +53,7 @@ ENTRY (P(__,socket))
 
 	/* %eax is < 0 if there was an error.  */
 	testl %eax, %eax
-	jl JUMPTARGET(syscall_error)
+	jl syscall_error
 
 	/* Successful; return the syscall's value.  */
 	ret

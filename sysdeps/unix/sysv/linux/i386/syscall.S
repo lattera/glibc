@@ -27,5 +27,5 @@ ENTRY (syscall)
 	int $0x80		/* Do the system call.  */
 	POPARGS_5		/* Restore register contents.  */
 	testl %eax, %eax	/* Check %eax for error.  */
-	jl JUMPTARGET(syscall_error) /* Jump to error handler if negative.  */
+	jl syscall_error	/* Jump to error handler if negative.  */
 	ret			/* Return to caller.  */

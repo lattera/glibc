@@ -42,7 +42,7 @@ ENTRY (__brk)
 	movl %edx, %ebx
 
 	cmpl 4(%esp), %eax
-	jne JUMPTARGET(syscall_error)
+	jne syscall_error
 
 #ifdef PIC
 	/* Standard PIC nonsense to store into `__curbrk' through the GOT.  */

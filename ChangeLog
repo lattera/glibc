@@ -1,3 +1,17 @@
+Thu Oct 26 00:11:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: New file.
+
+	* sysdeps/unix/sysv/linux/i386/xstat.S: Don't use JUMPTARGET macro
+	on syscall_error.  For PIC, it is a local label;
+	for non-PIC, JUMPTARGET expands to the unadorned name anyway.
+	* sysdeps/unix/sysv/linux/i386/xmknod.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sbrk.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/brk.S: Likewise.
+
 Thu Oct 26 03:01:22 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* sysdeps/unix/sysv/linux/syscall.h: Strip list of syscalls in

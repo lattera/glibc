@@ -41,7 +41,7 @@ ENTRY (__xstat)
 	jmp *%ecx		/* Return success.  */
 
 .L2:	pushl %ecx
-	jmp JUMPTARGET(syscall_error)
+	jmp syscall_error
 				/* Yes, then branch to error handling.  */
 
 /* For compatibility with Linux libc.  */
