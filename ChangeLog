@@ -1,3 +1,7 @@
+2004-11-18  Alexandre Oliva  <aoliva@redhat.com>
+
+	* manual/.cvsignore: Add dir-add.texi.
+
 2005-02-06  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Use RESOLVE_MAP
