@@ -1,5 +1,5 @@
 /* Convert between `struct stat' format, and `struct stat64' format.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@ xstat64_conv (struct stat *buf, struct stat64 *buf64)
   buf64->st_uid = buf->st_uid;
   buf64->st_gid = buf->st_gid;
   buf64->st_size = buf->st_size;
+  buf64->st_atime = buf->st_atime;
   buf64->st_atime_usec = buf->st_atime_usec;
   buf64->st_mtime = buf->st_mtime;
   buf64->st_mtime_usec = buf->st_mtime_usec;
