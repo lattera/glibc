@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/*#include <setjmp.h>*/
-#include "jmp_buf.h"
-#define jmp_buf __jmp_buf
-
-#ifndef __GNUC__
-#error This file uses GNU C extensions; you must compile with GCC.
-#endif
+/* Global register decls must come before any function defn.  */
 
 register long int
   r9 asm ("$9"), r10 asm ("$10"), r11 asm ("$11"), r12 asm ("$12"),
@@ -36,9 +30,13 @@ register double
   f6 asm ("$f6"), f7 asm ("$f7"), f8 asm ("$f8"), f9 asm ("$f9");
 #endif
 
+
+#include <setjmp.h>
+
+
 /* Save the current program position in ENV and return 0.  */
 int
-__setjmp_aux (jmp_buf env, long int *sp, long int *fp)
+__sigsetjmp_aux (sigjmp_buf env, int savemask, long int *sp, long int *fp)
 {
   /* Save the integer registers.  */
   env[0].__9 = r9;
@@ -63,11 +61,14 @@ __setjmp_aux (jmp_buf env, long int *sp, long int *fp)
   /* Save the return address of our caller, where longjmp will jump to.  */
   env[0].__pc = retpc;
 
-  /* Save the FP and SP of our caller.  The __setjmp entry point
-     simply puts these in the argument register for us to fetch.  */
+  /* Save the FP and SP of our caller.  The __sigsetjmp entry point
+     simply puts these in the argument registers for us to fetch.  */
   env[0].__fp = fp;
   env[0].__sp = sp;
 
-  /* Return to the original caller of __setjmp.  */
+  /* Save the signal mask if requested.  */
+  __sigjmp_save (env, savemask);
+
+  /* Return to the original caller of __sigsetjmp.  */
   return 0;
 }
