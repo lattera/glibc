@@ -4,30 +4,3 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
 # Concensus on stdio is that it's broken.
 test $stdio = default && stdio=libio
-
-# Crypt is your friend.
-case $add_ons in
-  *crypt*)
-    message=
-    ;;
-  *)
-    message="\
-*** WARNING:
-*** Are you sure you do not want to use the \`crypt' add-on?"
-    ;;
-esac
-
-if test "$message"; then
-  if test $enable_sanity = yes; then
-    echo "\
-*** You should not compile the GNU libc without the \`crypt' add-on.
-*** Not using them risks to be incompatible with the libraries of
-*** other systems.  Consider getting the add-on and restart the
-*** configuration.
-*** If you reall mean to avoid this add-on run configure again, now
-*** using the extra parameter \`--disable-sanity-checks'."
-    exit 1
-  else
-    echo "$message"
-  fi
-fi
