@@ -27,6 +27,8 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
+#include <stdio-common/_itoa.h>
+
 
 /* Type of the constructor functions.  */
 typedef void (*fini_t) (void);
@@ -63,6 +65,19 @@ _dl_close (void *_map)
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
       /* There are still references to this object.  Do nothing more.  */
+      if (__builtin_expect (_dl_debug_files, 0))
+	{
+	  char buf[20];
+
+	  buf[sizeof buf - 1] = '\0';
+
+	  _dl_debug_message (1, "\nclosing file=", map->l_name,
+			     "; opencount == ",
+			     _itoa_word (map->l_opencount,
+					 buf + sizeof buf - 1, 10, 0),
+			     "\n", NULL);
+	}
+
       --map->l_opencount;
       __libc_lock_unlock (_dl_load_lock);
       return;

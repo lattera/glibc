@@ -31,6 +31,7 @@
 #include <bp-sym.h>
 
 #include <dl-dst.h>
+#include <stdio-common/_itoa.h>
 
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
@@ -157,8 +158,23 @@ dl_open_worker (void *a)
     }
 
   if (new->l_searchlist.r_list)
-    /* It was already open.  */
-    return;
+    {
+      /* Let the user know about the opencount.  */
+      if (__builtin_expect (_dl_debug_files, 0))
+	{
+	  char buf[20];
+
+	  buf[sizeof buf - 1] = '\0';
+
+	  _dl_debug_message (1, "\nopening file=", new->l_name,
+			     "; opencount == ",
+			     _itoa_word (new->l_opencount,
+					 buf + sizeof buf - 1, 10, 0),
+			     "\n", NULL);
+	}
+      /* It was already open.  */
+      return;
+    }
 
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0);
@@ -301,6 +317,20 @@ dl_open_worker (void *a)
     /* We must be the static _dl_open in libc.a.  A static program that
        has loaded a dynamic object now has competition.  */
     __libc_multiple_libcs = 1;
+
+  /* Let the user know about the opencount.  */
+  if (__builtin_expect (_dl_debug_files, 0))
+    {
+      char buf[20];
+
+      buf[sizeof buf - 1] = '\0';
+
+      _dl_debug_message (1, "\nopening file=", new->l_name,
+			 "; opencount == ",
+			 _itoa_word (new->l_opencount,
+				     buf + sizeof buf - 1, 10, 0),
+			 "\n", NULL);
+    }
 }
 
 

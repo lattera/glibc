@@ -1,5 +1,11 @@
 2000-08-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Versions [ld] (GLIBC_2.2): Export _dl_debug_files.
+	* elf/dl-close.c (_dl_close): Print debug message if object is not
+	unloaded.
+	* elf/dl-open.c (dl_open_worked): Print message about opencount before
+	returning to caller.
+
 	* po/zh.po: Renamed to...
 	* po/zh_TW.po: ...this.
 
