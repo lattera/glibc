@@ -1,3 +1,8 @@
+1999-09-20  Jean-Louis Martineau  <martinea@IRO.UMontreal.CA>
+
+	* nis/nss_compat/compat-pwd.c (getpwuid_plusgroup): Correct
+	returned errno value in some cases.
+
 1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile (modules): Add GBK.
@@ -15,7 +20,7 @@
 	* manual/filesys.texi (Testing File Access): Correct description of
 	SUID.
 
-1999-08025  H.J. Lu  <hjl@gnu.org>
+1999-080-25  H.J. Lu  <hjl@gnu.org>
 
 	* csu/defs.awk (.end): Only match with leading white spaces.
 	(.align): Likewise.

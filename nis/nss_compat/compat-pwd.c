@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -873,7 +873,10 @@ getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
 
       if (yp_match (domain, "passwd.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
@@ -1376,8 +1379,8 @@ getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
         {
-          *errnop = errno;
-          return NSS_STATUS_TRYAGAIN;
+          *errnop = ENOENT;
+          return NSS_STATUS_NOTFOUND;
         }
 
       sprintf (buf, "%d", uid);
@@ -1385,8 +1388,8 @@ getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
                     &outval, &outvallen)
           != YPERR_SUCCESS)
         {
-          *errnop = errno;
-          return NSS_STATUS_TRYAGAIN;
+          *errnop = ENOENT;
+          return NSS_STATUS_NOTFOUND;
         }
 
       if (insert_passwd_adjunct (&outval, &outvallen, domain, errnop)
