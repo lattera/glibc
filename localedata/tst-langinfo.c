@@ -213,7 +213,7 @@ main (void)
 		  ++rp;
 		  if (*rp == '\0')
 		    break;
-		  if (*rp >= '\0' && *rp <= 'p')
+		  if (*rp >= '0' && *rp <= '9')
 		    {
 		      int val = *rp - '0';
 		      if (rp[1] >= '0' && rp[1] <= '9')

@@ -1,3 +1,16 @@
+2000-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/langinfo.h: Add entries for extra tables in CTYPE data.
+	* locale/programs/ld-ctype.c: Adjust for this.
+
+	* locale/programs/ld-collate.c: Add more alignment checks.
+	* locale/string/strcoll.c: Likewise.
+
+2000-07-30  Mark Kettenis  <kettenis@gnu.org>
+
+	* stdio-common/vfprintf.c: Move inclusion of _i18n_number.h
+	outside USE_IN_LIBIO block.
+
 2000-07-26  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/dl-machine.h (fix_bad_pc24): New function.

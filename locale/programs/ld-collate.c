@@ -2300,14 +2300,16 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
      more information here.  */
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE));
   iov[2 + cnt].iov_base = &collate->plane_size;
-  iov[2 + cnt].iov_len = sizeof (collate->plane_size);
+  iov[2 + cnt].iov_len = sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS));
   iov[2 + cnt].iov_base = &collate->plane_cnt;
   iov[2 + cnt].iov_len = sizeof (collate->plane_cnt);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   /* Construct a table with the names.  The size of the table is the same
@@ -2324,6 +2326,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_base = names;
   iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   /* Since we are using the sign of an integer to mark indirection the
@@ -2511,6 +2514,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_WEIGHTWC));
@@ -2518,6 +2522,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_base = obstack_finish (&weightpool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_EXTRAWC));
@@ -2526,6 +2531,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
   assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTWC));
@@ -2533,6 +2539,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (iov[2 + cnt].iov_len % sizeof (int32_t) == 0);
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
 
@@ -2633,12 +2640,14 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_base = &elem_size;
   iov[2 + cnt].iov_len = sizeof (int32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_TABLEMB));
   iov[2 + cnt].iov_base = elem_table;
   iov[2 + cnt].iov_len = elem_size * 2 * sizeof (int32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_EXTRAMB));
@@ -2656,6 +2665,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_COLLSEQWC));
   iov[2 + cnt].iov_base = collate->wcseqorder;
   iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
+  assert (idx[cnt] % 4 == 0);
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));

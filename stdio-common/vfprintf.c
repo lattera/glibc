@@ -102,8 +102,6 @@
 #  undef EOF
 #  define EOF WEOF
 # endif
-
-# include "_i18n_number.h"
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
@@ -154,6 +152,8 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
 extern void __flockfile (FILE *);
 extern void __funlockfile (FILE *);
 #endif /* USE_IN_LIBIO */
+
+#include "_i18n_number.h"
 
 /* Include the shared code for parsing the format string.  */
 #include "printf-parse.h"

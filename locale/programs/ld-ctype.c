@@ -838,7 +838,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 {
   static const char nulbytes[4] = { 0, 0, 0, 0 };
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
-  const size_t nelems = (_NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)
+  const size_t nelems = (_NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1)
 			 + (oldstyle_tables
 			    ? (ctype->map_collection_nr - 2)
 			    : (ctype->nr_charclass + ctype->map_collection_nr)));
@@ -866,7 +866,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   for (elem = 0; elem < nelems; ++elem)
     {
-      if (elem < _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE))
+      if (elem < _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1))
 	switch (elem)
 	  {
 #define CTYPE_EMPTY(name) \
@@ -1155,7 +1155,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  /* Handle extra maps.  */
 	  if (oldstyle_tables)
 	    {
-	      size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) + 2;
+	      size_t nr = (elem - _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1)) + 2;
 
 	      iov[2 + elem + offset].iov_base = ctype->map32[nr];
 	      iov[2 + elem + offset].iov_len = ((ctype->plane_size
@@ -1166,7 +1166,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    }
 	  else
 	    {
-	      size_t nr = elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE);
+	      size_t nr = elem - _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
 	      if (nr < ctype->nr_charclass)
 		{
 		  iov[2 + elem + offset] = ctype->class_3level[nr];
@@ -4240,7 +4240,7 @@ Computing table size for character classes might take a while..."),
     }
   else
     {
-      ctype->class_offset = _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE);
+      ctype->class_offset = _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
       ctype->map_offset = ctype->class_offset + ctype->nr_charclass;
     }
 

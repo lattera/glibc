@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -142,6 +142,15 @@ STRCOLL (s1, s2, l)
 # endif
 #endif
   use_malloc = 0;
+
+  assert (((uintptr_t) table) % sizeof (table[0]) == 0);
+  assert (((uintptr_t) weights) % sizeof (weights[0]) == 0);
+  assert (((uintptr_t) weights) % sizeof (weights[0]) == 0);
+  assert (((uintptr_t) extra) % sizeof (extra[0]) == 0);
+  assert (((uintptr_t) indirect) % sizeof (indirect[0]) == 0);
+#ifdef WIDE_CHAR_VERSION
+  assert (((uintptr_t) names) % sizeof (names[0]) == 0);
+#endif
 
   /* We need this a few times.  */
   s1len = STRLEN (s1);

@@ -1,5 +1,7 @@
 2000-07-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-langinfo.c (main): Fix esacape sequence handling.
+
 	* charmaps/EUC-TW: New file.
 
 	* tst-digits.c: Add tests for wprintf.
