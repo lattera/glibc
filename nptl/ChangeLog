@@ -1,3 +1,13 @@
+2002-12-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_locking_needed): Only
+	declare for libc.so.
+	(__libc_lock_init, __libc_lock_init_recursive): Change into comma
+	expression.
+	(__libc_lock_lock): Put into statement expression.
+	(__libc_lock_unlock): Remove trailing semicolon.
+	* sysdeps/unix/sysv/linux/fork.h (__libc_pthread_init): Fix typo.
+
 2002-12-12  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Use asm operand with
