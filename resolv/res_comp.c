@@ -148,9 +148,6 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
 		}
 	}
 	*dn = '\0';
-	for (dn = exp_dn; (c = *dn) != '\0'; dn++)
-		if (isascii(c) && isspace(c))
-			return (-1);
 	if (len < 0)
 		len = cp - comp_dn;
 	return (len);
@@ -337,6 +334,88 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
 	next:	;
 	}
 	return (-1);
+}
+
+/*
+ * Verify that a domain name uses an acceptable character set.
+ */
+
+/****
+To: "Lawrence R. Rogers" <lrr@cert.org>
+cc: cert@cert.org, pvm@home.net
+Subject: Re: VU#14542 
+In-reply-to: Your message of "Mon, 19 Feb 1996 17:16:27 PST."
+Date: Tue, 20 Feb 1996 22:37:21 -0800
+From: Paul A Vixie <vixie@wisdom.home.vix.com>
+
+in retrospect,
+
+	hostname = firstlabel ( "." otherlabel )+
+	firstchar = [a-zA-Z0-9_]
+	otherchar = [a-zA-Z0-9_-/]
+	firstlabel = firstchar otherchar*
+	otherlabel = otherchar+
+
+should have been
+
+	hostname = label ( "." label )+
+	firstchar = [a-zA-Z0-9_]
+	otherchar = [a-zA-Z0-9_-]
+	label = firstchar otherchar*
+
+i know of no example of a real host name that needs the looser rule i sent
+earlier.  since i'm only trying to bend the spec to fit actual known uses,
+i should not have widened the rules as far as i did earlier.
+****/
+
+#define firstchar(c) ((isascii(c) && isalnum(c)) || (c) == '_')
+#define otherchar(c) (firstchar(c) || (c) == '-')
+#define	wildlabel(firstlabel, ch, nch) \
+	((firstlabel) && (ch) == '*' && ((nch) == '.' || (nch) == '\0'))
+
+int
+res_hnok(dn)
+	const char *dn;
+{
+	int ppch = '\0', pch = '.', ch = *dn++, firstlabel = 1;
+
+	while (ch != '\0') {
+		int nch = *dn++;
+
+		if (ch == '.' || (ch == '\\' && nch == '.')) {
+			NULL;
+		} else if (pch == '.' && ppch != '\\') {
+			if (!firstchar(ch) && !wildlabel(firstlabel, ch, nch))
+				return (0);
+		} else {
+			if (!otherchar(ch))
+				return (0);
+		}
+		ppch = pch, pch = ch, ch = nch;
+		firstlabel = 0;
+	}
+	return (1);
+}
+
+/*
+ * This function is quite liberal, since RFC 1034's character sets are only
+ * recommendations.
+ *
+ * Note that some char's are signed, so we have to cast to unsigned.
+ */
+int
+dn_isvalid(dn)
+	const char *dn;
+{
+	unsigned char *t = (unsigned char *)dn;
+	int ch;
+
+	while ((ch = *t++) != '\0')
+		if (ch <= 0x1f || ch >= 0x7f) {
+			/* Unprintable in ASCII. */
+			return (0);
+		}
+	return (1);
 }
 
 /*

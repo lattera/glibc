@@ -158,10 +158,21 @@ getanswer(answer, anslen, qname, qclass, qtype)
 	int toobig = 0;
 	char tbuf[MAXDNAME+1];
 	const char *tname;
+	int (*name_ok) __P((const char *));
 
 	tname = qname;
 	host.h_name = NULL;
 	eom = answer->buf + anslen;
+	switch (qtype) {
+	case T_A:
+		name_ok = res_hnok;
+		break;
+	case T_PTR:
+		name_ok = dn_isvalid;
+		break;
+	default:
+		abort();
+	}
 	/*
 	 * find first satisfactory answer
 	 */
@@ -175,7 +186,8 @@ getanswer(answer, anslen, qname, qclass, qtype)
 		h_errno = NO_RECOVERY;
 		return (NULL);
 	}
-	if ((n = dn_expand(answer->buf, eom, cp, bp, buflen)) < 0) {
+	n = dn_expand(answer->buf, eom, cp, bp, buflen);
+	if ((n < 0) || !(*name_ok)(bp)) {
 		h_errno = NO_RECOVERY;
 		return (NULL);
 	}
@@ -204,7 +216,7 @@ getanswer(answer, anslen, qname, qclass, qtype)
 	had_error = 0;
 	while (ancount-- > 0 && cp < eom && !had_error) {
 		n = dn_expand(answer->buf, eom, cp, bp, buflen);
-		if (n < 0) {
+		if ((n < 0) || !(*name_ok)(bp)) {
 			had_error++;
 			continue;
 		}
@@ -224,7 +236,7 @@ getanswer(answer, anslen, qname, qclass, qtype)
 			if (ap >= &host_aliases[MAXALIASES-1])
 				continue;
 			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
-			if (n < 0) {
+			if ((n < 0) || !(*name_ok)(tbuf)) {
 				had_error++;
 				continue;
 			}
@@ -254,7 +266,7 @@ getanswer(answer, anslen, qname, qclass, qtype)
 		}
 		if (qtype == T_PTR && type == T_CNAME) {
 			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
-			if (n < 0) {
+			if ((n < 0) || !res_hnok(tbuf)) {
 				had_error++;
 				continue;
 			}
@@ -288,7 +300,7 @@ getanswer(answer, anslen, qname, qclass, qtype)
 				continue;	/* XXX - had_error++ ? */
 			}
 			n = dn_expand(answer->buf, eom, cp, bp, buflen);
-			if (n < 0) {
+			if ((n < 0) || !res_hnok(bp)) {
 				had_error++;
 				break;
 			}
@@ -517,7 +529,7 @@ gethostbyaddr(addr, len, type)
 		h_errno = NETDB_INTERNAL;
 		return (NULL);
 	}
-	if (type != AF_INET) {
+	if (type != AF_INET || len != INADDRSZ) {
 		errno = EAFNOSUPPORT;
 		h_errno = NETDB_INTERNAL;
 		return (NULL);

@@ -139,7 +139,7 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 	haveanswer = 0;
 	while (--ancount >= 0 && cp < eom) {
 		n = dn_expand(answer->buf, eom, cp, bp, buflen);
-		if (n < 0)
+		if ((n < 0) || !dn_isvalid(bp))
 			break;
 		cp += n;
 		ans[0] = '\0';
@@ -150,7 +150,7 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 		GETSHORT(n, cp);
 		if (class == C_IN && type == T_PTR) {
 			n = dn_expand(answer->buf, eom, cp, bp, buflen);
-			if (n < 0) {
+			if ((n < 0) || !res_hnok(bp)) {
 				cp += n;
 				return (NULL);
 			}
@@ -202,7 +202,7 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 
 struct netent *
 getnetbyaddr(net, net_type)
-	register long net;
+	register u_long net;
 	register int net_type;
 {
 	unsigned int netbr[4];

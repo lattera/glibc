@@ -409,6 +409,7 @@ res_send(buf, buflen, ans, anssiz)
 			/*
 			 * Receive length & response
 			 */
+read_len:
 			cp = ans;
 			len = INT16SZ;
 			while ((n = read(s, (char *)cp, (int)len)) > 0) {
@@ -476,6 +477,20 @@ res_send(buf, buflen, ans, anssiz)
 					else
 						break;
 				}
+			}
+			/*
+			 * The calling applicating has bailed out of
+			 * a previous call and failed to arrange to have
+			 * the circuit closed or the server has got
+			 * itself confused. Anyway drop the packet and
+			 * wait for the correct one.
+			 */
+			if (hp->id != anhp->id) {
+				DprintQ((_res.options & RES_DEBUG) ||
+					(_res.pfcode & RES_PRF_REPLY),
+					(stdout, ";; old answer (unexpected):\n"),
+					ans, (resplen>anssiz)?anssiz:resplen);
+				goto read_len;
 			}
 		} else {
 			/*
@@ -593,6 +608,8 @@ res_send(buf, buflen, ans, anssiz)
 			n = select(s+1, &dsmask, (fd_set *)NULL,
 				   (fd_set *)NULL, &timeout);
 			if (n < 0) {
+				if (errno == EINTR)
+					goto wait;
 				Perror(stderr, "select", errno);
 				_res_close();
 				goto next_ns;
@@ -626,7 +643,7 @@ res_send(buf, buflen, ans, anssiz)
 				DprintQ((_res.options & RES_DEBUG) ||
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; old answer:\n"),
-					ans, resplen);
+					ans, (resplen>anssiz)?anssiz:resplen);
 				goto wait;
 			}
 #if CHECK_SRVR_ADDR
@@ -640,7 +657,7 @@ res_send(buf, buflen, ans, anssiz)
 				DprintQ((_res.options & RES_DEBUG) ||
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; not our server:\n"),
-					ans, resplen);
+					ans, (resplen>anssiz)?anssiz:resplen);
 				goto wait;
 			}
 #endif
@@ -655,7 +672,7 @@ res_send(buf, buflen, ans, anssiz)
 				DprintQ((_res.options & RES_DEBUG) ||
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; wrong query name:\n"),
-					ans, resplen);
+					ans, (resplen>anssiz)?anssiz:resplen);
 				goto wait;
 			}
 			if (anhp->rcode == SERVFAIL ||
@@ -663,7 +680,7 @@ res_send(buf, buflen, ans, anssiz)
 			    anhp->rcode == REFUSED) {
 				DprintQ(_res.options & RES_DEBUG,
 					(stdout, "server rejected query:\n"),
-					ans, resplen);
+					ans, (resplen>anssiz)?anssiz:resplen);
 				badns |= (1 << ns);
 				_res_close();
 				/* don't retry if called from dig */
@@ -689,7 +706,7 @@ res_send(buf, buflen, ans, anssiz)
 		DprintQ((_res.options & RES_DEBUG) ||
 			(_res.pfcode & RES_PRF_REPLY),
 			(stdout, ""),
-			ans, resplen);
+			ans, (resplen>anssiz)?anssiz:resplen);
 		/*
 		 * If using virtual circuits, we assume that the first server
 		 * is preferred over the rest (i.e. it is on the local

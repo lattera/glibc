@@ -502,16 +502,28 @@ __p_rr(cp, msg, file)
 
 	case T_HINFO:
 	case T_ISDN:
+		(void) fputs("\t\"", file);
 		cp2 = cp + dlen;
-		if (n = *cp++) {
-			fprintf(file, "\t%.*s", n, cp);
-			cp += n;
+		if ((n = (unsigned char) *cp++) != 0) {
+			for (c = n; c > 0 && cp < cp2; c--) {
+				if (strchr("\n\"\\", *cp))
+					(void) putc('\\', file);
+				(void) putc(*cp++, file);
+			}
+			putc('"', file);
 		}
-		if ((cp < cp2) && (n = *cp++)) {
-			fprintf(file, "\t%.*s", n, cp);
-			cp += n;
-		} else if (type == T_HINFO)
+		if (cp < cp2 && (n = (unsigned char) *cp++) != 0) {
+			(void) fputs ("\t\"", file);
+			for (c = n; c > 0 && cp < cp2; c--) {
+				if (strchr("\n\"\\", *cp))
+					(void) putc('\\', file);
+				(void) putc(*cp++, file);
+			}
+			putc('"', file);
+		} else if (type == T_HINFO) {
+			(void) fputs("\"?\"", file);
 			fprintf(file, "\n;; *** Warning *** OS-type missing");
+		}
 		break;
 
 	case T_SOA:
@@ -563,12 +575,11 @@ __p_rr(cp, msg, file)
 		cp2 = cp1 + dlen;
 		while (cp < cp2) {
 			if (n = (unsigned char) *cp++) {
-				for (c = n; c > 0 && cp < cp2; c--)
-					if ((*cp == '\n') || (*cp == '"')) {
-					    (void) putc('\\', file);
-					    (void) putc(*cp++, file);
-					} else
-					    (void) putc(*cp++, file);
+				for (c = n; c > 0 && cp < cp2; c--) {
+					if (strchr("\n\"\\", *cp))
+						(void) putc('\\', file);
+					(void) putc(*cp++, file);
+				}
 			}
 		}
 		putc('"', file);

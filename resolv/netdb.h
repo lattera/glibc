@@ -135,7 +135,7 @@ struct hostent	*gethostbyaddr __P((const char *, int, int));
 struct hostent	*gethostbyname __P((const char *));
 struct hostent	*gethostbyname2 __P((const char *, int));
 struct hostent	*gethostent __P((void));
-struct netent	*getnetbyaddr __P((long, int)); /* u_long? */
+struct netent	*getnetbyaddr __P((unsigned long, int));
 struct netent	*getnetbyname __P((const char *));
 struct netent	*getnetent __P((void));
 struct protoent	*getprotobyname __P((const char *));

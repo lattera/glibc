@@ -78,7 +78,7 @@
  * is new enough to contain a certain feature.
  */
 
-#define	__RES	19951031
+#define	__RES	19960229
 
 /*
  * Resolver configuration file.
@@ -184,6 +184,8 @@ typedef res_sendhookact (*res_send_rhook)__P((const struct sockaddr_in *ns,
 extern struct __res_state _res;
 
 /* Private routines shared between libc/net, named, nslookup and others. */
+#define	res_hnok	__res_hnok
+#define	dn_isvalid	__dn_isvalid
 #define	dn_skipname	__dn_skipname
 #define	fp_query	__fp_query
 #define	fp_nquery	__fp_nquery
@@ -203,6 +205,8 @@ extern struct __res_state _res;
 #define	res_nameinquery	__res_nameinquery
 #define	res_queriesmatch __res_queriesmatch
 __BEGIN_DECLS
+int	 __res_hnok __P((const char *));
+int	 __dn_isvalid __P((const char *));
 int	 __dn_skipname __P((const u_char *, const u_char *));
 void	 __fp_resstat __P((struct __res_state *, FILE *));
 void	 __fp_query __P((const u_char *, FILE *));

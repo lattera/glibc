@@ -42,7 +42,7 @@ extern int _net_stayopen;
 
 struct netent *
 _getnetbyaddr(net, type)
-	register long net;
+	register unsigned long net;
 	register int type;
 {
 	register struct netent *p;
