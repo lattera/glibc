@@ -25,8 +25,8 @@
 /* Fast locks (not abstract because mutexes and conditions aren't abstract). */
 struct _pthread_fastlock
 {
-  long int status;              /* "Free" or "taken" or head of waiting list */
-  int spinlock;                 /* For compare-and-swap emulation */
+  long int __status;            /* "Free" or "taken" or head of waiting list */
+  int __spinlock;               /* For compare-and-swap emulation */
 };
 
 /* Thread descriptors */
@@ -36,30 +36,30 @@ typedef struct _pthread_descr_struct *_pthread_descr;
 /* Attributes for threads.  */
 typedef struct
 {
-  int detachstate;
-  int schedpolicy;
-  struct __sched_param schedparam;
-  int inheritsched;
-  int scope;
-  size_t guardsize;
-  int stackaddr_set;
-  void *stackaddr;
-  size_t stacksize;
+  int __detachstate;
+  int __schedpolicy;
+  struct __sched_param __schedparam;
+  int __inheritsched;
+  int __scope;
+  size_t __guardsize;
+  int __stackaddr_set;
+  void *__stackaddr;
+  size_t __stacksize;
 } pthread_attr_t;
 
 
 /* Conditions (not abstract because of PTHREAD_COND_INITIALIZER */
 typedef struct
 {
-  struct _pthread_fastlock c_lock; /* Protect against concurrent access */
-  _pthread_descr c_waiting;        /* Threads waiting on this condition */
+  struct _pthread_fastlock __c_lock; /* Protect against concurrent access */
+  _pthread_descr __c_waiting;        /* Threads waiting on this condition */
 } pthread_cond_t;
 
 
 /* Attribute for conditionally variables.  */
 typedef struct
 {
-  int dummy;
+  int __dummy;
 } pthread_condattr_t;
 
 /* Keys for thread-specific data */
@@ -71,18 +71,18 @@ typedef unsigned int pthread_key_t;
     with earlier releases of LinuxThreads.) */
 typedef struct
 {
-  int m_reserved;               /* Reserved for future use */
-  int m_count;                  /* Depth of recursive locking */
-  _pthread_descr m_owner;       /* Owner thread (if recursive or errcheck) */
-  int m_kind;                   /* Mutex kind: fast, recursive or errcheck */
-  struct _pthread_fastlock m_lock; /* Underlying fast lock */
+  int __m_reserved;               /* Reserved for future use */
+  int __m_count;                  /* Depth of recursive locking */
+  _pthread_descr __m_owner;       /* Owner thread (if recursive or errcheck) */
+  int __m_kind;                   /* Mutex kind: fast, recursive or errcheck */
+  struct _pthread_fastlock __m_lock; /* Underlying fast lock */
 } pthread_mutex_t;
 
 
 /* Attribute for mutex.  */
 typedef struct
 {
-  int mutexkind;
+  int __mutexkind;
 } pthread_mutexattr_t;
 
 
@@ -94,21 +94,21 @@ typedef int pthread_once_t;
 /* Read-write locks.  */
 typedef struct
 {
-  struct _pthread_fastlock rw_lock; /* Lock to guarantee mutual exclusion */
-  int rw_readers;               /* Number of readers */
-  _pthread_descr rw_writer;     /* Identity of writer, or NULL if none */
-  _pthread_descr rw_read_waiting; /* Threads waiting for reading */
-  _pthread_descr rw_write_waiting; /* Threads waiting for writing */
-  int rw_kind;                  /* Reader/Writer preference selection */
-  int rw_pshared;               /* Shared between processes or not */
+  struct _pthread_fastlock __rw_lock; /* Lock to guarantee mutual exclusion */
+  int __rw_readers;                   /* Number of readers */
+  _pthread_descr __rw_writer;         /* Identity of writer, or NULL if none */
+  _pthread_descr __rw_read_waiting;   /* Threads waiting for reading */
+  _pthread_descr __rw_write_waiting;  /* Threads waiting for writing */
+  int __rw_kind;                      /* Reader/Writer preference selection */
+  int __rw_pshared;                   /* Shared between processes or not */
 } pthread_rwlock_t;
 
 
 /* Attribute for read-write locks.  */
 typedef struct
 {
-  int lockkind;
-  int pshared;
+  int __lockkind;
+  int __pshared;
 } pthread_rwlockattr_t;
 #endif
 

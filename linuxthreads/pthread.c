@@ -340,11 +340,12 @@ int __pthread_create_2_0(pthread_t *thread, const pthread_attr_t *attr,
     {
       size_t ps = __getpagesize ();
 
-      memcpy (&new_attr, attr, (size_t) &(((pthread_attr_t*)NULL)->guardsize));
-      new_attr.guardsize = ps;
-      new_attr.stackaddr_set = 0;
-      new_attr.stackaddr = NULL;
-      new_attr.stacksize = STACK_SIZE - ps;
+      memcpy (&new_attr, attr,
+	      (size_t) &(((pthread_attr_t*)NULL)->__guardsize));
+      new_attr.__guardsize = ps;
+      new_attr.__stackaddr_set = 0;
+      new_attr.__stackaddr = NULL;
+      new_attr.__stacksize = STACK_SIZE - ps;
       attr = &new_attr;
     }
   return __pthread_create_2_1 (thread, attr, start_routine, arg);

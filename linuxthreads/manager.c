@@ -222,12 +222,12 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
   char * guardaddr;
   size_t stacksize, guardsize;
 
-  if (attr != NULL && attr->stackaddr_set)
+  if (attr != NULL && attr->__stackaddr_set)
     {
       /* The user provided a stack. */
       new_thread =
-        (pthread_descr) ((long)(attr->stackaddr) & -sizeof(void *)) - 1;
-      new_thread_bottom = (char *) attr->stackaddr - attr->stacksize;
+        (pthread_descr) ((long)(attr->__stackaddr) & -sizeof(void *)) - 1;
+      new_thread_bottom = (char *) attr->__stackaddr - attr->__stacksize;
       guardaddr = NULL;
       guardsize = 0;
     }
@@ -249,9 +249,9 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
          the RLIMIT_STACK soft limit prevents stacks from
          running into one another. */
       if (attr == NULL ||
-          attr->guardsize == 0 ||
-          (attr->guardsize == pagesize &&
-           attr->stacksize == STACK_SIZE - pagesize))
+          attr->__guardsize == 0 ||
+          (attr->__guardsize == pagesize &&
+           attr->__stacksize == STACK_SIZE - pagesize))
         {
           /* We don't need a guard page. */
           guardaddr = NULL;
@@ -260,11 +260,11 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       else
         {
           /* Put a bad page at the bottom of the stack */
-          stacksize = roundup(attr->stacksize, pagesize);
+          stacksize = roundup(attr->__stacksize, pagesize);
           if (stacksize >= STACK_SIZE - pagesize)
             stacksize = STACK_SIZE - pagesize;
           guardaddr = (void *)new_thread - stacksize;
-          guardsize = attr->guardsize;
+          guardsize = attr->__guardsize;
           if (mmap ((caddr_t) guardaddr, guardsize, 0, MAP_FIXED, -1, 0)
               == MAP_FAILED)
             {
@@ -298,7 +298,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
      we can  do this.  Normally this should be done by examining the
      return value of the __sched_setscheduler call in pthread_start_thread
      but this is hard to implement.  FIXME  */
-  if (attr != NULL && attr->schedpolicy != SCHED_OTHER && geteuid () != 0)
+  if (attr != NULL && attr->__schedpolicy != SCHED_OTHER && geteuid () != 0)
     return EPERM;
   /* Find a free segment for the thread, and allocate a stack if needed */
   for (sseg = 2; ; sseg++)
@@ -324,7 +324,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_signal_jmp = NULL;
   new_thread->p_cancel_jmp = NULL;
   new_thread->p_terminated = 0;
-  new_thread->p_detached = attr == NULL ? 0 : attr->detachstate;
+  new_thread->p_detached = attr == NULL ? 0 : attr->__detachstate;
   new_thread->p_exited = 0;
   new_thread->p_retval = NULL;
   new_thread->p_joining = NULL;
@@ -340,7 +340,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_sigwaiting = 0;
   new_thread->p_guardaddr = guardaddr;
   new_thread->p_guardsize = guardsize;
-  new_thread->p_userstack = attr != NULL && attr->stackaddr_set;
+  new_thread->p_userstack = attr != NULL && attr->__stackaddr_set;
   memset (new_thread->p_specific, '\0',
 	  PTHREAD_KEY_1STLEVEL_SIZE * sizeof (new_thread->p_specific[0]));
   new_thread->p_self = new_thread;
@@ -352,10 +352,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Determine scheduling parameters for the thread */
   new_thread->p_start_args.schedpolicy = -1;
   if (attr != NULL) {
-    switch(attr->inheritsched) {
+    switch(attr->__inheritsched) {
     case PTHREAD_EXPLICIT_SCHED:
-      new_thread->p_start_args.schedpolicy = attr->schedpolicy;
-      memcpy (&new_thread->p_start_args.schedparam, &attr->schedparam,
+      new_thread->p_start_args.schedpolicy = attr->__schedpolicy;
+      memcpy (&new_thread->p_start_args.schedparam, &attr->__schedparam,
 	      sizeof (struct sched_param));
       break;
     case PTHREAD_INHERIT_SCHED:
@@ -382,7 +382,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Check if cloning succeeded */
   if (pid == -1) {
     /* Free the stack if we allocated it */
-    if (attr == NULL || !attr->stackaddr_set)
+    if (attr == NULL || !attr->__stackaddr_set)
       {
 	munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
 	       INITIAL_STACK_SIZE);

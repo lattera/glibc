@@ -34,8 +34,8 @@ static void pthread_cleanup_upto(__jmp_buf target)
 
   for (c = THREAD_GETMEM(self, p_cleanup);
        c != NULL && _JMPBUF_UNWINDS(target, c);
-       c = c->prev)
-    c->routine(c->arg);
+       c = c->__prev)
+    c->__routine(c->__arg);
   THREAD_SETMEM(self, p_cleanup, c);
   if (THREAD_GETMEM(self, p_in_sighandler)
       && _JMPBUF_UNWINDS(target, THREAD_GETMEM(self, p_in_sighandler)))

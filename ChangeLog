@@ -3,6 +3,12 @@
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Tidy up, correct
 	llseek.
 
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: Do not use the i386 version.
+	Instead call the system call wrapper function using an 64bit argument.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+
 1998-10-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/signal.h: Don't include <time.h> for timespec, add

@@ -42,7 +42,7 @@ void __pthread_lock(struct _pthread_fastlock * lock)
   pthread_descr self = NULL;
 
   do {
-    oldstatus = lock->status;
+    oldstatus = lock->__status;
     if (oldstatus == 0) {
       newstatus = 1;
     } else {
@@ -51,8 +51,8 @@ void __pthread_lock(struct _pthread_fastlock * lock)
     }
     if (self != NULL)
       THREAD_SETMEM(self, p_nextwaiting, (pthread_descr) oldstatus);
-  } while(! compare_and_swap(&lock->status, oldstatus, newstatus,
-                             &lock->spinlock));
+  } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
+                             &lock->__spinlock));
   if (oldstatus != 0) suspend(self);
 }
 
@@ -61,9 +61,9 @@ int __pthread_trylock(struct _pthread_fastlock * lock)
   long oldstatus;
 
   do {
-    oldstatus = lock->status;
+    oldstatus = lock->__status;
     if (oldstatus != 0) return EBUSY;
-  } while(! compare_and_swap(&lock->status, 0, 1, &lock->spinlock));
+  } while(! compare_and_swap(&lock->__status, 0, 1, &lock->__spinlock));
   return 0;
 }
 
@@ -74,14 +74,15 @@ void __pthread_unlock(struct _pthread_fastlock * lock)
   int maxprio;
 
 again:
-  oldstatus = lock->status;
+  oldstatus = lock->__status;
   if (oldstatus == 1) {
     /* No threads are waiting for this lock */
-    if (! compare_and_swap(&lock->status, 1, 0, &lock->spinlock)) goto again;
+    if (! compare_and_swap(&lock->__status, 1, 0, &lock->__spinlock))
+      goto again;
     return;
   }
   /* Find thread in waiting queue with maximal priority */
-  ptr = (pthread_descr *) &lock->status;
+  ptr = (pthread_descr *) &lock->__status;
   thr = (pthread_descr) oldstatus;
   maxprio = 0;
   maxptr = ptr;
@@ -94,13 +95,13 @@ again:
     thr = *ptr;
   }
   /* Remove max prio thread from waiting list. */
-  if (maxptr == (pthread_descr *) &lock->status) {
+  if (maxptr == (pthread_descr *) &lock->__status) {
     /* If max prio thread is at head, remove it with compare-and-swap
        to guard against concurrent lock operation */
     thr = (pthread_descr) oldstatus;
-    if (! compare_and_swap(&lock->status,
+    if (! compare_and_swap(&lock->__status,
                            oldstatus, (long)(thr->p_nextwaiting),
-                           &lock->spinlock))
+                           &lock->__spinlock))
       goto again;
   } else {
     /* No risk of concurrent access, remove max prio thread normally */

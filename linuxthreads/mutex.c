@@ -26,18 +26,18 @@
 int __pthread_mutex_init(pthread_mutex_t * mutex,
                        const pthread_mutexattr_t * mutex_attr)
 {
-  __pthread_init_lock(&mutex->m_lock);
-  mutex->m_kind =
-    mutex_attr == NULL ? PTHREAD_MUTEX_FAST_NP : mutex_attr->mutexkind;
-  mutex->m_count = 0;
-  mutex->m_owner = NULL;
+  __pthread_init_lock(&mutex->__m_lock);
+  mutex->__m_kind =
+    mutex_attr == NULL ? PTHREAD_MUTEX_FAST_NP : mutex_attr->__mutexkind;
+  mutex->__m_count = 0;
+  mutex->__m_owner = NULL;
   return 0;
 }
 weak_alias (__pthread_mutex_init, pthread_mutex_init)
 
 int __pthread_mutex_destroy(pthread_mutex_t * mutex)
 {
-  if (mutex->m_lock.status != 0) return EBUSY;
+  if (mutex->__m_lock.__status != 0) return EBUSY;
   return 0;
 }
 weak_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
@@ -47,26 +47,26 @@ int __pthread_mutex_trylock(pthread_mutex_t * mutex)
   pthread_descr self;
   int retcode;
 
-  switch(mutex->m_kind) {
+  switch(mutex->__m_kind) {
   case PTHREAD_MUTEX_FAST_NP:
-    retcode = __pthread_trylock(&mutex->m_lock);
+    retcode = __pthread_trylock(&mutex->__m_lock);
     return retcode;
   case PTHREAD_MUTEX_RECURSIVE_NP:
     self = thread_self();
-    if (mutex->m_owner == self) {
-      mutex->m_count++;
+    if (mutex->__m_owner == self) {
+      mutex->__m_count++;
       return 0;
     }
-    retcode = __pthread_trylock(&mutex->m_lock);
+    retcode = __pthread_trylock(&mutex->__m_lock);
     if (retcode == 0) {
-      mutex->m_owner = self;
-      mutex->m_count = 0;
+      mutex->__m_owner = self;
+      mutex->__m_count = 0;
     }
     return retcode;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
-    retcode = __pthread_trylock(&mutex->m_lock);
+    retcode = __pthread_trylock(&mutex->__m_lock);
     if (retcode == 0) {
-      mutex->m_owner = thread_self();
+      mutex->__m_owner = thread_self();
     }
     return retcode;
   default:
@@ -79,25 +79,25 @@ int __pthread_mutex_lock(pthread_mutex_t * mutex)
 {
   pthread_descr self;
 
-  switch(mutex->m_kind) {
+  switch(mutex->__m_kind) {
   case PTHREAD_MUTEX_FAST_NP:
-    __pthread_lock(&mutex->m_lock);
+    __pthread_lock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
     self = thread_self();
-    if (mutex->m_owner == self) {
-      mutex->m_count++;
+    if (mutex->__m_owner == self) {
+      mutex->__m_count++;
       return 0;
     }
-    __pthread_lock(&mutex->m_lock);
-    mutex->m_owner = self;
-    mutex->m_count = 0;
+    __pthread_lock(&mutex->__m_lock);
+    mutex->__m_owner = self;
+    mutex->__m_count = 0;
     return 0;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
     self = thread_self();
-    if (mutex->m_owner == self) return EDEADLK;
-    __pthread_lock(&mutex->m_lock);
-    mutex->m_owner = self;
+    if (mutex->__m_owner == self) return EDEADLK;
+    __pthread_lock(&mutex->__m_lock);
+    mutex->__m_owner = self;
     return 0;
   default:
     return EINVAL;
@@ -107,23 +107,23 @@ weak_alias (__pthread_mutex_lock, pthread_mutex_lock)
 
 int __pthread_mutex_unlock(pthread_mutex_t * mutex)
 {
-  switch (mutex->m_kind) {
+  switch (mutex->__m_kind) {
   case PTHREAD_MUTEX_FAST_NP:
-    __pthread_unlock(&mutex->m_lock);
+    __pthread_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
-    if (mutex->m_count > 0) {
-      mutex->m_count--;
+    if (mutex->__m_count > 0) {
+      mutex->__m_count--;
       return 0;
     }
-    mutex->m_owner = NULL;
-    __pthread_unlock(&mutex->m_lock);
+    mutex->__m_owner = NULL;
+    __pthread_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
-    if (mutex->m_owner != thread_self() || mutex->m_lock.status == 0)
+    if (mutex->__m_owner != thread_self() || mutex->__m_lock.__status == 0)
       return EPERM;
-    mutex->m_owner = NULL;
-    __pthread_unlock(&mutex->m_lock);
+    mutex->__m_owner = NULL;
+    __pthread_unlock(&mutex->__m_lock);
     return 0;
   default:
     return EINVAL;
@@ -133,7 +133,7 @@ weak_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
 
 int __pthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
-  attr->mutexkind = PTHREAD_MUTEX_FAST_NP;
+  attr->__mutexkind = PTHREAD_MUTEX_FAST_NP;
   return 0;
 }
 weak_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
@@ -150,7 +150,7 @@ int __pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind)
       && kind != PTHREAD_MUTEX_RECURSIVE_NP
       && kind != PTHREAD_MUTEX_ERRORCHECK_NP)
     return EINVAL;
-  attr->mutexkind = kind;
+  attr->__mutexkind = kind;
   return 0;
 }
 weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_settype)
@@ -159,7 +159,7 @@ weak_alias (__pthread_mutexattr_setkind_np, pthread_mutexattr_setkind_np)
 
 int __pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *kind)
 {
-  *kind = attr->mutexkind;
+  *kind = attr->__mutexkind;
   return 0;
 }
 weak_alias (__pthread_mutexattr_gettype, pthread_mutexattr_gettype)

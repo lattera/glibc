@@ -20,8 +20,8 @@ extern void __pthread_unlock(struct _pthread_fastlock * lock);
 
 static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
 {
-  lock->status = 0;
-  lock->spinlock = 0;
+  lock->__status = 0;
+  lock->__spinlock = 0;
 }
 
 #define LOCK_INITIALIZER {0, 0}

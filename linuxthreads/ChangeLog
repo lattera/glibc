@@ -1,3 +1,26 @@
+1998-10-27 13:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/pthread.h (struct _pthread_cleanup_buffer): Prepend
+	__ to field names of the struct.
+	* sysdeps/pthread/bits/pthreadtypes.h (struct _pthread_fastlock):
+	Likewise.
+	(pthread_attr_t): Likewise.
+	(pthread_cond_t): Likewise.
+	(pthread_condattr_t): Likewise.
+	(pthread_mutex_t): Likewise.
+	(pthread_mutexattr_t): Likewise.
+	(pthread_rwlock_t): Likewise.
+	(pthread_rwlockattr_t): Likewise.
+	* attr.c: Adjust for pthread.h and pthreadtypes.h change.
+	* cancel.c: Likewise.
+	* condvar.c: Likewise.
+	* manager.c: Likewise.
+	* mutex.c: Likewise.
+	* pthread.c: Likewise.
+	* ptlongjmp.c: Likewise.
+	* rwlock.c: Likewise.
+	* spinlock.c: Likewise.
+
 1998-10-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/pt-machine.h (get_eflags, set_eflags): Mark these

@@ -107,10 +107,10 @@ enum
 
 struct _pthread_cleanup_buffer
 {
-  void (*routine) __PMT ((void *));	/* Function to call.  */
-  void *arg;				/* Its argument.  */
-  int canceltype;			/* Saved cancellation type. */
-  struct _pthread_cleanup_buffer *prev;	/* Chaining of cleanup functions.  */
+  void (*__routine) __PMT ((void *));	  /* Function to call.  */
+  void *__arg;				  /* Its argument.  */
+  int __canceltype;			  /* Saved cancellation type. */
+  struct _pthread_cleanup_buffer *__prev; /* Chaining of cleanup functions.  */
 };
 
 /* Cancellation */
