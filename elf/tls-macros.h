@@ -484,7 +484,7 @@ register void *__gp __asm__("$29");
 	  "algr %0,%%r2\n\t"						      \
           "lgr %%r12,%1"						      \
 	  : "=&a" (__offset), "=&a" (__save12)				      \
-          : : "cc", "0", "1", "2", "3", "4", "5" );			      \
+          : : "cc", "0", "1", "2", "3", "4", "5", "14" );		      \
      (int *) (__builtin_thread_pointer() + __offset); })
 # else
 #  define TLS_LD(x) \
@@ -497,7 +497,8 @@ register void *__gp __asm__("$29");
 	  "brasl %%r14,__tls_get_offset@plt:tls_ldcall:" #x "\n\t"	      \
 	  "lg %0,8(%0)\n\t"						      \
 	  "algr %0,%%r2"						      \
-	  : "=&a" (__offset) : : "cc", "0", "1", "2", "3", "4", "5", "12" );  \
+	  : "=&a" (__offset)						      \
+	  : : "cc", "0", "1", "2", "3", "4", "5", "12", "14" );		      \
      (int *) (__builtin_thread_pointer() + __offset); })
 # endif
 
@@ -513,7 +514,7 @@ register void *__gp __asm__("$29");
           "lgr %0,%%r2\n\t"						      \
           "lgr %%r12,%1"						      \
 	  : "=&a" (__offset), "=&a" (__save12)				      \
-          : : "cc", "0", "1", "2", "3", "4", "5" );			      \
+          : : "cc", "0", "1", "2", "3", "4", "5", "14" );		      \
      (int *) (__builtin_thread_pointer() + __offset); })
 # else
 #  define TLS_GD(x) \
@@ -524,7 +525,8 @@ register void *__gp __asm__("$29");
 	  "lg %%r2,0(%0)\n\t"						      \
 	  "brasl %%r14,__tls_get_offset@plt:tls_gdcall:" #x "\n\t"	      \
           "lgr %0,%%r2"							      \
-	  : "=&a" (__offset) : : "cc", "0", "1", "2", "3", "4", "5", "12" );  \
+	  : "=&a" (__offset)						      \
+	  : : "cc", "0", "1", "2", "3", "4", "5", "12", "14" );		      \
      (int *) (__builtin_thread_pointer() + __offset); })
 # endif
 

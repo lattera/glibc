@@ -1,3 +1,7 @@
+2004-06-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/tls-macros.h [__s390x__] (TLS_LD, TLS_GD): Clobber also r14.
+
 2004-06-08  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #199]
