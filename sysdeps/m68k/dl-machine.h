@@ -157,13 +157,12 @@ _start:\n\
 _dl_start_user:\n\
 	| Save the user entry point address in %a4.\n\
 	move.l %d0, %a4\n\
-	| Point %a5 at the GOT.\n\
-	lea _GLOBAL_OFFSET_TABLE_@GOTPC(%pc), %a5\n\
 	| Remember the highest stack address.\n\
-	move.l %sp, ([__libc_stack_end@GOT.w, %a5])\n\
+	lea __libc_stack_end(%pc), %a0\n\
+	move.l %sp, (%a0)\n\
 	| See if we were run as a command with the executable file\n\
 	| name as an extra leading argument.\n\
-	move.l ([_dl_skip_args@GOT.w, %a5]), %d0\n\
+	move.l _dl_skip_args(%pc), %d0\n\
 	| Pop the original argument count\n\
 	move.l (%sp)+, %d1\n\
 	| Subtract _dl_skip_args from it.\n\
@@ -176,12 +175,12 @@ _dl_start_user:\n\
 	pea 8(%sp, %d1*4)\n\
 	pea 8(%sp)\n\
 	move.l %d1, -(%sp)\n\
-	move.l ([_rtld_local@GOT.w, %a5]), -(%sp)\n\
+	move.l _rtld_local(%pc), -(%sp)\n\
 	jbsr _dl_init_internal@PLTPC\n\
 	addq.l #8, %sp\n\
 	addq.l #8, %sp\n\
 	| Pass our finalizer function to the user in %a1.\n\
-	move.l _dl_fini@GOT.w(%a5), %a1\n\
+	lea _dl_fini(%pc), %a1\n\
 	| Initialize %fp with the stack pointer.\n\
 	move.l %sp, %fp\n\
 	| Jump to the user's entry point.\n\
