@@ -1,5 +1,7 @@
 1999-05-03  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/tester.c: Add test of rawmemchr.
+
 	* sysdeps/i386/bits/select.h (__FD_ZERO): Remove memory output
 	specification.  It's not necessary.
 

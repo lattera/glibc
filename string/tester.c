@@ -443,6 +443,33 @@ test_strchrnul (void)
 }
 
 void
+test_rawmemchr (void)
+{
+  it = "rawmemchr";
+  (void) strcpy (one, "abcd");
+  check (rawmemchr (one, 'c') == one+2, 1);	/* Basic test. */
+  check (rawmemchr (one, 'd') == one+3, 2);	/* End of string. */
+  check (rawmemchr (one, 'a') == one, 3);		/* Beginning. */
+  check (rawmemchr (one, '\0') == one+4, 4);	/* Finding NUL. */
+  (void) strcpy (one, "ababa");
+  check (rawmemchr (one, 'b') == one+1, 5);	/* Finding first. */
+  (void) strcpy (one, "");
+  check (rawmemchr (one, '\0') == one, 6);	/* NUL in empty string. */
+  {
+    char buf[4096];
+    int i;
+    char *p;
+    for (i=0; i < 0x100; i++)
+      {
+	p = (char *) ((unsigned long int) (buf + 0xff) & ~0xff) + i;
+	strcpy (p, "OK");
+	strcpy (p+3, "BAD/WRONG");
+	check (rawmemchr (p, 'R') == p+8, 6+i);
+      }
+   }
+}
+
+void
 test_index (void)
 {
   it = "index";
@@ -1098,6 +1125,9 @@ main (void)
 
   /* strchrnul.  */
   test_strchrnul ();
+
+  /* rawmemchr.  */
+  test_rawmemchr ();
 
   /* index - just like strchr.  */
   test_index ();
