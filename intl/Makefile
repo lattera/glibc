@@ -50,10 +50,13 @@ ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 ifneq ($(strip $(MSGFMT)),:)
 .PHONY: do-gettext-test do-translit-test
-tests: do-gettext-test do-translit-test
+tests: $(objpfx)mtrace-tst-gettext do-translit-test
+$(objpfx)mtrace-tst-gettext: do-gettext-test
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-gettext.mtrace > $@
 do-gettext-test: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/ \
+	  $(objpfx)tst-gettext.mtrace
  do-translit-test: $(objpfx)tst-translit.out
 $(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
@@ -76,27 +79,3 @@ YFLAGS = --name-prefix=__gettext --output
 
 $(inst_msgcatdir)/locale.alias: locale.alias $(+force)
 	$(do-install)
-
-ifdef gettext-srcdir
-
-%.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.glibc; $(copysrc)
-%.c:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.c; $(copysrc)
-%.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.h; $(copysrc)
-locale.alias:: ../gpl2lgpl.sed $(gettext-srcdir)/misc/locale.alias; $(copysrc)
-
-ifeq ($(with-cvs),yes)
-define copysrc
-sed -f $^ > $@.new
-chmod a-w $@.new
-mv -f $@.new $@
-test ! -d CVS || cvs $(CVSOPTS) commit -m'Updated from $<' $@
-endef
-else
-define copysrc
-sed -f $^ > $@.new
-chmod a-w $@.new
-mv -f $@.new $@
-endef
-endif
-
-endif

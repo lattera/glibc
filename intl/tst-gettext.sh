@@ -20,6 +20,7 @@
 
 common_objpfx=$1
 objpfx=$2
+malloc_trace=$3
 
 GCONV_PATH=${common_objpfx}iconvdata
 export GCONV_PATH
@@ -42,6 +43,7 @@ msgfmt -o ${objpfx}domaindir/existing-locale/LC_TIME/existing-time-domain.mo \
        ../po/de.po
 
 # Now run the test.
+MALLOC_TRACE=$malloc_trace \
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${objpfx}tst-gettext > ${objpfx}tst-gettext.out ${objpfx}domaindir
 

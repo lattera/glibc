@@ -36,7 +36,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
   /* If DT_BIND_NOW is set relocate all references in this object.  We
      do not do this if we are profiling, of course.  */
-  if (!consider_profiling && l->l_info[DT_BIND_NOW])
+  if (!consider_profiling
+      && __builtin_expect (l->l_info[DT_BIND_NOW] != NULL, 0))
     lazy = 0;
 
   if (__builtin_expect (_dl_debug_reloc, 0))
@@ -57,8 +58,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    caddr_t mapend = ((caddr_t) l->l_addr +
 			      ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
 			       & ~(_dl_pagesize - 1)));
-	    if (__mprotect (mapstart, mapend - mapstart,
-			    PROT_READ|PROT_WRITE) < 0)
+	    if (__builtin_expect (__mprotect (mapstart, mapend - mapstart,
+					      PROT_READ|PROT_WRITE), 0) < 0)
 	      _dl_signal_error (errno, l->l_name, N_("\
 cannot make segment writable for relocation"));
 	  }
@@ -145,7 +146,8 @@ cannot make segment writable for relocation"));
 		  prot |= PROT_EXEC;
 	      }
 
-	    if (__mprotect (mapstart, mapend - mapstart, prot) < 0)
+	    if (__builtin_expect (__mprotect (mapstart, mapend - mapstart,
+					      prot), 0) < 0)
 	      _dl_signal_error (errno, l->l_name,
 				N_("can't restore segment prot after reloc"));
 

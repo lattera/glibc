@@ -1,5 +1,17 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/Makefile (tests): Depend in mtrace-tst-gettext.
+	Make this a new rule depending on tst-gettext.out and run mtrace.
+	* intl/tst-gettext.c: Call mtrace.
+	* intl/tst-gettext.sh: Put MALLOC_TRACE in environment of tst-gettext.
+
+	* elf/dl-reloc.c: Add a few more __builtin_expect.
+
+	* configure.in: Remove --with-gettext option.
+
+	* intl/dcigettext.c (free_mem): Correct freeing of
+	_nl_domain_bindings list.
+
 	* sysdeps/generic/setenv.c (free_mem): New function.  Free all
 	allocated memory.
 

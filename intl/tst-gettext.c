@@ -19,6 +19,7 @@
 
 #include <libintl.h>
 #include <locale.h>
+#include <mcheck.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,6 +55,9 @@ int
 main (int argc, char *argv[])
 {
   int result = 0;
+
+  /* For debugging.  */
+  mtrace ();
 
   /* This is the place where the .mo files are placed.  */
   if (argc > 1)

@@ -1129,16 +1129,17 @@ mempcpy (dest, src, n)
 static void __attribute__ ((unused))
 free_mem (void)
 {
-  struct binding *runp;
   void *old;
 
-  for (runp = _nl_domain_bindings; runp != NULL; runp = runp->next)
+  while (_nl_domain_bindings != NULL)
     {
-      if (runp->dirname != _nl_default_dirname)
+      struct binding *oldp = _nl_domain_bindings;
+      _nl_domain_bindings = _nl_domain_bindings->next;
+      if (oldp->dirname != _nl_default_dirname)
 	/* Yes, this is a pointer comparison.  */
-	free (runp->dirname);
-      if (runp->codeset != NULL)
-	free (runp->codeset);
+	free (oldp->dirname);
+      free (oldp->codeset);
+      free (oldp);
     }
 
   if (_nl_current_default_domain != _nl_default_default_domain)
@@ -1147,6 +1148,7 @@ free_mem (void)
 
   /* Remove the search tree with the known translations.  */
   __tdestroy (root, free);
+  root = NULL;
 
   while (transmem_list != NULL)
     {

@@ -19,19 +19,6 @@ yes) AC_MSG_ERROR(--with-gmp requires an argument; use --with-gmp=DIRECTORY) ;;
 gmp-srcdir = $withval" ;;
 esac
 ])
-# Check for a --with-gettext argument and set gettext-srcdir in config.make.
-AC_ARG_WITH(gettext, dnl
-  --with-gettext=DIR	  find GNU gettext source code in DIR (not needed),
-	    [dnl
-case "$with_gettext" in
-yes)
-  AC_MSG_ERROR(--with-gettext requires an argument; use --with-gettext=DIR) ;;
-''|no) ;;
-*)
-  config_vars="$config_vars
-gettext-srcdir = $withval" ;;
-esac
-])
 # Check for a --with-gd argument and set libgd-LDFLAGS in config.make.
 AC_ARG_WITH(gd, dnl
   --with-gd=DIR           find libgd include dir and library with prefix DIR,
