@@ -1,5 +1,5 @@
 /* Device numbers of devices used in the implementation.  Linux version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,23 @@
 #ifndef _DEVICE_NRS_H
 #define _DEVICE_NRS_H	1
 
+#include <sys/sysmacros.h>
+
 /* /dev/null is (1,3).  */
 #define DEV_NULL_MAJOR	1
 #define DEV_NULL_MINOR	3
+
+/* Pseudo tty slaves.  For Linux we use the Unix98 ttys.  We could
+   also include the old BSD-style tty buts they should not be used and
+   the extra test would only slow down correctly set up systems.  If a
+   system still uses those device the slower tests performed (using
+   isatty) will catch it.  */
+#define DEV_TTY_LOW_MAJOR	136
+#define DEV_TTY_HIGH_MAJOR	143
+
+/* Test whether given device is a tty.  */
+#define DEV_TTY_P(dev) \
+  ({ int __dev_major = major (dev);					      \
+     __dev_major >= DEV_TTY_LOW_MAJOR && __dev_major <= DEV_TTY_HIGH_MAJOR; })
 
 #endif	/* device-nrs.h */
