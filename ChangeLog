@@ -1,6 +1,12 @@
+2004-11-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_getai (__nscd_getai): Avoid memory and file descriptor
+	leaks.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Free air.
+
 2004-11-15  Maciej W. Rozycki  <macro@mips.com>
 
-	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (__SI_MAX_SIZE): 
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (__SI_MAX_SIZE):
 	Define appropriately based on __WORDSIZE.
 	[struct siginfo] (__pad0): Add for explicit padding.
 
@@ -9,7 +15,7 @@
 
 2004-11-22  Ulrich Drepper  <drepper@redhat.com>
 
-	* dirent/dirent.h: Add __nonnull attributes.
+	* dirent/dirent.h: Add nonnull attributes.
 	* dlfcn/dlfcn.h: Likewise.
 
 2004-11-20  Jakub Jelinek  <jakub@redhat.com>

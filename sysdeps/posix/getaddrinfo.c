@@ -767,6 +767,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		      addrs += size;
 		    }
 
+		  free (air);
+
 		  if (at->family == AF_UNSPEC)
 		    return (GAIH_OKIFUNSPEC | -EAI_NONAME);
 
