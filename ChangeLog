@@ -1,5 +1,7 @@
 Thu Mar 28 14:22:51 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* sunrpc/rpc_main.c (main): Call textdomain.
+
 	* MakeTAGS (XGETTEXTFLAGS-siglist.pot, XGETTEXTFLAGS-errlist.pot): Add
 	--no-location.
 	(all-pot): Replace $(subdirs) files with $P/subdirs.pot.

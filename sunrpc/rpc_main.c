@@ -70,6 +70,9 @@ main(argc, argv)
 {
 	struct commandline cmd;
 
+	/* Use the libc message catalog for translations.  */
+	textdomain (_libc_intl_domainname);
+
 	if (!parseargs(argc, argv, &cmd)) {
 		f_print(stderr,
 			_("usage: %s infile\n"), cmdname);
