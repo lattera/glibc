@@ -1,3 +1,12 @@
+Wed Oct 11 00:00:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makeconfig (config-LDFLAGS): Add missing slash.
+
+	* sysdeps/mach/hurd/profil.c (fork_profil): Only call
+	update_waiter if profiling was enabled in the parent.
+
+	* csu/initfini.c: Don't pass -f flag to cp.
+
 Tue Oct 10 23:08:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (build-shlib): Pass -rpath and -rpath-link options.

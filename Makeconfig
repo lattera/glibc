@@ -275,7 +275,7 @@ ifndef +link
 endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
-config-LDFLAGS = -Wl,-dynamic-linker=$(libdir)$(rtld-installed-name)
+config-LDFLAGS = -Wl,-dynamic-linker=$(libdir)/$(rtld-installed-name)
 endif
 endif
 ifndef link-libc

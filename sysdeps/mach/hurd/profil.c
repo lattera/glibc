@@ -158,7 +158,10 @@ fork_profil (void)
   ss = sample_scale;
   sample_scale = 0;
 
-  err = update_waiter (sb, n * sizeof *sb, o, ss);
-  assert_perror (err);
+  if (ss != 0)
+    {
+      err = update_waiter (sb, n * sizeof *sb, o, ss);
+      assert_perror (err);
+    }
 }
 text_set_element (_hurd_fork_child_hook, fork_profil);

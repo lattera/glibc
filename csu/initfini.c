@@ -53,8 +53,9 @@ void _fini (void) __attribute__ ((section (".fini")));
 /* End the here document containing the initial common code.
    Then move the output file crtcommon.tmp to crti.s-new and crtn.s-new.  */
 asm ("\nEOF_common\n\
-mv -f crtcommon.tmp crti.s-new\n\
-cp -f crti.s-new crtn.s-new");
+rm -f crti.s-new crtn.s-new\n\
+mv crtcommon.tmp crti.s-new\n\
+cp crti.s-new crtn.s-new");
 
 /* Append the .init prologue to crti.s-new.  */
 asm ("cat >> crti.s-new <<\\EOF.crti.init");
