@@ -1,2 +1,2 @@
-#define FUNC    __ieee754_log10f
+#define FUNC    __ieee754_log2f
 #include <e_acosf.c>
