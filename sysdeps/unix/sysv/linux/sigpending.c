@@ -44,7 +44,7 @@ sigpending (set)
 #if __ASSUME_REALTIME_SIGNALS > 0
   return INLINE_SYSCALL (rt_sigpending, 2, CHECK_SIGSET (set), _NSIG / 8);
 #else
-# ifdef __NR_rt_pending
+# ifdef __NR_rt_sigpending
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {

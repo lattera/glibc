@@ -1,3 +1,8 @@
+2000-12-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sigpending.c (sigpending): Fix typo.
+	Reported by Michael Kerrisk <mtk16@ext.canterbury.ac.nz>.
+
 2000-12-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h: Declare
