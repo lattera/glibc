@@ -20,16 +20,16 @@
  *	   for x in (0,2)
  *		j0(x) = 1 - z/4 + z^2*R0/S0,  where z = x*x;
  *	   for x in (2,inf)
- * 		j0(x) = sqrt(2/(pi*x))*(p0(x)*cos(x0)-q0(x)*sin(x0))
- * 	   where x0 = x-pi/4. It is better to compute sin(x0),cos(x0)
+ *		j0(x) = sqrt(2/(pi*x))*(p0(x)*cos(x0)-q0(x)*sin(x0))
+ *	   where x0 = x-pi/4. It is better to compute sin(x0),cos(x0)
  *	   as follow:
  *		cos(x0) = cos(x)cos(pi/4)+sin(x)sin(pi/4)
  *			= 1/sqrt(2) * (cos(x) + sin(x))
  *		sin(x0) = sin(x)cos(pi/4)-cos(x)sin(pi/4)
  *			= 1/sqrt(2) * (sin(x) - cos(x))
- * 	   (To avoid cancellation, use
+ *	   (To avoid cancellation, use
  *		sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
- * 	    to compute the worse one.)
+ *	    to compute the worse one.)
  *
  *	3 Special cases
  *		j0(nan)= nan
@@ -47,8 +47,8 @@
  *	   Note: For tiny x, U/V = u0 and j0(x)~1, hence
  *		y0(tiny) = u0 + (2/pi)*ln(tiny), (choose tiny<2**-27)
  *	2. For x>=2.
- * 		y0(x) = sqrt(2/(pi*x))*(p0(x)*cos(x0)+q0(x)*sin(x0))
- * 	   where x0 = x-pi/4. It is better to compute sin(x0),cos(x0)
+ *		y0(x) = sqrt(2/(pi*x))*(p0(x)*cos(x0)+q0(x)*sin(x0))
+ *	   where x0 = x-pi/4. It is better to compute sin(x0),cos(x0)
  *	   by the method mentioned above.
  *	3. Special cases: y0(0)=-inf, y0(x<0)=NaN, y0(inf)=0.
  */
@@ -71,8 +71,6 @@ static long double
   one = 1.0L,
   invsqrtpi = 5.6418958354775628694807945156077258584405e-1L,
   tpi = 6.3661977236758134307553505349005744813784e-1L,
-  j0z1 = 2.40482555769577276862163187932650662155139L,
-  j0z2 = 5.520078110286310649596604112813027425221865L,
 
   /* J0(x) = 1 - x^2 / 4 + x^4 R0(x^2) / S0(x^2)
      0 <= x <= 2
@@ -275,7 +273,7 @@ __ieee754_y0l (x)
 /* The asymptotic expansions of pzero is
  *	1 - 9/128 s^2 + 11025/98304 s^4 - ...,	where s = 1/x.
  * For x >= 2, We approximate pzero by
- * 	pzero(x) = 1 + s^2 R(s^2) / S(s^2)
+ *	pzero(x) = 1 + s^2 R(s^2) / S(s^2)
  */
 #ifdef __STDC__
 static const long double pR8[7] = {
@@ -450,7 +448,7 @@ pzero (x)
 /* For x >= 8, the asymptotic expansions of qzero is
  *	-1/8 s + 75/1024 s^3 - ..., where s = 1/x.
  * We approximate qzero by
- * 	qzero(x) = s*(-.125 + R(s^2) / S(s^2))
+ *	qzero(x) = s*(-.125 + R(s^2) / S(s^2))
  */
 #ifdef __STDC__
 static const long double qR8[7] = {

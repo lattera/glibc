@@ -20,21 +20,4 @@ libc {
     # s*
     scandir64;
   }
-  GLIBC_2.3 {
-    # f*
-    fgetxattr; flistxattr; fremovexattr; fsetxattr;
-
-    # g*
-    getxattr;
-
-    # l*
-    listxattr;
-    lgetxattr; llistxattr; lremovexattr; lsetxattr;
-
-    # r*
-    removexattr;
-
-    # s*
-    setxattr;
-  }
 }

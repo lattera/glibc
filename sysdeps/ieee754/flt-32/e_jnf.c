@@ -25,7 +25,6 @@ static const float
 #else
 static float
 #endif
-invsqrtpi=  5.6418961287e-01, /* 0x3f106ebb */
 two   =  2.0000000000e+00, /* 0x40000000 */
 one   =  1.0000000000e+00; /* 0x3F800000 */
 
@@ -62,7 +61,7 @@ static float zero  =  0.0000000000e+00;
 	if(n==1) return(__ieee754_j1f(x));
 	sgn = (n&1)&(hx>>31);	/* even n -- 0, odd n -- sign(x) */
 	x = fabsf(x);
-	if(ix==0||ix>=0x7f800000) 	/* if x is 0 or inf */
+	if(ix==0||ix>=0x7f800000)	/* if x is 0 or inf */
 	    b = zero;
 	else if((float)n<=x) {
 		/* Safe to use J(n+1,x)=2n/x *J(n,x)-J(n-1,x) */
@@ -90,11 +89,11 @@ static float zero  =  0.0000000000e+00;
 		}
 	    } else {
 		/* use backward recurrence */
-		/* 			x      x^2      x^2
+		/*			x      x^2      x^2
 		 *  J(n,x)/J(n-1,x) =  ----   ------   ------   .....
 		 *			2n  - 2(n+1) - 2(n+2)
 		 *
-		 * 			1      1        1
+		 *			1      1        1
 		 *  (for large x)   =  ----  ------   ------   .....
 		 *			2n   2(n+1)   2(n+2)
 		 *			-- - ------ - ------ -
@@ -107,7 +106,7 @@ static float zero  =  0.0000000000e+00;
 		 *		       1
 		 *	   w - -----------------
 		 *			  1
-		 * 	        w+h - ---------
+		 *	        w+h - ---------
 		 *		       w+2h - ...
 		 *
 		 * To determine how many terms needed, let
@@ -144,15 +143,15 @@ static float zero  =  0.0000000000e+00;
 		v = two/x;
 		tmp = tmp*__ieee754_logf(fabsf(v*tmp));
 		if(tmp<(float)8.8721679688e+01) {
-	    	    for(i=n-1,di=(float)(i+i);i>0;i--){
+		    for(i=n-1,di=(float)(i+i);i>0;i--){
 		        temp = b;
 			b *= di;
 			b  = b/x - a;
 		        a = temp;
 			di -= two;
-	     	    }
+		    }
 		} else {
-	    	    for(i=n-1,di=(float)(i+i);i>0;i--){
+		    for(i=n-1,di=(float)(i+i);i>0;i--){
 		        temp = b;
 			b *= di;
 			b  = b/x - a;
@@ -164,9 +163,9 @@ static float zero  =  0.0000000000e+00;
 			    t /= b;
 			    b  = one;
 			}
-	     	    }
+		    }
 		}
-	    	b = (t*__ieee754_j0f(x)/b);
+		b = (t*__ieee754_j0f(x)/b);
 	    }
 	}
 	if(sgn==1) return -b; else return b;

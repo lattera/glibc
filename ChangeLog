@@ -1,12 +1,52 @@
+2002-08-23  Andreas Jaeger  <aj@suse.de>
+
+	* locale/loadarchive.c: Include <stdlib.h> for prototypes of
+	alloca, free, qsort.
+
+	* dlfcn/bug-dlsym1-lib1.c (foo): Add prototype to avoid warning.
+
+	* sysdeps/ieee754/flt-32/e_jnf.c: Remove unused variable.
+	* sysdeps/ieee754/ldbl-96/e_j0l.c: Likewise.
+
+	* sysdeps/generic/fgetxattr.c: New file.
+	* sysdeps/generic/flistxattr.c: New file.
+	* sysdeps/generic/fremovexattr.c: New file.
+	* sysdeps/generic/fsetxattr.c: New file.
+	* sysdeps/generic/getxattr.c: New file.
+	* sysdeps/generic/listxattr.c: New file.
+	* sysdeps/generic/lgetxattr.c: New file.
+	* sysdeps/generic/llistxattr.c: New file.
+	* sysdeps/generic/lremovexattr.c: New file.
+	* sysdeps/generic/lsetxattr.c: New file.
+	* sysdeps/generic/removexattr.c: New file.
+	* sysdeps/generic/setxattr.c: New file.
+
+	* misc/sys/xattr.h: New file, contributed by Christoph Hellwig
+	<hch@lst.de>.
+
+	* misc/Makefile (headers): Add sys/xattr.h.
+	(routines): Add *xattr calls.
+
+	* misc/Versions: Add *xattr calls with version 2.3.
+
+	* sysdeps/unix/sysv/linux/m68k/Versions: Remove *xattr syscalls.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/arm/Versions: Likewise.
+
 2002-08-22  Steven Munroe  <sjmunroe@us.ibm.com>
 
-	* sysdeps/powerpc/elf/libc-start.c 
+	* sysdeps/powerpc/elf/libc-start.c
 	(__cache_line_size): Declare.
 	(__aux_init_cache): New.
 	(__libc_start_main): Change type of `auxvec' parameter to
 	`ElfW(auxv_t) *'.  Correct walking of aux vector.  Call
 	__aux_init_cache.
-	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c 
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
 	(__cache_line_size): Declare.
 	(__aux_init_cache): New.
 	(DL_PLATFORM_INIT): Define.
