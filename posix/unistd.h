@@ -814,8 +814,8 @@ extern int sync (void) __THROW;
 
 /* Return the number of bytes in a page.  This is the system's page size,
    which is not necessarily the same as the hardware page size.  */
-extern int __getpagesize (void) __attribute__ ((__const__)) __THROW;
-extern int getpagesize (void) __attribute__ ((__const__)) __THROW;
+extern int __getpagesize (void)  __THROW __attribute__ ((__const__));
+extern int getpagesize (void)  __THROW __attribute__ ((__const__));
 
 
 /* Truncate FILE to LENGTH bytes.  */
