@@ -968,7 +968,7 @@ write_output (void)
   size_t total;
 
   /* Function to insert the names.  */
-  void name_insert (const void *nodep, VISIT value, int level)
+  static void name_insert (const void *nodep, VISIT value, int level)
     {
       struct name *name;
       unsigned int idx;
