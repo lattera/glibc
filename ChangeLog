@@ -1,3 +1,8 @@
+2005-03-29  Thorsten Kukuk  <kukuk@suse.de>
+
+	* posix/tst-execle1.c (do_test): Fix execle arguments.
+	* posix/tst-execle2.c (do_test): Likewise.
+
 2005-03-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/w_exp2.c [NO_LONG_DOUBLE]: Fix typos in alias names.
