@@ -1,3 +1,10 @@
+Mon Nov 20 16:19:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* intl/Makefile [gettext-srcdir]: Rewrote copying rules to only
+	get .c and .h files.
+
+	* malloc/malloc.c (align): Use abort instead of assert.
+
 Sun Nov 19 18:23:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makeconfig (+includes): Add $($(stdio)-include).
