@@ -1,3 +1,17 @@
+2000-08-23  Andreas Jaeger  <aj@suse.de>
+
+	* include/wchar.h: Add some pure attributes.
+
+	* time/time.h: Add const attribute for dysize.
+
+	* include/stdlib.h: Add malloc attribute to __posix memalign.
+
+	* stdlib/stdlib.h: Add some pure and malloc attributes.
+	* wcsmbs/wchar.h: Likewise.
+
+	* dirent/dirent.h: Add some pure attributes.
+	* include/dirent.h: Likewise.
+
 2000-08-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/netinet/in.h (struct in6_addr): Don't enforce 64bit alignment
