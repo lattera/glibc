@@ -180,8 +180,8 @@ _dl_dst_count (const char *name, int is_path)
     {
       size_t len = 1;
 
-      /* $ORIGIN is not expanded for SUID/GUID programs and it must
-	 always appear first in path.
+      /* $ORIGIN is not expanded for SUID/GUID programs (except if it
+	 is $ORIGIN alone) and it must always appear first in path.
 
 	 Note that it is no bug that the string in the second and
 	 fourth `strncmp' call is longer than the sequence which is
@@ -192,7 +192,8 @@ _dl_dst_count (const char *name, int is_path)
 		   || (is_path && name[7] == ':'))
 	       && (len = 7) != 0)))
 	{
-	  if (__builtin_expect (!__libc_enable_secure, 1)
+	  if ((__builtin_expect (!__libc_enable_secure, 1)
+	       || name[len] == '\0' || (is_path && name[len] == ':'))
 	      && (name == start || (is_path && name[-1] == ':')))
 	    ++cnt;
 	}
@@ -241,7 +242,8 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 		       || (is_path && name[7] == ':'))
 		   && (len = 7) != 0)))
 	    {
-	      if (__builtin_expect (!__libc_enable_secure, 1)
+	      if ((__builtin_expect (!__libc_enable_secure, 1)
+		   || name[len] == '\0' || (is_path && name[len] == ':'))
 		  && (name == start || (is_path && name[-1] == ':')))
 		repl = l->l_origin;
 	    }
