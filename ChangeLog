@@ -1,5 +1,8 @@
 2005-03-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/test-ifaddrs.c: Use test-skeleton.
+	* inet/test_ifindex.c: Likewise.
+
 	* elf/dl-lookup.c (add_dependency): Always search l_initfini if
 	the list exists.
 
