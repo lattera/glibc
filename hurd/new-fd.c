@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,9 @@ _hurd_new_fd (io_t port, io_t ctty)
       /* Initialize the port cells.  */
       _hurd_port_init (&d->port, port);
       _hurd_port_init (&d->ctty, ctty);
+      
+      /* And the fcntl flags.  */
+      d->flags = 0;
     }
 
   return d;

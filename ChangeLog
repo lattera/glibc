@@ -1,3 +1,21 @@
+1999-08-22  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/new-fd.c (_hurd_new_fd): Initialize fcntl flags.
+	* hurd/port2fd.c (_hurd_port2fd): Reset the fcntl flags when
+	installing PORT in the descriptor cell.
+
+1999-08-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/intr-msg.h (INTR_MSG_TRAP): Mark OPTION and
+	TIMEOUT as outputs of the asm to indicate that the signal thread
+	might mutate them.
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Short circuit to plain
+	mach_msg if only sending or only receiving (i.e., not an RPC).  When
+	making an RPC that might get interrupted, save OPTION and the portion
+	of the message buffer that gets clobbered by an EINTR reply message,
+	and properly restore them before attempting to retry the request
+	message send.
+
 1999-08-21  Mark Kettenis  <kettenis@gnu.org>
 
 	* stdio-common/vfscanf.c [! USE_IN_LIBIO]: Add necessary

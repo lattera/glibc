@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,6 +67,7 @@ _hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
     mach_port_t old
       = _hurd_userlink_clear (&d->port.users) ? d->port.port : MACH_PORT_NULL;
     d->port.port = port;
+    d->flags = 0;
     if (old != MACH_PORT_NULL)
       __mach_port_deallocate (__mach_task_self (), old);
   }
