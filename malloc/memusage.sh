@@ -44,6 +44,7 @@ Profile memory usage of PROGRAM.
    -u,--unbuffered        Don't buffer output
    -b,--buffer=SIZE       Collect SIZE entries before writing them out
       --no-timer          Don't collect additional information though timer
+   -m,--mmap              Also trace mmap & friends
 
    -?,--help              Print this help and exit
       --usage             Give a short usage message
@@ -133,6 +134,9 @@ while test $# -gt 0; do
     ;;
   --n | --no | --no- | --no-t | --no-ti | --no-tim | --no-time | --no-timer)
     notimer=yes
+    ;;
+  -m | --m | --mm | --mma | --mmap)
+    tracemmap=yes
     ;;
   -t | --tim | --time | --time- | --time-b | --time-ba | --time-bas | --time-base | --time-based)
     memusagestat_args="$memusagestat_args -t"
@@ -232,6 +236,11 @@ fi
 # Disable timers.
 if test -n "$notimer"; then
   add_env="$add_env MEMUSAGE_NO_TIMER=yes"
+fi
+
+# Trace mmap.
+if test -n "$tracemmap"; then
+  add_env="$add_env MEMUSAGE_TRACE_MMAP=yes"
 fi
 
 # Execute the program itself.

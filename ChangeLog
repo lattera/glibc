@@ -1,3 +1,8 @@
+2002-05-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/memusage.c: Add support for tracking mmap & friends.
+	* malloc/memusage.sh: Implement -m/--mmap option.
+
 2002-04-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/locarchive.c (create_archive): Add archivefname

@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,10 +23,12 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/mman.h>
 #include <sys/time.h>
 
 #include <memusage.h>
@@ -38,12 +40,21 @@ static void *(*reallocp) (void *, size_t);
 static void *(*callocp) (size_t, size_t);
 static void (*freep) (void *);
 
+static void *(*mmapp) (void *, size_t, int, int, int, off_t);
+static void *(*mmap64p) (void *, size_t, int, int, int, off64_t);
+static int (*munmapp) (void *, size_t);
+static void *(*mremapp) (void *, size_t, size_t, int);
+
 enum
 {
   idx_malloc = 0,
   idx_realloc,
   idx_calloc,
   idx_free,
+  idx_mmap_r,
+  idx_mmap_w,
+  idx_mremap,
+  idx_munmap,
   idx_last
 };
 
@@ -66,6 +77,8 @@ static unsigned long int large;
 static unsigned long int calls_total;
 static unsigned long int inplace;
 static unsigned long int decreasing;
+static unsigned long int inplace_mremap;
+static unsigned long int decreasing_mremap;
 static long int current_use[2];
 static long int peak_use[3];
 static uintptr_t start_sp;
@@ -82,8 +95,9 @@ static size_t buffer_size;
 
 static int fd = -1;
 
-static int not_me;
+static bool not_me;
 static int initialized;
+static bool trace_mmap;
 extern const char *__progname;
 
 struct entry
@@ -186,6 +200,15 @@ me (void)
   reallocp = (void *(*) (void *, size_t)) dlsym (RTLD_NEXT, "realloc");
   callocp = (void *(*) (size_t, size_t)) dlsym (RTLD_NEXT, "calloc");
   freep = (void (*) (void *)) dlsym (RTLD_NEXT, "free");
+
+  mmapp = (void *(*) (void *, size_t, int, int, int, off_t)) dlsym (RTLD_NEXT,
+								    "mmap");
+  mmap64p =
+    (void *(*) (void *, size_t, int, int, int, off64_t)) dlsym (RTLD_NEXT,
+								"mmap64");
+  mremapp = (void *(*) (void *, size_t, size_t, int)) dlsym (RTLD_NEXT,
+							     "mremap");
+  munmapp = (int (*) (void *, size_t)) dlsym (RTLD_NEXT, "munmap");
   initialized = 1;
 
   if (env != NULL)
@@ -194,7 +217,7 @@ me (void)
       size_t len = strlen (env);
       if (len > prog_len || strcmp (env, &__progname[prog_len - len]) != 0
 	  || (prog_len != len && __progname[prog_len - len - 1] != '/'))
-	not_me = 1;
+	not_me = true;
     }
 
   /* Only open the file if it's really us.  */
@@ -214,7 +237,7 @@ me (void)
 	  if (fd == -1)
 	    /* Don't do anything in future calls if we cannot write to
 	       the output file.  */
-	    not_me = 1;
+	    not_me = true;
 	  else
 	    {
 	      /* Write the first entry.  */
@@ -255,6 +278,9 @@ me (void)
 		}
 	    }
 	}
+
+      if (!not_me && getenv ("MEMUSAGE_TRACE_MMAP") != NULL)
+	trace_mmap = true;
     }
 }
 
@@ -496,6 +522,208 @@ free (void *ptr)
 }
 
 
+/* `mmap' replacement.  We do not have to keep track of the sizesince
+   `munmap' will get it as a parameter.  */
+void *
+mmap (void *start, size_t len, int prot, int flags, int fd, off_t offset)
+{
+  void *result = NULL;
+
+  /* Determine real implementation if not already happened.  */
+  if (__builtin_expect (initialized <= 0, 0))
+    {
+      if (initialized == -1)
+	return NULL;
+      me ();
+    }
+
+  /* Always get a block.  We don't need extra memory.  */
+  result = (*mmapp) (start, len, prot, flags, fd, offset);
+
+  if (!not_me && trace_mmap)
+    {
+      int idx = prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r;
+
+      /* Keep track of number of calls.  */
+      ++calls[idx];
+      /* Keep track of total memory consumption for `malloc'.  */
+      total[idx] += len;
+      /* Keep track of total memory requirement.  */
+      grand_total += len;
+      /* Remember the size of the request.  */
+      if (len < 65536)
+	++histogram[len / 16];
+      else
+	++large;
+      /* Total number of calls of any of the functions.  */
+      ++calls_total;
+
+      /* Check for failures.  */
+      if (result == NULL)
+	++failed[idx];
+      else if (idx == idx_mmap_w)
+	/* Update the allocation data and write out the records if
+	   necessary.  Note the first parameter is NULL which means
+	   the size is not tracked.  */
+	update_data (NULL, len, 0);
+    }
+
+  /* Return the pointer to the user buffer.  */
+  return result;
+}
+
+
+/* `mmap' replacement.  We do not have to keep track of the sizesince
+   `munmap' will get it as a parameter.  */
+void *
+mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
+{
+  void *result = NULL;
+
+  /* Determine real implementation if not already happened.  */
+  if (__builtin_expect (initialized <= 0, 0))
+    {
+      if (initialized == -1)
+	return NULL;
+      me ();
+    }
+
+  /* Always get a block.  We don't need extra memory.  */
+  result = (*mmap64p) (start, len, prot, flags, fd, offset);
+
+  if (!not_me && trace_mmap)
+    {
+      int idx = prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r;
+
+      /* Keep track of number of calls.  */
+      ++calls[idx];
+      /* Keep track of total memory consumption for `malloc'.  */
+      total[idx] += len;
+      /* Keep track of total memory requirement.  */
+      grand_total += len;
+      /* Remember the size of the request.  */
+      if (len < 65536)
+	++histogram[len / 16];
+      else
+	++large;
+      /* Total number of calls of any of the functions.  */
+      ++calls_total;
+
+      /* Check for failures.  */
+      if (result == NULL)
+	++failed[idx];
+      else if (idx == idx_mmap_w)
+	/* Update the allocation data and write out the records if
+	   necessary.  Note the first parameter is NULL which means
+	   the size is not tracked.  */
+	update_data (NULL, len, 0);
+    }
+
+  /* Return the pointer to the user buffer.  */
+  return result;
+}
+
+
+/* `mmap' replacement.  We do not have to keep track of the sizesince
+   `munmap' will get it as a parameter.  */
+void *
+mremap (void *start, size_t old_len, size_t len, int flags)
+{
+  void *result = NULL;
+
+  /* Determine real implementation if not already happened.  */
+  if (__builtin_expect (initialized <= 0, 0))
+    {
+      if (initialized == -1)
+	return NULL;
+      me ();
+    }
+
+  /* Always get a block.  We don't need extra memory.  */
+  result = (*mremapp) (start, old_len, len, flags);
+
+  if (!not_me && trace_mmap)
+    {
+      /* Keep track of number of calls.  */
+      ++calls[idx_mremap];
+      if (len > old_len)
+	{
+	  /* Keep track of total memory consumption for `malloc'.  */
+	  total[idx_mremap] += len - old_len;
+	  /* Keep track of total memory requirement.  */
+	  grand_total += len - old_len;
+	}
+      /* Remember the size of the request.  */
+      if (len < 65536)
+	++histogram[len / 16];
+      else
+	++large;
+      /* Total number of calls of any of the functions.  */
+      ++calls_total;
+
+      /* Check for failures.  */
+      if (result == NULL)
+	++failed[idx_mremap];
+      else
+	{
+	  /* Record whether the reduction/increase happened in place.  */
+	  if (start == result)
+	    ++inplace_mremap;
+	  /* Was the buffer increased?  */
+	  if (old_len > len)
+	    ++decreasing_mremap;
+
+	  /* Update the allocation data and write out the records if
+	     necessary.  Note the first parameter is NULL which means
+	     the size is not tracked.  */
+	  update_data (NULL, len, old_len);
+	}
+    }
+
+  /* Return the pointer to the user buffer.  */
+  return result;
+}
+
+
+/* `munmap' replacement.  */
+int
+munmap (void *start, size_t len)
+{
+  int result;
+
+  /* Determine real implementation if not already happened.  */
+  if (__builtin_expect (initialized <= 0, 0))
+    {
+      if (initialized == -1)
+	return -1;
+      me ();
+    }
+
+  /* Do the real work.  */
+  result = (*munmapp) (start, len);
+
+  if (!not_me && trace_mmap)
+    {
+      /* Keep track of number of calls.  */
+      ++calls[idx_munmap];
+
+      if (__builtin_expect (result == 0, 1))
+	{
+	  /* Keep track of total memory freed using `free'.  */
+	  total[idx_munmap] += len;
+
+	  /* Update the allocation data and write out the records if
+	     necessary.  */
+	  update_data (NULL, 0, len);
+	}
+      else
+	++failed[idx_munmap];
+    }
+
+  return result;
+}
+
+
 /* Write some statistics to standard error.  */
 static void
 __attribute__ ((destructor))
@@ -508,7 +736,7 @@ dest (void)
   if (not_me)
     return;
   /* If we should call any of the memory functions don't do any profiling.  */
-  not_me = 1;
+  not_me = true;
 
   /* Finish the output file.  */
   if (fd != -1)
@@ -551,6 +779,22 @@ dest (void)
 	   calls[idx_calloc], total[idx_calloc],
 	   failed[idx_calloc] ? "\e[01;41m" : "", failed[idx_calloc],
 	   calls[idx_free], total[idx_free]);
+
+  if (trace_mmap)
+    fprintf (stderr, "\
+\e[00;34mmmap(r)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
+\e[00;34mmmap(w)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
+\e[00;34m mremap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m   (in place: %ld, dec: %ld)\n\
+\e[00;34m munmap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n",
+	     calls[idx_mmap_r], total[idx_mmap_r],
+	     failed[idx_mmap_r] ? "\e[01;41m" : "", failed[idx_mmap_r],
+	     calls[idx_mmap_w], total[idx_mmap_w],
+	     failed[idx_mmap_w] ? "\e[01;41m" : "", failed[idx_mmap_w],
+	     calls[idx_mremap], total[idx_mremap],
+	     failed[idx_mremap] ? "\e[01;41m" : "", failed[idx_mremap],
+	     inplace_mremap, decreasing_mremap,
+	     calls[idx_munmap], total[idx_munmap],
+	     failed[idx_munmap] ? "\e[01;41m" : "", failed[idx_munmap]);
 
   /* Write out a histoogram of the sizes of the allocations.  */
   fprintf (stderr, "\e[01;32mHistogram for block sizes:\e[0;0m\n");
