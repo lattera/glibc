@@ -40,7 +40,6 @@ char **__libc_argv attribute_hidden;
 
 
 void
-attribute_hidden
 __libc_init_first (int argc, char **argv, char **envp)
 {
 #ifdef SHARED
