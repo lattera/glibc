@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,6 +82,21 @@ bad_speed (speed_t speed)
     case B9600:
     case B19200:
     case B38400:
+    case B57600:
+    case B115200:
+    case B230400:
+    case B460800:
+    case B500000:
+    case B576000:
+    case B921600:
+    case B1000000:
+    case B1152000:
+    case B1500000:
+    case B2000000:
+    case B2500000:
+    case B3000000:
+    case B3500000:
+    case B4000000:
       return 0;
     default:
       return 1;

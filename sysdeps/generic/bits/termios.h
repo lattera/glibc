@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  4.4 BSD/generic GNU version.
-   Copyright (C) 1993,94,96,97,99 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,96,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -212,10 +212,25 @@ struct termios
 #define	B9600	9600		/* 9600 baud.  */
 #define	B19200	19200		/* 19200 baud.  */
 #define	B38400	38400		/* 38400 baud.  */
-#ifdef	__USE_BSD
+#ifdef	__USE_MISC
 # define EXTA	19200
 # define EXTB	38400
 #endif
+#define	B57600	57600
+#define	B115200	115200
+#define	B230400	230400
+#define	B460800	460800
+#define	B500000	500000
+#define	B576000	576000
+#define	B921600	921600
+#define	B1000000 1000000
+#define	B1152000 1152000
+#define	B1500000 1500000
+#define	B2000000 2000000
+#define	B2500000 2500000
+#define	B3000000 3000000
+#define	B3500000 3500000
+#define	B4000000 4000000
 };
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
