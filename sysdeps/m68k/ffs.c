@@ -30,7 +30,7 @@ DEFUN(ffs, (x), int x)
 {
   int cnt;
 
-  asm("bfffo %1{#0:#0},%0" : "=d" (cnt) : "rm" (x & -x));
+  asm("bfffo %1{#0:#0},%0" : "=d" (cnt) : "dm" (x & -x));
 
   return 32 - cnt;
 }

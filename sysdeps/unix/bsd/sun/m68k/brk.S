@@ -33,7 +33,7 @@ ___curbrk:
 
 .text
 ENTRY (__brk)
-	movel __end, d0
+	movel #__end, d0
 	cmpl sp@(4), d0
 	ble 0f
 	movel d0, sp@(4)

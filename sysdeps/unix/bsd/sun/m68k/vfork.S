@@ -41,7 +41,7 @@ ___vfork:
 	   bits set) for the parent, and 0 (no bits set) for the child.
 	   Then AND it with D0, so the parent gets D0&-1==R0, and the child
 	   gets D0&0==0.  */
-	decl d1
+	subql #1, d1
 	andl d1, d0
 
 	/* Jump to the return PC.  */

@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 
-__CONSTVALUE double
+double
 DEFUN(FUNC, (x), double x)
 {
   return __m81_u(FUNC)(x);

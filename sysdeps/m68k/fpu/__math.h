@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #ifdef	__GNUC__
 
 #include <sys/cdefs.h>
+#define __need_Emath
+#include <errno.h>
 
 #ifdef	__NO_MATH_INLINES
 /* This is used when defining the functions themselves.  Define them with
@@ -28,12 +30,14 @@ Cambridge, MA 02139, USA.  */
 #define __m81_inline	static __inline
 #else
 #define	__m81_u(x)	x
-#define __m81_inline	exter __inline
+#define __m81_inline	extern __inline
 #define	__MATH_INLINES	1
 #endif
 
 #define	__inline_mathop2(func, op)					      \
-  __m81_inline __CONSTVALUE double					      \
+  __m81_inline double							      \
+  __m81_u(func)(double __mathop_x) __attribute__((__const__));		      \
+  __m81_inline double							      \
   __m81_u(func)(double __mathop_x)					      \
   {									      \
     double __result;							      \
@@ -55,20 +59,23 @@ __inline_mathop2(exp, etox)
 __inline_mathop2(fabs, abs)
 __inline_mathop(log10)
 __inline_mathop2(log, logn)
-__inline_mathop2(floor, intrz)
 __inline_mathop(sqrt)
 
 __inline_mathop2(__rint, int)
 __inline_mathop2(__expm1, etoxm1)
 
 #ifdef	__USE_MISC
+#ifndef __NO_MATH_INLINES
 __inline_mathop2(rint, int)
 __inline_mathop2(expm1, etoxm1)
+#endif
 __inline_mathop2(log1p, lognp1)
 __inline_mathop(atanh)
 #endif
 
-__m81_inline __CONSTVALUE double
+__m81_inline double
+__m81_u(__drem)(double __x, double __y) __attribute__ ((__const__));
+__m81_inline double
 __m81_u(__drem)(double __x, double __y)
 {
   double __result;
@@ -76,7 +83,9 @@ __m81_u(__drem)(double __x, double __y)
   return __result;
 }
 
-__m81_inline __CONSTVALUE double
+__m81_inline double
+__m81_u(ldexp)(double __x, int __e) __attribute__ ((__const__));
+__m81_inline double
 __m81_u(ldexp)(double __x, int __e)
 {
   double __result;
@@ -85,7 +94,9 @@ __m81_u(ldexp)(double __x, int __e)
   return __result;
 }
 
-__m81_inline __CONSTVALUE double
+__m81_inline double
+__m81_u(fmod)(double __x, double __y) __attribute__ ((__const__));
+__m81_inline double
 __m81_u(fmod)(double __x, double __y)
 {
   double __result;
@@ -103,11 +114,39 @@ __m81_u(frexp)(double __value, int *__expptr)
   return __mantissa;
 }
 
-__m81_inline __CONSTVALUE double
+__m81_inline double
+__m81_u(floor)(double __x) __attribute__ ((__const__));
+__m81_inline double
+__m81_u(floor)(double __x)
+{
+  double __result;
+  unsigned long int __ctrl_reg;
+  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));
+  /* Set rounding towards negative infinity.  */
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */ 
+		      : "dmi" ((__ctrl_reg & ~0x10) | 0x20));
+  /* Convert X to an integer, using -Inf rounding.  */
+  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));
+  /* Restore the previous rounding mode.  */
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */
+		      : "dmi" (__ctrl_reg));
+  return __result;
+}
+
+__m81_inline double
+__m81_u(pow)(double __x, double __y) __attribute__ ((__const__));
+__m81_inline double
 __m81_u(pow)(double __x, double __y)
 {
   double __result;
-  if (__y == 0.0 || __x == 1.0)
+  if (__x == 0.0)
+    {
+      if (__y <= 0.0)
+	__result = __infnan (EDOM);
+      else
+	__result = 0.0;
+    }
+  else if (__y == 0.0 || __x == 1.0)
     __result = 1.0;
   else if (__y == 1.0)
     __result = __x;
@@ -117,23 +156,40 @@ __m81_u(pow)(double __x, double __y)
     __asm("ftentox%.x %1, %0" : "=f" (__result) : "f" (__y));
   else if (__x == 2.0)
     __asm("ftwotox%.x %1, %0" : "=f" (__result) : "f" (__y));
+  else if (__x < 0.0)
+    {
+      double __temp = __m81_u (__rint) (__y);
+      if (__y == __temp)
+	{
+	  int i = (int) __y;
+	  __result = __m81_u (exp) (__y * __m81_u (log) (-__x));
+	  if (i & 1)
+	    __result = -__result;
+	}
+      else
+	__result = __infnan (EDOM);
+    }
   else
     __result = __m81_u(exp)(__y * __m81_u(log)(__x));
   return __result;
 }
 
-__m81_inline __CONSTVALUE double
+__m81_inline double
+__m81_u(ceil)(double __x) __attribute__ ((__const__));
+__m81_inline double
 __m81_u(ceil)(double __x)
 {
   double __result;
   unsigned long int __ctrl_reg;
-  __asm("fmove%.l fpcr, %0" : "=g" (__ctrl_reg));
+  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));
   /* Set rounding towards positive infinity.  */
-  __asm("fmove%.l %0, fpcr" : /* No outputs.  */ : "g" (__ctrl_reg | 0x30));
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */
+		      : "dmi" (__ctrl_reg | 0x30));
   /* Convert X to an integer, using +Inf rounding.  */
-  __asm("fint%.x %1, %0" : "=f" (__result) : "f" (__x));
+  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));
   /* Restore the previous rounding mode.  */
-  __asm("fmove%.l %0, fpcr" : /* No outputs.  */ : "g" (__ctrl_reg));
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */
+		      : "dmi" (__ctrl_reg));
   return __result;
 }
 
@@ -145,23 +201,51 @@ __m81_u(modf)(double __value, double *__iptr)
   return __value - __modf_int;
 }
 
-__m81_inline __CONSTVALUE int
+__m81_inline int
+__m81_u(__isinf)(double __value) __attribute__ ((__const__));
+__m81_inline int
 __m81_u(__isinf)(double __value)
 {
   /* There is no branch-condition for infinity,
      so we must extract and examine the condition codes manually.  */
   unsigned long int __fpsr;
   __asm("ftst%.x %1\n"
-	"fmove%.l fpsr, %0" : "=g" (__fpsr) : "f" (__value));
+	"fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));
   return (__fpsr & (2 << (3 * 8))) ? (__value < 0 ? -1 : 1) : 0;
 }
 
-__m81_inline __CONSTVALUE int
+__m81_inline int
+__m81_u(__isnan)(double __value) __attribute__ ((__const__));
+__m81_inline int
 __m81_u(__isnan)(double __value)
 {
   char __result;
   __asm("ftst%.x %1\n"
-	"fsun %0" : "=g" (__result) : "f" (__value));
+	"fsun %0" : "=dm" (__result) : "f" (__value));
+  return __result;
+}
+
+__m81_inline int
+__m81_u(__isinfl)(long double __value) __attribute__ ((__const__));
+__m81_inline int
+__m81_u(__isinfl)(long double __value)
+{
+  /* There is no branch-condition for infinity,
+     so we must extract and examine the condition codes manually.  */
+  unsigned long int __fpsr;
+  __asm("ftst%.x %1\n"
+	"fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));
+  return (__fpsr & (2 << (3 * 8))) ? (__value < 0 ? -1 : 1) : 0;
+}
+
+__m81_inline int
+__m81_u(__isnanl)(long double __value) __attribute__ ((__const__));
+__m81_inline int
+__m81_u(__isnanl)(long double __value)
+{
+  char __result;
+  __asm("ftst%.x %1\n"
+	"fsun %0" : "=dm" (__result) : "f" (__value));
   return __result;
 }
 

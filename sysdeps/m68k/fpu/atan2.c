@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__GNUC__
 
-__CONSTVALUE double
+double
 DEFUN(atan2, (y, x), double y AND double x)
 {
   static CONST double one = 1.0, zero = 0.0;
