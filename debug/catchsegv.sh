@@ -85,7 +85,7 @@ if test $exval -gt 128 && test -f "$segv_output"; then
   sed '1,/Backtrace/d' "$segv_output" |
   (while read line; do
      case "$line" in
-       [*) addr=`echo $line | sed 's/^\[\(.*\)\]$/\1/'`
+       [*) addr=`echo "$line" | sed 's/^\[\(.*\)\]$/\1/'`
 	   complete=`addr2line -f -e "$prog" $addr 2>/dev/null`
 	   if test $? -eq 0; then
              echo "`echo "$complete"|sed 'N;s/\(.*\)\n\(.*\)/\2(\1)/;'`$line"

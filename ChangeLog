@@ -1,3 +1,7 @@
+1998-09-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/catchsegv.sh: Add one more pair of quotes.
+
 1998-09-01 17:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c (add_name_to_object): Change return type to void and
