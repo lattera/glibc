@@ -1,3 +1,12 @@
+1999-04-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/fnmatch.c (internal_fnmatch): Renamed from fnmatch.  Take
+	extra parameter.  Fix several more bugs involving wildcard and
+	ranges.
+	(fnmatch): New function.  Call internal_fnmatch.
+
+	* posix/testfnm.c: More test cases.
+
 1999-04-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/install.texi (Configuring and compiling): Explain that

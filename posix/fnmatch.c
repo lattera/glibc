@@ -129,11 +129,10 @@ extern int errno;
 
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
-int
-fnmatch (pattern, string, flags)
-     const char *pattern;
-     const char *string;
-     int flags;
+static int
+internal_function
+internal_fnmatch (const char *pattern, const char *string,
+		  int no_leading_period, int flags)
 {
   register const char *p = pattern, *n = string;
   register unsigned char c;
@@ -156,8 +155,7 @@ fnmatch (pattern, string, flags)
 	    return FNM_NOMATCH;
 	  else if (*n == '/' && (flags & FNM_FILE_NAME))
 	    return FNM_NOMATCH;
-	  else if (*n == '.' && (flags & FNM_PERIOD) &&
-		   (n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
+	  else if (*n == '.' && no_leading_period)
 	    return FNM_NOMATCH;
 	  break;
 
@@ -175,8 +173,7 @@ fnmatch (pattern, string, flags)
 	  break;
 
 	case '*':
-	  if (*n == '.' && (flags & FNM_PERIOD) &&
-	      (n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
+	  if (*n == '.' && no_leading_period)
 	    return FNM_NOMATCH;
 
 	  for (c = *p++; c == '?' || c == '*'; c = *p++)
@@ -214,8 +211,21 @@ fnmatch (pattern, string, flags)
 	      if (c == '[')
 		{
 		  for (--p; n < endp; ++n)
-		    if (fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
+		    if (internal_fnmatch (p, n,
+					  (n == string) && no_leading_period,
+					  ((flags & FNM_FILE_NAME)
+					   ? flags : (flags & ~FNM_PERIOD)))
+			== 0)
 		      return 0;
+		}
+	      else if (c == '/' && (flags & FNM_FILE_NAME))
+		{
+		  while (*n != '\0' && *n != '/')
+		    ++n;
+		  if (*n == '/'
+		      && (internal_fnmatch (p, n + 1, flags & FNM_PERIOD,
+					    flags) == 0))
+		    return 0;
 		}
 	      else
 		{
@@ -224,7 +234,13 @@ fnmatch (pattern, string, flags)
 		  c = FOLD (c);
 		  for (--p; n < endp; ++n)
 		    if (FOLD ((unsigned char) *n) == c
-			&& fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
+			&& (internal_fnmatch (p, n,
+					      ((n == string)
+					       && no_leading_period),
+					      ((flags & FNM_FILE_NAME)
+					       ? flags
+					       : (flags & ~FNM_PERIOD)))
+			    == 0))
 		      return 0;
 		}
 	    }
@@ -245,8 +261,7 @@ fnmatch (pattern, string, flags)
 	    if (*n == '\0')
 	      return FNM_NOMATCH;
 
-	    if (*n == '.' && (flags & FNM_PERIOD) &&
-		(n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
+	    if (*n == '.' && no_leading_period)
 	      return FNM_NOMATCH;
 
 	    if (*n == '/' && (flags & FNM_FILE_NAME))
@@ -294,7 +309,15 @@ fnmatch (pattern, string, flags)
 			    p += 2;
 			    break;
 			  }
-			str[c1++] = 'c';
+			if (c < 'a' || c >= 'z')
+			  {
+			    /* This cannot possibly be a character class name.
+			       Match it as a normal range.  */
+			    --p;
+			    c = '[';
+			    goto normal_bracket;
+			  }
+			str[c1++] = c;
 		      }
 		    str[c1] = '\0';
 
@@ -325,26 +348,31 @@ fnmatch (pattern, string, flags)
 		else if (c == '\0')
 		  /* [ (unterminated) loses.  */
 		  return FNM_NOMATCH;
-		else if (FOLD (c) == fn)
-		  goto matched;
-
-		cold = c;
-		c = *p++;
-
-		if (c == '-' && *p != ']')
+		else
 		  {
-		    /* It is a range.  */
-		    unsigned char cend = *p++;
-		    if (!(flags & FNM_NOESCAPE) && cend == '\\')
-		      cend = *p++;
-		    if (cend == '\0')
-		      return FNM_NOMATCH;
-
-		    if (cold <= fn && fn <= FOLD (cend))
+		  normal_bracket:
+		    if (FOLD (c) == fn)
 		      goto matched;
 
+		    cold = c;
 		    c = *p++;
+
+		    if (c == '-' && *p != ']')
+		      {
+			/* It is a range.  */
+			unsigned char cend = *p++;
+			if (!(flags & FNM_NOESCAPE) && cend == '\\')
+			  cend = *p++;
+			if (cend == '\0')
+			  return FNM_NOMATCH;
+
+			if (cold <= fn && fn <= FOLD (cend))
+			  goto matched;
+
+			c = *p++;
+		      }
 		  }
+
 		if (c == ']')
 		  break;
 	      }
@@ -402,6 +430,16 @@ fnmatch (pattern, string, flags)
   return FNM_NOMATCH;
 
 # undef FOLD
+}
+
+
+int
+fnmatch (pattern, string, flags)
+     const char *pattern;
+     const char *string;
+     int flags;
+{
+  return internal_fnmatch (pattern, string, flags & FNM_PERIOD, flags);
 }
 
 #endif	/* _LIBC or not __GNU_LIBRARY__.  */
