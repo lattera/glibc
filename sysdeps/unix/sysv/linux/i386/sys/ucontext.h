@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,7 @@ enum
 #endif
 
 /* Structure to describe FPU registers.  */
-typedef struct _fpstate *fpregset_t;
+typedef struct user_fpregs_struct fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
@@ -103,7 +103,7 @@ typedef struct ucontext
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     __sigset_t uc_sigmask;
-    struct _fpstate __fpregs_mem;
+    fpregset_t __fpregs_mem;
   } ucontext_t;
 
 #endif /* sys/ucontext.h */
