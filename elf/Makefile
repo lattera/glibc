@@ -168,14 +168,15 @@ $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
+	@rm -f $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared			\
 		  $(LDFLAGS-rtld) -Wl,--verbose 2>&1 |			\
 		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
 		      -e 's/\. = 0 + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
-		  > $@.lds;						\
+		  > $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $(LDFLAGS-rtld)	\
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
-		  -Wl,-soname=$(rtld-installed-name) -T $@.lds;		\
+		  -Wl,-soname=$(rtld-installed-name) -T $@.lds
 	rm -f $@.lds
 
 # interp.c exists just to get this string into the libraries.

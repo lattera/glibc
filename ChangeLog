@@ -1,9 +1,20 @@
+2002-08-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Handle
+	partially overlapping mappings.	 Remove unneeded (char *) casts.
+	Never allow duplication of ranges in mapped areas.
+
+2002-08-20  Roland McGrath  <roland@redhat.com>
+
+	* elf/Makefile ($(objpfx)ld.so): Separate commands in rule so errors
+	can be detected by make.  Reported by H.J. Lu <hjl@gnu.org>.
+
 2002-08-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/unistd.h: Don't hide _exit.
 
 	* elf/rtld.c (_dl_start): Pass extra argument 1 to TLS_INIT_TP.
-	(dl_main): Padd extra argument 0 to TLS_INIT_TP.
+	(dl_main): Pass extra argument 0 to TLS_INIT_TP.
 	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Pass extra
 	argument 1 to TLS_INIT_TP.
 	* sysdeps/generic/tls.h (TLS_INIT_TP): Describe new parameter.
