@@ -440,6 +440,7 @@ static const token symbols[] =
   {TOK_UNSIGNED, "unsigned"},
   {TOK_SHORT, "short"},
   {TOK_LONG, "long"},
+  {TOK_HYPER, "hyper"},
   {TOK_FLOAT, "float"},
   {TOK_DOUBLE, "double"},
   {TOK_STRING, "string"},
