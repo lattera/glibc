@@ -16,6 +16,7 @@
 	any cleanup handler.
 	(__libc_cleanup_region_end): Do nothing if start's DOIT arg was zero.
 	(__libc_cleanup_end): Likewise.
+	* sysdeps/generic/bits/libc-lock.h: Same changes.
 	* stdio-common/vfscanf.c (LOCK_STREAM): Pass new arg.
 	* stdio-common/vfprintf.c (buffered_vfprintf, vfprintf): Likewise.
 	* sysdeps/mach/hurd/bits/stdio-lock.h (_IO_cleanup_region_start):

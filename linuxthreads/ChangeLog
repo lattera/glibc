@@ -1,3 +1,12 @@
+2001-08-23  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_region_start): Take
+	new first argument, skip the cleanup handler if it's zero.
+	(_LIBC_LOCK_RECURSIVE_INITIALIZER): New macro.
+	(__libc_lock_define_initialized_recursive): Use it.
+	* sysdeps/pthread/bits/stdio-lock.h: File removed.
+	The sysdeps/generic file from the main tree now suffices.
+
 2001-08-22  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/pthread/bits/stdio-lock.h: Include <bits/libc-lock.h>

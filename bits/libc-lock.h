@@ -94,14 +94,23 @@
   } while (0)
 
 
-/* Start critical region with cleanup.  */
-#define __libc_cleanup_region_start(FCT, ARG)
+/* Start a critical region with a cleanup function */
+#define __libc_cleanup_region_start(DOIT, FCT, ARG)			    \
+{									    \
+  typeof (***(FCT)) *__save_FCT = (DOIT) ? (FCT) : 0;			    \
+  typeof (ARG) __save_ARG = ARG;					    \
+  /* close brace is in __libc_cleanup_region_end below. */
 
-/* End critical region with cleanup.  */
-#define __libc_cleanup_region_end(DOIT)
+/* End a critical region started with __libc_cleanup_region_start. */
+#define __libc_cleanup_region_end(DOIT)					    \
+  if ((DOIT) && __save_FCT != 0)					    \
+    (*__save_FCT)(__save_ARG);						    \
+}
 
 /* Sometimes we have to exit the block in the middle.  */
-#define __libc_cleanup_end(DOIT)
+#define __libc_cleanup_end(DOIT)					    \
+  if ((DOIT) && __save_FCT != 0)					    \
+    (*__save_FCT)(__save_ARG);						    \
 
 
 /* We need portable names for some of the functions.  */
