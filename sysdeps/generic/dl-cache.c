@@ -44,6 +44,10 @@ struct cache_file
       } libs[0];
   };
 
+/* This is the starting address and the size of the mmap()ed file.  */
+static struct cache_file *cache;
+static size_t cachesize;
+
 /* This is the cache ID we expect.  Normally it is 3 for glibc linked
    binaries.  */
 int _dl_correct_cache_id = 3;
@@ -54,8 +58,6 @@ int _dl_correct_cache_id = 3;
 const char *
 _dl_load_cache_lookup (const char *name)
 {
-  static struct cache_file *cache;
-  static size_t cachesize;
   unsigned int i;
   const char *best;
 
@@ -114,3 +116,19 @@ _dl_load_cache_lookup (const char *name)
 
   return best;
 }
+
+#ifndef MAP_COPY
+/* If the system does not support MAP_COPY we cannot leave the file open
+   all the time since this would create problems when the file is replaced.
+   Therefore we provide this function to close the file and open it again
+   once needed.  */
+void
+_dl_unload_cache (void)
+{
+  if (cache != NULL && cache != (struct cache_file *) -1)
+    {
+      __munmap (cache, cachesize);
+      cache = NULL;
+    }
+}
+#endif

@@ -41,6 +41,10 @@
 #define O_FSYNC		O_SYNC
 #define O_ASYNC		020000
 
+#ifdef __USE_GNU
+# define O_DIRECT	040000	/* Direct disk access.  */
+#endif
+
 /* For now Linux has synchronisity options for data and read operations.
    We define the symbols here but let them do the same as O_SYNC since
    this is a superset.  */
@@ -49,9 +53,8 @@
 # define O_RSYNC	O_SYNC	/* Synchronize read operations.  */
 #endif
 
-/* XXX missing */
 #ifdef __USE_LARGEFILE64
-# define O_LARGEFILE	0
+# define O_LARGEFILE	0100000
 #endif
 
 /* Values for the second argument to `fcntl'.  */

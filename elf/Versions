@@ -21,7 +21,7 @@ libc {
     _dl_profile; _dl_profile_map; _dl_profile_output; _dl_start_profile;
 
     # functions used in other libraries
-    _dl_mcount; _dl_mcount_wrapper; _dl_mcount_wrapper_check;
+    _dl_mcount; _dl_mcount_wrapper; _dl_mcount_wrapper_check; _dl_unload_cache;
   }
 }
 

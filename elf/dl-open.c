@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>		/* Check whether MAP_COPY is defined.  */
 #include <bits/libc-lock.h>
 #include <elf/ldsodefs.h>
 
@@ -30,6 +31,9 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Word) phnum,
 						     ElfW(Addr) *user_entry));
 weak_extern (_dl_sysdep_start)
+
+/* This function is used to unload the cache file if necessary.  */
+extern void _dl_unload_cache (void);
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
@@ -223,6 +227,11 @@ _dl_open (const char *file, int mode)
   args.mode = mode;
   args.map = NULL;
   errcode = _dl_catch_error (&errstring, dl_open_worker, &args);
+
+#ifndef MAP_COPY
+  /* We must munmap() the cache file.  */
+  _dl_unload_cache ();
+#endif
 
   /* Release the lock.  */
   __libc_lock_unlock (_dl_load_lock);

@@ -1,3 +1,22 @@
+1998-08-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/dl-cache.c: Move static variable cache and cachesize
+	to toplevel.
+	(_dl_unload_cache): New function.
+	* elf/Versions [libc GLIBC_2.1]: Add _dl_unload_cache.
+	* elf/dl-open.c (_dl_open): Unload map file before freeing the lock.
+	* elf/rtld (dl_main): Unload map file before jumping to user code.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Define O_DIRECT.
+	Correct comment for O_LARGEFILE.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Define O_DIRECT.
+	Change O_LARGEFILE to correct value.
+
+1998-08-25 14:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/iogetline.c (_IO_getline_info): Don't read anything for
+	N == 0.  Patch by HJ Lu.
+
 1998-08-25 11:43  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Add syminfo stuff and other DT_* from Solaris' ELF.
