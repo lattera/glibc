@@ -581,10 +581,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    if (is_long_num)						      \
 	      signed_number = args_value[fspec->data_arg].pa_long_int;	      \
-	    else if (!is_short)						      \
+	    else  /* `char' and `short int' will be promoted to `int'.  */    \
 	      signed_number = args_value[fspec->data_arg].pa_int;	      \
-	    else	      						      \
-	      signed_number = args_value[fspec->data_arg].pa_short_int;	      \
 									      \
 	  is_negative = signed_number < 0;				      \
 	  number.word = is_negative ? (- signed_number) : signed_number;      \
@@ -675,12 +673,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	      number.word = args_value[fspec->data_arg].pa_u_long_int;	      \
 	    else if (is_char)						      \
 	      number.word = (unsigned char)				      \
-		args_value[fspec->data_arg].pa_char;			      \
+		args_value[fspec->data_arg].pa_u_int;			      \
 	    else if (!is_short)						      \
 	      number.word = args_value[fspec->data_arg].pa_u_int;	      \
 	    else							      \
 	      number.word = (unsigned short int)			      \
-		args_value[fspec->data_arg].pa_u_short_int;		      \
+		args_value[fspec->data_arg].pa_u_int;			      \
 									      \
 	LABEL (number):							      \
 	  if (prec < 0)							      \
@@ -977,7 +975,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	outchar (__btowc ((unsigned char) va_arg (ap, int))); /* Promoted. */ \
       else								      \
 	outchar (__btowc ((unsigned char)				      \
-			  args_value[fspec->data_arg].pa_char));	      \
+			  args_value[fspec->data_arg].pa_int));		      \
       if (left)								      \
 	PAD (L' ');							      \
       break;								      \
@@ -1096,7 +1094,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (fspec == NULL)						      \
 	outchar ((unsigned char) va_arg (ap, int)); /* Promoted.  */	      \
       else								      \
-	outchar ((unsigned char) args_value[fspec->data_arg].pa_char);	      \
+	outchar ((unsigned char) args_value[fspec->data_arg].pa_int);	      \
       if (left)								      \
 	PAD (' ');							      \
       break;								      \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -63,33 +63,22 @@
 #endif
 
 void
-_IO_str_init_static (sf, ptr, size, pstart)
+_IO_str_init_static_internal (sf, ptr, size, pstart)
      _IO_strfile *sf;
      char *ptr;
-     int size;
+     _IO_size_t size;
      char *pstart;
 {
   _IO_FILE *fp = &sf->_sbf._f;
+  char *end;
 
   if (size == 0)
-    size = strlen (ptr);
-  else if (size < 0)
-    {
-      /* If size is negative 'the characters are assumed to
-	 continue indefinitely.'  This is kind of messy ... */
-      int s;
-      size = 512;
-      /* Try increasing powers of 2, as long as we don't wrap around. */
-      for (; s = 2*size, s > 0 && ptr + s > ptr && s < 0x4000000L; )
-	size = s;
-      /* Try increasing size as much as we can without wrapping around. */
-      for (s = size >> 1; s > 0; s >>= 1)
-	{
-	  if (ptr + size + s > ptr)
-	    size += s;
-	}
-    }
-  INTUSE(_IO_setb) (fp, ptr, ptr + size, 0);
+    end = __rawmemchr (ptr, '\0');
+  else if ((_IO_size_t) ptr + size > (_IO_size_t) ptr)
+    end = ptr + size;
+  else
+    end = (char *) -1;
+  INTUSE(_IO_setb) (fp, ptr, end, 0);
 
   fp->_IO_write_base = ptr;
   fp->_IO_read_base = ptr;
@@ -97,19 +86,28 @@ _IO_str_init_static (sf, ptr, size, pstart)
   if (pstart)
     {
       fp->_IO_write_ptr = pstart;
-      fp->_IO_write_end = ptr + size;
+      fp->_IO_write_end = end;
       fp->_IO_read_end = pstart;
     }
   else
     {
       fp->_IO_write_ptr = ptr;
       fp->_IO_write_end = ptr;
-      fp->_IO_read_end = ptr+size;
+      fp->_IO_read_end = end;
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
   sf->_s._allocate_buffer = (_IO_alloc_type) 0;
 }
-INTDEF(_IO_str_init_static)
+
+void
+_IO_str_init_static (sf, ptr, size, pstart)
+     _IO_strfile *sf;
+     char *ptr;
+     int size;
+     char *pstart;
+{
+  return _IO_str_init_static_internal (sf, ptr, size < 0 ? -1 : size, pstart);
+}
 
 void
 _IO_str_init_readonly (sf, ptr, size)
@@ -117,7 +115,7 @@ _IO_str_init_readonly (sf, ptr, size)
      const char *ptr;
      int size;
 {
-  INTUSE(_IO_str_init_static) (sf, (char *) ptr, size, NULL);
+  _IO_str_init_static_internal (sf, (char *) ptr, size < 0 ? -1 : size, NULL);
   sf->_sbf._f._IO_file_flags |= _IO_NO_WRITES;
 }
 

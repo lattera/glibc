@@ -619,8 +619,7 @@ extern void _IO_str_init_readonly __P ((struct _IO_strfile_ *, const char *, int
 extern _IO_ssize_t _IO_str_count __P ((_IO_FILE *));
 
 /* And the wide character versions.  */
-extern void _IO_wstr_init_static __P ((_IO_FILE *, wchar_t *, int, wchar_t *));
-extern void _IO_wstr_init_readonly __P ((_IO_FILE *, const char *, int));
+extern void _IO_wstr_init_static __P ((_IO_FILE *, wchar_t *, _IO_size_t, wchar_t *));
 extern _IO_ssize_t _IO_wstr_count __P ((_IO_FILE *));
 extern _IO_wint_t _IO_wstr_overflow __P ((_IO_FILE *, _IO_wint_t));
 extern _IO_wint_t _IO_wstr_underflow __P ((_IO_FILE *));
@@ -710,7 +709,7 @@ extern int _IO_str_pbackfail_internal __P ((_IO_FILE *, int));
 extern _IO_off64_t _IO_str_seekoff_internal __P ((_IO_FILE *, _IO_off64_t,
 						  int, int));
 extern void _IO_str_init_static_internal __P ((struct _IO_strfile_ *, char *,
-					       int, char *));
+					       _IO_size_t, char *));
 
 extern struct _IO_jump_t _IO_file_jumps_internal attribute_hidden;
 extern struct _IO_jump_t _IO_wfile_jumps_internal attribute_hidden;

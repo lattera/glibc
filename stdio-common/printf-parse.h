@@ -51,17 +51,13 @@ struct printf_spec
 /* The various kinds off arguments that can be passed to printf.  */
 union printf_arg
   {
-    unsigned char pa_char;
     wchar_t pa_wchar;
-    short int pa_short_int;
     int pa_int;
     long int pa_long_int;
     long long int pa_long_long_int;
-    unsigned short int pa_u_short_int;
     unsigned int pa_u_int;
     unsigned long int pa_u_long_int;
     unsigned long long int pa_u_long_long_int;
-    float pa_float;
     double pa_double;
     long double pa_long_double;
     const char *pa_string;

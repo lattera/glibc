@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997-1999,2001-2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,28 +67,20 @@ void
 _IO_wstr_init_static (fp, ptr, size, pstart)
      _IO_FILE *fp;
      wchar_t *ptr;
-     int size;
+     _IO_size_t size;
      wchar_t *pstart;
 {
+  wchar_t *end;
+  
   if (size == 0)
-    size = __wcslen (ptr);
-  else if (size < 0)
-    {
-      /* If size is negative 'the characters are assumed to
-	 continue indefinitely.'  This is kind of messy ... */
-      int s;
-      size = 512;
-      /* Try increasing powers of 2, as long as we don't wrap around. */
-      for (; s = 2*size, s > 0 && ptr + s > ptr && s < 0x4000000L; )
-	size = s;
-      /* Try increasing size as much as we can without wrapping around. */
-      for (s = size >> 1; s > 0; s >>= 1)
-	{
-	  if (ptr + size + s > ptr)
-	    size += s;
-	}
-    }
-  INTUSE(_IO_wsetb) (fp, ptr, ptr + size, 0);
+    end = ptr + __wcslen (ptr);
+  else if ((_IO_size_t) ptr + size * sizeof (wchar_t) > (_IO_size_t) ptr)
+    end = ptr + size;
+  else
+    /* Even for misaligned ptr make sure there is integral number of wide
+       characters.  */
+    end = ptr + (-1 - (_IO_size_t) ptr) / sizeof (wchar_t);
+  INTUSE(_IO_wsetb) (fp, ptr, end, 0);
 
   fp->_wide_data->_IO_write_base = ptr;
   fp->_wide_data->_IO_read_base = ptr;
@@ -96,27 +88,17 @@ _IO_wstr_init_static (fp, ptr, size, pstart)
   if (pstart)
     {
       fp->_wide_data->_IO_write_ptr = pstart;
-      fp->_wide_data->_IO_write_end = ptr + size;
+      fp->_wide_data->_IO_write_end = end;
       fp->_wide_data->_IO_read_end = pstart;
     }
   else
     {
       fp->_wide_data->_IO_write_ptr = ptr;
       fp->_wide_data->_IO_write_end = ptr;
-      fp->_wide_data->_IO_read_end = ptr + size;
+      fp->_wide_data->_IO_read_end = end;
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
   (((_IO_strfile *) fp)->_s._allocate_buffer) =  (_IO_alloc_type)0;
-}
-
-void
-_IO_wstr_init_readonly (fp, ptr, size)
-     _IO_FILE *fp;
-     const char *ptr;
-     int size;
-{
-  _IO_wstr_init_static (fp, (wchar_t *) ptr, size, NULL);
-  fp->_IO_file_flags |= _IO_NO_WRITES;
 }
 
 _IO_wint_t

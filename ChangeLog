@@ -1,3 +1,32 @@
+2003-05-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/vfprintf.c (process_arg, process_string_arg): Use
+	pa_int/pa_u_int instead of pa_short_int, pa_u_short_int and pa_char.
+	* stdio-common/printf-parse.h (union printf_arg): Remove pa_char,
+	pa_short_int, pa_u_short_int and pa_float.
+
+2003-05-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/strops.c (_IO_str_init_static): Change into a wrapper around
+	_IO_str_init_static_internal.
+	(_IO_str_init_static_internal): Moved from _IO_str_init_static,
+	change size argument to _IO_size_t, don't limit sprintf to 64M.
+	(_IO_str_init_readonly): Call _IO_str_init_static_internal.
+	* libio/wstrops.c (_IO_wstr_init_static): Change size argument to
+	_IO_size_t, don't limit swprintf to 256M.
+	(_IO_wstr_init_readonly): Remove.
+	* libio/libioP.h (_IO_str_init_static_internal, _IO_wstr_init_static):
+	Adjust prototypes.
+	(_IO_wstr_init_readonly): Remove prototype.
+	* libio/iovsprintf.c (_IO_vsprintf): Use
+	_IO_str_init_static_internal instead of INTUSE(_IO_str_init_static).
+	* libio/iovsscanf.c (_IO_vsscanf): Likewise.
+	* libio/memstream.c (open_memstream): Likewise.
+	* libio/obprintf.c (_IO_obstack_vfprintf): Likewise.
+	* libio/vasprintf.c (_IO_vasprintf): Likewise.
+	* libio/vsnprintf.c (_IO_vsnprintf): Likewise.
+	* stdio-common/tst-sprintf.c (main): Add new test.
+
 2003-05-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (vfprintf): Be bug-compatible with some
