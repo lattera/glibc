@@ -24,16 +24,41 @@
 #define MAX_SEC	(INT_MAX / 1000000L - 2)
 #define MIN_SEC	(INT_MIN / 1000000L + 2)
 
-int
-__adjtime (itv, otv)
-     const struct timeval *itv;
-     struct timeval *otv;
+#ifndef MOD_OFFSET
+#define modes mode
+#endif
+
+#ifndef TIMEVAL
+#define TIMEVAL timeval
+#endif
+
+#ifndef TIMEX
+#define TIMEX timex
+#endif
+
+#ifndef ADJTIME
+#define ADJTIME __adjtime
+#endif
+
+#ifndef ADJTIMEX
+#define NO_LOCAL_ADJTIME
+#define ADJTIMEX(x) __adjtimex (x)
+#endif
+
+#ifndef LINKAGE
+#define LINKAGE
+#endif
+
+LINKAGE int
+ADJTIME (itv, otv)
+     const struct TIMEVAL *itv;
+     struct TIMEVAL *otv;
 {
-  struct timex tntx;
+  struct TIMEX tntx;
 
   if (itv)
     {
-      struct timeval tmp;
+      struct TIMEVAL tmp;
 
       /* We will do some check here. */
       tmp.tv_sec = itv->tv_sec + itv->tv_usec / 1000000L;
@@ -49,7 +74,8 @@ __adjtime (itv, otv)
   else
     tntx.modes = 0;
 
-  if (__adjtimex (&tntx) < 0) return -1;
+  if (ADJTIMEX (&tntx) < 0)
+    return -1;
 
   if (otv)
     {
@@ -67,4 +93,6 @@ __adjtime (itv, otv)
   return 0;
 }
 
+#ifdef NO_LOCAL_ADJTIME
 weak_alias (__adjtime, adjtime)
+#endif
