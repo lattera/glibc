@@ -1,5 +1,8 @@
 Wed Apr  5 00:13:45 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* misc/login_tty.c [! TIOCSCTTY]: Try an emulation using ttyname
+ 	and open.
+
 	* sysdeps/i386/bsd-_setjmp.S: Fix typo in name: setjmp -> _setjmp.
 
 Tue Apr  4 00:48:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>

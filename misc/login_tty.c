@@ -38,14 +38,34 @@ static char sccsid[] = "@(#)login_tty.c	8.1 (Berkeley) 6/4/93";
 #include <sys/param.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 int
 login_tty(fd)
 	int fd;
 {
 	(void) setsid();
+#ifdef TIOCSCTTY
 	if (ioctl(fd, TIOCSCTTY, (char *)NULL) == -1)
 		return (-1);
+#else
+	{
+	  /* This might work.  */
+	  char *fdname = ttyname (fd);
+	  int newfd;
+	  if (fdname)
+	    {
+	      if (fd != 0)
+		(void) close (0);
+	      if (fd != 1)
+		(void) close (1);
+	      if (fd != 2)
+		(void) close (2);
+	      newfd = open (fdname, O_RDWR);
+	      (void) close (newfd);
+	    }
+	}
+#endif
 	(void) dup2(fd, 0);
 	(void) dup2(fd, 1);
 	(void) dup2(fd, 2);
