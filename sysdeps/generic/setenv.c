@@ -187,50 +187,44 @@ setenv (name, value, replace)
   else if (replace)
     {
       size_t len = strlen (*ep);
-      if (len + 1 < namelen + 1 + vallen)
-	{
-	  char *new_value;
-	  char *np;
+      char *new_value;
+      char *np;
 
-	  /* The existing string is too short; malloc a new one.  */
+      /* The existing string is too short; malloc a new one.  */
 #ifdef USE_TSEARCH
-	  new_value = alloca (namelen + 1 + vallen);
+      new_value = alloca (namelen + 1 + vallen);
 # ifdef _LIBC
-	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
-		     value, vallen);
+      __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
+		 value, vallen);
 # else
-	  memcpy (new_value, name, namelen);
-	  new_value[namelen] = '=';
-	  memcpy (&new_value[namelen + 1], value, vallen);
+      memcpy (new_value, name, namelen);
+      new_value[namelen] = '=';
+      memcpy (&new_value[namelen + 1], value, vallen);
 # endif
 
-	  np = KNOWN_VALUE (new_value);
+      np = KNOWN_VALUE (new_value);
+      if (np == NULL)
+#endif
+	{
+	  np = malloc (namelen + 1 + vallen);
 	  if (np == NULL)
-#endif
 	    {
-	      np = malloc (namelen + 1 + vallen);
-	      if (np == NULL)
-		{
-		  UNLOCK;
-		  return -1;
-		}
-
-#ifdef USE_TSEARCH
-	      memcpy (np, new_value, namelen + 1 + vallen);
-#else
-	      memcpy (np, name, namelen);
-	      np[namelen] = '=';
-	      memcpy (&np[namelen + 1], value, vallen);
-#endif
+	      UNLOCK;
+	      return -1;
 	    }
 
-	  /* Keep the old value around.  */
-	  STORE_VALUE (*ep);
-	  *ep = np;
+#ifdef USE_TSEARCH
+	  memcpy (np, new_value, namelen + 1 + vallen);
+#else
+	  memcpy (np, name, namelen);
+	  np[namelen] = '=';
+	  memcpy (&np[namelen + 1], value, vallen);
+#endif
 	}
-      else
-	/* Overwrite the value part of the old value.  */
-	memcpy (&(*ep)[namelen + 1], value, vallen);
+
+      /* Keep the old value around.  */
+      STORE_VALUE (*ep);
+      *ep = np;
     }
 
   UNLOCK;
