@@ -257,7 +257,7 @@ __md5_crypt (const char *key, const char *salt)
 
 
 static void
-__attribute__ ((__constructor__))
+__attribute__ ((__destructor__))
 free_mem (void)
 {
   free (buffer);
