@@ -1,5 +1,8 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Search for programs with prefix gnu* and g* first.
+	[PR libc/1104].
+
 	* dirent/Makefile (routines): Add getdents64.
 	* sysdeps/unix/sysv/linux/Makefile [dirent] (sysdep_routines):
 	Remove getdents64.
