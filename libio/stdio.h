@@ -127,11 +127,9 @@ extern void __libc_fatal __P ((__const char *__message))
 
 
 /* Standard streams.  */
-extern FILE *stdin, *stdout, *stderr;
-/* Refer to the real names by default.  */
-#define stdin _IO_stdin
-#define stdout _IO_stdout
-#define stderr _IO_stderr
+extern FILE *stdin;		/* Standard input stream.  */
+extern FILE *stdout;		/* Standard output stream.  */
+extern FILE *stderr;		/* Standard error output stream.  */
 
 
 /* Remove file FILENAME.  */

@@ -33,7 +33,7 @@ _dl_addr (const void *address, Dl_info *info)
   /* Find the highest-addressed object that ADDRESS is not below.  */
   match = NULL;
   for (l = _dl_loaded; l; l = l->l_next)
-    if (addr >= l->l_addr && !match || match->l_addr < l->l_addr)
+    if (addr >= l->l_addr && (!match || match->l_addr < l->l_addr))
       match = l;
 
   if (match)
@@ -62,10 +62,11 @@ _dl_addr (const void *address, Dl_info *info)
   /* We assume that the string table follows the symbol table, because
      there is no way in ELF to know the size of the dynamic symbol table!!  */
   for (matchsym = NULL; (void *) symtab < (void *) strtab; ++symtab)
-    if (addr >= match->l_addr + symtab->st_value && !matchsym ||
-	matchsym->st_value < symtab->st_value &&
-	ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL ||
-	ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
+    if (addr >= match->l_addr + symtab->st_value
+	&& (!matchsym
+	    || (matchsym->st_value < symtab->st_value
+		&& (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
+		    || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))))
       matchsym = symtab;
 
   if (matchsym)

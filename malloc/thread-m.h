@@ -19,7 +19,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* One out of _LIBC, USE_PTHREADS, USE_THR or USE_SPROC should be
+/* $Id$
+   One out of _LIBC, USE_PTHREADS, USE_THR or USE_SPROC should be
    defined, otherwise the token NO_THREADS and dummy implementations
    of the macros will be defined.  */
 
@@ -40,23 +41,18 @@ typedef pthread_t thread_id;
 typedef pthread_mutex_t	mutex_t;
 
 /* thread specific data */
-typedef pthread_key_t tsd_key_t;
+typedef void * tsd_key_t;
 
 #define MUTEX_INITIALIZER	PTHREAD_MUTEX_INITIALIZER
 
-static Void_t *malloc_key_data;
-
-#define tsd_key_create(key, destr) \
-  if (__pthread_key_create != NULL) {					      \
-    __pthread_key_create(key, destr);					      \
-  } else { *(key) = (tsd_key_t) 0; }
+#define tsd_key_create(key, destr) ( *(key) = NULL )
 #define tsd_setspecific(key, data) \
-  if (__pthread_setspecific != NULL) {					      \
-    __pthread_setspecific(key, data);					      \
-  } else { malloc_key_data = (Void_t *) data; }
+  if (__libc_internal_tsd_set != NULL) {				      \
+    __libc_internal_tsd_set(_LIBC_TSD_KEY_MALLOC, data);		      \
+  } else { (key) = (Void_t *) data; }
 #define tsd_getspecific(key, vptr) \
-  (vptr = (__pthread_getspecific != NULL				      \
-	   ? __pthread_getspecific(key) : malloc_key_data))
+  (vptr = (__libc_internal_tsd_get != NULL				      \
+	   ? __libc_internal_tsd_get(_LIBC_TSD_KEY_MALLOC) : (key)))
 
 #define mutex_init(m)		\
    (__pthread_mutex_init != NULL ? __pthread_mutex_init (m, NULL) : 0)
@@ -131,11 +127,32 @@ typedef pthread_mutex_t mutex_t;
 #define mutex_unlock(m)            pthread_mutex_unlock(m)
 
 /* thread specific data */
+#if defined(__sgi) || defined(USE_TSD_DATA_HACK)
+
+/* Hack for thread-specific data, e.g. on Irix 6.x.  We can't use
+   pthread_setspecific because that function calls malloc() itself.
+   The hack only works when pthread_t can be converted to an integral
+   type. */
+
+typedef void *tsd_key_t[256];
+#define tsd_key_create(key, destr) do { \
+  int i; \
+  for(i=0; i<256; i++) (*key)[i] = 0; \
+} while(0)
+#define tsd_setspecific(key, data) \
+ (key[(unsigned)pthread_self() % 256] = (data))
+#define tsd_getspecific(key, vptr) \
+ (vptr = key[(unsigned)pthread_self() % 256])
+
+#else
+
 typedef pthread_key_t tsd_key_t;
 
 #define tsd_key_create(key, destr) pthread_key_create(key, destr)
 #define tsd_setspecific(key, data) pthread_setspecific(key, data)
 #define tsd_getspecific(key, vptr) (vptr = pthread_getspecific(key))
+
+#endif
 
 /* at fork */
 #define thread_atfork(prepare, parent, child) \

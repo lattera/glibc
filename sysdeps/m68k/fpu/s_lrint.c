@@ -22,10 +22,20 @@
 #define __LIBC_M81_MATH_INLINES
 #include <math.h>
 
+#ifndef suffix
+#define suffix /*empty*/
+#endif
+#ifndef float_type
+#define float_type double
+#endif
+
+#define CONCATX(a,b) __CONCAT(a,b)
+
 long int
-__lrint (long double x)
+CONCATX(__lrint,suffix) (float_type x)
 {
-  return __m81_u(__lrint) (x);
+  return __m81_u(CONCATX(__lrint,suffix)) (x);
 }
 
-weak_alias (__lrint, lrint)
+#define weak_aliasx(a,b) weak_alias(a,b)
+weak_aliasx (CONCATX(__lrint,suffix), CONCATX(lrint,suffix))

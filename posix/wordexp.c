@@ -36,7 +36,10 @@
 #include <errno.h>
 #include <sys/param.h>
 #include <stdio.h>
+#include <fnmatch.h>
 
+/* Undefine the following line for the production version.  */
+/* #define NDEBUG 1 */
 #include <assert.h>
 
 /*
@@ -874,6 +877,14 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, int flags, wordexp_t *pwordexp)
 {
   /* We are poised just after "$" */
+  enum remove_pattern_enum
+  {
+    RP_NONE = 0,
+    RP_SHORT_LEFT,
+    RP_LONG_LEFT,
+    RP_SHORT_RIGHT,
+    RP_LONG_RIGHT
+  };
   size_t start = *offset;
   size_t env_length = 0;
   size_t env_maxlen = 0;
@@ -882,9 +893,8 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
   char *env = NULL;
   char *pattern = NULL;
   char *value;
-  char action = 0;
-  int prefix = 0;
-  int suffix = 0;
+  char action = '\0';
+  enum remove_pattern_enum remove = RP_NONE;
   int colon_seen = 0;
   int depth = 0;
   int error;
@@ -894,9 +904,10 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
       switch (words[*offset])
 	{
 	case '{':
-	  if (action || prefix || suffix)
+	  ++depth;
+
+	  if (action != '\0' || remove != RP_NONE)
 	    {
-	      ++depth;
 	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
 				   words[*offset]);
 	      if (pattern == NULL)
@@ -907,6 +918,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 
 	  if (*offset == start)
 	    break;
+
 	  /* Otherwise evaluate */
 	  /* (and re-parse this character) */
 	  --(*offset);
@@ -914,11 +926,9 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 
 	case '}':
 	  if (words[start] != '{')
-	    {
 	      --(*offset);
-	    }
 
-	  if (action || prefix || suffix)
+	  if (action != '\0' || remove != RP_NONE)
 	    {
 	      if (--depth)
 		{
@@ -935,53 +945,69 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  goto envsubst;
 
 	case '#':
-	case '%':
-	  if (words[start] == '{')
+	  /* At the start?  (ie. 'string length') */
+	  if (*offset == start + 1)
+	    /* FIXME: This isn't written yet! */
+	    break;
+
+	  if (words[start] != '{')
 	    {
-	      /* At the start?  (ie. 'string length') */
-	      if (*offset == start + 1)
-		break;
+	      /* Evaluate */
+	      /* (and re-parse this character) */
+	      --(*offset);
+	      goto envsubst;
+	    }
 
-	      /* Separating variable name from prefix pattern? */
-	      if (words[*offset] == '#')
-		{
-		  if (prefix < 2 && !suffix)
-		    {
-		      ++prefix;
-		      break;
-		    }
-		}
-	      else
-		{
-		  if (suffix < 2 && !prefix)
-		    {
-		      ++suffix;
-		      break;
-		    }
-		}
+	  /* Separating variable name from prefix pattern? */
 
-	      /* Must be part of prefix/suffix pattern. */
-	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-				   words[*offset]);
-	      if (pattern == NULL)
-		goto no_space;
-
+	  if (remove == RP_NONE)
+	    {
+	      remove = RP_SHORT_LEFT;
 	      break;
 	    }
-	  /* Otherwise evaluate */
-	  /* (and re-parse this character) */
-	  --(*offset);
-	  goto envsubst;
+	  else if (remove == RP_SHORT_LEFT)
+	    {
+	      remove = RP_LONG_LEFT;
+	      break;
+	    }
+
+	  /* Must be part of prefix/suffix pattern. */
+	  pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
+			       words[*offset]);
+	  if (pattern == NULL)
+	    goto no_space;
+
+	  break;
+
+	case '%':
+	  if (!*env)
+	    goto syntax;
+
+	  /* Separating variable name from suffix pattern? */
+	  if (remove == RP_NONE)
+	    {
+	      remove = RP_SHORT_RIGHT;
+	      break;
+	    }
+	  else if (remove == RP_SHORT_RIGHT)
+	    {
+	      remove = RP_LONG_RIGHT;
+	      break;
+	    }
+
+	  /* Must be part of prefix/suffix pattern. */
+	  pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
+			       words[*offset]);
+	  if (pattern == NULL)
+	    goto no_space;
+
+	  break;
 
 	case ':':
 	  if (!*env)
-	    {
-	      free (env);
-	      free (pattern);
-	      return WRDE_SYNTAX;
-	    }
+	    goto syntax;
 
-	  if (action || prefix || suffix)
+	  if (action != '\0' || remove != RP_NONE)
 	    {
 	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
 				   words[*offset]);
@@ -998,30 +1024,21 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	      break;
 	    }
 
-	  free (env);
-	  free (pattern);
-	  return WRDE_SYNTAX;
+	  goto syntax;
 
 	case '-':
 	case '=':
 	case '?':
 	case '+':
 	  if (!*env)
-	    {
-	      free (env);
-	      free (pattern);
-	      return WRDE_SYNTAX;
-	    }
+	    goto syntax;
 
-	  if (action || prefix || suffix)
+	  if (action != '\0' || remove != RP_NONE)
 	    {
 	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
 				   words[*offset]);
 	      if (pattern == NULL)
-		{
-		  free (env);
-		  return WRDE_NOSPACE;
-		}
+		goto no_space;
 
 	      break;
 	    }
@@ -1030,8 +1047,9 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  break;
 
 	case '\\':
-	  if (action || prefix || suffix)
+	  if (action != '\0' || remove != RP_NONE)
 	    {
+	      /* Um. Is this right? */
 	      error = parse_qtd_backslash (word, word_length, max_length,
 					   words, offset);
 	      if (error == 0)
@@ -1042,12 +1060,16 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	      error = WRDE_SYNTAX;
 	    }
 
-	  free (env);
-	  free (pattern);
+	  if (env)
+	    free (env);
+
+	  if (pattern != NULL)
+	    free (pattern);
+
 	  return error;
 
 	default:
-	  if (action || prefix || suffix)
+	  if (action != '\0' || remove != RP_NONE)
 	    {
 	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
 				   words[*offset]);
@@ -1076,11 +1098,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 
 envsubst:
   if (words[start] == '{' && words[*offset] != '}')
-    {
-      free (env);
-      free (pattern);
-      return WRDE_SYNTAX;
-    }
+    goto syntax;
 
   if (!env || !*env)
     {
@@ -1093,14 +1111,88 @@ envsubst:
 
   value = getenv (env);
 
-  if (action || prefix || suffix)
+  if (action != '\0' || remove != RP_NONE)
     {
       switch (action)
 	{
 	case 0:
-	  /* For the time being, pattern is ignored */
-	  printf ("Pattern: %s\nPrefix: %d\nSuffix: %d\n", pattern, prefix, suffix);
-	  break;
+	  {
+	    char *p;
+	    char c;
+	    char *end;
+
+	    if (!pattern || !*pattern)
+	      break;
+
+	    end = value + strlen (value);
+
+	    if (value == NULL)
+	      break;
+
+	    switch (remove)
+	      {
+	      case RP_SHORT_LEFT:
+		for (p = value; p <= end; p++)
+		  {
+		    c = *p;
+		    *p = '\0';
+		    if (fnmatch (pattern, value, 0) != FNM_NOMATCH)
+		      {
+			*p = c;
+			value = p;
+			break;
+		      }
+		    *p = c;
+		  }
+
+		break;
+
+	      case RP_LONG_LEFT:
+		for (p = end; p >= value; p--)
+		  {
+		    c = *p;
+		    *p = '\0';
+		    if (fnmatch (pattern, value, 0) != FNM_NOMATCH)
+		      {
+			*p = c;
+			value = p;
+			break;
+		      }
+		    *p = c;
+		  }
+
+		break;
+
+	      case RP_SHORT_RIGHT:
+		for (p = end; p >= value; p--)
+		  {
+		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
+		      {
+			*p = '\0';
+			break;
+		      }
+		  }
+
+		break;
+
+	      case RP_LONG_RIGHT:
+		for (p = value; p <= end; p++)
+		  {
+		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
+		      {
+			*p = '\0';
+			break;
+		      }
+		  }
+
+		break;
+
+	      default:
+		assert (! "Unexpected `remove' value\n");
+	      }
+
+	    break;
+	  }
 
 	case '?':
 	  if (value && *value)
@@ -1182,6 +1274,15 @@ no_space:
     free (pattern);
 
   return WRDE_NOSPACE;
+
+syntax:
+  if (env)
+    free (env);
+
+  if (pattern)
+    free (pattern);
+
+  return WRDE_SYNTAX;
 }
 
 static int

@@ -32,9 +32,9 @@ __sgn1 (double __x)
 {
   return __x >= 0.0 ? 1.0 : -1.0;
 }
-#endif /* __NO_MATH_INLINES && __OPTIMZE__ */
+#endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
-#if __USE_ISOC9X
+#if __USE_ISOC9X && !defined _SOFT_FLOAT
 # define __unordered_cmp(x, y) \
   (__extension__							      \
    ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
@@ -48,6 +48,6 @@ __sgn1 (double __x)
 # define islessequal(x, y) ((__unordered_cmp (x, y) & 0xA) != 0)
 # define islessgreater(x, y) ((__unordered_cmp (x, y) & 0xC) != 0)
 # define isunordered(x, y) (__unordered_cmp (x, y) & 1)
-#endif /* __USE_ISOC9X */
+#endif /* __USE_ISOC9X && !_SOFT_FLOAT */
 
 #endif /* __GNUC__  */

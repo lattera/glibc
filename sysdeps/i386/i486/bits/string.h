@@ -979,12 +979,14 @@ __strchr_g (__const char *__s, int __c)
 }
 
 
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Find the first occurrence of C in S.  This is the BSD name.  */
-#define _HAVE_STRING_ARCH_index 1
-#define index(s, c) \
+# define _HAVE_STRING_ARCH_index 1
+# define index(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strchr_c (s, ((c) & 0xff) << 8)			      \
 		  : __strchr_g (s, c)))
+#endif
 
 
 /* Find the last occurrence of C in S.  */
@@ -1075,12 +1077,14 @@ __strrchr_g (__const char *__s, int __c)
 #endif
 
 
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Find the last occurrence of C in S.  This is the BSD name.  */
-#define _HAVE_STRING_ARCH_rindex 1
-#define rindex(s, c) \
+# define _HAVE_STRING_ARCH_rindex 1
+# define rindex(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strrchr_c (s, ((c) & 0xff) << 8)			      \
 		  : __strrchr_g (s, c)))
+#endif
 
 
 /* Return the length of the initial segment of S which

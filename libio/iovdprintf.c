@@ -32,35 +32,35 @@ _IO_vdprintf (d, format, arg)
      const char *format;
      _IO_va_list arg;
 {
-  struct _IO_FILE_plus tmpfil;
+  struct _IO_FILE_complete tmpfil;
 #ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
 #endif
   int done;
 
 #ifdef _IO_MTSAFE_IO
-  tmpfil.file._lock = &lock;
+  tmpfil.plus.file._lock = &lock;
 #endif
-  _IO_init (&tmpfil.file, 0);
-  _IO_JUMPS (&tmpfil.file) = &_IO_file_jumps;
-  _IO_file_init (&tmpfil.file);
+  _IO_init (&tmpfil.plus.file, 0);
+  _IO_JUMPS (&tmpfil.plus.file) = &_IO_file_jumps;
+  _IO_file_init (&tmpfil.plus.file);
 #if  !_IO_UNIFIED_JUMPTABLES
   tmpfil.vtable = NULL;
 #endif
-  if (_IO_file_attach (&tmpfil.file, d) == NULL)
+  if (_IO_file_attach (&tmpfil.plus.file, d) == NULL)
     {
-      _IO_un_link (&tmpfil.file);
+      _IO_un_link (&tmpfil.plus.file);
       return EOF;
     }
-  tmpfil.file._flags &= ~_IO_DELETE_DONT_CLOSE;
+  tmpfil.plus.file._flags &= ~_IO_DELETE_DONT_CLOSE;
 
-  tmpfil.file._IO_file_flags =
-    _IO_mask_flags (&tmpfil.file, _IO_NO_READS,
+  tmpfil.plus.file._IO_file_flags =
+    _IO_mask_flags (&tmpfil.plus.file, _IO_NO_READS,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  done = _IO_vfprintf (&tmpfil.file, format, arg);
+  done = _IO_vfprintf (&tmpfil.plus.file, format, arg);
 
-  _IO_FINISH (&tmpfil.file);
+  _IO_FINISH (&tmpfil.plus.file);
 
   return done;
 }

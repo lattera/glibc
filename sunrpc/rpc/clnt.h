@@ -379,8 +379,17 @@ extern struct rpc_createerr rpc_createerr;
  */
 extern char *clnt_sperrno __P ((enum clnt_stat __num));	/* string */
 
+/*
+ * get the port number on the host for the rpc program,version and proto
+ */
 extern int getrpcport __P ((__const char * __host, u_long __prognum,
 			   u_long __versnum, u_int proto));
+
+/*
+ * get the local host's IP address without consulting
+ * name service library functions
+ */
+extern void get_myaddress __P ((struct sockaddr_in *));
 
 #define UDPMSGSIZE	8800	/* rpc imposed limit on udp msg size */
 #define RPCSMALLMSGSIZE	400	/* a more reasonable packet size */

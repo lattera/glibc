@@ -45,7 +45,7 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
       const size_t unklen = strlen (unk);
       char *p = buf + buflen;
       *--p = '\0';
-      p = _itoa (errnum, p, 10, 0);
+      p = _itoa_word (errnum, p, 10, 0);
       return memcpy (p - unklen, unk, unklen);
     }
 

@@ -69,7 +69,7 @@ struct arphdr
 
 /* ARP protocol HARDWARE identifiers. */
 #define ARPHRD_NETROM	0		/* From KA9Q: NET/ROM pseudo. */
-#define ARPHRD_ETHER 	1		/* Ethernet 10Mbps.  */
+#define ARPHRD_ETHER 	1		/* Ethernet 10/100Mbps.  */
 #define	ARPHRD_EETHER	2		/* Experimental Ethernet.  */
 #define	ARPHRD_AX25	3		/* AX.25 Level 2.  */
 #define	ARPHRD_PRONET	4		/* PROnet token ring.  */
@@ -92,6 +92,7 @@ struct arphdr
 #define ARPHRD_PPP	512
 #define ARPHRD_HDLC	513		/* (Cisco) HDLC.  */
 #define ARPHRD_LAPB	516		/* LAPB.  */
+#define ARPHRD_ASH	517		/* ASH.  */
 
 #define ARPHRD_TUNNEL	768		/* IPIP tunnel.  */
 #define ARPHRD_TUNNEL6	769		/* IPIP6 tunnel.  */

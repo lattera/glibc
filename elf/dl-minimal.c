@@ -146,7 +146,7 @@ __assert_fail (const char *assertion,
   char buf[64];
   buf[sizeof buf - 1] = '\0';
   _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
-		    file, ": ", _itoa (line, buf + sizeof buf - 1, 10, 0),
+		    file, ": ", _itoa_word (line, buf + sizeof buf - 1, 10, 0),
 		    ": ", function ?: "", function ? ": " : "",
 		    "Assertion `", assertion, "' failed!\n",
 		    NULL);
@@ -161,7 +161,7 @@ __assert_perror_fail (int errnum,
   char buf[64];
   buf[sizeof buf - 1] = '\0';
   _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
-		    file, ": ", _itoa (line, buf + sizeof buf - 1, 10, 0),
+		    file, ": ", _itoa_word (line, buf + sizeof buf - 1, 10, 0),
 		    ": ", function ?: "", function ? ": " : "",
 		    "Unexpected error: ", strerror (errnum), "\n", NULL);
 

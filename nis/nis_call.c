@@ -459,7 +459,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	if (fd_res->status != NIS_SUCCESS)
 	  {
 	    nis_free_directory (dir);
-	    xdr_free((xdrproc_t)xdr_fd_result, (caddr_t)fd_res);
+	    __free_fdresult (fd_res);
 	    return NULL;
 	  }
 	obj = calloc(1, sizeof(directory_obj));
@@ -511,7 +511,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	if (fd_res->status != NIS_SUCCESS)
 	  {
 	    nis_free_directory (dir);
-	    xdr_free((xdrproc_t)xdr_fd_result, (caddr_t)fd_res);
+	    __free_fdresult (fd_res);
 	    return NULL;
 	  }
 	obj = calloc(1, sizeof(directory_obj));

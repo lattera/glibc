@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,9 @@ scandir (dir, namelist, select, cmp)
     if (select == NULL || (*select) (d))
       {
 	size_t dsize;
+
+	/* Ignore errors from select or readdir */
+	__set_errno (0);
 
 	if (i == vsize)
 	  {

@@ -1750,11 +1750,11 @@ static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
 
 #endif
 
-static mchunkptr
 #if defined __GNUC__ && __GNUC__ >= 2
 /* This function is only called from one place, inline it.  */
 inline
 #endif
+static mchunkptr
 internal_function
 #if __STD_C
 mmap_chunk(size_t size)
@@ -2286,11 +2286,11 @@ arena *ar_ptr; mchunkptr p; INTERNAL_SIZE_T s;
   Main interface to sbrk (but see also malloc_trim).
 */
 
-static void
 #if defined __GNUC__ && __GNUC__ >= 2
 /* This function is called only from one place, inline it.  */
 inline
 #endif
+static void
 internal_function
 #if __STD_C
 malloc_extend_top(arena *ar_ptr, INTERNAL_SIZE_T nb)

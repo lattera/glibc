@@ -25,7 +25,6 @@
 
 #include "dl-hash.h"
 #include <dl-machine.h>
-#include <stdio-common/_itoa.h>
 
 #define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
 

@@ -23,7 +23,7 @@
 #include <unistd.h>
 
 ssize_t
-pread (int fd, void *buf, size_t nbyte, off_t offset)
+__pread (int fd, void *buf, size_t nbyte, off_t offset)
 {
   /* Since we must not change the file pointer preserve the value so that
      we can restore it later.  */
@@ -54,3 +54,7 @@ pread (int fd, void *buf, size_t nbyte, off_t offset)
 
   return result;
 }
+
+#ifndef __pread
+weak_alias (__pread, pread)
+#endif

@@ -273,7 +273,7 @@ struct _IO_FILE_plus
    same.  */
 struct _IO_FILE_complete
 {
-  struct _IO_FILE_plus plus;;
+  struct _IO_FILE_plus plus;
   _IO_off64_t _offset;
   int _unused2[16];	/* Make sure we don't get into trouble again.  */
 };

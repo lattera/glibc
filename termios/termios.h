@@ -24,6 +24,14 @@
 #define	_TERMIOS_H	1
 
 #include <features.h>
+#ifdef __USE_UNIX98
+/* We need `pid_t'.  */
+# include <bits/types.h>
+# ifndef pid_t
+typedef __pid_t pid_t;
+#  define pid_t pid_t
+# endif
+#endif
 
 __BEGIN_DECLS
 
@@ -83,6 +91,12 @@ extern int tcflush __P ((int __fd, int __queue_selector));
 /* Suspend or restart transmission on FD.
    Values for ACTION (TC[IO]{OFF,ON}) are in <bits/termios.h>.  */
 extern int tcflow __P ((int __fd, int __action));
+
+
+#ifdef __USE_UNIX98
+/* Get process group ID for session leader for controlling terminal FD.  */
+extern __pid_t tcgetsid __P ((int __fd));
+#endif
 
 
 #ifdef __USE_BSD

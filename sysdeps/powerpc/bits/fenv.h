@@ -144,7 +144,7 @@ extern const fenv_t *__fe_nomask_env __P ((void));
 # define FE_NOMASK_ENV	(__fe_nomask_env ())
 #endif
 
-#ifdef __OPTIMIZE__
+#if defined __OPTIMIZE__ && !defined _SOFT_FLOAT
 /* Inline definition for fegetround.  */
 # define fegetround() \
   (__extension__  ({ int __fegetround_result;				      \
@@ -175,4 +175,4 @@ extern const fenv_t *__fe_nomask_env __P ((void));
 			    : : "i"(32 - __builtin_ffs (__excepts)));	      \
 		     } else						      \
 		       (feclearexcept) (__excepts); }))
-#endif /* __OPTIMIZE__ */
+#endif /* __OPTIMIZE__ && !_SOFT_FLOAT */

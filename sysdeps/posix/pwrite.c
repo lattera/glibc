@@ -23,7 +23,7 @@
 #include <unistd.h>
 
 ssize_t
-pwrite (int fd, const void *buf, size_t nbyte, off_t offset)
+__pwrite (int fd, const void *buf, size_t nbyte, off_t offset)
 {
   /* Since we must not change the file pointer preserve the value so that
      we can restore it later.  */
@@ -54,3 +54,4 @@ pwrite (int fd, const void *buf, size_t nbyte, off_t offset)
 
   return result;
 }
+weak_alias (__pwrite, pwrite)

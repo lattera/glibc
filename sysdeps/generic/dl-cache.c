@@ -53,10 +53,7 @@ _dl_load_cache_lookup (const char *name)
   static struct cache_file *cache;
   static size_t cachesize;
   unsigned int i;
-
-  if (cache == (void *) -1)
-    /* Previously looked for the cache file and didn't find it.  */
-    return NULL;
+  const char *best;
 
   if (cache == NULL)
     {
@@ -76,6 +73,11 @@ _dl_load_cache_lookup (const char *name)
 	}
     }
 
+  if (cache == (void *) -1)
+    /* Previously looked for the cache file and didn't find it.  */
+    return NULL;
+
+  best = NULL;
   for (i = 0; i < cache->nlibs; ++i)
     if ((cache->libs[i].flags == 1 ||
 	 cache->libs[i].flags == 3) && /* ELF library entry.  */
@@ -85,7 +87,14 @@ _dl_load_cache_lookup (const char *name)
 	/* Does the name match?  */
 	! strcmp (name, ((const char *) &cache->libs[cache->nlibs] +
 			 cache->libs[i].key)))
-      return (const char *) &cache->libs[cache->nlibs] + cache->libs[i].value;
+      {
+	best = ((const char *) &cache->libs[cache->nlibs]
+		+ cache->libs[i].value);
 
-  return NULL;
+	if (cache->libs[i].flags == 3)
+	  /* We've found an exact match for the shared object and no
+	     general `ELF' release.  Stop searching.  */
+	  break;
+      }
+  return best;
 }

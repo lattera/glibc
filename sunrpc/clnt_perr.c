@@ -134,6 +134,7 @@ clnt_sperror (CLIENT * rpch, const char *msg)
       break;
     }
   *str = '\n';
+  *++str = '\0';
   return (strstart);
 }
 
@@ -252,6 +253,7 @@ clnt_spcreateerror (const char *msg)
       break;
     }
   *cp = '\n';
+  *++cp = '\0';
   return str;
 }
 

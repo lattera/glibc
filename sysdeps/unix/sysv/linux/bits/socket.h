@@ -136,10 +136,10 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
-    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+    size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
   };
@@ -147,7 +147,7 @@ struct msghdr
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
   {
-    socklen_t cmsg_len;		/* Length of data in cmsg_data plus length
+    size_t cmsg_len;		/* Length of data in cmsg_data plus length
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
@@ -194,6 +194,16 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg)
     return NULL;
   return (struct cmsghdr *) __p;
 }
+
+/* Socket level message types.  This must match the definitions in
+   <linux/socket.h>.  */
+enum
+  {
+    SCM_RIGHTS = 0x01,		/* Data array contains access rights.  */
+#define SCM_RIGHTS SCM_RIGHTS
+    __SCM_CREDENTIALS = 0x02,	/* Data array is `struct ucred'.  */
+    __SCM_CONNECT = 0x03	/* Data array is `struct scm_connect'.  */
+  };
 
 
 /* Get socket manipulation related informations from kernel headers.  */

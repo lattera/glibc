@@ -18,6 +18,8 @@
 
 /* We must not distribute the DES implementation as part of the glibc.
    So we have to provide a dummy version here.  */
+#include <des.h>
+
 int
 _des_crypt (char *buf, unsigned len, struct desparams *desp)
 {

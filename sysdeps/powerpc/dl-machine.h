@@ -243,8 +243,7 @@ _dl_prof_resolve:
  # ...unwind the stack frame, and jump to the PLT entry we updated.
 	addi 1,1,48
 	bctr
-0:
-	.size	 _dl_prof_resolve,0b-_dl_prof_resolve
+	.size	 _dl_prof_resolve,.-_dl_prof_resolve
  # Undo '.section text'.
 	.previous
 ");
@@ -741,7 +740,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else if (rinfo == R_PPC_JMP_SLOT)
     {
-      elf_machine_fixup_plt (map, reloc, reloc_addr, finalvalue);
+      elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
     }
   else
     {

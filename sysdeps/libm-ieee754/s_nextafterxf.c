@@ -25,7 +25,7 @@ static char rcsid[] = "$NetBSD: $";
 #else
 	float __nextafterxf(x,y)
 	float x;
-	log double y;
+	long double y;
 #endif
 {
 	int32_t hx,ix,iy;

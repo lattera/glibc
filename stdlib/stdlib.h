@@ -686,14 +686,6 @@ extern int mbtowc __P ((wchar_t *__restrict __pwc,
    by WCHAR in S, returning its length.  */
 extern int wctomb __P ((char *__s, wchar_t __wchar));
 
-#if defined __OPTIMIZE__ && __GNUC__ >= 2
-extern __inline int
-mblen (__const char *__s, size_t __n)
-{
-  return mbtowc ((wchar_t *) NULL, __s, __n);
-}
-#endif /* Optimizing GCC >=2.  */
-
 
 /* Convert a multibyte string to a wide char string.  */
 extern size_t mbstowcs __P ((wchar_t *__restrict  __pwcs,

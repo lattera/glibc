@@ -34,7 +34,7 @@ long int
 __lrintl (long double x)
 {
   int32_t se,j0;
-  u_int32_t i0,i1,i;
+  u_int32_t i0, i1;
   long int result;
   volatile long double w;
   long double t;
@@ -70,7 +70,7 @@ __lrintl (long double x)
 	  GET_LDOUBLE_WORDS (se, i0, i1, t);
 	  j0 = (se & 0x7fff) - 0x3fff;
 
-	  result = ((long int) i0 << (j0 - 31)) | (j >> (63 - j0));
+	  result = ((long int) i0 << (j0 - 31)) | (i1 >> (63 - j0));
 	}
     }
   else

@@ -23,6 +23,13 @@
 #define P(a, b) P2(a, b)
 #define P2(a, b) a##b
 
+#ifndef NARGS
+#ifdef socket
+#error NARGS not defined
+#endif
+#define NARGS 3
+#endif
+
 	.text
 /* The socket-oriented system calls are handled unusually in Linux.
    They are all gated through the single `socketcall' system call number.
@@ -34,25 +41,36 @@
 
 .globl P(__,socket)
 ENTRY (P(__,socket))
-	mov SYS_ify(socketcall), %g1    /* System call number */
 
-	/* Use ## so `socket' is a separate token that might be #define'd.  */
-	mov P(SOCKOP_,socket), %o0	/* Subcode is first arg to syscall.  */
-	mov %i0,%o1		        /* args pointer is second arg to syscall */
+	/* Drop up to 6 arguments (recvfrom) into the memory allocated by
+	   the caller for varargs, since that's really what we have.  */
+	st %o0, [%sp + 68 + 0]
+	st %o1, [%sp + 68 + 4]
+#if NARGS > 2
+	st %o2, [%sp + 68 + 8]
+#if NARGS > 3
+	st %o3, [%sp + 68 + 12]
+#if NARGS > 4
+	st %o4, [%sp + 68 + 16]
+#if NARGS > 5
+	st %o5, [%sp + 68 + 20]
+#endif
+#endif
+#endif
+#endif
 
+	mov P(SOCKOP_,socket), %o0	/* arg 1: socket subfunction */
+	add %sp, 68, %o1		/* arg 2: parameter block */
+	LOADSYSCALL(socketcall)
 	t 0x10
-	bcc,a	1
-	nop
-	save %sp,96,%sp
-	call __errno_location
-	nop
-	st %i0,[%o0]
-	restore
-	retl
-	mov -1,%o0
-1:
-	ret
 
-PSEUDO_END (P(__,socket))
+        bcs,a 1f
+	 nop
+	retl
+	 nop
+
+1:	SYSCALL_ERROR_HANDLER
+
+END (P(__,socket))
 
 weak_alias (P(__,socket), socket)

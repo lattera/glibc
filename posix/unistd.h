@@ -101,6 +101,15 @@ __BEGIN_DECLS
    _POSIX_MESSAGE_PASSING	POSIX.4 message queues are supported.
    _POSIX_SEMAPHORES		POSIX.4 counting semaphores are supported.
    _POSIX_SHARED_MEMORY_OBJECTS	POSIX.4 shared memory objects are supported.
+   _POSIX_THREADS		POSIX.1c pthreads are supported.
+   _POSIX_THREAD_ATTR_STACKADDR	Thread stack address attribute option supported.
+   _POSIX_THREAD_ATTR_STACKSIZE	Thread stack size attribute option supported.
+   _POSIX_THREAD_SAFE_FUNCTIONS	Thread-safe functions are supported.
+   _POSIX_THREAD_PRIORITY_SCHEDULING
+				POSIX.1c thread execution scheduling supported.
+   _POSIX_THREAD_PRIO_INHERIT	Thread priority inheritance option supported.
+   _POSIX_THREAD_PRIO_PROTECT	Thread priority protection option supported.
+   _POSIX_THREAD_PROCESS_SHARED	Process-shared synchronization supported.
    _POSIX_PII			Protocol-independent interfaces are supported.
    _POSIX_PII_XTI		XTI protocol-indep. interfaces are supported.
    _POSIX_PII_SOCKET		Socket protocol-indep. interfaces are supported.
@@ -261,6 +270,8 @@ extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
 /* Read NBYTES into BUF from FD at the given position OFFSET without
    changing the file pointer.  Return the number read, -1 for errors
    or 0 for EOF.  */
+extern ssize_t __pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
+			     __off_t __offset));
 # ifndef __USE_FILE_OFFSET64
 extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			   __off_t __offset));
@@ -268,6 +279,8 @@ extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			   __off_t __offset)) __asm__ ("pread64");
 # endif
+extern ssize_t __pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
+			       __off64_t __offset));
 # ifdef __USE_LARGEFILE64
 extern ssize_t pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			     __off64_t __offset));
@@ -275,6 +288,8 @@ extern ssize_t pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.  */
+extern ssize_t __pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
+			      __off_t __offset));
 # ifndef __USE_FILE_OFFSET64
 extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			    __off_t __offset));
@@ -282,6 +297,8 @@ extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
 extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			    __off_t __offset)) __asm__ ("pwrite64");
 # endif
+extern ssize_t __pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
+				__off64_t __offset));
 # ifdef __USE_LARGEFILE64
 extern ssize_t pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			      __off64_t __offset));

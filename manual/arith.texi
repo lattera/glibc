@@ -422,11 +422,11 @@ sqrt (creal (@var{z}) * creal (@var{z}) + cimag (@var{z}) * cimag (@var{z}))
 @end smallexample
 
 This function should always be used instead of the direct formula since
-using the simple straight-forward method can mean to loose accuracy.  If
+using the simple straight-forward method can mean to lose accuracy.  If
 one of the squared values is neglectable in size compared to the other
 value the result should be the same as the larger value.  But squaring
 the value and afterwards using the square root function leads to
-unaccuracy.  See @code{hypot} in @xref{Exponents and Logarithms}.
+inaccuracy.  See @code{hypot} in @xref{Exponents and Logarithms}.
 @end deftypefun
 
 @node Normalization Functions

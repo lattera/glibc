@@ -93,6 +93,10 @@ please let me know.
 
 [Q26]	``I have /usr/include/net and /usr/include/scsi as symlinks
 	  into my Linux source tree.  Is that wrong?''
+
+[Q27]	``Programs like `logname', `top', `uptime' `users', `w' and
+	  `who', show incorrect information about the (number of)
+	  users on my system.  Why?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -136,7 +140,9 @@ The GNU CC is found like all other GNU packages on
 or better one of the many mirror sites.
 
 You always should try to use the latest official release.  Older
-versions might not have all the features GNU libc could use.
+versions might not have all the features GNU libc could use.  It is
+known that on most platforms compilers earlier than 2.7.2.3 fail so
+at least use this version.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -198,6 +204,9 @@ Library.
   For Atari Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) James Troup
   <J.J.Troup@comp.brad.ac.uk> reports for a full build (shared, static,
   and profiled) a compile time of 45h34m.
+
+  For Atari TT030 (Motorola 68030 @ 32 Mhz, 34 Mb memory) (full build)
+  a compile time of 22h48m.
 
   If you have some more measurements let me know.
 
@@ -344,6 +353,9 @@ so reading the files written by functions from the one library cannot
 be read by functions from the other library.  Sorry, but this is what
 a major release is for.  It's better to have a cut now than having no
 means to support the new techniques later.
+
+{MK} There is however a (partial) solution for this problem.  Please
+take a look at the file `README.utmpd'.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -714,6 +726,14 @@ symlink that you have in place before you install glibc.  However,
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q27]	``Programs like `logname', `top', `uptime' `users', `w' and
+	  `who', show incorrect information about the (number of)
+	  users on my system.  Why?''
+
+[A27] {MK} See Q10.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
@@ -723,6 +743,7 @@ Answers were given by:
 {AJ} Andreas Jaeger, <aj@arthur.rhein-neckar.de>
 {EY} Eric Youngdale, <eric@andante.jic.com>
 {PB} Phil Blundell, <Philip.Blundell@pobox.com>
+{MK} Mark Kettenis, <kettenis@phys.uva.nl>
 
 Local Variables:
  mode:text

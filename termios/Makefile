@@ -25,6 +25,6 @@ headers	:= termios.h bits/termios.h sys/ttydefaults.h sys/termios.h \
 	   sys/ttychars.h
 
 routines	:= speed cfsetspeed tcsetattr tcgetattr tcgetpgrp tcsetpgrp \
-		   tcdrain tcflow tcflush tcsendbrk cfmakeraw
+		   tcdrain tcflow tcflush tcsendbrk cfmakeraw tcgetsid
 
 include ../Rules

@@ -461,8 +461,9 @@ are of type @code{struct dirent **}.  I.e., one cannot directly use the
 @code{alphasort} and @code{versionsort} below.
 
 The return value of the function gives the number of entries placed in
-@var{namelist}.  If it is @code{-1} an error occurred and the global
-variable @code{errno} contains more information on the error.
+@var{namelist}.  If it is @code{-1} an error occurred (either the
+directory could not be opened for reading or the malloc call failed) and
+the global variable @code{errno} contains more information on the error.
 @end deftypefun
 
 As said above the fourth argument to the @code{scandir} function must be

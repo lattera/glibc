@@ -54,7 +54,7 @@ _start:
      argument info starts after one register window (16 words) past the SP.  */
 	ld	[%sp+22*4], %o0
 	add	%sp, 23*4, %o1
-	sll	%o0, 4, %o2
+	sll	%o0, 2, %o2
 	add	%o2, %o1, %o2
 	sethi	%hi(__environ), %g2
 	add	%o2, 4, %o2

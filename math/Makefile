@@ -80,7 +80,7 @@ tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 	test-ifloat test-idouble test-matherr test-fenv \
 	atest-exp atest-sincos atest-exp2 # test-reduce
 # We do the `long double' tests only if this data type is available and
-# distrinct from `double'.
+# distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
 
 CFLAGS-test-float.c = -fno-inline -ffloat-store

@@ -74,7 +74,7 @@ extern int _IO_dup2 __P ((int fd, int fd2));
 
 struct _IO_proc_file
 {
-  struct _IO_FILE_plus file;
+  struct _IO_FILE_complete file;
   /* Following fields must match those in class procbuf (procbuf.h) */
   _IO_pid_t pid;
   struct _IO_proc_file *next;
@@ -169,7 +169,7 @@ _IO_popen (command, mode)
   if (new_f == NULL)
     return NULL;
 #ifdef _IO_MTSAFE_IO
-  new_f->fpx.file.file._lock = &new_f->lock;
+  new_f->fpx.file.plus.file._lock = &new_f->lock;
 #endif
   fp = (_IO_FILE*)&new_f->fpx;
   _IO_init (fp, 0);

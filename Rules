@@ -75,7 +75,8 @@ $(common-objpfx)dummy.c:
 	echo 'void __dummy__ (void) { }' > $@
 $(common-objpfx)empty.c:
 	cp -f /dev/null $@
-common-generated := $(common-generated) dummy.o dummy.c empty.c empty.os
+common-generated += dummy.o dummy.c empty.c \
+		    $(addprefix empty,$(object-suffixes))
 
 # This makes all the auxiliary and test programs.
 
@@ -152,6 +153,13 @@ subdir_dist: dist
 generated: $(addprefix $(common-objpfx),$(common-generated)) \
 	$(addprefix $(objpfx),$(generated))
 
+define o-iterator-doit
+$(common-objpfx)empty$o: $(common-objpfx)empty.c $(before-compile);
+	$$(compile-command.c)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
+
 ifndef libc.so-version
 # Undefine this because it can't work when we libc.so is unversioned.
 static-only-routines =
@@ -163,21 +171,15 @@ ifdef static-only-routines
 $(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
 	rm -f $@
 	ln $< $@
-
-$(common-objpfx)empty.os: $(common-objpfx)empty.c $(before-compile)
-	$(compile-command.c)
 endif
 
 ifdef shared-only-routines
 # If we have versioned code we don't need the old versions in any of the
 # static libraries.
 define o-iterator-doit
-$(shared-only-routines:%=$(objpfx)%.$o): %.$o: $(common-objpfx)empty.$o
+$(shared-only-routines:%=$(objpfx)%$o): %$o: $(common-objpfx)empty$o;
 	rm -f $$@
 	ln $$< $$@
-
-$(common-objpfx)empty.$o: $(common-objpfx)empty.c $(before-compile)
-	$$(compile-command.c)
 endef
 object-suffixes-left := $(filter-out .os,$(object-suffixes))
 include $(o-iterator)

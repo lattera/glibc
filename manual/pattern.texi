@@ -468,6 +468,21 @@ glob ("~homer/bin/*", GLOB_TILDE, NULL, &result)
 This functionality is equivalent to what is available in C-shells.
 @end table
 
+Calling @code{glob} will in most cases allocate resources which are used
+to represent the result of the function call.  If the same object of
+type @code{glob_t} is used in multiple call to @code{glob} the resources
+are freed or reused so that no leaks appear.  But this does not include
+the time when all @code{glob} calls are done.
+
+@comment glob.h
+@comment POSIX.2
+@deftypefun void globfree (glob_t *@var{pglob})
+The @code{globfree} function frees all resources allocated by previous
+calls to @code{glob} associated with the object pointed to by
+@var{pglob}.  This function should be called whenever the currently used
+@code{glob_t} typed object isn't used anymore.
+@end deftypefun
+
 
 @node Regular Expressions
 @section Regular Expression Matching

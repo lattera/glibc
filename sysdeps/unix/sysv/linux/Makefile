@@ -76,6 +76,10 @@ sysdep_headers += netinet/in_systm.h netinet/udp.h \
 		  sys/socketvar.h
 endif
 
+ifeq ($(subdir),posix)
+sysdep_routines += s_pread64 s_pwrite64
+endif
+
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
 

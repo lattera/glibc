@@ -76,12 +76,12 @@
 	cmp	%g2, 0
 	beq	3f
 	 sethi	%hi(__libc_multiple_libcs), %g3
-	ld	[%g4+%g2], %g2
+	ld	[%g2], %g2
 	subcc	%g0, %g2, %g0
 	subx	%g0, -1, %g2
 3:	or	%g3, %lo(__libc_multiple_libcs), %g3
 	cmp	%g2, 0
-	st	%g2, [%g3+%g4]
+	st	%g2, [%g3]
 	/* If so, argc et al are in %o0-%o2 already.  Otherwise, load them.  */
 	bnz	" #INIT "
 	 nop

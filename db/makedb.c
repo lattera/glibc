@@ -216,7 +216,7 @@ more_help (int key, const char *text, void *input)
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
       return strdup (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"));
+Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
     default:
       break;
     }

@@ -22,7 +22,7 @@
 /* Write NBYTES of BUF to FD at given position OFFSET without changing
    the file position.  Return the number written, or -1.  */
 ssize_t
-pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
+__pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
 {
   if (nbytes == 0)
     return 0;
@@ -40,5 +40,6 @@ pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__pwrite, pwrite)
 stub_warning (pwrite)
 #include <stub-tag.h>

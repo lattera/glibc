@@ -157,11 +157,9 @@ static const struct base_table_t base_table[] =
 };
 
 /* Lower-case digits.  */
-const char _itoa_lower_digits[]
-	= "0123456789abcdefghijklmnopqrstuvwxyz";
+extern const char _itoa_lower_digits[];
 /* Upper-case digits.  */
-const char _itoa_upper_digits[]
-	= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+extern const char _itoa_upper_digits[];
 
 
 char *

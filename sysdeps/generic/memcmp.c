@@ -18,56 +18,64 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+# include "config.h"
 #endif
 
 #undef	__ptr_t
-#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
-#define	__ptr_t	void *
+#if defined __cplusplus || (defined __STDC__ && __STDC__)
+# define __ptr_t	void *
 #else /* Not C++ or ANSI C.  */
-#undef	const
-#define	const
-#define	__ptr_t	char *
+# undef	const
+# define const
+# define __ptr_t	char *
 #endif /* C++ or ANSI C.  */
 
-#if defined (HAVE_STRING_H) || defined (_LIBC)
-#include <string.h>
+#ifndef __P
+# if defined __GNUC__ || (defined __STDC__ && __STDC__)
+#  define __P(args) args
+# else
+#  define __P(args) ()
+# endif  /* GCC.  */
+#endif  /* Not __P.  */
+
+#if defined HAVE_STRING_H || defined _LIBC
+# include <string.h>
 #endif
 
 #undef memcmp
 
 #ifdef _LIBC
 
-#include <memcopy.h>
+# include <memcopy.h>
 
 #else	/* Not in the GNU C library.  */
 
-#include <sys/types.h>
+# include <sys/types.h>
 
 /* Type to use for aligned memory operations.
    This should normally be the biggest type supported by a single load
    and store.  Must be an unsigned type.  */
-#define	op_t	unsigned long int
-#define OPSIZ	(sizeof(op_t))
+# define op_t	unsigned long int
+# define OPSIZ	(sizeof(op_t))
 
 /* Threshold value for when to enter the unrolled loops.  */
-#define	OP_T_THRES	16
+# define OP_T_THRES	16
 
 /* Type to use for unaligned operations.  */
 typedef unsigned char byte;
 
-#ifndef WORDS_BIGENDIAN
-#define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
-#else
-#define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
-#endif
+# ifndef WORDS_BIGENDIAN
+#  define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
+# else
+#  define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
+# endif
 
 #endif	/* In the GNU C library.  */
 
 #ifdef WORDS_BIGENDIAN
-#define CMP_LT_OR_GT(a, b) ((a) > (b) ? 1 : -1)
+# define CMP_LT_OR_GT(a, b) ((a) > (b) ? 1 : -1)
 #else
-#define CMP_LT_OR_GT(a, b) memcmp_bytes ((a), (b))
+# define CMP_LT_OR_GT(a, b) memcmp_bytes ((a), (b))
 #endif
 
 /* BE VERY CAREFUL IF YOU CHANGE THIS CODE!  */
@@ -90,9 +98,9 @@ typedef unsigned char byte;
 
 static int memcmp_bytes __P((op_t, op_t));
 
-#ifdef  __GNUC__
+# ifdef  __GNUC__
 __inline
-#endif
+# endif
 static int
 memcmp_bytes (a, b)
      op_t a, b;
@@ -376,6 +384,6 @@ memcmp (s1, s2, len)
 }
 
 #ifdef weak_alias
-#undef bcmp
+# undef bcmp
 weak_alias (memcmp, bcmp)
 #endif

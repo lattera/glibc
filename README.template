@@ -80,7 +80,7 @@ in the GNU C library, explaining how you can tell the library what
 facilities you want it to make available.
 
 We prefer to get bug reports sent using the `glibcbug' shell script which
-is install together with the rest of the GNU libc to <bugs@gnu.ai.mit.edu>.
+is install together with the rest of the GNU libc to <bugs@gnu.org>.
 Simply run this shell script and fill in the information.  Nevertheless
 you can still send bug reports to <bug-glibc@prep.ai.mit.edu> as normal
 electronic mails.

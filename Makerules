@@ -679,7 +679,7 @@ ifndef subdir
 # What we install as libc.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
 # The libc.so object is not complete since some functions are only defined
-# in libc.a and the dynamic linker is an etra object.
+# in libc.a and the dynamic linker is an extra object.
 install: $(inst_libdir)/libc.so
 $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 			$(elfobjdir)/$(rtld-installed-name) \
@@ -690,7 +690,11 @@ $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 	 echo '   The dynamic linker defines some functions used by $(<F),';\
 	 echo '	  but ld uses definitions from libc.a before examining the';\
 	 echo '   dependencies of $(<F) to find $(rtld-installed-name).  */';\
-	 echo 'GROUP ( $(^F) )') > $@.new
+	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
+	      '$(slibdir)/$(rtld-installed-name)' \
+	      '$(libdir)/lib$(libc-name).a' \
+	      ')' > $@.new
+	mv -f $@.new $@
 	mv -f $@.new $@
 
 endif

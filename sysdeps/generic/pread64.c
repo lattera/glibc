@@ -22,7 +22,7 @@
 /* Read NBYTES into BUF from FD at the given position OFFSET without
    changing the file pointer.  Return the number read or -1.  */
 ssize_t
-pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
+__pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
 {
   if (nbytes == 0)
     return 0;
@@ -40,5 +40,6 @@ pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__pread64, pread64)
 stub_warning (pread64)
 #include <stub-tag.h>

@@ -144,7 +144,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   /* Cleanup files created by a previous `bind'.  */
   unlink (_PATH_UTMPD_RO);
   unlink (_PATH_UTMPD_RW);
-  
+
   /* Open UTMP database.  */
   utmp_db = open_database (_PATH_UTMP "x", _PATH_UTMP);
   if (utmp_db == NULL)
@@ -205,7 +205,7 @@ Usage: %s [OPTION]...\n\
   -V, --version         output version information and exit\n"),
 	      program_invocation_name);
       fputs (_("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
+Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"),
 	     stdout);
     }
 
@@ -252,7 +252,7 @@ make_socket (const char *name)
   size = (offsetof (struct sockaddr_un, sun_path)
 	  + strlen (addr.sun_path));
 
-  
+
   if (bind (sock, (struct sockaddr *) &addr, size) < 0)
     error (EXIT_FAILURE, errno, "%s", name);
 

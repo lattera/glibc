@@ -17,14 +17,37 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
-
-#undef	mblen
+#include <wchar.h>
 
 
 /* Return the length of the multibyte character (if there is one)
-   at S which is no longer than N characters.  */
+   at S which is no longer than N characters.
+   The ISO C standard says that the `mblen' function must not change
+   the global state.  */
 int
 mblen (const char *s, size_t n)
 {
-  return mbtowc ((wchar_t *) NULL, s, n);
+  mbstate_t state;
+  int result;
+
+  /* If S is NULL the function has to return null or not null
+     depending on the encoding having a state depending encoding or
+     not.  This is nonsense because any multibyte encoding has a
+     state.  The ISO C amendment 1 corrects this while introducing the
+     restartable functions.  We simply say here all encodings have a
+     state.  */
+  if (s == NULL)
+    return 1;
+
+  state.count = 0;
+  state.value = 0;
+
+  result = __mbrtowc (NULL, s, n, &state);
+
+  /* The `mbrtowc' functions tell us more than we need.  Fold the -1
+     and -2 result into -1.  */
+  if (result < 0)
+    result = -1;
+
+  return result;
 }

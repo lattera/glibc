@@ -656,7 +656,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      {
 		char buf[20], *bp;
 		buf[sizeof buf - 1] = '\0';
-		bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
+		bp = _itoa_word (l->l_addr, &buf[sizeof buf - 1], 16, 0);
 		while ((size_t) (&buf[sizeof buf - 1] - bp)
 		       < sizeof l->l_addr * 2)
 		  *--bp = '0';
@@ -675,12 +675,12 @@ of this helper program; chances are you did not intend to run this program.\n",
 						     ELF_MACHINE_JMP_SLOT);
 	    char buf[20], *bp;
 	    buf[sizeof buf - 1] = '\0';
-	    bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
+	    bp = _itoa_word (ref->st_value, &buf[sizeof buf - 1], 16, 0);
 	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof loadbase * 2)
 	      *--bp = '0';
 	    _dl_sysdep_message (_dl_argv[i], " found at 0x", bp, NULL);
 	    buf[sizeof buf - 1] = '\0';
-	    bp = _itoa (loadbase, &buf[sizeof buf - 1], 16, 0);
+	    bp = _itoa_word (loadbase, &buf[sizeof buf - 1], 16, 0);
 	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof loadbase * 2)
 	      *--bp = '0';
 	    _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);

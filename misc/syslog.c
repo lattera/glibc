@@ -210,7 +210,7 @@ vsyslog(pri, fmt, ap)
 	     * is the one from the syslogd failure.
 	     */
 	    if (LogStat & LOG_CONS &&
-		(fd = open(_PATH_CONSOLE, O_WRONLY, 0)) >= 0)
+		(fd = open(_PATH_CONSOLE, O_WRONLY|O_NOCTTY, 0)) >= 0)
 	      {
 		dprintf (fd, "%s\r\n", buf + msgoff);
 		(void)close(fd);

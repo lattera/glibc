@@ -1,6 +1,293 @@
+1997-10-26 18:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/genops.c: Partial undo of last patch.
+	* libio/stdfiles.c: Likewise.
+	* libio/iofdopen.c: Use _IO_FILE_complete, not _IO_file_plus.
+	* libio/iopopen.c: Likewise.
+	* libio/iovdprintf.c: Likewise.
+	* libio/libio.h: Remove duplicated `;'.
+	* libio/stdio.c: Remove misleading comment.
+	* libio/stdio.h: Declare standard streams as variables.
+
+	* login/Makefile (distribute): Add README.utmpd.
+	* login/README.utmpd: New file.
+	Provided by Mark M. Kettenis <kettenis@phys.uva.nl>.
+
+	* manual/job.texi: Document tcgetsid.
+	* manual/pattern.texi: Document globfree.
+	* manual/terminal.texi: Document B38400 ... B460800.
+
+	* posix/confstr.c: Print "-D_FILE_OFFSET_SIZE=64" for _CS_LFS_CFLAGS.
+
+	* posix/unistd.h: Add explanation of _POSIX_* constants.
+
+	* posix/unists.h: Add prototypes for __pread, __pread64, __pwrite
+	and __pwrite64.
+	* sysdeps/generic/pread.c: Define as __pread and make pread weak alias.
+	* sysdeps/generic/pread64.c: Likewise.
+	* sysdeps/generic/pwrite.c: Likewise.
+	* sysdeps/generic/pwrite64.c: Likewise.
+	* sysdeps/posix/pread.c: Likewise.
+	* sysdeps/posix/pwrite.c: Likewise.
+	* sysdeps/posix/pread64.c: New file.
+	* sysdeps/posix/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=posix] (sysdep_routines):
+	Add s_pread64 and s_pwrite64.
+	* sysdeps/unix/sysv/linux/pread.c: New file.
+	* sysdeps/unix/sysv/linux/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/s_pread64.c: New file.
+	* sysdeps/unix/sysv/linux/s_pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add pread and pwrite.
+	* sysdeps/unix/sysv/linux/alpha/pread64.c: New (empty) file.
+	* sysdeps/unix/sysv/linux/alpha/pwrite64.c: New (empty) file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pread64.c: New (empty) file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pwrite64.c: New (empty) file.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add pread and pwrite
+	with weak aliases for *64 functions.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
+	* string/bits/string2.h: Add casts to allow void * arguments.
+
+	* sysdeps/i386/i486/bits/string.h: Define index and rindex only if
+	__USE_BSD or __USE_XOPEN_EXTENDED.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Add SCM_RIGHTS and other
+	SCM_* constants from kernel header.
+
+	* termios/termios.h: Add prototype for tcgetsid.
+
+1997-10-26 13:26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/clnt_perr.c: Add trailing '\0' to strings.
+
+	* sunrpc/get_myaddr.c: Include rpc/clnt.h for prototypes.
+
+	* sunrpc/pmap_clnt.c: Use get_myaddress from header file.
+
+1997-10-26 05:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Punt if any directory mentioned in the
+	enable-add-on parameter does not exist.
+
+1997-10-25 19:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* termios/Makefile (routines): Add tcgetsid.
+	* termios/tcgetsid.c: New file.
+	Provided by Mark M. Kettenis <kettenis@phys.uva.nl>.
+
+1997-10-25 18:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/stdlib.h: Remove mblen optimization.
+	* stdlib/mblen.c: Rewrite to make sure global state is not changed.
+	Reported by anderson@metrolink.com.
+
+1997-10-19 21:51  Wolfram Gloger  <wg@wolfram.dent.med.uni-muenchen.de>
+
+	* malloc/thread-m.h [_LIBC]:  Use new __libc_internal_tsd_{set,get}
+	interface for thread-specific data.
+
+1997-10-25 06:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-addr.c: Use braces for correct logical grouping.
+	Patch by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
+
+1997-10-18 09:15  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* io/ftwtest-sh: Sometimes /tmp is a symlink to somewhere more
+	convenient; that caused this test to break.
+
+	* sysdeps/powerpc/dl-machine.h: Fix typo.
+
+	* sysdeps/powerpc/bits/fenv.h: Don't use floating-point registers
+	when -msoft-float is in effect, because this causes compilation to
+	stop.
+	* sysdeps/powerpc/bits/mathinlines.h: Likewise.
+
+	* rpm/template: Add description, use RPM flags rather than the ones
+	used to build the spec.  Build in a temporary directory, not /.
+
+	* elf/dl-lookup.c: Don't include _itoa.h, it's not used.
+	* elf/dl-minimal.c: Use _itoa_word rather than _itoa.  It seems that
+	_itoa is the only routine that ld.so uses that requires something
+	from libgcc.a on powerpc, so it would be best to avoid it in ld.so.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/_strerror.c: Likewise.
+	* stdio-common/_itoa.c: Split out digits strings.
+	* stdio-common/itoa-digits.c: New file.
+	* stdio-common/Makefile: Add itoa-digits.
+
+1997-10-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/filesys.texi (Scanning Directory Content): Document error
+	case more.
+
+	* dirent/scandir.c (scandir): Ignore errors from select function.
+	Suggested by urbanw@cs.umu.se (closes PR libc/316).
+
+1997-10-25 06:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Corrections.
+	Patch by Erik Troan <ewt@redhat.com>.
+
+1997-10-25 04:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Favour exact
+	matching of version function if both the general (1) and
+	glibc-specific (3) entry are present.
+
+1997-10-22 18:47  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/rpc/clnt.h: Add get_myaddress prototype.
+
+	* nis/libnsl.map: Fix typo.
+
+	* nis/nis_call.c: Fix memory leak.
+
+1997-10-22 19:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/memcmp.c: Define __P if not defined before.
+	Patch by Jim Meyering <meyering@eng.ascend.com>.
+
+1997-10-21 22:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/prctl.h: New file by Richard Gooch
+	<rgooch@atnf.csiro.au>.
+
+1997-10-21 21:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/syslog.c (vsyslog): Open console with O_NOCTTY.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-10-21 18:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp.c: Improve handling of $... expressions.
+	Patch by Tim Waugh <tim@cyberelk.demon.co.uk>.
+
+1997-10-21 16:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/string.texi: Correct return values of bcopy and bzero.
+	Patch by Matthew Wilcox <willy@odie.barnet.ac.uk>.
+
+1997-10-18 15:03  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Correct types of some
+	elements in struct msghdr and struct cmsghdr, to keep in step with
+	the kernel.
+
+1997-10-17 22:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/init-first.h: Fix another
+	bug in startup code.
+	Patch by Eric Delaunay <delaunay@lix.polytechnique.fr>.
+
+1997-10-16 20:17  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Dump args to the
+	stack and give the kernel a pointer.  Use the sysdep.h macros.
+
+1997-10-17 04:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/sparc/sparc32/elf/start.S: Calculate argv correctly.
+	Patch by Eric Delaunay <delaunay@lix.polytechnique.fr>.
+
+1997-10-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/libm-ieee754/s_nextafterxf.c [!__STDC__]: Correct typo.
+
+1997-10-16 14:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/pattern.texi: Document globfree.
+
+1997-10-15 21:11  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/net/if_packet.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	net/if_packet.h.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_ASH): New type, for
+	64Mbps ASH.
+	(ARPHRD_ETHER): This is used for 100Mbps networks too.
+
+1997-10-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makerules (install): Use full pathnames for linker script.
+	This is to work around a limitation in `ld' while no better solution
+	is possible.
+
+1997-10-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* malloc/malloc.c (mmap_chunk): Put inline before static in
+	function definition to avoid compiler warning.
+	(malloc_extend): Likewise.
+
+	* sysdeps/generic/des_impl.c: Include "des.h" to avoid warning.
+
+1997-10-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* NEWS: Fix @gnu.ai.mit.edu -> @gnu.org.
+	* README.template: Likewise.
+	* db/makedb.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/ldd.sh.in: Likewise.
+	* intl/locale.alias: Likewise.
+	* login/programs/utmpd.c: Likewise.
+	* libio/stdfiles.c [!_IO_MTSAFE] (DEF_STDFILE): Fix parameter list.
+
+1997-10-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Rules: Remove all empty.* files.
+	(shared-only-routines): Correct implementation.
+
+1997-10-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_lrintl.c: Make compilable.
+	* sysdeps/libm-ieee754/s_llrintl.c: Likewise.  Optimized.
+
+1997-10-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/ldd.bash.in: Only prepend ./ if the file contains no slash
+	at all.
+	* elf/ldd.sh.in: Likewise.
+
+1997-10-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/sys/ucontext.h: New file.
+
+1997-10-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/s_scalbln.c: New (empty) file.
+	* sysdeps/m68k/fpu/s_scalblnf.c: New (empty) file.
+	* sysdeps/m68k/fpu/s_scalblnl.c: New (empty) file.
+
+	* sysdeps/m68k/fpu/s_scalbn.c: Add scalbln alias.
+	* sysdeps/m68k/fpu/s_scalbnf.c: Adapted.
+	* sysdeps/m68k/fpu/s_scalbnl.c: Adapted.
+
+	* sysdeps/m68k/fpu/s_lrint.c: Add standard skeleton stuff.
+	* sysdeps/m68k/fpu/s_lrintf.c: New file.
+	* sysdeps/m68k/fpu/s_lrintl.c: New file.
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Add fma and scalbln.  Update
+	lrint and scalbn.
+	(__m81_inline) [__cplusplus]: Define to __inline.
+
+	* math/bits/mathcalls.h: Remove whitespace before second argument
+	of __MATHDECL.  Add note explaining this.
+
+1997-10-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/arith.texi (Absolute Value): Spelling fix.
+
+1997-10-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/obstack.h (obstack_empty_p) [!__GNUC__]: Properly
+	parenthesize the macro parameter.
+
 1997-10-15 06:56  Ulrich Drepper  <drepper@cygnus.com>
 
-	* Rules: Remove ruls to magically install <subdir>.h headers.
+	* Rules: Remove rules to magically install <subdir>.h headers.
 	Reported by Mark Kettenis <kettenis@phys.uva.nl>.
 
 	* glibcbug.in: Fix @gnu.ai.mit.edu -> @gnu.org.

@@ -505,15 +505,15 @@ hello, wo
 
 @comment string.h
 @comment BSD
-@deftypefun {void *} bcopy (void *@var{from}, const void *@var{to}, size_t @var{size})
+@deftypefun void bcopy (const void *@var{from}, void *@var{to}, size_t @var{size})
 This is a partially obsolete alternative for @code{memmove}, derived from
 BSD.  Note that it is not quite equivalent to @code{memmove}, because the
-arguments are not in the same order.
+arguments are not in the same order and there is no return value.
 @end deftypefun
 
 @comment string.h
 @comment BSD
-@deftypefun {void *} bzero (void *@var{block}, size_t @var{size})
+@deftypefun void bzero (void *@var{block}, size_t @var{size})
 This is a partially obsolete alternative for @code{memset}, derived from
 BSD.  Note that it is not as general as @code{memset}, because the only
 value it can store is zero.

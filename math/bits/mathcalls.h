@@ -38,7 +38,10 @@
 
    This is just like __MATHCALL but for a function returning `TYPE'
    instead of `_Mdouble_'.  In all of these cases, there is still
-   both a `NAME' and a `NAMEf' that takes `float' arguments.  */
+   both a `NAME' and a `NAMEf' that takes `float' arguments.
+   
+   Note that there must be no whitespace before the argument passed for
+   NAME, to make token pasting work with -traditional.  */
 
 #ifndef _MATH_H
  #error "Never include <bits/mathcalls.h> directly; include <math.h> instead."
@@ -65,7 +68,7 @@ __MATHCALL (tan,, (_Mdouble_ __x));
 
 #ifdef __USE_GNU
 /* Cosine and sine of X.  */
-__MATHDECL (void, sincos,,
+__MATHDECL (void,sincos,,
 	    (_Mdouble_ __x, _Mdouble_ *__sinx, _Mdouble_ *__cosx));
 #endif
 
@@ -275,13 +278,13 @@ __MATHCALL (remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo));
 
 /* Round X to nearest integral value according to current rounding
    direction.  */
-__MATHDECL (long int, lrint,, (_Mdouble_ __x));
-__MATHDECL (long long int, llrint,, (_Mdouble_ __x));
+__MATHDECL (long int,lrint,, (_Mdouble_ __x));
+__MATHDECL (long long int,llrint,, (_Mdouble_ __x));
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
-__MATHDECL (long int, lround,, (_Mdouble_ __x));
-__MATHDECL (long long int, llround,, (_Mdouble_ __x));
+__MATHDECL (long int,lround,, (_Mdouble_ __x));
+__MATHDECL (long long int,llround,, (_Mdouble_ __x));
 
 
 /* Return positive difference between X and Y.  */
