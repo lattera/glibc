@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/port.h>
 #include <hurd/id.h>
+#include <hurd/lookup.h>
 #include <fcntl.h>
 
 /* Test for access to FILE by our real user and group IDs.  */
@@ -28,10 +29,48 @@ int
 DEFUN(__access, (file, type), CONST char *file AND int type)
 {
   error_t err;
-  file_t crdir, cwdir, rcrdir, rcwdir, io;
-  struct hurd_userlink crdir_ulink, cwdir_ulink;
+  file_t rcrdir, rcwdir, io;
   int flags, allowed;
-  mach_port_t ref;
+
+  error_t reauthenticate (int which, file_t *result)
+    {
+      /* Get a port to our root directory, authenticated with the real IDs.  */
+      error_t err;
+      mach_port_t ref;
+      ref = __mach_reply_port ();
+      err = HURD_PORT_USE
+	(&_hurd_ports[which],
+	 ({
+	   err = __io_reauthenticate (port, ref, MACH_MSG_TYPE_MAKE_SEND);
+	   if (!err)
+	     err = __auth_user_authenticate (_hurd_id.rid_auth,
+					     port,
+					     ref, MACH_MSG_TYPE_MAKE_SEND,
+					     result);
+	   err;
+	 }));
+      __mach_port_destroy (__mach_task_self (), ref);
+      return err;
+    }
+
+  error_t init_port (int which, error_t (*operate) (mach_port_t))
+    {
+      switch (which)
+	{
+	case INIT_PORT_AUTH:
+	  return (*operate) (_hurd_id.rid_auth);
+	case INIT_PORT_CRDIR:
+	  return (reauthenticate (INIT_PORT_CRDIR, &rcrdir) ?:
+		  (*operate) (rcrdir));
+	case INIT_PORT_CWDIR:
+	  return (reauthenticate (INIT_PORT_CWDIR, &rcwdir) ?:
+		  (*operate) (rcwdir));
+	default:
+	  return _hurd_ports_use (which, operate);
+	}
+    }
+
+  rcrdir = rcwdir = MACH_PORT_NULL;
 
   HURD_CRITICAL_BEGIN;
 
@@ -67,34 +106,11 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 					    &_hurd_id.rid_auth)))
 	goto lose;
     }
-
-  /* Get a port to our root directory, authenticated with the real IDs.  */
-  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
-  ref = __mach_reply_port ();
-  err = __io_reauthenticate (crdir, ref, MACH_MSG_TYPE_MAKE_SEND);
+  
   if (!err)
-    err = __auth_user_authenticate (_hurd_id.rid_auth,
-				    crdir,
-				    ref, MACH_MSG_TYPE_MAKE_SEND,
-				    &rcrdir);
-  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
-  __mach_port_destroy (__mach_task_self (), ref);
-
-  if (!err)
-    {
-      /* Get a port to our current working directory, authenticated with
-         the real IDs.  */
-      cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
-      ref = __mach_reply_port ();
-      err = __io_reauthenticate (cwdir, ref, MACH_MSG_TYPE_MAKE_SEND);
-      if (!err)
-	err = __auth_user_authenticate (_hurd_id.rid_auth,
-					cwdir,
-					ref, MACH_MSG_TYPE_MAKE_SEND,
-					&rcwdir);
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink, cwdir);
-      __mach_port_destroy (__mach_task_self (), ref);
-    }
+    /* Look up the file name using the modified init ports.  */
+    err = __hurd_file_name_lookup (&init_port, &__getdport,
+				   file, 0, 0, &io);
 
   /* We are done with _hurd_id.rid_auth now.  */
  lose:
@@ -102,15 +118,10 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 
   HURD_CRITICAL_END;
 
-  if (err)
-    return __hurd_fail (err);
-
-  /* Now do a path lookup on FILE, using the crdir and cwdir
-     reauthenticated with _hurd_id.rid_auth.  */
-
-  err = __hurd_file_name_lookup (rcrdir, rcwdir, file, 0, 0, &io);
-  __mach_port_deallocate (__mach_task_self (), rcrdir);
-  __mach_port_deallocate (__mach_task_self (), rcwdir);
+  if (rcrdir != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), rcrdir);
+  if (rcwdir != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), rcwdir);
   if (err)
     return __hurd_fail (err);
 

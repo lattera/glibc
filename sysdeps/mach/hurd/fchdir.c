@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/port.h>
 #include <hurd/fd.h>
+#include <fcntl.h>
 
 /* Change the current directory to FD.  */
 int

@@ -1,3 +1,12 @@
+Mon Oct 16 03:22:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getcwd.c: Use __file_name_lookup_under.
+	* sysdeps/mach/hurd/bind.c: Likewise.
+	* sysdeps/mach/hurd/access.c: Use new __hurd_file_name_lookup
+	calling convention.
+
+	* hurd/hurdexec.c: Undo last change (10 Oct 95).
+
 Sun Oct 15 21:04:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurd/lookup.h: New file.

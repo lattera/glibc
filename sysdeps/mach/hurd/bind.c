@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -65,40 +65,22 @@ DEFUN(bind, (fd, addr, len),
 	  if (! err)
 	    /* Link the node, now a socket, into the target directory.  */
 	    err = __dir_link (node, dir, n);
+	  __mach_port_deallocate (__mach_task_self (), node);
 	  if (! err)
-	    /* Get a port to the ifsock translator.  */
 	    {
-	      retry_type retry;
-	      string_t retry_name;
-
-	      err = __dir_lookup (dir, n, 0, 0, &retry, retry_name, &ifsock);
-
-	      if (! err && (retry != FS_RETRY_NORMAL || retry_name[0]))
-		/* Either someone has fucked with our new node, or the ifsock
-		   translator is acting very oddly.  */
+	      /* Get a port to the ifsock translator.  */
+	      ifsock = __file_name_lookup_under (dir, n, 0, 0);
+	      if (ifsock == MACH_PORT_NULL)
 		{
-		  struct hurd_userlink crdir_ulink;
-		  file_t crdir =
-		    _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR],
-				    &crdir_ulink);
-
-		  err = __hurd_file_name_lookup_retry (crdir,
-						       retry, retry_name, 0, 0,
-						       &ifsock);
-
-		  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR],
-				   &crdir_ulink, crdir);
+		  err = errno;
+		  /* If we failed, get rid of the node we created.  */
+		  __dir_unlink (dir, n);
 		}
-
-	      if (err)
-		/* If we failed, get rid of the node we created.  */
-		__dir_unlink  (dir, n);
 	    }
 	  if (! err)
 	    /* Get the address port.  */
 	    err = __ifsock_getsockaddr (ifsock, &aport);
 	  __mach_port_deallocate (__mach_task_self (), ifsock);
-	  __mach_port_deallocate (__mach_task_self (), node);
 	}
       __mach_port_deallocate (__mach_task_self (), dir);
 

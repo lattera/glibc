@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <fcntl.h>
 
 /* Change the current root directory to FD.  */
 int

@@ -174,7 +174,6 @@ void _mp_default_free ();
     else								\
       ____mpn_sqr_n (prodp, up, size, tspace);				\
   } while (0);
-#define assert(trueval) do {if (!(trueval)) abort ();} while (0)
 
 /* Structure for conversion between internal binary format and
    strings in base 2..36.  */

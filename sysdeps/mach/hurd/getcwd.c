@@ -47,12 +47,9 @@ __getcwd (char *buf, size_t size)
   file_t parent;
   char *dirbuf = NULL;
   unsigned int dirbufsize = 0;
-  file_t crdir;
-  struct hurd_userlink crdir_ulink;
 
   inline void cleanup (void)
     {
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
       __mach_port_deallocate (__mach_task_self (), parent);
 
       if (dirbuf != NULL)
@@ -86,12 +83,8 @@ __getcwd (char *buf, size_t size)
 
   /* Get a port to our root directory and stat it.  */
 
-  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
-  if (err = __io_stat (crdir, &st))
-    {
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
-      return __hurd_fail (err), NULL;
-    }
+  if (err = __USEPORT (CRDIR, __io_stat (port, &st)))
+    return __hurd_fail (err), NULL;
   rootdev = st.st_dev;
   rootino = st.st_ino;
 
@@ -101,10 +94,7 @@ __getcwd (char *buf, size_t size)
 						    (parent = port),
 						    MACH_PORT_RIGHT_SEND,
 						    1)))
-    {
-      _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
-      return __hurd_fail (err), NULL;
-    }
+    return __hurd_fail (err), NULL;
   if (err = __io_stat (parent, &st))
     {
       cleanup ();
@@ -130,14 +120,15 @@ __getcwd (char *buf, size_t size)
       int direntry, nentries;
 
       /* Look at the parent directory.  */
-      if (err = __hurd_file_name_lookup (crdir, parent, "..", O_READ, 0, &newp))
+      newp = __file_name_lookup_under (parent, "..", O_READ, 0);
+      if (newp == MACH_PORT_NULL)
 	goto lose;
       __mach_port_deallocate (__mach_task_self (), parent);
       parent = newp;
 
       /* Figure out if this directory is a mount point.  */
       if (err = __io_stat (parent, &st))
-	goto lose;
+	goto errlose;
       dotdev = st.st_dev;
       dotino = st.st_ino;
       mount_point = dotdev != thisdev;
@@ -184,14 +175,14 @@ __getcwd (char *buf, size_t size)
 
 	      if (mount_point || d->d_ino == thisino)
 		{
-		  file_t try;
-		  if (err = __hurd_file_name_lookup (crdir, parent, d->d_name,
-						     O_NOLINK, 0, &try))
+		  file_t try = __file_name_lookup_under (parent, d->d_name,
+							 O_NOLINK, 0);
+		  if (try == MACH_PORT_NULL)
 		    goto lose;
 		  err = __io_stat (try, &st);
 		  __mach_port_deallocate (__mach_task_self (), try);
 		  if (err)
-		    goto lose;
+		    goto errlose;
 		  if (st.st_dev == thisdev && st.st_ino == thisino)
 		    break;
 		}
@@ -199,7 +190,7 @@ __getcwd (char *buf, size_t size)
 	}
 
       if (err)
-	goto lose;
+	goto errlose;
       else
 	{
 	  /* Prepend the directory name just discovered.  */
@@ -244,6 +235,9 @@ __getcwd (char *buf, size_t size)
   cleanup ();
   return file_name;
 
+ errlose:
+  /* Set errno.  */
+  (void) __hurd_fail (err);
  lose:
   cleanup ();
   return NULL;
