@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <endian.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
@@ -46,11 +47,8 @@ __libc_pread (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-# if defined(__MIPSEB__)
-  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0, 0, offset);
-# elif defined(__MIPSEL__)
-  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0, offset, 0);
-# endif
+  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0,
+			   __LONG_LONG_PAIR (0, offset));
 # if __ASSUME_PREAD_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */

@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <endian.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
@@ -45,15 +46,9 @@ __libc_pwrite64 (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-# if defined(__MIPSEB__)
-  result = INLINE_SYSCALL (pwrite, 6, fd, buf, count, 0, (off_t) (offset >> 32),
-			   (off_t) (offset & 0xffffffff));
-# elif defined(__MIPSEL__)
   result = INLINE_SYSCALL (pwrite, 6, fd, buf, count, 0,
-			   (off_t) (offset & 0xffffffff),
-			   (off_t) (offset >> 32));
-# endif
-
+			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
+					     (off_t) (offset & 0xffffffff)));
 # if __ASSUME_PWRITE_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
