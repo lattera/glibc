@@ -1,3 +1,49 @@
+2000-09-10  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-collate.c (collate_read): Fix typo in handling
+	of decimal ellipsis.
+
+2000-09-11  Bruno Haible <haible@clisp.cons.org>
+
+	* locale/programs/ld-collate.c (collate_read): Always initialize
+	error_section.next.
+
+2000-09-10  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-collate.c (collate_finish): Upper bound for
+	ruleidx is 128, not 256.
+
+2000-09-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (collate_read): Correct check for
+	already inserted entries.
+
+2000-09-10  Bruno Haible <haible@clisp.cons.org>
+
+	* iconv/skeleton.c (FUNCTION_NAME): Handle unaligned access in
+	second try as well.
+
+2000-09-10  Bruno Haible <haible@clisp.cons.org>
+
+	* iconv/skeleton.c (FUNCTION_NAME): Optimize an `if' if
+	MAX_NEEDED_FROM > 1 && MAX_NEEDED_TO > 1.
+
+2000-09-10  Bruno Haible <haible@clisp.cons.org>
+
+	* iconv/skeleton.c (gconv_init): Replace all uses of RESET_STATE with
+	SAVE_RESET_STATE.
+
+2000-09-10  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/utf-7.c: New file.
+	* iconvdata/gconv-modules (UTF-7): New module entries.
+	* iconvdata/Makefile (modules): Add UTF-7.
+	(distribute): Add utf-7.c.
+	* iconvdata/testdata/UTF-7: New file.
+	* iconvdata/testdata/UTF-7..UTF8: New file.
+	* iconvdata/TESTS (UTF-7): New entry.
+	* iconvdata/run-iconv-test.sh: Fix confusing output.
+
 2000-09-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/tempname.c (__gen_tempname): Use __lxstat and __xstat.
