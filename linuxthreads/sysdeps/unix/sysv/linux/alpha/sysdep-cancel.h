@@ -40,10 +40,11 @@
 # define PSEUDO(name, syscall_name, args)			\
 	.globl name;						\
 	.align 4;						\
-	.ent name, 0;						\
+	.type name, @function;					\
+	.usepv name, std;					\
+	cfi_startproc;						\
 __LABEL(name)							\
 	ldgp	gp, 0(pv);					\
-	.prologue 1;						\
 	PSEUDO_PROF;						\
 	PSEUDO_PREPARE_ARGS					\
 	SINGLE_THREAD_P(t0);					\
@@ -55,7 +56,9 @@ __LABEL($pseudo_ret)						\
 	.subsection 2;						\
 __LABEL($pseudo_cancel)						\
 	subq	sp, 64, sp;					\
+	cfi_def_cfa_offset(64);					\
 	stq	ra, 0(sp);					\
+	cfi_offset(ra, -64);					\
 	SAVE_ARGS_##args;					\
 	CENABLE;						\
 	LOAD_ARGS_##args;					\
@@ -67,19 +70,27 @@ __LABEL($pseudo_cancel)						\
 	ldq	ra, 0(sp);					\
 	ldq	v0, 8(sp);					\
 	addq	sp, 64, sp;					\
+	cfi_remember_state;					\
+	cfi_restore(ra);					\
+	cfi_def_cfa_offset(0);					\
 	ret;							\
+	cfi_restore_state;					\
 __LABEL($multi_error)						\
 	CDISABLE;						\
 	ldq	ra, 0(sp);					\
 	ldq	v0, 8(sp);					\
 	addq	sp, 64, sp;					\
+	cfi_restore(ra);					\
+	cfi_def_cfa_offset(0);					\
 __LABEL($syscall_error)						\
 	SYSCALL_ERROR_HANDLER;					\
-	END(name);						\
 	.previous
 
 # undef PSEUDO_END
-# define PSEUDO_END(sym)
+# define PSEUDO_END(sym)					\
+	.subsection 2;						\
+	cfi_endproc;						\
+	.size sym, .-sym
 
 # define SAVE_ARGS_0	/* Nothing.  */
 # define SAVE_ARGS_1	SAVE_ARGS_0; stq a0, 8(sp)

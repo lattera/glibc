@@ -19,12 +19,13 @@
 
 #include <sysdep-cancel.h>
 
-	.globl __vfork
         .align 4
-        .ent __vfork,0
-__LABEL(__vfork)
+	.globl	__vfork
+	.type	__vfork, @function
+	.usepv	__vfork, std
+	cfi_startproc
+__vfork:
 	ldgp	gp, 0(pv)
-	.prologue 1
 	PSEUDO_PROF
 
 #ifdef SHARED
@@ -46,18 +47,24 @@ __LABEL(__vfork)
 	   fork and vfork object files.  */
 $do_fork:
 	subq	sp, 16, sp
+	cfi_adjust_cfa_offset(16)
 	stq	ra, 0(sp)
+	cfi_offset(ra, -16)
 	jsr	ra, HIDDEN_JUMPTARGET (__fork)
 	ldgp	gp, 0(ra)
 	ldq	ra, 0(sp)
 	addq	sp, 16, sp
+	cfi_restore(ra)
+	cfi_adjust_cfa_offset(-16)
 	ret
 
 $syscall_error:
 	SYSCALL_ERROR_HANDLER
 #endif
 
-PSEUDO_END(__vfork)
+	cfi_endproc
+	.size __vfork, .-__vfork
+
 libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

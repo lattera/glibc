@@ -1,3 +1,9 @@
+2003-06-05  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (PSEUDO): Use
+	and require CFI assembler directives.
+	* sysdeps/unix/sysv/linux/alpha/vfork.S: Likewise.
+
 2003-05-30  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h
