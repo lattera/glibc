@@ -19,11 +19,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <argp.h>
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
 #include <iconv.h>
+#include <langinfo.h>
 #include <locale.h>
 #include <search.h>
 #include <stdio.h>
@@ -131,16 +133,20 @@ main (int argc, char *argv[])
       print_known_names ();
       exit (EXIT_SUCCESS);
     }
-
-  /* If either the from- or to-code is not specified this is an error
-     since we do not know what to do.  */
-  if (from_code == NULL && to_code == NULL)
-    error (EXIT_FAILURE, 0,
-	   _("neither original nor target encoding specified"));
   if (from_code == NULL)
-    error (EXIT_FAILURE, 0, _("original encoding not specified using `-f'"));
+    {
+      /* The Unix standard says that in this case the charset of the current
+	 locale is used.  */
+      from_code = nl_langinfo (CODESET);
+      assert (from_code != NULL);
+    }
   if (to_code == NULL)
-    error (EXIT_FAILURE, 0, _("target encoding not specified using `-t'"));
+    {
+      /* The Unix standard says that in this case the charset of the current
+	 locale is used.  */
+      to_code = nl_langinfo (CODESET);
+      assert (to_code != NULL);
+    }
 
   /* If we have to ignore errors make sure we use the appropriate name for
      the to-character-set.  */
