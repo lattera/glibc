@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995,96,97,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.org>
 
@@ -29,7 +29,7 @@ __argz_stringify (char *argz, size_t len, int sep)
   if (len > 0)
     while (1)
       {
-	size_t part_len = strnlen (argz, len);
+	size_t part_len = __strnlen (argz, len);
 	argz += part_len;
 	len -= part_len;
 	if (len-- <= 1)		/* includes final '\0' we want to stop at */

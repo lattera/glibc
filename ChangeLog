@@ -1,3 +1,14 @@
+2001-08-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/argz-stringify.c (__argz_stringify): Use __strnlen
+	instead of strnlen.
+	* include/string.h (strndupa): Redefine here to use __strnlen
+	instead of strnlen.
+	* string/strndup.c (__strndup): Use __strnlen not strnlen.
+
+	* misc/syslog.c (vsyslog): Fix typo in last change (connect ->
+	connected).
+
 2001-08-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Don't handle

@@ -47,4 +47,16 @@ extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
 /* Now the real definitions.  We do this here since some of the functions
    above are defined as macros in the headers.  */
 #include <string/string.h>
+
+/* Alternative version which doesn't pollute glibc's namespace.  */
+#undef strndupa
+#define strndupa(s, n)							      \
+  (__extension__							      \
+    ({									      \
+      __const char *__old = (s);					      \
+      size_t __len = __strnlen (__old, (n));				      \
+      char *__new = (char *) __builtin_alloca (__len + 1);		      \
+      __new[__len] = '\0';						      \
+      (char *) memcpy (__new, __old, __len);				      \
+    }))
 #endif

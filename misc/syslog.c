@@ -247,7 +247,7 @@ vsyslog(pri, fmt, ap)
 		openlog_internal(LogTag, LogStat | LOG_NDELAY, 0);
 	      }
 
-	    if (!connect || __send(LogFile, buf, bufsize, 0) < 0)
+	    if (!connected || __send(LogFile, buf, bufsize, 0) < 0)
 	      {
 		closelog_internal ();	/* attempt re-open next time */
 		/*

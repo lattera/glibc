@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,8 +42,8 @@ __strndup (s, n)
      const char *s;
      size_t n;
 {
-  size_t len = strnlen (s, n);
-  char *new = malloc (len + 1);
+  size_t len = __strnlen (s, n);
+  char *new = (char *) malloc (len + 1);
 
   if (new == NULL)
     return NULL;
