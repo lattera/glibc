@@ -1,5 +1,7 @@
 1999-12-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/Makefile (categories): Remove commented-out old definition.
+
 	* locale/programs/ld-collate.c (insert_value): Don't pass wide string
 	to new_element if the wide char is not valid.
 	(handle_ellipsis): Likewise.

@@ -35,8 +35,6 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  mb_cur_max codeset_name \
 		  newlocale duplocale freelocale
-#categories	= ctype messages monetary numeric time collate paper name \
-#		  address telephone measurement versions
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name
