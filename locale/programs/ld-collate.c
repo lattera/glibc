@@ -1309,7 +1309,7 @@ order for `%.*s' already defined at %s:%Zu"),
 
 		  if (elem->name == NULL)
 		    {
-		      lr_error (ldfile, _("%s: `%s' must be a charater"),
+		      lr_error (ldfile, _("%s: `%s' must be a character"),
 				"LC_COLLATE", buf);
 		      continue;
 		    }
