@@ -1,5 +1,19 @@
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_int.h (gconv_module): Add new element from_regex_mem.
+	* iconv/gconv_conf.c (module_compare): Make s1 and s2 const.
+	(detect_conflict): New function.
+	(add_alias): Call detect_conflict to see whether there is already
+	a module for the new name.
+	(add_module): Make sure there is no alias for the new name.
+	(read_conf_file): Call add_alias with new argument.
+	(__gconv_read_conf): Don't destroy module tree immediately after
+	walking it.  We need it to test the internal conversions for
+	conflicts.
+	* iconv/gconv_db.c (find_derivation): Don't allocate memory for
+	regular expression.  There is now room in the module descriptor.
+	(free_mem): Don't free memory for regular expression.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h: Add AF_IRDA, PF_IRDA and
 	MSG_TRYHARD.
 

@@ -498,10 +498,10 @@ structure there is another function which allows to apply a function on
 all elements of the tree.  The function must have this type:
 
 @smallexample
-int __action_fn_t (const void *nodep, VISIT value, int level);
+void __action_fn_t (const void *nodep, VISIT value, int level);
 @end smallexample
 
-The @var{nodep} is the data value of the current node (nce given as the
+The @var{nodep} is the data value of the current node (once given as the
 @var{key} argument to @code{tsearch}).  @var{level} is a numeric value
 which corresponds to the depth of the current node in the tree.  The
 root node has the depth @math{0} and its children have a depth of

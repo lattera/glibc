@@ -87,8 +87,8 @@ builtin_aliases[] =
 static int
 module_compare (const void *p1, const void *p2)
 {
-  struct gconv_module *s1 = (struct gconv_module *) p1;
-  struct gconv_module *s2 = (struct gconv_module *) p2;
+  const struct gconv_module *s1 = (const struct gconv_module *) p1;
+  const struct gconv_module *s2 = (const struct gconv_module *) p2;
   int result;
 
   if (s1->from_pattern == NULL)
@@ -110,9 +110,78 @@ module_compare (const void *p1, const void *p2)
 }
 
 
+/* This function is used to test for a conflict which could be introduced
+   if adding a new alias.
+
+   This function is a *very* ugly hack.  The action-function is not
+   supposed to alter the parameter.  But we have to do this.   We will if
+   necessary compile the regular expression  so that we can see whether it
+   matches the alias name.  This is safe in this environment and for the
+   sake of performance we do it this way.  The alternative would be to
+   compile all regular expressions right from the start or to forget about
+   the compilation though we might need it later.
+
+   The second ugliness is that we have no possibility to pass parameters
+   to the function.  Therefore we use a global variable.  This is no problem
+   since we are for sure alone even in multi-threaded applications.  */
+
+/* This is alias we want to check.  */
+static const char *alias_to_test;
+
+/* This variable is set to a nonzero value once we have found a matching
+   entry.  */
+static int abort_conflict_search;
+
+static void
+detect_conflict (const void *p, VISIT value, int level)
+{
+  struct gconv_module *s = *(struct gconv_module **) p;
+
+  if ((value != endorder && value != leaf) || s->from_constpfx == NULL
+      || abort_conflict_search)
+    return;
+
+  /* Before we test the whole expression (if this is a regular expression)
+     make sure the constant prefix matches.  In case this is no regular
+     expression this is the whole string.  */
+  if (strcmp (alias_to_test, s->from_constpfx) == 0)
+    {
+      if (s->from_pattern == NULL)
+	/* This is a simple string and therefore we have a conflict.  */
+	abort_conflict_search = 1;
+      else
+	{
+	  /* Make sure the regular expression is compiled (if possible).  */
+	  if (s->from_regex == NULL)
+	    {
+	      /* Beware, this is what I warned you about in the comment
+		 above.  We are modifying the object.  */
+	      if (__regcomp (&s->from_regex_mem, s->from_pattern,
+			     REG_EXTENDED | REG_ICASE) != 0)
+		/* Something is wrong.  Remember this.  */
+		s->from_regex = (regex_t *) -1L;
+	      else
+		s->from_regex = &s->from_regex_mem;
+	    }
+
+	  if (s->from_regex != (regex_t *) -1L)
+	    {
+	      regmatch_t match[1];
+
+	      if (__regexec (s->from_regex, alias_to_test, 1, match, 0) == 0
+		  && match[0].rm_so == 0
+		  && alias_to_test[match[0].rm_eo] == '\0')
+		/* The whole string matched.  This is also a conflict.  */
+		abort_conflict_search = 1;
+	    }
+	}
+    }
+}
+
+
 /* Add new alias.  */
 static inline void
-add_alias (char *rp)
+add_alias (char *rp, void *modules)
 {
   /* We now expect two more string.  The strings are normalized
      (converted to UPPER case) and strored in the alias database.  */
@@ -137,6 +206,16 @@ add_alias (char *rp)
     /* No `to' string, ignore the line.  */
     return;
   *wp++ = '\0';
+
+  /* Test whether this alias conflicts with any available module.  See
+     the comment before the function `detect_conflict' for a description
+     of this ugly hack.  */
+  alias_to_test = from;
+  abort_conflict_search = 0;
+  __twalk (modules, detect_conflict);
+  if (abort_conflict_search)
+    /* It does conflict, don't add the alias.  */
+    return;
 
   new_alias = (struct gconv_alias *)
     malloc (sizeof (struct gconv_alias) + (wp - from));
@@ -290,6 +369,25 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
       if (need_ext)
 	memcpy (tmp - 1, gconv_module_ext, sizeof (gconv_module_ext));
 
+      /* See whether we have already an alias with this name defined.
+	 We do allow regular expressions matching this any alias since
+	 this expression can also match other names and we test for aliases
+	 before testing for modules.  */
+      if (! from_is_regex)
+	{
+	  struct gconv_alias fake_alias;
+
+	  fake_alias.fromname = new_module->from_constpfx;
+
+	  if (__tfind (&fake_alias, &__gconv_alias_db, __gconv_alias_compare)
+	      != NULL)
+	    {
+	      /* This module duplicates an alias.  */
+	      free (new_module);
+	      return;
+	    }
+	}
+
       if (__tfind (new_module, modules, module_compare) == NULL)
 	{
 	  if (__tsearch (new_module, modules, module_compare) == NULL)
@@ -364,7 +462,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 
       if (rp - word == sizeof ("alias") - 1
 	  && memcmp (word, "alias", sizeof ("alias") - 1) == 0)
-	add_alias (rp);
+	add_alias (rp, *modules);
       else if (rp - word == sizeof ("module") - 1
 	       && memcmp (word, "module", sizeof ("module") - 1) == 0)
 	add_module (rp, directory, dir_len, modules, nmodules, modcounter++);
@@ -449,9 +547,6 @@ __gconv_read_conf (void)
 	  /* Insert all module entries into the array.  */
 	  __twalk (modules, insert_module);
 
-	  /* No remove the tree data structure.  */
-	  __tdestroy (modules, nothing);
-
 	  /* Finally insert the builtin transformations.  */
 	  for (cnt = 0; cnt < (sizeof (builtin_modules)
 			       / sizeof (struct gconv_module)); ++cnt)
@@ -464,8 +559,12 @@ __gconv_read_conf (void)
   while (cnt > 0)
     {
       char *copy = strdupa (builtin_aliases[--cnt]);
-      add_alias (copy);
+      add_alias (copy, modules);
     }
+  
+  if (nmodules != 0)
+    /* Now remove the tree data structure.  */
+    __tdestroy (modules, nothing);
 
   /* Restore the error number.  */
   __set_errno (save_errno);

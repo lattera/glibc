@@ -67,6 +67,7 @@ struct gconv_module
   const char *from_constpfx;
   size_t from_constpfx_len;
   const regex_t *from_regex;
+  regex_t from_regex_mem;
 
   const char *to_string;
 

@@ -348,17 +348,14 @@ find_derivation (const char *toset, const char *toset_expand,
 		/* First compile the regex if not already done.  */
 		if (__gconv_modules_db[cnt]->from_regex == NULL)
 		  {
-		    regex_t *newp = (regex_t *) malloc (sizeof (regex_t));
-
-		    if (__regcomp (newp, __gconv_modules_db[cnt]->from_pattern,
+		    if (__regcomp (&__gconv_modules_db[cnt]->from_regex_mem,
+				   __gconv_modules_db[cnt]->from_pattern,
 				   REG_EXTENDED | REG_ICASE) != 0)
-		      {
-			/* Something is wrong.  Remember this.  */
-			free (newp);
-			__gconv_modules_db[cnt]->from_regex = (regex_t *) -1L;
-		      }
+		      /* Something is wrong.  Remember this.  */
+		      __gconv_modules_db[cnt]->from_regex = (regex_t *) -1L;
 		    else
-		      __gconv_modules_db[cnt]->from_regex = newp;
+		      __gconv_modules_db[cnt]->from_regex
+			= &__gconv_modules_db[cnt]->from_regex_mem;
 		  }
 
 		if (__gconv_modules_db[cnt]->from_regex != (regex_t *) -1L)
@@ -627,15 +624,10 @@ free_mem (void)
     __tdestroy (__gconv_alias_db, free);
 
   for (cnt = 0; cnt < __gconv_nmodules; ++cnt)
-    {
-      if (__gconv_modules_db[cnt]->from_regex != NULL)
-	__regfree ((regex_t *) __gconv_modules_db[cnt]->from_regex);
-
-      /* Modules which names do not start with a slash are builtin
-	 transformations and the memory is not allocated dynamically.  */
-      if (__gconv_modules_db[cnt]->module_name[0] == '/')
-	free (__gconv_modules_db[cnt]);
-    }
+    /* Modules which names do not start with a slash are builtin
+       transformations and the memory is not allocated dynamically.  */
+    if (__gconv_modules_db[cnt]->module_name[0] == '/')
+      free (__gconv_modules_db[cnt]);
 
   if (known_derivations != NULL)
     __tdestroy (known_derivations, free_derivation);
