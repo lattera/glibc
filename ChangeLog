@@ -1,4 +1,22 @@
+2002-11-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/make-syscalls.sh: Insert $(make-target-directory) at
+	the beginning of generated target commands.
+
+	* csu/Makefile ($(objpfx)crti.o, $(objpfx)crtn.o): Add explicit
+	dependencies for these in case implicit rule search skipped the
+	nonexistent source directory.
+	* sysdeps/gnu/Makefile ($(objpfx)errlist.d): Give this rule all the
+	files with $(object-suffixes) as targets too.
+	* Makerules [no_deps && objpfx] (before-compile): Add $(objpfx).
+	and a target for it using $(make-target-directory).
+
+	* Rules (before-compile): Add $(common-objpfx)bits/stdio-lim.h.
+
 2002-11-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/sysv/linux/bits/pthreadtypes.h: Moved to ...
+	* sysdeps/generic/bits/pthreadtypes.h: ... here.
 
 	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Treat a struct flock with
 	l_start == 0 and l_len == 1 as we do l_len == 0.
@@ -8,9 +26,6 @@
 	* po/da.po: Update from translation team.
 
 2002-11-10  Roland McGrath  <roland@redhat.com>
-
-	* sysdeps/unix/sysv/linux/bits/pthreadtypes.h: Moved to ...
-	* sysdeps/generic/bits/pthreadtypes.h: ... here.
 
 	* config.make.in (includedir): New variable, substituted by configure.
 	Reported missing by Jocelyn Fournier <joc@presence-pc.com>.

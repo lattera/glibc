@@ -125,6 +125,15 @@ $(common-objpfx)%.latest: $(common-objpfx)abi-versions.h
 endif # avoid-generated
 endif # $(versioning) = yes
 
+# When we have no deps pass doing it, then make sure the subdirectory
+# for object files gets created.
+ifdef no_deps
+ifdef objpfx
+before-compile += $(objpfx).
+$(objpfx).:
+	$(make-target-directory)
+endif
+endif
 
 # Remove existing files from `before-compile'.  Things are added there when
 # they must exist for dependency generation to work right, but once they

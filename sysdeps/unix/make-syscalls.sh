@@ -141,6 +141,7 @@ shared-only-routines += $file
   ;;
   x*)
   echo "\
+	\$(make-target-directory)
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\

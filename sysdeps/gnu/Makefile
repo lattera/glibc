@@ -49,7 +49,7 @@ endif
 	mv -f $@T $@
 
 # This will force the generation above to happy if need be.
-$(objpfx)errlist.d: $(objpfx)errlist-compat.c
+$(foreach o,.d $(object-suffixes),$(objpfx)errlist$o):$(objpfx)errlist-compat.c
 endif
 
 ifeq ($(subdir),login)

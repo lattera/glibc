@@ -113,6 +113,11 @@ $(objpfx)crtn.S: $(objpfx)initfini.s
 	       -e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \
 	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
 
+# These explicit rules are necessary when the $(objpfx) subdirectory
+# did not exist at the time make considered the implicit rules using it.
+# This comes up with a fresh build using no_deps=t.
+$(patsubst %,$(objpfx)crt%.o,i n): %.o: %.S
+
 $(objpfx)defs.h: $(objpfx)initfini.s
 	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
 		$(AWK) -f defs.awk > $@

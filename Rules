@@ -61,6 +61,9 @@ ifneq	"$(findstring env,$(origin common-generated))" ""
 common-generated :=
 endif
 
+# See below.  This must be set before Makerules processes it.
+before-compile += $(common-objpfx)bits/stdio_lim.h
+
 include ../Makerules
 
 .PHONY: subdir_lib
