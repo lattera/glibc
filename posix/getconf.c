@@ -912,6 +912,12 @@ static const struct conf vars[] =
     { "LEVEL4_CACHE_ASSOC", _SC_LEVEL4_CACHE_ASSOC, SYSCONF },
 #endif
 
+#ifdef _SC_IPV6
+    { "IPV6", _SC_IPV6, SYSCONF },
+#endif
+#ifdef _SC_RAW_SOCKETS
+    { "RAW_SOCKETS", _SC_RAW_SOCKETS, SYSCONF },
+#endif
 
     { NULL, 0, SYSCONF }
   };

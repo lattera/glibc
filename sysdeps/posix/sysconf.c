@@ -1189,6 +1189,20 @@ __sysconf (name)
 	 return zero which indicates that no information is
 	 available.  */
       return 0;
+
+    case _SC_IPV6:
+#ifdef _POSIX_IPV6
+      return _POSIX_IPV6;
+#else
+      return -1;
+#endif
+
+    case _SC_RAW_SOCKETS:
+#ifdef _POSIX_RAW_SOCKETS
+      return _POSIX_RAW_SOCKETS;
+#else
+      return -1;
+#endif
     }
 }
 

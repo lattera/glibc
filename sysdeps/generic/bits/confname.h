@@ -492,9 +492,14 @@ enum
 #define _SC_LEVEL4_CACHE_SIZE		_SC_LEVEL4_CACHE_SIZE
     _SC_LEVEL4_CACHE_ASSOC,
 #define _SC_LEVEL4_CACHE_ASSOC		_SC_LEVEL4_CACHE_ASSOC
-    _SC_LEVEL4_CACHE_LINESIZE
+    _SC_LEVEL4_CACHE_LINESIZE,
 #define _SC_LEVEL4_CACHE_LINESIZE	_SC_LEVEL4_CACHE_LINESIZE
     /* Leave room here, maybe we need a few more cache levels some day.  */
+
+    _SC_IPV6 = _SC_LEVEL1_ICACHE_SIZE + 50,
+#define _SC_IPV6			_SC_IPV6
+    _SC_RAW_SOCKETS
+#define _SC_RAW_SOCKETS			_SC_RAW_SOCKETS
   };
 
 /* Values for the NAME argument to `confstr'.  */
