@@ -353,3 +353,10 @@ CHARMAP
 <right-curly-bracket>  /x7D   <U007D> RIGHT CURLY BRACKET
 <tilde>                /x7E   <U007E> TILDE
 END CHARMAP
+
+WIDTH
+<NU>...<US>		0
+<SP>...<'?>		1
+<DT>...<AC>		0
+<NS>...<y:>		1
+END WIDTH

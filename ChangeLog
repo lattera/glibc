@@ -1,5 +1,8 @@
 1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Remove greg_t,
+	gregset_t, fpregset_t, and NGREG definitions.
+
 	* locale/programs/ld-ctype.c: Implement character width information
 	handling.
 
