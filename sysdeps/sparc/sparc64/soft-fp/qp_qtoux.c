@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return (unsigned long)(*a)
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com) and
 		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -38,7 +38,7 @@ unsigned long _Qp_qtoux(const long double *a)
   	__asm (
 "	ldd [%1], %%f52\n"
 "	ldd [%1+8], %%f54\n"
-"	fqtoi %%f52, %%f60\n"
+"	fqtox %%f52, %%f60\n"
 "	std %%f60, [%0]\n"
 "	" : : "r" (&rx), "r" (a) : QP_CLOBBER);
 	r = rx);
