@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     k_cos k_rem_pio2 k_sin k_tan s_asinh s_atan s_cbrt		\
 	     s_ceil s_copysign s_cos s_erf s_expm1 s_fabs s_finite	\
 	     s_floor s_frexp s_ilogb s_ldexp s_log1p s_logb 		\
-	     s_modf s_nextafter s_nextafterx s_rint s_scalbn s_scalbln	\
+	     s_modf s_nextafter s_nexttoward s_rint s_scalbn s_scalbln	\
 	     s_significand s_sin s_tan s_tanh w_acos w_acosh w_asin	\
 	     w_atan2 w_atanh w_cosh w_drem w_exp w_exp2 w_exp10 w_fmod	\
 	     w_tgamma w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r	\

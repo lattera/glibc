@@ -1,4 +1,4 @@
-/* s_nextafterxf.c -- float version of s_nextafter.c.
+/* s_nexttowardf.c -- float version of s_nextafter.c.
  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
@@ -21,9 +21,9 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 
 #ifdef __STDC__
-	float __nextafterxf(float x, long double y)
+	float __nexttowardf(float x, long double y)
 #else
-	float __nextafterxf(x,y)
+	float __nexttowardf(x,y)
 	float x;
 	long double y;
 #endif
@@ -75,4 +75,4 @@ static char rcsid[] = "$NetBSD: $";
 	SET_FLOAT_WORD(x,hx);
 	return x;
 }
-weak_alias (__nextafterxf, nextafterxf)
+weak_alias (__nexttowardf, nexttowardf)

@@ -1329,13 +1329,13 @@ recommended functions in @w{IEEE 754}/@w{IEEE 854}).
 
 @comment math.h
 @comment ISO
-@deftypefun {long long int} nextafterx (double @var{x}, long double @var{y})
+@deftypefun double nexttoward (double @var{x}, long double @var{y})
 @comment math.h
 @comment ISO
-@deftypefunx {long long int} nextafterxf (float @var{x}, long double @var{y})
+@deftypefunx float nexttowardf (float @var{x}, long double @var{y})
 @comment math.h
 @comment ISO
-@deftypefunx {long long int} nextafterxl (long double @var{x}, long double @var{y})
+@deftypefunx {long double} nexttowardl (long double @var{x}, long double @var{y})
 These functions are identical to the corresponding versions of
 @code{nextafter} except that their second argument is a @code{long
 double}.

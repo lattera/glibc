@@ -1,3 +1,23 @@
+1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile (libm-calls): Rename s_nextafterx to s_nexttoward.
+	* math/Versions: Likewise.
+	* math/bits/mathcalls.h: Likewise.
+	* manual/arith.texi: Likewise.
+	* sysdeps/libm-ieee754/s_nextafterl.c: Likewise.
+	* sysdeps/libm-ieee754/s_nextafterx.c: Replaced by...
+	* sysdeps/libm-ieee754/s_nexttoward.c: New file.
+	* sysdeps/libm-ieee754/s_nextafterxf.c: Replaced by...
+	* sysdeps/libm-ieee754/s_nexttowardf.c: New file.
+	* sysdeps/libm-ieee754/s_nextafterxl.c: Replaced by...
+	* sysdeps/libm-ieee754/s_nexttowardl.c: New file.
+
+	* time/Makefile (routines): Removed strfxtime.
+	* time/Versions: Likewise.
+	* time/strfxtime.c: Removed.
+	* time/time.h: Remove _LOCALTIME, _NO_LEAP_SECONDS, struct tmx,
+	mkxtime, and strfxtime.
+
 1999-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_conf.c (add_module): Complete rewrite.  Use cleverer

@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -253,7 +253,7 @@ __MATHCALL (rint,, (_Mdouble_ __x));
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 # ifdef __USE_ISOC9X
-__MATHCALLX (nextafterx,, (_Mdouble_ __x, long double __y), (__const__));
+__MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
 # endif
 
 /* Return the remainder of integer divison X / Y with infinite precision.  */

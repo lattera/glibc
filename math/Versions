@@ -103,7 +103,7 @@ libm {
     log2; log2f; log2l;
     nan; nanf; nanl;
     nearbyint; nearbyintf; nearbyintl;
-    nextafterx; nextafterxf; nextafterxl;
+    nexttoward; nexttowardf; nexttowardl;
     pow10; pow10f; pow10l;
     remquo; remquof; remquol;
     lrint; lrintf; lrintl;

@@ -1,5 +1,5 @@
-/* s_nextafterx.c
- * Conversion freom s_nextafter.c by Ulrich Drepper, Cygnus Support,
+/* s_nexttoward.c
+ * Conversion from s_nextafter.c by Ulrich Drepper, Cygnus Support,
  * drepper@cygnus.com.
  */
 
@@ -29,9 +29,9 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 
 #ifdef __STDC__
-	double __nextafterx(double x, long double y)
+	double __nexttoward(double x, long double y)
 #else
-	double __nextafterx(x,y)
+	double __nexttoward(x,y)
 	double x;
 	long double y;
 #endif
@@ -91,8 +91,8 @@ static char rcsid[] = "$NetBSD: $";
 	INSERT_WORDS(x,hx,lx);
 	return x;
 }
-weak_alias (__nextafterx, nextafterx)
+weak_alias (__nexttoward, nexttoward)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__nextafterx, __nextafterxl)
-weak_alias (__nextafterx, nextafterxl)
+strong_alias (__nexttoward, __nexttowardl)
+weak_alias (__nexttoward, nexttowardl)
 #endif

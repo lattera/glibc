@@ -97,5 +97,5 @@ static char rcsid[] = "$NetBSD: $";
 	return x;
 }
 weak_alias (__nextafterl, nextafterl)
-strong_alias (__nextafterl, __nextafterxl)
-weak_alias (__nextafterl, nextafterxl)
+strong_alias (__nextafterl, __nexttowardl)
+weak_alias (__nextafterl, nexttowardl)

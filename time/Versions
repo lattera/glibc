@@ -45,8 +45,5 @@ libc {
 
     # g*
     getdate; getdate_r; getitimer;
-
-    # s*
-    strfxtime;
   }
 }

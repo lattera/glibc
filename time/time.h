@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -95,14 +95,6 @@ struct timespec
 #undef	__need_timespec
 
 
-/* Value used for `tm_' field in `struct tmx' if describing the local
-   time.  */
-#define _LOCALTIME		(0x7fffffff)
-
-/* Value used for `tm_leapsecond' field if the number cannot be computed.  */
-#define _NO_LEAP_SECONDS	(0x7fffffff)
-
-
 #ifdef	_TIME_H
 /* Used by other time functions.  */
 struct tm
@@ -126,35 +118,6 @@ struct tm
 # endif
 };
 
-#ifdef __USE_ISOC9X
-/* Extended form of `struct tm' defined in ISO C 9X.  */
-struct tmx
-{
-  int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
-  int tm_min;			/* Minutes.	[0-59] */
-  int tm_hour;			/* Hours.	[0-23] */
-  int tm_mday;			/* Day.		[1-31] */
-  int tm_mon;			/* Month.	[0-11] */
-  int tm_year;			/* Year	- 1900.  */
-  int tm_wday;			/* Day of week.	[0-6] */
-  int tm_yday;			/* Days in year.[0-365]	*/
-  int tm_isdst;			/* DST.		[-1/0/1]*/
-
-# ifdef	__USE_BSD
-  long int tm_gmtoff;		/* Seconds east of UTC.  */
-# else
-  long int __tm_gmtoff;		/* Seconds east of UTC.  */
-# endif
-  __const char *__tm_zonestr;	/* Timezone abbreviation.  */
-
-  int tm_version;		/* Version number.  */
-  int tm_zone;			/* Minutes offset from UTC [-1439-1439] */
-  int tm_leapsecs;		/* Number of leap seconds applied.  */
-  void *tm_ext;			/* Extension block.  */
-  size_t tm_extlen;		/* Size of the extension block.  */
-};
-#endif
-
 
 /* Time used by the program so far (user time + system time).
    The result / CLOCKS_PER_SECOND is program time in seconds.  */
@@ -170,12 +133,6 @@ extern double difftime __P ((time_t __time1, time_t __time0))
 /* Return the `time_t' representation of TP and normalize TP.  */
 extern time_t mktime __P ((struct tm *__tp));
 
-#ifdef __USE_ISOC9X
-/* Return the `time_t' representation of TP and normalize TP, taking
-   account for the extra members in `struct tmx'.  */
-extern time_t mkxtime __P ((struct tmx *__tp));
-#endif
-
 
 /* Format TP into S according to FORMAT.
    Write no more than MAXSIZE characters and return the number
@@ -183,17 +140,6 @@ extern time_t mkxtime __P ((struct tmx *__tp));
 extern size_t strftime __P ((char *__restrict __s, size_t __maxsize,
 			     __const char *__restrict __format,
 			     __const struct tm *__restrict __tp));
-
-#ifdef __USE_ISOC9X
-/* Format TP into S according to FORMAT.
-   Write no more than MAXSIZE characters and return the number
-   of characters written, or 0 if it would exceed MAXSIZE.  */
-extern size_t strfxtime __P ((char *__restrict __s, size_t __maxsize,
-			      __const char *__restrict __format,
-			      __const struct tmx *__restrict __tp));
-
-
-#endif
 
 # ifdef __USE_XOPEN
 /* Parse S according to FORMAT and store binary time information in TP.
