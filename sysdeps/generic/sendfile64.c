@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sys/sendfile.h>
+#include <errno.h>
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */

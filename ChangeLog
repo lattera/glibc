@@ -1,5 +1,8 @@
 2002-06-05  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/generic/sendfile.c: Include <errno.h>.
+	* sysdeps/generic/sendfile64.c: Likewise.
+
 	* io/Makefile (routines): Add sendfile and sendfile64.
 	(headers): Add sys/sendfile.h to the list.
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Don't add it here.
@@ -7,6 +10,7 @@
 	* io/sys/sendfile.h: ... here.
 	* sysdeps/generic/sendfile.c: New file.
 	* sysdeps/generic/sendfile64.c: New file.
+
 	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.1, GLIBC_2.3):
 	Move sendfile, sendfile64 to ...
 	* io/Versions (GLIBC_2.1, GLIBC_2.3): ... here.
