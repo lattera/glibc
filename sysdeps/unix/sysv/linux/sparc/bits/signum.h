@@ -1,5 +1,5 @@
 /* Signal number definitions.  Linux/SPARC version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@
 #define SIGUSR1		30
 #define SIGUSR2		31
 
-#define	_NSIG		64	/* Biggest signal number + 1
+#define	_NSIG		65	/* Biggest signal number + 1
 				   (including real-time signals).  */
 
 #define SIGRTMIN        (__libc_current_sigrtmin ())

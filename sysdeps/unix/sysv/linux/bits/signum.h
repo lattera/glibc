@@ -66,7 +66,7 @@
 #define SIGSYS		31	/* Bad system call.  */
 #define SIGUNUSED	31
 
-#define	_NSIG		64	/* Biggest signal number + 1
+#define	_NSIG		65	/* Biggest signal number + 1
 				   (including real-time signals).  */
 
 #define SIGRTMIN        (__libc_current_sigrtmin ())
@@ -75,6 +75,6 @@
 /* These are the hard limits of the kernel.  These values should not be
    used directly at user level.  */
 #define __SIGRTMIN	32
-#define __SIGRTMAX	_NSIG
+#define __SIGRTMAX	(_NSIG - 1)
 
 #endif	/* <signal.h> included.  */

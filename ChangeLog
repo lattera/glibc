@@ -1,3 +1,14 @@
+2003-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/signum.h (_NSIG): Define to 65.
+	* sysdeps/unix/sysv/linux/hppa/bits/signum.h (_NSIG): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/signum.h (_NSIG): Likewise.
+	* sysdeps/unix/sysv/linux/bits/signum.h (_NSIG): Likewise.
+	(__SIGRTMAX): Adjust accordingly.
+	* sysdeps/gnu/siglist.c: If OLD2_SIGLIST_SIZE is defined define
+	second compatibility symbol set.
+	* sysdeps/unix/sysv/linux/siglist.h (OLD2_SIGLIST_SIZE): Define.
+
 2003-03-31  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/m68020/bits/atomic.h (atomic_increment_and_test):
@@ -21,8 +32,8 @@
 
 2003-03-29  Paolo Bonzini  <bonzini@gnu.org>
 
-        * intl/po2test.sed: Unify the transformations for msgid and msgstr
-        and remove a useless s/// command.
+	* intl/po2test.sed: Unify the transformations for msgid and msgstr
+	and remove a useless s/// command.
 
 2003-03-27  David Mosberger  <davidm@hpl.hp.com>
 
