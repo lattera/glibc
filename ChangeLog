@@ -1,5 +1,10 @@
 Tue Jun 11 15:09:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* string/basename.c (basename): Cast FILENAME to char * for return.
+
+	* Makerules ($(libdir)/libc.so): Put $(rtld-installed) name between
+	libc.so and libc.a in the deps.
+
 	* elf/Makefile ($(objpfx)$(rtld-installed-name)): New target to make
 	link to ld.so if that is not the installed name.
 	(lib-noranlib): Depend on the installed name in the build directory
