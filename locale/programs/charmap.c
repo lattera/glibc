@@ -99,6 +99,15 @@ charmap_read (const char *filename)
 			}
 		    }
 		}
+
+	      if (cmfile == NULL)
+		{
+		  /* Try the default directory.  */
+		  char path[sizeof (CHARMAP_PATH) + strlen (filename) + 1];
+
+		  stpcpy (stpcpy (stpcpy (path, CHARMAP_PATH), "/"), filename);
+		  cmfile = lr_open (path, charmap_hash);
+		}
 	    }
 	}
 
