@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,6 +77,11 @@
 /* The SIOCGIFNAME ioctl is available starting with 2.1.50.  */
 #if __LINUX_KERNEL_VERSION >= 131408
 # define __ASSUME_SIOCGIFNAME		1
+#endif
+
+/* MSG_NOSIGNAL was at least available with Linux 2.3.15.  */
+#if __LINUX_KERNEL_VERSION >= 131855
+# define __ASSUME_MSG_NOSIGNAL		1
 #endif
 
 /* On x86 another `getrlimit' syscall was added in 2.3.25.  */

@@ -1,3 +1,12 @@
+2005-01-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/syslog.c: Moved to...
+	* sysdeps/generic/syslog.c: ...here.
+	[NO_SIGIPE]: Don't install SIGPIPE handler.
+	* sysdeps/unix/sysv/linux/syslog.c: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_MSG_NOSIGNAL.
+
 2005-01-22  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/dl-trampoline.S: New file.
