@@ -1,5 +1,7 @@
 2004-10-25  Roland McGrath  <roland@redhat.com>
 
+	* login/openpty.c (openpty): Add libutil_hidden_def.
+
 	* nss/nss_files/files-parse.c (nss_files_parse_hidden_def): Define to
 	either libc_hidden_def or libnss_files_hidden_def, not hidden_def.
 	This file is also compiled into libnss_hesiod by #include.

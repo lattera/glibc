@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -136,3 +136,4 @@ openpty (int *amaster, int *aslave, char *name, struct termios *termp,
   close (master);
   return -1;
 }
+libutil_hidden_def (openpty)
