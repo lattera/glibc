@@ -82,14 +82,14 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 	 echo 'endef'							;\
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		;\
 	 echo 'ifdef $*-zones'						;\
-	 echo '$$(addprefix $$(datadir)/zone%/,$$($*-zones)): \'	;\
-	 echo '$< $$(objpfx)zic $$(leapseconds) yearistype'		;\
-	 echo '	$$(tzcompile)'						;\
 	 echo '$$(addprefix $$(datadir)/zone%/right/,$$($*-zones)): \'	;\
 	 echo '$< $$(objpfx)zic leapseconds yearistype'			;\
 	 echo '	$$(tzcompile)'						;\
 	 echo '$$(addprefix $$(datadir)/zone%/posix/,$$($*-zones)): \'	;\
 	 echo '$< $$(objpfx)zic /dev/null yearistype'			;\
+	 echo '	$$(tzcompile)'						;\
+	 echo '$$(addprefix $$(datadir)/zone%/,$$($*-zones)): \'	;\
+	 echo '$< $$(objpfx)zic $$(leapseconds) yearistype'		;\
 	 echo '	$$(tzcompile)'						;\
 	 echo 'endif'							;\
 	 echo 'zonenames := $$(zonenames) $$($*-zones)'			;\
