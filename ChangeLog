@@ -1,3 +1,7 @@
+1999-01-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: New file.
+
 1999-01-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/bits/string.h: Correct several bugs in various
