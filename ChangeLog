@@ -1,3 +1,8 @@
+2004-03-08  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/soft-fp/ots_cvtxt.c (_OtsConvertFloatXT): Fix typo
+	in name.
+
 2004-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* config.h.in: Add entry for HAVE_LIBIDN.
