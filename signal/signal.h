@@ -328,6 +328,8 @@ extern int sigstack __P ((__const struct sigstack *__ss,
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */
+extern int __sigaltstack __P ((__const struct sigaltstack *__ss,
+			       struct sigaltstack *__oss));
 extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));
 

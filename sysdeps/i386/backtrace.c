@@ -55,7 +55,7 @@ __backtrace (array, size)
   current = (struct layout *) ebp;
   while (cnt < size)
     {
-      if (current < esp || current > __libc_stack_end)
+      if ((void *) current < esp || (void *) current > __libc_stack_end)
 	/* This means the address is out of range.  Note that for the
 	   toplevel we see a frame pointer with value NULL which clearly is
 	   out of range.  */
