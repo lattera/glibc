@@ -16,11 +16,11 @@
 	(CAUSE_SHIFT): New.
 	Patch by Hartvig Ekner <hartvige@mips.com>.
 
-        * sysdeps/generic/unwind-dw2-fde-glibc.c: Add prototypes.
-        * sysdeps/generic/unwind-pe.h: Likewise.
+	* sysdeps/generic/unwind-dw2-fde-glibc.c: Add prototypes.
+	* sysdeps/generic/unwind-pe.h: Likewise.
 
-        * libio/iofdopen.c (_IO_new_fdopen): Pass parameter of correct
-        type to _IO_setb.
+	* libio/iofdopen.c (_IO_new_fdopen): Pass parameter of correct
+	type to _IO_setb.
 
 	* libio/stdio.c (AL2): Define variant when visibility attribute is
 	not supported.
@@ -78,6 +78,7 @@
 
 	* include/time.h: Declare __localtime_r as hidden.
 
+	* include/aliases.h: Declare __getaliasent_r as hidden.
 	* include/grp.h: Declare __getgrent_r as hidden.
 	* include/netdb.h: Declare __gethostent_r, __getnetent_r,
 	__getservent_r, and __getprotoent_r as hidden.
