@@ -15,6 +15,9 @@
 #endif
 #include <sysdep.h>
 
+/* Avoid the definition of ret that we set in the alpha sysdep.h.  */
+#undef ret
+
 
 
 
