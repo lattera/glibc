@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ DEFUN(__mkdir, (file_name, mode), CONST char *file_name AND mode_t mode)
   file_t parent = __file_name_split (file_name, (char **) &name);
   if (parent == MACH_PORT_NULL)
     return -1;
-  err = __dir_mkdir (parent, name, mode);
+  err = __dir_mkdir (parent, name, mode & ~_hurd_umask);
   __mach_port_deallocate (__mach_task_self (), parent);
   if (err)
     return __hurd_fail (err);

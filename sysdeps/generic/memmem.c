@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,9 @@ DEFUN(memmem, (haystack, haystack_len,
     = (CONST char *) haystack + haystack_len - needle_len;
 
   if (needle_len == 0)
-    return (PTR) &((CONST char *) haystack)[needle_len - 1];
+    /* The first occurrence of the empty string is deemed to occur at
+       the end of the string.  */
+    return (PTR) &((CONST char *) haystack)[haystack_len - 1];
 
   for (begin = (CONST char *) haystack; begin <= last_possible; ++begin)
     if (begin[0] == ((CONST char *) needle)[0] &&

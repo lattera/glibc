@@ -1,3 +1,21 @@
+Sun Jan 28 17:25:38 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* setjmp/setjmp.h (jmp_buf): Give a tag in the struct defn, to
+	make C++ happy.
+	* alpha/jmp_buf.h: Likewise.
+	* m68k/jmp_buf.h: Likewise.
+	* mips/jmp_buf.h: Likewise.
+	* sparc/jmp_buf.h: Likewise.
+	* vax/jmp_buf.h: Likewise.
+
+	* sysdeps/generic/memmem.c: Fix return value in case where
+	NEEDLE_LEN==0.
+
+	* hurd/hurdlookup.c (__file_name_lookup_under,
+	__file_name_lookup): Restrict mode with umask.
+	* sysdeps/mach/hurd/xmknod.c: Restrict mode with umask.
+	* sysdeps/mach/hurd/mkdir.c: Restrict mode with umask.
+
 Fri Jan 26 12:20:45 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdlib/strtol.c: Undo last change.  ANSI C changed since the

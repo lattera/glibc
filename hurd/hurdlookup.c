@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -352,7 +352,7 @@ __file_name_lookup (const char *file_name, int flags, mode_t mode)
   file_t result;
 
   err = __hurd_file_name_lookup (&_hurd_ports_use, &__getdport,
-				 file_name, flags, mode,
+				 file_name, flags, mode & ~_hurd_umask,
 				 &result);
 
   return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
@@ -388,7 +388,7 @@ __file_name_lookup_under (file_t startdir,
     }
 
   err = __hurd_file_name_lookup (&use_init_port, &__getdport,
-				 file_name, flags, mode,
+				 file_name, flags, mode & ~_hurd_umask,
 				 &result);
 
   return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;

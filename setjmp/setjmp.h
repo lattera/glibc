@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ __BEGIN_DECLS
 #include <sigset.h>		/* Get `__sigset_t'.  */
 
 /* Calling environment, plus possibly a saved signal mask.  */
-typedef struct
+typedef struct __jmp_buf	/* C++ doesn't like tagless structs.  */
   {
     /* NOTE: The machine-dependent definitions of `__sigsetjmp'
        assume that a `jmp_buf' begins with a `__jmp_buf'.
@@ -54,7 +54,7 @@ extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
    The ANSI C standard says `setjmp' is a macro.  */
 #define	setjmp(env)	__sigsetjmp ((env), 0)
 #else
-/* We are in 4.3 BSD-compatibility mode in which `setjmp' 
+/* We are in 4.3 BSD-compatibility mode in which `setjmp'
    saves the signal mask like `sigsetjmp (ENV, 1)'.  */
 #define	setjmp(env)	__sigsetjmp ((env), 1)
 #endif /* Favor BSD.  */

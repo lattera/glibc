@@ -90,7 +90,7 @@ __xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
     return -1;
 
   /* Create a new, unlinked node in the target directory.  */
-  err = __dir_mkfile (dir, O_WRITE, mode & ~S_IFMT & _hurd_umask, &node);
+  err = __dir_mkfile (dir, O_WRITE, (mode & ~S_IFMT) & ~_hurd_umask, &node);
 
   if (! err)
     /* Set the node's translator to make it a device.  */
