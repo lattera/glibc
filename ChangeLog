@@ -1,3 +1,8 @@
+1998-06-08 21:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* localedata/SUPPORTED: Add sk_SK.
+	* localedata/locales/sk_SK: New file.
+
 1998-06-08 18:57  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (subdirs): Add debug.

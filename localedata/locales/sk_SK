@@ -1,0 +1,154 @@
+escape_char /
+comment_char %
+%
+% Slovak Language Locale for Slovak
+% Source: 
+% Address: Narcisov<a'> 56, SK-821 01 Bratislava, Slovak Republic
+% Contact: Stanislav Meduna
+% Email:   stano@eunet.sk
+% Tel:
+% Fax:
+% Language: sk
+% Territory: SK
+% Revision: 1.2
+% Date: 1998-05-26
+% Application: general
+% Users: general
+% Repertoiremap: mnemonic.ds
+% Charset: ISO-8859-2
+% Distribution and use is free, also for commercial purposes.
+
+% 1997-05-14: Odvodené z cs_CZ locale Vladimíra Michla. 
+%             Collate algoritmy prevzaté bezo zmien (norma bola rovnaká),
+%             vysvetlenie pozri cs_CZ
+
+% spracovanie:
+%%    localedef -i <tento-soubor> -f ISO-8859-2 sk_SK
+
+%% Do súboru /usr/share/locale/locale.alias je vhodné dopísa» nasledovné aliasy:
+%% sk	  sk_SK.ISO-8859-2
+%% slovak sk_SK.ISO-8859-2
+
+% Definícia typov znakov
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+% Triedenie
+
+LC_COLLATE
+copy "cs_CZ"
+END LC_COLLATE
+
+
+%% LC_MESSAGES
+%% ekvivalenty yes/no
+%% -------------------------
+
+LC_MESSAGES 
+
+yesexpr		"<<(><a><A><a'><A'><y><Y><)/>><.><*>"
+noexpr  	"<<(><n><N><)/>><.><*>"
+yesstr		"<a'><n><o>"
+nostr		"<n><i><e>"
+
+END LC_MESSAGES
+
+%% LC_MONETARY -- peniaze
+%% -------------------------------------------------
+
+LC_MONETARY
+
+int_curr_symbol		"<S><K><K><SP>"
+currency_symbol		"<S><k>"
+mon_decimal_point	"<,>"
+mon_thousands_sep	"<NS>"
+mon_grouping      	3;3
+positive_sign		""
+negative_sign		"<->"
+int_frac_digits		2
+frac_digits		2
+p_cs_precedes		0
+p_sep_by_space		1
+n_cs_precedes		0
+n_sep_by_space		1
+p_sign_posn		1
+n_sign_posn		1
+
+END LC_MONETARY
+
+%% Èísla
+%% --------------
+
+LC_NUMERIC
+
+decimal_point		"<,>"
+thousands_sep		"<NS>"
+grouping		3;3
+
+END LC_NUMERIC
+
+%% Èas
+
+LC_TIME
+
+
+abday		"<N><e>";/
+		"<P><o>";/
+		"<U><t>";/
+		"<S><t>";/
+		"<S<><t>";/
+		"<P><i>";/
+		"<S><o>"
+
+day		"<N><e><d><e><l<><a>";/
+		"<P><o><n><d><e><l><o><k>";/
+		"<U><t><o><r><o><k>";/
+		"<S><t><r><e><d><a>";/
+		"<S<><t><v><r><t><o><k>";/
+		"<P><i><a><t><o><k>";/
+		"<S><o><b><o><t><a>"
+
+mon		"<j><a><n><u><a'><r>";/
+		"<f><e><b><r><u><a'><r>";/
+		"<m><a><r><e><c>";/
+		"<a><p><r><i'><l>";/
+		"<m><a'><j>";/
+		"<j><u'><n>";/
+		"<j><u'><l>";/
+		"<a><u><g><u><s><t>";/
+		"<s><e><p><t><e><m><b><e><r>";/
+		"<o><k><t><o'><b><e><r>";/
+		"<n><o><v><e><m><b><e><r>";/
+		"<d><e><c><e><m><b><e><r>"
+
+% Hm - máme zau¾ívané skratky pre mesiace ?
+
+abmon		"<j><a><n>";/
+		"<f><e><b>";/
+		"<m><a><r>";/
+		"<a><p><r>";/
+		"<m><a'><j>";/
+		"<j><u'><n>";/
+		"<j><u'><l>";/
+		"<a><u><g>";/
+		"<s><e><p>";/
+		"<o><k><t>";/
+		"<n><o><v>";/
+		"<d><e><c>"
+
+d_t_fmt		"<%><a><NS><%><e><.><NS><%><B><NS><%><Y><,><NS><%><H><:><%><M><:><%><S><NS><%><Z>"
+
+d_fmt 		"<%><d><.><%><m><.><%><Y>"
+
+t_fmt		"<%><H><:><%><M><:><%><S>"
+
+t_fmt_ampm	"<%><I><:><%><M><:><%><S>"
+
+am_pm   	"";""
+
+END LC_TIME
+
+%% END OF LOCALIZATION FILE for sk_SK.ISO-8859-2
+%% Koniec lokalizaèného súboru pre slovenské prostredie
