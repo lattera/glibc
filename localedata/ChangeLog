@@ -1,3 +1,11 @@
+2003-04-16  Petter Reinholdtsen  <pere@hungry.com>
+
+	* Makefile (tests): Add LC_NUMERIC test tst-numeric.out.
+	(tst-numeric.out): Define.
+	* tst-numeric.c: New file.
+	* tst-numeric.sh: New file.
+	* tst-numeric.data: New file.
+
 2003-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ar_BH: Fix spelling of Bahrain.

@@ -864,7 +864,7 @@ show_info (const char *name)
 	      printf ("%s=", item->name);
 
 	    if (val != NULL)
-	      printf ("%d", *val == CHAR_MAX ? -1 : *val);
+	      printf ("%d", *val == '\177' ? -1 : *val);
 	    putchar ('\n');
 	  }
 	  break;
@@ -878,12 +878,12 @@ show_info (const char *name)
 
 	    while (cnt > 1)
 	      {
-		printf ("%d;", *val == CHAR_MAX ? -1 : *val);
+		printf ("%d;", *val == '\177' ? -1 : *val);
                 --cnt;
 		++val;
 	      }
 
-	    printf ("%d\n", cnt == 0 || *val == CHAR_MAX ? -1 : *val);
+	    printf ("%d\n", cnt == 0 || *val == '\177' ? -1 : *val);
 	  }
 	  break;
 	case word:

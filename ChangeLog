@@ -1,5 +1,7 @@
 2003-04-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/locale.c (show_info): Use '\177' instead of CHAR_MAX.
+
 	* Makerules ($(common-objpfx)shlib.lds): Don't use PROVIDE to
 	define __start_libc_freeres_ptrs and __stop___libc_freeres_ptrs.
 

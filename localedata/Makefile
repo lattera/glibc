@@ -39,7 +39,7 @@ vpath %.h tests-mbwc
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
 	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
-	     tst-ctype tst-wctype tst-langinfo
+	     tst-ctype tst-wctype tst-langinfo tst-numeric
 test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1 da_DK.ISO-8859-1 \
 	      hr_HR.ISO-8859-2 sv_SE.ISO-8859-1
 test-input-data = $(addsuffix .in, $(basename $(test-input)))
@@ -65,6 +65,7 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
 	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh \
 	      tst-ctype-de_DE.ISO-8859-1.in				\
+	      tst-numeric.sh tst-numeric.data				\
 	      $(wildcard tests-mbwc/*.[ch])				\
 	      $(addprefix tst-fmon-locales/tstfmon_,$(fmon-tests))	\
 	      gen-locale.sh show-ucs-data.c tst-langinfo.sh		\
@@ -130,7 +131,7 @@ ifeq (no,$(cross-compiling))
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 ja_JP.EUC-JP da_DK.ISO-8859-1 \
 	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS fr_FR.ISO-8859-1 \
-	   vi_VN.TCVN5712-1
+	   vi_VN.TCVN5712-1 no_NO.ISO-8859-1 nn_NO.ISO-8859-1
 LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
 CHARMAPS := $(shell echo "$(LOCALES)" | \
 		    sed -e 's/[^ .]*[.]\([^ ]*\)/\1/g' -e s/SJIS/SHIFT_JIS/g)
@@ -151,7 +152,7 @@ $(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
 tests: $(objpfx)sort-test.out $(objpfx)tst-fmon.out $(objpfx)tst-locale.out \
        $(objpfx)tst-rpmatch.out $(objpfx)tst-trans.out \
        $(objpfx)tst-mbswcs.out $(objpfx)tst-ctype.out $(objpfx)tst-wctype.out \
-       $(objpfx)tst-langinfo.out
+       $(objpfx)tst-langinfo.out $(objpfx)tst-numeric.out
 
 $(objpfx)sort-test.out: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		       $(test-input-data) $(addprefix $(objpfx),$(CTYPE_FILES))
@@ -161,6 +162,11 @@ $(objpfx)tst-fmon.out: tst-fmon.sh $(objpfx)tst-fmon tst-fmon.data \
 		       $(objpfx)sort-test.out \
 		       $(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' tst-fmon.data \
+	  > $@
+$(objpfx)tst-numeric.out: tst-numeric.sh $(objpfx)tst-numeric tst-numeric.data \
+		       $(objpfx)sort-test.out \
+		       $(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' tst-numeric.data \
 	  > $@
 $(objpfx)tst-locale.out: tst-locale.sh $(common-objpfx)locale/localedef \
 			 $(ld-test-srcs) $(addprefix $(objpfx),$(CTYPE_FILES))
