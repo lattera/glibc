@@ -31,7 +31,7 @@ pthread_getcpuclockid (pthread_t thread_id, clockid_t *clock_id)
     return EPERM;
 
   /* Store the number.  */
-  *clock_id = CLOCK_PTHREAD_CPUTIME_ID;
+  *clock_id = CLOCK_THREAD_CPUTIME_ID;
 
   return 0;
 }

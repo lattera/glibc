@@ -240,7 +240,7 @@ if test ~/ = //; then
     echo / | cmp - $testout || result=1
 else
     echo ~/ | cmp - $testout || result=1
-endif
+fi
 
 # Test tilde expansion with username
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
