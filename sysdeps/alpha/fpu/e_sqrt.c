@@ -153,7 +153,7 @@ __ieee754_sqrt:								\n\
 	.align 4							\n\
 $fixup:									\n\
 	addq	$sp, 16, $sp						\n\
-	br	"ASM_ALPHA_NG_SYMBOL_PREFIX"__full_ieee754_sqrt..ng	\n\
+	br	__full_ieee754_sqrt	!samegp				\n\
 									\n\
 	.end	__ieee754_sqrt");
 

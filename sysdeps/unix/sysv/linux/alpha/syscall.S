@@ -70,7 +70,7 @@ $error:
 	br	gp, 2f
 2:	ldgp	gp, 0(gp)
 #endif
-	jmp	zero, __syscall_error
+	SYSCALL_ERROR_HANDLER
 
 END(__syscall)
 

@@ -99,7 +99,7 @@ $do32:
 	.align 3
 $error:
 	addq	sp, 16, sp
-	jmp	zero, __syscall_error
+	SYSCALL_ERROR_HANDLER
 
 END(UTIMES)
 

@@ -211,6 +211,33 @@
 			   "r12", "pr", "t");				      \
      __l; })
 
+#elif defined __alpha__
+
+register void *__gp __asm__("$29");
+
+# define TLS_LE(x)							\
+  ({ int *__l;								\
+     asm ("call_pal 158\n\tlda $0," #x "($0)\t\t!tprel" : "=v"(__l));	\
+     __l; })
+
+# define TLS_IE(x)							\
+  ({ char *__tp; unsigned long __o;					\
+     asm ("call_pal 158\n\tldq %1," #x "($gp)\t\t!gottprel"		\
+	  : "=v"(__tp), "=r"(__o) : "r"(__gp));				\
+     (int *)(__tp + __o); })
+
+# define TLS_LD(x)							\
+  ({ extern void *__tls_get_addr(void *); int *__l; void *__i;		\
+     asm ("lda %0," #x "($gp)\t\t!tlsldm" : "=r" (__i) : "r"(__gp));	\
+     __i = __tls_get_addr(__i);						\
+     asm ("lda %0, " #x "(%1)\t\t!dtprel" : "=r"(__l) : "r"(__i));	\
+     __l; })
+	  
+# define TLS_GD(x)							\
+  ({ extern void *__tls_get_addr(void *); void *__i;			\
+     asm ("lda %0," #x "($gp)\t\t!tlsgd" : "=r" (__i) : "r"(__gp));	\
+     (int *) __tls_get_addr(__i); })
+
 #else
 # error "No support for this architecture so far."
 #endif

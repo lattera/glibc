@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -20,24 +20,59 @@
 #include <sysdep.h>
 #include <features.h>
 
+#if defined(__ELF__) && defined(PIC)
+	/* Put this at the end of libc's text segment so that all of
+	   the direct branches from the syscalls are forward, and 
+	   thus predicted not taken.  */
+	.section .text.last, "ax", @progbits
+#else
 	.text
-	.align 2
+#endif
 
-#ifdef	_LIBC_REENTRANT
+#ifdef PIC
+	/* When building a shared library, we branch here without
+	   having loaded the GP.  Nor, since it was a direct branch,
+	   have we loaded PV with our address.  Do both.  */
+# define LOADGP		br pv, 1f; 1: ldgp gp, 0(pv)
+# define PROLOGUE	.prologue 0
+#else
+# define LOADGP		ldgp gp, 0(pv)
+# define PROLOGUE	.prologue 1
+#endif
 
+	.align 4
 	.globl __syscall_error
 	.ent __syscall_error
 __syscall_error:
-	ldgp	gp, 0(pv)
+
+#if defined(_LIBC_REENTRANT) && defined(USE___THREAD)
+
+	LOADGP
+	PROLOGUE
+	mov	v0, t0
+	call_pal PAL_rduniq
+	ldq	t1, __libc_errno(gp) !gottprel
+	addq	v0, t1, v0
+	stl	t0, 0(v0)
+	lda	v0, -1
+	ret
+
+#elif defined(_LIBC_REENTRANT)
+
+	LOADGP
 	lda	sp, -16(sp)
 	.frame	sp, 16, ra, 0
 	stq	ra, 0(sp)
 	stq	v0, 8(sp)
 	.mask	0x4000001, -16
-	.prologue 1
+	PROLOGUE
 
 	/* Find our per-thread errno address  */
+#ifdef PIC
+	bsr	ra, __errno_location	!samegp
+#else
 	jsr	ra, __errno_location
+#endif
 
 	/* Store the error value.  */
 	ldq	t0, 8(sp)
@@ -49,16 +84,15 @@ __syscall_error:
 	ldq	ra, 0(sp)
 	lda	sp, 16(sp)
 	ret
-	.end __syscall_error
+
 #else
 
-ENTRY(__syscall_error)
-	ldgp	gp, 0(t12)
-	.prologue 1
-
+	LOADGP
+	PROLOGUE
 	stl	v0, errno
 	lda	v0, -1
 	ret
-	END(__syscall_error)
 
-#endif /* _LIBC_REENTRANT */
+#endif
+
+	.end __syscall_error

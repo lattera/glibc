@@ -1,3 +1,41 @@
+2002-11-07  Richard Henderson  <rth@redhat.com>
+
+	* configure.in (ASM_ALPHA_NG_SYMBOL_PREFIX): Remove test.
+	* configure: Regenerated.
+	* config.h.in (ASM_ALPHA_NG_SYMBOL_PREFIX): Remove #undef.
+	* sysdeps/alpha/dl-machine.h (TRAMPOLINE_TEMPLATE): Use !samegp.
+	(RTLD_START): Likewise.  Access _dl_skip_args, _rtld_local, and
+	_dl_fini via gp-relative relocations.
+	* sysdeps/alpha/fpu/e_sqrt.c: Use !samegp.
+
+	* elf/tls-macros.h: Add alpha versions.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Handle TLS relocs.
+	* sysdeps/unix/alpha/sysdep.S: Support USE___THREAD.
+	* sysdeps/unix/alpha/sysdep.h: Likewise.  Add SYSCALL_ERROR_HANDLER.
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Use it.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Re-include protect.
+	Kill argument registers across the inline syscall.
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Add user_tid and tls args.
+
+	* linuxthreads/sysdeps/alpha/tls.h: New file.
+	* sysdeps/alpha/dl-tls.h: New file.
+
 2002-10-29  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/elf/initfini.c [HAVE_INITFINI_ARRAY]

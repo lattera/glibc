@@ -5205,43 +5205,6 @@ if test $libc_cv_gcc_exceptions = yes; then
   exceptions=-fexceptions
 fi
 
-if test "$base_machine" = alpha ; then
-echo "$as_me:$LINENO: checking for function ..ng prefix" >&5
-echo $ECHO_N "checking for function ..ng prefix... $ECHO_C" >&6
-if test "${libc_cv_gcc_alpha_ng_prefix+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat > conftest.c <<\EOF
-foo () { }
-EOF
-if { ac_try='${CC-cc} -S conftest.c -o - | fgrep "\$foo..ng" > /dev/null'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; };
-then
-  libc_cv_gcc_alpha_ng_prefix=yes
-else
-  libc_cv_gcc_alpha_ng_prefix=no
-fi
-rm -f conftest*
-fi
-echo "$as_me:$LINENO: result: $libc_cv_gcc_alpha_ng_prefix" >&5
-echo "${ECHO_T}$libc_cv_gcc_alpha_ng_prefix" >&6
-if test $libc_cv_gcc_alpha_ng_prefix = yes ; then
-  cat >>confdefs.h <<\_ACEOF
-#define ASM_ALPHA_NG_SYMBOL_PREFIX "$"
-_ACEOF
-
-else
-  cat >>confdefs.h <<\_ACEOF
-#define ASM_ALPHA_NG_SYMBOL_PREFIX ""
-_ACEOF
-
-fi
-fi
-
 if test "$host_cpu" = powerpc ; then
 # Check for a bug present in at least versions 2.8.x of GCC
 # and versions 1.0.x of EGCS.
@@ -5298,7 +5261,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5301 "configure"
+#line 5264 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5397,7 +5360,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5400 "configure"
+#line 5363 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5465,7 +5428,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5468 "configure"
+#line 5431 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };

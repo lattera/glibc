@@ -113,7 +113,7 @@ $do32:
 	.align 3
 $error:
 	addq	sp, 48, sp
-	jmp	zero, __syscall_error
+	SYSCALL_ERROR_HANDLER
 
 END(SETITIMER)
 

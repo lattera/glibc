@@ -73,9 +73,6 @@
    directive.  */
 #undef	HAVE_ASM_POPSECTION_DIRECTIVE
 
-/* Define to the prefix Alpha/ELF GCC emits before ..ng symbols.  */
-#undef  ASM_ALPHA_NG_SYMBOL_PREFIX
-
 /* Define if versioning of the library is wanted.  */
 #undef	DO_VERSIONING
 

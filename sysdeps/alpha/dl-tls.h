@@ -1,6 +1,6 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Thread-local storage handling in the ELF dynamic linker.  Alpha version.
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David Mosberger <davidm@azstarnet.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,44 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
 
-#define GSI_IEEE_FP_CONTROL	45
+/* Type used for the representation of TLS information in the GOT.  */
+typedef struct
+{
+  unsigned long int ti_module;
+  unsigned long int ti_offset;
+} tls_index;
 
-	.text
 
-LEAF(__ieee_get_fp_control, 16)
-#ifdef PROF
-	ldgp	gp, 0(pv)
-	lda	sp, -16(sp)
-	.set noat
-	lda	AT, _mcount
-	jsr	AT, (AT), _mcount
-	.set at
-	.prologue 1
-#else
-	lda	sp, -16(sp)
-	.prologue 0
-#endif
-
-	mov	sp, a1
-	ldi	a0, GSI_IEEE_FP_CONTROL
-	ldi	v0, __NR_osf_getsysinfo
-	call_pal PAL_callsys
-	bne	a3, $error
-
-	ldq	v0, 0(sp)
-	lda	sp, 16(sp)
-	ret
-
-$error:
-#ifndef PROF
-	br	gp, 1f
-1:	ldgp	gp, 0(gp)
-#endif
-	lda	sp, 16(sp)
-	SYSCALL_ERROR_HANDLER
-
-	END(__ieee_get_fp_control)
-
-weak_alias (__ieee_get_fp_control, ieee_get_fp_control)
+extern void *__tls_get_addr (tls_index *ti);

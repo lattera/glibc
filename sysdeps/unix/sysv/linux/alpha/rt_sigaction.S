@@ -56,7 +56,7 @@ ENTRY(__syscall_rt_sigaction)
 	br	gp,2f
 2:	ldgp	gp,0(gp)
 #endif
-	jmp	__syscall_error
+	SYSCALL_ERROR_HANDLER
 
 END(__syscall_rt_sigaction)
 
@@ -82,6 +82,6 @@ ENTRY(__syscall_rt_sigaction)
 	ldgp $29,0($27)
 	.prologue 1
 	ldi $0,ENOSYS
-	jmp __syscall_error
+	SYSCALL_ERROR_HANDLER
 END(__syscall_rt_sigaction)
 #endif

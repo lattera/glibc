@@ -47,7 +47,7 @@ error:
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 #endif
-	jmp	zero, __syscall_error
+	SYSCALL_ERROR_HANDLER
 
 	END(__sigsuspend)
 

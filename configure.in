@@ -1496,26 +1496,6 @@ if test $libc_cv_gcc_exceptions = yes; then
 fi
 AC_SUBST(exceptions)dnl
 
-if test "$base_machine" = alpha ; then
-AC_CACHE_CHECK(for function ..ng prefix, libc_cv_gcc_alpha_ng_prefix, [dnl
-cat > conftest.c <<\EOF
-foo () { }
-EOF
-dnl
-if AC_TRY_COMMAND([${CC-cc} -S conftest.c -o - | fgrep "\$foo..ng" > /dev/null]);
-then
-  libc_cv_gcc_alpha_ng_prefix=yes
-else
-  libc_cv_gcc_alpha_ng_prefix=no
-fi
-rm -f conftest* ])
-if test $libc_cv_gcc_alpha_ng_prefix = yes ; then
-  AC_DEFINE(ASM_ALPHA_NG_SYMBOL_PREFIX, "$")
-else
-  AC_DEFINE(ASM_ALPHA_NG_SYMBOL_PREFIX, "")
-fi
-fi
-
 if test "$host_cpu" = powerpc ; then
 # Check for a bug present in at least versions 2.8.x of GCC
 # and versions 1.0.x of EGCS.
