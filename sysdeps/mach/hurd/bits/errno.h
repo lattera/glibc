@@ -22,7 +22,7 @@ enum __error_t_codes
 	EIO             = _HURD_ERRNO (5),
 #define	EIO             _HURD_ERRNO (5) /* Input/output error */
 	ENXIO           = _HURD_ERRNO (6),
-#define	ENXIO           _HURD_ERRNO (6) /* Device not configured */
+#define	ENXIO           _HURD_ERRNO (6) /* No such device or address */
 	E2BIG           = _HURD_ERRNO (7),
 #define	E2BIG           _HURD_ERRNO (7) /* Argument list too long */
 	ENOEXEC         = _HURD_ERRNO (8),
