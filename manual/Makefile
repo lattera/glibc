@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ libc.dvi: texinfo.tex
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
 stamp-summary: summary.awk $(filter-out summary.texi, $(texis))
-	$(AWK) -f $^ | sort -t '' -df +0 -1 | tr '\014' '\012' > summary-tmp
+	$(AWK) -f $^ | sort -t'^L' -df +0 -1 | tr '\014' '\012' > summary-tmp
 	$(move-if-change) summary-tmp summary.texi
 	touch $@
 

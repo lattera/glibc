@@ -884,8 +884,7 @@ clean: common-clean
 mostlyclean: common-mostlyclean
 
 do-tests-clean:
-	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) $(test-srcs)) \
-				     $(addsuffix .sout,$(tests-static)))
+	-rm -f $(patsubst %,$(objpfx)%.out,$(tests) $(test-srcs))
 
 # Remove the object files.
 common-mostlyclean:

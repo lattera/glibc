@@ -39,9 +39,12 @@ numbers of type @code{double}:
 
 @smallexample
 int
-compare_doubles (const double *a, const double *b)
+compare_doubles (const void *a, const void *b)
 @{
-  return (int) (*a - *b);
+  const double *da = (const double *) a;
+  const double *db = (const double *) b;
+
+  return (*da > *db) - (*da < *db);
 @}
 @end smallexample
 

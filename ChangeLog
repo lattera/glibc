@@ -1,3 +1,18 @@
+1998-01-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/Makefile (stamp-summary): Remove space after -t option
+	for compatibility with non-GNU sort programs.
+
+1999-01-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/search.texi (Comparison Functions): Fix compare_doubles
+	example.
+
+1999-01-07  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makerules (do-tests-clean): Remove reference to obsolete
+	variable tests-static.
+
 1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/ntp_adjtime.c: Removed.  It's an alias
