@@ -188,12 +188,12 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	    {
 	      size_t size;
 
-	      /* Would have to be done if we would not clear the whole
-                 array above.  */
 	      /* If this is the last step we must not allocate an
 		 output buffer.  */
 	      result->__data[cnt].__flags = conv_flags;
 
+	      /* Would have to be done if we would not clear the whole
+                 array above.  */
 #if 0
 	      /* Reset the counter.  */
 	      result->__data[cnt].__invocation_counter = 0;

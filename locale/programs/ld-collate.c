@@ -2696,14 +2696,17 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  return;
 	}
 
-      /* Get the locale definition.  */
-      copy_locale = load_locale (LC_COLLATE, now->val.str.startmb,
-				 repertoire_name, charmap, NULL);
-      if ((copy_locale->avail & COLLATE_LOCALE) == 0)
+      if (! ignore_content)
 	{
-	  /* Not yet loaded.  So do it now.  */
-	  if (locfile_read (copy_locale, charmap) != 0)
-	    goto skip_category;
+	  /* Get the locale definition.  */
+	  copy_locale = load_locale (LC_COLLATE, now->val.str.startmb,
+				     repertoire_name, charmap, NULL);
+	  if ((copy_locale->avail & COLLATE_LOCALE) == 0)
+	    {
+	      /* Not yet loaded.  So do it now.  */
+	      if (locfile_read (copy_locale, charmap) != 0)
+		goto skip_category;
+	    }
 	}
 
       lr_ignore_rest (ldfile, 1);

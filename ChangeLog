@@ -1,5 +1,14 @@
 2000-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/gen-8bit-gap-1.sh: Update for new charmap format.
+	* iconvdata/gen-8bit-gap.sh: Likewise.
+	* iconvdata/gen-8bit.sh: Likewise.
+
+	* iconv/gconv_open.c (__gconv_open): Move comment to correct position.
+
+	* locale/programs/ld-collate.c (collate_read): Don't actually read
+	the copy locale if we are ignoring the content.
+
 	* locale/programs/ld-address.c (INT_STR_ELEM): Correct test for
 	unknown character.
 
@@ -21,8 +30,8 @@
 
 2000-06-23  Thorsten Kukuk  <kukuk@suse.de>
 
-	* xdr_rec.c (set_input_fragment): Fix PR libc/1549, patch from Jens
-	Moeller <jens.moeller@waii.com>.
+	* sunrpc/xdr_rec.c (set_input_fragment): Fix PR libc/1549, patch from
+	Jens Moeller <jens.moeller@waii.com>.
 
 2000-06-24  Ulrich Drepper  <drepper@redhat.com>
 

@@ -1,5 +1,5 @@
-/* Test program for
-   Copyright (C) 1998 Free Software Foundation, Inc.
+/* Test program for rpmatch function.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jochen Hein <jochen.hein@delphi.central.de>.
 
@@ -33,5 +33,5 @@ main (int argc, char* argv[])
 	       argv[1], argv[2], argv[3], rpmatch (argv[2]));
       exit (EXIT_FAILURE);
     }
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }
