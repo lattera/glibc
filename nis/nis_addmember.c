@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
 
@@ -71,6 +72,8 @@ nis_addmember (const_nis_name member, const_nis_name group)
 	}
       ++NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len;
 
+      /* Check the buffer bounds are not exceeded.  */
+      assert (strlen (NIS_RES_OBJECT(res)->zo_name) + 1 < grouplen + 14);
       cp = stpcpy (buf, NIS_RES_OBJECT(res)->zo_name);
       *cp++ = '.';
       strncpy (cp, NIS_RES_OBJECT (res)->zo_domain, NIS_MAXNAMELEN);

@@ -1,5 +1,8 @@
 2004-10-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_addmember.c (nis_addmember): Add assert to check buffer
+	bounds.
+
 	* resolv/nss_dns/dns-host.c: Avoid using PLTs.
 	* include/libc-symbols.h: Define hidden attribute macros for
 	libnss_nisplus and libutil.
