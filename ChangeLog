@@ -1,3 +1,7 @@
+2002-11-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/strncpy.S: Fix recovery code.
+
 2002-10-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/libc-symbols.h (__libc_freeres_fn_section, libc_freeres_fn):

@@ -217,11 +217,11 @@ ENTRY(strncpy)
 (p5)	mov	r[0] = r0
 	br.cond.sptk .back2
 .recovery3:
-	add	tmp = -MEMLAT * 8, src ;;
+	add	tmp = -(MEMLAT + 1) * 8, src ;;
 	ld8	r[MEMLAT] = [tmp]
 	br.cond.sptk .back3
 .recovery4:
-	add	tmp = -(MEMLAT - 1) * 8, src ;;
+	add	tmp = -MEMLAT * 8, src ;;
 	ld8	r[MEMLAT - 1] = [tmp]
 	br.cond.sptk .back4
 END(strncpy)
