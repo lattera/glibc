@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
    This file is part of the GNU C Library.
 
@@ -183,10 +183,11 @@ $u_head:
 	or	t0, t6, t6	# e1    : mask original data for zero test
 	cmpbge	zero, t6, t7	# e0    :
 	beq	a2, $u_eocfin	# .. e1 :
-	bne	t7, $u_final	# e1    :
+	lda	t6, -1		# e0    : 
+	bne	t7, $u_final	# .. e1 :
 
-	lda	t6, -1			# e1    : mask out the bits we have
-	mskql	t6, a1, t6		# e0    :   already seen
+	mskql	t6, a1, t6		# e0    : mask out bits already seen
+	nop				# .. e1 :
 	stq_u	t0, 0(a0)		# e0    : store first output word
 	or      t6, t2, t2		# .. e1 :
 	cmpbge	zero, t2, t7		# e0    : find nulls in second partial
@@ -198,11 +199,13 @@ $u_head:
 	   of and we can set up to enter the main loop.  */
 
 	extql	t2, a1, t1	# e0    : position hi-bits of lo word
-	ldq_u	t2, 8(a1)	# .. e1 : read next high-order source word
-	addq	a1, 8, a1	# e0    :
-	cmpbge	zero, t2, t7	# e1 (stall)
-	beq	a2, $u_eoc	# e1    :
-	bne	t7, $u_eos	# e1    :
+	beq	a2, $u_eoc	# .. e1 :
+	ldq_u	t2, 8(a1)	# e0    : read next high-order source word
+	addq	a1, 8, a1	# .. e1 :
+	extqh	t2, a1, t0	# e0    : position lo-bits of hi word
+	cmpbge	zero, t2, t7	# .. e1 : test new word for eos
+	nop			# e0    :
+	bne	t7, $u_eos	# .. e1 :
 
 	/* Unaligned copy main loop.  In order to avoid reading too much,
 	   the loop is structured to detect zeros in aligned source words.
@@ -212,6 +215,7 @@ $u_head:
 	   to run as fast as possible.
 
 	   On entry to this basic block:
+	   t0 == the shifted low-order bits from the current source word
 	   t1 == the shifted high-order bits from the previous source word
 	   t2 == the unshifted current source word
 
@@ -219,18 +223,18 @@ $u_head:
 
 	.align 3
 $u_loop:
-	extqh	t2, a1, t0	# e0    : extract high bits for current word
-	addq	a1, 8, a1	# .. e1 :
-	extql	t2, a1, t3	# e0    : extract low bits for next time
-	addq	a0, 8, a0	# .. e1 :
 	or	t0, t1, t0	# e0    : current dst word now complete
-	ldq_u	t2, 0(a1)	# .. e1 : load high word for next time
-	stq_u	t0, -8(a0)	# e0    : save the current word
-	mov	t3, t1		# .. e1 :
-	subq	a2, 1, a2	# e0    :
+	subq	a2, 1, a2	# .. e1 : decrement word count
+	stq_u	t0, 0(a0)	# e0    : save the current word
+	addq	a0, 8, a0	# .. e1 :
+	extql	t2, a1, t1	# e0    : extract high bits for next time
+	beq	a2, $u_eoc	# .. e1 :
+	ldq_u	t2, 8(a1)	# e0    : load high word for next time
+	addq	a1, 8, a1	# .. e1 :
+	nop			# e0    :
 	cmpbge	zero, t2, t7	# .. e1 : test new word for eos
-	beq	a2, $u_eoc	# e1    :
-	beq	t7, $u_loop	# e1    :
+	extqh	t2, a1, t0	# e0    : extract low bits for current word
+	beq	t7, $u_loop	# .. e1 :
 
 	/* We've found a zero somewhere in the source word we just read.
 	   If it resides in the lower half, we have one (probably partial)
@@ -238,25 +242,23 @@ $u_loop:
 	   have one full and one partial word left to write out.
 
 	   On entry to this basic block:
+	   t0 == the shifted low-order bits from the current source word
 	   t1 == the shifted high-order bits from the previous source word
 	   t2 == the unshifted current source word.  */
 $u_eos:
-	extqh	t2, a1, t0	# e0    :
-	or	t0, t1, t0	# e1    : first (partial) source word complete
-
+	or	t0, t1, t0	# e0    : first (partial) source word complete
 	cmpbge	zero, t0, t7	# e0    : is the null in this first bit?
 	bne	t7, $u_final	# .. e1 (zdb)
 
 	stq_u	t0, 0(a0)	# e0    : the null was in the high-order bits
 	addq	a0, 8, a0	# .. e1 :
-	subq	a2, 1, a2	# e1    :
+	subq	a2, 1, a2	# e0    :
 
 $u_late_head_exit:
-	extql	t2, a1, t0	# .. e0 :
+	extql	t2, a1, t0	# e0    :
 	cmpbge	zero, t0, t7	# e0    :
 	or	t7, t10, t6	# e1    :
 	cmoveq	a2, t6, t7	# e0    :
-	nop			# .. e1 :
 
 	/* Take care of a final (probably partial) result word.
 	   On entry to this basic block:
@@ -279,10 +281,22 @@ $u_final:
 1:	stq_u	t0, 0(a0)	# e0    :
 	ret	(t9)		# .. e1 :
 
-$u_eoc:				# end-of-count
-	extqh	t2, a1, t0
-	or	t0, t1, t0
-	cmpbge	zero, t0, t7
+	/* Got to end-of-count before end of string.  
+	   On entry to this basic block:
+	   t1 == the shifted high-order bits from the previous source word  */
+$u_eoc:
+	and	a1, 7, t6	# e1    :
+	sll	t10, t6, t6	# e0    :
+	and	t6, 0xff, t6	# e0	:
+	bne	t6, 1f		# e1    : avoid src word load if we can
+
+	ldq_u	t2, 8(a1)	# e0    : load final src word
+	nop			# .. e1 :
+	extqh	t2, a1, t0	# e0    : extract high bits for last word
+	or	t1, t0, t1	# e1    :
+
+1:	cmpbge	zero, t1, t7
+	mov	t1, t0
 
 $u_eocfin:			# end-of-count, final word
 	or	t10, t7, t7

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
    EV6 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
    This file is part of the GNU C Library.
@@ -210,35 +210,30 @@ $u_head:
 
 	cmpbge	zero, t6, t7	# E :
 	beq	a2, $u_eocfin	# U :
-	nop
+	lda	t6, -1		# E :
 	nop
 
 	bne	t7, $u_final	# U :
-	lda	t6, -1		# E : mask out the bits we have
-	mskql	t6, a1, t6	# U :   already seen (stall)
+	mskql	t6, a1, t6	# U : mask out bits already seen
 	stq_u	t0, 0(a0)	# L : store first output word
+	or      t6, t2, t2	# E :
 
-	or      t6, t2, t2		# E :
-	cmpbge	zero, t2, t7		# E : find nulls in second partial (stall)
-	addq	a0, 8, a0		# E :
-	subq	a2, 1, a2		# E :
-
+	cmpbge	zero, t2, t7	# E : find nulls in second partial
+	addq	a0, 8, a0	# E :
+	subq	a2, 1, a2	# E :
 	bne	t7, $u_late_head_exit	# U :
+
 	/* Finally, we've got all the stupid leading edge cases taken care
 	   of and we can set up to enter the main loop.  */
 	extql	t2, a1, t1	# U : position hi-bits of lo word
+	beq	a2, $u_eoc	# U :
 	ldq_u	t2, 8(a1)	# L : read next high-order source word
 	addq	a1, 8, a1	# E :
 
-	cmpbge	zero, t2, t7	# E : (stall)
-	beq	a2, $u_eoc	# U :
-	nop
-	nop
-
-	bne	t7, $u_eos	# e1    :
-	nop
-	nop
-	nop
+	extqh	t2, a1, t0	# U : position lo-bits of hi word (stall)
+	cmpbge	zero, t2, t7	# E :
+	nop			
+	bne	t7, $u_eos	# U :
 
 	/* Unaligned copy main loop.  In order to avoid reading too much,
 	   the loop is structured to detect zeros in aligned source words.
@@ -248,6 +243,7 @@ $u_head:
 	   to run as fast as possible.
 
 	   On entry to this basic block:
+	   t0 == the shifted low-order bits from the current source word
 	   t1 == the shifted high-order bits from the previous source word
 	   t2 == the unshifted current source word
 
@@ -255,25 +251,20 @@ $u_head:
 
 	.align 4
 $u_loop:
-	extqh	t2, a1, t0	# U : extract high bits for current word
-	addq	a1, 8, a1	# E :
-	extql	t2, a1, t3	# U : extract low bits for next time
+	or	t0, t1, t0	# E : current dst word now complete
+	subq	a2, 1, a2	# E : decrement word count
+	extql	t2, a1, t1	# U : extract high bits for next time
 	addq	a0, 8, a0	# E :
 
-	or	t0, t1, t0	# E : current dst word now complete
-	ldq_u	t2, 0(a1)	# U : Latency=3 load high word for next time
-	stq_u	t0, -8(a0)	# U : save the current word (stall)
-	mov	t3, t1		# E :
+	stq_u	t0, -8(a0)	# L : save the current word
+	beq	a2, $u_eoc	# U :
+	ldq_u	t2, 8(a1)	# L : Latency=3 load high word for next time
+	addq	a1, 8, a1	# E :
 
-	subq	a2, 1, a2	# E :
-	cmpbge	zero, t2, t7	# E : test new word for eos (2 cycle stall for data)
-	beq	a2, $u_eoc	# U : (stall)
+	extqh	t2, a1, t0	# U : extract low bits (2 cycle stall)
+	cmpbge	zero, t2, t7	# E : test new word for eos
 	nop
-
 	beq	t7, $u_loop	# U :
-	nop
-	nop
-	nop
 
 	/* We've found a zero somewhere in the source word we just read.
 	   If it resides in the lower half, we have one (probably partial)
@@ -281,11 +272,12 @@ $u_loop:
 	   have one full and one partial word left to write out.
 
 	   On entry to this basic block:
+	   t0 == the shifted low-order bits from the current source word
 	   t1 == the shifted high-order bits from the previous source word
 	   t2 == the unshifted current source word.  */
 $u_eos:
-	extqh	t2, a1, t0	# U :
-	or	t0, t1, t0	# E : first (partial) source word complete (stall)
+	or	t0, t1, t0	# E : first (partial) source word complete
+	nop
 	cmpbge	zero, t0, t7	# E : is the null in this first bit? (stall)
 	bne	t7, $u_final	# U : (stall)
 
@@ -323,17 +315,26 @@ $u_final:
 1:	stq_u	t0, 0(a0)	# L :
 	ret	(t9)		# L0 : Latency=3
 
-$u_eoc:				# end-of-count
-	extqh	t2, a1, t0	# U :
-	or	t0, t1, t0	# E : (stall)
-	cmpbge	zero, t0, t7	# E : (stall)
+        /* Got to end-of-count before end of string.  
+           On entry to this basic block:
+           t1 == the shifted high-order bits from the previous source word  */
+$u_eoc:
+	and	a1, 7, t6	# E :
+	sll	t10, t6, t6	# U : (stall)
+	and	t6, 0xff, t6	# E : (stall)
+	bne	t6, 1f		# U : (stall)
+
+	ldq_u	t2, 8(a1)	# L : load final src word
 	nop
+	extqh	t2, a1, t0	# U : extract low bits for last word (stall)	
+	or	t1, t0, t1	# E : (stall)
+
+1:	cmpbge	zero, t1, t7	# E :
+	mov	t1, t0
 
 $u_eocfin:			# end-of-count, final word
 	or	t10, t7, t7	# E :
 	br	$u_final	# L0 : Latency=3
-	nop
-	nop
 
 	/* Unaligned copy entry point.  */
 	.align 4
@@ -354,9 +355,7 @@ $unaligned:
 	mskql	t6, a0, t6	# U :
 	nop
 	nop
-	nop
-1:
-	subq	a1, t4, a1	# E : sub dest misalignment from src addr
+1:	subq	a1, t4, a1	# E : sub dest misalignment from src addr
 
 	/* If source misalignment is larger than dest misalignment, we need
 	   extra startup checks to avoid SEGV.  */
