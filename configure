@@ -1001,6 +1001,38 @@ else
   echo "$ac_t""no" 1>&4
 fi
 
+for ac_prog in msgfmt gmsgfmt
+do
+# Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+if eval "test \"`echo '$''{'ac_cv_prog_MSGFMT'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&4
+else
+  if test -n "$MSGFMT"; then
+  ac_cv_prog_MSGFMT="$MSGFMT" # Let the user override the test.
+else
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
+  for ac_dir in $PATH; do
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_prog_MSGFMT="$ac_prog"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+fi
+fi
+MSGFMT="$ac_cv_prog_MSGFMT"
+if test -n "$MSGFMT"; then
+  echo "$ac_t""$MSGFMT" 1>&4
+else
+  echo "$ac_t""no" 1>&4
+fi
+
+test -n "$MSGFMT" && break
+done
+
 
 echo $ac_n "checking build system type""... $ac_c" 1>&4
 
@@ -1163,13 +1195,13 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1167 "configure"
+#line 1199 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1173: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1205: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1178,13 +1210,13 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1182 "configure"
+#line 1214 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:1188: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:1220: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out`
 if test -z "$ac_err"; then
   :
@@ -1233,7 +1265,7 @@ if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1237 "configure"
+#line 1269 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
@@ -1249,7 +1281,7 @@ size_t size; wchar_t wchar;
 if (&size == NULL || &wchar == NULL) abort ();
 ; return 0; }
 EOF
-if { (eval echo configure:1253: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1285: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_friendly_stddef=yes
 else
@@ -1356,7 +1388,7 @@ if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1360 "configure"
+#line 1392 "configure"
 #include "confdefs.h"
 
 int main() { return 0; }
@@ -1365,7 +1397,7 @@ asm (".section .init");
 				    asm (".section .fini");
 ; return 0; }
 EOF
-if { (eval echo configure:1369: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1401: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_have_initfini=yes
 else
@@ -1393,7 +1425,7 @@ if eval "test \"`echo '$''{'libc_cv_asm_underscores'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1397 "configure"
+#line 1429 "configure"
 #include "confdefs.h"
 asm ("_glibc_foobar:");
 int main() { return 0; }
@@ -1401,7 +1433,7 @@ int t() {
 glibc_foobar ();
 ; return 0; }
 EOF
-if { (eval echo configure:1405: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if { (eval echo configure:1437: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
   rm -rf conftest*
   libc_cv_asm_underscores=yes
 else
@@ -1753,6 +1785,7 @@ s%@sysnames@%$sysnames%g
 s%@INSTALL_PROGRAM@%$INSTALL_PROGRAM%g
 s%@INSTALL_DATA@%$INSTALL_DATA%g
 s%@LN_S@%$LN_S%g
+s%@MSGFMT@%$MSGFMT%g
 s%@build@%$build%g
 s%@build_alias@%$build_alias%g
 s%@build_cpu@%$build_cpu%g

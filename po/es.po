@@ -1,0 +1,1113 @@
+# Korean messages for GNU C Library
+# Copyright (C) 1996 Free Software Foundation, Inc.
+# Bang Jun Young <bangjy@nownuri.nowcom.co.kr>, 1996.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GNU C Library 1.10.1\n"
+"PO-Revision-Date: 1996-04-19 22:14 KST\n"
+"Last-Translator: Bang Jun Young <bangjy@nownuri.nowcom.co.kr>\n"
+"Language-Team: Korean <ko@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=EUC-KR\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: sunrpc/rpc_main.c:77
+msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
+msgstr "       %s [-c | -h | -l | -m] [-o 출력파일] [입력파일]\n"
+
+#: sunrpc/rpc_main.c:80
+msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
+msgstr "       %s [-s udp|tcp]* [-o 출력파일] [입력파일]\n"
+
+#: assert/assert.c:48
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr ""
+
+#: assert/assert-perr.c:46
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%s예기치 못한 오류: %s.\n"
+
+#: stdio-common/psignal.c:48
+#, c-format
+msgid "%s%sUnknown signal %d\n"
+msgstr "%s%s알 수 없는 신호 %d\n"
+
+#: sunrpc/rpc_util.c:258
+msgid "%s, line %d: "
+msgstr "%s, 행 %d: "
+
+#: posix/getopt.c:673
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr "%s: 잘못된 옵션 -- %c\n"
+
+#: posix/getopt.c:676
+#, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr "%s: 부적절한 옵션 -- %c\n"
+
+#: posix/getopt.c:597
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr "%s: `%c%s' 옵션은 인자가 필요하지 않습니다\n"
+
+#: posix/getopt.c:568
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr "%s: `%s'는 모호한 옵션입니다\n"
+
+#: posix/getopt.c:614
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr "%s: `%s' 옵션은 인자가 필요합니다\n"
+
+#: posix/getopt.c:592
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr "%s: `--%s' 옵션은 인자가 필요하지 않습니다\n"
+
+#: posix/getopt.c:712
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr "%s: 이 옵션은 인자가 필요합니다 -- %c\n"
+
+#: sunrpc/rpc_main.c:143
+msgid "%s: output would overwrite %s\n"
+msgstr "%s: 출력이 %s를 덮어쓸 것입니다\n"
+
+#: sunrpc/rpc_main.c:149
+msgid "%s: unable to open "
+msgstr "%s: 열 수 없음"
+
+#: posix/getopt.c:647
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr "%s: 인식할 수 없는 옵션 `%c%s'\n"
+
+#: posix/getopt.c:643
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr "%s: 인식할 수 없는 옵션 `--%s'\n"
+
+#: sunrpc/clnt_perr.c:125
+msgid "(unknown authentication error - %d)"
+msgstr "(알 수 없는 인증 오류 - %d)"
+
+#: inet/rcmd.c:325
+msgid ".rhosts fstat failed"
+msgstr ".rhosts fstat 실패"
+
+#: inet/rcmd.c:321
+msgid ".rhosts lstat failed"
+msgstr ".rhosts lstat 실패"
+
+#: inet/rcmd.c:323
+msgid ".rhosts not regular file"
+msgstr ".rhosts는 일반 파일이 아님"
+
+#: inet/rcmd.c:329
+msgid ".rhosts writeable by other than owner"
+msgstr ".rhosts는 소유자가 아닌 사람이 변경할 수 있음"
+
+#: clnt_perr.c:133 sunrpc/clnt_perr.c:112
+msgid "; low version = %lu, high version = %lu"
+msgstr "; 낮은 버전 = %lu, 높은 버전 = %lu"
+
+#: sunrpc/clnt_perr.c:119
+msgid "; why = "
+msgstr "; 이유 = "
+
+#: sysdeps/mach/hurd/errlist.c:112
+msgid "?"
+msgstr "?"
+
+#: sysdeps/mach/hurd/errlist.c:58
+msgid "Address already in use"
+msgstr "주소가 이미 사용중입니다"
+
+#: sysdeps/mach/hurd/errlist.c:57
+msgid "Address family not supported by protocol family"
+msgstr "주소군이 규약군에서 지원되지 않음"
+
+#: i486-linux/siglist.c:22
+msgid "Alarm clock"
+msgstr "자명종 시계"
+
+#: sysdeps/mach/hurd/errlist.c:17
+msgid "Argument list too long"
+msgstr "인자 목록이 너무 깁니다"
+
+#: sunrpc/clnt_perr.c:276
+msgid "Authentication OK"
+msgstr "인증 승인"
+
+#: sysdeps/mach/hurd/errlist.c:90
+msgid "Authentication error"
+msgstr "인증 오류"
+
+#: sysdeps/mach/hurd/errlist.c:24
+msgid "Bad address"
+msgstr "잘못된 주소"
+
+#: sysdeps/mach/hurd/errlist.c:19
+msgid "Bad file descriptor"
+msgstr "잘못된 파일 기술자"
+
+#: sysdeps/mach/hurd/errlist.c:25
+msgid "Block device required"
+msgstr "블록 디바이스가 필요함"
+
+#: sunrpc/pmap_rmt.c:336
+msgid "Broadcast select problem"
+msgstr "브로드캐스트 선택 문제"
+
+#: i486-linux/siglist.c:21 sysdeps/mach/hurd/errlist.c:42
+msgid "Broken pipe"
+msgstr "깨어진 파이프"
+
+#: i486-linux/siglist.c:15
+msgid "Bus error"
+msgstr "버스 오류"
+
+#: i486-linux/siglist.c:32
+msgid "CPU time limit exceeded"
+msgstr "CPU 시간 제한 초과함"
+
+#: sysdeps/mach/hurd/errlist.c:59
+msgid "Can't assign requested address"
+msgstr "요청된 주소를 배정할 수 없습니다"
+
+#: sysdeps/mach/hurd/errlist.c:68
+msgid "Can't send after socket shutdown"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:22
+msgid "Cannot allocate memory"
+msgstr "메모리를 할당할 수 없습니다"
+
+#: sunrpc/pmap_rmt.c:254
+msgid "Cannot create socket for broadcast rpc"
+msgstr "브로드캐스트 rpc를 위한 소켓을 만들 수 없습니다"
+
+#: sunrpc/pmap_rmt.c:348
+msgid "Cannot receive reply to broadcast"
+msgstr "브로드캐스트에 대한 응답을 받을 수 없습니다"
+
+#: sunrpc/pmap_clnt.c:79
+msgid "Cannot register service"
+msgstr "서비스를 등록할 수 없습니다"
+
+#: sunrpc/pmap_rmt.c:312
+msgid "Cannot send broadcast packet"
+msgstr "브로드캐스트 패킷을 보낼 수 없습니다"
+
+#: sunrpc/pmap_rmt.c:260
+msgid "Cannot set socket option SO_BROADCAST"
+msgstr "소켓 옵션 SO_BROADCAST를 설정할 수 없습니다"
+
+#: i486-linux/siglist.c:25
+msgid "Child exited"
+msgstr "자식이 종료됨"
+
+#: sunrpc/clnt_perr.c:286
+msgid "Client credential too weak"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:114
+msgid "Computer bought the farm"
+msgstr "컴퓨터가 농장을 샀습니다"
+
+#: sysdeps/mach/hurd/errlist.c:71
+msgid "Connection refused"
+msgstr "연결이 거부됨"
+
+#: sysdeps/mach/hurd/errlist.c:64
+msgid "Connection reset by peer"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:70
+msgid "Connection timed out"
+msgstr "연결 시간 초과"
+
+#: i486-linux/siglist.c:26
+msgid "Continued"
+msgstr "계속됨"
+
+#: sysdeps/mach/hurd/errlist.c:49
+msgid "Destination address required"
+msgstr "목적지 주소가 필요함"
+
+#: sysdeps/mach/hurd/errlist.c:26
+msgid "Device busy"
+msgstr "디바이스 동작중"
+
+#: sysdeps/mach/hurd/errlist.c:16
+msgid "Device not configured"
+msgstr "디바이스가 설정되지 않았음"
+
+#: sysdeps/mach/hurd/errlist.c:76
+msgid "Directory not empty"
+msgstr "디렉토리가 비어있지 않음"
+
+#: sysdeps/mach/hurd/errlist.c:79
+msgid "Disc quota exceeded"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:254
+msgid "Error %d"
+msgstr "오류 %d"
+
+#: string/../sysdeps/mach/_strerror.c:43
+msgid "Error in unknown error system: "
+msgstr "알 수 없는 오류 시스템에 오류: "
+
+#: sysdeps/mach/hurd/errlist.c:18
+msgid "Exec format error"
+msgstr "Exec 형식 오류"
+
+#: sunrpc/clnt_perr.c:290
+msgid "Failed (unspecified error)"
+msgstr "실패 (지정되지 않은 오류)"
+
+#: sysdeps/mach/hurd/errlist.c:27
+msgid "File exists"
+msgstr "파일이 존재합니다"
+
+#: sysdeps/mach/hurd/errlist.c:73
+msgid "File name too long"
+msgstr "파일 이름이 너무 깁니다"
+
+#: i486-linux/siglist.c:33
+msgid "File size limit exceeded"
+msgstr "파일 크기 제한을 초과함"
+
+#: sysdeps/mach/hurd/errlist.c:37
+msgid "File too large"
+msgstr "파일이 너무 큽니다"
+
+#: i486-linux/siglist.c:16
+msgid "Floating point exception"
+msgstr "부동 소수점 예외"
+
+#: sysdeps/mach/hurd/errlist.c:88
+msgid "Function not implemented"
+msgstr "함수가 구현되지 않았음"
+
+#: sysdeps/mach/hurd/errlist.c:115
+msgid "Gratuitous error"
+msgstr "이유없는 오류"
+
+#: i486-linux/siglist.c:9
+msgid "Hangup"
+msgstr "끊어짐"
+
+#: sysdeps/mach/hurd/errlist.c:74
+msgid "Host is down"
+msgstr "호스트가 죽었습니다"
+
+#: resolv/herror.c:74
+msgid "Host name lookup failure"
+msgstr "호스트 이름 탐색 실패"
+
+#: i486-linux/siglist.c:37
+msgid "I/O possible"
+msgstr "입출력 가능"
+
+#: i486-linux/siglist.c:14
+msgid "IOT trap"
+msgstr ""
+
+#: i486-linux/siglist.c:12
+msgid "Illegal Instruction"
+msgstr "잘못된 명령"
+
+#: sysdeps/mach/hurd/errlist.c:39
+msgid "Illegal seek"
+msgstr "잘못된 탐색"
+
+#: sysdeps/mach/hurd/errlist.c:89
+msgid "Inappropriate file type or format"
+msgstr "부적절한 파일 타입 또는 형식"
+
+#: sysdeps/mach/hurd/errlist.c:35
+msgid "Inappropriate ioctl for device"
+msgstr "디바이스에 대해 부적절한 ioctl"
+
+#: sysdeps/mach/hurd/errlist.c:110
+msgid "Inappropriate operation for background process"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:15
+msgid "Input/output error"
+msgstr "입력/출력 오류"
+
+#: i486-linux/siglist.c:10
+msgid "Interrupt"
+msgstr "인터럽트"
+
+#: sysdeps/mach/hurd/errlist.c:14
+msgid "Interrupted system call"
+msgstr "중단된 시스템 호출"
+
+#: sysdeps/mach/hurd/errlist.c:32
+msgid "Invalid argument"
+msgstr "부적절한 인자"
+
+#: posix/regex.c:946
+msgid "Invalid back reference"
+msgstr "부적절한 후방 참조"
+
+#: posix/regex.c:944
+msgid "Invalid character class name"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:278
+msgid "Invalid client credential"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:282
+msgid "Invalid client verifier"
+msgstr ""
+
+#: posix/regex.c:943
+msgid "Invalid collation character"
+msgstr ""
+
+#: posix/regex.c:950
+msgid "Invalid content of \\{\\}"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:28
+msgid "Invalid cross-device link"
+msgstr "잘못된 디바이스간 연결"
+
+#: posix/regex.c:953
+msgid "Invalid preceding regular expression"
+msgstr ""
+
+#: posix/regex.c:951
+msgid "Invalid range end"
+msgstr "부적절한 범위 끝"
+
+#: posix/regex.c:942
+msgid "Invalid regular expression"
+msgstr "부적절한 정규식"
+
+#: sunrpc/clnt_perr.c:288
+msgid "Invalid server verifier"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:31
+msgid "Is a directory"
+msgstr "디렉토리입니다"
+
+#: i486-linux/siglist.c:17
+msgid "Killed"
+msgstr "죽었음"
+
+#: posix/regex.c:952
+msgid "Memory exhausted"
+msgstr "메모리가 바닥남"
+
+#: sysdeps/mach/hurd/errlist.c:50
+msgid "Message too long"
+msgstr "메시지가 너무 깁니다"
+
+#: sysdeps/mach/hurd/errlist.c:91
+msgid "Need authenticator"
+msgstr "인증자가 필요함"
+
+#: sysdeps/mach/hurd/errlist.c:62
+msgid "Network dropped connection on reset"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:60
+msgid "Network is down"
+msgstr "네트웍이 죽었습니다"
+
+#: sysdeps/mach/hurd/errlist.c:61
+msgid "Network is unreachable"
+msgstr "네트웍이 접근 불가능합니다"
+
+#: resolv/herror.c:76
+msgid "No address associated with name"
+msgstr "이름과 대응되는 주소가 없음"
+
+#: sysdeps/mach/hurd/errlist.c:65
+msgid "No buffer space available"
+msgstr "사용 가능한 버퍼 공간이 없음"
+
+#: sysdeps/mach/hurd/errlist.c:20
+msgid "No child processes"
+msgstr "자식 프로세스가 없음"
+
+#: sysdeps/mach/hurd/errlist.c:87
+msgid "No locks available"
+msgstr "사용가능한 잠금장치가 없음"
+
+#: posix/regex.c:941
+msgid "No match"
+msgstr "맞는 짝 없음"
+
+#: posix/regex.c:5197
+msgid "No previous regular expression"
+msgstr "전의 정규식이 없음"
+
+#: sysdeps/mach/hurd/errlist.c:75
+msgid "No route to host"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:38
+msgid "No space left on device"
+msgstr "디바이스에 남은 공간이 없음"
+
+#: sysdeps/mach/hurd/errlist.c:12
+msgid "No such file or directory"
+msgstr "그런 파일이나 디렉토리가 없음"
+
+#: sysdeps/mach/hurd/errlist.c:13
+msgid "No such process"
+msgstr "그런 프로세스가 없음"
+
+#: sysdeps/mach/hurd/errlist.c:30
+msgid "Not a directory"
+msgstr "디렉토리가 아닙니다"
+
+#: sysdeps/mach/hurd/errlist.c:43
+msgid "Numerical argument out of domain"
+msgstr "영역을 벗어난 수치 인자"
+
+#: sysdeps/mach/hurd/errlist.c:44
+msgid "Numerical result out of range"
+msgstr "범위를 벗어난 수치 결과"
+
+#: sysdeps/mach/hurd/errlist.c:47
+msgid "Operation already in progress"
+msgstr "이미 진행중인 명령"
+
+#: sysdeps/mach/hurd/errlist.c:11
+msgid "Operation not permitted"
+msgstr "명령이 허용되지 않음"
+
+#: sysdeps/mach/hurd/errlist.c:55
+msgid "Operation not supported"
+msgstr "명령이 지원되지 않음"
+
+#: sysdeps/mach/hurd/errlist.c:29
+msgid "Operation not supported by device"
+msgstr "디바이스에서 지원되지 않는 명령"
+
+#: sysdeps/mach/hurd/errlist.c:46
+msgid "Operation now in progress"
+msgstr "지금 진행중인 명령"
+
+#: sysdeps/mach/hurd/errlist.c:23
+msgid "Permission denied"
+msgstr "허가 거부됨"
+
+#: i486-linux/siglist.c:38
+msgid "Power failure"
+msgstr ""
+
+#: posix/regex.c:954
+msgid "Premature end of regular expression"
+msgstr ""
+
+#: i486-linux/siglist.c:35
+msgid "Profiling timer expired"
+msgstr "프로파일링 타이머의 시간이 초과됨"
+
+#: sysdeps/mach/hurd/errlist.c:56
+msgid "Protocol family not supported"
+msgstr "규약군이 지원되지 않음"
+
+#: sysdeps/mach/hurd/errlist.c:52
+msgid "Protocol not available"
+msgstr "규약 사용 불가능"
+
+#: sysdeps/mach/hurd/errlist.c:53
+msgid "Protocol not supported"
+msgstr "규약이 지원되지 않음"
+
+#: sysdeps/mach/hurd/errlist.c:51
+msgid "Protocol wrong type for socket"
+msgstr "소켓에 대한 규약이 잘못됨"
+
+#: i486-linux/siglist.c:11
+msgid "Quit"
+msgstr "종료"
+
+#: sysdeps/mach/hurd/errlist.c:86
+msgid "RPC bad procedure for program"
+msgstr "RPC 프로그램의 프로시져가 잘못됨"
+
+#: sysdeps/mach/hurd/errlist.c:84
+msgid "RPC program not available"
+msgstr "RPC 프로그램 사용 불가능"
+
+#: sysdeps/mach/hurd/errlist.c:85
+msgid "RPC program version wrong"
+msgstr "RPC 프로그램 버전이 잘못됨"
+
+#: sysdeps/mach/hurd/errlist.c:82
+msgid "RPC struct is bad"
+msgstr "RPC 구조가 잘못되었습니다"
+
+#: sysdeps/mach/hurd/errlist.c:83
+msgid "RPC version wrong"
+msgstr "RPC 버전이 잘못됨"
+
+#: sunrpc/clnt_perr.c:217
+msgid "RPC: (unknown error code)"
+msgstr "RPC: (알 수 없는 오류 코드)"
+
+#: sunrpc/clnt_perr.c:179
+msgid "RPC: Authentication error"
+msgstr "RPC: 인증 오류"
+
+#: sunrpc/clnt_perr.c:169
+msgid "RPC: Can't decode result"
+msgstr "RPC: 결과를 복호화할 수 없습니다"
+
+#: sunrpc/clnt_perr.c:167
+msgid "RPC: Can't encode arguments"
+msgstr "RPC: 인자를 부호화할 수 없습니다"
+
+#: sunrpc/clnt_perr.c:199
+msgid "RPC: Failed (unspecified error)"
+msgstr "RPC: 실패 (지정되지 않은 오류)"
+
+#: sunrpc/clnt_perr.c:177
+msgid "RPC: Incompatible versions of RPC"
+msgstr "RPC: 호환되지 않는 RPC 버전"
+
+#: sunrpc/clnt_perr.c:195
+msgid "RPC: Port mapper failure"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:185
+msgid "RPC: Procedure unavailable"
+msgstr "RPC: 프로시져 사용 불가능"
+
+#: sunrpc/clnt_perr.c:197
+msgid "RPC: Program not registered"
+msgstr "RPC: 프로그램이 등록되지 않음"
+
+#: sunrpc/clnt_perr.c:181
+msgid "RPC: Program unavailable"
+msgstr "RPC: 프로그램 사용 불가능"
+
+#: sunrpc/clnt_perr.c:183
+msgid "RPC: Program/version mismatch"
+msgstr "RPC: 프로그램/버전 불일치"
+
+#: sunrpc/clnt_perr.c:189
+msgid "RPC: Remote system error"
+msgstr "RPC: 원격 시스템 오류"
+
+#: sunrpc/clnt_perr.c:187
+msgid "RPC: Server can't decode arguments"
+msgstr "RPC: 서버가 인자를 복호화할 수 없습니다"
+
+#: sunrpc/clnt_perr.c:165
+msgid "RPC: Success"
+msgstr "RPC: 성공"
+
+#: sunrpc/clnt_perr.c:175
+msgid "RPC: Timed out"
+msgstr "RPC: 시간 초과"
+
+#: sunrpc/clnt_perr.c:173
+msgid "RPC: Unable to receive"
+msgstr "RPC: 받을 수 없음"
+
+#: sunrpc/clnt_perr.c:171
+msgid "RPC: Unable to send"
+msgstr "RPC: 보낼 수 없음"
+
+#: sunrpc/clnt_perr.c:191
+msgid "RPC: Unknown host"
+msgstr "RPC: 알 수 없는 호스트"
+
+#: sunrpc/clnt_perr.c:193
+msgid "RPC: Unknown protocol"
+msgstr "RPC: 알 수 없는 규약"
+
+#: sysdeps/mach/hurd/errlist.c:40
+msgid "Read-only file system"
+msgstr "읽기전용 파일 시스템"
+
+#: posix/regex.c:955
+msgid "Regular expression too big"
+msgstr "정규식이 너무 큽니다"
+
+#: sysdeps/mach/hurd/errlist.c:92
+msgid "Reserved error 82"
+msgstr "예약된 오류 82"
+
+#: sysdeps/mach/hurd/errlist.c:93
+msgid "Reserved error 83"
+msgstr "예약된 오류 83"
+
+#: sysdeps/mach/hurd/errlist.c:94
+msgid "Reserved error 84"
+msgstr "예약된 오류 84"
+
+#: sysdeps/mach/hurd/errlist.c:95
+msgid "Reserved error 85"
+msgstr "예약된 오류 85"
+
+#: sysdeps/mach/hurd/errlist.c:96
+msgid "Reserved error 86"
+msgstr "예약된 오류 86"
+
+#: sysdeps/mach/hurd/errlist.c:97
+msgid "Reserved error 87"
+msgstr "예약된 오류 87"
+
+#: sysdeps/mach/hurd/errlist.c:98
+msgid "Reserved error 88"
+msgstr "예약된 오류 88"
+
+#: sysdeps/mach/hurd/errlist.c:99
+msgid "Reserved error 89"
+msgstr "예약된 오류 89"
+
+#: sysdeps/mach/hurd/errlist.c:100
+msgid "Reserved error 90"
+msgstr "예약된 오류 90"
+
+#: sysdeps/mach/hurd/errlist.c:101
+msgid "Reserved error 91"
+msgstr "예약된 오류 91"
+
+#: sysdeps/mach/hurd/errlist.c:102
+msgid "Reserved error 92"
+msgstr "예약된 오류 92"
+
+#: sysdeps/mach/hurd/errlist.c:103
+msgid "Reserved error 93"
+msgstr "예약된 오류 93"
+
+#: sysdeps/mach/hurd/errlist.c:104
+msgid "Reserved error 94"
+msgstr "예약된 오류 94"
+
+#: sysdeps/mach/hurd/errlist.c:105
+msgid "Reserved error 95"
+msgstr "예약된 오류 95"
+
+#: sysdeps/mach/hurd/errlist.c:106
+msgid "Reserved error 96"
+msgstr "예약된 오류 96"
+
+#: sysdeps/mach/hurd/errlist.c:107
+msgid "Reserved error 97"
+msgstr "예약된 오류 97"
+
+#: sysdeps/mach/hurd/errlist.c:108
+msgid "Reserved error 98"
+msgstr "예약된 오류 98"
+
+#: sysdeps/mach/hurd/errlist.c:109
+msgid "Reserved error 99"
+msgstr "예약된 오류 99"
+
+#: resolv/herror.c:72
+msgid "Resolver Error 0 (no error)"
+msgstr ""
+
+#: resolv/herror.c:114
+msgid "Resolver internal error"
+msgstr "리솔버 내부 오류"
+
+#: sysdeps/mach/hurd/errlist.c:21
+msgid "Resource deadlock avoided"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:45
+msgid "Resource temporarily unavailable"
+msgstr "자원이 일시적으로 사용 불가능함"
+
+#: i486-linux/siglist.c:19
+msgid "Segmentation fault"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:280
+msgid "Server rejected credential"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:284
+msgid "Server rejected verifier"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:66
+msgid "Socket is already connected"
+msgstr "소켓이 이미 연결되어 있습니다"
+
+#: sysdeps/mach/hurd/errlist.c:67
+msgid "Socket is not connected"
+msgstr "소켓이 연결되어 있지 않습니다"
+
+#: sysdeps/mach/hurd/errlist.c:48
+msgid "Socket operation on non-socket"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:54
+msgid "Socket type not supported"
+msgstr "소켓 타입이 지원되지 않습니다"
+
+#: sysdeps/mach/hurd/errlist.c:63
+msgid "Software caused connection abort"
+msgstr "소프트웨어가 연결 중단을 초래했습니다"
+
+#: sysdeps/mach/hurd/errlist.c:80
+msgid "Stale NFS file handle"
+msgstr ""
+
+#: i486-linux/siglist.c:28
+msgid "Stopped"
+msgstr "중지됨"
+
+#: i486-linux/siglist.c:27
+msgid "Stopped (signal)"
+msgstr "중지됨 (신호)"
+
+#: i486-linux/siglist.c:29
+msgid "Stopped (tty input)"
+msgstr "중지됨 (tty 입력)"
+
+#: i486-linux/siglist.c:30
+msgid "Stopped (tty output)"
+msgstr "중지됨 (tty 출력)"
+
+#: posix/regex.c:940 sysdeps/mach/hurd/errlist.c:10
+msgid "Success"
+msgstr "성공"
+
+#: i486-linux/siglist.c:23
+msgid "Terminated"
+msgstr "종료됨"
+
+#: sysdeps/mach/hurd/errlist.c:36
+msgid "Text file busy"
+msgstr "문서 파일 사용중"
+
+#: sysdeps/mach/hurd/errlist.c:81
+msgid "Too many levels of remote in path"
+msgstr "원격 경로의 단계가 너무 많음"
+
+#: sysdeps/mach/hurd/errlist.c:72
+msgid "Too many levels of symbolic links"
+msgstr "기호 연결의 단계가 너무 많음"
+
+#: sysdeps/mach/hurd/errlist.c:41
+msgid "Too many links"
+msgstr "연결이 너무 많음"
+
+#: sysdeps/mach/hurd/errlist.c:34
+msgid "Too many open files"
+msgstr "열린 파일이 너무 많음"
+
+#: sysdeps/mach/hurd/errlist.c:33
+msgid "Too many open files in system"
+msgstr "시스템에 열린 파일이 너무 많음"
+
+#: sysdeps/mach/hurd/errlist.c:77
+msgid "Too many processes"
+msgstr "프로세스가 너무 많음"
+
+#: sysdeps/mach/hurd/errlist.c:69
+msgid "Too many references: can't splice"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:78
+msgid "Too many users"
+msgstr "사용자가 너무 많습니다"
+
+#: i486-linux/siglist.c:13
+msgid "Trace/breakpoint trap"
+msgstr ""
+
+#: posix/regex.c:945
+msgid "Trailing backslash"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:111
+msgid "Translator died"
+msgstr "번역기가 죽었음"
+
+#: inet/rcmd.c:118
+msgid "Trying %s...\n"
+msgstr "%s 시도중...\n"
+
+#: ../sysdeps/mach/_strerror.c:58 string/../sysdeps/generic/_strerror.c:36
+msgid "Unknown error "
+msgstr "알 수 없는 오류"
+
+#: resolv/herror.c:73
+msgid "Unknown host"
+msgstr "알 수 없는 호스트"
+
+#: resolv/herror.c:117
+msgid "Unknown resolver error"
+msgstr "알 수 없는 리솔버 오류"
+
+#: resolv/herror.c:75
+msgid "Unknown server error"
+msgstr "알 수 없는 서버 오류"
+
+#: string/strsignal.c:40
+#, c-format
+msgid "Unknown signal %d"
+msgstr "알 수 없는 신호 %d"
+
+#: misc/error.c:92
+msgid "Unknown system error"
+msgstr "알 수 없는 시스템 오류"
+
+#: posix/regex.c:948
+msgid "Unmatched ( or \\("
+msgstr "짝이 맞지 않는 ( 또는 \\("
+
+#: posix/regex.c:956
+msgid "Unmatched ) or \\)"
+msgstr "짝이 맞지 않는 ) 또는 \\)"
+
+#: posix/regex.c:947
+msgid "Unmatched [ or [^"
+msgstr "짝이 맞지 않는 [ 또는 [^"
+
+#: posix/regex.c:949
+msgid "Unmatched \\{"
+msgstr "짝이 맞지 않는 \\{"
+
+#: i486-linux/siglist.c:31
+msgid "Urgent I/O condition"
+msgstr "시급한 입출력 상황"
+
+#: i486-linux/siglist.c:18
+msgid "User defined signal 1"
+msgstr "사용자 정의 신호 1"
+
+#: i486-linux/siglist.c:20
+msgid "User defined signal 2"
+msgstr "사용자 신호 신호 2"
+
+#: i486-linux/siglist.c:34
+msgid "Virtual timer expired"
+msgstr "가상 타이머의 시간이 초과됨"
+
+#: i486-linux/siglist.c:36
+msgid "Window changed"
+msgstr "윈도우 변경됨"
+
+#: sysdeps/mach/hurd/errlist.c:113
+msgid "You really blew it this time"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:326
+msgid "array declaration expected"
+msgstr ""
+
+#: sunrpc/auth_unix.c:314
+msgid "auth_none.c - Fatal marshalling problem"
+msgstr ""
+
+#: inet/rcmd.c:327
+msgid "bad .rhosts owner"
+msgstr "잘못된 .rhosts 소유자"
+
+#: malloc/mcheck.c:174
+msgid "block freed twice"
+msgstr "블록이 두번 비워졌음"
+
+#: malloc/mcheck.c:177
+msgid "bogus mcheck_status, library is buggy"
+msgstr "엉터리 mcheck_status, 라이브러리는 버그가 버글버글합니다"
+
+#: sunrpc/pmap_rmt.c:177
+msgid "broadcast: ioctl (get interface configuration)"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:184
+msgid "broadcast: ioctl (get interface flags)"
+msgstr ""
+
+#: sunrpc/svc_udp.c:398
+msgid "cache_set: victim not found"
+msgstr "cache_set: 버릴것을 찾지 못했음"
+
+#: sunrpc/svc_simple.c:64
+msgid "can't reassign procedure number %d\n"
+msgstr "프로시져 번호 %d를 재지정할 수 없습니다\n"
+
+#: sunrpc/clnt_raw.c:106
+msgid "clnt_raw.c - Fatal header serialization error."
+msgstr ""
+
+#: inet/rcmd.c:112
+msgid "connect to address %s: "
+msgstr "주소 %s에 연결: "
+
+#: sunrpc/rpc_scan.c:109
+msgid "constant or identifier expected"
+msgstr ""
+
+#: sunrpc/svc_simple.c:70
+msgid "couldn't create an rpc server\n"
+msgstr "rpc 서버를 만들 수 없습니다\n"
+
+#: sunrpc/svc_simple.c:77
+msgid "couldn't register prog %d vers %d\n"
+msgstr "프로그램 %d 버전 %d를 등록할 수 없습니다\n"
+
+#: sunrpc/rpc_parse.c:77
+msgid "definition keyword expected"
+msgstr ""
+
+#: sunrpc/svc_udp.c:344
+msgid "enablecache: cache already enabled"
+msgstr "enablecache: 캐쉬가 이미 활성화되어 있음"
+
+#: sunrpc/svc_udp.c:349
+msgid "enablecache: could not allocate cache"
+msgstr "enablecache: 캐쉬를 할당할 수 없습니다"
+
+#: sunrpc/svc_udp.c:356
+msgid "enablecache: could not allocate cache data"
+msgstr "enablecache: 캐쉬 자료를 할당할 수 없습니다"
+
+#: sunrpc/svc_udp.c:362
+msgid "enablecache: could not allocate cache fifo"
+msgstr "enablecache: 캐쉬 fifo를 할당할 수 없습니다"
+
+#: sunrpc/rpc_util.c:300
+msgid "expected '%s'"
+msgstr ""
+
+#: sunrpc/rpc_util.c:312
+msgid "expected '%s' or '%s'"
+msgstr ""
+
+#: sunrpc/rpc_util.c:325
+msgid "expected '%s', '%s' or '%s'"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:384
+msgid "expected type specifier"
+msgstr ""
+
+#: sunrpc/get_myaddr.c:73
+msgid "get_myaddress: ioctl (get interface configuration)"
+msgstr ""
+
+#: sunrpc/rpc_scan.c:281
+msgid "illegal character in file: "
+msgstr "파일에 잘못된 문자가 있음: "
+
+#: sunrpc/rpc_parse.c:146
+msgid "illegal result type"
+msgstr "잘못된 결과 타입"
+
+#: malloc/mcheck.c:168
+msgid "memory clobbered before allocated block"
+msgstr ""
+
+#: malloc/mcheck.c:171
+msgid "memory clobbered past end of allocated block"
+msgstr ""
+
+#: malloc/mcheck.c:165
+msgid "memory is consistent, library is buggy"
+msgstr "메모리는 견고하지만, 라이브러리는 버그가 버글버글합니다"
+
+#: sunrpc/svc_simple.c:140
+msgid "never registered prog %d\n"
+msgstr "결코 등록되지 않은 프로그램 %d\n"
+
+#: rpc_parse.c:313 sunrpc/rpc_parse.c:305
+msgid "no array-of-pointer declarations -- use typedef"
+msgstr "포인터 배열 선언이 없습니다 -- typedef을 사용하세요"
+
+#: rpc_scan.c:464 sunrpc/rpc_scan.c:456
+msgid "preprocessor error"
+msgstr "전처리기 오류"
+
+#: inet/rcmd.c:154
+msgid "rcmd: select (setting up stderr): %s\n"
+msgstr "rcmd: 선택 (표준오류 설정): %s\n"
+
+#: inet/rcmd.c:86
+msgid "rcmd: socket: All ports in use\n"
+msgstr "rcmd: socket: 모든 포트가 사용중\n"
+
+#: inet/rcmd.c:141
+msgid "rcmd: write (setting up stderr): %s\n"
+msgstr "rcmd: 쓰기 (표준오류 설정): %s\n"
+
+#: sunrpc/svc_simple.c:83
+msgid "registerrpc: out of memory\n"
+msgstr "registerrpc: 메모리 부족"
+
+#: inet/rcmd.c:158
+msgid "select: protocol failure in circuit setup\n"
+msgstr ""
+
+#: inet/rcmd.c:176
+msgid "socket: protocol failure in circuit setup.\n"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:199 svc_tcp.c:204
+msgid "svc_tcp: makefd_xprt: out of memory\n"
+msgstr "svc_tcp: makefc_xprt: 메모리 부족"
+
+#: sunrpc/svc_tcp.c:147
+msgid "svctcp_.c - cannot getsockname or listen"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:134
+msgid "svctcp_.c - udp socket creation problem"
+msgstr "svctcp_.c - udp 소켓 생성 문제"
+
+#: sunrpc/svc_tcp.c:154 svc_tcp.c:161
+msgid "svctcp_create: out of memory\n"
+msgstr "svctcp_create: 메모리 부족\n"
+
+#: sunrpc/svc_udp.c:119
+msgid "svcudp_create - cannot getsockname"
+msgstr "svcudp_create - getsockname 불가능"
+
+#: sunrpc/svc_udp.c:107
+msgid "svcudp_create: socket creation problem"
+msgstr "svcudp_create: 소켓 생성 문제"
+
+#: sunrpc/rpc_util.c:285
+msgid "too many files!\n"
+msgstr "파일이 너무 많습니다!\n"
+
+#: sunrpc/svc_simple.c:132
+msgid "trouble replying to prog %d\n"
+msgstr ""
+
+#: i486-linux/siglist.c:8 i486-linux/siglist.c:24 i486-linux/siglist.c:39
+msgid "unknown signal"
+msgstr "알 수 없는 신호"
+
+#: sunrpc/rpc_scan.c:319
+msgid "unterminated string constant"
+msgstr "종료되지 않은 문자열 상수"
+
+#: sunrpc/rpc_main.c:75
+msgid "usage: %s infile\n"
+msgstr "사용법: %s 입력파일\n"
+
+#: sunrpc/rpc_parse.c:330
+msgid "variable-length array declaration expected"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:370
+msgid "voids allowed only inside union and program definitions"
+msgstr "void는 오직 공용체와 프로그램 정의 내에서만 허용됩니다"
+

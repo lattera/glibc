@@ -1,0 +1,85 @@
+# Makefile for installing libc message catalogs.
+
+# Copyright (C) 1996 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License
+# as published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If
+# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+# Cambridge, MA 02139, USA.
+
+subdir := po
+
+# List of languages for which we have message catalogs of translations.
+ALL_LINGUAS := $(basename $(wildcard *.po))
+
+# You can override this in configparms or the make command line to limit
+# the languages which get installed.
+ifdef LINGUAS
+LINGUAS := $(filter $(addsuffix %,$(LINGUAS)),$(ALL_LINGUAS))
+else
+LINGUAS = $(ALL_LINGUAS)
+endif
+
+# Text domain name to install under; must match ../locale/SYS_libc.c string.
+domainname = SYS_GNU_libc-$(version)
+
+# Get $(version) defined.
+include ../Makeconfig
+-include $(common-objpfx)version.mk
+
+# Pattern for where message catalog object for language % gets installed.
+mo-installed = $(localedir)/%/LC_MESSAGES/$(domainname).mo
+
+# Files to install: a $(domainname).mo file for each language.
+install-others = $(LINGUAS:%=$(mo-installed))
+
+# Files to distribute: all the source and compiled binary translation files.
+distribute = $(ALL_LINGUAS:=.po) $(ALL_LINGUAS:=.mo)
+
+
+include ../Makerules
+
+
+.SUFFIXES: .mo .po .pot
+
+# Compile the binary message object files from the portable object source
+# files of translations for each language.
+%.mo: %.po
+	$(MSGFMT) -o $@ $<
+
+# Install the message object files as SYS_libc.po in the language directory.
+$(mo-installed): %.mo; $(do-install)
+
+.PHONY: linguas linguas.mo
+linguas: $(ALL_LINGUAS:=.po)
+linguas.mo: $(ALL_LINGUAS:=.mo)
+
+# Copy the PO files from the translation coordinator's repository.
+
+podir = /com/share/ftp/gnu/po/maint/glibc
+
+pofiles := $(wildcard $(podir)/*.po)
+
+ifneq (,$(pofiles))
+
+%.po: $(podir)/%.po
+	cp -f $< $@
+	chmod 444 $@
+
+linguas: $(pofiles:$(podir)/%=%)
+	test ! -d CVS || cvs commit -m'Copied from $(podir)' $^
+linguas.mo: $(pofiles:$(podir)/%.po=%.mo)
+	test ! -d CVS || cvs commit -m'Compiled translations' $^
+
+endif

@@ -1,3 +1,20 @@
+Tue May  7 23:18:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* po/Makefile: New file.
+	* Makefile (subdirs): Add po.
+
+	* configure.in: Check for msgfmt.
+	* config.make.in (MSGFMT): New variable.
+
+Sun May  5 23:49:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/Makefile (routines): Add swapoff.
+
+	* sysdeps/unix/sysv/linux/Dist: Add sys/quota.h.
+
+	* sysdeps/unix/sysv/linux/sys/quota.h: New file.  Wrapper around
+	kernel header file.
+
 Tue May  7 19:00:01 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* string/argz-extract.c: Remove const from decl.

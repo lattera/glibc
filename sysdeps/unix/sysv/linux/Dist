@@ -1,4 +1,6 @@
 sys/acct.h
+sys/acct.h
+sys/quota.h
 sys/socketcall.h
 sys/sysctl.h
 sys/timex.h

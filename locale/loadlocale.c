@@ -1,4 +1,5 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Functions to read locale data files.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
