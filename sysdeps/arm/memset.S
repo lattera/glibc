@@ -22,47 +22,46 @@
 /* void *memset (dstpp, c, len) */
 
 ENTRY(memset)
-	mov	a4, a1
-	cmp	a3, $8		@ at least 8 bytes to do?
-	blt	2f
-	orr	a2, a2, a2, lsl $8
-	orr	a2, a2, a2, lsl $16
+	mov	r3, r0
+	cmp	r2, #8
+	bcc	2f		@ less than 8 bytes to move
+
 1:
-	tst	a4, $3		@ aligned yet?
-	strneb	a2, [a4], $1
-	subne	a3, a3, $1
+	tst	r3, #3		@ aligned yet?
+	strneb	r1, [r3], #1
+	subne	r2, r2, #1
 	bne	1b
-	mov	ip, a2
+
+	orr	r1, r1, r1, lsl $8
+	orr	r1, r1, r1, lsl $16
+
 1:
-	cmp	a3, $8		@ 8 bytes still to do?
-	blt	2f
-	stmia	a4!, {a2, ip}
-	sub	a3, a3, $8
-	cmp	a3, $8		@ 8 bytes still to do?
-	blt	2f
-	stmia	a4!, {a2, ip}
-	sub	a3, a3, $8
-	cmp	a3, $8		@ 8 bytes still to do?
-	blt	2f
-	stmia	a4!, {a2, ip}
-	sub	a3, a3, $8
-	cmp	a3, $8		@ 8 bytes still to do?
-	stmgeia	a4!, {a2, ip}
-	subge	a3, a3, $8
-	bge	1b
+	subs	r2, r2, #8
+	strcs	r1, [r3], #4	@ store up to 32 bytes per loop iteration
+	strcs	r1, [r3], #4
+	subcss	r2, r2, #8
+	strcs	r1, [r3], #4
+	strcs	r1, [r3], #4
+	subcss	r2, r2, #8
+	strcs	r1, [r3], #4
+	strcs	r1, [r3], #4
+	subcss	r2, r2, #8
+	strcs	r1, [r3], #4
+	strcs	r1, [r3], #4
+	bcs	1b
+
+	and	r2, r2, #7
 2:
-	movs	a3, a3		@ anything left?
-	RETINSTR(moveq,pc,lr)	@ nope
-	rsb	a3, a3, $7
-	add	pc, pc, a3, lsl $2
-	mov	r0, r0
-	strb	a2, [a4], $1
-	strb	a2, [a4], $1
-	strb	a2, [a4], $1
-	strb	a2, [a4], $1
-	strb	a2, [a4], $1
-	strb	a2, [a4], $1
-	strb	a2, [a4], $1
-	RETINSTR(mov,pc,lr)
+	subs	r2, r2, #1	@ store up to 4 bytes per loop iteration
+	strcsb	r1, [r3], #1
+	subcss	r2, r2, #1
+	strcsb	r1, [r3], #1
+	subcss	r2, r2, #1
+	strcsb	r1, [r3], #1
+	subcss	r2, r2, #1
+	strcsb	r1, [r3], #1
+	bcs	2b
+	
+	DO_RET(lr)
 END(memset)
 libc_hidden_builtin_def (memset)
