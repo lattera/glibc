@@ -1,11 +1,17 @@
 1999-11-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* scripts/versions.awk: Don't expect to read predecessor versions,
+	compute them.
+	* Versions.def: Remove predecessors.  They get now computed.
+
+1999-11-14  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/execve.c: Add __syscall_execve prototype.
 	* sysdeps/unix/sysv/linux/setrlimit.c: Add __syscall_setrlimit
 	prototype.
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add setrlimit.
 	* sysdeps/powerpc/stackinfo.h: New file.
-	Patches by Franz Sirl <Franz.Sirl@lauterback.com>.
+	Patches by Franz Sirl <Franz.Sirl@lauterbach.com>.
 
 1999-11-13  Roland McGrath  <roland@baalperazim.frob.com>
 

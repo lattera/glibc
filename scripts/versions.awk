@@ -17,12 +17,6 @@ BEGIN {
       curlib = $1;
       while (getline < defsfile && ! /^}/) {
 	versions[$1] = 1;
-	if (NF > 1) {
-	  derived[curlib, $1] = " " $2;
-	  for (n = 3; n <= NF; ++n) {
-	    derived[curlib, $1] = derived[curlib, $1] ", " $n;
-	  }
-	}
       }
     }
   }
@@ -65,12 +59,12 @@ BEGIN {
 }
 
 
-function closeversion(name) {
+function closeversion(name, oldname) {
   if (firstinfile) {
     printf("  local:\n    *;\n") > outfile;
     firstinfile = 0;
   }
-  printf("}%s;\n", derived[oldlib, name]) > outfile;
+  printf("}%s;\n", oldname) > outfile;
 }
 
 function close_and_move(name, real_name) {
@@ -87,7 +81,7 @@ END {
   while(getline < tmpfile) {
     if ($1 != oldlib) {
       if (oldlib != "") {
-	closeversion(oldver);
+	closeversion(oldver, veryoldver);
 	oldver = "";
 	close_and_move(outfile, real_outfile);
       }
@@ -95,11 +89,13 @@ END {
       real_outfile = buildroot oldlib ".map";
       outfile = real_outfile "T";
       firstinfile = 1;
+      veryoldver = "";
       printf(" %s.map", oldlib);
     }
     if ($2 != oldver) {
       if (oldver != "") {
-	closeversion(oldver);
+	closeversion(oldver, veryoldver);
+	veryoldver = oldver;
       }
       printf("%s {\n  global:\n", $2) > outfile;
       oldver = $2;
@@ -111,7 +107,7 @@ END {
     printf("\n") > outfile;
   }
   printf("\n");
-  closeversion(oldver);
+  closeversion(oldver, veryoldver);
   close_and_move(outfile, real_outfile);
   system("rm -f " tmpfile);
 }

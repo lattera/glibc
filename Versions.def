@@ -3,40 +3,40 @@ libBrokenLocale {
 }
 libc {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
-  GLIBC_2.1.1 GLIBC_2.1
-  GLIBC_2.1.2 GLIBC_2.1.1
-  GLIBC_2.1.3 GLIBC_2.1.2
-  GLIBC_2.2 GLIBC_2.1.3
+  GLIBC_2.1
+  GLIBC_2.1.1
+  GLIBC_2.1.2
+  GLIBC_2.1.3
+  GLIBC_2.2
 }
 libcrypt {
   GLIBC_2.0
 }
 libdb {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
-  GLIBC_2.2 GLIBC_2.1
+  GLIBC_2.1
+  GLIBC_2.2
 }
 libdl {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
+  GLIBC_2.1
 }
 libhurduser {
   GLIBC_2.0
 }
 libm {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
-  GLIBC_2.1.3 GLIBC_2.1
-  GLIBC_2.2 GLIBC_2.1.3
+  GLIBC_2.1
+  GLIBC_2.1.3
+  GLIBC_2.2
 }
 libmachuser {
   GLIBC_2.0
 }
 libnsl {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
-  GLIBC_2.2 GLIBC_2.1
+  GLIBC_2.1
+  GLIBC_2.2
 }
 libnss_compat {
   GLIBC_2.0
@@ -49,11 +49,11 @@ libnss_dns {
 }
 libnss_files {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
+  GLIBC_2.1
 }
 libnss_hesiod {
   GLIBC_2.1
-  GLIBC_2.2 GLIBC_2.1
+  GLIBC_2.2
 }
 libnss_nis {
   GLIBC_2.0
@@ -63,9 +63,9 @@ libnss_nisplus {
 }
 libpthread {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
-  GLIBC_2.1.1 GLIBC_2.1
-  GLIBC_2.1.2 GLIBC_2.1.1
+  GLIBC_2.1
+  GLIBC_2.1.1
+  GLIBC_2.1.2
 }
 libresolv {
   GLIBC_2.0
@@ -81,8 +81,8 @@ libdb1 {
 }
 ld.so {
   GLIBC_2.0
-  GLIBC_2.1 GLIBC_2.0
-  GLIBC_2.1.1 GLIBC_2.1
+  GLIBC_2.1
+  GLIBC_2.1.1
 }
 libthread_db {
   GLIBC_2.1.3
