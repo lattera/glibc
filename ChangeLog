@@ -1,5 +1,8 @@
 2000-08-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/getdents.c: Remove special d_ino
+	handling.  Patch by Richard Henderson <rth@twiddle.net>.
+
 	* nss/Versions: Remove libnss_db information.
 
 2000-08-16  Jakub Jelinek  <jakub@redhat.com>
