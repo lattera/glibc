@@ -66,9 +66,9 @@ atof				atof
 atoi				atoi
 atol				atol
 atoll				atoll
-			      >	authdes_create			NEW: NIS+
-			      >	authdes_getucred		NEW: NIS+
-			      >	authdes_pk_create		NEW: NIS+
+			      >	authdes_create			NEW: SecureRPC
+			      >	authdes_getucred		NEW: SecureRPC
+			      >	authdes_pk_create		NEW: SecureRPC
 authnone_create			authnone_create
 authunix_create			authunix_create
 authunix_create_default		authunix_create_default
@@ -119,7 +119,7 @@ canonicalize_file_name		canonicalize_file_name
 catclose			catclose
 catgets				catgets
 catopen				catopen
-			      >	cbc_crypt			NEW: NIS+
+			      >	cbc_crypt			NEW: SecureRPC
 cbrt				cbrt
 cbrtf				cbrtf
 cbrtl				cbrtl
@@ -227,7 +227,7 @@ daemon				daemon
 daylight			daylight
 dcgettext			dcgettext
 delete_module			delete_module
-			      >	des_setparity			NEW: NIS+
+			      >	des_setparity			NEW: SecureRPC
 dgettext			dgettext
 difftime			difftime
 dirfd				dirfd
@@ -242,7 +242,7 @@ dreml				dreml
 dup				dup
 dup2				dup2
 dysize				dysize
-			      >	ecb_crypt			NEW: NIS+
+			      >	ecb_crypt			NEW: SecureRPC
 ecvt				ecvt
 ecvt_r				ecvt_r
 endaliasent			endaliasent
@@ -514,7 +514,7 @@ getnetent			getnetent
 getnetent_r			getnetent_r
 getnetgrent			getnetgrent
 getnetgrent_r			getnetgrent_r
-			      >	getnetname			NEW: IPv6
+			      >	getnetname			NEW: SecureRPC
 getopt				getopt
 getopt_long			getopt_long
 getopt_long_only		getopt_long_only
@@ -609,7 +609,7 @@ hcreate_r			hcreate_r
 hdestroy			hdestroy
 hdestroy_r			hdestroy_r
 herror				herror
-			      >	host2netname			NEW: IPv6
+			      >	host2netname			NEW: SecureRPC
 hsearch				hsearch
 hsearch_r			hsearch_r
 hstrerror			hstrerror
@@ -699,15 +699,15 @@ jnf				jnf
 jnl				jnl
 jrand48				jrand48
 jrand48_r			jrand48_r
-			      >	key_decryptsession		NEW: NIS+
-			      >	key_decryptsession_pk		NEW: NIS+
-			      >	key_encryptsession		NEW: NIS+
-			      >	key_encryptsession_pk		NEW: NIS+
-			      >	key_gendes			NEW: NIS+
-			      >	key_get_conv			NEW: NIS+
-			      >	key_secretkey_is_set		NEW: NIS+
-			      >	key_setnet			NEW: NIS+
-			      >	key_setsecret			NEW: NIS+
+			      >	key_decryptsession		NEW: SecureRPC
+			      >	key_decryptsession_pk		NEW: SecureRPC
+			      >	key_encryptsession		NEW: SecureRPC
+			      >	key_encryptsession_pk		NEW: SecureRPC
+			      >	key_gendes			NEW: SecureRPC
+			      >	key_get_conv			NEW: SecureRPC
+			      >	key_secretkey_is_set		NEW: SecureRPC
+			      >	key_setnet			NEW: SecureRPC
+			      >	key_setsecret			NEW: SecureRPC
 kill				kill
 killpg				killpg
 klogctl				klogctl
@@ -875,7 +875,7 @@ opterr				opterr
 optind				optind
 optopt				optopt
 parse_printf_format		parse_printf_format
-			      >	passwd2des			NEW: NIS+
+			      >	passwd2des			NEW: SecureRPC
 pathconf			pathconf
 pause				pause
 pclose				pclose
@@ -1249,7 +1249,7 @@ svc_register			svc_register
 svc_run				svc_run
 svc_sendreply			svc_sendreply
 svc_unregister			svc_unregister
-			      >	svcauthdes_stats		NEW: NIS+
+			      >	svcauthdes_stats		NEW: SecureRPC
 svcerr_auth			svcerr_auth
 svcerr_decode			svcerr_decode
 svcerr_noproc			svcerr_noproc
@@ -1348,7 +1348,7 @@ unsetenv			unsetenv
 updwtmp				updwtmp
 			      >	updwtmpx			NEW: utmpx
 uselib				uselib
-			      >	user2netname			NEW: IPv6
+			      >	user2netname			NEW: SecureRPC
 usleep				usleep
 ustat				ustat
 utime				utime
@@ -1438,33 +1438,33 @@ wmemset				wmemset
 write				write
 write_profiling		      <					REMOVED
 writev				writev
-			      >	xdecrypt			NEW: NIS+
+			      >	xdecrypt			NEW: SecureRPC
 xdr_accepted_reply		xdr_accepted_reply
 xdr_array			xdr_array
-			      >	xdr_authdes_cred		NEW: NIS+
-			      >	xdr_authdes_verf		NEW: NIS+
+			      >	xdr_authdes_cred		NEW: SecureRPC
+			      >	xdr_authdes_verf		NEW: SecureRPC
 xdr_authunix_parms		xdr_authunix_parms
 xdr_bool			xdr_bool
 xdr_bytes			xdr_bytes
 xdr_callhdr			xdr_callhdr
 xdr_callmsg			xdr_callmsg
 xdr_char			xdr_char
-			      >	xdr_cryptkeyarg			NEW: NIS+
-			      >	xdr_cryptkeyarg2		NEW: NIS+
-			      >	xdr_cryptkeyres			NEW: NIS+
+			      >	xdr_cryptkeyarg			NEW: SecureRPC
+			      >	xdr_cryptkeyarg2		NEW: SecureRPC
+			      >	xdr_cryptkeyres			NEW: SecureRPC
 xdr_des_block			xdr_des_block
 xdr_double			xdr_double
 xdr_enum			xdr_enum
 xdr_float			xdr_float
 xdr_free			xdr_free
-			      >	xdr_getcredres			NEW: NIS+
+			      >	xdr_getcredres			NEW: SecureRPC
 xdr_int				xdr_int
-			      >	xdr_key_netstarg		NEW: NIS+
-			      >	xdr_key_netstres		NEW: NIS+
-			      >	xdr_keybuf			NEW: NIS+
-			      >	xdr_keystatus			NEW: NIS+
+			      >	xdr_key_netstarg		NEW: SecureRPC
+			      >	xdr_key_netstres		NEW: SecureRPC
+			      >	xdr_keybuf			NEW: SecureRPC
+			      >	xdr_keystatus			NEW: SecureRPC
 xdr_long			xdr_long
-			      >	xdr_netnamestr			NEW: NIS+
+			      >	xdr_netnamestr			NEW: SecureRPC
 xdr_netobj			xdr_netobj
 xdr_opaque			xdr_opaque
 xdr_opaque_auth			xdr_opaque_auth
@@ -1477,7 +1477,7 @@ xdr_replymsg			xdr_replymsg
 xdr_rmtcall_args		xdr_rmtcall_args
 xdr_rmtcallres			xdr_rmtcallres
 xdr_short			xdr_short
-			      >	xdr_sizeof			NEW: NIS+
+			      >	xdr_sizeof			NEW: SecureRPC
 xdr_string			xdr_string
 xdr_u_char			xdr_u_char
 xdr_u_int			xdr_u_int
@@ -1494,7 +1494,7 @@ xdrrec_endofrecord		xdrrec_endofrecord
 xdrrec_eof			xdrrec_eof
 xdrrec_skiprecord		xdrrec_skiprecord
 xdrstdio_create			xdrstdio_create
-			      >	xencrypt			NEW: NIS+
+			      >	xencrypt			NEW: SecureRPC
 xprt_register			xprt_register
 xprt_unregister			xprt_unregister
 y0				y0
