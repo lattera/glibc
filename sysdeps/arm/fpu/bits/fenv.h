@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #endif
 
 /* Define bits representing exceptions in the FPU status word.  */
-enum 
+enum
   {
     FE_INVALID = 1,
 #define FE_INVALID FE_INVALID
@@ -34,7 +34,7 @@ enum
   };
 
 /* Amount to shift by to convert an exception to a mask bit.  */
-#define FE_EXCEPT_SHIFT		16
+#define FE_EXCEPT_SHIFT	16
 
 /* All supported exceptions.  */
 #define FE_ALL_EXCEPT	\
@@ -45,12 +45,12 @@ enum
 #define FE_TONEAREST	0
 
 /* Type representing exception flags. */
-typedef unsigned long fexcept_t;
+typedef unsigned long int fexcept_t;
 
 /* Type representing floating-point environment.  */
 typedef struct
   {
-    unsigned long cw;
+    unsigned long int __cw;
   }
 fenv_t;
 
