@@ -1,3 +1,8 @@
+2001-10-28  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdselect.c (_hurd_select): Check SELECT_RETURNED bit when
+	packing results for a `poll' call.
+
 2001-10-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/fnmatch_loop.c: Recognize - at end of bracket expression
