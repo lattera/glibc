@@ -44,7 +44,8 @@
    in the GLIBC_2.0 version and obsoleted in the GLIBC_2.2 version.  */
 
 # define SHLIB_COMPAT(lib, introduced, obsoleted) \
-  (ABI_##lib##_##introduced < ABI_##lib##_##obsoleted)
+  (!(ABI_##lib##_##obsoleted - 0) \
+   || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
 
 /* That header also defines symbols like `VERSION_libm_GLIBC_2_1' to
    the version set name to use for e.g. symbols first introduced into
