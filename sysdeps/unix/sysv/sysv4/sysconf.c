@@ -1,5 +1,5 @@
 /* Copyright (C) 1993 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@cygnus.com).
+   Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -66,11 +66,7 @@ DEFUN(__sysconf, (name), int name)
       return __sysconfig (_CONFIG_OPEN_FILES);
 
     case _SC_TZNAME_MAX:
-#ifdef TZNAME_MAX
-      return __tzname_max > TZNAME_MAX ? __tzname_max : TZNAME_MAX;
-#else
-      return __tzname_max;
-#endif
+      return __tzname_max ();
 
     case _SC_JOB_CONTROL:
 #ifdef	_POSIX_JOB_CONTROL
