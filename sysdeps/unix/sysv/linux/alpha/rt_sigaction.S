@@ -37,7 +37,8 @@ ENTRY(__syscall_rt_sigaction)
 	jsr	AT, (AT), _mcount
 	.set at
 #endif
-	.prologue 1
+	/* Indicate non-standard use of our PV.  */
+	.prologue 2
 
 	beq	a1, 0f
 	ldl	t0, 8(a1)				# sa_flags
@@ -79,6 +80,7 @@ rt_sigreturn:
 #else
 ENTRY(__syscall_rt_sigaction)
 	ldgp $29,0($27)
+	.prologue 1
 	ldi $0,ENOSYS
 	jmp __syscall_error
 END(__syscall_rt_sigaction)
