@@ -1,3 +1,12 @@
+2002-12-04  Roland McGrath  <roland@redhat.com>
+
+	* forward.c (pthread_self): Use FORWARD3 macro to correct return type.
+
+	* sysdeps/i386/td_ta_map_lwp2thr.c: Moved from ../nptl_db.
+	* sysdeps/generic/td_ta_map_lwp2thr.c: New file.
+
+	* pthread_create.c (start_thread): Add missing & on __nptl_last_event.
+
 2002-12-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Make pthread_t

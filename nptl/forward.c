@@ -139,7 +139,7 @@ FORWARD (pthread_mutex_lock, (pthread_mutex_t *mutex), (mutex), 0);
 FORWARD (pthread_mutex_unlock, (pthread_mutex_t *mutex), (mutex), 0);
 
 
-FORWARD (pthread_self, (void), (), 0);
+FORWARD3 (pthread_self, pthread_t, (void), (), return 0, GLIBC_2_0);
 
 
 FORWARD (pthread_setcancelstate, (int state, int *oldstate), (state, oldstate),
