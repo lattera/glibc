@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@
 #include <bits/libc-lock.h>
 #include <ldsodefs.h>
 #include <bp-sym.h>
+#include <gnu/lib-names.h>
 
 #include <dl-dst.h>
 
@@ -66,7 +67,10 @@ struct dl_open_args
 {
   const char *file;
   int mode;
-  const void *caller;
+  /* This is the caller of the dlopen() function.  */
+  const void *caller_dlopen;
+  /* This is the caller if _dl_open().  */
+  const void *caller_dl_open;
   struct link_map *map;
 };
 
@@ -152,6 +156,52 @@ add_to_global (struct link_map *new)
 }
 
 
+#ifdef SHARED
+static int
+internal_function
+check_libc_caller (const void *caller)
+{
+  static const char expected1[] = LIBC_SO;
+  static const char expected2[] = LIBDL_SO;
+
+  /* If we already know the address ranges, just test.  */
+  static const void *expected1_from;
+  static const void *expected1_to;
+  static const void *expected2_from;
+  static const void *expected2_to;
+
+  if (expected1_from == NULL)
+    {
+      /* The only other DSO which is allowed to call these functions is
+	 libdl.  Find the address range containing the caller.  */
+      struct link_map *l;
+
+      for (l = GL(dl_loaded); l != NULL; l = l->l_next)
+	if (_dl_name_match_p (expected1, l))
+	  {
+	    expected1_from = (const void *) l->l_map_start;
+	    expected1_to = (const void *) l->l_map_end;
+	  }
+	else if (_dl_name_match_p (expected2, l))
+	  {
+	    expected2_from = (const void *) l->l_map_start;
+	    expected2_to = (const void *) l->l_map_end;
+	  }
+
+      assert (expected1_from != NULL);
+    }
+
+  /* When there would be more than two expected caller we could use an
+     array for the values but for now this is cheaper.  */
+  if ((caller >= expected1_from && caller < expected1_to)
+      || (caller >= expected2_from && caller < expected2_to))
+    return 0;
+
+  return 1;
+}
+#endif
+
+
 static void
 dl_open_worker (void *a)
 {
@@ -166,11 +216,17 @@ dl_open_worker (void *a)
   bool any_tls;
 #endif
 
+#ifdef SHARED
+  /* Check whether _dl_open() has been called from a valid DSO.  */
+  if (check_libc_caller (args->caller_dl_open) != 0)
+    _dl_signal_error (0, "dlopen", NULL, N_("invalid caller"));
+#endif
+
   /* Maybe we have to expand a DST.  */
   dst = strchr (file, '$');
   if (__builtin_expect (dst != NULL, 0))
     {
-      const void *caller = args->caller;
+      const void *caller_dlopen = args->caller_dlopen;
       size_t len = strlen (file);
       size_t required;
       struct link_map *call_map;
@@ -185,8 +241,8 @@ dl_open_worker (void *a)
       /* We have to find out from which object the caller is calling.  */
       call_map = NULL;
       for (l = GL(dl_loaded); l; l = l->l_next)
-	if (caller >= (const void *) l->l_map_start
-	    && caller < (const void *) l->l_map_end)
+	if (caller_dlopen >= (const void *) l->l_map_start
+	    && caller_dlopen < (const void *) l->l_map_end)
 	  {
 	    /* There must be exactly one DSO for the range of the virtual
 	       memory.  Otherwise something is really broken.  */
@@ -484,7 +540,7 @@ dl_open_worker (void *a)
 
 void *
 internal_function
-_dl_open (const char *file, int mode, const void *caller)
+_dl_open (const char *file, int mode, const void *caller_dlopen)
 {
   struct dl_open_args args;
   const char *objname;
@@ -500,7 +556,8 @@ _dl_open (const char *file, int mode, const void *caller)
 
   args.file = file;
   args.mode = mode;
-  args.caller = caller;
+  args.caller_dlopen = caller_dlopen;
+  args.caller_dl_open = RETURN_ADDRESS (0);
   args.map = NULL;
   errcode = _dl_catch_error (&objname, &errstring, dl_open_worker, &args);
 
