@@ -1,3 +1,15 @@
+1999-08-09  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/unix/sysv/linux/arm/sys/user.h: Added members
+	'unsigned char ftype[8]', and 'unsigned int init_flag' to
+	struct user_fp.  Tnese were added in version 2.2.12 of the
+	ARM Linux kernel.
+	* sysdeps/unix/sysv/linux/arm/sys/elf.h: New file.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: New file.
+	The generic procfs.h included <asm/elf.h>.  This causes
+	structure redefinition errors when <sys/user.h> and <sys/procfs.h>
+	are included in the same source file.  Found when building GDB.
+
 1999-09-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/langinfo.h: Remove byte-order dependent names.
