@@ -111,8 +111,19 @@ $(VAR_DB)/shadow.db: /etc/shadow
 		 /^[ \t]*#/ { next } \
 		 { printf "0%u ", cnt++; print } \
 		 /^[^#]/ { printf ".%s ", $$1; print }' $^ | \
-	$(MAKEDB) -o $@ -
+	(umask 077 && $(MAKEDB) -o $@ -)
 	@echo "done."
+	@if chgrp shadow $@ 2>/dev/null; then \
+	  chmod g+r $@; \
+	else \
+	  chown 0; chgrp 0; chmod 600; \
+	  echo; \
+	  echo "Warning: The shadow password database $@"; \
+	  echo "has been set to be readable only by root.  You may want"; \
+	  echo "to make it readable by the \`shadow' group depending"; \
+	  echo "on your configuration."; \
+	  echo; \
+	fi
 
 $(VAR_DB)/netgroup.db: /etc/netgroup
 	@echo -n "$(patsubst %.db,%,$(@F))... "

@@ -1,6 +1,18 @@
+1998-12-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c: Threads now send __pthread_sig_cancel on termination.
+	Change clone call and signal masks.
+	* thread.c (pthread_handle_sigrestart): Remove special code for
+	manager.
+	(pthread_handle_sigcancel): In manager thread call
+	__pthread_manager_sighandler.
+	* sysdeps/i386/pt-machine.h (__compare_and_swap): Add memory clobber.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+	Patches by Xavier Leroy.
+
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
-	* spinlock.c (__pthread_unlock): Don"t crash if called for an
+	* spinlock.c (__pthread_unlock): Don't crash if called for an
 	untaken mutex.  Reported by Ruslan V. Brushkoff <rus@Snif.Te.Net.UA>.
 
 	* Examples/ex6.c: Unbuffer stdout and reduce sleep time to reduce

@@ -1,3 +1,11 @@
+1998-12-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+ 
+	* Makefile (test-input): Add hr_HR.ISO-8859-2. 
+	(test-input-data): New variable. 
+	(distribute): Use it. 
+	(do-collate-test): Use it. 
+	* hr_HR.in: New file. 
+ 
 1998-12-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/IBM866: New file.

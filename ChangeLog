@@ -1,5 +1,8 @@
 1998-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/db-Makefile (shadow.db): Create file with correct protections.
+	Based on a patch by Joel Klecker <espy@debian.org>.
+
 	* inet/gethstbynm_r.c: Remove NEED__RES definition since we do this
 	anyway for digits_dots.c.
 	* nss/getXXbyYY.c: Initialize _res before using digits_dots.c
