@@ -1,3 +1,10 @@
+1999-06-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/memchr.S: New file.
+	* sysdeps/m68k/rawmemchr.S: New file.
+	* sysdeps/m68k/strchr.S: New file.
+	* sysdeps/m68k/strchrnul.S: New file.
+
 1999-06-13  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/powerpc/atomicity.h (exchange_and_add): Remove `volatile';
