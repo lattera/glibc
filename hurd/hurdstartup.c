@@ -27,7 +27,7 @@
 #include <hurd/threadvar.h>
 #include <unistd.h>
 #include <elf.h>
-#include "set-hooks.h"
+#include <set-hooks.h>
 #include "hurdstartup.h"
 #include <argz.h>
 
