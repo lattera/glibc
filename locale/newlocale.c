@@ -1,5 +1,5 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -41,7 +41,7 @@ __locale_t
 __newlocale (int category_mask, const char *locale, __locale_t base)
 {
   /* Intermediate memory for result.  */
-  const char *newnames[LC_ALL];
+  const char *newnames[__LC_LAST];
   struct __locale_struct result;
   __locale_t result_ptr;
   char *locale_path;
@@ -51,10 +51,10 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 
   /* We treat LC_ALL in the same way as if all bits were set.  */
   if (category_mask == LC_ALL)
-    category_mask = (1 << LC_ALL) - 1;
+    category_mask = (1 << __LC_LAST) - 1 - (1 << LC_ALL);
 
   /* Sanity check for CATEGORY argument.  */
-  if ((category_mask & ~((1 << LC_ALL) - 1)) != 0)
+  if ((category_mask & ~((1 << LC_ALL) - 1 - (1 << LC_ALL))) != 0)
     ERROR_RETURN;
 
   /* `newlocale' does not support asking for the locale name. */
@@ -72,8 +72,9 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   else
     {
       /* Fill with pointers to C locale data to .  */
-      for (cnt = 0; cnt < LC_ALL; ++cnt)
-	result.__locales[cnt] = _nl_C[cnt];
+      for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	if (cnt != LC_ALL)
+	  result.__locales[cnt] = _nl_C[cnt];
 
       /* If no category is to be set we return BASE if available or a
 	 dataset using the C locale data.  */
@@ -105,8 +106,9 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 
   /* Get the names for the locales we are interested in.  We either
      allow a composite name or a single name.  */
-  for (cnt = 0; cnt < LC_ALL; ++cnt)
-    newnames[cnt] = locale;
+  for (cnt = 0; cnt < __LC_LAST; ++cnt)
+    if (cnt != LC_ALL)
+      newnames[cnt] = locale;
   if (strchr (locale, ';') != NULL)
     {
       /* This is a composite name.  Make a copy and split it up.  */
@@ -115,12 +117,13 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 
       while ((cp = strchr (np, '=')) != NULL)
 	{
-	  for (cnt = 0; cnt < LC_ALL; ++cnt)
-	    if ((size_t) (cp - np) == _nl_category_name_sizes[cnt]
+	  for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	    if (cnt != LC_ALL
+		&& (size_t) (cp - np) == _nl_category_name_sizes[cnt]
 		&& memcmp (np, _nl_category_names[cnt], cp - np) == 0)
 	      break;
 
-	  if (cnt == LC_ALL)
+	  if (cnt == __LC_LAST)
 	    /* Bogus category name.  */
 	    ERROR_RETURN;
 
@@ -138,15 +141,16 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 	    break;
 	}
 
-      for (cnt = 0; cnt < LC_ALL; ++cnt)
-	if ((category_mask & 1 << cnt) != 0 && newnames[cnt] == locale)
+      for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	if (cnt != LC_ALL
+	    && (category_mask & 1 << cnt) != 0 && newnames[cnt] == locale)
 	  /* The composite name did not specify the category we need.  */
 	  ERROR_RETURN;
     }
 
   /* Now process all categories we are interested in.  */
-  for (cnt = 0; cnt < LC_ALL; ++cnt)
-    if ((category_mask & 1 << cnt) != 0)
+  for (cnt = 0; cnt < __LC_LAST; ++cnt)
+    if (cnt != LC_ALL && (category_mask & 1 << cnt) != 0)
       {
 	result.__locales[cnt] = _nl_find_locale (locale_path, locale_path_len,
 						 cnt, &newnames[cnt]);

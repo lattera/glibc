@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -22,13 +22,16 @@
 
 #include <ctype.h>
 #include <libintl.h>
+#include <stdint.h>
 #include <stdio.h>
 
+#include "charmap.h"
 #include "error.h"
 #include "locfile-token.h"
+#include "repertoire.h"
 
 
-typedef const struct keyword_t *(*kw_hash_fct_t) (const char *, int);
+typedef const struct keyword_t *(*kw_hash_fct_t) (const char *, unsigned int);
 struct charset_t;
 
 
@@ -39,15 +42,20 @@ struct token
   {
     struct
     {
-      char *start;
-      size_t len;
+      char *startmb;
+      size_t lenmb;
+      uint32_t *startwc;
+      size_t lenwc;
     } str;
     unsigned long int num;
     struct
     {
-      unsigned int val;
+      /* This element is sized on the safe expectation that no single
+	 character in any character set uses more then 16 bytes.  */
+      unsigned char bytes[16];
       int nbytes;
     } charcode;
+    uint32_t ucs4;
   } val;
 };
 
@@ -69,18 +77,20 @@ struct linereader
   struct token token;
 
   int translate_strings;
+  int return_widestr;
 
   kw_hash_fct_t hash_fct;
 };
 
 
 /* Functions defined in linereader.c.  */
-struct linereader *lr_open (const char *fname, kw_hash_fct_t hf);
-int lr_eof (struct linereader *lr);
-void lr_close (struct linereader *lr);
-int lr_next (struct linereader *lr);
-struct token *lr_token (struct linereader *lr,
-			const struct charset_t *charset);
+extern struct linereader *lr_open (const char *fname, kw_hash_fct_t hf);
+extern int lr_eof (struct linereader *lr);
+extern void lr_close (struct linereader *lr);
+extern int lr_next (struct linereader *lr);
+extern struct token *lr_token (struct linereader *lr,
+			       const struct charmap_t *charmap,
+			       const struct repertoire_t *repertoire);
 
 
 #define lr_error(lr, fmt, args...) \

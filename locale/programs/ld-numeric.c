@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,21 +21,16 @@
 # include <config.h>
 #endif
 
-#include <alloca.h>
 #include <langinfo.h>
 #include <string.h>
-#include <libintl.h>
+#include <sys/uio.h>
 
-/* Undefine following line in production version.  */
-/* #define NDEBUG 1 */
 #include <assert.h>
 
-#include "locales.h"
+#include "linereader.h"
+#include "localedef.h"
 #include "localeinfo.h"
-#include "stringtrans.h"
-
-void *xmalloc (size_t __n);
-void *xrealloc (void *__ptr, size_t __n);
+#include "locfile.h"
 
 
 /* The real definition of the struct for the LC_NUMERIC locale.  */
@@ -44,43 +39,38 @@ struct locale_numeric_t
   const char *decimal_point;
   const char *thousands_sep;
   char *grouping;
-  size_t grouping_max;
-  size_t grouping_act;
+  size_t grouping_len;
 };
 
 
-void
+static void
 numeric_startup (struct linereader *lr, struct localedef_t *locale,
-		 struct charset_t *charset)
+		 int ignore_content)
 {
-  struct locale_numeric_t *numeric;
+  if (!ignore_content)
+    {
+      struct locale_numeric_t *numeric;
 
-  /* We have a definition for LC_NUMERIC.  */
-  copy_posix.mask &= ~(1 << LC_NUMERIC);
+      locale->categories[LC_NUMERIC].numeric = numeric =
+	(struct locale_numeric_t *) xcalloc (1, sizeof (*numeric));
 
-  /* It is important that we always use UCS1 encoding for strings now.  */
-  encoding_method = ENC_UCS1;
+      numeric->grouping = NULL;
+      numeric->grouping_len = 0;
+    }
 
-  locale->categories[LC_NUMERIC].numeric = numeric =
-    (struct locale_numeric_t *) xmalloc (sizeof (struct locale_numeric_t));
-
-  memset (numeric, '\0', sizeof (struct locale_numeric_t));
-
-  numeric->grouping_max = 80;
-  numeric->grouping = (char *) xmalloc (numeric->grouping_max);
-  numeric->grouping_act = 0;
+  lr->translate_strings = 1;
+  lr->return_widestr = 0;
 }
 
 
 void
-numeric_finish (struct localedef_t *locale)
+numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
 
 #define TEST_ELEM(cat)							      \
   if (numeric->cat == NULL && !be_quiet)				      \
-    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
-	   #cat, "LC_NUMERIC")
+    error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", #cat)
 
   TEST_ELEM (decimal_point);
   TEST_ELEM (thousands_sep);
@@ -91,34 +81,24 @@ numeric_finish (struct localedef_t *locale)
   if (numeric->decimal_point[0] == '\0' && !be_quiet)
     {
       error (0, 0, _("\
-value for field `%s' in category `%s' must not be the empty string"),
-	     "decimal_point", "LC_NUMERIC");
+%s: value for field `%s' must not be the empty string"),
+	     "LC_NUMERIC", "decimal_point");
     }
 
-  if (numeric->grouping_act == 0 && !be_quiet)
-    error (0, 0, _("field `%s' in category `%s' undefined"),
-	   "grouping", "LC_NUMERIC");
+  if (numeric->grouping_len == 0 && !be_quiet)
+    error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", "grouping");
 }
 
 
 void
-numeric_output (struct localedef_t *locale, const char *output_path)
+numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
+		const char *output_path)
 {
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
   struct locale_file data;
-  u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
+  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
   size_t cnt = 0;
-
-  if ((locale->binary & (1 << LC_NUMERIC)) != 0)
-    {
-      iov[0].iov_base = numeric;
-      iov[0].iov_len = locale->len[LC_NUMERIC];
-
-      write_locale_data (output_path, "LC_NUMERIC", 1, iov);
-
-      return;
-    }
 
   data.magic = LIMAGIC (LC_NUMERIC);
   data.n = _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC);
@@ -141,10 +121,8 @@ numeric_output (struct localedef_t *locale, const char *output_path)
   ++cnt;
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = alloca (numeric->grouping_act + 1);
-  iov[cnt].iov_len = numeric->grouping_act + 1;
-  memcpy (iov[cnt].iov_base, numeric->grouping, numeric->grouping_act);
-  ((char *) iov[cnt].iov_base)[numeric->grouping_act] = '\0';
+  iov[cnt].iov_base = numeric->grouping;
+  iov[cnt].iov_len = numeric->grouping_len;
 
   assert (cnt + 1 == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC));
 
@@ -153,66 +131,173 @@ numeric_output (struct localedef_t *locale, const char *output_path)
 }
 
 
+/* The parser for the LC_NUMERIC section of the locale definition.  */
 void
-numeric_add (struct linereader *lr, struct localedef_t *locale,
-	     enum token_t tok, struct token *code,
-	     struct charset_t *charset)
+numeric_read (struct linereader *ldfile, struct localedef_t *result,
+	      struct charmap_t *charmap, const char *repertoire_name,
+	      int ignore_content)
 {
-  struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
+  struct repertoire_t *repertoire = NULL;
+  struct locale_numeric_t *numeric;
+  struct token *now;
+  enum token_t nowtok;
 
-  switch (tok)
+  /* Get the repertoire we have to use.  */
+  if (repertoire_name != NULL)
+    repertoire = repertoire_read (repertoire_name);
+
+  /* The rest of the line containing `LC_NUMERIC' must be free.  */
+  lr_ignore_rest (ldfile, 1);
+
+
+  do
     {
-#define STR_ELEM(cat)							      \
-    case tok_##cat:							      \
-      if (numeric->cat != NULL)						      \
-	lr_error (lr, _("\
-field `%s' in category `%s' declared more than once"),			      \
-		  #cat, "LC_NUMERIC");					      \
-      else if (code->val.str.start == NULL)				      \
-	{								      \
-	  lr_error (lr, _("unknown character in field `%s' of category `%s'"),\
-		    #cat, "LC_NUMERIC");				      \
-	  numeric->cat = "";						      \
-	}								      \
-      else								      \
-	numeric->cat = code->val.str.start;				      \
-      break
-
-    STR_ELEM (decimal_point);
-    STR_ELEM (thousands_sep);
-
-    case tok_grouping:
-      if (numeric->grouping_act == numeric->grouping_max)
-	{
-	  numeric->grouping_max *= 2;
-	  numeric->grouping = (char *) xrealloc (numeric->grouping,
-						 numeric->grouping_max);
-	}
-      if (numeric->grouping_act > 0
-	  && (numeric->grouping[numeric->grouping_act - 1] == '\177'))
-	{
-	  lr_error (lr, _("\
-`-1' must be last entry in `%s' field in `%s' category"),
-		    "grouping", "LC_NUMERIC");
-	  --numeric->grouping_act;
-	}
-
-      if (code->tok == tok_minus1)
-	numeric->grouping[numeric->grouping_act++] = '\177';
-      else if (code->val.num == 0)
-	/* A value of 0 disables grouping from here on but we must
-	   not store a NUL character since this terminates the string.
-	   Use something different which must not be used otherwise.  */
-	numeric->grouping[numeric->grouping_act++] = '\377';
-      else if (code->val.num > 126)
-	lr_error (lr, _("\
-values for field `%s' in category `%s' must be smaller than 127"),
-		  "grouping", "LC_NUMERIC");
-      else
-	numeric->grouping[numeric->grouping_act++] = code->val.num;
-      break;
-
-    default:
-      assert (! "unknown token in category `LC_NUMERIC': should not happen");
+      now = lr_token (ldfile, charmap, NULL);
+      nowtok = now->tok;
     }
+  while (nowtok == tok_eol);
+
+  /* If we see `copy' now we are almost done.  */
+  if (nowtok == tok_copy)
+    {
+      handle_copy (ldfile, charmap, repertoire, tok_lc_numeric, LC_NUMERIC,
+		   "LC_NUMERIC", ignore_content);
+      return;
+    }
+
+  /* Prepare the data structures.  */
+  numeric_startup (ldfile, result, ignore_content);
+  numeric = result->categories[LC_NUMERIC].numeric;
+
+  while (1)
+    {
+      /* Of course we don't proceed beyond the end of file.  */
+      if (nowtok == tok_eof)
+	break;
+
+      /* Ingore empty lines.  */
+      if (nowtok == tok_eol)
+	{
+	  now = lr_token (ldfile, charmap, NULL);
+	  nowtok = now->tok;
+	  continue;
+	}
+
+      switch (nowtok)
+	{
+#define STR_ELEM(cat) \
+	case tok_##cat:							      \
+	  now = lr_token (ldfile, charmap, NULL);			      \
+	  if (now->tok != tok_string)					      \
+	    goto err_label;						      \
+	  if (numeric->cat != NULL)					      \
+	    lr_error (ldfile, _("\
+%s: field `%s' declared more than once"), "LC_NUMERIC", #cat);		      \
+	  else if (!ignore_content && now->val.str.startmb == NULL)	      \
+	    {								      \
+	      lr_error (ldfile, _("\
+%s: unknown character in field `%s'"), "LC_NUMERIC", #cat);		      \
+	      numeric->cat = "";					      \
+	    }								      \
+	  else if (!ignore_content)					      \
+	    numeric->cat = now->val.str.startmb;			      \
+	  break
+
+	  STR_ELEM (decimal_point);
+	  STR_ELEM (thousands_sep);
+
+	case tok_grouping:
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok != tok_minus1 && now->tok != tok_number)
+	    goto err_label;
+	  else
+	    {
+	      size_t act = 0;
+	      size_t max = 10;
+	      char *grouping = ignore_content ? NULL : xmalloc (max);
+
+	      do
+		{
+		  if (act + 1 >= max)
+		    {
+		      max *= 2;
+		      grouping = xrealloc (grouping, max);
+		    }
+
+		  if (act > 0 && grouping[act - 1] == '\177')
+		    {
+		      lr_error (ldfile, _("\
+%s: `-1' must be last entry in `%s' field"), "LC_NUMERIC", "grouping");
+		      lr_ignore_rest (ldfile, 0);
+		      break;
+		    }
+
+		  if (now->tok == tok_minus1)
+		    {
+		      if (!ignore_content)
+			grouping[act++] = '\177';
+		    }
+		  else if (now->val.num == 0)
+		    {
+		      /* A value of 0 disables grouping from here on but
+			 we must not store a NUL character since this
+			 terminates the string.  Use something different
+			 which must not be used otherwise.  */
+		      if (!ignore_content)
+			grouping[act++] = '\377';
+		    }
+		  else if (now->val.num > 126)
+		    lr_error (ldfile, _("\
+%s: values for field `%s' must be smaller than 127"),
+			      "LC_NUMERIC", "grouping");
+		  else if (!ignore_content)
+		    grouping[act++] = now->val.num;
+
+		  /* Next must be semicolon.  */
+		  now = lr_token (ldfile, charmap, NULL);
+		  if (now->tok != tok_semicolon)
+		    break;
+
+		  now = lr_token (ldfile, charmap, NULL);
+		}
+	      while (now->tok == tok_minus1 || now->tok == tok_number);
+
+	      if (now->tok != tok_eol)
+		goto err_label;
+
+	      if (!ignore_content)
+		{
+		  grouping[act++] = '\0';
+
+		  numeric->grouping = xrealloc (grouping, act);
+		  numeric->grouping_len = act;
+		}
+	    }
+	  break;
+
+	case tok_end:
+	  /* Next we assume `LC_NUMERIC'.  */
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok == tok_eof)
+	    break;
+	  if (now->tok == tok_eol)
+	    lr_error (ldfile, _("%s: incomplete `END' line"), "LC_NUMERIC");
+	  else if (now->tok != tok_lc_numeric)
+	    lr_error (ldfile, _("\
+%1$s: definition does not end with `END %1$s'"), "LC_NUMERIC");
+	  lr_ignore_rest (ldfile, now->tok == tok_lc_numeric);
+	  return;
+
+	default:
+	err_label:
+	  SYNTAX_ERROR (_("%s: syntax error"), "LC_NUMERIC");
+	}
+
+      /* Prepare for the next round.  */
+      now = lr_token (ldfile, charmap, NULL);
+      nowtok = now->tok;
+    }
+
+  /* When we come here we reached the end of the file.  */
+  lr_error (ldfile, _("%s: premature end of file"), "LC_NUMERIC");
 }

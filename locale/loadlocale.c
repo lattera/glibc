@@ -1,7 +1,7 @@
 /* Functions to read locale data files.
    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,14 +18,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <byteswap.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#ifdef _POSIX_MAPPED_FILES
-# include <sys/mman.h>
-#endif
+#include <sys/mman.h>
 #include <sys/stat.h>
 
 #include "localeinfo.h"
@@ -33,7 +32,7 @@
 
 static const size_t _nl_category_num_items[] =
 {
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
   [category] = _NL_ITEM_INDEX (_NL_NUM_##category),
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -42,7 +41,7 @@ static const size_t _nl_category_num_items[] =
 
 #define NO_PAREN(arg, rest...) arg, ##rest
 
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
 static const enum value_type _nl_value_type_##category[] = { NO_PAREN items };
 #define DEFINE_ELEMENT(element, element_name, optstd, type, rest...) \
   [_NL_ITEM_INDEX (element)] = type,
@@ -51,7 +50,7 @@ static const enum value_type _nl_value_type_##category[] = { NO_PAREN items };
 
 static const enum value_type *_nl_value_types[] =
 {
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
   [category] = _nl_value_type_##category,
 #include "categories.def"
 #undef DEFINE_CATEGORY
@@ -76,10 +75,9 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   size_t cnt;
   inline unsigned int SWAP (const unsigned int *inw)
     {
-      const unsigned char *inc = (const unsigned char *) inw;
       if (!swap)
 	return *inw;
-      return (inc[3] << 24) | (inc[2] << 16) | (inc[1] << 8) | inc[0];
+      return bswap_32 (*inw);
     }
 
   file->decided = 1;
@@ -97,17 +95,13 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       /* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
            instead.  */
       char *newp;
-      size_t filenamelen;
 
       __close (fd);
 
-      filenamelen = strlen (file->filename);
-      newp = (char *) alloca (filenamelen
+      newp = (char *) alloca (strlen (file->filename)
 			      + 5 + _nl_category_name_sizes[category] + 1);
-      __mempcpy (__mempcpy (__mempcpy (newp, file->filename, filenamelen),
-			    "/SYS_", 5),
-		 _nl_category_names[category],
-		 _nl_category_name_sizes[category] + 1);
+      __stpcpy (__stpcpy (__stpcpy (newp, file->filename), "/SYS_"),
+		_nl_category_names[category]);
 
       fd = __open (newp, O_RDONLY);
       if (fd < 0)
@@ -119,32 +113,24 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 
   /* Map in the file's data.  */
   save_err = errno;
-#ifdef _POSIX_MAPPED_FILES
-# ifndef MAP_COPY
+#ifndef MAP_COPY
   /* Linux seems to lack read-only copy-on-write.  */
-#  define MAP_COPY MAP_PRIVATE
-# endif
-# ifndef MAP_FILE
+#define MAP_COPY MAP_PRIVATE
+#endif
+#ifndef	MAP_FILE
   /* Some systems do not have this flag; it is superfluous.  */
-#  define MAP_FILE 0
-# endif
-# ifndef MAP_INHERIT
+#define	MAP_FILE 0
+#endif
+#ifndef MAP_INHERIT
   /* Some systems might lack this; they lose.  */
-#  define MAP_INHERIT 0
-# endif
+#define MAP_INHERIT 0
+#endif
   filedata = (void *) __mmap ((caddr_t) 0, st.st_size, PROT_READ,
 			      MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
-  if ((void *) filedata != MAP_FAILED)
-    {
-      if (st.st_size < sizeof (*filedata))
-	/* This cannot be a locale data file since it's too small.  */
-	goto puntfd;
-    }
-  else
+  if ((void *) filedata == MAP_FAILED)
     {
       if (errno == ENOSYS)
 	{
-#endif	/* _POSIX_MAPPED_FILES */
 	  /* No mmap; allocate a buffer and read from the file.  */
 	  mmaped = 0;
 	  filedata = malloc (st.st_size);
@@ -170,12 +156,13 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	  else
 	    goto puntfd;
 	  __set_errno (save_err);
-#ifdef _POSIX_MAPPED_FILES
 	}
       else
 	goto puntfd;
     }
-#endif	/* _POSIX_MAPPED_FILES */
+  else if (st.st_size < sizeof (*filedata))
+    /* This cannot be a locale data file since it's too small.  */
+    goto puntfd;
 
   if (filedata->magic == LIMAGIC (category))
     /* Good data file in our byte order.  */
@@ -188,12 +175,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	/* Bad data file in either byte order.  */
 	{
 	puntmap:
-#ifdef _POSIX_MAPPED_FILES
-	  if (mmaped)
-	    __munmap ((caddr_t) filedata, st.st_size);
-	  else
-#endif	/* _POSIX_MAPPED_FILES */
-	    free (filedata);
+	  __munmap ((caddr_t) filedata, st.st_size);
 	puntfd:
 	  __close (fd);
 	  return;
@@ -211,9 +193,9 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       goto puntmap;
     }
 
-  newdata = malloc (sizeof *newdata +
-		    (_nl_category_num_items[category]
-		     * sizeof (union locale_data_value)));
+  newdata = malloc (sizeof *newdata
+		    + (_nl_category_num_items[category]
+		       * sizeof (union locale_data_value)));
   if (! newdata)
     goto puntmap;
 
@@ -246,14 +228,9 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 void
 _nl_unload_locale (struct locale_data *locale)
 {
-  if (locale->name != NULL)
-    free ((void *) locale->name);
-
-#ifdef _POSIX_MAPPED_FILES
   if (locale->mmaped)
     __munmap ((caddr_t) locale->filedata, locale->filesize);
   else
-#endif
     free ((void *) locale->filedata);
 
   free (locale);

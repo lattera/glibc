@@ -1,7 +1,7 @@
 /* Implementation of the locale program according to POSIX 9945-2.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -129,7 +129,7 @@ struct category
 /* We have all categories defined in `categories.def'.  Now construct
    the description and data structure used for all categories.  */
 #define DEFINE_ELEMENT(Item, More...) { Item, ## More },
-#define DEFINE_CATEGORY(category, name, items, postload, in, check, out)      \
+#define DEFINE_CATEGORY(category, name, items, postload) \
     static struct cat_item category##_desc[] =				      \
       {									      \
         NO_PAREN items							      \
@@ -140,7 +140,7 @@ struct category
 
 static struct category category[] =
   {
-#define DEFINE_CATEGORY(category, name, items, postload, in, check, out)      \
+#define DEFINE_CATEGORY(category, name, items, postload) \
     [category] = { _NL_NUM_##category, name, NELEMS (category##_desc),	      \
 		   category##_desc },
 #include "categories.def"

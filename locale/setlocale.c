@@ -34,16 +34,17 @@
    This contains the built-in "C"/"POSIX" locale's data for CATEGORY.
    Both are weak references; if &_nl_current_CATEGORY is zero,
    then nothing is using the locale data.  */
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
 extern struct locale_data *_nl_current_##category;			      \
 extern struct locale_data _nl_C_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
-/* Array indexed by category of pointers to _nl_current_CATEGORY slots.  */
+/* Array indexed by category of pointers to _nl_current_CATEGORY slots.
+   Elements are zero for categories whose data is never used.  */
 struct locale_data * *const _nl_current[] =
   {
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = &_nl_current_##category,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -56,7 +57,7 @@ struct locale_data * *const _nl_current[] =
    Elements are zero for categories whose data is never used.  */
 struct locale_data *const _nl_C[] =
   {
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = &_nl_C_##category,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -64,14 +65,10 @@ struct locale_data *const _nl_C[] =
 
 
 /* Define an array of category names (also the environment variable names),
-   indexed by integral category.
-
-   We have entries of fixed width (16 for now) do avoid an array of
-   pointers.  Update the size of the outer array if new, longer locale
-   names are introduced.  */
-const char _nl_category_names[][16] =
+   indexed by integral category.  */
+const char *const _nl_category_names[] =
   {
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = category_name,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -80,7 +77,7 @@ const char _nl_category_names[][16] =
 /* An array of their lengths, for convenience.  */
 const size_t _nl_category_name_sizes[] =
   {
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = sizeof (category_name) - 1,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -91,7 +88,7 @@ const size_t _nl_category_name_sizes[] =
 /* Declare the postload functions used below.  */
 #undef	NO_POSTLOAD
 #define NO_POSTLOAD _nl_postload_ctype /* Harmless thing known to exist.  */
-#define DEFINE_CATEGORY(category, category_name, items, postload, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, postload) \
 extern void postload (void);
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -101,7 +98,7 @@ extern void postload (void);
    loading and installing that category's data.  */
 static void (*const _nl_category_postload[]) (void) =
   {
-#define DEFINE_CATEGORY(category, category_name, items, postload, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, postload) \
     [category] = postload,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -112,7 +109,7 @@ static void (*const _nl_category_postload[]) (void) =
    Each is malloc'd unless it is nl_C_name.  */
 static const char *_nl_current_names[] =
   {
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
     [category] = _nl_C_name,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
@@ -134,7 +131,7 @@ __libc_lock_define_initialized (, __libc_setlocale_lock)
 
 /* Construct a new composite name.  */
 static inline char *
-new_composite_name (int category, const char *newnames[LC_ALL])
+new_composite_name (int category, const char *newnames[__LC_LAST])
 {
   size_t last_len = 0;
   size_t cumlen = 0;
@@ -142,22 +139,23 @@ new_composite_name (int category, const char *newnames[LC_ALL])
   char *new, *p;
   int same = 1;
 
-  for (i = 0; i < LC_ALL; ++i)
-    {
-      const char *name = (category == LC_ALL ? newnames[i] :
-			  category == i ? newnames[0] :
-			  _nl_current_names[i]);
-      last_len = strlen (name);
-      cumlen += _nl_category_name_sizes[i] + 1 + last_len + 1;
-      if (same && strcmp (name, newnames[0]) != 0)
-	same = 0;
-    }
+  for (i = 0; i < __LC_LAST; ++i)
+    if (i != LC_ALL)
+      {
+	const char *name = (category == LC_ALL ? newnames[i] :
+			    category == i ? newnames[0] :
+			    _nl_current_names[i]);
+	last_len = strlen (name);
+	cumlen += _nl_category_name_sizes[i] + 1 + last_len + 1;
+	if (i > 0 && same && strcmp (name, newnames[0]) != 0)
+	  same = 0;
+      }
 
   if (same)
     {
       /* All the categories use the same name.  */
-      if (strcmp (newnames[0], _nl_C_name) == 0
-	  || strcmp (newnames[0], _nl_POSIX_name) == 0)
+      if (strcmp (newnames[0], "C") == 0
+	  || strcmp (newnames[0], "POSIX") == 0)
 	return (char *) _nl_C_name;
 
       new = malloc (last_len + 1);
@@ -169,17 +167,18 @@ new_composite_name (int category, const char *newnames[LC_ALL])
   if (new == NULL)
     return NULL;
   p = new;
-  for (i = 0; i < LC_ALL; ++i)
-    {
-      /* Add "CATEGORY=NAME;" to the string.  */
-      const char *name = (category == LC_ALL ? newnames[i] :
-			  category == i ? newnames[0] :
-			  _nl_current_names[i]);
-      p = __stpcpy (p, _nl_category_names[i]);
-      *p++ = '=';
-      p = __stpcpy (p, name);
-      *p++ = ';';
-    }
+  for (i = 0; i < __LC_LAST; ++i)
+    if (i != LC_ALL)
+      {
+	/* Add "CATEGORY=NAME;" to the string.  */
+	const char *name = (category == LC_ALL ? newnames[i] :
+			    category == i ? newnames[0] :
+			    _nl_current_names[i]);
+	p = __stpcpy (p, _nl_category_names[i]);
+	*p++ = '=';
+	p = __stpcpy (p, name);
+	*p++ = ';';
+      }
   p[-1] = '\0';		/* Clobber the last ';'.  */
   return new;
 }
@@ -221,7 +220,7 @@ setlocale (int category, const char *locale)
   char *composite;
 
   /* Sanity check for CATEGORY argument.  */
-  if (category < 0 || category > LC_ALL)
+  if (category < 0 || category >= __LC_LAST)
     ERROR_RETURN;
 
   /* Does user want name of current locale?  */
@@ -254,12 +253,13 @@ setlocale (int category, const char *locale)
 	 for the individual categories can be selected by using a
 	 composite locale name.  This is a semi-colon separated list
 	 of entries of the form `CATEGORY=VALUE'.  */
-      const char *newnames[LC_ALL];
-      struct locale_data *newdata[LC_ALL];
+      const char *newnames[__LC_LAST];
+      struct locale_data *newdata[__LC_LAST];
 
       /* Set all name pointers to the argument name.  */
-      for (category = 0; category < LC_ALL; ++category)
-	newnames[category] = (char *) locale;
+      for (category = 0; category < __LC_LAST; ++category)
+	if (category != LC_ALL)
+	  newnames[category] = (char *) locale;
 
       if (strchr (locale, ';') != NULL)
 	{
@@ -270,12 +270,13 @@ setlocale (int category, const char *locale)
 
 	  while ((cp = strchr (np, '=')) != NULL)
 	    {
-	      for (cnt = 0; cnt < LC_ALL; ++cnt)
-		if ((size_t) (cp - np) == _nl_category_name_sizes[cnt]
+	      for (cnt = 0; cnt < __LC_LAST; ++cnt)
+		if (cnt != LC_ALL
+		    && (size_t) (cp - np) == _nl_category_name_sizes[cnt]
 		    && memcmp (np, _nl_category_names[cnt], cp - np) == 0)
 		  break;
 
-	      if (cnt == LC_ALL)
+	      if (cnt == __LC_LAST)
 		/* Bogus category name.  */
 		ERROR_RETURN;
 
@@ -293,8 +294,8 @@ setlocale (int category, const char *locale)
 		break;
 	    }
 
-	  for (cnt = 0; cnt < LC_ALL; ++cnt)
-	    if (newnames[cnt] == locale)
+	  for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	    if (cnt != LC_ALL && newnames[cnt] == locale)
 	      /* The composite name did not specify all categories.  */
 	      ERROR_RETURN;
 	}
@@ -305,6 +306,13 @@ setlocale (int category, const char *locale)
       /* Load the new data for each category.  */
       while (category-- > 0)
 	{
+	  /* XXX hack.  Remove when collation works.  */
+	  if (category == LC_COLLATE)
+	    {
+	      newdata[category] = NULL;
+	      continue;
+	    }
+
 	  newdata[category] = _nl_find_locale (locale_path, locale_path_len,
 					       category,
 					       &newnames[category]);
@@ -327,11 +335,12 @@ setlocale (int category, const char *locale)
       else
 	{
 	  /* Now we have loaded all the new data.  Put it in place.  */
-	  for (category = 0; category < LC_ALL; ++category)
-	    {
-	      setdata (category, newdata[category]);
-	      setname (category, newnames[category]);
-	    }
+	  for (category = 0; category < __LC_LAST; ++category)
+	    if (category != LC_ALL)
+	      {
+		setdata (category, newdata[category]);
+		setname (category, newnames[category]);
+	      }
 	  setname (LC_ALL, composite);
 	}
 
@@ -342,6 +351,11 @@ setlocale (int category, const char *locale)
       free (locale_path);
 
       return composite;
+    }
+  else if (category == LC_COLLATE)
+    {
+      /* XXX Remove when LC_COLLATE works.  */
+      return NULL;
     }
   else
     {
@@ -401,21 +415,22 @@ free_mem (void)
 {
   int category;
 
-  for (category = 0; category < LC_ALL; ++category)
-    {
-      struct locale_data *here = *_nl_current[category];
+  for (category = 0; category < __LC_LAST; ++category)
+    if (category != LC_ALL)
+      {
+	struct locale_data *here = *_nl_current[category];
 
-      /* If this category is already "C" don't do anything.  */
-      if (here == _nl_C[category])
-	continue;
+	/* If this category is already "C" don't do anything.  */
+	if (here == _nl_C[category])
+	  continue;
 
-      /* We have to be prepared that sometime later me still might
-	 need the locale information.  */
-      setdata (category, _nl_C[category]);
-      setname (category, _nl_C_name);
+	/* We have to be prepared that sometime later me still might
+	   need the locale information.  */
+	setdata (category, _nl_C[category]);
+	setname (category, _nl_C_name);
 
-      _nl_unload_locale (here);
-    }
+	_nl_unload_locale (here);
+      }
 
   setname (LC_ALL, _nl_C_name);
 }

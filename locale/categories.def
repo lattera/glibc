@@ -1,5 +1,5 @@
 /* Definition of all available locale categories and their items.  -*- C -*-
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,8 +21,7 @@
 
    The general format of the descriptions is like this:
 
-     DEFINE_CATEGORY (ID, name, ( items ), setlocale-postload,
-		      locale-input, locale-check, locale-output)
+     DEFINE_CATEGORY (ID, name, ( items ), setlocale-postload)
 
    where items itself is an array of entries in the form
 
@@ -43,28 +42,28 @@ DEFINE_CATEGORY
 (
  LC_COLLATE, "LC_COLLATE",
  (
-  DEFINE_ELEMENT (_NL_COLLATE_NRULES,           "collate-nrules",           std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_RULES,            "collate-rules",            std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_HASH_SIZE,        "collate-hash-size",        std, word)
+  DEFINE_ELEMENT (_NL_COLLATE_NRULES,         "collate-nrules",           std, word)
+  DEFINE_ELEMENT (_NL_COLLATE_RULES,          "collate-rules",            std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_HASH_SIZE,      "collate-hash-size",        std, word)
   DEFINE_ELEMENT (_NL_COLLATE_HASH_LAYERS,    "collate-hash-layers",      std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_TABLE_EB,       "collate-table-eb",         std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_TABLE_EL,       "collate-table-el",         std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_UNDEFINED,      "collate-undefined",        std, word)
-  DEFINE_ELEMENT (_NL_COLLATE_EXTRA_EB,       "collate-extra-eb",         std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_EXTRA_EL,       "collate-extra-el",         std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_TABLEWC_EB,     "collate-tablewc-eb",       std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_TABLEWC_EL,     "collate-tablewc-el",       std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_UNDEFINED_WC,   "collate-undefined-wc",     std, word)
+  DEFINE_ELEMENT (_NL_COLLATE_EXTRAWC_EB,     "collate-extrawc-eb",       std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_EXTRAWC_EL,     "collate-extrawc-el",       std, string)
   DEFINE_ELEMENT (_NL_COLLATE_ELEM_HASH_SIZE, "collate-elem-hash-size",   std, word)
   DEFINE_ELEMENT (_NL_COLLATE_ELEM_HASH_EB,   "collate-elem-hash-eb",     std, string)
   DEFINE_ELEMENT (_NL_COLLATE_ELEM_HASH_EL,   "collate-elem-hash-el",     std, string)
   DEFINE_ELEMENT (_NL_COLLATE_ELEM_STR_POOL,  "collate-elem-str-pool",    std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_ELEM_VAL_EB,    "collate-elem-val-eb", std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_ELEM_VAL_EL,    "collate-elem-val-el", std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_ELEM_VAL_EB,    "collate-elem-val-eb",      std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_ELEM_VAL_EL,    "collate-elem-val-el",      std, string)
   DEFINE_ELEMENT (_NL_COLLATE_SYMB_HASH_SIZE, "collate-symb-hash-size",   std, word)
   DEFINE_ELEMENT (_NL_COLLATE_SYMB_HASH_EB,   "collate-symb-hash-eb",     std, string)
   DEFINE_ELEMENT (_NL_COLLATE_SYMB_HASH_EL,   "collate-symb-hash-el",     std, string)
   DEFINE_ELEMENT (_NL_COLLATE_SYMB_STR_POOL,  "collate-symb-str-pool",    std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_SYMB_CLASS_EB,  "collate-symb-class-eb",    std, string)
-  DEFINE_ELEMENT (_NL_COLLATE_SYMB_CLASS_EL,  "collate-symb-class-el",    std, string)
-  ), _nl_postload_collate, collate_input, NULL, NULL)
+  DEFINE_ELEMENT (_NL_COLLATE_SYMB_CLASSWC_EB, "collate-symb-classwc-eb", std, string)
+  DEFINE_ELEMENT (_NL_COLLATE_SYMB_CLASSWC_EL, "collate-symb-classwc-el", std, string)
+  ), _nl_postload_collate)
 
 
 /* The actual definition of ctype is meaningless here.  It is hard coded in
@@ -74,44 +73,79 @@ DEFINE_CATEGORY
 (
  LC_CTYPE, "LC_CTYPE",
  (
-  DEFINE_ELEMENT (_NL_CTYPE_CLASS,	  "ctype-class",        std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_TOUPPER_EB,   "ctype-toupper-eb",   std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_TOLOWER_EB,   "ctype-tolower-eb",   std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_TOUPPER_EL,   "ctype-toupper-el",   std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_TOLOWER_EL,   "ctype-tolower-el",   std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_CLASS32,      "ctype-class32",      std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_NAMES_EB,	  "ctype-names-eb",     std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_NAMES_EL,	  "ctype-names-el",     std, string)
-  DEFINE_ELEMENT (_NL_CTYPE_HASH_SIZE,	  "ctype-hash-size",    std, word)
-  DEFINE_ELEMENT (_NL_CTYPE_HASH_LAYERS,  "ctype-hash-layers",  std, word)
-  DEFINE_ELEMENT (_NL_CTYPE_CLASS_NAMES,  "ctype-class-names",  std, stringlist)
-  DEFINE_ELEMENT (_NL_CTYPE_MAP_NAMES,	  "ctype-map-names",    std, stringlist)
-  DEFINE_ELEMENT (_NL_CTYPE_WIDTH,	  "ctype-width",        std, bytearray)
-  DEFINE_ELEMENT (_NL_CTYPE_MB_CUR_MAX,	  "ctype-mb-cur-max",   std, word)
-  DEFINE_ELEMENT (_NL_CTYPE_CODESET_NAME, "charmap",		std, string)
-  ), _nl_postload_ctype, ctype_input, ctype_check, ctype_output)
+  DEFINE_ELEMENT (_NL_CTYPE_CLASS,	    "ctype-class",          std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_TOUPPER_EB,     "ctype-toupper-eb",     std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_TOLOWER_EB,     "ctype-tolower-eb",     std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_TOUPPER_EL,     "ctype-toupper-el",     std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_TOLOWER_EL,     "ctype-tolower-el",     std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_CLASS32,        "ctype-class32",        std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_NAMES_EB,	    "ctype-names-eb",       std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_NAMES_EL,	    "ctype-names-el",       std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_HASH_SIZE_EB,   "ctype-hash-size-eb",   std, word)
+  DEFINE_ELEMENT (_NL_CTYPE_HASH_SIZE_EL,   "ctype-hash-size-el",   std, word)
+  DEFINE_ELEMENT (_NL_CTYPE_HASH_LAYERS_EB, "ctype-hash-layers-eb", std, word)
+  DEFINE_ELEMENT (_NL_CTYPE_HASH_LAYERS_EL, "ctype-hash-layers-el", std, word)
+  DEFINE_ELEMENT (_NL_CTYPE_CLASS_NAMES,    "ctype-class-names",    std, stringlist)
+  DEFINE_ELEMENT (_NL_CTYPE_MAP_NAMES,	    "ctype-map-names",      std, stringlist)
+  DEFINE_ELEMENT (_NL_CTYPE_WIDTH,	    "ctype-width",          std, bytearray)
+  DEFINE_ELEMENT (_NL_CTYPE_MB_CUR_MAX,	    "ctype-mb-cur-max",     std, word)
+  DEFINE_ELEMENT (_NL_CTYPE_CODESET_NAME,   "charmap",		    std, string)
+  ), _nl_postload_ctype)
 
 
+#if __BYTE_ORDER == __BIG_ENDIAN
+# define _NL_MONETARY_CONVERSION_RATE _NL_MONETARY_CONVERSION_RATE_EB
+#else
+# define _NL_MONETARY_CONVERSION_RATE _NL_MONETARY_CONVERSION_RATE_EL
+#endif
 DEFINE_CATEGORY
 (
  LC_MONETARY, "LC_MONETARY",
  (
-  DEFINE_ELEMENT (INT_CURR_SYMBOL,   "int_curr_symbol",   std, string)
-  DEFINE_ELEMENT (CURRENCY_SYMBOL,   "currency_symbol",   std, string)
-  DEFINE_ELEMENT (MON_DECIMAL_POINT, "mon_decimal_point", std, string)
-  DEFINE_ELEMENT (MON_THOUSANDS_SEP, "mon_thousands_sep", std, string)
-  DEFINE_ELEMENT (MON_GROUPING,      "mon_grouping",      std, bytearray)
-  DEFINE_ELEMENT (POSITIVE_SIGN,     "positive_sign",     std, string)
-  DEFINE_ELEMENT (NEGATIVE_SIGN,     "negative_sign",     std, string)
-  DEFINE_ELEMENT (INT_FRAC_DIGITS,   "int_frac_digits",   std, byte)
-  DEFINE_ELEMENT (FRAC_DIGITS,       "frac_digits",       std, byte)
-  DEFINE_ELEMENT (P_CS_PRECEDES,     "p_cs_precedes",     std, byte, 0, 1)
-  DEFINE_ELEMENT (P_SEP_BY_SPACE,    "p_sep_by_space",    std, byte, 0, 2)
-  DEFINE_ELEMENT (N_CS_PRECEDES,     "n_cs_precedes",     std, byte, 0, 1)
-  DEFINE_ELEMENT (N_SEP_BY_SPACE,    "n_sep_by_space",    std, byte, 0, 2)
-  DEFINE_ELEMENT (P_SIGN_POSN,       "p_sign_posn",       std, byte, 0, 4)
-  DEFINE_ELEMENT (N_SIGN_POSN,       "n_sign_posn",       std, byte, 0, 4)
-  ), NO_POSTLOAD, NULL, monetary_check, NULL)
+  DEFINE_ELEMENT (INT_CURR_SYMBOL,                     "int_curr_symbol",        std, string)
+  DEFINE_ELEMENT (CURRENCY_SYMBOL,                     "currency_symbol",        std, string)
+  DEFINE_ELEMENT (MON_DECIMAL_POINT,                   "mon_decimal_point",      std, string)
+  DEFINE_ELEMENT (MON_THOUSANDS_SEP,                   "mon_thousands_sep",      std, string)
+  DEFINE_ELEMENT (MON_GROUPING,                        "mon_grouping",           std, bytearray)
+  DEFINE_ELEMENT (POSITIVE_SIGN,                       "positive_sign",          std, string)
+  DEFINE_ELEMENT (NEGATIVE_SIGN,                       "negative_sign",          std, string)
+  DEFINE_ELEMENT (INT_FRAC_DIGITS,                     "int_frac_digits",        std, byte)
+  DEFINE_ELEMENT (FRAC_DIGITS,                         "frac_digits",            std, byte)
+  DEFINE_ELEMENT (P_CS_PRECEDES,                       "p_cs_precedes",          std, byte, 0, 1)
+  DEFINE_ELEMENT (P_SEP_BY_SPACE,                      "p_sep_by_space",         std, byte, 0, 2)
+  DEFINE_ELEMENT (N_CS_PRECEDES,                       "n_cs_precedes",          std, byte, 0, 1)
+  DEFINE_ELEMENT (N_SEP_BY_SPACE,                      "n_sep_by_space",         std, byte, 0, 2)
+  DEFINE_ELEMENT (P_SIGN_POSN,                         "p_sign_posn",            std, byte, 0, 4)
+  DEFINE_ELEMENT (N_SIGN_POSN,                         "n_sign_posn",            std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_INT_P_CS_PRECEDES,      "int_p_cs_precedes",      std, byte, 0, 1)
+  DEFINE_ELEMENT (_NL_MONETARY_INT_P_SEP_BY_SPACE,     "int_p_sep_by_space",     std, byte, 0, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_INT_N_CS_PRECEDES,      "int_n_cs_precedes",      std, byte, 0, 1)
+  DEFINE_ELEMENT (_NL_MONETARY_INT_N_SEP_BY_SPACE,     "int_n_sep_by_space",     std, byte, 0, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_INT_P_SIGN_POSN,        "int_p_sign_posn",        std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_INT_N_SIGN_POSN,        "int_n_sign_posn",        std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_CURR_SYMBOL,    "duo_int_curr_symbol",    std, string)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_CURRENCY_SYMBOL,    "duo_currency_symbol",    std, string)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_FRAC_DIGITS,    "duo_int_frac_digits",    std, byte)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_FRAC_DIGITS,        "duo_frac_digits",        std, byte)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_P_CS_PRECEDES,      "duo_p_cs_precedes",      std, byte, 0, 1)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_P_SEP_BY_SPACE,     "duo_p_sep_by_space",     std, byte, 0, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_N_CS_PRECEDES,      "duo_n_cs_precedes",      std, byte, 0, 1)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_N_SEP_BY_SPACE,     "duo_n_sep_by_space",     std, byte, 0, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_P_CS_PRECEDES,  "duo_int_p_cs_precedes",  std, byte, 0, 1)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_P_SEP_BY_SPACE, "duo_int_p_sep_by_space", std, byte, 0, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_N_CS_PRECEDES,  "duo_int_n_cs_precedes",  std, byte, 0, 1)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_N_SEP_BY_SPACE, "duo_int_n_sep_by_space", std, byte, 0, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_P_SIGN_POSN,        "duo_p_sign_posn",        std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_N_SIGN_POSN,        "duo_n_sign_posn",        std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_P_SIGN_POSN,    "duo_int_p_sign_posn",    std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_N_SIGN_POSN,    "duo_int_n_sign_posn",    std, byte, 0, 4)
+  DEFINE_ELEMENT (_NL_MONETARY_UNO_VALID_FROM,         "uno_valid_from",         std, word)
+  DEFINE_ELEMENT (_NL_MONETARY_UNO_VALID_TO,           "uno_valid_to",           std, word)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_VALID_FROM,         "duo_valid_from",         std, word)
+  DEFINE_ELEMENT (_NL_MONETARY_DUO_VALID_TO,           "duo_valid_to",           std, word)
+  DEFINE_ELEMENT (_NL_MONETARY_CONVERSION_RATE_EB,     "conversion_rate-eb",      std, wordarray, 2, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_CONVERSION_RATE_EL,     "conversion_rate-el",      std, wordarray, 2, 2)
+  ), NO_POSTLOAD)
 
 
 DEFINE_CATEGORY
@@ -121,7 +155,7 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (DECIMAL_POINT, "decimal_point", std, string)
   DEFINE_ELEMENT (THOUSANDS_SEP, "thousands_sep", std, string)
   DEFINE_ELEMENT (GROUPING,      "grouping",      std, bytearray)
-  ), NO_POSTLOAD, NULL, numeric_check, NULL)
+  ), NO_POSTLOAD)
 
 
 DEFINE_CATEGORY
@@ -143,34 +177,133 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (ALT_DIGITS,  "alt_digits",  opt, stringarray,  0, 100)
   DEFINE_ELEMENT (ERA_D_T_FMT, "era_d_t_fmt", opt, string)
   DEFINE_ELEMENT (ERA_T_FMT,   "era_t_fmt",   opt, string)
-  DEFINE_ELEMENT (_NL_TIME_NUM_ALT_DIGITS,  "time-num-alt-digits", opt, word)
-  DEFINE_ELEMENT (_NL_TIME_ERA_NUM_ENTRIES, "time-era-num-entries", opt, word)
+  DEFINE_ELEMENT (_NL_TIME_ERA_NUM_ENTRIES_EB, "time-era-num-entries-eb", opt, word)
+  DEFINE_ELEMENT (_NL_TIME_ERA_NUM_ENTRIES_EL, "time-era-num-entries-el", opt, word)
   DEFINE_ELEMENT (_NL_TIME_ERA_ENTRIES_EB,  "time-era-entries-eb", opt, string)
   DEFINE_ELEMENT (_NL_TIME_ERA_ENTRIES_EL,  "time-era-entries-el", opt, string)
-  DEFINE_ELEMENT (_NL_WABDAY_1,     "wide-abday",       std, stringarray,  7,  7)
-  DEFINE_ELEMENT (_NL_WDAY_1,       "wide-day",         std, stringarray,  7,  7)
-  DEFINE_ELEMENT (_NL_WABMON_1,     "wide-abmon",       std, stringarray, 12, 12)
-  DEFINE_ELEMENT (_NL_WMON_1,       "wide-mon",         std, stringarray, 12, 12)
-  DEFINE_ELEMENT (_NL_WAM_STR,      "wide-am_pm",       std, stringarray,  2,  2)
-  DEFINE_ELEMENT (_NL_WD_T_FMT,     "wide-d_t_fmt",     std, string)
-  DEFINE_ELEMENT (_NL_WD_FMT,       "wide-d_fmt",       std, string)
-  DEFINE_ELEMENT (_NL_WT_FMT,       "wide-t_fmt",       std, string)
-  DEFINE_ELEMENT (_NL_WT_FMT_AMPM,  "wide-t_fmt_ampm",  std, string)
-  DEFINE_ELEMENT (_NL_WERA,         "wide-era",         opt, stringarray)
-  DEFINE_ELEMENT (_NL_WERA_YEAR,    "wide-era_year",    opt, string)
-  DEFINE_ELEMENT (_NL_WERA_D_FMT,   "wide-era_d_fmt",   opt, string)
-  DEFINE_ELEMENT (_NL_WALT_DIGITS,  "wide-alt_digits",  opt, stringarray,  0, 100)
-  DEFINE_ELEMENT (_NL_WERA_D_T_FMT, "wide-era_d_t_fmt", opt, string)
-  DEFINE_ELEMENT (_NL_WERA_T_FMT,   "wide-era_t_fmt",   opt, string)
-  ), _nl_postload_time, NULL, NULL, NULL)
+  DEFINE_ELEMENT (_NL_WABDAY_1_EB,  "wide-abday-eb",    std, stringarray,  7,  7)
+  DEFINE_ELEMENT (_NL_WABDAY_1_EL,  "wide-abday-el",    std, stringarray,  7,  7)
+  DEFINE_ELEMENT (_NL_WDAY_1_EB,    "wide-day-eb",      std, stringarray,  7,  7)
+  DEFINE_ELEMENT (_NL_WDAY_1_EL,    "wide-day-el",      std, stringarray,  7,  7)
+  DEFINE_ELEMENT (_NL_WABMON_1_EB,  "wide-abmon-eb",    std, stringarray, 12, 12)
+  DEFINE_ELEMENT (_NL_WABMON_1_EL,  "wide-abmon-el",    std, stringarray, 12, 12)
+  DEFINE_ELEMENT (_NL_WMON_1_EB,    "wide-mon-eb",      std, stringarray, 12, 12)
+  DEFINE_ELEMENT (_NL_WMON_1_EL,    "wide-mon-el",      std, stringarray, 12, 12)
+  DEFINE_ELEMENT (_NL_WAM_STR_EB,   "wide-am_pm-eb",    std, stringarray,  2,  2)
+  DEFINE_ELEMENT (_NL_WAM_STR_EL,   "wide-am_pm-el",    std, stringarray,  2,  2)
+  DEFINE_ELEMENT (_NL_WD_T_FMT_EB,  "wide-d_t_fmt-eb",  std, string)
+  DEFINE_ELEMENT (_NL_WD_T_FMT_EL,  "wide-d_t_fmt-el",  std, string)
+  DEFINE_ELEMENT (_NL_WD_FMT_EB,    "wide-d_fmt-eb",    std, string)
+  DEFINE_ELEMENT (_NL_WD_FMT_EL,    "wide-d_fmt-el",    std, string)
+  DEFINE_ELEMENT (_NL_WT_FMT_EB,    "wide-t_fmt-eb",    std, string)
+  DEFINE_ELEMENT (_NL_WT_FMT_EL,    "wide-t_fmt-el",    std, string)
+  DEFINE_ELEMENT (_NL_WT_FMT_AMPM_EB, "wide-t_fmt_ampm-eb", std, string)
+  DEFINE_ELEMENT (_NL_WT_FMT_AMPM_EL, "wide-t_fmt_ampm-el", std, string)
+  DEFINE_ELEMENT (_NL_WERA_YEAR_EB,   "wide-era_year-eb",    opt, string)
+  DEFINE_ELEMENT (_NL_WERA_YEAR_EL,   "wide-era_year-el",    opt, string)
+  DEFINE_ELEMENT (_NL_WERA_D_FMT_EB,  "wide-era_d_fmt-eb",   opt, string)
+  DEFINE_ELEMENT (_NL_WERA_D_FMT_EL,  "wide-era_d_fmt-el",   opt, string)
+  DEFINE_ELEMENT (_NL_WALT_DIGITS_EB,  "wide-alt_digits-eb",  opt, stringarray,  0, 100)
+  DEFINE_ELEMENT (_NL_WALT_DIGITS_EL,  "wide-alt_digits-el",  opt, stringarray,  0, 100)
+  DEFINE_ELEMENT (_NL_WERA_D_T_FMT_EB, "wide-era_d_t_fmt-eb", opt, string)
+  DEFINE_ELEMENT (_NL_WERA_D_T_FMT_EL, "wide-era_d_t_fmt-el", opt, string)
+  DEFINE_ELEMENT (_NL_WERA_T_FMT_EB,   "wide-era_t_fmt-eb",   opt, string)
+  DEFINE_ELEMENT (_NL_WERA_T_FMT_EL,   "wide-era_t_fmt-el",   opt, string)
+  DEFINE_ELEMENT (_NL_TIME_WEEK_NDAYS,      "week-ndays",          std, byte)
+  DEFINE_ELEMENT (_NL_TIME_WEEK_1STDAY,     "week-1stday",         std, word)
+  DEFINE_ELEMENT (_NL_TIME_WEEK_1STWEEK,    "week-1stweek",        std, byte)
+  DEFINE_ELEMENT (_NL_TIME_FIRST_WEEKDAY,   "first_weekday",       std, byte)
+  DEFINE_ELEMENT (_NL_TIME_FIRST_WORKDAY,   "first_workday",       std, byte)
+  DEFINE_ELEMENT (_NL_TIME_CAL_DIRECTION,   "cal_direction",       std, byte)
+  DEFINE_ELEMENT (_NL_TIME_TIMEZONE,        "timezone",            std, string)
+  ), _nl_postload_time)
 
 
 DEFINE_CATEGORY
 (
  LC_MESSAGES, "LC_MESSAGES",
  (
-  DEFINE_ELEMENT (YESEXPR,  "yesexpr", std, string)
-  DEFINE_ELEMENT (NOEXPR,   "noexpr",  std, string)
-  DEFINE_ELEMENT (__YESSTR, "yesstr",  opt, string)
-  DEFINE_ELEMENT (__NOSTR,  "nostr",   opt, string)
-  ), NO_POSTLOAD, NULL, messages_check, NULL)
+  DEFINE_ELEMENT (YESEXPR, "yesexpr", std, string)
+  DEFINE_ELEMENT (NOEXPR,  "noexpr",  std, string)
+  DEFINE_ELEMENT (YESSTR,  "yesstr",  opt, string)
+  DEFINE_ELEMENT (NOSTR,   "nostr",   opt, string)
+  ), NO_POSTLOAD)
+
+DEFINE_CATEGORY
+(
+ LC_PAPER, "LC_PAPER",
+ (
+  DEFINE_ELEMENT (_NL_PAPER_HEIGHT_EB, "height-eb", std, word)
+  DEFINE_ELEMENT (_NL_PAPER_HEIGHT_EL, "height-el", std, word)
+  DEFINE_ELEMENT (_NL_PAPER_WIDTH_EB,  "width-eb",  std, word)
+  DEFINE_ELEMENT (_NL_PAPER_WIDTH_EL,  "width-el",  std, word)
+  ), NO_POSTLOAD)
+
+DEFINE_CATEGORY
+(
+ LC_NAME, "LC_NAME",
+ (
+  DEFINE_ELEMENT (_NL_NAME_NAME_FMT,  "name_fmt",  std, string)
+  DEFINE_ELEMENT (_NL_NAME_NAME_GEN,  "name_gen",  std, string)
+  DEFINE_ELEMENT (_NL_NAME_NAME_MR,   "name_mr",   std, string)
+  DEFINE_ELEMENT (_NL_NAME_NAME_MRS,  "name_mrs",  std, string)
+  DEFINE_ELEMENT (_NL_NAME_NAME_MISS, "name_miss", std, string)
+  DEFINE_ELEMENT (_NL_NAME_NAME_MS,   "name_ms",   std, string)
+  ), NO_POSTLOAD)
+
+DEFINE_CATEGORY
+(
+ LC_ADDRESS, "LC_ADDRESS",
+ (
+  DEFINE_ELEMENT (_NL_ADDRESS_POSTAL_FMT,      "postal_fmt",      std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_NAME,    "country_name",    std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_POST,    "country_post",    std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_AB2,     "country_ab2",     std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_AB3,     "country_ab3",     std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_CAR,     "country_car",     std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_NUM_EB,  "country_num-eb",  std, word)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_NUM_EL,  "country_num-el",  std, word)
+  DEFINE_ELEMENT (_NL_ADDRESS_COUNTRY_ISBN,    "country_isbn",    std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_LANG_NAME,       "lang_name",       std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_LANG_AB,         "lang_ab",         std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_LANG_TERM,       "lang_term",       std, string)
+  DEFINE_ELEMENT (_NL_ADDRESS_LANG_LIB,        "lang_lib",        std, string)
+  ), NO_POSTLOAD)
+
+DEFINE_CATEGORY
+(
+ LC_TELEPHONE, "LC_TELEPHONE",
+ (
+  DEFINE_ELEMENT (_NL_TELEPHONE_TEL_INT_FMT, "tel_int_fmt", std, string)
+  DEFINE_ELEMENT (_NL_TELEPHONE_TEL_DOM_FMT, "tel_dom_fmt", std, string)
+  DEFINE_ELEMENT (_NL_TELEPHONE_INT_SELECT,  "int_select",  std, string)
+  DEFINE_ELEMENT (_NL_TELEPHONE_INT_PREFIX,  "int_prefix",  std, string)
+  ), NO_POSTLOAD)
+
+DEFINE_CATEGORY
+(
+ LC_MEASUREMENT, "LC_MEASUREMENT",
+ (
+  DEFINE_ELEMENT (_NL_MEASUREMENT_MEASUREMENT, "measurement", std, byte)
+  ), NO_POSTLOAD)
+
+DEFINE_CATEGORY
+(
+ LC_IDENTIFICATION, "LC_IDENTIFICATION",
+ (
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_TITLE,        "title",        std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_SOURCE,       "source",       std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_ADDRESS,      "address",      std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_CONTACT,      "contact",      std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_EMAIL,        "email",        std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_TEL,          "tel",          std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_FAX,          "fax",          std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_LANGUAGE,     "language",     std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_TERRITORY,    "territory",    std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_AUDIENCE,     "audience",     std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_APPLICATION,  "applcation",   std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_ABBREVIATION, "abbreviation", std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_REVISION,     "revision",     std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_DATE,         "date",         std, string)
+  DEFINE_ELEMENT (_NL_IDENTIFICATION_CATEGORY,      "category",    std, stringarray, 13, 13)
+  ), NO_POSTLOAD)

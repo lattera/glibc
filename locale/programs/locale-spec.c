@@ -109,7 +109,7 @@ locale_special (const char *name, int show_category_name,
 	  {
 	    printf ("%s<%s>", first ? "" : ",",
 		    &__collate_symbol_strings[__collate_symbol_hash[2 * cnt]]);
-#if 1
+#if 0
 	    {
 	      size_t idx = __collate_symbol_hash[2 * cnt + 1];
 	      size_t cls;

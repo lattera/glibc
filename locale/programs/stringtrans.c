@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -21,6 +21,7 @@
 # include <config.h>
 #endif
 
+#include <assert.h>
 #include <stdlib.h>
 
 #include "charset.h"
@@ -77,8 +78,11 @@ translate_string (char *str, struct charset_t *charset)
 
       tp = &str[1];
       while (tp[0] != '\0' && tp[0] != '>')
-	if (tp[0] == '\\' && tp[1] != '\0')
-	  tp += 2;
+	if (tp[0] == '\\')
+	  if (tp[1] != '\0')
+	    tp += 2;
+	  else
+	    ++tp;
 	else
 	  ++tp;
 

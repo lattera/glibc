@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -34,6 +34,23 @@
 # define STRCMP strcmp
 #endif
 
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
+int
+STRCOLL (s1, s2)
+     const STRING_TYPE *s1;
+     const STRING_TYPE *s2;
+#else
+int
+STRCOLL (s1, s2, l)
+     const STRING_TYPE *s1;
+     const STRING_TYPE *s2;
+     __locale_t l;
+#endif
+{
+  return STRCMP (s1, s2);
+}
+
+#if 0
 /* Include the shared helper functions.  `strxfrm'/`wcsxfrm' also use
    these functions.  */
 #include "../locale/weight.h"
@@ -208,3 +225,4 @@ STRCOLL (s1, s2, l)
 
   return 0;
 }
+#endif

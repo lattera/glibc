@@ -1,8 +1,8 @@
-/* C code produced by gperf version 2.5 (GNU C++ version) */
-/* Command-line: gperf -acCgopt -k1,2,5,$ -N charmap_hash programs/charmap-kw.gperf  */
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* ANSI-C code produced by gperf version 2.7.1 (19981006 egcs) */
+/* Command-line: gperf -acCgopt -k1,2,5,9,$ -L ANSI-C -N charmap_hash programs/charmap-kw.gperf  */
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper, <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -24,81 +24,103 @@
 #include "locfile-token.h"
 struct keyword_t ;
 
-#define TOTAL_KEYWORDS 14
+#define TOTAL_KEYWORDS 17
 #define MIN_WORD_LENGTH 3
 #define MAX_WORD_LENGTH 14
 #define MIN_HASH_VALUE 3
-#define MAX_HASH_VALUE 25
-/* maximum key range = 23, duplicates = 0 */
+#define MAX_HASH_VALUE 35
+/* maximum key range = 33, duplicates = 0 */
 
 #ifdef __GNUC__
-inline
+__inline
 #endif
 static unsigned int
-hash (register const char *str, register int len)
+hash (register const char *str, register unsigned int len)
 {
   static const unsigned char asso_values[] =
     {
-     26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
-     26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
-     26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
-     26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
-     26, 26, 26, 26, 26, 26, 26, 26, 14, 10,
-     15,  4, 26, 26, 26, 26, 26, 26, 26, 26,
-     26, 26, 26, 26, 26, 26, 26,  0,  0,  0,
-     26, 26,  0,  0, 26, 26, 26,  0,  0, 26,
-      0, 26, 26, 26,  5, 26, 26,  0, 26, 26,
-     26, 26, 26, 26, 26,  0, 26, 26,  0,  0,
-     26,  0, 26,  0, 26, 26, 26, 26, 26,  0,
-     15,  0,  0, 26,  0,  0, 26,  0, 26, 26,
-      0, 26, 26, 26, 26, 26, 26, 26,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 25, 10,
+      15, 20, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 10,  0,  0,
+       5, 36,  0,  0, 36, 36, 36,  0,  0, 36,
+       0, 36,  0, 36,  0, 36, 36,  0, 36, 36,
+      36, 36, 36, 36, 36,  0, 36,  0,  0,  0,
+      10,  0, 36,  0,  0,  0, 36, 36, 36,  0,
+       0,  0,  0,  0,  0,  0,  0,  0, 36, 36,
+      25, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36
     };
   register int hval = len;
 
   switch (hval)
     {
       default:
+      case 9:
+        hval += asso_values[(unsigned char)str[8]];
+      case 8:
+      case 7:
+      case 6:
       case 5:
-        hval += asso_values[str[4]];
+        hval += asso_values[(unsigned char)str[4]];
       case 4:
       case 3:
       case 2:
-        hval += asso_values[str[1]];
+        hval += asso_values[(unsigned char)str[1]];
       case 1:
-        hval += asso_values[str[0]];
+        hval += asso_values[(unsigned char)str[0]];
         break;
     }
-  return hval + asso_values[str[len - 1]];
+  return hval + asso_values[(unsigned char)str[len - 1]];
 }
 
 #ifdef __GNUC__
-inline
+__inline
 #endif
 const struct keyword_t *
-charmap_hash (register const char *str, register int len)
+charmap_hash (register const char *str, register unsigned int len)
 {
   static const struct keyword_t wordlist[] =
     {
-      {"",}, {"",}, {"",}, 
-      {"END",              tok_end,             0},
-      {"",}, 
-      {"WIDTH",            tok_width,           0},
-      {"",}, 
-      {"CHARMAP",          tok_charmap,         0},
-      {"",}, 
-      {"g3esc",            tok_g3esc,           1},
-      {"mb_cur_max",       tok_mb_cur_max,      1},
-      {"escape_char",      tok_escape_char,     1},
-      {"comment_char",     tok_comment_char,    1},
-      {"code_set_name",    tok_code_set_name,   1},
-      {"WIDTH_VARIABLE",   tok_width_variable,  0},
-      {"g1esc",            tok_g1esc,           1},
-      {"",}, {"",}, 
-      {"WIDTH_DEFAULT",    tok_width_default,   0},
-      {"g0esc",            tok_g0esc,           1},
-      {"g2esc",            tok_g2esc,           1},
-      {"",}, {"",}, {"",}, {"",}, 
-      {"mb_cur_min",       tok_mb_cur_min,      1},
+      {""}, {""}, {""},
+      {"END",             tok_end,             0},
+      {""},
+      {"WIDTH",           tok_width,           0},
+      {"escseq",          tok_escseq,          1},
+      {"include",         tok_include,         1},
+      {""}, {""},
+      {"mb_cur_min",      tok_mb_cur_min,      1},
+      {"escape_char",     tok_escape_char,     1},
+      {"comment_char",    tok_comment_char,    1},
+      {"code_set_name",   tok_code_set_name,   1},
+      {"WIDTH_VARIABLE",  tok_width_variable,  0},
+      {"g1esc",           tok_g1esc,           1},
+      {"addset",          tok_addset,          1},
+      {"CHARMAP",         tok_charmap,         0},
+      {"WIDTH_DEFAULT",   tok_width_default,   0},
+      {""},
+      {"g2esc",           tok_g2esc,           1},
+      {""}, {""}, {""}, {""},
+      {"g3esc",           tok_g3esc,           1},
+      {""}, {""}, {""}, {""},
+      {"g0esc",           tok_g0esc,           1},
+      {""}, {""}, {""}, {""},
+      {"mb_cur_max",      tok_mb_cur_max,      1}
     };
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
@@ -109,7 +131,7 @@ charmap_hash (register const char *str, register int len)
         {
           register const char *s = wordlist[key].name;
 
-          if (*s == *str && !strncmp (str + 1, s + 1, len - 1))
+          if (*str == *s && !strncmp (str + 1, s + 1, len - 1))
             return &wordlist[key];
         }
     }

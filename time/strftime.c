@@ -86,10 +86,15 @@ extern char *tzname[];
 #endif
 
 #ifdef COMPILE_WIDE
+# include <endian.h>
 # define CHAR_T wchar_t
 # define UCHAR_T unsigned int
 # define L_(Str) L##Str
-# define NLW(Sym) _NL_W##Sym
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+#  define NLW(Sym) _NL_W##Sym##_EL
+# else
+#  define NLW(Sym) _NL_W##Sym##_EB
+# endif
 
 # define MEMCPY(d, s, n) wmemcpy (d, s, n)
 # define STRLEN(s) wcslen (s)
@@ -833,11 +838,11 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  /* XXX For the time being there is no equivalent to
-		     _nl_get_era_entry to get a wide character variant.  */
-		  wchar_t *ws;
-		  size_t len;
-		  widen (era->name_fmt, ws, len);
+		  /* The wide name is after the single byte name and
+                     format.  */
+		  char *tcp = strchr (era->name_fmt, '\0') + 1;
+		  wchar_t *ws = (wchar_t *) (strchr (tcp, '\0') + 1);
+		  size_t len = wcslen (ws);
 		  cpy (len, ws);
 # else
 		  size_t len = strlen (era->name_fmt);
@@ -909,13 +914,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      /* Get the locale specific alternate representation of
 		 the number NUMBER_VALUE.  If none exist NULL is returned.  */
 # ifdef COMPILE_WIDE
-	      const char *ncp = _nl_get_alt_digit (number_value);
-	      wchar_t *cp = NULL;
-	      if (ncp != NULL)
-		{
-		  size_t len;
-		  widen (ncp, cp, len);
-		}
+	      const wchar_t *cp = _nl_get_walt_digit (number_value);
 # else
 	      const char *cp = _nl_get_alt_digit (number_value);
 # endif
@@ -1200,13 +1199,12 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  /* XXX For the time being there is no wide character
-		     equivalent or _nl_get_era_entry.  */
-		  const char *ncp = strchr (era->name_fmt, '\0') + 1;
+		  /* The wide name is after the single byte name and
+                     format.  */
+		  char *tcp = strchr (era->name_fmt, '\0') + 1;
 		  size_t len;
-		  wchar_t *s;
-		  widen (ncp, s, len);
-		  subfmt = s;
+		  subfmt = (wchar_t *) (strchr (tcp, '\0') + 1);
+		  subfmt = wcschr (subfmt, L'\0') + 1;
 # else
 		  subfmt = strchr (era->name_fmt, '\0') + 1;
 # endif

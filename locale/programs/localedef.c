@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -30,26 +30,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#ifdef _POSIX2_LOCALEDEF
-# include <sys/mman.h>
-#endif
+#include <sys/mman.h>
 #include <sys/stat.h>
 
 #include "error.h"
-#include "charset.h"
+#include "charmap.h"
 #include "locfile.h"
-#include "locales.h"
 
-
-/* This is a special entry of the copylist.  For all categories we don't
-   have a definition we use the data for the POSIX locale.  */
-struct copy_def_list_t copy_posix =
-{
-  next: NULL,
-  name: "POSIX",
-  mask: (1 << LC_ALL) - 1,
-  locale: NULL
-};
+/* Undefine the following line in the production version.  */
+/* #define NDEBUG 1 */
+#include <assert.h>
 
 
 /* List of copied locales.  */
@@ -74,7 +64,10 @@ static const char *charmap_file;
 static const char *input_file;
 
 /* Name of the repertoire map file.  */
-const char *repertoiremap;
+const char *repertoire_global;
+
+/* List of all locales.  */
+static struct localedef_t *locales;
 
 
 /* Name and version of program.  */
@@ -88,11 +81,10 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 static const struct argp_option options[] =
 {
   { NULL, 0, NULL, 0, N_("Input Files:") },
-  { "charmap", 'f', N_("FILE"), 0,
+  { "charmap", 'f', "FILE", 0,
     N_("Symbolic character names defined in FILE") },
-  { "inputfile", 'i', N_("FILE"), 0,
-    N_("Source definitions are found in FILE") },
-  { "repertoire-map", 'u', N_("FILE"), 0,
+  { "inputfile", 'i', "FILE", 0, N_("Source definitions are found in FILE") },
+  { "repertoire-map", 'u', "FILE", 0,
     N_("FILE contains mapping from symbolic names to UCS4 values") },
 
   { NULL, 0, NULL, 0, N_("Output control:") },
@@ -125,7 +117,7 @@ static struct argp argp =
 
 
 /* Prototypes for global functions.  */
-void *xmalloc (size_t __n);
+extern void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
 static void error_print (void);
@@ -138,12 +130,12 @@ main (int argc, char *argv[])
 {
   const char *output_path;
   int cannot_write_why;
-  struct charset_t *charset;
-  struct localedef_t *localedef;
-  struct copy_def_list_t *act_add_locdef;
+  struct charmap_t *charmap;
+  struct localedef_t global;
   int remaining;
 
   /* Set initial values for global variables.  */
+  copy_list = NULL;
   posix_conformance = getenv ("POSIXLY_CORRECT") != NULL;
   error_print_progname = error_print;
 
@@ -187,135 +179,37 @@ main (int argc, char *argv[])
     error (3, 0, _("FATAL: system does not define `_POSIX2_LOCALEDEF'"));
 
   /* Process charmap file.  */
-  charset = charmap_read (charmap_file);
+  charmap = charmap_read (charmap_file);
+
+  /* Add the first entry in the locale list.  */
+  memset (&global, '\0', sizeof (struct localedef_t));
+  global.name = input_file;
+  global.needed = ALL_LOCALES;
+  locales = &global;
 
   /* Now read the locale file.  */
-  localedef = locfile_read (input_file, charset);
-  if (localedef->failed != 0)
+  if (locfile_read (&global, charmap) != 0)
     error (4, errno, _("cannot open locale definition file `%s'"), input_file);
 
-  /* Make sure all categories are defined.  */
-  copy_posix.next = copy_list;
-  copy_list = &copy_posix;
-
-  /* Perhaps we saw some `copy' instructions.  Process the given list.
-     We use a very simple algorithm: we look up the list from the
-     beginning every time.  */
-  do
+  /* Perhaps we saw some `copy' instructions.  */
+  while (1)
     {
-      int cat = 0;
+      struct localedef_t *runp = locales;
 
-      for (act_add_locdef = copy_list; act_add_locdef != NULL;
-	   act_add_locdef = act_add_locdef->next)
-	{
-	  for (cat = LC_CTYPE; cat <= LC_MESSAGES; ++cat)
-	    if ((act_add_locdef->mask & (1 << cat)) != 0)
-	      {
-		act_add_locdef->mask &= ~(1 << cat);
-		break;
-	      }
-	  if (cat <= LC_MESSAGES)
-	    break;
-	}
+      while (runp != NULL && runp->needed == runp->avail)
+	runp = runp->next;
 
-      if (act_add_locdef != NULL)
-	{
-	  int avail = 0;
+      if (runp == NULL)
+	/* Everything read.  */
+	break;
 
-	  if (act_add_locdef->locale == NULL)
-	    {
-	      /* Saving the mask is an ugly trick to prevent the reader
-		 from modifying `copy_posix' if we currently process it.  */
-	      int save_mask = act_add_locdef->mask;
-	      act_add_locdef->locale = locfile_read (act_add_locdef->name,
-						     charset);
-	      act_add_locdef->mask = save_mask;
-	    }
-
-	  if (! act_add_locdef->locale->failed)
-	    {
-	      avail = act_add_locdef->locale->categories[cat].generic != NULL;
-	      if (avail)
-		{
-		  localedef->categories[cat].generic
-		    = act_add_locdef->locale->categories[cat].generic;
-		  localedef->avail |= 1 << cat;
-		}
-	    }
-
-	  if (! avail)
-	    {
-	      static const char *locale_names[] =
-	      {
-		"LC_COLLATE", "LC_CTYPE", "LC_MONETARY",
-		"LC_NUMERIC", "LC_TIME", "LC_MESSAGES"
-	      };
-	      char *fname;
-	      int fd;
-	      struct stat st;
-
-	      asprintf (&fname, LOCALEDIR "/%s/%s", act_add_locdef->name,
-			locale_names[cat]);
-	      fd = open (fname, O_RDONLY);
-	      if (fd == -1)
-		{
-		  free (fname);
-
-		  asprintf (&fname, LOCALEDIR "/%s/%s/SYS_%s",
-			    act_add_locdef->name, locale_names[cat],
-			    locale_names[cat]);
-
-		  fd = open (fname, O_RDONLY);
-		  if (fd == -1)
-		    error (5, 0, _("\
-locale file `%s', used in `copy' statement, not found"),
-			   act_add_locdef->name);
-		}
-
-	      if (fstat (fd, &st) < 0)
-		error (5, errno, _("\
-cannot `stat' locale file `%s'"),
-		       fname);
-
-	      localedef->len[cat] = st.st_size;
-#ifdef _POSIX_MAPPED_FILES
-	      localedef->categories[cat].generic
-		= mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-
-	      if (localedef->categories[cat].generic == MAP_FAILED)
-#endif	/* _POSIX_MAPPED_FILES */
-		{
-		  size_t left = st.st_size;
-		  void *read_ptr;
-
-		  localedef->categories[cat].generic
-		    = xmalloc (st.st_size);
-		  read_ptr = localedef->categories[cat].generic;
-
-		  do
-		    {
-		      long int n;
-		      n = read (fd, read_ptr, left);
-		      if (n == -1)
-			error (5, errno, _("cannot read locale file `%s'"),
-			       fname);
-		      read_ptr += n;
-		      left -= n;
-		    }
-		  while (left > 0);
-		}
-
-	      close (fd);
-	      free (fname);
-
-	      localedef->binary |= 1 << cat;
-	    }
-	}
+      if (locfile_read (runp, charmap) != 0)
+	error (4, errno, _("cannot open locale definition file `%s'"),
+	       runp->name);
     }
-  while (act_add_locdef != NULL);
 
   /* Check the categories we processed in source form.  */
-  check_all_categories (localedef, charset);
+  check_all_categories (locales, charmap);
 
   /* We are now able to write the data files.  If warning were given we
      do it only if it is explicitly requested (--force).  */
@@ -325,7 +219,7 @@ cannot `stat' locale file `%s'"),
 	error (4, cannot_write_why, _("cannot write output files to `%s'"),
 	       output_path);
       else
-	write_all_categories (localedef, charset, output_path);
+	write_all_categories (locales, charmap, output_path);
     }
   else
     error (4, 0, _("no output file produced because warning were issued"));
@@ -357,7 +251,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       input_file = arg;
       break;
     case 'u':
-      repertoiremap = arg;
+      repertoire_global = arg;
       break;
     case 'v':
       verbose = 1;
@@ -406,50 +300,11 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 }
 
 
-void
-def_to_process (const char *name, int category)
-{
-  struct copy_def_list_t *new, **rp;
-
-  for (rp = &copy_list; *rp != NULL; rp = &(*rp)->next)
-    if (strcmp (name, (*rp)->name) == 0)
-      break;
-
-  if (*rp == NULL)
-    {
-      size_t cnt;
-
-      *rp = (struct copy_def_list_t *) xmalloc (sizeof (**rp));
-
-      (*rp)->next = NULL;
-      (*rp)->name = name;
-      (*rp)->mask = 0;
-      (*rp)->locale = NULL;
-
-      for (cnt = 0; cnt < 6; ++cnt)
-	{
-	  (*rp)->binary[cnt].data = NULL;
-	  (*rp)->binary[cnt].len = 0;
-	}
-    }
-  new = *rp;
-
-  if ((new->mask & category) != 0)
-    /* We already have the information.  This cannot happen.  */
-    error (5, 0, _("\
-category data requested more than once: should not happen"));
-
-  new->mask |= category;
-}
-
-
 /* The address of this function will be assigned to the hook in the error
    functions.  */
 static void
-error_print ()
+error_print (void)
 {
-  /* We don't want the program name to be printed in messages.  Emacs'
-     compile.el does not like this.  */
 }
 
 
@@ -461,13 +316,15 @@ construct_output_path (char *path)
 {
   const char *normal = NULL;
   char *result;
+  char *endp;
 
   if (strchr (path, '/') == NULL)
     {
       /* This is a system path.  First examine whether the locale name
 	 contains a reference to the codeset.  This should be
 	 normalized.  */
-      char *startp, *endp;
+      char *startp;
+      size_t n;
 
       startp = path;
       /* We must be prepared for finding a CEN name or a location of
@@ -493,17 +350,20 @@ construct_output_path (char *path)
 	 the end of the function we need another byte for the trailing
 	 '/'.  */
       if (normal == NULL)
-	asprintf (&result, "%s/%s%c", LOCALEDIR, path, '\0');
+	n = asprintf (&result, "%s/%s%c", LOCALEDIR, path, '\0');
       else
-	asprintf (&result, "%s/%.*s%s%s%c", LOCALEDIR, startp - path, path,
-		  normal, endp, '\0');
+	n = asprintf (&result, "%s/%.*s%s%s%c", LOCALEDIR, startp - path, path,
+		      normal, endp, '\0');
+
+      endp = result + n;
     }
   else
     {
       /* This is a user path.  Please note the additional byte in the
 	 memory allocation.  */
-      result = xmalloc (strlen (path) + 2);
-      strcpy (result, path);
+      size_t len = strlen (path) + 1;
+      result = xmalloc (len + 1);
+      endp = mempcpy (result, path, len);
     }
 
   errno = 0;
@@ -516,10 +376,12 @@ construct_output_path (char *path)
 	mkdir (result, 0777);
       }
 
-  strcat (result, "/");
+  *endp++ = '/';
+  *endp = '\0';
 
   return result;
 }
+
 
 /* Normalize codeset name.  There is no standard for the codeset
    names.  Normalization allows the user to use any of the common
@@ -555,7 +417,7 @@ normalize_codeset (codeset, name_len)
 
       for (cnt = 0; cnt < name_len; ++cnt)
 	if (isalpha (codeset[cnt]))
-	  *wp++ = _tolower (codeset[cnt]);
+	  *wp++ = tolower (codeset[cnt]);
 	else if (isdigit (codeset[cnt]))
 	  *wp++ = codeset[cnt];
 
@@ -563,4 +425,53 @@ normalize_codeset (codeset, name_len)
     }
 
   return (const char *) retval;
+}
+
+
+struct localedef_t *
+add_to_readlist (int locale, const char *name, const char *repertoire_name)
+{
+  struct localedef_t *runp = locales;
+
+  while (runp != NULL && strcmp (name, runp->name) != 0)
+    runp = runp->next;
+
+  if (runp == NULL)
+    {
+      /* Add a new entry at the end.  */
+      struct localedef_t *newp = xcalloc (1, sizeof (struct localedef_t));
+      newp->name = name;
+      newp->repertoire_name = repertoire_name;
+
+      if (locales == NULL)
+	runp = locales = newp;
+      else
+	{
+	  runp = locales;
+	  while (runp->next != NULL)
+	    runp = runp->next;
+	  runp = runp->next = newp;
+	}
+    }
+
+  if ((runp->needed & (1 << locale)) != 0)
+    error (5, 0, _("circular dependencies between locale definitions"));
+
+  runp->needed |= 1 << locale;
+
+  return runp;
+}
+
+
+struct localedef_t *
+find_locale (int locale, const char *name, const char *repertoire_name,
+	     struct charmap_t *charmap)
+{
+  struct localedef_t *result = add_to_readlist (locale, name, repertoire_name);
+
+  if (locfile_read (result, charmap) != 0)
+    error (4, errno, _("cannot open locale definition file `%s'"),
+	   result->name);
+
+  return result;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -34,6 +34,21 @@
 # define STPNCPY __stpncpy
 #endif
 
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
+size_t
+STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
+#else
+size_t
+STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
+#endif
+{
+      if (n != 0)
+	STPNCPY (dest, src, n);
+
+      return STRLEN (src);
+}
+
+#if 0
 /* Include the shared helper functions.  `strxfrm'/`wcsxfrm' also use
    these functions.  */
 #include "../locale/weight.h"
@@ -280,3 +295,4 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
   /* Return length without counting the terminating '\0'.  */
   return written;
 }
+#endif

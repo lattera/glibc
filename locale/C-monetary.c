@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -20,7 +20,8 @@
 #include "localeinfo.h"
 
 /* This table's entries are taken from POSIX.2 Table 2-9
-   ``LC_MONETARY Category Definition in the POSIX Locale''.  */
+   ``LC_MONETARY Category Definition in the POSIX Locale'',
+   with additions from ISO 14652, section 4.4.  */
 #ifdef __CHAR_UNSIGNED__
 static const char not_available[] = "\377";
 #else
@@ -32,7 +33,7 @@ const struct locale_data _nl_C_LC_MONETARY =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  15,
+  49,
   {
     { string: "" },
     { string: "" },
@@ -48,6 +49,34 @@ const struct locale_data _nl_C_LC_MONETARY =
     { string: not_available },
     { string: not_available },
     { string: not_available },
-    { string: not_available }
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: "" },
+    { string: "" },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { word: 10101 },
+    { word: 99991231 },
+    { word: 10101 },
+    { word: 99991231 },
+    { word: 1 },
+    { word: 1 }
   }
 };

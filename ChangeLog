@@ -1,5 +1,81 @@
 1999-08-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/Makefile (distribute): Add iso-639.def and iso-3166.def.
+	Change charset.h to charmap.h.
+	(categories): Add new categories.  Leave out collate for now.
+	Update build rules.
+	* locale/categories.def: Add definitions for new categories.
+	* locale/langinfo.h: Likewise.
+	* locale/locale.h: Likewise.
+	* locale/C-address.c: New file.
+	* locale/C-identification.c: New file.
+	* locale/C-measurement.c: New file.
+	* locale/C-name.c: New file.
+	* locale/C-paper.c: New file.
+	* locale/C-telephone.c: New file.
+	* locale/lc-address.c: Likewise.
+	* locale/lc-identification.c: Likewise.
+	* locale/lc-measurement.c: Likewise.
+	* locale/lc-name.c: Likewise.
+	* locale/lc-paper.c: Likewise.
+	* locale/lc-telephone.c: Likewise.
+	* locale/C-ctype.c: Update for locale rewrite.
+	* locale/C-messages.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* locale/lc-collate.c: Likewise.
+	* locale/lc-ctype.c: Likewise.
+	* locale/lc-monetary.c: Likewise.
+	* locale/lc-time.c: Likewise.
+	* locale/localeinfo.h: Likewise.
+	* locale/newlocale.c: Likewise.
+	* locale/setlocale.c: Likewise.
+	* locale/weight.h: Likewise.
+	* locale/findlocale.c: Unconditionally use mmap.
+	Handle new categories.
+	* locale/loadlocale.c: Likewise.
+	* locale/iso-3166.def: New file.
+	* locale/iso-639.def: New file.
+	* locale/programs/charmap-kw.gperf: Add new keywords.
+	* locale/programs/locfile-kw.gperf: Likewise.
+	* locale/programs/locfile-token.h: Define new tokens.
+	* locale/programs/charmap.c: Rewrite to handle multibyte charsets.
+	* locale/programs/charmap.h: New file.
+	* locale/programs/charset.h: Removed.
+	* locale/programs/config.h: Add __LC_LAST.
+	* locale/programs/lc-address.c: New file.
+	* locale/programs/lc-identification.c: New file.
+	* locale/programs/lc-measurement.c: New file.
+	* locale/programs/lc-name.c: New file.
+	* locale/programs/lc-paper.c: New file.
+	* locale/programs/lc-telephone.c: New file.
+	* locale/programs/lc-collate.c: Update for locale rewrite.
+	* locale/programs/lc-ctype.c: Likewise.
+	* locale/programs/lc-messages.c: Likewise.
+	* locale/programs/lc-monetary.c: Likewise.
+	* locale/programs/lc-numeric.c: Likewise.
+	* locale/programs/lc-time.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* locale/programs/locfile.c: Likewise.
+	* locale/programs/repertoire.c: Likewise.
+	* locale/programs/repertoire.h: Likewise.
+	* locale/programs/locfile.c: Update prototypes.
+	Update handle_copy definition.
+	* locale/programs/linereader.c: Add handling of wide char strings and
+	new definition file syntax.
+	* locale/programs/linereader.h (struct token): Add elements for wide
+	character strings.
+	* locale/programs/locale-spec.c: Disable handling of collation
+	elements for now.
+	* locale/programs/simple-hash.h: Cleanup.
+	* locale/programs/stringtrans.h: Handle quite of end of line.
+	* string/strcoll.c: Fall back on strcmp for now.
+	* string/strxfrm.c: Fall back on strncpy/strlen for now.
+	* time/strftime.c: Use new wide character data for wcsftime.
+	* time/strptime.c: Remove _nl_C_LC_TIME declaration.
+	* wctype/cname-lookup.h: Update for new LC_CTYPE data.
+
 	* sysdeps/i386/Makefile [csu]: Define CFLAGS-initfini.s to force
 	compiling for i386 to avoid i686-like GOT pointer computation.
 

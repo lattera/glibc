@@ -1,5 +1,5 @@
 /* Define current locale data for LC_CTYPE category.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include "localeinfo.h"
 #include <ctype.h>
 #include <endian.h>
+#include <stdint.h>
 
 _NL_CURRENT_DEFINE (LC_CTYPE);
 
@@ -46,14 +47,14 @@ _nl_postload_ctype (void)
 #define current(type,x,offset) \
   ((const type *) _NL_CURRENT (LC_CTYPE, paste(_NL_CTYPE_,x)) + offset)
 
-  extern const unsigned int *__ctype32_b;
-  extern const unsigned int *__ctype_names;
+  extern const uint32_t *__ctype32_b;
+  extern const uint32_t *__ctype_names;
   extern const unsigned char *__ctype_width;
 
-  __ctype_b = current (unsigned short int, CLASS, 128);
-  __ctype_toupper = current (int, bo (TOUPPER), 128);
-  __ctype_tolower = current (int, bo (TOLOWER), 128);
-  __ctype32_b = current (unsigned int, CLASS32, 0);
-  __ctype_names = current (unsigned int, bo (NAMES), 0);
+  __ctype_b = current (uint16_t, CLASS, 128);
+  __ctype_toupper = current (uint32_t, bo (TOUPPER), 128);
+  __ctype_tolower = current (uint32_t, bo (TOLOWER), 128);
+  __ctype32_b = current (uint32_t, CLASS32, 0);
+  __ctype_names = current (uint32_t, bo (NAMES), 0);
   __ctype_width = current (unsigned char, WIDTH, 0);
 }

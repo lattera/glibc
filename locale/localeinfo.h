@@ -1,5 +1,5 @@
-/* localeinfo.h -- declarations for internal libc locale interfaces
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Declarations for internal libc locale interfaces
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,17 +24,21 @@
 #include <langinfo.h>
 #include <limits.h>
 #include <time.h>
+#include <stdint.h>
 #include <sys/types.h>
 
-#include "../intl/loadinfo.h"	/* For loaded_l10nfile definition.  */
+/* This has to be changed whenever a new locale is defined.  */
+#define __LC_LAST	13
+
+#include <intl/loadinfo.h>	/* For loaded_l10nfile definition.  */
 
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
-#define	LIMAGIC(category)	(0x960617de ^ (category))
+#define	LIMAGIC(category)	(0x980505 ^ (category))
 
 /* Two special weight constants for the collation data.  */
-#define FORWARD_CHAR ((wchar_t) 0xfffffffd)
-#define ELLIPSIS_CHAR ((wchar_t) 0xfffffffe)
-#define IGNORE_CHAR ((wchar_t) 0xffffffff)
+#define FORWARD_CHAR ((uint32_t) 0xfffffffd)
+#define ELLIPSIS_CHAR ((uint32_t) 0xfffffffe)
+#define IGNORE_CHAR ((uint32_t) 0xffffffff)
 
 /* We use a special value for the usage counter in `locale_data' to
    signal that this data must never be removed anymore.  */
@@ -54,7 +58,7 @@ struct locale_data
   unsigned int nstrings;	/* Number of strings below.  */
   union locale_data_value
   {
-    const wchar_t *wstr;
+    const uint32_t *wstr;
     const char *string;
     unsigned int word;
   }
@@ -83,14 +87,15 @@ enum value_type
   byte,
   bytearray,
   word,
-  stringlist
+  stringlist,
+  wordarray
 };
 
 
 /* Structure to access `era' information from LC_TIME.  */
 struct era_entry
 {
-  u_int32_t direction;		/* Contains '+' or '-'.  */
+  uint32_t direction;		/* Contains '+' or '-'.  */
   int32_t offset;
   int32_t start_date[3];
   int32_t stop_date[3];
@@ -99,27 +104,26 @@ struct era_entry
 
 
 /* For each category declare the variable for the current locale data.  */
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
+#define DEFINE_CATEGORY(category, category_name, items, a) \
 extern struct locale_data *_nl_current_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
-extern const char _nl_category_names[LC_ALL + 1][16];
-extern const size_t _nl_category_name_sizes[LC_ALL + 1];
-extern struct locale_data * *const _nl_current[LC_ALL + 1];
+extern const char *const _nl_category_names[__LC_LAST];
+extern const size_t _nl_category_name_sizes[__LC_LAST];
+extern struct locale_data * *const _nl_current[__LC_LAST];
 
 /* Name of the standard locales.  */
 extern const char _nl_C_name[];
 extern const char _nl_POSIX_name[];
 
-/* XXX Temporily until the locale data has everything.  */
-extern struct locale_data _nl_C_LC_TIME;
-
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
-  ((item) < _NL_WABDAY_1 || (item) > _NL_WALT_DIGITS			      \
-   ? (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)	      \
-   : _nl_C_LC_TIME.values[_NL_ITEM_INDEX (item)].string)
+  (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)
+
+/* Extract the current CATEGORY locale's string for ITEM.  */
+#define _NL_CURRENT_WSTR(category, item) \
+  ((wchar_t *) (_nl_current_##category->values[_NL_ITEM_INDEX (item)].wstr))
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 #define _NL_CURRENT_WORD(category, item) \
@@ -154,15 +158,18 @@ extern struct era_entry *_nl_get_era_entry (const struct tm *tp);
 /* Return `alt_digit' which corresponds to NUMBER.  Used in strftime.  */
 extern const char *_nl_get_alt_digit (unsigned int number);
 
+/* Similar, but now for wide characters.  */
+extern const wchar_t *_nl_get_walt_digit (unsigned int number);
+
 
 /* Global variables for LC_COLLATE category data.  */
-extern const u_int32_t *__collate_table;
-extern const u_int32_t *__collate_extra;
-extern const u_int32_t *__collate_element_hash;
+extern const uint32_t *__collate_tablewc;
+extern const uint32_t *__collate_extrawc;
+extern const uint32_t *__collate_element_hash;
 extern const char *__collate_element_strings;
-extern const wchar_t *__collate_element_values;
-extern const u_int32_t *__collate_symbol_hash;
+extern const uint32_t *__collate_element_values;
+extern const uint32_t *__collate_symbol_hash;
 extern const char *__collate_symbol_strings;
-extern const u_int32_t *__collate_symbol_classes;
+extern const uint32_t *__collate_symbol_classes;
 
 #endif	/* localeinfo.h */

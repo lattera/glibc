@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@cygnus.com>.
 
@@ -37,7 +37,7 @@ typedef struct weight_t
   struct data_pair
     {
       int number;
-      const u_int32_t *value;
+      const uint32_t *value;
     } data[0];
 } weight_t;
 
@@ -52,9 +52,9 @@ typedef struct weight_t
 # define collate_hash_layers \
   (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_LAYERS))
 # define collate_undefined \
-  (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_UNDEFINED))
+  (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_UNDEFINED_WC))
 # define collate_rules \
-  ((u_int32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULES))
+  ((uint32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULES))
 
 static __inline void get_weight (const STRING_TYPE **str, weight_t *result);
 static __inline void
@@ -67,18 +67,18 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 # define collate_hash_layers \
   current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].word
 # define collate_undefined \
-  current->values[_NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED)].word
+  current->values[_NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED_WC)].word
 # define collate_rules \
-  ((u_int32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_RULES)].string)
+  ((uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_RULES)].string)
 
 static __inline void get_weight (const STRING_TYPE **str, weight_t *result,
 				 struct locale_data *current,
-				 const u_int32_t *__collate_table,
-				 const u_int32_t *__collate_extra);
+				 const uint32_t *__collate_tablewc,
+				 const uint32_t *__collate_extrawc);
 static __inline void
 get_weight (const STRING_TYPE **str, weight_t *result,
-	    struct locale_data *current, const u_int32_t *__collate_table,
-	    const u_int32_t *__collate_extra)
+	    struct locale_data *current, const uint32_t *__collate_tablewc,
+	    const uint32_t *__collate_extrawc)
 #endif
 {
   unsigned int ch = *((USTRING_TYPE *) (*str))++;
@@ -94,9 +94,9 @@ get_weight (const STRING_TYPE **str, weight_t *result,
       slot = (ch % collate_hash_size) * (collate_nrules + 1);
 
       level = 0;
-      while (__collate_table[slot] != (u_int32_t) ch)
+      while (__collate_tablewc[slot] != (uint32_t) ch)
 	{
-	  if (__collate_table[slot + 1] == 0
+	  if (__collate_tablewc[slot + 1] == 0
 	      || ++level >= collate_hash_layers)
 	    {
 	      size_t idx = collate_undefined;
@@ -104,8 +104,8 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 
 	      for (cnt = 0; cnt < collate_nrules; ++cnt)
 		{
-		  result->data[cnt].number = __collate_extra[idx++];
-		  result->data[cnt].value = &__collate_extra[idx];
+		  result->data[cnt].number = __collate_extrawc[idx++];
+		  result->data[cnt].value = &__collate_extrawc[idx];
 		  idx += result->data[cnt].number;
 		}
 	      /* The Unix standard requires that a character outside
@@ -117,7 +117,7 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 	}
     }
 
-  if (__collate_table[slot + 1] != (u_int32_t) FORWARD_CHAR)
+  if (__collate_tablewc[slot + 1] != (uint32_t) FORWARD_CHAR)
     {
       /* We have a simple form.  One value for each weight.  */
       size_t cnt;
@@ -125,7 +125,7 @@ get_weight (const STRING_TYPE **str, weight_t *result,
       for (cnt = 0; cnt < collate_nrules; ++cnt)
 	{
 	  result->data[cnt].number = 1;
-	  result->data[cnt].value = &__collate_table[slot + 1 + cnt];
+	  result->data[cnt].value = &__collate_tablewc[slot + 1 + cnt];
 	}
       return;
     }
@@ -134,21 +134,21 @@ get_weight (const STRING_TYPE **str, weight_t *result,
      There might none, but the last list member is a catch-all case
      because it is simple the character CH.  The value of this entry
      might be the same as UNDEFINED.  */
-  slot = __collate_table[slot + 2];
+  slot = __collate_tablewc[slot + 2];
 
   while (1)
     {
       size_t idx;
 
-      /* This is a comparison between a u_int32_t array (aka wchar_t) and
+      /* This is a comparison between a uint32_t array (aka wchar_t) and
 	 an 8-bit string.  */
-      for (idx = 0; __collate_extra[slot + 2 + idx] != 0; ++idx)
-	if (__collate_extra[slot + 2 + idx] != ((USTRING_TYPE *) *str)[idx])
+      for (idx = 0; __collate_extrawc[slot + 2 + idx] != 0; ++idx)
+	if (__collate_extrawc[slot + 2 + idx] != (uint32_t) (*str)[idx])
 	  break;
 
-      /* When the loop finished with all characters of the collation
+      /* When the loop finished with all character of the collation
 	 element used, we found the longest prefix.  */
-      if (__collate_extra[slot + 2 + idx] == 0)
+      if (__collate_extrawc[slot + 2 + idx] == 0)
 	{
 	  size_t cnt;
 
@@ -156,15 +156,15 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 	  idx += slot + 3;
 	  for (cnt = 0; cnt < collate_nrules; ++cnt)
 	    {
-	      result->data[cnt].number = __collate_extra[idx++];
-	      result->data[cnt].value = &__collate_extra[idx];
+	      result->data[cnt].number = __collate_extrawc[idx++];
+	      result->data[cnt].value = &__collate_extrawc[idx];
 	      idx += result->data[cnt].number;
 	    }
 	  return;
 	}
 
       /* To next entry in list.  */
-      slot += __collate_extra[slot];
+      slot += __collate_extrawc[slot];
     }
 }
 
@@ -178,10 +178,10 @@ get_weight (const STRING_TYPE **str, weight_t *result,
    We have this strange extra macro since the functions which use the
    given locale (not the global one) cannot use the global tables.  */
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
-# define call_get_weight(strp, newp) get_weight (strp, newp)
+# define call_get_weight(strp, newp) get_weight ((strp), (newp))
 #else
 # define call_get_weight(strp, newp) \
-  get_weight (strp, newp, current, collate_table, collate_extra)
+  get_weight ((strp), (newp), current, collate_table, collate_extra)
 #endif
 
 #define get_string(str, forw, backw) \

@@ -1,6 +1,6 @@
 /* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,9 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#ifdef _POSIX_MAPPED_FILES
-# include <sys/mman.h>
-#endif
+#include <sys/mman.h>
 
 #include "localeinfo.h"
 
@@ -88,7 +86,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
     loc_name = (char *) *name;
 
   /* Make a writable copy of the locale name.  */
-  loc_name = strdupa (loc_name);
+  loc_name = __strdup (loc_name);
 
   /* LOCALE can consist of up to four recognized parts for the XPG syntax:
 
@@ -137,6 +135,11 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	/* This means we are out of core.  */
 	return NULL;
     }
+  else
+    /* If the addressed locale is already available it should be
+       freed.  If we would not do this switching back and force
+       between two locales would slowly eat up all memory.  */
+    free ((void *) loc_name);
 
   if (locale_file->decided == 0)
     _nl_load_locale (locale_file, category);
@@ -208,7 +211,6 @@ _nl_remove_locale (int locale, struct locale_data *data)
       /* Free the name.  */
       free ((char *) data->name);
 
-#ifdef _POSIX_MAPPED_FILES
       /* Really delete the data.  First delete the real data.  */
       if (data->mmaped)
 	{
@@ -221,7 +223,6 @@ _nl_remove_locale (int locale, struct locale_data *data)
 	    }
 	}
       else
-#endif	/* _POSIX_MAPPED_FILES */
 	/* The memory was malloced.  */
 	free ((void *) data->filedata);
 
@@ -235,21 +236,21 @@ free_mem (void)
 {
   int category;
 
-  for (category = 0; category < LC_ALL; ++category)
-    {
-      struct loaded_l10nfile *runp = locale_file_list[category];
+  for (category = 0; category < __LC_LAST; ++category)
+    if (category != LC_ALL)
+      {
+	struct loaded_l10nfile *runp = locale_file_list[category];
 
-      while (runp != NULL)
-	{
-	  struct loaded_l10nfile *here = runp;
-	  struct locale_data *data = (struct locale_data *) runp->data;
+	while (runp != NULL)
+	  {
+	    struct loaded_l10nfile *here = runp;
+	    struct locale_data *data = (struct locale_data *) runp->data;
 
-	  if (data != NULL && data->usage_count != UNDELETABLE)
-	    _nl_unload_locale (data);
-	  runp = runp->next;
-	  free ((char *) here->filename);
-	  free (here);
-	}
-    }
+	    if (data != NULL && data->usage_count != UNDELETABLE)
+	      _nl_unload_locale (data);
+	    runp = runp->next;
+	    free (here);
+	  }
+      }
 }
 text_set_element (__libc_subfreeres, free_mem);

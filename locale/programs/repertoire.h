@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,18 +21,43 @@
 #define _REPERTOIREMAP_H	1
 
 #include <obstack.h>
+#include <stdint.h>
 
+#include "charmap.h"
 #include "simple-hash.h"
-#include "linereader.h"
 
 struct repertoire_t
 {
+  const char *name;
   struct obstack mem_pool;
   hash_table char_table;
+  hash_table reverse_table;
+  hash_table seq_table;
 };
 
 
+/* We need one value to mark the error case.  Let's use 0xffffffff.
+   I.e., it is placed in the last page of ISO 10646.  For now only the
+   first is used and we have plenty of room.  */
+#define ILLEGAL_CHAR_VALUE ((uint32_t) 0xffffffffu)
+
+/* Another value is needed to signal that a value is not yet determined.  */
+#define UNINITIALIZED_CHAR_VALUE ((uint32_t) 0xfffffffeu)
+
+
 /* Prototypes for repertoire map handling functions.  */
-struct repertoire_t *repertoire_read (const char *filename);
+extern struct repertoire_t *repertoire_read (const char *filename);
+
+/* Return UCS4 value of character with given NAME.  */
+extern uint32_t repertoire_find_value (const struct repertoire_t *repertoire,
+				       const char *name, size_t len);
+
+/* Return symbol for given UCS4 value.  */
+extern const char *repertoire_find_symbol (const struct repertoire_t *repertoire,
+					   uint32_t ucs);
+
+/* Query the has table to memoize mapping from UCS4 to byte sequences.  */
+extern struct charseq *repertoire_find_seq (const struct repertoire_t *rep,
+					    uint32_t ucs);
 
 #endif /* repertoiremap.h */

@@ -1,5 +1,5 @@
 /* Define current locale data for LC_MONETARY category.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,3 +20,24 @@
 #include "localeinfo.h"
 
 _NL_CURRENT_DEFINE (LC_MONETARY);
+
+const uint32_t *__monetary_conversion_rate;
+
+void
+_nl_postload_monetary (void)
+{
+#if BYTE_ORDER == BIG_ENDIAN
+#define bo(x) x##_EB
+#elif BYTE_ORDER == LITTLE_ENDIAN
+#define bo(x) x##_EL
+#else
+#error bizarre byte order
+#endif
+#define paste(a,b) paste1(a,b)
+#define paste1(a,b) a##b
+
+#define current(type,x,offset) \
+  ((const type *) _NL_CURRENT (LC_MONETARY, paste(_NL_MONETARY_,x)) + offset)
+
+  __monetary_conversion_rate = current (uint32_t, bo (CONVERSION_RATE), 0);
+}

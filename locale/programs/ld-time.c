@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,25 +21,19 @@
 # include <config.h>
 #endif
 
+#include <byteswap.h>
 #include <langinfo.h>
-#include <string.h>
-#include <libintl.h>
-
-/* Undefine following line in production version.  */
-/* #define NDEBUG 1 */
-#include <assert.h>
 #include <stdlib.h>
+#include <string.h>
+#include <wchar.h>
+#include <sys/uio.h>
 
-#include "locales.h"
+#include <assert.h>
+
+#include "linereader.h"
+#include "localedef.h"
 #include "localeinfo.h"
-#include "stringtrans.h"
-
-#define SWAPU32(w) \
-  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
-
-
-extern void *xmalloc (size_t __n);
-extern void *xrealloc (void *__p, size_t __n);
+#include "locfile.h"
 
 
 /* Entry describing an entry of the era specification.  */
@@ -51,6 +45,8 @@ struct era_data
   int32_t stop_date[3];
   const char *name;
   const char *format;
+  uint32_t *wname;
+  uint32_t *wformat;
 };
 
 
@@ -58,75 +54,135 @@ struct era_data
 struct locale_time_t
 {
   const char *abday[7];
-  size_t cur_num_abday;
+  const uint32_t *wabday[7];
+  const uint32_t *wabday_ob[7];
+  int abday_defined;
   const char *day[7];
-  size_t cur_num_day;
+  const uint32_t *wday[7];
+  const uint32_t *wday_ob[7];
+  int day_defined;
   const char *abmon[12];
-  size_t cur_num_abmon;
+  const uint32_t *wabmon[12];
+  const uint32_t *wabmon_ob[12];
+  int abmon_defined;
   const char *mon[12];
-  size_t cur_num_mon;
+  const uint32_t *wmon[12];
+  const uint32_t *wmon_ob[12];
+  int mon_defined;
   const char *am_pm[2];
-  size_t cur_num_am_pm;
+  const uint32_t *wam_pm[2];
+  const uint32_t *wam_pm_ob[2];
+  int am_pm_defined;
   const char *d_t_fmt;
+  const uint32_t *wd_t_fmt;
+  const uint32_t *wd_t_fmt_ob;
   const char *d_fmt;
+  const uint32_t *wd_fmt;
+  const uint32_t *wd_fmt_ob;
   const char *t_fmt;
+  const uint32_t *wt_fmt;
+  const uint32_t *wt_fmt_ob;
   const char *t_fmt_ampm;
+  const uint32_t *wt_fmt_ampm;
+  const uint32_t *wt_fmt_ampm_ob;
   const char **era;
-  u_int32_t cur_num_era;
+  const uint32_t **wera;
+  const uint32_t **wera_ob;
+  uint32_t num_era;
   const char *era_year;
+  const uint32_t *wera_year;
+  const uint32_t *wera_year_ob;
   const char *era_d_t_fmt;
+  const uint32_t *wera_d_t_fmt;
+  const uint32_t *wera_d_t_fmt_ob;
   const char *era_t_fmt;
+  const uint32_t *wera_t_fmt;
+  const uint32_t *wera_t_fmt_ob;
   const char *era_d_fmt;
+  const uint32_t *wera_d_fmt;
+  const uint32_t *wera_d_fmt_ob;
   const char *alt_digits[100];
-  u_int32_t cur_num_alt_digits;
+  const uint32_t *walt_digits[100];
+  const uint32_t *walt_digits_ob[100];
+  int alt_digits_defined;
+  unsigned char week_ndays;
+  uint32_t week_1stday;
+  unsigned char week_1stweek;
+  unsigned char first_weekday;
+  unsigned char first_workday;
+  unsigned char cal_direction;
+  const char *timezone;
+  const uint32_t *wtimezone;
 
   struct era_data *era_entries;
   struct era_data *era_entries_ob;
 };
 
 
-void
+/* This constant is used to represent an empty wide character string.  */
+static const uint32_t empty_wstr[1] = { 0 };
+
+
+static void
 time_startup (struct linereader *lr, struct localedef_t *locale,
-	      struct charset_t *charset)
+	      int ignore_content)
 {
-  struct locale_time_t *time;
+  if (!ignore_content)
+    locale->categories[LC_TIME].time =
+      (struct locale_time_t *) xcalloc (1, sizeof (struct locale_time_t));
 
-  /* We have a definition for LC_TIME.  */
-  copy_posix.mask &= ~(1 << LC_TIME);
-
-  /* It is important that we always use UCS1 encoding for strings now.  */
-  encoding_method = ENC_UCS1;
-
-  locale->categories[LC_TIME].time = time =
-    (struct locale_time_t *) xmalloc (sizeof (struct locale_time_t));
-
-  memset (time, '\0', sizeof (struct locale_time_t));
+  lr->translate_strings = 1;
+  lr->return_widestr = 0;
 }
 
 
 void
-time_finish (struct localedef_t *locale)
+time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
+  size_t cnt;
 
-#define TESTARR_ELEM(cat, max)						      \
-  if (time->cur_num_##cat == 0 && !be_quiet)				      \
-    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
-	   #cat, "LC_TIME");						      \
-  else if (time->cur_num_##cat != max && !be_quiet)			      \
-    error (0, 0, _("field `%s' in category `%s' has not enough values"),      \
-	   #cat, "LC_TIME")
+#define TESTARR_ELEM(cat) \
+  if (!time->cat##_defined && !be_quiet)				      \
+    error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+  else if (time->w##cat != NULL)					      \
+    {									      \
+      size_t n;								      \
+      for (n = 0; n < sizeof (time->w##cat) / sizeof (time->w##cat[0]); ++n)  \
+	{								      \
+	  size_t len = wcslen ((wchar_t *) time->w##cat[n]) + 1;	      \
+	  uint32_t *wstr = (uint32_t *) xmalloc (len * sizeof (uint32_t));    \
+	  do								      \
+	    {								      \
+	      --len;							      \
+	      wstr[len] = bswap_32 (time->w##cat[n][len]);		      \
+	    }								      \
+	  while (len > 0);						      \
+	  time->w##cat##_ob[n] = wstr;					      \
+	}								      \
+    }
 
-  TESTARR_ELEM (abday, 7);
-  TESTARR_ELEM (day, 7);
-  TESTARR_ELEM (abmon, 12);
-  TESTARR_ELEM (mon, 12);
-  TESTARR_ELEM (am_pm, 2);
+  TESTARR_ELEM (abday);
+  TESTARR_ELEM (day);
+  TESTARR_ELEM (abmon);
+  TESTARR_ELEM (mon);
+  TESTARR_ELEM (am_pm);
 
-#define TEST_ELEM(cat)							      \
+#define TEST_ELEM(cat) \
   if (time->cat == NULL && !be_quiet)					      \
-    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
-	   #cat, "LC_TIME")
+    error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+  else if (time->w##cat != NULL)					      \
+    {									      \
+      size_t len = wcslen ((wchar_t *) time->w##cat) + 1;		      \
+      uint32_t *wstr = (uint32_t *) xmalloc (len * sizeof (uint32_t));	      \
+      do								      \
+	{								      \
+	  --len;							      \
+	  wstr[len] = bswap_32 (time->w##cat[len]);			      \
+	}								      \
+      while (len > 0);							      \
+      time->w##cat##_ob = wstr;						      \
+    }
 
   TEST_ELEM (d_t_fmt);
   TEST_ELEM (d_fmt);
@@ -135,21 +191,39 @@ time_finish (struct localedef_t *locale)
   /* According to C.Y.Alexis Cheng <alexis@vnet.ibm.com> the T_FMT_AMPM
      field is optional.  */
   if (time->t_fmt_ampm == NULL)
-    /* Use the 24h format as default.  */
-    time->t_fmt_ampm = time->t_fmt;
+    {
+      /* Use the 24h format as default.  */
+      time->t_fmt_ampm = time->t_fmt;
+      time->wt_fmt_ampm = time->wt_fmt;
+      time->wt_fmt_ampm_ob = time->wt_fmt_ob;
+    }
+  else
+    {
+      /* Convert the byte order.  */
+      size_t len = wcslen ((wchar_t *) time->wt_fmt_ampm) + 1;
+      uint32_t *wstr = (uint32_t *) xmalloc (len * sizeof (uint32_t));
+      do
+	{
+	  --len;
+	  wstr[len] = bswap_32 (time->wt_fmt_ampm[len]);
+	}
+      while (len > 0);
+      time->wt_fmt_ampm_ob = wstr;
+    }
 
   /* Now process the era entries.  */
-  if (time->cur_num_era != 0)
+  if (time->num_era != 0)
     {
       const int days_per_month[12] = { 31, 29, 31, 30, 31, 30,
 				       31, 31, 30, 31 ,30, 31 };
       size_t idx;
+      wchar_t *wstr;
 
       time->era_entries =
-	(struct era_data *) xmalloc (time->cur_num_era
+	(struct era_data *) xmalloc (time->num_era
 				     * sizeof (struct era_data));
 
-      for (idx = 0; idx < time->cur_num_era; ++idx)
+      for (idx = 0; idx < time->num_era; ++idx)
 	{
 	  size_t era_len = strlen (time->era[idx]);
 	  char *str = xmalloc ((era_len + 1 + 3) & ~3);
@@ -161,9 +235,9 @@ time_finish (struct localedef_t *locale)
 	  if (*str != '+' && *str != '-')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("direction flag in string %d in `era' field"
-			       " in category `%s' is not '+' nor '-'"),
-		       idx + 1, "LC_TIME");
+		error (0, 0, _("%s: direction flag in string %d in `era' field"
+			       " is not '+' nor '-'"),
+		       "LC_TIME", idx + 1);
 	      /* Default arbitrarily to '+'.  */
 	      time->era_entries[idx].direction = '+';
 	    }
@@ -172,9 +246,9 @@ time_finish (struct localedef_t *locale)
 	  if (*++str != ':')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("direction flag in string %d in `era' field"
-			       " in category `%s' is not a single character"),
-		       idx + 1, "LC_TIME");
+		error (0, 0, _("%s: direction flag in string %d in `era' field"
+			       " is not a single character"),
+		       "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -185,17 +259,17 @@ time_finish (struct localedef_t *locale)
 	  if (endp == str)
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("illegal number for offset in string %d in"
-			       " `era' field in category `%s'"),
-		       idx + 1, "LC_TIME");
+		error (0, 0, _("%s: invalid number for offset in string %d in"
+			       " `era' field"),
+		       "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
 	  else if (*endp != ':')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("garbage at end of offset value in string %d in"
-			       " `era' field in category `%s'"),
-		       idx + 1, "LC_TIME");
+		error (0, 0, _("%s: garbage at end of offset value in"
+			       " string %d in `era' field"),
+		       "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -241,19 +315,18 @@ time_finish (struct localedef_t *locale)
 		{
 		invalid_start_date:
 		  if (!be_quiet)
-		    error (0, 0, _("illegal starting date in string %d in"
-				   " `era' field in category `%s'"),
-			   idx + 1, "LC_TIME");
+		    error (0, 0, _("%s: invalid starting date in string %d in"
+				   " `era' field"),
+			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else if (*endp != ':')
 		{
 		garbage_start_date:
 		  if (!be_quiet)
-		    error (0, 0, _("garbage at end of starting date "
-				   "in string %d in `era' field "
-				   "in category `%s'"),
-			   idx + 1, "LC_TIME");
+		    error (0, 0, _("%s: garbage at end of starting date "
+				   "in string %d in `era' field "),
+			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -270,10 +343,9 @@ time_finish (struct localedef_t *locale)
 			   && time->era_entries[idx].start_date[2] == 29
 			   && !__isleap (time->era_entries[idx].start_date[0])))
 		      && !be_quiet)
-			  error (0, 0, _("starting date is illegal in"
-					 " string %d in `era' field in"
-					 " category `%s'"),
-				 idx + 1, "LC_TIME");
+			  error (0, 0, _("%s: starting date is invalid in"
+					 " string %d in `era' field"),
+				 "LC_TIME", idx + 1);
 		}
 	    }
 
@@ -317,19 +389,18 @@ time_finish (struct localedef_t *locale)
 		{
 		invalid_stop_date:
 		  if (!be_quiet)
-		    error (0, 0, _("illegal stopping date in string %d in"
-				   " `era' field in category `%s'"),
-			   idx + 1, "LC_TIME");
+		    error (0, 0, _("%s: invalid stopping date in string %d in"
+				   " `era' field"),
+			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else if (*endp != ':')
 		{
 		garbage_stop_date:
 		  if (!be_quiet)
-		    error (0, 0, _("garbage at end of stopping date "
-				   "in string %d in `era' field "
-				   "in category `%s'"),
-			   idx + 1, "LC_TIME");
+		    error (0, 0, _("%s: garbage at end of stopping date "
+				   "in string %d in `era' field"),
+			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -346,23 +417,19 @@ time_finish (struct localedef_t *locale)
 			   && time->era_entries[idx].stop_date[2] == 29
 			   && !__isleap (time->era_entries[idx].stop_date[0])))
 		      && !be_quiet)
-			  error (0, 0, _("stopping date is illegal in"
-					 " string %d in `era' field in"
-					 " category `%s'"),
-				 idx + 1, "LC_TIME");
+			  error (0, 0, _("%s: stopping date is invalid in"
+					 " string %d in `era' field"),
+				 "LC_TIME", idx + 1);
 		}
 	    }
 
 	  if (str == NULL || *str == '\0')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("missing era name in string %d in `era' field"
-			       " in category `%s'"), idx + 1, "LC_TIME");
-	      /* Make sure that name and format are adjacent strings
-		 in memory.  */
-	      time->era_entries[idx].name = "\0";
-	      time->era_entries[idx].format
-		= time->era_entries[idx].name + 1;
+		error (0, 0, _("%s: missing era name in string %d in `era'"
+			       " field"), "LC_TIME", idx + 1);
+	      time->era_entries[idx].name =
+		time->era_entries[idx].format = "";
 	    }
 	  else
 	    {
@@ -371,74 +438,149 @@ time_finish (struct localedef_t *locale)
 	      if (str == NULL || *str == '\0')
 		{
 		  if (!be_quiet)
-		    error (0, 0, _("missing era format in string %d in `era'"
-				   " field in category `%s'"),
-			   idx + 1, "LC_TIME");
-		  /* Make sure that name and format are adjacent strings
-		     in memory.  */
-		  time->era_entries[idx].name = "\0";
-		  time->era_entries[idx].format
-		    = time->era_entries[idx].name + 1;
+		    error (0, 0, _("%s: missing era format in string %d"
+				   " in `era' field"),
+			   "LC_TIME", idx + 1);
+		  time->era_entries[idx].name =
+		    time->era_entries[idx].format = "";
 		}
 	      else
 		time->era_entries[idx].format = str;
 	    }
+
+	  /* Now generate the wide character name and format.  */
+	  wstr = wcschr ((wchar_t *) time->wera, L':');	/* end direction */
+	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end offset */
+	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end start */
+	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end end */
+	  time->era_entries[idx].wname = (uint32_t *) wstr;
+	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end name */
+	  time->era_entries[idx].wformat = (uint32_t *) wstr;
 	}
 
       /* Construct the array for the other byte order.  */
       time->era_entries_ob =
-	(struct era_data *) xmalloc (time->cur_num_era
-				      * sizeof (struct era_data));
+	(struct era_data *) xmalloc (time->num_era * sizeof (struct era_data));
 
-      for (idx = 0; idx < time->cur_num_era; ++idx)
+      for (idx = 0; idx < time->num_era; ++idx)
 	{
 	  time->era_entries_ob[idx].direction =
-	    SWAPU32 (time->era_entries[idx].direction);
+	    bswap_32 (time->era_entries[idx].direction);
 	  time->era_entries_ob[idx].offset =
-	    SWAPU32 (time->era_entries[idx].offset);
+	    bswap_32 (time->era_entries[idx].offset);
 	  time->era_entries_ob[idx].start_date[0] =
-	    SWAPU32 (time->era_entries[idx].start_date[0]);
+	    bswap_32 (time->era_entries[idx].start_date[0]);
 	  time->era_entries_ob[idx].start_date[1] =
-	    SWAPU32 (time->era_entries[idx].start_date[1]);
+	    bswap_32 (time->era_entries[idx].start_date[1]);
 	  time->era_entries_ob[idx].start_date[2] =
-	    SWAPU32 (time->era_entries[idx].stop_date[2]);
+	    bswap_32 (time->era_entries[idx].stop_date[2]);
 	  time->era_entries_ob[idx].stop_date[0] =
-	    SWAPU32 (time->era_entries[idx].stop_date[0]);
+	    bswap_32 (time->era_entries[idx].stop_date[0]);
 	  time->era_entries_ob[idx].stop_date[1] =
-	    SWAPU32 (time->era_entries[idx].stop_date[1]);
+	    bswap_32 (time->era_entries[idx].stop_date[1]);
 	  time->era_entries_ob[idx].stop_date[2] =
-	    SWAPU32 (time->era_entries[idx].stop_date[2]);
+	    bswap_32 (time->era_entries[idx].stop_date[2]);
 	  time->era_entries_ob[idx].name =
 	    time->era_entries[idx].name;
 	  time->era_entries_ob[idx].format =
 	    time->era_entries[idx].format;
+	  if (time->era_entries[idx].wname != NULL)
+	    {
+	      size_t inner = (wcslen ((wchar_t *) time->era_entries[idx].wname)
+			      + 1);
+	      time->era_entries_ob[idx].wname = xmalloc (inner
+							 * sizeof (uint32_t));
+	      do
+		time->era_entries_ob[idx].wname[inner - 1]
+		  = bswap_32 (time->era_entries[idx].wname[inner - 1]);
+	      while (inner-- > 0);
+	    }
+	  else
+	    time->era_entries_ob[idx].wname = NULL;
+	  if (time->era_entries[idx].wformat != NULL)
+	    {
+	      size_t inner
+		= wcslen ((wchar_t *) time->era_entries[idx].wformat) + 1;
+	      time->era_entries_ob[idx].wformat = xmalloc (inner
+							   * sizeof (uint32_t));
+	      do
+		time->era_entries_ob[idx].wformat[inner - 1]
+		  = bswap_32 (time->era_entries[idx].wformat[inner - 1]);
+	      while (inner-- > 0);
+	    }
+	  else
+	    time->era_entries_ob[idx].wformat = NULL;
 	}
     }
+
+  if (time->week_ndays == 0)
+    time->week_ndays = 7;
+
+  if (time->week_1stday == 0)
+    time->week_1stday = 19971130;
+
+  if (time->week_1stweek > time->week_ndays)
+    error (0, 0, _("\
+%s: third operand for value of field `%s' must not be larger than %d"),
+	   "LC_TIME", "week", 7);
+
+  if (time->first_weekday == '\0')
+    /* The definition does not specify this so the default is used.  */
+    time->first_weekday = 1;
+  else if (time->first_weekday > time->week_ndays)
+    error (0, 0, _("\
+%s: values of field `%s' must not be larger than %d"),
+	   "LC_TIME", "first_weekday", 7);
+
+  if (time->first_workday == '\0')
+    /* The definition does not specify this so the default is used.  */
+    time->first_workday = 1;
+  else if (time->first_workday > time->week_ndays)
+    error (0, 0, _("\
+%s: values of field `%s' must not be larger than %d"),
+	   "LC_TIME", "first_workday", 7);
+
+  if (time->cal_direction == '\0')
+    /* The definition does not specify this so the default is used.  */
+    time->cal_direction = 1;
+  else if (time->cal_direction > 3)
+    error (0, 0, _("\
+%s: values for field `%s' must not be larger than 3"),
+	   "LC_TIME", "cal_direction", 3);
+
+  /* XXX We don't perform any tests on the timezone value since this is
+     simply useless, stupid $&$!@...  */
+  if (time->timezone == NULL)
+    time->timezone = "";
+
+  /* Generate alt digits in other byte order.  */
+  for (cnt = 0; cnt < 100; ++cnt)
+    if (time->walt_digits[cnt] != NULL)
+      {
+	size_t len = wcslen ((wchar_t *) time->walt_digits[cnt]) + 1;
+	uint32_t *wstr = xmalloc (len * sizeof (uint32_t));
+	do
+	  wstr[len - 1] = bswap_32 (time->walt_digits[cnt][len - 1]);
+	while (len-- > 0);
+	time->walt_digits_ob[cnt] = wstr;
+      }
 }
 
 
 void
-time_output (struct localedef_t *locale, const char *output_path)
+time_output (struct localedef_t *locale, struct charmap_t *charmap,
+	     const char *output_path)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
-		  + time->cur_num_era - 1
-		  + time->cur_num_alt_digits - 1
-		  + 1 + (time->cur_num_era * 9 - 1) * 2
-		  + (time->cur_num_era == 0)];
+		  + time->num_era - 1
+		  + 3 * 99
+		  + 1 + (time->num_era * 10 - 1) * 2];
   struct locale_file data;
-  u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
-  size_t cnt, last_idx, num;
-
-  if ((locale->binary & (1 << LC_TIME)) != 0)
-    {
-      iov[0].iov_base = time;
-      iov[0].iov_len = locale->len[LC_TIME];
-
-      write_locale_data (output_path, "LC_TIME", 1, iov);
-
-      return;
-    }
+  uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
+  size_t cnt, last_idx, num, n;
+  uint32_t num_era_eb;
+  uint32_t num_era_el;
 
   data.magic = LIMAGIC (LC_TIME);
   data.n = _NL_ITEM_INDEX (_NL_NUM_LC_TIME);
@@ -516,7 +658,7 @@ time_output (struct localedef_t *locale, const char *output_path)
   last_idx = ++cnt;
 
   idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < time->cur_num_era; ++num, ++cnt)
+  for (num = 0; num < time->num_era; ++num, ++cnt)
     {
       iov[2 + cnt].iov_base = (void *) time->era[num];
       iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
@@ -537,7 +679,7 @@ time_output (struct localedef_t *locale, const char *output_path)
   ++last_idx;
 
   idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < time->cur_num_alt_digits; ++num, ++cnt)
+  for (num = 0; num < 100; ++num, ++cnt)
     {
       iov[2 + cnt].iov_base = (void *) (time->alt_digits[num] ?: "");
       iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
@@ -564,15 +706,23 @@ time_output (struct localedef_t *locale, const char *output_path)
   idx[last_idx] = (idx[last_idx] + 3) & ~3;
   ++cnt;
 
-  iov[2 + cnt].iov_base = (void *) &time->cur_num_alt_digits;
-  iov[2 + cnt].iov_len = sizeof (u_int32_t);
+  /* The `era' data in usable form.  */
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+  num_era_eb = bswap_32 (time->num_era);
+  num_era_el = time->num_era;
+#else
+  num_era_eb = time->num_era;
+  num_era_el = bswap_32 (time->num_era);
+#endif
+
+  iov[2 + cnt].iov_base = (void *) &num_era_eb;
+  iov[2 + cnt].iov_len = sizeof (uint32_t);
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  /* The `era' data in usable form.  */
-  iov[2 + cnt].iov_base = (void *) &time->cur_num_era;
-  iov[2 + cnt].iov_len = sizeof (u_int32_t);
+  iov[2 + cnt].iov_base = (void *) &num_era_el;
+  iov[2 + cnt].iov_len = sizeof (uint32_t);
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
@@ -585,7 +735,7 @@ time_output (struct localedef_t *locale, const char *output_path)
 # define ERA_B2 time->era_entries_ob
 #endif
   idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < time->cur_num_era; ++num)
+  for (num = 0; num < time->num_era; ++num)
     {
       size_t l;
 
@@ -596,10 +746,22 @@ time_output (struct localedef_t *locale, const char *output_path)
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[0];
-      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[0];
-      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
 
       l = (strchr (ERA_B1[num].format, '\0') - ERA_B1[num].name) + 1;
@@ -611,11 +773,19 @@ time_output (struct localedef_t *locale, const char *output_path)
       idx[1 + last_idx] += 8 * sizeof (int32_t) + l;
 
       assert (idx[1 + last_idx] % 4 == 0);
+
+      iov[2 + cnt].iov_base = (void *) ERA_B1[num].wname;
+      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) ERA_B1[cnt].wformat, L'\0')
+			       - (wchar_t *) ERA_B1[num].wname + 1)
+			      * sizeof (uint32_t));
+      ++cnt;
+
+      idx[1 + last_idx] += iov[2 + cnt].iov_len;
     }
   ++last_idx;
 
-  /* idx[1 + last_idx] = idx[last_idx]; */
-  for (num = 0; num < time->cur_num_era; ++num)
+  idx[1 + last_idx] = idx[last_idx];
+  for (num = 0; num < time->num_era; ++num)
     {
       size_t l;
 
@@ -626,10 +796,22 @@ time_output (struct localedef_t *locale, const char *output_path)
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[0];
-      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
       iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[0];
-      iov[2 + cnt].iov_len = 3 * sizeof (int32_t);
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[1];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
+      ++cnt;
+      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[2];
+      iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
 
       l = (strchr (ERA_B2[num].format, '\0') - ERA_B2[num].name) + 1;
@@ -638,103 +820,618 @@ time_output (struct localedef_t *locale, const char *output_path)
       iov[2 + cnt].iov_len = l;
       ++cnt;
 
-      /* idx[1 + last_idx] += 8 * sizeof (int32_t) + l; */
+      idx[1 + last_idx] += 8 * sizeof (int32_t) + l;
+
+      iov[2 + cnt].iov_base = (void *) ERA_B1[num].wname;
+      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) ERA_B1[cnt].wformat, L'\0')
+			       - (wchar_t *) ERA_B1[num].wname + 1)
+			      * sizeof (uint32_t));
+      ++cnt;
+
+      idx[1 + last_idx] += iov[2 + cnt].iov_len;
+    }
+  ++last_idx;
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define WABDAY_B1	 wabday_ob
+# define WDAY_B1	 wday_ob
+# define WABMON_B1	 wabmon_ob
+# define WMON_B1	 wmon_ob
+# define WAM_PM_B1	 wam_pm_ob
+# define WD_T_FMT_B1	 wd_t_fmt_ob
+# define WD_FMT_B1	 wd_fmt_ob
+# define WT_FMT_B1	 wt_fmt_ob
+# define WT_FMT_AMPM_B1	 wt_fmt_ampm_ob
+# define WERA_YEAR_B1	 wera_year_ob
+# define WERA_D_FMT_B1	 wera_d_fmt_ob
+# define WALT_DIGITS_B1	 walt_digits_ob
+# define WERA_D_T_FMT_B1 wera_d_t_fmt_ob
+# define WERA_T_FMT_B1	 wera_t_fmt_ob
+# define WABDAY_B2	 wabday
+# define WDAY_B2	 wday
+# define WABMON_B2	 wabmon
+# define WMON_B2	 wmon
+# define WAM_PM_B2	 wam_pm
+# define WD_T_FMT_B2	 wd_t_fmt
+# define WD_FMT_B2	 wd_fmt
+# define WT_FMT_B2	 wt_fmt
+# define WT_FMT_AMPM_B2	 wt_fmt_ampm
+# define WERA_YEAR_B2	 wera_year
+# define WERA_D_FMT_B2	 wera_d_fmt
+# define WALT_DIGITS_B2	 walt_digits
+# define WERA_D_T_FMT_B2 wera_d_t_fmt
+# define WERA_T_FMT_B2	 wera_t_fmt
+#else
+# define WABDAY_B1	wabday
+# define WDAY_B1	wday
+# define WABMON_B1	wabmon
+# define WMON_B1	wmon
+# define WAM_PM_B1	wam_pm
+# define WD_T_FMT_B1	wd_t_fmt
+# define WD_FMT_B1	wd_fmt
+# define WT_FMT_B1	wt_fmt
+# define WT_FMT_AMPM_B1	wt_fmt_ampm
+# define WERA_YEAR_B1	 wera_year
+# define WERA_D_FMT_B1	 wera_d_fmt
+# define WALT_DIGITS_B1	 walt_digits
+# define WERA_D_T_FMT_B1 wera_d_t_fmt
+# define WERA_T_FMT_B1	 wera_t_fmt
+# define WABDAY_B2	wabday_ob
+# define WDAY_B2	wday_ob
+# define WABMON_B2	wabmon_ob
+# define WMON_B2	wmon_ob
+# define WAM_PM_B2	wam_pm_ob
+# define WD_T_FMT_B2	wd_t_fmt_ob
+# define WD_FMT_B2	wd_fmt_ob
+# define WT_FMT_B2	wt_fmt_ob
+# define WT_FMT_AMPM_B2	wt_fmt_ampm_ob
+# define WERA_YEAR_B2	 wera_year_ob
+# define WERA_D_FMT_B2	 wera_d_fmt_ob
+# define WALT_DIGITS_B2	 walt_digits_ob
+# define WERA_D_T_FMT_B2 wera_d_t_fmt_ob
+# define WERA_T_FMT_B2	 wera_t_fmt_ob
+#endif
+
+  /* The wide character ab'days.  */
+  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WABDAY_B1[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WABDAY_B2[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
     }
 
-  /* We have a problem when no era data is present.  In this case the
-     data pointer for _NL_TIME_ERA_ENTRIES_EB and
-     _NL_TIME_ERA_ENTRIES_EL point after the end of the file.  So we
-     introduce some dummy data here.  */
-  if (time->cur_num_era == 0)
+  /* The wide character days.  */
+  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
     {
-      static u_int32_t dummy = 0;
-      iov[2 + cnt].iov_base = (void *) &dummy;
-      iov[2 + cnt].iov_len = 4;
-      ++cnt;
+      iov[2 + cnt].iov_base =
+	(void *) (time->WDAY_B1[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
     }
+  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WDAY_B2[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+
+  /* The wide character ab'mons.  */
+  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WABMON_B1[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WABMON_B2[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+
+  /* The wide character mons.  */
+  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WMON_B1[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WMON_B2[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+
+  /* Wide character AM/PM.  */
+  for (n = 0; n < 2; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WAM_PM_B1[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+  for (n = 0; n < 2; ++n, ++cnt, ++last_idx)
+    {
+      iov[2 + cnt].iov_base =
+	(void *) (time->WAM_PM_B2[n] ?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+    }
+
+  iov[2 + cnt].iov_base = (void *) (time->WD_T_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WD_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_AMPM_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WD_T_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WD_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_AMPM_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_YEAR_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_D_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  idx[1 + last_idx] = idx[last_idx];
+  for (num = 0; num < 100; ++num, ++cnt)
+    {
+      iov[2 + cnt].iov_base = (void *) (time->WALT_DIGITS_B2[num]
+					?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] += iov[2 + cnt].iov_len;
+    }
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_D_T_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_T_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_YEAR_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_D_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  idx[1 + last_idx] = idx[last_idx];
+  for (num = 0; num < 100; ++num, ++cnt)
+    {
+      iov[2 + cnt].iov_base = (void *) (time->WALT_DIGITS_B1[num]
+					?: empty_wstr);
+      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			      * sizeof (uint32_t));
+      idx[1 + last_idx] += iov[2 + cnt].iov_len;
+    }
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_D_T_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) (time->WERA_T_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
+			  * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) &time->week_ndays;
+  iov[2 + cnt].iov_len = 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) &time->week_1stday;
+  iov[2 + cnt].iov_len = 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) &time->week_1stweek;
+  iov[2 + cnt].iov_len = 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) &time->first_weekday;
+  iov[2 + cnt].iov_len = 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) &time->first_workday;
+  iov[2 + cnt].iov_len = 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) &time->cal_direction;
+  iov[2 + cnt].iov_len = 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) time->timezone;
+  iov[2 + cnt].iov_len = strlen (time->timezone) + 1;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
 
   assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
-		  + time->cur_num_era - 1
-		  + time->cur_num_alt_digits - 1
-		  + 1 + (time->cur_num_era * 9 - 1) * 2
-		  + (time->cur_num_era == 0))
-	  && last_idx + 1 == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
+		  + time->num_era - 1
+		  + 3 * 99
+		  + 1 + (time->num_era * 10 - 1) * 2));
+  assert (last_idx  == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   write_locale_data (output_path, "LC_TIME", 2 + cnt, iov);
 }
 
 
+/* The parser for the LC_TIME section of the locale definition.  */
 void
-time_add (struct linereader *lr, struct localedef_t *locale,
-	  enum token_t tok, struct token *code,
-	  struct charset_t *charset)
+time_read (struct linereader *ldfile, struct localedef_t *result,
+	   struct charmap_t *charmap, const char *repertoire_name,
+	   int ignore_content)
 {
-  struct locale_time_t *time = locale->categories[LC_TIME].time;
+  struct repertoire_t *repertoire = NULL;
+  struct locale_time_t *time;
+  struct token *now;
+  enum token_t nowtok;
+  size_t cnt;
 
-  switch (tok)
+  /* Get the repertoire we have to use.  */
+  if (repertoire_name != NULL)
+    repertoire = repertoire_read (repertoire_name);
+
+  /* The rest of the line containing `LC_TIME' must be free.  */
+  lr_ignore_rest (ldfile, 1);
+
+
+  do
     {
-#define STRARR_ELEM(cat, max)						      \
-    case tok_##cat:							      \
-      if (time->cur_num_##cat >= max)					      \
-	lr_error (lr, _("\
-too many values for field `%s' in category `%s'"),			      \
-		  #cat, "LC_TIME");					      \
-      else if (code->val.str.start == NULL)				      \
-	{								      \
-	  lr_error (lr, _("unknown character in field `%s' of category `%s'"),\
-		    #cat, "LC_TIME");					      \
-	  time->cat[time->cur_num_##cat++] = "";			      \
-	}								      \
-      else								      \
-	time->cat[time->cur_num_##cat++] = code->val.str.start;		      \
-      break
-
-    STRARR_ELEM (abday, 7);
-    STRARR_ELEM (day, 7);
-    STRARR_ELEM (abmon, 12);
-    STRARR_ELEM (mon, 12);
-    STRARR_ELEM (am_pm, 2);
-    STRARR_ELEM (alt_digits, 100);
-
-    case tok_era:
-      if (code->val.str.start == NULL)
-	lr_error (lr, _("unknown character in field `%s' of category `%s'"),
-		  "era", "LC_TIME");
-      else
-	{
-	  ++time->cur_num_era;
-	  time->era = xrealloc (time->era,
-				time->cur_num_era * sizeof (char *));
-	  time->era[time->cur_num_era - 1] = code->val.str.start;
-	}
-      break;
-
-#define STR_ELEM(cat)							      \
-    case tok_##cat:							      \
-      if (time->cat != NULL)						      \
-	lr_error (lr, _("\
-field `%s' in category `%s' declared more than once"),			      \
-		  #cat, "LC_TIME");					      \
-      else if (code->val.str.start == NULL)				      \
-	{								      \
-	  lr_error (lr, _("unknown character in field `%s' of category `%s'"),\
-		    #cat, "LC_TIME");					      \
-	  time->cat = "";						      \
-	}								      \
-      else								      \
-	time->cat = code->val.str.start;				      \
-      break
-
-    STR_ELEM (d_t_fmt);
-    STR_ELEM (d_fmt);
-    STR_ELEM (t_fmt);
-    STR_ELEM (t_fmt_ampm);
-    STR_ELEM (era_year);
-    STR_ELEM (era_d_t_fmt);
-    STR_ELEM (era_d_fmt);
-    STR_ELEM (era_t_fmt);
-
-    default:
-      assert (! "unknown token in category `LC_TIME': should not happen");
+      now = lr_token (ldfile, charmap, NULL);
+      nowtok = now->tok;
     }
+  while (nowtok == tok_eol);
+
+  /* If we see `copy' now we are almost done.  */
+  if (nowtok == tok_copy)
+    {
+      handle_copy (ldfile, charmap, repertoire, tok_lc_time, LC_TIME,
+		   "LC_TIME", ignore_content);
+      return;
+    }
+
+  /* Prepare the data structures.  */
+  time_startup (ldfile, result, ignore_content);
+  time = result->categories[LC_TIME].time;
+
+  while (1)
+    {
+      /* Of course we don't proceed beyond the end of file.  */
+      if (nowtok == tok_eof)
+	break;
+
+      /* Ingore empty lines.  */
+      if (nowtok == tok_eol)
+	{
+	  now = lr_token (ldfile, charmap, NULL);
+	  nowtok = now->tok;
+	  continue;
+	}
+
+      switch (nowtok)
+	{
+#define STRARR_ELEM(cat, min, max) \
+	case tok_##cat:							      \
+	  for (cnt = 0; cnt < max; ++cnt)				      \
+	    {								      \
+	      now = lr_token (ldfile, charmap, repertoire);		      \
+	      if (now->tok == tok_eol)					      \
+		{							      \
+		  if (cnt < min)					      \
+		    lr_error (ldfile, _("%s: too few values for field `%s'"), \
+			      "LC_TIME", #cat);				      \
+		  if (!ignore_content)					      \
+		    do							      \
+		      {							      \
+			time->cat[cnt] = "";				      \
+			time->w##cat[cnt] = empty_wstr;			      \
+		      }							      \
+		    while (++cnt < max);				      \
+		  break;						      \
+		}							      \
+	      else if (now->tok != tok_string)				      \
+		goto err_label;						      \
+	      else if (!ignore_content && (now->val.str.startmb == NULL	      \
+					   || now->val.str.startwc == NULL))  \
+		{							      \
+		  lr_error (ldfile, _("%s: unknown character in field `%s'"), \
+			    "LC_TIME", #cat);				      \
+		  time->cat[cnt] = "";					      \
+		  time->w##cat[cnt] = empty_wstr;			      \
+		}							      \
+	      else if (!ignore_content)					      \
+		{							      \
+		  time->cat[cnt] = now->val.str.startmb;		      \
+		  time->w##cat[cnt] = now->val.str.startwc;		      \
+		}							      \
+									      \
+	      /* Match the semicolon.  */				      \
+	      now = lr_token (ldfile, charmap, NULL);			      \
+	      if (now->tok != tok_semicolon && now->tok != tok_eol)	      \
+		break;							      \
+	    }								      \
+	  if (now->tok != tok_eol)					      \
+	    {								      \
+	      while (!ignore_content && cnt < min)			      \
+		{							      \
+		  time->cat[cnt] = "";					      \
+		  time->w##cat[cnt++] = empty_wstr;			      \
+		}							      \
+	      								      \
+	      if (now->tok == tok_semicolon)				      \
+		{							      \
+		  now = lr_token (ldfile, charmap, NULL);		      \
+		  if (now->tok == tok_eol)				      \
+		    lr_error (ldfile, _("extra trailing semicolon"));	      \
+		  else if (now->tok == tok_string)			      \
+		    {							      \
+		      lr_error (ldfile, _("\
+%s: too many values for field `%s'"),					      \
+				"LC_TIME", #cat);			      \
+		      lr_ignore_rest (ldfile, 0);			      \
+		    }							      \
+		  else							      \
+		    goto err_label;					      \
+		}							      \
+	      else							      \
+		goto err_label;						      \
+	    }								      \
+	  time->cat##_defined = 1;					      \
+	  break
+
+	  STRARR_ELEM (abday, 7, 7);
+	  STRARR_ELEM (day, 7, 7);
+	  STRARR_ELEM (abmon, 12, 12);
+	  STRARR_ELEM (mon, 12, 12);
+	  STRARR_ELEM (am_pm, 2, 2);
+	  STRARR_ELEM (alt_digits, 0, 100);
+
+	case tok_era:
+	  do
+	    {
+	      now = lr_token (ldfile, charmap, NULL);
+	      if (now->tok != tok_string)
+		goto err_label;
+	      if (!ignore_content && (now->val.str.startmb == NULL
+				      || now->val.str.startwc == NULL))
+		{
+		  lr_error (ldfile, _("%s: unknown character in field `%s'"),
+			    "LC_TIME", "era");
+		  lr_ignore_rest (ldfile, 0);
+		  break;
+		}
+
+	      if (!ignore_content)
+		{
+		  time->era = xrealloc (time->era,
+					(time->num_era + 1) * sizeof (char *));
+		  time->era[time->num_era] = now->val.str.startmb;
+
+		  time->wera = xrealloc (time->wera,
+					 (time->num_era + 1)
+					 * sizeof (char *));
+		  time->wera[time->num_era++] = now->val.str.startwc;
+		}
+
+	      now = lr_token (ldfile, charmap, NULL);
+	      if (now->tok != tok_eof && now->tok != tok_semicolon)
+		goto err_label;
+	    }
+	  while (now->tok == tok_semicolon);
+	  break;
+
+#define STR_ELEM(cat) \
+	case tok_##cat:							      \
+	  now = lr_token (ldfile, charmap, NULL);			      \
+	  if (now->tok != tok_string)					      \
+	    goto err_label;						      \
+	  else if (time->cat != NULL)					      \
+	    lr_error (ldfile, _("\
+%s: field `%s' declared more than once"), "LC_TIME", #cat);		      \
+	  else if (!ignore_content && (now->val.str.startmb == NULL	      \
+				       || now->val.str.startwc == NULL))      \
+	    {								      \
+	      lr_error (ldfile, _("%s: unknown character in field `%s'"),     \
+			"LC_TIME", #cat);				      \
+	      time->cat = "";						      \
+	      time->w##cat = empty_wstr;				      \
+	    }								      \
+	  else if (!ignore_content)					      \
+	    {								      \
+	      time->cat = now->val.str.startmb;				      \
+	      time->w##cat = now->val.str.startwc;			      \
+	    }								      \
+	  break
+
+	  STR_ELEM (d_t_fmt);
+	  STR_ELEM (d_fmt);
+	  STR_ELEM (t_fmt);
+	  STR_ELEM (t_fmt_ampm);
+	  STR_ELEM (era_year);
+	  STR_ELEM (era_d_t_fmt);
+	  STR_ELEM (era_d_fmt);
+	  STR_ELEM (era_t_fmt);
+	  STR_ELEM (timezone);
+
+#define INT_ELEM(cat) \
+	case tok_##cat:							      \
+	  now = lr_token (ldfile, charmap, NULL);			      \
+	  if (now->tok != tok_number)					      \
+	    goto err_label;						      \
+	  else if (time->cat != 0)					      \
+	    lr_error (ldfile, _("%s: field `%s' declared more than once"),    \
+		      "LC_TIME", #cat);					      \
+	  else if (!ignore_content)					      \
+	    time->cat = now->val.num;					      \
+	  break
+
+	  INT_ELEM (first_weekday);
+	  INT_ELEM (first_workday);
+	  INT_ELEM (cal_direction);
+
+	case tok_week:
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok != tok_number)
+	    goto err_label;
+	  time->week_ndays = now->val.num;
+
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok != tok_semicolon)
+	    goto err_label;
+
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok != tok_number)
+	    goto err_label;
+	  time->week_1stday = now->val.num;
+
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok != tok_semicolon)
+	    goto err_label;
+
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok != tok_number)
+	    goto err_label;
+	  time->week_1stweek = now->val.num;
+
+	  lr_ignore_rest (ldfile,  1);
+	  break;
+
+	case tok_end:
+	  /* Next we assume `LC_TIME'.  */
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok == tok_eof)
+	    break;
+	  if (now->tok == tok_eol)
+	    lr_error (ldfile, _("%s: incomplete `END' line"), "LC_TIME");
+	  else if (now->tok != tok_lc_time)
+	    lr_error (ldfile, _("\
+%1$s: definition does not end with `END %1$s'"), "LC_TIME");
+	  lr_ignore_rest (ldfile, now->tok == tok_lc_time);
+	  return;
+
+	default:
+	err_label:
+	  SYNTAX_ERROR (_("%s: syntax error"), "LC_TIME");
+	}
+
+      /* Prepare for the next round.  */
+      now = lr_token (ldfile, charmap, NULL);
+      nowtok = now->tok;
+    }
+
+  /* When we come here we reached the end of the file.  */
+  lr_error (ldfile, _("%s: premature end of file"), "LC_TIME");
 }

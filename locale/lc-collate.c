@@ -1,5 +1,5 @@
 /* Define current locale data for LC_COLLATE category.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,16 +28,16 @@ extern const u_int32_t _nl_C_LC_COLLATE_symbol_classes[];
 
 _NL_CURRENT_DEFINE (LC_COLLATE);
 
-const u_int32_t *__collate_table;
-const u_int32_t *__collate_extra;
+const u_int32_t *__collate_tablewc;
+const u_int32_t *__collate_extrawc;
 
 const u_int32_t *__collate_element_hash;
 const char *__collate_element_strings;
-const wchar_t *__collate_element_values;
+const uint32_t *__collate_element_values;
 
 const u_int32_t *__collate_symbol_hash = _nl_C_LC_COLLATE_symbol_hash;
 const char *__collate_symbol_strings = _nl_C_LC_COLLATE_symbol_strings;
-const u_int32_t *__collate_symbol_classes = _nl_C_LC_COLLATE_symbol_classes;
+const u_int32_t *__collate_symbol_classeswc = _nl_C_LC_COLLATE_symbol_classes;
 
 
 /* We are called after loading LC_CTYPE data to load it into
@@ -58,14 +58,14 @@ _nl_postload_collate (void)
 #define current(x)							      \
   ((const unsigned int *) _NL_CURRENT (LC_COLLATE, paste(_NL_COLLATE_,x)))
 
-  __collate_table = current (bo (TABLE));
-  __collate_extra = current (bo (EXTRA));
+  __collate_tablewc = current (bo (TABLEWC));
+  __collate_extrawc = current (bo (EXTRAWC));
 
   __collate_element_hash = current (bo (ELEM_HASH));
   __collate_element_strings = (const char *) current (ELEM_STR_POOL);
-  __collate_element_values = (const wchar_t *) current (bo (ELEM_VAL));
+  __collate_element_values = (const uint32_t *) current (bo (ELEM_VAL));
 
   __collate_symbol_hash = current (bo (SYMB_HASH));
   __collate_symbol_strings = (const char *) current (SYMB_STR_POOL);
-  __collate_symbol_classes = current (bo (SYMB_CLASS));
+  __collate_symbol_classeswc = current (bo (SYMB_CLASSWC));
 }

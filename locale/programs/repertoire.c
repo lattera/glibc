@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -24,22 +24,30 @@
 #include <errno.h>
 #include <error.h>
 #include <limits.h>
+#include <obstack.h>
+#include <search.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <libintl.h>
 
 #include "linereader.h"
-#include "charset.h"
+#include "charmap.h"
 #include "repertoire.h"
 #include "simple-hash.h"
-
-
-extern void *xmalloc (size_t __n);
+#include "localedef.h"
 
 
 /* Simple keyword hashing for the repertoiremap.  */
-static const struct keyword_t *repertoiremap_hash (const char *str, int len);
+static const struct keyword_t *repertoiremap_hash (const char *str,
+						   unsigned int len);
+static void repertoire_new_char (struct linereader *lr, hash_table *ht,
+				 hash_table *rt, struct obstack *ob,
+				 uint32_t value, const char *from,
+				 const char *to, int decimal_ellipsis);
+static int repertoire_compare (const void *p1, const void *p2);
+
+/* Already known repertoire maps.  */
+static void *known;
 
 
 struct repertoire_t *
@@ -47,9 +55,17 @@ repertoire_read (const char *filename)
 {
   struct linereader *repfile;
   struct repertoire_t *result;
+  struct repertoire_t **resultp;
+  struct repertoire_t search;
   int state;
   char *from_name = NULL;
   char *to_name = NULL;
+  enum token_t ellipsis = tok_none;
+
+  search.name = filename;
+  resultp = tfind (&search, &known, &repertoire_compare);
+  if (resultp != NULL)
+    return *resultp;
 
   /* Determine path.  */
   repfile = lr_open (filename, repertoiremap_hash);
@@ -57,7 +73,7 @@ repertoire_read (const char *filename)
     {
       if (strchr (filename, '/') == NULL)
 	{
-	  char *i18npath = __secure_getenv ("I18NPATH");
+	  char *i18npath = getenv ("I18NPATH");
 	  if (i18npath != NULL && *i18npath != '\0')
 	    {
 	      char path[strlen (filename) + 1 + strlen (i18npath)
@@ -73,6 +89,13 @@ repertoire_read (const char *filename)
 			  filename);
 
 		  repfile = lr_open (path, repertoiremap_hash);
+
+		  if (repfile == NULL)
+		    {
+		      stpcpy (stpcpy (path, next), filename);
+
+		      repfile = lr_open (path, repertoiremap_hash);
+		    }
 		}
 	    }
 
@@ -98,15 +121,22 @@ repertoire_read (const char *filename)
 	}
     }
 
+  /* We don't want symbolic names in string to be translated.  */
+  repfile->translate_strings = 0;
+
   /* Allocate room for result.  */
   result = (struct repertoire_t *) xmalloc (sizeof (struct repertoire_t));
   memset (result, '\0', sizeof (struct repertoire_t));
+
+  result->name = xstrdup (filename);
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
   obstack_init (&result->mem_pool);
 
-  if (init_hash (&result->char_table, 256))
+  if (init_hash (&result->char_table, 256)
+      || init_hash (&result->reverse_table, 256)
+      || init_hash (&result->seq_table, 256))
     {
       free (result);
       return NULL;
@@ -118,7 +148,7 @@ repertoire_read (const char *filename)
   while (1)
     {
       /* What's on?  */
-      struct token *now = lr_token (repfile, NULL);
+      struct token *now = lr_token (repfile, NULL, NULL);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -137,7 +167,7 @@ repertoire_read (const char *filename)
 	  if (nowtok == tok_escape_char || nowtok == tok_comment_char)
 	    {
 	      /* We know that we need an argument.  */
-	      arg = lr_token (repfile, NULL);
+	      arg = lr_token (repfile, NULL, NULL);
 
 	      if (arg->tok != tok_ident)
 		{
@@ -148,7 +178,7 @@ repertoire_read (const char *filename)
 		  continue;
 		}
 
-	      if (arg->val.str.len != 1)
+	      if (arg->val.str.lenmb != 1)
 		{
 		  lr_error (repfile, _("\
 argument to <%s> must be a single character"),
@@ -160,9 +190,9 @@ argument to <%s> must be a single character"),
 		}
 
 	      if (nowtok == tok_escape_char)
-		repfile->escape_char = *arg->val.str.start;
+		repfile->escape_char = *arg->val.str.startmb;
 	      else
-		repfile->comment_char = *arg->val.str.start;
+		repfile->comment_char = *arg->val.str.startmb;
 
 	      lr_ignore_rest (repfile, 1);
 	      continue;
@@ -209,8 +239,8 @@ argument to <%s> must be a single character"),
 	    obstack_free (&result->mem_pool, from_name);
 
 	  from_name = (char *) obstack_copy0 (&result->mem_pool,
-					      now->val.str.start,
-					      now->val.str.len);
+					      now->val.str.startmb,
+					      now->val.str.lenmb);
 	  to_name = NULL;
 
 	  state = 3;
@@ -219,8 +249,10 @@ argument to <%s> must be a single character"),
 	case 3:
 	  /* We have two possibilities: We can see an ellipsis or an
 	     encoding value.  */
-	  if (nowtok == tok_ellipsis)
+	  if (nowtok == tok_ellipsis3 || nowtok == tok_ellipsis4
+	      || nowtok == tok_ellipsis2)
 	    {
+	      ellipsis = nowtok;
 	      state = 4;
 	      continue;
 	    }
@@ -232,7 +264,7 @@ argument to <%s> must be a single character"),
 	  state = 2;
 
 	  errno = 0;
-	  if (nowtok != tok_ucs2 && nowtok != tok_ucs4)
+	  if (nowtok != tok_ucs4)
 	    {
 	      lr_error (repfile,
 			_("syntax error in repertoire map definition: %s"),
@@ -243,8 +275,10 @@ argument to <%s> must be a single character"),
 	    }
 
 	  /* We've found a new valid definition.  */
-	  charset_new_char (repfile, &result->char_table, 4,
-			    now->val.charcode.val, from_name, to_name);
+	  repertoire_new_char (repfile, &result->char_table,
+			       &result->reverse_table, &result->mem_pool,
+			       now->val.ucs4, from_name, to_name,
+			       ellipsis != tok_ellipsis2);
 
 	  /* Ignore the rest of the line.  */
 	  lr_ignore_rest (repfile, 0);
@@ -268,8 +302,8 @@ argument to <%s> must be a single character"),
 
 	  /* Copy the to-name in a safe place.  */
 	  to_name = (char *) obstack_copy0 (&result->mem_pool,
-					    repfile->token.val.str.start,
-					    repfile->token.val.str.len);
+					    repfile->token.val.str.startmb,
+					    repfile->token.val.str.lenmb);
 
 	  state = 5;
 	  continue;
@@ -291,12 +325,26 @@ argument to <%s> must be a single character"),
 
   lr_close (repfile);
 
+  if (tsearch (result, &known, &repertoire_compare) == NULL)
+    /* Something went wrong.  */
+    error (0, errno, _("cannot safe new repertoire map"));
+
   return result;
 }
 
 
+static int
+repertoire_compare (const void *p1, const void *p2)
+{
+  struct repertoire_t *r1 = (struct repertoire_t *) p1;
+  struct repertoire_t *r2 = (struct repertoire_t *) p2;
+
+  return strcmp (r1->name, r2->name);
+}
+
+
 static const struct keyword_t *
-repertoiremap_hash (const char *str, int len)
+repertoiremap_hash (const char *str, unsigned int len)
 {
   static const struct keyword_t wordlist[0] =
   {
@@ -316,4 +364,135 @@ repertoiremap_hash (const char *str, int len)
     return &wordlist[3];
 
   return NULL;
+}
+
+
+static void
+repertoire_new_char (struct linereader *lr, hash_table *ht, hash_table *rt,
+		     struct obstack *ob, uint32_t value, const char *from,
+		     const char *to, int decimal_ellipsis)
+{
+  char *from_end;
+  char *to_end;
+  const char *cp;
+  char *buf = NULL;
+  int prefix_len, len1, len2;
+  unsigned int from_nr, to_nr, cnt;
+
+  if (to == NULL)
+    {
+      insert_entry (ht, from, strlen (from),
+		    (void *) (unsigned long int) value);
+      /* Please note that it isn't a bug if a symbol is defined more
+	 than once.  All later definitions are simply discarded.  */
+
+      insert_entry (rt, obstack_copy (ob, &value, sizeof (value)),
+		    sizeof (value), (void *) from);
+
+      return;
+    }
+
+  /* We have a range: the names must have names with equal prefixes
+     and an equal number of digits, where the second number is greater
+     or equal than the first.  */
+  len1 = strlen (from);
+  len2 = strlen (to);
+
+  if (len1 != len2)
+    {
+    invalid_range:
+      lr_error (lr, _("invalid names for character range"));
+      return;
+    }
+
+  cp = &from[len1 - 1];
+  if (decimal_ellipsis)
+    while (isdigit (*cp) && cp >= from)
+      --cp;
+  else
+    while (isxdigit (*cp) && cp >= from)
+      {
+	if (!isdigit (*cp) && !isupper (*cp))
+	  lr_error (lr, _("\
+hexadecimal range format should use only capital characters"));
+	--cp;
+      }
+
+  prefix_len = (cp - from) + 1;
+
+  if (cp == &from[len1 - 1] || strncmp (from, to, prefix_len) != 0)
+    goto invalid_range;
+
+  errno = 0;
+  from_nr = strtoul (&from[prefix_len], &from_end, decimal_ellipsis ? 10 : 16);
+  if (*from_end != '\0' || (from_nr == ULONG_MAX && errno == ERANGE)
+      || ((to_nr = strtoul (&to[prefix_len], &to_end,
+			    decimal_ellipsis ? 10 : 16)) == ULONG_MAX
+          && errno == ERANGE)
+      || *to_end != '\0')
+    {
+      lr_error (lr, _("<%s> and <%s> are invalid names for range"));
+      return;
+    }
+
+  if (from_nr > to_nr)
+    {
+      lr_error (lr, _("upper limit in range is not smaller then lower limit"));
+      return;
+    }
+
+  for (cnt = from_nr; cnt <= to_nr; ++cnt)
+    {
+      uint32_t this_value = value + (cnt - from_nr);
+
+      obstack_printf (ob, decimal_ellipsis ? "%.*s%0*d" : "%.*s%0*X",
+		      prefix_len, from, len1 - prefix_len, cnt);
+
+      insert_entry (ht, buf, len1,
+		    (void *) (unsigned long int) this_value);
+      /* Please note we don't examine the return value since it is no error
+	 if we have two definitions for a symbol.  */
+
+      insert_entry (rt, obstack_copy (ob, &this_value, sizeof (this_value)),
+		    sizeof (this_value), (void *) from);
+    }
+}
+
+
+uint32_t
+repertoire_find_value (const struct repertoire_t *rep, const char *name,
+		       size_t len)
+{
+  void *result;
+
+  if (find_entry ((hash_table *) &rep->char_table, name, len, &result) < 0)
+    return ILLEGAL_CHAR_VALUE;
+
+  return (uint32_t) ((unsigned long int) result);
+}
+
+
+const char *
+repertoire_find_symbol (const struct repertoire_t *rep, uint32_t ucs)
+{
+  void *result;
+
+  if (find_entry ((hash_table *) &rep->reverse_table, &ucs, sizeof (ucs),
+		  &result) < 0)
+    return NULL;
+
+  return (const char *) result;
+}
+
+
+struct charseq *
+repertoire_find_seq (const struct repertoire_t *rep, uint32_t ucs)
+{
+  void *result;
+
+  if (find_entry ((hash_table *) &rep->seq_table, &ucs, sizeof (ucs),
+		  &result) < 0)
+    return NULL;
+
+  return (struct charseq *) result;
 }

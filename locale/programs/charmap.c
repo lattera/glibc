@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -25,6 +25,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <libintl.h>
+#include <limits.h>
 #include <obstack.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,13 +33,10 @@
 
 #include "error.h"
 #include "linereader.h"
-#include "charset.h"
+#include "charmap.h"
 #include "locfile.h"
 #include "repertoire.h"
 
-
-/* Uncomment following line for production version.  */
-/* define NDEBUG 1 */
 #include <assert.h>
 
 
@@ -49,17 +47,20 @@
 extern void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
-static struct charset_t *parse_charmap (const char *filename);
-static void new_width (struct linereader *cmfile, struct charset_t *result,
+static struct charmap_t *parse_charmap (const char *filename);
+static void new_width (struct linereader *cmfile, struct charmap_t *result,
 		       const char *from, const char *to,
 		       unsigned long int width);
+static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
+			      int nbytes, char *bytes, const char *from,
+			      const char *to, int decimal_ellipsis);
 
 
-struct charset_t *
+struct charmap_t *
 charmap_read (const char *filename)
 {
   const char *pathnfile;
-  struct charset_t *result = NULL;
+  struct charmap_t *result = NULL;
 
   if (filename != NULL)
     {
@@ -175,16 +176,17 @@ charmap_read (const char *filename)
 }
 
 
-static struct charset_t *
+static struct charmap_t *
 parse_charmap (const char *filename)
 {
   struct linereader *cmfile;
-  struct charset_t *result;
+  struct charmap_t *result;
   int state;
   enum token_t expected_tok = tok_error;
   const char *expected_str = NULL;
   char *from_name = NULL;
   char *to_name = NULL;
+  enum token_t ellipsis = 0;
 
   /* Determine path.  */
   cmfile = lr_open (filename, charmap_hash);
@@ -206,9 +208,12 @@ parse_charmap (const char *filename)
 	return NULL;
     }
 
+  /* We don't want symbolic names in string to be translated.  */
+  cmfile->translate_strings = 0;
+
   /* Allocate room for result.  */
-  result = (struct charset_t *) xmalloc (sizeof (struct charset_t));
-  memset (result, '\0', sizeof (struct charset_t));
+  result = (struct charmap_t *) xmalloc (sizeof (struct charmap_t));
+  memset (result, '\0', sizeof (struct charmap_t));
   /* The default DEFAULT_WIDTH is 1.  */
   result->width_default = 1;
 
@@ -216,7 +221,8 @@ parse_charmap (const char *filename)
 #define obstack_chunk_free free
   obstack_init (&result->mem_pool);
 
-  if (init_hash (&result->char_table, 256))
+  if (init_hash (&result->char_table, 256)
+      || init_hash (&result->byte_table, 256))
     {
       free (result);
       return NULL;
@@ -228,7 +234,7 @@ parse_charmap (const char *filename)
   while (1)
     {
       /* What's on?  */
-      struct token *now = lr_token (cmfile, NULL);
+      struct token *now = lr_token (cmfile, NULL, NULL);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -275,22 +281,24 @@ parse_charmap (const char *filename)
 	      && nowtok != tok_mb_cur_min && nowtok != tok_escape_char
 	      && nowtok != tok_comment_char && nowtok != tok_g0esc
 	      && nowtok != tok_g1esc && nowtok != tok_g2esc
-	      && nowtok != tok_g3esc)
+	      && nowtok != tok_g3esc && nowtok != tok_repertoiremap
+	      && nowtok != tok_include)
 	    {
 	      lr_error (cmfile, _("syntax error in prolog: %s"),
-			_("illegal definition"));
+			_("invalid definition"));
 
 	      lr_ignore_rest (cmfile, 0);
 	      continue;
 	    }
 
 	  /* We know that we need an argument.  */
-	  arg = lr_token (cmfile, NULL);
+	  arg = lr_token (cmfile, NULL, NULL);
 
 	  switch (nowtok)
 	    {
 	    case tok_code_set_name:
-	      if (arg->tok != tok_ident && arg->tok != tok_string)
+	    case tok_repertoiremap:
+	      if (arg->tok != tok_ident)
 		{
 		badarg:
 		  lr_error (cmfile, _("syntax error in prolog: %s"),
@@ -300,9 +308,14 @@ parse_charmap (const char *filename)
 		  continue;
 		}
 
-	      result->code_set_name = obstack_copy0 (&result->mem_pool,
-						     arg->val.str.start,
-						     arg->val.str.len);
+	      if (nowtok == tok_code_set_name)
+		result->code_set_name = obstack_copy0 (&result->mem_pool,
+						       arg->val.str.startmb,
+						       arg->val.str.lenmb);
+	      else
+		result->repertoiremap = obstack_copy0 (&result->mem_pool,
+						       arg->val.str.startmb,
+						       arg->val.str.lenmb);
 
 	      lr_ignore_rest (cmfile, 1);
 	      continue;
@@ -312,12 +325,21 @@ parse_charmap (const char *filename)
 	      if (arg->tok != tok_number)
 		goto badarg;
 
-	      if (arg->val.num < 1 || arg->val.num > 4)
+	      if (verbose
+		  && ((nowtok == tok_mb_cur_max
+		       && result->mb_cur_max != 0)
+		      || (nowtok == tok_mb_cur_max
+			  && result->mb_cur_max != 0)))
+		lr_error (cmfile, _("duplicate definition of <%s>"),
+			  nowtok == tok_mb_cur_min
+			  ? "mb_cur_min" : "mb_cur_max");
+
+	      if (arg->val.num < 1)
 		{
 		  lr_error (cmfile,
-			    _("value for <%s> must lie between 1 and 4"),
-			    nowtok == tok_mb_cur_min ? "mb_cur_min"
-						     : "mb_cur_max");
+			    _("value for <%s> must be 1 or greater"),
+			    nowtok == tok_mb_cur_min
+			    ? "mb_cur_min" : "mb_cur_max");
 
 		  lr_ignore_rest (cmfile, 0);
 		  continue;
@@ -328,7 +350,8 @@ parse_charmap (const char *filename)
 		      && (int) arg->val.num > result->mb_cur_max))
 		{
 		  lr_error (cmfile, _("\
-value of <mb_cur_max> must be greater than the value of <mb_cur_min>"));
+value of <%s> must be greater or equal than the value of <%s>"),
+			    "mb_cur_max", "mb_cur_min");
 
 		  lr_ignore_rest (cmfile, 0);
 		  continue;
@@ -347,7 +370,7 @@ value of <mb_cur_max> must be greater than the value of <mb_cur_min>"));
 	      if (arg->tok != tok_ident)
 		goto badarg;
 
-	      if (arg->val.str.len != 1)
+	      if (arg->val.str.lenmb != 1)
 		{
 		  lr_error (cmfile, _("\
 argument to <%s> must be a single character"),
@@ -359,9 +382,9 @@ argument to <%s> must be a single character"),
 		}
 
 	      if (nowtok == tok_escape_char)
-		cmfile->escape_char = *arg->val.str.start;
+		cmfile->escape_char = *arg->val.str.startmb;
 	      else
-		cmfile->comment_char = *arg->val.str.start;
+		cmfile->comment_char = *arg->val.str.startmb;
 
 	      lr_ignore_rest (cmfile, 1);
 	      continue;
@@ -370,8 +393,14 @@ argument to <%s> must be a single character"),
 	    case tok_g1esc:
 	    case tok_g2esc:
 	    case tok_g3esc:
+	    case tok_escseq:
 	      lr_ignore_rest (cmfile, 0); /* XXX */
 	      continue;
+
+	    case tok_include:
+	      lr_error (cmfile, _("\
+character sets with locking states are not supported"));
+	      exit (4);
 
 	    default:
 	      /* Cannot happen.  */
@@ -409,8 +438,8 @@ argument to <%s> must be a single character"),
 	    obstack_free (&result->mem_pool, from_name);
 
 	  from_name = (char *) obstack_copy0 (&result->mem_pool,
-					      now->val.str.start,
-					      now->val.str.len);
+					      now->val.str.startmb,
+					      now->val.str.lenmb);
 	  to_name = NULL;
 
 	  state = 3;
@@ -419,19 +448,20 @@ argument to <%s> must be a single character"),
 	case 3:
 	  /* We have two possibilities: We can see an ellipsis or an
 	     encoding value.  */
-	  if (nowtok == tok_ellipsis)
+	  if (nowtok == tok_ellipsis3 || nowtok == tok_ellipsis4
+	      || nowtok == tok_ellipsis2)
 	    {
+	      ellipsis = nowtok;
 	      state = 4;
 	      continue;
 	    }
 	  /* FALLTHROUGH */
 
 	case 5:
-	  if (nowtok != tok_charcode && nowtok != tok_ucs2
-	      && nowtok != tok_ucs4)
+	  if (nowtok != tok_charcode)
 	    {
 	      lr_error (cmfile, _("syntax error in %s definition: %s"),
-			"CHARMAP", _("illegal encoding given"));
+			"CHARMAP", _("invalid encoding given"));
 
 	      lr_ignore_rest (cmfile, 0);
 
@@ -444,9 +474,9 @@ argument to <%s> must be a single character"),
 	  else if (now->val.charcode.nbytes > result->mb_cur_max)
 	    lr_error (cmfile, _("too many bytes in character encoding"));
 	  else
-	    charset_new_char (cmfile, &result->char_table,
-			      now->val.charcode.nbytes,
-			      now->val.charcode.val, from_name, to_name);
+	    charmap_new_char (cmfile, result, now->val.charcode.nbytes,
+			      now->val.charcode.bytes, from_name, to_name,
+			      ellipsis != tok_ellipsis2);
 
 	  /* Ignore trailing comment silently.  */
 	  lr_ignore_rest (cmfile, 0);
@@ -470,8 +500,8 @@ argument to <%s> must be a single character"),
 
 	  /* Copy the to-name in a safe place.  */
 	  to_name = (char *) obstack_copy0 (&result->mem_pool,
-					    cmfile->token.val.str.start,
-					    cmfile->token.val.str.len);
+					    cmfile->token.val.str.startmb,
+					    cmfile->token.val.str.lenmb);
 
 	  state = 5;
 	  continue;
@@ -557,15 +587,15 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	    obstack_free (&result->mem_pool, from_name);
 
 	  from_name = (char *) obstack_copy0 (&result->mem_pool,
-					      now->val.str.start,
-					      now->val.str.len);
+					      now->val.str.startmb,
+					      now->val.str.lenmb);
 	  to_name = NULL;
 
 	  state = 94;
 	  continue;
 
 	case 94:
-	  if (nowtok == tok_ellipsis)
+	  if (nowtok == tok_ellipsis3)
 	    {
 	      state = 95;
 	      continue;
@@ -602,8 +632,8 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	    }
 
 	  to_name = (char *) obstack_copy0 (&result->mem_pool,
-					    now->val.str.start,
-					    now->val.str.len);
+					    now->val.str.startmb,
+					    now->val.str.lenmb);
 
 	  state = 96;
 	  continue;
@@ -637,15 +667,15 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	    obstack_free (&result->mem_pool, from_name);
 
 	  from_name = (char *) obstack_copy0 (&result->mem_pool,
-					      now->val.str.start,
-					      now->val.str.len);
+					      now->val.str.startmb,
+					      now->val.str.lenmb);
 	  to_name = NULL;
 
 	  state = 99;
 	  continue;
 
 	case 99:
-	  if (nowtok == tok_ellipsis)
+	  if (nowtok == tok_ellipsis3)
 	    state = 100;
 
 	  /* Store info.  */
@@ -663,8 +693,8 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	  else
 	    {
 	      to_name = (char *) obstack_copy0 (&result->mem_pool,
-						now->val.str.start,
-						now->val.str.len);
+						now->val.str.startmb,
+						now->val.str.lenmb);
 	      /* XXX Enter value into table.  */
 	    }
 
@@ -690,13 +720,14 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 
 
 static void
-new_width (struct linereader *cmfile, struct charset_t *result,
+new_width (struct linereader *cmfile, struct charmap_t *result,
 	   const char *from, const char *to, unsigned long int width)
 {
-  unsigned int from_val, to_val;
+  struct charseq *from_val;
+  struct charseq *to_val;
 
-  from_val = charset_find_value (&result->char_table, from, strlen (from));
-  if ((wchar_t) from_val == ILLEGAL_CHAR_VALUE)
+  from_val = charmap_find_value (result, from, strlen (from));
+  if (from_val == NULL)
     {
       lr_error (cmfile, _("unknown character `%s'"), from);
       return;
@@ -706,8 +737,8 @@ new_width (struct linereader *cmfile, struct charset_t *result,
     to_val = from_val;
   else
     {
-      to_val = charset_find_value (&result->char_table, to, strlen (to));
-      if ((wchar_t) to_val == ILLEGAL_CHAR_VALUE)
+      to_val = charmap_find_value (result, to, strlen (to));
+      if (to_val == NULL)
 	{
 	  lr_error (cmfile, _("unknown character `%s'"), to);
 	  return;
@@ -733,4 +764,141 @@ new_width (struct linereader *cmfile, struct charset_t *result,
   result->width_rules[result->nwidth_rules].to = to_val;
   result->width_rules[result->nwidth_rules].width = (unsigned int) width;
   ++result->nwidth_rules;
+}
+
+
+struct charseq *
+charmap_find_value (const struct charmap_t *cm, const char *name, size_t len)
+{
+  void *result;
+
+  return (find_entry ((hash_table *) &cm->char_table, name, len, &result)
+	  < 0 ? NULL : (struct charseq *) result);
+}
+
+
+static void
+charmap_new_char (struct linereader *lr, struct charmap_t *cm,
+		  int nbytes, char *bytes, const char *from, const char *to,
+		  int decimal_ellipsis)
+{
+  hash_table *ht = &cm->char_table;
+  hash_table *bt = &cm->byte_table;
+  struct obstack *ob = &cm->mem_pool;
+  char *from_end;
+  char *to_end;
+  const char *cp;
+  int prefix_len, len1, len2;
+  unsigned int from_nr, to_nr, cnt;
+  struct charseq *newp;
+
+  len1 = strlen (from);
+
+  if (to == NULL)
+    {
+      newp = (struct charseq *) obstack_alloc (ob, sizeof (*newp) + nbytes);
+      newp->nbytes = nbytes;
+      memcpy (newp->bytes, bytes, nbytes);
+      newp->name = obstack_copy (ob, from, len1 + 1);
+      newp->ucs4 = UNINITIALIZED_CHAR_VALUE;
+
+      insert_entry (ht, from, len1, newp);
+      insert_entry (bt, newp->bytes, nbytes, newp);
+      /* Please note that it isn't a bug if a symbol is defined more
+	 than once.  All later definitions are simply discarded.  */
+      return;
+    }
+
+  /* We have a range: the names must have names with equal prefixes
+     and an equal number of digits, where the second number is greater
+     or equal than the first.  */
+  len2 = strlen (to);
+
+  if (len1 != len2)
+    {
+    illegal_range:
+      lr_error (lr, _("invalid names for character range"));
+      return;
+    }
+
+  cp = &from[len1 - 1];
+  if (decimal_ellipsis)
+    while (isdigit (*cp) && cp >= from)
+      --cp;
+  else
+    while (isxdigit (*cp) && cp >= from)
+      {
+	if (!isdigit (*cp) && !isupper (*cp))
+	  lr_error (lr, _("\
+hexadecimal range format should use only capital characters"));
+	--cp;
+      }
+
+  prefix_len = (cp - from) + 1;
+
+  if (cp == &from[len1 - 1] || strncmp (from, to, prefix_len) != 0)
+    goto illegal_range;
+
+  errno = 0;
+  from_nr = strtoul (&from[prefix_len], &from_end, decimal_ellipsis ? 10 : 16);
+  if (*from_end != '\0' || (from_nr == ULONG_MAX && errno == ERANGE)
+      || ((to_nr = strtoul (&to[prefix_len], &to_end,
+			    decimal_ellipsis ? 10 : 16)) == ULONG_MAX
+	  && errno == ERANGE)
+      || *to_end != '\0')
+    {
+      lr_error (lr, _("<%s> and <%s> are illegal names for range"));
+      return;
+    }
+
+  if (from_nr > to_nr)
+    {
+      lr_error (lr, _("upper limit in range is not higher then lower limit"));
+      return;
+    }
+
+  for (cnt = from_nr; cnt <= to_nr; ++cnt)
+    {
+      char *name_end;
+      obstack_printf (ob, decimal_ellipsis ? "%.*s%0*d" : "%.*s%0*X",
+		      prefix_len, from, len1 - prefix_len, cnt);
+      name_end = obstack_finish (ob);
+
+      newp = (struct charseq *) obstack_alloc (ob, sizeof (*newp) + nbytes);
+      newp->nbytes = nbytes;
+      memcpy (newp->bytes, bytes, nbytes);
+      newp->name = name_end;
+      newp->ucs4 = UNINITIALIZED_CHAR_VALUE;
+
+      insert_entry (ht, name_end, len1, newp);
+      insert_entry (bt, newp->bytes, nbytes, newp);
+      /* Please note we don't examine the return value since it is no error
+	 if we have two definitions for a symbol.  */
+
+      /* Increment the value in the byte sequence.  */
+      if (++bytes[nbytes - 1] == '\0')
+	{
+	  int b = nbytes - 2;
+
+	  do
+	    if (b < 0)
+	      {
+		lr_error (lr,
+			  _("resulting bytes for range not representable."));
+		return;
+	      }
+	  while (++bytes[b--] == 0);
+	}
+    }
+}
+
+
+struct charseq *
+charmap_find_symbol (const struct charmap_t *cm, const char *bytes,
+		     size_t nbytes)
+{
+  void *result;
+
+  return (find_entry ((hash_table *) &cm->byte_table, bytes, nbytes, &result)
+	  < 0 ? NULL : (struct charseq *) result);
 }
