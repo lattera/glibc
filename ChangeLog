@@ -1,3 +1,13 @@
+2002-12-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (sendfile): Change
+	args to i:iipi.
+	(readahead): Change args to i:iii.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list (readahead):
+	Change args to i:iii.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (readahead): Change
+	args to i:iiii.
+
 2002-12-05  Roland McGrath  <roland@redhat.com>
 
 	* stdlib/cxa_finalize.c (__cxa_finalize): When given a null argument,

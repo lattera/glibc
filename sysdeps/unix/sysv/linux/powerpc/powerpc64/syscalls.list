@@ -4,7 +4,7 @@
 s_ioctl		ioctl	ioctl		i:iiI	__syscall_ioctl
 s_ipc		msgget	ipc		i:iiiip	__syscall_ipc
 s_llseek	llseek	_llseek		i:iiipi	__syscall__llseek
-s_readahead	readahead readahead	i:iiii	__syscall_readahead
+s_readahead	readahead readahead	i:iii	__syscall_readahead
 s_chown		chown	chown		i:sii	__syscall_chown
 s_execve	execve	execve		i:spp	__syscall_execve
 rt_sigaction	-	rt_sigaction	i:ippi	__syscall_rt_sigaction

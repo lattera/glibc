@@ -12,8 +12,8 @@ getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit getrlimit64
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit64 setrlimit
 ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
 truncate	-	truncate	i:si	truncate	truncate64
-readahead	-	readahead	i:iipi	__readahead	readahead
-sendfile	-	sendfile	i:iip	sendfile	sendfile64
+readahead	-	readahead	i:iii	__readahead	readahead
+sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 
 # semaphore and shm system calls
 msgctl		-	msgctl		i:iip	__msgctl	msgctl
