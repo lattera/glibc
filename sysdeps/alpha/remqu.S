@@ -54,24 +54,25 @@ __remqu:
 	   going to use the results.  */
 	stq	X, 16(sp)
 	stq	Y, 24(sp)
-	beq	Y, DIVBYZERO
+	subq	Y, 1, AT
 
 	stt	$f0, 0(sp)
+	and	Y, AT, AT
 	stt	$f1, 8(sp)
+	beq	AT, $powerof2
 	cfi_rel_offset ($f0, 0)
 	cfi_rel_offset ($f1, 8)
+
 	ldt	$f0, 16(sp)
 	ldt	$f1, 24(sp)
-
 	cvtqt	$f0, $f0
 	cvtqt	$f1, $f1
+
 	blt	X, $x_is_neg
 	divt/c	$f0, $f1, $f0
 
 	/* Check to see if Y was mis-converted as signed value.  */
 	ldt	$f1, 8(sp)
-	unop
-	nop
 	blt	Y, $y_is_neg
 
 	/* Check to see if X fit in the double as an exact value.  */
@@ -242,6 +243,16 @@ $y_is_neg:
 
 	lda	sp, FRAME(sp)
 	cfi_restore ($f0)
+	cfi_def_cfa_offset (0)
+	ret	$31, (RA), 1
+
+	.align	4
+	cfi_def_cfa_offset (FRAME)
+$powerof2:
+	subq	Y, 1, AT
+	beq	Y, DIVBYZERO
+	and	X, AT, RV
+	lda	sp, FRAME(sp)
 	cfi_def_cfa_offset (0)
 	ret	$31, (RA), 1
 
