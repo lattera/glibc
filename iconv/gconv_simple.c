@@ -89,10 +89,10 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #endif
 
   /* Determine the status.  */
-  if (*outptrp == outend)
-    result = __GCONV_FULL_OUTPUT;
-  else if (*inptrp == inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
+  else if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
 
