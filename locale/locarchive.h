@@ -70,6 +70,7 @@ struct sumhashent
 
 struct locrecent
 {
+  uint32_t refs;		/* # of namehashent records that point here */
   struct
   {
     uint32_t offset;

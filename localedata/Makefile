@@ -213,8 +213,9 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
 	echo -n `echo $$locale | sed 's/\([^\@]*\)\(\@.*\)*/\2/'`; \
 	echo -n '...'; \
 	input=`echo $$locale | sed 's/\([^.]*\)[^@]*\(.*\)/\1\2/'`; \
-	$(LOCALEDEF) -i locales/$$input -c -f charmaps/$$charset \
-		$(addprefix --prefix=,$(install_root)) $$locale; \
+	$(LOCALEDEF) --alias-file=../intl/locale.alias \
+		     -i locales/$$input -c -f charmaps/$$charset \
+		     $(addprefix --prefix=,$(install_root)) $$locale; \
 	echo ' done'; \
 
 # The mbwc-tests need some environment setup to find the locale data files
