@@ -29,17 +29,17 @@ _hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
 {
   struct mips_thread_state *ts = state;
 
-  ts->r16 = env[0].__regs[0];
-  ts->r17 = env[0].__regs[1];
-  ts->r18 = env[0].__regs[2];
-  ts->r19 = env[0].__regs[3];
-  ts->r20 = env[0].__regs[4];
-  ts->r21 = env[0].__regs[5];
-  ts->r22 = env[0].__regs[6];
-  ts->r23 = env[0].__regs[7];
-  ts->r28 = (int) env[0].__gp;
-  ts->r29 = (int) env[0].__sp;
-  ts->r30 = (int) env[0].__fp;
-  ts->pc = (int) env[0].__pc;
+  ts->r16 = env[0].__jmpbuf.__regs[0];
+  ts->r17 = env[0].__jmpbuf.__regs[1];
+  ts->r18 = env[0].__jmpbuf.__regs[2];
+  ts->r19 = env[0].__jmpbuf.__regs[3];
+  ts->r20 = env[0].__jmpbuf.__regs[4];
+  ts->r21 = env[0].__jmpbuf.__regs[5];
+  ts->r22 = env[0].__jmpbuf.__regs[6];
+  ts->r23 = env[0].__jmpbuf.__regs[7];
+  ts->r28 = (int) env[0].__jmpbuf.__gp;
+  ts->r29 = (int) env[0].__jmpbuf.__sp;
+  ts->r30 = (int) env[0].__jmpbuf.__fp;
+  ts->pc = (int) env[0].__jmpbuf.__pc;
   ts->r2 = val ?: 1;
 }
