@@ -1,5 +1,7 @@
 2001-12-02  Roland McGrath  <roland@frob.com>
 
+	* hurd/hurd.h (_hurd_umask): Remove volatile qualifier from decl.
+
 	* mach/Makefile ($(objpfx)mach-syscalls.mk): Pass $(CFLAGS) to $(CC).
 	* mach/Machrules ($(objpfx)%.udeps static pattern rule): Likewise.
 	Reported by Jeff Bailey <jbailey@nisa.net>.

@@ -79,7 +79,7 @@ __hurd_fail (error_t err)
 extern int _hurd_exec_flags;	/* Flags word passed in exec_startup.  */
 extern struct hurd_port *_hurd_ports;
 extern unsigned int _hurd_nports;
-extern volatile mode_t _hurd_umask;
+extern mode_t _hurd_umask;
 extern sigset_t _hurdsig_traced;
 
 /* Shorthand macro for internal library code referencing _hurd_ports (see
