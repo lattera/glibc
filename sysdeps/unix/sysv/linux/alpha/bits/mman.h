@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/Alpha version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,9 +50,9 @@
 # define MAP_ANON	  MAP_ANONYMOUS
 #endif
 
-/* Not used by Linux, but here to make sure we don't clash with OSF/1
-   defines.  */
-#ifdef __USE_BSD
+/* Not used by Linux, but here to make sure we don't clash with
+   OSF/1 defines.  */
+#if 0 && defined(__USE_BSD)
 # define MAP_HASSEMAPHORE 0x0200
 # define MAP_INHERIT	  0x0400
 # define MAP_UNALIGNED	  0x0800
