@@ -522,7 +522,7 @@ elf_machine_rela (struct link_map *map,
       if (map != &GL(dl_rtld_map))
 # endif
 	{
-	  /* XXX Make some timings.  Maybe it's preverable to test for
+	  /* XXX Make some timings.  Maybe it's preferable to test for
 	     unaligned access and only do it the complex way if necessary.  */
 	  void *reloc_addr_1 = reloc_addr;
 	  Elf64_Addr reloc_addr_val;
@@ -535,12 +535,11 @@ elf_machine_rela (struct link_map *map,
 	  memcpy (reloc_addr_1, &reloc_addr_val, 8);
 	}
     }
-# ifndef RTLD_BOOTSTRAP
-  else if (__builtin_expect (r_type == R_ALPHA_NONE, 0))
-    return;
-# endif
   else
 #endif
+    if (__builtin_expect (r_type == R_ALPHA_NONE, 0))
+      return;
+  else
     {
       Elf64_Addr loadbase, sym_value;
 
