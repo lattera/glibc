@@ -1,3 +1,8 @@
+2000-11-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Synch with generic
+	Linux version.
+
 2000-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Fix last patch.
