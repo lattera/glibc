@@ -1,3 +1,12 @@
+2000-12-23  Ben Collins  <bcollins@debian.org>
+
+	* manual/charset.texi (Extended Char Intro): Fix typo in ISO 6937
+	description.
+
+	* manual/stdio.texi (Dynamic Output): Document the return value of
+	asprintf.  Also make the asprintf/snprintf examples a little
+	better (check for some error returns).
+
 2000-12-22  Andreas Jaeger  <aj@suse.de>
 
 	* include/stdio.h: Add __ftrylockfile prototype.

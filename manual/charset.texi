@@ -268,7 +268,7 @@ representing characters like the acute accent do not produce output
 themselves: one has to combine them with other characters to get the
 desired result.  E.g., the byte sequence @code{0xc2 0x61} (non-spacing
 acute accent, following by lower-case `a') to get the ``small a with
-acute'' character.  To get the acute accent character on its on one has
+acute'' character.  To get the acute accent character on its own, one has
 to write @code{0xc2 0x20} (the non-spacing acute followed by a space).
 
 This type of character set is used in some embedded systems such as
