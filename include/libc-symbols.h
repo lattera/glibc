@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-1998,2000-2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2003,2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -279,6 +279,7 @@
 
 /* A canned warning for sysdeps/stub functions.  */
 #define	stub_warning(name) \
+  __make_section_unallocated (".gnu.glibc-stub." #name) \
   link_warning (name, \
 		"warning: " #name " is not implemented and will always fail")
 

@@ -492,7 +492,7 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		 PROVIDE(__start___libc_freeres_ptrs = .); \
 		 *(__libc_freeres_ptrs) \
 		 PROVIDE(__stop___libc_freeres_ptrs = .);/'\
-	      -e 's/^.*\*(\.jcr).*$$/& \
+	      -e 's@^.*\*(\.jcr).*$$@& \
 		 PROVIDE(__start___libc_subfreeres = .);\
 		 __libc_subfreeres : { *(__libc_subfreeres) }\
 		 PROVIDE(__stop___libc_subfreeres = .);\
@@ -501,7 +501,8 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		 PROVIDE(__stop___libc_atexit = .);\
 		 PROVIDE(__start___libc_thread_subfreeres = .);\
 		 __libc_thread_subfreeres : { *(__libc_thread_subfreeres) }\
-		 PROVIDE(__stop___libc_thread_subfreeres = .);/'
+		 PROVIDE(__stop___libc_thread_subfreeres = .);\
+		 /DISCARD/ : { *(.gnu.glibc-stub.*) }@'
 	mv -f $@T $@
 common-generated += shlib.lds
 
@@ -1385,19 +1386,15 @@ ifdef objpfx
 .PHONY: stubs # The parent Makefile calls this target.
 stubs: $(objpfx)stubs
 endif
-$(objpfx)stubs: $(+depfiles)
-ifneq (,$(strip $(+depfiles)))
-# Use /dev/null since `...` might expand to empty.
-	c=`($(patsubst %/,cd % &&,$(objpfx)) \
-	    sed -n -e 's@\$$(common-objpfx)@$(common-objpfx)@g' \
-		   -e 's@\$$(objpfx)@$(objpfx)@g' \
-		   -e '/stub-tag\.h/{; g; s/./&/p; }' \
-		   -e '/:/{x; s/^.*$$//; x; }' \
-		   -e 's/^.*://;s/\\$$//;s/^ *\([^ ][^ ]*\) .*$$/\1/' \
-		   -e '/^[^ ][^ ]*$$/{G;s/^.*\n\(..*\)/\1/;s/\n//;h; }' \
-		   $(patsubst $(objpfx)%,%,$^)) | sort | uniq`; \
-	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
-	    $$c /dev/null > $@T
+objs-for-stubs := $(foreach o,$(object-suffixes-for-libc),$(o-objects)) \
+		  $(addprefix $(objpfx),$(extra-objs))
+$(objpfx)stubs: $(objs-for-stubs)
+ifneq (,$(strip $(objs-for-stubs)))
+	$(OBJDUMP) -h $^ | \
+	$(AWK) '/\.gnu\.glibc-stub\./ { \
+	          sub(/\.gnu\.glibc-stub\./, "", $$2); \
+		  stubs[$$2] = 1; } \
+		END { for (s in stubs) print "#define __stub_" s }' > $@T
 	mv -f $@T $@
 else
 	> $@

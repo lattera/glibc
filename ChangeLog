@@ -1,5 +1,12 @@
 2005-02-10  Roland McGrath  <roland@redhat.com>
 
+	[BZ #157]
+	* include/libc-symbols.h (stub_warning): Emit a marker section called
+	.gnu.glibc-stub.NAME.
+	* Makerules ($(objpfx)stubs): Depend on object files, not dep files.
+	Use objdump to collect those marker section names.
+	($(common-objpfx)shlib.lds): Discard .gnu.glibc-stub.* sections.
+
 	* Rules (subdir_objs, subdir_stubs): New phony targets.
 	* Makefile (+subdir_targets): Add them.
 
