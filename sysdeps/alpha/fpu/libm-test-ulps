@@ -770,8 +770,8 @@ idouble: 1
 ifloat: 2
 
 Function: "atan2":
-float: 3
-ifloat: 3
+float: 4
+ifloat: 4
 
 Function: "atanh":
 double: 1
