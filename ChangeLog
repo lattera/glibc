@@ -1,3 +1,7 @@
+2000-04-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_rel): Fix relocation.
+
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/aix/geteuid.c: Don't try to include <sys/id.h>.
