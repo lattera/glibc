@@ -1,3 +1,11 @@
+2002-07-17  Andreas Schwab  <schwab@suse.de>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pread.c: Sign extend offset.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+
 2002-07-01  H.J. Lu  <hjl@gnu.org>
 
 	* elf/circleload1.c (load_dso): Call "circlemod1" and check
