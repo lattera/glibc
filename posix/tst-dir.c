@@ -296,7 +296,7 @@ main (int argc, char *argv[])
 
   /* Try to find the new directory.  */
   rewinddir (dir1);
-  while (readdir64_r (dir1, &direntbuf, &d) == 0)
+  while (readdir64_r (dir1, &direntbuf, &d) == 0 && d != NULL)
     {
 #ifdef _DIRENT_HAVE_D_TYPE
       if (d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
@@ -428,6 +428,12 @@ main (int argc, char *argv[])
 	  printf ("unexpected directory entry \"%s\"\n", d->d_name);
 	  result = 1;
 	}
+    }
+
+  if (stat64 ("does-not-exist", &st1) >= 0)
+    {
+      puts ("stat for unexisting file did not fail");
+      result = 1;
     }
 
   /* Free all resources.  */
