@@ -84,7 +84,7 @@ typedef uintmax_t uatomic_max_t;
    and later, but NOT on i486.  */
 #if 1
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  (abort (), 0)
+  ({ __typeof (*mem) ret = *(mem); abort (); ret = (newval); ret = (oldval); })
 #else
 # ifdef __PIC__
 #  define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
@@ -101,13 +101,13 @@ typedef uintmax_t uatomic_max_t;
 			 "d" (((unsigned long long int) (oldval)) >> 32));    \
      ret; })
 # else
-#  define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+#  define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   ({ __typeof (*mem) ret;						      \
      __asm __volatile (LOCK "cmpxchg8b %1"				      \
 		       : "=A" (ret), "=m" (*mem)			      \
 		       : "b" (((unsigned long long int) (newval))	      \
 			      & 0xffffffff),				      \
-			  "c" (((unsigned long long int) (newval)) >> 32),    \
+			 "c" (((unsigned long long int) (newval)) >> 32),    \
 			 "m" (*mem), "a" (((unsigned long long int) (oldval)) \
 					  & 0xffffffff),		      \
 			 "d" (((unsigned long long int) (oldval)) >> 32));    \
@@ -159,8 +159,9 @@ typedef uintmax_t uatomic_max_t;
 	 __typeof (mem) memp = (mem);					      \
 	 do								      \
 	   result = *memp;						      \
-	 while (__arch_compare_and_exchange_64_acq (memp, result + addval,    \
-						    result));		      \
+	 while (__arch_compare_and_exchange_val_64_acq (memp,		      \
+							result + addval,      \
+							result) == result);   \
        }								      \
      result; })
 
@@ -189,9 +190,8 @@ typedef uintmax_t uatomic_max_t;
 		__typeof (mem) memp = (mem);				      \
 		do							      \
 		  oldval = *memp;					      \
-		while (__arch_compare_and_exchange_64_acq (memp,	      \
-							   oldval + addval,   \
-							   oldval));	      \
+		while (__arch_compare_and_exchange_val_64_acq		      \
+		       (memp, oldval + addval, oldval) == oldval);	      \
 	      }								      \
 	    })
 
@@ -253,8 +253,8 @@ typedef uintmax_t uatomic_max_t;
 		__typeof (mem) memp = (mem);				      \
 		do							      \
 		  oldval = *memp;					      \
-		while (__arch_compare_and_exchange_64_acq (memp, oldval + 1,  \
-							   oldval));	      \
+		while (__arch_compare_and_exchange_val_64_acq		      \
+		       (memp, oldval + 1, oldval) == oldval);		      \
 	      }								      \
 	    })
 
@@ -297,8 +297,8 @@ typedef uintmax_t uatomic_max_t;
 		__typeof (mem) memp = (mem);				      \
 		do							      \
 		  oldval = *memp;					      \
-		while (__arch_compare_and_exchange_64_acq (memp, oldval - 1,  \
-							   oldval));	      \
+		while (__arch_compare_and_exchange_val_64_acq		      \
+		       (memp, oldval - 1, oldval) == oldval); 		      \
 	      }								      \
 	    })
 
