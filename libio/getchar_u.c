@@ -28,9 +28,7 @@ the executable file might be covered by the GNU General Public License. */
 #undef getchar_unlocked
 
 int
-__getchar_unlocked ()
+getchar_unlocked ()
 {
   return _IO_getc_unlocked (stdin);
 }
-
-weak_alias (__getchar_unlocked, getchar_unlocked)

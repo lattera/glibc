@@ -125,7 +125,7 @@ $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make $(all-Subdirs-files)
 all-Banner-files = $(wildcard $(addsuffix /Banner, $(subdirs)))
 $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
 	(files="$(all-Banner-files)";				\
-	 if [ test -n "$$files" ]; then				\
+	 if test -n "$$files"; then				\
 	   echo "\"Available extensions:";			\
 	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$files;	\
 	   echo "\"";						\

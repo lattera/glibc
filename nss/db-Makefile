@@ -1,5 +1,5 @@
 DATABASES = $(wildcard /etc/passwd /etc/group /etc/ethers /etc/protocols \
-		       /etc/rpc /etc/services /etc/shadow)
+		       /etc/rpc /etc/services /etc/shadow /etc/netgroup)
 
 VAR_DB = /var/db
 
@@ -65,5 +65,13 @@ $(VAR_DB)/shadow.db: /etc/shadow
 	@echo -n "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
 		 /^[^#]/ { printf ".%s ", $$1; print }' $^ | \
+	$(MAKEDB) -o $@ -
+	@echo "done."
+
+$(VAR_DB)/netgroup.db: /etc/netgroup
+	@echo -n "$(patsubst %.db,%,$(@F))... "
+	@$(AWK) '/^[^#]/ { end=sub(/\\/, " "); \
+			   gsub(/[ \t]+/, " "); \
+			   if(end == 1) printf "%s", $$0; else print }' $^ | \
 	$(MAKEDB) -o $@ -
 	@echo "done."

@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
    use the protected form here.  In stdio it is called `__vscanf' and
    in libio `_IO_vscanf'.  */
 #ifdef USE_IN_LIBIO
+# include <libioP.h>
 # define VSCANF _IO_vscanf
 #else
 # define VSCANF __vscanf

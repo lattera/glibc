@@ -33,7 +33,7 @@ fseek (fp, offset, whence)
 {
   int result;
   CHECK_FILE (fp, -1);
-  __libc_cleanup_region_start (&_IO_funlockfile, fp);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   result = _IO_fseek (fp, offset, whence);
   __libc_cleanup_region_end (1);

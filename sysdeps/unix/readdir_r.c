@@ -29,8 +29,8 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Read a directory entry from DIRP.  */
-struct dirent *
-__readdir (DIR *dirp)
+int
+__readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
   struct dirent *dp;
 
@@ -79,7 +79,7 @@ __readdir (DIR *dirp)
       reclen = sizeof *dp;
       /* The name is not terminated if it is the largest possible size.
 	 Clobber the following byte to ensure proper null termination.  We
-	 read jst one entry at a time above so we know that byte will not
+	 read just one entry at a time above so we know that byte will not
 	 be used later.  */
       dp->d_name[sizeof dp->d_name] = '\0';
 #endif
@@ -95,8 +95,14 @@ __readdir (DIR *dirp)
       /* Skip deleted files.  */
     } while (dp->d_ino == 0);
 
+  if (dp != NULL)
+    {
+      *entry = *dp;
+      *result = entry;
+    }
+
   __libc_lock_unlock (dirp->lock);
 
-  return dp;
+  return dp != NULL ? 0 : -1;
 }
-weak_alias (__readdir, readdir)
+weak_alias (__readdir_r, readdir_r)

@@ -36,7 +36,7 @@ _IO_fwrite (buf, size, count, fp)
   CHECK_FILE (fp, 0);
   if (request == 0)
     return 0;
-  __libc_cleanup_region_start (&_IO_funlockfile, fp);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   written = _IO_sputn (fp, (const char *) buf, request);
   __libc_cleanup_region_end (1);

@@ -21,6 +21,9 @@ Cambridge, MA 02139, USA.  */
 #include <sys/stat.h>
 
 /* Change the flags of the file FD refers to to FLAGS.  */
+
+int fchflags __P ((int fd, int flags));
+
 int
 fchflags (fd, flags)
      int fd;

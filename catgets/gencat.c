@@ -165,14 +165,13 @@ main (int argc, char *argv[])
   /* Version information is requested.  */
   if (do_version)
     {
-      fprintf (stderr, "gencat (GNU %s) %s\n", PACKAGE, VERSION);
-      fprintf (stderr, _("\
+      printf ("gencat (GNU %s) %s\n", PACKAGE, VERSION);
+      printf (_("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "1996");
-      fprintf (stderr, _("Written by %s.\n"),
-	       "Ulrich Drepper");
+      printf (_("Written by %s.\n"), "Ulrich Drepper");
 
       exit (EXIT_SUCCESS);
     }
@@ -210,7 +209,7 @@ usage (int status)
              program_invocation_name);
   else
     {
-      printf(gettext ("\
+      printf (gettext ("\
 Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n\
        %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
@@ -221,7 +220,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -V, --version       output version information and exit\n\
 If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n\
 is -, output is written to standard output.\n"),
-	   program_invocation_name, program_invocation_name);
+	      program_invocation_name, program_invocation_name);
       fputs (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
 	     stdout);
     }

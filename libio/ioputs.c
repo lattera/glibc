@@ -30,7 +30,8 @@ _IO_puts (str)
 {
   int result;
   _IO_size_t len = strlen (str);
-  __libc_cleanup_region_start (&_IO_funlockfile, _IO_stdout);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+			       _IO_stdout);
   _IO_flockfile (_IO_stdout);
   if (_IO_sputn (_IO_stdout, str, len) == len
       && _IO_putc_unlocked ('\n', _IO_stdout) != EOF)

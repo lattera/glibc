@@ -136,7 +136,7 @@ SETFUNC_NAME (STAYOPEN)
 #ifdef NEED__RES
   if ((_res.options & RES_INIT) == 0 && res_init () == -1)
     {
-      h_errno = NETDB_INTERNAL;
+      __set_h_errno (NETDB_INTERNAL);
       return NULL;
     }
 #endif /* need _res */
@@ -166,7 +166,7 @@ ENDFUNC_NAME (void)
 #ifdef NEED__RES
   if ((_res.options & RES_INIT) == 0 && res_init () == -1)
     {
-      h_errno = NETDB_INTERNAL;
+      __set_h_errno (NETDB_INTERNAL);
       return NULL;
     }
 #endif /* need _res */
@@ -198,7 +198,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *result, char *buffer, int buflen
 #ifdef NEED__RES
   if ((_res.options & RES_INIT) == 0 && res_init () == -1)
     {
-      h_errno = NETDB_INTERNAL;
+      __set_h_errno (NETDB_INTERNAL);
       return NULL;
     }
 #endif /* need _res */

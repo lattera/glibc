@@ -52,6 +52,12 @@ extern int __h_errno;
 
 /* Use a macro to access always the thread specific `h_errno' variable.  */
 #define h_errno (*__h_errno_location ())
+
+/* Retain some binary compatibility with old libraries by having both the
+   global variable and the per-thread variable set on error.  */
+#define __set_h_errno(x) (h_errno = __h_errno = (x))
+#else
+#define __set_h_errno(x) (h_errno = (x))
 #endif
 
 /* Possible values left in `h_errno'.  */
@@ -325,6 +331,31 @@ extern struct protoent *getprotobynumber_r __P ((int __proto,
 						 char *__buf, int __buflen));
 #endif	/* reentrant */
 
+
+/* Establish network group NETGROUP for enumeration.  */
+extern int setnetgrent __P ((__const char *__netgroup));
+
+/* Free all space allocated by previous `setnetgrent' call.  */
+extern void endnetgrent __P ((void));
+
+/* Get next member of netgroup established by last `setnetgrent' call
+   and return pointers to elements in HOSTP, USERP, and DOMAINP.  */
+extern int getnetgrent __P ((char **__hostp, char **__userp,
+			     char **__domainp));
+
+/* Test whether NETGROUP contains the triple (HOST,USER,DOMAIN).  */
+extern int innetgr __P ((__const char *__netgroup, __const char *__host,
+			 __const char *__user, __const char *domain));
+
+#ifdef	__USE_REENTRANT
+/* Reentrant version of `getnetgrent' where result is placed in BUFFER.  */
+extern int __getnetgrent_r __P ((char **__hostp, char **__userp,
+				 char **__domainp,
+				 char *__buffer, int __buflen));
+extern int getnetgrent_r __P ((char **__hostp, char **__userp,
+			       char **__domainp,
+			       char *__buffer, int __buflen));
+#endif
 
 __END_DECLS
 

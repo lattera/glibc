@@ -23,9 +23,10 @@ This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
+#include <stdio.h>
 
 int
-_IO_fflush_unlocked (fp)
+fflush_unlocked (fp)
      register _IO_FILE *fp;
 {
   if (fp == NULL)
@@ -36,6 +37,3 @@ _IO_fflush_unlocked (fp)
       return _IO_SYNC (fp) ? EOF : 0;
     }
 }
-
-weak_alias (_IO_fflush_unlocked, fflush_unlocked)
-

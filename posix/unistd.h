@@ -128,7 +128,8 @@ __BEGIN_DECLS
 #include <gnu/types.h>
 
 #ifndef	ssize_t
-#define	ssize_t	__ssize_t
+typedef __ssize_t ssize_t;
+#define	ssize_t	ssize_t
 #endif
 
 #define	__need_size_t

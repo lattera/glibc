@@ -127,9 +127,9 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 	cp = answer->buf + HFIXEDSZ;
 	if (!qdcount) {
 		if (hp->aa)
-			h_errno = HOST_NOT_FOUND;
+			__set_h_errno (HOST_NOT_FOUND);
 		else
-			h_errno = TRY_AGAIN;
+			__set_h_errno (TRY_AGAIN);
 		return (NULL);
 	}
 	while (qdcount-- > 0)
@@ -197,7 +197,7 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 		net_entry.n_aliases++;
 		return (&net_entry);
 	}
-	h_errno = TRY_AGAIN;
+	__set_h_errno (TRY_AGAIN);
 	return (NULL);
 }
 
@@ -267,7 +267,7 @@ getnetbyname(net)
 	struct netent *net_entry;
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
 	strcpy(&qbuf[0], net);

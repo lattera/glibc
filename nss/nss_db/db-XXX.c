@@ -56,10 +56,10 @@ static int keep_db;
 static unsigned int entidx;	/* Index for `getENTNAME'. */
 
 /* Open database file if not already opened.  */
-static int
+static enum nss_status
 internal_setent (int stayopen)
 {
-  int status = NSS_STATUS_SUCCESS;
+  enum nss_status status = NSS_STATUS_SUCCESS;
 
   if (db == NULL)
     {
@@ -78,10 +78,10 @@ internal_setent (int stayopen)
 
 
 /* Thread-safe, exported version of that.  */
-int
+enum nss_status
 CONCAT(_nss_db_set,ENTNAME) (int stayopen)
 {
-  int status;
+  enum nss_status status;
 
   __libc_lock_lock (lock);
 
@@ -109,7 +109,7 @@ internal_endent (void)
 
 
 /* Thread-safe, exported version of that.  */
-int
+enum nss_status
 CONCAT(_nss_db_end,ENTNAME) (void)
 {
   __libc_lock_lock (lock);

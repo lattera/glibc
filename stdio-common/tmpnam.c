@@ -29,7 +29,7 @@ tmpnam (char *s)
   /* By using two buffers we manage to be thread safe in the case
      where S != NULL.  */
   static char buf[L_tmpnam];
-  char *tmpbuf[L_tmpnam];
+  char tmpbuf[L_tmpnam];
   char *result;
 
   /* In the following call we use the buffer pointed to by S if

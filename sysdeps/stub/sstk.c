@@ -20,6 +20,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Increase the size of the stack by INCREMENT,
    and return the address of the bottom of the stack.  */
+
+void *sstk __P ((int increment));
+
 void *
 sstk (increment)
      int increment;

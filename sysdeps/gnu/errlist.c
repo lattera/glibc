@@ -2,7 +2,7 @@
 
 #include <errno.h>
 
-const char *_sys_errlist[] =
+const char *const _sys_errlist[] =
   {
     [0] = N_("Success"),
 #ifdef EPERM

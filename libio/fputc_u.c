@@ -28,12 +28,10 @@ the executable file might be covered by the GNU General Public License. */
 #undef fputc_unlocked
 
 int
-__fputc_unlocked (c, fp)
+fputc_unlocked (c, fp)
      int c;
      _IO_FILE *fp;
 {
   CHECK_FILE (fp, EOF);
   return _IO_putc_unlocked (c, fp);
 }
-
-weak_alias (__fputc_unlocked, fputc_unlocked)

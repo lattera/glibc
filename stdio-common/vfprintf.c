@@ -87,6 +87,7 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 # define PUTC(C, F)	_IO_putc_unlocked (C, F)
 # define vfprintf	_IO_vfprintf
 # define FILE		_IO_FILE
+# undef va_list
 # define va_list	_IO_va_list
 # undef	BUFSIZ
 # define BUFSIZ		_IO_BUFSIZ

@@ -113,7 +113,7 @@ res_query(name, class, type, answer, anslen)
 	hp->rcode = NOERROR;	/* default */
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (-1);
 	}
 #ifdef DEBUG
@@ -128,7 +128,7 @@ res_query(name, class, type, answer, anslen)
 		if (_res.options & RES_DEBUG)
 			printf(";; res_query: mkquery failed\n");
 #endif
-		h_errno = NO_RECOVERY;
+		__set_h_errno (NO_RECOVERY);
 		return (n);
 	}
 	n = res_send(buf, n, answer, anslen);
@@ -137,7 +137,7 @@ res_query(name, class, type, answer, anslen)
 		if (_res.options & RES_DEBUG)
 			printf(";; res_query: send error\n");
 #endif
-		h_errno = TRY_AGAIN;
+		__set_h_errno (TRY_AGAIN);
 		return (n);
 	}
 
@@ -149,19 +149,19 @@ res_query(name, class, type, answer, anslen)
 #endif
 		switch (hp->rcode) {
 		case NXDOMAIN:
-			h_errno = HOST_NOT_FOUND;
+			__set_h_errno (HOST_NOT_FOUND);
 			break;
 		case SERVFAIL:
-			h_errno = TRY_AGAIN;
+			__set_h_errno (TRY_AGAIN);
 			break;
 		case NOERROR:
-			h_errno = NO_DATA;
+			__set_h_errno (NO_DATA);
 			break;
 		case FORMERR:
 		case NOTIMP:
 		case REFUSED:
 		default:
-			h_errno = NO_RECOVERY;
+			__set_h_errno (NO_RECOVERY);
 			break;
 		}
 		return (-1);
@@ -189,11 +189,11 @@ res_search(name, class, type, answer, anslen)
 	int got_nodata = 0, got_servfail = 0, tried_as_is = 0;
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (-1);
 	}
 	__set_errno (0);
-	h_errno = HOST_NOT_FOUND;	/* default, if we never query */
+	__set_h_errno (HOST_NOT_FOUND);	/* default, if we never query */
 	dots = 0;
 	for (cp = name; *cp; cp++)
 		dots += (*cp == '.');
@@ -253,7 +253,7 @@ res_search(name, class, type, answer, anslen)
 			 * fully-qualified.
 			 */
 			if (errno == ECONNREFUSED) {
-				h_errno = TRY_AGAIN;
+				__set_h_errno (TRY_AGAIN);
 				return (-1);
 			}
 
@@ -302,11 +302,11 @@ res_search(name, class, type, answer, anslen)
 	 * the last DNSRCH we did.
 	 */
 	if (saved_herrno != -1)
-		h_errno = saved_herrno;
+		__set_h_errno (saved_herrno);
 	else if (got_nodata)
-		h_errno = NO_DATA;
+		__set_h_errno (NO_DATA);
 	else if (got_servfail)
-		h_errno = TRY_AGAIN;
+		__set_h_errno (TRY_AGAIN);
 	return (-1);
 }
 
@@ -326,7 +326,7 @@ res_querydomain(name, domain, class, type, answer, anslen)
 	int n;
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (-1);
 	}
 #ifdef DEBUG

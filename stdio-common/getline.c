@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef USE_IN_LIBIO
 # include "../libio/libioP.h"
+# undef ssize_t
 # define ssize_t _IO_ssize_t
 # define __getdelim _IO_getdelim
 #endif

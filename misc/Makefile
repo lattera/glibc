@@ -56,11 +56,6 @@ routines := brk sbrk sstk ioctl \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error ustat \
 	    getsysstats
-
-ifneq (,$(filter %REENTRANT, $(defines)))
-routines += force-wrapper
-endif
-
 aux := init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o

@@ -51,6 +51,7 @@ Cambridge, MA 02139, USA.  */
 # include <libioP.h>
 # include <libio.h>
 
+# undef va_list
 # define va_list	_IO_va_list
 # define ungetc(c, s)	(--read_in, _IO_ungetc (c, s))
 # define inchar()	((c = _IO_getc_unlocked (s)), (void) ++read_in, c)

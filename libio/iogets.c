@@ -32,7 +32,8 @@ _IO_gets (buf)
   _IO_size_t count;
   int ch;
 
-  __libc_cleanup_region_start (&_IO_funlockfile, _IO_stdin);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+			       _IO_stdin);
   _IO_flockfile (_IO_stdin);
   ch = _IO_getc_unlocked (_IO_stdin);
   if (ch == EOF)

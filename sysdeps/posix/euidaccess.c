@@ -67,7 +67,7 @@ gid_t getegid ();
 extern int errno;
 #endif
 #ifndef __set_errno
-#define __set_errno(val) errno = 8val)
+#define __set_errno(val) errno = (val)
 #endif
 
 #if defined(EACCES) && !defined(EACCESS)

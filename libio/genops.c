@@ -329,7 +329,7 @@ DEFUN(_IO_default_xsputn, (f, data, n),
       _IO_ssize_t count = f->_IO_write_end - f->_IO_write_ptr; /* Space available. */
       if (count > 0)
 	{
-	  if (count > more)
+	  if ((_IO_size_t) count > more)
 	    count = more;
 	  if (count > 20)
 	    {
@@ -374,7 +374,7 @@ DEFUN(_IO_default_xsgetn, (fp, data, n),
       _IO_ssize_t count = fp->_IO_read_end - fp->_IO_read_ptr; /* Data available. */
       if (count > 0)
 	{
-	  if (count > more)
+	  if ((_IO_size_t) count > more)
 	    count = more;
 	  if (count > 20)
 	    {

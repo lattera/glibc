@@ -36,7 +36,7 @@ _IO_fread (buf, size, count, fp)
   CHECK_FILE (fp, 0);
   if (bytes_requested == 0)
     return 0;
-  __libc_cleanup_region_start (&_IO_funlockfile, fp);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
   __libc_cleanup_region_end (1);

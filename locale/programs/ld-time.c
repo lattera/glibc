@@ -395,7 +395,8 @@ time_output (struct localedef_t *locale, const char *output_path)
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->cur_num_era - 1
 		  + time->cur_num_alt_digits - 1
-		  + 1 + (time->cur_num_era * 9 - 1) * 2];
+		  + 1 + (time->cur_num_era * 9 - 1) * 2
+		  + (time->cur_num_era == 0)];
   struct locale_file data;
   u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num;
@@ -635,11 +636,23 @@ time_output (struct localedef_t *locale, const char *output_path)
       /* idx[1 + last_idx] += 8 * sizeof (int32_t) + l; */
     }
 
+  /* We have a problem when no era data is present.  In this case the
+     data pointer for _NL_TIME_ERA_ENTRIES_EB and
+     _NL_TIME_ERA_ENTRIES_EL point after the end of the file.  So we
+     introduce some dummy data here.  */
+  if (time->cur_num_era == 0)
+    {
+      static u_int32_t dummy = 0;
+      iov[2 + cnt].iov_base = (void *) &dummy;
+      iov[2 + cnt].iov_len = 4;
+      ++cnt;
+    }
 
   assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->cur_num_era - 1
 		  + time->cur_num_alt_digits - 1
-		  + 1 + (time->cur_num_era * 9 - 1) * 2)
+		  + 1 + (time->cur_num_era * 9 - 1) * 2
+		  + (time->cur_num_era == 0))
 	  && last_idx + 1 == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   write_locale_data (output_path, "LC_TIME", 2 + cnt, iov);

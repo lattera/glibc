@@ -24,8 +24,11 @@ Cambridge, MA 02139, USA.  */
 /* Re-construct the password-file line for the given uid
    in the given buffer.  This knows the format that the caller
    will expect, but this need not be the format of the password file.  */
+
+int __getpw __P ((__uid_t uid, char *buf));
+
 int
-getpw (uid, buf)
+__getpw (uid, buf)
      __uid_t uid;
      register char *buf;
 {
@@ -47,3 +50,4 @@ getpw (uid, buf)
 
   return 0;
 }
+weak_alias (__getpw, getpw)

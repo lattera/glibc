@@ -26,6 +26,9 @@ Cambridge, MA 02139, USA.  */
 static __sighandler_t wrapped_handlers[NSIG];
 static sigset_t wrapped_masks[NSIG];
 
+static void wrapper_handler __P ((int sig));
+static inline int convert_mask __P ((sigset_t *set, const int mask));
+
 static void
 wrapper_handler (sig)
      int sig;

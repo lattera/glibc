@@ -1,5 +1,6 @@
-/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -13,30 +14,9 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <sys/stat.h>
+#define DATABASE_NAME netgroup
 
-/* Change the flags of FILE to FLAGS.  */
-
-int chflags __P ((const char *file, int flags));
-
-int
-chflags (file, flags)
-     const char *file;
-     int flags;
-{
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
-}
-
-stub_warning (chflags)
+#include "XXX-lookup.c"

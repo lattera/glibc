@@ -57,6 +57,7 @@ typedef long int __daddr_t;	/* The type of a disk address.  */
 typedef char *__caddr_t;
 typedef long int __time_t;
 typedef long int __swblk_t;	/* Type of a swap block maybe?  */
+typedef long int __key_t;	/* Type of an IPC key */
 
 /* fd_set for select.  */
 

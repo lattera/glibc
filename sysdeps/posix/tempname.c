@@ -150,7 +150,7 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
   len = dlen + 1 + plen + 5 + 3;
   while (1)
     {
-      const size_t i;
+      size_t i;
 
       if (*idx >= ((sizeof (letters) - 1) * (sizeof (letters) - 1) *
 		   (sizeof (letters) - 1)))
@@ -193,11 +193,18 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
 		 Create a stream for it.  */
 #ifdef USE_IN_LIBIO
 	      int save;
+	      struct locked_FILE
+		{
+		  struct _IO_FILE_plus fp;
+#ifdef _IO_MTSAFE_IO
+		  _IO_lock_t lock;
+#endif
+		} *new_f;
 	      struct _IO_FILE_plus *fp;
 
-	      fp = (struct _IO_FILE_plus *)
-		malloc (sizeof (struct _IO_FILE_plus));
-	      if (fp == NULL)
+	      new_f = (struct locked_FILE *)
+		malloc (sizeof (struct locked_FILE));
+	      if (new_f == NULL)
 		{
 		  /* We lost trying to create a stream (out of memory?).
 		     Nothing to do but remove the file, close the descriptor,
@@ -209,6 +216,10 @@ __stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
 		  __set_errno (save);
 		  return NULL;
 		}
+	      fp = &new_f->fp;
+#ifdef _IO_MTSAFE_IO
+	      fp->file._lock = &new_f->lock;
+#endif
 	      _IO_init (&fp->file, 0);
 	      _IO_JUMPS (&fp->file) = &_IO_file_jumps;
 	      _IO_file_init (&fp->file);

@@ -52,8 +52,6 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <ctype.h>
 #include <string.h>
 
-#define MIN(A, B) ((A) < (B) ? (A) : (B))
-
 
 int	__ivaliduser __P((FILE *, u_int32_t, const char *, const char *));
 static int __icheckhost __P((u_int32_t, char *));

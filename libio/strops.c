@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright (C) 1993 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
@@ -112,7 +112,7 @@ DEFUN(_IO_str_overflow, (fp, c),
       fp->_flags |= _IO_CURRENTLY_PUTTING;
       get_pos = LEN(fp);
     }
-  if (pos >= _IO_blen(fp) + flush_only)
+  if (pos >= (_IO_size_t) (_IO_blen(fp) + flush_only))
     {
       if (fp->_flags & _IO_USER_BUF) /* not allowed to enlarge */
 	{
@@ -187,10 +187,10 @@ DEFUN(_IO_str_count, (fp),
       register _IO_FILE *fp)
 {
   _IO_ssize_t put_len = fp->_IO_write_ptr - fp->_IO_write_base;
-  if (put_len < LEN(fp))
+  if (put_len < (_IO_ssize_t) LEN(fp))
     put_len = LEN(fp);
   return put_len;
-}     
+}
 
 _IO_pos_t
 DEFUN(_IO_str_seekoff, (fp, offset, dir, mode),
@@ -213,7 +213,7 @@ DEFUN(_IO_str_seekoff, (fp, offset, dir, mode),
 	default: /* case _IO_seek_set: */
 	  break;
 	}
-      if (offset < 0 || (_IO_size_t)offset > cur_size)
+      if (offset < 0 || (_IO_ssize_t)offset > cur_size)
 	return EOF;
       fp->_IO_read_ptr = fp->_IO_read_base + offset;
       fp->_IO_read_end = fp->_IO_read_base + cur_size;
@@ -234,7 +234,7 @@ DEFUN(_IO_str_seekoff, (fp, offset, dir, mode),
 	default: /* case _IO_seek_set: */
 	  break;
 	}
-      if (offset < 0 || (_IO_size_t)offset > cur_size)
+      if (offset < 0 || (_IO_ssize_t)offset > cur_size)
 	return EOF;
       LEN(fp) = cur_size;
       fp->_IO_write_ptr = fp->_IO_write_base + offset;

@@ -30,31 +30,37 @@ __BEGIN_DECLS
 #include <gnu/types.h>
 
 #ifdef	__USE_BSD
-#define u_char __u_char
-#define u_short __u_short
-#define u_int __u_int
-#define u_long __u_long
-#define quad_t __quad_t
-#define u_quad_t __u_quad_t
-#define	fsid_t __fsid_t
+typedef __u_char u_char;
+typedef __u_short u_short;
+typedef __u_int u_int;
+typedef __u_long u_long;
+typedef __quad_t quad_t;
+typedef __u_quad_t u_quad_t;
+typedef __fsid_t fsid_t;
 #endif
 
-#define dev_t __dev_t
-#define gid_t __gid_t
-#define ino_t __ino_t
-#define mode_t __mode_t
-#define nlink_t __nlink_t
-#define off_t __off_t
-#define loff_t __loff_t
-#define pid_t __pid_t
-#define uid_t __uid_t
-#ifndef	ssize_t
-#define	ssize_t	__ssize_t
+typedef __dev_t dev_t;
+typedef __gid_t gid_t;
+typedef __ino_t ino_t;
+typedef __mode_t mode_t;
+typedef __nlink_t nlink_t;
+typedef __off_t off_t;
+typedef __loff_t loff_t;
+typedef __pid_t pid_t;
+typedef __uid_t uid_t;
+
+#ifndef ssize_t
+typedef __ssize_t ssize_t;
+#define ssize_t ssize_t
 #endif
 
 #ifdef	__USE_BSD
-#define daddr_t __daddr_t
-#define caddr_t __caddr_t
+typedef __daddr_t daddr_t;
+typedef __caddr_t caddr_t;
+#endif
+
+#ifdef  __USE_SVID
+typedef __key_t key_t;
 #endif
 
 #define	__need_time_t
@@ -84,8 +90,8 @@ typedef	unsigned int u_int32_t;
 #ifdef __GNUC__
 typedef long long int int64_t;
 typedef unsigned long long int u_int64_t;
-typedef int register_t __attribute__ ((__mode__ (word)));
 #endif
+typedef int register_t;
 
 #else
 

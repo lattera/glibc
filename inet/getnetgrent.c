@@ -1,7 +1,5 @@
-/* readdir_r - Reentrant version of readdir.
-Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -18,20 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <dirent.h>
+#include <netdb.h>
 
-/* Some systems have reentrancy problems with their `readdir'
-   implementation so they have an additional `readdir_r' version.  The
-   GNU version does not have these problems but for compatibility
-   reasons we provide this function.  It is simply a wrapper around
-   the normal function.
 
-   The actual definition of this functions varies very strong from
-   system to system.  We chose to follow the POSIX version.  */
 int
-readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
+getnetgrent (char **hostp, char **userp, char **domainp)
 {
-  *result = readdir (dirp);
+  static char buffer[1024];	/* All three strings shouldn't use 1kB.  */
 
-  return *result != NULL ? 0 : -1;
+  return __getnetgrent_r (hostp, userp, domainp, buffer, sizeof (buffer));
 }

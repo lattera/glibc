@@ -158,7 +158,7 @@ __nss_next (service_user **ni, const char *fct_name, void **fctp, int status,
   else
     {
       /* This is really only for debugging.  */
-       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_SUCCESS)
+       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
 	 __libc_fatal ("illegal status in " __FUNCTION__);
 
        if (nss_next_action (*ni, status) == NSS_ACTION_RETURN)
@@ -503,6 +503,7 @@ nss_parse_service_list (const char *line)
       new_service->actions[2 + NSS_STATUS_UNAVAIL] = NSS_ACTION_CONTINUE;
       new_service->actions[2 + NSS_STATUS_NOTFOUND] = NSS_ACTION_CONTINUE;
       new_service->actions[2 + NSS_STATUS_SUCCESS] = NSS_ACTION_RETURN;
+      new_service->actions[2 + NSS_STATUS_RETURN] = NSS_ACTION_RETURN;
       new_service->library = NULL;
       new_service->known = NULL;
       new_service->next = NULL;

@@ -215,7 +215,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     char *p;
     for (i=0; i < 0x100; i++)
       {
-	p = (char *)((int)(buf + 0xff) & ~0xff) + i;
+	p = (char *)((unsigned long int)(buf + 0xff) & ~0xff) + i;
 	strcpy (p, "OK");
 	strcpy (p+3, "BAD/WRONG");
 	check(strlen(p) == 2, 4+i);
@@ -241,7 +241,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     char *p;
     for (i=0; i < 0x100; i++)
       {
-	p = (char *)((int)(buf + 0xff) & ~0xff) + i;
+	p = (char *)((unsigned long int)(buf + 0xff) & ~0xff) + i;
 	strcpy (p, "OK");
 	strcpy (p+3, "BAD/WRONG");
 	check(strchr(p, '/') == NULL, 9+i);
@@ -283,7 +283,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     char *p;
     for (i=0; i < 0x100; i++)
       {
-	p = (char *)((int)(buf + 0xff) & ~0xff) + i;
+	p = (char *)((unsigned long int)(buf + 0xff) & ~0xff) + i;
 	strcpy (p, "OK");
 	strcpy (p+3, "BAD/WRONG");
 	check(strrchr(p, '/') == NULL, 9+i);

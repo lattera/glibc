@@ -33,7 +33,7 @@ getc (fp)
 {
   int result;
   CHECK_FILE (fp, EOF);
-  __libc_cleanup_region_start (&_IO_funlockfile, fp);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   result = _IO_getc_unlocked (fp);
   __libc_cleanup_region_end (1);

@@ -97,7 +97,7 @@ res_mkquery(op, dname, class, type, data, datalen, newrr_in, buf, buflen)
 	u_char *dnptrs[20], **dpp, **lastdnptr;
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (-1);
 	}
 #ifdef DEBUG

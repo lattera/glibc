@@ -236,12 +236,12 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
        OSF/1 has a per-thread h_errno variable.  */
     if (header_pointer->aa != 0)
       {
-	h_errno = HOST_NOT_FOUND;
+	__set_h_errno (HOST_NOT_FOUND);
 	return NSS_STATUS_NOTFOUND;
       }
     else
       {
-	h_errno = TRY_AGAIN;
+	__set_h_errno (TRY_AGAIN);
 	return NSS_STATUS_TRYAGAIN;
       }
 
@@ -338,7 +338,6 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
       return NSS_STATUS_SUCCESS;
     }
 
-  /* XXX Really use global variable??? */
-  h_errno = TRY_AGAIN;
+  __set_h_errno (TRY_AGAIN);
   return NSS_STATUS_TRYAGAIN;
 }

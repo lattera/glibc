@@ -35,7 +35,6 @@
 #include <sys/gmon.h>
 #include <sys/gmon_out.h>
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -45,7 +44,7 @@
 #include <string.h>
 #include <unistd.h>
 
-extern int __profile_frequency (void);
+extern int __profile_frequency __P ((void));
 
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
 
@@ -65,7 +64,8 @@ static int	s_scale;
  *	all the data structures are ready.
  */
 void
-DEFUN(moncontrol, (mode), int mode)
+moncontrol (mode)
+     int mode;
 {
   struct gmonparam *p = &_gmonparam;
 
@@ -85,7 +85,9 @@ DEFUN(moncontrol, (mode), int mode)
 
 
 void
-DEFUN(monstartup, (lowpc, highpc), u_long lowpc AND u_long highpc)
+monstartup (lowpc, highpc)
+     u_long lowpc;
+     u_long highpc;
 {
   register int o;
   char *cp;
@@ -155,21 +157,19 @@ DEFUN(monstartup, (lowpc, highpc), u_long lowpc AND u_long highpc)
 
 
 static void
-DEFUN(write_hist, (fd), int fd)
+write_hist (fd)
+     int fd;
 {
   const u_char tag = GMON_TAG_TIME_HIST;
   struct gmon_hist_hdr thdr;
-  int size, rate;
 
   if (_gmonparam.kcountsize > 0)
     {
-      size = _gmonparam.kcountsize / sizeof(HISTCOUNTER);
-      rate = __profile_frequency();
-      bcopy(&_gmonparam.lowpc, &thdr.low_pc, sizeof(thdr.low_pc));
-      bcopy(&_gmonparam.highpc, &thdr.high_pc, sizeof(thdr.high_pc));
-      bcopy(&size, &thdr.hist_size, sizeof(thdr.hist_size));
-      bcopy(&rate, &thdr.prof_rate, sizeof(thdr.prof_rate));
-      strcpy(thdr.dimen, "seconds");
+      thdr.low_pc = _gmonparam.lowpc;
+      thdr.high_pc = _gmonparam.highpc;
+      thdr.hist_size = _gmonparam.kcountsize / sizeof(HISTCOUNTER);
+      thdr.prof_rate = __profile_frequency();
+      strncpy(thdr.dimen, "seconds", sizeof(thdr.dimen));
       thdr.dimen_abbrev = 's';
 
       write(fd, &tag, sizeof(tag));
@@ -180,7 +180,8 @@ DEFUN(write_hist, (fd), int fd)
 
 
 static void
-DEFUN(write_call_graph, (fd), int fd)
+write_call_graph (fd)
+     int fd;
 {
   const u_char tag = GMON_TAG_CG_ARC;
   struct gmon_cg_arc_record raw_arc;
@@ -200,11 +201,9 @@ DEFUN(write_call_graph, (fd), int fd)
 	   to_index != 0;
 	   to_index = _gmonparam.tos[to_index].link)
 	{
-	  bcopy(&frompc, &raw_arc.from_pc, sizeof(raw_arc.from_pc));
-	  bcopy(&_gmonparam.tos[to_index].selfpc, &raw_arc.self_pc,
-		sizeof(raw_arc.self_pc));
-	  bcopy(&_gmonparam.tos[to_index].count, &raw_arc.count,
-		sizeof(raw_arc.count));
+	  raw_arc.from_pc = frompc;
+	  raw_arc.self_pc = _gmonparam.tos[to_index].selfpc;
+	  raw_arc.count = _gmonparam.tos[to_index].count;
 
 	  write(fd, &tag, sizeof(tag));
 	  write(fd, &raw_arc, sizeof(raw_arc));
@@ -214,7 +213,8 @@ DEFUN(write_call_graph, (fd), int fd)
 
 
 static void
-DEFUN(write_bb_counts, (fd), int fd)
+write_bb_counts (fd)
+     int fd;
 {
   struct __bb *grp;
   const u_char tag = GMON_TAG_BB_COUNT;
@@ -239,9 +239,8 @@ DEFUN(write_bb_counts, (fd), int fd)
 
 
 void
-DEFUN_VOID(_mcleanup)
+_mcleanup ()
 {
-    const int version = GMON_VERSION;
     struct gmon_hdr ghdr;
     int fd;
 
@@ -254,8 +253,9 @@ DEFUN_VOID(_mcleanup)
       }
 
     /* write gmon.out header: */
-    bcopy(GMON_MAGIC, &ghdr.cookie[0], 4);
-    bcopy(&version, &ghdr.version, sizeof(version));
+    memset(&ghdr, 0, sizeof(ghdr));
+    memcpy(&ghdr.cookie[0], GMON_MAGIC, sizeof(ghdr.cookie));
+    ghdr.version = GMON_VERSION;
     write(fd, &ghdr, sizeof(ghdr));
 
     /* write PC histogram: */

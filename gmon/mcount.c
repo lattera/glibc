@@ -58,7 +58,6 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
  * perform this optimization.
  */
 _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
-	register u_long frompc, selfpc;
 {
 	register u_short *frompcindex;
 	register struct tostruct *top, *prevtop;

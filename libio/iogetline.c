@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright (C) 1993 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
@@ -48,7 +48,7 @@ DEFUN(_IO_getline, (fp, buf, n, delim, extract_delim),
 	  break;
 	else
 	  len = fp->_IO_read_end - fp->_IO_read_ptr;
-      if (len >= n)
+      if ((_IO_size_t) len >= n)
 	len = n;
       t = (char*)memchr((void*)fp->_IO_read_ptr, delim, len);
       if (t != NULL)

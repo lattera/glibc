@@ -53,7 +53,7 @@ strtok (s, delim)
   s = strpbrk (token, delim);
   if (s == NULL)
     /* This token finishes the string.  */
-    olds = NULL;
+    olds = strchr (token, '\0');
   else
     {
       /* Terminate the token and make OLDS point past it.  */

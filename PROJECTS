@@ -37,7 +37,8 @@ contact <bug-glibc@prep.ai.mit.edu>
 
      The libm is in fact fdlibm (not the same as in Linux libc).
 
-**** Partly done.
+**** Partly done.  But we need someone with numerical experiences for
+     the rest.
 
 
 [ 6] If you enjoy assembler programming (as I do --drepper :-) you might
@@ -81,7 +82,7 @@ contact <bug-glibc@prep.ai.mit.edu>
      Please contact bug-glibc@prep.ai.mit.edu before starting to avoid
      duplicated work.
 
-[11] Write access function for netmasks, bootparams, netgroup, publickey,
-     automount, aliases databases for nss_files and nss_db module.
+[11] Write access function for netmasks, bootparams, publickey, automount,
+     and aliases databases for nss_files and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.

@@ -496,7 +496,7 @@ __p_rr(cp, msg, file)
 	char base64_key[MAX_KEY_BASE64];
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
 	cp = __p_fqnname(cp, msg, MAXCDNAME, rrname, sizeof rrname);

@@ -1341,7 +1341,7 @@ collation element `%.*s' appears more than once: ignore line"),
 	{
 	  unsigned int order = ++collate->order_cnt;
 
-	  if ((unsigned int) tmp != 0)
+	  if ((unsigned long int) tmp != 0ul)
 	    {
 	      lr_error (lr, _("\
 collation symbol `.*s' appears more than once: ignore line"),

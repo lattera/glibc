@@ -33,7 +33,7 @@ routines		= nsswitch $(addsuffix -lookup,$(databases))
 # Caution: if you add a database here, you must add its real name
 # in databases.def, too.
 databases		= proto service hosts network grp pwd rpc ethers \
-			  spwd
+			  spwd netgrp
 
 # Specify rules for the nss_* modules.  We have some services.
 services		:= files dns db

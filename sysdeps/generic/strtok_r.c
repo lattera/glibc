@@ -54,7 +54,7 @@ strtok_r (s, delim, save_ptr)
   s = strpbrk (token, delim);
   if (s == NULL)
     /* This token finishes the string.  */
-    *save_ptr = NULL;
+    *save_ptr = strchr (token, '\0');
   else
     {
       /* Terminate the token and make *SAVE_PTR point past it.  */

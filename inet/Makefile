@@ -24,6 +24,8 @@ subdir	:= inet
 headers	:= netinet/ether.h netinet/in.h netinet/if_ether.h \
 	   netinet/tcp.h $(wildcard arpa/*.h protocols/*.h)
 
+distribute := netgroup.h
+
 routines := ntohl ntohs htonl htons		\
 	    inet_lnaof inet_mkadr	\
 	    inet_netof inet_ntoa inet_net herrno \
@@ -38,7 +40,8 @@ routines := ntohl ntohs htonl htons		\
 	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
 	    ether_aton ether_aton_r ether_hton ether_line \
 	    ether_ntoa ether_ntoa_r ether_ntoh \
-	    rcmd rexec ruserpass
+	    rcmd rexec ruserpass \
+	    getnetgrent_r getnetgrent
 
 # No warnings about losing BSD code.
 override +gccwarn := -w

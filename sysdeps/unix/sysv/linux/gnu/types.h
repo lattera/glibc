@@ -71,7 +71,7 @@ typedef __kernel_clock_t __clock_t;
 typedef unsigned long __fd_mask;
 
 #ifdef	__USE_SVID
-typedef int key_t;
+typedef int __key_t;
 #endif
 
 #endif /* gnu/types.h */

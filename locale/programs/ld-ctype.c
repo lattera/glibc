@@ -21,6 +21,7 @@ Boston, MA 02111-1307, USA.  */
 # include <config.h>
 #endif
 
+#include <alloca.h>
 #include <endian.h>
 #include <limits.h>
 #include <string.h>

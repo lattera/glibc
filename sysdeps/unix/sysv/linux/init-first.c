@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include <fpu_control.h>
 #include <linux/personality.h>
-#include "init-first.h"
+#include <init-first.h>
 
 extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
@@ -95,7 +95,7 @@ SYSDEP_CALL_INIT(__libc_init_first, init);
    cause ld.so to gain an init function, which is not a cool thing. */
 
 void
-_dl_start ()
+_dl_start (void)
 {
   abort ();
 }

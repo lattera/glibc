@@ -145,7 +145,7 @@ dprintf(msg, num)
 		int save = errno;
 
 		printf(msg, num);
-		errno = save;
+		__set_errno (save);
 	}
 }
 #else
@@ -195,12 +195,12 @@ getanswer(answer, anslen, qname, qtype)
 	buflen = sizeof hostbuf;
 	cp = answer->buf + HFIXEDSZ;
 	if (qdcount != 1) {
-		h_errno = NO_RECOVERY;
+		__set_h_errno (NO_RECOVERY);
 		return (NULL);
 	}
 	n = dn_expand(answer->buf, eom, cp, bp, buflen);
 	if ((n < 0) || !(*name_ok)(bp)) {
-		h_errno = NO_RECOVERY;
+		__set_h_errno (NO_RECOVERY);
 		return (NULL);
 	}
 	cp += n + QFIXEDSZ;
@@ -330,7 +330,7 @@ getanswer(answer, anslen, qname, qtype)
 				buflen -= n;
 				map_v4v6_hostent(&host, &bp, &buflen);
 			}
-			h_errno = NETDB_SUCCESS;
+			__set_h_errno (NETDB_SUCCESS);
 			return (&host);
 #endif
 		case T_A:
@@ -403,11 +403,11 @@ getanswer(answer, anslen, qname, qtype)
 		}
 		if (_res.options & RES_USE_INET6)
 			map_v4v6_hostent(&host, &bp, &buflen);
-		h_errno = NETDB_SUCCESS;
+		__set_h_errno (NETDB_SUCCESS);
 		return (&host);
 	}
  try_again:
-	h_errno = TRY_AGAIN;
+	__set_h_errno (TRY_AGAIN);
 	return (NULL);
 }
 
@@ -418,7 +418,7 @@ gethostbyname(name)
 	struct hostent *hp;
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
        }
 	if (_res.options & RES_USE_INET6) {
@@ -441,7 +441,7 @@ gethostbyname2(name, af)
 	extern struct hostent *_gethtbyname2();
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
 
@@ -455,7 +455,7 @@ gethostbyname2(name, af)
 		type = T_AAAA;
 		break;
 	default:
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		errno = EAFNOSUPPORT;
 		return (NULL);
 	}
@@ -486,7 +486,7 @@ gethostbyname2(name, af)
 				 * done a lookup.
 				 */
 				if (inet_pton(af, name, host_addr) <= 0) {
-					h_errno = HOST_NOT_FOUND;
+					__set_h_errno (HOST_NOT_FOUND);
 					return (NULL);
 				}
 				strncpy(hostbuf, name, MAXDNAME);
@@ -501,7 +501,7 @@ gethostbyname2(name, af)
 				host.h_addr_list = h_addr_ptrs;
 				if (_res.options & RES_USE_INET6)
 					map_v4v6_hostent(&host, &bp, &len);
-				h_errno = NETDB_SUCCESS;
+				__set_h_errno (NETDB_SUCCESS);
 				return (&host);
 			}
 			if (!isdigit(*cp) && *cp != '.')
@@ -518,7 +518,7 @@ gethostbyname2(name, af)
 				 * done a lookup.
 				 */
 				if (inet_pton(af, name, host_addr) <= 0) {
-					h_errno = HOST_NOT_FOUND;
+					__set_h_errno (HOST_NOT_FOUND);
 					return (NULL);
 				}
 				strncpy(hostbuf, name, MAXDNAME);
@@ -531,7 +531,7 @@ gethostbyname2(name, af)
 				h_addr_ptrs[0] = (char *)host_addr;
 				h_addr_ptrs[1] = NULL;
 				host.h_addr_list = h_addr_ptrs;
-				h_errno = NETDB_SUCCESS;
+				__set_h_errno (NETDB_SUCCESS);
 				return (&host);
 			}
 			if (!isxdigit(*cp) && *cp != ':' && *cp != '.')
@@ -568,7 +568,7 @@ gethostbyaddr(addr, len, af)
 	extern struct hostent *_gethtbyaddr();
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
 	if (af == AF_INET6 && len == IN6ADDRSZ &&
@@ -588,13 +588,13 @@ gethostbyaddr(addr, len, af)
 		size = IN6ADDRSZ;
 		break;
 	default:
-		errno = EAFNOSUPPORT;
-		h_errno = NETDB_INTERNAL;
+		__set_errno (EAFNOSUPPORT);
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
 	if (size != len) {
-		errno = EINVAL;
-		h_errno = NETDB_INTERNAL;
+		__set_errno (EINVAL);
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
 	switch (af) {
@@ -642,7 +642,7 @@ gethostbyaddr(addr, len, af)
 		       "gethostbyaddr: No A record for %s (verifying [%s])",
 		       hname2, inet_ntoa(*((struct in_addr *)addr)));
 		_res.options = old_options;
-		h_errno = HOST_NOT_FOUND;
+		__set_h_errno (HOST_NOT_FOUND);
 		return (NULL);
 	    }
 	    _res.options = old_options;
@@ -653,7 +653,7 @@ gethostbyaddr(addr, len, af)
 		syslog(LOG_NOTICE|LOG_AUTH,
 		       "gethostbyaddr: A record of %s != PTR record [%s]",
 		       hname2, inet_ntoa(*((struct in_addr *)addr)));
-		h_errno = HOST_NOT_FOUND;
+		__set_h_errno (HOST_NOT_FOUND);
 		return (NULL);
 	    }
 	}
@@ -668,7 +668,7 @@ gethostbyaddr(addr, len, af)
 		hp->h_addrtype = AF_INET6;
 		hp->h_length = IN6ADDRSZ;
 	}
-	h_errno = NETDB_SUCCESS;
+	__set_h_errno (NETDB_SUCCESS);
 	return (hp);
 }
 
@@ -700,12 +700,12 @@ _gethtent()
 	int af, len;
 
 	if (!hostf && !(hostf = fopen(_PATH_HOSTS, "r" ))) {
-		h_errno = NETDB_INTERNAL;
+		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
  again:
 	if (!(p = fgets(hostbuf, sizeof hostbuf, hostf))) {
-		h_errno = HOST_NOT_FOUND;
+		__set_h_errno (HOST_NOT_FOUND);
 		return (NULL);
 	}
 	if (*p == '#')
@@ -760,7 +760,7 @@ _gethtent()
 
 		map_v4v6_hostent(&host, &bp, &buflen);
 	}
-	h_errno = NETDB_SUCCESS;
+	__set_h_errno (NETDB_SUCCESS);
 	return (&host);
 }
 

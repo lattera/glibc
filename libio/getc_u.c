@@ -28,11 +28,9 @@ the executable file might be covered by the GNU General Public License. */
 #undef getc_unlocked
 
 int
-__getc_unlocked (fp)
+getc_unlocked (fp)
      FILE *fp;
 {
   CHECK_FILE (fp, EOF);
   return _IO_getc_unlocked (fp);
 }
-
-weak_alias (__getc_unlocked, getc_unlocked)

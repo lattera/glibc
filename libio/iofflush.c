@@ -23,6 +23,7 @@ This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
+#include <stdio.h>
 
 int
 _IO_fflush (fp)
@@ -34,7 +35,8 @@ _IO_fflush (fp)
     {
       int result;
       CHECK_FILE (fp, EOF);
-      __libc_cleanup_region_start (&_IO_funlockfile, fp);
+      __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+				   fp);
       _IO_flockfile (fp);
       result = _IO_SYNC (fp) ? EOF : 0;
       __libc_cleanup_region_end (1);

@@ -32,7 +32,7 @@ BEGIN {
     print "";
     print "#include <errno.h>";
     print "";
-    print "const char *_sys_errlist[] =";
+    print "const char *const _sys_errlist[] =";
     print "  {";
     print "    [0] = N_(\"Success\"),"
   }

@@ -62,7 +62,7 @@ typedef struct service_user
   /* Name of the service (`files', `dns', `nis', ...).  */
   const char *name;
   /* Action according to result.  */
-  lookup_actions actions[4];
+  lookup_actions actions[5];
   /* Link to the underlying library object.  */
   service_library *library;
   /* Collection of known functions.  */

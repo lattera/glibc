@@ -27,6 +27,8 @@ errno:	.space 4
 	.type errno, @object
 	.size errno, 4
 #endif
+	.globl __errno
+__errno = errno
 
 	.text
 	.align 2
@@ -44,7 +46,10 @@ __syscall_error:
 	.mask	0x4000001, -16
 	.prologue 1
 
-	/* Find our pre-thread errno address  */
+	/* Store into the "real" variable.  */
+	stl	v0, errno
+
+	/* Find our per-thread errno address  */
 	jsr	ra, __errno_location
 
 	/* Store the error value.  */

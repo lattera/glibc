@@ -26,6 +26,7 @@ static const char rcsid[] = "$Id$";
 
 #include <errno.h>
 #include <stdio.h>
+#include <string.h>
 
 #ifdef SPRINTF_CHAR
 # define SPRINTF(x) strlen(sprintf/**/x)

@@ -26,6 +26,9 @@ printf_arginfo_function *__printf_arginfo_table[UCHAR_MAX + 1];
 
 printf_function **__printf_function_table;
 
+int __register_printf_function __P ((int, printf_function,
+                                     printf_arginfo_function));
+
 /* Register FUNC to be called to format SPEC specifiers.  */
 int
 __register_printf_function (spec, converter, arginfo)

@@ -31,7 +31,8 @@ int
 getchar ()
 {
   int result;
-  __libc_cleanup_region_start (&_IO_funlockfile, stdin);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+			       stdin);
   _IO_flockfile (stdin);
   result = _IO_getc_unlocked (stdin);
   __libc_cleanup_region_end (1);

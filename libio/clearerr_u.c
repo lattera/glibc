@@ -20,11 +20,9 @@ Boston, MA 02111-1307, USA.  */
 #include "stdio.h"
 
 void
-__clearerr_unlocked (fp)
+clearerr_unlocked (fp)
      FILE *fp;
 {
   CHECK_FILE (fp, /*nothing*/);
   _IO_clearerr (fp);
 }
-
-weak_alias (__clearerr_unlocked, clearerr_unlocked)

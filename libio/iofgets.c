@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1995 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -23,6 +23,7 @@ This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
+#include <stdio.h>
 
 char*
 _IO_fgets (buf, n, fp)
@@ -35,7 +36,7 @@ _IO_fgets (buf, n, fp)
   CHECK_FILE (fp, NULL);
   if (n <= 0)
     return NULL;
-  __libc_cleanup_region_start (&__funlockfile, fp);
+  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   __flockfile (fp);
   count = _IO_getline (fp, buf, n - 1, '\n', 1);
   if (count == 0 || (fp->_IO_file_flags & _IO_ERR_SEEN))
