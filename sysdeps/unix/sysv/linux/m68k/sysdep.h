@@ -163,7 +163,21 @@ SYSCALL_ERROR_LABEL:							      \
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)		\
+#define INLINE_SYSCALL(name, nr, args...)				\
+  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, nr, args);	\
+     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result), 0))	\
+       {								\
+	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result));		\
+	 _sys_result = (unsigned int) -1;				\
+       }								\
+     (int) _sys_result; })
+
+/* Define a macro which expands inline into the wrapper code for a system
+   call.  This use is for internal calls that do not need to handle errors
+   normally.  It will never touch errno.  This returns just what the kernel
+   gave back.  */
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...)		\
   ({ unsigned int _sys_result;				\
      {							\
        LOAD_ARGS_##nr (args)				\
@@ -174,12 +188,13 @@ SYSCALL_ERROR_LABEL:							      \
 		     : "memory");			\
        _sys_result = _d0;				\
      }							\
-     if (_sys_result >= (unsigned int) -4095)		\
-       {						\
-	 __set_errno (-_sys_result);			\
-	 _sys_result = (unsigned int) -1;		\
-       }						\
      (int) _sys_result; })
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= -4095U)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
 
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0

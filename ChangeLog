@@ -1,3 +1,12 @@
+2002-12-21  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INTERNAL_SYSCALL): Define.
+	(INLINE_SYSCALL): Use it.
+	(INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): Define.
+
+	* sysdeps/unix/sysv/linux/m68k/getpagesize.c: Use INTERNAL_SYSCALL.
+	* sysdeps/unix/sysv/linux/m68k/brk.c: Likewise.
+
 2002-12-20  Art Haas  <ahaas@airmail.net>
 
 	* sysdeps/gnu/siglist.c: Convert GCC extension initializer
