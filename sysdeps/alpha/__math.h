@@ -28,7 +28,8 @@ __copysign (double __x, double __y)
 extern __inline double
 fabs (double __x)
 {
-  return __copysign (0, __x);
+  __asm ("cpys $f31, %1, %0" : "=f" (__x) : "f" (__x));
+  return __x;
 }
 
 #endif
