@@ -546,6 +546,37 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
+    } elsif (/^symbol *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
+      my($symbol) = $1;
+      my($value) = $2;
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $symbol;
+
+      # Generate a program to test for the availability of this constant.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "void foobarbaz (void) {\n";
+      print TESTFILE "__typeof__ ($symbol) a = $symbol;\n";
+      print TESTFILE "}\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Testing for symbol $symbol",
+			  "Symbol \"$symbol\" not available.", $res, 0);
+
+      if ($value ne "") {
+	# Generate a program to test for the value of this constant.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	print TESTFILE "int main (void) { return $symbol != $value; }\n";
+	close (TESTFILE);
+
+	$res = runtest ($fnamebase, "Testing for value of symbol $symbol",
+			"Symbol \"$symbol\" has not the right value.", $res);
+      }
     } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
       my($const) = $1;
       my($type) = "$3$4";

@@ -1,5 +1,8 @@
 2001-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/sys/shm.h-data: SHMLBA is not required to by a constant.
+	* conform/conformtest.pl: Implement handling of symbol.
+
 	* signal/signal.h: Fix handling of __need_* symbols.
 	* misc/sys/select.c: Define fd_set here.  Remove __fd_set.  Define
 	fd_mask only if __USE_MISC.  Declare pselect for __USE_XOPEN2K.

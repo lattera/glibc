@@ -1,5 +1,5 @@
 constant SHM_RDONLY
-constant SHMLBA
+symbol SHMLBA
 constant SHM_RND
 
 type shmatt_t
