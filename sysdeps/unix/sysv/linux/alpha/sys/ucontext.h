@@ -24,6 +24,26 @@
 
 #include <bits/sigcontext.h>
 
+
+/* Type for general register.  */
+typedef long int greg_t;
+
+/* Number of general registers.  */
+#define NGREG	33
+
+/* Container for all general registers.  */
+typedef greg_t gregset_t[NGREG];
+
+/* Type for floating-point register.  */
+typedef long int fpreg_t;
+
+/* Number of general registers.  */
+#define NFPREG	32
+
+/* Container for all general registers.  */
+typedef fpreg_t fpregset_t[NFPREG];
+
+
 /* A machine context is exactly a sigcontext.  */
 typedef struct sigcontext mcontext_t;
 
