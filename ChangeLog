@@ -1,3 +1,8 @@
+2003-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h: Undo last change.
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h: Likewise.
+
 2003-09-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/bits/types.h (__quad_t): Make long int if 64-bit.
@@ -10,7 +15,7 @@
 
 	* Makefile (tests): Run check-c++-types.sh if possible.
 	* scripts/check-c++-types.h: New file.
-	* scripts/data/c++-ctypes-i386-linux-gnu.data: New file.
+	* scripts/data/c++-types-i386-linux-gnu.data: New file.
 
 2003-09-08  Andreas Jaeger  <aj@suse.de>
 
