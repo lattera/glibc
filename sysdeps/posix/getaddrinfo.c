@@ -383,6 +383,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
       memset (at->next, 0, sizeof(struct gaih_addrtuple));
       at->next->family = AF_INET;
+
+      if (!(req->ai_flags & AI_PASSIVE))
+	{
+	  /* RFC 2553 requires to set set the socket address structure
+	     to the loopback address in this case.  */
+	  memcpy (at->addr, &in6addr_loopback, sizeof (struct in6_addr));
+	  ((struct in_addr *)at->next->addr)->s_addr = htonl (INADDR_LOOPBACK);
+	}
     }
 
   if (pai == NULL)
