@@ -108,7 +108,6 @@ case $maybe_os in
   nto-qnx* | linux-gnu*)
     os=-$maybe_os
     basic_machine=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\1/'`
-    basic_machine=`echo $basic_machine | sed 's/-unknown//'`
     ;;
   *)
     basic_machine=`echo $1 | sed 's/-[^-]*$//'`
