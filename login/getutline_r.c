@@ -55,22 +55,16 @@ getutline_r (const struct utmp *line, struct utmp **utmp,
       /* Update position pointer.  */
       utmp_data->loc_utmp += sizeof (struct utmp);
 
+      if (
 #if _HAVE_UT_TYPE - 0
-      if (utmp_data->ubuf.ut_type == USER_PROCESS
-	  && strncmp (line->ut_line, utmp_data->ubuf.ut_line,
-		      sizeof line->ut_line) == 0)
-	/* Stop if we found an user entry.  */
-	break;
-
-      if (utmp_data->ubuf.ut_type == LOGIN_PROCESS)
-	/* Stop if we found a login entry.  */
-	break;
-#else	/* !_HAVE_UT_TYPE */
-      if (strncmp (line->ut_line, utmp_data->ubuf.ut_line,
-		      sizeof line->ut_line) == 0)
-	/* Stop if the line match.  */
-	break;
+	  (utmp_data->ubuf.ut_type == USER_PROCESS
+	   || utmp_data->ubuf.ut_type == LOGIN_PROCESS)
+	  &&
 #endif
+	  ! strncmp (line->ut_line, utmp_data->ubuf.ut_line,
+		     sizeof line->ut_line))
+	/* Stop if we found a user or login entry.  */
+	break;
     }
 
   *utmp = &utmp_data->ubuf;

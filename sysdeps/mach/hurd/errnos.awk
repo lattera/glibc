@@ -54,15 +54,15 @@ errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
   { ++errnoh; e = $4; next; }
 
 errnoh == 3 && $1 == "@comment" && $2 == "errno" {
-    errno = $3 + 0;
-    if (errno == 0)
-      next;
-    if (errno > maxerrno) maxerrno = errno;
     if (e == "EWOULDBLOCK")
       {
 	print "#define EWOULDBLOCK EAGAIN /* Operation would block */";
 	next;
       }
+    errno = $3 + 0;
+    if (errno == 0)
+      next;
+    if (errno > maxerrno) maxerrno = errno;
     x = sprintf ("%-40s/*%s */", sprintf ("%-24s%s", "#define\t" e,
 					  "_HURD_ERRNO (" errno ")"),
 		 etext);

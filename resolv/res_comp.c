@@ -397,7 +397,7 @@ res_hnok(dn)
 		int nch = *dn++;
 
 		if (periodchar(ch)) {
-			NULL;
+			/* NULL */;
 		} else if (periodchar(pch)) {
 			if (!borderchar(ch))
 				return (0);

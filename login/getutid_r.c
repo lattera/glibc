@@ -53,32 +53,55 @@ getutid_r (const struct utmp *id, struct utmp **utmp,
   if (lseek (utmp_data->ut_fd, utmp_data->loc_utmp, SEEK_SET) == -1)
     return -1;
 
-  while (1)
+  if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
+      || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
     {
-      /* Read the next entry.  */
-      if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
-	  != sizeof (struct utmp))
+      /* Search for next entry with type RUN_LVL, BOOT_TIME,
+	 OLD_TIME, or NEW_TIME.  */
+
+      while (1)
 	{
-	  errno = ESRCH;
-	  return -1;
+	  /* Read the next entry.  */
+	  if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
+	      != sizeof (struct utmp))
+	    {
+	      errno = ESRCH;
+	      return -1;
+	    }
+
+	  /* Update position pointer.  */
+	  utmp_data->loc_utmp += sizeof (struct utmp);
+
+	  if (id->ut_type == utmp_data->ubuf.ut_type)
+	    break;
 	}
+    }
+  else
+    {
+      /* Search for the next entry with the specified ID and with type
+	 INIT_PROCESS, LOGIN_PROCESS, USER_PROCESS, or DEAD_PROCESS.  */
 
-      /* Update position pointer.  */
-      utmp_data->loc_utmp += sizeof (struct utmp);
+      while (1)
+	{
+	  /* Read the next entry.  */
+	  if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
+	      != sizeof (struct utmp))
+	    {
+	      errno = ESRCH;
+	      return -1;
+	    }
 
-      if ((id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
-	   || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
-	  && id->ut_type != utmp_data->ubuf.ut_type)
-	/* Stop at the next entry with type RUN_LVL, BOOT_TIME,
-	   OLD_TIME, or NEW_TIME.  */
-	break;
+	  /* Update position pointer.  */
+	  utmp_data->loc_utmp += sizeof (struct utmp);
 
-      if ((id->ut_type == INIT_PROCESS || id->ut_type == LOGIN_PROCESS
-	   || id->ut_type == USER_PROCESS || id->ut_type == DEAD_PROCESS)
-	  && strncmp (id->ut_id, utmp_data->ubuf.ut_id, sizeof id->ut_id) == 0)
-	/* Stop at the next entry with the specified ID and with type
-	   INIT_PROCESS, LOGIN_PROCESS, USER_PROCESS, or DEAD_PROCESS.  */
-	break;
+	  if ((   utmp_data->ubuf.ut_type == INIT_PROCESS
+	       || utmp_data->ubuf.ut_type == LOGIN_PROCESS
+	       || utmp_data->ubuf.ut_type == USER_PROCESS
+	       || utmp_data->ubuf.ut_type == DEAD_PROCESS)
+	      && (strncmp (utmp_data->ubuf.ut_id, id->ut_id, sizeof id->ut_id)
+		  == 0))
+	    break;
+	}
     }
 
   *utmp = &utmp_data->ubuf;

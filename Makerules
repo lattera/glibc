@@ -588,7 +588,7 @@ cryptobjdir := $(firstword $(objdir) $(patsubst ../$(subdir),.,$(..)crypt))
 $(libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 		   $(elfobjdir)/$(rtld-installed-name) \
 		   $(common-objpfx)libc.a \
-		   $(cryptobjdir)libcrypt.so$(libcrypt.so-version)
+		   $(cryptobjdir)/libcrypt.so$(libcrypt.so-version)
 	(echo '/* Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.'; \
 	 echo '   The dynamic linker defines some functions used by $(<F),';\

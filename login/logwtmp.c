@@ -17,33 +17,31 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <string.h>
 #include <unistd.h>
 #include <utmp.h>
-
+#include <sys/file.h>
+#include <sys/stat.h>
 
 void
 logwtmp (const char *line, const char *name, const char *host)
 {
-  struct utmp_data data;
   struct utmp ut;
+  struct stat st;
+  size_t written;
+  int fd;
 
-  /* Tell that we want to use the UTMP file.  */
-  if (utmpname (_PATH_WTMP) == 0)
-    return;
-
-  /* Open UTMP file.  */
-  setutent_r (&data);
-
-  /* Position at end of file.  */
-  data.loc_utmp = lseek (data.ut_fd, 0, SEEK_END);
-  if (data.loc_utmp == -1)
-    return;
+  /* Open WTMP file.  */
+  fd = __open (_PATH_WTMP, O_WRONLY | O_APPEND);
+  if (fd < 0)
+      return;
 
   /* Set information in new entry.  */
-  bzero (&ut, sizeof (ut));
+  memset (&ut, 0, sizeof (ut));
+  ut.ut_pid = getpid ();
 #if _HAVE_UT_TYPE - 0
-  ut.ut_type = USER_PROCESS;
+  ut.ut_type = name[0] ? USER_PROCESS : DEAD_PROCESS;
 #endif
   strncpy (ut.ut_line, line, sizeof ut.ut_line);
   strncpy (ut.ut_name, name, sizeof ut.ut_name);
@@ -52,14 +50,36 @@ logwtmp (const char *line, const char *name, const char *host)
 #endif
 
 #if _HAVE_UT_TV - 0
-  gettimeofday (&ut.ut_tv, NULL);
+  __gettimeofday (&ut.ut_tv, NULL);
 #else
-  time (&ut.ut_time);
+  __time (&ut.ut_time);
 #endif
 
-  /* Write the entry.  */
-  pututline_r (&ut, &data);
+  /* Try to lock the file.  */
+  if (__flock (fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
+    {
+      /* Oh, oh.  The file is already locked.  Wait a bit and try again.  */
+      sleep (1);
 
-  /* Close UTMP file.  */
-  endutent_r (&data);
+      /* This time we ignore the error.  */
+      __flock (fd, LOCK_EX | LOCK_NB);
+    }
+
+  /* Remeber original size of log file: */
+  if (__fstat (fd, &st) < 0)
+    goto done;
+
+  /* Write the entry.  If we can't write all the bytes, reset the file
+     size back to the original size.  That way, no partial entries
+     will remain.  */
+  written = __write (fd, &ut, sizeof (ut));
+  if (written > 0 && written != sizeof (ut))
+    ftruncate (fd, st.st_size);
+
+done:
+  /* And unlock the file.  */
+  __flock (fd, LOCK_UN);
+
+  /* Close WTMP file.  */
+  __close (fd);
 }

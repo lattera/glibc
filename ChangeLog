@@ -1,3 +1,69 @@
+Thu Jul 18 04:33:21 1996  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/errnos.awk: Move EWOULDBLOCK check before errno==0
+	check.  mib's clueless hacking broke it.
+
+Thu Jul 18 04:27:21 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules ($(libdir)/libc.so): Add missing / after $(cryptobjdir).
+
+Wed Jul 17 10:54:20 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/start.S: Move to ...
+	* sysdeps/alpha/elf/start.S: here.
+
+	* misc/sys/ustat.h: New file.
+	* misc/ustat.h: Ditto.
+	* sysdeps/generic/ustatbits.h: Ditto.
+	* libc-orig/sysdeps/stub/ustat.c: Ditto.
+	* sysdeps/unix/sysv/linux/ustatbits.h: Ditto.
+	* misc/Makefile (headers): Mention ustat.h, sys/ustat.h, and
+ 	ustatbits.h.
+	(routines): Mention ustat.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Mention klogctl in
+ 	alphabetically correct place.  Mention ustat.
+
+	* sysdeps/unix/alpha/sysdep.S: Make errno a bss symbol, not a
+	common symbol (makes errno accessible from gdb).
+
+	* login/pututline_r.c (pututline_r): Test ut_id in repositioning
+	test, not ut_type.
+
+	* login/logwtmp.c (logwtmp): Reimplemented.  Must ensure that a
+ 	record always gets appended at end of file (wtmp is a log file,
+ 	after all).  Set ut_type to DEAD_PROCESS if name is empty.
+
+	* login/getutid_r.c (getutid_r): Handle search for UT_TYPE in
+	separate loop from search for UT_ID.  Fix code so it is in
+	sync with Unix man page.
+
+	* login/getutline_r.c (getutline_r): Stop searching only if
+ 	ut_line matches and type is either USER_PROCESS or LOGIN_PROCESS.
+
+Tue Jul 16 15:06:18 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Base on <linux/in.h> to
+ 	avoid duplicate declarations.
+
+Sun Jul 14 19:08:55 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* manual/maint.texi (Supported Configurations): Add alpha-gnu-linux
+	and alpha-gnu-linuxecoff targets.
+
+Fri Jul 12 16:58:44 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Declare bindresvport().
+
+Sat Jun 22 23:30:07 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* resolv/res_send.c (res_send): Declare FROMLEN as size_t instead
+	of int.
+
+	* resolv/res_comp.c (res_hnok): Use empty statement in place
+	of NULL (which generates a "useless expression" warning in
+	gcc).
+
 Wed Jul 17 23:56:35 1996  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Replace ../

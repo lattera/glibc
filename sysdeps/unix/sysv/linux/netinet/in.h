@@ -21,23 +21,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <features.h>
 
 #include <sys/socket.h>
-
-
-/* Standard well-defined IP protocols.  */
-enum
-  {
-    IPPROTO_IP = 0,	/* Dummy protocol for TCP.  */
-    IPPROTO_ICMP = 1,	/* Internet Control Message Protocol.  */
-    IPPROTO_IGMP = 2,	/* Internet Group Management Protocol. */
-    IPPROTO_TCP = 6,	/* Transmission Control Protocol.  */
-    IPPROTO_EGP = 8,	/* Exterior Gateway Protocol.  */
-    IPPROTO_PUP = 12,	/* PUP protocol.  */
-    IPPROTO_UDP = 17,	/* User Datagram Protocol.  */
-    IPPROTO_IDP = 22,	/* XNS IDP protocol.  */
-
-    IPPROTO_RAW = 255,	/* Raw IP packets.  */
-    IPPROTO_MAX
-  };
+#include <linux/in.h>
 
 /* Standard well-known ports.  */
 enum
@@ -85,74 +69,8 @@ enum
 #define	IMPLINK_LOWEXPER	156
 #define	IMPLINK_HIGHEXPER	158
 
-
-/* Internet address.  */
-struct in_addr
-  {
-    unsigned int s_addr;
-  };
-
-
-/* Definitions of the bits in an Internet address integer.
-
-   On subnets, host and network parts are found according to
-   the subnet mask, not these masks.  */
-
-#define	IN_CLASSA(a)		((((unsigned) (a)) & 0x80000000) == 0)
-#define	IN_CLASSA_NET		0xff000000
-#define	IN_CLASSA_NSHIFT	24
-#define	IN_CLASSA_HOST		(0xffffffff & ~IN_CLASSA_NET)
-#define	IN_CLASSA_MAX		128
-
-#define	IN_CLASSB(a)		((((unsigned) (a)) & 0xc0000000) == 0x80000000)
-#define	IN_CLASSB_NET		0xffff0000
-#define	IN_CLASSB_NSHIFT	16
-#define	IN_CLASSB_HOST		(0xffffffff & ~IN_CLASSB_NET)
-#define	IN_CLASSB_MAX		65536
-
-#define	IN_CLASSC(a)		((((unsigned) (a)) & 0xc0000000) == 0xc0000000)
-#define	IN_CLASSC_NET		0xffffff00
-#define	IN_CLASSC_NSHIFT	8
-#define	IN_CLASSC_HOST		(0xffffffff & ~IN_CLASSC_NET)
-
-#define	IN_CLASSD(a)		((((unsigned) (a)) & 0xf0000000) == 0xe0000000)
-#define	IN_MULTICAST(a)		IN_CLASSD(a)
-
-#define	IN_EXPERIMENTAL(a)	((((unsigned) (a)) & 0xe0000000) == 0xe0000000)
-#define	IN_BADCLASS(a)		((((unsigned) (a)) & 0xf0000000) == 0xf0000000)
-
-/* Address to accept any incoming messages.  */
-#define	INADDR_ANY		((unsigned) 0x00000000)
-/* Address to send to all hosts.  */
-#define	INADDR_BROADCAST	((unsigned) 0xffffffff)
-/* Address indicating an error return.  */
-#define	INADDR_NONE		0xffffffff
-
-/* Network number for local host loopback.  */
-#define	IN_LOOPBACKNET	127
-/* Address to loopback in software to local host.  */
-#ifndef INADDR_LOOPBACK
-#define	INADDR_LOOPBACK	0x7f000001	/* Internet address 127.0.0.1.  */
-#endif
-
-
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <sockaddrcom.h>
-
-
-/* Structure describing an Internet socket address.  */
-struct sockaddr_in
-  {
-    __SOCKADDR_COMMON (sin_);
-    unsigned short int sin_port;	/* Port number.  */
-    struct in_addr sin_addr;		/* Internet address.  */
-
-    /* Pad to size of `struct sockaddr'.  */
-    unsigned char sin_zero[sizeof(struct sockaddr) -
-			   __SOCKADDR_COMMON_SIZE -
-			   sizeof(unsigned short int) -
-			   sizeof(struct in_addr)];
-  };
 
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
@@ -162,13 +80,6 @@ struct ip_opts
     struct in_addr ip_dst;	/* First hop; zero without source route.  */
     char ip_opts[40];		/* Actually variable in size.  */
   };
-
-/* Structure used for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP. */
-struct ip_mreq
-{
-  struct in_addr imr_multiaddr;	/* IP multicast address of group */
-  struct in_addr imr_interface;	/* local IP address of interface */
-};
 
 /* Functions to convert between host and network byte order.  */
 
@@ -187,5 +98,12 @@ extern unsigned short int htons __P ((unsigned short int));
 #define	htonl(x)	(x)
 #define	htons(x)	(x)
 #endif
+
+__BEGIN_DECLS
+
+/* Bind socket FD to a privileged IP address SIN.  */
+extern int bindresvport __P((int __fd, struct sockaddr_in * __sin));
+
+__END_DECLS
 
 #endif	/* netinet/in.h */

@@ -1,5 +1,6 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@zen.org).
+/* Header describing obsolete `ustat' interface.
+Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,28 +17,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
-#define _ERRNO_H
-#include <errnos.h>
+/* This interface is obsolete.  Use <sys/statfs.h> instead.  */
 
-	.section .bss
-	.globl errno
-errno:	.space 4
-#ifdef __ELF__
-	.type errno, @object
-	.size errno, 4
-#endif
+#ifndef _SYS_USTAT_H
+#define _SYS_USTAT_H 1
 
-	.text
-LEAF(__syscall_error, 0)
-	ldgp	gp, 0(t12)
-	.prologue 1
+#include <sys/types.h>
+#include <ustatbits.h>
 
-	/* Store return value in errno... */
-	stl	v0, errno
+__BEGIN_DECLS
 
-	/* And just kick back a -1.  */
-	ldi	v0, -1
-	ret
+extern int __ustat __P ((dev_t, struct ustat *));
+extern int ustat __P ((dev_t, struct ustat *));
 
-	END(__syscall_error)
+__END_DECLS
+
+#endif /* _SYS_USTAT_H */

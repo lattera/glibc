@@ -58,12 +58,15 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 	return -1;
     }
 
-#if _HAVE_UT_TYPE - 0
-  /* Seek position to write.  */
-  if (utmp_data->loc_utmp >= sizeof (struct utmp)
-      && utmp_data->ubuf.ut_type != id->ut_type)
+#if _HAVE_UT_ID - 0
+  /* Check whether we need to reposition.  Repositioning is necessary
+     either if the data in UTMP_DATA is not valid or if the ids don't
+     match: */
+  if (utmp_data->loc_utmp < (off_t) sizeof (struct utmp)
+      || strncmp(utmp_data->ubuf.ut_id, id->ut_id, sizeof (id->ut_id)) != 0)
     {
-      /* We must not overwrite the data in UTMP_DATA.  */
+      /* We must not overwrite the data in UTMP_DATA since ID may be
+	 aliasing it.  */
       struct utmp_data *data_tmp = alloca (sizeof (*data_tmp));
       struct utmp *dummy;
 
@@ -77,7 +80,7 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 	       pointer now is at the end of the file.  */
 	    return -1;
 
-	  /* Set position pointer to position after adding of the record.  */
+	  /* Set position pointer to position behind the record.  */
 	  utmp_data->loc_utmp += sizeof (struct utmp);
 	}
     }
@@ -98,7 +101,7 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 
   if (result >= 0)
     /* Position file correctly.  */
-    if (utmp_data->loc_utmp < sizeof (struct utmp))
+    if (utmp_data->loc_utmp < (off_t) sizeof (struct utmp))
       /* Not located at any valid entry.  Add at the end.  */
       {
 	result = lseek (utmp_data->ut_fd, 0L, SEEK_END);

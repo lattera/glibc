@@ -1,5 +1,6 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@zen.org).
+/* Generic declaration of ustat structure.
+Copyright (C) 1994 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,28 +17,10 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
-#define _ERRNO_H
-#include <errnos.h>
-
-	.section .bss
-	.globl errno
-errno:	.space 4
-#ifdef __ELF__
-	.type errno, @object
-	.size errno, 4
-#endif
-
-	.text
-LEAF(__syscall_error, 0)
-	ldgp	gp, 0(t12)
-	.prologue 1
-
-	/* Store return value in errno... */
-	stl	v0, errno
-
-	/* And just kick back a -1.  */
-	ldi	v0, -1
-	ret
-
-	END(__syscall_error)
+struct ustat
+{
+  daddr_t f_tfree;	/* total free */
+  ino_t f_tinode;	/* total inodes free */
+  char f_fname[6];	/* filesystem name */
+  char f_fpack[6];	/* filesystem pack name */
+};

@@ -42,7 +42,7 @@ enum __error_t_codes
 	ENOTBLK         = _HURD_ERRNO (15),
 #define	ENOTBLK         _HURD_ERRNO (15)/* Block device required */
 	EBUSY           = _HURD_ERRNO (16),
-#define	EBUSY           _HURD_ERRNO (16)/* Device busy */
+#define	EBUSY           _HURD_ERRNO (16)/* Device or resource busy */
 	EEXIST          = _HURD_ERRNO (17),
 #define	EEXIST          _HURD_ERRNO (17)/* File exists */
 	EXDEV           = _HURD_ERRNO (18),
@@ -103,11 +103,11 @@ enum __error_t_codes
 	EPFNOSUPPORT    = _HURD_ERRNO (46),
 #define	EPFNOSUPPORT    _HURD_ERRNO (46)/* Protocol family not supported */
 	EAFNOSUPPORT    = _HURD_ERRNO (47),
-#define	EAFNOSUPPORT    _HURD_ERRNO (47)/* Address family not supported by protocol family */
+#define	EAFNOSUPPORT    _HURD_ERRNO (47)/* Address family not supported by protocol */
 	EADDRINUSE      = _HURD_ERRNO (48),
 #define	EADDRINUSE      _HURD_ERRNO (48)/* Address already in use */
 	EADDRNOTAVAIL   = _HURD_ERRNO (49),
-#define	EADDRNOTAVAIL   _HURD_ERRNO (49)/* Can't assign requested address */
+#define	EADDRNOTAVAIL   _HURD_ERRNO (49)/* Cannot assign requested address */
 	ENETDOWN        = _HURD_ERRNO (50),
 #define	ENETDOWN        _HURD_ERRNO (50)/* Network is down */
 	ENETUNREACH     = _HURD_ERRNO (51),
@@ -121,15 +121,15 @@ enum __error_t_codes
 	ENOBUFS         = _HURD_ERRNO (55),
 #define	ENOBUFS         _HURD_ERRNO (55)/* No buffer space available */
 	EISCONN         = _HURD_ERRNO (56),
-#define	EISCONN         _HURD_ERRNO (56)/* Socket is already connected */
+#define	EISCONN         _HURD_ERRNO (56)/* Transport endpoint is already connected */
 	ENOTCONN        = _HURD_ERRNO (57),
-#define	ENOTCONN        _HURD_ERRNO (57)/* Socket is not connected */
+#define	ENOTCONN        _HURD_ERRNO (57)/* Transport endpoint is not connected */
 	EDESTADDRREQ    = _HURD_ERRNO (39),
 #define	EDESTADDRREQ    _HURD_ERRNO (39)/* Destination address required */
 	ESHUTDOWN       = _HURD_ERRNO (58),
-#define	ESHUTDOWN       _HURD_ERRNO (58)/* Can't send after socket shutdown */
+#define	ESHUTDOWN       _HURD_ERRNO (58)/* Cannot send after transport endpoint shutdown */
 	ETOOMANYREFS    = _HURD_ERRNO (59),
-#define	ETOOMANYREFS    _HURD_ERRNO (59)/* Too many references: can't splice */
+#define	ETOOMANYREFS    _HURD_ERRNO (59)/* Too many references: cannot splice */
 	ETIMEDOUT       = _HURD_ERRNO (60),
 #define	ETIMEDOUT       _HURD_ERRNO (60)/* Connection timed out */
 	ECONNREFUSED    = _HURD_ERRNO (61),
@@ -153,7 +153,7 @@ enum __error_t_codes
 	ESTALE          = _HURD_ERRNO (70),
 #define	ESTALE          _HURD_ERRNO (70)/* Stale NFS file handle */
 	EREMOTE         = _HURD_ERRNO (71),
-#define	EREMOTE         _HURD_ERRNO (71)/* Too many levels of remote in path */
+#define	EREMOTE         _HURD_ERRNO (71)/* Object is remote */
 	EBADRPC         = _HURD_ERRNO (72),
 #define	EBADRPC         _HURD_ERRNO (72)/* RPC struct is bad */
 	ERPCMISMATCH    = _HURD_ERRNO (73),
@@ -174,6 +174,8 @@ enum __error_t_codes
 #define	ENEEDAUTH       _HURD_ERRNO (81)/* Need authenticator */
 	ENOSYS          = _HURD_ERRNO (78),
 #define	ENOSYS          _HURD_ERRNO (78)/* Function not implemented */
+	EILSEQ          = _HURD_ERRNO (106),
+#define	EILSEQ          _HURD_ERRNO (106)/* Invalid or incomplete multibyte or wide character */
 	EBACKGROUND     = _HURD_ERRNO (100),
 #define	EBACKGROUND     _HURD_ERRNO (100)/* Inappropriate operation for background process */
 	EDIED           = _HURD_ERRNO (101),
@@ -240,6 +242,8 @@ enum __error_t_codes
 	EKERN_RIGHT_EXISTS              = 21,
 	EKERN_INVALID_HOST              = 22,
 	EKERN_MEMORY_PRESENT            = 23,
+	EKERN_WRITE_PROTECTION_FAILURE  = 24,
+	EKERN_TERMINATED                = 26,
 
 	/* Errors from <mach/mig_errors.h>.  */
 	EMIG_TYPE_ERROR         = -300, /* client type check failure */
@@ -267,7 +271,7 @@ enum __error_t_codes
 
 };
 
-#define	_HURD_ERRNOS	106
+#define	_HURD_ERRNOS	107
 
 /* User-visible type of error codes.  It is ok to use `int' or
    `kern_return_t' for these, but with `error_t' the debugger prints
