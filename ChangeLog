@@ -1,3 +1,8 @@
+2004-06-20  Jim Meyering  <jim@meyering.net>
+
+	* malloc/obstack.h (obstack_base): Cast to `void *', to align with
+	documentation.
+
 2004-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/bug-if1.c (do_test): Simply use 0 as invalid index.
