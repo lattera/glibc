@@ -1,3 +1,9 @@
+2003-02-20  Roland McGrath  <roland@redhat.com>
+
+	* Makerules: Clean up conditional around include of tls.make.
+	* Make-dist: Export generating=t to prevent using that.
+	(+distinfo): Likewise for $(shell $(MAKE) ...) runs.
+
 2003-02-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/rcmd.c (rresvport_af): Avoid using invliad values.  Wrap
