@@ -11,6 +11,7 @@ s_setregid	setregid setregid	2	__syscall_setregid
 s_setresgid	setresgid setresgid	3	__syscall_setresgid
 s_setresuid	setresuid setresuid	3	__syscall_setresuid
 s_setreuid	setreuid setreuid	2	__syscall_setreuid
+s_setrlimit	setrlimit setrlimit	3	__syscall_setrlimit
 s_ipc		msgget	ipc		5	__syscall_ipc
 s_setuid	setuid	setuid		1	__syscall_setuid
 

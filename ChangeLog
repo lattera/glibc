@@ -1,8 +1,14 @@
+1999-11-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
+	__syscall_setrlimit.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
 1999-11-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* scripts/versions.awk: Don't expect to read predecessor versions,
 	compute them.
-	* Versions.def: Remove predecessors.  They get now computed.
+	* Versions.def: Remove predecessors.  They now get computed.
 
 1999-11-14  Ulrich Drepper  <drepper@cygnus.com>
 
