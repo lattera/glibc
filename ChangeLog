@@ -1,5 +1,10 @@
 2000-10-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-deps.c (_dl_map_object_deps): Put l_initfini array before
+	r_list array in allocated memory.
+	* elf/dl-close.c (_dl_close): Optimize access to l_initfini list
+	and remove use of r_list.
+
 	* elf/dl-close.c (_dl_close): Use correct list (l_initfini) when
 	computing new opencounts.
 	* elf/Makefile: Add rules to build and run neededtest3.

@@ -468,12 +468,16 @@ _dl_map_object_deps (struct link_map *map,
 
   /* Store the search list we built in the object.  It will be used for
      searches in the scope of this object.  */
-  map->l_searchlist.r_list = malloc ((2 * nlist + 1
-				      + (nlist == nduplist ? 0 : nduplist))
-				     * sizeof (struct link_map *));
-  if (map->l_searchlist.r_list == NULL)
+  map->l_initfini =
+    (struct link_map **) malloc ((2 * nlist + 1
+				  + (nlist == nduplist ? 0 : nduplist))
+				 * sizeof (struct link_map *));
+  if (map->l_initfini == NULL)
     _dl_signal_error (ENOMEM, map->l_name,
 		      N_("cannot allocate symbol search list"));
+
+
+  map->l_searchlist.r_list = &map->l_initfini[nlist + 1];
   map->l_searchlist.r_nlist = nlist;
 
   for (nlist = 0, runp = known; runp; runp = runp->unique)
@@ -507,10 +511,8 @@ _dl_map_object_deps (struct link_map *map,
     }
 
   /* Now determine the order in which the initialization has to happen.  */
-  map->l_initfini =
-    (struct link_map **) memcpy (map->l_searchlist.r_duplist + nduplist,
-				 map->l_searchlist.r_list,
-				 nlist * sizeof (struct link_map *));
+  memcpy (map->l_initfini, map->l_searchlist.r_list,
+	  nlist * sizeof (struct link_map *));
   /* We can skip looking for the binary itself which is at the front
      of the search list.  Look through the list backward so that circular
      dependencies are not changing the order.  */

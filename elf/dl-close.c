@@ -86,7 +86,7 @@ _dl_close (void *_map)
       return;
     }
 
-  list = map->l_searchlist.r_list;
+  list = map->l_initfini;
   nsearchlist = map->l_searchlist.r_nlist;
 
   /* Compute the new l_opencount values.  */
@@ -94,23 +94,23 @@ _dl_close (void *_map)
 					   * sizeof (unsigned int));
   for (i = 0; i < nsearchlist; ++i)
     {
-      map->l_initfini[i]->l_idx = i;
-      new_opencount[i] = map->l_initfini[i]->l_opencount;
+      list[i]->l_idx = i;
+      new_opencount[i] = list[i]->l_opencount;
     }
   --new_opencount[0];
   for (i = 1; i < nsearchlist; ++i)
-    if (! (map->l_initfini[i]->l_flags_1 & DF_1_NODELETE)
+    if (! (list[i]->l_flags_1 & DF_1_NODELETE)
 	/* Decrement counter.  */
 	&& --new_opencount[i] == 0
 	/* Test whether this object was also loaded directly.  */
-	&& map->l_initfini[i]->l_searchlist.r_list != NULL)
+	&& list[i]->l_searchlist.r_list != NULL)
       {
 	/* In this case we have the decrement all the dependencies of
            this object.  They are all in MAP's dependency list.  */
 	unsigned int j;
-	struct link_map **dep_list = map->l_initfini[i]->l_searchlist.r_list;
+	struct link_map **dep_list = list[i]->l_searchlist.r_list;
 
-	for (j = 1; j < map->l_initfini[i]->l_searchlist.r_nlist; ++j)
+	for (j = 1; j < list[i]->l_searchlist.r_nlist; ++j)
 	  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE))
 	    {
 	      assert (dep_list[j]->l_idx < nsearchlist);
@@ -125,7 +125,7 @@ _dl_close (void *_map)
   /* Call all termination functions at once.  */
   for (i = 0; i < nsearchlist; ++i)
     {
-      struct link_map *imap = map->l_initfini[i];
+      struct link_map *imap = list[i];
       if (new_opencount[i] == 0 && imap->l_type == lt_loaded
 	  && (imap->l_info[DT_FINI] || imap->l_info[DT_FINI_ARRAY])
 	  && ! (imap->l_flags_1 & DF_1_NODELETE)
@@ -235,12 +235,7 @@ _dl_close (void *_map)
 
 	  /* Remove the searchlists.  */
 	  if (imap != map)
-	    {
-	      if (imap->l_searchlist.r_list != NULL)
-		free (imap->l_searchlist.r_list);
-	      else
-		free (imap->l_initfini);
-	    }
+	      free (imap->l_initfini);
 
 	  if (imap->l_phdr_allocated)
 	    free ((void *) imap->l_phdr);
