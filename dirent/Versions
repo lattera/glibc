@@ -37,4 +37,8 @@ libc {
     # v*
     versionsort; versionsort64;
   }
+  GLIBC_2.2 {
+    # g*
+    getdirentries64;
+  }
 }
