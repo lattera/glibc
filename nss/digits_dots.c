@@ -103,21 +103,16 @@
 		  if (*--cp == '.')
 		    break;
 
-	/* All-numeric, no dot at the end. Fake up a hostent as if
-	   we'd actually done a lookup.  What if someone types
-	   255.255.255.255?  The test below will succeed
-	   spuriously... ???  */
-		  switch (af)
+		  /* All-numeric, no dot at the end. Fake up a hostent as if
+		     we'd actually done a lookup.  What if someone types
+		     255.255.255.255?  The test below will succeed
+		     spuriously... ???  */
+		  if (af == AF_INET)
+		    not_ok = inet_aton (name, (struct in_addr *) host_addr);
+		  else
 		    {
-		    case AF_INET:
-		      not_ok = inet_aton (name, (struct in_addr *) host_addr);
-		      break;
-		    case AF_INET6:
+		      assert (af == AF_INET6);
 		      not_ok = (inet_pton (af, name, host_addr) <= 0);
-		      break;
-		    default:
-		      assert (! "There should be no other `af' value");
-		      not_ok = 1;
 		    }
 		  if (not_ok)
 		    {
