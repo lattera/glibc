@@ -1,13 +1,8 @@
 #ifndef _STDIO_H
 # if defined __need_FILE || defined __need___FILE
-#  ifdef USE_IN_LIBIO
-#   include <libio/stdio.h>
-#  else
-#   include <stdio/stdio.h>
-#  endif
+#  include <libio/stdio.h>
 # else
-#  ifdef USE_IN_LIBIO
-#   include <libio/stdio.h>
+#  include <libio/stdio.h>
 
 /* Now define the internal interfaces.  */
 extern int __fcloseall (void);
@@ -36,9 +31,6 @@ extern FILE *__new_tmpfile (void);
 extern FILE *__old_tmpfile (void);
 
 
-#  else
-#   include <stdio/stdio.h>
-#  endif
 
 #  define __need_size_t
 #  include <stddef.h>

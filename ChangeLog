@@ -1,3 +1,9 @@
+2002-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdio.h: Remove references to old stdio implementation.
+
+	* libio/Makefile (bug-ungetwc2-ENV): Define.
+
 2002-05-13  Roland McGrath  <roland@frob.com>
 
 	* iconv/gconv_charset.h (upstr): Add inline keyword, quiets warning.
@@ -6,10 +12,10 @@
 
 2002-05-13  Marcus Brinkmann  <marcus@gnu.org>
 
-        * hurd/hurdchdir.c (_hurd_change_directory_port_from_name):
-        Allocate three, not two, more than LEN when appending '/.'.
-        * sysdeps/mach/hurd/chroot.c (chroot): Likewise.  Don't check
-        if NAME ends with '/.' if it is shorter than 2 chars.
+	* hurd/hurdchdir.c (_hurd_change_directory_port_from_name):
+	Allocate three, not two, more than LEN when appending '/.'.
+	* sysdeps/mach/hurd/chroot.c (chroot): Likewise.  Don't check
+	if NAME ends with '/.' if it is shorter than 2 chars.
 
 2002-05-12  Roland McGrath  <roland@frob.com>
 
