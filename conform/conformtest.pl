@@ -53,6 +53,7 @@ $CFLAGS{"XOPEN2K"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=600
 @knownproblems = ('unix', 'linux', 'i386');
 
 # Some headers need a bit more attention.
+$mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
 $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
 $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
 $mustprepend{'signal.h'} = "#include <pthread.h>\n";

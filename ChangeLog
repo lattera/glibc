@@ -1,5 +1,7 @@
 2001-08-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: <inttypes.h> test required <stddef.h>.
+
 	* wcsmbs/wchar.h (wcwdith): Change parameter type to wchar_t.
 	* wcsmbs/wcwidth.c (wcwdith): Likewise.
 	* wcsmbs/wcwidth.h (internal_wcwdith): Likewise.
