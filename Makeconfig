@@ -346,6 +346,9 @@ ifeq ($(release),stable)
 default_cflags := -g -O2
 else
 default_cflags := -g -O
+ifneq ($(CC),/usr/bin/gcc)
+default_cflags := -g -O3 -finline-limit=2000 -march=pentium4
+endif
 endif
 endif
 
@@ -437,7 +440,7 @@ link-libc = -Wl,-rpath-link=$(rpath-link) \
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
 else
-ifneq (,$(findstring aix,$(config-os)))
+ifneq (,$(filter aix aix%,$(config-os)))
 link-libc = $(common-objpfx)libc.a \
 	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
 rpath-dirs = math dlfcn nss nis rt resolv crypt
@@ -460,7 +463,7 @@ LDFLAGS-soname-fname = -Wl,-soname,$(@F)
 LDFLAGS-rdynamic = -rdynamic
 LDFLAGS-Bsymbolic = -Bsymbolic
 else
-ifneq (,$(findstring aix,$(config-os)))
+ifneq (,$(filter aix aix%,$(config-os)))
 LDFLAGS-rpath-ORIGIN =
 LDFLAGS-soname-fname =
 LDFLAGS-rdynamic = -Wl,-bdynamic
@@ -526,7 +529,8 @@ sysdep-library-path = \
 $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
 				       $(filter -Wl$(comma)-rpath-link=%,\
 						$(sysdep-LDFLAGS)))))
-run-program-prefix = $(if $(findstring $(notdir $(built-program-file)), $(tests-static)),, \
+run-program-prefix = $(if $(filter $(notdir $(built-program-file)),\
+				   $(tests-static)),, \
 			  $(elf-objpfx)$(rtld-installed-name) \
 			  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)))
 else

@@ -90,7 +90,7 @@ const size_t _nl_category_name_sizes[] =
 #undef	NO_POSTLOAD
 #define NO_POSTLOAD _nl_postload_ctype /* Harmless thing known to exist.  */
 #define DEFINE_CATEGORY(category, category_name, items, postload) \
-extern void postload (void);
+extern void postload (void); weak_extern (postload)
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 #undef	NO_POSTLOAD

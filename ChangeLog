@@ -1,5 +1,10 @@
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
+	* Makeconfig (run-program-prefix): Fix bogus use of $(findstring ...)
+	to use $(filter ...) instead.  Same bug fixed in aix conditionals.
+
+	* locale/setlocale.c: Declare postload functions weak.
+
 	* elf/tst-tls1-static.c: New file.
 	* elf/tst-tls2-static.c: New file.
 	* elf/Makefile ($(tests-static):%=$(objfpx)%.o): Remove rule.
