@@ -536,7 +536,7 @@ package; available at
     http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html
 
 ??	I have killed ypbind to stop using NIS, but glibc
-        continues using NIS.
+	continues using NIS.
 
 {TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files from
 ypbind.  ypbind 3.3 and older versions don't always remove these files, so
@@ -545,8 +545,8 @@ Until ypbind 3.4 is released, you can find a patch at
 
     ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.
 
-??     Under Linux/Alpha, I always get "do_ypcall: clnt_call:
-       RPC: Unable to receive; errno = Connection refused" when using NIS.
+??	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
+	RPC: Unable to receive; errno = Connection refused" when using NIS.
 
 {TK} You need a ypbind version which is 64bit clean.  Some versions are not
 64bit clean.  A 64bit clean implementation is ypbind-mt.  For ypbind 3.3,
@@ -559,6 +559,18 @@ know about other versions.
 {AJ} You probably should read the manual section describing nsswitch.conf
 (just type `info libc "NSS Configuration File"').  The NSS configuration
 file is usually the culprit.
+
+
+??	How do I create the databases for NSS?
+
+{AJ} If you have an entry "db" in /etc/nsswitch.conf you should also create
+the database files.  The glibc sources contain a Makefile which does the
+neccessary conversion and calls to create those files.  The file is
+`db-Makefile' in the subdirectory `nss' and you can call it with `make -f
+db-Makefile'.  Please note that not all services are capable of using a
+database.  Currently passwd, group, ethers, protocol, rpc, services shadow
+and netgroup are implemented.
+
 
 ??	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
@@ -829,8 +841,8 @@ siginterrupt().
 	functions.  Why?
 
 {AJ} glibc 2.1 has special string functions that are faster than the normal
-library functions. Some of the functions are implemented as inline functions
-and others as macros.
+library functions. Some of the functions are additionally implemented as
+inline functions and others as macros.
 
 The optimized string functions are only used when compiling with
 optimizations (-O1 or higher). The behavior can be changed with two feature

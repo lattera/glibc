@@ -516,15 +516,15 @@ print_known_names (void)
 	{
 	  if (strcmp (__gconv_modules_db[cnt]->from_constpfx, "INTERNAL"))
 	    tsearch (__gconv_modules_db[cnt]->from_constpfx, &printlist,
-		     (__compar_fn_t) strcoll);
+		     (__compar_fn_t) strverscmp);
 	  if (strcmp (__gconv_modules_db[cnt]->to_string, "INTERNAL"))
 	    tsearch (__gconv_modules_db[cnt]->to_string, &printlist,
-		     (__compar_fn_t) strcoll);
+		     (__compar_fn_t) strverscmp);
 	}
       else
 	if (strcmp (__gconv_modules_db[cnt]->from_pattern, "INTERNAL"))
 	  tsearch (__gconv_modules_db[cnt]->from_pattern, &printlist,
-		   (__compar_fn_t) strcoll);
+		   (__compar_fn_t) strverscmp);
     }
 
   fputs (_("\

@@ -65,24 +65,25 @@ please let me know.
 2.11.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
 2.12.	I have killed ypbind to stop using NIS, but glibc
-        continues using NIS.
+	continues using NIS.
 2.13.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
-       RPC: Unable to receive; errno = Connection refused" when using NIS.
+	RPC: Unable to receive; errno = Connection refused" when using NIS.
 2.14.	After installing glibc name resolving doesn't work properly.
-2.15.	I have /usr/include/net and /usr/include/scsi as symlinks
+2.15.	How do I create the databases for NSS?
+2.16.	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
-2.16.	Programs like `logname', `top', `uptime' `users', `w' and
+2.17.	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
 	users on my system.  Why?
-2.17.	After upgrading to glibc 2.1 with symbol versioning I get
+2.18.	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
-2.18.	When I start the program XXX after upgrading the library
+2.19.	When I start the program XXX after upgrading the library
 	I get
 	  XXX: Symbol `_sys_errlist' has different size in shared
 	  object, consider re-linking
 	Why?  What should I do?
-2.19.	What do I need for C++ development?
-2.20.	Even statically linked programs need some shared libraries
+2.20.	What do I need for C++ development?
+2.21.	Even statically linked programs need some shared libraries
 	which is not acceptable for me.  What can I do?
 
 3. Source and binary incompatibilities, and what to do about them
@@ -674,7 +675,7 @@ package; available at
 
 
 2.12.	I have killed ypbind to stop using NIS, but glibc
-        continues using NIS.
+	continues using NIS.
 
 {TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files from
 ypbind.  ypbind 3.3 and older versions don't always remove these files, so
@@ -685,7 +686,7 @@ Until ypbind 3.4 is released, you can find a patch at
 
 
 2.13.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
-       RPC: Unable to receive; errno = Connection refused" when using NIS.
+	RPC: Unable to receive; errno = Connection refused" when using NIS.
 
 {TK} You need a ypbind version which is 64bit clean.  Some versions are not
 64bit clean.  A 64bit clean implementation is ypbind-mt.  For ypbind 3.3,
@@ -700,7 +701,18 @@ know about other versions.
 file is usually the culprit.
 
 
-2.15.	I have /usr/include/net and /usr/include/scsi as symlinks
+2.15.	How do I create the databases for NSS?
+
+{AJ} If you have an entry "db" in /etc/nsswitch.conf you should also create
+the database files.  The glibc sources contain a Makefile which does the
+neccessary conversion and calls to create those files.  The file is
+`db-Makefile' in the subdirectory `nss' and you can call it with `make -f
+db-Makefile'.  Please note that not all services are capable of using a
+database.  Currently passwd, group, ethers, protocol, rpc, services shadow
+and netgroup are implemented.
+
+
+2.16.	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
 
 {PB} This was necessary for libc5, but is not correct when using glibc.
@@ -711,14 +723,14 @@ in place before you install glibc.  However, /usr/include/asm and
 /usr/include/linux should remain as they were.
 
 
-2.16.	Programs like `logname', `top', `uptime' `users', `w' and
+2.17.	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
 	users on my system.  Why?
 
 {MK} See question 3.2.
 
 
-2.17.	After upgrading to glibc 2.1 with symbol versioning I get
+2.18.	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
 
 {AJ} The problem is caused either by wrong program code or tools.  In the
@@ -732,7 +744,7 @@ price you might have to pay once for quite a number of advantages with
 symbol versioning.
 
 
-2.18.	When I start the program XXX after upgrading the library
+2.19.	When I start the program XXX after upgrading the library
 	I get
 	  XXX: Symbol `_sys_errlist' has different size in shared
 	  object, consider re-linking
@@ -754,7 +766,7 @@ be possible that a symbol changed size when that should not have happened.
 So in case of doubt report such a warning message as a problem.
 
 
-2.19.	What do I need for C++ development?
+2.20.	What do I need for C++ development?
 
 {HJ,AJ} You need either egcs 1.0.2 or gcc-2.8.1 with libstdc++ 2.8.1 (or
 more recent versions). libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't
@@ -764,7 +776,7 @@ library compiled for 2.0 is not compatible due to the new Large File Support
 (LFS) in version 2.1.
 
 
-2.20.	Even statically linked programs need some shared libraries
+2.21.	Even statically linked programs need some shared libraries
 	which is not acceptable for me.  What can I do?
 
 {AJ} NSS (for details just type `info libc "Name Service Switch"') won't
@@ -983,8 +995,8 @@ siginterrupt().
 	functions.  Why?
 
 {AJ} glibc 2.1 has special string functions that are faster than the normal
-library functions. Some of the functions are implemented as inline functions
-and others as macros.
+library functions. Some of the functions are additionally implemented as
+inline functions and others as macros.
 
 The optimized string functions are only used when compiling with
 optimizations (-O1 or higher). The behavior can be changed with two feature

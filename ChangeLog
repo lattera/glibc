@@ -1,3 +1,8 @@
+1998-05-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/iconv_prog.c (print_known_names): Use strverscmp in all
+	tsearch calls.
+
 1998-05-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* timezone/test-tz.c: The test with TZ=UTC0 seems to work - enable
