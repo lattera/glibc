@@ -1,4 +1,10 @@
-2000-08-24  Denis Joseph Barrow    <djbarrow@de.ibm.com>
+2000-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (res_ourserver_p): Cleanup the type mess to avoid
+	problems with now restrict parameter types.
+	(convaddr4to6): Likewise.
+
+2000-08-24  Denis Joseph Barrow  <djbarrow@de.ibm.com>
 
 	* sysdeps/s390/fpu/fedisblxcpt.c: New file.
 	* sysdeps/s390/fpu/feenablxcpt.c: New file.
