@@ -1,3 +1,8 @@
+2000-09-02  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/pthread/timer_routines.c: Include stdlib.h for abort
+	prototype.
+
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/stdio-lock.h (_IO_cleanup_region_start):
