@@ -1,0 +1,17 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+# The configure fragment in this file provides infrastructure for a glibc
+# add-on containing one or more glibc ports.  Only these few script files
+# need exist in the top-level source directory of the add-on.  The ports
+# themselves are contained entirely within their new sysdeps/ directories.
+# This makes it easy to take these few top-level files plus a new port's
+# additions to the sysdeps tree, and package a small add-on for that port.
+# The same infrastructure scripts work for any number of such glibc ports
+# collected together into a single shared add-on package.
+
+cpu_frags=`(cd $srcdir/$libc_add_on; echo sysdeps/*/preconfigure)`
+for frag in $cpu_frags; do
+  echo "$as_me:$LINENO: result: ports add-on running preconfigure fragment $frag" >&5
+echo "${ECHO_T}ports add-on running preconfigure fragment $frag" >&6
+  . $srcdir/$libc_add_on/$frag
+done

@@ -1,0 +1,6 @@
+2004-08-04  Roland McGrath  <roland@frob.com>
+
+	New directory implementing glibc add-on infrastructure for
+	ports maintained separate from the core glibc source tree.
+	* README, configure.in, Makeconfig, Banner, ChangeLog: New files.
+	* configure: New generated file.
