@@ -1,5 +1,8 @@
 2004-03-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-fini.c (_dl_fini): Combine _dl_debug_printf calls.
+	* elf/rtld.c (print_statistics): Likewise.
+
 	* elf/dl-open.c: No need to pass any parameter to _dl_start_profile.
 	They are the same in both places.
 	* elf/dl-profile.c: Likewise.

@@ -174,13 +174,9 @@ _dl_fini (void)
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
-    {
-      _dl_debug_printf ("\nruntime linker statistics:\n");
-      _dl_debug_printf ("\
-           final number of relocations: %lu\n",
-			GL(dl_num_relocations));
-      _dl_debug_printf ("\
-final number of relocations from cache: %lu\n",
-			GL(dl_num_cache_relocations));
-    }
+    _dl_debug_printf ("\nruntime linker statistics:\n"
+		      "           final number of relocations: %lu\n"
+		      "final number of relocations from cache: %lu\n",
+		      GL(dl_num_relocations),
+		      GL(dl_num_cache_relocations));
 }

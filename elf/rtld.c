@@ -2266,11 +2266,11 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	num_relative_relocations += l->l_info[VERSYMIDX (DT_RELACOUNT)]->d_un.d_val;
     }
 
-  _dl_debug_printf ("                 number of relocations: %lu\n",
-		    GL(dl_num_relocations));
-  _dl_debug_printf ("      number of relocations from cache: %lu\n",
-		    GL(dl_num_cache_relocations));
-  _dl_debug_printf ("        number of relative relocations: %lu\n",
+  _dl_debug_printf ("                 number of relocations: %lu\n"
+		    "      number of relocations from cache: %lu\n"
+		    "        number of relative relocations: %lu\n",
+		    GL(dl_num_relocations),
+		    GL(dl_num_cache_relocations),
 		    num_relative_relocations);
 
 #ifndef HP_TIMING_NONAVAIL
