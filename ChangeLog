@@ -2,6 +2,9 @@
 
 	* intl/Makefile: Run gettext-test only if msgfmt is available.
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_LDT_WORKS):
+	Define it for newer kernels.
+
 2000-05-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-sym.c: Minor cleanups.

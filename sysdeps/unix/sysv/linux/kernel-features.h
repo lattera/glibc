@@ -117,3 +117,8 @@
 #  define __ASSUME_SETRESUID_SYSCALL	1
 # endif
 #endif
+
+/* We can use the LDTs for threading with Linux 2.3.99 and newer.  */
+#if __LINUX_KERNEL_VERSION >= 131939
+# define __ASSUME_LDT_WORKS		1
+#endif

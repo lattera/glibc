@@ -22,7 +22,7 @@
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
-
+#include "kernel-features.h"
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
@@ -62,5 +62,6 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   return ret;
 }
 
-
+#if __ASSUME_LDT_WORKS > 0
 #include "../useldt.h"
+#endif
