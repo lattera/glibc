@@ -1,5 +1,18 @@
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* internals.h (strict __pthread_descr_struct): Add p_sem_avail.
+	* semaphore.c: Handle spurious wakeups.
+
+	* sysdeps/pthread/pthread.h: Add back PTHREAD_MUTX_FAST_NP as an alias
+	for PTHREAD_MUTEX_ADAPTIVE_NP for source code compatibility.
+
+	* pthread.c (__pthread_set_own_extricate): Use THREAD_GETMEM.
+	(__pthread_wait_for_restart): Likewise.
+
+	* condvar.c (pthread_cond_wait): Also check whether thread is
+	cancelable before aborting loop.
+	(pthread_cond_timedwait): Likewise.
+
 	* signals.c (pthread_sighandler): Remove special code to restrore
 	%gs on x86.
 	(pthread_sighandler_t): Likewise.

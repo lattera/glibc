@@ -168,6 +168,7 @@ struct _pthread_descr_struct {
 					   called on thread */
   char p_woken_by_cancel;       /* cancellation performed wakeup */
   char p_condvar_avail;		/* flag if conditional variable became avail */
+  char p_sem_avail;             /* flag if semaphore became available */
   pthread_extricate_if *p_extricate; /* See above */
   pthread_readlock_info *p_readlock_list;  /* List of readlock info structs */
   pthread_readlock_info *p_readlock_free;  /* Free list of structs */

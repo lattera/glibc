@@ -868,9 +868,9 @@ weak_alias (__pthread_getconcurrency, pthread_getconcurrency)
 
 void __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif)
 {
-  __pthread_lock(self->p_lock, self);
+  __pthread_lock(THREAD_GETMEM(self, p_lock), self);
   THREAD_SETMEM(self, p_extricate, peif);
-  __pthread_unlock(self->p_lock);
+  __pthread_unlock(THREAD_GETMEM (self, p_lock));
 }
 
 /* Primitives for controlling thread execution */
@@ -881,10 +881,10 @@ void __pthread_wait_for_restart_signal(pthread_descr self)
 
   sigprocmask(SIG_SETMASK, NULL, &mask); /* Get current signal mask */
   sigdelset(&mask, __pthread_sig_restart); /* Unblock the restart signal */
+  THREAD_SETMEM(self, p_signal, 0);
   do {
-    self->p_signal = 0;
     sigsuspend(&mask);                   /* Wait for signal */
-  } while (self->p_signal !=__pthread_sig_restart );
+  } while (THREAD_GETMEM(self, p_signal) !=__pthread_sig_restart);
 }
 
 #if !__ASSUME_REALTIME_SIGNALS

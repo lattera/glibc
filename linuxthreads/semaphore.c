@@ -60,6 +60,7 @@ int __new_sem_wait(sem_t * sem)
   volatile pthread_descr self = thread_self();
   pthread_extricate_if extr;
   int already_canceled = 0;
+  int spurious_wakeup_count;
 
   /* Set up extrication interface */
   extr.pu_object = sem;
@@ -72,6 +73,7 @@ int __new_sem_wait(sem_t * sem)
     return 0;
   }
   /* Register extrication interface */
+  THREAD_SETMEM(self, p_sem_avail, 0);
   __pthread_set_own_extricate_if(self, &extr);
   /* Enqueue only if not already cancelled. */
   if (!(THREAD_GETMEM(self, p_canceled)
@@ -87,7 +89,20 @@ int __new_sem_wait(sem_t * sem)
   }
 
   /* Wait for sem_post or cancellation, or fall through if already canceled */
-  suspend(self);
+  spurious_wakeup_count = 0;
+  while (1)
+    {
+      suspend(self);
+      if (THREAD_GETMEM(self, p_sem_avail) == 0
+	  && (THREAD_GETMEM(self, p_woken_by_cancel) == 0
+	      || THREAD_GETMEM(self, p_cancelstate) != PTHREAD_CANCEL_ENABLE))
+	{
+	  /* Count resumes that don't belong to us. */
+	  spurious_wakeup_count++;
+	  continue;
+	}
+      break;
+    }
   __pthread_set_own_extricate_if(self, 0);
 
   /* Terminate only if the wakeup came from cancellation. */
@@ -138,6 +153,8 @@ int __new_sem_post(sem_t * sem)
     } else {
       th = dequeue(&sem->__sem_waiting);
       __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
+      th->p_sem_avail = 1;
+      WRITE_MEMORY_BARRIER();
       restart(th);
     }
   } else {
@@ -195,6 +212,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
   pthread_descr self = thread_self();
   pthread_extricate_if extr;
   int already_canceled = 0;
+  int spurious_wakeup_count;
 
   __pthread_lock((struct _pthread_fastlock *) &sem->__sem_lock, self);
   if (sem->__sem_value > 0) {
@@ -215,6 +233,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
   extr.pu_extricate_func = new_sem_extricate_func;
 
   /* Register extrication interface */
+  THREAD_SETMEM(self, p_sem_avail, 0);
   __pthread_set_own_extricate_if(self, &extr);
   /* Enqueue only if not already cancelled. */
   if (!(THREAD_GETMEM(self, p_canceled)
@@ -229,24 +248,39 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
     pthread_exit(PTHREAD_CANCELED);
   }
 
-  if (timedsuspend(self, abstime) == 0) {
-    int was_on_queue;
+  spurious_wakeup_count = 0;
+  while (1)
+    {
+      if (timedsuspend(self, abstime) == 0) {
+	int was_on_queue;
 
-    /* __pthread_lock will queue back any spurious restarts that
-       may happen to it. */
+	/* __pthread_lock will queue back any spurious restarts that
+	   may happen to it. */
 
-    __pthread_lock((struct _pthread_fastlock *)&sem->__sem_lock, self);
-    was_on_queue = remove_from_queue(&sem->__sem_waiting, self);
-    __pthread_unlock((struct _pthread_fastlock *)&sem->__sem_lock);
+	__pthread_lock((struct _pthread_fastlock *)&sem->__sem_lock, self);
+	was_on_queue = remove_from_queue(&sem->__sem_waiting, self);
+	__pthread_unlock((struct _pthread_fastlock *)&sem->__sem_lock);
 
-    if (was_on_queue) {
-      __pthread_set_own_extricate_if(self, 0);
-      return ETIMEDOUT;
+	if (was_on_queue) {
+	  __pthread_set_own_extricate_if(self, 0);
+	  return ETIMEDOUT;
+	}
+
+	/* Eat the outstanding restart() from the signaller */
+	suspend(self);
+      }
+
+      if (THREAD_GETMEM(self, p_sem_avail) == 0
+	  && (THREAD_GETMEM(self, p_woken_by_cancel) == 0
+	      || THREAD_GETMEM(self, p_cancelstate) != PTHREAD_CANCEL_ENABLE))
+	{
+	  /* Count resumes that don't belong to us. */
+	  spurious_wakeup_count++;
+	  continue;
+	}
+      break;
     }
 
-    /* Eat the outstanding restart() from the signaller */
-    suspend(self);
-  }
  __pthread_set_own_extricate_if(self, 0);
 
   /* Terminate only if the wakeup came from cancellation. */

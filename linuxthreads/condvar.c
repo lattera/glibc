@@ -103,7 +103,8 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
     {
       suspend(self);
       if (THREAD_GETMEM(self, p_condvar_avail) == 0
-	  && THREAD_GETMEM(self, p_woken_by_cancel) == 0)
+	  && (THREAD_GETMEM(self, p_woken_by_cancel) == 0
+	      || THREAD_GETMEM(self, p_cancelstate) != PTHREAD_CANCEL_ENABLE))
 	{
 	  /* Count resumes that don't belong to us. */
 	  spurious_wakeup_count++;
@@ -196,7 +197,8 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
       }
 
       if (THREAD_GETMEM(self, p_condvar_avail) == 0
-	  && THREAD_GETMEM(self, p_woken_by_cancel) == 0)
+	  && (THREAD_GETMEM(self, p_woken_by_cancel) == 0
+	      || THREAD_GETMEM(self, p_cancelstate) != PTHREAD_CANCEL_ENABLE))
 	{
 	  /* Count resumes that don't belong to us. */
 	  spurious_wakeup_count++;
