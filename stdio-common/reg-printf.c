@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <printf.h>
+#include <stdlib.h>
 
 /* Array of functions indexed by format character.  */
 libc_freeres_ptr (printf_arginfo_function **__printf_arginfo_table)
