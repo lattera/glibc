@@ -1,3 +1,10 @@
+2005-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* csu/Makefile (generated): Add start.os and start.ob.
+
+	* elf/Makefile (tests): Change rule for tst-pie1 so that make
+	clean works.
+
 2004-12-29  Roland McGrath  <roland@redhat.com>
 
 	[BZ #626]

@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -163,7 +163,7 @@ tests-nodlopen-yes = nodlopen nodlopen2
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
-tests: $(objpfx)tst-pie1.out
+tests += tst-pie1
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
