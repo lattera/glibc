@@ -1,3 +1,25 @@
+2002-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove
+	lowlevellock.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: New file.
+	* sysdeps/unix/sysv/linux/i386/i586/libc-lowlevellock.S: New file.
+	* sysdeps/unix/sysv/linux/i386/i686/libc-lowlevellock.S: New file.
+	* sysdeps/pthread/bits/libc-lock.h: Use lowlevellock implementation
+	for __libc_lock_* macros.
+	* Makefile (routines): Add libc-lowlevellock.
+
+2002-10-09  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_maybe_call): New macro.
+	Under [__PIC__], call the function via the pointer fetched for
+	comparison rather than a call by name that uses the PLT.
+	(__libc_lock_init, __libc_rwlock_init, __libc_lock_fini)
+	(__libc_rwlock_fini, __libc_lock_lock, __libc_rwlock_rdlock)
+	(__libc_rwlock_wrlock, __libc_lock_trylock, __libc_rwlock_tryrdlock)
+	(__libc_rwlock_trywrlock, __libc_lock_unlock, __libc_rwlock_unlock)
+	(__libc_key_create, __libc_getspecific, __libc_setspecific): Use it.
+
 2002-12-04  Roland McGrath  <roland@redhat.com>
 
 	* forward.c (pthread_self): Use FORWARD3 macro to correct return type.

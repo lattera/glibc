@@ -24,9 +24,24 @@
 #define __need_NULL
 #include <stddef.h>
 
+
+/* Fortunately Linux now has a mean to do locking which is realtime
+   safe without the aid of the thread library.  We also need no fancy
+   options like error checking mutexes etc.  We only need simple
+   locks, maybe recursive.  This can be easily and cheaply implemented
+   using futexes.  We will use them everywhere except in ld.so since
+   ld.so might be used on old kernels with a different libc.so.  */
+#ifdef _LIBC
+# include <lowlevellock.h>
+#endif
+
 /* Mutex type.  */
-#if defined(_LIBC) || defined(_IO_MTSAFE_IO)
+#if defined _LIBC || defined _IO_MTSAFE_IO
+# if defined NOT_IN_libc || !defined _LIBC
 typedef pthread_mutex_t __libc_lock_t;
+# else
+typedef int __libc_lock_t;
+# endif
 typedef struct { pthread_mutex_t mutex; } __libc_lock_recursive_t;
 # ifdef __USE_UNIX98
 typedef pthread_rwlock_t __libc_rwlock_t;
@@ -65,12 +80,22 @@ typedef pthread_key_t __libc_key_t;
    initialized locks must be set to one due to the lack of normal
    atomic operations.) */
 
-#if __LT_SPINLOCK_INIT == 0
+#if defined _LIBC && !defined NOT_IN_libc
+# if LLL_LOCK_INITIALIZER == 0
 #  define __libc_lock_define_initialized(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
+# else
+#  define __libc_lock_define_initialized(CLASS,NAME) \
+  CLASS __libc_lock_t NAME = LLL_LOCK_INITIALIZER;
+# endif
 #else
+# if __LT_SPINLOCK_INIT == 0
+#  define __libc_lock_define_initialized(CLASS,NAME) \
+  CLASS __libc_lock_t NAME;
+# else
 #  define __libc_lock_define_initialized(CLASS,NAME) \
   CLASS __libc_lock_t NAME = PTHREAD_MUTEX_INITIALIZER;
+# endif
 #endif
 
 #define __libc_rwlock_define_initialized(CLASS,NAME) \
@@ -83,12 +108,32 @@ typedef pthread_key_t __libc_key_t;
 #define _LIBC_LOCK_RECURSIVE_INITIALIZER \
   {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
 
+
+/* If we check for a weakly referenced symbol and then perform a
+   normal jump to it te code generated for some platforms in case of
+   PIC is unnecessarily slow.  What would happen is that the function
+   is first referenced as data and then it is called indirectly
+   through the PLT.  We can make this a direct jump.  */
+#ifdef __PIC__
+# define __libc_maybe_call(FUNC, ARGS, ELSE) \
+  (__extension__ ({ __typeof (FUNC) *_fn = (FUNC); \
+                    _fn != NULL ? (*_fn) ARGS : ELSE; }))
+#else
+# define __libc_maybe_call(FUNC, ARGS, ELSE) \
+  (FUNC != NULL ? FUNC ARGS : ELSE)
+#endif
+
+
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
-#define __libc_lock_init(NAME) \
-  (__pthread_mutex_init != NULL ? __pthread_mutex_init (&(NAME), NULL) : 0);
+#if defined _LIBC && !defined NOT_IN_libc
+# define __libc_lock_init(NAME) (NAME) = LLL_LOCK_INITIALIZER;
+#else
+# define __libc_lock_init(NAME) \
+  __libc_maybe_call (__pthread_mutex_init, (&(NAME), NULL), 0)
+#endif
 #define __libc_rwlock_init(NAME) \
-  (__pthread_rwlock_init != NULL ? __pthread_rwlock_init (&(NAME), NULL) : 0);
+  __libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0)
 
 /* Same as last but this time we initialize a recursive mutex.  */
 #define __libc_lock_init_recursive(NAME) \
@@ -106,46 +151,67 @@ typedef pthread_key_t __libc_key_t;
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */
-#define __libc_lock_fini(NAME) \
-  (__pthread_mutex_destroy != NULL ? __pthread_mutex_destroy (&(NAME)) : 0);
+#if defined _LIBC && !defined NOT_IN_libc
+# define __libc_lock_fini(NAME) (0)
+#else
+# define __libc_lock_fini(NAME) \
+  __libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0)
+#endif
 #define __libc_rwlock_fini(NAME) \
-  (__pthread_rwlock_destroy != NULL ? __pthread_rwlock_destroy (&(NAME)) : 0);
+  __libc_maybe_call (__pthread_rwlock_destroy, (&(NAME)), 0)
 
 /* Finalize recursive named lock.  */
-#define __libc_lock_fini_recursive(NAME) __libc_lock_fini ((NAME).mutex)
+#define __libc_lock_fini_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0)
 
 /* Lock the named lock variable.  */
-#define __libc_lock_lock(NAME) \
-  (__pthread_mutex_lock != NULL ? __pthread_mutex_lock (&(NAME)) : 0);
+#if defined _LIBC && !defined NOT_IN_libc
+# define __libc_lock_lock(NAME) \
+  lll_lock (NAME);
+#else
+# define __libc_lock_lock(NAME) \
+  __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
+#endif
 #define __libc_rwlock_rdlock(NAME) \
-  (__pthread_rwlock_rdlock != NULL ? __pthread_rwlock_rdlock (&(NAME)) : 0);
+  __libc_maybe_call (__pthread_rwlock_rdlock, (&(NAME)), 0)
 #define __libc_rwlock_wrlock(NAME) \
-  (__pthread_rwlock_wrlock != NULL ? __pthread_rwlock_wrlock (&(NAME)) : 0);
+  __libc_maybe_call (__pthread_rwlock_wrlock, (&(NAME)), 0)
 
 /* Lock the recursive named lock variable.  */
-#define __libc_lock_lock_recursive(NAME) __libc_lock_lock ((NAME).mutex)
+#define __libc_lock_lock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
 
 /* Try to lock the named lock variable.  */
-#define __libc_lock_trylock(NAME) \
-  (__pthread_mutex_trylock != NULL ? __pthread_mutex_trylock (&(NAME)) : 0)
+#if defined _LIBC && !defined NOT_IN_libc
+# define __libc_lock_trylock(NAME) \
+  lll_trylock (NAME)
+#else
+# define __libc_lock_trylock(NAME) \
+  __libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0)
+#endif
 #define __libc_rwlock_tryrdlock(NAME) \
-  (__pthread_rwlock_tryrdlock != NULL \
-   ? __pthread_rwlock_tryrdlock (&(NAME)) : 0)
+  __libc_maybe_call (__pthread_rwlock_tryrdlock, (&(NAME)), 0)
 #define __libc_rwlock_trywrlock(NAME) \
-  (__pthread_rwlock_trywrlock != NULL \
-   ? __pthread_rwlock_trywrlock (&(NAME)) : 0)
+  __libc_maybe_call (__pthread_rwlock_trywrlock, (&(NAME)), 0)
 
 /* Try to lock the recursive named lock variable.  */
-#define __libc_lock_trylock_recursive(NAME) __libc_lock_trylock ((NAME).mutex)
+#define __libc_lock_trylock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0)
 
 /* Unlock the named lock variable.  */
-#define __libc_lock_unlock(NAME) \
-  (__pthread_mutex_unlock != NULL ? __pthread_mutex_unlock (&(NAME)) : 0);
+#if defined _LIBC && !defined NOT_IN_libc
+# define __libc_lock_unlock(NAME) \
+  lll_unlock (NAME);
+#else
+# define __libc_lock_unlock(NAME) \
+  __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
+#endif
 #define __libc_rwlock_unlock(NAME) \
-  (__pthread_rwlock_unlock != NULL ? __pthread_rwlock_unlock (&(NAME)) : 0);
+  __libc_maybe_call (__pthread_rwlock_unlock, (&(NAME)), 0)
 
 /* Unlock the recursive named lock variable.  */
-#define __libc_lock_unlock_recursive(NAME) __libc_lock_unlock ((NAME).mutex)
+#define __libc_lock_unlock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
 
 
 /* Define once control variable.  */
@@ -194,15 +260,15 @@ typedef pthread_key_t __libc_key_t;
 
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \
-  (__pthread_key_create != NULL ? __pthread_key_create (KEY, DESTRUCTOR) : 1)
+  __libc_maybe_call (__pthread_key_create, (KEY, DESTRUCTOR), 1)
 
 /* Get thread-specific data.  */
 #define __libc_getspecific(KEY) \
-  (__pthread_getspecific != NULL ? __pthread_getspecific (KEY) : NULL)
+  __libc_maybe_call (__pthread_getspecific, (KEY), NULL)
 
 /* Set thread-specific data.  */
 #define __libc_setspecific(KEY, VALUE) \
-  (__pthread_setspecific != NULL ? __pthread_setspecific (KEY, VALUE) : 0)
+  __libc_maybe_call (__pthread_setspecific, (KEY, VALUE), 0)
 
 
 /* Register handlers to execute before and after `fork'.  Note that the
