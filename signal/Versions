@@ -41,4 +41,8 @@ libc {
     # New RT signal functions.
     sigqueue; sigtimedwait; sigwaitinfo;
   }
+  GLIBC_2.1.3 {
+    # LinuxThreads needs this entry point.
+    __sigsuspend;
+  }
 }

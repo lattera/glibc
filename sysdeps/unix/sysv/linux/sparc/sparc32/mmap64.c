@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -44,19 +44,19 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 #endif
       ! (offset & 4095))
     {
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
+#ifndef __ASSUME_MMAP2_SYSCALL
       int saved_errno = errno;
 #endif
       /* This will be always 12, no matter what page size is.  */
       int result = INLINE_SYSCALL (mmap2, 6, addr, len, prot, flags,
 				   fd, (off_t) (offset >> 12));
 
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
+#ifndef __ASSUME_MMAP2_SYSCALL
       if (result != -1 || errno != ENOSYS)
 #endif
 	return result;
 
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
+#ifndef __ASSUME_MMAP2_SYSCALL
       __set_errno (saved_errno);
       have_no_mmap2 = 1;
 #endif
