@@ -1,3 +1,9 @@
+Wed Apr 10 14:13:45 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Store
+ 	MACH_PORT_DEAD in the thread reply-port variable before destroying
+ 	the signal handler's reply port, to avoid infinite recursion.
+
 Mon Apr  8 18:27:17 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/gettimeofday.c (__gettimeofday): Don't fail if the
