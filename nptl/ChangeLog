@@ -1,5 +1,15 @@
 2004-03-10  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/pt-vfork.S: Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/pt-vfork.S: New file.
+	* sysdeps/powerpc/tcb-offsets.sym: Add PID.
+
+	* sysdeps/unix/sysv/linux/ia64/pt-vfork.S (__vfork): Don't use
+	a local register for saving old PID.  Negate PID in parent upon exit.
+
 	* sysdeps/unix/sysv/linux/s390/s390-32/pt-vfork.S: Include
 	tcb-offsets.h.
 	(__vfork): Negate PID if non-zero and set to INT_MIN if zero

@@ -1,5 +1,6 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,6 +21,7 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 #include <kernel-features.h>
+#include <tcb-offsets.h>
 
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
@@ -27,7 +29,25 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
-	DO_CALL (SYS_ify (vfork));
+	lwz	0,PID(13)
+	cmpwi	0,0,0
+	neg	0,0
+	bne-	0,1f
+	lis	0,0x8000
+1:	stw	0,PID(13)
+
+	DO_CALL (SYS_ify (vfork))
+
+	cmpwi	1,3,0
+	beqlr-	1
+
+	lwz	0,PID(13)
+	clrlwi	4,0,1
+	cmpwi	1,4,0
+	beq-	1,1f
+	neg	4,0
+1:	stw	4,PID(13)
+
 	PSEUDO_RET
 
 PSEUDO_END (__vfork)

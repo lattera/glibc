@@ -71,8 +71,8 @@
 # include <libintl.h>
 #else
 # include "gettext.h"
+# define _(msgid) gettext (msgid)
 #endif
-#define _(msgid) gettext (msgid)
 
 #if defined _LIBC && defined USE_IN_LIBIO
 # include <wchar.h>
