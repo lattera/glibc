@@ -1,3 +1,18 @@
+2004-11-11  Richard Sandiford  <rsandifo@redhat.com>
+
+	[BZ #758]
+	* sysdeps/unix/sysv/linux/mips/configure.in (asm-unistd.h): Only
+	preprocess <asm/unistd.h> if it defines ABI-prefixed syscall names
+	like __NR_N32_open.  Just include <asm/unistd.h> otherwise.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/mips/mips32/kern64/sysdep.h: Delete
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h (SYS_ify): Use the
+	standard __NR prefix.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h (SYS_ify): Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile (syscall-%.h): Rework so that
+	the output file is compatible with both pre-2.6 and 2.6 kernel headers.
+	Extract separate syscall lists for each ABI.
+
 2005-02-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makerules (libc.so): Add AS_NEEDED line for dynamic linker.
