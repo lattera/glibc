@@ -1,3 +1,278 @@
+Mon Jan  6 13:57:05 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/ftw.c: Add `const' to second parameter of function given as
+	second parameter to ftw.
+	* io/ftw.h: Likewise for prototype.
+	Reported by Ronald F. Guilmette <rfg@monkeys.com>.
+
+Thu Jan  2 23:44:39 1997  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* inet/Makefile (headers): Add netinet/ip.h.
+	* inet/netinet/ip.h: New file, contains BSD definitions for struct
+	ip and friends.
+
+Fri Jan  3 23:17:11 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/string.h (strnlen): Add cast for C++.
+
+Mon Jan  6 03:31:46 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (install-bin): Define as glibcbug to install script.
+	(glibcbug): New rules.  Create from glibcbug.in.
+	* configure.in (AC_OUTPUT): Generate glibcbug script.
+	* glibcbug.in: New file.
+	* version.c: Mention glibcbug to report bugs.
+	* catgets/gencat.c: Likewise.
+	* db/makedb.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/ldd.sh.in: Likewise.
+	* intl/locale.alias: Likewise.
+
+	* mcheck.h: New file.  Necessary since mcheck.h is used in time/ap.c.
+
+	* set-init.c: Update and reformat copyright.
+	* version.c: Likewise.
+	* signal/sigaddset.c: Likewise.
+	* signal/sigdelset.c: Likewise.
+	* signal/sigempty.c: Likewise.
+	* signal/sigfillset.c: Likewise.
+	* signal/siggetmask.c: Likewise.
+	* signal/sigismem.c: Likewise.
+	* sysdeps/generic/speed.c: Likewise.
+	* sysdeps/unix/getdents.c: Likewise.
+	* sysdeps/unix/xmknod.c: Likewise.
+	* sysdeps/unix/bsd/poll.c: Likewise.
+	* sysdeps/unix/bsd/tcdrain.c: Likewise.
+	* sysdeps/unix/bsd/tcflow.c: Likewise.
+	* sysdeps/unix/bsd/tcflush.c: Likewise.
+	* sysdeps/unix/bsd/tcgetpgrp.c: Likewise.
+	* sysdeps/unix/bsd/tcsendbrk.c: Likewise.
+	* sysdeps/unix/bsd/tcsetpgrp.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/tcsetattr.c: Likewise.
+	* sysdeps/unix/sysv/getdents.c: Likewise.
+	* sysdeps/unix/sysv/i386/sigreturn.S: Likewise.
+	* termios/Makefile: Likewise.
+	* termios/cfmakeraw.c: Likewise.
+	* termios/cfsetspeed.c: Likewise.
+
+	* version.h: Bump VERSION to 1.100.
+
+	* intl/finddomain.c: Defining stpcpy function isn't necessary.
+
+	* libio/genops.c (_IO_init): Use _IO_lock_init instead of
+	_IO_lock_init_recursive.
+	* libio/stdfiles.c (DEF_STDFILE): Use _IO_lock_initializer instead
+	of _IO_lock_init.
+
+	* locale/programs/charmap.c (obstack_chunk_alloc): Use malloc instead
+	of xmalloc.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/simple-hash.c: Likewise.
+
+	* misc/Makefile (headers): Add selectbits.h.
+	* misc/sys/select.h: Include <selectbits.h> to get necessary
+	definitions.
+	* sysdeps/generic/selectbits.h: New file.  Generic macros for
+	handling file descriptor sets.
+	* sysdeps/i386/selectbits.h: New file.  i386 specific macros for
+	handling file descriptor sets.
+	* sysdeps/generic/gnu/types.h: Remove _FD_* macros.
+
+	* misc/mntent_r.c: Fix handling of multiple, comma-separated
+	options.  Patch by Sai-Lai Lo <sll@orl.co.uk>.
+
+	* po/de.po: Update.
+	* po/ko.po: Update.
+	* po/sv.po: Update.
+
+	* posix/getopt.c: Only use the bash generated environment variable
+	to determine non-option parameters when using in GNU libc and if
+	the argument vector given to getopt is the same as given to the
+	program.
+
+	* posix/unistd.h [__USE_GNU]: Declare environ.
+
+	* posix/sys/types.h (key_t): Also define when __USE_XOPEN.
+
+	* resolv/res_debug.c: Add casts to prevent warnings.
+	* resolv/res_query.c: Likewise.
+
+	* resolv/nss_dns/dns-host.c: Change type for buffer size arguments
+	to `size_t'.
+	* resolv/nss_dns/dns-network.c: Likewise.
+
+	* signal/sigempty.c: Use memset to initialize variable.
+	* signal/sigfillset.c: Likewise.
+
+	* signal/signal.h: Change back handling of signal.  The BSD
+ 	version is preferred and the new sysv_signal is used when
+ 	__USE_XOPEN.
+	* sysdeps/posix/sysv_signal.c: Renamed from signal.c.  Use SVID
+	semantic.
+	* sysdeps/posix/signal.c: Renamed from bsd_signal.c.  Use BSD
+	semantic.
+	* sysdpes/posix/sigpause.c: Correct comment.
+	* sysdeps/stub/sigpause.c: Provide default implementation.
+	* signal/Makefile (routines): Remove bsd_signal, add sysv_signal.
+
+	* sysdeps/generic/abort.c: Allow repeated calls to abort if
+	a user defined handler for SIGABRT is installed.
+
+	* sysdeps/stub/libc-lock.h: Define separate set of macros for
+	handling recursive mutexes.
+
+	* sysdeps/unix/Makefile: Change rule to generate syscall.h file
+	so that it is generate in the sys/ subdir.
+
+	* sysdeps/unix/sysv/linux/Dist: Add kernel_termios.h.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add kernel_termios.h and
+	sys/acct.h.
+
+	* sysdeps/unix/sysv/linux/direntry.h: Don't use struct dirent from
+	kernel.  Define own version with additional field d_type.
+	* sysdeps/unix/sysv/linux/getdents.c: New file.  Reformat dirent
+	entries after reading from kernel.
+
+	* sysdeps/unix/sysv/linux/gnu/types.h: Don't use kernel headers.
+	Define types based on kernel types except for uid_t, gid_t, mode_t,
+	dev_t which are larger now.
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/ioctl-types.h: Don't include
+	<linux/termios.h>.  Define structure here.
+	* sysdeps/unix/sysv/linux/alpha/ioctl-types.h: Likewise.
+	* sysdeps/unix/sysv/linux/kernel_termios.h: New file. Define
+	architecture dependent struct termio type.
+	* sysdeps/unix/sysv/linux/alpha/kernel_termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sigset.h: Define extended sigset_t type.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Pass first word of array
+	to syscall.
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Don't use kernel header.
+	* sysdeps/unix/sysv/linux/statfsbuf.h: Likewise.
+	* sysdeps/unix/sysv/linux/termbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/termbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/ustatbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/net/if.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/acct.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h (minor, major, mkdev):
+	Change definitions to fit new dev_t definition.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add getdents and sigreturn.
+	Rename ustat to s_ustat since wrapper is needed.
+
+	* sysdeps/unix/sysv/linux/tcgetattr.c: After getting value from
+	kernel rewrite it to userland level data format.
+	* sysdeps/unix/sysv/linux/tcsetattr.c: Before calling kernel change
+	data format to kernel format.
+	* sysdeps/unix/sysv/linux/ustat.c: New file.  Change format of
+	device parameter to format needed by kernel.
+	* sysdeps/unix/sysv/linux/alpha/ustat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknod.c: New file.  Extend generic
+	version to change device parameter to format needed by kernel.
+	* sysdeps/unix/sysv/linux/alpha/xmknod.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/sys/acct.h: New file.  Alpha specific
+	definition of accounting structure.
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h: Include <asm/ptrace.h>.
+	Patch by Andreas Schwab.
+
+	* time/ap.c: Include <mcheck.h>.
+
+	* time/tzset.c (__tzset_internal): Change to take one argument
+	which tells whether examining of TZ is always wanted or only if
+	no initialization happened before.
+	* time/localtime.c: (localtime, __localtime_r): Change for new
+	__tzset_internal form.
+
+	* time/sys/time.h: Include <sys/select.h> to get select related
+	declarations.
+
+Mon Jan  6 01:58:21 1997  Richard Henderson  <richard@atheist.tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_dynamic): Work around
+	bug in GNU ld.
+
+Mon Jan  6 01:35:29 1997  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* misc/getpass.c: Make sure the content of the input buffer is not
+	printed if the getpass function is interrupted.
+
+Sat Jan  4 17:07:08 1997  Roland McGrath  <roland@fmh.frob.com>
+
+	* md5-crypt/Makefile (rpath-link): Add md5-crypt objdir, not crypt.
+
+Thu Jan  2 17:58:23 1997  Roland McGrath  <roland@fmh.frob.com>
+
+	* sysdeps/generic/abort.c: Include <string.h> for memset decl.
+
+	* new-malloc/mcheck.c [_LIBC || STDC_HEADERS || USG]: Include
+	<string.h> so memset is declared.
+
+Tue Dec 31 21:16:05 1996  Roland McGrath  <roland@fmh.frob.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Support DT_AUXILIARY.
+
+	* elf/dl-error.c (_dl_catch_error): Save and restore old catch site so
+	calls can be nested.
+
+	* elf/link.h (struct link_map): Extend `l_info' by DT_EXTRANUM elts.
+	* elf/dynamic-link.h (elf_get_dynamic_info): Grok tags in the Sun
+	extension range.
+
+	* elf/elf.h (DT_AUXILIARY, DT_FILTER, DT_EXTRANUM): New constant
+	macros, for Sun extensions.
+	(DT_EXTRATAGID): New macro to convert Sun extension tag values placed
+	near the top of the processor-specific range into zero-origin indices.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Check for malloc failure.
+
+Sat Jan  4 22:25:01 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* libio/fcloseall.c: Include stdio.h for prototype declaration for
+	__fcloseall.
+
+Thu Jan  2 17:35:20 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/posix/signal.c: Provide ignorable definitions of
+	SA_ONESHOT, SA_NOMASK, and SA_INTERRUPT for non-threads Posix
+	systems.
+
+Thu Jan  2 23:20:51 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* MakeTAGS ($P/siglist.pot): Delete rule.
+	(XGETTEXTFLAGS-siglist.pot): Remove definition.
+	(all-pot): Remove $P/siglist.pot.
+	* sysdeps/unix/siglist.c: Mark strings as translatable.
+	* sysdeps/unix/sysv/linux/siglist.h: Likewise.
+
+Wed Jan  1 22:21:18 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* misc/syscall.h: New file.
+	* misc/sys/syscall.h: Removed.  Forwarding to <syscall.h> might
+	find user header, so do it the other way round.
+	* sysdeps/mach/sys/syscall.h: Moved here from parent directory.
+	* sysdeps/stub/sys/syscall.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/syscall.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/sys/syscall.h: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile ($(objpfx)syscall-%.h): Update
+	dependency.
+	* sysdeps/unix/sysdep.h: Include <sys/syscall.h> instead of
+	<syscall.h>.
+
+Tue Dec 31 00:03:18 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* features.h: Fix typo.
+
+Thu Jan  2 00:46:09 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/_G_config.h: Add _G_HAVE_LONG_DOUBLE_IO for libg++.
+
 Wed Jan  1 15:15:00 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/Makefile (routines): Add fcloseall.
@@ -176,7 +451,8 @@ Mon Dec 30 01:32:59 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* signal/signal.h: Declare bsd_signal.  Define signal as bsd_signal
 	if __FAVOR_BSD.
 	* sysdeps/posix/bsd_signal.c: New file.  Implementation of XPG
-	function.
+	function.  This is the old signal.c file.
+	* sysdeps/posix/signal.c: Change to have semantic of X/Open.
 
 	* sysdeps/unix/sysv/linux/signal.c: Add explanation.
 
