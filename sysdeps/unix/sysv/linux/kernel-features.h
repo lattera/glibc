@@ -311,7 +311,7 @@
    with support.  */
 #if __LINUX_KERNEL_VERSION >= 132416 \
     && (defined __ia64__ || defined __s390__ || defined __powerpc__ \
-	|| defined __x86_64__ || __sh__)
+	|| defined __x86_64__ || defined __sh__)
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
 
