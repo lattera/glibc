@@ -1,3 +1,7 @@
+2000-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/stratcliff.c: Add test for rawmemchr.
+
 2000-12-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-open.c (_dl_open): If objname points right after errstring,

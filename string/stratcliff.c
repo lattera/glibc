@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -149,6 +149,27 @@ main (int argc, char *argv[])
 		  adr[inner] = 'T';
 		  adr[middle] = 'T';
 		}
+	    }
+        }
+
+      /* rawmemchr test */
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+        {
+	  for (middle = MAX (outer, size - 64); middle < size; ++middle)
+	    {
+	      char *cp;
+	      adr[middle] = 'V';
+
+	      cp = rawmemchr (&adr[outer], 'V');
+
+	      if (cp - &adr[outer] != middle - outer)
+		{
+		  printf ("rawmemchr flunked for outer = %d, middle = %d\n",
+			  outer, middle, inner);
+		  result = 1;
+		}
+
+	      adr[middle] = 'T';
 	    }
         }
 
