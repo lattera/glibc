@@ -5,5 +5,3 @@ kernel_proto.h
 bits/utmpx.h
 gnu/lib-names.h
 uitrunc.c
-savef.S
-restf.S
