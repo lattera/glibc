@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,15 +22,43 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-
 #include <linux/posix_types.h>
+#include "kernel-features.h"
+
 
 #ifdef __NR_setfsgid
+
 extern int __syscall_setfsgid (__kernel_gid_t);
+
+# ifdef __NR_setfsgid32
+extern int __syscall_setfsgid32 (__kernel_gid32_t);
+#  if __ASSUME_32BITUIDS == 0
+/* This variable is shared with all files that need to check for 32bit
+   uids.  */
+extern int __libc_missing_32bit_uids;
+#  endif
+# endif /* __NR_setfsgid32 */
 
 int
 setfsgid (gid_t gid)
 {
+# if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (setfsgid32, 1, gid);
+# else
+#  ifdef __NR_setfsgid32
+  if (!__libc_missing_32bit_uids)
+    {
+      int result;
+      int saved_errno = errno;
+
+      result = INLINE_SYSCALL (setfsgid32, 1, gid);
+      if (result == 0 || errno != ENOSYS)
+	return result;
+
+      __set_errno (saved_errno);
+      __libc_missing_32bit_uids = 1;
+    }
+#  endif /* __NR_setfsgid32 */
   if (gid != (gid_t) ((__kernel_gid_t) gid))
     {
       __set_errno (EINVAL);
@@ -38,5 +66,6 @@ setfsgid (gid_t gid)
     }
 
   return INLINE_SYSCALL (setfsgid, 1, gid);
+# endif
 }
 #endif

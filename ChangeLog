@@ -1,3 +1,80 @@
+2000-01-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_32BITUIDS):
+	Added for Linux 2.3.39+.
+
+	* sysdeps/unix/sysv/linux/getresgid.c: Support 32bit UIDs and
+	32bit GIDs.
+	* sysdeps/unix/sysv/linux/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setegid.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/chown.c: New file.
+	* sysdeps/unix/sysv/linux/arm/fchown.c: New file.
+	* sysdeps/unix/sysv/linux/arm/geteuid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/getegid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/getuid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/getgid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/lchown.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fchown.c: New file.
+	* sysdeps/unix/sysv/linux/i386/getegid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/geteuid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/getgid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/getuid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/lchown.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/chown.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/fchown.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getegid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/geteuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getgid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/lchown.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/chown.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fchown.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getegid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/geteuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getgid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lchown.c: New file.
+	Based on a patch by Chris Wing <wingc@engin.umich.edu>.
+
+2000-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sys/procfs.h: New file.
+
+2000-01-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/backtrace.c: Include signal.h which
+	sigcontextinfo.h headers are used to expect.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/register-dump.h
+	(register_dump): Fix a typo in the printout.
+	Avoid using reg_window, so that asm/ptrace.h is not necessary.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h
+	(ADVANCE_STACK_FRAME): Likewise.
+
+	* stdlib/longlong.h: Avoid using __sparc_v9__ ifdefs.
+	* sysdeps/sparc/sparc32/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc64/bits/wordsize.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Include bits/wordsize.h
+	to make it clear this file depends on __WORDSIZE.
+	* sysdeps/unix/sysv/linux/ftruncate64.c (__have_no_truncate64):
+	Renamed from have_no_truncate64.
+	* sysdeps/unix/sysv/linux/truncate64.c (__have_no_truncate64):
+	Likewise.
+
 2000-01-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (rpath-dirs): Remove db2.

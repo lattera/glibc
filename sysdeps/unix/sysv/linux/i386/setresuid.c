@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,14 +24,44 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include "kernel-features.h"
+
 #ifdef __NR_setresuid
 
 extern int __syscall_setresuid (__kernel_uid_t rgid, __kernel_uid_t egid,
 				__kernel_uid_t sgid);
 
+# ifdef __NR_setresuid32
+extern int __syscall_setresuid32 (__kernel_uid32_t rgid, __kernel_uid32_t egid,
+				  __kernel_uid32_t sgid);
+#  if __ASSUME_32BITUIDS == 0
+/* This variable is shared with all files that need to check for 32bit
+   uids.  */
+extern int __libc_missing_32bit_uids;
+#  endif
+# endif /* __NR_setresuid32 */
+
 int
 __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
+# if __ASSUME_32BITUIDS > 0  
+  return INLINE_SYSCALL (setresuid32, 3, ruid, euid, suid);
+# else
+#  ifdef __NR_setresuid32
+  if (!__libc_missing_32bit_uids)
+    {
+      int result;
+      int saved_errno = errno;
+
+      result = INLINE_SYSCALL (setresuid32, 3, ruid, euid, suid);
+      if (result == 0 || errno != ENOSYS)
+	return result;
+
+      __set_errno (saved_errno);
+      __libc_missing_32bit_uids = 1;
+    }
+#  endif /* __NR_setresuid32 */
+
   if ((ruid != (uid_t) -1 && ruid != (uid_t) (__kernel_uid_t) ruid)
       || (euid != (uid_t) -1 && euid != (uid_t) (__kernel_uid_t) euid)
       || (suid != (uid_t) -1 && suid != (uid_t) (__kernel_uid_t) suid))
@@ -41,6 +71,7 @@ __setresuid (uid_t ruid, uid_t euid, uid_t suid)
     }
 
   return INLINE_SYSCALL (setresuid, 3, ruid, euid, suid);
+# endif
 }
 weak_alias (__setresuid, setresuid)
 #endif

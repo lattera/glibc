@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,56 +18,45 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-
-#include <linux/posix_types.h>
-
 #include "kernel-features.h"
 
-extern int __syscall_setgid (__kernel_gid_t);
+extern int __syscall_geteuid (void);
 
-#ifdef __NR_setgid32
-extern int __syscall_setgid32 (__kernel_gid32_t);
+#ifdef __NR_geteuid32
+extern int __syscall_geteuid32 (void);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */
 extern int __libc_missing_32bit_uids;
 # endif
-#endif /* __NR_setgid32 */
+#endif /* __NR_geteuid32 */
 
-int
-__setgid (gid_t gid)
+uid_t
+__geteuid (void)
 {
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (setgid32, 1, gid);
+  return INLINE_SYSCALL (geteuid32, 0);
 #else
-# ifdef __NR_setgid32
+# ifdef __NR_geteuid32
   if (!__libc_missing_32bit_uids)
     {
       int result;
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (setgid32, 1, gid);
-
+      result = INLINE_SYSCALL (geteuid32, 0);
       if (result == 0 || errno != ENOSYS)
 	return result;
 
       __set_errno (saved_errno);
       __libc_missing_32bit_uids = 1;
     }
-# endif /* __NR_setgid32 */
+# endif /* __NR_geteuid32 */
 
-  if (gid == (gid_t) ~0
-      || gid != (gid_t) ((__kernel_gid_t) gid))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return INLINE_SYSCALL (setgid, 1, gid);
+  return INLINE_SYSCALL (geteuid, 0);
 #endif
 }
-weak_alias (__setgid, setgid)
+
+weak_alias (__geteuid, geteuid)

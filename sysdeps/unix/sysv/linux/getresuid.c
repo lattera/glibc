@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,16 +24,46 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+
+#include "kernel-features.h"
+
 #ifdef __NR_getresuid
 
 extern int __syscall_getresuid (__kernel_uid_t *ruid, __kernel_uid_t *euid,
 				__kernel_uid_t *suid);
 
+# ifdef __NR_getresuid32
+extern int __syscall_getresuid32 (__kernel_uid32_t *ruid, __kernel_uid32_t *euid,
+				  __kernel_uid32_t *suid);
+#  if __ASSUME_32BITUIDS == 0
+/* This variable is shared with all files that need to check for 32bit
+   uids.  */
+extern int __libc_missing_32bit_uids;
+#  endif
+# endif /* __NR_getresuid32 */
+
 int
 getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
 {
+# if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (getresuid32, 3, ruid, euid, suid);
+# else
   __kernel_uid_t k_ruid, k_euid, k_suid;
   int result;
+#  ifdef __NR_getresuid32
+  if (!__libc_missing_32bit_uids)
+    {
+      int r;
+      int saved_errno = errno;
+
+      r = INLINE_SYSCALL (getresuid32, 3, ruid, euid, suid);
+      if (r == 0 || errno != ENOSYS)
+	return r;
+
+      __set_errno (saved_errno);
+      __libc_missing_32bit_uids = 1;
+    }
+#  endif /* __NR_getresuid32 */
 
   result = INLINE_SYSCALL (getresuid, 3, &k_ruid, &k_euid, &k_suid);
 
@@ -45,6 +75,7 @@ getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
     }
 
   return result;
+# endif
 }
 #else
 # include <sysdeps/generic/getresuid.c>

@@ -1,7 +1,7 @@
 /* Dump registers.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -20,7 +20,6 @@
 
 #include <sys/uio.h>
 #include <stdio-common/_itoa.h>
-#include <asm/ptrace.h>
 #include <bits/sigcontext.h>
 
 /* We will print the register dump in this format:
@@ -95,7 +94,7 @@ register_dump (int fd, SIGCONTEXT ctx)
   struct iovec iov[150];
   size_t nr = 0;
   int i;
-  struct reg_window *r = (struct reg_window *)
+  unsigned int *r = (unsigned int *)
     ctx->si_regs.u_regs[14];
 
 #define ADD_STRING(str) \
@@ -115,7 +114,7 @@ register_dump (int fd, SIGCONTEXT ctx)
   for (i = 1; i <= 15; i++)
     hexvalue (ctx->si_regs.u_regs[i], regs[3+i], 8);
   for (i = 0; i <= 15; i++)
-    hexvalue (r->locals[i], regs[19+i], 8);
+    hexvalue (r[i], regs[19+i], 8);
   hexvalue (ctx->si_mask, regs[35], 8);
 
   /* Generate the output.  */
@@ -252,7 +251,7 @@ register_dump (int fd, SIGCONTEXT ctx)
 	  ADD_MEM (fregs[36], 16);
 	  ADD_STRING ("  f38: ");
 	  ADD_MEM (fregs[38], 16);
-	  ADD_STRING (" f40: ");
+	  ADD_STRING ("  f40: ");
 	  ADD_MEM (fregs[40], 16);
 	  ADD_STRING ("\n f42: ");
 	  ADD_MEM (fregs[42], 16);

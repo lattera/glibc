@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <execinfo.h>
+#include <signal.h>
 #include <frame.h>
 #include <sigcontextinfo.h>
 

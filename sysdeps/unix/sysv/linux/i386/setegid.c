@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 96, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
-
-#include <linux/posix_types.h>
 
 int
 setegid (gid)
      gid_t gid;
 {
-  if (gid == (gid_t) ~0
-      || gid != (gid_t) ((__kernel_gid_t) gid))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
   return __setregid (-1, gid);
 }

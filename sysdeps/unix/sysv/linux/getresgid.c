@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,16 +24,47 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include "kernel-features.h"
+
 #ifdef __NR_getresgid
 
 extern int __syscall_getresgid (__kernel_gid_t *rgid, __kernel_gid_t *egid,
 				__kernel_gid_t *sgid);
 
+# ifdef __NR_getresgid32
+extern int __syscall_getresgid32 (__kernel_gid32_t *rgid, __kernel_gid32_t *egid,
+				  __kernel_gid32_t *sgid);
+
+#  if __ASSUME_32BITUIDS == 0
+/* This variable is shared with all files that need to check for 32bit
+   uids.  */
+extern int __libc_missing_32bit_uids;
+#  endif
+# endif /* __NR_getresgid32 */
+
+
 int
 getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
 {
+# if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (getresgid32, 3, rgid, egid, sgid);
+# else  
   __kernel_gid_t k_rgid, k_egid, k_sgid;
   int result;
+#  ifdef __NR_getresgid32
+  if (!__libc_missing_32bit_uids)
+    {
+      int r;
+      int saved_errno = errno;
+
+      r = INLINE_SYSCALL (getresgid32, 3, rgid, egid, sgid);
+      if (r == 0 || errno != ENOSYS)
+	return r;
+
+      __set_errno (saved_errno);
+      __libc_missing_32bit_uids = 1;
+    }
+#  endif /* __NR_getresgid32 */
 
   result = INLINE_SYSCALL (getresgid, 3, &k_rgid, &k_egid, &k_sgid);
 
@@ -45,6 +76,7 @@ getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
     }
 
   return result;
+# endif
 }
 #else
 # include <sysdeps/generic/getresgid.c>

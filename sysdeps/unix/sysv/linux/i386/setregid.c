@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,41 @@
 #include <sys/syscall.h>
 
 #include <linux/posix_types.h>
+#include "kernel-features.h"
+
 
 extern int __syscall_setregid (__kernel_gid_t, __kernel_gid_t);
+
+#ifdef __NR_setregid32
+extern int __syscall_setregid32 (__kernel_gid32_t, __kernel_gid32_t);
+# if __ASSUME_32BITUIDS == 0
+/* This variable is shared with all files that need to check for 32bit
+   uids.  */
+extern int __libc_missing_32bit_uids;
+# endif
+#endif /* __NR_setregid32 */
 
 int
 __setregid (gid_t rgid, gid_t egid)
 {
+#if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (setregid32, 2, rgid, egid);
+#else
+# ifdef __NR_setregid32
+  if (!__libc_missing_32bit_uids)
+    {
+      int result;
+      int saved_errno = errno;
+
+      result = INLINE_SYSCALL (setregid32, 2, rgid, egid);
+
+      if (result == 0 || errno != ENOSYS)
+	return result;
+
+      __set_errno (saved_errno);
+      __libc_missing_32bit_uids = 1;
+    }
+# endif /* __NR_setregid32 */
   if ((rgid != (gid_t) -1 && rgid != (gid_t) (__kernel_gid_t) rgid)
       || (egid != (gid_t) -1 && egid != (gid_t) (__kernel_gid_t) egid))
     {
@@ -38,5 +67,6 @@ __setregid (gid_t rgid, gid_t egid)
     }
 
   return INLINE_SYSCALL (setregid, 2, rgid, egid);
+#endif
 }
 weak_alias (__setregid, setregid)

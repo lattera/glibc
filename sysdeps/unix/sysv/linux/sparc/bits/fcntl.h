@@ -21,6 +21,7 @@
 #define _FCNTLBITS_H	1
 
 #include <sys/types.h>
+#include <bits/wordsize.h>
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */

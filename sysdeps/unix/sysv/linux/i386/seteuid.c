@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <linux/posix_types.h>
 
 #ifdef __NR_setresuid
 extern int __setresuid (uid_t ruid, uid_t euid, uid_t suid);
@@ -31,14 +30,6 @@ int
 seteuid (uid_t uid)
 {
   int result;
-
-  if (uid == (uid_t) ~0
-      || uid != (uid_t) ((__kernel_uid_t) uid))
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
   /* First try the syscall.  */
 #ifdef __NR_setresuid
   result = __setresuid (-1, uid, -1);
