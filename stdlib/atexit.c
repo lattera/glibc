@@ -40,7 +40,8 @@ atexit (void (*func) (void))
 __libc_lock_define_initialized (static, lock)
 
 
-struct exit_function_list *__exit_funcs;
+static struct exit_function_list initial;
+struct exit_function_list *__exit_funcs = &initial;
 
 struct exit_function *
 __new_exitfn (void)
