@@ -22,6 +22,7 @@
    in setjmp doesn't clobber the state restored by longjmp.  */
 
 #include <sysdep.h>
+#include <sys/asm.h>
 
 #ifdef __PIC__
 	.option pic2

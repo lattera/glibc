@@ -220,7 +220,7 @@
 	".set\treorder" 						\
 	: "=r" (__v0), "+r" (__a3) 					\
 	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
-	  "r" (__a5), "r" (__a6)					\
+	  "r" (__a4), "r" (__a5)					\
 	: __SYSCALL_CLOBBERS); 						\
 	err = __a3;							\
 	_sys_result = __v0;						\
@@ -248,7 +248,7 @@
 	".set\treorder" 						\
 	: "=r" (__v0), "+r" (__a3) 					\
 	: "r" (__a0), "r" (__a1), "r" (__a2), "i" (SYS_ify(name)), 	\
-	  "r" (__a5), "r" (__a6), "r" (__a7)				\
+	  "r" (__a4), "r" (__a5), "r" (__a6)				\
 	: __SYSCALL_CLOBBERS); 						\
 	err = __a3;							\
 	_sys_result = __v0;						\
