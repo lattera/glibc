@@ -486,7 +486,7 @@ define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
-	  -Wl,-rpath-link=$(common-objdir) \
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive $^ $(no-whole-archive) \
 	  $(LDLIBS-$(@F:lib%.so=%).so)
 endef

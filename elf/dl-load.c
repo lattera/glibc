@@ -469,13 +469,24 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
 	}
 
       fd = -1;
-      for (l = loader; l; l = l->l_loader)
+
+      /* First try the DT_RPATH of the dependent object that caused NAME
+	 to be loaded.  Then that object's dependent, and on up.  */
+      for (l = loader; fd == -1 && l; l = l->l_loader)
 	if (l && l->l_info[DT_RPATH])
 	  trypath ((const char *) (l->l_addr +
 				   l->l_info[DT_STRTAB]->d_un.d_ptr +
 				   l->l_info[DT_RPATH]->d_un.d_val));
+      /* If dynamically linked, try the DT_RPATH of the executable itself.  */
+      l = _dl_loaded;
+      if (fd == -1 && l && l->l_type != lt_loaded)
+	trypath ((const char *) (l->l_addr +
+				 l->l_info[DT_STRTAB]->d_un.d_ptr +
+				 l->l_info[DT_RPATH]->d_un.d_val));
+      /* Try an environment variable (unless setuid).  */
       if (fd == -1 && ! _dl_secure)
 	trypath (getenv ("LD_LIBRARY_PATH"));
+      /* Finally, try the default path.  */
       if (fd == -1)
 	{
 	  extern const char *_dl_rpath;	/* Set in rtld.c. */

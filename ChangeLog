@@ -1,3 +1,21 @@
+Sat Jun 15 18:13:43 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/Dist: Add sys/klog.h.
+
+	* elf/dl-open.c (_dl_open): Remove PARENT argument, pass null.
+	* elf/link.h: Update prototype.
+	* elf/dl-load.c (_dl_map_object): If dependents' DT_RPATHs don't find
+	NAME, try the DT_RPATH of the executable itself if dynamic.
+	* elf/dlopen.c (dlopen): Don't pass first arg to _dl_open.
+
+	* elf/dl-load.c (_dl_map_object): Exit DT_RPATH checking loop when an
+	open succeeds.
+
+	* Makerules (build-shlib): Give -L opts for each elt of $(rpath-link).
+
+	* sysdeps/mach/hurd/Makefile (sysdep-LDFLAGS): Variable removed.
+	(rpath-link): Append to this instead.
+
 Fri Jun 14 01:51:47 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* version.c (banner): New static const variable, complete version

@@ -25,22 +25,15 @@ Cambridge, MA 02139, USA.  */
 size_t _dl_global_scope_alloc;
 
 struct link_map *
-_dl_open (struct link_map *parent, const char *file, int mode)
+_dl_open (const char *file, int mode)
 {
   struct link_map *new, *l;
   ElfW(Addr) init;
   struct r_debug *r;
 
 
-#ifdef PIC
-  if (! parent)
-    /* If no particular dependent object caused this load,
-       then use the DT_RPATH of the executable itself.  */
-      parent = _dl_loaded;
-#endif
-
   /* Load the named object.  */
-  new = _dl_map_object (parent, file, lt_loaded);
+  new = _dl_map_object (NULL, file, lt_loaded);
   if (new->l_searchlist)
     /* It was already open.  */
     return new;

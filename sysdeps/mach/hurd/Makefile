@@ -104,7 +104,9 @@ endif
 # For the shared library, we don't need to do the linker script machination.
 # Instead, we specify the required libraries when building the shared object.
 LDLIBS-c.so = -lmachuser -lhurduser
-sysdep-LDFLAGS += -Wl,-rpath-link=$(..)mach:$(..)hurd
+ifndef objpfx
+rpath-link += $(..)mach:$(..)hurd
+endif
 
 
 endif	# in-Makerules
