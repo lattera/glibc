@@ -29,15 +29,20 @@ Cambridge, MA 02139, USA.  */
 static void
 describe_number (string_t description, const char *flavor, int i)
 {
+  int j;
   char *p = __stpcpy (description, flavor);
-  p += i / 10 + 1;
-  *p = '\0';
+
+  /* Allocate space for the number at the end of DESCRIPTION.  */
+  for (j = i; j >= 10; j /= 10)
+    p++;
+  p[1] = '\0';
+
   do
     {
-      *--p = '0' + i % 10;
+      *p-- = '0' + i % 10;
       i /= 10;
     } while (i != 0);
-  assert (p[-1] == '#');
+  assert (*p == '#');
 }
 
 static void

@@ -233,6 +233,9 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
 #include <hurd/sigpreempt.h>
 #include "intr-msg.h"
 
+/* Timeout on interrupt_operation calls.  */
+mach_msg_timeout_t _hurdsig_interrupt_timeout = 1000;
+
 /* SS->thread is suspended.
 
    Abort any interruptible RPC operation the thread is doing.
@@ -299,7 +302,7 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 
 	mach_port_t *reply = interrupted_reply_port_location (state,
 							      sigthread);
-	error_t err = __interrupt_operation (intr_port);
+	error_t err = __interrupt_operation (intr_port, _hurdsig_interrupt_timeout);
 
 	if (err)
 	  {
