@@ -62,6 +62,11 @@ writer_thread (void *nr)
 	  TIMEVAL_TO_TIMESPEC (&tv, &ts);
 
 	  ts.tv_nsec += 2 * TIMEOUT;
+	  if (ts.tv_nsec >= 1000000000)
+	    {
+	      ts.tv_nsec -= 1000000000;
+	      ++ts.tv_sec;
+	    }
 
 	  printf ("writer thread %ld tries again\n", (long int) nr);
 
@@ -111,6 +116,11 @@ reader_thread (void *nr)
 	  TIMEVAL_TO_TIMESPEC (&tv, &ts);
 
 	  ts.tv_nsec += TIMEOUT;
+	  if (ts.tv_nsec >= 1000000000)
+	    {
+	      ts.tv_nsec -= 1000000000;
+	      ++ts.tv_sec;
+	    }
 
 	  printf ("reader thread %ld tries again\n", (long int) nr);
 

@@ -1,5 +1,8 @@
 2003-02-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-rwlock9.c (writer_thread): Correct adding TIMEOUT.
+	(reader_thread): Likewise.
+
 	* sysdeps/pthread/pthread_rwlock_unlock.c
 	(__pthread_rwlock_unlock): Release internal lock early.  Don't try
 	to wake up readers if there are none.
