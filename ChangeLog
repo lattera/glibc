@@ -1,5 +1,11 @@
 1998-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Include
+	features.h and stddef.h.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/sigstack.h (struct
+	sigaltstack): Move ss_size field at the end.
+	Patches by Jeff Bailey <jbailey@nisa.net>.
+
 	* time/getdate.c (check_mday): tm_mon contains values from 0 to 11,
 	not 1 to 12.
 

@@ -1537,6 +1537,33 @@ multi-threaded applications.
 The @code{errno} variable is @emph{not} changed.  Error conditions are
 signalled using the global variable @code{getdate_err}.  See the
 description above for a list of the possible error values.
+
+@emph{Warning:} The @code{getdate} function should @emph{never} be
+used in SUID-programs.  The reason is obvious: using the
+@code{DATEMSK} environment variable one can get the function to open
+any arbitrary file and changes are high that with some bogus input
+(such as a binary file) the program will crash.
+@end deftypefun
+
+@comment time.h
+@comment GNU
+@deftypefun int getdate_r (const char *@var{string}, struct tm *@var{tp})
+The @code{getdate_r} function is the reentrant counterpart of
+@code{getdate}.  It does not use the global variable @code{getdate_err}
+to signal the error but instead the return value now is this error code.
+The same error codes as described in the @code{getdate_err}
+documentation above are used.
+
+@code{getdate_err} also does not store the broken-down time in a static
+variable.  Instead it takes an second argument which must be a pointer
+to a variable of type @code{struct tm} where the broken-down can be
+stored.
+
+This function is not defined in the Unix standard.  Nevertheless it is
+available on some other Unix systems as well.
+
+As for @code{getdate} the warning for using this function in
+SUID-programs applied to @code{getdate_r} as well.
 @end deftypefun
 
 @node TZ Variable
