@@ -1,3 +1,8 @@
+2004-03-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sym.c: Unify _dl_sym and _dl_vsym code and make the entry
+	points wrappers around the unified code.
+
 2004-03-11  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel_stat.h (kernel_stat64): New.
