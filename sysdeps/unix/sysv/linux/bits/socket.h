@@ -63,10 +63,10 @@ enum __socket_type
 #define	PF_INET		2	/* IP protocol family.  */
 #define	PF_AX25		3	/* Amateur Radio AX.25.  */
 #define	PF_IPX		4	/* Novell Internet Protocol.  */
-#define	PF_APPLETALK	5	/* Don't use this.  */
+#define	PF_APPLETALK	5	/* Appletalk DDP.  */
 #define	PF_NETROM	6	/* Amateur radio NetROM.  */
 #define	PF_BRIDGE	7	/* Multiprotocol bridge.  */
-#define	PF_AAL5		8	/* Reserved for Werner's ATM.  */
+#define	PF_ATMPVC	8	/* ATM PVCs.  */
 #define	PF_X25		9	/* Reserved for X.25 project.  */
 #define	PF_INET6	10	/* IP version 6.  */
 #define	PF_ROSE		11	/* Amateur Radio X.25 PLP.  */
@@ -78,6 +78,8 @@ enum __socket_type
 #define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD.  */
 #define	PF_PACKET	17	/* Packet family.  */
 #define	PF_ASH		18	/* Ash.  */
+#define	PF_ECONET	19	/* Acorn Econet.  */
+#define	PF_ATMSVC	20	/* ATM SVCs.  */
 #define	PF_MAX		32	/* For now..  */
 
 /* Address families.  */
@@ -91,7 +93,7 @@ enum __socket_type
 #define	AF_APPLETALK	PF_APPLETALK
 #define	AF_NETROM	PF_NETROM
 #define	AF_BRIDGE	PF_BRIDGE
-#define	AF_AAL5		PF_AAL5
+#define	AF_ATMPVC	PF_ATMPVC
 #define	AF_X25		PF_X25
 #define	AF_INET6	PF_INET6
 #define	AF_ROSE		PF_ROSE
@@ -103,6 +105,8 @@ enum __socket_type
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_PACKET	PF_PACKET
 #define	AF_ASH		PF_ASH
+#define	AF_ECONET	PF_ECONET
+#define	AF_ATMSVC	PF_ATMSVC
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.

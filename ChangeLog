@@ -1,3 +1,10 @@
+1998-04-12 22:47  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_APPLETALK): Correct
+	comment.
+	(PF_AAL5, AF_AAL5): Rename to *_ATMPVC.
+	(PF_ATMSVC, PF_ECONET, AF_ATMSVC, AF_ECONET): Added.
+
 1998-04-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/sjis.c (gconv): Remove superfluous varaible declarations.
