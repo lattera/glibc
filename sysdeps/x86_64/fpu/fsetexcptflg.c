@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
   /* And now the same for SSE.  */
   __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
 
-  mxcsr &= (excepts & FE_ALL_EXCEPT);
+  mxcsr &= ~(excepts & FE_ALL_EXCEPT);
   mxcsr |= *flagp & excepts & FE_ALL_EXCEPT;
 
   __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));

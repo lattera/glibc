@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,10 +45,9 @@ fesetenv (const fenv_t *envp)
       temp.__data_selector = 0;
       /* Set mask for SSE MXCSR.  */
       temp.__mxcsr |= (FE_ALL_EXCEPT << 7);
-      /* Set rounding to FE_TOWARDZERO.  */
-      temp.__mxcsr &= ~(FE_TOWARDZERO << 3);
-      /* Disable exceptions.  */
-      temp.__mxcsr &= ~FE_ALL_EXCEPT;
+      /* Set rounding to FE_TONEAREST.  */
+      temp.__mxcsr &= ~ 0x6000;
+      temp.__mxcsr |= (FE_TONEAREST << 3);
     }
   else if (envp == FE_NOMASK_ENV)
     {
@@ -60,11 +59,11 @@ fesetenv (const fenv_t *envp)
       temp.__data_offset = 0;
       temp.__data_selector = 0;
       /* Set mask for SSE MXCSR.  */
+      /* Set rounding to FE_TONEAREST.  */
+      temp.__mxcsr &= ~ 0x6000;
+      temp.__mxcsr |= (FE_TONEAREST << 3);
+      /* Do not mask exceptions.  */
       temp.__mxcsr &= ~(FE_ALL_EXCEPT << 7);
-      /* Set rounding to FE_TOWARDZERO.  */
-      temp.__mxcsr &= ~(FE_TOWARDZERO << 3);
-      /* Disable exceptions.  */
-      temp.__mxcsr &= ~FE_ALL_EXCEPT;
     }
   else
     {
