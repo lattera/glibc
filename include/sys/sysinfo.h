@@ -10,9 +10,9 @@ extern int __get_nprocs_conf (void);
 extern int __get_nprocs (void);
 
 /* Return number of physical pages of memory in the system.  */
-extern int __get_phys_pages (void);
+extern long int __get_phys_pages (void);
 
 /* Return number of available physical pages of memory in the system.  */
-extern int __get_avphys_pages (void);
+extern long int __get_avphys_pages (void);
 
 #endif /* sys/sysinfo.h */

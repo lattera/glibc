@@ -59,7 +59,7 @@ Pass to another daemon
 Discard
 @end itemize
 
-Syslogd can also handle messages from other systems.  It listens on the 
+Syslogd can also handle messages from other systems.  It listens on the
 @code{syslog} UDP port as well as the local socket for messages.
 
 Syslog can handle messages from the kernel itself.  But the kernel
@@ -158,7 +158,7 @@ to identify the source of the message, and people conventionally set it
 to the name of the program that will submit the messages.
 
 @code{openlog} may or may not open the @file{/dev/log} socket, depending
-on @var{option}.  If it does, it tries to open it and connect it as a 
+on @var{option}.  If it does, it tries to open it and connect it as a
 stream socket.  If that doesn't work, it tries to open it and connect it
 as a datagram socket.  The socket has the ``Close on Exec'' attribute,
 so the kernel will close it if the process performs an exec.
@@ -166,7 +166,7 @@ so the kernel will close it if the process performs an exec.
 You don't have to use @code{openlog}.  If you call @code{syslog} without
 having called @code{openlog}, @code{syslog} just opens the connection
 implicitly and uses defaults for the information in @var{ident} and
-@var{options}.  
+@var{options}.
 
 @var{options} is a bit string, with the bits as defined by the following
 single bit masks:
@@ -243,7 +243,7 @@ writing to the Unix domain socket @code{/dev/log}.
 
 @code{syslog} submits the message with the facility and priority indicated
 by @var{facility_priority}.  The macro @code{LOG_MAKEPRI} generates a
-facility/priority from a facility and a priority, as in the following 
+facility/priority from a facility and a priority, as in the following
 example:
 
 @smallexample
@@ -255,7 +255,7 @@ The possible values for the facility code are (macros):
 @c Internally, there is also LOG_KERN, but LOG_KERN == 0, which means
 @c if you try to use it here, just selects default.
 
-@table @code
+@vtable @code
 @item LOG_USER
 A miscellaneous user process
 @item LOG_MAIL
@@ -294,15 +294,15 @@ Locally defined
 Locally defined
 @item LOG_LOCAL7
 Locally defined
-@end table
+@end vtable
 
 Results are undefined if the facility code is anything else.
 
-@strong{note:} Syslog recognizes one other facility code: that of the
-kernel.  But you can't specify that facility code with these functions.
-If you try, it looks the same to @code{syslog} as if you are requesting
-the default facility.  But you wouldn't want to anyway, because any
-program that uses the GNU C library is not the kernel.
+@strong{note:} @code{syslog} recognizes one other facility code: that of
+the kernel.  But you can't specify that facility code with these
+functions.  If you try, it looks the same to @code{syslog} as if you are
+requesting the default facility.  But you wouldn't want to anyway,
+because any program that uses the GNU C library is not the kernel.
 
 You can use just a priority code as @var{facility_priority}.  In that
 case, @code{syslog} assumes the default facility established when the
@@ -310,7 +310,7 @@ Syslog connection was opened.  @xref{Syslog Example}.
 
 The possible values for the priority code are (macros):
 
-@table @code
+@vtable @code
 @item LOG_EMERG
 The message says the system is unusable.
 @item LOG_ALERT
@@ -327,7 +327,7 @@ The message describes a normal but important event.
 The message is purely informational.
 @item LOG_DEBUG
 The message is only for debugging purposes.
-@end table
+@end vtable
 
 Results are undefined if the priority code is anything else.
 
@@ -354,8 +354,8 @@ Example:
 @smallexample
 
 #include <syslog.h>
-syslog(LOG_MAKEPRI(LOG_LOCAL1, LOG_ERROR), 
-       "Unable to make network connection to %s.  Error=%m", host);
+syslog (LOG_MAKEPRI(LOG_LOCAL1, LOG_ERROR),
+        "Unable to make network connection to %s.  Error=%m", host);
 
 @end smallexample
 
@@ -364,8 +364,7 @@ syslog(LOG_MAKEPRI(LOG_LOCAL1, LOG_ERROR),
 
 @comment syslog.h
 @comment BSD
-@deftypefun void vsyslog (int @var{facility_priority}, char *@var{format},
-         __gnuc_va_list arglist)
+@deftypefun void vsyslog (int @var{facility_priority}, char *@var{format}, va_list arglist)
 
 This is functionally identical to @code{syslog}, with the BSD style variable
 length argument.
@@ -381,7 +380,7 @@ The symbols referred to in this section are declared in the file
 
 @comment syslog.h
 @comment BSD
-@deftypefun void closelog ()
+@deftypefun void closelog (void)
 
 @code{closelog} closes the current Syslog connection, if there is one.
 This include closing the @file{dev/log} socket, if it is open.
@@ -444,7 +443,7 @@ on for a certain priority and all priorities above it:
 LOG_UPTO(LOG_ERROR)
 @end smallexample
 
-The unfortunate naming of the macro is due to the fact that internally, 
+The unfortunate naming of the macro is due to the fact that internally,
 higher numbers are used for lower message priorities.
 
 @end deftypefun
@@ -462,16 +461,13 @@ in the example does nothing.
 @smallexample
 #include <syslog.h>
 
-setlogmask(LOG_UPTO(LOG_NOTICE));
+setlogmask (LOG_UPTO (LOG_NOTICE));
 
-openlog("exampleprog", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+openlog ("exampleprog", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
 
-syslog(LOG_NOTICE, "Program started by User %d", getuid());
-syslog(LOG_INFO, "A tree falls in a forest");
+syslog (LOG_NOTICE, "Program started by User %d", getuid ());
+syslog (LOG_INFO, "A tree falls in a forest");
 
-closelog();
+closelog ();
 
 @end smallexample
-
-
-

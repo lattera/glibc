@@ -1401,3 +1401,22 @@ processors and so the call
 @noindent
 returns the number of processors which are currently inline (i.e.,
 available).
+
+@cindex load average
+Before starting more threads it should be checked whether the processors
+are not already overused.  Unix systems calculate something called the
+@dfn{load average}.  This is a number indicating how many processes were
+running.  This number is average over different periods of times
+(normally 1, 5, and 15 minutes).
+
+@comment stdlib.h
+@comment BSD
+@deftypefun int getloadavg (double @var{loadavg}[], int @var{nelem})
+This function gets the 1, 5 and 15 minute load averages of the
+system. The values are placed in @var{loadavg}.  @code{getloadavg} will
+place at most @var{nelem} elements into the array but never more than
+three elements.  The return value is the number of elements written to
+@var{loadavg}, or -1 on error.
+
+This function is declared in @file{stdlib.h}.
+@end deftypefun

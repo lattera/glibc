@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: December 1998
+Status: February 2001
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@gnu.org>.
@@ -77,19 +77,14 @@ contact <bug-glibc@gnu.org>.
 
      It is planned to do a complete rewrite.
 
+***  We have no multibyte character support.  But a rewrite is still
+     necessary.
+
 
 [11] Write access function for netmasks, bootparams, and automount
      databases for nss_files and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.
-
-
-[14] We need to write a library for on-the-fly transformation of streams
-     of text.  In fact, this would be a recode-library (you know, GNU recode).
-     This is needed in several places in the GNU libc and I already have
-     rather concrete plans but so far no possibility to start this.
-
-***  The library is available, now it remains to be used in the streams.
 
 
 [15] Cleaning up the header files.  Ideally, each header style should
@@ -98,9 +93,13 @@ contact <bug-glibc@gnu.org>.
      should always contain variable names which can help to identify their
      meaning; better than
 
-		int foo __P ((int, int, int, int));
+		int foo (int, int, int, int);
 
      Blargh!
+
+***  The conformtest.pl tool helps cleaning the namespace.  As far as
+     known the prototypes all contain parameter names.  But maybe some
+     comments can be improved.
 
 
 [16] The libio stream file functions should be extended in a way to use
@@ -194,7 +193,4 @@ contact <bug-glibc@gnu.org>.
      user should be preferred even if the last user spent more time.
 
 
-[26] Improve the AIO implementation so that threads do not immediately
-     terminate if no more requests are available.  Let them sleep for a
-     while and wake them up on demand.  If after a while no request arrived
-     they really can die.
+[26] ...done

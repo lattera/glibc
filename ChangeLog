@@ -1,5 +1,12 @@
 2001-02-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/getsysstat.c: Change return value of get_phys_pages
+	and get_avphys_page to long int.
+	* sysdeps/unix/sysv/linux/getsysstat.c: Likewise.
+	* include/sys/sysinfo.h: Likewise.
+	* sysdeps/generic/sys/sysinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Fail if we
 	cannot return as many values as the user asked for.
 

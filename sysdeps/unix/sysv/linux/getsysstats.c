@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -203,14 +203,14 @@ weak_alias (__get_nprocs_conf, get_nprocs_conf)
 
 /* General function to get information about memory status from proc
    filesystem.  */
-static int
+static long int
 internal_function
 phys_pages_info (const char *format)
 {
   FILE *fp;
   char buffer[8192];
   const char *proc_path;
-  int result = -1;
+  long int result = -1;
 
   /* Get mount point of proc filesystem.  */
   proc_path = get_proc_path (buffer, sizeof buffer);
@@ -258,12 +258,12 @@ phys_pages_info (const char *format)
 
    But not all systems have support for the /proc filesystem.  If it
    is not available we return -1 as an error signal.  */
-int
+long int
 __get_phys_pages ()
 {
   /* XXX Here will come a test for the new system call.  */
 
-  return phys_pages_info ("MemTotal: %d kB");
+  return phys_pages_info ("MemTotal: %ld kB");
 }
 weak_alias (__get_phys_pages, get_phys_pages)
 
@@ -279,12 +279,12 @@ weak_alias (__get_phys_pages, get_phys_pages)
 
    But not all systems have support for the /proc filesystem.  If it
    is not available we return -1 as an error signal.  */
-int
+long int
 __get_avphys_pages ()
 {
   /* XXX Here will come a test for the new system call.  */
 
-  return phys_pages_info ("MemFree: %d kB");
+  return phys_pages_info ("MemFree: %ld kB");
 }
 weak_alias (__get_avphys_pages, get_avphys_pages)
 

@@ -15,7 +15,6 @@ can make changes.
                                   machine type
 * Filesystem Handling::         Controlling/querying mounts
 * System Parameters::           Getting and setting various system parameters
-* Load Average::                Getting the system load average
 @end menu
 
 To get information on parameters of the system that are built into the
@@ -1193,23 +1192,3 @@ parameters are:
 @item
 @code{bdflush}
 @end itemize
-
-@node Load Average
-@section Getting the system load average
-
-This section describes the @code{getloadavg} function, which gets the 1, 5
-and 15 minute load averages of the system. The load average is the number of
-processes in the system run queue, averaged over various periods of time
-(1, 5 and 15 minutes in this case).
-
-The symbols used in this section are declared in the file @file{stdlib.h}.
-
-@comment stdlib.h
-@comment BSD
-@deftypefun int getloadavg (double @var{loadavg}[], int @var{nelem})
-This function gets the 1, 5 and 15 minute load averages of the system. The
-values are placed in @var{loadavg}. The function will place at most
-@var{nelem} elements into the array, @var{loadavg}. Never are there more
-than three elements returned and possibly less than @var{nelem}. The return
-value is the number of elements written to @var{loadavg}, or -1 on error.
-@end deftypefun

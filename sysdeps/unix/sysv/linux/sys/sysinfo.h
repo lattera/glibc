@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SYSINFO_H
-
 #define _SYS_SYSINFO_H	1
+
 #include <features.h>
 
 /* Get sysinfo structure from kernel header.  */
@@ -38,10 +38,10 @@ extern int get_nprocs (void) __THROW;
 
 
 /* Return number of physical pages of memory in the system.  */
-extern int get_phys_pages (void) __THROW;
+extern long int get_phys_pages (void) __THROW;
 
 /* Return number of available physical pages of memory in the system.  */
-extern int get_avphys_pages (void) __THROW;
+extern long int get_avphys_pages (void) __THROW;
 
 __END_DECLS
 

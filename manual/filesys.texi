@@ -140,6 +140,34 @@ syntax errors (@pxref{File Name Errors}), plus @code{ENOTDIR} if the
 file @var{filename} is not a directory.
 @end deftypefun
 
+@comment unistd.h
+@comment XPG
+@deftypefun int fchdir (int @var{filedes})
+This function is used to set the process's working directory to
+directory associated with the file descriptor @var{filedes}.
+
+The normal, successful return value from @code{fchdir} is @code{0}.  A
+value of @code{-1} is returned to indicate an error.  The following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EACCES
+Read permission is denied for the directory named by @code{dirname}.
+
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTDIR
+The file descriptor @var{filedes} is not associated with a directory.
+
+@item EINTR
+The function call was interrupt by a signal.
+
+@item EIO
+An I/O error occurred.
+@end table
+@end deftypefun
+
 
 @node Accessing Directories
 @section Accessing Directories
@@ -206,7 +234,7 @@ type of the appropriate size
 This is the type of the file, possibly unknown.  The following constants
 are defined for its value:
 
-@table @code
+@vtable @code
 @item DT_UNKNOWN
 The type is unknown.  On some systems this is the only value returned.
 
@@ -227,24 +255,34 @@ A character device.
 
 @item DT_BLK
 A block device.
-@end table
+@end vtable
 
-This member is a BSD extension.  On systems where it is used, it
+This member is a BSD extension.  The symbol @code{_DIRENT_HAVE_D_TYPE}
+is defined if this member is available.  On systems where it is used, it
 corresponds to the file type bits in the @code{st_mode} member of
-@code{struct statbuf}.  On other systems it will always be DT_UNKNOWN.
-These two macros convert between @code{d_type} values and @code{st_mode}
-values:
+@code{struct statbuf}.  If the value cannot be determine the member
+value is DT_UNKNOWN.  These two macros convert between @code{d_type}
+values and @code{st_mode} values:
 
+@comment dirent.h
+@comment BSD
 @deftypefun int IFTODT (mode_t @var{mode})
 This returns the @code{d_type} value corresponding to @var{mode}.
 @end deftypefun
 
+@comment dirent.h
+@comment BSD
 @deftypefun mode_t DTTOIF (int @var{dtype})
 This returns the @code{st_mode} value corresponding to @var{dtype}.
 @end deftypefun
 @end table
 
-This structure may contain additional members in the future.
+This structure may contain additional members in the future.  Their
+availability is always announced in the compilation environment by a
+macro names @code{_DIRENT_HAVE_D_xxx} where @code{xxx} is replaced by
+the name of the new member.  For instance, the member @code{d_reclen}
+available on some systems is announced through the macro
+@code{_DIRENT_HAVE_D_RECLEN}.
 
 When a file has multiple names, each name has its own directory entry.
 The only way you can tell that the directory entries belong to a
@@ -302,6 +340,24 @@ The @code{DIR} type is typically implemented using a file descriptor,
 and the @code{opendir} function in terms of the @code{open} function.
 @xref{Low-Level I/O}.  Directory streams and the underlying
 file descriptors are closed on @code{exec} (@pxref{Executing a File}).
+@end deftypefun
+
+In some situations it can be desirable to get hold of the file
+descriptor which is created by the @code{opendir} call.  For instance,
+to switch the current working directory to the directory just read the
+@code{fchdir} function could be used.  Historically the @code{DIR} type
+was exposed and programs could access the fields.  This does not happen
+in the GNU C library.  Instead a separate function is provided to allow
+access.
+
+@comment dirent.h
+@comment GNU
+@deftypefun int dirfd (DIR *@var{dirstream})
+The function @code{dirfd} returns the file descriptor associated with
+the directory stream @var{dirstream}.  This descriptor can be used until
+the directory is closed with @code{closedir}.  If the directory stream
+implementation is not using file descriptors the return value is
+@code{-1}.
 @end deftypefun
 
 @node Reading/Closing Directory
