@@ -580,6 +580,7 @@ typedef struct
 #define NT_FPREGSET	2		/* Contains copy of fpregset struct */
 #define NT_PRPSINFO	3		/* Contains copy of prpsinfo struct */
 #define NT_PRXREG	4		/* Contains copy of prxregset struct */
+#define NT_TASKSTRUCT	4		/* Contains copy of task structure */
 #define NT_PLATFORM	5		/* String from sysinfo(SI_PLATFORM) */
 #define NT_AUXV		6		/* Contains copy of auxv array */
 #define NT_GWINDOWS	7		/* Contains copy of gwindows struct */
@@ -993,6 +994,7 @@ typedef struct
 #define ELF_NOTE_OS_LINUX	0
 #define ELF_NOTE_OS_GNU		1
 #define ELF_NOTE_OS_SOLARIS2	2
+#define ELF_NOTE_OS_FREEBSD	3
 
 
 /* Move records.  */
