@@ -77,8 +77,11 @@ extern __thread struct __res_state __libc_res __attribute__ ((alias ("_res")))
   attribute_hidden;
 # define _res __libc_res
 #else
-/* The resolver state for use by single-threaded programs.  */
-struct __res_state _res;
+/* The resolver state for use by single-threaded programs.
+   This differs from plain `struct __res_state _res;' in that it doesn't
+   create a common definition, but a plain symbol that resides in .bss,
+   which can have an alias.  */
+struct __res_state _res __attribute__((section (".bss")));
 
 /* We declare this with compat_symbol so that it's not
    visible at link time.  Programs must use the accessor functions.  */

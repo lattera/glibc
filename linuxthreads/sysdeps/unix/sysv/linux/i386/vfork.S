@@ -86,6 +86,8 @@ ENTRY (__vfork)
 	jae	SYSCALL_ERROR_LABEL
 .Lpseudo_end:
 	ret
+#elif !defined __NR_vfork
+# error "__NR_vfork not available and __ASSUME_VFORK_SYSCALL defined"
 #endif
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)

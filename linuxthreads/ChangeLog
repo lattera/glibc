@@ -1,3 +1,9 @@
+2003-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Make sure
+	__ASSUME_VFORK_SYSCALL is not defined if the kernel headers have
+	no __NR_vfork definition.
+
 2003-02-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-popen2.c: New test.
@@ -7,7 +13,8 @@
 	* sysdeps/unix/sysv/linux/i386/vfork.S (__vfork): Likewise.
 	* sysdeps/unix/sysv/linux/ia64/vfork.S (__vfork): Likewise.
 	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S (__vfork): Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S (__vfork):
+	Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S (__vfork): Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S (__vfork): Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/vfork.S (__vfork): Likewise.

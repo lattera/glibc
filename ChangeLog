@@ -1,7 +1,14 @@
+2003-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/res_libc.c (_res): Ensure _res is not common symbol,
+	so that it can have aliases.
+	* inet/herrno.c (h_errno): Put it into .bss not .data section.
+
 2003-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-runtime.c (fixup): Correct typo in version index computation.
 	(profile_fixup): Likewise.
+	Patch by Lance Larsh <Lance.Larsh@oracle.com>.
 
 2002-11-24  Robert Love  <rml@tech9.net>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,10 @@ extern __thread int __libc_h_errno __attribute__ ((alias ("h_errno")))
   attribute_hidden;
 # define h_errno __libc_h_errno
 #else
-int h_errno = 0;
+/* This differs from plain `int h_errno;' in that it doesn't create
+   a common definition, but a plain symbol that resides in .bss,
+   which can have an alias.  */
+int h_errno __attribute__((section (".bss")));
 weak_alias (h_errno, _h_errno)
 
 /* We declare these with compat_symbol so that they are not
