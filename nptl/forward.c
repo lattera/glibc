@@ -31,6 +31,10 @@ static void *libpthread_handle;
 static void
 test_loaded (void)
 {
+  /* While we are getting the result set the handle to (void *) -1 to
+     avoid recursive calls.  */
+  libpthread_handle = (void *) -1l;
+
   void *h = __libc_dlopen_mode ("libpthread.so.0", RTLD_LAZY | RTLD_NOLOAD);
 
   libpthread_handle = h ?: (void *) -1l;
