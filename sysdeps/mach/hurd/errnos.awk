@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,2000 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -113,7 +113,7 @@ in_mig_errors && $1 == "#endif" && $3 == "_MACH_MIG_ERRORS_H_" \
   }
 
 (in_mig_errors && $1 == "#define" && $3 <= -300) || \
-(in_device_errors && $1 == "#define") \
+(in_device_errors && $1 == "#define" && /D_/ && NF > 3) \
   {
     comment = "";
     for (i = 4; i <= NF; ++i)
