@@ -1,9 +1,15 @@
+2002-11-18  Roland McGrath  <roland@redhat.com>
+
+	* manual/pattern.texi (Variable Substitution): Fix # and ## examples.
+
 2002-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/pattern.texi (Wordexp Example): Fix sample code.
 
 	* sysdeps/unix/sysv/linux/i386/clone.S: Initialize word in the
 	childs stack which will be loaded into the %esi register.
 
-2002-11-14  Paul Eggert  <eggert@twionsun.com>
+2002-11-14  Paul Eggert  <eggert@twinsun.com>
 
 	* resolv/nss_dns/dns-network.c (getanswer_r): Check for buffer
 	overflow when skipping the question part and when unpacking aliases.
