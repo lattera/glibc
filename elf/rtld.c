@@ -1167,7 +1167,8 @@ process_envvars (enum mode *modep, int *lazyp)
 
 	case 11:
 	  /* Path where the binary is found.  */
-	  if (memcmp (&envline[3], "ORIGIN_PATH", 11) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (&envline[3], "ORIGIN_PATH", 11) == 0)
 	    _dl_hwcap_mask = strtoul (&envline[15], NULL, 0);
 	  break;
 
