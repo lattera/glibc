@@ -45,18 +45,18 @@
 __pthread_cond_signal:
 
 	pushl	%ebx
-	pushl	%esi
 	pushl	%edi
 
-	movl	16(%esp), %edi
+	movl	12(%esp), %edi
 
 	/* Get internal lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%edi)
+	cmpxchgl %edx, (%edi)
 #else
-	xaddl	%eax, cond_lock(%edi)
+	cmpxchgl %edx, cond_lock(%edi)
 #endif
 	testl	%eax, %eax
 	jne	1f
@@ -78,20 +78,10 @@ __pthread_cond_signal:
 	adcl	$0, 4(%ebx)
 
 	/* Wake up one thread by moving it to the internal lock futex.  */
-	movl	$FUTEX_REQUEUE, %ecx
+	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
-	xorl	%edx, %edx
-	movl	$1, %esi
+	movl	$1, %edx
 	ENTER_KERNEL
-
-#ifndef __ASSUME_FUTEX_REQUEUE
-	cmpl	$-EINVAL, %eax
-	je	7f
-#endif
-
-	/* If we moved a thread we in any case have to make the syscall.  */
-	testl	%eax, %eax
-	jne	5f
 
 	/* Unlock.  Note that at this point %edi always points to
 	   cond_lock.  */
@@ -101,7 +91,6 @@ __pthread_cond_signal:
 
 6:	xorl	%eax, %eax
 	popl	%edi
-	popl	%esi
 	popl	%ebx
 	ret
 
@@ -119,15 +108,6 @@ __pthread_cond_signal:
 5:	movl	%edi, %eax
 	call	__lll_mutex_unlock_wake
 	jmp	6b
-
-#ifndef __ASSUME_FUTEX_REQUEUE
-7:	/* The futex requeue functionality is not available.  */
-	movl	$1, %edx
-	movl	$FUTEX_WAKE, %ecx
-	movl	$SYS_futex, %eax
-	ENTER_KERNEL
-	jmp	4b
-#endif
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)

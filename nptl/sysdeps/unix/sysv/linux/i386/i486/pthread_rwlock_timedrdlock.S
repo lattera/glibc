@@ -50,12 +50,13 @@ pthread_rwlock_timedrdlock:
 	movl	32(%esp), %edi
 
 	/* Get the lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%eax, (%ebp)
+	cmpxchgl %edx, (%ebp)
 #else
-	xaddl	%eax, MUTEX(%ebp)
+	cmpxchgl %edx, MUTEX(%ebp)
 #endif
 	testl	%eax, %eax
 	jne	1f
@@ -114,22 +115,23 @@ pthread_rwlock_timedrdlock:
 	leal	READERS_WAKEUP(%ebp), %ebx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
-	movl	%eax, %edx
+	movl	%eax, %ecx
 17:
 
 	/* Reget the lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%eax, (%ebp)
+	cmpxchgl %edx, (%ebp)
 #else
-	xaddl	%eax, MUTEX(%ebp)
+	cmpxchgl %edx, MUTEX(%ebp)
 #endif
 	testl	%eax, %eax
 	jne	12f
 
 13:	subl	$1, READERS_QUEUED(%ebp)
-	cmpl	$-ETIMEDOUT, %edx
+	cmpl	$-ETIMEDOUT, %ecx
 	jne	2b
 
 18:	movl	$ETIMEDOUT, %ecx
@@ -207,7 +209,7 @@ pthread_rwlock_timedrdlock:
 	call	__lll_mutex_lock_wait
 	jmp	13b
 
-16:	movl	$-ETIMEDOUT, %edx
+16:	movl	$-ETIMEDOUT, %ecx
 	jmp	17b
 
 19:	movl	$EINVAL, %ecx

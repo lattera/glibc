@@ -56,12 +56,13 @@ __pthread_cond_timedwait:
 	movl	28(%esp), %ebp
 
 	/* Get internal lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	cmpxchgl %edx, cond_lock(%ebx)
 #endif
 	testl	%eax, %eax
 	jne	1f
@@ -170,12 +171,13 @@ __pthread_cond_timedwait:
 .LcleanupEND:
 
 	/* Lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	cmpxchgl %edx, cond_lock(%ebx)
 #endif
 	testl	%eax, %eax
 	jne	5f
@@ -353,12 +355,13 @@ __condvar_tw_cleanup:
 	movl	%eax, %esi
 
 	/* Get internal lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	cmpxchgl %edx, cond_lock(%ebx)
 #endif
 	testl	%eax, %eax
 	je	1f

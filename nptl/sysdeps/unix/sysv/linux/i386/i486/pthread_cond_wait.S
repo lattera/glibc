@@ -53,12 +53,13 @@ __pthread_cond_wait:
 	movl	16(%esp), %ebx
 
 	/* Get internal lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	cmpxchgl %edx, cond_lock(%ebx)
 #endif
 	testl	%eax, %eax
 	jne	1f
@@ -114,12 +115,13 @@ __pthread_cond_wait:
 .LcleanupEND:
 
 	/* Lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	cmpxchgl %edx, cond_lock(%ebx)
 #endif
 	testl	%eax, %eax
 	jne	5f
@@ -246,12 +248,13 @@ __condvar_w_cleanup:
 	movl	%eax, %esi
 
 	/* Get internal lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	cmpxchgl %edx, cond_lock(%ebx)
 #endif
 	testl	%eax, %eax
 	je	1f
@@ -270,7 +273,11 @@ __condvar_w_cleanup:
 	adcl	$0, woken_seq+4(%ebx)
 
 	LOCK
+#if cond_lock == 0
+	subl	$1, (%ebx)
+#else
 	subl	$1, cond_lock(%ebx)
+#endif
 	je	2f
 
 #if cond_lock == 0

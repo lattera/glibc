@@ -44,12 +44,13 @@ __pthread_rwlock_unlock:
 	movl	12(%esp), %edi
 
 	/* Get the lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%eax, (%edi)
+	cmpxchgl %edx, (%edi)
 #else
-	xaddl	%eax, MUTEX(%edi)
+	cmpxchgl %edx, MUTEX(%edi)
 #endif
 	testl	%eax, %eax
 	jne	1f

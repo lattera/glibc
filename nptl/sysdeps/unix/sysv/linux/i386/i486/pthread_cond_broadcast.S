@@ -51,12 +51,13 @@ __pthread_cond_broadcast:
 	movl	16(%esp), %ebx
 
 	/* Get internal lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	cmpxchgl %edx, cond_lock(%ebx)
 #endif
 	testl	%eax, %eax
 	jne	1f

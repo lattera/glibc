@@ -46,12 +46,13 @@ __pthread_rwlock_rdlock:
 	movl	12(%esp), %ebx
 
 	/* Get the lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, MUTEX(%ebx)
+	cmpxchgl %edx, MUTEX(%ebx)
 #endif
 	testl	%eax, %eax
 	jne	1f
@@ -85,12 +86,13 @@ __pthread_rwlock_rdlock:
 	subl	$READERS_WAKEUP, %ebx
 
 	/* Reget the lock.  */
-	movl	$1, %eax
+	movl	$1, %edx
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%eax, (%ebx)
+	cmpxchgl %edx, (%ebx)
 #else
-	xaddl	%eax, MUTEX(%ebx)
+	cmpxchgl %edx, MUTEX(%ebx)
 #endif
 	testl	%eax, %eax
 	jne	12f

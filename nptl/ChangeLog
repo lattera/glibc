@@ -1,3 +1,24 @@
+2003-09-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Completely revamp the
+	locking macros.  No distinction between normal and mutex locking
+	anymore.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Rewrite mutex
+	locking.  Merge bits from lowlevelmutex.S we still need.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S: Removed.
+	* Makefile (routines): Remove libc-lowlevelmutex.
+	(libpthread-rountines): Remove lowlevelmutex.
+	* pthread_barrier_wait.S: Adjust for new mutex implementation.
+	* pthread_cond_broadcast.S: Likewise.
+	* pthread_cond_timedwait.S: Likewise.
+	* pthread_cond_wait.S: Likewise.
+	* pthread_rwlock_rdlock.S: Likewise.
+	* pthread_rwlock_timedrdlock.S: Likewise.
+	* pthread_rwlock_timedwrlock.S: Likewise.
+	* pthread_rwlock_unlock.S: Likewise.
+	* pthread_rwlock_wrlock.S: Likewise.
+	* pthread_cond_signal.S: Likewise.  Don't use requeue.
+
 2003-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Don't match memory
