@@ -1,3 +1,23 @@
+2004-04-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL): Move
+	LOAD_ARGS_##nr up front and add LOAD_REGS_##nr.
+	(LOAD_ARGS_0, LOAD_ARGS_1, LOAD_ARGS_2, LOAD_ARGS_3, LOAD_ARGS_4)
+	(LOAD_ARGS_5, LOAD_ARGS_6): Load argument values into temporary
+	variables.
+	(LOAD_REGS_0, LOAD_REGS_1, LOAD_REGS_2, LOAD_REGS_3, LOAD_REGS_4)
+	(LOAD_REGS_5, LOAD_REGS_6): New macros to actually load the
+	syscall argument registers.
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INTERNAL_SYSCALL): Add
+	LOAD_REGS_##nr.
+	(LOAD_ARGS_0, LOAD_ARGS_1, LOAD_ARGS_2, LOAD_ARGS_3, LOAD_ARGS_4)
+	(LOAD_ARGS_5, LOAD_ARGS_6): Load argument values into temporary
+	variables.
+	(LOAD_REGS_0, LOAD_REGS_1, LOAD_REGS_2, LOAD_REGS_3, LOAD_REGS_4)
+	(LOAD_REGS_5, LOAD_REGS_6): New macros to actually load the
+	syscall argument registers.
+
 2004-04-09  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/s390/ffs.c: Don't add ffsl weak alias on s390x.
