@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -148,7 +148,7 @@ extern void psignal (int __sig, __const char *__s);
    __THROW.  */
 extern int __sigpause (int __sig_or_mask, int __is_sig);
 
-#ifdef __USE_BSD
+#ifdef __FAVOR_BSD
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
 extern int sigpause (int __mask) __THROW;
