@@ -185,9 +185,9 @@ struct sockaddr_in
 struct sockaddr_in6
   {
     __SOCKADDR_COMMON (sin6_);
-    u_int16_t		sin6_port;      /* Transport layer port # */
-    u_int32_t		sin6_flowinfo;  /* IPv6 flow information */
-    struct in6_addr	sin6_addr;      /* IPv6 address */
+    u_int16_t sin6_port;	/* Transport layer port # */
+    u_int32_t sin6_flowinfo;	/* IPv6 flow information */
+    struct in6_addr sin6_addr;	/* IPv6 address */
   };
 
 /* IPv6 multicast request.  */
@@ -197,7 +197,7 @@ struct ipv6_mreq
     struct in6_addr ipv6mr_multiaddr;
 
     /* local IPv6 address of interface */
-    int		ipv6mr_ifindex;
+    int ipv6mr_ifindex;
   };
 
 /* Get system-specific definitions.  */
@@ -210,18 +210,17 @@ struct ipv6_mreq
    this was a short-sighted decision since on different systems the types
    may have different representations but the values are always the same.  */
 
-extern u_int32_t __ntohl __P ((u_int32_t __netlong));
 extern u_int32_t ntohl __P ((u_int32_t __netlong));
-extern u_int16_t __ntohs __P ((u_int16_t __netshort));
 extern u_int16_t ntohs __P ((u_int16_t __netshort));
-extern u_int32_t __htonl __P ((u_int32_t __hostlong));
 extern u_int32_t htonl __P ((u_int32_t __hostlong));
-extern u_int16_t __htons __P ((u_int16_t __hostshort));
 extern u_int16_t htons __P ((u_int16_t __hostshort));
 
 #include <endian.h>
 
-#if __BYTE_ORDER == __BIG_ENDIAN
+/* Get machine dependent optimized versions of byte swapping functions.  */
+#include <bits/byteswap.h>
+
+#if __BYTE_ORDER == __BIG_ENDIAN && defined __OPTIMIZE__
 /* The host byte order is the same as network byte order,
    so these functions are all just identity.  */
 # define ntohl(x)	(x)
@@ -230,26 +229,10 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 # define htons(x)	(x)
 #else
 # if __BYTE_ORDER == __LITTLE_ENDIAN && defined __OPTIMIZE__
-#  define ntohl(x)	(__builtin_constant_p (x)			  \
-			 ? __constant_htontohl (x) : __ntohl (x))
-#  define ntohs(x)	(__builtin_constant_p (x)			  \
-			 ? __constant_htontohs (x) : __ntohs (x))
-#  define htonl(x)	(__builtin_constant_p (x)			  \
-			 ? __constant_htontohl (x) : __htonl (x))
-#  define htons(x)	(__builtin_constant_p (x)			  \
-			 ? __constant_htontohl (x) : __htonl (x))
-
-#  define __constant_htontohl(x) \
-	((((x) & 0xff000000) >> 24) | \
-	 (((x) & 0x00ff0000) >>  8) | \
-	 (((x) & 0x0000ff00) <<  8) | \
-	 (((x) & 0x000000ff) << 24))
-#  define __constant_htontohs(x) \
-	((((x) & 0x0000ff00) >>  8) | \
-	 (((x) & 0x000000ff) << 8))
-
-/* Now get machine dependent optimized versions for the real work.  */
-#  include <bits/htontoh.h>
+#  define ntohl(x)	__bswap_32 (x)
+#  define ntohs(x)	__bswap_16 (x)
+#  define htonl(x)	__bswap_32 (x)
+#  define htons(x)	__bswap_16 (x)
 # endif
 #endif
 

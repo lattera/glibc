@@ -20,7 +20,7 @@
 #ifndef _SEARCH_H
 #define	_SEARCH_H 1
 
-#include <sys/cdefs.h>
+#include <features.h>
 
 #define __need_size_t
 #define __need_NULL
@@ -28,7 +28,7 @@
 
 __BEGIN_DECLS
 
-#if defined(__USE_SVID) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED
 /* Prototype structure for a linked-list data structure.
    This is the type used by the `insque' and `remque' functions.  */
 
@@ -50,7 +50,7 @@ extern void remque __P ((void *__elem));
 
 /* For use with hsearch(3).  */
 #ifndef __COMPAR_FN_T
-#define __COMPAR_FN_T
+# define __COMPAR_FN_T
 typedef int (*__compar_fn_t) __P ((__const __ptr_t, __const __ptr_t));
 #endif
 
@@ -72,6 +72,23 @@ ENTRY;
 /* Opaque type for internal use.  */
 struct _ENTRY;
 
+/* Family of hash table handling functions.  The functions also
+   have reentrant counterparts ending with _r.  The non-reentrant
+   functions all work on a signle internal hashing table.  */
+
+/* Search for entry matching ITEM.key in internal hash table.  If
+   ACTION is `FIND' return found entry or signal error by returning
+   NULL.  If ACTION is `ENTER' replace existing data (if any) with
+   ITEM.data.  */
+extern ENTRY *hsearch __P ((ENTRY __item, ACTION __action));
+
+/* Create a new hashing table which will at most contain NEL elements.  */
+extern int hcreate __P ((size_t __nel));
+
+/* Destroy current internal hashing table.  */
+extern void hdestroy __P ((void));
+
+#ifdef __USE_GNU
 /* Data type for reentrant functions.  */
 struct hsearch_data
   {
@@ -80,16 +97,13 @@ struct hsearch_data
     unsigned int filled;
   };
 
-/* Family of hash table handling functions.  The functions also have
-   reentrant counterparts ending with _r.  */
-extern ENTRY *hsearch __P ((ENTRY __item, ACTION __action));
-extern int hcreate __P ((size_t __nel));
-extern void hdestroy __P ((void));
-
+/* Reentrant versions which can handle multiple hashing tables at the
+   same time.  */
 extern int hsearch_r __P ((ENTRY __item, ACTION __action, ENTRY **__retval,
 			   struct hsearch_data *__htab));
 extern int hcreate_r __P ((size_t __nel, struct hsearch_data *htab));
 extern void hdestroy_r __P ((struct hsearch_data *htab));
+#endif
 
 
 /* The tsearch routines are very interesting. They make many
@@ -108,26 +122,26 @@ VISIT;
 
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP and insert a new element if not found.  */
-extern void *tsearch __P ((__const void * __key, void **__rootp,
+extern void *tsearch __P ((__const void *__key, void **__rootp,
 			   __compar_fn_t compar));
-extern void *__tsearch __P ((__const void * __key, void **__rootp,
+extern void *__tsearch __P ((__const void *__key, void **__rootp,
 			     __compar_fn_t compar));
 
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP.  If no matching entry is available return NULL.  */
-extern void *tfind __P ((__const void * __key, void *__const * __rootp,
+extern void *tfind __P ((__const void *__key, void *__const *__rootp,
 			 __compar_fn_t compar));
-extern void *__tfind __P ((__const void * __key, void *__const * __rootp,
+extern void *__tfind __P ((__const void *__key, void *__const *__rootp,
 			   __compar_fn_t compar));
 
 /* Remove the element matching KEY from the tree pointed to by *ROOTP.  */
-extern void *tdelete __P ((__const void * __key, void ** __rootp,
+extern void *tdelete __P ((__const void *__key, void **__rootp,
 			   __compar_fn_t compar));
-extern void *__tdelete __P ((__const void * __key, void ** __rootp,
+extern void *__tdelete __P ((__const void *__key, void **__rootp,
 			     __compar_fn_t compar));
 
 #ifndef __ACTION_FN_T
-#define __ACTION_FN_T
+# define __ACTION_FN_T
 typedef void (*__action_fn_t) __P ((__const void *__nodep,
 				    VISIT __value,
 				    int __level));
@@ -135,9 +149,9 @@ typedef void (*__action_fn_t) __P ((__const void *__nodep,
 
 /* Walk through the whole tree and call the ACTION callback for every node
    or leaf.  */
-extern void twalk __P ((__const void * __root, __action_fn_t action));
+extern void twalk __P ((__const void *__root, __action_fn_t action));
 
-extern void __twalk __P ((__const void * __root, __action_fn_t action));
+extern void __twalk __P ((__const void *__root, __action_fn_t action));
 
 #ifdef __USE_GNU
 /* Callback type for function to free a tree node.  If the keys are atomic
@@ -152,14 +166,14 @@ extern void tdestroy __P ((void *__root, __free_fn_t freefct));
 
 /* Perform linear search for KEY by comparing by COMPAR in an array
    [BASE,BASE+NMEMB*SIZE).  */
-extern void * lfind __P ((__const void *__key, __const void *__base,
-			  size_t *__nmemb, size_t __size,
-			  __compar_fn_t __compar));
+extern void *lfind __P ((__const void *__key, __const void *__base,
+			 size_t *__nmemb, size_t __size,
+			 __compar_fn_t __compar));
 
 /* Perform linear search for KEY by comparing by COMPAR function in
    array [BASE,BASE+NMEMB*SIZE) and insert entry if not found.  */
-extern void * lsearch __P ((__const void *__key, void *__base, size_t *__nmemb,
-			    size_t __size, __compar_fn_t __compar));
+extern void *lsearch __P ((__const void *__key, void *__base, size_t *__nmemb,
+			   size_t __size, __compar_fn_t __compar));
 
 __END_DECLS
 

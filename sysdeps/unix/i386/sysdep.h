@@ -26,9 +26,7 @@
 
 #define DO_CALL(syscall_name, args)					      \
   lea SYS_ify (syscall_name), %eax;					      \
-  /* lcall $7, $0; */							      \
-  /* Above loses; GAS bug.  */						      \
-  .byte 0x9a, 0, 0, 0, 0, 7, 0
+  lcall $7, $0
 
 #define	r0		%eax	/* Normal return-value register.  */
 #define	r1		%edx	/* Secondary return-value register.  */

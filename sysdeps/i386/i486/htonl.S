@@ -26,12 +26,10 @@
 */
 
 	.text
-ENTRY (__htonl)
+ENTRY (htonl)
 	movl	4(%esp), %eax
 	bswap	%eax
 	ret
-END (__htonl)
+END (htonl)
 
-strong_alias (__htonl, __ntohl)
-weak_alias (__htonl, htonl)
-weak_alias (__ntohl, ntohl)
+weak_alias (htonl, ntohl)

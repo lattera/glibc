@@ -26,13 +26,11 @@
 */
 
 	.text
-ENTRY (__htons)
+ENTRY (htons)
 	movl	4(%esp), %eax
 	andl	$0xffff, %eax
 	rorw	$8, %ax
 	ret
-END (__htons)
+END (htons)
 
-strong_alias (__htons, __ntohs)
-weak_alias (__htons, htons)
-weak_alias (__ntohs, ntohs)
+weak_alias (htons, ntohs)

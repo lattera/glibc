@@ -1,3 +1,91 @@
+1997-07-24 03:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-deps.c: Complete rewrite to handle DT_AUXILIARY correctly.
+
+	* inet/Makefile (tests): Add htontest.
+	* inet/htontest.c: New file.
+
+	* inet/netinet/in.h: Cleanup optimization of ntoh/hton functions
+	when they are no noops.
+	* sysdeps/alpha/htonl.S: Don't define __ protected names.
+	* sysdeps/alpha/htons.S: Likewise.
+	* sysdeps/generic/htonl.c: Likewise.
+	* sysdeps/generic/htons.c: Likewise.
+	* sysdeps/i386/htonl.S: Likewise.
+	* sysdeps/i386/htons.S: Likewise.
+	* sysdeps/i386/i486/htonl.S: Likewise.
+	* sysdeps/vax/htonl.s: Likewise.
+	* sysdeps/vax/htons.s: Likewise.
+
+	* string/Makefile (headers): Add byteswap.h and bits/byteswap.h.
+	* string/byteswap.h: New file.
+	* sysdeps/generic/bits/byteswap.h: New file.
+	* sysdeps/i386/bits/byteswap.h: New file.
+	* sysdeps/generic/bits/htontoh.h: Removed.
+	* sysdeps/i386/bits/htontoh.h: Removed.
+
+	* misc/search.h: General cleanup.  Don't define reentrant hsearch
+	functions uless __USE_GNU.
+
+	* nss/nsswitch.c: Pretty print.
+
+	* sunrpc/clnt_udp.c (clntudp_call): Initialize outlen to prevent
+	warning.
+
+	* sysdeps/unix/i386/sysdep.h (DO_CALL): Use lcall, binutils have
+	been fixed meanwhile.
+	Reported by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-07-24 00:53  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* db/hash/hash.c (init_hash): Only use statbuf.st_blksize if it
+	exists for this port.
+
+1997-07-24 00:12  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/standalone/arm/bits/errno.h (ESTALE): Add.
+
+1997-07-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/argp.texi (Argp Option Vectors): Use @minus, not @math,
+	to format a proper minus sign.
+
+1997-07-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/fraiseexcpt.c: Don't handle FE_INEXACT
+	specially, the standard doesn't require it.
+
+	* math/test-fenv.c (test_exceptions): Add IGNORE_INEXACT argument,
+	if non-zero then don't test inexact flag.  Callers changed.
+	(set_single_exc): Ignore inexact flag if underflow or overflow
+	exception is raised.
+
+1997-07-23 05:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/fsuid.h: New file.
+	Provided by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+	* sysdeps/unix/sysv/linux/Makefile (headers): Add sys/fsuid.h.
+	* sysdeps/unix/sysv/linux/Dist: Add sys/fsuid.h.
+
+1997-07-16 10:09  Fila Kolodny  <fila@ibi.com>
+
+	* resolv/gethnamaddr.c: Define MAXHOSTNAMELEN as 256, since RFC 1034
+	and 1035 state that a fully qualified domain name cannot exceed 255
+	octets in length.
+	* resolv/nss_dns/dns-host.c: Likewise.
+
+1997-07-22 09:54  H.J. Lu   <hjl@gnu.ai.mit.edu>
+
+	* inet/netinet/in.h (htons): Fix typos.
+
+	* sysdeps/i386/bits/htontoh.h (__ntohs): Return the value.
+
+1997-07-22 11:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (nss_lookup_function): Include function.def, not
+	functions.def.
+	Patch by Klaus Espenlaub <kespenla@hydra.informatik.uni-ulm.de>.
+
 1997-07-22 01:35  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules (+make-deps): Use $(CFLAGS) in run of $(+mkdep) so

@@ -19,17 +19,18 @@
 #include <netinet/in.h>
 
 #undef	htonl
+#undef	ntohl
 
 u_int32_t
-__htonl (x)
+htonl (x)
      u_int32_t x;
 {
-#if BYTE_ORDER == LITTLE_ENDIAN
-  x = (x << 24) | ((x & 0xff00) << 8) | ((x & 0xff0000) >> 8) | (x >> 24);
-#endif
-
+#if BYTE_ORDER == BIG_ENDIAN
   return x;
+#elif BYTE_ORDER == LITTLE_ENDIAN
+  return __bswap_32 (x);
+#else
+# error "What kind of system is this?"
+#endif
 }
-strong_alias (__htonl, __ntohl)
-weak_alias (__htonl, htonl)
-weak_alias (__ntohl, ntohl)
+weak_alias (htonl, ntohl)

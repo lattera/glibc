@@ -19,17 +19,18 @@
 #include <netinet/in.h>
 
 #undef	htons
+#undef	ntohs
 
 u_int16_t
 __htons (x)
      u_int16_t x;
 {
-#if BYTE_ORDER == LITTLE_ENDIAN
-  x = (x << 8) | (x >> 8);
-#endif
-
+#if BYTE_ORDER == BIG_ENDIAN
   return x;
+#elif BYTE_ORDER == LITTLE_ENDIAN
+  return __bswap_16 (x);
+#else
+# error "What kind of system is this?"
+#endif
 }
-strong_alias (__htons, __ntohs)
-weak_alias (__htons, htons)
-weak_alias (__ntohs, ntohs)
+weak_alias (htons, ntohs)

@@ -22,17 +22,27 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 
-struct openaux_args
-{
-  /* The arguments to openaux.  */
-  struct link_map *map;
-  int trace_mode;
-  const char *strtab;
-  ElfW(Dyn) *d;
+#include <assert.h>
 
-  /* The return value of openaux.  */
-  struct link_map *aux;
-};
+/* Whether an shared object references one or more auxiliary objects
+   is signaled by the AUXTAG entry in l_info.  */
+#define AUXTAG	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
+		 + DT_EXTRATAGIDX (DT_AUXILIARY))
+
+
+/* When loading auxiliary objects we must ignore errors.  It's ok if
+   an object is missing.  */
+struct openaux_args
+  {
+    /* The arguments to openaux.  */
+    struct link_map *map;
+    int trace_mode;
+    const char *strtab;
+    const ElfW(Dyn) *d;
+
+    /* The return value of openaux.  */
+    struct link_map *aux;
+  };
 
 static void
 openaux (void *a)
@@ -45,78 +55,56 @@ openaux (void *a)
 			      args->trace_mode);
 }
 
+
+
+/* We use a very special kind of list to track the three kinds paths
+   through the list of loaded shared objects.  We have to
+
+   - go through all objects in the correct order, which includes the
+     possible recursive loading of auxiliary objects and dependencies
+
+   - produce a flat list with unique members of all involved objects
+
+   - produce a flat list of all shared objects.
+*/
+struct list
+  {
+    int done;			/* Nonzero if this map was processed.  */
+    struct link_map *map;	/* The data.  */
+
+    struct list *unique;	/* Elements for normal list.  */
+    struct list *dup;		/* Elements in complete list.  */
+  };
+
+
 void
 _dl_map_object_deps (struct link_map *map,
 		     struct link_map **preloads, unsigned int npreloads,
 		     int trace_mode)
 {
-  struct list
-    {
-      struct link_map *map;
-      struct list *next;
-    };
-  struct list *head, *tailp, *scanp;
-  struct list duphead, *duptailp;
-  unsigned int nduplist;
-  unsigned int nlist, naux, i;
+  struct list known[1 + npreloads + 1];
+  struct list *runp, *head, *utail, *dtail;
+  unsigned int nlist, nduplist, i;
+
   inline void preload (struct link_map *map)
     {
-      head[nlist].next = &head[nlist + 1];
-      head[nlist++].map = map;
+      known[nlist].done = 0;
+      known[nlist].map = map;
 
+      known[nlist].unique = &known[nlist + 1];
+      known[nlist].dup = &known[nlist + 1];
+
+      ++nlist;
       /* We use `l_reserved' as a mark bit to detect objects we have
 	 already put in the search list and avoid adding duplicate
 	 elements later in the list.  */
       map->l_reserved = 1;
     }
 
-  naux = nlist = 0;
+  /* No loaded object so far.  */
+  nlist = 0;
 
-  /* XXX The AUXILIARY implementation isn't correct in the moment. XXX
-     XXX The problem is that we currently do not handle auxiliary  XXX
-     XXX entries in the loaded objects.				   XXX */
-
-#define AUXTAG	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
-		 + DT_EXTRATAGIDX (DT_AUXILIARY))
-
-  /* First determine the number of auxiliary objects we have to load.  */
-  if (map->l_info[AUXTAG])
-    {
-      ElfW(Dyn) *d;
-      for (d = map->l_ld; d->d_tag != DT_NULL; ++d)
-	if (d->d_tag == DT_AUXILIARY)
-	  ++naux;
-    }
-
-  /* Now we can allocate the array for the linker maps. */
-  head = (struct list *) alloca (sizeof (struct list)
-				 * (naux + npreloads + 2));
-
-  /* Load the auxiliary objects, even before the object itself.  */
-  if (map->l_info[AUXTAG])
-    {
-      /* There is at least one auxiliary library specified.  We try to
-	 load it, and if we can, use its symbols in preference to our
-	 own.  But if we can't load it, we just silently ignore it.  */
-      struct openaux_args args;
-      args.strtab
-	= ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
-      args.map = map;
-      args.trace_mode = trace_mode;
-
-      for (args.d = map->l_ld; args.d->d_tag != DT_NULL; ++args.d)
-	if (args.d->d_tag == DT_AUXILIARY)
-	  {
-	    char *errstring;
-	    const char *objname;
-	    if (! _dl_catch_error (&errstring, &objname, openaux, &args))
-	      /* The auxiliary object is actually there.  Use it as
-		 the first search element, even before MAP itself.  */
-	      preload (args.aux);
-	  }
-    }
-
-  /* Next load MAP itself.  */
+  /* First load MAP itself.  */
   preload (map);
 
   /* Add the preloaded items after MAP but before any of its dependencies.  */
@@ -124,30 +112,51 @@ _dl_map_object_deps (struct link_map *map,
     preload (preloads[i]);
 
   /* Terminate the lists.  */
-  head[nlist - 1].next = NULL;
-  duphead.next = NULL;
+  known[nlist - 1].unique = NULL;
+  known[nlist - 1].dup = NULL;
 
-  /* Start here for adding dependencies to the list.  */
-  tailp = &head[nlist - 1];
+  /* Pointer to the first member of the unique and duplicate list.  */
+  head = known;
+
+  /* Pointer to last unique object.  */
+  utail = &known[nlist - 1];
+  /* Pointer to last loaded object.  */
+  dtail = &known[nlist - 1];
 
   /* Until now we have the same number of libraries in the normal and
      the list with duplicates.  */
   nduplist = nlist;
-  duptailp = &duphead;
 
-  /* Process each element of the search list, loading each of its immediate
-     dependencies and appending them to the list as we step through it.
-     This produces a flat, ordered list that represents a breadth-first
-     search of the dependency tree.  */
-  for (scanp = head; scanp; scanp = scanp->next)
+  /* Process each element of the search list, loading each of its
+     auxiliary objects and immediate dependencies.  Auxiliary objects
+     will be added in the list before the object itself and
+     dependencies will be appended to the list as we step through it.
+     This produces a flat, ordered list that represents a
+     breadth-first search of the dependency tree.
+
+     The whole process is complicated by the fact that we better
+     should use alloca for the temporary list elements.  But using
+     alloca means we cannot use recursive function calls.  */
+  for (runp = known; runp; )
     {
-      struct link_map *l = scanp->map;
+      struct link_map *l = runp->map;
 
-      if (l->l_info[DT_NEEDED])
+      if (runp->done == 0 && (l->l_info[AUXTAG] || l->l_info[DT_NEEDED]))
 	{
-	  const char *strtab
-	    = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
+	  const char *strtab = ((void *) l->l_addr
+				+ l->l_info[DT_STRTAB]->d_un.d_ptr);
+	  struct openaux_args args;
+	  struct list *orig;
 	  const ElfW(Dyn) *d;
+
+	  /* Mark map as processed.  */
+	  runp->done = 1;
+
+	  args.strtab = strtab;
+	  args.map = l;
+	  args.trace_mode = trace_mode;
+	  orig = runp;
+
 	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
 	    if (d->d_tag == DT_NEEDED)
 	      {
@@ -156,32 +165,182 @@ _dl_map_object_deps (struct link_map *map,
 		  = _dl_map_object (l, strtab + d->d_un.d_val,
 				    l->l_type == lt_executable ? lt_library :
 				    l->l_type, trace_mode);
+		/* Allocate new entry.  */
+		struct list *newp = alloca (sizeof (struct list));
+
+		/* Add it in any case to the duplicate list.  */
+		newp->map = dep;
+		newp->dup = NULL;
+		dtail->dup = newp;
+		dtail = newp;
+		++nduplist;
 
 		if (dep->l_reserved)
 		  /* This object is already in the search list we are
-                     building.  Don't add a duplicate pointer.  Release the
-                     reference just added by _dl_map_object.  */
+		     building.  Don't add a duplicate pointer.
+		     Release the reference just added by
+		     _dl_map_object.  */
 		  --dep->l_opencount;
 		else
 		  {
-		    /* Append DEP to the search list.  */
-		    tailp->next = alloca (sizeof *tailp);
-		    tailp = tailp->next;
-		    tailp->map = dep;
-		    tailp->next = NULL;
+		    /* Append DEP to the unique list.  */
+		    newp->done = 0;
+		    newp->unique = NULL;
+		    utail->unique = newp;
+		    utail = newp;
 		    ++nlist;
 		    /* Set the mark bit that says it's already in the list.  */
 		    dep->l_reserved = 1;
 		  }
+	      }
+	    else if (d->d_tag == DT_AUXILIARY)
+	      {
+		char *errstring;
+		const char *objname;
 
-		/* In any case append DEP to the duplicates search list.  */
-		duptailp->next = alloca (sizeof *duptailp);
-		duptailp = duptailp->next;
-		duptailp->map = dep;
-		duptailp->next = NULL;
-		++nduplist;
+		/* Store the tag in the argument structure.  */
+		args.d = d;
+
+		if (_dl_catch_error (&errstring, &objname, openaux, &args))
+		  {
+		    /* We are not interested in the error message.  */
+		    assert (errstring != NULL);
+		    free (errstring);
+		  }
+		else
+		  {
+		    /* The auxiliary object is actually available.
+		       Incorporate the map in all the lists.  */
+
+		    /* Allocate new entry.  This always has to be done.  */
+		    struct list *newp = alloca (sizeof (struct list));
+
+		    /* Copy the content of the current entry over.  */
+		    memcpy (newp, orig, sizeof (*newp));
+
+		    /* Initialize new entry.  */
+		    orig->done = 0;
+		    orig->map = args.aux;
+		    orig->dup = newp;
+
+		    /* We must handle two situations here: the map is new,
+		       so we must add it in all three lists.  If the map
+		       is already known, we have two further possibilities:
+		       - if the object is before the current map in the
+		         search list, we do nothing.  It is already found
+			 early
+		       - if the object is after the current one, we must
+		         move it just before the current map to make sure
+			 the symbols are found early enough
+		    */
+		    if (args.aux->l_reserved)
+		      {
+			/* The object is already somewhere in the
+			   list.  Locate it first.  */
+			struct list *late;
+
+			/* This object is already in the search list
+			   we are building.  Don't add a duplicate
+			   pointer.  Release the reference just added
+			   by _dl_map_object.  */
+			--args.aux->l_opencount;
+
+			for (late = orig; late->unique; late = late->unique)
+			  if (late->unique->map == args.aux)
+			    break;
+
+			if (late->unique)
+			  {
+			    /* The object is somewhere behind the current
+			       position in the search path.  We have to
+			       move it to this earlier position.  */
+			    orig->unique = newp;
+
+			    /* Now remove the later entry from the unique
+			       list.  */
+			    late->unique = late->unique->unique;
+
+			    /* We must move the earlier in the chain.  */
+			    if (args.aux->l_prev)
+			      args.aux->l_prev->l_next = args.aux->l_next;
+			    if (args.aux->l_next)
+			      args.aux->l_next->l_prev = args.aux->l_prev;
+
+			    args.aux->l_prev = newp->map->l_prev;
+			    newp->map->l_prev = args.aux;
+			    if (args.aux->l_prev != NULL)
+			      args.aux->l_prev->l_next = args.aux;
+			    args.aux->l_next = newp->map;
+			  }
+			else
+			  {
+			    /* The object must be somewhere earlier in
+			       the list.  That's good, we only have to
+			       insert an entry for the duplicate list.  */
+			    orig->unique = NULL;	/* Never used.  */
+
+			    /* Now we have a problem.  The element pointing
+			       to ORIG in the unique list must point to
+			       NEWP now.  This is the only place where we
+			       need this backreference and this situation
+			       is really not that frequent.  So we don't
+			       use a double-linked list but instead search
+			       for the preceding element.  */
+			    late = head;
+			    while (late->unique != orig)
+			      late = late->unique;
+			    late->unique = newp;
+			  }
+		      }
+		    else
+		      {
+			/* This is easy.  We just add the symbol right
+			   here.  */
+			orig->unique = newp;
+			++nlist;
+			/* Set the mark bit that says it's already in
+			   the list.  */
+			args.aux->l_reserved = 1;
+
+			/* The only problem is that in the double linked
+			   list of all objects we don't have this new
+			   object at the correct place.  Correct this
+			   here.  */
+			if (args.aux->l_prev)
+			  args.aux->l_prev->l_next = args.aux->l_next;
+			if (args.aux->l_next)
+			  args.aux->l_next->l_prev = args.aux->l_prev;
+
+			args.aux->l_prev = newp->map->l_prev;
+			newp->map->l_prev = args.aux;
+			if (args.aux->l_prev != NULL)
+			  args.aux->l_prev->l_next = args.aux;
+			args.aux->l_next = newp->map;
+		      }
+
+		    /* Move the tail pointers if necessary.  */
+		    if (orig == utail)
+		      utail = newp;
+		    if (orig == dtail)
+		      dtail = newp;
+
+		    /* Move on the insert point.  */
+		    orig = newp;
+
+		    /* We always add an entry to the duplicate list.  */
+		    ++nduplist;
+		  }
 	      }
 	}
+      else
+	/* Mark as processed.  */
+	runp->done = 1;
+
+      /* If we have no auxiliary objects just go on to the next map.  */
+      if (runp->done)
+	do
+	  runp = runp->unique;
+	while (runp && runp->done);
     }
 
   /* Store the search list we built in the object.  It will be used for
@@ -192,24 +351,26 @@ _dl_map_object_deps (struct link_map *map,
 		      "cannot allocate symbol search list");
   map->l_nsearchlist = nlist;
 
-  nlist = 0;
-  for (scanp = head; scanp; scanp = scanp->next)
+  for (nlist = 0, runp = head; runp; runp = runp->unique)
     {
-      map->l_searchlist[nlist++] = scanp->map;
+      map->l_searchlist[nlist++] = runp->map;
 
       /* Now clear all the mark bits we set in the objects on the search list
 	 to avoid duplicates, so the next call starts fresh.  */
-      scanp->map->l_reserved = 0;
+      runp->map->l_reserved = 0;
     }
 
-  map->l_dupsearchlist = malloc (nduplist * sizeof (struct link_map *));
-  if (map->l_dupsearchlist == NULL)
-    _dl_signal_error (ENOMEM, map->l_name,
-		      "cannot allocate symbol search list");
   map->l_ndupsearchlist = nduplist;
+  if (nlist == nduplist)
+    map->l_dupsearchlist = map->l_searchlist;
+  else
+    {
+      map->l_dupsearchlist = malloc (nduplist * sizeof (struct link_map *));
+      if (map->l_dupsearchlist == NULL)
+	_dl_signal_error (ENOMEM, map->l_name,
+			  "cannot allocate symbol search list");
 
-  for (nlist = 0; nlist < naux + 1 + npreloads; ++nlist)
-    map->l_dupsearchlist[nlist] = head[nlist].map;
-  for (scanp = duphead.next; scanp; scanp = scanp->next)
-    map->l_dupsearchlist[nlist++] = scanp->map;
+      for (nlist = 0, runp = head; runp; runp = runp->dup)
+	map->l_searchlist[nlist++] = runp->map;
+    }
 }

@@ -271,15 +271,14 @@ group); in this usage, it's conventional to end the string with a
 The group this option is in.
 
 In a long help message, options are sorted alphabetically within each
-group, and the groups presented in the order @math{0, 1, 2,} @dots{},
-@math{@var{n}, -@var{m},} @dots{}, @math{-2, -1}.  Every entry in an
+group, and the groups presented in the order 0, 1, 2, @dots{}, @var{n},
+@minus{}@var{m}, @dots{}, @minus{}2, @minus{}1.  Every entry in an
 options array with this
 field 0 will inherit the group number of the previous entry, or zero if
 it's the first one, unless its a group header (@code{name} and
-@code{key} fields both zero), in which case, the previous entry
-@math{@w{} + 1} is
+@code{key} fields both zero), in which case, the previous entry + 1 is
 the default.  Automagic options such as @samp{--help} are put into group
-@math{-1}.
+@minus{}1.
 
 Note that because of C structure initialization rules, this field
 often need not be specified, because 0 is the right value.

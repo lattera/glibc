@@ -1,4 +1,4 @@
-/* Change byte order in word.  For Intel 80386.
+/* Macros to swap the order of bytes in integer values.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,21 +17,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-#include "asm-syntax.h"
+#ifndef _BITS_BYTESWAP_H
+#define _BITS_BYTESWAP_H	1
 
-/*
-   INPUT PARAMETERS:
-   word		(sp + 4)
-*/
+/* Swap bytes in 16 bit value.  */
+#define __bswap_16(x) \
+     ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
 
-	.text
-ENTRY (htonl)
-	movl	4(%esp), %eax
-	rorw	$8, %ax
-	rorl	$16, %eax
-	rorw	$8, %ax
-	ret
-END (htonl)
+/* Swap bytes in 32 bit value.  */
+#define __bswap_32(x) \
+     ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) |		      \
+      (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
 
-weak_alias (htonl, ntohl)
+#if defined __GNUC__ && __GNUC__ >= 2
+/* Swap bytes in 64 bit value.  */
+# define __bswap_64(x) \
+     ({ union { unsigned long long int __ll;				      \
+		unsigned long int __l[2]; } __v, __r;			      \
+        __v.__ll = (x);							      \
+	__r.__l[0] = __bswap_32 (__v.__l[1]);				      \
+	__r.__l[1] = __bswap_32 (__v.__l[0]);				      \
+	__r.__ll; })
+#endif
+
+#endif /* bits/byteswap.h */

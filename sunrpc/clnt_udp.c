@@ -231,7 +231,7 @@ clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
 {
   struct cu_data *cu = (struct cu_data *) cl->cl_private;
   XDR *xdrs;
-  int outlen;
+  int outlen = 0;
   int inlen;
   size_t fromlen;
 #ifdef FD_SETSIZE

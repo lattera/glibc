@@ -22,7 +22,7 @@
 subdir	:= string
 
 headers	:= string.h strings.h memory.h endian.h bits/endian.h \
-	   argz.h envz.h
+	   argz.h envz.h byteswap.h bits/byteswap.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strverscmp strdup strndup				\

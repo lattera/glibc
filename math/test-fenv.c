@@ -85,7 +85,8 @@ test_single_exception (short int exception,
 }
 
 static void
-test_exceptions (const char *test_name, short int exception)
+test_exceptions (const char *test_name, short int exception,
+		 int ignore_inexact)
 {
   printf ("Test: %s\n", test_name);
 #ifdef FE_DIVBYZERO
@@ -97,8 +98,9 @@ test_exceptions (const char *test_name, short int exception)
                          "INVALID");
 #endif
 #ifdef FE_INEXACT
-  test_single_exception (exception, INEXACT_EXC, FE_INEXACT,
-                         "INEXACT");
+  if (!ignore_inexact)
+    test_single_exception (exception, INEXACT_EXC, FE_INEXACT,
+			   "INEXACT");
 #endif
 #ifdef FE_UNDERFLOW
   test_single_exception (exception, UNDERFLOW_EXC, FE_UNDERFLOW,
@@ -163,28 +165,32 @@ static void
 set_single_exc (const char *test_name, int fe_exc, fexcept_t exception)
 {
   char str[200];
+  /* The standard allows the inexact exception to be set together with the
+     underflow and overflow exceptions.  So ignore the inexact flag if the
+     others are raised.  */
+  int ignore_inexact = (fe_exc & (UNDERFLOW_EXC | OVERFLOW_EXC)) != 0;
 
   strcpy (str, test_name);
   strcat (str, ": set flag, with rest not set");
   feclearexcept (FE_ALL_EXCEPT);
   feraiseexcept (exception);
-  test_exceptions (str, fe_exc);
+  test_exceptions (str, fe_exc, ignore_inexact);
 
   strcpy (str, test_name);
   strcat (str, ": clear flag, rest also unset");
   feclearexcept (exception);
-  test_exceptions (str, NO_EXC);
+  test_exceptions (str, NO_EXC, ignore_inexact);
 
   strcpy (str, test_name);
   strcat (str, ": set flag, with rest set");
   feraiseexcept (FE_ALL_EXCEPT ^ exception);
   feraiseexcept (exception);
-  test_exceptions (str, ALL_EXC);
+  test_exceptions (str, ALL_EXC, 0);
 
   strcpy (str, test_name);
   strcat (str, ": clear flag, leave rest set");
   feclearexcept (exception);
-  test_exceptions (str, ALL_EXC ^ fe_exc);
+  test_exceptions (str, ALL_EXC ^ fe_exc, 0);
 }
 
 static void
@@ -193,12 +199,12 @@ fe_tests (void)
   /* clear all exceptions and test if all are cleared */
   feclearexcept (FE_ALL_EXCEPT);
   test_exceptions ("feclearexcept (FE_ALL_EXCEPT) clears all exceptions",
-                   NO_EXC);
+                   NO_EXC, 0);
 
   /* raise all exceptions and test if all are raised */
   feraiseexcept (FE_ALL_EXCEPT);
   test_exceptions ("feraiseexcept (FE_ALL_EXCEPT) raises all exceptions",
-                   ALL_EXC);
+                   ALL_EXC, 0);
   feclearexcept (FE_ALL_EXCEPT);
 
 #ifdef FE_DIVBYZERO
@@ -339,7 +345,7 @@ static void
 initial_tests (void)
 {
   test_exceptions ("Initially all exceptions should be cleared",
-                   NO_EXC);
+                   NO_EXC, 0);
   test_rounding ("Rounding direction should be initalized to nearest",
                  FE_TONEAREST);
 }

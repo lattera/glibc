@@ -123,6 +123,12 @@ static void addrsort __P((char **, int));
 #define	MAXPACKET	1024
 #endif
 
+/* As per RFC 1034 and 1035 a host name cannot exceed 255 octets in length.  */
+#ifdef MAXHOSTNAMELEN
+# undef MAXHOSTNAMELEN
+#endif
+#define MAXHOSTNAMELEN 256
+
 typedef union {
     HEADER hdr;
     u_char buf[MAXPACKET];

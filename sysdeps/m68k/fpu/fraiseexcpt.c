@@ -48,43 +48,17 @@ feraiseexcept (int excepts)
   /* Next: overflow.  */
   if (excepts & FE_OVERFLOW)
     {
-      /* We cannot raise the overflow exception without also setting the
-	 inexact flag.  Restore it after the operation, unless it should
-	 be set anyway.  */
       long double d = LDBL_MAX;
-      fexcept_t fpsr;
 
-      __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (fpsr));
-      __asm__ __volatile__ ("fmul%.x %0,%0" : "=f" (d) : "0" (d));
-      if (!((excepts | fpsr) & FE_INEXACT))
-	{
-	  __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (fpsr));
-	  fpsr &= ~FE_INEXACT;
-	  __asm__ __volatile__ ("fmove%.l %0,%/fpsr" : : "dm" (fpsr));
-	}
-      else
-	__asm__ ("fnop");
+      __asm__ __volatile__ ("fmul%.x %0,%0; fnop" : "=f" (d) : "0" (d));
     }
 
   /* Next: underflow.  */
   if (excepts & FE_UNDERFLOW)
     {
-      /* We cannot raise the underflow exception without also setting the
-	 inexact flag.  Restore it after the operation, unless it should
-	 be set anyway.  */
       long double d = -LDBL_MAX;
-      fexcept_t fpsr;
 
-      __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (fpsr));
-      __asm__ __volatile__ ("fetox%.x %0" : "=f" (d) : "0" (d));
-      if (!((excepts | fpsr) & FE_INEXACT))
-	{
-	  __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (fpsr));
-	  fpsr &= ~FE_INEXACT;
-	  __asm__ __volatile__ ("fmove%.l %0,%/fpsr" : : "dm" (fpsr));
-	}
-      else
-	__asm__ ("fnop");
+      __asm__ __volatile__ ("fetox%.x %0; fnop" : "=f" (d) : "0" (d));
     }
 
   /* Last: inexact.  */

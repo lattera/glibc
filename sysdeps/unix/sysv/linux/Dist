@@ -30,6 +30,7 @@ netipx/ipx.h
 nfs/nfs.h
 sys/acct.h
 sys/debugreg.h
+sys/fsuid.h
 sys/io.h
 sys/kd.h
 sys/kdaemon.h
