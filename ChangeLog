@@ -1,3 +1,11 @@
+2004-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_realloc): Add checks for corrupted memory.
+	(_int_free): Make clear message are result of free() calls.
+
+	* malloc/malloc.c (_int_realloc): Remove unnecessary tests for
+	oldmem and size == 0.
+
 2004-12-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/arena.c (arena_get2): Prevent endless loop if arenas and

@@ -4256,7 +4256,7 @@ _int_free(mstate av, Void_t* mem)
 	|| __builtin_expect (chunksize (chunk_at_offset (p, size))
 			     >= av->system_mem, 0))
       {
-	errstr = "invalid next size (fast)";
+	errstr = "free(): invalid next size (fast)";
 	goto errout;
       }
 
@@ -4306,7 +4306,7 @@ _int_free(mstate av, Void_t* mem)
     if (__builtin_expect (nextchunk->size <= 2 * SIZE_SZ, 0)
 	|| __builtin_expect (nextsize >= av->system_mem, 0))
       {
-	errstr = "invalid next size (normal)";
+	errstr = "free(): invalid next size (normal)";
 	goto errout;
       }
 
@@ -4550,26 +4550,41 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
   INTERNAL_SIZE_T* s;               /* copy source */
   INTERNAL_SIZE_T* d;               /* copy destination */
 
+  const char *errstr = NULL;
 
-#if REALLOC_ZERO_BYTES_FREES
-  if (bytes == 0) {
-    if (oldmem != 0)
-      _int_free(av, oldmem);
-    return 0;
-  }
-#endif
-
-  /* realloc of null is supposed to be same as malloc */
-  if (oldmem == 0) return _int_malloc(av, bytes);
 
   checked_request2size(bytes, nb);
 
   oldp    = mem2chunk(oldmem);
   oldsize = chunksize(oldp);
 
+  /* Simple tests for old block integrity.  */
+  if (__builtin_expect ((uintptr_t) oldp & MALLOC_ALIGN_MASK, 0))
+    {
+      errstr = "realloc(): invalid pointer";
+    errout:
+      malloc_printerr (check_action, errstr, oldmem);
+      return NULL;
+    }
+  if (__builtin_expect (oldp->size <= 2 * SIZE_SZ, 0)
+      || __builtin_expect (oldsize >= av->system_mem, 0))
+    {
+      errstr = "realloc(): invalid size";
+      goto errout;
+    }
+
   check_inuse_chunk(av, oldp);
 
   if (!chunk_is_mmapped(oldp)) {
+
+    next = chunk_at_offset(oldp, oldsize);
+    INTERNAL_SIZE_T nextsize = chunksize(next);
+    if (__builtin_expect (next->size <= 2 * SIZE_SZ, 0)
+	|| __builtin_expect (nextsize >= av->system_mem, 0))
+      {
+	errstr = "realloc(): invalid next size";
+	goto errout;
+      }
 
     if ((unsigned long)(oldsize) >= (unsigned long)(nb)) {
       /* already big enough; split below */
@@ -4578,11 +4593,9 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
     }
 
     else {
-      next = chunk_at_offset(oldp, oldsize);
-
       /* Try to expand forward into top */
       if (next == av->top &&
-          (unsigned long)(newsize = oldsize + chunksize(next)) >=
+          (unsigned long)(newsize = oldsize + nextsize) >=
           (unsigned long)(nb + MINSIZE)) {
         set_head_size(oldp, nb | (av != &main_arena ? NON_MAIN_ARENA : 0));
         av->top = chunk_at_offset(oldp, nb);
@@ -4594,7 +4607,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
       /* Try to expand forward into next chunk;  split off remainder below */
       else if (next != av->top &&
                !inuse(next) &&
-               (unsigned long)(newsize = oldsize + chunksize(next)) >=
+               (unsigned long)(newsize = oldsize + nextsize) >=
                (unsigned long)(nb)) {
         newp = oldp;
         unlink(next, bck, fwd);
