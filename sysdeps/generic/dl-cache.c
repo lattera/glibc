@@ -34,6 +34,10 @@ extern void *_dl_sysdep_read_whole_file (const char *filename,
 
 extern const char *_dl_platform;
 
+#ifndef _DL_PLATFORMS_COUNT
+# define _DL_PLATFORMS_COUNT 0
+#endif
+
 /* This is the starting address and the size of the mmap()ed file.  */
 static struct cache_file *cache;
 static struct cache_file_new *cache_new;
