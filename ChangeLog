@@ -1,3 +1,8 @@
+2001-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Use __lseek64
+	instead of __lseek.
+
 2001-02-13  Andreas Jaeger  <aj@suse.de>
 
 	* login/getutent_r.c: Include <stdlib.h> for NULL.
@@ -6,7 +11,10 @@
 2001-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/dbl-64/e_j0.c: Little optimization, use sincos.
+	* sysdeps/dbl-64/e_j1.c: Likewise.
+	* sysdeps/dbl-64/e_jn.c: Likewise.
 	* sysdeps/flt-32/e_j0f.c: Likewise.
+	* sysdeps/flt-32/e_j1f.c: Likewise.
 	* sysdeps/ldbl-96/e_j0l.c: Likewise.
 
 2000-12-02  H.J. Lu  <hjl@gnu.org>
