@@ -48,7 +48,8 @@ routines := brk sbrk sstk ioctl \
 	    chflags fchflags \
 	    insremque getttyent getusershell getpass ttyslot \
 	    syslog syscall daemon \
-	    mmap munmap mprotect msync madvise
+	    mmap munmap mprotect msync madvise \
+	    efgcvt
 aux := progname init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
