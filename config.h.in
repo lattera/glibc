@@ -99,6 +99,9 @@
 /* Define if the assembler supported .protected.  */
 #undef	HAVE_PROTECTED
 
+/* Define if binutils support TLS handling.  */
+#undef	HAVE_TLS_SUPPORT
+
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */

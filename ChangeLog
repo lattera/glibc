@@ -1,3 +1,8 @@
+2002-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* config.h.in: Add HAVE_TLS_SUPPORT.
+	* sysdeps/i386/elf/configure.in: New file.
+
 2002-02-03  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/posix/readv.c: Use ssize_t for bytes_read.
