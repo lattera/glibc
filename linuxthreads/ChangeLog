@@ -1,3 +1,9 @@
+2000-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* signals.c (pthread_sighandler): Remove special code to restrore
+	%gs on x86.
+	(pthread_sighandler_t): Likewise.
+
 2000-07-25  Mark Kettenis  <kettenis@gnu.org>
 
 	* internals.h (__RES_PTHREAD_INTERNAL): Remove define.

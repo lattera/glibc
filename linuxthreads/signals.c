@@ -81,9 +81,6 @@ static void pthread_sighandler(int signo, SIGCONTEXT ctx)
 {
   pthread_descr self;
   char * in_sighandler;
-#ifdef __i386__
-  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
-#endif
   self = thread_self();
   /* If we're in a sigwait operation, just record the signal received
      and return without calling the user's handler */
@@ -108,9 +105,6 @@ static void pthread_sighandler_rt(int signo, struct siginfo *si,
 {
   pthread_descr self;
   char * in_sighandler;
-#ifdef __i386__
-  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[REG_GS]));
-#endif
   self =  thread_self();
   /* If we're in a sigwait operation, just record the signal received
      and return without calling the user's handler */
