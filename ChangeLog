@@ -1,3 +1,8 @@
+2001-11-15  Jeff Law  <law@redhat.com>
+
+	* posix/regex.c (uintptr_t): Do not provide a definition if the
+	system provided one.
+
 2001-11-13  Roland McGrath  <roland@frob.com>
 
 	* stdio-common/tmpfile.c: Moved to ...
