@@ -1,3 +1,10 @@
+1998-10-28  Philip Blundell  <pb@nexus.co.uk> 
+ 
+	* sysdeps/unix/sysv/linux/neteconet/ec.h: New file.  Support for 
+	AF_ECONET sockets as found in recent Linux 2.1 kernels. 
+	* sysdeps/unix/sysv/linux/Dist: Distribute it. 
+	* sysdeps/unix/sysv/linux/Makefile: Install it. 
+ 
 1998-10-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
  
 	* string/bits/string2.h: __USE_GNU already implies __USE_MISC. 
