@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -263,4 +263,10 @@
 # define __ASSUME_STAT64_SYSCALL	1
 # define __ASSUME_FCNTL64		1
 # define __ASSUME_VFORK_SYSCALL		1
+#endif
+
+/* Beginning with 2.5.63 support for realtime and monotonic clocks and
+   timers based on them is available.  */
+#if __LINUX_KERNEL_VERSION >= 132415
+# define __ASSUME_POSIX_TIMERS		1
 #endif

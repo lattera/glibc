@@ -1,5 +1,5 @@
 /* High-resolution sleep with the specified clock.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,16 @@
 
 
 #if HP_TIMING_AVAIL
-# define CLOCK_P(clock) \
-  (clock) != CLOCK_PROCESS_CPUTIME_ID					      \
-  && (clock) != CLOCK_THREAD_CPUTIME_ID
+# define CPUCLOCK_P(clock) \
+  ((clock) != CLOCK_PROCESS_CPUTIME_ID					      \
+   && (clock) != CLOCK_THREAD_CPUTIME_ID)
 #else
-# define CLOCK_P(clock) 0
+# define CPUCLOCK_P(clock) 0
+#endif
+
+#ifndef INVALID_CLOCK_P
+# define INVALID_CLOCK_P(cl) \
+  ((cl) < CLOCK_REALTIME || (cl) > CLOCK_THREAD_CPUTIME_ID || CPUCLOCK_P (cl))
 #endif
 
 
@@ -43,6 +48,16 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   if (__builtin_expect (req->tv_nsec, 0) < 0
       || __builtin_expect (req->tv_nsec, 0) >= 1000000000)
     return EINVAL;
+
+  if (CPUCLOCK_P (clock_id))
+    return ENOTSUP;
+
+  if (INVALID_CLOCK_P (clock_id))
+    return EINVAL;
+
+#ifdef SYSDEP_NANOSLEEP
+  SYSDEP_NANOSLEEP;
+#endif
 
   /* If we got an absolute time, remap it.  */
   if (flags == TIMER_ABSTIME)
@@ -76,11 +91,8 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   else if (__builtin_expect (flags, 0) != 0)
     return EINVAL;
   else if (clock_id != CLOCK_REALTIME)
-    {
-      /* Make sure the clock ID is correct.  */
-      if (__builtin_expect (! CLOCK_P (clock_id), 0))
-	return EINVAL;
-    }
+    /* Not supported.  */
+    return ENOTSUP;
 
   return __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,11 +52,22 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 
   switch (clock_id)
     {
-    case CLOCK_REALTIME:
-      TIMESPEC_TO_TIMEVAL (&tv, tp);
+#define HANDLE_REALTIME \
+      do {								      \
+	TIMESPEC_TO_TIMEVAL (&tv, tp);					      \
+									      \
+	retval = settimeofday (&tv, NULL);				      \
+	while (0)
 
-      retval = settimeofday (&tv, NULL);
+#ifdef SYSDEP_GETTIME
+      SYSDEP_GETTIME;
+#endif
+
+#ifndef HANDLED_REALTIME
+    case CLOCK_REALTIME:
+      HANDLE_REALTIME;
       break;
+#endif
 
 #if HP_TIMING_AVAIL
     case CLOCK_PROCESS_CPUTIME_ID:

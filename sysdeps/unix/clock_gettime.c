@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,12 +46,23 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 
   switch (clock_id)
     {
+#define HANDLE_REALTIME \
+      do {								      \
+	retval = gettimeofday (&tv, NULL);				      \
+	if (retval == 0)						      \
+	  /* Convert into `timespec'.  */				      \
+	  TIMEVAL_TO_TIMESPEC (&tv, tp);				      \
+      } while (0)
+
+#ifdef SYSDEP_GETTIME
+      SYSDEP_GETTIME;
+#endif
+
+#ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
-      retval = gettimeofday (&tv, NULL);
-      if (retval == 0)
-	/* Convert into `timespec'.  */
-	TIMEVAL_TO_TIMESPEC (&tv, tp);
+      HANDLE_REALTIME;
       break;
+#endif
 
 #if HP_TIMING_AVAIL
     case CLOCK_PROCESS_CPUTIME_ID:

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <libc-internal.h>
 
 
-#if HP_TIMING_AVAIL
+#if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
 /* Clock frequency of the processor.  */
 static long int nsec;
 #endif
@@ -38,24 +38,33 @@ clock_getres (clockid_t clock_id, struct timespec *res)
 
   switch (clock_id)
     {
+#define HANDLE_REALTIME \
+      do {								      \
+	long int clk_tck = sysconf (_SC_CLK_TCK);			      \
+									      \
+	if (__builtin_expect (clk_tck != -1, 1))			      \
+	  {								      \
+	    /* This implementation assumes that the realtime clock has a      \
+	       resolution higher than 1 second.  This is the case for any     \
+	       reasonable implementation.  */				      \
+	    res->tv_sec = 0;						      \
+	    res->tv_nsec = 1000000000 / clk_tck;			      \
+									      \
+	    retval = 0;							      \
+	  }								      \
+      } while (0)
+
+#ifdef SYSDEP_GETRES
+      SYSDEP_GETRES;
+#endif
+
+#ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
-      {
-	long int clk_tck = sysconf (_SC_CLK_TCK);
-
-	if (__builtin_expect (clk_tck != -1, 1))
-	  {
-	    /* This implementation assumes that the realtime clock has a
-	       resolution higher than 1 second.  This is the case for any
-	       reasonable implementation.  */
-	    res->tv_sec = 0;
-	    res->tv_nsec = 1000000000 / clk_tck;
-
-	    retval = 0;
-	  }
-      }
+      HANDLE_REALTIME;
       break;
+#endif	/* handled REALTIME */
 
-#if HP_TIMING_AVAIL
+#if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
     case CLOCK_PROCESS_CPUTIME_ID:
     case CLOCK_THREAD_CPUTIME_ID:
       {
