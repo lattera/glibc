@@ -1,3 +1,8 @@
+2001-02-04  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/translit_cjk_compat: Add missing characters in range
+	U+3300..U+33FF.
+
 2001-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/fi_FI: Remove FIXME comments.

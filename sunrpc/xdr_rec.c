@@ -598,7 +598,7 @@ static bool_t /* next two bytes of the input stream are treated as a header */
 internal_function
 set_input_fragment (RECSTREAM *rstrm)
 {
-  u_long header;
+  uint32_t header;
 
   if (! get_input_bytes (rstrm, (caddr_t)&header, BYTES_PER_XDR_UNIT))
     return FALSE;
