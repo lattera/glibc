@@ -1,5 +1,10 @@
 1998-06-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manager.c (pthread_exited): If thread is not detached put it on
+	special list.
+	(pthread_handle_free): If thread is not on list with living threads
+	search on list with detached threads.
+
 	* sysdeps/pthread/pthread.h (PTHREAD_RWLOCK_INITIALIZER): Correct
 	for new definition of pthread_rwlock_t.
 

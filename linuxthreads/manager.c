@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/select.h>		/* for select */
+#include <sys/poll.h>		/* for poll */
 #include <sys/mman.h>           /* for mmap */
 #include <sys/time.h>
 #include <sys/wait.h>           /* for waitpid macros */
@@ -36,6 +36,12 @@
 /* Array of active threads. Entry 0 is reserved for the initial thread. */
 struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
 { { LOCK_INITIALIZER, &__pthread_initial_thread, 0}, /* All NULLs */ };
+
+/* This is a list of terminated, but not detached threads.  This can happen
+   when pthread_join() is called and the pthread_reap_children() function
+   removes the thread from the live list before processing the FREE_REQ
+   request.  */
+static pthread_descr non_detached;
 
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or if all threads have stacks supplied by LinuxThreads (if 0). */
@@ -87,9 +93,8 @@ static void pthread_kill_all_threads(int sig, int main_thread_also);
 int __pthread_manager(void *arg)
 {
   int reqfd = (int)arg;
+  struct pollfd ufd;
   sigset_t mask;
-  fd_set readfds;
-  struct timeval timeout;
   int n;
   struct pthread_request request;
 
@@ -112,13 +117,11 @@ int __pthread_manager(void *arg)
   /* Synchronize debugging of the thread manager */
   n = __libc_read(reqfd, (char *)&request, sizeof(request));
   ASSERT(n == sizeof(request) && request.req_kind == REQ_DEBUG);
+  ufd.fd = reqfd;
+  ufd.events = POLLIN;
   /* Enter server loop */
   while(1) {
-    FD_ZERO(&readfds);
-    FD_SET(reqfd, &readfds);
-    timeout.tv_sec = 2;
-    timeout.tv_usec = 0;
-    n = __select(reqfd + 1, &readfds, NULL, NULL, &timeout);
+    n = __poll(&ufd, 1, 2000);
 
     /* Check for termination of the main thread */
     if (getppid() == 1) {
@@ -131,7 +134,7 @@ int __pthread_manager(void *arg)
       pthread_reap_children();
     }
     /* Read and execute request */
-    if (n == 1 && FD_ISSET(reqfd, &readfds)) {
+    if (n == 1 && (ufd.revents & POLLIN)) {
       n = __libc_read(reqfd, (char *)&request, sizeof(request));
       ASSERT(n == sizeof(request));
       switch(request.req_kind) {
@@ -401,7 +404,16 @@ static void pthread_exited(pid_t pid)
       th->p_exited = 1;
       detached = th->p_detached;
       __pthread_unlock(th->p_lock);
-      if (detached) pthread_free(th);
+      if (detached)
+	pthread_free(th);
+      else {
+	/* Enqueue in the detached list.  */
+	th->p_nextlive = non_detached;
+	if (non_detached != NULL)
+	  non_detached->p_prevlive = th;
+	th->p_prevlive = NULL;
+	non_detached = th;
+      }
       break;
     }
   }
@@ -436,7 +448,6 @@ static void pthread_reap_children(void)
 static void pthread_handle_free(pthread_descr th)
 {
   pthread_descr t;
-
   /* Check that the thread th is still there -- pthread_reap_children
      might have deallocated it already */
   t = __pthread_main_thread;
@@ -444,8 +455,29 @@ static void pthread_handle_free(pthread_descr th)
     if (t == th) break;
     t = t->p_nextlive;
   } while (t != __pthread_main_thread);
-  if (t != th) return;
+  if (t != th) {
+    /* Hum, it might be that the thread already was dequeued but
+       wasn't detached.  In the case the thread is already detached
+       and we cannot find it this is a user bug but we must be
+       gracious.  */
+    t = non_detached;
+    while (t != NULL) {
+      if (t == th) break;
+      t = t->p_nextlive;
+    }
+    if (t == th) {
+      if (th->p_prevlive == NULL)
+	non_detached = th->p_nextlive;
+      else
+	th->p_prevlive->p_nextlive = th->p_nextlive;
+      if (th->p_nextlive != NULL)
+	th->p_nextlive->p_prevlive = th->p_prevlive;
 
+      /* Finally free it.  */
+      pthread_free (th);
+    }
+    return;
+  }
   __pthread_lock(th->p_lock);
   if (th->p_exited) {
     __pthread_unlock(th->p_lock);
