@@ -1,3 +1,8 @@
+1998-05-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/bits/string.h (__strstr_g): Initialize %edx
+	correctly.  Patch by Horst von Brand <vonbrand@sleipnir.valparaiso.cl>.
+
 1998-05-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/terminal.texi (I/O Queues): Fix typo.

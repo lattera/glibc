@@ -1530,7 +1530,8 @@ __strstr_g (__const char *__haystack, __const char *__needle)
      "2:\n\t"
      "popl	%%ebx"
      : "=a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
-     : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (0), "d" (__needle)
+     : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (__needle),
+       "d" (__needle)
      : "cc");
   return __res;
 }
@@ -1558,7 +1559,8 @@ __strstr_g (__const char *__haystack, __const char *__needle)
      "xorl	%%eax,%%eax\n"
      "2:"
      : "=a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2), "=&d" (__d3)
-     : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (0), "b" (__needle)
+     : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (__needle),
+       "b" (__needle)
      : "cc");
   return __res;
 }
