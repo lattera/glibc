@@ -1,5 +1,13 @@
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c: Define _dl_bind_not variable.
+	(process_envvars): Recognize LD_BIND_NOT and set _dl_bind_not.
+	* elf/dl-support.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_bind_not.
+	* elf/dl-runtime.c (fixup): Don't remember looked up value if
+	_dl_bind_not.
+	(profile_fixup): Likewise.
+
 	* libio/Makefile (routines): Add fwide.
 	* libio/iofwide.c (_IO_fwide): Remove locking.  This is done in
 	fwide now.  Internal calls to _IO_fwide must do locking themselves

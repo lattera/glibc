@@ -67,6 +67,9 @@ void *__libc_stack_end;
 /* Path where the binary is found.  */
 const char *_dl_origin_path;
 
+/* Nonzero if runtime lookup should not update the .got/.plt.  */
+int _dl_bind_not;
+
 /* Initially empty list of loaded objects.  */
 struct link_map *_dl_loaded;
 
@@ -108,6 +111,8 @@ non_dynamic_init (void)
   _dl_init_paths (getenv ("LD_LIBRARY_PATH"));
 
   _dl_lazy = *(getenv ("LD_BIND_NOW") ?: "") == '\0';
+
+  _dl_bind_not = *(getenv ("LD_BIND_NOT") ?: "") != '\0';
 
   _dl_dynamic_weak = *(getenv ("LD_DYNAMIC_WEAK") ?: "") == '\0';
 

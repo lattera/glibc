@@ -96,6 +96,7 @@ int _dl_debug_statistics;
 const char *_dl_inhibit_rpath;		/* RPATH values which should be
 					   ignored.  */
 const char *_dl_origin_path;
+int _dl_bind_not;
 
 /* This is a pointer to the map for the main object and through it to
    all loaded objects.  */
@@ -1363,7 +1364,12 @@ process_envvars (enum mode *modep, int *lazyp)
 	case 8:
 	  /* Do we bind early?  */
 	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0)
-	    bind_now = envline[12] != '\0';
+	    {
+	      bind_now = envline[12] != '\0';
+	      break;
+	    }
+	  if (memcmp (&envline[3], "BIND_NOT", 8) == 0)
+	    _dl_bind_not = envline[12] != '\0';
 	  break;
 
 	case 9:

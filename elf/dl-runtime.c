@@ -117,6 +117,9 @@ fixup (
   value = elf_machine_plt_value (l, reloc, value);
 
   /* Finally, fix up the plt itself.  */
+  if (__builtin_expect (_dl_bind_not, 0))
+    return value;
+
   return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
 }
 #endif
@@ -205,7 +208,8 @@ profile_fixup (
       value = elf_machine_plt_value (l, reloc, value);
 
       /* Store the result for later runs.  */
-      *resultp = value;
+      if (__builtin_expect (! _dl_bind_not, 1))
+	*resultp = value;
     }
 
   (*mcount_fct) (retaddr, value);
