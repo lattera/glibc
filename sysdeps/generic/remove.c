@@ -1,5 +1,5 @@
 /* ANSI C `remove' function to delete a file or directory.  Stub version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@ remove (file)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (remove)
 
 stub_warning (remove)
 #include <stub-tag.h>

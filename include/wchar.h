@@ -16,6 +16,7 @@ libc_hidden_proto (__wcsncasecmp_l)
 
 libc_hidden_proto (fputws_unlocked)
 libc_hidden_proto (putwc_unlocked)
+libc_hidden_proto (putwc)
 
 libc_hidden_proto (vswscanf)
 

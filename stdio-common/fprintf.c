@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@ fprintf (FILE *stream, const char *format, ...)
 
   return done;
 }
+libc_hidden_def (fprintf)
 
 #ifdef USE_IN_LIBIO
 /* We define the function with the real name here.  But deep down in

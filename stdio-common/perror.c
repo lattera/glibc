@@ -90,3 +90,4 @@ perror (const char *s)
   perror_internal (stderr, s, errnum);
 #endif
 }
+libc_hidden_def (perror)

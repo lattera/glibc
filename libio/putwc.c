@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,97,98,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,3 +33,4 @@ putwc (wc, fp)
   _IO_cleanup_region_end (0);
   return result;
 }
+libc_hidden_def (putwc)

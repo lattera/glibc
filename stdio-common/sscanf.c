@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,7 @@ sscanf (s, format)
 
   return done;
 }
+libc_hidden_def (sscanf)
 
 #ifdef USE_IN_LIBIO
 # undef _IO_sscanf

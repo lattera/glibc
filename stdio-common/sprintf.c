@@ -38,6 +38,7 @@ sprintf (char *s, const char *format, ...)
 
   return done;
 }
+libc_hidden_def (sprintf)
 
 #ifdef USE_IN_LIBIO
 strong_alias(sprintf, _IO_sprintf)

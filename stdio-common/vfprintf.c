@@ -29,6 +29,7 @@
 #include <sys/param.h>
 #include "_itoa.h"
 #include <locale/localeinfo.h>
+#include <stdio.h>
 
 /* This code is shared between the standard stdio implementation found
    in GNU C library and the libio implementation originally found in
@@ -104,7 +105,6 @@
 # endif
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
-# include <stdio.h>
 # define ARGCHECK(S, Format) \
   do									      \
     {									      \
@@ -2264,6 +2264,7 @@ strong_alias (_IO_vfwprintf, __vfwprintf);
 weak_alias (_IO_vfwprintf, vfwprintf);
 #  else
 strong_alias (_IO_vfprintf, vfprintf);
+libc_hidden_def (vfprintf)
 INTDEF(_IO_vfprintf)
 #  endif
 # else

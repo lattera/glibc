@@ -53,8 +53,9 @@ _IO_fwrite (buf, size, count, fp)
 INTDEF(_IO_fwrite)
 
 #ifdef weak_alias
+# include <stdio.h>
 weak_alias (_IO_fwrite, fwrite)
-
+libc_hidden_weak (fwrite)
 # ifndef _IO_MTSAFE_IO
 weak_alias (_IO_fwrite, fwrite_unlocked)
 # endif

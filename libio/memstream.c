@@ -124,6 +124,7 @@ open_memstream (bufloc, sizeloc)
 
   return (_IO_FILE *) &new_f->fp._sf._sbf;
 }
+libc_hidden_def (open_memstream)
 
 
 static int

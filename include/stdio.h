@@ -90,6 +90,15 @@ extern int _IO_new_fgetpos __P ((_IO_FILE *, _IO_fpos_t *));
 #   define fgetpos(fp, posp) _IO_new_fgetpos (fp, posp)
 #  endif
 
+libc_hidden_proto (dprintf)
+libc_hidden_proto (fprintf)
+libc_hidden_proto (vfprintf)
+libc_hidden_proto (sprintf)
+libc_hidden_proto (sscanf)
+libc_hidden_proto (fwrite)
+libc_hidden_proto (perror)
+libc_hidden_proto (remove)
+libc_hidden_proto (rewind)
 libc_hidden_proto (fileno)
 libc_hidden_proto (fwrite)
 libc_hidden_proto (fseek)
@@ -98,6 +107,7 @@ libc_hidden_proto (fread_unlocked)
 libc_hidden_proto (fwrite_unlocked)
 libc_hidden_proto (fgets_unlocked)
 libc_hidden_proto (fputs_unlocked)
+libc_hidden_proto (open_memstream)
 
 # endif
 
