@@ -1,3 +1,8 @@
+2000-12-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c: Adjust types of several variables to
+	avoid warnings.
+
 2000-12-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/shm_open.c: Remove incorrect comment.

@@ -379,7 +379,7 @@ glob (pattern, flags, errfunc, pglob)
   const char *dirname;
   size_t dirlen;
   int status;
-  int oldcount;
+  size_t oldcount;
 
   if (pattern == NULL || pglob == NULL || (flags & ~__GLOB_FLAGS) != 0)
     {
@@ -399,7 +399,7 @@ glob (pattern, flags, errfunc, pglob)
 	{
 	  /* Allocate working buffer large enough for our work.  Note that
 	    we have at least an opening and closing brace.  */
-	  int firstc;
+	  size_t firstc;
 	  char *alt_start;
 	  const char *p;
 	  const char *next;
@@ -622,7 +622,7 @@ glob (pattern, flags, errfunc, pglob)
         pglob->gl_pathv = NULL;
       else
 	{
-	  int i;
+	  size_t i;
 	  pglob->gl_pathv = (char **) malloc ((pglob->gl_offs + 1)
 					      * sizeof (char *));
 	  if (pglob->gl_pathv == NULL)
@@ -671,7 +671,7 @@ glob (pattern, flags, errfunc, pglob)
 		{
 		  struct passwd *p;
 #   if defined HAVE_GETPWNAM_R || defined _LIBC
-		  size_t pwbuflen = sysconf (_SC_GETPW_R_SIZE_MAX);
+		  long int pwbuflen = sysconf (_SC_GETPW_R_SIZE_MAX);
 		  char *pwtmpbuf;
 		  struct passwd pwbuf;
 		  int save = errno;
@@ -755,7 +755,7 @@ glob (pattern, flags, errfunc, pglob)
 	  {
 	    struct passwd *p;
 #  if defined HAVE_GETPWNAM_R || defined _LIBC
-	    size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
+	    long int buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
 	    char *pwtmpbuf;
 	    struct passwd pwbuf;
 	    int save = errno;
@@ -868,7 +868,7 @@ glob (pattern, flags, errfunc, pglob)
 	 have to glob for the directory, and then glob for
 	 the pattern in each directory found.  */
       glob_t dirs;
-      register int i;
+      size_t i;
 
       if ((flags & GLOB_ALTDIRFUNC) != 0)
 	{
@@ -1046,7 +1046,7 @@ glob (pattern, flags, errfunc, pglob)
   if (flags & GLOB_MARK)
     {
       /* Append slashes to directory names.  */
-      int i;
+      size_t i;
       struct stat st;
 #ifdef HAVE_STAT64
       struct stat64 st64;
@@ -1092,7 +1092,7 @@ globfree (pglob)
 {
   if (pglob->gl_pathv != NULL)
     {
-      register int i;
+      size_t i;
       for (i = 0; i < pglob->gl_pathc; ++i)
 	if (pglob->gl_pathv[pglob->gl_offs + i] != NULL)
 	  free ((__ptr_t) pglob->gl_pathv[pglob->gl_offs + i]);
