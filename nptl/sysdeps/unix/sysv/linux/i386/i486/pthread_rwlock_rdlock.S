@@ -45,7 +45,6 @@ __pthread_rwlock_rdlock:
 	pushl	%ebx
 
 	xorl	%esi, %esi
-	xorl	%edx, %edx
 	movl	12(%esp), %ebx
 
 	/* Get the lock.  */
@@ -69,6 +68,8 @@ __pthread_rwlock_rdlock:
 
 3:	incl	READERS_QUEUED(%ebx)
 	je	4f
+
+	movl	READERS_WAKEUP(%ebx), %edx
 
 	LOCK
 #if MUTEX == 0
@@ -97,8 +98,6 @@ __pthread_rwlock_rdlock:
 	jne	12f
 
 13:	decl	READERS_QUEUED(%ebx)
-	jne	2b
-	movl	$0, READERS_WAKEUP(%ebx)
 	jmp	2b
 
 5:	xorl	%ecx, %ecx
@@ -118,7 +117,12 @@ __pthread_rwlock_rdlock:
 	popl	%esi
 	ret
 
-1:	movl	%ebx, %ecx
+1:
+#if MUTEX == 0
+	movl	%ebx, %ecx
+#else
+	leal	MUTEX(%ebx), %ecx
+#endif
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
@@ -128,7 +132,12 @@ __pthread_rwlock_rdlock:
 	movl	$EDEADLK, %ecx
 	jmp	9b
 
-6:	movl	%ebx, %eax
+6:
+#if MUTEX == 0
+	movl	%ebx, %eax
+#else
+	leal	MUTEX(%ebx), %eax
+#endif
 	call	__lll_mutex_unlock_wake
 	jmp	7b
 
@@ -142,11 +151,21 @@ __pthread_rwlock_rdlock:
 	movl	$EAGAIN, %ecx
 	jmp	9b
 
-10:	movl	%ebx, %eax
+10:
+#if MUTEX == 0
+	movl	%ebx, %eax
+#else
+	leal	MUTEX(%ebx), %eax
+#endif
 	call	__lll_mutex_unlock_wake
 	jmp	11b
 
-12:	movl	%ebx, %ecx
+12:
+#if MUTEX == 0
+	movl	%ebx, %ecx
+#else
+	leal	MUTEX(%ebx), %ecx
+#endif
 	call	__lll_mutex_lock_wait
 	jmp	13b
 	.size	__pthread_rwlock_rdlock,.-__pthread_rwlock_rdlock

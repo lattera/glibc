@@ -42,13 +42,12 @@ pthread_rwlock_rdlock(pthread_rwlock_t *rwlock)
         break;
 
     rwlock->nr_readers_queued++;
+    val = rwlock->readers_wakeup;
     lll_unlock(rwlock->lock);
 
-    futex_wait(&rwlock->readers_wakeup, 0)
+    futex_wait(&rwlock->readers_wakeup, val)
 
     lll_lock(rwlock->lock);
-    if (!--rwlock->nr_readers_queued)
-        rwlock->readers_wakeup = 0;
   }
   rwlock->readers++;
   lll_unlock(rwlock->lock);
@@ -73,13 +72,13 @@ pthread_rwlock_wrlock(pthread_rwlock_t *rwlock)
        break;
 
     rwlock->nr_writers_queued++;
+    val = rwlock->writer_wakeup;
     lll_unlock(rwlock->lock);
 
-    futex_wait(&rwlock->writer_wakeup, 0);
+    futex_wait(&rwlock->writer_wakeup, val);
 
     lll_lock(rwlock->lock);
     rwlock->nr_writers_queued--;
-    rwlock->writer_wakeup = 0;
   }
   rwlock->writer = pthread_self();
   lll_unlock(rwlock->lock);
@@ -96,11 +95,11 @@ pthread_rwlock_unlock(pthread_rwlock_t *rwlock)
 
   if (!rwlock->readers) {
     if (rwlock->nr_writers_queued) {
-      rwlock->writer_wakeup = 1;
+      ++rwlock->writer_wakeup;
       futex_wake(&rwlock->writer_wakeup, 1);
     } else
       if (rwlock->nr_readers_queued) {
-        rwlock->readers_wakeup = 1;
+        ++rwlock->readers_wakeup;
         futex_wake(&rwlock->readers_wakeup, MAX_INT);
       }
   }

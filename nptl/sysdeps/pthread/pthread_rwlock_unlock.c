@@ -35,12 +35,12 @@ int __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
     {
       if (rwlock->__data.__nr_writers_queued)
 	{
-	  rwlock->__data.__writer_wakeup = 1;
+	  ++rwlock->__data.__writer_wakeup;
 	  lll_futex_wake(&rwlock->__data.__writer_wakeup, 1);
 	}
       else
 	{
-	  rwlock->__data.__readers_wakeup = 1;
+	  ++rwlock->__data.__readers_wakeup;
 	  lll_futex_wake(&rwlock->__data.__readers_wakeup, INT_MAX);
 	}
     }

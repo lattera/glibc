@@ -42,8 +42,6 @@ __pthread_rwlock_unlock:
 	pushl	%esi
 	pushl	%edi
 
-	xorl	%esi, %esi
-	xorl	%edx, %edx
 	movl	16(%esp), %edi
 
 	/* Get the lock.  */
@@ -64,20 +62,21 @@ __pthread_rwlock_unlock:
 
 5:	movl	$0, WRITER(%edi)
 
+	movl	$1, %ecx
+	leal	WRITERS_WAKEUP(%edi), %ebx
+	movl	%ecx, %edx
+	cmpl	$0, WRITERS_QUEUED(%edi)
+	jne	0f
+
+	/* If also no readers waiting nothing to do.  */
+	cmpl	$0, READERS_QUEUED(%edi)
+	je	6f
+
 	movl	$0x7fffffff, %edx
 	leal	READERS_WAKEUP(%edi), %ebx
-	movl	$1, %ecx
-	leal	WRITERS_WAKEUP(%edi), %eax
-	cmpl	$0, WRITERS_QUEUED(%edi)
-#ifdef HAVE_CMOV
-	cmovnel	%ecx, %edx
-	cmovnel	%eax, %ebx
-#else
-	je	0f
-	movl	%ecx, %edx
-	movl	%eax, %ebx
-0:
-#endif
+
+0:	incl	(%ebx)
+	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
@@ -95,11 +94,21 @@ __pthread_rwlock_unlock:
 	popl	%ebx
 	ret
 
-1:	movl	%edi, %ecx
+1:
+#if MUTEX == 0
+	movl	%edi, %ecx
+#else
+	leal	MUTEX(%edx), %ecx
+#endif
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
-3:	movl	%edi, %eax
+3:
+#if MUTEX == 0
+	movl	%edi, %eax
+#else
+	leal	MUTEX(%edx), %eax
+#endif
 	call	__lll_mutex_unlock_wake
 	jmp	4b
 

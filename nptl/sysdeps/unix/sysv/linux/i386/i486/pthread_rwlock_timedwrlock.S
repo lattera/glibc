@@ -77,6 +77,8 @@ pthread_rwlock_timedwrlock:
 	incl	WRITERS_QUEUED(%ebp)
 	je	4f
 
+	movl	WRITERS_WAKEUP(%ebp), %esi
+
 	LOCK
 #if MUTEX == 0
 	decl	(%ebp)
@@ -108,9 +110,9 @@ pthread_rwlock_timedwrlock:
 	/* Futex call.  */
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
+	movl	%esi, %edx
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%esp, %esi
-	movl	%ecx, %edx
 	leal	WRITERS_WAKEUP(%ebp), %ebx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
@@ -128,11 +130,12 @@ pthread_rwlock_timedwrlock:
 	testl	%eax, %eax
 	jne	12f
 
-13:	cmpl	$-ETIMEDOUT, %ecx
-	je	18f
-	decl	WRITERS_QUEUED(%ebp)
-	movl	$0, WRITERS_WAKEUP(%ebp)
-	jmp	2b
+13:	decl	WRITERS_QUEUED(%ebp)
+	cmpl	$-ETIMEDOUT, %edx
+	jne	2b
+
+18:	movl	$ETIMEDOUT, %ecx
+	jmp	9f
 
 
 5:	xorl	%ecx, %ecx
@@ -155,7 +158,12 @@ pthread_rwlock_timedwrlock:
 	popl	%esi
 	ret
 
-1:	movl	%ebp, %ecx
+1:
+#if MUTEX == 0
+	movl	%ebp, %ecx
+#else
+	leal	MUTEX(%ebp), %ecx
+#endif
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
@@ -164,7 +172,12 @@ pthread_rwlock_timedwrlock:
 20:	movl	$EDEADLK, %ecx
 	jmp	9b
 
-6:	movl	%ebp, %eax
+6:
+#if MUTEX == 0
+	movl	%ebp, %eax
+#else
+	leal	MUTEX(%ebp), %eax
+#endif
 	call	__lll_mutex_unlock_wake
 	jmp	7b
 
@@ -173,19 +186,26 @@ pthread_rwlock_timedwrlock:
 	movl	$EAGAIN, %ecx
 	jmp	9b
 
-10:	movl	%ebp, %eax
+10:
+#if MUTEX == 0
+	movl	%ebp, %eax
+#else
+	leal	MUTEX(%ebp), %eax
+#endif
 	call	__lll_mutex_unlock_wake
 	jmp	11b
 
-12:	movl	%ebx, %ecx
+12:
+#if MUTEX == 0
+	movl	%ebp, %ecx
+#else
+	leal	MUTEX(%ebp), %ecx
+#endif
 	call	__lll_mutex_lock_wait
 	jmp	13b
 
-16:	movl	$-ETIMEDOUT, %ecx
+16:	movl	$-ETIMEDOUT, %edx
 	jmp	17b
-
-18:	movl	$ETIMEDOUT, %ecx
-	jmp	9b
 
 19:	movl	$EINVAL, %ecx
 	jmp	9b

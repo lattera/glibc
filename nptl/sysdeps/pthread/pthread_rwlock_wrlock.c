@@ -63,18 +63,19 @@ __pthread_rwlock_wrlock (rwlock)
 	  break;
 	}
 
+      int waitval = rwlock->__data.__writer_wakeup;
+
       /* Free the lock.  */
       lll_mutex_unlock (rwlock->__data.__lock);
 
       /* Wait for the writer or reader(s) to finish.  */
-      lll_futex_wait (&rwlock->__data.__writer_wakeup, 0);
+      lll_futex_wait (&rwlock->__data.__writer_wakeup, waitval);
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);
 
       /* To start over again, remove the thread from the writer list.  */
       --rwlock->__data.__nr_writers_queued;
-      rwlock->__data.__writer_wakeup = 0;
     }
 
   /* We are done, free the lock.  */

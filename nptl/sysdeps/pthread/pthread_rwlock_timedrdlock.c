@@ -105,18 +105,17 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	  break;
 	}
 
+      int waitval = rwlock->__data.__readers_wakeup;
+
       /* Free the lock.  */
       lll_mutex_unlock (rwlock->__data.__lock);
 
       /* Wait for the writer to finish.  */
-      result = lll_futex_timed_wait (&rwlock->__data.__readers_wakeup, 0, &rt);
+      result = lll_futex_timed_wait (&rwlock->__data.__readers_wakeup,
+				     waitval, &rt);
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);
-
-      /* To start over again, remove the thread from the reader list.  */
-      if (--rwlock->__data.__nr_readers_queued == 0)
-	rwlock->__data.__readers_wakeup = 0;
 
       /* Did the futex call time out?  */
       if (result == -ETIMEDOUT)
