@@ -1,7 +1,6 @@
 /* This file defines standard ELF types, structures, and macros.
    Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ian Lance Taylor <ian@cygnus.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -154,8 +153,10 @@ typedef struct
 #define ET_DYN		3		/* Shared object file */
 #define ET_CORE		4		/* Core file */
 #define	ET_NUM		5		/* Number of defined types */
-#define ET_LOPROC	0xff00		/* Processor-specific */
-#define ET_HIPROC	0xffff		/* Processor-specific */
+#define ET_LOOS		0xfe00		/* OS-specific range start */
+#define ET_HIOS		0xfeff		/* OS-specific range end */
+#define ET_LOPROC	0xff00		/* Processor-specific range start */
+#define ET_HIPROC	0xffff		/* Processor-specific range end */
 
 /* Legal values for e_machine (architecture).  */
 
@@ -178,11 +179,12 @@ typedef struct
 #define EM_SPARC32PLUS	18		/* Sun's "v8plus" */
 #define EM_960		19		/* Intel 80960 */
 #define EM_PPC		20		/* PowerPC */
+#define EM_PPC64	21		/* PowerPC 64-bit */
 
 #define EM_V800		36		/* NEC V800 series */
 #define EM_FR20		37		/* Fujitsu FR20 */
 #define EM_RH32		38		/* TRW RH32 */
-#define EM_MMA		39		/* Fujitsu MMA */
+#define EM_RCE		39		/* Motorola RCE */
 #define EM_ARM		40		/* ARM */
 #define EM_FAKE_ALPHA	41		/* Digital Alpha */
 #define EM_SH		42		/* Hitachi SH */
@@ -197,7 +199,24 @@ typedef struct
 #define EM_MIPS_X	51		/* Stanford MIPS-X */
 #define EM_COLDFIRE	52		/* Motorola Coldfire */
 #define EM_68HC12	53		/* Motorola M68HC12 */
-#define EM_NUM		54
+#define EM_MMA		54		/* Fujitsu MMA Multimedia Accelerator*/
+#define EM_PCP		55		/* Siemens PCP */
+#define EM_NCPU		56		/* Sony nCPU embeeded RISC */
+#define EM_NDR1		57		/* Denso NDR1 microprocessor */
+#define EM_STARCORE	58		/* Motorola Start*Core processor */
+#define EM_ME16		59		/* Toyota ME16 processor */
+#define EM_ST100	60		/* STMicroelectronic ST100 processor */
+#define EM_TINYJ	61		/* Advanced Logic Corp. Tinyj emb.fam*/
+#define EM_FX66		66		/* Siemens FX66 microcontroller */
+#define EM_ST9PLUS	67		/* STMicroelectronics ST9+ 8/16 mc */
+#define EM_ST7		68		/* STmicroelectronics ST7 8 bit mc */
+#define EM_68HC16	69		/* Motorola MC68HC16 microcontroller */
+#define EM_68HC11	70		/* Motorola MC68HC11 microcontroller */
+#define EM_68HC08	71		/* Motorola MC68HC08 microcontroller */
+#define EM_68HC05	72		/* Motorola MC68HC05 microcontroller */
+#define EM_SVX		73		/* Silicon Graphics SVx */
+#define EM_AT19		74		/* STMicroelectronics ST19 8 bit mc */
+#define EM_NUM		75
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
@@ -247,44 +266,51 @@ typedef struct
 #define SHN_LORESERVE	0xff00		/* Start of reserved indices */
 #define SHN_LOPROC	0xff00		/* Start of processor-specific */
 #define SHN_HIPROC	0xff1f		/* End of processor-specific */
+#define SHN_LOOS	0xff20		/* Start of OS-specific */
+#define SHN_HIOS	0xff3f		/* End of OS-specific */
 #define SHN_ABS		0xfff1		/* Associated symbol is absolute */
 #define SHN_COMMON	0xfff2		/* Associated symbol is common */
 #define SHN_HIRESERVE	0xffff		/* End of reserved indices */
 
 /* Legal values for sh_type (section type).  */
 
-#define SHT_NULL	 0		/* Section header table entry unused */
-#define SHT_PROGBITS	 1		/* Program data */
-#define SHT_SYMTAB	 2		/* Symbol table */
-#define SHT_STRTAB	 3		/* String table */
-#define SHT_RELA	 4		/* Relocation entries with addends */
-#define SHT_HASH	 5		/* Symbol hash table */
-#define SHT_DYNAMIC	 6		/* Dynamic linking information */
-#define SHT_NOTE	 7		/* Notes */
-#define SHT_NOBITS	 8		/* Program space with no data (bss) */
-#define SHT_REL		 9		/* Relocation entries, no addends */
-#define SHT_SHLIB	 10		/* Reserved */
-#define SHT_DYNSYM	 11		/* Dynamic linker symbol table */
-#define	SHT_NUM		 12		/* Number of defined types.  */
-#define SHT_LOOS	 0x60000000	/* Start OS-specific */
-#define SHT_LOSUNW	 0x6ffffffb	/* Sun-specific low bound.  */
-#define SHT_SUNW_COMDAT  0x6ffffffb
-#define SHT_SUNW_syminfo 0x6ffffffc
-#define SHT_GNU_verdef	 0x6ffffffd	/* Version definition section.  */
-#define SHT_GNU_verneed	 0x6ffffffe	/* Version needs section.  */
-#define SHT_GNU_versym	 0x6fffffff	/* Version symbol table.  */
-#define SHT_HISUNW	 0x6fffffff	/* Sun-specific high bound.  */
-#define SHT_HIOS	 0x6fffffff	/* End OS-specific type */
-#define SHT_LOPROC	 0x70000000	/* Start of processor-specific */
-#define SHT_HIPROC	 0x7fffffff	/* End of processor-specific */
-#define SHT_LOUSER	 0x80000000	/* Start of application-specific */
-#define SHT_HIUSER	 0x8fffffff	/* End of application-specific */
+#define SHT_NULL	  0		/* Section header table entry unused */
+#define SHT_PROGBITS	  1		/* Program data */
+#define SHT_SYMTAB	  2		/* Symbol table */
+#define SHT_STRTAB	  3		/* String table */
+#define SHT_RELA	  4		/* Relocation entries with addends */
+#define SHT_HASH	  5		/* Symbol hash table */
+#define SHT_DYNAMIC	  6		/* Dynamic linking information */
+#define SHT_NOTE	  7		/* Notes */
+#define SHT_NOBITS	  8		/* Program space with no data (bss) */
+#define SHT_REL		  9		/* Relocation entries, no addends */
+#define SHT_SHLIB	  10		/* Reserved */
+#define SHT_DYNSYM	  11		/* Dynamic linker symbol table */
+#define SHT_INIT_ARRAY	  13		/* Array of constructors */
+#define SHT_FINI_ARRAY	  14		/* Array of destructors */
+#define SHT_PREINIT_ARRAY 15		/* Array of pre-constructors */
+#define	SHT_NUM		  16		/* Number of defined types.  */
+#define SHT_LOOS	  0x60000000	/* Start OS-specific */
+#define SHT_LOSUNW	  0x6ffffffb	/* Sun-specific low bound.  */
+#define SHT_SUNW_COMDAT   0x6ffffffb
+#define SHT_SUNW_syminfo  0x6ffffffc
+#define SHT_GNU_verdef	  0x6ffffffd	/* Version definition section.  */
+#define SHT_GNU_verneed	  0x6ffffffe	/* Version needs section.  */
+#define SHT_GNU_versym	  0x6fffffff	/* Version symbol table.  */
+#define SHT_HISUNW	  0x6fffffff	/* Sun-specific high bound.  */
+#define SHT_HIOS	  0x6fffffff	/* End OS-specific type */
+#define SHT_LOPROC	  0x70000000	/* Start of processor-specific */
+#define SHT_HIPROC	  0x7fffffff	/* End of processor-specific */
+#define SHT_LOUSER	  0x80000000	/* Start of application-specific */
+#define SHT_HIUSER	  0x8fffffff	/* End of application-specific */
 
 /* Legal values for sh_flags (section flags).  */
 
 #define SHF_WRITE	(1 << 0)	/* Writable */
 #define SHF_ALLOC	(1 << 1)	/* Occupies memory during execution */
 #define SHF_EXECINSTR	(1 << 2)	/* Executable */
+#define SHF_MERGE	(1 << 4)	/* Might be merged */
+#define SHF_STRINGS	(1 << 5)	/* Contains nul-terminated strings */
 #define SHF_MASKPROC	0xf0000000	/* Processor-specific */
 
 /* Symbol table entry.  */
@@ -295,7 +321,7 @@ typedef struct
   Elf32_Addr	st_value;		/* Symbol value */
   Elf32_Word	st_size;		/* Symbol size */
   unsigned char	st_info;		/* Symbol type and binding */
-  unsigned char	st_other;		/* No defined meaning, 0 */
+  unsigned char	st_other;		/* Symbol visibility */
   Elf32_Section	st_shndx;		/* Section index */
 } Elf32_Sym;
 
@@ -303,7 +329,7 @@ typedef struct
 {
   Elf64_Word	st_name;		/* Symbol name (string tbl index) */
   unsigned char	st_info;		/* Symbol type and binding */
-  unsigned char st_other;		/* No defined meaning, 0 */
+  unsigned char st_other;		/* Symbol visibility */
   Elf64_Section	st_shndx;		/* Section index */
   Elf64_Addr	st_value;		/* Symbol value */
   Elf64_Xword	st_size;		/* Symbol size */
@@ -374,8 +400,9 @@ typedef struct
 #define STT_FUNC	2		/* Symbol is a code object */
 #define STT_SECTION	3		/* Symbol associated with a section */
 #define STT_FILE	4		/* Symbol's name is file name */
-#define	STT_NUM		5		/* Number of defined types.  */
-#define STT_LOOS	11		/* Start of OS-specific */
+#define STT_COMMON	5		/* Symbol is a common data object */
+#define	STT_NUM		6		/* Number of defined types.  */
+#define STT_LOOS	10		/* Start of OS-specific */
 #define STT_HIOS	12		/* End of OS-specific */
 #define STT_LOPROC	13		/* Start of processor-specific */
 #define STT_HIPROC	15		/* End of processor-specific */
@@ -386,6 +413,22 @@ typedef struct
    the end of a chain, meaning no further symbols are found in that bucket.  */
 
 #define STN_UNDEF	0		/* End of a chain.  */
+
+
+/* How to extract and insert information held in the st_other field.  */
+
+#define ELF32_ST_VISIBILITY(o)	((o) & 0x03)
+#define ELF32_ST_OTHER(o)	((o) & 0x03)
+
+/* For ELF64 the definitions are the same.  */
+#define ELF64_ST_VISIBILITY(o)	ELF32_ST_VISIBILITY (o)
+#define ELF64_ST_OTHER(o)	ELF32_ST_OTHER (o)
+
+/* Symbol visibility specification encoded in the st_other field.  */
+#define STV_DEFAULT	0		/* Default symbol visibility rules */
+#define STV_INTERNAL	1		/* Processor specific hidden class */
+#define STV_HIDDEN	2		/* Sym unavailable in other modules */
+#define STV_PROTECTED	3		/* Not preemptible, not exported */
 
 
 /* Relocation table entry without addend (in section of type SHT_REL).  */
@@ -541,7 +584,7 @@ typedef struct
 #define DT_INIT		12		/* Address of init function */
 #define DT_FINI		13		/* Address of termination function */
 #define DT_SONAME	14		/* Name of shared object */
-#define DT_RPATH	15		/* Library search path */
+#define DT_RPATH	15		/* Library search path (deprecated) */
 #define DT_SYMBOLIC	16		/* Start symbol search here */
 #define DT_REL		17		/* Address of Rel relocs */
 #define DT_RELSZ	18		/* Total size of Rel relocs */
@@ -555,7 +598,12 @@ typedef struct
 #define	DT_FINI_ARRAY	26		/* Array with addresses of fini fct */
 #define	DT_INIT_ARRAYSZ	27		/* Size in bytes of DT_INIT_ARRAY */
 #define	DT_FINI_ARRAYSZ	28		/* Size in bytes of DT_FINI_ARRAY */
-#define	DT_NUM		29		/* Number used */
+#define DT_RUNPATH	29		/* Library search path */
+#define DT_FLAGS	30		/* Flags for the object being loaded */
+#define DT_ENCODING	32		/* Start of encoded range */
+#define DT_PREINIT_ARRAY 32		/* Array with addresses of preinit fct*/
+#define DT_PREINIT_ARRAYSZ 33		/* size in bytes of DT_PREINIT_ARRAY */
+#define	DT_NUM		34		/* Number used */
 #define DT_LOOS		0x60000000	/* Start of OS-specific */
 #define DT_HIOS		0x6fffffff	/* End of OS-specific */
 #define DT_LOPROC	0x70000000	/* Start of processor-specific */
@@ -602,6 +650,12 @@ typedef struct
 #define DT_FILTER       0x7fffffff      /* Shared object to get values from */
 #define DT_EXTRATAGIDX(tag)	((Elf32_Word)-((Elf32_Sword) (tag) <<1>>1)-1)
 #define DT_EXTRANUM	3
+
+/* Values of `d_un.d_val' in the DT_FLAGS entry.  */
+#define DF_ORIGIN	0x00000001	/* Object may use DF_ORIGIN */
+#define DF_SYMBOLIC	0x00000002	/* Symbol resolutions starts here */
+#define DF_TEXTREL	0x00000004	/* Object contains text relocations */
+#define DF_BIND_NOW	0x00000008	/* No lazy binding for this object */
 
 /* State flags selectable in the `d_un.d_val' element of the DT_FLAGS_1
    entry in the dynamic section.  */
