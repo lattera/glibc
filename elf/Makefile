@@ -45,7 +45,7 @@ extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
 
-before-compile = $(objpfx)trusted-dirs.h $(objpfx)rtldtbl.h
+before-compile = $(objpfx)trusted-dirs.h
 
 
 all: # Make this the default target; it will be defined in Rules.
@@ -54,7 +54,7 @@ include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os eval.os interp.os
-generated	= librtld.os dl-allobjs.os ld.so trusted-dirs.h rtldtbl.h
+generated	= librtld.os dl-allobjs.os ld.so trusted-dirs.h trusted-dirs.st
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 generated      += ldd
@@ -135,17 +135,15 @@ endif
 # libraries when using LD_LIBRARY_PATH in a setuid program.  The user can
 # add directories to the list by defining $(user-defined-trusted-dirs)
 # before starting make.
-$(objpfx)trusted-dirs.h: Makefile $(..)Makeconfig
+$(objpfx)trusted-dirs.h: $(objpfx)trusted-dirs.st; @:
+$(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 	$(make-target-directory)
-	(for dir in `echo "$(default-rpath) $(user-defined-trusted-dirs)" |   \
-		     sed 's/:/ /g'`; do					      \
-	   echo "  \"$$dir/\",";					      \
-	 done;) > $@T
-	mv -f $@T $@
-$(objpfx)rtldtbl.h: Makefile $(..)Makeconfig genrtldtbl.awk
-	$(make-target-directory)
-	echo "$(default-rpath)" | $(AWK) -f genrtldtbl.awk > $@T
-	mv -f $@T $@
+	dirs="$(subst :, ,$(default-rpath) $(user-defined-trusted-dirs))";   \
+	for dir in $$dirs; do						     \
+	  echo "  \"$$dir/\",";						     \
+	done > ${@:st=T}
+	$(move-if-change) ${@:st=T} ${@:st=h}
+	touch $@
 CPPFLAGS-dl-load.c = -I$(objpfx).
 CFLAGS-dl-load.c += -Wno-uninitialized
 

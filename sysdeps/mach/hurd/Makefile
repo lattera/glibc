@@ -90,7 +90,7 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 	$(AWK) -f $^ > $(hurd)/errnos.h-tmp
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $(hurd)/errnos.h-tmp
-	./$(..)scripts/move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
+	$(move-if-change) $(hurd)/errnos.h-tmp $(hurd)/errnos.h
 ifeq ($(with-cvs),yes)
 	test ! -d $(hurd)/CVS || \
 	  (cd $(hurd) && cvs commit -m'Regenerated from $^' errnos.h)
@@ -114,7 +114,7 @@ endif
 rpcuserlibs := $(common-objpfx)mach/libmachuser.so \
 	       $(common-objpfx)hurd/libhurduser.so
 $(common-objpfx)libc.so: $(rpcuserlibs)
-rpath-link := $(rpath-link):$(common-objpfx)mach:$(common-objpfx)hurd
+rpath-dirs += mach hurd
 
 # And get them into the libc.so ldscript.
 $(inst_libdir)/libc.so: $(rpcuserlibs)

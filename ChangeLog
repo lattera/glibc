@@ -1,3 +1,7 @@
+1998-05-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Allow more make versions e.g 3.76.90.
+
 1998-05-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (rpath-link): Find libc.so.6 in $(common-objdir).

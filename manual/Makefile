@@ -65,7 +65,9 @@ mv -f $@.new $@
 endef
 
 # scripts we use
-move-if-change = $(..)scripts/move-if-change
+ifndef move-if-change
+move-if-change = ./move-if-change
+endif
 mkinstalldirs = $(..)scripts/mkinstalldirs
 
 libc.dvi libc.info: $(chapters) summary.texi $(chapters-incl)

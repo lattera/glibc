@@ -452,7 +452,7 @@ AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
   critic_missing=t)
 AC_CHECK_PROG_VER(MAKE, make gmake, --version,
   [version \([0-9][0-9.]*\), by],
-  [3.75 | 3.76.[1-9] | 3.7[789]* | 3.[89]*], critic_missing=t)
+  [3.75 | 3.76.[1-9]* | 3.7[789]* | 3.[89]*], critic_missing=t)
 
 AC_CHECK_PROG_VER(MSGFMT, msgfmt gmsgfmt, --version,
   [GNU gettext.*\([0-9][0-9]*\.[0-9]*\)],

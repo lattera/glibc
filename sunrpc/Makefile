@@ -134,7 +134,6 @@ $(inst_sysconfdir)/rpc: etc.rpc $(+force)
 # Generate the rpcsvc headers with rpcgen.
 # We use a stamp file to avoid unnessary recompilation each time rpcgen is
 # relinked.
-move-if-change = ./$(..)scripts/move-if-change
 $(rpcsvc:%.x=$(objpfx)rpcsvc/%.h): $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
 	@:
 $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen

@@ -224,7 +224,6 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 
 # If we have the localedata add-on available we can build the conversion
 # tables for numerous charsets.
-move-if-change = ./$(..)scripts/move-if-change
 
 define generate-8bit-table
 $(make-target-directory)

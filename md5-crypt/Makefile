@@ -39,7 +39,7 @@ extra-objs = $(patsubst %,onlymd5-entry%,$(object-suffixes))
 
 include ../Makeconfig
 
-rpath-link := $(common-objpfx)md5-crypt:$(rpath-link)
+rpath-dirs += md5-crypt
 
 ifeq ($(crypt-in-libc),yes)
 routines += $(libcrypt-routines)
