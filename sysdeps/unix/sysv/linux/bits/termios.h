@@ -1,5 +1,6 @@
 /* termios type and macro definitions.  Linux version.
-   Copyright (C) 1993, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1993,1994,1995,1996,1997,1998,1999,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +37,8 @@ struct termios
     cc_t c_cc[NCCS];		/* control characters */
     speed_t c_ispeed;		/* input speed */
     speed_t c_ospeed;		/* output speed */
+#define _HAVE_STRUCT_TERMIOS_C_ISPEED 1
+#define _HAVE_STRUCT_TERMIOS_C_OSPEED 1
   };
 
 /* c_cc characters */

@@ -67,7 +67,9 @@ cfsetospeed  (termios_p, speed)
       return -1;
     }
 
+#ifdef _HAVE_STRUCT_TERMIOS_C_OSPEED
   termios_p->c_ospeed = speed;
+#endif
   termios_p->c_cflag &= ~(CBAUD | CBAUDEX);
   termios_p->c_cflag |= speed;
 
@@ -92,7 +94,9 @@ cfsetispeed (termios_p, speed)
       return -1;
     }
 
+#ifdef _HAVE_STRUCT_TERMIOS_C_ISPEED
   termios_p->c_ispeed = speed;
+#endif
   if (speed == 0)
     termios_p->c_iflag |= IBAUD0;
   else
