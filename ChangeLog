@@ -1,3 +1,7 @@
+1998-10-27  Philip Blundell  <pb@nexus.co.uk>
+
+	* elf/elf.h: Update ARM definitions.
+
 1998-10-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/signal.h: Include bits/sigthread.h only for Unix98.
