@@ -1,5 +1,12 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/sh/sh3/bsd-_setjmp.S: Move to...
+	* sysdeps/sh/bsd-_setjmp.S: ...here.  New file.
+	* sysdeps/sh/sh4/bsd-_setjmp.S: Removed.
+	* sysdeps/sh/sh3/bsd-setjmp.S: Move to...
+	* sysdeps/sh/bsd-setjmp.S: ...here.  New file.
+	* sysdeps/sh/sh4/bsd-setjmp.S: Removed.
+
 	* sysdeps/sh/dl-machine.h (FGR_SAVE): Protect using HAVE_FPU macro
 	instead of KERNEL_MATH_EMULATION.
 	* sysdeps/sh/sh4/dl-machine.h: Define HAVE_FPU not
