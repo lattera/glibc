@@ -929,9 +929,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    for (signo = 1; signo < NSIG; ++signo)
 	      if (__sigismember (&ss->pending, signo)
 		  && (!__sigismember (&ss->blocked, signo)
-		  /* We "deliver" immediately pending blocked signals whose
-                     action might be to ignore, so that if ignored they are
-                     dropped right away.  */
+		      /* We "deliver" immediately pending blocked signals whose
+			 action might be to ignore, so that if ignored they are
+			 dropped right away.  */
 		      || ss->actions[signo].sa_handler == SIG_IGN
 		      || ss->actions[signo].sa_handler == SIG_DFL))
 		{
