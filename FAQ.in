@@ -657,6 +657,19 @@ option is using NSS.  There is no switch anymore.  Therefore it is
 *highly* recommended *not* to use --enable-static-nss since this makes
 the behaviour of the programs on the system inconsistent.
 
+??	I just upgraded my Linux system to glibc and now I get
+	errors whenever I try to link any program.
+
+{ZW} This happens when you have installed glibc as the primary C library but
+have stray symbolic links pointing at your old C library.  If the first
+`libc.so' the linker finds is libc 5, it will use that.  Your program
+expects to be linked with glibc, so the link fails.
+
+The most common case is that glibc put its `libc.so' in /usr/lib, but there
+was a `libc.so' from libc 5 in /lib, which gets searched first.  To fix the
+problem, just delete /lib/libc.so.  You may also need to delete other
+symbolic links in /lib, such as /lib/libm.so if it points to libm.so.5.
+
 ? Source and binary incompatibilities, and what to do about them
 
 ??	I expect GNU libc to be 100% source code compatible with

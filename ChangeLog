@@ -1,4 +1,32 @@
+1998-06-16  David S. Miller <davem@dm.cobaltmicro.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h
+	(elf_machine_fixup_plt): During rtld bootstrap, always perform
+	flushes as the kernel will emulate it when the underlying cpu does
+	not implement flush.
+
+	* sysdeps/unix/sysv/linux/sparc/sys/kernel_termios.h: Move...
+	* sysdeps/unix/sysv/linux/sparc/kernel_termios.h: ...to here.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/__sigtrampoline.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: No longer build
+	trampoline code.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S
+	(__clone): Branch to label .Lerror not __clone_syscall_error.
+	(.Lerror): Fixup EINVAL setting.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getgroups.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setgroups.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list
+	(__syscall_getgroups, __syscall_setgroups): Add.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c
+	(__sigaction): Member name is k_sa_handler.  Use memcpy to copy
+	around sa_mask data.
+
 1998-06-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/math.h: Include bits/nan.h when compiling for ISO C 9x.
 
 	* string/Makefile: Make sure test-ffs does not use builtins.
 

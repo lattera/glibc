@@ -1,7 +1,3 @@
-ifeq ($(subdir),signal)
-sysdep_routines += __sigtrampoline
-endif
-
 asm-CPPFLAGS=-D__ASSEMBLY__
 ASFLAGS-.os=-fPIC
 

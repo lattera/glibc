@@ -34,14 +34,14 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
   struct kernel_sigaction k_sigact, k_osigact;
 
   /* Magic to tell the kernel we are using "new-style" signals, in that
-     the signal table is not kept in userspace.  Not the same as the 
+     the signal table is not kept in userspace.  Not the same as the
      really-new-style rt signals.  */
   sig = -sig;
 
   if (act)
     {
-      k_sigact.sa_handler = act->sa_handler;
-      k_sigact.sa_mask = act->sa_mask.__val[0];
+      k_sigact.k_sa_handler = act->sa_handler;
+      memcpy (&k_sigact.sa_mask, &act->sa_mask, sizeof (sigset_t));
       k_sigact.sa_flags = act->sa_flags;
     }
 
@@ -70,8 +70,8 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
     {
       if (oact)
 	{
-	  oact->sa_handler = k_osigact.sa_handler;
-	  oact->sa_mask.__val[0] = k_osigact.sa_mask;
+	  oact->sa_handler = k_osigact.k_sa_handler;
+	  memcpy (&oact->sa_mask, &k_osigact.sa_mask, sizeof (sigset_t));
 	  oact->sa_flags = k_osigact.sa_flags;
 	  oact->sa_restorer = NULL;
 	}

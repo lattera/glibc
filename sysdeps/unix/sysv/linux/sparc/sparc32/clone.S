@@ -44,7 +44,7 @@ __clone:
 	mov	%i2,%o0
 	set	__NR_clone,%g1
 	ta	0x10
-	bcs	__clone_syscall_error
+	bcs	.Lerror
 	 tst	%o1
 	bne	__thread_start
 	 nop
@@ -54,7 +54,7 @@ __clone:
 
 .Lerror:
 	call	__errno_location
-	 set	EINVAL,%i0
+	 or	%g0,EINVAL,%i0
 	st	%i0,[%o0]
 	mov	-1,%i0
 	ret

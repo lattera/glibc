@@ -271,7 +271,9 @@ elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
   unsigned long *hwcap = WEAKADDR(_dl_hwcap);
   int do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
 #else
-  int do_flush = 0;
+  /* Unfortunately, this is necessary, so that we can ensure
+     ld.so will not execute corrupt PLT entry instructions. */
+  const int do_flush = 1;
 #endif
 
   /* For thread safety, write the instructions from the bottom and

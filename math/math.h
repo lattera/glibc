@@ -33,7 +33,7 @@ __BEGIN_DECLS
 #include <bits/huge_val.h>
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
-#ifdef	 __USE_GNU
+#ifdef	 __USE_ISOC9X
 # include <bits/nan.h>
 #endif
 
