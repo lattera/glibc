@@ -48,6 +48,23 @@ __pthread_cond_timedwait:
 	pushq	%r13
 	pushq	%r14
 	subq	$80, %rsp
+	/* Stack frame:
+
+	   rsp + 80
+	            +--------------------------+
+	   rsp + 48 | cleanup buffer           |
+	            +--------------------------+
+	   rsp + 40 | old wake_seq value       |
+	            +--------------------------+
+	   rsp + 24 | timeout value            |
+	            +--------------------------+
+	   rsp + 16 | mutex pointer            |
+	            +--------------------------+
+	   rsp +  8 | condvar pointer          |
+	            +--------------------------+
+	   rsp +  0 | old cancellation mode    |
+	            +--------------------------+
+	*/
 
 	/* Prepare structure passed to cancellation handler.  */
 	movq	%rdi, 8(%rsp)
@@ -73,7 +90,7 @@ __pthread_cond_timedwait:
 	jne	16f
 
 	movq	8(%rsp), %rdi
-	addq	$1, total_seq(%rdi)
+	incq	total_seq(%rdi)
 
 	/* Install cancellation handler.  */
 #ifdef PIC
@@ -113,7 +130,7 @@ __pthread_cond_timedwait:
 	movq	$1000, %rdx
 	mul	%rdx		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rcx
-	movq	4(%r13), %rdx
+	movq	8(%r13), %rdx
 	subq	24(%rsp), %rcx
 	subq	%rax, %rdx
 	jns	12f

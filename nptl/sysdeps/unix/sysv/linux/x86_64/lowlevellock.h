@@ -82,14 +82,13 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 		       "testl %0, %0\n\t"				      \
 		       "jne 1f\n\t"					      \
 		       ".subsection 1\n"				      \
-		       "1:\tmovl %0, %%esi\n\t"				      \
-		       "leaq %4, %%rdi\n\t"				      \
+		       "1:\tleaq %4, %%rdi\n\t"				      \
 		       "movq %7, %%rdx\n\t"				      \
 		       "call __lll_mutex_timedlock_wait\n\t"		      \
 		       "jmp 2f\n\t"					      \
 		       ".previous\n"					      \
 		       "2:"						      \
-		       : "=a" (result), "=&D" (ignore1), "=&S" (ignore2),     \
+		       : "=S" (result), "=&D" (ignore1), "=&a" (ignore2),     \
 			 "=&d" (ignore3), "=m" (futex)			      \
 		       : "0" (1), "4" (futex), "m" (timeout)		      \
 		       : "memory", "cx", "cc", "r10");			      \

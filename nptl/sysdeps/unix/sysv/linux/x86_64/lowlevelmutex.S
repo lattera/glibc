@@ -80,13 +80,14 @@ __lll_mutex_timedlock_wait:
 
 	pushq	%r12
 	pushq	%r13
+	pushq	%r14
 
 	/* Stack frame for the timespec and timeval structs.  */
 	subq	$16, %rsp
 
 	movq	%rdi, %r12
 	movq	%rdx, %r13
-	leaq	1(%rax), %rdx
+	leaq	1(%rsi), %r14
 
 	/* Get current time.  */
 1:	movq	%rsp, %rdi
@@ -112,24 +113,26 @@ __lll_mutex_timedlock_wait:
 
 	/* Futex call.  */
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
-	movq	%rsi, 4(%rsp)
+	movq	%rsi, 8(%rsp)
 
+	movl	%r14d, %edx
 	movq	%rsp, %r10
 	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	%r12, %rdi
 	movq	$SYS_futex, %rax
 	syscall
 
-	movl	$1, %edx
+	movl	$1, %r14d
 	LOCK
-	xaddl	%edx, (%rdi)
-	testl	%edx, %edx
+	xaddl	%r14d, (%rdi)
+	testl	%r14d, %r14d
 	jne	7f
 
 	movl	$2, (%rdi)
 	xorl	%eax, %eax
 
 8:	addq	$16, %rsp
+	popq	%r14
 	popq	%r13
 	popq	%r12
 	retq

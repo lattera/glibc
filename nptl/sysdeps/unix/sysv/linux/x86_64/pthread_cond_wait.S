@@ -61,9 +61,9 @@ __condvar_cleanup:
 	subq	$cond_lock, %rdi
 #endif
 
-1:	addq	$1, wakeup_seq(%rdi)
+1:	incq	wakeup_seq(%rdi)
 
-	addq	$1, woken_seq(%rdi)
+	incq	woken_seq(%rdi)
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
 	addq	$wakeup_seq, %rdi
@@ -103,6 +103,21 @@ __condvar_cleanup:
 __pthread_cond_wait:
 	pushq	%r12
 	subq	$64, %rsp
+	/* Stack frame:
+
+	   rsp + 64
+	            +--------------------------+
+	   rsp + 32 | cleanup buffer           |
+	            +--------------------------+
+	   rsp + 24 | old wake_seq value       |
+	            +--------------------------+
+	   rsp + 16 | mutex pointer            |
+	            +--------------------------+
+	   rsp +  8 | condvar pointer          |
+	            +--------------------------+
+	   rsp +  0 | old cancellation mode    |
+	            +--------------------------+
+	*/
 
 	/* Prepare structure passed to cancellation handler.  */
 	movq	%rdi, 8(%rsp)
@@ -127,7 +142,7 @@ __pthread_cond_wait:
 	jne	12f
 
 	movq	8(%rsp), %rdi
-	addq	$1, total_seq(%rdi)
+	incq	total_seq(%rdi)
 
 	/* Install cancellation handler.  */
 #ifdef PIC

@@ -60,7 +60,7 @@ sem_timedwait:
 	movq	%rsi, %r9
 
 	/* Check for invalid nanosecond field.  */
-	cmpq	$1000000000, 4(%r9)
+	cmpq	$1000000000, 8(%r9)
 	movl	$EINVAL, %eax
 	jae	6f
 
