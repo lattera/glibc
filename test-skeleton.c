@@ -263,8 +263,17 @@ main (int argc, char *argv[])
   if (WTERMSIG (status) != EXPECTED_SIGNAL)
     {
       if (EXPECTED_SIGNAL != 0)
-	fprintf (stderr, "Incorrect signal from child: got `%s', need `%s'\n",
-		 strsignal (WTERMSIG (status)), strsignal (EXPECTED_SIGNAL));
+	{
+	  if (WTERMSIG (status) == 0)
+	    fprintf (stderr,
+		     "Expected signal '%s' from child, got none\n",
+		     strsignal (EXPECTED_SIGNAL));
+	  else
+	    fprintf (stderr,
+		     "Incorrect signal from child: got `%s', need `%s'\n",
+		     strsignal (WTERMSIG (status)),
+		     strsignal (EXPECTED_SIGNAL));
+	}
       else
 	fprintf (stderr, "Didn't expect signal from child: got `%s'\n",
 		 strsignal (WTERMSIG (status)));
