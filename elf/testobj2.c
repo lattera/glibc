@@ -23,3 +23,9 @@ preload (int a)
     return fp (a) + 10;
   return 10;
 }
+
+void
+p (void)
+{
+  puts ("hello world");
+}
