@@ -246,8 +246,8 @@ sb[]  =  {0.0,3.03380607434824582924e+01, /* 0x403E568B, 0x261D5190 */
 	    Q2 = qa[2]+s*qa[3];
 	    P3 = pa[4]+s*pa[5];
 	    Q3 = qa[4]+s*qa[5];
-	    P4 = s6*pa[6];
-	    Q4 = s6*qa[6];
+	    P4 = pa[6];
+	    Q4 = qa[6];
 	    P = P1 + s2*P2 + s4*P3 + s6*P4;
 	    Q = Q1 + s2*Q2 + s4*Q3 + s6*Q4;
 #endif
@@ -362,8 +362,8 @@ weak_alias (__erf, erfl)
 	    Q2 = qa[2]+s*qa[3];
 	    P3 = pa[4]+s*pa[5];
 	    Q3 = qa[4]+s*qa[5];
-	    P4 = s6*pa[6];
-	    Q4 = s6*qa[6];
+	    P4 = pa[6];
+	    Q4 = qa[6];
 	    P = P1 + s2*P2 + s4*P3 + s6*P4;
 	    Q = Q1 + s2*Q2 + s4*Q3 + s6*Q4;
 #endif

@@ -1,5 +1,8 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/ieee754/dbl-64/s_erf.c: Correct type in performance increase
+	rewrite.  Patch by Alan Stern <stern@kitsilano.rowland.org>.
+
 	* timezone/private.h: Update from tzcode1999e.
 	* timezone/zic.c: Likewise.
 
