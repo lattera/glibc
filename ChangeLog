@@ -1,3 +1,12 @@
+2002-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/Versions [libc: GLIBC_2.3.1]: Move __libc_readv and
+	__libc_writev to...
+	[libc: GLIBC_PRIVATE]: ...here.
+	* sysvipc/Versions [libc: GLIBC_2.3.1]: Move __libc_msgrcv and
+	__libc_msgsnd to...
+	[libc: GLIBC_PRIVATE]: ...here.
+
 2002-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define ENTER_KERNEL macro.

@@ -300,8 +300,11 @@ extern int __have_no_set_thread_area;
 })
 #endif
 
+#if __ASSUME_LDT_WORKS > 0
 /* We want the OS to assign stack addresses.  */
 #define FLOATING_STACKS	1
 
 /* Maximum size of the stack if the rlimit is unlimited.  */
 #define ARCH_STACK_MAX_SIZE	8*1024*1024
+#endif
+

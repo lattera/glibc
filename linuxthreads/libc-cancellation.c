@@ -34,6 +34,13 @@ weak_extern (__pthread_thread_self)
 
 int __libc_multiple_threads attribute_hidden;
 
+# ifndef FLOATING_STACKS
+#  undef THREAD_GETMEM
+#  undef THREAD_SETMEM
+#  define THREAD_GETMEM(descr, member) descr->member
+#  define THREAD_SETMEM(descr, member, value) descr->member = (value)
+# endif
+
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().
    They do not need to check parameters etc.  */
