@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 #include <stdio.h>
 #include <string.h>
 
+static char tmpnam_buffer[L_tmpnam];
+
 /* Generate a unique filename in P_tmpdir.
 
    This function is *not* thread safe!  */
@@ -27,7 +29,6 @@ tmpnam (char *s)
 {
   /* By using two buffers we manage to be thread safe in the case
      where S != NULL.  */
-  static char buf[L_tmpnam];
   char tmpbuf[L_tmpnam];
 
   /* In the following call we use the buffer pointed to by S if
@@ -40,10 +41,7 @@ tmpnam (char *s)
     return NULL;
 
   if (s == NULL)
-    {
-      memcpy (buf, tmpbuf, L_tmpnam);
-      return buf;
-    }
-  else
-    return s;
+    return (char *) memcpy (tmpnam_buffer, tmpbuf, L_tmpnam);
+
+  return s;
 }

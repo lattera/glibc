@@ -1,3 +1,10 @@
+1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/tmpnam.c: Move local static variable buf to
+	toplevel and rename to tmpnam_buffer to ease debugging.
+	Patch by Joe Keane <jgk@jgk.org>.
+	Optimize s == NULL case a bit.
+
 1998-09-10 12:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/res_init.c (res_init): Initialize _res.nscount and
