@@ -1,3 +1,8 @@
+2004-10-16  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	* sysdeps/mach/hurd/Makefile (link-libc-static): Use
+	`$(static-gnulib') instead of `$(gnulib)'.
+
 2004-10-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/rpc_clntout.c: Avoid including rcsid into binary.
