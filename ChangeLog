@@ -1,3 +1,12 @@
+2002-01-07  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/bits/byteswap.h: Prevent double inclusion.
+	* sysdeps/i386/bits/byteswap.h: Likewise.
+	* sysdeps/ia64/bits/byteswap.h: Likewise.
+	* sysdeps/m68k/bits/byteswap.h: Likewise.
+	* sysdeps/s390/s390-32/bits/byteswap.h: Likewise.
+	* sysdeps/s390/s390-64/bits/byteswap.h: Likewise.
+
 2002-01-02  Bruno Haible  <bruno@clisp.org>
 
 	* intl/plural.y: Fix %expect count.
