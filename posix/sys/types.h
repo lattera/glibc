@@ -89,6 +89,12 @@ typedef int register_t __attribute__ ((__mode__ (word)));
 #endif
 
 
+#ifdef __USE_SVID
+/* Data type for key value used in System V IPC functions.  */
+typedef long int key_t;
+#endif
+
+
 #ifdef	__USE_BSD
 
 #define	FD_SETSIZE	__FD_SETSIZE

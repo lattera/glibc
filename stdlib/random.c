@@ -19,10 +19,9 @@
  * This is derived from the Berkeley source:
  *	@(#)random.c	5.5 (Berkeley) 7/6/88
  * It was reworked for the GNU C Library by Roland McGrath.
+ * Rewritten to use reentrent functions by Ulrich Drepper, 1995.
  */
 
-#include <ansidecl.h>
-#include <errno.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -105,10 +104,6 @@
 
 #define	MAX_TYPES	5	/* Max number of types above.  */
 
-static int degrees[MAX_TYPES] = { DEG_0, DEG_1, DEG_2, DEG_3, DEG_4 };
-static int seps[MAX_TYPES] = { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
-
-
 
 /* Initially, everything is set up as if from:
 	initstate(1, randtbl, 128);
@@ -132,6 +127,9 @@ static long int randtbl[DEG_3 + 1] =
     -205601318, 
   };
 
+
+static struct random_data unsafe_state =
+  {
 /* FPTR and RPTR are two pointers into the state info, a front and a rear
    pointer.  These two pointers are always rand_sep places aparts, as they
    cycle through the state information.  (Yes, this does mean we could get
@@ -142,10 +140,8 @@ static long int randtbl[DEG_3 + 1] =
    in the initialization of randtbl) because the state table pointer is set
    to point to randtbl[1] (as explained below).)  */
 
-static long int *fptr = &randtbl[SEP_3 + 1];
-static long int *rptr = &randtbl[1];
-
-
+    fptr : &randtbl[SEP_3 + 1],
+    rptr : &randtbl[1],
 
 /* The following things are the pointer to the state information table,
    the type of the current generator, the degree of the current polynomial
@@ -157,13 +153,14 @@ static long int *rptr = &randtbl[1];
    indexing every time to find the address of the last element to see if
    the front and rear pointers have wrapped.  */
 
-static long int *state = &randtbl[1];
+    state : &randtbl[1],
 
-static int rand_type = TYPE_3;
-static int rand_deg = DEG_3;
-static int rand_sep = SEP_3;
+    rand_type : TYPE_3,
+    rand_deg : DEG_3,
+    rand_sep : SEP_3,
 
-static long int *end_ptr = &randtbl[sizeof(randtbl) / sizeof(randtbl[0])];
+    end_ptr : &randtbl[sizeof (randtbl) / sizeof (randtbl[0])]
+};
 
 /* Initialize the random number generator based on the given seed.  If the
    type is the trivial no-state-information type, just remember the seed.
@@ -174,27 +171,10 @@ static long int *end_ptr = &randtbl[sizeof(randtbl) / sizeof(randtbl[0])];
    introduced by the L.C.R.N.G.  Note that the initialization of randtbl[]
    for default usage relies on values produced by this routine.  */
 void
-DEFUN(__srandom, (x), unsigned int x)
+__srandom (x)
+     unsigned int x;
 {
-  state[0] = x;
-  if (rand_type != TYPE_0)
-    {
-      register long int i;
-      for (i = 1; i < rand_deg; ++i)
-	{
-	  /* This does:
-	       state[i] = (16807 * state[i - 1]) % 2147483647;
-	     but avoids overflowing 31 bits.  */
-	  long int hi = state[i - 1] / 127773;
-	  long int lo = state[i - 1] % 127773;
-	  long int test = 16807 * lo - 2836 * hi;
-	  state[i] = test + (test < 0 ? 2147483647 : 0);
-	}
-      fptr = &state[rand_sep];
-      rptr = &state[0];
-      for (i = 0; i < 10 * rand_deg; ++i)
-	(void) __random ();
-    }
+  (void) __srandom_r (x, &unsafe_state);
 }
 
 weak_alias (__srandom, srandom)
@@ -211,60 +191,15 @@ weak_alias (__srandom, srand)
    Note: The first thing we do is save the current state, if any, just like
    setstate so that it doesn't matter when initstate is called.
    Returns a pointer to the old state.  */
-PTR
-DEFUN(__initstate, (seed, arg_state, n),
-      unsigned int seed AND PTR arg_state AND size_t n)
+void *
+__initstate (seed, arg_state, n)
+     unsigned int seed;
+     void *arg_state;
+     size_t n;
 {
-  PTR ostate = (PTR) &state[-1];
+  void *ostate = (void *) &unsafe_state.state[-1];
 
-  if (rand_type == TYPE_0)
-    state[-1] = rand_type;
-  else
-    state[-1] = (MAX_TYPES * (rptr - state)) + rand_type;
-  if (n < BREAK_1)
-    {
-      if (n < BREAK_0)
-	{
-	  errno = EINVAL;
-	  return NULL;
-	}
-      rand_type = TYPE_0;
-      rand_deg = DEG_0;
-      rand_sep = SEP_0;
-    }
-  else if (n < BREAK_2)
-    {
-      rand_type = TYPE_1;
-      rand_deg = DEG_1;
-      rand_sep = SEP_1;
-    }
-  else if (n < BREAK_3)
-    {
-      rand_type = TYPE_2;
-      rand_deg = DEG_2;
-      rand_sep = SEP_2;
-    }
-  else if (n < BREAK_4)
-    {
-      rand_type = TYPE_3;
-      rand_deg = DEG_3;
-      rand_sep = SEP_3;
-    }
-  else
-    {
-      rand_type = TYPE_4;
-      rand_deg = DEG_4;
-      rand_sep = SEP_4;
-    }
-
-  state = &((long int *) arg_state)[1];	/* First location.  */
-  /* Must set END_PTR before srandom.  */
-  end_ptr = &state[rand_deg];
-  __srandom(seed);
-  if (rand_type == TYPE_0)
-    state[-1] = rand_type;
-  else
-    state[-1] = (MAX_TYPES * (rptr - state)) + rand_type;
+  __initstate_r (seed, arg_state, n, &unsafe_state);
 
   return ostate;
 }
@@ -279,44 +214,14 @@ weak_alias (__initstate, initstate)
    to the order in which things are done, it is OK to call setstate with the
    same state as the current state
    Returns a pointer to the old state information.  */
-PTR
-DEFUN(__setstate, (arg_state), PTR arg_state)
+void *
+__setstate (arg_state)
+     void *arg_state;
 {
-  register long int *new_state = (long int *) arg_state;
-  register int type = new_state[0] % MAX_TYPES;
-  register int rear = new_state[0] / MAX_TYPES;
-  PTR ostate = (PTR) &state[-1];
+  void *ostate = (void *) &unsafe_state.state[-1];
 
-  if (rand_type == TYPE_0)
-    state[-1] = rand_type;
-  else
-    state[-1] = (MAX_TYPES * (rptr - state)) + rand_type;
-
-  switch (type)
-    {
-    case TYPE_0:
-    case TYPE_1:
-    case TYPE_2:
-    case TYPE_3:
-    case TYPE_4:
-      rand_type = type;
-      rand_deg = degrees[type];
-      rand_sep = seps[type];
-      break;
-    default:
-      /* State info munged.  */
-      errno = EINVAL;
-      return NULL;
-    }
-
-  state = &new_state[1];
-  if (rand_type != TYPE_0)
-    {
-      rptr = &state[rear];
-      fptr = &state[(rear + rand_sep) % rand_deg];
-    }
-  /* Set end_ptr too.  */
-  end_ptr = &state[rand_deg];
+  if (__setstate_r (arg_state, &unsafe_state) < 0)
+    return NULL;
 
   return ostate;
 }
@@ -335,33 +240,13 @@ weak_alias (__setstate, setstate)
    pointer if the front one has wrapped.  Returns a 31-bit random number.  */
 
 long int
-DEFUN_VOID(__random)
+__random ()
 {
-  if (rand_type == TYPE_0)
-    {
-      state[0] = ((state[0] * 1103515245) + 12345) & LONG_MAX;
-      return state[0];
-    }
-  else
-    {
-      long int i;
-      *fptr += *rptr;
-      /* Chucking least random bit.  */
-      i = (*fptr >> 1) & LONG_MAX;
-      ++fptr;
-      if (fptr >= end_ptr)
-	{
-	  fptr = state;
-	  ++rptr;
-	}
-      else
-	{
-	  ++rptr;
-	  if (rptr >= end_ptr)
-	    rptr = state;
-	}
-      return i;
-    }
+  long int retval;
+
+  (void) __random_r (&unsafe_state, &retval);
+
+  return retval;
 }
 
 weak_alias (__random, random)

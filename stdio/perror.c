@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <errno.h>
 
-extern char *_strerror_internal __P ((int, char buf[1024]));
+extern char *_strerror_internal __P ((int, char *buf, size_t));
 
 /* Print a line on stderr consisting of the text in S, a colon, a space,
    a message describing the meaning of the contents of `errno' and a newline.
@@ -38,5 +38,5 @@ DEFUN(perror, (s), register CONST char *s)
     colon = ": ";
 
   (void) fprintf (stderr, "%s%s%s\n",
-		  s, colon, _strerror_internal (errnum, buf));
+		  s, colon, _strerror_internal (errnum, buf, sizeof buf));
 }

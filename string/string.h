@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -120,8 +120,13 @@ extern __ptr_t memmem __P ((__const __ptr_t __haystack, size_t __haystacklen,
 /* Return the length of S.  */
 extern size_t strlen __P ((__const char *__s));
 
-/* Return a string describing the meaning of the errno code in ERRNUM.  */
+/* Return a string describing the meaning of the `errno' code in ERRNUM.  */
 extern char *strerror __P ((int __errnum));
+#ifdef	__USE_REENTRANT
+/* Reentrant version of `strerror'.  If a temporary buffer is required, at
+   most BUFLEN bytes of BUF will be used.  */
+extern char *strerror_r __P ((int __errnum, char *__buf, int __buflen));
+#endif
 
 #ifdef	__USE_BSD
 /* Find the first occurrence of C in S (same as strchr).  */

@@ -1,3 +1,77 @@
+Sat Sep 16 17:47:19 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* elf/elf.h (AT_GID): Fix typo: Read -> Real.
+
+	* misc/efgvt_r.c: New file.  Reentrant version of [efg]cvt functions.
+	* misc/efgcvt.c: Rewrite to use reentrant functions.
+	* misc/hsearch_r.c: New file.  Reentrant version of functions from
+	hsearch family.
+	* misc/hsearch.c, misc/tsearch.c: New files.
+	* misc/Makefile (routines): Add efgcvt_r, hsearch_r, hsearch, tsearch.
+
+	* posix/unistd.h (ttyname_r): Add prototype for new function.
+
+	* stdlib/drand48_r.c, stdlib/erand48_r.c, stdlib/jrand48_r.c,
+	stdlib/lrand48_r.c, stdlib/mrand48_r.c, stdlib/nrand48_r.c,
+	stdlib/seed48_r.c, stdlib/srand48_r.c, stdlib/lcong48_r.c,
+	stdlib/drand48-iter.c: New files implementing reentrant versions
+	of functions from drand48 family.
+	* stdlib/seed48.c, stdlib/drand48.c, stdlib/erand48.c,
+	stdlib/jrand48.c, stdlib/lrand48.c, stdlib/mrand48.c,
+	stdlib/nrand48.c, stdlib/srand48.c, stdlib/lcong48.c:
+	Rewrite to use reentrant versions.
+	* stdlib/a64l.c, stdlib/l64a.c: New files.  Implement a64l()
+	and l64a() functions from SysV library.
+	* stdlib/Makefile (routines): Add drand48_r, erand48_r, lrand48_r,
+	nrand48_r, mrand48_r, jrand48_r, srand48_r, seed48_r, lcong48_r,
+	drand48-iter, a64l, l64a.
+	* stdlib/stdlib.h: Declare them.
+
+	* stdlib/random_r.c: New file.  Reentrant version of functions
+	from random family.
+	* stdlib/stdlib.h: Declare them.
+	* stdlib/random.c: Rewrite to use reentrant functions.
+
+	* string/strerror_r.c: New file.  Reentrant version.
+	* string/strerror.c: Change for new _strerror_internal form.
+	* string/Makefile (routines): Add strerror_r.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Set default
+	value of user_entry to `_start'.
+	Close AT_ENTRY case with `break'.
+
+	* sysdeps/generic/strstr.c: New and much faster implementation
+	by Stephen R. van den Berg.
+
+	* sysdeps/generic/_strerror.c: _strerror_internal now takes
+	three argument and has and explicit buffer length.
+	* sysdeps/mach/_strerror.c: Change for new interface with three
+	arguments.
+	* stdio/perror.c, stdio/vfprintf.c: Callers changed.
+	
+	* sysdeps/mach/hurd/ttyname_r.c: New file.  Reentrant version.
+	* sysdeps/posix/ttyname_r.c: New file.  Reentrant version.
+	* sysdeps/stub/ttyname_r: New file.  Define as dummy function.
+
+	* sysdeps/posix/utimes.c: Include <utime.h> for prototype.
+	(utimes): First parameter to utime must be file, not path.
+
+	* sysdeps/posix/sysconf.c (__sysconf): Test for CLK_TCK in case
+	_SC_CLK_TCK and return it when available.
+	Test for STREAM_MAX in case _SC_STREAM_MAX and return it when
+	available.
+	Add case for _SC_2_LOCALEDEF which is now available.
+
+	* posix/sys/types.h [__USE_SVID] (key_t): New type.
+	* sysvipc/Makefile, sysvipc/ftok.c, sysvipc/sys/ipc.h,
+	sysvipc/sys/msg.h, sysvipc/sys/sem.h, sysvipc/sys/shm.h,
+	sysdeps/stub/sys/msq_buf.h, sysdeps/stub/sys/sem_buf.h,
+	sysdeps/stub/sys/shm_buf.h, sysdeps/stub/sys/ipc_buf.h,
+	sysdeps/stub/semctl.c, sysdeps/stub/semget.c, sysdeps/stub/semop.c,
+	sysdeps/stub/shmat.c, sysdeps/stub/shmctl.c, sysdeps/stub/shmdt.c,
+	sysdeps/stub/shmget.c, sysdeps/stub/msgctl.c, sysdeps/stub/msgget.c,
+	sysdeps/stub/msgrcv.c, sysdeps/stub/msgsnd.c: New files.
+	Add implementation of System V IPC.
 Fri Sep 15 21:34:28 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c: Include <hurd/crash.h> in place of <hurd/core.h>.

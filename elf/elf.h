@@ -430,7 +430,7 @@ typedef struct
 #define AT_NOTELF	10		/* Program is not ELF */
 #define AT_UID		11		/* Real uid */
 #define AT_EUID		12		/* Effective uid */
-#define AT_GID		13		/* Read gid */
+#define AT_GID		13		/* Real gid */
 #define AT_EGID		14		/* Effective gid */
 
 /* Intel 80386 specific definitions.  */

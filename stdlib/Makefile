@@ -32,10 +32,16 @@ routines	:=							      \
 	abs labs							      \
 	div ldiv							      \
 	mblen mbstowcs mbtowc wcstombs wctomb				      \
-	random rand 							      \
+	random random_r rand 						      \
+	drand48 erand48 lrand48 nrand48 mrand48 jrand48			      \
+	srand48 seed48 lcong48						      \
+	drand48_r erand48_r lrand48_r nrand48_r mrand48_r jrand48_r	      \
+	srand48_r seed48_r lcong48_r					      \
+	drand48-iter							      \
 	strtol strtoul strtoq strtouq					      \
 	strtof strtod strtold						      \
-	system
+	system								      \
+	a64l l64a
 
 distribute	:= exit.h grouping.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv

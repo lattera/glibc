@@ -1,4 +1,4 @@
-/* [efg]cvt -- compatibility functions for floating point formatting
+/* [efg]cvt -- compatibility functions for floating point formatting.
 Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -18,9 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <math.h>
+#include <stdlib.h>
 
 char *
 fcvt (value, ndigit, decpt, sign)
@@ -28,24 +26,8 @@ fcvt (value, ndigit, decpt, sign)
      int ndigit, *decpt, *sign;
 {
   static char buf[100];
-  int n, i;
 
-  *sign = value < 0.0;
-  if (*sign)
-    value = - value;
-
-  n = snprintf (buf, sizeof buf, "%.*f", ndigit, value);
-  if (n < 0)
-    return NULL;
-
-  i = 0;
-  while (i < n && isdigit (buf[i]))
-    ++i;
-  *decpt = i;
-  do
-    ++i;
-  while (! isdigit (buf[i]));
-  memmove (&buf[i - *decpt], buf, n - (i - *decpt));
+  (void) fcvt_r (value, ndigit, decpt, sign, buf, sizeof buf);
 
   return buf;
 }
@@ -55,10 +37,11 @@ ecvt (value, ndigit, decpt, sign)
      double value;
      int ndigit, *decpt, *sign;
 {
-  ndigit -= (int) floor (log10 (value));
-  if (ndigit < 0)
-    ndigit = 0;
-  return fcvt (value, ndigit, decpt, sign);
+  static char buf[100];
+
+  (void) ecvt_r (value, ndigit, decpt, sign, buf, sizeof buf);
+
+  return buf;
 }
 
 char *

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,41 +16,102 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <stddef.h>
+/*
+ * My personal strstr() implementation that beats most other algorithms.
+ * Until someone tells me otherwise, I assume that this is the
+ * fastest implementation of strstr() in C.
+ * I deliberately chose not to comment it.  You should have at least
+ * as much fun trying to understand it, as I had to write it :-).
+ *
+ * Stephen R. van den Berg, berg@pool.informatik.rwth-aachen.de	*/
+
 #include <string.h>
+#include <sys/types.h>
 
-/* Return the first ocurrence of NEEDLE in HAYSTACK.  */
+typedef unsigned chartype;
+
 char *
-DEFUN(strstr, (haystack, needle),
-      CONST char *CONST haystack AND
-      CONST char *CONST needle)
+strstr (phaystack, pneedle)
+     const char *phaystack;
+     const char *pneedle;
 {
-  register CONST char *CONST needle_end = strchr(needle, '\0');
-  register CONST char *CONST haystack_end = strchr(haystack, '\0');
-  register CONST size_t needle_len = needle_end - needle;
-  register CONST size_t needle_last = needle_len - 1;
-  register CONST char *begin;
+  register const unsigned char *haystack, *needle;
+  register chartype b, c;
 
-  if (needle_len == 0)
-    return (char *) haystack;	/* ANSI 4.11.5.7, line 25.  */
-  if ((size_t) (haystack_end - haystack) < needle_len)
-    return NULL;
+  haystack = (const unsigned char *) phaystack;
+  needle = (const unsigned char *) pneedle;
 
-  for (begin = &haystack[needle_last]; begin < haystack_end; ++begin)
+  b = *needle;
+  if (b != '\0')
     {
-      register CONST char *n = &needle[needle_last];
-      register CONST char *h = begin;
-
+      haystack--;				/* possible ANSI violation */
       do
-	if (*h != *n)
-	  goto loop;		/* continue for loop */
-      while (--n >= needle && --h >= haystack);
+	{
+	  c = *++haystack;
+	  if (c == '\0')
+	    goto ret0;
+	}
+      while (c != b);
 
-      return (char *) h;
+      c = *++needle;
+      if (c == '\0')
+	goto foundneedle;
+      ++needle;
+      goto jin;
 
-    loop:;
+      for (;;)
+        { 
+          register chartype a;
+	  register const unsigned char *rhaystack, *rneedle;
+
+	  do
+	    {
+	      a = *++haystack;
+	      if (a == '\0')
+		goto ret0;
+	      if (a == b)
+		break;
+	      a = *++haystack;
+	      if (a == '\0')
+		goto ret0;
+shloop:	    }
+          while (a != b);
+
+jin:	  a = *++haystack;
+	  if (a == '\0')
+	    goto ret0;
+
+	  if (a != c)
+	    goto shloop;
+
+	  rhaystack = haystack-- + 1;
+	  rneedle = needle;
+	  a = *rneedle;
+
+	  if (*rhaystack == a)
+	    do
+	      {
+		if (a == '\0')
+		  goto foundneedle;
+		++rhaystack;
+		a = *++needle;
+		if (*rhaystack != a)
+		  break;
+		if (a == '\0')
+		  goto foundneedle;
+		++rhaystack;
+		a = *++needle;
+	      }
+	    while (*rhaystack == a);
+
+	  needle = rneedle;		   /* took the register-poor aproach */
+
+	  if (a == '\0')
+	    break;
+        }
     }
-
-  return NULL;
+foundneedle:
+  return (char*) haystack;
+ret0:
+  return 0;
 }

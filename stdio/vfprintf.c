@@ -534,7 +534,7 @@ vfprintf (s, format, ap)
               else if (specs[cnt].info.prec != -1)
 		{
 		  /* Search for the end of the string, but don't search
-                     past the length specified by the precision.  */
+		     past the length specified by the precision.  */
 		  const char *end = memchr (str, '\0', specs[cnt].info.prec);
 		  if (end)
 		    len = end - str;
@@ -600,8 +600,8 @@ vfprintf (s, format, ap)
 
           case 'm':
             {
-              extern char *_strerror_internal __P ((int, char buf[1024]));
-              str = _strerror_internal (errno, errorbuf);
+              extern char *_strerror_internal __P ((int, char *buf, size_t));
+              str = _strerror_internal (errno, errorbuf, sizeof errorbuf);
               goto string;
             }
 

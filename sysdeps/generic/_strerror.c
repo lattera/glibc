@@ -1,4 +1,4 @@
-/* Copyright (C) 19911993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -27,13 +26,16 @@ Cambridge, MA 02139, USA.  */
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-DEFUN(_strerror_internal, (errnum, buf), int errnum AND char buf[1024])
+_strerror_internal (errnum, buf, buflen)
+     int errnum;
+     char *buf;
+     size_t buflen;
 {
   if (errnum < 0 || errnum > _sys_nerr)
     {
       static char fmt[] = "Unknown error %d";
-      size_t len = sprintf (buf, fmt, errnum);
-      if (len < sizeof(fmt) - 2)
+      size_t len = snprintf (buf, buflen, fmt, errnum);
+      if (len < sizeof (fmt) - 2)
 	return NULL;
       buf[len - 1] = '\0';
       return buf;

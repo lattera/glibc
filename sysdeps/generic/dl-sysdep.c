@@ -26,6 +26,7 @@ Cambridge, MA 02139, USA.  */
 extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
+extern void _start (void);
 
 Elf32_Addr
 _dl_sysdep_start (void **start_argptr,
@@ -39,6 +40,7 @@ _dl_sysdep_start (void **start_argptr,
   uid_t uid, euid;
   gid_t gid, egid;
 
+  user_entry = (Elf32_Addr) &_start;
   _dl_argc = *(int *) start_argptr;
   _dl_argv = start_argptr + 1;
   _environ = &_dl_argv[_dl_argc + 1];
@@ -57,6 +59,7 @@ _dl_sysdep_start (void **start_argptr,
 	break;
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;
+	break;
       case AT_UID:
 	uid = av->a_un.a_val;
 	break;

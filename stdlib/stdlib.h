@@ -198,7 +198,83 @@ extern __inline __ptr_t initstate (unsigned int __seed,
 extern __inline __ptr_t setstate (__ptr_t __statebuf)
 { return __setstate (__statebuf); }
 #endif /* Optimizing GCC >=2.  */
-#endif /* Use BSD.  */
+
+#ifdef __USE_REENTRANT
+/* Reentrant versions of the `random' family of functions.
+   These functions all use the following data structure to contain
+   state, rather than global state variables.  */
+
+struct random_data
+  {
+    long int *fptr;		/* Front pointer.  */
+    long int *rptr;		/* Rear pointer.  */
+    long int *state;		/* Array of state values.  */
+    int rand_type;		/* Type of random number generator.  */
+    int rand_deg;		/* Degree of random number generator.  */
+    int rand_sep;		/* Distance between front and rear.  */
+    long int *end_ptr;		/* Pointer behind state table.  */
+  };
+
+extern int __random_r __P ((struct random_data *__buf, long int *__result));
+extern int __srandom_r __P ((unsigned int __seed, struct random_data *__buf));
+extern int __initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
+			       size_t __statelen, struct random_data *__buf));
+extern int __setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
+
+extern int random_r __P ((struct random_data *__buf, long int *__result));
+extern int srandom_r __P ((unsigned int __seed, struct random_data *__buf));
+extern int initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
+			     size_t __statelen, struct random_data *__buf));
+extern int setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
+#endif	/* __USE_REENTRANT.  */
+#endif	/* Use BSD.  */
+
+
+#ifdef	__USE_SVID
+/* System V style 48-bit random number generator functions.  */
+
+/* Data structure for communication with thread safe versions.  */
+struct drand48_data
+  {
+    unsigned short int X[3];	/* Current state.  */
+    unsigned short int a[3];	/* Factor in congruential formula.  */
+    unsigned short int c;	/* Additive const. in congruential formula.  */
+    unsigned short int old_X[3]; /* Old state.  */
+    int init;			/* Flag for initializing.  */
+  };
+
+/* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
+extern double drand48 __P ((void));
+extern int drand48_r __P ((struct drand48_data *__buffer, double *__result));
+extern double erand48 __P ((unsigned short int __xsubi[3]));
+extern int erand48_r __P ((unsigned short int __xsubi[3],
+			   struct drand48_data *__buffer, double *__result));
+/* Return non-negative, long integer in [0,2^31).  */
+extern long lrand48 __P ((void));
+extern int lrand48_r __P ((struct drand48_data *__buffer, long *__result));
+extern long nrand48 __P ((unsigned short int __xsubi[3]));
+extern int nrand48_r __P ((unsigned short int __xsubi[3],
+			   struct drand48_data *__buffer, long *__result));
+/* Return signed, long integers in [-2^31,2^31).  */
+extern long mrand48 __P ((void));
+extern int mrand48_r __P ((struct drand48_data *__buffer, long *__result));
+extern long jrand48 __P ((unsigned short int __xsubi[3]));
+extern int jrand48_r __P ((unsigned short int __xsubi[3],
+			   struct drand48_data *__buffer, long *__result));
+/* Seed random number generator.  */
+extern void srand48 __P ((long __seedval));
+extern int srand48_r __P ((long __seedval, struct drand48_data *__buffer));
+extern unsigned short int *seed48 __P ((unsigned short int __seed16v[3]));
+extern int seed48_r __P ((unsigned short int __seed16v[3],
+			  struct drand48_data *__buffer));
+extern void lcong48 __P ((unsigned short int __param[7]));
+extern int lcong48_r __P ((unsigned short int __param[7],
+			   struct drand48_data *__buffer));
+
+/* Internal function to compute next state of the generator.  */
+extern int __drand48_iterate __P ((unsigned short int __xsubi[3],
+				   struct drand48_data *__buffer));
+#endif	/* __USE_SVID.  */
 
 
 /* Allocate SIZE bytes of memory.  */
@@ -268,7 +344,10 @@ extern int system __P ((__const char *__command));
 
 
 /* Shorthand for type of comparison functions.  */
+#ifndef __COMPAR_FN_T
+#define __COMPAR_FN_T
 typedef int (*__compar_fn_t) __P ((__const __ptr_t, __const __ptr_t));
+#endif
 
 #ifdef	__USE_GNU
 typedef __compar_fn_t comparison_fn_t;
@@ -306,6 +385,34 @@ extern __CONSTVALUE long int labs __P ((long int __x));
 /* GCC may have built-ins for these someday.  */
 extern __CONSTVALUE div_t div __P ((int __numer, int __denom));
 extern __CONSTVALUE ldiv_t ldiv __P ((long int __numer, long int __denom));
+
+
+#ifdef __USE_SVID
+/* Convert floating point numbers to strings.  The returned values are
+   valid only until another call to the same function.  */
+
+/* Convert VALUE to a string with NDIGIT digits and return a pointer to
+   this.  Set *DECPT with the position of the decimal character and *SIGN
+   with the sign of the number.  */
+char *ecvt __P ((double __value, int __ndigit, int *__decpt, int *sign));
+
+/* Convert VALUE to a string rounded to NDIGIT decimal digits.  Set *DECPT
+   with the position of the decimal character and *SIGN with the sign of
+   the number.  */
+char *fcvt __P ((double __value, int __ndigit, int *__decpt, int *sign));
+
+/* If possible convert VALUE to a string with NDIGIT significant digits.
+   Otherwise use exponential representation.  The resulting string will
+   be written to BUF.  */
+char *gcvt __P ((double __value, int __ndigit, char *__buf));
+
+/* Reentrant version of the functions above which provide their own
+   buffers.  */
+int ecvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
+		 char *__buf, int *__len));
+int fcvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
+		 char *__buf, int *__len));
+#endif
 
 
 /* Return the length of the multibyte character

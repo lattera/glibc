@@ -25,7 +25,7 @@ subdir	:= misc
 headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
 	   a.out.h nlist.h stab.h stab.def sgtty.h sys/dir.h sys/cdefs.h \
 	   ttyent.h syscall.h syslog.h sys/syslog.h paths.h sys/reboot.h \
-	   sys/mman.h sys/param.h fstab.h mntent.h search.h utmp.h
+	   sys/mman.h sys/param.h fstab.h search.h utmp.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \
@@ -42,14 +42,15 @@ routines := brk sbrk sstk ioctl \
 	    ualarm usleep \
 	    gtty stty \
 	    ptrace \
-	    nlist fstab mntent \
+	    nlist fstab \
 	    utimes \
 	    truncate ftruncate \
 	    chflags fchflags \
 	    insremque getttyent getusershell getpass ttyslot \
 	    syslog syscall daemon \
 	    mmap munmap mprotect msync madvise \
-	    efgcvt
+	    efgcvt efgcvt_r \
+	    hsearch hsearch_r tsearch
 aux := progname init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o

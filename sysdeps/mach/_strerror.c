@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-_strerror_internal (int errnum, char buf[1024])
+_strerror_internal (int errnum, char *buf, size_t buflen)
 {
   int system; 
   int sub;
@@ -41,7 +41,7 @@ _strerror_internal (int errnum, char buf[1024])
   if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
     {
       static const char unk[] = "Error in unknown error system: ";
-      char *p = buf + sizeof buf;
+      char *p = buf + buflen;
       *p-- = '\0';
       p = _itoa (errnum, p, 16, 1);
       p -= sizeof unk - 1;
@@ -56,7 +56,7 @@ _strerror_internal (int errnum, char buf[1024])
   if (code >= es->subsystem[sub].max_code)
     {
       static const char unk[] = "Unknown error ";
-      char *p = buf + sizeof buf;
+      char *p = buf + buflen;
       size_t len = strlen (es->subsystem[sub].subsys_name);
       *p-- = '\0';
       p = _itoa (errnum, p, 16, 1);

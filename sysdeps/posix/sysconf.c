@@ -52,7 +52,11 @@ DEFUN(__sysconf, (name), int name)
 #endif
 
     case _SC_CLK_TCK:
+#ifdef	CLK_TCK
+      return CLK_TCK;
+#else
       return 60;
+#endif
 
     case _SC_NGROUPS_MAX:
 #ifdef	NGROUPS_MAX
@@ -65,7 +69,11 @@ DEFUN(__sysconf, (name), int name)
       return __getdtablesize ();
 
     case _SC_STREAM_MAX:
+#ifdef	STREAM_MAX
+      return STREAM_MAX;
+#else
       return FOPEN_MAX;
+#endif
 
     case _SC_TZNAME_MAX:
       return __tzname_max ();
@@ -167,6 +175,13 @@ DEFUN(__sysconf, (name), int name)
     case _SC_2_FORT_DEV:
 #ifdef	_POSIX2_FORT_DEV
       return _POSIX2_FORT_DEV;
+#else
+      return -1;
+#endif
+
+    case _SC_2_LOCALEDEF:
+#ifdef	_POSIX2_LOCALEDEF
+      return _POSIX2_LOCALEDEF;
 #else
       return -1;
 #endif
