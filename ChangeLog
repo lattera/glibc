@@ -1,3 +1,8 @@
+2005-03-29  Alfred M. Szmidt  <ams@gnu.org>
+
+	* manual/install.texi (Tools for Compilation): GNU binutils 2.15
+	is now needed.
+
 2005-03-19  Bruno Haible  <bruno@clisp.org>
 
 	* intl/dcigettext.c (struct known_translation_t): Change type of
