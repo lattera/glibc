@@ -23,6 +23,8 @@
 
 #define ELF_MACHINE_NAME "MIPS"
 
+#define ELF_MACHINE_NO_PLT 
+
 #include <assert.h>
 #include <entry.h>
 
@@ -142,7 +144,6 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   ElfW(Addr) *got;
   ElfW(Sym) *sym;
   int i, n;
-  struct link_map **scope;
   const char *strtab
     = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
 
@@ -150,7 +151,8 @@ elf_machine_got_rel (struct link_map *map, int lazy)
     ({ \
       const ElfW(Sym) *ref = sym; \
       ElfW(Addr) sym_loadaddr; \
-      sym_loadaddr = _dl_lookup_symbol (strtab + sym->st_name, &ref, scope, \
+      sym_loadaddr = _dl_lookup_symbol (strtab + sym->st_name, &ref, \
+					map->l_scope, \
 					map->l_name, ELF_MACHINE_RELOC_NOPLT);\
       (ref)? sym_loadaddr + ref->st_value: 0; \
     })
@@ -165,9 +167,6 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   /* Add the run-time display to all local got entries. */
   while (i < n)
     got[i++] += map->l_addr;
-
-  /* Set scope.  */
-  scope = _dl_object_relocation_scope (map);
 
   /* Handle global got entries. */
   got += n;
@@ -210,7 +209,6 @@ elf_machine_got_rel (struct link_map *map, int lazy)
     }
 
 #undef RESOLVE_GOTSYM
-  *_dl_global_scope_end = NULL;
 
   return;
 }
@@ -362,16 +360,13 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
   const ElfW(Sym) *definer;						      \
   ElfW(Addr) loadbase;							      \
   ElfW(Addr) funcaddr;							      \
-  struct link_map **scope;						      \
 									      \
   /* Look up the symbol's run-time value.  */				      \
-  scope = _dl_object_relocation_scope (l);				      \
   definer = &symtab[sym_index];						      \
 									      \
   loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,	      \
-				scope, l->l_name, ELF_MACHINE_RELOC_NOPLT);   \
-									      \
-  *_dl_global_scope_end = NULL;						      \
+				l->l_scope, l->l_name,			      \
+				ELF_MACHINE_RELOC_NOPLT);		      \
 									      \
   /* Apply the relocation with that value.  */				      \
   funcaddr = loadbase + definer->st_value;				      \
