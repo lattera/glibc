@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,11 @@
 #
 subdir		:= dirent
 
-headers		:= dirent.h
+headers		:= dirent.h direntry.h
 routines	:= opendir closedir readdir rewinddir \
 		   seekdir telldir scandir alphasort \
 		   getdents dirfd
-distribute := direct.h dirstream.h
+distribute := dirstream.h
 
 tests	   := list tst-seekdir
 

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.22";
+static char	elsieid[] = "@(#)zdump.c	7.23";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -68,6 +68,11 @@ static char	elsieid[] = "@(#)zdump.c	7.22";
 #define isleap(y) ((((y) % 4) == 0 && ((y) % 100) != 0) || ((y) % 400) == 0)
 #endif /* !defined isleap */
 
+#if HAVE_GETTEXT - 0
+#include "locale.h"	/* for setlocale */
+#include "libintl.h"
+#endif /* HAVE_GETTEXT - 0 */
+
 #ifndef GNUC_or_lint
 #ifdef lint
 #define GNUC_or_lint
@@ -90,11 +95,21 @@ static char	elsieid[] = "@(#)zdump.c	7.22";
 
 /*
 ** For the benefit of GNU folk...
+** `_(MSGID)' uses the current locale's message library string for MSGID.
+** The default is to use gettext if available, and use MSGID otherwise.
 */
 
 #ifndef _
-#define _(x) x
+#if HAVE_GETTEXT - 0
+#define _(msgid) gettext(msgid)
+#else /* !(HAVE_GETTEXT - 0) */
+#define _(msgid) msgid
+#endif /* !(HAVE_GETTEXT - 0) */
 #endif /* !defined _ */
+
+#ifndef TZ_DOMAIN
+#define TZ_DOMAIN "tz"
+#endif /* !defined TZ_DOMAIN */
 
 extern char **	environ;
 extern int	getopt();
@@ -130,6 +145,13 @@ char *	argv[];
 	struct tm		newtm;
 
 	INITIALIZE(cuttime);
+#if HAVE_GETTEXT - 0
+	(void) setlocale(LC_MESSAGES, "");
+#ifdef TZ_DOMAINDIR
+	(void) bindtextdomain(TZ_DOMAIN, TZ_DOMAINDIR);
+#endif /* defined(TEXTDOMAINDIR) */
+	(void) textdomain(TZ_DOMAIN);
+#endif /* HAVE_GETTEXT - 0 */
 	progname = argv[0];
 	vflag = 0;
 	cutoff = NULL;

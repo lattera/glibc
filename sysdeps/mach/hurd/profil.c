@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Mach/Hurd version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,8 @@ Cambridge, MA 02139, USA.  */
 #include <cthreads.h>
 #include <assert.h>
 
+#define MAX_PC_SAMPLES	512	/* XXX ought to be exported in kernel hdr */
+
 static thread_t profile_thread = MACH_PORT_NULL;
 static u_short *samples;
 static size_t maxsamples;
@@ -33,6 +35,7 @@ static size_t pc_offset;
 static size_t sample_scale;
 static sampled_pc_seqno_t seqno;
 static struct mutex lock = MUTEX_INITIALIZER;
+static mach_msg_timeout_t collector_timeout; /* ms between collections.  */
 
 /* Enable statistical profiling, writing samples of the PC into at most
    SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
@@ -59,7 +62,12 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 
   if (! err)
     {
-      if (sample_scale == 0)
+      int tick;			/* Microseconds per sample.  */
+      err = __task_enable_pc_sampling (__mach_task_self (), &tick,
+				       SAMPLED_PC_PERIODIC);
+      if (!err && sample_scale == 0)
+	/* Profiling was not turned on, so the collector thread was
+	   suspended.  Resume it.  */
 	err = __thread_resume (profile_thread);
       if (! err)
 	{
@@ -67,6 +75,11 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 	  maxsamples = size / sizeof *sample_buffer;
 	  pc_offset = offset;
 	  sample_scale = scale;
+	  /* Calculate a good period for the collector thread.  From TICK
+	     and the kernel buffer size we get the length of time it takes
+	     to fill the buffer; translate that to milliseconds for
+	     mach_msg, and chop it in half for general lag factor.  */
+	  collector_timeout = MAX_PC_SAMPLES * tick / 1000 / 2;
 	}
     }
 
@@ -100,17 +113,17 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 static void
 profile_waiter (void)
 {
-  sampled_pc_t pc_samples[512];
-  mach_msg_type_number_t nsamples = 512, i;
+  sampled_pc_t pc_samples[MAX_PC_SAMPLES];
+  mach_msg_type_number_t nsamples, i;
   mach_port_t rcv = __mach_reply_port ();
   mach_msg_header_t msg;
-  const mach_msg_timeout_t timeout = 17; /* ??? XXX */
   error_t err;
 
   while (1)
     {
       __mutex_lock (&lock);
 
+      nsamples = sizeof pc_samples / sizeof pc_samples[0];
       err = __task_get_sampled_pcs (__mach_task_self (), &seqno,
 				    pc_samples, &nsamples);
       assert_perror (err);
@@ -130,7 +143,7 @@ profile_waiter (void)
       __mutex_unlock (&lock);
 
       __mach_msg (&msg, MACH_RCV_MSG|MACH_RCV_TIMEOUT, 0, sizeof msg,
-		  rcv, timeout, MACH_PORT_NULL);
+		  rcv, collector_timeout, MACH_PORT_NULL);
     }
 }
 

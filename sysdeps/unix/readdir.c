@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
@@ -24,60 +23,77 @@ Cambridge, MA 02139, USA.  */
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <assert.h>
 
-#include "direct.h"		/* This file defines `struct direct'.  */
-#include "dirstream.h"
-
-/* direct.h may have an alternate definition for this.  */
-#ifndef D_RECLEN
-#define D_RECLEN(dp)	((dp)->d_reclen)
-#endif
+#include <dirstream.h>
 
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
-DEFUN(readdir, (dirp), DIR *dirp)
+readdir (DIR *dirp)
 {
-  if (dirp == NULL || dirp->__data == NULL)
+  struct dirent *dp;
+
+  if (dirp == NULL || dirp->data == NULL)
     {
       errno = EINVAL;
       return NULL;
     }
 
-  while (1)
+  do
     {
-      struct direct *dp;
+      size_t reclen;
 
-      if (dirp->__offset >= dirp->__size)
+      if (dirp->offset >= dirp->size)
 	{
 	  /* We've emptied out our buffer.  Refill it.  */
 
+	  size_t maxread;
 	  off_t base;
-	  ssize_t bytes = __getdirentries (dirp->__fd, dirp->__data,
-					   dirp->__allocation, &base);
+	  ssize_t bytes;
+
+	  if (sizeof (dp->d_name) > 1)
+	    /* Fixed-size struct; must read one at a time (see below).  */
+	    maxread = sizeof *dp;
+	  else
+	    maxread = dirp->allocation;
+
+	  base = dirp->filepos;
+	  bytes = __getdirentries (dirp->fd, dirp->data, maxread, &base);
 	  if (bytes <= 0)
 	    return NULL;
-	  dirp->__size = (size_t) bytes;
+	  dirp->size = (size_t) bytes;
 
 	  /* Reset the offset into the buffer.  */
-	  dirp->__offset = 0;
+	  dirp->offset = 0;
 	}
 
-      dp = (struct direct *) &dirp->__data[dirp->__offset];
-      dirp->__offset += D_RECLEN (dp);
+      dp = (struct dirent *) &dirp->data[dirp->offset];
 
-      if (dp->d_ino != 0)
-	{
-	  /* Not a deleted file.  */
-	  register struct dirent *d = &dirp->__entry;
-	  register const char *p;
-	  d->d_fileno = (ino_t) dp->d_ino;
-	  /* On some systems the name length does not actually mean much.
-	     But we always use it as a maximum.  */
-	  p = memchr ((PTR) dp->d_name, '\0', D_NAMLEN (dp) + 1);
-	  d->d_namlen = (p != NULL) ? p - dp->d_name : D_NAMLEN (dp);
-	  memcpy (d->d_name, dp->d_name, d->d_namlen + 1);
-	  return d;
-	}
-    }
+#ifdef _DIRENT_HAVE_D_RECLEN
+      reclen = dp->d_reclen;
+#else
+      /* The only version of `struct dirent' that lacks `d_reclen'
+	 is fixed-size.  */
+      assert (sizeof dp->d_name > 1);
+      reclen = sizeof *dp;
+      /* The name is not terminated if it is the largest possible size.
+	 Clobber the following byte to ensure proper null termination.  We
+	 read jst one entry at a time above so we know that byte will not
+	 be used later.  */
+      dp->d_name[sizeof dp->d_name] = '\0';
+#endif
+
+      dirp->offset += reclen;
+
+#ifdef _DIRENT_HAVE_D_OFF
+      dirp->filepos = dp->d_off;
+#else
+      dirp->filepos += reclen;
+#endif
+
+      /* Skip deleted files.  */
+    } while (dp->d_ino == 0);
+
+  return dp;
 }

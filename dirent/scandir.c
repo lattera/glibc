@@ -64,7 +64,7 @@ DEFUN(scandir, (dir, namelist, select, cmp),
 	    v = new;
 	  }
 
-	dsize = &d->d_name[d->d_namlen + 1] - (char *) d;
+	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
 	v[i] = (struct dirent *) malloc (dsize);
 	if (v[i] == NULL)
 	  goto lose;

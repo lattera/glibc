@@ -661,13 +661,16 @@ fts_build(sp, type)
 	/* Read the directory, attaching each entry to the `link' pointer. */
 	adjaddr = NULL;
 	for (head = tail = NULL, nitems = 0; dp = readdir(dirp);) {
+		int namlen;
+
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
 			continue;
 
-		if ((p = fts_alloc(sp, dp->d_name, (int)dp->d_namlen)) == NULL)
+		namlen = _D_EXACT_NAMLEN (dp);
+		if ((p = fts_alloc(sp, dp->d_name, namlen)) == NULL)
 			goto mem1;
-		if (dp->d_namlen > maxlen) {
-			if (fts_palloc(sp, (size_t)dp->d_namlen)) {
+		if (namlen > maxlen) {
+			if (fts_palloc(sp, (size_t)namlen)) {
 				/*
 				 * No more memory for path or structures.  Save
 				 * errno, free up the current structure and the
@@ -687,7 +690,7 @@ mem1:				saved_errno = errno;
 			maxlen = sp->fts_pathlen - sp->fts_cur->fts_pathlen - 1;
 		}
 
-		p->fts_pathlen = len + dp->d_namlen + 1;
+		p->fts_pathlen = len + namlen + 1;
 		p->fts_parent = sp->fts_cur;
 		p->fts_level = level;
 

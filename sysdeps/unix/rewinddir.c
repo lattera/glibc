@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,13 +21,13 @@ Cambridge, MA 02139, USA.  */
 #include <dirent.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "dirstream.h"
+#include <dirstream.h>
 
 /* Rewind DIRP to the beginning of the directory.  */
 void
 DEFUN(rewinddir, (dirp), DIR *dirp)
 {
-  (void) lseek(dirp->__fd, (off_t) 0, SEEK_SET);
-  dirp->__offset = 0;
-  dirp->__size = 0;
+  (void) lseek(dirp->fd, (off_t) 0, SEEK_SET);
+  dirp->offset = 0;
+  dirp->size = 0;
 }

@@ -1,3 +1,83 @@
+Mon Feb 26 10:22:30 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/dirstream.h: Rewritten.
+	* sysdeps/unix/readdir.c: Rewritten.
+	* sysdeps/unix/telldir.c: Rewritten.
+	* sysdeps/unix/closedir.c: Use <...> instead of "..." for dirstream.h.
+	Remove __ from DIR struct member names.
+	* sysdeps/unix/dirfd.c: Likewise.
+	* sysdeps/unix/seekdir.c: Likewise.
+	* sysdeps/unix/rewinddir.c: Likewise.
+	* sysdeps/unix/opendir.c: Likewise.  Don't allocate extra space after
+	DIR structure.
+	* sysdeps/stub/direct.h: File removed.
+	* sysdeps/unix/bsd/bsd4.4/direct.h: File removed.
+	* sysdeps/unix/bsd/direct.h: File removed.
+	* sysdeps/unix/common/direct.h: File removed.
+	* sysdeps/unix/sysv/irix4/direct.h: File removed.
+	* sysdeps/unix/sysv/isc3/direct.h: File removed.
+	* sysdeps/unix/sysv/sco3.2.4/direct.h: File removed.
+	* sysdeps/unix/sysv/sysv4/solaris2/direct.h: File removed.
+	* sysdeps/unix/common/direntry.h: New file.
+	* sysdeps/unix/bsd/direntry.h: New file.
+	* sysdeps/unix/bsd/bsd4.4/direntry.h: New file.
+	* sysdeps/unix/sysv/direntry.h: New file.
+	* sysdeps/stub/direntry.h: New file.
+	* dirent/dirent.h (struct dirent): Type removed.  Include <direntry.h>
+	to define it.
+	(_D_EXACT_NAMLEN, _D_ALLOC_NAMLEN): New macros.
+	* dirent/Makefile (headers): Add direntry.h.
+	(distribute): Remove direct.h.
+	* sysdeps/posix/getcwd.c: Use new macros instead of d_namlen.
+	* dirent/scandir.c: Likewise.
+	* io/fts.c (fts_build): Likewise.
+	* io/ftw.c (ftw_dir): Likewise.
+	* sysdeps/posix/ttyname.c: Likewise.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/syscalls.list: New file.
+
+	* sysdeps/mach/hurd/profil.c (MAX_PC_SAMPLES): New macro.
+	(collector_timeout): New static variable.
+	(update_waiter): Actually call __task_enable_pc_sampling.
+	Set collector_timeout based on the `tick' count returned.
+	(profile_waiter): Use MAX_PC_SAMPLES.  Set nsamples before RPC.
+	Use collector_timeout in __mach_msg call.
+
+	* gmon/Makefile (noprof): New variable containing mcount.
+	Append profil unless it is in $(unix-syscalls).
+	(mcount.po): Use $(noprof) for list of targets in this rule.
+
+	* libc-symbols.h: Define _LIBC before #include <config.h>.
+
+Sun Feb 25 12:29:23 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* config.h.in [_LIBC] (HAVE_STRERROR): Define it.
+	Protect 2nd page of #undef's for generator programs with #ifndef _LIBC.
+
+	* time/zic.c, time/zdump.c, time/private.h: Updated from ADO's latest.
+
+Fri Feb  9 12:40:19 1996  Brendan Kehoe  <brendan@lisa.cygnus.com>
+
+ 	* libio/cleanup.c (_IO_cleanup_registration_needed)
+	[!_G_HAVE_ATEXIT]: Init to NULL.
+	* libio/filedoalloc.c (_IO_cleanup_registration_needed): Remove decl.
+
+Thu Feb  8 08:12:50 1996  Brendan Kehoe  <brendan@cygnus.com>
+
+	* libio/filedoalloc.c (_IO_cleanup_registration_needed): Revert
+	previous change, since cleanup.c only defines it if _G_HAVE_ATEXIT.
+
+Wed Feb  7 15:10:17 1996  Brendan Kehoe  <brendan@lisa.cygnus.com>
+
+	* libio/filedoalloc.c (_IO_cleanup_registration_needed): Declare as
+	extern.
+
+Sat Feb 24 11:34:13 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/i386/memcmp.S: Fix argument %esp offsets.
+
+	* time/sys/time.h (timeradd, timersub): New macros; BSD has these.
+
 Wed Feb 21 02:25:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* Rules (others): Depend on $(extra-objs), $(install-lib),

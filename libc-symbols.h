@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,15 +37,17 @@ Cambridge, MA 02139, USA.  */
    linker being used.  Set by --with-weak-symbols.
 
    */
-#include <config.h>
 
-/* This is defined for the compilation of all C library code.
-   features.h tests this to avoid inclusion of stubs.h while
-   compiling the library, before stubs.h has been generated.
-   Some library code that is shared with other packages also
-   tests this symbol to see if it is being compiled as part
-   of the C library.  */
+/* This is defined for the compilation of all C library code.  features.h
+   tests this to avoid inclusion of stubs.h while compiling the library,
+   before stubs.h has been generated.  Some library code that is shared
+   with other packages also tests this symbol to see if it is being
+   compiled as part of the C library.  We must define this before including
+   config.h, because it makes some definitions conditional on whether libc
+   itself is being compiled, or just some generator program.  */
 #define _LIBC	1
+
+#include <config.h>
 /*
 
 */

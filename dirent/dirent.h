@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,29 +29,47 @@ __BEGIN_DECLS
 
 #include <gnu/types.h>
 
+/* This file defines `struct dirent'.
 
-/* Directory entry structure.
+   It defines the macro `_DIRENT_HAVE_D_NAMLEN' iff there is a `d_namlen'
+   member that gives the length of `d_name'.
 
-   This structure is laid out identically to the `struct direct' that
-   represents directory entries in the GNU Hurd and in BSD 4.4 (and
-   incidentally, on disk in the Berkeley fast file system).  The `readdir'
-   implementations for GNU and BSD know this; you must change them if you
-   change this structure.  */
+   It defines the macro `_DIRENT_HAVE_D_RECLEN' iff there is a `d_reclen'
+   member that gives the size of the entire directory entry.  */
 
-struct dirent
-  {
-    __ino_t d_fileno;		/* File serial number.  */
-    unsigned short int d_reclen; /* Length of the whole `struct dirent'.  */
-    unsigned char d_type;	/* File type, possibly unknown.  */
-    unsigned char d_namlen;	/* Length of the file name.  */
-
-    /* Only this member is in the POSIX standard.  */
-    char d_name[1];		/* File name (actually longer).  */
-  };
+#include <direntry.h>
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
 #define	d_ino		d_fileno /* Backward compatibility.  */
 #endif
+
+/* These macros extract size information from a `struct dirent *'.
+   They may evaluate their argument multiple times, so it must not
+   have side effects.  Each of these may involve a relatively costly
+   call to `strlen' on some systems, so these values should be cached.
+
+   _D_EXACT_NAMLEN (DP)	returns the length of DP->d_name, not including
+   its terminating null character.
+
+   _D_ALLOC_NAMLEN (DP)	returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
+   that is, the allocation size needed to hold the DP->d_name string.
+   Use this macro when you don't need the exact length, just an upper bound.
+   This macro is less likely to require calling `strlen' than _D_EXACT_NAMLEN.
+   */
+
+#ifdef _DIRENT_HAVE_D_NAMLEN
+#define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
+#define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
+#else
+#define _D_EXACT_NAMLEN(d) (strlen ((d)->d_name))
+#ifdef _DIRENT_HAVE_D_RECLEN
+#define _D_ALLOC_NAMLEN(d) (((char *) (d) + (d)->d_reclen) - &(d)->d_name[0])
+#else
+#define _D_ALLOC_NAMLEN(d) (sizeof (d)->d_name > 1 ? sizeof (d)->d_name : \
+			    _D_EXACT_NAMLEN (d) + 1)
+#endif
+#endif
+
 
 #ifdef __USE_BSD
 /* File types for `d_type'.  */

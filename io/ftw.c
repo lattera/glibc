@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ian Lance Taylor (ian@airs.com).
 
@@ -53,18 +53,21 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
     {
       struct stat s;
       int flag, retval, newlev;
+      size_t namlen;
 
       ++got;
 
       if (entry->d_name[0] == '.'
-	  && (entry->d_namlen == 1 ||
-	      (entry->d_namlen == 2 && entry->d_name[1] == '.')))
+	  && (entry->d_name[1] == '\0' ||
+	      (entry->d_name[1] == '.' && entry->d_name[2] == '\0')))
 	{
 	  errno = 0;
 	  continue;
 	}
 
-      if (entry->d_namlen + len + 1 > PATH_MAX)
+      namlen = _D_EXACT_NAMLEN (entry);
+
+      if (namlen + len + 1 > PATH_MAX)
 	{
 #ifdef ENAMETOOLONG
 	  errno = ENAMETOOLONG;
@@ -76,7 +79,7 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 
       dir[len] = '/';
       memcpy ((PTR) (dir + len + 1), (PTR) entry->d_name,
-	      entry->d_namlen + 1);
+	      namlen + 1);
 
       if (stat (dir, &s) < 0)
 	{
@@ -110,7 +113,7 @@ DEFUN (ftw_dir, (dirs, level, descriptors, dir, len, func),
 	{
 	  if (retval == 0)
 	    retval = ftw_dir (dirs, newlev, descriptors, dir,
-			      entry->d_namlen + len + 1, func);
+			      namlen + len + 1, func);
 	  if (dirs[newlev] != NULL)
 	    {
 	      int save;

@@ -16,7 +16,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.40";
+static char	privatehid[] = "@(#)private.h	7.42";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -29,9 +29,17 @@ static char	privatehid[] = "@(#)private.h	7.40";
 #define HAVE_ADJTIME		1
 #endif /* !defined HAVE_ADJTIME */
 
+#ifndef HAVE_GETTEXT
+#define HAVE_GETTEXT		0
+#endif /* !defined HAVE_GETTEXT */
+
 #ifndef HAVE_SETTIMEOFDAY
 #define HAVE_SETTIMEOFDAY	3
 #endif /* !defined HAVE_SETTIMEOFDAY */
+
+#ifndef HAVE_STRERROR
+#define HAVE_STRERROR		0
+#endif /* !defined HAVE_STRERROR */
 
 #ifndef HAVE_UNISTD_H
 #define HAVE_UNISTD_H		1
@@ -56,6 +64,10 @@ static char	privatehid[] = "@(#)private.h	7.40";
 #include "limits.h"	/* for CHAR_BIT */
 #include "time.h"
 #include "stdlib.h"
+
+#if HAVE_GETTEXT - 0
+#include "libintl.h"
+#endif /* HAVE_GETTEXT - 0 */
 
 #if HAVE_UNISTD_H - 0
 #include "unistd.h"	/* for F_OK and R_OK */
@@ -147,6 +159,15 @@ extern int	unlink P((const char * filename));
 #endif /* !defined remove */
 
 /*
+** Some ancient errno.h implementations don't declare errno.
+** But some newer errno.h implementations define it as a macro.
+** Fix the former without affecting the latter.
+*/
+#ifndef errno
+extern int errno;
+#endif /* !defined errno */
+
+/*
 ** Finally, some convenience items.
 */
 
@@ -203,11 +224,21 @@ extern int	unlink P((const char * filename));
 
 /*
 ** For the benefit of GNU folk...
+** `_(MSGID)' uses the current locale's message library string for MSGID.
+** The default is to use gettext if available, and use MSGID otherwise.
 */
 
 #ifndef _
-#define _(x) x
+#if HAVE_GETTEXT - 0
+#define _(msgid) gettext(msgid)
+#else /* !(HAVE_GETTEXT - 0) */
+#define _(msgid) msgid
+#endif /* !(HAVE_GETTEXT - 0) */
 #endif /* !defined _ */
+
+#ifndef TZ_DOMAIN
+#define TZ_DOMAIN "tz"
+#endif /* !defined TZ_DOMAIN */
 
 /*
 ** UNIX was a registered trademark of UNIX System Laboratories in 1993.

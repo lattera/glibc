@@ -292,16 +292,15 @@ __getcwd (buf, size)
       while ((d = readdir (dirstream)) != NULL)
 	{
 	  if (d->d_name[0] == '.' &&
-	      (d->d_namlen == 1 || (d->d_namlen == 2 && d->d_name[1] == '.')))
+	      (d->d_name[1] == '\0' ||
+	       (d->d_name[1] == '.' && d->d_name[2] == '\0')))
 	    continue;
 	  if (mount_point || d->d_ino == thisino)
 	    {
-	      char *name = __alloca (dotlist + dotsize - dotp +
-				     1 + d->d_namlen + 1);
+	      char name[dotlist + dotsize - dotp + 1 + _D_ALLOC_NAMLEN (d)];
 	      memcpy (name, dotp, dotlist + dotsize - dotp);
 	      name[dotlist + dotsize - dotp] = '/';
-	      memcpy (&name[dotlist + dotsize - dotp + 1],
-		      d->d_name, d->d_namlen + 1);
+	      strcpy (&name[dotlist + dotsize - dotp + 1], d->d_name);
 	      if (__lstat (name, &st) < 0)
 		{
 		  int save = errno;
@@ -322,7 +321,9 @@ __getcwd (buf, size)
 	}
       else
 	{
-	  if (pathp - path < d->d_namlen + 1)
+	  size_t namlen = _D_EXACT_NAMLEN (d);
+
+	  if (pathp - path < namlen)
 	    {
 	      if (buf != NULL)
 		{
@@ -344,8 +345,8 @@ __getcwd (buf, size)
 		  path = buf;
 		}
 	    }
-	  pathp -= d->d_namlen;
-	  (void) memcpy (pathp, d->d_name, d->d_namlen);
+	  pathp -= namlen;
+	  (void) memcpy (pathp, d->d_name, namlen);
 	  *--pathp = '/';
 	  (void) closedir (dirstream);
 	}

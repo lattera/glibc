@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,26 +20,25 @@ Cambridge, MA 02139, USA.  */
 
 #define	_DIRSTREAM_H	1
 
-#define __need_size_t
-#include <stddef.h>
+#include <sys/types.h>
 
 /* Directory stream type.
 
    The miscellaneous Unix `readdir' implementations read directory data
-   into a buffer and fill in a `struct dirent' copy in the `DIR' object. */
+   into a buffer and return `struct dirent *' pointers into it.  */
 
 struct __dirstream
   {
-    int __fd;			/* File descriptor.  */
+    int fd;			/* File descriptor.  */
 
-    char *__data;		/* Directory block.  */
-    size_t __allocation;	/* Space allocated for the block.  */
-    size_t __offset;		/* Current offset into the block.  */
-    size_t __size;		/* Total valid data in the block.  */
+    char *data;			/* Directory block.  */
+    size_t allocation;		/* Space allocated for the block.  */
+    size_t size;		/* Total valid data in the block.  */
+    size_t offset;		/* Current offset into the block.  */
 
-    struct dirent __entry;	/* Returned by `readdir'.  */
+    off_t filepos;		/* Position of next entry to read.  */
   };
 
-#define _DIR_dirfd(dirp)	((dirp)->__fd)
+#define _DIR_dirfd(dirp)	((dirp)->fd)
 
 #endif	/* dirstream.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -56,17 +56,18 @@ DEFUN(ttyname, (fd), int fd)
   while ((d = readdir (dirstream)) != NULL)
     if (d->d_fileno == myino)
       {
-	if (sizeof (dev) + d->d_namlen + 1 > namelen)
+	size_t dlen = _D_ALLOC_NAMLEN (d);
+	if (sizeof (dev) + dlen > namelen)
 	  {
 	    free (name);
-	    namelen = 2 * (sizeof (dev) + d->d_namlen + 1); /* Big enough.  */
+	    namelen = 2 * (sizeof (dev) + dlen); /* Big enough.  */
 	    name = malloc (namelen);
 	    if (! name)
 	      return NULL;
 	    (void) memcpy (name, dev, sizeof (dev) - 1);
 	    name[sizeof (dev) - 1] = '/';
 	  }
-	(void) memcpy (&name[sizeof (dev)], d->d_name, d->d_namlen + 1);
+	(void) memcpy (&name[sizeof (dev)], d->d_name, dlen);
 	if (stat (name, &st) == 0 && st.st_dev == mydev)
 	  {
 	    (void) closedir (dirstream);

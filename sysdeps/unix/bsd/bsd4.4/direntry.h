@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Directory entry structure `struct dirent'.  4.4BSD version.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,32 +17,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <unistd.h>
-#include <dirstream.h>
+struct dirent
+  {
+    __ino_t d_fileno;		/* File serial number.  */
+    unsigned short int d_reclen; /* Length of the whole `struct dirent'.  */
+    unsigned char d_type;	/* File type, possibly unknown.  */
+    unsigned char d_namlen;	/* Length of the file name.  */
 
-/* Close the directory stream DIRP.
-   Return 0 if successful, -1 if not.  */
-int
-DEFUN(closedir, (dirp), DIR *dirp)
-{
-  int fd;
+    /* Only this member is in the POSIX standard.  */
+    char d_name[1];		/* File name (actually longer).  */
+  };
 
-  if (dirp == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  fd = dirp->fd;
-
-  free ((PTR) dirp->data);
-  free ((PTR) dirp);
-
-  return __close (fd);
-}
-
+#define _DIRENT_HAVE_D_RECLEN 1
+#define _DIRENT_HAVE_D_NAMLEN 1
+#define _DIRENT_HAVE_D_TYPE 1

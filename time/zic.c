@@ -1,10 +1,11 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.60";
+static char	elsieid[] = "@(#)zic.c	7.62";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
 #include "private.h"
+#include "locale.h"
 #include "tzfile.h"
 #ifdef unix
 #include "sys/stat.h"			/* for umask manifest constants */
@@ -134,6 +135,10 @@ static time_t	tadd P((time_t t1, long t2));
 static void	usage P((void));
 static void	writezone P((const char * name));
 static int	yearistype P((int year, const char * type));
+
+#if !HAVE_STRERROR
+static char *	strerror P((int));
+#endif /* !HAVE_STRERROR */
 
 static int		charcnt;
 static int		errors;
@@ -351,7 +356,9 @@ memcheck(ptr)
 char * const	ptr;
 {
 	if (ptr == NULL) {
-		(void) perror(progname);
+		const char *e = strerror(errno);
+		(void) fprintf(stderr, _("%s: Memory exhausted: %s\n"),
+			progname, e);
 		(void) exit(EXIT_FAILURE);
 	}
 	return ptr;
@@ -365,6 +372,20 @@ char * const	ptr;
 /*
 ** Error handling.
 */
+
+#if ! HAVE_STRERROR
+static char *
+strerror(errnum)
+int	errnum;
+{
+	extern char *sys_errlist[];
+	extern int sys_nerr;
+
+	if (errnum > 0 && errnum <= sys_nerr)
+		return sys_errlist[errnum];
+	return "Unknown system error";
+}
+#endif /* ! HAVE_STRERROR */
 
 static void
 eats(name, num, rname, rnum)
@@ -434,6 +455,13 @@ char *	argv[];
 #ifdef unix
 	(void) umask(umask(S_IWGRP | S_IWOTH) | (S_IWGRP | S_IWOTH));
 #endif /* defined unix */
+#if HAVE_GETTEXT - 0
+	(void) setlocale(LC_MESSAGES, "");
+#ifdef TZ_DOMAINDIR
+	(void) bindtextdomain(TZ_DOMAIN, TZ_DOMAINDIR);
+#endif /* defined TEXTDOMAINDIR */
+	(void) textdomain(TZ_DOMAIN);
+#endif /* HAVE_GETTEXT - 0 */
 	progname = argv[0];
 	while ((c = getopt(argc, argv, "d:l:p:L:vsy:")) != EOF)
 		switch (c) {
@@ -567,9 +595,10 @@ const char * const	tofile;
 		if (mkdirs(toname) != 0)
 			(void) exit(EXIT_FAILURE);
 		if (link(fromname, toname) != 0) {
-			(void) fprintf(stderr, _("%s: Can't link from %s to "),
-				progname, fromname);
-			(void) perror(toname);
+			const char *e = strerror(errno);
+			(void) fprintf(stderr,
+				_("%s: Can't link from %s to %s: %s\n"),
+				progname, fromname, toname, e);
 			(void) exit(EXIT_FAILURE);
 		}
 	}
@@ -682,7 +711,8 @@ associate P((void))
 			** Maybe we have a local standard time offset.
 			*/
 			eat(zp->z_filename, zp->z_linenum);
-			zp->z_stdoff = gethms(zp->z_rule, "unruly zone", TRUE);
+			zp->z_stdoff = gethms(zp->z_rule, _("unruly zone"),
+					      TRUE);
 			/*
 			** Note, though, that if there's no rule,
 			** a '%s' in the format is a bad thing.
@@ -712,8 +742,9 @@ const char *	name;
 		name = _("standard input");
 		fp = stdin;
 	} else if ((fp = fopen(name, "r")) == NULL) {
-		(void) fprintf(stderr, _("%s: Can't open "), progname);
-		(void) perror(name);
+		const char *e = strerror(errno);
+		(void) fprintf(stderr, _("%s: Can't open %s: %s\n"),
+			progname, name, e);
 		(void) exit(EXIT_FAILURE);
 	}
 	wantcont = FALSE;
@@ -774,13 +805,14 @@ _("%s: panic: Invalid l_value %d\n"),
 		ifree((char *) fields);
 	}
 	if (ferror(fp)) {
-		(void) fprintf(stderr, _("%s: Error reading "), progname);
-		(void) perror(filename);
+		(void) fprintf(stderr, _("%s: Error reading %s\n"),
+			progname, filename);
 		(void) exit(EXIT_FAILURE);
 	}
 	if (fp != stdin && fclose(fp)) {
-		(void) fprintf(stderr, _("%s: Error closing "), progname);
-		(void) perror(filename);
+		const char *e = strerror(errno);
+		(void) fprintf(stderr, _("%s: Error closing %s: %s\n"),
+			progname, filename, e);
 		(void) exit(EXIT_FAILURE);
 	}
 	if (wantcont)
@@ -1048,7 +1080,7 @@ const int		nfields;
 	}
 	dayoff = oadd(dayoff, eitol(day - 1));
 	if (dayoff < 0 && !TYPE_SIGNED(time_t)) {
-		error("time before zero");
+		error(_("time before zero"));
 		return;
 	}
 	t = (time_t) dayoff * SECSPERDAY;
@@ -1059,7 +1091,7 @@ const int		nfields;
 		error(_("time overflow"));
 		return;
 	}
-	tod = gethms(fields[LP_TIME], "invalid time of day", FALSE);
+	tod = gethms(fields[LP_TIME], _("invalid time of day"), FALSE);
 	cp = fields[LP_CORR];
 	{
 		register int	positive;
@@ -1161,7 +1193,7 @@ const char * const		timep;
 				break;
 		}
 	}
-	rp->r_tod = gethms(dp, "invalid time of day", FALSE);
+	rp->r_tod = gethms(dp, _("invalid time of day"), FALSE);
 	ifree(dp);
 	/*
 	** Year work.
@@ -1303,9 +1335,9 @@ const char * const	name;
 		if (mkdirs(fullname) != 0)
 			(void) exit(EXIT_FAILURE);
 		if ((fp = fopen(fullname, "wb")) == NULL) {
-			(void) fprintf(stderr, _("%s: Can't create "),
-				       progname);
-			(void) perror(fullname);
+			const char *e = strerror(errno);
+			(void) fprintf(stderr, _("%s: Can't create %s: %s\n"),
+				progname, fullname, e);
 			(void) exit(EXIT_FAILURE);
 		}
 	}
@@ -1369,8 +1401,8 @@ const char * const	name;
 	for (i = 0; i < typecnt; ++i)
 		(void) putc(ttisgmts[i], fp);
 	if (ferror(fp) || fclose(fp)) {
-		(void) fprintf(stderr, _("%s: Write error on "), progname);
-		(void) perror(fullname);
+		(void) fprintf(stderr, _("%s: Error writing %s\n"),
+			progname, fullname);
 		(void) exit(EXIT_FAILURE);
 	}
 }
@@ -1977,10 +2009,10 @@ char * const	argname;
 			** It doesn't seem to exist, so we try to create it.
 			*/
 			if (mkdir(name, 0755) != 0) {
+				const char *e = strerror(errno);
 				(void) fprintf(stderr,
-					_("%s: Can't create directory "),
-					progname);
-				(void) perror(name);
+				    _("%s: Can't create directory %s: %s\n"),
+				    progname, name, e);
 				ifree(name);
 				return -1;
 			}

@@ -34,11 +34,21 @@
 /* Define to use GNU libio instead of GNU stdio.
    This is defined by configure under --enable-libio.  */
 #undef	USE_IN_LIBIO
-/*  */
-/* These symbols might be defined by some sysdeps configures.  */
+
+/*
+ */
+
+#ifndef	_LIBC
+
+/* These symbols might be defined by some sysdeps configures.
+   They are used only in miscellaneous generator programs, not
+   in compiling libc itself.   */
 
 /* sysdeps/generic/configure.in */
 #undef	HAVE_PSIGNAL
+
+/* sysdeps/unix/configure.in */
+#undef	HAVE_STRERROR
 
 /* sysdeps/unix/common/configure.in */
 #undef	HAVE_SYS_SIGLIST
@@ -49,3 +59,16 @@
 #undef	HAVE__CTYPE__
 #undef	HAVE__CTYPE
 #undef	HAVE__LOCP
+
+#endif
+
+/*
+ */
+
+#ifdef	_LIBC
+
+/* The zic and zdump programs need these definitions.  */
+
+#define	HAVE_STRERROR	1
+
+#endif

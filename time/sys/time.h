@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -135,11 +135,30 @@ extern int utimes __P ((__const char *__file, struct timeval __tvp[2]));
 /* Convenience macros for operations on timevals.
    NOTE: `timercmp' does not work for >= or <=.  */
 #define	timerisset(tvp)		((tvp)->tv_sec || (tvp)->tv_usec)
-#define	timercmp(tvp, uvp, CMP)	\
-  ((tvp)->tv_sec CMP (uvp)->tv_sec || \
-   (tvp)->tv_sec == (uvp)->tv_sec && (tvp)->tv_usec CMP (uvp)->tv_usec)
 #define	timerclear(tvp)		((tvp)->tv_sec = (tvp)->tv_usec = 0)
-
+#define	timercmp(a, b, CMP) 						      \
+  (((a)->tv_sec == (b)->tv_sec) ? 					      \
+   ((a)->tv_usec CMP (b)->tv_usec) : 					      \
+   ((a)->tv_sec CMP (b)->tv_sec))
+#define	timeradd(a, b, result)						      \
+  do {									      \
+    (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;			      \
+    (result)->tv_usec = (a)->tv_usec + (b)->tv_usec;			      \
+    if ((result)->tv_usec >= 1000000)					      \
+      {									      \
+	++(result)->tv_sec;						      \
+	(result)->tv_usec -= 1000000;					      \
+      }									      \
+  } while (0)
+#define	timersub(a, b, result)						      \
+  do {									      \
+    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;			      \
+    (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;			      \
+    if ((result)->tv_usec < 0) {					      \
+      --(result)->tv_sec;						      \
+      (result)->tv_usec += 1000000;					      \
+    }									      \
+  } while (0)
 
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
@@ -28,12 +27,11 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <stdio.h>
 
-#include "direct.h"		/* This file defines `struct direct'.  */
-#include "dirstream.h"
+#include <dirstream.h>
 
 /* Open a directory stream on NAME.  */
 DIR *
-DEFUN(opendir, (name), CONST char *name)
+opendir (const char *name)
 {
   DIR *dirp;
   struct stat statbuf;
@@ -62,7 +60,7 @@ DEFUN(opendir, (name), CONST char *name)
       goto lose;
     }
 
-  dirp = (DIR *) calloc (1, sizeof (DIR) + NAME_MAX); /* Zero-fill.  */
+  dirp = (DIR *) calloc (1, sizeof (DIR)); /* Zero-fill.  */
   if (dirp == NULL)
   lose:
     {
@@ -73,24 +71,24 @@ DEFUN(opendir, (name), CONST char *name)
     }
 
 #ifdef _STATBUF_ST_BLKSIZE
-  if (statbuf.st_blksize < sizeof (struct direct))
-    dirp->__allocation = sizeof (struct direct);
+  if (statbuf.st_blksize < sizeof (struct dirent))
+    dirp->allocation = sizeof (struct dirent);
   else
-    dirp->__allocation = statbuf.st_blksize;
+    dirp->allocation = statbuf.st_blksize;
 #else
-  dirp->__allocation = (BUFSIZ < sizeof (struct direct) ?
-			sizeof (struct direct) : BUFSIZ);
+  dirp->allocation = (BUFSIZ < sizeof (struct dirent) ?
+		      sizeof (struct dirent) : BUFSIZ);
 #endif
-  dirp->__data = (char *) malloc (dirp->__allocation);
-  if (dirp->__data == NULL)
+  dirp->data = (char *) malloc (dirp->allocation);
+  if (dirp->data == NULL)
     {
       int save = errno;
-      free ((PTR) dirp);
+      free (dirp);
       (void) __close (fd);
       errno = save;
       return NULL;
     }
 
-  dirp->__fd = fd;
+  dirp->fd = fd;
   return dirp;
 }

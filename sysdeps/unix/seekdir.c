@@ -21,13 +21,13 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <dirent.h>
 #include <unistd.h>
-#include "dirstream.h"
+#include <dirstream.h>
 
 /* Seek to position POS in DIRP.  */
 void
 DEFUN(seekdir, (dirp, pos), DIR *dirp AND __off_t pos)
 {
-  (void) __lseek(dirp->__fd, pos, SEEK_SET);
-  dirp->__size = 0;
-  dirp->__offset = 0;
+  (void) __lseek(dirp->fd, pos, SEEK_SET);
+  dirp->size = 0;
+  dirp->offset = 0;
 }

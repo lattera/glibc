@@ -26,5 +26,5 @@ int
 dirfd (dirp)
      DIR *dirp;
 {
-  return dirp->__fd;
+  return dirp->fd;
 }

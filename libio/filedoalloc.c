@@ -49,12 +49,6 @@ the executable file might be covered by the GNU General Public License. */
 #include <stdlib.h>
 #endif
 
-/* If this function pointer is non-zero, we should call it.
-   It's supposed to make sure _IO_cleanup gets called on exit.
-   We call it from _IO_file_doallocate, since that is likely
-   to get called by any program that does buffered I/O. */
-void (*_IO_cleanup_registration_needed)();
-
 /*
  * Allocate a file buffer, or switch to unbuffered I/O.
  * Per the ANSI C standard, ALL tty devices default to line buffered.
@@ -72,6 +66,10 @@ DEFUN(_IO_file_doallocate, (fp),
   register char *p;
   struct stat st;
 
+  /* If _IO_cleanup_registration_needed is non-zero, we should call the
+     function it points to.  This is to make sure _IO_cleanup gets called
+     on exit.  We call it from _IO_file_doallocate, since that is likely
+     to get called by any program that does buffered I/O. */
   if (_IO_cleanup_registration_needed)
     (*_IO_cleanup_registration_needed)();
   

@@ -16,28 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <stddef.h>
 #include <dirent.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include "dirstream.h"
+
+#include <dirstream.h>
 
 /* Return the current position of DIRP.  */
 off_t
-DEFUN(telldir, (dirp), DIR *dirp)
+telldir (DIR *dirp)
 {
-  register off_t pos;
-
-  if (dirp == NULL)
-    {
-      errno = EINVAL;
-      return (off_t) -1;
-    }
-
-  pos = __lseek(dirp->__fd, (off_t) 0, SEEK_CUR);
-  if (pos == (off_t) -1)
-    return (off_t) -1;
-  return pos + dirp->__size - dirp->__offset;
+  return dirp->filepos;
 }
