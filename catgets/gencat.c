@@ -649,6 +649,7 @@ duplicated message identifier"));
 	      size_t outlen;
 	      struct message_list *newp;
 	      size_t line_len = strlen (line) + 1;
+	      size_t ident_len = 0;
 
 	      /* We need the conversion.  */
 	      if (cd_towc == (iconv_t) -1
@@ -699,6 +700,9 @@ invalid character: message ignored"));
 	      normalize_line (fname, start_line, cd_towc, wbuf,
 			      current->quote_char, escape_char);
 
+	      if (ident)
+		ident_len = line - this_line;
+
 	      /* Now the string is free of escape sequences.  Convert it
 		 back into a multibyte character string.  First free the
 		 memory allocated for the original string.  */
@@ -714,7 +718,8 @@ invalid character: message ignored"));
 	      outlen = obstack_room (&current->mem_pool);
 	      obstack_blank (&current->mem_pool, outlen);
 	      this_line = (char *) obstack_base (&current->mem_pool);
-	      outbuf = this_line;
+	      outbuf = this_line + ident_len;
+	      outlen -= ident_len;
 
 	      /* Flush the state.  */
 	      iconv (cd_tomb, NULL, NULL, NULL, NULL);
@@ -734,9 +739,9 @@ invalid character: message ignored"));
 
 	      newp = (struct message_list *) xmalloc (sizeof (*newp));
 	      newp->number = message_number;
-	      newp->message = line;
+	      newp->message = line + ident_len;
 	      /* Remember symbolic name; is NULL if no is given.  */
-	      newp->symbol = ident;
+	      newp->symbol = ident ? line : NULL;
 	      /* Remember where we found the character.  */
 	      newp->fname = fname;
 	      newp->line = start_line;
