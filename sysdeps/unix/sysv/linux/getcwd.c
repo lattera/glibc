@@ -104,13 +104,14 @@ __getcwd (char *buf, size_t size)
       if (retval >= 0)
 	{
 	  if (buf == NULL && size == 0)
-	    {
-	      /* Ensure that the buffer is only as large as necessary.  */
-	      buf = realloc (path, (size_t) retval);
-	      if (buf == NULL)
-		/* `realloc' failed but we still have the original string.  */
-		buf = path;
-	    }
+	    /* Ensure that the buffer is only as large as necessary.  */
+	    buf = realloc (path, (size_t) retval);
+
+	  if (buf == NULL)
+	    /* Either buf was NULL all along, or `realloc' failed but
+	       we still have the original string.  */
+	    buf = path;
+
 	  return buf;
 	}
 
@@ -156,13 +157,13 @@ __getcwd (char *buf, size_t size)
 
 	  path[n] = '\0';
 	  if (buf == NULL && size == 0)
-	    {
-	      /* Ensure that the buffer is only as large as necessary.  */
-	      buf = realloc (path, (size_t) n + 1);
-	      if (buf == NULL)
-		/* `relloc' failed but we still have the original string.  */
-		buf = path;
-	    }
+	    /* Ensure that the buffer is only as large as necessary.  */
+	    buf = realloc (path, (size_t) n + 1);
+	  if (buf == NULL)
+	    /* Either buf was NULL all along, or `realloc' failed but
+	       we still have the original string.  */
+	    buf = path;
+
 	  return buf;
 	}
 #ifndef have_new_dcache
