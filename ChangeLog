@@ -1,3 +1,16 @@
+2003-12-14  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.c (re_acquire_state_context):
+        Compare the node sets after all the other comparisons.
+
+2003-12-13  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (find_subexp_node, check_arrival,
+	check_arrival_add_next_nodes, check_arrival_expand_ecl,
+	check_arrival_expand_ecl_sub, expand_bkref_cache):
+	Rename the FL_OPEN parameter to TYPE, which is either
+	OP_OPEN_SUBEXP or OP_CLOSE_SUBEXP.  Callers adjusted.
+
 2003-12-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/syscall.S: Pass also 6th argument
@@ -40,10 +53,10 @@
 	* configure.in: Check whether compiler has libunwind support.
 	* config.make.in (have-cc-with-libunwind): New variable.
 	* config.h.in (HAVE_CC_WITH_LIBUNWIND): New macro.
-	* Makeconfig (gnulib): If have-cc-withh-libunwind is "yes", also
+	* Makeconfig (gnulib): If have-cc-with-libunwind is "yes", also
 	mention -lunwind.
 
-003-11-12  David Mosberger  <davidm@hpl.hp.com>
+2003-11-12  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Define DO_CALL_VIA_BREAK.
 	Redefine DO_CALL to use vdso if supported, otherwise DO_CALL_VIA_BREAK.

@@ -1398,10 +1398,9 @@ re_acquire_state_context (err, dfa, nodes, context)
   for (i = 0 ; i < spot->num ; i++)
     {
       re_dfastate_t *state = spot->array[i];
-      if (hash != state->hash)
-	continue;
-      if (re_node_set_compare (state->entrance_nodes, nodes)
-	  && state->context == context)
+      if (state->hash == hash
+	  && state->context == context
+	  && re_node_set_compare (state->entrance_nodes, nodes))
 	return state;
     }
   /* There are no appropriate state in `dfa', create the new one.  */
