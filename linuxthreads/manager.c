@@ -41,9 +41,11 @@ struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
 /* For debugging purposes put the maximum number of threads in a variable.  */
 const int __linuxthreads_pthread_threads_max = PTHREAD_THREADS_MAX;
 
+#ifndef THREAD_SELF
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or if all threads have stacks supplied by LinuxThreads (if 0). */
 int __pthread_nonstandard_stacks;
+#endif
 
 /* Number of active entries in __pthread_handles (used by gdb) */
 volatile int __pthread_handles_num = 2;
@@ -319,9 +321,11 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       new_thread =
         (pthread_descr) ((long)(attr->__stackaddr) & -sizeof(void *)) - 1;
       new_thread_bottom = (char *) attr->__stackaddr - attr->__stacksize;
-      guardaddr = NULL;
+      guardaddr = new_thread_bottom;
       guardsize = 0;
+#ifndef THREAD_SELF
       __pthread_nonstandard_stacks = 1;
+#endif
     }
   else
     {
@@ -331,6 +335,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 #else
       size_t granularity = pagesize;
 #endif
+      void *map_addr;
+
       /* Allocate space for stack and thread descriptor at default address */
       if (attr != NULL)
 	{
@@ -344,8 +350,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 	  guardsize = granularity;
 	  stacksize = STACK_SIZE - granularity;
 	}
-      new_thread = default_new_thread;
 #ifdef NEED_SEPARATE_REGISTER_STACK
+      new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize - guardsize;
       /* Includes guard area, unlike the normal case.  Use the bottom
        end of the segment as backing store for the register stack.
@@ -376,11 +382,12 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       guardaddr = new_thread_bottom + stacksize/2;
       /* We leave the guard area in the middle unmapped.	*/
 #else  /* !NEED_SEPARATE_REGISTER_STACK */
+      new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize;
-      if (mmap((caddr_t)((char *)(new_thread + 1) - INITIAL_STACK_SIZE),
-               INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
-               MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED | MAP_GROWSDOWN,
-               -1, 0) == MAP_FAILED)
+      map_addr = mmap((caddr_t)((char *)(new_thread + 1) - stacksize),
+		      stacksize, PROT_READ | PROT_WRITE | PROT_EXEC,
+		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+      if (map_addr == MAP_FAILED)
         /* Bad luck, this segment is already mapped. */
         return -1;
       /* We manage to get a stack.  Now see whether we need a guard
@@ -391,7 +398,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       if (stacksize == STACK_SIZE - pagesize)
         {
           /* We don't need a guard page. */
-          guardaddr = NULL;
+          guardaddr = new_thread_bottom;
           guardsize = 0;
         }
       else
@@ -402,7 +409,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
               == MAP_FAILED)
             {
               /* We don't make this an error.  */
-              guardaddr = NULL;
+              guardaddr = new_thread_bottom;
               guardsize = 0;
             }
         }
@@ -445,7 +452,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	return EAGAIN;
       if (__pthread_handles[sseg].h_descr != NULL)
 	continue;
-      if (pthread_allocate_stack(attr, thread_segment(sseg), pagesize,
+      if (pthread_allocate_stack(attr, thread_segment(sseg),
+				 pagesize,
                                  &new_thread, &new_thread_bottom,
                                  &guardaddr, &guardsize) == 0)
         break;
@@ -589,14 +597,11 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 #ifdef NEED_SEPARATE_REGISTER_STACK
 	size_t stacksize = ((char *)(new_thread->p_guardaddr)
 			    - new_thread_bottom);
-	munmap((caddr_t)new_thread_bottom, stacksize);
-	munmap((caddr_t)new_thread_bottom + stacksize
-	       + new_thread->p_guardsize, stacksize);
+	munmap((caddr_t)new_thread_bottom,
+	       2 * stacksize + new_thread->p_guardsize);
 #else
-	if (new_thread->p_guardsize != 0)
-	  munmap(new_thread->p_guardaddr, new_thread->p_guardsize);
-	munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
-	       INITIAL_STACK_SIZE);
+	size_t stacksize = (char *)(new_thread+1) - new_thread_bottom;
+	munmap(new_thread_bottom - guardsize, guardsize + stacksize);
 #endif
       }
     __pthread_handles[sseg].h_descr = NULL;
@@ -654,7 +659,6 @@ static void pthread_free(pthread_descr th)
     }
 
   /* If initial thread, nothing to free */
-  if (th == &__pthread_initial_thread) return;
   if (!th->p_userstack)
     {
       size_t guardsize = th->p_guardsize;
@@ -666,17 +670,16 @@ static void pthread_free(pthread_descr th)
 	 guardsize is 0.  This allows us to compute everything else.  */
       size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
       /* Unmap the register stack, which is below guardaddr.  */
-      munmap((caddr_t)(guardaddr-stacksize), stacksize);
-      /* Unmap the main stack.	*/
-      munmap((caddr_t)(guardaddr+guardsize), stacksize);
+      munmap((caddr_t)(guardaddr-stacksize),
+	     2 * stacksize + th->p_guardsize);
 #else
-      /* The following assumes that we only allocate stacks of one
-	 size.  That's currently true but probably shouldn't be.  This
-	 looks like it fails for growing stacks if there was something
-	 else mapped just below the stack?  */
-      if (guardsize != 0)
-	munmap(th->p_guardaddr, guardsize);
-      munmap((caddr_t) ((char *)(th+1) - STACK_SIZE), STACK_SIZE);
+      char *guardaddr = th->p_guardaddr;
+      /* We unmap exactly what we mapped, in case there was something
+	 else in the same region.  Guardaddr is always set, eve if
+	 guardsize is 0.  This allows us to compute everything else.  */
+      size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
+
+      munmap (guardaddr, stacksize + guardsize);
 #endif
     }
 }

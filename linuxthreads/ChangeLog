@@ -1,3 +1,16 @@
+2000-08-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* manager.c (__pthread_nonstandard_stacks): Define only if
+	THREAD_SELF is not defined.
+	(pthread_allocate_stack): Always initialize gardaddr to a correct
+	value.
+	(pthread_handle_create): Unmap thread with one call.
+	(pthread_free): Remove test for initial thread before removing stack.
+	Unmap stack with one call.
+
+	* pthread.c (__pthread_initial_thread): Initialize p_userstack to
+	1 to avoid removing the stack.
+
 2000-07-27  Jes Sorensen  <jes@linuxcare.com>
 
 	* linuxthreads/sysdeps/ia64/pspinlock.c (__pthread_spin_lock): Add

@@ -80,7 +80,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
                               /* struct pthread_start_args p_start_args */
   {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
   {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
-  0,                          /* int p_userstack */
+  1,                          /* int p_userstack */
   NULL,                       /* void * p_guardaddr */
   0,                          /* size_t p_guardsize */
   0,                          /* Always index 0 */
