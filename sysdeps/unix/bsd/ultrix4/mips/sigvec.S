@@ -16,36 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdeps/unix/sysdep.h>
+#include <sysdep.h>
 
-#ifdef	__STDC__
-#define	ENTRY(name)							      \
-  .globl _##name;							      \
-  .even;								      \
-  _##name##:
-#else
-#define	ENTRY(name)							      \
-  .globl _/**/name;							      \
-  .even;								      \
-  _/**/name/**/:
-#endif
+/* __sigvec is defined by sigtramp.c.  */
 
-#ifdef	__STDC__
-#define	PSEUDO(name, syscall_name, args)				      \
-  .even;								      \
-  .globl syscall_error							      \
-  error: jmp syscall_error;						      \
-  ENTRY (name)								      \
-  chmk $SYS_##syscall_name						      \
-  bcs error
-#else
-#define	PSEUDO(name, syscall_name, args)				      \
-  .even;								      \
-  .globl syscall_error							      \
-  error: jmp syscall_error;						      \
-  ENTRY (name)								      \
-  chmk $SYS_/**/syscall_name						      \
-  bcs error
-#endif
-
-#define MOVE(x,y)	movl x , y
+PSEUDO (__raw_sigvec, sigvec, 3)
+	ret
