@@ -1,3 +1,8 @@
+2000-10-13  Geoffrey Keating  <geoffk@cygnus.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update ULPs for my Pentium III
+	building with the default options.
+
 2000-10-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Set cache.
