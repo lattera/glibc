@@ -1,5 +1,9 @@
 1999-01-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sunrpc/clnt_tcp.c (clnttcp_call): Resolve 32-64 comparison
+	conflict for 64 bit platforms.
+	Patch by trott@rottmann.hi.shuttle.de.
+
 	* sysdeps/unix/sparc/vfork.S: Correct comment.
 	* sysdeps/unix/sparc/fork.S: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Remove vfork.
@@ -19,7 +23,7 @@
 	duplicate the code.
 	* sysdeps/alpha/fpu/s_floorf.c (__floorf): Likewise.
 
-	* sysdeps/i386/Versions: Exports functions from libgcc sinc ethis
+	* sysdeps/i386/Versions: Exports functions from libgcc since this
 	is what was done in glibc 2.0.
 	* sysdeps/m68k/Versions: Likewise.  New file.
 
