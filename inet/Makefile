@@ -29,7 +29,7 @@ routines := ntohl ntohs htonl htons		\
 	    inet_netof inet_ntoa inet_net herrno \
 	    gethstbyad gethstbyad_r gethstbynm gethstbynm2 gethstbynm2_r \
 	    gethstbynm_r gethstent gethstent_r \
-	    getnetbypt getnetbypt_r getnetbynm getnetent getnetent_r \
+	    getnetbyad getnetbyad_r getnetbynm getnetent getnetent_r \
 	    getnetbynm_r \
 	    getproto getproto_r getprtent getprtent_r getprtname getprtname_r \
 	    getsrvbynm getsrvbynm_r getsrvbypt getsrvbypt_r getservent \

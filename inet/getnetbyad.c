@@ -21,10 +21,10 @@ Boston, MA 02111-1307, USA.  */
 
 
 #define LOOKUP_TYPE	struct netent
-#define FUNCTION_NAME	getnetbyport
+#define FUNCTION_NAME	getnetbyaddr
 #define DATABASE_NAME	networks
 #define ADD_PARAMS	unsigned long int net, int type
 #define ADD_VARIABLES	net, type
-#define NEED__RES	1
+#define BUFLEN		1024
 
-#include "../nss/getXXbyYY_r.c"
+#include "../nss/getXXbyYY.c"
