@@ -2,6 +2,7 @@
 
 	* elf/dl-object.c (_dl_new_object): Store map address in
 	_dl_loaded if _dl_loaded is NULL.
+	* elf/rtld.c (dl_main): Don't update _dl_loaded here.
 
 	* sysdeps/generic/setrlimit64.c: Remove stub warning.
 

@@ -411,7 +411,6 @@ of this helper program; chances are you did not intend to run this program.\n\
 
 	  args.str = _dl_argv[0];
 	  (void) _dl_catch_error (&err_str, map_doit, &args);
-	  _dl_loaded = args.main_map;
 	  if (err_str != NULL)
 	    {
 	      free (err_str);
@@ -419,7 +418,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    }
 	}
       else
-	_dl_loaded = _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
+	_dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
 
       phdr = _dl_loaded->l_phdr;
       phent = _dl_loaded->l_phnum;
@@ -434,7 +433,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      _dl_loaded = _dl_new_object ((char *) "", "", lt_executable, NULL);
+      _dl_new_object ((char *) "", "", lt_executable, NULL);
       if (_dl_loaded == NULL)
 	_dl_sysdep_fatal ("cannot allocate memory for link map\n", NULL);
       _dl_loaded->l_phdr = phdr;
