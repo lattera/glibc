@@ -1,3 +1,10 @@
+1999-09-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis): Fix
+	error message printing.  Correctly test whether all characters of
+	current token are used.
+	(ctype_read): NUL terminate last_str.
+
 1999-09-26  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nscd/connections.c: Invalidate caches on request.

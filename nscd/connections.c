@@ -195,7 +195,7 @@ close_sockets (void)
 }
 
 static void
-invalidate_cache (void *key)
+invalidate_cache (char *key)
 {
   dbtype number;
 

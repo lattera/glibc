@@ -1148,8 +1148,8 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
     {
     invalid_range:
       lr_error (ldfile,
-		_("`%s' and `%s' are no valid names for symbolic range"),
-		last_str, nowstr);
+		_("`%s' and `%.*s' are no valid names for symbolic range"),
+		last_str, now->val.str.lenmb, nowstr);
       return;
     }
 
@@ -1166,7 +1166,8 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
     goto invalid_range;
 
   to = strtoul (nowstr + (cp - last_str), &endp, base);
-  if ((to == UINT_MAX && errno == ERANGE) || *endp != '\0' || from >= to)
+  if ((to == UINT_MAX && errno == ERANGE)
+      || (endp - nowstr) != now->val.str.lenmb || from >= to)
     goto invalid_range;
 
   /* OK, we have a range FROM - TO.  Now we can create the symbolic names.  */
@@ -1778,6 +1779,8 @@ unknown character class `%s' in category `LC_CTYPE'"),
 			       &ctype->class_collection_act, wch) |= class_bit;
 
 		  last_token = now->tok;
+		  /* Terminate the string.  */
+		  now->val.str.startmb[now->val.str.lenmb] = '\0';
 		  last_str = now->val.str.startmb;
 		  last_seq = seq;
 		  last_wch = wch;
