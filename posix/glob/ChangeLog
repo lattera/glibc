@@ -1,3 +1,8 @@
+Thu Dec 14 02:28:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob_in_dir): Cast result of opendir to __ptr_t,
+	and cast STREAM to DIR * before passing to readdir and closedir.
+
 Mon Dec 11 20:07:54 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c [! STDC_HEADERS]: Declare getenv.
