@@ -91,7 +91,7 @@
 #endif
 
 
-#ifdef atomic_add_negative
+#ifndef atomic_add_negative
 # define atomic_add_negative(mem, value) \
   (atomic_exchange_and_add (mem, value) < 0)
 #endif

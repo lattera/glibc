@@ -25,6 +25,7 @@ s_getrlimit	getrlimit getrlimit	i:ip	__syscall_getrlimit
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
 s_mmap2		mmap64	mmap2		b:aniiii __syscall_mmap2
 s_poll		poll	poll		i:pii	__syscall_poll
+posix_fadvise64	-	fadvise64	4	posix_fadvise64	posix_fadvise
 s_ptrace	ptrace	ptrace		i:iipp	__syscall_ptrace
 s_putpmsg	putpmsg	putpmsg		i:ippii	__syscall_putpmsg
 s_reboot	reboot	reboot		i:iii	__syscall_reboot
