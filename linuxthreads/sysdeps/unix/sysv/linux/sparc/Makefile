@@ -6,6 +6,6 @@ before-compile += $(objpfx)specs
 generated += specs
 $(objpfx)specs:
 	$(CC) $(CFLAGS) $(CPPFLAGS) -dumpspecs \
-	  | sed 's,\(/usr/lib\(\|64\)/\|^\|\([^/a-z]\)\)\(crt[in]\.o\),\3./\4,g' > $@.new
+	  | sed 's~\(/usr/lib\(\|64\)/\|^\|\([^/a-z]\)\)\(crt[in]\.o\)~\3'$(objpfx)'\4~g' > $@.new
 	mv -f $@.new $@
 endif
