@@ -51,7 +51,9 @@ extern void ENTRY_POINT (void);
 /* Protect SUID program against misuse of file descriptors.  */
 extern void __libc_check_standard_fds (void);
 
+#ifdef NEED_DL_BASE_ADDR
 ElfW(Addr) _dl_base_addr;
+#endif
 int __libc_enable_secure;
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
@@ -87,8 +89,12 @@ _dl_sysdep_start (void **start_argptr,
   uid_t uid = 0;
   uid_t euid = 0;
   gid_t gid = 0;
+#ifdef HAVE_AUX_X
+  /* This adds a little bit of security.  If the kernel does not pass
+     any value up we default to the safe mode.  */
+  gid_t egid = 1;
+#else
   gid_t egid = 0;
-#ifndef HAVE_AUX_X
   unsigned int seen = 0;
 # define M(type) (1 << (type))
 #endif
@@ -114,9 +120,11 @@ _dl_sysdep_start (void **start_argptr,
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;
 	break;
+#ifdef NEED_DL_BASE_ADDR
       case AT_BASE:
 	_dl_base_addr = av->a_un.a_val;
 	break;
+#endif
       case AT_UID:
 	uid = av->a_un.a_val;
 	break;
