@@ -1,5 +1,5 @@
 /* Get the symbol address.  IA-64 version.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,13 +27,7 @@ _dl_symbol_address (const struct link_map *map, const Elf64_Sym *ref)
 
   /* On ia64, we have to return the pointer to function descriptor. */
   if (ELFW(ST_TYPE) (ref->st_info) == STT_FUNC)
-    return (void *) __ia64_make_fptr (map, value, &__fptr_root, NULL);
+    return (void *) __ia64_make_fptr (map, ref, value);
   else
     return (void *) value;
-}
-
-Elf64_Addr
-_dl_function_address (const struct link_map *map, Elf64_Addr start)
-{
-  return __ia64_make_fptr (map, start, &__fptr_root, NULL);
 }

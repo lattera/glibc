@@ -36,9 +36,21 @@ extern void _dl_unmap (struct link_map *map);
 
 #define DL_UNMAP(map) _dl_unmap (map)
 
-extern Elf64_Addr _dl_function_address (const struct link_map *map,
-					Elf64_Addr start);
+#define DL_AUTO_FUNCTION_ADDRESS(map, addr)		\
+({							\
+  unsigned long fptr[2];				\
+  fptr[0] = (addr);					\
+  fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;	\
+  (Elf64_Addr) fptr;					\
+})
 
-#define DL_FUNCTION_ADDRESS(map, addr) _dl_function_address (map, addr)
-#define DL_DT_INIT_ADDRESS(map, addr) DL_FUNCTION_ADDRESS (map, addr)
-#define DL_DT_FINI_ADDRESS(map, addr) DL_FUNCTION_ADDRESS (map, addr)
+#define DL_STATIC_FUNCTION_ADDRESS(map, addr)		\
+({							\
+  static unsigned long fptr[2];				\
+  fptr[0] = (addr);					\
+  fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;	\
+  (Elf64_Addr) fptr;					\
+})
+
+#define DL_DT_INIT_ADDRESS(map, addr) DL_AUTO_FUNCTION_ADDRESS (map, addr)
+#define DL_DT_FINI_ADDRESS(map, addr) DL_AUTO_FUNCTION_ADDRESS (map, addr)

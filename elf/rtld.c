@@ -157,7 +157,7 @@ _dl_start (void *arg)
     HP_TIMING_NOW (start_time);
 
   /* Partly clean the `bootstrap_map' structure up.  Don't use `memset'
-     since it might nor be built in or inlined and we cannot make function
+     since it might not be built in or inlined and we cannot make function
      calls at this point.  */
   for (cnt = 0;
        cnt < sizeof (bootstrap_map.l_info) / sizeof (bootstrap_map.l_info[0]);
@@ -228,6 +228,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   memcpy (_dl_rtld_map.l_info, bootstrap_map_p->l_info,
 	  sizeof _dl_rtld_map.l_info);
   _dl_setup_hash (&_dl_rtld_map);
+  _dl_rtld_map.l_mach = bootstrap_map_p->l_mach;
 
 /* Don't bother trying to work out how ld.so is mapped in memory.  */
   _dl_rtld_map.l_map_start = ~0;

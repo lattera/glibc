@@ -1,3 +1,49 @@
+2001-06-07  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/dl-symaddr.c (_dl_symbol_address): Update call to
+	__ia64_make_fptr() for new interface.
+	(_dl_function_address): Remove.
+
+	* sysdeps/ia64/dl-machine.h (IA64_BOOT_FPTR_TABLE_LEN): Rename
+	from IA64_BOOT_FPTR_SIZE and reduce its value from 256 to 200.
+	(struct ia64_fdesc): Rename from struct ia64_fptr and drop "next"
+	pointer.  Rename member "func" to "ip".
+	(struct ia64_fdesc_table): New type.
+	(__ia64_make_fptr): Change prototype.
+	(__ia64_init_bootstrap_fdesc_table): New function.
+	(ELF_MACHINE_BEFORE_RTLD_RELOC): New macro.
+	(__boot_ldso_fptr): Removed.
+	(__fptr_next): Removed.
+	(__fptr_root): Removed.
+	(__fptr_count): Removed.
+	(TRAMPOLINE_TEMPLATE): Fix typo in comment.  Don't use multi-line
+	strings to avoid warning from gcc3.
+	(RTLD_START): Don't use multi-line strings.
+	(ELF_MACHINE_START_ADDRESS): Use DL_STATIC_FUNCTION_ADDRESS.
+	(elf_machine_fixup_plt): Update the code entry point in the
+	function descriptor through a "volatile" pointer to ensure proper
+	write ordering.
+	(elf_machine_rela): Simplify handling of FPTR relocs: always call
+	__ia64_make_fptr().
+
+	* sysdeps/ia64/dl-lookupcfg.h (DL_AUTO_FUNCTION_ADDRESS): New macro.
+	(DL_STATIC_FUNCTION_ADDRESS): Likewise.
+	(DL_DT_INIT_ADDRESS): Use DL_AUTO_FUNCTION_ADDRESS.
+	(DL_DT_FINI_ADDRESS): Likewise.
+
+	* sysdeps/ia64/dl-fptr.c: Rewrite for better scalability and to
+	avoid deadlocks.
+
+	* include/link.h: Add member machine specific "l_mach" member to
+	link_map.
+
+	* sysdeps/generic/bits/link.h: New file.
+	* sysdeps/ia64/bits/link.h: Likewise.
+
+	* elf/rtld.c (_dl_start): Fix typo in comment.
+	(_dl_start_final): Copy new "l_mach" member from temporary to
+	final bootstrap map.
+
 2001-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/gmon-start.c: Use ENTRY_POINT_DECL is defined instead of a

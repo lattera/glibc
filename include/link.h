@@ -33,6 +33,7 @@
 #define _ElfW_1(e,w,t)	e##w##t
 
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
+#include <bits/link.h>
 
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's
@@ -228,6 +229,8 @@ struct link_map
 
     /* Temporarily used in `dl_close'.  */
     unsigned int l_idx;
+
+    struct link_map_machine l_mach;
   };
 
 struct dl_phdr_info
