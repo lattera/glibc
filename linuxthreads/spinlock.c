@@ -155,7 +155,7 @@ int __pthread_unlock(struct _pthread_fastlock * lock)
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
   {
     WRITE_MEMORY_BARRIER();
-    lock->__spinlock = LT_SPINLOCK_INIT;
+    lock->__spinlock = __LT_SPINLOCK_INIT;
     return 0;
   }
 #endif
@@ -394,7 +394,7 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
     }
 
     WRITE_MEMORY_BARRIER();
-    lock->__spinlock = LT_SPINLOCK_INIT;
+    lock->__spinlock = __LT_SPINLOCK_INIT;
 
     if (suspend_needed)
       suspend (self);
@@ -468,7 +468,7 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
     }
 
     WRITE_MEMORY_BARRIER();
-    lock->__spinlock = LT_SPINLOCK_INIT;
+    lock->__spinlock = __LT_SPINLOCK_INIT;
     goto suspend;
   }
 #endif
@@ -649,7 +649,7 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
   {
     WRITE_MEMORY_BARRIER();
-    lock->__spinlock = LT_SPINLOCK_INIT;
+    lock->__spinlock = __LT_SPINLOCK_INIT;
   }
 #endif
 }

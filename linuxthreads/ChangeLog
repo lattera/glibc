@@ -1,3 +1,9 @@
+2001-01-28  Andreas Jaeger  <aj@suse.de>
+
+	* oldsemaphore.c (__old_sem_init): Adjust for last change.
+	* sysdeps/pthread/bits/libc-lock.h: Likewise.
+	* spinlock.c: Likewise.
+
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/initspin.h: Make all names namespace clean.

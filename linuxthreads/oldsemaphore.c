@@ -73,7 +73,7 @@ int __old_sem_init(old_sem_t *sem, int pshared, unsigned int value)
 	errno = ENOSYS;
 	return -1;
     }
-  sem->sem_spinlock = LT_SPINLOCK_INIT;
+  sem->sem_spinlock = __LT_SPINLOCK_INIT;
   sem->sem_status = ((long)value << 1) + 1;
   return 0;
 }
