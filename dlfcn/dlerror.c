@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995-2000,2002,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000,2002,2003,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -180,13 +180,30 @@ init (void)
     static_buf = &last_result;
 }
 
+
+static void
+check_free (struct dl_action_result *rec)
+{
+  if (rec->errstring != NULL
+      && strcmp (rec->errstring, "out of memory") != 0)
+    {
+      /* We can free the string only if the allocation happened in the
+	 C library used by the dynamic linker.  This means, it is
+	 always the C library in the base namespave.  */
+      struct link_map *map = NULL;
+      Dl_info info;
+      if (_dl_addr (check_free, &info, &map, NULL) != 0
+	  && map != NULL && map->l_ns == 0)
+	free ((char *) rec->errstring);
+    }
+}
+
+
 static void
 __attribute__ ((destructor))
 fini (void)
 {
-  if (last_result.errstring != NULL
-      && strcmp (last_result.errstring, "out of memory") != 0)
-    free ((char *) last_result.errstring);
+  check_free (&last_result);
 }
 
 
@@ -194,11 +211,7 @@ fini (void)
 static void
 free_key_mem (void *mem)
 {
-  struct dl_action_result *result = (struct dl_action_result *) mem;
-
-  if (result->errstring != NULL
-      && strcmp (result->errstring, "out of memory") != 0)
-    free ((char *) result->errstring);
+  check_free ((struct dl_action_result *) mem);
 
   free (mem);
   __libc_setspecific (key, NULL);

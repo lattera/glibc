@@ -1,3 +1,9 @@
+2005-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/dlerror.c (check_free): New function.  Extract common code
+	from fini and free_key_mem.  Check whether this is libdl in the
+	base namespace.
+
 2005-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c (_dl_debug_bindings): Add namespace information
