@@ -496,8 +496,6 @@ static const struct conf vars[] =
 
 #ifdef _CS_PATH
     { "PATH", _CS_PATH, CONFSTR },
-#endif
-#ifdef _CS_PATH
     { "CS_PATH", _CS_PATH, CONFSTR },
 #endif
 
@@ -590,6 +588,70 @@ static const struct conf vars[] =
 #endif
 #ifdef _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS
     { "XBS5_LPBIG_OFFBIG_LINTFLAGS", _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS, CONFSTR },
+#endif
+
+#ifdef _SC_V6_ILP32_OFF32
+    { "_POSIX_V6_ILP32_OFF32", _SC_V6_ILP32_OFF32, SYSCONF },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFF32_CFLAGS
+    { "POSIX_V6_ILP32_OFF32_CFLAGS", _CS_POSIX_V6_ILP32_OFF32_CFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFF32_LDFLAGS
+    { "POSIX_V6_ILP32_OFF32_LDFLAGS", _CS_POSIX_V6_ILP32_OFF32_LDFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFF32_LIBS
+    { "POSIX_V6_ILP32_OFF32_LIBS", _CS_POSIX_V6_ILP32_OFF32_LIBS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFF32_LINTFLAGS
+    { "POSIX_V6_ILP32_OFF32_LINTFLAGS", _CS_POSIX_V6_ILP32_OFF32_LINTFLAGS, CONFSTR },
+#endif
+
+#ifdef _SC_V6_ILP32_OFFBIG
+    { "_POSIX_V6_ILP32_OFFBIG", _SC_V6_ILP32_OFFBIG, SYSCONF },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS
+    { "POSIX_V6_ILP32_OFFBIG_CFLAGS", _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFFBIG_LDFLAGS
+    { "POSIX_V6_ILP32_OFFBIG_LDFLAGS", _CS_POSIX_V6_ILP32_OFFBIG_LDFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFFBIG_LIBS
+    { "POSIX_V6_ILP32_OFFBIG_LIBS", _CS_POSIX_V6_ILP32_OFFBIG_LIBS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_ILP32_OFFBIG_LINTFLAGS
+    { "POSIX_V6_ILP32_OFFBIG_LINTFLAGS", _CS_POSIX_V6_ILP32_OFFBIG_LINTFLAGS, CONFSTR },
+#endif
+
+#ifdef _SC_V6_LP64_OFF64
+    { "_POSIX_V6_LP64_OFF64", _SC_V6_LP64_OFF64, SYSCONF },
+#endif
+#ifdef _CS_POSIX_V6_LP64_OFF64_CFLAGS
+    { "POSIX_V6_LP64_OFF64_CFLAGS", _CS_POSIX_V6_LP64_OFF64_CFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_LP64_OFF64_LDFLAGS
+    { "POSIX_V6_LP64_OFF64_LDFLAGS", _CS_POSIX_V6_LP64_OFF64_LDFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_LP64_OFF64_LIBS
+    { "POSIX_V6_LP64_OFF64_LIBS", _CS_POSIX_V6_LP64_OFF64_LIBS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_LP64_OFF64_LINTFLAGS
+    { "POSIX_V6_LP64_OFF64_LINTFLAGS", _CS_POSIX_V6_LP64_OFF64_LINTFLAGS, CONFSTR },
+#endif
+
+#ifdef _SC_V6_LPBIG_OFFBIG
+    { "_POSIX_V6_LPBIG_OFFBIG", _SC_V6_LPBIG_OFFBIG, SYSCONF },
+#endif
+#ifdef _CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS
+    { "POSIX_V6_LPBIG_OFFBIG_CFLAGS", _CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS
+    { "POSIX_V6_LPBIG_OFFBIG_LDFLAGS", _CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_LPBIG_OFFBIG_LIBS
+    { "POSIX_V6_LPBIG_OFFBIG_LIBS", _CS_POSIX_V6_LPBIG_OFFBIG_LIBS, CONFSTR },
+#endif
+#ifdef _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAG
+    { "POSIX_V6_LPBIG_OFFBIG_LINTFLAG", _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAG, CONFSTR },
 #endif
 
 #ifdef _SC_ADVISORY_INFO
@@ -722,13 +784,25 @@ static const struct conf vars[] =
     { NULL, 0, SYSCONF }
   };
 
+
+static const char *specs[] =
+  {
+    "POSIX_V6_ILP32_OFF32",
+    "POSIX_V6_ILP32_OFFBIG",
+    "POSIX_V6_LP64_OFF64",
+    "POSIX_V6_LPBIG_OFFBIG"
+  };
+static const int nspecs = sizeof (specs) / sizeof (specs[0]);
+
 extern const char *__progname;
 
 
 static void
 usage (void)
 {
-  fprintf (stderr, _("Usage: %s variable_name [pathname]\n"), __progname);
+  fprintf (stderr,
+	   _("Usage: %s [-v specification] variable_name [pathname]\n"),
+	   __progname);
   exit (2);
 }
 
@@ -755,6 +829,40 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "2001");
       fprintf (stderr, gettext ("Written by %s.\n"), "Roland McGrath");
       return 0;
+    }
+
+  if (argc > 1 && strncmp (argv[1], "-v", 2) == 0)
+    {
+      const char *spec;
+      int i;
+
+      if (argv[1][2] == '\0')
+	{
+	  if (argc < 3)
+	    usage ();
+
+	  spec = argv[2];
+	  argv += 2;
+	  argc -= 2;
+	}
+      else
+	{
+	  spec = &argv[1][2];
+	  argv += 1;
+	  argc += 1;
+	}
+
+      /* Check for the specifications we know.  This is simple in the
+	 moment.  */
+      for (i = 0; i < nspecs; ++i)
+	if (strcmp (spec, specs[i]) == 0)
+	  break;
+
+      if (i == nspecs)
+	error (2, 0, _("unknown specification \"%s\""), spec);
+
+      /* And now we forget the specification.  We don't do anything different
+	 with or without it.  */
     }
 
   if (argc < 2 || argc > 3)

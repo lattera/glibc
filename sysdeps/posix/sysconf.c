@@ -798,6 +798,31 @@ __sysconf (name)
       return -1;
 #endif
 
+    case _SC_V6_ILP32_OFF32:
+#ifdef _POSIX_V6_ILP32_OFF32
+      return _POSIX_V6_ILP32_OFF32;
+#else
+      return -1;
+#endif
+    case _SC_V6_ILP32_OFFBIG:
+#ifdef _POSIX_V6_ILP32_OFFBIG
+      return _POSIX_V6_ILP32_OFFBIG;
+#else
+      return -1;
+#endif
+    case _SC_V6_LP64_OFF64:
+#ifdef _POSIX_V6_LP64_OFF64
+      return _POSIX_V6_LP64_OFF64;
+#else
+      return -1;
+#endif
+    case _SC_V6_LPBIG_OFFBIG:
+#ifdef _POSIX_V6_LPBIG_OFFBIG
+      return _POSIX_V6_LPBIG_OFFBIG;
+#else
+      return -1;
+#endif
+
     case _SC_XOPEN_LEGACY:
       return _XOPEN_LEGACY;
 

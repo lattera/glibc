@@ -1,5 +1,12 @@
 2001-04-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/confname.h: Add _SC_V6_* and _CS_POSIX_V6_*
+	values.
+	* sysdeps/generic/bits/environments.h: Define _POSIX_V6_* values.
+	* posix/confstr.c: Handle _CS_POSIX_V6_* values.
+	* posix/getconf.c: Handle _CS_POSIX_V6_* and _SC_V6_* values.
+	* sysdeps/posix/sysconf.c: Handle _SC_V6_* values.
+
 	* sysdeps/powerpc/fpu/libm-test-ulps: Add deltas for atan2f.
 	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
 	* sysdeps/sh/sh4/fpu/libm-test-ulps: Likewise.

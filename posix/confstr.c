@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,8 +45,9 @@ confstr (name, buf, len)
       break;
 
     case _CS_XBS5_ILP32_OFFBIG_CFLAGS:
+    case _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS:
     case _CS_LFS_CFLAGS:
-#if defined _XBS5_ILP32_OFF32 && !defined _XBS5_ILP32_OFFBIG
+#if _XBS5_LP64_OFF64 == -1 && _XBS5_LPBIG_OFFBIG == -1 && _XBS5_ILP32_OFFBIG == 1
       /* Signal that we want the new ABI.  */
       {
 	static const char file_offset[] = "-D_FILE_OFFSET_BITS=64";
@@ -79,6 +80,22 @@ confstr (name, buf, len)
     case _CS_XBS5_LPBIG_OFFBIG_LDFLAGS:
     case _CS_XBS5_LPBIG_OFFBIG_LIBS:
     case _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS:
+
+    case _CS_POSIX_V6_ILP32_OFF32_CFLAGS:
+    case _CS_POSIX_V6_ILP32_OFF32_LDFLAGS:
+    case _CS_POSIX_V6_ILP32_OFF32_LIBS:
+    case _CS_POSIX_V6_ILP32_OFF32_LINTFLAGS:
+    case _CS_POSIX_V6_ILP32_OFFBIG_LDFLAGS:
+    case _CS_POSIX_V6_ILP32_OFFBIG_LIBS:
+    case _CS_POSIX_V6_ILP32_OFFBIG_LINTFLAGS:
+    case _CS_POSIX_V6_LP64_OFF64_CFLAGS:
+    case _CS_POSIX_V6_LP64_OFF64_LDFLAGS:
+    case _CS_POSIX_V6_LP64_OFF64_LIBS:
+    case _CS_POSIX_V6_LP64_OFF64_LINTFLAGS:
+    case _CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS:
+    case _CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS:
+    case _CS_POSIX_V6_LPBIG_OFFBIG_LIBS:
+    case _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS:
       /* GNU libc does not require special actions to use LFS functions.  */
       string = "";
       string_len = 1;
