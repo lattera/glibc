@@ -14,7 +14,7 @@ eight bits (one byte) were used to represent a single character.  The
 limitations of this approach became more apparent as more people
 grappled with non-Roman character sets, where not all the characters
 that make up a language's character set can be represented by @math{2^8}
-choices.  This chapter shows the functionality which was added to the C
+choices.  This chapter shows the functionality that was added to the C
 library to support multiple character sets.
 
 @menu
@@ -31,9 +31,9 @@ library to support multiple character sets.
 @node Extended Char Intro
 @section Introduction to Extended Characters
 
-A variety of solutions to overcome the differences between
+A variety of solutions is available to overcome the differences between
 character sets with a 1:1 relation between bytes and characters and
-character sets with ratios of 2:1 or 4:1 exist. The remainder of this
+character sets with ratios of 2:1 or 4:1. The remainder of this
 section gives a few examples to help understand the design decisions
 made while developing the functionality of the @w{C library}.
 
@@ -42,37 +42,37 @@ A distinction we have to make right away is between internal and
 external representation.  @dfn{Internal representation} means the
 representation used by a program while keeping the text in memory.
 External representations are used when text is stored or transmitted
-through whatever communication channel.  Examples of external
-representations include files lying in a directory that are going to be
+through some communication channel.  Examples of external
+representations include files waiting in a directory to be
 read and parsed.
 
 Traditionally there has been no difference between the two representations.
 It was equally comfortable and useful to use the same single-byte
-representation internally and externally.  This changes with more and
-larger character sets.
+representation internally and externally.  This comfort level decreases
+with more and larger character sets.
 
 One of the problems to overcome with the internal representation is
 handling text that is externally encoded using different character
-sets.  Assume a program which reads two texts and compares them using
+sets.  Assume a program that reads two texts and compares them using
 some metric.  The comparison can be usefully done only if the texts are
 internally kept in a common format.
 
 @cindex wide character
 For such a common format (@math{=} character set) eight bits are certainly
 no longer enough.  So the smallest entity will have to grow: @dfn{wide
-characters} will now be used.  Instead of one byte, two or four will
-be used instead.  (Three are not good to address in memory and more
-than four bytes seem not to be necessary).
+characters} will now be used.  Instead of one byte per character, two or
+four will be used instead.  (Three are not good to address in memory and
+more than four bytes seem not to be necessary).
 
 @cindex Unicode
 @cindex ISO 10646
 As shown in some other part of this manual,
 @c !!! Ahem, wide char string functions are not yet covered -- drepper
-there exists a completely new family of functions which can handle texts
-of this kind in memory.  The most commonly used character sets for such
+a completely new family has been created of functions that can handle wide
+character texts in memory. The most commonly used character sets for such
 internal wide character representations are Unicode and @w{ISO 10646}
 (also known as UCS for Universal Character Set). Unicode was originally
-planned as a 16-bit character set, whereas @w{ISO 10646} was designed to
+planned as a 16-bit character set; whereas, @w{ISO 10646} was designed to
 be a 31-bit large code space. The two standards are practically identical.
 They have the same character repertoire and code table, but Unicode specifies
 added semantics.  At the moment, only characters in the first @code{0x10000}
@@ -93,10 +93,10 @@ of UCS-2 in which pairs of certain UCS-2 words can be used to encode
 non-BMP characters up to @code{0x10ffff}.
 
 To represent wide characters the @code{char} type is not suitable.  For
-this reason the @w{ISO C} standard introduces a new type which is
+this reason the @w{ISO C} standard introduces a new type that is
 designed to keep one character of a wide character string.  To maintain
 the similarity there is also a type corresponding to @code{int} for
-those functions which take a single wide character.
+those functions that take a single wide character.
 
 @comment stddef.h
 @comment ISO
@@ -105,39 +105,40 @@ This data type is used as the base type for wide character strings.
 I.e., arrays of objects of this type are the equivalent of @code{char[]}
 for multibyte character strings.  The type is defined in @file{stddef.h}.
 
-The @w{ISO C90} standard, where this type was introduced, does not say
-anything specific about the representation.  It only requires that this
-type is capable of storing all elements of the basic character set.
-Therefore it would be legitimate to define @code{wchar_t} as
-@code{char}.  This might make sense for embedded systems.
+The @w{ISO C90} standard, where @code{wchar_t} was introduced, does not
+say anything specific about the representation.  It only requires that
+this type is capable of storing all elements of the basic character set.
+Therefore it would be legitimate to define @code{wchar_t} as @code{char},
+which might make sense for embedded systems.
 
-But for GNU systems this type is always 32 bits wide.  It is therefore
-capable of representing all UCS-4 values and  therefore covering all of
-@w{ISO 10646}.  Some Unix systems define @code{wchar_t} as a 16-bit type and
-thereby follow Unicode very strictly.  This is perfectly fine with the
-standard but it also means that to represent all characters from Unicode
-and @w{ISO 10646} one has to use UTF-16 surrogate characters which is in
-fact a multi-wide-character encoding.  But this contradicts the purpose
-of the @code{wchar_t} type.
+But for GNU systems @code{wchar_t} is always 32 bits wide and, therefore,
+capable of representing all UCS-4 values and, therefore, covering all of
+@w{ISO 10646}.  Some Unix systems define @code{wchar_t} as a 16-bit type
+and thereby follow Unicode very strictly. This definition is perfectly
+fine with the standard, but it also means that to represent all
+characters from Unicode and @w{ISO 10646} one has to use UTF-16 surrogate
+characters, which is in fact a multi-wide-character encoding. But
+resorting to multi-wide-character encoding contradicts the purpose of the
+@code{wchar_t} type.
 @end deftp
 
 @comment wchar.h
 @comment ISO
 @deftp {Data type} wint_t
-@code{wint_t} is a data type used for parameters and variables which
-contain a single wide character.  As the name already suggests it is the
-equivalent to @code{int} when using the normal @code{char} strings.  The
-types @code{wchar_t} and @code{wint_t} have often the same
-representation if their size if 32 bits wide but if @code{wchar_t} is
+@code{wint_t} is a data type used for parameters and variables that
+contain a single wide character. As the name suggests this type is the
+equivalent of @code{int} when using the normal @code{char} strings.  The
+types @code{wchar_t} and @code{wint_t} often have the same
+representation if their size is 32 bits wide but if @code{wchar_t} is
 defined as @code{char} the type @code{wint_t} must be defined as
 @code{int} due to the parameter promotion.
 
 @pindex wchar.h
-This type is defined in @file{wchar.h} and got introduced in
+This type is defined in @file{wchar.h} and was introduced in
 @w{Amendment 1} to @w{ISO C90}.
 @end deftp
 
-As there are for the @code{char} data type there also exist macros
+As there are for the @code{char} data type macros are available for
 specifying the minimum and maximum value representable in an object of
 type @code{wchar_t}.
 
@@ -147,7 +148,7 @@ type @code{wchar_t}.
 The macro @code{WCHAR_MIN} evaluates to the minimum value representable
 by an object of type @code{wint_t}.
 
-This macro got introduced in @w{Amendment 1} to @w{ISO C90}.
+This macro was introduced in @w{Amendment 1} to @w{ISO C90}.
 @end deftypevr
 
 @comment wchar.h
@@ -156,7 +157,7 @@ This macro got introduced in @w{Amendment 1} to @w{ISO C90}.
 The macro @code{WCHAR_MAX} evaluates to the maximum value representable
 by an object of type @code{wint_t}.
 
-This macro got introduced in @w{Amendment 1} to @w{ISO C90}.
+This macro was introduced in @w{Amendment 1} to @w{ISO C90}.
 @end deftypevr
 
 Another special wide character value is the equivalent to @code{EOF}.
@@ -181,8 +182,8 @@ character set.
 @end smallexample
 
 @noindent
-has to be rewritten to explicitly use @code{WEOF} when wide characters
-are used.
+has to be rewritten to use @code{WEOF} explicitly when wide characters
+are used:
 
 @smallexample
 @{
@@ -200,48 +201,49 @@ defined in @file{wchar.h}.
 
 
 These internal representations present problems when it comes to storing
-and transmittal, since a single wide character consists of more
-than one byte they are effected by byte-ordering.  I.e., machines with
-different endianesses would see different value accessing the same data.
-This also applies for communication protocols which are all byte-based
-and therefore the sender has to decide about splitting the wide
-character in bytes.  A last (but not least important) point is that wide
-characters often require more storage space than an customized byte
-oriented character set.
+and transmittal. Because each single wide character consists of more
+than one byte, they are effected by byte-ordering.  Thus, machines with
+different endianesses would see different values when accessing the same
+data. This byte ordering concern also applies for communication protocols
+that are all byte-based and, thereforet require that the sender has to
+decide about splitting the wide character in bytes. A last (but not least
+important) point is that wide characters often require more storage space
+than a customized byte-oriented character set.
 
 @cindex multibyte character
 @cindex EBCDIC
-   For all the above reasons, an external encoding which is different
+   For all the above reasons, an external encoding that is different
 from the internal encoding is often used if the latter is UCS-2 or UCS-4.
 The external encoding is byte-based and can be chosen appropriately for
-the environment and for the texts to be handled.  There exist a variety
-of different character sets which can be used for this external
-encoding. Information which will not be exhaustively presented
-here--instead, a description of the major groups will suffice.  All of
-the ASCII-based character sets fulfill one requirement: they are
-"filesystem safe".  This means that the character @code{'/'} is used in
-the encoding @emph{only} to represent itself.  Things are a bit
-different for character sets like EBCDIC (Extended Binary Coded Decimal
-Interchange Code, a character set family used by IBM) but if the
-operation system does not understand EBCDIC directly the parameters to
-system calls have to be converted first anyhow.
+the environment and for the texts to be handled. A variety of different
+character sets can be used for this external encoding (information that
+will not be exhaustively presented here--instead, a description of the
+major groups will suffice). All of the ASCII-based character sets
+[_bkoz_: do you mean Roman character sets? If not, what do you mean
+here?] fulfill one requirement: they are "filesystem safe."  This means
+that the character @code{'/'} is used in the encoding @emph{only} to
+represent itself.  Things are a bit different for character sets like
+EBCDIC (Extended Binary Coded Decimal Interchange Code, a character set
+family used by IBM), but if the operation system does not understand
+EBCDIC directly the parameters-to-system calls have to be converted first
+anyhow.
 
 @itemize @bullet
-@item
-The simplest character sets are single-byte character sets.  There can
-be only up to 256 characters (for @w{8 bit} character sets) which is not
-sufficient to cover all languages but might be sufficient to handle a
-specific text.  Handling of @w{8 bit} character sets is simple.  This is
-not true for the other kinds presented later and therefore the
+@item 
+The simplest character sets are single-byte character sets.  There can 
+be only up to 256 characters (for @w{8 bit} character sets), which is 
+not sufficient to cover all languages but might be sufficient to handle 
+a specific text. Handling of a @w{8 bit} character sets is simple. This 
+is not true for other kinds presented later, and therefore, the 
 application one uses might require the use of @w{8 bit} character sets.
 
 @cindex ISO 2022
 @item
 The @w{ISO 2022} standard defines a mechanism for extended character
 sets where one character @emph{can} be represented by more than one
-byte.  This is achieved by associating a state with the text.  Embedded
-in the text can be characters which can be used to change the state.
-Each byte in the text might have a different interpretation in each
+byte.  This is achieved by associating a state with the text.
+Characters that can be used to change the state can be embedded in the
+text. Each byte in the text might have a different interpretation in each
 state.  The state might even influence whether a given byte stands for a
 character on its own or whether it has to be combined with some more
 bytes.
@@ -267,13 +269,14 @@ Early attempts to fix 8 bit character sets for other languages using the
 Roman alphabet lead to character sets like @w{ISO 6937}.  Here bytes
 representing characters like the acute accent do not produce output
 themselves: one has to combine them with other characters to get the
-desired result.  E.g., the byte sequence @code{0xc2 0x61} (non-spacing
-acute accent, following by lower-case `a') to get the ``small a with
-acute'' character.  To get the acute accent character on its own, one has
-to write @code{0xc2 0x20} (the non-spacing acute followed by a space).
+desired result.  For example, the byte sequence @code{0xc2 0x61}
+(non-spacing acute accent, followed by lower-case `a') to get the ``small
+a with  acute'' character.  To get the acute accent character on its own,
+one has to write @code{0xc2 0x20} (the non-spacing acute followed by a
+space).
 
-This type of character set is used in some embedded systems such as
-teletex.
+Character sets like @w[ISO 6937] are used in some embedded systems such
+as teletex.
 
 @item
 @cindex UTF-8
@@ -281,13 +284,13 @@ Instead of converting the Unicode or @w{ISO 10646} text used internally,
 it is often also sufficient to simply use an encoding different than
 UCS-2/UCS-4.  The Unicode and @w{ISO 10646} standards even specify such an
 encoding: UTF-8.  This encoding is able to represent all of @w{ISO
-10464} 31 bits in a byte string of length one to six.
+10646} 31 bits in a byte string of length one to six.
 
 @cindex UTF-7
-There were a few other attempts to encode @w{ISO 10646} such as UTF-7
-but UTF-8 is today the only encoding which should be used.  In fact,
-UTF-8 will hopefully soon be the only external encoding that has to be
-supported.  It proves to be universally usable and the only disadvantage
+There were a few other attempts to encode @w{ISO 10646} such as UTF-7,
+but UTF-8 is today the only encoding which should be used.  In fact, with
+any luck UTF-8 will soon be the only external encoding that has to be
+supported.  It proves to be universally usable and its only disadvantage
 is that it favors Roman languages by making the byte string
 representation of other scripts (Cyrillic, Greek, Asian scripts) longer
 than necessary if using a specific character set for these scripts.
@@ -299,9 +302,9 @@ The question remaining is: how to select the character set or encoding
 to use.  The answer: you cannot decide about it yourself, it is decided
 by the developers of the system or the majority of the users.  Since the
 goal is interoperability one has to use whatever the other people one
-works with use.  If there are no constraints the selection is based on
-the requirements the expected circle of users will have.  I.e., if a
-project is expected to only be used in, say, Russia it is fine to use
+works with use.  If there are no constraints, the selection is based on
+the requirements the expected circle of users will have.  In other words,
+if a project is expected to be used in only, say, Russia it is fine to use
 KOI8-R or a similar character set.  But if at the same time people from,
 say, Greece are participating one should use a character set which allows
 all people to collaborate.
@@ -317,24 +320,21 @@ is using Unicode or @w{ISO 10646}.  This is not required, but at least
 encouraged, by the @w{ISO C} standard.  The standard defines at least a
 macro @code{__STDC_ISO_10646__} that is only defined on systems where
 the @code{wchar_t} type encodes @w{ISO 10646} characters.  If this
-symbol is not defined one should as much as possible avoid making
-assumption about the wide character representation.  If the programmer
-uses only the functions provided by the C library to handle wide
-character strings there should not be any compatibility problems with
-other systems.
+symbol is not defined one should avoid making assumptions about the wide
+character representation. If the programmer uses only the functions
+provided by the C library to handle wide character strings there should
+be no compatibility problems with other systems.
 
 @node Charset Function Overview
 @section Overview about Character Handling Functions
 
-A Unix @w{C library} contains three different sets of functions in two
-families to handle character set conversion.  The one function family
-is specified in the @w{ISO C} standard and therefore is portable even
-beyond the Unix world.
-
-The most commonly known set of functions, coming from the @w{ISO C90}
-standard, is unfortunately the least useful one.  In fact, these
-functions should be avoided whenever possible, especially when
-developing libraries (as opposed to applications).
+A Unix @w{C library} contains three different sets of functions in two 
+families to handle character set conversion. One of the function families 
+(the most commonly used) is specified in the @w{ISO C90} standard and, 
+therefore, is portable even beyond the Unix world. Unfortunately this 
+family is the least useful one. These functions should be avoided 
+whenever possible, especially when developing libraries (as opposed to 
+applications). 
 
 The second family of functions got introduced in the early Unix standards
 (XPG2) and is still part of the latest and greatest Unix standard:
@@ -360,17 +360,17 @@ the @code{LC_CTYPE} category of the current locale is used; see
 The functions handling more than one character at a time require NUL
 terminated strings as the argument.  I.e., converting blocks of text
 does not work unless one can add a NUL byte at an appropriate place.
-The GNU C library contains some extensions the standard which allow
-specifying a size but basically they also expect terminated strings.
+The GNU C library contains some extensions to the standard that allow
+specifying a size, but basically they also expect terminated strings.
 @end itemize
 
-Despite these limitations the @w{ISO C} functions can very well be used
-in many contexts.  In graphical user interfaces, for instance, it is not
-uncommon to have functions which require text to be displayed in a wide
-character string if it is not simple ASCII.  The text itself might come
+Despite these limitations the @w{ISO C} functions can be used in many
+contexts.  In graphical user interfaces, for instance, it is not
+uncommon to have functions that require text to be displayed in a wide
+character string if the text is not simple ASCII.  The text itself might come
 from a file with translations and the user should decide about the
 current locale which determines the translation and therefore also the
-external encoding used.  In such a situation (and many others) the
+external encoding used. In such a situation (and many others) the
 functions described here are perfect.  If more freedom while performing
 the conversion is necessary take a look at the @code{iconv} functions
 (@pxref{Generic Charset Conversion}).
@@ -395,18 +395,18 @@ one assumed as the external multibyte encoding.  The wide character
 character set always is UCS-4, at least on GNU systems.
 
 A characteristic of each multibyte character set is the maximum number
-of bytes which can be necessary to represent one character.  This
-information is quite important when writing code which uses the
-conversion functions.  In the examples below we will see some examples.
+of bytes that can be necessary to represent one character.  This
+information is quite important when writing code that uses the
+conversion functions (as shown in the examples below).
 The @w{ISO C} standard defines two macros which provide this information.
 
 
 @comment limits.h
 @comment ISO
 @deftypevr Macro int MB_LEN_MAX
-This macro specifies the maximum number of bytes in the multibyte
+@code{MB_LEN_MAX} specifies the maximum number of bytes in the multibyte
 sequence for a single character in any of the supported locales.  It is
-a compile-time constant and it is defined in @file{limits.h}.
+a compile-time constant and is defined in @file{limits.h}.
 @pindex limits.h
 @end deftypevr
 
@@ -416,15 +416,15 @@ a compile-time constant and it is defined in @file{limits.h}.
 @code{MB_CUR_MAX} expands into a positive integer expression that is the
 maximum number of bytes in a multibyte character in the current locale.
 The value is never greater than @code{MB_LEN_MAX}.  Unlike
-@code{MB_LEN_MAX} this macro need not be a compile-time constant and in
-fact, in the GNU C library it is not.
+@code{MB_LEN_MAX} this macro need not be a compile-time constant, and in 
+the GNU C library it is not.
 
 @pindex stdlib.h
 @code{MB_CUR_MAX} is defined in @file{stdlib.h}.
 @end deftypevr
 
 Two different macros are necessary since strictly @w{ISO C90} compilers
-do not allow variable length array definitions but still it is desirable
+do not allow variable length array definitions, but still it is desirable
 to avoid dynamic allocation.  This incomplete piece of code shows the
 problem:
 
@@ -445,8 +445,8 @@ problem:
 The code in the inner loop is expected to have always enough bytes in
 the array @var{buf} to convert one multibyte character.  The array
 @var{buf} has to be sized statically since many compilers do not allow a
-variable size.  The @code{fread} call makes sure that always
-@code{MB_CUR_MAX} bytes are available in @var{buf}.  Note that it isn't
+variable size.  The @code{fread} call makes sure that @code{MB_CUR_MAX} 
+bytes are always available in @var{buf}.  Note that it isn't
 a problem if @code{MB_CUR_MAX} is not a compile-time constant.
 
 
@@ -455,8 +455,8 @@ a problem if @code{MB_CUR_MAX} is not a compile-time constant.
 
 @cindex stateful
 In the introduction of this chapter it was said that certain character
-sets use a @dfn{stateful} encoding.  I.e., the encoded values depend in
-some way on the previous bytes in the text.
+sets use a @dfn{stateful} encoding.  That is, the encoded values depend 
+in some way on the previous bytes in the text.
 
 Since the conversion functions allow converting a text in more than one
 step we must have a way to pass this information from one call of the
@@ -471,19 +471,18 @@ about the @dfn{shift state} needed from one call to a conversion
 function to another.
 
 @pindex wchar.h
-This type is defined in @file{wchar.h}.  It got introduced in
+@code{mbstate_t} is defined in @file{wchar.h}. It was introduced in
 @w{Amendment 1} to @w{ISO C90}.
 @end deftp
 
-To use objects of this type the programmer has to define such objects
-(normally as local variables on the stack) and pass a pointer to the
-object to the conversion functions.  This way the conversion function
-can update the object if the current multibyte character set is
-stateful.
+To use objects of type @code{mbstate_t} the programmer has to define such 
+objects (normally as local variables on the stack) and pass a pointer to 
+the object to the conversion functions.  This way the conversion function
+can update the object if the current multibyte character set is stateful.
 
 There is no specific function or initializer to put the state object in
 any specific state.  The rules are that the object should always
-represent the initial state before the first use and this is achieved by
+represent the initial state before the first use, and this is achieved by
 clearing the whole variable with code such as follows:
 
 @smallexample
@@ -497,24 +496,24 @@ clearing the whole variable with code such as follows:
 
 When using the conversion functions to generate output it is often
 necessary to test whether the current state corresponds to the initial
-state.  This is necessary, for example, to decide whether or not to emit
+state.  This is necessary, for example, to decide whether to emit
 escape sequences to set the state to the initial state at certain
 sequence points.  Communication protocols often require this.
 
 @comment wchar.h
 @comment ISO
 @deftypefun int mbsinit (const mbstate_t *@var{ps})
-This function determines whether the state object pointed to by @var{ps}
-is in the initial state or not.  If @var{ps} is a null pointer or the
-object is in the initial state the return value is nonzero.  Otherwise
+The @code {mbsinit} function determines whether the state object pointed 
+to by @var{ps} is in the initial state. If @var{ps} is a null pointer or 
+the object is in the initial state the return value is nonzero. Otherwise 
 it is zero.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and
-is declared in @file{wchar.h}.
+@code {mbsinit} was introduced in @w{Amendment 1} to @w{ISO C90} and is 
+declared in @file{wchar.h}.
 @end deftypefun
 
-Code using this function often looks similar to this:
+Code using @code {mbsinit} often looks similar to this:
 
 @c Fix the example to explicitly say how to generate the escape sequence
 @c to restore the initial state.
@@ -536,7 +535,7 @@ Code using this function often looks similar to this:
 @end smallexample
 
 The code to emit the escape sequence to get back to the initial state is
-interesting.  The @code{wcsrtombs} function can be used to determine the
+interesting. The @code{wcsrtombs} function can be used to determine the
 necessary output code (@pxref{Converting Strings}).  Please note that on
 GNU systems it is not necessary to perform this extra action for the
 conversion from multibyte text to wide character text since the wide
@@ -551,11 +550,10 @@ The most fundamental of the conversion functions are those dealing with
 single characters.  Please note that this does not always mean single
 bytes.  But since there is very often a subset of the multibyte
 character set which consists of single byte sequences there are
-functions to help with converting bytes.  One very important and often
-applicable scenario is where ASCII is a subpart of the multibyte
-character set.  I.e., all ASCII characters stand for itself and all
-other characters have at least a first byte which is beyond the range
-@math{0} to @math{127}.
+functions to help with converting bytes.  Frequently, ASCII is a subpart 
+of the multibyte character set.  In such a scenario, each ASCII character 
+stands for itself, and all other characters have at least a first byte 
+that is beyond the range @math{0} to @math{127}.
 
 @comment wchar.h
 @comment ISO
@@ -566,16 +564,16 @@ character equivalent using the conversion rules from the currently
 selected locale of the @code{LC_CTYPE} category.
 
 If @code{(unsigned char) @var{c}} is no valid single byte multibyte
-character or if @var{c} is @code{EOF} the function returns @code{WEOF}.
+character or if @var{c} is @code{EOF}, the function returns @code{WEOF}.
 
 Please note the restriction of @var{c} being tested for validity only in
-the initial shift state.  There is no @code{mbstate_t} object used from
-which the state information is taken and the function also does not use
+the initial shift state.  No @code{mbstate_t} object is used from
+which the state information is taken, and the function also does not use
 any static state.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and
-is declared in @file{wchar.h}.
+The @code{btowc} function was introduced in @w{Amendment 1} to @w{ISO C90} 
+and is declared in @file{wchar.h}.
 @end deftypefun
 
 Despite the limitation that the single byte value always is interpreted
@@ -623,7 +621,7 @@ value of this function is this character.  Otherwise the return value is
 @code{EOF}.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and
+@code{wctob} was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -639,46 +637,46 @@ and they also do not require it to be in the initial state.
 The @code{mbrtowc} function (``multibyte restartable to wide
 character'') converts the next multibyte character in the string pointed
 to by @var{s} into a wide character and stores it in the wide character
-string pointed to by @var{pwc}.  The conversion is performed according
+string pointed to by @var{pwc}. The conversion is performed according
 to the locale currently selected for the @code{LC_CTYPE} category.  If
-the conversion for the character set used in the locale requires a state
+the conversion for the character set used in the locale requires a state,
 the multibyte string is interpreted in the state represented by the
-object pointed to by @var{ps}.  If @var{ps} is a null pointer, a static,
+object pointed to by @var{ps}. If @var{ps} is a null pointer, a static,
 internal state variable used only by the @code{mbrtowc} function is
 used.
 
-If the next multibyte character corresponds to the NUL wide character
+If the next multibyte character corresponds to the NUL wide character,
 the return value of the function is @math{0} and the state object is
-afterwards in the initial state.  If the next @var{n} or fewer bytes
-form a correct multibyte character the return value is the number of
-bytes starting from @var{s} which form the multibyte character.  The
+afterwards in the initial state. If the next @var{n} or fewer bytes
+form a correct multibyte character, the return value is the number of
+bytes starting from @var{s} that form the multibyte character.  The
 conversion state is updated according to the bytes consumed in the
-conversion.  In both cases the wide character (either the @code{L'\0'}
-or the one found in the conversion) is stored in the string pointer to
-by @var{pwc} iff @var{pwc} is not null.
+conversion. In both cases the wide character (either the @code{L'\0'}
+or the one found in the conversion) is stored in the string pointed to
+by @var{pwc} if @var{pwc} is not null.
 
 If the first @var{n} bytes of the multibyte string possibly form a valid
 multibyte character but there are more than @var{n} bytes needed to
-complete it the return value of the function is @code{(size_t) -2} and
+complete it, the return value of the function is @code{(size_t) -2} and
 no value is stored.  Please note that this can happen even if @var{n}
-has a value greater or equal to @code{MB_CUR_MAX} since the input might
-contain redundant shift sequences.
+has a value greater than or equal to @code{MB_CUR_MAX} since the input 
+might contain redundant shift sequences.
 
 If the first @code{n} bytes of the multibyte string cannot possibly form
-a valid multibyte character also no value is stored, the global variable
-@code{errno} is set to the value @code{EILSEQ} and the function returns
-@code{(size_t) -1}.  The conversion state is afterwards undefined.
+a valid multibyte character, no value is stored, the global variable
+@code{errno} is set to the value @code{EILSEQ}, and the function returns
+@code{(size_t) -1}. The conversion state is afterwards undefined.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and
+@code{mbrtowc} was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
-Using this function is straight forward.  A function which copies a
+Use of @code{mbrtowc} is straightforward.  A function which copies a
 multibyte string into a wide character string while at the same time
-converting all lowercase character into uppercase could look like this
+converting all lowercase characters into uppercase could look like this
 (this is not the final version, just an example; it has no error
-checking, and leaks sometimes memory):
+checking, and sometimes leaks memory):
 
 @smallexample
 wchar_t *
@@ -705,27 +703,26 @@ mbstouwcs (const char *s)
 @}
 @end smallexample
 
-The use of @code{mbrtowc} should be clear.  A single wide character is
-stored in @code{@var{tmp}[0]} and the number of consumed bytes is stored
-in the variable @var{nbytes}.  In case the the conversion was successful
-the uppercase variant of the wide character is stored in the
-@var{result} array and the pointer to the input string and the number of
-available bytes is adjusted.
+The use of @code{mbrtowc} should be clear. A single wide character is
+stored in @code{@var{tmp}[0]}, and the number of consumed bytes is stored
+in the variable @var{nbytes}. If the conversion is successful, the 
+uppercase variant of the wide character is stored in the @var{result} 
+array and the pointer to the input string and the number of available 
+bytes is adjusted.
 
-The only non-obvious thing about the function might be the way memory is
-allocated for the result.  The above code uses the fact that there can
-never be more wide characters in the converted results than there are
-bytes in the multibyte input string.  This method yields to a
-pessimistic guess about the size of the result and if many wide
-character strings have to be constructed this way or the strings are
-long, the extra memory required allocated because the input string
-contains multibyte characters might be significant.  It would be
-possible to resize the allocated memory block to the correct size before
-returning it.  A better solution might be to allocate just the right
-amount of space for the result right away.  Unfortunately there is no
-function to compute the length of the wide character string directly
-from the multibyte string.  But there is a function which does part of
-the work.
+The only non-obvious thing about @code{mbrtowc} might be the way memory 
+is allocated for the result. The above code uses the fact that there 
+can never be more wide characters in the converted results than there are
+bytes in the multibyte input string. This method yields a pessimistic 
+guess about the size of the result, and if many wide character strings 
+have to be constructed this way or if the strings are long, the extra 
+memory required to be allocated because the input string contains 
+multibyte characters might be significant. The allocated memory block can 
+be resized to the correct size before returning it, but a better solution 
+might be to allocate just the right amount of space for the result right 
+away. Unfortunately there is no function to compute the length of the wide 
+character string directly from the multibyte string. There is, however, a 
+function which does part of the work.
 
 @comment wchar.h
 @comment ISO
@@ -734,36 +731,36 @@ The @code{mbrlen} function (``multibyte restartable length'') computes
 the number of at most @var{n} bytes starting at @var{s} which form the
 next valid and complete multibyte character.
 
-If the next multibyte character corresponds to the NUL wide character
+If the next multibyte character corresponds to the NUL wide character,
 the return value is @math{0}.  If the next @var{n} bytes form a valid
-multibyte character the number of bytes belonging to this multibyte
+multibyte character, the number of bytes belonging to this multibyte
 character byte sequence is returned.
 
 If the the first @var{n} bytes possibly form a valid multibyte
-character but it is incomplete the return value is @code{(size_t) -2}.
-Otherwise the multibyte character sequence is invalid and the return
-value is @code{(size_t) -1}.
+character but the character is incomplete, the return value is 
+@code{(size_t) -2}. Otherwise the multibyte character sequence is invalid 
+and the return value is @code{(size_t) -1}.
 
 The multibyte sequence is interpreted in the state represented by the
 object pointed to by @var{ps}.  If @var{ps} is a null pointer, a state
 object local to @code{mbrlen} is used.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and
+@code{mbrlen} was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
-The tentative reader now will of course note that @code{mbrlen} can be
-implemented as
+The attentive reader now will note that @code{mbrlen} can be implemented 
+as
 
 @smallexample
 mbrtowc (NULL, s, n, ps != NULL ? ps : &internal)
 @end smallexample
 
 This is true and in fact is mentioned in the official specification.
-Now, how can this function be used to determine the length of the wide
+How can this function be used to determine the length of the wide
 character string created from a multibyte character string?  It is not
-directly usable but we can define a function @code{mbslen} using it:
+directly usable, but we can define a function @code{mbslen} using it:
 
 @smallexample
 size_t
@@ -788,12 +785,11 @@ mbslen (const char *s)
 This function simply calls @code{mbrlen} for each multibyte character
 in the string and counts the number of function calls.  Please note that
 we here use @code{MB_LEN_MAX} as the size argument in the @code{mbrlen}
-call.  This is OK since a) this value is larger then the length of the
-longest multibyte character sequence and b) because we know that the
-string @var{s} ends with a NUL byte which cannot be part of any other
-multibyte character sequence but the one representing the NUL wide
-character.  Therefore the @code{mbrlen} function will never read invalid
-memory.
+call. This is acceptable since a) this value is larger then the length of 
+the longest multibyte character sequence and b) we know that the string 
+@var{s} ends with a NUL byte, which cannot be part of any other multibyte 
+character sequence but the one representing the NUL wide character.  
+Therefore, the @code{mbrlen} function will never read invalid memory.
 
 Now that this function is available (just to make this clear, this
 function is @emph{not} part of the GNU C library) we can compute the
@@ -804,12 +800,12 @@ character string @var{s} using
 wcs_bytes = (mbslen (s) + 1) * sizeof (wchar_t);
 @end smallexample
 
-Please note that the @code{mbslen} function is quite inefficient.  The
-implementation of @code{mbstouwcs} implemented using @code{mbslen} would
-have to perform the conversion of the multibyte character input string
-twice and this conversion might be quite expensive.  So it is necessary
-to think about the consequences of using the easier but imprecise method
-before doing the work twice.
+Please note that the @code{mbslen} function is quite inefficient. The
+implementation of @code{mbstouwcs} with @code{mbslen} would have to 
+perform the conversion of the multibyte character input string twice, and 
+this conversion might be quite expensive. So it is necessary to think 
+about the consequences of using the easier but imprecise method before 
+doing the work twice.
 
 @comment wchar.h
 @comment ISO
@@ -818,8 +814,8 @@ The @code{wcrtomb} function (``wide character restartable to
 multibyte'') converts a single wide character into a multibyte string
 corresponding to that wide character.
 
-If @var{s} is a null pointer the function resets the the state stored in
-the objects pointer to by @var{ps} (or the internal @code{mbstate_t}
+If @var{s} is a null pointer, the function resets the state stored in
+the objects pointed to by @var{ps} (or the internal @code{mbstate_t}
 object) to the initial state.  This can also be achieved by a call like
 this:
 
@@ -828,23 +824,24 @@ wcrtombs (temp_buf, L'\0', ps)
 @end smallexample
 
 @noindent
-since if @var{s} is a null pointer @code{wcrtomb} performs as if it
-writes into an internal buffer which is guaranteed to be large enough.
+since, if @var{s} is a null pointer, @code{wcrtomb} performs as if it
+writes into an internal buffer, which is guaranteed to be large enough.
 
-If @var{wc} is the NUL wide character @code{wcrtomb} emits, if
+If @var{wc} is the NUL wide character, @code{wcrtomb} emits, if
 necessary, a shift sequence to get the state @var{ps} into the initial
-state followed by a single NUL byte is stored in the string @var{s}.
+state followed by a single NUL byte, which is stored in the string 
+@var{s}.
 
-Otherwise a byte sequence (possibly including shift sequences) is
-written into the string @var{s}.  This of only happens if @var{wc} is a
-valid wide character, i.e., it has a multibyte representation in the
-character set selected by locale of the @code{LC_CTYPE} category.  If
-@var{wc} is no valid wide character nothing is stored in the strings
-@var{s}, @code{errno} is set to @code{EILSEQ}, the conversion state in
-@var{ps} is undefined and the return value is @code{(size_t) -1}.
+Otherwise a byte sequence (possibly including shift sequences) is written 
+into the string @var{s}.  This only happens if @var{wc} is a valid wide 
+character (i.e., it has a multibyte representation in the character set 
+selected by locale of the @code{LC_CTYPE} category).  If @var{wc} is no 
+valid wide character, nothing is stored in the strings @var{s}, 
+@code{errno} is set to @code{EILSEQ}, the conversion state in @var{ps} 
+is undefined and the return value is @code{(size_t) -1}.
 
 If no error occurred the function returns the number of bytes stored in
-the string @var{s}.  This includes all byte representing shift
+the string @var{s}.  This includes all bytes representing shift
 sequences.
 
 One word about the interface of the function: there is no parameter
@@ -855,13 +852,13 @@ character.  So the caller has to make sure that there is enough space
 available, otherwise buffer overruns can occur.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and is
+@code{wcrtomb} was introduced in @w{Amendment 1} to @w{ISO C90} and is
 declared in @file{wchar.h}.
 @end deftypefun
 
-Using this function is as easy as using @code{mbrtowc}.  The following
+Using @code{wcrtomb} is as easy as using @code{mbrtowc}.  The following
 example appends a wide character string to a multibyte character string.
-Again, the code is not really useful (and correct), it is simply here to
+Again, the code is not really useful (or correct), it is simply here to
 demonstrate the use and some problems.
 
 @smallexample
@@ -899,7 +896,7 @@ mbscatwcs (char *s, size_t len, const wchar_t *ws)
 First the function has to find the end of the string currently in the
 array @var{s}.  The @code{strchr} call does this very efficiently since a
 requirement for multibyte character representations is that the NUL byte
-never is used except to represent itself (and in this context, the end
+is never used except to represent itself (and in this context, the end
 of the string).
 
 After initializing the state object the loop is entered where the first
@@ -908,9 +905,9 @@ abort if there are not at least @code{MB_CUR_LEN} bytes available.  This
 is not always optimal but we have no other choice.  We might have less
 than @code{MB_CUR_LEN} bytes available but the next multibyte character
 might also be only one byte long.  At the time the @code{wcrtomb} call
-returns it is too late to decide whether the buffer was large enough or
-not.  If this solution is really unsuitable there is a very slow but
-more accurate solution.
+returns it is too late to decide whether the buffer was large enough. If 
+this solution is unsuitable, there is a very slow but more accurate 
+solution.
 
 @smallexample
   ...
@@ -930,20 +927,19 @@ more accurate solution.
   ...
 @end smallexample
 
-Here we do perform the conversion which might overflow the buffer so
-that we are afterwards in the position to make an exact decision about
-the buffer size.  Please note the @code{NULL} argument for the
-destination buffer in the new @code{wcrtomb} call; since we are not
-interested in the converted text at this point this is a nice way to
-express this.  The most unusual thing about this piece of code certainly
-is the duplication of the conversion state object.  But think about
-this: if a change of the state is necessary to emit the next multibyte
-character we want to have the same shift state change performed in the
-real conversion.  Therefore we have to preserve the initial shift state
-information.
+Here we perform the conversion that might overflow the buffer so that 
+we are afterwards in the position to make an exact decision about the 
+buffer size. Please note the @code{NULL} argument for the destination 
+buffer in the new @code{wcrtomb} call; since we are not interested in the 
+converted text at this point, this is a nice way to express this. The 
+most unusual thing about this piece of code certainly is the duplication 
+of the conversion state object, but if a change of the state is necessary 
+to emit the next multibyte character, we want to have the same shift state 
+change performed in the real conversion. Therefore, we have to preserve 
+the initial shift state information.
 
 There are certainly many more and even better solutions to this problem.
-This example is only meant for educational purposes.
+This example is only provided for educational purposes.
 
 @node Converting Strings
 @subsection Converting Multibyte and Wide Character Strings
@@ -952,29 +948,29 @@ The functions described in the previous section only convert a single
 character at a time.  Most operations to be performed in real-world
 programs include strings and therefore the @w{ISO C} standard also
 defines conversions on entire strings.  However, the defined set of
-functions is quite limited, thus the GNU C library contains a few
+functions is quite limited; therefore, the GNU C library contains a few
 extensions which can help in some important situations.
 
 @comment wchar.h
 @comment ISO
 @deftypefun size_t mbsrtowcs (wchar_t *restrict @var{dst}, const char **restrict @var{src}, size_t @var{len}, mbstate_t *restrict @var{ps})
 The @code{mbsrtowcs} function (``multibyte string restartable to wide
-character string'') converts an NUL terminated multibyte character
+character string'') converts an NUL-terminated multibyte character
 string at @code{*@var{src}} into an equivalent wide character string,
 including the NUL wide character at the end.  The conversion is started
 using the state information from the object pointed to by @var{ps} or
 from an internal object of @code{mbsrtowcs} if @var{ps} is a null
-pointer.  Before returning the state object to match the state after the
-last converted character.  The state is the initial state if the
+pointer. Before returning, the state object is updated to match the state 
+after the last converted character. The state is the initial state if the
 terminating NUL byte is reached and converted.
 
-If @var{dst} is not a null pointer the result is stored in the array
-pointed to by @var{dst}, otherwise the conversion result is not
+If @var{dst} is not a null pointer, the result is stored in the array
+pointed to by @var{dst}; otherwise, the conversion result is not
 available since it is stored in an internal buffer.
 
 If @var{len} wide characters are stored in the array @var{dst} before
-reaching the end of the input string the conversion stops and @var{len}
-is returned.  If @var{dst} is a null pointer @var{len} is never checked.
+reaching the end of the input string, the conversion stops and @var{len}
+is returned. If @var{dst} is a null pointer, @var{len} is never checked.
 
 Another reason for a premature return from the function call is if the
 input string contains an invalid multibyte sequence.  In this case the
@@ -982,42 +978,42 @@ global variable @code{errno} is set to @code{EILSEQ} and the function
 returns @code{(size_t) -1}.
 
 @c XXX The ISO C9x draft seems to have a problem here.  It says that PS
-@c is not updated if DST is NULL.  This is not said straight forward and
+@c is not updated if DST is NULL.  This is not said straightforward and
 @c none of the other functions is described like this.  It would make sense
 @c to define the function this way but I don't think it is meant like this.
 
 In all other cases the function returns the number of wide characters
-converted during this call.  If @var{dst} is not null @code{mbsrtowcs}
-stores in the pointer pointed to by @var{src} a null pointer (if the NUL
-byte in the input string was reached) or the address of the byte
+converted during this call. If @var{dst} is not null, @code{mbsrtowcs}
+stores in the pointer pointed to by @var{src} either a null pointer (if 
+the NUL byte in the input string was reached) or the address of the byte
 following the last converted multibyte character.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and is
+@code{mbsrtowcs} was introduced in @w{Amendment 1} to @w{ISO C90} and is
 declared in @file{wchar.h}.
 @end deftypefun
 
-The definition of this function has one limitation which has to be
-understood.  The requirement that @var{dst} has to be a NUL terminated
-string provides problems if one wants to convert buffers with text.  A
-buffer is normally no collection of NUL terminated strings but instead a
+The definition of the @code{mbsrtowcs} function has one important 
+limitation. The requirement that @var{dst} has to be a NUL-terminated 
+string provides problems if one wants to convert buffers with text. A
+buffer is normally no collection of NUL-terminated strings but instead a
 continuous collection of lines, separated by newline characters.  Now
-assume a function to convert one line from a buffer is needed.  Since
-the line is not NUL terminated the source pointer cannot directly point
-into the unmodified text buffer.  This means, either one inserts the NUL
+assume that a function to convert one line from a buffer is needed. Since
+the line is not NUL-terminated the source pointer cannot directly point
+into the unmodified text buffer. This means, either one inserts the NUL
 byte at the appropriate place for the time of the @code{mbsrtowcs}
 function call (which is not doable for a read-only buffer or in a
 multi-threaded application) or one copies the line in an extra buffer
-where it can be terminated by a NUL byte.  Note that it is not in
-general possible to limit the number of characters to convert by setting
-the parameter @var{len} to any specific value.  Since it is not known
-how many bytes each multibyte character sequence is in length one always
-could do only a guess.
+where it can be terminated by a NUL byte. Note that it is not in general 
+possible to limit the number of characters to convert by setting the 
+parameter @var{len} to any specific value.  Since it is not known how 
+many bytes each multibyte character sequence is in length, one can only 
+guess.
 
 @cindex stateful
 There is still a problem with the method of NUL-terminating a line right
 after the newline character which could lead to very strange results.
-As said in the description of the @var{mbsrtowcs} function above the
+As said in the description of the @code{mbsrtowcs} function above the
 conversion state is guaranteed to be in the initial shift state after
 processing the NUL byte at the end of the input string.  But this NUL
 byte is not really part of the text.  I.e., the conversion state after
@@ -1026,10 +1022,10 @@ initial shift state and therefore the first character of the next line
 is encoded using this state.  But the state in question is never
 accessible to the user since the conversion stops after the NUL byte
 (which resets the state).  Most stateful character sets in use today
-require that the shift state after a newline is the initial state--but
-this is not a strict guarantee.  Therefore simply NUL terminating a
-piece of a running text is not always an adequate solution and therefore
-never should be used in generally used code.
+require that the shift state after a newline be the initial state--but
+this is not a strict guarantee.  Therefore, simply NUL-terminating a
+piece of a running text is not always an adequate solution and, 
+therefore, should never be used in generally used code.
 
 The generic conversion interface (@pxref{Generic Charset Conversion})
 does not have this limitation (it simply works on buffers, not
@@ -1043,62 +1039,62 @@ length and passing this length to the function.
 @comment ISO
 @deftypefun size_t wcsrtombs (char *restrict @var{dst}, const wchar_t **restrict @var{src}, size_t @var{len}, mbstate_t *restrict @var{ps})
 The @code{wcsrtombs} function (``wide character string restartable to
-multibyte string'') converts the NUL terminated wide character string at
-@code{*@var{src}} into an equivalent multibyte character string and
-stores the result in the array pointed to by @var{dst}.  The NUL wide
-character is also converted.  The conversion starts in the state
+multibyte string'') converts the NUL-terminated wide character string at
+@code{*@var{src}} into an equivalent multibyte character string and 
+stores the result in the array pointed to by @var{dst}. The NUL wide
+character is also converted. The conversion starts in the state
 described in the object pointed to by @var{ps} or by a state object
-locally to @code{wcsrtombs} in case @var{ps} is a null pointer.  If
-@var{dst} is a null pointer the conversion is performed as usual but the
-result is not available.  If all characters of the input string were
-successfully converted and if @var{dst} is not a null pointer the
+locally to @code{wcsrtombs} in case @var{ps} is a null pointer. If
+@var{dst} is a null pointer, the conversion is performed as usual but the
+result is not available. If all characters of the input string were
+successfully converted and if @var{dst} is not a null pointer, the 
 pointer pointed to by @var{src} gets assigned a null pointer.
 
 If one of the wide characters in the input string has no valid multibyte
-character equivalent the conversion stops early, sets the global
+character equivalent, the conversion stops early, sets the global
 variable @code{errno} to @code{EILSEQ}, and returns @code{(size_t) -1}.
 
 Another reason for a premature stop is if @var{dst} is not a null
 pointer and the next converted character would require more than
-@var{len} bytes in total to the array @var{dst}.  In this case (and if
+@var{len} bytes in total to the array @var{dst}. In this case (and if
 @var{dest} is not a null pointer) the pointer pointed to by @var{src} is
 assigned a value pointing to the wide character right after the last one
 successfully converted.
 
-Except in the case of an encoding error the return value of the function
-is the number of bytes in all the multibyte character sequences stored
-in @var{dst}.  Before returning the state in the object pointed to by
-@var{ps} (or the internal object in case @var{ps} is a null pointer) is
-updated to reflect the state after the last conversion.  The state is
-the initial shift state in case the terminating NUL wide character was
-converted.
+Except in the case of an encoding error the return value of the 
+@code{wcsrtombs} function is the number of bytes in all the multibyte 
+character sequences stored in @var{dst}. Before returning the state in 
+the object pointed to by @var{ps} (or the internal object in case 
+@var{ps} is a null pointer) is updated to reflect the state after the 
+last conversion. The state is the initial shift state in case the 
+terminating NUL wide character was converted.
 
 @pindex wchar.h
-This function was introduced in @w{Amendment 1} to @w{ISO C90} and is
-declared in @file{wchar.h}.
+The @code{wcsrtombs} function was introduced in @w{Amendment 1} to 
+@w{ISO C90} and is declared in @file{wchar.h}.
 @end deftypefun
 
-The restriction mentions above for the @code{mbsrtowcs} function applies
-also here.  There is no possibility to directly control the number of
-input characters.  One has to place the NUL wide character at the
-correct place or control the consumed input indirectly via the available
-output array size (the @var{len} parameter).
+The restriction mentioned above for the @code{mbsrtowcs} function applies
+here also. There is no possibility of directly controlling the number of
+input characters. One has to place the NUL wide character at the correct 
+place or control the consumed input indirectly via the available output 
+array size (the @var{len} parameter).
 
 @comment wchar.h
 @comment GNU
 @deftypefun size_t mbsnrtowcs (wchar_t *restrict @var{dst}, const char **restrict @var{src}, size_t @var{nmc}, size_t @var{len}, mbstate_t *restrict @var{ps})
 The @code{mbsnrtowcs} function is very similar to the @code{mbsrtowcs}
-function.  All the parameters are the same except for @var{nmc} which is
-new.  The return value is the same as for @code{mbsrtowcs}.
+function. All the parameters are the same except for @var{nmc} which is
+new. The return value is the same as for @code{mbsrtowcs}.
 
 This new parameter specifies how many bytes at most can be used from the
-multibyte character string.  I.e., the multibyte character string
-@code{*@var{src}} need not be NUL terminated.  But if a NUL byte is
-found within the @var{nmc} first bytes of the string the conversion
+multibyte character string.  In other words, the multibyte character 
+string @code{*@var{src}} need not be NUL-terminated. But if a NUL byte is
+found within the @var{nmc} first bytes of the string, the conversion 
 stops here.
 
-This function is a GNU extensions.  It is meant to work around the
-problems mentioned above.  Now it is possible to convert buffer with
+This function is a GNU extension. It is meant to work around the
+problems mentioned above. Now it is possible to convert a buffer with
 multibyte character text piece for piece without having to care about
 inserting NUL bytes and the effect of NUL bytes on the conversion state.
 @end deftypefun
@@ -1134,23 +1130,24 @@ showmbs (const char *src, FILE *fp)
 There is no problem with the state after a call to @code{mbsnrtowcs}.
 Since we don't insert characters in the strings which were not in there
 right from the beginning and we use @var{state} only for the conversion
-of the given buffer there is no problem with altering the state.
+of the given buffer, there is no problem with altering the state.
 
 @comment wchar.h
 @comment GNU
 @deftypefun size_t wcsnrtombs (char *restrict @var{dst}, const wchar_t **restrict @var{src}, size_t @var{nwc}, size_t @var{len}, mbstate_t *restrict @var{ps})
 The @code{wcsnrtombs} function implements the conversion from wide
-character strings to multibyte character strings.  It is similar to
-@code{wcsrtombs} but it takes, just like @code{mbsnrtowcs}, an extra
-parameter which specifies the length of the input string.
+character strings to multibyte character strings. It is similar to
+@code{wcsrtombs} but, just like @code{mbsnrtowcs}, it takes an extra
+parameter, which specifies the length of the input string.
 
 No more than @var{nwc} wide characters from the input string
 @code{*@var{src}} are converted.  If the input string contains a NUL
-wide character in the first @var{nwc} character to conversion stops at
+wide character in the first @var{nwc} characters, the conversion stops at
 this place.
 
-This function is a GNU extension and just like @code{mbsnrtowcs} is
-helps in situations where no NUL terminated input strings are available.
+The @code{wcsnrtombs} function is a GNU extension and just like 
+@code{mbsnrtowcs} helps in situations where no NUL-terminated input 
+strings are available.
 @end deftypefun
 
 
@@ -1247,26 +1244,27 @@ file_mbsrtowcs (int input, int output)
 @node Non-reentrant Conversion
 @section Non-reentrant Conversion Function
 
-The functions described in the last chapter are defined in
-@w{Amendment 1} to @w{ISO C90}.  But the original @w{ISO C90} standard also
-contained functions for character set conversion.  The reason that they
-are not described in the first place is that they are almost entirely
-useless.
+The functions described in the previous chapter are defined in
+@w{Amendment 1} to @w{ISO C90}, but the original @w{ISO C90} standard 
+also contained functions for character set conversion. The reason that 
+these original functions are not described first is that they are almost 
+entirely useless.
 
-The problem is that all the functions for conversion defined in @w{ISO
-C90} use a local state.  This implies that multiple conversions at the
-same time (not only when using threads) cannot be done, and that you
-cannot first convert single characters and then strings since you cannot
-tell the conversion functions which state to use.
+The problem is that all the conversion functions described in the 
+original @w{ISO C90} use a local state. Using a local state implies that 
+multiple conversions at the same time (not only when using threads) 
+cannot be done, and that you cannot first convert single characters and 
+then strings since you cannot tell the conversion functions which state 
+to use.
 
-These functions are therefore usable only in a very limited set of
-situations.  One must complete converting the entire string before
-starting a new one and each string/text must be converted with the same
+These original functions are therefore usable only in a very limited set 
+of situations. One must complete converting the entire string before
+starting a new one, and each string/text must be converted with the same
 function (there is no problem with the library itself; it is guaranteed
 that no library function changes the state of any of these functions).
 @strong{For the above reasons it is highly requested that the functions
-from the last section are used in place of non-reentrant conversion
-functions.}
+described in the previous section be used in place of non-reentrant 
+conversion functions.}
 
 @menu
 * Non-reentrant Character Conversion::  Non-reentrant Conversion of Single
@@ -1291,13 +1289,13 @@ to supply for @var{size} the number of bytes of data you have in hand.)
 
 @code{mbtowc} with non-null @var{string} distinguishes three
 possibilities: the first @var{size} bytes at @var{string} start with
-valid multibyte character, they start with an invalid byte sequence or
+valid multibyte characters, they start with an invalid byte sequence or
 just part of a character, or @var{string} points to an empty string (a
 null character).
 
 For a valid multibyte character, @code{mbtowc} converts it to a wide
 character and stores that in @code{*@var{result}}, and returns the
-number of bytes in that character (always at least @math{1}, and never
+number of bytes in that character (always at least @math{1} and never
 more than @var{size}).
 
 For an invalid byte sequence, @code{mbtowc} returns @math{-1}.  For an
@@ -1326,7 +1324,7 @@ be translated to a multibyte character), an invalid code, and @code{L'\0'}.
 
 Given a valid code, @code{wctomb} converts it to a multibyte character,
 storing the bytes starting at @var{string}.  Then it returns the number
-of bytes in that character (always at least @math{1}, and never more
+of bytes in that character (always at least @math{1} and never more
 than @code{MB_CUR_MAX}).
 
 If @var{wchar} is an invalid wide character code, @code{wctomb} returns
@@ -1334,7 +1332,7 @@ If @var{wchar} is an invalid wide character code, @code{wctomb} returns
 storing @code{'\0'} in @code{*@var{string}}.
 
 If the multibyte character code uses shift characters, then
-@code{wctomb} maintains and updates a shift state as it scans.  If you
+@code{wctomb} maintains and updates a shift state as it scans. If you
 call @code{wctomb} with a null pointer for @var{string}, that
 initializes the shift state to its standard initial value.  It also
 returns nonzero if the multibyte character code in use actually has a
@@ -1360,13 +1358,13 @@ to supply for @var{size} the number of bytes of data you have in hand.)
 
 The return value of @code{mblen} distinguishes three possibilities: the
 first @var{size} bytes at @var{string} start with valid multibyte
-character, they start with an invalid byte sequence or just part of a
+characters, they start with an invalid byte sequence or just part of a
 character, or @var{string} points to an empty string (a null character).
 
 For a valid multibyte character, @code{mblen} returns the number of
-bytes in that character (always at least @code{1}, and never more than
-@var{size}).  For an invalid byte sequence, @code{mblen} returns
-@math{-1}.  For an empty string, it returns @math{0}.
+bytes in that character (always at least @code{1} and never more than
+@var{size}). For an invalid byte sequence, @code{mblen} returns 
+@math{-1}. For an empty string, it returns @math{0}.
 
 If the multibyte character code uses shift characters, then @code{mblen}
 maintains and updates a shift state as it scans.  If you call
@@ -1383,8 +1381,8 @@ The function @code{mblen} is declared in @file{stdlib.h}.
 @node Non-reentrant String Conversion
 @subsection Non-reentrant Conversion of Strings
 
-For convenience reasons the @w{ISO C90} standard defines also functions
-to convert entire strings instead of single characters.  These functions
+For convenience the @w{ISO C90} standard also defines functions to 
+convert entire strings instead of single characters. These functions
 suffer from the same problems as their reentrant counterparts from
 @w{Amendment 1} to @w{ISO C90}; see @ref{Converting Strings}.
 
@@ -1402,11 +1400,11 @@ is less than the actual number of wide characters resulting from
 The conversion of characters from @var{string} begins in the initial
 shift state.
 
-If an invalid multibyte character sequence is found, this function
-returns a value of @math{-1}.  Otherwise, it returns the number of wide
-characters stored in the array @var{wstring}.  This number does not
-include the terminating null character, which is present if the number
-is less than @var{size}.
+If an invalid multibyte character sequence is found, the @code{mbstowcs} 
+function returns a value of @math{-1}. Otherwise, it returns the number 
+of wide characters stored in the array @var{wstring}. This number does 
+not include the terminating null character, which is present if the 
+number is less than @var{size}.
 
 Here is an example showing how to convert a string of multibyte
 characters, allocating enough space for the result.
@@ -1435,7 +1433,7 @@ The @code{wcstombs} (``wide character string to multibyte string'')
 function converts the null-terminated wide character array @var{wstring}
 into a string containing multibyte characters, storing not more than
 @var{size} bytes starting at @var{string}, followed by a terminating
-null character if there is room.  The conversion of characters begins in
+null character if there is room. The conversion of characters begins in
 the initial shift state.
 
 The terminating null character counts towards the size, so if @var{size}
@@ -1443,10 +1441,10 @@ is less than or equal to the number of bytes needed in @var{wstring}, no
 terminating null character is stored.
 
 If a code that does not correspond to a valid multibyte character is
-found, this function returns a value of @math{-1}.  Otherwise, the
-return value is the number of bytes stored in the array @var{string}.
-This number does not include the terminating null character, which is
-present if the number is less than @var{size}.
+found, the @code{wcstombs} function returns a value of @math{-1}. 
+Otherwise, the return value is the number of bytes stored in the array 
+@var{string}. This number does not include the terminating null character, 
+which is present if the number is less than @var{size}.
 @end deftypefun
 
 @node Shift State
@@ -1454,8 +1452,8 @@ present if the number is less than @var{size}.
 
 In some multibyte character codes, the @emph{meaning} of any particular
 byte sequence is not fixed; it depends on what other sequences have come
-earlier in the same string.  Typically there are just a few sequences
-that can change the meaning of other sequences; these few are called
+earlier in the same string. Typically there are just a few sequences that 
+can change the meaning of other sequences; these few are called 
 @dfn{shift sequences} and we say that they set the @dfn{shift state} for
 other sequences that follow.
 
@@ -1470,18 +1468,18 @@ and ``Latin-1 mode''), and two shift sequences that specify particular
 shift states.
 
 When the multibyte character code in use has shift states, then
-@code{mblen}, @code{mbtowc} and @code{wctomb} must maintain and update
-the current shift state as they scan the string.  To make this work
+@code{mblen}, @code{mbtowc}, and @code{wctomb} must maintain and update
+the current shift state as they scan the string. To make this work
 properly, you must follow these rules:
 
 @itemize @bullet
 @item
 Before starting to scan a string, call the function with a null pointer
 for the multibyte character address---for example, @code{mblen (NULL,
-0)}.  This initializes the shift state to its standard initial value.
+0)}. This initializes the shift state to its standard initial value.
 
 @item
-Scan the string one character at a time, in order.  Do not ``back up''
+Scan the string one character at a time, in order. Do not ``back up''
 and rescan characters already scanned, and do not intersperse the
 processing of different strings.
 @end itemize
@@ -1525,24 +1523,26 @@ worry that the shift state will be changed mysteriously.
 @section Generic Charset Conversion
 
 The conversion functions mentioned so far in this chapter all had in
-common that they operate on character sets which are not directly
-specified by the functions.  The multibyte encoding used is specified by
-the currently selected locale for the @code{LC_CTYPE} category.  The
+common that they operate on character sets that are not directly
+specified by the functions. The multibyte encoding used is specified by
+the currently selected locale for the @code{LC_CTYPE} category. The
 wide character set is fixed by the implementation (in the case of GNU C
-library it always is UCS-4 encoded @w{ISO 10646}.
+library it is always UCS-4 encoded @w{ISO 10646}.
 
 This has of course several problems when it comes to general character
 conversion:
 
 @itemize @bullet
 @item
-For every conversion where neither the source or destination character
-set is the character set of the locale for the @code{LC_CTYPE} category,
-one has to change the @code{LC_CTYPE} locale using @code{setlocale}.
+For every conversion where neither the source nor the destination 
+character set is the character set of the locale for the @code{LC_CTYPE} 
+category, one has to change the @code{LC_CTYPE} locale using 
+@code{setlocale}.
 
-This introduces major problems for the rest of the programs since
-several more functions (e.g., the character classification functions,
-@pxref{Classification of Characters}) use the @code{LC_CTYPE} category.
+Changing the @code{LC_TYPE} locale introduces major problems for the rest 
+of the programs since several more functions (e.g., the character 
+classification functions, @pxref{Classification of Characters}) use the 
+@code{LC_CTYPE} category.
 
 @item
 Parallel conversions to and from different character sets are not
@@ -1551,11 +1551,11 @@ threads.
 
 @item
 If neither the source nor the destination character set is the character
-set used for @code{wchar_t} representation there is at least a two-step
-process necessary to convert a text using the functions above.  One
-would have to select the source character set as the multibyte encoding,
+set used for @code{wchar_t} representation, there is at least a two-step
+process necessary to convert a text using the functions above. One would 
+have to select the source character set as the multibyte encoding, 
 convert the text into a @code{wchar_t} text, select the destination
-character set as the multibyte encoding and convert the wide character
+character set as the multibyte encoding, and convert the wide character
 text to the multibyte (@math{=} destination) character set.
 
 Even if this is possible (which is not guaranteed) it is a very tiring
@@ -1563,20 +1563,19 @@ work.  Plus it suffers from the other two raised points even more due to
 the steady changing of the locale.
 @end itemize
 
-
 The XPG2 standard defines a completely new set of functions which has
-none of these limitations.  They are not at all coupled to the selected
-locales and they but no constraints on the character sets selected for
-source and destination.  Only the set of available conversions is
-limiting them.  The standard does not specify that any conversion at all
-must be available.  It is a measure of the quality of the implementation.
+none of these limitations. They are not at all coupled to the selected
+locales, and they have no constraints on the character sets selected for
+source and destination. Only the set of available conversions limits 
+them. The standard does not specify that any conversion at all must be 
+available. Such availability is a measure of the quality of the 
+implementation.
 
-In the following text first the interface to @code{iconv}, the
-conversion function, will be described.  Comparisons with other
-implementations will show what pitfalls lie on the way of portable
-applications.  At last, the implementation is described as far as
-interesting to the advanced user who wants to extend the conversion
-capabilities.
+In the following text first the interface to @code{iconv} and then the
+conversion function, will be described. Comparisons with other
+implementations will show what obstacles stand in the way of portable
+applications. Finally, the implementation is described in so far as might 
+interest the advanced user who wants to extend conversion capabilities.
 
 @menu
 * Generic Conversion Interface::    Generic Character Set Conversion Interface.
@@ -1592,22 +1591,22 @@ capabilities.
 
 This set of functions follows the traditional cycle of using a resource:
 open--use--close.  The interface consists of three functions, each of
-which implement one step.
+which implements one step.
 
 Before the interfaces are described it is necessary to introduce a
-datatype.  Just like other open--use--close interface the functions
-introduced here work using a handles and the @file{iconv.h} header
+data type.  Just like other open--use--close interfaces the functions
+introduced here work using handles and the @file{iconv.h} header
 defines a special type for the handles used.
 
 @comment iconv.h
 @comment XPG2
 @deftp {Data Type} iconv_t
 This data type is an abstract type defined in @file{iconv.h}.  The user
-must not assume anything about the definition of this type, it must be
+must not assume anything about the definition of this type; it must be
 completely opaque.
 
 Objects of this type can get assigned handles for the conversions using
-the @code{iconv} functions.  The objects themselves need not be freed but
+the @code{iconv} functions. The objects themselves need not be freed, but
 the conversions for which the handles stand for have to.
 @end deftp
 
@@ -1619,13 +1618,13 @@ The first step is the function to create a handle.
 @deftypefun iconv_t iconv_open (const char *@var{tocode}, const char *@var{fromcode})
 The @code{iconv_open} function has to be used before starting a
 conversion.  The two parameters this function takes determine the
-source and destination character set for the conversion and if the
-implementation has the possibility to perform such a conversion the
+source and destination character set for the conversion, and if the
+implementation has the possibility to perform such a conversion, the
 function returns a handle.
 
-If the wanted conversion is not available the function returns
-@code{(iconv_t) -1}.  In this case the global variable @code{errno} can
-have the following values:
+If the wanted conversion is not available, the @code{iconv_open} function 
+returns @code{(iconv_t) -1}. In this case the global variable 
+@code{errno} can have the following values:
 
 @table @code
 @item EMFILE
@@ -1639,50 +1638,49 @@ The conversion from @var{fromcode} to @var{tocode} is not supported.
 @end table
 
 It is not possible to use the same descriptor in different threads to
-perform independent conversions.  Within the data structures associated
-with the descriptor there is information about the conversion state.
+perform independent conversions. The data structures associated
+with the descriptor include information about the conversion state.
 This must not be messed up by using it in different conversions.
 
 An @code{iconv} descriptor is like a file descriptor as for every use a
-new descriptor must be created.  The descriptor does not stand for all
+new descriptor must be created. The descriptor does not stand for all
 of the conversions from @var{fromset} to @var{toset}.
 
 The GNU C library implementation of @code{iconv_open} has one
-significant extension to other implementations.  To ease the extension
-of the set of available conversions the implementation allows storing
-the necessary files with data and code in arbitrarily many directories.
-How this extension has to be written will be explained below
-(@pxref{glibc iconv Implementation}).  Here it is only important to say
+significant extension to other implementations. To ease the extension
+of the set of available conversions, the implementation allows storing
+the necessary files with data and code in an arbitrary number of 
+directories. How this extension must be written will be explained below
+(@pxref{glibc iconv Implementation}). Here it is only important to say
 that all directories mentioned in the @code{GCONV_PATH} environment
-variable are considered if they contain a file @file{gconv-modules}.
+variable are considered only if they contain a file @file{gconv-modules}.
 These directories need not necessarily be created by the system
-administrator.  In fact, this extension is introduced to help users
-writing and using their own, new conversions.  Of course this does not work
-for security reasons in SUID binaries; in this case only the system
-directory is considered and this normally is
-@file{@var{prefix}/lib/gconv}.  The @code{GCONV_PATH} environment
-variable is examined exactly once at the first call of the
-@code{iconv_open} function.  Later modifications of the variable have no
-effect.
+administrator. In fact, this extension is introduced to help users
+writing and using their own, new conversions. Of course, this does not 
+work for security reasons in SUID binaries; in this case only the system
+directory is considered and this normally is 
+@file{@var{prefix}/lib/gconv}. The @code{GCONV_PATH} environment variable 
+is examined exactly once at the first call of the @code{iconv_open} 
+function. Later modifications of the variable have no effect.
 
 @pindex iconv.h
-This function got introduced early in the X/Open Portability Guide,
-@w{version 2}.  It is supported by all commercial Unices as it is
-required for the Unix branding.  However, the quality and completeness
-of the implementation varies widely.  The function is declared in
-@file{iconv.h}.
+The @code{iconv_open} function was introduced early in the X/Open 
+Portability Guide, @w{version 2}. It is supported by all commercial 
+Unices as it is required for the Unix branding. However, the quality and 
+completeness of the implementation varies widely. The @code{iconv_open} 
+function is declared in @file{iconv.h}.
 @end deftypefun
 
 The @code{iconv} implementation can associate large data structure with
-the handle returned by @code{iconv_open}.  Therefore it is crucial to
-free all the resources once all conversions are carried out and the
+the handle returned by @code{iconv_open}. Therefore, it is crucial to 
+free all the resources once all conversions are carried out and the 
 conversion is not needed anymore.
 
 @comment iconv.h
 @comment XPG2
 @deftypefun int iconv_close (iconv_t @var{cd})
 The @code{iconv_close} function frees all resources associated with the
-handle @var{cd} which must have been returned by a successful call to
+handle @var{cd}, which must have been returned by a successful call to
 the @code{iconv_open} function.
 
 If the function call was successful the return value is @math{0}.
@@ -1695,12 +1693,12 @@ The conversion descriptor is invalid.
 @end table
 
 @pindex iconv.h
-This function was introduced together with the rest of the @code{iconv}
-functions in XPG2 and it is declared in @file{iconv.h}.
+The @code{iconv_close} function was introduced together with the rest 
+of the @code{iconv} functions in XPG2 and is declared in @file{iconv.h}.
 @end deftypefun
 
-The standard defines only one actual conversion function.  This has
-therefore the most general interface: it allows conversion from one
+The standard defines only one actual conversion function.  This has,
+therefore, the most general interface: it allows conversion from one
 buffer to another.  Conversion from a file to a buffer, vice versa, or
 even file to file can be implemented on top of it.
 
@@ -1710,7 +1708,7 @@ even file to file can be implemented on top of it.
 @cindex stateful
 The @code{iconv} function converts the text in the input buffer
 according to the rules associated with the descriptor @var{cd} and
-stores the result in the output buffer.  It is possible to call the
+stores the result in the output buffer. It is possible to call the
 function for the same text several times in a row since for stateful
 character sets the necessary state information is kept in the data
 structures associated with the descriptor.
@@ -1726,55 +1724,55 @@ The output buffer is specified in a similar way.  @code{*@var{outbuf}}
 points to the beginning of the buffer with at least
 @code{*@var{outbytesleft}} bytes room for the result.  The buffer
 pointer again is of type @code{char} and the length is measured in
-bytes.  If @var{outbuf} or @code{*@var{outbuf}} is a null pointer the
+bytes.  If @var{outbuf} or @code{*@var{outbuf}} is a null pointer, the
 conversion is performed but no output is available.
 
-If @var{inbuf} is a null pointer the @code{iconv} function performs the
+If @var{inbuf} is a null pointer, the @code{iconv} function performs the
 necessary action to put the state of the conversion into the initial
-state.  This is obviously a no-op for non-stateful encodings, but if the
-encoding has a state such a function call might put some byte sequences
-in the output buffer which perform the necessary state changes.  The
+state. This is obviously a no-op for non-stateful encodings, but if the
+encoding has a state, such a function call might put some byte sequences
+in the output buffer, which perform the necessary state changes. The
 next call with @var{inbuf} not being a null pointer then simply goes on
-from the initial state.  It is important that the programmer never makes
-any assumption on whether the conversion has to deal with states or not.
-Even if the input and output character sets are not stateful the
-implementation might still have to keep states.  This is due to the
+from the initial state. It is important that the programmer never makes
+any assumption as to whether the conversion has to deal with states. Even 
+if the input and output character sets are not stateful, the 
+implementation might still have to keep states. This is due to the
 implementation chosen for the GNU C library as it is described below.
 Therefore an @code{iconv} call to reset the state should always be
 performed if some protocol requires this for the output text.
 
-The conversion stops for three reasons.  The first is that all
-characters from the input buffer are converted.  This actually can mean
-two things: really all bytes from the input buffer are consumed or
-there are some bytes at the end of the buffer which possibly can form a
-complete character but the input is incomplete.  The second reason for a
-stop is when the output buffer is full.  And the third reason is that
+The conversion stops for one of three reasons. The first is that all
+characters from the input buffer are converted. This actually can mean
+two things: either all bytes from the input buffer are consumed or
+there are some bytes at the end of the buffer that possibly can form a
+complete character but the input is incomplete. The second reason for a
+stop is that the output buffer is full. And the third reason is that
 the input contains invalid characters.
 
-In all these cases the buffer pointers after the last successful
+In all of these cases the buffer pointers after the last successful
 conversion, for input and output buffer, are stored in @var{inbuf} and
-@var{outbuf} and the available room in each buffer is stored in
+@var{outbuf}, and the available room in each buffer is stored in
 @var{inbytesleft} and @var{outbytesleft}.
 
 Since the character sets selected in the @code{iconv_open} call can be
-almost arbitrary there can be situations where the input buffer contains
-valid characters which have no identical representation in the output
-character set.  The behavior in this situation is undefined.  The
+almost arbitrary, there can be situations where the input buffer contains
+valid characters, which have no identical representation in the output
+character set. The behavior in this situation is undefined. The
 @emph{current} behavior of the GNU C library in this situation is to
-return with an error immediately.  This certainly is not the most
-desirable solution.  Therefore future versions will provide better ones
+return with an error immediately. This certainly is not the most
+desirable solution; therefore, future versions will provide better ones,
 but they are not yet finished.
 
 If all input from the input buffer is successfully converted and stored
-in the output buffer the function returns the number of non-reversible
-conversions performed.  In all other cases the return value is
-@code{(size_t) -1} and @code{errno} is set appropriately.  In this case
+in the output buffer, the function returns the number of non-reversible
+conversions performed. In all other cases the return value is
+@code{(size_t) -1} and @code{errno} is set appropriately. In such cases
 the value pointed to by @var{inbytesleft} is nonzero.
 
 @table @code
 @item EILSEQ
 The conversion stopped because of an invalid byte sequence in the input.
-After the call @code{*@var{inbuf}} points at the first byte of the
+After the call, @code{*@var{inbuf}} points at the first byte of the
 invalid byte sequence.
 
 @item E2BIG
@@ -1789,27 +1787,26 @@ The @var{cd} argument is invalid.
 @end table
 
 @pindex iconv.h
-This function was introduced in the XPG2 standard and is declared in the
-@file{iconv.h} header.
+The @code{iconv} function was introduced in the XPG2 standard and is 
+declared in the @file{iconv.h} header.
 @end deftypefun
 
-The definition of the @code{iconv} function is quite good overall.  It
-provides quite flexible functionality.  The only problems lie in the
-boundary cases which are incomplete byte sequences at the end of the
-input buffer and invalid input.  A third problem, which is not really
-a design problem, is the way conversions are selected.  The standard
+The definition of the @code{iconv} function is quite good overall. It
+provides quite flexible functionality. The only problems lie in the
+boundary cases, which are incomplete byte sequences at the end of the
+input buffer and invalid input. A third problem, which is not really
+a design problem, is the way conversions are selected. The standard
 does not say anything about the legitimate names, a minimal set of
-available conversions.  We will see how this negatively impacts other
-implementations, as is demonstrated below.
-
+available conversions. We will see how this negatively impacts other
+implementations, as demonstrated below.
 
 @node iconv Examples
 @subsection A complete @code{iconv} example
 
 The example below features a solution for a common problem.  Given that
 one knows the internal encoding used by the system for @code{wchar_t}
-strings one often is in the position to read text from a file and store
-it in wide character buffers.  One can do this using @code{mbsrtowcs}
+strings, one often is in the position to read text from a file and store
+it in wide character buffers. One can do this using @code{mbsrtowcs},
 but then we run into the problems discussed above.
 
 @smallexample
@@ -1904,37 +1901,35 @@ functions.  It shows how successive calls to @code{iconv} can be used to
 convert large amounts of text.  The user does not have to care about
 stateful encodings as the functions take care of everything.
 
-An interesting point is the case where @code{iconv} return an error and
-@code{errno} is set to @code{EINVAL}.  This is not really an error in
-the transformation.  It can happen whenever the input character set
-contains byte sequences of more than one byte for some character and
-texts are not processed in one piece.  In this case there is a chance
-that a multibyte sequence is cut.  The caller than can simply read the
-remainder of the takes and feed the offending bytes together with new
-character from the input to @code{iconv} and continue the work.  The
-internal state kept in the descriptor is @emph{not} unspecified after
-such an event as it is the case with the conversion functions from the
-@w{ISO C} standard.
+An interesting point is the case where @code{iconv} returns an error and
+@code{errno} is set to @code{EINVAL}. This is not really an error in the 
+transformation. It can happen whenever the input character set contains 
+byte sequences of more than one byte for some character and texts are not 
+processed in one piece. In this case there is a chance that a multibyte 
+sequence is cut. The caller can then simply read the remainder of the 
+takes and feed the offending bytes together with new character from the 
+input to @code{iconv} and continue the work. The internal state kept in 
+the descriptor is @emph{not} unspecified after such an event as is the 
+case with the conversion functions from the @w{ISO C} standard.
 
 The example also shows the problem of using wide character strings with
-@code{iconv}.  As explained in the description of the @code{iconv}
-function above the function always takes a pointer to a @code{char}
-array and the available space is measured in bytes.  In the example the
-output buffer is a wide character buffer.  Therefore we use a local
-variable @var{wrptr} of type @code{char *} which is used in the
+@code{iconv}. As explained in the description of the @code{iconv}
+function above, the function always takes a pointer to a @code{char}
+array and the available space is measured in bytes. In the example, the
+output buffer is a wide character buffer; therefore, we use a local
+variable @var{wrptr} of type @code{char *}, which is used in the
 @code{iconv} calls.
 
-This looks rather innocent but can lead to problems on platforms which
-have tight restriction on alignment.  Therefore the caller of
-@code{iconv} has to make sure that the pointers passed are suitable for
-access of characters from the appropriate character set.  Since in the
-above case the input parameter to the function is a @code{wchar_t}
-pointer this is the case (unless the user violates alignment when
-computing the parameter).  But in other situations, especially when
+This looks rather innocent but can lead to problems on platforms that
+have tight restriction on alignment. Therefore the caller of @code{iconv} 
+has to make sure that the pointers passed are suitable for access of 
+characters from the appropriate character set. Since, in the
+above case, the input parameter to the function is a @code{wchar_t}
+pointer, this is the case (unless the user violates alignment when
+computing the parameter). But in other situations, especially when
 writing generic functions where one does not know what type of character
-set one uses and therefore treats text as a sequence of bytes, it might
+set one uses and, therefore, treats text as a sequence of bytes, it might
 become tricky.
-
 
 @node Other iconv Implementations
 @subsection Some Details about other @code{iconv} Implementations
@@ -1944,10 +1939,10 @@ of other systems but it is necessary to know a bit about them to write
 portable programs.  The above mentioned problems with the specification
 of the @code{iconv} functions can lead to portability issues.
 
-The first thing to notice is that due to the large number of character
-sets in use it is certainly not practical to encode the conversions
-directly in the C library.  Therefore the conversion information must
-come from files outside the C library.  This is usually done in one or
+The first thing to notice is that, due to the large number of character
+sets in use, it is certainly not practical to encode the conversions
+directly in the C library. Therefore, the conversion information must
+come from files outside the C library. This is usually done in one or
 both of the following ways:
 
 @itemize @bullet
@@ -1957,71 +1952,72 @@ read the needed conversion tables and other information from data files.
 These files get loaded when necessary.
 
 This solution is problematic as it requires a great deal of effort to
-apply to all character sets (potentially an infinite set).  The
+apply to all character sets (potentially an infinite set). The 
 differences in the structure of the different character sets is so large
-that many different variants of the table processing functions must be
-developed.  On top of this the generic nature of these functions make
-them slower than specifically implemented functions.
+that many different variants of the table-processing functions must be
+developed. In addition, the generic nature of these functions make them 
+slower than specifically implemented functions.
 
 @item
 The C library only contains a framework which can dynamically load
-object files and execute the therein contained conversion functions.
+object files and execute the conversion functions contained therein.
 
-This solution provides much more flexibility.  The C library itself
+This solution provides much more flexibility. The C library itself
 contains only very little code and therefore reduces the general memory
-footprint.  Also, with a documented interface between the C library and
+footprint. Also, with a documented interface between the C library and
 the loadable modules it is possible for third parties to extend the set
-of available conversion modules.  A drawback of this solution is that
+of available conversion modules. A drawback of this solution is that
 dynamic loading must be available.
 @end itemize
 
-Some implementations in commercial Unices implement a mixture of these
-these possibilities, the majority only the second solution.  Using
-loadable modules moves the code out of the library itself and keeps the
-door open for extensions and improvements.  But this design is also
+Some implementations in commercial Unices implement a mixture of these 
+possibilities; the majority implement only the second solution. Using 
+loadable modules moves the code out of the library itself and keeps 
+the door open for extensions and improvements, but this design is also
 limiting on some platforms since not many platforms support dynamic
-loading in statically linked programs.  On platforms without his
+loading in statically linked programs. On platforms without this
 capability it is therefore not possible to use this interface in
-statically linked programs.  The GNU C library has on ELF platforms no
-problems with dynamic loading in in these situations and therefore this
-point is moot.  The danger is that one gets acquainted with this and
-forgets about the restrictions on other systems.
+statically linked programs. The GNU C library has, on ELF platforms, no
+problems with dynamic loading in these situations; therefore, this
+point is moot. The danger is that one gets acquainted with this situation 
+and forgets about the restrictions on other systems.
 
 A second thing to know about other @code{iconv} implementations is that
-the number of available conversions is often very limited.  Some
-implementations provide in the standard release (not special
-international or developer releases) at most 100 to 200 conversion
-possibilities.  This does not mean 200 different character sets are
-supported.  E.g., conversions from one character set to a set of, say,
-10 others counts as 10 conversion.  Together with the other direction
-this makes already 20.  One can imagine the thin coverage these platform
-provide.  Some Unix vendors even provide only a handful of conversions
-which renders them useless for almost all uses.
+the number of available conversions is often very limited. Some
+implementations provide, in the standard release (not special
+international or developer releases), at most 100 to 200 conversion
+possibilities. This does not mean 200 different character sets are
+supported; for example, conversions from one character set to a set of 10 
+others might count as 10 conversions. Together with the other direction
+this makes 20 conversion possibilities used up by one character set. One 
+can imagine the thin coverage these platform provide. Some Unix vendors 
+even provide only a handful of conversions which renders them useless for 
+almost all uses.
 
 This directly leads to a third and probably the most problematic point.
 The way the @code{iconv} conversion functions are implemented on all
-known Unix system and the availability of the conversion functions from
+known Unix systems and the availability of the conversion functions from
 character set @math{@cal{A}} to @math{@cal{B}} and the conversion from
 @math{@cal{B}} to @math{@cal{C}} does @emph{not} imply that the
 conversion from @math{@cal{A}} to @math{@cal{C}} is available.
 
-This might not seem unreasonable and problematic at first but it is a
+This might not seem unreasonable and problematic at first, but it is a
 quite big problem as one will notice shortly after hitting it.  To show
 the problem we assume to write a program which has to convert from
-@math{@cal{A}} to @math{@cal{C}}.  A call like
+@math{@cal{A}} to @math{@cal{C}}. A call like
 
 @smallexample
 cd = iconv_open ("@math{@cal{C}}", "@math{@cal{A}}");
 @end smallexample
 
 @noindent
-does fail according to the assumption above.  But what does the program
-do now?  The conversion is really necessary and therefore simply giving
-up is no possibility.
+fails according to the assumption above. But what does the program
+do now?  The conversion is necessary; therefore, simply giving up is not
+an option.
 
 This is a nuisance.  The @code{iconv} function should take care of this.
-But how should the program proceed from here on?  If it would try to
-convert to character set @math{@cal{B}} first the two @code{iconv_open}
+But how should the program proceed from here on?  If it tries to convert 
+to character set @math{@cal{B}}, first the two @code{iconv_open}
 calls
 
 @smallexample
@@ -2036,24 +2032,23 @@ cd2 = iconv_open ("@math{@cal{C}}", "@math{@cal{B}}");
 @end smallexample
 
 @noindent
-will succeed but how to find @math{@cal{B}}?
+will succeed, but how to find @math{@cal{B}}?
 
 Unfortunately, the answer is: there is no general solution.  On some
-systems guessing might help.  On those systems most character sets can
-convert to and from UTF-8 encoded @w{ISO 10646} or Unicode text.
-Beside this only some very system-specific methods can help.  Since the
+systems guessing might help. On those systems most character sets can
+convert to and from UTF-8 encoded @w{ISO 10646} or Unicode text. Beside 
+this only some very system-specific methods can help. Since the 
 conversion functions come from loadable modules and these modules must
 be stored somewhere in the filesystem, one @emph{could} try to find them
 and determine from the available file which conversions are available
 and whether there is an indirect route from @math{@cal{A}} to
 @math{@cal{C}}.
 
-This shows one of the design errors of @code{iconv} mentioned above.  It
-should at least be possible to determine the list of available
-conversion programmatically so that if @code{iconv_open} says there is
-no such conversion, one could make sure this also is true for indirect
+This example shows one of the design errors of @code{iconv} mentioned 
+above. It should at least be possible to determine the list of available
+conversion programmatically so that if @code{iconv_open} says there is no 
+such conversion, one could make sure this also is true for indirect
 routes.
-
 
 @node glibc iconv Implementation
 @subsection The @code{iconv} Implementation in the GNU C library
@@ -2073,52 +2068,51 @@ trivial conversions.
 
 All the benefits of loadable modules are available in the GNU C library
 implementation.  This is especially appealing since the interface is
-well documented (see below) and it therefore is easy to write new
+well documented (see below), and it, therefore, is easy to write new
 conversion modules.  The drawback of using loadable objects is not a
 problem in the GNU C library, at least on ELF systems.  Since the
 library is able to load shared objects even in statically linked
-binaries this means that static linking needs not to be forbidden in
-case one wants to use @code{iconv}.
+binaries, static linking need not be forbidden in case one wants to use 
+@code{iconv}.
 
 The second mentioned problem is the number of supported conversions.
 Currently, the GNU C library supports more than 150 character sets.  The
 way the implementation is designed the number of supported conversions
 is greater than 22350 (@math{150} times @math{149}).  If any conversion
-from or to a character set is missing it can easily be added.
+from or to a character set is missing, it can be added easily.
 
 Particularly impressive as it may be, this high number is due to the
 fact that the GNU C library implementation of @code{iconv} does not have
-the third problem mentioned above.  I.e., whenever there is a conversion
+the third problem mentioned above (i.e., whenever there is a conversion
 from a character set @math{@cal{A}} to @math{@cal{B}} and from
 @math{@cal{B}} to @math{@cal{C}} it is always possible to convert from
-@math{@cal{A}} to @math{@cal{C}} directly.  If the @code{iconv_open}
-returns an error and sets @code{errno} to @code{EINVAL} this really
-means there is no known way, directly or indirectly, to perform the
-wanted conversion.
+@math{@cal{A}} to @math{@cal{C}} directly).  If the @code{iconv_open}
+returns an error and sets @code{errno} to @code{EINVAL}, there is no 
+known way, directly or indirectly, to perform the wanted conversion.
 
 @cindex triangulation
-This is achieved by providing for each character set a conversion from
-and to UCS-4 encoded @w{ISO 10646}.  Using @w{ISO 10646} as an
-intermediate representation it is possible to @dfn{triangulate}, i.e.,
-converting with an intermediate representation.
+Triangulation is achieved by providing for each character set a 
+conversion from and to UCS-4 encoded @w{ISO 10646}.  Using @w{ISO 10646} 
+as an intermediate representation it is possible to @dfn{triangulate}
+(i.e., convert with an intermediate representation).
 
 There is no inherent requirement to provide a conversion to @w{ISO
-10646} for a new character set and it is also possible to provide other
+10646} for a new character set, and it is also possible to provide other
 conversions where neither source nor destination character set is @w{ISO
-10646}.  The currently existing set of conversions is simply meant to
-cover all conversions which might be of interest.
+10646}.  The existing set of conversions is simply meant to cover all 
+conversions that might be of interest.
 
 @cindex ISO-2022-JP
 @cindex EUC-JP
 All currently available conversions use the triangulation method above,
-making conversion run unnecessarily slow.  If, e.g., somebody often
-needs the conversion from ISO-2022-JP to EUC-JP, a quicker solution
+making conversion run unnecessarily slow. If, for example, somebody 
+often needs the conversion from ISO-2022-JP to EUC-JP, a quicker solution
 would involve direct conversion between the two character sets, skipping
-the input to @w{ISO 10646} first.  The two character sets of interest
+the input to @w{ISO 10646} first. The two character sets of interest
 are much more similar to each other than to @w{ISO 10646}.
 
-In such a situation one can easy write a new conversion and provide it
-as a better alternative.  The GNU C library @code{iconv} implementation
+In such a situation one easily can write a new conversion and provide it
+as a better alternative. The GNU C library @code{iconv} implementation
 would automatically use the module implementing the conversion if it is
 specified to be more efficient.
 
@@ -2126,52 +2120,52 @@ specified to be more efficient.
 
 All information about the available conversions comes from a file named
 @file{gconv-modules} which can be found in any of the directories along
-the @code{GCONV_PATH}.  The @file{gconv-modules} files are line-oriented
+the @code{GCONV_PATH}. The @file{gconv-modules} files are line-oriented
 text files, where each of the lines has one of the following formats:
 
 @itemize @bullet
 @item
-If the first non-whitespace character is a @kbd{#} the line contains
-only comments and is ignored.
+If the first non-whitespace character is a @kbd{#} the line contains only 
+comments and is ignored.
 
 @item
-Lines starting with @code{alias} define an alias name for a character
-set.  There are two more words expected on the line.  The first one
-defines the alias name and the second defines the original name of the
-character set.  The effect is that it is possible to use the alias name
+Lines starting with @code{alias} define an alias name for a character 
+set. Two more words are expected on the line.  The first word 
+defines the alias name, and the second defines the original name of the
+character set. The effect is that it is possible to use the alias name
 in the @var{fromset} or @var{toset} parameters of @code{iconv_open} and
 achieve the same result as when using the real character set name.
 
 This is quite important as a character set has often many different
-names.  There is normally always an official name but this need not
-correspond to the most popular name.  Beside this many character sets
-have special names which are somehow constructed.  E.g., all character
-sets specified by the ISO have an alias of the form
-@code{ISO-IR-@var{nnn}} where @var{nnn} is the registration number.
-This allows programs which know about the registration number to
-construct character set names and use them in @code{iconv_open} calls.
-More on the available names and aliases follows below.
+names. There is normally an official name but this need not correspond to 
+the most popular name.  Beside this many character sets have special 
+names that are somehow constructed.  For example, all character sets 
+specified by the ISO have an alias of the form @code{ISO-IR-@var{nnn}} 
+where @var{nnn} is the registration number. This allows programs which 
+know about the registration number to construct character set names and 
+use them in @code{iconv_open} calls. More on the available names and 
+aliases follows below.
 
 @item
 Lines starting with @code{module} introduce an available conversion
-module.  These lines must contain three or four more words.
+module. These lines must contain three or four more words.
 
 The first word specifies the source character set, the second word the
-destination character set of conversion implemented in this module.  The
-third word is the name of the loadable module.  The filename is
+destination character set of conversion implemented in this module, and 
+the third word is the name of the loadable module. The filename is
 constructed by appending the usual shared object suffix (normally
 @file{.so}) and this file is then supposed to be found in the same
-directory the @file{gconv-modules} file is in.  The last word on the
-line, which is optional, is a numeric value representing the cost of the
-conversion.  If this word is missing a cost of @math{1} is assumed.  The
+directory the @file{gconv-modules} file is in. The last word on the line, 
+which is optional, is a numeric value representing the cost of the
+conversion. If this word is missing, a cost of @math{1} is assumed. The
 numeric value itself does not matter that much; what counts are the
 relative values of the sums of costs for all possible conversion paths.
 Below is a more precise description of the use of the cost value.
 @end itemize
 
 Returning to the example above where one has written a module to directly
-convert from ISO-2022-JP to EUC-JP and back.  All what has to be done is
-to put the new module, be its name ISO2022JP-EUCJP.so, in a directory
+convert from ISO-2022-JP to EUC-JP and back. All that has to be done is
+to put the new module, let its name be ISO2022JP-EUCJP.so, in a directory
 and add a file @file{gconv-modules} with the following content in the
 same directory:
 
@@ -2182,19 +2176,19 @@ module  EUC-JP//        ISO-2022-JP//   ISO2022JP-EUCJP    1
 
 To see why this is sufficient, it is necessary to understand how the
 conversion used by @code{iconv} (and described in the descriptor) is
-selected.  The approach to this problem is quite simple.
+selected. The approach to this problem is quite simple.
 
 At the first call of the @code{iconv_open} function the program reads
 all available @file{gconv-modules} files and builds up two tables: one
-containing all the known aliases and another which contains the
+containing all the known aliases and another that contains the
 information about the conversions and which shared object implements
 them.
 
 @subsubsection Finding the conversion path in @code{iconv}
 
 The set of available conversions form a directed graph with weighted
-edges.  The weights on the edges are the costs specified in the
-@file{gconv-modules} files.  The @code{iconv_open} function uses an
+edges. The weights on the edges are the costs specified in the
+@file{gconv-modules} files. The @code{iconv_open} function uses an
 algorithm suitable for search for the best path in such a graph and so
 constructs a list of conversions which must be performed in succession
 to get the transformation from the source to the destination character
@@ -2203,17 +2197,17 @@ set.
 Explaining why the above @file{gconv-modules} files allows the
 @code{iconv} implementation to resolve the specific ISO-2022-JP to
 EUC-JP conversion module instead of the conversion coming with the
-library itself is straightforward.  Since the latter conversion takes two
+library itself is straightforward. Since the latter conversion takes two
 steps (from ISO-2022-JP to @w{ISO 10646} and then from @w{ISO 10646} to
-EUC-JP) the cost is @math{1+1 = 2}.  But the above @file{gconv-modules}
-file specifies that the new conversion modules can perform this
+EUC-JP), the cost is @math{1+1 = 2}.  The above @file{gconv-modules}
+file, however, specifies that the new conversion modules can perform this
 conversion with only the cost of @math{1}.
 
-A mysterious piece about the @file{gconv-modules} file above (and also
+A mysterious item about the @file{gconv-modules} file above (and also
 the file coming with the GNU C library) are the names of the character
-sets specified in the @code{module} lines.  Why do almost all the names
+sets specified in the @code{module} lines. Why do almost all the names
 end in @code{//}?  And this is not all: the names can actually be
-regular expressions.  At this point of time this mystery should not be
+regular expressions.  At this point in time this mystery should not be
 revealed, unless you have the relevant spell-casting materials: ashes
 from an original @w{DOS 6.2} boot disk burnt in effigy, a crucifix
 blessed by St.@: Emacs, assorted herbal roots from Central America, sand
@@ -2222,46 +2216,46 @@ this is used is not yet finished.  For now please simply follow the
 existing examples.  It'll become clearer once it is. --drepper}
 
 A last remark about the @file{gconv-modules} is about the names not
-ending with @code{//}.  There often is a character set named
-@code{INTERNAL} mentioned.  From the discussion above and the chosen
-name it should have become clear that this is the name for the
-representation used in the intermediate step of the triangulation.  We
-have said that this is UCS-4 but actually it is not quite right.  The
-UCS-4 specification also includes the specification of the byte ordering
-used.  Since a UCS-4 value consists of four bytes a stored value is
-effected by byte ordering.  The internal representation is @emph{not}
-the same as UCS-4 in case the byte ordering of the processor (or at least
-the running process) is not the same as the one required for UCS-4.  This
-is done for performance reasons as one does not want to perform
-unnecessary byte-swapping operations if one is not interested in actually
-seeing the result in UCS-4.  To avoid trouble with endianess the internal
-representation consistently is named @code{INTERNAL} even on big-endian
-systems where the representations are identical.
+ending with @code{//}. Aa character set named @code{INTERNAL} is often 
+mentioned. From the discussion above and the chosen name it should have 
+become clear that this is the name for the representation used in the 
+intermediate step of the triangulation. We have said that this is UCS-4 
+but actually that is not quite right. The UCS-4 specification also 
+includes the specification of the byte ordering used. Since a UCS-4 value 
+consists of four bytes, a stored value is effected by byte ordering.  The 
+internal representation is @emph{not} the same as UCS-4 in case the byte 
+ordering of the processor (or at least the running process) is not the 
+same as the one required for UCS-4. This is done for performance reasons 
+as one does not want to perform unnecessary byte-swapping operations if 
+one is not interested in actually seeing the result in UCS-4. To avoid 
+trouble with endianess, the internal representation consistently is named 
+@code{INTERNAL} even on big-endian systems where the representations are 
+identical.
 
 @subsubsection @code{iconv} module data structures
 
-So far this section described how modules are located and considered to
-be used.  What remains to be described is the interface of the modules
-so that one can write new ones.  This section describes the interface as
-it is in use in January 1999.  The interface will change in future a bit
-but hopefully only in an upward compatible way.
+So far this section has described how modules are located and considered 
+to be used. What remains to be described is the interface of the modules
+so that one can write new ones. This section describes the interface as
+it is in use in January 1999. The interface will change a bit in the 
+future but, with luck, only in an upwardly compatible way.
 
 The definitions necessary to write new modules are publicly available
-in the non-standard header @file{gconv.h}.  The following text will
-therefore describe the definitions from this header file.  But first it
-is necessary to get an overview.
+in the non-standard header @file{gconv.h}.  The following text,
+therefore, describes the definitions from this header file.  First, 
+however, it is necessary to get an overview.
 
 From the perspective of the user of @code{iconv} the interface is quite
-simple: the @code{iconv_open} function returns a handle which can be
-used in calls to @code{iconv} and finally the handle is freed with a call
-to @code{iconv_close}.  The problem is: the handle has to be able to
+simple: the @code{iconv_open} function returns a handle that can be used 
+in calls to @code{iconv}, and finally the handle is freed with a call to 
+@code{iconv_close}. The problem is that the handle has to be able to
 represent the possibly long sequences of conversion steps and also the
-state of each conversion since the handle is all which is passed to the
-@code{iconv} function.  Therefore the data structures are really the
-elements to understanding the implementation.
+state of each conversion since the handle is all that is passed to the
+@code{iconv} function. Therefore, the data structures are really the
+elements necessary to understanding the implementation.
 
-We need two different kinds of data structures.  The first describes the
-conversion and the second describes the state etc.  There are really two
+We need two different kinds of data structures. The first describes the
+conversion and the second describes the state etc. There are really two
 type definitions like this in @file{gconv.h}.
 @pindex gconv.h
 
@@ -2271,24 +2265,24 @@ type definitions like this in @file{gconv.h}.
 This data structure describes one conversion a module can perform.  For
 each function in a loaded module with conversion functions there is
 exactly one object of this type.  This object is shared by all users of
-the conversion.  I.e., this object does not contain any information
-corresponding to an actual conversion.  It only describes the conversion
-itself.
+the conversion (i.e., this object does not contain any information
+corresponding to an actual conversion; it only describes the conversion
+itself).
 
 @table @code
 @item struct __gconv_loaded_object *__shlib_handle
 @itemx const char *__modname
 @itemx int __counter
 All these elements of the structure are used internally in the C library
-to coordinate loading and unloading the shared.  One must not expect any
-of the other elements be available or initialized.
+to coordinate loading and unloading the shared. One must not expect any
+of the other elements to be available or initialized.
 
 @item const char *__from_name
 @itemx const char *__to_name
 @code{__from_name} and @code{__to_name} contain the names of the source and
-destination character sets.  They can be used to identify the actual
-conversion to be carried out since one module might implement
-conversions for more than one character set and/or direction.
+destination character sets. They can be used to identify the actual
+conversion to be carried out since one module might implement conversions 
+for more than one character set and/or direction.
 
 @item gconv_fct __fct
 @itemx gconv_init_fct __init_fct
@@ -2300,30 +2294,31 @@ The interface will be explained below.
 @itemx int __max_needed_from
 @itemx int __min_needed_to
 @itemx int __max_needed_to;
-These values have to be filled in the init function of the module.  The
+These values have to be supplied in the init function of the module. The
 @code{__min_needed_from} value specifies how many bytes a character of
-the source character set at least needs.  The @code{__max_needed_from}
-specifies the maximum value which also includes possible shift
-sequences.
+the source character set at least needs. The @code{__max_needed_from}
+specifies the maximum value that also includes possible shift sequences.
 
 The @code{__min_needed_to} and @code{__max_needed_to} values serve the
-same purpose but this time for the destination character set.
+same purpose as @code{__min_needed_from} and @code{__max_needed_from} but 
+this time for the destination character set.
 
-It is crucial that these values are accurate since otherwise the
+It is crucial that these values be accurate since otherwise the
 conversion functions will have problems or not work at all.
 
 @item int __stateful
-This element must also be initialized by the init function.  It is
-nonzero if the source character set is stateful.  Otherwise it is zero.
+This element must also be initialized by the init function. 
+@code{int __stateful} is nonzero if the source character set is stateful. 
+Otherwise it is zero.
 
 @item void *__data
 This element can be used freely by the conversion functions in the
-module.  It can be used to communicate extra information from one call
-to another.  It need not be initialized if not needed at all.  If this
-element gets assigned a pointer to dynamically allocated memory
-(presumably in the init function) it has to be made sure that the end
-function deallocates the memory.  Otherwise the application will leak
-memory.
+module. @code{void *__data} can be used to communicate extra information 
+from one call to another. @code{void *__data} need not be initialized if 
+not needed at all. If @code{void *__data} element is assigned a pointer 
+to dynamically allocated memory (presumably in the init function) it has 
+to be made sure that the end function deallocates the memory. Otherwise 
+the application will leak memory.
 
 It is important to be aware that this data structure is shared by all
 users of this specification conversion and therefore the @code{__data}
@@ -2335,61 +2330,63 @@ conversion function.
 @comment gconv.h
 @comment GNU
 @deftp {Data type} {struct __gconv_step_data}
-This is the data structure which contains the information specific to
+This is the data structure that contains the information specific to
 each use of the conversion functions.
+
 
 @table @code
 @item char *__outbuf
 @itemx char *__outbufend
-These elements specify the output buffer for the conversion step.  The
-@code{__outbuf} element points to the beginning of the buffer and
+These elements specify the output buffer for the conversion step. The
+@code{__outbuf} element points to the beginning of the buffer, and
 @code{__outbufend} points to the byte following the last byte in the
-buffer.  The conversion function must not assume anything about the size
+buffer. The conversion function must not assume anything about the size
 of the buffer but it can be safely assumed the there is room for at
 least one complete character in the output buffer.
 
-Once the conversion is finished and the conversion is the last step the
-@code{__outbuf} element must be modified to point after last last byte
-written into the buffer to signal how much output is available.  If this
-conversion step is not the last one the element must not be modified.
+Once the conversion is finished, if the conversion is the last step, the
+@code{__outbuf} element must be modified to point after the last byte
+written into the buffer to signal how much output is available. If this
+conversion step is not the last one, the element must not be modified.
 The @code{__outbufend} element must not be modified.
 
 @item int __is_last
-This element is nonzero if this conversion step is the last one.  This
+This element is nonzero if this conversion step is the last one. This
 information is necessary for the recursion.  See the description of the
 conversion function internals below.  This element must never be
 modified.
 
 @item int __invocation_counter
-The conversion function can use this element to see how many calls of
-the conversion function already happened.  Some character sets require
-when generating output a certain prolog and by comparing this value with
-zero one can find out whether it is the first call and therefore the
-prolog should be emitted or not.  This element must never be modified.
+The conversion function can use this element to see how many calls of 
+the conversion function already happened. Some character sets require a 
+certain prolog when generating output, and by comparing this value with
+zero, one can find out whether it is the first call and whether, 
+therefore, the prolog should be emitted. This element must never be 
+modified.
 
 @item int __internal_use
 This element is another one rarely used but needed in certain
-situations.  It got assigned a nonzero value in case the conversion
-functions are used to implement @code{mbsrtowcs} et.al.  I.e., the
-function is not used directly through the @code{iconv} interface.
+situations. It is assigned a nonzero value in case the conversion
+functions are used to implement @code{mbsrtowcs} et.al.@: (i.e., the
+function is not used directly through the @code{iconv} interface).
 
 This sometimes makes a difference as it is expected that the
 @code{iconv} functions are used to translate entire texts while the
-@code{mbsrtowcs} functions are normally only used to convert single
+@code{mbsrtowcs} functions are normally used only to convert single
 strings and might be used multiple times to convert entire texts.
 
 But in this situation we would have problem complying with some rules of
-the character set specification.  Some character sets require a prolog
-which must appear exactly once for an entire text.  If a number of
-@code{mbsrtowcs} calls are used to convert the text only the first call
-must add the prolog.  But since there is no communication between the
-different calls of @code{mbsrtowcs} the conversion functions have no
-possibility to find this out.  The situation is different for sequences
+the character set specification. Some character sets require a prolog
+which must appear exactly once for an entire text. If a number of
+@code{mbsrtowcs} calls are used to convert the text, only the first call
+must add the prolog.  However, because there is no communication between the
+different calls of @code{mbsrtowcs}, the conversion functions have no
+possibility to find this out. The situation is different for sequences
 of @code{iconv} calls since the handle allows access to the needed
 information.
 
-This element is mostly used together with @code{__invocation_counter} in
-a way like this:
+The @code{int __internal_use} element is mostly used together with 
+@code{__invocation_counter} as follows:
 
 @smallexample
 if (!data->__internal_use
@@ -2402,13 +2399,13 @@ This element must never be modified.
 
 @item mbstate_t *__statep
 The @code{__statep} element points to an object of type @code{mbstate_t}
-(@pxref{Keeping the state}).  The conversion of an stateful character
-set must use the object pointed to by this element to store information
-about the conversion state.  The @code{__statep} element itself must
-never be modified.
+(@pxref{Keeping the state}). The conversion of a stateful character
+set must use the object pointed to by @code{__statep} to store 
+information about the conversion state. The @code{__statep} element 
+itself must never be modified.
 
 @item mbstate_t __state
-This element @emph{never} must be used directly.  It is only part of
+This element must @emph{never} be used directly.  It is only part of
 this structure to have the needed space allocated.
 @end table
 @end deftp
@@ -2416,61 +2413,61 @@ this structure to have the needed space allocated.
 @subsubsection @code{iconv} module interfaces
 
 With the knowledge about the data structures we now can describe the
-conversion functions itself.  To understand the interface a bit of
-knowledge about the functionality in the C library which loads the
-objects with the conversions is necessary.
+conversion function itself. To understand the interface a bit of
+knowledge is necessary about the functionality in the C library that 
+loads the objects with the conversions.
 
-It is often the case that one conversion is used more than once.  I.e.,
+It is often the case that one conversion is used more than once (i.e.,
 there are several @code{iconv_open} calls for the same set of character
-sets during one program run.  The @code{mbsrtowcs} et.al.@: functions in
-the GNU C library also use the @code{iconv} functionality which
+sets during one program run).  The @code{mbsrtowcs} et.al.@: functions in
+the GNU C library also use the @code{iconv} functionality, which 
 increases the number of uses of the same functions even more.
 
-For this reason the modules do not get loaded exclusively for one
-conversion.  Instead a module once loaded can be used by arbitrarily many
-@code{iconv} or @code{mbsrtowcs} calls at the same time.  The splitting
-of the information between conversion function specific information and
-conversion data makes this possible.  The last section showed the two
-data structures used to do this.
+Because of this multiple use of conversions, the modules do not get 
+loaded exclusively for one conversion. Instead a module once loaded can 
+be used by an arbitrary number of @code{iconv} or @code{mbsrtowcs} calls 
+at the same time. The splitting of the information between conversion-
+function-specific information and conversion data makes this possible. 
+The last section showed the two data structures used to do this.
 
 This is of course also reflected in the interface and semantics of the
-functions the modules must provide.  There are three functions which
+functions that the modules must provide. There are three functions that
 must have the following names:
 
 @table @code
 @item gconv_init
 The @code{gconv_init} function initializes the conversion function
 specific data structure.  This very same object is shared by all
-conversion which use this conversion and therefore no state information
-about the conversion itself must be stored in here.  If a module
-implements more than one conversion the @code{gconv_init} function will be
-called multiple times.
+conversions that use this conversion and, therefore, no state information
+about the conversion itself must be stored in here. If a module 
+implements more than one conversion, the @code{gconv_init} function will 
+be called multiple times.
 
 @item gconv_end
-The @code{gconv_end} function is responsible to free all resources
-allocated by the @code{gconv_init} function.  If there is nothing to do
-this function can be missing.  Special care must be taken if the module
+The @code{gconv_end} function is responsible for freeing all resources
+allocated by the @code{gconv_init} function. If there is nothing to do,
+this function can be missing. Special care must be taken if the module
 implements more than one conversion and the @code{gconv_init} function
 does not allocate the same resources for all conversions.
 
 @item gconv
-This is the actual conversion function.  It is called to convert one
-block of text.  It gets passed the conversion step information
+This is the actual conversion function. It is called to convert one
+block of text. It gets passed the conversion step information
 initialized by @code{gconv_init} and the conversion data, specific to
 this use of the conversion functions.
 @end table
 
 There are three data types defined for the three module interface
-function and these define the interface.
+functions and these define the interface.
 
 @comment gconv.h
 @comment GNU
 @deftypevr {Data type} int {(*__gconv_init_fct)} (struct __gconv_step *)
 This specifies the interface of the initialization function of the
-module.  It is called exactly once for each conversion the module
+module. It is called exactly once for each conversion the module
 implements.
 
-As explained int the description of the @code{struct __gconv_step} data
+As explained in the description of the @code{struct __gconv_step} data
 structure above the initialization function has to initialize parts of
 it.
 
@@ -2481,19 +2478,19 @@ it.
 @itemx __max_needed_to
 These elements must be initialized to the exact numbers of the minimum
 and maximum number of bytes used by one character in the source and
-destination character set respectively.  If the characters all have the
-same size the minimum and maximum values are the same.
+destination character sets, respectively. If the characters all have the
+same size, the minimum and maximum values are the same.
 
 @item __stateful
 This element must be initialized to an nonzero value if the source
-character set is stateful.  Otherwise it must be zero.
+character set is stateful. Otherwise it must be zero.
 @end table
 
-If the initialization function needs to communication some information
-to the conversion function this can happen using the @code{__data}
-element of the @code{__gconv_step} structure.  But since this data is
-shared by all the conversion is must not be modified by the conversion
-function.  How this can be used is shown in the example below.
+If the initialization function needs to communicate some information
+to the conversion function, this communication can happen using the 
+@code{__data} element of the @code{__gconv_step} structure. But since 
+this data is shared by all the conversions, it must not be modified by 
+the conversion function. The example below shows how this can be used.
 
 @smallexample
 #define MIN_NEEDED_FROM         1
@@ -2545,12 +2542,12 @@ gconv_init (struct __gconv_step *step)
           step->__data = new_data;
 
           if (dir == from_iso2022jp)
-	    @{
+            @{
               step->__min_needed_from = MIN_NEEDED_FROM;
               step->__max_needed_from = MAX_NEEDED_FROM;
               step->__min_needed_to = MIN_NEEDED_TO;
               step->__max_needed_to = MAX_NEEDED_TO;
-	    @}
+            @}
           else
             @{
               step->__min_needed_from = MIN_NEEDED_TO;
@@ -2570,37 +2567,38 @@ gconv_init (struct __gconv_step *step)
 @}
 @end smallexample
 
-The function first checks which conversion is wanted.  The module from
-which this function is taken implements four different conversion and
-which one is selected can be determined by comparing the names.  The
+The function first checks which conversion is wanted. The module from
+which this function is taken implements four different conversions; 
+which one is selected can be determined by comparing the names. The
 comparison should always be done without paying attention to the case.
 
-Then a data structure is allocated which contains the necessary
-information about which conversion is selected.  The data structure
-@code{struct iso2022jp_data} is locally defined since outside the module
-this data is not used at all.  Please note that if all four conversions
-this modules supports are requested there are four data blocks.
+Next, a data structure, which contains the necessary information about 
+which conversion is selected, is allocated. The data structure
+@code{struct iso2022jp_data} is locally defined since, outside the 
+module, this data is not used at all. Please note that if all four 
+conversions this modules supports are requested there are four data 
+blocks.
 
 One interesting thing is the initialization of the @code{__min_} and
-@code{__max_} elements of the step data object.  A single ISO-2022-JP
-character can consist of one to four bytes.  Therefore the
+@code{__max_} elements of the step data object. A single ISO-2022-JP
+character can consist of one to four bytes. Therefore the
 @code{MIN_NEEDED_FROM} and @code{MAX_NEEDED_FROM} macros are defined
-this way.  The output is always the @code{INTERNAL} character set (aka
-UCS-4) and therefore each character consists of exactly four bytes.  For
+this way. The output is always the @code{INTERNAL} character set (aka
+UCS-4) and therefore each character consists of exactly four bytes. For
 the conversion from @code{INTERNAL} to ISO-2022-JP we have to take into
 account that escape sequences might be necessary to switch the character
 sets.  Therefore the @code{__max_needed_to} element for this direction
-gets assigned @code{MAX_NEEDED_FROM + 2}.  This takes into account the
-two bytes needed for the escape sequences to single the switching.  The
+gets assigned @code{MAX_NEEDED_FROM + 2}. This takes into account the
+two bytes needed for the escape sequences to single the switching. The
 asymmetry in the maximum values for the two directions can be explained
-easily: when reading ISO-2022-JP text escape sequences can be handled
-alone.  I.e., it is not necessary to process a real character since the
-effect of the escape sequence can be recorded in the state information.
-The situation is different for the other direction.  Since it is in
-general not known which character comes next one cannot emit escape
-sequences to change the state in advance.  This means the escape
-sequences which have to be emitted together with the next character.
-Therefore one needs more room then only for the character itself.
+easily: when reading ISO-2022-JP text, escape sequences can be handled
+alone (i.e., it is not necessary to process a real character since the
+effect of the escape sequence can be recorded in the state information).
+The situation is different for the other direction. Since it is in
+general not known which character comes next, one cannot emit escape
+sequences to change the state in advance. This means the escape
+sequences that have to be emitted together with the next character.
+Therefore one needs more room than only for the character itself.
 
 The possible return values of the initialization function are:
 
@@ -2615,16 +2613,16 @@ Memory required to store additional information could not be allocated.
 @end table
 @end deftypevr
 
-The functions called before the module is unloaded is significantly
-easier.  It often has nothing at all to do in which case it can be left
+The function called before the module is unloaded is significantly
+easier. It often has nothing at all to do; in which case it can be left
 out completely.
 
 @comment gconv.h
 @comment GNU
 @deftypevr {Data type} void {(*__gconv_end_fct)} (struct gconv_step *)
-The task of this function is it to free all resources allocated in the
-initialization function.  Therefore only the @code{__data} element of
-the object pointed to by the argument is of interest.  Continuing the
+The task of this function is to free all resources allocated in the
+initialization function. Therefore only the @code{__data} element of
+the object pointed to by the argument is of interest. Continuing the
 example from the initialization function, the finalization function
 looks like this:
 
@@ -2637,66 +2635,66 @@ gconv_end (struct __gconv_step *data)
 @end smallexample
 @end deftypevr
 
-The most important function is the conversion function itself.  It can
-get quite complicated for complex character sets.  But since this is not
-of interest here we will only describe a possible skeleton for the
+The most important function is the conversion function itself, which can
+get quite complicated for complex character sets. But since this is not
+of interest here, we will only describe a possible skeleton for the
 conversion function.
 
 @comment gconv.h
 @comment GNU
 @deftypevr {Data type} int {(*__gconv_fct)} (struct __gconv_step *, struct __gconv_step_data *, const char **, const char *, size_t *, int)
 The conversion function can be called for two basic reason: to convert
-text or to reset the state.  From the description of the @code{iconv}
-function it can be seen why the flushing mode is necessary.  What mode
-is selected is determined by the sixth argument, an integer.  If it is
-nonzero it means that flushing is selected.
+text or to reset the state. From the description of the @code{iconv}
+function it can be seen why the flushing mode is necessary. What mode
+is selected is determined by the sixth argument, an integer.  This 
+argument being nonzero means that flushing is selected.
 
-Common to both mode is where the output buffer can be found.  The
-information about this buffer is stored in the conversion step data.  A
-pointer to this is passed as the second argument to this function.  The
-description of the @code{struct __gconv_step_data} structure has more
-information on this.
+Common to both modes is where the output buffer can be found. The
+information about this buffer is stored in the conversion step data. A
+pointer to this information is passed as the second argument to this 
+function. The description of the @code{struct __gconv_step_data} 
+structure has more information on the conversion step data.
 
 @cindex stateful
 What has to be done for flushing depends on the source character set.
-If it is not stateful nothing has to be done.  Otherwise the function
-has to emit a byte sequence to bring the state object in the initial
-state.  Once this all happened the other conversion modules in the chain
-of conversions have to get the same chance.  Whether another step
-follows can be determined from the @code{__is_last} element of the step
-data structure to which the first parameter points.
+If the source character set is not stateful, nothing has to be done. 
+Otherwise the function has to emit a byte sequence to bring the state 
+object into the initial state. Once this all happened the other 
+conversion modules in the chain of conversions have to get the same 
+chance. Whether another step follows can be determined from the 
+@code{__is_last} element of the step data structure to which the first 
+parameter points.
 
-The more interesting mode is when actually text has to be converted.
-The first step in this case is to convert as much text as possible from
-the input buffer and store the result in the output buffer.  The start
-of the input buffer is determined by the third argument which is a
-pointer to a pointer variable referencing the beginning of the buffer.
-The fourth argument is a pointer to the byte right after the last byte
-in the buffer.
+The more interesting mode is when actual text has to be converted. The 
+first step in this case is to convert as much text as possible from the 
+input buffer and store the result in the output buffer. The start of the 
+input buffer is determined by the third argument which is a pointer to a 
+pointer variable referencing the beginning of the buffer. The fourth 
+argument is a pointer to the byte right after the last byte in the buffer.
 
 The conversion has to be performed according to the current state if the
-character set is stateful.  The state is stored in an object pointed to
-by the @code{__statep} element of the step data (second argument).  Once
+character set is stateful. The state is stored in an object pointed to
+by the @code{__statep} element of the step data (second argument). Once
 either the input buffer is empty or the output buffer is full the
-conversion stops.  At this point the pointer variable referenced by the
+conversion stops. At this point, the pointer variable referenced by the
 third parameter must point to the byte following the last processed
-byte.  I.e., if all of the input is consumed this pointer and the fourth
-parameter have the same value.
+byte (i.e., if all of the input is consumed, this pointer and the fourth
+parameter have the same value).
 
-What now happens depends on whether this step is the last one or not.
-If it is the last step the only thing which has to be done is to update
-the @code{__outbuf} element of the step data structure to point after the
-last written byte.  This gives the caller the information on how much
-text is available in the output buffer.  Beside this the variable
+What now happens depends on whether this step is the last one. If it is 
+the last step, the only thing that has to be done is to update the 
+@code{__outbuf} element of the step data structure to point after the
+last written byte. This update gives the caller the information on how 
+much text is available in the output buffer. In addition, the variable
 pointed to by the fifth parameter, which is of type @code{size_t}, must
-be incremented by the number of characters (@emph{not bytes}) which were
-converted in a non-reversible way.  Then the function can return.
+be incremented by the number of characters (@emph{not bytes}) that were
+converted in a non-reversible way. Then, the function can return.
 
-In case the step is not the last one the later conversion functions have
-to get a chance to do their work.  Therefore the appropriate conversion
-function has to be called.  The information about the functions is
+In case the step is not the last one, the later conversion functions have
+to get a chance to do their work. Therefore, the appropriate conversion
+function has to be called. The information about the functions is
 stored in the conversion data structures, passed as the first parameter.
-This information and the step data are stored in arrays so the next
+This information and the step data are stored in arrays, so the next
 element in both cases can be found by simple pointer arithmetic:
 
 @smallexample
@@ -2719,42 +2717,42 @@ therefore will look similar to this:
                     written, 0)
 @end smallexample
 
-But this is not yet all.  Once the function call returns the conversion
-function might have some more to do.  If the return value of the
-function is @code{__GCONV_EMPTY_INPUT} this means there is more room in
-the output buffer.  Unless the input buffer is empty the conversion
-functions start all over again and processes the rest of the input
-buffer.  If the return value is not @code{__GCONV_EMPTY_INPUT} something
-went wrong and we have to recover from this.
+But this is not yet all. Once the function call returns the conversion
+function might have some more to do. If the return value of the function 
+is @code{__GCONV_EMPTY_INPUT}, more room is available in the output 
+buffer. Unless the input buffer is empty the conversion, functions start 
+all over again and process the rest of the input buffer. If the return 
+value is not @code{__GCONV_EMPTY_INPUT}, something went wrong and we have 
+to recover from this.
 
 A requirement for the conversion function is that the input buffer
-pointer (the third argument) always points to the last character which
-was put in the converted form in the output buffer.  This is trivially
-true after the conversion performed in the current step.  But if the
-conversion functions deeper down the stream stop prematurely not all
-characters from the output buffer are consumed and therefore the input
-buffer pointers must be backed of to the right position.
+pointer (the third argument) always point to the last character that
+was put in converted form into the output buffer. This is trivially
+true after the conversion performed in the current step, but if the
+conversion functions deeper downstream stop prematurely, not all
+characters from the output buffer are consumed and, therefore, the input
+buffer pointers must be backed off to the right position.
 
-This is easy to do if the input and output character sets have a fixed
-width for all characters.  In this situation we can compute how many
-characters are left in the output buffer and therefore can correct the
-input buffer pointer appropriate with a similar computation.  Things are
-getting tricky if either character set has character represented with
-variable length byte sequences and it gets even more complicated if the
-conversion has to take care of the state.  In these cases the conversion
-has to be performed once again, from the known state before the initial
-conversion.  I.e., if necessary the state of the conversion has to be
-reset and the conversion loop has to be executed again.  The difference
-now is that it is known how much input must be created and the
-conversion can stop before converting the first unused character.  Once
-this is done the input buffer pointers must be updated again and the
-function can return.
+Correcting the input buffers is easy to do if the input and output 
+character sets have a fixed width for all characters. In this situation 
+we can compute how many characters are left in the output buffer and, 
+therefore, can correct the input buffer pointer appropriately with a 
+similar computation. Things are getting tricky if either character set 
+has characters represented with variable length byte sequences, and it 
+gets even more complicated if the conversion has to take care of the 
+state. In these cases the conversion has to be performed once again, from 
+the known state before the initial conversion (i.e., if necessary the 
+state of the conversion has to be reset and the conversion loop has to be 
+executed again). The difference now is that it is known how much input 
+must be created, and the conversion can stop before converting the first 
+unused character. Once this is done the input buffer pointers must be 
+updated again and the function can return.
 
-One final thing should be mentioned.  If it is necessary for the
+One final thing should be mentioned. If it is necessary for the
 conversion to know whether it is the first invocation (in case a prolog
-has to be emitted) the conversion function should just before returning
-to the caller increment the @code{__invocation_counter} element of the
-step data structure.  See the description of the @code{struct
+has to be emitted), the conversion function should increment the 
+@code{__invocation_counter} element of the step data structure just 
+before returning to the caller. See the description of the @code{struct
 __gconv_step_data} structure above for more information on how this can
 be used.
 
@@ -2764,7 +2762,7 @@ The return value must be one of the following values:
 @item __GCONV_EMPTY_INPUT
 All input was consumed and there is room left in the output buffer.
 @item __GCONV_FULL_OUTPUT
-No more room in the output buffer.  In case this is not the last step
+No more room in the output buffer. In case this is not the last step
 this value is propagated down from the call of the next conversion
 function in the chain.
 @item __GCONV_INCOMPLETE_INPUT
@@ -2823,7 +2821,7 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
           /* @r{Run the conversion loop.  @code{status} is set}
              @r{appropriately afterwards.}  */
 
-          /* @r{If this is the last step leave the loop, there is}
+          /* @r{If this is the last step, leave the loop. There is}
              @r{nothing we can do.}  */
           if (data->__is_last)
             @{
@@ -2890,3 +2888,5 @@ This information should be sufficient to write new modules.  Anybody
 doing so should also take a look at the available source code in the GNU
 C library sources.  It contains many examples of working and optimized
 modules.
+
+@c File charset.texi edited October 2001 by Dennis Grace, IBM Corporation
