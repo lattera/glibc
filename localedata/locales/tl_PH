@@ -1,7 +1,7 @@
 comment_char %
 escape_char  /
 %
-% Tagalog Language Locale for Philipines
+% Tagalog Language Locale for Philippines
 % Source:
 % Contact:
 % Email:
@@ -16,7 +16,7 @@ escape_char  /
 % for commercial purposes.
 
 LC_IDENTIFICATION
-title "Tagalog language locale for Philipines"
+title "Tagalog language locale for Philippines"
 source "Rene Torres"
 address ""
 contact "Rene Torres, Pablo Saratxaga"
@@ -24,7 +24,7 @@ email "rgtorre@rocketmail.com, pablo@mandrakesoft.com"
 tel ""
 fax ""
 language "Tagalog"
-territory "Philipines"
+territory "Philippines"
 revision "0.2"
 date "2001-01-28"
 

@@ -1,3 +1,7 @@
+2002-11-06  Thorsten Kukuk  <kukuk@suse.de>
+
+        * locales/tl_PH: Fix typo: Philipines -> Philippines.
+
 2002-10-18  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/ISO_5428: Use Greek characters introduced in Unicode 3.0.
