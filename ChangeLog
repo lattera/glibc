@@ -1,8 +1,14 @@
+2001-10-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-96/s_nextafterl.c (__nextafterl): Fix
+	parentheses.
+	Reported by David Byron <dbyron@porto.coactive.com>, close PR libc/2589.
+
 2001-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ca.po: New file.  Contributed by the translation team.
 
-2001-08-15  Ralf Baechle  <ralf@gnu.org>
+2001-10-15  Ralf Baechle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sys/sysmips.h: Make sysmips() prototype
 	a varargs prototype.  Remove dependency from kernel header files.
