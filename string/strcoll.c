@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -136,6 +136,10 @@ STRCOLL (s1, s2, l)
   /* We need this a few times.  */
   s1len = STRLEN (s1);
   s2len = STRLEN (s2);
+
+  /* Catch empty strings.  */
+  if (__builtin_expect (s1len == 0, 0) || __builtin_expect (s2len == 0, 0))
+    return (s1len != 0) - (s2len != 0);
 
   /* We need the elements of the strings as unsigned values since they
      are used as indeces.  */

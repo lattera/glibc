@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -177,7 +177,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
      very conservative here.  */
   if (srclen >= 16384)
     {
-      idxarr = (int32_t *) malloc (srclen * (sizeof (int32_t) + 1));
+      idxarr = (int32_t *) malloc ((srclen + 1) * (sizeof (int32_t) + 1));
       rulearr = (unsigned char *) &idxarr[srclen];
 
       if (idxarr == NULL)
@@ -194,8 +194,11 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
     {
     try_stack:
       idxarr = (int32_t *) alloca (srclen * sizeof (int32_t));
-      rulearr = (unsigned char *) alloca (srclen);
+      rulearr = (unsigned char *) alloca (srclen + 1);
     }
+  /* This element is only read, the value never used but to determine
+     another value which then is ignored.  */
+  rulearr[srclen] = '\0';
 
   idxmax = 0;
   do

@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -198,26 +198,35 @@ __STRING2_COPY_TYPE (8);
 #ifdef __USE_GNU
 # if !defined _HAVE_STRING_ARCH_mempcpy || defined _FORCE_INLINES
 #  ifndef _HAVE_STRING_ARCH_mempcpy
-#   define __mempcpy(dest, src, n) \
+#   if __GNUC_PREREQ (3, 0)
+#    define __mempcpy(dest, src, n) \
+  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
+		  && __string2_1bptr_p (src) && n <= 8			      \
+		  ? __builtin_memcpy (dest, src, n) + n			      \
+		  : __mempcpy (dest, src, n)))
+#   else
+#    define __mempcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
 		  && __string2_1bptr_p (src) && n <= 8			      \
 		  ? __mempcpy_small (dest, __mempcpy_args (src), n)	      \
 		  : __mempcpy (dest, src, n)))
+#   endif
 /* In glibc we use this function frequently but for namespace reasons
    we have to use the name `__mempcpy'.  */
 #   define mempcpy(dest, src, n) __mempcpy (dest, src, n)
 #  endif
 
-#  if _STRING_ARCH_unaligned
-#   ifndef _FORCE_INLINES
-#    define __mempcpy_args(src) \
+#  if !__GNUC_PREREQ (3, 0) || defined _FORCE_INLINES
+#   if _STRING_ARCH_unaligned
+#    ifndef _FORCE_INLINES
+#     define __mempcpy_args(src) \
      ((__const char *) (src))[0], ((__const char *) (src))[2],		      \
      ((__const char *) (src))[4], ((__const char *) (src))[6],		      \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
-#   endif
+#    endif
 __STRING_INLINE void *__mempcpy_small (void *, char, char, char, char,
 				       __uint16_t, __uint16_t, __uint32_t,
 				       __uint32_t, size_t);
@@ -283,9 +292,9 @@ __mempcpy_small (void *__dest1,
     }
   return (void *) __u;
 }
-#  else
-#   ifndef _FORCE_INLINES
-#    define __mempcpy_args(src) \
+#   else
+#    ifndef _FORCE_INLINES
+#     define __mempcpy_args(src) \
      ((__const char *) (src))[0],					      \
      __extension__ ((__STRING2_COPY_ARR2)				      \
       { { ((__const char *) (src))[0], ((__const char *) (src))[1] } }),      \
@@ -313,7 +322,7 @@ __mempcpy_small (void *__dest1,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], ((__const char *) (src))[7] } })
-#   endif
+#    endif
 __STRING_INLINE void *__mempcpy_small (void *, char, __STRING2_COPY_ARR2,
 				       __STRING2_COPY_ARR3,
 				       __STRING2_COPY_ARR4,
@@ -367,6 +376,7 @@ __mempcpy_small (void *__dest, char __src1,
     }
   return __extension__ ((void *) __u + __srclen);
 }
+#   endif
 #  endif
 # endif
 #endif
@@ -383,8 +393,9 @@ extern void *__rawmemchr (const void *__s, int __c);
 
 
 /* Copy SRC to DEST.  */
-#if !defined _HAVE_STRING_ARCH_strcpy || defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strcpy
+#if (!defined _HAVE_STRING_ARCH_strcpy && !__GNUC_PREREQ (3, 0)) \
+    || defined _FORCE_INLINES
+# if !defined _HAVE_STRING_ARCH_strcpy && !__GNUC_PREREQ (3, 0)
 #  define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
@@ -547,26 +558,38 @@ __strcpy_small (char *__dest,
 #ifdef __USE_GNU
 # if !defined _HAVE_STRING_ARCH_stpcpy || defined _FORCE_INLINES
 #  ifndef _HAVE_STRING_ARCH_stpcpy
-#   define __stpcpy(dest, src) \
+#   if __GNUC_PREREQ (3, 0)
+#    define __stpcpy(dest, src) \
+  (__extension__ (__builtin_constant_p (src)				      \
+		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
+		     ? __builtin_strcpy (dest, src) + strlen (src)	      \
+		     : ((char *) (__mempcpy) (dest, src, strlen (src) + 1)    \
+			- 1))						      \
+		  : __stpcpy (dest, src)))
+#   else
+#    define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
 		     ? __stpcpy_small (dest, __stpcpy_args (src),	      \
 				       strlen (src) + 1)		      \
-		     : ((char *) __mempcpy (dest, src, strlen (src) + 1) - 1))\
+		     : ((char *) (__mempcpy) (dest, src, strlen (src) + 1)    \
+			- 1))						      \
 		  : __stpcpy (dest, src)))
+#   endif
 /* In glibc we use this function frequently but for namespace reasons
    we have to use the name `__stpcpy'.  */
 #   define stpcpy(dest, src) __stpcpy (dest, src)
 #  endif
 
-#  if _STRING_ARCH_unaligned
-#   ifndef _FORCE_INLINES
-#    define __stpcpy_args(src) \
+#  if !__GNUC_PREREQ (3, 0) || _FORCE_INLINES
+#   if _STRING_ARCH_unaligned
+#    ifndef _FORCE_INLINES
+#     define __stpcpy_args(src) \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
-#   endif
+#    endif
 __STRING_INLINE char *__stpcpy_small (char *, __uint16_t, __uint16_t,
 				      __uint32_t, __uint32_t, size_t);
 __STRING_INLINE char *
@@ -626,9 +649,9 @@ __stpcpy_small (char *__dest,
     }
   return &__u->__c;
 }
-#  else
-#   ifndef _FORCE_INLINES
-#    define __stpcpy_args(src) \
+#   else
+#    ifndef _FORCE_INLINES
+#     define __stpcpy_args(src) \
      __extension__ ((__STRING2_COPY_ARR2)				      \
       { { ((__const char *) (src))[0], '\0' } }),			      \
      __extension__ ((__STRING2_COPY_ARR3)				      \
@@ -655,7 +678,7 @@ __stpcpy_small (char *__dest,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], '\0' } })
-#   endif
+#    endif
 __STRING_INLINE char *__stpcpy_small (char *, __STRING2_COPY_ARR2,
 				      __STRING2_COPY_ARR3,
 				      __STRING2_COPY_ARR4,
@@ -709,6 +732,7 @@ __stpcpy_small (char *__dest,
   }
   return __dest + __srclen - 1;
 }
+#   endif
 #  endif
 # endif
 #endif

@@ -935,7 +935,8 @@ random-access files, all append-type output streams are effectively
 linked to each other.
 
 @cindex cleaning up a stream
-If you have been using a stream for I/O, and you want to do I/O using
+If you have been using a stream for I/O (or have just opened the stream),
+and you want to do I/O using
 another channel (either a stream or a descriptor) that is linked to it,
 you must first @dfn{clean up} the stream that you have been using.
 @xref{Cleaning Streams}.
@@ -1007,7 +1008,8 @@ You can skip the @code{fclean} or @code{fflush} if you know the stream
 is already clean.  A stream is clean whenever its buffer is empty.  For
 example, an unbuffered stream is always clean.  An input stream that is
 at end-of-file is clean.  A line-buffered stream is clean when the last
-character output was a newline.
+character output was a newline.  However, a just-opened input stream
+might not be clean, as its input buffer might not be empty.
 
 There is one case in which cleaning a stream is impossible on most
 systems.  This is when the stream is doing input from a file that is not
