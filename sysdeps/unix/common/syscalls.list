@@ -4,14 +4,14 @@ adjtime		-	adjtime		i:pp	__adjtime	adjtime
 fchmod		-	fchmod		i:ii	__fchmod	fchmod
 fchown		-	fchown		i:iii	__fchown	fchown
 ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate
-getpgid		-	getpgrp		i:i	__getpgid	getpgid __GI___getpgid
+getpgid		-	getpgrp		i:i	__getpgid	getpgid
 getrusage	-	getrusage	i:ip	__getrusage	getrusage
 gettimeofday	-	gettimeofday	i:PP	__gettimeofday	gettimeofday __gettimeofday_internal
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
-setpgid		-	setpgrp		i:ii	__setpgid	setpgid __GI___setpgid
+setpgid		-	setpgrp		i:ii	__setpgid	setpgid
 setregid	-	setregid	i:ii	__setregid	setregid
 setreuid	-	setreuid	i:ii	__setreuid	setreuid
-sigaction	-	sigaction	i:ipp	__sigaction	sigaction __GI___sigaction
+sigaction	-	sigaction	i:ipp	__sigaction	sigaction
 sys_lstat	lxstat	lstat		i:sp	__syscall_lstat
 truncate	-	truncate	i:si	truncate
 vhangup		-	vhangup		i:i	vhangup

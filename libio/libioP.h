@@ -58,9 +58,6 @@
 # define libc_hidden_weak(name)
 #endif
 
-libc_hidden_proto (__overflow)
-libc_hidden_proto (__woverflow)
-
 #ifdef __cplusplus
 extern "C" {
 #endif

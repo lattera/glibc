@@ -1,8 +1,29 @@
 2002-08-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libio.h: New file.
+	* libio/libioP.h (__overflow, __woverflow): Remove libc_hidden_proto.
+	* libio/iolibio.h: #include <libio.h>, not "libio.h".
+	* sysdeps/generic/morecore.c (__sbrk): Add libc_hidden_proto.
+	* sysdeps/unix/bsd/syscalls.list: Remove all __GI_* aliases.
+	* sysdeps/unix/common/syscalls.list: Likewise.
+	* sysdeps/unix/inet/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/irix4/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/syscalls.list: Likewise.
+	* sysdeps/unix/syscalls.list: Likewise.
+
+2002-08-03  Jakub Jelinek  <jakub@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (public_cALLOc): Only divide if at least one of
-	arguments is big enough to cause an overflow.
+	the arguments is big enough to cause an overflow.
 
 2002-08-03  Ulrich Drepper  <drepper@redhat.com>
 

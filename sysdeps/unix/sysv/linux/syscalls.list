@@ -12,7 +12,7 @@ fork		-	fork		i:	__libc_fork	__fork fork
 get_kernel_syms	EXTRA	get_kernel_syms	i:p	get_kernel_syms
 getegid		-	getegid		i:	__getegid	getegid
 geteuid		-	geteuid		i:	__geteuid	geteuid
-getpgid		-	getpgid		i:i	__getpgid	getpgid __GI___getpgid
+getpgid		-	getpgid		i:i	__getpgid	getpgid
 getpgrp		-	getpgrp		i:	getpgrp
 getppid		-	getppid		i:	__getppid	getppid
 getsid		-	getsid		i:i	getsid
@@ -34,7 +34,7 @@ nanosleep	-	nanosleep	i:pp	__libc_nanosleep	__nanosleep nanosleep
 nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
 pause		-	pause		i:	__libc_pause	pause
 personality	init-first personality	i:i	__personality	personality
-pipe		-	pipe		i:f	__pipe		pipe __GI___pipe
+pipe		-	pipe		i:f	__pipe		pipe
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
 prctl		EXTRA	prctl		i:iiiii	prctl
 query_module	EXTRA	query_module	i:sipip	query_module
@@ -45,14 +45,14 @@ sched_primax	-	sched_get_priority_max	i:i	__sched_get_priority_max	sched_get_pri
 sched_primin	-	sched_get_priority_min	i:i	__sched_get_priority_min	sched_get_priority_min
 sched_rr_gi	-	sched_rr_get_interval	i:ip	__sched_rr_get_interval	sched_rr_get_interval
 sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
-sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler __GI___sched_setscheduler
+sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
-select		-	_newselect	i:iPPPP	__select	select __GI___select
+select		-	_newselect	i:iPPPP	__select	select
 sendfile	-	sendfile	i:iipi	sendfile
 sendfile64	-	sendfile64	i:iipi	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
-setpgid		-	setpgid		i:ii	__setpgid	setpgid __GI___setpgid
+setpgid		-	setpgid		i:ii	__setpgid	setpgid
 setresuid	EXTRA	setresuid	i:iii	__setresuid	setresuid
 setresgid	EXTRA	setresgid	i:iii	__setresgid	setresgid
 sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
@@ -62,5 +62,5 @@ swapoff		-	swapoff		i:s	__swapoff	swapoff
 uselib		EXTRA	uselib		i:s	uselib
 wait4		-	wait4		i:iWiP	__wait4		wait4
 
-chown		-	chown		i:sii	__GI___chown	__chown chown
-fcntl		-	fcntl		i:iiF	__libc_fcntl	__GI___libc_fcntl __fcntl __GI___fcntl fcntl
+chown		-	chown		i:sii	__libc_chown	__chown chown
+fcntl		-	fcntl		i:iiF	__libc_fcntl	__fcntl fcntl

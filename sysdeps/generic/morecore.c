@@ -31,6 +31,7 @@
 
 #include <stddef.h>
 extern __malloc_ptr_t __sbrk __P ((ptrdiff_t increment));
+libc_hidden_proto (__sbrk)
 #endif
 
 #ifndef NULL
