@@ -1,3 +1,8 @@
+2003-11-25  Roland McGrath  <roland@redhat.com>
+
+	* td_symbol_list.c (symbol_list_arr) [HAVE_ASM_GLOBAL_DOT_NAME]:
+	Prepend "." to symbol names for functions.
+
 2003-08-18  Daniel Jacobowitz  <drow@mvista.com>
 
 	* td_thr_getfpregs.c (td_thr_getfpregs): Use the main thread if

@@ -1,3 +1,13 @@
+2003-12-02  Roland McGrath  <roland@redhat.com>
+
+	* thread_dbP.h (DB_FUNCTION): New macro.
+	* structs.def: Use it for __nptl_create_event and __nptl_death_event.
+	* db_info.c (DB_FUNCTION): New macro.
+	* td_symbol_list.c (DB_FUNCTION): New macro, prepend "." to symbol
+	name under [HAVE_ASM_GLOBAL_DOT_NAME].
+	(td_lookup) [HAVE_ASM_GLOBAL_DOT_NAME]: If lookup fails with PS_NOSYM
+	and name starts with a dot, try it without the dot.
+
 2003-09-08  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_get_info.c (td_thr_get_info): Cast th_unique to thread_t.
