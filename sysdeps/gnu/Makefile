@@ -35,3 +35,8 @@ sysdep_routines += setutxent getutxent endutxent getutxid getutxline \
 
 sysdep_headers += utmpx.h bits/utmpx.h
 endif
+
+
+ifeq ($(subdir),inet)
+sysdep_headers += netinet/udp.h netinet/ip_icmp.h
+endif

@@ -33,10 +33,7 @@ netinet/if_tr.h
 netinet/igmp.h
 netinet/in_systm.h
 netinet/ip_fw.h
-netinet/ip_icmp.h
 netpacket/packet.h
-netinet/tcp.h
-netinet/udp.h
 netipx/ipx.h
 netrom/netrom.h
 netrose/rose.h

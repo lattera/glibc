@@ -1,5 +1,11 @@
 1998-09-05  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet] (sysdep_headers):
+	Don't add netinet/udp.h, netinet/ip_icmp.h here.
+	* sysdeps/gnu/Makefile: Do it here instead.
+	* sysdeps/unix/sysv/linux/Dist: Move those files from here ...
+	* sysdeps/gnu/Dist: ... to here.
+
 	* sysdeps/unix/sysv/linux/netinet/ip_icmp.h,
 	sysdeps/unix/sysv/linux/netinet/tcp.h,
 	sysdeps/unix/sysv/linux/netinet/udp.h: Moved to sysdeps/gnu/netinet.

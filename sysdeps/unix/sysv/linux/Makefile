@@ -80,10 +80,9 @@ sysdep_headers += bits/pthreadtypes.h
 endif
 
 ifeq ($(subdir),inet)
-sysdep_headers += netinet/in_systm.h netinet/udp.h \
+sysdep_headers += sys/socketvar.h netinet/in_systm.h netinet/ip_fw.h \
 		  netinet/if_fddi.h netinet/if_tr.h netinet/igmp.h \
-		  netinet/ip_fw.h  netinet/ip_icmp.h netipx/ipx.h \
-		  sys/socketvar.h netash/ash.h netax25/ax25.h netatalk/at.h \
+		  netipx/ipx.h netash/ash.h netax25/ax25.h netatalk/at.h \
 		  netrom/netrom.h netpacket/packet.h netrose/rose.h
 endif
 
