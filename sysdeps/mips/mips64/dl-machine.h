@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -84,7 +84,7 @@ elf_machine_matches_host (ElfW(Half) e_machine)
   switch (e_machine)
     {
     case EM_MIPS:
-    case EM_MIPS_RS4_BE:
+    case EM_MIPS_RS3_LE:
       return 1;
     default:
       return 0;
