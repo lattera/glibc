@@ -1,3 +1,29 @@
+1998-05-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/8bit-gap.c (BODY): Don't fall off the end of the gap
+	table.
+
+1998-05-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/gen-8bit.sh: New file.
+	* iconvdata/gen-8bit-gap.sh: New file.
+	* iconvdata/gen-8bit-gap-1.sh: New file.
+	* iconvdata/Makefile (generate-8bit-table): Use shell script
+	instead of writing the commands directly.
+	(generate-8bit-gap-table): Likewise.
+	($(objpfx)iso8859-7jp.h): Likewise.
+	(generated headers): Depend on shell script instead of Makefile.
+	(before-compile): Add $(perl-generated-headers) only if perl is
+	available.
+	(headers): Depend on $(perl-generated-headers) only if perl is
+	available.
+	(sed-generated-headers): Remove iso8859-7jp.h.
+
+1998-05-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* csu/Makefile ($(objpfx)abi-tag.h): Double $ in command.  Clean up.
+	(/): Removed.
+
 1998-05-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcsmbsload.c (extract_charset_name): Pass correctly

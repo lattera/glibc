@@ -149,15 +149,16 @@ $(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
 	rm -f $(@:.o=.c)
 
 # These headers are used by the startup code.
-/ := $$/# bite me.
 $(objpfx)abi-tag.h: $(..)abi-tags
 	$(make-target-directory)
 	rm -f $@.new
-	sed 's/#.*$//;/^[ 	]*$/d' $< | while read conf tag; do \
+	sed -e 's/#.*$$//' -e '/^[ 	]*$$/d' $< | \
+	while read conf tag; do \
 	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 		     : "$$conf"` != 0 || continue; \
-	  echo "$$tag" | sed > $@.new \
-	       's/[^0-9xXa-fA-F]/ /g;s/ *$//;s/ /,/g;s/^ */#define ABI_TAG /';\
+	  echo "$$tag" | \
+	  sed -e 's/[^0-9xXa-fA-F]/ /g' -e 's/ *$$//' \
+	      -e 's/ /,/g' -e 's/^ */#define ABI_TAG /' > $@.new; \
 	done
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi

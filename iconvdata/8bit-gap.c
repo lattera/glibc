@@ -71,6 +71,12 @@ struct gap
     uint32_t ch = *((uint32_t *) inptr);				      \
     unsigned char res;							      \
 									      \
+    if (ch >= 0xffff)							      \
+      {									      \
+	/* This is an illegal character.  */				      \
+	result = GCONV_ILLEGAL_INPUT;					      \
+	break;								      \
+      }									      \
     while (ch > rp->end)						      \
       ++rp;								      \
     if (ch < rp->start)							      \
