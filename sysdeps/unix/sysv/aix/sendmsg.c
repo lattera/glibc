@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,10 @@
 extern int nsendmsg (int s, const void *uap_msg, int flags);
 
 ssize_t
-sendmsg (int fd, const struct msghdr *message, int flags)
+__sendmsg (int fd, const struct msghdr *message, int flags)
 {
   return nsendmsg (fd, message, flags);
 }
+
+weak_alias (__sendmsg, sendmsg)
+
