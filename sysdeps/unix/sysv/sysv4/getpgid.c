@@ -21,11 +21,11 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <sys/types.h>
 
-extern int __sco_pgrp __P ((int type, ...));
+extern int __pgrpsys __P ((int type, ...));
 
 /* Get the process group ID of process PID.  */
 int
 DEFUN(__getpgrp, (pid), pid_t pid)
 {
-  return __sco_pgrp (0, pid);
+  return __pgrpsys (4, pid);
 }
