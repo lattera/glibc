@@ -3,6 +3,8 @@
 	* elf/do-rel.h (elf_dynamic_do_rel): Fix problem with ld.so
 	startup.  Explicitly remove lazy part for RTLD_BOOTSTRAP since gcc
 	doesn't do it.
+	* elf/rtld.c: Include <sys/param.h>.
+	* elf/dl-reloc.c: Likewise.
 
 2001-08-24  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 

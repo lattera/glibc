@@ -22,6 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
+#include <sys/param.h>
 #include <sys/stat.h>
 #include <ldsodefs.h>
 #include <stdio-common/_itoa.h>

@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/types.h>
 #include "dynamic-link.h"
 
