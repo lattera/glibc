@@ -343,6 +343,8 @@ dl_open_worker (void *a)
 				    N_("cannot create scope list"));
 		imap->l_scope = newp;
 	      }
+
+	    imap->l_scope_max = new_size;
 	  }
 
 	imap->l_scope[cnt++] = &new->l_searchlist;

@@ -56,7 +56,7 @@ struct sigaction
 #define SA_NOCLDWAIT 0x00000100  /* Don't create zombie on child death.  */
 #define SA_SIGINFO   0x00000200  /* Invoke signal-catching function with
 				    three arguments instead of one.  */
-#ifdef __USE_MISC
+#if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
 # define SA_RESTART   0x00000002 /* Restart syscall on signal return.  */
 # define SA_INTERRUPT 0x00000010 /* Historical no-op.  */

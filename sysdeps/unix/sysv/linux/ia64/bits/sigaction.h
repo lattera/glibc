@@ -50,7 +50,7 @@ struct sigaction
 /* Bits in `sa_flags'.  */
 #define SA_NOCLDSTOP  0x00000001 /* Don't send SIGCHLD when children stop.  */
 #define SA_SIGINFO    0x00000004
-#ifdef __USE_MISC
+#if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK   0x08000000 /* Use signal stack by using `sa_restorer'. */
 # define SA_RESTART   0x10000000 /* Restart syscall on signal return.  */
 # define SA_NODEFER   0x40000000 /* Don't automatically block the signal

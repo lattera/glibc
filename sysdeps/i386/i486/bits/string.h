@@ -545,13 +545,13 @@ __strlen_g (__const char *__str)
 #define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
-		     ? __strcpy_small (dest, src, strlen (src) + 1)	      \
+		     ? __strcpy_a_small (dest, src, strlen (src) + 1)	      \
 		     : (char *) memcpy ((char *) dest,			      \
 					(__const char *) src,		      \
 					strlen (src) + 1))		      \
 		  : __strcpy_g (dest, src)))
 
-#define __strcpy_small(dest, src, srclen) \
+#define __strcpy_a_small(dest, src, srclen) \
   (__extension__ ({ char *__dest = (dest);				      \
 		    union {						      \
 		      unsigned int __ui;				      \
@@ -629,7 +629,7 @@ __strcpy_g (char *__dest, __const char *__src)
 # define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (strlen (src) + 1 <= 8				      \
-		     ? __stpcpy_small (dest, src, strlen (src) + 1)	      \
+		     ? __stpcpy_a_small (dest, src, strlen (src) + 1)	      \
 		     : __stpcpy_c (dest, src, strlen (src) + 1))	      \
 		  : __stpcpy_g (dest, src)))
 # define __stpcpy_c(dest, src, srclen) \
@@ -642,7 +642,7 @@ __strcpy_g (char *__dest, __const char *__src)
 /* In glibc itself we use this symbol for namespace reasons.  */
 # define stpcpy(dest, src) __stpcpy (dest, src)
 
-# define __stpcpy_small(dest, src, srclen) \
+# define __stpcpy_a_small(dest, src, srclen) \
   (__extension__ ({ union {						      \
 		      unsigned int __ui;				      \
 		      unsigned short int __usi;				      \
@@ -1441,6 +1441,7 @@ __strrchr_g (__const char *__s, int __c)
 
 __STRING_INLINE size_t __strcspn_c1 (__const char *__s, int __reject);
 
+#ifndef _FORCE_INLINES
 __STRING_INLINE size_t
 __strcspn_c1 (__const char *__s, int __reject)
 {
@@ -1460,6 +1461,7 @@ __strcspn_c1 (__const char *__s, int __reject)
      : "cc");
   return (__res - 1) - __s;
 }
+#endif
 
 __STRING_INLINE size_t __strcspn_cg (__const char *__s, __const char __reject[],
 				    size_t __reject_len);
@@ -1556,6 +1558,7 @@ __strcspn_g (__const char *__s, __const char *__reject)
 			: __strspn_cg (s, accept, strlen (accept))))	      \
 		  : __strspn_g (s, accept)))
 
+#ifndef _FORCE_INLINES
 __STRING_INLINE size_t __strspn_c1 (__const char *__s, int __accept);
 
 __STRING_INLINE size_t
@@ -1575,6 +1578,7 @@ __strspn_c1 (__const char *__s, int __accept)
      : "cc");
   return (__res - 1) - __s;
 }
+#endif
 
 __STRING_INLINE size_t __strspn_cg (__const char *__s, __const char __accept[],
 				    size_t __accept_len);

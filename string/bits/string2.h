@@ -196,24 +196,28 @@ __STRING2_COPY_TYPE (8);
 /* Copy N bytes from SRC to DEST, returning pointer to byte following the
    last copied.  */
 #ifdef __USE_GNU
-# ifndef _HAVE_STRING_ARCH_mempcpy
-#  define __mempcpy(dest, src, n) \
+# if !defined _HAVE_STRING_ARCH_mempcpy || defined _FORCE_INLINES
+#  ifndef _HAVE_STRING_ARCH_mempcpy
+#   define __mempcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
 		  && __string2_1bptr_p (src) && n <= 8			      \
 		  ? __mempcpy_small (dest, __mempcpy_args (src), n)	      \
 		  : __mempcpy (dest, src, n)))
 /* In glibc we use this function frequently but for namespace reasons
    we have to use the name `__mempcpy'.  */
-#  define mempcpy(dest, src, n) __mempcpy (dest, src, n)
+#   define mempcpy(dest, src, n) __mempcpy (dest, src, n)
+#  endif
 
 #  if _STRING_ARCH_unaligned
-#   define __mempcpy_args(src) \
+#   ifndef _FORCE_INLINES
+#    define __mempcpy_args(src) \
      ((__const char *) (src))[0], ((__const char *) (src))[2],		      \
      ((__const char *) (src))[4], ((__const char *) (src))[6],		      \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
+#   endif
 __STRING_INLINE void *__mempcpy_small (void *, char, char, char, char,
 				       __uint16_t, __uint16_t, __uint32_t,
 				       __uint32_t, size_t);
@@ -280,7 +284,8 @@ __mempcpy_small (void *__dest1,
   return (void *) __u;
 }
 #  else
-#   define __mempcpy_args(src) \
+#   ifndef _FORCE_INLINES
+#    define __mempcpy_args(src) \
      ((__const char *) (src))[0],					      \
      __extension__ ((__STRING2_COPY_ARR2)				      \
       { { ((__const char *) (src))[0], ((__const char *) (src))[1] } }),      \
@@ -308,6 +313,7 @@ __mempcpy_small (void *__dest1,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], ((__const char *) (src))[7] } })
+#   endif
 __STRING_INLINE void *__mempcpy_small (void *, char, __STRING2_COPY_ARR2,
 				       __STRING2_COPY_ARR3,
 				       __STRING2_COPY_ARR4,
@@ -377,21 +383,25 @@ extern void *__rawmemchr (const void *__s, int __c);
 
 
 /* Copy SRC to DEST.  */
-#ifndef _HAVE_STRING_ARCH_strcpy
-# define strcpy(dest, src) \
+#if !defined _HAVE_STRING_ARCH_strcpy || defined _FORCE_INLINES
+# ifndef _HAVE_STRING_ARCH_strcpy
+#  define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
 		     ? __strcpy_small (dest, __strcpy_args (src),	      \
 				       strlen (src) + 1)		      \
 		     : (char *) memcpy (dest, src, strlen (src) + 1))	      \
 		  : strcpy (dest, src)))
+# endif
 
 # if _STRING_ARCH_unaligned
-#  define __strcpy_args(src) \
+#  ifndef _FORCE_INLINES
+#   define __strcpy_args(src) \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
+#  endif
 __STRING_INLINE char *__strcpy_small (char *, __uint16_t, __uint16_t,
 				      __uint32_t, __uint32_t, size_t);
 __STRING_INLINE char *
@@ -447,7 +457,8 @@ __strcpy_small (char *__dest,
   return __dest;
 }
 # else
-#  define __strcpy_args(src) \
+#  ifndef _FORCE_INLINES
+#   define __strcpy_args(src) \
      __extension__ ((__STRING2_COPY_ARR2)				      \
       { { ((__const char *) (src))[0], '\0' } }),			      \
      __extension__ ((__STRING2_COPY_ARR3)				      \
@@ -474,6 +485,7 @@ __strcpy_small (char *__dest,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], '\0' } })
+#  endif
 __STRING_INLINE char *__strcpy_small (char *, __STRING2_COPY_ARR2,
 				      __STRING2_COPY_ARR3,
 				      __STRING2_COPY_ARR4,
@@ -533,8 +545,9 @@ __strcpy_small (char *__dest,
 
 /* Copy SRC to DEST, returning pointer to final NUL byte.  */
 #ifdef __USE_GNU
-# ifndef _HAVE_STRING_ARCH_stpcpy
-#  define __stpcpy(dest, src) \
+# if !defined _HAVE_STRING_ARCH_stpcpy || defined _FORCE_INLINES
+#  ifndef _HAVE_STRING_ARCH_stpcpy
+#   define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
 		     ? __stpcpy_small (dest, __stpcpy_args (src),	      \
@@ -543,14 +556,17 @@ __strcpy_small (char *__dest,
 		  : __stpcpy (dest, src)))
 /* In glibc we use this function frequently but for namespace reasons
    we have to use the name `__stpcpy'.  */
-#  define stpcpy(dest, src) __stpcpy (dest, src)
+#   define stpcpy(dest, src) __stpcpy (dest, src)
+#  endif
 
 #  if _STRING_ARCH_unaligned
-#   define __stpcpy_args(src) \
+#   ifndef _FORCE_INLINES
+#    define __stpcpy_args(src) \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 4)
+#   endif
 __STRING_INLINE char *__stpcpy_small (char *, __uint16_t, __uint16_t,
 				      __uint32_t, __uint32_t, size_t);
 __STRING_INLINE char *
@@ -611,7 +627,8 @@ __stpcpy_small (char *__dest,
   return &__u->__c;
 }
 #  else
-#  define __stpcpy_args(src) \
+#   ifndef _FORCE_INLINES
+#    define __stpcpy_args(src) \
      __extension__ ((__STRING2_COPY_ARR2)				      \
       { { ((__const char *) (src))[0], '\0' } }),			      \
      __extension__ ((__STRING2_COPY_ARR3)				      \
@@ -638,6 +655,7 @@ __stpcpy_small (char *__dest,
 	  ((__const char *) (src))[2], ((__const char *) (src))[3],	      \
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], '\0' } })
+#   endif
 __STRING_INLINE char *__stpcpy_small (char *, __STRING2_COPY_ARR2,
 				      __STRING2_COPY_ARR3,
 				      __STRING2_COPY_ARR4,
@@ -854,8 +872,9 @@ __stpcpy_small (char *__dest,
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
-#ifndef _HAVE_STRING_ARCH_strcspn
-# define strcspn(s, reject) \
+#if !defined _HAVE_STRING_ARCH_strcspn || defined _FORCE_INLINES
+# ifndef _HAVE_STRING_ARCH_strcspn
+#  define strcspn(s, reject) \
   __extension__								      \
   ({ char __r0, __r1, __r2;						      \
      (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
@@ -869,10 +888,11 @@ __stpcpy_small (char *__dest,
 		  ? __strcspn_c3 (s, __r0, __r1, __r2)			      \
 		  : strcspn (s, reject)))))				      \
 		  : strcspn (s, reject)); })
+# endif
 
-__STRING_INLINE size_t __strcspn_c1 (__const char *__s, char __reject);
+__STRING_INLINE size_t __strcspn_c1 (__const char *__s, int __reject);
 __STRING_INLINE size_t
-__strcspn_c1 (__const char *__s, char __reject)
+__strcspn_c1 (__const char *__s, int __reject)
 {
   register size_t __result = 0;
   while (__s[__result] != '\0' && __s[__result] != __reject)
@@ -880,10 +900,10 @@ __strcspn_c1 (__const char *__s, char __reject)
   return __result;
 }
 
-__STRING_INLINE size_t __strcspn_c2 (__const char *__s, char __reject1,
-				     char __reject2);
+__STRING_INLINE size_t __strcspn_c2 (__const char *__s, int __reject1,
+				     int __reject2);
 __STRING_INLINE size_t
-__strcspn_c2 (__const char *__s, char __reject1, char __reject2)
+__strcspn_c2 (__const char *__s, int __reject1, int __reject2)
 {
   register size_t __result = 0;
   while (__s[__result] != '\0' && __s[__result] != __reject1
@@ -892,11 +912,11 @@ __strcspn_c2 (__const char *__s, char __reject1, char __reject2)
   return __result;
 }
 
-__STRING_INLINE size_t __strcspn_c3 (__const char *__s, char __reject1,
-				     char __reject2, char __reject3);
+__STRING_INLINE size_t __strcspn_c3 (__const char *__s, int __reject1,
+				     int __reject2, int __reject3);
 __STRING_INLINE size_t
-__strcspn_c3 (__const char *__s, char __reject1, char __reject2,
-	      char __reject3)
+__strcspn_c3 (__const char *__s, int __reject1, int __reject2,
+	      int __reject3)
 {
   register size_t __result = 0;
   while (__s[__result] != '\0' && __s[__result] != __reject1
@@ -909,8 +929,9 @@ __strcspn_c3 (__const char *__s, char __reject1, char __reject2,
 
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
-#ifndef _HAVE_STRING_ARCH_strspn
-# define strspn(s, accept) \
+#if !defined _HAVE_STRING_ARCH_strspn || defined _FORCE_INLINES
+# ifndef _HAVE_STRING_ARCH_strspn
+#  define strspn(s, accept) \
   __extension__								      \
   ({ char __a0, __a1, __a2;						      \
      (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
@@ -924,10 +945,11 @@ __strcspn_c3 (__const char *__s, char __reject1, char __reject2,
 		  ? __strspn_c3 (s, __a0, __a1, __a2)			      \
 		  : strspn (s, accept)))))				      \
       : strspn (s, accept)); })
+# endif
 
-__STRING_INLINE size_t __strspn_c1 (__const char *__s, char __accept);
+__STRING_INLINE size_t __strspn_c1 (__const char *__s, int __accept);
 __STRING_INLINE size_t
-__strspn_c1 (__const char *__s, char __accept)
+__strspn_c1 (__const char *__s, int __accept)
 {
   register size_t __result = 0;
   /* Please note that __accept never can be '\0'.  */
@@ -936,10 +958,10 @@ __strspn_c1 (__const char *__s, char __accept)
   return __result;
 }
 
-__STRING_INLINE size_t __strspn_c2 (__const char *__s, char __accept1,
-				    char __accept2);
+__STRING_INLINE size_t __strspn_c2 (__const char *__s, int __accept1,
+				    int __accept2);
 __STRING_INLINE size_t
-__strspn_c2 (__const char *__s, char __accept1, char __accept2)
+__strspn_c2 (__const char *__s, int __accept1, int __accept2)
 {
   register size_t __result = 0;
   /* Please note that __accept1 and __accept2 never can be '\0'.  */
@@ -948,10 +970,10 @@ __strspn_c2 (__const char *__s, char __accept1, char __accept2)
   return __result;
 }
 
-__STRING_INLINE size_t __strspn_c3 (__const char *__s, char __accept1,
-				    char __accept2, char __accept3);
+__STRING_INLINE size_t __strspn_c3 (__const char *__s, int __accept1,
+				    int __accept2, int __accept3);
 __STRING_INLINE size_t
-__strspn_c3 (__const char *__s, char __accept1, char __accept2, char __accept3)
+__strspn_c3 (__const char *__s, int __accept1, int __accept2, int __accept3)
 {
   register size_t __result = 0;
   /* Please note that __accept1 to __accept3 never can be '\0'.  */
@@ -964,8 +986,9 @@ __strspn_c3 (__const char *__s, char __accept1, char __accept2, char __accept3)
 
 
 /* Find the first occurrence in S of any character in ACCEPT.  */
-#ifndef _HAVE_STRING_ARCH_strpbrk
-# define strpbrk(s, accept) \
+#if !defined _HAVE_STRING_ARCH_strpbrk || defined _FORCE_INLINES
+# ifndef _HAVE_STRING_ARCH_strpbrk
+#  define strpbrk(s, accept) \
   __extension__								      \
   ({ char __a0, __a1, __a2;						      \
      (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
@@ -979,6 +1002,7 @@ __strspn_c3 (__const char *__s, char __accept1, char __accept2, char __accept3)
 		  ? __strpbrk_c3 (s, __a0, __a1, __a2)			      \
 		  : strpbrk (s, accept)))))				      \
       : strpbrk (s, accept)); })
+# endif
 
 __STRING_INLINE char *__strpbrk_c2 (__const char *__s, int __accept1,
 				     int __accept2);
@@ -1021,14 +1045,16 @@ __strpbrk_c3 (__const char *__s, int __accept1, int __accept2,
 #endif
 
 
-#ifndef _HAVE_STRING_ARCH_strtok_r
-# define __strtok_r(s, sep, nextp) \
+#if !defined _HAVE_STRING_ARCH_strtok_r || defined _FORCE_INLINES
+# ifndef _HAVE_STRING_ARCH_strtok_r
+#  define __strtok_r(s, sep, nextp) \
   (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
 		  ? (((__const char *) (sep))[0] != '\0'		      \
 		     && ((__const char *) (sep))[1] == '\0'		      \
 		     ? __strtok_r_1c (s, ((__const char *) (sep))[0], nextp)  \
 		     : __strtok_r (s, sep, nextp))			      \
 		  : __strtok_r (s, sep, nextp)))
+# endif
 
 __STRING_INLINE char *__strtok_r_1c (char *__s, char __sep, char **__nextp);
 __STRING_INLINE char *
@@ -1039,11 +1065,10 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
     __s = *__nextp;
   while (*__s == __sep)
     ++__s;
-  if (*__s == '\0')
-    __result = NULL;
-  else
+  __result = NULL;
+  if (*__s != '\0')
     {
-      __result = __s;
+      __result = __s++;
       while (*__s != '\0')
 	if (*__s++ == __sep)
 	  {
@@ -1055,14 +1080,14 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
   return __result;
 }
 # if defined __USE_POSIX || defined __USE_MISC
-#  define strtok_r(s, sep, nextp) __strtok_r ((s), (sep), (nextp))
+#  define strtok_r(s, sep, nextp) __strtok_r (s, sep, nextp)
 # endif
 #endif
 
 
-#ifndef _HAVE_STRING_ARCH_strsep
-
-# define __strsep(s, reject) \
+#if !defined _HAVE_STRING_ARCH_strsep || defined _FORCE_INLINES
+# ifndef _HAVE_STRING_ARCH_strsep
+#  define __strsep(s, reject) \
   __extension__								      \
   ({ char __r0, __r1, __r2;						      \
      (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
@@ -1075,23 +1100,17 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
 	    ? __strsep_2c (s, __r0, __r1)				      \
 	    : (((__const char *) (reject))[3] == '\0'			      \
 	       ? __strsep_3c (s, __r0, __r1, __r2)			      \
-	       : __strsep_g (s, reject))))				      \
-      : __strsep_g (s, reject)); })
+	       : __strsep (s, reject))))				      \
+      : __strsep (s, reject)); })
+# endif
 
 __STRING_INLINE char *__strsep_1c (char **__s, char __reject);
 __STRING_INLINE char *
 __strsep_1c (char **__s, char __reject)
 {
   register char *__retval = *__s;
-  if (__retval == NULL)
-    return *__s = NULL;
-  if (*__retval == __reject)
+  if (__retval != NULL && (*__s = strchr (__retval, __reject)) != NULL)
     *(*__s)++ = '\0';
-  else
-    if ((*__s = strchr (__retval, __reject)) != NULL)
-      *(*__s)++ = '\0';
-    else
-      *__s = NULL;
   return __retval;
 }
 
@@ -1100,22 +1119,24 @@ __STRING_INLINE char *
 __strsep_2c (char **__s, char __reject1, char __reject2)
 {
   register char *__retval = *__s;
-  if (__retval == NULL)
-    return *__s = NULL;
-  if (*__retval == __reject1 || *__retval == __reject2)
-    *(*__s)++ = '\0';
-  else
+  if (__retval != NULL)
     {
       register char *__cp = __retval;
-      while (*__cp != '\0' && *__cp != __reject1 && *__cp != __reject2)
-	++__cp;
-      if (*__cp != '\0')
+      while (1)
 	{
-	  *__s = __cp;
-	  *(*__s)++ = '\0';
+	  if (*__cp == '\0')
+	    {
+	      __cp = NULL;
+	  break;
+	    }
+	  if (*__cp == __reject1 || *__cp == __reject2)
+	    {
+	      *__cp++ = '\0';
+	      break;
+	    }
+	  ++__cp;
 	}
-      else
-	*__s = NULL;
+      *__s = __cp;
     }
   return __retval;
 }
@@ -1126,41 +1147,29 @@ __STRING_INLINE char *
 __strsep_3c (char **__s, char __reject1, char __reject2, char __reject3)
 {
   register char *__retval = *__s;
-  if (__retval == NULL)
-    return *__s = NULL;
-  if (*__retval == __reject1 || *__retval == __reject2
-      || *__retval == __reject3)
-    *(*__s)++ = '\0';
-  else
+  if (__retval != NULL)
     {
       register char *__cp = __retval;
-      while (*__cp != '\0' && *__cp != __reject1 && *__cp != __reject2
-	     && *__cp != __reject3)
-	++__cp;
-      if (*__cp != '\0')
+      while (1)
 	{
-	  *__s = __cp;
-	  *(*__s)++ = '\0';
+	  if (*__cp == '\0')
+	    {
+	      __cp = NULL;
+	  break;
+	    }
+	  if (*__cp == __reject1 || *__cp == __reject2 || *__cp == __reject3)
+	    {
+	      *__cp++ = '\0';
+	      break;
+	    }
+	  ++__cp;
 	}
-      else
-	*__s = NULL;
+      *__s = __cp;
     }
   return __retval;
 }
-
-__STRING_INLINE char *__strsep_g (char **__s, __const char *__reject);
-__STRING_INLINE char *
-__strsep_g (char **__s, __const char *__reject)
-{
-  register char *__retval = *__s;
-  if (__retval == NULL)
-    return NULL;
-  if ((*__s = strpbrk (__retval, __reject)) != NULL)
-    *(*__s)++ = '\0';
-  return __retval;
-}
 # ifdef __USE_BSD
-#  define strsep(s, reject) __strsep ((s), (reject))
+#  define strsep(s, reject) __strsep (s, reject)
 # endif
 #endif
 
@@ -1214,10 +1223,10 @@ extern char *__strndup (__const char *__string, size_t __n)
 							  __len - 1);	      \
 			    }						      \
 			  __retval; }))					      \
-		  : __strndup ((s), (n))))
+		  : __strndup (s, n)))
 
 #  ifdef __USE_GNU
-#   define strndup(s, n) __strndup ((s), (n))
+#   define strndup(s, n) __strndup (s, n)
 #  endif
 # endif
 

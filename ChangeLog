@@ -1,5 +1,37 @@
 2001-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ulimit.c (__ulimit): Handle overflow in
+	UL_SETFSIZE computations better.
+
+	* string/Versions: Export __strsep for GLIBC_2.2.5.
+	* string/bits/string2.h: Define all __STRING_INLINE functions if
+	_FORCE_INLINES is defined.
+	Use int instead of char of parameter types.
+	(__strsep): Don't use __strsep_g.  Don't define it.
+	(__strsep_1c, __strsep_2c, __strsep_3c): Optimize.
+	* sysdeps/i386/i486/string.h (__strcpy_a_small): Renamed from
+	__strcpy_small.
+	(__stpcpy_a_small): Renamed from __stpcpy_small.
+	(__strcspn_c1): Don't define if _FORCE_INLINES.
+	(__strspn_c1): Likewise.
+
+2001-09-22  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/sparc/bits/sigaction.h: Define SA_RESTART and friends when
+	_UNIX98_SOURCE is defined too.  Matches generic/bits/sigaction.h.
+	* sysdeps/ia64/bits/sigaction.h: Likewise.
+	* sysdeps/s390/s390-64/bits/sigaction.h: Likewise.
+
+2001-09-24  Andrew Haley  <aph@cambridge.redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/Makefile (sysdep_headers): Add sys/io.h.
+
+2001-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Update l_scope_max.
+
+2001-09-24  Ulrich Drepper  <drepper@redhat.com>
+
 	* wcsmbs/wchar.h: Add __attribute_pure__ to mbsinit prototype.
 
 2001-09-20  H.J. Lu  <hjl@gnu.org>

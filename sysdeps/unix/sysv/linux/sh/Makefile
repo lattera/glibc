@@ -4,6 +4,7 @@ endif
 
 ifeq ($(subdir),misc)
 sysdep_routines += setfsgid setfsuid setresgid setresuid
+sysdep_headers += sys/io.h
 endif
 
 ifeq ($(subdir),signal)
