@@ -1,6 +1,4 @@
-/* Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.
-   Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
-     On-Line Applications Research Corporation.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,31 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- *  This is the file descriptor used by the no OS implementation
- *  of __open, __read, __write, and __close.
- */
+#include <unistd.h>
+#include <sys/types.h>
 
-#ifndef __FILEDESC_h
-#define __FILEDESC_h
+#include <linux/posix_types.h>
 
-#define __need_FOPEN_MAX
-#include <bits/stdio_lim.h>
+extern int __syscall_getresuid (__kernel_uid_t *ruid, __kernel_uid_t *euid,
+				__kernel_uid_t *suid);
 
-#ifndef __DECLARE_FILE_DESCRIPTORS__
-#define FILEDESC_EXTERN extern
-#else
-#define FILEDESC_EXTERN
-#endif
+int
+getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
+{
+  __kernel_uid_t k_ruid, k_euid, k_suid;
 
-typedef struct {
-  int  in_use;         /* 1 if in use, 0 otherwise */
-  int  flags;          /* Flags from open */
-}   __no_os_file_descriptor;
+  if (__syscall_getresuid (&k_ruid, &k_euid, &k_suid) < 0)
+    return -1;
 
-#define __FD_Is_valid( _fd ) \
-  ( (_fd) >= 0 && (_fd) < FOPEN_MAX )
-
-FILEDESC_EXTERN __no_os_file_descriptor __FD_Table[ FOPEN_MAX ];
-
-#endif
+  *ruid = (uid_t) k_ruid;
+  *euid = (uid_t) k_euid;
+  *suid = (uid_t) k_suid;
+  return 0;
+}

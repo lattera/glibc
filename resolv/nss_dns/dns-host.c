@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -87,8 +87,8 @@
 #include "nsswitch.h"
 
 /* Get implementation for some internal functions.  */
-#include "../resolv/mapv4v6addr.h"
-#include "../resolv/mapv4v6hostent.h"
+#include <resolv/mapv4v6addr.h>
+#include <resolv/mapv4v6hostent.h>
 
 /* Maximum number of aliases we allow.  */
 #define MAX_NR_ALIASES	48
@@ -245,7 +245,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
       qp = qbuf;
       for (n = IN6ADDRSZ - 1; n >= 0; n--)
 	qp += sprintf (qp, "%x.%x.", uaddr[n] & 0xf, (uaddr[n] >> 4) & 0xf);
-      strcpy(qp, "ip6.int");
+      strcpy (qp, "ip6.int");
       break;
     default:
       /* Cannot happen.  */
@@ -429,8 +429,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      ++had_error;
 	      continue;
 	    }
-	  strcpy (bp, tbuf);		/* Cannot overflow.  */
-	  result->h_name = bp;
+	  result->h_name = strcpy (bp, tbuf);	/* Cannot overflow.  */
 	  bp += n;
 	  linebuflen -= n;
 	  continue;
@@ -439,21 +438,20 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (qtype == T_PTR && type == T_CNAME)
 	{
 	  n = dn_expand (answer->buf, end_of_message, cp, tbuf, sizeof tbuf);
-	  if (n < 0 || res_hnok (tbuf) == 0)
+	  if (n < 0 || res_dnok (tbuf) == 0)
 	    {
 	      ++had_error;
 	      continue;
 	    }
 	  cp += n;
-	  /* Get canonical name. */
+	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;   /* For the \0.  */
 	  if ((size_t) n > buflen || n >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
 	    }
-	  strcpy (bp, tbuf);		/* Cannot overflow.  */
-	  tname = bp;
+	  tname = strcpy (bp, tbuf);	/* Cannot overflow.  */
 	  bp += n;
 	  linebuflen -= n;
 	  continue;
@@ -570,7 +568,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
     {
       *ap = NULL;
       *hap = NULL;
-#if defined(RESOLVSORT)
+#if defined RESOLVSORT
       /*
        * Note: we sort even if host can take only one address
        * in its return structures - should give it the "best"
@@ -585,8 +583,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  n = strlen (qname) + 1;	/* For the \0.  */
 	  if (n > linebuflen || n >= MAXHOSTNAMELEN)
 	    goto no_recovery;
-	  strcpy (bp, qname);		/* Cannot overflow.  */
-	  result->h_name = bp;
+	  result->h_name = strcpy (bp, qname);	/* Cannot overflow.  */
 	  bp += n;
 	  linebuflen -= n;
 	}

@@ -223,20 +223,19 @@ some problems of this kind.  The setting of CFLAGS is checked at the
 very beginning and if it is not usable `configure' will bark.
 
 ??	Why do I get messages about missing thread functions when I use
-	the librt?  I don't even use threads.
+	librt?  I don't even use threads.
 
-{UD} In this case you probably mixed up your installation of the libc.
-The librt internally uses threads and it has implicit references to
-the thread library.  Normally these references are satisfied
-automatically but if the thread library belonging to the librt is not
-in the expected place one has to specify this place.  When using GNU
-ld it works like this:
+{UD} In this case you probably mixed up your installation.  librt uses
+threads internally and has implicit references to the thread library.
+Normally these references are satisfied automatically but if the
+thread library is not in the expected place you must tell the linker
+where it is.  When using GNU ld it works like this:
 
 	gcc -o foo foo.c -Wl,-rpath-link=/some/other/dir -lrt
 
-The `/some/other/dir' should contain the matching thread library and
-`ld' will use the given path to find the implicitly referenced library
-while not disturbing any other link path order.
+The `/some/other/dir' should contain the thread library.  `ld' will
+use the given path to find the implicitly referenced library while not
+disturbing any other link path.
 
 ??	What's the problem with configure --enable-omitfp?
 
@@ -509,6 +508,19 @@ catalog files to the XPG4 form:
 }
 -----------------------------------------------------------------------
 
+??	Programs using libc have their messages translated, but other
+	behavior is not localized (e.g. collating order); why?
+
+{ZW} Translated messages are automatically installed, but the locale
+database that controls other behaviors is not.  You need to run
+localedef to install this database, after you have run `make
+install'.  For example, to set up the French Canadian locale, simply
+issue the command
+
+    localedef -i fr_CA -f ISO-8859-1 fr_CA
+
+Please see localedata/README in the source tree for further details.
+
 ??	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
 
@@ -520,13 +532,13 @@ client (the NIS_COLD_START file is byte order independent) or generate
 it with nisinit from the nis-tools package (available at
 http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
 
-??	I have killed ypbind to stop using NIS, but glibc will
-        continue using NIS.
+??	I have killed ypbind to stop using NIS, but glibc
+        continues using NIS.
 
 {TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files
 from ypbind.  ypbind 3.3 and older versions don't always remove these
-files, so glibc will use them furthermore.  Other BSD versions seem to
-work correct.  Until ypbind 3.4 is released, you can find a patch at
+files, so glibc will continue to use them.  Other BSD versions seem to
+work correctly.  Until ypbind 3.4 is released, you can find a patch at
 ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc2.diff.
 
 ??	After installing glibc name resolving doesn't work properly.
@@ -585,6 +597,15 @@ In some situations (especially when testing a new library release) it
 might be possible that a symbol changed size when that should not have
 happened.  So in case of doubt report such a warning message as a
 problem.
+
+??	What do I need for C++ development?
+
+{HJ,AJ} You need either egcs 1.0.1 or gcc-2.8.0 with libstdc++
+2.8.0. libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work very 
+well with the GNU C library due to vtable thunks.
+If you're upgrading from glibc 2.0.x to 2.1 you have to recompile
+libstc++ the library compiled for 2.0 is not compatible due to the new 
+Large File Support (LFS) in version 2.1.
 
 ? Source and binary incompatibilities, and what to do about them
 
@@ -876,6 +897,7 @@ Answers were given by:
 {ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
 {TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
 {GK} Geoffrey Keating, <Geoff.Keating@anu.edu.au>
+{HJ} H.J. Lu, <hjl@gnu.org>
 
 Local Variables:
  mode:outline

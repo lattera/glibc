@@ -1,6 +1,6 @@
 # Makefile for elf subdirectory of GNU C Library.
 
-# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@ elide-routines.os = $(dl-routines) dl-support enbl-secure
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
+rtld-map	:= rtld.map
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h
@@ -53,13 +54,14 @@ include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os eval.os
-generated	= librtld.os dl-allobjs.os trusted-dirs.h rtldtbl.h
+generated	= librtld.os dl-allobjs.os ld.so trusted-dirs.h rtldtbl.h
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
+generated      += ldd
 endif
 
 ifeq (yes,$(has-ldconfig))
-extra-objs	+= ldconfig.o
+others		+= ldconfig
 install-rootsbin = ldconfig
 
 $(objpfx)ldconfig: $(objpfx)ldconfig.o
@@ -111,7 +113,8 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(objpfx)rtld-ldscript
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  -Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld) \
-	  $(filter-out $(objpfx)rtld-ldscript,$^)
+	  $(filter-out $(objpfx)rtld-ldscript,$^) \
+	  -Wl,--version-script=$(rtld-map)
 endef
 else
 $(objpfx)ld.so: $(objpfx)librtld.os
@@ -119,7 +122,8 @@ $(objpfx)ld.so: $(objpfx)librtld.os
 
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
-	  -Wl,-rpath=$(default-rpath) $^
+	  -Wl,-rpath=$(default-rpath) $^ \
+	  -Wl,--version-script=$(rtld-map)
 endef
 endif
 
@@ -132,6 +136,7 @@ ifneq (ld.so,$(rtld-installed-name))
 $(objpfx)$(rtld-installed-name): $(objpfx)ld.so
 	rm -f $@
 	ln -s $(<F) $@
+generated += $(rtld-installed-name)
 endif
 
 # Build a file mentioning all trustworthy directories to look for shared
@@ -162,6 +167,10 @@ $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so
 $(inst_slibdir)/$(rtld-installed-name): \
   $(inst_slibdir)/$(rtld-version-installed-name)
 	$(make-shlib-link)
+
+# Special target called by parent to install just the dynamic linker.
+.PHONY: ldso_install
+ldso_install: $(inst_slibdir)/$(rtld-installed-name)
 
 ifneq ($(have-bash2),yes)
 $(objpfx)ldd: ldd.sh.in $(common-objpfx)version.mk \

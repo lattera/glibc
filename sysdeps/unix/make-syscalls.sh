@@ -64,9 +64,44 @@ EOF
 	 echo '	ret'; \\
 	 echo 'PSEUDO_END($strong)'; \\"
 
-  # Append any weak aliases defined for this syscall function.
+  # Append any weak aliases or versions defined for this syscall function.
+
+  # A shortcoming in the current gas is that it will only allow one
+  # version-alias per symbol.  So we create new strong aliases as needed.
+  vcount=""
+
   for name in $weak; do
-    echo "	 echo 'weak_alias ($strong, $name)'; \\"
+    case $name in
+      *@@*)
+	base=`echo $name | sed 's/@.*//'`
+	ver=`echo $name | sed 's/@.*//'`
+	if test -z "$vcount" ; then
+	  source=$strong
+	  vcount=1
+	else
+	  source="${strong}_${vcount}"
+	  vcount=`expr $vcount + 1`
+	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
+	fi
+	echo "	 echo 'default_symbol_version($source, $base, $ver)'; \\"
+	;;
+      *@*)
+	base=`echo $name | sed 's/@.*//'`
+	ver=`echo $name | sed 's/.*@//'`
+	if test -z "$vcount" ; then
+	  source=$strong
+	  vcount=1
+	else
+	  source="${strong}_${vcount}"
+	  vcount=`expr $vcount + 1`
+	  echo "	 echo 'strong_alias ($strong, $source)'; \\"
+	fi
+	echo "	 echo 'symbol_version($source, $base, $ver)'; \\"
+	;;
+      *)
+	echo "	 echo 'weak_alias ($strong, $name)'; \\"
+	;;
+    esac
   done
 
   # And finally, pipe this all into the compiler.

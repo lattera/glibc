@@ -70,7 +70,7 @@ main (void)
   else
     {
       status = EXIT_FAILURE;
-      printf ("%Zd errors.\n", errors);
+      printf ("%d errors.\n", errors);
     }
   exit (status);
 }

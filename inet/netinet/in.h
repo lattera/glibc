@@ -274,7 +274,7 @@ extern uint16_t htons __P ((uint16_t __hostshort));
 	 (((uint32_t *) (a))[3] == ((uint32_t *) (b))[3]))
 
 /* Bind socket to a privileged IP port.  */
-extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
+extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sock_in));
 
 
 /* IPv6 packet information.  */

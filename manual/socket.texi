@@ -897,8 +897,9 @@ indicate error return.
 @comment BSD
 @deftypefun {unsigned long int} inet_network (const char *@var{name})
 This function extracts the network number from the address @var{name},
-given in the standard numbers-and-dots notation.
-If the input is not valid, @code{inet_network} returns @code{-1}.
+given in the standard numbers-and-dots notation. The returned address is
+in host order. If the input is not valid, @code{inet_network} returns
+@code{-1}.
 @end deftypefun
 
 @comment arpa/inet.h

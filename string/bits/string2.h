@@ -86,7 +86,8 @@ __STRING2_COPY_TYPE (8);
 #endif
 
 /* Dereferencing a pointer arg to run sizeof on it fails for the
-   void pointer case, so we use this instead.  */
+   void pointer case, so we use this instead.  Note that the argument
+   must not contain any side effects.  */
 #define __string2_1bptr_p(x) (((size_t) ((x) + 1) - (size_t) (x)) == 1)
 
 
@@ -430,13 +431,13 @@ __STRING2_COPY_TYPE (8);
 		  ? memcmp (s1, s2, (strlen (s1) < strlen (s2)		      \
 				     ? strlen (s1) : strlen (s2)) + 1)	      \
 		  : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)      \
-		     && __string2_1bptr_p (s2) && strlen (s1) < 4	      \
-		     ? (__builtin_constant_p (s2)			      \
+		     && strlen (s1) < 4					      \
+		     ? (__builtin_constant_p (s2) && __string2_1bptr_p (s2)   \
 			? __strcmp_cc (s1, s2, strlen (s1))		      \
 			: __strcmp_cg (s1, s2, strlen (s1)))		      \
-		     : (__builtin_constant_p (s2) && __string2_1bptr_p (s1)   \
-			&& __string2_1bptr_p (s2) && strlen (s2) < 4	      \
-			? (__builtin_constant_p (s1)			      \
+		     : (__builtin_constant_p (s2) && __string2_1bptr_p (s2)   \
+			&& strlen (s2) < 4				      \
+			? (__builtin_constant_p (s1) && __string2_1bptr_p (s1)\
 			   ? __strcmp_cc (s1, s2, strlen (s2))		      \
 			   : __strcmp_gc (s1, s2, strlen (s2)))		      \
 			: strcmp (s1, s2)))))

@@ -55,7 +55,10 @@ getttyname (fd, mydev, myino, save, dostat)
     }
 
   while ((d = readdir (dirstream)) != NULL)
-    if ((ino_t) d->d_fileno == myino || *dostat)
+    if (((ino_t) d->d_fileno == myino || *dostat)
+	&& strcmp (d->d_name, "stdin")
+	&& strcmp (d->d_name, "stdout")
+	&& strcmp (d->d_name, "stderr"))
       {
 	size_t dlen = _D_ALLOC_NAMLEN (d);
 	if (sizeof (dev) + dlen > namelen)

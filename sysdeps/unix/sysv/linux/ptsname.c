@@ -31,10 +31,10 @@
 #include <sys/sysmacros.h>
 
 /* Given the file descriptor of a master pty, return the pathname
-   of the associated slave. */
+   of the associated slave.  */
 
 static char namebuf[PTYNAMELEN];
-extern const char __ptyname1[], __ptyname2[]; /* defined in getpt.c */
+extern const char __ptyname1[], __ptyname2[]; /* Defined in getpt.c.  */
 
 char *
 ptsname (fd)
@@ -57,7 +57,7 @@ __ptsname_r (fd, buf, len)
   static int tiocgptn_works = 1;
   if (tiocgptn_works)
     {
-      if (!ioctl (fd, TIOCGPTN, &ptyno))
+      if (ioctl (fd, TIOCGPTN, &ptyno) == 0)
 	goto gotit;
       else
 	{
@@ -70,10 +70,12 @@ __ptsname_r (fd, buf, len)
 #endif
   /* /dev/ptmx will make it into the kernel before 32 bit dev_t, so
      this should be safe.  */
-  if (fstat (fd, &st))
+  if (__fxstat (_STAT_VER, fd, &st))
     return 0;
 
   ptyno = minor (st.st_rdev);
+  if (major (st.st_rdev) == 4)
+    ptyno -= 128;
 
 #ifdef TIOCGPTN
 gotit:
@@ -82,27 +84,24 @@ gotit:
      the SVr4 way.  */
 
   idbuf[5] = '\0';
-  stpcpy (stpcpy (nbuf, "/dev/pts/"),
-	  _itoa_word (ptyno, &idbuf[4], 10, 0));
-  if (!stat (nbuf, &st))
-    {
-      strncpy (buf, nbuf, len);
-      return buf;
-    }
+  __stpcpy (__stpcpy (nbuf, "/dev/pts/"),
+	    _itoa_word (ptyno, &idbuf[4], 10, 0));
+  if (!__xstat (_STAT_VER, nbuf, &st))
+    return strncpy (buf, nbuf, len);
   else
     if (errno != ENOENT)
       return NULL;
 
   /* ...and the BSD way.  */
+  nbuf[5]  = 't';
   nbuf[7]  = 'y';
   nbuf[8]  = __ptyname1[ptyno / 16];
   nbuf[9]  = __ptyname2[ptyno % 16];
   nbuf[10] = '\0';
 
-  if (stat (nbuf, &st))
+  if (__xstat (_STAT_VER, nbuf, &st))
     return NULL;
 
-  strncpy (buf, nbuf, len);
-  return buf;
+  return strncpy (buf, nbuf, len);
 }
 weak_alias (__ptsname_r, ptsname_r)

@@ -41,8 +41,12 @@
 
 #define stackblock 20
 
+#ifndef __socket
+#define __socket P(__,socket)
+#endif
+
 	.text
-ENTRY(P(__,socket))
+ENTRY(__socket)
 	stwu %r1,-48(%r1)
 #if NARGS >= 1
 	stw  %r3,stackblock(%r1)
@@ -76,6 +80,6 @@ ENTRY(P(__,socket))
 	DO_CALL(SYS_ify(socketcall))
 	addi	%r1,%r1,48
 	PSEUDO_RET
-PSEUDO_END (P(__,socket))
+PSEUDO_END (__socket)
 
-weak_alias (P(__,socket), socket)
+weak_alias (__socket, socket)

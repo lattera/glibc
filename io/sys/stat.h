@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ __BEGIN_DECLS
 # ifdef __S_IFIFO
 #  define S_IFIFO	__S_IFIFO
 # endif
-# ifndef __USE_UNIX98
+# if defined __USE_BSD || defined __USE_MISC
 #  ifdef __S_IFLNK
 #   define S_IFLNK	__S_IFLNK
 #  endif

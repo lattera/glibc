@@ -1516,10 +1516,10 @@ produce.  The trailing null character is counted towards this limit, so
 you should allocate at least @var{size} characters for the string @var{s}.
 
 The return value is the number of characters which would be generated
-for the given input.  If this value is greater or equal to @var{size},
-not all characters from the result have been stored in @var{s}.  You
-should try again with a bigger output string.  Here is an example of
-doing this:
+for the given input, excluding the trailing null.  If this value is
+greater or equal to @var{size}, not all characters from the result have
+been stored in @var{s}.  You should try again with a bigger output
+string.  Here is an example of doing this:
 
 @smallexample
 @group

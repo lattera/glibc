@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -326,13 +326,21 @@ extern const char _libc_intl_domainname[];
 #endif	/* Have GNU ld.  */
 
 #if DO_VERSIONING
-# define symbol_version(real, name, version) \
+# ifdef ASSEMBLER
+#  define symbol_version(real, name, version) \
+     .symver real, name##@##version
+#  define default_symbol_version(real, name, version) \
+     .symver real, name##@##@##version
+# else
+#  define symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@" #version)
-# define default_symbol_version(real, name, version) \
+#  define default_symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@@" #version)
+# endif
 #else
 # define symbol_version(real, name, version)
-# define default_symbol_version(real, name, version)
+# define default_symbol_version(real, name, version) \
+  strong_alias(real, name)
 #endif
 
 #endif /* libc-symbols.h */

@@ -34,6 +34,9 @@ shutdown	-	shutdown	2	__shutdown	shutdown
 socket		-	socket		3	__socket	socket
 socketpair	-	socketpair	4	__socketpair	socketpair
 
+getresuid	-	getresuid	3	getresuid
+getresgid	-	getresgid	3	getresuid
+
 #
 # There are defined locally because the caller is also defined in this dir.
 #

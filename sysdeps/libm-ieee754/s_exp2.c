@@ -1,5 +1,5 @@
 /* Double-precision floating point 2^x.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
@@ -54,7 +54,10 @@ __ieee754_exp2 (double x)
       fenv_t oldenv;
 
       feholdexcept (&oldenv);
+#ifdef FE_TONEAREST
+      /* If we don't have this, it's too bad.  */
       fesetround (FE_TONEAREST);
+#endif
 
       /* 1. Argument reduction.
 	 Choose integers ex, -256 <= t < 256, and some real

@@ -703,7 +703,7 @@ mem1:				saved_errno = errno;
 				p->fts_info = FTS_NSOK;
 			p->fts_accpath = cur->fts_accpath;
 		} else if (nlinks == 0
-#ifdef DT_DIR
+#if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
 		    || nlinks > 0 &&
 		    dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN
 #endif

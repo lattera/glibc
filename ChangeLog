@@ -1,3 +1,251 @@
+1998-02-10 23:57  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* misc/tst-efgcvt.c: Add more tests.
+	* misc/efgcvt_r.c: Correct result for above new tests.
+
+1998-02-06 17:22  H.J. Lu  <hjl@gnu.org>
+
+	* misc/efgcvt_r.c (fcvt_r, ecvt_r): Correctly handle
+	NDIGIT <= 0.
+
+1998-02-10 16:48  Philip Blundell  <pb@nexus.co.uk>
+
+	* Makerules (install-no-libc.a-nosubdir): Don't install-bin (etc)
+	if the programs weren't built.
+
+1998-02-09 10:12  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/libm-ieee754/s_exp2.c (__ieee754_exp2): If we don't have
+	FE_TONEAREST, soldier on regardless and do the best we can.
+	* sysdeps/libm-ieee754/s_exp2f.c (__ieee754_exp2f): likewise.
+
+1998-02-5 17:20  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/standalone/filedesc.h: Define __need_FOPEN_MAX, not
+	_STDIO_H, before including <bits/stdio_lim.h>.
+
+	* sysdeps/standalone/arm/bits/errno.h (EOVERFLOW): Added.
+
+	* io/fts.c (fts_build): Don't try to use d_type if it doesn't
+	exist.
+	
+	* sysdeps/arm/sys/ucontext.h: New file.
+
+1998-02-04 10:11  Philip Blundell  <pb@nexus.co.uk>
+
+	* manual/stdio.texi (Formatted Output Functions): Explicitly say
+	that the return value from snprintf() does not count the
+	terminating NUL as a character.
+	
+1998-02-10 16:57  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* manual/users.texi: Rewrite to describe correct POSIX behaviour,
+	add description for sete[ug]id and general cleanup.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1998-01-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (parent-clean): Don't remove makefile fragments here.
+	(postclean): New variable.
+	(clean): Remove makefile fragments here.
+	(realclean distclean): Likewise.  Pass sysdep-subdirs to sub-make.
+	(generated): Add isomac and isomanc.out.
+	* Makeconfig ($(common-objpfx)soversions.mk): Don't generate if
+	avoid-generated is set.
+	(postclean-generated): Add soversion.mk.
+	($(common-objpfx)version.mk): Don't include if avoid-generated is
+	set.
+	* Makerules: Still need to include $(+sysdir_pfx)sysd-Makefile if
+	avoid-generated is set.
+	(common-generated): Add libc.so and libc.so$(libc.so-version).
+	(generated): Add versioned libraries.
+	(common-mostlyclean): Also remove %.so and %_pic.a.
+	* csu/Makefile (generated): Add abi-tag.h.
+	* db2/Makefile (extra-objs): Add getlong.o.
+	* elf/Makefile (generated): Add ld.so, ldd and
+	$(rtld-installed-name).
+	(others): Add ldconfig here instead of ldconfig.o to extra-objs.
+	* malloc/Makefile (generated): Add mtrace.
+	* po/Makefile: Don't include version.mk, not needed any more.
+	* sunrpc/Makefile (generated): Add rpc-proto.d and rpcgen.
+	* sysdeps/unix/Makefile: Fix local_lim.h -> bits/local_lim.h,
+	syscall.h -> sys/syscall.h.
+	(common-generated): Add s-proto.d.
+	(postclean-generated): Add sysd-syscalls.
+	* localedata/Makefile (test-output): Add all output files.
+	(generated): Add test-input and test-output.
+	(generated-dirs): Add all the dirs.
+
+1998-01-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (test-output, generated, generated-dirs): New
+	variables.
+
+1998-02-10 16:57  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* resolv/nss_dns/dns-host.c: Various code cleanups.
+	
+1998-02-09 08:10  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/gethnamaddr.c (getanswer): Fix the PTR/CNAME bug.
+	From Philip Blundell <pb@nexus.co.uk>.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Ditto.
+
+1998-02-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Add .rem, .div, .mul, .udiv, .umul, .urem for Sparc.
+	Suggested by debian/sparc porters.
+
+1998-02-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/tst-efgcvt.c: Totally rewritten, added a lot of new tests
+	for ecvt and fcvt.
+
+1998-02-10 16:32  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Use __xstat and
+	__fxstat instead of stat and fstat.  Use namespace clean __stpcpy.
+
+	* signal/signal.h: Always define sigset_t if __need_sigset_t is
+	defined even if __USE_POSIX is not defined.
+
+1998-02-02 20:51  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Correct last patch
+	to support obsolete tty major numbers correctly.
+	
+1998-02-02 08:47  H.J. Lu  <hjl@gnu.org>
+
+	* login/Makefile ($(inst_libexecdir)/pt_chown): Make the target
+	directory first and ignore install error.
+
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Substract
+	128 from ptyno and fix a typo for the BSD style pty.
+
+1998-02-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/Makefile ($(common-objpfx)s-proto.d): Depend on all
+	syscalls.list's.
+
+1998-02-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add
+	getresuid and getresgid.
+
+	* sysdeps/unix/sysv/linux/getresuid.c: New file.
+	* sysdeps/unix/sysv/linux/getresgid.c: New file.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove getres[ug]id, add
+	s_getres[ug]id.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add getres[ug]id.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Likewise.
+
+1998-02-02 08:11  H.J. Lu  <hjl@gnu.org>
+
+	* nscd/grpcache.c: Include <stdlib.h>.
+
+1998-02-01 16:01  H.J. Lu  <hjl@gnu.org>
+
+	* stdlib/atoll.c: Fix comments.
+
+	* sysdeps/posix/ttyname.c: Ignore stdin/stdout/stderr.
+	* sysdeps/posix/ttyname_r.c: Ditto.
+
+1998-02-03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* io/sys/stat.h: Define S_IFLNK and S_IFSOCK if __USE_BSD or
+	__USE_MISC, independent of __USE_UNIX98.
+
+1998-02-10 19:18  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_missing_rt_sigs):
+	Rename from __libc_have_rt_sigs and leave as COMMON data.
+	
+1998-02-04 11:58  Richard Henderson  <rth@twiddle.rth.home>
+
+	* Makeconfig (CFLAGS-.os): Kill -fno-common.
+	* Makerules (libc.so): Prelink libc_pic.a, allocating commons.
+
+	* libc.map (GLIBC_2.1): Add Linux/Alpha tv64 symbols.
+	* elf/rtld.map: New file.  Needed to define the GLIBC_2.* 
+	version symbols.
+	* include/libc-symbols.h (symbol_version, default_symbol_version):
+	Provide asm versions and correct !DO_VERSIONING versions.
+	* sysdeps/unix/make-syscalls.sh: Recognize version symbols in
+	the weak symbol list.
+	
+	* sysdeps/unix/sysv/linux/sigaction.c (__libc_missing_rt_sigs):
+	Rename from __libc_have_rt_sigs and leave as COMMON data.
+	* sysdeps/unix/sysv/linux/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+
+1998-02-04 16:41  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sunrpc/Makefile: Correct dependencies of rpcgen.
+
+1998-02-10 03:00  Ulrich Drepper  <drepper@happy.cygnus.com>
+
+	* nscd/Makefile: Fix test for available linuxthreads add-on.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1998-02-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Fix typo in lchown.
+
+1998-02-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/gnu/Makefile: Respect with-cvs variable.
+
+	* manual/errno.texi (Error Messages): Correct description of
+	strerror_r.  Pointed out by jonas@bagge.se.
+
+1998-01-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/socket.texi (Host Address Functions): Clarify description 
+	of inet_network.
+
+1998-02-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/grantpt.c (argv): Move const to toplevel.
+	(grantpt): Delete superfluous cast.
+
+1998-02-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(inst_slibdir)/libc-$(version).so): Depend on
+	elf/ldso_install instead of elf/subdir_install.
+	(elf/ldso_install): New target.
+
+	* elf/Makefile (ldso_install): New target.
+
+1998-02-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/socket.S: Really do the change
+	of 1998-01-06.
+
+1998-02-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/bits/string2.h (strcmp): Use __string2_1bptr_p only for
+	constant expressions.
+
+1998-02-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/test-netdb.c: Include <unistd.h> for gethostname and "nss.h"
+	for __nss_configure_lookup.
+	(output_hostent): Remove unused variable.
+
+1998-02-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/tst-inlcall.c: Fix format string.
+
+1998-02-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/netinet/in.h: Rename second parameter of bindresvport to
+	avoid buggy gcc warning. [PR libc/412]
+
 1998-02-04 18:04  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/clone.S: Elide terminal ldgp for PROF.

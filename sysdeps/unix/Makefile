@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,8 +38,8 @@ $(common-objpfx)bits/local_lim.h: $(common-objpfx)mk-local_lim
 $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/mk-local_lim.c
 	$(common-objdir-compile)
 
-before-compile := $(before-compile) $(common-objpfx)bits/local_lim.h
-common-generated := $(common-generated) local_lim.h mk-local_lim
+before-compile += $(common-objpfx)bits/local_lim.h
+common-generated += bits/local_lim.h mk-local_lim
 
 endif
 
@@ -263,8 +263,8 @@ $(common-objpfx)sys/syscall.h: $(syscall.h)
 	> $@-tmp
 	mv $@-tmp $@
 
-before-compile := $(before-compile) $(common-objpfx)syscall.h
-common-generated := $(common-generated) syscall.h
+before-compile += $(common-objpfx)sys/syscall.h
+common-generated += sys/syscall.h
 
 endif
 
@@ -304,7 +304,11 @@ ifndef no_deps
 endif
 endif
 
-$(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S
+$(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S \
+			   $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	$(+make-deps)
+
+common-generated += s-proto.d
+postclean-generated += sysd-syscalls
 
 endif

@@ -1,6 +1,4 @@
-/* Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.
-   Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
-     On-Line Applications Research Corporation.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,31 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- *  This is the file descriptor used by the no OS implementation
- *  of __open, __read, __write, and __close.
- */
+#include <unistd.h>
+#include <sys/types.h>
 
-#ifndef __FILEDESC_h
-#define __FILEDESC_h
+#include <linux/posix_types.h>
 
-#define __need_FOPEN_MAX
-#include <bits/stdio_lim.h>
+extern int __syscall_getresgid (__kernel_gid_t *rgid, __kernel_gid_t *egid,
+				__kernel_gid_t *sgid);
 
-#ifndef __DECLARE_FILE_DESCRIPTORS__
-#define FILEDESC_EXTERN extern
-#else
-#define FILEDESC_EXTERN
-#endif
+int
+getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
+{
+  __kernel_gid_t k_rgid, k_egid, k_sgid;
 
-typedef struct {
-  int  in_use;         /* 1 if in use, 0 otherwise */
-  int  flags;          /* Flags from open */
-}   __no_os_file_descriptor;
+  if (__syscall_getresgid (&k_rgid, &k_egid, &k_sgid) < 0)
+    return -1;
 
-#define __FD_Is_valid( _fd ) \
-  ( (_fd) >= 0 && (_fd) < FOPEN_MAX )
-
-FILEDESC_EXTERN __no_os_file_descriptor __FD_Table[ FOPEN_MAX ];
-
-#endif
+  *rgid = (gid_t) k_rgid;
+  *egid = (gid_t) k_egid;
+  *sgid = (gid_t) k_sgid;
+  return 0;
+}

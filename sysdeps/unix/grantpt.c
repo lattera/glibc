@@ -36,7 +36,7 @@
 /* This "generic Unix" implementation works because we provide the program
    /usr/libexec/pt_chown, and it only depends on ptsname() working. */
 static const char helper[] = LIBEXECDIR "/pt_chown";
-static const char *argv[] = { "pt_chown", NULL };
+static char *const argv[] = { "pt_chown", NULL };
 
 int
 grantpt (fd)
@@ -71,7 +71,7 @@ grantpt (fd)
 	if (dup2 (fd, PTY_FD) == -1)
 	  _exit (FAIL_EBADF);
 
-      execve (helper, (char *const *) argv, 0);
+      execve (helper, argv, 0);
       _exit (FAIL_EXEC);
     }
   else

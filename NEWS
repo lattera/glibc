@@ -1,6 +1,6 @@
-GNU C Library NEWS -- history of user-visible changes.  1997-09-27
+GNU C Library NEWS -- history of user-visible changes.  1998-02-09
 
-Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
@@ -8,6 +8,13 @@ Please send GNU C library bug reports using the `glibcbug' script to
 <bug-glibc@prep.ai.mit.edu>.
 
 Version 2.1
+
+* Richard Henderson corrected size of struct timeval on Linux/Alpha to
+  conform to POSIX member type requirements.  Symbol versions have been
+  adjusted as needed within the library, and for direct use by applications,
+  but there is potential for problems if third-party libraries use
+  struct timeval as part of their interface.  This does not present
+  a problem for X and other "essential" system libraries.
 
 * An additional locale model to support C++ Standard Library locale
   model and probably more was implemented by Ulrich Drepper.

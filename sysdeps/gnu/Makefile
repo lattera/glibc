@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,4 +25,6 @@ $(..)sysdeps/gnu/errlist.c: $(..)sysdeps/gnu/errlist.awk \
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@-tmp
 	mv -f $@-tmp $@
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
+endif

@@ -1231,8 +1231,10 @@ The function @code{strerror} is declared in @file{string.h}.
 @deftypefun {char *} strerror_r (int @var{errnum}, char *@var{buf}, size_t @var{n})
 The @code{strerror_r} function works like @code{strerror} but instead of
 returning the error message in a statically allocated buffer shared by
-all threads in the process, it writes the message string in the user
-supplied buffer starting at @var{buf} with the length of @var{n} bytes.
+all threads in the process, it returns a private copy for the
+thread. This might be either some permanent global data or a message
+string in the user supplied buffer starting at @var{buf} with the
+length of @var{n} bytes.
 
 At most @var{n} characters are written (including the NUL byte) so it is
 up to the user to select the buffer large enough.

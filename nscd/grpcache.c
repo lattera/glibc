@@ -19,8 +19,8 @@
 
 #include <errno.h>
 #include <grp.h>
-#include <malloc.h>
 #include <pthread.h>
+#include <stdlib.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
 #include <sys/types.h>

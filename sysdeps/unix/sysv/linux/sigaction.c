@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ extern int __syscall_rt_sigaction (int, const struct sigaction *,
 
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */
-int __libc_have_rt_sigs = -1;
+int __libc_missing_rt_sigs;
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
@@ -46,7 +46,7 @@ __sigaction (sig, act, oact)
   int error;
 
   /* First try the RT signals.  */
-  if (__libc_have_rt_sigs)
+  if (!__libc_missing_rt_sigs)
     {
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
@@ -55,7 +55,7 @@ __sigaction (sig, act, oact)
       if (result >= 0 || errno != ENOSYS)
 	return result;
 
-      __libc_have_rt_sigs = 0;
+      __libc_missing_rt_sigs = 1;
     }
 
   if (act)

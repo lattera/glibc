@@ -59,7 +59,10 @@ getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
     }
 
   while ((d = readdir (dirstream)) != NULL)
-    if ((ino_t) d->d_fileno == myino || *dostat)
+    if (((ino_t) d->d_fileno == myino || *dostat)
+	&& strcmp (d->d_name, "stdin")
+	&& strcmp (d->d_name, "stdout")
+	&& strcmp (d->d_name, "stderr"))
       {
 	char *cp;
 	size_t needed = _D_EXACT_NAMLEN (d) + 1;

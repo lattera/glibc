@@ -53,6 +53,7 @@ vpath %.c $(subdir-dirs)
 
 extra-libs := libdb
 extra-libs-others := $(extra-libs)
+extra-objs = getlong.o
 
 libdb-routines := bt_close bt_compare bt_conv bt_cursor bt_delete \
 	bt_open bt_page bt_put bt_rec bt_recno bt_rsearch bt_search \

@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,10 @@ locales := $(filter-out $(addprefix locales/, CVS RCS %~), \
 
 test-srcs := collate-test xfrm-test tst-fmon
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1
+test-output := $(foreach s, .out .xout, \
+			 $(addsuffix $s, $(basename $(test-input))))
+generated := $(test-input) $(test-output)
+generated-dirs := $(basename $(test-input)) en_US
 
 distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
 	      README mnemonic.ds fr_CA,2.13.in de_DE.in da_DK.in	 \

@@ -23,6 +23,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
+#include <sys/param.h>
 
 #ifndef FLOAT_TYPE
 #define FLOAT_TYPE double
@@ -60,18 +61,19 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       *sign = signbit (value) != 0;
       if (*sign)
 	value = -value;
+
+      if (ndigit < 0)
+	{
+	  /* Rounding to the left of the decimal point.  */
+	  for (i = ndigit; i < 0; i++)
+	    value *= 0.1;
+
+	  ndigit = 0;
+	}
     }
   else
     /* Value is Inf or NaN.  */
     *sign = 0;
-
-  if (ndigit <= 0)
-    {
-      if (len > 0)
-	buf[0] = '\0';
-      *decpt = 0;
-      return 0;
-    }
 
   n = snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
   if (n < 0)
@@ -91,8 +93,21 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
       do
 	++i;
       while (i < n && !isdigit (buf[i]));
-      memmove (&buf[*decpt], &buf[i], n - i);
-      buf[n - (i - *decpt)] = '\0';
+
+      if (*decpt == 1 && buf[0] == '0')
+	{
+	  /* We must not have leading zeroes.  Strip them all out and
+	     adjust *DECPT if necessary.  */
+	  --*decpt;
+	  while (i < n && buf[i] == '0')
+	    {
+	      --*decpt;
+	      ++i;
+	    }
+	}
+
+      memmove (&buf[MAX (*decpt, 0)], &buf[i], n - i);
+      buf[n - (i - MAX (*decpt, 0))] = '\0';
     }
 
   return 0;
@@ -136,7 +151,7 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
 	      do
 		{
 		  d *= 10.0;
-		  exponent--;
+		  --exponent;
 		}
 	      while (d < 1.0);
 	    }
@@ -145,7 +160,7 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
 	      do
 		{
 		  d *= 0.1;
-		  exponent++;
+		  ++exponent;
 		}
 	      while (d >= 10.0);
 	    }
@@ -155,9 +170,22 @@ APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign, buf, len)
 	    value = d;
 	}
     }
+  else if (value == 0.0)
+    /* SUSv2 leaves it unspecified whether *DECPT is 0 or 1 for 0.0.
+       This could be changed to -1 if we want to return 0.  */
+    exponent = 0;
 
-  if (APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit - 1, decpt, sign, buf, len))
-    return -1;
+  if (ndigit <= 0 && len > 0)
+    {
+      buf[0] = '\0';
+      *decpt = 1;
+      *sign = isfinite (value) ? signbit (value) != 0 : 0;
+    }
+  else
+    if (APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit - 1, decpt, sign,
+				      buf, len))
+      return -1;
+
   *decpt += exponent;
   return 0;
 }

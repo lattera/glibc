@@ -36,9 +36,7 @@ domainname = libc
 
 all: # Make this the default target; it will be defined in Rules.
 
-# Get $(version) defined.
 include ../Makeconfig
--include $(common-objpfx)version.mk
 
 # Pattern for where message catalog object for language % gets installed.
 mo-installed = $(inst_localedir)/%/LC_MESSAGES/$(domainname).mo

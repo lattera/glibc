@@ -1,4 +1,4 @@
-# Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) \
 	    $(rpcsvc:%.x=rpcsvc/%.stmp) $(rpcsvc:%.x=x%.stmp) \
-	    rpc-proto.c
+	    rpc-proto.c rpc-proto.d rpcgen
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
@@ -111,7 +111,9 @@ CFLAGS-xkey_prot.c = -Wno-unused
 
 include ../Rules
 
-$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) $(common-objpfx)libc.a
+$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
+  $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
 
 # Tell rpcgen that it should unset LD_LIBRARY_PATH before executing the

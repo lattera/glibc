@@ -37,6 +37,8 @@
 #include <netinet/in.h>
 #include <sys/param.h>
 #include <sys/socket.h>
+#include <unistd.h>
+#include "nss.h"
 
 /*
   The following define is neccessary for glibc 2.0.6
@@ -104,7 +106,6 @@ test_services (void)
 void
 output_hostent (const char *call, struct hostent *hptr)
 {
-  int i;
   char **pptr;
   char buf[INET6_ADDRSTRLEN];
 

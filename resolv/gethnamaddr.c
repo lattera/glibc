@@ -286,7 +286,7 @@ getanswer(answer, anslen, qname, qtype)
 		}
 		if (qtype == T_PTR && type == T_CNAME) {
 			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
-			if (n < 0 || !res_hnok(tbuf)) {
+			if (n < 0 || !res_dnok(tbuf)) {
 				had_error++;
 				continue;
 			}

@@ -20,6 +20,9 @@ GLIBC_2.0 {
     # This is for ix86 only.
     _fp_hw;
 
+    # This is for sparc only.
+    .div; .mul; .rem; .udiv; .umul; .urem;
+
     # helper functions
     __errno_location; __libc_init_first; __h_errno_location;
     __libc_current_sigrtmin; __libc_current_sigrtmax; __libc_allocate_rtsig;
@@ -442,5 +445,13 @@ GLIBC_2.1 {
     sigqueue; sigtimedwait; sigwaitinfo;
     # Since we have new signals this structure changed.
     _sys_siglist; sys_siglist; sys_sigabbrev;
+
+    # Linux/Alpha 64-bit timeval functions.
+    __select; select;
+    __gettimeofday; gettimeofday; settimeofday;
+    getitimer; setitimer;
+    utimes;
+    getrusage;
+    wait4;
 
 } GLIBC_2.0;

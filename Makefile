@@ -127,7 +127,11 @@ include Makerules
 install: subdir_install
 
 # Make sure that the dynamic linker is installed before libc.
-$(inst_slibdir)/libc-$(version).so: elf/subdir_install
+$(inst_slibdir)/libc-$(version).so: elf/ldso_install
+
+.PHONY: elf/ldso_install
+elf/ldso_install:
+	$(MAKE) -C $(@D) $(@F)
 
 # Create links for shared libraries using the `ldconfig' program is possible.
 # Ignore the error if we cannot update /etc/ld.so.cache.
@@ -186,7 +190,6 @@ $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
 	   echo "\"";						\
 	 fi) > $@T
 	mv -f $@T $@
-generated += version-info.h
 
 version.c-objects := $(addprefix $(objpfx)version,$(object-suffixes))
 $(version.c-objects): $(objpfx)version-info.h
@@ -261,8 +264,9 @@ parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
 		   $(common-objpfx)$(patsubst %,$(libtype$o),c)) \
 	       $(addprefix $(objpfx),$(install-lib))
 parent-clean: parent-mostlyclean common-clean
-	-rm -f $(addprefix $(common-objpfx),$(common-generated))
-	-rm -f $(addprefix $(objpfx),sysd-Makefile sysd-dirs sysd-rules)
+
+postclean = $(addprefix $(common-objpfx),$(postclean-generated)) \
+	    $(addprefix $(objpfx),sysd-Makefile sysd-dirs sysd-rules)
 
 clean: parent-clean
 # This is done this way rather than having `subdir_clean' be a
@@ -272,6 +276,7 @@ clean: parent-clean
 	@$(MAKE) subdir_clean no_deps=t
 mostlyclean: parent-mostlyclean
 	@$(MAKE) subdir_mostlyclean no_deps=t
+	-rm -f $(postclean)
 
 # The realclean target is just like distclean for the parent, but we want
 # the subdirs to know the difference in case they care.
@@ -280,7 +285,9 @@ realclean distclean: parent-clean
 # dependency of this target so that libc.a will be removed before the
 # subdirectories are dealt with and so they won't try to remove object
 # files from it when it's going to be removed anyway.
-	@$(MAKE) distclean-1 no_deps=t distclean-1=$@ avoid-generated=yes
+	@$(MAKE) distclean-1 no_deps=t distclean-1=$@ avoid-generated=yes \
+		 sysdep-subdirs="$(sysdep-subdirs)"
+	-rm -f $(postclean)
 
 # Subroutine of distclean and realclean.
 distclean-1: subdir_$(distclean-1)
@@ -312,6 +319,8 @@ parent-tests: $(objpfx)isomac
 
 $(objpfx)isomac: isomac.c
 	$(native-compile)
+
+generated += isomac isomac.out
 
 # Make the distribution tarfile.
 

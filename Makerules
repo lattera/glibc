@@ -103,8 +103,8 @@ vpath %.x $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
 # being included individually by a subdir makefile (hurd/Makefile needs this).
 in-Makerules := yes
 
-ifndef avoid-generated
 -include $(+sysdir_pfx)sysd-Makefile
+ifndef avoid-generated
 ifneq ($(sysd-Makefile-sysdirs),$(config-sysdirs))
 sysd-Makefile-force = FORCE
 FORCE:
@@ -383,15 +383,25 @@ LDLIBS-c.so = $(gnulib)
 LDFLAGS-c.so += -e __libc_main
 # We have a versioning file for libc.so.
 libc-map = $(..)libc.map
+# Pre-link the objects of libc_pic.a so that we can locally resolve
+# COMMON symbols before we link against ld.so.  This is because ld.so
+# contains some of libc_pic.a already, which will prevent the COMMONs
+# from being allocated in libc.so, which introduces evil dependencies
+# between libc.so and ld.so, which can make it impossible to upgrade.
+$(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
+	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
+	-Wl,-d -Wl,--whole-archive $^
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
-			 $(common-objpfx)libc_pic.a \
+			 $(common-objpfx)libc_pic.os \
 			 $(elfobjdir)/sofini.os $(elfobjdir)/ld.so \
 			 $(libc-map)
 	$(build-shlib)
+common-generated += libc.so
 ifdef libc.so-version
 $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
 	$(make-link)
+common-generated += libc.so$(libc.so-version)
 endif
 endif
 
@@ -719,6 +729,7 @@ endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
 
+generated += $(foreach o,$(versioned),$o$($o-version))
 
 ifeq (,$($(subdir)-version))
 define o-iterator-doit
@@ -824,10 +835,15 @@ install-others-nosubdir: $(install-others)
 install-%:: install-%-nosubdir ;
 
 .PHONY: install install-no-libc.a-nosubdir
+ifeq ($(build-programs),yes)
 install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
 			    install-bin-nosubdir install-lib-nosubdir	\
 			    install-others-nosubdir install-rootsbin-nosubdir \
 			    install-sbin-nosubdir
+else
+install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
+			    install-lib-nosubdir install-others-nosubdir
+endif
 install: install-no-libc.a-nosubdir
 
 # Command to compile $< in $(objdir) using the native libraries.
@@ -880,7 +896,9 @@ common-mostlyclean:
 				     $(addsuffix .o,$(tests) $(test-srcs) \
 						    $(others)) \
 				     $(addsuffix .out,$(tests) $(test-srcs)))
-	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib))
+	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
+				     $(install-lib.so) \
+				     $(install-lib.so:%.so=%_pic.a))
 	-rm -f core $(common-objpfx)stub-$(subdir)
 	$(rmobjs)
 define rmobjs
