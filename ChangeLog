@@ -1,5 +1,12 @@
 2000-12-31  Andreas Jaeger  <aj@suse.de>
 
+	* iconvdata/tst-table-to.c (main): Use return instead of exit to
+	avoid warning.
+
+	* nis/rpcsvc/yp_prot.h: Remove __P.
+	* nis/rpcsvc/ypupd.h: Likewise.
+	* nis/rpcsvc/yp.h: Likewise.
+
 	* sunrpc/rpc_main.c: Add noreturn attributes.
 	* sunrpc/rpc_scan.h: Likewise.
 
