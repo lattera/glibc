@@ -674,13 +674,17 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 						   + (sizeof (buffer)
 						      / sizeof (buffer[0])),
 						   &ignore);
-		  if (status !=  __codecvt_ok && status != __codecvt_partial)
+		  if (status != __codecvt_ok && status != __codecvt_partial)
 		    {
 		      fp->_flags |= _IO_ERR_SEEN;
 		      goto dumb;
 		    }
 		}
 	      while (read_ptr_copy != fp->_IO_read_ptr);
+
+	      fp->_offset = (fp->_offset
+			     - (fp->_IO_read_end - fp->_IO_read_base)
+			     + rel_offset);
 
 	      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end
 		= fp->_wide_data->_IO_read_base;

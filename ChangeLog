@@ -1,3 +1,10 @@
+2002-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Set fp->_offset after
+	finding the read position [PR libc/4265].
+	* libio/Makefile (tests): Add bug-rewind2.
+	* libio/bug-rewind2.c: New file.
+
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c (REENTRANT_NAME): Return ENOENT if status is

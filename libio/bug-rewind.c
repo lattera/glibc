@@ -5,9 +5,24 @@
 #define	FAILED  3
 
 
+static int fd;
+
+static void prepare (void);
+#define PREPARE(argc, argv) prepare ()
+
+
 #define TEST_FUNCTION do_test ()
 static int do_test (void);
 #include "../test-skeleton.c"
+
+
+static void
+prepare (void)
+{
+  fd = create_temp_file ("wrewind.", NULL);
+  if (fd == -1)
+    exit (3);
+}
 
 
 static int
@@ -17,11 +32,6 @@ do_test (void)
   char arg1;
   char arg2;
   int ret1, ret2, result, num;
-  int fd;
-
-  fd = create_temp_file ("wrewind.", NULL);
-  if (fd == -1)
-    return 3;
 
   ret1 = 0;
   ret2 = 0;
