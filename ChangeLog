@@ -1,3 +1,8 @@
+2000-07-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (free_mem): Only free
+	memory if it was allocated.
+
 2000-07-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_db.c (gen_steps): Always initialize __data field of
