@@ -1,5 +1,21 @@
 2004-06-28  Jakub Jelinek  <jakub@redhat.com>
 
+	* inet/bug-if1.c: Include <string.h>.
+
+2004-06-19  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/posix/waitid.c (do_waitid) [DO_WAITID]: Define function
+	under this macro name instead.
+	[NO_DO_WAITID]: Don't define it at all.
+	(do_waitid) [WNOWAIT, WEXITED]: If these POSIX.1 waitid flag bits are
+	defined, then return ENOTSUP for combinations of selection bits other
+	than WEXITED and WEXITED|WSTOPPED, which this version cannot support.
+
+	* posix/tst-waitid.c: New file.
+	* posix/Makefile (tests): Add it.
+
+2004-06-28  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/alpha/sysdep.h (inline_syscall6): Fix a typo.
 
 	[BZ #231]

@@ -1,5 +1,5 @@
 /* Pseudo implementation of waitid.
-   Copyright (C) 1997, 1998, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1997.
 
@@ -28,8 +28,15 @@
 #include <sysdep-cancel.h>
 
 
+#ifdef DO_WAITID
+# define OUR_WAITID DO_WAITID
+#elif !defined NO_DO_WAITID
+# define OUR_WAITID do_waitid
+#endif
+
+#ifdef OUR_WAITID
 static int
-do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
+OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
   pid_t pid, child;
   int status;
@@ -63,6 +70,22 @@ do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
   if (infop == NULL)
     {
       __set_errno (EFAULT);
+      return -1;
+    }
+
+  /* This emulation using waitpid cannot support the waitid modes in which
+     we do not reap the child, or match only stopped and not dead children.  */
+  if (0
+#ifdef WNOWAIT
+      || (options & WNOWAIT)
+#endif
+#ifdef WEXITED
+      || ((options & (WEXITED|WSTOPPED|WCONTINUED))
+	  != (WEXITED | (options & WUNTRACED)))
+#endif
+      )
+    {
+      __set_errno (ENOTSUP);
       return -1;
     }
 
@@ -118,6 +141,7 @@ do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 
   return 0;
 }
+#endif
 
 
 int
