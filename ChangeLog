@@ -6,7 +6,7 @@
 	__gconv_compare_alias prototype.
 	* iconv/gconv_db.c (__gconv_lookup_alias): Removed.
 	(__gconv_compare_alias): New function.
-	* locale/findlocale.c (_nl_find_locale): Ise __gconv_compare_alias
+	* locale/findlocale.c (_nl_find_locale): Use __gconv_compare_alias
 	instead of calling __gconv_lookup_alias twice and compare here.
 
 2001-07-26  Mark Kettenis  <kettenis@gnu.org>
