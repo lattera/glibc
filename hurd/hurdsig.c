@@ -908,7 +908,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	for (signo = 1; signo < NSIG; ++signo)
 	  if (__sigismember (&pending, signo))
 	    {
-	    deliver:
+	    deliver_pending:
 	      __sigdelset (&ss->pending, signo);
 	      *detail = ss->pending_data[signo];
 	      __spin_unlock (&ss->lock);
