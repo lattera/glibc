@@ -1,5 +1,7 @@
 1999-10-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* socket/Makefile (distribute): Add ifreq.h.
+
 	* manual/time.texi (Formatting Date and Time): Revise comments about
 	origins of the formats with ISO C99 references.
 

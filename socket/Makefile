@@ -28,4 +28,6 @@ routines := accept bind connect getpeername getsockname getsockopt	\
 	    listen recv recvfrom recvmsg send sendmsg sendto		\
 	    setsockopt shutdown socket socketpair isfdtype opensock
 
+distribute := ifreq.h
+
 include ../Rules
