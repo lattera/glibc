@@ -351,10 +351,10 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
       syslog (LOG_ERR, "NIS+: failed to read local socket info");
       return NULL;
     }
-  port = sin.sin_port;
+  port = ntohs (sin.sin_port);
   get_myaddress (&sin);
   snprintf (addr, sizeof (addr), "%s.%d.%d", inet_ntoa (sin.sin_addr),
-	    port & 0x00FF, (port & 0xFF00) >> 8);
+	    (port & 0xFF00) >> 8, port & 0x00FF);
   cb->serv->ep.ep_val[0].uaddr = strdup (addr);
 
   return cb;

@@ -290,7 +290,7 @@ call_again:
   /*
    * the transaction is the first thing in the out buffer
    */
-  (*(u_short *) (cu->cu_outbuf))++;
+  (*(uint32_t *) (cu->cu_outbuf))++;
   if ((!XDR_PUTLONG (xdrs, (long *) &proc)) ||
       (!AUTH_MARSHALL (cl->cl_auth, xdrs)) ||
       (!(*xargs) (xdrs, argsp)))

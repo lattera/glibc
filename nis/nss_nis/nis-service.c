@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -270,8 +270,7 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
   while (!found &&
          ((status = internal_nis_getservent_r (serv, buffer, buflen, errnop,
 					       &data)) == NSS_STATUS_SUCCESS))
-    if (htons (serv->s_port) == port
-	&&  strcmp (serv->s_proto, protocol) == 0)
+    if (serv->s_port == port && strcmp (serv->s_proto, protocol) == 0)
       found = 1;
 
   internal_nis_endservent (&data);

@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -347,9 +347,9 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 }
 
 enum nss_status
-_nss_nisplus_getservbynumber_r (const int number, const char *protocol,
-				struct servent *serv,
-				char *buffer, size_t buflen, int *errnop)
+_nss_nisplus_getservbyport_r (const int number, const char *protocol,
+			      struct servent *serv,
+			      char *buffer, size_t buflen, int *errnop)
 {
   if (tablename_val == NULL)
     {
@@ -370,7 +370,7 @@ _nss_nisplus_getservbynumber_r (const int number, const char *protocol,
       nis_result *result;
       char buf[60 + strlen (protocol) + tablename_len];
 
-      sprintf (buf, "[number=%d,proto=%s],%s",
+      sprintf (buf, "[port=%d,proto=%s],%s",
 	       number, protocol, tablename_val);
 
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
