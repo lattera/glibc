@@ -1,3 +1,9 @@
+2003-03-12  Steven Munroe  <sjmunroe@us.ibm.com>
+
+        * sysdeps/powerpc/powerpc64/elf/configure.in: Remove
+	AC_DEFINE(PI_STATIC_AND_HIDDEN).  Not supported for PowerPC64.
+        * sysdeps/powerpc/powerpc64/elf/configure: Regenerated.
+
 2003-03-11  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela):
