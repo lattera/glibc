@@ -1,3 +1,7 @@
+2002-09-28  Andreas Jaeger  <aj@suse.de>
+
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Fix reference to dtv.
+
 2002-09-24  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Fetch just the
