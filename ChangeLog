@@ -1,3 +1,7 @@
+2003-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c: Makr all _int_* functions as static.
+
 2003-01-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h (PSEUDO): Use PSEUDO_PREPARE_ARGS.
