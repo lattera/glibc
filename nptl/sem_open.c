@@ -126,7 +126,7 @@ sem_t *
 sem_open (const char *name, int oflag, ...)
 {
   char *finalname;
-  size_t namelen;
+  size_t namelen = SEM_FAILED;
   sem_t *result;
   int fd;
 
@@ -158,19 +158,24 @@ sem_open (const char *name, int oflag, ...)
 	     name, namelen + 1);
 
   /* If the semaphore object has to exist simply open it.  */
-  if ((oflag & O_CREAT) == 0)
+  if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
     {
-      fd = __libc_open (finalname, oflag | O_NOFOLLOW);
+    try_again:
+      fd = __libc_open (finalname,
+			(oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
 
       if (fd == -1)
-	/* Return.  errno is already set.  */
-	return SEM_FAILED;
+	{
+	  /* If we are supposed to create the file try this next.  */
+	  if ((oflag & O_CREAT) != 0)
+	    goto try_create;
 
-      /* Map the sem_t structure from the file.  */
-      result = (sem_t *) mmap (NULL, sizeof (sem_t), PROT_READ | PROT_WRITE,
-			       MAP_SHARED, fd, 0);
-      if (MAP_FAILED != (void *) SEM_FAILED && result == MAP_FAILED)
-	result = SEM_FAILED;
+	  /* Return.  errno is already set.  */
+	}
+      else
+	/* Map the sem_t structure from the file.  */
+	result = (sem_t *) mmap (NULL, sizeof (sem_t), PROT_READ | PROT_WRITE,
+				 MAP_SHARED, fd, 0);
     }
   else
     {
@@ -181,6 +186,7 @@ sem_open (const char *name, int oflag, ...)
       unsigned int value;
       va_list ap;
 
+    try_create:
       va_start (ap, oflag);
 
       mode = va_arg (ap, mode_t);
@@ -213,45 +219,41 @@ sem_open (const char *name, int oflag, ...)
 	      sizeof (sem_t) - sizeof (struct sem));
 
       if (TEMP_FAILURE_RETRY (__libc_write (fd, &initsem, sizeof (sem_t)))
-	  != sizeof (sem_t)
+	  == sizeof (sem_t)
 	  /* Adjust the permission.  */
-	  || fchmod (fd, mode) != 0)
+	  && fchmod (fd, mode) == 0
+	  /* Map the sem_t structure from the file.  */
+	  && (result = (sem_t *) mmap (NULL, sizeof (sem_t),
+				       PROT_READ | PROT_WRITE, MAP_SHARED,
+				       fd, 0)) != MAP_FAILED)
 	{
-	unlink_return:
-	  unlink (tmpfname);
-	  return SEM_FAILED;
-	}
-
-      /* Map the sem_t structure from the file.  */
-      result = (sem_t *) mmap (NULL, sizeof (sem_t), PROT_READ | PROT_WRITE,
-			       MAP_SHARED, fd, 0);
-      if (result == MAP_FAILED)
-	goto unlink_return;
-
-      /* Create or overwrite the file.  Depending on what is wanted we
-	 use rename or link.  */
-      if ((oflag & O_EXCL) == 0)
-	{
-	  /* An existing file gets overwritten.  */
-	  if (rename (tmpfname, finalname) != 0)
+	  /* Create the file.  Don't overwrite an existing file.  */
+	  if (link (tmpfname, finalname) != 0)
 	    {
-	    unmap_unlink_return:
-	      munmap (result, sizeof (sem_t));
-	      goto unlink_return;
+	      /* Remove the file.  */
+	      unlink (tmpfname);
+
+	      /* Undo the mapping.  */
+	      (void) munmap (result, sizeof (sem_t));
+
+	      /* Reinitialize 'result'.  */
+	      result = SEM_FAILED;
+
+	      /* This failed.  If O_EXCL is not set and the problem was
+		 that the file exists, try again.  */
+	      if ((oflag & O_EXCL) == 0 && errno == EEXIST)
+		goto try_again;
 	    }
 	}
-      else
-	{
-	  /* Don't overwrite an existing file.  */
-	  if (link (tmpfname, finalname) != 0)
-	    goto unmap_unlink_return;
 
-	  /* This went well.  Now remove the temporary name.  This
-	     should never fail.  If it fails we leak a file name.
-	     Better fix the kernel.  */
-	  (void) unlink (tmpfname);
-	}
+      /* Now remove the temporary name.  This should never fail.  If
+	 it fails we leak a file name.  Better fix the kernel.  */
+      (void) unlink (tmpfname);
     }
+
+  /* Map the mmap error to the error we need.  */
+  if (MAP_FAILED != (void *) SEM_FAILED && result == MAP_FAILED)
+    result = SEM_FAILED;
 
   /* We don't need the file descriptor anymore.  */
   __libc_close (fd);
