@@ -1,3 +1,7 @@
+2000-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/syslog.c (vsyslog): Initialize msgoff in all cases.
+
 2000-06-14  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/sh4/fpu/fclrexcpt.c: Remove definitions for backward

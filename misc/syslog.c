@@ -160,6 +160,7 @@ vsyslog(pri, fmt, ap)
 	    *endp = '\0';
 	    buf = failbuf;
 	    bufsize = endp - failbuf;
+	    msgoff = 0;
 	  }
 	else
 	  {
