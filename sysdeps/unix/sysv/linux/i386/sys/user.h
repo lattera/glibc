@@ -19,9 +19,9 @@
 #ifndef _SYS_USER_H
 #define _SYS_USER_H	1
 
-/* The whole purpose of this file is for gdb and gdb only. Don't read
-   too much into it. Don't use it for anything other than gdb unless
-   you know what you are doing. */
+/* The whole purpose of this file is for GDB and GDB only.  Don't read
+   too much into it.  Don't use it for anything other than GDB unless
+   you know what you are doing.  */
 
 struct user_fpregs_struct
 {

@@ -36,9 +36,10 @@
 /* This is the default path where we look for module lists.  */
 static const char default_gconv_path[] = GCONV_PATH;
 
-/* The path element in use.   */
+/* The path elements, as determined by the __gconv_get_path function.
+   All path elements end in a slash.  */
 const struct path_elem *__gconv_path_elem;
-/* Maximum length of a single path element.  */
+/* Maximum length of a single path element in __gconv_path_elem.  */
 size_t __gconv_max_path_elem_len;
 
 /* We use the following struct if we couldn't allocate memory.  */
@@ -507,21 +508,18 @@ __gconv_read_conf (void)
 
   for (cnt = 0; __gconv_path_elem[cnt].name != NULL; ++cnt)
     {
-      char real_elem[__gconv_max_path_elem_len + sizeof (gconv_conf_filename)];
+      const char *elem = __gconv_path_elem[cnt].name;
+      size_t elem_len = __gconv_path_elem[cnt].len;
+      char *filename;
 
-      if (__realpath (__gconv_path_elem[cnt].name, real_elem) != NULL)
-	{
-	  size_t elem_len = strlen (real_elem);
-	  char *filename;
+      /* No slash needs to be inserted between elem and gconv_conf_filename;
+	 elem already ends in a slash.  */
+      filename = alloca (elem_len + sizeof (gconv_conf_filename));
+      __mempcpy (__mempcpy (filename, elem, elem_len),
+		 gconv_conf_filename, sizeof (gconv_conf_filename));
 
-	  filename = alloca (elem_len + 1 + sizeof (gconv_conf_filename));
-	  __mempcpy (__mempcpy (__mempcpy (filename, real_elem, elem_len),
-				"/", 1),
-		     gconv_conf_filename, sizeof (gconv_conf_filename));
-
-	  /* Read the next configuration file.  */
-	  read_conf_file (filename, real_elem, elem_len, &modules, &nmodules);
-	}
+      /* Read the next configuration file.  */
+      read_conf_file (filename, elem, elem_len, &modules, &nmodules);
     }
 
   /* Add the internal modules.  */

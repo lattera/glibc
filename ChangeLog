@@ -1,3 +1,57 @@
+2000-08-01  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/sys/elf.h (elf_greg_t, ELF_NGREG,
+	elf_gregset_t, elf_fpregset_t, elf_fpxregset_t): Moved to
+	sysdeps/unix/sysv/linux/i386/sys/procfs.h.
+	Remove the junk that's only relevant in the Linux kernel itself.
+	Add a warning saying that this file is now obsolete, and include
+	<sys/procfs.h>.
+	* sysdeps/unix/sysv/linux/i386/sys/procfs.h (elf_greg_t,
+	ELF_NGREG, elf_gregset_t, elf_fpregset_t, elf_fpxregset_t): Moved
+	here from sysdeps/unix/sysv/linux/i386/sys/elf.h.  Don't include
+	<signal.h>, <sys/ucontext.h> and <sys/elf.h>.  Remove parts of
+	`struct elf_prstatus' that are #ifdef'ed out.  Improve comments
+	and add the notice that the file is primarily there for GDB.
+	* sysdeps/unix/sysv/linux/i386/sys/user.h: Fix comment.
+
+2000-08-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzfile.c (__tzfile_compute): __tzstring zones
+	from zone_names.
+
+2000-08-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/resolv.h (__res_state): Surround prototype with
+	__BEGIN_DECLS/__END_DECLS.
+	* sysdeps/unix/sysv/linux/m68k/chown.c: Include kernel-features.h.
+
+2000-08-04  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/resource.h (__rlimit_resource):
+	Make independant of asm/resource.h from the Linux kernel.
+
+2000-08-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_conf.c (__gconv_read_conf): Don't call realpath.
+
+2000-08-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/Makefile (CPPFLAGS): Remove $(i18ndir) from LOCALE_ALIAS_PATH.
+	* locale/Makefile (locale-CPPFLAGS): Likewise.
+
+2000-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Increase several error values
+	for AMD processors.
+
+2000-08-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/Versions (mincore): Export at GLIBC_2.2.
+
+2000-08-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/libintl.h (gettext, dgettext, dcgettext): Add back __THROW.
+
 2000-08-02  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/socketpair.c (__socketpair): Renamed from
@@ -29,7 +83,7 @@
 	make version.
 	(Supported Configurations): Update list of supported
 	configurations.
-	
+
 2000-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/linereader.c (get_string): Don't print an error is a string

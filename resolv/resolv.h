@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1983, 1987, 1989
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -216,7 +216,9 @@ typedef struct __res_state *res_state;
 
 /* Things involving an internal (static) resolver context. */
 #if !defined _LIBC || defined _LIBC_REENTRANT
+__BEGIN_DECLS
 extern struct __res_state *__res_state(void) __attribute__ ((__const__));
+__END_DECLS
 #define _res (*__res_state())
 #else
 #ifndef __BIND_NOSTATIC
@@ -259,7 +261,7 @@ __END_DECLS
 #if !defined(SHARED_LIBBIND) || defined(LIB)
 /*
  * If libbind is a shared object (well, DLL anyway)
- * these externs break the linker when resolv.h is 
+ * these externs break the linker when resolv.h is
  * included by a lib client (like named)
  * Make them go away if a client is including this
  *

@@ -24,6 +24,7 @@
 #include <bp-checks.h>
 
 #include <linux/posix_types.h>
+#include "kernel-features.h"
 
 extern int __syscall_chown (const char *__unbounded __file,
 			    __kernel_uid_t __owner, __kernel_gid_t __group);
@@ -42,7 +43,7 @@ extern int __libc_missing_32bit_uids;
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {
-#if __ASSUME_32BITUIDS
+#if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
 #else
 # ifdef __NR_chown32

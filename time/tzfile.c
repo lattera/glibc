@@ -498,7 +498,7 @@ __tzfile_compute (time_t timer, int use_localtime,
 	/* There is no daylight saving time.  */
 	__tzname[1] = __tzname[0];
       tp->tm_isdst = info->isdst;
-      tp->tm_zone = &zone_names[info->idx];
+      tp->tm_zone = __tzstring (&zone_names[info->idx]);
       tp->tm_gmtoff = info->offset;
     }
 

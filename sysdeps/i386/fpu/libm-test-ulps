@@ -2,8 +2,13 @@
 
 # acos
 Test "acos (0.7) == 0.7953988301841435554":
-ildouble: 1149
-ldouble: 1149
+ildouble: 1150
+ldouble: 1150
+
+# acosh
+Test "acosh (7) == 2.6339157938496334172":
+ldouble: 1
+ildouble: 1
 
 # asin
 Test "asin (0.7) == 0.7753974966107530637":
@@ -166,8 +171,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 6
+ldouble: 6
 Test "Imaginary part of: catanh (-2 - 3 i) == -0.1469466662255297520 - 1.3389725222944935611 i":
 Test "Real part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959 + 0.9702403077950989849 i":
 double: 1
@@ -332,8 +337,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 1402
-ldouble: 1402
+ildouble: 1403
+ldouble: 1403
 Test "Imaginary part of: clog10 (0.7 + 1.2 i) == 0.1427786545038868803 + 0.4528483579352493248 i":
 double: 1
 idouble: 1
@@ -404,8 +409,8 @@ ifloat: 4
 Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 float: 1
 ifloat: 1
-ildouble: 2
-ldouble: 2
+ildouble: 4
+ldouble: 4
 Test "Real part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
 Test "Imaginary part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
 double: 1.104

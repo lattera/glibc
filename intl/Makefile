@@ -71,7 +71,7 @@ CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
 $(objpfx)tst-translit.out: $(objpfx)tst-gettext.out
 
 CPPFLAGS += -D'GNULOCALEDIR="$(msgcatdir)"' \
-	    -D'LOCALE_ALIAS_PATH="$(msgcatdir):$(i18ndir)"'
+	    -D'LOCALE_ALIAS_PATH="$(msgcatdir)"'
 YFLAGS = --name-prefix=__gettext --output
 
 $(inst_msgcatdir)/locale.alias: locale.alias $(+force)
