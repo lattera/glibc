@@ -981,6 +981,16 @@ This error code has no purpose.
 @comment errno 117
 @end deftypevr
 
+@comment errno.h
+@comment POSIX.1: Operation canceled
+@deftypevr Macro int ECANCELED
+@comment errno 118
+Operation canceled; an asynchronous operation was canceled before it
+completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
+the normal result is for the operations affected to complete with this
+error; @pxref{Cancel AIO Operations}.
+@end deftypevr
+
 
 @emph{The following error codes are defined by the Linux/i386 kernel.
 They are not yet documented.}

@@ -1,3 +1,34 @@
+2002-08-26  Roland McGrath  <roland@redhat.com>
+
+	* manual/errno.texi (Error Codes): Added ECANCELED (118 for Hurd).
+	* sysdeps/mach/hurd/bits/errno.h: Regenerated.
+
+	* sysdeps/gnu/Versions: New file.
+	* sysdeps/unix/sysv/linux/Versions (libc: GLIBC_2.1): Remove
+	_sys_errlist; sys_errlist; _sys_nerr; sys_nerr; from here.
+	* sysdeps/gnu/Makefile ($(..)sysdeps/gnu/errlist-compat.c): New target.
+	($(objpfx)errlist.d): Depend on $(..)sysdeps/gnu/errlist-compat.c.
+	* sysdeps/gnu/errlist.awk: Make output define _sys_errlist_internal
+	and _sys_nerr_internal instead of anything else.  Make it include
+	"errlist-compat.c" if [!NOT_IN_libc && !ERRLIST_NO_COMPAT].
+	Make it emit some asm magic if [EMIT_ERR_MAX].
+	* sysdeps/gnu/errlist.c: Regenerated.
+	* sysdeps/gnu/errlist-compat.awk: New file.
+	* sysdeps/gnu/errlist-compat.c: New file (generated).
+	* sysdeps/mach/hurd/errlist.c (ERRLIST_NO_COMPAT): New macro.
+	(_sys_errlist_internal): Define this as	a macro for _hurd_errlist.
+	(_sys_nerr_internal): Define this is a macro for _hurd_nerr.
+	(SYS_ERRLIST, SYS_NERR): Macros removed.
+	(sys_nerr, _sys_nerr): Remove these weak aliases.
+	* sysdeps/unix/sysv/linux/errlist.c: File removed.
+	* sysdeps/unix/sysv/linux/errlist.h: File removed.
+	* sysdeps/unix/sysv/linux/arm/errlist.c: File removed.
+
+	* include/libc-symbols.h (declare_symbol): New macro.
+	* config.h.in (ASM_TYPE_DIRECTIVE_PREFIX): New #undef.
+	* configure.in: New check to define it.
+	* configure: Regenerated.
+
 2002-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c (REENTRANT_NAME): If no service is available

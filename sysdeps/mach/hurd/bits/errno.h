@@ -212,6 +212,8 @@ enum __error_t_codes
 #define	EPROTO          _HURD_ERRNO (116)/* Protocol error */
 	ETIME           = _HURD_ERRNO (117),
 #define	ETIME           _HURD_ERRNO (117)/* Timer expired */
+	ECANCELED       = _HURD_ERRNO (118),
+#define	ECANCELED       _HURD_ERRNO (118)/* Operation canceled */
 
 	/* Errors from <mach/message.h>.  */
 	EMACH_SEND_IN_PROGRESS          = 0x10000001,

@@ -51,6 +51,10 @@
    declaring a symbol global (default `.globl').  */
 #undef	ASM_GLOBAL_DIRECTIVE
 
+/* Define to the prefix before `object' or `function' in the
+   assembler's `.type' directive, if it has one.  */
+#undef	ASM_TYPE_DIRECTIVE_PREFIX
+
 /* Define a symbol_name as a global .symbol_name for ld.  */
 #undef	HAVE_ASM_GLOBAL_DOT_NAME
 
