@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1998,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1203,5 +1203,12 @@
 #define SYS_sendfile			(SYS_Linux + 207)
 #define SYS_putpmsg			(SYS_Linux + 208)
 #define SYS_getpmsg			(SYS_Linux + 209)
+#define	SYS_mmap2			(SYS_Linux + 210)
+#define	SYS_truncate64			(SYS_Linux + 211)
+#define	SYS_ftruncate64			(SYS_Linux + 212)
+#define	SYS_stat64			(SYS_Linux + 213)
+#define	SYS_lstat64			(SYS_Linux + 214)
+#define	SYS_fstat64			(SYS_Linux + 215)
+
 
 #endif	/* sys/syscall.h */

@@ -1,3 +1,9 @@
+2000-02-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Add new syscalls.
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add missing syscalls.
+
 2000-02-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h (GET_PC): Fix typo.
