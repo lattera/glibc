@@ -72,15 +72,6 @@ endif
 # `+includes' in Makeconfig references $(+sysdep-includes).
 +sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
 
-# The name of the symbol table archive member.  The default is suitable for
-# BSD style archives.  It can be overridden in sysdep Makefiles when SYSV
-# style archive are used.
-ifeq (no,$(elf))
-ar-symtab-name = __.SYMDEF
-else
-ar-symtab-name = # The null name is used in ELF archives.
-endif
-
 # This variable is used in ``include $(o-iterator)'' after defining
 # $(o-iterator-doit) to produce some desired rule using $o for the object
 # suffix, and setting $(object-suffixes-left) to $(object-suffixes); a copy
@@ -382,20 +373,14 @@ elide-routines.oS = $(filter-out $(static-only-routines),\
 				 $(routines) $(aux) $(sysdep_routines))
 
 ifdef static-only-routines
-# These routines are to be omitted from the shared library object,
-# so we replace the PIC objects for them with the empty object file.
-$(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
-	rm -f $@
-	ln $< $@
+elide-routines.os += $(static-only-routines)
 endif
 
 ifdef shared-only-routines
 # If we have versioned code we don't need the old versions in any of the
 # static libraries.
 define o-iterator-doit
-$(shared-only-routines:%=$(objpfx)%$o): %$o: $(common-objpfx)empty$o;
-	rm -f $$@
-	ln $$< $$@
+elide-routines.$o := $(shared-only-routines)
 endef
 object-suffixes-left := $(filter-out .os,$(object-suffixes))
 include $(o-iterator)
@@ -510,29 +495,18 @@ verbose	:=
 endif						# not -s
 
 ARFLAGS := r$(verbose)
-ifeq ($(have-ar-S),yes)
-CREATE_ARFLAGS := Scru$(verbose)
-else
 CREATE_ARFLAGS := cru$(verbose)
-endif
 
 # This makes all the object files in the parent library archive.
 
-.PHONY: lib libobjs lib-noranlib
+.PHONY: lib lib-noranlib
 lib: lib-noranlib $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
-
-# Pattern rule for libraries: depend on the __.SYMDEF member updated by ranlib.
-lib%.a: lib%.a($(ar-symtab-name)) ;
 
 # For object-suffix $o, the list of objects with that suffix.
 # Makefiles can define `elide-routines.so = foo' to leave foo.so out.
 o-objects = $(patsubst %.o,%$o,$(filter-out $(patsubst %,$(objpfx)%.o,\
 						       $(elide-routines$o)),\
 					    $(objects)))
-
-libobjs: $(foreach o,$(object-suffixes-for-libc),\
-		   $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
-		   $(notdir $(o-objects))))
 lib-noranlib: libobjs
 others: $(addprefix $(objpfx),$(install-lib))
 
@@ -545,26 +519,17 @@ $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o):
 	rm -f $@; > $@
 else
 
-# Define a pattern rule that will match many targets libc.a(foo.%), for
-# each foo.o in $(objects) (% will just happen always to match `o').  This is
-# the only way to define a rule that updates many targets at once with one
-# sequence of commands.
-define o-iterator-doit
-$(common-objpfx)$(patsubst %,$(libtype$o),c)(\
-$(addsuffix .%,$(filter-out $(elide-routines$o),$(notdir $(objects:.o=))))): \
-  $(objpfx)stamp.% ;
-endef
-object-suffixes-left := $(object-suffixes-for-libc)
-include $(o-iterator)
-
-# The pattern rule tells Make to remake $(objpfx)stamp.% as
-# the way to update all the foo.% object files in $(objects).  Now we
-# define explicit rules to update each $(objpfx)stamp.SUFFIX
+# Define explicit rules to update each $(objpfx)stamp.SUFFIX
 # timestamp file; these rules (one explicit rule is generated for each
-# object suffix) will update the parent archive with ar.  Use a static
-# pattern rule so $* is set to the object type during the commands.
+# object suffix) write a list of objects to update in the stamp file.
+# The parent will then actually add them all to the archive in the
+# archive rule, below.
 define o-iterator-doit
-$(objpfx)stamp$o: $(objpfx)stamp%: $(o-objects); $$(do-ar)
+$(objpfx)stamp$o: $(o-objects); $$(do-stamp)
+endef
+define do-stamp
+	echo '$(patsubst $(common-objpfx)%,%,$^)' > $@T
+	mv -f $@T $@
 endef
 ifdef static-only-routines
 object-suffixes-left := $(object-suffixes-for-libc)
@@ -572,15 +537,6 @@ else
 object-suffixes-left := $(object-suffixes)
 endif
 include $(o-iterator)
-define do-ar
-topdir=`cd $(..). && pwd`; \
-$(patsubst %/,cd % &&,$(objpfx)) \
-$(SHELL) $$topdir/autolock.sh ${O%-lib}.lck $(AR) $(CREATE_ARFLAGS) ${O%-lib} \
-						  $(patsubst $(objpfx)%,%,$?)
-rm -f $@
-touch $@
-endef
-O%-lib = $(..)$(patsubst %,$(libtype$*),c)
 
 ifndef static-only-routines
 subdir_lib: $(objpfx)stamp.oS
@@ -591,29 +547,42 @@ endif
 
 endif
 
-# Rules to update the $(ar-symtab-name) member with ranlib,
-# one for each object flavor.
+# Now define explicit rules to build the library archives; these depend
+# on the stamp files built above.  The rule always destroys and recreates
+# the library from scratch; it's faster (!) that way.
 define o-iterator-doit
-$(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
-	  $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
-	    $(patsubst $(objpfx)%,%,$(o-objects))) $(subdirs-stamp-o); \
-	$(SHELL) $$(..)./autolock.sh \
-	  $$(common-objpfx)$$(patsubst %,$$(libtype$o),c).lck \
-	  $$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
+$(common-objpfx)$(patsubst %,$(libtype$o),c): \
+		$(subdirs-stamp-o) $(common-objpfx)stamp$o; $$(do-makelib)
+endef
+define do-makelib
+	(set -e; cd $(common-objdir); 			  \
+	$(AR) $(CREATE_ARFLAGS) $(@F)T			  \
+		`cat $(patsubst $(common-objpfx)%,%,$^)`; \
+	$(RANLIB) $(@F)T;				  \
+	mv -f $(@F)T $(@F))
 endef
 ifndef subdir
 subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
 subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
 $(subdirs-stamps): subdir_lib;
 endif
+# The elf directory needs to know subdirs-stamp-o; otherwise libc_pic.a
+# is mangled. FIXME: It would be cleaner to move the final construction
+# of ld.so to top level.
+ifeq ($(subdir),elf)
+subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
+subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
+endif
+
 object-suffixes-left = $(object-suffixes-for-libc)
 include $(o-iterator)
 
 
 # This makes all the object files.
-.PHONY: objects objs
-objects objs: $(foreach o,$(object-suffixes-for-libc),$(o-objects)) \
-	      $(addprefix $(objpfx),$(extra-objs))
+.PHONY: objects objs libobjs extra-objs
+objects objs: libobjs extra-objs
+libobjs: $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
+extra-objs: $(addprefix $(objpfx),$(extra-objs))
 
 # Canned sequence for building an extra library archive.
 define build-extra-lib
@@ -945,7 +914,7 @@ mostlyclean: common-mostlyclean
 # Remove the object files.
 common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(test-srcs) $(others) \
-				     $(tests-static) \
+				     $(tests-static) stubs \
 				     $(addsuffix .o,$(tests) $(test-srcs) \
 						    $(tests-static) \
 						    $(others)) \
@@ -954,7 +923,7 @@ common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
 				     $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
-	-rm -f core $(common-objpfx)stub-$(subdir)
+	-rm -f core
 	$(rmobjs)
 define rmobjs
 $(foreach o,$(object-suffixes-for-libc),
@@ -968,15 +937,15 @@ common-clean: common-mostlyclean
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
 	-rm -f $(objpfx)distinfo
 
-# Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'
+# Produce a file `stubs' which contains `#define __stub_FUNCTION'
 # for each function which is a stub.  We grovel over all the .d files
 # looking for references to <stub-tag.h>.  Then we grovel over each
 # referenced source file to see what stub function it defines.
 
 .PHONY: stubs # The parent Makefile calls this target.
-stubs: $(common-objpfx)stub-$(subdir)
+stubs: $(objpfx)stubs
 s = $(sysdep_dir)/generic
-$(common-objpfx)stub-$(subdir): $(+depfiles)
+$(objpfx)stubs: $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
 	(s=`cd $s && /bin/pwd`; \
 	 $(patsubst %/,cd % &&,$(objpfx)) \

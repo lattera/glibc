@@ -35,7 +35,6 @@ with-cvs = @with_cvs@
 
 versioning = @VERSIONING@
 
-have-ar-S=@libc_cv_ar_S@
 have-no-whole-archive = @libc_cv_ld_no_whole_archive@
 have-no-exceptions = @libc_cv_gcc_no_exceptions@
 have-bash2 = @libc_cv_have_bash2@

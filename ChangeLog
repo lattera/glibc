@@ -1,3 +1,7 @@
+1998-04-30 14:15  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/unix/sysv/linux/netrose/rose.h: Don't include kernel headers.
+
 1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/locale.alias: Update russian entry.

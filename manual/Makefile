@@ -141,7 +141,7 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
-	-rm -f libc.dvi libc.info* dir-add.info $(common-objpfx)stub-manual
+	-rm -f libc.dvi libc.info* dir-add.info stubs
 	-rm -f $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
 clean: mostlyclean
 distclean: clean
@@ -206,8 +206,8 @@ $(glibc-targets):
 # updating the library archives are happy with us, and never think we have
 # changed the library.
 lib: $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
-stubs: $(common-objpfx)stub-manual
-$(common-objpfx)stub-manual ../po/manual.pot $(objpfx)stamp%:
+stubs: $(objpfx)stubs
+$(objpfx)stubs ../po/manual.pot $(objpfx)stamp%:
 	$(make-target-directory)
 	cp /dev/null $@
 

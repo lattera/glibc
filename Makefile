@@ -195,11 +195,12 @@ $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
 version.c-objects := $(addprefix $(objpfx)version,$(object-suffixes))
 $(version.c-objects): $(objpfx)version-info.h
 
-# Makerules creates a file `stub-$(subdir)' for each subdirectory, which
-# contains `#define __stub_FUNCTION' for each function which is a stub.
+# Makerules creates a file `stubs' in each subdirectory, which
+# contains `#define __stub_FUNCTION' for each function defined in that
+# directory which is a stub.
 # Here we paste all of these together into <gnu/stubs.h>.
 
-subdir-stubs := $(foreach dir,$(subdirs),$(common-objpfx)stub-$(dir))
+subdir-stubs := $(foreach dir,$(subdirs),$(common-objpfx)$(dir)/stubs)
 
 # Since stubs.h is never needed when building the library, we simplify the
 # hairy installation process by producing it in place only as the last part

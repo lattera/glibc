@@ -492,19 +492,26 @@ if test -n "$sysheaders"; then
 fi
 AC_SUBST(SYSINCLUDES)
 
-# check if ar takes S
-AC_CACHE_CHECK(for ar S, libc_cv_ar_S, [dnl
-tmpo=$$.o
-tmplib=lib$$.a
-rm -f $tmpo $tmplib
-touch $tmpo
-if AC_TRY_COMMAND([${AR-ar} rcuS $tmplib $tmpo > /dev/null 2>&1]); then
-  libc_cv_ar_S=yes
+# check if ranlib is necessary
+AC_CACHE_CHECK(whether ranlib is necessary, libc_cv_ranlib_necessary, [dnl
+cat > conftest.c <<EOF
+int a;
+char b;
+void c(void) {}
+EOF
+$CC $CFLAGS -c conftest.c
+$AR cr conftest.a conftest.c
+cp conftest.a conftest2.a
+$RANLIB conftest.a
+if cmp -s conftest.a conftest2.a; then
+  libc_cv_ranlib_necessary=no
 else
-  libc_cv_ar_S=no
+  libc_cv_ranlib_necessary=yes
 fi
-rm -f $tmpo $tmplib])
-AC_SUBST(libc_cv_ar_S)dnl
+rm -rf conftest*])
+if test "$libc_cv_ranlib_necessary" = no; then
+ RANLIB=:
+fi
 
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.
