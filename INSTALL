@@ -36,8 +36,8 @@ Configuring and compiling GNU Libc
 advise to build it in a separate build directory.  For example, if you
 have unpacked the glibc sources in `/src/gnu/glibc-2.1.0', create a
 directory `/src/gnu/glibc-build' to put the object files in.  This
-allows to remove the whole build directory in case an error occurs
-which is the safest way to get a clean way and should always be done.
+allows removing the whole build directory in case an error occurs,
+which is the safest way to get a fresh start and should always be done.
 
    From your object directory, run the shell script `configure' found
 at the top level of the source tree.  In the scenario above, you'd type
@@ -193,6 +193,23 @@ distribution already includes the on-line formatted version of the
 manual, as Info files.  You can regenerate those with `make info', but
 it shouldn't be necessary.
 
+   The library has a number of special-purpose configuration parameters
+which you can find in `Makeconfig'.  These can be overwritten with the
+file `configparms'.  To change them, create a `configparms' in your
+build directory and add values as appropriate for your system.  The
+file is included and parsed by `make' and has to follow the conventions
+for makefiles.
+
+   It is easy to configure the GNU C library for cross-compilation by
+setting a few variables in `configparms'.  Set `CC' to the
+cross-compiler for the target you configured the library for; it is
+important to use this same `CC' value when running `configure', like
+this: `CC=TARGET-gcc configure TARGET'.  Set `BUILD_CC' to the compiler
+to use for for programs run on the build system as part of compiling
+the library.  You may need to set `AR' and `RANLIB' to cross-compiling
+versions of `ar' and `ranlib' if the native tools are not configured to
+work with object files for the target you configured for.
+
 Installing the C Library
 ========================
 
@@ -204,24 +221,37 @@ recommend that you shut the system down to single-user mode first, and
 reboot afterward.  This minimizes the risk of breaking things when the
 library changes out from underneath.
 
+   If you're upgrading from Linux libc5 or some other C library, you
+need to replace the `/usr/include' with a fresh directory before
+installing it.  The new `/usr/include' should contain the Linux
+headers, but nothing else.
+
+   You must first build the library (`make'), optionally check it
+(`make check'), switch the include directories and then install (`make
+install').  The steps must be done in this order.  Not moving the
+directory before install will result in an unusable mixture of header
+files from both libraries, but configuring, building, and checking the
+library requires the ability to compile and run programs against the old
+library.
+
    If you are upgrading from a previous installation of glibc 2.0 or
-2.1, `make install' will do the entire job.  If you're upgrading from
-Linux libc5 or some other C library, you need to rename the old
-`/usr/include' directory before running `make install', or you will end
-up with a mixture of header files from both libraries, and you won't be
-able to compile anything.  You may also need to reconfigure GCC to work
-with the new library.  The easiest way to do that is to figure out the
-compiler switches to make it work again
-(`-Wl,--dynamic-linker=/lib/ld-linux.so.2' should work on Linux
-systems) and use them to recompile gcc.  You can also edit the specs
-file (`/usr/lib/gcc-lib/TARGET/VERSION/specs'), but that is a bit of a
-black art.
+2.1, `make install' will do the entire job.  You do not need to remove
+the old includes - if you want to do so anyway you must then follow the
+order given above.
+
+   You may also need to reconfigure GCC to work with the new library.
+The easiest way to do that is to figure out the compiler switches to
+make it work again (`-Wl,--dynamic-linker=/lib/ld-linux.so.2' should
+work on Linux systems) and use them to recompile gcc.  You can also
+edit the specs file (`/usr/lib/gcc-lib/TARGET/VERSION/specs'), but that
+is a bit of a black art.
 
    You can install glibc somewhere other than where you configured it
 to go by setting the `install_root' variable on the command line for
 `make install'.  The value of this variable is prepended to all the
 paths for installation.  This is useful when setting up a chroot
-environment or preparing a binary distribution.
+environment or preparing a binary distribution.  The directory should be
+specified with an absolute file name.
 
    Glibc 2.1 includes two daemons, `nscd' and `utmpd', which you may or
 may not want to run.  `nscd' caches name service lookups; it can
@@ -273,13 +303,13 @@ build the GNU C library:
      to have bugs which only show up in big projects like GNU `libc'.
      Version 3.76.1 seems OK but some people have reported problems.
 
-   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95, 2.95.1
+   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95 or newer
 
      The GNU C library can only be compiled with the GNU C compiler
      family.  As of the 2.1 release, EGCS 1.0.3 or higher is required.
      GCC 2.8.1 can also be used (but see the FAQ for reasons why you
      might not want to).  Earlier versions simply are too buggy.  As of
-     this writing, GCC 2.95.1 is the compiler we advise to use.
+     this writing, GCC 2.95.2 is the compiler we advise to use.
 
      You can use whatever compiler you like to compile programs that
      use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
@@ -326,6 +356,15 @@ build the GNU C library:
 
      Perl is not required, but it is used if present to test the
      installation.  We may decide to use it elsewhere in the future.
+
+   * GNU `sed' 3.02 or newer
+
+     Sed is used in several places to generate files.  Most scripts
+     work with any version of `sed'.  The known exception is the script
+     `po2test.sed' in the `intl' subdirectory which is used to generate
+     `msgs.h' for the testsuite.  This script works correctly only with
+     GNU `sed' 3.02.  If you like to run the testsuite, you should
+     definitly upgrade `sed'.
 
 
 If you change any of the `configure.in' files you will also need
@@ -467,7 +506,7 @@ twice.
 
    If you think you have found some way in which the GNU C library does
 not conform to the ISO and POSIX standards (*note Standards and
-Portability::.), that is definitely a bug.  Report it!
+Portability::), that is definitely a bug.  Report it!
 
    Once you're sure you've found a bug, try to narrow it down to the
 smallest test case that reproduces the problem.  In the case of a C
