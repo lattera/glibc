@@ -570,25 +570,28 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		{
 		  fct = __nss_lookup_function (nip, "gethostbyname2_r");
 
-		  gethosts2 (AF_INET6, struct in6_addr);
-		  no_inet6_data = no_data;
-		  inet6_status = status;
-		  gethosts2 (AF_INET, struct in_addr);
+		  if (fct != NULL)
+		    {
+		      gethosts2 (AF_INET6, struct in6_addr);
+		      no_inet6_data = no_data;
+		      inet6_status = status;
+		      gethosts2 (AF_INET, struct in_addr);
 
-		  /* If we found one address for AF_INET or AF_INET6,
-		     don't continue the search.  */
-		  if (inet6_status == NSS_STATUS_SUCCESS ||
-		      status == NSS_STATUS_SUCCESS)
-		    break;
+		      /* If we found one address for AF_INET or AF_INET6,
+			 don't continue the search.  */
+		      if (inet6_status == NSS_STATUS_SUCCESS ||
+			  status == NSS_STATUS_SUCCESS)
+			break;
 
-		  /* We can have different states for AF_INET
-		     and AF_INET6. Try to find a usefull one for
-		     both.  */
-		  if (inet6_status == NSS_STATUS_TRYAGAIN)
-		    status = NSS_STATUS_TRYAGAIN;
-		  else if (status == NSS_STATUS_UNAVAIL &&
-			   inet6_status != NSS_STATUS_UNAVAIL)
-		    status = inet6_status;
+		      /* We can have different states for AF_INET
+			 and AF_INET6. Try to find a usefull one for
+			 both.  */
+		      if (inet6_status == NSS_STATUS_TRYAGAIN)
+			status = NSS_STATUS_TRYAGAIN;
+		      else if (status == NSS_STATUS_UNAVAIL &&
+			       inet6_status != NSS_STATUS_UNAVAIL)
+			status = inet6_status;
+		    }
 
 		  if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
 		    break;
