@@ -1,3 +1,8 @@
+2001-11-04  Roland McGrath  <roland@frob.com>
+
+	* hurd/set-host.c (_hurd_set_host_config): Use O_WRONLY in flags
+	parameter to dir_mkfile.
+
 2001-11-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/bits/string2.h (__strndup): If n is smaller than len, set
