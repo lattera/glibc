@@ -1,3 +1,4 @@
+#ifndef _SYS_TIME_H
 #include <time/sys/time.h>
 
 /* Now document the internal interfaces.  */
@@ -11,3 +12,4 @@ extern int __setitimer __P ((enum __itimer_which __which,
 			     __const struct itimerval *__new,
 			     struct itimerval *__old));
 extern int __utimes __P ((__const char *__file, struct timeval __tvp[2]));
+#endif

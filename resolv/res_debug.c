@@ -203,7 +203,7 @@ do_rrset(msg, len, cp, cnt, pflag, file, hs)
 	 * Print answer records.
 	 */
 	sflag = (_res.pfcode & pflag);
-	if (n = ntohs(cnt)) {
+	if ((n = ntohs(cnt))) {
 		if ((!_res.pfcode) ||
 		    ((sflag) && (_res.pfcode & RES_PRF_HEAD1)))
 			fprintf(file, hs);
@@ -337,7 +337,7 @@ __fp_nquery(msg, len, file)
 	/*
 	 * Print question records.
 	 */
-	if (n = ntohs(hp->qdcount)) {
+	if ((n = ntohs(hp->qdcount))) {
 		if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
 			fprintf(file, ";; QUESTIONS:\n");
 		while (--n >= 0) {
@@ -647,7 +647,7 @@ __p_rr(cp, msg, file)
 		cp2 = cp1 + dlen;
 		while (cp < cp2) {
 			putc('"', file);
-			if (n = (unsigned char) *cp++) {
+			if ((n = (unsigned char) *cp++)) {
 				for (c = n; c > 0 && cp < cp2; c--) {
 					if (strchr("\n\"\\", *cp))
 						(void) putc('\\', file);

@@ -1,3 +1,4 @@
+#ifndef _STDIO_H
 #ifdef USE_IN_LIBIO
 #ifdef __need_FILE
 # include <libio/stdio.h>
@@ -26,4 +27,5 @@ extern int __vsscanf __P ((__const char *__restrict __s,
 #endif
 #else
 #include <stdio/stdio.h>
+#endif
 #endif

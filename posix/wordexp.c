@@ -2049,8 +2049,8 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
   ifs = getenv ("IFS");
 
   if (!ifs)
-    /* NULL IFS means no field-splitting is to be performed */
-    ifs = strcpy (ifs_white, "");
+    /* IFS unset - use <space><tab><newline>. */
+    ifs = strcpy (ifs_white, " \t\n");
   else
     {
       char *ifsch = ifs;
@@ -2082,22 +2082,6 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
   for (words_offset = 0 ; words[words_offset] ; ++words_offset)
     switch (words[words_offset])
       {
-      case '\n':
-      case '|':
-      case '&':
-      case ';':
-      case '<':
-      case '>':
-      case '(':
-      case ')':
-	case '{':
-      case '}':
-	/* Fail */
-	wordfree (pwordexp);
-	pwordexp->we_wordc = 0;
-	pwordexp->we_wordv = old_wordv;
-	return WRDE_BADCHAR;
-
       case '\\':
 	error = parse_backslash (&word, &word_length, &max_length, words,
 				 &words_offset);
@@ -2175,6 +2159,16 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	/* Is it a field separator? */
 	if (strchr (ifs, words[words_offset]) == NULL)
 	  {
+	    /* Not a field separator -- but is it a valid word char? */
+	    if (strchr ("\n|&;<>(){}", words[words_offset]))
+	      {
+		/* Fail */
+		wordfree (pwordexp);
+		pwordexp->we_wordc = 0;
+		pwordexp->we_wordv = old_wordv;
+		return WRDE_BADCHAR;
+	      }
+
 	    /* "Ordinary" character -- add it to word */
 
 	    word = w_addchar (word, &word_length, &max_length,

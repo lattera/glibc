@@ -19,6 +19,20 @@ comments.  You could also use the @samp{-D} option to GCC, but it's
 better if you make the source files indicate their own meaning in a
 self-contained way.
 
+This system exists to allow the library to conform to multiple standards.
+Although the different standards are often described as supersets of each
+other, they are usually incompatible because larger standards require
+functions with names that smaller ones reserve to the user program.  This
+is not mere pedantry --- it has been a problem in practice.  For instance,
+some non-GNU programs define functions named @code{getline} that have
+nothing to do with this library's @code{getline}.  They would not be
+compilable if all features were enabled indescriminantly. 
+
+This should not be used to verify that a program conforms to a limited
+standard.  It is insufficent for this purpose, as it will not protect you
+from including header files outside the standard, or relying on semantics
+undefined within the standard. 
+
 @comment (none)
 @comment POSIX.1
 @defvr Macro _POSIX_SOURCE

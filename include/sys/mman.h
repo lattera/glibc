@@ -1,3 +1,4 @@
+#ifndef _SYS_MMAN_H
 #include_next <sys/mman.h>
 
 /* Now define the internal interfaces.  */
@@ -11,3 +12,4 @@ extern int __mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 /* This one is Linux specific.  */
 extern __ptr_t __mremap __P ((__ptr_t __addr, size_t __old_len,
 			    size_t __new_len, int __may_move));
+#endif

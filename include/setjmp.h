@@ -1,3 +1,4 @@
+#ifndef _SETJMP_H
 #include <setjmp/setjmp.h>
 
 /* Now define the internal interfaces.  */
@@ -11,3 +12,4 @@ extern void __longjmp __P ((__jmp_buf __env, int __val))
    This is used by the machine-dependent definition of `__sigsetjmp'.
    Always returns zero, for convenience.  */
 extern int __sigjmp_save __P ((jmp_buf __env, int __savemask));
+#endif

@@ -3170,7 +3170,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	*outptr++ = s[0];						      \
 	*outptr++ = s[1];						      \
       }									      \
-    else if (ch >= 0x4e00 && ch <= 0x9fa5 || ch >= 0xf900 && ch <= 0xfa0b)    \
+    else if ((ch >= 0x4e00 && ch <= 0x9fa5) || (ch >= 0xf900 && ch <= 0xfa0b))\
       {									      \
 	size_t written = ucs4_to_ksc5601_hanja (ch, outptr,		      \
 						(NEED_LENGTH_TEST	      \

@@ -1,3 +1,4 @@
+#ifndef _WCHAR_H
 #include <wcsmbs/wchar.h>
 
 /* Now define the internal interfaces.  */
@@ -28,3 +29,4 @@ extern size_t __wcsnrtombs __P ((char *__restrict __dst,
 extern wchar_t *__wcpcpy __P ((wchar_t *__dest, __const wchar_t *__src));
 extern wchar_t *__wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
 				size_t __n));
+#endif

@@ -1,3 +1,4 @@
+#ifndef _SHADOW_H
 #include <shadow/shadow.h>
 
 /* Now define the internal interfaces.  */
@@ -14,3 +15,4 @@ extern int __fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
 			       struct spwd **__result));
 extern int __lckpwdf __P ((void));
 extern int __ulckpwdf __P ((void));
+#endif

@@ -220,11 +220,11 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		  }							      \
 		else if (i > 0 && m > 0)				      \
 		  ch = ((i - 1) * 21 + (m - 1)) * 28 + f + 0xac00;	      \
-		else if (i > 0 && m == 0 & f == 0)			      \
+		else if (i > 0 && m == 0 && f == 0)			      \
 		  ch = init_to_ucs[i - 1];				      \
-		else if (i == 0 && m > 0 & f == 0)			      \
+		else if (i == 0 && m > 0 && f == 0)			      \
 		  ch = 0x314e + m;	/* 0x314f + m - 1 */		      \
-		else if (i == 0 && m == 0 & f > 0)			      \
+		else if (i == 0 && m == 0 && f > 0)			      \
 		  ch = final_to_ucs[f - 1];	/* round trip?? */	      \
 		else							      \
 		  {							      \

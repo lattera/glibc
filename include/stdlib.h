@@ -1,3 +1,4 @@
+#ifndef _STDLIB_H
 #include <stdlib/stdlib.h>
 
 /* Now define the internal interfaces.  */
@@ -39,3 +40,4 @@ extern char *__canonicalize_file_name __P ((__const char *__name));
 extern char *__realpath __P ((__const char *__name, char *__resolved));
 extern int __ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int __getpt __P ((void));
+#endif

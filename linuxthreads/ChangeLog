@@ -1,3 +1,7 @@
+1998-09-06 10:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/semaphore.h: New file.
+
 1998-09-06 09:08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/pthread/bits/libc-lock.h (enum __libc_tsd_key_t): Add

@@ -295,7 +295,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	{
 	  if (tp->name != NULL)
 	    {
-	      if (rc = gaih_inet_serv (service->name, tp, &st))
+	      if ((rc = gaih_inet_serv (service->name, tp, &st)))
 		return rc;
 	    }
 	  else
@@ -303,7 +303,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      struct gaih_servtuple **pst = &st;
 	      for (tp++; tp->name; tp++)
 		{
-		  if (rc = gaih_inet_serv (service->name, tp, pst))
+		  if ((rc = gaih_inet_serv (service->name, tp, pst)))
 		    {
 		      if (rc & GAIH_OKIFUNSPEC)
 			continue;
@@ -567,7 +567,7 @@ getaddrinfo (const char *name, const char *service,
 	  if ((pg == NULL) || (pg->gaih != g->gaih))
 	    {
 	      pg = g;
-	      if (i = g->gaih (name, pservice, hints, end))
+	      if ((i = g->gaih (name, pservice, hints, end)))
 		{
 		  if ((hints->ai_family == AF_UNSPEC) && (i & GAIH_OKIFUNSPEC))
 		    continue;

@@ -196,7 +196,7 @@ _itoa (value, buflim, base, upper_case)
 		if (BITS_PER_MP_LIMB % BITS != 0)			  \
 		  {							  \
 		    work_lo |= ((work_hi				  \
-				 & ((1 << BITS - BITS_PER_MP_LIMB % BITS) \
+				 & ((1 << (BITS - BITS_PER_MP_LIMB%BITS)) \
 				    - 1))				  \
 				<< BITS_PER_MP_LIMB % BITS);		  \
 		    *--bp = digits[work_lo];				  \

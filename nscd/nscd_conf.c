@@ -70,7 +70,7 @@ nscd_parse_file (const char *fname)
       arg1 = cp;
       ++arg1;
       *cp = '\0';
-      if (*cp = '\0' || strlen (entry) == 0)
+      if (strlen (entry) == 0)
 	dbg_log (_("Parse error: %s"), line);
       while (isspace (*arg1) && *arg1 != '\0')
 	++arg1;

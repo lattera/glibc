@@ -137,10 +137,11 @@ __hasmntopt (const struct mntent *mnt, const char *opt)
 
   while ((p = strstr (rest, opt)) != NULL)
     {
-      if (p == rest || p[-1] == ',' &&
-	  (p[optlen] == '\0' ||
-	   p[optlen] == '=' ||
-	   p[optlen] == ','))
+      if (p == rest
+	  || (p[-1] == ','
+	      && (p[optlen] == '\0' ||
+		  p[optlen] == '='  ||
+		  p[optlen] == ',')))
 	return p;
 
       rest = strchr (rest, ',');

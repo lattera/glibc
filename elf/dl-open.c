@@ -192,7 +192,7 @@ dl_open_worker (void *a)
   _dl_debug_state ();
 
   /* Run the initializer functions of new objects.  */
-  while (init = _dl_init_next (&new->l_searchlist))
+  while ((init = _dl_init_next (&new->l_searchlist)))
     (*(void (*) (int, char **, char **)) init) (__libc_argc, __libc_argv,
 						__environ);
 

@@ -422,7 +422,7 @@ svc_getreqset (readfds)
   maskp = (u_int32_t *) readfds->fds_bits;
   for (sock = 0; sock < setsize; sock += 32)
     {
-      for (mask = *maskp++; bit = ffs (mask); mask ^= (1 << (bit - 1)))
+      for (mask = *maskp++; (bit = ffs (mask)); mask ^= (1 << (bit - 1)))
 	{
 	  /* sock has input waiting */
 	  xprt = xports[sock + bit - 1];

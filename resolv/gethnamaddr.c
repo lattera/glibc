@@ -815,7 +815,7 @@ _gethtent()
 		cp++;
 	host.h_name = cp;
 	q = host.h_aliases = host_aliases;
-	if (cp = strpbrk(cp, " \t"))
+	if ((cp = strpbrk(cp, " \t")))
 		*cp++ = '\0';
 	while (cp && *cp) {
 		if (*cp == ' ' || *cp == '\t') {
@@ -824,7 +824,7 @@ _gethtent()
 		}
 		if (q < &host_aliases[MAXALIASES - 1])
 			*q++ = cp;
-		if (cp = strpbrk(cp, " \t"))
+		if ((cp = strpbrk(cp, " \t")))
 			*cp++ = '\0';
 	}
 	*q = NULL;
@@ -856,7 +856,7 @@ _gethtbyname2(name, af)
 	register char **cp;
 
 	_sethtent(0);
-	while (p = _gethtent()) {
+	while ((p = _gethtent())) {
 		if (p->h_addrtype != af)
 			continue;
 		if (strcasecmp(p->h_name, name) == 0)
@@ -878,7 +878,7 @@ _gethtbyaddr(addr, len, af)
 	register struct hostent *p;
 
 	_sethtent(0);
-	while (p = _gethtent())
+	while ((p = _gethtent()))
 		if (p->h_addrtype == af && !bcmp(p->h_addr, addr, len))
 			break;
 	_endhtent();

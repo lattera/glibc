@@ -1,3 +1,30 @@
+1998-09-06 09:53 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Makeconfig (+gccwarn): Remove -Wno-parentheses.
+
+	* elf/dl-open.c: Quiet -Wparentheses warnings.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* inet/inet_net.c: Likewise.
+	* io/fts.c: Likewise.
+	* locale/newlocale.c: Likewise.
+	* misc/getttyent.c: Likewise.
+	* misc/mntent_r.c: Likewise.
+	* misc/ttyslot.c: Likewise.
+	* nscd/nscd_conf.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* resolv/gethnamaddr.c: Likewise.
+	* resolv/nsap_addr.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* stdio-common/_itoa.c: Likewise.
+	* stdlib/strtod.c: Likewise.
+	* string/strverscmp.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sysdeps/libm-ieee754/e_cosh.c: Likewise.
+	* sysdeps/libm-ieee754/e_gamma_r.c: Likewise.
+	* sysdeps/libm-ieee754/e_sinh.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+
 1998-09-06 15:13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dlsym.c (dlsym_doit): Use new RTLD_DEFAULT macro to test
@@ -38,6 +65,7 @@
 	* include/alloca.h: Add multiple-inclusion guard.
 	* include/db.h: Likewise.
 	* include/db_185.h: Likewise.
+	* include/dlfcn.h: Likewise.
 	* include/fcntl.h: Likewise.
 	* include/grp.h: Likewise.
 	* include/libintl.h: Likewise.
@@ -68,9 +96,6 @@
 	* include/sys/times.h: Likewise.
 	* include/sys/wait.h: Likewise.
 
-	* include/dlfcn.h: Declare dladdr only for __USE_GNU.
-	Define RTLD_DEFAULT.
-
 1998-09-06 09:00  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.96.
@@ -95,7 +120,6 @@
 	* elf/dl-support.c: Likewise.
 	* elf/dl-symbol.c: Likewise.
 	* elf/dl-version.c: Likewise.
-	* elf/dlfcn.h: Likewise.
 	* elf/dlsym.c: Likewise.
 	* elf/dlvsym.c: Likewise.
 	* elf/ldsodefs.h: Likewise.
@@ -104,6 +128,9 @@
 	* nss/nsswitch.c: Likewise.
 	* sysdeps/i386/dl-machine.h: Likewise.
 	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Likewise.
+
+	* elf/dlfcn.h: Declare dladdr only for __USE_GNU.
+	Define RTLD_DEFAULT.
 
 1998-09-05  Mark Kettenis  <kettenis@phys.uva.nl>
 

@@ -33,7 +33,7 @@ __ieee754_gamma_r (double x, int *signgamp)
 
   EXTRACT_WORDS (hx, lx, x);
 
-  if ((hx & 0x7fffffff | lx) == 0)
+  if (((hx & 0x7fffffff) | lx) == 0)
     /* Return value for x == 0 is NaN with invalid exception.  */
     return x / x;
   if (hx < 0 && (u_int32_t) hx < 0xfff00000 && __rint (x) == x)

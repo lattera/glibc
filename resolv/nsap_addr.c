@@ -63,7 +63,7 @@ inet_nsap_addr(ascii, binary, maxlen)
 			c = toupper(c);
 		if (isxdigit(c)) {
 			nib = xtob(c);
-			if (c = *ascii++) {
+			if ((c = *ascii++)) {
 				c = toupper(c);
 				if (isxdigit(c)) {
 					*binary++ = (nib << 4) | xtob(c);

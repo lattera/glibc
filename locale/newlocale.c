@@ -54,7 +54,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
     category_mask = (1 << LC_ALL) - 1;
 
   /* Sanity check for CATEGORY argument.  */
-  if ((category_mask & ~(1 << LC_ALL) - 1) != 0)
+  if ((category_mask & ~((1 << LC_ALL) - 1)) != 0)
     ERROR_RETURN;
 
   /* `newlocale' does not support asking for the locale name. */

@@ -81,7 +81,7 @@ __strverscmp (s1, s2)
   c1 = *p1++;
   c2 = *p2++;
   /* Hint: '0' is a digit too.  */
-  state = S_N | (c1 == '0') + (isdigit (c1) != 0);
+  state = S_N | ((c1 == '0') + (isdigit (c1) != 0));
 
   while ((diff = c1 - c2) == 0 && c1 != '\0')
     {
@@ -91,7 +91,7 @@ __strverscmp (s1, s2)
       state |= (c1 == '0') + (isdigit (c1) != 0);
     }
 
-  state = result_type[state << 2 | ((c2 == '0') + (isdigit (c2) != 0))];
+  state = result_type[state << 2 | (((c2 == '0') + (isdigit (c2) != 0)))];
 
   switch (state)
   {

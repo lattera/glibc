@@ -1,3 +1,4 @@
+#ifndef _MNTENT_H
 #include <misc/mntent.h>
 
 /* Now define the internal interfaces.  */
@@ -9,3 +10,4 @@ extern int __addmntent __P ((FILE *__stream, __const struct mntent *__mnt));
 extern int __endmntent __P ((FILE *__stream));
 extern char *__hasmntopt __P ((__const struct mntent *__mnt,
 			       __const char *__opt));
+#endif

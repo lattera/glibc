@@ -1,3 +1,4 @@
+#ifndef _SIGNAL_H
 #if defined __need_sig_atomic_t || defined __need_sigset_t
 # include <signal/signal.h>
 #else
@@ -22,4 +23,5 @@ extern int __sigvec __P ((int __sig, __const struct sigvec *__vec,
 extern int __sigreturn __P ((struct sigcontext *__scp));
 extern int __sigaltstack __P ((__const struct sigaltstack *__ss,
 			       struct sigaltstack *__oss));
+#endif
 #endif

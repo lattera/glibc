@@ -1,3 +1,4 @@
+#ifndef _PWD_H
 #include <pwd/pwd.h>
 
 /* Now define the internal interfaces.  */
@@ -12,3 +13,4 @@ extern int __getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
 extern int __fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
 			       char *__buffer, size_t __buflen,
 			       struct passwd **__result));
+#endif

@@ -77,12 +77,11 @@ static double one = 1.0, half=0.5, huge = 1.0e300;
 	}
 
     /* |x| in [22, log(maxdouble)] return half*exp(|x|) */
-	if (ix < 0x40862E42)  return half*__ieee754_exp(fabs(x));
+	if (ix < 0x40862e42)  return half*__ieee754_exp(fabs(x));
 
     /* |x| in [log(maxdouble), overflowthresold] */
 	GET_LOW_WORD(lx,x);
-	if (ix<0x408633CE || 
-	      (ix==0x408633ce)&&(lx<=(u_int32_t)0x8fb9f87d)) {
+	if (ix<0x408633ce || ((ix==0x408633ce)&&(lx<=(u_int32_t)0x8fb9f87d))) {
 	    w = __ieee754_exp(half*fabs(x));
 	    t = half*w;
 	    return t*w;

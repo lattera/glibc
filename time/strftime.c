@@ -542,7 +542,13 @@ my_strftime (s, maxsize, format, tp)
 		if (bytes == 0)
 		  break;
 
-		if (bytes == (size_t) -2 || bytes == (size_t) -1)
+		if (bytes == (size_t) -2)
+		  {
+		    len += strlen (f + len);
+		    break;
+		  }
+		
+		if (bytes == (size_t) -1)
 		  {
 		    len++;
 		    break;
@@ -553,6 +559,7 @@ my_strftime (s, maxsize, format, tp)
 	    while (! mbsinit (&mbstate));
 
 	    cpy (len, f);
+	    f += len - 1;
 	    continue;
 	  }
 	}

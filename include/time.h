@@ -1,3 +1,4 @@
+#ifndef _TIME_H
 #if defined __need_time_t  || defined __need_clock_t || defined __need_timespec
 # include <time/time.h>
 #else
@@ -34,4 +35,5 @@ extern long int __tzname_max __P ((void));
 extern int __nanosleep __P ((__const struct timespec *__requested_time,
 			     struct timespec *__remaining));
 extern int __getdate_r __P ((__const char *__string, struct tm *__resbufp));
+#endif
 #endif

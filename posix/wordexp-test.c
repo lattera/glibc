@@ -119,6 +119,11 @@ struct test_case_struct
     { 0, "foo", "*$var*", 0, 1, { "*foo*", }, IFS },
     { 0, "o thr", "*$var*", 0, 2, { "two", "three" }, IFS },
 
+    /* Different IFS values */
+    { 0, NULL, "a b\tc\nd  ", 0, 4, { "a", "b", "c", "d" }, NULL /* unset */ },
+    { 0, NULL, "a b\tc d  ", 0, 1, { "a b\tc d  " }, "" /* `null' */ },
+    { 0, NULL, "a,b c\n, d", 0, 3, { "a", "b c", " d" }, "\t\n," },
+
     /* Other things that should succeed */
     { 0, NULL, "\\*\"|&;<>\"\\(\\)\\{\\}", 0, 1, { "*|&;<>(){}", }, IFS },
     { 0, "???", "$var", 0, 1, { "???", }, IFS },
@@ -127,7 +132,7 @@ struct test_case_struct
     { 0, NULL, "", 0, 0, { NULL, }, IFS },
 
     /* Things that should fail */
-    { WRDE_BADCHAR, NULL, "new\nline", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "new\nline", 0, 0, { NULL, }, "" /* \n not IFS */ },
     { WRDE_BADCHAR, NULL, "pipe|symbol", 0, 0, { NULL, }, IFS },
     { WRDE_BADCHAR, NULL, "&ampersand", 0, 0, { NULL, }, IFS },
     { WRDE_BADCHAR, NULL, "semi;colon", 0, 0, { NULL, }, IFS },

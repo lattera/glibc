@@ -664,7 +664,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   if ((wchar_t) c == decimal)
     {
       c = *++cp;
-      while (c >= L_('0') && c <= L_('9') ||
+      while ((c >= L_('0') && c <= L_('9')) ||
 	     (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
 	{
 	  if (c != L_('0') && lead_zero == -1)

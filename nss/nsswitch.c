@@ -618,7 +618,8 @@ nss_parse_service_list (const char *line)
 	      lookup_actions action;
 
 	      /* Grok ! before name to mean all statii but that one.  */
-	      if (not = line[0] == '!')
+	      not = line[0] == '!';
+	      if (not)
 		++line;
 
 	      /* Read status name.  */
