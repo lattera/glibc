@@ -71,7 +71,7 @@ register struct _pthread_descr_struct *__thread_self __asm__("r13");
 
 
 /* Memory barrier */
-#define MEMORY_BARRIER() __sync_syncronize ()
+#define MEMORY_BARRIER() __sync_synchronize ()
 
 
 #define HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
