@@ -1,3 +1,30 @@
+2001-04-22  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sys/user.h (struct user_fpregs):
+	Renamed from struct user_fp.
+	(struct user_regs): New.
+	(struct user): Use struct user_regs rather than struct pt_regs to
+	avoid dependency on asm/ptrace.h.  Use struct user_fpregs in place
+	of struct user_fp and struct user_fp_struct.
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: Include sys/procfs.h
+	not sys/elf.h.
+
+2001-04-22  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sys/elf.h: Move contents to
+	sys/procfs.h, and tell the user to include that file instead.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Remove old cruft
+	surrounded with #if 0.
+	(elf_greg_t, ELF_NGREG, elf_gregset_t, elf_fpregset_t): Moved here
+	from sys/elf.h.
+	(prgregset_t, prfpregset_t): Define in terms of elf_gregset_t and
+	elf_fpregset_t respectively.
+
+2001-04-22  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/register-dump.h: Also print the
+	address that faulted.
+
 2001-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/confname.h: Add _SC_V6_* and _CS_POSIX_V6_*

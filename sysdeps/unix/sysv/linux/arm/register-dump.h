@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pb@nexus.co.uk>, 1998.
 
@@ -32,6 +32,7 @@
  CPSR: XXXXXXXX
 
  Trap: XXXXXXXX   Error: XXXXXXXX   OldMask: XXXXXXXX
+ Addr: XXXXXXXX
 
  */
 
@@ -46,7 +47,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 static void
 register_dump (int fd, union k_sigcontext *ctx)
 {
-  char regs[20][8];
+  char regs[21][8];
   struct iovec iov[97];
   size_t nr = 0;
 
@@ -105,6 +106,7 @@ register_dump (int fd, union k_sigcontext *ctx)
       hexvalue (ctx->v21.trap_no, regs[17], 8);
       hexvalue (ctx->v21.error_code, regs[18], 8);
       hexvalue (ctx->v21.oldmask, regs[19], 8);
+      hexvalue (ctx->v21.fault_address, regs[20], 8);
     }
 
   /* Generate the output.  */
@@ -148,6 +150,11 @@ register_dump (int fd, union k_sigcontext *ctx)
   ADD_MEM (regs[18], 8);
   ADD_STRING ("   OldMask: ");
   ADD_MEM (regs[19], 8);
+  if (ctx->v20.magic != SIGCONTEXT_2_0_MAGIC)
+    {
+      ADD_STRING ("\n Addr: ");
+      ADD_MEM (regs[20], 8);
+    }
 
   ADD_STRING ("\n");
 
