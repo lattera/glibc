@@ -1,3 +1,52 @@
+2003-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_broadcast.c: Try using FUTEX_REQUEUE
+	instead of FUTEX_WAIT.
+	* sysdeps/pthread/pthread_cond_signal.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Likewise.
+	* sysdeps/pthread/pthread_cond_timedwait.c: Remember mutex which was
+	used in condvar structure.  Call __pthread_mutex_cond_lock instead
+	of __pthread_mutex_lock_internal.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/pthread/pthread_cond_wait.c: Likewise.
+	(__condvar_cleanup): Always call __pthread_mutex_cond_lock.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (libpthread-sysdep_routines):
+	Add pthread_mutex_cond_lock.
+	* sysdeps/unix/sysv/linux/lowlevelcond.sym: Add dep_mutex.
+	* sysdeps/unix/sysv/linux/pthread_cond_mutex_lock.c: New file.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Define
+	lll_mutex_cond_lock.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/pthread_types.h (pthread_cond_t):
+	Add __mutex field.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthread_types.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+
+	* sysdeps/i386/tcb-offsets.sym: Define MUTEX_FUTEX.
+	* sysdeps/x86_64/tcb-offsets.sym: Likewise.
+
+	* pthreadP.h: Declare __pthread_mutex_cond_lock.
+	* pthread_mutex_lock.c: Define LLL_MUTEX_LOCK if not already defined.
+	Use it instead of lll_mutex_lock.  If __pthread_mutex_lock is a
+	macro don't define aliases.
+
+	* cancellation.c: Remove __pthread_enable_asynccancel_2.
+	* pthreadP.h: Remove declaration of __pthread_enable_asynccancel_2.
+	* sysdeps/pthread/pthread_cond_timedwait.c: Use
+	__pthread_enable_asynccancel instead of __pthread_enable_asynccancel_2.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/pthread/pthread_cond_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+
 2003-05-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sem_open.c: Fix one endless loop.  Implement correct semantics

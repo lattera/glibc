@@ -65,8 +65,7 @@ __condvar_cleanup (void *arg)
 
   /* Get the mutex before returning unless asynchronous cancellation
      is in effect.  */
-  if (!(cbuffer->oldtype & CANCELTYPE_BITMASK))
-    __pthread_mutex_lock_internal (cbuffer->mutex);
+  __pthread_mutex_cond_lock (cbuffer->mutex);
 }
 
 
@@ -92,6 +91,10 @@ __pthread_cond_wait (cond, mutex)
 
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
+
+  /* Remember the mutex we are using here.  If there is already a
+     different address store this is a bad user bug.  */
+  cond->__data.__mutex = mutex;
 
   /* Prepare structure passed to cancellation handler.  */
   cbuffer.cond = cond;
@@ -123,7 +126,7 @@ __pthread_cond_wait (cond, mutex)
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
-      __pthread_enable_asynccancel_2 (&cbuffer.oldtype);
+      cbuffer.oldtype = __pthread_enable_asynccancel ();
 
       /* Wait until woken by signal or broadcast.  Note that we
 	 truncate the 'val' value to 32 bits.  */
@@ -150,7 +153,7 @@ __pthread_cond_wait (cond, mutex)
   __pthread_cleanup_pop (&buffer, 0);
 
   /* Get the mutex before returning.  */
-  return __pthread_mutex_lock_internal (mutex);
+  return __pthread_mutex_cond_lock (mutex);
 }
 
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,

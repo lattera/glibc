@@ -102,6 +102,25 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      : "0" (1), "2" (futex)			      \
 			      : "cx", "r11", "cc", "memory"); })
 
+
+#define lll_mutex_cond_lock(futex) \
+  (void) ({ int ignore1, ignore2;					      \
+	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
+			      "testl %0, %0\n\t"			      \
+			      "jne 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleaq %2, %%rdi\n\t"			      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_mutex_lock_wait\n\t"		      \
+			      "addq $128, %%rsp\n\t"			      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=S" (ignore1), "=&D" (ignore2), "=m" (futex) \
+			      : "0" (2), "2" (futex)			      \
+			      : "cx", "r11", "cc", "memory"); })
+
+
 #define lll_mutex_timedlock(futex, timeout) \
   ({ int result, ignore1, ignore2, ignore3;				      \
      __asm __volatile (LOCK_INSTR "xaddl %0, %4\n\t"			      \

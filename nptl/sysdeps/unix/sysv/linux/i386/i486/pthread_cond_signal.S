@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
+#include <kernel-features.h>
 
 #ifdef UP
 # define LOCK
@@ -30,6 +31,9 @@
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_REQUEUE		3
+
+#define EINVAL			22
 
 
 	.text
@@ -41,23 +45,25 @@
 __pthread_cond_signal:
 
 	pushl	%ebx
+	pushl	%esi
+	pushl	%edi
 
-	movl	8(%esp), %ebx
+	movl	16(%esp), %edi
 
 	/* Get internal lock.  */
 	movl	$1, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%eax, (%ebx)
+	xaddl	%eax, (%edi)
 #else
-	xaddl	%eax, cond_lock(%ebx)
+	xaddl	%eax, cond_lock(%edi)
 #endif
 	testl	%eax, %eax
 	jne	1f
 
-2:	addl	$wakeup_seq, %ebx
-	movl	total_seq+4-wakeup_seq(%ebx), %eax
-	movl	total_seq-wakeup_seq(%ebx), %ecx
+2:	leal	wakeup_seq(%edi), %ebx
+	movl	total_seq+4(%edi), %eax
+	movl	total_seq(%edi), %ecx
 	cmpl	4(%ebx), %eax
 	ja	3f
 	jb	4f
@@ -68,18 +74,30 @@ __pthread_cond_signal:
 3:	addl	$1, (%ebx)
 	adcl	$0, 4(%ebx)
 
-	/* Wake up one thread.  */
-	movl	$FUTEX_WAKE, %ecx
+	/* Wake up one thread by moving it to the internal lock futex.  */
+	movl	$FUTEX_REQUEUE, %ecx
 	movl	$SYS_futex, %eax
-	movl	%ecx, %edx	/* movl $1, %edx */
+	xorl	%edx, %edx
+	movl	$1, %esi
 	ENTER_KERNEL
+
+#ifndef __ASSUME_FUTEX_REQUEUE
+	cmpl	$-EINVAL, %eax
+	je	7f
+#endif
+
+	/* If we moved a thread we in any case have to make the syscall.  */
+	testl	%eax, %eax
+	jne	5f
 
 	/* Unlock.  */
 4:	LOCK
-	subl	$1, cond_lock-wakeup_seq(%ebx)
+	subl	$1, (%edi)
 	jne	5f
 
 6:	xorl	%eax, %eax
+	popl	%edi
+	popl	%esi
 	popl	%ebx
 	ret
 
@@ -93,11 +111,24 @@ __pthread_cond_signal:
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 5:
-	leal	cond_lock-wakeup_seq(%ebx), %eax
+#if cond_lock == 0
+	movl	%edi, %eax
+#else
+	leal	cond_lock(%edi), %eax
+#endif
 	call	__lll_mutex_unlock_wake
 	jmp	6b
+
+#ifndef __ASSUME_FUTEX_REQUEUE
+7:	/* The futex requeue functionality is not available.  */
+	movl	$1, %edx
+	movl	$FUTEX_WAKE, %ecx
+	movl	$SYS_futex, %eax
+	ENTER_KERNEL
+	jmp	4b
+#endif
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)

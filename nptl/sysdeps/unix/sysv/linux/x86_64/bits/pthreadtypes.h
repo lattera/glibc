@@ -78,6 +78,7 @@ typedef union
     unsigned long long int __total_seq;
     unsigned long long int __wakeup_seq;
     unsigned long long int __woken_seq;
+    void *__mutex;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
   long int __align;

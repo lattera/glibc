@@ -88,7 +88,9 @@ __pthread_cond_timedwait:
 	jne	1f
 
 	/* Unlock the mutex.  */
-2:	movq	16(%rsp), %rdi
+2:	movq	%rdi, %rax
+	movq	16(%rsp), %rdi
+	movq	%rdi, dep_mutex(%rax)
 	callq	__pthread_mutex_unlock_internal
 
 	testl	%eax, %eax
@@ -121,8 +123,8 @@ __pthread_cond_timedwait:
 #endif
 	jne	3f
 
-4:	movq	%rsp, %rdi
-	callq	__pthread_enable_asynccancel_2
+4:	callq	__pthread_enable_asynccancel
+	movq	%rax, (%rsp)
 
 	/* Get the current time.  */
 #ifdef __NR_clock_gettime
@@ -227,7 +229,7 @@ __pthread_cond_timedwait:
 	movq	%rdx, %fs:CLEANUP
 
 	movq	16(%rsp), %rdi
-	callq	__pthread_mutex_lock_internal
+	callq	__pthread_mutex_cond_lock
 
 	testq	%rax, %rax
 	cmoveq	%r14, %rax

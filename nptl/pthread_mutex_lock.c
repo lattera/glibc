@@ -22,6 +22,11 @@
 #include <lowlevellock.h>
 
 
+#ifndef LLL_MUTEX_LOCK
+# define LLL_MUTEX_LOCK(mutex) lll_mutex_lock (mutex)
+#endif
+
+
 int
 __pthread_mutex_lock (mutex)
      pthread_mutex_t *mutex;
@@ -45,7 +50,7 @@ __pthread_mutex_lock (mutex)
       else
 	{
 	  /* We have to get the mutex.  */
-	  lll_mutex_lock (mutex->__data.__lock);
+	  LLL_MUTEX_LOCK (mutex->__data.__lock);
 
 	  /* Record the ownership.  */
 	  mutex->__data.__owner = id;
@@ -66,7 +71,7 @@ __pthread_mutex_lock (mutex)
     case PTHREAD_MUTEX_TIMED_NP:
     case PTHREAD_MUTEX_ADAPTIVE_NP:
       /* Normal mutex.  */
-      lll_mutex_lock (mutex->__data.__lock);
+      LLL_MUTEX_LOCK (mutex->__data.__lock);
       /* Record the ownership.  */
       mutex->__data.__owner = id;
       break;
@@ -74,5 +79,7 @@ __pthread_mutex_lock (mutex)
 
   return 0;
 }
+#ifndef __pthread_mutex_lock
 strong_alias (__pthread_mutex_lock, pthread_mutex_lock)
 strong_alias (__pthread_mutex_lock, __pthread_mutex_lock_internal)
+#endif

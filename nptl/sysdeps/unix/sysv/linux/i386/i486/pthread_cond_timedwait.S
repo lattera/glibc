@@ -66,8 +66,13 @@ __pthread_cond_timedwait:
 	testl	%eax, %eax
 	jne	1f
 
+	/* Store the reference to the mutex.  If there is already a
+	   different value in there this is a bad user bug.  */
+2:	movl	24(%esp), %eax
+	movl	%eax, dep_mutex(%ebx)
+
 	/* Unlock the mutex.  */
-2:	pushl	24(%esp)
+	pushl	%eax
 .Lpush4:
 	call	__pthread_mutex_unlock_internal
 
@@ -113,8 +118,8 @@ __pthread_cond_timedwait:
 #endif
 	jne	3f
 
-4:	leal	8(%esp), %eax
-	call	__pthread_enable_asynccancel_2
+4:	call	__pthread_enable_asynccancel
+	movl	%eax, 8(%esp)
 
 	/* Get the current time.  */
 	movl	%ebx, %edx
@@ -230,7 +235,7 @@ __pthread_cond_timedwait:
 	movl	%edx, %gs:CLEANUP
 
 	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
-	call	__pthread_mutex_lock_internal
+	call	__pthread_mutex_cond_lock
 	addl	$44, %esp
 .Laddl:
 

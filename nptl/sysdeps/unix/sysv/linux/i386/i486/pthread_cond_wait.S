@@ -83,15 +83,11 @@ __condvar_cleanup:
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
-	/* Lock the mutex unless asynchronous cancellation is in effect.  */
-	testl	$2, 8(%esi)
-	jne	3f
-
 	pushl	(%esi)
-	call	__pthread_mutex_lock_internal
+	call	__pthread_mutex_cond_lock
 	popl	%eax
 
-3:	popl	%esi
+	popl	%esi
 	popl	%ebx
 	ret
 	.size	__condvar_cleanup, .-__condvar_cleanup
@@ -125,8 +121,13 @@ __pthread_cond_wait:
 	testl	%eax, %eax
 	jne	1f
 
+	/* Store the reference to the mutex.  If there is already a
+	   different value in there this is a bad user bug.  */
+2:	movl	20(%esp), %eax
+	movl	%eax, dep_mutex(%ebx)
+
 	/* Unlock the mutex.  */
-2:	pushl	20(%esp)
+	pushl	%eax
 .Lpush4:
 	call	__pthread_mutex_unlock_internal
 
@@ -171,8 +172,8 @@ __pthread_cond_wait:
 #endif
 	jne	3f
 
-4:	leal	8(%esp), %eax
-	call	__pthread_enable_asynccancel_2
+4:	call	__pthread_enable_asynccancel
+	movl	%eax, 8(%esp)
 
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
@@ -229,7 +230,7 @@ __pthread_cond_wait:
 	movl	%edx, %gs:CLEANUP
 
 	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
-	call	__pthread_mutex_lock_internal
+	call	__pthread_mutex_cond_lock
 	addl	$36, %esp
 .Laddl:
 

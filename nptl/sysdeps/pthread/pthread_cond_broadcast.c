@@ -25,6 +25,7 @@
 #include <pthreadP.h>
 
 #include <shlib-compat.h>
+#include <kernel-features.h>
 
 
 int
@@ -54,7 +55,16 @@ __pthread_cond_broadcast (cond)
 #endif
 
       /* Wake everybody.  */
-      lll_futex_wake (futex, INT_MAX);
+      pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
+      if (__builtin_expect (lll_futex_requeue (futex, 1, MAX_INT,
+					       &mut->__data.__lock) == -EINVAL,
+			    0))
+	{
+	  /* The requeue functionality is not available.  */
+#ifndef __ASSUME_FUTEX_REQUEUE
+	  lll_futex_wake (futex, MAX_INT);
+#endif
+	}
 
       /* That's all.  */
       return 0;

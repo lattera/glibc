@@ -29,6 +29,7 @@
 #define SYS_futex		1230
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_REQUEUE		3
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -64,7 +65,7 @@
 			 "=r" (__o0), "=r" (__o1), "=r" (__o2), "=r" (__o3)   \
 		       : "i" (0x100000), "2" (__r15), "3" (__o0), "4" (__o1), \
 		 	 "5" (__o2), "6" (__o3)				      \
-		       : lll_futex_clobbers);				      \
+		       : "out4", lll_futex_clobbers);			      \
      __r10 == -1 ? -__r8 : __r8;					      \
   })
 
@@ -83,9 +84,32 @@
 			 "=r" (__o0), "=r" (__o1), "=r" (__o2)		      \
 		       : "i" (0x100000), "2" (__r15), "3" (__o0), "4" (__o1), \
 		 	 "5" (__o2)					      \
-		       : "out3", lll_futex_clobbers);			      \
+		       : "out3", "out4", lll_futex_clobbers);		      \
      __r10 == -1 ? -__r8 : __r8;					      \
   })
+
+
+#define lll_futex_requeue(futex, nr_wake, nr_move, mutex) \
+  ({									      \
+     register long int __o0 asm ("out0") = (long int) (futex);		      \
+     register long int __o1 asm ("out1") = FUTEX_REQUEUE;		      \
+     register long int __o2 asm ("out2") = (long int) (nr_wake);	      \
+     register long int __o3 asm ("out3") = (long int) (nr_move);	      \
+     register long int __o4 asm ("out4") = (long int) (mutex);		      \
+     register long int __r8 asm ("r8");					      \
+     register long int __r10 asm ("r10");				      \
+     register long int __r15 asm ("r15") = SYS_futex;			      \
+									      \
+     __asm __volatile ("break %7;;"					      \
+		       : "=r" (__r8), "=r" (__r10), "=r" (__r15),	      \
+			 "=r" (__o0), "=r" (__o1), "=r" (__o2), "r" (__o3),   \
+			 "=r" (__o4)					      \
+		       : "i" (0x100000), "2" (__r15), "3" (__o0), "4" (__o1), \
+			 "5" (__o2), "6" (__o3), "7" (__o4)		      \
+		       : lll_futex_clobbers);				      \
+     __r8;								      \
+  })
+
 
 static inline int
 __attribute__ ((always_inline))
@@ -109,6 +133,18 @@ __lll_mutex_lock (int *futex)
     __lll_lock_wait (futex, val);
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
+
+
+static inline void
+__attribute__ ((always_inline))
+__lll_mutex_cond_lock (int *futex)
+{
+  int val = atomic_exchange_and_add (futex, 2);
+
+  if (__builtin_expect (val != 0, 0))
+    __lll_lock_wait (futex, val);
+}
+#define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
 
 extern int __lll_timedlock_wait (int *futex, int val, const struct timespec *)
@@ -140,7 +176,11 @@ __lll_mutex_unlock (int *futex)
   if (__builtin_expect (val > 1, 0))
     lll_futex_wake (futex, 1);
 }
-#define lll_mutex_unlock(futex) __lll_mutex_unlock(&(futex))
+#define lll_mutex_unlock(futex) \
+  __lll_mutex_unlock(&(futex))
+
+#define lll_mutex_unlock_force(futex) \
+  lll_futex_wake (&(futex), 1)
 
 #define lll_mutex_islocked(futex) \
   (futex != 0)

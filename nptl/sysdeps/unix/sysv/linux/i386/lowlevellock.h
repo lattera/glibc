@@ -126,6 +126,24 @@ extern int __lll_mutex_unlock_wait (int *__futex)
 			      : "memory"); })
 
 
+/* Special version of lll_mutex_lock which causes the unlock function to
+   always wakeup waiters.  */
+#define lll_mutex_cond_lock(futex) \
+  (void) ({ int ignore1, ignore2;					      \
+	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
+			      "testl %0, %0\n\t"			      \
+			      "jne 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "call __lll_mutex_lock_wait\n\t"		      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
+			      : "0" (2), "2" (futex)			      \
+			      : "memory"); })
+
+
 #define lll_mutex_timedlock(futex, timeout) \
   ({ int result, ignore1, ignore2;					      \
      __asm __volatile (LOCK_INSTR "xaddl %0, %3\n\t"			      \

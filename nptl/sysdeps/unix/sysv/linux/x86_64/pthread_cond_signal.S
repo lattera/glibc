@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
+#include <kernel-features.h>
 
 #ifdef UP
 # define LOCK
@@ -30,6 +31,9 @@
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_REQUEUE		3
+
+#define EINVAL			22
 
 
 	.text
@@ -44,15 +48,15 @@ __pthread_cond_signal:
 	movl	$1, %esi
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	xaddl	%esi, (%r8)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	xaddl	%esi, cond_lock(%r8)
 #endif
 	testl	%esi, %esi
 	jne	1f
 
-2:	addq	$wakeup_seq, %rdi
-	movq	total_seq-wakeup_seq(%rdi), %rcx
+2:	leaq	wakeup_seq(%r8), %rdi
+	movq	total_seq(%r8), %rcx
 	cmpq	(%rdi), %rcx
 	jbe	4f
 
@@ -62,12 +66,22 @@ __pthread_cond_signal:
 	/* Wake up one thread.  */
 	movq	$FUTEX_WAKE, %rsi
 	movq	$SYS_futex, %rax
-	movq	%rsi, %rdx	/* movl $1, %edx */
+	xorq	%rdx, %rdx
+	movq	$1, %r10
 	syscall
+
+#ifndef __ASSUME_FUTEX_REQUEUE
+	cmpq	$-EINVAL, %rax
+	je	7f
+#endif
+
+	/* If we moved a thread we in any case have to make the syscall.  */
+	testq	%rax, %rax
+	jne	5f
 
 	/* Unlock.  */
 4:	LOCK
-	decl	cond_lock-wakeup_seq(%rdi)
+	decl	cond_lock(%r8)
 	jne	5f
 
 6:	xorl	%eax, %eax
@@ -85,9 +99,22 @@ __pthread_cond_signal:
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
-5:	addq	$cond_lock-wakeup_seq, %rdi
+5:
+#if cond_lock != 0
+	addq	$cond_lock-wakeup_seq, %rdi
+#else
+	movq	%r8, %rdi
+#endif
 	callq	__lll_mutex_unlock_wake
 	jmp	6b
+
+#ifndef __ASSUME_FUTEX_REQUEUE
+7:	/* The futex requeue functionality is not available.  */
+	movq	$1, %rdx
+	movq	$FUTEX_WAKE, %esi
+	movq	$SYS_futex, %rax
+	syscall
+	jmp	4b
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)

@@ -1,3 +1,8 @@
+2003-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_FUTEX_REQUEUE for >= 2.5.70.
+
 2003-05-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S: Add CFI
@@ -12,7 +17,7 @@
 
 2003-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
-	* math/test-fenv.c (feexcp_nomask_test): Fix comment
+	* math/test-fenv.c (feexcp_nomask_test): Fix comment.
 	(feexcp_mask_test): Likewise.
 
 2003-05-21  Ulrich Drepper  <drepper@redhat.com>

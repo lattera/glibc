@@ -241,6 +241,8 @@ extern int __pthread_mutex_destroy_internal (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock_internal (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_cond_lock (pthread_mutex_t *__mutex)
+     attribute_hidden;
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_unlock_internal (pthread_mutex_t *__mutex);
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
@@ -320,8 +322,6 @@ extern int __pthread_kill (pthread_t threadid, int signo);
 extern void __pthread_exit (void *value);
 extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
-extern void __pthread_enable_asynccancel_2 (int *oldvalp)
-     internal_function attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 

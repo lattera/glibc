@@ -66,6 +66,10 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
 
+  /* Remember the mutex we are using here.  If there is already a
+     different address store this is a bad user bug.  */
+  cond->__data.__mutex = mutex;
+
   /* Prepare structure passed to cancellation handler.  */
   cbuffer.cond = cond;
   cbuffer.mutex = mutex;
@@ -145,7 +149,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
-      __pthread_enable_asynccancel_2 (&cbuffer.oldtype);
+      cbuffer.oldtype = __pthread_enable_asynccancel ();
 
       /* Wait until woken by signal or broadcast.  Note that we
 	 truncate the 'val' value to 32 bits.  */
@@ -184,7 +188,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   __pthread_cleanup_pop (&buffer, 0);
 
   /* Get the mutex before returning.  */
-  err = __pthread_mutex_lock_internal (mutex);
+  err = __pthread_mutex_cond_lock (mutex);
 
   return err ?: result;
 }

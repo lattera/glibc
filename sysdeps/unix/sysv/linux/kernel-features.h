@@ -294,3 +294,8 @@
 #if __LINUX_KERNEL_VERSION >= 132405 && defined __i386__
 # define __ASSUME_VSYSCALL	1
 #endif
+
+/* The requeue futex functionality was introduced in 2.5.70.  */
+#if __LINUX_KERNEL_VERSION >= 132422
+# define __ASSUME_FUTEX_REQUEUE	1
+#endif

@@ -25,13 +25,15 @@
 #include <pthreadP.h>
 
 #include <shlib-compat.h>
+#include <kernel-features.h>
+
 
 int
 __pthread_cond_signal (cond)
      pthread_cond_t *cond;
 {
   /* Make sure we are alone.  */
-  lll_mutex_lock(cond->__data.__lock);
+  lll_mutex_lock (cond->__data.__lock);
 
   /* Are there any waiters to be woken?  */
   if (cond->__data.__total_seq > cond->__data.__wakeup_seq)
@@ -50,7 +52,22 @@ __pthread_cond_signal (cond)
 #endif
 
       /* Wake one.  */
-      lll_futex_wake (futex, 1);
+      int r = lll_futex_requeue (futex, 0, 1, &cond->__data.__lock);
+      if (__builtin_expect (r == -EINVAL, 0))
+	{
+	  /* The requeue functionality is not available.  */
+#ifndef __ASSUME_FUTEX_REQUEUE
+	  lll_futex_wake (futex, 1);
+#endif
+	}
+      else if (r != 0)
+	{
+	  /* We always have to make the syscall if requeue actually
+	     moved a thread.  */
+	  lll_mutex_unlock_force (cond->__data.__lock);
+
+	  return 0;
+	}
     }
 
   /* We are done.  */

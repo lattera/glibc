@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
+#include <kernel-features.h>
 
 #ifdef UP
 # define LOCK
@@ -30,6 +31,9 @@
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_REQUEUE		3
+
+#define EINVAL			22
 
 
 	.text
@@ -41,8 +45,10 @@
 __pthread_cond_broadcast:
 
 	pushl	%ebx
+	pushl	%esi
+	pushl	%edi
 
-	movl	8(%esp), %ebx
+	movl	16(%esp), %ebx
 
 	/* Get internal lock.  */
 	movl	$1, %eax
@@ -69,18 +75,34 @@ __pthread_cond_broadcast:
 3:	movl	%ecx, (%ebx)
 	movl	%eax, 4(%ebx)
 
+	/* Get the address of the mutex used.  */
+	movl	dep_mutex-wakeup_seq(%ebx), %edi
+
 	/* Unlock.  */
 	LOCK
 	subl	$1, cond_lock-wakeup_seq(%ebx)
 	jne	7f
 
 	/* Wake up all threads.  */
-8:	movl	$FUTEX_WAKE, %ecx
+8:	movl	$FUTEX_REQUEUE, %ecx
 	movl	$SYS_futex, %eax
-	movl	$0x7fffffff, %edx
+	movl	$0x7fffffff, %esi
+	movl	$1, %edx
+	/* Get the address of the futex involved.  */
+# if MUTEX_FUTEX != 0
+	addl	$MUTEX_FUTEX, %edi
+# endif
 	ENTER_KERNEL
 
+#ifndef __ASSUME_FUTEX_REQUEUE
+	cmpl	$-EINVAL, %eax
+	je	9f
+10:
+#endif
+
 	xorl	%eax, %eax
+	popl	%edi
+	popl	%esi
 	popl	%ebx
 	ret
 
@@ -91,6 +113,8 @@ __pthread_cond_broadcast:
 	jne	5f
 
 6:	xorl	%eax, %eax
+	popl	%edi
+	popl	%esi
 	popl	%ebx
 	ret
 
@@ -113,6 +137,15 @@ __pthread_cond_broadcast:
 7:	leal	cond_lock-wakeup_seq(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 	jmp	8b
+
+#ifndef __ASSUME_FUTEX_REQUEUE
+9:	/* The futex requeue functionality is not available.  */
+	movl	$0x7fffffff, %edx
+	movl	$FUTEX_WAKE, %ecx
+	movl	$SYS_futex, %eax
+	ENTER_KERNEL
+	jmp	10b
+#endif
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2)
