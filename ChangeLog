@@ -4,6 +4,10 @@
 	Use prototypes definitions for static functions.
 
 2004-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/fpu/bits/mathinline.h: Use __NTH instead of __THROW.
+
+2004-09-08  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd-client.h: Add a few #includes.
