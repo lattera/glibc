@@ -86,6 +86,7 @@ CFLAGS-tst-printfsz.c = -Wno-format
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
 test-vfprintf-ENV = LOCPATH=$(common-objpfx)localedata
+bug14-ENV = LOCPATH=$(common-objpfx)localedata
 
 ifneq (,$(filter %REENTRANT, $(defines)))
 CPPFLAGS += -D_IO_MTSAFE_IO

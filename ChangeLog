@@ -1,3 +1,7 @@
+2003-01-27  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* stdio-common/Makefile: Add bug14-ENV to set LOCPATH for make check.
+
 2003-01-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c [USE_IN_LIBIO]: Use _IO_cleanup_region_start

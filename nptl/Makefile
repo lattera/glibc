@@ -136,7 +136,7 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-atfork1 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
 	tst-cancel6 tst-cancel7 \
-	tst-cleanup1 \
+	tst-cleanup1 tst-cleanup2 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 \
 	tst-exec1 tst-exec2 tst-exec3 \

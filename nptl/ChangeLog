@@ -1,3 +1,8 @@
+2003-01-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_region_start):
+	Interpret first parameter correctly.
+
 2003-01-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (headers): Add bits/semaphore.h.
