@@ -380,9 +380,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	return -EAI_MEMORY;
 
       at->family = AF_INET6;
+      if ((req->ai_flags & AI_PASSIVE) == 0)
+	memcpy (at->addr, &in6addr_loopback, sizeof (struct in6_addr));
 
       memset (at->next, 0, sizeof(struct gaih_addrtuple));
       at->next->family = AF_INET;
+      if ((req->ai_flags & AI_PASSIVE) == 0)
+	*(uint32_t *) at->next->addr = htonl (INADDR_LOOPBACK);
     }
 
   if (pai == NULL)

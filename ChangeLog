@@ -1,3 +1,8 @@
+1999-07-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): For non-passive
+	connections without a hostname set address to localhost address.
+
 1999-07-11  H.J. Lu  <hjl@gnu.org>
 
 	* nscd/grpcache.c: Add prefix "__" to get[a-z]*_r () to get
