@@ -53,7 +53,7 @@ routines = hurdstartup hurdinit \
 	   $(sig) $(dtable) hurdinline port-cleanup
 sig	= hurdsig hurdfault faultexc siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
-	  thread-self thread-cancel
+	  thread-self thread-cancel intr-msg
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
