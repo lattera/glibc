@@ -1,3 +1,13 @@
+Mon Sep 11 14:00:14 1995  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): Comment fix.
+
+Wed Aug 30 16:44:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): Use realloc to extend strings for GLOB_MARK
+	slash.
+	(glob_in_dir): Don't allocate extra byte here.
+
 Mon Aug  7 14:04:36 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c (glob_in_dir): Allocate GLOB_MARK byte in case when
