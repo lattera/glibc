@@ -1,3 +1,9 @@
+1999-04-28  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/getdents.c (__getdirentries): Remove
+	implementation and just always fail with ENOSYS.  This entry point is
+	obsolete.  Add link warning to that effect.
+
 1999-04-27  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/get-host.c: Include <hurd/lookup.h>.
