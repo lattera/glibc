@@ -26,8 +26,8 @@
 	check_subexp_matching_top, transit_state_sb, transit_state_mb,
 	transit_state_bkref, get_subexp, get_subexp_sub, check_arrival,
 	check_arrival_add_next_nodes, expand_bkref_cache, check_node_accept):
-	Remove dfa parameter.  Get dfa from mctxt.  Adjust callers.
-	(re_search_internal): Initialize mctxt.dfa.
+	Remove dfa parameter.  Get dfa from mctx.  Adjust callers.
+	(re_search_internal): Initialize mctx.dfa.
 
 	* posix/regex_internal.c (re_node_set_insert): Remove unused variables.
 
