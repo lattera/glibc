@@ -4401,10 +4401,11 @@ main (int argc, char **argv)
   if (noErrors)
     {
       printf ("  %d errors occured.\n", noErrors);
-      exit (1);
+      return 1;
     }
   printf ("  All tests passed successfully.\n");
-  exit (0);
+
+  return 0;
 }
 
 /*

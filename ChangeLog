@@ -1,3 +1,23 @@
+2000-12-05  Andreas Jaeger  <aj@suse.de>
+
+	* nss/test-netdb.c: Mark local functions as static to avoid
+	warnings.
+	(main): Use return to silence warning.
+
+	* stdlib/test-canon.c (check_path): Mark as static to avoid warning.
+
+	* stdio-common/test-popen.c: Mark local functions as static to
+	avoid warnings.
+	(main): Use return to silence warning.
+
+	* stdlib/testsort.c (compare): Mark as static to avoid warning.
+
+	* assert/test-assert.c: Mark local functions as static to avoid
+	warnings.
+	* assert/test-assert-perr.c: Likewise.
+
+	* math/libm-test.inc (main): Use return to silence warnings.
+
 2000-12-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/fenv.h: Fix typo in comment.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
+static void
 write_data (FILE *stream)
 {
   int i;
@@ -33,7 +33,7 @@ write_data (FILE *stream)
     }
 }
 
-void
+static void
 read_data (FILE *stream)
 {
   int i, j;
@@ -99,5 +99,5 @@ main (void)
     }
 
   puts (wstatus | rstatus  ? "Test FAILED!" : "Test succeeded.");
-  exit (wstatus | rstatus);
+  return (wstatus | rstatus);
 }

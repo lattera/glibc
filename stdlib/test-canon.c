@@ -93,7 +93,7 @@ struct {
 };
 
 
-int
+static int
 check_path (const char * result, const char * expected)
 {
   int good;

@@ -14,7 +14,7 @@
 jmp_buf rec;
 char buf[160];
 
-void
+static void
 sigabrt (int unused)
 {
   longjmp (rec, 1);  /* recover control */
@@ -22,13 +22,13 @@ sigabrt (int unused)
 
 #undef NDEBUG
 #include <assert.h>
-void
+static void
 assert1 (void)
 {
   assert_perror (1);
 }
 
-void
+static void
 assert2 (void)
 {
   assert_perror (0);
@@ -36,7 +36,7 @@ assert2 (void)
 
 #define NDEBUG
 #include <assert.h>
-void
+static void
 assert3 (void)
 {
   assert_perror (2);
