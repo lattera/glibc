@@ -1,3 +1,9 @@
+2000-11-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-digits.c (main): Add casts to avoid warnings.
+	* collate-test.c (xstrcoll): Make l1 and l2 const.
+	* xfrm-test.c (xstrcmp): Make l1 and l2 const.
+
 2000-11-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/BALTIC: Superceded by ISO-8859-13.

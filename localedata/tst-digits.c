@@ -67,6 +67,8 @@ static struct printf_int_test
   {  123456, "%I'10d", ONE TWO THREE "," FOUR FIVE SIX },
   { 1234567, "%I'10d", ONE "," TWO THREE FOUR "," FIVE SIX SEVEN }
 };
+#define nprintf_int_tests \
+  (sizeof (printf_int_tests) / sizeof (printf_int_tests[0]))
 
 #define WZERO  L"\x2080"
 #define WONE   L"\x2081"
@@ -106,7 +108,8 @@ static struct wprintf_int_test
   {  123456, L"%I'10d", L"   " WONE WTWO WTHREE L"," WFOUR WFIVE WSIX },
   { 1234567, L"%I'10d", L" " WONE L"," WTWO WTHREE WFOUR L"," WFIVE WSIX WSEVEN }
 };
-
+#define nwprintf_int_tests \
+  (sizeof (wprintf_int_tests) / sizeof (wprintf_int_tests[0]))
 
 
 int
@@ -125,8 +128,7 @@ main (void)
 
   /* First: printf tests.  */
   failures = 0;
-  for (cnt = 0; cnt < sizeof (printf_int_tests) / sizeof (printf_int_tests[0]);
-       ++cnt)
+  for (cnt = 0; cnt < (int) nprintf_int_tests; ++cnt)
     {
       char buf[100];
       ssize_t n;
@@ -137,7 +139,7 @@ main (void)
       printf ("%3d: got \"%s\", expected \"%s\"",
 	      cnt, buf, printf_int_tests[cnt].expected);
 
-      if (n != strlen (printf_int_tests[cnt].expected)
+      if (n != (ssize_t) strlen (printf_int_tests[cnt].expected)
 	  || strcmp (buf, printf_int_tests[cnt].expected) != 0)
 	{
 	  puts ("  -> FAILED");
@@ -152,9 +154,7 @@ main (void)
 
   /* wprintf tests.  */
   failures = 0;
-  for (cnt = 0;
-       cnt < sizeof (wprintf_int_tests) / sizeof (wprintf_int_tests[0]);
-       ++cnt)
+  for (cnt = 0; cnt < (int) nwprintf_int_tests; ++cnt)
     {
       wchar_t buf[100];
       ssize_t n;
@@ -166,7 +166,7 @@ main (void)
       printf ("%3d: got \"%ls\", expected \"%ls\"",
 	      cnt, buf, wprintf_int_tests[cnt].expected);
 
-      if (n != wcslen (wprintf_int_tests[cnt].expected)
+      if (n != (ssize_t) wcslen (wprintf_int_tests[cnt].expected)
 	  || wcscmp (buf, wprintf_int_tests[cnt].expected) != 0)
 	{
 	  puts ("  -> FAILED");
