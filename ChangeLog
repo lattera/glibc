@@ -1,4 +1,29 @@
+2002-11-11  Randolf Chung  <tausq@debian.org>
+
+	* sysdeps/hppa/fpu/libm-test-ulps: New file (generated).
+
+	* sysdeps/hppa/Makefile (CFLAGS-rtld.c): New variable.
+	Set -mdisable-fpregs for this file.
+
+2002-11-11  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/unix/sysv/linux/configure.in:
+	Make 2.4.19 minimum linux kernel for hppa, and add unwind symbols
+	from gcc-3.0 era for backwards compatibility.
+	* sysdeps/unix/sysv/linux/configure: Regenerate.
+
+        * sysdeps/unix/sysv/linux/hppa/sys/ucontext.h:
+        Define mcontext_t as a sigcontext.
+
 2002-11-18  Roland McGrath  <roland@redhat.com>
+
+	* dlfcn/dlerror.c (fini): New function, __attribute__ ((destructor)).
+	Free memory in `last_result' if it was used.
+
+	* resolv/nss_dns/dns-network.c (getanswer_r): In BYNAME case, search
+	all aliases for one that matches the "<dotted-quad>.IN-ADDR.ARPA" form.
+	Do the parsing inline instead of copying strings and calling
+	inet_network, and properly skip all alias names not matching the form.
 
 	* manual/pattern.texi (Variable Substitution): Fix # and ## examples.
 

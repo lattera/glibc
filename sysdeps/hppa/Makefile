@@ -27,6 +27,7 @@ CFLAGS-malloc.c += -DMALLOC_ALIGNMENT=16
 endif
 
 ifeq ($(subdir),elf)
+CFLAGS-rtld.c += -mdisable-fpregs
 dl-routines += dl-symaddr dl-fptr
 rtld-routines += dl-symaddr dl-fptr
 endif

@@ -366,53 +366,80 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 
   if (have_answer)
     {
-      char *tmp;
-      int len;
-      char *in, *cp, *rp, *wp;
-      int cnt, first_flag;
-
       *alias_pointer = NULL;
       switch (net_i)
 	{
 	case BYADDR:
-	  result->n_name = result->n_aliases[0];
+	  result->n_name = *result->n_aliases++;
 	  result->n_net = 0L;
-	  break;
+	  return NSS_STATUS_SUCCESS;
+
 	case BYNAME:
-	  len = strlen (result->n_aliases[0]);
-	  tmp = (char *) alloca (len + 1);
-	  tmp[len] = 0;
-	  wp = &tmp[len - 1];
+	  {
+	    char **ap = result->n_aliases++;
+	    while (*ap != NULL)
+	      {
+		/* Check each alias name for being of the forms:
+		   4.3.2.1.in-addr.arpa		= net 1.2.3.4
+		   3.2.1.in-addr.arpa		= net 0.1.2.3
+		   2.1.in-addr.arpa		= net 0.0.1.2
+		   1.in-addr.arpa		= net 0.0.0.1
+		*/
+		uint32_t val = 0;	/* Accumulator for n_net value.  */
+		unsigned int shift = 0; /* Which part we are parsing now.  */
+		const char *p = *ap; /* Consuming the string.  */
+		do
+		  {
+		    /* Match the leading 0 or 0[xX] base indicator.  */
+		    unsigned int base = 10;
+		    if (*p == '0' && p[1] != '.')
+		      {
+			base = 8;
+			++p;
+			if (*p == 'x' || *p == 'X')
+			  {
+			    base = 16;
+			    ++p;
+			    if (*p == '.')
+			      break; /* No digit here.  Give up on alias.  */
+			  }
+			if (*p == '\0')
+			  break;
+		      }
 
-	  rp = in = result->n_aliases[0];
-	  result->n_name = ans;
+		    uint32_t part = 0; /* Accumulates this part's number.  */
+		    do
+		      {
+			if (isdigit (*p) && (*p - '0' < base))
+			  part = (part * base) + (*p - '0');
+			else if (base == 16 && isxdigit (*p))
+			  part = (part << 4) + 10 + (tolower (*p) - 'a');
+			++p;
+		      } while (*p != '\0' && *p != '.');
 
-	  first_flag = 1;
-	  for (cnt = 0; cnt < 4; ++cnt)
-	    {
-	      char *startp;
+		    if (*p != '.')
+		      break;	/* Bad form.  Give up on this name.  */
 
-	      startp = rp;
-	      while (*rp != '.')
-		++rp;
-	      if (rp - startp > 1 || *startp != '0' || !first_flag)
-		{
-		  first_flag = 0;
-		  if (cnt > 0)
-		    *wp-- = '.';
-		  cp = rp;
-		  while (cp > startp)
-		    *wp-- = *--cp;
-		}
-	      in = rp + 1;
-	    }
+		    /* Install this as the next more significant byte.  */
+		    val |= part << shift;
+		    shift += 8;
+		    ++p;
 
-	  result->n_net = inet_network (wp);
+		    /* If we are out of digits now, there are two cases:
+		       1. We are done with digits and now see "in-addr.arpa".
+		       2. This is not the droid we are looking for.  */
+		    if (!isdigit (*p) && !strcasecmp (p, "in-addr.arpa"))
+		      {
+			result->n_net = val;
+			return NSS_STATUS_SUCCESS;
+		      }
+
+		    /* Keep going when we have seen fewer than 4 parts.  */
+		  } while (shift < 32);
+	      }
+	  }
 	  break;
 	}
-
-      ++result->n_aliases;
-      return NSS_STATUS_SUCCESS;
     }
 
   __set_h_errno (TRY_AGAIN);

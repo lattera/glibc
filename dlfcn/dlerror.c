@@ -1,5 +1,6 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2002
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -146,6 +147,15 @@ init (void)
        wrong.  In any case use a static buffer which is better than
        nothing.  */
     static_buf = &last_result;
+}
+
+static void
+__attribute__ ((destructor))
+fini (void)
+{
+  if (last_result.errstring != NULL
+      && strcmp (last_result.errstring, "out of memory") != 0)
+    free ((char *) last_result.errstring);
 }
 
 
