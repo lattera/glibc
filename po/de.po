@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.3.3\n"
 "POT-Creation-Date: 2004-08-05 09:16+0200\n"
-"PO-Revision-Date: 2004-08-14 12:26+0200\n"
+"PO-Revision-Date: 2004-11-06 12:38+0100\n"
 "Last-Translator: Jochen Hein <jochen@jochen.org>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -51,6 +51,7 @@ msgstr ""
 # weight
 # ellipsis: Auslassung
 # range: bereich
+#
 #: sysdeps/generic/siglist.h:29 stdio-common/../sysdeps/unix/siglist.c:27
 msgid "Hangup"
 msgstr "Aufgelegt"
@@ -2716,7 +2717,7 @@ msgstr "Der Name ist im Netzwerk nicht eindeutig"
 #: stdio-common/../sysdeps/gnu/errlist.c:1285
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
 msgid "File descriptor in bad state"
-msgstr "Die Dateizugriffsnummer ist ein schlechter Verfassung"
+msgstr "Die Dateizugriffsnummer ist in schlechter Verfassung"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1293
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:112
