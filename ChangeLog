@@ -1,3 +1,33 @@
+2001-02-26  Paul Eggert  <eggert@twinsun.com>
+
+	Modify mkstemp.c and tempname.c so that they can be used by
+	GNU applications on non-glibc platforms.
+
+	* misc/mkstemp.c (__GT_FILE): Define to zero if not defined.
+
+	* sysdeps/posix/tempname.c: Include <config.h> if HAVE_CONFIG_H.
+	Include <stddef.h>, <stdint.h>, <string.h> only if
+	STDC_HEADERS || _LIBC.
+	Include <fcntl.h> only if HAVE_FCNTL_H || _LIBC.
+	Include <unistd.h> only if HAVE_UNISTD_H || _LIBC.
+	Include <sys/time.h> only if HAVE_SYS_TIME_H || _LIBC.
+	(__set_errno): Define this macro if <errno.h> doesn't.
+	(P_tmpdir, TMP_MAX, __GT_FILE, __GT_BIGFILE, __GT_DIR, __GT_NOCREATE):
+	Define these macros if <stdio.h> doesn't.
+	(S_ISDIR, S_IRUSR, S_IWUSR, S_IXUSR):
+	Define these macros if <sys/stat.h> doesn't.
+	Ignore <sys/stat.h> S_ISDIR if STAT_MACROS_BROKEN.
+	(stat64, __getpid, __gettimeofday, __mkdir, __open, __open64,
+	lxstat64, __xstat64): Define if not _LIBC.
+	(struct_stat64): New macro.
+	(direxists, __gen_tempname): Use it, to avoid a
+	portability problem with Solaris 8.
+	(__secure_getenv): Define if ! (HAVE___SECURE_GETENV || _LIBC).
+	(__gen_tempname): Invoke gettimeofday only if
+	HAVE_GETTIMEOFDAY || _LIBC; otherwise, fall back on plain "time".
+	Use portable macros like S_IRUSR | S_IWUSR rather than nonportable
+	octal values like 0600.
+
 2001-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/ldbl-96/e_jnl.c: New file.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,102 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/time.h>
 #include <assert.h>
+
+#include <errno.h>
+#ifndef __set_errno
+# define __set_errno(Val) errno = (Val)
+#endif
+
+#include <stdio.h>
+#ifndef P_tmpdir
+# define P_tmpdir "/tmp"
+#endif
+#ifndef TMP_MAX
+# define TMP_MAX 238328
+#endif
+#ifndef __GT_FILE
+# define __GT_FILE	0
+# define __GT_BIGFILE	1
+# define __GT_DIR	2
+# define __GT_NOCREATE	3
+#endif
+
+#if STDC_HEADERS || _LIBC
+# include <stddef.h>
+# include <stdlib.h>
+# include <string.h>
+#endif
+
+#if HAVE_FCNTL_H || _LIBC
+# include <fcntl.h>
+#endif
+
+#if HAVE_SYS_TIME_H || _LIBC
+# include <sys/time.h>
+#endif
+
+#if HAVE_STDINT_H || _LIBC
+# include <stdint.h>
+#endif
+
+#if HAVE_UNISTD_H || _LIBC
+# include <unistd.h>
+#endif
+
+#include <sys/stat.h>
+#if STAT_MACROS_BROKEN
+# undef S_ISDIR
+#endif
+#if !defined S_ISDIR && defined S_IFDIR
+# define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
+#endif
+#if !S_IRUSR && S_IREAD
+# define S_IRUSR S_IREAD
+#endif
+#if !S_IRUSR
+# define S_IRUSR 00400
+#endif
+#if !S_IWUSR && S_IWRITE
+# define S_IWUSR S_IWRITE
+#endif
+#if !S_IWUSR
+# define S_IWUSR 00200
+#endif
+#if !S_IXUSR && S_IEXEC
+# define S_IXUSR S_IEXEC
+#endif
+#if !S_IXUSR
+# define S_IXUSR 00100
+#endif
+
+#if _LIBC
+# define struct_stat64 struct stat64
+#else
+# define struct_stat64 struct stat
+# define __getpid getpid
+# define __gettimeofday gettimeofday
+# define __mkdir mkdir
+# define __open open
+# define __open64 open
+# define __lxstat64(version, path, buf) lstat (path, buf)
+# define __xstat64(version, path, buf) stat (path, buf)
+#endif
+
+#if ! (HAVE___SECURE_GETENV || _LIBC)
+# define __secure_getenv getenv
+#endif
 
 /* Return nonzero if DIR is an existent directory.  */
 static int
 direxists (const char *dir)
 {
-  struct stat64 buf;
+  struct_stat64 buf;
   return __xstat64 (_STAT_VER, dir, &buf) == 0 && S_ISDIR (buf.st_mode);
 }
 
@@ -124,10 +202,10 @@ __gen_tempname (char *tmpl, int kind)
   int len;
   char *XXXXXX;
   static uint64_t value;
-  struct timeval tv;
+  uint64_t random_time_bits;
   int count, fd = -1;
   int save_errno = errno;
-  struct stat64 st;
+  struct_stat64 st;
 
   len = strlen (tmpl);
   if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
@@ -140,8 +218,16 @@ __gen_tempname (char *tmpl, int kind)
   XXXXXX = &tmpl[len - 6];
 
   /* Get some more or less random data.  */
-  __gettimeofday (&tv, NULL);
-  value += ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec ^ __getpid ();
+#if HAVE_GETTIMEOFDAY || _LIBC
+  {
+    struct timeval tv;
+    __gettimeofday (&tv, NULL);
+    random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
+  }
+#else
+  random_time_bits = time (NULL);
+#endif
+  value += random_time_bits ^ __getpid ();
 
   for (count = 0; count < TMP_MAX; value += 7777, ++count)
     {
@@ -163,15 +249,15 @@ __gen_tempname (char *tmpl, int kind)
       switch (kind)
 	{
 	case __GT_FILE:
-	  fd = __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600);
+	  fd = __open (tmpl, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 	  break;
 
 	case __GT_BIGFILE:
-	  fd = __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600);
+	  fd = __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 	  break;
 
 	case __GT_DIR:
-	  fd = __mkdir (tmpl, 0700);
+	  fd = __mkdir (tmpl, S_IRUSR | S_IWUSR | S_IXUSR);
 	  break;
 
 	case __GT_NOCREATE:
