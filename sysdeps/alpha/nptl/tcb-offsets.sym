@@ -10,3 +10,4 @@
 #if TLS_MULTIPLE_THREADS_IN_TCB
 MULTIPLE_THREADS_OFFSET		thread_offsetof (header.multiple_threads)
 #endif
+PID_OFFSET			thread_offsetof (pid)
