@@ -1,3 +1,7 @@
+2004-07-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (prune_cache): Print correct list when debugging.
+
 2004-07-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* resolv/res_libc.c (res_init): If RES_INIT is set and
