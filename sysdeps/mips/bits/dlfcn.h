@@ -1,5 +1,5 @@
 /* System dependent definitions for run-time dynamic loading.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,8 +52,13 @@
         foo = DL_CALL_FCT (fctp, (arg1, arg2));
 */
 # define DL_CALL_FCT(fctp, args) \
-  (_dl_mcount_wrapper_check (fctp), (*(fctp)) args)
+  (_dl_mcount_wrapper_check ((void *) (fctp)), (*(fctp)) args)
+
+__BEGIN_DECLS
 
 /* This function calls the profiling functions.  */
 extern void _dl_mcount_wrapper_check (void *__selfpc) __THROW;
+
+__END_DECLS
+
 #endif

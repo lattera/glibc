@@ -1,3 +1,35 @@
+2001-10-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/strxfrm.c [USE_IN_EXTENDED_LOCALE_MODEL]: Correctly get
+	nrules value.
+
+2001-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/bits/dlfcn.h (DL_CALL_FCT): Cast to void *.
+	Use __BEGIN_DECLS/__END_DECLS around prototypes.
+	* sysdeps/mips/bits/dlfcn.h (DL_CALL_FCT): Likewise.
+
+2001-10-21  Jim Meyering  <meyering@lucent.com>
+
+	* malloc/obstack.c (_): Honor the setting of ENABLE_NLS.  Otherwise,
+	this code would end up calling gettext even in packages built
+	with --disable-nls.
+	* posix/getopt.c (_): Likewise.
+	* posix/regex.c (_): Likewise.
+
+2001-10-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/gethnamaddr.c (gethostbyaddr): Use ip6.addr for reverse
+	lookup not ip6.int.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Likewise.
+	Reported by Martin.v.Loewis@t-online.de [PR libc/2598].
+
+2001-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__attribute_used__): Define.
+	* elf/rtld.c (_dl_start): Add __attribute_used__.
+	* elf/dl-runtime.c (fixup, profile_fixup): Likewise.
+
 2001-10-25  Andreas Schwab  <schwab@suse.de>
 
 	* stdlib/a64l.c: Expect least significant digit first.

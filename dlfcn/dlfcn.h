@@ -1,5 +1,5 @@
 /* User functions for run-time dynamic loading.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 /* Collect various system dependent definitions and declarations.  */
 #include <bits/dlfcn.h>
 
+
 #ifdef __USE_GNU
 /* If the first argument of `dlsym' or `dlvsym' is set to RTLD_NEXT
    the run-time address of the symbol called NAME in the next shared
@@ -37,6 +38,7 @@
    is returned.  */
 # define RTLD_DEFAULT	((void *) 0)
 #endif
+
 
 __BEGIN_DECLS
 
@@ -66,6 +68,7 @@ extern void *dlvsym (void *__restrict __handle,
    the error string so that a following call returns null.  */
 extern char *dlerror (void) __THROW;
 
+
 #ifdef __USE_GNU
 /* Structure containing information about object searched using
    `dladdr'.  */
@@ -79,7 +82,7 @@ typedef struct
 
 /* Fill in *INFO with the following information about ADDRESS.
    Returns 0 iff no shared object's segments contain that address.  */
-extern int dladdr (const void *__address, Dl_info *__info) __THROW;
+extern int dladdr (__const void *__address, Dl_info *__info) __THROW;
 #endif
 
 __END_DECLS

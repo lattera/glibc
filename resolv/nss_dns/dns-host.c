@@ -282,7 +282,7 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
       qp = qbuf;
       for (n = IN6ADDRSZ - 1; n >= 0; n--)
 	qp += sprintf (qp, "%x.%x.", uaddr[n] & 0xf, (uaddr[n] >> 4) & 0xf);
-      strcpy (qp, "ip6.int");
+      strcpy (qp, "ip6.arpa");
       break;
     default:
       /* Cannot happen.  */

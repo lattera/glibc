@@ -690,7 +690,7 @@ gethostbyaddr(addr, len, af)
 				       uaddr[n] & 0xf,
 				       (uaddr[n] >> 4) & 0xf));
 		}
-		strcpy(qp, "ip6.int");
+		strcpy(qp, "ip6.arpa");
 		break;
 	default:
 		abort();
