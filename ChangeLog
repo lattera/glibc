@@ -1,3 +1,9 @@
+2004-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Don't use
+	CNAME records, we better follow the chain of CNAME records which
+	can be accomplished with A/AAAA lookups.
+
 2004-08-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/resource.h (enum __rusage_who):
