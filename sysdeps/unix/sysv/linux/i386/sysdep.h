@@ -111,10 +111,15 @@ __i686.get_pc_thunk.reg:						      \
 # elif defined _LIBC_REENTRANT
 
 #  if USE___THREAD
+#   ifndef NOT_IN_libc
+#    define SYSCALL_ERROR_ERRNO __libc_errno
+#   else
+#    define SYSCALL_ERROR_ERRNO errno
+#   endif
 #   define SYSCALL_ERROR_HANDLER					      \
 0:SETUP_PIC_REG (cx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
-  movl __libc_errno@GOTNTPOFF(%ecx), %ecx;				      \
+  movl SYSCALL_ERROR_ERRNO@GOTNTPOFF(%ecx), %ecx;			      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
   movl %edx, %gs:0(%ecx);						      \
