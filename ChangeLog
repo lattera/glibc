@@ -1,3 +1,41 @@
+2002-12-31  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/kernel_stat.h: Sync
+	with Linux kernel.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/kernel_stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/kernel_stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/kernel_stat.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/kernel_stat.h
+	(_HAVE_STAT_NSEC,_HAVE_STAT_NSEC64): New.
+
+	* sysdeps/unix/sysv/linux/xstatconv.c (xstat_conv): Readd
+	__unused[1-3] since they're needed by some platforms.  Handle
+	_HAVE_STAT_NSEC and _HAVE_STAT_NSEC64.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Add nsec resolution
+	for structs stat and stat64.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+
+        * io/sys/stat.h [__USE_MISC]: Define __need_timespec for struct
+        stat.
+
+        * sysdeps/unix/sysv/linux/xstatconv.c (xstat_conv): Adjust for
+        nsec resolution changes.
+        (xstat64_conv): Likewise.
+        (xstat32_conv): Likewise.
+
+        * sysdeps/unix/sysv/linux/kernel_stat.h: Add nsec resolution for
+        struct kernel_stat.
+
+        * sysdeps/unix/sysv/linux/bits/stat.h: Add nsec resolution for
+        structs stat and stat64.
+
+        * time/time.h (__timespec_defined): Define for __USE_MISC.
+
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/unistd.h: Add libc_hidden_proto for __fork and __vfork.
