@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,95,97,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <mach_init.h>
 #include <mach/mach_interface.h>
 #include <mach/mig_support.h>
+#include <unistd.h>
 
 mach_port_t __mach_task_self_;
 vm_size_t __vm_page_size = 0;	/* Must be data not bss for weak alias.  */

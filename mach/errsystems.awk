@@ -16,6 +16,6 @@ const struct error_system __mach_error_systems[err_max_system + 1] =";
 }
 END {
   print "  };";
-  printf "\n\
+  print "\n\
 const int __mach_error_system_count = errlib_count (__mach_error_systems);";
 }

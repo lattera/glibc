@@ -1,3 +1,73 @@
+2001-03-30  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/Makefile ($(link-rpcuserlibs)): Don't append
+	options after $(build-module), which is no longer a single command.
+	(LDFLAGS-link-rpcuserlibs): New variable to hold those options.
+	(LDFLAGS-libmachuser-link.so, LDFLAGS-libhurduser-link.so): New
+	variables using it.  Reported by Mark Kettenis <kettenis@gnu.org>.
+
+2001-03-11  Roland McGrath  <roland@frob.com>
+
+	* elf/rtld.c (dl_main): Add cast to quiet warning.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* iconv/gconv_conf.c (__gconv_get_path): Likewise.
+	(__gconv_read_conf): Likewise.
+	* iconv/gconv_db.c (gen_steps): Likewise.
+	(__gconv_find_transform): Likewise.
+	* locale/programs/charmap-dir.c (fopen_uncompressed): Likewise.
+	(fopen_uncompressed): Use const in second argument's type.
+
+2001-03-11  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__writev): New function.
+
+	* mach/mach_error.h: Fix ancient #endif syntax.
+	* hurd/hurdmalloc.c: Likewise.
+
+	* sysdeps/generic/atomicity.h (exchange_and_add, atomic_add,
+	compare_and_swap): Add volatile qualifier to first arg, to bring
+	these prototypes in line with all the other implementations.
+	Add a #warning to remind the builder that these are not atomic.
+
+2001-03-04  Roland McGrath  <roland@frob.com>
+
+	* hurd/vpprintf.c (vpprintf) [USE_IN_LIBIO]: Use innermore first
+	member of TEMP_F so its type is _IO_FILE * as expected.
+
+	* hurd/fopenport.c (seekio): Conditionalize type of POS argument
+	on [USE_IN_LIBIO].  Check the value for overflow, since for libio
+	it might exceed off_t's range.
+
+2001-02-25  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/sysd-stdio.c (__stdio_reopen): Use prototype.
+	* sysdeps/unix/bsd/getpt.c (__posix_openpt): Likewise.
+
+	* sysdeps/mach/hurd/i386/intr-msg.h (SYSCALL_EXAMINE): Make this a
+	macro instead of an inline function,
+	(MSG_EXAMINE): Likewise.
+
+	* hurd/hurd/ioctl.h (_HURD_HANDLE_IOCTLS_1): Remove extraneous ##.
+
+	* hurd/get-host.c: Include <string.h> for decls of built-ins.
+	* hurd/hurdchdir.c: Likewise.
+	* sysdeps/mach/hurd/i386/sigreturn.c: Likweise.
+	* sysdeps/mach/hurd/opendir.c: Likewise.
+
+	* mach/mach_init.c: Include <unistd.h> for _exit decl.
+
+	* mach/errsystems.awk: Give output file a trailing newline.
+
+	* mach/Machrules (MIG): Prepend CC='${CC}' to the mig command, so that
+	the script will use our compiler for the cpp stage.
+
+	With --enable-all-warnings we get a whole bunch of warnings,
+	and these are just a few fixes; there are more needed to silence it.
+	* mach/mach/mig_support.h (__mig_strncpy, mig_strncpy): Add extern
+	decls before extern inline defns to quiet gcc warning.
+	* hurd/hurd/threadvar.h (__hurd_threadvar_location_from_sp): Likewise.
+	* sysdeps/mach/i386/machine-sp.h (__thread_stack_pointer): Likewise.
+
 2001-03-31  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_RAWHDLC): Added.

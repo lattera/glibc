@@ -1,5 +1,5 @@
 /* Get a host configuration item kept as the whole contents of a file.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <hurd.h>
 #include <hurd/lookup.h>
 #include "hurdhost.h"
+#include <string.h>
 
 ssize_t
 _hurd_get_host_config (const char *item, char *buf, size_t buflen)

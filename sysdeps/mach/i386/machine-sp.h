@@ -1,5 +1,5 @@
 /* Machine-specific function to return the stack pointer.  i386 version.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994,97,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #define _EXTERN_INLINE extern __inline
 #endif
 
+extern void *__thread_stack_pointer (void);
 _EXTERN_INLINE void *
 __thread_stack_pointer (void)
 {

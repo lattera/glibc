@@ -1,5 +1,5 @@
 /* Machine-dependent details of interruptible RPC messaging.  i386 version.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,20 +53,20 @@ INTR_MSG_BACK_OUT (struct i386_thread_state *state)
 
 #include "hurdfault.h"
 
-static inline int
-SYSCALL_EXAMINE (struct i386_thread_state *state, int *callno)
-{
-  struct { unsigned int c[2]; } *p = (void *) (state->eip - 7);
-  int result;
-  if (_hurdsig_catch_memory_fault (p))
-    return 0;
-  if (result = p->c[0] == 0x0000009a && (p->c[1] & 0x00ffffff) == 0x00000700)
-    /* The PC is just after an `lcall $7,$0' instruction.
-       This is a system call in progress; %eax holds the call number.  */
-    *callno = state->eax;
-  _hurdsig_end_catch_fault ();
-  return result;
-}
+/* This cannot be an inline function because it calls setjmp.  */
+#define SYSCALL_EXAMINE(state, callno)					      \
+({									      \
+  struct { unsigned int c[2]; } *p = (void *) ((state)->eip - 7);	      \
+  int result;								      \
+  if (_hurdsig_catch_memory_fault (p))					      \
+    return 0;								      \
+  if (result = p->c[0] == 0x0000009a && (p->c[1] & 0x00ffffff) == 0x00000700) \
+    /* The PC is just after an `lcall $7,$0' instruction.		      \
+       This is a system call in progress; %eax holds the call number.  */     \
+    *(callno) = (state)->eax;						      \
+  _hurdsig_end_catch_fault ();						      \
+  result;								      \
+})
 
 
 struct mach_msg_trap_args
@@ -83,35 +83,31 @@ struct mach_msg_trap_args
   };
 
 
-static inline int
-MSG_EXAMINE (struct i386_thread_state *state, int *msgid,
-	     mach_port_t *rcv_name, mach_port_t *send_name,
-	     mach_msg_option_t *option, mach_msg_timeout_t *timeout)
-{
-  const struct mach_msg_trap_args *args = (const void *) state->uesp;
-  mach_msg_header_t *msg;
-
-  if (_hurdsig_catch_memory_fault (args))
-    return -1;
-  msg = args->msg;
-  *option = args->option;
-  *timeout = args->timeout;
-  *rcv_name = args->rcv_name;
-  _hurdsig_end_catch_fault ();
-
-  if (msg == 0)
-    {
-      *send_name = MACH_PORT_NULL;
-      *msgid = 0;
-    }
-  else
-    {
-      if (_hurdsig_catch_memory_fault (msg))
-	return -1;
-      *send_name = msg->msgh_remote_port;
-      *msgid = msg->msgh_id;
-      _hurdsig_end_catch_fault ();
-    }
-
-  return 0;
-}
+/* This cannot be an inline function because it calls setjmp.  */
+#define MSG_EXAMINE(state, msgid, rcvname, send_name, opt, tmout)	      \
+({									      \
+  const struct mach_msg_trap_args *args = (const void *) (state)->uesp;	      \
+  mach_msg_header_t *msg;						      \
+  _hurdsig_catch_memory_fault (args) ? -1 :				      \
+    ({									      \
+      msg = args->msg;							      \
+      *(opt) = args->option;						      \
+      *(tmout) = args->timeout;						      \
+      *(rcvname) = args->rcv_name;					      \
+      _hurdsig_end_catch_fault ();					      \
+      if (msg == 0)							      \
+	{								      \
+	  *(send_name) = MACH_PORT_NULL;				      \
+	  *(msgid) = 0;							      \
+	}								      \
+      else								      \
+	{								      \
+	  if (_hurdsig_catch_memory_fault (msg))			      \
+	    return -1;							      \
+	  *(send_name) = msg->msgh_remote_port;				      \
+	  *(msgid) = msg->msgh_id;					      \
+	  _hurdsig_end_catch_fault ();					      \
+	}								      \
+      0;								      \
+    });									      \
+})

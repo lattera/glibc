@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -225,7 +225,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	{
 	  result[step_cnt].__from_name = (step_cnt == 0
 					  ? __strdup (fromset)
-					  : current->last->result_set);
+					  : (char *)current->last->result_set);
 	  result[step_cnt].__to_name = (step_cnt + 1 == *nsteps
 					? __strdup (current->result_set)
 					: result[step_cnt + 1].__from_name);
@@ -644,11 +644,11 @@ __gconv_find_transform (const char *toset, const char *fromset,
       struct gconv_alias key;
       struct gconv_alias **found;
 
-      key.fromname = fromset;
+      key.fromname = (char *) fromset;
       found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
       fromset_expand = found != NULL ? (*found)->toname : NULL;
 
-      key.fromname = toset;
+      key.fromname = (char *) toset;
       found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
       toset_expand = found != NULL ? (*found)->toname : NULL;
     }

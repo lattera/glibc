@@ -874,7 +874,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
 	    else
 	      _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
-			  l->l_name, sizeof l->l_addr * 2, l->l_addr);
+			  l->l_name, (int) sizeof l->l_addr * 2, l->l_addr);
 	}
 
       if (__builtin_expect (mode, trace) != trace)
@@ -891,8 +891,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 
 	    _dl_printf ("%s found at 0x%0*Zd in object at 0x%0*Zd\n",
-			_dl_argv[i], sizeof ref->st_value * 2, ref->st_value,
-			sizeof loadbase * 2, loadbase);
+			_dl_argv[i],
+			(int) sizeof ref->st_value * 2, ref->st_value,
+			(int) sizeof loadbase * 2, loadbase);
 	  }
       else
 	{

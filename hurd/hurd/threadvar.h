@@ -1,5 +1,5 @@
 /* Internal per-thread variables for the Hurd.
-   Copyright (C) 1994, 95, 97, 98, 99, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,97,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,6 +74,8 @@ enum __hurd_threadvar_index
 /* Return the location of the value for the per-thread variable with index
    INDEX used by the thread whose stack pointer is SP.  */
 
+extern unsigned long int *__hurd_threadvar_location_from_sp
+  (enum __hurd_threadvar_index __index, void *__sp);
 _HURD_THREADVAR_H_EXTERN_INLINE unsigned long int *
 __hurd_threadvar_location_from_sp (enum __hurd_threadvar_index __index,
 				   void *__sp)

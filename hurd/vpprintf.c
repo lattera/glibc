@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,94,97,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,94,97,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ vpprintf (io_t port, const char *format, va_list arg)
   _IO_cookie_init (&temp_f.cfile, _IO_NO_READS,
 		   (void *) port, (cookie_io_functions_t) { write: do_write });
 
-  done = _IO_vfprintf (&temp_f.cfile.__fp, format, arg);
+  done = _IO_vfprintf (&temp_f.cfile.__fp.file, format, arg);
 
 #else
 

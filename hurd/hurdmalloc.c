@@ -9,34 +9,40 @@
 #define vm_allocate __vm_allocate
 #define vm_page_size __vm_page_size
 
-/* 
+/*
  * Mach Operating System
  * Copyright (c) 1991,1990,1989 Carnegie Mellon University
  * All Rights Reserved.
- * 
+ *
  * Permission to use, copy, modify and distribute this software and its
  * documentation is hereby granted, provided that both the copyright
  * notice and this permission notice appear in all copies of the
  * software, derivative works or modified versions, and any portions
  * thereof, and that both notices appear in supporting documentation.
- * 
+ *
  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
+ *
  * Carnegie Mellon requests users of this software to return to
- * 
+ *
  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
  *  School of Computer Science
  *  Carnegie Mellon University
  *  Pittsburgh PA 15213-3890
- * 
+ *
  * any improvements or extensions that they make and grant Carnegie Mellon
  * the rights to redistribute these changes.
  */
 /*
  * HISTORY
  * $Log$
+ * Revision 1.14  2001/04/01 05:03:14  roland
+ * 2001-03-11  Roland McGrath  <roland@frob.com>
+ *
+ * 	* mach/mach_error.h: Fix ancient #endif syntax.
+ * 	* hurd/hurdmalloc.c: Likewise.
+ *
  * Revision 1.13  1996/12/20 01:32:01  drepper
  * Update from main archive 961219
  *
@@ -178,7 +184,7 @@ typedef struct free_list {
 	header_t head;		/* head of free list for this size */
 #ifdef	DEBUG
 	int in_use;		/* # mallocs - # frees */
-#endif	DEBUG
+#endif	/* DEBUG */
 } *free_list_t;
 
 /*
@@ -301,7 +307,7 @@ malloc(size)
 
 #ifdef	DEBUG
 	fl->in_use += 1;
-#endif	DEBUG
+#endif	/* DEBUG */
 	spin_unlock(&fl->lock);
 	/*
 	 * Store free list pointer in block header
@@ -359,7 +365,7 @@ free(base)
 	fl->head = h;
 #ifdef	DEBUG
 	fl->in_use -= 1;
-#endif	DEBUG
+#endif	/* DEBUG */
 	spin_unlock(&fl->lock);
 	return;
 }
@@ -455,7 +461,7 @@ print_malloc_free_list()
   	fprintf(stderr, " all sizes %10d %10d %10d\n",
 		total_used, total_free, total_used + total_free);
 }
-#endif	DEBUG
+#endif	/* DEBUG */
 
 static void
 malloc_fork_prepare(void)

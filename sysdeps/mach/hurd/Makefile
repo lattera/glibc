@@ -1,4 +1,4 @@
-# Copyright (C) 1993,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
+# Copyright (C) 1993,94,95,96,97,98,99,2000,01 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -149,7 +149,12 @@ lib-noranlib: $(common-objpfx)hurd/libhurduser-link.so
 endif
 
 $(link-rpcuserlibs): %-link.so: %_pic.a
-	$(build-module) -nostdlib -Wl,-soname=$(*F).so$($(*F).so-version)
+# The $(build-module) variable now contains a sequence of several commands,
+# so we can't tweak the ld command just by adding text to this command line.
+	$(build-module)
+LDFLAGS-link-rpcuserlibs = -nostdlib -Wl,-soname=$(*F).so$($(*F).so-version)
+LDFLAGS-libmachuser-link.so = $(LDFLAGS-link-rpcuserlibs)
+LDFLAGS-libhurduser-link.so = $(LDFLAGS-link-rpcuserlibs)
 
 # And get them into the libc.so ldscript.
 $(inst_libdir)/libc.so: $(rpcuserlibs)

@@ -1,5 +1,5 @@
 /* User-registered handlers for specific `ioctl' requests.
-   Copyright (C) 1993,94,95,96,97,2000 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,97,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ extern int hurd_register_ioctl_handler (int first_request, int last_request,
     { _IOC_NOTYPE (first), _IOC_NOTYPE (last),				      \
 	(int (*) (int, int, void *)) (handler), NULL };	      		      \
   text_set_element (_hurd_ioctl_handler_lists,				      \
-                    ##handler##_ioctl_handler##moniker)
+                    handler##_ioctl_handler##moniker)
 #define	_HURD_HANDLE_IOCTLS(handler, first, last)			      \
   _HURD_HANDLE_IOCTLS_1 (handler, first, last, first##_to_##last)
 

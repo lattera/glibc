@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -164,7 +164,7 @@ charmap_closedir (CHARMAP_DIR *cdir)
    a stream reading its output (the decompressed data).  */
 static
 FILE *
-fopen_uncompressed (const char *pathname, char *compressor)
+fopen_uncompressed (const char *pathname, const char *compressor)
 {
   int pfd;
 
@@ -178,7 +178,8 @@ fopen_uncompressed (const char *pathname, char *compressor)
           && S_ISREG (statbuf.st_mode)
           && pipe (fd) >= 0)
         {
-          char *argv[4] = { compressor, "-d", "-c", NULL };
+          char *argv[4]
+	    = { (char *) compressor, (char *) "-d", (char *) "-c", NULL };
           posix_spawn_file_actions_t actions;
 
           if (posix_spawn_file_actions_init (&actions) == 0)

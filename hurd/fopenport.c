@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,95,97,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,97,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,10 +62,27 @@ writeio (void *cookie, const char *buf, size_t n)
    The current file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 static int
-seekio (void *cookie, off_t *pos, int whence)
+seekio (void *cookie,
+#ifdef USE_IN_LIBIO
+	_IO_off64_t *pos,
+#else
+	fpos_t *pos,
+#endif
+	int whence)
 {
   off_t res;
-  error_t error = __io_seek ((file_t) cookie, *pos, whence, &res);
+  error_t error;
+
+  /* XXX We don't really support large files on the Hurd.  So if POS
+     doesn't fit in an `off_t', we'll return `-1' and set errno.  EOVERFLOW
+     probably isn't the right error value, but seems appropriate here.  */
+  if ((off_t) *pos != *pos)
+    {
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
+
+  error = __io_seek ((file_t) cookie, *pos, whence, &res);
   if (error)
     return __hurd_fail (error);
   *pos = res;

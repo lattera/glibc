@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,6 +65,8 @@ extern void mig_reply_setup (const mach_msg_header_t *__request,
 			     mach_msg_header_t *__reply);
 
 /* Idiocy support function.  */
+extern vm_size_t mig_strncpy (char *__dst, const char *__src, vm_size_t __len);
+extern vm_size_t __mig_strncpy (char *__dst, const char *__src, vm_size_t);
 extern __inline vm_size_t
 __mig_strncpy (char *__dst, const char *__src, vm_size_t __len)
 {

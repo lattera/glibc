@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Hurd version.
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 
 #include <entry.h>
 #include <dl-machine.h>
@@ -553,6 +554,37 @@ __libc_write (int fd, const void *buf, size_t nbytes)
 
   return nwrote;
 }
+
+/* This is only used for printing messages (see dl-misc.c).  */
+__ssize_t weak_function
+__writev (int fd, const struct iovec *iov, int niov)
+{
+  int i;
+  size_t total = 0;
+  for (i = 0; i < niov; ++i)
+    total += iov[i].iov_len;
+
+  assert (fd < _hurd_init_dtablesize);
+
+  if (total != 0)
+    {
+      char buf[total], *bufp = buf;
+      error_t err;
+      mach_msg_type_number_t nwrote;
+
+      for (i = 0; i < niov; ++i)
+	bufp = (memcpy (bufp, iov[i].iov_base, iov[i].iov_len)
+		+ iov[i].iov_len);
+
+      err = __io_write (_hurd_init_dtable[fd], buf, total, -1, &nwrote);
+      if (err)
+	return __hurd_fail (err);
+
+      return nwrote;
+    }
+  return 0;
+}
+
 
 off_t weak_function
 __lseek (int fd, off_t offset, int whence)

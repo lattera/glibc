@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -506,7 +506,7 @@ __gconv_get_path (void)
 	  result[n].len = 0;
 	}
 
-      __gconv_path_elem = result ?: &empty_path_elem;
+      __gconv_path_elem = result ?: (struct path_elem *) &empty_path_elem;
 
       if (cwd != NULL)
 	free (cwd);
@@ -552,7 +552,7 @@ __gconv_read_conf (void)
     {
       struct gconv_alias fake_alias;
 
-      fake_alias.fromname = builtin_modules[cnt].from_string;
+      fake_alias.fromname = (char *) builtin_modules[cnt].from_string;
 
       if (__tfind (&fake_alias, &__gconv_alias_db, __gconv_alias_compare)
 	  != NULL)

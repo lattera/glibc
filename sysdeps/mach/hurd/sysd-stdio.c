@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,98,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -175,11 +175,10 @@ __stdio_open (filename, m, cookieptr)
 /* Open FILENAME with the mode in M.  Use the same magic cookie
    already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
 int
-__stdio_reopen (filename, m, cookieptr, closefn)
-     const char *filename;
-     __io_mode m;
-     void **cookieptr;
-     __io_close_fn closefn;
+__stdio_reopen (const char *filename,
+		__io_mode m,
+		void **cookieptr,
+		__io_close_fn closefn)
 {
   int flags;
   file_t port;
