@@ -1,3 +1,10 @@
+2000-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/localedef.c: Use __malloc_initialize_hook to
+	install mcheck handler.
+
+	* libio/obprintf.c (_IO_obstack_vprintf): Fix one more memory
+	handling problem.
 2000-03-27  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* stdio-common/tmpfile.c: Use <shlib-compat.h> macros.

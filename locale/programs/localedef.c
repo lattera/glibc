@@ -135,9 +135,6 @@ main (int argc, char *argv[])
   struct localedef_t global;
   int remaining;
 
-  /* Enable `malloc' debugging.  */
-  mcheck_pedantic (NULL);
-
   /* Set initial values for global variables.  */
   copy_list = NULL;
   posix_conformance = getenv ("POSIXLY_CORRECT") != NULL;
@@ -510,3 +507,14 @@ load_locale (int locale, const char *name, const char *repertoire_name,
 
   return result;
 }
+
+static void
+turn_on_mcheck (void)
+{
+  /* Enable `malloc' debugging.  */
+  mcheck (NULL);
+  /* Use the following line for a more thorough but much slower testing.  */
+  /* mcheck_pedantic (NULL); */
+}
+
+void (*__malloc_initialize_hook) (void) = turn_on_mcheck;
