@@ -181,14 +181,20 @@ $(objpfx)tst-digits.out: $(objpfx)tst-locale.out
 endif
 
 # Sometimes the whole collection of locale files should be installed.
-LOCALEDEF=I18NPATH=. $(common-objpfx)elf/ld.so --library-path $(rpath-link) $(common-objpfx)locale/localedef
+LOCALEDEF=I18NPATH=. GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+$(common-objpfx)elf/ld.so --library-path $(rpath-link) $(common-objpfx)locale/localedef
 install-locales:
 	$(..)./scripts/mkinstalldirs $(inst_localedir)
 	while read locale charset; do \
 	   case $$locale in \#*) continue;; esac; \
-	   $(LOCALEDEF) -i locales/`echo $$locale | sed 's/\([^.]*\).*/\1/'` \
-			-c -f charmaps/$$charset \
+	   echo -n `echo $$locale | sed 's/\([^.\@]*\).*/\1/'`; \
+	   echo -n ".$$charset"; \
+	   echo -n `echo $$locale | sed 's/\([^\@]*\)\(\@.*\)*/\2/'`; \
+	   echo -n '...'; \
+	   input=`echo $$locale | sed 's/\([^.]*\)[^@]*\(.*\)/\1\2/'`; \
+	   $(LOCALEDEF) -i locales/$$input -c -f charmaps/$$charset \
 			$(addprefix --prefix=,$(install_root)) $$locale; \
+	   echo ' done'; \
 	done < SUPPORTED
 
 # The mbwc-tests need some environment setup to find the locale data files
