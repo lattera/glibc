@@ -1056,7 +1056,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
 	case PT_TLS:
 #ifdef USE_TLS
-# ifdef SHARED
 	  if (ph->p_memsz == 0)
 	    /* Nothing to do for an empty segment.  */
 	    break;
@@ -1084,6 +1083,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	      break;
 	    }
 
+# ifdef SHARED
 	  if (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0)
 	    /* We are loading the executable itself when the dynamic linker
 	       was executed directly.  The setup will happen later.  */
@@ -1092,6 +1092,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  /* In a static binary there is no way to tell if we dynamically
 	     loaded libpthread.  */
 	  if (GL(dl_error_catch_tsd) == &_dl_initial_error_catch_tsd)
+# endif
 	    {
 	      /* We have not yet loaded libpthread.
 		 We can do the TLS setup right now!  */
@@ -1124,12 +1125,6 @@ cannot allocate TLS data structures for initial thread");
 	      _dl_deallocate_tls (tcb, 1);
 	      goto call_lose;
 	    }
-# else
-	  errval = EINVAL;
-	  errstring = N_("\
-statically linked code cannot load module with TLS");
-	  goto call_lose;
-# endif
 #endif
 
 	  /* Uh-oh, the binary expects TLS support but we cannot

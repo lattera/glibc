@@ -1,5 +1,5 @@
 /* Initialization code for TLS in statically linked application.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,8 +34,7 @@ extern ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
 
 
-/* DTV with just one element plus overhead.  */
-static dtv_t static_dtv[3];
+static dtv_t static_dtv[2 + TLS_SLOTINFO_SURPLUS];
 
 
 static struct
@@ -173,7 +172,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 		       & ~(max_align - 1));
 
   /* Initialize the dtv.  [0] is the length, [1] the generation counter.  */
-  static_dtv[0].counter = 1;
+  static_dtv[0].counter = (sizeof (static_dtv) / sizeof (static_dtv[0])) - 2;
   // static_dtv[1].counter = 0;		would be needed if not already done
 
   /* Initialize the TLS block.  */

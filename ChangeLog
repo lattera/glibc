@@ -1,5 +1,11 @@
 2005-02-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/libc-tls.c (static_dtv): Size the same as the
+	slotinfo array.
+	(__libc_setup_tls_): Initializer length of DTV based on array length.
+	* elf/dl-load.c: Revert last change.
+	* sysdeps/generic/dl-tls.c: Revert last change.
+
 	* posix/Makefile (tests): Add tst-execvp1, tst-execvp2, tst-execlp1,
 	tst-execlp2, tst-execv1, tst-execv2, tst-execl1, tst-execl2,
 	tst-execve1, tst-execve2, tst-execle1, and tst-execle2.
