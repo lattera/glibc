@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -162,8 +162,8 @@ mem2chunk_check(mem) Void_t* mem;
   INTERNAL_SIZE_T sz, c;
   unsigned char magic;
 
+  if(!aligned_OK(mem)) return NULL;
   p = mem2chunk(mem);
-  if(!aligned_OK(p)) return NULL;
   if( (char*)p>=mp_.sbrk_base &&
       (char*)p<(mp_.sbrk_base+main_arena.system_mem) ) {
     /* Must be a chunk in conventional heap memory. */
