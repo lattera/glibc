@@ -1,3 +1,7 @@
+2004-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/nb_NO: Make language field consistent in form with nn_NO.
+
 2004-09-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/cy_GB: Fix d_t_fmt ("a viz" -> "mis").
