@@ -190,19 +190,21 @@ extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
 
+#ifdef IS_IN_libpthread
 /* Special versions which use non-exported functions.  */
 extern void _GI_pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
 				      void (*routine) (void *), void *arg)
      attribute_hidden;
-#undef pthread_cleanup_push
-#define pthread_cleanup_push(routine,arg) \
+# undef pthread_cleanup_push
+# define pthread_cleanup_push(routine,arg) \
   { struct _pthread_cleanup_buffer _buffer;				      \
     _GI_pthread_cleanup_push (&_buffer, (routine), (arg));
 
 extern void _GI_pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
 				     int execute) attribute_hidden;
-#undef pthread_cleanup_pop
-#define pthread_cleanup_pop(execute) \
+# undef pthread_cleanup_pop
+# define pthread_cleanup_pop(execute) \
     _GI_pthread_cleanup_pop (&_buffer, (execute)); }
+#endif
 
 #endif	/* pthreadP.h */

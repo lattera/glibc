@@ -1,5 +1,8 @@
 2002-12-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthreadP.h: Enable pthread_cleanup_{push,pop} optimizations only
+	inside libpthread.
+
 	* pt-fcntl.c (__fcntl): Initialize oldtype to avoid warning.
 
 	* pthreadP.h: Declare __pthread_enable_asynccancel and
