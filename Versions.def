@@ -25,6 +25,7 @@ libhurduser {
 libm {
   GLIBC_2.0
   GLIBC_2.1 GLIBC_2.0
+  GLIBC_2.1.3 GLIBC_2.1
 }
 libmachuser {
   GLIBC_2.0
