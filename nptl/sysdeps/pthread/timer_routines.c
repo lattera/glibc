@@ -296,7 +296,7 @@ thread_cleanup (void *val)
       thread->current_timer = 0;
 
       if (list_isempty (&thread->timer_queue))
-	  __timer_thread_dealloc (thread);
+	__timer_thread_dealloc (thread);
       else
 	(void) __timer_thread_start (thread);
 
@@ -540,10 +540,7 @@ __timer_thread_find_matching (const pthread_attr_t *desired_attr,
 
       if (thread_attr_compare (desired_attr, &candidate->attr)
 	  && desired_clock_id == candidate->clock_id)
-	{
-	  list_unlink (iter);
-	  return candidate;
-        }
+	return candidate;
 
       iter = list_next (iter);
     }

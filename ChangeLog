@@ -1,3 +1,8 @@
+2003-07-29  Roland McGrath  <roland@redhat.com>
+
+	* rt/tst-timer2.c: New file.
+	* rt/Makefile (tests): Add it.
+
 2003-07-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-support.c (_dl_hwcap): Add nocommon attribute.

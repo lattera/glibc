@@ -538,10 +538,7 @@ __timer_thread_find_matching (const pthread_attr_t *desired_attr,
 
       if (thread_attr_compare (desired_attr, &candidate->attr)
 	  && desired_clock_id == candidate->clock_id)
-	{
-	  list_unlink (iter);
-	  return candidate;
-        }
+	return candidate;
 
       iter = list_next (iter);
     }

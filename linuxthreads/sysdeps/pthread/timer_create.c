@@ -178,7 +178,10 @@ timer_create (clock_id, evp, timerid)
       if (thread != NULL)
 	__timer_thread_dealloc (thread);
       if (newtimer != NULL)
-	__timer_dealloc (newtimer);
+	{
+	  timer_delref (newtimer);
+	  __timer_dealloc (newtimer);
+	}
     }
 
   pthread_mutex_unlock (&__timer_mutex);

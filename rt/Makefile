@@ -38,7 +38,7 @@ librt-routines = $(aio-routines) \
 		 $(clock-routines) $(timer-routines) \
 		 $(shm-routines)
 
-tests := tst-shm tst-clock tst-clock_nanosleep tst-timer \
+tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
 	 tst-aio7
 
