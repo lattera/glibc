@@ -1,12 +1,20 @@
+1999-07-02  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Revert bogus 'unset IFS' change.  It
+	doesn't belong in the tests, but in the wordexp implementation.
+
+	* posix/wordexp.c (exec_comm): Unset IFS so that subshells don't
+	split fields.
+
 1999-07-01  Cristian Gafton  <gafton@redhat.com>
- 
+
 	* time/strptime.c (strptime): Initialize the tm struct first to avoid
 	returning bogus results on incomplete data.
 	(strptime_internal): day_of_the_week() requres bith tm_mon and
 	tm_mday to be initializaed.
 	Computer them first if they are not given.
 	(strptime_internal): (have_mon, have_mday): New variables.
- 
+
 1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* inet/rcmd.c (__icheckhost): Fix typo in last patch.

@@ -859,6 +859,9 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	    }
 	}
 
+      /* Make sure the subshell doesn't field-split on our behalf. */
+      unsetenv ("IFS");
+
       __close (fildes[0]);
       __execve (_PATH_BSHELL, (char *const *) args, __environ);
 

@@ -1285,7 +1285,7 @@ parameters.
 
 A pointer to the buffer, in which the result is stored, is available in
 @code{*@var{result}} after the function call successfully returned.  If
-an error occurs or if no entry is found, the pointer @code{*var{result}
+an error occurs or if no entry is found, the pointer @code{*@var{result}}
 is a null pointer.  Success is signalled by a zero return value.  If the
 function failed the return value is an error number.  In addition to the
 errors defined for @code{gethostbyname} it can also be @code{ERANGE}.
