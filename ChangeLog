@@ -1,3 +1,8 @@
+2001-08-27  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/sysv/gethostname.c (__gethostname): When LEN is too
+	short, copy that much into NAME anyway before returning error.
+
 2001-09-01  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/elf/Dist: Remove file.
