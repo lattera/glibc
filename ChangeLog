@@ -1,5 +1,9 @@
 1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/stratcliff.c: Add one more strchr test for something
+	which was reported to not work
+	(which proofed to be wrong).
+
 	* iconv/skeleton.c: It's __is_last, not is_last.
 
 	* locale/programs/ld-ctype.c (ctype_finish): Correct method to find

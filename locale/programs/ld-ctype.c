@@ -551,9 +551,17 @@ character '%s' in class `%s' must not be in class `%s'"),
 			  nbytes) <= 0)
 	  {
 	    /* Find the UCS value for `bytes'.  */
-	    uint32_t wch = repertoire_find_value (ctype->repertoire, bytes,
-						  nbytes);
 	    int inner;
+	    uint32_t wch;
+	    struct charseq *seq = charmap_find_symbol (charmap, bytes, nbytes);
+
+	    if (seq == NULL)
+	      wch = ILLEGAL_CHAR_VALUE;
+	    else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
+	      wch = seq->ucs4;
+	    else
+	      wch = repertoire_find_value (ctype->repertoire, seq->name,
+					   strlen (seq->name));
 
 	    if (wch != ILLEGAL_CHAR_VALUE)
 	      /* We are only interested in the side-effects of the
@@ -1097,7 +1105,7 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
 		  (*max - old_max) * sizeof (uint32_t));
 	}
 
-      *act = cnt;
+      *act = cnt + 1;
     }
 
   return &(*table)[cnt];
@@ -3084,9 +3092,18 @@ Computing table size for character classes might take a while..."),
 			    nbytes) <= 0)
 	    {
 	      /* Find the UCS value for `bytes'.  */
-	      uint32_t wch = repertoire_find_value (ctype->repertoire, bytes,
-						    nbytes);
 	      int inner;
+	      uint32_t wch;
+	      struct charseq *seq =
+		charmap_find_symbol (charmap, bytes, nbytes);
+
+	      if (seq == NULL)
+		wch = ILLEGAL_CHAR_VALUE;
+	      else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
+		wch = seq->ucs4;
+	      else
+		wch = repertoire_find_value (ctype->repertoire, seq->name,
+					     strlen (seq->name));
 
 	      if (wch != ILLEGAL_CHAR_VALUE)
 		{

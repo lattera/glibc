@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -42,10 +42,10 @@ main (int argc, char *argv[])
   char *adr, *dest;
   int result = 0;
 
-  adr = (char *) mmap (NULL, 3 * size, PROT_READ|PROT_WRITE,
-		       MAP_PRIVATE|MAP_ANON, -1, 0);
-  dest = (char *) mmap (NULL, 3*size, PROT_READ|PROT_WRITE,
-			MAP_PRIVATE|MAP_ANON, -1, 0);
+  adr = (char *) mmap (NULL, 3 * size, PROT_READ | PROT_WRITE,
+		       MAP_PRIVATE | MAP_ANON, -1, 0);
+  dest = (char *) mmap (NULL, 3 * size, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANON, -1, 0);
   if (adr == MAP_FAILED || dest == MAP_FAILED)
     {
       if (errno == ENOSYS)
@@ -61,11 +61,11 @@ main (int argc, char *argv[])
       int inner, middle, outer;
 
       mprotect(adr, size, PROT_NONE);
-      mprotect(adr+2*size, size, PROT_NONE);
+      mprotect(adr + 2 * size, size, PROT_NONE);
       adr += size;
 
       mprotect(dest, size, PROT_NONE);
-      mprotect(dest+2*size, size, PROT_NONE);
+      mprotect(dest + 2 * size, size, PROT_NONE);
       dest += size;
 
       memset (adr, 'T', size);
@@ -115,6 +115,14 @@ main (int argc, char *argv[])
 		}
 	    }
         }
+
+      /* Special test.  */
+      adr[size - 1] = '\0';
+      if (strchr (&adr[size - 1], '\n') != NULL)
+	{
+	  puts ("strchr flunked for test of empty string at end of page");
+	  result = 1;
+	}
 
       /* strrchr test */
       for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
