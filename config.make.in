@@ -29,6 +29,7 @@ build-omitfp = @omitfp@
 CC = @CC@
 AR = @AR@
 RANLIB = @RANLIB@
+AS = $(CC) -c
 
 # Installation tools.
 INSTALL = @INSTALL@

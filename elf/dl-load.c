@@ -108,40 +108,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 		Elf32_Addr *entry_point)
 {
   int fd;
-  struct link_map *l = NULL;
   char *realname;
-  const size_t pagesize = getpagesize ();
-  void *file_mapping = NULL;
-  size_t mapping_size = 0;
-
-  void lose (int code, const char *msg)
-    {
-      (void) close (fd);
-      if (file_mapping)
-	munmap (file_mapping, mapping_size);
-      _dl_signal_error (code, l ? l->l_name : name, msg);
-    }
-
-  /* Make sure LOCATION is mapped in.  */
-  void *map (off_t location, size_t size)
-    {
-      if ((off_t) mapping_size <= location + (off_t) size)
-	{
-	  void *result;
-	  if (file_mapping)
-	    munmap (file_mapping, mapping_size);
-	  mapping_size = (location + size + 1 + pagesize - 1);
-	  mapping_size &= ~(pagesize - 1);
-	  result = mmap (file_mapping, mapping_size, PROT_READ,
-			 MAP_COPY|MAP_FILE, fd, 0);
-	  if (result == (void *) -1)
-	    lose (errno, "cannot map file data");
-	  file_mapping = result;
-	}
-      return file_mapping + location;
-    }
-
-  const Elf32_Ehdr *header;
+  struct link_map *l;
 
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -182,7 +150,52 @@ _dl_map_object (struct link_map *loader, const char *name,
     }
 
   if (fd == -1)
-    lose (errno, "cannot open shared object file");
+    _dl_signal_error (errno, name, "cannot open shared object file");
+
+  return _dl_map_object_from_fd (name, fd, realname, entry_point);
+}
+
+
+/* Map in the shared object NAME, actually located in REALNAME, and already
+   opened on FD.  */
+
+struct link_map *
+_dl_map_object_from_fd (const char *name, int fd, char *realname, 
+			Elf32_Addr *entry_point)
+{
+  struct link_map *l = NULL;
+  const size_t pagesize = getpagesize ();
+  void *file_mapping = NULL;
+  size_t mapping_size = 0;
+
+  void lose (int code, const char *msg)
+    {
+      (void) close (fd);
+      if (file_mapping)
+	munmap (file_mapping, mapping_size);
+      _dl_signal_error (code, l ? l->l_name : name, msg);
+    }
+
+  /* Make sure LOCATION is mapped in.  */
+  void *map (off_t location, size_t size)
+    {
+      if ((off_t) mapping_size <= location + (off_t) size)
+	{
+	  void *result;
+	  if (file_mapping)
+	    munmap (file_mapping, mapping_size);
+	  mapping_size = (location + size + 1 + pagesize - 1);
+	  mapping_size &= ~(pagesize - 1);
+	  result = mmap (file_mapping, mapping_size, PROT_READ,
+			 MAP_COPY|MAP_FILE, fd, 0);
+	  if (result == (void *) -1)
+	    lose (errno, "cannot map file data");
+	  file_mapping = result;
+	}
+      return file_mapping + location;
+    }
+
+  const Elf32_Ehdr *header;
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
@@ -191,10 +204,10 @@ _dl_map_object (struct link_map *loader, const char *name,
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
 	close (fd);
+	free (realname);
 	++l->l_opencount;
 	return l;
       }
-
 
   /* Map in the first page to read the header.  */
   header = map (0, sizeof *header);

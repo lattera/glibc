@@ -164,6 +164,12 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name,
 					Elf32_Addr *entry_point);
 
+/* Similar, but file found at REALNAME and opened on FD.
+   REALNAME must malloc'd storage and is used in internal data structures.  */
+extern struct link_map *_dl_map_object_from_fd (const char *name,
+						int fd, char *realname,
+						Elf32_Addr *entry_point);
+
 /* Cache the locations of MAP's hash table.  */
 extern void _dl_setup_hash (struct link_map *map);
 

@@ -568,6 +568,15 @@ extern int vhangup __P ((void));
 extern int revoke __P ((const char *__file));
 
 
+/* Enable statistical profiling, writing samples of the PC into at most
+   SIZE bytes of SAMPLE_BUFFER; every processor clock tick while profiling
+   is enabled, the system examines the user PC and increments
+   SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
+   disable profiling.  Returns zero on success, -1 on error.  */
+extern int profil __P ((unsigned short int *__sample_buffer, size_t __size,
+			size_t __offset, unsigned int __scale));
+
+
 /* Turn accounting on if NAME is an existing file.  The system will then write
    a record for each process as it terminates, to this file.  If NAME is NULL,
    turn accounting off.  This call is restricted to the super-user.  */
