@@ -1,3 +1,12 @@
+1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/iovdprintf.c (_IO_vdprintf): Set _IO_DELETE_DONT_CLOSE
+	flag.
+
+	* misc/syslog.c (vsyslog): Don't try to send if not connected to
+	syslog daemon.
+	(closelog_internal): Don't do anything if not connected.
+
 1998-03-10 17:54  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add _dl_debug_message.

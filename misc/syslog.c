@@ -201,7 +201,7 @@ vsyslog(pri, fmt, ap)
 	if (LogType == SOCK_STREAM)
 	  ++bufsize;
 
-	if (__send(LogFile, buf, bufsize, 0) < 0)
+	if (!connected || __send(LogFile, buf, bufsize, 0) < 0)
 	  {
 	    closelog_internal ();	/* attempt re-open next time */
 	    /*
@@ -245,7 +245,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 			(void)strncpy(SyslogAddr.sa_data, _PATH_LOG,
 				      sizeof(SyslogAddr.sa_data));
 			if (LogStat & LOG_NDELAY) {
-				if ((LogFile = socket(AF_UNIX, LogType, 0))
+				if ((LogFile = __socket(AF_UNIX, LogType, 0))
 				    == -1)
 					return;
 				(void)fcntl(LogFile, F_SETFD, 1);
@@ -292,15 +292,18 @@ openlog (const char *ident, int logstat, int logfac)
 static void
 sigpipe_handler (int signo)
 {
-	closelog_internal();
+  closelog_internal ();
 }
 
 static void
 closelog_internal()
 {
-	(void)close(LogFile);
-	LogFile = -1;
-	connected = 0;
+  if (!connected)
+    return;
+
+  close (LogFile);
+  LogFile = -1;
+  connected = 0;
 }
 
 void
