@@ -72,7 +72,7 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
 	*(2 + (const unsigned short int *) __src);
       return __dest;
     case 8:
-      *(unsigned long int *) __dest = *(const unsigned long int *) __to;
+      *(unsigned long int *) __dest = *(const unsigned long int *) __src;
       *(1 + (unsigned long int *) __dest) =
 	*(1 + (const unsigned long int *) __src);
       return __dest;
@@ -177,13 +177,13 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
   switch (__n)
     {
     case 0:
-      return s;
+      return __s;
     case 1:
       *(unsigned char *) __s = __pattern;
       return __s;
     case 2:
       *(unsigned short int *) __s = __pattern;
-      return s;
+      return __s;
     case 3:
       *(unsigned short int *) __s = __pattern;
       *(2 + (unsigned char *) __s) = __pattern;
@@ -210,7 +210,7 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
       __COMMON_CODE ("\n\tstosb");
       return __s;
     case 2:
-      __COMMON__CODE ("\n\tstosw");
+      __COMMON_CODE ("\n\tstosw");
       return s;
     case 3:
       __COMMON_CODE ("\n\tstosw\n\tstosb");

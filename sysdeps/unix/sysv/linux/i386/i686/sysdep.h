@@ -1,0 +1,71 @@
+/* Copyright (C) 1998 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper, <drepper@cygnus.com>, 1998.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#ifndef _LINUX_I386_I686_SYSDEP_H
+#define _LINUX_I386_I686_SYSDEP_H 1
+
+/* There is some commonality.  */
+#include <sysdeps/unix/sysv/linux/i386/sysdep.h>
+
+/* We define special versions of the error handler code to match the i686's
+   deep branch prediction mechanism.  */
+#ifdef PIC
+# undef SYSCALL_ERROR_HANDLER
+
+/* Store (- %eax) into errno through the GOT.  */
+# ifdef _LIBC_REENTRANT
+#  define SYSCALL_ERROR_HANDLER						      \
+  .type syscall_error,@function;					      \
+0:movl (%esp),%ebx;							      \
+  ret;									      \
+syscall_error:								      \
+  pushl %ebx;								      \
+  call 0b;								      \
+  addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
+  xorl %edx, %edx;							      \
+  subl %eax, %edx;							      \
+  pushl %edx;								      \
+  call __errno_location@PLT;						      \
+  popl %ecx;								      \
+  popl %ebx;								      \
+  movl %ecx, (%eax);							      \
+  movl $-1, %eax;							      \
+  jmp L(pseudo_end);							      \
+  .size syscall_error,.-syscall_error;
+/* A quick note: it is assumed that the call to `__errno_location' does
+   not modify the stack!  */
+# else
+#  define SYSCALL_ERROR_HANDLER						      \
+  .type syscall_error,@function;					      \
+0:movl (%esp),%ecx;							      \
+  ret;									      \
+syscall_error:								      \
+  call 0b;								      \
+  addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
+  xorl %edx, %edx;							      \
+  subl %eax, %edx;							      \
+  movl errno@GOT(%ecx), %ecx;						      \
+  movl %edx, (%ecx);							      \
+  movl $-1, %eax;							      \
+  jmp L(pseudo_end);							      \
+  .size syscall_error,.-syscall_error;
+# endif	/* _LIBC_REENTRANT */
+#endif	/* PIC */
+
+#endif /* linux/i386/i686/sysdep.h */

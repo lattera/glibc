@@ -59,9 +59,15 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 #endif
 
 
-#if !defined __NR_lchown || \
-    (defined HAVE_ELF && defined PIC && defined DO_VERSIONING)
-/* compiling under older kernels or for compatibiity */
+#ifndef __NR_lchown
+/* Compiling under older kernels.  */
+int
+__chown_is_lchown (const char *file, uid_t owner, gid_t group)
+{
+  return __syscall_chown (file, owner, group);
+}
+#elif defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+/* Compiling for compatibiity.  */
 int
 __chown_is_lchown (const char *file, uid_t owner, gid_t group)
 {

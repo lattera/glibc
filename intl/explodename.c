@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -23,8 +23,15 @@
 # include <config.h>
 #endif
 
-#include <stdlib.h>
-#include <string.h>
+#if defined STDC_HEADERS || defined _LIBC
+# include <stdlib.h>
+#endif
+
+#if defined HAVE_STRING_H || defined _LIBC
+# include <string.h>
+#else
+# include <strings.h>
+#endif
 #include <sys/types.h>
 
 #include "loadinfo.h"

@@ -1,3 +1,54 @@
+1998-04-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/isomac.c: Use -isystem instead of -I for system include
+	dir.
+
+1998-03-30 08:05  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/res_comp.c (underscorechar): New.
+	(middlechar): Allow '_'.
+
+1998-04-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/explodename.c (stdlib.h): Include that file only if
+	STDC_HEADERS or _LIBC.
+	(string.h): Include that file only if HAVE_STRING_H or _LIBC.
+	Patch by Philippe De Muyter <phdm@macqel.be>.
+
+1998-04-01 21:08  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* aclocal.m4 (AC_PROG_CC_LOCAL): Remove superfluous tests.
+	(AC_PROG_CHECK_VER): New macro.
+	* configure.in: Use AC_PROG_CHECK_VER to check versions of
+	gcc, gmake, msgfmt, makeinfo.  Remove superfluous tests.
+
+1998-04-02 15:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/i686/sysdep.h: New file.
+	* sysdeps/i386/i686/strtok.S: New file
+	* sysdeps/i386/i686/strtok_r.S: New file
+
+1998-04-02  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* posix/unistd.h: [__USE_FILE_OFFSET64] (lseek): Change return
+	type to __off64_t.
+	* libio/stdio.h [__USE_FILE_OFFSET64] (fseeko): Declare offset
+	parameter as __off64_t instead of __off_t.
+	(ftello): Make alias for ftello64 instead of ftello.  Change
+	return type to __off64_t.
+
+1998-04-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/string.h: Fix various typos.
+	Patch by Horst von Brand <vonbrand@sleipnir.valparaiso.cl>.
+
+	* sysdeps/unix/sysv/linux/getcwd.c: Use getcwd syscall in Linux 2.1.92.
+
+1998-04-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/chown.c: Handle old kernels without
+	lchown syscall correctly.  [PR libc/541].
+
 1998-04-02 11:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* localedata/Makefile: Correct testsuite rules.

@@ -32,51 +32,79 @@ fi
 AC_MSG_RESULT($ac_cv_check_symbol_$1)])dnl
 dnl
 
+dnl Locate a program and check that its version is acceptable.
+dnl AC_PROG_CHECK_VER(var, namelist, version-switch,
+dnl 		      [version-extract-regexp], version-glob, fatal)
+AC_DEFUN(AC_CHECK_PROG_VER,
+[# Prepare to iterate over the program-name list.
+set dummy $2; shift
+AC_MSG_CHECKING([for [$]1])
+AC_CACHE_VAL(ac_cv_prog_$1, [dnl
+if test -n "[$]$1"; then
+  ac_cv_prog_$1="[$]$1" # Let the user override the test.
+else
+  IFS="${IFS=   }"; ac_save_ifs="$IFS"; IFS="${IFS}:"
+  for ac_word; do
+    for ac_dir in $PATH; do
+      test -z "$ac_dir" && ac_dir=.
+      if test -f $ac_dir/$ac_word; then
+        ac_cv_prog_$1="$ac_word"
+        break
+      fi
+    done
+    test -n "$ac_cv_prog_$1" && break
+  done
+  IFS="$ac_save_ifs"
+fi])dnl
+if test -z "$ac_cv_prog_$1"; then
+  AC_MSG_RESULT(no)
+  $1=:
+  ac_verc_fail=t; ifelse([$6],,,[ac_verc_fatal=$6])
+else
+# Found it, now check the version.
+ac_word=$ac_cv_prog_$1
+dnl Do this by hand to avoid "(cached) (cached)".
+  if test "[$]{ac_cv_prog_$1_ver+set}" != set; then
+changequote(<<,>>)dnl
+    ac_cv_prog_$1_ver=`$ac_word $3 2>&1 ifelse(<<$4>>,,,<<| sed -n 's/^.*$4.*$/\1/p'>>)`
+  fi
+  if test -n "$ac_cv_prog_$1_ver"; then
+  case $ac_cv_prog_$1_ver in
+    <<$5>>) ac_vers_ok=", ok";  $1=$ac_cv_prog_$1;;
+changequote([,])dnl
+         *) ac_vers_ok=", bad"; $1=:
+	    ac_verc_fail=t; ifelse([$6],,,[ac_verc_fatal=$6]);;
+  esac
+  else
+    ac_vers_ok="v. ?.??, bad"; $1=:
+    ac_verc_fail=t; ifelse([$6],,,[ac_verc_fatal=$6])
+  fi
+AC_MSG_RESULT($ac_word $ac_cv_prog_$1_ver$ac_vers_ok)
+fi
+AC_SUBST($1)dnl
+])
+
 dnl These modifications are to allow for an empty cross compiler tree.
 dnl In the situation that cross-linking is impossible, the variable
 dnl `cross_linkable' will be substituted with "yes".
+dnl The vercheck macros are expected to have been called already.
 AC_DEFUN(AC_PROG_CC_LOCAL,
 [AC_BEFORE([$0], [AC_PROG_CPP])dnl
-AC_CHECK_PROG(CC, gcc, gcc)
-if test -z "$CC"; then
-  AC_CHECK_PROG(CC, cc, cc, , , /usr/ucb/cc)
-  test -z "$CC" && AC_MSG_ERROR([no acceptable cc found in \$PATH])
-fi
 
 AC_PROG_CC_WORKS_LOCAL
 AC_PROG_CC_GNU
-
-dnl The following differs from the AC_PROG_CC macro in autoconf.  Since
-dnl we require a recent version of gcc to be used we do not need to go
-dnl into lengths and test for bugs in old versions.  It must be gcc 2.7
-dnl or above.
-if test $ac_cv_prog_gcc = yes; then
-  GCC=yes
-
-dnl Check the version
-  cat > conftest.c <<EOF
-#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)
-  yes;
-#endif
-EOF
-  if AC_TRY_COMMAND(${CC-cc} -E conftest.c) | egrep yes >/dev/null 2>&1; then
-    if test -z "$CFLAGS"; then
-      CFLAGS="-g -O2"
-    fi
-  else
-    AC_MSG_ERROR([We require GNU CC version 2.7 or newer])
-  fi
-else
+if test $ac_cv_prog_gcc != yes; then
   AC_MSG_ERROR([GNU libc must be compiled using GNU CC])
 fi
 ])
 
 AC_DEFUN(AC_PROG_CC_WORKS_LOCAL,
 [AC_MSG_CHECKING([whether the C compiler ($CC $CFLAGS $LDFLAGS) works])
-AC_LANG_SAVE
+AC_CACHE_VAL(ac_cv_prog_cc_works,
+[AC_LANG_SAVE
 AC_LANG_C
 AC_TRY_COMPILER([main(){return(0);}], ac_cv_prog_cc_works, ac_cv_prog_cc_cross)
-AC_LANG_RESTORE
+AC_LANG_RESTORE])
 AC_MSG_RESULT($ac_cv_prog_cc_works)
 if test $ac_cv_prog_cc_works = no; then
  cross_linkable=no
@@ -85,8 +113,9 @@ dnl AC_MSG_ERROR([installation or configuration problem: C compiler cannot creat
 else
  cross_linkable=yes
 fi
-AC_MSG_CHECKING([whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler])
-AC_MSG_RESULT($ac_cv_prog_cc_cross)
+AC_CACHE_CHECK(
+[whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler],
+ac_cv_prog_cc_cross, [:])
 AC_SUBST(cross_linkable)
 cross_compiling=$ac_cv_prog_cc_cross
 ])
@@ -105,7 +134,7 @@ AC_DEFUN(LIBC_PROG_BINUTILS,
 if test -n "$path_binutils"; then
     # Make absolute; ensure a single trailing slash.
     path_binutils=`(cd $path_binutils; pwd) | sed 's%/*$%/%'`
-    CC="$CC -B$with_binutils"
+    CC="$CC -B$path_binutils"
 fi
 AS=`$CC -print-file-name=as`
 LD=`$CC -print-file-name=ld`
@@ -118,4 +147,5 @@ gnu_as=$libc_cv_prog_as_gnu
 
 AC_CACHE_CHECK(whether $LD is GNU ld, libc_cv_prog_ld_gnu,
 [LIBC_PROG_FOO_GNU($LD, libc_cv_prog_ld_gnu=yes, libc_cv_prog_ld_gnu=no)])
-gnu_ld=$libc_cv_prog_ld_gnu])
+gnu_ld=$libc_cv_prog_ld_gnu
+])

@@ -429,33 +429,30 @@ if test "$INSTALL" = "${srcdir}/install-sh -c"; then
   INSTALL='\$(..)./install-sh -c'
 fi
 AC_PROG_LN_S
-AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)
-if test "$MSGFMT" != ":"; then
-changequote(,)dnl Need [] for regexps.
-  if $MSGFMT --version 2>&1 | grep 'GNU gettext.*0\.[1-9][0-9]' >/dev/null 2>&1
-changequote([,])dnl
-  then : # msgfmt from gettext 0.10 or greater, works.
-  else
-    AC_MSG_WARN([
-*** (g)msgfmt is too old or wrong version (need gettext 0.10 or better).])
-    MSGFMT=":"
-  fi
-fi
 
-AC_CHECK_PROG(MAKEINFO, makeinfo, makeinfo)
-if test "$MAKEINFO"; then
-changequote(,)dnl Need [] for regexps.
-  if $MAKEINFO --version | grep 'texinfo 3\.[1-9][1-9]' >/dev/null 2>&1
-changequote([,])dnl
-  then : # Makeinfo 3.11 or greater, works.
-  else
-    AC_MSG_WARN([
-*** makeinfo is too old (need version 3.11 or better).
-*** You should install the needed version and re-configure since otherwise
-*** you won't get the info pages installed.])
-    MAKEINFO=
-  fi
-fi
+# These programs are version sensitive.
+AC_CHECK_PROG_VER(CC, gcc cc, -v,
+  [version \([egcs0-9.-]*\)],
+  [egcs-2.91.*|egcs-2.90.2[789]|egcs-2.90.[3-9][0-9]|2.8.[1-9]*|2.9.[0-9]*], t)
+AC_CHECK_PROG_VER(MAKE, make gmake, --version,
+  [version \([0-9][0-9.]*\), by],
+  [3.75 | 3.76.[2-9] | 3.7[789]* | 3.[89]*], t)
+
+AC_CHECK_PROG_VER(MSGFMT, msgfmt gmsgfmt, --version,
+  [GNU gettext.*\([0-9][0-9]*\.[0-9]*\)],
+  [0.[1-9][0-9] | [1-9].*])
+AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
+  [GNU texinfo \([0-9][0-9.]*\)],
+  [3.1[1-9] | 3.[2-9][0-9]])
+
+test -n "$ac_verc_fatal" && AC_MSG_ERROR([
+*** Some critical program is missing or too old.
+*** Check the INSTALL file for required versions.])
+
+test -n "$ac_verc_fail" && AC_MSG_WARN([
+*** An auxiliary program is missing or too old;
+*** some features will be disabled.
+*** Check the INSTALL file for required versions.])
 
 AC_PROG_CC_LOCAL
 AC_CANONICAL_BUILD
@@ -482,26 +479,6 @@ fi
 rm -f $tmpo $tmplib])
 AC_SUBST(libc_cv_ar_S)dnl
 
-# check for recent compiler
-AC_MSG_CHECKING(compiler version)
-changequote(,)dnl
-case `${CC-cc} -v 2>&1` in
-  *egcs-2.91.* | *egcs-1.0.[2-9]* | *egcs-1.1* | *2.8.[1-9]* | *2.9.[0-9]*)
-    cc_is_recent="ok"
-    ;;
-  *)
-    cc_is_recent="too old"
-    ;;
-esac
-changequote([,])dnl
-AC_MSG_RESULT($cc_is_recent)
-if test "$cc_is_recent" != "ok"; then
-  AC_MSG_WARN([
-*** Your compiler is too old.
-*** You need at least egcs 1.0.2 or GNU CC 2.8.1 to compile glibc.
-])
-fi
-
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.
 # LD_LIBRARY_PATH contains the current directory if one of the following
@@ -522,9 +499,10 @@ esac
 changequote([,])dnl
 AC_MSG_RESULT($ld_library_path_setting)
 if test "$ld_library_path_setting" != "ok"; then
-AC_MSG_ERROR(
-*** LD_LIBRARY_PATH shouldn't contain the current path when building glibc.
-*** Please change the environment variable and run configure again.)
+AC_MSG_ERROR([
+*** LD_LIBRARY_PATH shouldn't contain the current directory when
+*** building glibc. Please change the environment variable
+*** and run configure again.])
 fi
 
 AC_PATH_PROG(BASH, bash, no)
@@ -606,36 +584,6 @@ rm -f conftest*])
 if test $libc_cv_need_minus_P = yes; then
   config_vars="$config_vars
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
-fi
-
-# gcc 2.7.x has a bug where if -pipe is set, the assembler will always
-# be told to read stdin.  This causes the compiler to hang when fed an
-# .s file.
-if test $ac_cv_prog_gcc = yes; then
- case `${CC-cc} -v 2>&1` in
-  *2.7*)
-  # We must check this even if -pipe is not given here, because the user
-  # might do `make CFLAGS=-pipe'.
-  AC_CACHE_CHECK(for gcc 2.7.x -pipe bug, libc_cv_gcc_pipe_bug, [dnl
-   cp /dev/null conftest.s
-   cat >conftest1.s <<EOF
-.nosuchdirective
-EOF
-   if ${CC-cc} -pipe -c conftest.s <conftest1.s 2>/dev/null; then
-    libc_cv_gcc_pipe_bug=no
-   else
-    libc_cv_gcc_pipe_bug=yes
-   fi
-   rm -f conftest*])
-  if test $libc_cv_gcc_pipe_bug = yes; then
-   makeCC="${CC-cc} -B\$(common-objpfx)"
-   makeCFLAGS=$CFLAGS
-   CFLAGS=`echo $CFLAGS |sed 's/-pipe//'`
-  fi;;
- *) libc_cv_gcc_pipe_bug=no;;
- esac
-else
- libc_cv_gcc_pipe_bug=no
 fi
 
 AC_CACHE_CHECK(for assembler global-symbol directive,
@@ -1178,17 +1126,6 @@ fi
 
 VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
 AC_SUBST(VERSION)
-
-if test $libc_cv_gcc_pipe_bug = yes; then
- realCC=$CC
- CC=$makeCC
- CFLAGS=$makeCFLAGS
-fi
-AC_OUTPUT_COMMANDS([
-if test "$realCC"; then
- sed -e 's/%{pipe:-}/%|/g' `$realCC -print-file-name=specs` >specsT
- mv specsT specs
-fi], [realCC=$realCC])
 
 AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
           [echo '$config_vars' >> config.make; test -d bits || mkdir bits])

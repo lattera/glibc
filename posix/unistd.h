@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -273,7 +273,7 @@ extern __off_t __lseek __P ((int __fd, __off_t __offset, int __whence));
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence));
 #else
-extern __off_t lseek __P ((int __fd, __off64_t __offset, int __whence))
+extern __off64_t lseek __P ((int __fd, __off64_t __offset, int __whence))
      __asm__ ("lseek64");
 #endif
 #ifdef __USE_LARGEFILE64

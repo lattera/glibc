@@ -1,5 +1,5 @@
 /* Determine current working directory.  Linux version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,6 +22,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/syscall.h>
 
 
 /* The "proc" filesystem provides an easy method to retrieve the value.
@@ -31,10 +32,20 @@
    the proc filesystem mounted.  Use the POSIX implementation in this case.  */
 static char *generic_getcwd (char *buf, size_t size) internal_function;
 
+#ifdef __NR_getcwd
+/* Kernel 2.1.92 introduced a third way to get the current working
+   directory: a syscall.  We've got to be careful that even when
+   compiling under 2.1.92+ the libc still runs under older kernels. */
+extern int __syscall_getcwd (char *buf, unsigned long size);
+static no_syscall_getcwd;
+static int no_new_dcache = 1;
+#else
+static int no_new_dcache;
+#endif
+
 char *
 __getcwd (char *buf, size_t size)
 {
-  static int no_new_dcache = 0;
   int save_errno;
   char *path;
   int n;
@@ -66,6 +77,41 @@ __getcwd (char *buf, size_t size)
 
   save_errno = errno;
 
+#ifdef __NR_getcwd
+  if (!no_syscall_getcwd)
+    {
+      int retval;
+
+      do
+      retval = __syscall_getcwd (path, alloc_size);
+      if (retval >= 0)
+	{
+	  if (buf == NULL)
+	    {
+	      buf = realloc (path, strlen (path) + 1);
+	      if (buf == NULL)
+		/* `relloc' failed but we still have the original string.  */
+		buf = path;
+	    }
+	  return buf;
+	}
+
+      if (errno == ENOSYS)
+	{
+	   no_syscall_getcwd = 1;
+	   no_new_dcache = 0;	/* Now we will try the /proc method.  */
+	}
+      else if (errno != ERANGE || buf != NULL)
+	{
+	  if (buf == NULL)
+	    free (path);
+	  return NULL;
+	}
+
+      __set_errno (save_errno);
+    }
+#endif
+
   n = __readlink ("/proc/self/cwd", path, alloc_size - 1);
   if (n != -1)
     {
@@ -79,7 +125,14 @@ __getcwd (char *buf, size_t size)
 	    }
 
 	  path[n] = '\0';
-	  return buf ?: (char *) realloc (path, (size_t) n + 1);
+	  if (buf == NULL)
+	    {
+	      buf = realloc (path, (size_t) n + 1);
+	      if (buf == NULL)
+		/* `relloc' failed but we still have the original string.  */
+		buf = path;
+	    }
+	  return buf;
 	}
       else
 	no_new_dcache = 1;

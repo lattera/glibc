@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -559,7 +559,7 @@ typedef __off64_t off64_t;
 # ifndef __USE_FILE_OFFSET64
 extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence));
 # else
-extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence))
+extern int fseeko __P ((FILE *__stream, __off64_t __off, int __whence))
      __asm__ ("fseeko64");
 # endif
 # ifdef __USE_LARGEFILE64
@@ -570,7 +570,7 @@ extern int fseeko64 __P ((FILE *__stream, __off64_t __off, int __whence));
 # ifndef __USE_FILE_OFFSET64
 extern __off_t ftello __P ((FILE *__stream));
 # else
-extern __off_t ftello __P ((FILE *__stream)) __asm__ ("ftello");
+extern __off64_t ftello __P ((FILE *__stream)) __asm__ ("ftello64");
 # endif
 # ifdef __USE_LARGEFILE64
 extern __off64_t ftello64 __P ((FILE *__stream));

@@ -354,6 +354,7 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
  */
 #define PERIOD 0x2e
 #define	hyphenchar(c) ((c) == 0x2d)
+#define	underscorechar(c) ((c) == 0x5f)
 #define bslashchar(c) ((c) == 0x5c)
 #define periodchar(c) ((c) == PERIOD)
 #define asterchar(c) ((c) == 0x2a)
@@ -362,7 +363,7 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
 #define digitchar(c) ((c) >= 0x30 && (c) <= 0x39)
 
 #define borderchar(c) (alphachar(c) || digitchar(c))
-#define middlechar(c) (borderchar(c) || hyphenchar(c))
+#define middlechar(c) (borderchar(c) || hyphenchar(c) || underscorechar(c))
 #define	domainchar(c) ((c) > 0x20 && (c) < 0x7f)
 
 int

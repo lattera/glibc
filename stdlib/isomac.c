@@ -1,5 +1,5 @@
 /* Check system header files for ISO 9899:1990 (ISO C) compliance.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jens Schweikhardt <schweikh@noc.dfn.de>, 1996.
 
@@ -176,8 +176,8 @@ static char *macros[] =
 /* Format string to build command to invoke compiler.  */
 static const char fmt[] = "\
 echo \"#include <%s>\" |\
-%s -E -dM -ansi -pedantic %s -D_LIBC -I. -I `%s --print-prog-name=include` -\
-> %s";
+%s -E -dM -ansi -pedantic %s -D_LIBC -I. \
+-isystem `%s --print-prog-name=include` - > %s";
 
 
 /* The compiler we use (given on the command line).  */

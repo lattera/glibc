@@ -140,10 +140,10 @@ syscall_error:								      \
    %ecx and %edx when we have more than 1 and 2 registers resp.
 
    The code below might look a bit long but we have to take care for
-   the pipelined processors (i586 and up).  Here the `pushl' and `popl'
+   the pipelined processors (i586).  Here the `pushl' and `popl'
    instructions are marked as NP (not pairable) but the exception is
    two consecutive of these instruction.  This gives no penalty on
-   i386 and i486 processors though.  */
+   other processors though.  */
 
 #undef	DO_CALL
 #define DO_CALL(args, syscall_name)			      		      \
