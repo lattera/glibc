@@ -209,7 +209,7 @@ TMP_MAX   = 0
 L_ctermid = 1
 L_cuserid = 1
 else
-L_tmpnam  = 19
+L_tmpnam  = 20
 TMP_MAX   = 238328
 L_ctermid = 9
 L_cuserid = 9

@@ -173,6 +173,7 @@ __mempcpy_small (void *__dest1,
 }
 #  else
 #   define __mempcpy_args(src) \
+     ((__const char *) (src))[0],					      \
      __extension__ ((__STRING2_COPY_ARR2)				      \
       { { ((__const char *) (src))[0], ((__const char *) (src))[1] } }),      \
      __extension__ ((__STRING2_COPY_ARR3)				      \
@@ -200,7 +201,7 @@ __mempcpy_small (void *__dest1,
 	  ((__const char *) (src))[4], ((__const char *) (src))[5],	      \
 	  ((__const char *) (src))[6], ((__const char *) (src))[7] } })
 __STRING_INLINE void *
-__mempcpy_small (void *__dest1,
+__mempcpy_small (void *__dest1, char __src1,
 		 __STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
 		 __STRING2_COPY_ARR4 __src4, __STRING2_COPY_ARR5 __src5,
 		 __STRING2_COPY_ARR6 __src6, __STRING2_COPY_ARR7 __src7,
@@ -210,7 +211,7 @@ __mempcpy_small (void *__dest1,
   switch (__srclen)
     {
     case 1:
-      *__dest = '\0';
+      *__dest = __src1;
       break;
     case 2:
       __extension__ *((__STRING2_COPY_ARR2 *) __dest) = __src2;
