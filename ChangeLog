@@ -1,5 +1,32 @@
 Tue Jun  4 21:01:20 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* math/Makefile (libm-support, libm-calls): New variables.
+	(libm-routines): Construct this from those.
+	(calls): New variable.
+	(routines): Construct this from it.
+
+	* resolv/res_debug.c: Add missing #include <ctype.h>.
+
+	* sysdeps/unix/getlogin.c: Must pass struct utmp ptr to getutline_r.
+	* sysdeps/unix/getlogin_r.c: Likewise.
+
+	* sysdeps/libm-ieee754/w_hypotl.c: Fix typo.
+
+	* sysdeps/libm-ieee754/w_cabsl.c: __cabsl_complex -> __cabs_complexl
+
+	* math/Makefile (long-m-routines): Define recursive variable as
+	$(long-m-$(long-double-fcts)).
+	(long-m-yes): Put list of routines here.
+	(long-c-routines, long-c-yes): Likewise.
+
+	* sysdeps/unix/sysv/linux/schedbits.h: File removed.
+
+	* sysdeps/i386/Makefile (long-double-fcts): New variable, set to yes.
+	* sysdeps/m68k/Makefile: Likewise.
+
+	* math/Makefile [$(long-double-fcts)!=yes] (CPPFLAGS): Append
+ 	-DNO_LONG_DOUBLE.
+
 	* sysdeps/mach/hurd/getlogin_r.c: New file.
 
 Wed Jun  5 02:11:30 1996  Ulrich Drepper  <drepper@cygnus.com>

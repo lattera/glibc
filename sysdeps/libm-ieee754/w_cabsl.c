@@ -11,7 +11,7 @@
 
 long double
 __cabsl(z)
-	struct __cabsl_complex z;
+	struct __cabs_complexl z;
 {
 	return __hypotl(z.x, z.y);
 }

@@ -36,7 +36,7 @@ DEFUN_VOID(getlogin)
   char *real_tty_path = tty_pathname;
   char *result = NULL;
   static struct utmp_data utmp_data;
-  struct utmp *ut;
+  struct utmp *ut, line;
 
   {
     int err = 0;
@@ -58,7 +58,8 @@ DEFUN_VOID(getlogin)
   real_tty_path += 5;		/* Remove "/dev/".  */
 
   setutent_r (&utmp_data);
-  if (getutline_r (real_tty_path, &ut, &utmp_data) < 0)
+  strncpy (line.ut_line, real_tty_path, sizeof line.ut_line);
+  if (getutline_r (&line, &ut, &utmp_data) < 0)
     {
       if (errno == ESRCH)
 	/* The caller expects ENOENT if nothing is found.  */

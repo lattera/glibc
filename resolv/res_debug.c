@@ -66,6 +66,7 @@ static char rcsid[] = "$Id$";
 #include <arpa/nameser.h>
 
 #include <stdio.h>
+#include <ctype.h>
 #include <netdb.h>
 #include <resolv.h>
 #if defined(BSD) && (BSD >= 199103) && defined(AF_INET6)

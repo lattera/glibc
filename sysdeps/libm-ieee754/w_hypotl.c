@@ -27,7 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 
 
 #ifdef __STDC__
-	long double __hypotl(longdouble x, long double y)/* wrapper hypotl */
+	long double __hypotl(long double x, long double y)/* wrapper hypotl */
 #else
 	long double __hypotl(x,y)			 /* wrapper hypotl */
 	long double x,y;
