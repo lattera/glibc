@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  Hurd/i386 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -113,14 +113,25 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(descr, secondcall) \
     _hurd_tls_init ((tcbhead_t *) (descr), (secondcall))
+# define TLS_INIT_TP_EXPENSIVE 1
+
+/* Return the TCB address of the current thread.  */
+# define THREAD_SELF \
+  ({ tcbhead_t *__tcb;
+     __asm__ ("movl %%gs:%c1,%0" : "=r" (__tcb)		\
+	      : "i" (offsetof (tcbhead_t, tcb))); 	\
+     __tcb;})
 
 /* Install new dtv for current thread.  */
-# define INSTALL_NEW_DTV(dtv) \
-  ({ __asm__ ("movl %0, %%gs:0" : : "r" (dtv)); })
+# define INSTALL_NEW_DTV(dtvp) \
+  ({ asm volatile ("movl %0,%%gs:%P1"
+		   : : "ir" (dtvp), "i" (offsetof (tcbhead_t, dtv))); })
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  ({ void *_dtv; __asm__ ("movl %%gs:0, %0" : "=r" (_dtv)); _dtv; })
+  ({ void *_dtv;
+     asm ("movl %%gs:%P1,%0" : "=q" (_dtv) : "i" (offsetof (tcbhead_t, dtv)));
+     _dtv; })
 
 # endif	/* !ASSEMBLER */
 #endif /* HAVE_TLS_SUPPORT */
