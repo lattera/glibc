@@ -1,5 +1,7 @@
 1999-05-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/do-lookup.h: Fix typo in comment.
+
 	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs): Set f_frsize to
 	f_bsize to help some broken programs.
 

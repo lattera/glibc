@@ -96,7 +96,7 @@ FCT (const char *undef_name, unsigned long int hash,
 #if VERSIONED
 	  if (verstab == NULL)
 	    {
-	      /* We need a versioned system but haven't found any.  If
+	      /* We need a versioned symbol but haven't found any.  If
 		 this is the object which is referenced in the verneed
 		 entry it is a bug in the library since a symbol must
 		 not simply disappear.  */
