@@ -90,6 +90,7 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 # the files.
 # The extra kludge for the $(tzlinks) files is necessary since running zic
 # this file requires all other files to exist.  Blech!
+	$(make-target-directory)
 	(echo 'define $*-zones'						    ;\
 	 $(AWK) '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^ ;\
 	 echo 'endef'							    ;\

@@ -1,3 +1,8 @@
+1999-05-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/Makefile (install-others): Create target directory
+	before creating tzfiles.
+
 1999-05-05  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nis_file.c (readColdStartFile): Allocate memory only after
