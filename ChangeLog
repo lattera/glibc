@@ -1,3 +1,8 @@
+2001-07-24  Andreas Jaeger  <aj@suse.de>
+
+	* manual/examples/longopt.c (main): Fix which options take
+	arguments.
+
 2001-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile: Add dependencies for tst-loading test.
