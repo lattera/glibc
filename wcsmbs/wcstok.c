@@ -1,5 +1,6 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,52 +17,42 @@ License along with the GNU C Library; see the file COPYING.LIB.	 If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <wcstr.h>
+#include <wchar.h>
 #include <errno.h>
 
 
-static wchar_t *olds = NULL;
-
-/* Parse WCS into tokens separated by characters in DELIM.
-   If WCS is NULL, the last string wcstok() was called with is
-   used.  */
+/* Parse WCS into tokens separated by characters in DELIM.  If WCS is
+   NULL, the last string wcstok() was called with is used.  */
 wchar_t *
-wcstok (wcs, delim)
-    register wchar_t *wcs;
-    register const wchar_t *delim;
+wcstok (wcs, delim, ptr)
+     register wchar_t *wcs;
+     register const wchar_t *delim;
+     register wchar_t **ptr;
 {
-  wchar_t *token;
+  wchar_t *result;
 
   if (wcs == NULL)
-    {
-      if (olds == NULL)
-	{
-	  errno = EINVAL;
-	  return NULL;
-	}
-      else
-	wcs = olds;
-    }
+    wcs = *ptr;
 
   /* Scan leading delimiters.  */
   wcs += wcsspn (wcs, delim);
   if (*wcs == L'\0')
     {
-      olds = NULL;
+      *ptr = NULL;
       return NULL;
     }
 
   /* Find the end of the token.	 */
-  token = wcs;
-  wcs = wcspbrk (token, delim);
+  result = wcs;
+  wcs = wcspbrk (result, delim);
   if (wcs == NULL)
     /* This token finishes the string.	*/
-    olds = NULL;
+    *ptr = NULL;
   else
     {
       /* Terminate the token and make OLDS point past it.  */
       *wcs = L'\0';
-      olds = wcs + 1;
+      *ptr = wcs + 1;
     }
-  return token;
+  return result;
 }

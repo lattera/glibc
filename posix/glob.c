@@ -699,7 +699,7 @@ glob_pattern_p (pattern, quote)
 	return 1;
 
       case '\\':
-	if (quote)
+	if (quote && p[1] != '\0')
 	  ++p;
 	break;
 

@@ -32,7 +32,7 @@ __BEGIN_DECLS
 #include <sigset.h>		/* Get `__sigset_t'.  */
 
 /* Calling environment, plus possibly a saved signal mask.  */
-typedef struct __jmp_buf	/* C++ doesn't like tagless structs.  */
+typedef struct __jmp_buf_tag	/* C++ doesn't like tagless structs.  */
   {
     /* NOTE: The machine-dependent definitions of `__sigsetjmp'
        assume that a `jmp_buf' begins with a `__jmp_buf'.

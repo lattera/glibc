@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,50 @@ Cambridge, MA 02139, USA.  */
 #include <printf.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
+
+#ifndef COMPILE_WPRINTF
+# define CHAR_T		char
+# define UCHAR_T	unsigned char
+# define INT_T		int
+# define L_(Str)	Str
+# define ISDIGIT(Ch)	isdigit (Ch)
+
+# ifdef USE_IN_LIBIO
+#  define PUT(F, S, N)	_IO_sputn (F, S, N)
+#  define PAD(Padchar)							      \
+  if (width > 0)							      \
+    done += _IO_padn (s, Padchar, width)
+# else
+#  define PUTC(C, F)	putc (C, F)
+ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
+# define PAD(Padchar)							      \
+  if (width > 0)							      \
+    { if (__printf_pad (s, Padchar, width) == -1)			      \
+	return -1; else done += width; }
+# endif
+#else
+# define vfprintf	vfwprintf
+# define CHAR_T		wchar_t
+# define UCHAR_T	uwchar_t
+# define INT_T		wint_t
+# define L_(Str)	L##Str
+# define ISDIGIT(Ch)	iswdigit (Ch)
+
+# ifdef USE_IN_LIBIO
+# define PUT(F, S, N)	_IO_sputn (F, S, N)
+# define PAD(Padchar)							      \
+  if (width > 0)							      \
+    done += _IO_wpadn (s, Padchar, width)
+# else
+#  define PUTC(C, F)	wputc (C, F)
+ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
+# define PAD(Padchar)							      \
+  if (width > 0)							      \
+    { if (__wprintf_pad (s, Padchar, width) == -1)			      \
+	return -1; else done += width; }
+# endif
+#endif
 
 #include "printf-parse.h"
 
@@ -33,15 +77,17 @@ parse_printf_format (fmt, n, argtypes)
   size_t nargs;			/* Number of arguments.  */
   size_t max_ref_arg;		/* Highest index used in a positional arg.  */
   struct printf_spec spec;
+  mbstate_t mbstate;
 
   nargs = 0;
   max_ref_arg = 0;
+  mbstate = 0;
 
   /* Search for format specifications.  */
-  for (fmt = find_spec (fmt); *fmt != '\0'; fmt = spec.next_fmt)
+  for (fmt = find_spec (fmt, &mbstate); *fmt != '\0'; fmt = spec.next_fmt)
     {
       /* Parse this spec.  */
-      nargs += parse_one_spec (fmt, nargs, &spec, &max_ref_arg);
+      nargs += parse_one_spec (fmt, nargs, &spec, &max_ref_arg, &mbstate);
 
       /* If the width is determined by an argument this is an int.  */
       if (spec.width_arg != -1 && spec.width_arg < n)

@@ -481,20 +481,12 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* Read the fractional digits.  A special case are the 'american style'
      numbers like `16.' i.e. with decimal but without trailing digits.  */
   if (c == decimal)
-    {
-      if (isdigit (cp[1]))
-	{
-	  c = *++cp;
-	  do
-	    {
-	      if (c != '0' && lead_zero == -1)
-		lead_zero = dig_no - int_no;
-	      ++dig_no;
-	      c = *++cp;
-	    }
-	  while (isdigit (c));
-	}
-    }
+    while (isdigit (c = *++cp))
+      {
+	if (c != '0' && lead_zero == -1)
+	  lead_zero = dig_no - int_no;
+	++dig_no;
+      }
 
   /* Remember start of exponent (if any).  */
   expp = cp;

@@ -21,11 +21,12 @@
 #
 subdir	:= wcsmbs
 
-headers	:= wcstr.h mbstr.h
+headers	:= wchar.h
 
-routines := mbsadvance mbscat mbschr mbscmp mbscpy mbsdup mbslen	\
-	    mbsncat mbsncmp mbsncpy mbsrchr mbstomb wcscat wcschr wcscmp\
-	    wcscpy wcscspn wcsdup wcslen wcsncat wcsncmp wcsncpy wcspbrk\
-	    wcsrchr wcsspn wcstok wcswcs
+routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
+	    wcsncmp wcsncpy wcspbrk wcsrchr wcsspn wcstok wcsstr wmemchr \
+	    wmemcmp wmemcpy wmemmove wmemset \
+	    btowc wctob mbsinit \
+	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs
 
 include ../Rules

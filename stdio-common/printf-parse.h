@@ -1,5 +1,5 @@
 /* Internal header for parsing printf format strings.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of th GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -73,14 +73,14 @@ union printf_arg
 /* Read a simple integer from a string and update the string pointer.
    It is assumed that the first character is a digit.  */
 static inline unsigned int
-read_int (const char * *pstr)
+read_int (const UCHAR_T * *pstr)
 {
-  unsigned int retval = **pstr - '0';
+  unsigned int retval = **pstr - L_('0');
 
-  while (isdigit (*++(*pstr)))
+  while (ISDIGIT (*++(*pstr)))
     {
       retval *= 10;
-      retval += **pstr - '0';
+      retval += **pstr - L_('0');
     }
 
   return retval;
@@ -91,13 +91,13 @@ read_int (const char * *pstr)
 /* Find the next spec in FORMAT, or the end of the string.  Returns
    a pointer into FORMAT, to a '%' or a '\0'.  */
 static inline const char *
-find_spec (const char *format)
+find_spec (const char *format, mbstate_t *ps)
 {
   while (*format != '\0' && *format != '%')
     {
       int len;
 
-      if (isascii (*format) || (len = mblen (format, MB_CUR_MAX)) <= 0)
+      if (isascii (*format) || (len = mbrlen (format, MB_CUR_MAX, ps)) <= 0)
 	++format;
       else
 	format += len;
@@ -116,8 +116,8 @@ extern printf_arginfo_function **__printf_arginfo_table;
    the number of args consumed by this spec; *MAX_REF_ARG is updated so it
    remains the highest argument index used.  */
 static inline size_t
-parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
-		size_t *max_ref_arg)
+parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
+		size_t *max_ref_arg, mbstate_t *ps)
 {
   unsigned int n;
   size_t nargs = 0;
@@ -135,13 +135,13 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
   spec->info.pad = ' ';
 
   /* Test for positional argument.  */
-  if (isdigit (*format))
+  if (ISDIGIT (*format))
     {
-      const char *begin = format;
+      const UCHAR_T *begin = format;
 
       n = read_int (&format);
 
-      if (n > 0 && *format == '$')
+      if (n > 0 && *format == L_('$'))
 	/* Is positional parameter.  */
 	{
 	  ++format;		/* Skip the '$'.  */
@@ -155,32 +155,32 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
     }
 
   /* Check for spec modifiers.  */
-  while (*format == ' ' || *format == '+' || *format == '-' ||
-	 *format == '#' || *format == '0' || *format == '\'')
+  while (*format == L_(' ') || *format == L_('+') || *format == L_('-') ||
+	 *format == L_('#') || *format == L_('0') || *format == L_('\''))
     switch (*format++)
       {
-      case ' ':
+      case L_(' '):
 	/* Output a space in place of a sign, when there is no sign.  */
 	spec->info.space = 1;
 	break;
-      case '+':
+      case L_('+'):
 	/* Always output + or - for numbers.  */
 	spec->info.showsign = 1;
 	break;
-      case '-':
+      case L_('-'):
 	/* Left-justify things.  */
 	spec->info.left = 1;
 	break;
-      case '#':
+      case L_('#'):
 	/* Use the "alternate form":
 	   Hex has 0x or 0X, FP always has a decimal point.  */
 	spec->info.alt = 1;
 	break;
-      case '0':
+      case L_('0'):
 	/* Pad with 0s.  */
 	spec->info.pad = '0';
 	break;
-      case '\'':
+      case L_('\''):
 	/* Show grouping in numbers if the locale information
 	   indicates any.  */
 	spec->info.group = 1;
@@ -192,18 +192,18 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
   /* Get the field width.  */
   spec->width_arg = -1;
   spec->info.width = 0;
-  if (*format == '*')
+  if (*format == L_('*'))
     {
       /* The field width is given in an argument.
 	 A negative field width indicates left justification.  */
-      const char *begin = ++format;
+      const UCHAR_T *begin = ++format;
 
-      if (isdigit (*format))
+      if (ISDIGIT (*format))
 	{
 	  /* The width argument might be found in a positional parameter.  */
 	  n = read_int (&format);
 
-	  if (n > 0 && *format == '$')
+	  if (n > 0 && *format == L_('$'))
 	    {
 	      spec->width_arg = n - 1;
 	      *max_ref_arg = MAX (*max_ref_arg, n);
@@ -219,7 +219,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 	  format = begin;	/* Step back and reread.  */
 	}
     }
-  else if (isdigit (*format))
+  else if (ISDIGIT (*format))
     /* Constant width specification.  */
     spec->info.width = read_int (&format);
 
@@ -227,19 +227,19 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
   spec->prec_arg = -1;
   /* -1 means none given; 0 means explicit 0.  */
   spec->info.prec = -1;
-  if (*format == '.')
+  if (*format == L_('.'))
     {
       ++format;
-      if (*format == '*')
+      if (*format == L_('*'))
 	{
 	  /* The precision is given in an argument.  */
-	  const char *begin = ++format;
+	  const UCHAR_T *begin = ++format;
 
-	  if (isdigit (*format))
+	  if (ISDIGIT (*format))
 	    {
 	      n = read_int (&format);
 
-	      if (n > 0 && *format == '$')
+	      if (n > 0 && *format == L_('$'))
 		{
 		  spec->prec_arg = n - 1;
 		  *max_ref_arg = MAX (*max_ref_arg, n);
@@ -255,7 +255,7 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 	      format = begin;
 	    }
 	}
-      else if (isdigit (*format))
+      else if (ISDIGIT (*format))
 	spec->info.prec = read_int (&format);
       else
 	/* "%.?" is treated like "%.0?".  */
@@ -268,40 +268,41 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
   spec->info.is_short = 0;
   spec->info.is_long = 0;
 
-  while (*format == 'h' || *format == 'l' || *format == 'L' ||
-	 *format == 'Z' || *format == 'q')
+  if (*format == L_('h') || *format == L_('l') || *format == L_('L') ||
+      *format == L_('Z') || *format == L_('q'))
     switch (*format++)
       {
-      case 'h':
+      case L_('h'):
 	/* int's are short int's.  */
 	spec->info.is_short = 1;
 	break;
-      case 'l':
-	if (spec->info.is_long)
-	  /* A double `l' is equivalent to an `L'.  */
-	  spec->info.is_longlong = 1;
-	else
-	  /* int's are long int's.  */
-	  spec->info.is_long = 1;
-	break;
-      case 'L':
+      case L_('l'):
+	/* int's are long int's.  */
+	spec->info.is_long = 1;
+	if (*format != L_('l'))
+	  break;
+	++format;
+	/* FALLTHROUGH */
+      case L_('L'):
 	/* double's are long double's, and int's are long long int's.  */
+      case L_('q'):
+	/* 4.4 uses this for long long.  */
 	spec->info.is_long_double = 1;
 	break;
-      case 'Z':
+      case L_('Z'):
 	/* int's are size_t's.  */
 	assert (sizeof(size_t) <= sizeof(unsigned long long int));
 	spec->info.is_longlong = sizeof(size_t) > sizeof(unsigned long int);
 	spec->info.is_long = sizeof(size_t) > sizeof(unsigned int);
 	break;
-      case 'q':
-	/* 4.4 uses this for long long.  */
-	spec->info.is_longlong = 1;
-	break;
       }
 
   /* Get the format specification.  */
-  spec->info.spec = *format++;
+#ifdef THIS_IS_INCOMPATIBLE_WITH_LINUX_LIBC
+  spec->info.spec = (wchar_t) *format++;
+#else
+  spec->info.spec = (char) *format++;
+#endif
   if (__printf_arginfo_table != NULL &&
       __printf_arginfo_table[spec->info.spec] != NULL)
     /* We don't try to get the types for all arguments if the format
@@ -315,12 +316,12 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 
       switch (spec->info.spec)
 	{
-	case 'i':
-	case 'd':
-	case 'u':
-	case 'o':
-	case 'X':
-	case 'x':
+	case L'i':
+	case L'd':
+	case L'u':
+	case L'o':
+	case L'X':
+	case L'x':
 	  if (spec->info.is_longlong)
 	    spec->data_arg_type = PA_INT|PA_FLAG_LONG_LONG;
 	  else if (spec->info.is_long)
@@ -330,30 +331,30 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 	  else
 	    spec->data_arg_type = PA_INT;
 	  break;
-	case 'e':
-	case 'E':
-	case 'f':
-	case 'g':
-	case 'G':
+	case L'e':
+	case L'E':
+	case L'f':
+	case L'g':
+	case L'G':
 	  if (spec->info.is_long_double)
 	    spec->data_arg_type = PA_DOUBLE|PA_FLAG_LONG_DOUBLE;
 	  else
 	    spec->data_arg_type = PA_DOUBLE;
 	  break;
-	case 'c':
+	case L'c':
 	  spec->data_arg_type = PA_CHAR;
 	  break;
-	case 's':
+	case L's':
 	  spec->data_arg_type = PA_STRING;
 	  break;
-	case 'p':
+	case L'p':
 	  spec->data_arg_type = PA_POINTER;
 	  break;
-	case 'n':
+	case L'n':
 	  spec->data_arg_type = PA_INT|PA_FLAG_PTR;
 	  break;
 
-	case 'm':
+	case L'm':
 	default:
 	  /* An unknown spec will consume no args.  */
 	  spec->ndata_args = 0;
@@ -370,14 +371,14 @@ parse_one_spec (const char *format, size_t posn, struct printf_spec *spec,
 	}
     }
 
-  if (spec->info.spec == '\0')
+  if (spec->info.spec == L'\0')
     /* Format ended before this spec was complete.  */
     spec->end_of_fmt = spec->next_fmt = format - 1;
   else
     {
       /* Find the next format spec.  */
       spec->end_of_fmt = format;
-      spec->next_fmt = find_spec (format);
+      spec->next_fmt = find_spec (format, ps);
     }
 
   return nargs;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@ __BEGIN_DECLS
 #define	__need_FILE
 #include <stdio.h>
 #define	__need_size_t
+#define __need_wchar_t
 #include <stddef.h>
 
 
@@ -33,7 +34,11 @@ struct printf_info
 {
   int prec;			/* Precision.  */
   int width;			/* Width.  */
-  unsigned char spec;		/* Format letter.  */
+#ifdef THIS_IS_INCOMPATIBLE_WITH_LINUX_LIBC
+  wchar_t spec;			/* Format letter.  */
+#else
+  char spec;			/* Format letter.  */
+#endif
   unsigned int is_long_double:1;/* L flag.  */
   unsigned int is_short:1;	/* h flag.  */
   unsigned int is_long:1;	/* l flag.  */

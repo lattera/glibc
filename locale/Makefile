@@ -31,8 +31,8 @@ distribute	= localeinfo.h categories.def \
 routines	= setlocale loadlocale localeconv nl_langinfo
 categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc
-others		= localedef# locale
-install-bin	= localedef# locale
+others		= localedef locale
+install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 		  $(lib-modules:=.o)
 
@@ -41,7 +41,6 @@ vpath %.h programs
 
 localedef-modules	:= $(categories:%=ld-%) charmap charset linereader \
 			   locfile stringtrans
-locale-modules		:= ctypedump
 lib-modules		:= simple-hash xmalloc xstrdup
 
 

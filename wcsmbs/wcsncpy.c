@@ -1,5 +1,6 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,18 +17,18 @@ License along with the GNU C Library; see the file COPYING.LIB.	 If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <wcstr.h>
+#include <wchar.h>
 
 
 /* Copy no more than N wide-characters of SRC to DEST.	*/
 wchar_t *
 wcsncpy (dest, src, n)
-      wchar_t *dest;
-      const wchar_t *src;
-      size_t n;
+     wchar_t *dest;
+     const wchar_t *src;
+     size_t n;
 {
   wchar_t c;
-  wchar_t * const s = dest;
+  wchar_t *const s = dest;
 
   --dest;
 

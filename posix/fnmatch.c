@@ -78,6 +78,9 @@ fnmatch (pattern, string, flags)
 	  if (!(flags & FNM_NOESCAPE))
 	    {
 	      c = *p++;
+	      if (c == '\0')
+		/* Trailing \ loses.  */
+		return FNM_NOMATCH;
 	      c = FOLD (c);
 	    }
 	  if (FOLD (*n) != c)
@@ -129,7 +132,11 @@ fnmatch (pattern, string, flags)
 		register char cstart = c, cend = c;
 
 		if (!(flags & FNM_NOESCAPE) && c == '\\')
-		  cstart = cend = *p++;
+		  {
+		    if (*p == '\0')
+		      return FNM_NOMATCH;
+		    cstart = cend = *p++;
+		  }
 
 		cstart = cend = FOLD (cstart);
 
@@ -176,8 +183,12 @@ fnmatch (pattern, string, flags)
 
 		c = *p++;
 		if (!(flags & FNM_NOESCAPE) && c == '\\')
-		  /* XXX 1003.2d11 is unclear if this is right.  */
-		  ++p;
+		  {
+		    if (*p == '\0')
+		      return FNM_NOMATCH;
+		    /* XXX 1003.2d11 is unclear if this is right.  */
+		    ++p;
+		  }
 	      }
 	    if (not)
 	      return FNM_NOMATCH;

@@ -27,7 +27,6 @@ typedef int wint_t;
 typedef unsigned short int u16_t;
 
 
-
-int euidaccess (__const char *__name, int __type);
+#include_next <config.h>
 
 #endif

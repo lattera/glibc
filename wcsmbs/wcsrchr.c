@@ -1,5 +1,6 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,14 +17,14 @@ License along with the GNU C Library; see the file COPYING.LIB.	 If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <wcstr.h>
+#include <wchar.h>
 
 
 /* Find the last ocurrence of WC in WCS.  */
 wchar_t *
 wcsrchr (wcs, wc)
-    register const wchar_t *wcs;
-    register const wchar_t wc;
+     register const wchar_t *wcs;
+     register const wchar_t wc;
 {
   const wchar_t *retval = NULL;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -188,7 +188,7 @@ I am ready for my first lesson today.";
   {
     double d = FLT_MIN;
     int niter = 17;
-    
+
     while (niter-- != 0)
       printf ("%.17e\n", d / 2);
     fflush (stdout);
@@ -233,7 +233,18 @@ I am ready for my first lesson today.";
   rfg1 ();
   rfg2 ();
 
-  exit(EXIT_SUCCESS);
+  {
+    char buf[200];
+    int result;
+
+    sprintf(buf,"%*s%*s%*s",-1,"one",-20,"two",-30,"three");
+
+    result = strcmp (buf,
+		     "onetwo                 three                         ");
+
+    puts (result != 0 ? "Test failed!" : "Test ok.");
+    return result != 0;
+  }
 }
 
 rfg1 ()

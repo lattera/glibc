@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Torbjorn Granlund <tege@matematik.su.se>
 and Ulrich Drepper <drepper@gnu.ai.mit.edu>.
@@ -159,10 +159,10 @@ static const struct base_table_t base_table[] =
 };
 
 /* Lower-case digits.  */
-static const char _itoa_lower_digits[]
+const char _itoa_lower_digits[]
 	= "0123456789abcdefghijklmnopqrstuvwxyz";
 /* Upper-case digits.  */
-static const char _itoa_upper_digits[]
+const char _itoa_upper_digits[]
 	= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
