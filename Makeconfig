@@ -346,9 +346,6 @@ ifeq ($(release),stable)
 default_cflags := -g -O2
 else
 default_cflags := -g -O
-ifneq ($(CC),/usr/bin/gcc)
-default_cflags := -g -O3 -finline-limit=2000 -march=pentium4
-endif
 endif
 endif
 
