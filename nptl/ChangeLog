@@ -1,5 +1,9 @@
 2003-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-tls1 and tst-tls2.
+	* tst-tls1.c: New file.
+	* tst-tls2.c: New file.
+
 	* libc-cancellation.c (__libc_enable_asynccancel): Correct test
 	for failed cmpxchg.
 
