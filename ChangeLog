@@ -1,5 +1,7 @@
 2000-02-24  Andreas Jaeger  <aj@suse.de>
 
+	* include/stdlib.h: Fix prototypes of __initstate and __setstate.
+
 	* manual/time.texi (Precision Time): Fix typo.
 	Patch by John Tobey <jtobey@ne.mediaone.net>, PR libc/1576.
 
