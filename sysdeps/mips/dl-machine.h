@@ -485,8 +485,6 @@ _dl_start_user:\n\
 	move $16, $28\n\
 	# Save the user entry point address in a saved register.\n\
 	move $17, $2\n\
-	# Store the highest stack address\n\
-	" STRINGXP(PTR_S) " $29, __libc_stack_end\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	lw $2, _dl_skip_args\n\
