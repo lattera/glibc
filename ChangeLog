@@ -1,3 +1,10 @@
+1998-09-10 12:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_init.c (res_init): Initialize _res.nscount and
+	_res.nsaddr.sin_port differently for the can when no loopback
+	is available to allow immediate timeout in non-networking environments.
+	Patch by Cristian Gafton <gafton@redhat.com>.
+
 1998-09-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* localedata/charmaps/ISO-8859-10: Character 0xBD is HORIZONTAL

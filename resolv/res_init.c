@@ -206,12 +206,14 @@ res_init()
 
 #ifdef USELOOPBACK
 	_res.nsaddr.sin_addr = inet_makeaddr(IN_LOOPBACKNET, 1);
+	_res.nscount = 1;
+	_res.nsaddr.sin_port = htons(NAMESERVER_PORT);
 #else
 	_res.nsaddr.sin_addr.s_addr = INADDR_ANY;
+	_res.nscount = 0;
+	_res.nsaddr.sin_port = 0;
 #endif
 	_res.nsaddr.sin_family = AF_INET;
-	_res.nsaddr.sin_port = htons(NAMESERVER_PORT);
-	_res.nscount = 1;
 	_res.ndots = 1;
 	_res.pfcode = 0;
 
