@@ -152,6 +152,14 @@ __do_cancel (void)
 # define LIBC_CANCEL_HANDLED() \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_enable_asynccancel"); \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_disable_asynccancel")
+#elif defined NOT_IN_libc && defined IS_IN_librt
+# define LIBC_CANCEL_ASYNC() \
+  __librt_enable_asynccancel ()
+# define LIBC_CANCEL_RESET(val) \
+  __librt_disable_asynccancel (val)
+# define LIBC_CANCEL_HANDLED() \
+  __asm (".globl " __SYMBOL_PREFIX "__librt_enable_asynccancel"); \
+  __asm (".globl " __SYMBOL_PREFIX "__librt_disable_asynccancel")
 #else
 # define LIBC_CANCEL_ASYNC()	0 /* Just a dummy value.  */
 # define LIBC_CANCEL_RESET(val)	((void)(val)) /* Nothing, but evaluate it.  */
@@ -340,6 +348,12 @@ extern int __pthread_cond_wait_2_0 (pthread_cond_2_0_t *cond,
 /* The two functions are in libc.so and not exported.  */
 extern int __libc_enable_asynccancel (void) attribute_hidden;
 extern void __libc_disable_asynccancel (int oldtype)
+     internal_function attribute_hidden;
+
+
+/* The two functions are in librt.so and not exported.  */
+extern int __librt_enable_asynccancel (void) attribute_hidden;
+extern void __librt_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 
 #ifdef IS_IN_libpthread
