@@ -192,3 +192,5 @@ xdrstdio_putint32 (XDR *xdrs, const int32_t *ip)
     return FALSE;
   return TRUE;
 }
+
+libc_hidden_def (xdrstdio_create)

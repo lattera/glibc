@@ -1,3 +1,17 @@
+2002-09-17  Roland McGrath  <roland@redhat.com>
+
+	* sunrpc/xcrypt.c (passwd2des_internal): Renamed fom passwd2des.
+	(passwd2des): Define it as an alias.
+	(xencrypt, xdecrypt): Call passwd2des_internal instead of passwd2des.
+
+2002-09-12  Bruno Haible  <bruno@clisp.org>
+
+	* include/sys/sysctl.h (__sysctl): Add libc_hidden_proto.
+	* sysdeps/unix/sysv/linux/sysctl.c (__sysctl): Add libc_hidden_def.
+
+	* include/rpc/xdr.h (xdrstdio_create): Add libc_hidden_proto.
+	* sunrpc/xdr_stdio.c (xdrstdio_create): Add libc_hidden_def.
+
 2002-09-05  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h [__powerpc64__]

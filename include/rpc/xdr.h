@@ -32,3 +32,5 @@ extern void xdrmem_create_internal (XDR *, const caddr_t, u_int, enum xdr_op);
 extern bool_t xdrrec_endofrecord_internal (XDR *__xdrs, bool_t __sendnow);
 extern bool_t xdrrec_skiprecord_internal (XDR *__xdrs);
 extern bool_t xdrrec_eof_internal (XDR *__xdrs);
+
+libc_hidden_proto (xdrstdio_create)

@@ -69,7 +69,32 @@ static char hexval (char) internal_function;
 
 static void hex2bin (int, char *, char *) internal_function;
 static void bin2hex (int, unsigned char *, char *) internal_function;
-void passwd2des (char *pw, char *key);
+static void passwd2des_internal (char *pw, char *key);
+
+
+/*
+ * Turn password into DES key
+ */
+static void
+passwd2des_internal (char *pw, char *key)
+{
+  int i;
+
+  memset (key, 0, 8);
+  for (i = 0; *pw && i < 8; ++i)
+    key[i] ^= *pw++ << 1;
+
+  des_setparity (key);
+}
+
+#ifdef _LIBC
+strong_alias (passwd2des_internal, passwd2des)
+#else
+void passwd2des (char *pw, char *key)
+{
+  return passwd2des_internal (pw, key);
+}
+#endif
 
 /*
  * Encrypt a secret key given passwd
@@ -88,7 +113,7 @@ xencrypt (char *secret, char *passwd)
   len = strlen (secret) / 2;
   buf = malloc ((unsigned) len);
   hex2bin (len, secret, buf);
-  passwd2des (passwd, key);
+  passwd2des_internal (passwd, key);
   memset (ivec, 0, 8);
 
   err = cbc_crypt (key, buf, len, DES_ENCRYPT | DES_HW, ivec);
@@ -120,7 +145,7 @@ xdecrypt (char *secret, char *passwd)
   buf = malloc ((unsigned) len);
 
   hex2bin (len, secret, buf);
-  passwd2des (passwd, key);
+  passwd2des_internal (passwd, key);
   memset (ivec, 0, 8);
 
   err = cbc_crypt (key, buf, len, DES_DECRYPT | DES_HW, ivec);
@@ -132,21 +157,6 @@ xdecrypt (char *secret, char *passwd)
   bin2hex (len, (unsigned char *) buf, secret);
   free (buf);
   return 1;
-}
-
-/*
- * Turn password into DES key
- */
-void
-passwd2des (char *pw, char *key)
-{
-  int i;
-
-  memset (key, 0, 8);
-  for (i = 0; *pw && i < 8; ++i)
-    key[i] ^= *pw++ << 1;
-
-  des_setparity (key);
 }
 
 /*

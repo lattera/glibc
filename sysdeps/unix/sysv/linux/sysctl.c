@@ -1,5 +1,5 @@
 /* Read or write system information.  Linux version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,4 +46,5 @@ __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
 
   return INLINE_SYSCALL (_sysctl, 1, __ptrvalue (&args));
 }
+libc_hidden_def (__sysctl)
 weak_alias (__sysctl, sysctl)
