@@ -1,3 +1,9 @@
+2000-07-25  Bruno Haible  <haible@clisp.cons.org>
+
+	* wctype/wctype.h (__wctrans_l): New declaration.
+	* wctype/wctrans_l.c: New file.
+	* wctype/Makefile (routines): Add wctrans_l.
+
 2000-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/fnmatch_loop.c: Fixes for use outside glibc.
@@ -5,8 +11,8 @@
 
 2000-07-26  Andreas Jaeger  <aj@suse.de>
 
-	* rt/tst-aio4.c: New file, slighlty modified version of tst-aio2.
-	* rt/tst-aio5.c: New file, slighlty modified version of tst-aio2.
+	* rt/tst-aio4.c: New file, slightly modified version of tst-aio2.
+	* rt/tst-aio5.c: New file, slightly modified version of tst-aio2.
 	* rt/Makefile: Add rules to build and run tst-aio4 and tst-aio5.
 
 	* rt/tst-aio.c (test_file): Fix typo.

@@ -378,6 +378,11 @@ extern wint_t __towlower_l (wint_t __wc, __locale_t __locale) __THROW;
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
 extern wint_t __towupper_l (wint_t __wc, __locale_t __locale) __THROW;
 
+/* Construct value that describes a mapping between wide characters
+   identified by the string argument PROPERTY.  */
+extern wctrans_t __wctrans_l (__const char *__property, __locale_t __locale)
+     __THROW;
+
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t __towctrans_l (wint_t __wc, wctrans_t __desc,
 			     __locale_t __locale) __THROW;

@@ -24,7 +24,8 @@ subdir	:= wctype
 headers		:= wctype.h
 distribute	:= cname-lookup.h
 routines	:= wcfuncs wctype iswctype wctrans towctrans wcextra \
-		   wcfuncs_l iswctype_l towctrans_l wctype_l wcextra_l
+		   wcfuncs_l wctype_l iswctype_l wctrans_l towctrans_l \
+		   wcextra_l
 
 tests	:= test_wctype test_wcfuncs
 
