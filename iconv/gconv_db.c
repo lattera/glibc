@@ -181,6 +181,7 @@ gen_steps (struct derivation_step *best, const char *toset,
     {
       int failed = 0;
 
+      status = GCONV_OK;
       *nsteps = step_cnt;
       current = best;
       while (step_cnt-- > 0)
@@ -220,7 +221,18 @@ gen_steps (struct derivation_step *best, const char *toset,
 
 	  /* Call the init function.  */
 	  if (result[step_cnt].init_fct != NULL)
-	    _CALL_DL_FCT (result[step_cnt].init_fct, (&result[step_cnt]));
+	     {
+	       status = _CALL_DL_FCT (result[step_cnt].init_fct,
+				      (&result[step_cnt]));
+	       
+	       if (status != GCONV_OK)
+		 {
+		   failed = 1;
+		   /* Make sure we unload this modules.  */
+		   --step_cnt;
+		   break;
+		 }
+	     }
 
 	  current = current->last;
 	}
@@ -239,13 +251,11 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  free (result);
 	  *nsteps = 0;
 	  *handle = NULL;
-	  status = GCONV_NOCONV;
+	  if (status == GCONV_OK)
+	    status = GCONV_NOCONV;
 	}
       else
-	{
-	  *handle = result;
-	  status = GCONV_OK;
-	}
+	*handle = result;
     }
   else
     {

@@ -1,5 +1,8 @@
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_db.c (gen_steps): Respect error return value from
+	init functions and abort.
+
 	* iconvdata/iso646.c: Recognize NF_Z_62-010_1973 as charset name.
 
 1998-12-17  H.J. Lu  <hjl@gnu.org>
