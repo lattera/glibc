@@ -1,3 +1,8 @@
+2004-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mq_unlink.c: Rewrite to produce more
+	compact code.
+
 2004-04-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdio-common/vfscanf.c (_IO_vfscanf): When skipping whitespace,
