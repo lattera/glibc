@@ -1,3 +1,7 @@
+2003-02-19  Jiro Sekiba  <jir@yamato.ibm.com>
+
+	* iconvdata/utf-16.c (gconv_end): Fix range of low surrogate.
+
 2003-02-16  Roland McGrath  <roland@redhat.com>
 
 	* signal/signal.h: Include <sys/ucontext.h>, not <ucontext.h>.
