@@ -1,5 +1,7 @@
 2000-11-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (VERSION): Bump to 2.1.97.
+
 	* sysdeps/i386/i486/bits/string.h (strcmp): Cast arguments to
 	__strcmp_cc, __strcmp_cg, and __strcmp_gc to unsigned char *.
 	(__strcmp_cc, __strcmp_cg, __strcmp_gc): Remove casts of values here.
