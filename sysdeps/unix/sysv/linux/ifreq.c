@@ -71,7 +71,8 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
     {
       ifc.ifc_len = rq_len;
       void *newp = realloc (ifc.ifc_buf, ifc.ifc_len);
-      if (newp == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
+      if (newp == NULL
+	  || (ifc.ifc_buf = newp, __ioctl (fd, SIOCGIFCONF, &ifc)) < 0)
 	{
 	  free (ifc.ifc_buf);
 
@@ -82,7 +83,6 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 	  *ifreqs = NULL;
 	  return;
 	}
-      ifc.ifc_buf = newp;
 
       if (!old_siocgifconf || ifc.ifc_len < rq_len)
 	break;
