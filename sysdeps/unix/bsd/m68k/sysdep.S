@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ syscall_error:
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
 #ifdef __motorola__
-#ifdef EWOULDBLOCK_sys
+#if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	cmp.l d0, #EWOULDBLOCK_sys
 	bne store
 	moveq.l #EAGAIN, d0
@@ -33,7 +33,7 @@ syscall_error:
 store:	move.l d0, _errno
 	moveq.l #-1, d0
 #else
-#ifdef EWOULDBLOCK_sys
+#if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	cmpl d0, #EWOULDBLOCK_sys
 	bne 0f
 	moveq #EAGAIN, d0
