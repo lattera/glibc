@@ -2,28 +2,21 @@
 				  and
 		    POSIX character set descriptions
 
-Ulrich Drepper			Time-stamp: <1997/06/04 01:36:26 drepper>
+Ulrich Drepper			Time-stamp: <2000/07/20 13:08:24 aj>
 drepper@cygnus.com
 
 
-This add-on package contains the data needed to build the locale data
-files to use the internationalization features of the GNU libc.
+This directory contains the data needed to build the locale data files
+to use the internationalization features of the GNU libc.
 
 POSIX.2 describes the `localedef' utility which is part of the GNU libc.
 You need this program to "compile" the locale description in a form
 suitable for fast access by the GNU libc functions.  Any compilation is
 based on a given character set.
 
-To use these data files you should add the name of this add-on
-(localedata) to the list of add-on you specify while compiling the GNU
-libc:
-
-	configure --enable-add-ons=...,localedata ...
-
-where ... are the options you normally choose. Once you run `make
-install' for the GNU libc the data files are automatically installed in
-the right place, ready for use by the `localedef' program.
-
+Once you run `make install' for the GNU libc the data files are
+automatically installed in the right place, ready for use by the
+`localedef' program.
 
 To compile the locale data files you simply have to decide which locale
 (based on the location and the language) and which character set you
