@@ -1,7 +1,12 @@
+Fri Jul 19 13:18:02 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* hurd/report-wait.c (describe_number): Use unsigned long int for J.
+
 Thu Jul 18 11:42:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* crypt/Makefile (lib-noranlib): Depend on
 	$(objpfx)libcrypt.so$(libcrypt.so-version).
+	(subdir): Fix name.
 
 Thu Jul 18 04:33:21 1996  Roland McGrath  <roland@baalperazim.frob.com>
 
