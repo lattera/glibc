@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 # The mpn functions need this.  All existing 68k ports use MIT syntax.  If
 # a new port wants to use Motorola or Sony syntax, it can redefine this
@@ -30,3 +30,7 @@ CFLAGS-setjmp.c := -fno-omit-frame-pointer
 
 # The 68k `long double' is a distinct type we support.
 long-double-fcts = yes
+
+ifeq ($(subdir),elf)
+CFLAGS-rtld.c += -Wno-uninitialized
+endif
