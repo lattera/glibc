@@ -246,6 +246,7 @@ Sat Nov 25 06:05:12 1995  H.J. Lu  <hjl@nynexst.com>
 
 	* stdio-common/vfscanf.c: Always check width !=0.
 	Correctly handle %%.
+
 Thu Dec 14 02:28:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c (glob_in_dir): Cast result of opendir to __ptr_t,
