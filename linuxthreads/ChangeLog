@@ -1,3 +1,8 @@
+2001-12-13  Andreas Schwab  <schwab@suse.de>
+
+	* specific.c (pthread_key_delete): Don't contact the thread
+	manager if no threads have been created yet.
+
 2001-12-12  NIIBE Yutaka  <gniibe@.m17n.org>
 
 	* sysdeps/sh/pt-machine.h (INIT_THREAD_SELF): Added __volatile__
@@ -15,8 +20,7 @@
 
 2001-11-29  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/x86_64/pt-machine.h: Use %gs as thread specific
-	register.
+	* sysdeps/x86_64/pt-machine.h: Use %gs as thread specific register.
 	(THREAD_SELF): New.
 	(INIT_THREAD_SELF): New.
 	(THREAD_GETMEM): New.

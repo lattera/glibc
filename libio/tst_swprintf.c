@@ -68,8 +68,24 @@ main (int argc, char *argv[])
 	  result = 1;
 	}
       else
-	printf  ("swprintf (buf, %Zu, L\"%%s\", \"%s\") OK\n",
-		 tests[n].n, tests[n].str);
+	printf ("swprintf (buf, %Zu, L\"%%s\", \"%s\") OK\n",
+		tests[n].n, tests[n].str);
+    }
+
+  if (swprintf (buf, nbuf, L"%.0s", "foo") != 0
+      || wcslen (buf) != 0)
+    {
+      printf ("swprintf (buf, %Zu, L\"%%.0s\", \"foo\") create some output\n",
+	      nbuf);
+      result = 1;
+    }
+
+  if (swprintf (buf, nbuf, L"%.0ls", L"foo") != 0
+      || wcslen (buf) != 0)
+    {
+      printf ("swprintf (buf, %Zu, L\"%%.0ls\", L\"foo\") create some output\n",
+	      nbuf);
+      result = 1;
     }
 
   return result;
