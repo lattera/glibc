@@ -3,6 +3,7 @@
 	* libio/oldtmpfile.c: Update for new SHLIB_COMPAT definition.
 	* libio/oldiofopen.c: Likewise.
 	* libio/oldiofclose.c: Likewise.
+	* sysdeps/unix/sysv/linux/errlist.c: Likewise.
 
 2000-03-22  Roland McGrath  <roland@baalperazim.frob.com>
 

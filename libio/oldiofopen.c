@@ -24,7 +24,7 @@
    General Public License.  */
 
 #include <shlib-compat.h>
-#if SHLIB_COMPAT (libc, GLIBC_2_0)
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #define _IO_USE_OLD_IO_FILE
 #include "libioP.h"

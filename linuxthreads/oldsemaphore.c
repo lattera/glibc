@@ -19,6 +19,8 @@
 /* GNU Library General Public License for more details.                 */
 
 /* Semaphores a la POSIX 1003.1b */
+#include <shlib-compat.h>
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 
 #include <errno.h>
 #include "pthread.h"
@@ -90,7 +92,7 @@ int __old_sem_wait(old_sem_t * sem)
 
     while (1) {
 	/* Register extrication interface */
-	__pthread_set_own_extricate_if(self, &extr); 
+	__pthread_set_own_extricate_if(self, &extr);
 	do {
             oldstatus = sem->sem_status;
             if ((oldstatus & 1) && (oldstatus != 1))
@@ -103,12 +105,12 @@ int __old_sem_wait(old_sem_t * sem)
 	while (! sem_compare_and_swap(sem, oldstatus, newstatus));
 	if (newstatus & 1) {
 	    /* We got the semaphore. */
-	  __pthread_set_own_extricate_if(self, 0); 
+	  __pthread_set_own_extricate_if(self, 0);
 	    return 0;
 	}
 	/* Wait for sem_post or cancellation */
 	suspend(self);
-	__pthread_set_own_extricate_if(self, 0); 
+	__pthread_set_own_extricate_if(self, 0);
 
 	/* This is a cancellation point */
 	if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
@@ -224,11 +226,11 @@ static void sem_restart_list(pthread_descr waiting)
   }
 }
 
-#if defined PIC && DO_VERSIONING
 symbol_version (__old_sem_init, sem_init, GLIBC_2.0);
 symbol_version (__old_sem_wait, sem_wait, GLIBC_2.0);
 symbol_version (__old_sem_trywait, sem_trywait, GLIBC_2.0);
 symbol_version (__old_sem_post, sem_post, GLIBC_2.0);
 symbol_version (__old_sem_getvalue, sem_getvalue, GLIBC_2.0);
 symbol_version (__old_sem_destroy, sem_destroy, GLIBC_2.0);
+
 #endif

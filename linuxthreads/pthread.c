@@ -517,7 +517,7 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
 
 versioned_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
 
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0)
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
 
 int __pthread_create_2_0(pthread_t *thread, const pthread_attr_t *attr,
 			 void * (*start_routine)(void *), void *arg)

@@ -1,5 +1,10 @@
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* attr.c: Use new macros from shlib-compat.h to define versions.
+	* oldsemaphore.c: Likewise.
+	* semaphore.c: Likewise.
+	* weaks.c: Likewise.
+
 	* pthread.c: Update for new SHLIB_COMPAT definition.
 
 	* manager.c (__pthread_manager): Unmask debug signal.

@@ -20,6 +20,7 @@
 #include <sys/param.h>
 #include "pthread.h"
 #include "internals.h"
+#include <shlib-compat.h>
 
 int __pthread_attr_init_2_1(pthread_attr_t *attr)
 {
@@ -36,9 +37,11 @@ int __pthread_attr_init_2_1(pthread_attr_t *attr)
   attr->__stacksize = STACK_SIZE - ps;
   return 0;
 }
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
-default_symbol_version (__pthread_attr_init_2_1, pthread_attr_init, GLIBC_2.1);
 
+versioned_symbol (libpthread, __pthread_attr_init_2_1, pthread_attr_init,
+		  GLIBC_2_1);
+
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 int __pthread_attr_init_2_0(pthread_attr_t *attr)
 {
   attr->__detachstate = PTHREAD_CREATE_JOINABLE;
@@ -49,8 +52,6 @@ int __pthread_attr_init_2_0(pthread_attr_t *attr)
   return 0;
 }
 symbol_version (__pthread_attr_init_2_0, pthread_attr_init, GLIBC_2.0);
-#else
-strong_alias (__pthread_attr_init_2_1, pthread_attr_init)
 #endif
 
 int pthread_attr_destroy(pthread_attr_t *attr)

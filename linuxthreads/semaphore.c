@@ -21,6 +21,7 @@
 #include "spinlock.h"
 #include "restart.h"
 #include "queue.h"
+#include <shlib-compat.h>
 
 int __new_sem_init(sem_t *sem, int pshared, unsigned int value)
 {
@@ -71,7 +72,7 @@ int __new_sem_wait(sem_t * sem)
     return 0;
   }
   /* Register extrication interface */
-  __pthread_set_own_extricate_if(self, &extr); 
+  __pthread_set_own_extricate_if(self, &extr);
   /* Enqueue only if not already cancelled. */
   if (!(THREAD_GETMEM(self, p_canceled)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE))
@@ -81,13 +82,13 @@ int __new_sem_wait(sem_t * sem)
   __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
 
   if (already_canceled) {
-    __pthread_set_own_extricate_if(self, 0); 
+    __pthread_set_own_extricate_if(self, 0);
     pthread_exit(PTHREAD_CANCELED);
-  } 
+  }
 
   /* Wait for sem_post or cancellation, or fall through if already canceled */
   suspend(self);
-  __pthread_set_own_extricate_if(self, 0); 
+  __pthread_set_own_extricate_if(self, 0);
 
   /* Terminate only if the wakeup came from cancellation. */
   /* Otherwise ignore cancellation because we got the semaphore. */
@@ -189,21 +190,9 @@ int sem_unlink(const char *name)
   return -1;
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_sem_init, sem_init, GLIBC_2.1);
-default_symbol_version (__new_sem_wait, sem_wait, GLIBC_2.1);
-default_symbol_version (__new_sem_trywait, sem_trywait, GLIBC_2.1);
-default_symbol_version (__new_sem_post, sem_post, GLIBC_2.1);
-default_symbol_version (__new_sem_getvalue, sem_getvalue, GLIBC_2.1);
-default_symbol_version (__new_sem_destroy, sem_destroy, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_alias (__new_sem_init, sem_init)
-weak_alias (__new_sem_wait, sem_wait)
-weak_alias (__new_sem_trywait, sem_trywait)
-weak_alias (__new_sem_post, sem_post)
-weak_alias (__new_sem_getvalue, sem_getvalue)
-weak_alias (__new_sem_destroy, sem_destroy)
-# endif
-#endif
-    
+versioned_symbol (libpthread, __new_sem_init, sem_init, GLIBC_2_1);
+versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
+versioned_symbol (libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1);
+versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
+versioned_symbol (libpthread, __new_sem_getvalue, sem_getvalue, GLIBC_2_1);
+versioned_symbol (libpthread, __new_sem_destroy, sem_destroy, GLIBC_2_1);
