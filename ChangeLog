@@ -1,3 +1,8 @@
+Fri May 10 09:41:54 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
+
+	* string/argz.h (__argz_create, argz_create): Omit const keyword
+	from declaration of ARGV.
+
 Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	Cleanups in sunrpc code from NIIBE Yutaka <gniibe@mri.co.jp>.
