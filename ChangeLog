@@ -1,3 +1,10 @@
+2003-03-04  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Remove unneeded
+	stubs, we have INLINE_SYSCALL.
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Define MAP_POPULATE,
+	MAP_NONBLOCK.
+
 2003-03-06  Roland McGrath  <roland@redhat.com>
 
 	* rt/tst-aio7.c (do_test): Revert last change.  Instead, give CB1
