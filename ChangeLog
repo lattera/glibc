@@ -1,3 +1,8 @@
+2000-04-04  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Rewrite for new init
+	function interface.  Remove unused _dl_start_user entry point.
+
 2000-04-03  Andreas Jaeger  <aj@suse.de>
 
 	* include/arpa/inet.h (__inet_aton): Add protoype.
