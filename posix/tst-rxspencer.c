@@ -214,6 +214,7 @@ test (const char *pattern, int cflags, const char *string, int eflags,
   n = regcomp (&re, pattern, cflags);
   if (n != 0)
     {
+      char buf[500];
       if (eflags == -1)
 	{
 	  static struct { reg_errcode_t code; const char *name; } codes []
@@ -239,7 +240,6 @@ test (const char *pattern, int cflags, const char *string, int eflags,
 	  return 1;
 	}
 
-      char buf[500];
       regerror (n, &re, buf, sizeof (buf));
       printf ("%s regcomp failed: %s\n", fail, buf);
       return 1;

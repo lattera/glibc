@@ -1,3 +1,7 @@
+2003-12-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-numeric.data: Remove reliance on nb_NO.ISO-8859-1 locale.
+
 2003-12-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED: Add az_ZA.UTF-8, bn_BD, bn_IN, br_FR@euro, tt_RU, zh_SG.

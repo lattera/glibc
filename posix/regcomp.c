@@ -2968,6 +2968,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 #endif /* not RE_ENABLE_I18N */
   bin_tree_t *work_tree;
   int token_len;
+  int first_round = 1;
 #ifdef _LIBC
   collseqmb = (const unsigned char *)
     _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQMB);
@@ -3027,7 +3028,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   if (token->type == OP_CLOSE_BRACKET)
     token->type = CHARACTER;
 
-  int first_round = 1;
   while (1)
     {
       bracket_elem_t start_elem, end_elem;

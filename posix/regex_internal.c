@@ -21,25 +21,25 @@
 static void re_string_construct_common (const char *str, int len,
 					re_string_t *pstr,
 					RE_TRANSLATE_TYPE trans, int icase,
-					const re_dfa_t *dfa);
+					const re_dfa_t *dfa) internal_function;
 #ifdef RE_ENABLE_I18N
 static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx,
-				 wint_t *last_wc);
+				 wint_t *last_wc) internal_function;
 #endif /* RE_ENABLE_I18N */
 static re_dfastate_t *create_newstate_common (re_dfa_t *dfa,
 					      const re_node_set *nodes,
-					      unsigned int hash);
+					      unsigned int hash) internal_function;
 static reg_errcode_t register_state (re_dfa_t *dfa, re_dfastate_t *newstate,
-				     unsigned int hash);
+				     unsigned int hash) internal_function;
 static re_dfastate_t *create_ci_newstate (re_dfa_t *dfa,
 					  const re_node_set *nodes,
-					  unsigned int hash);
+					  unsigned int hash) internal_function;
 static re_dfastate_t *create_cd_newstate (re_dfa_t *dfa,
 					  const re_node_set *nodes,
 					  unsigned int context,
-					  unsigned int hash);
+					  unsigned int hash) internal_function;
 static unsigned int inline calc_state_hash (const re_node_set *nodes,
-					    unsigned int context);
+					    unsigned int context) internal_function;
 
 /* Functions for string operation.  */
 
@@ -746,8 +746,9 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 }
 
 static unsigned char
-re_string_peek_byte_case (const re_string_t *pstr,
-			  int idx)
+re_string_peek_byte_case (pstr, idx)
+     const re_string_t *pstr;
+     int idx;
 {
   int ch, off;
 
@@ -784,7 +785,8 @@ re_string_peek_byte_case (const re_string_t *pstr,
 }
 
 static unsigned char
-re_string_fetch_byte_case (re_string_t *pstr)
+re_string_fetch_byte_case (pstr)
+     re_string_t *pstr;
 {
   int ch;
 

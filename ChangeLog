@@ -1,3 +1,66 @@
+2003-12-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c: Remove C99-ism.
+	* posix/tst-rxspencer.c: Likewise.
+	Based on a patch by Alex Davis <alex14641@yahoo.com>.
+
+2002-12-17  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.h [!_LIBC] (internal_function): Define.
+	(re_string_allocate, re_string_construct, re_string_reconstruct,
+	re_string_realloc_buffers, build_wcs_buffer,
+	build_wcs_upper_buffer, build_upper_buffer,
+	re_string_translate_buffer, re_string_destruct,
+	re_string_elem_size_at, re_string_char_size_at,
+	re_string_wchar_at, re_string_context_at,
+	re_node_set_alloc, re_node_set_init_1
+	re_node_set_init_2, re_node_set_init_copy,
+	re_node_set_add_intersect, re_node_set_init_union,
+	re_node_set_merge, re_node_set_insert
+	re_node_set_compare, re_node_set_contains
+	re_node_set_remove_at, re_dfa_add_node,
+	re_acquire_state, re_acquire_state_context,
+	free_state): Add internal_function to declaration.
+
+	* posix/regexec.c (match_ctx_init, match_ctx_clean,
+	match_ctx_free, match_ctx_free_subtops,
+	match_ctx_add_entry, search_cur_bkref_entry,
+	match_ctx_clear_flag, match_ctx_add_subtop,
+	match_ctx_add_sublast, sift_ctx_init,
+	re_search_internal, re_search_2_stub, re_search_stub,
+	re_copy_regs, acquire_init_state_context,
+	prune_impossible_nodes, check_matching,
+	check_halt_node_context, check_halt_state_context
+	update_regs, proceed_next_node, push_fail_stack,
+	pop_fail_stack, set_regs, free_fail_stack_return,
+	sift_states_iter_mb, sift_states_backward
+	update_cur_sifted_state, add_epsilon_src_nodes,
+	sub_epsilon_src_nodes, check_dst_limits,
+	check_dst_limits_calc_pos, check_subexp_limits,
+	sift_states_bkref, clean_state_log_if_need,
+	merge_state_array, transit_state,
+	check_subexp_matching_top, transit_state_sb,
+	transit_state_mb, transit_state_bkref,
+	get_subexp, get_subexp_sub, find_subexp_node,
+	check_arrival, check_arrival_add_next_nodes,
+	find_collation_sequence_value, check_arrival_expand_ecl,
+	check_arrival_expand_ecl_sub, expand_bkref_cache,
+	build_trtable, check_node_accept_bytes, extend_buffers,
+	group_nodes_into_DFAstates, check_node_accept): Likewise.
+
+	* posix/regex_internal.c (re_string_construct_common,
+	re_string_skip_chars, create_newstate_common,
+	register_state, create_ci_newstate, create_cd_newstate,
+	calc_state_hash): Likewise.
+	(re_string_peek_byte_case, re_fetch_byte_case): Change
+	declaration from ANSI to K&R.
+
+2002-12-16  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (build_trtable): Don't allocate the trtable
+	until state->word_trtable is known.  Don't hardcode UINT_BITS
+	iterations on each bitset item.
+
 2003-12-22  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 
 	* sysdeps/unix/sysv/linux/ia64/dl-static.c (_dl_static_init):

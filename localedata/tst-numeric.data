@@ -41,9 +41,7 @@ C	*%g*	1.23	*1.23*
 C	%9g	1.23	     1.23
 C	%9g	-1.23	    -1.23
 #
-# check both the norwegian locales and snprintf with that data
+# Locale-dependent test.
 #
-nb_NO.ISO-8859-1	%'g	123.45	123,45
-nb_NO.ISO-8859-1	%'g	-123.45	-123,45
 nn_NO.ISO-8859-1	%'g	123.45	123,45
 nn_NO.ISO-8859-1	%'g	-123.45	-123,45
