@@ -1,3 +1,8 @@
+2000-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add entry for
+	Nautilus.  Patch by Soohoon Lee <soohoon.lee@alpha-processor.com>.
+
 2000-03-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/scsi/sg.h: Sync with Linux 2.3.50.

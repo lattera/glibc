@@ -2,7 +2,8 @@
 
 	* condvar.c (pthread_cond_wait): Check whether mutex is owned by
 	current thread and return error if not.
-	(pthread_cond_timedwait): Likewise.
+	(pthread_cond_timedwait_relative_old): Likewise.
+	(pthread_cond_timedwait_relative_new): Likewise.
 
 	* mutex.c (__pthread_once): Handle cancelled init function correctly.
 	(pthread_once_cancelhandler): New function.
