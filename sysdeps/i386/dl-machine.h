@@ -87,6 +87,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
 	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
       got = (Elf32_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
+      /* If a library is prelinked but we have to relocate anyway,
+	 we have to be able to undo the prelinking of .got.plt.
+	 The prelinker saved us here address of .plt + 0x16.  */
+      if (got[1])
+	{
+	  l->l_mach.plt = got[1] + l->l_addr;
+	  l->l_mach.gotplt = (Elf32_Addr) &got[3];
+	}	  
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets
@@ -258,8 +266,9 @@ _dl_start_user:\n\
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_386_JMP_SLOT
 
-/* The i386 never uses Elf32_Rela relocations.  */
-#define ELF_MACHINE_NO_RELA 1
+/* The i386 never uses Elf32_Rela relocations for the dynamic linker.
+   Prelinked libraries may use Elf32_Rela though.  */
+#define ELF_MACHINE_PLT_REL 1
 
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */
@@ -294,6 +303,12 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 #endif /* !dl_machine_h */
 
 #ifdef RESOLVE
+
+/* The i386 never uses Elf32_Rela relocations for the dynamic linker.
+   Prelinked libraries may use Elf32_Rela though.  */
+#ifdef RTLD_BOOTSTRAP
+#define ELF_MACHINE_NO_RELA 1
+#endif
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
@@ -378,6 +393,41 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     }
 }
 
+#ifndef RTLD_BOOTSTRAP
+static inline void
+elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
+		  const Elf32_Sym *sym, const struct r_found_version *version,
+		  Elf32_Addr *const reloc_addr)
+{
+  if (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE)
+    *reloc_addr = map->l_addr + reloc->r_addend;
+  else if (ELF32_R_TYPE (reloc->r_info) != R_386_NONE)
+    {
+/*      const Elf32_Sym *const refsym = sym; */
+      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      if (sym)
+	value += sym->st_value;
+
+      switch (ELF32_R_TYPE (reloc->r_info))
+	{
+	case R_386_GLOB_DAT:
+	case R_386_JMP_SLOT:
+	case R_386_32:
+	  *reloc_addr = value + reloc->r_addend;
+	  break;
+	case R_386_PC32:
+	  *reloc_addr = (value + reloc->r_addend - (Elf32_Addr) reloc_addr);
+	  break;
+	default:
+	  /* We add these checks in the version to relocate ld.so only
+	     if we are still debugging.  */
+	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+	  break;
+	}
+    }
+}
+#endif
+
 static inline void
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 			  Elf32_Addr *const reloc_addr)
@@ -385,6 +435,15 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
   assert (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE);
   *reloc_addr += l_addr;
 }
+
+#ifndef RTLD_BOOTSTRAP
+static inline void
+elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
+			   Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
+}
+#endif
 
 static inline void
 elf_machine_lazy_rel (struct link_map *map,
@@ -394,9 +453,26 @@ elf_machine_lazy_rel (struct link_map *map,
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
   if (__builtin_expect (r_type == R_386_JMP_SLOT, 1))
-    *reloc_addr += l_addr;
+    {
+      if (__builtin_expect (map->l_mach.plt, 0) == 0)
+	*reloc_addr += l_addr;
+      else
+	*reloc_addr =
+	  map->l_mach.plt
+	  + (((Elf32_Addr) reloc_addr) - map->l_mach.gotplt) * 4;
+    }
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }
+
+#ifndef RTLD_BOOTSTRAP
+
+static inline void
+elf_machine_lazy_rela (struct link_map *map,
+		       Elf32_Addr l_addr, const Elf32_Rela *reloc)
+{
+}
+
+#endif
 
 #endif /* RESOLVE */

@@ -29,7 +29,7 @@ routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
-				  version profile)
+				  version profile conflict)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure \
@@ -154,30 +154,16 @@ $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
 
-# Do we need a linker script?
-rtld-ldscript-in := $(firstword $(wildcard $(+sysdep_dirs:%=%/rtld-ldscript.in)))
-
-ifneq (,$(rtld-ldscript-in))
-rtld-ldscript = $(objpfx)rtld-ldscript
-generated += rtld-ldscript
-
-LDFLAGS-rtld = -T $(rtld-ldscript)
-before-compile += $(rtld-ldscript)
-
-rtld-parms = $(wildcard $(+sysdep_dirs:%=%/rtld-parms))
-include $(rtld-parms)
-
-$(rtld-ldscript): $(rtld-ldscript-in) $(rtld-parms)
-	sed -e 's#@@rtld-oformat@@#$(rtld-oformat)#' \
-	    -e 's#@@rtld-arch@@#$(rtld-arch)#' \
-	    -e 's#@@rtld-entry@@#$(rtld-entry)#' \
-	    -e 's#@@rtld-base@@#$(rtld-base)#' $< >$@
-endif
-
-$(objpfx)ld.so: $(objpfx)librtld.os $(rtld-ldscript) $(ld-map)
-	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $(LDFLAGS-rtld) \
-		  $(filter-out $(rtld-ldscript) $(map-file),$^)		\
-		  $(load-map-file) -Wl,-soname=$(rtld-installed-name)
+$(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
+	$(LINK.o) -nostdlib -nostartfiles -shared			\
+		  $(LDFLAGS-rtld) -Wl,--verbose 2>&1 |			\
+		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
+		      -e 's/\. = 0 + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
+		  > $@.lds;						\
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $(LDFLAGS-rtld)	\
+		  $(filter-out $(map-file),$^) $(load-map-file)		\
+		  -Wl,-soname=$(rtld-installed-name) -T $@.lds;		\
+	rm -f $@.lds
 
 # interp.c exists just to get this string into the libraries.
 CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"'

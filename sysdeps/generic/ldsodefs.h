@@ -207,6 +207,8 @@ extern const char *_dl_profile;
 extern struct link_map *_dl_profile_map;
 /* Filename of the output file.  */
 extern const char *_dl_profile_output;
+/* Map of shared object to be prelink traced.  */
+extern struct link_map *_dl_trace_prelink_map;
 
 /* If nonzero the appropriate debug information is printed.  */
 extern int _dl_debug_mask;
@@ -220,6 +222,7 @@ extern int _dl_debug_mask;
 #define DL_DEBUG_STATISTICS (1 << 7)
 /* This one is used only internally.  */
 #define DL_DEBUG_HELP       (1 << 8)
+#define DL_DEBUG_PRELINK    (1 << 9)
 
 /* Expect cache ID.  */
 extern int _dl_correct_cache_id;
@@ -434,6 +437,11 @@ extern void _dl_relocate_object (struct link_map *map,
 extern void _dl_reloc_bad_type (struct link_map *map,
 				unsigned int type, int plt)
      internal_function __attribute__ ((__noreturn__));
+
+/* Resolve conflicts if prelinking.  */
+extern void _dl_resolve_conflicts (struct link_map *l,
+				   ElfW(Rela) *conflict,
+				   ElfW(Rela) *conflictend);
 
 /* Check the version dependencies of all objects available through
    MAP.  If VERBOSE print some more diagnostics.  */

@@ -23,6 +23,10 @@
 #include <sys/param.h>
 #include <ldsodefs.h>
 
+#ifndef VALIDX
+# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
+#endif
 
 /* Some SPARC opcodes we need to use for self-modifying code.  */
 #define OPCODE_NOP	0x01000000 /* nop */
@@ -30,6 +34,7 @@
 #define OPCODE_SETHI_G1	0x03000000 /* sethi ?, %g1; add value>>10 */
 #define OPCODE_JMP_G1	0x81c06000 /* jmp %g1+?; add lo 10 bits of value */
 #define OPCODE_SAVE_SP	0x9de3bfa8 /* save %sp, -(16+6)*4, %sp */
+#define OPCODE_BA	0x30800000 /* b,a ?; add PC-rel word address */
 
 /* Protect some broken versions of gcc from misinterpreting weak addresses.  */
 #define WEAKADDR(x)	({ __typeof(x) *_px = &x;			\
@@ -139,6 +144,37 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       plt[1] = OPCODE_CALL | ((rfunc - (Elf32_Addr) &plt[1]) >> 2);
       plt[2] = OPCODE_NOP;	/* Fill call delay slot.  */
       plt[3] = (Elf32_Addr) l;
+      if (__builtin_expect (l->l_info[VALIDX(DT_GNU_PRELINKED)] != NULL, 0)
+	  || __builtin_expect (l->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL, 0))
+	{
+	  /* Need to reinitialize .plt to undo prelinking.  */
+	  unsigned long *hwcap;
+	  int do_flush;
+	  Elf32_Rela *rela = (Elf32_Rela *) D_PTR (l, l_info[DT_JMPREL]);
+	  Elf32_Rela *relaend
+	    = (Elf32_Rela *) ((char *) rela
+			      + l->l_info[DT_PLTRELSZ]->d_un.d_val);
+	  weak_extern (_dl_hwcap);
+	  hwcap = WEAKADDR(_dl_hwcap);
+	  do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
+
+	  /* prelink must ensure there are no R_SPARC_NONE relocs left
+	     in .rela.plt.  */
+	  while (rela < relaend)
+	    {
+	      *(unsigned int *) rela->r_offset
+		= OPCODE_SETHI_G1 | (rela->r_offset - (Elf32_Addr) plt);
+	      *(unsigned int *) (rela->r_offset + 4)
+		= OPCODE_BA | ((((Elf32_Addr) plt
+				 - rela->r_offset - 4) >> 2) & 0x3fffff);
+	      if (do_flush)
+		{
+		  __asm __volatile ("flush %0" : : "r"(rela->r_offset));
+		  __asm __volatile ("flush %0+4" : : "r"(rela->r_offset));
+		}
+	      ++rela;
+	    }
+	}
     }
 
   return lazy;
@@ -292,10 +328,10 @@ _dl_start_user:
 	.previous");
 
 static inline Elf32_Addr
-elf_machine_fixup_plt (struct link_map *map, lookup_t t,
-		       const Elf32_Rela *reloc,
-		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+sparc_fixup_plt (const Elf32_Rela *reloc, Elf32_Addr *reloc_addr,
+		 Elf32_Addr value, int t)
 {
+  Elf32_Sword disp = value - (Elf32_Addr) reloc_addr;
 #ifndef RTLD_BOOTSTRAP
   /* Note that we don't mask the hwcap here, as the flush is essential to
      functionality on those cpu's that implement it.  */
@@ -309,21 +345,42 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
      ld.so will not execute corrupt PLT entry instructions. */
   const int do_flush = 1;
 #endif
+  
+  if (0 && disp >= -0x800000 && disp < 0x800000)
+    {
+      /* Don't need to worry about thread safety. We're writing just one
+	 instruction.  */
 
-  /* For thread safety, write the instructions from the bottom and
-     flush before we overwrite the critical "b,a".  This of course
-     need not be done during bootstrapping, since there are no threads.
-     But we also can't tell if we _can_ use flush, so don't. */
+      reloc_addr[0] = OPCODE_BA | ((disp >> 2) & 0x3fffff);
+      if (do_flush)
+	__asm __volatile ("flush %0" : : "r"(reloc_addr));
+    }
+  else
+    {
+      /* For thread safety, write the instructions from the bottom and
+	 flush before we overwrite the critical "b,a".  This of course
+	 need not be done during bootstrapping, since there are no threads.
+	 But we also can't tell if we _can_ use flush, so don't. */
 
-  reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
-  if (do_flush)
-    __asm __volatile ("flush %0+8" : : "r"(reloc_addr));
+      reloc_addr += t;
+      reloc_addr[1] = OPCODE_JMP_G1 | (value & 0x3ff);
+      if (do_flush)
+	__asm __volatile ("flush %0+4" : : "r"(reloc_addr));
 
-  reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
-  if (do_flush)
-    __asm __volatile ("flush %0+4" : : "r"(reloc_addr));
+      reloc_addr[0] = OPCODE_SETHI_G1 | (value >> 10);
+      if (do_flush)
+	__asm __volatile ("flush %0" : : "r"(reloc_addr));
+    }
 
   return value;
+}
+
+static inline Elf32_Addr
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const Elf32_Rela *reloc,
+		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+{
+  return sparc_fixup_plt (reloc, reloc_addr, value, 1);
 }
 
 /* Return the final value of a plt relocation.  */
@@ -366,10 +423,11 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   else
 #endif
     {
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
 #endif
       Elf32_Addr value;
+#ifndef RESOLVE_CONFLICT_FIND_MAP
       if (sym->st_shndx != SHN_UNDEF &&
 	  ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
 	value = map->l_addr;
@@ -379,11 +437,14 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  if (sym)
 	    value += sym->st_value;
 	}
+#else
+      value = 0;
+#endif
       value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
       switch (r_type)
 	{
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
 	case R_SPARC_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be
@@ -410,7 +471,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = value;
 	  break;
 	case R_SPARC_JMP_SLOT:
-	  elf_machine_fixup_plt(map, 0, reloc, reloc_addr, value);
+	  /* At this point we don't need to bother with thread safety,
+	     so we can optimize the first instruction of .plt out.  */
+	  sparc_fixup_plt (reloc, reloc_addr, value, 0);
 	  break;
 #ifndef RTLD_BOOTSTRAP
 	case R_SPARC_8:

@@ -347,6 +347,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   Elf32_Word loadbase, finaladdr;
   const int rinfo = ELF32_R_TYPE (reloc->r_info);
 
+#ifndef RESOLVE_CONFLICT_FIND_MAP
   if (__builtin_expect (rinfo == R_PPC_NONE, 0))
     return;
 
@@ -375,6 +376,11 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	finaladdr = (loadbase + (Elf32_Word) (char *) sym->st_value
 		     + reloc->r_addend);
     }
+#else
+  finaladdr = reloc->r_addend;
+  if (rinfo == R_PPC_JMP_SLOT)
+    RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
+#endif
 
   /* A small amount of code is duplicated here for speed.  In libc,
      more than 90% of the relocs are R_PPC_RELATIVE; in the X11 shared

@@ -67,6 +67,8 @@ struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
+const char *_dl_trace_prelink;
+struct link_map *_dl_trace_prelink_map;
 int _dl_lazy = 1;
 /* XXX I know about at least one case where we depend on the old weak
    behavior (it has to do with librt).  Until we get DSO groups implemented
@@ -183,10 +185,14 @@ _dl_start (void *arg)
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
 #endif
 
-  /* Relocate ourselves so we can do normal function calls and
-     data access using the global offset table.  */
+  if (bootstrap_map.l_addr || ! bootstrap_map.l_info[VALIDX(DT_GNU_PRELINKED)])
+    {
+      /* Relocate ourselves so we can do normal function calls and
+	 data access using the global offset table.  */
 
-  ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0);
+      ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0);
+    }
+
   /* Please note that we don't allow profiling of this object and
      therefore need not test whether we have to allocate the array
      for the relocation results (as done in dl-reloc.c).  */
@@ -209,6 +215,15 @@ _dl_start (void *arg)
 }
 
 
+#ifndef VALIDX
+# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
+#endif
+#ifndef ADDRIDX
+# define ADDRIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		       + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
+#endif
+
 static ElfW(Addr)
 _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 		 hp_timing_t start_time)
@@ -218,6 +233,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
      way to do this so we use this trick.  gcc never inlines functions
      which use `alloca'.  */
   ElfW(Addr) *start_addr = alloca (sizeof (ElfW(Addr)));
+  extern char _begin[], _end[];
 
   if (HP_TIMING_AVAIL)
     {
@@ -237,10 +253,8 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 	  sizeof _dl_rtld_map.l_info);
   _dl_setup_hash (&_dl_rtld_map);
   _dl_rtld_map.l_mach = bootstrap_map_p->l_mach;
-
-/* Don't bother trying to work out how ld.so is mapped in memory.  */
-  _dl_rtld_map.l_map_start = ~0;
-  _dl_rtld_map.l_map_end = ~0;
+  _dl_rtld_map.l_map_start = (ElfW(Addr)) _begin;
+  _dl_rtld_map.l_map_end = (ElfW(Addr)) _end;
 
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
@@ -383,6 +397,7 @@ dl_main (const ElfW(Phdr) *phdr,
   char *file;
   int has_interp = 0;
   unsigned int i;
+  int prelinked = 0;
   int rtld_is_main = 0;
 #ifndef HP_TIMING_NONAVAIL
   hp_timing_t start;
@@ -885,13 +900,42 @@ of this helper program; chances are you did not intend to run this program.\n\
 	{
 	  struct link_map *l;
 
-	  for (l = _dl_loaded->l_next; l; l = l->l_next)
-	    if (l->l_faked)
-	      /* The library was not found.  */
-	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
-	    else
-	      _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
-			  l->l_name, (int) sizeof l->l_addr * 2, l->l_addr);
+	  if (_dl_debug_mask & DL_DEBUG_PRELINK)
+	    {
+	      struct r_scope_elem *scope = &_dl_loaded->l_searchlist;
+
+	      for (i = 0; i < scope->r_nlist; i++)
+		{
+		  l = scope->r_list [i];
+		  if (l->l_faked)
+		    {
+		      _dl_printf ("\t%s => not found\n", l->l_libname->name);
+		      continue;
+		    }
+		  if (_dl_name_match_p (_dl_trace_prelink, l))
+		    _dl_trace_prelink_map = l;
+		  _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)\n",
+			      l->l_libname->name[0] ? l->l_libname->name
+			      : _dl_argv[0] ?: "<main program>",
+			      l->l_name[0] ? l->l_name
+			      : _dl_argv[0] ?: "<main program>",
+			      (int) sizeof l->l_map_start * 2,
+			      l->l_map_start,
+			      (int) sizeof l->l_addr * 2,
+			      l->l_addr);
+		}
+	    }
+	  else
+	    {
+	      for (l = _dl_loaded->l_next; l; l = l->l_next)
+		if (l->l_faked)
+		  /* The library was not found.  */
+		  _dl_printf ("\t%s => not found\n", l->l_libname->name);
+		else
+		  _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
+			      l->l_name, (int) sizeof l->l_map_start * 2,
+			      l->l_map_start);
+	    }
 	}
 
       if (__builtin_expect (mode, trace) != trace)
@@ -936,6 +980,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 		    }
 		  l = l->l_prev;
 		} while (l);
+
+	      if ((_dl_debug_mask & DL_DEBUG_PRELINK)
+		  && _dl_rtld_map.l_opencount > 1)
+		_dl_relocate_object (&_dl_rtld_map, _dl_loaded->l_scope, 0, 0);
 	    }
 
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
@@ -1014,6 +1062,84 @@ of this helper program; chances are you did not intend to run this program.\n\
       _exit (0);
     }
 
+  if (_dl_loaded->l_info [ADDRIDX (DT_GNU_LIBLIST)]
+      && ! __builtin_expect (_dl_profile != NULL, 0))
+    {
+      ElfW(Lib) *liblist, *liblistend;
+      struct link_map **r_list, **r_listend, *l;
+      const char *strtab = (const void *)
+			   D_PTR (_dl_loaded, l_info[DT_STRTAB]);
+
+      assert (_dl_loaded->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL);
+      liblist = (ElfW(Lib) *)
+		_dl_loaded->l_info [ADDRIDX (DT_GNU_LIBLIST)]->d_un.d_ptr;
+      liblistend = (ElfW(Lib) *)
+		   ((char *) liblist
+		    + _dl_loaded->l_info [VALIDX (DT_GNU_LIBLISTSZ)]->d_un.d_val);
+      r_list = _dl_loaded->l_searchlist.r_list;
+      r_listend = r_list + _dl_loaded->l_searchlist.r_nlist;
+
+      for (; r_list < r_listend && liblist < liblistend; r_list++)
+	{
+	  l = *r_list;
+
+	  if (l == _dl_loaded)
+	    continue;
+
+	  /* If the library is not mapped where it should, fail.  */
+	  if (l->l_addr)
+	    break;
+
+	  /* Next, check if checksum matches.  */
+	  if (l->l_info [VALIDX(DT_CHECKSUM)] == NULL
+	      || l->l_info [VALIDX(DT_CHECKSUM)]->d_un.d_val
+		 != liblist->l_checksum)
+	    break;
+
+	  if (l->l_info [VALIDX(DT_GNU_PRELINKED)] == NULL
+	      || l->l_info [VALIDX(DT_GNU_PRELINKED)]->d_un.d_val
+		 != liblist->l_time_stamp)
+	    break;
+
+	  if (! _dl_name_match_p (strtab + liblist->l_name, l))
+	    break;
+
+	  ++liblist;
+	}
+
+
+      if (r_list == r_listend && liblist == liblistend)
+	prelinked = 1;
+
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
+	_dl_printf ("\nprelink checking: %s\n", prelinked ? "ok" : "failed");
+    }
+
+  if (prelinked)
+    {
+      if (_dl_loaded->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
+	{
+	  ElfW(Rela) *conflict, *conflictend;
+#ifndef HP_TIMING_NONAVAIL
+	  hp_timing_t start;
+	  hp_timing_t stop;
+#endif
+
+	  HP_TIMING_NOW (start);
+	  assert (_dl_loaded->l_info [VALIDX (DT_GNU_CONFLICTSZ)] != NULL);
+	  conflict = (ElfW(Rela) *)
+		     _dl_loaded->l_info [ADDRIDX (DT_GNU_CONFLICT)]->d_un.d_ptr;
+	  conflictend = (ElfW(Rela) *)
+			((char *) conflict
+			 + _dl_loaded->l_info [VALIDX (DT_GNU_CONFLICTSZ)]->d_un.d_val);
+	  _dl_resolve_conflicts (_dl_loaded, conflict, conflictend);
+	  HP_TIMING_NOW (stop);
+	  HP_TIMING_DIFF (relocate_time, start, stop);
+	}
+
+      _dl_sysdep_start_cleanup ();
+    }
+  else
   {
     /* Now we have all the objects loaded.  Relocate them all except for
        the dynamic linker itself.  We do this in reverse order so that copy
@@ -1094,7 +1220,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   _dl_main_searchlist = &_dl_loaded->l_searchlist;
   _dl_global_scope[0] = &_dl_loaded->l_searchlist;
 
-  /* Safe the information about the original global scope list since
+  /* Save the information about the original global scope list since
      we need it in the memory handling later.  */
   _dl_initial_searchlist = *_dl_main_searchlist;
 
@@ -1369,6 +1495,17 @@ process_envvars (enum mode *modep)
 	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0
 	      && envline[15] != '\0')
 	    _dl_profile_output = &envline[15];
+	  break;
+
+	case 16:
+	  /* The mode of the dynamic linker can be set.  */
+	  if (memcmp (envline, "TRACE_PRELINKING", 16) == 0)
+	    {
+	      mode = trace;
+	      _dl_verbose = 1;
+	      _dl_debug_mask |= DL_DEBUG_PRELINK;
+	      _dl_trace_prelink = &envline[17];
+	    }
 	  break;
 
 	case 20:

@@ -122,8 +122,30 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       *(Elf64_Addr *)(plt + 24) = (Elf64_Addr) l;
 
       /* If the first instruction of the plt entry is not
-	 "br $28, plt0", we cannot do lazy relocation.  */
-      lazy = (*(unsigned int *)(plt + 32) == 0xc39ffff7);
+	 "br $28, plt0", we have to reinitialize .plt for lazy relocation.  */
+      if (*(unsigned int *)(plt + 32) != 0xc39ffff7)
+	{
+	  unsigned int val = 0xc39ffff7;
+	  unsigned int *slot, *end;
+	  const Elf64_Rela *rela = D_PTR (l, l_info[DT_JMPREL]);
+	  Elf64_Addr l_addr = l->l_addr;
+
+	  /* br t12,.+4; ldq t12,12(t12); nop; jmp t12,(t12),.+4 */
+	  *(unsigned long *)plt = 0xa77b000cc3600000;
+	  *(unsigned long *)(plt + 8) = 0x6b7b000047ff041f;
+	  slot = (unsigned int *)(plt + 32);
+	  end = (unsigned int *)(plt + 32
+				 + l->l_info[DT_PLTRELSZ]->d_un.d_val / 2);
+	  while (slot < end)
+	    {
+	      /* br at,.plt+0 */
+	      *slot = val;
+	      *(Elf64_Addr *) rela->r_offset = (Elf64_Addr) slot - l_addr;
+	      val -= 3;
+	      slot += 3;
+	      ++rela;
+	    }
+	}
     }
 
   return lazy;
@@ -520,8 +542,23 @@ elf_machine_rela (struct link_map *map,
 
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
-      else if (r_type  == R_ALPHA_JMP_SLOT)
+#ifdef RESOLVE_CONFLICT_FIND_MAP
+      /* In .gnu.conflict section, R_ALPHA_JMP_SLOT relocations have
+	 R_ALPHA_JMP_SLOT in lower 8 bits and the remaining 24 bits
+	 are .rela.plt index.  */
+      else if ((r_type & 0xff) == R_ALPHA_JMP_SLOT)
+	{
+	  /* elf_machine_fixup_plt needs the map reloc_addr points into,
+	     while in _dl_resolve_conflicts map is _dl_loaded.  */
+	  RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
+	  reloc = ((const Elf64_Rela *) D_PTR (map, l_info[DT_JMPREL]))
+		  + (r_type >> 8);
+	  elf_machine_fixup_plt (map, 0, reloc, reloc_addr, sym_value);
+	}
+#else
+      else if (r_type == R_ALPHA_JMP_SLOT)
 	elf_machine_fixup_plt (map, 0, reloc, reloc_addr, sym_value);
+#endif
 #ifndef RTLD_BOOTSTRAP
       else if (r_type == R_ALPHA_REFQUAD)
 	{

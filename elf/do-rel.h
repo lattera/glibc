@@ -33,6 +33,10 @@
 #ifndef VERSYMIDX
 # define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
+#ifndef VALIDX
+# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
+#endif
 
 /* Perform the relocations in MAP on the running program image as specified
    by RELTAG, SZTAG.  If LAZY is nonzero, this is the first pass on PLT
@@ -48,7 +52,7 @@ elf_dynamic_do_rel (struct link_map *map,
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
   ElfW(Addr) l_addr = map->l_addr;
 
-#ifndef RTLD_BOOTSTRAP
+#if (!defined DO_RELA || !defined ELF_MACHINE_PLT_REL) && !defined RTLD_BOOTSTRAP
   /* We never bind lazily during ld.so bootstrap.  Unfortunately gcc is
      not clever enough to see through all the function calls to realize
      that.  */
@@ -81,8 +85,11 @@ elf_dynamic_do_rel (struct link_map *map,
 	/* Rela platforms get the offset from r_addend and this must
 	   be copied in the relocation address.  Therefore we can skip
 	   the relative relocations only if this is for rel
-	   relocations.  */
+	   relocations...  */
 	if (l_addr != 0)
+# else
+	/* ...or we know the object has been prelinked.  */
+	if (l_addr != 0 || ! map->l_info[VALIDX(DT_GNU_PRELINKED)])
 # endif
 #endif
 	  for (; relative < r; ++relative)

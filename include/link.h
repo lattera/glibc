@@ -132,14 +132,20 @@ struct link_map
     /* Indexed pointers to dynamic section.
        [0,DT_NUM) are indexed by the processor-independent tags.
        [DT_NUM,DT_NUM+DT_THISPROCNUM) are indexed by the tag minus DT_LOPROC.
-       [DT_NUM+DT_THISPROCNUM,DT_NUM+DT_THISPROCNUM+DT_EXTRANUM) are indexed
-       by DT_EXTRATAGIDX(tagvalue) and
+       [DT_NUM+DT_THISPROCNUM,DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM) are
+       indexed by DT_VERSIONTAGIDX(tagvalue).
        [DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM,
-        DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM)
-       are indexed by DT_EXTRATAGIDX(tagvalue) (see <elf.h>).  */
+	DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM) are indexed by
+       DT_EXTRATAGIDX(tagvalue).
+       [DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM,
+	DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM+DT_VALNUM) are
+       indexed by DT_VALTAGIDX(tagvalue) and
+       [DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM+DT_VALNUM,
+	DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM+DT_VALNUM+DT_ADDRNUM)
+       are indexed by DT_ADDRTAGIDX(tagvalue), see <elf.h>.  */
 
     ElfW(Dyn) *l_info[DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM
-		     + DT_EXTRANUM];
+		     + DT_EXTRANUM + DT_VALNUM + DT_ADDRNUM];
     const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
     ElfW(Addr) l_entry;		/* Entry point location.  */
     ElfW(Half) l_phnum;		/* Number of program header entries.  */

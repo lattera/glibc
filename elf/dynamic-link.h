@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,31 +58,39 @@ elf_get_dynamic_info (struct link_map *l)
       else if ((Elf32_Word) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
 	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
 	     + DT_VERSIONTAGNUM] = dyn;
+      else if ((Elf32_Word) DT_VALTAGIDX (dyn->d_tag) < DT_VALNUM)
+	info[DT_VALTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
+	     + DT_VERSIONTAGNUM + DT_EXTRANUM] = dyn;
+      else if ((Elf32_Word) DT_ADDRTAGIDX (dyn->d_tag) < DT_ADDRNUM)
+	info[DT_ADDRTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
+	     + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] = dyn;
       else
 	assert (! "bad dynamic tag");
       ++dyn;
     }
 #ifndef DL_RO_DYN_SECTION
-  if (info[DT_PLTGOT] != NULL)
-    info[DT_PLTGOT]->d_un.d_ptr += l_addr;
-  if (info[DT_STRTAB] != NULL)
-    info[DT_STRTAB]->d_un.d_ptr += l_addr;
-  if (info[DT_SYMTAB] != NULL)
-    info[DT_SYMTAB]->d_un.d_ptr += l_addr;
-# if ! ELF_MACHINE_NO_RELA
-  if (info[DT_RELA] != NULL)
+  /* Don't adjust .dynamic unnecessarily.  */
+  if (l_addr)
     {
-      assert (info[DT_RELAENT]->d_un.d_val == sizeof (ElfW(Rela)));
-      info[DT_RELA]->d_un.d_ptr += l_addr;
-    }
+      if (info[DT_PLTGOT] != NULL)
+	info[DT_PLTGOT]->d_un.d_ptr += l_addr;
+      if (info[DT_STRTAB] != NULL)
+	info[DT_STRTAB]->d_un.d_ptr += l_addr;
+      if (info[DT_SYMTAB] != NULL)
+	info[DT_SYMTAB]->d_un.d_ptr += l_addr;
+# if ! ELF_MACHINE_NO_RELA
+      if (info[DT_RELA] != NULL)
+	info[DT_RELA]->d_un.d_ptr += l_addr;
 # endif
 # if ! ELF_MACHINE_NO_REL
-  if (info[DT_REL] != NULL)
-    {
-      assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
-      info[DT_REL]->d_un.d_ptr += l_addr;
-    }
+      if (info[DT_REL] != NULL)
+	info[DT_REL]->d_un.d_ptr += l_addr;
 # endif
+      if (info[DT_JMPREL] != NULL)
+	info[DT_JMPREL]->d_un.d_ptr += l_addr;
+      if (info[VERSYMIDX (DT_VERSYM)] != NULL)
+	info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr += l_addr;
+    }
 #endif
   if (info[DT_PLTREL] != NULL)
     {
@@ -95,12 +103,14 @@ elf_get_dynamic_info (struct link_map *l)
 	      || info[DT_PLTREL]->d_un.d_val == DT_RELA);
 # endif
     }
-#ifndef DL_RO_DYN_SECTION
-  if (info[DT_JMPREL] != NULL)
-    info[DT_JMPREL]->d_un.d_ptr += l_addr;
-  if (info[VERSYMIDX (DT_VERSYM)] != NULL)
-    info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr += l_addr;
-#endif
+# if ! ELF_MACHINE_NO_RELA
+  if (info[DT_RELA] != NULL)
+    assert (info[DT_RELAENT]->d_un.d_val == sizeof (ElfW(Rela)));
+# endif
+# if ! ELF_MACHINE_NO_REL
+  if (info[DT_REL] != NULL)
+    assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
+# endif
   if (info[DT_FLAGS] != NULL)
     {
       /* Flags are used.  Translate to the old form where available.
@@ -177,8 +187,8 @@ elf_get_dynamic_info (struct link_map *l)
 									      \
     if ((map)->l_info[DT_##RELOC])					      \
       {									      \
-        ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
-        ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
+	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
+	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
     if ((map)->l_info[DT_PLTREL]					      \
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \

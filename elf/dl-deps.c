@@ -21,6 +21,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <libintl.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -70,6 +71,21 @@ openaux (void *a)
 			      args->trace_mode, 0);
 }
 
+static ptrdiff_t
+internal_function
+_dl_build_local_scope (struct link_map **list, struct link_map *map)
+{
+  struct link_map **p = list;
+  struct link_map **q;
+
+  *p++ = map;
+  map->l_reserved = 1;
+  if (map->l_initfini)
+    for (q = map->l_initfini + 1; *q; ++q)
+      if (! (*q)->l_reserved)
+	p += _dl_build_local_scope (p, *q);
+  return p - list;
+}
 
 
 /* We use a very special kind of list to track the path
@@ -489,6 +505,51 @@ _dl_map_object_deps (struct link_map *map,
       /* Now clear all the mark bits we set in the objects on the search list
 	 to avoid duplicates, so the next call starts fresh.  */
       runp->map->l_reserved = 0;
+    }
+
+  if (__builtin_expect(_dl_debug_mask & DL_DEBUG_PRELINK, 0) != 0
+      && map == _dl_loaded)
+    {
+      /* If we are to compute conflicts, we have to build local scope
+	 for each library, not just the ultimate loader.  */
+      for (i = 0; i < nlist; ++i)
+	{
+	  struct link_map *l = map->l_searchlist.r_list[i];
+	  unsigned int j, cnt;
+
+	  /* The local scope has been already computed.  */
+	  if (l == map
+	      || (l->l_local_scope[0]
+		  && l->l_local_scope[0]->r_nlist) != 0)
+	    continue;
+
+	  if (l->l_info[AUXTAG] || l->l_info[FILTERTAG])
+	    {
+	      /* As current DT_AUXILIARY/DT_FILTER implementation needs to be
+		 rewritten, no need to bother with prelinking the old
+		 implementation.  */
+	      _dl_signal_error (EINVAL, l->l_name, NULL, N_("\
+Filters not supported with LD_TRACE_PRELINKING"));
+	    }
+
+	  cnt = _dl_build_local_scope (map->l_initfini, l);
+	  assert (cnt <= nlist);
+	  for (j = 0; j < cnt; j++)
+	    map->l_initfini[j]->l_reserved = 0;
+
+	  l->l_local_scope[0] =
+	    (struct r_scope_elem *) malloc (sizeof (struct r_scope_elem)
+					    + (cnt
+					       * sizeof (struct link_map *)));
+	  if (l->l_local_scope[0] == NULL)
+	    _dl_signal_error (ENOMEM, map->l_name, NULL,
+			      N_("cannot allocate symbol search list"));
+	  l->l_local_scope[0]->r_nlist = cnt;
+	  l->l_local_scope[0]->r_list =
+	    (struct link_map **) (l->l_local_scope[0] + 1);
+	  memcpy (l->l_local_scope[0]->r_list, map->l_initfini,
+		  cnt * sizeof (struct link_map *));
+	}
     }
 
   /* Maybe we can remove some relocation dependencies now.  */

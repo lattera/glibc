@@ -23,7 +23,8 @@
 #include <ldsodefs.h>
 #include "dynamic-link.h"
 
-#if !defined ELF_MACHINE_NO_RELA || ELF_MACHINE_NO_REL
+#if (!defined ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
+    || ELF_MACHINE_NO_REL
 # define PLTREL  ElfW(Rela)
 #else
 # define PLTREL  ElfW(Rel)

@@ -24,6 +24,11 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
+#ifndef VALIDX
+# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
+#endif
+
 #define ELF64_R_TYPE_ID(info)	((info) & 0xff)
 #define ELF64_R_TYPE_DATA(info) ((info) >> 8)
 
@@ -147,7 +152,7 @@ sparc64_fixup_plt (struct link_map *map, const Elf64_Rela *reloc,
       insns[1] = 0x40000000 | (displacement >> 2);
       __asm __volatile ("flush %0 + 4" : : "r" (insns));
 
-      insns[t] = 0x8210000f;
+      insns[0] = 0x8210000f;
       __asm __volatile ("flush %0" : : "r" (insns));
     }
   /* Worst case, ho hum...  */
@@ -251,10 +256,11 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
   else
 #endif
     {
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
       const Elf64_Sym *const refsym = sym;
 #endif
       Elf64_Addr value;
+#ifndef RESOLVE_CONFLICT_FIND_MAP
       if (sym->st_shndx != SHN_UNDEF &&
 	  ELF64_ST_BIND (sym->st_info) == STB_LOCAL)
 	value = map->l_addr;
@@ -264,11 +270,14 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  if (sym)
 	    value += sym->st_value;
 	}
+#else
+      value = 0;
+#endif
       value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
       switch (r_type)
 	{
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
 	case R_SPARC_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be
@@ -371,8 +380,18 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 #endif
 	case R_SPARC_JMP_SLOT:
+#ifdef RESOLVE_CONFLICT_FIND_MAP
+	  /* R_SPARC_JMP_SLOT conflicts against .plt[32768+]
+	     relocs should be turned into R_SPARC_64 relocs
+	     in .gnu.conflict section.
+	     r_addend non-zero does not mean it is a .plt[32768+]
+	     reloc, instead it is the actual address of the function
+	     to call.  */
+	  sparc64_fixup_plt (NULL, reloc, reloc_addr, value, 0, 0);
+#else
 	  sparc64_fixup_plt (map, reloc, reloc_addr, value,
 			     reloc->r_addend, 0);
+#endif
 	  break;
 #ifndef RTLD_BOOTSTRAP
 	case R_SPARC_UA16:
@@ -536,6 +555,47 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       /* Now put the magic cookie at the beginning of .PLT2
 	 Entry .PLT3 is unused by this implementation.  */
       *((struct link_map **)(&plt[16 + 0])) = l;
+
+      if (__builtin_expect (l->l_info[VALIDX(DT_GNU_PRELINKED)] != NULL, 0)
+	  || __builtin_expect (l->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL, 0))
+	{
+	  /* Need to reinitialize .plt to undo prelinking.  */
+	  Elf64_Rela *rela = (Elf64_Rela *) D_PTR (l, l_info[DT_JMPREL]);
+	  Elf64_Rela *relaend
+	    = (Elf64_Rela *) ((char *) rela
+			      + l->l_info[DT_PLTRELSZ]->d_un.d_val);
+
+	  /* prelink must ensure there are no R_SPARC_NONE relocs left
+	     in .rela.plt.  */
+	  while (rela < relaend)
+	    {
+	      if (__builtin_expect (rela->r_addend, 0) != 0)
+		{
+                  Elf64_Addr slot = ((rela->r_offset + 0x400
+				      - (Elf64_Addr) plt)
+				     / 0x1400) * 0x1400
+				    + (Elf64_Addr) plt - 0x400;
+		  /* ldx [%o7 + X], %g1  */
+		  unsigned int first_ldx = *(unsigned int *)(slot + 12);
+		  Elf64_Addr ptr = slot + (first_ldx & 0xfff) + 4;
+
+		  *(Elf64_Addr *) rela->r_offset
+		    = (Elf64_Addr) plt
+		      - (slot + ((rela->r_offset - ptr) / 8) * 24 + 4);
+		  ++rela;
+		  continue;
+		}
+
+	      *(unsigned int *) rela->r_offset
+		= 0x03000000 | (rela->r_offset - (Elf64_Addr) plt);
+	      *(unsigned int *) (rela->r_offset + 4)
+		= 0x30680000 | ((((Elf64_Addr) plt + 32
+				  - rela->r_offset - 4) >> 2) & 0x7ffff);
+	      __asm __volatile ("flush %0" : : "r" (rela->r_offset));
+	      __asm __volatile ("flush %0+4" : : "r" (rela->r_offset));
+	      ++rela;
+	    }
+	}
     }
 
   return lazy;

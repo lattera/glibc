@@ -76,6 +76,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
 	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
       got = (Elf64_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
+      /* If a library is prelinked but we have to relocate anyway,
+	 we have to be able to undo the prelinking of .got.plt.
+	 The prelinker saved us here address of .plt + 0x16.  */
+      if (got[1])
+	{
+	  l->l_mach.plt = got[1] + l->l_addr;
+	  l->l_mach.gotplt = (Elf64_Addr) &got[3];
+	}
       got[1] = (Elf64_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets
@@ -409,7 +417,14 @@ elf_machine_lazy_rel (struct link_map *map,
 
   /* Check for unexpected PLT reloc type.  */
   if (__builtin_expect (r_type == R_X86_64_JUMP_SLOT, 1))
-    *reloc_addr += l_addr;
+    {
+      if (__builtin_expect (map->l_mach.plt, 0) == 0)
+	*reloc_addr += l_addr;
+      else
+	*reloc_addr =
+	  map->l_mach.plt
+	  + (((Elf64_Addr) reloc_addr) - map->l_mach.gotplt) * 2;
+    }
   else
     _dl_reloc_bad_type (map, r_type, 1);
 }

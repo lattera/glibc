@@ -1782,7 +1782,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
   if (__builtin_expect (fd, 0) == -1)
     {
-      if (trace_mode)
+      if (trace_mode
+	  && __builtin_expect (_dl_debug_mask & DL_DEBUG_PRELINK, 0) == 0)
 	{
 	  /* We haven't found an appropriate library.  But since we
 	     are only interested in the list of libraries this isn't

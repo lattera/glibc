@@ -1,3 +1,104 @@
+2001-12-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (dl-routines): Add conflict.
+	(rtld-ldscript-in, rtld-ldscript, rtld-parms): Remove.
+	(ld.so): Add _begin local symbol.
+	* elf/elf.h (DT_VALTAGIDX, DT_VALNUM, DT_ADDRTAGIDX, DT_ADDRNUM):
+	Define.
+	* elf/dl-deps.c (_dl_build_local_scope): New.
+	(_dl_map_object_deps): If LD_TRACE_PRELINKING, compute local scopes
+	of all libraries.
+	* elf/do-rel.h (VALIDX): Define.
+	(elf_dynamic_do_rel): If ELF_MACHINE_PLT_REL is defined, don't do
+	lazy binding for RELA.  If DT_GNU_PRELINKED, DT_RELACOUNT relocations
+	can be skipped.
+	* elf/dl-conflict.c: New file.
+	* elf/dl-lookup.c (_dl_debug_bindings): New.
+	(_dl_lookup_symbol): Use _dl_debug_bindings.  Reference_name is always
+	non-NULL.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+	* elf/dl-runtime.c (PLTREL): If ELF_MACHINE_PLT_REL is defined,
+	define to ElfW(Rel).
+	* elf/dynamic-link.h (elf_get_dynamic_info): Record selected dynamic
+	tags in the DT_VALRNGLO..DT_VALRNGHI and DT_ADDRRNGLO..DT_ADDRRNGHI
+	ranges.
+	Don't adjust address dynamic tags if l_addr is 0.
+	* elf/rtld.c (_dl_trace_prelink, _dl_trace_prelink_map): New variables.
+	(_dl_start): Skip ELF_DYNAMIC_RELOCATE if ld.so is prelinked.
+	(VALIDX, ADDRIDX): Define.
+	(_dl_start_final): Initialize _dl_rtld_map's l_map_start and l_map_end.
+	(dl_main): Print library list for LD_TRACE_PRELINKING.
+	If prelinking information can be used, skip relocating libraries and
+	call _dl_resolve_conflicts instead.
+	(process_envvars): Handle LD_TRACE_PRELINKING envvar.
+	* elf/dl-load.c (_dl_map_object): Don't create fake libs
+	if LD_TRACE_PRELINKING.
+	* include/link.h (struct link_map) [l_info]: Add DT_VALNUM
+	+ DT_ADDRNUM.
+	* sysdeps/generic/ldsodefs.h (_dl_trace_prelink_map): New declaration.
+	(DL_DEBUG_PRELINK): Define.
+	(_dl_resolve_conflicts): Add prototype.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Reinitialize
+	.plt for prelinked libraries where prelinking info cannot be used.
+	(elf_machine_rela): If relocating R_ALPHA_JMP_SLOT in .gnu.conflict
+	section, use RESOLVE_CONFLICT_FIND_MAP to find out reloc's link_map.
+	* sysdeps/arm/bits/link.h: New file.
+	* sysdeps/arm/dl-machine.h (elf_machine_runtime_setup): Save original
+	content of .got[1].
+	(ELF_MACHINE_NO_RELA): Only define if RTLD_BOOTSTRAP.
+	(ELF_MACHINE_PLT_REL): Define.
+	(elf_machine_rela, elf_machine_rela_relative): New.
+	(elf_machine_lazy_rel): Reinitialize R_ARM_JUMP_SLOT address instead
+	of adjusting it if prelinked and prelinking cannot be used.
+	* sysdeps/i386/bits/link.h: New file.
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): Save original
+	content of .got[1].
+	(ELF_MACHINE_NO_RELA): Only define if RTLD_BOOTSTRAP.
+	(ELF_MACHINE_PLT_REL): Define.
+	(elf_machine_rela, elf_machine_rela_relative): New.
+	(elf_machine_lazy_rel): Reinitialize R_386_JUMP_SLOT address instead
+	of adjusting it if prelinked and prelinking cannot be used.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): If relocating
+	conflicts, skip finaladdr computation.  Use RESOLVE_CONFLICT_FIND_MAP
+	to find out map for R_PPC_JMP_SLOT relocs.
+	* sysdeps/sparc/sparc32/dl-machine.h (VALIDX): Define.
+	(OPCODE_BA): Define.
+	(elf_machine_runtime_setup): Reinitialize .plt for prelinked
+	libraries where prelinking info cannot be used.
+	(sparc_fixup_plt): Renamed from elf_machine_fixup_plt.
+	(elf_machine_fixup_plt): Call sparc_fixup_plt.
+	(elf_machine_rela): Set value to 0 if relocating conflicts.
+	Call sparc_fixup_plt for R_SPARC_JMP_SLOT.
+	* sysdeps/sparc/sparc64/dl-machine.h (VALIDX): Define.
+	(sparc64_fixup_plt): Fix a typo.
+	(elf_machine_rela): Set value to 0 if relocating conflicts.
+	Handle R_SPARC_JMP_SLOT relocs when relocating conflicts.
+	(elf_machine_runtime_setup): Reinitialize .plt for prelinked
+	libraries where prelinking info cannot be used.
+	* sysdeps/sh/bits/link.h: New file.
+	* sysdeps/sh/dl-machine.h (elf_machine_runtime_setup): Save original
+	content of .got[1].
+	(elf_machine_lazy_rel): Reinitialize R_SH_JMP_SLOT address instead
+	of adjusting it if prelinked and prelinking cannot be used.
+	* sysdeps/s390/s390-32/bits/link.h: New file.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_runtime_setup):
+	Save original content of .got[1].
+	(elf_machine_lazy_rel): Reinitialize R_390_JMP_SLOT address instead
+	of adjusting it if prelinked and prelinking cannot be used.
+	* sysdeps/s390/s390-64/bits/link.h: New file.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_runtime_setup):
+	Save original content of .got[1].
+	(elf_machine_lazy_rel): Reinitialize R_390_JMP_SLOT address instead
+	of adjusting it if prelinked and prelinking cannot be used.
+	* sysdeps/x86_64/bits/link.h: New file.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup):
+	Save original content of .got[1].
+	(elf_machine_lazy_rel): Reinitialize R_X86_64_JMP_SLOT address instead
+	of adjusting it if prelinked and prelinking cannot be used.
+
 2001-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Use sizeof
