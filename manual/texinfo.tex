@@ -1,5 +1,5 @@
 %% TeX macros to handle Texinfo files.
-%% $Id: texinfo.tex,v 2.206 1997/07/06 21:41:02 drepper Exp $
+%% $Id: texinfo.tex,v 2.207 1997/07/07 13:08:20 drepper Exp $
 
 %  Copyright (C) 1985, 86, 88, 90, 91, 92, 93,
 %                94, 95, 96, 97 Free Software Foundation, Inc.
@@ -36,7 +36,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.206 $
+\deftexinfoversion$Revision: 2.207 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -189,7 +189,7 @@
         % Only leave this space if the footline is nonempty.
         % (We lessened \vsize for it in \oddfootingxxx.)
         % The \baselineskip=24pt in plain's \makefootline has no effect.
-        \vskip\baselineskip
+        \vskip 2\baselineskip
         \unvbox\footlinebox
       \fi
       %
@@ -1140,13 +1140,26 @@ where each line of input produces a line of output.}
 \font\indi=cmmi9
 \font\indsy=cmsy9
 
+% Fonts for title page:
+\setfont\titlerm\rmbshape{12}{\magstep3}
+\setfont\titleit\itbshape{10}{\magstep4}
+\setfont\titlesl\slbshape{10}{\magstep4}
+\setfont\titlett\ttbshape{12}{\magstep3}
+\setfont\titlettsl\ttslshape{10}{\magstep4}
+\setfont\titlesf\sfbshape{17}{\magstep1}
+\let\titlebf=\titlerm
+\setfont\titlesc\scbshape{10}{\magstep4}
+\font\titlei=cmmi12 scaled \magstep3
+\font\titlesy=cmsy10 scaled \magstep4
+\let\authorrm = \secrm
+
 % Chapter (and unnumbered) fonts (17.28pt).
 \setfont\chaprm\rmbshape{12}{\magstep2}
 \setfont\chapit\itbshape{10}{\magstep3}
 \setfont\chapsl\slbshape{10}{\magstep3}
 \setfont\chaptt\ttbshape{12}{\magstep2}
 \setfont\chapttsl\ttslshape{10}{\magstep3}
-\setfont\chapsf\sfbshape{12}{\magstep2}
+\setfont\chapsf\sfbshape{17}{1000}
 \let\chapbf=\chaprm
 \setfont\chapsc\scbshape{10}{\magstep3}
 \font\chapi=cmmi12 scaled \magstep2
@@ -1183,18 +1196,14 @@ where each line of input produces a line of output.}
 \setfont\ssecit\itbshape{10}{1315}
 \setfont\ssecsl\slbshape{10}{1315}
 \setfont\ssectt\ttbshape{12}{\magstephalf}
-\setfont\ssecttsl\ttslshape{10}{\magstep1}
+\setfont\ssecttsl\ttslshape{10}{1315}
 \setfont\ssecsf\sfbshape{12}{\magstephalf}
 \let\ssecbf\ssecrm
 \setfont\ssecsc\scbshape{10}{\magstep1}
 \font\sseci=cmmi12 scaled \magstephalf
-\font\ssecsy=cmsy10 scaled \magstep1
+\font\ssecsy=cmsy10 scaled 1315
 % The smallcaps and symbol fonts should actually be scaled \magstep1.5,
 % but that is not a standard magnification.
-
-% Fonts for title page:
-\setfont\titlerm\rmbshape{12}{\magstep3}
-\let\authorrm = \secrm
 
 % In order for the font changes to affect most math symbols and letters,
 % we have to define the \textfont of the standard families.  Since
@@ -1220,6 +1229,12 @@ where each line of input produces a line of output.}
   \let\tenbf=\textbf \let\tentt=\texttt \let\smallcaps=\textsc
   \let\tensf=\textsf \let\teni=\texti \let\tensy=\textsy \let\tenttsl=\textttsl
   \resetmathfonts}
+\def\titlefonts{%
+  \let\tenrm=\titlerm \let\tenit=\titleit \let\tensl=\titlesl
+  \let\tenbf=\titlebf \let\tentt=\titlett \let\smallcaps=\titlesc
+  \let\tensf=\titlesf \let\teni=\titlei \let\tensy=\titlesy
+  \let\tenttsl=\titlettsl
+  \resetmathfonts \setleading{25pt}}
 \def\chapfonts{%
   \let\tenrm=\chaprm \let\tenit=\chapit \let\tensl=\chapsl
   \let\tenbf=\chapbf \let\tentt=\chaptt \let\smallcaps=\chapsc
@@ -1357,14 +1372,27 @@ where each line of input produces a line of output.}
 % @kbd is like @code, except that if the argument is just one @key command,
 % then @kbd has no effect.
 
-% Font to use for @kbd, ordinarily.
-\let\kbdfont\t
-% Font to use for @kbd, when inside @example.
-\let\kbdexamplefont\t
+% @kbdinputstyle -- arg is `distinct' (@kbd uses slanted tty font always),
+%   `example' (@kbd uses ttsl only inside of @example and friends),
+%   or `code' (@kbd uses normal tty font always).
+\def\kbdinputstyle{\parsearg\kbdinputstylexxx}
+\def\kbdinputstylexxx#1{%
+  \def\arg{#1}%
+  \ifx\arg\worddistinct
+    \gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\ttsl}%
+  \else\ifx\arg\wordexample
+    \gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\tt}%
+  \else\ifx\arg\wordcode
+    \gdef\kbdexamplefont{\tt}\gdef\kbdfont{\tt}%
+  \fi\fi\fi
+}
+\def\worddistinct{distinct}
+\def\wordexample{example}
+\def\wordcode{code}
 
-% If you use @setkbdinputdistinct, then @kbd produces slanted tty font.
-\def\setkbdinputdistinct{\let\kbdfont\ttsl
-\let\kbdexamplefont\ttsl}
+% Default is kbdinputdistinct.  (Too much of a hassle to call the macro,
+% the catcodes are wrong for parsearg to work.)
+\gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\ttsl}
 
 % If you use @setkbdinputexample, then @kbd produces slanted tty font
 % only inside of @example and friends.
@@ -1430,8 +1458,6 @@ where each line of input produces a line of output.}
 \newskip\titlepagebottomglue \titlepagebottomglue = 2pc
 
 % First the title page.  Must do @settitle before @titlepage.
-\def\titlefont#1{{\titlerm #1}}
-
 \newif\ifseenauthor
 \newif\iffinishedtitlepage
 
@@ -1453,7 +1479,7 @@ where each line of input produces a line of output.}
    %
    % Now you can print the title using @title.
    \def\title{\parsearg\titlezzz}%
-   \def\titlezzz##1{\leftline{\titlefont{##1}}
+   \def\titlezzz##1{\leftline{\titlefonts\rm ##1}
                     % print a rule at the page bottom also.
                     \finishedtitlepagefalse
                     \vskip4pt \hrule height 4pt width \hsize \vskip4pt}%
@@ -4368,29 +4394,27 @@ width0pt\relax} \fi
 % Read the last existing aux file, if any.  No error if none exists.
 \def\readauxfile{\begingroup
   \catcode`\^^@=\other
-  \catcode`\=\other
-  \catcode`\=\other
+  \catcode`\^=\other
+  \catcode`\^=\other
   \catcode`\^^C=\other
   \catcode`\^^D=\other
   \catcode`\^^E=\other
   \catcode`\^^F=\other
   \catcode`\^^G=\other
   \catcode`\^^H=\other
-  \catcode`\=\other
+  \catcode`\^=\other
   \catcode`\^^L=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode`\=\other
-  \catcode26=\other
+  \catcode`\^^N=\other
+  \catcode`\^^P=\other
+  \catcode`\^^Q=\other
+  \catcode`\^^R=\other
+  \catcode`\^^S=\other
+  \catcode`\^^T=\other
+  \catcode`\^^U=\other
+  \catcode`\^^V=\other
+  \catcode`\^^W=\other
+  \catcode`\^^X=\other
+  \catcode`\^^Z=\other
   \catcode`\^^[=\other
   \catcode`\^^\=\other
   \catcode`\^^]=\other
@@ -4468,7 +4492,7 @@ width0pt\relax} \fi
 % space to prevent strange expansion errors.)
 \def\supereject{\par\penalty -20000\footnoteno =0 }
 
-% @footnotestyle is meaningful for info output only..
+% @footnotestyle is meaningful for info output only.
 \let\footnotestyle=\comment
 
 \let\ptexfootnote=\footnote

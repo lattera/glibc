@@ -155,7 +155,7 @@ gmtime_r (t, tp)
 #  endif /* ! HAVE_TM_GMTOFF */
 
 /* Approximate localtime_r as best we can in its absence.  */
-#  define localtime_r my_localtime_r
+#  define localtime_r my_ftime_localtime_r
 static struct tm *localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
 localtime_r (t, tp)
@@ -287,6 +287,7 @@ memcpy_uppcase (dest, src, len)
 #if ! HAVE_TM_GMTOFF
 /* Yield the difference between *A and *B,
    measured in seconds, ignoring leap seconds.  */
+# define tm_diff ftime_tm_diff
 static int tm_diff __P ((const struct tm *, const struct tm *));
 static int
 tm_diff (a, b)

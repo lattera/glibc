@@ -1,5 +1,5 @@
 /* Netgroup file parser in nss_files modules.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -170,8 +170,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 
   /* Some sanity checks.  */
   if (cp == NULL)
-    /* User bug.  setnetgrent() wasn't called before.  */
-    abort ();
+    return NSS_STATUS_NOTFOUND;
 
   /* First skip leading spaces.  */
   while (isspace (*cp))

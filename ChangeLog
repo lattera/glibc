@@ -1,3 +1,22 @@
+1997-07-08 02:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/lockf.c (lockf): Clear fl before using.
+	Patch by sr@adb.fr.
+
+	* libio/strops.c: Correctly handle _IO_write_end.
+
+	* nss/libnss_files.map: Add __nss_netgroup_parseline.
+	* nss/nss_files/files-netgroup.c (_nss_netgroup_parseline): Don't
+	panic if setnetgrent wasn't called before, return error.
+	Patch by Thorsten Kukuk <kukuk@uni-paderborn.de>.
+
+	* time/mktime.c: Define localtime_r function as my_mktime_localtime_r
+	if locally defined.
+	* time/strftime.c: Define localtime_r function as my_ftime_localtime_r
+	if locally defined.
+	Define tm_diff function as ftime_tm_diff if locally defined.
+	Reported by Richard Stallman <rms@gnu.ai.mit.edu>.
+
 1997-07-06 23:36  Ulrich Drepper  <drepper@cygnus.com>
 
 	* isomac.c (get_null_defines): Put NULL at end of list.

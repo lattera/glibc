@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <string.h>
 
 /* lockf is a simplified interface to fcntl's locking facilities.  */
 
@@ -27,6 +28,8 @@ int
 lockf (int fd, int cmd, off_t len)
 {
   struct flock fl;
+
+  memset ((char *) &fl, '\0', sizeof (fl));
 
   switch (cmd)
     {
