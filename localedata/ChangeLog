@@ -1,3 +1,7 @@
+2002-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/es_ES: Define int_frac_digits and frac_digits as 2.
+
 2002-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/vi_VN: Fix various mistakes and add some more information.
