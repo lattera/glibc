@@ -30,14 +30,12 @@ struct sigcontext
 
     /* Port this thread is doing an interruptible RPC on.  */
     unsigned int sc_intr_port;
-  
-    /* "General" registers.  */
-    int sc_gpr[32];
-  
-    int sc_sp;			/* Stack pointer.  */
-    int sc_fp;			/* Frame pointer.  */
-    int sc_pc;			/* Instruction pointer.  */
-    int sc_ps;			/* Processor status.  */
 
+    /* These four elements are laid out just like a `struct mips_thread_state';
+       trampoline.c knows this, so it must be changed if this changes.  */
+    int sc_gpr[31];		/* "General" registers; [0] is r1.  */
+    int sc_pc;			/* Instruction pointer.  */
     int sc_mdlo, sc_mdhi;	/* High and low multiplication results.  */
+
+    int sc_ps;			/* Processor status.  */
   };
