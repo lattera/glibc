@@ -188,7 +188,7 @@ main (int argc, char *argv[])
 	      error (EXIT_FAILURE, errno, _("error while closing input `%s'"),
 		     argv[remaining]);
 
-	    if (process_block (cd, addr, st.st_size, stdout) < 0)
+	    if (process_block (cd, addr, st.st_size, output) < 0)
 	      {
 		/* Something went wrong.  */
 		status = EXIT_FAILURE;

@@ -1,3 +1,12 @@
+1998-04-14 23:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Add rules to run tests.
+	* iconvdata/TESTS: New file.
+	* iconvdata/run-iconv-test.sh: New file.
+
+	* iconv/iconv_prog.c (main): Call process_block with OUTPUT stream,
+	not stdout.
+
 1998-04-14 18:22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_builtin.c (__gconv_get_builtin_trans): Initialize
