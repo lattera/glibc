@@ -60,7 +60,9 @@ alpha	<A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
 	<J1137>....<J1187>
 
 digit	<zero>;<one>;<two>;<three>;<four>;/
-	<five>;<six>;<seven>;<eight>;<nine>
+	<five>;<six>;<seven>;<eight>;<nine>;/
+	<j0316>;<j0317>;<j0318>;<j0319>;<j0320>;/
+	<j0321>;<j0322>;<j0323>;<j0324>;<j0325>
 
 xdigit	<zero>;<one>;<two>;<three>;<four>;/
 	<five>;<six>;<seven>;<eight>;<nine>;/

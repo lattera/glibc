@@ -1,3 +1,7 @@
+2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/ja_JP: Add double-width digits to digit class.
+
 2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/ISO-8859-16: Add mapping for /xba.

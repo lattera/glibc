@@ -1,5 +1,8 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/mbsrtowcs.c: Compute return value correctly after change
+	in gconv function.
+
 	* wcsmbs/mbrtowc.c: Don't set errno if byte sequence is only
 	incomplete but correct.
 
