@@ -9,6 +9,7 @@
 	* Makeconfig (preprocess-versions): Define ASSEMBLER.
 	* stdlib/Makefile (isomac-CFLAGS): Define to -O.
 	* posix/Makefile (annexc-CFLAGS): Define to -O.
+	* sysdeps/unix/make-syscalls.sh: Define __OPTIMIZE__ in use of asm_CPP.
 
 2001-09-11  Ulrich Drepper  <drepper@redhat.com>
 

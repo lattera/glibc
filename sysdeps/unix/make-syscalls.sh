@@ -74,8 +74,9 @@ while read file srcfile caller syscall args strong weak; do
   callnum=-
   eval `{ echo "#include <sysdep.h>";
 	echo "callnum=SYS_ify ($syscall)"; } |
-	  $asm_CPP - |sed -n -e "/^callnum=.*$syscall/d" \
-			     -e "/^\(callnum=\)[ 	]*\(.*\)/s//\1'\2'/p"`
+	  $asm_CPP -D__OPTIMIZE__ - |
+	  sed -n -e "/^callnum=.*$syscall/d" \
+		 -e "/^\(callnum=\)[ 	]*\(.*\)/s//\1'\2'/p"`
 
   # Derive the number of arguments from the argument signature
   case $args in
