@@ -22,7 +22,9 @@
 #include <config.h>
 #endif
 
-#include <features.h>
+#if defined _LIBC || defined HAVE_FEATURES_H
+# include <features.h>
+#endif
 
 #ifndef __USE_EXTERN_INLINES
 # define __USE_EXTERN_INLINES	1

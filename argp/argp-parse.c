@@ -119,24 +119,28 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
       break;
 
     case OPT_PROGNAME:		/* Set the program name.  */
+#if defined _LIBC || HAVE_DECL_PROGRAM_INVOCATION_NAME
       program_invocation_name = arg;
-
+#endif
       /* [Note that some systems only have PROGRAM_INVOCATION_SHORT_NAME (aka
 	 __PROGNAME), in which case, PROGRAM_INVOCATION_NAME is just defined
 	 to be that, so we have to be a bit careful here.]  */
-      arg = strrchr (arg, '/');
-      if (arg)
-	program_invocation_short_name = arg + 1;
-      else
-	program_invocation_short_name = program_invocation_name;
 
       /* Update what we use for messages.  */
-      state->name = program_invocation_short_name;
+      state->name = strrchr (arg, '/');
+      if (state->name)
+	state->name++;
+      else
+	state->name = arg;
+
+#if defined _LIBC || HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
+      program_invocation_short_name = state->name;
+#endif
 
       if ((state->flags & (ARGP_PARSE_ARGV0 | ARGP_NO_ERRS))
 	  == ARGP_PARSE_ARGV0)
 	/* Update what getopt uses too.  */
-	state->argv[0] = program_invocation_name;
+	state->argv[0] = arg;
 
       break;
 
@@ -599,7 +603,7 @@ parser_init (struct parser *parser, const struct argp *argp,
       parser->state.name = short_name ? short_name + 1 : argv[0];
     }
   else
-    parser->state.name = program_invocation_short_name;
+    parser->state.name = __argp_short_program_name ();
 
   return 0;
 }

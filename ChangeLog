@@ -1,3 +1,41 @@
+2003-08-22  Simon Josefsson  <jas@extundo.com>
+
+	* argp/argp-fmtstream.h [!__attribute__]: Define to nothing.
+
+	* argp/argp-help.c: Don't include malloc.h, some platforms
+	complain and it doesn't appear to be used.
+	[!_LIBC && HAVE_STRERROR_R && !HAVE_DECL_STRERROR_R]: Declare
+	strerror_r.
+	[!_LIBC && !HAVE_STRERROR_R && !HAVE_DECL_STRERROR]: Declare
+	strerror.
+	(hol_entry_long_iterate): Change __attribute to __attribute__.
+	(_help, __argp_error, __argp_failure) [!_LIBC && (HAVE_FLOCKFILE
+	&& HAVE_FUNLOCKFILE)]: Protect call to flockfile and funlockfile.
+	(__argp_basename) [!_LIBC]: New. Taken from LSH, by Niels Möller,
+	modifed after comments from Ulrich Drepper.
+	(__argp_short_program_name): Ditto.
+	(__argp_state_help, __argp_error, __argp_failure): Use it.
+	(__argp_failure): Use strerror when necessary.
+
+	* argp/argp-namefrob.h (__flockfile, __funlockfile, __mempcpy)
+	(__strchrnul, __strerror_r, __strndup) [!_LIBC]: Remove __-prefix.
+	(clearerr_unlocked, feof_unlocked, ferror_unlocked)
+	(fflush_unlocked, fgets_unlocked, fputc_unlocked, fputs_unlocked)
+	(fread_unlocked, fwrite_unlocked, getc_unlocked, getchar_unlocked)
+	(putc_unlocked, putchar_unlocked) [!_LIBC && !HAVE_DECL_*]: Map to
+	non-unlocked functions.
+	[!_LIBC]: Add prototypes for __argp_basename and
+	__argp_short_program_name.
+
+	* argp/argp-parse.c (argp_default_parser): Only use
+	program_invocation{_short,}_name if declared.
+	(parser_init): Use __argp_short_program_name.
+
+	* argp/argp-xinl.c [_LIBC || HAVE_FEATURES_H]: Add CPP check for
+	'#include features.h'.
+
+	* argp/argp.h [!__attribute__]: Define to nothing.
+
 2003-09-26  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c (parse_sub_exp): Pass RE_CARET_ANCHORS_HERE
