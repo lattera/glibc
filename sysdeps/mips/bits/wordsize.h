@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +16,4 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
-#include <sys/asm.h>
-
-/* The function __sigsetjmp_aux saves all the registers, but it can't
-   reliably access the stack or frame pointers, so we pass them in as
-   extra arguments.  */
-#ifdef __PIC__
-	.option pic2
-#endif
-ENTRY (__sigsetjmp)
-#ifdef __PIC__
-	SETUP_GP
-#endif
-	SETUP_GP64 (v0, C_SYMBOL_NAME (__sigsetjmp))
-	move a2, sp
-	move a3, fp
-	PTR_LA t9, __sigsetjmp_aux
-#if _MIPS_SIM == _MIPS_SIM_ABI32
-	nop
-#endif	
-	RESTORE_GP64
-	jr t9
-	.end __sigsetjmp
+#define __WORDSIZE	_MIPS_SZPTR

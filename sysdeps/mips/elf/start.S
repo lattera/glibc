@@ -1,5 +1,6 @@
 /* Startup code compliant to the ELF Mips ABI.
-   Copyright (C) 1995, 1997, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 2000, 2001, 2002, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +20,7 @@
 
 #define __ASSEMBLY__ 1
 #include <entry.h>
+#include <sys/asm.h>
 
 #ifndef ENTRY_POINT
 #error ENTRY_POINT needs to be defined for start.S on MIPS/ELF.
@@ -52,42 +54,41 @@
 		      char **argv, void (*init) (void), void (*fini) (void),
 		      void (*rtld_fini) (void), void *stack_end)
 */
-#ifdef __PIC__
-/* A macro to (re)initialize gp. We can get the run time address of 0f in
-   ra ($31) by blezal instruction. In this early phase, we can't save gp
-   in stack and .cprestore doesn't work properly. So we set gp by using
-   this macro. */
-#define SET_GP \
-	.set noreorder;	\
-	bltzal $0,0f;	\
-	nop;		\
-0:	.cpload $31;	\
-	.set reorder;
-#endif
-
+	
 	.text
 	.globl ENTRY_POINT
 	.type ENTRY_POINT,@function
 ENTRY_POINT:
 #ifdef __PIC__
-	SET_GP
+	SETUP_GPX($0)
+	SETUP_GPX64($25,$0)
 #else
-	la $28, _gp		/* Setup GP correctly if we're non-PIC.  */
-#endif
+	PTR_LA $28, _gp		/* Setup GP correctly if we're non-PIC.  */
 	move $31, $0
+#endif
 
-	la $4, main		/* main */
-	lw $5, 0($29)		/* argc */
-	addu $6, $29, 4		/* argv  */
-	/* Allocate space on the stack for seven arguments and make sure
-	   the stack is aligned to double words (8 bytes).  */
-	and $29, 0xfffffff8
-	subu $29, 32
-	la $7, __libc_csu_init		/* init */
-	la $8, __libc_csu_fini
-	sw $8, 16($29)		/* fini */
-	sw $2, 20($29)		/* rtld_fini */
-	sw $29, 24($29)		/* stack_end */
+	PTR_LA $4, main		/* main */
+	PTR_L $5, 0($29)		/* argc */
+	PTR_ADDIU $6, $29, PTRSIZE	/* argv  */
+	
+	/* Allocate space on the stack for seven arguments (o32 only)
+	   and make sure the stack is aligned to double words (8 bytes) 
+	   on o32 and quad words (16 bytes) on n32 and n64.  */
+	
+	and $29, -2 * SZREG
+#if _MIPS_SIM == _MIPS_SIM_ABI32
+	PTR_SUBIU $29, 32
+#endif
+	PTR_LA $7, __libc_csu_init		/* init */
+	PTR_LA $8, __libc_csu_fini
+#if _MIPS_SIM == _MIPS_SIM_ABI32
+	PTR_S $8, 16($29)		/* fini */
+	PTR_S $2, 20($29)		/* rtld_fini */
+	PTR_S $29, 24($29)		/* stack_end */
+#else
+	move $9, $2		/* rtld_fini */
+	move $10, $29		/* stack_end */
+#endif
 	jal __libc_start_main
 hlt:	b hlt			/* Crash if somehow it does return.  */
 

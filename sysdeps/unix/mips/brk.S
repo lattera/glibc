@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <sys/asm.h>
 
 #ifndef SYS_brk
 #define SYS_brk 17
@@ -37,9 +38,9 @@ SYSCALL__(brk, 1)
 	.set	reorder
 	/* Handle the query case.  */
 	bnez a0, 1f
-	move a0,v0
+	move a0, v0
 1:	/* Update __curbrk and exit cleanly.  */
-	sw a0, __curbrk
+	PTR_S a0, __curbrk
 	move v0, zero
 	jr ra
 PSEUDO_END(__brk)

@@ -1,7 +1,7 @@
 #define _FP_W_TYPE_SIZE		64
-#define _FP_W_TYPE		unsigned long
-#define _FP_WS_TYPE		signed long
-#define _FP_I_TYPE		long
+#define _FP_W_TYPE		unsigned long long
+#define _FP_WS_TYPE		signed long long
+#define _FP_I_TYPE		long long
 
 #define _FP_MUL_MEAT_S(R,X,Y)					\
   _FP_MUL_MEAT_1_imm(_FP_WFRACBITS_S,R,X,Y)

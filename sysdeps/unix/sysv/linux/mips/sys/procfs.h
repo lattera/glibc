@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +33,11 @@
 #define ELF_NGREG	45
 #define ELF_NFPREG	33
 
+#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+__extension__ typedef unsigned long long elf_greg_t;
+#else
 typedef unsigned long elf_greg_t;
+#endif
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 typedef double elf_fpreg_t;
@@ -59,8 +64,13 @@ struct elf_prstatus
   {
     struct elf_siginfo pr_info;		/* Info associated with signal.  */
     short int pr_cursig;		/* Current signal.  */
+#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+    __extension__ unsigned long long int pr_sigpend;
+    __extension__ unsigned long long int pr_sighold;
+#else
     unsigned long int pr_sigpend;	/* Set of pending signals.  */
     unsigned long int pr_sighold;	/* Set of held signals.  */
+#endif
     __pid_t pr_pid;
     __pid_t pr_ppid;
     __pid_t pr_pgrp;
@@ -82,7 +92,11 @@ struct elf_prpsinfo
     char pr_sname;			/* Char for pr_state.  */
     char pr_zomb;			/* Zombie.  */
     char pr_nice;			/* Nice val.  */
+#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+    __extension__ unsigned long long int pr_flag;
+#else
     unsigned long int pr_flag;		/* Flags.  */
+#endif
     long pr_uid;
     long pr_gid;
     int pr_pid, pr_ppid, pr_pgrp, pr_sid;

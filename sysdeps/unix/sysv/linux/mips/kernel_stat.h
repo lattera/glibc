@@ -1,4 +1,28 @@
 /* Definition of `struct stat' used in the kernel..  */
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+struct kernel_stat
+  {
+    unsigned int st_dev;
+    unsigned int __pad1[3];
+    unsigned long st_ino;
+    unsigned int st_mode;
+    unsigned int st_nlink;
+    int st_uid;
+    int st_gid;
+    unsigned int st_rdev;
+    unsigned int __pad2[3];
+    long st_size;
+    unsigned int st_atime;
+    unsigned int __unused1;
+    unsigned int st_mtime;
+    unsigned int __unused2;
+    unsigned int st_ctime;
+    unsigned int __unused3;
+    unsigned int st_blksize;
+    unsigned int __pad3;
+    unsigned long st_blocks;
+  };
+#else
 struct kernel_stat
   {
     unsigned long int st_dev;
@@ -26,3 +50,4 @@ struct kernel_stat
     unsigned int st_flags;
     unsigned int st_gen;
   };
+#endif
