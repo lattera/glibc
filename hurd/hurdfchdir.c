@@ -1,5 +1,5 @@
 /* Change a port cell to a directory in an open file descriptor.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,8 +38,11 @@ _hurd_change_directory_port_from_fd (struct hurd_port *portcell, int fd)
   ret = HURD_PORT_USE (&d->port,
 		       ({
 			 int ret;
+			 /* We look up "." to force ENOTDIR if it's not a
+			    directory and EACCES if we don't have search
+			    permission.  */
 			 file_t dir = __file_name_lookup_under (port, ".",
-								0, 0);
+								O_NOTRANS, 0);
 			 if (dir == MACH_PORT_NULL)
 			   ret = -1;
 			 else
