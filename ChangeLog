@@ -1,3 +1,61 @@
+1998-02-02 01:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add _h_errno.
+	* inet/herrno.c: Make _h_errno weak alias.
+
+	* login/Makefile (distribute): Add pty-internal.h.
+
+	* nscd/Makefile (distribute): Add all the files missing.
+
+	* signal/allocrtsig.c: Fix problem with recognizing whether RT sigs
+	are available.
+
+	* stdio-common/tstscanf.c: Rewrite a bit to continue after errors
+	and report status at the end.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add lchown.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Make errno an initialized
+	variable.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.c: Add alias _errno for errno.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.S: Likewise.
+
+1998-01-03 20:47  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* configure.in: Fix --enable-add-ons code.
+
+1998-02-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/rtld.c (dl_main): Allow ":" as separator for LD_PRELOAD. Patch
+	by Rudolf Leitgeb <leitgeb@leland.stanford.edu>.
+	[PR libc/441]
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Use first
+	occurence in cache.  Reported by Rudolf Leitgeb
+	<leitgeb@leland.stanford.edu>.
+	[PR libc/440]
+
+1998-02-01 21:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/iovsscanf.c: Set errno to 0 before calling _IO_vfscanf so
+	that it never is EINTR (which is tested for in _IO_vfscanf).
+
+	* Makefile.in: Call sub-make with CVSOPTS.
+
+	* elf/Makefile (distribute): Add dl-procinfo.h.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add rt_sigaction.S.
+
+1998-02-01 15:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.92.
+
+1998-01-31  Phil Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/siglist.c (_sys_siglist): Additional weak
+	alias for __new_sys_siglist.
+
 1998-02-01 00:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* grp/Makefile: Define USE_NSCD in CFLAGS for getgrnam_r.c and
@@ -29,7 +87,7 @@
 	* nscd/grpcache.c (cache_grpinit): Let calloc do the multiplication.
 
 	* nscd/pwdcache.c (cache_pwdinit): Use thread attribute to detach
-	thread and no pthread_detach.
+	thread and not pthread_detach.
 
 	* nscd/nscd.c: Rewrite to use argp instead of getopt.
 

@@ -1,7 +1,7 @@
 GLIBC_2.0 {
   global:
     # global variables
-    _errno; _itoa_lower_digits; _itoa_upper_digits;
+    _errno; _h_errno; _itoa_lower_digits; _itoa_upper_digits;
     __ctype_b; __ctype_tolower; __ctype_toupper;
     _nl_msg_cat_cntr; __environ; _environ; _res;
     ___brk_addr; __curbrk; _nl_current_LC_CTYPE; _libc_intl_domainname;

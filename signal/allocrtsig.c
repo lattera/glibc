@@ -1,5 +1,5 @@
 /* Handle real-time signal allocation.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -80,7 +80,7 @@ __libc_allocate_rtsig (int high)
 #else
   if (!initialized)
     init ();
-  if (current_rtmin != -1 || current_rtmin > current_rtmax)
+  if (current_rtmin == -1 || current_rtmin > current_rtmax)
     /* We don't have anymore signal available.  */
     return -1;
 

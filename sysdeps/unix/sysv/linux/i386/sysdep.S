@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,12 @@
    it somewhere else.
 
    ...and this place is here.  */
-	.comm errno,4,4
-_errno = errno	/* This name is expected by hj's libc.so.5 startup code.  */
+	.data
+	.globl	errno
+errno:
+	.globl	_errno
+_errno:
+	.long	4
 
 /* The following code is only used in the shared library when we
    compile the reentrant version.  Otherwise each system call defines
@@ -41,6 +45,7 @@ _errno = errno	/* This name is expected by hj's libc.so.5 startup code.  */
 #undef CALL_MCOUNT
 #define CALL_MCOUNT /* Don't insert the profiling call, it clobbers %eax.  */
 
+	.text
 ENTRY (__syscall_error)
 	negl %eax
 

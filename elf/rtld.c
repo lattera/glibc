@@ -489,14 +489,14 @@ of this helper program; chances are you did not intend to run this program.\n",
   preloadlist = getenv ("LD_PRELOAD");
   if (preloadlist)
     {
-      /* The LD_PRELOAD environment variable gives a white space
-	 separated list of libraries that are loaded before the
+      /* The LD_PRELOAD environment variable gives list of libraries
+	 separated by white space or colons that are loaded before the
 	 executable's dependencies and prepended to the global scope
 	 list.  If the binary is running setuid all elements
 	 containing a '/' are ignored since it is insecure.  */
       char *list = strdupa (preloadlist);
       char *p;
-      while ((p = strsep (&list, " ")) != NULL)
+      while ((p = strsep (&list, " :")) != NULL)
 	if (! __libc_enable_secure || strchr (p, '/') == NULL)
 	  {
 	    struct link_map *new_map = _dl_map_object (NULL, p, lt_library, 0);

@@ -10,6 +10,7 @@ kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
 net/route.h
+rt_sigaction.S
 sys/acct.h
 sys/io.h
 sys/procfs.h

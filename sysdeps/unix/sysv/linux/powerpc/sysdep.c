@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,3 +31,4 @@ __syscall_error (int err_no)
 /* We also have to have a 'real' definition of errno.  */
 #undef errno
 int errno = 0;
+weak_alias (errno, _errno)

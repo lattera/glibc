@@ -11,4 +11,4 @@ srcdir = @srcdir@
 # CVSOPTS = -z9
 
 all .DEFAULT:
-	$(MAKE) PARALLELMFLAGS="$(PARALLELMFLAGS)" -C $(srcdir) objdir=`pwd` $@
+	$(MAKE) PARALLELMFLAGS="$(PARALLELMFLAGS)" CVSOPTS="$(CVSOPTS)" -C $(srcdir) objdir=`pwd` $@

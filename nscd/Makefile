@@ -31,11 +31,12 @@ install-sbin := nscd
 
 endif
 
-nscd-routines := nscd connections pwdcache getpwnam_r getpwuid_r grpcache\
+nscd-routines := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		 getgrnam_r getgrgid_r dbg_log nscd_conf nscd_stat
 extra-objs := $(nscd-routines:=.o)
 
-distribute := nscd.h dbg_log.h
+distribute := nscd.h dbg_log.h $(nscd-routines:=.c) TODO nscd.conf nscd.init \
+	      nscd_proto.h
 
 include ../Rules
 

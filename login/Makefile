@@ -37,7 +37,8 @@ utmpd-routines := connection database error request xtmp
 extra-objs := $(utmpd-routines:=.o)
 
 distribute := utmp-private.h programs/xtmp.h programs/utmpd.h README.utmpd \
-	      programs/utmpd-private.h $(utmpd-routines:%=programs/%.c)
+	      programs/utmpd-private.h $(utmpd-routines:%=programs/%.c) \
+	      pty-internal.h
 
 subdir-dirs = programs
 vpath %.c programs

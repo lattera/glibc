@@ -39,6 +39,7 @@ default_symbol_version (__new_sys_siglist, _sys_siglist, GLIBC_2.1);
 default_symbol_version (_new_sys_siglist, sys_siglist, GLIBC_2.1);
 default_symbol_version (__new_sys_sigabbrev, sys_sigabbrev, GLIBC_2.1);
 #else
+weak_alias(__new_sys_siglist, _sys_siglist)
 weak_alias(__new_sys_siglist, sys_siglist)
 weak_alias(__new_sys_sigabbrev, sys_sigabbrev)
 #endif

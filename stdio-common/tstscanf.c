@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,15 +31,19 @@ main (int argc, char **argv)
   char buf[BUFSIZ];
   FILE *in = stdin, *out = stdout;
   int x;
+  int result = 0;
 
   if (sscanf ("0", "%d", &x) != 1)
-    exit (EXIT_FAILURE);
+    {
+      fputs ("test failed!\n", stdout);
+      result = 1;
+    }
 
   sscanf ("conversion] Zero flag Ze]ro#\n", "%*[^]] %[^#]\n", buf);
   if (strcmp (buf, "] Zero flag Ze]ro") != 0)
     {
-      fputs ("test failed!\n", stderr);
-      return 1;
+      fputs ("test failed!\n", stdout);
+      result = 1;
     }
 
   if (argc == 2 && !strcmp (argv[1], "-opipe"))
@@ -48,13 +52,18 @@ main (int argc, char **argv)
       if (out == NULL)
 	{
 	  perror ("popen: /bin/cat");
-	  exit (EXIT_FAILURE);
+	  result = 1;
 	}
     }
   else if (argc == 3 && !strcmp (argv[1], "-ipipe"))
     {
       sprintf (buf, "/bin/cat %s", argv[2]);
       in = popen (buf, "r");
+      if (in == NULL)
+	{
+	  perror ("popen: /bin/cat");
+	  result = 1;
+	}
     }
 
   {
@@ -64,7 +73,10 @@ main (int argc, char **argv)
 	     sscanf ("thompson", "%s", name),
 	     name);
     if (strcmp (name, "thompson") != 0)
-      return 1;
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
   }
 
   fputs ("Testing scanf (vfscanf)\n", out);
@@ -78,11 +90,17 @@ main (int argc, char **argv)
     fprintf (out, "n = %d, i = %d, x = %f, name = \"%.50s\"\n",
 	     n, i, x, name);
     if (n != 3 || i != 25 || x != 5.432F || strcmp (name, "thompson"))
-      return 1;
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
   }
   fprintf (out, "Residual: \"%s\"\n", fgets (buf, sizeof (buf), in));
   if (strcmp (buf, "\n"))
-    return 1;
+    {
+      fputs ("test failed!\n", stdout);
+      result = 1;
+    }
   fputs ("Test 2:\n", out);
   {
     int i;
@@ -90,12 +108,18 @@ main (int argc, char **argv)
     char name[50];
     (void) fscanf (in, "%2d%f%*d %[0123456789]", &i, &x, name);
     fprintf (out, "i = %d, x = %f, name = \"%.50s\"\n", i, x, name);
-    if (i != 56 || x != 789.0F || strcmp(name, "56"))
-      return 1;
+    if (i != 56 || x != 789.0F || strcmp (name, "56"))
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
   }
   fprintf (out, "Residual: \"%s\"\n", fgets (buf, sizeof (buf), in));
   if (strcmp (buf, "a72\n"))
-    return 1;
+    {
+      fputs ("test failed!\n", stdout);
+      result = 1;
+    }
   fputs ("Test 3:\n", out);
   {
     static struct {
@@ -118,7 +142,10 @@ main (int argc, char **argv)
 	int count;
 
 	if (rounds++ >= sizeof (ok) / sizeof (ok[0]))
-	  return 1;
+	  {
+	    fputs ("test failed!\n", stdout);
+	    result = 1;
+	  }
 
 	quant = 0.0;
 	units[0] = item[0] = '\0';
@@ -129,28 +156,37 @@ main (int argc, char **argv)
 	if (count != ok[rounds-1].count || quant != ok[rounds-1].quant
 	    || strcmp (item, ok[rounds-1].item)
 	    || strcmp (units, ok[rounds-1].units))
-	  return 1;
+	  {
+	    fputs ("test failed!\n", stdout);
+	    result = 1;
+	  }
       }
   }
   buf[0] = '\0';
   fprintf (out, "Residual: \"%s\"\n", fgets (buf, sizeof (buf), in));
   if (strcmp (buf, ""))
-    return 1;
+    {
+      fputs ("test failed!\n", stdout);
+      result = 1;
+    }
 
   if (out != stdout)
     pclose (out);
 
-  fputs ("Test 3:\n", out);
+  fputs ("Test 4:\n", out);
   {
     int res, val, n;
 
     res = sscanf ("-242", "%3o%n", &val, &n);
     printf ("res = %d, val = %d, n = %d\n", res, val, n);
     if (res != 1 || val != -20 || n != 3)
-      return 1;
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
   }
 
-  fputs ("Test 4:\n", out);
+  fputs ("Test 5:\n", out);
   {
     double a = 0, b = 0;
     int res, n;
@@ -159,20 +195,29 @@ main (int argc, char **argv)
     printf ("res = %d, a = %g, b = %g, n = %d\n", res, a, b, n);
 
     if (res != 2 || a != 123 || b != 456 || n != 6)
-      return 1;
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
 
     res = sscanf ("0", "%lg", &a);
     printf ("res = %d, a = %g\n", res, a);
 
     if (res != 1 || a != 0)
-      exit (EXIT_FAILURE);
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
 
     res = sscanf ("1e3", "%lg%n", &a, &n);
     printf ("res = %d, a = %g, n = %d\n", res, a, n);
 
     if (res != 1 || a != 1000 || n != 3)
-      exit (EXIT_FAILURE);
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
   }
 
-  exit(EXIT_SUCCESS);
+  exit (result);
 }

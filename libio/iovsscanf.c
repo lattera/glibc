@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+#include <errno.h>
 #include "libioP.h"
 #include "strfile.h"
 
@@ -43,6 +44,8 @@ _IO_vsscanf (string, format, args)
   _IO_str_init_static (&sf._sbf._f, (char*)string, 0, NULL);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, &sf);
   _IO_flockfile (&sf._sbf._f);
+  errno = 0;	/* Necessary since _IO_vfscanf tests for errno but the
+		   string I/O functions don't set it.  */
   ret = _IO_vfscanf (&sf._sbf._f, format, args, NULL);
   _IO_cleanup_region_end (1);
   return ret;
