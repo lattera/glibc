@@ -3,6 +3,7 @@
 # appropriate message.
 SUPPORTED-LOCALES=\
 af_ZA/ISO-8859-1 \
+an_ES/ISO-8859-15 \
 ar_AE/ISO-8859-6 \
 ar_BH/ISO-8859-6 \
 ar_DZ/ISO-8859-6 \

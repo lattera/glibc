@@ -217,7 +217,7 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	$(make-target-directory)
 	(case $(config-os) in \
 	   linux*) version=`(echo -e "#include <linux/version.h>\nUTS_RELEASE"\
-			     | $(CC) -E -P - | \
+			     | $(CC) $(CPPFLAGS) -E -P - | \
 			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
 		   if [ -z "$$version" ]; then \
 		     if [ -r /proc/version ]; then \

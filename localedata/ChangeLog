@@ -1,3 +1,10 @@
+2003-06-25  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/an_ES: Change default charset from ISO-8859-1 to
+	ISO-8859-15 as the locale need the EURO sign.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add an_ES.ISO-8859-15.
+
 2003-06-21  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/no_NO [LC_COLLATE]: Add missing eth letter, sorted as

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+#if 0 /* XXX this one needs to be rewritten.  */
 
 #include <errno.h>
 #include <fcntl.h>
@@ -718,3 +720,5 @@ in_blacklist (const char *name, int namelen, ent_t *ent)
   *cp = '\0';
   return strstr (ent->blacklist.data, buf) != NULL;
 }
+
+#endif

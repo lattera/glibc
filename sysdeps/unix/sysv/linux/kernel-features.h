@@ -141,6 +141,11 @@
 # define __ASSUME_IPC64		1
 #endif
 
+/* We can use the LDTs for threading with Linux 2.3.99 and newer.  */
+#if __LINUX_KERNEL_VERSION >= 131939
+# define __ASSUME_LDT_WORKS		1
+#endif
+
 /* Linux 2.4.0 on PPC introduced a correct IPC64. But PowerPC64 does not
    support a separate 64-bit sys call, already 64-bit */
 #if __LINUX_KERNEL_VERSION >= 132096 && defined __powerpc__ \
@@ -148,15 +153,18 @@
 # define __ASSUME_IPC64			1
 #endif
 
-/* We can use the LDTs for threading with Linux 2.3.99 and newer.  */
-#if __LINUX_KERNEL_VERSION >= 131939
-# define __ASSUME_LDT_WORKS		1
+/* SH kernels got stat64, mmap2, and truncate64 during 2.4.0-test.  */
+#if __LINUX_KERNEL_VERSION >= 132096 && defined __sh__
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_MMAP2_SYSCALL		1
+# define __ASSUME_STAT64_SYSCALL	1
 #endif
 
 /* The changed st_ino field appeared in 2.4.0-test6.  But we cannot
    distinguish this version from other 2.4.0 releases.  Therefore play
-   save and assume it available is for 2.4.1 and up.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && !defined __alpha__
+   save and assume it available is for 2.4.1 and up.  However, SH is lame,
+   and still does not have a 64-bit inode field.  */
+#if __LINUX_KERNEL_VERSION >= 132097 && !defined __alpha__ && !defined __sh__
 # define __ASSUME_ST_INO_64_BIT		1
 #endif
 

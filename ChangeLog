@@ -1,3 +1,22 @@
+2003-06-17  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/Makefile: Remove NIS/NIS+ files from nss_compat module.
+	* nis/nss_compat/compat-grp.c: Don't use our own NIS/NIS+ functions,
+	dlopen corresponding NSS module instead.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_compat/compat-initgroups.c: Disabled for now.
+	* nss/Versions: Export __nss_lookup_function.
+
+2003-06-19  Daniel Jacobowitz  <drow@mvista.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Update kernel features
+	for the SH architecture.
+
+2003-06-25  Thorsten Kukuk  <kukuk@suse.de>
+
+	* csu/Makefile: Use CPPFLAGS to find correct linux/version.h.
+
 2003-06-25  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/tst-strtod.c (main): Declare constant long double as
@@ -5,7 +24,7 @@
 
 	* posix/tst-nanosleep.c: Include <time.h> for nanosleep
 	declaration.
-	
+
 	* stdio-common/tst-fphex.c: Fix format string.
 
 	* posix/transbug.c: Include <string.h> for memset and strlen
