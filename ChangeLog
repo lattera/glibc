@@ -1,3 +1,23 @@
+2001-08-28  Andreas Jaeger  <aj@suse.de>
+
+	* manual/libc-texinfo.sh: Add entry about free manuals.
+
+	* manual/contrib.texi (Contributors): Fix cross reference.
+
+	* manual/libc.texinfo (Copying): Include freemanuals.
+
+	* manual/Makefile (appendices): Add freemanuals.
+
+	* manual/freemanuals.texi: New file.
+	Patch by Brian Youmans <3diff@gnu.org>.
+
+	* manual/libm-err-tab.pl: Pretty print more platforms, print a
+	smaller table.
+
+	* manual/math.texi (Errors in Math Functions): Fix grammar, start
+	table on separate page.
+	Patch by Brian Youmans <3diff@gnu.org>.
+
 2001-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/syslog.c (vsyslog): Try a bit harder to use syslogd.  If
