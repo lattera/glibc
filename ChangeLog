@@ -1,3 +1,16 @@
+2003-02-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Remove
+	special case for dl_rtld_map in R_PPC64_RELATIVE; it's harmless to
+	repeat it and avoids the test for the common case.
+	Clean up and fix calculations for TLS relocs.
+
+	* sysdeps/powerpc/powerpc64/dl-tls.h: Moved to ...
+	* sysdeps/powerpc/dl-tls.h: ... here.
+	(TLS_TP_OFFSET): New macro.
+
+	* sunrpc/svc_udp.c (svcudp_recv): Add a cast to last change.
+
 2003-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Increase ULPs for yn due to

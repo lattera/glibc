@@ -1,4 +1,4 @@
-/* Machine-dependent ELF dynamic relocation inline functions.  
+/* Machine-dependent ELF dynamic relocation inline functions.
    PowerPC64 version.
    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
    Free Software Foundation, Inc.
@@ -386,7 +386,7 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 
       /* Relocate the DT_PPC64_GLINK entry in the _DYNAMIC section.
 	 elf_get_dynamic_info takes care of the standard entries but
-	 doesn't know exactly what to do with processor specific 
+	 doesn't know exactly what to do with processor specific
 	 entires.  */
       if (info[DT_PPC64(GLINK)] != NULL)
 	info[DT_PPC64(GLINK)]->d_un.d_ptr += l_addr;
@@ -425,7 +425,7 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	  plt_reserve->fd_func += l_addr;
 	  plt_reserve->fd_toc  += l_addr;
 #endif
-	  
+
 	  /* Set up the lazy PLT entries.  */
 	  glink = (Elf64_Word *) D_PTR (map, l_info[DT_PPC64(GLINK)]);
 	  offset = PLT_INITIAL_ENTRY_WORDS;
@@ -516,7 +516,7 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 {
   return value + reloc->r_addend;
 }
- 
+
 #endif /* dl_machine_h */
 
 #ifdef RESOLVE_MAP
@@ -560,20 +560,10 @@ elf_machine_rela (struct link_map *map,
   Elf64_Addr value, raw_value;
 #ifndef RTLD_BOOTSTRAP
   const Elf64_Sym *const refsym = sym;
-  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
-     reference weak so static programs can still link.  This declaration
-     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
-     because rtld.c contains the common defn for _dl_rtld_map, which is
-     incompatible with a weak decl in the same file.  */
-  weak_extern (GL(dl_rtld_map));
 #endif
 
   if (r_type == R_PPC64_RELATIVE)
     {
-#ifndef RTLD_BOOTSTRAP
-      /* Already done in dynamic linker.  */
-      if (map != &GL(dl_rtld_map))
-#endif
       *reloc_addr = map->l_addr + reloc->r_addend;
       return;
     }
@@ -581,37 +571,21 @@ elf_machine_rela (struct link_map *map,
   if (r_type == R_PPC64_NONE)
     return;
 
-  value = 0;
-  raw_value = 0;
-
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
   sym_map = RESOLVE_MAP (&sym, version, r_type);
-  raw_value = value = reloc->r_addend;
+  value = raw_value = reloc->r_addend;
   if (sym_map)
-    if (sym)
     {
       raw_value += sym->st_value;
       value = raw_value + sym_map->l_addr;
     }
-#else
-  sym_map = RESOLVE_MAP (&sym, version, r_type);
-  if (sym_map)
-  {
-    if (sym)
-    {
-      raw_value = sym->st_value + sym_map->l_addr;
-    }
-    value = raw_value + reloc->r_addend;
-  }
-#endif
 
   switch (r_type)
     {
     case R_PPC64_ADDR64:
     case R_PPC64_GLOB_DAT:
-      *reloc_addr = value;      
+      *reloc_addr = value;
       return;
-      
+
 #if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
 
     case R_PPC64_DTPMOD64:
@@ -620,34 +594,34 @@ elf_machine_rela (struct link_map *map,
       *reloc_addr = 1;
 #else
     /* Get the information from the link map returned by the
-       resolv function.  */
+       resolve function.  */
       if (sym_map != NULL)
-        {
-          *reloc_addr = sym_map->l_tls_modid;
-        }
+	*reloc_addr = sym_map->l_tls_modid;
 #endif
       return;
-      
+
     case R_PPC64_TPREL64:
 #ifdef RTLD_BOOTSTRAP
-      *reloc_addr = raw_value + map->l_tls_offset - 0x7010;
+      *reloc_addr = (sym_map->l_tls_offset - TLS_TCB_SIZE
+		     + raw_value - TLS_TP_OFFSET);
 #else
       if (sym_map)
-      {
-        CHECK_STATIC_TLS (map, sym_map);
-        *reloc_addr = raw_value + sym_map->l_tls_offset - 0x7010;
-      }
+	{
+	  CHECK_STATIC_TLS (map, sym_map);
+	  *reloc_addr = (sym_map->l_tls_offset - TLS_TCB_SIZE
+			 + raw_value - TLS_TP_OFFSET);
+	}
 #endif
       return;
-      
+
     case R_PPC64_DTPREL64:
 #ifndef RTLD_BOOTSTRAP
       /* During relocation all TLS symbols are defined and used.
-       Therefore the offset is already correct.  */
-      *reloc_addr = raw_value - 0x8000;
+	 Therefore the offset is already correct.  */
+      *reloc_addr = raw_value - TLS_DTV_OFFSET;
 #endif
       return;
-#endif      
+#endif
 
     case R_PPC64_JMP_SLOT:
 
@@ -657,7 +631,7 @@ elf_machine_rela (struct link_map *map,
 #ifndef RTLD_BOOTSTRAP /* None of the following appear in ld.so */
     case R_PPC64_ADDR16_LO_DS:
       if (dont_expect ((value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_ADDR16_LO_DS", 
+        _dl_reloc_overflow (map, "R_PPC64_ADDR16_LO_DS",
                             reloc_addr, sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
 					       value, 0xfffc);
@@ -665,7 +639,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_TPREL16_LO_DS:
       if (dont_expect ((value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_TPREL16_LO_DS", 
+        _dl_reloc_overflow (map, "R_PPC64_TPREL16_LO_DS",
                             reloc_addr, sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);
@@ -673,7 +647,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_DTPREL16_LO_DS:
       if (dont_expect ((value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_DTPREL16_LO_DS", 
+        _dl_reloc_overflow (map, "R_PPC64_DTPREL16_LO_DS",
                             reloc_addr, sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);
@@ -681,7 +655,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_GOT_TPREL16_LO_DS:
       if (dont_expect ((value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_GOT_TPREL16_LO_DS", 
+        _dl_reloc_overflow (map, "R_PPC64_GOT_TPREL16_LO_DS",
                             reloc_addr, sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);
@@ -689,7 +663,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_GOT_DTPREL16_LO_DS:
       if (dont_expect ((value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_GOT_DTPREL16_LO_DS", 
+        _dl_reloc_overflow (map, "R_PPC64_GOT_DTPREL16_LO_DS",
                             reloc_addr, sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);
@@ -800,7 +774,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_TPREL16_DS:
       if (dont_expect ((value + 0x8000) >= 0x10000 || (value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_TPREL16_DS", reloc_addr, 
+        _dl_reloc_overflow (map, "R_PPC64_TPREL16_DS", reloc_addr,
                             sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);
@@ -808,7 +782,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_DTPREL16_DS:
       if (dont_expect ((value + 0x8000) >= 0x10000 || (value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_DTPREL16_DS", reloc_addr, 
+        _dl_reloc_overflow (map, "R_PPC64_DTPREL16_DS", reloc_addr,
                             sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);
@@ -816,7 +790,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_GOT_TPREL16_DS:
       if (dont_expect ((value + 0x8000) >= 0x10000 || (value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_GOT_TPREL16_DS", reloc_addr, 
+        _dl_reloc_overflow (map, "R_PPC64_GOT_TPREL16_DS", reloc_addr,
                             sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);
@@ -824,7 +798,7 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_GOT_DTPREL16_DS:
       if (dont_expect ((value + 0x8000) >= 0x10000 || (value & 3) != 0))
-        _dl_reloc_overflow (map, "R_PPC64_GOT_DTPREL16_DS", 
+        _dl_reloc_overflow (map, "R_PPC64_GOT_DTPREL16_DS",
                             reloc_addr, sym, refsym);
       *(Elf64_Half *) reloc_addr = BIT_INSERT (*(Elf64_Half *) reloc_addr,
                                               value, 0xfffc);

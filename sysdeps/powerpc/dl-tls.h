@@ -1,4 +1,4 @@
-/* Thread-local storage handling in the ELF dynamic linker.  PowerPC64 version.
+/* Thread-local storage handling in the ELF dynamic linker.  PowerPC version.
    Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -29,6 +29,9 @@ typedef struct
 #ifdef SHARED
 
 extern void *__tls_get_addr (tls_index *ti);
+
+/* The thread pointer points 0x7000 past the first static TLS block.  */
+# define TLS_TP_OFFSET		0x7000
 
 /* Dynamic thread vector pointers point 0x8000 past the start of each
    TLS block.  */
