@@ -261,7 +261,6 @@ CHARMAP
 <Y->                   /xA5     <U00A5> YEN SIGN
 <Ye>                   /xA5     <U00A5> YEN SIGN
 <S<>                   /xA6     <U0160> LATIN CAPITAL LETTER S WITH CARON
-<So>                   /xA7     <U00A7> SECTION SIGN
 <SE>                   /xA7     <U00A7> SECTION SIGN
 <s<>                   /xA8     <U0161> LATIN SMALL LETTER S WITH CARON
 <Co>                   /xA9     <U00A9> COPYRIGHT SIGN
@@ -271,7 +270,6 @@ CHARMAP
 <7!>                   /xAC     <U00AC> NOT SIGN
 <-->                   /xAD     <U00AD> SOFT HYPHEN
 <Rg>                   /xAE     <U00AE> REGISTERED SIGN
-<OR>                   /xAE     <U00AE> REGISTERED SIGN
 <'m>                   /xAF     <U00AF> MACRON
 <DG>                   /xB0     <U00B0> DEGREE SIGN
 <+->                   /xB1     <U00B1> PLUS-MINUS SIGN

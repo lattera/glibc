@@ -1,5 +1,8 @@
 2000-05-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* charmaps/ISO-8859-15: Remove incorrect definitions of <So> and <OR>.
+	Reported by Gaël Quéri <gqueri@mail.dotcom.fr> [PR libc/1718].
+
 	* tst-fmon.c (main): Print the locale name as well in the error
 	message.
 

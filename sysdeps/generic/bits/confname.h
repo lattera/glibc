@@ -420,7 +420,7 @@ enum
 #define _SC_PBS_MESSAGE			_SC_PBS_MESSAGE
     _SC_PBS_TRACK,
 #define _SC_PBS_TRACK			_SC_PBS_TRACK
-    _SC_SYMLOOP,
+    _SC_SYMLOOP
 #define _SC_SYMLOOP			_SC_SYMLOOP
   };
 

@@ -1,3 +1,13 @@
+2000-05-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/bits/confname.h (_SC* enum): Avoid comma at the
+	end of enum.
+
+2000-05-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconv/gconv.h (__gconv_t): Add __extension__ to make gcc -pedantic
+	happy.
+
 2000-04-11  Geoff Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/dl-start.S (_dl_start): Add _dl_start_user

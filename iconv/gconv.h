@@ -124,7 +124,7 @@ typedef struct __gconv_info
 {
   size_t __nsteps;
   struct __gconv_step *__steps;
-  struct __gconv_step_data __data[0];
+  __extension__ struct __gconv_step_data __data[0];
 } *__gconv_t;
 
 #endif /* gconv.h */
