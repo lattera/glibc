@@ -39,3 +39,8 @@ typedef struct
 #endif
 
   } __jmp_buf[1];
+
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address) \
+  ((void *) (address) < (void *) (jmpbuf)->__sp)
