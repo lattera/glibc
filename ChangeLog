@@ -1,3 +1,9 @@
+2004-02-09  Andreas Jaeger  <aj@suse.de>
+
+	PR 7
+	* sysdeps/x86_64/memcpy.S: Fix alignment.
+	Patch by Jan Beulich <jbeulich@novell.com>.
+
 2004-02-09  Andreas Schwab  <schwab@suse.de>
 
 	* include/rpc/rpc.h: Declare thread variables with their correct
