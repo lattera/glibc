@@ -1,4 +1,4 @@
-This directory contains the version 2.0.94 test release of the GNU C Library.
+This directory contains the version 2.0.95 test release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
@@ -13,6 +13,7 @@ configurations:
 		sparc-*-linux-gnu	Linux-2.x on SPARC
 		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 		arm-*-none		ARM standalone systems
+		arm-*-linux		Linux-2.x on ARM
 		arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
 
@@ -52,7 +53,7 @@ provides the Unix `crypt' function, plus some other entry points.
 Because of the United States export restriction on DES implementations,
 we are distributing this code separately from the rest of the C
 library.  There is an extra distribution tar file just for crypt; it is
-called `glibc-crypt-2.0.94.tar.gz'.  You can just unpack the crypt
+called `glibc-crypt-2.0.95.tar.gz'.  You can just unpack the crypt
 distribution along with the rest of the C library and build; you can
 also build the library without getting crypt.  Users outside the USA
 can get the crypt distribution via anonymous FTP from ftp.ifi.uio.no

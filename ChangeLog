@@ -1,3 +1,11 @@
+1998-07-29 15:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/arm/fpu/Dist: New file.  Add ieee754.h.
+
+	* nis/nis_chache2_xdr.c: Removed.
+	* nis/nis_cache.c: Removed.
+	* nis/nis_cache2.h: Removed.
+
 1998-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* Rules (tests): Depend on tests-static only if build-static == yes.
