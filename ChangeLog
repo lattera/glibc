@@ -1,3 +1,7 @@
+2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
+
+	* stdlib/fpioconst.h: Include gmp.h with angle brackets.
+
 2003-03-13  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Bail if no PT_LOAD phdrs
