@@ -49,4 +49,7 @@ endef
 object-suffixes-left = $(object-suffixes-$(lib))
 include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-$(lib)))
 
+# Add the version script to the dependencies of the shared library.
+$(objpfx)$(lib).so: $($(lib)-map)
+
 endif

@@ -88,7 +88,7 @@ DEFUN(_IO_str_init_static, (fp, ptr, size, pstart),
   if (pstart)
     {
       fp->_IO_write_ptr = pstart;
-      fp->_IO_write_end = pstart;
+      fp->_IO_write_end = ptr + size;
       fp->_IO_read_end = pstart;
     }
   else
@@ -158,7 +158,7 @@ DEFUN(_IO_str_overflow, (fp, c),
 	  fp->_IO_write_ptr = new_buf + (fp->_IO_write_ptr - old_buf);
 
 	  fp->_IO_write_base = new_buf;
-	  fp->_IO_write_end = new_buf + (fp->_IO_write_end - old_buf);
+	  fp->_IO_write_end = fp->_IO_buf_end;
 	}
     }
 

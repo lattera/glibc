@@ -42,13 +42,13 @@ static int replace_entry (utmp_database *database, int old_position,
 			  int new_position, const struct utmp *entry);
 static int store_entry (utmp_database *database, int position,
 			const struct utmp *entry);
-static int get_mtime (const char *file, time_t *timer);
+static int get_mtime (int filedes, time_t *timer);
 
 
-/* Open the database specified by FILE and merge it with the
-   contents of the old format file specified by OLD_FILE.  Returns a
-   pointer to a newly allocated structure describing the database, or
-   NULL on error.  */
+/* Open the database specified by FILE and merge it with the contents
+   of the old format file specified by OLD_FILE.  Returns a pointer to
+   a newly allocated structure describing the database, or NULL on
+   error.  */
 utmp_database *
 open_database (const char *file, const char *old_file)
 {
@@ -57,31 +57,54 @@ open_database (const char *file, const char *old_file)
   /* Allocate memory.  */
   database = (utmp_database *) malloc (sizeof (utmp_database));
   if (database == NULL)
-    return NULL;
+    {
+      error (0, 0, _("memory exhausted"));
+      return NULL;
+    }
 
   memset (database, 0, sizeof (utmp_database));
 
-  /* Open database.  */
-  database->fd = open (file, O_RDWR);
+  /* Open database, create it if it doesn't exist already.  */
+  database->fd = open (file, O_RDWR | O_CREAT);
   if (database->fd < 0)
-    goto fail;
+    {
+      error (0, errno, "%s", file);
+      goto return_error;
+    }
 
-  database->old_fd = open (old_file, O_RDWR);
-  if (database->old_fd < 0)
-    goto fail;
+  database->file = strdup (file);
+  if (database->file == NULL)
+    {
+      error (0, 0, _("memory exhausted"));
+      goto return_error;
+    }
+
+  if (old_file)
+    {
+      database->old_fd = open (old_file, O_RDWR);
+      if (database->old_fd < 0)
+	{
+	  error (0, errno, "%s", old_file);
+	  goto return_error;
+	}
   
-  if ((file && !(database->file = strdup (file)))
-      || (old_file && !(database->old_file = strdup (old_file))))
-    goto fail;
+      database->old_file = strdup (old_file);
+      if (database->old_file == NULL)
+	{
+	  error (0, 0, _("memory exhausted"));
+	  goto return_error;
+	}
+    }
 
-  if (initialize_database (database) < 0
-      || synchronize_database (database) < 0)
-    goto fail;
+  /* Initialize database.  */
+  if (initialize_database (database) < 0)
+    goto return_error;
   
   return database;
 
-fail:
+return_error:
   close_database (database);
+  
   return NULL;
 }
 
@@ -100,8 +123,12 @@ synchronize_database (utmp_database *database)
       
       curtime = time (NULL);
       
-      if (get_mtime (database->old_file, &mtime) < 0)
-	return -1;
+      if (get_mtime (database->old_fd, &mtime) < 0)
+	{
+	  error (0, errno, _("%s: cannot get modification time"),
+		 database->old_file);
+	  return -1;
+	}
       
       if (mtime >= database->mtime)
 	{
@@ -118,7 +145,10 @@ synchronize_database (utmp_database *database)
 		  || !compare_entry (&old_entry, &entry))
 		{
 		  if (write_entry (database, position, &old_entry) < 0)
-		    return -1;
+		    {
+		      error (0, errno, "%s", database->file);
+		      return -1;
+		    }
 		}
 
 	      position++;
@@ -325,13 +355,19 @@ initialize_database (utmp_database *database)
 	      || entry.ut_type == OLD_TIME || entry.ut_type == NEW_TIME)
 	    {
 	      if (store_state_entry (database, position, &entry) < 0)
-		return -1;
+		{
+		  error (0, errno, "%s", database->file);
+		  return -1;
+		}
 	    }
 	  else
 #endif
 	    {
 	      if (store_process_entry (database, position, &entry) < 0)
-		return -1;
+		{
+		  error (0, errno, "%s", database->file);
+		  return -1;
+		}
 	    }
 
 	  /* Update position.  */
@@ -344,14 +380,17 @@ initialize_database (utmp_database *database)
 	    break;
 
 	  if (write_old_entry (database, position, &entry) < 0)
-	    return -1;
+	    {
+	      error (0, errno, "%s", database->file);
+	      return -1;
+	    }
 
 	  /* Update position.  */
 	  position++;
 	}
     }
 
-  return 0;
+  return synchronize_database (database);
 }
 
 
@@ -472,14 +511,14 @@ store_entry (utmp_database *database, int position,
 }
 
 
-/* Get modification time of FILE and put it in TIMER.  returns 0 if
-   successful, -1 if not.  */
+/* Get modification time of the file with file descriptor FILEDES and
+   put it in TIMER.  Returns 0 if successful, -1 if not.  */
 static int
-get_mtime (const char *file, time_t *timer)
+get_mtime (int filedes, time_t *timer)
 {
   struct stat st;
   
-  if (stat (file, &st) < 0)
+  if (fstat (filedes, &st) < 0)
     return -1;
 
   *timer = st.st_mtime;

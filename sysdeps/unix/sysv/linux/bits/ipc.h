@@ -82,4 +82,4 @@ extern int __ipc __P ((int __call, int __first, int __second, int __third,
 
 __END_DECLS
 
-#endif /* _SYS_IPC_BUF_H */
+#endif /* bits/ipc_buf.h */

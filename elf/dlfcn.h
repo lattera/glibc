@@ -22,15 +22,8 @@
 
 #include <features.h>
 
-/* The MODE argument to `dlopen' contains one of the following: */
-#define RTLD_LAZY	0x001	/* Lazy function call binding.  */
-#define RTLD_NOW	0x002	/* Immediate function call binding.  */
-#define	RTLD_BINDING_MASK 0x3	/* Mask of binding time value.  */
-
-/* If the following bit is set in the MODE argument to `dlopen',
-   the symbols of the loaded object and its dependencies are made
-   visible as if the object were linked directly into the program.  */
-#define RTLD_GLOBAL	0x100
+/* Collect various system dependand definitions and declarations.  */
+#include <bits/dlfcn.h>
 
 /* If the first argument of `dlsym' is set to RTLD_NEXT the run-time
    address of the symbol called NAME in the next shared object is

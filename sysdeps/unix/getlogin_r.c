@@ -1,5 +1,5 @@
 /* Reentrant function to return the current login name.  Unix version.
-   Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,19 +41,17 @@ getlogin_r (name, name_len)
   struct utmp *ut, line, buffer;
 
   {
-    int err;
     int d = __open ("/dev/tty", 0);
     if (d < 0)
       return errno;
 
     result = ttyname_r (d, real_tty_path, sizeof (tty_pathname));
-    err = errno;
     (void) close (d);
 
-    if (result < 0)
+    if (result != 0)
       {
-	__set_errno (err);
-	return err;
+	__set_errno (result);
+	return result;
       }
   }
 

@@ -344,7 +344,7 @@ endif
 # build shared libraries in place from the installed *_pic.a files.
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
-lib%.so: lib%_pic.a $(load-map-file); $(build-shlib)
+lib%.so: lib%_pic.a; $(build-shlib)
 
 ifeq ($(have-no-whole-archive),yes)
 no-whole-archive = -Wl,--no-whole-archive
@@ -367,7 +367,7 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -Wl,--whole-archive $(filter-out $(load-map-file),$^) \
+	  -Wl,--whole-archive $(filter-out $($(@F:.so=)-map),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
@@ -385,7 +385,7 @@ libc-map = $(..)libc.map
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so \
-			 $(load-map-file)
+			 $(libc-map)
 	$(build-shlib)
 ifdef libc.so-version
 $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so

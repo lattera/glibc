@@ -436,10 +436,10 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
     struct gaih_servtuple *st2;
     struct gaih_addrtuple *at2 = at;
     int j;
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 128
-#endif /* MAXHOSTNAMELEN */
-    char buffer[MAXHOSTNAMELEN];
+    /*
+      buffer is the size of an unformatted IPv6 address in printable format.
+     */
+    char buffer[sizeof "ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255"];
 
     while(at2) {
       if (req->ai_flags & AI_CANONNAME) {

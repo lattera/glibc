@@ -139,12 +139,12 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   
   /* Check if we are already running.  */
   if (check_pid (_PATH_UTMPDPID))
-    error (EXIT_FAILURE, 0, "already running");
+    error (EXIT_FAILURE, 0, _("already running"));
 
   /* Open UTMP database.  */
   utmp_db = open_database (_PATH_UTMP "x", _PATH_UTMP);
   if (utmp_db == NULL)
-    error (EXIT_FAILURE, errno, "%s", _PATH_UTMP);
+    exit (EXIT_FAILURE);
 
   /* Create sockets, with the right permissions.  */
   mask = umask (S_IXUSR | S_IXGRP | S_IXOTH);
@@ -156,7 +156,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   /* Set the sockets up to accept connections.  */
   if (listen (ro_sock, MAX_CONNECTIONS) < 0
       || listen (rw_sock, MAX_CONNECTIONS) < 0)
-    error (EXIT_FAILURE, errno, "cannot enable socket to accept connections");
+    error (EXIT_FAILURE, errno,
+	   _("cannot enable socket to accept connections"));
 
   /* Behave like a daemon.  */
   if (!debug)
@@ -164,7 +165,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
       openlog ("utmpd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
       
       if (daemon (0, 0) < 0)
-	error (EXIT_FAILURE, errno, "cannot auto-background");
+	error (EXIT_FAILURE, errno, _("cannot auto-background"));
       forked = 1;
 
       if (write_pid (_PATH_UTMPDPID) < 0)
@@ -235,7 +236,7 @@ make_socket (const char *name)
   /* Create the socket.  */
   sock = socket (PF_UNIX, SOCK_STREAM, 0);
   if (sock < 0)
-    error (EXIT_FAILURE, errno, "cannot create socket");
+    error (EXIT_FAILURE, errno, _("cannot create socket"));
 
   /* Bind a name to the socket.  */
   addr.sun_family = AF_UNIX;
@@ -277,7 +278,7 @@ void handle_requests (void)
       read_fd_set = active_read_fd_set;
       write_fd_set = active_write_fd_set;
       if (select (FD_SETSIZE, &read_fd_set, &write_fd_set, NULL, NULL) < 0)
-	error (EXIT_FAILURE, errno, "cannot get input on sockets");
+	error (EXIT_FAILURE, errno, _("cannot get input on sockets"));
 
       /* Service all the sockets with input pending.  */
       for (fd = 0; fd < FD_SETSIZE; fd++)
@@ -290,7 +291,7 @@ void handle_requests (void)
 
 		  connection = accept_connection (fd, access);
 		  if (connection == NULL)
-		    error (0, errno, "cannot accept connection");
+		    error (0, errno, _("cannot accept connection"));
 
 		  FD_SET (connection->sock, &active_read_fd_set);
 		}
@@ -298,7 +299,7 @@ void handle_requests (void)
 		{
 		  connection = find_connection (fd);
 		  if (connection == NULL)
-		    error (EXIT_FAILURE, 0, "cannot find connection");
+		    error (EXIT_FAILURE, 0, _("cannot find connection"));
 
 		  if (read_data (connection) < 0)
 		    {
@@ -316,7 +317,7 @@ void handle_requests (void)
 	    {
 	      connection = find_connection (fd);
 	      if (connection == NULL)
-		error (EXIT_FAILURE, 0, "cannot find connection");
+		error (EXIT_FAILURE, 0, _("cannot find connection"));
 
 	      if (write_data (connection) < 0)
 		{

@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <bits/libc-lock.h>
 #include <rpc/rpc.h>
+#include <rpcsvc/nis.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 #include <rpcsvc/ypupd.h>
@@ -39,7 +40,7 @@ typedef struct dom_binding dom_binding;
 
 static struct timeval TIMEOUT = {25, 0};
 static int const MAXTRIES = 5;
-static char __ypdomainname[MAXHOSTNAMELEN + 1] = "\0";
+static char __ypdomainname[NIS_MAXNAMELEN + 1] = "\0";
 __libc_lock_define_initialized (static, ypbindlist_lock)
 static dom_binding *__ypbindlist = NULL;
 
@@ -305,7 +306,7 @@ yp_get_default_domain (char **outdomain)
 
   if (__ypdomainname[0] == '\0')
     {
-      if (getdomainname (__ypdomainname, MAXHOSTNAMELEN))
+      if (getdomainname (__ypdomainname, NIS_MAXNAMELEN))
 	result = YPERR_NODOM;
       else
 	*outdomain = __ypdomainname;

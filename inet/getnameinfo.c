@@ -72,16 +72,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 struct hostent *_addr2hostname_hosts(const char *, int, int);
 #endif /* HOSTTABLE */
 
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 128
-#endif
-
 #ifndef min
 #define min(x,y) (((x) > (y)) ? (y) : (x))
 #endif /* min */
 
-static char *domain;
-static char domainbuffer[MAXHOSTNAMELEN];
+static const char *domain;
 
 static char *nrl_domainname(void)
 {
@@ -114,32 +109,34 @@ static char *nrl_domainname(void)
       }
 
       if (h && (c = strchr(h->h_name, '.'))) {
-	strcpy(domain = domainbuffer, ++c);
+	domain = __strdup (++c);
 	goto ret;
       }
 
-      if (!gethostname(domainbuffer, sizeof(domainbuffer))) {
-	if (c = strchr(domainbuffer, '.')) {
-	  domain = ++c;
-	  goto ret;
-	}
+      while (gethostname (tmpbuf, tmpbuflen)) {
+	tmpbuflen *= 2;
+	tmpbuf = __alloca (tmpbuflen);
+      }
+      if (c = strchr(tmpbuf, '.')) {
+	domain = __strdup(++c);
+	goto ret;
+      }
 
-	while (__gethostbyname_r(domainbuffer, &th, tmpbuf, tmpbuflen, &h,
-				 &herror)) {
-	  if (herror == NETDB_INTERNAL) {
-	    if (errno == ERANGE) {
-	      tmpbuflen *= 2;
-	      tmpbuf = __alloca(tmpbuflen);
-	    }
-	  } else {
-	    break;
+      while (__gethostbyname_r(tmpbuf, &th, tmpbuf, tmpbuflen, &h,
+			       &herror)) {
+	if (herror == NETDB_INTERNAL) {
+	  if (errno == ERANGE) {
+	    tmpbuflen *= 2;
+	    tmpbuf = __alloca(tmpbuflen);
 	  }
+	} else {
+	  break;
 	}
+      }
 
-	if (h && (c = strchr(h->h_name, '.'))) {
-	  strcpy(domain = domainbuffer, ++c);
-	  goto ret;
-	}
+      if (h && (c = strchr(h->h_name, '.'))) {
+	domain = __strdup(++c);
+	goto ret;
       }
 
       {
@@ -147,7 +144,9 @@ static char *nrl_domainname(void)
 
 	in_addr.s_addr = htonl(0x7f000001);
 
-	while (__gethostbyaddr_r((const char *)&in_addr, sizeof(struct in_addr), AF_INET, &th, tmpbuf, tmpbuflen, &h, &herror)) {
+	while (__gethostbyaddr_r((const char *)&in_addr,
+				 sizeof(struct in_addr), AF_INET, &th, tmpbuf,
+				 tmpbuflen, &h, &herror)) {
 	  if (herror == NETDB_INTERNAL) {
 	    if (errno == ERANGE) {
 	      tmpbuflen *= 2;
@@ -159,7 +158,7 @@ static char *nrl_domainname(void)
 	}
 
 	if (h && (c = strchr(h->h_name, '.'))) {
-	  domain = domainbuffer, ++c;
+	  domain = __strdup(++c);
 	  goto ret;
 	}
       }
@@ -168,7 +167,7 @@ static char *nrl_domainname(void)
 
   ret:
     __libc_lock_unlock (lock);
-  };
+  }
 
   return domain;
 };

@@ -1,3 +1,171 @@
+1997-07-13 01:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* setjmp/setjmp.h: Define _setjmp and _longjmp also if __USE_XOPEN.
+
+	* sysdeps/unix/sysv/linux/bits/ipc.h: Fix comment.
+	* sysdeps/unix/sysv/linux/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+
+	* time/Makefile (routines): Add getdate.
+	* time/time.h: Add prototype for getdate and getdate_r.
+	* time/getdate.c: New file.
+	Provided by Mark Kettenis <kettenis@phys.uva.nl>.
+
+1997-06-30 14:49  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	From Ralf Baechle <ralf@informatik.uni-koblenz.de> on
+	Sat Jun 21 18:11:21 1997:
+
+	* sysdeps/unix/sysv/linux/syscalls.list (swapon): Add __swapon alias.
+	(swapoff): New.
+
+	* elf/Makefile: Add linker script support.
+	(headers): Add bits/dlfcn.h.
+
+	* elf/dl-load.c (MAP_BASE_ADDR): New.
+
+	* elf/dlfcn.h: Include <bits/dlfcn.h>.
+
+	* elf/elf.h: Add MIPS support.
+
+	* sysdeps/generic/Dist: Add entry.h.
+	* sysdeps/generic/entry.h: New, define the entry symbol.
+
+	* elf/rtld.c (_start): Include <entry.h>.  Change to ENTRY_POINT.
+	* sysdeps/generic/dl-sysdep.c (_start): Likewise.
+	* mips/elf/start.S (_start): Likewise.
+
+	* sysdeps/mips/bsd-_setjmp.S: Fix PIC.
+	* sysdeps/mips/bsd-setjmp.S: Likewise.
+	* sysdeps/mips/setjmp.S: Likewise.
+	* mips/elf/start.S: Likewise.
+	* sysdeps/unix/mips/brk.S: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/mips/sysdep.h: Likewise.
+	* sysdeps/unix/mips/wait.S: Likewise.
+
+	* sysdeps/mips/dl-machine.h: Update for Linux/MIPS.
+	* sysdeps/mips/fpu_control.h: Likewise.
+
+	* sysdeps/generic/bits/dlfcn.h: New file.
+
+	* sysdeps/mips/rtld-ldscript.in: New for Linux/MIPS.
+	* sysdeps/mips/rtld-parms: Likewise.
+	* sysdeps/mips/bits/dlfcn.h: Likewise.
+	* sysdeps/mips/mips64/rtld-parms: Likewise.
+	* sysdeps/mips/mipsel/rtld-parms: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/entry.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/fpregdef.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/regdef.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sgidefs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ustat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/endian.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h:
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/acct.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/asm.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/cachectl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/fpregdef.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/regdef.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/sysmips.h: Likewise.
+
+1997-04-09 19:05  H.J. Lu (hjl@gnu.ai.mit.edu)
+
+	* isomac.c (xstrndup): New, use it instead of strndup ().
+
+1997-07-02 08:55  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Print
+	the program name for different sizes.
+
+1997-07-10 15:47  Fila Kolodny  <fila@ibi.com>
+
+	* nis/ypclnt.c: Change references to MAXHOSTNAMELEN to NIS_MAXNAMELEN.
+	Add include of rpcsvc/nis.h.
+	* inet/getnameinfo.c: Delete references to MAXHOSTNAMELEN.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+	Change size of variable buffer to be big enough to hold an IPv6
+	address in printable format.
+
+1997-07-12 18:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* assert/assert.h [!NDEBUG] (assert, assert_perror): Don't use ||
+	and && in tests to allow use in C++ code which overloads these
+	operators.  Reported by Istvan Marko <istvan@cmdmail.amd.com>.
+
+	* configure.in: Move mips64* recognition before mips*.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-07-03 20:44  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (lib%.so, $(common-objpfx)libc.so): Don't use
+	automatic variables in dependency lists.
+	(build-shlib): Always filter out the version script file.
+	* extra-lib.mk ($(objpfx)$(lib).so): Depend on version script.
+
+1997-07-12 17:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/login.c (tty_name): Test return value of ttyname_r for !=
+	0, not < 0.
+	* misc/ttyslot.c (ttyslot): Test return value of ttyname_r for ==
+	0, not >= 0.
+	* sysdeps/unix/getlogin.c (getlogin): Test return value of
+	ttyname_r for != 0.
+	* sysdeps/unix/getlogin_r.c (getlogin_r): Likewise.
+
+1997-07-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* login/utmp_file.c (getutline_r_file): Fix type: compare with
+	*result.
+
+1997-07-11 00:21  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/Makefile (headers): Add utmpx.h and bits/utmpx.h.
+
+1997-07-09 19:21  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/programs/utmpd.c, login/programs/database.c,
+	login/programs/request.c: Prepare messages for
+	internationalization.
+
+	* login/programs/utmpd.c:
+	(main): Change handling of errors in opening the database.
+	* login/programs/database.c:
+	(open_database, synchronize_dtatabase, initialize_database):
+	Properly handle errors.
+	(get_mtime): Use fstat instead of stat.  All callers changed.
+
+	* login/getutent_r.c: Make setutxent a weak alias for __setutxent.
+	* login/getutent.c: Rename getutent to __getutent and make
+	getutent a weak alias.
+	Make getutxent a weak alias for	__getutent.
+	* login/utmpx.h: New file.
+	* sysdeps/gnu/bits/utmp.h: Cleanup.  Added comments.
+	* sysdeps/gnu/bits/utmpx.h: New file.
+
 1997-07-11 03:00  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/inet_ntoa.c: Prevent looking for thread data key if we found
@@ -22,6 +190,9 @@
 	__libc_setspecific as empty macros since they are used as
 	function with return value.
 	Reported by Andreas Jaeger.
+
+	* stdio-common/strops.c: Partialy undo last change.  Will need
+	more investigation.
 
 1997-07-10  Marcus G. Daniels  <marcus@cathcart.sysc.pdx.edu>
 

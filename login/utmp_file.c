@@ -170,7 +170,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
 		  struct utmp **result)
 {
   struct flock fl;
-  
+
   if (file_fd < 0 || file_offset == -1l)
     {
       *result = NULL;
@@ -215,7 +215,7 @@ unlock_return:
   fl.l_type = F_UNLCK;
   fcntl (file_fd, F_SETLKW, &fl);
 
-  return ((result == NULL) ? -1 : 0);
+  return ((*result == NULL) ? -1 : 0);
 }
 
 
@@ -251,7 +251,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 {
   int result = -1;
   struct flock fl;
-  
+
   /* Try to get the lock.  */
   memset (&fl, '\0', sizeof (struct flock));
   fl.l_type = F_RDLCK;
@@ -432,7 +432,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   struct flock fl;
   off_t offset;
   int fd;
-  
+
   /* Open WTMP file.  */
   fd = open (file, O_WRONLY);
   if (fd < 0)
@@ -443,7 +443,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   fl.l_type = F_WRLCK;
   fl.l_whence = SEEK_SET;
   fcntl (fd, F_SETLKW, &fl);
-  
+
   /* Remember original size of log file.  */
   offset = lseek (fd, 0, SEEK_END);
   if (offset % sizeof (struct utmp) != 0)
@@ -465,7 +465,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
     }
 
   result = 0;
-  
+
 unlock_return:
   /* And unlock the file.  */
   fl.l_type = F_UNLCK;

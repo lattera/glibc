@@ -275,6 +275,38 @@ extern int nanosleep __P ((__const struct timespec *__requested_time,
 #endif
 
 
+#ifdef __USE_XOPEN_EXTENDED
+/* Set to one of the following values to indicate an error.
+     1  the DATEMSK environment variable is null or undefined,
+     2  the template file cannot be opened for reading,
+     3  failed to get file status information,
+     4  the template file is not a regular file,
+     5  an error is encountered while reading the template file,
+     6  memory allication failed (not enough memory available),
+     7  there is no line in the template that matches the input,
+     8  invalid input specification Example: February 31 or a time is
+        specified that can not be represented in a time_t (representing
+	the time in seconds since 00:00:00 UTC, January 1, 1970) */
+extern int getdate_err;
+
+/* Parse the given string as a date specification and return a value
+   representing the value.  The templates from the file identified by
+   the environment variable DATEMSK are used.  In case of an error
+   `getdate_err' is set.  */
+extern struct tm *getdate __P ((__const char *__string));
+#endif
+
+#ifdef __USE_GNU
+/* Since `getdate' is not reentrant because of the use of `getdate_err'
+   and the static buffer to return the result in, we provide a thread-safe
+   variant.  The functionality is the same.  The result is returned in
+   the buffer pointed to by RESBUFP and in case of an error the return
+   value is != 0 with the same values as given above for `getdate_err'.  */
+extern int __getdate_r __P ((__const char *__string, struct tm *__resbufp));
+extern int getdate_r __P ((__const char *__string, struct tm *__resbufp));
+#endif
+
+
 __END_DECLS
 
 #endif /* <time.h> included.  */

@@ -28,14 +28,14 @@ ENTRY(__wait)
 
 	li v0, SYS_wait
 	syscall
-	beq a3, zero, noerror
+	beqz a3, noerror
 	nop
-	j syscall_error
+	j __syscall_error
 	nop
 
 noerror:
 	/* If the arg is not NULL, store v1 there.  */
-	beq a0, zero, noarg
+	beqz a0, noarg
 	nop
 	sw v1, 0(a0)
 	nop

@@ -51,17 +51,17 @@ extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
 /* Set ENV to the current position and return 0, not saving the signal mask.
    This is just like `sigsetjmp (ENV, 0)'.
    The ISO C standard says `setjmp' is a macro.  */
-#define	setjmp(env)	__sigsetjmp ((env), 0)
+# define setjmp(env)	__sigsetjmp ((env), 0)
 #else
 /* We are in 4.3 BSD-compatibility mode in which `setjmp'
    saves the signal mask like `sigsetjmp (ENV, 1)'.  */
-#define	setjmp(env)	__sigsetjmp ((env), 1)
+# define setjmp(env)	__sigsetjmp ((env), 1)
 #endif /* Favor BSD.  */
 
-#ifdef __USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN
 /* Set ENV to the current position and return 0, not saving the signal mask.
    This is the 4.3 BSD name for ISO `setjmp'.  */
-#define _setjmp(env)	__sigsetjmp ((env), 0)
+# define _setjmp(env)	__sigsetjmp ((env), 0)
 #endif
 
 
@@ -69,13 +69,13 @@ extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
    `setjmp' call there return VAL, or 1 if VAL is 0.  */
 extern void longjmp __P ((jmp_buf __env, int __val))
      __attribute__ ((__noreturn__));
-#ifdef	__USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN
 /* Same.  Usually `_longjmp' is used with `_setjmp', which does not save
    the signal mask.  But it is how ENV was saved that determines whether
    `longjmp' restores the mask; `_longjmp' is just an alias.  */
 extern void _longjmp __P ((jmp_buf __env, int __val))
      __attribute__ ((__noreturn__));
-#endif /* Use BSD.  */
+#endif
 
 /* Internal machine-dependent function to restore context sans signal mask.  */
 extern void __longjmp __P ((__jmp_buf __env, int __val))
@@ -96,7 +96,7 @@ typedef jmp_buf sigjmp_buf;
 
 /* Store the calling environment in ENV, also saving the
    signal mask if SAVEMASK is nonzero.  Return 0.  */
-#define	sigsetjmp(env, savemask)	__sigsetjmp ((env), (savemask))
+# define sigsetjmp(env, savemask)	__sigsetjmp ((env), (savemask))
 
 /* Jump to the environment saved in ENV, making the
    sigsetjmp call there return VAL, or 1 if VAL is 0.

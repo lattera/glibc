@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ getlogin (void)
      thing to do.  Note that ttyname(open("/dev/tty")) on those
      systems returns /dev/tty, so that is not a possible solution for
      getlogin().  */
-  if (__ttyname_r (0, real_tty_path, sizeof (tty_pathname)) < 0)
+  if (__ttyname_r (0, real_tty_path, sizeof (tty_pathname)) != 0)
     return NULL;
 
   real_tty_path += 5;		/* Remove "/dev/".  */

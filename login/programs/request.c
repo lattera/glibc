@@ -88,7 +88,7 @@ read_data (client_connection *connection)
     }
 
   if (nbytes < 0)
-    error (0, errno, "cannot read from client");
+    error (0, errno, _("cannot read from client"));
 
   return -1;
 }
@@ -117,7 +117,7 @@ write_data (client_connection *connection)
     }
 
   if (nbytes < 0)
-    error (0, errno, "cannot write to client");
+    error (0, errno, _("cannot write to client"));
 
   return -1;
 }
@@ -164,7 +164,7 @@ send_reply (client_connection *connection, const reply_header *reply)
   /* Check if the reply fits in the buffer.  */
   if ((size_t) (connection->write_end - connection->write_ptr) < reply->size)
     {
-      error (0, 0, "buffer overflow");
+      error (0, 0, _("buffer overflow"));
       return -1;
     }
 

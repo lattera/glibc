@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,7 +25,7 @@ static struct utmp buffer;
 
 
 struct utmp *
-getutent (void)
+__getutent (void)
 {
   struct utmp *result;
 
@@ -34,3 +34,5 @@ getutent (void)
 
   return result;
 }
+weak_alias (__getutent, getutent)
+weak_alias (__getutent, getutxent)

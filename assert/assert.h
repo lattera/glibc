@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@
 
 #ifdef	NDEBUG
 
-#define	assert(expr)		((void) 0)
+# define assert(expr)		((void) 0)
 
 /* void assert_perror (int errnum);
 
@@ -45,13 +45,11 @@
    error message with the error text for ERRNUM and abort.
    (This is a GNU extension.) */
 
-#ifdef	__USE_GNU
-#define	assert_perror(errnum)	((void) 0)
-#endif
+# ifdef	__USE_GNU
+#  define assert_perror(errnum)	((void) 0)
+# endif
 
 #else /* Not NDEBUG.  */
-
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
@@ -71,27 +69,27 @@ extern void __assert_perror_fail __P ((int __errnum,
 
 __END_DECLS
 
-#define	assert(expr)							      \
-  ((void) ((expr) ||							      \
+# define assert(expr)							      \
+  ((void) ((expr) ? 0 :							      \
 	   (__assert_fail (__STRING(expr),				      \
 			   __FILE__, __LINE__, __ASSERT_FUNCTION), 0)))
 
-#ifdef	__USE_GNU
-#define assert_perror(errnum)						      \
-  ((void) ((errnum) && (__assert_perror_fail ((errnum),			      \
-					      __FILE__, __LINE__,	      \
-					      __ASSERT_FUNCTION), 0)))
-#endif
+# ifdef	__USE_GNU
+#  define assert_perror(errnum)						      \
+  ((void) ((errnum) ? 0 : (__assert_perror_fail ((errnum),		      \
+						 __FILE__, __LINE__,	      \
+						 __ASSERT_FUNCTION), 0)))
+# endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
    which contains the name of the function currently being defined.
    This is broken in G++ before version 2.6.  */
-#if (!defined (__GNUC__) || __GNUC__ < 2 || \
-     __GNUC_MINOR__ < (defined (__cplusplus) ? 6 : 4))
-#define __ASSERT_FUNCTION	((__const char *) 0)
-#else
-#define __ASSERT_FUNCTION	__PRETTY_FUNCTION__
-#endif
+# if (!defined __GNUC__ || __GNUC__ < 2 || \
+     __GNUC_MINOR__ < (defined __cplusplus ? 6 : 4))
+#  define __ASSERT_FUNCTION	((__const char *) 0)
+# else
+#  define __ASSERT_FUNCTION	__PRETTY_FUNCTION__
+# endif
 
 
 #endif /* NDEBUG.  */

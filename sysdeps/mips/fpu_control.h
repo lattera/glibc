@@ -1,7 +1,7 @@
 /* FPU control word bits.  Mips version.
    Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Olaf Flebbe.
+   Contributed by Olaf Flebbe and Ralf Baechle.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,74 +21,84 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
 
-/* FP control/status register bit assignments.
+/* MIPS FPU floating point control register bits.
  *
- *     31-25    24  23     22-18       17-12          11-7       6-2     1-0
- *                                    (cause)      (enables)   (flags)
- * | reserved | FS | C | reserved | E V Z O U I | V Z O U I | V Z O U I | RM
+ * 31-25  -> floating point conditions code bits 7-1.  These bits are only
+ *           available in MIPS IV.
+ * 24     -> flush denormalized results to zero instead of
+ *           causing unimplemented operation exception.  This bit is only
+ *           available for MIPS III and newer.
+ * 23     -> Condition bit
+ * 22-18  -> reserved (read as 0, write with 0)
+ * 17     -> cause bit for unimplemented operation
+ * 16     -> cause bit for invalid exception
+ * 15     -> cause bit for division by zero exception
+ * 14     -> cause bit for overflow exception
+ * 13     -> cause bit for underflow exception
+ * 12     -> cause bit for inexact exception
+ * 11     -> enable exception for invalid exception
+ * 10     -> enable exception for division by zero exception
+ *  9     -> enable exception for overflow exception
+ *  8     -> enable exception for underflow exception
+ *  7     -> enable exception for inexact exception
+ *  6     -> flag invalid exception
+ *  5     -> flag division by zero exception
+ *  4     -> flag overflow exception
+ *  3     -> flag underflow exception
+ *  2     -> flag inexact exception
+ *  1-0   -> rounding control
  *
- * FS: When set, denormalized results are flushed to zero instead of
- *     causing an unimplemented operation exception.
- * C:  Condition bit.
- * E:  Unimplemented Operation.
- * V:  Invalid Operation.
- * Z:  Division by zero.
- * O:  Overflow.
- * U:  Underflow.
- * I:  Inexact Operation
- * RM: Rounding mode bits
- * 00 (RN) - rounding to nearest
- * 01 (RZ) - rounding toward zero
- * 10 (RP) - rounding down (toward - infinity)
- * 11 (RM) - rounding up (toward + infinity)
  *
+ * Rounding Control:
+ * 00 - rounding to nearest (RN)
+ * 01 - rounding toward zero (RZ)
+ * 01 - rounding (up) toward plus infinity (RP)
+ * 11 - rounding (down)toward minus infinity (RM)
  */
 
 #include <features.h>
 
 /* masking of interrupts */
-#define _FPU_MASK_IM  (1 << 11)
-#define _FPU_MASK_DM  (1 << 24)	/* XXX */
-#define _FPU_MASK_ZM  (1 << 10)
-#define _FPU_MASK_OM  (1 << 9)
-#define _FPU_MASK_UM  (1 << 8)
-#define _FPU_MASK_PM  (1 << 7)
+#define _FPU_MASK_V     0x0800  /* Invalid operation */
+#define _FPU_MASK_Z     0x0400  /* Division by zero  */
+#define _FPU_MASK_O     0x0200  /* Overflow          */
+#define _FPU_MASK_U     0x0100  /* Underflow         */
+#define _FPU_MASK_I     0x0080  /* Inexact operation */
 
-/* precision control */
-#define _FPU_EXTENDED 0
-#define _FPU_DOUBLE   0
-#define _FPU_SINGLE   0
+/* flush denormalized numbers to zero */
+#define _FPU_FLUSH_TZ   0x1000000
 
 /* rounding control */
-#define _FPU_RC_NEAREST 0x0    /* RECOMMENDED */
-#define _FPU_RC_DOWN    0x2
-#define _FPU_RC_UP      0x3
+#define _FPU_RC_NEAREST 0x0     /* RECOMMENDED */
 #define _FPU_RC_ZERO    0x1
+#define _FPU_RC_UP      0x2
+#define _FPU_RC_DOWN    0x3
 
-#define _FPU_RESERVED 0xfe7c0000  /* Reserved bits */
+#define _FPU_RESERVED 0xfe3c0000  /* Reserved bits in cw */
 
 
 /* The fdlibm code requires strict IEEE double precision arithmetic,
    and no interrupts for exceptions, rounding to nearest.  */
 
-#define _FPU_DEFAULT  0x0
+#define _FPU_DEFAULT  0x00000600
 
 /* IEEE:  same as above, but exceptions */
-#define _FPU_IEEE     (0x1f << 7)
+#define _FPU_IEEE     0x00000F80
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t;
+typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 
 /* Macros for accessing the hardware control word.  */
-#define _FPU_GETCW(cw) __asm__ ("cfc1 %0, $31; nop; nop" : "=r" (cw))
-#define _FPU_SETCW(cw) __asm__ ("ctc1 %0, $31; nop; nop" : : "r" (cw))
+#define _FPU_GETCW(cw) __asm__ ("cfc1 %0,$31" : "=r" (cw) : )
+#define _FPU_SETCW(cw) __asm__ ("ctc1 %0,$31" : : "r" (cw))
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
 __BEGIN_DECLS
 
-/* Called at startup.  It can be used to manipulate fpu control register.  */
+/* Called at startup.  It can be used to manipulate the fpu control
+   register.  */
 extern void __setfpucw __P ((fpu_control_t));
 
 __END_DECLS

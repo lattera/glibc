@@ -16,35 +16,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _UTMPBITS_H
-
-#define _UTMPBITS_H	1
-#include <features.h>
+#ifndef _UTMP_H
+#error "Never use <bits/utmp.h> directly; include <utmpx.h> instead."
+#endif
 
 #include <paths.h>
 #include <sys/time.h>
 #include <sys/types.h>
 
 
-#define UT_UNKNOWN	0	/* for ut_type field */
-
-#define RUN_LVL		1
-#define BOOT_TIME	2
-#define NEW_TIME	3
-#define OLD_TIME	4
-
-#define INIT_PROCESS	5
-#define LOGIN_PROCESS	6
-#define USER_PROCESS	7
-#define DEAD_PROCESS	8
-#define ACCOUNTING	9
-
 #define UT_LINESIZE	32
 #define UT_NAMESIZE	32
 #define UT_HOSTSIZE	256
 
-__BEGIN_DECLS
 
+/* The structure describing an entry in the database of
+   previous logins.  */
 struct lastlog
 {
   time_t ll_time;
@@ -53,28 +40,8 @@ struct lastlog
 };
 
 
-/* XXX We are not ready to use this now.  It needs some more research.
-   Simly copying the behaviour of other implementations is no big
-   help.  */
-#if 0
-/* Which program created the record.  */
-enum utlogin
-{
-  unknown,
-  X,
-  local,
-  rlogin,
-  telnet,
-  rsh,
-  ftp,
-  screen,
-  splitvt,
-  xterm
-  /* More could be added here.  */
-};
-#endif
-
-
+/* The structure describing the status of a terminated process.  This
+   type is used in `struct utmp' below.  */
 struct exit_status
 {
   short int e_termination;	/* Process termination status.  */
@@ -82,16 +49,16 @@ struct exit_status
 };
 
 
+/* The structure describing an entry in the user accounting database.  */
 struct utmp
 {
   short int ut_type;		/* Type of login.  */
-  pid_t ut_pid;			/* Pid of login process.  */
-  char ut_line[UT_LINESIZE];	/* NUL-terminated devicename of tty.  */
-  char ut_id[4];		/* Inittab id. */
-  char ut_user[UT_NAMESIZE];	/* Username (not NUL terminated).  */
-#define ut_name	ut_user		/* Compatible field name for same.  */
+  pid_t ut_pid;			/* Process ID of login process.  */
+  char ut_line[UT_LINESIZE];	/* Devicename.  */
+  char ut_id[4];		/* Inittab ID.  */
+  char ut_user[UT_NAMESIZE];	/* Username.  */
   char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
-  struct exit_status ut_exit;	/* The exit status of a process marked
+  struct exit_status ut_exit;	/* Exit status of a process marked
 				   as DEAD_PROCESS.  */
   long ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
@@ -100,6 +67,7 @@ struct utmp
 };
 
 /* Backwards compatibility hacks.  */
+#define ut_name		ut_user
 #ifndef _NO_UT_TIME
 /* We have a problem here: `ut_time' is also used otherwise.  Define
    _NO_UT_TIME if the compiler complains.  */
@@ -108,6 +76,26 @@ struct utmp
 #define ut_xtime	ut_tv.tv_sec
 #define ut_addr		ut_addr_v6[0]
 
+
+/* Values for the `ut_type' field of a `struct utmp'.  */
+#define EMPTY		0	/* No valid user accounting information.  */
+
+#define RUN_LVL		1	/* The system's runlevel.  */
+#define BOOT_TIME	2	/* Time of system boot.  */
+#define NEW_TIME	3	/* Time after system clock changed.  */
+#define OLD_TIME	4	/* Time when system clock changed.  */
+
+#define INIT_PROCESS	5	/* Process spawned by the init process.  */
+#define LOGIN_PROCESS	6	/* Session leader of a logged in user.  */
+#define USER_PROCESS	7	/* Normal process.  */
+#define DEAD_PROCESS	8	/* Terminated process.  */
+
+#define ACCOUNTING	9
+
+/* Old Linux name for the EMPTY type.  */
+#define UT_UNKNOWN	EMPTY
+
+
 /* Tell the user that we have a modern system with UT_HOST, UT_PID,
    UT_TYPE, UT_ID and UT_TV fields.  */
 #define _HAVE_UT_TYPE	1
@@ -115,7 +103,3 @@ struct utmp
 #define _HAVE_UT_ID	1
 #define _HAVE_UT_TV	1
 #define _HAVE_UT_HOST	1
-
-__END_DECLS
-
-#endif /* !_UTMP_H_ */

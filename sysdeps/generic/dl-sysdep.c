@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <elf.h>
+#include <entry.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -52,7 +53,7 @@ _dl_sysdep_start (void **start_argptr,
   gid_t egid = 0;
   unsigned int seen;
 
-  user_entry = (ElfW(Addr)) &_start;
+  user_entry = (ElfW(Addr)) &ENTRY_POINT;
   _dl_argc = *(long *) start_argptr;
   _dl_argv = (char **) start_argptr + 1;
   _environ = &_dl_argv[_dl_argc + 1];

@@ -185,6 +185,7 @@ char *CC;
 /* The -I parameters for CC to find all headers.  */
 char *INC;
 
+static char *xstrndup (const char *, size_t);
 static const char **get_null_defines (void);
 static int check_header (const char *, const char **);
 
@@ -219,6 +220,20 @@ main (int argc, char *argv[])
   /* The test suite should return errors but for now this is not
      practical.  Give a warning and ask the user to correct the bugs.  */
   return result;
+}
+
+
+static char *
+xstrndup (const char *s, size_t n)
+{
+  size_t len = n;
+  char *new = malloc (len + 1);
+
+  if (new == NULL)
+    return NULL;
+
+  new[len] = '\0';
+  return memcpy (new, s, len);
 }
 
 
@@ -285,7 +300,7 @@ get_null_defines (void)
       start = &line[8];
       for (end = start + 1; !isspace (*end) && *end != '\0'; ++end)
 	;
-      result[result_len++] = strndup (start, end - start);
+      result[result_len++] = xstrndup (start, end - start);
 
       if (first)
 	{

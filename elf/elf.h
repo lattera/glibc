@@ -741,6 +741,8 @@ typedef struct
 #define E_MIPS_ARCH_1	  0x00000000	/* -mips1 code.  */
 #define E_MIPS_ARCH_2	  0x10000000	/* -mips2 code.  */
 #define E_MIPS_ARCH_3	  0x20000000	/* -mips3 code.  */
+#define E_MIPS_ARCH_4	  0x30000000	/* -mips4 code.  */
+#define E_MIPS_ARCH_5	  0x40000000	/* -mips5 code.  */
 
 /* Special section indices.  */
 
@@ -810,6 +812,8 @@ typedef struct
 /* Legal values for p_type field of Elf32_Phdr.  */
 
 #define PT_MIPS_REGINFO	0x70000000	/* Register usage information */
+#define PT_MIPS_RTPROC  0x70000001	/* Runtime procedure table. */
+#define PT_MIPS_OPTIONS 0x70000002
 
 /* Legal values for d_tag field of Elf32_Dyn.  */
 

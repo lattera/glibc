@@ -63,6 +63,7 @@ __setutent (void)
   __libc_lock_unlock (__libc_utmp_lock);
 }
 weak_alias (__setutent, setutent)
+weak_alias (__setutent, setutxent)
 
 
 static int
@@ -105,6 +106,7 @@ __endutent (void)
   __libc_lock_unlock (__libc_utmp_lock);
 }
 weak_alias (__endutent, endutent)
+weak_alias (__endutent, endutxent)
 
 
 static void
@@ -154,8 +156,9 @@ __pututline (const struct utmp *data)
   return buffer;
 }
 weak_alias (__pututline, pututline)
+weak_alias (__pututline, pututxline)
 
-
+     
 static struct utmp *
 pututline_unknown (const struct utmp *data)
 {

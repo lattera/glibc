@@ -43,7 +43,7 @@ tty_name (int fd, char **tty, size_t buf_len)
 	{
 	  rv = ttyname_r (fd, buf, buf_len);
 
-	  if (rv < 0 || memchr (buf, '\0', buf_len))
+	  if (rv != 0 || memchr (buf, '\0', buf_len))
 	    /* We either got an error, or we succeeded and the
 	       returned name fit in the buffer.  */
 	    break;

@@ -237,6 +237,8 @@ _dl_start_user:\n\
 
 #ifdef RESOLVE
 
+extern char **_dl_argv;
+
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
@@ -275,6 +277,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      strtab = ((void *) map->l_addr
 			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
 	      _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
+				"' in `",
+				_dl_argv[0] ?: "<program name unknown>",
 				"' has different size in shared object, "
 				"consider re-linking\n", NULL);
 	    }

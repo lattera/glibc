@@ -75,4 +75,4 @@ struct msginfo
 
 __END_DECLS
 
-#endif /* _SYS_MSQ_BUF_H */
+#endif /* bits/msq_buf.h */

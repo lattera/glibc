@@ -44,6 +44,15 @@
 #define MAP_COPY	MAP_PRIVATE
 #endif
 
+/* Some systems link their relocatable objects for another base address
+   than 0.  We want to know the base address for these such that we can
+   subtract this address from the segment addresses during mapping.
+   This results in a more efficient address space usage.  Defaults to
+   zero for almost all systems.  */
+#ifndef MAP_BASE_ADDR
+#define MAP_BASE_ADDR(l)	0
+#endif
+
 
 #include <endian.h>
 #if BYTE_ORDER == BIG_ENDIAN
@@ -335,7 +344,8 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
  	caddr_t mapat;
 	ElfW(Addr) mappref;
 	size_t maplength = loadcmds[nloadcmds - 1].allocend - c->mapstart;
-	mappref = ELF_PREFERRED_ADDRESS (loader, maplength, c->mapstart);
+	mappref = (ELF_PREFERRED_ADDRESS (loader, maplength, c->mapstart)
+		   - MAP_BASE_ADDR (l));
 	mapat = map_segment (mappref, maplength, c->prot, 0, c->mapoff);
 	l->l_addr = (ElfW(Addr)) mapat - c->mapstart;
 

@@ -89,4 +89,4 @@ struct shm_info
 
 __END_DECLS
 
-#endif /* _SYS_SHM_BUF_H */
+#endif /* bits/shm_buf.h */

@@ -25,6 +25,7 @@
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
 #include <stdio-common/_itoa.h>
 #include <assert.h>
+#include <entry.h>
 #include "dynamic-link.h"
 
 
@@ -137,7 +138,7 @@ _dl_start (void *arg)
 /* Now life is peachy; we can do all normal operations.
    On to the real work.  */
 
-void _start (void);
+void ENTRY_POINT (void);
 
 /* Some helper functions.  */
 
@@ -268,7 +269,7 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Set up a flag which tells we are just starting.  */
   _dl_starting_up = 1;
 
-  if (*user_entry == (ElfW(Addr)) &_start)
+  if (*user_entry == (ElfW(Addr)) &ENTRY_POINT)
     {
       /* Ho ho.  We are not the program interpreter!  We are the program
 	 itself!  This means someone ran ld.so as a command.  Well, that

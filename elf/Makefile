@@ -20,7 +20,7 @@
 
 subdir		:= elf
 
-headers		= elf.h bits/elfclass.h link.h dlfcn.h
+headers		= elf.h bits/elfclass.h bits/dlfcn.h link.h dlfcn.h
 routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
 		  dl-version enbl-secure
 
@@ -88,6 +88,30 @@ $(objpfx)dl-allobjs.so: $(rtld-routines:%=$(objpfx)%.so)
 $(objpfx)librtld.so: $(objpfx)dl-allobjs.so $(common-objpfx)libc_pic.a
 	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
 
+# Do we need a linker script?
+rtld-ldscript-in := $(firstword $(wildcard $(+sysdep_dirs:%=%/rtld-ldscript.in)))
+ifneq (,$(rtld-ldscript-in))
+LDFLAGS-rtld = -T $(objpfx)rtld-ldscript
+
+before-compile += $(objpfx)rtld-ldscript
+rtld-parms = $(wildcard $(+sysdep_dirs:%=%/rtld-parms))
+include $(rtld-parms)
+generated += rtld-ldscript
+$(objpfx)rtld-ldscript: $(rtld-ldscript-in) $(rtld-parms)
+	sed -e 's#@@rtld-oformat@@#$(rtld-oformat)#' \
+	    -e 's#@@rtld-arch@@#$(rtld-arch)#' \
+	    -e 's#@@rtld-entry@@#$(rtld-entry)#' \
+	    -e 's#@@rtld-base@@#$(rtld-base)#' $< >$@
+
+$(objpfx)ld.so: $(objpfx)librtld.so $(objpfx)rtld-ldscript
+	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
+
+define rtld-link
+$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
+	  -Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld) \
+	  $(filter-out $(objpfx)rtld-ldscript,$^)
+endef
+else
 $(objpfx)ld.so: $(objpfx)librtld.so
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
 
@@ -95,6 +119,7 @@ define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  -Wl,-rpath=$(default-rpath) $^
 endef
+endif
 
 # The dl code in the static libc needs a default library path.
 CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
