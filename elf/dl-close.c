@@ -36,19 +36,29 @@ typedef void (*fini_t) (void);
 #ifdef USE_TLS
 /* Returns true we an non-empty was found.  */
 static bool
-remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp)
+remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
+		 bool should_be_there)
 {
   if (idx - disp >= listp->len)
     {
-      /* There must be a next entry.  Otherwise would the index be wrong.  */
-      assert (listp->next != NULL);
+      if (listp->next == NULL)
+	{
+	  /* The index is not actually valid in the slotinfo list,
+	     because this object was closed before it was fully setup
+	     due to some error.  */
+	  assert (idx - disp == listp->len);
+	  assert (! should_be_there);
+	}
+      else
+	{
+	  if (remove_slotinfo (idx, listp->next, disp + listp->len,
+			       should_be_there))
+	    return true;
 
-      if (remove_slotinfo (idx, listp->next, disp + listp->len))
-	return true;
-
-      /* No non-empty entry.  Search from the end of this elements
-	 slotinfo array.  */
-      idx = disp + listp->len;
+	  /* No non-empty entry.  Search from the end of this element's
+	     slotinfo array.  */
+	  idx = disp + listp->len;
+	}
     }
   else
     {
@@ -267,14 +277,14 @@ _dl_close (void *_map)
 	    }
 
 #ifdef USE_TLS
-	  /* Remove the object from the dtv slotinfo array if it uses
-	     TLS.  */
+	  /* Remove the object from the dtv slotinfo array if it uses TLS.  */
 	  if (__builtin_expect (imap->l_tls_blocksize > 0, 0))
 	    {
 	      any_tls = true;
 
 	      if (! remove_slotinfo (imap->l_tls_modid,
-				     GL(dl_tls_dtv_slotinfo_list), 0))
+				     GL(dl_tls_dtv_slotinfo_list), 0,
+				     imap->l_init_called))
 		/* All dynamically loaded modules with TLS are unloaded.  */
 		GL(dl_tls_max_dtv_idx) = GL(dl_tls_static_nelem);
 	    }
