@@ -1,3 +1,80 @@
+Tue Aug 13 20:51:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/canonicalize.c (canonicalize): Add cast to prevent
+ 	warning.
+
+	* Makerules (o-iterator-doit): Use autolock.sh when running ranlib.
+
+Tue Aug 13 18:26:45 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (__nss_configure_lookup): Use fact that list is
+ 	sorted.
+
+	Update from bind-4.9.5-T1A.
+	* resolv/Makefile (routines): Add inet_net_ntop, inet_net_pton,
+ 	inet_net.
+	(libresolv-routines): Add base64.
+
+	* resolv/gethnamaddr.c: Include <sys/types.h>.
+	* resolv/getnetnamadr.c: Likewise.
+	* resolv/herror.c: Likewise.
+	* resolv/inet_addr.c: Likewise.
+	* resolv/nsap_addr.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_data.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+
+	* resolv/gethnamaddr.c [! SPRINTF_CHAR] (SPRINTF): Cast return
+ 	value of sprintf.
+	* resolv/inet_ntop.c: Likewise.
+
+	* resolv/gethnamaddr.c [BSD]: Include <stdlib.h>.
+	Remove prototype of gethostbyname_ipv4.
+
+	* resolv/inet_ntop.c, resolv/inet_pton.c: Use ISO C `mem*'
+ 	functions instead of BSD `b*' functions.
+
+	* resolv/nsap_addr.c: Add copyright message.
+
+	* resolv/res_comp.c: Remove comment explaining label format.
+	(res_mailok): Correct check.
+
+	* resolv/res_debug: Include missing headers.
+	(__fp_nquery): Handle `unused', `ad', and `cd' bits.
+	(__p_fqnname): New function to print FQDN from compressed name.
+	(__p_rr): Use __p_fqnname.  Correct printing of ".  Handle T_TXT
+	correctly.  Add handling of T_KEY and T_SIG.
+	Handle class and type names by using name arrays instead of
+	explicit `switch'es.
+	(__sym_ston, __sym_ntos, __sym_ntop): New functions to use arrays.
+	(__dn_count_labels, __p_secstodate): New functions.
+
+	* resolv/resolv.h (__RES): Update version number.
+	(res_sym): New type.
+	Add #defines for new functions.
+	Declare sym_ntos, sym_ntop, b64_ntop, b64_pton, __p_fqnname,
+	__p_secstodate, dn_count_labels.
+
+	* resolv/arpa/nameser.h (__BIND): Update verison number.
+	Add KEYFLAG_* and ALGORITHM_* symbols.
+	(HEADER): Add `ad' and `cd' flags.
+
+	* inet/ient.h: Add prototypes for inet_neta, inet_net_ntop,
+	and inet_net_pton.
+
+	* manual/maint.texi: Document that we use bind-4.9.5.
+	* INSTALL: Ditto.
+
+Mon Aug 12 16:41:52 1996  Thomas Bushnell n/BSG  <thomas@gnu.ai.mit.edu>
+
+        * io/getwd.c (getwd) [! PATH_MAX]: Don't assume that the user's
+        buffer is any longer than the amount necessary to hold the
+        filename; the Hurd getcwd uses the *entire* contents of the
+        buffer, however long it is specified to be.
+
 Mon Aug 12 04:33:09 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nsswitch.c (__nss_database_lookup): Always release locks
