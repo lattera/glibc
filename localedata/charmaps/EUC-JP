@@ -1,0 +1,548 @@
+<code_set_name> EUC-JP
+<comment_char> %
+<escape_char> /
+<mb_cur_min> 1
+<mb_cur_max> 3
+
+% Name:    character map for EUC-JP
+% Version: 0.2
+% Date:    1999-05-20
+% Write:   HANATAKA, Shinya <hanataka@abyss.rim.or.jp>
+
+CHARMAP
+
+<NUL>                  /x00   <U0000> NUL
+<SOH>                  /x01   <U0001> START OF HEADING
+<STX>                  /x02   <U0002> START OF TEXT
+<ETX>                  /x03   <U0003> END OF TEXT
+<EOT>                  /x04   <U0004> END OF TRANSMISSION
+<ENQ>                  /x05   <U0005> ENQUIRY
+<ACK>                  /x06   <U0006> ACKNOWLEDGE
+<alert>                /x07   <U0007> BELL
+<BEL>                  /x07   <U0007> BELL
+<backspace>            /x08   <U0008> BACKSPACE
+<tab>                  /x09   <U0009> CHARACTER TABULATION
+<newline>              /x0A   <U000A> LINE FEED
+<vertical-tab>         /x0B   <U000B> LINE TABULATION
+<form-feed>            /x0C   <U000C> FORM FEED
+<carriage-return>      /x0D   <U000D> CARRIAGE RETURN
+<SO>                   /x0E   <U000E> SHIFT OUT
+<SI>                   /x0F   <U000F> SHIFT IN
+<DLE>                  /x10   <U0010> DATALINK ESCAPE
+<DC1>                  /x11   <U0011> DEVICE CONTROL ONE
+<DC2>                  /x12   <U0012> DEVICE CONTROL TWO
+<DC3>                  /x13   <U0013> DEVICE CONTROL THREE
+<DC4>                  /x14   <U0014> DEVICE CONTROL FOUR
+<NAK>                  /x15   <U0015> NEGATIVE ACKNOWLEDGE
+<SYN>                  /x16   <U0016> SYNCHRONOUS IDLE
+<ETB>                  /x17   <U0017> END OF TRANSMISSION BLOCK
+<CAN>                  /x18   <U0018> CANCEL
+<EM>                   /x19   <U0019> END OF MEDIUM
+<SUB>                  /x1A   <U001A> SUBSTITUTE
+<ESC>                  /x1B   <U001B> ESCAPE
+<IS4>                  /x1C   <U001C> FILE SEPARATOR
+<IS3>                  /x1D   <U001D> GROUP SEPARATOR
+<intro>                /x1D   <U001D> GROUP SEPARATOR
+<IS2>                  /x1E   <U001E> RECORD SEPARATOR
+<IS1>                  /x1F   <U001F> UNIT SEPARATOR
+<space>                /x20   <U0020> SPACE
+<exclamation-mark>     /x21   <U0021> EXCLAMATION MARK
+<quotation-mark>       /x22   <U0022> QUOTATION MARK
+<number-sign>          /x23   <U0023> NUMBER SIGN
+<dollar-sign>          /x24   <U0024> DOLLAR SIGN
+<percent-sign>         /x25   <U0025> PERCENT SIGN
+<ampersand>            /x26   <U0026> AMPERSAND
+<apostrophe>           /x27   <U0027> APOSTROPHE
+<left-parenthesis>     /x28   <U0028> LEFT PARENTHESIS
+<right-parenthesis>    /x29   <U0029> RIGHT PARENTHESIS
+<asterisk>             /x2A   <U002A> ASTERISK
+<plus-sign>            /x2B   <U002B> PLUS SIGN
+<comma>                /x2C   <U002C> COMMA
+<hyphen>               /x2D   <U002D> HYPHEN-MINUS
+<hyphen-minus>         /x2D   <U002D> HYPHEN-MINUS
+<period>               /x2E   <U002E> FULL STOP
+<full-stop>            /x2E   <U002E> FULL STOP
+<slash>                /x2F   <U002F> SOLIDUS
+<solidus>              /x2F   <U002F> SOLIDUS
+<zero>                 /x30   <U0030> DIGIT ZERO
+<one>                  /x31   <U0031> DIGIT ONE
+<two>                  /x32   <U0032> DIGIT TWO
+<three>                /x33   <U0033> DIGIT THREE
+<four>                 /x34   <U0034> DIGIT FOUR
+<five>                 /x35   <U0035> DIGIT FIVE
+<six>                  /x36   <U0036> DIGIT SIX
+<seven>                /x37   <U0037> DIGIT SEVEN
+<eight>                /x38   <U0038> DIGIT EIGHT
+<nine>                 /x39   <U0039> DIGIT NINE
+<colon>                /x3A   <U003A> COLON
+<semicolon>            /x3B   <U003B> SEMICOLON
+<less-than-sign>       /x3C   <U003C> LESS-THAN SIGN
+<equals-sign>          /x3D   <U003D> EQUALS SIGN
+<greater-than-sign>    /x3E   <U003E> GREATER-THAN SIGN
+<question-mark>        /x3F   <U003F> QUESTION MARK
+<commercial-at>        /x40   <U0040> COMMERCIAL AT
+<A>                    /x41   <U0041> LATIN CAPITAL LETTER A
+<B>                    /x42   <U0042> LATIN CAPITAL LETTER B
+<C>                    /x43   <U0043> LATIN CAPITAL LETTER C
+<D>                    /x44   <U0044> LATIN CAPITAL LETTER D
+<E>                    /x45   <U0045> LATIN CAPITAL LETTER E
+<F>                    /x46   <U0046> LATIN CAPITAL LETTER F
+<G>                    /x47   <U0047> LATIN CAPITAL LETTER G
+<H>                    /x48   <U0048> LATIN CAPITAL LETTER H
+<I>                    /x49   <U0049> LATIN CAPITAL LETTER I
+<J>                    /x4A   <U004A> LATIN CAPITAL LETTER J
+<K>                    /x4B   <U004B> LATIN CAPITAL LETTER K
+<L>                    /x4C   <U004C> LATIN CAPITAL LETTER L
+<M>                    /x4D   <U004D> LATIN CAPITAL LETTER M
+<N>                    /x4E   <U004E> LATIN CAPITAL LETTER N
+<O>                    /x4F   <U004F> LATIN CAPITAL LETTER O
+<P>                    /x50   <U0050> LATIN CAPITAL LETTER P
+<Q>                    /x51   <U0051> LATIN CAPITAL LETTER Q
+<R>                    /x52   <U0052> LATIN CAPITAL LETTER R
+<S>                    /x53   <U0053> LATIN CAPITAL LETTER S
+<T>                    /x54   <U0054> LATIN CAPITAL LETTER T
+<U>                    /x55   <U0055> LATIN CAPITAL LETTER U
+<V>                    /x56   <U0056> LATIN CAPITAL LETTER V
+<W>                    /x57   <U0057> LATIN CAPITAL LETTER W
+<X>                    /x58   <U0058> LATIN CAPITAL LETTER X
+<Y>                    /x59   <U0059> LATIN CAPITAL LETTER Y
+<Z>                    /x5A   <U005A> LATIN CAPITAL LETTER Z
+<left-square-bracket>  /x5B   <U005B> LEFT SQUARE BRACKET
+<backslash>            /x5C   <U005C> REVERSE SOLIDUS
+<reverse-solidus>      /x5C   <U005C> REVERSE SOLIDUS
+<yen-sign>             /x5C   <U00A5> YEN SIGN
+<right-square-bracket> /x5D   <U005D> RIGHT SQUARE BRACKET
+<circumflex>           /x5E   <U005E> CIRCUMFLEX ACCENT
+<circumflex-accent>    /x5E   <U005E> CIRCUMFLEX ACCENT
+<underscore>           /x5F   <U005F> LOW LINE
+<low-line>             /x5F   <U005F> LOW LINE
+<grave-accent>         /x60   <U0060> GRAVE ACCENT
+<a>                    /x61   <U0061> LATIN SMALL LETTER A
+<b>                    /x62   <U0062> LATIN SMALL LETTER B
+<c>                    /x63   <U0063> LATIN SMALL LETTER C
+<d>                    /x64   <U0064> LATIN SMALL LETTER D
+<e>                    /x65   <U0065> LATIN SMALL LETTER E
+<f>                    /x66   <U0066> LATIN SMALL LETTER F
+<g>                    /x67   <U0067> LATIN SMALL LETTER G
+<h>                    /x68   <U0068> LATIN SMALL LETTER H
+<i>                    /x69   <U0069> LATIN SMALL LETTER I
+<j>                    /x6A   <U006A> LATIN SMALL LETTER J
+<k>                    /x6B   <U006B> LATIN SMALL LETTER K
+<l>                    /x6C   <U006C> LATIN SMALL LETTER L
+<m>                    /x6D   <U006D> LATIN SMALL LETTER M
+<n>                    /x6E   <U006E> LATIN SMALL LETTER N
+<o>                    /x6F   <U006F> LATIN SMALL LETTER O
+<p>                    /x70   <U0070> LATIN SMALL LETTER P
+<q>                    /x71   <U0071> LATIN SMALL LETTER Q
+<r>                    /x72   <U0072> LATIN SMALL LETTER R
+<s>                    /x73   <U0073> LATIN SMALL LETTER S
+<t>                    /x74   <U0074> LATIN SMALL LETTER T
+<u>                    /x75   <U0075> LATIN SMALL LETTER U
+<v>                    /x76   <U0076> LATIN SMALL LETTER V
+<w>                    /x77   <U0077> LATIN SMALL LETTER W
+<x>                    /x78   <U0078> LATIN SMALL LETTER X
+<y>                    /x79   <U0079> LATIN SMALL LETTER Y
+<z>                    /x7A   <U007A> LATIN SMALL LETTER Z
+<left-brace>           /x7B   <U007B> LEFT CURLY BRACKET
+<left-curly-bracket>   /x7B   <U007B> LEFT CURLY BRACKET
+<vertical-line>        /x7C   <U007C> VERTICAL LINE
+<right-brace>          /x7D   <U007D> RIGHT CURLY BRACKET
+<right-curly-bracket>  /x7D   <U007D> RIGHT CURLY BRACKET
+<tilde>                /x7E   <U007E> TILDE
+<overline>             /x7E   <U007E> TILDE
+<DEL>                  /x7F   <U007F> DELETE
+<PAD>                  /x80   <U0080> PADDING CHARACTER
+<HOP>                  /x81   <U0081> HIGH OCTET PRESET
+<BPH>                  /x82   <U0082> BREAK PERMITTED HERE
+<NBH>                  /x83   <U0083> NO BREAK HERE
+<IND>                  /x84   <U0084> INDEX
+<NEL>                  /x85   <U0085> NEXT LINE
+<SSA>                  /x86   <U0086> START OF SELECTED AREA
+<ESA>                  /x87   <U0087> END OF SELECTED AREA
+<HTS>                  /x88   <U0088> CHARACTER TABULATION SET
+<HTJ>                  /x89   <U0089> CHARACTER TABULATION WITH JUSTIFICATION
+<VTS>                  /x8A   <U008A> LINE TABULATION SET
+<PLD>                  /x8B   <U008B> PARTIAL LINE FORWARD
+<PLU>                  /x8C   <U008C> PARTIAL LINE BACKWARD
+<RI>                   /x8D   <U008D> REVERSE LINE FEED
+<DCS>                  /x90   <U0090> DEVICE CONTROL STRING
+<PU1>                  /x91   <U0091> PRIVATE USE ONE
+<PU2>                  /x92   <U0092> PRIVATE USE TWO
+<STS>                  /x93   <U0093> SET TRANSMIT STATE
+<CCH>                  /x94   <U0094> CANCEL CHARACTER
+<MW>                   /x95   <U0095> MESSAGE WAITING
+<SPA>                  /x96   <U0096> START OF GUARDED AREA
+<EPA>                  /x97   <U0097> END OF GUARDED AREA
+<SOS>                  /x98   <U0098> START OF STRING
+<SGCI>                 /x99   <U0099> SINGLE GRAPHIC CHARACTER INTRODUCER
+<SCI>                  /x9A   <U009A> SINGLE CHARACTER INTRODUCER
+<CSI>                  /x9B   <U009B> CONTROL SEQUENCE INTRODUCER
+<ST>                   /x9C   <U009C> STRING TERMINATOR
+<OSC>                  /x9D   <U009D> OPERATING SYSTEM COMMAND
+<PM>                   /x9E   <U009E> PRIVACY MESSAGE
+<APC>                  /x9F   <U009F> APPLICATION PROGRAM COMMAND
+
+<NU>                   /x00   <U0000> NULL (NUL)
+<SH>                   /x01   <U0001> START OF HEADING (SOH)
+<SX>                   /x02   <U0002> START OF TEXT (STX)
+<EX>                   /x03   <U0003> END OF TEXT (ETX)
+<ET>                   /x04   <U0004> END OF TRANSMISSION (EOT)
+<EQ>                   /x05   <U0005> ENQUIRY (ENQ)
+<AK>                   /x06   <U0006> ACKNOWLEDGE (ACK)
+<BL>                   /x07   <U0007> BELL (BEL)
+<BS>                   /x08   <U0008> BACKSPACE (BS)
+<HT>                   /x09   <U0009> CHARACTER TABULATION (HT)
+<LF>                   /x0A   <U000A> LINE FEED (LF)
+<VT>                   /x0B   <U000B> LINE TABULATION (VT)
+<FF>                   /x0C   <U000C> FORM FEED (FF)
+<CR>                   /x0D   <U000D> CARRIAGE RETURN (CR)
+<DL>                   /x10   <U0010> DATALINK ESCAPE (DLE)
+<D1>                   /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<D2>                   /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<D3>                   /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<D4>                   /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NK>                   /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SY>                   /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<EB>                   /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CN>                   /x18   <U0018> CANCEL (CAN)
+<SB>                   /x1A   <U001A> SUBSTITUTE (SUB)
+<EC>                   /x1B   <U001B> ESCAPE (ESC)
+<FS>                   /x1C   <U001C> FILE SEPARATOR (IS4)
+<GS>                   /x1D   <U001D> GROUP SEPARATOR (IS3)
+<RS>                   /x1E   <U001E> RECORD SEPARATOR (IS2)
+<US>                   /x1F   <U001F> UNIT SEPARATOR (IS1)
+<SP>                   /x20   <U0020> SPACE
+<!>                    /x21   <U0021> EXCLAMATION MARK
+<">                    /x22   <U0022> QUOTATION MARK
+<Nb>                   /x23   <U0023> NUMBER SIGN
+<DO>                   /x24   <U0024> DOLLAR SIGN
+<%>                    /x25   <U0025> PERCENT SIGN
+<&>                    /x26   <U0026> AMPERSAND
+<'>                    /x27   <U0027> APOSTROPHE
+<(>                    /x28   <U0028> LEFT PARENTHESIS
+<)>                    /x29   <U0029> RIGHT PARENTHESIS
+<*>                    /x2A   <U002A> ASTERISK
+<+>                    /x2B   <U002B> PLUS SIGN
+<,>                    /x2C   <U002C> COMMA
+<->                    /x2D   <U002D> HYPHEN-MINUS
+<.>                    /x2E   <U002E> FULL STOP
+<//>                   /x2F   <U002F> SOLIDUS
+<0>                    /x30   <U0030> DIGIT ZERO
+<1>                    /x31   <U0031> DIGIT ONE
+<2>                    /x32   <U0032> DIGIT TWO
+<3>                    /x33   <U0033> DIGIT THREE
+<4>                    /x34   <U0034> DIGIT FOUR
+<5>                    /x35   <U0035> DIGIT FIVE
+<6>                    /x36   <U0036> DIGIT SIX
+<7>                    /x37   <U0037> DIGIT SEVEN
+<8>                    /x38   <U0038> DIGIT EIGHT
+<9>                    /x39   <U0039> DIGIT NINE
+<:>                    /x3A   <U003A> COLON
+<;>                    /x3B   <U003B> SEMICOLON
+<<>                    /x3C   <U003C> LESS-THAN SIGN
+<=>                    /x3D   <U003D> EQUALS SIGN
+</>>                   /x3E   <U003E> GREATER-THAN SIGN
+<?>                    /x3F   <U003F> QUESTION MARK
+<At>                   /x40   <U0040> COMMERCIAL AT
+<<(>                   /x5B   <U005B> LEFT SQUARE BRACKET
+<////>                 /x5C   <U005C> REVERSE SOLIDUS
+<)/>>                  /x5D   <U005D> RIGHT SQUARE BRACKET
+<'/>>                  /x5E   <U005E> CIRCUMFLEX ACCENT
+<_>                    /x5F   <U005F> LOW LINE
+<'!>                   /x60   <U0060> GRAVE ACCENT
+<(!>                   /x7B   <U007B> LEFT CURLY BRACKET
+<!!>                   /x7C   <U007C> VERTICAL LINE
+<!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
+<'?>                   /x7E   <U007E> TILDE
+<DT>                   /x7F   <U007F> DELETE (DEL)
+<PA>                   /x80   <U0080> PADDING CHARACTER (PAD)
+<HO>                   /x81   <U0081> HIGH OCTET PRESET (HOP)
+<BH>                   /x82   <U0082> BREAK PERMITTED HERE (BPH)
+<NH>                   /x83   <U0083> NO BREAK HERE (NBH)
+<IN>                   /x84   <U0084> INDEX (IND)
+<NL>                   /x85   <U0085> NEXT LINE (NEL)
+<SA>                   /x86   <U0086> START OF SELECTED AREA (SSA)
+<ES>                   /x87   <U0087> END OF SELECTED AREA (ESA)
+<HS>                   /x88   <U0088> CHARACTER TABULATION SET (HTS)
+<HJ>                   /x89   <U0089> CHARACTER TABULATION WITH JUSTIFICATION (HTJ)
+<VS>                   /x8A   <U008A> LINE TABULATION SET (VTS)
+<PD>                   /x8B   <U008B> PARTIAL LINE FORWARD (PLD)
+<PU>                   /x8C   <U008C> PARTIAL LINE BACKWARD (PLU)
+<DC>                   /x90   <U0090> DEVICE CONTROL STRING (DCS)
+<P1>                   /x91   <U0091> PRIVATE USE ONE (PU1)
+<P2>                   /x92   <U0092> PRIVATE USE TWO (PU2)
+<TS>                   /x93   <U0093> SET TRANSMIT STATE (STS)
+<CC>                   /x94   <U0094> CANCEL CHARACTER (CCH)
+<SG>                   /x96   <U0096> START OF GUARDED AREA (SPA)
+<EG>                   /x97   <U0097> END OF GUARDED AREA (EPA)
+<SS>                   /x98   <U0098> START OF STRING (SOS)
+<GC>                   /x99   <U0099> SINGLE GRAPHIC CHARACTER INTRODUCER (SGCI)
+<SC>                   /x9A   <U009A> SINGLE CHARACTER INTRODUCER (SCI)
+<CI>                   /x9B   <U009B> CONTROL SEQUENCE INTRODUCER (CSI)
+<OC>                   /x9D   <U009D> OPERATING SYSTEM COMMAND (OSC)
+<AC>                   /x9F   <U009F> APPLICATION PROGRAM COMMAND (APC)
+
+%
+% JIS X 0201 KANA
+%
+<kana-full-stop>       /x8E/xA1 <UFF61> HALFWIDTH IDEOGRAPHIC FULL STOP
+<kana-opening-bracket> /x8E/xA2 <UFF62> HALFWIDTH LEFT CORNER BRACKET
+<kana-closing-bracket> /x8E/xA3 <UFF63> HALFWIDTH RIGHT CORNER BRACKET
+<kana-comma>           /x8E/xA4 <UFF64> HALFWIDTH IDEOGRAPHIC COMMA
+<kana-conjunctive>     /x8E/xA5 <UFF65> HALFWIDTH KATAKANA MIDDLE DOT
+<kana-WO>              /x8E/xA6 <UFF66> HALFWIDTH KATAKANA LETTER WO
+<kana-a>               /x8E/xA7 <UFF67> HALFWIDTH KATAKANA LETTER SMALL A
+<kana-i>               /x8E/xA8 <UFF68> HALFWIDTH KATAKANA LETTER SMALL I
+<kana-u>               /x8E/xA9 <UFF69> HALFWIDTH KATAKANA LETTER SMALL U
+<kana-e>               /x8E/xAA <UFF6A> HALFWIDTH KATAKANA LETTER SMALL E
+<kana-o>               /x8E/xAB <UFF6B> HALFWIDTH KATAKANA LETTER SMALL O
+<kana-ya>              /x8E/xAC <UFF6C> HALFWIDTH KATAKANA LETTER SMALL YA
+<kana-yu>              /x8E/xAD <UFF6D> HALFWIDTH KATAKANA LETTER SMALL YU
+<kana-yo>              /x8E/xAE <UFF6E> HALFWIDTH KATAKANA LETTER SMALL YO
+<kana-tsu>             /x8E/xAF <UFF6F> HALFWIDTH KATAKANA LETTER SMALL TSU
+<kana-prolonged-sound> /x8E/xB0 <UFF70> HALFWIDTH KATAKANA-HIRAGANA PROLONGED SOUND MARK
+<kana-A>               /x8E/xB1 <UFF71> HALFWIDTH KATAKANA LETTER A
+<kana-I>               /x8E/xB2 <UFF72> HALFWIDTH KATAKANA LETTER I
+<kana-U>               /x8E/xB3 <UFF73> HALFWIDTH KATAKANA LETTER U
+<kana-E>               /x8E/xB4 <UFF74> HALFWIDTH KATAKANA LETTER E
+<kana-O>               /x8E/xB5 <UFF75> HALFWIDTH KATAKANA LETTER O
+<kana-KA>              /x8E/xB6 <UFF76> HALFWIDTH KATAKANA LETTER KA
+<kana-KI>              /x8E/xB7 <UFF77> HALFWIDTH KATAKANA LETTER KI
+<kana-KU>              /x8E/xB8 <UFF78> HALFWIDTH KATAKANA LETTER KU
+<kana-KE>              /x8E/xB9 <UFF79> HALFWIDTH KATAKANA LETTER KE
+<kana-KO>              /x8E/xBA <UFF7A> HALFWIDTH KATAKANA LETTER KO
+<kana-SA>              /x8E/xBB <UFF7B> HALFWIDTH KATAKANA LETTER SA
+<kana-SHI>             /x8E/xBC <UFF7C> HALFWIDTH KATAKANA LETTER SHI
+<kana-SU>              /x8E/xBD <UFF7D> HALFWIDTH KATAKANA LETTER SU
+<kana-SE>              /x8E/xBE <UFF7E> HALFWIDTH KATAKANA LETTER SE
+<kana-SO>              /x8E/xBF <UFF7F> HALFWIDTH KATAKANA LETTER SO
+<kana-TA>              /x8E/xC0 <UFF80> HALFWIDTH KATAKANA LETTER TA
+<kana-CHI>             /x8E/xC1 <UFF81> HALFWIDTH KATAKANA LETTER CHI
+<kana-TSU>             /x8E/xC2 <UFF82> HALFWIDTH KATAKANA LETTER TSU
+<kana-TE>              /x8E/xC3 <UFF83> HALFWIDTH KATAKANA LETTER TE
+<kana-TO>              /x8E/xC4 <UFF84> HALFWIDTH KATAKANA LETTER TO
+<kana-NA>              /x8E/xC5 <UFF85> HALFWIDTH KATAKANA LETTER NA
+<kana-NI>              /x8E/xC6 <UFF86> HALFWIDTH KATAKANA LETTER NI
+<kana-NU>              /x8E/xC7 <UFF87> HALFWIDTH KATAKANA LETTER NU
+<kana-NE>              /x8E/xC8 <UFF88> HALFWIDTH KATAKANA LETTER NE
+<kana-NO>              /x8E/xC9 <UFF89> HALFWIDTH KATAKANA LETTER NO
+<kana-HA>              /x8E/xCA <UFF8A> HALFWIDTH KATAKANA LETTER HA
+<kana-HI>              /x8E/xCB <UFF8B> HALFWIDTH KATAKANA LETTER HI
+<kana-FU>              /x8E/xCC <UFF8C> HALFWIDTH KATAKANA LETTER FU
+<kana-HE>              /x8E/xCD <UFF8D> HALFWIDTH KATAKANA LETTER HE
+<kana-HO>              /x8E/xCE <UFF8E> HALFWIDTH KATAKANA LETTER HO
+<kana-MA>              /x8E/xCF <UFF8F> HALFWIDTH KATAKANA LETTER MA
+<kana-MI>              /x8E/xD0 <UFF90> HALFWIDTH KATAKANA LETTER MI
+<kana-MU>              /x8E/xD1 <UFF91> HALFWIDTH KATAKANA LETTER MU
+<kana-ME>              /x8E/xD2 <UFF92> HALFWIDTH KATAKANA LETTER ME
+<kana-MO>              /x8E/xD3 <UFF93> HALFWIDTH KATAKANA LETTER MO
+<kana-YA>              /x8E/xD4 <UFF94> HALFWIDTH KATAKANA LETTER YA
+<kana-YU>              /x8E/xD5 <UFF95> HALFWIDTH KATAKANA LETTER YU
+<kana-YO>              /x8E/xD6 <UFF96> HALFWIDTH KATAKANA LETTER YO
+<kana-RA>              /x8E/xD7 <UFF97> HALFWIDTH KATAKANA LETTER RA
+<kana-RI>              /x8E/xD8 <UFF98> HALFWIDTH KATAKANA LETTER RI
+<kana-RU>              /x8E/xD9 <UFF99> HALFWIDTH KATAKANA LETTER RU
+<kana-RE>              /x8E/xDA <UFF9A> HALFWIDTH KATAKANA LETTER RE
+<kana-RO>              /x8E/xDB <UFF9B> HALFWIDTH KATAKANA LETTER RO
+<kana-WA>              /x8E/xDC <UFF9C> HALFWIDTH KATAKANA LETTER WA
+<kana-N>               /x8E/xDD <UFF9D> HALFWIDTH KATAKANA LETTER N
+<kana-voiced-sound>    /x8E/xDE <UFF9E> HALFWIDTH KATAKANA VOICED SOUND MARK
+<kana-semivoiced-sound> /x8E/xDF <UFF9F> HALFWIDTH KATAKANA SEMI-VOICED SOUND MARK
+
+%
+% JIS X 0208
+%
+<j0101>...<j0194>      /xa1/xa1   JIS X 0208 KANJI
+<j0201>...<j0294>      /xa2/xa1   JIS X 0208 KANJI
+<j0301>...<j0394>      /xa3/xa1   JIS X 0208 KANJI
+<j0401>...<j0494>      /xa4/xa1   JIS X 0208 KANJI
+<j0501>...<j0594>      /xa5/xa1   JIS X 0208 KANJI
+<j0601>...<j0694>      /xa6/xa1   JIS X 0208 KANJI
+<j0701>...<j0794>      /xa7/xa1   JIS X 0208 KANJI
+<j0801>...<j0894>      /xa8/xa1   JIS X 0208 KANJI
+<j0901>...<j0994>      /xa9/xa1   JIS X 0208 KANJI
+<j1001>...<j1094>      /xaa/xa1   JIS X 0208 KANJI
+<j1101>...<j1194>      /xab/xa1   JIS X 0208 KANJI
+<j1201>...<j1294>      /xac/xa1   JIS X 0208 KANJI
+<j1301>...<j1394>      /xad/xa1   JIS X 0208 KANJI
+<j1401>...<j1494>      /xae/xa1   JIS X 0208 KANJI
+<j1501>...<j1594>      /xaf/xa1   JIS X 0208 KANJI
+<j1601>...<j1694>      /xb0/xa1   JIS X 0208 KANJI
+<j1701>...<j1794>      /xb1/xa1   JIS X 0208 KANJI
+<j1801>...<j1894>      /xb2/xa1   JIS X 0208 KANJI
+<j1901>...<j1994>      /xb3/xa1   JIS X 0208 KANJI
+<j2001>...<j2094>      /xb4/xa1   JIS X 0208 KANJI
+<j2101>...<j2194>      /xb5/xa1   JIS X 0208 KANJI
+<j2201>...<j2294>      /xb6/xa1   JIS X 0208 KANJI
+<j2301>...<j2394>      /xb7/xa1   JIS X 0208 KANJI
+<j2401>...<j2494>      /xb8/xa1   JIS X 0208 KANJI
+<j2501>...<j2594>      /xb9/xa1   JIS X 0208 KANJI
+<j2601>...<j2694>      /xba/xa1   JIS X 0208 KANJI
+<j2701>...<j2794>      /xbb/xa1   JIS X 0208 KANJI
+<j2801>...<j2894>      /xbc/xa1   JIS X 0208 KANJI
+<j2901>...<j2994>      /xbd/xa1   JIS X 0208 KANJI
+<j3001>...<j3094>      /xbe/xa1   JIS X 0208 KANJI
+<j3101>...<j3194>      /xbf/xa1   JIS X 0208 KANJI
+<j3201>...<j3294>      /xc0/xa1   JIS X 0208 KANJI
+<j3301>...<j3394>      /xc1/xa1   JIS X 0208 KANJI
+<j3401>...<j3494>      /xc2/xa1   JIS X 0208 KANJI
+<j3501>...<j3594>      /xc3/xa1   JIS X 0208 KANJI
+<j3601>...<j3694>      /xc4/xa1   JIS X 0208 KANJI
+<j3701>...<j3794>      /xc5/xa1   JIS X 0208 KANJI
+<j3801>...<j3894>      /xc6/xa1   JIS X 0208 KANJI
+<j3901>...<j3994>      /xc7/xa1   JIS X 0208 KANJI
+<j4001>...<j4094>      /xc8/xa1   JIS X 0208 KANJI
+<j4101>...<j4194>      /xc9/xa1   JIS X 0208 KANJI
+<j4201>...<j4294>      /xca/xa1   JIS X 0208 KANJI
+<j4301>...<j4394>      /xcb/xa1   JIS X 0208 KANJI
+<j4401>...<j4494>      /xcc/xa1   JIS X 0208 KANJI
+<j4501>...<j4594>      /xcd/xa1   JIS X 0208 KANJI
+<j4601>...<j4694>      /xce/xa1   JIS X 0208 KANJI
+<j4701>...<j4794>      /xcf/xa1   JIS X 0208 KANJI
+<j4801>...<j4894>      /xd0/xa1   JIS X 0208 KANJI
+<j4901>...<j4994>      /xd1/xa1   JIS X 0208 KANJI
+<j5001>...<j5094>      /xd2/xa1   JIS X 0208 KANJI
+<j5101>...<j5194>      /xd3/xa1   JIS X 0208 KANJI
+<j5201>...<j5294>      /xd4/xa1   JIS X 0208 KANJI
+<j5301>...<j5394>      /xd5/xa1   JIS X 0208 KANJI
+<j5401>...<j5494>      /xd6/xa1   JIS X 0208 KANJI
+<j5501>...<j5594>      /xd7/xa1   JIS X 0208 KANJI
+<j5601>...<j5694>      /xd8/xa1   JIS X 0208 KANJI
+<j5701>...<j5794>      /xd9/xa1   JIS X 0208 KANJI
+<j5801>...<j5894>      /xda/xa1   JIS X 0208 KANJI
+<j5901>...<j5994>      /xdb/xa1   JIS X 0208 KANJI
+<j6001>...<j6094>      /xdc/xa1   JIS X 0208 KANJI
+<j6101>...<j6194>      /xdd/xa1   JIS X 0208 KANJI
+<j6201>...<j6294>      /xde/xa1   JIS X 0208 KANJI
+<j6301>...<j6394>      /xdf/xa1   JIS X 0208 KANJI
+<j6401>...<j6494>      /xe0/xa1   JIS X 0208 KANJI
+<j6501>...<j6594>      /xe1/xa1   JIS X 0208 KANJI
+<j6601>...<j6694>      /xe2/xa1   JIS X 0208 KANJI
+<j6701>...<j6794>      /xe3/xa1   JIS X 0208 KANJI
+<j6801>...<j6894>      /xe4/xa1   JIS X 0208 KANJI
+<j6901>...<j6994>      /xe5/xa1   JIS X 0208 KANJI
+<j7001>...<j7094>      /xe6/xa1   JIS X 0208 KANJI
+<j7101>...<j7194>      /xe7/xa1   JIS X 0208 KANJI
+<j7201>...<j7294>      /xe8/xa1   JIS X 0208 KANJI
+<j7301>...<j7394>      /xe9/xa1   JIS X 0208 KANJI
+<j7401>...<j7494>      /xea/xa1   JIS X 0208 KANJI
+<j7501>...<j7594>      /xeb/xa1   JIS X 0208 KANJI
+<j7601>...<j7694>      /xec/xa1   JIS X 0208 KANJI
+<j7701>...<j7794>      /xed/xa1   JIS X 0208 KANJI
+<j7801>...<j7894>      /xee/xa1   JIS X 0208 KANJI
+<j7901>...<j7994>      /xef/xa1   JIS X 0208 KANJI
+<j8001>...<j8094>      /xf0/xa1   JIS X 0208 KANJI
+<j8101>...<j8194>      /xf1/xa1   JIS X 0208 KANJI
+<j8201>...<j8294>      /xf2/xa1   JIS X 0208 KANJI
+<j8301>...<j8394>      /xf3/xa1   JIS X 0208 KANJI
+<j8401>...<j8494>      /xf4/xa1   JIS X 0208 KANJI
+<j8501>...<j8594>      /xf5/xa1   JIS X 0208 KANJI
+<j8601>...<j8694>      /xf6/xa1   JIS X 0208 KANJI
+<j8701>...<j8794>      /xf7/xa1   JIS X 0208 KANJI
+<j8801>...<j8894>      /xf8/xa1   JIS X 0208 KANJI
+<j8901>...<j8994>      /xf9/xa1   JIS X 0208 KANJI
+<j9001>...<j9094>      /xfa/xa1   JIS X 0208 KANJI
+<j9101>...<j9194>      /xfb/xa1   JIS X 0208 KANJI
+<j9201>...<j9294>      /xfc/xa1   JIS X 0208 KANJI
+<j9301>...<j9394>      /xfd/xa1   JIS X 0208 KANJI
+<j9401>...<j9494>      /xfe/xa1   JIS X 0208 KANJI
+
+%
+% JIS X 0212
+%
+<J0101>...<J0194>      /x8f/xa1/xa1   JIS X 0212 KANJI
+<J0201>...<J0294>      /x8f/xa2/xa1   JIS X 0212 KANJI
+<J0301>...<J0394>      /x8f/xa3/xa1   JIS X 0212 KANJI
+<J0401>...<J0494>      /x8f/xa4/xa1   JIS X 0212 KANJI
+<J0501>...<J0594>      /x8f/xa5/xa1   JIS X 0212 KANJI
+<J0601>...<J0694>      /x8f/xa6/xa1   JIS X 0212 KANJI
+<J0701>...<J0794>      /x8f/xa7/xa1   JIS X 0212 KANJI
+<J0801>...<J0894>      /x8f/xa8/xa1   JIS X 0212 KANJI
+<J0901>...<J0994>      /x8f/xa9/xa1   JIS X 0212 KANJI
+<J1001>...<J1094>      /x8f/xaa/xa1   JIS X 0212 KANJI
+<J1101>...<J1194>      /x8f/xab/xa1   JIS X 0212 KANJI
+<J1201>...<J1294>      /x8f/xac/xa1   JIS X 0212 KANJI
+<J1301>...<J1394>      /x8f/xad/xa1   JIS X 0212 KANJI
+<J1401>...<J1494>      /x8f/xae/xa1   JIS X 0212 KANJI
+<J1501>...<J1594>      /x8f/xaf/xa1   JIS X 0212 KANJI
+<J1601>...<J1694>      /x8f/xb0/xa1   JIS X 0212 KANJI
+<J1701>...<J1794>      /x8f/xb1/xa1   JIS X 0212 KANJI
+<J1801>...<J1894>      /x8f/xb2/xa1   JIS X 0212 KANJI
+<J1901>...<J1994>      /x8f/xb3/xa1   JIS X 0212 KANJI
+<J2001>...<J2094>      /x8f/xb4/xa1   JIS X 0212 KANJI
+<J2101>...<J2194>      /x8f/xb5/xa1   JIS X 0212 KANJI
+<J2201>...<J2294>      /x8f/xb6/xa1   JIS X 0212 KANJI
+<J2301>...<J2394>      /x8f/xb7/xa1   JIS X 0212 KANJI
+<J2401>...<J2494>      /x8f/xb8/xa1   JIS X 0212 KANJI
+<J2501>...<J2594>      /x8f/xb9/xa1   JIS X 0212 KANJI
+<J2601>...<J2694>      /x8f/xba/xa1   JIS X 0212 KANJI
+<J2701>...<J2794>      /x8f/xbb/xa1   JIS X 0212 KANJI
+<J2801>...<J2894>      /x8f/xbc/xa1   JIS X 0212 KANJI
+<J2901>...<J2994>      /x8f/xbd/xa1   JIS X 0212 KANJI
+<J3001>...<J3094>      /x8f/xbe/xa1   JIS X 0212 KANJI
+<J3101>...<J3194>      /x8f/xbf/xa1   JIS X 0212 KANJI
+<J3201>...<J3294>      /x8f/xc0/xa1   JIS X 0212 KANJI
+<J3301>...<J3394>      /x8f/xc1/xa1   JIS X 0212 KANJI
+<J3401>...<J3494>      /x8f/xc2/xa1   JIS X 0212 KANJI
+<J3501>...<J3594>      /x8f/xc3/xa1   JIS X 0212 KANJI
+<J3601>...<J3694>      /x8f/xc4/xa1   JIS X 0212 KANJI
+<J3701>...<J3794>      /x8f/xc5/xa1   JIS X 0212 KANJI
+<J3801>...<J3894>      /x8f/xc6/xa1   JIS X 0212 KANJI
+<J3901>...<J3994>      /x8f/xc7/xa1   JIS X 0212 KANJI
+<J4001>...<J4094>      /x8f/xc8/xa1   JIS X 0212 KANJI
+<J4101>...<J4194>      /x8f/xc9/xa1   JIS X 0212 KANJI
+<J4201>...<J4294>      /x8f/xca/xa1   JIS X 0212 KANJI
+<J4301>...<J4394>      /x8f/xcb/xa1   JIS X 0212 KANJI
+<J4401>...<J4494>      /x8f/xcc/xa1   JIS X 0212 KANJI
+<J4501>...<J4594>      /x8f/xcd/xa1   JIS X 0212 KANJI
+<J4601>...<J4694>      /x8f/xce/xa1   JIS X 0212 KANJI
+<J4701>...<J4794>      /x8f/xcf/xa1   JIS X 0212 KANJI
+<J4801>...<J4894>      /x8f/xd0/xa1   JIS X 0212 KANJI
+<J4901>...<J4994>      /x8f/xd1/xa1   JIS X 0212 KANJI
+<J5001>...<J5094>      /x8f/xd2/xa1   JIS X 0212 KANJI
+<J5101>...<J5194>      /x8f/xd3/xa1   JIS X 0212 KANJI
+<J5201>...<J5294>      /x8f/xd4/xa1   JIS X 0212 KANJI
+<J5301>...<J5394>      /x8f/xd5/xa1   JIS X 0212 KANJI
+<J5401>...<J5494>      /x8f/xd6/xa1   JIS X 0212 KANJI
+<J5501>...<J5594>      /x8f/xd7/xa1   JIS X 0212 KANJI
+<J5601>...<J5694>      /x8f/xd8/xa1   JIS X 0212 KANJI
+<J5701>...<J5794>      /x8f/xd9/xa1   JIS X 0212 KANJI
+<J5801>...<J5894>      /x8f/xda/xa1   JIS X 0212 KANJI
+<J5901>...<J5994>      /x8f/xdb/xa1   JIS X 0212 KANJI
+<J6001>...<J6094>      /x8f/xdc/xa1   JIS X 0212 KANJI
+<J6101>...<J6194>      /x8f/xdd/xa1   JIS X 0212 KANJI
+<J6201>...<J6294>      /x8f/xde/xa1   JIS X 0212 KANJI
+<J6301>...<J6394>      /x8f/xdf/xa1   JIS X 0212 KANJI
+<J6401>...<J6494>      /x8f/xe0/xa1   JIS X 0212 KANJI
+<J6501>...<J6594>      /x8f/xe1/xa1   JIS X 0212 KANJI
+<J6601>...<J6694>      /x8f/xe2/xa1   JIS X 0212 KANJI
+<J6701>...<J6794>      /x8f/xe3/xa1   JIS X 0212 KANJI
+<J6801>...<J6894>      /x8f/xe4/xa1   JIS X 0212 KANJI
+<J6901>...<J6994>      /x8f/xe5/xa1   JIS X 0212 KANJI
+<J7001>...<J7094>      /x8f/xe6/xa1   JIS X 0212 KANJI
+<J7101>...<J7194>      /x8f/xe7/xa1   JIS X 0212 KANJI
+<J7201>...<J7294>      /x8f/xe8/xa1   JIS X 0212 KANJI
+<J7301>...<J7394>      /x8f/xe9/xa1   JIS X 0212 KANJI
+<J7401>...<J7494>      /x8f/xea/xa1   JIS X 0212 KANJI
+<J7501>...<J7594>      /x8f/xeb/xa1   JIS X 0212 KANJI
+<J7601>...<J7694>      /x8f/xec/xa1   JIS X 0212 KANJI
+<J7701>...<J7794>      /x8f/xed/xa1   JIS X 0212 KANJI
+<J7801>...<J7894>      /x8f/xee/xa1   JIS X 0212 KANJI
+<J7901>...<J7994>      /x8f/xef/xa1   JIS X 0212 KANJI
+<J8001>...<J8094>      /x8f/xf0/xa1   JIS X 0212 KANJI
+<J8101>...<J8194>      /x8f/xf1/xa1   JIS X 0212 KANJI
+<J8201>...<J8294>      /x8f/xf2/xa1   JIS X 0212 KANJI
+<J8301>...<J8394>      /x8f/xf3/xa1   JIS X 0212 KANJI
+<J8401>...<J8494>      /x8f/xf4/xa1   JIS X 0212 KANJI
+<J8501>...<J8594>      /x8f/xf5/xa1   JIS X 0212 KANJI
+<J8601>...<J8694>      /x8f/xf6/xa1   JIS X 0212 KANJI
+<J8701>...<J8794>      /x8f/xf7/xa1   JIS X 0212 KANJI
+<J8801>...<J8894>      /x8f/xf8/xa1   JIS X 0212 KANJI
+<J8901>...<J8994>      /x8f/xf9/xa1   JIS X 0212 KANJI
+<J9001>...<J9094>      /x8f/xfa/xa1   JIS X 0212 KANJI
+<J9101>...<J9194>      /x8f/xfb/xa1   JIS X 0212 KANJI
+<J9201>...<J9294>      /x8f/xfc/xa1   JIS X 0212 KANJI
+<J9301>...<J9394>      /x8f/xfd/xa1   JIS X 0212 KANJI
+<J9401>...<J9494>      /x8f/xfe/xa1   JIS X 0212 KANJI
+
+END CHARMAP

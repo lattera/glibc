@@ -436,9 +436,10 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end offset */
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end start */
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end end */
-	  time->era_entries[idx].wname = (uint32_t *) wstr;
+	  time->era_entries[idx].wname = (uint32_t *) wstr + 1;
 	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end name */
-	  time->era_entries[idx].wformat = (uint32_t *) wstr;
+	  *wstr = L'\0';
+	  time->era_entries[idx].wformat = (uint32_t *) wstr + 1;
 	}
     }
 

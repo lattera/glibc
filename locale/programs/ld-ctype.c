@@ -729,7 +729,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   const size_t nelems = (_NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)
-			 + 2 * (ctype->map_collection_nr - 2));
+			 + (ctype->map_collection_nr - 2));
   struct iovec iov[2 + nelems + ctype->nr_charclass
 		  + ctype->map_collection_nr];
   struct locale_file data;
@@ -951,7 +951,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
       else
 	{
 	  /* Handle extra maps.  */
-	  size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) >> 1;
+	  size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) + 2;
 
 	  iov[2 + elem + offset].iov_base = ctype->map[nr];
 	  iov[2 + elem + offset].iov_len = ((ctype->plane_size
@@ -1712,6 +1712,36 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 
       switch (nowtok)
 	{
+	case tok_charclass:
+	  now = lr_token (ldfile, charmap, NULL);
+	  while (now->tok == tok_ident || now->tok == tok_string)
+	    {
+	      ctype_class_new (ldfile, ctype, now->val.str.startmb);
+	      now = lr_token (ldfile, charmap, NULL);
+	      if (now->tok != tok_semicolon)
+		break;
+	      now = lr_token (ldfile, charmap, NULL);
+	    }
+	  if (now->tok != tok_eol)
+	    SYNTAX_ERROR (_("\
+%s: syntax error in definition of new character class"), "LC_CTYPE");
+	  break;
+
+	case tok_charconv:
+	  now = lr_token (ldfile, charmap, NULL);
+	  while (now->tok == tok_ident || now->tok == tok_string)
+	    {
+	      ctype_map_new (ldfile, ctype, now->val.str.startmb, charmap);
+	      now = lr_token (ldfile, charmap, NULL);
+	      if (now->tok != tok_semicolon)
+		break;
+	      now = lr_token (ldfile, charmap, NULL);
+	    }
+	  if (now->tok != tok_eol)
+	    SYNTAX_ERROR (_("\
+%s: syntax error in definition of new character map"), "LC_CTYPE");
+	  break;
+
 	case tok_class:
 	  /* Ignore the rest of the line if we don't need the input of
 	     this line.  */
@@ -2219,6 +2249,15 @@ with character code range values one must use the absolute ellipsis `...'"));
 	      free (now->val.str.startmb);
 	      goto read_charclass;
 	    }
+	  for (cnt = 0; cnt < ctype->map_collection_nr; ++cnt)
+	    if (strcmp (now->val.str.startmb, ctype->mapnames[cnt]) == 0)
+	      break;
+	  if (cnt < ctype->map_collection_nr)
+	    {
+	      mapidx = cnt;
+	      free (now->val.str.startmb);
+	      goto read_mapping;
+            }
 	  if (strcmp (now->val.str.startmb, "special1") == 0)
 	    {
 	      class_bit = _ISwspecial1;

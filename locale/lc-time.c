@@ -98,9 +98,9 @@ _nl_get_era_entry (const struct tm *tp)
 		  ptr += 3 - (((ptr - (const char *) eras[cnt]) + 3) & 3);
 
 		  /* Skip wide era name.  */
-		  ptr = (char *) wcschr ((wchar_t *) ptr, '\0');
+		  ptr = (char *) (wcschr ((wchar_t *) ptr, '\0') + 1);
 		  /* Skip wide era format.  */
-		  ptr = (char *) wcschr ((wchar_t *) ptr, '\0');
+		  ptr = (char *) (wcschr ((wchar_t *) ptr, '\0') + 1);
 		}
 	    }
 	}

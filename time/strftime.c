@@ -834,11 +834,15 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  /* The wide name is after the single byte name and
+		  /* The wide name is after the multi byte name and
                      format.  */
+		  wchar_t *ws;
+		  size_t len;
 		  char *tcp = strchr (era->name_fmt, '\0') + 1;
-		  wchar_t *ws = (wchar_t *) (strchr (tcp, '\0') + 1);
-		  size_t len = wcslen (ws);
+		  tcp = strchr (tcp, '\0') + 1;
+		  tcp += 3 - (((tcp - era->name_fmt) + 3) & 3);
+		  ws = (wchar_t *) tcp;
+		  len = wcslen (ws);
 		  cpy (len, ws);
 # else
 		  size_t len = strlen (era->name_fmt);
@@ -1195,10 +1199,12 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  /* The wide name is after the single byte name and
+		  /* The wide name is after the multi byte name and
                      format.  */
 		  char *tcp = strchr (era->name_fmt, '\0') + 1;
-		  subfmt = (wchar_t *) (strchr (tcp, '\0') + 1);
+		  tcp = strchr (tcp, '\0') + 1;
+		  tcp += 3 - (((tcp - era->name_fmt) + 3) & 3);
+		  subfmt = (wchar_t *) tcp;
 		  subfmt = wcschr (subfmt, L'\0') + 1;
 # else
 		  subfmt = strchr (era->name_fmt, '\0') + 1;

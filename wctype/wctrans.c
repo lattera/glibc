@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <inttypes.h>
 #include <string.h>
 #include <wctype.h>
 #include "../locale/localeinfo.h"
@@ -27,7 +28,7 @@ wctrans (const char *property)
 {
   const char *names;
   size_t cnt;
-  unsigned int **result;
+  int32_t *result;
 
   names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_MAP_NAMES);
   cnt = 0;
@@ -49,11 +50,7 @@ wctrans (const char *property)
     return (wctrans_t) __ctype_tolower;
 
   /* We have to search the table.  */
-  result = (unsigned int **) &_NL_CURRENT (LC_CTYPE, _NL_CTYPE_WIDTH);
+  result = (int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_WIDTH + cnt - 2);
 
-#if __BYTE_ORDER == _BIG_ENDIAN
-  return (wctrans_t) result[1 + 2 * cnt];
-#else
-  return (wctrans_t) result[1 + 2 * cnt + 1];
-#endif
+  return (wctrans_t) (result + 128);
 }

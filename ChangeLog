@@ -1,5 +1,20 @@
 1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-ctype.c (ctype_output): Correct computation of
+	nelems.  Correctly compute index for additional character classes.
+	(ctype_read): Handle charclass and charconv definitions.  Also
+	recognize arbitrary strings as mapping names.
+	* locale/programs/ld-time.c (time_finish): Correctly skip over wide
+	character era strings.
+	* locale/lc-time.c (_nl_get_era_entry): Correctly skip era name
+	and format for wide characters.
+	* time/strftime.c: Correctly determine era information for wide
+	wcsftime.
+	* wctrans.c: Fix after removal of second endianess table.
+	* wctype/wctype.h (_ISwbit): Correctly handle bits > 16.
+	Patches by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
+	* wcsmbs/wcwidth.h (internal_wcwidth): Reject non-printable characters.
 	* wcsmbs/wcswidth.c (wcswidth): Don't forget to decrement counter n.
 
 	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Remove greg_t,
