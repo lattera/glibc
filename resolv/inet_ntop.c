@@ -97,8 +97,7 @@ inet_ntop4(src, dst, size)
 		__set_errno (ENOSPC);
 		return (NULL);
 	}
-	strcpy(dst, tmp);
-	return (dst);
+	return strcpy(dst, tmp);
 }
 
 /* const char *
@@ -132,8 +131,8 @@ inet_ntop6(src, dst, size)
 	 *	Find the longest run of 0x00's in src[] for :: shorthanding.
 	 */
 	memset(words, '\0', sizeof words);
-	for (i = 0; i < IN6ADDRSZ; i++)
-		words[i / 2] |= (src[i] << ((1 - (i % 2)) << 3));
+	for (i = 0; i < IN6ADDRSZ; i += 2)
+		words[i / 2] = (src[i] << 8) | src[i + 1];
 	best.base = -1;
 	cur.base = -1;
 	for (i = 0; i < (IN6ADDRSZ / INT16SZ); i++) {
@@ -194,6 +193,5 @@ inet_ntop6(src, dst, size)
 		__set_errno (ENOSPC);
 		return (NULL);
 	}
-	strcpy(dst, tmp);
-	return (dst);
+	return strcpy(dst, tmp);
 }
