@@ -1,3 +1,7 @@
+2001-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-runtime.c: Update calls to _dl_lookup_*.
+
 2001-08-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-reloc.c (RESOLVE_MAP, RESOLVE): Use elf_machine_type_class
