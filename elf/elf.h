@@ -513,7 +513,7 @@ typedef struct
 #define PT_NOTE		4		/* Auxiliary information */
 #define PT_SHLIB	5		/* Reserved */
 #define PT_PHDR		6		/* Entry for header table itself */
-#define	PT_NUM		7		/* Number of defined types.  */
+#define	PT_NUM		7		/* Number of defined types */
 #define PT_LOOS		0x60000000	/* Start of OS-specific */
 #define PT_HIOS		0x6fffffff	/* End of OS-specific */
 #define PT_LOPROC	0x70000000	/* Start of processor-specific */
@@ -524,6 +524,7 @@ typedef struct
 #define PF_X		(1 << 0)	/* Segment is executable */
 #define PF_W		(1 << 1)	/* Segment is writable */
 #define PF_R		(1 << 2)	/* Segment is readable */
+#define PF_MASKOS	0x0ff00000	/* OS-specific */
 #define PF_MASKPROC	0xf0000000	/* Processor-specific */
 
 /* Legal values for note segment descriptor types for core files. */
