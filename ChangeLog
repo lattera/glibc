@@ -1,5 +1,7 @@
 2002-12-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (mALLOPt): Make sure malloc is initialized.
+
 	* elf/elf.h (AT_SYSINFO): New define.
 	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Add support for
 	AT_SYSINFO.

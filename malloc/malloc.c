@@ -5146,6 +5146,8 @@ int mALLOPt(int param_number, int value)
 int mALLOPt(param_number, value) int param_number; int value;
 #endif
 {
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
   mstate av = &main_arena;
   int res = 1;
 
