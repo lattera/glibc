@@ -1,3 +1,8 @@
+2001-06-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/e_expl.c: Include <math_private.h> for
+	prototypes.
+
 2001-06-18  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurd/fd.h (_hurd_fd_error_signal): Change return type to int.
