@@ -119,6 +119,124 @@ init1 (int argc, char *arg0, ...)
 }
 
 
+static inline void
+init (int *data)
+{
+  int argc = *data;
+  char **argv = (void *) (data + 1);
+  char **envp = &argv[argc + 1];
+  struct hurd_startup_data *d;
+  unsigned long int threadvars[_HURD_THREADVAR_MAX];
+
+  /* Provide temporary storage for thread-specific variables on the startup
+     stack so the cthreads initialization code can use them for malloc et al,
+  or so we can use malloc below for the real threadvars array.  */
+  memset (threadvars, 0, sizeof threadvars);
+  __hurd_threadvar_stack_offset = (unsigned long int) threadvars;
+
+  __environ = envp;
+  while (*envp)
+    ++envp;
+  d = (void *) ++envp;
+
+  /* The user might have defined a value for this, to get more variables.
+     Otherwise it will be zero on startup.  We must make sure it is set
+     properly before before cthreads initialization, so cthreads can know
+     how much space to leave for thread variables.  */
+  if (__hurd_threadvar_max < _HURD_THREADVAR_MAX)
+    __hurd_threadvar_max = _HURD_THREADVAR_MAX;
+
+
+  /* After possibly switching stacks, call `init1' (above) with the user
+     code as the return address, and the argument data immediately above
+     that on the stack.  */
+
+  if (_cthread_init_routine)
+    {
+      /* Initialize cthreads, which will allocate us a new stack to run on.  */
+      void *newsp = (*_cthread_init_routine) ();
+      struct hurd_startup_data *od;
+
+      /* Copy per-thread variables from that temporary
+	 area onto the new cthread stack.  */
+      memcpy (__hurd_threadvar_location_from_sp (0, newsp),
+	      threadvars, sizeof threadvars);
+
+      /* Copy the argdata from the old stack to the new one.  */
+      newsp = memcpy (newsp - ((char *) &d[1] - (char *) data), data,
+		      (char *) d - (char *) data);
+
+      /* Set up the Hurd startup data block immediately following
+	 the argument and environment pointers on the new stack.  */
+      od = (newsp + ((char *) d - (char *) data));
+      if ((void *) argv[0] == d)
+	/* We were started up by the kernel with arguments on the stack.
+	   There is no Hurd startup data, so zero the block.  */
+	memset (od, 0, sizeof *od);
+      else
+	/* Copy the Hurd startup data block to the new stack.  */
+	*od = *d;
+
+      /* Push the user code address on the top of the new stack.  It will
+	 be the return address for `init1'; we will jump there with NEWSP
+	 as the stack pointer.  */
+      *--(int *) newsp = data[-1];
+      ((void **) data)[-1] = &&switch_stacks;
+      /* Force NEWSP into %ecx and &init1 into %eax, which are not restored
+	 by function return.  */
+      asm volatile ("# a %0 c %1" : : "a" (newsp), "c" (&init1));
+    }
+  else
+    {
+      /* We are not using cthreads, so we will have just a single allocated
+	 area for the per-thread variables of the main user thread.  */
+      unsigned long int *array;
+      unsigned int i;
+      int usercode;
+
+      array = malloc (__hurd_threadvar_max * sizeof (unsigned long int));
+      if (array == NULL)
+	__libc_fatal ("Can't allocate single-threaded thread variables.");
+
+      /* Copy per-thread variables from the temporary array into the
+	 newly malloc'd space.  */
+      memcpy (array, threadvars, sizeof threadvars);
+      __hurd_threadvar_stack_offset = (unsigned long int) array;
+      for (i = _HURD_THREADVAR_MAX; i < __hurd_threadvar_max; ++i)
+	array[i] = 0;
+
+      /* The argument data is just above the stack frame we will unwind by
+	 returning.  Mutate our own return address to run the code below.  */
+      usercode = data[-1];
+      ((void **) data)[-1] = &&call_init1;
+      /* Force USERCODE into %eax and &init1 into %ecx, which are not
+	 restored by function return.  */
+      asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
+    }
+
+  return;
+
+ switch_stacks:
+  /* Our return address was redirected to here, so at this point our stack
+     is unwound and callers' registers restored.  Only %ecx and %eax are
+     call-clobbered and thus still have the values we set just above.
+     Fetch from there the new stack pointer we will run on, and jmp to the
+     run-time address of `init1'; when it returns, it will run the user
+     code with the argument data at the top of the stack.  */
+  asm volatile ("movl %eax, %esp; jmp *%ecx");
+  /* NOTREACHED */
+
+ call_init1:
+  /* As in the stack-switching case, at this point our stack is unwound and
+     callers' registers restored, and only %ecx and %eax communicate values
+     from the lines above.  In this case we have stashed in %eax the user
+     code return address.  Push it on the top of the stack so it acts as
+     init1's return address, and then jump there.  */
+  asm volatile ("pushl %eax; jmp *%ecx");
+  /* NOTREACHED */
+}
+
+
 #ifdef PIC
 /* This function is called to initialize the shared C library.
    It is called just before the user _start code from i386/elf/start.S,
@@ -136,133 +254,9 @@ _init (int argc, ...)
 
   RUN_HOOK (_hurd_preinit_hook, ());
 
-#else
-
-/* In statically-linked programs, this function is
-   called from _hurd_stack_setup (below).  */
-static void
-doinit1 (int argc, ...)
-{
-#endif
-  /* This block used to be a separate inline function.
-     But GCC refuses to inline a function that uses alloca
-     or dynamically-sized auto arrays.  */
-  {
-    int *const data = &argc;
-    char **argv = (void *) (data + 1);
-    char **envp = &argv[argc + 1];
-    struct hurd_startup_data *d;
-
-    unsigned long int threadvars[__hurd_threadvar_max];
-
-    /* Provide temporary storage for thread-specific variables on the startup
-       stack so the cthreads initialization code can use them for malloc et al,
-    or so we can use malloc below for the real threadvars array.  */
-    memset (threadvars, 0, sizeof threadvars);
-    __hurd_threadvar_stack_offset = (unsigned long int) threadvars;
-
-    __environ = envp;
-    while (*envp)
-      ++envp;
-    d = (void *) ++envp;
-
-    /* The user might have defined a value for this, to get more variables.
-       Otherwise it will be zero on startup.  We must make sure it is set
-       properly before before cthreads initialization, so cthreads can know
-       how much space to leave for thread variables.  */
-    if (__hurd_threadvar_max < _HURD_THREADVAR_MAX)
-      __hurd_threadvar_max = _HURD_THREADVAR_MAX;
-
-
-    /* After possibly switching stacks, call `init1' (above) with the user
-       code as the return address, and the argument data immediately above
-       that on the stack.  */
-
-    if (_cthread_init_routine)
-      {
-	void *newsp;
-	struct hurd_startup_data *od;
-
-	/* Initialize cthreads, which will allocate us a new
-	   stack to run on.  */
-	newsp = (*_cthread_init_routine) ();
-
-	/* Copy per-thread variables from that temporary
-	   area onto the new cthread stack.  */
-	memcpy (__hurd_threadvar_location_from_sp (0, newsp),
-		threadvars, sizeof threadvars);
-
-	/* Copy the argdata from the old stack to the new one.  */
-	newsp = memcpy (newsp - ((char *) &d[1] - (char *) data), data,
-			(char *) d - (char *) data);
-
-	/* Set up the Hurd startup data block immediately following
-	   the argument and environment pointers on the new stack.  */
-	od = (newsp + ((char *) d - (char *) data));
-	if ((void *) argv[0] == d)
-	  /* We were started up by the kernel with arguments on the stack.
-	     There is no Hurd startup data, so zero the block.  */
-	  memset (od, 0, sizeof *od);
-	else
-	  /* Copy the Hurd startup data block to the new stack.  */
-	  *od = *d;
-
-	/* Push the user code address on the top of the new stack.  It will
-	   be the return address for `init1'; we will jump there with NEWSP
-	   as the stack pointer.  */
-	*--(int *) newsp = data[-1];
-	((void **) data)[-1] = &&switch_stacks;
-	/* Force NEWSP into %ecx and &init1 into %eax, which are not restored
-	   by function return.  */
-	asm volatile ("# a %0 c %1" : : "a" (newsp), "c" (&init1));
-      }
-    else
-      {
-	/* We are not using cthreads, so we will have just a single allocated
-	   area for the per-thread variables of the main user thread.  */
-	void *array;
-	int usercode;
-
-	array = malloc (sizeof threadvars);
-	if (array == NULL)
-	  __libc_fatal ("Can't allocate single-threaded thread variables.");
-
-	/* Copy per-thread variables from the temporary array into the
-	   newly malloc'd space.  */
-	memcpy (array, threadvars, sizeof threadvars);
-	__hurd_threadvar_stack_offset = (unsigned long int) array;
-
-	/* The argument data is just above the stack frame we will unwind by
-	   returning.  Mutate our own return address to run the code below.  */
-	usercode = data[-1];
-	((void **) data)[-1] = &&call_init1;
-	/* Force USERCODE into %eax and &init1 into %ecx, which are not
-	   restored by function return.  */
-	asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
-      }
-
-    return;
-
-  switch_stacks:
-    /* Our return address was redirected to here, so at this point our
-       stack is unwound and callers' registers restored.  Only %ecx and
-       %eax are call-clobbered and thus still have the values we set just
-       above.  Fetch from there the new stack pointer we will run on, and
-       jmp to the run-time address of `init1'; when it returns, it will run
-       the user code with the argument data at the top of the stack.  */
-    asm volatile ("movl %eax, %esp; jmp *%ecx");
-    /* NOTREACHED */
-
-  call_init1:
-    /* As in the stack-switching case, at this point our stack is unwound
-       and callers' registers restored, and only %ecx and %eax communicate
-       values from the lines above.  In this case we have stashed in %eax
-       the user code return address.  Push it on the top of the stack so it
-       acts as init1's return address, and then jump there.  */
-    asm volatile ("pushl %eax; jmp *%ecx");
-    /* NOTREACHED */
-  }
+  init (&argc);
 }
+#endif
 
 
 void
@@ -285,6 +279,10 @@ _hurd_stack_setup (int argc __attribute__ ((unused)), ...)
   void doinit (int *data)
     {
       /* This function gets called with the argument data at TOS.  */
+      void doinit1 (int argc, ...)
+	{
+	  init (&argc);
+	}
 
       /* Push the user return address after the argument data, and then
 	 jump to `doinit1' (above), so it is as if __libc_init_first's

@@ -1,3 +1,11 @@
+1998-11-25  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init): Restored as inline fn.
+	Use constant _HURD_THREADVARS_MAX for temporary array size.
+
+	* Makeconfig ($(common-objpfx)sysd-sorted): Use @ instead of / as sed
+	s separator, since $(..) might contain a /.
+
 1998-11-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* configure.in (mips): Fix typo (Replace ,, by ;;).
