@@ -217,7 +217,11 @@ _dl_start_user:
 	jsr	$26, ($0)
 	ldgp	$gp, 0($26)
 	br	1b
-2:	/* Pass our finalizer function to the user in $0. */
+2:	/* Clear the startup flag.  */
+	.set at
+	stl	$31, _dl_starting_up
+	.set noat
+	/* Pass our finalizer function to the user in $0. */
 	lda	$0, _dl_fini
 	/* Jump to the user's entry point.  */
 	mov	$9, $27
