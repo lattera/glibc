@@ -153,7 +153,7 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
 
 	    if (version->hash != 0)
 	      {
-		sym_map = _dl_lookup_symbol_x (strtab + sym->st_name, l, 
+		sym_map = _dl_lookup_symbol_x (strtab + sym->st_name, l,
 					       &sym, l->l_scope, version,
 					       ELF_RTYPE_CLASS_PLT, 0, 0);
 		break;

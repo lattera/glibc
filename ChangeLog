@@ -1,5 +1,36 @@
 2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
 
+	* sysdeps/mips/atomicity.h: Remove unused file.
+	* sysdeps/mips/dl-machine.h (elf_machine_rel): Add TLS relocations.
+	* sysdeps/mips/dl-tls.h: New file.
+	* sysdeps/mips/libc-tls.c: New file.
+	* sysdeps/mips/tls-macros.h: New file.
+	* sysdeps/mips/bits/atomic.h: New file.
+	* sysdeps/mips/bits/setjmp.h: Protect against multiple inclusion.
+	* sysdeps/mips/elf/configure.in: New file.
+	* sysdeps/mips/elf/configure: Generated.
+	* sysdeps/mips/sys/asm.h: New file.
+	* sysdeps/unix/sysv/linux/mips/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Add NPTL and five-argument
+	clone support.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(INTERNAL_SYSCALL_NCS): New.
+	(INTERNAL_SYSCALL): Update for non-constant support.
+	(internal_syscall0): Likewise.
+	(internal_syscall1): Likewise.
+	(internal_syscall2): Likewise.
+	(internal_syscall3): Likewise.
+	(internal_syscall4): Likewise.
+	(internal_syscall5): Likewise.
+	(internal_syscall6): Likewise.
+	(internal_syscall7): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (SIGEV_THREAD):
+	Update to match the kernel.
+	(SIGEV_CALLBACK): Likewise.
+	(SIGEV_THREAD_ID): Likewise.
+
+2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
+
 	[BZ #783]
 	* elf/tst-auditmod1.c: Add MIPS support.
 	* sysdeps/generic/ldsodefs.h (La_mips_32_regs): New.

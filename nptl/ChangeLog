@@ -1,3 +1,24 @@
+2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/mips/Makefile: New file.
+	* sysdeps/mips/nptl-sysdep.S: New file.
+	* sysdeps/mips/tcb-offsets.sym: New file.
+	* sysdeps/mips/pthread_spin_lock.S: New file.
+	* sysdeps/mips/pthread_spin_trylock.S: New file.
+	* sysdeps/mips/pthreaddef.h: New file.
+	* sysdeps/mips/tls.h: New file.
+	* sysdeps/mips/jmpbuf-unwind.h: New file.
+	* sysdeps/unix/sysv/linux/mips/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/pthreadtypes.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/semaphore.h: New file.
+	* sysdeps/unix/sysv/linux/mips/pthread_once.c: New file.
+	* sysdeps/unix/sysv/linux/mips/fork.c: New file.
+	* sysdeps/unix/sysv/linux/mips/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/mips/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/mips/clone.S: New file.
+	* sysdeps/unix/sysv/linux/mips/createthread.c: New file.
+	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h: New file.
+
 2005-03-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (__pthread_create_2_1): Rename syscall error

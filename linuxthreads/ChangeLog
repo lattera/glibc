@@ -1,3 +1,8 @@
+2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/mips/tls.h: New file.
+	* sysdeps/unix/sysv/linux/mips/vfork.S: New file.
+
 2005-03-21  GOTO Masanori  <gotom@debian.or.jp>
 
 	* linuxthreads/sysdeps/m68k/Makefile: Remove to delete
