@@ -1,3 +1,9 @@
+1999-03-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* debug/Makefile (install-bin): Install and build catchsegv only
+	if build-shared == yes.  Reported by jussi@jlaako.pp.fi [PR
+	libc/965].
+
 1999-03-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* time/tzfile.c (__tzfile_read): Handle the case where there are
