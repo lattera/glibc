@@ -1,5 +1,9 @@
 2002-08-18  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/mkdir.c (__mkdir): Use __directory_name_split
+	instead of __file_name_split.
+	* sysdeps/mach/hurd/unlink.c (__unlink): Likewise.
+
 	* sysdeps/mach/hurd/dl-sysdep.c
 	[HP_TIMING_AVAIL] (_dl_cpuclock_offset): New variable.
 	[HP_TIMING_AVAIL] (_dl_sysdep_start): Set it with HP_TIMING_NOW.
