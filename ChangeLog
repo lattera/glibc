@@ -1,3 +1,9 @@
+1999-03-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/signal.texi (Termination in Handler): Correct example.
+	Install default handler before reraising the signal.
+	Patch by Jochen Voss <voss@mathematik.uni-kl.de>.
+
 1999-03-08  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdexec.c (_hurd_exec): Handle ARGV or ENVP parameters being

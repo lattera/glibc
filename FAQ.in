@@ -46,7 +46,7 @@ really interested in porting it, contact
 
 	<bug-glibc@gnu.org>
 
-??	What compiler do I need to build GNU libc?
+??binsize	What compiler do I need to build GNU libc?
 
 {UD} You must use GNU CC to compile GNU libc.  A lot of extensions of GNU CC
 are used to increase portability and speed.
@@ -63,8 +63,15 @@ may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.3 and 1.1.1) should work with the GNU C library (for powerpc see
 ?powerpc; for ARM see ?arm).
 
-{ZW} Due to problems with C++ exception handling, you must use EGCS (any
-version) to compile version 2.1 of GNU libc.  See ?exception for details.
+While the GNU CC should be able to compile glibc it is nevertheless adviced
+to use EGCS.  Comparing the sizes of glibc on Intel compiled with a recent
+EGCS and gcc 2.8.1 shows this:
+
+		  text    data     bss     dec     hex filename
+egcs-2.93.10	862897   15944   12824  891665   d9b11 libc.so
+gcc-2.8.1	959965   16468   12152  988585   f15a9 libc.so
+
+Make up your own decision.
 
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
@@ -538,7 +545,7 @@ not a symlink to libc.so.6.  It should look something like this:
 
 GROUP ( libc.so.6 libc_nonshared.a )
 
-??exception	When I run an executable on one system which I compiled on
+??	When I run an executable on one system which I compiled on
 	another, I get dynamic linker errors.  Both systems have the same
 	version of glibc installed.  What's wrong?
 
@@ -562,14 +569,18 @@ libc.  It doesn't matter what compiler you use to compile your program.
 
 For glibc 2.1, we've chosen to do it the other way around: libc.so
 explicitly provides the EH functions.  This is to prevent other shared
-libraries from doing it.  You must therefore compile glibc 2.1 with EGCS.
-Again, it doesn't matter what compiler you use for your programs.
+libraries from doing it.
+
+{UD} Starting with glibc 2.1.1 you can compile glibc with gcc 2.8.1 or
+newer since we have explicitly add references to the functions causing the
+problem.  But you nevertheless should use EGCS for other reasons
+(see ?binsize).
 
 ??	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
 
 {AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3 or later.
-But you should get at least gcc 2.8.1 or egcs 1.0.2 (or later versions)
+But you should get at least gcc 2.8.1 or egcs 1.1 (or later versions)
 instead.
 
 ??	The `gencat' utility cannot process the catalog sources which

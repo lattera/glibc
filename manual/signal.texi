@@ -1514,11 +1514,12 @@ fatal_error_signal (int sig)
 @end group
 
 @group
-  /* @r{Now reraise the signal.  Since the signal is blocked,}
-     @r{it will receive its default handling, which is}
-     @r{to terminate the process.  We could just call}
-     @r{@code{exit} or @code{abort}, but reraising the signal}
-     @r{sets the return status from the process correctly.} */
+  /* @r{Now reraise the signal.  We reactivate the signal's}
+     @r{default handling, which is to terminate the process.}
+     @r{We could just call @code{exit} or @code{abort},}
+     @r{but reraising the signal sets the return status}
+     @r{from the process correctly.} */
+  signal (sig, SIG_DFL);
   raise (sig);
 @}
 @end group
