@@ -13,7 +13,6 @@ truncate	-	truncate	2	truncate	truncate64
 mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
 readahead	-	readahead	3	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
-posix_fadvise64	-	fadvise64	Vi:iiii	posix_fadvise64	posix_fadvise
 
 # Override select.S in parent directory:
 select		-	select		C:5	__select	select

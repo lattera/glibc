@@ -21,7 +21,6 @@ getpriority	-	getpriority	i:ii	__getpriority	getpriority
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 llseek		EXTRA	lseek		C:3	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
 lseek		llseek	-
-posix_fadvise64	-	fadvise64	Vi:iiii	posix_fadvise64	posix_fadvise
 pread		-	pread64		C:4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
 pwrite		-	pwrite64		C:4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs __fstatfs64 fstatfs64

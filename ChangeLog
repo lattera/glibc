@@ -1,3 +1,30 @@
+2004-03-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (posix_fadvise64):
+	Remove.
+	* sysdeps/unix/sysv/linux/alpha/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (posix_fadvise64):
+	Remove.
+	* sysdeps/unix/sysv/linux/ia64/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (posix_fadvise64):
+	Remove.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/posix_fadvise64.c: New
+	file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-64/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list
+	(posix_fadvise64): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/posix_fadvise.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/posix_fadvise64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list
+	(posix_fadvise64): Remove.
+
 2004-03-02  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/xstat.c: New file.
