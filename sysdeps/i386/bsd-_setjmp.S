@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  i386 version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-ENTRY (setjmp)
+ENTRY (_setjmp)
 	popl %eax		/* Pop return PC.  */
 	popl %ecx		/* Pop jmp_buf argument.  */
 	pushl $0		/* Push second argument of zero.  */
