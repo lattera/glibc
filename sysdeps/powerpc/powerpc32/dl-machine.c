@@ -415,10 +415,10 @@ __process_machine_rela (struct link_map *map,
       return;
 
     case R_PPC_UADDR32:
-      ((char *) reloc_addr)[0] = value >> 24;
-      ((char *) reloc_addr)[1] = value >> 16;
-      ((char *) reloc_addr)[2] = value >> 8;
-      ((char *) reloc_addr)[3] = value;
+      ((char *) reloc_addr)[0] = finaladdr >> 24;
+      ((char *) reloc_addr)[1] = finaladdr >> 16;
+      ((char *) reloc_addr)[2] = finaladdr >> 8;
+      ((char *) reloc_addr)[3] = finaladdr;
       break;
 
     case R_PPC_ADDR24:
@@ -436,8 +436,8 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_UADDR16:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
 	dl_reloc_overflow (map,  "R_PPC_UADDR16", reloc_addr, sym, refsym);
-      ((char *) reloc_addr)[0] = value >> 8;
-      ((char *) reloc_addr)[1] = value;
+      ((char *) reloc_addr)[0] = finaladdr >> 8;
+      ((char *) reloc_addr)[1] = finaladdr;
       break;
 
     case R_PPC_ADDR16_LO:

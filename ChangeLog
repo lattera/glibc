@@ -1,5 +1,8 @@
 2002-10-18  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__process_machine_rela): Fix
+	typos: VALUE -> FINALADDR.
+
 	* sysdeps/unix/alpha/sysdep.h (INLINE_SYSCALL, INLINE_SYSCALL1)
 	(inline_syscall_clobbers, inline_syscall0, inline_syscall1)
 	(inline_syscall2, inline_syscall3, inline_syscall4, inline_syscall5)
