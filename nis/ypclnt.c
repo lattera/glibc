@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -205,10 +205,15 @@ __yp_bind (const char *domain, dom_binding **ypdb)
       return YPERR_YPSERV;
     }
 
-  if (is_new && ypdb != NULL)
+  if (is_new)
     {
-      ysd->dom_pnext = *ypdb;
-      *ypdb = ysd;
+      if (ypdb != NULL)
+	{
+	  ysd->dom_pnext = *ypdb;
+	  *ypdb = ysd;
+	}
+      else
+	free (ysd);
     }
 
   return YPERR_SUCCESS;
@@ -710,6 +715,8 @@ yp_all (const char *indomain, const char *inmap,
 
       /* We don't need the UDP connection anymore.  */
       __yp_unbind (ydb);
+      free (ydb);
+      ydb = NULL;
 
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);
       if (clnt == NULL)

@@ -1,5 +1,8 @@
 2003-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/ypclnt.c (yp_all): Free the dom_binding object after
+	unwinding it.
+
 	* grp/initgroups.c (getgrouplist): Don't copy too much into the
 	user buffer if more groups are found than fit into it.
 
