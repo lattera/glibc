@@ -1,3 +1,9 @@
+1999-10-27  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/rand_r.c (rand_r): Really use 31 bits, the result was
+	shifted a bit too much.
+	Reported by Eugen Dedu <dedu@ese-metz.fr>.
+
 1999-10-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/gethnamaddr.c: Account bytes needed for alignment in

@@ -1,5 +1,5 @@
 /* Reentrant random function frm POSIX.1c.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -35,7 +35,7 @@ rand_r (unsigned int *seed)
 
   next *= 1103515245;
   next += 12345;
-  result <<= 11;
+  result <<= 10;
   result ^= (unsigned int) (next / 65536) % 1024;
 
   next *= 1103515245;
