@@ -1,4 +1,16 @@
+2002-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/system.c: Define FORK only if
+	__ASSUME_CLONE_THREAD_FLAGS is defined.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_CLONE_THREAD_FLAGS): Define for x86 and kernel >=
+	2.5.50.
+
 2002-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/brk.c: Use INTERNAL_SYSCALL instead
+	of asm.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
 
 	* elf/dl-support.c [NEED_DL_SYSINFO]: Define and initialize
 	_dl_sysinfo.

@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <bits/libc-lock.h>
+#include <kernel-features.h>
 
 /* We have to and actually can handle cancelable system().  The big
    problem: we have to kill the child process if necessary.  To do
@@ -31,8 +32,10 @@
    return.  It might still be in the kernel when the cancellation
    request comes.  Therefore we have to use the clone() calls ability
    to have the kernel write the PID into the user-level variable.  */
-#define FORK() \
+#ifdef __ASSUME_CLONE_THREAD_FLAGS
+# define FORK() \
   INLINE_SYSCALL (clone, 3, CLONE_PARENT_SETTID | SIGCHLD, 0, &pid)
+#endif
 
 static void cancel_handler (void *arg);
 
