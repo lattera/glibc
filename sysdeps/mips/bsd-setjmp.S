@@ -1,5 +1,5 @@
 /* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  MIPS version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@
 
 #include <sysdep.h>
 
-#ifdef PIC
+#ifdef __PIC__
 	.option pic2
 #endif
 ENTRY (setjmp)
 	.set	noreorder
-#ifdef PIC
+#ifdef __PIC__
 	.cpload t9
 	la	t9, C_SYMBOL_NAME (__sigsetjmp)
 	jr	t9
