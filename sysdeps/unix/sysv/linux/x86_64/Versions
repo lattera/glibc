@@ -1,0 +1,7 @@
+libc {
+  GLIBC_2.2.5 {
+    ioperm; iopl;
+
+    __modify_ldt; modify_ldt;
+  }
+}

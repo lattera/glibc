@@ -1,0 +1,44 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
+llseek		EXTRA	lseek		i:iii	__libc_lseek64	__llseek llseek __lseek64 lseek64
+pread		-	pread		i:ibni	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
+pwrite		-	pwrite		i:ibni	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
+fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs __fstatfs64 fstatfs64
+statfs		-	statfs		i:sp	__statfs	statfs statfs64
+getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit getrlimit64
+setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit64 setrlimit
+ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate ftruncate64 __ftruncate64
+truncate	-	truncate	i:si	truncate	truncate64
+ptrace		-	ptrace		i:iipp	__ptrace	ptrace
+
+# semaphore and shm system calls
+msgctl		-	msgctl		i:iip	__msgctl	msgctl
+msgget		-	msgget		i:ii	__msgget	msgget
+msgrcv		-	msgrcv		i:ibnii	__msgrcv	msgrcv
+msgsnd		-	msgsnd		i:ibni	__msgsnd	msgsnd
+shmat		-	shmat		i:ipi	__shmat		shmat
+shmctl		-	shmctl		i:iip	__shmctl	shmctl
+shmdt		-	shmdt		i:s	__shmdt		shmdt
+shmget		-	shmget		i:iii	__shmget	shmget
+semop		-	semop		i:ipi	__semop		semop
+semget		-	semget		i:iii	__semget	semget
+semctl		-	semctl		i:iiii	__semctl	semctl
+
+
+# proper socket implementations:
+accept		-	accept		i:iBN	__libc_accept	__accept accept
+bind		-	bind		i:ipi	__bind		bind
+connect		-	connect		i:ipi	__libc_connect	__connect connect
+getpeername	-	getpeername	i:ipp	__getpeername	getpeername
+getsockname	-	getsockname	i:ipp	__getsockname	getsockname
+getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
+listen		-	listen		i:ii	__listen	listen
+recvfrom	-	recvfrom	i:ibniBN	__libc_recvfrom	__recvfrom recvfrom
+recvmsg		-	recvmsg		i:ipi	__libc_recvmsg	recvmsg
+sendmsg		-	sendmsg		i:ipi	__libc_sendmsg	sendmsg
+sendto		-	sendto		i:ibnibn	__libc_sendto	__sendto sendto
+setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
+shutdown	-	shutdown	i:ii	__shutdown	shutdown
+socket		-	socket		i:iii	__socket	socket
+socketpair	-	socketpair	i:iiif	__socketpair	socketpair
