@@ -1,3 +1,8 @@
+2001-05-05  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/bits/environments.h: Add comment from
+	sysdeps/generic/bits/environments.h.  Define _POSIX_V6_* values.
+
 2001-04-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/confstr.c (confstr) [_CS_V6_WIDTH_RESTRICTED_ENVS]: Move so
