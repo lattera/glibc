@@ -24,8 +24,14 @@ Boston, MA 02111-1307, USA.  */
 
 #include <sys/types.h>
 
+
 /* Get system dependent values and data structures.  */
 #include <utmpbits.h>
+
+
+/* Make FD be the controlling terminal, stdin, stdout, and stderr;
+   then close FD.  Returns 0 on success, nonzero on error.  */
+extern int login_tty __P ((int fd));
 
 
 /* Write the given entry into utmp and wtmp.  */
@@ -38,7 +44,7 @@ extern int logout __P ((__const char *ut_line));
 extern void logwtmp __P ((__const char *ut_line, __const char *ut_name,
 			  __const char *ut_host));
 
-/* Change name of the examine utmp file.  */
+/* Change name of the utmp file to be examined.  */
 extern int utmpname __P ((__const char *__file));
 
 /* Read next entry from a utmp-like file.  */
