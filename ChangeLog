@@ -2,6 +2,12 @@
 
 	* version.h (VERSION): Bump to 2.2.3.
 
+	* stdlib/isomac.c (fmt): Don't define _LIBC.
+	* include/endian.h: Define BIG_ENDI, LITTLE_ENDI, HIGH_HALF, and
+	LOW_HALF only if _LIBC is defined.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Slight adjustment of yn() error.
+
 	* posix/fnmatch_loop.c (FCT): Handle !() after * special like @()
 	and +().
 	* posix/tst-fnmatch.input: Add test cases for matching empty strings.

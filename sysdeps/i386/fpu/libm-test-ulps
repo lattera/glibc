@@ -1120,8 +1120,8 @@ ifloat: 1
 ldouble: 2
 ildouble: 2
 Test "yn (3, 0.7) == -15.819479052819633505":
-double: 2
-idouble: 2
+double: 3
+idouble: 3
 ldouble: 2
 ildouble: 2
 Test "yn (3, 2.0) == -1.1277837768404277861":
