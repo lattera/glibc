@@ -1,3 +1,13 @@
+2003-06-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S (__pthread_once):
+	Use correct cleanup handler registration.  Add unwind info.
+	* tst-once3.c: Add cleanup handler and check it is called.
+	* tst-once4.c: Likewise.
+	* tst-oncex3.c: New file.
+	* tst-oncex4.c: New file.
+	* Makefile: Add rules to build and run tst-oncex3 and tst-oncex4.
+
 2003-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/configure.in: Check for C cleanup handling in gcc.

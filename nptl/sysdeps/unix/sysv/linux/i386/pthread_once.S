@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <unwindbuf.h>
 #include <sysdep.h>
 
 #ifndef UP
@@ -36,6 +37,7 @@
 	.globl	__pthread_once
 	.type	__pthread_once,@function
 	.align	16
+	cfi_startproc
 __pthread_once:
 	movl	4(%esp), %ecx
 	testl	$2, (%ecx)
@@ -44,7 +46,11 @@ __pthread_once:
 	ret
 
 1:	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (3, 0)
 	pushl	%esi
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (6, 0)
 	movl	%ecx, %ebx
 	xorl	%esi, %esi
 
@@ -90,33 +96,35 @@ __pthread_once:
 	jmp	6b
 
 3:	/* Call the initializer function after setting up the
-	   cancellation handler.  */
-	subl	$16, %esp
+	   cancellation handler.  Note that it is not possible here
+	   to use the unwind-based cleanup handling.  This would require
+	   that the user-provided function and all the code it calls
+	   is compiled with exceptions.  Unfortunately this cannot be
+	   guaranteed.  */
+	subl	$UNWINDBUFSIZE+8, %esp
+	cfi_adjust_cfa_offset (UNWINDBUFSIZE+8)
+	movl	%ecx, %ebx		/* PIC register value.  */
 
-	/* Push the cleanup handler.  */
-#ifdef PIC
-	leal	clear_once_control@GOTOFF(%ecx), %eax
-#else
-	leal	clear_once_control, %eax
-#endif
-	movl	%esp, %edx
-	pushl	%ebx
-	pushl	%eax
-	pushl	%edx
-	call	__pthread_cleanup_push	/* Note: no @PLT.  */
-
-	call	*44(%esp)
-
-	/* Pop the cleanup handler.  This code depends on the once
-	   handler and _pthread_cleanup_push not touch the content
-	   of the stack.  Otherwise the first parameter would have
-	   to be reloaded.  */
+	leal	8+UWJMPBUF(%esp), %eax
 	movl	$0, 4(%esp)
-	call	__pthread_cleanup_pop	/* Note: no @PLT.  */
+	movl	%eax, (%esp)
+	call	__sigsetjmp@PLT
+	jne	7f
 
-	addl	$28, %esp
+	leal	8(%esp), %eax
+	call	__pthread_register_cancel
+
+	/* Call the user-provided initialization function.  */
+	call	*24+UNWINDBUFSIZE(%esp)
+
+	/* Pop the cleanup handler.  */
+	leal	8(%esp), %eax
+	call	__pthread_unregister_cancel
+	addl	$UNWINDBUFSIZE+8, %esp
+	cfi_adjust_cfa_offset (-UNWINDBUFSIZE-8)
 
 	/* Sucessful run of the initializer.  Signal that we are done.  */
+	movl	12(%esp), %ebx
 	LOCK
 	addl	$1, (%ebx)
 
@@ -127,25 +135,19 @@ __pthread_once:
 	ENTER_KERNEL
 
 4:	popl	%esi
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (6)
 	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (3)
 	xorl	%eax, %eax
 	ret
 
-	.size	__pthread_once,.-__pthread_once
-
-	.globl	__pthread_once_internal
-__pthread_once_internal = __pthread_once
-
-	.globl	pthread_once
-pthread_once = __pthread_once
-
-
-	.type	clear_once_control,@function
-	.align	16
-clear_once_control:
-	pushl	%ebx
-
-	movl	8(%esp), %ebx
+7:	/* __sigsetjmp returned for the second time.  */
+	movl	20+UNWINDBUFSIZE(%esp), %ebx
+	cfi_adjust_cfa_offset (UNWINDBUFSIZE+16)
+	cfi_offset (3, -8)
+	cfi_offset (6, -12)
 	movl	$0, (%ebx)
 
 	movl	$0x7fffffff, %edx
@@ -153,9 +155,18 @@ clear_once_control:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
-	popl	%ebx
-	ret
-	.size	clear_once_control,.-clear_once_control
+	leal	8(%esp), %eax
+	call	__pthread_unwind_next		/* Note: no @PLT.  */
+	/* NOTREACHED */
+	hlt
+	cfi_endproc
+	.size	__pthread_once,.-__pthread_once
+
+	.globl	__pthread_once_internal
+__pthread_once_internal = __pthread_once
+
+	.globl	pthread_once
+pthread_once = __pthread_once
 
 
 #ifdef PIC

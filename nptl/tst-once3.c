@@ -33,6 +33,7 @@ static pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 static pthread_barrier_t bar;
 
 static int global;
+static int cl_called;
 
 static void
 once_handler1 (void)
@@ -42,6 +43,7 @@ once_handler1 (void)
       puts ("once_handler1: mutex_lock failed");
       exit (1);
     }
+  puts ("once_handler1: locked");
 
   int r = pthread_barrier_wait (&bar);
   if (r != 0 && r!= PTHREAD_BARRIER_SERIAL_THREAD)
@@ -53,6 +55,7 @@ once_handler1 (void)
   pthread_cond_wait (&cond, &mut);
 
   /* We should never get here.  */
+  exit (42);
 }
 
 static void
@@ -62,10 +65,21 @@ once_handler2 (void)
 }
 
 
+static void
+cl (void *arg)
+{
+  cl_called = 1;
+}
+
+
 static void *
 tf (void *arg)
 {
+  pthread_cleanup_push (cl, NULL)
+
   pthread_once (&once, once_handler1);
+
+  pthread_cleanup_pop (0);
 
   /* We should never get here.  */
   puts ("pthread_once in tf returned");
@@ -81,40 +95,41 @@ do_test (void)
   if (pthread_barrier_init (&bar, NULL, 2) != 0)
     {
       puts ("barrier_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_create (&th, NULL, tf, NULL) != 0)
     {
       puts ("first create failed");
-      exit (1);
+      return 1;
     }
 
   int r = pthread_barrier_wait (&bar);
   if (r != 0 && r!= PTHREAD_BARRIER_SERIAL_THREAD)
     {
       puts ("barrier_wait failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutex_lock (&mut) != 0)
     {
       puts ("mutex_lock failed");
-      exit (1);
+      return 1;
     }
   /* We unlock the mutex so that we catch the case where the pthread_cond_wait
      call incorrectly resumes and tries to get the mutex.  */
   if (pthread_mutex_unlock (&mut) != 0)
     {
       puts ("mutex_unlock failed");
-      exit (1);
+      return 1;
     }
 
   /* Cancel the thread.  */
+  puts ("going to cancel");
   if (pthread_cancel (th) != 0)
     {
       puts ("cancel failed");
-      exit (1);
+      return 1;
     }
 
   void *result;
@@ -122,7 +137,13 @@ do_test (void)
   if (result != PTHREAD_CANCELED)
     {
       puts ("join didn't return PTHREAD_CANCELED");
-      exit (1);
+      return 1;
+    }
+
+  if (cl_called != 1)
+    {
+      puts ("cleanup handler not called");
+      return 1;
     }
 
   pthread_once (&once, once_handler2);
@@ -130,7 +151,7 @@ do_test (void)
   if (global != 1)
     {
       puts ("global still 0");
-      exit (1);
+      return 1;
     }
 
   return 0;
