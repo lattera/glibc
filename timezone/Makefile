@@ -104,13 +104,13 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 	   echo '$$(addprefix $$(inst_zonedir)/,$$($*-zones)): \'	    ;\
 	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_zonedir)/,$$($$t-zones)))' ;\
 	 fi								    ;\
-	 echo '$$(addprefix $$(inst_datadir)/zone%/right/,$$($*-zones)): \' ;\
+	 echo '$$(addprefix $$(dir $$(inst_zonedir))zone%/right/,$$($*-zones)): \' ;\
 	 echo '$< $$(objpfx)zic leapseconds yearistype'			    ;\
 	 echo '	$$(tzcompile)'						    ;\
-	 echo '$$(addprefix $$(inst_datadir)/zone%/posix/,$$($*-zones)): \' ;\
+	 echo '$$(addprefix $$(dir $$(inst_zonedir))zone%/posix/,$$($*-zones)): \' ;\
 	 echo '$< $$(objpfx)zic /dev/null yearistype'			    ;\
 	 echo '	$$(tzcompile)'						    ;\
-	 echo '$$(addprefix $$(inst_datadir)/zone%/,$$($*-zones)): \'	    ;\
+	 echo '$$(addprefix $$(dir $$(inst_zonedir))zone%/,$$($*-zones)): \' ;\
 	 echo '$< $$(objpfx)zic $$(leapseconds) yearistype'		    ;\
 	 echo '	$$(tzcompile)'						    ;\
 	 echo 'endif'							    ;\
