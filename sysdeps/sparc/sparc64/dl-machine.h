@@ -199,13 +199,15 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 {
   const unsigned long int r_type = ELF64_R_TYPE_ID (reloc->r_info);
 
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_SPARC_RELATIVE, 0))
     *reloc_addr = map->l_addr + reloc->r_addend;
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
   else if (r_type == R_SPARC_NONE) /* Who is Wilbur? */
     return;
-#endif
+# endif
   else
+#endif
     {
 #ifndef RTLD_BOOTSTRAP
       const Elf64_Sym *const refsym = sym;

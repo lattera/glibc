@@ -308,7 +308,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_386_RELATIVE, 0))
     {
-# ifndef RTLD_BOOTSTRAP
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       /* This is defined in rtld.c, but nowhere in the static libc.a;
 	 make the reference weak so static programs can still link.
 	 This declaration cannot be done when compiling rtld.c

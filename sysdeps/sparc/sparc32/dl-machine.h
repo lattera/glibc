@@ -346,7 +346,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 {
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
      reference weak so static programs can still link.  This declaration
      cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
@@ -355,14 +355,16 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   weak_extern (_dl_rtld_map);
 #endif
 
+#if !define RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_SPARC_RELATIVE, 0))
     {
-#ifndef RTLD_BOOTSTRAP
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       if (map != &_dl_rtld_map) /* Already done in rtld itself. */
-#endif
+# endif
 	*reloc_addr += map->l_addr + reloc->r_addend;
     }
   else
+#endif
     {
 #ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;

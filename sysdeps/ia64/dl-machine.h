@@ -508,7 +508,7 @@ elf_machine_rela (struct link_map *map,
   const unsigned long int r_type = ELF64_R_TYPE (reloc->r_info);
   Elf64_Addr value;
 
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
      reference weak so static programs can still link.  This declaration
      cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
@@ -520,28 +520,28 @@ elf_machine_rela (struct link_map *map,
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
 
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_REL64LSB),
 			0))
     {
       assert (ELF64_R_TYPE (reloc->r_info) == R_IA64_REL64LSB);
       value = *reloc_addr;
-#ifndef RTLD_BOOTSTRAP
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       /* Already done in dynamic linker.  */
       if (map != &_dl_rtld_map)
-#endif
+# endif
         value += map->l_addr;
     }
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
   else if (r_type == R_IA64_NONE)
     return;
-#endif
+# endif
   else
+#endif
     {
       struct link_map *sym_map;
 
-      /*
-       * RESOLVE_MAP() will return NULL if it fail to locate the symbol
-       */
+      /* RESOLVE_MAP() will return NULL if it fail to locate the symbol.  */
       if ((sym_map = RESOLVE_MAP (&sym, version, r_type)))
         {
 	  value = sym ? sym_map->l_addr + sym->st_value : 0;
