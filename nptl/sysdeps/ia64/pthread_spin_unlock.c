@@ -17,15 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Ugly hack to avoid the declaration of pthread_spin_init.  */
-#define pthread_spin_init pthread_spin_init_XXX
 #include "pthreadP.h"
-#undef pthread_spin_init
+
 
 int
 pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  *lock = 0;
+  __sync_lock_release_si ((int *) lock);
   return 0;
 }
 strong_alias (pthread_spin_unlock, pthread_spin_init)

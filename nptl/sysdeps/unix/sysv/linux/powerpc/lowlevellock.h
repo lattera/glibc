@@ -31,107 +31,107 @@
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
-#define lll_futex_wait(futexp, val)				\
-  ({								\
-    INTERNAL_SYSCALL_DECL (__err);				\
-    long int __ret;						\
-								\
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,			\
-			      (futexp), FUTEX_WAIT, (val), 0);	\
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;		\
+#define lll_futex_wait(futexp, val) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
+			      (futexp), FUTEX_WAIT, (val), 0);		      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
   })
 
-#define lll_futex_timed_wait(futexp, val, timespec)			\
-  ({									\
-    INTERNAL_SYSCALL_DECL (__err);					\
-    long int __ret;							\
-									\
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,				\
-			      (futexp), FUTEX_WAIT, (val), (timespec));	\
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			\
+#define lll_futex_timed_wait(futexp, val, timespec) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
+			      (futexp), FUTEX_WAIT, (val), (timespec));	      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
   })
 
-#define lll_futex_wake(futexp, nr) 				\
-  ({								\
-    INTERNAL_SYSCALL_DECL (__err);				\
-    long int __ret;						\
-								\
-    __ret = INTERNAL_SYSCALL (futex, __err, 4,			\
-			      (futexp), FUTEX_WAKE, (nr), 0);	\
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;		\
+#define lll_futex_wake(futexp, nr) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
+			      (futexp), FUTEX_WAKE, (nr), 0);		      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
   })
 
 #ifdef UP
-#define __lll_acq_instr	""
-#define __lll_rel_instr	""
+# define __lll_acq_instr	""
+# define __lll_rel_instr	""
 #else
-#define __lll_acq_instr	"isync"
-#define __lll_rel_instr	"sync"
+# define __lll_acq_instr	"isync"
+# define __lll_rel_instr	"sync"
 #endif
 
 /* Set *futex to 1 if it is 0, atomically.  Returns the old value */
-#define __lll_trylock(futex)				\
-  ({ int __val;							\
-     __asm __volatile ("1:	lwarx	%0,0,%2\n"		\
-		       "	cmpwi	0,%0,0\n"		\
-		       "	bne	2f\n"			\
-		       "	stwcx.	%3,0,%2\n"		\
-		       "	bne-	1b\n"			\
-		       "2:	" __lll_acq_instr		\
-		       : "=&r" (__val), "=m" (*futex)		\
-		       : "r" (futex), "r" (1), "1" (*futex)	\
-		       : "cr0", "memory");			\
-     __val;							\
+#define __lll_trylock(futex) \
+  ({ int __val;								      \
+     __asm __volatile ("1:	lwarx	%0,0,%2\n"			      \
+		       "	cmpwi	0,%0,0\n"			      \
+		       "	bne	2f\n"				      \
+		       "	stwcx.	%3,0,%2\n"			      \
+		       "	bne-	1b\n"				      \
+		       "2:	" __lll_acq_instr			      \
+		       : "=&r" (__val), "=m" (*futex)			      \
+		       : "r" (futex), "r" (1), "1" (*futex)		      \
+		       : "cr0", "memory");				      \
+     __val;								      \
   })
 
 #define lll_mutex_trylock(lock)	__lll_trylock(&(lock))
 
 /* Add inc to *futex atomically and return the old value. */
-#define __lll_add(futex, inc)						\
-  ({ int __val, __tmp;							\
-     __asm __volatile ("1:	lwarx	%0,0,%3\n"			\
-		       "	addi	%1,%0,%4\n"			\
-		       "	stwcx.	%1,0,%3\n"			\
-		       "	bne-	1b"				\
-		       : "=&b" (__val), "=&r" (__tmp), "=m" (*futex)	\
-		       : "r" (futex), "I" (inc), "2" (*futex)		\
-		       : "cr0");					\
-     __val;								\
+#define __lll_add(futex, inc) \
+  ({ int __val, __tmp;							      \
+     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
+		       "	addi	%1,%0,%4\n"			      \
+		       "	stwcx.	%1,0,%3\n"			      \
+		       "	bne-	1b"				      \
+		       : "=&b" (__val), "=&r" (__tmp), "=m" (*futex)	      \
+		       : "r" (futex), "I" (inc), "2" (*futex)		      \
+		       : "cr0");					      \
+     __val;								      \
   })
 
 extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
 
-#define lll_mutex_lock(lock)				\
-  (void) ({						\
-    int *__futex = &(lock);				\
-    int __val = __lll_add (__futex, 1);			\
-    __asm __volatile (__lll_acq_instr ::: "memory");	\
-    if (__builtin_expect (__val != 0, 0))		\
-      __lll_lock_wait (__futex, __val);			\
+#define lll_mutex_lock(lock) \
+  (void) ({								      \
+    int *__futex = &(lock);						      \
+    int __val = __lll_add (__futex, 1);					      \
+    __asm __volatile (__lll_acq_instr ::: "memory");			      \
+    if (__builtin_expect (__val != 0, 0))				      \
+      __lll_lock_wait (__futex, __val);					      \
   })
 
 extern int __lll_timedlock_wait
 	(int *futex, int val, const struct timespec *) attribute_hidden;
 
-#define lll_mutex_timedlock(lock, abstime)			\
-  ({ int *__futex = &(lock);						\
-     int __val = __lll_add (__futex, 1);				\
-     __asm __volatile (__lll_acq_instr ::: "memory");			\
-     if (__builtin_expect (__val != 0, 0))				\
-       __val = __lll_timedlock_wait (__futex, __val, (abstime));	\
-     __val;								\
+#define lll_mutex_timedlock(lock, abstime) \
+  ({ int *__futex = &(lock);						      \
+     int __val = __lll_add (__futex, 1);				      \
+     __asm __volatile (__lll_acq_instr ::: "memory");			      \
+     if (__builtin_expect (__val != 0, 0))				      \
+       __val = __lll_timedlock_wait (__futex, __val, (abstime));	      \
+     __val;								      \
   })
 
-#define lll_mutex_unlock(lock)				\
-  (void) ({						\
-    int *__futex = &(lock);				\
-     __asm __volatile (__lll_rel_instr ::: "memory");	\
-    int __val = __lll_add (__futex, -1);		\
-    if (__builtin_expect (__val != 1, 0))		\
-      {							\
-	*__futex = 0;					\
-	lll_futex_wake (__futex, 1);			\
-      }							\
+#define lll_mutex_unlock(lock) \
+  (void) ({								      \
+    int *__futex = &(lock);						      \
+     __asm __volatile (__lll_rel_instr ::: "memory");			      \
+    int __val = __lll_add (__futex, -1);				      \
+    if (__builtin_expect (__val != 1, 0))				      \
+      {									      \
+	*__futex = 0;							      \
+	lll_futex_wake (__futex, 1);					      \
+      }									      \
   })
 
 #define lll_mutex_islocked(futex) \
@@ -164,39 +164,39 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
    wakeup when the clone terminates.  The memory location contains the
    thread ID while the clone is running and is reset to zero
    afterwards.	*/
-#define lll_wait_tid(tid)			\
-  do {						\
-    __typeof (tid) __tid;			\
-    while ((__tid = (tid)) != 0)		\
-      lll_futex_wait (&(tid), __tid);		\
+#define lll_wait_tid(tid) \
+  do {									      \
+    __typeof (tid) __tid;						      \
+    while ((__tid = (tid)) != 0)					      \
+      lll_futex_wait (&(tid), __tid);					      \
   } while (0)
 
 extern int __lll_timedwait_tid (int *, const struct timespec *)
      attribute_hidden;
 
-#define lll_timedwait_tid(tid, abstime)			\
-  ({							\
-    int __res = 0;					\
-    if ((tid) != 0)					\
-      __res = __lll_timedwait_tid (&(tid), (abstime));	\
-    __res;						\
+#define lll_timedwait_tid(tid, abstime) \
+  ({									      \
+    int __res = 0;							      \
+    if ((tid) != 0)							      \
+      __res = __lll_timedwait_tid (&(tid), (abstime));			      \
+    __res;								      \
   })
 
 
 /* Decrement *futex if it is > 0, and return the old value */
-#define __lll_dec_if_positive(futex)					\
-  ({ int __val, __tmp;							\
-     __asm __volatile ("1:	lwarx	%0,0,%3\n"			\
-		       "	cmpwi	0,%0,0\n"			\
-		       "	addi	%1,%0,-1\n"			\
-		       "	ble	2f\n"				\
-		       "	stwcx.	%1,0,%3\n"			\
-		       "	bne-	1b\n"				\
-		       "2:	" __lll_acq_instr			\
-		       : "=&b" (__val), "=&r" (__tmp), "=m" (*futex)	\
-		       : "r" (futex), "2" (*futex)			\
-		       : "cr0");					\
-     __val;								\
+#define __lll_dec_if_positive(futex) \
+  ({ int __val, __tmp;							      \
+     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
+		       "	cmpwi	0,%0,0\n"			      \
+		       "	addi	%1,%0,-1\n"			      \
+		       "	ble	2f\n"				      \
+		       "	stwcx.	%1,0,%3\n"			      \
+		       "	bne-	1b\n"				      \
+		       "2:	" __lll_acq_instr			      \
+		       : "=&b" (__val), "=&r" (__tmp), "=m" (*futex)	      \
+		       : "r" (futex), "2" (*futex)			      \
+		       : "cr0");					      \
+     __val;								      \
   })
 
 

@@ -27,9 +27,9 @@
 void
 __lll_lock_wait (int *futex, int val)
 {
-  do {
-      lll_futex_wait (futex, val+1);
-  } while ((val = __lll_add (futex, 1)) != 0);
+  do
+      lll_futex_wait (futex, val + 1);
+  while ((val = __lll_add (futex, 1)) != 0);
   *futex = 2;
 }
 hidden_proto (__lll_lock_wait)
@@ -38,8 +38,6 @@ hidden_proto (__lll_lock_wait)
 int
 __lll_timedlock_wait (int *futex, int val, const struct timespec *abstime)
 {
-  int err;
-
   /* Reject invalid timeouts.  */
   if (abstime->tv_nsec >= 1000000000)
     return EINVAL;
@@ -48,33 +46,31 @@ __lll_timedlock_wait (int *futex, int val, const struct timespec *abstime)
     {
       struct timeval tv;
       struct timespec rt;
-      int sec, nsec;
 
       /* Get the current time.  */
-      __gettimeofday (&tv, NULL);
+      (void) __gettimeofday (&tv, NULL);
 
       /* Compute relative timeout.  */
-      sec = abstime->tv_sec - tv.tv_sec;
-      nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-      if (nsec < 0)
+      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+      if (rt.tv_nsec < 0)
 	{
-	  nsec += 1000000000;
-	  --sec;
+	  rt.tv_nsec += 1000000000;
+	  --rt.tv_sec;
 	}
 
       /* Already timed out?  */
-      err = -ETIMEDOUT;
-      if (sec < 0)
-	break;
+      if (rt.tv_sec < 0)
+	return ETIMEDOUT;
 
       /* Wait.  */
-      rt.tv_sec = sec;
-      rt.tv_nsec = nsec;
-      err = lll_futex_timed_wait (futex, val+1, &rt);
-    } while (err == 0 && (val = __lll_add (futex, 1)) != 0);
+      if (lll_futex_timed_wait (futex, val + 1, &rt) == -ETIMEDOUT)
+	return ETIMEDOUT;
+    }
+  while ((val = __lll_add (futex, 1)) != 0);
 
   *futex = 2;
-  return -err;
+  return 0;
 }
 hidden_proto (__lll_timedlock_wait)
 
@@ -84,7 +80,9 @@ hidden_proto (__lll_timedlock_wait)
 int
 lll_unlock_wake_cb (int *futex)
 {
-  __lll_add (futex, 1);
+  if (__lll_add (futex, 1) + 1 != 0)
+    lll_futex_wake (futex, 1);
+
   return 0;
 }
 hidden_proto (lll_unlock_wake_cb)
@@ -94,7 +92,6 @@ int
 __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 {
   int tid;
-  int err = 0;
 
   if (abstime == NULL || abstime->tv_nsec >= 1000000000)
     return EINVAL;
@@ -104,36 +101,29 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
     {
       struct timeval tv;
       struct timespec rt;
-      int sec, nsec;
 
       /* Get the current time.  */
-      __gettimeofday (&tv, NULL);
+      (void) __gettimeofday (&tv, NULL);
 
       /* Compute relative timeout.  */
-      sec = abstime->tv_sec - tv.tv_sec;
-      nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-      if (nsec < 0)
+      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+      if (rt.tv_nsec < 0)
 	{
-	  nsec += 1000000000;
-	  --sec;
+	  rt.tv_nsec += 1000000000;
+	  --rt.tv_sec;
 	}
 
       /* Already timed out?  */
-      err = -ETIMEDOUT;
-      if (sec < 0)
-	break;
-
-      /* Wait.  */
-      rt.tv_sec = sec;
-      rt.tv_nsec = nsec;
+      if (rt.tv_sec < 0)
+	return ETIMEDOUT;
 
       /* Wait until thread terminates.  */
-      err = lll_futex_timed_wait (tidp, tid, &rt);
-      if (err != 0)
-	break;
+      if (lll_futex_timed_wait (tidp, tid, &rt) == -ETIMEDOUT)
+	return ETIMEDOUT;
     }
 
-  return -err;
+  return 0;
 }
 
 hidden_proto (__lll_timedwait_tid)

@@ -76,20 +76,22 @@ typedef uintmax_t uatomic_max_t;
     __val = *__memp;							      \
     if (sizeof (*mem) == 4)						      \
       do								      \
-	__oldval = __val;						      \
-      while ((__val							      \
-	      = __arch_compare_and_exchange_32_val_acq (__memp,		      \
-							__oldval + __value,   \
-							__oldval))	      \
-	     != __oldval);						      \
+	{								      \
+	  __oldval = __val;						      \
+	  __val = __arch_compare_and_exchange_32_val_acq (__memp,	      \
+							  __oldval + __value, \
+							  __oldval);	      \
+	}								      \
+      while (__builtin_expect (__val != __oldval, 0));			      \
     else if (sizeof (*mem) == 8)					      \
       do								      \
-	__oldval = __val;						      \
-      while ((__val							      \
-	      = __arch_compare_and_exchange_64_val_acq (__memp,		      \
-							__oldval + __value,   \
-							__oldval))	      \
-	     != __oldval);						      \
+	{								      \
+	  __oldval = __val;						      \
+	  __val = __arch_compare_and_exchange_64_val_acq (__memp,	      \
+							  __oldval + __value, \
+							  __oldval);	      \
+	}								      \
+      while (__builtin_expect (__val != __oldval, 0));			      \
     else								      \
       abort ();								      \
     __oldval + __value; })
