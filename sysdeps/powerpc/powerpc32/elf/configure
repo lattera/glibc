@@ -50,8 +50,3 @@ _ACEOF
 
 fi
 fi
-
-cat >>confdefs.h <<\_ACEOF
-#define PI_STATIC_AND_HIDDEN 1
-_ACEOF
-

@@ -36,7 +36,3 @@ if test $libc_cv_powerpc32_tls = yes; then
   AC_DEFINE(HAVE_TLS_SUPPORT)
 fi
 fi
-
-dnl It is always possible to access static and hidden symbols in an
-dnl position independent way.
-AC_DEFINE(PI_STATIC_AND_HIDDEN)
