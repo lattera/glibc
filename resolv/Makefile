@@ -1,4 +1,4 @@
-# Copyright (C) 1994,95,96,97,98,1999 Free Software Foundation, Inc.
+# Copyright (C) 1994,95,96,97,98,99,2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@
 #
 subdir	:= resolv
 
-headers	:= resolv.h netdb.h arpa/nameser.h sys/bitypes.h
+headers	:= resolv.h netdb.h arpa/nameser.h arpa/nameser_compat.h \
+	   sys/bitypes.h
 distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 	      Banner res_hconf.h res_debug.h
 

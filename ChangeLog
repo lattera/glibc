@@ -1,3 +1,7 @@
+2000-03-02  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/Makefile (headers): Add arpa/nameser_compat.h.
+
 2000-03-01  Andreas Jaeger  <aj@suse.de>
 
 	* time/Makefile (tst-getdate-ENV): New flag to pass DATEMSK.
