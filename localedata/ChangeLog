@@ -1,3 +1,13 @@
+2003-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ne_NP: New file.
+	* locales/gu_IN: New file.
+	* locales/kn_IN: New file.
+	* locales/pa_IN: New file.
+	Patch by Gnutupalli Karunakar <karunakar@freedomink.org>.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add ne_NP, gu_IN, kn_IN, and pa_IN.
+
 2003-11-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-numeric.data: Fix fallout from nb_NO introduction.

@@ -107,6 +107,7 @@ gez_ET/UTF-8 \
 gez_ET@abegede/UTF-8 \
 gl_ES/ISO-8859-1 \
 gl_ES@euro/ISO-8859-15 \
+gu_IN/UTF-8 \
 gv_GB/ISO-8859-1 \
 he_IL/ISO-8859-8 \
 hi_IN/UTF-8 \
@@ -121,6 +122,7 @@ iw_IL/ISO-8859-8 \
 ja_JP.EUC-JP/EUC-JP \
 ka_GE/GEORGIAN-PS \
 kl_GL/ISO-8859-1 \
+kn_IN/UTF-8 \
 ko_KR.EUC-KR/EUC-KR \
 ko_KR.UTF-8/UTF-8 \
 kw_GB/ISO-8859-1 \
@@ -135,6 +137,7 @@ mn_MN/UTF-8 \
 mr_IN/UTF-8 \
 ms_MY/ISO-8859-1 \
 mt_MT/ISO-8859-3 \
+ne_NP/UTF-8 \
 nl_BE/ISO-8859-1 \
 nl_BE@euro/ISO-8859-15 \
 nl_NL/ISO-8859-1 \
@@ -144,6 +147,7 @@ nn_NO/ISO-8859-1 \
 oc_FR/ISO-8859-1 \
 om_ET/UTF-8 \
 om_KE/ISO-8859-1 \
+pa_IN/UTF-8 \
 pl_PL/ISO-8859-2 \
 pt_BR/ISO-8859-1 \
 pt_PT/ISO-8859-1 \
