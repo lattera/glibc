@@ -23,6 +23,7 @@
 #include <time.h>
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
+#include <atomic.h>
 
 #define SYS_futex		238
 #define FUTEX_WAIT		0
@@ -126,19 +127,14 @@ __lll_mutex_trylock (int *futex)
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
 
 
-extern void ___lll_mutex_lock (int *, int) attribute_hidden;
-
+extern void __lll_lock_wait (int *futex) attribute_hidden;
 
 static inline void
 __attribute__ ((always_inline))
 __lll_mutex_lock (int *futex)
 {
-  int oldval;
-  int newval;
-
-  lll_compare_and_swap (futex, oldval, newval, "lr %2,%1; ahi %2,1");
-  if (oldval > 0)
-    ___lll_mutex_lock (futex, newval);
+  if (atomic_compare_and_exchange_bool_acq (futex, 1, 0) != 0)
+    __lll_lock_wait (futex);
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
 
@@ -146,32 +142,21 @@ static inline void
 __attribute__ ((always_inline))
 __lll_mutex_cond_lock (int *futex)
 {
-  int oldval;
-  int newval;
-
-  lll_compare_and_swap (futex, oldval, newval, "lr %2,%1; ahi %2,2");
-  if (oldval > 0)
-    ___lll_mutex_lock (futex, newval);
+  if (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0)
+    __lll_lock_wait (futex);
 }
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
-
-extern int ___lll_mutex_timedlock (int *, const struct timespec *, int)
-  attribute_hidden;
-
+extern int __lll_timedlock_wait
+  (int *futex, const struct timespec *) attribute_hidden;
 
 static inline int
 __attribute__ ((always_inline))
 __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 {
-  int oldval;
-  int newval;
   int result = 0;
-
-  lll_compare_and_swap (futex, oldval, newval, "lr %2,%1; ahi %2,1");
-  if (oldval > 0)
-    result = ___lll_mutex_timedlock (futex, abstime, newval);
-
+  if (atomic_compare_and_exchange_bool_acq (futex, 1, 0) != 0)
+    result = __lll_timedlock_wait (futex, abstime);
   return result;
 }
 #define lll_mutex_timedlock(futex, abstime) \
@@ -208,15 +193,19 @@ __lll_mutex_unlock_force (int *futex)
 
 
 /* We have a separate internal lock implementation which is not tied
-   to binary compatibility.  */
+   to binary compatibility.  We can use the lll_mutex_*.  */
 
 /* Type for lock object.  */
 typedef int lll_lock_t;
 
 /* Initializers for lock.  */
-#define LLL_LOCK_INITIALIZER		(1)
-#define LLL_LOCK_INITIALIZER_LOCKED	(0)
+#define LLL_LOCK_INITIALIZER		(0)
+#define LLL_LOCK_INITIALIZER_LOCKED	(1)
 
+#define lll_trylock(futex)      lll_mutex_trylock (futex)
+#define lll_lock(futex)         lll_mutex_lock (futex)
+#define lll_unlock(futex)       lll_mutex_unlock (futex)
+#define lll_islocked(futex)     lll_mutex_islocked (futex)
 
 extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
@@ -224,54 +213,6 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
     1  -  untaken
     0  -  taken by one user
    <0  -  taken by more users */
-
-
-static inline int
-__attribute__ ((always_inline))
-__lll_trylock (int *futex)
-{
-  unsigned int old;
-
-  __asm __volatile ("cs %0,%3,%1"
-		    : "=d" (old), "=Q" (*futex)
-		    : "0" (1), "d" (0), "m" (*futex) : "cc" );
-  return old != 1;
-}
-#define lll_trylock(futex) __lll_trylock (&(futex))
-
-
-extern void ___lll_lock (int *, int) attribute_hidden;
-
-static inline void
-__attribute__ ((always_inline))
-__lll_lock (int *futex)
-{
-  int oldval;
-  int newval;
-
-  lll_compare_and_swap (futex, oldval, newval, "lr %2,%1; ahi %2,-1");
-  if (newval < 0)
-    ___lll_lock (futex, newval);
-}
-#define lll_lock(futex) __lll_lock (&(futex))
-
-
-static inline void
-__attribute__ ((always_inline))
-__lll_unlock (int *futex)
-{
-  int oldval;
-  int newval;
-
-  lll_compare_and_swap (futex, oldval, newval, "lhi %2,1");
-  if (oldval < 0)
-    lll_futex_wake (futex, 1);
-}
-#define lll_unlock(futex) __lll_unlock(&(futex))
-
-
-#define lll_islocked(futex) \
-  (futex != 1)
 
 
 /* The kernel notifies a process with uses CLONE_CLEARTID via futex
@@ -289,20 +230,16 @@ __lll_wait_tid (int *ptid)
 }
 #define lll_wait_tid(tid) __lll_wait_tid(&(tid))
 
-
-extern int ___lll_timedwait_tid (int *, const struct timespec *)
+extern int __lll_timedwait_tid (int *, const struct timespec *)
      attribute_hidden;
-static inline int
-__attribute__ ((always_inline))
-__lll_timedwait_tid (int *ptid, const struct timespec *abstime)
-{
-  if (*ptid == 0)
-    return 0;
 
-  return ___lll_timedwait_tid (ptid, abstime);
-}
-#define lll_timedwait_tid(tid, abstime) __lll_timedwait_tid (&(tid), abstime)
-
+#define lll_timedwait_tid(tid, abstime) \
+  ({									      \
+    int __res = 0;							      \
+    if ((tid) != 0)							      \
+      __res = __lll_timedwait_tid (&(tid), (abstime));			      \
+    __res;								      \
+  })
 
 /* Conditional variable handling.  */
 

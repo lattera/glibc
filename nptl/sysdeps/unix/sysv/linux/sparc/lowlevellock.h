@@ -87,17 +87,17 @@ __lll_mutex_trylock (int *futex)
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
 
 
-extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
+extern void __lll_lock_wait (int *futex) attribute_hidden;
 
 
 static inline void
 __attribute__ ((always_inline))
 __lll_mutex_lock (int *futex)
 {
-  int val = atomic_exchange_and_add (futex, 1);
+  int val = atomic_compare_and_exchange_val_acq (futex, 1, 0);
 
   if (__builtin_expect (val != 0, 0))
-    __lll_lock_wait (futex, val);
+    __lll_lock_wait (futex);
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
 
@@ -106,18 +106,15 @@ static inline void
 __attribute__ ((always_inline))
 __lll_mutex_cond_lock (int *futex)
 {
-  int val = atomic_exchange_and_add (futex, 2);
+  int val = atomic_compare_and_exchange_val_acq (futex, 2, 0);
 
   if (__builtin_expect (val != 0, 0))
-    /* Note, the val + 1 is kind of ugly here.  __lll_lock_wait will add
-       1 again.  But we added 2 to the futex value so this is the right
-       value which will be passed to the kernel.  */
-    __lll_lock_wait (futex, val + 1);
+    __lll_lock_wait (futex);
 }
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
 
-extern int __lll_timedlock_wait (int *futex, int val, const struct timespec *)
+extern int __lll_timedlock_wait (int *futex, const struct timespec *)
      attribute_hidden;
 
 
@@ -125,12 +122,11 @@ static inline int
 __attribute__ ((always_inline))
 __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 {
-  int val = atomic_exchange_and_add (futex, 1);
+  int val = atomic_compare_and_exchange_val_acq (futex, 1, 0);
   int result = 0;
-
+  
   if (__builtin_expect (val != 0, 0))
-    result = __lll_timedlock_wait (futex, val, abstime);
-
+    result = __lll_timedlock_wait (futex, abstime);
   return result;
 }
 #define lll_mutex_timedlock(futex, abstime) \

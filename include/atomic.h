@@ -71,8 +71,8 @@
 
 
 #ifndef atomic_compare_and_exchange_val_rel
-# define atomic_compare_and_exchange_val_rel(mem, oldval, newval)	      \
-  atomic_compare_and_exchange_val_acq (mem, oldval, newval)
+# define atomic_compare_and_exchange_val_rel(mem, newval, oldval)	      \
+  atomic_compare_and_exchange_val_acq (mem, newval, oldval)
 #endif
 
 
@@ -95,8 +95,8 @@
 
 
 #ifndef atomic_compare_and_exchange_bool_rel
-# define atomic_compare_and_exchange_bool_rel(mem, oldval, newval) \
-  atomic_compare_and_exchange_bool_acq (mem, oldval, newval)
+# define atomic_compare_and_exchange_bool_rel(mem, newval, oldval) \
+  atomic_compare_and_exchange_bool_acq (mem, newval, oldval)
 #endif
 
 

@@ -68,7 +68,7 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime)
       /* Wait.  */
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_wait (futex, 2);
+	lll_futex_timed_wait (futex, 2, &rt);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 

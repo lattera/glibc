@@ -101,30 +101,35 @@
 #define lll_mutex_trylock(lock)	__lll_trylock (&(lock))
 
 
-extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
+extern void __lll_lock_wait (int *futex) attribute_hidden;
 
 #define lll_mutex_lock(lock) \
   (void) ({								      \
     int *__futex = &(lock);						      \
-    if (atomic_compare_and_exchange_bool_acq (__futex, 1, 0) != 0)	      \
+    if (__builtin_expect (atomic_compare_and_exchange_val_acq (__futex, 1, 0),\
+			  0) != 0)					      \
       __lll_lock_wait (__futex);					      \
   })
 
 #define lll_mutex_cond_lock(lock) \
   (void) ({								      \
     int *__futex = &(lock);						      \
-    if (atomic_compare_and_exchange_bool_acq (__futex, 2, 0) != 0)	      \
+    if (__builtin_expect (atomic_compare_and_exchange_val_acq (__futex, 2, 0),\
+			  0) != 0)					      \
       __lll_lock_wait (__futex);					      \
   })
 
 extern int __lll_timedlock_wait
-	(int *futex, int val, const struct timespec *) attribute_hidden;
+  (int *futex, const struct timespec *) attribute_hidden;
 
 #define lll_mutex_timedlock(lock, abstime) \
-  (void) ({								      \
+  ({									      \
     int *__futex = &(lock);						      \
-    if (atomic_compare_and_exchange_bool_acq (__futex, 1, 0) != 0)	      \
-      __lll_timedlock_wait (__futex, abstime);				      \
+    int __val = 0;							      \
+    if (__builtin_expect (atomic_compare_and_exchange_val_acq (__futex, 1, 0),\
+			  0) != 0)					      \
+      __val = __lll_timedlock_wait (__futex, abstime);			      \
+    __val;								      \
   })
 
 #define lll_mutex_unlock(lock) \

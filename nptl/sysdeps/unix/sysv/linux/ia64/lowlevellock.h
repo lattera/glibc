@@ -120,7 +120,7 @@ __lll_mutex_trylock (int *futex)
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
 
 
-extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
+extern void __lll_lock_wait (int *futex) attribute_hidden;
 
 
 static inline void
@@ -143,7 +143,7 @@ __lll_mutex_cond_lock (int *futex)
 #define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
 
 
-extern int __lll_timedlock_wait (int *futex, int val, const struct timespec *)
+extern int __lll_timedlock_wait (int *futex, const struct timespec *)
      attribute_hidden;
 
 

@@ -26,6 +26,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <dirstream.h>
 #include <not-cancel.h>

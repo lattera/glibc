@@ -1,3 +1,35 @@
+2003-09-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_timedlock_wait): Use
+	lll_futex_timed_wait instead of lll_futex_wait.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/lowlevelmutex.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/libc-lowlevellock.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/libc-lowlevelmutex.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/sem_trywait.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/sem_wait.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/sem_post.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Include atomic.h.
+	Completely revamp the locking macros.  No distinction between
+	normal and mutex locking anymore.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (__lll_lock_wait,
+	__lll_lock_timedwait): Fix prototypes.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (__lll_lock_wait,
+	__lll_lock_timedwait): Likewise.
+	(lll_mutex_lock, lll_mutex_cond_lock): Use _val instead of _bool
+	macros, add __builtin_expect.
+	(lll_mutex_timedlock): Likewise.  Fix return value.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevelmutex.S: Removed.
+	* sysdeps/unix/sysv/linux/i386/i586/libc-lowlevelmutex.S: Removed.
+	* sysdeps/unix/sysv/linux/i386/i586/lowlevelmutex.S: Removed.
+	* sysdeps/unix/sysv/linux/i386/i686/libc-lowlevelmutex.S: Removed.
+	* sysdeps/unix/sysv/linux/i386/i686/lowlevelmutex.S: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/libc-lowlevelmutex.S: Removed.
+	* sysdeps/unix/sysv/linux/lowlevelmutex.c: Removed.
+	* sysdeps/unix/sysv/linux/libc-lowlevelmutex.c: Removed.
+
 2003-09-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
