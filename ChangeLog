@@ -1,3 +1,12 @@
+1999-11-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/asia: Update from tzdata1999j.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 1999-11-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sys/procfs.h: Remove duplicate definitions.
