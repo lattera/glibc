@@ -1,3 +1,8 @@
+2001-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/net/ethernet.h: Correct references to
+	ETHER_CRC_LEN.
+
 2001-09-14  Andreas Schwab  <schwab@suse.de>
 
 	* posix/execl.c: Fix last argument of memcpy.  Reported by Brian
