@@ -55,6 +55,7 @@
 	* sysdeps/powerpc/soft-fp/feholdexcpt.c: New file.
 	* sysdeps/powerpc/soft-fp/fenv_const.c: New file.
 	* sysdeps/powerpc/soft-fp/libm-test-ulps: New file.
+	* sysdeps/powerpc/soft-fp/soft-supp.h: New file.
 	* sysdeps/powerpc/soft-fp/Versions: Add libgcc soft-float
 	symbols.  Add __sim_disabled_exceptions, __sim_exceptions,
 	__sim_round_mode.
