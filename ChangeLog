@@ -1,3 +1,7 @@
+1998-05-29 08:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/texinfo.tex: Update to last available version.
+
 1998-05-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/chown.c: Fix comment.
