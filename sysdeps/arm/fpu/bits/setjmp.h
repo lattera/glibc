@@ -28,7 +28,7 @@
 typedef int __jmp_buf[22];
 #endif
 
-#define __JMP_BUF_SP		8
+#define __JMP_BUF_SP		20
 
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */

@@ -85,6 +85,11 @@
 			  __libc_cleanup_end (0);			      \
 			  return EOF;					      \
 			} while (0)
+# define fmt_error()	do {						      \
+			  _IO_funlockfile (s);				      \
+			  __libc_cleanup_end (0);			      \
+			  return EOF;					      \
+			} while (0)
 # define ARGCHECK(s, format)						      \
   do									      \
     {									      \
@@ -127,6 +132,10 @@
 # define memory_error()	do {						      \
 			  funlockfile (s);				      \
 			  __set_errno (ENOMEM);				      \
+			  return EOF;					      \
+			} while (0)
+# define fmt_error()	do {						      \
+			  funlockfile (s);				      \
 			  return EOF;					      \
 			} while (0)
 # define ARGCHECK(s, format)						      \
@@ -1247,6 +1256,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  number_signed = 0;
 	  read_pointer = 1;
 	  goto number;
+
+	default:
+	  /* If this is an unknown format character punt.  */
+	  fmt_error ();
 	}
     }
 

@@ -1,10 +1,18 @@
 1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/vfscanf.c: Return EOF for invalid format
+	characters.
+
 	* version.h (VERSION): Bump to 2.0.101.
 
 	* Makerules (Versions.all): Generate this file from all Versions.def
 	files.
 	(sysd-versions): Use Versions.all instead of Versions.def.
+
+1998-11-13  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/fpu/bits/setjmp.h (__JMP_BUF_SP): Correct value.
+	Reported by Scott Bambrough.
 
 1998-11-11  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
