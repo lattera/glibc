@@ -1,3 +1,8 @@
+2001-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9b/Implies: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9b/bits/time.h: Removed.
+
 2001-03-21  Alan Modra  <alan@one.net.au>
 
 	* sysdeps/hppa/dl-machine.h (RTLD_START): Set up dp with DT_PLTGOT
