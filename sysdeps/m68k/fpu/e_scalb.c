@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
 
@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <math.h>
+#include "mathimpl.h"
 
 #ifndef SUFF
 #define SUFF
