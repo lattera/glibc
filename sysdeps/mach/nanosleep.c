@@ -50,4 +50,5 @@ __nanosleep (const struct timespec *requested_time,
 
   return 0;
 }
+libc_hidden_def (__nanosleep)
 weak_alias (__nanosleep, nanosleep)

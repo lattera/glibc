@@ -23,7 +23,7 @@
 #include "atomic.h"
 
 
-#if !defined NOT_IN_libc
+#ifndef NOT_IN_libc
 
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().

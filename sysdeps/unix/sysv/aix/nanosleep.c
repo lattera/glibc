@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,4 +36,5 @@ __libc_nanosleep (const struct timespec *req, struct timespec *rem)
   return _nsleep ((struct timestruc_t *) req, (struct timestruc_t *) rem);
 }
 strong_alias (__libc_nanosleep, __nanosleep)
+libc_hidden_def (__nanosleep)
 strong_alias (__libc_nanosleep, nanosleep)

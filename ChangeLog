@@ -1,5 +1,11 @@
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/time.h: Add libc_hidden_proto for __nanosleep.
+	* sysdeps/generic/nanosleep.c: Add libc_hidden_def for __nanosleep.
+	* sysdeps/mach/nanosleep.c: Likewise.
+	* sysdeps/unix/sysv/aix/nanosleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __GI___nanosleep alias.
+
 	* libio/libioP.h: Add libc_hidden_proto for _IO_list_lock,
 	_IO_list_unlock, and _IO_list_resetlock.
 	* libio/genops.c: Add libc_hidden_def for _IO_list_lock,
