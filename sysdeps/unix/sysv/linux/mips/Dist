@@ -5,7 +5,6 @@ ipc_priv.h
 kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
-sys/acct.h
 sys/cachectl.h
 sys/procfs.h
 sys/sysmips.h
