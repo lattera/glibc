@@ -159,8 +159,7 @@ _dl_start (void *arg)
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
-  elf_get_dynamic_info (bootstrap_map.l_ld, bootstrap_map.l_addr,
-			bootstrap_map.l_info);
+  elf_get_dynamic_info (&bootstrap_map);
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
@@ -594,8 +593,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   if (! rtld_is_main)
     {
       /* Extract the contents of the dynamic section for easy access.  */
-      elf_get_dynamic_info (_dl_loaded->l_ld, _dl_loaded->l_addr,
-			    _dl_loaded->l_info);
+      elf_get_dynamic_info (_dl_loaded);
       if (_dl_loaded->l_info[DT_HASH])
 	/* Set up our cache of pointers into the hash table.  */
 	_dl_setup_hash (_dl_loaded);
@@ -861,9 +859,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	for (i = 1; i < _dl_argc; ++i)
 	  {
 	    const ElfW(Sym) *ref = NULL;
-	    ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
-						     _dl_loaded->l_scope,
-						     "argument",
+	    ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], _dl_loaded,
+						     &ref, _dl_loaded->l_scope,
 						     ELF_MACHINE_JMP_SLOT);
 	    char buf[20], *bp;
 	    buf[sizeof buf - 1] = '\0';
