@@ -80,6 +80,9 @@ struct pthread
      therefore stack) used' flag.  */
   pid_t tid;
 
+  /* List of cleanup buffers.  */
+  struct _pthread_cleanup_buffer *cleanup;
+
   /* Two-level array for the thread-specific data.  */
   struct pthread_key_data
   {
@@ -121,8 +124,6 @@ struct pthread
   /* Check whether a thread is detached.  */
 #define IS_DETACHED(pd) ((pd)->joinid == (pd))
 
-  /* List of cleanup buffers.  */
-  struct _pthread_cleanup_buffer *cleanup;
   /* Flags determining processing of cancellation.  */
   int cancelhandling;
   /* Bit set if cancellation is disabled.  */
