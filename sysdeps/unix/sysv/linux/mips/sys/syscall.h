@@ -19,11 +19,6 @@
 #ifndef	_SYSCALL_H
 #define	_SYSCALL_H	1
 
-/* This file should list the numbers of the system the system knows.
-   But instead of duplicating this we use the information available
-   from the kernel sources.  */
-#include <asm/unistd.h>
-
 /*
  * SVR4 syscalls are in the range from 1 to 999
  */
@@ -1212,6 +1207,8 @@
 #define SYS_pivot_root			(SYS_Linux + 216)
 #define SYS_mincore			(SYS_Linux + 217)
 #define SYS_madvise			(SYS_Linux + 218)
+#define SYS_getdents64			(SYS_Linux + 219)
+#define SYS_fcntl64			(SYS_Linux + 220)
 
 
 #endif	/* sys/syscall.h */
