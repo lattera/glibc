@@ -31,11 +31,7 @@ typedef struct _pthread_descr_struct *_pthread_descr;
 /* System specific semaphore definition.  */
 typedef struct
 {
-  struct
-  {
-    long int __status;
-    int __spinlock;
-  } __sem_lock;
+  struct _pthread_fastlock __sem_lock;
   int __sem_value;
   _pthread_descr __sem_waiting;
 } sem_t;

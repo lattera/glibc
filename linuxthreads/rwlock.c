@@ -36,9 +36,9 @@ static int rwlock_rd_extricate_func(void *obj, pthread_descr th)
   pthread_rwlock_t *rwlock = obj;
   int did_remove = 0;
 
-  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, NULL);
+  __pthread_lock(&rwlock->__rw_lock, NULL);
   did_remove = remove_from_queue(&rwlock->__rw_read_waiting, th);
-  __pthread_unlock((struct _pthread_fastlock *) &rwlock->__rw_lock);
+  __pthread_unlock(&rwlock->__rw_lock);
 
   return did_remove;
 }
@@ -48,9 +48,9 @@ static int rwlock_wr_extricate_func(void *obj, pthread_descr th)
   pthread_rwlock_t *rwlock = obj;
   int did_remove = 0;
 
-  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, NULL);
+  __pthread_lock(&rwlock->__rw_lock, NULL);
   did_remove = remove_from_queue(&rwlock->__rw_write_waiting, th);
-  __pthread_unlock((struct _pthread_fastlock *) &rwlock->__rw_lock);
+  __pthread_unlock(&rwlock->__rw_lock);
 
   return did_remove;
 }

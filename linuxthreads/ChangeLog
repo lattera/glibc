@@ -1,3 +1,10 @@
+2001-02-02  John S. Marvin  <jsm@udlkern.fc.hp.com>
+
+	* semaphore.h: Use struct _pthread_fastlock as an element of
+	sem_t instead of an identical struct.
+	* rwlock.c: Remove casts.
+	* semaphore.c: Likewise.
+
 2001-04-30  Alan Modra  <amodra@one.net.au>
 
 	* sysdeps/unix/sysv/linux/hppa/pt-initfini.c: New.
