@@ -1,5 +1,9 @@
 1998-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* sunrpc/rtime.c (rtime): Use poll instead of select.
+
+1998-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* sunrpc/clnt_tcp.c (readtcp): Use poll instead of select.
 	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
 	* sunrpc/clnt_udp.c (clntudp_call): Likewise.
