@@ -167,8 +167,8 @@ $(objpfx)glibcbug: $(common-objpfx)config.status glibcbug.in
 	cd $(<D) && CONFIG_FILES=$(@F) CONFIG_HEADERS= $(SHELL) $(<F)
 
 # This makes the Info or DVI file of the documentation from the Texinfo source.
-.PHONY: info dvi pdf
-info dvi pdf:
+.PHONY: info dvi pdf html
+info dvi pdf html:
 	$(MAKE) $(PARALLELMFLAGS) -C manual $@
 
 # This makes all the subdirectory targets.

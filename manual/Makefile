@@ -24,7 +24,7 @@ export subdir := $(subdir)
 # Allow override
 INSTALL_INFO = install-info
 
-.PHONY: all dvi pdf info
+.PHONY: all dvi pdf info html
 all: dvi
 dvi: libc.dvi
 pdf: libc.pdf
@@ -75,6 +75,10 @@ chapters.% top-menu.%: libc-texinfo.sh $(texis) Makefile
 
 libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi libm-err.texi
 libc.dvi libc.pdf: texinfo.tex
+
+html: libc/index.html
+libc/index.html: chapters.texi top-menu.texi libm-err.texi
+	$(MAKEINFO) --html libc.texinfo
 
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;

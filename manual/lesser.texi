@@ -1,7 +1,3 @@
-@setfilename lgpl.info
-
-@set lgpl-appendix
-
 @ifset lgpl-appendix
 @appendix GNU LESSER GENERAL PUBLIC LICENSE
 @end ifset

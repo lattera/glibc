@@ -2465,7 +2465,7 @@ function and these define the interface.
 
 @comment gconv.h
 @comment GNU
-@deftypevr {Data type} int (*__gconv_init_fct) (struct __gconv_step *)
+@deftypevr {Data type} int {(*__gconv_init_fct)} (struct __gconv_step *)
 This specifies the interface of the initialization function of the
 module.  It is called exactly once for each conversion the module
 implements.
@@ -2621,7 +2621,7 @@ out completely.
 
 @comment gconv.h
 @comment GNU
-@deftypevr {Data type} void (*__gconv_end_fct) (struct gconv_step *)
+@deftypevr {Data type} void {(*__gconv_end_fct)} (struct gconv_step *)
 The task of this function is it to free all resources allocated in the
 initialization function.  Therefore only the @code{__data} element of
 the object pointed to by the argument is of interest.  Continuing the
@@ -2644,7 +2644,7 @@ conversion function.
 
 @comment gconv.h
 @comment GNU
-@deftypevr {Data type} int (*__gconv_fct) (struct __gconv_step *, struct __gconv_step_data *, const char **, const char *, size_t *, int)
+@deftypevr {Data type} int {(*__gconv_fct)} (struct __gconv_step *, struct __gconv_step_data *, const char **, const char *, size_t *, int)
 The conversion function can be called for two basic reason: to convert
 text or to reset the state.  From the description of the @code{iconv}
 function it can be seen why the flushing mode is necessary.  What mode

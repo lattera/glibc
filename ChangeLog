@@ -1,3 +1,8 @@
+2001-07-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add html goal.
+	* manual/Makefile: Likewise.
+
 2001-07-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/filedoalloc.c (_IO_file_doallocate): A few more minor
