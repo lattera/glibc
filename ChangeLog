@@ -1,3 +1,8 @@
+1998-03-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Correct test for compiler version.
+	Check that LD_LIBRARY_PATH doesn't contain current path.
+
 1998-03-23 07:52  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-close.c (_dl_close): Fix byte count while removing

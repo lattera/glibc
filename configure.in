@@ -479,11 +479,36 @@ case `${CC-cc} -v 2>&1` in
     ;;
 esac
 AC_MSG_RESULT($cc_is_recent)
-if test $cc_is_recent != ok; then
+if test "$cc_is_recent" != "ok"; then
   AC_MSG_WARN([
 *** Your compiler is too old.
 *** You need at least egcs 1.0.2 or GNU CC 2.8.1 to compile glibc.
 ])
+fi
++
+# Test if LD_LIBRARY_PATH contains the notation for the current directory
+# since this would lead to problems installing/building glibc.
+# LD_LIBRARY_PATH contains the current directory if one of the following
+# is true:
+# - one of the terminals (":" and ";") is the first or last sign
+# - two terminals occur directly after each other
+# - the path contains an element with a dot in it
+AC_MSG_CHECKING(LD_LIBRARY_PATH variable)
+changequote(,)dnl
+case ${LD_LIBRARY_PATH} in
+  [:\;]* | *[:\;] | *[:\;][:\;]* |  *[:\;]. | .[:\;]*| . | *[:\;].[:\;]* )
+    ld_library_path_setting="contains current path"
+    ;;
+  *)
+    ld_library_path_setting="ok"
+    ;;
+esac
+changequote([,])dnl
+AC_MSG_RESULT($ld_library_path_setting)
+if test "$ld_library_path_setting" != "ok"; then
+AC_MSG_ERROR(
+*** LD_LIBRARY_PATH shouldn't contain the current path when building glibc.
+*** Please change the environment variable and run configure again.)
 fi
 
 AC_PATH_PROG(BASH, bash, no)
