@@ -3,9 +3,9 @@
 
 BEGIN {
   if (parse_names)
-    out = "/dev/stderr";
+    defout = "/dev/stderr";
   else
-    out = "/dev/stdout";
+    defout = "/dev/stdout";
 }
 
 # Per-file header.
@@ -62,11 +62,11 @@ $2 == "g" || $2 == "w" && NF == 7 {
     size = "";
   }
   else {
-    print symbol, version, weak, "?", type, $4, $5 >> out;
+    print symbol, version, weak, "?", type, $4, $5 > defout;
     next;
   }
   if (size == " 0x") {
-    print symbol, version, weak, "?", type, $4, $5 >> out;
+    print symbol, version, weak, "?", type, $4, $5 > defout;
     next;
   }
 
@@ -87,20 +87,10 @@ $2 == "g" || $2 == "w" && NF == 7 {
 NF == 0 || /DYNAMIC SYMBOL TABLE/ || /file format/ { next }
 
 {
-  print "Don't grok this line:", $0 >> out
+  print "Don't grok this line:", $0 > defout
 }
 
 function emit(tofile) {
-  if (tofile) {
-    out = prefix soname ".symlist";
-    if (soname in outfiles)
-      out = out "." ++outfiles[soname];
-    else
-      outfiles[soname] = 1;
-  }
-  else
-    out = "/dev/stdout";
-
   nverlist = 0;
   for (version in versions) {
     if (nverslist == 0) {
@@ -129,17 +119,33 @@ function emit(tofile) {
     ++nverslist;
   }
 
+  if (tofile) {
+    out = prefix soname ".symlist";
+    if (soname in outfiles)
+      out = out "." ++outfiles[soname];
+    else
+      outfiles[soname] = 1;
+    printf "" > out;
+  }
+
   split(verslist, order, "\n");
   for (i = 1; i <= nverslist; ++i) {
     version = order[i];
 
-    print version >> out;
-    outpipe = "sort >> " out;
+    if (tofile) {
+      print version >> out;
+      close(out);
+      outpipe = "sort >> " out;
+    }
+    else
+      outpipe = "sort";
     print versions[version] | outpipe;
     close(outpipe);
 
     delete versions[version];
   }
+  for (version in versions)
+    delete versions[version];
 
   if (tofile)
     print "wrote", out, "for", sofullname;
