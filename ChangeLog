@@ -1,3 +1,8 @@
+2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/unistd.h: symlink and readlink are unconditionally
+	available in the 2001 spec.
+
 2005-02-16  Roland McGrath  <roland@redhat.com>
 
 	* intl/dcigettext.c (_nl_find_msg): Add a cast.
