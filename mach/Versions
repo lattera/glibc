@@ -24,7 +24,7 @@ libc {
 %endif
 
     # functions used by RPC stubs
-    __mach_msg;
+    __mach_msg; __mach_msg_overwrite;
     __mig_allocate; __mig_deallocate; __mig_dealloc_reply_port;
     __mig_get_reply_port; __mig_put_reply_port;
     __mig_strncpy;
@@ -40,7 +40,8 @@ libc {
     # m*
     mach_error; mach_error_string; mach_error_type;
     mach_host_self;
-    mach_msg; mach_msg_destroy;
+    mach_msg; mach_msg_overwrite;
+    mach_msg_destroy;
     mach_msg_send; mach_msg_receive;
     mach_msg_server; mach_msg_server_timeout;
     mach_open_devstream;

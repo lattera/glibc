@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,97,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,19 @@ setpriority (enum __priority_which which, id_t who, int prio)
 	{
 	  error_t prierr;
 	  ++ntasks;
+#ifdef POLICY_TIMESHARE_BASE_COUNT
+	  {
+	    /* XXX This assumes timeshare policy.  */
+	    struct policy_timeshare_base base
+	      = { NICE_TO_MACH_PRIORITY (prio) };
+	    prierr = __task_policy (task, POLICY_TIMESHARE,
+				    (policy_base_t) &base,
+				    POLICY_TIMESHARE_BASE_COUNT,
+				    0, 1);
+	  }
+#else
 	  prierr = __task_priority (task, NICE_TO_MACH_PRIORITY (prio), 1);
+#endif
 	  __mach_port_deallocate (__mach_task_self (), task);
 	  switch (prierr)
 	    {

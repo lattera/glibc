@@ -67,6 +67,9 @@ distribute += Machrules syscalls.awk shortcut.awk \
 # Clear any environment	value.
 generated =
 
+# Translate GNU names for CPUs into the names used in Mach header files.
+mach-machine = $(patsubst powerpc,ppc,$(base-machine))
+
 # Define mach-syscalls and sysno-*.
 ifndef no_deps
 ifndef inhibit_mach_syscalls
@@ -80,7 +83,7 @@ $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 	echo '#include <mach/syscall_sw.h>' | \
 	DEPENDENCIES_OUTPUT='$@-dep $@' \
 	$(CC) $(CFLAGS) $(CPPFLAGS) -E -x c-header - \
-	      -D_MACH_`echo $(base-machine) | tr a-z A-Z`_SYSCALL_SW_H_=1 | \
+	      -D_MACH_`echo $(mach-machine) | tr a-z A-Z`_SYSCALL_SW_H_=1 | \
 	sed -n -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\
 	| $(AWK) -f $< > $@-new
 	cat $@-dep >> $@-new; rm -f $@-dep
@@ -93,15 +96,20 @@ ifndef mach-syscalls
 no_deps=t
 else
 $(mach-syscalls:%=$(objpfx)%.S): $(objpfx)%.S: $(objpfx)mach-syscalls.mk
-	(echo '#include <sysdep.h>'; \
+	(echo '#include <mach/machine/syscall_sw.h>'; \
 	 echo 'kernel_trap(__$*,$(sysno-$*),$(nargs-$*))'; \
 	 echo 'weak_alias (__$*, $*)') > $@-new
 	 mv -f $@-new $@
 generated += $(mach-syscalls:=.S)
 endif	# mach-syscalls
 
-# syscall_device_writev_request has no RPC equivalent.
-mach-shortcuts := $(filter-out device_writev_request,\
+# These syscalls that look like RPCs actually have no RPC equivalents.
+mach-shortcuts := $(filter-out device_writev_request \
+			       device_read_overwrite_request \
+			       device_read_overwrite \
+			       vm_read_overwrite \
+			       thread_switch \
+			       ,\
 		  $(patsubst syscall_%,%,$(filter syscall_%,$(mach-syscalls))))
 
 ifndef mach-shortcuts

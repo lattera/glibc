@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994-1998,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1994-1998,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,6 +80,10 @@
 # define POSIX_MADV_DONTNEED	4 /* Don't need these pages.  */
 #endif
 
+/* Flags to `msync'.  */
+#define MS_ASYNC	1		/* Sync memory asynchronously.  */
+#define MS_SYNC		0		/* Synchronous memory sync.  */
+#define MS_INVALIDATE	2		/* Invalidate the caches.  */
 
 /* Flags for `mlockall' (can be OR'd together).  */
 #define MCL_CURRENT	1		/* Lock all currently mapped pages.  */

@@ -340,6 +340,7 @@ sparc64 | ultrasparc)
 sparc64b | ultrasparc3)
 		base_machine=sparc machine=sparc/sparc64/sparcv9b ;;
 thumb*)		base_machine=thumb machine=arm/thumb/$machine ;;
+*)		base_machine=$machine ;;
 esac
 changequote([,])dnl
 AC_SUBST(base_machine)

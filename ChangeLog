@@ -1,5 +1,34 @@
 2002-02-18  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/times.c: Fix typo in last change.
+
+	* sysdeps/mach/hurd/setpriority.c [POLICY_TIMESHARE_BASE_COUNT]:
+	Use task_policy in place of task_priority.
+
+	* sysdeps/generic/bits/mman.h
+	(MS_ASYNC, MS_SYNC, MS_INVALIDATE): New macros.
+	* sysdeps/mach/msync.c: New file.
+
+	* sysdeps/mach/powerpc/syscall.S: New file.
+
+	* mach/msg.c [MACH_MSG_OVERWRITE]
+	(__mach_msg_trap, __mach_msg_overwrite): New functions.
+	* mach/Versions (libc: GLIBC_2.0): Add mach_msg_overwrite and __ name.
+
+	* sysdeps/mach/configure.in: Check for clock.defs to put into
+	mach_interface_list.
+	* sysdeps/mach/configure: Regenerated.
+
+	* mach/Makefile (mach-machine): New variable, set from $(base-machine).
+	($(objpfx)mach-syscalls.mk): Use it in place of $(base-machine).
+	($(mach-syscalls:%=$(objpfx)%.S) static pattern rule):
+	Use <mach/machine/syscall_sw.h> instead of <sysdep.h>.
+	(mach-shortcuts): Add device_read_overwrite_request,
+	device_read_overwrite, vm_read_overwrite, thread_switch.
+
+	* configure.in (base_machine): Set to $machine by default.
+	* configure: Regenerated.
+
 	* sysdeps/mach/configure.in: Check for <mach/machine/ndr_def.h>
 	or <machine/ndr_def.h> and add -DNDR_DEF_HEADER=... to DEFINES.
 	* sysdeps/mach/configure: Regenerated.

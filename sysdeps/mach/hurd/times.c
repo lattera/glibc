@@ -83,7 +83,7 @@ __times (struct tms *tms)
 #if NO_CREATION_TIME
 # define our_creation_time	startup_time
 #else
-# define our_creation_time	bi.startup_time
+# define our_creation_time	bi.creation_time
 #endif
   return (clock_from_time_value (&now)
 	  - clock_from_time_value (&our_creation_time));
