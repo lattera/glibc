@@ -1,4 +1,26 @@
-Fri Mar  6 10:40:30 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-03-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/Makefile (tests): Add wordexp-test.
+	* posix/wordexp-test.c: New file.  Testsuite for wrodexp.
+	Patches by Tim Waugh <tim@cyberelk.demon.co.uk>.
+
+1998-03-05 16:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile ($(objpfx)rtldtbl.h): Add genrtldtbl.awk to the
+	dependencies.
+
+	* elf/link.h (struct r_search_path_elem): Add two new field for
+	lib path debugging.
+	* elf/rtld.c: Recognize LD_DEBUG environment variable and set
+	variable accordingly.
+	* elf/dl-load.c: If _dl_debug_libs is nonzero print what library
+	is considered next along with information about load paths.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* elf/dl-support.c: Define _dl_debug_libs.
+	* elf/genrtldtbl.awk: Add initializers for two new field in
+	struct r_search_path_elem.
+
+1998-03-06 10:40  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/add_n.S: Use ENTRY and END macros.
 	* sysdeps/m68k/lshift.S: Likewise.
