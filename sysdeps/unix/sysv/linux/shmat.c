@@ -48,7 +48,7 @@ shmat (shmid, shmaddr, shmflg)
 #endif
 
   result = (void *__unbounded) INLINE_SYSCALL (ipc, 5, IPCOP_shmat, shmid, shmflg,
-					       __ptrvalue (&raddr),
+					       (long int) __ptrvalue (&raddr),
 					       __ptrvalue (shmaddr));
   if ((unsigned long) result <= -(unsigned long) SHMLBA)
     result = raddr;

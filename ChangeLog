@@ -1,3 +1,10 @@
+2000-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* assert/__assert.c: Undefine NDEBUG before include <assert.h>.
+
+	* sysdeps/unix/sysv/linux/msgsnd.c (msgsnd): Add cast to avoid warning.
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Likewise.
+
 2000-09-06  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/time.h: New file.

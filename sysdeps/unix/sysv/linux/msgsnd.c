@@ -34,5 +34,5 @@ msgsnd (msqid, msgp, msgsz, msgflg)
      int msgflg;
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,
-			 msgflg, CHECK_N (msgp, msgsz));
+			 msgflg, (void *) CHECK_N (msgp, msgsz));
 }
