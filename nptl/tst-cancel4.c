@@ -399,7 +399,7 @@ do_test (void)
       exit (1);
     }
 
-  int cnt;
+  size_t cnt;
   for (cnt = 0; cnt < ntest_tf; ++cnt)
     {
       if (pthread_barrier_init (&b2, NULL, tests[cnt].nb) != 0)

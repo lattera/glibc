@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -54,7 +54,7 @@ main (void)
   memset (data, '\0', ps);
 
   /* Write the data to the file.  */
-  if (write (fd, data, ps) != ps)
+  if (write (fd, data, ps) != (ssize_t) ps)
     {
       puts ("short write");
       exit (1);

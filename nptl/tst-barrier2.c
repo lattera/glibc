@@ -64,7 +64,7 @@ do_test (void)
   memset (data, '\0', ps);
 
   /* Write the data to the file.  */
-  if (write (fd, data, ps) != ps)
+  if (write (fd, data, ps) != (ssize_t) ps)
     {
       puts ("short write");
       return 1;

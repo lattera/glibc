@@ -44,7 +44,7 @@ static int
 work (const char *fname, int mask)
 {
   int result = 0;
-  int i;
+  size_t i;
   for (i = 0; i < nfcts; ++i)
     {
       remove (fname);

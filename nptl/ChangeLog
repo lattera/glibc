@@ -1,3 +1,17 @@
+2003-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-barrier2.c: Eliminate warnings.
+	* tst-cancel4.c: Likewise.
+	* tst-cond4.c: Likewise.
+	* tst-cond6.c: Likewise.
+	* tst-detach1.c: Likewise.
+	* tst-rwlock4.c: Likewise.
+	* tst-rwlock6.c: Likewise.
+	* tst-rwlock7.c: Likewise.
+	* tst-sem3.c: Likewise.
+	* tst-spin2.c: Likewise.
+	* tst-umask1.c: Likewise.
+
 2003-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_detach.c (pthread_detach): Fix test for invalid TID.

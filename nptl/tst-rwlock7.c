@@ -101,7 +101,7 @@ tf (void *arg)
 static int
 do_test (void)
 {
-  int cnt;
+  size_t cnt;
   for (cnt = 0; cnt < sizeof (kind) / sizeof (kind[0]); ++cnt)
     {
       pthread_rwlock_t r;
