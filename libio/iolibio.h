@@ -7,36 +7,35 @@
 extern "C" {
 #endif
 
-extern int _IO_fclose (_IO_FILE*) __THROW;
-extern int _IO_new_fclose (_IO_FILE*) __THROW;
-extern int _IO_old_fclose (_IO_FILE*) __THROW;
+extern int _IO_fclose (_IO_FILE*);
+extern int _IO_new_fclose (_IO_FILE*);
+extern int _IO_old_fclose (_IO_FILE*);
 extern _IO_FILE *_IO_fdopen (int, const char*) __THROW;
 extern _IO_FILE *_IO_old_fdopen (int, const char*) __THROW;
 extern _IO_FILE *_IO_new_fdopen (int, const char*) __THROW;
-extern int _IO_fflush (_IO_FILE*) __THROW;
-extern int _IO_fgetpos (_IO_FILE*, _IO_fpos_t*) __THROW;
-extern int _IO_fgetpos64 (_IO_FILE*, _IO_fpos64_t*) __THROW;
-extern char* _IO_fgets (char*, int, _IO_FILE*) __THROW;
-extern _IO_FILE *_IO_fopen (const char*, const char*) __THROW;
-extern _IO_FILE *_IO_old_fopen (const char*, const char*) __THROW;
-extern _IO_FILE *_IO_new_fopen (const char*, const char*) __THROW;
-extern _IO_FILE *_IO_fopen64 (const char*, const char*) __THROW;
-extern _IO_FILE *__fopen_internal (const char*, const char*, int) __THROW;
+extern int _IO_fflush (_IO_FILE*);
+extern int _IO_fgetpos (_IO_FILE*, _IO_fpos_t*);
+extern int _IO_fgetpos64 (_IO_FILE*, _IO_fpos64_t*);
+extern char* _IO_fgets (char*, int, _IO_FILE*);
+extern _IO_FILE *_IO_fopen (const char*, const char*);
+extern _IO_FILE *_IO_old_fopen (const char*, const char*);
+extern _IO_FILE *_IO_new_fopen (const char*, const char*);
+extern _IO_FILE *_IO_fopen64 (const char*, const char*);
+extern _IO_FILE *__fopen_internal (const char*, const char*, int);
 extern _IO_FILE *__fopen_maybe_mmap (_IO_FILE *) __THROW;
-extern int _IO_fprintf (_IO_FILE*, const char*, ...) __THROW;
-extern int _IO_fputs (const char*, _IO_FILE*) __THROW;
+extern int _IO_fprintf (_IO_FILE*, const char*, ...);
+extern int _IO_fputs (const char*, _IO_FILE*);
 libc_hidden_proto (_IO_fputs)
-extern int _IO_fsetpos (_IO_FILE*, const _IO_fpos_t *) __THROW;
-extern int _IO_fsetpos64 (_IO_FILE*, const _IO_fpos64_t *) __THROW;
-extern long int _IO_ftell (_IO_FILE*) __THROW;
-extern _IO_size_t _IO_fread (void*, _IO_size_t, _IO_size_t, _IO_FILE*) __THROW;
-extern _IO_size_t _IO_fwrite (const void*, _IO_size_t, _IO_size_t, _IO_FILE*)
-       __THROW;
-extern char* _IO_gets (char*) __THROW;
+extern int _IO_fsetpos (_IO_FILE*, const _IO_fpos_t *);
+extern int _IO_fsetpos64 (_IO_FILE*, const _IO_fpos64_t *);
+extern long int _IO_ftell (_IO_FILE*);
+extern _IO_size_t _IO_fread (void*, _IO_size_t, _IO_size_t, _IO_FILE*);
+extern _IO_size_t _IO_fwrite (const void*, _IO_size_t, _IO_size_t, _IO_FILE*);
+extern char* _IO_gets (char*);
 extern void _IO_perror (const char*) __THROW;
-extern int _IO_printf (const char*, ...) __THROW;
-extern int _IO_puts (const char*) __THROW;
-extern int _IO_scanf (const char*, ...) __THROW;
+extern int _IO_printf (const char*, ...);
+extern int _IO_puts (const char*);
+extern int _IO_scanf (const char*, ...);
 extern void _IO_setbuffer (_IO_FILE *, char*, _IO_size_t) __THROW;
 extern int _IO_setvbuf (_IO_FILE*, char*, int, _IO_size_t) __THROW;
 extern int _IO_sscanf (const char*, const char*, ...) __THROW;
@@ -89,11 +88,11 @@ extern _IO_size_t _IO_fread_internal (void*, _IO_size_t, _IO_size_t, _IO_FILE*)
        __THROW;
 extern _IO_FILE *_IO_fdopen_internal (int, const char*) __THROW;
 extern int _IO_vsprintf_internal (char*, const char*, _IO_va_list) __THROW;
-extern int _IO_fflush_internal (_IO_FILE*) __THROW;
+extern int _IO_fflush_internal (_IO_FILE*);
 extern _IO_size_t _IO_fwrite_internal (const void*, _IO_size_t,
-				       _IO_size_t, _IO_FILE*) __THROW;
-extern long int _IO_ftell_internal (_IO_FILE*) __THROW;
-extern int _IO_fputs_internal (const char*, _IO_FILE*) __THROW;
+				       _IO_size_t, _IO_FILE*);
+extern long int _IO_ftell_internal (_IO_FILE*);
+extern int _IO_fputs_internal (const char*, _IO_FILE*);
 extern int _IO_setvbuf_internal (_IO_FILE*, char*, int, _IO_size_t) __THROW;
 
 #ifdef __cplusplus

@@ -1,3 +1,8 @@
+2004-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/pa_IN: Add some missing fields and fix some spelling
+	mistakes.  Patch by Jatin Nansi <jnansi@redhat.com>.
+
 2004-10-31  Petter Reinholdtsen  <pere@hungry.com>
 
 	[BZ #337]

@@ -12,7 +12,8 @@
 
 /* Now define the internal interfaces.  */
 
-#define __libc_dlopen(name) __libc_dlopen_mode (name, RTLD_LAZY)
+#define __libc_dlopen(name) \
+  __libc_dlopen_mode (name, RTLD_LAZY | __RTLD_DLOPEN)
 extern void *__libc_dlopen_mode  (__const char *__name, int __mode);
 extern void *__libc_dlsym   (void *__map, __const char *__name);
 extern int   __libc_dlclose (void *__map);

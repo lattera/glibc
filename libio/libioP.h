@@ -440,18 +440,15 @@ extern void _IO_wdefault_finish (_IO_FILE *, int) __THROW;
 extern int _IO_default_pbackfail (_IO_FILE *, int) __THROW;
 extern wint_t _IO_wdefault_pbackfail (_IO_FILE *, wint_t) __THROW;
 extern _IO_FILE* _IO_default_setbuf (_IO_FILE *, char *, _IO_ssize_t) __THROW;
-extern _IO_size_t _IO_default_xsputn (_IO_FILE *, const void *, _IO_size_t)
-     __THROW;
-extern _IO_size_t _IO_wdefault_xsputn (_IO_FILE *, const void *, _IO_size_t)
-     __THROW;
-extern _IO_size_t _IO_default_xsgetn (_IO_FILE *, void *, _IO_size_t) __THROW;
-extern _IO_size_t _IO_wdefault_xsgetn (_IO_FILE *, void *, _IO_size_t) __THROW;
+extern _IO_size_t _IO_default_xsputn (_IO_FILE *, const void *, _IO_size_t);
+extern _IO_size_t _IO_wdefault_xsputn (_IO_FILE *, const void *, _IO_size_t);
+extern _IO_size_t _IO_default_xsgetn (_IO_FILE *, void *, _IO_size_t);
+extern _IO_size_t _IO_wdefault_xsgetn (_IO_FILE *, void *, _IO_size_t);
 extern _IO_off64_t _IO_default_seekoff (_IO_FILE *, _IO_off64_t, int, int)
      __THROW;
 extern _IO_off64_t _IO_default_seekpos (_IO_FILE *, _IO_off64_t, int) __THROW;
-extern _IO_ssize_t _IO_default_write (_IO_FILE *, const void *, _IO_ssize_t)
-     __THROW;
-extern _IO_ssize_t _IO_default_read (_IO_FILE *, void *, _IO_ssize_t) __THROW;
+extern _IO_ssize_t _IO_default_write (_IO_FILE *, const void *, _IO_ssize_t);
+extern _IO_ssize_t _IO_default_read (_IO_FILE *, void *, _IO_ssize_t);
 extern int _IO_default_stat (_IO_FILE *, void *) __THROW;
 extern _IO_off64_t _IO_default_seek (_IO_FILE *, _IO_off64_t, int) __THROW;
 extern int _IO_default_sync (_IO_FILE *) __THROW;
@@ -657,16 +654,14 @@ extern int _IO_vsnprintf (char *string, _IO_size_t maxlen,
 			  __const char *format, _IO_va_list args) __THROW;
 
 
-extern _IO_size_t _IO_getline (_IO_FILE *,char *, _IO_size_t, int, int)
-     __THROW;
+extern _IO_size_t _IO_getline (_IO_FILE *,char *, _IO_size_t, int, int);
 extern _IO_size_t _IO_getline_info (_IO_FILE *,char *, _IO_size_t,
-				    int, int, int *) __THROW;
+				    int, int, int *);
 extern _IO_ssize_t _IO_getdelim (char **, _IO_size_t *, int, _IO_FILE *)
      __THROW;
-extern _IO_size_t _IO_getwline (_IO_FILE *,wchar_t *, _IO_size_t, wint_t, int)
-     __THROW;
+extern _IO_size_t _IO_getwline (_IO_FILE *,wchar_t *, _IO_size_t, wint_t, int);
 extern _IO_size_t _IO_getwline_info (_IO_FILE *,wchar_t *, _IO_size_t,
-				     wint_t, int, wint_t *) __THROW;
+				     wint_t, int, wint_t *);
 extern double _IO_strtod (const char *, char **) __THROW;
 extern char *_IO_dtoa (double __d, int __mode, int __ndigits,
 		       int *__decpt, int *__sign, char **__rve) __THROW;
@@ -718,7 +713,7 @@ extern _IO_FILE* _IO_file_attach_internal (_IO_FILE *, int) __THROW;
 extern _IO_FILE* _IO_file_fopen_internal (_IO_FILE *, const char *,
 					  const char *, int) __THROW;
 extern _IO_ssize_t _IO_file_read_internal (_IO_FILE *, void *,
-					   _IO_ssize_t) __THROW;
+					   _IO_ssize_t);
 extern int _IO_file_sync_internal (_IO_FILE *) __THROW;
 extern _IO_off64_t _IO_file_seek_internal (_IO_FILE *, _IO_off64_t, int)
      __THROW;
@@ -747,20 +742,18 @@ extern void _IO_link_in_internal (struct _IO_FILE_plus *) __THROW;
 extern int _IO_sputbackc_internal (_IO_FILE *, int) __THROW;
 extern void _IO_wdoallocbuf_internal (_IO_FILE *) __THROW;
 
-extern _IO_size_t _IO_sgetn_internal (_IO_FILE *, void *, _IO_size_t) __THROW;
+extern _IO_size_t _IO_sgetn_internal (_IO_FILE *, void *, _IO_size_t);
 extern void _IO_flush_all_linebuffered_internal (void) __THROW;
 extern int _IO_switch_to_wget_mode_internal (_IO_FILE *) __THROW;
 extern void _IO_unsave_markers_internal (_IO_FILE *) __THROW;
 extern void _IO_switch_to_main_wget_area_internal (_IO_FILE *) __THROW;
-extern int _IO_wdo_write_internal (_IO_FILE *, const wchar_t *, _IO_size_t)
-     __THROW;
-extern int _IO_do_write_internal (_IO_FILE *, const char *, _IO_size_t)
-     __THROW;
+extern int _IO_wdo_write_internal (_IO_FILE *, const wchar_t *, _IO_size_t);
+extern int _IO_do_write_internal (_IO_FILE *, const char *, _IO_size_t);
 extern _IO_ssize_t _IO_padn_internal (_IO_FILE *, int, _IO_ssize_t) __THROW;
 extern _IO_size_t _IO_getline_info_internal (_IO_FILE *,char *, _IO_size_t,
-					     int, int, int *) __THROW;
+					     int, int, int *);
 extern _IO_size_t _IO_getline_internal (_IO_FILE *, char *, _IO_size_t, int,
-					int) __THROW;
+					int);
 extern void _IO_free_wbackup_area_internal (_IO_FILE *) __THROW;
 extern void _IO_free_backup_area_internal (_IO_FILE *) __THROW;
 extern void _IO_switch_to_wbackup_area_internal (_IO_FILE *) __THROW;
@@ -771,7 +764,7 @@ extern int _IO_vfscanf_internal (_IO_FILE * __restrict,
 				 const char * __restrict,
 				 _IO_va_list, int *__restrict);
 extern int _IO_vfprintf_internal (_IO_FILE *__restrict, const char *__restrict,
-				  _IO_va_list) __THROW;
+				  _IO_va_list);
 extern void _IO_doallocbuf_internal (_IO_FILE *) __THROW;
 extern void _IO_wsetb_internal (_IO_FILE *, wchar_t *, wchar_t *, int)
      __THROW;
@@ -779,7 +772,7 @@ extern _IO_off64_t _IO_seekoff_unlocked (_IO_FILE *, _IO_off64_t, int, int)
      attribute_hidden __THROW;
 extern _IO_off64_t _IO_seekpos_unlocked (_IO_FILE *, _IO_off64_t, int)
      attribute_hidden __THROW;
-extern int _IO_putc_internal (int __c, _IO_FILE *__fp) __THROW;
+extern int _IO_putc_internal (int __c, _IO_FILE *__fp);
 extern void _IO_init_internal (_IO_FILE *, int) __THROW;
 extern void _IO_un_link_internal (struct _IO_FILE_plus *) __THROW;
 
@@ -871,10 +864,10 @@ extern void _IO_un_link_internal (struct _IO_FILE_plus *) __THROW;
 # define OS_FSTAT fstat
 #endif
 struct stat;
-extern _IO_ssize_t _IO_read (int, void *, _IO_size_t) __THROW;
-extern _IO_ssize_t _IO_write (int, const void *, _IO_size_t) __THROW;
+extern _IO_ssize_t _IO_read (int, void *, _IO_size_t);
+extern _IO_ssize_t _IO_write (int, const void *, _IO_size_t);
 extern _IO_off64_t _IO_lseek (int, _IO_off64_t, int) __THROW;
-extern int _IO_close (int) __THROW;
+extern int _IO_close (int);
 extern int _IO_fstat (int, struct stat *) __THROW;
 extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 

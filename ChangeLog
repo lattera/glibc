@@ -1,3 +1,26 @@
+2004-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/dlfcn.h (__libc_dlopen): Add __RTLD_DLOPEN to the mode
+	parameter.  Reported by VY Newsum <newsum@fel.tno.nl>.
+
+2004-11-10  Daniel Jacobowitz  <dan@debian.org>
+
+	* libio/iolibio.h (_IO_fclose, _IO_new_fclose, _IO_old_fclose,
+	_IO_fflush, _IO_fgetpos, _IO_fgetpos64, _IO_fgets, _IO_fopen,
+	_IO_old_fopen, _IO_new_fopen, _IO_fopen64, __fopen_internal,
+	_IO_fprintf, _IO_fputs, _IO_fsetpos, _IO_fsetpos64, _IO_ftell,
+	_IO_fread, _IO_fwrite, _IO_gets, _IO_printf, _IO_puts, _IO_scanf,
+	_IO_fflush_internal, _IO_ftell_internal, _IO_fputs_internal)
+	_IO_fwrite_internal): Remove incorrect __THROW.
+	* libio/libioP.h (_IO_default_xsputn, _IO_wdefault_xsputn,
+	_IO_default_xsgetn, _IO_wdefault_xsgetn, _IO_default_write,
+	_IO_default_read, _IO_getline, _IO_getline_info, _IO_getwline,
+	_IO_getwline_info, _IO_file_read_internal, _IO_sgetn_internal,
+	_IO_wdo_write_internal, _IO_do_write_internal,
+	_IO_getline_info_internal, _IO_getline_internal,
+	_IO_vfprintf_internal, _IO_putc_internal, _IO_read, _IO_write,
+	_IO_close): Likewise.
+
 2004-11-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/Makefile (install-others): Add $(inst_libexecdir)/getconf.

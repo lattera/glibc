@@ -1,11 +1,11 @@
 comment_char    %
 escape_char     /
-% Punjabi language locale for India.
-% used hi_IN as guideline, Rajneesh K Saini <rajneeshksaini@yahoo.com>
+% Punjabi language locale for Indian Punjabi(Gurmukhi)
+% Last update by A Alam <amanlinux@netscape.net>
 
 LC_IDENTIFICATION
-title      "Punjabi language locale for India"
-source     "IndLinux.org"
+title      "Punjabi language locale for Indian Punjabi(Gurmukhi)"
+source     "IndLinux.org"	
 address    ""
 contact    ""
 email      "bug-glibc-locales@gnu.org"
@@ -13,8 +13,8 @@ tel        ""
 fax        ""
 language   "Punjabi"
 territory  "India"
-revision   "0.01"
-date       "2002-04-10"
+revision   "0.2"
+date       "2004-09-30"	
 %
 category  "pa_IN:2000";LC_IDENTIFICATION
 category  "pa_IN:2000";LC_CTYPE
@@ -45,7 +45,7 @@ END LC_COLLATE
 LC_MONETARY
 % This is the POSIX Locale definition the LC_MONETARY category.
 int_curr_symbol       "<U0049><U004E><U0052><U0020>"
-currency_symbol       "<U0A30><U0A42><U0A2A><U0A72><U0A48>"
+currency_symbol       "<U0A30><U0A41><U0A2A><U0A0F>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3
@@ -74,56 +74,56 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U0A06><U0A48><U0A24><U0020>";/
+abday       "<U0A10><U0A24><U0020>";/
             "<U0A38><U0A4B><U0A2E><U0020>";/
             "<U0A2E><U0A70><U0A17><U0A32><U0020>";/
             "<U0A2C><U0A41><U0A71><U0A27><U0020>";/
             "<U0A35><U0A40><U0A30><U0020>";/
-            "<U0A36><U0A41><U0A15><U0A30><U0020>";/
-            "<U0A36><U0A28><U0A40><U0020>"
+            "<U0A36><U0A41><U0A71><U0A15><U0A30><U0020>";/
+            "<U0A36><U0A28><U0A40><U0A1A><U0A30><U0020>"
 %
 % Full weekday names (%A)
-day       "<U0A06><U0A48><U0A24><U0A35><U0A3E><U0A30><U0020>";/
+day       "<U0A10><U0A24><U0A35><U0A3E><U0A30><U0020>";/
             "<U0A38><U0A4B><U0A2E><U0A35><U0A3E><U0A30><U0020>";/
             "<U0A2E><U0A70><U0A17><U0A32><U0A35><U0A3E><U0A30><U0020>";/
             "<U0A2C><U0A41><U0A71><U0A27><U0A35><U0A3E><U0A30><U0020>";/
             "<U0A35><U0A40><U0A30><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A36><U0A41><U0A15><U0A30><U0A35><U0A3E><U0A30><U0020>";/
-            "<U0A36><U0A28><U0A40><U0A35><U0A3E><U0A30><U0020>"
+            "<U0A36><U0A41><U0A71><U0A15><U0A30><U0A35><U0A3E><U0A30><U0020>";/
+            "<U0A36><U0A28><U0A40><U0A1A><U0A30><U0A35><U0A3E><U0A30><U0020>"
 
 
 % Abbreviated month names (%b)
 abmon       "<U0A1C><U0A28><U0A35><U0A30><U0A40>";/
-            "<U0A2B><U0A3C><U0A30><U0A35><U0A30><U0A40>";/
-            "<U0A2E><U0A3E><U0A30><U0A1B>";/
-            "<U0A05><U0A2A><U0A3C><U0A48><U0A32>";/
-            "<U0A2E><U0A72><U0A40>";/
+            "<U0A5E><U0A30><U0A35><U0A30><U0A40>";/
+            "<U0A2E><U0A3E><U0A30><U0A1A>";/
+            "<U0A05><U0A2A><U0A30><U0A48><U0A32>";/
+            "<U0A2E><U0A08>";/
 	    "<U0A1C><U0A42><U0A28>";/
-            "<U0A1C><U0A41><U0A32><U0A3E><U0A72><U0A40>";/
+            "<U0A1C><U0A41><U0A32><U0A3E><U0A08>";/
             "<U0A05><U0A17><U0A38><U0A24>";/
-            "<U0A38><U0A3F><U0A24><U0A70><U0A2C><U0A30>";/
+            "<U0A38><U0A24><U0A70><U0A2C><U0A30>";/
             "<U0A05><U0A15><U0A24><U0A42><U0A2C><U0A30>";/
             "<U0A28><U0A35><U0A70><U0A2C><U0A30>";/
-            "<U0A26><U0A3F><U0A38><U0A70><U0A2C><U0A30>"
+            "<U0A26><U0A38><U0A70><U0A2C><U0A30>"
 %
 % Full month names (%B)
 mon         "<U0A1C><U0A28><U0A35><U0A30><U0A40>";/
-            "<U0A2B><U0A3C><U0A30><U0A35><U0A30><U0A40>";/
-            "<U0A2E><U0A3E><U0A30><U0A1B>";/
-            "<U0A05><U0A2A><U0A3C><U0A48><U0A32>";/
-            "<U0A2E><U0A72><U0A40>";/
+            "<U0A5E><U0A30><U0A35><U0A30><U0A40>";/
+            "<U0A2E><U0A3E><U0A30><U0A1A>";/
+            "<U0A05><U0A2A><U0A30><U0A48><U0A32>";/
+            "<U0A2E><U0A08>";/
 	    "<U0A1C><U0A42><U0A28>";/
-            "<U0A1C><U0A41><U0A32><U0A3E><U0A72><U0A40>";/
+            "<U0A1C><U0A41><U0A32><U0A3E><U0A08>";/
             "<U0A05><U0A17><U0A38><U0A24>";/
-            "<U0A38><U0A3F><U0A24><U0A70><U0A2C><U0A30>";/
+            "<U0A38><U0A24><U0A70><U0A2C><U0A30>";/
             "<U0A05><U0A15><U0A24><U0A42><U0A2C><U0A30>";/
             "<U0A28><U0A35><U0A70><U0A2C><U0A30>";/
-            "<U0A26><U0A3F><U0A38><U0A70><U0A2C><U0A30>"
+            "<U0A26><U0A38><U0A70><U0A2C><U0A30>"
 
 %
 % Equivalent of AM PM
-am_pm       "<U092A><U0942><U0930><U094D><U0935><U093E><U0939><U094D><U0928>";/
-            "<U0905><U092A><U0930><U093E><U0939><U094D><U0928>"
+am_pm       "<U0A38><U035><U0A47><U0A30><U0A47>";/
+            "<U0A36><U0A3E><U02E>"
 
 %
 % Appropriate date and time representation
