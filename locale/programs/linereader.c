@@ -535,7 +535,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 {
   int return_widestr = lr->return_widestr;
   char *buf;
-  char *buf2 = NULL;
+  wchar_t *buf2 = NULL;
   size_t bufact;
   size_t bufmax = 56;
 

@@ -836,6 +836,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    *(uint32_t *) iov[2 + elem + offset].iov_base =
 	      ctype->mbdigits_act / 10;
+	    idx[elem + 1] = idx[elem] + sizeof (uint32_t);
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN):
@@ -843,6 +844,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    *(uint32_t *) iov[2 + elem + offset].iov_base =
 	      ctype->wcdigits_act / 10;
+	    idx[elem + 1] = idx[elem] + sizeof (uint32_t);
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_MB):
@@ -865,6 +867,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 			      ctype->mbdigits[cnt]->nbytes);
 		*cp++ = '\0';
 	      }
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_MB) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_MB):
@@ -880,6 +883,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    *(char *) mempcpy (iov[2 + elem + offset].iov_base,
 			       ctype->mbdigits[cnt]->bytes,
 			       ctype->mbdigits[cnt]->nbytes) = '\0';
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_WC):
@@ -893,12 +897,14 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		 cnt < ctype->wcdigits_act; cnt += 10)
 	      ((uint32_t *) iov[2 + elem + offset].iov_base)[cnt / 10]
 		= ctype->wcdigits[cnt];
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC):
 	    cnt = elem - _NL_CTYPE_OUTDIGIT0_WC;
 	    iov[2 + elem + offset].iov_base = &ctype->wcoutdigits[cnt];
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
 	  default:
@@ -2933,6 +2939,12 @@ Computing table size for character classes might take a while..."),
 
       /* EOF must map to EOF.  */
       ctype->map[idx][127] = EOF;
+
+      /* The 32 bit map collection.  */
+      for (idx2 = 0; idx2 < ctype->map_collection_act[idx]; ++idx2)
+	if (ctype->map_collection[idx][idx2] != 0)
+	  ctype->map[idx][128 + ctype->charnames[idx2]]
+	    = ctype->map_collection[idx][idx2];
     }
 
   /* Extra array for class and map names.  */
@@ -3041,7 +3053,8 @@ Computing table size for character classes might take a while..."),
 	}
 
       /* Next we allocate an array large enough and fill in the values.  */
-      sorted = alloca (number * sizeof (struct translit_t **));
+      sorted = (struct translit_t **) alloca (number
+					      * sizeof (struct translit_t **));
       runp = ctype->translit;
       number = 0;
       do

@@ -2236,6 +2236,14 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	if (error)
 	  goto do_error;
 
+	if (!word_length)
+	  {
+	    error = w_addword (pwordexp, NULL);
+
+	    if (error)
+	      return error;
+	  }
+
 	break;
 
       case '\'':
@@ -2245,6 +2253,14 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 
 	if (error)
 	  goto do_error;
+
+	if (!word_length)
+	  {
+	    error = w_addword (pwordexp, NULL);
+
+	    if (error)
+	      return error;
+	  }
 
 	break;
 

@@ -118,7 +118,7 @@ time_startup (struct linereader *lr, struct localedef_t *locale,
   if (time != NULL)
     {
       lr->translate_strings = 1;
-      lr->return_widestr = 0;
+      lr->return_widestr = 1;
     }
 }
 
@@ -432,12 +432,12 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	    }
 
 	  /* Now generate the wide character name and format.  */
-	  wstr = wcschr ((wchar_t *) time->wera, L':');	/* end direction */
-	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end offset */
-	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end start */
-	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end end */
+	  wstr = wcschr ((wchar_t *) time->wera[idx], L':');/* end direction */
+	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end offset */
+	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end start */
+	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end end */
 	  time->era_entries[idx].wname = (uint32_t *) wstr;
-	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end name */
+	  wstr = wstr ? wcschr (wstr + 1, L':') : NULL;	/* end name */
 	  time->era_entries[idx].wformat = (uint32_t *) wstr;
 	}
     }
@@ -670,12 +670,11 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
       assert (idx[1 + last_idx] % 4 == 0);
 
       iov[2 + cnt].iov_base = (void *) time->era_entries[num].wname;
-      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) time->era_entries[cnt].wformat, L'\0')
+      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) time->era_entries[num].wformat, L'\0')
 			       - (wchar_t *) time->era_entries[num].wname + 1)
 			      * sizeof (uint32_t));
-      ++cnt;
-
       idx[1 + last_idx] += iov[2 + cnt].iov_len;
+      ++cnt;
     }
   ++last_idx;
 
@@ -869,7 +868,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, repertoire);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -895,7 +894,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ingore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, repertoire);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -946,7 +945,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 		}							      \
 									      \
 	      /* Match the semicolon.  */				      \
-	      now = lr_token (ldfile, charmap, NULL);			      \
+	      now = lr_token (ldfile, charmap, repertoire);		      \
 	      if (now->tok != tok_semicolon && now->tok != tok_eol)	      \
 		break;							      \
 	    }								      \
@@ -960,7 +959,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	      								      \
 	      if (now->tok == tok_semicolon)				      \
 		{							      \
-		  now = lr_token (ldfile, charmap, NULL);		      \
+		  now = lr_token (ldfile, charmap, repertoire);		      \
 		  if (now->tok == tok_eol)				      \
 		    lr_error (ldfile, _("extra trailing semicolon"));	      \
 		  else if (now->tok == tok_string)			      \
@@ -994,10 +993,9 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	      lr_ignore_rest (ldfile, 0);
 	      break;
 	    }
-
 	  do
 	    {
-	      now = lr_token (ldfile, charmap, NULL);
+	      now = lr_token (ldfile, charmap, repertoire);
 	      if (now->tok != tok_string)
 		goto err_label;
 	      if (!ignore_content && (now->val.str.startmb == NULL
@@ -1008,7 +1006,6 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 		  lr_ignore_rest (ldfile, 0);
 		  break;
 		}
-
 	      if (!ignore_content)
 		{
 		  time->era = xrealloc (time->era,
@@ -1020,9 +1017,8 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 					 * sizeof (char *));
 		  time->wera[time->num_era++] = now->val.str.startwc;
 		}
-
-	      now = lr_token (ldfile, charmap, NULL);
-	      if (now->tok != tok_eof && now->tok != tok_semicolon)
+	      now = lr_token (ldfile, charmap, repertoire);
+	      if (now->tok != tok_eol && now->tok != tok_semicolon)
 		goto err_label;
 	    }
 	  while (now->tok == tok_semicolon);
@@ -1038,7 +1034,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  now = lr_token (ldfile, charmap, NULL);			      \
+	  now = lr_token (ldfile, charmap, repertoire);			      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
 	  else if (time->cat != NULL)					      \
@@ -1079,7 +1075,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  now = lr_token (ldfile, charmap, NULL);			      \
+	  now = lr_token (ldfile, charmap, repertoire);			      \
 	  if (now->tok != tok_number)					      \
 	    goto err_label;						      \
 	  else if (time->cat != 0)					      \
@@ -1102,25 +1098,25 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;
 	    }
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, repertoire);
 	  if (now->tok != tok_number)
 	    goto err_label;
 	  time->week_ndays = now->val.num;
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, repertoire);
 	  if (now->tok != tok_semicolon)
 	    goto err_label;
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, repertoire);
 	  if (now->tok != tok_number)
 	    goto err_label;
 	  time->week_1stday = now->val.num;
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, repertoire);
 	  if (now->tok != tok_semicolon)
 	    goto err_label;
 
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, repertoire);
 	  if (now->tok != tok_number)
 	    goto err_label;
 	  time->week_1stweek = now->val.num;
@@ -1130,7 +1126,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_TIME'.  */
-	  now = lr_token (ldfile, charmap, NULL);
+	  now = lr_token (ldfile, charmap, repertoire);
 	  if (now->tok == tok_eof)
 	    break;
 	  if (now->tok == tok_eol)
@@ -1147,7 +1143,7 @@ time_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL);
+      now = lr_token (ldfile, charmap, repertoire);
       nowtok = now->tok;
     }
 

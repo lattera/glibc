@@ -1,3 +1,31 @@
+1999-11-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIM_INFINITY): Adjust
+	for kernel changes.
+	* sysdeps/unix/sysv/linux/bits/types.h (__rlim_t, __rlim64_t): Make
+	unsigned.
+
+1999-10-04  Tim Waugh <twaugh@redhat.com>
+
+	* posix/wordexp-test.c: More tests.
+
+	* posix/wordexp.c (wordexp): Explicit null words should be kept.
+
+1999-11-04  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
+
+	* locale/programs/linereader.c (get_string): Correct type of buf2
+	variable.
+	* locale/programs/ld-ctype.c (ctype_output): Store index correctly
+	for _NL_CTYPE_INDIGITS_MB_LEN, _NL_CTYPE_INDIGITS_WC_LEN,
+	_NL_CTYPE_INDIGITS*_MB, _NL_CTYPE_OUTDIGIT*_MB, and
+	_NL_CTYPE_OUTDIGIT*_WC.
+	(allocate_arrays): Completely initialize mapping tables.
+	* locale/programs/ld-time.c (time_startup): We need the wide car
+	string.
+	(time_finish): Correct handling of era.
+	(time_output): Fix a few array indeces.
+	(time_read): Pass the repertoire map to lr_token.
+
 1999-11-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions.def: Add version for libthread_db.

@@ -89,6 +89,9 @@ struct test_case_struct
     { 0, "foo", "\"$var\"\"$var\"", 0, 1, { "foofoo", }, IFS },
     { 0, NULL, "'singly-quoted'", 0, 1, { "singly-quoted", }, IFS },
     { 0, NULL, "contin\\\nuation", 0, 1, { "continuation", }, IFS },
+    { 0, NULL, "explicit ''", 0, 2, { "explicit", "", }, IFS },
+    { 0, NULL, "explicit \"\"", 0, 2, { "explicit", "", }, IFS },
+    { 0, NULL, "explicit ``", 0, 1, { "explicit", }, IFS },
 
     /* Simple command substitution */
     { 0, NULL, "$(echo hello)", 0, 1, { "hello", }, IFS },
@@ -244,6 +247,7 @@ main (int argc, char *argv[])
     if (testit (&test_case[test]))
       ++fail;
 
+  /* Tilde-expansion tests. */
   pw = getpwnam ("root");
   if (pw != NULL)
     {
@@ -255,6 +259,17 @@ main (int argc, char *argv[])
       ts.flags = 0;
       ts.wordc = 1;
       ts.wordv[0] = pw->pw_dir;
+      ts.ifs = IFS;
+
+      if (testit (&ts))
+	++fail;
+
+      ts.retval = 0;
+      ts.env = pw->pw_dir;
+      ts.words = "${var#~root}x";
+      ts.flags = 0;
+      ts.wordc = 1;
+      ts.wordv[0] = "x";
       ts.ifs = IFS;
 
       if (testit (&ts))
