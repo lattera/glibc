@@ -49,7 +49,7 @@
 	increase priority when needed.
 	* internals.h: Add prototype for __pthread_manager_adjust_prio.
 	* mutex.c: Optimize mutexes to wake up only one thread.
-	* pthread.c: Move PID of manager fro global variable in structure
+	* pthread.c: Move PID of manager for global variable in structure
 	element.
 	Patches by Xavier Leroy.
 
