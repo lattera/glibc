@@ -1,3 +1,12 @@
+2003-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/Makefile (tests): Add bug-nextafter.
+	* math/bug-nextafter.c: New file.
+	* sysdeps/generic/s_nextafter.c: Construct overflow value correctly.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c: Likewise.
+	* math/libm-test.inc (nextafter_test): Add test for overflow after
+	+/-FLT_MAX etc.
+
 2003-12-04  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/fgetexcptflg.c (__fegetexceptflag): Add masking

@@ -87,7 +87,8 @@ distribute += $(filter-out $(generated),$(long-m-yes:=.c) $(long-c-yes:=.c))
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
-	test-misc test-fpucw tst-definitions test-tgmath test-tgmath-ret
+	test-misc test-fpucw tst-definitions test-tgmath test-tgmath-ret \
+	bug-nextafter
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl

@@ -3437,6 +3437,11 @@ nextafter_test (void)
   TEST_ff_f (nextafter, 1.1L, nan_value, nan_value);
   TEST_ff_f (nextafter, nan_value, nan_value, nan_value);
 
+  FLOAT fltmax = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
+			 LDBL_MAX, DBL_MAX, FLT_MAX);
+  TEST_ff_f (nextafter, fltmax, plus_infty, plus_infty);
+  TEST_ff_f (nextafter, -fltmax, minus_infty, minus_infty);
+
 #ifdef TEST_LDOUBLE
   // XXX Enable once gcc is fixed.
   //TEST_ff_f (nextafter, 0x0.00000040000000000000p-16385L, -0.1L, 0x0.0000003ffffffff00000p-16385L);
