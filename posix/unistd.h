@@ -339,10 +339,30 @@ extern __pid_t __getpgid __P ((__pid_t __pid));
 extern __pid_t getpgid __P ((__pid_t __pid));
 #endif
 
-#ifdef	__USE_BSD
-/* Another name for `setpgid'.  */
+#if defined (__USE_SVID) || defined (__USE_BSD)
+/* Both System V and BSD have `setpgrp' functions, but with different
+   calling conventions.  The BSD function is the same as POSIX.1 `setpgid'
+   (above).  The System V function takes no arguments and puts the calling
+   process in its on group like `setpgid (0, 0)'.
+
+   New programs should always use `setpgid' instead.
+
+   The default in GNU is to provide the System V function.  The BSD
+   function is available under -D_BSD_SOURCE with -lbsd-compat.  */
+
+#ifndef	__FAVOR_BSD
+
+/* Set the process group ID of the calling process to its own PID.
+   This is exactly the same as `setpgid (0, 0)'.  */
+extern int setpgrp __P ((void));
+
+#else
+
+/* Another name for `setpgid' (above).  */
 extern int setpgrp __P ((__pid_t __pid, __pid_t __pgrp));
-#endif /* Use BSD.  */
+
+#endif	/* Favor BSD.  */
+#endif	/* Use SVID or BSD.  */
 
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process

@@ -172,12 +172,16 @@ extern int rand __P ((void));
 /* Seed the random number generator with the given number.  */
 extern void srand __P ((unsigned int __seed));
 
+#ifdef	__USE_BSD
+
+#include <sys/types.h>	/* we need int32_t... */
+
 /* These are the functions that actually do things.  The `random', `srandom',
    `initstate' and `setstate' functions are those from BSD Unices.
    The `rand' and `srand' functions are required by the ANSI standard.
    We provide both interfaces to the same random number generator.  */
 /* Return a random long integer between 0 and RAND_MAX inclusive.  */
-extern long int __random __P ((void));
+extern int32_t __random __P ((void));
 /* Seed the random number generator with the given number.  */
 extern void __srandom __P ((unsigned int __seed));
 
@@ -191,7 +195,6 @@ extern __ptr_t __initstate __P ((unsigned int __seed, __ptr_t __statebuf,
    which should have been previously initialized by `initstate'.  */
 extern __ptr_t __setstate __P ((__ptr_t __statebuf));
 
-#ifdef	__USE_BSD
 extern long int random __P ((void));
 extern void srandom __P ((unsigned int __seed));
 extern __ptr_t initstate __P ((unsigned int __seed, __ptr_t __statebuf,
@@ -217,22 +220,22 @@ extern __inline __ptr_t setstate (__ptr_t __statebuf)
 
 struct random_data
   {
-    long int *fptr;		/* Front pointer.  */
-    long int *rptr;		/* Rear pointer.  */
-    long int *state;		/* Array of state values.  */
+    int32_t *fptr;		/* Front pointer.  */
+    int32_t *rptr;		/* Rear pointer.  */
+    int32_t *state;		/* Array of state values.  */
     int rand_type;		/* Type of random number generator.  */
     int rand_deg;		/* Degree of random number generator.  */
     int rand_sep;		/* Distance between front and rear.  */
-    long int *end_ptr;		/* Pointer behind state table.  */
+    int32_t *end_ptr;		/* Pointer behind state table.  */
   };
 
-extern int __random_r __P ((struct random_data *__buf, long int *__result));
+extern int __random_r __P ((struct random_data *__buf, int32_t *__result));
+extern int random_r __P ((struct random_data *__buf, int32_t *__result));
 extern int __srandom_r __P ((unsigned int __seed, struct random_data *__buf));
 extern int __initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
 			       size_t __statelen, struct random_data *__buf));
 extern int __setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
 
-extern int random_r __P ((struct random_data *__buf, long int *__result));
 extern int srandom_r __P ((unsigned int __seed, struct random_data *__buf));
 extern int initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
 			     size_t __statelen, struct random_data *__buf));

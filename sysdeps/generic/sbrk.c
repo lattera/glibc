@@ -26,7 +26,7 @@ extern int __brk (void *addr);
    If INCREMENT is negative, shrink data space by - INCREMENT.
    Return start of new space allocated, or -1 for errors.  */
 void *
-__sbrk (int increment)
+__sbrk (ptrdiff_t increment)
 {
   void *oldbrk;
 

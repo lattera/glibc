@@ -233,7 +233,7 @@ clnttcp_call(h, proc, xdr_args, args_ptr, xdr_results, results_ptr, timeout)
 	register XDR *xdrs = &(ct->ct_xdrs);
 	struct rpc_msg reply_msg;
 	u_long x_id;
-	u_long *msg_x_id = (u_long *)(ct->ct_mcall);	/* yuk */
+	u_int32_t *msg_x_id = (u_int32_t *)(ct->ct_mcall);	/* yuk */
 	register bool_t shipnow;
 	int refreshes = 2;
 

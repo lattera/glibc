@@ -35,11 +35,5 @@ $(objpfx)termio.h: $(..)sysdeps/unix/sysv/sysv_termio.h
 
 endif
 
-ifeq ($(subdir),dirent)
-
-sysdep_routines := $(sysdep_routines) s_getdents
-
-endif
-
 # In SYSV style archives the symbol table member has an empty name.
 ar-symtab-name =

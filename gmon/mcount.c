@@ -34,6 +34,7 @@
 #if !defined(lint) && !defined(KERNEL) && defined(LIBC_SCCS)
 static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
 #endif
+	int i;
 
 #include <sys/param.h>
 #include <sys/gmon.h>
@@ -67,6 +68,7 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 #ifdef KERNEL
 	register int s;
 #endif
+	int i;
 
 	p = &_gmonparam;
 	/*
@@ -89,7 +91,13 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	if (frompc > p->textsize)
 		goto done;
 
-	frompcindex = &p->froms[frompc / (p->hashfraction * sizeof(*p->froms))];
+	/* avoid integer divide if possible: */
+	if (p->log_hashfraction >= 0) {
+	    i = frompc >> p->log_hashfraction;
+	} else {
+	    i = frompc / (p->hashfraction * sizeof(*p->froms));
+	}
+	frompcindex = &p->froms[i];
 	toindex = *frompcindex;
 	if (toindex == 0) {
 		/*

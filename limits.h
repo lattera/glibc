@@ -101,12 +101,26 @@ Cambridge, MA 02139, USA.  */
 #define	UINT_MAX	4294967295
 #endif
 
+#ifdef __alpha__
+
 /* Minimum and maximum values a `signed long int' can hold.  */
-#define	LONG_MIN	INT_MIN
+#define LONG_MAX	9223372036854775807L
+#define LONG_MIN	(- LONG_MAX - 1L)
+
+/* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
+#define ULONG_MAX	18446744073709551615L
+
+#else
+
+/* Minimum and maximum values a `signed long int' can hold.  */
 #define	LONG_MAX	INT_MAX
+#define	LONG_MIN	INT_MIN
 
 /* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
 #define	ULONG_MAX	UINT_MAX
+
+#endif
+
 
 #endif	/* limits.h  */
 #endif	/* GCC 2.  */

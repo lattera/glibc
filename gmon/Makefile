@@ -21,9 +21,9 @@
 #
 subdir	:= gmon
 
-headers	:= sys/gmon.h
+headers	:= sys/gmon.h sys/gmon_out.h
 distribute := machine-gmon.h
-routines := gmon mcount profil
+routines := gmon mcount profil bb_init_func bb_exit_func
 
 include ../Rules
 

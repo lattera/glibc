@@ -400,7 +400,7 @@ svc_getreqset(readfds)
 	register SVCXPRT *xprt;
 	register u_long mask;
 	register int bit;
-	register u_long *maskp;
+	register u_int32_t *maskp;
 	register int setsize;
 	register int sock;
 	char cred_area[2*MAX_AUTH_BYTES + RQCRED_SIZE];
@@ -411,7 +411,7 @@ svc_getreqset(readfds)
 
 #ifdef FD_SETSIZE
 	setsize = _rpc_dtablesize();	
-	maskp = (u_long *)readfds->fds_bits;
+	maskp = (u_int32_t *)readfds->fds_bits;
 	for (sock = 0; sock < setsize; sock += NFDBITS) {
 	    for (mask = *maskp++; bit = ffs(mask); mask ^= (1 << (bit - 1))) {
 		/* sock has input waiting */

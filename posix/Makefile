@@ -37,7 +37,7 @@ routines :=								      \
 	execve fexecve execv execle execl execvp execlp			      \
 	getpid getppid							      \
 	getuid geteuid getgid getegid getgroups setuid setgid group_member    \
-	getpgid setpgid getpgrp getsid setsid				      \
+	getpgid setpgid getpgrp setpgrp getsid setsid			      \
 	getlogin setlogin						      \
 	pathconf sysconf fpathconf					      \
 	glob fnmatch regex						      \

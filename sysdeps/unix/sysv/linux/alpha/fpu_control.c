@@ -1,5 +1,5 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+   Contributed by David Mosberger (davidm@azstarnet.com).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,13 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#define __NO_MATH_INLINES
+#include <fpu_control.h>
 
-#include <math.h>
-
-__inline double
-fabs (double __x)
-{
-  __asm ("cpys $f31, %1, %0" : "=f" (__x) : "f" (__x));
-  return __x;
-}
+fpu_control_t __fpu_control = _FPU_DEFAULT;

@@ -82,7 +82,7 @@ xdr_callmsg(xdrs, cmsg)
 			IXDR_PUT_LONG(buf, oa->oa_length);
 			if (oa->oa_length) {
 				bcopy(oa->oa_base, (caddr_t)buf, oa->oa_length);
-				buf += RNDUP(oa->oa_length) / sizeof (long);
+				buf = (long *) ((char *) buf + RNDUP(oa->oa_length));
 			}
 			oa = &cmsg->rm_call.cb_verf;
 			IXDR_PUT_ENUM(buf, oa->oa_flavor);
@@ -90,7 +90,7 @@ xdr_callmsg(xdrs, cmsg)
 			if (oa->oa_length) {
 				bcopy(oa->oa_base, (caddr_t)buf, oa->oa_length);
 				/* no real need....
-				buf += RNDUP(oa->oa_length) / sizeof (long);
+				buf = (long *) ((char *) buf + RNDUP(oa->oa_length));
 				*/
 			}
 			return (TRUE);
@@ -132,8 +132,8 @@ xdr_callmsg(xdrs, cmsg)
 					bcopy((caddr_t)buf, oa->oa_base,
 					    oa->oa_length);
 					/* no real need....
-					buf += RNDUP(oa->oa_length) /
-						sizeof (long);
+					buf = (long *) ((char *) buf
+					      + RNDUP(oa->oa_length));
 					*/
 				}
 			}
@@ -166,8 +166,8 @@ xdr_callmsg(xdrs, cmsg)
 					bcopy((caddr_t)buf, oa->oa_base,
 					    oa->oa_length);
 					/* no real need...
-					buf += RNDUP(oa->oa_length) /
-						sizeof (long);
+					buf = (long *) ((char *) buf
+					      + RNDUP(oa->oa_length));
 					*/
 				}
 			}

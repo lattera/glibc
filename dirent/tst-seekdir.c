@@ -14,7 +14,7 @@ main ()
   dirp = opendir(".");
   for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp))
     {
-      /* save position 3 (fourth entry) */
+      /* save position 3 (after fourth entry) */
       if (i++ == 3)
 	save3 = telldir(dirp);
 
@@ -25,6 +25,8 @@ main ()
       if (i == 400)
 	break;
     }
+
+  printf("going back past 4-th entry...\n");
 
   /* go back to saved entry */
   seekdir (dirp, save3);

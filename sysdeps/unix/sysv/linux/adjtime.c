@@ -20,8 +20,8 @@ Boston, MA 02111-1307, USA.  */
 #include <sys/time.h>
 #include <sys/timex.h>
 
-#define MAX_SEC	(LONG_MAX / 1000000L - 2)
-#define MIN_SEC	(LONG_MIN / 1000000L + 2)
+#define MAX_SEC	(INT_MAX / 1000000L - 2)
+#define MIN_SEC	(INT_MIN / 1000000L + 2)
 
 #ifndef MOD_OFFSET
 #define modes mode

@@ -43,6 +43,8 @@ DEFUN(main, (argc, argv),
   try (0, 0);
   for (i=0 ; i<32 ; i++)
     try (1<<i, i+1);
+  for (i=0 ; i<32 ; i++)
+    try ((~0 >> i) << i, i+1);
   try (0x80008000, 16);
 
   if (failures)

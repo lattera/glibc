@@ -1,5 +1,7 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Inline math functions for Alpha.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by David Mosberger-Tang.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -31,5 +33,21 @@ fabs (double __x)
   __asm ("cpys $f31, %1, %0" : "=f" (__x) : "f" (__x));
   return __x;
 }
+
+extern __inline double
+atan (double __x)
+{
+  extern double __atan2 (double, double);
+  return __atan2 (__x, 1.0);
+}
+
+#ifdef __USE_MISC
+extern __inline double
+cabs (struct __cabs_complex __z)
+{
+  extern double __hypot (double, double);
+  return __hypot(__z.__x, __z.__y);
+}
+#endif
 
 #endif

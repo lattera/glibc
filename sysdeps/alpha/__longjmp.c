@@ -38,6 +38,8 @@ register double
 void
 __longjmp (__jmp_buf env, int val)
 {
+  register long int retval asm ("$0");
+
   /* Restore the integer registers.  */
   r9 = env[0].__9;
   r10 = env[0].__10;
@@ -73,18 +75,18 @@ __longjmp (__jmp_buf env, int val)
      precisely the FP and SP the desired environment needs,
      we must avoid the compiler doing anything with the stack.  */
 
+
+  asm volatile
+    ("cmoveq %1, 1, %0\n\t"	/* $0 = val ?: 1; */
+     "ret $31, (%2), 1"	/* return $0 */
+     : "=r" (retval)
+     /* The "0" constraint should force VAL into $0.  */
+     : "0" (val), "r" (retpc));
+
   while (1)
     {
       /* The loop is just to avoid `volatile function does return' warnings.
 	 The instruction will only be executed once.  */
-
-      register long int retval asm ("$0");
-
-      asm volatile
-	("cmoveq %1, 1, %0\n\t"	/* $0 = val ?: 1; */
-	 "ret $31, (%2), 1"	/* return $0 */
-	 : "=r" (retval)
-	 /* The "0" constraint should force VAL into $0.  */
-	 : "0" (val), "r" (retpc));
+      asm volatile ("");
     }
 }

@@ -30,161 +30,53 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
-#if !defined(lint) && defined(LIBC_SCCS)
-static char sccsid[] = "@(#)gmon.c	8.1 (Berkeley) 6/4/93";
-#endif
-
 #include <sys/param.h>
 #include <sys/time.h>
 #include <sys/gmon.h>
+#include <sys/gmon_out.h>
 
+#include <ansidecl.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <unistd.h>
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
+struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
+
 struct gmonparam _gmonparam = { GMON_PROF_OFF };
 
+/*
+ * See profil(2) where this is described:
+ */
 static int	s_scale;
-/* see profil(2) where this is describe (incorrectly) */
 #define		SCALE_1_TO_1	0x10000L
 
-#define ERR(s) write(2, s, sizeof(s) - 1)
+#define ERR(s) write(2, s, sizeof(s))
 
-void	moncontrol __P((int));
-static int hertz __P((void));
-
-void
-monstartup(lowpc, highpc)
-	u_long lowpc;
-	u_long highpc;
+/*
+ * Discover the tick frequency of the machine if something goes wrong,
+ * we return 0, an impossible hertz.
+ */
+static int
+DEFUN_VOID(hertz)
 {
-	register int o;
-	char *cp;
-	struct gmonparam *p = &_gmonparam;
-
-	/*
-	 * round lowpc and highpc to multiples of the density we're using
-	 * so the rest of the scaling (here and in gprof) stays in ints.
-	 */
-	p->lowpc = ROUNDDOWN(lowpc, HISTFRACTION * sizeof(HISTCOUNTER));
-	p->highpc = ROUNDUP(highpc, HISTFRACTION * sizeof(HISTCOUNTER));
-	p->textsize = p->highpc - p->lowpc;
-	p->kcountsize = p->textsize / HISTFRACTION;
-	p->hashfraction = HASHFRACTION;
-	p->fromssize = p->textsize / HASHFRACTION;
-	p->tolimit = p->textsize * ARCDENSITY / 100;
-	if (p->tolimit < MINARCS)
-		p->tolimit = MINARCS;
-	else if (p->tolimit > MAXARCS)
-		p->tolimit = MAXARCS;
-	p->tossize = p->tolimit * sizeof(struct tostruct);
-
-	cp = malloc (p->kcountsize + p->fromssize + p->tossize);
-	if (! cp) {
-		ERR("monstartup: out of memory\n");
-		return;
-	}
-	bzero(cp, p->kcountsize + p->fromssize + p->tossize);
-	p->tos = (struct tostruct *)cp;
-	cp += p->tossize;
-	p->kcount = (u_short *)cp;
-	cp += p->kcountsize;
-	p->froms = (u_short *)cp;
-
-	p->tos[0].link = 0;
-
-	o = p->highpc - p->lowpc;
-	if (p->kcountsize < o) {
-#ifndef hp300
-		s_scale = ((float)p->kcountsize / o ) * SCALE_1_TO_1;
-#else /* avoid floating point */
-		int quot = o / p->kcountsize;
-		
-		if (quot >= 0x10000)
-			s_scale = 1;
-		else if (quot >= 0x100)
-			s_scale = 0x10000 / quot;
-		else if (o >= 0x800000)
-			s_scale = 0x1000000 / (o / (p->kcountsize >> 8));
-		else
-			s_scale = 0x1000000 / ((o << 8) / p->kcountsize);
-#endif
-	} else
-		s_scale = SCALE_1_TO_1;
-
-	moncontrol(1);
+  struct itimerval tim;
+    
+  tim.it_interval.tv_sec = 0;
+  tim.it_interval.tv_usec = 1;
+  tim.it_value.tv_sec = 0;
+  tim.it_value.tv_usec = 0;
+  setitimer(ITIMER_REAL, &tim, 0);
+  setitimer(ITIMER_REAL, 0, &tim);
+  if (tim.it_interval.tv_usec < 2)
+    return 0;
+  return (1000000 / tim.it_interval.tv_usec);
 }
 
-void
-_mcleanup()
-{
-	int fd;
-	int fromindex;
-	int endfrom;
-	u_long frompc;
-	int toindex;
-	struct rawarc rawarc;
-	struct gmonparam *p = &_gmonparam;
-	struct gmonhdr gmonhdr, *hdr;
-#ifdef DEBUG
-	int log, len;
-	char buf[200];
-#endif
-
-	if (p->state == GMON_PROF_ERROR)
-		ERR("_mcleanup: tos overflow\n");
-
-	moncontrol(0);
-	fd = open("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
-	if (fd < 0) {
-		perror("mcount: gmon.out");
-		return;
-	}
-#ifdef DEBUG
-	log = open("gmon.log", O_CREAT|O_TRUNC|O_WRONLY, 0664);
-	if (log < 0) {
-		perror("mcount: gmon.log");
-		return;
-	}
-	len = sprintf(buf, "[mcleanup1] kcount 0x%x ssiz %d\n",
-	    p->kcount, p->kcountsize);
-	write(log, buf, len);
-#endif
-	hdr = (struct gmonhdr *)&gmonhdr;
-	hdr->lpc = p->lowpc;
-	hdr->hpc = p->highpc;
-	hdr->ncnt = p->kcountsize + sizeof(gmonhdr);
-	hdr->version = GMONVERSION;
-	hdr->profrate = hertz();
-	write(fd, (char *)hdr, sizeof *hdr);
-	write(fd, p->kcount, p->kcountsize);
-	endfrom = p->fromssize / sizeof(*p->froms);
-	for (fromindex = 0; fromindex < endfrom; fromindex++) {
-		if (p->froms[fromindex] == 0)
-			continue;
-
-		frompc = p->lowpc;
-		frompc += fromindex * p->hashfraction * sizeof(*p->froms);
-		for (toindex = p->froms[fromindex]; toindex != 0;
-		     toindex = p->tos[toindex].link) {
-#ifdef DEBUG
-			len = sprintf(buf,
-			"[mcleanup2] frompc 0x%x selfpc 0x%x count %d\n" ,
-				frompc, p->tos[toindex].selfpc,
-				p->tos[toindex].count);
-			write(log, buf, len);
-#endif
-			rawarc.raw_frompc = frompc;
-			rawarc.raw_selfpc = p->tos[toindex].selfpc;
-			rawarc.raw_count = p->tos[toindex].count;
-			write(fd, &rawarc, sizeof rawarc);
-		}
-	}
-	close(fd);
-}
 
 /*
  * Control profiling
@@ -192,41 +84,207 @@ _mcleanup()
  *	all the data structures are ready.
  */
 void
-moncontrol(mode)
-	int mode;
+DEFUN(moncontrol, (mode), int mode)
 {
-	struct gmonparam *p = &_gmonparam;
+  struct gmonparam *p = &_gmonparam;
 
-	if (mode) {
-		/* start */
-		profil(p->kcount, p->kcountsize, (int)p->lowpc,
-		    s_scale);
-		p->state = GMON_PROF_ON;
-	} else {
-		/* stop */
-		profil(0, 0, 0, 0);
-		p->state = GMON_PROF_OFF;
+  if (mode)
+    {
+      /* start */
+      profil((void *) p->kcount, p->kcountsize, p->lowpc, s_scale);
+      p->state = GMON_PROF_ON;
+    }
+  else
+    {
+      /* stop */
+      profil((void *) 0, 0, 0, 0);
+      p->state = GMON_PROF_OFF;
+    }
+}
+
+
+void
+DEFUN(monstartup, (lowpc, highpc), u_long lowpc AND u_long highpc)
+{
+  register int o;
+  char *cp;
+  struct gmonparam *p = &_gmonparam;
+
+  /*
+   * round lowpc and highpc to multiples of the density we're using
+   * so the rest of the scaling (here and in gprof) stays in ints.
+   */
+  p->lowpc = ROUNDDOWN(lowpc, HISTFRACTION * sizeof(HISTCOUNTER));
+  p->highpc = ROUNDUP(highpc, HISTFRACTION * sizeof(HISTCOUNTER));
+  p->textsize = p->highpc - p->lowpc;
+  p->kcountsize = p->textsize / HISTFRACTION;
+  p->hashfraction = HASHFRACTION;
+  p->log_hashfraction = -1;
+  if ((HASHFRACTION & (HASHFRACTION - 1)) == 0) {
+      /* if HASHFRACTION is a power of two, mcount can use shifting
+	 instead of integer division.  Precompute shift amount. */
+      p->log_hashfraction = ffs(p->hashfraction * sizeof(*p->froms)) - 1;
+  }
+  p->fromssize = p->textsize / HASHFRACTION;
+  p->tolimit = p->textsize * ARCDENSITY / 100;
+  if (p->tolimit < MINARCS)
+    p->tolimit = MINARCS;
+  else if (p->tolimit > MAXARCS)
+    p->tolimit = MAXARCS;
+  p->tossize = p->tolimit * sizeof(struct tostruct);
+
+  cp = malloc (p->kcountsize + p->fromssize + p->tossize);
+  if (! cp)
+    {
+      ERR("monstartup: out of memory\n");
+      return;
+    }
+  bzero(cp, p->kcountsize + p->fromssize + p->tossize);
+  p->tos = (struct tostruct *)cp;
+  cp += p->tossize;
+  p->kcount = (u_short *)cp;
+  cp += p->kcountsize;
+  p->froms = (u_short *)cp;
+
+  p->tos[0].link = 0;
+
+  o = p->highpc - p->lowpc;
+  if (p->kcountsize < o)
+    {
+#ifndef hp300
+      s_scale = ((float)p->kcountsize / o ) * SCALE_1_TO_1;
+#else
+      /* avoid floating point operations */
+      int quot = o / p->kcountsize;
+
+      if (quot >= 0x10000)
+	s_scale = 1;
+      else if (quot >= 0x100)
+	s_scale = 0x10000 / quot;
+      else if (o >= 0x800000)
+	s_scale = 0x1000000 / (o / (p->kcountsize >> 8));
+      else
+	s_scale = 0x1000000 / ((o << 8) / p->kcountsize);
+#endif
+    } else
+      s_scale = SCALE_1_TO_1;
+
+  moncontrol(1);
+}
+
+
+static void
+DEFUN(write_hist, (fd), int fd)
+{
+  const u_char tag = GMON_TAG_TIME_HIST;
+  struct gmon_hist_hdr thdr;
+  int size, rate;
+
+  if (_gmonparam.kcountsize > 0)
+    {
+      size = _gmonparam.kcountsize / sizeof(HISTCOUNTER);
+      rate = hertz();
+      bcopy(&_gmonparam.lowpc, &thdr.low_pc, sizeof(thdr.low_pc));
+      bcopy(&_gmonparam.highpc, &thdr.high_pc, sizeof(thdr.high_pc));
+      bcopy(&size, &thdr.hist_size, sizeof(thdr.hist_size));
+      bcopy(&rate, &thdr.prof_rate, sizeof(thdr.prof_rate));
+      strcpy(thdr.dimen, "seconds");
+      thdr.dimen_abbrev = 's';
+
+      write(fd, &tag, sizeof(tag));
+      write(fd, &thdr, sizeof(thdr));
+      write(fd, _gmonparam.kcount, _gmonparam.kcountsize);
+    }
+}
+
+
+static void
+DEFUN(write_call_graph, (fd), int fd)
+{
+  const u_char tag = GMON_TAG_CG_ARC;
+  struct gmon_cg_arc_record raw_arc;
+  int from_index, to_index, from_len;
+  u_long frompc;
+
+  from_len = _gmonparam.fromssize / sizeof(*_gmonparam.froms);
+  for (from_index = 0; from_index < from_len; ++from_index)
+    {
+      if (_gmonparam.froms[from_index] == 0)
+	continue;
+
+      frompc = _gmonparam.lowpc;
+      frompc += (from_index * _gmonparam.hashfraction
+		 * sizeof(*_gmonparam.froms));
+      for (to_index = _gmonparam.froms[from_index];
+	   to_index != 0;
+	   to_index = _gmonparam.tos[to_index].link)
+	{
+	  bcopy(&frompc, &raw_arc.from_pc, sizeof(raw_arc.from_pc));
+	  bcopy(&_gmonparam.tos[to_index].selfpc, &raw_arc.self_pc,
+		sizeof(raw_arc.self_pc));
+	  bcopy(&_gmonparam.tos[to_index].count, &raw_arc.count,
+		sizeof(raw_arc.count));
+
+	  write(fd, &tag, sizeof(tag));
+	  write(fd, &raw_arc, sizeof(raw_arc));
 	}
+    }
 }
 
-/*
- * discover the tick frequency of the machine
- * if something goes wrong, we return 0, an impossible hertz.
- */
-static int
-hertz()
+
+static void
+DEFUN(write_bb_counts, (fd), int fd)
 {
-	struct itimerval tim;
-	
-	tim.it_interval.tv_sec = 0;
-	tim.it_interval.tv_usec = 1;
-	tim.it_value.tv_sec = 0;
-	tim.it_value.tv_usec = 0;
-	setitimer(ITIMER_REAL, &tim, 0);
-	setitimer(ITIMER_REAL, 0, &tim);
-	if (tim.it_interval.tv_usec < 2)
-		return(0);
-	return (1000000 / tim.it_interval.tv_usec);
+  struct __bb *grp;
+  const u_char tag = GMON_TAG_BB_COUNT;
+  int ncounts;
+  int i;
+
+  /* Write each group of basic-block info (all basic-blocks in a
+     compilation unit form a single group). */
+
+  for (grp = __bb_head; grp; grp = grp->next)
+    {
+      ncounts = grp->ncounts;
+      write(fd, &tag, sizeof(tag));
+      write(fd, &ncounts, sizeof(ncounts));
+      for (i = 0; i < ncounts; ++i)
+	{
+	  write(fd, &grp->addresses[i], sizeof(grp->addresses[0]));
+	  write(fd, &grp->counts[i], sizeof(grp->counts[0]));
+	}
+    }
 }
 
 
+void
+DEFUN_VOID(_mcleanup)
+{
+    const int version = GMON_VERSION;
+    struct gmon_hdr ghdr;
+    int fd;
+
+    moncontrol(0);
+    fd = open("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
+    if (fd < 0)
+      {
+	perror("_mcleanup: gmon.out");
+	return;
+      }
+
+    /* write gmon.out header: */
+    bcopy(GMON_MAGIC, &ghdr.cookie[0], 4);
+    bcopy(&version, &ghdr.version, sizeof(version));
+    write(fd, &ghdr, sizeof(ghdr));
+
+    /* write PC histogram: */
+    write_hist(fd);
+
+    /* write call-graph: */
+    write_call_graph(fd);
+
+    /* write basic-block execution counts: */
+    write_bb_counts(fd);
+
+    close(fd);
+}

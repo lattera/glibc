@@ -53,7 +53,7 @@ main ()
       }
     else
       {
-	printf ("wide value: 0x%04x\n", (unsigned long) wc);
+	printf ("wide value: 0x%04lx\n", (unsigned long) wc);
 	mbc[0] = '\0';
 	if ((r = wctomb (mbc, wc)) <= 0)
 	  {

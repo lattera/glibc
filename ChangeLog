@@ -1,4 +1,238 @@
+Tue Mar 19 14:18:42 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/bsd/pause.c: Moved to sysdeps/unix/common/pause.c.
+
+Mon Mar  4 20:17:28 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/adjtime.c: Use INT_MAX instead of LONG_MAX.
+
+	* sysdeps/unix/sysv/Makefile (sysdep_routines): Don't add s_getdents.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Don't add mount,
+	umount.
+
+	* sysdeps/alpha/__math.h (atan, cabs): New functions.
+
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: new file (syscall
+ 	expects set-value, not pointer to it).
+
+Sun Feb 25 22:36:10 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/profil-counter.h: New file.
+
+	* gmon/gmon.c (__bb_head): new variable.
+	(write_hist, write_call_graph, write_bb_counts): new functions.
+	(_mcleanup): modified to call above functions instead of directly
+ 	writing out gmon.out.
+	* gmon/sys/gmon.h (struct __bb): New type.
+	(struct gmonhdr): Type removed.
+	(struct gmonparam): New member `log_hashfraction'.
+	(GMONVERSION): Macro removed.
+
+	* gmon/sys/gmon_out.h, gmon/bb_exit_func.c,
+ 	sysdeps/generic/bb_init_func.c, sysdeps/alpha/bb_init_func.S: new
+ 	files.
+	* gmon/Makefile (headers): Add sys/gmon_out.h.
+	(routines): Add bb_init_func, bb_exit_func.
+
+	* gmon/mcount.c: Avoid integer division.
+
+Wed Feb 21 23:56:41 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/alpha/setjmp.S: switched order in which sp and fp are
+ 	passed to match what __sigsetjmp_aux() expects.
+
+Tue Feb 20 11:33:46 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (select, bind,
+ 	connect, getpeername, getsockname, listen, recv, recvfrom,
+ 	recvmsg, send, sendmsg, sendto, setsockopt, shutdown, socketpair):
+ 	added to override same-name assembly file in the parent directory.
+
+	* stdlib/stdlib.h: add include of sys/types.h in front of random
+ 	etc declarations to ensure int32_t is declared.
+
+	* stdlib/random.c, stdlib/random_r.c: replaced "long int" by int32_t
+	where 32 bit integers are required.  Also change LONG_MAX into
+	0x7fffffff since the intent is to turn off the sign bit in a
+	32 bit integer.
+
+	* time/offtime.c (__offtime): Use Paul Eggert's code to deal
+	with very large values for "days" (e.g., 64 bit values).
+
+Mon Feb 19 22:22:12 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* stdlib/stdlib.h (__random, __random_r, random_r, struct
+ 	random_data): use int32_t instead of `long int'.
+
+Sat Feb 17 11:29:29 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: new file.
+
+	* sysdeps/alpha/ffs.S: new file.
+
+	* sysdeps/alpha/fabs.c: File removed.
+
+	* time/tzfile.c (__tzfile_read): counter variable is i, *not*
+	num_transitions!
+
+	* time/offtime.c: make capable of dealing with very large (64 bit)
+ 	time_t values.  Use old algorithm until a year is reached that
+	is an integer multiple of 400, then use DAYS_PER_400_YEARS to
+	do the remainder in a single division.
+
+	* sysdeps/generic/ffs.c (ffs): fix variable declarations to
+	be unsigned int, not unsigned long.
+
+	* string/test-ffs.c (main): add test case with all upper bits
+	set.
+
+	* stdlib/tst-strtol.c: add tests cases for machines where
+	sizeof(long)==8.
+
+	* stdlib/testrand.c (main): disallow rand() to return negative
+ 	integers.
+
+	* stdlib/testmb.c (main): fix format to use %lx instead of %x.
+
+	* stdlib/stdlib.h: on 64 bit machines, declare
+	struct random_data, __random(),  __random_r, and random_r to
+	return "int" instead of "long int".
+
+	* stdlib/random_r.c: 64 bit machines use "int" instead of "long
+ 	int".  Similarly, use INT_MAX instead of LONG_MAX.
+
+	* stdlib/random.c: on 64 bit machines, randtbl[] and __random[]
+ 	need to operate on "int" instead of "long int".
+
+	* locale/locfile-hash.c (compute_hashval): make shifted constant
+	a long to avoid loosing bits on 64 bit machines.
+
+	* dirent/tst-seekdir.c (main): fix confusing comment; print
+	a line to mark point where directory is rewound.
+
+Fri Feb 16 15:01:49 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* time/strftime.c (strftime): any hour > 11 is PM (not > 12!).
+
+Wed Feb 14 00:21:17 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile,
+	sysdeps/unix/sysv/linux/alpha/brk.S,
+	sysdeps/unix/sysv/linux/alpha/fpu_control.c,
+	sysdeps/unix/sysv/linux/alpha/fpu_control.h,
+	sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S,
+	sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S,
+	sysdeps/unix/sysv/linux/alpha/pipe.S,
+	sysdeps/unix/sysv/linux/alpha/setfpucw.c,
+	sysdeps/unix/sysv/linux/alpha/sigprocmask.c,
+	sysdeps/unix/sysv/linux/alpha/speed.c,
+	sysdeps/unix/sysv/linux/alpha/start.S,
+	sysdeps/unix/sysv/linux/alpha/syscall.S,
+	sysdeps/unix/sysv/linux/alpha/syscalls.list,
+	sysdeps/unix/sysv/linux/alpha/alpha/regdef.h,
+	sysdeps/unix/sysv/linux/alpha/sysdep.S,
+	sysdeps/unix/sysv/linux/alpha/sysdep.h: New files.
+
+	* sysdeps/alpha/setjmp_aux.c (__sigsetjmp_aux): restore return
+ 	address register before returning (gcc 2.7.1 doesn't do it,
+ 	presumably because $26 is declared as a global variable).
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: msync was missing "flags"
+	argument.
+
+	* sysdeps/unix/alarm.c (alarm): do roundup using test & increment
+	instead of multiplication.
+
+	* sysdeps/posix/sleep.c (sleep): initialize sa_mask to mask of
+	currently blocked signals instead of the empty mask to ensure
+	that execution of alarm handler occurs with none of the currently
+	blocked signals enabled.
+
+	* sysdeps/unix/alpha/sysdep.h: new file (adapted from OSF/1 version).
+
+	* sysdeps/unix/bsd/osf/alpha/sysdep.h: include
+ 	sysdeps/unix/alpha/sysdep.h and removed definitions now in that file.
+
+	* sysdeps/alpha/divrem.S, sysdeps/alpha/htonl.S,
+	sysdeps/alpha/htons.S, sysdeps/alpha/machine-gmon.h,
+	sysdeps/alpha/_mcount.S, sysdeps/alpha/ntohl.s, sysdeps/alpha/ntohs.s,
+	sysdeps/alpha/strlen.S: New files.
+
+	* sysdeps/alpha/divl.S, sysdeps/alpha/divlu.S, sysdeps/alpha/divq.S,
+	sysdeps/alpha/divqu.S, sysdeps/alpha/divrem.m4,
+	sysdeps/alpha/macros.m4, sysdeps/alpha/reml.S, sysdeps/alpha/remlu.S,
+	sysdeps/alpha/remq.S, sysdeps/alpha/remqu.S, sysdeps/alpha/strlen.c:
+ 	Removed.
+
+	* sysdeps/generic/sbrk.c (__sbrk): argument is of type ptrdiff_t, not
+	int.
+
+	* sysdeps/alpha/__longjmp.c (__longjmp): moved dummy while loop
+	to end of function to avoid a jump across NOPs.
+
+	* sysdeps/alpha/Makefile (sysdep_routines): Removed all rules
+ 	pertaining to integer division/remainder routines since new code
+ 	doesn't require them.
+
+	* sunrpc/xdr_mem.c, sunrpc/xdr_stdio.c: Use 4 instead of sizeof(long)
+	where 32 bit quantities are consumed/stored.  Various other minor
+	64-bit cleanups (casting).
+
+	* sunrpc/xdr.c (xdr_int): test for sizeof(int)==4 to determine
+ 	whether xdr_long or xdr_short should be used to encode an int.
+  	Notice that an xdr_long is 4 bytes independent of the architecture
+	(otherwise no Alpha could interoperate with existing NFS servers,
+ 	for example).  Ditto for enums.
+
+	* sunrpc/svc_udp.c (svcudp_recv): changed test from 4*sizeof(u_long)
+	to 16 since it really wants 16 bytes.
+
+	* sunrpc/svc.c (maskp): changed from u_long* to u_int32*.
+
+	* sunrpc/rpc_cmsg.c (xdr_callmsg), sunrpc/svc_authux.c: increment
+	"buf" pointer by casting it to a char* first since a long* may be 8
+ 	bytes or more and oa->oa_length may be any multiple of 4.
+
+	* sunrpc/rpc/xdr.h (IXDR_GET_LONG, IXDR_PUT_LONG): change casts to
+ 	u_int32_t (instead of u_long).
+
+	* sunrpc/clnt_udp.c (clntudp_call): replaced sizeof(u_long) by 4
+	since it really is testing for 32 bits.  Fixed casts to use
+	u_int32 instead of u_long.
+	* sunrpc/xdr_rec.c: Likewise.
+
+	* sunrpc/clnt_tcp.c (clnttcp_call): replaced u_long by u_int32.
+	* sunrpc/rpc/auth.h: Likewise.
+
+	* limits.h (LONG_MAX, LONG_MIN, ULONG_MAX): use 64 bit values
+	for Alpha.
+
+Tue Mar 19 13:27:49 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/i386/fpu/__math.h: New file.
+	Contributed by John C. Bowman <bowman@hagar.ph.utexas.edu>.
+
+Sun Mar 17 00:28:16 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/clock.c: Don't multiply the return value by
+	CLOCKS_PER_SEC or CLK_TCK.
+
 Mon Mar 18 13:20:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getcwd.c: Fail with ENOENT if a parent directory
+	scan finds no match.
+
+	* posix/unistd.h (setpgrp): Declare no-arg version unless __FAVOR_BSD.
+	* misc/bsd-compat.c (setpgrp): New function, two arg version.
+	* sysdeps/stub/setpgid.c: Remove setpgrp alias.
+	* sysdeps/mach/hurd/setpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/setpgid.c: Likewise.
+	* sysdeps/unix/common/syscalls.list (setpgid): Remove setpgrp alias.
+	* sysdeps/unix/sysv/irix4/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/setpgrp.c: Obsolete file removed.
+	* posix/setpgrp.c (setpgrp): New file.
+	* posix/Makefile (routines): Add setpgrp.
 
 	* elf/Makefile (rtld-link): New canned sequence.
 	(ld.so, ld-linux.so.1): Use it.  Pass -soname option.
@@ -779,6 +1013,11 @@ Wed Feb  7 14:16:36 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): RETRYNAME of
 	"" is only special for FS_RETRY_NORMAL; for FS_RETRY_REAUTH, do
 	another dir_lookup of "".
+
+Tue Feb  6 12:46:29 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* libc-symbols.h (weak_alias, weak_symbol): added definitions
+	for ECOFF (HAVE_ECOFF).
 
 Fri Feb  2 13:09:18 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
@@ -2977,7 +3216,6 @@ Wed Sep 27 00:27:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/stub/socketpair.c: Likewise.
 	* sysdeps/stub/sqrt.c: Likewise.
 	* sysdeps/stub/sync.c: Likewise.
-M sysd-stdio.c
 	* sysdeps/stub/system.c: Likewise.
 	* sysdeps/stub/tan.c: Likewise.
 	* sysdeps/stub/tanh.c: Likewise.

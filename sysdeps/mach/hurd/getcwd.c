@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ __getcwd (char *buf, size_t size)
 			 (vm_address_t) dirbuf, dirbufsize);
     }
 
-      
+
   if (size == 0)
     {
       if (buf != NULL)
@@ -139,7 +139,7 @@ __getcwd (char *buf, size_t size)
       dirdatasize = dirbufsize;
       while (!(err = __dir_readdir (parent, &dirdata, &dirdatasize,
 				    direntry, -1, 0, &nentries)) &&
-	     nentries != 0)	     
+	     nentries != 0)
 	{
 	  /* We have a block of directory entries.  */
 
@@ -167,7 +167,7 @@ __getcwd (char *buf, size_t size)
 	      d = (struct dirent *) &dirdata[offset];
 	      offset += d->d_reclen;
 
-	      /* Ignore `.' and `..'.  */	
+	      /* Ignore `.' and `..'.  */
 	      if (d->d_name[0] == '.' &&
 		  (d->d_namlen == 1 ||
 		   (d->d_namlen == 2 && d->d_name[1] == '.')))
@@ -191,6 +191,14 @@ __getcwd (char *buf, size_t size)
 
       if (err)
 	goto errlose;
+      else if (nentries == 0)
+	{
+	  /* We got to the end of the directory without finding anything!
+	     We are in a directory that has been unlinked, or something is
+	     broken.  */
+	  err = ENOENT;
+	  goto errlose;
+	}
       else
 	{
 	  /* Prepend the directory name just discovered.  */

@@ -58,8 +58,8 @@ DEFUN(sleep, (seconds), unsigned int seconds)
 
   act.sa_handler = sleep_handler;
   act.sa_flags = 0;
-  if (sigemptyset (&act.sa_mask) < 0 ||
-      sigaction (SIGALRM, &act, &oact) < 0)
+  act.sa_mask = oset;	/* execute handler with original mask */
+  if (sigaction (SIGALRM, &act, &oact) < 0)
     return seconds;
 
   before = time ((time_t *) NULL);

@@ -324,10 +324,10 @@ send_again:
 			cu->cu_error.re_errno = errno;
 			return (cu->cu_error.re_status = RPC_CANTRECV);
 		}
-		if (inlen < sizeof(u_long))
+		if (inlen < 4)
 			continue;	
 		/* see if reply transaction id matches sent id */
-		if (*((u_long *)(cu->cu_inbuf)) != *((u_long *)(cu->cu_outbuf)))
+		if (*((u_int32_t *)(cu->cu_inbuf)) != *((u_int32_t *)(cu->cu_outbuf)))
 			continue;	
 		/* we now assume we have the proper reply */
 		break;

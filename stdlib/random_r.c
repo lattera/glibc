@@ -145,7 +145,7 @@ __srandom_r (x, buf)
       buf->rptr = &buf->state[0];
       for (i = 0; i < 10 * buf->rand_deg; ++i)
 	{
-	  long int discard;
+	  int32_t discard;
 	  (void) __random_r (buf, &discard);
 	}
     }
@@ -217,7 +217,7 @@ __initstate_r (seed, arg_state, n, buf)
       buf->rand_sep = SEP_4;
     }
 
-  buf->state = &((long int *) arg_state)[1];	/* First location.  */
+  buf->state = &((int32_t *) arg_state)[1];	/* First location.  */
   /* Must set END_PTR before srandom.  */
   buf->end_ptr = &buf->state[buf->rand_deg];
 
@@ -246,7 +246,7 @@ __setstate_r (arg_state, buf)
      void *arg_state;
      struct random_data *buf;
 {
-  long int *new_state = (long int *) arg_state;
+  int32_t *new_state = (int32_t *) arg_state;
   int type = new_state[0] % MAX_TYPES;
   int rear = new_state[0] / MAX_TYPES;
 
@@ -303,21 +303,21 @@ weak_alias (__setstate_r, setstate_r)
 int
 __random_r (buf, result)
      struct random_data *buf;
-     long int *result;
+     int32_t *result;
 {
   if (buf == NULL || result == NULL)
     return -1;
 
   if (buf->rand_type == TYPE_0)
     {
-      buf->state[0] = ((buf->state[0] * 1103515245) + 12345) & LONG_MAX;
+      buf->state[0] = ((buf->state[0] * 1103515245) + 12345) & 0x7fffffff;
       *result = buf->state[0];
     }
   else
     {
       *buf->fptr += *buf->rptr;
       /* Chucking least random bit.  */
-      *result = (*buf->fptr >> 1) & LONG_MAX;
+      *result = (*buf->fptr >> 1) & 0x7fffffff;
       ++buf->fptr;
       if (buf->fptr >= buf->end_ptr)
 	{

@@ -114,7 +114,7 @@
    position of the rear pointer is just
 	(MAX_TYPES * (rptr - state)) + TYPE_3 == TYPE_3.  */
 
-static long int randtbl[DEG_3 + 1] =
+static int32_t randtbl[DEG_3 + 1] =
   {
     TYPE_3,
 
@@ -239,10 +239,10 @@ weak_alias (__setstate, setstate)
    rear pointers can't wrap on the same call by not testing the rear
    pointer if the front one has wrapped.  Returns a 31-bit random number.  */
 
-long int
+int
 __random ()
 {
-  long int retval;
+  int32_t retval;
 
   (void) __random_r (&unsafe_state, &retval);
 

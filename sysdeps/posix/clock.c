@@ -29,5 +29,5 @@ DEFUN_VOID(clock)
   if (__times(&buf) < 0)
     return (clock_t) -1;
 
-  return ((buf.tms_utime + buf.tms_stime) * CLK_TCK * CLOCKS_PER_SEC);
+  return buf.tms_utime + buf.tms_stime;
 }

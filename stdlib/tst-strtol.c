@@ -18,6 +18,7 @@ struct ltest
   };
 static CONST struct ltest tests[] =
   {
+#if ~0UL == 0xffffffff
     /* First, signed numbers.  */
     { "   -17",		-17,		0,	0,	0 },
     { " +0x123fg",	0x123f,		0,	'g',	0 },
@@ -40,6 +41,35 @@ static CONST struct ltest tests[] =
     { "-0x123456789",	0xffffffff,	0,	0,	ERANGE },
     { "-0xfedcba98",	-0xfedcba98,	0,	0,	0 },
     { NULL,		0,		0,	0,	0 },
+#else
+    /* assume 64 bit long... */
+
+    /* First, signed numbers.  */
+    { "   -17",			-17,		0,	0,	0 },
+    { " +0x123fg",		0x123f,		0,	'g',	0 },
+    { "2147483647",		2147483647,	0,	0,	0 },
+    { "9223372036854775807",	9223372036854775807,	0,	0,	0 },
+    { "9223372036854775808",	9223372036854775807,	0,	0,	ERANGE },
+    { "922337203685477580777",	9223372036854775807,	0,	0,	ERANGE },
+    { "9223372036854775810",	9223372036854775807,	0,	0,	ERANGE },
+    { "-2147483648",		-2147483648,	0,	0,	0 },
+    { "-9223372036854775808",	-9223372036854775808,	0,	0,	0 },
+    { "-9223372036854775809",	-9223372036854775808,	0,	0,	ERANGE },
+    { "0123",		0123,		0,	0,	0 },
+    { "0x112233445566778899z",	9223372036854775807,	16,	'z',	ERANGE },
+    { "0x0xc",		0,		0,	'x',	0 },
+    { "yz!",		34*36+35,	36,	'!',	0 },
+    { NULL,		0,		0,	0,	0 },
+
+    /* Then unsigned.  */
+    { "  0",		0,		0,	0,	0 },
+    { "0xffffffffg",	0xffffffff,	0,	'g',	0 },
+    { "0xffffffffffffffffg",	0xffffffffffffffff,	0,	'g',	0 },
+    { "0xf1f2f3f4f5f6f7f8f9",	0xffffffffffffffff,	0,	0,	ERANGE },
+    { "-0x123456789abcdef01",	0xffffffffffffffff,	0,	0,	ERANGE },
+    { "-0xfedcba987654321",	-0xfedcba987654321,	0,	0,	0 },
+    { NULL,		0,		0,	0,	0 },
+#endif
   };
 
 static void EXFUN(expand, (char *dst, int c));

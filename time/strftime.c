@@ -149,7 +149,7 @@ strftime (s, maxsize, format, tp)
   const char *const a_month = _NL_CURRENT (LC_TIME, ABMON_1 + tp->tm_mon);
   const char *const f_month = _NL_CURRENT (LC_TIME, MON_1 + tp->tm_mon);
   const char *const ampm = _NL_CURRENT (LC_TIME,
-					hour12 > 12 ? PM_STR : AM_STR);
+					hour12 > 11 ? PM_STR : AM_STR);
   size_t aw_len = strlen(a_wkday);
   size_t am_len = strlen(a_month);
   size_t ap_len = strlen (ampm);
@@ -158,7 +158,7 @@ strftime (s, maxsize, format, tp)
   const char *const f_month = month_name[tp->tm_mon];
   const char *const a_wkday = f_wkday;
   const char *const a_month = f_month;
-  const char *const ampm = "AMPM" + 2 * (hour12 > 12);
+  const char *const ampm = "AMPM" + 2 * (hour12 > 11);
   size_t aw_len = 3;
   size_t am_len = 3;
   size_t ap_len = 2;

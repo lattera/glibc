@@ -97,10 +97,10 @@ xdrmem_getlong(xdrs, lp)
 	long *lp;
 {
 
-	if ((xdrs->x_handy -= sizeof(long)) < 0)
+	if ((xdrs->x_handy -= 4) < 0)
 		return (FALSE);
-	*lp = (long)ntohl((u_long)(*((long *)(xdrs->x_private))));
-	xdrs->x_private += sizeof(long);
+	*lp = (long)ntohl((u_long)(*((int32_t *)(xdrs->x_private))));
+	xdrs->x_private += 4;
 	return (TRUE);
 }
 
@@ -110,10 +110,10 @@ xdrmem_putlong(xdrs, lp)
 	long *lp;
 {
 
-	if ((xdrs->x_handy -= sizeof(long)) < 0)
+	if ((xdrs->x_handy -= 4) < 0)
 		return (FALSE);
-	*(long *)xdrs->x_private = (long)htonl((u_long)(*lp));
-	xdrs->x_private += sizeof(long);
+	*(int32_t *)xdrs->x_private = (long)htonl((u_long)(*(int32_t*)lp));
+	xdrs->x_private += 4;
 	return (TRUE);
 }
 
@@ -150,7 +150,7 @@ xdrmem_getpos(xdrs)
 	register XDR *xdrs;
 {
 
-	return ((u_int)xdrs->x_private - (u_int)xdrs->x_base);
+	return ((u_long)xdrs->x_private - (u_long)xdrs->x_base);
 }
 
 static bool_t
@@ -164,7 +164,7 @@ xdrmem_setpos(xdrs, pos)
 	if ((long)newaddr > (long)lastaddr)
 		return (FALSE);
 	xdrs->x_private = newaddr;
-	xdrs->x_handy = (int)lastaddr - (int)newaddr;
+	xdrs->x_handy = (long)lastaddr - (long)newaddr;
 	return (TRUE);
 }
 

@@ -39,17 +39,23 @@
 #include <sys/cdefs.h>
 
 /*
- * Structure prepended to gmon.out profiling data file.
+ * See gmon_out.h for gmon.out format.
  */
-struct gmonhdr {
-	u_long	lpc;		/* base pc address of sample buffer */
-	u_long	hpc;		/* max pc address of sampled buffer */
-	int	ncnt;		/* size of sample buffer (plus this header) */
-	int	version;	/* version number */
-	int	profrate;	/* profiling clock rate */
-	int	spare[3];	/* reserved */
+
+/* structure emitted by "gcc -a".  This must match struct bb in
+   gcc/libgcc2.c.  It is OK for gcc to declare a longer structure as
+   long as the members below are present.  */
+struct __bb
+{
+  long			zero_word;
+  const char		*filename;
+  long			*counts;
+  long			ncounts;
+  struct __bb		*next;
+  const unsigned long	*addresses;
 };
-#define GMONVERSION	0x00051879
+
+extern struct __bb *__bb_head;
 
 /*
  * histogram counters are unsigned shorts (according to the kernel).
@@ -137,6 +143,7 @@ struct gmonparam {
 	u_long		highpc;
 	u_long		textsize;
 	u_long		hashfraction;
+	long		log_hashfraction;
 };
 extern struct gmonparam _gmonparam;
 

@@ -34,6 +34,9 @@ DEFUN_VOID(main)
   srand (1);
   j1 = rand();
   j2 = rand();
+  if (i1 < 0 || i2 < 0 || j1 < 0 || j2 < 0) {
+      puts ("Test FAILED!");
+  }
   if (j1 == i1 && j2 == i2)
     {
       puts ("Test succeeded.");

@@ -23,9 +23,16 @@ Cambridge, MA 02139, USA.  */
 /* Don't include unistd.h because it declares a conflicting
    prototype for the POSIX.1 `getpgrp' function.  */
 extern pid_t __getpgid __P ((pid_t));
+extern int __setpgid __P ((pid_t, pid_t));
 
 pid_t
 getpgrp (pid_t pid)
 {
   return __getpgid (pid);
+}
+
+int
+setpgrp (pid_t pid, pid_t pgrp)
+{
+  return __setpgid (pid, pgrp);
 }

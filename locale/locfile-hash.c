@@ -205,7 +205,7 @@ compute_hashval(const char *key, size_t keylen)
     {
       hval <<= 4;
       hval += key[cnt++];
-      g = hval & (0xf << (LONGBITS - 4));
+      g = hval & (0xfL << (LONGBITS - 4));
       if (g != 0)
 	{
 	  hval ^= g >> (LONGBITS - 8);

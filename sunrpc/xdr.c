@@ -99,7 +99,7 @@ xdr_int(xdrs, ip)
 	(void) (xdr_short(xdrs, (short *)ip));
 	return (xdr_long(xdrs, (long *)ip));
 #else
-	if (sizeof (int) == sizeof (long)) {
+	if (sizeof (int) == 4) {
 		return (xdr_long(xdrs, (long *)ip));
 	} else {
 		return (xdr_short(xdrs, (short *)ip));
@@ -120,7 +120,7 @@ xdr_u_int(xdrs, up)
 	(void) (xdr_short(xdrs, (short *)up));
 	return (xdr_u_long(xdrs, (u_long *)up));
 #else
-	if (sizeof (u_int) == sizeof (u_long)) {
+	if (sizeof (u_int) == 4) {
 		return (xdr_u_long(xdrs, (u_long *)up));
 	} else {
 		return (xdr_short(xdrs, (short *)up));
@@ -307,7 +307,7 @@ xdr_enum(xdrs, ep)
 	/*
 	 * enums are treated as ints
 	 */
-	if (sizeof (enum sizecheck) == sizeof (long)) {
+	if (sizeof (enum sizecheck) == 4) {
 		return (xdr_long(xdrs, (long *)ep));
 	} else if (sizeof (enum sizecheck) == sizeof (short)) {
 		return (xdr_short(xdrs, (short *)ep));

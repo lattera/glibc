@@ -60,19 +60,20 @@ static struct leap *leaps = NULL;
 static inline int
 decode (const void *ptr)
 {
-#if BYTE_ORDER == BIG_ENDIAN
-  return *(const int *) ptr;
-#else
-  const unsigned char *p = ptr;
-  int result = 0;
+  if ((BYTE_ORDER == BIG_ENDIAN) && sizeof (int) == 4)
+    return *(const int *) ptr;
+  else
+    {
+      const unsigned char *p = ptr;
+      int result = *p & (1 << (CHAR_BIT - 1)) ? ~0 : 0;
 
-  result = (result << 8) | *p++;
-  result = (result << 8) | *p++;
-  result = (result << 8) | *p++;
-  result = (result << 8) | *p++;
+      result = (result << 8) | *p++;
+      result = (result << 8) | *p++;
+      result = (result << 8) | *p++;
+      result = (result << 8) | *p++;
 
-  return result;
-#endif
+      return result;
+    }
 }
 
 void
@@ -158,6 +159,9 @@ DEFUN(__tzfile_read, (file), CONST char *file)
 	goto lose;
     }
 
+  if (sizeof (time_t) < 4)
+      abort ();
+
   if (fread((PTR) transitions, 4, num_transitions, f) != num_transitions ||
       fread((PTR) type_idxs, 1, num_transitions, f) != num_transitions)
     goto lose;
@@ -169,7 +173,7 @@ DEFUN(__tzfile_read, (file), CONST char *file)
 	 the array so as not to clobber the next element to be
 	 processed when sizeof (time_t) > 4.  */
       i = num_transitions;
-      while (num_transitions-- > 0)
+      while (i-- > 0)
 	transitions[i] = decode ((char *) transitions + i*4);
     }
 

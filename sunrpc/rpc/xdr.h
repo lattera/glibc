@@ -203,8 +203,8 @@ struct xdr_discrim {
  * N.B. and frozen for all time: each data type here uses 4 bytes
  * of external representation.
  */
-#define IXDR_GET_LONG(buf)		((long)ntohl((u_long)*(buf)++))
-#define IXDR_PUT_LONG(buf, v)		(*(buf)++ = (long)htonl((u_long)v))
+#define IXDR_GET_LONG(buf)		((long)ntohl((u_long)*((u_int32_t*)buf)++))
+#define IXDR_PUT_LONG(buf, v)		(*((u_int32_t*)(buf))++ = (long)htonl((u_long)v))
 
 #define IXDR_GET_BOOL(buf)		((bool_t)IXDR_GET_LONG(buf))
 #define IXDR_GET_ENUM(buf, t)		((t)IXDR_GET_LONG(buf))

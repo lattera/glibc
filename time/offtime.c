@@ -19,7 +19,6 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <time.h>
 
-
 /* Defined in mktime.c.  */
 extern CONST unsigned short int __mon_yday[2][13];
 
@@ -33,8 +32,7 @@ void
 DEFUN(__offtime, (t, offset, tp),
       CONST time_t *t AND long int offset AND struct tm *tp)
 {
-  register long int days, rem;
-  register int y;
+  register long int days, rem, y;
   register CONST unsigned short int *ip;
 
   days = *t / SECS_PER_DAY;
@@ -59,15 +57,19 @@ DEFUN(__offtime, (t, offset, tp),
   if (tp->tm_wday < 0)
     tp->tm_wday += 7;
   y = 1970;
-  while (days >= (rem = __isleap(y) ? 366 : 365))
+
+# define LEAPS_THRU_END_OF(y) ((y) / 4 - (y) / 100 + (y) / 400)
+
+  while (days < 0 || days >= (__isleap (y) ? 366 : 365))
     {
-      ++y;
-      days -= rem;
-    }
-  while (days < 0)
-    {
-      --y;
-      days += __isleap(y) ? 366 : 365;
+      /* Guess a corrected year, assuming 365 days per year.  */
+      int yg = y + days / 365 - (days % 365 < 0);
+
+      /* Adjust DAYS and Y to match the guessed year.  */
+      days -= ((yg - y) * 365
+	       + LEAPS_THRU_END_OF (yg - 1)
+	       - LEAPS_THRU_END_OF (y - 1));
+      y = yg;
     }
   tp->tm_year = y - 1900;
   tp->tm_yday = days;

@@ -15,7 +15,7 @@ sysdep_routines += fxstat lxstat xstat
 endif
 
 ifeq ($(subdir), misc)
-sysdep_routines += xmknod mount umount s_ptrace
+sysdep_routines += xmknod s_ptrace
 headers += sys/mount.h
 endif
 

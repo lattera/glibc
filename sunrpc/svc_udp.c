@@ -181,7 +181,7 @@ svcudp_recv(xprt, msg)
 	    0, (struct sockaddr *)&(xprt->xp_raddr), &(xprt->xp_addrlen));
 	if (rlen == -1 && errno == EINTR)
 		goto again;
-	if (rlen < 4*sizeof(u_long))
+	if (rlen < 16)		/* < 4 32-bit ints? */
 		return (FALSE);
 	xdrs->x_op = XDR_DECODE;
 	XDR_SETPOS(xdrs, 0);
