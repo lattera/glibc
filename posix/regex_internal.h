@@ -388,18 +388,20 @@ static void re_string_translate_buffer (re_string_t *pstr) internal_function;
 static void re_string_destruct (re_string_t *pstr) internal_function;
 # ifdef RE_ENABLE_I18N
 static int re_string_elem_size_at (const re_string_t *pstr, int idx)
-     internal_function;
+     internal_function __attribute ((pure));
 static inline int re_string_char_size_at (const re_string_t *pstr, int idx)
-     internal_function;
+     internal_function __attribute ((pure));
 static inline wint_t re_string_wchar_at (const re_string_t *pstr, int idx)
-     internal_function;
+     internal_function __attribute ((pure));
 # endif /* RE_ENABLE_I18N */
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
-					  int eflags) internal_function;
+					  int eflags)
+     internal_function __attribute ((pure));
 static unsigned char re_string_peek_byte_case (const re_string_t *pstr,
-					       int idx) internal_function;
+					       int idx)
+     internal_function __attribute ((pure));
 static unsigned char re_string_fetch_byte_case (re_string_t *pstr)
-     internal_function;
+     internal_function __attribute ((pure));
 #endif
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
@@ -481,6 +483,8 @@ struct re_dfastate_t
 {
   unsigned int hash;
   re_node_set nodes;
+  re_node_set non_eps_nodes;
+  re_node_set inveclosure;
   re_node_set *entrance_nodes;
   struct re_dfastate_t **trtable;
   unsigned int context : 4;
@@ -665,8 +669,10 @@ static int re_node_set_insert (re_node_set *set, int elem) internal_function;
 static int re_node_set_insert_last (re_node_set *set,
 				    int elem) internal_function;
 static int re_node_set_compare (const re_node_set *set1,
-				const re_node_set *set2) internal_function;
-static int re_node_set_contains (const re_node_set *set, int elem) internal_function;
+				const re_node_set *set2)
+     internal_function __attribute ((pure));
+static int re_node_set_contains (const re_node_set *set, int elem)
+     internal_function __attribute ((pure));
 static void re_node_set_remove_at (re_node_set *set, int idx) internal_function;
 #define re_node_set_remove(set,id) \
   (re_node_set_remove_at (set, re_node_set_contains (set, id) - 1))

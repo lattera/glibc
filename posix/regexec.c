@@ -73,7 +73,7 @@ static int proceed_next_node (const re_match_context_t *mctx,
 			      int *pidx, int node, re_node_set *eps_via_nodes,
 			      struct re_fail_stack_t *fs) internal_function;
 static reg_errcode_t push_fail_stack (struct re_fail_stack_t *fs,
-				      int str_idx, int *dests, int nregs,
+				      int str_idx, int dest_node, int nregs,
 				      regmatch_t *regs,
 				      re_node_set *eps_via_nodes) internal_function;
 static int pop_fail_stack (struct re_fail_stack_t *fs, int *pidx, int nregs,
@@ -1223,30 +1223,38 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
   if (IS_EPSILON_NODE (dfa->nodes[node].type))
     {
       re_node_set *cur_nodes = &mctx->state_log[*pidx]->nodes;
-      int ndest, dest_nodes[2];
+      re_node_set *edests = &dfa->edests[node];
+      int dest_node;
       err = re_node_set_insert (eps_via_nodes, node);
       if (BE (err < 0, 0))
 	return -2;
-      /* Pick up valid destinations.  */
-      for (ndest = 0, i = 0; i < dfa->edests[node].nelem; ++i)
+      /* Pick up a valid destination, or return -1 if none is found.  */
+      for (dest_node = -1, i = 0; i < edests->nelem; ++i)
 	{
-	  int candidate = dfa->edests[node].elems[i];
+	  int candidate = edests->elems[i];
 	  if (!re_node_set_contains (cur_nodes, candidate))
 	    continue;
-	  dest_nodes[0] = (ndest == 0) ? candidate : dest_nodes[0];
-	  dest_nodes[1] = (ndest == 1) ? candidate : dest_nodes[1];
-	  ++ndest;
+          if (dest_node == -1)
+	    dest_node = candidate;
+
+          else
+	    {
+	      /* In order to avoid infinite loop like "(a*)*", return the second
+	         epsilon-transition if the first was already considered.  */
+	      if (re_node_set_contains (eps_via_nodes, dest_node))
+	        return candidate;
+
+	      /* Otherwise, push the second epsilon-transition on the fail stack.  */
+	      else if (fs != NULL
+		       && push_fail_stack (fs, *pidx, candidate, nregs, regs,
+				           eps_via_nodes))
+		return -2;
+
+	      /* We know we are going to exit.  */
+	      break;
+	    }
 	}
-      if (ndest <= 1)
-	return ndest == 0 ? -1 : (ndest == 1 ? dest_nodes[0] : 0);
-      /* In order to avoid infinite loop like "(a*)*".  */
-      if (re_node_set_contains (eps_via_nodes, dest_nodes[0]))
-	return dest_nodes[1];
-      if (fs != NULL
-	  && push_fail_stack (fs, *pidx, dest_nodes, nregs, regs,
-			      eps_via_nodes))
-	return -2;
-      return dest_nodes[0];
+      return dest_node;
     }
   else
     {
@@ -1304,9 +1312,9 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
 }
 
 static reg_errcode_t
-push_fail_stack (fs, str_idx, dests, nregs, regs, eps_via_nodes)
+push_fail_stack (fs, str_idx, dest_node, nregs, regs, eps_via_nodes)
      struct re_fail_stack_t *fs;
-     int str_idx, *dests, nregs;
+     int str_idx, dest_node, nregs;
      regmatch_t *regs;
      re_node_set *eps_via_nodes;
 {
@@ -1323,7 +1331,7 @@ push_fail_stack (fs, str_idx, dests, nregs, regs, eps_via_nodes)
       fs->stack = new_array;
     }
   fs->stack[num].idx = str_idx;
-  fs->stack[num].node = dests[1];
+  fs->stack[num].node = dest_node;
   fs->stack[num].regs = re_malloc (regmatch_t, nregs);
   if (fs->stack[num].regs == NULL)
     return REG_ESPACE;
@@ -1600,7 +1608,7 @@ build_sifted_states (mctx, sctx, str_idx, cur_dest)
      re_node_set *cur_dest;
 {
   re_dfa_t *const dfa = mctx->dfa;
-  re_node_set *cur_src = &mctx->state_log[str_idx]->nodes;
+  re_node_set *cur_src = &mctx->state_log[str_idx]->non_eps_nodes;
   int i;
 
   /* Then build the next sifted state.
@@ -1608,16 +1616,20 @@ build_sifted_states (mctx, sctx, str_idx, cur_dest)
      `sifted_states[str_idx]' with `cur_dest'.
      Note:
      `cur_dest' is the sifted state from `state_log[str_idx + 1]'.
-     `cur_src' points the node_set of the old `state_log[str_idx]'.  */
+     `cur_src' points the node_set of the old `state_log[str_idx]'
+     (with the epsilon nodes pre-filtered out).  */
   for (i = 0; i < cur_src->nelem; i++)
     {
       int prev_node = cur_src->elems[i];
       int naccepted = 0;
-      re_token_type_t type = dfa->nodes[prev_node].type;
       int ret;
 
-      if (IS_EPSILON_NODE (type))
-	continue;
+#if defined DEBUG || defined RE_ENABLE_I18N
+      re_token_type_t type = dfa->nodes[prev_node].type;
+#endif
+#ifdef DEBUG
+      assert (!IS_EPSILON_NODE (type));
+#endif
 #ifdef RE_ENABLE_I18N
       /* If the node may accept `multi byte'.  */
       if (ACCEPT_MB_NODE (type))
@@ -1764,26 +1776,24 @@ add_epsilon_src_nodes (dfa, dest_nodes, candidates)
      re_node_set *dest_nodes;
      const re_node_set *candidates;
 {
-  reg_errcode_t err;
-  int src_idx;
-  re_node_set src_copy;
+  reg_errcode_t err = REG_NOERROR;
+  int i;
 
-  err = re_node_set_init_copy (&src_copy, dest_nodes);
+  re_dfastate_t *state = re_acquire_state (&err, dfa, dest_nodes);
   if (BE (err != REG_NOERROR, 0))
     return err;
-  for (src_idx = 0; src_idx < src_copy.nelem; ++src_idx)
+
+  if (!state->inveclosure.alloc)
     {
-      err = re_node_set_add_intersect (dest_nodes, candidates,
-				       dfa->inveclosures
-				       + src_copy.elems[src_idx]);
+      err = re_node_set_alloc (&state->inveclosure, dest_nodes->nelem);
       if (BE (err != REG_NOERROR, 0))
-	{
-	  re_node_set_free (&src_copy);
-	  return err;
-	}
+        return REG_ESPACE;
+      for (i = 0; i < dest_nodes->nelem; i++)
+        re_node_set_merge (&state->inveclosure,
+			   dfa->inveclosures + dest_nodes->elems[i]);
     }
-  re_node_set_free (&src_copy);
-  return REG_NOERROR;
+  return re_node_set_add_intersect (dest_nodes, candidates,
+				    &state->inveclosure);
 }
 
 static reg_errcode_t
@@ -2935,7 +2945,7 @@ check_arrival (mctx, path, top_node, top_str, last_node, last_str,
       if (cur_state)
 	{
 	  err = check_arrival_add_next_nodes (mctx, str_idx,
-					      &cur_state->nodes, &next_nodes);
+					      &cur_state->non_eps_nodes, &next_nodes);
 	  if (BE (err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
@@ -3009,9 +3019,12 @@ check_arrival_add_next_nodes (mctx, str_idx, cur_nodes, next_nodes)
     {
       int naccepted = 0;
       int cur_node = cur_nodes->elems[cur_idx];
+#if defined DEBUG || defined RE_ENABLE_I18N
       re_token_type_t type = dfa->nodes[cur_node].type;
-      if (IS_EPSILON_NODE (type))
-	continue;
+#endif
+#ifdef DEBUG
+      assert (!IS_EPSILON_NODE (type));
+#endif
 #ifdef RE_ENABLE_I18N
       /* If the node may accept `multi byte'.  */
       if (ACCEPT_MB_NODE (type))
@@ -3988,8 +4001,36 @@ check_node_accept (mctx, node, idx)
     const re_token_t *node;
     int idx;
 {
-  re_dfa_t *const dfa = mctx->dfa;
   unsigned char ch;
+  ch = re_string_byte_at (&mctx->input, idx);
+  switch (node->type)
+    {
+    case CHARACTER:
+      if (node->opr.c != ch)
+        return 0;
+      break;
+
+    case SIMPLE_BRACKET:
+      if (!bitset_contain (node->opr.sbcset, ch))
+        return 0;
+      break;
+
+#ifdef RE_ENABLE_I18N
+    case OP_UTF8_PERIOD:
+      if (ch >= 0x80)
+        return 0;
+      /* FALLTHROUGH */
+#endif
+    case OP_PERIOD:
+      if ((ch == '\n' && !(mctx->dfa->syntax & RE_DOT_NEWLINE))
+	  || (ch == '\0' && (mctx->dfa->syntax & RE_DOT_NOT_NULL)))
+	return 0;
+      break;
+
+    default:
+      return 0;
+    }
+
   if (node->constraint)
     {
       /* The node has constraints.  Check whether the current context
@@ -3999,25 +4040,8 @@ check_node_accept (mctx, node, idx)
       if (NOT_SATISFY_NEXT_CONSTRAINT (node->constraint, context))
 	return 0;
     }
-  ch = re_string_byte_at (&mctx->input, idx);
-  switch (node->type)
-    {
-    case CHARACTER:
-      return node->opr.c == ch;
-    case SIMPLE_BRACKET:
-      return bitset_contain (node->opr.sbcset, ch);
-#ifdef RE_ENABLE_I18N
-    case OP_UTF8_PERIOD:
-      if (ch >= 0x80)
-        return 0;
-      /* FALLTHROUGH */
-#endif
-    case OP_PERIOD:
-      return !((ch == '\n' && !(dfa->syntax & RE_DOT_NEWLINE))
-	       || (ch == '\0' && (dfa->syntax & RE_DOT_NOT_NULL)));
-    default:
-      return 0;
-    }
+
+  return 1;
 }
 
 /* Extend the buffers, if the buffers have run out.  */

@@ -1,3 +1,28 @@
+2004-12-07  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (proceed_next_node): Simplify treatment of epsilon
+	nodes.  Pass the pushed node to push_fail_stack.
+	(push_fail_stack): Accept a single node rather than an array
+	of two epsilon destinations.
+	(build_sifted_states): Only walk non-epsilon nodes.
+	(check_arrival): Don't pass epsilon nodes to
+	check_arrival_add_next_nodes.
+	(check_arrival_add_next_nodes) [DEBUG]: Abort if an epsilon node is
+	found.
+	(check_node_accept): Do expensive checks later.
+	(add_epsilon_src_nodes): Cache result of merging the inveclosures.
+	* posix/regex_internal.h (re_dfastate_t): Add non_eps_nodes and
+	inveclosure.
+	(re_string_elem_size_at, re_string_char_size_at, re_string_wchar_at,
+	re_string_context_at, re_string_peek_byte_case,
+	re_string_fetch_byte_case, re_node_set_compare, re_node_set_contains):
+	Declare as pure.
+	* posix/regex_internal.c (create_newstate_common): Remove.
+	(register_state): Move part of it here.  Initialize non_eps_nodes.
+	(free_state): Free inveclosure and non_eps_nodes.
+	(create_cd_newstate, create_ci_newstate): Allocate the new
+	re_dfastate_t here.
+
 2004-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (public_rEALLOc): Add parameter checks.

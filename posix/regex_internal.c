@@ -26,9 +26,6 @@ static void re_string_construct_common (const char *str, int len,
 static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx,
 				 wint_t *last_wc) internal_function;
 #endif /* RE_ENABLE_I18N */
-static re_dfastate_t *create_newstate_common (re_dfa_t *dfa,
-					      const re_node_set *nodes,
-					      unsigned int hash) internal_function;
 static reg_errcode_t register_state (re_dfa_t *dfa, re_dfastate_t *newstate,
 				     unsigned int hash) internal_function;
 static re_dfastate_t *create_ci_newstate (re_dfa_t *dfa,
@@ -1298,7 +1295,7 @@ re_node_set_contains (set, elem)
      const re_node_set *set;
      int elem;
 {
-  int idx, right, mid;
+  unsigned int idx, right, mid;
   if (set->nelem <= 0)
     return 0;
 
@@ -1484,33 +1481,9 @@ re_acquire_state_context (err, dfa, nodes, context)
     }
 }
 
-/* Allocate memory for DFA state and initialize common properties.
-   Return the new state if succeeded, otherwise return NULL.  */
-
-static re_dfastate_t *
-create_newstate_common (dfa, nodes, hash)
-     re_dfa_t *dfa;
-     const re_node_set *nodes;
-     unsigned int hash;
-{
-  re_dfastate_t *newstate;
-  reg_errcode_t err;
-  newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
-  if (BE (newstate == NULL, 0))
-    return NULL;
-  err = re_node_set_init_copy (&newstate->nodes, nodes);
-  if (BE (err != REG_NOERROR, 0))
-    {
-      re_free (newstate);
-      return NULL;
-    }
-  newstate->trtable = NULL;
-  newstate->hash = hash;
-  return newstate;
-}
-
-/* Store the new state NEWSTATE whose hash value is HASH in appropriate
-   position.  Return value indicate the error code if failed.  */
+/* Finish initialization of the new state NEWSTATE, and using its hash value
+   HASH put in the appropriate bucket of DFA's state table.  Return value
+   indicates the error code if failed.  */
 
 static reg_errcode_t
 register_state (dfa, newstate, hash)
@@ -1519,8 +1492,21 @@ register_state (dfa, newstate, hash)
      unsigned int hash;
 {
   struct re_state_table_entry *spot;
-  spot = dfa->state_table + (hash & dfa->state_hash_mask);
+  reg_errcode_t err;
+  int i;
 
+  newstate->hash = hash;
+  err = re_node_set_alloc (&newstate->non_eps_nodes, newstate->nodes.nelem);
+  if (BE (err != REG_NOERROR, 0))
+    return REG_ESPACE;
+  for (i = 0; i < newstate->nodes.nelem; i++)
+    {
+      int elem = newstate->nodes.elems[i];
+      if (!IS_EPSILON_NODE (dfa->nodes[elem].type))
+        re_node_set_insert_last (&newstate->non_eps_nodes, elem);
+    }
+
+  spot = dfa->state_table + (hash & dfa->state_hash_mask);
   if (BE (spot->alloc <= spot->num, 0))
     {
       int new_alloc = 2 * spot->num + 2;
@@ -1547,11 +1533,18 @@ create_ci_newstate (dfa, nodes, hash)
   int i;
   reg_errcode_t err;
   re_dfastate_t *newstate;
-  newstate = create_newstate_common (dfa, nodes, hash);
+
+  newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
   if (BE (newstate == NULL, 0))
     return NULL;
-  newstate->entrance_nodes = &newstate->nodes;
+  err = re_node_set_init_copy (&newstate->nodes, nodes);
+  if (BE (err != REG_NOERROR, 0))
+    {
+      re_free (newstate);
+      return NULL;
+    }
 
+  newstate->entrance_nodes = &newstate->nodes;
   for (i = 0 ; i < nodes->nelem ; i++)
     {
       re_token_t *node = dfa->nodes + nodes->elems[i];
@@ -1595,9 +1588,16 @@ create_cd_newstate (dfa, nodes, context, hash)
   reg_errcode_t err;
   re_dfastate_t *newstate;
 
-  newstate = create_newstate_common (dfa, nodes, hash);
+  newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
   if (BE (newstate == NULL, 0))
     return NULL;
+  err = re_node_set_init_copy (&newstate->nodes, nodes);
+  if (BE (err != REG_NOERROR, 0))
+    {
+      re_free (newstate);
+      return NULL;
+    }
+
   newstate->context = context;
   newstate->entrance_nodes = &newstate->nodes;
 
@@ -1660,6 +1660,8 @@ static void
 free_state (state)
      re_dfastate_t *state;
 {
+  re_node_set_free (&state->non_eps_nodes);
+  re_node_set_free (&state->inveclosure);
   if (state->entrance_nodes != &state->nodes)
     {
       re_node_set_free (state->entrance_nodes);
