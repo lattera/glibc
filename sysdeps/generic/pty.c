@@ -47,6 +47,7 @@ static char sccsid[] = "@(#)pty.c	8.1 (Berkeley) 6/4/93";
 #include <string.h>
 #include <grp.h>
 
+int
 openpty(amaster, aslave, name, termp, winp)
 	int *amaster, *aslave;
 	char *name;
@@ -97,12 +98,14 @@ openpty(amaster, aslave, name, termp, winp)
 	return (-1);
 }
 
+int
 forkpty(amaster, name, termp, winp)
 	int *amaster;
 	char *name;
 	struct termios *termp;
 	struct winsize *winp;
 {
+	extern int login_tty();
 	int master, slave, pid;
 
 	if (openpty(&master, &slave, name, termp, winp) == -1)

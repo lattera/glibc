@@ -1,5 +1,14 @@
 Mon Mar 27 02:23:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/bsd/bsd4.4/revoke.S: New file.
+	* sysdeps/stub/revoke.c: New file.
+	* misc/Makefile (routines): Add revoke.
+	* posix/unistd.h [__USE_BSD] (revoke): Declare it.
+	* sysdeps/generic/pty.c (openpty, forkpty): Declare return types.
+	(forkpty): Declare login_tty.
+	* misc/logwtmp.c (logwtmp): Declare to return void.
+	* misc/login_tty.c (login_tty): Include unistd.h.  Declare return type.
+
 	* posix/unistd.h [__USE_BSD] (ttyslot): Declare it.
 
 	* posix/unistd.h [__USE_BSD] (L_SET, L_INCR, L_XTND): Define

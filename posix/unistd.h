@@ -559,6 +559,9 @@ extern int sync __P ((void));
    group of the control terminal.  */
 extern int vhangup __P ((void));
 
+/* Revoke the access of all descriptors currently open on FILE.  */
+extern int revoke __P ((const char *__file));
+
 
 /* Turn accounting on if NAME is an existing file.  The system will then write
    a record for each process as it terminates, to this file.  If NAME is NULL,

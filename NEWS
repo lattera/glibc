@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  21 March 1995
+GNU C Library NEWS -- history of user-visible changes.  27 March 1995
 
 Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -98,6 +98,11 @@ Version 1.10
 * The new functions `ecvt', `fcvt', and `gcvt' provide an obsolete interface
   for formatting floating-point numbers.  They are provided only for
   compatibility; new programs should use `sprintf' instead.
+
+* The new auxiliary library `-lutil' from 4.4 BSD contains various
+  functions for maintaining the login-record files (primarily of use to
+  system programs such as `login'), and convenient functions for
+  allocating and initializing a pseudo-terminal (pty) device.
 
 Version 1.09
 

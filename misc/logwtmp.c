@@ -43,6 +43,7 @@ static char sccsid[] = "@(#)logwtmp.c	8.1 (Berkeley) 6/4/93";
 #include <unistd.h>
 #include <utmp.h>
 
+void
 logwtmp(line, name, host)
 	char *line, *name, *host;
 {
