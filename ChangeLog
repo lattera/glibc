@@ -3,6 +3,8 @@
 	* sysdeps/i386/fpu/s_nextafterl.c: Decrement high word of mantissa
 	of demorm correctly if low word is zero.
 	Reported by Fred J. Tydeman <tydeman@tybor.com>.
+	* math/libm-test.inc (nextafter_test): New test, but disabled due
+	to gcc bug.
 
 	* sysdeps/generic/libc-start.c [HAVE_PTR_NTHREADS]: Decrement thread
 	counter and only call __exit_thread if this is not the last thread.

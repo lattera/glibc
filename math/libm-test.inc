@@ -3430,6 +3430,11 @@ nextafter_test (void)
   TEST_ff_f (nextafter, 1.1L, nan_value, nan_value);
   TEST_ff_f (nextafter, nan_value, nan_value, nan_value);
 
+#ifdef TEST_LDOUBLE
+  // XXX Enable once gcc is fixed.
+  //TEST_ff_f (nextafter, 0x0.00000040000000000000p-16385L, -0.1L, 0x0.0000003ffffffff00000p-16385L);
+#endif
+
   /* XXX We need the hexadecimal FP number representation here for further
      tests.  */
 

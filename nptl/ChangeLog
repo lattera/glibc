@@ -1,5 +1,8 @@
 2003-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-basic4.
+	* tst-basic4.c: New file.
+
 	* pthreadP.h: Add declaraction for __nptl_nthreads.
 	* pthread_create.c: Define __nptl_nthreads
 	(start_thread): Increment __nptl_nthreads at beginning.  Decrement
