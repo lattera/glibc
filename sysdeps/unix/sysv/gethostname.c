@@ -36,13 +36,13 @@ __gethostname (name, len)
     return -1;
 
   node_len = strlen (buf.nodename) + 1;
+  memcpy (name, buf.nodename, len < node_len ? len : node_len);
+
   if (node_len > len)
     {
       __set_errno (ENAMETOOLONG);
       return -1;
     }
-
-  memcpy (name, buf.nodename, node_len);
   return 0;
 }
 
