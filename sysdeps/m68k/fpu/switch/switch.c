@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,11 +27,8 @@ Cambridge, MA 02139, USA.  */
 #define	TRAPSIG	SIGILL
 #endif
 
-/* Nonzero if we have determined whether or not there is a 68881.  */
-static int tested_fpu = 0;
-
-/* Nonzero if we have a 68881.  */
-static int have_fpu;
+/* Zero if no 68881, one if we have a 68881, or -1 if we don't know yet.  */
+static int have_fpu = -1;
 
 
 /* Signal handler for the trap that happens if we don't have a 68881.  */
@@ -53,10 +50,10 @@ DEFUN(__68881_switch, (dummy), int dummy)
   struct switch_caller *CONST caller
     = (struct switch_caller *) (((short int *) *return_address_location) - 1);
 
-  if (!tested_fpu)
+  if (have_fpu < 0)
     {
       /* Figure out whether or not we have a 68881.  */
-      __sighandler_t handler = signal(TRAPSIG, trap);
+      __sighandler_t handler = signal (TRAPSIG, trap);
       if (handler == SIG_ERR)
 	/* We can't figure it out, so assume we don't have a 68881.
 	   This assumption will never cause us any problems other than
@@ -70,14 +67,11 @@ DEFUN(__68881_switch, (dummy), int dummy)
 	     If we don't have one, this will trap and the signal handler
 	     will clear `have_fpu'.  */
 	  have_fpu = 1;
-	  asm("fnop");
+	  asm ("fnop");
 
 	  /* Restore the old signal handler.  */
-	  (void) signal(TRAPSIG, handler);
+	  (void) signal (TRAPSIG, handler);
 	}
-
-      /* Say that we've tested for a 68881, so we only do it once.  */
-      tested_fpu = 1;
     }
 
   /* Modify the caller to be a jump to the appropriate address.  */
