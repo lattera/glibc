@@ -1543,8 +1543,8 @@ else
   cat > conftest.c <<\EOF
 _start () {}
 EOF
-if { ac_try='${CC-cc} $CFLAGS \
-			    -nostdlib -nostartfiles -Wl,--no-whole-archive \
+if { ac_try='${CC-cc} $CFLAGS
+			    -nostdlib -nostartfiles -Wl,--no-whole-archive
 			    -o conftest conftest.c'; { (eval echo configure:1549: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_ld_no_whole_archive=yes
 else

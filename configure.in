@@ -477,8 +477,9 @@ AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
 cat > conftest.c <<\EOF
 _start () {}
 EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS \
-			    -nostdlib -nostartfiles -Wl,--no-whole-archive \
+dnl No \ in command here because it ends up inside ''.
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS
+			    -nostdlib -nostartfiles -Wl,--no-whole-archive
 			    -o conftest conftest.c]); then
   libc_cv_ld_no_whole_archive=yes
 else

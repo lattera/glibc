@@ -25,5 +25,6 @@ Boston, MA 02111-1307, USA.  */
 #define DATABASE_NAME	rpc
 #define ADD_PARAMS	int number
 #define ADD_VARIABLES	number
+#define BUFLEN		1024
 
 #include "../nss/getXXbyYY.c"
