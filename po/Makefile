@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -83,7 +83,7 @@ ifneq (,$(pofiles))
 	chmod 444 $@
 
 linguas: $(pofiles:$(podir)/%=%)
-	test ! -d CVS || cvs commit -m'Copied from $(podir)' $^
+	test ! -d CVS || cvs $(CVSOPTS) commit -m'Copied from $(podir)' $^
 linguas.mo: $(pofiles:$(podir)/%.po=%.mo)
 
 endif
