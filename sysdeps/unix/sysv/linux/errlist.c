@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,10 +38,9 @@ extern const char *const *__old_sys_errlist;
 const int __old_sys_nerr = OLD_ERRLIST_SIZE;
 
 strong_alias (__old_sys_nerr, _old_sys_nerr);
-weak_alias (__old_sys_nerr, _old_sys_nerr)
 compat_symbol (libc, __old_sys_nerr, _sys_nerr, GLIBC_2_0);
 compat_symbol (libc, _old_sys_nerr, sys_nerr, GLIBC_2_0);
-weak_alias (__old_sys_errlist, _old_sys_errlist);
+strong_alias (__old_sys_errlist, _old_sys_errlist);
 compat_symbol (libc, __old_sys_errlist, _sys_errlist, GLIBC_2_0);
 compat_symbol (libc, _old_sys_errlist, sys_errlist, GLIBC_2_0);
 #endif
