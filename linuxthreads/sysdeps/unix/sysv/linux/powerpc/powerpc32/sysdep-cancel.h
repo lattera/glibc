@@ -86,13 +86,41 @@
 #  define CDISABLE	bl JUMPTARGET(__librt_disable_asynccancel)
 # endif
 
-# ifndef __ASSEMBLER__
-#  define SINGLE_THREAD_P						\
+# ifdef HAVE_TLS_SUPPORT
+#  ifndef __ASSEMBLER__
+#   define SINGLE_THREAD_P						\
   __builtin_expect (THREAD_GETMEM (THREAD_SELF, p_multiple_threads) == 0, 1)
-# else
-#  define SINGLE_THREAD_P						\
+#  else
+#   define SINGLE_THREAD_P						\
   lwz 10,MULTIPLE_THREADS_OFFSET(2);					\
   cmpwi 10,0
+#  endif
+# else
+#  if !defined NOT_IN_libc
+#   define __local_multiple_threads __libc_multiple_threads
+#  else
+#   define __local_multiple_threads __librt_multiple_threads
+#  endif
+#  ifndef __ASSEMBLER__
+extern int __local_multiple_threads attribute_hidden;
+#   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
+#  else
+#   if !defined PIC
+#    define SINGLE_THREAD_P						\
+  lis 10,__local_multiple_threads@ha;					\
+  lwz 10,__local_multiple_threads@l(10);				\
+  cmpwi 10,0
+#   else
+#    define SINGLE_THREAD_P						\
+  mflr 9;								\
+  bl _GLOBAL_OFFSET_TABLE_@local-4;					\
+  mflr 10;								\
+  mtlr 9;								\
+  lwz 10,__local_multiple_threads@got(10);				\
+  lwz 10,0(10);								\
+  cmpwi 10,0
+#   endif
+#  endif
 # endif
 
 #elif !defined __ASSEMBLER__

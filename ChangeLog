@@ -1,3 +1,10 @@
+2004-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: Support crappy compilers and platforms which have
+	problems with alloca.
+	* posix/regex_internal.h: Likewise.
+	Patch by Paolo Bonzini.
+
 2004-01-12  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c [_LIBC && !RE_ENABLE_I18N]:

@@ -21,10 +21,6 @@
 #ifndef _REGEX_INTERNAL_H
 #define _REGEX_INTERNAL_H 1
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <assert.h>
 #include <ctype.h>
 #include <limits.h>
