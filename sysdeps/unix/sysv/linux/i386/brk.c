@@ -21,7 +21,8 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <sysdep.h>
 
-void *__curbrk;
+/* This must be initialized data because commons can't have aliases.  */
+void *__curbrk = 0;
 
 /* Old braindamage in GCC's crtstuff.c requires this symbol in an attempt
    to work around different old braindamage in the old Linux ELF dynamic

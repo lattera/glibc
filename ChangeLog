@@ -1,5 +1,8 @@
 Mon May 27 10:10:00 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/i386/brk.c (__curbrk): Initialize it so it
+	can be aliased.
+
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=termios] (headers):
 	Append termio.h.
 
