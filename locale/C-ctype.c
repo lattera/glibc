@@ -20,6 +20,14 @@ Boston, MA 02111-1307, USA.  */
 #include "localeinfo.h"
 #include <endian.h>
 
+/* This table's entries are taken from POSIX.2 Table 2-6
+   ``LC_CTYPE Category Definitionin the POSIX Locale''.
+
+   The `_nl_C_LC_CTYPE_width' array is a GNU extension.
+
+   In the `_nl_C_LC_CTYPE_class' array the value for EOF (== -1)
+   is set to always return 0 and the conversion arrays return EOF.  */
+
 const char _nl_C_LC_CTYPE_class[768] =
   /* 0x80 */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\002\000"
   /* 0x86 */ "\002\000" "\002\000" "\002\000" "\002\000" "\002\000" "\002\000"

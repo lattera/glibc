@@ -159,7 +159,7 @@ ifndef subdir
 $P/subdirs.pot: $(subdirs:%=$P/%.pot)
 	@rm -f $@.new
 	(for d in $(subdirs); \
-	 do sed "s%^#: %&$$d/%" $P/$$d.pot; done) > $@.new
+	 do sed "/^#:/s% % $$d/%g" $P/$$d.pot; done) > $@.new
 	mv -f $@.new $@
 
 # Get $(version) defined.

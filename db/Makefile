@@ -25,6 +25,9 @@ distribute	:= compat.h					\
 		   hash/extern.h hash/hash.h hash/page.h	\
 		   recno/extern.h recno/recno.h
 
+others		:= makedb
+install-bin	:= makedb
+
 include ../Rules
 
 CPPFLAGS += -D__DBINTERFACE_PRIVATE
@@ -35,3 +38,5 @@ CFLAGS-hash_func.c := -Wno-unused
 
 # The db code outsmarts the compiler frequently.
 override CFLAGS += -Wno-uninitialized
+
+$(objpfx)makedb: -ldb

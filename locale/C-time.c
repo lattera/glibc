@@ -19,6 +19,9 @@ Boston, MA 02111-1307, USA.  */
 
 #include "localeinfo.h"
 
+/* This table's entries are taken from POSIX.2 Table 2-11
+   ``LC_TIME Category Definition in the POSIX Locale''.  */
+
 const struct locale_data _nl_C_LC_TIME =
 {
   _nl_C_name,
@@ -65,7 +68,7 @@ const struct locale_data _nl_C_LC_TIME =
     { string: "December" },
     { string: "AM" },
     { string: "PM" },
-    { string: "%a %b %d %H:%M:%S %Y" },
+    { string: "%a %b %e %H:%M:%S %Y" },
     { string: "%m/%d/%y" },
     { string: "%H:%M:%S" },
     { string: "%I:%M:%S %p" },

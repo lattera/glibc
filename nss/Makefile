@@ -23,7 +23,8 @@ subdir	:= nss
 
 headers			:= nss.h
 distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
-			   getXXent.c getXXent_r.c databases.def
+			   getXXent.c getXXent_r.c databases.def \
+			   nsswitch.conf db-Makefile
 
 # This is the trivial part which goes into libc itself.
 routines		= nsswitch $(addsuffix -lookup,$(databases))

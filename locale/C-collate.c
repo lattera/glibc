@@ -20,6 +20,9 @@ Boston, MA 02111-1307, USA.  */
 #include <endian.h>
 #include "localeinfo.h"
 
+/* These tables' entries contain values which make the function behave
+   accoriding to POSIX.2 Table 2-8 ``LC_COLLATE Category Definition in
+   the POSIX Locale''.  */
 
 const u_int32_t _nl_C_LC_COLLATE_symbol_hash[446] =
 {

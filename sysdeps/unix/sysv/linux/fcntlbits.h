@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,5 +22,14 @@ Boston, MA 02111-1307, USA.  */
 
 #include <sys/types.h>
 #include <linux/fcntl.h>
+
+/* Define some more compatibility macros to be backward compatible with
+   BSD systems which did not managed to hide these kernel macros.  */
+#ifdef	__USE_BSD
+#define	FAPPEND		O_APPEND
+#define	FFSYNC		O_FSYNC
+#define	FNONBLOCK	O_NONBLOCK
+#define	FNDELAY		O_NDELAY
+#endif /* Use BSD.  */
 
 #endif	/* fcntlbits.h */

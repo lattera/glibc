@@ -481,6 +481,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
 {
   int fd;
   char *realname;
+  char *name_copy;
   struct link_map *l;
 
   /* Look for this name among those already loaded.  */
@@ -572,8 +573,8 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
 
   if (fd != -1)
     {
-      name = local_strdup (name);
-      if (name == NULL)
+      name_copy = local_strdup (name);
+      if (name_copy == NULL)
 	{
 	  __close (fd);
 	  fd = -1;
@@ -583,5 +584,5 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
   if (fd == -1)
     _dl_signal_error (errno, name, "cannot open shared object file");
 
-  return _dl_map_object_from_fd (name, fd, realname, loader, type);
+  return _dl_map_object_from_fd (name_copy, fd, realname, loader, type);
 }

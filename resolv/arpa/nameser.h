@@ -135,17 +135,6 @@
 #define STATUS		0x2		/* nameserver status query */
 /*#define xxx		0x3*/		/* 0x3 reserved */
 #define NS_NOTIFY_OP	0x4		/* notify secondary of SOA change */
-#ifdef ALLOW_UPDATES
-	/* non standard - supports ALLOW_UPDATES stuff from Mike Schwartz */
-# define UPDATEA	0x9		/* add resource record */
-# define UPDATED	0xa		/* delete a specific resource record */
-# define UPDATEDA	0xb		/* delete all named resource record */
-# define UPDATEM	0xc		/* modify a specific resource record */
-# define UPDATEMA	0xd		/* modify all named resource record */
-# define ZONEINIT	0xe		/* initial zone transfer */
-# define ZONEREF	0xf		/* incremental zone referesh */
-#endif
-
 /*
  * Currently defined response codes
  */
@@ -155,10 +144,6 @@
 #define NXDOMAIN	3		/* non existent domain */
 #define NOTIMP		4		/* not implemented */
 #define REFUSED		5		/* query refused */
-#ifdef ALLOW_UPDATES
-	/* non standard */
-# define NOCHANGE	0xf		/* update failed to change db */
-#endif
 
 /*
  * Type values for resources and queries
@@ -193,12 +178,17 @@
 #define T_AAAA		28		/* IP6 Address */
 #define T_LOC		29		/* Location Information */
 #define T_NXT		30		/* Next Valid Name in Zone */
+#define T_EID		31		/* Endpoint identifier */
+#define T_NIMLOC	32		/* Nimrod locator */
+#define T_SRV		33		/* Server selection */
+#define T_ATMA		34		/* ATM Address */
 	/* non standard */
 #define T_UINFO		100		/* user (finger) information */
 #define T_UID		101		/* user ID */
 #define T_GID		102		/* group ID */
 #define T_UNSPEC	103		/* Unspecified format (binary data) */
 	/* Query type values which do not appear in resource records */
+#define	T_IXFR		251		/* incremental zone transfer */
 #define T_AXFR		252		/* transfer zone of authority */
 #define T_MAILB		253		/* transfer mailbox records */
 #define T_MAILA		254		/* transfer mail agent records */
@@ -354,18 +344,6 @@ typedef struct {
  * Defines for handling compressed domain names
  */
 #define INDIR_MASK	0xc0
-
-/*
- * Structure for passing resource records around.
- */
-struct rrec {
-	int16_t		r_zone;			/* zone number */
-	int16_t		r_class;		/* class number */
-	int16_t		r_type;			/* type number */
-	u_int32_t	r_ttl;			/* time to live */
-	int		r_size;			/* size of data area */
-	char		*r_data;		/* pointer to data */
-};
 
 extern	u_int16_t	_getshort __P((const u_char *));
 extern	u_int32_t	_getlong __P((const u_char *));

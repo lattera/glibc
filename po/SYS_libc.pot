@@ -1,4 +1,4 @@
-# SOME DESCRIPTIVE TITLE.
+# GNU libc message catalog of translations
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 1.93\n"
-"POT-Creation-Date: 1996-08-14 18:02\n"
+"POT-Creation-Date: 1996-08-29  1:37\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid " (rule from \"%s\", line %d)"
 msgstr ""
 
-#: locale/programs/ld-collate.c:360 programs/ld-ctype.c:1233
+#: locale/programs/ld-collate.c:360 locale/programs/ld-ctype.c:1233
 msgid " done\n"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 msgid "%s: command was '%s', result was %d\n"
 msgstr ""
 
-#: locale/programs/charmap.c:593 programs/locfile.c:878
+#: locale/programs/charmap.c:593 locale/programs/locfile.c:878
 #, c-format
 msgid "%s: error in state machine"
 msgstr ""
@@ -228,7 +228,7 @@ msgstr ""
 msgid "%s: output would overwrite %s\n"
 msgstr ""
 
-#: time/zic.c:838 zic.c:1249 zic.c:1269
+#: time/zic.c:838 time/zic.c:1249 time/zic.c:1269
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr ""
@@ -299,7 +299,7 @@ msgstr ""
 msgid ".rhosts writeable by other than owner"
 msgstr ""
 
-#: clnt_perr.c:133 sunrpc/clnt_perr.c:112
+#: sunrpc/clnt_perr.c:112 sunrpc/clnt_perr.c:133
 #, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr ""
@@ -552,6 +552,10 @@ msgstr ""
 
 #: string/../sysdeps/mach/_strerror.c:43
 msgid "Error in unknown error system: "
+msgstr ""
+
+#: inet/ruserpass.c:156
+msgid "Error: .netrc file is readable by others."
 msgstr ""
 
 #: stdio-common/../sysdeps/gnu/errlist.c:662
@@ -1191,6 +1195,10 @@ msgstr ""
 msgid "Remote address changed"
 msgstr ""
 
+#: inet/ruserpass.c:157
+msgid "Remove password or make file unreadable by others."
+msgstr ""
+
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
 msgstr ""
@@ -1395,7 +1403,7 @@ msgstr ""
 msgid "Transport endpoint is not connected"
 msgstr ""
 
-#: catgets/gencat.c:202
+#: catgets/gencat.c:202 db/makedb.c:196
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr ""
@@ -1405,7 +1413,13 @@ msgstr ""
 msgid "Trying %s...\n"
 msgstr ""
 
-#: ../sysdeps/mach/_strerror.c:58 string/../sysdeps/generic/_strerror.c:36
+#: inet/ruserpass.c:241
+#, c-format
+msgid "Unknown .netrc keyword %s"
+msgstr ""
+
+#: string/../sysdeps/generic/_strerror.c:36
+#: string/../sysdeps/mach/_strerror.c:58
 msgid "Unknown error "
 msgstr ""
 
@@ -1469,6 +1483,22 @@ msgid ""
 "is -, output is written to standard output.\n"
 msgstr ""
 
+#: db/makedb.c:199
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... INPUT-FILE OUTPUT-FILE\n"
+"       %s [OPTION]... -o OUTPUT-FILE INPUT-FILE\n"
+"       %s [OPTION]... -u INPUT-FILE\n"
+"Mandatory arguments to long options are mandatory for short options too.\n"
+"  -f, --fold-case     convert key to lower case\n"
+"  -h, --help          display this help and exit\n"
+"  -o, --output=NAME   write output to file NAME\n"
+"      --quiet         don't print messages while building database\n"
+"  -u, --undo          print content of database file, one entry a line\n"
+"  -V, --version       output version information and exit\n"
+"If INPUT-FILE is -, input is read from standard input.\n"
+msgstr ""
+
 #: posix/getconf.c:131
 #, c-format
 msgid "Usage: %s variable_name [pathname]\n"
@@ -1507,12 +1537,12 @@ msgstr ""
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 
-#: locale/programs/charmap.c:397 programs/locfile.c:341
+#: locale/programs/charmap.c:397 locale/programs/locfile.c:341
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr ""
 
-#: locale/programs/ld-monetary.c:358 programs/ld-numeric.c:190
+#: locale/programs/ld-monetary.c:358 locale/programs/ld-numeric.c:190
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
 msgstr ""
@@ -1552,7 +1582,7 @@ msgstr ""
 msgid "bad .rhosts owner"
 msgstr ""
 
-#: locale/programs/charmap.c:212 programs/locfile.c:209
+#: locale/programs/charmap.c:212 locale/programs/locfile.c:209
 msgid "bad argument"
 msgstr ""
 
@@ -1598,21 +1628,26 @@ msgstr ""
 msgid "cannot insert collation element `%.*s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1492 programs/ld-collate.c:1497
+#: locale/programs/ld-collate.c:1492 locale/programs/ld-collate.c:1497
 msgid "cannot insert into result table"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1165 programs/ld-collate.c:1207
+#: locale/programs/ld-collate.c:1165 locale/programs/ld-collate.c:1207
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
 msgstr ""
 
-#: catgets/gencat.c:249
+#: db/makedb.c:148
+#, c-format
+msgid "cannot open database file `%s': %s"
+msgstr ""
+
+#: catgets/gencat.c:249 db/makedb.c:167
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr ""
 
-#: catgets/gencat.c:754 gencat.c:795
+#: catgets/gencat.c:754 catgets/gencat.c:795 db/makedb.c:176
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr ""
@@ -1645,11 +1680,12 @@ msgstr ""
 msgid "character `%c' not defined while needed as default value"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:938 locale/programs/ld-ctype.c:1017
-#: locale/programs/ld-ctype.c:1041 locale/programs/ld-ctype.c:1113
-#: programs/ld-ctype.c:1001 programs/ld-ctype.c:1009 programs/ld-ctype.c:1025
-#: programs/ld-ctype.c:1033 programs/ld-ctype.c:1067 programs/ld-ctype.c:1075
-#: programs/ld-ctype.c:1151
+#: locale/programs/ld-ctype.c:938 locale/programs/ld-ctype.c:1001
+#: locale/programs/ld-ctype.c:1009 locale/programs/ld-ctype.c:1017
+#: locale/programs/ld-ctype.c:1025 locale/programs/ld-ctype.c:1033
+#: locale/programs/ld-ctype.c:1041 locale/programs/ld-ctype.c:1067
+#: locale/programs/ld-ctype.c:1075 locale/programs/ld-ctype.c:1113
+#: locale/programs/ld-ctype.c:1151
 #, c-format
 msgid "character `%s' not defined while needed as default value"
 msgstr ""
@@ -1722,7 +1758,7 @@ msgstr ""
 msgid "definition keyword expected"
 msgstr ""
 
-#: locale/programs/charset.c:87 programs/charset.c:132
+#: locale/programs/charset.c:87 locale/programs/charset.c:132
 #, c-format
 msgid "duplicate character name `%s'"
 msgstr ""
@@ -1734,6 +1770,10 @@ msgstr ""
 #: locale/programs/ld-collate.c:1286
 #, c-format
 msgid "duplicate definition for character `%.*s'"
+msgstr ""
+
+#: db/makedb.c:293
+msgid "duplicate key"
 msgstr ""
 
 #: catgets/gencat.c:368
@@ -1817,12 +1857,12 @@ msgstr ""
 msgid "failure while writing data for category `%s'"
 msgstr ""
 
-#: locale/programs/ld-monetary.c:154 programs/ld-numeric.c:95
+#: locale/programs/ld-monetary.c:154 locale/programs/ld-numeric.c:95
 #, c-format
 msgid "field `%s' in category `%s' not defined"
 msgstr ""
 
-#: locale/programs/ld-messages.c:81 programs/ld-messages.c:102
+#: locale/programs/ld-messages.c:81 locale/programs/ld-messages.c:102
 #, c-format
 msgid "field `%s' in category `%s' undefined"
 msgstr ""
@@ -1883,7 +1923,7 @@ msgstr ""
 msgid "illegal result type"
 msgstr ""
 
-#: catgets/gencat.c:341 gencat.c:418
+#: catgets/gencat.c:341 catgets/gencat.c:418
 msgid "illegal set number"
 msgstr ""
 
@@ -1895,6 +1935,10 @@ msgstr ""
 #: locale/programs/ld-ctype.c:838
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
+msgstr ""
+
+#: db/makedb.c:150
+msgid "incorrectly formatted file"
 msgstr ""
 
 #: time/zic.c:815
@@ -1926,7 +1970,7 @@ msgstr ""
 msgid "invalid abbreviation format"
 msgstr ""
 
-#: time/zic.c:1115 zic.c:1314 zic.c:1328
+#: time/zic.c:1115 time/zic.c:1314 time/zic.c:1328
 msgid "invalid day of month"
 msgstr ""
 
@@ -1938,7 +1982,7 @@ msgstr ""
 msgid "invalid leaping year"
 msgstr ""
 
-#: time/zic.c:1102 zic.c:1205
+#: time/zic.c:1102 time/zic.c:1205
 msgid "invalid month name"
 msgstr ""
 
@@ -1950,7 +1994,7 @@ msgstr ""
 msgid "invalid starting year"
 msgstr ""
 
-#: time/zic.c:1131 zic.c:1233
+#: time/zic.c:1131 time/zic.c:1233
 msgid "invalid time of day"
 msgstr ""
 
@@ -1982,10 +2026,10 @@ msgstr ""
 msgid "memory clobbered past end of allocated block"
 msgstr ""
 
-#: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:177
-#: locale/programs/ld-collate.c:1467 posix/getconf.c:174
-#: programs/ld-collate.c:173 programs/ld-collate.c:1438 programs/locfile.c:940
-#: programs/xmalloc.c:64
+#: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
+#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1438
+#: locale/programs/ld-collate.c:1467 locale/programs/locfile.c:940
+#: locale/programs/xmalloc.c:64 posix/getconf.c:174
 msgid "memory exhausted"
 msgstr ""
 
@@ -2002,11 +2046,11 @@ msgstr ""
 msgid "never registered prog %d\n"
 msgstr ""
 
-#: rpc_parse.c:313 sunrpc/rpc_parse.c:305
+#: sunrpc/rpc_parse.c:305 sunrpc/rpc_parse.c:313
 msgid "no array-of-pointer declarations -- use typedef"
 msgstr ""
 
-#: locale/programs/ld-messages.c:95 programs/ld-messages.c:116
+#: locale/programs/ld-messages.c:95 locale/programs/ld-messages.c:116
 #, c-format
 msgid "no correct regular expression for field `%s' in category `%s': %s"
 msgstr ""
@@ -2023,11 +2067,13 @@ msgstr ""
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr ""
 
-#: locale/programs/charmap.c:315 programs/charmap.c:466 programs/charmap.c:545
+#: locale/programs/charmap.c:315 locale/programs/charmap.c:466
+#: locale/programs/charmap.c:545
 msgid "no symbolic name given"
 msgstr ""
 
-#: locale/programs/charmap.c:380 programs/charmap.c:512 programs/charmap.c:578
+#: locale/programs/charmap.c:380 locale/programs/charmap.c:512
+#: locale/programs/charmap.c:578
 msgid "no symbolic name given for end of range"
 msgstr ""
 
@@ -2044,25 +2090,30 @@ msgstr ""
 msgid "portmap CALLIT: cannot fork.\n"
 msgstr ""
 
-#: portmap.c:116 sunrpc/portmap.c:94
+#: sunrpc/portmap.c:94 sunrpc/portmap.c:116
 msgid "portmap cannot bind"
 msgstr ""
 
-#: portmap.c:112 sunrpc/portmap.c:86
+#: sunrpc/portmap.c:86 sunrpc/portmap.c:112
 msgid "portmap cannot create socket"
 msgstr ""
 
-#: rpc_scan.c:464 sunrpc/rpc_scan.c:456
+#: sunrpc/rpc_scan.c:456 sunrpc/rpc_scan.c:464
 msgid "preprocessor error"
 msgstr ""
 
-#: rpcinfo.c:350 sunrpc/rpcinfo.c:222
+#: db/makedb.c:309
+#, c-format
+msgid "problems while reading `%s'"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:222 sunrpc/rpcinfo.c:350
 #, c-format
 msgid "program %lu is not available\n"
 msgstr ""
 
-#: rpcinfo.c:282 rpcinfo.c:371 rpcinfo.c:408 rpcinfo.c:429
-#: sunrpc/rpcinfo.c:245 sunrpc/rpcinfo.c:462
+#: sunrpc/rpcinfo.c:245 sunrpc/rpcinfo.c:282 sunrpc/rpcinfo.c:371
+#: sunrpc/rpcinfo.c:408 sunrpc/rpcinfo.c:429 sunrpc/rpcinfo.c:462
 #, c-format
 msgid "program %lu version %lu is not available\n"
 msgstr ""
@@ -2126,7 +2177,7 @@ msgstr ""
 msgid "run_svc returned unexpectedly\n"
 msgstr ""
 
-#: time/zic.c:709 zic.c:711
+#: time/zic.c:709 time/zic.c:711
 msgid "same rule name in multiple files"
 msgstr ""
 
@@ -2142,7 +2193,7 @@ msgstr ""
 msgid "sorting order `forward' and `backward' are mutually exclusive"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1567 programs/ld-collate.c:1613
+#: locale/programs/ld-collate.c:1567 locale/programs/ld-collate.c:1613
 msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr ""
@@ -2159,7 +2210,7 @@ msgstr ""
 msgid "starting year greater than ending year"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:199 svc_tcp.c:204
+#: sunrpc/svc_tcp.c:199 sunrpc/svc_tcp.c:204
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr ""
 
@@ -2171,7 +2222,7 @@ msgstr ""
 msgid "svctcp_.c - udp socket creation problem"
 msgstr ""
 
-#: sunrpc/svc_tcp.c:154 svc_tcp.c:161
+#: sunrpc/svc_tcp.c:154 sunrpc/svc_tcp.c:161
 msgid "svctcp_create: out of memory\n"
 msgstr ""
 
@@ -2211,16 +2262,17 @@ msgid ""
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1054 programs/ld-collate.c:1181
+#: locale/programs/ld-collate.c:1054 locale/programs/ld-collate.c:1181
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbolic name "
 "in charset"
 msgstr ""
 
-#: locale/programs/charmap.c:314 locale/programs/charmap.c:465
-#: locale/programs/charmap.c:576 programs/charmap.c:348 programs/charmap.c:378
-#: programs/charmap.c:511 programs/charmap.c:544
+#: locale/programs/charmap.c:314 locale/programs/charmap.c:348
+#: locale/programs/charmap.c:378 locale/programs/charmap.c:465
+#: locale/programs/charmap.c:511 locale/programs/charmap.c:544
+#: locale/programs/charmap.c:576
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr ""
@@ -2273,7 +2325,7 @@ msgstr ""
 msgid "syntax error in order specification"
 msgstr ""
 
-#: locale/programs/charmap.c:195 programs/charmap.c:211
+#: locale/programs/charmap.c:195 locale/programs/charmap.c:211
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr ""
@@ -2286,7 +2338,7 @@ msgstr ""
 msgid "syntax error: not inside a locale definition section"
 msgstr ""
 
-#: catgets/gencat.c:370 gencat.c:506 gencat.c:533
+#: catgets/gencat.c:370 catgets/gencat.c:506 catgets/gencat.c:533
 msgid "this is the first definition"
 msgstr ""
 
@@ -2294,7 +2346,7 @@ msgstr ""
 msgid "time before zero"
 msgstr ""
 
-#: time/zic.c:1128 zic.c:1960 zic.c:1979
+#: time/zic.c:1128 time/zic.c:1960 time/zic.c:1979
 msgid "time overflow"
 msgstr ""
 
@@ -2351,13 +2403,13 @@ msgstr ""
 msgid "typed single year"
 msgstr ""
 
-#: locale/programs/charmap.c:617 programs/charmap.c:628
+#: locale/programs/charmap.c:617 locale/programs/charmap.c:628
 #, c-format
 msgid "unknown character `%s'"
 msgstr ""
 
-#: locale/programs/ld-messages.c:193 locale/programs/ld-messages.c:215
-#: programs/ld-messages.c:204 programs/ld-messages.c:226
+#: locale/programs/ld-messages.c:193 locale/programs/ld-messages.c:204
+#: locale/programs/ld-messages.c:215 locale/programs/ld-messages.c:226
 #, c-format
 msgid "unknown character in field `%s' of category `%s'"
 msgstr ""
@@ -2379,8 +2431,8 @@ msgstr ""
 msgid "unknown signal"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1366 locale/programs/ld-collate.c:1731
-#: programs/ld-collate.c:1557
+#: locale/programs/ld-collate.c:1366 locale/programs/ld-collate.c:1557
+#: locale/programs/ld-collate.c:1731
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
 msgstr ""
@@ -2393,7 +2445,7 @@ msgstr ""
 msgid "unterminated message"
 msgstr ""
 
-#: locale/programs/linereader.c:515 programs/linereader.c:550
+#: locale/programs/linereader.c:515 locale/programs/linereader.c:550
 msgid "unterminated string"
 msgstr ""
 
@@ -2422,7 +2474,7 @@ msgstr ""
 msgid "use of 2/29 in non leap-year"
 msgstr ""
 
-#: locale/programs/charmap.c:438 programs/charmap.c:492
+#: locale/programs/charmap.c:438 locale/programs/charmap.c:492
 #, c-format
 msgid "value for %s must be an integer"
 msgstr ""
@@ -2432,7 +2484,7 @@ msgstr ""
 msgid "value for <%s> must lie between 1 and 4"
 msgstr ""
 
-#: locale/programs/ld-monetary.c:148 programs/ld-numeric.c:89
+#: locale/programs/ld-monetary.c:148 locale/programs/ld-numeric.c:89
 #, c-format
 msgid "value for field `%s' in category `%s' must not be the empty string"
 msgstr ""
@@ -2452,7 +2504,7 @@ msgid ""
 "value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"
 msgstr ""
 
-#: locale/programs/ld-monetary.c:370 programs/ld-numeric.c:199
+#: locale/programs/ld-monetary.c:370 locale/programs/ld-numeric.c:199
 #, c-format
 msgid "values for field `%s' in category `%s' must be smaller than 127"
 msgstr ""
@@ -2476,6 +2528,18 @@ msgstr ""
 
 #: catgets/gencat.c:978
 msgid "while opening old catalog file"
+msgstr ""
+
+#: db/makedb.c:336
+msgid "while reading database"
+msgstr ""
+
+#: db/makedb.c:298
+msgid "while writing data base file"
+msgstr ""
+
+#: db/makedb.c:129
+msgid "wrong number of arguments"
 msgstr ""
 
 #: time/zic.c:1078

@@ -1,3 +1,47 @@
+Thu Aug 29 00:28:08 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf_fp.c (__printf_fp): Use default value `.` if
+ 	`decimal' char is 0.
+
+	* C-numeric.c (not_available): New constant.
+	(_nl_C_LC_NUMERIC): Use `not_available' for grouping value.
+
+	* nss/nsswitch.conf: Example configuration file.
+	* nss/db-Makefile: Example Makefile for generation of databases
+	for nss_db.
+	* nss/Makefile (distribute): Add nsswitch.conf and db-Makefile.
+
+1996-08-28  Paul Eggert  <eggert@twinsun.com>
+
+	* C-messages.c (_nl_C_LC_MESSAGES): Set yesexpr to "^[yY]" and
+ 	noexpr to "^[nN]"; this conforms to POSIX.2.
+
+	* C-time.c (_nl_C_LC_TIME): Change %d to %e in d_t_format, to
+ 	conform to POSIX.2.
+
+1996-08-28  Paul Eggert  <eggert@twinsun.com>
+
+	* C-monetary.c (not_available): New constant.
+	(_nl_C_LC_MONETARY): Set mon_decimal_point to "", and set
+ 	mon_grouping, int_frac_digits, frac_digits, p_cs_precedes,
+ 	p_sep_by_space, n_cs_precedes, n_sep_by_space, p_sign_posn, and
+ 	n_sign_posn to CHAR_MAX, as required by the POSIX Standard.
+
+Wed Aug 28 23:12:28 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_db/db-XXX.c: Correct function names.  They must be
+	`_nss_db_*' instead of `_nss_files_*'.
+	(lookup): `parse_line' returns 1 if succesful.
+	* nss/nss_files/files-service.c (servbyname): Key for database
+	must also contain protocol names.
+	(servbypt): Likewise.
+	Test must also check for protocol.  Add `proto' argument.
+
+Tue Aug 27 09:56:13 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* MakeTAGS ($P/subdirs.pot): Prefix all file names, not only the
+	first one.
+
 Tue Aug 27 17:45:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules: Add some test for correct version of GNU Make.
@@ -206,6 +250,19 @@ Fri Aug 16 04:59:01 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Thu Aug  8 12:40:20 1996.
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = csu]: Use
 	-fkeep-inline-functions flag instead.
+
+Fri Aug 16 16:11:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* nss/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): Treat
+ 	EPFNOSUPPORT and EAFNOSUPPORT as implying NSS_STATUS_UNAVAIL just
+ 	like ECONNREFUSED already does.
+	(_nss_dns_gethostbyaddr_r): Likewise.
+	* nss/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Likewise.
+	(_nss_dns_getnetbyaddr_r): Likewise.
+
+	* sysdeps/mach/hurd/socket.c (socket): For message transmission
+ 	and RPC errors that indicate that the socket server is not really
+ 	present and able to do its job, turn the error into EPFNOSUPPORT.
 
 Fri Aug 16 01:24:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -432,6 +489,10 @@ Sun Aug 11 16:19:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 	script and mark it to substitute.
 
 	* string/Makefile: Add -fno-builtin for tst-strlen.c, too.
+
+	* sysdeps/generic/sbrk.c (__sbrk):  Get kernel brk address
+	always only if in static libc or if statically linked program
+	uses libc.so.
 
 	* sysdeps/generic/sbrk.c (__sbrk):  Get kernel brk address
 	always only if in static libc or if statically linked program

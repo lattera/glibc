@@ -19,14 +19,19 @@ Boston, MA 02111-1307, USA.  */
 
 #include "localeinfo.h"
 
+/* This table's entries are taken from POSIX.2 Table 2-12
+   ``LC_MESSAGES Category Definition in the POSIX Locale''.
+
+   The last two fields are a GNU extension.  */
+
 const struct locale_data _nl_C_LC_MESSAGES =
 {
   _nl_C_name,
   NULL, 0, /* no file mapped */
   4,
   {
-    { string: "[yY][[:alpha:]]*" },
-    { string: "[nN][[:alpha:]]*" },
+    { string: "^[yY]" },
+    { string: "^[nN]" },
     { string: "" },
     { string: "" }
   }

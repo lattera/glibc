@@ -20,13 +20,15 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <link.h>
 #include <setjmp.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* This structure communicates state between _dl_catch_error and
    _dl_signal_error.  */
 struct catch
   {
-    const char *errstring, *objname; /* Error detail filled in here.  */
+    char *errstring;		/* Error detail filled in here.  */
+    const char *objname;
     jmp_buf env;		/* longjmp here on error.  */
   };
 
@@ -69,7 +71,7 @@ _dl_signal_error (int errcode,
 }
 
 int
-_dl_catch_error (const char **errstring,
+_dl_catch_error (char **errstring,
 		 const char **objname,
 		 void (*operate) (void))
 {
@@ -82,7 +84,8 @@ _dl_catch_error (const char **errstring,
       catch = &c;
       (*operate) ();
       catch = NULL;
-      *errstring = *objname = NULL;
+      *errstring = NULL;
+      *objname = NULL;
       return 0;
     }
 

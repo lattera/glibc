@@ -667,7 +667,7 @@ __p_rr(cp, msg, file)
 	case T_AAAA: {
 		char t[sizeof "ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255"];
 
-		fprintf(file, "\t%s\n", inet_ntop(AF_INET6, cp, t, sizeof t));
+		fprintf(file, "\t%s", inet_ntop(AF_INET6, cp, t, sizeof t));
 		cp += dlen;
 		break;
 	}
@@ -675,8 +675,20 @@ __p_rr(cp, msg, file)
 	case T_LOC: {
 		char t[255];
 
-		(void) fprintf(file, "\t%s\n", loc_ntoa(cp, t));
+		(void) fprintf(file, "\t%s", loc_ntoa(cp, t));
 		cp += dlen;
+		break;
+	}
+
+	case T_SRV: {
+		u_int priority, weight, port;
+
+		priority = _getshort(cp);  cp += INT16SZ;
+		weight   = _getshort(cp);  cp += INT16SZ;
+		port     = _getshort(cp);  cp += INT16SZ;
+		fprintf(file, "\t%u %u %u ", priority, weight, port);
+		if ((cp = p_fqname(cp, msg, file)) == NULL)
+			return (NULL);
 		break;
 	}
 
@@ -856,13 +868,15 @@ const struct res_sym __p_class_syms[] = {
 const struct res_sym __p_type_syms[] = {
 	{T_A,		"A",		"address"},
 	{T_NS,		"NS",		"name server"},
+	{T_MD,		"MD",		"mail destination (deprecated)"},
+	{T_MF,		"MF",		"mail forwarder (deprecated)"},
 	{T_CNAME,	"CNAME",	"canonical name"},
 	{T_SOA,		"SOA",		"start of authority"},
 	{T_MB,		"MB",		"mailbox"},
 	{T_MG,		"MG",		"mail group member"},
 	{T_MR,		"MR",		"mail rename"},
 	{T_NULL,	"NULL",		"null"},
-	{T_WKS,		"WKS",		"well-known service"},
+	{T_WKS,		"WKS",		"well-known service (deprecated)"},
 	{T_PTR,		"PTR",		"domain name pointer"},
 	{T_HINFO,	"HINFO",	"host information"},
 	{T_MINFO,	"MINFO",	"mailbox information"},
@@ -877,22 +891,27 @@ const struct res_sym __p_type_syms[] = {
 	{T_NSAP_PTR,	"NSAP_PTR",	"domain name pointer"},
 	{T_SIG,		"SIG",		"signature"},
 	{T_KEY,		"KEY",		"key"},
-	{T_NXT,		"NXT",		"next valid name"},
 	{T_PX,		"PX",		"mapping information"},
-	{T_GPOS,	"GPOS",		"geographical position"},
+	{T_GPOS,	"GPOS",		"geographical position (withdrawn)"},
 	{T_AAAA,	"AAAA",		"IPv6 address"},
 	{T_LOC,		"LOC",		"location"},
+	{T_NXT,		"NXT",		"next valid name (unimplemented)"},
+	{T_EID,		"EID",		"endpoint identifier (unimplemented)"},
+	{T_NIMLOC,	"NIMLOC",	"NIMROD locator (unimplemented)"},
+	{T_SRV,		"SRV",		"server selection"},
+	{T_ATMA,	"ATMA",		"ATM address (unimplemented)"},
+	{T_IXFR,	"IXFR",		"incremental zone transfer"},
 	{T_AXFR,	"AXFR",		"zone transfer"},
-	{T_MAILB,	"MAILB",	"mailbox-related data"},
-	{T_MAILA,	"MAILA",	"mail agent"},
-	{T_UINFO,	"UINFO",	"user information"},
-	{T_UID,		"UID",		"user ID"},
-	{T_GID,		"GID",		"group ID"},
+	{T_MAILB,	"MAILB",	"mailbox-related data (deprecated)"},
+	{T_MAILA,	"MAILA",	"mail agent (deprecated)"},
+	{T_UINFO,	"UINFO",	"user information (nonstandard)"},
+	{T_UID,		"UID",		"user ID (nonstandard)"},
+	{T_GID,		"GID",		"group ID (nonstandard)"},
 #ifdef ALLOW_T_UNSPEC
-	{T_UNSPEC,	"UNSPEC",	"unspecified data"},
+	{T_UNSPEC,	"UNSPEC",	"unspecified data (nonstandard)"},
 #endif /* ALLOW_T_UNSPEC */
 	{T_ANY,		"ANY",		"\"any\""},
-	{0,		(char *)0,	(char *)0}
+	{0,		NULL,		NULL}
 };
 
 int

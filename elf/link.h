@@ -178,8 +178,9 @@ extern void _dl_signal_error (int errcode,
 /* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
    error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING and
    *OBJECT are set to the strings passed to _dl_signal_error, and the error
-   code passed is the return value.  */
-extern int _dl_catch_error (const char **errstring,
+   code passed is the return value.  ERRSTRING if nonzero points to a
+   malloc'ed string which the caller has to free after use.  */
+extern int _dl_catch_error (char **errstring,
 			    const char **object,
 			    void (*operate) (void));
 

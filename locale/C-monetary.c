@@ -19,6 +19,14 @@ Boston, MA 02111-1307, USA.  */
 
 #include "localeinfo.h"
 
+/* This table's entries are taken from POSIX.2 Table 2-9
+   ``LC_MONETARY Category Definition in the POSIX Locale''.  */
+#ifdef __CHAR_UNSIGNED__
+static const char not_available[] = "\377";
+#else
+static const char not_available[] = "\177";
+#endif
+
 const struct locale_data _nl_C_LC_MONETARY =
 {
   _nl_C_name,
@@ -27,18 +35,18 @@ const struct locale_data _nl_C_LC_MONETARY =
   {
     { string: "" },
     { string: "" },
-    { string: "." },
-    { string: "" },
-    { string: "\177" },
     { string: "" },
     { string: "" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" },
-    { string: "\177" }
+    { string: not_available },
+    { string: "" },
+    { string: "" },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available },
+    { string: not_available }
   }
 };

@@ -45,6 +45,7 @@ __BEGIN_DECLS
 #define mode_t __mode_t
 #define nlink_t __nlink_t
 #define off_t __off_t
+#define loff_t __loff_t
 #define pid_t __pid_t
 #define uid_t __uid_t
 #ifndef	ssize_t

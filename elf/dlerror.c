@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 
 static int last_errcode;
-static const char *last_errstring;
+static char *last_errstring;
 static const char *last_object_name;
 
 char *

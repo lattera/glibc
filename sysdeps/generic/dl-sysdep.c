@@ -31,21 +31,26 @@ Cambridge, MA 02139, USA.  */
 extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
+extern void _end;
 extern void _start (void);
 
 int __libc_enable_secure;
+int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
+				   of init-first.  */
 
 ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
 		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 				   ElfW(Addr) *user_entry))
 {
-  const ElfW(Phdr) *phdr;
-  ElfW(Word) phnum;
+  const ElfW(Phdr) *phdr = NULL;
+  ElfW(Word) phnum = 0;
   ElfW(Addr) user_entry;
   ElfW(auxv_t) *av;
-  uid_t uid, euid;
-  gid_t gid, egid;
+  uid_t uid = 0;
+  uid_t euid = 0;
+  gid_t gid = 0;
+  gid_t egid = 0;
   unsigned int seen;
 
   user_entry = (ElfW(Addr)) &_start;
@@ -102,6 +107,18 @@ _dl_sysdep_start (void **start_argptr,
 #ifdef DL_SYSDEP_INIT
   DL_SYSDEP_INIT;
 #endif
+
+  if (__sbrk (0) == &_end)
+    {
+      /* The dynamic linker was run as a program, and so the initial break
+	 starts just after our bss, at &_end.  The malloc in dl-minimal.c
+	 will consume the rest of this page, so tell the kernel to move the
+	 break up that far.  When the user program examines its break, it
+	 will see this new value and not clobber our data.  */
+      size_t pg = __getpagesize ();
+
+      __sbrk (pg - ((&_end - (void *) 0) & (pg - 1)));
+    }
 
   (*dl_main) (phdr, phnum, &user_entry);
   return user_entry;

@@ -241,6 +241,9 @@ __printf_fp (FILE *fp,
 		  strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT))) <= 0)
 	decimal = (wchar_t) *_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
     }
+  /* Give default value.  */
+  if (decimal == L'\0')
+    decimal = L'.';
 
 
   if (info->group)
@@ -249,7 +252,7 @@ __printf_fp (FILE *fp,
 	grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
       else
 	grouping = _NL_CURRENT (LC_MONETARY, MON_GROUPING);
-	
+
       if (*grouping <= 0 || *grouping == CHAR_MAX)
 	grouping = NULL;
       else
@@ -273,7 +276,7 @@ __printf_fp (FILE *fp,
 		thousands_sep = (wchar_t) *_NL_CURRENT (LC_MONETARY,
 							MON_THOUSANDS_SEP);
 	    }
-	    
+
 	  if (thousands_sep == L'\0')
 	    grouping = NULL;
 	}

@@ -38,22 +38,8 @@ __sbrk (ptrdiff_t increment)
      instances of __brk and __sbrk can share the heap, returning
      interleaved pieces of it.  */
   if (__curbrk == NULL || __libc_multiple_libcs)
-    {
-      extern void _end;
-
-      if (__brk (0) < 0)		/* Initialize the break.  */
-	return (void *) -1;
-
-      /* Align break address to page boundary if not happened before.  */
-      if (!__libc_multiple_libcs && __curbrk == &_end)
-	{
-	  size_t pg = __getpagesize ();
-	  ptrdiff_t rest = pg - ((&_end - (void *) 0) & (pg - 1));
-
-	  if (__brk (__curbrk + rest) < 0)
-	    return (void *) -1;
-	}
-    }
+    if (__brk (0) < 0)		/* Initialize the break.  */
+      return (void *) -1;
 
   if (increment == 0)
     return __curbrk;

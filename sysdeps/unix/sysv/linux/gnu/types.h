@@ -51,6 +51,7 @@ typedef __kernel_ino_t __ino_t;		/* Type of file serial numbers.  */
 typedef __kernel_mode_t __mode_t;	/* Type of file attribute bitmasks.  */
 typedef __kernel_nlink_t __nlink_t; 	/* Type of file link counts.  */
 typedef __kernel_off_t __off_t;		/* Type of file sizes and offsets.  */
+typedef __kernel_loff_t __loff_t;	/* Type of file sizes and offsets.  */
 typedef __kernel_pid_t __pid_t;		/* Type of process identifications.  */
 typedef __kernel_ssize_t __ssize_t;	/* Type of a byte count, or error.  */
 typedef __kernel_fsid_t __fsid_t;	/* Type of file system IDs.  */

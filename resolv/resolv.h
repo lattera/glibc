@@ -71,9 +71,9 @@
 #include <stdio.h>
 
 /*
- * revision information.  this is the release date in YYYYMMDD format.
- * it can change every day so the right thing to do with it is use it
- * in preprocessor commands such as "#if (__RES > 19931104)".  do not
+ * Revision information.  This is the release date in YYYYMMDD format.
+ * It can change every day so the right thing to do with it is use it
+ * in preprocessor commands such as "#if (__RES > 19931104)".  Do not
  * compare for equality; rather, use it to determine whether your resolver
  * is new enough to contain a certain feature.
  */
@@ -121,7 +121,7 @@ struct __res_state {
 		struct in_addr	addr;
 		u_int32_t	mask;
 	} sort_list[MAXRESOLVSORT];
-	char	pad[72];		/* On an i38this means 512b total. */
+	char	pad[72];		/* on an i386 this means 512b total */
 };
 
 /*

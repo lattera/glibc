@@ -25,6 +25,13 @@ ifneq (,)
 This makefile requires GNU Make.
 endif
 
+REQUIRED_MAKE_VERSION = 3.74
+
+ifneq ($(REQUIRED_MAKE_VERSION), \
+       $(firstword $(sort $(MAKE_VERSION) $(REQUIRED_MAKE_VERSION))))
+Wrong GNU Make version.  See above for the version needed.
+endif
+
 
 ifdef	subdir
 ..	:= ../

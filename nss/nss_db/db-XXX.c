@@ -34,7 +34,7 @@ Cambridge, MA 02139, USA.  */
 #define ENTNAME_r	CONCAT(ENTNAME,_r)
 
 #include <paths.h>
-#define	DBFILE		_PATH_VARDB DATABASE
+#define	DBFILE		_PATH_VARDB DATABASE ".db"
 
 #ifdef NEED_H_ERRNO
 #define H_ERRNO_PROTO	, int *herrnop
@@ -79,7 +79,7 @@ internal_setent (int stayopen)
 
 /* Thread-safe, exported version of that.  */
 int
-CONCAT(_nss_files_set,ENTNAME) (int stayopen)
+CONCAT(_nss_db_set,ENTNAME) (int stayopen)
 {
   int status;
 
@@ -110,7 +110,7 @@ internal_endent (void)
 
 /* Thread-safe, exported version of that.  */
 int
-CONCAT(_nss_files_end,ENTNAME) (void)
+CONCAT(_nss_db_end,ENTNAME) (void)
 {
   __libc_lock_lock (lock);
 
@@ -133,11 +133,13 @@ lookup (const DBT *key, struct STRUCTURE *result,
   DBT value;
 
   /* Open the database.  */
-  internal_setent (keep_db);
+  status = internal_setent (keep_db);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
 
   /* Succeed iff it matches a value that parses correctly.  */
   status = (((*db->get) (db, key, &value, 0) == 0 &&
-	     parse_line (value.data, result, buffer, buflen) == 0)
+	     parse_line (value.data, result, buffer, buflen))
 	    ? NSS_STATUS_SUCCESS : NSS_STATUS_NOTFOUND);
 
   if (! keep_db)
@@ -164,9 +166,9 @@ lookup (const DBT *key, struct STRUCTURE *result,
 
 #define DB_LOOKUP(name, keysize, keypattern, break_if_match, proto...)	      \
 enum nss_status								      \
-_nss_files_get##name##_r (proto,					      \
-			  struct STRUCTURE *result,			      \
-			  char *buffer, int buflen H_ERRNO_PROTO)	      \
+_nss_db_get##name##_r (proto,						      \
+		       struct STRUCTURE *result,			      \
+		       char *buffer, int buflen H_ERRNO_PROTO)		      \
 {									      \
   DBT key;								      \
   enum nss_status status;						      \
@@ -186,8 +188,8 @@ _nss_files_get##name##_r (proto,					      \
 
 /* Return the next entry from the database file, doing locking.  */
 enum nss_status
-CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
-				  char *buffer, int buflen H_ERRNO_PROTO)
+CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result,
+			       char *buffer, int buflen H_ERRNO_PROTO)
 {
   /* Return next entry in host file.  */
   enum nss_status status;

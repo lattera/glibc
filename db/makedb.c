@@ -39,15 +39,16 @@ static const struct option long_options[] =
   { "help", no_argument, NULL, 'h' },
   { "fold-case", no_argument, NULL, 'f' },
   { "output", required_argument, NULL, 'o' },
+  { "quiet", no_argument, NULL, 'q' },
   { "undo", no_argument, NULL, 'u' },
   { "version", no_argument, NULL, 'V' },
-  { NULL, }
+  { NULL, 0, NULL, 0}
 };
 
 /* Prototypes for local functions.  */
 static void usage __P ((int status)) __attribute__ ((noreturn));
 static int process_input __P ((FILE *input, const char *inname, DB *output,
-			       int to_lowercase));
+			       int to_lowercase, int be_quiet));
 static int print_database __P ((DB *db));
 
 
@@ -64,6 +65,7 @@ main (argc, argv)
   int do_version;
   int to_lowercase;
   int do_undo;
+  int be_quiet;
   int status;
   int opt;
 
@@ -78,6 +80,7 @@ main (argc, argv)
   do_version = 0;
   to_lowercase = 0;
   do_undo = 0;
+  be_quiet = 0;
   output_name = NULL;
 
   while ((opt = getopt_long (argc, argv, "fho:uV", long_options, NULL)) != EOF)
@@ -94,6 +97,9 @@ main (argc, argv)
       case 'o':
         output_name = optarg;
         break;
+      case 'q':
+	be_quiet = 1;
+	break;
       case 'u':
 	do_undo = 1;
 	break;
@@ -170,7 +176,8 @@ main (argc, argv)
     error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"));
 
   /* Start the real work.  */
-  status = process_input (input_file, input_name, db_file, to_lowercase);
+  status = process_input (input_file, input_name, db_file, to_lowercase,
+			  be_quiet);
 
   /* Close files.  */
   if (input_file != stdin)
@@ -197,6 +204,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -f, --fold-case     convert key to lower case\n\
   -h, --help          display this help and exit\n\
   -o, --output=NAME   write output to file NAME\n\
+      --quiet         don't print messages while building database\n\
   -u, --undo          print content of database file, one entry a line\n\
   -V, --version       output version information and exit\n\
 If INPUT-FILE is -, input is read from standard input.\n"),
@@ -208,11 +216,12 @@ If INPUT-FILE is -, input is read from standard input.\n"),
 
 
 static int
-process_input (input, inname, output, to_lowercase)
+process_input (input, inname, output, to_lowercase, be_quiet)
      FILE *input;
      const char *inname;
      DB *output;
      int to_lowercase;
+     int be_quiet;
 {
   char *line;
   size_t linelen;
@@ -278,11 +287,18 @@ process_input (input, inname, output, to_lowercase)
       if (status != 0)
 	{
 	  if (status == 1)
-	    error_at_line (0, 0, inname, linenr, gettext ("duplicate key"));
+	    {
+	      if (!be_quiet)
+		error_at_line (0, 0, inname, linenr,
+			       gettext ("duplicate key"));
+	      /* This is no real error.  Just give a warning.  */
+	      status = 0;
+	    }
 	  else
 	    error (0, errno, gettext ("while writing data base file"));
 
-	  status = EXIT_FAILURE;
+	  status = status ? EXIT_FAILURE : EXIT_SUCCESS;
+
 	  clearerr (input);
 	  break;
 	}

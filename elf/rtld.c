@@ -38,6 +38,12 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Addr) *user_entry));
 extern void _dl_sysdep_start_cleanup (void);
 
+/* System-dependent function to read a file's whole contents
+   in the most convenient manner available.  */
+extern void *_dl_sysdep_read_whole_file (const char *filename,
+					 size_t *filesize_ptr,
+					 int mmap_prot);
+
 int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
@@ -138,6 +144,8 @@ dl_main (const ElfW(Phdr) *phdr,
   enum { normal, list, verify, trace } mode;
   struct link_map **preloads;
   unsigned int npreloads;
+  size_t file_size;
+  char *file;
 
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
 
@@ -296,8 +304,77 @@ of this helper program; chances are you did not intend to run this program.\n",
   l->l_next = &_dl_rtld_map;
   _dl_rtld_map.l_prev = l;
 
+  /* We have two ways to specify objects to preload: via environment
+     variable and via the file /etc/ld.so.preload.  The later can also
+     be used when security is enabled.  */
   preloads = NULL;
   npreloads = 0;
+
+  /* Read the contents of the file.  */
+  file = _dl_sysdep_read_whole_file ("/etc/ld.so.preload", &file_size,
+				     PROT_READ | PROT_WRITE);
+  if (file)
+    {
+      /* Parse the file.  It contains names of libraries to be loaded,
+	 separated by white spaces or `:'.  It may also contain
+	 comments introduced by `#'.  */
+      char *problem;
+      char *runp;
+      size_t rest;
+
+      /* Eliminate comments.  */
+      runp = file;
+      rest = file_size;
+      while (rest > 0)
+	{
+	  char *comment = memchr (runp, '#', rest);
+	  if (comment == NULL)
+	    break;
+
+	  rest -= comment - runp;
+	  do
+	    *comment = ' ';
+	  while (--rest > 0 && *++comment != '\n');
+	}
+
+      /* We have one problematic case: if we have a name at the end of
+	 the file without a trailing terminating characters, we cannot
+	 place the \0.  Handle the case separately.  */
+      if (file[file_size - 1] != ' ' && file[file_size] != '\t'
+	  && file[file_size] != '\n')
+	{
+	  problem = &file[file_size];
+	  while (problem > file && problem[-1] != ' ' && problem[-1] != '\t'
+		 && problem[-1] != '\n')
+	    --problem;
+
+	  if (problem > file)
+	    problem[-1] = '\0';
+	}
+      else
+	problem = NULL;
+
+      if (file != problem)
+	{
+	  char *p;
+	  runp = file;
+	  while ((p = strsep (&runp, ": \t\n")) != NULL)
+	    {
+	      (void) _dl_map_object (NULL, p, lt_library);
+	      ++npreloads;
+	    }
+	}
+
+      if (problem != NULL)
+	{
+	  char *p = strndupa (problem, file_size - (problem - file));
+	  (void) _dl_map_object (NULL, p, lt_library);
+	}
+
+      /* We don't need the file anymore.  */
+      __munmap (file, file_size);
+    }
+
   if (! __libc_enable_secure)
     {
       const char *preloadlist = getenv ("LD_PRELOAD");
@@ -313,23 +390,23 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      (void) _dl_map_object (NULL, p, lt_library);
 	      ++npreloads;
 	    }
-
-	  if (npreloads != 0)
-	    {
-	      /* Set up PRELOADS with a vector of the preloaded libraries.  */
-	      struct link_map *l;
-	      unsigned int i;
-	      preloads = __alloca (npreloads * sizeof preloads[0]);
-	      l = _dl_rtld_map.l_next; /* End of the chain before preloads.  */
-	      i = 0;
-	      do
-		{
-		  preloads[i++] = l;
-		  l = l->l_next;
-		} while (l);
-	      assert (i == npreloads);
-	    }
 	}
+    }
+
+  if (npreloads != 0)
+    {
+      /* Set up PRELOADS with a vector of the preloaded libraries.  */
+      struct link_map *l;
+      unsigned int i;
+      preloads = __alloca (npreloads * sizeof preloads[0]);
+      l = _dl_rtld_map.l_next; /* End of the chain before preloads.  */
+      i = 0;
+      do
+	{
+	  preloads[i++] = l;
+	  l = l->l_next;
+	} while (l);
+      assert (i == npreloads);
     }
 
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
@@ -386,7 +463,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    char buf[20], *bp;
 	    buf[sizeof buf - 1] = '\0';
 	    bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
-	    while (&buf[sizeof buf - 1] - bp < sizeof l->l_addr * 2)
+	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof l->l_addr * 2)
 	      *--bp = '0';
 	    _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
 				" (0x", bp, ")\n", NULL);
@@ -403,12 +480,12 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    char buf[20], *bp;
 	    buf[sizeof buf - 1] = '\0';
 	    bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
-	    while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
+	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof loadbase * 2)
 	      *--bp = '0';
 	    _dl_sysdep_message (_dl_argv[i], " found at 0x", bp, NULL);
 	    buf[sizeof buf - 1] = '\0';
 	    bp = _itoa (loadbase, &buf[sizeof buf - 1], 16, 0);
-	    while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
+	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof loadbase * 2)
 	      *--bp = '0';
 	    _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);
 	  }
