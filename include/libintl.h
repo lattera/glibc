@@ -30,10 +30,10 @@ extern const char _libc_intl_domainname_internal[] attribute_hidden;
 /* This is defined as an optimizing macro, so use it.  */
 # if !defined NOT_IN_libc && defined SHARED
 #  define _(msgid) \
-  __dcgettext_internal (_libc_intl_domainname_internal, (msgid), LC_MESSAGES)
+  __dcgettext_internal (_libc_intl_domainname_internal, msgid, LC_MESSAGES)
 # else
 #  define _(msgid) \
-  __dcgettext (_libc_intl_domainname, (msgid), LC_MESSAGES)
+  __dcgettext (_libc_intl_domainname, msgid, LC_MESSAGES)
 #endif
 
 #endif

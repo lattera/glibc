@@ -1214,7 +1214,8 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
   assert (2 + elem + offset == (nelems + 2 * ctype->nr_charclass
 				+ ctype->map_collection_nr + 4 + 2));
 
-  write_locale_data (output_path, "LC_CTYPE", 2 + elem + offset, iov);
+  write_locale_data (output_path, LC_CTYPE, "LC_CTYPE", 2 + elem + offset,
+		     iov);
 }
 
 

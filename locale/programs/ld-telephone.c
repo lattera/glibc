@@ -218,7 +218,7 @@ telephone_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_TELEPHONE));
 
-  write_locale_data (output_path, "LC_TELEPHONE",
+  write_locale_data (output_path, LC_TELEPHONE, "LC_TELEPHONE",
 		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_TELEPHONE), iov);
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -46,6 +46,8 @@ extern int iterate_table (const hash_table *htab, void **ptr,
 			  const void **key, size_t *keylen, void **data)
      __THROW;
 
+extern unsigned long int compute_hashval (const void *key, size_t keylen)
+     __THROW;
 extern unsigned long int next_prime (unsigned long int seed) __THROW;
 
 #endif /* simple-hash.h */

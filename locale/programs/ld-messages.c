@@ -226,7 +226,7 @@ messages_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (cnt + 1 == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_MESSAGES));
 
-  write_locale_data (output_path, "LC_MESSAGES",
+  write_locale_data (output_path, LC_MESSAGES, "LC_MESSAGES",
 		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_MESSAGES), iov);
 }
 

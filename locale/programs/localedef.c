@@ -27,6 +27,7 @@
 #include <libintl.h>
 #include <locale.h>
 #include <mcheck.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,7 +57,8 @@ int verbose;
 /* If not zero suppress warnings and information messages.  */
 int be_quiet;
 
-/* If not zero, produce old-style hash table instead of 3-level access tables.  */
+/* If not zero, produce old-style hash table instead of 3-level access
+   tables.  */
 int oldstyle_tables;
 
 /* If not zero force output even if warning were issued.  */
@@ -77,15 +79,38 @@ const char *repertoire_global;
 /* List of all locales.  */
 static struct localedef_t *locales;
 
+/* If true don't add locale data to archive.  */
+bool no_archive;
+
+/* If true add named locales to archive.  */
+static bool add_to_archive;
+
+/* If true delete named locales from archive.  */
+static bool delete_from_archive;
+
+/* If true replace archive content when adding.  */
+static bool replace_archive;
+
+/* If true list archive content.  */
+static bool list_archive;
+
+/* Maximum number of retries when opening the locale archive.  */
+int max_locarchive_open_retry = 10;
+
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
-#define OPT_POSIX 1
-#define OPT_QUIET 2
-#define OPT_OLDSTYLE 3
-#define OPT_PREFIX 4
+#define OPT_POSIX 301
+#define OPT_QUIET 302
+#define OPT_OLDSTYLE 303
+#define OPT_PREFIX 304
+#define OPT_NO_ARCHIVE 305
+#define OPT_ADD_TO_ARCHIVE 306
+#define OPT_REPLACE 307
+#define OPT_DELETE_FROM_ARCHIVE 308
+#define OPT_LIST_ARCHIVE 309
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -106,6 +131,15 @@ static const struct argp_option options[] =
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
   { "verbose", 'v', NULL, 0, N_("Print more messages") },
+  { NULL, 0, NULL, 0, N_("Archive control:") },
+  { "no-archive", OPT_NO_ARCHIVE, NULL, 0,
+    N_("Don't add new data to archive") },
+  { "add-to-archive", OPT_ADD_TO_ARCHIVE, NULL, 0,
+    N_("Add locales named by parameters to archive") },
+  { "replace", OPT_REPLACE, NULL, 0, N_("Replace existing archive content") },
+  { "delete-from-archive", OPT_DELETE_FROM_ARCHIVE, NULL, 0,
+    N_("Remove locales named by parameters from archive") },
+  { "list-archive", OPT_LIST_ARCHIVE, NULL, 0, N_("List content of archive") },
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -113,7 +147,10 @@ static const struct argp_option options[] =
 static const char doc[] = N_("Compile locale specification");
 
 /* Strings for arguments in help texts.  */
-static const char args_doc[] = N_("NAME");
+static const char args_doc[] = N_("\
+NAME\n\
+[--add-to-archive|--delete-from-archive] FILE...\n\
+--list-archive [FILE]");
 
 /* Prototype for option handler.  */
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
@@ -163,6 +200,15 @@ main (int argc, char *argv[])
   argp_err_exit_status = 4;
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
+  /* Handle a few special cases.  */
+  if (list_archive)
+    show_archive_content ();
+  if (add_to_archive)
+    return add_locales_to_archive (argc - remaining, &argv[remaining],
+				   replace_archive);
+  if (delete_from_archive)
+    return delete_locales_from_archive (argc - remaining, &argv[remaining]);
+
   /* POSIX.2 requires to be verbose about missing characters in the
      character map.  */
   verbose |= posix_conformance;
@@ -177,10 +223,18 @@ main (int argc, char *argv[])
 
   /* The parameter describes the output path of the constructed files.
      If the described files cannot be written return a NULL pointer.  */
-  output_path  = construct_output_path (argv[remaining]);
-  if (output_path == NULL)
-    error (4, errno, _("cannot create directory for output files"));
-  cannot_write_why = errno;
+  if (no_archive)
+    {
+      output_path  = construct_output_path (argv[remaining]);
+      if (output_path == NULL)
+	error (4, errno, _("cannot create directory for output files"));
+      cannot_write_why = errno;
+    }
+  else
+    {
+      output_path = NULL;
+      cannot_write_why = 0;	/* Just to shut the compiler up.  */
+    }
 
   /* Now that the parameters are processed we have to reset the local
      ctype locale.  (P1003.2 4.35.5.2)  */
@@ -235,7 +289,7 @@ cannot open locale definition file `%s'"), runp->name));
 	WITH_CUR_LOCALE (error (4, cannot_write_why, _("\
 cannot write output files to `%s'"), output_path));
       else
-	write_all_categories (locales, charmap, output_path);
+	write_all_categories (locales, charmap, argv[remaining], output_path);
     }
   else
     WITH_CUR_LOCALE (error (4, 0, _("\
@@ -263,6 +317,21 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case OPT_PREFIX:
       output_prefix = arg;
+      break;
+    case OPT_NO_ARCHIVE:
+      no_archive = true;
+      break;
+    case OPT_ADD_TO_ARCHIVE:
+      add_to_archive = true;
+      break;
+    case OPT_REPLACE:
+      replace_archive = true;
+      break;
+    case OPT_DELETE_FROM_ARCHIVE:
+      delete_from_archive = true;
+      break;
+    case OPT_LIST_ARCHIVE:
+      list_archive = true;
       break;
     case 'c':
       force_output = 1;
@@ -392,6 +461,10 @@ construct_output_path (char *path)
       size_t len = strlen (path) + 1;
       result = xmalloc (len + 1);
       endp = mempcpy (result, path, len) - 1;
+
+      /* If the user specified an output path we cannot add the output
+	 to the archive.  */
+      no_archive = true;
     }
 
   errno = 0;

@@ -906,7 +906,7 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		  + 2 + time->num_era * 10 - 1));
   assert (last_idx  == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
-  write_locale_data (output_path, "LC_TIME", 2 + cnt, iov);
+  write_locale_data (output_path, LC_TIME, "LC_TIME", 2 + cnt, iov);
 }
 
 

@@ -187,7 +187,7 @@ numeric_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (cnt + 1 == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC));
 
-  write_locale_data (output_path, "LC_NUMERIC",
+  write_locale_data (output_path, LC_NUMERIC, "LC_NUMERIC",
 		     3 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC), iov);
 }
 

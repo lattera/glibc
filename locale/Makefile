@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,1995-1999,2000,2001,2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 		  iso-4217.def weight.h weightwc.h strlen-hash.h elem-hash.h \
 		  indigits.h indigitswc.h outdigits.h outdigitswc.h \
 		  coll-lookup.h C-translit.h.in C-translit.h gen-translit.pl \
+		  locarchive.h \
 		  $(addprefix programs/, \
 			      locale.c localedef.c \
 			      $(localedef-modules:=.c) $(locale-modules:=.c) \
@@ -33,7 +34,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 			      charmap-kw.gperf charmap-kw.h locfile-token.h \
 			      locfile-kw.gperf locfile-kw.h linereader.h \
 			      locfile.h charmap.h repertoire.h localedef.h \
-			      3level.h charmap-dir.h)
+			      3level.h charmap-dir.h locarchive.c)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  nl_langinfo_l mb_cur_max \
 		  newlocale duplocale freelocale
@@ -54,12 +55,12 @@ extra-libs-others = $(extra-libs)
 libBrokenLocale-routines = broken_cur_max
 
 subdir-dirs	= programs
-vpath %.c programs
+vpath %.c programs ../crypt
 vpath %.h programs
 vpath %.gperf programs
 
 localedef-modules	:= $(categories:%=ld-%) charmap linereader locfile \
-			   repertoire
+			   repertoire md5 locarchive
 locale-modules		:= locale-spec
 lib-modules		:= charmap-dir simple-hash xmalloc xstrdup
 

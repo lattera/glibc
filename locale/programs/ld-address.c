@@ -422,7 +422,7 @@ address_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (cnt == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS));
 
-  write_locale_data (output_path, "LC_ADDRESS",
+  write_locale_data (output_path, LC_ADDRESS, "LC_ADDRESS",
 		     3 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS), iov);
 }
 

@@ -154,7 +154,7 @@ paper_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_PAPER));
 
-  write_locale_data (output_path, "LC_PAPER",
+  write_locale_data (output_path, LC_PAPER, "LC_PAPER",
 		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_PAPER), iov);
 }
 

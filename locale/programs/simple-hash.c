@@ -1,5 +1,5 @@
 /* Implement simple hashing table with string based keys.
-   Copyright (C) 1994-1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, October 1994.
 
@@ -54,6 +54,8 @@
 # define bcopy(s, d, n)	memcpy ((d), (s), (n))
 #endif
 
+#include "hashval.h"
+
 extern void *xmalloc (size_t __n);
 extern void *xcalloc (size_t __n, size_t __m);
 
@@ -72,7 +74,6 @@ static void insert_entry_2 (hash_table *htab, const void *key, size_t keylen,
 			    unsigned long hval, size_t idx, void *data);
 static size_t lookup (const hash_table *htab, const void *key, size_t keylen,
 		      unsigned long int hval);
-static unsigned long compute_hashval (const void *key, size_t keylen);
 static int is_prime (unsigned long int candidate);
 
 
@@ -297,30 +298,7 @@ lookup (htab, key, keylen, hval)
 }
 
 
-static unsigned long
-compute_hashval (key, keylen)
-     const void *key;
-     size_t keylen;
-{
-  size_t cnt;
-  unsigned long int hval;
-
-  /* Compute the hash value for the given string.  The algorithm
-     is taken from [Aho,Sethi,Ullman], modified to reduce the number of
-     collisions for short strings with very varied bit patterns.
-     See http://www.clisp.org/haible/hashfunc.html.  */
-  cnt = 0;
-  hval = keylen;
-  while (cnt < keylen)
-    {
-      hval = (hval << 9) | (hval >> (LONGBITS - 9));
-      hval += (unsigned long int) *(((char *) key) + cnt++);
-    }
-  return hval != 0 ? hval : ~((unsigned long) 0);
-}
-
-
-unsigned long
+unsigned long int
 next_prime (seed)
      unsigned long int seed;
 {

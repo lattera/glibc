@@ -210,7 +210,7 @@ name_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_NAME));
 
-  write_locale_data (output_path, "LC_NAME",
+  write_locale_data (output_path, LC_NAME, "LC_NAME",
 		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_NAME), iov);
 }
 

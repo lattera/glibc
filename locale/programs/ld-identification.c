@@ -291,7 +291,8 @@ identification_output (struct localedef_t *locale,
   assert (cnt == (2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)
 		  + (__LC_LAST - 2)));
 
-  write_locale_data (output_path, "LC_IDENTIFICATION", cnt, iov);
+  write_locale_data (output_path, LC_IDENTIFICATION, "LC_IDENTIFICATION", cnt,
+		     iov);
 }
 
 

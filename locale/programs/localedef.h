@@ -1,5 +1,5 @@
 /* General definitions for localedef(1).
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -22,11 +22,13 @@
 #define _LOCALEDEF_H	1
 
 /* Get the basic locale definitions.  */
-#include <locale.h>
-#include <stddef.h>
 #include <errno.h>
+#include <locale.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 #include "repertoire.h"
+#include "../locarchive.h"
 
 
 /* We need a bitmask for the locales.  */
@@ -114,6 +116,8 @@ extern int verbose;
 extern int be_quiet;
 extern int oldstyle_tables;
 extern const char *repertoire_global;
+extern int max_locarchive_open_retry;
+extern bool no_archive;
 
 
 /* Prototypes for a few program-wide used functions.  */
@@ -152,5 +156,25 @@ extern struct localedef_t *load_locale (int locale, const char *name,
 					const char *repertoire_name,
 					const struct charmap_t *charmap,
 					struct localedef_t *copy_locale);
+
+
+/* Open the locale archive.  */
+extern void open_archive (struct locarhandle *ah);
+
+/* Close the locale archive.  */
+extern void close_archive (struct locarhandle *ah);
+
+/* Add given locale data to the archive.  */
+extern int add_locale_to_archive (struct locarhandle *ah, const char *name,
+				  locale_data_t data, bool replace);
+
+/* Add content of named directories to locale archive.  */
+extern int add_locales_to_archive (size_t nlist, char *list[], bool replace);
+
+/* Removed named locales from archive.  */
+extern int delete_locales_from_archive (size_t nlist, char *list[]);
+
+/* List content of locale archive.  */
+extern void show_archive_content (void);
 
 #endif /* localedef.h */

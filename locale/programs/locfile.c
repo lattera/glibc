@@ -30,10 +30,16 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 
+#include "../../crypt/md5.h"
 #include "localedef.h"
 #include "locfile.h"
+#include "simple-hash.h"
 
 #include "locfile-kw.h"
+
+
+/* Temporary storage of the locale data before writing it to the archive.  */
+static locale_data_t to_archive;
 
 
 int
@@ -312,9 +318,10 @@ static void (*const write_funcs[]) (struct localedef_t *,
   [LC_IDENTIFICATION] = identification_output
 };
 
+
 void
 write_all_categories (struct localedef_t *definitions,
-		      const struct charmap_t *charmap,
+		      const struct charmap_t *charmap, const char *locname,
 		      const char *output_path)
 {
   int cnt;
@@ -322,7 +329,24 @@ write_all_categories (struct localedef_t *definitions,
   for (cnt = 0; cnt < sizeof (write_funcs) / sizeof (write_funcs[0]); ++cnt)
     if (write_funcs[cnt] != NULL)
       write_funcs[cnt] (definitions, charmap, output_path);
+
+  if (! no_archive)
+    {
+      /* The data has to be added to the archive.  Do this now.  */
+      struct locarhandle ah;
+
+      /* Open the archive.  This call never returns if we cannot
+	 successfully open the archive.  */
+      open_archive (&ah);
+
+      if (add_locale_to_archive (&ah, locname, to_archive, true) != 0)
+	error (EXIT_FAILURE, errno, _("cannot add to locale archive"));
+
+      /* We are done.  */
+      close_archive (&ah);
+    }
 }
+
 
 /* Return a NULL terminated list of the directories next to output_path
    that have the same owner, group, permissions and device as output_path.  */
@@ -408,6 +432,7 @@ siblings_uncached (const char *output_path)
   return elems;
 }
 
+
 /* Return a NULL terminated list of the directories next to output_path
    that have the same owner, group, permissions and device as output_path.
    Cache the result for future calls.  */
@@ -434,6 +459,7 @@ siblings (const char *output_path)
   return last_result;
 }
 
+
 /* Read as many bytes from a file descriptor as possible.  */
 static ssize_t
 full_read (int fd, void *bufarea, size_t nbyte)
@@ -456,6 +482,7 @@ full_read (int fd, void *bufarea, size_t nbyte)
     }
   return buf - (char *) bufarea;
 }
+
 
 /* Compare the contents of two regular files of the same size.  Return 0
    if they are equal, 1 if they are different, or -1 if an error occurs.  */
@@ -506,15 +533,42 @@ compare_files (const char *filename1, const char *filename2, size_t size,
   return ret;
 }
 
+
 /* Write a locale file, with contents given by N_ELEM and VEC.  */
 void
-write_locale_data (const char *output_path, const char *category,
+write_locale_data (const char *output_path, int catidx, const char *category,
 		   size_t n_elem, struct iovec *vec)
 {
   size_t cnt, step, maxiov;
   int fd;
   char *fname;
   const char **other_paths;
+
+  if (! no_archive)
+    {
+      /* The data will be added to the archive.  For now we simply
+	 generate the image which will be written.  First determine
+	 the size.  */
+      int cnt;
+      void *endp;
+
+      to_archive[catidx].size = 0;
+      for (cnt = 0; cnt < n_elem; ++cnt)
+	to_archive[catidx].size += vec[cnt].iov_len;
+
+      /* Allocate the memory for it.  */
+      to_archive[catidx].addr = xmalloc (to_archive[catidx].size);
+
+      /* Fill it in.  */
+      for (cnt = 0, endp = to_archive[catidx].addr; cnt < n_elem; ++cnt)
+	endp = mempcpy (endp, vec[cnt].iov_base, vec[cnt].iov_len);
+
+      /* Compute the MD5 sum for the data.  */
+      __md5_buffer (to_archive[catidx].addr, to_archive[catidx].size,
+		    to_archive[catidx].sum);
+
+      return;
+    }
 
   fname = xmalloc (strlen (output_path) + 2 * strlen (category) + 7);
 
@@ -680,8 +734,7 @@ failure while writing data for category `%s'"), category));
 			  char * tmp_fname =
 			    (char *) xmalloc (strlen (fname) + 4 + 1);
 
-			  strcpy (tmp_fname, fname);
-			  strcat (tmp_fname, ".tmp");
+			  strcpy (stpcpy (tmp_fname, fname), ".tmp");
 
 			  if (link (other_fname, tmp_fname) >= 0)
 			    {

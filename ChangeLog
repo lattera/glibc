@@ -1,3 +1,46 @@
+2002-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locfile.c (to_archive): New variable.  To collect
+	data which has to be added to the locale archive.
+	(write_all_categories): Take new third parameter with locale name.
+	Unless no_archive flag set add new locale data to the archive
+	(write_locale_data): Unless no-archive flag set store generated data
+	in to_archive data structure instead of generation output file.
+	Add new parameter with locale category index.
+	* locale/programs/locfile.h: Add new parameters in declaractions of
+	write_all_categories and write_locale_data.
+	* locale/programs/localedef.c: Recognize --no-archive, --list-archive,
+	--add-to-archive, and --delete-from-archive options.  Pass extra
+	parameter to write_all_categories.
+	* locale/programs/localedef.h: Add prototypes for functions in
+	locarchive.c.
+	* locale/locarchive.h: New file.
+	* locale/programs/locarchive.c: New file.
+	* locale/Makefile (distribute): Add programs/locarchive.c and
+	locarchive.h.
+	(localedef-modules): Add md5 and locarchive.
+	Add vpath to crypt subdir for md5.c.
+
+	* locale/programs/ld-address.c: Pass locale category ID as new second
+	parameter to write_locale_data.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+
+	* locale/simple-hash.c: Move compute_hashval function from here...
+	* locale/hashval.h: ...to here.  New file.
+	* locale/simple-hash.h: Add prototype for compute_hashval.
+
+	* include/libintl.h: Minor cleanups.
+
 2002-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c (gettext): Use INTUSE for _libc_intl_domainname.
@@ -13,10 +56,10 @@
 
 2002-02-17  Andreas Schwab  <schwab@suse.de>
 
-	* reldep7.c: New file.
-	* reldep7mod1.c: New file.
-	* reldep7mod2.c: New file.
-	* Makefile: Add rules to build and run reldep7.
+	* elf/reldep7.c: New file.
+	* elf/reldep7mod1.c: New file.
+	* elf/reldep7mod2.c: New file.
+	* elf/Makefile: Add rules to build and run reldep7.
 
 2002-04-14  Jakub Jelinek  <jakub@redhat.com>
 

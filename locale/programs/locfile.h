@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -115,11 +115,13 @@ extern void check_all_categories (struct localedef_t *definitions,
 /* Write out all locale categories.  */
 extern void write_all_categories (struct localedef_t *definitions,
 				  const struct charmap_t *charmap,
+				  const char *locname,
 				  const char *output_path);
 
 /* Write out the data.  */
-extern void write_locale_data (const char *output_path, const char *category,
-			       size_t n_elem, struct iovec *vec);
+extern void write_locale_data (const char *output_path, int catidx,
+			       const char *category, size_t n_elem,
+			       struct iovec *vec);
 
 
 /* Entrypoints for the parsers of the individual categories.  */

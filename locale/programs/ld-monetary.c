@@ -612,7 +612,7 @@ monetary_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
   assert (cnt == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY));
 
-  write_locale_data (output_path, "LC_MONETARY",
+  write_locale_data (output_path, LC_MONETARY, "LC_MONETARY",
 		     3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY), iov);
 }
 

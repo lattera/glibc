@@ -150,7 +150,7 @@ measurement_output (struct localedef_t *locale,
 
   assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT));
 
-  write_locale_data (output_path, "LC_MEASUREMENT",
+  write_locale_data (output_path, LC_MEASUREMENT, "LC_MEASUREMENT",
 		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_MEASUREMENT), iov);
 }
 
