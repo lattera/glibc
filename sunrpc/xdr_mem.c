@@ -48,7 +48,7 @@ static bool_t xdrmem_getbytes (XDR *, caddr_t, u_int);
 static bool_t xdrmem_putbytes (XDR *, const char *, u_int);
 static u_int xdrmem_getpos (const XDR *);
 static bool_t xdrmem_setpos (XDR *, u_int);
-static int32_t *xdrmem_inline (XDR *, int);
+static int32_t *xdrmem_inline (XDR *, u_int);
 static void xdrmem_destroy (XDR *);
 static bool_t xdrmem_getint32 (XDR *, int32_t *);
 static bool_t xdrmem_putint32 (XDR *, const int32_t *);
@@ -191,11 +191,11 @@ xdrmem_setpos (xdrs, pos)
  * xdrs modified
  */
 static int32_t *
-xdrmem_inline (XDR *xdrs, int len)
+xdrmem_inline (XDR *xdrs, u_int len)
 {
   int32_t *buf = 0;
 
-  if (xdrs->x_handy >= (u_int) len)
+  if (xdrs->x_handy >= len)
     {
       xdrs->x_handy -= len;
       buf = (int32_t *) xdrs->x_private;

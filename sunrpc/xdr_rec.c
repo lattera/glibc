@@ -61,7 +61,7 @@ static bool_t xdrrec_getbytes (XDR *, caddr_t, u_int);
 static bool_t xdrrec_putbytes (XDR *, const char *, u_int);
 static u_int xdrrec_getpos (const XDR *);
 static bool_t xdrrec_setpos (XDR *, u_int);
-static int32_t *xdrrec_inline (XDR *, int);
+static int32_t *xdrrec_inline (XDR *, u_int);
 static void xdrrec_destroy (XDR *);
 static bool_t xdrrec_getint32 (XDR *, int32_t *);
 static bool_t xdrrec_putint32 (XDR *, const int32_t *);
@@ -373,7 +373,7 @@ xdrrec_setpos (XDR *xdrs, u_int pos)
 }
 
 static int32_t *
-xdrrec_inline (XDR *xdrs, int len)
+xdrrec_inline (XDR *xdrs, u_int len)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   int32_t *buf = NULL;

@@ -55,7 +55,7 @@ static bool_t xdrstdio_getbytes (XDR *, caddr_t, u_int);
 static bool_t xdrstdio_putbytes (XDR *, const char *, u_int);
 static u_int xdrstdio_getpos (const XDR *);
 static bool_t xdrstdio_setpos (XDR *, u_int);
-static int32_t *xdrstdio_inline (XDR *, int);
+static int32_t *xdrstdio_inline (XDR *, u_int);
 static void xdrstdio_destroy (XDR *);
 static bool_t xdrstdio_getint32 (XDR *, int32_t *);
 static bool_t xdrstdio_putint32 (XDR *, const int32_t *);
@@ -157,7 +157,7 @@ xdrstdio_setpos (XDR *xdrs, u_int pos)
 }
 
 static int32_t *
-xdrstdio_inline (XDR *xdrs, int len)
+xdrstdio_inline (XDR *xdrs, u_int len)
 {
   /*
    * Must do some work to implement this: must insure
