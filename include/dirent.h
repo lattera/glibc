@@ -1,4 +1,5 @@
 #ifndef _DIRENT_H
+# include <dirstream.h>
 # include <dirent/dirent.h>
 
 /* Now define the internal interfaces.  */

@@ -1712,11 +1712,11 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 	    {
 	      char *buf;
 
-	      asprintf (&buf, fmt, ap);
+	      __asprintf (&buf, fmt, ap);
 
-	      fwprintf (stream, L"%s: %s\n",
-			state ? state->name : program_invocation_short_name,
-			buf);
+	      __fwprintf (stream, L"%s: %s\n",
+			  state ? state->name : program_invocation_short_name,
+			  buf);
 
 	      free (buf);
 	    }
@@ -1787,9 +1787,9 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 		{
 		  char *buf;
 
-		  asprintf (&buf, fmt, ap);
+		  __asprintf (&buf, fmt, ap);
 
-		  fwprintf (stream, L": %s", buf);
+		  __fwprintf (stream, L": %s", buf);
 
 		  free (buf);
 		}
@@ -1811,8 +1811,8 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stream, 0) > 0)
-		fwprintf (stream, ": %s",
-			  __strerror_r (errnum, buf, sizeof (buf)));
+		__fwprintf (stream, ": %s",
+			    __strerror_r (errnum, buf, sizeof (buf)));
 	      else
 #endif
 		{
