@@ -1,5 +1,5 @@
 /* FPU control word bits.  i387 version.
-   Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe.
 
@@ -50,7 +50,7 @@
  * IC: Infinity control
  * That is for 8087 and 80287 only.
  *
- * The hardware default is 0x037f. I choose 0x1372.
+ * The hardware default is 0x037f which we use.
  */
 
 #include <features.h>
@@ -80,10 +80,10 @@
 /* The fdlibm code requires strict IEEE double precision arithmetic,
    and no interrupts for exceptions, rounding to nearest.  */
 
-#define _FPU_DEFAULT  0x137f
+#define _FPU_DEFAULT  0x037f
 
 /* IEEE:  same as above.  */
-#define _FPU_IEEE     0x137f
+#define _FPU_IEEE     0x037f
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));

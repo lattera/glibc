@@ -79,7 +79,7 @@ include ../Makeconfig
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
-	test-misc
+	test-misc test-fpucw
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl

@@ -60,6 +60,8 @@ __md5_crypt_r (key, salt, buffer, buflen)
   size_t key_len;
   size_t cnt;
   char *cp;
+  int key_copied = 0;
+  int salt_copied = 0;
 
   /* Find beginning of salt string.  The prefix should normally always
      be present.  Just in case it is not.  */
@@ -77,6 +79,7 @@ __md5_crypt_r (key, salt, buffer, buflen)
 		    - (tmp - (char *) 0) % __alignof__ (md5_uint32),
 		    key, key_len);
       assert ((key - (char *) 0) % __alignof__ (md5_uint32) == 0);
+      key_copied = 1;
     }
 
   if ((salt - (char *) 0) % __alignof__ (md5_uint32) != 0)
@@ -86,6 +89,7 @@ __md5_crypt_r (key, salt, buffer, buflen)
 		     - (tmp - (char *) 0) % __alignof__ (md5_uint32),
 		     salt, salt_len);
       assert ((salt - (char *) 0) % __alignof__ (md5_uint32) == 0);
+      salt_copied = 1;
     }
 
   /* Prepare for the real work.  */
@@ -215,8 +219,16 @@ __md5_crypt_r (key, salt, buffer, buflen)
 
   /* Clear the buffer for the intermediate result so that people
      attaching to processes or reading core dumps cannot get any
-     information.  */
-  memset (alt_result, '\0', sizeof (alt_result));
+     information.  We do it in this way to clear correct_words[]
+     inside the MD5 implementation as well.  */
+  __md5_init_ctx (&ctx);
+  __md5_finish_ctx (&ctx, alt_result);
+  memset (&ctx, '\0', sizeof (ctx));
+  memset (&alt_ctx, '\0', sizeof (alt_ctx));
+  if (key_copied)
+    memset (key, '\0', key_len);
+  if (salt_copied)
+    memset (salt, '\0', salt_len);
 
   return buffer;
 }

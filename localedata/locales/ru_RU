@@ -23,7 +23,7 @@ escape_char  /
 LC_IDENTIFICATION
 title      "Russian locale for Russia"
 source     "RAP"
-address    "Sankt Jo<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+address    "Sankt Jorgens Alle 8, DK-1615 Kobenhavn V, Danmark"
 contact    ""
 email      "bug-glibc@gnu.org"
 tel        ""

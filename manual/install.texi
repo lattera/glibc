@@ -15,9 +15,9 @@ Features can be added to GNU Libc via @dfn{add-on} bundles.  These are
 separate tarfiles which you unpack into the top level of the source
 tree.  Then you give @code{configure} the @samp{--enable-add-ons} option
 to activate them, and they will be compiled into the library.  As of the
-2.1 release, two important components of glibc are distributed as
-``official'' add-ons.  Unless you are doing an unusual installation, you
-should get them both.
+2.2 release, one important component of glibc is distributed as
+``official'' add-ons: the linuxthreads add-on.  Unless you are doing an
+unusual installation, you should get this.
 
 Support for POSIX threads is maintained by someone else, so it's in a
 separate package.  It is only available for Linux systems, but this will
@@ -43,7 +43,7 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 
 GNU libc can be compiled in the source directory, but we strongly advise to
 build it in a separate build directory.  For example, if you have unpacked
-the glibc sources in @file{/src/gnu/glibc-2.1.0}, create a directory
+the glibc sources in @file{/src/gnu/glibc-2.2.0}, create a directory
 @file{/src/gnu/glibc-build} to put the object files in.  This allows
 removing the whole build directory in case an error occurs, which is the
 safest way to get a fresh start and should always be done.
@@ -52,7 +52,7 @@ From your object directory, run the shell script @file{configure} found
 at the top level of the source tree.  In the scenario above, you'd type
 
 @smallexample
-$ ../glibc-2.1.0/configure @var{args...}
+$ ../glibc-2.2.0/configure @var{args...}
 @end smallexample
 
 Please note that even if you're building in a separate build directory,

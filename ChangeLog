@@ -1,5 +1,26 @@
 2000-07-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* crypt/md5-crypt.c (__md5_crypt_r): Clear arrays the key and salt
+	string got copied in.
+	Patch by Solar Designer <solar@false.com>.
+
+2000-07-05  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Installation): Update information about
+	add-ons.
+	(Configuring and compiling): Update for glibc 2.2.
+
+2000-07-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu_control.h (_FPU_DEFAULT): Correct value.
+	(_FPU_IEEE): Likewise.
+
+	* math/Makefile (tests): Add test-fpucw.
+
+	* math/test-fpucw.c (main): New file.
+
+2000-07-05  Ulrich Drepper  <drepper@redhat.com>
+
 	* locale/loadlocale.c (_nl_unload_locale): Add cast to avoid warning.
 
 	* locale/programs/ld-collate.c (collate_output): Also write out the

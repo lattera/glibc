@@ -16,9 +16,9 @@ comment_char %
 % E-mail:    thep@links.nectec.or.th
 % Language:  Thai
 % Territory: Thailand
-% Charset:   TIS-620:1990
-% Revision:  0.5.2
-% Date:      1995-04-02
+% Charset:   TIS-620.2533:1990
+% Revision:  0.5.3
+% Date:      1999-05-28
 %
 
 %
@@ -88,8 +88,8 @@ alpha   <U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;<U0047>;<U0048>;<U0049>;
         <U004E>;<U004F>;<U0050>;<U0051>;<U0052>;<U0053>;<U0054>;<U0055>;<U0056>;<U0057>;<U0058>;<U0059>;<U005A>;/
         <U0061>;<U0062>;<U0063>;<U0064>;<U0065>;<U0066>;<U0067>;<U0068>;<U0069>;<U006A>;<U006B>;<U006C>;<U006D>;/
         <U006E>;<U006F>;<U0070>;<U0071>;<U0072>;<U0073>;<U0074>;<U0075>;<U0076>;<U0077>;<U0078>;<U0079>;<U007A>;/
-        <U0E01>;...;<U0E2E>;<U0E30>;...;<U0E39>;<U0E40>;...;<U0E44>;/
-        <U0E45>;<U0E47>;<U0E48>;...;<U0E4B>;<U0E4C>
+        <U0E01>..<U0E2E>;<U0E30>..<U0E39>;<U0E40>..<U0E44>;/
+        <U0E45>;<U0E47>;<U0E48>..<U0E4B>;<U0E4C>
 
 %
 % digit = Arabic digits  + Thai digits
@@ -97,7 +97,7 @@ alpha   <U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;<U0047>;<U0048>;<U0049>;
 digit   <U0030>;<U0031>;<U0032>;<U0033>;<U0034>;/
         <U0035>;<U0036>;<U0037>;<U0038>;<U0039>
 % The Thai digits
-%       <U0E50>;...;<U0E59>
+%       <U0E50>..<U0E59>
 % cannot be listed here.  In glibc 2.2 they'll be in indigits and
 % possibly outdigits.
 
@@ -606,316 +606,316 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 % Thai consonants, with leading vowels rearrangement
 %
 <U0E01>        <U0E01>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KO KAI
-<ko-kai-e>           <U0E01><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<ko-kai-ae>          <U0E01><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<ko-kai-o>           <U0E01><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<ko-kai-ai-maimuan>  <U0E01><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<ko-kai-ai-maimalai> <U0E01><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<ko-kai-e>           "<U0E01><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<ko-kai-ae>          "<U0E01><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<ko-kai-o>           "<U0E01><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<ko-kai-ai-maimuan>  "<U0E01><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<ko-kai-ai-maimalai> "<U0E01><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E02>        <U0E02>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHAI
-<kho-khai-e>           <U0E02><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<kho-khai-ae>          <U0E02><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<kho-khai-o>           <U0E02><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<kho-khai-ai-maimuan>  <U0E02><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<kho-khai-ai-maimalai> <U0E02><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<kho-khai-e>           "<U0E02><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<kho-khai-ae>          "<U0E02><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<kho-khai-o>           "<U0E02><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<kho-khai-ai-maimuan>  "<U0E02><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<kho-khai-ai-maimalai> "<U0E02><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E03>        <U0E03>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHUAT
-<kho-khuat-e>           <U0E03><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<kho-khuat-ae>          <U0E03><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<kho-khuat-o>           <U0E03><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<kho-khuat-ai-maimuan>  <U0E03><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<kho-khuat-ai-maimalai> <U0E03><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-e>           "<U0E03><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-ae>          "<U0E03><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-o>           "<U0E03><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-ai-maimuan>  "<U0E03><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-ai-maimalai> "<U0E03><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E04>        <U0E04>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHWAI
-<kho-khwai-e>           <U0E04><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<kho-khwai-ae>          <U0E04><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<kho-khwai-o>           <U0E04><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<kho-khwai-ai-maimuan>  <U0E04><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<kho-khwai-ai-maimalai> <U0E04><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-e>           "<U0E04><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-ae>          "<U0E04><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-o>           "<U0E04><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-ai-maimuan>  "<U0E04><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-ai-maimalai> "<U0E04><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E05>        <U0E05>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHON
-<kho-khon-e>           <U0E05><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<kho-khon-ae>          <U0E05><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<kho-khon-o>           <U0E05><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<kho-khon-ai-maimuan>  <U0E05><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<kho-khon-ai-maimalai> <U0E05><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<kho-khon-e>           "<U0E05><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<kho-khon-ae>          "<U0E05><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<kho-khon-o>           "<U0E05><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<kho-khon-ai-maimuan>  "<U0E05><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<kho-khon-ai-maimalai> "<U0E05><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E06>        <U0E06>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO RAKHANG
-<kho-rakhang-e>           <U0E06><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<kho-rakhang-ae>          <U0E06><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<kho-rakhang-o>           <U0E06><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<kho-rakhang-ai-maimuan>  <U0E06><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<kho-rakhang-ai-maimalai> <U0E06><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-e>           "<U0E06><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-ae>          "<U0E06><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-o>           "<U0E06><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-ai-maimuan>  "<U0E06><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-ai-maimalai> "<U0E06><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E07>        <U0E07>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER NGO NGU
-<ngo-ngu-e>           <U0E07><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<ngo-ngu-ae>          <U0E07><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<ngo-ngu-o>           <U0E07><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<ngo-ngu-ai-maimuan>  <U0E07><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<ngo-ngu-ai-maimalai> <U0E07><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-e>           "<U0E07><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-ae>          "<U0E07><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-o>           "<U0E07><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-ai-maimuan>  "<U0E07><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-ai-maimalai> "<U0E07><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E08>        <U0E08>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHAN
-<cho-chan-e>           <U0E08><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<cho-chan-ae>          <U0E08><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<cho-chan-o>           <U0E08><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<cho-chan-ai-maimuan>  <U0E08><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<cho-chan-ai-maimalai> <U0E08><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<cho-chan-e>           "<U0E08><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<cho-chan-ae>          "<U0E08><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<cho-chan-o>           "<U0E08><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<cho-chan-ai-maimuan>  "<U0E08><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<cho-chan-ai-maimalai> "<U0E08><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E09>        <U0E09>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHING
-<cho-ching-e>           <U0E09><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<cho-ching-ae>          <U0E09><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<cho-ching-o>           <U0E09><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<cho-ching-ai-maimuan>  <U0E09><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<cho-ching-ai-maimalai> <U0E09><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<cho-ching-e>           "<U0E09><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<cho-ching-ae>          "<U0E09><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<cho-ching-o>           "<U0E09><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<cho-ching-ai-maimuan>  "<U0E09><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<cho-ching-ai-maimalai> "<U0E09><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E0A>        <U0E0A>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHANG
-<cho-chang-e>           <U0E0A><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<cho-chang-ae>          <U0E0A><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<cho-chang-o>           <U0E0A><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<cho-chang-ai-maimuan>  <U0E0A><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<cho-chang-ai-maimalai> <U0E0A><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<cho-chang-e>           "<U0E0A><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<cho-chang-ae>          "<U0E0A><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<cho-chang-o>           "<U0E0A><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<cho-chang-ai-maimuan>  "<U0E0A><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<cho-chang-ai-maimalai> "<U0E0A><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E0B>        <U0E0B>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO SO
-<so-so-e>           <U0E0B><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<so-so-ae>          <U0E0B><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<so-so-o>           <U0E0B><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<so-so-ai-maimuan>  <U0E0B><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<so-so-ai-maimalai> <U0E0B><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<so-so-e>           "<U0E0B><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<so-so-ae>          "<U0E0B><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<so-so-o>           "<U0E0B><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<so-so-ai-maimuan>  "<U0E0B><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<so-so-ai-maimalai> "<U0E0B><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E0C>        <U0E0C>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHOE
-<cho-choe-e>           <U0E0C><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<cho-choe-ae>          <U0E0C><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<cho-choe-o>           <U0E0C><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<cho-choe-ai-maimuan>  <U0E0C><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<cho-choe-ai-maimalai> <U0E0C><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<cho-choe-e>           "<U0E0C><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<cho-choe-ae>          "<U0E0C><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<cho-choe-o>           "<U0E0C><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<cho-choe-ai-maimuan>  "<U0E0C><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<cho-choe-ai-maimalai> "<U0E0C><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E0D>        <U0E0D>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER YO YING
-<yo-ying-e>           <U0E0D><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<yo-ying-ae>          <U0E0D><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<yo-ying-o>           <U0E0D><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<yo-ying-ai-maimuan>  <U0E0D><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<yo-ying-ai-maimalai> <U0E0D><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<yo-ying-e>           "<U0E0D><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<yo-ying-ae>          "<U0E0D><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<yo-ying-o>           "<U0E0D><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<yo-ying-ai-maimuan>  "<U0E0D><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<yo-ying-ai-maimalai> "<U0E0D><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E0E>        <U0E0E>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER DO CHADA
-<do-chada-e>           <U0E0E><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<do-chada-ae>          <U0E0E><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<do-chada-o>           <U0E0E><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<do-chada-ai-maimuan>  <U0E0E><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<do-chada-ai-maimalai> <U0E0E><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<do-chada-e>           "<U0E0E><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<do-chada-ae>          "<U0E0E><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<do-chada-o>           "<U0E0E><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<do-chada-ai-maimuan>  "<U0E0E><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<do-chada-ai-maimalai> "<U0E0E><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E0F>        <U0E0F>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER TO PATAK
-<to-patak-e>           <U0E0F><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<to-patak-ae>          <U0E0F><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<to-patak-o>           <U0E0F><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<to-patak-ai-maimuan>  <U0E0F><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<to-patak-ai-maimalai> <U0E0F><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<to-patak-e>           "<U0E0F><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<to-patak-ae>          "<U0E0F><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<to-patak-o>           "<U0E0F><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<to-patak-ai-maimuan>  "<U0E0F><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<to-patak-ai-maimalai> "<U0E0F><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E10>        <U0E10>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THAN
-<tho-than-e>           <U0E10><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<tho-than-ae>          <U0E10><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<tho-than-o>           <U0E10><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<tho-than-ai-maimuan>  <U0E10><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<tho-than-ai-maimalai> <U0E10><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<tho-than-e>           "<U0E10><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<tho-than-ae>          "<U0E10><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<tho-than-o>           "<U0E10><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<tho-than-ai-maimuan>  "<U0E10><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<tho-than-ai-maimalai> "<U0E10><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E11>        <U0E11>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO NANGMONTHO
-<tho-nangmontho-e>           <U0E11><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<tho-nangmontho-ae>          <U0E11><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<tho-nangmontho-o>           <U0E11><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<tho-nangmontho-ai-maimuan>  <U0E11><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<tho-nangmontho-ai-maimalai> <U0E11><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-e>           "<U0E11><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-ae>          "<U0E11><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-o>           "<U0E11><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-ai-maimuan>  "<U0E11><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-ai-maimalai> "<U0E11><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E12>        <U0E12>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO PHUTHAO
-<tho-phuthao-e>           <U0E12><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<tho-phuthao-ae>          <U0E12><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<tho-phuthao-o>           <U0E12><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<tho-phuthao-ai-maimuan>  <U0E12><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<tho-phuthao-ai-maimalai> <U0E12><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-e>           "<U0E12><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-ae>          "<U0E12><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-o>           "<U0E12><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-ai-maimuan>  "<U0E12><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-ai-maimalai> "<U0E12><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E13>        <U0E13>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER NO NEN
-<no-nen-e>           <U0E13><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<no-nen-ae>          <U0E13><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<no-nen-o>           <U0E13><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<no-nen-ai-maimuan>  <U0E13><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<no-nen-ai-maimalai> <U0E13><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<no-nen-e>           "<U0E13><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<no-nen-ae>          "<U0E13><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<no-nen-o>           "<U0E13><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<no-nen-ai-maimuan>  "<U0E13><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<no-nen-ai-maimalai> "<U0E13><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E14>        <U0E14>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER DO DEK
-<do-dek-e>           <U0E14><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<do-dek-ae>          <U0E14><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<do-dek-o>           <U0E14><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<do-dek-ai-maimuan>  <U0E14><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<do-dek-ai-maimalai> <U0E14><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<do-dek-e>           "<U0E14><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<do-dek-ae>          "<U0E14><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<do-dek-o>           "<U0E14><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<do-dek-ai-maimuan>  "<U0E14><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<do-dek-ai-maimalai> "<U0E14><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E15>        <U0E15>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER TO TAO
-<to-tao-e>           <U0E15><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<to-tao-ae>          <U0E15><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<to-tao-o>           <U0E15><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<to-tao-ai-maimuan>  <U0E15><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<to-tao-ai-maimalai> <U0E15><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<to-tao-e>           "<U0E15><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<to-tao-ae>          "<U0E15><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<to-tao-o>           "<U0E15><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<to-tao-ai-maimuan>  "<U0E15><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<to-tao-ai-maimalai> "<U0E15><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E16>        <U0E16>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THUNG
-<tho-thung-e>           <U0E16><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<tho-thung-ae>          <U0E16><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<tho-thung-o>           <U0E16><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<tho-thung-ai-maimuan>  <U0E16><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<tho-thung-ai-maimalai> <U0E16><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<tho-thung-e>           "<U0E16><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<tho-thung-ae>          "<U0E16><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<tho-thung-o>           "<U0E16><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<tho-thung-ai-maimuan>  "<U0E16><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<tho-thung-ai-maimalai> "<U0E16><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E17>        <U0E17>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THAHAN
-<tho-thahan-e>           <U0E17><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<tho-thahan-ae>          <U0E17><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<tho-thahan-o>           <U0E17><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<tho-thahan-ai-maimuan>  <U0E17><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<tho-thahan-ai-maimalai> <U0E17><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-e>           "<U0E17><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-ae>          "<U0E17><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-o>           "<U0E17><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-ai-maimuan>  "<U0E17><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-ai-maimalai> "<U0E17><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E18>        <U0E18>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THONG
-<tho-thong-e>           <U0E18><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<tho-thong-ae>          <U0E18><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<tho-thong-o>           <U0E18><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<tho-thong-ai-maimuan>  <U0E18><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<tho-thong-ai-maimalai> <U0E18><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<tho-thong-e>           "<U0E18><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<tho-thong-ae>          "<U0E18><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<tho-thong-o>           "<U0E18><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<tho-thong-ai-maimuan>  "<U0E18><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<tho-thong-ai-maimalai> "<U0E18><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E19>        <U0E19>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER NO NU
-<no-nu-e>           <U0E19><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<no-nu-ae>          <U0E19><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<no-nu-o>           <U0E19><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<no-nu-ai-maimuan>  <U0E19><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<no-nu-ai-maimalai> <U0E19><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<no-nu-e>           "<U0E19><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<no-nu-ae>          "<U0E19><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<no-nu-o>           "<U0E19><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<no-nu-ai-maimuan>  "<U0E19><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<no-nu-ai-maimalai> "<U0E19><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E1A>        <U0E1A>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER BO BAIMAI
-<bo-baimai-e>           <U0E1A><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<bo-baimai-ae>          <U0E1A><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<bo-baimai-o>           <U0E1A><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<bo-baimai-ai-maimuan>  <U0E1A><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<bo-baimai-ai-maimalai> <U0E1A><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-e>           "<U0E1A><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-ae>          "<U0E1A><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-o>           "<U0E1A><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-ai-maimuan>  "<U0E1A><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-ai-maimalai> "<U0E1A><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E1B>        <U0E1B>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PO PLA
-<po-pla-e>           <U0E1B><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<po-pla-ae>          <U0E1B><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<po-pla-o>           <U0E1B><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<po-pla-ai-maimuan>  <U0E1B><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<po-pla-ai-maimalai> <U0E1B><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<po-pla-e>           "<U0E1B><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<po-pla-ae>          "<U0E1B><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<po-pla-o>           "<U0E1B><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<po-pla-ai-maimuan>  "<U0E1B><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<po-pla-ai-maimalai> "<U0E1B><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E1C>        <U0E1C>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PHO PHUNG
-<pho-phung-e>           <U0E1C><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<pho-phung-ae>          <U0E1C><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<pho-phung-o>           <U0E1C><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<pho-phung-ai-maimuan>  <U0E1C><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<pho-phung-ai-maimalai> <U0E1C><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<pho-phung-e>           "<U0E1C><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<pho-phung-ae>          "<U0E1C><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<pho-phung-o>           "<U0E1C><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<pho-phung-ai-maimuan>  "<U0E1C><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<pho-phung-ai-maimalai> "<U0E1C><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E1D>        <U0E1D>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER FO FA
-<fo-fa-e>           <U0E1D><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<fo-fa-ae>          <U0E1D><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<fo-fa-o>           <U0E1D><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<fo-fa-ai-maimuan>  <U0E1D><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<fo-fa-ai-maimalai> <U0E1D><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<fo-fa-e>           "<U0E1D><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<fo-fa-ae>          "<U0E1D><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<fo-fa-o>           "<U0E1D><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<fo-fa-ai-maimuan>  "<U0E1D><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<fo-fa-ai-maimalai> "<U0E1D><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E1E>        <U0E1E>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PHO PHAN
-<pho-phan-e>           <U0E1E><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<pho-phan-ae>          <U0E1E><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<pho-phan-o>           <U0E1E><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<pho-phan-ai-maimuan>  <U0E1E><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<pho-phan-ai-maimalai> <U0E1E><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<pho-phan-e>           "<U0E1E><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<pho-phan-ae>          "<U0E1E><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<pho-phan-o>           "<U0E1E><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<pho-phan-ai-maimuan>  "<U0E1E><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<pho-phan-ai-maimalai> "<U0E1E><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E1F>        <U0E1F>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER FO FAN
-<fo-fan-e>           <U0E1F><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<fo-fan-ae>          <U0E1F><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<fo-fan-o>           <U0E1F><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<fo-fan-ai-maimuan>  <U0E1F><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<fo-fan-ai-maimalai> <U0E1F><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<fo-fan-e>           "<U0E1F><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<fo-fan-ae>          "<U0E1F><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<fo-fan-o>           "<U0E1F><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<fo-fan-ai-maimuan>  "<U0E1F><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<fo-fan-ai-maimalai> "<U0E1F><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E20>        <U0E20>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PHO SAMPHAO
-<pho-samphao-e>           <U0E20><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<pho-samphao-ae>          <U0E20><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<pho-samphao-o>           <U0E20><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<pho-samphao-ai-maimuan>  <U0E20><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<pho-samphao-ai-maimalai> <U0E20><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-e>           "<U0E20><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-ae>          "<U0E20><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-o>           "<U0E20><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-ai-maimuan>  "<U0E20><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-ai-maimalai> "<U0E20><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E21>        <U0E21>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER MO MA
-<mo-ma-e>           <U0E21><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<mo-ma-ae>          <U0E21><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<mo-ma-o>           <U0E21><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<mo-ma-ai-maimuan>  <U0E21><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<mo-ma-ai-maimalai> <U0E21><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<mo-ma-e>           "<U0E21><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<mo-ma-ae>          "<U0E21><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<mo-ma-o>           "<U0E21><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<mo-ma-ai-maimuan>  "<U0E21><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<mo-ma-ai-maimalai> "<U0E21><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E22>        <U0E22>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER YO YAK
-<yo-yak-e>           <U0E22><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<yo-yak-ae>          <U0E22><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<yo-yak-o>           <U0E22><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<yo-yak-ai-maimuan>  <U0E22><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<yo-yak-ai-maimalai> <U0E22><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<yo-yak-e>           "<U0E22><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<yo-yak-ae>          "<U0E22><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<yo-yak-o>           "<U0E22><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<yo-yak-ai-maimuan>  "<U0E22><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<yo-yak-ai-maimalai> "<U0E22><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E23>        <U0E23>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER RO RUA
-<ro-rua-e>           <U0E23><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<ro-rua-ae>          <U0E23><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<ro-rua-o>           <U0E23><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<ro-rua-ai-maimuan>  <U0E23><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<ro-rua-ai-maimalai> <U0E23><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<ro-rua-e>           "<U0E23><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<ro-rua-ae>          "<U0E23><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<ro-rua-o>           "<U0E23><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<ro-rua-ai-maimuan>  "<U0E23><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<ro-rua-ai-maimalai> "<U0E23><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E24>        <U0E24>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER RU
 
 <U0E25>        <U0E25>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER LO LING
-<lo-ling-e>           <U0E25><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<lo-ling-ae>          <U0E25><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<lo-ling-o>           <U0E25><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<lo-ling-ai-maimuan>  <U0E25><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<lo-ling-ai-maimalai> <U0E25><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<lo-ling-e>           "<U0E25><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<lo-ling-ae>          "<U0E25><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<lo-ling-o>           "<U0E25><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<lo-ling-ai-maimuan>  "<U0E25><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<lo-ling-ai-maimalai> "<U0E25><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E26>        <U0E26>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER LU
 
 <U0E27>        <U0E27>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER WO WAEN
-<wo-waen-e>           <U0E27><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<wo-waen-ae>          <U0E27><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<wo-waen-o>           <U0E27><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<wo-waen-ai-maimuan>  <U0E27><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<wo-waen-ai-maimalai> <U0E27><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<wo-waen-e>           "<U0E27><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<wo-waen-ae>          "<U0E27><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<wo-waen-o>           "<U0E27><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<wo-waen-ai-maimuan>  "<U0E27><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<wo-waen-ai-maimalai> "<U0E27><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E28>        <U0E28>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO SALA
-<so-sala-e>           <U0E28><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<so-sala-ae>          <U0E28><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<so-sala-o>           <U0E28><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<so-sala-ai-maimuan>  <U0E28><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<so-sala-ai-maimalai> <U0E28><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<so-sala-e>           "<U0E28><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<so-sala-ae>          "<U0E28><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<so-sala-o>           "<U0E28><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<so-sala-ai-maimuan>  "<U0E28><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<so-sala-ai-maimalai> "<U0E28><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E29>        <U0E29>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO RUSI
-<so-rusi-e>           <U0E29><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<so-rusi-ae>          <U0E29><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<so-rusi-o>           <U0E29><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<so-rusi-ai-maimuan>  <U0E29><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<so-rusi-ai-maimalai> <U0E29><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<so-rusi-e>           "<U0E29><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<so-rusi-ae>          "<U0E29><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<so-rusi-o>           "<U0E29><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<so-rusi-ai-maimuan>  "<U0E29><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<so-rusi-ai-maimalai> "<U0E29><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E2A>        <U0E2A>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO SUA
-<so-sua-e>           <U0E2A><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<so-sua-ae>          <U0E2A><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<so-sua-o>           <U0E2A><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<so-sua-ai-maimuan>  <U0E2A><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<so-sua-ai-maimalai> <U0E2A><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<so-sua-e>           "<U0E2A><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<so-sua-ae>          "<U0E2A><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<so-sua-o>           "<U0E2A><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<so-sua-ai-maimuan>  "<U0E2A><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<so-sua-ai-maimalai> "<U0E2A><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E2B>        <U0E2B>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER HO HIP
-<ho-hip-e>           <U0E2B><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<ho-hip-ae>          <U0E2B><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<ho-hip-o>           <U0E2B><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<ho-hip-ai-maimuan>  <U0E2B><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<ho-hip-ai-maimalai> <U0E2B><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<ho-hip-e>           "<U0E2B><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<ho-hip-ae>          "<U0E2B><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<ho-hip-o>           "<U0E2B><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<ho-hip-ai-maimuan>  "<U0E2B><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<ho-hip-ai-maimalai> "<U0E2B><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E2C>        <U0E2C>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER LO CHULA
-<lo-chula-e>           <U0E2C><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<lo-chula-ae>          <U0E2C><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<lo-chula-o>           <U0E2C><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<lo-chula-ai-maimuan>  <U0E2C><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<lo-chula-ai-maimalai> <U0E2C><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<lo-chula-e>           "<U0E2C><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<lo-chula-ae>          "<U0E2C><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<lo-chula-o>           "<U0E2C><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<lo-chula-ai-maimuan>  "<U0E2C><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<lo-chula-ai-maimalai> "<U0E2C><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E2D>        <U0E2D>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER O ANG
-<o-ang-e>           <U0E2D><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<o-ang-ae>          <U0E2D><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<o-ang-o>           <U0E2D><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<o-ang-ai-maimuan>  <U0E2D><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<o-ang-ai-maimalai> <U0E2D><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<o-ang-e>           "<U0E2D><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<o-ang-ae>          "<U0E2D><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<o-ang-o>           "<U0E2D><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<o-ang-ai-maimuan>  "<U0E2D><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<o-ang-ai-maimalai> "<U0E2D><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E2E>        <U0E2E>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER HO NOKHUK
-<ho-nokhuk-e>           <U0E2E><U0E40>;<BLANK>;<BLANK>;<BLANK>
-<ho-nokhuk-ae>          <U0E2E><U0E41>;<BLANK>;<BLANK>;<BLANK>
-<ho-nokhuk-o>           <U0E2E><U0E42>;<BLANK>;<BLANK>;<BLANK>
-<ho-nokhuk-ai-maimuan>  <U0E2E><U0E43>;<BLANK>;<BLANK>;<BLANK>
-<ho-nokhuk-ai-maimalai> <U0E2E><U0E44>;<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-e>           "<U0E2E><U0E40>";<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-ae>          "<U0E2E><U0E41>";<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-o>           "<U0E2E><U0E42>";<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-ai-maimuan>  "<U0E2E><U0E43>";<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-ai-maimalai> "<U0E2E><U0E44>";<BLANK>;<BLANK>;<BLANK>
 
 <U0E4D> <U0E4D>;<BLANK>;<BLANK>;<BLANK>  % THAI CHARACTER NIKHAHIT
 
