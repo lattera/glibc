@@ -742,12 +742,6 @@ endif
 
 ifndef avoid-generated
 -include $(common-objpfx)sysd-dirs
-define \n
-
-
-endef
-sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
-sysdep-inhibit-subdirs := $(subst $(\n), ,$(sysdep-inhibit-subdirs))
 endif
 
 # These are the subdirectories containing the library source.  The order
@@ -762,8 +756,10 @@ all-subdirs = csu assert ctype db db2 locale intl catgets math setjmp signal\
 	      $(binfmt-subdir)
 all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
 
+ifeq ($(sysd-dirs-done),t)
 -include $(common-objpfx)sysd-sorted
 subdirs = $(sorted-subdirs)
+endif
 
 # The mach and hurd subdirectories have many generated header files which
 # much of the rest of the library depends on, so it is best to build them
@@ -776,12 +772,12 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 
 all-Subdirs-files = $(wildcard $(config-sysdirs:%=$(..)%/Subdirs))
 $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
-	(echo define sysdep-subdirs;					\
-	 sed 's/[#-].*$$//' $(all-Subdirs-files) /dev/null;		\
-	 echo endef;							\
-	 echo define sysdep-inhibit-subdirs;				\
-	 sed '/-.*$$/!d;s/^-//' $(all-Subdirs-files) /dev/null;		\
-	 echo endef;							\
+	($(AWK) 'END { printf ("sysdep-subdirs =") }' /dev/null;	\
+	 $(AWK) '/^[^#-]/ { printf (" %s", $$0) }' $(all-Subdirs-files);\
+	 echo;								\
+	 $(AWK) 'END { printf ("sysdep-inhibit-subdirs =") }' /dev/null;\
+	 $(AWK) '/^-/ { printf (" %s", $$0) }' $(all-Subdirs-files);	\
+	 echo;								\
 	 echo 'sysd-dirs-done = t';					\
 	) > $@-tmp
 	mv -f $@-tmp $@
