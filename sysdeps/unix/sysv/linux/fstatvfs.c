@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <mntent.h>
 #include <paths.h>
+#include <stdio_ext.h>
 #include <string.h>
 #include <sys/mount.h>
 #include <sys/stat.h>

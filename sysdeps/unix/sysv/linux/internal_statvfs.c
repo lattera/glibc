@@ -64,6 +64,9 @@
 	{
 	  char tmpbuf[1024];
 
+	  /* No locking needed.  */
+	  (void) __fsetlocking (mtab, FSETLOCKING_BYCALLER);
+
 	  while (__getmntent_r (mtab, &mntbuf, tmpbuf, sizeof (tmpbuf)))
 	    {
 	      struct stat64 fsst;

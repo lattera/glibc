@@ -2,6 +2,9 @@
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Avoid
 	locking when using mount tab file.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/statvfs.c: Include <stdio_ext.h>.
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Likewise.
 
 	* elf/dl-init.c (_dl_init): Fix test of the size of the
 	preinit_array section.
