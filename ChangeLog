@@ -1,3 +1,9 @@
+2004-12-29  Roland McGrath  <roland@redhat.com>
+
+	[BZ #626]
+	* sysdeps/unix/alarm.c (alarm): Round return value to nearest rather
+	than always up; when nearest is zero, round up to one.
+
 2004-12-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/es.po: Update from translation team.
