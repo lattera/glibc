@@ -1,4 +1,37 @@
+Tue Mar 12 04:42:01 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/sparc/jmp_buf.h: Rewritten; use array of ints, not struct.
+	* sysdeps/sparc/setjmp.S: Rewritten; store %fp value as well.
+	* sysdeps/sparc/__longjmp.S: Rewritten; unwind frames one by one with
+	`restore' until the target frame is hit.
+
+Sun Mar 10 20:29:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove sigsuspend, add
+	s_sigsuspend.
+
+Thu Mar  7 21:30:58 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (+make-deps, sed-remove-objpfx): Quote periods on the
+	left side of sed substitutions.
+
+Sun Mar 10 16:58:10 1996  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* stdio-common/printf_fp.c (hack_digit): __mpn_normal_size
+	is not available anymore.  Do it ourselves.
+
+	* sysdeps/unix/sysv/linux/i386/fpu_control.h (_FPU_SETCW):
+	Correct GCC `asm' syntax.
+
 Tue Mar 12 03:15:02 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* stdio-common/Makefile (tests): Add tst-ungetc.
+	* stdio-common/tst-ungetc.c: New test from drepper.
+	* stdio-common/tstscanf.c (main): New %[ test case from drepper.
+
+	* sysdeps/libm-ieee754/s_scalbn.c (scalbn): Rename to __scalbn;
+	somehow this was missed, though the weak alias is already there.
 
 	* sysdeps/unix/sysv/linux/i386/fpu_control.h (_FPU_DEFAULT): Change
 	default to double precision, all interrupts masked; fdlibm requires.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,13 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   if (sscanf ("0", "%d", &x) != 1)
     exit (EXIT_FAILURE);
+
+  sscanf ("conversion] Zero flag Ze]ro#\n", "%*[^]] %[^#]\n", buf);
+  if (strcmp (buf, "] Zero flag Ze]ro") != 0)
+    {
+      fputs ("test failed!", stderr);
+      return 1;
+    }
 
   if (argc == 2 && !strcmp (argv[1], "-opipe"))
     {

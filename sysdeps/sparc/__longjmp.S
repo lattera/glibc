@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,31 +17,42 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
-#ifdef __svr4__
-#include <sys/trap.h>
-#else
-#include <machine/trap.h>
-#endif
 
-/* NOTE: This code depends on the definition of `__jmp_buf' in <jmp_buf.h>.  */
+#include <jmp_buf.h>
+#define ENV(reg) [%g1 + (reg * 4)]
 
 ENTRY (__longjmp)
-	/* Do a "flush register windows trap".  The trap handler in the
-	   kernel writes all the register windows to their stack slots, and
-	   marks them all as invalid (needing to be sucked up from the
-	   stack when used).  This ensures that all information needed to
-	   unwind to these callers is in memory, not in the register
-	   windows.  */
-	ta ST_FLUSH_WINDOWS
-	ld [%o0], %o7		/* Return PC.  */
-	ld [%o0 + 4], %fp	/* Saved SP.  */
-	sub %fp, 64, %sp	/* Allocate a register save area.  */
+	/* Store our arguments in global registers so we can still
+	   use them while unwinding frames and their register windows.  */
+	mov %o0, %g1		/* ENV in %g1 */
+     	orcc %o1, %g0, %g6	/* VAL in %g6 */
+     	be,a 0f			/* Branch if zero; else skip delay slot.  */
+	 mov 1, %g6		/* Delay slot only hit if zero: VAL = 1.  */
+0:
 
-	/* if (%o1 == 0) %o1 = 1; */
-	tst %o1
-	be,a Ldone
-	mov 1, %o1
+	/* Cache target FP in register %g7.  */
+	ld ENV (JB_FP), %g7
 
-Ldone:	retl
-	/* On the way out, put the return value in %o0.  */
-	restore %o1, 0, %o0
+	/* Now we will loop, unwinding the register windows up the stack
+	   until the restored %fp value matches the target value in %g7.  */
+
+loop:	cmp %fp, %g7		/* Have we reached the target frame? */
+	bl,a loop		/* Loop while current fp is below target.  */
+	 restore		/* Unwind register window in delay slot.  */
+	be,a found		/* Better have hit it exactly.  */
+	 ld ENV (JB_SP), %o0	/* Delay slot: extract target SP.  */
+
+bogus:	/* Get here only if the jmp_buf or stack is clobbered.  */
+	call C_SYMBOL_NAME (abort)
+	nop
+	unimp 0
+
+found:	/* We have unwound register windows so %fp matches the target.  */
+	cmp %o0, %sp		/* Check jmp_buf SP vs register window.  */
+	bge,a sp_ok		/* Saved must not be deeper than register.  */
+	 mov %o0, %sp		/* OK, install new SP.  */
+	b,a bogus		/* Bogus, we lose.  */
+
+sp_ok:	ld ENV (JB_PC), %o0	/* Extract target return PC.  */
+	jmp %o0 + 8		/* Return there.  */
+	 mov %g6, %o0		/* Delay slot: set return value.  */

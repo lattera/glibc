@@ -18,10 +18,10 @@ munlockall	-	munlockall	0	__munlockall	munlockall
 pipe		-	pipe		1	__pipe	pipe
 reboot		-	reboot		3	reboot
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
+s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 setpgid		-	setpgid		2	setpgid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
-sigsuspend	-	sigsuspend	1	sigsuspend
 stty		-	stty		2	stty
 umount		-	umount		1	__umount	umount
 wait4		-	wait4		4	__wait4		wait4

@@ -276,13 +276,14 @@ S-CPPFLAGS = $(asm-CPPFLAGS)
 define +make-deps
 -@rm -f $@
 $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-sed -e 's,$*\.o,$(foreach o,$(object-suffixes),$(@:.d=$o)) $@,' \
+sed -e 's,$(subst .,\.,$*)\.o,$(foreach o,$(object-suffixes),$(@:.d=$o)) $@,' \
 $(sed-remove-objpfx) > $(@:.d=.T)
 mv -f $(@:.d=.T) $@
 endef
 ifneq (,$(objpfx))
-sed-remove-objpfx = -e 's@ $(subst @,\@,$(objpfx))@ $$(objpfx)@g' \
-		    -e 's@^$(subst @,\@,$(objpfx))@$$(objpfx)@g'
+sed-remove-objpfx = -e 's@ $(subst .,\., \
+				     $(subst @,\@,$(objpfx)))@ $$(objpfx)@g' \
+		    -e 's@^$(subst .,\.,$(subst @,\@,$(objpfx)))@$$(objpfx)@g'
 endif
 
 # Figure out the source filenames in this directory.

@@ -208,7 +208,9 @@ __printf_fp (FILE *fp,
 	      tmp[fracsize - scalesize] = hi;
 	      hi = tmp[0];
 
-	      fracsize = __mpn_normal_size (frac, scalesize);
+	      fracsize = scalesize;
+	      while (fracsize != 0 && frac[fracsize - 1] == 0)
+		--fracsize;
 	      if (fracsize == 0)
 		{
 		  /* We're not prepared for an mpn variable with zero
