@@ -395,13 +395,8 @@ ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
-# If using gcc, add flags that only it will grok.
-ifneq	"$(findstring gcc,$(CC))" ""
 +cflags := $(+cflags) $(+gccwarn)
 +gcc-nowarn := -w
-else
-+gcc-nowarn :=
-endif	# gcc
 
 # Don't duplicate options if we inherited variables from the parent.
 +cflags	:= $(sort $(+cflags))
