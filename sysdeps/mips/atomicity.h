@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations. Mips version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,9 @@ exchange_and_add (volatile uint32_t *mem, int val)
     ("/* Inline exchange & add */\n"
      "1:\n\t"
      ".set	push\n\t"
+#if _MIPS_SIM == _MIPS_SIM_ABI32
      ".set	mips2\n\t"
+#endif
      "ll	%0,%3\n\t"
      "addu	%1,%4,%0\n\t"
      "sc	%1,%2\n\t"
@@ -56,7 +58,9 @@ atomic_add (volatile uint32_t *mem, int val)
     ("/* Inline atomic add */\n"
      "1:\n\t"
      ".set	push\n\t"
+#if _MIPS_SIM == _MIPS_SIM_ABI32
      ".set	mips2\n\t"
+#endif
      "ll	%0,%2\n\t"
      "addu	%0,%3,%0\n\t"
      "sc	%0,%1\n\t"
@@ -78,12 +82,22 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
     ("/* Inline compare & swap */\n"
      "1:\n\t"
      ".set	push\n\t"
+#if _MIPS_SIM == _MIPS_SIM_ABI32
      ".set	mips2\n\t"
+#endif
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+     "lld	%1,%5\n\t"
+#else
      "ll	%1,%5\n\t"
+#endif
      "move	%0,$0\n\t"
      "bne	%1,%3,2f\n\t"
      "move	%0,%4\n\t"
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+     "scd	%0,%2\n\t"
+#else
      "sc	%0,%2\n\t"
+#endif
      ".set	pop\n\t"
      "beqz	%0,1b\n"
      "2:\n\t"

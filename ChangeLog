@@ -1,5 +1,11 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/atomicity.h (exchange_and_add, atomic_add):
+	Don't .set mips2 on new abi.
+	(compare_and_swap): Likewise.  Support 64-bit longs on n64.
+
+2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
+
 	* stdlib/fpioconst.h: Include gmp.h with angle brackets.
 
 2003-03-13  Roland McGrath  <roland@redhat.com>
