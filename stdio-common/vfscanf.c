@@ -313,7 +313,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    flags |= SHORT;
 	    break;
 	  case 'l':
-	    if (flags & SHORT)
+	    if (flags & (SHORT|LONGDBL))
 	      conv_error ();
 	    else if (flags & LONG)
 	      {

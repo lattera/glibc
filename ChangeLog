@@ -1,5 +1,7 @@
 Wed Jan 24 03:22:07 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdio-common/vfscanf.c: Disallow l flag after ll or L.
+
 	* stdio-common/Makefile (tests): Add scanf[1-9].
 	* stdio-common/scanf[1-9].c: New files.  Bug tests from hjl.
 
