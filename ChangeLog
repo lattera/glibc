@@ -1,3 +1,7 @@
+Mon Jul 24 03:13:16 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/posix/pathconf.c: New file.
+
 Sat Jul 22 20:53:18 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/i386/sysdep.h (JUMPTARGET): Use ## to avoid space
