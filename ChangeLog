@@ -1,5 +1,10 @@
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/tmpnam.c (tmpnam): Optimize a bit.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_local): Don't use tmpnam, use
+	underlying functions directly.
+
 	* sysdeps/unix/sysv/linux/bits/resource.h: Add RLIMIT_LOCKS.
 	* sysdeps/unix/sysv/linux/arm/bits/resource.h: Likewise.
 	* sysdeps/unix/sysv/linux/i386/bits/resource.h: Likewise.

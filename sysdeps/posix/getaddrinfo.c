@@ -206,7 +206,15 @@ gaih_local (const char *name, const struct gaih_service *service,
     }
   else
     {
-      if (tmpnam (((struct sockaddr_un *) (*pai)->ai_addr)->sun_path) == NULL)
+      /* This is a dangerous use of the interface since there is a time
+	 window between the test for the file and the actual creation
+	 (done by the caller) in which a file with the same name could
+	 be created.  */
+      char *buf = ((struct sockaddr_un *) (*pai)->ai_addr)->sun_path;
+
+      if (__builtin_expect (__path_search (buf, L_tmpnam, NULL, NULL, 0),
+			    0) != 0
+	  || __builtin_expect (__gen_tempname (buf, __GT_NOCREATE), 0) != 0)
 	return -EAI_SYSTEM;
     }
 

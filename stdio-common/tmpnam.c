@@ -29,15 +29,17 @@ tmpnam (char *s)
 {
   /* By using two buffers we manage to be thread safe in the case
      where S != NULL.  */
-  char tmpbuf[L_tmpnam];
+  char tmpbufmem[L_tmpnam];
+  char tmpbuf = s ?: tmpbufmem;
 
   /* In the following call we use the buffer pointed to by S if
      non-NULL although we don't know the size.  But we limit the size
      to L_tmpnam characters in any case.  */
-  if (__path_search (s ? : tmpbuf, L_tmpnam, NULL, NULL, 0))
+  if (__builtin_expect (__path_search (tmpbuf, L_tmpnam, NULL, NULL, 0),
+			0))
     return NULL;
 
-  if (__gen_tempname (s ? : tmpbuf, __GT_NOCREATE))
+  if (__builtin_expect (__gen_tempname (tmpbuf, __GT_NOCREATE), 0))
     return NULL;
 
   if (s == NULL)
