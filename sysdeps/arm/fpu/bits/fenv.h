@@ -34,7 +34,7 @@ enum
   };
 
 /* Amount to shift by to convert an exception to a mask bit.  */
-#define FE_EXCEPTION_SHIFT		16
+#define FE_EXCEPT_SHIFT		16
 
 /* All supported exceptions.  */
 #define FE_ALL_EXCEPT	\
