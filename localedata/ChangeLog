@@ -1,5 +1,9 @@
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/i18n: Backspace isn't blank, tab is.
+
+	* tst-ctype.c (main): Add tests for control characters and space.
+
 	* locales/i18n: Backspace is no space.
 
 	* locales/i18n: Add \t to space.

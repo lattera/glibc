@@ -26,6 +26,9 @@
 static const char lower[] = "abcdefghijklmnopqrstuvwxyz";
 static const char upper[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static const char digits[] = "0123456789";
+static const char cntrl[] = "\
+\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\
+\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f ";
 
 
 static struct classes
@@ -132,6 +135,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (islower (*cp))
       FAIL ("islower ('%c') is true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (islower (*cp))
+      FAIL ("islower ('\\x%02x') is true", *cp);
 
   puts ("    isupper()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -143,6 +149,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (isupper (*cp))
       FAIL ("isupper ('%c') is true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (isupper (*cp))
+      FAIL ("isupper ('\\x%02x') is true", *cp);
 
   puts ("    isalpha()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -154,6 +163,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (isalpha (*cp))
       FAIL ("isalpha ('%c') is true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (isalpha (*cp))
+      FAIL ("isalpha ('\\x%02x') is true", *cp);
 
   puts ("    isdigit()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -165,6 +177,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (! isdigit (*cp))
       FAIL ("isdigit ('%c') not true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (isdigit (*cp))
+      FAIL ("isdigit ('\\x%02x') is true", *cp);
 
   puts ("    isxdigit()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -178,6 +193,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (! isxdigit (*cp))
       FAIL ("isxdigit ('%c') not true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (isxdigit (*cp))
+      FAIL ("isxdigit ('\\x%02x') is true", *cp);
 
   puts ("    isspace()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -189,6 +207,12 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (isspace (*cp))
       FAIL ("isspace ('%c') is true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if ((isspace (*cp) && ((*cp < '\x09' || *cp > '\x0d') && *cp != ' '))
+	|| (! isspace (*cp)
+	    && ((*cp >= '\x09' && *cp <= '\x0d') || *cp == ' ')))
+      FAIL ("isspace ('\\x%02x') %s true", *cp,
+	    (*cp < '\x09' || *cp > '\x0d') ? "is" : "not");
 
   puts ("    isprint()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -200,6 +224,10 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (! isprint (*cp))
       FAIL ("isprint ('%c') not true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if ((isprint (*cp) && *cp != ' ')
+	|| (! isprint (*cp) && *cp == ' '))
+      FAIL ("isprint ('\\x%02x') is true", *cp);
 
   puts ("    isgraph()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -211,6 +239,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (! isgraph (*cp))
       FAIL ("isgraph ('%c') not true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (isgraph (*cp))
+      FAIL ("isgraph ('\\x%02x') is true", *cp);
 
   puts ("    isblank()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -222,6 +253,10 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (isblank (*cp))
       FAIL ("isblank ('%c') is true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if ((isblank (*cp) && *cp != '\x09' && *cp != ' ')
+	|| (! isblank (*cp) && (*cp == '\x09' || *cp == ' ')))
+      FAIL ("isblank ('\\x%02x') %s true", *cp, *cp != '\x09' ? "is" : "not");
 
   puts ("    iscntrl()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -233,6 +268,10 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (iscntrl (*cp))
       FAIL ("iscntrl ('%c') is true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if ((iscntrl (*cp) && *cp == ' ')
+	|| (! iscntrl (*cp) && *cp != ' '))
+      FAIL ("iscntrl ('\\x%02x') not true", *cp);
 
   puts ("    ispunct()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -244,6 +283,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (ispunct (*cp))
       FAIL ("ispunct ('%c') is true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (ispunct (*cp))
+      FAIL ("ispunct ('\\x%02x') is true", *cp);
 
   puts ("    isalnum()");
   for (cp = lower; *cp != '\0'; ++cp)
@@ -255,6 +297,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (! isalnum (*cp))
       FAIL ("isalnum ('%c') not true", *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (isalnum (*cp))
+      FAIL ("isalnum ('\\x%02x') is true", *cp);
 
 
   puts ("    tolower()");
@@ -267,6 +312,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (tolower (*cp) != *cp)
       FAIL ("tolower ('%c') != '%c'", *cp, *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (tolower (*cp) != *cp)
+      FAIL ("tolower ('\\x%02x') != '\\x%02x'", *cp, *cp);
 
   puts ("    toupper()");
   for (cp = lower, cp2 = upper; *cp != '\0'; ++cp, ++cp2)
@@ -278,6 +326,9 @@ punct = %04x  alnum = %04x\n",
   for (cp = digits; *cp != '\0'; ++cp)
     if (toupper (*cp) != *cp)
       FAIL ("toupper ('%c') != '%c'", *cp, *cp);
+  for (cp = cntrl; *cp != '\0'; ++cp)
+    if (toupper (*cp) != *cp)
+      FAIL ("toupper ('\\x%02x') != '\\x%02x'", *cp, *cp);
 
 
   /* Now some locale specific tests.  */
