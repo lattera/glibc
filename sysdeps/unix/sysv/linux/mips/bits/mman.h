@@ -1,4 +1,4 @@
-/* Definitions for POSIX memory map interface.  Linux/PowerPC version.
+/* Definitions for POSIX memory map interface.  Linux/MIPS version.
    Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
