@@ -29,7 +29,6 @@
 
 #include "kernel-features.h"
 
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 struct __old_shmid_ds
 {
   struct __old_ipc_perm shm_perm;	/* operation permission struct */
@@ -55,6 +54,7 @@ struct __old_shminfo
 };
 
 /* Provide operations to control over shared memory segments.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int __old_shmctl (int, int, struct __old_shmid_ds *);
 #endif
 int __new_shmctl (int, int, struct shmid_ds *);

@@ -29,7 +29,6 @@
 
 #include "kernel-features.h"
 
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 struct __old_semid_ds
 {
   struct __old_ipc_perm sem_perm;	/* operation permission struct */
@@ -41,7 +40,6 @@ struct __old_semid_ds
   struct sem_undo *__undo;		/* ondo requests on this array */
   unsigned short int sem_nsems;		/* number of semaphores in set */
 };
-#endif
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun
