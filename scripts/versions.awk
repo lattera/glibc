@@ -1,5 +1,5 @@
 # Combine version map fragments into version scripts for our shared objects.
-# Copyright (C) 1998,99,2000 Free Software Foundation, Inc.
+# Copyright (C) 1998,99,2000,02 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
 # This script expects the following variables to be defined:
@@ -49,7 +49,7 @@ BEGIN {
   if (renamed[actlib "::" $1])
     actver = renamed[actlib "::" $1];
   else if (!versions[$1]) {
-    printf("version %s not defined\n", $1) > "/dev/stderr";
+    printf("version %s not defined for %s\n", $1, actlib) > "/dev/stderr";
     exit 1;
   }
   else
@@ -73,7 +73,13 @@ function closeversion(name, oldname) {
     printf("  local:\n    *;\n") > outfile;
     firstinfile = 0;
   }
-  printf("}%s;\n", oldname) > outfile;
+  # This version inherits from the last one only if they
+  # have the same nonnumeric prefix, i.e. GLIBC_x.y and GLIBC_x.z
+  # or FOO_x and FOO_y but not GLIBC_x and FOO_y.
+  pfx = oldname;
+  sub(/[0-9.]+/,".+",pfx);
+  if (oldname == "" || name !~ pfx) print "};" > outfile;
+  else printf("} %s;\n", oldname) > outfile;
 }
 
 function close_and_move(name, real_name) {
@@ -87,7 +93,7 @@ END {
   oldlib = "";
   oldver = "";
   printf("version-maps =");
-  while(getline < tmpfile) {
+  while (getline < tmpfile) {
     if ($1 != oldlib) {
       if (oldlib != "") {
 	closeversion(oldver, veryoldver);

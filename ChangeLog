@@ -1,5 +1,13 @@
 2002-02-06  Roland McGrath  <roland@frob.com>
 
+	* scripts/versions.awk: Improve error message for missing version.
+	Each version inherits from the last one only if they have the same
+	nonnumeric prefix, i.e. GLIBC_x.y and GLIBC_x.z or FOO_x and FOO_y
+	but not GLIBC_x and FOO_y.
+
+	* scripts/firstversions.awk: Handle libraries that don't have each
+	particular version named in the third column of shlib-versions.
+
 	* scripts/firstversions.awk: Don't mess with GLIBC_PRIVATE.
 
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
