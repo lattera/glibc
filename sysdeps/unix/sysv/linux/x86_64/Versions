@@ -9,4 +9,21 @@ libc {
   GLIBC_PRIVATE {
     __modify_ldt;
   }
+  GLIBC_2.3 {
+    # f*
+    fgetxattr; flistxattr; fremovexattr; fsetxattr;
+
+    # g*
+    getxattr;
+
+    # l*
+    listxattr;
+    lgetxattr; llistxattr; lremovexattr; lsetxattr;
+
+    # r*
+    removexattr;
+
+    # s*
+    setxattr;
+  }
 }
