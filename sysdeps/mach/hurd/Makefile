@@ -77,7 +77,7 @@ $(common-objpfx)errnos.d: $(mach-errnos-deps)
 	$(mach-errno-h) | \
 	$(CC) $(CPPFLAGS) -M -x c - | \
 	sed $(sed-remove-objpfx) -e 's,- *:,mach-errnos-deps :=,' \
-	    -e 's,../,$(..),g' > $@t
+	    -e 's,\.\./,$(..),g' > $@t
 	mv -f $@t $@
 
 $(hurd)/errnos.h: $(common-objpfx)stamp-errnos ;
