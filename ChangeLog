@@ -1,10 +1,35 @@
+1998-09-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile (gmp-objs): Add mp_clz_tab.
+
+1998-09-25  David S. Miller  <davem@pierdol.cobaltmicro.com>
+
+	* sysdeps/sparc/fpu/feholdexcpt.c (feholdexcept): Clear bits don't
+	set them.
+	* stdlib/longlong.h (sparc udiv_qrnnd): Define inline version for
+	cpus lacking hardware multiply and divide.
+
+1998-09-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* db/Makefile ($(inst_slibdir)/libdb.so$(libdb1.so-version)): Use
+	$(<F), not $(^F).
+
+1998-09-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* db/btree/bt_delete.c: Fix -Wparentheses warning.
+
+1998-09-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(inst_includedir)/gnu/lib-names.h): Use
+	$(do-install).
+
 1998-09-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* debug/catchsegv.sh: Also produce output if cloned process died.
 
 1998-09-24  Paul Eggert  <eggert@twinsun.com>
 
-	* strftime.c (f_wkday): Remove duplicate definition.
+	* time/strftime.c (f_wkday): Remove duplicate definition.
 	(f_wkday, f_month, a_wkday, a_month, ampm): Define as macros when
 	!defined _NL_CURRENT && !HAVE_STRFTIME; this propagates the
 	1998-09-11 fix to this case.
@@ -12,7 +37,7 @@
 
 1998-09-24  Paul Eggert  <eggert@twinsun.com>
 
-	* strftime.c (my_strftime): Don't store past the end of a
+	* time/strftime.c (my_strftime): Don't store past the end of a
 	zero-sized buffer.
 
 1998-09-24  Paul Eggert  <eggert@twinsun.com>

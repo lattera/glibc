@@ -1,5 +1,5 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
-   Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1135,12 +1135,39 @@ extern USItype __udiv_qrnnd ();
 #define UMUL_TIME 39		/* 39 instructions */
 #endif
 #ifndef udiv_qrnnd
-#ifndef LONGLONG_STANDALONE
+/* It's quite necessary to add this much assembler for the sparc.
+   The default udiv_qrnnd (in C) is more than 10 times slower!  */
 #define udiv_qrnnd(q, r, n1, n0, d) \
-  do { USItype __r;							\
-    (q) = __udiv_qrnnd (&__r, (n1), (n0), (d));				\
-    (r) = __r;								\
-  } while (0)
+  __asm__ ("! Inlined udiv_qrnnd
+	mov	32,%%g1
+	subcc	%1,%2,%%g0
+1:	bcs	5f
+	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb
+	sub	%1,%2,%1	! this kills msb of n
+	addx	%1,%1,%1	! so this can't give carry
+	subcc	%%g1,1,%%g1
+2:	bne	1b
+	 subcc	%1,%2,%%g0
+	bcs	3f
+	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb
+	b	3f
+	 sub	%1,%2,%1	! this kills msb of n
+4:	sub	%1,%2,%1
+5:	addxcc	%1,%1,%1
+	bcc	2b
+	 subcc	%%g1,1,%%g1
+! Got carry from n.  Subtract next step to cancel this carry.
+	bne	4b
+	 addcc	%0,%0,%0	! shift n1n0 and a 0-bit in lsb
+	sub	%1,%2,%1
+3:	xnor	%0,0,%0
+	! End of inline udiv_qrnnd"					\
+	   : "=&r" ((USItype)(q)),					\
+	     "=&r" ((USItype)(r))					\
+	   : "r" ((USItype)(d)),					\
+	     "1" ((USItype)(n1)),					\
+	     "0" ((USItype)(n0)) : "%g1" __AND_CLOBBER_CC)
+#define UDIV_TIME (3+7*32)	/* 7 instructions/iteration. 32 iterations. */
 extern USItype __udiv_qrnnd __P ((USItype *, USItype, USItype, USItype));
 #define UDIV_TIME 140
 #endif /* LONGLONG_STANDALONE */

@@ -153,10 +153,7 @@ $(inst_includedir)/gnu/stubs.h: subdir_install
 ifeq (yes,$(build-shared))
 
 $(inst_includedir)/gnu/lib-names.h: $(common-objpfx)gnu/lib-names.h $(+force)
-	$(make-target-directory)
-	if test -r $@ && cmp -s $< $@; \
-	then echo 'gnu/lib-names.h unchanged'; \
-	else $(INSTALL_DATA) $< $@; fi
+	$(do-install)
 endif
 
 # The `glibcbug' script contains the version number and it shall be rebuild

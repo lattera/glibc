@@ -34,7 +34,7 @@ install-others	:= $(inst_slibdir)/libdb.so$(libdb1.so-version) \
 
 $(inst_slibdir)/libdb.so$(libdb1.so-version): $(inst_slibdir)/libdb1-$(version).so $(+force)
 	rm -f $@
-	$(LN_S) $(^F) $@
+	$(LN_S) $(<F) $@
 
 $(db1-headers:%=$(inst_includedir)/db1/%): $(inst_includedir)/db1/%: % $(+force)
 	$(do-install)
