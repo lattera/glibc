@@ -6,6 +6,8 @@
 
 	* sysdeps/unix/sysv/linux/timer_settime.c [!__ASSUME_POSIX_TIMERS]
 	(timer_settime): Fix typo.
+	* sysdeps/unix/sysv/linux/timer_getoverr.c
+	[!__ASSUME_POSIX_TIMERS] (timer_getoverrun): Likewise.
 
 2003-03-27  Jakub Jelinek  <jakub@redhat.com>
 

@@ -87,21 +87,22 @@ libc_hidden_def (_setjmp)
 ENTRY(__sigsetjmp)
 	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(2)
 	alloc loc1=ar.pfs,2,2,2,0
+	.save ar.unat, r16
 	mov r16=ar.unat
 	;;
 	mov r17=ar.fpsr
 	mov r2=in0
 	add r3=8,in0
 	;;
-	st8.spill.nta [r2]=sp,16	// r12 (sp)
-	st8.spill.nta [r3]=gp,16	// r1 (gp)
+.mem.offset 8,0;	st8.spill.nta [r2]=sp,16	// r12 (sp)
+.mem.offset 0,0;	st8.spill.nta [r3]=gp,16	// r1 (gp)
 	;;
 	st8.nta [r2]=r16,16		// save caller's unat
 	st8.nta [r3]=r17,16		// save fpsr
 	add r8=0xa0,in0
 	;;
-	st8.spill.nta [r2]=r4,16	// r4
-	st8.spill.nta [r3]=r5,16	// r5
+.mem.offset 8,0;	st8.spill.nta [r2]=r4,16	// r4
+.mem.offset 0,0;	st8.spill.nta [r3]=r5,16	// r5
 	add r9=0xb0,in0
 	;;
 	stf.spill.nta [r8]=f2,32
@@ -143,8 +144,8 @@ ENTRY(__sigsetjmp)
 	stf.spill.nta [r8]=f30
 	stf.spill.nta [r9]=f31
 
-	st8.spill.nta [r2]=r6,16	// r6
-	st8.spill.nta [r3]=r7,16	// r7
+.mem.offset 8,0;	st8.spill.nta [r2]=r6,16	// r6
+.mem.offset 0,0;	st8.spill.nta [r3]=r7,16	// r7
 	;;
 	mov r23=ar.bsp
 	mov r25=ar.unat
@@ -170,9 +171,10 @@ ENTRY(__sigsetjmp)
 	st8.nta [r3]=in0		// &__jmp_buf
 	br.call.dpnt.few rp=__sigjmp_save
 .ret0:					// force a new bundle ::q
-	mov r8=0
+	mov.m ar.unat=r16		// restore caller's unat
 	mov rp=loc0
 	mov ar.pfs=loc1
+	mov r8=0
 	ret
 END(__sigsetjmp)
 

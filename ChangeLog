@@ -1,3 +1,10 @@
+2003-03-27  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Restore caller's
+	ar.unat before returning.  Add missing .mem.offset directives
+	to ensure file gets assembled without warnings.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Likewise.
+
 2003-03-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf) <_SC_MONOTONIC_CLOCK>:

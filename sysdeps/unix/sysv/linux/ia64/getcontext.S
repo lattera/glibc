@@ -34,6 +34,7 @@
   other than the PRESERVED state.  */
 
 ENTRY(__getcontext)
+	.prologue
 	alloc r16 = ar.pfs, 1, 0, 3, 0
 
 	// sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask):
@@ -53,7 +54,9 @@ ENTRY(__getcontext)
 	add r2 = SC_GR+1*8, r32
 	;;
 	mov.m rBSP = ar.bsp
+	.save ar.unat, rUNAT
 	mov.m rUNAT = ar.unat
+	.body
 	add r3 = SC_GR+4*8, r32
 	;;
 
@@ -65,8 +68,8 @@ ENTRY(__getcontext)
 .mem.offset 8,0; st8.spill [r3] = r6, 48
 	and rTMP = ~0x3, rRSC
 	;;
-	st8.spill [r2] = r7, (SC_FR+2*16-(SC_GR+7*8))
-	st8.spill [r3] = sp, (SC_FR+3*16-(SC_GR+12*8))
+.mem.offset 0,0; st8.spill [r2] = r7, (SC_FR+2*16-(SC_GR+7*8))
+.mem.offset 8,0; st8.spill [r3] = sp, (SC_FR+3*16-(SC_GR+12*8))
 	;;
 	mov.m ar.rsc = rTMP 		// put RSE into enforced lazy mode
 	mov.m rNAT = ar.unat
@@ -119,8 +122,8 @@ ENTRY(__getcontext)
 	stf.spill [r3] = f31, 32
 	mov rB1 = b1
 	;;
+	mov ar.unat = rUNAT	// we're done spilling integer regs; restore caller's UNaT
 	add r2 = SC_NAT, r32
-	nop 0
 	add r3 = SC_BSP, r32
 	;;
 	st8 [r2] = rNAT, (SC_RNAT-SC_NAT)
