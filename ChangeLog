@@ -1,3 +1,8 @@
+2000-07-26  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (fix_bad_pc24): New function.
+	(elf_machine_rel): Use it for out-of-range PC24 relocs.
+
 2000-07-28  Philip Blundell  <philb@gnu.org>
 
 	* math/test-fpucw.c: Ignore reserved bits in control word.
