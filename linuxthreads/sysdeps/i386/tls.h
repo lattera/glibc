@@ -171,7 +171,7 @@ TLS_DO_MODIFY_LDT_KERNEL_CHECK(						      \
 
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
 #   define TLS_SETUP_GS_SEGMENT(descr, secondcall)			      \
-  (TLS_DO_SET_THREAD_AREA (descr, firstcall)				      \
+  (TLS_DO_SET_THREAD_AREA (descr, secondcall)				      \
    ? "set_thread_area failed when setting up thread-local storage" : NULL)
 #  elif defined __NR_set_thread_area
 #   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
