@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-02-22 15:34-0800\n"
-"PO-Revision-Date: 2004-02-01 17:25+0100\n"
+"PO-Revision-Date: 2004-03-09 21:36+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -2992,11 +2992,11 @@ msgstr "geheugen is consistent, er zitten fouten in de bibliotheek\n"
 
 #: malloc/mcheck.c:349
 msgid "memory clobbered before allocated block\n"
-msgstr ""
+msgstr "geheugen rommelig voor toegewezen blok\n"
 
 #: malloc/mcheck.c:352
 msgid "memory clobbered past end of allocated block\n"
-msgstr ""
+msgstr "geheugen rommelig na einde van toegewezen blok\n"
 
 #: malloc/mcheck.c:355
 msgid "block freed twice\n"
@@ -3326,7 +3326,7 @@ msgstr "%s: Fout bij schrijven %s\n"
 
 #: timezone/zic.c:1758
 msgid "can't determine time zone abbreviation to use just after until time"
-msgstr ""
+msgstr "kan tijdzone afkorting niet bepalen voor gebruik net na tot-tijd"
 
 #: timezone/zic.c:1801
 msgid "too many transitions?!"
@@ -3758,7 +3758,7 @@ msgstr "Dienstconfiguratie om te gebruiken"
 #: nss/getent.c:136 nss/getent.c:308
 #, c-format
 msgid "Enumeration not supported on %s\n"
-msgstr ""
+msgstr "Opsomming niet ondersteund op %s\n"
 
 #: nss/getent.c:732
 msgid "getent - get entries from administrative database."
@@ -3799,7 +3799,7 @@ msgstr "kan kop niet lezen"
 
 #: debug/pcprofiledump.c:170
 msgid "invalid pointer size"
-msgstr ""
+msgstr "ongeldige pointergrootte"
 
 #: inet/rcmd.c:163 inet/rcmd.c:166
 msgid "rcmd: Cannot allocate memory\n"
@@ -4019,7 +4019,7 @@ msgstr "Mislukt (fout niet aangegeven)"
 
 #: sunrpc/clnt_raw.c:117
 msgid "clnt_raw.c - Fatal header serialization error."
-msgstr ""
+msgstr "clnt_raw.c - Fatale kopserialisatiefout."
 
 #: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
 msgid "clnttcp_create: out of memory\n"
@@ -4067,7 +4067,7 @@ msgstr ""
 
 #: sunrpc/pmap_rmt.c:328
 msgid "Cannot send broadcast packet"
-msgstr ""
+msgstr "Kan broadcasting pakket niet verzenden"
 
 #: sunrpc/pmap_rmt.c:353
 msgid "Broadcast poll problem"
@@ -4075,7 +4075,7 @@ msgstr ""
 
 #: sunrpc/pmap_rmt.c:366
 msgid "Cannot receive reply to broadcast"
-msgstr ""
+msgstr "Kan antwoord op broadcast niet ontvangen"
 
 #: sunrpc/rpc_main.c:288
 #, c-format
@@ -4114,7 +4114,7 @@ msgstr "%s: C-voorverwerker mislukt met afsluitcode %d\n"
 #: sunrpc/rpc_main.c:462
 #, c-format
 msgid "illegal nettype :`%s'\n"
-msgstr ""
+msgstr "ongeldige netsoort :`%s'\n"
 
 #: sunrpc/rpc_main.c:1104
 msgid "rpcgen: too many defines\n"
@@ -4137,27 +4137,27 @@ msgstr "Kan niet meer dan één invoerbestand opgeven!\n"
 
 #: sunrpc/rpc_main.c:1364
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-msgstr ""
+msgstr "Deze implementatie ondersteund geen newstyle of MT veilige code!\n"
 
 #: sunrpc/rpc_main.c:1373
 msgid "Cannot use netid flag with inetd flag!\n"
-msgstr ""
+msgstr "Kan netid optie niet met inetd optie gebruiken!\n"
 
 #: sunrpc/rpc_main.c:1385
 msgid "Cannot use netid flag without TIRPC!\n"
-msgstr ""
+msgstr "Kan netid optie niet zonder TIRPC gebruiken!\n"
 
 #: sunrpc/rpc_main.c:1392
 msgid "Cannot use table flags with newstyle!\n"
-msgstr ""
+msgstr "Kan tabelopties niet gebruiken met newstyle!\n"
 
 #: sunrpc/rpc_main.c:1411
 msgid "\"infile\" is required for template generation flags.\n"
-msgstr ""
+msgstr "\"invoerbestand\" is vereist voor sjabloonaanmaakopties.\n"
 
 #: sunrpc/rpc_main.c:1416
 msgid "Cannot have more than one file generation flag!\n"
-msgstr ""
+msgstr "Kan niet meer dan één bestandsgenereeroptie hebben!\n"
 
 #: sunrpc/rpc_main.c:1425
 #, c-format
@@ -4177,12 +4177,12 @@ msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o uitvoerbestand] [inv
 #: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
-msgstr ""
+msgstr "\t%s [-s netsoort]* [-o uitvoerbestand] [invoerbestand]\n"
 
 #: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
-msgstr ""
+msgstr "\t%s [-n netid]* [-o uitvoerbestand] [invoerbestand]\n"
 
 #: sunrpc/rpc_scan.c:116
 msgid "constant or identifier expected"
@@ -4249,37 +4249,37 @@ msgstr "Sorry, u bent niet root\n"
 #: sunrpc/rpcinfo.c:665
 #, c-format
 msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-msgstr ""
+msgstr "rpcinfo: Kon registratie voor programma %s versie %s niet verwijderen\n"
 
 #: sunrpc/rpcinfo.c:674
 msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-msgstr ""
+msgstr "Gebruik: rpcinfo [ -n poortnummer ] -u host programmanummer [ versienummer ]\n"
 
 #: sunrpc/rpcinfo.c:676
 msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-msgstr ""
+msgstr "       rpcinfo [ -n poortnummer ] -t host programmanummer [ versienummer ]\n"
 
 #: sunrpc/rpcinfo.c:678
 msgid "       rpcinfo -p [ host ]\n"
-msgstr ""
+msgstr "       rpcinfo -p [ host ]\n"
 
 #: sunrpc/rpcinfo.c:679
 msgid "       rpcinfo -b prognum versnum\n"
-msgstr ""
+msgstr "       rpcinfo -b programmanummer versienummer\n"
 
 #: sunrpc/rpcinfo.c:680
 msgid "       rpcinfo -d prognum versnum\n"
-msgstr ""
+msgstr "       rpcinfo -d programmanummer versienummer\n"
 
 #: sunrpc/rpcinfo.c:695
 #, c-format
 msgid "rpcinfo: %s is unknown service\n"
-msgstr ""
+msgstr "rpcinfo: %s is onbekende dienst\n"
 
 #: sunrpc/rpcinfo.c:732
 #, c-format
 msgid "rpcinfo: %s is unknown host\n"
-msgstr ""
+msgstr "rpcinfo: %s is onbekende host\n"
 
 #: sunrpc/svc_run.c:76
 msgid "svc_run: - poll failed"
@@ -4288,7 +4288,7 @@ msgstr ""
 #: sunrpc/svc_simple.c:87
 #, c-format
 msgid "can't reassign procedure number %ld\n"
-msgstr ""
+msgstr "kan procedurenummer %ld niet opnieuw toewijzen\n"
 
 #: sunrpc/svc_simple.c:96
 msgid "couldn't create an rpc server\n"
@@ -4297,7 +4297,7 @@ msgstr "kon geen rpc-server aanmaken\n"
 #: sunrpc/svc_simple.c:104
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
-msgstr ""
+msgstr "kon programma %ld versie %ld niet registreren\n"
 
 #: sunrpc/svc_simple.c:111
 msgid "registerrpc: out of memory\n"
@@ -4306,16 +4306,16 @@ msgstr "registerrpc: geheugentekort\n"
 #: sunrpc/svc_simple.c:175
 #, c-format
 msgid "trouble replying to prog %d\n"
-msgstr ""
+msgstr "problemen bij antwoorden aan programma %d\n"
 
 #: sunrpc/svc_simple.c:183
 #, c-format
 msgid "never registered prog %d\n"
-msgstr ""
+msgstr "programma %d nooit geregistreerd\n"
 
 #: sunrpc/svc_tcp.c:155
 msgid "svc_tcp.c - tcp socket creation problem"
-msgstr ""
+msgstr "svc_tcp.c - probleem bij aanmaken TCP socket"
 
 #: sunrpc/svc_tcp.c:170
 msgid "svc_tcp.c - cannot getsockname or listen"
@@ -4323,59 +4323,59 @@ msgstr ""
 
 #: sunrpc/svc_tcp.c:181 sunrpc/svc_tcp.c:184
 msgid "svctcp_create: out of memory\n"
-msgstr ""
+msgstr "svctcp_create: geheugentekort\n"
 
 #: sunrpc/svc_tcp.c:225 sunrpc/svc_tcp.c:228
 msgid "svc_tcp: makefd_xprt: out of memory\n"
-msgstr ""
+msgstr "svc_tcp: makefd_xprt: geheugentekort\n"
 
 #: sunrpc/svc_udp.c:128
 msgid "svcudp_create: socket creation problem"
-msgstr ""
+msgstr "svcudp_create: probleem bij aanmaken socket"
 
 #: sunrpc/svc_udp.c:142
 msgid "svcudp_create - cannot getsockname"
-msgstr ""
+msgstr "svcudp_create - getsockname aanroep mislukt"
 
 #: sunrpc/svc_udp.c:154 sunrpc/svc_udp.c:157
 msgid "svcudp_create: out of memory\n"
-msgstr ""
+msgstr "svcudp_create: geheugentekort\n"
 
 #: sunrpc/svc_udp.c:182 sunrpc/svc_udp.c:185
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
-msgstr ""
+msgstr "svcudp_create: xp_pad is te klein voor IP_PKTINFO\n"
 
 #: sunrpc/svc_udp.c:471
 msgid "enablecache: cache already enabled"
-msgstr ""
+msgstr "enablecache: buffering staat al aan"
 
 #: sunrpc/svc_udp.c:477
 msgid "enablecache: could not allocate cache"
-msgstr ""
+msgstr "enablecache: kon buffer niet toewijzen"
 
 #: sunrpc/svc_udp.c:485
 msgid "enablecache: could not allocate cache data"
-msgstr ""
+msgstr "enablecache: kon buffergegevens niet toewijzen"
 
 #: sunrpc/svc_udp.c:492
 msgid "enablecache: could not allocate cache fifo"
-msgstr ""
+msgstr "enablecache: kon buffer fifo niet toewijzen"
 
 #: sunrpc/svc_udp.c:528
 msgid "cache_set: victim not found"
-msgstr ""
+msgstr "cache_set: slachtoffer niet gevonden"
 
 #: sunrpc/svc_udp.c:539
 msgid "cache_set: victim alloc failed"
-msgstr ""
+msgstr "cache_set: toewijzen slachtoffer mislukt"
 
 #: sunrpc/svc_udp.c:545
 msgid "cache_set: could not allocate new rpc_buffer"
-msgstr ""
+msgstr "cache_set: kon nieuwe rpc_buffer niet toewijzen"
 
 #: sunrpc/svc_unix.c:150
 msgid "svc_unix.c - AF_UNIX socket creation problem"
-msgstr ""
+msgstr "svc_unix.c - probleem bij aanmaken AF_UNIX socket"
 
 #: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
@@ -4383,11 +4383,11 @@ msgstr ""
 
 #: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
 msgid "svcunix_create: out of memory\n"
-msgstr ""
+msgstr "svcunix_create: geheugentekort\n"
 
 #: sunrpc/svc_unix.c:222 sunrpc/svc_unix.c:225
 msgid "svc_unix: makefd_xprt: out of memory\n"
-msgstr ""
+msgstr "svc_unix: makefd_xprt: geheugentekort\n"
 
 #: sunrpc/xdr.c:570 sunrpc/xdr.c:573
 msgid "xdr_bytes: out of memory\n"
@@ -4499,7 +4499,7 @@ msgstr "Gegevensbank voor tabel bestaat niet"
 
 #: nis/nis_error.c:53
 msgid "Entry/table type mismatch"
-msgstr ""
+msgstr "Ingang/tabelsoort komt niet overeen"
 
 #: nis/nis_error.c:54
 msgid "Link points to illegal name"
@@ -4531,31 +4531,31 @@ msgstr ""
 
 #: nis/nis_error.c:61
 msgid "Non NIS+ namespace encountered"
-msgstr ""
+msgstr "Niet-NIS+ naamruimte tegengekomen"
 
 #: nis/nis_error.c:62
 msgid "Illegal object type for operation"
-msgstr ""
+msgstr "Ongeldige objektsoort voor bewerking"
 
 #: nis/nis_error.c:63
 msgid "Passed object is not the same object on server"
-msgstr ""
+msgstr "Meegegeven objekt is niet hetzelfde objekt op de server"
 
 #: nis/nis_error.c:64
 msgid "Modify operation failed"
-msgstr ""
+msgstr "Wijzigingsbewerking mislukt"
 
 #: nis/nis_error.c:65
 msgid "Query illegal for named table"
-msgstr ""
+msgstr "Zoekopdracht ongeldig voor genoemde tabel"
 
 #: nis/nis_error.c:66
 msgid "Attempt to remove a non-empty table"
-msgstr ""
+msgstr "Poging een niet-lege tabel te verwijderen"
 
 #: nis/nis_error.c:67
 msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
-msgstr ""
+msgstr "Fout bij toegang tot NIS+ koude-start bestand.  Is NIS+ wel geïnstalleerd?"
 
 #: nis/nis_error.c:68
 msgid "Full resync required for directory"
@@ -4761,7 +4761,7 @@ msgstr "\t\tToegangsrechten : "
 
 #: nis/nis_print.c:286
 msgid "Linked Object Type : "
-msgstr ""
+msgstr "Soort gekoppeld objekt:"
 
 #: nis/nis_print.c:288
 #, c-format
@@ -4815,11 +4815,13 @@ msgid ""
 "\n"
 "Time to Live  : "
 msgstr ""
+"\n"
+"Tijd te leven  : "
 
 #: nis/nis_print.c:329
 #, c-format
 msgid "Creation Time : %s"
-msgstr ""
+msgstr "Aanmaaktijd : %s"
 
 #: nis/nis_print.c:331
 #, c-format
@@ -4828,17 +4830,17 @@ msgstr ""
 
 #: nis/nis_print.c:332
 msgid "Object Type   : "
-msgstr ""
+msgstr "Objektsoort   : "
 
 #: nis/nis_print.c:352
 #, c-format
 msgid "    Data Length = %u\n"
-msgstr ""
+msgstr " Gegevenslengte = %u\n"
 
 #: nis/nis_print.c:365
 #, c-format
 msgid "Status            : %s\n"
-msgstr ""
+msgstr "Status            : %s\n"
 
 #: nis/nis_print.c:366
 #, c-format
@@ -5095,7 +5097,7 @@ msgstr ""
 #: nscd/connections.c:518
 #, c-format
 msgid "key length in request too long: %d"
-msgstr ""
+msgstr "sleutellengte in verzoek te lang: %d"
 
 #: nscd/connections.c:532
 #, c-format
@@ -5152,7 +5154,7 @@ msgstr ""
 
 #: nscd/nscd.c:85
 msgid "Read configuration data from NAME"
-msgstr ""
+msgstr "Configuratiegegevens lezen uit NAAM"
 
 #: nscd/nscd.c:87
 msgid "Do not fork and display messages on the current tty"
@@ -5214,7 +5216,7 @@ msgstr "Kon logbestand \"%s\" niet aanmaken"
 
 #: nscd/nscd_conf.c:182
 msgid "Must specify user name for server-user option"
-msgstr ""
+msgstr "Het is nodig een gebruikersnaam op te geven bij de server-user optie"
 
 #: nscd/nscd_conf.c:187
 #, c-format
@@ -5224,7 +5226,7 @@ msgstr "Onbekende optie: %s %s %s"
 #: nscd/nscd_stat.c:87
 #, c-format
 msgid "cannot write statistics: %s"
-msgstr ""
+msgstr "kan statistieken niet schrijven: %s"
 
 #: nscd/nscd_stat.c:105
 msgid "nscd not running!\n"
@@ -5236,7 +5238,7 @@ msgstr "schrijven onvolledig"
 
 #: nscd/nscd_stat.c:128
 msgid "cannot read statistics data"
-msgstr ""
+msgstr "kan statistische gegevens niet lezen"
 
 #: nscd/nscd_stat.c:131
 #, c-format
@@ -5275,7 +5277,7 @@ msgstr ""
 #: nscd/pwdcache.c:214
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
-msgstr ""
+msgstr "Kon \"%s\" niet vinden in wachtwoordenbuffer!"
 
 #: nscd/pwdcache.c:280
 #, c-format
@@ -5285,7 +5287,7 @@ msgstr ""
 #: nscd/pwdcache.c:287
 #, c-format
 msgid "Haven't found \"%d\" in password cache!"
-msgstr ""
+msgstr "Kon \"%d\" niet vinden in wachtwoordenbuffer!"
 
 #: elf/../sysdeps/generic/dl-sysdep.c:357
 msgid "cannot create capability list"
@@ -5294,7 +5296,7 @@ msgstr ""
 #: elf/../sysdeps/generic/readelflib.c:35
 #, c-format
 msgid "file %s is truncated\n"
-msgstr ""
+msgstr "bestand %s is afgekapt\n"
 
 #: elf/../sysdeps/generic/readelflib.c:67
 #, c-format
@@ -5354,35 +5356,35 @@ msgstr "Bestand is niet een bufferbestand.\n"
 #: elf/cache.c:195 elf/cache.c:205
 #, c-format
 msgid "%d libs found in cache `%s'\n"
-msgstr ""
+msgstr "%d bibliotheken gevonden in buffer `%s'\n"
 
 #: elf/cache.c:392
 #, c-format
 msgid "Can't remove old temporary cache file %s"
-msgstr ""
+msgstr "Kan oud tijdelijk bufferbestand %s niet verwijderen"
 
 #: elf/cache.c:399
 #, c-format
 msgid "Can't create temporary cache file %s"
-msgstr ""
+msgstr "Kan tijdelijk bufferbestand %s niet aanmaken"
 
 #: elf/cache.c:407 elf/cache.c:416 elf/cache.c:420
 msgid "Writing of cache data failed"
-msgstr ""
+msgstr "Schrijven van buffergegevens mislukt"
 
 #: elf/cache.c:424
 msgid "Writing of cache data failed."
-msgstr ""
+msgstr "Schrijven van buffergegevens mislukt."
 
 #: elf/cache.c:431
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
-msgstr ""
+msgstr "Wijzigen toegangsrechten van %s naar %#o mislukt"
 
 #: elf/cache.c:436
 #, c-format
 msgid "Renaming of %s to %s failed"
-msgstr ""
+msgstr "Naam wijzigen van %s naar %s mislukt"
 
 #: elf/dl-close.c:128
 msgid "shared object not open"
@@ -5407,23 +5409,23 @@ msgstr ""
 
 #: elf/dl-deps.c:461
 msgid "cannot allocate dependency list"
-msgstr ""
+msgstr "kan afhankelijkhedenlijst niet toewijzen"
 
 #: elf/dl-deps.c:494 elf/dl-deps.c:549
 msgid "cannot allocate symbol search list"
-msgstr ""
+msgstr "kan symboolzoeklijst niet toewijzen"
 
 #: elf/dl-deps.c:534
 msgid "Filters not supported with LD_TRACE_PRELINKING"
-msgstr ""
+msgstr "Filters niet ondersteund met LD_TRACE_PRELINKING"
 
 #: elf/dl-error.c:75
 msgid "DYNAMIC LINKER BUG!!!"
-msgstr ""
+msgstr "FOUT IN DYNAMISCHE KOPPELAAR!!!"
 
 #: elf/dl-error.c:108
 msgid "error while loading shared libraries"
-msgstr ""
+msgstr "fout bij laden gedeelde bibliotheken"
 
 #: elf/dl-load.c:339
 msgid "cannot allocate name record"
@@ -5431,11 +5433,11 @@ msgstr ""
 
 #: elf/dl-load.c:441 elf/dl-load.c:520 elf/dl-load.c:612 elf/dl-load.c:707
 msgid "cannot create cache for search path"
-msgstr ""
+msgstr "kan buffer voor zoekpad niet aanmaken"
 
 #: elf/dl-load.c:543
 msgid "cannot create RUNPATH/RPATH copy"
-msgstr ""
+msgstr "kan geen kopie maken van RUNPATH/RPATH"
 
 #: elf/dl-load.c:598
 msgid "cannot create search path array"
@@ -5455,7 +5457,7 @@ msgstr ""
 
 #: elf/dl-load.c:866 elf/dl-load.c:1398 elf/dl-load.c:1481
 msgid "cannot read file data"
-msgstr ""
+msgstr "kan bestandsgegevens niet lezen"
 
 #: elf/dl-load.c:906
 msgid "ELF load command alignment not page-aligned"
@@ -5491,11 +5493,11 @@ msgstr ""
 
 #: elf/dl-load.c:1169
 msgid "cannot allocate memory for program header"
-msgstr ""
+msgstr "kan geen geheugen toewijzen voor programmakop"
 
 #: elf/dl-load.c:1200
 msgid "object file has no dynamic section"
-msgstr ""
+msgstr "objektbestand heeft geen dynamische sectie"
 
 #: elf/dl-load.c:1240
 msgid "shared object cannot be dlopen()ed"
@@ -5503,7 +5505,7 @@ msgstr ""
 
 #: elf/dl-load.c:1263
 msgid "cannot create searchlist"
-msgstr ""
+msgstr "kan zoeklijst niet aanmaken"
 
 #: elf/dl-load.c:1398
 msgid "file too short"
@@ -5515,23 +5517,23 @@ msgstr "ongeldige ELF-header"
 
 #: elf/dl-load.c:1430
 msgid "ELF file data encoding not big-endian"
-msgstr ""
+msgstr "ELF-bestand gegevenscodering niet big-endian"
 
 #: elf/dl-load.c:1432
 msgid "ELF file data encoding not little-endian"
-msgstr ""
+msgstr "ELF-bestand gegevenscodering niet little-endian"
 
 #: elf/dl-load.c:1436
 msgid "ELF file version ident does not match current one"
-msgstr ""
+msgstr "ELF-bestandsversie identificatie komt niet overeen met huidige"
 
 #: elf/dl-load.c:1440
 msgid "ELF file OS ABI invalid"
-msgstr ""
+msgstr "ELF-bestand OS ABI onjuist"
 
 #: elf/dl-load.c:1442
 msgid "ELF file ABI version invalid"
-msgstr ""
+msgstr "ELF-bestand ABI-versie ongeldig"
 
 #: elf/dl-load.c:1445
 msgid "internal error"
@@ -5539,7 +5541,7 @@ msgstr "interne fout"
 
 #: elf/dl-load.c:1452
 msgid "ELF file version does not match current one"
-msgstr ""
+msgstr "ELF-bestand versie komt niet overeen met huidige"
 
 #: elf/dl-load.c:1460
 msgid "ELF file's phentsize not the expected size"
@@ -5555,7 +5557,7 @@ msgstr ""
 
 #: elf/dl-lookup.c:265 elf/dl-lookup.c:430
 msgid "relocation error"
-msgstr ""
+msgstr "verhuisfout"
 
 #: elf/dl-open.c:111
 msgid "cannot extend global scope"
@@ -5588,7 +5590,7 @@ msgstr ""
 #: elf/dl-reloc.c:219
 #, c-format
 msgid "%s: profiler found no PLTREL in object %s\n"
-msgstr ""
+msgstr "%s: profileerder heeft geen PLTREL in objekt gevonden %s\n"
 
 #: elf/dl-reloc.c:231
 #, c-format
@@ -5605,7 +5607,7 @@ msgstr ""
 
 #: elf/dl-version.c:302
 msgid "cannot allocate version reference table"
-msgstr ""
+msgstr "kan versieverwijzingstabel niet toewijzen"
 
 #: elf/ldconfig.c:122
 msgid "Print cache"
@@ -5617,11 +5619,11 @@ msgstr ""
 
 #: elf/ldconfig.c:124
 msgid "Don't build cache"
-msgstr ""
+msgstr "Geen buffer bouwen"
 
 #: elf/ldconfig.c:125
 msgid "Don't generate links"
-msgstr ""
+msgstr "Geen koppelingen genereren"
 
 #: elf/ldconfig.c:126
 msgid "Change to and use ROOT as root directory"
@@ -5629,19 +5631,19 @@ msgstr ""
 
 #: elf/ldconfig.c:127
 msgid "Use CACHE as cache file"
-msgstr ""
+msgstr "BUFFER als bufferbestand gebruiken"
 
 #: elf/ldconfig.c:128
 msgid "Use CONF as configuration file"
-msgstr ""
+msgstr "CONF als configuratiebestand gebruiken"
 
 #: elf/ldconfig.c:129
 msgid "Only process directories specified on the command line.  Don't build cache."
-msgstr ""
+msgstr "Alleen mappen opgegeven op opdrachtregel verwerken.  Geen buffer opbouwen."
 
 #: elf/ldconfig.c:130
 msgid "Manually link individual libraries."
-msgstr ""
+msgstr "Handmatig losse bibliotheken koppelen."
 
 #: elf/ldconfig.c:131
 msgid "Format to use: new, old or compat (default)"
@@ -5654,12 +5656,12 @@ msgstr ""
 #: elf/ldconfig.c:294
 #, c-format
 msgid "Path `%s' given more than once"
-msgstr ""
+msgstr "Pad `%s' meerdere malen opgegeven"
 
 #: elf/ldconfig.c:338
 #, c-format
 msgid "%s is not a known library type"
-msgstr ""
+msgstr "%s is geen bekende bibliotheeksoort"
 
 #: elf/ldconfig.c:356
 #, c-format
@@ -5674,7 +5676,7 @@ msgstr ""
 #: elf/ldconfig.c:436
 #, c-format
 msgid "%s is not a symbolic link\n"
-msgstr ""
+msgstr "%s is geen symbolische koppeling\n"
 
 #: elf/ldconfig.c:455
 #, c-format
@@ -5688,7 +5690,7 @@ msgstr ""
 
 #: elf/ldconfig.c:467
 msgid " (changed)\n"
-msgstr ""
+msgstr " (gewijzigd)\n"
 
 #: elf/ldconfig.c:469
 msgid " (SKIPPED)\n"
@@ -5707,7 +5709,7 @@ msgstr ""
 #: elf/ldconfig.c:547
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
-msgstr ""
+msgstr "Bestand %s genegeerd omdat het geen gewoon bestand is."
 
 #: elf/ldconfig.c:555
 #, c-format
@@ -5732,22 +5734,22 @@ msgstr ""
 #: elf/ldconfig.c:770 elf/readlib.c:93
 #, c-format
 msgid "Input file %s not found.\n"
-msgstr ""
+msgstr "Invoerbestand %s niet gevonden.\n"
 
 #: elf/ldconfig.c:804
 #, c-format
 msgid "libc5 library %s in wrong directory"
-msgstr ""
+msgstr "libc5-bibliotheek %s in verkeerde map"
 
 #: elf/ldconfig.c:807
 #, c-format
 msgid "libc6 library %s in wrong directory"
-msgstr ""
+msgstr "libc6-bibliotheek %s in verkeerde map"
 
 #: elf/ldconfig.c:810
 #, c-format
 msgid "libc4 library %s in wrong directory"
-msgstr ""
+msgstr "libc4-bibliotheek %s in verkeerde map"
 
 #: elf/ldconfig.c:837
 #, c-format
@@ -5757,7 +5759,7 @@ msgstr ""
 #: elf/ldconfig.c:940
 #, c-format
 msgid "Can't open configuration file %s"
-msgstr ""
+msgstr "Kan configuratiebestand %s niet openen"
 
 #: elf/ldconfig.c:1024
 msgid "Can't chdir to /"
@@ -5766,7 +5768,7 @@ msgstr ""
 #: elf/ldconfig.c:1066
 #, c-format
 msgid "Can't open cache file directory %s\n"
-msgstr ""
+msgstr "Kan bufferbestandmap %s niet openen\n"
 
 #: elf/readlib.c:99
 #, c-format
@@ -5776,7 +5778,7 @@ msgstr ""
 #: elf/readlib.c:109
 #, c-format
 msgid "File %s is too small, not checked."
-msgstr ""
+msgstr "Bestand %s is te klein, niet gecontroleerd."
 
 #: elf/readlib.c:118
 #, c-format
@@ -5790,7 +5792,7 @@ msgstr ""
 
 #: elf/sprof.c:72
 msgid "Output selection:"
-msgstr ""
+msgstr "Uitvoerselectie:"
 
 #: elf/sprof.c:74
 msgid "print list of count paths and their number of use"
@@ -5798,15 +5800,15 @@ msgstr ""
 
 #: elf/sprof.c:76
 msgid "generate flat profile with counts and ticks"
-msgstr ""
+msgstr "vlak profiel met aantallen en tikken genereren"
 
 #: elf/sprof.c:77
 msgid "generate call graph"
-msgstr ""
+msgstr "aanroepengrafiek genereren"
 
 #: elf/sprof.c:84
 msgid "Read and display shared object profiling data"
-msgstr ""
+msgstr "Profileergegevens van gedeeld objekt lezen en weergeven"
 
 #: elf/sprof.c:87
 msgid "SHOBJ [PROFDATA]"
@@ -5815,16 +5817,16 @@ msgstr ""
 #: elf/sprof.c:398
 #, c-format
 msgid "failed to load shared object `%s'"
-msgstr ""
+msgstr "laden gedeeld objekt `%s' mislukt"
 
 #: elf/sprof.c:407
 msgid "cannot create internal descriptors"
-msgstr ""
+msgstr "kan interne beschrijvers niet aanmaken"
 
 #: elf/sprof.c:526
 #, c-format
 msgid "Reopening shared object `%s' failed"
-msgstr ""
+msgstr "Opnieuw openen van gedeelde objekt `%s' mislukt"
 
 #: elf/sprof.c:534
 msgid "mapping of section headers failed"
@@ -5837,15 +5839,15 @@ msgstr ""
 #: elf/sprof.c:564
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
-msgstr ""
+msgstr "*** Het bestand `%s' is gestript: geen gedetailleerde analyse mogelijk\n"
 
 #: elf/sprof.c:594
 msgid "failed to load symbol data"
-msgstr ""
+msgstr "laden symboolgegevens mislukt"
 
 #: elf/sprof.c:664
 msgid "cannot load profiling data"
-msgstr ""
+msgstr "kan profileergegevens niet laden"
 
 #: elf/sprof.c:673
 msgid "while stat'ing profiling data file"
@@ -5854,7 +5856,7 @@ msgstr ""
 #: elf/sprof.c:681
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
-msgstr ""
+msgstr "profileergegevens bestand `%s' komt niet overeen met gedeeld objekt `%s'"
 
 #: elf/sprof.c:692
 msgid "failed to mmap the profiling data file"
@@ -5862,17 +5864,17 @@ msgstr ""
 
 #: elf/sprof.c:700
 msgid "error while closing the profiling data file"
-msgstr ""
+msgstr "fout bij sluiten profileergegevens bestand"
 
 #: elf/sprof.c:709 elf/sprof.c:779
 msgid "cannot create internal descriptor"
-msgstr ""
+msgstr "kan interne beschrijver niet aanmaken"
 
 #: elf/sprof.c:755
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
-msgstr ""
+msgstr "`%s' is geen juist bestand met profileergegevens voor `%s'"
 
 #: elf/sprof.c:936 elf/sprof.c:988
 msgid "cannot allocate symbol data"
-msgstr ""
+msgstr "kan symboolgegevens niet toewijzen"
