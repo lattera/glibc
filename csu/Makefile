@@ -85,6 +85,8 @@ $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
 
 CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions
 
+vpath initfini.c $(full_config_sysdirs)
+
 $(objpfx)initfini.s: initfini.c
 	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
 		$(patsubst -f%,-fno-%,$(exceptions)) -o $@

@@ -86,14 +86,16 @@ pid_t __fork(void)
   parent = pthread_atfork_parent;
   pthread_mutex_unlock(&pthread_atfork_lock);
   pthread_call_handlers(prepare);
+  __pthread_once_fork_prepare();
   pid = __libc_fork();
   if (pid == 0) {
     __pthread_reset_main_thread();
-    __pthread_reset_pthread_once();
     __fresetlockfiles();
     pthread_call_handlers(child);
+    __pthread_once_fork_child();
   } else {
     pthread_call_handlers(parent);
+    __pthread_once_fork_parent();
   }
   return pid;
 }

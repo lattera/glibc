@@ -1,5 +1,23 @@
 2000-05-06  Kaz Kylheku  <kaz@ashi.footprints.net>
 
+	* mutex.c (pthread_once): IN_PROGRESS state of pthread_once_t
+	object state is represented with additional bits which distinguish
+	whether that state was set up in the current process, or
+	in an ancestor process. If that state was set in an ancestor,
+	it means that a fork happened while thread was executing the init
+	function. In that case, the state is reset to NEVER.
+	* mutex.c (__pthread_once_fork_prepare): New function.
+	(__pthread_once_fork_child): Likewise
+	(__pthread_once_fork_parent): Likewise
+	(__pthread_reset_pthread_once): Removed.
+	* ptfork.c (__fork): Call new handlers in mutex.c.
+	* internals.h: Declarations of new mutex.c functions added.
+	Declaration of removed function deleted.
+	* linuxthreads.texi: Updated documentation about pthread_once
+	to clarify what happens under cancellation and forking.
+
+2000-05-06  Kaz Kylheku  <kaz@ashi.footprints.net>
+
 	* internals.h: New thread manager request type, REQ_KICK.
 	* join.c (pthread_exit): main thread now calls exit() instead
 	of _exit() in order to proper process cleanup.

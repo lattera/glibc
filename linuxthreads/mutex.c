@@ -17,6 +17,7 @@
 #include <errno.h>
 #include <sched.h>
 #include <stddef.h>
+#include <limits.h>
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
@@ -170,6 +171,7 @@ weak_alias (__pthread_mutexattr_getkind_np, pthread_mutexattr_getkind_np)
 
 static pthread_mutex_t once_masterlock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t once_finished = PTHREAD_COND_INITIALIZER;
+static int fork_generation = 0;	/* Child process increments this after fork. */
 
 enum { NEVER = 0, IN_PROGRESS = 1, DONE = 2 };
 
@@ -199,14 +201,20 @@ int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
   state_changed = 0;
 
   pthread_mutex_lock(&once_masterlock);
+
+  /* If this object was left in an IN_PROGRESS state in a parent
+     process (indicated by stale generation field), reset it to NEVER. */
+  if ((*once_control & 3) == IN_PROGRESS && (*once_control & ~3) != fork_generation)
+    *once_control = NEVER;
+
   /* If init_routine is being called from another routine, wait until
      it completes. */
-  while (*once_control == IN_PROGRESS) {
+  while ((*once_control & 3) == IN_PROGRESS) {
     pthread_cond_wait(&once_finished, &once_masterlock);
   }
   /* Here *once_control is stable and either NEVER or DONE. */
   if (*once_control == NEVER) {
-    *once_control = IN_PROGRESS;
+    *once_control = IN_PROGRESS | fork_generation;
     pthread_mutex_unlock(&once_masterlock);
     pthread_cleanup_push(pthread_once_cancelhandler, once_control);
     init_routine();
@@ -225,13 +233,31 @@ int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
 strong_alias (__pthread_once, pthread_once)
 
 /*
- * This is called in the child process after a fork to make
- * sure that the global mutex pthread_once is not held,
- * and that the condition variable is reset to an initial state.
+ * Handle the state of the pthread_once mechanism across forks.  The
+ * once_masterlock is acquired in the parent process prior to a fork to ensure
+ * that no thread is in the critical region protected by the lock.  After the
+ * fork, the lock is released. In the child, the lock and the condition
+ * variable are simply reset.  The child also increments its generation
+ * counter which lets pthread_once calls detect stale IN_PROGRESS states
+ * and reset them back to NEVER.
  */
 
-void __pthread_reset_pthread_once(void)
+void __pthread_once_fork_prepare(void)
+{
+  pthread_mutex_lock(&once_masterlock);
+}
+
+void __pthread_once_fork_parent(void)
+{
+  pthread_mutex_unlock(&once_masterlock);
+}
+
+void __pthread_once_fork_child(void)
 {
   pthread_mutex_init(&once_masterlock, NULL);
   pthread_cond_init(&once_finished, NULL);
+  if (fork_generation <= INT_MAX - 4)
+    fork_generation += 4;	/* leave least significant two bits zero */
+  else
+    fork_generation = 0;
 }

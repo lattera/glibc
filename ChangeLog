@@ -1,3 +1,10 @@
+2000-05-07  H.J. Lu  <hjl@gnu.org>
+
+	* csu/initfini.c: Moved to ....
+	* sysdeps/generic/initfini.c: ...here.
+
+	* csu/Makefile (initfini.c): Set vpath to $(full_config_sysdirs).
+
 2000-05-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/resource.texi: Document POSIX scheduling functions.

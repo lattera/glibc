@@ -1368,6 +1368,15 @@ record that initialization has been performed. Subsequent calls to
 @code{pthread_once} with the same @code{once_control} argument do
 nothing.
 
+If a thread is cancelled while executing @var{init_routine}
+the state of the @var{once_control} variable is reset so that
+a future call to @code{pthread_once} will call the routine again.
+
+If the process forks while one or more threads are executing
+@code{pthread_once} initialization routines, the states of their respective
+@var{once_control} variables will appear to be reset in the child process so
+that if the child calls @code{pthread_once}, the routines will be executed.
+
 @code{pthread_once} always returns 0.
 @end deftypefun
 
