@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1165,7 +1165,7 @@ __STRING_INLINE char *
 __strsep_g (char **__s, __const char *__reject)
 {
   register char *__retval = *__s;
-  if (__retval == NULL || *__retval == '\0')
+  if (__retval == NULL)
     return NULL;
   if ((*__s = strpbrk (__retval, __reject)) != NULL)
     *(*__s)++ = '\0';

@@ -36,6 +36,7 @@ main (void)
 	printf ("`fwrite' failed: %m\n");
 	return 1;
       }
+  fflush (fp);
   assert (ps + 1000 < c * sizeof (buf));
 
   /* First try something which is not allowed: map at an offset which is

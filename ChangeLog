@@ -1,3 +1,31 @@
+2000-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* include/resolv.h: Remove declarations for __ns_name_ntop and
+	__ns_name_unpack since those are available in resolv/arpa/nameser.h.
+
+2000-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* time/tst-strptime.c (test_tm): Add tests for all fields of
+	struct tm.
+
+2000-01-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h (__strsep_g): Don't handle empty __S special.
+
+2000-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* string/tester.c (test_strsep): Add one more test.
+
+2000-01-03  Philip Blundell  <philb@gnu.org>
+
+	* string/tester.c (test_mempcpy): New function.
+	(main): Call it.
+	(test_memcpy): Test unaligned cases too.
+
+	* sysdeps/arm/bits/string.h (_HAVE_STRING_ARCH_mempcpy): Define.
+
+	* sysdeps/arm/fpu/bits/mathdef.h: New file.
+
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/Makefile (tests): Add tst-mmap.
@@ -34,6 +62,7 @@
 	typos (__ASSUME_TRUNCATE64_SYSCALL -> __ASSUME_MMAP2_SYSCALL).
 	Reported by Philip Blundell <Philip.Blundell@pobox.com>.
 
+	* nss/Makefile: Add rules to build makedb.
 	* nss/nss_db/nss_db.h: Add definitions needed for makedb.
 	* nss/nss_db/dummy-db.h: Likewise.
 	* nss/makedb.c: New file.  Copied from file in db2, modified to not

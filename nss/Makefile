@@ -36,8 +36,8 @@ routines		= nsswitch $(addsuffix -lookup,$(databases))
 databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp key alias
 
-others                  := getent
-install-bin             := getent
+others                  := getent makedb
+install-bin             := getent makedb
 
 tests			= test-netdb
 
@@ -71,6 +71,8 @@ generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))
 distribute		+= db-XXX.c nss_db.h dummy-db.h
 
+
+$(objpfx)makedb: $(libdl)
 
 # Build static module if requested
 ifneq ($(build-static-nss),yes)

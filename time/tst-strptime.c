@@ -1,5 +1,5 @@
 /* Test for strptime.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -36,6 +36,69 @@ static const struct
   { "9/9/99", "%x", 4, 251 },
   { "19990502123412", "%Y%m%d%H%M%S", 0, 121 },
 };
+
+
+static const struct
+{
+  const char *input;
+  const char *format;
+  const char *output;
+  int wday;
+  int yday;
+} tm_tests [] =
+{
+  {"17410105012000", "%H%M%S%d%m%Y", "2000-01-05 17:41:01", 3, 4}
+};
+
+
+
+static int
+test_tm (void)
+{
+  struct tm tm;
+  int i;
+  int result = 0;
+  char buf[100];
+
+  for (i = 0; i < sizeof (tm_tests) / sizeof (tm_tests[0]); ++i)
+    {
+      memset (&tm, '\0', sizeof (tm));
+
+      if (*strptime (tm_tests[i].input, tm_tests[i].format, &tm) != '\0')
+	{
+	  printf ("not all of `%s' read\n", tm_tests[i].input);
+	  result = 1;
+	}
+      strftime (buf, sizeof (buf), "%F %T", &tm);
+      printf ("strptime (\"%s\", \"%s\", ...)\n"
+	      "\tshould be: %s, wday = %d, yday = %3d\n"
+	      "\t       is: %s, wday = %d, yday = %3d\n",
+	      tm_tests[i].input, tm_tests[i].format,
+	      tm_tests[i].output,
+	      tm_tests[i].wday, tm_tests[i].yday,
+	      buf, tm.tm_wday, tm.tm_yday);
+
+      if (strcmp (buf, tm_tests[i].output) != 0)
+	{
+	  printf ("Time and date are not correct.\n");
+	  result = 1;
+	}
+      if (tm.tm_wday != tm_tests[i].wday)
+	{
+	  printf ("weekday for `%s' incorrect: %d instead of %d\n",
+		  tm_tests[i].input, tm.tm_wday, tm_tests[i].wday);
+	  result = 1;
+	}
+      if (tm.tm_yday != tm_tests[i].yday)
+	{
+	  printf ("yearday for `%s' incorrect: %d instead of %d\n",
+		  tm_tests[i].input, tm.tm_yday, tm_tests[i].yday);
+	  result = 1;
+	}
+    }
+
+  return result;
+}
 
 
 int
@@ -75,6 +138,8 @@ main (int argc, char *argv[])
 	  result = 1;
 	}
     }
+
+  result |= test_tm ();
 
   return result;
 }

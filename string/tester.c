@@ -1,5 +1,5 @@
 /* Tester for string functions.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -928,6 +928,13 @@ test_strsep (void)
   equal(ptr, "", 83);
   check(ptr == one, 84);
   check(cp == NULL, 85);
+
+  *one = '\0';				/* Empty string and no token. */
+  cp = one;
+  ptr = strsep(&cp, "");
+  equal(ptr, "", 86);
+  check(ptr == one , 87);
+  check(cp == NULL, 88);
 }
 
 void
@@ -990,6 +997,7 @@ test_memchr (void)
 void
 test_memcpy (void)
 {
+  int i;
   it = "memcpy";
   check(memcpy(one, "abc", 4) == one, 1);	/* Returned value. */
   equal(one, "abc", 2);			/* Did the copy go right? */
@@ -1007,6 +1015,57 @@ test_memcpy (void)
   (void) memcpy(two, one, 9);
   equal(two, "hi there", 5);		/* Just paranoia. */
   equal(one, "hi there", 6);		/* Stomped on source? */
+
+  for (i = 0; i < 16; i++)
+    {
+      const char *x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+      strcpy (one, x);
+      check (memcpy (one + i, "hi there", 9) == one + i,
+	     7 + (i * 6));		/* Unaligned destination. */
+      check (memcmp (one, x, i) == 0, 8 + (i * 6));  /* Wrote under? */
+      equal (one + i, "hi there", 9 + (i * 6));
+      check (one[i + 9] == 'x', 10 + (i * 6));       /* Wrote over? */
+      check (memcpy (two, one + i, 9) == two,
+	     11 + (i * 6));		/* Unaligned source. */
+      equal (two, "hi there", 12 + (i * 6));
+    }
+}
+
+void
+test_mempcpy (void)
+{
+  int i;
+  it = "mempcpy";
+  check(mempcpy(one, "abc", 4) == one + 4, 1);	/* Returned value. */
+  equal(one, "abc", 2);			/* Did the copy go right? */
+
+  (void) strcpy(one, "abcdefgh");
+  (void) mempcpy(one+1, "xyz", 2);
+  equal(one, "axydefgh", 3);		/* Basic test. */
+
+  (void) strcpy(one, "abc");
+  (void) mempcpy(one, "xyz", 0);
+  equal(one, "abc", 4);			/* Zero-length copy. */
+
+  (void) strcpy(one, "hi there");
+  (void) strcpy(two, "foo");
+  (void) mempcpy(two, one, 9);
+  equal(two, "hi there", 5);		/* Just paranoia. */
+  equal(one, "hi there", 6);		/* Stomped on source? */
+
+  for (i = 0; i < 16; i++)
+    {
+      const char *x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+      strcpy (one, x);
+      check (mempcpy (one + i, "hi there", 9) == one + i + 9,
+	     7 + (i * 6));		/* Unaligned destination. */
+      check (memcmp (one, x, i) == 0, 8 + (i * 6));  /* Wrote under? */
+      equal (one + i, "hi there", 9 + (i * 6));
+      check (one[i + 9] == 'x', 10 + (i * 6));       /* Wrote over? */
+      check (mempcpy (two, one + i, 9) == two + 9,
+	     11 + (i * 6));		/* Unaligned source. */
+      equal (two, "hi there", 12 + (i * 6));
+    }
 }
 
 void
@@ -1294,6 +1353,9 @@ main (void)
 
   /* memmove - must work on overlap.  */
   test_memmove ();
+
+  /* mempcpy */
+  test_mempcpy ();
 
   /* memccpy.  */
   test_memccpy ();
