@@ -36,7 +36,7 @@
 # endif
 /* This macro will be used for functions which might take C++ callback
    functions.  */
-# define __PMS(args)	args
+# define __PMT(args)	args
 # define __DOTS		, ...
 
 #else	/* Not GCC.  */
@@ -46,7 +46,7 @@
 # if (defined __STDC__ && __STDC__) || defined __cplusplus
 
 #  define __P(args)	args
-#  define __PMS(args)	args
+#  define __PMT(args)	args
 #  define __const	const
 #  define __signed	signed
 #  define __volatile	volatile
@@ -55,7 +55,7 @@
 # else	/* Not ANSI C or C++.  */
 
 #  define __P(args)	()	/* No prototypes.  */
-#  define __PMS(args)	()
+#  define __PMT(args)	()
 #  define __const		/* No ANSI C keywords.  */
 #  define __signed
 #  define __volatile

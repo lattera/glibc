@@ -2,12 +2,12 @@
 
 	* configure.in: Check for -fexceptions.
 	* config.make.in: Define exceptions, not no-exceptions.
-	* misc/sys/cdefs.h: Define __PMS.  When using modern g++ define
+	* misc/sys/cdefs.h: Define __PMT.  When using modern g++ define
 	__P to use throw().
 	* misc/Makefile: Define CFLAGS-tsearch.c and CFLAGS-lsearch.c to
 	$(exceptions).
 	* stdlib/Makefile: Likewise for bsearch.c, msort.c, and qsort.c.
-	* misc/search.h: Use __PMS in tsearch, tfind, tdelete, twalk, tdestroy,
+	* misc/search.h: Use __PMT in tsearch, tfind, tdelete, twalk, tdestroy,
 	lfind, and lsearch prototpypes.
 	* stdlib/stdlib.h: Likewise for bsearch and qsort.
 
