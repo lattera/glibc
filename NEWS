@@ -7,6 +7,16 @@ Please send GNU C library bug reports using the `glibcbug' script to
 
 Version 2.3.2
 
+* Thread-safe interfaces for many functions that access locale data
+  were added in version 2.3, but these features were omitted from NEWS.
+  Many functions have variants with an `_l' suffix that take a `locale_t'
+  object as a parameter rather than consulting the current locale.
+  The new functions `newlocale', `duplocale', and `freelocale' in <locale.h>
+  create and maintain `locale_t' objects.  Additionally, the new function
+  `uselocale' sets "the current locale" (as used by functions not so
+  parameterized) set for an individual thread.  These features were added
+  in version 2.3, implemented by Ulrich Drepper and Roland McGrath.
+
 * The functions getresuid, getresgid, setresuid, and setresgid, which
   have long been available on Linux, are now declared in <unistd.h>
   and are now also available on the Hurd.
@@ -16,10 +26,13 @@ Version 2.3.2
 * The new dynamic string token $LIB is expanded in shared library names.
   This normally expands to lib, but on some 64-bit platforms to lib64 instead.
 
+* Aldy Hernandez contributed complete software floating point support for
+  PowerPC machines with no FPU.
+
 * fexecve is implemented on Linux.
 
-* the btowc() function should work 2+ times faster due to specialized
-  callbacks in the iconv modules.  Implemented by Bruno Haible.
+* The `btowc' function should work at least twice as fast due to
+  specialized callbacks in the iconv modules.  Implemented by Bruno Haible.
 
 Version 2.3
 
@@ -56,7 +69,7 @@ Version 2.3
   Changes by Ulrich Drepper.  SH support by Kaz Kojima.
 
 * Bruno Haible contributed iconv converters for ISO-2022-JP-3, SHIFT JIS-X0213,
-  EUC-JISX0213, and TISCII.
+  EUC-JISX0213, and TSCII.
 
 * New header <ifaddrs.h> with functions `getifaddrs' and `freeifaddrs':
   BSD-compatible interface for getting all network interface addresses.
@@ -1394,7 +1407,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992-1999,2000,01,02 Free Software Foundation, Inc.
+Copyright (C) 1992-1999,2000,2001,2002 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the
