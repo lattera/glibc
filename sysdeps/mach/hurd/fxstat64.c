@@ -24,8 +24,6 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-#undef __fxstat64
-
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat64 (int vers, int fd, struct stat64 *buf)
@@ -40,7 +38,6 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
 
   return 0;
 }
-
-INTDEF(__fxstat64)
+hidden_def (__fxstat64)
 
 #endif

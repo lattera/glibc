@@ -48,9 +48,6 @@ int __have_no_stat64;
 /* Get information about the file NAME in BUF.  */
 
 int
-___xstat64 (int vers, const char *name, struct stat64 *buf);
-
-int
 ___xstat64 (int vers, const char *name, struct stat64 *buf)
 {
   int result;
@@ -104,3 +101,4 @@ compat_symbol (libc, __old__xstat64, __xstat64, GLIBC_2_1);
 #else
 strong_alias (___xstat64, __xstat64);
 #endif
+hidden_ver (___xstat64, __xstat64)

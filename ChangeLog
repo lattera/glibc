@@ -1,3 +1,96 @@
+2002-08-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/unistd.h (seteuid, setegid): Add libc_hidden_proto.
+	* sysdeps/generic/seteuid.c (seteuid): Add libc_hidden_def.
+	* sysdeps/generic/setegid.c (setegid): Likewise.
+	* sysdeps/mach/hurd/seteuid.c (seteuid): Likewise.
+	* sysdeps/mach/hurd/setegid.c (setegid): Likewise.
+	* sysdeps/unix/bsd/seteuid.c (seteuid): Likewise.
+	* sysdeps/unix/bsd/setegid.c (setegid): Likewise.
+	* sysdeps/unix/sysv/aix/seteuid.c (seteuid): Likewise.
+	* sysdeps/unix/sysv/aix/setegid.c (setegid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c (setegid): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/seteuid.c (seteuid): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setegid.c (setegid): Likewise.
+	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Likewise.
+	* sysdeps/unix/sysv/linux/setegid.c (setegid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c (seteuid): Likewise.
+	Remove fallback if __ASSUME_SETRESUID_SYSCALL.
+
+	* include/sys/stat.h (__fxstat_internal, __fxstat64_internal,
+	__lxstat_internal, __lxstat64_internal): Remove.
+	(__fxstat, __fxstat64, __lxstat, __lxstat64, __xstat, __xstat64):
+	Add hidden_proto.
+	* sysdeps/generic/fxstat.c (__fxstat): Add hidden_def.
+	Remove INTDEF where present, remove #undef at the beginning.
+	* sysdeps/generic/fxstat64.c (__fxstat64): Likewise.
+	* sysdeps/generic/lxstat.c (__lxstat): Likewise.
+	* sysdeps/generic/lxstat64.c (__lxstat64): Likewise.
+	* sysdeps/generic/xstat.c (__xstat): Likewise.
+	* sysdeps/generic/xstat64.c (__xstat64): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c (__xstat64, __fxstat64): Likewise.
+	* sysdeps/mach/hurd/fxstat.c (__fxstat): Likewise.
+	* sysdeps/mach/hurd/fxstat64.c (__fxstat64): Likewise.
+	* sysdeps/mach/hurd/lxstat.c (__lxstat): Likewise.
+	* sysdeps/mach/hurd/lxstat64.c (__lxstat64): Likewise.
+	* sysdeps/mach/hurd/xstat.c (__xstat): Likewise.
+	* sysdeps/mach/hurd/xstat64.c (__xstat64): Likewise.
+	* sysdeps/unix/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/common/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/aix/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/sysv/aix/fxstat64.c (__fxstat64): Likewise.
+	* sysdeps/unix/sysv/aix/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/aix/lxstat64.c (__lxstat64): Likewise.
+	* sysdeps/unix/sysv/aix/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/aix/xstat64.c (__xstat64): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/xstat.c (__xstat): Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c (__xstat64): Likewise.
+	* sysdeps/unix/sysv/linux/fxstat.c (__fxstat): Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c (__fxstat64): Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c (__lxstat): Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c (__lxstat64): Likewise.
+	* sysdeps/unix/xstat.c (__xstat): Likewise.
+
+	* include/sys/statvfs.h (statvfs, fstatvfs): Add libc_hidden_proto.
+	* sysdeps/generic/statvfs.c (statvfs): Add libc_hidden_def.
+	* sysdeps/generic/fstatvfs.c (fstatvfs): Likewise.
+	* sysdeps/mach/hurd/statvfs.c (statvfs): Likewise.
+	* sysdeps/mach/hurd/fstatvfs.c (fstatvfs): Likewise.
+	* sysdeps/unix/sysv/linux/statvfs.c (statvfs): Likewise.
+	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs): Likewise.
+
+	* include/unistd.h (tcgetpgrp): Add libc_hidden_proto.
+	* include/termios.h (tcsetattr, cfsetispeed, cfsetospeed): Likewise.
+	* sysdeps/generic/tcgetpgrp.c (tcgetpgrp): Add libc_hidden_def.
+	* sysdeps/generic/tcsetattr.c (tcsetattr): Likewise.
+	* sysdeps/generic/speed.c (cfsetispeed, cfsetospeed): Likewise.
+	* sysdeps/unix/bsd/bsd4.4/tcsetattr.c (tcgetpgrp): Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/tcsetattr.c (tcsetattr): Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/speed.c (cfsetispeed, cfsetospeed):
+	Likewise.
+	* sysdeps/unix/bsd/tcgetpgrp.c (tcgetpgrp): Likewise.
+	* sysdeps/unix/bsd/tcsetattr.c (tcsetattr): Likewise.
+	* sysdeps/unix/sysv/aix/tcsetattr.c (tcsetattr): Likewise.
+	* sysdeps/unix/sysv/aix/speed.c (cfsetispeed, cfsetospeed): Likewise.
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Likewise.
+	* sysdeps/unix/sysv/linux/speed.c (cfsetispeed, cfsetospeed): Likewise.
+	* sysdeps/unix/sysv/tcgetpgrp.c (tcgetpgrp): Likewise.
+	* sysdeps/unix/sysv/tcsetattr.c (tcsetattr): Likewise.
+
+	* include/string.h (strcoll): Add libc_hidden_proto.
+	* string/strcoll.c (strcoll): Add libc_hidden_def.
+
+	* misc/err.c (vwarn): Fix pasto in libc_hidden_def.
+
 2002-08-11  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/Makefile: New file.

@@ -22,8 +22,6 @@
 #include <sys/stat.h>
 #include <bp-checks.h>
 
-#undef __lxstat
-
 extern int __syscall_lstat (const char *__unbounded, struct stat *__unbounded);
 
 int
@@ -37,5 +35,5 @@ __lxstat (int vers, const char *file, struct stat *buf)
 
   return __syscall_lstat (CHECK_STRING (file), CHECK_1 (buf));
 }
-INTDEF(__lxstat)
+hidden_def (__lxstat)
 weak_alias (__lxstat, _lxstat)

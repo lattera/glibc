@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
 
 #define STX_NORMAL      0x00
 
-
 extern int statx (const char *pathname, struct stat *st, int len, int cmd);
 
 int
@@ -30,3 +29,4 @@ __xstat (int ver, const char *pathname, struct stat *st)
   assert (ver == 0);
   return statx (pathname, st, sizeof (*st), STX_NORMAL);
 }
+hidden_def (__xstat)

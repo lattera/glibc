@@ -20,8 +20,6 @@
 #include <stddef.h>
 #include <sys/stat.h>
 
-#undef __lxstat64
-
 /* Get file information about FILE in BUF.
    If FILE is a symbolic link, do not follow it.  */
 int
@@ -36,6 +34,6 @@ __lxstat64 (int vers, const char *file, struct stat64 *buf)
   __set_errno (ENOSYS);
   return -1;
 }
-INTDEF(__lxstat64)
+hidden_def (__lxstat64)
 stub_warning (__lxstat64)
 #include <stub-tag.h>

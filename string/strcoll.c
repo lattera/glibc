@@ -551,3 +551,6 @@ STRCOLL (s1, s2, l)
 
   return result;
 }
+#if !defined WIDE_CHAR_VERSION && !defined USE_IN_EXTENDED_LOCALE_MODEL
+libc_hidden_def (strcoll)
+#endif

@@ -22,8 +22,6 @@
 #include <fcntl.h>
 #include <hurd.h>
 
-#undef __lxstat64
-
 /* Get information about the file descriptor FD in BUF.  */
 int
 __lxstat64 (int vers, const char *file, struct stat64 *buf)
@@ -43,4 +41,4 @@ __lxstat64 (int vers, const char *file, struct stat64 *buf)
     return __hurd_fail (err);
   return 0;
 }
-INTDEF(__lxstat64)
+hidden_def (__lxstat64)

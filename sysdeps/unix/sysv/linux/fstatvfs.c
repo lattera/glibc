@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -43,3 +43,4 @@ fstatvfs (int fd, struct statvfs *buf)
   /* We signal success if the statfs call succeeded.  */
   return 0;
 }
+libc_hidden_def (fstatvfs)

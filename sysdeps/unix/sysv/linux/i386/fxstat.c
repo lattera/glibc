@@ -44,8 +44,6 @@ extern int __have_no_stat64;
 # endif
 #endif
 
-#undef __fxstat
-
 /* Get information about the file FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
@@ -96,10 +94,10 @@ __fxstat (int vers, int fd, struct stat *buf)
 #endif  /* __ASSUME_STAT64_SYSCALL  */
 }
 
-INTDEF(__fxstat)
+hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat);
 #ifdef XSTAT_IS_XSTAT64
 #undef __fxstat64
 strong_alias (__fxstat, __fxstat64);
-INTDEF(__fxstat64)
+hidden_ver (__fxstat, __fxstat64)
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,95,96,2000,01 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
   __set_errno (ENOSYS);
   return -1;
 }
-
+libc_hidden_def (tcsetattr)
 
 /* Strychnine checking.  */
 static int

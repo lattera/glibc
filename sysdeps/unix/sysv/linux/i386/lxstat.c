@@ -34,8 +34,6 @@
 
 #include <xstatconv.c>
 
-#undef __lxstat
-
 extern int __syscall_lstat (const char *__unbounded,
 			    struct kernel_stat *__unbounded);
 
@@ -98,10 +96,10 @@ __lxstat (int vers, const char *name, struct stat *buf)
 #endif
 }
 
-INTDEF(__lxstat)
+hidden_def (__lxstat)
 weak_alias (__lxstat, _lxstat);
 #ifdef XSTAT_IS_XSTAT64
 #undef __lxstat64
-INTDEF(__lxstat64)
 strong_alias (__lxstat, __lxstat64);
+hidden_ver (__lxstat, __lxstat64)
 #endif

@@ -20,8 +20,6 @@
 #include <stddef.h>
 #include <sys/stat.h>
 
-#undef __fxstat64
-
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat64 (int vers, int fd, struct stat64 *buf)
@@ -46,7 +44,6 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
   __set_errno (ENOSYS);
   return -1;
 }
+hidden_def (__fxstat64)
 stub_warning (fstat64)
 #include <stub-tag.h>
-
-INTDEF(__fxstat64)

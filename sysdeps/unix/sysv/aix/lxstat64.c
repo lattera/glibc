@@ -22,8 +22,6 @@
 #define STX_LINK        0x01
 #define STX_64          0x08
 
-#undef __lxstat64
-
 extern int statx (const char *pathname, struct stat64 *st, int len, int cmd);
 
 int
@@ -32,5 +30,4 @@ __lxstat64 (int ver, const char *pathname, struct stat64 *st)
   assert (ver == 0);
   return statx (pathname, st, sizeof (*st), STX_LINK | STX_64);
 }
-
-INTDEF(__lxstat64)
+hidden_def (__lxstat64)

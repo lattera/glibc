@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __xstat (int vers, const char *file, struct stat *buf)
   __set_errno (ENOSYS);
   return -1;
 }
+hidden_def (__xstat)
 stub_warning (stat)
-
 weak_alias (__xstat, _xstat)
 #include <stub-tag.h>

@@ -22,14 +22,11 @@
 
 #include "xstatconv.c"
 
-#undef __lxstat
-
 int
 __lxstat (int vers, const char *file, struct stat *buf)
 {
   struct stat64 buf64;
   return __lxstat64 (vers, file, &buf64) ?: xstat64_conv (buf, &buf64);
 }
-
-INTDEF(__lxstat)
+hidden_def (__lxstat)
 weak_alias (__lxstat, _lxstat)

@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FD resides.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,6 @@ __fstatvfs (int fd, struct statvfs *buf)
   return -1;
 }
 stub_warning (fstatvfs)
-
 weak_alias (__fstatvfs, fstatvfs)
+libc_hidden_weak (fstatvfs)
 #include <stub-tag.h>

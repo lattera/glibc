@@ -28,8 +28,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#undef __lxstat
-
 extern int __syscall_lstat (const char *, struct stat *);
 
 /* Get information about the file FD in BUF.  */
@@ -39,8 +37,8 @@ __lxstat (int vers, const char *name, struct stat *buf)
   return INLINE_SYSCALL (lstat, 2, name, buf);
 }
 
-INTDEF(__lxstat)
+hidden_def (__lxstat)
 weak_alias (__lxstat, _lxstat);
 #undef __lxstat64
-INTDEF(__lxstat64)
 strong_alias (__lxstat, __lxstat64);
+hidden_ver (__lxstat, __lxstat64)

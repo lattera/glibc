@@ -505,6 +505,7 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
 
   return 0;
 }
+libc_hidden_def (__fxstat64)
 
 int weak_function
 __xstat64 (int vers, const char *file, struct stat64 *buf)
@@ -522,6 +523,7 @@ __xstat64 (int vers, const char *file, struct stat64 *buf)
 
   return 0;
 }
+libc_hidden_def (__xstat64)
 
 /* This function is called by the dynamic linker (rtld.c) to check
    whether debugging malloc is allowed even for SUID binaries.  This

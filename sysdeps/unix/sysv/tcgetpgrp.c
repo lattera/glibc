@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,3 +33,4 @@ tcgetpgrp (fd)
     return (pid_t) -1;
   return (pid_t) pgrp;
 }
+libc_hidden_def (tcgetpgrp)

@@ -72,6 +72,7 @@ libc_hidden_proto (__strndup)
 libc_hidden_proto (__strerror_r)
 libc_hidden_proto (__strverscmp)
 libc_hidden_proto (basename)
+libc_hidden_proto (strcoll)
 
 # ifndef _ISOMAC
 #  ifndef index

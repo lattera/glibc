@@ -22,8 +22,6 @@
 
 #include "xstatconv.c"
 
-#undef __fxstat
-
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
@@ -31,6 +29,5 @@ __fxstat (int vers, int fd, struct stat *buf)
   struct stat64 buf64;
   return __fxstat64 (vers, fd, &buf64) ?: xstat64_conv (buf, &buf64);
 }
-
-INTDEF(__fxstat)
+hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat)

@@ -12,7 +12,9 @@ libc_hidden_proto (getpid)
 libc_hidden_proto (getsid)
 libc_hidden_proto (getdomainname)
 libc_hidden_proto (getlogin_r)
-
+libc_hidden_proto (seteuid)
+libc_hidden_proto (setegid)
+libc_hidden_proto (tcgetpgrp)
 
 /* Now define the internal interfaces.  */
 extern int __access (__const char *__name, int __type);

@@ -18,13 +18,10 @@
 
 #include <sys/stat.h>
 
-#undef __lxstat
-
 int
 __lxstat (int version, const char *file, struct stat *buf)
 {
   return __xstat (version, file, buf);
 }
-
-INTDEF(__lxstat)
+hidden_def (__lxstat)
 weak_alias (__lxstat, _lxstat)

@@ -42,5 +42,6 @@ __xstat64 (int vers, const char *file, struct stat64 *buf)
     return __hurd_fail (err);
   return 0;
 }
+hidden_def (__xstat64)
 
 #endif

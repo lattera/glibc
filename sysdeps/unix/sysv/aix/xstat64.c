@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,3 +31,4 @@ __xstat64 (int ver, const char *pathname, struct stat64 *st)
   assert (ver == 0);
   return statx (pathname, st, sizeof (*st), STX_NORMAL | STX_64);
 }
+hidden_def (__xstat64)

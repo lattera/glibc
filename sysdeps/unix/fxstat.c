@@ -24,8 +24,6 @@
 
 extern int __syscall_fstat (int, struct stat *__unbounded);
 
-#undef __fxstat
-
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
@@ -38,5 +36,5 @@ __fxstat (int vers, int fd, struct stat *buf)
 
   return __syscall_fstat (fd, CHECK_1 (buf));
 }
-INTDEF(__fxstat)
+hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat)

@@ -28,4 +28,5 @@ __xstat (int vers, const char *file, struct stat *buf)
   struct stat64 buf64;
   return __xstat64 (vers, file, &buf64) ?: xstat64_conv (buf, &buf64);
 }
+hidden_def (__xstat)
 weak_alias (__xstat, _xstat)

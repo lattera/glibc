@@ -20,7 +20,6 @@
 /* Ho hum, if xstat == xstat64 we must get rid of the prototype or gcc
    will complain since they don't strictly match.  */
 #define __fxstat64 __fxstat64_disable
-#define __fxstat64_internal __fxstat64_internal_disable
 
 #include <errno.h>
 #include <stddef.h>
@@ -35,8 +34,6 @@
 #include <xstatconv.c>
 
 extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
-
-#undef __fxstat
 
 /* Get information about the file FD in BUF.  */
 int
@@ -55,11 +52,10 @@ __fxstat (int vers, int fd, struct stat *buf)
   return result;
 }
 
-INTDEF(__fxstat)
+hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat);
 #ifdef XSTAT_IS_XSTAT64
 #undef __fxstat64
-#undef __fxstat64_internal
 strong_alias (__fxstat, __fxstat64);
-INTDEF(__fxstat64)
+hidden_ver (__fxstat, __fxstat64)
 #endif

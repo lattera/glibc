@@ -32,8 +32,6 @@
 # include <xstatconv.c>
 #endif
 
-#undef __lxstat64
-
 extern int __syscall_lstat (const char *__unbounded,
 			    struct kernel_stat *__unbounded);
 
@@ -47,8 +45,6 @@ extern int __have_no_stat64;
 #endif
 
 /* Get information about the file NAME in BUF.  */
-extern int ___lxstat64 (int vers, const char *name, struct stat64 *buf);
-
 int
 ___lxstat64 (int vers, const char *name, struct stat64 *buf)
 {
@@ -102,4 +98,4 @@ compat_symbol (libc, __old__lxstat64, __lxstat64, GLIBC_2_1);
 #else
 strong_alias (___lxstat64, __lxstat64);
 #endif
-INTDEF2(___lxstat64, __lxstat64)
+hidden_ver (___lxstat64, __lxstat64)

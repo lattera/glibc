@@ -1,5 +1,5 @@
 /* xstat using old-style Unix stat system call.
-   Copyright (C) 1991, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1997,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,4 +35,5 @@ __xstat (int vers, const char *file, struct stat *buf)
 
   return __syscall_stat (CHECK_STRING (file), CHECK_1 (buf));
 }
+hidden_def (__xstat)
 weak_alias (__xstat, _xstat)

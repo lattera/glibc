@@ -30,8 +30,6 @@
 
 extern int __syscall_fstat (int, struct stat *);
 
-#undef __fxstat
-
 /* Get information about the file FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
@@ -39,8 +37,8 @@ __fxstat (int vers, int fd, struct stat *buf)
   return INLINE_SYSCALL (fstat, 2, fd, buf);
 }
 
-INTDEF(__fxstat)
+hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat);
 #undef __fxstat64
 strong_alias (__fxstat, __fxstat64);
-INTDEF(__fxstat64)
+hidden_ver (__fxstat, __fxstat64)

@@ -1,5 +1,5 @@
 /* `struct termios' speed frobnication functions.  AIX version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,8 @@ cfsetospeed (termios_p, speed)
   termios_p->c_cflag |= speed & 0x0000000f;
   return 0;
 }
+libc_hidden_def (cfsetospeed)
+
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
 int
@@ -70,3 +72,4 @@ cfsetispeed (termios_p, speed)
   termios_p->c_cflag |= (speed << 16) & ~0x000f0000;
   return 0;
 }
+libc_hidden_def (cfsetispeed)

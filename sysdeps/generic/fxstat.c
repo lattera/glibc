@@ -20,8 +20,6 @@
 #include <stddef.h>
 #include <sys/stat.h>
 
-#undef __fxstat
-
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
@@ -47,7 +45,6 @@ __fxstat (int vers, int fd, struct stat *buf)
   return -1;
 }
 stub_warning (fstat)
-
-INTDEF(__fxstat)
+hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat)
 #include <stub-tag.h>
