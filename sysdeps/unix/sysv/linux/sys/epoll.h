@@ -19,6 +19,7 @@
 #ifndef	_SYS_EPOLL_H
 #define	_SYS_EPOLL_H	1
 
+#include <stdint.h>
 #include <sys/types.h>
 
 
