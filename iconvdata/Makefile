@@ -24,6 +24,7 @@ subdir	:= iconvdata
 # Names of all the shared objects which implement the transformations.
 modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		 \
+	   ISO8859-11 ISO8859-13 ISO8859-14 ISO8859-15			 \
 	   T.61 ISO_6937 SJIS KOI-8 HP-ROMAN8 EBCDIC-AT-DE		 \
 	   EBCDIC-AT-DE-A EBCDIC-CA-FR EUC-KR UHC JOHAB libJIS libKSC	 \
 	   BIG5 EUC-JP libGB EUC-CN libCNS EUC-TW ISO646 EBCDIC-DK-NO	 \
@@ -57,6 +58,10 @@ ISO8859-7-routines := iso8859-7
 ISO8859-8-routines := iso8859-8
 ISO8859-9-routines := iso8859-9
 ISO8859-10-routines := iso8859-10
+ISO8859-11-routines := iso8859-11
+ISO8859-13-routines := iso8859-13
+ISO8859-14-routines := iso8859-14
+ISO8859-15-routines := iso8859-15
 ISO646-routines := iso646
 T.61-routines := t61
 ISO_6937-routines := iso6937
@@ -203,6 +208,8 @@ LDFLAGS-libCNS.so = -Wl,-soname,$(@F)
 distribute := 8bit-generic.c 8bit-gap.c gap.awk gaptab.awk gconv-modules    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
 	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
+	      iso8859-11.c iso8859-11.h iso8859-13.c iso8859-14.c	    \
+	      iso8859-15.c						    \
 	      t61.c iso6937.c sjis.c jis0201.h jis0208.h jis0212.h	    \
 	      koi-8.c koi8-r.c hp-roman8.c latin-greek.c latin-greek-1.c    \
 	      ebcdic-at-de.c ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c	    \
@@ -300,7 +307,8 @@ awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  greek-ccitt.h greek7.h greek7-old.h inis.h	 \
 			  inis-8.h inis-cyrillic.h iso_2033.h iso_5427.h \
 			  iso_5427-ext.h iso_5428.h iso_10367-box.h	 \
-			  mac-is.h nats-dano.h nats-sefi.h
+			  mac-is.h nats-dano.h nats-sefi.h iso8859-13.h  \
+			  iso8859-14.h iso8859-15.h
 
 generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
 	    $(awk-generated-headers) $(awk-generated-headers:%.h=%.stmp) \
@@ -409,6 +417,12 @@ $(objpfx)iso8859-7jp.stmp: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap-1.sh
 $(objpfx)iso8859-8.stmp: ../localedata/charmaps/ISO-8859-8 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)iso8859-10.stmp: ../localedata/charmaps/ISO-8859-10 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-13.stmp: ../localedata/charmaps/ISO-8859-13 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-14.stmp: ../localedata/charmaps/ISO-8859-14 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-15.stmp: ../localedata/charmaps/ISO-8859-15 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 
 $(objpfx)koi8-r.stmp: ../localedata/charmaps/KOI8-R gen-8bit-gap.sh

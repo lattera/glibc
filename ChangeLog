@@ -1,5 +1,15 @@
 1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/iso-8859-11.h: ISO 8859-11 conversion data.
+	* iconvdata/iso-8859-11.c: ISO 8859-11 conversion module.
+	* iconvdata/iso-8859-13.c: Likewise for 8859-13.
+	* iconvdata/iso-8859-14.c: Likewise for 8859-14.
+	* iconvdata/iso-8859-15.c: Likewise for 8859-15.
+	* iconvdata/gconv-modules: Add rules for new modules.
+	* iconvdata/Makefile: Likewise.
+
+1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
+
 	* stdio-common/printf_fp.c: #ifdef out long double handling code if
 	__NO_LONG_DOUBLE_MATH is defined to avoid warnings.
 	* stdio-common/printf_fphex.c: Likewise.

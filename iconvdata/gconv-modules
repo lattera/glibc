@@ -299,6 +299,27 @@ module	ISO-8859-10//		INTERNAL		ISO8859-10	1
 module	INTERNAL		ISO-8859-10//		ISO8859-10	1
 
 #	from			to			module		cost
+module	ISO-8859-11//		INTERNAL		ISO8859-11	1
+module	INTERNAL		ISO-8859-11//		ISO8859-11	1
+
+#	from			to			module		cost
+alias	ISO-IR-179//		ISO-8859-13//
+alias	LATIN8//		ISO-8859-13//
+alias	L8//			ISO-8859-13//
+module	ISO-8859-13//		INTERNAL		ISO8859-13	1
+module	INTERNAL		ISO-8859-13//		ISO8859-13	1
+
+#	from			to			module		cost
+alias	ISO_8859-14:1998//	ISO-8859-14//
+module	ISO-8859-14//		INTERNAL		ISO8859-14	1
+module	INTERNAL		ISO-8859-14//		ISO8859-14	1
+
+#	from			to			module		cost
+alias	ISO_8859-15:1998//	ISO-8859-15//
+module	ISO-8859-15//		INTERNAL		ISO8859-15	1
+module	INTERNAL		ISO-8859-15//		ISO8859-15	1
+
+#	from			to			module		cost
 alias	T.61//			T.61-8BIT//
 alias	ISO-IR-103//		T.61-8BIT//
 module	T.61-8BIT//		INTERNAL		T.61		1
