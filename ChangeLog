@@ -1,3 +1,8 @@
+2003-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bug-regex4.c (main): Cap RANGE and STOP arguments to
+	sum of SIZE1 and SIZE2 arguments.
+
 2003-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (process_block): Don't print message about
