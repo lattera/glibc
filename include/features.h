@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -293,7 +293,8 @@
 #endif	/* !ASSEMBLER */
 
 /* Decide whether we can define 'extern inline' functions in headers.  */
-#if __GNUC_PREREQ (2, 7) && defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
+#if __GNUC_PREREQ (2, 7) && defined __OPTIMIZE__ \
+    && !defined __OPTIMIZE_SIZE__ && !defined __NO_INLINE__
 # define __USE_EXTERN_INLINES	1
 #endif
 

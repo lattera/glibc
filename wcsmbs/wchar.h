@@ -284,8 +284,7 @@ extern size_t __mbrlen (__const char *__restrict __s, size_t __n,
 extern size_t mbrlen (__const char *__restrict __s, size_t __n,
 		      mbstate_t *__restrict __ps) __THROW;
 
-#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
-    && defined __USE_EXTERN_INLINES
+#ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
 extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
 			       mbstate_t *__restrict __ps) __THROW

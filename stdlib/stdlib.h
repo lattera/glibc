@@ -287,8 +287,7 @@ extern unsigned long long int __strtoull_internal (__const char *
 # endif
 #endif /* GCC */
 
-#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
-    && defined __USE_EXTERN_INLINES
+#ifdef __USE_EXTERN_INLINES
 /* Define inline functions which call the internal entry points.  */
 
 extern __inline double

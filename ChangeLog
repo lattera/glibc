@@ -1,3 +1,14 @@
+2001-05-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/features.h (__USE_EXTERN_INLINES): Don't define if
+	__NO_INLINE__ is defined.
+	* ctype/ctype.h (tolower, toupper): Change the guard condition to
+	__USE_EXTERN_INLINES check only.
+	* stdlib/stdlib.h (strtod, ...): Likewise.
+	* wcsmbs/wchar.h (mbrlen): Likewise.
+	* string/string.h: Only include bits/string.h and bits/string2.h
+	if __NO_INLINE__ is not defined.
+
 2001-05-07  Andreas Jaeger  <aj@suse.de>
 
 	* debug/Makefile ($(objpfx)xtrace): Substitute @SLIBDIR@ instead
