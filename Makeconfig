@@ -670,6 +670,14 @@ endif
 
 ifeq (yes, $(build-shared))
 
+# Commands to put in a pipeline to preprocess a file with # comments
+# %ifdef et al based on config.h settings or other %include'd files.
+define preprocess-versions
+sed 's/#.*$$//;s/^[ 	]*%/#/' \
+| $(CC) $(CPPFLAGS) -E -undef -include $(common-objpfx)config.h -x c - \
+| sed 's/#.*$$//;/^[ 	]*$$/d'
+endef
+
 # Process the shlib-versions file, which tells us what shared library
 # version numbers to use when we install shared objects on this system.
 # We need to wait until $(subdirs) is complete.
@@ -681,9 +689,8 @@ $(common-objpfx)soversions.i: $(..)shlib-versions $(..)Makeconfig \
 						       $(add-ons) \
 						       $(subdirs))) \
 			      $(common-objpfx)config.make
-	sed -e 's/#.*$$//;s/^[ 	]*%/#/' \
-	    $(filter-out $(..)Makeconfig $(common-objpfx)config.make,$^) \
-	| $(CC) -E -undef -include $(common-objpfx)config.h -x c - \
+	cat $(filter-out $(..)Makeconfig $(common-objpfx)config.make,$^) \
+	| $(preprocess-versions) \
 	| while read conf version setname; do \
 	    test -n "$$version" && \
 	    test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
