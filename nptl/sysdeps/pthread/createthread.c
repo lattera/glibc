@@ -79,17 +79,11 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
       /* Set the scheduling parameters.  */
       if ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)
 	{
-	  res = INTERNAL_SYSCALL (sched_setparam, err, 2, pd->tid,
-				  &pd->schedparam);
+	  res = INTERNAL_SYSCALL (sched_setscheduler, err, 3, pd->tid,
+				  pd->schedpolicy, &pd->schedparam);
 
-	  if (__builtin_expect (! INTERNAL_SYSCALL_ERROR_P (res, err), 1))
-	    {
-	      res = INTERNAL_SYSCALL (sched_setscheduler, err, 2, pd->tid,
-				      &pd->schedpolicy);
-
-	      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
-		goto err_out;
-	    }
+	  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+	    goto err_out;
 	}
 
       /* Now start the thread for real.  */

@@ -1,3 +1,8 @@
+2003-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/createthread.c (do_clone): Only use
+	sched_setschduler and pass correct parameters.
+
 2003-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/pthread.h (pthread_attr_setstackaddr,
