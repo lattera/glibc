@@ -1,5 +1,5 @@
 /* Software floating-point exception handling emulation.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -23,12 +23,15 @@
 #include "soft-supp.h"
 
 /* Global to store sticky exceptions.  */
-int __sim_exceptions;
+int __sim_exceptions __attribute__ ((nocommon));
+libc_hidden_data_def (__sim_exceptions);
 
 /* By default, no exceptions should trap.  */
 int __sim_disabled_exceptions = 0xffffffff;
+libc_hidden_data_def (__sim_disabled_exceptions);
 
-int __sim_round_mode;
+int __sim_round_mode __attribute__ ((nocommon));
+libc_hidden_data_def (__sim_round_mode);
 
 void
 __simulate_exceptions (int x)

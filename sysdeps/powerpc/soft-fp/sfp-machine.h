@@ -52,7 +52,11 @@
 #define FP_HANDLE_EXCEPTIONS  __simulate_exceptions (_fex)
 #define FP_ROUNDMODE          __sim_round_mode
 
-extern int __sim_exceptions attribute_hidden;
-extern int __sim_disabled_exceptions attribute_hidden;
-extern int __sim_round_mode attribute_hidden;
+extern int __sim_exceptions;
+libc_hidden_proto (__sim_exceptions);
+extern int __sim_disabled_exceptions;
+libc_hidden_proto (__sim_disabled_exceptions);
+extern int __sim_round_mode;
+libc_hidden_proto (__sim_round_mode);
+
 extern void __simulate_exceptions (int x) attribute_hidden;
