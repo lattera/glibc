@@ -49,13 +49,13 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
 
 # Several mpn functions from GNU MP are used by the strtod function.
 mpn-routines := add_1 add_n addmul_1 cmp divmod divmod_1 udiv_qrnnd \
-		lshift rshift mod_1 mul mul_1 mul_n sub_n submul_1 
+		lshift rshift mod_1 mul mul_1 mul_n sub_n submul_1
 mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm-syntax.h
 
 routines := $(strip $(routines) $(mpn-routines))	\
 	    dbl2mpn ldbl2mpn				\
 	    mpn2flt mpn2dbl mpn2ldbl
-aux := mp_clz_tab fpioconst 
+aux := mp_clz_tab fpioconst
 distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
 
 
@@ -74,8 +74,9 @@ mpn-sysdep := $(addsuffix .c,$(mpn-routines)) \
 	      $(addsuffix .S,$(mpn-routines)) \
 	      $(addsuffix .s,$(mpn-routines)) gmp-mparam.h asm-syntax.h
 
-mpn-try := $(addprefix $(gmp-srcdir)/mpn/*/,$(mpn-sysdep))
-mpn-found := $(wildcard $(mpn-try))
+mpn-try := $(addprefix $(gmp-srcdir)/mpn/*/,$(mpn-sysdep)) \
+	   $(addprefix $(gmp-srcdir)/mpn/*/*/,$(mpn-sysdep))
+mpn-found = $(wildcard $(mpn-try))
 
 include mpn-copy.mk
 %.mk: gen-%; sh $< > $@

@@ -1,3 +1,18 @@
+Mon Dec  4 12:10:28 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdlib/gen-mpn-copy (translations): Updated for new layout in
+	GMP 1.910.
+
+	* malloc/malloc.c (__malloc_initialize): Renamed from initialize;
+	made global.
+	(malloc): Caller changed.
+	* malloc/realloc.c (realloc): Call __malloc_initialize if
+	necessary, before checking hook.
+	* malloc/malloc.h: Declare __malloc_initialize.
+
+	* sysdeps/mach/hurd/ioctl.c: For IOC_VOID request, send ARG itself
+	as integer_t arg in RPC.
+
 Sat Dec  2 03:47:27 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/brk.c (DATA_SIZE): Bump to 128MB.
