@@ -1,3 +1,8 @@
+2000-06-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/bits/string.h (strcmp): Use 8bit register in 8bit
+	instruction.
+
 2000-06-29  Andreas Jaeger  <aj@suse.de>
 
 	* sunrpc/rpc_svcout.c (write_msg_out): Always use format string
