@@ -95,7 +95,6 @@ FUNCTION_NAME (ADD_PARAMS)
   static size_t buffer_size;
   static LOOKUP_TYPE resbuf;
   LOOKUP_TYPE *result;
-  int save;
 #ifdef NEED_H_ERRNO
   int h_errno_tmp = 0;
 #endif
