@@ -663,6 +663,9 @@ typedef struct
    Dyn.d_un.d_val field of the Elf*_Dyn structure.  This follows Sun's
    approach.  */
 #define DT_VALRNGLO	0x6ffffd00
+#define DT_GNU_PRELINKED 0x6ffffdf5	/* Prelinking timestamp */
+#define DT_GNU_CONFLICTSZ 0x6ffffdf6	/* Size of conflict section */
+#define DT_GNU_LIBLISTSZ 0x6ffffdf7	/* Size of library list */
 #define DT_CHECKSUM	0x6ffffdf8
 #define DT_PLTPADSZ	0x6ffffdf9
 #define DT_MOVEENT	0x6ffffdfa
@@ -680,6 +683,8 @@ typedef struct
    If any adjustment is made to the ELF object after it has been
    built these entries will need to be adjusted.  */
 #define DT_ADDRRNGLO	0x6ffffe00
+#define DT_GNU_CONFLICT	0x6ffffef8	/* Start of conflict section */
+#define DT_GNU_LIBLIST	0x6ffffef9	/* Library list */
 #define DT_CONFIG	0x6ffffefa	/* Configuration information.  */
 #define DT_DEPAUDIT	0x6ffffefb	/* Dependency auditing.  */
 #define DT_AUDIT	0x6ffffefc	/* Object auditing.  */

@@ -72,13 +72,16 @@
       }									      \
 									      \
   case 15:								      \
-    if (memcmp (envline, "LIBRARY_VERSION", 15) == 0)		      \
+    if (memcmp (envline, "LIBRARY_VERSION", 15) == 0)			      \
       {									      \
 	_dl_correct_cache_id = envline[16] == '5' ? 2 : 3;		      \
 	break;								      \
       }
 
-/* Extra unsecure variables.  */
-#define EXTRA_UNSECURE_ENVVARS "LD_AOUT_LIBRARY_PATH", "LD_AOUT_PRELOAD"
+/* Extra unsecure variables.  The names are all stuffed in a single
+   string which means they have to be terminated with a '\0' explicitly.  */
+#define EXTRA_UNSECURE_ENVVARS \
+  "LD_AOUT_LIBRARY_PATH\0"						      \
+  "LD_AOUT_PRELOAD\0"
 
 #endif /* dl-librecon.h */

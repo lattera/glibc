@@ -1345,7 +1345,7 @@ process_envvars (enum mode *modep)
 	    }
 
 	  /* Which shared object shall be profiled.  */
-	  if (memcmp (envline, "PROFILE", 7) == 0)
+	  if (memcmp (envline, "PROFILE", 7) == 0 && envline[8] != '\0')
 	    _dl_profile = &envline[8];
 	  break;
 
@@ -1430,38 +1430,27 @@ process_envvars (enum mode *modep)
      variables.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     {
-      static const char *unsecure_envvars[] =
-      {
-	UNSECURE_ENVVARS,
+      static const char unsecure_envvars[] =
 #ifdef EXTRA_UNSECURE_ENVVARS
 	EXTRA_UNSECURE_ENVVARS
 #endif
-      };
-      size_t cnt;
+	UNSECURE_ENVVARS;
+      const char *nextp;
 
-      if (preloadlist != NULL)
-	unsetenv ("LD_PRELOAD");
-      if (library_path != NULL)
-	unsetenv ("LD_LIBRARY_PATH");
-      if (_dl_origin_path != NULL)
-	unsetenv ("LD_ORIGIN_PATH");
-      if (debug_output != NULL)
-	unsetenv ("LD_DEBUG_OUTPUT");
-      if (_dl_profile != NULL)
-	unsetenv ("LD_PROFILE");
-
-      for (cnt = 0;
-	   cnt < sizeof (unsecure_envvars) / sizeof (unsecure_envvars[0]);
-	   ++cnt)
-	unsetenv (unsecure_envvars[cnt]);
+      nextp = unsecure_envvars;
+      do
+	{
+	  unsetenv (nextp);
+	  nextp = (char *) rawmemchr (nextp, '\0') + 1;
+	}
+      while (*nextp != '\0');
 
       if (__access ("/etc/suid-debug", F_OK) != 0)
 	unsetenv ("MALLOC_CHECK_");
     }
 
-  /* The name of the object to profile cannot be empty.  */
-  if (_dl_profile != NULL && *_dl_profile == '\0')
-    _dl_profile = NULL;
+  /* The caller wants this information.  */
+  *modep = mode;
 
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug
@@ -1487,8 +1476,6 @@ process_envvars (enum mode *modep)
 	/* We use standard output if opening the file failed.  */
 	_dl_debug_fd = STDOUT_FILENO;
     }
-
-  *modep = mode;
 }
 
 

@@ -63,7 +63,7 @@ void *__libc_stack_end;
 static ElfW(auxv_t) *_dl_auxv;
 unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 #if HP_TIMING_AVAIL
-hp_timing_t _dl_cpuclock_offset = 0;
+hp_timing_t _dl_cpuclock_offset;
 #endif
 
 #ifndef DL_FIND_ARG_COMPONENTS

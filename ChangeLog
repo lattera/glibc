@@ -1,5 +1,16 @@
 2001-11-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h: Add dynamic tag definitions for prelinking.
+
+	* elf/rtld.c (process_envvars): Avoid using array of string pointers.
+	Rewrite code to remove environment varables for SUID binaries.
+	Small optimization in LD_PROFILE handling.
+	* sysdeps/generic/unsecvars.h: Adjust format for process_envvars
+	changes.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h: Likewise.
+
+	* sysdeps/generic/dl-sysdep.c: Don't initialize _dl_cpuclock_offset.
+
 	* elf/dl-reloc.c (_dl_reloc_bad_type): Rewrite to not use writable
 	strings.  Change type of second parameter.
 	* sysdeps/generic/ldsodefs.h: Adjust _dl_reloc_bad_type prototype
