@@ -9,7 +9,7 @@ BEGIN {
 }
 
 # Per-file header.
-/[^ :]+\.so\.[0-9]+:[ 	]+.file format .*$/ {
+/[^ :]+\.so\.[0-9.]+:[ 	]+.file format .*$/ {
   emit(0);
 
   seen_opd = 0;
@@ -18,7 +18,7 @@ BEGIN {
   sub(/:$/, "", sofullname);
   soname = sofullname;
   sub(/^.*\//, "", soname);
-  sub(/\.so\.[0-9]+$/, "", soname);
+  sub(/\.so\.[0-9.]+$/, "", soname);
 
   suppress = ((filename_regexp != "" && sofullname !~ filename_regexp) \
 	      || (libname_regexp != "" && soname !~ libname_regexp));
@@ -106,11 +106,9 @@ NF == 0 || /DYNAMIC SYMBOL TABLE/ || /file format/ { next }
 }
 
 function emit(end) {
-  if (! parse_names || soname == "")
+  if (!end && (combine || ! parse_names || soname == ""))
     return;
-  if (combine && !end)
-    return;
-  tofile = !combine;
+  tofile = parse_names && !combine;
 
   nverslist = 0;
   for (version in versions) {
