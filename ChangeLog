@@ -1,3 +1,17 @@
+2003-05-11  Andreas Schwab  <schwab@suse.de>
+
+	* Makerules: Always use -MP together with -MD.
+	(sed-remove-dotot): Substitute $(..) also at start of line.
+	($(stdio_lim:h=st)): Use -MD instead of SUNPRO_DEPENDENCIES.
+	Generated defines with a single compiler call.
+	Use $(sed-remove-dotdot).
+	* mach/Makefile ($(objpfx)mach-syscalls.mk): Use -MD instead
+	of DEPENDENCIES_OUTPUT, and use $(sed-remove-objpfx).
+	* sysdeps/unix/sysv/linux/Makefile ($(objpfx)syscall-%.h):
+	Use -MD instead of SUNPRO_DEPENDENCIES, and use $(sed-remove-objpfx).
+	* sysdeps/unix/sysv/linux/mips/Makefile
+	($(objpfx)syscall-%.h): Likewise.
+
 2003-05-28  Roland McGrath  <roland@redhat.com>
 
 	* malloc/malloc.h [! __GNUC__] (__const): Define if undefined.
