@@ -2,17 +2,16 @@ comment_char %
 escape_char  /
 %
 % Persian Language Locale for Iran with UTF-8 character set
-% Source: The FarsiWeb Project
-% Address: Computing Center, Sharif University of Technology
-%    Azadi Ave, Tehran, Iran
+% Source: Sharif FarsiWeb, Inc.
+% Address: 5, Shahid Ghasemi Habibollah, Azadi Ave, Tehran, Iran
 % Contact: Roozbeh Pournader
-% Email: roozbeh@sharif.edu
+% Email: roozbeh@farsiweb.info
 % Tel: +98 21 6022372
 % Fax: +98 21 6019568
 % Language: fa
 % Territory: IR
-% Revision: 2.2
-% Date: 2002-07-29
+% Revision: 2.3
+% Date: 2004-03-16
 % Users: general
 % Repertoiremap:
 % Charset: UTF-8
@@ -21,28 +20,28 @@ escape_char  /
 
 LC_IDENTIFICATION
 title      "Persian locale for Iran"
-source     "The FarsiWeb Project"
-address    "Computing Center, Sharif University of Technology, Azadi Ave, Tehran, Iran"
+source     "Sharif FarsiWeb, Inc."
+address    "5, Shahid Ghasemi Habibollah, Azadi Ave, Tehran, Iran"
 contact    "Roozbeh Pournader"
-email      "roozbeh@sharif.edu"
+email      "roozbeh@farsiweb.info"
 tel        "+98 21 6022372"
 fax        "+98 21 6019568"
 language   "Persian"
 territory  "Iran"
-revision   "2.2"
-date       "2002-07-29"
+revision   "2.3"
+date       "2004-03-16"
 %
-category  "fa_IR:2002";LC_IDENTIFICATION
-category  "fa_IR:2002";LC_CTYPE
-category  "fa_IR:2002";LC_COLLATE
-category  "fa_IR:2002";LC_TIME
-category  "fa_IR:2002";LC_NUMERIC
-category  "fa_IR:2002";LC_MONETARY
-category  "fa_IR:2002";LC_MESSAGES
-category  "fa_IR:2002";LC_PAPER
-category  "fa_IR:2002";LC_NAME
-category  "fa_IR:2002";LC_ADDRESS
-category  "fa_IR:2002";LC_TELEPHONE
+category  "fa_IR:2004";LC_IDENTIFICATION
+category  "fa_IR:2004";LC_CTYPE
+category  "fa_IR:2004";LC_COLLATE
+category  "fa_IR:2004";LC_TIME
+category  "fa_IR:2004";LC_NUMERIC
+category  "fa_IR:2004";LC_MONETARY
+category  "fa_IR:2004";LC_MESSAGES
+category  "fa_IR:2004";LC_PAPER
+category  "fa_IR:2004";LC_NAME
+category  "fa_IR:2004";LC_ADDRESS
+category  "fa_IR:2004";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
@@ -326,8 +325,8 @@ cal_direction 3
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "<U005B><U0079><U0059><U0628><U0066><U005D><U002E><U002A>"
-noexpr  "<U005B><U006E><U004E><U062E><U0646><U006F><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U0079><U0059><U0628><U0066><U005D><U002E><U002A>"
+noexpr  "<U005E><U005B><U006E><U004E><U062E><U0646><U006F><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER

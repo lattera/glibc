@@ -1,3 +1,19 @@
+2004-03-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/hp-timing.h (HP_TIMING_NOW): Make asm volatile.
+
+2004-03-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp.S: Spelling.
+	(JB_SIZE): Undefine before including __longjmp-common.S again.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp.S: Spelling.
+	(JB_SIZE): Undefine before including setjmp-common.S again.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Spelling.
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: Spelling.
+	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S: Spelling.
+	* sysdeps/powerpc/powerpc32/bsd-setjmp.S: Spelling.
+	* sysdeps/powerpc/sigjmp.c: Spelling.
+
 2004-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/ctype.h: For libc, define isdigit, isdigit_l, and

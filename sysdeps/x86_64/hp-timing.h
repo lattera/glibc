@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  x86-64 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,8 @@
 /* The "=A" constraint used in 32-bit mode does not work in 64-bit mode.  */
 # undef HP_TIMING_NOW
 # define HP_TIMING_NOW(Var) \
-  ({ unsigned int _hi, _lo; asm ("rdtsc" : "=a" (_lo), "=d" (_hi)); \
+  ({ unsigned int _hi, _lo; \
+     asm volatile ("rdtsc" : "=a" (_lo), "=d" (_hi)); \
      (Var) = ((unsigned long long int) _hi << 32) | _lo; })
 
 /* The funny business for 32-bit mode is not required here.  */

@@ -38,7 +38,7 @@ __vmx__sigjmp_save (sigjmp_buf env, int savemask)
 }
 
 #if defined NOT_IN_libc
-/* Build a none versioned object for rtld-*.  */
+/* Build a non-versioned object for rtld-*.  */
 strong_alias (__vmx__sigjmp_save,__sigjmp_save)
 #else
 /* Build a versioned object for libc.  */

@@ -1,3 +1,8 @@
+2004-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/locales/fa_IR: Fix yesexpr and noexpr.
+	Patch by Hamed Malek <hamed@bamdad.org>.
+
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/tr_TR: Correct sorting order of the normal and dotless I

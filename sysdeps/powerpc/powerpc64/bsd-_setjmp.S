@@ -23,7 +23,7 @@
 #include <bp-sym.h>
 
 #if defined NOT_IN_libc
-/* Build a none versioned object for rtld-*.  */
+/* Build a non-versioned object for rtld-*.  */
 ENTRY (BP_SYM (_setjmp))
 	li r4,0			/* Set second argument to 0.  */
 	b JUMPTARGET(BP_SYM (__sigsetjmp))

@@ -23,10 +23,10 @@
 
 #if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
 
-/* We need 2 copies of identicatal code for the  setjmp's as gas complains
-  erronously about having multiple versions of setjmp this eliminates the
-  need for the strong alias of __setjmp to setjmp which
-  does not support versioning i.e. another gas unimplemented feature. */
+/* We need 2 copies of identical code for the setjmp's as gas complains
+   erroneously about having multiple versions of setjmp.  This eliminates the
+   need for the strong alias of __setjmp to setjmp which
+   does not support versioning, i.e. another gas unimplemented feature. */
 symbol_version (__novmx__setjmp,__setjmp,GLIBC_2.3)
 symbol_version (__novmxsetjmp,setjmp,GLIBC_2.3)
 
