@@ -34,14 +34,22 @@ pthread_attr_setaffinity_np (attr, cpuset)
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
-  if (iattr->cpuset == NULL)
+  if (cpuset == NULL)
     {
-      iattr->cpuset = (cpu_set_t *) malloc (sizeof (cpu_set_t));
-      if (iattr->cpuset == NULL)
-	return ENOMEM;
+      free (iattr->cpuset);
+      iattr->cpuset = NULL;
     }
+  else
+    {
+      if (iattr->cpuset == NULL)
+	{
+	  iattr->cpuset = (cpu_set_t *) malloc (sizeof (cpu_set_t));
+	  if (iattr->cpuset == NULL)
+	    return ENOMEM;
+	}
 
-  memcpy (iattr->cpuset, cpuset, sizeof (cpu_set_t));
+      memcpy (iattr->cpuset, cpuset, sizeof (cpu_set_t));
+    }
 
   return 0;
 }

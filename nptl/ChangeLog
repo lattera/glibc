@@ -1,5 +1,9 @@
 2003-09-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/pthread.h (pthread_getattr_np): Clarify usage.
+	* sysdeps/unix/sysv/linux/pthread_attr_setaffinity.c
+	(pthread_attr_setaffinity_np): Handle cpuset == NULL.
+
 	* sysdeps/unix/sysv/linux/pthread_attr_getaffinity.c
 	(pthread_attr_getaffinity_np): Don't segfault if iattr->cpuset is
 	NULL.

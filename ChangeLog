@@ -1,5 +1,45 @@
 2003-09-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/Makefile (distribute): Add tst-alignmod.c.
+	(tests): Add tst-align.
+	(modules-names): Add tst-alignmod.
+	(CFLAGS-tst-align.c, CFLAGS-tst-alignmod.c): Add
+	$(stack-align-test-flags).
+	($(objpfx)tst-align): Depend on libdl.
+	($(objpfx)tst-align.out): Depend on tst-alignmod.so.
+	* elf/tst-align.c: New file.
+	* elf/tst-alignmod.c: New file.
+	* misc/Makefile (CFLAGS-tst-tsearch.c): Add $(stack-align-test-flags).
+	* misc/tst-tsearch.c: Include tst-stack-align.h.
+	(stack_align_check): New array.
+	(cmp_fn, walk_action): Use TEST_STACK_ALIGN ().
+	(main): Report error if stack was not enough aligned
+	in cmp_fn or walk_action.
+	* stdlib/Makefile (CFLAGS-tst-qsort.c): Add $(stack-align-test-flags).
+	* stdlib/tst-qsort.c: Include tst-stack-align.h.
+	(align_check): New var.
+	(compare): Use TEST_STACK_ALIGN () macro.
+	(main): Report error if stack was not enough aligned in compare.
+	* sysdeps/i386/i686/Makefile (stack-align-test-flags): Remove
+	unneeded -mpreferred-stack-boundary=4.
+	* sysdeps/x86_64/tst-stack-align.h: New file.
+
+	* libio/memstream.c (_IO_wmem_jumps): Remove unused structure.
+	(_IO_wmem_sync, _IO_wmem_finish): Remove unused functions.
+
+2003-09-17  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (CALL_ROUTINE): Deleted.
+	(BX): Define.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Optimise a little.
+
+	* sysdeps/arm/sysdep.h (DO_RET): New.
+
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Add #error if __NR_vfork
+	required but not defined.  Improve test of error code.
+
+2003-09-17  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/i386/Makefile (stack-align-test-flags): Add
 	-malign-double -mpreferred-stack-boundary=4.
 

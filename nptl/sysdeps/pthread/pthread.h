@@ -334,7 +334,9 @@ extern int pthread_attr_getaffinity_np (__const pthread_attr_t *__attr,
 					cpu_set_t *__cpuset) __THROW;
 
 
-/* Get thread attributes corresponding to the already running thread TH.  */
+/* Initialize thread attribute *ATTR with attributes corresponding to the
+   already running thread TH.  It shall be called on unitialized ATTR
+   and destroyed with pthread_attr_destroy when no longer needed.  */
 extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr) __THROW;
 #endif
 
