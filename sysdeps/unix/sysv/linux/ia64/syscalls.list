@@ -72,7 +72,6 @@ s_getdents64	getdents64 getdents64	i:ipi	__syscall_getdents64
 s_mknod		xmknod	mknod		i:sii	__syscall_mknod
 s_readv		readv	readv		i:ipi	__syscall_readv
 s_writev	writev	writev		i:ipi	__syscall_writev
-s_getpagesize	getpagesize getpagesize	0	__syscall_getpagesize
 s_poll		poll	poll		i:pii	__syscall_poll
 s_reboot	reboot	reboot		i:iii	__syscall_reboot
 s_ustat		ustat	ustat		i:ip	__syscall_ustat

@@ -148,9 +148,7 @@ builtins.
 For most of the headers required of freestanding implementations,
 glibc relies on GCC to provide correct versions.  (At present, glibc
 provides <stdint.h>, and GCC doesn't.)  GCC's <float.h> is missing
-FLT_EVAL_METHOD and DECIMAL_DIG; glibc instead provides them in
-<math.h>, which is not what the standard specifies.  GCC's <stdbool.h>
-is broken: GCC lacks support for the _Bool type.
+FLT_EVAL_METHOD and DECIMAL_DIG.
 
 Implementing MATH_ERRNO, MATH_ERREXCEPT and math_errhandling in
 <math.h> needs compiler support: see
@@ -165,7 +163,7 @@ Issues with headers
 
 There are various technical issues with the definitions contained in
 glibc's headers, listed below.  The list below assumes current CVS GCC
-as of 2000-10-08, and relates to i686-linux; older GCC may lead to
+as of 2001-01-10, and relates to i686-linux; older GCC may lead to
 more problems in the headers.
 
 Note that the _t suffix is reserved by POSIX, but not by pure ISO C.

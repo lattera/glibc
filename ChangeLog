@@ -1,3 +1,7 @@
+2001-01-10  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (s_getpagesize): Removed.
+
 2001-01-10  Joseph S. Myers  <jsm28@cam.ac.uk>
 
 	* CONFORMANCE: Update.
