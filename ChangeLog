@@ -1,3 +1,9 @@
+2000-09-05  Andreas Jaeger  <aj@suse.de>
+
+	* scripts/config.guess: New upstream version.
+	* scripts/config.sub: Likewise.
+	* manual/texinfo.tex: Likewise.
+
 2000-09-04  Andreas Schwab  <schwab@suse.de>
 
 	* elf/Makefile (all-dl-routines): New variable.
