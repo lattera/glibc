@@ -1,5 +1,20 @@
 2002-10-17  Roland McGrath  <roland@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't check DF_STATIC_TLS.
+	* elf/dl-reloc.c (_dl_relocate_object: CHECK_STATIC_TLS): New macro
+	to signal error if an IE-model TLS reloc resolved to a dlopen'd module.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel, elf_machine_rela):
+	Call it after performing TPOFF relocs.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Likewise.
+	* elf/dl-conflict.c (CHECK_STATIC_TLS): New macro (no-op).
+
+	* elf/dl-close.c (remove_slotinfo): Change asserts so as not to crash
+	when closing a partially-initialized object.
+
+	* elf/dl-load.c (_dl_map_object_from_fd) [! USE_TLS]: Call lose
+	instead of _dl_fatal_printf when we see PT_TLS.
+
 	* Makeconfig (CPPFLAGS): Fix last change to use $(libof-$(<F))
 	instead of $(libof-$<).
 

@@ -159,6 +159,15 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l->l_addr)
 
+#define CHECK_STATIC_TLS(map, sym_map)					      \
+    do {								      \
+      if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0))		      \
+	{								      \
+	  errstring = N_("shared object cannot be dlopen()ed");		      \
+	  INTUSE(_dl_signal_error) (0, (map)->l_name, NULL, errstring);	      \
+	}								      \
+    } while (0)
+
 #include "dynamic-link.h"
 
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);

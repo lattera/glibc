@@ -98,10 +98,11 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so \
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
-  $(filter-out $(tests-static), \
+  $(filter-out $(tests-static) unload, \
     $(tests) $(test-srcs))): $(objpfx)libpthread.so
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 $(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
+$(objpfx)unload.out: $(objpfx)libpthread.so
 else
 $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.a

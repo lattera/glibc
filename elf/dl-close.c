@@ -53,18 +53,22 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp)
   else
     {
       struct link_map *old_map = listp->slotinfo[idx - disp].map;
-      assert (old_map != NULL);
 
-      /* Mark the entry as unused.  */
-      listp->slotinfo[idx - disp].gen = GL(dl_tls_generation) + 1;
-      listp->slotinfo[idx - disp].map = NULL;
+      /* The entry might still be in its unused state if we are closing an
+	 object that wasn't fully set up.  */
+      if (__builtin_expect (old_map != NULL, 1))
+	{
+	  assert (old_map->l_tls_modid == idx);
+
+	  /* Mark the entry as unused. */
+	  listp->slotinfo[idx - disp].gen = GL(dl_tls_generation) + 1;
+	  listp->slotinfo[idx - disp].map = NULL;
+	}
 
       /* If this is not the last currently used entry no need to look
 	 further.  */
-      if (old_map->l_tls_modid != GL(dl_tls_max_dtv_idx))
+      if (idx != GL(dl_tls_max_dtv_idx))
 	return true;
-
-      assert (old_map->l_tls_modid == GL(dl_tls_max_dtv_idx));
     }
 
   while (idx - disp > disp == 0 ? 1 + GL(dl_tls_static_nelem) : 0)

@@ -44,6 +44,7 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE_MAP(ref, version, flags) (*ref = NULL, NULL)
 #define RESOLVE(ref, version, flags) (*ref = NULL, 0)
+#define CHECK_STATIC_TLS(ref_map, sym_map) ((void) 0)
 #define RESOLVE_CONFLICT_FIND_MAP(map, r_offset) \
   do {									      \
     while ((resolve_conflict_map->l_map_end < (ElfW(Addr)) (r_offset))	      \

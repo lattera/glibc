@@ -432,6 +432,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     Therefore the offset is already correct.  */
 	  if (sym != NULL)
 	    *reloc_addr = sym->st_value;
+	  CHECK_STATIC_TLS (map, sym_map);
 # endif
 	  break;
 	case R_386_TLS_TPOFF32:
@@ -445,6 +446,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     block we subtract the offset from that of the TLS block.  */
 	  if (sym != NULL)
 	    *reloc_addr += sym_map->l_tls_offset - sym->st_value;
+	  CHECK_STATIC_TLS (map, sym_map);
 # endif
 	  break;
 	case R_386_TLS_TPOFF:
@@ -457,6 +459,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     thread pointer.  */
 	  if (sym != NULL)
 	    *reloc_addr += sym->st_value - sym_map->l_tls_offset;
+	  CHECK_STATIC_TLS (map, sym_map);
 # endif
 	  break;
 #endif	/* use TLS */
@@ -549,6 +552,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr
 	    = (sym == NULL ? 0 : sym_map->l_tls_offset - sym->st_value)
 	      + reloc->r_addend;
+	  CHECK_STATIC_TLS (map, sym_map);
 	  break;
 	case R_386_TLS_TPOFF:
 	  /* The offset is negative, forward from the thread pointer.  */
@@ -558,6 +562,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr
 	    = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
 	      + reloc->r_addend;
+	  CHECK_STATIC_TLS (map, sym_map);
 	  break;
 #endif	/* use TLS */
 	default:

@@ -582,6 +582,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr
 	    = ((sym == NULL ? 0 : sym_map->l_tls_offset + sym->st_value)
 	       + reloc->r_addend);
+	  CHECK_STATIC_TLS (map, sym_map);
 # endif
 	  break;
 #endif	/* use TLS */

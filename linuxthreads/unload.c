@@ -1,5 +1,5 @@
 /* Tests for non-unloading of libpthread.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,13 +29,13 @@ main (void)
 
   if (p == NULL)
     {
-      puts ("failed to load " LIBPTHREAD_SO);
+      printf ("failed to load %s: %s\n", LIBPTHREAD_SO, dlerror ());
       exit (1);
     }
 
   if (dlclose (p) != 0)
     {
-      puts ("dlclose (" LIBPTHREAD_SO ") failed");
+      printf ("dlclose (%s) failed: %s\n", LIBPTHREAD_SO, dlerror ());
       exit (1);
     }
 

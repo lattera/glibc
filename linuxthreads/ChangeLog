@@ -1,3 +1,9 @@
+2002-10-17  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (unload): Don't link in libpthread.so.
+	($(objpfx)unload.out): Do depend on it.
+	* unload.c (main): Improve error reporting.
+
 2002-10-09  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h (__libc_maybe_call): New macro.

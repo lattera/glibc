@@ -957,7 +957,9 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #else
 	  /* Uh-oh, the binary expects TLS support but we cannot
 	     provide it.  */
-	  _dl_fatal_printf ("cannot handle file '%s' with TLS data\n", name);
+	  errval = 0;
+	  errstring = N_("cannot handle TLS data");
+	  goto call_lose;
 #endif
 	  break;
 	}
@@ -1173,11 +1175,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* Make sure we are not dlopen'ing an object
      that has the DF_1_NOOPEN flag set.  */
-  if ((__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
-#ifdef USE_TLS
-       || __builtin_expect (l->l_flags & DF_STATIC_TLS, 0)
-#endif
-       )
+  if (__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
       && (mode & __RTLD_DLOPEN))
     {
       /* We are not supposed to load this object.  Free all resources.  */
