@@ -1,3 +1,8 @@
+2002-09-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/tst-timer.c (main): Clear
+	SIGEV2.sigev_notify_attributes.
+
 2002-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/useldt.h (DO_SET_THREAD_AREA): Don't use

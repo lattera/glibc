@@ -307,6 +307,7 @@ extern "C" {
 #if MALLOC_DEBUG
 #include <assert.h>
 #else
+#undef	assert
 #define assert(x) ((void)0)
 #endif
 

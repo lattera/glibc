@@ -1,8 +1,8 @@
 2002-09-29  Roland McGrath  <roland@redhat.com>
 
-	* sysdeps/mach/hurd/Versions (ld: GLIBC_2.2.6): Add __errno_location.
+	* malloc/malloc.c [! MALLOC_DEBUG] (assert): #undef before defining.
 
-2002-09-29  Roland McGrath  <roland@redhat.com>
+	* sysdeps/mach/hurd/Versions (ld: GLIBC_2.2.6): Add __errno_location.
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.S [USE_TLS && HAVE___THREAD]:
 	Define errno in .tbss.
