@@ -422,10 +422,20 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 {
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_ARM_RELATIVE, 0))
     {
-# ifndef RTLD_BOOTSTRAP
-      if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
+      /* This is defined in rtld.c, but nowhere in the static libc.a;
+	 make the reference weak so static programs can still link.
+	 This declaration cannot be done when compiling rtld.c
+	 (i.e. #ifdef RTLD_BOOTSTRAP) because rtld.c contains the
+	 common defn for _dl_rtld_map, which is incompatible with a
+	 weak decl in the same file.  */
+#  ifndef SHARED
+      weak_extern (_dl_rtld_map);
+#  endif
+      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
 # endif
 	*reloc_addr += map->l_addr;
     }
@@ -434,6 +444,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     return;
 # endif
   else
+#endif
     {
       const Elf32_Sym *const refsym = sym;
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
@@ -483,7 +494,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #  ifndef SHARED
 	    weak_extern (_dl_rtld_map);
 #  endif
-	    if (map == &_dl_rtld_map)
+	    if (map == &GL(dl_rtld_map))
 	      /* Undo the relocation done here during bootstrapping.
 		 Now we will relocate it anew, possibly using a
 		 binding found in the user program or a loaded library
@@ -541,7 +552,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     return;
   else
     {
-      const Elf32_Sym *const refsym = sym;
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
