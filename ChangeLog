@@ -1,3 +1,7 @@
+2003-01-21  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/bits/ioctls.h (SIOCSIFNAME): Define.
+
 2003-01-27  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* stdio-common/Makefile: Add bug14-ENV to set LOCPATH for make check.

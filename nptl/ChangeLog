@@ -1,5 +1,9 @@
 2003-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelsem.S
+	(__new_sem_post): Clear %eax before returning.
+	Reported by MAEDA Naoaki <maeda.naoaki@jp.fujitsu.com>.
+
 	* Makefile (tests): Add tst-cleanup2.
 	* tst-cleanup2.c: New file.
 
