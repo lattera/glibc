@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ routines := htonl htons		\
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
 	    in6_addr getnameinfo if_index
 
-tests := htontest test_ifindex tst-ntoa
+tests := htontest test_ifindex tst-ntoa tst-ether_aton
 
 # No warnings about losing BSD code.
 CFLAGS-rcmd.c = -w

@@ -1,5 +1,8 @@
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/Makefile (tests): Add tst-ether_aton.
+	* inet/tst-ether_aton.c: New file.
+
 	* inet/ether_aton_r.c (ether_aton_r): Preserve high-nibble value
 	in hex conversion.
 	* inet/ether_aton.c (ether_aton): Declare result variable static.
