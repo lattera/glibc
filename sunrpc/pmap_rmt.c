@@ -45,6 +45,7 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
 #include <rpc/pmap_rmt.h>
+#include <sys/poll.h>
 #include <sys/socket.h>
 #include <stdio.h>
 #include <errno.h>
@@ -240,13 +241,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   socklen_t fromlen;
   int sock;
   int on = 1;
-#ifdef FD_SETSIZE
-  fd_set mask;
-  fd_set readfds;
-#else
-  int readfds;
-  int mask;
-#endif /* def FD_SETSIZE */
+  struct pollfd fd;
+  int milliseconds;
   int i;
   bool_t done = FALSE;
   u_long xid;
@@ -256,7 +252,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   struct rmtcallargs a;
   struct rmtcallres r;
   struct rpc_msg msg;
-  struct timeval t, t1;
+  struct timeval t;
   char outbuf[MAX_BROADCAST_SIZE], inbuf[UDPMSGSIZE];
 
   /*
@@ -277,12 +273,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
       goto done_broad;
     }
 #endif /* def SO_BROADCAST */
-#ifdef FD_SETSIZE
-  FD_ZERO (&mask);
-  FD_SET (sock, &mask);
-#else
-  mask = (1 << sock);
-#endif /* def FD_SETSIZE */
+  fd.fd = sock;
+  fd.events = POLLIN;
   nets = getbroadcastnets (addrs, sock, inbuf);
   bzero ((char *) &baddr, sizeof (baddr));
   baddr.sin_family = AF_INET;
@@ -342,10 +334,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
       msg.acpted_rply.ar_verf = _null_auth;
       msg.acpted_rply.ar_results.where = (caddr_t) & r;
       msg.acpted_rply.ar_results.proc = (xdrproc_t) xdr_rmtcallres;
-      readfds = mask;
-      t1 = t;
-      switch (select (_rpc_dtablesize (), &readfds, (fd_set *) NULL,
-		      (fd_set *) NULL, &t1))
+      milliseconds = t.tv_sec * 1000 + t.tv_usec / 1000;
+      switch (__poll(&fd, 1, milliseconds))
 	{
 
 	case 0:		/* timed out */
@@ -355,11 +345,11 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	case -1:		/* some kind of error */
 	  if (errno == EINTR)
 	    goto recv_again;
-	  perror (_("Broadcast select problem"));
+	  perror (_("Broadcast poll problem"));
 	  stat = RPC_CANTRECV;
 	  goto done_broad;
 
-	}			/* end of select results switch */
+	}			/* end of poll results switch */
     try_again:
       fromlen = sizeof (struct sockaddr);
       inlen = recvfrom (sock, inbuf, UDPMSGSIZE, 0,

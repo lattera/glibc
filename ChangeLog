@@ -1,5 +1,12 @@
 1998-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* sunrpc/clnt_tcp.c (readtcp): Use poll instead of select.
+	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
+	* sunrpc/clnt_udp.c (clntudp_call): Likewise.
+	Patches from FreeBSD current.
+
+1998-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* nscd/connections.c (handle_new_request): Handle POLLHUP
 	correctly.
 	(close_sockets): Correct parameter to dbg_log.

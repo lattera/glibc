@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 #include <rpc/xdr.h>
 #include <rpc/clnt.h>
+#include <sys/poll.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <netdb.h>
@@ -234,13 +235,9 @@ clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
   int outlen = 0;
   int inlen;
   socklen_t fromlen;
-#ifdef FD_SETSIZE
-  fd_set readfds;
-  fd_set mask;
-#else
-  int readfds;
-  int mask;
-#endif /* def FD_SETSIZE */
+  struct pollfd fd;
+  int milliseconds = (cu->cu_wait.tv_sec * 1000) +
+    (cu->cu_wait.tv_usec / 1000);
   struct sockaddr_in from;
   struct rpc_msg reply_msg;
   XDR reply_xdrs;
@@ -301,18 +298,11 @@ send_again:
   reply_msg.acpted_rply.ar_verf = _null_auth;
   reply_msg.acpted_rply.ar_results.where = resultsp;
   reply_msg.acpted_rply.ar_results.proc = xresults;
-#ifdef FD_SETSIZE
-  FD_ZERO (&mask);
-  FD_SET (cu->cu_sock, &mask);
-#else
-  mask = 1 << cu->cu_sock;
-#endif /* def FD_SETSIZE */
+  fd.fd = cu->cu_sock;
+  fd.events = POLLIN;
   for (;;)
     {
-      struct timeval cu_wait = cu->cu_wait;
-      readfds = mask;
-      switch (select (_rpc_dtablesize (), &readfds, (fd_set*) NULL,
-		      (fd_set*) NULL, &cu_wait))
+      switch (__poll(&fd, 1, milliseconds))
 	{
 
 	case 0:

@@ -55,6 +55,7 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 #include <stdio.h>
 #include <unistd.h>
 #include <rpc/rpc.h>
+#include <sys/poll.h>
 #include <sys/socket.h>
 #include <rpc/pmap_clnt.h>
 
@@ -469,28 +470,18 @@ static int
 readtcp (char *ctptr, char *buf, int len)
 {
   struct ct_data *ct = (struct ct_data *)ctptr;
-#ifdef FD_SETSIZE
-  fd_set mask;
-  fd_set readfds;
-
-  if (len == 0)
-    return 0;
-  FD_ZERO (&mask);
-  FD_SET (ct->ct_sock, &mask);
-#else
-  int mask = 1 << (ct->ct_sock);
-  int readfds;
+  struct pollfd fd;
+  int milliseconds = (ct->ct_wait.tv_sec * 1000) +
+    (ct->ct_wait.tv_usec / 1000);
 
   if (len == 0)
     return 0;
 
-#endif /* def FD_SETSIZE */
+  fd.fd = ct->ct_sock;
+  fd.events = POLLIN;
   while (TRUE)
     {
-      struct timeval timeout = ct->ct_wait;
-      readfds = mask;
-      switch (select (_rpc_dtablesize (), &readfds, (fd_set*)NULL,
-		      (fd_set*)NULL, &timeout))
+      switch (__poll(&fd, 1, milliseconds))
 	{
 	case 0:
 	  ct->ct_error.re_status = RPC_TIMEDOUT;
