@@ -1,12 +1,14 @@
 2000-08-01  Andreas Jaeger  <aj@suse.de>
 
+	* intl/Makefile (distribute): Add tst-translit.sh and translit.po.
+
 	* hesiod/Makefile (distribute): Add nss_hesiod/nss_hesiod.h.
 
 	* elf/Makefile (distribute): Add filtmod1.c and filtmod2.c.
 
 	* wctype/Makefile (distribute): Add wchar-lookup.h.
 
-	* sysdeps/generic/Dist: Add bp-checks.h.
+	* sysdeps/generic/Dist: Add bp-checks.h and bp-semctl.h.
 
 	* iconvdata/Makefile (distribute): Add isiri-3342.h.
 
