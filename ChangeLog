@@ -1,3 +1,15 @@
+Fri Jan 12 13:40:01 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/gnu/types.h: Moved to sysdeps/generic/gnu/types.h.
+
+	* posix/glob.c (glob): Add parens in glob call flags arg for
+	GLOB_BRACE case.
+
+	* string/string.h (strdupa): New macro.
+
+	* stdio-common/vfscanf.c (%[): Grok ] as first char in set, not
+	terminator on empty set.  From drepper.
+
 Thu Jan 11 13:09:20 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/do-rel.h (elf_dynamic_do_rel): Use referring symbol as

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -290,7 +290,7 @@ glob (pattern, flags, errfunc, pglob)
 		  memcpy (buf, pattern, begin - pattern);
 		  memcpy (buf + (begin - pattern), p, comma - p);
 		  memcpy (buf + (begin - pattern) + (comma - p), end, restlen);
-		  result = glob (buf, (flags & ~(GLOB_NOCHECK|GLOB_NOMAGIC) |
+		  result = glob (buf, ((flags & ~(GLOB_NOCHECK|GLOB_NOMAGIC)) |
 				       GLOB_APPEND), errfunc, pglob);
 		  if (result && result != GLOB_NOMATCH)
 		    return result;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -89,6 +89,16 @@ extern size_t strxfrm __P ((char *__dest, __const char *__src, size_t __n));
 #if defined (__USE_SVID) || defined (__USE_BSD)
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *strdup __P ((__const char *__s));
+#endif
+
+#if defined (__USE_GNU) && defined (__GNUC__)
+/* Duplicate S, returning an identical alloca'd string.  */
+#define strdupa(s)							      \
+({									      \
+    const char *__old = (s);						      \
+    size_t __len = strlen (__old) + 1;					      \
+    memcpy (__builtin_alloca (__len), __old, __len);			      \
+})
 #endif
 
 /* Find the first occurrence of C in S.  */

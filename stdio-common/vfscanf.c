@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -702,6 +702,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  else
 	    not_in = 0;
+
+	  if (*f == ']')
+	    /* If ] appears before any char in the set, it is not
+	       the terminator, but the first char in the set.  */
+	    ADDW (*f++);
 
 	  while ((fc = *f++) != '\0' && fc != ']')
 	    {
