@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <endian.h>
 #include <unistd.h>
 
 #include <sysdep.h>
@@ -46,8 +47,15 @@ __libc_pwrite64 (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count, (off_t) (offset >> 32),
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count,
+			   (off_t) (offset & 0xffffffff),
+			   (off_t) (offset >> 32));
+# elif __BYTE_ORDER == __BIG_ENDIAN
+  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count,
+			   (off_t) (offset >> 32),
 			   (off_t) (offset & 0xffffffff));
+# endif
 # if __ASSUME_PWRITE_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */

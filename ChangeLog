@@ -1,5 +1,16 @@
 2000-05-26  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/i386/pread64.c: Removed, we can use the
+	normal version now.
+	* sysdeps/unix/sysv/linux/arm/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/pwrite64.c (__libc_pwrite64): Check
+	endianness to check how to pass argument.
+	* sysdeps/unix/sysv/linux/pread64.c (__libc_pread64): Likewise.
+
 	* elf/ldconfig.h: Update parameter list for process_elf_file.
 
 	* sysdeps/unix/sysv/linux/sparc/readelflib.c (process_elf_file):
