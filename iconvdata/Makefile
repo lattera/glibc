@@ -29,16 +29,16 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   BIG5 EUC-JP libGB EUC-CN libCNS EUC-TW ISO646 EBCDIC-DK-NO	 \
 	   EBCDIC-DK-NO-A EBCDIC-ES EBCDIC-ES-A EBCDIC-ES-S EBCDIC-FI-SE \
 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
-	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423 IBM424 \
+	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423	 \
 	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
 	   CP874 CP737 CP775 ISO-2022-KR
 ifneq ($(PERL),no)
 modules += KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
-	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM437	 \
-	   IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861 IBM862	 \
-	   IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880 IBM918	 \
-	   IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254 CP1255	 \
-	   CP1256 CP1257 ISO-2022-JP
+	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM424	 \
+	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
+	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
+	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
+	   CP1255 CP1256 CP1257 ISO-2022-JP
 endif
 modules.so := $(addsuffix .so, $(modules))
 
@@ -234,15 +234,15 @@ touch $@
 endef
 
 sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-6.h \
-			 iso8859-9.h koi-8.h hp-roman8.h ebcdic-at-de.h \
-			 ebcdic-at-de-a.h ebcdic-ca-fr.h ebcdic-dk-no.h  \
+			 iso8859-9.h koi-8.h hp-roman8.h ebcdic-at-de.h  \
+			 ebcdic-at-de-a.h ebcdic-ca-fr.h ebcdic-dk-no.h	 \
 			 ebcdic-dk-no-a.h ebcdic-es.h ebcdic-es-a.h	 \
 			 ebcdic-es-s.h ebcdic-fi-se.h ebcdic-fi-se-a.h	 \
 			 ebcdic-fr.h ebcdic-is-friss.h ebcdic-it.h	 \
 			 ebcdic-pt.h ebcdic-uk.h ebcdic-us.h ibm037.h	 \
-			 ibm038.h ibm274.h ibm275.h ibm423.h ibm424.h	 \
-			 ibm500.h ibm870.h ibm871.h ibm891.h ibm903.h	 \
-			 ibm904.h ibm905.h ibm1047.h
+			 ibm038.h ibm274.h ibm275.h ibm423.h ibm500.h	 \
+			 ibm870.h ibm871.h ibm891.h ibm903.h ibm904.h	 \
+			 ibm905.h ibm1047.h
 
 define generate-8bit-gap-table
 $(make-target-directory)
@@ -254,14 +254,14 @@ endef
 perl-generated-headers := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  ibm256.h ibm273.h ibm277.h ibm278.h ibm280.h	 \
 			  ibm281.h ibm284.h ibm285.h ibm290.h ibm297.h	 \
-			  ibm420.h ibm437.h ibm850.h ibm851.h ibm852.h	 \
-			  ibm855.h ibm857.h ibm860.h ibm861.h ibm862.h	 \
-			  ibm863.h ibm864.h ibm865.h ibm868.h ibm869.h	 \
-			  ibm875.h ibm880.h ibm918.h ibm1004.h ibm1026.h \
-			  cp1250.h cp1251.h cp1252.h cp1253.h cp1254.h	 \
-			  cp1255.h cp1256.h cp1257.h iso8859-5.h	 \
-			  iso8859-7.h iso8859-8.h iso8859-10.h		 \
-			  iso8859-7jp.h
+			  ibm420.h ibm424.h ibm437.h ibm850.h ibm851.h	 \
+			  ibm852.h ibm855.h ibm857.h ibm860.h ibm861.h	 \
+			  ibm862.h ibm863.h ibm864.h ibm865.h ibm868.h	 \
+			  ibm869.h ibm875.h ibm880.h ibm918.h ibm1004.h	 \
+			  ibm1026.h cp1250.h cp1251.h cp1252.h cp1253.h	 \
+			  cp1254.h cp1255.h cp1256.h cp1257.h		 \
+			  iso8859-5.h iso8859-7.h iso8859-8.h		 \
+			  iso8859-10.h iso8859-7jp.h
 
 generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
 	    $(perl-generated-headers) $(perl-generated-headers:%.h=%.stmp) \

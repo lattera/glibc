@@ -21,6 +21,8 @@
    indices by taking their subcode. */
 #define SYS_ERRLIST _hurd_errlist
 #define SYS_NERR _hurd_nerr
-#define ERR_REMAP(n) (n & 0x3fff)
+
+#include <mach/error.h>
+#define ERR_REMAP(n) (err_get_code (n))
 
 #include <sysdeps/gnu/errlist.c>

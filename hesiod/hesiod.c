@@ -255,7 +255,7 @@ read_config_file (struct hesiod_p *ctx, const char *filename)
 
   /* Try to open the configuration file. */
   fp = fopen (filename, "r");
-  if (fp = NULL)
+  if (fp == NULL)
     {
       /* Use compiled in default domain names. */
       ctx->lhs = malloc (strlen (DEF_LHS) + 1);

@@ -1,3 +1,67 @@
+1998-05-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/thread-m.h: Use __mutex_init function in mutex_init macro
+	for Hurd.  Patch by Mark Kettenis.
+
+1998-04-18  Gordon Matzigkeit  <gord@profitpress.com>
+
+	 * mach/Machrules (+preinit, +postinit): Define these variables to
+	 empty because libhurduser and libmachuser don't need startup
+	 files.
+
+1998-04-22  Gordon Matzigkeit  <gord@profitpress.com>
+
+	 * sysdeps/mach/hurd/errlist.c (ERR_REMAP): Use err_get_code
+	 instead of a raw bitmask.
+
+1998-05-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (rpath-dirs): New variable.
+	(rpath-link): Use it.
+	(nssobjdir, nisobjdir, rtobjdir, resolvobjdir): Removed.
+	(db-objpfx): Removed.
+	* crypt/Makefile: Augment rpath-dirs instead of rpath-link.
+	* md5-crypt/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+
+	* Makeconfig (move-if-change): New variable.
+	* iconvdata/Makefile (move-if-change): Removed.
+	* manual/Makefile (move-if-change): Set only if undefined, use
+	local script by default.
+	* sunrpc/Makefile (move-if-change): Removed.
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)stamp-errnos): Use
+	$(move-if-change).
+
+	 * elf/Makefile: Remove all references to obsolete file
+	 $(objpfx)rtldtbl.h.
+	 ($(objpfx)trusted-dirs.h): Use stamp file.  Cleanup command.
+
+1998-05-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-close.c (_dl_close): Add debugging message.
+
+1998-05-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* csu/Makefile ($(objpfx)version-info.h): Correct sed expression
+	to get Linux version and not gcc version.
+	Reported by Alan Curry <pacman@cqc.com>.
+
+1998-05-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/_strerror.c (__strerror_r): Don't return NULL
+	pointers - return unknown error message instead.
+	Reported by Alan Curry <pacman@cqc.com>.
+
+1998-05-24  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* iconvdata/Makefile (modules, sed-generated-headers,
+	perl-generated-headers): ibm424.h is perl generated.  Make
+	necessary modifications to compile without perl.
+
+1998-05-24  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* hesiod/hesiod.c (read_config_file): Fix typo.
+
 1998-05-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h: Bump VERSION.

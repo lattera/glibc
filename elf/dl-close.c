@@ -61,12 +61,16 @@ _dl_close (struct link_map *map)
   for (i = 0; i < map->l_nsearchlist; ++i)
     {
       struct link_map *imap = list[i];
-      if (imap->l_opencount == 1 && imap->l_type == lt_loaded)
+      if (imap->l_opencount == 1 && imap->l_type == lt_loaded
+	  && imap->l_info[DT_FINI])
 	{
-	  if (imap->l_info[DT_FINI])
-	    /* Call its termination function.  */
-	    (*(void (*) (void)) ((void *) imap->l_addr
-				 + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
+	  /* When debugging print a message first.  */
+	  if (_dl_debug_impcalls)
+	    _dl_debug_message (1, "\ncalling fini: ", imap->l_name,
+			       "\n\n", NULL);
+	  /* Call its termination function.  */
+	  (*(void (*) (void)) ((void *) imap->l_addr
+			       + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
 	}
     }
 

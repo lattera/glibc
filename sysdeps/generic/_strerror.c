@@ -40,7 +40,7 @@
 char *
 __strerror_r (int errnum, char *buf, size_t buflen)
 {
-  if (errnum < 0 || errnum >= _sys_nerr)
+  if (errnum < 0 || errnum >= _sys_nerr || _sys_errlist[errnum] == NULL)
     {
       /* Buffer we use to print the number in.  For a maximum size for
 	 `int' of 8 bytes we never need more than 20 digits.  */

@@ -1,6 +1,6 @@
 /* Basic platform-independent macro definitions for mutexes and
    thread-specific data.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>, 1996.
 
@@ -73,6 +73,9 @@ typedef void * tsd_key_t;
    mutex itself.  */
 #undef mutex_t
 #define mutex_t struct mutex
+
+#undef mutex_init
+#define mutex_init(m) (__mutex_init(m), 0)
 
 #undef mutex_lock
 #define mutex_lock(m) (__mutex_lock(m), 0)

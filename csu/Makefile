@@ -173,7 +173,7 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
 		   if [ -z "$$version" ]; then \
 		     if [ -r /proc/version ]; then \
-		       version=`sed 's/.*version \([^ ]*\) .*/>>\1<</' \
+		       version=`sed 's/.*Linux version \([^ ]*\) .*/>>\1<</' \
 				< /proc/version`; \
 		     else \
 		       version=`uname -r`; \
