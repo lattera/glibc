@@ -52,17 +52,8 @@ do_system (const char *line)
   if (__sigaction (SIGQUIT, &sa, &quit) < 0)
     {
       save = errno;
-      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
-      __set_errno (save);
-      return -1;
+      goto out_restore_sigint;
     }
-
-#ifndef WAITPID_CANNOT_BLOCK_SIGCHLD
-
-/* SCO 3.2v4 has a bug where `waitpid' will never return if SIGCHLD is
-   blocked.  This makes it impossible for `system' to be implemented in
-   compliance with POSIX.2-1992.  They have acknowledged that this is a bug
-   but I have not seen nor heard of any forthcoming fix.  */
 
   __sigemptyset (&block);
   __sigaddset (&block, SIGCHLD);
@@ -74,16 +65,13 @@ do_system (const char *line)
       else
 	{
 	  save = errno;
-	  (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
 	  (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
+	out_restore_sigint:
+	  (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
 	  __set_errno (save);
 	  return -1;
 	}
     }
-# define UNBLOCK __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)
-#else
-# define UNBLOCK 0
-#endif
 
   pid = __fork ();
   if (pid == (pid_t) 0)
@@ -98,7 +86,7 @@ do_system (const char *line)
       /* Restore the signals.  */
       (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
       (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
-      (void) UNBLOCK;
+      (void) __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL);
 
       /* Exec the shell.  */
       (void) __execve (SHELL_PATH, (char *const *) new_argv, __environ);
@@ -125,25 +113,22 @@ do_system (const char *line)
 	}
       while (child != pid);
 #else
-      int n;
-
-      do
-	n = __waitpid (pid, &status, 0);
-      while (n == -1 && errno == EINTR);
-
-      if (n != pid)
+      if (TEMP_FAILURE_RETRY (__waitpid (pid, &status, 0)) != pid)
 	status = -1;
 #endif
     }
 
   save = errno;
-  if ((__sigaction (SIGINT, &intr, (struct sigaction *) NULL) |
-       __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL) |
-       UNBLOCK) != 0)
+  if ((__sigaction (SIGINT, &intr, (struct sigaction *) NULL)
+       | __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL)
+       | __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)) != 0)
     {
+#ifndef _LIBC
+      /* glibc cannot be used on systems without waitpid.  */
       if (errno == ENOSYS)
 	__set_errno (save);
       else
+#endif
 	return -1;
     }
 
