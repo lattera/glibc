@@ -8,7 +8,7 @@ cachectl	-	cachectl	i:pii	__cachectl	cachectl
 cacheflush	-	cacheflush	i:pii	_flush_cache	cacheflush
 sysmips		-	sysmips		i:iiii	__sysmips	sysmips
 
-sigsuspend	-	sigsuspend	i:p	__sigsuspend	sigsuspend
+s_sigsuspend	sigsuspend sigsuspend	i:p	__syscall_sigsuspend
 
 #
 # Socket functions; Linux/MIPS doesn't use the socketcall(2) wrapper;
@@ -61,6 +61,7 @@ getresgid	-	getresgid	i:ppp	getresgid
 getresuid	-	getresuid	i:ppp	getresuid
 s_ipc		msgget	ipc		i:iiiip	__syscall_ipc
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
+s_mmap2		mmap64	mmap2		b:aniiii __syscall_mmap2
 s_poll		poll	poll		i:pii	__syscall_poll
 s_pread64	pread64	pread		i:ibniii __syscall_pread
 s_putpmsg	putpmsg	putpmsg		i:ippii	__syscall_putpmsg
