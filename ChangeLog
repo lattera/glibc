@@ -1,3 +1,25 @@
+Thu Sep 28 13:05:54 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	Merge new message handling code from GNU gettext, by Drepper.
+	* intl: New directory.
+	* Makefile (subdirs): Add intl.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Return
+	USER_ENTRY instead of storing it on our stack.
+
+	* elf/rtld.c (rtld_command): Variable removed.
+	(_dl_skip_args): New variable.
+	(dl_main): Increment _dl_skip_args instead of setting rtld_command.
+	If the link_map for the executable itself is not first in the chain,
+	make it so.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Use _dl_skip_args as
+	count of args to skip.
+
+Thu Sep 28 09:20:04 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* stdlib/strtod.c (STRTOF): Fix handling of numbers with lots of
+	leading zeroes. 
+	
 Wed Sep 27 00:27:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/getcwd.c (__getcwd): Renamed from getcwd.

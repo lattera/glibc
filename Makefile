@@ -51,14 +51,14 @@ sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
 endif
 
 # These are the subdirectories containing the library source.
-subdirs := csu assert ctype locale math setjmp signal stdio stdlib	\
+subdirs := csu assert ctype locale intl math setjmp signal stdio stdlib	\
 	   malloc string time dirent grp pwd posix io termios resource	\
 	   misc socket sysvipc gmon gnulib $(wildcard crypt) manual	\
 	   $(sysdep-subdirs) elf
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 
 # The mach and hurd subdirectories have many generated header files which
-# the much of rest of the library depends on, so it is best to build them
+# much of the rest of the library depends on, so it is best to build them
 # first (and mach before hurd, at that).  The before-compile additions in
 # sysdeps/{mach,hurd}/Makefile should make it reliably work for these files
 # not to exist when making in other directories, but it will be slower that

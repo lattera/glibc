@@ -42,13 +42,13 @@ _dl_sysdep_start (void **start_argptr,
 
   user_entry = (Elf32_Addr) &_start;
   _dl_argc = *(int *) start_argptr;
-  _dl_argv = start_argptr + 1;
+  _dl_argv = (char **) start_argptr + 1;
   _environ = &_dl_argv[_dl_argc + 1];
   start_argptr = (void **) _environ;
   while (*start_argptr)
     ++start_argptr;
 
-  for (av = ++start_argptr; av->a_type != AT_NULL; ++av)
+  for (av = (void *) ++start_argptr; av->a_type != AT_NULL; ++av)
     switch (av->a_type)
       {
       case AT_PHDR:
@@ -77,7 +77,7 @@ _dl_sysdep_start (void **start_argptr,
   _dl_secure = uid != euid || gid != egid;
 
   (*dl_main) (phdr, phnum, &user_entry);
-  start_argptr[-1] = (void *) user_entry;
+  return user_entry;
 }
 
 int

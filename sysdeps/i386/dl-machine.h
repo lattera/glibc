@@ -182,15 +182,16 @@ _dl_start_user:\n\
 	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
-	movl rtld_command@GOT(%ebx), %eax\n\
+	movl _dl_skip_args@GOT(%ebx), %eax\n\
 	movl (%eax),%eax\n\
-	testl %eax,%eax\n\
-	jz 0f\n\
-	# Pop the original argument count, decrement it, and replace\n\
-	# the original first argument pointer with the new count.\n\
-	popl %eax\n\
-	decl %eax\n\
-	movl %eax,(%esp)\n\
+	# Pop the original argument count.\n\
+	popl %ecx\n\
+	# Subtract _dl_skip_args from it.\n\
+	subl %eax, %ecx\n\
+	# Adjust the stack pointer to skip _dl_skip_args words.\n\
+	leal (%esp,%eax,4), %esp\n\
+	# Push back the modified argument count.\n\
+	pushl %ecx\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\
 0:	call _dl_init_next@PLT\n\
