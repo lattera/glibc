@@ -131,6 +131,7 @@ modules-names = tst-_res1mod1 tst-_res1mod2 \
 		tst-tls1mod tst-tls1moda tst-tls1modb tst-tls1modc \
 		tst-tls1modd tst-tls1mode tst-tls1modf
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
+generated += $(addsuffix .so,$(strip $(modules-names)))
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
@@ -236,7 +237,7 @@ $(objpfx)libc.so: $(elfobjdir)/soinit.os \
 		  $(elfobjdir)/interp.os $(elfobjdir)/ld.so
 	$(build-shlib)
 
-generated += libc_pic_lite.a libc_pic_lite.os libc.so
+generated += libc_pic_lite.a libc_pic_lite.os libc.so libc-tsd.os
 else
 libc-link.so = $(common-objpfx)libc.so
 endif
@@ -317,7 +318,7 @@ $(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)
 	ln -f $< $@
 endif
 
-generated += crti.S crtn.S defs.h pt-initfini.s
+generated += crti.S crtn.S defs.h pt-initfini.s libpthread_nonshared.a 
 endif
 
 ifeq (yes,$(build-static-nss))
@@ -338,6 +339,7 @@ $(objpfx)tst-tls2.out: tst-tls2.sh $(objpfx)tst-tls1 \
 		       $(objpfx)tst-tls1mode.so $(objpfx)tst-tls1modf.so
 	$(SHELL) -e tst-tls2.sh $(common-objpfx) $(elf-objpfx) \
 		    $(rtld-installed-name)
+generated += tst-tls2.out
 endif
 
 ifeq (no,$(cross-compiling))
@@ -350,5 +352,6 @@ $(objpfx)tst-cancel-wrappers.out: tst-cancel-wrappers.sh
 		    $(common-objpfx)/libc.a \
 		    $(objpfx)/libpthread_pic.a \
 		    $(objpfx)/libpthread.a > $@
+generated += tst-signal.out tst-cancel-wrappers.out
 endif
 endif
