@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -142,7 +142,7 @@ ENTRY(__getcontext)
 	st8 [r2] = rB0, 16
 	st8 [r3] = rB1, 16
 	;;
-	st8 [r3] = rB2, 16
+	st8 [r2] = rB2, 16
 	st8 [r3] = rB3, 16
 	;;
 	st8 [r2] = rB4
