@@ -1013,8 +1013,9 @@ signal_allowed (int signo, mach_port_t refport)
 	   authorizing SIGIO and SIGURG signals properly.  */
 
 	int d;
+	int lucky = 0;		/* True if we find a match for REFPORT.  */
 	__mutex_lock (&_hurd_dtable_lock);
-	for (d = 0; (unsigned int) d < (unsigned int) _hurd_dtablesize; ++d)
+	for (d = 0; !lucky && (unsigned) d < (unsigned) _hurd_dtablesize; ++d)
 	  {
 	    struct hurd_userlink ulink;
 	    io_t port;
@@ -1026,13 +1027,13 @@ signal_allowed (int signo, mach_port_t refport)
 	      {
 		if (refport == asyncid)
 		  /* Break out of the loop on the next iteration.  */
-		  d = -1;
+		  lucky = 1;
 		__mach_port_deallocate (__mach_task_self (), asyncid);
 	      }
 	    _hurd_port_free (&_hurd_dtable[d]->port, &ulink, port);
 	  }
 	/* If we found a lucky winner, we've set D to -1 in the loop.  */
-	if (d < 0)
+	if (lucky)
 	  goto win;
       }
     }
