@@ -613,13 +613,13 @@ const char * const	tofile;
 			(void) exit(EXIT_FAILURE);
 
 		result = link(fromname, toname);
-#if (HAVE_SYMLINK - 0) 
+#if (HAVE_SYMLINK - 0)
 		if (result != 0) {
 		        char *s = (char *) tofile;
-		        register char * symlinkcontents = NULL;
+		        register char *symlinkcontents = NULL;
 		        while ((s = strchr(s+1, '/')) != NULL)
 			        symlinkcontents = ecatalloc(symlinkcontents, "../");
-			symlinkcontents = ecatalloc(symlinkcontents, fromfile);
+			symlinkcontents = ecatalloc(symlinkcontents, fromname);
 
 			result = symlink(symlinkcontents, toname);
 			if (result == 0)

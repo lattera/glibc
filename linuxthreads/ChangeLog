@@ -1,3 +1,14 @@
+1999-04-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/arm/Implies: Removed since cmpxchg/no-cmpxchg
+	doesn't exist anymore.
+	* sysdeps/i386/Implies: Likewise.
+	* sysdeps/m68k/Implies: Likewise.
+	* sysdeps/mips/Implies: Likewise.
+	* sysdeps/powerpc/Implies: Likewise.
+	* sysdeps/sparc/sparc32/Implies: Likewise.
+	* sysdeps/sparc/sparc64/Implies: Likewise.
+
 1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/alpha/bits/semaphore.h: Removed.
