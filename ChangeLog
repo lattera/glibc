@@ -12,6 +12,9 @@
 	* sysdeps/unix/sysv/linux/Dist: Add sys/sendfile.h.
 	* sysdeps/unix/sysv/linux/arm/Dist: Add init-first.h.
 
+	* grp/initgroups.c: Include stdlib.h.
+	Patch by Zack Weinberg.
+
 1998-09-14 22:46  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: Chet Ramey confirmed that bash's behaviour
