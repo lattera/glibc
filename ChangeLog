@@ -1,3 +1,7 @@
+2003-04-01  Andreas Jaeger  <aj@suse.de>
+
+	* configure.in: Output as/ld as name if version is too old.
+
 2003-03-31  Daniel Jacobowitz  <drow@mvista.com>
 
 	* configure.in: Don't require an installed C library in the test

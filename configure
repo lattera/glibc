@@ -3401,7 +3401,7 @@ echo $ECHO_N "checking version of $AS... $ECHO_C" >&6
 echo "${ECHO_T}$ac_prog_version" >&6
 fi
 if test $ac_verc_fail = yes; then
-  AS=: critic_missing=t
+  AS=: critic_missing="$critic_missing as"
 fi
 
 for ac_prog in $LD
@@ -3462,7 +3462,7 @@ echo $ECHO_N "checking version of $LD... $ECHO_C" >&6
 echo "${ECHO_T}$ac_prog_version" >&6
 fi
 if test $ac_verc_fail = yes; then
-  LD=: critic_missing=t
+  LD=: critic_missing="$critic_missing ld"
 fi
 
 
