@@ -1,3 +1,7 @@
+2000-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-ctype.sh: Generate ja_JP.EUC-JP locale and test it.
+
 2000-06-27  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile: Add environment setting for all tests from tests-mbwc.
