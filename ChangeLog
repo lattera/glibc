@@ -1,3 +1,12 @@
+2003-03-02  Roland McGrath  <roland@redhat.com>
+
+	* scripts/abilist.awk: Reject data items with apparent 0 size.
+
+	* scripts/merge-abilist.awk: Restore hack to elide pattern foo.*/bar
+	after foo.* as if it were a duplicate.
+
+	* sysdeps/unix/sysv/linux/ia64/brk.S: Add .type and .size for __curbrk.
+
 2003-03-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (struct filebuf): Reduce buf array to 512 bytes.
@@ -21,7 +30,7 @@
 	* sysdeps/unix/sysv/linux/clock_nanosleep.c: New file.
 	* sysdeps/unix/sysv/linux/sysconf.c: New file.
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
-	__ASSUME_POSIX_TIMERS for Linux 2.4.63 and up.
+	__ASSUME_POSIX_TIMERS for Linux 2.5.63 and up.
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
 	_POSIX_MONOTONIC_CLOCK.
 
