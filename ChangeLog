@@ -1,4 +1,12 @@
-2004-12-19  Andreas Jaeger  <aj@suse.de>
+2004-12-19  Roland McGrath  <roland@redhat.com>
+
+	* iconv/iconvconfig.c (nostdlib, output_file, output_file_len):
+	New variables.
+	(options, parse_opt, main): Take new options --nostdlib and
+	--output/-o to set them.  Under --nostdlib, skip GCONV_PATH dirs.
+	(write_output): If output_file is set, write the output there.
+
+2004-12-19  Andreas Jaeger  <aj@suse.de>NULL
 
 	[BZ #560]
 	* inet/netinet/in.h: Use __interface_addr instead of __interface.
