@@ -47,6 +47,7 @@ struct element_t;
 /* Data type for list of strings.  */
 struct section_list
 {
+  struct section_list *def_next;
   struct section_list *next;
   /* Name of the section.  */
   const char *name;
@@ -144,6 +145,8 @@ struct locale_collate_t
   int cur_weight_max;
 
   /* List of known scripts.  */
+  struct section_list *known_sections;
+  /* List of used sections.  */
   struct section_list *sections;
   /* Current section using definition.  */
   struct section_list *current_section;
@@ -151,6 +154,9 @@ struct locale_collate_t
   struct section_list unnamed_section;
   /* To make handling of errors easier we have another section.  */
   struct section_list error_section;
+  /* Sometimes we are defining the values for collating symbols before
+     the first actual section.  */
+  struct section_list symbol_section;
 
   /* Start of the order list.  */
   struct element_t *start;
@@ -562,7 +568,7 @@ read_directions (struct linereader *ldfile, struct token *arg,
 
 static struct element_t *
 find_element (struct linereader *ldfile, struct locale_collate_t *collate,
-	      const char *str, size_t len, uint32_t *wcstr)
+	      const char *str, size_t len)
 {
   struct element_t *result = NULL;
 
@@ -668,13 +674,26 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 	  elem->weights[weight_cnt].w[0] = NULL;
 	  elem->weights[weight_cnt].cnt = 1;
 	}
-      else if (arg->tok == tok_bsymbol)
+      else if (arg->tok == tok_bsymbol || arg->tok == tok_ucs4)
 	{
-	  struct element_t *val = find_element (ldfile, collate,
-						arg->val.str.startmb,
-						arg->val.str.lenmb,
-						arg->val.str.startwc);
+	  char ucs4str[10];
+	  struct element_t *val;
+	  char *symstr;
+	  size_t symlen;
 
+	  if (arg->tok == tok_bsymbol)
+	    {
+	      symstr = arg->val.str.startmb;
+	      symlen = arg->val.str.lenmb;
+	    }
+	  else
+	    {
+	      snprintf (ucs4str, sizeof (ucs4str), "U%08X", arg->val.ucs4);
+	      symstr = ucs4str;
+	      symlen = 9;
+	    }
+
+	  val = find_element (ldfile, collate, symstr, symlen);
 	  if (val == NULL)
 	    break;
 
@@ -720,7 +739,7 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 		    }
 
 		    charelem = find_element (ldfile, collate, startp,
-					     cp - startp, NULL);
+					     cp - startp);
 		    ++cp;
 		}
 	      else
@@ -731,7 +750,7 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 		     string as if that would be bsymbols.  Otherwise we
 		     would have to match back to bsymbols somehow and this
 		     is normally not what people normally expect.  */
-		  charelem = find_element (ldfile, collate, cp++, 1, NULL);
+		  charelem = find_element (ldfile, collate, cp++, 1);
 		}
 
 	      if (charelem == NULL)
@@ -1349,7 +1368,7 @@ static void
 collate_startup (struct linereader *ldfile, struct localedef_t *locale,
 		 struct localedef_t *copy_locale, int ignore_content)
 {
-  if (!ignore_content)
+  if (!ignore_content && locale->categories[LC_COLLATE].collate == NULL)
     {
       struct locale_collate_t *collate;
 
@@ -1432,8 +1451,9 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
      or in none.  */
   for (i = 0; i < nrules; ++i)
     for (sect = collate->sections; sect != NULL; sect = sect->next)
-      if ((sect->rules[i] & sort_position)
-	  != (collate->sections->rules[i] & sort_position))
+      if (sect->rules != NULL
+	  && ((sect->rules[i] & sort_position)
+	      != (collate->sections->rules[i] & sort_position)))
 	{
 	  error (0, 0, _("\
 %s: `position' must be used for a specific level in all sections or none"),
@@ -1771,7 +1791,10 @@ Computing table size for collation table might take a while..."),
     {
       if (need_undefined)
 	{
-	  error (0, 0, _("no definition of `UNDEFINED'"));
+	  /* This seems not to be enforced by recent standards.  Don't
+	     emit an error, simply append UNDEFINED at the end.  */
+	  if (0)
+	    error (0, 0, _("no definition of `UNDEFINED'"));
 
 	  /* Add UNDEFINED at the end.  */
 	  collate->undefined.mborder =
@@ -1793,6 +1816,8 @@ Computing table size for collation table might take a while..."),
      ruleset the same index.  Since there are never many section we can
      use an O(n^2) algorithm here.  */
   sect = collate->sections;
+  while (sect != NULL && sect->rules == NULL)
+    sect = sect->next;
   assert (sect != NULL);
   ruleidx = 0;
   do
@@ -1800,7 +1825,8 @@ Computing table size for collation table might take a while..."),
       struct section_list *osect = collate->sections;
 
       while (osect != sect)
-	if (memcmp (osect->rules, sect->rules, nrules) == 0)
+	if (osect->rules != NULL
+	    && memcmp (osect->rules, sect->rules, nrules) == 0)
 	  break;
 	else
 	  osect = osect->next;
@@ -1811,7 +1837,9 @@ Computing table size for collation table might take a while..."),
 	sect->ruleidx = osect->ruleidx;
 
       /* Next section.  */
-      sect = sect->next;
+      do
+	sect = sect->next;
+      while (sect != NULL && sect->rules == NULL);
     }
   while (sect != NULL);
   /* We are currently not prepared for more than 256 rulesets.  But this
@@ -1993,7 +2021,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   /* Prepare the ruleset table.  */
   for (sect = collate->sections, i = 0; sect != NULL; sect = sect->next)
-    if (sect->ruleidx == i)
+    if (sect->rules != NULL && sect->ruleidx == i)
       {
 	int j;
 
@@ -2670,7 +2698,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
       /* Get the locale definition.  */
       copy_locale = load_locale (LC_COLLATE, now->val.str.startmb,
-				 repertoire_name, charmap);
+				 repertoire_name, charmap, NULL);
       if ((copy_locale->avail & COLLATE_LOCALE) == 0)
 	{
 	  /* Not yet loaded.  So do it now.  */
@@ -2708,6 +2736,19 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
       switch (nowtok)
 	{
+	case tok_copy:
+	  /* Allow copying other locales.  */
+	  now = lr_token (ldfile, charmap, NULL);
+	  if (now->tok != tok_string)
+	    goto err_label;
+
+	  if (! ignore_content)
+	    load_locale (LC_COLLATE, now->val.str.startmb, repertoire_name,
+			 charmap, result);
+
+	  lr_ignore_rest (ldfile, 1);
+	  break;
+
 	case tok_coll_weight_max:
 	  /* Ignore the rest of the line if we don't need the input of
 	     this line.  */
@@ -2751,8 +2792,11 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      /* Check whether this section is already known.  */
 	      struct section_list *known = collate->sections;
 	      while (known != NULL)
-		if (strcmp (known->name, arg->val.str.startmb) == 0)
-		  break;
+		{
+		  if (strcmp (known->name, arg->val.str.startmb) == 0)
+		    break;
+		  known = known->next;
+		}
 
 	      if (known != NULL)
 		{
@@ -2822,15 +2866,12 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 				       repertoire, symbol, symbol_len))
 		    goto col_elem_free;
 
-		  if (insert_entry (&collate->elem_table,
-				    symbol, symbol_len,
-				    new_element (collate,
-						 arg->val.str.startmb,
-						 arg->val.str.lenmb - 1,
-						 arg->val.str.startwc,
-						 symbol, symbol_len, 0)) < 0)
-		    lr_error (ldfile, _("\
-error while adding collating element"));
+		  insert_entry (&collate->elem_table, symbol, symbol_len,
+				new_element (collate,
+					     arg->val.str.startmb,
+					     arg->val.str.lenmb - 1,
+					     arg->val.str.startwc,
+					     symbol, symbol_len, 0));
 		}
 	      else
 		{
@@ -2909,11 +2950,8 @@ error while adding collating element"));
 					   repertoire, symbol, symbol_len))
 			goto col_sym_free;
 
-		      if (insert_entry (&collate->sym_table,
-					symbol, symbol_len,
-					new_symbol (collate)) < 0)
-			lr_error (ldfile, _("\
-error while adding collating symbol"));
+		      insert_entry (&collate->sym_table, symbol, symbol_len,
+				    new_symbol (collate));
 		    }
 		  else if (symbol_len != endsymbol_len)
 		    {
@@ -2972,11 +3010,8 @@ error while adding collating symbol"));
 					       repertoire, symbuf, symbol_len))
 			    goto col_sym_free;
 
-			  if (insert_entry (&collate->sym_table,
-					    symbuf, symbol_len,
-					    new_symbol (collate)) < 0)
-			    lr_error (ldfile, _("\
-error while adding collating symbol"));
+			  insert_entry (&collate->sym_table, symbuf,
+					symbol_len, new_symbol (collate));
 
 			  /* Increment the counter.  */
 			  ++from;
@@ -3074,6 +3109,44 @@ error while adding equivalent collating symbol"));
 	  lr_ignore_rest (ldfile, 1);
 	  break;
 
+	case tok_script:
+	  /* We get told about the scripts we know.  */
+	  arg = lr_token (ldfile, charmap, repertoire);
+	  if (arg->tok != tok_bsymbol)
+	    goto err_label;
+	  else
+	    {
+	      struct section_list *runp = collate->known_sections;
+	      char *name;
+
+	      while (runp != NULL)
+		if (strncmp (runp->name, arg->val.str.startmb,
+			     arg->val.str.lenmb) == 0
+		    && runp->name[arg->val.str.lenmb] == '\0')
+		  break;
+		else
+		  runp = runp->def_next;
+
+	      if (runp != NULL)
+		{
+		  lr_error (ldfile, _("duplicate definition of script `%s'"),
+			    runp->name);
+		  lr_ignore_rest (ldfile, 0);
+		  break;
+		}
+
+	      runp = (struct section_list *) xcalloc (1, sizeof (*runp));
+	      name = strncpy (xmalloc (arg->val.str.lenmb + 1),
+			      arg->val.str.startmb, arg->val.str.lenmb);
+	      name[arg->val.str.lenmb] = '\0';
+	      runp->name = name;
+
+	      runp->def_next = collate->known_sections;
+	      collate->known_sections = runp;
+	    }
+	  lr_ignore_rest (ldfile, 1);
+	  break;
+
 	case tok_order_start:
 	  /* Ignore the rest of the line if we don't need the input of
 	     this line.  */
@@ -3094,10 +3167,13 @@ error while adding equivalent collating symbol"));
 	  if (arg->tok == tok_bsymbol)
 	    {
 	      /* This better should be a section name.  */
-	      struct section_list *sp = collate->sections;
+	      struct section_list *sp = collate->known_sections;
 	      while (sp != NULL
-		     && strcmp (sp->name, arg->val.str.startmb) != 0)
-		sp = sp->next;
+		     && (sp->name == NULL
+			 || strncmp (sp->name, arg->val.str.startmb,
+				     arg->val.str.lenmb) != 0
+			 || sp->name[arg->val.str.lenmb] != '\0'))
+		sp = sp->def_next;
 
 	      if (sp == NULL)
 		{
@@ -3109,15 +3185,21 @@ error while adding equivalent collating symbol"));
 
 		  if (collate->error_section.first == NULL)
 		    {
-		      collate->error_section.next = collate->sections;
-		      collate->sections = &collate->error_section;
+		      if (collate->sections == NULL)
+			collate->sections = &collate->error_section;
+		      else
+			{
+			  sp = collate->sections;
+			  while (sp->next != NULL)
+			    sp = sp->next;
+
+			  collate->error_section.next = NULL;
+			  sp->next = &collate->error_section;
+			}
 		    }
 		}
 	      else
 		{
-		  /* Remember this section.  */
-		  collate->current_section = sp;
-
 		  /* One should not be allowed to open the same
                      section twice.  */
 		  if (sp->first != NULL)
@@ -3126,8 +3208,13 @@ error while adding equivalent collating symbol"));
 			      "LC_COLLATE", sp->name);
 		  else
 		    {
-		      sp->next = collate->sections;
-		      collate->sections = sp;
+		      if (collate->current_section == NULL)
+			collate->current_section = sp;
+		      else
+			{
+			  sp->next = collate->current_section->next;
+			  collate->current_section->next = sp;
+			}
 		    }
 
 		  /* Next should come the end of the line or a semicolon.  */
@@ -3381,10 +3468,10 @@ error while adding equivalent collating symbol"));
 	      break;
 	    }
 
-	  if (state != 1 && state != 3 && state != 5)
+	  if (state != 0 && state != 1 && state != 3 && state != 5)
 	    goto err_label;
 
-	  if (state == 5 && nowtok == tok_ucs4)
+	  if ((state == 0 || state == 5) && nowtok == tok_ucs4)
 	    goto err_label;
 
 	  if (nowtok == tok_ucs4)
@@ -3399,7 +3486,41 @@ error while adding equivalent collating symbol"));
 	      symlen = arg->val.str.lenmb;
 	    }
 
-	  if (state == 3)
+	  if (state == 0)
+	    {
+	      /* We are outside an `order_start' region.  This means
+                 we must only accept definitions of values for
+                 collation symbols since these are purely abstract
+                 values and don't need dorections associated.  */
+	      struct element_t *seqp;
+
+	      if (find_entry (&collate->seq_table, symstr, symlen,
+			      (void **) &seqp) == 0)
+		{
+		  /* It's already defined.  First check whether this
+		     is really a collating symbol.  */
+		  if (seqp->is_character)
+		    goto err_label;
+
+		  goto move_entry;
+		}
+	      else
+		{
+		  void *result;
+
+		  if (find_entry (&collate->sym_table, symstr, symlen,
+				  &result) != 0)
+		    /* No collating symbol, it's an error.  */
+		    goto err_label;
+
+		  /* Maybe this is the first time we define a symbol
+		     value and it is before the first actual section.  */
+		  if (collate->sections == NULL)
+		    collate->sections = collate->current_section =
+		      &collate->symbol_section;
+		}
+	    }
+	  else if (state == 3)
 	    {
 	      /* It is possible that we already have this collation sequence.
 		 In this case we move the entry.  */
@@ -3416,6 +3537,7 @@ error while adding equivalent collating symbol"));
 	      if (find_entry (&collate->seq_table, symstr, symlen,
 			      (void **) &seqp) == 0)
 		{
+		move_entry:
 		  /* Remove the entry from the old position.  */
 		  if (seqp->last == NULL)
 		    collate->start = seqp->next;
