@@ -1,3 +1,68 @@
+2002-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/Dist: Add _mcount.S and bits/link.h.
+
+	* sysdeps/s390/Dist: Add bits/link.h.
+
+	* sysdeps/sh/Dist: New file.
+
+	* sysdeps/ia64/Dist: Add ia64libgcc.S.
+
+	* sysdeps/wordsize-32/Dist: New file.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add dl-brk.S.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: Likewise.
+
+	* sysdeps/unix/sysv/linux/Dist: Add dl-brk.c, dl-sbrk.c, and
+	sys/personality.h.
+
+	* sysdeps/unix/Dist: Add i386/dl-brk.S, mips/dl-brk.S, and
+	sparc/dl-brk.S.
+
+	* sysdeps/unix/bsd/Dist: Add vax/dl-brk.S.
+
+	* sysdeps/unix/bsd/sun/Dist: New file.
+
+	* sysdeps/unix/bsd/osf/Dist: New file.
+
+	* sysdeps/unix/bsd/hp/Dist: New file.
+
+	* sysdeps/unix/arm/Dist: New file.
+
+	* sysdeps/powerpc/Dist: Add divdi3.c and libgcc-compat.S.
+
+	* sysdeps/mach/hurd/Dist: Add set-init.c.
+
+	* sysdeps/i386/Dist: Add bits/link.h.
+
+	* sysdeps/gnu/Dist: Add errlist-compat.c errlist-compat.awk.
+
+	* sysdeps/generic/Dist: Add dl-brk.c and dl-sbrk.c.
+
+	* locale/Makefile (distribute): Add hashval.h.
+
+	* iconvdata/Makefile (distribute): Add tcvn5712-1.c and armscii-8.c.
+
+	* sysdeps/unix/sysv/linux/Dist: Remove errlist.h.
+
+	* misc/sys/cdefs.h: Define __BEGIN_NAMESPACE_STD, __END_NAMESPACE_STD,
+	__USING_NAMESPACE_STD, __BEGIN_NAMESPACE_C99, __END_NAMESPACE_C99, and
+	__USING_NAMESPACE_C99 dependingon _GLIBCPP_USE_NAMESPACES.
+	* ctype/ctype.h: Prepare headers for use in ISO C++ compliant
+	implementations.
+	* libio/stdio.h: Likewise.
+	* locale/locale.h: Likewise.
+	* math/math.h: Likewise.
+	* math/bits/mathcalls.h: Likewise.
+	* setjmp/setjmp.h: Likewise.
+	* signal/signal.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/string.h: Likewise.
+	* time/time.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* wctype/wctype.h: Likewise.
+
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
 	* locale/tst-C-locale.c (run_test): Remove __ from function names.
@@ -18,8 +83,8 @@
 
 2002-08-28  Jakub Jelinek  <jakub@redhat.com>
 
-        * locale/programs/locarchive.c (insert_name): Suppress warnings about
-  	hash collisions if be_quiet.
+	* locale/programs/locarchive.c (insert_name): Suppress warnings about
+	hash collisions if be_quiet.
 
 2002-08-27  Roland McGrath  <roland@redhat.com>
 
@@ -105,6 +170,10 @@
 	(libc: GLIBC_2.3): ... here.
 
 2002-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/Makefile: Fix typo in stdio_lim.h installation rule.
+
+	* Makefile (distribute): Add LICENSES.
 
 	* sysdeps/unix/sysv/linux/x86_64/Dist: Add ucontext_i.h and
 	sys/debugreg.h.
@@ -192,6 +261,8 @@
 
 	* libio/Makefile (tests): Add bug-fopena+.
 	* libio/bug-fopena+.c: New file.
+	* libio/fileops.c (_IO_file_open): Only set file pointer to end of the
+	file for _IO_IS_APPENDING if file isn't opened for reading, too.
 
 	* stdio-common/tst-swprintf.c (main): Add casts to avoid warnings.
 
