@@ -1,3 +1,8 @@
+2001-08-11  Roland McGrath  <roland@frob.com>
+
+	* posix/getopt.c (nonoption_flags_max_len, nonoption_flags_len):
+	Make these defns conditional on [USE_NONOPTION_FLAGS].
+
 2001-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* config.h.in: Add #undef line for USE_NONOPTION_FLAGS.
