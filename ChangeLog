@@ -1,3 +1,8 @@
+2000-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_trans.c: Move initialization of winbuf and winbufend
+	ahead.
+
 2000-06-21  Greg McGary  <greg@mcgary.org>
 
 	* Makerules (elide-routines.*, elide-bp-thunks):
