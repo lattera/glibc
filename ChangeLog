@@ -1,3 +1,11 @@
+2001-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-minimal.c (realloc): Handle NULL for first parameter
+	correctly.
+	* elf/dl-load.c (is_dst): New function.
+	(_dl_dst_count): Use is_dst to check for DST variable.
+	(_dl_dst_substitute): Likewise.
+
 2001-11-09  Roland McGrath  <roland@frob.com>
 
 	Hurd/PowerPC port contributed by Peter Bruin <pjbruin@dds.nl>.

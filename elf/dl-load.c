@@ -170,6 +170,30 @@ local_strdup (const char *s)
 }
 
 
+static size_t
+is_dst (const char *start, const char *name, const char *str, size_t cmplen, int is_path,
+	int secure)
+{
+  size_t len;
+
+  if (strncmp (name, str, cmplen) == 0)
+    len = cmplen + 1;
+  else if (strncmp (name, str + 1, cmplen - 2) == 0
+	   && (name[cmplen - 2] == '\0' || name[cmplen - 2] == '/'
+	       || (is_path && name[cmplen - 2] == ':')))
+    len = cmplen - 1;
+  else
+    return 0;
+
+  if (__builtin_expect (secure, 0)
+      && ((name[len - 1] != '\0' && (!is_path || name[len - 1] != ':'))
+	  || (name != start + 1 && (!is_path || name[-2] != ':'))))
+    return 0;
+
+  return len;
+}
+
+
 size_t
 _dl_dst_count (const char *name, int is_path)
 {
@@ -186,23 +210,10 @@ _dl_dst_count (const char *name, int is_path)
 	 Note that it is no bug that the string in the second and
 	 fourth `strncmp' call is longer than the sequence which is
 	 actually tested.  */
-      if (((strncmp (&name[1], "{ORIGIN}", 8) == 0 && (len = 9) != 0)
-	   || (strncmp (&name[1], "{ORIGIN}" + 1, 6) == 0
-	       && (name[7] == '\0' || name[7] == '/'
-		   || (is_path && name[7] == ':'))
-	       && (len = 7) != 0)))
-	{
-	  if ((__builtin_expect (!__libc_enable_secure, 1)
-	       || name[len] == '\0' || (is_path && name[len] == ':'))
-	      && (name == start || (is_path && name[-1] == ':')))
-	    ++cnt;
-	}
-      else if ((strncmp (&name[1], "{PLATFORM}", 10) == 0
-		&& (len = 11) != 0)
-	       || (strncmp (&name[1], "{PLATFORM}" + 1, 8) == 0
-		   && (name[9] == '\0' || name[9] == '/'
-		       || (is_path && name[9] == ':'))
-		   && (len = 9) != 0))
+      if ((len = is_dst (start, name + 1, "{ORIGIN}", 8, is_path,
+			 __libc_enable_secure)) != 0
+	  || ((len = is_dst (start, name + 1, "{PLATFORM}", 10, is_path, 0))
+	      != 0))
 	++cnt;
 
       name = strchr (name + len, '$');
@@ -236,24 +247,12 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	  /* Note that it is no bug that the string in the second and
 	     fourth `strncmp' call is longer than the sequence which
 	     is actually tested.  */
-	  if (((strncmp (&name[1], "{ORIGIN}", 8) == 0 && (len = 9) != 0)
-	       || (strncmp (&name[1], "{ORIGIN}" + 1, 6) == 0
-		   && (name[7] == '\0' || name[7] == '/'
-		       || (is_path && name[7] == ':'))
-		   && (len = 7) != 0)))
-	    {
-	      if ((__builtin_expect (!__libc_enable_secure, 1)
-		   || name[len] == '\0' || (is_path && name[len] == ':'))
-		  && (name == start || (is_path && name[-1] == ':')))
-		repl = l->l_origin;
-	    }
-	  else if ((strncmp (&name[1], "{PLATFORM}", 10) == 0
-		    && (len = 11) != 0)
-		   || (strncmp (&name[1], "{PLATFORM}" + 1, 8) == 0
-		       && (name[9] == '\0' || name[9] == '/' || name[9] == ':')
-		       && (len = 9) != 0))
+	  if ((len = is_dst (start, name + 1, "{ORIGIN}", 8, is_path,
+			     __libc_enable_secure)) != 0)
+	    repl = l->l_origin;
+	  else if ((len = is_dst (start, name + 1, "{PLATFORM}", 10, is_path,
+				  0)) != 0)
 	    repl = _dl_platform;
-
 
 	  if (repl != NULL && repl != (const char *) -1)
 	    {
@@ -747,7 +746,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
      is to avoid the function from being inlined.  There is no official
      way to do this so we use this trick.  gcc never inlines functions
      which use `alloca'.  */
-  int *a = alloca (sizeof (int));
+  int *a = (int *) alloca (sizeof (int));
   a[0] = fd;
   /* The file might already be closed.  */
   if (a[0] != -1)
