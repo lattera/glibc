@@ -1,5 +1,7 @@
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/Dist: Add bp-asm.h.
+
 	* sysdeps/unix/sysv/linux/shm_open.c (where_is_shmfs): Use
 	defaultdir variable instead of "/var/shm" everywhere.
 	(defaultdir): Change to /dev/shm/.
