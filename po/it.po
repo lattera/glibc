@@ -1,83 +1,83 @@
-# Polish translation for GNU libc-2.1.2
-# Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.
-# Pawe³ Krawczyk <kravietz@ceti.pl>, 1996,97,98,99.
+# Italian translation of the GNU-libc-messages.
+# Copyright (C) 1999 Free Software Foundation, Inc.
+# Marco d'Itri <md@linux.it>, 1999.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.1.2\n"
+"Project-Id-Version: libc 2.0.90\n"
 "POT-Creation-Date: 1998-11-28 09:29-0800\n"
-"PO-Revision-Date: 1999-09-11 22:25+02:00\n"
-"Last-Translator: Pawe³ Krawczyk <kravietz@ceti.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 1999-08-10 12:07+02:00\n"
+"Last-Translator: Marco d'Itri <md@linux.it>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: nis/nis_print.c:273
 msgid "\t\tAccess Rights : "
-msgstr "\t\tPrawa dostêpu : "
+msgstr "\t\tDiritti di Accesso : "
 
 #: nis/nis_print.c:271
 msgid "\t\tAttributes    : "
-msgstr "\t\tAtrybuty      : "
+msgstr "\t\tAttributi     : "
 
 #: sunrpc/rpc_main.c:1416
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
-msgstr "\t%s [a-bkCLNTM][-Dnazwa[=warto¶æ]] [-i wielko¶æ] [-I [-K sekundy]] [-Y ¶cie¿ka] plik_we\n"
+msgstr "\t%s [-abkCLNTM][-Dnome[=valore]] [-i dimes] [-I [-K secondi]] [-Y path] infile\n"
 
 #: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
-msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o plik_wy] [plik_we]\n"
+msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 
 #: sunrpc/rpc_main.c:1421
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
-msgstr "\t%s [-s id_sieci]* [-o plik_wy] [plik_we]\n"
+msgstr "\t%s [-n netid]* [-o outfile] [infile]\n"
 
 #: sunrpc/rpc_main.c:1420
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
-msgstr "\t%s [-s typ_sieci]* [-o plik_wy] [plik_we]\n"
+msgstr "\t%s [-s nettype]* [-o outfile] [infile]\n"
 
 #: nis/nis_print.c:235
 msgid "\tAccess rights: "
-msgstr "\tPrawa dostêpu: "
+msgstr "\tDiritti di accesso: "
 
 #: nis/nis_print.c:293
 #, c-format
 msgid "\tEntry data of type %s\n"
-msgstr "\tDane rekordu typu %s\n"
+msgstr "\tDati della voce di tipo %s\n"
 
 #: nis/nis_print.c:171
 #, c-format
 msgid "\tName       : %s\n"
-msgstr "\tNazwa      :%s\n"
+msgstr "\tNome       : %s\n"
 
 #: nis/nis_print.c:172
 msgid "\tPublic Key : "
-msgstr "\tKlucz publiczny : "
+msgstr "\tChiave pubblica : "
 
 #: nis/nis_print.c:234
 #, c-format
 msgid "\tType         : %s\n"
-msgstr "\tTyp          : %s\n"
+msgstr "\tTipo   : %s\n"
 
 #: nis/nis_print.c:201
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
-msgstr "\tAdresy uniwersalne (%u)\n"
+msgstr "\tIndirizzi universali (%u)\n"
 
 #: nis/nis_print.c:269
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
-msgstr "\t[%d]\tNazwa         : %s\n"
+msgstr "\t[%d]\tNome          : %s\n"
 
 #: nis/nis_print.c:296
 #, c-format
 msgid "\t[%u] - [%u bytes] "
-msgstr "\t[%u] - [%u bajtów] "
+msgstr "\t[%u] - [%u byte] "
 
 #: nscd/nscd_stat.c:153
 msgid ""
@@ -98,35 +98,32 @@ msgstr ""
 "\n"
 "cache %s:\n"
 "\n"
-"%15s  cache jest w³±czony\n"
-"%15Zd  zalecany rozmiar\n"
-"%15ld  sekund czasu przez który bêd± utrzymywane wpisy pozytywne\n"
-"%15ld  sekund czasu przez który bêd± utrzymywane wpisy negatywne\n"
-"%15ld  trafionych wpisów pozytywnych\n"
-"%15ld  trafionych wpisów negatywnych\n"
-"%15ld  nietrafiownych wpisów pozytywnych\n"
-"%15ld  nietrafionych wpisów negatywnych\n"
-"%15ld%% procent trafieñ\n"
-"%15s  sprawd¼ zmiany w /etc/%s\n"
+"%15s  la cache è abilitata\n"
+"%15Zd  dimensioni suggerite\n"
+"%15ld  secondi di vita per le voci positive\n"
+"%15ld  secondi di vita per le voci negative\n"
+"%15ld  cache hit sulle voci positive\n"
+"%15ld  cache hit sulle voci negative\n"
+"%15ld  cache miss sulle voci positive\n"
+"%15ld  cache miss sulle voci negative\n"
+"%15ld%% hit rate della cache\n"
+"%15s  controlla i cambiamenti di /etc/%s\n"
 
 #: nis/nis_print.c:251
 msgid "\nGroup Members :\n"
-msgstr "\nCz³onkowie grupy :\n"
+msgstr "\nMembri del gruppo :\n"
 
 #: nis/nis_print.c:320
 msgid "\nTime to Live  : "
-msgstr "\nCzas ¿ycia  : "
+msgstr "\nTempo da vivere: "
 
-# collation symbol...
-# collation element...  dlaczego 'element ³±cz±cy' ??? -pk
-#
 #: sunrpc/rpcinfo.c:679
 msgid "       rpcinfo -b prognum versnum\n"
-msgstr "       rpcinfo -b nr_programu nr_wersji\n"
+msgstr "       rpcinfo -b prognum versnum\n"
 
 #: sunrpc/rpcinfo.c:680
 msgid "       rpcinfo -d prognum versnum\n"
-msgstr "       rpcinfo -d nr_programu nr_wersji\n"
+msgstr "       rpcinfo -d prognum versnum\n"
 
 #: sunrpc/rpcinfo.c:678
 msgid "       rpcinfo -p [ host ]\n"
@@ -134,332 +131,329 @@ msgstr "       rpcinfo -p [ host ]\n"
 
 #: sunrpc/rpcinfo.c:676
 msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-msgstr "       rpcinfo [ -n nr_portu ] -t host nr_programu [ nr_wersji ]\n"
+msgstr "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
 
 #: nscd/nscd_stat.c:145 nscd/nscd_stat.c:147
 msgid "      no"
-msgstr "     nie"
+msgstr "      no"
 
 #: nscd/nscd_stat.c:145 nscd/nscd_stat.c:147
 msgid "     yes"
-msgstr "    tak"
+msgstr "      si"
 
 #: nis/nis_print.c:344
 #, c-format
 msgid "    Data Length = %u\n"
-msgstr "   Rozmiar danych = %u\n"
+msgstr "Lunghezza dati = %u\n"
 
-# XXX nie-czlonkowie brzmi glupio -PK
 #: nis/nis_print_group_entry.c:121
 msgid "    Explicit members:\n"
-msgstr "    Cz³onkowie zadeklarowani:\n"
+msgstr "    Membri espliciti:\n"
 
 #: nis/nis_print_group_entry.c:145 nis/nis_print_group_entry.c:161
 msgid "    Explicit nonmembers:\n"
-msgstr "   Nie-cz³onkowie zadeklarowani:\n"
+msgstr "    Non-membri espliciti:\n"
 
 #: nis/nis_print_group_entry.c:129
 msgid "    Implicit members:\n"
-msgstr "    Cz³onkowie domniemani:\n"
+msgstr "    Membri impliciti:\n"
 
 #: nis/nis_print_group_entry.c:153
 msgid "    Implicit nonmembers:\n"
-msgstr "    Nie-cz³onkowie domniemani:\n"
+msgstr "    Non-membri impliciti:\n"
 
 #: nis/nis_print_group_entry.c:126
 msgid "    No explicit members\n"
-msgstr "    Brak zadeklarowanych cz³onków\n"
+msgstr "    Nessun membro esplicito\n"
 
 #: nis/nis_print_group_entry.c:150
 msgid "    No explicit nonmembers\n"
-msgstr "    Brak zadeklarowanych nie-cz³onków\n"
+msgstr "    Nessun non-membro esplicito\n"
 
 #: nis/nis_print_group_entry.c:134
 msgid "    No implicit members\n"
-msgstr "    Brak domniemanych cz³onków\n"
+msgstr "    Nessun membro implicito\n"
 
 #: nis/nis_print_group_entry.c:158
 msgid "    No implicit nonmembers\n"
-msgstr "    Brak domniemanych nie-cz³onków\n"
+msgstr "    Nessun non-membro implicito\n"
 
 #: nis/nis_print_group_entry.c:142
 msgid "    No recursive members\n"
-msgstr "    Brak rekursywnych cz³onków\n"
+msgstr "    Nessun membro ricorsivo\n"
 
 #: nis/nis_print_group_entry.c:166
 msgid "    No recursive nonmembers\n"
-msgstr "   Brak rekursywnych nie-cz³onków\n"
+msgstr "    Nessun non-membro ricorsivo\n"
 
 #: nis/nis_print_group_entry.c:137
 msgid "    Recursive members:\n"
-msgstr "    Cz³onkowie rekursywni:\n"
+msgstr "     Membri ricorsivi:\n"
 
 #: sunrpc/rpcinfo.c:574
 msgid "   program vers proto   port\n"
-msgstr "   program wer. proto   port\n"
+msgstr " programma vers proto   porta\n"
 
 #: argp/argp-help.c:1571
 msgid "  or: "
-msgstr "  lub: "
+msgstr "   o: "
 
 #: timezone/zic.c:421
 #, c-format
 msgid " (rule from \"%s\", line %d)"
-msgstr " (regu³a z \"%s\", linia %d)"
+msgstr " (regola da \"%s\", riga %d)"
 
 #: argp/argp-help.c:1583
 msgid " [OPTION...]"
-msgstr " [OPCJA...]"
+msgstr " [OPZIONE...]"
 
 #: locale/programs/ld-collate.c:370 locale/programs/ld-ctype.c:1291
 msgid " done\n"
-msgstr " zakoñczone\n"
+msgstr " fatto\n"
 
 #: timezone/zic.c:418
 #, c-format
 msgid "\"%s\", line %d: %s"
-msgstr "\"%s\", linia %d: %s"
+msgstr "\"%s\", riga %d: %s"
 
 #: timezone/zic.c:958
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
-msgstr "Linia \"Zone %s\" i opcja -l wykluczaj± siê wzajemnie"
+msgstr "La riga \"Zone %s\" e l'opzione -l sono mutuamente esclusive"
 
 #: timezone/zic.c:966
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
-msgstr "Linia \"Zone %s\" i opcja -p wykluczaj± siê wzajemnie"
+msgstr "La riga Zone %s\" e l'opzione -p sono mutuamente esclusive"
 
 #: sunrpc/rpc_main.c:1401
 msgid "\"infile\" is required for template generation flags.\n"
-msgstr "flagi generowania szablonów wymagaj± podania \"pliku_we\".\n"
+msgstr "\"infile\" è necessario per i flag di generazione del template.\n"
 
 #: argp/argp-help.c:210
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
-msgstr "%.*s: parametr ARGP_HELP_FMT wymaga podania warto¶ci"
+msgstr "%.*s: Il parametro ARGP_HELP_FMT richiede un valore"
 
 #: argp/argp-help.c:219
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
-msgstr "%.*s: Nieznany parametr ARGP_HELP_FMT"
+msgstr "%.*s: Parametro ARGP_HELP_FMT sconosciuto"
 
 #: timezone/zic.c:768
 #, c-format
 msgid "%s in ruleless zone"
-msgstr "%s w strefie dla której nie zdefiniowano regu³"
+msgstr "%s in una zona senza regole"
 
 #: assert/assert.c:51
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-msgstr "%s%s%s:%u: %s%sWarunek `%s' nie zosta³ spe³niony.\n"
+msgstr "%s%s%s:%u: %s%sAsserzione `%s' fallita.\n"
 
 #: assert/assert-perr.c:52
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgstr "%s%s%s:%u %s%sNiespodziewany b³±d: %s.\n"
+msgstr "%s%s%s:%u: %s%sErrore inatteso: %s.\n"
 
 #: stdio-common/psignal.c:47
 #, c-format
 msgid "%s%sUnknown signal %d\n"
-msgstr "%s%sNieznany sygna³ %d\n"
+msgstr "%s%sSegnale %d sconosciuto\n"
 
 #: timezone/zic.c:2201
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
-msgstr "%s: %d niepoprawnie rozszerzy³ znak\n"
+msgstr "%s: %d non ha esteso correttamente il segno\n"
 
 #: locale/programs/charmap.c:261
 #, c-format
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
-msgstr "%s: <mb_cur_max> musi byæ wiêkszy ni¿ <mb_cur_min>\n"
+msgstr "%s: <mb_cur_max> deve essere maggiore di <mb_cur_min>\n"
 
 #: sunrpc/rpc_main.c:422
 #, c-format
 msgid "%s: C preprocessor failed with exit code %d\n"
-msgstr "%s: preprocesor C zakoñczy³ pracê z b³êdem %d\n"
+msgstr "%s: il preprocessore C ha fallito con il codice di uscita %d\n"
 
 #: sunrpc/rpc_main.c:419
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
-msgstr "%s: preprocesor C zakoñczy³ pracê z sygna³em %d\n"
+msgstr "%s: il preprocessore C ha fallito con il segnale %d\n"
 
 #: timezone/zic.c:1469
 #, c-format
 msgid "%s: Can't create %s: %s\n"
-msgstr "%s: Nie mogê stworzyæ %s: %s\n"
+msgstr "%s: Impossibile creare %s: %s\n"
 
 #: timezone/zic.c:2179
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
-msgstr "%s: Nie mogê stworzyæ katalogu %s: %s\n"
+msgstr "%s: Impossibile creare la directory %s: %s\n"
 
 #: timezone/zic.c:620
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
-msgstr "%s: Nie mogê dowi±zaæ %s do %s: %s\n"
+msgstr "%s: Impossibile fare un link da %s a %s: %s\n"
 
 #: timezone/zic.c:794
 #, c-format
 msgid "%s: Can't open %s: %s\n"
-msgstr "%s: Nie mogê otworzyæ %s: %s\n"
+msgstr "%s: Impossibile aprire %s: %s\n"
 
 #: timezone/zic.c:1459
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
-msgstr "%s: Usuniêcie %s jest niemo¿liwe: %s\n"
+msgstr "%s: Impossibile rimuovere %s: %s\n"
 
 #: timezone/zic.c:863
 #, c-format
 msgid "%s: Error closing %s: %s\n"
-msgstr "%s: B³±d przy zamykaniu %s: %s\n"
+msgstr "%s: Errore chiudendo %s: %s\n"
 
 #: timezone/zic.c:856
 #, c-format
 msgid "%s: Error reading %s\n"
-msgstr "%s: B³±d odczytu %s\n"
+msgstr "%s: Errore leggendo %s\n"
 
 #: timezone/zic.c:1535
 #, c-format
 msgid "%s: Error writing %s\n"
-msgstr "%s: B³±d zapisu %s\n"
+msgstr "%s: Errore scrivendo %s\n"
 
 #: timezone/zdump.c:266
 #, c-format
 msgid "%s: Error writing standard output "
-msgstr "%s: B³±d zapisu na standardowe wyj¶cie "
+msgstr "%s: Errore scrivendo sullo standard output "
 
 #: timezone/zic.c:841
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
-msgstr "%s: linia Leap nie znajduje siê w pliku sekund przestêpnych %s\n"
+msgstr "%s: riga leap nel file non di secondi intercalari %s\n"
 
 #: timezone/zic.c:359
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
-msgstr "%s: Brak pamiêci: %s\n"
+msgstr "%s: Memoria esaurita: %s\n"
 
 #: timezone/zic.c:524
 #, c-format
 msgid "%s: More than one -L option specified\n"
-msgstr "%s: Podano wiêcej ni¿ jedn± opcjê -L\n"
+msgstr "%s: È stata specificata più di una opzione -L\n"
 
 #: timezone/zic.c:484
 #, c-format
 msgid "%s: More than one -d option specified\n"
-msgstr "%s: Podano wiêcej ni¿ jedn± opcjê -d\n"
+msgstr "%s: È stata specificata più di una opzione -d\n"
 
 #: timezone/zic.c:494
 #, c-format
 msgid "%s: More than one -l option specified\n"
-msgstr "%s: Podano wiêcej ni¿ jedn± opcjê -l\n"
+msgstr "%s: È stata specificata più di una opzione -l\n"
 
 #: timezone/zic.c:504
 #, c-format
 msgid "%s: More than one -p option specified\n"
-msgstr "%s: Podano wiêcej ni¿ jedn± opcjê -p\n"
+msgstr "%s: È stata specificata più di una opzione -p\n"
 
 #: timezone/zic.c:514
 #, c-format
 msgid "%s: More than one -y option specified\n"
-msgstr "%s: Podano wiêcej ni¿ jedn± opcjê -y\n"
+msgstr "%s: È stata specificata più di una opzione -y\n"
 
 #: argp/argp-parse.c:640
 #, c-format
 msgid "%s: Too many arguments\n"
-msgstr "%s : Za du¿o argumentów\n"
+msgstr "%s: Troppi argomenti\n"
 
 #: login/programs/database.c:129
 #, c-format
 msgid "%s: cannot get modification time"
-msgstr "%s: sprawdzenie czasu modyfikacji jest niemo¿liwe"
+msgstr "%s: impossibile ottenere l'orario di modifica"
 
 #: timezone/zic.c:1900
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: polecenie `%s' zwróci³o %d\n"
+msgstr "%s: il comando era '%s', il risultato %d\n"
 
-# state machine = finite state machine =
-# automat skoñczony -PK
 #: locale/programs/charmap.c:677 locale/programs/locfile.c:1008
 #, c-format
 msgid "%s: error in state machine"
-msgstr "%s: b³±d w automacie skoñczonym"
+msgstr "%s: errore nella macchina a stati"
 
 #: posix/getopt.c:784
 #, c-format
 msgid "%s: illegal option -- %c\n"
-msgstr "%s: niew³a¶ciwa opcja -- %c\n"
+msgstr "%s: opzione non permessa -- %c\n"
 
 #: posix/getopt.c:787
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr "%s: b³êdna opcja -- %c\n"
+msgstr "%s: opzione non valida -- %c\n"
 
 #: posix/getopt.c:707
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: opcja `%c%s' nie mo¿e mieæ argumentów\n"
+msgstr "%s: l'opzione `%c%s' non accetta argomenti\n"
 
 #: posix/getopt.c:677
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: opcja `%s' jest niejednoznaczna\n"
+msgstr "%s: l'opzione `%s' è ambigua\n"
 
 #: posix/getopt.c:725 posix/getopt.c:898
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: opcja `%s' musi mieæ argument\n"
+msgstr "%s: l'opzione `%s' richiede un argomento\n"
 
 #: posix/getopt.c:702
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: opcja `--%s' nie mo¿e mieæ argumentów\n"
+msgstr "%s: l'opzione `--%s' non accetta argomenti\n"
 
 #: posix/getopt.c:882
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: opcja `-W %s' nie mo¿e mieæ argumentów\n"
+msgstr "%s: l'opzione `-W %s' non accetta argomenti\n"
 
 #: posix/getopt.c:864
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s: opcja `-W %s' jest niejednoznaczna\n"
+msgstr "%s: l'opzione `-W %s' è ambigua\n"
 
 #: posix/getopt.c:817 posix/getopt.c:947
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: opcja musi mieæ argument -- %c\n"
+msgstr "%s: l'opzione richiede un argomento -- %c\n"
 
 #: sunrpc/rpc_main.c:287
 #, c-format
 msgid "%s: output would overwrite %s\n"
-msgstr "%s: wyj¶cie nadpisze %s\n"
+msgstr "%s: l'output sovrascriverebbe %s\n"
 
 #: timezone/zic.c:848 timezone/zic.c:1262 timezone/zic.c:1287
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: panika: B³êdna l-warto¶æ %d\n"
+msgstr "%s: panico: l_value %d non valido\n"
 
 #: locale/programs/charmap.c:684 locale/programs/repertoire.c:289
 #, c-format
 msgid "%s: premature end of file"
-msgstr "%s: przedwczesny koniec pliku"
+msgstr "%s: fine del file prematura"
 
 #: sunrpc/rpc_main.c:294
 #, c-format
 msgid "%s: unable to open "
-msgstr "%s: otwarcie jest niemo¿liwe "
+msgstr "%s: impossibile aprire "
 
 #: posix/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: nieznana opcja `%c%s'\n"
+msgstr "%s: opzione `%c%s' non riconosciuta\n"
 
 #: posix/getopt.c:754
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: nieznana opcja `--%s'\n"
+msgstr "%s: opzione `--%s' non riconosciuta\n"
 
 #: timezone/zic.c:443
 #, c-format
@@ -467,85 +461,84 @@ msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
 "\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
-"%s: sk³adnia: %s [ -s ] [ -v ] [ -l czas_lokalny ] [ -p regu³y_POSIX ]\n"
-"\t[ -d katalog ] [ -L sek_przestêpne ] [ -y yearistype ]\n"
-"\t[ plik ... ]\n"
+"%s: l'uso è %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ]\n"
+"\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ nomefile ... ]\n"
 
 #: timezone/zdump.c:174
 #, c-format
 msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
-msgstr "%s: sk³adnia: %s [ -v ] [ -c rok ] nazwa_strefy...\n"
+msgstr "%s: l'uso è %s [ -v ] [ -c cutoff ] nomezona ...\n"
 
 #: sunrpc/rpc_main.c:307
 #, c-format
 msgid "%s: while writing output: "
-msgstr "%s: podczas zapisywania na wyj¶cie: "
+msgstr "%s: scrivendo l'output: "
 
 #: argp/argp-parse.c:164
 msgid "(PROGRAM ERROR) No version known!?"
-msgstr "(B£¡D PROGRAMU) Nieznana wersja!?"
+msgstr "(ERRORE DEL PROGRAMMA) Nessuna versione conosciuta!?"
 
 #: argp/argp-parse.c:781
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
-msgstr "(B£¡D PROGRAMU) Opcja powinna zostaæ rozpoznana?!"
+msgstr "(PROGRAM ERROR) L'opzione avrebbe dovuto essere riconosciuta!?"
 
 #: nis/nis_print.c:129
 msgid "(Unknown object)\n"
-msgstr "(Nieznany obiekt)\n"
+msgstr "(Oggetto sconosciuto)\n"
 
 #: sunrpc/clnt_perr.c:124
 #, c-format
 msgid "(unknown authentication error - %d)"
-msgstr "(nieznany b³±d autoryzacji - %d)"
+msgstr "(errore di autenticazione sconosciuto - %d)"
 
 #: sunrpc/rpcinfo.c:613
 msgid "(unknown)"
-msgstr "(nieznany)"
+msgstr "(sconosciuto)"
 
 #: elf/sprof.c:574
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
-msgstr "*** Symbole zosta³y usuniête z pliku `%s', dok³adna analiza jest niemo¿liwa\n"
+msgstr "*** Il file `%s' è stripped: impossibile fare l'analisi dettagliata\n"
 
 #: catgets/gencat.c:266
 msgid "*standard input*"
-msgstr "*standardowe wej¶cie*"
+msgstr "*standard input*"
 
 #: catgets/gencat.c:120
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
 msgstr ""
-"-o PLIK-WY [PLIK-WE]...\n"
-"[PLIK-WY [PLIK-WE]...]"
+"-o FILE-OUTPUT [FILE-INPUT]...\n"
+"[FILE-OUTPUT [FILE-INPUT]...]"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:778
 msgid ".lib section in a.out corrupted"
-msgstr "sekcja .lib w a.out jest uszkodzona"
+msgstr "sezione .lib nell'a.out danneggiata"
 
 #: sunrpc/clnt_perr.c:110 sunrpc/clnt_perr.c:131
 #, c-format
 msgid "; low version = %lu, high version = %lu"
-msgstr "; wersja poboczna = %lu, wersja g³ówna = %lu"
+msgstr "; low version = %lu, high version = %lu"
 
 #: sunrpc/clnt_perr.c:117
 msgid "; why = "
-msgstr "; bo = "
+msgstr "; motivo = "
 
 #: locale/programs/charset.c:98
 #, c-format
 msgid "<%s> and <%s> are illegal names for range"
-msgstr "<%s> i <%s> nie s± niepoprawnymi nazwami dla przedzia³u"
+msgstr "<%s> e <%s> non sono nomi leciti per l'intervallo"
 
 #: locale/programs/ld-ctype.c:342
 #, c-format
 msgid "<SP> character must not be in class `%s'"
-msgstr "znak <SP> nie mo¿e znajdowaæ siê w klasie `%s'"
+msgstr "Il carattere <SP> non deve essere nella classe `%s'"
 
 #: locale/programs/ld-ctype.c:330
 #, c-format
 msgid "<SP> character not in class `%s'"
-msgstr "znak <SP> nie jest w klasie `%s'"
+msgstr "Il carattere <SP> non è nella classe `%s'"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
@@ -556,39 +549,39 @@ msgstr "?"
 
 #: sysdeps/unix/sysv/linux/siglist.h:27
 msgid "Aborted"
-msgstr "Przerwane"
+msgstr "Abortito"
 
 #: nis/nis_print.c:318
 msgid "Access Rights : "
-msgstr "Prawa dostêpu : "
+msgstr "Diritti di Accesso : "
 
 #: stdio-common/../sysdeps/gnu/errlist.c:774
 msgid "Accessing a corrupted shared library"
-msgstr "Próba u¿ycia uszkodzonej biblioteki dzielonej"
+msgstr "Accesso ad una libreria condivisa danneggiata"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
 #: stdio-common/../sysdeps/gnu/errlist.c:366
 msgid "Address already in use"
-msgstr "Adres jest ju¿ w u¿yciu"
+msgstr "Indirizzo già in uso"
 
 #: posix/../sysdeps/posix/gai_strerror.c:30
 msgid "Address family for hostname not supported"
-msgstr "Rodzina adresów dla tej nazwy hosta nie jest obs³ugiwana"
+msgstr "Famiglia dell'indirizzo non gestita per l'hostname"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
 #: stdio-common/../sysdeps/gnu/errlist.c:361
 msgid "Address family not supported by protocol"
-msgstr "Rodzina adresów nie obs³ugiwana przez protokó³"
+msgstr "Famiglia dell'indirizzo non gestita dal protocollo"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:742
 msgid "Advertise error"
-msgstr "B³±d podczas og³aszania"
+msgstr "Advertise error"
 
 #: stdio-common/../sysdeps/unix/siglist.c:39
 #: sysdeps/unix/sysv/linux/siglist.h:33
 msgid "Alarm clock"
-msgstr "Budzik"
+msgstr "Alarm clock"
 
 #. TRANS Argument list too long; used when the arguments passed to a new program
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
@@ -596,77 +589,77 @@ msgstr "Budzik"
 #. TRANS GNU system.
 #: stdio-common/../sysdeps/gnu/errlist.c:69
 msgid "Argument list too long"
-msgstr "Lista argumentów za d³uga"
+msgstr "Lista degli argomenti troppo lunga"
 
 #: nis/nis_error.c:65
 msgid "Attempt to remove a non-empty table"
-msgstr "Próba skasowania tablicy z zawarto¶ci±"
+msgstr "Si è tentato di rimuovere una tabella non vuota"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:782
 msgid "Attempting to link in too many shared libraries"
-msgstr "Próba ³±czenia ze zbyt wieloma bibliotekami dzielonymi"
+msgstr "Si è tentato di linkare troppe librerie condivise"
 
 #: sunrpc/clnt_perr.c:273
 msgid "Authentication OK"
-msgstr "Uwierzytelnienie OK"
+msgstr "Autenticazione OK"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:561
 msgid "Authentication error"
-msgstr "B³±d uwierzytelnienia"
+msgstr "Errore di autenticazione"
 
 #: nis/nis_print.c:105
 msgid "BOGUS OBJECT\n"
-msgstr "NIEISTNIEJ¡CY OBIEKT\n"
+msgstr "BOGUS OBJECT\n"
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS In the GNU system, this error never happens; you get a signal instead.
 #: stdio-common/../sysdeps/gnu/errlist.c:114
 msgid "Bad address"
-msgstr "B³êdny adres"
+msgstr "Indirizzo non valido"
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
 #: stdio-common/../sysdeps/gnu/errlist.c:82
 msgid "Bad file descriptor"
-msgstr "B³êdny deskryptor pliku"
+msgstr "Descrittore di file non valido"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:730
 msgid "Bad font file format"
-msgstr "B³êdny format pliku czcionek"
+msgstr "Formato del file di font non valido"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:622
 msgid "Bad message"
-msgstr "B³êdny komunikat"
+msgstr "Messaggio non valido"
 
 #: stdio-common/../sysdeps/unix/siglist.c:37
 #: sysdeps/unix/sysv/linux/siglist.h:56
 msgid "Bad system call"
-msgstr "B³êdne wywo³anie systemowe"
+msgstr "Chiamata di sistema non valida"
 
 #: posix/../sysdeps/posix/gai_strerror.c:32
 msgid "Bad value for ai_flags"
-msgstr "B³êdna warto¶æ dla ai_flags"
+msgstr "Valore di ai_flags non valido"
 
 #: locale/programs/localedef.c:104
 msgid "Be strictly POSIX conform"
-msgstr "Przestrzegaj ¶ci¶le POSIX"
+msgstr "Conformità POSIX rigorosa"
 
 #: nis/nis_print.c:301
 msgid "Binary data\n"
-msgstr "Dane binarne\n"
+msgstr "Dati binari\n"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
 #: stdio-common/../sysdeps/gnu/errlist.c:121
 msgid "Block device required"
-msgstr "Wymagane urz±dzenie blokowe"
+msgstr "È necessario un dispositivo a blocchi"
 
 #: sunrpc/pmap_rmt.c:347
 msgid "Broadcast poll problem"
-msgstr "Problem podczas próby rozg³aszania"
+msgstr "Problema di poll del broadcast"
 
 #. TRANS Broken pipe; there is no process reading from the other end of a pipe.
 #. TRANS Every library function that returns this error code also generates a
@@ -677,12 +670,12 @@ msgstr "Problem podczas próby rozg³aszania"
 #: stdio-common/../sysdeps/unix/siglist.c:38
 #: sysdeps/unix/sysv/linux/siglist.h:32
 msgid "Broken pipe"
-msgstr "Przerwany potok"
+msgstr "Pipe rotta"
 
 #: stdio-common/../sysdeps/unix/siglist.c:35
 #: sysdeps/unix/sysv/linux/siglist.h:30
 msgid "Bus error"
-msgstr "B³±d szyny"
+msgstr "Bus error"
 
 #: nis/nis_print.c:45
 msgid "CDS"
@@ -691,168 +684,172 @@ msgstr "CDS"
 #: stdio-common/../sysdeps/unix/siglist.c:49
 #: sysdeps/unix/sysv/linux/siglist.h:43
 msgid "CPU time limit exceeded"
-msgstr "Przekroczony limit czasu procesora"
+msgstr "Superato il limite del tempo di CPU"
 
 #: nis/nis_error.c:32
 msgid "Cache expired"
-msgstr "Dezaktualizacja bufora cache"
+msgstr "Cache scaduta"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:770
 msgid "Can not access a needed shared library"
-msgstr "Brak dostêpu do wymaganej biblioteki dzielonej"
+msgstr "Impossibile accedere ad una libreria condivisa necessaria"
 
 #: nis/ypclnt.c:769
 msgid "Can't bind to server which serves this domain"
-msgstr "Po³±czenie z serwerem dla tej domeny jest niemo¿liwe"
+msgstr "Impossibile fare il bind al server che serve questo dominio"
 
 #: nis/ypclnt.c:781
 msgid "Can't communicate with portmapper"
-msgstr "Komunikacja z portmapperem jest niemo¿liwa"
+msgstr "Impossibile comunicare con il portmapper"
 
 #: nis/ypclnt.c:783
 msgid "Can't communicate with ypbind"
-msgstr "Komunikacja z ypbind jest niemo¿liwa"
+msgstr "Impossibile comunicare con ypbind"
 
 #: nis/ypclnt.c:785
 msgid "Can't communicate with ypserv"
-msgstr "Komunikacja z ypserv jest niemo¿liwa"
+msgstr "Impossibile comunicare con ypserv"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
 #: stdio-common/../sysdeps/gnu/errlist.c:103
 msgid "Cannot allocate memory"
-msgstr "Brak pamiêci do alokacji"
+msgstr "Impossibile allocare memoria"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
 #: stdio-common/../sysdeps/gnu/errlist.c:373
 msgid "Cannot assign requested address"
-msgstr "Przypisanie ¿±danego adresu jest niemo¿liwe"
+msgstr "Impossibile assegnare l'indirizzo richiesto"
 
 #: sunrpc/pmap_rmt.c:264
 msgid "Cannot create socket for broadcast rpc"
-msgstr "Stworzenie gniazda dla transmisji rpc niemo¿liwe"
+msgstr "Impossibile creare il socket per l'rpc broadcast"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:786
 msgid "Cannot exec a shared library directly"
-msgstr "Bezpo¶rednie uruchomienie biblioteki dzielonej jest niemo¿liwe"
+msgstr "Impossibile eseguire direttamente una libreria condivisa"
 
 #: sunrpc/rpc_main.c:1406
 msgid "Cannot have more than one file generation flag!\n"
-msgstr "Nie mo¿na podaæ wiêcej ni¿ jednej flagi generowania pliku!\n"
+msgstr "Impossibile avere più di un flag di generazione del file!\n"
 
 #: sunrpc/pmap_rmt.c:360
 msgid "Cannot receive reply to broadcast"
-msgstr "Brak odpowiedzi na rozg³aszanie"
+msgstr "Impossibile ricevere una risposta al broadcast"
 
 #: sunrpc/pmap_clnt.c:74
 msgid "Cannot register service"
-msgstr "Zarejestrowanie us³ugi jest niemo¿liwe"
+msgstr "Impossibile registrare il servizio"
 
 #. TRANS The socket has already been shut down.
 #: stdio-common/../sysdeps/gnu/errlist.c:434
 msgid "Cannot send after transport endpoint shutdown"
-msgstr "Wysy³anie po zamkniêciu gniazda jest niemo¿liwe"
+msgstr "Impossibile inviare dopo la chiusura dell'estremità del trasporto"
 
 #: sunrpc/pmap_rmt.c:322
 msgid "Cannot send broadcast packet"
-msgstr "Wys³anie pakietu transmisji niemo¿liwe"
+msgstr "Impossibile inviare il pacchetto broadcast"
 
 #: sunrpc/pmap_rmt.c:271
 msgid "Cannot set socket option SO_BROADCAST"
-msgstr "Ustawienie opcji gniazda SO_BROADCAST jest niemo¿liwe"
+msgstr "Impossibile impostare l'opzione del socket SO_BROADCAST"
 
 #: sunrpc/rpc_main.c:1193
 msgid "Cannot specify more than one input file!\n"
-msgstr "Mo¿na podaæ tylko jeden plik wej¶ciowy!\n"
+msgstr "Impossibile specificare più di un file di input!\n"
 
 #: sunrpc/rpc_main.c:1363
 msgid "Cannot use netid flag with inetd flag!\n"
-msgstr "Nie mo¿na u¿ywaæ flagi netid z flag± inetd!\n"
+msgstr "Impossibile usare il flag netid con il flag inetd!\n"
 
 #: sunrpc/rpc_main.c:1375
 msgid "Cannot use netid flag without TIRPC!\n"
-msgstr "Flagi netid mo¿na u¿ywaæ tylko z TIRPC!\n"
+msgstr "Impossibile usare il flag netid senza TIRPC!\n"
 
 #: sunrpc/rpc_main.c:1382
 msgid "Cannot use table flags with newstyle!\n"
-msgstr "Nowa sk³adnia opcji nie pozwala na u¿ywanie flagi table!\n"
+msgstr "Impossibile usare il flag della tabella con il nuovo stile!\n"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:670
 msgid "Channel number out of range"
-msgstr "Numer kana³u poza zakresem"
+msgstr "Numero del canale fuori dall'intervallo"
 
 #: nis/nis_print.c:264
 #, c-format
 msgid "Character Separator : %c\n"
-msgstr "Separator znaków : %c\n"
+msgstr "Separatore dei caratteri: %c\n"
 
 #: stdio-common/../sysdeps/unix/siglist.c:45
 #: sysdeps/unix/sysv/linux/siglist.h:39
 msgid "Child exited"
-msgstr "Potomek zakoñczy³ pracê"
+msgstr "Il figlio è uscito"
 
 #: sunrpc/clnt_perr.c:283
 msgid "Client credential too weak"
-msgstr "Wierzytelno¶æ klienta jest zbyt ma³a"
+msgstr "Credenziale del client troppo debole"
 
 #: nis/nis_print.c:266
 msgid "Columns             :\n"
-msgstr "Kolmny              :\n"
+msgstr "Colonne:            :\n"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:750
 msgid "Communication error on send"
-msgstr "B³±d komunikacji podczas wysy³ania"
+msgstr "Errore di comunicazione durante send"
 
 #: locale/programs/localedef.c:112
 msgid "Compile locale specification"
-msgstr "Skompiluj specyfikacjê lokalizacji"
+msgstr "Compila la specifica di localizzazione"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
 #: stdio-common/../sysdeps/gnu/errlist.c:613
 msgid "Computer bought the farm"
-msgstr "Komputer wyjecha³ na wakacje"
+msgstr "Il computer ha tirato le cuoia"
 
 #: locale/programs/ld-ctype.c:1253
 msgid "Computing table size for character classes might take a while..."
-msgstr "Obliczanie rozmiaru tablicy klas znaków mo¿e chwilê potrwaæ..."
+msgstr ""
+"Calcolo le dimensioni della tabella per le classi di caratteri.\n"
+"Può essere una cosa lunga..."
 
 #: locale/programs/ld-collate.c:336
 msgid "Computing table size for collation information might take a while..."
-msgstr "Obliczanie rozmiaru tablicy sortowania mo¿e chwilê potrwaæ..."
+msgstr ""
+"Calcolo le dimensioni della tabella per le informazioni di collazione.\n"
+"Può essere una cosa lunga..."
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
 #: stdio-common/../sysdeps/gnu/errlist.c:451
 msgid "Connection refused"
-msgstr "Po³±czenie odrzucone"
+msgstr "Connessione rifiutata"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
 #: stdio-common/../sysdeps/gnu/errlist.c:401
 msgid "Connection reset by peer"
-msgstr "Po³±czenie zerwane przez drug± stronê"
+msgstr "Connessione abbattuta dal corrispondente"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
 #: stdio-common/../sysdeps/gnu/errlist.c:445
 msgid "Connection timed out"
-msgstr "Przekroczony czas oczekiwania na po³±czenie"
+msgstr "Timeout della connessione"
 
 #: stdio-common/../sysdeps/unix/siglist.c:44
 #: sysdeps/unix/sysv/linux/siglist.h:38
 msgid "Continued"
-msgstr "Kontynuacja"
+msgstr "Continuato"
 
 #: iconv/iconv_prog.c:66
 msgid "Convert encoding of given files from one encoding to another."
-msgstr "Konwertuje podanych plików miêdzy ró¿nymi metodami kodowania."
+msgstr "Converte in un'altra codifica la codifica dei file indicati."
 
 #: db2/makedb.c:58
 msgid "Convert key to lower case"
-msgstr "Konwertuj klucz na ma³e znaki"
+msgstr "Converte la chiave in minuscolo"
 
 #: catgets/gencat.c:236 db2/makedb.c:242 elf/sprof.c:359
 #: iconv/iconv_prog.c:294 locale/programs/locale.c:267
@@ -865,41 +862,43 @@ msgid ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
-"Oprogramowanie darmowe. Warunki kopiowania zamieszczone s± w kodzie ¼ród³owym.\n"
-"Nie podlega ¿adnej gwarancji, nawet gwarancji przydatno¶ci do jakiegokolwiek\n"
-"zastosowania lub sprzeda¿y.\n"
+"This is free software; see the source for copying conditions.  There is NO\n"
+"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+"Questo è software libero; si veda il sorgente per le condizioni di copiatura.\n"
+"NON c'è alcuna garanzia; neppure di COMMERCIABILITÀ o IDONEITÀ AD UN\n"
+"PARTICOLARE SCOPO.\n"
 
 #: nscd/nscd_conf.c:167
 #, c-format
 msgid "Could not create log file \"%s\""
-msgstr "Stworzenie pliku dziennika \"%s\" jest niemo¿liwe"
+msgstr "impossibile creare il file di log \"%s\""
 
 #: catgets/gencat.c:107
 msgid "Create C header file NAME containing symbol definitions"
-msgstr "Tworzy plik nag³ówkowy C o nazwie NAZWA zawieraj±cy definicje symboli"
+msgstr "Crea un header C NOME contenente le definizioni dei simboli"
 
 #: locale/programs/localedef.c:103
 msgid "Create output even if warning messages were issued"
-msgstr "brak pliku wyj¶ciowego - wyst±pi³y ostrze¿enia"
+msgstr "Crea l'output anche se sono stati emessi messaggi di avvertimento"
 
 #: db2/makedb.c:68
 msgid "Create simple DB database from textual input."
-msgstr "Tworzy prost± bazê DB z wej¶cia tekstowego."
+msgstr "Crea un semplice database DB dall'input testuale."
 
 #: nis/nis_print.c:322
 #, c-format
 msgid "Creation Time : %s"
-msgstr "Czas stworzenia : %s"
+msgstr "Orario di creazione : %s"
 
 #: nis/nss_nisplus/nisplus-publickey.c:89
 #: nis/nss_nisplus/nisplus-publickey.c:159
 #, c-format
 msgid "DES entry for netname %s not unique\n"
-msgstr "Pozycja DES dla sieci %s nie jest unikalna\n"
+msgstr "La voce DES per il netname %s non è unica\n"
 
 #: nis/nis_print.c:111
 msgid "DIRECTORY\n"
-msgstr "KATALOG\n"
+msgstr "DIRECTORY\n"
 
 #: nis/nis_print.c:41
 msgid "DNANS"
@@ -911,26 +910,26 @@ msgstr "DNS"
 
 #: nis/nis_error.c:51
 msgid "Database for table does not exist"
-msgstr "Brak bazy danych dla tej tabeli"
+msgstr "Non esiste un database per la tabella"
 
 #: nis/ypclnt.c:795
 msgid "Database is busy"
-msgstr "Baza danych jest zajêta"
+msgstr "Il database è occupato"
 
 #: nis/nis_print.c:225
 msgid "Default Access rights :\n"
-msgstr "Domy¶lne prawa dostêpu :\n"
+msgstr "Diritti di accesso predefiniti:\n"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
 #: stdio-common/../sysdeps/gnu/errlist.c:429
 msgid "Destination address required"
-msgstr "Wymagany jest adres docelowy"
+msgstr "È necessario l'indirizzo di destinazione"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:650
 msgid "Device not a stream"
-msgstr "Urz±dzenie nie jest strumieniem"
+msgstr "Il dispositivo non è uno stream"
 
 #. TRANS No such device or address.  The system tried to use the device
 #. TRANS represented by a file you specified, and it couldn't find the device.
@@ -939,264 +938,265 @@ msgstr "Urz±dzenie nie jest strumieniem"
 #. TRANS computer.
 #: stdio-common/../sysdeps/gnu/errlist.c:61
 msgid "Device not configured"
-msgstr "Urz±dzenie nie jest skonfigurowane"
+msgstr "Dispositivo non configurato"
 
 #. TRANS Resource busy; a system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
 #: stdio-common/../sysdeps/gnu/errlist.c:128
 msgid "Device or resource busy"
-msgstr "Urz±dzenie lub zasoby s± zajête"
+msgstr "Dispositivo o risorsa occupata"
 
 #: nis/nis_print.c:179
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
-msgstr "Diffie-Hellmann (%d bitów)\n"
+msgstr "Diffie-Hellmann (%d bit)\n"
 
 #: nis/nis_print.c:315
 #, c-format
 msgid "Directory     : %s\n"
-msgstr "Katalog       : %s\n"
+msgstr "Directory     : %s\n"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
 #: stdio-common/../sysdeps/gnu/errlist.c:480
 msgid "Directory not empty"
-msgstr "Katalog nie jest pusty"
+msgstr "La directory non è vuota"
 
 #. TRANS The user's disk quota was exceeded.
 #: stdio-common/../sysdeps/gnu/errlist.c:498
 msgid "Disc quota exceeded"
-msgstr "Przekroczony limit dyskowy"
+msgstr "Superata la quota di disco"
 
 #: nscd/nscd.c:80
 msgid "Do not fork and display messages on the current tty"
-msgstr "Nie pracuje w tle i wy¶wietla komunikaty na bie¿±cy terminal"
+msgstr "Non fa fork e stampa i messaggi sul tty corrente"
 
 #: db2/makedb.c:61
 msgid "Do not print messages while building database"
-msgstr "Nie wy¶wietla komunikatów podczas budowania bazy danych"
+msgstr "Non stampa messaggi mentre crea il database"
 
 #: catgets/gencat.c:109
 msgid "Do not use existing catalog, force new output file"
-msgstr "Zamiast do istniej±cego katalogu zapisuje do nowego pliku"
+msgstr "Non usa il catalogo esistente, forza un nuovo file di output"
 
 #: nis/ypclnt.c:841
 msgid "Domain not bound"
-msgstr "Domena nie zosta³a zwi±zana"
+msgstr "Dominio non collegato"
 
 #: stdio-common/../sysdeps/unix/siglist.c:32
 #: sysdeps/unix/sysv/linux/siglist.h:53
 msgid "EMT trap"
-msgstr "pu³apka EMT"
+msgstr "trap EMT"
 
 #: nis/nis_print.c:120
 msgid "ENTRY\n"
-msgstr "POZYCJA\n"
+msgstr "ENTRY\n"
 
 #: nis/nis_print.c:299
 msgid "Encrypted data\n"
-msgstr "Zaszyfrowane dane\n"
+msgstr "Dati cifrati\n"
 
 #: nis/nis_error.c:52
 msgid "Entry/Table type mismatch"
-msgstr "Typy wpisu/tablicy nie pasuj± do siebie"
+msgstr "I tipi di voce/tabella non coincidono"
 
 #: nis/nis_error.c:56
 msgid "Error in RPC subsystem"
-msgstr "B³±d w podsystemie RPM"
+msgstr "Errore nel sottosistema RPC"
 
 #: nis/nis_error.c:66
 msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
-msgstr "Znalezienie pliku startowego NIS+ jest niemo¿liwe. Czy NIS+ jest zainstalowany?"
+msgstr ""
+"Errore nell'accesso al file per la partenza a freddo di NIS+.\n"
+"NIS+ è installato?"
 
 #: string/../sysdeps/mach/_strerror.c:56
 #: sysdeps/mach/hurd/mips/dl-machine.c:67
 msgid "Error in unknown error system: "
-msgstr "B³±d w nieznanym systemie b³êdów: "
+msgstr "Errore in un sistema di errore sconosciuto: "
 
 #: nis/nis_error.c:59
 msgid "Error while talking to callback proc"
-msgstr "Wyst±pi³ b³±d podczas odwo³ania do callbacka"
+msgstr "Errore parlando alla procedura di callback"
 
 #: inet/ruserpass.c:161
 msgid "Error: .netrc file is readable by others."
-msgstr "B³±d: plik .netrc mo¿e byæ czytany przez ka¿dego."
+msgstr "Errore: il file .netrc è leggibile da altri."
 
 #: stdio-common/../sysdeps/gnu/errlist.c:710
 msgid "Exchange full"
-msgstr "Przepe³niona wymiana"
+msgstr "Scambio pieno"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
 #: stdio-common/../sysdeps/gnu/errlist.c:75
 msgid "Exec format error"
-msgstr "B³êdny format pliku wykonywalnego"
+msgstr "Errore di formato di exec"
 
 #: locale/programs/localedef.c:190
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
-msgstr "PRZERWANIE: system nie definiuje `_POSIX2_LOCALEDEF'"
+msgstr "FATALE: il sistema non definisce `_POSIX2_LOCALEDEF'"
 
 #: locale/programs/localedef.c:99
 msgid "FILE contains mapping from symbolic names to UCS4 values"
-msgstr "PLIK zawiera odwzorowania nazw symbolicznych na warto¶ci UCS4"
+msgstr "FILE contiene la mappatura dai nomi simbolici ai valori UCS4"
 
 #: sunrpc/clnt_perr.c:287
 msgid "Failed (unspecified error)"
-msgstr "Nieudane (nieustalony b³±d)"
+msgstr "Fallito (errore non specificato)"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:762
 msgid "File descriptor in bad state"
-msgstr "Deskryptor pliku w z³ym stanie"
+msgstr "Il descrittore di file è in uno stato non valido"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
 #: stdio-common/../sysdeps/gnu/errlist.c:134
 msgid "File exists"
-msgstr "Plik istnieje"
+msgstr "Il file esiste"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:726
 msgid "File locking deadlock error"
-msgstr "Podczas blokowania pliku wyst±pi³o zakleszczenie"
+msgstr "Errore di deadlock durante il locking del file"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
 #: stdio-common/../sysdeps/gnu/errlist.c:464
 msgid "File name too long"
-msgstr "Za d³uga nazwa pliku"
+msgstr "Nome del file troppo lungo"
 
 #: stdio-common/../sysdeps/unix/siglist.c:50
 #: sysdeps/unix/sysv/linux/siglist.h:44
 msgid "File size limit exceeded"
-msgstr "Przekroczony limit wielko¶ci pliku"
+msgstr "Superato il limite di dimensione del file"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
 #: stdio-common/../sysdeps/gnu/errlist.c:202
 msgid "File too large"
-msgstr "Plik jest za du¿y"
+msgstr "File troppo grande"
 
 #: nis/nis_error.c:37
 msgid "First/Next chain broken"
-msgstr "£añcuch pierwszy/nastêpny jest uszkodzony"
+msgstr "La prima/prossima catena è rotta"
 
 #: stdio-common/../sysdeps/unix/siglist.c:33
 #: sysdeps/unix/sysv/linux/siglist.h:28
 msgid "Floating point exception"
-msgstr "B³±d w obliczeniach zmiennoprzecinkowych"
+msgstr "Errore di virgola mobile"
 
 #: nis/nis_error.c:67
 msgid "Full resync required for directory"
-msgstr "Katalog wymaga powtórzenia pe³nej synchronizacji"
+msgstr "È necessario un resync completo per la directory"
 
 #. TRANS Function not implemented.  Some functions have commands or options defined
 #. TRANS that might not be supported in all implementations, and this is the kind
 #. TRANS of error you get if you request them and they are not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:573
 msgid "Function not implemented"
-msgstr "Niezaimplementowana funkcja"
+msgstr "Funzione non implementata"
 
 #: nis/nis_print.c:114
 msgid "GROUP\n"
-msgstr "GRUPA\n"
+msgstr "GRUPPO\n"
 
 #: argp/argp-help.c:231
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
-msgstr "B³êdne dane w ARGP_HELP_FMT: %s"
+msgstr "Spazzatura in ARGP_HELP_FMT: %s"
 
 #: catgets/gencat.c:115
 msgid ""
 "Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
 msgstr ""
-"Generuje katalog komunikatów.\n"
-"Je¶li PLIK-WE to -, dane s± czytane ze standardowego wej¶cia. Je¶li PLIK-WY\n"
-"to -, dane s± zapisywane na standardowe wyj¶cie.\n"
+"Genera un catalogo di messaggi.\\vSe INPUT-FILE è -, l'input è letto dallo standard input. Se OUTPUT-FILE\n"
+"è -, l'output è scritto sullo standard output.\n"
 
 #: nis/nis_error.c:36
 msgid "Generic system error"
-msgstr "B³±d systemowy"
+msgstr "Errore di sistema generico"
 
 #: locale/programs/locale.c:75
 msgid "Get locale-specific information."
-msgstr "Wy¶wietla dane dotycz±ce lokalizacji."
+msgstr "Legge le informazioni specifiche alla localizzazione."
 
 #: argp/argp-parse.c:88
 msgid "Give a short usage message"
-msgstr "Wy¶wietla krótkie informacje o sk³adni polecenia"
+msgstr "Dà un breve messaggio di istruzioni"
 
 #: argp/argp-parse.c:87
 msgid "Give this help list"
-msgstr "Wy¶wietla ten tekst pomocy"
+msgstr "Dà questa lista di aiuto"
 
 #. TRANS This error code has no purpose.
 #: stdio-common/../sysdeps/gnu/errlist.c:618
 msgid "Gratuitous error"
-msgstr "Nieoczekiwany b³±d"
+msgstr "Errore gratuito"
 
 #: nis/nis_print.c:317
 #, c-format
 msgid "Group         : %s\n"
-msgstr "Grupa         : %s\n"
+msgstr "Gruppo        : %s\n"
 
 #: nis/nis_print.c:248
 msgid "Group Flags :"
-msgstr "Flagi grupy :"
+msgstr "Flag del gruppo: "
 
 #: nis/nis_print_group_entry.c:113
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
-msgstr "Wpis dla grupy \"%s.%s\":\n"
+msgstr "Voce del gruppo per il gruppo \"%s.%s\":\n"
 
 #: argp/argp-parse.c:91
 msgid "Hang for SECS seconds (default 3600)"
-msgstr "Czekaj przez SEK sekund (domy¶lnie 3600)"
+msgstr "Si blocca per SECS secondi (predefiniti 3600)"
 
 #: stdio-common/../sysdeps/unix/siglist.c:26
 #: sysdeps/unix/sysv/linux/siglist.h:22
 msgid "Hangup"
-msgstr "Roz³±czenie"
+msgstr "Hangup"
 
 #: nscd/grpcache.c:238
 #, c-format
 msgid "Haven't found \"%d\" in group cache!"
-msgstr "Nie znaleziono \"%d\" w pamiêci podrêcznej grup!"
+msgstr "Non ho trovato \"%d\" nella cache dei gruppi!"
 
 #: nscd/pwdcache.c:235
 #, c-format
 msgid "Haven't found \"%d\" in password cache!"
-msgstr "Nie znaleziono \"%d\" w pamiêci podrêcznej hase³!"
+msgstr "Non ho trovato \"%d\" nella cache delle password!"
 
 #: nscd/grpcache.c:210
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr "Nie znaleziono \"%s\" w pamiêci podrêcznej grup!"
+msgstr "Non ho trovato \"%s\" nella cache dei gruppi!"
 
 #: nscd/hstcache.c:297 nscd/hstcache.c:328 nscd/hstcache.c:359
 #: nscd/hstcache.c:390
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr "Nie znaleziono \"%s\" w pamiêci podrêcznej hostów!"
+msgstr "Non ho trovato \"%s\" nella cache degli host!"
 
 #: nscd/pwdcache.c:207
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
-msgstr "Nie znaleziono \"%s\" w pamiêci podrêcznej hase³!"
+msgstr "Non ho trovato \"%s\" nella cache delle password!"
 
 #. TRANS The remote host for a requested network connection is down.
 #: stdio-common/../sysdeps/gnu/errlist.c:469
 msgid "Host is down"
-msgstr "Host nie odpowiada"
+msgstr "L'host è giù"
 
 #: resolv/herror.c:75
 msgid "Host name lookup failure"
-msgstr "Odnalezienie nazwy hosta jest niemo¿liwe"
+msgstr "Errore durante la ricerca del nome dell'host"
 
 #: stdio-common/../sysdeps/unix/siglist.c:48
 #: sysdeps/unix/sysv/linux/siglist.h:42
 msgid "I/O possible"
-msgstr "We/Wy dozwolone"
+msgstr "I/O possibile"
 
 #: db2/makedb.c:71
 msgid ""
@@ -1204,13 +1204,13 @@ msgid ""
 "-o OUTPUT-FILE INPUT-FILE\n"
 "-u INPUT-FILE"
 msgstr ""
-"PLIK-WE PLIK-WY\n"
-"-o PLIK-WY PLIK-WE\n"
-"-u PLIK-WE"
+"INPUT-FILE OUTPUT-FILE\n"
+"-o OUTPUT-FILE INPUT-FILE\n"
+"-u INPUT-FILE"
 
 #: stdio-common/../sysdeps/unix/siglist.c:31
 msgid "IOT trap"
-msgstr "pu³apka IOT"
+msgstr "trap IOT"
 
 #: nis/nis_print.c:35
 msgid "IVY"
@@ -1218,21 +1218,21 @@ msgstr "IVY"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:626
 msgid "Identifier removed"
-msgstr "Identyfikator zosta³ usuniêty"
+msgstr "Identificatore rimosso"
 
 #: stdio-common/../sysdeps/unix/siglist.c:29
 #: sysdeps/unix/sysv/linux/siglist.h:25
 msgid "Illegal instruction"
-msgstr "B³êdna instrukcja"
+msgstr "Istruzione illecita"
 
 #: nis/nis_error.c:61
 msgid "Illegal object type for operation"
-msgstr "B³êdny typ obiektu dla tej operacji"
+msgstr "Tipo di oggetto illecito per l'operazione"
 
 #. TRANS Invalid seek operation (such as on a pipe).
 #: stdio-common/../sysdeps/gnu/errlist.c:213
 msgid "Illegal seek"
-msgstr "B³êdne przesuniêcie"
+msgstr "Seek illecito"
 
 #. TRANS Inappropriate file type or format.  The file was the wrong type for the
 #. TRANS operation, or a data file had the wrong format.
@@ -1241,13 +1241,13 @@ msgstr "B³êdne przesuniêcie"
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
 #: stdio-common/../sysdeps/gnu/errlist.c:556
 msgid "Inappropriate file type or format"
-msgstr "Niew³a¶ciwy typ lub format pliku"
+msgstr "Tipo di file o formato non appropriato"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
 #: stdio-common/../sysdeps/gnu/errlist.c:188
 msgid "Inappropriate ioctl for device"
-msgstr "Niew³a¶ciwy dostêp do urz±dzenia"
+msgstr "IOCTL non appropriata per il dispositivo"
 
 #. TRANS In the GNU system, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
@@ -1257,41 +1257,41 @@ msgstr "Niew³a¶ciwy dostêp do urz±dzenia"
 #. TRANS for information on process groups and these signals.
 #: stdio-common/../sysdeps/gnu/errlist.c:589
 msgid "Inappropriate operation for background process"
-msgstr "Dzia³anie niedopuszczalne dla procesu w tle"
+msgstr "Operazione non appropriata per un processo sullo sfondo"
 
 #: sysdeps/unix/sysv/linux/siglist.h:62
 msgid "Information request"
-msgstr "¯±danie informacji"
+msgstr "Richiesta di informazioni"
 
 #: iconv/iconv_prog.c:57
 msgid "Information:"
-msgstr "Informacja:"
+msgstr "Informazioni: "
 
 #: locale/programs/localedef.c:94
 msgid "Input Files:"
-msgstr "Pliki wej¶ciowe:"
+msgstr "File di input:"
 
 #: iconv/iconv_prog.c:54
 msgid "Input/Output format specification:"
-msgstr "Specyfikacja formatu wej¶cia/wyj¶cia:"
+msgstr "Specifiche del formato di input/output:"
 
 #. TRANS Input/output error; usually used for physical read or write errors.
 #: stdio-common/../sysdeps/gnu/errlist.c:52
 msgid "Input/output error"
-msgstr "B³±d wej¶cia/wyj¶cia"
+msgstr "Errore di input/output"
 
 #: nis/ypclnt.c:775
 msgid "Internal NIS error"
-msgstr "B³±d wewnêtrzny NIS"
+msgstr "Errore interno di NIS"
 
 #: nis/ypclnt.c:839
 msgid "Internal ypbind error"
-msgstr "B³±d wewnêtrzny ypbind"
+msgstr "Errore interno di ypbind"
 
 #: stdio-common/../sysdeps/unix/siglist.c:27
 #: sysdeps/unix/sysv/linux/siglist.h:23
 msgid "Interrupt"
-msgstr "Przerwanie"
+msgstr "Interruzione"
 
 #. TRANS Interrupted function call; an asynchronous signal occurred and prevented
 #. TRANS completion of the call.  When this happens, you should try the call
@@ -1302,100 +1302,100 @@ msgstr "Przerwanie"
 #. TRANS Primitives}.
 #: stdio-common/../sysdeps/gnu/errlist.c:47
 msgid "Interrupted system call"
-msgstr "Przerwane wywo³anie systemowe"
+msgstr "Chiamata di sistema interrotta"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:666
 msgid "Interrupted system call should be restarted"
-msgstr "Nale¿y wznowiæ przerwane wywo³anie systemowe"
+msgstr "La chiamata di sistema interrotta deve essere ricominciata"
 
 #: nis/nis_error.c:44
 msgid "Invalid Object for operation"
-msgstr "B³êdny obiekt dla tej operacji"
+msgstr "Oggetto non valido per l'operazione"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
 #: stdio-common/../sysdeps/gnu/errlist.c:164
 msgid "Invalid argument"
-msgstr "Z³y argument"
+msgstr "Argomento non valido"
 
 #: posix/regex.c:1018
 msgid "Invalid back reference"
-msgstr "B³êdny odno¶nik wstecz"
+msgstr "Riferimento all'indietro non valido"
 
 #: posix/regex.c:1016
 msgid "Invalid character class name"
-msgstr "B³êdna nazwa klasy znaku"
+msgstr "Nome della classe di caratteri non valido"
 
 #: sunrpc/clnt_perr.c:275
 msgid "Invalid client credential"
-msgstr "B³êdne uwierzytelnienie klienta"
+msgstr "Credenziali del client non valide"
 
 #: sunrpc/clnt_perr.c:279
 msgid "Invalid client verifier"
-msgstr "B³êdny weryfikator klienta"
+msgstr "Verificatore del client non valido"
 
 #: posix/regex.c:1015
 msgid "Invalid collation character"
-msgstr "B³êdny znak sortowany"
+msgstr "Carattere di collazione non valido"
 
 #: posix/regex.c:1022
 msgid "Invalid content of \\{\\}"
-msgstr "B³êdna zawarto¶æ \\{\\}"
+msgstr "Contenuto di \\{\\} non valido"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
 #: stdio-common/../sysdeps/gnu/errlist.c:141
 msgid "Invalid cross-device link"
-msgstr "B³êdne dowi±zanie miêdzy urz±dzeniami"
+msgstr "Link tra dispositivi non valido"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:702
 msgid "Invalid exchange"
-msgstr "B³êdna wymiana"
+msgstr "Scambio non valido"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
 #: stdio-common/../sysdeps/gnu/errlist.c:579
 msgid "Invalid or incomplete multibyte or wide character"
-msgstr "B³êdny lub niepe³ny znak wielobajtowy"
+msgstr "Carattere largo o multibyte non valido o incompleto"
 
 #: posix/regex.c:1025
 msgid "Invalid preceding regular expression"
-msgstr "B³êdne poprzedzaj±ce wyra¿enie regularne"
+msgstr "Espressione regolare precedente non valida"
 
 #: posix/regex.c:1023
 msgid "Invalid range end"
-msgstr "B³êdny koniec zakresu"
+msgstr "Fine dell'intervallo non valida"
 
 #: posix/regex.c:1014
 msgid "Invalid regular expression"
-msgstr "B³êdne wyra¿enie regularne"
+msgstr "Espressione regolare non valida"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:718
 msgid "Invalid request code"
-msgstr "Z³y kod ¿±dania"
+msgstr "Codice di richiesta non valido"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:706
 msgid "Invalid request descriptor"
-msgstr "B³êdny deskryptor ¿±dania"
+msgstr "Descrittore di richiesta non valido"
 
 #: sunrpc/clnt_perr.c:285
 msgid "Invalid server verifier"
-msgstr "B³êdny weryfikator serwera"
+msgstr "Verificatore di server non valido"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:722
 msgid "Invalid slot"
-msgstr "B³êdny kana³"
+msgstr "Slot non valido"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
 #: stdio-common/../sysdeps/gnu/errlist.c:158
 msgid "Is a directory"
-msgstr "Jest katalogiem"
+msgstr "È una directory"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:806
 msgid "Is a named type file"
-msgstr "Jest plikiem nazwanym"
+msgstr "È un tipo di file con nome"
 
 #: nis/nis_print.c:187
 msgid "Kerberos.\n"
@@ -1404,133 +1404,134 @@ msgstr "Kerberos.\n"
 #: stdio-common/../sysdeps/unix/siglist.c:34
 #: sysdeps/unix/sysv/linux/siglist.h:29
 msgid "Killed"
-msgstr "Unicestwiony"
+msgstr "Ucciso"
 
 #: nis/nis_print.c:123
 msgid "LINK\n"
-msgstr "DOWI¡ZANIE\n"
+msgstr "LINK\n"
 
 #: nis/nis_local_names.c:125
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
-msgstr "Wpis LOKALNY dla UID %d w katalogu %s nie jest unikalny\n"
+msgstr "La voce LOCAL per l'UID %d nella directory %s non è unica\n"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:698
 msgid "Level 2 halted"
-msgstr "Poziom 2 zatrzymany"
+msgstr "Livello 2 fermato"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:674
 msgid "Level 2 not synchronized"
-msgstr "Poziom 2 brak synchronizacji"
+msgstr "Livello 2 non sincronizzato"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:678
 msgid "Level 3 halted"
-msgstr "Poziom 3 zatrzymany"
+msgstr "Livello 3 fermato"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:682
 msgid "Level 3 reset"
-msgstr "Poziom 3 wyzerowany"
+msgstr "Livello 3 reinizializzato"
 
 #: nis/nis_error.c:53
 msgid "Link Points to illegal name"
-msgstr "Dowi±zanie wskazuje na b³êdn± nazwê"
+msgstr "Il link punta a un nome illecito"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:638
 msgid "Link has been severed"
-msgstr "Po³±czenie zosta³o przerwane"
+msgstr "Il link è stato tagliato"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:686
 msgid "Link number out of range"
-msgstr "Numer dowi±zania poza zakresem"
+msgstr "Numero del link fuori dall'intervallo"
 
 #: nis/nis_print.c:282
 msgid "Linked Object Type : "
-msgstr "Typ dowi±zanego obiektu : "
+msgstr "Tipo di oggetto collegato : "
 
 #: nis/nis_print.c:284
 #, c-format
 msgid "Linked to : %s\n"
-msgstr "Dowi±zany do : %s\n"
+msgstr "Collegato a : %s\n"
 
 #: nis/ypclnt.c:787
 msgid "Local domain name not set"
-msgstr "Lokalna domena nie jest ustawiona"
+msgstr "Il nome del dominio locale non è stato impostato"
 
 #: nis/ypclnt.c:777
 msgid "Local resource allocation failure"
-msgstr "Wyst±pi³ b³±d podczas przydzielania lokalnych zasobów"
+msgstr "Errore di allocazione delle risorse locali"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:734
 msgid "Machine is not on the network"
-msgstr "Maszyna nie znajduje siê w tej sieci"
+msgstr "La macchina non è in rete"
 
 #: nis/nis_error.c:45
 msgid "Malformed Name, or illegal name"
-msgstr "Zniekszta³cona lub b³êdna nazwa"
+msgstr "Nome malformato o illecito"
 
 #: argp/argp-help.c:1182
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
-msgstr "Argumenty obowi±zkowe lub opcjonalne dla d³ugich opcji s± równie¿ obowi±zkowe lub lokalne dla odpowiednich krótkich opcji."
+msgstr ""
+"Gli argomenti obbligatori o opzionali delle opzioni lunghe lo sono anche\n"
+"per le corrispondenti opzioni corte."
 
 #: nis/nis_print.c:168
 msgid "Master Server :\n"
-msgstr "Serwer nadrzêdny :\n"
+msgstr "Master Server :\n"
 
 #: nis/nis_error.c:75
 msgid "Master server busy, full dump rescheduled."
-msgstr "Serwer nadrzêdny jest zajêty, pe³ny zrzut danych przesuniêty na pó¼niej."
+msgstr "Il master server è occupato, dump integrale rimandato."
 
 #: posix/../sysdeps/posix/gai_strerror.c:35
 msgid "Memory allocation failure"
-msgstr "Wyst±pi³ b³±d przydzielania pamiêci"
+msgstr "Errore di allocazione della memoria"
 
 #: posix/regex.c:1024
 msgid "Memory exhausted"
-msgstr "Pamiêæ wyczerpana"
+msgstr "Memoria esaurita"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
 #: stdio-common/../sysdeps/gnu/errlist.c:317
 msgid "Message too long"
-msgstr "Komunikat za d³ugi"
+msgstr "Messaggio troppo lungo"
 
 #: nis/nis_error.c:57
 msgid "Missing or malformed attribute"
-msgstr "Brakuj±cy lub b³êdny atrybut"
+msgstr "Attributo mancante o malformato"
 
 #: nis/nis_print.c:323
 #, c-format
 msgid "Mod. Time     : %s"
-msgstr "Modyfikacja   : %s"
+msgstr "Orario di modifica: %s"
 
 #: nis/nis_error.c:50
 msgid "Modification failed"
-msgstr "Modyfikacja nie powiod³a siê"
+msgstr "Modifica fallita"
 
 #: nis/nis_error.c:63
 msgid "Modify operation failed"
-msgstr "Operacja modyfikacji nie powiod³a siê"
+msgstr "Operazione di modifica fallita"
 
 #: locale/programs/locale.c:68
 msgid "Modify output format:"
-msgstr "Modyfikuje format wyj¶ciowy:"
+msgstr "Modifica il formato di output:"
 
-# wydaje mi sie ze tu chodzi o wyczerpanie TTL i stad 'zbyt' -PK
 #: stdio-common/../sysdeps/gnu/errlist.c:630
 msgid "Multihop attempted"
-msgstr "Próba przej¶cia przez zbyt wiele ruterów"
+msgstr "Tentato un multihop"
 
 #: catgets/gencat.c:106 catgets/gencat.c:110 db2/makedb.c:59
 #: locale/programs/localedef.c:115 nscd/nscd.c:77
 msgid "NAME"
-msgstr "NAZWA"
+msgstr "NOME"
 
 #: locale/programs/locale.c:78
 msgid ""
 "NAME\n"
 "[-a|-m]"
 msgstr ""
-"NAZWA\n"
+"NOME\n"
 "[-a|-m]"
 
 #: nis/nis_print.c:31
@@ -1539,124 +1540,123 @@ msgstr "NIS"
 
 #: nis/ypclnt.c:791
 msgid "NIS client/server version mismatch - can't supply service"
-msgstr "Niezgodno¶æ wersji miêdzy klientem i serwerem NIS - us³uga niemo¿liwa"
+msgstr "versioni di client/server NIS incompatibili - non si può fornire il servizio"
 
 #: nis/ypclnt.c:789
 msgid "NIS map database is bad"
-msgstr "Mapa NIS zawiera b³êdy"
+msgstr "Il database della mappa NIS non è valido"
 
 #: nis/nis_error.c:68
 msgid "NIS+ operation failed"
-msgstr "Operacja NIS+ nie powiod³a siê"
+msgstr "Operazione NIS+ fallita"
 
 #: nis/nis_error.c:33
 msgid "NIS+ servers unreachable"
-msgstr "Serwery NIS+ s± niedostêpne"
+msgstr "Server NIS+ non raggiungibile"
 
 #: nis/nis_error.c:69
 msgid "NIS+ service is unavailable or not installed"
-msgstr "Us³uga NIS+ jest niedostêpna lub nie zosta³a zainstalowana"
+msgstr "Il servizio NIS+ non è disponibile o non è installato"
 
 #: nis/nis_print.c:108
 msgid "NO OBJECT\n"
-msgstr "BRAK OBIEKTU\n"
+msgstr "OGGETTO MANCANTE\n"
 
 #: nscd/nscd.c:81
 msgid "NUMBER"
-msgstr "LICZBA"
+msgstr "NUMERO"
 
 #: nis/nis_print.c:162
 #, c-format
 msgid "Name : '%s'\n"
-msgstr "Nazwa : '%s'\n"
+msgstr "Nome : '%s'\n"
 
-# XXX moze zostawic oryginal albo zrobic ladniej -PK
 #: nscd/nscd.c:88
 msgid "Name Service Cache Daemon."
-msgstr "Demon buforuj±cy us³ugi odwzorowania nazw."
+msgstr "Demone di caching del servizio dei nomi."
 
 #: nis/nis_error.c:40
 msgid "Name not served by this server"
-msgstr "Nazwa nie jest obs³ugiwana przez ten serwer"
+msgstr "Nome non servito da questo server"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:758
 msgid "Name not unique on network"
-msgstr "Nazwa nie jest unikalna w sieci"
+msgstr "Il nome non è unico sulla rete"
 
 #: posix/../sysdeps/posix/gai_strerror.c:37
 msgid "Name or service not known"
-msgstr "Ta nazwa lub us³uga jest nieznana"
+msgstr "Nome o servizio sconosciuto"
 
 #: nis/nis_error.c:49
 msgid "Name/entry isn't unique"
-msgstr "Nazwa/zapis nie jest unikalny"
+msgstr "Il nome/voce non è unico"
 
 #: nis/nis_error.c:58
 msgid "Named object is not searchable"
-msgstr "Wskazany obiekt nie mo¿e byæ przeszukiwany"
+msgstr "L'oggetto indicato non è ricercabile"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:566
 msgid "Need authenticator"
-msgstr "Wymagane uwierzytelnienie"
+msgstr "Serve un autenticatore"
 
 #. TRANS A network connection was reset because the remote host crashed.
 #: stdio-common/../sysdeps/gnu/errlist.c:389
 msgid "Network dropped connection on reset"
-msgstr "Sieæ przerwa³a po³±czenie po resecie"
+msgstr "La rete ha lasciato cadere la connessione per il reset"
 
 #. TRANS A socket operation failed because the network was down.
 #: stdio-common/../sysdeps/gnu/errlist.c:378
 msgid "Network is down"
-msgstr "Sieæ nie dzia³a"
+msgstr "La rete è giù"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
 #: stdio-common/../sysdeps/gnu/errlist.c:384
 msgid "Network is unreachable"
-msgstr "Sieæ jest niedostêpna"
+msgstr "La rete non è raggiungibile"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:694
 msgid "No CSI structure available"
-msgstr "Struktura CSI niedostêpna"
+msgstr "La struttura CSI non è disponibile"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:802
 msgid "No XENIX semaphores available"
-msgstr "Brak dostêpnych semaforów XENIXowych"
+msgstr "Non ci sono semafori XENIX disponibili"
 
 #: posix/../sysdeps/posix/gai_strerror.c:36
 msgid "No address associated with hostname"
-msgstr "Brak adresu zwi±zanego z nazw± hosta"
+msgstr "Non ci sono indirizzi associati al nome dell'host"
 
 #: resolv/herror.c:77
 msgid "No address associated with name"
-msgstr "Brak adresu zwi±zanego z nazw±"
+msgstr "Non ci sono indirizzi associati al nome"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:714
 msgid "No anode"
-msgstr "Brak anody"
+msgstr "Manca l'anode"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
 #: stdio-common/../sysdeps/gnu/errlist.c:408
 msgid "No buffer space available"
-msgstr "Brak miejsca w buforze"
+msgstr "Non c'è spazio di buffer disponibile"
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
 #: stdio-common/../sysdeps/gnu/errlist.c:89
 msgid "No child processes"
-msgstr "Brak procesów potomnych"
+msgstr "Non ci sono processi figli"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:634
 msgid "No data available"
-msgstr "Brak danych"
+msgstr "Non ci sono dati disponibili"
 
 #: nis/nis_error.c:73
 msgid "No file space on server"
-msgstr "Brak miejsca na serwerze"
+msgstr "Non c'è spazio per file sul server"
 
 #. TRANS No locks available.  This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by the GNU system, but
@@ -1664,175 +1664,173 @@ msgstr "Brak miejsca na serwerze"
 #. TRANS operating system.
 #: stdio-common/../sysdeps/gnu/errlist.c:547
 msgid "No locks available"
-msgstr "Brak dostêpnych blokad"
+msgstr "Non ci sono lock disponibili"
 
 #: posix/regex.c:1013
 msgid "No match"
-msgstr "Nic nie pasuje"
+msgstr "Nessuna corrispondenza"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:814
 msgid "No medium found"
-msgstr "Brak medium"
+msgstr "Non è stato trovato un medium"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:642
 msgid "No message of desired type"
-msgstr "Brak komunikatu o po¿±danym typie"
+msgstr "Non ci sono messaggi del tipo desiderato"
 
 #: nis/ypclnt.c:779
 msgid "No more records in map database"
-msgstr "Nie ma wiêcej rekordów w mapie"
+msgstr "Non ci sono altri record nel database della mappa"
 
 #: posix/regex.c:5515
 msgid "No previous regular expression"
-msgstr "Brak wyra¿enia regularnego"
+msgstr "Manca una precedente espressione regolare"
 
 #: sunrpc/rpcinfo.c:570
 msgid "No remote programs registered.\n"
-msgstr "Brak zarejestrowanych zdalnych programów.\n"
+msgstr "Nessun programma remoto registrato.\n"
 
 #. TRANS The remote host for a requested network connection is not reachable.
 #: stdio-common/../sysdeps/gnu/errlist.c:474
 msgid "No route to host"
-msgstr "Brak drogi do systemu"
+msgstr "Non c'è una route verso l'host"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
 #: stdio-common/../sysdeps/gnu/errlist.c:208
 msgid "No space left on device"
-msgstr "Brak miejsca na urz±dzeniu"
+msgstr "Non è rimasto spazio sul dispositivo"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
 #: stdio-common/../sysdeps/gnu/errlist.c:147
 msgid "No such device"
-msgstr "Nie ma takiego urz±dzenia"
+msgstr "Dispositivo inesistente"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
 #: stdio-common/../sysdeps/gnu/errlist.c:31
 msgid "No such file or directory"
-msgstr "Nie ma takiego pliku ani katalogu"
+msgstr "File o directory inesistente"
 
 #: nis/ypclnt.c:773
 msgid "No such key in map"
-msgstr "Brak takiego klucza w mapie"
+msgstr "La chiave non è nella mappa"
 
 #: nis/ypclnt.c:771
 msgid "No such map in server's domain"
-msgstr "Nie ma takiej mapy w domenie serwera"
+msgstr "La mappa non è nel dominio del server"
 
 #. TRANS No process matches the specified process ID.
 #: stdio-common/../sysdeps/gnu/errlist.c:36
 msgid "No such process"
-msgstr "Nie ma takiego procesu"
+msgstr "Processo inesistente"
 
 #: nis/nis_error.c:60
 msgid "Non NIS+ namespace encountered"
-msgstr "Napotkano nazwy nie nale¿±ce do przestrzeni NIS+"
+msgstr "Incontrato un namespace non di NIS+"
 
 #: posix/../sysdeps/posix/gai_strerror.c:33
 msgid "Non-recoverable failure in name resolution"
-msgstr "Wyst±pi³ krytyczny b³±d w odwzorowaniu nazw"
+msgstr "Errore irreparabile nella risoluzione dei nomi"
 
 #: nis/nis_print.c:176
 msgid "None.\n"
-msgstr "Brak.\n"
+msgstr "Nessuno.\n"
 
 #: nis/nis_error.c:48
 msgid "Not Found, no such name"
-msgstr "Nie znaleziono, brak takiej nazwy"
+msgstr "Non trovato, nome inesistente"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:798
 msgid "Not a XENIX named type file"
-msgstr "To nie jest nazwanego pliku w wersji XENIXa"
+msgstr "Non è un file con nome di XENIX"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:152
 msgid "Not a directory"
-msgstr "To nie jest katalog"
+msgstr "Non è una directory"
 
 #: nis/nis_error.c:30
 msgid "Not found"
-msgstr "Nie znaleziono"
+msgstr "Non trovato"
 
 #: nis/nis_error.c:43
 msgid "Not master server for this domain"
-msgstr "To nie jest serwer nadrzêdny dla tej domeny"
+msgstr "Non è un server master per questo dominio"
 
 #: nis/nis_error.c:39
 msgid "Not owner"
-msgstr "To nie jest w³a¶ciciel"
+msgstr "Non è il proprietario"
 
 #: nis/nis_print.c:263
 #, c-format
 msgid "Number of Columns   : %d\n"
-msgstr "Liczba kolumn       : %d\n"
+msgstr "Numero di colonne   : %d\n"
 
 #: nis/nis_print.c:358
 #, c-format
 msgid "Number of objects : %u\n"
-msgstr "L. obiektów   : %u\n"
+msgstr "Numero di oggetti : %u\n"
 
 #. TRANS Domain error; used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
 #: stdio-common/../sysdeps/gnu/errlist.c:240
 msgid "Numerical argument out of domain"
-msgstr "Argument numeryczny poza zakresem"
+msgstr "Argomento numerico fuori dal dominio"
 
 #. TRANS Range error; used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
 #: stdio-common/../sysdeps/gnu/errlist.c:246
 msgid "Numerical result out of range"
-msgstr "Wynik numeryczny poza zakresem"
+msgstr "Risultato numerico fuori scala"
 
 #: nis/nis_print.c:362
 #, c-format
 msgid "Object #%d:\n"
-msgstr "Obiekt #%d:\n"
+msgstr "Oggetto #%d:\n"
 
 #: nis/nis_print.c:314
 #, c-format
 msgid "Object Name   : %s\n"
-msgstr "Nazwa obiektu : %s\n"
+msgstr "Nome dell'oggetto: %s\n"
 
 #: nis/nis_print.c:324
 msgid "Object Type   : "
-msgstr "Typ obiektu   : "
+msgstr "Tipo dell'oggetto: "
 
-# to imho jest bardziej zrozumiale - zwlaszcza ze to sie czasem zdarza
-# jak sie uruchomi mountd bez -r -PK
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on the GNU system, making this error code impossible.)
 #: stdio-common/../sysdeps/gnu/errlist.c:514
 msgid "Object is remote"
-msgstr "Zdalny obiekt jest obiektem podmontowanym przez NFS"
+msgstr "L'oggetto è remoto"
 
 #: nis/nis_error.c:42
 msgid "Object with same name exists"
-msgstr "Istnieje ju¿ obiekt o tej nazwie"
+msgstr "Esiste un oggetto con lo stesso nome"
 
 #: timezone/zic.c:1995
 msgid "Odd number of quotation marks"
-msgstr "Nieparzysta liczba cudzys³owów"
+msgstr "Numero dispari di virgolette"
 
 #: nscd/nscd.c:185
 msgid "Only root is allowed to use this option!"
-msgstr "Tylko root mo¿e u¿ywaæ tej opcji!"
+msgstr "Solo root puo` usare questa opzione!"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
 #: stdio-common/../sysdeps/gnu/errlist.c:306
 msgid "Operation already in progress"
-msgstr "Operacja jest ju¿ wykonywana"
+msgstr "Operazione già in corso"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
 #: stdio-common/../sysdeps/gnu/errlist.c:24
 msgid "Operation not permitted"
-msgstr "Operacja niedozwolona"
+msgstr "Operazione non permessa"
 
 #. TRANS The operation you requested is not supported.  Some socket functions
 #. TRANS don't make sense for all types of sockets, and others may not be
@@ -1842,7 +1840,7 @@ msgstr "Operacja niedozwolona"
 #. TRANS nothing to do for that call.
 #: stdio-common/../sysdeps/gnu/errlist.c:350
 msgid "Operation not supported"
-msgstr "Operacja nie obs³ugiwana"
+msgstr "Operazione non gestita"
 
 #. TRANS An operation that cannot complete immediately was initiated on an object
 #. TRANS that has non-blocking mode selected.  Some functions that must always
@@ -1854,7 +1852,7 @@ msgstr "Operacja nie obs³ugiwana"
 #. TRANS has completed; @pxref{Waiting for I/O}.
 #: stdio-common/../sysdeps/gnu/errlist.c:300
 msgid "Operation now in progress"
-msgstr "Operacja jest w³a¶nie wykonywana"
+msgstr "L'operazione ora è in corso"
 
 #. TRANS In the GNU C library, this is another name for @code{EAGAIN} (above).
 #. TRANS The values are always the same, on every operating system.
@@ -1863,312 +1861,311 @@ msgstr "Operacja jest w³a¶nie wykonywana"
 #. TRANS separate error code.
 #: stdio-common/../sysdeps/gnu/errlist.c:288
 msgid "Operation would block"
-msgstr "Operacja spowoduje blokadê"
+msgstr "L'operazione si bloccherebbe"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:646
 msgid "Out of streams resources"
-msgstr "Brak dodatkowych strumieni"
+msgstr "Risorse degli streams esaurite"
 
 #: iconv/iconv_prog.c:59 locale/programs/localedef.c:101
 msgid "Output control:"
-msgstr "Kontrola wyj¶cia:"
+msgstr "Controllo dell'output:"
 
 #: elf/sprof.c:76
 msgid "Output selection:"
-msgstr "Wybór wyj¶cia:"
+msgstr "Selezione dell'output:"
 
 #: nis/nis_print.c:316
 #, c-format
 msgid "Owner         : %s\n"
-msgstr "W³a¶ciciel    : %s\n"
+msgstr "Proprietario  : %s\n"
 
 #: nis/nis_print.c:126
 msgid "PRIVATE\n"
-msgstr "PRYWATNY\n"
+msgstr "PRIVATO\n"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:738
 msgid "Package not installed"
-msgstr "Pakiet nie jest zainstalowany"
+msgstr "Pacchetto non installato"
 
 #: nscd/nscd_conf.c:84
 #, c-format
 msgid "Parse error: %s"
-msgstr "B³±d parsowania: %s"
+msgstr "Errore di parsing: %s"
 
 #: nis/nis_error.c:54
 msgid "Partial Success"
-msgstr "Czê¶ciowy sukces"
+msgstr "Successo parziale"
 
 #: nis/nis_error.c:62
 msgid "Passed object is not the same object on server"
-msgstr "Uzyskany obiekt nie jest taki sam jak obiekt na serwerze"
+msgstr "L'oggetto passato non è lo stesso oggetto sul server"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
 #: nis/nis_error.c:38 nis/ypclnt.c:793
 #: stdio-common/../sysdeps/gnu/errlist.c:108
 msgid "Permission denied"
-msgstr "Brak dostêpu"
+msgstr "Permesso negato"
 
 #: sysdeps/unix/sysv/linux/siglist.h:64
 msgid "Power failure"
-msgstr "Awaria zasilania"
+msgstr "Manca la corrente"
 
 #: posix/regex.c:1026
 msgid "Premature end of regular expression"
-msgstr "Niespodziewany koniec wyra¿enia regularnego"
+msgstr "Fine prematura dell'espressione regolare"
 
 #: db2/makedb.c:63
 msgid "Print content of database file, one entry a line"
-msgstr "Wy¶wietla rekordy bazy linijka po linijce"
+msgstr "Stampa il contenuto del file del database, una voce per riga"
 
 #: nscd/nscd.c:83
 msgid "Print current configuration statistic"
-msgstr "Wy¶wietla aktualne statystyki konfiguracji"
+msgstr "Stampa le statistiche della configurazione attuale"
 
 #: locale/programs/localedef.c:107
 msgid "Print more messages"
-msgstr "Wy¶wietla wiêcej komunikatów"
+msgstr "Stampa altri messaggi"
 
 #: argp/argp-parse.c:148
 msgid "Print program version"
-msgstr "Wy¶wietla wersjê programu"
+msgstr "Stampa la versione del programma"
 
 #: nis/nis_error.c:29
 msgid "Probable success"
-msgstr "Prawdopodobnie sukces"
+msgstr "Probabile successo"
 
 #: nis/nis_error.c:31
 msgid "Probably not found"
-msgstr "Prawdopodobnie nie znaleziony"
+msgstr "Probabilmente non trovato"
 
 #: stdio-common/../sysdeps/unix/siglist.c:52
 #: sysdeps/unix/sysv/linux/siglist.h:46
 msgid "Profiling timer expired"
-msgstr "Koniec stopera profiluj±cego"
+msgstr "Timer di profiling scaduto"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:690
 msgid "Protocol driver not attached"
-msgstr "Sterownik protoko³u nie jest pod³±czony"
+msgstr "Driver del protocollo non collegato"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:658
 msgid "Protocol error"
-msgstr "B³±d protoko³u"
+msgstr "Errore di protocollo"
 
 #. TRANS The socket communications protocol family you requested is not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:355
 msgid "Protocol family not supported"
-msgstr "Nie obs³ugiwana rodzina protoko³ów"
+msgstr "Famiglia del protocollo non gestita"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
 #: stdio-common/../sysdeps/gnu/errlist.c:328
 msgid "Protocol not available"
-msgstr "Protokó³ niedostêpny"
+msgstr "Protocollo non disponibile"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
 #: stdio-common/../sysdeps/gnu/errlist.c:335
 msgid "Protocol not supported"
-msgstr "Protokó³ nie obs³ugiwany"
+msgstr "Protocollo non gestito"
 
 #. TRANS The socket type does not support the requested communications protocol.
 #: stdio-common/../sysdeps/gnu/errlist.c:322
 msgid "Protocol wrong type for socket"
-msgstr "Typ protoko³u nie pasuje do gniazda"
+msgstr "Tipo di protocollo sbagliato per il socket"
 
 #: nis/nis_error.c:64
 msgid "Query illegal for named table"
-msgstr "B³êdne zapytanie dla podanej tablicy"
+msgstr "Query illecita per la tabella indicata"
 
-# XXX -PK
 #: stdio-common/../sysdeps/unix/siglist.c:28
 #: sysdeps/unix/sysv/linux/siglist.h:24
 msgid "Quit"
-msgstr "Wyj¶cie"
+msgstr "Quit"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:754
 msgid "RFS specific error"
-msgstr "B³±d RFS"
+msgstr "Errore specifico di RFS"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:539
 msgid "RPC bad procedure for program"
-msgstr "RPC z³a procedura dla programu"
+msgstr "Procedura RPC non valida per il programma"
 
 #: nis/ypclnt.c:767
 msgid "RPC failure on NIS operation"
-msgstr "B³±d RPC podczas operacji NIS"
+msgstr "Errore di RPC su una operazione NIS"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:529
 msgid "RPC program not available"
-msgstr "RPC program niedostêpny"
+msgstr "Programma RPC non disponibile"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:534
 msgid "RPC program version wrong"
-msgstr "RPC z³a wersja programu"
+msgstr "Versione sbagliata del programma RPC"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:519
 msgid "RPC struct is bad"
-msgstr "RPC b³êdna struktura"
+msgstr "La struct RPC non è valida"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:524
 msgid "RPC version wrong"
-msgstr "RPC z³a wersja"
+msgstr "Versione di RPC sbagliata"
 
 #: sunrpc/clnt_perr.c:215
 msgid "RPC: (unknown error code)"
-msgstr "RPC: (nieznany kod b³êdu)"
+msgstr "RPC: (codice di errore sconosciuto)"
 
 #: sunrpc/clnt_perr.c:176
 msgid "RPC: Authentication error"
-msgstr "RPC: B³±d uwierzytelniania"
+msgstr "RPC: Errore di autenticazione"
 
 #: sunrpc/clnt_perr.c:166
 msgid "RPC: Can't decode result"
-msgstr "RPC: Nie mogê zdekodowaæ wyniku"
+msgstr "RPC: Impossibile decodificare il risultato"
 
 #: sunrpc/clnt_perr.c:164
 msgid "RPC: Can't encode arguments"
-msgstr "RPC: Nie mogê zakodowaæ argumentów"
+msgstr "RPC: Impossibile codificare gli argomenti"
 
 #: sunrpc/clnt_perr.c:196
 msgid "RPC: Failed (unspecified error)"
-msgstr "RPC: Nieudane (niesprecyzowany b³±d)"
+msgstr "RPC: Fallito (errore non specificato)"
 
 #: sunrpc/clnt_perr.c:174
 msgid "RPC: Incompatible versions of RPC"
-msgstr "RPC: Niekompatybilne wersje RPC"
+msgstr "RPC: Versioni di RPC incompatibili"
 
 #: sunrpc/clnt_perr.c:192
 msgid "RPC: Port mapper failure"
-msgstr "RPC: Awaria portmappera"
+msgstr "RPC: Errore del portmapper"
 
 #: sunrpc/clnt_perr.c:182
 msgid "RPC: Procedure unavailable"
-msgstr "RPC: Niedostêpna procedura"
+msgstr "RPC: Procedura non disponibile"
 
 #: sunrpc/clnt_perr.c:194
 msgid "RPC: Program not registered"
-msgstr "RPC: Niezarejestrowany program"
+msgstr "RPC: Programma non registrato"
 
 #: sunrpc/clnt_perr.c:178
 msgid "RPC: Program unavailable"
-msgstr "RPC: Niedostêpny program"
+msgstr "RPC: Programma non disponibile"
 
 #: sunrpc/clnt_perr.c:180
 msgid "RPC: Program/version mismatch"
-msgstr "RPC: Niezgodno¶æ programu/wersji"
+msgstr "RPC: Programma/versione non corrispondenti"
 
 #: sunrpc/clnt_perr.c:186
 msgid "RPC: Remote system error"
-msgstr "RPC: B³±d w odleg³ym systemie"
+msgstr "RPC: Errore del sistema remoto"
 
 #: sunrpc/clnt_perr.c:184
 msgid "RPC: Server can't decode arguments"
-msgstr "RPC: Serwer nie mo¿e zdekodowaæ argumentów"
+msgstr "RPC: Il server non può decodificare gli argomenti"
 
 #: sunrpc/clnt_perr.c:162
 msgid "RPC: Success"
-msgstr "RPC: Sukces"
+msgstr "RPC: Successo"
 
 #: sunrpc/clnt_perr.c:172
 msgid "RPC: Timed out"
-msgstr "RPC: Czas oczekiwania przekroczony"
+msgstr "RPC: Tempo scaduto"
 
 #: sunrpc/clnt_perr.c:170
 msgid "RPC: Unable to receive"
-msgstr "RPC: Niemo¿liwy odbiór"
+msgstr "RPC: Impossibile ricevere"
 
 #: sunrpc/clnt_perr.c:168
 msgid "RPC: Unable to send"
-msgstr "RPC: Niemo¿liwe wysy³anie"
+msgstr "RPC: Impossibile inviare"
 
 #: sunrpc/clnt_perr.c:188
 msgid "RPC: Unknown host"
-msgstr "RPC: Nieznany host"
+msgstr "RPC: Host sconosciuto"
 
 #: sunrpc/clnt_perr.c:190
 msgid "RPC: Unknown protocol"
-msgstr "RCP: Nieznany protokó³"
+msgstr "RPC: Protocollo sconosciuto"
 
 #: nis/nis_print.c:184
 #, c-format
 msgid "RSA (%d bits)\n"
-msgstr "RSA (%d bitów)\n"
+msgstr "RSA (%d bit)\n"
 
 #: elf/dlsym.c:59 elf/dlvsym.c:62
 msgid "RTLD_NEXT used in code not dynamically loaded"
-msgstr "RTLD_NEXT wyst±pi³o w kodzie nie ³adowanym dynamicznie"
+msgstr "RTLD_NEXT usato in codice non caricato dinamicamente"
 
 #: elf/sprof.c:88
 msgid "Read and display shared object profiling data"
-msgstr "Czyta i wy¶wietla dane profiluj±ce obiektu dzielonego"
+msgstr "Legge e mostra i dati di profilazione degli oggetti condivisi"
 
 #: nscd/nscd.c:78
 msgid "Read configuration data from NAME"
-msgstr "Czyta konfiguracjê z pliku NAZWA"
+msgstr "Legge i dati di configurazione da NOME"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: stdio-common/../sysdeps/gnu/errlist.c:218
 msgid "Read-only file system"
-msgstr "System plików wy³±cznie do odczytu"
+msgstr "File system di sola lettura"
 
 #: string/strsignal.c:66
 #, c-format
 msgid "Real-time signal %d"
-msgstr "Sygna³ w czasie rzeczywistym %d"
+msgstr "Segnale real-time %d"
 
 #: posix/regex.c:1027
 msgid "Regular expression too big"
-msgstr "Wyra¿enie regularne jest za du¿e"
+msgstr "Espressione regolare troppo grande"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:810
 msgid "Remote I/O error"
-msgstr "B³±d we/wy w odleg³ym systemie"
+msgstr "Errore di I/O remoto"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:766
 msgid "Remote address changed"
-msgstr "Zmieni³ siê adres drugiego koñca"
+msgstr "È cambiato l'indirizzo del remoto"
 
 #: inet/ruserpass.c:162
 msgid "Remove password or make file unreadable by others."
-msgstr "Usuñ has³o lub uczyñ plik niedostêpnym dla innych"
+msgstr "Rimuovere la password o rendere il file illeggibile dagli altri."
 
 #: elf/sprof.c:537
 #, c-format
 msgid "Reopening shared object `%s' failed"
-msgstr "Nie powiod³o siê ponowne otwarcie dzielonego obiektu `%s'"
+msgstr "Fallita la riapertura dell'oggetto condiviso `%s'"
 
 #: nis/nis_print.c:170
 msgid "Replicate :\n"
-msgstr "Replikacja :\n"
+msgstr "Replica   :\n"
 
 #: argp/argp-help.c:1638
 #, c-format
 msgid "Report bugs to %s.\n"
-msgstr "Prosimy zg³aszaæ b³êdy na adres %s.\n"
+msgstr "Segnalare i bug a %s.\n"
 
 #: catgets/gencat.c:223 db2/makedb.c:229 iconv/iconv_prog.c:280
 #: locale/programs/locale.c:254 locale/programs/localedef.c:389
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
-msgstr "Prosimy zg³aszaæ b³êdy za pomoc± skryptu `glibcbug' na adres <bugs@gnu.org>.\n"
+msgstr "Segnalare i bug a <bugs@gnu.org> usando lo script `glibcbug'.\n"
 
 #: nis/ypclnt.c:765
 msgid "Request arguments bad"
-msgstr "Argumenty ¿±dania s± b³êdne"
+msgstr "Argomenti della richiesta non validi"
 
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
-msgstr "B³±d 0 resolvera (bez b³êdów)"
+msgstr "Errore 0 del resolver (nessun errore)"
 
 #: resolv/herror.c:117
 msgid "Resolver internal error"
-msgstr "B³±d wewnêtrzny resolvera"
+msgstr "Errore interno del resolver"
 
 #. TRANS Deadlock avoided; allocating a system resource would have resulted in a
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
@@ -2176,11 +2173,11 @@ msgstr "B³±d wewnêtrzny resolvera"
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
 #: stdio-common/../sysdeps/gnu/errlist.c:97
 msgid "Resource deadlock avoided"
-msgstr "Unikniêto zakleszczenia zasobów"
+msgstr "Evitato un deadlock sulle risorse"
 
 #: stdio-common/../sysdeps/unix/siglist.c:54
 msgid "Resource lost"
-msgstr "Zasoby zosta³y stracone"
+msgstr "Risorsa persa"
 
 #. TRANS Resource temporarily unavailable; the call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
@@ -2213,16 +2210,15 @@ msgstr "Zasoby zosta³y stracone"
 #. TRANS @end itemize
 #: stdio-common/../sysdeps/gnu/errlist.c:279
 msgid "Resource temporarily unavailable"
-msgstr "Zasoby chwilowo niedostêpne"
+msgstr "Risorsa temporaneamente non disponibile"
 
-# XXX callback? -PK
 #: nis/nis_error.c:47
 msgid "Results Sent to callback proc"
-msgstr "Wyniki zosta³y wys³ane do procedury callbacka"
+msgstr "Risultati inviati alla procedura di callback"
 
 #: elf/sprof.c:91
 msgid "SHOBJ [PROFDATA]"
-msgstr "OBJ_DZIEL [DANE_PROF]"
+msgstr "SHOBJ [PROFDATA]"
 
 #: nis/nis_print.c:33
 msgid "SUNYP"
@@ -2231,75 +2227,75 @@ msgstr "SUNYP"
 #: nis/nis_print.c:265
 #, c-format
 msgid "Search Path         : %s\n"
-msgstr "¦cie¿ka przeszukiwania : %s\n"
+msgstr "Percorso di ricerca : %s\n"
 
 #: stdio-common/../sysdeps/unix/siglist.c:36
 #: sysdeps/unix/sysv/linux/siglist.h:31
 msgid "Segmentation fault"
-msgstr "Naruszenie ochrony pamiêci"
+msgstr "Segmentation fault"
 
 #: nis/nis_error.c:35
 msgid "Server busy, try again"
-msgstr "Serwer zajêty, spróbuj ponownie"
+msgstr "Server occupato, riprovare"
 
 #: nis/nis_error.c:41
 msgid "Server out of memory"
-msgstr "Brak pamiêci dla serwera"
+msgstr "Il server ha esaurito la memoria"
 
 #: sunrpc/clnt_perr.c:277
 msgid "Server rejected credential"
-msgstr "Serwer odrzuci³ wierzytelno¶æ"
+msgstr "Il server ha rifiutato le credenziali"
 
 #: sunrpc/clnt_perr.c:281
 msgid "Server rejected verifier"
-msgstr "Serwer odrzuci³ weryfikacjê"
+msgstr "Il server ha rifiutato il verificatore"
 
 #: posix/../sysdeps/posix/gai_strerror.c:38
 msgid "Servname not supported for ai_socktype"
-msgstr "Nazwa nie obs³ugiwana dla ai_socktype"
+msgstr "Servname non gestito per ai_socktype"
 
 #: argp/argp-parse.c:89
 msgid "Set the program name"
-msgstr "Okre¶la nazwê programu"
+msgstr "Imposta il nome del programma"
 
 #: nscd/nscd.c:82
 msgid "Shut the server down"
-msgstr "Koñczy pracê serwera"
+msgstr "Disattiva il server"
 
 #: stdio-common/../sysdeps/unix/siglist.c:25
 msgid "Signal 0"
-msgstr "Sygna³ 0"
+msgstr "Segnale 0"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:311
 msgid "Socket operation on non-socket"
-msgstr "Operacja na obiekcie, który nie jest gniazdem"
+msgstr "Operazione per socket su un non socket"
 
 #. TRANS The socket type is not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:340
 msgid "Socket type not supported"
-msgstr "Nie obs³ugiwany typ gniazda"
+msgstr "Tipo di socket non gestito"
 
 #. TRANS A network connection was aborted locally.
 #: stdio-common/../sysdeps/gnu/errlist.c:394
 msgid "Software caused connection abort"
-msgstr "Oprogramowanie spowodowa³o przerwanie po³±czenia"
+msgstr "Il programma ha causato la fine della connessione"
 
 #: sunrpc/rpcinfo.c:658
 msgid "Sorry. You are not root\n"
-msgstr "Niestety nie jeste¶ rootem\n"
+msgstr "Spiacente, non sei root\n"
 
 #: locale/programs/localedef.c:97
 msgid "Source definitions are found in FILE"
-msgstr "Definicje ¼ród³owe znajduj± siê w PLIKU"
+msgstr "Le definizioni sorgente sono nel FILE"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:746
 msgid "Srmount error"
-msgstr "B³±d srmount"
+msgstr "Errore di srmount"
 
 #: sysdeps/unix/sysv/linux/siglist.h:59
 msgid "Stack fault"
-msgstr "B³±d stosu"
+msgstr "Stack fault"
 
 #. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
 #. TRANS system which is due to file system rearrangements on the server host.
@@ -2307,72 +2303,70 @@ msgstr "B³±d stosu"
 #. TRANS the NFS file system on the local host.
 #: stdio-common/../sysdeps/gnu/errlist.c:506
 msgid "Stale NFS file handle"
-msgstr "Nieaktualny uchwyt pliku NFS"
+msgstr "Vecchio file handle NFS"
 
 #: nscd/nscd.c:81
 msgid "Start NUMBER threads"
-msgstr "Uruchamia LICZBÊ w±tków"
+msgstr "Lancia NUMERO thread"
 
 #: nis/nis_print.c:357
 #, c-format
 msgid "Status            : %s\n"
-msgstr "Stan          : %s\n"
+msgstr "Stato             : %s\n"
 
 #: stdio-common/../sysdeps/unix/siglist.c:43
 #: sysdeps/unix/sysv/linux/siglist.h:37
 msgid "Stopped"
-msgstr "Zatrzymany"
+msgstr "Fermato"
 
 #: stdio-common/../sysdeps/unix/siglist.c:42
 #: sysdeps/unix/sysv/linux/siglist.h:36
 msgid "Stopped (signal)"
-msgstr "Zatrzymany (sygna³)"
+msgstr "Fermato (segnale)"
 
 #: stdio-common/../sysdeps/unix/siglist.c:46
 #: sysdeps/unix/sysv/linux/siglist.h:40
 msgid "Stopped (tty input)"
-msgstr "Zatrzymany (wej¶cie z tty)"
+msgstr "Fermato (input da tty)"
 
 #: stdio-common/../sysdeps/unix/siglist.c:47
 #: sysdeps/unix/sysv/linux/siglist.h:41
 msgid "Stopped (tty output)"
-msgstr "Zatrzymany (wyj¶cie na tty)"
+msgstr "Fermato (output da tty)"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:790
 msgid "Streams pipe error"
-msgstr "B³±d potoku biblioteki strumieni"
+msgstr "Errore di pipe di streams"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:794
 msgid "Structure needs cleaning"
-msgstr "Struktura wymaga wyczyszczenia"
+msgstr "La struttura ha bisogno di essere pulita"
 
 #: nis/nis_error.c:28 nis/ypclnt.c:763 nis/ypclnt.c:837 posix/regex.c:1012
 #: stdio-common/../sysdeps/gnu/errlist.c:19
 msgid "Success"
-msgstr "Sukces"
+msgstr "Successo"
 
 #: locale/programs/localedef.c:106
 msgid "Suppress warnings and information messages"
-msgstr "Nie wy¶wietla ostrze¿eñ i informacji"
+msgstr "Sopprime messaggi di avvertimento e informazione"
 
 #: locale/programs/localedef.c:96
 msgid "Symbolic character names defined in FILE"
-msgstr "Nazwy symboliczne znaków s± zdefiniowane w PLIKU"
+msgstr "Nomi simbolici dei caratteri definiti in FILE"
 
 #: posix/../sysdeps/posix/gai_strerror.c:40
 msgid "System error"
-msgstr "B³±d systemowy"
+msgstr "Errore di sistema"
 
 #: locale/programs/locale.c:63
 msgid "System information:"
-msgstr "Informacja o systemie:"
+msgstr "Informazioni sul sistema:"
 
 #: nis/ypclnt.c:843
 msgid "System resource allocation failure"
-msgstr "Wyst±pi³ b³±d podczas przydzielania zasobów systemowych"
+msgstr "Errore di allocazione delle risorse di sistema"
 
-# wyjatkowo nieladne tlumaczenia repertoire i locale -PK
-# XXX
 #: locale/programs/localedef.c:384
 #, c-format
 msgid ""
@@ -2381,28 +2375,28 @@ msgid ""
 "                       locale path    : %s\n"
 "%s"
 msgstr ""
-"Katalog systemowy map znaków : %s\n"
-"             map repertuarów : %s\n"
-"          ¶cie¿ka lokalizacji: %s\n"
+"Directory di sistema per le mappe dei caratteri: %s\n"
+"                     repertoire maps           : %s\n"
+"                     percorso di localizzazione: %s\n"
 "%s"
 
 #: nis/nis_print.c:117
 msgid "TABLE\n"
-msgstr "TABLICA\n"
+msgstr "TABELLA\n"
 
 #: nis/nis_print.c:262
 #, c-format
 msgid "Table Type          : %s\n"
-msgstr "Typ tablicy         : %s\n"
+msgstr "Tipo di tabella     : %s\n"
 
 #: posix/../sysdeps/posix/gai_strerror.c:31
 msgid "Temporary failure in name resolution"
-msgstr "Odwzorowanie nazwy jest chwilowo niemo¿liwe"
+msgstr "Errore temporaneo durante la risoluzione del nome"
 
 #: stdio-common/../sysdeps/unix/siglist.c:40
 #: sysdeps/unix/sysv/linux/siglist.h:34
 msgid "Terminated"
-msgstr "Zakoñczony"
+msgstr "Terminato"
 
 #. TRANS An attempt to execute a file that is currently open for writing, or
 #. TRANS write to a file that is currently being executed.  Often using a
@@ -2411,7 +2405,7 @@ msgstr "Zakoñczony"
 #. TRANS is not an error in the GNU system; the text is copied as necessary.
 #: stdio-common/../sysdeps/gnu/errlist.c:197
 msgid "Text file busy"
-msgstr "Plik wykonywalny zajêty"
+msgstr "File text occupato"
 
 #: iconv/iconv_prog.c:536
 msgid ""
@@ -2425,39 +2419,39 @@ msgid ""
 "\n"
 "  "
 msgstr ""
-"Poni¿sza lista zawiera wszystkie zakodowane zestawy znaków. Nie oznacza to,\n"
-"¿e wszystkie kombinacje zestawów mog± byæ u¿ywane jako parametry OD i DO. Jeden\n"
-"zestaw znaków mo¿e znajdowaæ siê na li¶cie pod wieloma nazwami (aliasami).\n"
-"  Niektóre nazwy nie s± zwyk³ymi napisami, tylko wyra¿eniami regularnymi\n"
-"pasuj±cymi do okre¶lonego zbioru nazw. One tak¿e mog± byæ u¿ywane jako\n"
-"parametry programu.\n"
+"La seguente lista contiene tutti i set di caratteri codificati noti. Questo\n"
+"non significa necessariamente che tutte le combinazioni di questi nomi possono\n"
+"essere usate per i parametri di linea di comando FROM e TO. Un set di\n"
+"caratteri codificato può essere elencato con diversi nomi diversi (alias).\n"
+"Alcuni nomi non sono semplici stringhe ma espressioni regolari e corrispondono\n"
+"a una varietà di nomi che possono essere dati come parametri al programma.\n"
 "\n"
 "  "
 
 #: nis/nis_print.c:223
 msgid "Time to live : "
-msgstr "Czas ¿ycia : "
+msgstr "Tempo di vita: "
 
 #: stdio-common/../sysdeps/gnu/errlist.c:662
 msgid "Timer expired"
-msgstr "Koniec stopera"
+msgstr "Timer scaduto"
 
 #: nis/nis_error.c:55
 msgid "Too Many Attributes"
-msgstr "Za du¿o atrybutów"
+msgstr "Troppi attributi"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
 #: stdio-common/../sysdeps/gnu/errlist.c:457
 msgid "Too many levels of symbolic links"
-msgstr "Za du¿o wzajemnych symlinków"
+msgstr "Troppi livelli di link simbolici"
 
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
 #: stdio-common/../sysdeps/gnu/errlist.c:225
 msgid "Too many links"
-msgstr "Za du¿o linków"
+msgstr "Troppi link"
 
 #. TRANS The current process has too many files open and can't open any more.
 #. TRANS Duplicate descriptors do count toward this limit.
@@ -2468,54 +2462,54 @@ msgstr "Za du¿o linków"
 #. TRANS @pxref{Limits on Resources}.
 #: stdio-common/../sysdeps/gnu/errlist.c:175
 msgid "Too many open files"
-msgstr "Za du¿o otwartych plików"
+msgstr "Troppi file aperti"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs in the GNU system.
 #: stdio-common/../sysdeps/gnu/errlist.c:182
 msgid "Too many open files in system"
-msgstr "Za du¿o otwartych plików w systemie"
+msgstr "Troppi file aperti nel sistema"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
 #: stdio-common/../sysdeps/gnu/errlist.c:487
 msgid "Too many processes"
-msgstr "Za du¿o procesów"
+msgstr "Troppi processi"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:439
 msgid "Too many references: cannot splice"
-msgstr "Za du¿o odniesieñ: dowi±zanie niemo¿liwe"
+msgstr "Troppi riferimenti: impossibile dividere"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
 #: stdio-common/../sysdeps/gnu/errlist.c:493
 msgid "Too many users"
-msgstr "Za du¿o u¿ytkowników"
+msgstr "Troppi utenti"
 
 #: stdio-common/../sysdeps/unix/siglist.c:30
 #: sysdeps/unix/sysv/linux/siglist.h:26
 msgid "Trace/breakpoint trap"
-msgstr "Pu³apka debuggera/breakpoint"
+msgstr "Trap di trace/breakpoint"
 
 #: posix/regex.c:1017
 msgid "Trailing backslash"
-msgstr "Koñcz±cy znak `\\'"
+msgstr "Backslash finale"
 
 #. TRANS In the GNU system, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
 #: stdio-common/../sysdeps/gnu/errlist.c:596
 msgid "Translator died"
-msgstr "Translator przerwa³ pracê"
+msgstr "Il traduttore è morto"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
 #: stdio-common/../sysdeps/gnu/errlist.c:414
 msgid "Transport endpoint is already connected"
-msgstr "Drugi koniec jest ju¿ po³±czony"
+msgstr "Estremità del trasporto già connesso"
 
 #. TRANS The socket is not connected to anything.  You get this error when you
 #. TRANS try to transmit data over a socket, without first specifying a
@@ -2523,205 +2517,204 @@ msgstr "Drugi koniec jest ju¿ po³±czony"
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
 #: stdio-common/../sysdeps/gnu/errlist.c:422
 msgid "Transport endpoint is not connected"
-msgstr "Drugi koniec nie jest po³±czony"
+msgstr "Estremità del trasporto non connesso"
 
 #: argp/argp-help.c:1610
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
-msgstr "Napisz `%s --help' lub `%s --usage' by uzyskaæ wiêcej informacji.\n"
+msgstr "Usare `%s --help' o `%s --usage' per ulteriori informazioni.\n"
 
 #: inet/rcmd.c:143
 #, c-format
 msgid "Trying %s...\n"
-msgstr "Próbujê %s...\n"
+msgstr "Proviamo %s...\n"
 
 #: nis/nis_print.c:163
 #, c-format
 msgid "Type : %s\n"
-msgstr "Typ  : %s\n"
+msgstr "Tipo : %s\n"
 
 #: nis/nis_print.c:47
 msgid "UNKNOWN"
-msgstr "NIEZNANY"
+msgstr "SCONOSCIUTO"
 
 #: nis/nis_error.c:72
 msgid "Unable to authenticate NIS+ client"
-msgstr "Uwierzytelnienie klienta NIS+ jest niemo¿liwe"
+msgstr "Impossibile autenticare il client NIS+"
 
 #: nis/nis_error.c:71
 msgid "Unable to authenticate NIS+ server"
-msgstr "Uwierzytelnienie serwera NIS+ jest niemo¿liwe"
+msgstr "Impossibile autenticare il server NIS+"
 
 #: nis/nis_error.c:46
 msgid "Unable to create callback"
-msgstr "Utworzenie procedury callbacka nie jest mo¿liwe"
+msgstr "Impossibile creare il callback"
 
 #: nis/nis_error.c:74
 msgid "Unable to create process on server"
-msgstr "Uruchomienie nowego procesu na serwerze jest niemo¿liwe"
+msgstr "Impossibile creare il processo sul server"
 
 #: nis/nis_print.c:190
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
-msgstr "Nieznany (typ = %d, bity = %d)\n"
+msgstr "Sconosciuto (tipo = %d, bit = %d)\n"
 
 #: inet/ruserpass.c:248
 #, c-format
 msgid "Unknown .netrc keyword %s"
-msgstr "Nieznane s³owo kluczowe w .netrc %s"
+msgstr "Parola chiave di .netrc sconosciuta %s"
 
 #: nis/ypclnt.c:797
 msgid "Unknown NIS error code"
-msgstr "Nieznany kod b³êdu NIS"
+msgstr "Codice di errore di NIS sconosciuto"
 
 #: nss/getent.c:505
 #, c-format
 msgid "Unknown database: %s\n"
-msgstr "Nieznana baza `%s'\n"
+msgstr "Databae sconosciuto: %s\n"
 
 #: posix/../sysdeps/posix/gai_strerror.c:51
 msgid "Unknown error"
-msgstr "Nieznany b³±d"
+msgstr "Errore sconosciuto"
 
 #: string/../sysdeps/generic/_strerror.c:48
 #: string/../sysdeps/mach/_strerror.c:86
 #: sysdeps/mach/hurd/mips/dl-machine.c:82
 msgid "Unknown error "
-msgstr "Nieznany b³±d "
+msgstr "Errore sconosciuto "
 
 #: resolv/herror.c:74
 msgid "Unknown host"
-msgstr "Nieznany host"
+msgstr "Host sconosciuto"
 
 #: nis/nis_error.c:34
 msgid "Unknown object"
-msgstr "Nieznany obiekt"
+msgstr "Oggetto sconosciuto"
 
 #: nscd/nscd_conf.c:181
 #, c-format
 msgid "Unknown option: %s %s %s"
-msgstr "Nieznana opcja: %s %s %s"
+msgstr "Opzione sconosciuta: %s %s %s"
 
 #: resolv/herror.c:120
 msgid "Unknown resolver error"
-msgstr "Nieznany b³±d biblioteki odwzoruj±cej nazwy"
+msgstr "Errore conosciuto del resolver"
 
 #: resolv/herror.c:76
 msgid "Unknown server error"
-msgstr "Nieznany b³±d serwera"
+msgstr "Errore sconosciuto del server"
 
 #: string/strsignal.c:70
 #, c-format
 msgid "Unknown signal %d"
-msgstr "Nieznany sygna³ %d"
+msgstr "Segnale %d sconosciuto"
 
 #: misc/error.c:107
 msgid "Unknown system error"
-msgstr "Nieznany b³±d systemowy"
+msgstr "Errore di sistema sconosciuto"
 
 #: nis/ypclnt.c:845
 msgid "Unknown ypbind error"
-msgstr "Nieznany b³±d ypbind"
+msgstr "Errore sconosciuto di ypbind"
 
 #: posix/regex.c:1020
 msgid "Unmatched ( or \\("
-msgstr "Niesparowane ( lub \\("
+msgstr "( o \\( sbilanciato"
 
 #: posix/regex.c:1028
 msgid "Unmatched ) or \\)"
-msgstr "Niesparowane ) lub \\)"
+msgstr ") o \\) sbilanciato"
 
 #: posix/regex.c:1019
 msgid "Unmatched [ or [^"
-msgstr "Niesparowane [ lub [^"
+msgstr "[ o [^ sbilanciato"
 
 #: posix/regex.c:1021
 msgid "Unmatched \\{"
-msgstr "Niesparowane \\{"
+msgstr "\\{ sbilanciato"
 
 #: posix/getconf.c:692
 #, c-format
 msgid "Unrecognized variable `%s'"
-msgstr "Nierozpoznana zmienna `%s'"
+msgstr "Variabile `%s' non riconosciuta"
 
 #: stdio-common/../sysdeps/unix/siglist.c:41
 #: sysdeps/unix/sysv/linux/siglist.h:35
 msgid "Urgent I/O condition"
-msgstr "Nag³y wypadek I/O"
+msgstr "Condizione di I/O urgente"
 
 #: argp/argp-help.c:1567
 msgid "Usage:"
-msgstr "Sk³adnia:"
+msgstr "Uso:"
 
 #: posix/getconf.c:604
 #, c-format
 msgid "Usage: %s variable_name [pathname]\n"
-msgstr "Sk³adnia: %s nazwa_zmiennej [¶cie¿ka]\n"
+msgstr "Uso: %s nome_variabile [percorso]\n"
 
 #: sunrpc/rpcinfo.c:674
 msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-msgstr "Sk³adnia: rpcinfo [ -n nr_portu ] -u host nr_programu [ nr_wersji ]\n"
+msgstr "Uso: rpcinfo [ -n numporta ] -u host numprog [ numvers ]\n"
 
 #: stdio-common/../sysdeps/unix/siglist.c:55
 #: sysdeps/unix/sysv/linux/siglist.h:48
 msgid "User defined signal 1"
-msgstr "Sygna³ u¿ytkownika 1"
+msgstr "Segnale 1 definito dall'utente"
 
 #: stdio-common/../sysdeps/unix/siglist.c:56
 #: sysdeps/unix/sysv/linux/siglist.h:49
 msgid "User defined signal 2"
-msgstr "Sygna³ u¿ytkownika 2"
+msgstr "Segnale 2 definito dall'utente"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:654
 msgid "Value too large for defined data type"
-msgstr "Warto¶æ za du¿a dla zdefiniowanego typu danych"
+msgstr "Valore troppo grande per il tipo di dato definito"
 
 #: stdio-common/../sysdeps/unix/siglist.c:51
 #: sysdeps/unix/sysv/linux/siglist.h:45
 msgid "Virtual timer expired"
-msgstr "Wirtualny stoper wyczerpany"
+msgstr "Virtual timer expired"
 
 #: timezone/zic.c:1899
 msgid "Wild result from command execution"
-msgstr "Osobliwy wynik wykonania polecenia"
+msgstr "Risultato assurdo dall'esecuzione del comando"
 
 #: stdio-common/../sysdeps/unix/siglist.c:53
 #: sysdeps/unix/sysv/linux/siglist.h:47
 msgid "Window changed"
-msgstr "Okno zmienione"
+msgstr "Finestra cambiata"
 
 #: locale/programs/locale.c:67
 msgid "Write names of available charmaps"
-msgstr "Wy¶wietla nazwy dostêpnych map znaków"
+msgstr "Scrive i nomi delle mappe di caratteri disponibili"
 
 #: locale/programs/locale.c:65
 msgid "Write names of available locales"
-msgstr "Wy¶wietla nazwy dostêpnych lokalizacji"
+msgstr "Scrive i nomi delle localizzazioni disponibili"
 
 #: locale/programs/locale.c:69
 msgid "Write names of selected categories"
-msgstr "Wy¶wietla nazwy wybranych kategorii"
+msgstr "Scrive i nomi delle categorie selezionate"
 
 #: locale/programs/locale.c:70
 msgid "Write names of selected keywords"
-msgstr "Wy¶wietla nazwy wybranych s³ów kluczowych"
+msgstr "Scrive i nomi delle parole chiave selezionate"
 
 #: catgets/gencat.c:110 db2/makedb.c:59
 msgid "Write output to file NAME"
-msgstr "Zapisuje wyniki do pliku NAZWA"
+msgstr "Scrive l'output nel file NOME"
 
-# w %s wchodzi nazwisko autora danego programu/procedury -PK
 #: catgets/gencat.c:241 db2/makedb.c:247 elf/sprof.c:365
 #: iconv/iconv_prog.c:299 locale/programs/locale.c:272
 #: locale/programs/localedef.c:408 nscd/nscd.c:228 nss/getent.c:70
 #: posix/getconf.c:629
 #, c-format
 msgid "Written by %s.\n"
-msgstr "Autor: %s.\n"
+msgstr "Scritto da %s.\n"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:818
 msgid "Wrong medium type"
-msgstr "Niew³a¶ciwy typ medium"
+msgstr "Tipo di medium errato"
 
 #: nis/nis_print.c:39
 msgid "X500"
@@ -2738,320 +2731,326 @@ msgstr "YPBINDPROC_DOMAIN: %s\n"
 
 #: nis/nis_error.c:70
 msgid "Yes, 42 is the meaning of life"
-msgstr "Tak, 42 jest odpowiedzi± na pytanie o sens ¿ycia"
+msgstr "Sì, 42 è il significato della vita"
 
 #. TRANS You did @strong{what}?
 #: stdio-common/../sysdeps/gnu/errlist.c:608
 msgid "You really blew it this time"
-msgstr "Tym razem da³e¶ popaliæ"
+msgstr "Questa volta hai davvero combinato un pasticcio"
 
 #: timezone/zic.c:1063
 msgid "Zone continuation line end time is not after end time of previous line"
-msgstr "Koniec czasu nie znajduje siê po koñcu czasu poprzedniej linii"
+msgstr ""
+"Il tempo finale della riga di continuazione della zona\n"
+"non è successivo al tempo finale della riga precedente"
 
 #: iconv/iconv_prog.c:70
 msgid "[FILE...]"
-msgstr "[PLIK...]"
+msgstr "[FILE...]"
 
 #: locale/programs/charmap.c:481 locale/programs/locfile.c:471
 #: locale/programs/repertoire.c:278
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
-msgstr "definicja `%1$s' musi koñczyæ siê wyra¿eniem `END %1$s'"
+msgstr "la definizione `%1$s' non finisce con `END %1$s'"
 
 #: elf/sprof.c:766
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
-msgstr "`%s' nie zawiera poprawnych danych profiluj±cych dla `%s'"
+msgstr "`%s' non è un file con i dati di profilazione corretti per `%s'"
 
 #: locale/programs/ld-monetary.c:369 locale/programs/ld-numeric.c:193
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
-msgstr "`-1' musi byæ ostatnim elementem w polu `%s' kategorii `%s'"
+msgstr "`-1' dev'essere l'ultima voce del campo `%s' nella categoria `%s'"
 
 #: locale/programs/ld-collate.c:1666
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
-msgstr "`...' mo¿e byæ u¿yte wy³±cznie dla  `...' i `UNDEFINED'"
+msgstr "`...' deve essere usata solo nelle voci `...' e `UNDEFINED'"
 
 #: locale/programs/locfile.c:668
 msgid "`from' expected after first argument to `collating-element'"
-msgstr "`from' spodziewane po pierwszym argumencie `collate-element'"
+msgstr "manca `from' dopo il primo argomento a `collating-element'"
 
 #: locale/programs/ld-collate.c:1118
 msgid "`from' string in collation element declaration contains unknown character"
-msgstr "³añcuch `from' w deklaracji elementu sortowania zawiera nieznany znak"
+msgstr ""
+"la stringa `from' nella dichiarazione dell'elemento di collazione\n"
+"contiene un carattere sconosciuto"
 
 #: posix/../sysdeps/posix/gai_strerror.c:34
 msgid "ai_family not supported"
-msgstr "Nie obs³ugiwana rodzina protoko³ów"
+msgstr "ai_family non gestita"
 
 #: posix/../sysdeps/posix/gai_strerror.c:39
 msgid "ai_socktype not supported"
-msgstr "Nie obs³ugiwany typ gniazda"
+msgstr "ai_socktype non gestito"
 
 #: nscd/nscd.c:121
 msgid "already running"
-msgstr "jest ju¿ uruchomiony"
+msgstr "già in esecuzione"
 
 #: locale/programs/charmap.c:352 locale/programs/repertoire.c:152
 #, c-format
 msgid "argument to <%s> must be a single character"
-msgstr "argument <%s> musi byæ pojedynczym znakiem"
+msgstr "l'argomento di <%s> deve essere un unico carattere"
 
 #: locale/programs/locfile.c:240
 #, c-format
 msgid "argument to `%s' must be a single character"
-msgstr "argument `%s' musi byæ pojedynczym znakiem"
+msgstr "l'argomento di `%s' deve essere un unico carattere"
 
 #: sunrpc/auth_unix.c:321
 msgid "auth_none.c - Fatal marshalling problem"
-msgstr "auth_none.c - Problem z prze³±czaniem"
+msgstr "auth_none.c - Problema fatale di marshalling"
 
 #: sunrpc/auth_unix.c:116 sunrpc/auth_unix.c:122 sunrpc/auth_unix.c:151
 msgid "authunix_create: out of memory\n"
-msgstr "authunix_create: brak pamiêci\n"
+msgstr "authunix_create: memoria esaurita\n"
 
 #: locale/programs/charmap.c:297 locale/programs/locfile.c:234
 #: locale/programs/locfile.c:261 locale/programs/repertoire.c:144
 msgid "bad argument"
-msgstr "b³êdny argument"
+msgstr "argomenti non validi"
 
 #: inet/rcmd.c:318
 msgid "bad owner"
-msgstr "nieodpowiedni w³a¶ciciel"
+msgstr "proprietario non valido"
 
 #: timezone/zic.c:1185
 msgid "blank FROM field on Link line"
-msgstr "puste pole FROM w linii Link"
+msgstr "campo FROM vuoto in una riga di Link"
 
 #: timezone/zic.c:1189
 msgid "blank TO field on Link line"
-msgstr "puste pole TO w linii Link"
+msgstr "campo TO vuoto in una riga di Link"
 
 #: malloc/mcheck.c:208
 msgid "block freed twice\n"
-msgstr "blok zwalniany dwa razy\n"
+msgstr "blocco liberato due volte\n"
 
 #: malloc/mcheck.c:211
 msgid "bogus mcheck_status, library is buggy\n"
-msgstr "b³êdny mcheck_status, biblioteka zawiera b³êdy\n"
+msgstr "mcheck_status insensato, la libreria è bacata\n"
 
 #: sunrpc/pmap_rmt.c:185
 msgid "broadcast: ioctl (get interface configuration)"
-msgstr "transmisja: ioctl (info o konfiguracji interfejsu)"
+msgstr "broadcast: ioctl (leggi la configurazione dell'interfaccia)"
 
 #: sunrpc/pmap_rmt.c:194
 msgid "broadcast: ioctl (get interface flags)"
-msgstr "transmisja: ioctl (info o flagach interjesu)"
+msgstr "broadcast: ioctl (leggi i flag dell'interfaccia)"
 
 #: login/programs/request.c:167
 msgid "buffer overflow"
-msgstr "przepe³nienie bufora"
+msgstr "overflow del buffer"
 
 #: sunrpc/svc_udp.c:446
 msgid "cache_set: could not allocate new rpc_buffer"
-msgstr "cache_set: przydzielenie nowego rpc_buffer jest niemo¿liwe"
+msgstr "cache_set: impossibile allocare un nuovo rpc_buffer"
 
 #: sunrpc/svc_udp.c:440
 msgid "cache_set: victim alloc failed"
-msgstr "cache_set: przydzielenie pamiêci dla nowego wpisu jest niemo¿liwe"
+msgstr "cache_set: fallita l'allocazione della vittima"
 
 #: sunrpc/svc_udp.c:429
 msgid "cache_set: victim not found"
-msgstr "cache_set: nie znaleziono wpisu mo¿liwego do powtórnego wykorzystania"
+msgstr "cache_set: vittima non trovata"
 
-# jak ladnie przetlumaczyc ten until time? -PK
 #: timezone/zic.c:1726
 msgid "can't determine time zone abbreviation to use just after until time"
-msgstr "okre¶lenie skrótu strefy czasowej po koñcu przedzia³u czasu jest niemo¿liwe"
+msgstr ""
+"impossibile determinare l'abbreviazione del fuso orario\n"
+"da usare subito dopo il tempo finale"
 
 #: sunrpc/svc_simple.c:75
 #, c-format
 msgid "can't reassign procedure number %d\n"
-msgstr "przypisanie procedury nr %d jest niemo¿liwe\n"
+msgstr "impossibile riassegnare il numero di procedura %d\n"
 
 #: locale/programs/localedef.c:279
 #, c-format
 msgid "cannot `stat' locale file `%s'"
-msgstr "znalezienie pliku lokalizacji `%s' jest niemo¿liwe"
+msgstr "impossibile fare `stat' sul file di localizzazione `%s'"
 
 #: elf/sprof.c:935 elf/sprof.c:987
 msgid "cannot allocate symbol data"
-msgstr "przydzielenie pamiêci dla symboli jest niemo¿liwe"
+msgstr "impossibile allocare i dati dei simboli"
 
 #: elf/sprof.c:719 elf/sprof.c:777
 msgid "cannot create internal descriptor"
-msgstr "stworzenie wewnêtrznego deskryptora jest niemo¿liwe"
+msgstr "impossibile creare il descrittore interno"
 
 #: elf/sprof.c:417
 msgid "cannot create internal descriptors"
-msgstr "stworzenie wewnêtrznego deskryptora jest niemo¿liwe"
+msgstr "impossibile creare i descrittori interni"
 
 #: nscd/connections.c:180
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
-msgstr "otwarcie gniazda do przyjmowania po³±czeñ jest niemo¿liwe: %s"
+msgstr "impossibile abilitare il socket ad accettare connessioni: %s"
 
 #: sunrpc/rpc_main.c:342
 #, c-format
 msgid "cannot find C preprocessor: %s \n"
-msgstr "odnalezienie preprocesora C jest niemo¿liwe: %s \n"
+msgstr "impossibile trovare il preprocessore C: %s\n"
 
 #: sunrpc/rpc_main.c:350
 msgid "cannot find any C preprocessor (cpp)\n"
-msgstr "odnalezienie preprocesora C (cpp) jest niemo¿liwe\n"
+msgstr "impossibile trovare un preprocessore C\n"
 
 #: nscd/connections.c:205
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
-msgstr "obs³uga ¿±dañ w starej wersji %d nie jest mo¿liwa; aktualna wersja to %d"
+msgstr ""
+"impossibile gestire una vecchia richiesta di versione %d;\n"
+"la versione attuale è %d"
 
-# collation = sortowanie czy laczenie??? -PK
 #: locale/programs/ld-collate.c:1324
 #, c-format
 msgid "cannot insert collation element `%.*s'"
-msgstr "wstawienie elementu sortowania `%.*s' jest niemo¿liwe"
+msgstr "impossibile inserire l'elemento di collazione `%.*s'"
 
 #: locale/programs/ld-collate.c:1503 locale/programs/ld-collate.c:1510
 msgid "cannot insert into result table"
-msgstr "wstawienie do tablicy wyników jest niemo¿liwe"
+msgstr "impossibile l'inserimento nella tabella dei risultati"
 
 #: locale/programs/ld-collate.c:1175 locale/programs/ld-collate.c:1218
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
-msgstr "wstawienie definicji nowego symbolu sortowania niemo¿liwe: %s"
+msgstr "impossibile inserire la nuova definizione di simbolo di collazione: %s"
 
 #: elf/sprof.c:674
 msgid "cannot load profiling data"
-msgstr "za³adowanie danych do profilowania jest niemo¿liwe"
+msgstr "impossibile leggere i dati di profilazione"
 
 #: inet/rcmd.c:314
 msgid "cannot open"
-msgstr "otwarcie jest niemo¿liwe"
+msgstr "impossibile aprire"
 
 #: sysdeps/unix/sysv/linux/lddlibc4.c:64
 #, c-format
 msgid "cannot open `%s'"
-msgstr "otwarcie `%s' jest niemo¿liwe"
+msgstr "impossibile aprire `%s'"
 
 #: db2/makedb.c:146
 #, c-format
 msgid "cannot open database file `%s': %s"
-msgstr "otwarcie pliku bazy danych `%s' jest niemo¿liwe: %s"
+msgstr "impossibile aprire il file del database `%s': %s"
 
 #: catgets/gencat.c:272 db2/makedb.c:167 iconv/iconv_prog.c:177
 #, c-format
 msgid "cannot open input file `%s'"
-msgstr "otwarcie wej¶ciowego pliku `%s' niemo¿liwe"
+msgstr "impossibile aprire il file di input `%s'"
 
 #: locale/programs/localedef.c:198
 #, c-format
 msgid "cannot open locale definition file `%s'"
-msgstr "otwarcie pliku definicji lokalnych `%s' niemo¿liwe"
+msgstr "impossibile aprire il file di definizione della localizzazione `%s'"
 
 #: iconv/iconv_prog.c:155
 msgid "cannot open output file"
-msgstr "otwarcie wyj¶ciowego pliku jest niemo¿liwe"
+msgstr "impossibile aprire il file di output"
 
 #: catgets/gencat.c:774 catgets/gencat.c:815 db2/makedb.c:181
 #, c-format
 msgid "cannot open output file `%s'"
-msgstr "otwarcie wyj¶ciowego pliku `%s' niemo¿liwe"
+msgstr "impossibile aprire il file di output `%s'"
 
 #: locale/programs/locfile.c:1129
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
-msgstr "otwarcie wyj¶ciowego pliku `%s' dla kategorii `%s' niemo¿liwe"
+msgstr "impossibile aprire il file di output `%s' per la categoria `%s'"
 
 #: nscd/connections.c:162
 #, c-format
 msgid "cannot open socket: %s"
-msgstr "otwarcie gniazda jest niemo¿liwe: %s"
+msgstr "impossibile aprire il socket `%s'"
 
 #: locale/programs/ld-collate.c:1370
 msgid "cannot process order specification"
-msgstr "przetwarzanie specyfikacji kolejno¶ci jest niemo¿liwe"
+msgstr "impossibile elaborare le specifiche di ordine"
 
 #: locale/programs/locale.c:449
 #, c-format
 msgid "cannot read character map directory `%s'"
-msgstr "odczyt katalogu mapy znaków `%s' niemo¿liwy"
+msgstr "impossibile leggere la directory delle mappe di caratteri `%s'"
 
 #: nscd/connections.c:122
 msgid "cannot read configuration file; this is fatal"
-msgstr "przeczytanie pliku konfiguracyjnego jest niemo¿liwe: koniec pracy"
+msgstr "impossibile leggere il file di configurazione. Questo è fatale"
 
 #: login/programs/request.c:91
 msgid "cannot read from client"
-msgstr "odczyt danych od klienta jest niemo¿liwy"
+msgstr "impossibile leggere dal client"
 
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid "cannot read header from `%s'"
-msgstr "przeczytanie nag³ówka z `%s' jest niemo¿liwe"
+msgstr "impossibile leggere l'header da `%s'"
 
 #: locale/programs/locale.c:306
 #, c-format
 msgid "cannot read locale directory `%s'"
-msgstr "odczyt katalogu lokalizacji %s' jest niemo¿liwy"
+msgstr "impossibile leggere la directory di localizzazione `%s'"
 
 #: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot read locale file `%s'"
-msgstr "odczyt pliku lokalizacji `%s' niemo¿liwy"
+msgstr "impossibile leggere il file di localizzazione `%s'"
 
 #: locale/programs/locfile.c:288 locale/programs/locfile.c:306
 #: locale/programs/locfile.c:324 locale/programs/locfile.c:342
 #: locale/programs/locfile.c:360 locale/programs/locfile.c:378
 #, c-format
 msgid "cannot read repertoire map `%s'"
-msgstr "odczytanie mapy repertuarów `%s' jest niemo¿liwe"
+msgstr "impossibile leggere la repertoire map `%s'"
 
 #: nscd/nscd_stat.c:127
 msgid "cannot read statistics data"
-msgstr "odczytanie danych statystycznych jest niemo¿liwe"
+msgstr "impossibile leggere i dati statistici"
 
 #: nscd/cache.c:141 nscd/connections.c:148
 #, c-format
 msgid "cannot stat() file `%s': %s"
-msgstr "znalezienie pliku bazy danych `%s' jest niemo¿liwe: %s"
+msgstr "impossibile fare stat() sul file `%s': %s"
 
 #: locale/programs/localedef.c:328
 #, c-format
 msgid "cannot write output files to `%s'"
-msgstr "zapisanie plików wyj¶ciowych do `%s' jest niemo¿liwe"
+msgstr "impossibile scrivere i file di output su `%s'"
 
 #: nscd/connections.c:229 nscd/connections.c:250
 #, c-format
 msgid "cannot write result: %s"
-msgstr "zapisanie wyniku jest niemo¿liwe: %s"
+msgstr "impossibile scrivere i risultati: %s"
 
 #: nscd/nscd_stat.c:86
 #, c-format
 msgid "cannot write statistics: %s"
-msgstr "zapisanie statystyk jest niemo¿liwe: %s"
+msgstr "impossibile scrivere le statistiche: %s"
 
 #: login/programs/request.c:120
 msgid "cannot write to client"
-msgstr "zwracanie odpowiedzi klientowi jest niemo¿liwe"
+msgstr "impossibile scrivere sul client"
 
 #: locale/programs/localedef.c:442
 msgid "category data requested more than once: should not happen"
-msgstr "wielokrotne ¿±danie kategorii danych: nie powinno wyst±piæ"
+msgstr "dati di categoria richiesti più di una volta: non dovrebbe succedere"
 
 #: locale/programs/ld-ctype.c:269
 #, c-format
 msgid "character %s'%s' in class `%s' must be in class `%s'"
-msgstr "znak %s'%s' z klasy`%s' musi byæ w klasie `%s'"
+msgstr "il carattere %s'%s' nella classe `%s' dev'essere nella classe `%s'"
 
 #: locale/programs/ld-ctype.c:294
 #, c-format
 msgid "character %s'%s' in class `%s' must not be in class `%s'"
-msgstr "znak %s'%s' z klasy `%s' nie mo¿e byæ w klasie `%s'"
+msgstr "il carattere %s'%s' nella classe `%s' non dev'essere nella classe `%s'"
 
 #: locale/programs/ld-ctype.c:320
 msgid "character <SP> not defined in character map"
-msgstr "znak <SP> nie zdefiniowany w tablicy znaków"
+msgstr "carattere <SP> non definito nella mappa di caratteri"
 
 #: locale/programs/ld-ctype.c:964 locale/programs/ld-ctype.c:1029
 #: locale/programs/ld-ctype.c:1040 locale/programs/ld-ctype.c:1051
@@ -3061,231 +3060,229 @@ msgstr "znak <SP> nie zdefiniowany w tablicy znaków"
 #: locale/programs/ld-ctype.c:1194 locale/programs/ld-ctype.c:1206
 #, c-format
 msgid "character `%s' not defined while needed as default value"
-msgstr "znak `%s', wymagany jako domy¶lny, nie zosta³ zdefiniowany"
+msgstr "carattere `%s' non definito sebbene necessario come valore predefinito"
 
 #: locale/programs/ld-ctype.c:825
 #, c-format
 msgid "character class `%s' already defined"
-msgstr "klasa znaków `%s' jest ju¿ zdefiniowana"
+msgstr "classe di caratteri `%s' già definita"
 
 #: locale/programs/ld-ctype.c:857
 #, c-format
 msgid "character map `%s' already defined"
-msgstr "tablica znaków `%s' jest ju¿ zdefiniowana"
+msgstr "mappa di caratteri `%s' già definita"
 
 #: locale/programs/charmap.c:83
 #, c-format
 msgid "character map file `%s' not found"
-msgstr "nie znaleziono pliku tablicy znaków `%s'"
+msgstr "file di mappa di caratteri `%s' non trovato"
 
 #: sunrpc/clnt_raw.c:110
 msgid "clnt_raw.c - Fatal header serialization error."
-msgstr "clnt_raw.c - Krytyczny b³±d serializacji nag³ówka."
+msgstr "clnt_raw.c - Errore fatale di serializzazione dell'header"
 
 #: sunrpc/clnt_tcp.c:125 sunrpc/clnt_tcp.c:133
 msgid "clnttcp_create: out of memory\n"
-msgstr "clnttcp_create: brak pamiêci\n"
+msgstr "clnttcp_create: memoria esaurita\n"
 
 #: sunrpc/clnt_udp.c:124 sunrpc/clnt_udp.c:134
 msgid "clntudp_create: out of memory\n"
-msgstr "clntudp_create: brak pamiêci\n"
+msgstr "clntudp_create: memoria esaurita\n"
 
 #: sunrpc/clnt_unix.c:123 sunrpc/clnt_unix.c:131
 msgid "clntunix_create: out of memory\n"
-msgstr "clntunix_create: brak pamiêci\n"
+msgstr "clntunix_create: memoria esaurita\n"
 
 #: locale/programs/ld-collate.c:1339
 #, c-format
 msgid "collation element `%.*s' appears more than once: ignore line"
-msgstr "element sortowania `%.*s' wyst±pi³ wielokrotnie: linia pominiêta"
+msgstr "l'elemento di collazione `%.*s' appare più di una volta: riga ignorata"
 
 #: locale/programs/ld-collate.c:1357
 #, c-format
 msgid "collation symbol `%.*s' appears more than once: ignore line"
-msgstr "element sortowania `%.*s' wyst±pi³ wielokrotnie: linia pominiêta"
+msgstr "il simbolo di collazione `%.*s' appare più di una volta: riga ignorata"
 
 #: locale/programs/locfile.c:652
 #, c-format
 msgid "collation symbol expected after `%s'"
-msgstr "oczekiwano symbolu sortowania po `%s'"
+msgstr "simbolo di collazione non trovato dopo `%s'"
 
 #: inet/rcmd.c:136
 #, c-format
 msgid "connect to address %s: "
-msgstr "po³±czenie do adresu %s: "
+msgstr "connessione all'indirizzo %s: "
 
 #: sunrpc/rpc_scan.c:115
 msgid "constant or identifier expected"
-msgstr "spodziewana sta³a lub identyfikator"
+msgstr "attesa una costante o un identificatore"
 
 #: iconv/iconv_prog.c:144
 #, c-format
 msgid "conversion from `%s' to `%s' not supported"
-msgstr "konwersja z `%s' do `%s' nie jest obs³ugiwana"
+msgstr "conversione da `%s' a `%s' non gestita"
 
 #: iconv/iconv_prog.c:326
 msgid "conversion stopped due to problem in writing the output"
-msgstr "konwersja zosta³a przerwana poniewa¿ wyst±pi³y problemy z zapisaniem wyników"
+msgstr "conversione fermata a causa di un problema durante la scrittura dell'output"
 
 #: sunrpc/svc_simple.c:83
 msgid "couldn't create an rpc server\n"
-msgstr "stworzenie serwera rpc niemo¿liwe\n"
+msgstr "impossibile creare un server rpc\n"
 
 #: sunrpc/svc_simple.c:91
 #, c-format
 msgid "couldn't register prog %d vers %d\n"
-msgstr "rejestracja prog %d wer. %d niemo¿liwa\n"
+msgstr "impossibile registrare il programma %d vers %d\n"
 
 #: nss/getent.c:49
 msgid "database [key ...]"
-msgstr "baza [klucz ...]"
+msgstr "database [chiave ...]"
 
 #: locale/programs/charmap.c:170
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr "nie znaleziono domy¶lnej tablicy znaków `%s'"
+msgstr "file di mappa di caratteri `%s' predefinito non trovato"
 
 #: locale/programs/ld-time.c:163
 #, c-format
 msgid "direction flag in string %d in `era' field in category `%s' is not '+' nor '-'"
 msgstr ""
-"znacznik kierunku w ³añcuchu %d w polu `era' w kategorii `%s' nie jest '+'\n"
-"lub '-'"
+"il flag di direzione nella stringa %d, nel campo `era'\n"
+"della categoria `%s', non è né '+' né '-'"
 
 #: locale/programs/ld-time.c:174
 #, c-format
 msgid "direction flag in string %d in `era' field in category `%s' is not a single character"
 msgstr ""
-"znacznik kierunku w ³añcuchu %d w polu `era' w kategorii `%s' nie jest\n"
-"pojedynczym znakiem"
+"il flag di direzione nella stringa %d, nel campo `era'\n"
+"della categoria `%s', non è un unico carattere"
 
 #: locale/programs/charset.c:64 locale/programs/charset.c:118
 #, c-format
 msgid "duplicate character name `%s'"
-msgstr "dwukrotne wyst±pienie nazwy znaku `%s'"
+msgstr "nome di carattere `%s' ripetuto"
 
 #: locale/programs/ld-collate.c:1150
 msgid "duplicate collating element definition"
-msgstr "podwójna definicja elementu sortowania"
+msgstr "definizione di eleento di collazione ripetuta"
 
 #: locale/programs/ld-collate.c:1297
 #, c-format
 msgid "duplicate definition for character `%.*s'"
-msgstr "wielokrotna definicja znaku `%.*s'"
+msgstr "definizione ripetuta per il carattere `%.*s'"
 
 #: db2/makedb.c:328
 msgid "duplicate key"
-msgstr "dwukrotne wyst±pienie klucza"
+msgstr "chiave ripetuta"
 
 #: catgets/gencat.c:388
 msgid "duplicate set definition"
-msgstr "podwójna definicja zbioru"
+msgstr "definizione di insieme ripetuta"
 
 #: timezone/zic.c:978
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgstr "podwójna nazwa strefy %s (plik \"%s\", linia %d)"
+msgstr "nome di zona %s duplicato (file \"%s\", riga %d)"
 
 #: catgets/gencat.c:551
 msgid "duplicated message identifier"
-msgstr "podwójny identyfikator komunikatu"
+msgstr "identificatore del messaggio doppio"
 
 #: catgets/gencat.c:524
 msgid "duplicated message number"
-msgstr "podwójny numer komunikatu"
+msgstr "numero del messaggio doppio"
 
 #: sunrpc/rpc_scan.c:382
 msgid "empty char string"
-msgstr "pusty napis"
+msgstr "stringa di caratteri vuota"
 
 #: locale/programs/ld-collate.c:1710
 msgid "empty weight name: line ignored"
-msgstr "pusta nazwa wagi: linia zignorowana"
+msgstr "nome del peso assente: riga ignorata"
 
 #: sunrpc/svc_udp.c:372
 msgid "enablecache: cache already enabled"
-msgstr "enablecache: bufor jest ju¿ aktywny"
+msgstr "enablecache: cache già abilitata"
 
 #: sunrpc/svc_udp.c:378
 msgid "enablecache: could not allocate cache"
-msgstr "enablecache: niemo¿liwa alokacja bufora"
+msgstr "enablecache: impossibile allocare la cache"
 
 #: sunrpc/svc_udp.c:386
 msgid "enablecache: could not allocate cache data"
-msgstr "enablecache: niemo¿liwa alokacja danych bufora"
+msgstr "enablecache: impossibile allocare i dati della cache"
 
 #: sunrpc/svc_udp.c:393
 msgid "enablecache: could not allocate cache fifo"
-msgstr "enablecache: niemo¿liwa alokacja kolejki dla bufora"
+msgstr "enablecache: impossibile allocare il fifo della cache"
 
 #: iconv/iconv_prog.c:56
 msgid "encoding for output"
-msgstr "kodowanie wyników"
+msgstr "codifica per l'output"
 
 #: iconv/iconv_prog.c:55
 msgid "encoding of original text"
-msgstr "kodowanie oryginalnego tekstu"
+msgstr "codifica del testo originale"
 
-# ellipsis = wyrzutnia jezykowa - sprawdzilem. nawet pamietam ze cos takiego
-# istnieje ze szkoly, ale za cholere nie pamietam co to jest ;) -PK
 #: locale/programs/ld-collate.c:1429
 msgid "end point of ellipsis range is bigger then start"
-msgstr "koniec zakresu wyrzutni wiêkszy niz pocz±tek"
+msgstr "punto terminale dell'intervallo dei puntini maggiore dell'inizio"
 
 #: iconv/iconv_prog.c:193
 #, c-format
 msgid "error while closing input `%s'"
-msgstr "wyst±pi³ b³±d podczas zamykania wej¶cia `%s'"
+msgstr "errore chiudendo l'input `%s'"
 
 #: iconv/iconv_prog.c:239
 msgid "error while closing output file"
-msgstr "wyst±pi³ b³±d podczas zamykania pliku wyj¶ciowego"
+msgstr "errore chiudendo il file di output"
 
 #: elf/sprof.c:710
 msgid "error while closing the profiling data file"
-msgstr "wyst±pi³ b³±d podczas zamykania pliku z danymi profiluj±cymi"
+msgstr "errore chiudendo il file con i dati di profilazione"
 
 #: locale/programs/ld-collate.c:1158
 msgid "error while inserting collation element into hash table"
-msgstr "b³±d podczas wstawiania elementu sortowanego do tablicy mieszaj±cej"
+msgstr "errore di inserimento dell'elemento di collazione nellatabella hash"
 
 #: locale/programs/ld-collate.c:1170
 msgid "error while inserting to hash table"
-msgstr "b³±d podczas wstawiania do tablicy mieszaj±cej"
+msgstr "errore di inserimento nella tabella hash"
 
 #: iconv/iconv_prog.c:389 iconv/iconv_prog.c:420
 msgid "error while reading the input"
-msgstr "wyst±pi³ b³±d podczas czytania danych wej¶ciowych"
+msgstr "errore leggendo l'output"
 
 #: locale/programs/locfile.c:595
 msgid "expect string argument for `copy'"
-msgstr "spodziewanym argumentem dla `copy' jest ³añcuch"
+msgstr "manca un argomento stringa per `copy'"
 
 #: timezone/zic.c:868
 msgid "expected continuation line not found"
-msgstr "brak spodziewanej linii kontynuacji"
+msgstr "manca la riga di continuazione"
 
 #: elf/sprof.c:408
 #, c-format
 msgid "failed to load shared object `%s'"
-msgstr "Nie powiod³o siê za³adowanie dzielonego obiektu `%s'"
+msgstr "impossibile caricare l'oggetto condiviso `%s'"
 
 #: elf/sprof.c:604
 msgid "failed to load symbol data"
-msgstr "Nie uda³o siê za³adowaæ danych o symbolach"
+msgstr "impossibile caricare i dati dei simboli"
 
 #: elf/sprof.c:702
 msgid "failed to mmap the profiling data file"
-msgstr "Nie uda³ siê mmap danych profiluj±cych"
+msgstr "impossibile fare mmap del file con i dati di profilazione"
 
 #: iconv/iconv_prog.c:147
 msgid "failed to start conversion processing"
-msgstr "Nie uda³o siê rozpocz±æ konwersji"
+msgstr "impossibile iniziare il processo di conversione"
 
 #: locale/programs/locfile.c:1154
 #, c-format
 msgid "failure while writing data for category `%s'"
-msgstr "niepowodzenie przy zapisie danych kategorii `%s'"
+msgstr "errore di scrittura dei dati per la categoria `%s'"
 
 #: nis/nis_call.c:155
 msgid "fcntl: F_SETFD"
@@ -3294,279 +3291,291 @@ msgstr "fcntl: F_SETFD"
 #: locale/programs/ld-monetary.c:163 locale/programs/ld-numeric.c:98
 #, c-format
 msgid "field `%s' in category `%s' not defined"
-msgstr "pole `%s' w kategorii `%s' nie jest zdefiniowane"
+msgstr "il campo `%s' nella categoria `%s' non è definito"
 
 #: locale/programs/ld-messages.c:86 locale/programs/ld-messages.c:110
 #, c-format
 msgid "field `%s' in category `%s' undefined"
-msgstr "pole `%s' w kategorii `%s' nie jest zdefiniowane"
+msgstr "il campo `%s' nella categoria `%s' non è definito"
 
 #: sunrpc/rpc_main.c:1148
 #, c-format
 msgid "file '%s' already exists and may be overwritten\n"
-msgstr "plik '%s' ju¿ istnieje i mo¿e zostaæ nadpisany\n"
+msgstr "il file '%s' esiste già e potrebbe essere sovrascritto\n"
 
 #: locale/programs/locfile.c:677
 msgid "from-value of `collating-element' must be a string"
-msgstr "argument from-value definicji `collating-element' musi byæ ³añcuchem"
+msgstr "il valore di partenza di `collating-element' dev'essere una stringa"
 
 #: inet/rcmd.c:316
 msgid "fstat failed"
-msgstr "fstat nie powiód³ siê"
+msgstr "fstat fallito"
 
 #: locale/programs/linereader.c:333
 msgid "garbage at end of character code specification"
-msgstr "¶mieci na koñcu specyfikacji kodu znaku"
+msgstr "spazzatura alla fine della specifica del codice di carattere"
 
 #: locale/programs/linereader.c:219
 msgid "garbage at end of number"
-msgstr "¶mieci na koñcu liczby"
+msgstr "spazzatura alla fine del numero"
 
 #: locale/programs/ld-time.c:195
 #, c-format
 msgid "garbage at end of offset value in string %d in `era' field in category `%s'"
-msgstr "¶mieci na koñcu warto¶ci offset w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"spazzatura alla fine del valore di scostamento nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: locale/programs/ld-time.c:252
 #, c-format
 msgid "garbage at end of starting date in string %d in `era' field in category `%s'"
-msgstr "¶mieci na koñcu pierwszej daty w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"spazzatura alla fine della data di inizio nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: locale/programs/ld-time.c:328
 #, c-format
 msgid "garbage at end of stopping date in string %d in `era' field in category `%s'"
-msgstr "¶mieci na koñcu drugiej daty w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"spazzatura alla fine della data terminale nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: elf/sprof.c:81
 msgid "generate call graph"
-msgstr "generuje wykres odwo³añ"
+msgstr "genera il grafico delle chiamate"
 
 #: elf/sprof.c:80
 msgid "generate flat profile with counts and ticks"
-msgstr "generuje prosty profil z licznikami i czasami"
+msgstr "genera un profilo piatto con totali e tick"
 
 #: sunrpc/get_myaddr.c:77
 msgid "get_myaddress: ioctl (get interface configuration)"
-msgstr "get_myaddress: ioctl (informacja o konfiguracji interfejsu)"
+msgstr "get_myaddress: ioctl (leggi la configurazione dell'interfaccia)"
 
 #: nss/getent.c:53
 msgid "getent - get entries from administrative database."
-msgstr "getent - wy¶wietla wpisy z bazy administracyjnej."
+msgstr "getent - legge voci dal database amministrativo."
 
 #: nscd/connections.c:200
 #, c-format
 msgid "handle_request: request received (Version = %d)"
-msgstr "handle_request: odebrano ¿±danie (Wersja = %d)"
+msgstr "handle_request: ricevuta una richiesta (Versione = %d)"
 
 #: timezone/zic.c:613
 msgid "hard link failed, symbolic link used"
-msgstr "stworzenie dowi±zania nie powiod³o siê, u¿yto symlinka"
+msgstr "hard link fallito, usato un link simbolico"
 
 #: inet/rcmd.c:322
 msgid "hard linked somewhere"
-msgstr "gdzie¶ dowi±zany"
+msgstr "ha un hard link da qualche parte"
 
 #: timezone/zic.c:1162
 msgid "illegal CORRECTION field on Leap line"
-msgstr "b³êdne pole CORRECTION w linii Leap"
+msgstr "campo CORRECTION illecito in una riga Leap"
 
 #: timezone/zic.c:1166
 msgid "illegal Rolling/Stationary field on Leap line"
-msgstr "b³êdne ple Rolling/Stationary w linii Leap"
+msgstr "campo Rolling/Stationary illecito in una riga Leap"
 
 #: locale/programs/ld-collate.c:1782
 msgid "illegal character constant in string"
-msgstr "b³êdna sta³a znakowa w ³añcuchu"
+msgstr "costante carattere illecita nella stringa"
 
 #: sunrpc/rpc_scan.c:311
 msgid "illegal character in file: "
-msgstr "b³êdn znak w pliku: "
+msgstr "carattere illecito nel file: "
 
 #: locale/programs/ld-collate.c:1125
 msgid "illegal collation element"
-msgstr "b³êdny element sortowania"
+msgstr "elemento di collazione illecito"
 
 #: locale/programs/charmap.c:281
 msgid "illegal definition"
-msgstr "niepoprawna definicja"
+msgstr "definizione illecita"
 
 #: locale/programs/charmap.c:434
 msgid "illegal encoding given"
-msgstr "niepoprawne kodowanie"
+msgstr "codifica ottenuta illecita"
 
 #: locale/programs/linereader.c:551
 msgid "illegal escape sequence at end of string"
-msgstr "niepoprawna sekwencja escape na koñcu ³añcucha"
+msgstr "sequenza di escape illecita a fine stringa"
 
 #: iconv/iconv_prog.c:342
 #, c-format
 msgid "illegal input sequence at position %ld"
-msgstr "b³êdna sekwencja wej¶ciowa na pozycji %ld"
+msgstr "sequenza di escape illecita alla posizione %ld"
 
 #: locale/programs/charset.c:78
 msgid "illegal names for character range"
-msgstr "niepoprawne nazwy dla zakresu znaków"
+msgstr "nomi illeciti per l'intervallo di caratteri"
 
 #: sunrpc/rpc_main.c:462
 #, c-format
 msgid "illegal nettype :'%s'\n"
-msgstr "b³êdny typ sieci :'%s'\n"
+msgstr "nettype illecito:'%s'\n"
 
 #: locale/programs/ld-time.c:187
 #, c-format
 msgid "illegal number for offset in string %d in `era' field in category `%s'"
-msgstr "nieprawid³owa warto¶æ offset w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"numero illecito per lo scostamento nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: catgets/gencat.c:361 catgets/gencat.c:438
 msgid "illegal set number"
-msgstr "b³êdny numer zbioru"
+msgstr "numero dell'insieme illecito"
 
 #: locale/programs/ld-time.c:243
 #, c-format
 msgid "illegal starting date in string %d in `era' field in category `%s'"
-msgstr "nieprawid³owa pierwsza data w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"data iniziale illecita nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: locale/programs/ld-time.c:319
 #, c-format
 msgid "illegal stopping date in string %d in `era' field in category `%s'"
-msgstr "nieprawid³owa druga data w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"data finale illecita nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: locale/programs/ld-ctype.c:831
 #, c-format
 msgid "implementation limit: no more than %d character classes allowed"
-msgstr "ograniczenie implementacji: dozwolone maksymalnie %d klas znaków"
+msgstr "limite di implementazione: permesse al piu` %d classi di caratteri"
 
 #: locale/programs/ld-ctype.c:863
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
-msgstr "ograniczenie implementacji: dozwolone maksymalnie %d map znaków"
+msgstr "limite di implementazione: permesse al piu` %d mappe di caratteri"
 
 #: iconv/iconv_prog.c:346
 msgid "incomplete character or shift sequence at end of buffer"
-msgstr "na koñcu bufora wyst±pi³ niekompletny znak lub sekwencja steruj±ca"
+msgstr "carattere o sequenza di shift incompleti alla fine del buffer"
 
 #: db2/makedb.c:148
 msgid "incorrectly formatted file"
-msgstr "nieprawid³owy format pliku"
+msgstr "file formattato non correttamente"
 
 #: timezone/zic.c:825
 msgid "input line of unknown type"
-msgstr "nieznany typ linii wej¶ciowej"
+msgstr "linea di input di tipo sconosciuto"
 
 #: iconv/iconv_prog.c:350
 msgid "internal error (illegal descriptor)"
-msgstr "b³±d wewnêtrzny (nieprawid³owy deskryptor)"
+msgstr "errore interno (descrittore illecito)"
 
 #: timezone/zic.c:1788
 msgid "internal error - addtype called with bad isdst"
-msgstr "b³±d wewnêtrzny - addtype wywo³ane ze b³êdnym isdst"
+msgstr "errore interno - addtype chiamata con isdst errato"
 
 #: timezone/zic.c:1796
 msgid "internal error - addtype called with bad ttisgmt"
-msgstr "b³±d wewnêtrzny - addtype wywo³ane ze b³êdnym ttisgmt"
+msgstr "errore interno - addtype chiamata con ttisgmt errato"
 
 #: timezone/zic.c:1792
 msgid "internal error - addtype called with bad ttisstd"
-msgstr "b³±d wewnêtrzny - addtype wywo³ane ze b³êdnym ttisstd"
+msgstr "errore interno - addtype chiamata con ttisstd errato"
 
 #: locale/programs/ld-ctype.c:307
 #, c-format
 msgid "internal error in %s, line %u"
-msgstr "b³±d wewnêtrzny w %s, linia %u"
+msgstr "errore interno in %s, riga %u"
 
 #: timezone/zic.c:1034
 msgid "invalid UTC offset"
-msgstr "nieprawid³owe przesuniêcie UTC"
+msgstr "scostamento UTC non valido"
 
 #: timezone/zic.c:1037
 msgid "invalid abbreviation format"
-msgstr "nieprawid³owy format skrótu"
+msgstr "formato di abbreviazione non ammesso"
 
 #: timezone/zic.c:1127 timezone/zic.c:1339 timezone/zic.c:1353
 msgid "invalid day of month"
-msgstr "nieprawid³owy dzieñ miesi±ca"
+msgstr "giorno del mese errato"
 
 #: timezone/zic.c:1291
 msgid "invalid ending year"
-msgstr "nieprawid³owy rok koñcowy"
+msgstr "anno finale errato"
 
 #: timezone/zic.c:1099
 msgid "invalid leaping year"
-msgstr "nieprawid³owy rok przestêpny"
+msgstr "anno bisestile errato"
 
 #: elf/dl-open.c:159
 msgid "invalid mode for dlopen()"
-msgstr "b³êdny typ dla dlopen()"
+msgstr "modo di dlopen() non valido"
 
 #: timezone/zic.c:1114 timezone/zic.c:1217
 msgid "invalid month name"
-msgstr "nieprawid³owy miesi±c"
+msgstr "nome del meso errato"
 
 #: timezone/zic.c:933
 msgid "invalid saved time"
-msgstr "b³êdny czas oszczêdno¶ci"
+msgstr "orario salvato errato"
 
 #: timezone/zic.c:1266
 msgid "invalid starting year"
-msgstr "nieprawid³owy rok pocz±tkowy"
+msgstr "anno iniziale errato"
 
 #: timezone/zic.c:1143 timezone/zic.c:1246
 msgid "invalid time of day"
-msgstr "nieprawid³owa pora dnia"
+msgstr "ora del giorno errata"
 
 #: timezone/zic.c:1344
 msgid "invalid weekday name"
-msgstr "nieprawid³owy dzieñ tygodnia"
+msgstr "giorno della settimana errato"
 
 #: nscd/connections.c:375
 #, c-format
 msgid "key length in request too long: %Zd"
-msgstr "d³ugo¶æ klucza w ¿±daniu jest za du¿a: %Zd"
+msgstr "lunghezza della chiave troppo lunga nella richiesta: %Zd"
 
 #: locale/programs/ld-collate.c:1422
 msgid "line after ellipsis must contain character definition"
-msgstr "linia za wyrzutni± musi zawieraæ definicjê znaku"
+msgstr "la riga dopo i puntini deve contenere una definizione di carattere"
 
 #: locale/programs/ld-collate.c:1401
 msgid "line before ellipsis does not contain definition for character constant"
-msgstr "linia przed wyrzutni± nie mo¿e zawieraæ definicji sta³ej znakowej"
+msgstr "la riga prima dei puntini deve contenere una definizione di carattere"
 
 #: timezone/zic.c:805
 msgid "line too long"
-msgstr "za d³uga linia"
+msgstr "riga troppo lunga"
 
 #: iconv/iconv_prog.c:58
 msgid "list all known coded character sets"
-msgstr "wy¶wietla wszystkie znane zestawy znaków"
+msgstr "elenca tutti i set di caratteri codificati noti"
 
 #: locale/programs/localedef.c:273
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
-msgstr "brak pliku lokalizacji `%s' u¿ytego w wyra¿eniu `copy'"
+msgstr "file di localizzazione `%s', usato nell'istruzione `copy', non trovato"
 
 #: inet/rcmd.c:307
 msgid "lstat failed"
-msgstr "nieudany lstat"
+msgstr "lstat fallito"
 
 #: catgets/gencat.c:619
 msgid "malformed line ignored"
-msgstr "b³êdna linia zosta³a pominiêta"
+msgstr "riga malformata ignorata"
 
 #: elf/sprof.c:554
 msgid "mapping of section header string table failed"
-msgstr "nie powiod³o siê odwzorowanie tablicy nag³ówków sekcji"
+msgstr ""
 
 #: elf/sprof.c:544
 msgid "mapping of section headers failed"
-msgstr "nie powiod³o siê odwzorowanie nag³ówków sekcji"
+msgstr ""
 
 #: malloc/mcheck.c:202
 msgid "memory clobbered before allocated block\n"
-msgstr "pamiêæ zosta³a uszkodzona przed przydzielonym blokiem\n"
+msgstr "memoria sovrascritta prima del blocco allocato\n"
 
 #: malloc/mcheck.c:205
 msgid "memory clobbered past end of allocated block\n"
-msgstr "pamiêæ zosta³a uszkodzona za przydzielonym blokiem\n"
+msgstr "memoria sovrascritta dopo la fine del blocco allocato\n"
 
 #: locale/programs/ld-collate.c:170 locale/programs/ld-collate.c:176
 #: locale/programs/ld-collate.c:180 locale/programs/ld-collate.c:1449
@@ -3575,33 +3584,37 @@ msgstr "pamiêæ zosta³a uszkodzona za przydzielonym blokiem\n"
 #: login/programs/database.c:79 login/programs/database.c:95
 #: posix/getconf.c:682
 msgid "memory exhausted"
-msgstr "pamiêæ zosta³a wyczerpana"
+msgstr "memoria esaurita"
 
 #: malloc/obstack.c:471
 msgid "memory exhausted\n"
-msgstr "pamiêæ zosta³a wyczerpana\n"
+msgstr "memoria esaurita\n"
 
 #: malloc/mcheck.c:199
 msgid "memory is consistent, library is buggy\n"
-msgstr "pamiêæ jest zwarta, biblioteka zawiera b³êdy\n"
+msgstr "la memoria è coerente, la libreria è bacata\n"
 
 #: locale/programs/ld-time.c:370
 #, c-format
 msgid "missing era format in string %d in `era' field in category `%s'"
-msgstr "brak formatu ery w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"manca il formato dell'era nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: locale/programs/ld-time.c:358
 #, c-format
 msgid "missing era name in string %d in `era' field in category `%s'"
-msgstr "brak nazwy ery w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"manca il nome dell'era nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: timezone/zic.c:928
 msgid "nameless rule"
-msgstr "bezimienna regu³a"
+msgstr "regola anonima"
 
 #: iconv/iconv_prog.c:133
 msgid "neither original nor target encoding specified"
-msgstr "nie podano kodowania ¼ród³owego ani docelowego"
+msgstr "non sono state specificate nè la codifica originale nè quella di destinazione"
 
 #: nis/nss_nisplus/nisplus-publickey.c:262
 #: nis/nss_nisplus/nisplus-publickey.c:268
@@ -3609,93 +3622,95 @@ msgstr "nie podano kodowania ¼ród³owego ani docelowego"
 #: nis/nss_nisplus/nisplus-publickey.c:336
 #, c-format
 msgid "netname2user: (nis+ lookup): %s\n"
-msgstr "netname2user: (odwzorowanie nis+): %s\n"
+msgstr "netname2user: (nis+ lookup): %s\n"
 
 #: nis/nss_nisplus/nisplus-publickey.c:281
 #, c-format
 msgid "netname2user: DES entry for %s in directory %s not unique"
-msgstr "netname2user: wpis DES dla %s w katalogu %s nie jest unikalny"
+msgstr "netname2user: la voce DES di %s nella directory %s non è unica"
 
 #: nis/nss_nisplus/nisplus-publickey.c:349
 #, c-format
 msgid "netname2user: LOCAL entry for %s in directory %s not unique"
-msgstr "netname2user: wpis LOKALNY dla %s w katalogu %s nie jest unikalny"
+msgstr "netname2user: la voce LOCAL di %s nella directory %s non è unica"
 
 #: nis/nss_nisplus/nisplus-publickey.c:194
 #, c-format
 msgid "netname2user: missing group id list in '%s'."
-msgstr "netname2user: brak listy identyfikatorów grup w '%s'."
+msgstr "netname2user: manca la lista dei group id in '%s'."
 
-# XXX principal = nadzorca, troche lame -PK
 #: nis/nss_nisplus/nisplus-publickey.c:299
 #, c-format
 msgid "netname2user: principal name '%s' too long"
-msgstr "name2user: nazwa nadzorcy '%s' jest zbyt d³uga"
+msgstr "netname2user: nome principale '%s' troppo lungo"
 
 #: nis/nss_nisplus/nisplus-publickey.c:356
 msgid "netname2user: should not have uid 0"
-msgstr "netname2user: UID 0 nie powinien wyst±piæ"
+msgstr "netname2user: non deve avere uid 0"
 
 #: sunrpc/svc_simple.c:158
 #, c-format
 msgid "never registered prog %d\n"
-msgstr "program %d nie by³ nigdy zarejestrowany\n"
+msgstr "il programma %d non è mai stato registrato\n"
 
 #: locale/programs/repertoire.c:238
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
-msgstr "nie podano ¿adnych warto¶ci <Uxxxx> lub <Uxxxxxxxx>"
+msgstr "non è stato dato un valore tipo <Uxxxx> o <Uxxxxxxxx>"
 
 #: locale/programs/ld-messages.c:101 locale/programs/ld-messages.c:125
 #, c-format
 msgid "no correct regular expression for field `%s' in category `%s': %s"
-msgstr "brak poprawnego wyra¿enia regularnego dla pola `%s' w kategorii `%s': %s"
+msgstr ""
+"nessuna espressione regolare corretta per il campo `%s'\n"
+"della categoria `%s': %s"
 
 #: timezone/zic.c:2115
 msgid "no day in month matches rule"
-msgstr "¿aden z dni miesi±ca nie pasuje do regu³y"
+msgstr "nessun giorno del mese corrisponde alla regola"
 
 #: locale/programs/ld-collate.c:267
 msgid "no definition of `UNDEFINED'"
-msgstr "brak definicji `UNDEFINED'"
+msgstr "nessuna definizione di `UNDEFINED'"
 
 #: elf/sprof.c:276
 #, c-format
 msgid "no filename for profiling data given and shared object `%s' has no soname"
-msgstr "nie podano nazwy pliku dla danych profiluj±cych a obiekt dzielony `%s' nie ma soname"
+msgstr ""
+"non è stato indicato il nome del file per i dati di profilazione e l'oggetto\n"
+"condiviso `%s' non ha un soname"
 
 #: locale/programs/locfile.c:609
 msgid "no other keyword shall be specified when `copy' is used"
-msgstr "¿adne s³owo kluczowe nie powinno wystêpowaæ razem z `copy'"
+msgstr "nessun'altra parola chiave va specificata quando si usa `copy'"
 
 #: locale/programs/localedef.c:334
 msgid "no output file produced because warning were issued"
-msgstr "brak pliku wyj¶ciowego - wyst±pi³y ostrze¿enia"
+msgstr "nessun file di uscita prodotto a causa degli avvertimenti"
 
-# XXX repertoire -PK
 #: locale/programs/locfile.c:283 locale/programs/locfile.c:301
 #: locale/programs/locfile.c:319 locale/programs/locfile.c:337
 #: locale/programs/locfile.c:355 locale/programs/locfile.c:373
 msgid "no repertoire map specified: cannot proceed"
-msgstr "nie podano ¿adnej mapy repertuarów: kontynuacja niemo¿liwa"
+msgstr "non è stata indicata la repertoire map: impossibile procedere"
 
 #: locale/programs/charmap.c:400 locale/programs/charmap.c:550
 #: locale/programs/charmap.c:629 locale/programs/repertoire.c:199
 msgid "no symbolic name given"
-msgstr "brak nazwy symbolicznej"
+msgstr "nessun nome simbolico fornito"
 
 #: locale/programs/charmap.c:465 locale/programs/charmap.c:596
 #: locale/programs/charmap.c:662 locale/programs/repertoire.c:261
 msgid "no symbolic name given for end of range"
-msgstr "brak nazwy symbolicznej dla koñca zakresu"
+msgstr "nessun nome simbolico fornito per la fine dell'intervallo"
 
 #: locale/programs/ld-collate.c:249
 #, c-format
 msgid "no weight defined for symbol `%s'"
-msgstr "brak definicji wagi dla symbolu `%s'"
+msgstr "nessun peso definito per il simbolo `%s'"
 
 #: inet/rcmd.c:309
 msgid "not regular file"
-msgstr "nie jest zwyk³ym plikiem"
+msgstr "non è un file regolare"
 
 #: nscd/nscd_stat.c:130
 #, c-format
@@ -3704,266 +3719,283 @@ msgid ""
 "\n"
 "%15d  server debug level\n"
 msgstr ""
-"konfiguracja nscd:\n"
+"configurazione di nscd:\n"
 "\n"
-"%15d  poziom komunikatów diagnostycznych\n"
+"%15d  livello di debug del server\n"
 
 #: nscd/nscd_stat.c:104
 msgid "nscd not running!\n"
-msgstr "nscd nie jest uruchomiony!\n"
+msgstr "nscd non è in esecuzione!\n"
 
 #: locale/programs/charmap.c:514
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
-msgstr "po definicji CHARMAP mog± wystêpowaæ tylko definicje WIDTH"
+msgstr "una definizione CHARMAP può essere seguita solo da definizioni WIDTH"
 
 #: iconv/iconv_prog.c:135
 msgid "original encoding not specified using `-f'"
-msgstr "nie podano kodowania ¼ród³owego w opcji `-f'"
+msgstr "non è stata specificata con `-f' la codifica originale"
 
 #: iconv/iconv_prog.c:60
 msgid "output file"
-msgstr "plik wynikowy"
+msgstr "file di output"
 
 #: sunrpc/pm_getmaps.c:73
 msgid "pmap_getmaps rpc problem"
-msgstr "problem rpc pmap_getmaps"
+msgstr "problema rpc di pmap_getmaps"
 
 #: inet/rcmd.c:179
 msgid "poll: protocol failure in circuit setup\n"
-msgstr "poll: b³±d protoko³u podczas zestawiania pêtli\n"
+msgstr "poll: problema di protocollo impostando il circuito\n"
 
 #: sunrpc/rpc_scan.c:523 sunrpc/rpc_scan.c:533
 msgid "preprocessor error"
-msgstr "b³±d preprocesora"
+msgstr "errore del preprocessore"
 
-# XXX poprawic -PK
 #: elf/sprof.c:78
 msgid "print list of count paths and their number of use"
-msgstr "wy¶wietla listê ¶cie¿ek zliczania i ich numery"
+msgstr ""
 
 #: iconv/iconv_prog.c:61
 msgid "print progress information"
-msgstr "wy¶wietla informacje o postêpie konwersji"
+msgstr "stampa informazioni sui progressi"
 
 #: db2/makedb.c:345
 #, c-format
 msgid "problems while reading `%s'"
-msgstr "wyst±pi³y problemy podczas czytania `%s'"
+msgstr "problemi leggendo `%s'"
 
 #: elf/sprof.c:691
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
-msgstr "dane profiluj±ce w pliku `%s' nie pasuj± do obiektu dzielonego `%s'"
+msgstr ""
+"Il file con i dati di profilazione `%s' non corrisponde all'oggetto\n"
+"condiviso `%s'"
 
 #: sunrpc/rpcinfo.c:237 sunrpc/rpcinfo.c:383
 #, c-format
 msgid "program %lu is not available\n"
-msgstr "program %lu jest niedostêpny\n"
+msgstr "il programma %lu non è disponibile\n"
 
 #: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333
 #: sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476
 #: sunrpc/rpcinfo.c:510
 #, c-format
 msgid "program %lu version %lu is not available\n"
-msgstr "program %lu wersja %lu jest niedostêpny\n"
+msgstr "la versione %2$lu del programma %1$lu non è disponibile\n"
 
 #: sunrpc/rpcinfo.c:515
 #, c-format
 msgid "program %lu version %lu ready and waiting\n"
-msgstr "program %lu wersja %lu gotowy i oczekuje\n"
+msgstr "la versione %2$lu del programma %1$lu è pronta e in attesa\n"
 
 #: inet/rcmd.c:176
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
-msgstr "rcmd: poll (podczas ustawiania stderr): %m\n"
+msgstr "rcmd: poll (impostazione di stderr): %m\n"
 
 #: inet/rcmd.c:110
 msgid "rcmd: socket: All ports in use\n"
-msgstr "rcmd: socket: Wszystkie porty zajête\n"
+msgstr "rcmd: socket: tutte le porte sono in uso\n"
 
 #: inet/rcmd.c:166
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
-msgstr "rcmd: write (podczas ustawiania stderr): %m\n"
+msgstr "rcmd: write (impostazione di stderr): %m\n"
 
 #: sunrpc/svc_simple.c:98
 msgid "registerrpc: out of memory\n"
-msgstr "registerrpc: brak pamiêci\n"
+msgstr "registerrpc: memoria esaurita\n"
 
 #: timezone/zic.c:1849
 msgid "repeated leap second moment"
-msgstr "powtórzone sekundy przestêpne"
+msgstr "momento del secondo intercalare ripetuto"
 
 #: locale/programs/repertoire.c:95
 #, c-format
 msgid "repertoire map file `%s' not found"
-msgstr "nie znaleziono pliku mapy repertuarów `%s'"
+msgstr "repertoire map file `%s' non trovato"
 
 #: sunrpc/rpc_main.c:1117
 msgid "rpcgen: arglist coding error\n"
-msgstr "rpcgen: b³êdne kodowanie arglist\n"
+msgstr "rpcgen: errore di codifica della arglist\n"
 
 #: sunrpc/rpc_main.c:1105
 msgid "rpcgen: too many defines\n"
-msgstr "rpcgen: za du¿o definicji\n"
+msgstr "rpcgen: troppi define\n"
 
 #: sunrpc/rpcinfo.c:732
 #, c-format
 msgid "rpcinfo: %s is unknown host\n"
-msgstr "rpcinfo: nieznany host %s\n"
+msgstr "rpcinfo: %s è l'host sconosciuto\n"
 
 #: sunrpc/rpcinfo.c:695
 #, c-format
 msgid "rpcinfo: %s is unknown service\n"
-msgstr "rpcinfo: nieznana us³uga %s\n"
+msgstr "rpcinfo: %s è il servizio sconosciuto\n"
 
 #: sunrpc/rpcinfo.c:665
 #, c-format
 msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-msgstr "rpcinfo: Nie mogê usun±æ rejestracji prog %s wer. %s\n"
+msgstr ""
+"rpcinfo: impossibile cancellare la registrazione per la versione %2$s\n"
+"del programma %1$s\n"
 
 #: sunrpc/rpcinfo.c:637
 #, c-format
 msgid "rpcinfo: broadcast failed: %s\n"
-msgstr "rpcinfo: rozg³aszanie nieudane: %s\n"
+msgstr "rpcinfo: broadcast fallito: %s\n"
 
 #: sunrpc/rpcinfo.c:556 sunrpc/rpcinfo.c:563
 msgid "rpcinfo: can't contact portmapper"
-msgstr "rpcinfo: kontakt z portmapperem niemo¿liwy"
+msgstr "rpcinfo: impossibile contattare il portmapper"
 
 #: timezone/zic.c:718 timezone/zic.c:720
 msgid "same rule name in multiple files"
-msgstr "ta sama nazwa nazwa regu³y w ró¿nych plikach"
+msgstr "stesso nome di regola in più file"
 
 #: nscd/connections.c:387
 #, c-format
 msgid "short read while reading request key: %s"
-msgstr "brak danych podczas czytania klucza ¿±dania: %s"
+msgstr "lettura troppo corta leggendo la chiave di richiesta: %s"
 
 #: nscd/connections.c:364
 #, c-format
 msgid "short read while reading request: %s"
-msgstr "brak danych podczas czytania ¿±dania: `%s'"
+msgstr "lettura troppo corta leggendo la richiesta: %s"
 
 #: nscd/grpcache.c:191 nscd/hstcache.c:278 nscd/pwdcache.c:188
 #, c-format
 msgid "short write in %s: %s"
-msgstr "b³±d zapisu w %s: %s"
+msgstr "scrittura troppo corta in %s: %s"
 
 #: inet/rcmd.c:197
 msgid "socket: protocol failure in circuit setup\n"
-msgstr "socket: protokó³ zawiód³ podczas konfiguracji po³±czenia\n"
+msgstr "socket: problema di protocollo impostando il circuito\n"
 
 #: locale/programs/locfile.c:730
 msgid "sorting order `forward' and `backward' are mutually exclusive"
-msgstr "porz±dki sortowania `forward' i `backward' wykluczaj± siê wzajemnie"
+msgstr "gli ordinamenti `forward' e `backward' sono mutuamente esclusivi"
 
 #: locale/programs/ld-collate.c:1582 locale/programs/ld-collate.c:1628
 msgid "specification of sorting weight for collation symbol does not make sense"
-msgstr "specyfikacja wagi dla elementu sortowania nie ma sensu"
+msgstr "non ha senso specificare pesi di ordinamento per il simbolo di collazione"
 
 #: timezone/zic.c:789
 msgid "standard input"
-msgstr "standardowe wej¶cie"
+msgstr "standard input"
 
 #: timezone/zdump.c:268
 msgid "standard output"
-msgstr "standardowe wyj¶cie"
+msgstr "standard output"
 
 #: locale/programs/ld-time.c:272
 #, c-format
 msgid "starting date is illegal in string %d in `era' field in category `%s'"
-msgstr "nieprawid³owa pierwsza data w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"data iniziale illecita nella stringa %d,\n"
+"nel campo `era' della categoria `%s'"
 
 #: timezone/zic.c:1300
 msgid "starting year greater than ending year"
-msgstr "pierwszy rok jest pó¼niejszy ni¿ drugi"
+msgstr "anno iniziale maggiore dell'anno finale"
 
 #: timezone/zic.c:1272 timezone/zic.c:1297
 msgid "starting year too high to be represented"
-msgstr "pierwszy rok jest zbyt du¿y"
+msgstr "anno iniziale troppo grande per essere rappresentato"
 
 #: timezone/zic.c:1270 timezone/zic.c:1295
 msgid "starting year too low to be represented"
-msgstr "pierwszy rok jest zbyt ma³y"
+msgstr "anno iniziale troppo piccolo per essere rappresentato"
 
 #: locale/programs/ld-time.c:348
 #, c-format
 msgid "stopping date is illegal in string %d in `era' field in category `%s'"
-msgstr "nieprawid³owa druga data w ³añcuchu %d w polu `era' w kategorii `%s'"
+msgstr ""
+"la data di stop non è permessa nella stringa %d in campo `era' della\n"
+"categoria `%s'"
 
 #: sunrpc/svc_run.c:81
 msgid "svc_run: - select failed"
-msgstr "svc_run - b³±d select"
+msgstr "svc_run: - select fallita"
 
 #: sunrpc/svc_tcp.c:160
 msgid "svc_tcp.c - cannot getsockname or listen"
-msgstr "svc_tcp.c - wykonanie getsockname lub listen niemo¿liwe"
+msgstr "svc_tcp.c - impossibile fare getsockname o listen"
 
 #: sunrpc/svc_tcp.c:145
 msgid "svc_tcp.c - tcp socket creation problem"
-msgstr "svc_tcp.c - problemy przy tworzeniu gniazda tcp"
+msgstr "svc_tcp.c - problema di creazione del socket tcp"
 
 #: sunrpc/svc_tcp.c:209 sunrpc/svc_tcp.c:215
 msgid "svc_tcp: makefd_xprt: out of memory\n"
-msgstr "svc_tcp: makefd_xprt: brak pamiêci\n"
+msgstr "svc_tcp: makefd_xprt: memoria esaurita\n"
 
 #: sunrpc/svc_unix.c:135
 msgid "svc_unix.c - AF_UNIX socket creation problem"
-msgstr "svc_unix.c - problemy przy tworzeniu gniazda AF_UNIX"
+msgstr "svc_unix.c - problema di creazione del socket AF_UNIX"
 
 #: sunrpc/svc_unix.c:151
 msgid "svc_unix.c - cannot getsockname or listen"
-msgstr "svc_unix.c - wykonanie getsockname lub listen niemo¿liwe"
+msgstr "svc_unix.c - impossibile fare getsockname o listen"
 
 #: sunrpc/svc_unix.c:201 sunrpc/svc_unix.c:207
 msgid "svc_unix: makefd_xprt: out of memory\n"
-msgstr "svc_unix: makefd_xprt: brak pamiêci\n"
+msgstr "svc_unix: makefd_xprt: memoria esaurita\n"
 
 #: sunrpc/svc_tcp.c:168 sunrpc/svc_tcp.c:176
 msgid "svctcp_create: out of memory\n"
-msgstr "svctcp_create: brak pamiêci\n"
+msgstr "svctcp_create: memoria esaurita\n"
 
 #: sunrpc/svc_udp.c:135
 msgid "svcudp_create - cannot getsockname"
-msgstr "svcudp_create - wykonanie getsockname niemo¿liwe"
+msgstr "svcudp_create - impossibile fare getsockname"
 
 #: sunrpc/svc_udp.c:143 sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155
 msgid "svcudp_create: out of memory\n"
-msgstr "svcudp_create: brak pamiêci\n"
+msgstr "svcudp_create: memoria esaurita\n"
 
 #: sunrpc/svc_udp.c:121
 msgid "svcudp_create: socket creation problem"
-msgstr "svcudp_create: problemy przy tworzeniu gniazda"
+msgstr "svcudp_create: problema di creazione del socket"
 
 #: sunrpc/svc_unix.c:160 sunrpc/svc_unix.c:168
 msgid "svcunix_create: out of memory\n"
-msgstr "svcunix_create: brak pamiêci\n"
+msgstr "svcunix_create: memoria esaurita\n"
 
 #: locale/programs/ld-collate.c:1201
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates element definition"
-msgstr "symbol zarezerwowany dla wieloznakowego elementu sortowania `%.*s' powiela definicjê tego elementu"
+msgstr ""
+"il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
+"replica la definizione dell'elemento"
 
 #: locale/programs/ld-collate.c:1073
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates other element definition"
-msgstr "symbol zarezerwowany dla wieloznakowego elementu sortowania `%.*s' powiela definicjê innego elementu"
+msgstr ""
+"il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
+"replica la definizione di un altro elemento"
 
 #: locale/programs/ld-collate.c:1210
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates other symbol definition"
-msgstr "symbol zarezerwowany dla wieloznakowego elementu sortowania `%.*s' powiela definicjê innego symbolu"
+msgstr ""
+"il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
+"replica la definizione di un altro simbolo"
 
 #: locale/programs/ld-collate.c:1082
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates symbol definition"
-msgstr "symbol zarezerwowany dla wieloznakowego elementu sortowania `%.*s' powiela definicjê tego symbolu"
+msgstr ""
+"il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
+"replica la definizione del simbolo"
 
 #: locale/programs/ld-collate.c:1064 locale/programs/ld-collate.c:1192
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates symbolic name in charset"
-msgstr "symbol zarezerwowany dla wieloznakowego elementu sortowania `%.*s' powiela nazwê symboliczn± z zestawu znaków"
+msgstr ""
+"il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
+"replica il nome simbolico"
 
 #: locale/programs/charmap.c:399 locale/programs/charmap.c:433
 #: locale/programs/charmap.c:463 locale/programs/charmap.c:549
@@ -3971,578 +4003,348 @@ msgstr "symbol zarezerwowany dla wieloznakowego elementu sortowania `%.*s' powie
 #: locale/programs/charmap.c:660
 #, c-format
 msgid "syntax error in %s definition: %s"
-msgstr "b³±d sk³adniowy w definicji %s: %s"
+msgstr "errore di sintassi nella definizione di %s: %s"
 
 #: locale/programs/locfile.c:750
 msgid "syntax error in `order_start' directive"
-msgstr "b³±d sk³adniowy w dyrektywie `order_start'"
+msgstr "errore di sintassi nella direttiva `order_start'"
 
 #: locale/programs/locfile.c:492
 msgid "syntax error in character class definition"
-msgstr "b³±d sk³adniowy definicji klasy znaków"
+msgstr "errore di sintassi nella definizione della classe del carattere"
 
 #: locale/programs/locfile.c:550
 msgid "syntax error in character conversion definition"
-msgstr "b³±d sk³adniowy w definicji konwersji znaku"
+msgstr "errore di sintassi nella definizione della conversione del carattere"
 
 #: locale/programs/locfile.c:792
 msgid "syntax error in collating order definition"
-msgstr "b³±d sk³adniowy w definicji kolejno¶ci sortowania"
+msgstr "errore di sintassi nella definizione dell'ordine di collazione"
 
 #: locale/programs/locfile.c:642
 msgid "syntax error in collation definition"
-msgstr "b³±d sk³adniowy w definicji sortowania"
+msgstr "errore di sintassi nella definizione della collazione"
 
 #: locale/programs/locfile.c:465
 msgid "syntax error in definition of LC_CTYPE category"
-msgstr "b³±d sk³adniowy w definicji kategorii LC_CTYPE"
+msgstr "errore di sintassi nella categoria di LC_TYPE"
 
 #: locale/programs/locfile.c:408
 msgid "syntax error in definition of new character class"
-msgstr "b³±d sk³adniowy w definicji nowej klasy znaków"
+msgstr "errore di sintassi nella definizione di una nuova classe di caratteri"
 
 #: locale/programs/locfile.c:418
 msgid "syntax error in definition of new character map"
-msgstr "b³±d sk³adniowy w definicji nowej mapy znaków"
+msgstr "errore di sintassi nella definizione di una nuova mappa di caratteri"
 
 #: locale/programs/locfile.c:1003
 msgid "syntax error in message locale definition"
-msgstr "b³±d sk³adniowy w definicji lokalnych komunikatów"
+msgstr "errore di sintassi nella definizione dalla localizzazione del messaggio"
 
 #: locale/programs/locfile.c:914
 msgid "syntax error in monetary locale definition"
-msgstr "b³±d sk³adniowy w definicji lokalnej waluty"
+msgstr "errore di sintassi nella definizione dalla localizzazione monetaria"
 
 #: locale/programs/locfile.c:941
 msgid "syntax error in numeric locale definition"
-msgstr "b³±d sk³adniowy w lokalnej definicji numerycznej"
+msgstr "errore di sintassi nella definizione dalla localizzazione numerica"
 
 #: locale/programs/locfile.c:852
 msgid "syntax error in order specification"
-msgstr "b³±d sk³adniowy w specyfikacji kolejno¶ci"
+msgstr "errore di sintassi nella specifica di ordinamento"
 
 #: locale/programs/charmap.c:280 locale/programs/charmap.c:296
 #: locale/programs/repertoire.c:143
 #, c-format
 msgid "syntax error in prolog: %s"
-msgstr "b³±d sk³adniowy w prologu: %s"
+msgstr "errore di sintassi nel prologo: %s"
 
 #: locale/programs/repertoire.c:198 locale/programs/repertoire.c:237
 #: locale/programs/repertoire.c:260
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
-msgstr "b³±d sk³adniowy w definicji mapy repertuaru: %s"
+msgstr "errore di sintassi nella definizione della repertoire map: %s"
 
 #: locale/programs/locfile.c:979
 msgid "syntax error in time locale definition"
-msgstr "b³±d sk³adniowy w lokalnej definicji czasu"
+msgstr "errore di sintassi nella definizione della localizzazione del tempo"
 
 #: locale/programs/locfile.c:385
 msgid "syntax error: not inside a locale definition section"
-msgstr "b³±d sk³adniowy: nie wewn±trz sekcji definicji lokalnych"
+msgstr "errore di sintassi: fuori da una sezione di definizione di localizzazione"
 
 #: iconv/iconv_prog.c:137
 msgid "target encoding not specified using `-t'"
-msgstr "nie podano docelowego kodowania w `-t'"
+msgstr "non è stata specificata con `-t' la codifica di destinazione"
 
 #: catgets/gencat.c:390 catgets/gencat.c:526 catgets/gencat.c:553
 msgid "this is the first definition"
-msgstr "to pierwsza definicja"
+msgstr "questa è la prima definizione"
 
 #: timezone/zic.c:1132
 msgid "time before zero"
-msgstr "czas przed zerem"
+msgstr "tempo precedente a zero"
 
 #: timezone/zic.c:1140 timezone/zic.c:2015 timezone/zic.c:2034
 msgid "time overflow"
-msgstr "przepe³nienie czasu"
+msgstr "overflow del tempo"
 
 #: locale/programs/charmap.c:443
 msgid "too few bytes in character encoding"
-msgstr "za ma³o bajtów w kodzie znaku"
+msgstr "troppo pochi byte nella codifica di carattere"
 
 #: locale/programs/charmap.c:445
 msgid "too many bytes in character encoding"
-msgstr "za du¿o bajtów w kodzie znaku"
+msgstr "troppi byte nella codifica di carattere"
 
 #: locale/programs/locales.h:92
 msgid "too many character classes defined"
-msgstr "zdefiniowane zbyt wiele klas znaków"
+msgstr "definite troppe classi di carattere"
 
 #: timezone/zic.c:1843
 msgid "too many leap seconds"
-msgstr "za du¿o sekund przestêpnych"
+msgstr "troppi secondi intercalari"
 
 #: timezone/zic.c:1815
 msgid "too many local time types"
-msgstr "za du¿o lokalnych typów czasu"
+msgstr "troppi tipi di tempi locali"
 
 #: timezone/zic.c:1769
 msgid "too many transitions?!"
-msgstr "za duzo konwersji?!"
+msgstr "troppe transizioni?!"
 
 #: locale/programs/ld-collate.c:1637
 msgid "too many weights"
-msgstr "za du¿o wag"
+msgstr "troppi pesi"
 
 #: timezone/zic.c:2138
 msgid "too many, or too long, time zone abbreviations"
-msgstr "za d³ugie lub za du¿o skrótów stref czasowych"
+msgstr "troppe o troppo lunghe abbreviazioni di fuso orario"
 
 #: locale/programs/linereader.h:146
 msgid "trailing garbage at end of line"
-msgstr "¶miecie na koñcu linii"
+msgstr "spazzatura alla fine della riga"
 
 #: sunrpc/svc_simple.c:150
 #, c-format
 msgid "trouble replying to prog %d\n"
-msgstr "problem przy odpowiadaniu programowi %d\n"
+msgstr "problema rispondendo al programma %d\n"
 
 #: locale/programs/ld-collate.c:1393
 msgid "two lines in a row containing `...' are not allowed"
-msgstr "dwie kolejne linie zawieraj±ce `...' nie s± dozwolone"
+msgstr "non sono permesse due righe di seguito contenenti `...'"
 
 #: timezone/zic.c:1307
 msgid "typed single year"
-msgstr "podany pojedyñczy rok"
+msgstr "digitato un solo anno"
 
 #: iconv/iconv_prog.c:406
 msgid "unable to allocate buffer for input"
-msgstr "przydzielenie bufora dla danych wej¶ciowych by³o niemo¿liwe"
+msgstr "impossibile allocare il buffer per l'input"
 
 #: nis/nis_callback.c:187
 msgid "unable to free arguments"
-msgstr "zwolnienie argumentów nie powiod³o siê"
+msgstr "impossibile liberare gli argomenti"
 
 #: posix/getconf.c:654 posix/getconf.c:670
 msgid "undefined"
-msgstr "niezdefiniowana"
+msgstr "non definito"
 
 #: locale/programs/charmap.c:701 locale/programs/charmap.c:712
 #, c-format
 msgid "unknown character `%s'"
-msgstr "nieznany znak `%s'"
+msgstr "carattere sconosciuto `%s'"
 
 #: locale/programs/ld-messages.c:202 locale/programs/ld-messages.c:213
 #: locale/programs/ld-messages.c:224 locale/programs/ld-messages.c:235
 #: locale/programs/ld-time.c:718
 #, c-format
 msgid "unknown character in field `%s' of category `%s'"
-msgstr "nieznany znak w polu `%s' kategorii `%s'"
+msgstr "carattere sconosciuto nel campo `%s' della categoria `%s'"
 
 #: locale/programs/locfile.c:715
 msgid "unknown collation directive"
-msgstr "nieznana dyrektywa sortuj±ca"
+msgstr "direttiva di collazione sconosciuta"
 
 #: catgets/gencat.c:487
 #, c-format
 msgid "unknown directive `%s': line ignored"
-msgstr "nieznana dyrektywa `%s': linia zignorowana"
+msgstr "direttiva `%s' sconosciuta: riga ignorata"
 
 #: iconv/iconv_prog.c:353
 #, c-format
 msgid "unknown iconv() error %d"
-msgstr "nieznany b³±d iconv() %d"
+msgstr "errore di iconv() sconosciuto %d"
 
 #: catgets/gencat.c:466
 #, c-format
 msgid "unknown set `%s'"
-msgstr "nieznany zestaw `%s'"
+msgstr "insieme `%s' sconosciuto"
 
 #: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:1572
 #: locale/programs/ld-collate.c:1747
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
-msgstr "nieznany symbol `%.*s': linia zignorowana"
+msgstr "simbolo `%.*s' sconosciuto: riga ignorata"
 
 #: timezone/zic.c:761
 msgid "unruly zone"
-msgstr "strefa bez regu³"
+msgstr "zona senza regole"
 
 #: catgets/gencat.c:971
 msgid "unterminated message"
-msgstr "niezakoñczony komunikat"
+msgstr "messaggio non terminato"
 
 #: locale/programs/linereader.c:520 locale/programs/linereader.c:555
 msgid "unterminated string"
-msgstr "niezakoñczony ³añcuch"
+msgstr "stringa non terminata"
 
 #: sunrpc/rpc_scan.c:350 sunrpc/rpc_scan.c:376
 msgid "unterminated string constant"
-msgstr "niezakoñczony napis"
+msgstr "costante stringa non terminata"
 
 #: locale/programs/linereader.c:390
 msgid "unterminated symbolic name"
-msgstr "niezakoñczona nazwa symboliczna"
+msgstr "nome simbolico non terminato"
 
 #: locale/programs/ld-collate.c:1699
 msgid "unterminated weight name"
-msgstr "niezakoñczona nazwa wagi"
+msgstr "nome di peso non terminato"
 
 #: locale/programs/charset.c:104
 msgid "upper limit in range is not smaller then lower limit"
-msgstr "górna granica zakresu nie jest mniejsza ni¿ dolna"
+msgstr "limite superiore dell'intervallo non minore del limite inferiore"
 
 #: sunrpc/rpc_main.c:1415
 #, c-format
 msgid "usage:  %s infile\n"
-msgstr "sk³adnia: %s plik_we\n"
+msgstr "uso:  %s infile\n"
 
 #: timezone/zic.c:2081
 msgid "use of 2/29 in non leap-year"
-msgstr "u¿ycie 2/29 w roku nieprzestêpnym"
+msgstr "uso del 29/2 in anno non bisestile"
 
 #: locale/programs/charmap.c:522 locale/programs/charmap.c:576
 #, c-format
 msgid "value for %s must be an integer"
-msgstr "warto¶æ %s musi byæ liczb± ca³kowit±"
+msgstr "il valore di %s deve essere intero"
 
 #: locale/programs/charmap.c:318
 #, c-format
 msgid "value for <%s> must lie between 1 and 4"
-msgstr "warto¶æ <%s> musi byæ z zakresu 1 do 4"
+msgstr "il valore di <%s> dev'essere compreso fra 1 e 4"
 
 #: locale/programs/ld-monetary.c:157 locale/programs/ld-numeric.c:92
 #, c-format
 msgid "value for field `%s' in category `%s' must not be the empty string"
-msgstr "warto¶æ pola `%s' w kategorii `%s' nie mo¿e byæ pustym ³añcuchem"
+msgstr ""
+"il valore per il campo `%s' della categoria `%s'\n"
+"non dev'essere la stringa vuota"
 
 #: locale/programs/charmap.c:330
 msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"
-msgstr "warto¶æ <mb_cur_max> musi byæ wiêksza ni¿ warto¶æ <mb_cur_min>"
+msgstr "il valore di <mb_cur_max> dev'essere maggiore del valore di <mb_cur_min>"
 
 #: locale/programs/ld-monetary.c:147
 msgid "value of field `int_curr_symbol' in category `LC_MONETARY' does not correspond to a valid name in ISO 4217"
-msgstr "zawarto¶æ pola `int_curr_symbol' w kategorii `LC_MONETARY' nie jest zgodna z nazwami ISO 4217"
+msgstr ""
+"il valore del campo `int_curr_symbol' della categoria `LC_MONETARY'\n"
+"non corriposnde ad un nome ISO 4217 valido"
 
 #: locale/programs/ld-monetary.c:139
 msgid "value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"
-msgstr "zawarto¶æ pola `int_curr_symbol' w kategorii `LC_MONETARY' ma z³± d³ugo¶æ"
+msgstr ""
+"il valore del campo `int_curr_symbol' della categoria `LC_MONETARY'\n"
+"è di lunghezza errata"
 
 #: locale/programs/ld-monetary.c:383 locale/programs/ld-numeric.c:207
 #, c-format
 msgid "values for field `%s' in category `%s' must be smaller than 127"
-msgstr "warto¶ci pola `%s' w kategorii `%s' musz± byæ mniejsze ni¿ 127"
+msgstr ""
+"i valori dei campi `%s' della categoria `%s' devono essere\n"
+"inferiori a 127"
 
 #: nscd/connections.c:355
 #, c-format
 msgid "while accepting connection: %s"
-msgstr "podczas przyjmowania po³±czenia: %s"
+msgstr "accettando la connessione: %s"
 
 #: nscd/grpcache.c:149 nscd/hstcache.c:168 nscd/pwdcache.c:142
 msgid "while allocating cache entry"
-msgstr "podczas dokonywania wpisu do pamiêci podrêcznej"
+msgstr "allocando la voce di cache"
 
 #: nscd/cache.c:85
 msgid "while allocating hash table entry"
-msgstr "b³±d podczas wstawiania do tablicy mieszaj±cej"
+msgstr "allocando voce della tabella hash"
 
 #: nscd/grpcache.c:99 nscd/hstcache.c:109 nscd/pwdcache.c:105
 msgid "while allocating key copy"
-msgstr "podczas tworzenia kopii klucza"
+msgstr "allocando la copia della chiave"
 
 #: catgets/gencat.c:1001
 msgid "while opening old catalog file"
-msgstr "podczas otwierania starego katalogu"
+msgstr "aprendo il file del vecchio catalogo"
 
 #: locale/programs/locale.c:346
 msgid "while preparing output"
-msgstr "podczas przygotowywania wyników"
+msgstr "preparando l'output"
 
 #: db2/makedb.c:365 db2/makedb.c:382
 msgid "while reading database"
-msgstr "podczas czytania bazy"
+msgstr "leggendo il database"
 
 #: elf/sprof.c:683
 msgid "while stat'ing profiling data file"
-msgstr "podczas szukania pliku z danymi profiluj±cymi"
+msgstr "facendo stat del database di profilazione"
 
 #: db2/makedb.c:334
 msgid "while writing database file"
-msgstr "podczas zapisywania pliku bazy"
+msgstr "scrivendo il file del database"
 
 #: nscd/nscd_stat.c:115
 msgid "write incomplete"
-msgstr "zapis nie by³ kompletny"
+msgstr "write incompleta"
 
 #: inet/rcmd.c:320
 msgid "writeable by other than owner"
-msgstr "zapisywalny nie tylko przez w³a¶ciciela"
+msgstr "scrivibile da altri oltre il proprietario"
 
 #: db2/makedb.c:124 nscd/nscd.c:114 nss/getent.c:392
 msgid "wrong number of arguments"
-msgstr "z³a liczba argumentów"
+msgstr "numero di argomenti sbagliato"
 
 #: timezone/zic.c:1090
 msgid "wrong number of fields on Leap line"
-msgstr "z³a liczba pól w linii Leap"
+msgstr "numero di campi errato su una riga Leap"
 
 #: timezone/zic.c:1181
 msgid "wrong number of fields on Link line"
-msgstr "z³a liczba pól w linii Link"
+msgstr "numero di campi errato su una riga Link"
 
 #: timezone/zic.c:924
 msgid "wrong number of fields on Rule line"
-msgstr "z³a liczba pól w linii Rule"
+msgstr "numero di campi errato su una riga Rule"
 
 #: timezone/zic.c:994
 msgid "wrong number of fields on Zone continuation line"
-msgstr "z³a liczba pól w linii kontynuacji Zone"
+msgstr "numero di campi errato su una riga Zone di continuazione"
 
 #: timezone/zic.c:952
 msgid "wrong number of fields on Zone line"
-msgstr "z³a liczba pól w linii Zone"
+msgstr "numero di campi errato su una riga Zone"
 
 #: sunrpc/xdr_ref.c:84
 msgid "xdr_reference: out of memory\n"
-msgstr "xdr_reference: brak pamiêci\n"
+msgstr "xdr_reference: memoria esaurita\n"
 
 #: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
 msgid "xdrrec_create: out of memory\n"
-msgstr "xdrrec_create: brak pamiêci\n"
+msgstr "xdrrec_create: memoria esaurita\n"
 
 #: nis/ypclnt.c:884
 msgid "yp_update: cannot convert host to netname\n"
-msgstr "yp_update: konwersja nazwy hosta na nazwê sieci jest niemo¿liwa\n"
+msgstr "yp_update: impossibile convertire l'host in netname\n"
 
 #: nis/ypclnt.c:896
 msgid "yp_update: cannot get server address\n"
-msgstr "yp_update: uzyskanie adresu serwera jest niemo¿liwe\n"
-
-#~ msgid "Cputime limit exceeded"
-#~ msgstr "Przekroczenie limitu czasu procesora"
-
-#~ msgid "Error %d"
-#~ msgstr "B³±d %d"
-
-#~ msgid "Filesize limit exceeded"
-#~ msgstr "Przekroczenie limitu wielko¶ci pliku"
-
-#~ msgid "Illegal Instruction"
-#~ msgstr "Nieznana Instrukcja"
-
-#~ msgid "Trace/BPT trap"
-#~ msgstr "Pu³apka debuggera/BPT"
-
-#~ msgid ""
-#~ "Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
-#~ "       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -H, --header        create C header file containing symbol definitions\n"
-#~ "  -h, --help          display this help and exit\n"
-#~ "      --new           do not use existing catalog, force new output file\n"
-#~ "  -o, --output=NAME   write output to file NAME\n"
-#~ "  -V, --version       output version information and exit\n"
-#~ "If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
-#~ "is -, output is written to standard output.\n"
-#~ msgstr ""
-#~ "Sk³adnia: %s [OPCJA]... -o PLIK_WYJ¦CIOWY [PLIK_WEJ¦CIOWY]...\n"
-#~ "          %s [OPCJA]... [PLIK_WYJ¦CIOWY [PLIK_WEJ¦CIOWY]...]\n"
-#~ "Obowi±zkowe argumenty d³ugich form opcji s± wymagane tak¿e dla krótkich form.\n"
-#~ "  -H, --header        stwórz nag³ówek C zawieraj±cy definicje symboli\n"
-#~ "  -h, --help          wy¶wietl ten tekst pomocy i zakoñcz pracê\n"
-#~ "      --new       nie u¿ywaj istniej±cego katalogu, wymu¶ nowy plik wyj¶ciowy\n"
-#~ "  -o, --output=PLIK   zapisz wynik do PLIKu\n"
-#~ "  -V, --version       wy¶wietl wersjê programi i zakoñcz pracê.\n"
-#~ "Je¶li PLIKIEM_WEJ¦CIOWYM jest `-', dane s± czytane ze standardowego wej¶cia.\n"
-#~ "Je¶li PLIKIEM_WYJ¦CIOWYM jest `-', wyniki s± wypisywane na standardowe wyj¶cie.\n"
-
-#~ msgid ""
-#~ "Usage: %s [OPTION]... INPUT-FILE OUTPUT-FILE\n"
-#~ "       %s [OPTION]... -o OUTPUT-FILE INPUT-FILE\n"
-#~ "       %s [OPTION]... -u INPUT-FILE\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -f, --fold-case     convert key to lower case\n"
-#~ "  -h, --help          display this help and exit\n"
-#~ "  -o, --output=NAME   write output to file NAME\n"
-#~ "      --quiet         don't print messages while building database\n"
-#~ "  -u, --undo          print content of database file, one entry a line\n"
-#~ "  -V, --version       output version information and exit\n"
-#~ "If INPUT-FILE is -, input is read from standard input.\n"
-#~ msgstr ""
-#~ "Sk³adnia: %s PLIK_WEJ¦CIOWY PLIK_WYJ¦CIOWE\n"
-#~ "          %s [OPCJA]... -o PLIK_WYJ¦CIOWY PLIK_WEJ¦CIOWY\n"
-#~ "          %s [OPCJA]... -u PLIK_WEJ¦CIOWY\n"
-#~ "Obowi±zkowe argumenty d³ugich form opcji s± wymagane tak¿e dla krótkich form.\n"
-#~ "  -f, --fold-case     zamien litery w kluczu na ma³e\n"
-#~ "  -h, --help          wy¶wietl ten tekst pomocy i zakoñcz pracê\n"
-#~ "  -o, --output=PLIK   zapisz wynik do pliku PLIK\n"
-#~ "      --quiet         nie wy¶wietlaj komunikatów podczas tworzenia bazy danych\n"
-#~ "  -u, --undo          wy¶wietl zawarto¶æ bazy, po jednym rekordzie w linii\n"
-#~ "  -V, --version       wy¶wietl wersjê programi i zakoñcz pracê.\n"
-#~ "Je¶li PLIKIEM_WEJ¦CIOWYM jest `-', dane s± czytane ze standardowego wej¶cia.\n"
-
-#~ msgid ""
-#~ "Usage: %s [OPTION]... name\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -c, --force               create output even if warning messages were issued\n"
-#~ "  -h, --help                display this help and exit\n"
-#~ "  -f, --charmap=FILE        symbolic character names defined in FILE\n"
-#~ "  -i, --inputfile=FILE      source definitions are found in FILE\n"
-#~ "  -u, --code-set-name=NAME  specify code set for mapping ISO 10646 elements\n"
-#~ "  -v, --verbose             print more messages\n"
-#~ "  -V, --version             output version information and exit\n"
-#~ "      --posix               be strictly POSIX conform\n"
-#~ "\n"
-#~ "System's directory for character maps: %s\n"
-#~ "                       locale files  : %s\n"
-#~ msgstr ""
-#~ "U¿ycie: %s [OPCJA]... nazwa\n"
-#~ "Argumenty wymagane dla d³ugich opcji s± wymagane tak¿e dla krótkich form.\n"
-#~ "  -c, --force               utwórz wynik nawet je¶li pojawi³y siê ostrze¿enia\n"
-#~ "  -h, --help                wy¶wietl ten tekst pomocy i zakoñcz pracê\n"
-#~ "  -f, --charmap=PLIK        symboliczne nazwy znaków zdefiniowane w PLIKu\n"
-#~ "  -i, --inputfile=PLIK      definicje ¼ród³owe pobierz z PLIKu\n"
-#~ "  -u, --code-set-name=NAZWA nazwa zbioru kodów do mapowania elementów ISO 10646\n"
-#~ "  -v, --verbose             wy¶wietlaj wiêcej informacji\n"
-#~ "  -V, --version             wy¶wietl wersjê programu i zakoñcz pracê\n"
-#~ "      --posix               zachowaj ¶cis³± zgodno¶æ ze standardem POSIX\n"
-#~ "\n"
-#~ "Systemowy katalog tablic znakowych: %s\n"
-#~ "               pliki lokalizacyjne: %s\n"
-
-#~ msgid ""
-#~ "Usage: %s [OPTION]... name\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -h, --help            display this help and exit\n"
-#~ "  -V, --version         output version information and exit\n"
-#~ "\n"
-#~ "  -a, --all-locales     write names of available locales\n"
-#~ "  -m, --charmaps        write names of available charmaps\n"
-#~ "\n"
-#~ "  -c, --category-name   write names of selected categories\n"
-#~ "  -k, --keyword-name    write names of selected keywords\n"
-#~ msgstr ""
-#~ "U¿ycie: %s [OPCJA]... nazwa\n"
-#~ "Argumenty wymagane dla d³ugich opcji s± wymagane tak¿e dla krótkich form.\n"
-#~ "  -h, --help            wy¶wietl ten tekst pomocy i zakoñcz\n"
-#~ "  -V, --version         wy¶wietl wersjê programu i zakoñcz\n"
-#~ "\n"
-#~ "  -a, --all-locales     wypisz nazwy dostêpnych lokalizacji\n"
-#~ "  -m, --charmaps        wypisz nazwy dostêpnych map znakowych\n"
-#~ "\n"
-#~ "  -c, --category-name   wypisz nazwy wybranych kategorii\n"
-#~ "  -k, --keyword-name    wypisz nazwy wybranych s³ów kluczowych\n"
-
-#~ msgid "YPBINDPROC_DOMAIN: Internal error\n"
-#~ msgstr "YPBINDPROC_DOMAIN: B³±d wewnêtrzny\n"
-
-#~ msgid "YPBINDPROC_DOMAIN: No server for domain %s\n"
-#~ msgstr "YPBINDPROC_DOMAIN: Brak serwera dla domeny %s\n"
-
-#~ msgid "YPBINDPROC_DOMAIN: Resource allocation failure\n"
-#~ msgstr "YPBINDPROC_DOMAIN: Wyst±pi³ b³±d podczas przydzielania zasobów\n"
-
-#~ msgid "rpcinfo: can't contact portmapper: "
-#~ msgstr "rpcinfo: kontakt z portmapperem niemo¿liwy: "
-
-#~ msgid "values for field `%s' in category `%s' must not be zero"
-#~ msgstr "warto¶ci pola `%s' w kategorii `%s' nie mog± byæ zerowe"
-
-#~ msgid "while opening UTMP file"
-#~ msgstr "podczas otwierania pliku UTMP"
-
-#~ msgid "%s, line %d: "
-#~ msgstr "%s, linia %d: "
-
-#~ msgid "Reserved error 82"
-#~ msgstr "Zarezerwowany b³±d 82"
-
-#~ msgid "Reserved error 83"
-#~ msgstr "Zarezerwowany b³±d 83"
-
-#~ msgid "Reserved error 84"
-#~ msgstr "Zarezerwowany b³±d 84"
-
-#~ msgid "Reserved error 85"
-#~ msgstr "Zarezerwowany b³±d 85"
-
-#~ msgid "Reserved error 86"
-#~ msgstr "Zarezerwowany b³±d 86"
-
-#~ msgid "Reserved error 87"
-#~ msgstr "Zarezerwowany b³±d 87"
-
-#~ msgid "Reserved error 88"
-#~ msgstr "Zarezerwowany b³±d 88"
-
-#~ msgid "Reserved error 89"
-#~ msgstr "Zarezerwowany b³±d 89"
-
-#~ msgid "Reserved error 90"
-#~ msgstr "Zarezerwowany b³±d 90"
-
-#~ msgid "Reserved error 91"
-#~ msgstr "Zarezerwowany b³±d 91"
-
-#~ msgid "Reserved error 92"
-#~ msgstr "Zarezerwowany b³±d 92"
-
-#~ msgid "Reserved error 93"
-#~ msgstr "Zarezerwowany b³±d 93"
-
-#~ msgid "Reserved error 94"
-#~ msgstr "Zarezerwowany b³±d 94"
-
-#~ msgid "Reserved error 95"
-#~ msgstr "Zarezerwowany b³±d 95"
-
-#~ msgid "Reserved error 96"
-#~ msgstr "Zarezerwowany b³±d 96"
-
-#~ msgid "Reserved error 97"
-#~ msgstr "Zarezerwowany b³±d 97"
-
-#~ msgid "Reserved error 98"
-#~ msgstr "Zarezerwowany b³±d 98"
-
-#~ msgid "Reserved error 99"
-#~ msgstr "Zarezerwowany b³±d 99"
-
-#~ msgid "Too many levels of remote in path"
-#~ msgstr "Za du¿o poziomów zagnie¿d¿enia w ¶cie¿ce"
-
-#~ msgid "array declaration expected"
-#~ msgstr "spodziewana deklaracja tablicy"
-
-#~ msgid "couldn't do tcp_create\n"
-#~ msgstr "wykonanie tcp_create jest niemo¿liwe\n"
-
-#~ msgid "couldn't do udp_create\n"
-#~ msgstr "wykonanie udp_create jest niemo¿liwe\n"
-
-#~ msgid "definition keyword expected"
-#~ msgstr "spodziewane s³owo kluczowe definition"
-
-#~ msgid "expected '%s'"
-#~ msgstr "spodziewane '%s'"
-
-#~ msgid "expected '%s' or '%s'"
-#~ msgstr "spodziewane '%s' lub '%s'"
-
-#~ msgid "expected '%s', '%s' or '%s'"
-#~ msgstr "spodziewane '%s', '%s' lub '%s'"
-
-#~ msgid "expected type specifier"
-#~ msgstr "spodziewany specyfikator typu"
-
-#~ msgid "no array-of-pointer declarations -- use typedef"
-#~ msgstr "brak deklaracji tablicy wska¼ników - u¿yj typedef"
-
-#~ msgid "portmap CALLIT: cannot fork.\n"
-#~ msgstr "portmap CALLIT: nie mogê rozwidliæ procesu\n"
-
-#~ msgid "portmap cannot create socket"
-#~ msgstr "portmap nie mo¿e stworzyæ gniazda"
-
-#~ msgid "run_svc returned unexpectedly\n"
-#~ msgstr "run_svc powróci³ niespodziewanie\n"
-
-#~ msgid "unknown signal"
-#~ msgstr "nieznany sygna³"
-
-#~ msgid "variable-length array declaration expected"
-#~ msgstr "spodziewana tablica o zmiennej d³ugo¶ci"
-
-#~ msgid "voids allowed only inside union and program definitions"
-#~ msgstr "typ void dozwolony tylko w unii i definicjach programów"
+msgstr "yp_update: impossibile ottenere l'indirizzo del server\n"
