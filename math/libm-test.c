@@ -1987,7 +1987,7 @@ hypot_test (void)
   check_isinfp_ext ("hypot (-inf, x) == +inf", FUNC(hypot) (minus_infty, a), a);
 
 #ifndef TEST_INLINE
-  check_isinfp ("hypot (+inf, NaN) == +inf", FUNC(hypot) (minus_infty, nan_value));
+  check_isinfp ("hypot (+inf, NaN) == +inf", FUNC(hypot) (plus_infty, nan_value));
   check_isinfp ("hypot (-inf, NaN) == +inf", FUNC(hypot) (minus_infty, nan_value));
 #endif
 
