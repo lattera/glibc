@@ -225,14 +225,20 @@ No definition for %s category found"), "LC_MONETARY"));
 %s: value of field `int_curr_symbol' has wrong length"),
 				    "LC_MONETARY"));
 	}
-      else if (bsearch (monetary->int_curr_symbol, valid_int_curr,
-			NR_VALID_INT_CURR, sizeof (const char *),
-			(comparison_fn_t) curr_strcmp) == NULL
+      else
+	{ /* Check the first three characters against ISO 4217 */
+	  char symbol[4];
+	  strncpy (symbol, monetary->int_curr_symbol, 3);
+	  symbol[3] = '\0';
+	  if (bsearch (symbol, valid_int_curr, NR_VALID_INT_CURR,
+		       sizeof (const char *),
+		       (comparison_fn_t) curr_strcmp) == NULL
 	       && !be_quiet)
-	WITH_CUR_LOCALE (error (0, 0, _("\
+	    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value of field `int_curr_symbol' does \
 not correspond to a valid name in ISO 4217"),
 				"LC_MONETARY"));
+	}
     }
 
   /* The decimal point must not be empty.  This is not said explicitly

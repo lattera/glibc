@@ -1,3 +1,10 @@
+2003-11-23  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/translit_et: Removed unused file.
+
+	* locales/fi_FI: First weekday and workday is Monday in Finland.
+	Correction from Tommi Vainikainen.
+
 2003-11-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (LOCALES): Add cs_CZ.UTF-8.
