@@ -1,3 +1,8 @@
+1999-02-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (lose): Add more comments to explain the `why'.
+	(_dl_map_object): Remove redundant test.
+
 1999-02-27  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdselect.c (_hurd_select): When bailing for bogus fd, don't
