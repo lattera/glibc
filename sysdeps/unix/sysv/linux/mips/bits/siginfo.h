@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/MIPS version.
-   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -300,10 +300,11 @@ enum
 # define SIGEV_SIGNAL	SIGEV_SIGNAL
   SIGEV_NONE,			/* Other notification: meaningless.  */
 # define SIGEV_NONE	SIGEV_NONE
-  SIGEV_CALLBACK,		/* Deliver via thread creation.  */
-# define SIGEV_CALLBACK	SIGEV_CALLBACK
-  SIGEV_THREAD			/* Deliver via thread creation.  */
+  SIGEV_THREAD,			/* Deliver via thread creation.  */
 # define SIGEV_THREAD	SIGEV_THREAD
+
+  SIGEV_THREAD_ID = 4		/* Send signal to specific thread.  */
+#define SIGEV_THREAD_ID	SIGEV_THREAD_ID
 };
 
 #endif	/* have _SIGNAL_H.  */
