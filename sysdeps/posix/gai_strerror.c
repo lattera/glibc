@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pjb27@cam.ac.uk>, 1997.
 
@@ -38,16 +38,21 @@ values[] =
     { EAI_NONAME, N_("Name or service not known") },
     { EAI_SERVICE, N_("Servname not supported for ai_socktype") },
     { EAI_SOCKTYPE, N_("ai_socktype not supported") },
-    { EAI_SYSTEM, N_("System error") }
+    { EAI_SYSTEM, N_("System error") },
+    { EAI_INPROGRESS, N_("Processing request in progress") },
+    { EAI_CANCELED, N_("Request canceled") },
+    { EAI_NOTCANCELED, N_("Request not canceled") },
+    { EAI_ALLDONE, N_("All requests done") },
+    { EAI_INTR, N_("Interrupted by a signal") }
   };
 
-char *
+const char *
 gai_strerror (int code)
 {
   size_t i;
   for (i = 0; i < sizeof (values) / sizeof (values[0]); ++i)
     if (values[i].code == code)
-      return (char *) values[i].msg;
+      return _(values[i].msg);
 
-  return (char *) _("Unknown error");
+  return _("Unknown error");
 }

@@ -1,3 +1,10 @@
+2001-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/netdb.h (gai_strerror): Make return value const.
+	* sysdeps/generic/gai_strerror.c (gai_strerror): Likewise.
+	* sysdeps/posix/gai_strerror.c (gai_strerror): Likewise.
+	Add strings for new error values.
+
 2001-03-29  Michael Keezer  <mkeezer@redhat.com>
 
 	* posix/tst-gnuglob.c: Added ifdef _DIRENT_HAVE_D_TYPE.

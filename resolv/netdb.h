@@ -482,7 +482,7 @@ extern int getaddrinfo (__const char *__restrict __name,
 extern void freeaddrinfo (struct addrinfo *__ai) __THROW;
 
 /* Convert error return from getaddrinfo() to a string.  */
-extern char *gai_strerror (int __ecode) __THROW;
+extern __const char *gai_strerror (int __ecode) __THROW;
 
 /* Translate a socket address to a location and service name.  */
 extern int getnameinfo (__const struct sockaddr *__restrict __sa,
