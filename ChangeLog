@@ -1,5 +1,7 @@
 2000-02-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/bits/string2.h (strnlen): Add cast to prevent warning.
+
 	* nscd/connections.c (handle_request): Don't abort() if unknown
 	command is sent.
 

@@ -1025,7 +1025,7 @@ __STRING_INLINE size_t
 strnlen (__const char *__string, size_t __maxlen)
 {
   __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
-  return __end ? __end - __string : __maxlen;
+  return __end ? (size_t) (__end - __string) : __maxlen;
 }
 # endif
 #endif
