@@ -1,3 +1,10 @@
+2003-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/unwind-dw2-fde.c: Update from recent gcc version.
+	* sysdeps/generic/unwind-dw2-fde.h: Likewise.
+	* sysdeps/generic/unwind-dw2.c: Likewise.
+	* sysdeps/generic/unwind-pe.h: Likewise.
+
 2003-04-13  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/profil-counter: New.
