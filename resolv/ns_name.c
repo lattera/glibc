@@ -24,6 +24,7 @@ static const char rcsid[] = "$BINDId: ns_name.c,v 8.15 2000/03/30 22:53:46 vixie
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 
+#include <ctype.h>
 #include <errno.h>
 #include <resolv.h>
 #include <string.h>
@@ -64,7 +65,7 @@ ns_name_ntop(const u_char *src, char *dst, size_t dstsiz) {
 	eom = dst + dstsiz;
 
 	while ((n = *cp++) != 0) {
-		if ((n & NS_CMPRSFLGS) != 0) {
+		if ((n & NS_CMPRSFLGS) != 0 && n != 0x41) {
 			/* Some kind of compression pointer. */
 			__set_errno (EMSGSIZE);
 			return (-1);
@@ -76,6 +77,29 @@ ns_name_ntop(const u_char *src, char *dst, size_t dstsiz) {
 			}
 			*dn++ = '.';
 		}
+
+		if (n == 0x41) {
+			n = *cp++ / 8;
+			if (dn + n * 2 + 4 >= eom) {
+				__set_errno (EMSGSIZE);
+				return (-1);
+			}
+			*dn++ = '\\';
+			*dn++ = '[';
+			*dn++ = 'x';
+
+			while (n-- > 0) {
+				c = *cp++;
+				unsigned u = c >> 4;
+				*dn++ = u > 9 ? 'a' + u - 10 : '0' + u;
+				u = c & 0xf;
+				*dn++ = u > 9 ? 'a' + u - 10 : '0' + u;
+			}
+
+			*dn++ = ']';
+			continue;
+		}
+
 		if (dn + n >= eom) {
 			__set_errno (EMSGSIZE);
 			return (-1);
@@ -165,6 +189,43 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 					return (-1);
 				}
 				c = n;
+			} else if (c == '[' && label == bp - 1 && *src == 'x') {
+				/* Theoretically we would have to handle \[o
+				   as well but we do not since we do not need
+				   it internally.  */
+				*label = 0x41;
+				label = bp++;
+				/* Another simplification: always assume
+				   128 bit number.  */
+				if (bp + 16 >= eom) {
+					__set_errno (EMSGSIZE);
+					return (-1);
+				}
+				++src;
+				while (isxdigit (*src)) {
+					n = *src > '9' ? *src - 'a' + 10 : *src - '0';
+					++src;
+					if (! isxdigit(*src)) {
+						__set_errno (EMSGSIZE);
+						return (-1);
+					}
+					n <<= 4;
+					n += *src > '9' ? *src - 'a' + 10 : *src - '0';
+					*bp++ = n;
+					++src;
+				}
+				*label = (bp - label - 1) * 8;
+				if (*src++ != ']' || *src++ != '.') {
+					__set_errno (EMSGSIZE);
+					return (-1);
+				}
+				escaped = 0;
+				label = bp++;
+				if (bp >= eom) {
+					__set_errno (EMSGSIZE);
+					return (-1);
+				}
+				continue;
 			}
 			escaped = 0;
 		} else if (c == '\\') {
@@ -303,6 +364,20 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 	while ((n = *srcp++) != 0) {
 		/* Check for indirection. */
 		switch (n & NS_CMPRSFLGS) {
+		case 0x40:
+			if (n == 0x41) {
+				if (dstp + 1 >= dstlim) {
+					__set_errno (EMSGSIZE);
+					return (-1);
+			  	}
+				*dstp++ = 0x41;
+				n = *srcp++ / 8;
+				++checked;
+			} else {
+				__set_errno (EMSGSIZE);
+				return (-1);		/* flag error */
+			}
+			/* FALLTHROUGH */
 		case 0:
 			/* Limit checks. */
 			if (dstp + n + 1 >= dstlim || srcp + n >= eom) {
@@ -310,9 +385,7 @@ ns_name_unpack(const u_char *msg, const u_char *eom, const u_char *src,
 				return (-1);
 			}
 			checked += n + 1;
-			*dstp++ = n;
-			memcpy(dstp, srcp, n);
-			dstp += n;
+			dstp = mempcpy(dstp, srcp - 1, n + 1);
 			srcp += n;
 			break;
 
@@ -394,10 +467,12 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 	l = 0;
 	do {
 		n = *srcp;
-		if ((n & NS_CMPRSFLGS) != 0) {
+		if ((n & NS_CMPRSFLGS) != 0 && n != 0x41) {
 			__set_errno (EMSGSIZE);
 			return (-1);
 		}
+		if (n == 0x41)
+			n = *++srcp / 8;
 		l += n + 1;
 		if (l > MAXCDNAME) {
 			__set_errno (EMSGSIZE);
@@ -411,7 +486,7 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 	do {
 		/* Look to see if we can use pointers. */
 		n = *srcp;
-		if (n != 0 && msg != NULL) {
+		if (n != 0 && n != 0x41 && msg != NULL) {
 			l = dn_find(srcp, msg, (const u_char * const *)dnptrs,
 				    (const u_char * const *)lpp);
 			if (l >= 0) {
@@ -431,8 +506,14 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 			}
 		}
 		/* copy label to buffer */
-		if (n & NS_CMPRSFLGS) {		/* Should not happen. */
+		if ((n & NS_CMPRSFLGS) != 0 && n != 0x41) {		/* Should not happen. */
 			goto cleanup;
+		}
+		if (n == 0x41) {
+			n = *++srcp / 8;
+			if (dstp + 1 >= eob)
+				goto cleanup;
+			*dstp++ = 0x41;
 		}
 		if (dstp + 1 + n >= eob) {
 			goto cleanup;
@@ -448,7 +529,7 @@ cleanup:
 			*lpp = NULL;
 		__set_errno (EMSGSIZE);
 		return (-1);
-	} 
+	}
 	return (dstp - dst);
 }
 
@@ -466,7 +547,7 @@ ns_name_uncompress(const u_char *msg, const u_char *eom, const u_char *src,
 {
 	u_char tmp[NS_MAXCDNAME];
 	int n;
-	
+
 	if ((n = ns_name_unpack(msg, eom, src, tmp, sizeof tmp)) == -1)
 		return (-1);
 	if (ns_name_ntop(tmp, dst, dstsiz) == -1)

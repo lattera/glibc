@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -305,10 +305,14 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 	       (uaddr[2] & 0xff), (uaddr[1] & 0xff), (uaddr[0] & 0xff));
       break;
     case AF_INET6:
+      /* XXX Maybe we need an option to select whether to use the nibble
+	 or the bitfield form.  The RFC requires the bitfield form so
+	 we use it.  */
       qp = qbuf;
-      for (n = IN6ADDRSZ - 1; n >= 0; n--)
-	qp += sprintf (qp, "%x.%x.", uaddr[n] & 0xf, (uaddr[n] >> 4) & 0xf);
-      strcpy (qp, "ip6.arpa");
+      qp = stpcpy (qbuf, "\\[x");
+      for (n = 0; n < IN6ADDRSZ; ++n)
+	qp += sprintf (qp, "%02hhx", uaddr[n]);
+      strcpy (qp, "].ip6.arpa");
       break;
     default:
       /* Cannot happen.  */
@@ -321,6 +325,9 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 			 1024, &host_buffer.ptr);
   if (n < 0 && af == AF_INET6)
     {
+      qp = qbuf;
+      for (n = IN6ADDRSZ - 1; n >= 0; n--)
+	qp += sprintf (qp, "%x.%x.", uaddr[n] & 0xf, (uaddr[n] >> 4) & 0xf);
       strcpy (qp, "ip6.int");
       n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
 			     host_buffer.buf != orig_host_buffer
