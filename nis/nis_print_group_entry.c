@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -55,18 +55,18 @@ nis_print_group_entry (const_nis_name group)
 	  (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
 	return;
 
-      mem_exp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      mem_imp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      mem_rec = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      nomem_exp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      nomem_imp = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      nomem_rec = malloc (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      mem_exp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      mem_imp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      mem_rec = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      nomem_exp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      nomem_imp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      nomem_rec = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
 
       for (i = 0;
-	 i < NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len; ++i)
+	   i < NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len; ++i)
 	{
 	  char *grmem =
-	  NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[i];
+	    NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val[i];
 	  int neg = grmem[0] == '-';
 
 	  switch (grmem[neg])
@@ -166,12 +166,6 @@ nis_print_group_entry (const_nis_name group)
       else
         fputs (_("    No recursive nonmembers\n"), stdout);
 
-      free (mem_exp);
-      free (mem_imp);
-      free (mem_rec);
-      free (nomem_exp);
-      free (nomem_imp);
-      free (nomem_rec);
       nis_freeresult (res);
     }
 }
