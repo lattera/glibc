@@ -298,7 +298,8 @@ extern char *basename __P ((__const char *__filename));
 #endif
 
 
-#if defined __GNUC__ && __GNUC__ >= 2 && defined __OPTIMIZE__
+#if defined __GNUC__ && __GNUC__ >= 2
+# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
 /* When using GNU CC we provide some optimized versions of selected
    functions from this header.  There are two kinds of optimizations:
 
@@ -318,10 +319,11 @@ extern char *basename __P ((__const char *__filename));
    One can inhibit all optimizations by defining __NO_STRING_INLINES.  */
 
 /* Get the machine-dependent optimizations (if any).  */
-# include <bits/string.h>
+#  include <bits/string.h>
 
 /* These are generic optimizations which do not add too much inline code.  */
-# include <bits/string2.h>
+#  include <bits/string2.h>
+# endif
 #endif
 
 __END_DECLS
