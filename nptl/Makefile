@@ -36,6 +36,7 @@ libpthread-routines = init vars events version \
 		      pthread_self pthread_equal pthread_yield \
 		      pthread_getconcurrency pthread_setconcurrency \
 		      pthread_getschedparam pthread_setschedparam \
+		      pthread_setschedprio \
 		      pthread_attr_init pthread_attr_destroy \
 		      pthread_attr_getdetachstate pthread_attr_setdetachstate \
 		      pthread_attr_getguardsize pthread_attr_setguardsize \

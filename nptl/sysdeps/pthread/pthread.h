@@ -373,6 +373,10 @@ extern int pthread_getschedparam (pthread_t __target_thread,
 				  struct sched_param *__restrict __param)
      __THROW;
 
+/* Set the scheduling priority for TARGET_THREAD.  */
+extern int pthread_setschedprio (pthread_t __target_thread, int __prio)
+     __THROW;
+
 
 #ifdef __USE_UNIX98
 /* Determine level of concurrency.  */

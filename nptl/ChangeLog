@@ -1,3 +1,10 @@
+2004-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libpthread-routines): Add pthread_setschedprio.
+	* Versions [libpthread, GLIBC_2.3.4]: Add pthread_setschedprio.
+	* sysdeps/pthread/pthread.h: Declare pthread_setschedprio.
+	* pthread_setschedprio.c: New file.
+
 2004-11-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_create.c (pthread_cancel): Add PTHREAD_STATIC_FN_REQUIRE.
