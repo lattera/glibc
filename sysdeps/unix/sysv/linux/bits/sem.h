@@ -62,7 +62,7 @@ struct semid_ds
 
    Previous versions of this file used to define this union but this is
    incorrect.  One can test the macro _SEM_SEMUN_UNDEFINED to see whether
-   one must define the unio or not.  */
+   one must define the union or not.  */
 #define _SEM_SEMUN_UNDEFINED	1
 
 #ifdef __USE_MISC

@@ -1,3 +1,14 @@
+1998-06-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bits/sem.h: Don't define union semun.
+
+	* sysdeps/unix/sysv/linux/bits/sem.h: Fix typo.
+
+	* sysdeps/unix/sysv/linux/bits/ipc.h: Remove ipc_kludge definition
+	here.
+	* sysdeps/unix/sysv/linux/msgrcv.c (msgrcv): Add ipc_kludge
+	definition here.
+
 1998-06-18 21:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/signal.h: Add prototype for __sigaltstack.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -18,6 +18,16 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sys/msg.h>
+
+
+/* Kludge to work around Linux' restriction of only up to five
+   arguments to a system call.  */
+struct ipc_kludge
+  {
+    void *msgp;
+    long int msgtyp;
+  };
+
 
 int
 msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)

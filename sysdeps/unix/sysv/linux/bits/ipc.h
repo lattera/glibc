@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,15 +47,6 @@ struct ipc_perm
     unsigned short int cgid;		/* Creator's group ID.  */
     unsigned short int mode;		/* Read/write permission.  */
     unsigned short int __seq;		/* Sequence number.  */
-  };
-
-
-/* Kludge to work around Linux' restriction of only up to five
-   arguments to a system call.  */
-struct ipc_kludge
-  {
-    void *msgp;
-    long int msgtyp;
   };
 
 
