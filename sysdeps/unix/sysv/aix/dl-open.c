@@ -85,7 +85,7 @@ _dl_open (const char *file, int mode, const void *caller)
     {
       bsize *= 2;
       dl_info = realloc (dl_info, bsize);
-      if (new_dl_info == NULL)
+      if (dl_info == NULL)
         {
 	  (void) __unload ((void *) handle);
           errno = ENOMEM;
