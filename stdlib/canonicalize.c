@@ -1,21 +1,21 @@
 /* Return the canonical absolute name of a given file.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <assert.h>
 #include <stdlib.h>
@@ -58,10 +58,22 @@ canonicalize (const char *name, char *resolved)
   if (!resolved)
     rpath = malloc (path_max);
 
-  strcpy (rpath, "/");
-  if (name[0] != '/' && !getcwd (rpath, path_max))
-    goto error;
-  dest = rpath + strlen (rpath);
+  if (name[0] != '/')
+    {
+      /* We don't write to RPATH directly since the application and
+	 the library might disagree about the value for PATH_MAX.  */
+      char tmpbuf[path_max];
+
+      if (!getcwd (rpath, path_max))
+	goto error;
+
+      dest = __stpcpy (rpath, tmpbuf);
+    }
+  else
+    {
+      rpath[0] = '/';
+      dest = rpath + 1;
+    }
 
   for (start = end = name; *start; start = end)
     {
@@ -164,8 +176,8 @@ error:
     free (rpath);
   return NULL;
 }
-
 weak_alias (canonicalize, realpath)
+
 
 char *
 canonicalize_file_name (const char *name)

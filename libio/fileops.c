@@ -45,21 +45,27 @@ extern int errno;
    is that of gptr(); in put mode that of pptr().
 
    The position in the buffer that corresponds to the position
-   in external file system is file_ptr().
-   This is normally _IO_read_end, except in putback mode,
+   in external file system is normally _IO_read_end, except in putback
+   mode, when it is _IO_save_end.
    when it is _IO_save_end.
    If the field _fb._offset is >= 0, it gives the offset in
    the file as a whole corresponding to eGptr(). (?)
 
    PUT MODE:
-   If a filebuf is in put mode, pbase() is non-NULL and equal to base().
-   Also, epptr() == ebuf().
-   Also, eback() == gptr() && gptr() == egptr().
-   The un-flushed character are those between pbase() and pptr().
+   If a filebuf is in put mode, then all of _IO_read_ptr, _IO_read_end,
+   and _IO_read_base are equal to each other.  These are usually equal
+   to _IO_buf_base, though not necessarily if we have switched from
+   get mode to put mode.  (The reason is to maintain the invariant
+   that _IO_read_end corresponds to the external file position.)
+   _IO_write_base is non-NULL and usually equal to _IO_base_base.
+   We also have _IO_write_end == _IO_buf_end, but only in fully buffered mode.
+   The un-flushed character are those between _IO_write_base and _IO_write_ptr.
+
    GET MODE:
    If a filebuf is in get or putback mode, eback() != egptr().
    In get mode, the unread characters are between gptr() and egptr().
    The OS file position corresponds to that of egptr().
+
    PUTBACK MODE:
    Putback mode is used to remember "excess" characters that have
    been sputbackc'd in a separate putback buffer.
@@ -72,7 +78,7 @@ extern int errno;
    The OS position corresponds to that of save_egptr().
 
    LINE BUFFERED OUTPUT:
-   During line buffered output, pbase()==base() && epptr()==base().
+   During line buffered output, _IO_write_base==base() && epptr()==base().
    However, ptr() may be anywhere between base() and ebuf().
    This forces a call to filebuf::overflow(int C) on every put.
    If there is more space in the buffer, and C is not a '\n',

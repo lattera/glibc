@@ -1,3 +1,68 @@
+Sat Dec  7 03:24:36 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Discard error message from test in test for
+	bash-2.0.
+
+	* io/getpw.c: Don't apply getcwd on user supplied buffer.
+	Instead always use temporary buffer and only copy the result.
+	Patch by HJ Lu.
+	* stdlib/canonicalize.c: Likewise.
+
+	* libio/fileops.c: Change comments according to libg++2.8b5.
+	* libio/iosetvbuf.c: Follow change in libg++-2.8b5 to clear
+	unbuffered flag.
+	Reported by HJ Lu.
+
+	* manual/nss.texi: Correct prototypes.
+
+	* misc/syslog.c: Make reentrant.  Catch SIGPIPE signal to prevent
+	crash if syslog daemon is restarted.
+
+	* stdlib/rand_r.c: New file.  Implementation of POSIX.2 function
+	rand_r.
+	* stdlib/Makefile (routines): Add rand_r.
+
+	* sysdeps/stub/libc-lock.h: Define __libc_lock_trylock and
+	__libc_mutex_lock.
+
+	* configure.in: Add --disable-sanity-check option.
+	* sysdeps/unix/sysv/linux/configure.in: If linuxthreads or
+	des-crypt are not available and --disbale-sanity-check is not
+	given abort with a message.
+
+Thu Dec  5 19:19:53 1996  Richard Henderson  <rth@tamu.edu>
+
+	* posix/glob.c: Tests against STDC_HEADERS should also test
+	__GNU_LIBRARY__.
+
+Thu Dec  5 16:20:55 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/err.c (vwarn): Set errno again before using %m format.
+
+Thu Dec  5 10:14:05 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* grp/grp.h: Add declaration of __getgrent_r.
+
+	* io/fts.c (fts_build): Remove "register" from variables dirbuf
+	and dp since their address is needed.
+
+	* sysdeps/posix/getcwd.c (__getcwd): Remove "register" from
+	variable d since d's address is needed.
+
+	* misc/tst-dirname.c (main): Provide prototype.
+	* misc/ioctltst.c (main): Dito.
+
+	* Makefile: Add gnu/lib-names.h to install-others before including
+	Makerules.
+
+Wed Dec  4 16:00:09 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/socketvar.h: New file.  Simply use
+	<sys/socket.h>.
+	* sysdeps/unix/sysv/linux/Dist: Add sys/socketvar.h.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet)]: Add
+	sys/socketvar.h to sysdep_headers.
+
 Tue Dec  3 08:38:15 1996  Richard Henderson  <rth@tamu.edu>
 
 	* sysdeps/unix/alpha/sysdep.S: Remove definition of __errno_location.
@@ -125,7 +190,7 @@ Mon Dec  2 03:59:38 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* sysdeps/unix/sysv/linux/gethostid.c: Likewise.
 
 	* posix/getconf.c: Treat _SC_UNIT_MAX and _SC_ULONG_MAX separately
-	since the value might be outsode the range of the `long int'.
+	since the value might be outside the range of the `long int'.
 	Print string `undefined' when a value is undefined.
 
 	* stdlib/l64a.c: Return correct pointer.

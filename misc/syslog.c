@@ -49,6 +49,8 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <libc-lock.h>
+#include <signal.h>
 
 #if __STDC__
 #include <stdarg.h>
@@ -64,6 +66,14 @@ static const char *LogTag = NULL;	/* string to tag the entry with */
 static int	LogFacility = LOG_USER;	/* default facility code */
 static int	LogMask = 0xff;		/* mask of priorities to be logged */
 extern char	*__progname;		/* Program name, from crt0. */
+
+/* Define the lock.  */
+__libc_lock_define_initialized (static, syslog_lock)
+
+static void openlog_internal(const char *, int, int);
+static void closelog_internal(void);
+static void sigpipe_handler (int);
+static void cancel_handler (void *);
 
 /*
  * syslog, vsyslog --
@@ -103,6 +113,9 @@ vsyslog(pri, fmt, ap)
 	char *buf = 0;
 	size_t bufsize = 0;
 	size_t prioff, msgoff;
+ 	struct sigaction action, oldaction;
+	struct sigaction *oldaction_ptr = NULL;
+ 	int sigpipe;
 
 #define	INTERNALLOG	LOG_ERR|LOG_CONS|LOG_PERROR|LOG_PID
 	/* Check for invalid bits. */
@@ -163,9 +176,22 @@ vsyslog(pri, fmt, ap)
 		(void)writev(STDERR_FILENO, iov, 2);
 	}
 
+	/* Prepare for multiple users.  We have to take care: open and
+	   write are cancelation points.  */
+	__libc_cleanup_region_start (cancel_handler, &oldaction_ptr);
+	__libc_lock_lock (syslog_lock);
+
+	/* Prepare for a broken connection.  */
+ 	memset (&action, 0, sizeof (action));
+ 	action.sa_handler = sigpipe_handler;
+ 	sigemptyset (&action.sa_mask);
+ 	sigpipe = sigaction (SIGPIPE, &action, &oldaction);
+	if (sigpipe == 0)
+	  oldaction_ptr = &oldaction;
+
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
-		openlog(LogTag, LogStat | LOG_NDELAY, 0);
+		openlog_internal(LogTag, LogStat | LOG_NDELAY, 0);
 
 	/* If we have a SOCK_STREAM connection, also send ASCII NUL as
 	   a record terminator.  */
@@ -174,7 +200,7 @@ vsyslog(pri, fmt, ap)
 
 	if (__send(LogFile, buf, bufsize, 0) < 0)
 	  {
-	    closelog ();	/* attempt re-open next time */
+	    closelog_internal ();	/* attempt re-open next time */
 	    /*
 	     * Output the message to the console; don't worry about blocking,
 	     * if console blocks everything will.  Make sure the error reported
@@ -188,15 +214,20 @@ vsyslog(pri, fmt, ap)
 	      }
 	  }
 
+	if (sigpipe == 0)
+		sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
+
+	/* End of critical section.  */
+	__libc_cleanup_region_end (0);
+	__libc_lock_unlock (syslog_lock);
+
 	free (buf);
 }
 
 static struct sockaddr SyslogAddr;	/* AF_UNIX address of local logger */
 
-void
-openlog(ident, logstat, logfac)
-	const char *ident;
-	int logstat, logfac;
+static void
+openlog_internal(const char *ident, int logstat, int logfac)
 {
 	if (ident != NULL)
 		LogTag = ident;
@@ -237,11 +268,58 @@ openlog(ident, logstat, logfac)
 }
 
 void
-closelog()
+openlog (const char *ident, int logstat, int logfac)
+{
+  /* Protect against multiple users.  */
+  __libc_cleanup_region_start ((void (*) __P ((void *))) __libc_mutex_unlock,
+			       &syslog_lock);
+  __libc_lock_lock (syslog_lock);
+
+  openlog_internal (ident, logstat, logfac);
+
+  /* Free the lock.  */
+  __libc_cleanup_region_end (1);
+}
+
+static void
+sigpipe_handler (int signo)
+{
+	closelog_internal();
+}
+
+static void
+closelog_internal()
 {
 	(void)close(LogFile);
 	LogFile = -1;
 	connected = 0;
+}
+
+void
+closelog ()
+{
+  /* Protect against multiple users.  */
+  __libc_cleanup_region_start ((void (*) __P ((void *))) __libc_mutex_unlock,
+			       &syslog_lock);
+  __libc_lock_lock (syslog_lock);
+
+  closelog_internal ();
+
+  /* Free the lock.  */
+  __libc_cleanup_region_end (1);
+}
+
+static void
+cancel_handler (void *ptr)
+{
+  /* Restore the old signal handler.  */
+  struct sigaction *oldaction = *((struct sigaction **) ptr);
+
+  if (oldaction != (struct sigaction *) NULL)
+    sigaction (SIGPIPE, oldaction, (struct sigaction *) NULL);
+
+  /* Free the lock.  */
+  __libc_lock_unlock (syslog_lock);
 }
 
 /* setlogmask -- set the log mask level */

@@ -378,9 +378,9 @@ the non-reentrant and reentrant versions of our function above are:
 @smallexample
 struct hostent *gethostbyname (const char *name)
 
-struct hostent *gethostbyname_r (const char *name,
-                                 struct hostent *result_buf, char *buf,
-                                 int buflen, int *h_errnop)
+int gethostbyname_r (const char *name, struct hostent *result_buf,
+                     char *buf, size_t buflen, struct hostent **result,
+                     int *h_errnop)
 @end smallexample
 
 @noindent
@@ -389,7 +389,7 @@ The actual prototype of the function in the NSS modules in this case is
 @smallexample
 enum nss_status _nss_files_gethostbyname_r (const char *name,
                                             struct hostent *result_buf,
-                                            char *buf, int buflen,
+                                            char *buf, size_t buflen,
                                             int *h_errnop)
 @end smallexample
 
@@ -553,7 +553,7 @@ the interface.  All derive from the traditional ones for system databases.
 database (e.g., it is @code{pw} for the password database).
 
 @table @code
-@item int _nss_@var{database}_set@var{db}ent (void)
+@item enum nss_status _nss_@var{database}_set@var{db}ent (void)
 This function prepares the service for following operations.  For a
 simple file based lookup this means files could be opened, for other
 services this function simply is a noop.
@@ -566,14 +566,14 @@ argument for some @var{database}s (i.e., the interface is
 The return value should be @var{NSS_STATUS_SUCCESS} or according to the
 table above in case of an error (@pxref{NSS Modules Interface}).
 
-@item int _nss_@var{database}_end@var{db}ent (void)
+@item enum nss_status _nss_@var{database}_end@var{db}ent (void)
 This function simply closes all files which are still open or removes
 buffer caches.  If there are no files or buffers to remove this is again
 a simple noop.
 
 There normally is no return value different to @var{NSS_STATUS_SUCCESS}.
 
-@item int _nss_@var{database}_get@var{db}ent_r (@var{STRUCTURE} *result, char *buffer, int buflen)
+@item enum nss_status _nss_@var{database}_get@var{db}ent_r (@var{STRUCTURE} *result, char *buffer, size_t buflen)
 Since this function will be called several times in a row to retrieve
 one entry after the other it must keep some kind of state.  But this
 also means the functions are not really reentrant.  They are reentrant
@@ -602,7 +602,7 @@ returned.  When the service was not formerly initialized by a call to
 @code{_nss_@var{DATABASE}_set@var{db}ent} all return value allowed for
 this function can also be returned here.
 
-@item int _nss_@var{DATABASE}_get@var{db}by@var{XX}_r (@var{PARAMS}, @var{STRUCTURE} *result, char *buffer, int buflen)
+@item enum nss_status _nss_@var{DATABASE}_get@var{db}by@var{XX}_r (@var{PARAMS}, @var{STRUCTURE} *result, char *buffer, size_t buflen)
 This function shall return the entry from the database which is
 addressed by the @var{PARAMS}.  The type and number of these arguments
 vary.  It must be individually determined by looking to the user-level

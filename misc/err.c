@@ -56,6 +56,7 @@ vwarn (const char *format, __gnuc_va_list ap)
       vfprintf (stderr, format, ap);
       fputs (": ", stderr);
     }
+  __set_errno (error);
   fprintf (stderr, "%m\n");
 }
 

@@ -52,7 +52,7 @@
 
 #ifndef ELIDE_CODE
 
-#ifdef	STDC_HEADERS
+#if defined(STDC_HEADERS) || defined(__GNU_LIBRARY__)
 #include <stddef.h>
 #endif
 
@@ -222,7 +222,7 @@ extern char *alloca ();
 #endif
 #endif
 
-#ifndef	STDC_HEADERS
+#if !(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__))
 #undef	size_t
 #define	size_t	unsigned int
 #endif

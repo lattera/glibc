@@ -32,7 +32,7 @@ routines	:=							      \
 	abs labs llabs							      \
 	div ldiv lldiv							      \
 	mblen mbstowcs mbtowc wcstombs wctomb				      \
-	random random_r rand 						      \
+	random random_r rand rand_r					      \
 	drand48 erand48 lrand48 nrand48 mrand48 jrand48			      \
 	srand48 seed48 lcong48						      \
 	drand48_r erand48_r lrand48_r nrand48_r mrand48_r jrand48_r	      \

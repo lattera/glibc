@@ -570,7 +570,7 @@ fts_build(sp, type)
 	register FTS *sp;
 	int type;
 {
-	register struct dirent dirbuf, *dp;
+	struct dirent dirbuf, *dp;
 	register FTSENT *p, *head;
 	register int nitems;
 	FTSENT *cur, *tail;

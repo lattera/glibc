@@ -48,6 +48,9 @@
 /* Lock the named lock variable.  */
 #define __libc_lock_lock(NAME)
 
+/* Try tp lock the named lock variable.  */
+#define __libc_lock_trylock(NAME)
+
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME)
 
@@ -57,5 +60,8 @@
 /* End critical region with cleanup.  */
 #define __libc_cleanup_region_end(DOIT)
 
+
+/* We need protable names for some of the functions.  */
+#define __libc_mutex_unlock
 
 #endif	/* libc-lock.h */

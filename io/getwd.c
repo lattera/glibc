@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Obsolete function to get current working directory.
+   Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,19 +22,15 @@
 #include <string.h>
 #include <unistd.h>
 
-/* Put the absolute pathname of the current working direction in BUF.
-   If successful, return BUF.  If not, put an error message in
-   BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
+
 char *
 getwd (buf)
      char *buf;
 {
 #ifndef PATH_MAX
 #define PATH_MAX 1024
-  char fetchbuf[PATH_MAX];
-#else
-#define fetchbuf buf
 #endif
+  char tmpbuf[PATH_MAX];
 
   if (buf == NULL)
     {
@@ -41,18 +38,21 @@ getwd (buf)
       return NULL;
     }
 
-  if (getcwd (fetchbuf, PATH_MAX) == NULL)
+  if (getcwd (tmpbuf, LOCAL_PATH_MAX) == NULL)
     {
-#if defined HAVE_STRERROR_R || defined _LIBC
-      __strerror_r (errno, buf, PATH_MAX);
-#else
-      strncpy (buf, strerror (errno), PATH_MAX);
-#endif
+      /* We use 1024 here since it should really be enough and because
+	 this is a save value.  */
+      __strerror_r (errno, buf, 1024);
       return NULL;
     }
 
-  if (fetchbuf != buf)
-    strcpy (buf, fetchbuf);
+  /* This is completely unsafe.  Nobody can say how big the user
+     provided buffer is.  Perhaps the application and the libc
+     disagree about the value of PATH_MAX.  */
+  strcpy (buf, tmpbuf);
 
   return buf;
 }
+
+link_warning (getwd,
+	      "the `getwd' function is dangerous and should not be used.")

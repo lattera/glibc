@@ -1,4 +1,4 @@
-/* Test program for dirname function a la XPG.
+/* Reentrant random function frm POSIX.1c.
    Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -18,44 +18,32 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define _GNU_SOURCE	1
-#include <libgen.h>
-#include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
 
-extern int test __P ((const char *input, const char *result));
-
+/* This algorithm is mentioned in the ISO C standard, here extended
+   for 32 bits.  */
 int
-test (input, result)
-     const char *input;
-     const char *result;
+rand_r (unsigned int *seed)
 {
-  int retval;
-  char *cp;
-  cp = strdupa (input);
-  cp = dirname (cp);
-  retval = strcmp (cp, result);
-  if (retval)
-    printf ("dirname(\"%s\") should be \"%s\", but is \"%s\"\n",
-	    input, result, cp);
-  return retval;
-}
+  unsigned int next = *seed;
+  int result;
 
-int
-main (argc, argv)
-     int argc;
-     char *argv[];
-{
-  int result = 0;
+  next *= 1103515245;
+  next += 12345;
+  result = (unsigned int) (next / 65536) % 2048;
 
-  /* These are the examples given in XPG4.2.  */
-  result |= test ("/usr/lib", "/usr");
-  result |= test ("/usr", "/");
-  result |= test ("usr", ".");
-  result |= test ("/", "/");
-  result |= test (".", ".");
-  result |= test ("..", ".");
+  next *= 1103515245;
+  next += 12345;
+  result <<= 11;
+  result ^= (unsigned int) (next / 65536) % 1024;
 
-  return result != 0;
+  next *= 1103515245;
+  next += 12345;
+  result <<= 10;
+  result ^= (unsigned int) (next / 65536) % 1024;
+
+  *seed = next;
+
+  return result;
 }

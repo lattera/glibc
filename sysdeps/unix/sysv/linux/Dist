@@ -22,6 +22,7 @@ sys/mtio.h
 sys/procfs.h
 sys/quota.h
 sys/socketcall.h
+sys/socketvar.h
 sys/soundcard.h
 sys/sysctl.h
 sys/sysinfo.h

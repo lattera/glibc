@@ -29,3 +29,50 @@ Linux LIBC_LINUX_VERSION or later.  This check uses <linux/version.h>, so
 make sure that file was built correctly when installing the kernel header
 files.])
 fi
+
+# The Linux filesystem standard prescribes where to place "essential"
+# files.  I.e., when the installation prefix is "/usr" we have to place
+# shared library objects and the configuation files on the root partition
+# in /lib and /etc.
+if test "$prefix" = "/usr"; then
+  libc_cv_slibdir="/lib"
+  libc_cv_sysconfdir="/etc"
+fi
+
+# Under Linux the LinuxThreads and crypt add-on should be available.
+case $add_ons in
+  # Both are available.  Good.
+  *linuxthreads*des-crypt* | *des-crypt*linuxthreads*)
+    message=
+    ;;
+  *linuxthreads*)
+    message="\
+*** WARNING:
+*** Are you sure you do not want to use the \`crypt' add-on?"
+    ;;
+  *des-crypt*)
+    message="\
+*** WARNING:
+*** Are you sure you do not want to use the \`LinuxThread' add-on?"
+    ;;
+  *)
+    message="\
+*** WARNING: Are you sure you do not want to use the \`LinuxThreads'
+*** and \`crypt' add-ons?"
+    ;;
+esac
+
+if test "$message"; then
+  if test $enable_sanity = yes; then
+    echo "\
+*** You should not compile the GNU libc without the \`LinuxThreads' and
+*** \`crypt' add-on.  Not using them risks to be incompatible with the
+*** libraries of other systems.  Consider getting the add-ons and restart
+*** the configuration.
+*** If you really mean to avoid those add-ons run configure again, now
+*** using the extra parameter \`--disable-sanity-checks'."
+    exit 1
+  else
+    echo "$message"
+  fi
+fi

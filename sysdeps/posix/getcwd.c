@@ -253,7 +253,7 @@ __getcwd (buf, size)
   while (!(thisdev == rootdev && thisino == rootino))
     {
       register DIR *dirstream;
-      register struct dirent *d;
+      struct dirent *d;
 #if defined HAVE_READDIR_R || defined _LIBC
       struct dirent dirbuf;
 #endif

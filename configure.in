@@ -34,7 +34,7 @@ esac
 
 dnl Arguments to specify presence of other packages/features.
 AC_ARG_WITH(fp, dnl
-  --with-fp		  if using floating-point hardware [default=yes],
+[  --with-fp		  if using floating-point hardware [default=yes]],
 	    with_fp=$withval, with_fp=yes)
 AC_ARG_WITH(gnu-binutils, dnl
   --with-gnu-binutils	  if using GNU binutils (as and ld),
@@ -58,6 +58,11 @@ AC_ARG_ENABLE(libio, dnl
 	         stdio=stdio
 	       fi],
 	      stdio=default)
+
+AC_ARG_ENABLE(sanity-checks, dnl
+[  --disable-sanity-checks really do not use threads (should not be used
+			  except in special situations) [default=yes]],
+              enable_sanity=$enableval, enable_sanity=yes)
 
 dnl Arguments to enable or disable building the shared, profiled, and
 dnl -fomit-frame-pointer libraries.
@@ -360,7 +365,8 @@ AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
 
 AC_PATH_PROG(BASH, bash, no)
-if test "$BASH" != no && $BASH -c 'test "$BASH_VERSINFO" -ge 2'; then
+if test "$BASH" != no &&
+   $BASH -c 'test "$BASH_VERSINFO" -ge 2 >&/dev/null'; then
   libc_cv_have_bash2=yes
 else
   libc_cv_have_bash2=no
