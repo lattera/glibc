@@ -74,6 +74,35 @@ size_t _dl_tls_generation;
 TLS_INIT_HELPER
 #endif
 
+static inline void
+init_slotinfo (void)
+{
+  /* Create the slotinfo list.  */
+  static_slotinfo.si.len = (((char *) (&static_slotinfo + 1)
+			     - (char *) &static_slotinfo.si.slotinfo[0])
+			    / sizeof static_slotinfo.si.slotinfo[0]);
+  // static_slotinfo.si.next = NULL;	already zero
+
+  /* The slotinfo list.  Will be extended by the code doing dynamic
+     linking.  */
+  GL(dl_tls_max_dtv_idx) = 1;
+  GL(dl_tls_dtv_slotinfo_list) = &static_slotinfo.si;
+}
+
+static inline void
+init_static_tls (size_t memsz, size_t align)
+{
+  /* That is the size of the TLS memory for this object.  The initialized
+     value of _dl_tls_static_size is provided by dl-open.c to request some
+     surplus that permits dynamic loading of modules with IE-model TLS.  */
+  GL(dl_tls_static_size) = roundup (memsz + GL(dl_tls_static_size),
+				    TLS_TCB_ALIGN);
+  GL(dl_tls_static_used) = memsz;
+  /* The alignment requirement for the static TLS block.  */
+  GL(dl_tls_static_align) = align;
+  /* Number of elements in the static TLS block.  */
+  GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx);
+}
 
 void
 __libc_setup_tls (size_t tcbsize, size_t tcbalign)
@@ -117,8 +146,8 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
      to request some surplus that permits dynamic loading of modules with
      IE-model TLS.  */
 # if TLS_TCB_AT_TP
-  tlsblock = __sbrk (roundup (memsz, tcbalign) + tcbsize + max_align
-		     + GL(dl_tls_static_size));
+  tcb_offset = roundup (memsz + GL(dl_tls_static_size), tcbalign);
+  tlsblock = __sbrk (tcb_offset + tcbsize + max_align);
 # elif TLS_DTV_AT_TP
   tlsblock = __sbrk (roundup (tcbsize, align) + memsz + max_align
 		     + GL(dl_tls_static_size));
@@ -138,10 +167,13 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 
   /* Initialize the TLS block.  */
 # if TLS_TCB_AT_TP
-  static_dtv[2].pointer = tlsblock;
+  static_dtv[2].pointer = ((char *) tlsblock + tcb_offset
+			   - roundup (memsz, align));
+  static_map.l_tls_offset = roundup (memsz, align);
 # elif TLS_DTV_AT_TP
   tcb_offset = roundup (tcbsize, align);
   static_dtv[2].pointer = (char *) tlsblock + tcb_offset;
+  static_map.l_tls_offset = tcb_offset;
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
@@ -152,8 +184,6 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 
   /* Initialize the thread pointer.  */
 # if TLS_TCB_AT_TP
-  tcb_offset = roundup (memsz, tcbalign);
-
   INSTALL_DTV ((char *) tlsblock + tcb_offset, static_dtv);
 
   TLS_INIT_TP ((char *) tlsblock + tcb_offset, 0);
@@ -171,39 +201,38 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   static_map.l_tls_blocksize = memsz;
   static_map.l_tls_initimage = initimage;
   static_map.l_tls_initimage_size = filesz;
-  static_map.l_tls_offset = tcb_offset;
   static_map.l_type = lt_executable;
   static_map.l_tls_modid = 1;
 
-  /* Create the slotinfo list.  */
-  static_slotinfo.si.len = (((char *) (&static_slotinfo + 1)
-			     - (char *) &static_slotinfo.si.slotinfo[0])
-			    / sizeof static_slotinfo.si.slotinfo[0]);
-  // static_slotinfo.si.next = NULL;	already zero
-
-  static_slotinfo.si.slotinfo[1].gen = 0;
+  init_slotinfo ();
+  // static_slotinfo.si.slotinfo[1].gen = 0; already zero
   static_slotinfo.si.slotinfo[1].map = &static_map;
 
-  /* The slotinfo list.  Will be extended by the code doing dynamic
-     linking.  */
-  GL(dl_tls_max_dtv_idx) = 1;
-  GL(dl_tls_dtv_slotinfo_list) = &static_slotinfo.si;
-
   memsz = roundup (memsz, align ?: 1);
+
 # if TLS_TCB_AT_TP
   memsz += tcbsize;
 # endif
 
-  /* That is the size of the TLS memory for this object.  The initialized
-     value of _dl_tls_static_size is provided by dl-open.c to request some
-     surplus that permits dynamic loading of modules with IE-model TLS.  */
-  GL(dl_tls_static_size) = roundup (memsz + GL(dl_tls_static_size),
-				    TLS_TCB_ALIGN);
-  GL(dl_tls_static_used) = memsz;
-  /* The alignment requirement for the static TLS block.  */
-  GL(dl_tls_static_align) = MAX (TLS_TCB_ALIGN, max_align);
-  /* Number of elements in the static TLS block.  */
-  GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx);
+  init_static_tls (memsz, MAX (TLS_TCB_ALIGN, max_align));
+}
+
+/* This is called only when the data structure setup was skipped at startup,
+   when there was no need for it then.  Now we have dynamically loaded
+   something needing TLS, or libpthread needs it.  */
+int
+internal_function
+_dl_tls_setup (void)
+{
+  init_slotinfo ();
+  init_static_tls (
+# if TLS_TCB_AT_TP
+		   TLS_TCB_SIZE,
+# else
+		   0,
+# endif
+		   TLS_TCB_ALIGN);
+  return 0;
 }
 
 

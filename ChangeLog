@@ -1,3 +1,51 @@
+2002-12-04  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Move all [USE_TLS]
+	members to the end, so a libpthread compiled with !USE_TLS will still
+	find other members properly.
+
+	* sysdeps/i386/i486/bits/string.h (__strcpy_g): Add dummy output
+	operand for DEST memory.  Fix dummy input operand to use SRC.
+	Reported by Davin McCall <davmac@ozonline.com.au>.
+
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Account for TCB
+	alignment when initializing the DTV entry.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): If we hit a TLS segment
+	when TLS has not been set up, try to set it up if we can.
+	* elf/tst-tls4.c: Revert last change.
+	* elf/tst-tls5.c: Likewise.
+	* elf/tst-tls6.c: Likewise.
+	* elf/tst-tls7.c: Likewise.
+	* elf/tst-tls8.c: Likewise.
+	* elf/tst-tls9.c: Likewise.
+
+	* sysdeps/generic/dl-tls.c [SHARED] (_dl_tls_setup): New function.
+	* sysdeps/generic/ldsodefs.h: Declare it.
+	* elf/Versions (ld: GLIBC_PRIVATE): Add it.
+	* sysdeps/generic/libc-tls.c (init_slotinfo): New static inline
+	function, broken out of __libc_setup_tls.
+	(init_static_tls): Likewise.
+	(__libc_setup_tls): Call them.
+	(_dl_tls_setup): New function, uses new subroutines.
+
+	* elf/dl-close.c (free_slotinfo): Make argument pointer to pointer.
+	Clear the pointer when returning true.
+	(libc_freeres_fn) [SHARED]: If GL(dl_initial_dtv) is null, free the
+	first element of the slotinfo list too.
+
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Define only if
+	[SHARED].
+
+	* sysdeps/generic/ldsodefs.h (_dl_next_tls_modid): Declare as hidden.
+	(_dl_determine_tlsoffset): Likewise.
+
+	* elf/rtld.c (_dl_initial_error_catch_tsd): Renamed from
+	startup_error_tsd, made global.
+	(dl_main): Update initialization.
+	* elf/dl-tsd.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Declare it.
+
 2002-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/texinfo.tex: Update from latest upstream version.

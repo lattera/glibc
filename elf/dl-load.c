@@ -946,32 +946,64 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	    /* Nothing to do for an empty segment.  */
 	    break;
 
+	  l->l_tls_blocksize = ph->p_memsz;
+	  l->l_tls_align = ph->p_align;
+	  l->l_tls_initimage_size = ph->p_filesz;
+	  /* Since we don't know the load address yet only store the
+	     offset.  We will adjust it later.  */
+	  l->l_tls_initimage = (void *) ph->p_vaddr;
+
 	  /* If not loading the initial set of shared libraries,
 	     check whether we should permit loading a TLS segment.  */
-	  if (
-# ifdef SHARED
-	      __builtin_expect (l->l_type == lt_library, 1) ||
-# endif
+	  if (__builtin_expect (l->l_type == lt_library, 1)
 	      /* If GL(dl_tls_max_dtv_idx) == 0, then rtld.c did not
 		 set up TLS data structures, so don't use them now.  */
-	      __builtin_expect (GL(dl_tls_max_dtv_idx), 1) != 0)
+	      || __builtin_expect (GL(dl_tls_max_dtv_idx), 1) != 0)
 	    {
-	      l->l_tls_blocksize = ph->p_memsz;
-	      l->l_tls_align = ph->p_align;
-	      l->l_tls_initimage_size = ph->p_filesz;
-	      /* Since we don't know the load address yet only store the
-		 offset.  We will adjust it later.  */
-	      l->l_tls_initimage = (void *) ph->p_vaddr;
-
 	      /* Assign the next available module ID.  */
 	      l->l_tls_modid = _dl_next_tls_modid ();
 	      break;
 	    }
 
+# ifdef SHARED
 	  if (l->l_prev == NULL)
 	    /* We are loading the executable itself when the dynamic linker
 	       was executed directly.  The setup will happen later.  */
 	    break;
+
+	  /* In a static binary there is no way to tell if we dynamically
+	     loaded libpthread.  */
+	  if (GL(dl_error_catch_tsd) == &_dl_initial_error_catch_tsd)
+# endif
+	    {
+	      /* We have not yet loaded libpthread.
+		 We can do the TLS setup right now!  */
+
+	      void *tcb;
+
+	      /* The first call allocates TLS bookkeeping data structures.
+		 Then we allocate the TCB for the initial thread.  */
+	      if (__builtin_expect (_dl_tls_setup (), 0)
+		  || __builtin_expect ((tcb = _dl_allocate_tls (NULL)) == NULL,
+				       0))
+		{
+		  errval = ENOMEM;
+		  errstring = N_("\
+cannot allocate TLS data structures for initial thread");
+		  goto call_lose;
+		}
+
+	      /* Now we install the TCB in the thread register.  */
+	      if (__builtin_expect (TLS_INIT_TP (tcb, 0), 0) != -1)
+		{
+		  /* Now we are all good.  */
+		  l->l_tls_modid = ++GL(dl_tls_max_dtv_idx);
+		  break;
+		}
+
+	      /* The kernel is too old or somesuch.  */
+	      _dl_deallocate_tls (tcb, 1);
+	    }
 #endif
 
 	  /* Uh-oh, the binary expects TLS support but we cannot

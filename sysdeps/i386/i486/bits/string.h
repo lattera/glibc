@@ -636,9 +636,10 @@ __strcpy_g (char *__dest, __const char *__src)
      "leal	1(%1),%1\n\t"
      "testb	%b2,%b2\n\t"
      "jne	1b"
-     : "=&r" (__src), "=&r" (__tmp), "=&q" (__dummy)
+     : "=&r" (__src), "=&r" (__tmp), "=&q" (__dummy),
+       "=m" ( *(struct { char __x[0xfffffff]; } *)__dest)
      : "0" (__src), "1" (__tmp),
-       "m" ( *(struct { char __x[0xfffffff]; } *)__dest)
+       "m" ( *(struct { char __x[0xfffffff]; } *)__src)
      : "cc");
   return __dest;
 }

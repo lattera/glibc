@@ -27,8 +27,8 @@
 /* _dl_error_catch_tsd points to this for the single-threaded case.
    It's reset by the thread library for multithreaded programs
    if we're not using __thread.  */
-static void ** __attribute__ ((const))
-startup_error_tsd (void)
+void ** __attribute__ ((const))
+_dl_initial_error_catch_tsd (void)
 {
 #  if USE___THREAD
   static __thread void *data;
@@ -38,7 +38,7 @@ startup_error_tsd (void)
   return &data;
 }
 void **(*_dl_error_catch_tsd) (void) __attribute__ ((const))
-     = &startup_error_tsd;
+     = &_dl_initial_error_catch_tsd;
 
 # elif USE___THREAD
 

@@ -110,6 +110,7 @@ _dl_next_tls_modid (void)
   return result;
 }
 
+# ifdef SHARED
 
 void
 internal_function
@@ -203,6 +204,41 @@ _dl_determine_tlsoffset (void)
   GL(dl_tls_static_align) = MAX (TLS_TCB_ALIGN, max_align);
 }
 
+
+/* This is called only when the data structure setup was skipped at startup,
+   when there was no need for it then.  Now we have dynamically loaded
+   something needing TLS, or libpthread needs it.  */
+int
+internal_function
+_dl_tls_setup (void)
+{
+  assert (GL(dl_tls_dtv_slotinfo_list) == NULL);
+  assert (GL(dl_tls_max_dtv_idx) == 0);
+
+  const size_t nelem = 2 + TLS_SLOTINFO_SURPLUS;
+
+  GL(dl_tls_dtv_slotinfo_list) =
+    malloc (sizeof (struct dtv_slotinfo_list)
+	    + nelem * sizeof (struct dtv_slotinfo));
+  if (GL(dl_tls_dtv_slotinfo_list) == NULL)
+    return -1;
+
+  memset (GL(dl_tls_dtv_slotinfo_list)->slotinfo, '\0',
+	  nelem * sizeof (struct dtv_slotinfo));
+  GL(dl_tls_dtv_slotinfo_list)->len = nelem;
+  GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+
+  /* Number of elements in the static TLS block.  It can't be zero
+     because of various assumptions.  The one element is null.  */
+  GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx) = 1;
+
+  /* This initializes more variables for us.  */
+  _dl_determine_tlsoffset ();
+
+  return 0;
+}
+rtld_hidden_def (_dl_tls_setup)
+# endif
 
 static void *
 internal_function

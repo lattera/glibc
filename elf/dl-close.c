@@ -429,28 +429,28 @@ libc_hidden_def (_dl_close)
 
 #ifdef USE_TLS
 static bool
-free_slotinfo (struct dtv_slotinfo_list *elemp)
+free_slotinfo (struct dtv_slotinfo_list **elemp)
 {
   size_t cnt;
 
-  if (elemp == NULL)
+  if (*elemp == NULL)
     /* Nothing here, all is removed (or there never was anything).  */
     return true;
 
-  if (!free_slotinfo (elemp->next))
+  if (!free_slotinfo (&(*elemp)->next))
     /* We cannot free the entry.  */
     return false;
 
-  /* The least we could do is remove next element (if there was any).  */
-  elemp->next = NULL;
+  /* That cleared our next pointer for us.  */
 
-  for (cnt = 0; cnt < elemp->len; ++cnt)
-    if (elemp->slotinfo[cnt].map != NULL)
+  for (cnt = 0; cnt < (*elemp)->len; ++cnt)
+    if ((*elemp)->slotinfo[cnt].map != NULL)
       /* Still used.  */
       return false;
 
   /* We can remove the list element.  */
-  free (elemp);
+  free (*elemp);
+  *elemp = NULL;
 
   return true;
 }
@@ -479,12 +479,17 @@ libc_freeres_fn (free_mem)
   if (USE___THREAD || GL(dl_tls_dtv_slotinfo_list) != NULL)
     {
       /* Free the memory allocated for the dtv slotinfo array.  We can do
-	 this only if all modules which used this memory are unloaded.
-	 Also, the first element of the list does not have to be
-	 deallocated.  It was allocated in the dynamic linker (i.e., with
-	 a different malloc).  */
-      if (free_slotinfo (GL(dl_tls_dtv_slotinfo_list)->next))
-	GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+	 this only if all modules which used this memory are unloaded.  */
+# ifdef SHARED
+      if (GL(dl_initial_dtv) == NULL)
+	/* There was no initial TLS setup, it was set up later when
+	   it used the normal malloc.  */
+	free_slotinfo (&GL(dl_tls_dtv_slotinfo_list));
+# endif
+      /* The first element of the list does not have to be deallocated.
+	 It was allocated in the dynamic linker (i.e., with a different
+	 malloc), and in the static library it's in .bss space.  */
+      free_slotinfo (&GL(dl_tls_dtv_slotinfo_list)->next);
     }
 #endif
 }

@@ -563,8 +563,8 @@ match_version (const char *string, struct link_map *map)
 #ifdef _LIBC_REENTRANT
 /* _dl_error_catch_tsd points to this for the single-threaded case.
    It's reset by the thread library for multithreaded programs.  */
-static void ** __attribute__ ((const))
-startup_error_tsd (void)
+void ** __attribute__ ((const))
+_dl_initial_error_catch_tsd (void)
 {
   static void *data;
   return &data;
@@ -602,7 +602,7 @@ dl_main (const ElfW(Phdr) *phdr,
 
 #ifdef _LIBC_REENTRANT
   /* Explicit initialization since the reloc would just be more work.  */
-  GL(dl_error_catch_tsd) = &startup_error_tsd;
+  GL(dl_error_catch_tsd) = &_dl_initial_error_catch_tsd;
 #endif
 
   /* Process the environment variable which control the behaviour.  */
@@ -1180,9 +1180,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  slotinfo[++i].map = l;
       assert (i == GL(dl_tls_max_dtv_idx));
 
-      /* Compute the TLS offsets for the various blocks.  We call this
-	 function even if none of the modules available at startup time
-	 uses TLS to initialize some variables.  */
+      /* Compute the TLS offsets for the various blocks.  */
       _dl_determine_tlsoffset ();
 
       /* Construct the static TLS block and the dtv for the initial
