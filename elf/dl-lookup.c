@@ -142,8 +142,9 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  if (! do_lookup (undef_name, hash, *ref, &current_value,
-		   *scope, i, reference_name, skip_map, 0))
+  if (i >= (*scope)->r_nlist
+      || ! do_lookup (undef_name, hash, *ref, &current_value,
+		      *scope, i, reference_name, skip_map, 0))
     while (*++scope)
       if (do_lookup (undef_name, hash, *ref, &current_value,
 		     *scope, 0, reference_name, skip_map, 0))
@@ -263,8 +264,9 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  if (! do_lookup_versioned (undef_name, hash, *ref, &current_value,
-			     *scope, i, reference_name, version, skip_map, 0))
+  if (i >= (*scope)->r_nlist
+      || ! do_lookup_versioned (undef_name, hash, *ref, &current_value, *scope,
+				i, reference_name, version, skip_map, 0))
     while (*++scope)
       if (do_lookup_versioned (undef_name, hash, *ref, &current_value, *scope,
 			       0, reference_name, version, skip_map, 0))
