@@ -1,3 +1,34 @@
+Fri Sep 13 04:33:08 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sched.h: New file.  helper to access posix/sched.h.
+	* posix/sched.h: Change `sched_params' to `sched_param' to follow
+	POSIX.4.
+
+Thu Sep 12 20:12:40 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/makedb.c (usage): Print bug report address separately to
+	ease translators task.
+	* catgets/gencat.c (usage): Likewise.
+	* locale/locale.c (usage): Likewise.
+	* locale/localedef.c (usage): Likewise.
+
+1996-09-12  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (my_localtime_r): Define if ! HAVE_LOCALTIME_R,
+	and #define localtime_r to it.	If _LIBC, use __localtime_r instead.
+	(my_gmtime_r): Similar, except it's not needed if ! HAVE_TM_GMTOFF.
+
+Thu Sep 12 14:03:29 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* crypt/Makefile: Include Makeconfig and add crypt object dir to
+ 	rpath-link so that running the check finds the new library.
+	* crypt/cert.c: provide correct prototypes to prevent warnings.
+	Reported by Andreas Jaeger.
+
+	* sysdeps/mach/hurd/Makefile (rpath-link): Don't use += because
+	old and new value must be glued using `:'.
+	Reported by Marcus Daniels.
+
 Thu Sep 12 12:33:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* stdio-common/vfprintf.c: Include <libc-lock.h>.
@@ -11,7 +42,6 @@ Thu Sep 12 12:33:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): New
 	macro.
 	(__libc_cleanup_region_end): New macro.
-
 
 Thu Sep 12 03:35:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 

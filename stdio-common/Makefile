@@ -33,6 +33,11 @@ routines	:=							      \
 	tmpfile tmpnam tempnam tempname					      \
 	getline getw putw						      \
 	remove rename
+
+ifneq (,$(filter %REENTRANT, $(defines)))
+routines += lockfile
+endif
+
 aux	:= errlist siglist
 distribute := _itoa.h printf-parse.h
 

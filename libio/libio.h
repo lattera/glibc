@@ -150,9 +150,7 @@ typedef struct
 
 /* Handle lock.  */
 #ifdef _IO_MTSAFE_IO
-#include <pthread.h>
-typedef pthread_mutex_t _IO_lock_t;
-#define _IO_lock_init PTHREAD_MUTEX_INITIALIZER
+#include <stdio-lock.h>
 #else
 typedef void _IO_lock_t;
 #endif

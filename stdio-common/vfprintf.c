@@ -124,8 +124,6 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
     }									      \
    while (0)
 # define UNBUFFERED_P(s) ((s)->__buffer == NULL)
-# define __flockfile(S) /* nothing */
-# define __funlockfile(S) /* nothing */
 #endif /* USE_IN_LIBIO */
 
 
@@ -152,6 +150,14 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 /* For handling long_double and longlong we use the same flag.  */
 #ifndef is_longlong
 # define is_longlong is_long_double
+#endif
+
+
+#ifdef _LIBC_REENTRANT
+extern void __flockfile (FILE *);
+weak_extern (__flockfile);
+extern void __funlockfile (FILE *);
+weak_extern (__funlockfile);
 #endif
 
 
@@ -848,15 +854,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   f = lead_str_end = find_spec (format, &mbstate);
 
   /* Lock stream.  */
-#ifdef USE_IN_LIBIO
-  __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
-#else
-#if 0
-  /* XXX For now stdio has no locking.  */
   __libc_cleanup_region_start ((void (*) (void *)) &__funlockfile, s);
-#endif
-#endif
-  __flockfile (s);
+
+  if (__flockfile != NULL)
+    __flockfile (s);
 
   /* Write the literal text before the first format.  */
   outstring ((const UCHAR_T *) format,

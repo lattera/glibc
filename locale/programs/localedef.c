@@ -383,7 +383,8 @@ usage (int status)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_invocation_name);
   else
-    printf (_("\
+    {
+      printf (_("\
 Usage: %s [OPTION]... name\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --force               create output even if warning messages were issued\n\
@@ -396,9 +397,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --posix               be strictly POSIX conform\n\
 \n\
 System's directory for character maps: %s\n\
-                       locale files  : %s\n\
-Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
-	    program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
+                       locale files  : %s\n"),
+	      program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
+      printf (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"));
+    }
 
   exit (status);
 }

@@ -33,19 +33,19 @@ __BEGIN_DECLS
 
 /* Set scheduling parameters for a process.  */
 extern int __sched_setparam __P ((__pid_t __pid,
-				  __const struct sched_params *__param));
+				  __const struct sched_param *__param));
 extern int sched_setparam __P ((__pid_t __pid,
-				__const struct sched_params *__param));
+				__const struct sched_param *__param));
 
 /* Retrieve scheduling parameters for a particular process.  */
-extern int __sched_getparam __P ((__pid_t __pid, struct sched_params *__param));
-extern int sched_getparam __P ((__pid_t __pid, struct sched_params *__param));
+extern int __sched_getparam __P ((__pid_t __pid, struct sched_param *__param));
+extern int sched_getparam __P ((__pid_t __pid, struct sched_param *__param));
 
 /* Set scheduling algorithm and/or parameters for a process.  */
 extern int __sched_setscheduler __P ((__pid_t __pid, int __policy,
-				      __const struct sched_params *__param));
+				      __const struct sched_param *__param));
 extern int sched_setscheduler __P ((__pid_t __pid, int __policy,
-				    __const struct sched_params *__param));
+				    __const struct sched_param *__param));
 
 /* Retrieve scheduling algorithm for a particular purpose.  */
 extern int __sched_getscheduler __P ((__pid_t __pid));

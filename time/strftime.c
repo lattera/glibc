@@ -92,6 +92,46 @@ Cambridge, MA 02139, USA.  */
 #define TM_YEAR_BASE 1900
 
 
+#ifdef _LIBC
+# define gmtime_r __gmtime_r
+# define localtime_r __localtime_r
+#else
+# if ! HAVE_LOCALTIME_R
+#  if ! HAVE_TM_GMTOFF
+/* Approximate gmtime_r as best we can in its absence.  */
+#define gmtime_r my_gmtime_r
+static struct tm *gmtime_r __P ((const time_t *, struct tm *));
+static struct tm *
+gmtime_r (t, tp)
+     const time_t *t;
+     struct tm *tp;
+{
+  struct tm *l = gmtime (t);
+  if (! l)
+    return 0;
+  *tp = *l;
+  return tp;
+}
+#  endif /* ! HAVE_TM_GMTOFF */
+
+/* Approximate localtime_r as best we can in its absence.  */
+#define localtime_r my_localtime_r
+static struct tm *localtime_r __P ((const time_t *, struct tm *));
+static struct tm *
+localtime_r (t, tp)
+     const time_t *t;
+     struct tm *tp;
+{
+  struct tm *l = localtime (t);
+  if (! l)
+    return 0;
+  *tp = *l;
+  return tp;
+}
+# endif /* ! HAVE_LOCALTIME_R */
+#endif /* ! defined (_LIBC) */
+
+
 static unsigned int week __P ((const struct tm *const, int, int));
 
 

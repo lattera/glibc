@@ -234,7 +234,8 @@ usage (int status)
     fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
 	     __progname);
   else
-    printf (gettext ("\
+    {
+      printf (gettext ("\
 Usage: %s [OPTION]... name\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -h, --help            display this help and exit\n\
@@ -244,9 +245,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -m, --charmaps        write names of available charmaps\n\
 \n\
   -c, --category-name   write names of selected categories\n\
-  -k, --keyword-name    write names of selected keywords\n\
-Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
-	    __progname);
+  -k, --keyword-name    write names of selected keywords\n"),
+	      __progname);
+      printf (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"));
+    }
 
   exit (status);
 }

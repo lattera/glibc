@@ -40,7 +40,7 @@ include ../Makeconfig
 
 ifneq (,$(filter %REENTRANT, $(defines)))
 routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
-	    iofflush_u putc_u putchar_u ioflockfile
+	    iofflush_u putc_u putchar_u
 
 CPPFLAGS += -D_IO_MTSAFE_IO
 endif

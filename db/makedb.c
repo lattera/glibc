@@ -198,7 +198,8 @@ usage (status)
     fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
              program_invocation_name);
   else
-    printf (gettext ("\
+    {
+      printf (gettext ("\
 Usage: %s [OPTION]... INPUT-FILE OUTPUT-FILE\n\
        %s [OPTION]... -o OUTPUT-FILE INPUT-FILE\n\
        %s [OPTION]... -u INPUT-FILE\n\
@@ -209,10 +210,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --quiet         don't print messages while building database\n\
   -u, --undo          print content of database file, one entry a line\n\
   -V, --version       output version information and exit\n\
-If INPUT-FILE is -, input is read from standard input.\n\
-Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
-	    program_invocation_name, program_invocation_name,
-	    program_invocation_name);
+If INPUT-FILE is -, input is read from standard input.\n"),
+	      program_invocation_name, program_invocation_name,
+	      program_invocation_name);
+      printf (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"));
+    }
 
   exit (status);
 }
