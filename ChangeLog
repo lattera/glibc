@@ -1,5 +1,9 @@
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/semctl.c (semctl): Define own union
+	semun and use stdarg macros to get the value.
+	* sysdeps/generic/semctl.c: Don't use union semun.
+
 	* sysvipc/sys/sem.h: Don't use union semun in semctl prototype.
 
 	* string/basename.c [!_LIBC]: Define function as gnu_basename.

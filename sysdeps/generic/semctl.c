@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -24,11 +24,7 @@
    KEY.  */
 
 int
-semctl (semid, semnum, cmd, arg)
-     int semid;
-     int semnum;
-     int cmd;
-     union semun arg;
+semctl (int semid, int semnum, int cmd, ...)
 {
   __set_errno (ENOSYS);
   return -1;
