@@ -69,7 +69,7 @@ EGCS and with GCC 2.8.1. See ?exception for details.
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
 
-{UD} You definitely need GNU make to translate GNU libc.  No other make
+{UD} You definitely need GNU make to build GNU libc.  No other make
 program has the needed functionality.
 
 We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
@@ -168,7 +168,7 @@ when using the library do not need to match.  The GNU C library runs without
 problems on kernels that are older than the kernel headers used.  The other
 way round (compiling the GNU C library with old kernel headers and running
 on a recent kernel) does not necessarily work.  For example you can't use
-new kernel features when using old kernel headers for compiling the GNU C
+new kernel features if you used old kernel headers to compile the GNU C
 library.
 
 {ZW} Even if you are using a 2.0 kernel on your machine, we recommend you
@@ -282,18 +282,18 @@ with a library that was build this way, we advise you to rebuild the library
 without --enable-omitfp.  If the problem vanishes consider tracking the
 problem down and report it as compiler failure.
 
-Since a library build with --enable-omitfp is undebuggable on most systems,
-debuggable libraries are also built - you can use it by appending "_g" to
+Since a library built with --enable-omitfp is undebuggable on most systems,
+debuggable libraries are also built - you can use them by appending "_g" to
 the library names.
 
 The compilation of these extra libraries and the compiler optimizations slow
 down the build process and need more disk space.
 
-??	I get failures during `make check'.  What shall I do?
+??	I get failures during `make check'.  What should I do?
 
-{AJ} The testsuite should compile and run cleanly on your system, every
-failure should be looked into.  Depending on the failure I wouldn't advise
-installing the library at all.
+{AJ} The testsuite should compile and run cleanly on your system; every
+failure should be looked into.  Depending on the failures, you probably
+should not install the library at all.
 
 You should consider using the `glibcbug' script to report the failure,
 providing as much detail as possible.  If you run a test directly, please
@@ -303,13 +303,15 @@ command line which failed and run the test from the subdirectory for this
 test in the sources.
 
 There are some failures which are not directly related to the GNU libc:
-- Some compiler produce buggy code.  The egcs 1.1 release should be ok.  gcc
-  2.8.1 might cause some failures, gcc 2.7.2.x is so buggy, that explicit
-  checks have been used so that you can't build with it.
+- Some compilers produce buggy code.  No compiler gets single precision
+  complex numbers correct on Alpha.  Otherwise, the egcs 1.1 release should be
+  ok; gcc 2.8.1 might cause some failures; gcc 2.7.2.x is so buggy that
+  explicit checks have been used so that you can't build with it.
 - The kernel might have bugs.  For example on Linux/Alpha 2.0.34 the
   floating point handling has quite a number of bugs and therefore most of
   the test cases in the math subdirectory will fail.  Linux 2.2 has
-  fixes for the floating point support on Alpha.
+  fixes for the floating point support on Alpha.  The Linux/SPARC kernel has
+  also some bugs in the FPU emulation code (as of Linux 2.2.0).
 
 ??	What is symbol versioning good for?  Do I need it?
 
@@ -318,15 +320,15 @@ changes.  One version of an interface might have been introduced in a
 previous version of the GNU C library but the interface or the semantics of
 the function has been changed in the meantime.  For binary compatibility
 with the old library, a newer library needs to still have the old interface
-for old programs.  On the other hand new programs should use the new
+for old programs.  On the other hand, new programs should use the new
 interface.  Symbol versioning is the solution for this problem.  The GNU
-libc version 2.1 uses by default symbol versioning if the binutils support
-it.
+libc version 2.1 uses symbol versioning by default if the installed binutils
+supports it.
 
-We don't advise to build without symbol versioning since you lose binary
-compatibility if you do - for ever!  The binary compatibility you lose is
-not only against the previous version of the GNU libc (version 2.0) but also
-against future versions.
+We don't advise building without symbol versioning, since you lose binary
+compatibility - forever!  The binary compatibility you lose is not only
+against the previous version of the GNU libc (version 2.0) but also against
+all future versions.
 
 
 ? Installation and configuration issues

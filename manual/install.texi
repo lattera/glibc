@@ -48,10 +48,9 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 @cindex configuring
 @cindex compiling
 
-GNU Libc cannot be compiled in the source directory.  You must create a
-separate directory for the object files.  This directory should be
-outside the source tree.  For example, if you have unpacked the glibc
-sources in @file{/src/gnu/glibc-2.1.0}, create a directory
+GNU Libc can be compiled in the source directory but we'd advise to
+build in a separate build directory.  For example, if you have unpacked
+the glibc sources in @file{/src/gnu/glibc-2.1.0}, create a directory
 @file{/src/gnu/glibc-build} to put the object files in.
 
 From your object directory, run the shell script @file{configure} found

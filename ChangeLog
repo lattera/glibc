@@ -1,3 +1,12 @@
+1999-02-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/reboot.c: Make sure first parameter is
+	correctly passed to the kernel even on 64bit platforms.
+	Patch by Bruce Elliott <bde@nwlink.com>.
+
+	* localedata/locales/it_CH: New file.
+	Contributed by Giacomo Amabile Catenazzi <gcatenaz@g26.ethz.ch>.
+
 1999-01-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.c (fdim_test): Fix typo in message.

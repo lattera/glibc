@@ -80,7 +80,7 @@ locale_special (const char *name, int show_category_name,
 		      if (ch != EOF)
 			putchar (ch);
 		      else
-			fputs ("<???\>", stdout);
+			fputs ("<??\?>", stdout);
 		    }
 
 		  putchar ('"');
