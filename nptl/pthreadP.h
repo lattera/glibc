@@ -67,7 +67,12 @@ extern unsigned int __nptl_nthreads attribute_hidden;
 /* The library can run in debugging mode where it performs a lot more
    tests.  */
 extern int __pthread_debug attribute_hidden;
-#define DEBUGGING_P __builtin_expect (__pthread_debug, 0)
+/** For now disable debugging support.  */
+#if 0
+# define DEBUGGING_P __builtin_expect (__pthread_debug, 0)
+#else
+# define DEBUGGING_P 0
+#endif
 
 
 /* Cancellation test.  */

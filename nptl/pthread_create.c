@@ -226,7 +226,7 @@ start_thread (void *arg)
   /* If this is the last thread we terminate the process now.  We
      do not notify the debugger, it might just irritate it if there
      is no thread left.  */
-  if (atomic_decrement_and_test (&__nptl_nthreads))
+  if (__builtin_expect (atomic_decrement_and_test (&__nptl_nthreads), 0))
     /* This was the last thread.  */
     exit (0);
 
@@ -328,7 +328,7 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
     iattr = &default_attr;
 
   err = ALLOCATE_STACK (iattr, &pd);
-  if (err != 0)
+  if (__builtin_expect (err != 0, 0))
     /* Something went wrong.  Maybe a parameter of the attributes is
        invalid or we could not allocate memory.  */
     return err;
