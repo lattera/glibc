@@ -504,7 +504,7 @@ Instead, use the facilities described in @ref{Time Zone Functions}.
 The @code{gettimeofday} function returns the current calendar time as
 the elapsed time since the epoch in the @code{struct timeval} structure
 indicated by @var{tp}.  (@pxref{Elapsed Time} for a description of
-@code{struct timespec}).  Information about the time zone is returned in
+@code{struct timeval}).  Information about the time zone is returned in
 the structure pointed at @var{tzp}.  If the @var{tzp} argument is a null
 pointer, time zone information is ignored.
 

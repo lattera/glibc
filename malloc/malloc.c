@@ -2969,9 +2969,6 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
     */
 
     else {
-      /* Count foreign sbrk as system_mem.  */
-      if (old_size)
-	av->system_mem += brk - old_end;
       front_misalign = 0;
       end_misalign = 0;
       correction = 0;
@@ -2979,6 +2976,10 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 
       /* handle contiguous cases */
       if (contiguous(av)) {
+
+	/* Count foreign sbrk as system_mem.  */
+	if (old_size)
+	  av->system_mem += brk - old_end;
 
         /* Guarantee alignment of first new chunk made from this space */
 
@@ -5164,11 +5165,11 @@ int mALLOPt(int param_number, int value)
 int mALLOPt(param_number, value) int param_number; int value;
 #endif
 {
-  if(__malloc_initialized < 0)
-    ptmalloc_init ();
   mstate av = &main_arena;
   int res = 1;
 
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
   (void)mutex_lock(&av->mutex);
   /* Ensure initialization/consolidation */
   malloc_consolidate(av);

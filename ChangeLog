@@ -1,3 +1,10 @@
+2003-09-08  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (sYSMALLOc): Move foreign sbrk accounting into
+	contiguous case.  Bug report from Prem Gopalan
+	<prem@mazunetworks.com>.
+	(mALLOPt): Avoid requirement of C99.
+
 2003-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/bug-ftell.c: Include <sys/types.h>.
