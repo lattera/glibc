@@ -113,6 +113,8 @@ _hurdsig_fault_init (void)
   struct machine_thread_state state;
   mach_port_t sigexc;
 
+  /* Allocate a port to receive signal thread exceptions.
+     We will move this receive right to the proc server.  */
   err = __mach_port_allocate (__mach_task_self (),
 			      MACH_PORT_RIGHT_RECEIVE, &sigexc);
   assert_perror (err);
@@ -120,16 +122,20 @@ _hurdsig_fault_init (void)
 			      MACH_PORT_RIGHT_RECEIVE, &forward_sigexc);
   assert_perror (err);
 
+  /* Allocate a port to receive the exception msgs forwarded
+     from the proc server.  */
   err = __mach_port_insert_right (__mach_task_self (), sigexc,
 				  sigexc, MACH_MSG_TYPE_MAKE_SEND);
   assert_perror (err);
-#if 0				/* XXX gdb bites */
-  err = __thread_set_special_port (_hurd_msgport_thread,
-				   THREAD_EXCEPTION_PORT, sigexc);
-#endif
-  __mach_port_deallocate (__mach_task_self (), sigexc);
+
+  /* Set the queue limit for this port to just one.  The proc server will
+     notice if we ever get a second exception while one remains queued and
+     unreceived, and decide we are hopelessly buggy.  */
+  err = __mach_port_set_qlimit (__mach_task_self (), forward_sigexc, 1);
   assert_perror (err);
 
+  /* This state will be restored when we fault.
+     It runs the function above.  */
   memset (&state, 0, sizeof state);
   MACHINE_THREAD_STATE_SET_PC (&state, faulted);
   MACHINE_THREAD_STATE_SET_SP (&state, faultstack, sizeof faultstack);
@@ -142,6 +148,12 @@ _hurdsig_fault_init (void)
 			       MACHINE_THREAD_STATE_FLAVOR,
 			       (natural_t *) &state,
 			       MACHINE_THREAD_STATE_COUNT));
+  assert_perror (err);
+
+  /* Direct signal thread exceptions to the proc server.  */
+  err = __thread_set_special_port (_hurd_msgport_thread,
+				   THREAD_EXCEPTION_PORT, sigexc);
+  __mach_port_deallocate (__mach_task_self (), sigexc);
   assert_perror (err);
 }
 

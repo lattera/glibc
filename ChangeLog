@@ -35,6 +35,10 @@ Mon Feb 12 03:10:41 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 	* sysdeps/unix/sysv/sysv4/sigaltstack.S: File removed.
 	* sysdeps/unix/sysv/sysv4/solaris2/utimes.S: File removed.
 
+	* hurd/hurdfault.c (_hurdsig_fault_init): Set qlimit on
+ 	FORWARD_SIGEXC to one.  Uncomment setting of thread exc port, and
+ 	move it to last thing.
+
 Sat Feb 10 05:57:08 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/generic/make_siglist.c: #undef _SIGNAL_H before defining it.

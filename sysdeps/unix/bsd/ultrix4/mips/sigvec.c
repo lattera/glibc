@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,6 @@ Cambridge, MA 02139, USA.  */
 /* The user's signal handler is called with three arguments.  */
 typedef void (*handler_type) (int sig, int code, struct sigcontext *);
 
-/* Defined in __raw_sigvec.S.  */
 extern int EXFUN(__raw_sigvec, (int sig, CONST struct sigvec *vec,
 				struct sigvec *ovec,
 				void (*)(int sig, int code,
