@@ -1,3 +1,9 @@
+2004-08-20  Roland McGrath  <roland@frob.com>
+
+	* csu/Makefile ($(objpfx)version-info.h): Use printf in place
+	of echo -e for POSIX.2 portability.
+	Reported by Paul Jarc <prj@po.cwru.edu>.
+
 2004-08-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Minor optimizations in
@@ -881,7 +887,7 @@
 2004-07-16  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #269]
-	* setjmp/Makefile (tests): Add  bug269-setjmp.
+	* setjmp/Makefile (tests): Add bug269-setjmp.
 	* setjmp/bug269-setjmp.c: New file.
 	* sysdeps/powerpc/powerpc64/__longjmp-common.S [SHARED && !IS_IN_rtld]:
 	Store R2 from jmpbuf in callers TOC save area.
