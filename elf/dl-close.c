@@ -528,7 +528,7 @@ _dl_close (void *_map)
   if (any_tls)
     {
       if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
-	__libc_fatal (_("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
+	__libc_fatal (_("TLS generation counter wrapped!  Please send report as described in <http://www.gnu.org/software/libc/bugs.html>."));
 
       if (tls_free_end == GL(dl_tls_static_used))
 	GL(dl_tls_static_used) = tls_free_start;
