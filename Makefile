@@ -77,10 +77,6 @@ ifeq (yes,$(build-shared))
 install-others += $(inst_includedir)/gnu/lib-names.h
 endif
 
-ifeq ($(versioning),yes)
-lib-noranlib: lib-mapfiles
-endif
-
 include Makerules
 
 ifeq ($(build-programs),yes)
@@ -315,25 +311,3 @@ headers2_0 := 	__math.h bytesex.h confname.h direntry.h elfclass.h  	\
 .PHONY: remove-old-headers
 remove-old-headers:
 	rm -f $(addprefix $(inst_includedir)/, $(headers2_0))
-
-# Generate version maps.
-ifeq ($(versioning),yes)
-ifndef avoid-generated
-$(common-objpfx)sysd-versions: Versions.def
-	(echo define vers-libs; \
-	sed -n 's/\(lib[a-zA-Z0-9_][a-zA-Z0-9_]*\) {/$$(common-objpfx)\1%map/p' $<; \
-	echo endef) > $@T
-	mv -f $@T $@
--include $(common-objpfx)sysd-versions
-vers-libs := $(subst $(\n), ,$(vers-libs))
-
-$(vers-libs): versions.awk \
-	       $(wildcard $(subdirs:%=%/Versions)) \
-	       $(wildcard $(+sysdep_dirs:%=%/Versions))
-	$(AWK) -v 'buildroot=$(common-objpfx)' -f $^
-
-lib-mapfiles: $(common-objpfx)sysd-versions $(subst %,.,$(vers-libs))
-else
-lib-mapfiles:
-endif
-endif

@@ -10,20 +10,35 @@ libc {
     # variables in normal name space
     sys_errlist; sys_nerr; sys_sigabbrev; sys_siglist;
 
+    # a*
+    asprintf;
+
     # c*
     ctermid; cuserid;
 
+    # d*
+    dprintf;
+
+    # f*
+    fprintf; fscanf;
+
+    # g*
+    getline; getw;
+
     # p*
-    parse_printf_format; perror;
+    parse_printf_format; perror; printf; putw;
 
     # r*
     register_printf_function; remove; rename;
+
+    # s*
+    scanf; snprintf; sprintf; sscanf;
 
     # t*
     tempnam; tmpfile; tmpnam; tmpnam_r;
 
     # v*
-    vfprintf; vfscanf;
+    vfprintf; vfscanf; vprintf; 
   }
   GLIBC_2.1 {
     # p*

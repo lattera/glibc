@@ -64,7 +64,7 @@ before-compile	:= testcases.h ptestcases.h
 
 # So they get cleaned up.
 generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
-	     $(objpfx)annexc $(objpfx)annexc.out
+	     annexc annexc.out
 
 include ../Rules
 
@@ -137,7 +137,8 @@ endif
 # Run a test on the header files we use.
 # XXX Please note that for now we ignore the result of this test.
 tests: $(objpfx)annexc
-	-$(dir $<)$(notdir $<) '$(CC)' '-I../include -I../include -I.. $(+sysdep-includes) -I../include -I../include -I..' > $<.out
+	-$(dir $<)$(notdir $<) '$(CC)' \
+			       '-I../include -I.. $(+sysdep-includes)' > $<.out
 
 $(objpfx)annexc: annexc.c
 	$(native-compile)

@@ -6,26 +6,24 @@
 # Read definitions for the versions.
 BEGIN {
   nlibs=0;
-  while (getline < "Versions.def") {
+  while (getline < defsfile) {
     if (/^[a-zA-Z_]+ {/) {
       libs[$1] = 1;
       curlib = $1;
-      while (getline < "Versions.def" && ! /^}/) {
+      while (getline < defsfile && ! /^}/) {
+	versions[$1] = 1;
 	if (NF > 1) {
-	  versions[$1] = 1;
-	  derived[curlib, $1] = (" " $2);
+	  derived[curlib, $1] = " " $2;
 	  for (n = 3; n <= NF; ++n) {
-	    derived[curlib, $1] = sprintf("%s, %s", derived[curlib, $1], $n);
+	    derived[curlib, $1] = derived[curlib, $1] ", " $n;
 	  }
-	} else {
-	  versions[$1] = 1;
 	}
       }
     }
   }
-  close("Versions.def");
+  close(defsfile);
 
-  tmpfile = (buildroot "/Versions.tmp");
+  tmpfile = (buildroot "Versions.tmp");
   sort = ("sort -n >" tmpfile);
 }
 
@@ -37,8 +35,8 @@ BEGIN {
 # This matches the beginning of the version information for a new library.
 /^[a-zA-Z_]+/ {
   actlib = $1;
-  if (libs[$1] != 1) {
-    printf("no versions defined for %s\n", $1);
+  if (!libs[$1]) {
+    printf("no versions defined for %s\n", $1) > "/dev/stderr";
     exit 1;
   }
   next;
@@ -47,8 +45,8 @@ BEGIN {
 # This matches the beginning of a new version for the current library.
 /^  [A-Za-z_]/ {
   actver = $1;
-  if (versions[$1] != 1) {
-    printf("version %s not defined\n", $1);
+  if (!versions[$1]) {
+    printf("version %s not defined\n", $1) > "/dev/stderr";
     exit 1;
   }
   next;
@@ -75,6 +73,7 @@ END {
   close(sort);
   oldlib="";
   oldver="";
+  printf("all-version-maps =");
   while(getline < tmpfile) {
     if ($1 != oldlib) {
       if (oldlib != "") {
@@ -85,6 +84,7 @@ END {
       oldlib = $1;
       outfile = (buildroot oldlib ".map");
       firstinfile = 1;
+      printf(" $(common-objpfx)%s.map", oldlib);
     }
     if ($2 != oldver) {
       if (oldver != "") {
@@ -99,7 +99,8 @@ END {
     }
     printf("\n") > outfile;
   }
+  printf("\n");
   closeversion(oldver);
   close(outfile);
-  rm tmpfile;
+  system("rm " tmpfile);
 }

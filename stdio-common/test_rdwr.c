@@ -91,7 +91,7 @@ main (int argc, char **argv)
       }
     else if (where == -1L)
       {
-	printf ("ftell got %s (should be at %u).\n",
+	printf ("ftell got %s (should be at %Zu).\n",
 		strerror (errno), replace_from);
 	lose = 1;
       }

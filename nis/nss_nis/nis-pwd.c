@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -82,8 +82,8 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
 			 int *errnop)
 {
   struct parser_data *data = (void *) buffer;
-  char *domain, *result, *outkey;
-  int len, keylen, parse_res;
+  char *domain;
+  int parse_res;
 
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
@@ -92,7 +92,9 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
   do
     {
       enum nss_status retval;
-      char *p;
+      char *result, *outkey, *result2, *p;
+      int len, keylen, len2;
+      size_t namelen;
 
       if (new_start)
         retval = yperr2nss (yp_first (domain, "passwd.byname",
@@ -109,15 +111,63 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
           return retval;
         }
 
-      if ((size_t) (len + 1) > buflen)
-        {
-          free (result);
-	  *errnop = ERANGE;
-          return NSS_STATUS_TRYAGAIN;
-        }
+      /* Check for adjunct style secret passwords.  They can be
+	 recognized by a password starting with "##".  */
+      p = strchr (result, ':');
+      if (p != NULL	/* This better should be true in all cases.  */
+	  && p[1] == '#' && p[2] == '#'
+	  && (namelen = p - result,
+	      yp_match (domain, "passwd.adjunct.byname", result, namelen,
+			&result2, &len2)) == YPERR_SUCCESS)
+	{
+	  /* We found a passwd.adjunct entry.  Merge encrypted
+	     password therein into original result.  */
+	  char *encrypted = strchr (result2, ':');
+	  char *endp;
+	  size_t restlen;
 
-      p = strncpy (buffer, result, len);
-      buffer[len] = '\0';
+	  if (encrypted != NULL
+	      || (endp = strchr (++encrypted, ':')) == NULL
+	      || (p = strchr (p + 1, ':')) == NULL)
+	    {
+	      /* Invalid format of the entry.  This never should happen
+		 unless the data from which the NIS table is generated is
+		 wrong.  We simply ignore it.  */
+	      free (result2);
+	      goto non_adjunct;
+	    }
+
+	  restlen = len - (p - result);
+	  if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
+	    {
+	      free (result2);
+	      free (result);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
+	  __mempcpy (__mempcpy (__mempcpy (__mempcpy (buffer, result, namelen),
+					   ":", 1),
+				encrypted, endp - encrypted),
+		     p, restlen + 1);
+	  p = buffer;
+
+	  free (result2);
+	}
+      else
+	{
+	non_adjunct:
+	  if ((size_t) (len + 1) > buflen)
+	    {
+	      free (result);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
+	  p = strncpy (buffer, result, len);
+	  buffer[len] = '\0';
+	}
+
       while (isspace (*p))
         ++p;
       free (result);
@@ -161,8 +211,9 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
-  char *domain, *result, *p;
-  int len, parse_res;
+  char *domain, *result, *result2, *p;
+  int len, len2, parse_res;
+  size_t namelen;
 
   if (name == NULL)
     {
@@ -173,8 +224,10 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
+  namelen = strlen (name);
+
   retval = yperr2nss (yp_match (domain, "passwd.byname", name,
-				strlen (name), &result, &len));
+				namelen, &result, &len));
 
   if (retval != NSS_STATUS_SUCCESS)
     {
@@ -183,15 +236,62 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  /* Check for adjunct style secret passwords.  They can be recognized
+     by a password starting with "##".  */
+  p = strchr (result, ':');
+  if (p != NULL	/* This better should be true in all cases.  */
+      && p[1] == '#' && p[2] == '#'
+      && yp_match (domain, "passwd.adjunct.byname", name, namelen,
+		   &result2, &len2) == YPERR_SUCCESS)
     {
-      free (result);
-      *errnop = ERANGE;
-      return NSS_STATUS_TRYAGAIN;
+      /* We found a passwd.adjunct entry.  Merge encrypted password
+	 therein into original result.  */
+      char *encrypted = strchr (result2, ':');
+      char *endp;
+      size_t restlen;
+
+      if (encrypted != NULL
+	  || (endp = strchr (++encrypted, ':')) == NULL
+	  || (p = strchr (p + 1, ':')) == NULL)
+	{
+	  /* Invalid format of the entry.  This never should happen
+	     unless the data from which the NIS table is generated is
+	     wrong.  We simply ignore it.  */
+	  free (result2);
+	  goto non_adjunct;
+	}
+
+      restlen = len - (p - result);
+      if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
+	{
+	  free (result2);
+	  free (result);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      __mempcpy (__mempcpy (__mempcpy (__mempcpy (buffer, name, namelen),
+				       ":", 1),
+			    encrypted, endp - encrypted),
+		 p, restlen + 1);
+      p = buffer;
+
+      free (result2);
+    }
+  else
+    {
+    non_adjunct:
+      if ((size_t) (len + 1) > buflen)
+	{
+	  free (result);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      p = strncpy (buffer, result, len);
+      buffer[len] = '\0';
     }
 
-  p = strncpy (buffer, result, len);
-  buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);
@@ -214,9 +314,10 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
-  char *domain, *result, *p;
-  int len, nlen, parse_res;
+  char *domain, *result, *p, *result2;
+  int len, nlen, parse_res, len2;
   char buf[32];
+  size_t namelen;
 
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
@@ -233,15 +334,63 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
       return retval;
     }
 
-  if ((size_t) (len + 1) > buflen)
+  /* Check for adjunct style secret passwords.  They can be recognized
+     by a password starting with "##".  */
+  p = strchr (result, ':');
+  if (p != NULL	/* This better should be true in all cases.  */
+      && p[1] == '#' && p[2] == '#'
+      && (namelen = p - result,
+	  yp_match (domain, "passwd.adjunct.byname", result, namelen,
+		    &result2, &len2)) == YPERR_SUCCESS)
     {
-      free (result);
-      *errnop = ERANGE;
-      return NSS_STATUS_TRYAGAIN;
+      /* We found a passwd.adjunct entry.  Merge encrypted password
+	 therein into original result.  */
+      char *encrypted = strchr (result2, ':');
+      char *endp;
+      size_t restlen;
+
+      if (encrypted != NULL
+	  || (endp = strchr (++encrypted, ':')) == NULL
+	  || (p = strchr (p + 1, ':')) == NULL)
+	{
+	  /* Invalid format of the entry.  This never should happen
+	     unless the data from which the NIS table is generated is
+	     wrong.  We simply ignore it.  */
+	  free (result2);
+	  goto non_adjunct;
+	}
+
+      restlen = len - (p - result);
+      if ((size_t) (namelen + (endp - encrypted) + restlen + 2) > buflen)
+	{
+	  free (result2);
+	  free (result);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      __mempcpy (__mempcpy (__mempcpy (__mempcpy (buffer, result, namelen),
+				       ":", 1),
+			    encrypted, endp - encrypted),
+		 p, restlen + 1);
+      p = buffer;
+
+      free (result2);
+    }
+  else
+    {
+    non_adjunct:
+      if ((size_t) (len + 1) > buflen)
+	{
+	  free (result);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      p = strncpy (buffer, result, len);
+      buffer[len] = '\0';
     }
 
-  p = strncpy (buffer, result, len);
-  buffer[len] = '\0';
   while (isspace (*p))
     ++p;
   free (result);

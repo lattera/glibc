@@ -1,0 +1,51 @@
+libdb {
+  GLIBC_2.0 {
+    # db 1.85 interface
+    dbopen; __dbopen;
+
+    # The compatibility functions.
+    dbm_clearerr; dbm_close; dbm_delete; dbm_dirfno; dbm_error;
+    dbm_fetch; dbm_firstkey; dbminit; dbm_nextkey; dbm_open;
+    dbm_pagfno; dbm_store;
+  }
+  GLIBC_2.1 {
+    # db.2.x interface
+    # Internal functions used by db maintenance programs
+    __bam_init_print; __bam_pgin; __bam_pgout;
+    __db_dispatch;__db_dump; __db_err; __db_init_print;__db_jump;
+    __db_omode;__db_prdbt;
+    __ham_init_print; __ham_pgin; __ham_pgout;
+    __lock_dump_region;
+    __log_init_print;
+    __memp_dump_region;
+    __txn_init_print;
+
+    # Constants
+    db_rw_conflicts; db_riw_conflicts;
+
+    # Functions
+    db_appexit; db_appinit; db_jump_set; db_open; db_value_set;
+    db_version;
+    lock_close; lock_detect; lock_get; lock_id; lock_open; lock_put;
+    lock_stat; lock_unlink; lock_vec; log_archive; log_close;
+    log_compare; log_file; log_flush; log_get; log_open; log_put;
+    log_register; log_stat; log_unlink; log_unregister;
+
+    memp_close; memp_fclose; memp_fget; memp_fopen; memp_fput;
+    memp_fset; memp_fsync; memp_open; memp_register; memp_stat;
+    memp_sync; memp_trickle; memp_unlink;
+
+    txn_abort; txn_begin; txn_checkpoint; txn_close; txn_commit;
+    txn_id; txn_open; txn_prepare; txn_stat; txn_unlink;
+
+    # compatibility interface for ndbm
+    __db_ndbm_clearerr; __db_ndbm_close; __db_ndbm_delete;
+    __db_ndbm_dirfno; __db_ndbm_error; __db_ndbm_fetch;
+    __db_ndbm_firstkey; __db_ndbm_nextkey; __db_ndbm_open;
+    __db_ndbm_pagfno; __db_ndbm_rdonly; __db_ndbm_store;
+
+    # compatibility interface for dbm
+    __db_dbm_delete; __db_dbm_fetch; __db_dbm_firstkey; __db_dbm_init;
+    __db_dbm_nextkey; __db_dbm_store;
+  }
+}

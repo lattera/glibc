@@ -276,6 +276,17 @@ ifndef sysd-rules-done
 no_deps=t
 endif
 
+# Generate version maps.
+ifeq ($(versioning),yes)
+-include $(common-objpfx)sysd-versions
+$(common-objpfx)sysd-versions: $(..)Versions.def $(..)versions.awk \
+			       $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
+			       $(wildcard $(+sysdep_dirs:%=%/Versions))
+	$(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
+	       -f $(filter-out $<,$^) > $@T
+	mv -f $@T $@
+$(all-version-maps): $(common-objpfx)sysd-versions
+endif
 
 ifndef compile-command.S
 compile-command.S = $(compile.S) $(OUTPUT_OPTION)

@@ -609,12 +609,12 @@ static struct header
 /* Format string to build command to invoke compiler.  */
 static const char fmt[] = "\
 echo \"#include <%s>\" |\
-%s -E -dM -D_POSIX_SOURCE %s \
+%s -E -dM -D_POSIX_SOURCE -D_LIBC %s \
 -isystem `%s --print-prog-name=include` - > %s";
 
 static const char testfmt[] = "\
 echo \"#include <unistd.h>\n#ifndef %s\n#error not defined\n#endif\n\" |\
-%s -E -dM -D_POSIX_SOURCE %s \
+%s -E -dM -D_POSIX_SOURCE -D_LIBC %s \
 -isystem `%s --print-prog-name=include` - 2> /dev/null > %s";
 
 
@@ -709,7 +709,7 @@ get_null_defines (void)
 
   while (fgets (line, sizeof line, input) != NULL)
     {
-      char *start, *end;
+      char *start;
       if (strlen (line) < 9 || line[7] != ' ')
 	{ /* "#define A" */
 	  printf ("Malformed input, expected '#define MACRO'\ngot '%s'\n",
@@ -730,9 +730,7 @@ get_null_defines (void)
 	    }
 	}
       start = &line[8];
-      for (end = start + 1; !isspace (*end) && *end != '\0'; ++end)
-	;
-      result[result_len++] = xstrndup (start, end - start);
+      result[result_len++] = xstrndup (start, strcspn (start, " ("));
 
       if (first)
 	{
@@ -809,7 +807,6 @@ check_header (const struct header *header, const char **except)
 
   while (fgets (line, sizeof line, input) != NULL)
     {
-      char *endmac;
       const char **ignore;
       if (strlen (line) < 9 || line[7] != ' ')
 	{ /* "#define A" */
@@ -819,9 +816,13 @@ check_header (const struct header *header, const char **except)
 	  continue;
 	}
 
+      /* Find next char after the macro identifier; this can be either
+	 a space or an open parenthesis.  */
+      line[8 + strcspn (&line[8], " (")] = '\0';
+
       /* Now check whether it's one of the required macros.  */
       for (i = 0; i < header->nsyms; ++i)
-	if (!strncmp (&line[8], header->syms[i], strlen (header->syms[i])))
+	if (!strcmp (&line[8], header->syms[i]))
 	  break;
       if (i < header->nsyms)
 	{
@@ -832,12 +833,6 @@ check_header (const struct header *header, const char **except)
       /* Symbols starting with "_" are ok.  */
       if (line[8] == '_')
 	continue;
-
-      /* Find next char after the macro identifier; this can be either
-	 a space or an open parenthesis.  */
-      endmac = strpbrk (&line[8], " (");
-      if (endmac != NULL)
-	*endmac = '\0';
 
       /* Maybe one of the symbols which are always defined.  */
       for (ignore = except; *ignore != NULL; ++ignore)

@@ -43,48 +43,39 @@ libc {
     # variables in normal name space
     stderr; stdin; stdout;
 
-    # a*
-    asprintf;
-
     # c*
     clearerr; clearerr_unlocked;
-
-    # d*
-    dprintf;
 
     # f*
     fclose; fcloseall; fdopen; feof; feof_locked; feof_unlocked; ferror;
     ferror_locked; ferror_unlocked; fflush; fflush_locked; fflush_unlocked;
     fgetc; fgetpos; fgets; fileno; fileno_locked; fileno_unlocked; flockfile;
-    fopen; fopencookie; fprintf; fputc; fputc_locked; fputc_unlocked; fputs;
-    fread; freopen; fscanf; fseek; fsetpos; ftell; ftrylockfile; funlockfile;
+    fopen; fopencookie; fputc; fputc_locked; fputc_unlocked; fputs;
+    fread; freopen; fseek; fsetpos; ftell; ftrylockfile; funlockfile;
     fwrite;
 
     # g*
     getc; getc_locked; getc_unlocked; getchar; getchar_unlocked; getdelim;
-    getline; gets; getw;
+    gets;
 
     # o*
-    obstack_printf; obstack_vprintf; open_memstream;
+    open_memstream; open_obstack_stream; obstack_printf; obstack_vprintf;
 
     # p*
-    pclose; popen; printf; putc; putc_locked; putc_unlocked; putchar;
+    pclose; popen; putc; putc_locked; putc_unlocked; putchar;
     putchar_unlocked; puts;
 
-    # p*
-    putw; rewind;
+    # r*
+    rewind;
 
     # s*
-    scanf; setbuf; setbuffer; setlinebuf;
-
-    # s*
-    setvbuf; snprintf; sprintf; sscanf;
+    setbuf; setbuffer; setlinebuf; setvbuf;
 
     # u*
     ungetc;
 
     # v*
-    vasprintf; vdprintf; vprintf; vscanf; vsnprintf; vsprintf; vsscanf;
+    vasprintf; vdprintf; vscanf; vsnprintf; vsprintf; vsscanf;
   }
   GLIBC_2.1 {
     # global variables

@@ -24,6 +24,7 @@
    General Public License.  */
 
 #include "libioP.h"
+#include <stdio.h>
 
 _IO_size_t
 fwrite_unlocked (buf, size, count, fp)

@@ -2,5 +2,50 @@ libc {
   GLIBC_2.0 {
     # more or less standard functions
     __fillbf; __flshfp;
+
+    # functions used in inline functions or macros
+    __getdelim; __line_wrap_output; __line_wrap_update;
+    __vfscanf; __vsscanf;
+
+    # variables in normal name space
+    stderr; stdin; stdout;
+
+    # c*
+    clearerr;
+
+    # f*
+    fclose; fcloseall; fdopen; feof; ferror; fflush; fgetc; fgetpos; fgets;
+    fileno; fmemopen; fopen; fopencookie; fputc; fputs; fread; freopen;
+    fseek; fsetpos; ftell; fwrite;
+
+    # g*
+    getc; getchar; getdelim; gets;
+
+    # l*
+    line_wrap_stream; line_unwrap_stream; line_wrapped; line_wrap_lmargin;
+    line_wrap_set_lmargin; line_wrap_rmargin; line_wrap_set_rmargin;
+    line_wrap_wmargin; line_wrap_set_wmargin; line_wrap_point;
+
+    # o*
+    open_memstream; open_obstack_stream; obstack_printf; obstack_vprintf;
+
+    # p*
+    pclose; popen; putc; putchar; puts;
+
+    # r*
+    rewind;
+
+    # s*
+    setbuf; setbuffer; setlinebuf; setvbuf;
+
+    # u*
+    ungetc;
+
+    # v*
+    vasprintf; vdprintf; vscanf; vsnprintf; vsprintf; vsscanf;
+  }
+  GLIBC_2.1 {
+    # functions used in other libraries
+    __asprintf;
   }
 }

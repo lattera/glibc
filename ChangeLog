@@ -1,3 +1,54 @@
+1998-07-06 14:36  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/Makefile (generated): Remove $(objpfx) from the names.
+
+1998-07-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/test_rdwr.c: Use %Zu for size_t in printf
+	format string.
+
+	* libio/iofread_u.c: Include <stdio.h> for prototype.
+	* libio/iofwrite_u.c: Likewise.
+
+1998-07-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* db2/Versions: New file.
+
+1998-07-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (lib-noranlib): Don't depend on sysd-versions.
+	($(common-objpfx)sysd-versions): Remove rule.
+	* Makerules ($(common-objpfx)sysd-versions): Define here instead.
+	Pass name of Versions.def file to script and redirect output to
+	target.  Include it and make all generated version maps depend on
+	it.
+	* versions.awk: Print out variable definition containing all
+	generated version maps.  Print error messages to stderr.  Remove
+	temp file.
+
+1998-07-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/annexc.c (check_header): Terminate macro name before
+	comparing.
+	(get_null_defines): Allow builtin macros with parameters.
+	(fmt, testfmt): Add -D_LIBC.
+	* posix/Makefile: Remove bogus duplicate include directories from
+	annexc test command.
+
+1998-07-06 12:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nis/nis-pwd.c (internal_nis_getpwent_r): Handle adjunct
+	password scheme.
+	(_nss_nis_getpwnam_r): Likewise.
+	(_nss_nis_getpwuid_r): Likewise.
+
+1998-07-05  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* libio/Versions: Move symbols whose source lives in
+	stdio-common to ...
+	* stdio-common/Versions: ... here.
+	* stdio/Versions: Add missing symbols.
+
 1998-07-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/__sendmsg.S: Define function as
