@@ -21,7 +21,7 @@
 
 2000-04-23  Ulrich Drepper  <drepper@redhat.com>
 
-	* nss/Makefile (libnss_db-dbs): Remove stry backslash.
+	* nss/Makefile (libnss_db-dbs): Remove stray backslash.
 	Patch by Zack Weinberg <zack@wolery.cumb.org>.
 
 2000-04-22  Ulrich Drepper  <drepper@redhat.com>
