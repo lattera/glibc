@@ -171,10 +171,15 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
       size_t len = 1;
 
       /* $ORIGIN is not expanded for SUID/GUID programs.  */
-      if (((!__libc_enable_secure
-	    && strncmp (&sf[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
-	   || (strncmp (&sf[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
-	  && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
+      if ((((!__libc_enable_secure
+	     && strncmp (&sf[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+	    || (strncmp (&sf[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+	   && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
+	  || (s[1] == '{'
+	      && ((!__libc_enable_secure
+		   && strncmp (&sf[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
+		  || (strncmp (&sf[2], "PLATFORM}", 9) == 0
+		      && (len = 11) != 0))))
 	++cnt;
 
       st = sf + len;
@@ -220,13 +225,19 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
 	  const char *repl;
 	  size_t len;
 
-	  if (((!__libc_enable_secure
-		&& strncmp (&s[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
-	       || (strncmp (&s[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
-	      && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
+	  if ((((strncmp (&s[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+		|| (strncmp (&s[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+	       && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
+	      || (s[1] == '{'
+		  && ((strncmp (&s[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
+		      || (strncmp (&s[2], "PLATFORM}", 9) == 0
+			  && (len = 11) != 0))))
 	    {
-	      if ((repl = len == 7 ? l->l_origin : _dl_platform) != NULL
-		  && repl != (const char *) -1)
+	      repl = ((len == 7 || s[2] == 'O')
+		      ? (__libc_enable_secure ? NULL : l->l_origin)
+		      : _dl_platform);
+
+	      if (repl != NULL && repl != (const char *) -1)
 		{
 		  wp = __stpcpy (wp, repl);
 		  s += len;
@@ -242,7 +253,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
 		}
 	    }
 	  else
-	    /* No SDK we recognize.  */
+	    /* No DST we recognize.  */
 	    *wp++ = *s++;
 	}
       else if (*s == ':')

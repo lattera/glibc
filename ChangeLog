@@ -1,3 +1,8 @@
+1999-05-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (expand_dynamic_string_token): Recognize { }
+	around DST.  Correctly ignore ORIGIN IN SUID binaries.
+
 1999-05-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/strtok_r.c: Use rawmemchr instead of strchr.
