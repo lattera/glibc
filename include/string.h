@@ -31,6 +31,9 @@ extern char *__strchrnul (__const char *__s, int __c)
 extern void *__memrchr (__const void *__s, int __c, size_t __n)
      __attribute_pure__;
 
+extern void *__memchr (__const void *__s, int __c, size_t __n)
+     __attribute_pure__;
+     
 /* Now the real definitions.  We do this here since some of the functions
    above are defined as macros in the headers.  */
 #include <string/string.h>

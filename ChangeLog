@@ -1,5 +1,7 @@
 2000-07-18  Andreas Jaeger  <aj@suse.de>
 
+	* include/string.h: Add prototype for __memchr.
+
 	* sysdeps/alpha/memchr.S: Fix copy & error in weak_alias.
 
 	* sysdeps/generic/memchr.c: Fix copy & paste error: Use memchr
