@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -177,6 +177,11 @@ extern int sigpending __P ((sigset_t *__set));
 #endif /* Use POSIX.  */
 
 #if	defined(_SIGNAL_H) && defined(__USE_BSD)
+
+/* Names of the signals.  This variable exists only for compatiblity.
+   Use `strsignal' instead (see <string.h>).  */
+extern __const char *__const _sys_siglist[NSIG];
+extern __const char *__const sys_siglist[NSIG];
 
 /* Structure passed to `sigvec'.  */
 struct sigvec

@@ -1,5 +1,8 @@
 Wed Oct 18 03:33:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* signal/signal.h [__USE_BSD] (_sys_siglist, sys_siglist): Declare
+	them.
+
 	* sysdeps/generic/_strerror.c: Declare _sys_errlist and _sys_nerr.
 
 	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): For magic
