@@ -931,6 +931,13 @@ of this helper program; chances are you did not intend to run this program.\n\
   GL(dl_rtld_map).l_prev = GL(dl_loaded);
   ++GL(dl_nloaded);
 
+  /* Set up the program header information for the dynamic linker
+     itself.  It is needed in the dl_iterate_phdr() callbacks.  */
+  ElfW(Ehdr) *rtld_ehdr = (ElfW(Ehdr) *) GL(dl_rtld_map.l_addr);
+  GL(dl_rtld_map).l_phdr = (ElfW(Phdr) *) (GL(dl_rtld_map.l_addr)
+					   + rtld_ehdr->e_phoff);
+  GL(dl_rtld_map).l_phnum = rtld_ehdr->e_phnum;
+
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The latter can also
      be used when security is enabled.  */

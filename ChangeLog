@@ -1,5 +1,10 @@
 2003-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Don't skip dynamic
+	linker's map.
+	* elf/rtld.c (dl_main): Initialize l_phdr and l_phnum of of the
+	dynamic linker's map.
+
 	Fix cancellation point handling wrt exception based cleanup.
 	* io/Makefile: Compile fcntl.c, poll.c, and lockf.c with exceptions.
 	* misc/Makefile: Compile pselect.c, readv.c, writev.c, and usleep.c
