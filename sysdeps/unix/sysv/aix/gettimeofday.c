@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 # define __timezone	timezone
 # define __tzname	tzname
 #endif
+
+#undef __gettimeofday
 
 extern int rtc_upper (void);
 extern int rtc_lower (void);
@@ -92,4 +94,5 @@ __gettimeofday (tv, tz)
   return 0;
 }
 
+INTDEF(__gettimeofday)
 weak_alias (__gettimeofday, gettimeofday)
