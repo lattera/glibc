@@ -1,5 +1,7 @@
 2001-06-12  Andreas Jaeger  <aj@suse.de>
 
+	* iconvdata/tst-table-to.c: Include string.h for strcmp prototype.
+
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Add ULPs for tanh (-0.7).
 
 2001-06-11  Andreas Jaeger  <aj@suse.de>
