@@ -118,7 +118,7 @@
     (*__save_FCT)(__save_ARG);						    \
 
 #define __libc_cleanup_push(fct, arg) __libc_cleanup_region_start (1, fct, arg)
-#define __libc_cleanup_pop(execute) __libc_cleanup_end (execute)
+#define __libc_cleanup_pop(execute) __libc_cleanup_region_end (execute)
 
 /* We need portable names for some of the functions.  */
 #define __libc_mutex_unlock

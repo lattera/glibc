@@ -1,3 +1,9 @@
+2003-08-18  Daniel Jacobowitz  <drow@mvista.com>
+
+	* td_thr_getfpregs.c (td_thr_getfpregs): Use the main thread if
+	the descriptor is uninitialized.
+	* td_thr_getgregs.c (td_thr_getgregs): Likewise.
+
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
 	* thread_db.h (td_err_e): Add TD_NOTLS and TD_TLSDEFER.
