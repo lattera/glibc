@@ -29,7 +29,7 @@
 
 
 #define TEST_FUNCTION do_test ()
-int
+static int
 do_test (void)
 {
   struct aiocb *arr[1];
@@ -38,11 +38,18 @@ do_test (void)
   struct timeval before;
   struct timeval after;
   struct timespec timeout;
+  int fd[2];
   int result = 0;
+
+  if (pipe (fd) != 0)
+    {
+      printf ("cannot create pipe: %m\n");
+      return 1;
+    }
 
   arr[0] = &cb;
 
-  cb.aio_fildes = STDIN_FILENO;
+  cb.aio_fildes = fd[0];
   cb.aio_lio_opcode = LIO_WRITE;
   cb.aio_reqprio = 0;
   cb.aio_buf = (void *) buf;
@@ -52,7 +59,7 @@ do_test (void)
   /* Try to read from stdin where nothing will be available.  */
   if (aio_read (arr[0]) < 0)
     {
-      printf ("aio_write failed: %m\n");
+      printf ("aio_read failed: %m\n");
       return 1;
     }
 

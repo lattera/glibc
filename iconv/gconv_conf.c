@@ -202,12 +202,14 @@ insert_module (struct gconv_module *newp, int tobefreed)
 		  || (newp->cost_hi == root->cost_hi
 		      && newp->cost_lo < root->cost_lo))
 		{
-		  root->cost_hi = newp->cost_hi;
-		  root->cost_lo = newp->cost_lo;
-		  root->module_name = newp->module_name;
-		}
+		  newp->left = root->left;
+		  newp->right = root->right;
+		  newp->same = root->same;
+		  *rootp = newp;
 
-	      if (tobefreed)
+		  free (root);
+		}
+	      else if (tobefreed)
 		free (newp);
 	      return;
 	    }

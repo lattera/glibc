@@ -1,7 +1,17 @@
 2000-11-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* test-skeleton.c: Mark local functions as static to avoid warnings.
+
+2000-11-23  H.J. Lu  <hjl@gnu.org>
+
+	* rt/tst-aio6.c (do_test): Use pipe instead of STDIN_FILENO to
+	support the background job.
+	Fix a typo.
+
+2000-11-24  Ulrich Drepper  <drepper@redhat.com>
+
 	* iconv/gconv_conf.c (insert_module): Replace old entry if new one
-	hsa same names but lower cost.
+	has same names but lower cost.
 
 2000-11-23  Jakub Jelinek  <jakub@redhat.com>
 

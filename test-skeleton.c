@@ -62,7 +62,7 @@ struct name_list
 } *name_list;
 
 /* Add temporary files in list.  */
-void
+static void
 add_temp_file (const char *name)
 {
   struct name_list *newp = (struct name_list *) calloc (sizeof (*newp), 1);
@@ -77,7 +77,7 @@ add_temp_file (const char *name)
 }
 
 /* Delete all temporary files.  */
-void
+static void
 delete_temp_files (void)
 {
   while (name_list != NULL)
@@ -88,7 +88,7 @@ delete_temp_files (void)
 }
 
 /* Timeout handler.  We kill the child and exit with an error.  */
-void
+static void
 timeout_handler (int sig __attribute__ ((unused)))
 {
   int killed;
