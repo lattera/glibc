@@ -32,8 +32,19 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #endif
 
-#ifndef	HAVE_GNU_LD
+#if _LIBC - 0 == 0
 #define	__environ	environ
+#endif
+
+#if _LIBC - 0
+/* This lock protects against simultaneous modifications of `environ'.  */
+#include <libc-lock.h>
+__libc_lock_define_initialized (static, envlock)
+#define LOCK	__libc_lock_lock (envlock)
+#define UNLOCK	__libc_lock_unlock (envlock)
+#else
+#define LOCK
+#define UNLOCK
 #endif
 
 int
@@ -46,6 +57,8 @@ setenv (name, value, replace)
   register size_t size;
   const size_t namelen = strlen (name);
   const size_t vallen = strlen (value) + 1;
+
+  LOCK;
 
   size = 0;
   for (ep = __environ; *ep != NULL; ++ep)
@@ -66,13 +79,17 @@ setenv (name, value, replace)
 	new_environ = (char **) malloc ((size + 2) * sizeof (char *));
 
       if (new_environ == NULL)
-	return -1;
+	{
+	  UNLOCK;
+	  return -1;
+	}
 
       new_environ[size] = malloc (namelen + 1 + vallen);
       if (new_environ[size] == NULL)
 	{
 	  free ((char *) new_environ);
 	  errno = ENOMEM;
+	  UNLOCK;
 	  return -1;
 	}
 
@@ -96,13 +113,18 @@ setenv (name, value, replace)
 	  /* The existing string is too short; malloc a new one.  */
 	  char *new = malloc (namelen + 1 + vallen);
 	  if (new == NULL)
-	    return -1;
+	    {
+	      UNLOCK;
+	      return -1;
+	    }
 	  *ep = new;
 	}
       memcpy (*ep, name, namelen);
       (*ep)[namelen] = '=';
       memcpy (&(*ep)[namelen + 1], value, vallen);
     }
+
+  UNLOCK;
 
   return 0;
 }
@@ -114,6 +136,8 @@ unsetenv (name)
   const size_t len = strlen (name);
   char **ep;
 
+  LOCK;
+
   for (ep = __environ; *ep; ++ep)
     if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       {
@@ -124,4 +148,6 @@ unsetenv (name)
 	while (*dp++);
 	/* Continue the loop in case NAME appears again.  */
       }
+
+  UNLOCK;
 }
