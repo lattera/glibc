@@ -1807,6 +1807,8 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
               return NULL;
             }
         }
+      else
+	branch = NULL;
       tree = create_tree (tree, branch, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
         return *err = REG_ESPACE, NULL;
