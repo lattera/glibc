@@ -1,3 +1,7 @@
+2004-04-19  Roland McGrath  <roland@redhat.com>
+
+	* rt/tst-mqueue9.c (do_test): Initialize RESULT.
+
 2004-04-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mq_unlink.c (mq_unlink): Change EPERM into
