@@ -35,6 +35,7 @@
 #include <abi-tag.h>
 #include <dl-osinfo.h>
 #include <stackinfo.h>
+#include <caller.h>
 
 #include <dl-dst.h>
 
@@ -1293,7 +1294,10 @@ cannot allocate TLS data structures for initial thread");
 	  size_t s = (uintptr_t) &__stack_prot - p + sizeof (int);
 
 	  __mprotect ((void *) p, s, PROT_READ|PROT_WRITE);
-	  __stack_prot |= PROT_EXEC;
+	  if (__builtin_expect (__check_caller (RETURN_ADDRESS (0),
+						allow_ldso|allow_libc) == 0,
+				0))
+	    __stack_prot |= PROT_EXEC;
 	  __mprotect ((void *) p, s, PROT_READ);
 	}
       else
