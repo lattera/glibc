@@ -54,6 +54,7 @@ __inline_mathop2(floor, intrz)
 __inline_mathop(sqrt)
 
 __inline_mathop2(__rint, int)
+__inline_mathop2(__expm1, etoxm1)
 
 #ifdef	__USE_MISC
 __inline_mathop2(rint, int)
