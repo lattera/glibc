@@ -2,6 +2,21 @@
 
 	* nscd/aicache.c (addhstaiX): Tweak type to avoid warning.
 
+2005-03-16  Richard Henderson  <rth@redhat.com>
+
+	* include/libc-symbols.h (__hidden_proto): Remove bogus declaration
+	of internal.
+	(__hidden_def1, __hidden_dot_def1): Remove.
+	(__hidden_def2, __hidden_def3): Remove.
+	(__hidden_ver1): New.
+	(hidden_ver, hidden_def, hidden_weak): Use it.
+	(hidden_data_ver, hidden_data_ver, hidden_data_weak): Use non-data
+	version of the macro.
+
+	* include/wchar.h (__wcscoll): Remove.
+	* wcsmbs/wcscoll.c: Define wcscoll directly instead of via __wcscoll.
+	* string/strcoll.c: Don't issue libc_hidden_def STRCOLL redefined.
+
 2005-03-16  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* elf/elf.h: Define MIPS TLS relocations.

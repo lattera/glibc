@@ -583,78 +583,23 @@ for linking")
 #  define hidden_proto(name, attrs...) \
   __hidden_proto (name, __GI_##name, ##attrs)
 #  define __hidden_proto(name, internal, attrs...) \
-  extern __typeof (name) internal; \
   extern __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
   __hidden_proto_hiddenattr (attrs);
 #  define __hidden_asmname(name) \
   __hidden_asmname1 (__USER_LABEL_PREFIX__, name)
 #  define __hidden_asmname1(prefix, name) __hidden_asmname2(prefix, name)
 #  define __hidden_asmname2(prefix, name) #prefix name
-#  ifdef HAVE_ASM_SET_DIRECTIVE
-#   define __hidden_def1(original, alias)			\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
-  .set C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#     define __hidden_dot_def1(original, alias)	 ASM_LINE_SEP	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
-  .set C_SYMBOL_DOT_NAME (alias), C_SYMBOL_DOT_NAME (original)
-#   else
-#     define __hidden_dot_def1(original, alias)
-#   endif
-#  else
-#   define __hidden_def1(original, alias)			\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#    define __hidden_dot_def1(original, alias)	ASM_LINE_SEP	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
-  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
-#   else
-#    define __hidden_dot_def1(original, alias)
-#   endif
-#  endif
-#  define __hidden_def2(...) #__VA_ARGS__
-#  define __hidden_def3(...) __hidden_def2 (__VA_ARGS__)
-#  define hidden_def(name)					\
-  __asm__ (__hidden_def3 (__hidden_def1 (__GI_##name, name) \
-  __hidden_dot_def1 (__GI_##name, name)));
-#  define hidden_data_def(name)					\
-  __asm__ (__hidden_def3 (__hidden_def1 (__GI_##name, name)));
-#  define hidden_ver(local, name)				\
-  __asm__ (__hidden_def3 (__hidden_def1 (local, __GI_##name) \
-  __hidden_dot_def1 (local, __GI_##name)));
-#  define hidden_data_ver(local, name)				\
-  __asm__ (__hidden_def3 (__hidden_def1 (local, __GI_##name)));
-#  ifdef HAVE_WEAK_SYMBOLS
-#   ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#    define __hidden_weak1(original, alias)			\
-  .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
-#    ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#     define __hidden_dot_weak1(original, alias)	ASM_LINE_SEP	\
-  .weakext C_SYMBOL_DOT_NAME (alias), C_SYMBOL_DOT_NAME (original)
-#    else
-#     define __hidden_dot_weak1(original, alias)
-#    endif
-#   else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
-#    define __hidden_weak1(original, alias)			\
-  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP			\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-#    ifdef HAVE_ASM_GLOBAL_DOT_NAME
-#     define __hidden_dot_weak1(original, alias)	ASM_LINE_SEP	\
-  .weak C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
-  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
-#    else
-#     define __hidden_dot_weak1(original, alias)
-#    endif
-#   endif
-#   define hidden_weak(name)					\
-  __asm__ (__hidden_def3 (__hidden_weak1 (__GI_##name, name) \
-  __hidden_dot_weak1 (__GI_##name, name)));
-#   define hidden_data_weak(name)					\
-  __asm__ (__hidden_def3 (__hidden_weak1 (__GI_##name, name)));
-#  else
-#   define hidden_weak(name) hidden_def (name)
-#  endif
+#  define __hidden_ver1(local, internal, name) \
+  extern __typeof (name) __EI_##name __asm__(__hidden_asmname (#internal)); \
+  extern __typeof (name) __EI_##name \
+	__attribute__((alias (__hidden_asmname (#local))))
+#  define hidden_ver(local, name)	__hidden_ver1(local, __GI_##name, name);
+#  define hidden_data_ver(local, name)	hidden_ver(local, name)
+#  define hidden_def(name)		__hidden_ver1(__GI_##name, name, name);
+#  define hidden_data_def(name)		hidden_def(name)
+#  define hidden_weak(name) \
+	__hidden_ver1(__GI_##name, name, name) __attribute__((weak));
+#  define hidden_data_weak(name)	hidden_weak(name)
 # else
 /* For assembly, we need to do the opposite of what we do in C:
    in assembly gcc __REDIRECT stuff is not in place, so functions
