@@ -161,7 +161,7 @@ do_test (void)
 	}
       if (status != NULL)
 	{
-	  printf ("failure in round %d\n", cnt);
+	  printf ("failure in round %Zu\n", cnt);
 	  exit (1);
 	}
 

@@ -179,8 +179,17 @@ __lll_mutex_unlock (int *futex)
 #define lll_mutex_unlock(futex) \
   __lll_mutex_unlock(&(futex))
 
+
+static inline void
+__attribute__ ((always_inline))
+__lll_mutex_unlock_force (int *futex)
+{
+  (void) atomic_exchange_rel (futex, 0);
+  lll_futex_wake (futex, 1);
+}
 #define lll_mutex_unlock_force(futex) \
-  lll_futex_wake (&(futex), 1)
+  __lll_mutex_unlock_force(&(futex))
+
 
 #define lll_mutex_islocked(futex) \
   (futex != 0)

@@ -1,5 +1,11 @@
 2003-05-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
+	(__lll_mutex_unlock_force): New function.
+	(lll_mutex_unlock_force): Use __lll_mutex_unlock_force.
+
+	* tst-rwlock7.c (do_test): Use correct format specifier.
+
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (lll_futex_requeue):
 	Find break parameter in correct asm argument.
 
