@@ -106,29 +106,35 @@ _dl_close (struct link_map *map)
 	      unsigned int cnt = _dl_main_searchlist->r_nlist;
 
 	      do
-		--cnt;
+		if (--cnt < 0)
+		  break;
 	      while (_dl_main_searchlist->r_list[cnt] != imap);
 
-	      while (++cnt < _dl_main_searchlist->r_nlist)
-		_dl_main_searchlist->r_list[cnt - 1]
-		  = _dl_main_searchlist->r_list[cnt];
-
-	      --_dl_main_searchlist->r_nlist;
-	      if (_dl_main_searchlist->r_nlist
-		  == _dl_initial_searchlist.r_nlist)
+	      if (cnt >= 0)
 		{
-		  /* All object dynamically loaded by the program are
-		     unloaded.  Free the memory allocated for the global
-		     scope variable.  */
-		  struct link_map **old = _dl_main_searchlist->r_list;
+		  /* The object was already correctly registered.  */
+		  while (++cnt < _dl_main_searchlist->r_nlist)
+		    _dl_main_searchlist->r_list[cnt - 1]
+		      = _dl_main_searchlist->r_list[cnt];
 
-		  /* Put the old map in.  */
-		  _dl_main_searchlist->r_list = _dl_initial_searchlist.r_list;
-		  /* Signal that the old map is used.  */
-		  _dl_global_scope_alloc = 0;
-
-		  /* Now free the old map.  */
-		  free (old);
+		  --_dl_main_searchlist->r_nlist;
+		}
+	      else
+		{
+		  /* This can happen if loading was interrupted by something
+		     like a missing symbol in the newly loaded objects.  In
+		     this case the object is already marked as global but
+		     `r_nlist' does not count it in.  The pointer is in the
+		     `r_list' array so we keep searching in the other
+		     direction.  */
+		  cnt = _dl_main_searchlist->r_nlist;
+		  while (_dl_main_searchlist->r_list[cnt] != imap)
+		    {
+		      ++cnt;
+		      /* Note that if _dl_global_scope_alloc is zero we
+			 should never come here in the first place.  */
+		      assert (cnt < _dl_global_scope_alloc);
+		    }
 		}
 	    }
 
@@ -185,6 +191,22 @@ _dl_close (struct link_map *map)
     }
 
   free (list);
+
+  if (_dl_global_scope_alloc != 0
+      && _dl_main_searchlist->r_nlist == _dl_initial_searchlist.r_nlist)
+    {
+      /* All object dynamically loaded by the program are unloaded.  Free
+	 the memory allocated for the global scope variable.  */
+      struct link_map **old = _dl_main_searchlist->r_list;
+
+      /* Put the old map in.  */
+      _dl_main_searchlist->r_list = _dl_initial_searchlist.r_list;
+      /* Signal that the original map is used.  */
+      _dl_global_scope_alloc = 0;
+
+      /* Now free the old map.  */
+      free (old);
+    }
 
   /* Notify the debugger those objects are finalized and gone.  */
   _r_debug.r_state = RT_CONSISTENT;

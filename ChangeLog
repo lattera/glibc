@@ -1,9 +1,18 @@
 1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-close.c: Handle failed loads which would have gone in the
+	global scope correctly.
+
+	* elf/testobj1.c: Include stdlib.h to get NULL defined.
+	* elf/testobj2.c: Likewise.
+	* elf/testobj3.c: Likewise.
+	* elf/testobj4.c: Likewise.
+	* elf/testobj5.c: Likewise.
+
 	* iconvdata/Makefile (modules): Add SAMI-WS2 and ISO-IR-197.
 	* iconvdata/gconv-modules: Add entries for above charsets.
 	* iconvdata/iso-ir-197.c: New file.
-	* iconvdata/same-ws2.c: New file.
+	* iconvdata/sami-ws2.c: New file.
 
 	* sysdeps/unix/sysv/linux/vfork.c: Once again use generic version.
 

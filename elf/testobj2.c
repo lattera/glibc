@@ -1,4 +1,5 @@
 #include <dlfcn.h>
+#include <stdlib.h>
 
 int
 obj2func1 (int a __attribute__ ((unused)))
