@@ -35,6 +35,8 @@ struct pthread_attr
   /* Stack handling.  */
   void *stackaddr;
   size_t stacksize;
+  /* Affinity map.  */
+  cpu_set_t *cpuset;
 
   /* Chain of all initialized attributes.  Keep this last since it is
      not always used.  */

@@ -117,6 +117,7 @@ libpthread-routines = init events version \
 		      herrno res pt-allocrtsig \
 		      pthread_kill_other_threads \
 		      pthread_getaffinity pthread_setaffinity \
+		      pthread_attr_getaffinity pthread_attr_setaffinity \
 		      cleanup_routine
 
 libpthread-shared-only-routines = version pt-allocrtsig

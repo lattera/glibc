@@ -431,7 +431,7 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   *newthread = (pthread_t) pd;
 
   /* Start the thread.  */
-  err = create_thread (pd, STACK_VARIABLES_ARGS);
+  err = create_thread (pd, iattr, STACK_VARIABLES_ARGS);
   if (err != 0)
     {
       /* Something went wrong.  Free the resources.  */

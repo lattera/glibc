@@ -321,6 +321,17 @@ extern int pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 #endif
 
 #ifdef __USE_GNU
+/* Thread created with attribute ATTR will be limited to run only on
+   the processors represented in CPUSET.  */
+extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
+					__const cpu_set_t *__cpuset) __THROW;
+
+/* Get bit set in CPUSET representing the processors threads created with
+   ATTR can run on.  */
+extern int pthread_attr_getaffinity_np (__const pthread_attr_t *__attr,
+					cpu_set_t *__cpuset) __THROW;
+
+
 /* Get thread attributes corresponding to the already running thread TH.  */
 extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr) __THROW;
 #endif
@@ -359,7 +370,7 @@ extern int pthread_yield (void) __THROW;
 
 /* Limit specified thread TH to run only on the processors represented
    in CPUSET.  */
-extern int pthread_setaffinity_np (pthread_t __th, const cpu_set_t *__cpuset)
+extern int pthread_setaffinity_np (pthread_t __th, __const cpu_set_t *__cpuset)
      __THROW;
 
 /* Get bit set in CPUSET representing the processors TH can run on.  */

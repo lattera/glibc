@@ -1,3 +1,21 @@
+2003-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libpthread-routines): Add pthread_attr_getaffinity and
+	pthread_attr_setaffinity.
+	* Versions [libpthread] (GLIBC_2.3.3): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_attr_getaffinity.c: New file.
+	* sysdeps/unix/sysv/linux/pthread_attr_setaffinity.c: New file.
+	* pthread_attr_destroy.c: Free cpuset element if allocated.
+	* pthread_create.c: Pass iattr as additional parameter to
+	create_thread.
+	* sysdeps/pthread/createthread.c: If attribute is provided and
+	a new thread is created with affinity set or scheduling parameters,
+	start thread with CLONE_STOPPED.
+	* sysdeps/pthread/pthread.h: Declare pthread_attr_getaffinity and
+	pthread_attr_setaffinity.
+	* sysdeps/unix/sysv/linux/internaltypes.h (struct pthread_attr): Add
+	cpuset element.
+
 2003-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-tcancel-wrappers.sh: lseek and llseek are not cancelation points.

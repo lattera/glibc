@@ -110,8 +110,8 @@ typedef struct
 # define __CPU_ZERO(cpusetp) \
   do {									      \
     unsigned int __i;							      \
-    cpu_set *__arr = (cpusetp);						      \
-    for (__i = 0; __i < sizeof (cpu_set) / sizeof (__cpu_mask); ++__i)	      \
+    cpu_set_t *__arr = (cpusetp);					      \
+    for (__i = 0; __i < sizeof (cpu_set_t) / sizeof (__cpu_mask); ++__i)      \
       __arr->__bits[__i] = 0;						      \
   } while (0)
 # define __CPU_SET(cpu, cpusetp) \

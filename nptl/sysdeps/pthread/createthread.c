@@ -27,6 +27,10 @@
 
 
 #define CLONE_SIGNAL    	(CLONE_SIGHAND | CLONE_THREAD)
+/* XXX Remove when definition is common place.  */
+#ifndef CLONE_STOPPED
+# define CLONE_STOPPED 0x02000000
+#endif
 
 /* Unless otherwise specified, the thread "register" is going to be
    initialized with a pointer to the TCB.  */
@@ -48,72 +52,84 @@ int *__libc_multiple_threads_ptr attribute_hidden;
 
 
 static int
-create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
+do_clone (struct pthread *pd, struct pthread_attr *attr, int clone_flags,
+	  int (*fct) (void *), STACK_VARIABLES_PARMS)
 {
 #ifdef PREPARE_CREATE
   PREPARE_CREATE;
 #endif
 
-#ifdef TLS_TCB_AT_TP
-  assert (pd->header.tcb != NULL);
-#endif
+  if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
+		  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
+    /* Failed.  */
+    return errno;
 
-  if (__builtin_expect (THREAD_GETMEM (THREAD_SELF, report_events), 0))
+  /* Now we have the possibility to set scheduling parameters etc.  */
+  if (__builtin_expect ((clone_flags & CLONE_STOPPED) != 0, 0))
     {
-      /* The parent thread is supposed to report events.  Check whether
-	 the TD_CREATE event is needed, too.  */
-      const int _idx = __td_eventword (TD_CREATE);
-      const uint32_t _mask = __td_eventmask (TD_CREATE);
+      INTERNAL_SYSCALL_DECL (err);
+      int res = 0;
 
-      if ((_mask & (__nptl_threads_events.event_bits[_idx]
-		    | pd->eventbuf.eventmask.event_bits[_idx])) != 0)
+      /* Set the affinity mask if necessary.  */
+      if (attr->cpuset != NULL)
 	{
-	  /* We have to report the new thread.  Make sure the thread
-	     does not run far by forcing it to get a lock.  We lock it
-	     here too so that the new thread cannot continue until we
-	     tell it to.  */
-	  lll_lock (pd->lock);
+	  res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid,
+				  sizeof (cpu_set_t), attr->cpuset);
 
-	  /* Create the thread.  */
-	  if (ARCH_CLONE (start_thread_debug, STACK_VARIABLES_ARGS,
-			  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
-			  CLONE_SETTLS | CLONE_PARENT_SETTID |
-			  CLONE_CHILD_CLEARTID | CLONE_DETACHED |
-			  CLONE_SYSVSEM | 0, pd, &pd->tid, TLS_VALUE,
-			  &pd->tid) == -1)
-	    /* Failed.  */
-	    return errno;
+	  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+	    goto err_out;
+	}
 
-	  /* We now have for sure more than one thread.  The main
-	     thread might not yet have the flag set.  No need to set
-	     the global variable again if this is what we use.  */
-	  THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+      /* Set the scheduling parameters.  */
+      if ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)
+	{
+	  res = INTERNAL_SYSCALL (sched_setparam, err, 2, pd->tid,
+				  &pd->schedparam);
 
-	  /* Now fill in the information about the new thread in
-	     the newly created thread's data structure.  We cannot let
-	     the new thread do this since we don't know whether it was
-	     already scheduled when we send the event.  */
-	  pd->eventbuf.eventnum = TD_CREATE;
-	  pd->eventbuf.eventdata = pd;
+	  if (__builtin_expect (! INTERNAL_SYSCALL_ERROR_P (res, err), 1))
+	    {
+	      res = INTERNAL_SYSCALL (sched_setscheduler, err, 2, pd->tid,
+				      &pd->schedpolicy);
 
-	  /* Enqueue the descriptor.  */
-	  do
-	    pd->nextevent = __nptl_last_event;
-	  while (atomic_compare_and_exchange_bool_acq (&__nptl_last_event, pd,
-						       pd->nextevent) != 0);
+	      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+		goto err_out;
+	    }
+	}
 
-	  /* Now call the function which signals the event.  */
-	  __nptl_create_event ();
+      /* Now start the thread for real.  */
+      res = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCONT);
 
-	  /* And finally restart the new thread.  */
-	  lll_unlock (pd->lock);
+      /* If something went wrong, kill the thread.  */
+      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
+	{
+	  /* The operation failed.  We have to kill the thread.  First
+             send it the cancellation signal.  */
+	  INTERNAL_SYSCALL_DECL (err2);
+	err_out:
+	  (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
 
-	  return 0;
+	  /* Then wake it up so that the signal can be processed.  */
+	  (void) INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCONT);
+
+	  return INTERNAL_SYSCALL_ERRNO (res, err);
 	}
     }
 
-#ifdef NEED_DL_SYSINFO
-  assert (THREAD_GETMEM (THREAD_SELF, header.sysinfo) == pd->header.sysinfo);
+  /* We now have for sure more than one thread.  The main thread might
+     not yet have the flag set.  No need to set the global variable
+     again if this is what we use.  */
+  THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+
+  return 0;
+}
+
+
+static int
+create_thread (struct pthread *pd, struct pthread_attr *attr,
+	       STACK_VARIABLES_PARMS)
+{
+#ifdef TLS_TCB_AT_TP
+  assert (pd->header.tcb != NULL);
 #endif
 
   /* We rely heavily on various flags the CLONE function understands:
@@ -147,18 +163,68 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 
      The termination signal is chosen to be zero which means no signal
      is sent.  */
-  if (ARCH_CLONE (start_thread, STACK_VARIABLES_ARGS,
-		  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL |
-		  CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID |
-		  CLONE_DETACHED | CLONE_SYSVSEM | 0, pd, &pd->tid, TLS_VALUE,
-		  &pd->tid) == -1)
-    /* Failed.  */
-    return errno;
+  int clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGNAL
+		     | CLONE_SETTLS | CLONE_PARENT_SETTID
+		     | CLONE_CHILD_CLEARTID | CLONE_DETACHED | CLONE_SYSVSEM
+		     | 0);
 
-  /* We now have for sure more than one thread.  The main thread might
-     not yet have the flag set.  No need to set the global variable
-     again if this is what we use.  */
-  THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+  /* If the newly created threads has to be started stopped since we
+     have to set the scheduling parameters or set the affinity we set
+     the CLONE_STOPPED flag.  */
+  if (attr != NULL && (attr->cpuset != NULL
+		       || (attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0))
+    clone_flags |= CLONE_STOPPED;
 
-  return 0;
+  if (__builtin_expect (THREAD_GETMEM (THREAD_SELF, report_events), 0))
+    {
+      /* The parent thread is supposed to report events.  Check whether
+	 the TD_CREATE event is needed, too.  */
+      const int _idx = __td_eventword (TD_CREATE);
+      const uint32_t _mask = __td_eventmask (TD_CREATE);
+
+      if ((_mask & (__nptl_threads_events.event_bits[_idx]
+		    | pd->eventbuf.eventmask.event_bits[_idx])) != 0)
+	{
+	  /* We have to report the new thread.  Make sure the thread
+	     does not run far by forcing it to get a lock.  We lock it
+	     here too so that the new thread cannot continue until we
+	     tell it to.  */
+	  lll_lock (pd->lock);
+
+	  /* Create the thread.  */
+	  int res = do_clone (pd, attr, clone_flags, start_thread_debug,
+			      STACK_VARIABLES_ARGS);
+	  if (res == 0)
+	    {
+	      /* Now fill in the information about the new thread in
+		 the newly created thread's data structure.  We cannot let
+		 the new thread do this since we don't know whether it was
+		 already scheduled when we send the event.  */
+	      pd->eventbuf.eventnum = TD_CREATE;
+	      pd->eventbuf.eventdata = pd;
+
+	      /* Enqueue the descriptor.  */
+	      do
+		pd->nextevent = __nptl_last_event;
+	      while (atomic_compare_and_exchange_bool_acq (&__nptl_last_event,
+							   pd, pd->nextevent)
+		     != 0);
+
+	      /* Now call the function which signals the event.  */
+	      __nptl_create_event ();
+
+	      /* And finally restart the new thread.  */
+	      lll_unlock (pd->lock);
+	    }
+
+	  return res;
+	}
+    }
+
+#ifdef NEED_DL_SYSINFO
+  assert (THREAD_GETMEM (THREAD_SELF, header.sysinfo) == pd->header.sysinfo);
+#endif
+
+  /* Actually create the thread.  */
+  return do_clone (pd, attr, clone_flags, start_thread, STACK_VARIABLES_ARGS);
 }
