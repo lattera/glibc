@@ -28,4 +28,12 @@ extern int __send (int __fd, __const void *__buf, size_t __n, int __flags);
    Return 0 on success, -1 for errors.  */
 extern int __connect (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len);
 
+/* Return the length of a `sockaddr' structure.  */
+#ifdef _HAVE_SA_LEN
+# define SA_LEN(_x)      (_x)->sa_len
+#else
+# define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
+extern int __libc_sa_len (sa_family_t __af) __THROW;
+#endif
+
 #endif
