@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include "fork.h"
+#include <fork.h>
 #include <bits/libc-lock.h>
 
 weak_extern (__pthread_fork);

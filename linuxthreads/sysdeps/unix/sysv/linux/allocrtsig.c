@@ -57,6 +57,7 @@ __libc_current_sigrtmin (void)
   return current_rtmin;
 }
 strong_alias (__libc_current_sigrtmin, __libc_current_sigrtmin_private);
+libc_hidden_def (__libc_current_sigrtmin)
 
 /* Return number of available real-time signal with lowest priority.  */
 int
@@ -67,6 +68,7 @@ __libc_current_sigrtmax (void)
   return current_rtmax;
 }
 strong_alias (__libc_current_sigrtmax, __libc_current_sigrtmax_private);
+libc_hidden_def (__libc_current_sigrtmax)
 
 /* Allocate real-time signal with highest/lowest available
    priority.  Please note that we don't use a lock since we assume

@@ -34,7 +34,7 @@ ENTRY(_setjmp)
 	ba	__sigsetjmp_local
 	 set	0, %o1
 END(_setjmp)
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)
 
 /* int setjmp(jmp_buf) */
 

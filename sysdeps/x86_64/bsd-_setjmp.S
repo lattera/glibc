@@ -37,4 +37,4 @@ ENTRY (BP_SYM (_setjmp))
 	jmp BP_SYM (__sigsetjmp)
 #endif
 END (BP_SYM (_setjmp))
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)

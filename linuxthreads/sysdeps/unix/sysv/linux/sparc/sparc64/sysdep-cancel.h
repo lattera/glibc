@@ -19,7 +19,7 @@
 
 #include <sysdep.h>
 #include <tls.h>
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 # include <linuxthreads/internals.h>
 #endif
 
@@ -80,7 +80,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler2)			      \
 #define COPY_ARGS_5	COPY_ARGS_4 mov %i4, %o4;
 #define COPY_ARGS_6	COPY_ARGS_5 mov %i5, %o5;
 
-# ifndef ASSEMBLER
+# ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P \
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
 				   p_header.data.multiple_threads) == 0, 1)
@@ -88,7 +88,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler2)			      \
 #  define SINGLE_THREAD_P ld [%g6 + MULTIPLE_THREADS_OFFSET], %g1
 # endif
 
-#elif !defined ASSEMBLER
+#elif !defined __ASSEMBLER__
 
 /* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)

@@ -35,6 +35,6 @@ ENTRY (__vfork)
 	decl r1
 	andl r1, r0
 	ret
-strong_alias (__vfork, __GI___vfork)
+libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

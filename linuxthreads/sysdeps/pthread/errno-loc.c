@@ -42,3 +42,4 @@ __errno_location (void)
 #endif
   return &errno;
 }
+libc_hidden_def (__errno_location)

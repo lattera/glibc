@@ -26,5 +26,5 @@ PSEUDO (__libc_fork, fork, 0)
 PSEUDO_END (__libc_fork)
 
 weak_alias (__libc_fork, __fork)
-strong_alias (__fork, __GI___fork)
+libc_hidden_def (__fork)
 weak_alias (__libc_fork, fork)

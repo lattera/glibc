@@ -30,6 +30,6 @@ SYSCALL__ (vfork, 0)
 	sub %o1, 1, %o1
 	retl
 	and %o0, %o1, %o0
-strong_alias (__vfork, __GI___vfork)
+libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

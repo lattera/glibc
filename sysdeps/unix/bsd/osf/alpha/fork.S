@@ -23,6 +23,6 @@ SYSCALL__ (fork, 0)
 	cmovne a4, 0, v0
 	ret
 	.end __fork
-strong_alias (__fork, __GI___fork)
+libc_hidden_def (__fork)
 
 weak_alias (__fork, fork)

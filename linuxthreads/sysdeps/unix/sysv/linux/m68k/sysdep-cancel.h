@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 # include <linuxthreads/internals.h>
 #endif
 
@@ -90,7 +90,7 @@
 #  define __local_multiple_threads __pthread_multiple_threads
 # endif
 
-# ifndef ASSEMBLER
+# ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #  define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 # else
@@ -107,7 +107,7 @@ extern int __local_multiple_threads attribute_hidden;
 #  endif
 # endif
 
-#elif !defined ASSEMBLER
+#elif !defined __ASSEMBLER__
 
 /* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)

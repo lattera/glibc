@@ -26,3 +26,4 @@ __errno_location (void)
   return (int *) __hurd_threadvar_location (_HURD_THREADVAR_ERRNO);
 }
 strong_alias (__errno_location, __hurd_errno_location)
+libc_hidden_def (__errno_location)

@@ -16,7 +16,7 @@ sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 
 # Override select.S in parent directory:
 select		-	select		C:5	__select	select
-accept		-	accept		C:3	__libc_accept	__accept accept
+accept		-	accept		C:3	__libc_accept	__accept accept __GI_accept
 bind		-	bind		3	__bind		bind
 connect		-	connect		C:3	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	3	__getpeername	getpeername

@@ -27,4 +27,4 @@ ENTRY (_setjmp)
 	mov	r1, #0
 	b	PLTJMP(C_SYMBOL_NAME(__sigsetjmp))
 END (_setjmp)
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)

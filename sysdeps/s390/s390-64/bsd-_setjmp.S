@@ -32,4 +32,4 @@ ENTRY(_setjmp)
 	jg     __sigsetjmp	    /* Branch to __sigsetjmp.  */
 #endif
 END (_setjmp)
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)

@@ -34,7 +34,7 @@ END (setjmp)
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
         .weak  C_SYMBOL_NAME (_setjmp)
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)
 ENTRY(__setjmp)
         slgr   %r3,%r3              /* Second argument of zero.  */
 

@@ -52,6 +52,6 @@ error:
 	movl r0, _errno
 	mnegl $1, r0
 	jmp (r2)
-strong_alias (__vfork, __GI___vfork)
+libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

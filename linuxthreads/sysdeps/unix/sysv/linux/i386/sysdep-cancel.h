@@ -20,7 +20,7 @@
 #include <sysdep.h>
 #include <tls.h>
 #include <pt-machine.h>
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 # include <linuxthreads/internals.h>
 #endif
 
@@ -83,7 +83,7 @@
 # define __local_multiple_threads __pthread_multiple_threads
 #endif
 
-# ifndef ASSEMBLER
+# ifndef __ASSEMBLER__
 #  if defined FLOATING_STACKS && USE___THREAD && defined PIC
 #   define SINGLE_THREAD_P \
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
@@ -112,7 +112,7 @@ extern int __local_multiple_threads attribute_hidden;
 #  endif
 # endif
 
-#elif !defined ASSEMBLER
+#elif !defined __ASSEMBLER__
 
 /* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)

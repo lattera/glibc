@@ -18,6 +18,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _LINUX_IA64_SYSDEP_H
+#define _LINUX_IA64_SYSDEP_H 1
+
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/ia64/sysdep.h>
 
@@ -197,3 +200,5 @@
   "b6", "b7"
 
 #endif /* not __ASSEMBLER__ */
+
+#endif /* linux/ia64/sysdep.h */

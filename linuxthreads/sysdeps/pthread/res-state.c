@@ -41,3 +41,4 @@ __res_state (void)
 #endif
   return &_res;
 }
+libc_hidden_def (__res_state)

@@ -22,6 +22,6 @@ PSEUDO (__vfork, vfork, 0)
 	Ret
 	nop
 PSEUDO_END (__vfork)
-strong_alias (__vfork, __GI___vfork)
+libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

@@ -26,6 +26,6 @@ SYSCALL__ (fork, 0)
 	sub %o1, 1, %o1
 	retl
 	and %o0, %o1, %o0
-strong_alias (__fork, __GI___fork)
+libc_hidden_def (__fork)
 
 weak_alias (__fork, fork)

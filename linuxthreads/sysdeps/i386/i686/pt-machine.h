@@ -27,7 +27,7 @@
 #endif
 #include "kernel-features.h"
 
-#ifndef ASSEMBLER
+#ifndef __ASSEMBLER__
 extern long int testandset (int *spinlock);
 extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 

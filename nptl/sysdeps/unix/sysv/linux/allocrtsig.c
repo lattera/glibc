@@ -31,6 +31,7 @@ __libc_current_sigrtmin (void)
 {
   return current_rtmin;
 }
+libc_hidden_def (__libc_current_sigrtmin)
 strong_alias (__libc_current_sigrtmin, __libc_current_sigrtmin_private)
 
 
@@ -39,6 +40,7 @@ __libc_current_sigrtmax (void)
 {
   return current_rtmax;
 }
+libc_hidden_def (__libc_current_sigrtmax)
 strong_alias (__libc_current_sigrtmax, __libc_current_sigrtmax_private)
 
 

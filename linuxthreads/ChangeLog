@@ -1,5 +1,29 @@
 2002-12-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/i386/i686/pt-machine.h: Use __ASSEMBLER__ instead of
+	ASSEMBLER test macro.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Likewise.
+
+	* sysdeps/pthread/errno-loc.c (__errno_location): Add
+	libc_hidden_def.
+	* sysdeps/pthread/herrno-loc.c (__h_errno_location): Likewise.
+	* sysdeps/pthread/res-state.c (__res_state): Likewise.
+	* sysdeps/unix/sysv/linux/allocrtsig.c (__libc_current_sigrtmin,
+	__libc_current_sigrtmax): Likewise.
+	* Versions [libc] (GLIBC_PRIVATE): Remove __libc_internal_tsd_get,
+	__libc_internal_tsd_set, __libc_internal_tsd_address,
+	__libc_alloca_cutoff.
+	[libpthread] (GLIBC_PRIVATE): Remove __libc_internal_tsd_get,
+	__libc_internal_tsd_set, __libc_internal_tsd_address.
+
+	* sysdeps/pthread/list.h: Remove assert.h include.
+	* sysdeps/unix/sysv/linux/fork.c: Include <fork.h>, not "fork.h".
+
 	* sysdeps/pthread/list.h: New file.
 	* sysdeps/unix/sysv/linux/jmp-unwind.c: New file.
 	* sysdeps/unix/sysv/linux/fork.c: New file.

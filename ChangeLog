@@ -20,21 +20,113 @@
 	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
 
-        * io/sys/stat.h [__USE_MISC]: Define __need_timespec for struct
-        stat.
+	* io/sys/stat.h [__USE_MISC]: Define __need_timespec for struct stat.
 
-        * sysdeps/unix/sysv/linux/xstatconv.c (xstat_conv): Adjust for
-        nsec resolution changes.
-        (xstat64_conv): Likewise.
-        (xstat32_conv): Likewise.
+	* sysdeps/unix/sysv/linux/xstatconv.c (xstat_conv): Adjust for
+	nsec resolution changes.
+	(xstat64_conv): Likewise.
+	(xstat32_conv): Likewise.
 
-        * sysdeps/unix/sysv/linux/kernel_stat.h: Add nsec resolution for
-        struct kernel_stat.
+	* sysdeps/unix/sysv/linux/kernel_stat.h: Add nsec resolution for
+	struct kernel_stat.
 
-        * sysdeps/unix/sysv/linux/bits/stat.h: Add nsec resolution for
-        structs stat and stat64.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Add nsec resolution for
+	structs stat and stat64.
 
-        * time/time.h (__timespec_defined): Define for __USE_MISC.
+	* time/time.h (__timespec_defined): Define for __USE_MISC.
+
+2002-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/signal.h: Add libc_hidden_proto for __libc_current_sigrtmin
+	and __libc_current_sigrtmax.
+
+2002-12-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/errno.h (__errno_location): Add prototype.
+	Use libc_hidden_proto unconditionally.
+	* include/netdb.h (__h_errno_location): Use libc_hidden_proto
+	unconditionally.
+	* include/resolv.h (__res_state): Likewise.
+
+	* hurd/errno-loc.c (__errno_location): Add libc_hidden_def.
+	* include/sys/socket.h (accept): Add libc_hidden_proto.
+	* include/errno.h (__errno_location): Likewise.
+	* include/netdb.h (__h_errno_location): Likewise.
+	* include/resolv.h (__res_state): Likewise.
+	* include/unistd.h (__lseek): Likewise.
+	* sysdeps/generic/errno-loc.c (__errno_location): Add libc_hidden_def.
+	* sysdeps/generic/herrno-loc.c (__h_errno_location): Likewise.
+	* sysdeps/generic/res-state.c (__res_state): Likewise.
+	* sysdeps/generic/accept.c (accept): Likewise.
+	* sysdeps/generic/lseek.c (__lseek): Likewise.
+	* sysdeps/generic/allocrtsig.c (__libc_current_sigrtmin,
+	__libc_current_sigrtmax): Likewise.
+	* sysdeps/mach/hurd/accept.c (accept): Likewise.
+	* sysdeps/mach/hurd/lseek.c (__lseek): Likewise.
+	* sysdeps/unix/sysv/aix/accept.c (accept): Likewise.
+	* sysdeps/unix/sysv/aix/lseek.c (__lseek): Likewise.
+	* sysdeps/unix/sysv/linux/accept.S (accept): Likewise.
+	* sysdeps/unix/inet/syscalls.list (__GI_accept): New alias to accept.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (__GI_accept): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (__GI_accept): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (__GI___lseek): New
+	alias to llseek.
+	(__GI_accept): New alias to accept.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (__GI_accept): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (__GI___lseek):
+	New alias to llseek.
+	(__GI_accept): New alias to accept.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (__GI_accept):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (__GI_accept):
+	Likewise.
+	* sysdeps/unix/syscalls.list (__GI___lseek): New alias to lseek.
+
+	* sysdeps/alpha/setjmp.S : Use libc_hidden_def(name) instead of
+	strong_alias (name, __GI_name).
+	* sysdeps/arm/bsd-_setjmp.S : Likewise.
+	* sysdeps/hppa/bsd-_setjmp.S : Likewise.
+	* sysdeps/i386/bsd-_setjmp.S : Likewise.
+	* sysdeps/mips/mips64/bsd-_setjmp.S : Likewise.
+	* sysdeps/mips/bsd-_setjmp.S : Likewise.
+	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S : Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp.S : Likewise.
+	* sysdeps/s390/s390-32/elf/setjmp.S : Likewise.
+	* sysdeps/s390/s390-32/bsd-_setjmp.S : Likewise.
+	* sysdeps/s390/s390-64/elf/setjmp.S : Likewise.
+	* sysdeps/s390/s390-64/bsd-_setjmp.S : Likewise.
+	* sysdeps/sh/bsd-_setjmp.S : Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S : Likewise.
+	* sysdeps/unix/arm/fork.S : Likewise.
+	* sysdeps/unix/bsd/hp/m68k/vfork.S : Likewise.
+	* sysdeps/unix/bsd/i386/vfork.S : Likewise.
+	* sysdeps/unix/bsd/osf/alpha/fork.S : Likewise.
+	* sysdeps/unix/bsd/sun/m68k/vfork.S : Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/vfork.S : Likewise.
+	* sysdeps/unix/bsd/vax/vfork.S : Likewise.
+	* sysdeps/unix/i386/fork.S : Likewise.
+	* sysdeps/unix/mips/fork.S : Likewise.
+	* sysdeps/unix/sparc/fork.S : Likewise.
+	* sysdeps/unix/sparc/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/cris/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/ia64/fork.S : Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S : Likewise.
+	* sysdeps/unix/sysv/linux/ia64/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/sh/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S : Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S : Likewise.
+	* sysdeps/unix/sysv/linux/sparc/fork.S : Likewise.
+	* sysdeps/unix/sysv/linux/sparc/vfork.S : Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S : Likewise.
+	* sysdeps/unix/fork.S : Likewise.
+	* sysdeps/vax/bsd-_setjmp.S : Likewise.
+	* sysdeps/x86_64/bsd-_setjmp.S : Likewise.
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Guard against multiple
+	inclusion.
 
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 

@@ -51,6 +51,6 @@ error:
 	movel d0, _errno
 	moveq #-1, d0
 	jmp a0@
-strong_alias (__vfork, __GI___vfork)
+libc_hidden_def (__vfork)
 
 weak_alias (__vfork, vfork)

@@ -24,7 +24,7 @@ getuid		-	getuid		i:	__getuid	getuid
 ioctl		-	ioctl		i:iiI	__ioctl		ioctl
 kill		-	kill		i:ii	__kill		kill
 link		-	link		i:ss	__link		link
-lseek		-	lseek		Ci:iii	__libc_lseek	__lseek lseek
+lseek		-	lseek		Ci:iii	__libc_lseek	__lseek lseek __GI___lseek
 mkdir		-	mkdir		i:si	__mkdir		mkdir
 open		-	open		Ci:siv	__libc_open __open open
 profil		-	profil		i:piii	__profil	profil

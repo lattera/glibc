@@ -1,3 +1,13 @@
+2002-12-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Use __ASSEMBLER__
+	instead of ASSEMBLER test macro.
+
+	* sysdeps/unix/sysv/linux/allocrtsig.c (__libc_current_sigrtmin,
+	__libc_current_sigrtmax): Add libc_hidden_def.
+
+	* sysdeps/pthread/list.h: Remove assert.h include.
+
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pt-initfini.c (call_initialize_minimal): Use

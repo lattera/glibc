@@ -40,4 +40,4 @@ ENTRY (_setjmp)
 	j	C_SYMBOL_NAME (__sigsetjmp)
 #endif
 	.end	_setjmp
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)

@@ -118,6 +118,7 @@ extern int __listen (int __fd, int __n) attribute_hidden;
 extern int __libc_accept (int __fd, __SOCKADDR_ARG __addr,
 			  socklen_t *__restrict __addr_len)
      __THROW;
+libc_hidden_proto (accept)
 
 /* Return the length of a `sockaddr' structure.  */
 #ifdef _HAVE_SA_LEN

@@ -80,7 +80,7 @@ LEAF(_setjmp)
 	mov in1=0
 	br.cond.sptk.many __sigsetjmp
 END(_setjmp)
-strong_alias (_setjmp, __GI__setjmp)
+libc_hidden_def (_setjmp)
 
 	/* __sigsetjmp(__jmp_buf buf, int savemask) */
 

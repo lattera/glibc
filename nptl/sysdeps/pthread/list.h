@@ -20,8 +20,6 @@
 #ifndef _LIST_H
 #define _LIST_H	1
 
-#include <assert.h>
-
 /* The definitions of this file are adopted from those which can be
    found in the Linux kernel headers to enable people familiar with
    the latter find their way in these sources as well.  */
