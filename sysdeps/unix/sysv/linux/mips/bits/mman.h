@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/MIPS version.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,6 +59,8 @@
 # define MAP_DENYWRITE	0x2000		/* ETXTBSY */
 # define MAP_EXECUTABLE	0x4000		/* mark it as an executable */
 # define MAP_LOCKED	0x8000		/* pages are locked */
+# define MAP_POPULATE   0x10000         /* populate (prefault) pagetables */
+# define MAP_NONBLOCK   0x20000         /* do not block on IO */
 #endif
 
 /* Flags to `msync'.  */

@@ -32,14 +32,6 @@ shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 
-#
-# These are defined locally because the caller is also defined in this dir.
-#
-s_llseek	llseek	_llseek		i:iiipi	__syscall__llseek
-s_sigaction	sigaction sigaction	i:ipp	__syscall_sigaction
-s_ustat		ustat	ustat		i:ip	__syscall_ustat
-sys_mknod	xmknod	mknod		i:sii	__syscall_mknod
-
 # System calls with wrappers.
 rt_sigaction	-	rt_sigaction	i:ippi	__syscall_rt_sigaction
 rt_sigpending	-	rt_sigpending	i:pi	__syscall_rt_sigpending
@@ -47,35 +39,3 @@ rt_sigprocmask	-	rt_sigprocmask	i:ippi	__syscall_rt_sigprocmask
 rt_sigqueueinfo	-	rt_sigqueueinfo	i:iip	__syscall_rt_sigqueueinfo
 rt_sigsuspend	-	rt_sigsuspend	i:pi	__syscall_rt_sigsuspend
 rt_sigtimedwait	-	rt_sigtimedwait	i:pppi	__syscall_rt_sigtimedwait
-s_execve	EXTRA	execve		i:spp	__syscall_execve
-s_exit		_exit	exit		i:i	__syscall_exit
-s_fcntl		fcntl	fcntl		i:iiF	__syscall_fcntl
-s_fcntl64	fcntl64	fcntl64		i:iiF	__syscall_fcntl64
-s_fstat64	fxstat64 fstat64	i:ip	__syscall_fstat64
-s_ftruncate64	ftruncate64 ftruncate64	i:iiii	__syscall_ftruncate64
-s_getcwd	getcwd	getcwd		i:pi	__syscall_getcwd
-s_getdents	getdents getdents	i:ipi	__syscall_getdents
-s_getdents64	getdents getdents64	i:ipi	__syscall_getdents64
-s_getpriority	getpriority getpriority	i:ii	__syscall_getpriority
-s_ipc		msgget	ipc		i:iiiip	__syscall_ipc
-s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
-s_mmap2		mmap64	mmap2		b:aniiii __syscall_mmap2
-s_poll		poll	poll		i:pii	__syscall_poll
-s_pread64	pread64	pread		i:ibniii __syscall_pread
-s_ptrace	ptrace	ptrace		i:iipp	__syscall_ptrace
-s_pwrite64	pwrite64 pwrite		i:ibniii __syscall_pwrite
-s_readahead	EXTRA	readahead	i:iiii	__syscall_readahead
-s_reboot	reboot	reboot		i:iii	__syscall_reboot
-s_setrlimit	setrlimit setrlimit	i:ip	__syscall_setrlimit
-s_sigpending	sigpending sigpending	i:p	__syscall_sigpending
-s_sigprocmask	sigprocmask sigprocmask	i:ipp	__syscall_sigprocmask
-s_stat64	xstat64  stat64		i:sp	__syscall_stat64
-s_truncate64	truncate64 truncate64	i:siii	__syscall_truncate64
-
-# Todo: we can pass 6 args in registers, no need for the wrapper
-sys_sysctl	sysctl	_sysctl		i:p	__syscall__sysctl
-sys_fstat	fxstat	fstat		i:ip	__syscall_fstat
-sys_lstat	lxstat	lstat		i:sp	__syscall_lstat
-sys_readv	readv	readv		i:ipi	__syscall_readv
-sys_stat	xstat	stat		i:sp	__syscall_stat
-sys_writev	writev	writev		i:ipi	__syscall_writev
