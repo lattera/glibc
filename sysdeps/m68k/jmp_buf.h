@@ -1,4 +1,4 @@
-/* Define the machine-dependent type `jmp_buf'.  Sun 3 version.  */
+/* Define the machine-dependent type `jmp_buf'.  m68k version.  */
 
 typedef struct
   {
@@ -6,9 +6,9 @@ typedef struct
     long int __dregs[7];
 
     /* There are six 4-byte address registers, plus the FP and SP.  */
-    PTR __aregs[6];
-    PTR __fp;
-    PTR __sp;
+    int *__aregs[6];
+    int * __fp;
+    int * __sp;
 
 #if defined(__HAVE_68881__) || defined(__HAVE_FPU__)
     /* There are eight floating point registers which
