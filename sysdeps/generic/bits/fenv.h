@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@
    XXX Probably we should also include the signal handler here.  */
 typedef struct
   {
-    unsigned int flags;
+    unsigned int __flags;
   }
 fexcept_t;
 
@@ -52,7 +52,7 @@ fexcept_t;
 /* Type representing floating-point environment.  */
 typedef struct
   {
-    fexcept_t excepts;
+    fexcept_t __excepts;
     /* XXX I don't know what else we should save.  */
   }
 fenv_t;

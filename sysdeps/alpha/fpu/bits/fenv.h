@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,10 +83,10 @@ enum
 
 
 /* Type representing exception flags.  */
-typedef unsigned long fexcept_t;
+typedef unsigned long int fexcept_t;
 
 /* Type representing floating-point environment.  */
-typedef unsigned long fenv_t;
+typedef unsigned long int fenv_t;
 
 /* If the default argument is used we use this value.  Note that due to
    architecture-specified page mappings, no user-space pointer will ever

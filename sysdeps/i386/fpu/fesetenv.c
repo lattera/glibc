@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -39,37 +39,37 @@ fesetenv (const fenv_t *envp)
 
   if (envp == FE_DFL_ENV)
     {
-      temp.control_word |= FE_ALL_EXCEPT;
-      temp.control_word &= ~FE_TOWARDZERO;
-      temp.status_word &= ~FE_ALL_EXCEPT;
-      temp.eip = 0;
-      temp.cs_selector = 0;
-      temp.opcode = 0;
-      temp.data_offset = 0;
-      temp.data_selector = 0;
+      temp.__control_word |= FE_ALL_EXCEPT;
+      temp.__control_word &= ~FE_TOWARDZERO;
+      temp.__status_word &= ~FE_ALL_EXCEPT;
+      temp.__eip = 0;
+      temp.__cs_selector = 0;
+      temp.__opcode = 0;
+      temp.__data_offset = 0;
+      temp.__data_selector = 0;
     }
   else if (envp == FE_NOMASK_ENV)
     {
-      temp.control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
-      temp.status_word &= ~FE_ALL_EXCEPT;
-      temp.eip = 0;
-      temp.cs_selector = 0;
-      temp.opcode = 0;
-      temp.data_offset = 0;
-      temp.data_selector = 0;
+      temp.__control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
+      temp.__status_word &= ~FE_ALL_EXCEPT;
+      temp.__eip = 0;
+      temp.__cs_selector = 0;
+      temp.__opcode = 0;
+      temp.__data_offset = 0;
+      temp.__data_selector = 0;
     }
   else
     {
-      temp.control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
-      temp.control_word |= (envp->control_word
-			    & (FE_ALL_EXCEPT | FE_TOWARDZERO));
-      temp.status_word &= ~FE_ALL_EXCEPT;
-      temp.status_word |= envp->status_word & FE_ALL_EXCEPT;
-      temp.eip = envp->eip;
-      temp.cs_selector = envp->cs_selector;
-      temp.opcode = envp->opcode;
-      temp.data_offset = envp->data_offset;
-      temp.data_selector = envp->data_selector;
+      temp.__control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
+      temp.__control_word |= (envp->__control_word
+			      & (FE_ALL_EXCEPT | FE_TOWARDZERO));
+      temp.__status_word &= ~FE_ALL_EXCEPT;
+      temp.__status_word |= envp->__status_word & FE_ALL_EXCEPT;
+      temp.__eip = envp->__eip;
+      temp.__cs_selector = envp->__cs_selector;
+      temp.__opcode = envp->__opcode;
+      temp.__data_offset = envp->__data_offset;
+      temp.__data_selector = envp->__data_selector;
     }
 
   __asm__ ("fldenv %0" : : "m" (temp));

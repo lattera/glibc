@@ -1,5 +1,5 @@
 /* Clear given exceptions in current floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -33,7 +33,7 @@ feclearexcept (int excepts)
   __asm__ ("fnstenv %0" : "=m" (*&temp));
 
   /* Clear the relevant bits.  */
-  temp.status_word &= excepts ^ FE_ALL_EXCEPT;
+  temp.__status_word &= excepts ^ FE_ALL_EXCEPT;
 
   /* Put the new data in effect.  */
   __asm__ ("fldenv %0" : : "m" (*&temp));

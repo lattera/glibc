@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -59,7 +59,7 @@ feraiseexcept (int excepts)
       __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
 
       /* Set the relevant bits.  */
-      temp.status_word |= FE_OVERFLOW;
+      temp.__status_word |= FE_OVERFLOW;
 
       /* Put the new data in effect.  */
       __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
@@ -80,7 +80,7 @@ feraiseexcept (int excepts)
       __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
 
       /* Set the relevant bits.  */
-      temp.status_word |= FE_UNDERFLOW;
+      temp.__status_word |= FE_UNDERFLOW;
 
       /* Put the new data in effect.  */
       __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
@@ -101,7 +101,7 @@ feraiseexcept (int excepts)
       __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
 
       /* Set the relevant bits.  */
-      temp.status_word |= FE_INEXACT;
+      temp.__status_word |= FE_INEXACT;
 
       /* Put the new data in effect.  */
       __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));

@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,8 +30,8 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
      separately set the status word.  */
   __asm__ ("fnstenv %0" : "=m" (*&temp));
 
-  temp.status_word &= ~(excepts & FE_ALL_EXCEPT);
-  temp.status_word |= *flagp & excepts & FE_ALL_EXCEPT;
+  temp.__status_word &= ~(excepts & FE_ALL_EXCEPT);
+  temp.__status_word |= *flagp & excepts & FE_ALL_EXCEPT;
 
   /* Store the new status word (along with the rest of the environment.
      Possibly new exceptions are set but they won't get executed unless

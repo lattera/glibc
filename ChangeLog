@@ -1,3 +1,26 @@
+1999-05-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/alpha/fpu/bits/fenv.h: Pretty print.
+
+	* sysdeps/sparc/sparc64/fpu/bits/fenv.h: Remove unneeded #if.
+
+1999-05-22  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/fenv.h (fenv_t): Prepend __ to member
+	names to protect from user's macro namespace.
+	* sysdeps/arm/fpu/bits/fenv.h (fenv_t): Likewise.
+	* sysdeps/generic/bits/fenv.h (fexcept_t, fenv_t): Likewise.
+	* sysdeps/i386/fpu/bits/fenv.h (fenv_t): Likewise.
+	* sysdeps/mips/bits/fenv.h (fenv_t): Likewise.
+	* sysdeps/m68k/fpu/feholdexcpt.c, sysdeps/m68k/fpu/fesetenv.c:
+	Adapted.
+	* sysdeps/arm/fpu/fegetenv.c, sysdeps/arm/fpu/feholdexcpt.c,
+	sysdeps/arm/fpu/fesetenv.c: Likewise.
+	* sysdeps/i386/fpu/fclrexcpt.c, sysdeps/i386/fpu/feholdexcpt.c,
+	sysdeps/i386/fpu/fesetenv.c, sysdeps/i386/fpu/fraiseexcpt.c,
+	sysdeps/i386/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/mips/fesetenv.c: Likewise.
+
 1999-05-22  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/generic/bits/sigstack.h (enum SS_*): Remove trailing comma.

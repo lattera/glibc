@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,18 +65,18 @@ typedef unsigned short int fexcept_t;
    to the layout of the block written by the `fstenv'.  */
 typedef struct
   {
-    unsigned short int control_word;
+    unsigned short int __control_word;
     unsigned short int __unused1;
-    unsigned short int status_word;
+    unsigned short int __status_word;
     unsigned short int __unused2;
-    unsigned short int tags;
+    unsigned short int __tags;
     unsigned short int __unused3;
-    unsigned int eip;
-    unsigned short int cs_selector;
-    unsigned int opcode:11;
+    unsigned int __eip;
+    unsigned short int __cs_selector;
+    unsigned int __opcode:11;
     unsigned int __unused4:5;
-    unsigned int data_offset;
-    unsigned short int data_selector;
+    unsigned int __data_offset;
+    unsigned short int __data_selector;
     unsigned short int __unused5;
   }
 fenv_t;

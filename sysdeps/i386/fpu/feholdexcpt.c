@@ -1,5 +1,5 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -29,7 +29,7 @@ feholdexcept (fenv_t *envp)
   __asm__ ("fnstenv %0" : "=m" (*envp));
 
   /* Now set all exceptions to non-stop.  */
-  work = envp->control_word | 0x3f;
+  work = envp->__control_word | 0x3f;
   __asm__ ("fldcw %0" : : "m" (*&work));
 
   return 1;

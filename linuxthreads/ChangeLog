@@ -1,3 +1,10 @@
+1999-05-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* man/pthread_cond_init.man: Correct example.
+	Reported by Tomas Berndtsson <tomas@nocrew.org>.
+
+	* linuxthreads.texi (Condition Variables): Likewise.
+
 1999-05-18  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/sparc64/pt-machine.h (__compare_and_swap): Use

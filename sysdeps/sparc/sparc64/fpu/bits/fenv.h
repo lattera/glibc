@@ -59,19 +59,13 @@ enum
 
 #define __FE_ROUND_MASK	(3U << 30)
 
-#if __WORDSIZE == 64
+
 /* Type representing exception flags.  */
-typedef unsigned long fexcept_t;
+typedef unsigned long int fexcept_t;
+
 
 /* Type representing floating-point environment.  */
-typedef unsigned long fenv_t;
-#else
-/* Type representing exception flags.  */
-typedef unsigned int fexcept_t;
-
-/* Type representing floating-point environment.  */
-typedef unsigned int fenv_t;
-#endif
+typedef unsigned long int fenv_t;
 
 /* If the default argument is used we use this value.  */
 #define FE_DFL_ENV	((fenv_t *) -1)
@@ -83,9 +77,9 @@ typedef unsigned int fenv_t;
 
 /* For internal use only: access the fp state register.  */
 #if __WORDSIZE == 64
-#define __fenv_stfsr(X)   __asm__ ("stx %%fsr,%0" : "=m" (X))
-#define __fenv_ldfsr(X)   __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (X))
+# define __fenv_stfsr(X)   __asm__ ("stx %%fsr,%0" : "=m" (X))
+# define __fenv_ldfsr(X)   __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (X))
 #else
-#define __fenv_stfsr(X)   __asm__ ("st %%fsr,%0" : "=m" (X))
-#define __fenv_ldfsr(X)   __asm__ __volatile__ ("ld %0,%%fsr" : : "m" (X))
+# define __fenv_stfsr(X)   __asm__ ("st %%fsr,%0" : "=m" (X))
+# define __fenv_ldfsr(X)   __asm__ __volatile__ ("ld %0,%%fsr" : : "m" (X))
 #endif
