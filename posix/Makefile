@@ -82,7 +82,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex21 bug-regex22 bug-regex23 tst-nice tst-nanosleep \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-waitid \
-		   tst-getaddrinfo2
+		   tst-getaddrinfo2 bug-glob1
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -172,6 +172,7 @@ tst-rxspencer-ARGS = --utf8 rxspencer/tests
 tst-rxspencer-ENV = LOCPATH=$(common-objpfx)localedata
 tst-pcre-ARGS = PCRE.tests
 tst-boost-ARGS = BOOST.tests
+bug-glob1-ARGS = "$(objpfx)"
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
