@@ -227,7 +227,7 @@ struct cmsghdr
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
-    __extension__ unsigned char __flexarr; /* Ancillary data.  */
+    __extension__ unsigned char __cmsg_data __flexarr; /* Ancillary data.  */
     /* XXX Perhaps this should be removed.  */
   };
 
