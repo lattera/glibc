@@ -24,11 +24,18 @@ Cambridge, MA 02139, USA.  */
 #ifdef _LIBC
 # define USE_NUMBER_GROUPING
 # define STDC_HEADERS
+# define HAVE_LIMITS_H
 #endif
 
 #include <ctype.h>
 #include <errno.h>
-#include <limits.h>
+#ifndef errno
+extern int errno;
+#endif
+
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
 
 #ifdef STDC_HEADERS
 # include <stddef.h>
