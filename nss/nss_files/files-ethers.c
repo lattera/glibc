@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ LINE_PARSER
        if (cnt < 5)
 	 INT_FIELD (number, ISCOLON , 0, 16, (unsigned int))
        else
-	 INT_FIELD (number, isspace, 0, 16, (unsigned int))
+	 INT_FIELD (number, isspace, 1, 16, (unsigned int))
 
        if (number > 0xff)
 	 return 0;
@@ -60,7 +60,7 @@ LINE_PARSER
 
 DB_LOOKUP (hostton, 1 + strlen (name), (".%s", name),
 	   {
-	     if (strcmp (result->e_name, name) == 0)
+	     if (__strcasecmp (result->e_name, name) == 0)
 	       break;
 	   }, const char *name)
 
