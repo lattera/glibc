@@ -48,7 +48,8 @@ extern int __have_no_getdents64;
 
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
-extern int __syscall_getdents (int fd, char *__unbounded buf, size_t nbytes);
+extern int __syscall_getdents (int fd, char *__unbounded buf, unsigned int nbytes);
+extern int __syscall_getdents64 (int fd, char *__unbounded buf, unsigned int nbytes);
 
 /* For Linux we need a special version of this file since the
    definition of `struct dirent' is not the same for the kernel and
