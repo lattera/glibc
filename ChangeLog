@@ -1,3 +1,8 @@
+2003-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_storage): Fix
+	reversed __builtin_expect expectation.
+
 2003-03-05  Roland McGrath  <roland@redhat.com>
 
 	* stdio-common/sscanf.c: Use prototype defn with ... syntax.
