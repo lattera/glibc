@@ -2688,29 +2688,51 @@ with character code range values one must use the absolute ellipsis `...'"));
 		{
 		  uint32_t *wstr;
 
-		  /* We expect a single character or string as the
-		     argument.  */
-		  now = lr_token (ldfile, charmap, NULL);
-		  wstr = read_widestring (ldfile, now, charmap, repertoire);
-
-		  if (wstr != NULL)
+		  while (1)
 		    {
-		      if (ctype->default_missing != NULL)
+		      /* We expect a single character or string as the
+			 argument.  */
+		      now = lr_token (ldfile, charmap, NULL);
+		      wstr = read_widestring (ldfile, now, charmap,
+					      repertoire);
+
+		      if (wstr != NULL)
 			{
-			  lr_error (ldfile, _("\
+			  if (ctype->default_missing != NULL)
+			    {
+			      lr_error (ldfile, _("\
 %s: duplicate `default_missing' definition"), "LC_CTYPE");
-			  error_at_line (0, 0, ctype->default_missing_file,
-					 ctype->default_missing_lineno,
-					 _("previous definition was here"));
+			      error_at_line (0, 0, ctype->default_missing_file,
+					     ctype->default_missing_lineno,
+					     _("\
+previous definition was here"));
+			    }
+			  else
+			    {
+			      ctype->default_missing = wstr;
+			      ctype->default_missing_file = ldfile->fname;
+			      ctype->default_missing_lineno = ldfile->lineno;
+			    }
+			  lr_ignore_rest (ldfile, 1);
+			  break;
 			}
-		      else
+		      else if (wstr == (uint32_t *) -1l)
+			/* This was an syntax error.  */
+			break;
+
+		      /* Maybe there is another replacement we can use.  */
+		      now = lr_token (ldfile, charmap, NULL);
+		      if (now->tok == tok_eol || now->tok == tok_eof)
 			{
-			  ctype->default_missing = wstr;
-			  ctype->default_missing_file = ldfile->fname;
-			  ctype->default_missing_lineno = ldfile->lineno;
+			  /* Nothing found.  We tell the user.  */
+			  lr_error (ldfile, _("\
+%s: no representable `default_missing' definition found"), LC_CTYPE);
+			  break;
 			}
+		      if (now->tok != tok_semicolon)
+			goto translit_syntax;
 		    }
-		  lr_ignore_rest (ldfile, 1);
+
 		  continue;
 		}
 	      else if (now->tok == tok_translit_ignore)
