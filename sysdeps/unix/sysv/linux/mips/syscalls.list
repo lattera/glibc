@@ -47,7 +47,7 @@ rt_sigprocmask	-	rt_sigprocmask	i:ippi	__syscall_rt_sigprocmask
 rt_sigqueueinfo	-	rt_sigqueueinfo	i:iip	__syscall_rt_sigqueueinfo
 rt_sigsuspend	-	rt_sigsuspend	i:pi	__syscall_rt_sigsuspend
 rt_sigtimedwait	-	rt_sigtimedwait	i:pppi	__syscall_rt_sigtimedwait
-s_execve	execve	execve		i:spp	__syscall_execve
+s_execve	EXTRA	execve		i:spp	__syscall_execve
 s_exit		_exit	exit		i:i	__syscall_exit
 s_fcntl		fcntl	fcntl		i:iiF	__syscall_fcntl
 s_fcntl64	fcntl64	fcntl64		i:iiF	__syscall_fcntl64

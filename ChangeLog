@@ -1,3 +1,8 @@
+2002-11-02  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (s_execve): Set
+	caller to EXTRA instead of execve.
+
 2002-11-01  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/errno-loc.c [! USE___THREAD]: Use this conditional
