@@ -48,6 +48,8 @@ _hurd_setup_sighandler (int flags,
     {
       sigsp = sigaltstack->ss_sp + sigaltstack->ss_size;
       sigaltstack->ss_flags |= SA_ONSTACK;
+      /* XXX need to set up base of new stack for
+	 per-thread variables, cthreads.  */
     }
   else
     sigsp = (char *) ts->r29;
@@ -61,24 +63,9 @@ _hurd_setup_sighandler (int flags,
 
   scp->sc_onstack = sigaltstack->ss_flags & SA_ONSTACK ? 1 : 0;
 
-  scp->sc_gpr[2] = ts->r2;
-  scp->sc_gpr[16] = ts->r16;
-  scp->sc_gpr[17] = ts->r17;
-  scp->sc_gpr[18] = ts->r18;
-  scp->sc_gpr[19] = ts->r19;
-  scp->sc_gpr[20] = ts->r20;
-  scp->sc_gpr[21] = ts->r21;
-  scp->sc_gpr[22] = ts->r22;
-  scp->sc_gpr[23] = ts->r23;
-  scp->sc_gpr[28] = ts->r28;
-  scp->sc_gpr[31] = ts->r31;
-  
-  scp->sc_mdlo = ts->mdlo;
-  scp->sc_mdhi = ts->mdhi;
-
-  scp->sc_pc = ts->pc;
-  scp->sc_sp = ts->r29;
-  scp->sc_fp = ts->r30;
+  /* struct sigcontext is laid out so that starting at sc_gpr
+     mimics a struct mips_thread_state.  */
+  memcpy (scp->sc_gpr, &ts, sizeof ts);
 
   /* Modify the thread state to call `trampoline' on the new stack.  */
 
