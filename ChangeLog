@@ -1,3 +1,21 @@
+2001-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-address.c (address_finish): Add 'S' to allow
+	formats for postal_fmt.
+
+2001-02-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (ftruncate): Add
+	__ftruncate64 alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (ftruncate):
+	Likewise.
+
+2001-02-15  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S (__longjmp): No need to
+	do "loadrs".  Writing to bspstore already takes care of
+	invalidating the "clean" partition.
+
 2001-02-16  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/s_nextafterl.c: New file.

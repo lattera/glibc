@@ -161,7 +161,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 		if (*++cp == 'R')
 		  /* Romanize-flag.  */
 		  ++cp;
-		if (strchr ("afdbshNtreCzTc%", *cp) == NULL)
+		if (strchr ("afdbshNtreCzTSc%", *cp) == NULL)
 		  {
 		    error (0, 0, _("\
 %s: invalid escape `%%%c' sequence in field `%s'"),

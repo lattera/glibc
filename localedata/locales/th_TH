@@ -888,10 +888,10 @@ mon     "<U0E21><U0E01><U0E23><U0E32><U0E04><U0E21>";/
         "<U0E15><U0E38><U0E25><U0E32><U0E04><U0E21>";/
         "<U0E1E><U0E24><U0E28><U0E08><U0E34><U0E01><U0E32><U0E22><U0E19>";/
         "<U0E18><U0E31><U0E19><U0E27><U0E32><U0E04><U0E21>"
-% Appropriate date & time representation  "%a %e %b %o, %H:%M:%S"
-d_t_fmt "%a<U0020>%e<U0020>%b<U0020>%Y<U002C><U0020>%H<U003A>%M<U003A>%S"
-% Appropriate date representation  "%d/%m/%Y"
-d_fmt   "%d<U002F>%m<U002F>%Y"
+% Appropriate date & time representation  "%a %e %b %Ey, %H:%M:%S"
+d_t_fmt "%a<U0020>%e<U0020>%b<U0020>%Ey<U002C><U0020>%H<U003A>%M<U003A>%S"
+% Appropriate date representation  "%d/%m/%Ey"
+d_fmt   "%d<U002F>%m<U002F>%Ey"
 % Appropriate time representation  "%H:%M:%S"
 t_fmt   "%H<U003A>%M<U003A>%S"
 % AM/PM signs
@@ -899,14 +899,16 @@ am_pm   "<U0041><U004D>";"<U0050><U004D>"
 % Appropriate 12-hour clock representation  "%I:%M:%S %p"
 t_fmt_ampm  "%I<U003A>%M<U003A>%S<U0020>%p"
 % Era : Buddhist Era
-%era     "+:1:-542/01/01:+*:<U0E1E><U002E><U0E28><U002E>:%N<U0020>%o"
-%era_d_fmt       "%d<U0020>%b<U0020>%o"
-%era_t_fmt       "%H<U003A>%M<U003A>%S<U0020><U0E19><U002E>"
-%era_d_t_fmt     "<U0E27><U0E31><U0E19>%A<U0E17><U0E35><U0E48><U0020>%d<U0020>%B<U0020>%N<U0020>%o<U002C><U0020>%H<U003A>%M<U003A>%S<U0020><U0E19><U002E>"
-% Appropriate date representation (date(1))   "%a %b %e %H:%M:%S %Z %Y"
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+era     "+:1:-543<U002F>01<U002F>01:+*:<U0E1E><U002E><U0E28><U002E>:%EC<U0020>%Ey"
+era_d_fmt       "%e<U0020>%b<U0020>%Ey"
+era_t_fmt       "%H<U002E>%M<U002E>%S<U0020><U0E19><U002E>"
+era_d_t_fmt     "<U0E27><U0E31><U0E19>%A<U0E17><U0E35><U0E48><U0020>%e<U0020>%B<U0020>%EC<U0020>%Ey<U002C><U0020>%H<U002E>%M<U002E>%S<U0020><U0E19><U002E>"
+% Appropriate date representation (date(1))   "%a %e %b %Ey %H:%M:%S %Z"
+date_fmt       "<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
+<U0020><U0025><U0045><U0079><U0020><U0025><U0048><U003A><U0025><U004D>/
+<U003A><U0025><U0053><U0020><U0025><U005A>"
+% ICT-7ICT-7
+timezone	"<U0049><U0043><U0054><U002D><U0037><U0049><U0043><U0054><U002d><U0037>"
 END LC_TIME
 
 LC_MESSAGES
@@ -916,23 +918,23 @@ LC_MESSAGES
 % yesstr = "Chai2" = MAIMUAN + CHO CHANG + MAI EK
 % nostr = "Mai2Chai2" = MAIMALAI + MO MA + MAI EK + MAIMUAN + CHO CHANG + MAI EK
 
-yesexpr "^[<U0079><U0059><U0E0A>]"
-noexpr  "^[<U006E><U004E><U0E21>]"
+yesexpr "<U005E><U005B><U0079><U0059><U0E0A><U005D>"
+noexpr  "<U005E><U005B><U006E><U004E><U0E21><U005D>"
 yesstr  "<U0E43><U0E0A><U0E48>"
 nostr   "<U0E44><U0E21><U0E48><U0E43><U0E0A><U0E48>"
 
 END LC_MESSAGES
 
 LC_PAPER
-% FIXME
 height   297
-% FIXME
 width    210
 END LC_PAPER
 
 LC_TELEPHONE
 tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 <U006C>"
+tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0025><U006C>"
+int_select     "<U0030><U0030><U0031>"
 int_prefix     "<U0036><U0036>"
 END LC_TELEPHONE
 
@@ -944,12 +946,32 @@ END LC_MEASUREMENT
 LC_NAME
 name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 <U0025><U006D><U0025><U0074><U0025><U0066>"
+name_gen    "<U0E04><U0E38><U0E13>"
+name_miss   "<U0E19><U0E32><U0E07><U0E2A><U0E32><U0E27>"
+name_mr     "<U0E19><U0E32><U0E22>"
+name_mrs    "<U0E19><U0E32><U0E07>"
+name_ms     "<U0E04><U0E38><U0E13>"
 END LC_NAME
 
 LC_ADDRESS
+%    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
 postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+<U0025><U0064><U0025><U004E><U0025><U0072><U0025><U0074><U0025><U0065>/
+<U0025><U0074><U0025><U0062><U0025><U004E><U0025><U0068><U0025><U0074>/
+<U0025><U0073><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0053>/
+<U0025><U004E><U0025><U007A><U0025><U0063><U0025><U004E>"
+country_name  "<U0E44><U0E17><U0E22>"
+%FIXME
+%country_post  ""
+country_ab2   "<U0054><U0048>"
+country_ab3   "<U0054><U0048><U0041>"
+%country_num   "<U0037><U0036><U0034>"
+%FIXME
+%country_car   ""
+%FIXME
+%country_isbn  ""
+lang_name     "<U0E44><U0E17><U0E22>"
+lang_ab       "<U0074><U0068>"
+lang_term     "<U0074><U0068><U0061>"
+lang_lib      "<U0074><U0068><U0061>"
 END LC_ADDRESS
