@@ -1,7 +1,7 @@
 /* file: libm_error.c */
 
 
-// Copyright (c) 2000 - 2004, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -85,6 +85,7 @@
 //           nextafter_underflow, nexttoward_overflow, nexttoward_underflow.  
 //           Added ISOC to set errno for nextafter and nexttoward underflow.
 // 12/15/04: Corrected POSIX behavior for exp, exp2, and exp10 underflow.
+// 03/31/05: Added missing ALIGNIT statement to 6 float constants.
 
 #include <errno.h>
 #include <stdio.h>
@@ -163,11 +164,17 @@ struct exceptionl excl;
 
 #define STATIC static
 
+ALIGNIT
 STATIC const char float_inf[4] = {0x00,0x00,0x80,0x7F};
+ALIGNIT
 STATIC const char float_huge[4] = {0xFF,0xFF,0x7F,0x7F};
+ALIGNIT
 STATIC const char float_zero[4] = {0x00,0x00,0x00,0x00};
+ALIGNIT
 STATIC const char float_neg_inf[4] = {0x00,0x00,0x80,0xFF};
+ALIGNIT
 STATIC const char float_neg_huge[4] = {0xFF,0xFF,0x7F,0xFF};
+ALIGNIT
 STATIC const char float_neg_zero[4] = {0x00,0x00,0x00,0x80};
 ALIGNIT
 STATIC const char double_inf[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0x7F};

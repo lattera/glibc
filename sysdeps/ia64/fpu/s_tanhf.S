@@ -1,7 +1,7 @@
 .file "tanhf.s"
 
 
-// Copyright (c) 2001 - 2003, Intel Corporation
+// Copyright (c) 2001 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2001 by the Intel Numerics Group, Intel Corporation
@@ -42,6 +42,7 @@
 // 05/30/01 Initial version
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 03/31/05 Reformatted delimiters between data tables
 //
 // API
 //==============================================================
@@ -224,7 +225,6 @@ data8 0xBFD555551E8245B7 // A0
 data8 0x3FC110E63F52E689 // A1
 data8 0xBFAB8CD6A5B7BAFA // A2
 data8 0x3F945D467FCEB553 // A3
-//
 // Polynomial coefficients for the tanh(x), 0.3125 <= |x| < 0.5
 data8 0xBE3DCC92FCAECBB6 // A0
 data8 0x3FF0000043B7D267 // A1

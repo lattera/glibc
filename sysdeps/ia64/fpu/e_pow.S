@@ -1,7 +1,7 @@
 .file "pow.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -66,6 +66,7 @@
 // 08/29/02 Improved Itanium 2 performance
 // 09/21/02 Added branch for |y*log(x)|<2^-11 to fix monotonicity problems.
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 03/31/05 Reformatted delimiters between data tables
 //
 // API
 //==============================================================

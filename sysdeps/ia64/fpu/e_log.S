@@ -1,7 +1,7 @@
 .file "log.s"
 
 
-// Copyright (c) 2000 - 2002, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -51,6 +51,7 @@
 // 05/23/02 Modified algorithm. Now only one polynomial is used
 //          for |x-1| >= 1/256 and for |x-1| < 1/256
 // 12/11/02 Improved performance for Itanium 2
+// 03/31/05 Reformatted delimiters between data tables
 //
 // API
 //==============================================================

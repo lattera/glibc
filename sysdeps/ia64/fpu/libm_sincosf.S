@@ -1,7 +1,7 @@
 .file "libm_sincosf.s"
 
 
-// Copyright (c) 2002 - 2003, Intel Corporation
+// Copyright (c) 2002 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2002 by the Intel Numerics Group, Intel Corporation
@@ -48,6 +48,7 @@
 // 09/05/02 Work range is widened by reduction strengthen (2 parts of Pi/16)
 // 02/10/03 Reordered header: .section, .global, .proc, .align
 // 02/11/04 cisf is moved to the separate file.
+// 03/31/05 Reformatted delimiters between data tables
 
 // API
 //==============================================================

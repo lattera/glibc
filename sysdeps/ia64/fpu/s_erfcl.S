@@ -1,7 +1,7 @@
 .file "erfcl.s"
 
 
-// Copyright (c) 2001 - 2003, Intel Corporation
+// Copyright (c) 2001 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2001 by the Intel Numerics Group, Intel Corporation
@@ -44,6 +44,7 @@
 // 05/20/02  Cleaned up namespace and sf0 syntax
 // 02/10/03  Reordered header: .section, .global, .proc, .align;
 //           used data8 for long double table values
+// 03/31/05  Reformatted delimiters between data tables
 //
 // API
 //==============================================================
@@ -763,7 +764,7 @@ LOCAL_OBJECT_END(erfc_s_table)
 
 LOCAL_OBJECT_START(erfc_Q_table)
 // Q(z)= (P(z)- S)/S
-
+//
 // Pol0 
 data8 0x98325D50F9DC3499, 0x0000BFAA //A0 = +3.07358861423101280650e-26L
 data8 0xED35081A2494DDD9, 0x00003FF8 //A1 = +1.44779757616302832466e-02L

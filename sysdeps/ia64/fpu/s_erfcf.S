@@ -1,7 +1,7 @@
 .file "erfcf.s"
 
 
-// Copyright (c) 2002 - 2003, Intel Corporation
+// Copyright (c) 2002 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2002 by the Intel Numerics Group, Intel Corporation
@@ -42,6 +42,7 @@
 // 01/17/02  Initial version
 // 05/20/02  Cleaned up namespace and sf0 syntax
 // 02/06/03  Reordered header: .section, .global, .proc, .align
+// 03/31/05  Reformatted delimiters between data tables
 //
 // API
 //==============================================================

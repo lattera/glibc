@@ -1,7 +1,7 @@
 .file "tgamma.s"
 
 
-// Copyright (c) 2001 - 2003, Intel Corporation
+// Copyright (c) 2001 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2001 by the Intel Numerics Group, Intel Corporation
@@ -45,6 +45,7 @@
 // 02/10/03  Reordered header: .section, .global, .proc, .align
 // 04/04/03  Changed error codes for overflow and negative integers
 // 04/10/03  Changed code for overflow near zero handling
+// 03/31/05  Reformatted delimiters between data tables
 //
 //*********************************************************************
 //
@@ -537,7 +538,6 @@ data8 0xE9566E93AAE7E38F,0x00003FFE // C10
 data8 0x8646E78AABEF0255,0x00003FFF // C20
 data8 0xA32AEDB62E304345,0x00003FFF // C30
 data8 0xCE83E40280EE7DF0,0x00003FFF // C40
-//
 //
 //[2; 3]
 data8 0xC44FB47E90584083,0x00004001 // C50

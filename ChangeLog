@@ -1,3 +1,48 @@
+2005-04-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/e_acosh.S: Update from Intel libm 2005-04-05
+	(comment changes only).
+	* sysdeps/ia64/fpu/e_acoshl.S: Likewise.
+	* sysdeps/ia64/fpu/e_atanh.S: Likewise.
+	* sysdeps/ia64/fpu/e_cosh.S: Likewise.
+	* sysdeps/ia64/fpu/e_coshf.S: Likewise.
+	* sysdeps/ia64/fpu/e_exp.S: Likewise.
+	* sysdeps/ia64/fpu/e_exp10.S: Likewise.
+	* sysdeps/ia64/fpu/e_exp10f.S: Likewise.
+	* sysdeps/ia64/fpu/e_exp2.S: Likewise.
+	* sysdeps/ia64/fpu/e_exp2f.S: Likewise.
+	* sysdeps/ia64/fpu/e_expf.S: Likewise.
+	* sysdeps/ia64/fpu/e_log.S: Likewise.
+	* sysdeps/ia64/fpu/e_logf.S: Likewise.
+	* sysdeps/ia64/fpu/e_pow.S: Likewise.
+	* sysdeps/ia64/fpu/e_powf.S: Likewise.
+	* sysdeps/ia64/fpu/e_sinh.S: Likewise.
+	* sysdeps/ia64/fpu/e_sinhf.S: Likewise.
+	* sysdeps/ia64/fpu/libm_error.c: Likewise.
+	* sysdeps/ia64/fpu/libm_lgamma.S: Likewise.
+	* sysdeps/ia64/fpu/libm_lgammaf.S: Likewise.
+	* sysdeps/ia64/fpu/libm_lgammal.S: Likewise.
+	* sysdeps/ia64/fpu/libm_sincos.S: Likewise.
+	* sysdeps/ia64/fpu/libm_sincosf.S: Likewise.
+	* sysdeps/ia64/fpu/s_asinh.S: Likewise.
+	* sysdeps/ia64/fpu/s_atanl.S: Likewise.
+	* sysdeps/ia64/fpu/s_cos.S: Likewise.
+	* sysdeps/ia64/fpu/s_cosf.S: Likewise.
+	* sysdeps/ia64/fpu/s_erf.S: Likewise.
+	* sysdeps/ia64/fpu/s_erfc.S: Likewise.
+	* sysdeps/ia64/fpu/s_erfcf.S: Likewise.
+	* sysdeps/ia64/fpu/s_erfcl.S: Likewise.
+	* sysdeps/ia64/fpu/s_erff.S: Likewise.
+	* sysdeps/ia64/fpu/s_expm1.S: Likewise.
+	* sysdeps/ia64/fpu/s_expm1f.S: Likewise.
+	* sysdeps/ia64/fpu/s_log1p.S: Likewise.
+	* sysdeps/ia64/fpu/s_tanf.S: Likewise.
+	* sysdeps/ia64/fpu/s_tanh.S: Likewise.
+	* sysdeps/ia64/fpu/s_tanhf.S: Likewise.
+	* sysdeps/ia64/fpu/w_tgamma.S: Likewise.
+	* sysdeps/ia64/fpu/w_tgammaf.S: Likewise.
+	* sysdeps/ia64/fpu/w_tgammal.S: Likewise.
+
 2005-04-05  Roland McGrath  <roland@redhat.com>
 
 	* scripts/config.guess: Update from master, timestamp='2005-03-24'.

@@ -1,7 +1,7 @@
 .file "tanh.s"
 
 
-// Copyright (c) 2001 - 2003, Intel Corporation
+// Copyright (c) 2001 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2001 by the Intel Numerics Group, Intel Corporation
@@ -45,6 +45,7 @@
 // 05/20/02  Cleaned up namespace and sf0 syntax
 // 08/14/02  Changed mli templates to mlx
 // 02/10/03  Reordered header: .section, .global, .proc, .align
+// 03/31/05  Reformatted delimiters between data tables
 //
 // API
 //==============================================================================
@@ -364,7 +365,6 @@ data8 0xA23A087F96846951, 0x0000BFE0 //A6
 data8 0xF358D8A7FC012D5D, 0x00003FDE //A5
 data8 0x98176E2309B7C73A, 0x0000BFDD //A4
 //
-//
 // Coefficients ##16..19 ("tail" coefficient tables)
 // Polynomial coefficients for the tanh(x), 0.25 <= |x| < 0.5 
 data8 0x838F209ABB9BA7B3, 0x0000BFF7 //A3
@@ -427,7 +427,6 @@ data8 0xE42327B9B0D7202F, 0x0000BFD8 //A2
 data8 0xE42327BB13076BD6, 0x00003FD5 //A1
 data8 0xFFFFFFFFFFF8DEE7, 0x00003FFE //A0
 //
-//
 // Polynomial coefficients for the tanh(x), 0.0 <= |x| < 0.25 
 // ('tanh_near_zero' path)
 data8 0xBF2BA5D26E479D0C //A9
@@ -439,7 +438,6 @@ data8 0xBF57D91925BB5EE2 //A7
 data8 0x3F6D6D36C3D5B7A1 //A6
 data8 0xBFABA1BA1BA19D32 //A3
 data8 0x3FC1111111111108 //A2
-//
 //
 // 1.0 - 2^(-63)
 // ('tanh_saturation' path)

@@ -1,7 +1,7 @@
 .file "exp.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -53,6 +53,7 @@
 // 09/07/02 Force inexact flag
 // 11/15/02 Split underflow path into zero/nonzero; eliminated fma in main path
 // 05/30/03 Set inexact flag on unmasked overflow/underflow
+// 03/31/05 Reformatted delimiters between data tables
 
 // API
 //==============================================================

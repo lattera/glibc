@@ -1,7 +1,7 @@
 .file "libm_lgamma.s"
 
 
-// Copyright (c) 2002 - 2003, Intel Corporation
+// Copyright (c) 2002 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2002 by the Intel Numerics Group, Intel Corporation
@@ -48,6 +48,7 @@
 // 10/21/02  Now it returns SIGN(GAMMA(x))=-1 for negative zero
 // 02/10/03  Reordered header: .section, .global, .proc, .align
 // 07/22/03  Reformatted some data tables
+// 03/31/05  Reformatted delimiters between data tables
 //
 //*********************************************************************
 //
@@ -630,7 +631,7 @@ data8 0x7F5754D9278B51A8 // overflow boundary (first inf result)
 data8 0xAAAAAAAAAAAAAAAB,0x3FFB // W2=B2/2=1/12
 //
 data8 0x3FBC756AC654273B // Q8
-data8 0xBFC001A42489AB4D // Q7	; 
+data8 0xBFC001A42489AB4D // Q7
 data8 0x3FC99999999A169B // Q4
 data8 0xBFD00000000019AC // Q3
 data8 0x3FC2492479AA0DF8 // Q6

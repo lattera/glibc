@@ -1,7 +1,7 @@
 .file "exp2.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -43,6 +43,7 @@
 // 05/20/02  Cleaned up namespace and sf0 syntax
 // 09/05/02  Improved performance
 // 01/17/03  Fixed to call error support when x=1024.0
+// 03/31/05  Reformatted delimiters between data tables
 //
 // API
 //==============================================================
@@ -203,7 +204,6 @@ data8 0x8218af4373fc25eb, 0x822f3c7ab205c89a
 data8 0x8245cd9ab2cec048, 0x825c62a423d13f0c
 data8 0x8272fb97b2a5894c, 0x828998760d01faf3
 data8 0x82a0393fe0bb0ca8, 0x82b6ddf5dbc35906
-//
 //
 // 2^{0.b1 b2 b3 b4 b5}
 data8 0x8000000000000000, 0x82cd8698ac2ba1d7

@@ -1,7 +1,7 @@
 .file "tgammaf.s"
 
 
-// Copyright (c) 2001 - 2003, Intel Corporation
+// Copyright (c) 2001 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2001 by the Intel Numerics Group, Intel Corporation
@@ -46,6 +46,7 @@
 // 04/04/03  Changed error codes for overflow and negative integers
 // 04/10/03  Changed code for overflow near zero handling
 // 12/16/03  Fixed parameter passing to/from error handling routine
+// 03/31/05  Reformatted delimiters between data tables
 //
 //*********************************************************************
 //

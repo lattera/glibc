@@ -1,7 +1,7 @@
 .file "acoshl.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -47,6 +47,7 @@
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 08/14/02 Changed mli templates to mlx
 // 02/06/03 Reorganized data tables
+// 03/31/05 Reformatted delimiters between data tables
 //
 //*********************************************************************
 //
@@ -258,6 +259,7 @@ data8 0x9E34AF4D372861E0, 0x3FFB  // .77248925727776366270605984806795850504e-1
 data8 0xF3DC502AEE14C4AE, 0x3FA6  // .3077953476682583606615438814166025592e-26  
 LOCAL_OBJECT_END(Poly_P)
 
+//
 LOCAL_OBJECT_START(Poly_Q)
 data8 0xF76E3FD3C7680357, 0x3FF1  // .11798413344703621030038719253730708525e-3  
 data8 0xD107D2E7273263AE, 0x3FF7  // .63791065024872525660782716786703188820e-2  

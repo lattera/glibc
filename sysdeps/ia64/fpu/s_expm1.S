@@ -1,7 +1,7 @@
 .file "exp_m1.s"
 
 
-// Copyright (c) 2000 - 2002, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -46,6 +46,7 @@
 // 07/07/01 Improved speed of all paths
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 11/20/02 Improved speed, algorithm based on exp
+// 03/31/05 Reformatted delimiters between data tables
 
 // API
 //==============================================================

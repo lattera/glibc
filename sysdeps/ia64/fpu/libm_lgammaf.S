@@ -1,7 +1,7 @@
 .file "libm_lgammaf.s"
 
 
-// Copyright (c) 2002 - 2003, Intel Corporation
+// Copyright (c) 2002 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2002 by the Intel Numerics Group, Intel Corporation
@@ -48,6 +48,7 @@
 // 10/21/02  Now it returns SIGN(GAMMA(x))=-1 for negative zero
 // 02/10/03  Reordered header: .section, .global, .proc, .align
 // 07/22/03  Reformatted some data tables
+// 03/31/05  Reformatted delimiters between data tables
 //
 //*********************************************************************
 //

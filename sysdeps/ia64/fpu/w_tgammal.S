@@ -1,7 +1,7 @@
 .file "tgammal.s"
 
 
-// Copyright (c) 2002 - 2003, Intel Corporation
+// Copyright (c) 2002 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2002 by the Intel Numerics Group, Intel Corporation
@@ -45,6 +45,7 @@
 //           used data8 for long double table values
 // 03/17/03  Moved tgammal_libm_err label into .proc region
 // 04/10/03  Changed error codes for overflow and negative integers
+// 03/31/05  Reformatted delimiters between data tables
 //
 // API
 //==============================================================

@@ -1,7 +1,7 @@
 .file "sincos.s"
 
 
-// Copyright (c) 2000 - 2004, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -53,6 +53,7 @@
 // 02/10/03 Reordered header: .section, .global, .proc, .align
 // 08/08/03 Improved performance
 // 10/28/04 Saved sincos_r_sincos to avoid clobber by dynamic loader 
+// 03/31/05 Reformatted delimiters between data tables
 
 // API
 //==============================================================
@@ -300,7 +301,6 @@ data8 0xd4db3148750d181a , 0x00003ffe // cos( 3 pi/16)  C3
 data8 0xb504f333f9de6484 , 0x00003ffe // sin( 4 pi/16)  S4
 data8 0xb504f333f9de6484 , 0x00003ffe // cos( 4 pi/16)  C4
 //
-//
 data8 0xd4db3148750d181a , 0x00003ffe // sin( 5 pi/16)  C3
 data8 0x8e39d9cd73464364 , 0x00003ffe // cos( 5 pi/16)  S3
 //
@@ -312,7 +312,6 @@ data8 0xc7c5c1e34d3055b3 , 0x00003ffc // cos( 7 pi/16)  S1
 //
 data8 0x8000000000000000 , 0x00003fff // sin( 8 pi/16)  C0
 data8 0x0000000000000000 , 0x00000000 // cos( 8 pi/16)  S0
-//
 //
 data8 0xfb14be7fbae58157 , 0x00003ffe // sin( 9 pi/16)  C1
 data8 0xc7c5c1e34d3055b3 , 0x0000bffc // cos( 9 pi/16)  -S1
@@ -326,7 +325,6 @@ data8 0x8e39d9cd73464364 , 0x0000bffe // cos(11 pi/16)  -S3
 data8 0xb504f333f9de6484 , 0x00003ffe // sin(12 pi/16)  S4
 data8 0xb504f333f9de6484 , 0x0000bffe // cos(12 pi/16)  -S4
 //
-//
 data8 0x8e39d9cd73464364 , 0x00003ffe // sin(13 pi/16) S3
 data8 0xd4db3148750d181a , 0x0000bffe // cos(13 pi/16) -C3
 //
@@ -338,7 +336,6 @@ data8 0xfb14be7fbae58157 , 0x0000bffe // cos(15 pi/16) -C1
 //
 data8 0x0000000000000000 , 0x00000000 // sin(16 pi/16) S0
 data8 0x8000000000000000 , 0x0000bfff // cos(16 pi/16) -C0
-//
 //
 data8 0xc7c5c1e34d3055b3 , 0x0000bffc // sin(17 pi/16) -S1
 data8 0xfb14be7fbae58157 , 0x0000bffe // cos(17 pi/16) -C1
@@ -352,7 +349,6 @@ data8 0xd4db3148750d181a , 0x0000bffe // cos(19 pi/16) -C3
 data8 0xb504f333f9de6484 , 0x0000bffe // sin(20 pi/16) -S4
 data8 0xb504f333f9de6484 , 0x0000bffe // cos(20 pi/16) -S4
 //
-//
 data8 0xd4db3148750d181a , 0x0000bffe // sin(21 pi/16) -C3
 data8 0x8e39d9cd73464364 , 0x0000bffe // cos(21 pi/16) -S3
 //
@@ -365,7 +361,6 @@ data8 0xc7c5c1e34d3055b3 , 0x0000bffc // cos(23 pi/16) -S1
 data8 0x8000000000000000 , 0x0000bfff // sin(24 pi/16) -C0
 data8 0x0000000000000000 , 0x00000000 // cos(24 pi/16) S0
 //
-//
 data8 0xfb14be7fbae58157 , 0x0000bffe // sin(25 pi/16) -C1
 data8 0xc7c5c1e34d3055b3 , 0x00003ffc // cos(25 pi/16) S1
 //
@@ -377,7 +372,6 @@ data8 0x8e39d9cd73464364 , 0x00003ffe // cos(27 pi/16) S3
 //
 data8 0xb504f333f9de6484 , 0x0000bffe // sin(28 pi/16) -S4
 data8 0xb504f333f9de6484 , 0x00003ffe // cos(28 pi/16) S4
-//
 //
 data8 0x8e39d9cd73464364 , 0x0000bffe // sin(29 pi/16) -S3
 data8 0xd4db3148750d181a , 0x00003ffe // cos(29 pi/16) C3

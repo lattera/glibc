@@ -1,7 +1,7 @@
 .file "sincosf.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2005, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -51,6 +51,7 @@
 // 06/03/02 Insure inexact flag set for large arg result
 // 09/05/02 Single precision version is made using double precision one as base
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 03/31/05 Reformatted delimiters between data tables
 //
 // API
 //==============================================================
