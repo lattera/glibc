@@ -129,6 +129,8 @@ struct element_t
 /* Data type for collating symbol.  */
 struct symbol_t
 {
+  const char *name;
+
   /* Point to place in the order list.  */
   struct element_t *order;
 
@@ -332,12 +334,13 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
 
 
 static struct symbol_t *
-new_symbol (struct locale_collate_t *collate)
+new_symbol (struct locale_collate_t *collate, const char *name, size_t len)
 {
   struct symbol_t *newp;
 
   newp = (struct symbol_t *) obstack_alloc (&collate->mempool, sizeof (*newp));
 
+  newp->name = obstack_copy0 (&collate->mempool, name, len);
   newp->order = NULL;
 
   newp->file = NULL;
@@ -910,7 +913,8 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
 	  elem = sym->order;
 
 	  if (elem == NULL)
-	    elem = sym->order = new_element (collate, NULL, 0, NULL, NULL, 0,
+	    elem = sym->order = new_element (collate, NULL, 0, NULL,
+					     sym->name, strlen (sym->name),
 					     0);
 	}
       else if (find_entry (&collate->elem_table, symstr, symlen,
@@ -1007,6 +1011,9 @@ handle_ellipsis (struct linereader *ldfile, const char *symstr, size_t symlen,
   endp = collate->cursor->next;
   assert (symstr == NULL || endp != NULL);
 
+  /* XXX The following is probably very wrong since also collating symbols
+     can appear in ranges.  But do we want/can refine the test for that?  */
+#if 0
   /* Both, the start and the end symbol, must stand for characters.  */
   if ((startp != NULL && (startp->name == NULL || ! startp->is_character))
       || (endp != NULL && (endp->name == NULL|| ! endp->is_character)))
@@ -1016,6 +1023,7 @@ handle_ellipsis (struct linereader *ldfile, const char *symstr, size_t symlen,
 		"LC_COLLATE");
       return;
     }
+#endif
 
   if (ellipsis == tok_ellipsis3)
     {
@@ -2907,12 +2915,13 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 				       repertoire, symbol, symbol_len))
 		    goto col_elem_free;
 
-		  insert_entry (&collate->elem_table, symbol, symbol_len,
-				new_element (collate,
-					     arg->val.str.startmb,
-					     arg->val.str.lenmb - 1,
-					     arg->val.str.startwc,
-					     symbol, symbol_len, 0));
+		  if (arg->val.str.startmb != NULL)
+		    insert_entry (&collate->elem_table, symbol, symbol_len,
+				  new_element (collate,
+					       arg->val.str.startmb,
+					       arg->val.str.lenmb - 1,
+					       arg->val.str.startwc,
+					       symbol, symbol_len, 0));
 		}
 	      else
 		{
@@ -2992,7 +3001,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 			goto col_sym_free;
 
 		      insert_entry (&collate->sym_table, symbol, symbol_len,
-				    new_symbol (collate));
+				    new_symbol (collate, symbol, symbol_len));
 		    }
 		  else if (symbol_len != endsymbol_len)
 		    {
@@ -3052,7 +3061,9 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 			    goto col_sym_free;
 
 			  insert_entry (&collate->sym_table, symbuf,
-					symbol_len, new_symbol (collate));
+					symbol_len,
+					new_symbol (collate, symbuf,
+						    symbol_len));
 
 			  /* Increment the counter.  */
 			  ++from;
@@ -3602,6 +3613,19 @@ error while adding equivalent collating symbol"));
 		    collate->sections = collate->current_section =
 		      &collate->symbol_section;
 		}
+
+	      if (was_ellipsis != tok_none)
+		{
+
+		  handle_ellipsis (ldfile, symstr, symlen, was_ellipsis,
+				   charmap, repertoire, collate);
+
+		  /* Remember that we processed the ellipsis.  */
+		  was_ellipsis = tok_none;
+
+		  /* And don't add the value a second time.  */
+		  break;
+		}
 	    }
 	  else if (state == 3)
 	    {
@@ -3772,7 +3796,7 @@ error while adding equivalent collating symbol"));
 	  if (was_ellipsis != tok_none)
 	    goto err_label;
 
-	  if (state != 1 && state != 3)
+	  if (state != 0 && state != 1 && state != 3)
 	    goto err_label;
 
 	  was_ellipsis = nowtok;

@@ -1,3 +1,14 @@
+2000-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (struct symbol_t): Add name element.
+	(new_symbol): Take new parameters with name of the symbol.
+	Adjust callers.
+	(handle_ellipsis): Don't only allow character symbols.
+	(collate_read): Allow string of collating elements contain invalid
+	characters; ignore entry in this case.
+	Handle ellipsis of collating symbols before first order_start.
+	Allow ellipsis in state 0.
+
 2000-08-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (handle_ellipsis): Fix typo in
