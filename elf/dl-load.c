@@ -396,6 +396,35 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
       if (len > 0 && cp[len - 1] != '/')
 	cp[len++] = '/';
 
+      /* Make sure we don't use untrusted directories if we run SUID.  */
+      if (__builtin_expect (check_trusted, 0))
+	{
+	  const char *trun = system_dirs;
+	  size_t idx;
+	  int unsecure = 1;
+
+	  /* All trusted directories must be complete names.  */
+	  if (cp[0] == '/')
+	    {
+	      for (idx = 0; idx < nsystem_dirs_len; ++idx)
+		{
+		  if (len == system_dirs_len[idx]
+		      && memcmp (trun, cp, len) == 0)
+		    {
+		      /* Found it.  */
+		      unsecure = 0;
+		      break;
+		    }
+
+		  trun += system_dirs_len[idx] + 1;
+		}
+	    }
+
+	  if (unsecure)
+	    /* Simply drop this directory.  */
+	    continue;
+	}
+
       /* See if this directory is already known.  */
       for (dirp = _dl_all_dirs; dirp != NULL; dirp = dirp->next)
 	if (dirp->dirnamelen == len && memcmp (cp, dirp->dirname, len) == 0)
@@ -434,41 +463,10 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	  if (len > max_dirnamelen)
 	    max_dirnamelen = len;
 
-	  /* Make sure we don't use untrusted directories if we run SUID.  */
-	  if (__builtin_expect (check_trusted, 0))
-	    {
-	      const char *trun = system_dirs;
-	      size_t idx;
-
-	      /* By default we don't trust anything.  */
-	      init_val = nonexisting;
-
-	      /* All trusted directories must be complete names.  */
-	      if (cp[0] == '/')
-		{
-		  for (idx = 0; idx < nsystem_dirs_len; ++idx)
-		    {
-		      if (len == system_dirs_len[idx]
-			  && memcmp (trun, cp, len) == 0)
-			/* Found it.  */
-			break;
-
-		      trun += system_dirs_len[idx] + 1;
-		    }
-
-		  if (idx < nsystem_dirs_len)
-		    /* It's a trusted directory so allow checking for it.  */
-		    init_val = unknown;
-		}
-	    }
-	  else
-	    /* We don't have to check for trusted directories and can
-	       accept everything.  We have to make sure all the
-	       relative directories are never ignored.  The current
-	       directory might change and all our saved information
-	       would be void.  */
-	    init_val = cp[0] != '/' ? existing : unknown;
-
+	  /* We have to make sure all the relative directories are
+	     never ignored.  The current directory might change and
+	     all our saved information would be void.  */
+	  init_val = cp[0] != '/' ? existing : unknown;
 	  for (cnt = 0; cnt < ncapstr; ++cnt)
 	    dirp->status[cnt] = init_val;
 

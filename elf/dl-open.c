@@ -156,7 +156,6 @@ add_to_global (struct link_map *new)
 	}
     }
 
-  /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
   return 0;
 }
 

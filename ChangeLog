@@ -1,5 +1,10 @@
 2001-08-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-open.c (add_to_global): Remove stale comment.
+
+	* elf/dl-load.c (fillin_rpath): In SUID binaries, don't mark
+	non-system-dirs in LD_LIBRARY_PATH as nonexisting, simply drop them.
+
 	* libio/iovdprintf.c (_IO_vdprintf): Call __fsetlocking for temporary
 	stream.
 	* libio/obprintf.c (_IO_obstack_vprintf): Likewise.
