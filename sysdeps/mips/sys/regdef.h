@@ -32,20 +32,32 @@
 #define a2      $6
 #define a3      $7
 #if _MIPS_SIM != _MIPS_SIM_ABI32
-#define a4	$8
-#define a5	$9
-#define a6	$10
-#define a7	$11
+#define a4      $8
+#define a5      $9
+#define a6      $10
+#define a7      $11
+#define t0      $12
+#define t1      $13
+#define t2      $14
+#define t3      $15
+#define ta0     a4
+#define ta1     a5
+#define ta2     a6
+#define ta3     a7
 #else /* if _MIPS_SIM == _MIPS_SIM_ABI32 */
 #define t0      $8      /* caller saved */
 #define t1      $9
 #define t2      $10
 #define t3      $11
-#endif /* _MIPS_SIM == _MIPS_SIM_ABI32 */
 #define t4      $12
 #define t5      $13
 #define t6      $14
 #define t7      $15
+#define ta0     t4
+#define ta1     t5
+#define ta2     t6
+#define ta3     t7
+#endif /* _MIPS_SIM == _MIPS_SIM_ABI32 */
 #define s0      $16     /* callee saved */
 #define s1      $17
 #define s2      $18
