@@ -1,5 +1,8 @@
 2000-12-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/dlerror.c (dlerror): Always create output string which
+	includes object file name.
+
 	* sysdeps/alpha/alphaev6/memcpy.S: Don't go through unrolled loop
 	if we would go through it only once.
 	Patch by Rick Gorton <rick.gorton@api-networks.com>.

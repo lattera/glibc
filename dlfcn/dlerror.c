@@ -69,10 +69,9 @@ dlerror (void)
   else
     {
       buf = (char *) result->errstring;
-      if (result->errcode != 0
-	  && __asprintf (&buf, "%s: %s: %s",
-			 result->objname, _(result->errstring),
-			 strerror (result->errcode)) != -1)
+      if (__asprintf (&buf, result->errcode != 0 ? "%s: %s: %s" : "%s: %s",
+		      result->objname, _(result->errstring),
+		      strerror (result->errcode)) != -1)
 	{
 	  /* We don't need the error string anymore.  */
 	  if (strcmp (result->errstring, "out of memory") != 0)
