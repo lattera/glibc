@@ -1,3 +1,11 @@
+2000-08-25  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/i386/memchr.S: Check high bound against chars
+	actually scanned.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/i386/stpncpy.S: Adjust high-bound check to
+	account for pointers that lie one beyond end-of-buffer.
+
 2000-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (LDFLAGS-nodelete): Add -rdynamic.
