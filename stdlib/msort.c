@@ -1,6 +1,6 @@
 /* An alternative to qsort, with an identical interface.
    This file is part of the GNU C Library.
-   Copyright (C) 1992, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995-1997, 1999, 2000 Free Software Foundation, Inc.
    Written by Mike Haertel, September 1988.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <alloca.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <memcopy.h>
 #include <errno.h>
 
@@ -94,20 +95,57 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
     msort_with_tmp (b, n, s, cmp, __alloca (size));
   else
     {
-      /* It's somewhat large, so malloc it.  */
-      int save = errno;
-      char *tmp = malloc (size);
-      if (tmp == NULL)
+      /* We should avoid allocating too much memory since this might
+	 have to be backed up by swap space.  */
+      static long int phys_pages;
+      static int pagesize;
+
+      if (phys_pages == 0)
 	{
-	  /* Couldn't get space, so use the slower algorithm
-	     that doesn't need a temporary array.  */
-	  _quicksort (b, n, s, cmp);
+	  phys_pages = __sysconf (_SC_PHYS_PAGES);
+
+	  if (phys_pages == -1)
+	    /* Error while determining the memory size.  So let's
+	       assume there is enough memory.  Otherwise the
+	       implementer should provide a complete implementation of
+	       the `sysconf' function.  */
+	    phys_pages = (long int) (~0ul >> 1);
+
+	  /* The following determines that we will never use more than
+	     a quarter of the physical memory.  */
+	  phys_pages /= 4;
+
+	  pagesize = __sysconf (_SC_PAGESIZE);
 	}
+
+      /* Just a comment here.  We cannot compute
+	   phys_pages * pagesize
+	   and compare the needed amount of memory against this value.
+	   The problem is that some systems might have more physical
+	   memory then can be represented with a `size_t' value (when
+	   measured in bytes.  */
+
+      /* If the memory requirements are too high don't allocate memory.  */
+      if (size / pagesize > phys_pages)
+	_quicksort (b, n, s, cmp);
       else
 	{
-	  msort_with_tmp (b, n, s, cmp, tmp);
-	  free (tmp);
+	  /* It's somewhat large, so malloc it.  */
+	  int save = errno;
+	  char *tmp = malloc (size);
+	  if (tmp == NULL)
+	    {
+	      /* Couldn't get space, so use the slower algorithm
+		 that doesn't need a temporary array.  */
+	      __set_errno (save);
+	      _quicksort (b, n, s, cmp);
+	    }
+	  else
+	    {
+	      __set_errno (save);
+	      msort_with_tmp (b, n, s, cmp, tmp);
+	      free (tmp);
+	    }
 	}
-      __set_errno (save);
     }
 }

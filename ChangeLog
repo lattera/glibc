@@ -1,3 +1,8 @@
+2000-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/msort.c (qsort): Limit the amount of memory spend on a
+	temporary array for the mergesort.
+
 2000-02-28  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/canonicalize.c: Include <stddef.h> for ptrdiff_t.
