@@ -1,5 +1,7 @@
 2004-09-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd-client.h: Fix database structure layout for biarch.
+
 	* nss/getent.c: Don't preconstruct help message.  Do it only when
 	needed.
 

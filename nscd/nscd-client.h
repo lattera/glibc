@@ -123,6 +123,9 @@ typedef uint32_t ref_t;
 /* Value for invalid/no reference.  */
 #define ENDREF	UINT32_MAX
 
+/* Timestamp type.  */
+typedef uint64_t nscd_time_t;
+
 /* Alignment requirement of the beginning of the data region.  */
 #define ALIGN 16
 
@@ -130,12 +133,13 @@ typedef uint32_t ref_t;
 /* Head of record in data part of database.  */
 struct datahead
 {
-  size_t allocsize;	/* Allocated Bytes.  */
-  size_t recsize;	/* Size of the record.  */
-  time_t timeout;	/* Time when this entry becomes invalid.  */
-  bool notfound;	/* Nonzero if data for key has not been found.  */
-  uint8_t nreloads;	/* Reloads without use.  */
-  bool usable;		/* False if the entry must be ignored.  */
+  nscd_ssize_t allocsize;	/* Allocated Bytes.  */
+  nscd_ssize_t recsize;		/* Size of the record.  */
+  nscd_time_t timeout;		/* Time when this entry becomes invalid.  */
+  bool notfound;		/* Nonzero if data has not been found.  */
+  uint8_t nreloads;		/* Reloads without use.  */
+  bool usable;			/* False if the entry must be ignored.  */
+  uint64_t :40;			/* Alignment.  */
 
   /* We need to have the following element aligned for the response
      header data types and their use in the 'struct dataset' types
@@ -145,8 +149,8 @@ struct datahead
     pw_response_header pwdata;
     gr_response_header grdata;
     hst_response_header hstdata;
-    ssize_t align1;
-    time_t align2;
+    nscd_ssize_t align1;
+    nscd_time_t align2;
   } data[0];
 };
 
@@ -156,9 +160,9 @@ struct hashentry
 {
   request_type type:8;		/* Which type of dataset.  */
   bool first;			/* True if this was the original key.  */
-  size_t len;			/* Length of key.  */
+  nscd_ssize_t len;		/* Length of key.  */
   ref_t key;			/* Pointer to key.  */
-  uid_t owner;			/* If secure table, this is the owner.  */
+  int32_t owner;		/* If secure table, this is the owner.  */
   ref_t next;			/* Next entry in this hash bucket list.  */
   ref_t packet;			/* Records for the result.  */
   union
@@ -181,30 +185,30 @@ struct hashentry
 /* Header of persistent database file.  */
 struct database_pers_head
 {
-  int version;
-  int header_size;
-  volatile int gc_cycle;
-  volatile int nscd_certainly_running;
-  volatile time_t timestamp;
+  int32_t version;
+  int32_t header_size;
+  volatile int32_t gc_cycle;
+  volatile int32_t nscd_certainly_running;
+  volatile nscd_time_t timestamp;
 
-  size_t module;
-  size_t data_size;
+  nscd_ssize_t module;
+  nscd_ssize_t data_size;
 
-  size_t first_free;		/* Offset of first free byte in data area.  */
+  nscd_ssize_t first_free;	/* Offset of first free byte in data area.  */
 
-  size_t nentries;
-  size_t maxnentries;
-  size_t maxnsearched;
+  nscd_ssize_t nentries;
+  nscd_ssize_t maxnentries;
+  nscd_ssize_t maxnsearched;
 
-  uintmax_t poshit;
-  uintmax_t neghit;
-  uintmax_t posmiss;
-  uintmax_t negmiss;
+  uint64_t poshit;
+  uint64_t neghit;
+  uint64_t posmiss;
+  uint64_t negmiss;
 
-  uintmax_t rdlockdelayed;
-  uintmax_t wrlockdelayed;
+  uint64_t rdlockdelayed;
+  uint64_t wrlockdelayed;
 
-  uintmax_t addfailed;
+  uint64_t addfailed;
 
   ref_t array[0];
 };
