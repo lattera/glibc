@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 # The unix-specific configure fragment writes `unix-generated' in config.make.
 config-generated := $(config-generated) $(unix-generated)
@@ -227,9 +227,9 @@ endif
 endif # stdio-common
 
 ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/syscall.h))))))
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/syscall.h))))))
 
-# The syscall code assumes a file <syscall.h> that defines macros
+# The syscall code assumes a file <sys/syscall.h> that defines macros
 # `SYS_call' for syscall `call'.  Variations on this I have seen include:
 # it's in <sys/syscall.h>;
 # it's in <sys.s>;
@@ -246,7 +246,8 @@ syscall.h := $(firstword $(wildcard $(addprefix $(sysincludedir)/, \
 ifdef syscall.h
 
 # Transmogrify any of several formats of the file into the one we want.
-$(common-objpfx)syscall.h: $(syscall.h)
+$(common-objpfx)sys/syscall.h: $(syscall.h)
+	-mkdir $(common-objpfx)sys
 	tr '[A-Z]' '[a-z]' < $< | \
 	sed -e 's/[ 	]sys_/ /' \
 	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \

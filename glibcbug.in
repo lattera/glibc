@@ -1,0 +1,253 @@
+#! /bin/sh
+#
+# glibcbug - create a bug report and mail it to the bug address.
+#
+# configuration section:
+#       these variables are filled in by configure
+#
+VERSION="@VERSION@"
+BUGGLIBC="bugs@gnu.ai.mit.edu"
+ADDONS="@subdirs@"
+
+PATH=/bin:/usr/bin:/usr/local/bin:$PATH
+export PATH
+
+TEMP=/tmp/glibcbug.$$
+
+BUGADDR=${1-$BUGGLIBC}
+ENVIRONMENT=`uname -a`
+
+: ${EDITOR=emacs}
+
+: ${USER=${LOGNAME-`whoami`}}
+
+trap 'rm -f $TEMP $TEMP.x; exit 1' 1 2 3 13 15
+trap 'rm -f $TEMP $TEMP.x' 0
+
+
+# How to read the passwd database.
+PASSWD="cat /etc/passwd"
+
+if [ -f /usr/lib/sendmail ] ; then
+        RMAIL="/usr/lib/sendmail -oi -t"
+elif [ -f /usr/sbin/sendmail ] ; then
+        RMAIL="/usr/sbin/sendmail -oi -t"
+else
+        RMAIL=rmail
+fi
+
+# Figure out how to echo a string without a trailing newline
+N=`echo 'hi there\c'`
+case "$N" in
+*c)	ECHON1='echo -n' ECHON2= ;;
+*)	ECHON1=echo ECHON2='\c' ;;
+esac
+
+# Find out the name of the originator of this PR.
+if [ -n "$NAME" ]; then
+  ORIGINATOR="$NAME"
+elif [ -f $HOME/.fullname ]; then
+  ORIGINATOR="`sed -e '1q' $HOME/.fullname`"
+else
+  # Must use temp file due to incompatibilities in quoting behavior
+  # and to protect shell metacharacters in the expansion of $LOGNAME
+  $PASSWD | grep "^$LOGNAME:" | awk -F: '{print $5}' | sed -e 's/,.*//' > $TEMP
+  ORIGINATOR="`cat $TEMP`"
+  rm -f $TEMP
+fi
+
+if [ -n "$ORGANIZATION" ]; then
+  if [ -f "$ORGANIZATION" ]; then
+    ORGANIZATION="`cat $ORGANIZATION`"
+  fi
+else
+  if [ -f $HOME/.organization ]; then
+    ORGANIZATION="`cat $HOME/.organization`"
+  elif [ -f $HOME/.signature ]; then
+    ORGANIZATION=`sed -e "s/^/  /" $HOME/.signature; echo ">"`
+  fi
+fi
+
+# If they don't have a preferred editor set, then use
+if [ -z "$VISUAL" ]; then
+  if [ -z "$EDITOR" ]; then
+    EDIT=vi
+  else
+    EDIT="$EDITOR"
+  fi
+else
+  EDIT="$VISUAL"
+fi
+
+# Find out some information.
+SYSTEM=`( [ -f /bin/uname ] && /bin/uname -a ) || \
+        ( [ -f /usr/bin/uname ] && /usr/bin/uname -a ) || echo ""`
+ARCH=`[ -f /bin/arch ] && /bin/arch`
+MACHINE=`[ -f /bin/machine ] && /bin/machine`
+
+ORGANIZATION_C='<organization of PR author (multiple lines)>'
+CONFIDENTIAL_C='<[ yes | no ] (one line)>'
+SYNOPSIS_C='<synopsis of the problem (one line)>'
+SEVERITY_C='<[ non-critical | serious | critical ] (one line)>'
+PRIORITY_C='<[ low | medium | high ] (one line)>'
+CLASS_C='<[ sw-bug | doc-bug | change-request | support ] (one line)>'
+RELEASE_C='<release number or tag (one line)>'
+ENVIRONMENT_C='<machine, os, target, libraries (multiple lines)>'
+DESCRIPTION_C='<precise description of the problem (multiple lines)>'
+HOW_TO_REPEAT_C='<code/input/activities to reproduce the problem (multiple lines)>'
+FIX_C='<how to correct or work around the problem, if known (multiple lines)>'
+
+
+cat > $TEMP <<EOF
+SEND-PR: -*- send-pr -*-
+SEND-PR: Lines starting with \`SEND-PR' will be removed automatically, as
+SEND-PR: will all comments (text enclosed in \`<' and \`>').
+SEND-PR:
+From: ${USER}
+To: ${BUGADDR}
+Subject: [50 character or so descriptive subject here (for reference)]
+
+>Submitter-Id:	<submitter ID>
+>Originator:	${ORIGINATOR}
+>Organization:
+${ORGANIZATION- $ORGANIZATION_C}
+>Confidential:	$CONFIDENTIAL_C
+>Synopsis:	$SYNOPSIS_C
+>Severity:	$SEVERITY_C
+>Priority:	$PRIORITY_C
+>Category:	libc
+>Class:		$CLASS_C
+>Release:	libc-${VERSION}
+>Environment:
+	<machine, os, target, libraries (multiple lines)>
+`[ -n "$SYSTEM" ] && echo System: $SYSTEM`
+`[ -n "$ARCH" ] && echo Architecture: $ARCH`
+`[ -n "$MACHINE" ] && echo Machine: $MACHINE`
+`[ -n "$ADDONS" ] && echo Addons: $ADDONS`
+
+>Description:
+	$DESCRIPTION_C
+>How-To-Repeat:
+	$HOW_TO_REPEAT_C
+>Fix:
+	$FIX_C
+EOF
+
+chmod u+w $TEMP
+cp $TEMP $TEMP.x
+
+eval $EDIT $TEMP
+
+if cmp -s $TEMP $TEMP.x; then
+	echo "File not changed, no bug report submitted."
+	exit 1
+fi
+
+#
+#       Check the enumeration fields
+
+# This is a "sed-subroutine" with one keyword parameter
+# (with workaround for Sun sed bug)
+#
+SED_CMD='
+/$PATTERN/{
+s|||
+s|<.*>||
+s|^[    ]*||
+s|[     ]*$||
+p
+q
+}'
+
+
+while :; do
+  CNT=0
+
+  # 1) Confidential
+  #
+  PATTERN=">Confidential:"
+  CONFIDENTIAL=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
+  case "$CONFIDENTIAL" in
+    ""|yes|no) CNT=`expr $CNT + 1` ;;
+    *) echo "$COMMAND: \`$CONFIDENTIAL' is not a valid value for \`Confidential'." ;;
+  esac
+  #
+  # 2) Severity
+  #
+  PATTERN=">Severity:"
+  SEVERITY=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
+  case "$SEVERITY" in
+    ""|non-critical|serious|critical) CNT=`expr $CNT + 1` ;;
+    *)  echo "$COMMAND: \`$SEVERITY' is not a valid value for \`Severity'."
+  esac
+  #
+  # 3) Priority
+  #
+  PATTERN=">Priority:"
+  PRIORITY=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
+  case "$PRIORITY" in
+    ""|low|medium|high) CNT=`expr $CNT + 1` ;;
+    *)  echo "$COMMAND: \`$PRIORITY' is not a valid value for \`Priority'."
+  esac
+  #
+  # 4) Class
+  #
+  PATTERN=">Class:"
+  CLASS=`eval sed -n -e "\"$SED_CMD\"" $TEMP`
+  case "$CLASS" in
+    ""|sw-bug|doc-bug|change-request|support) CNT=`expr $CNT + 1` ;;
+    *)  echo "$COMMAND: \`$CLASS' is not a valid value for \`Class'."
+  esac
+
+  [ $CNT -lt 5 ] &&
+    echo "Errors were found with the problem report."
+
+  while :; do
+    $ECHON1 "a)bort, e)dit or s)end? $ECHON2"
+    read input
+    case "$input" in
+      a*)
+	echo "$COMMAND: problem report saved in $HOME/dead.glibcbug."
+	cat $TEMP >> $HOME/dead.glibcbug
+        xs=1; exit
+        ;;
+      e*)
+        eval $EDIT $TEMP
+        continue 2
+        ;;
+      s*)
+        break 2
+        ;;
+    esac
+  done
+done
+#
+#       Remove comments and send the problem report
+#       (we have to use patterns, where the comment contains regex chars)
+#
+# /^>Originator:/s;$ORIGINATOR;;
+sed  -e "
+/^SEND-PR:/d
+/^>Organization:/,/^>[A-Za-z-]*:/s;$ORGANIZATION_C;;
+/^>Confidential:/s;<.*>;;
+/^>Synopsis:/s;$SYNOPSIS_C;;
+/^>Severity:/s;<.*>;;
+/^>Priority:/s;<.*>;;
+/^>Class:/s;<.*>;;
+/^>Release:/,/^>[A-Za-z-]*:/s;$RELEASE_C;;
+/^>Environment:/,/^>[A-Za-z-]*:/s;$ENVIRONMENT_C;;
+/^>Description:/,/^>[A-Za-z-]*:/s;$DESCRIPTION_C;;
+/^>How-To-Repeat:/,/^>[A-Za-z-]*:/s;$HOW_TO_REPEAT_C;;
+/^>Fix:/,/^>[A-Za-z-]*:/s;$FIX_C;;
+" $TEMP > $REF
+
+if $MAIL_AGENT < $REF; then
+  echo "$COMMAND: problem report sent"
+  xs=0; exit
+else
+  echo "$COMMAND: mysterious mail failure, report not sent."
+  echo "$COMMAND: problem report saved in $HOME/dead.glibcbug."
+  cat $TEMP >> $HOME/dead.glibcbug
+fi
+
+exit 0

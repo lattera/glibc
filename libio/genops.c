@@ -466,7 +466,7 @@ DEFUN(_IO_init, (fp, flags),
   fp->_markers = NULL;
   fp->_cur_column = 0;
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_init_recursive (*fp->_lock);
+  _IO_lock_init (*fp->_lock);
 #endif
 }
 

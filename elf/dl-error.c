@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,21 +76,22 @@ _dl_catch_error (char **errstring,
 		 void (*operate) (void))
 {
   int errcode;
-  struct catch c = { errstring: NULL, objname: NULL };
+  struct catch *old, c = { errstring: NULL, objname: NULL };
 
+  old = catch;
   errcode = setjmp (c.env);
   if (errcode == 0)
     {
       catch = &c;
       (*operate) ();
-      catch = NULL;
+      catch = old;
       *errstring = NULL;
       *objname = NULL;
       return 0;
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
-  catch = NULL;
+  catch = old;
   *errstring = c.errstring;
   *objname = c.objname;
   return errcode == -1 ? 0 : errcode;

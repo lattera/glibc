@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -164,7 +164,7 @@ extern size_t strnlen __P ((__const char *__string, size_t __maxlen));
 extern __inline size_t
 strnlen (__const char *__string, size_t __maxlen)
 {
-  __const char *__end = memchr (__string, '\0', __maxlen);
+  __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
   return __end ? __end - __string : __maxlen;
 }
 #endif

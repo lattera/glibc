@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,14 +19,19 @@
 #ifndef _DIRENTRY_H
 #define _DIRENTRY_H	1
 
-/* Get `struct dirent' from the Linux kernel header file.  */
-#include <asm/posix_types.h>
-#include <linux/dirent.h>
-
-#define d_fileno	d_ino	/* backwards compatibility */
+struct dirent
+  {
+    long int d_ino;
+    __off_t d_off;
+    unsigned short int d_reclen;
+    unsigned char d_type;
+    char d_name[256];		/* We must not include limits.h! */
+  };
+#define d_fileno	d_ino	/* Backwards compatibility.  */
 
 #undef  _DIRENT_HAVE_D_NAMLEN
 #define _DIRENT_HAVE_D_RECLEN
 #define _DIRENT_HAVE_D_OFF
+#define _DIRENT_HAVE_D_TYPE
 
 #endif /* _DIRENTRY_H */

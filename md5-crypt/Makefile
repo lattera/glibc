@@ -1,4 +1,4 @@
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ libcrypt-routines := crypt-entry md5-crypt md5
 
 include ../Makeconfig
 
-rpath-link := $(common-objpfx)crypt:$(rpath-link)
+rpath-link := $(common-objpfx)md5-crypt:$(rpath-link)
 
 ifeq ($(crypt-in-libc),yes)
 routines += $(libcrypt-routines)

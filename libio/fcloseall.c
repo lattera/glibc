@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -23,9 +23,7 @@ This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
-#ifdef __STDC__
-#include <stdlib.h>
-#endif
+#include <stdio.h>
 
 int
 __fcloseall ()

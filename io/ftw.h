@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ian Lance Taylor (ian@airs.com).
 
@@ -37,7 +37,7 @@
 /* Call a function on every element in a directory tree.  */
 extern int ftw __P ((__const char *__dir,
 		     int (*__func) (__const char *__file,
-				    struct stat *__status,
+				    __const struct stat *__status,
 				    int __flag),
 		     int __descriptors));
 

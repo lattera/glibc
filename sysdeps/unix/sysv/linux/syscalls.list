@@ -31,11 +31,13 @@ pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
 query_module	EXTRA	query_module	5	query_module
+s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 s_reboot	EXTRA	reboot		3	__syscall_reboot
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
+s_ustat		ustat	ustat		2	__syscall_ustat
 sched_getp	-	sched_getparam	2	__sched_getparam	sched_getparam
 sched_gets	-	sched_getscheduler	1	__sched_getscheduler	sched_getscheduler
 sched_primax	-	sched_get_priority_max	1	__sched_get_priority_max	sched_get_priority_max
@@ -51,9 +53,9 @@ setpgid		-	setpgid		2	__setpgid	setpgid
 setresuid	EXTRA	setresuid	3	setresuid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
+sigreturn	EXTRA	sigreturn	1	__sigreturn	sigreturn
 sysinfo		EXTRA	sysinfo		1	sysinfo
 swapon		-	swapon		2	swapon
 umount		EXTRA	umount		1	__umount	umount
 uselib		EXTRA	uselib		1	uselib
-ustat		-	ustat		2	__ustat		ustat
 wait4		-	wait4		4	__wait4		wait4

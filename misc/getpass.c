@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1993,1994,1995,1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,8 +34,8 @@ getpass (prompt)
      const char *prompt;
 {
   FILE *in, *out;
-  struct termios t;
-  int echo_off;
+  struct termios s, t;
+  int tty_changed;
   static char *buf = NULL;
   static size_t bufsize = 0;
   ssize_t nread;
@@ -56,17 +56,16 @@ getpass (prompt)
 
   if (tcgetattr (fileno (in), &t) == 0)
     {
-      if (t.c_lflag & ECHO)
-	{
-	  t.c_lflag &= ~ECHO;
-	  echo_off = tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &t) == 0;
-	  t.c_lflag |= ECHO;
-	}
-      else
-	echo_off = 0;
+      /* Save the old one. */
+      s = t;
+      /* Tricky, tricky. */
+      t.c_lflag &= ~(ECHO|ISIG|ICANON);
+      t.c_cc[VTIME] = 0;
+      t.c_cc[VMIN] = 1;
+      tty_changed = (tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &t) == 0);
     }
   else
-    echo_off = 0;
+    tty_changed = 0;
 
   /* Write the prompt.  */
   fputs (prompt, out);
@@ -81,14 +80,14 @@ getpass (prompt)
       {
 	/* Remove the newline.  */
 	buf[nread - 1] = '\0';
-	if (echo_off)
+	if (tty_changed)
 	  /* Write the newline that was not echoed.  */
 	  putc ('\n', out);
       }
 
-  /* Restore echoing.  */
-  if (echo_off)
-    (void) tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &t);
+  /* Restore the original setting.  */
+  if (tty_changed)
+    (void) tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &s);
 
   if (in != stdin)
     /* We opened the terminal; now close it.  */

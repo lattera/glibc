@@ -1,5 +1,5 @@
-/* 
-Copyright (C) 1993, 1994 Free Software Foundation
+/*
+Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -33,7 +33,7 @@ the executable file might be covered by the GNU General Public License. */
 
 #ifdef _IO_MTSAFE_IO
 #define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
-  static _IO_lock_t _IO_stdfile_##FD##_lock = _IO_lock_init; \
+  static _IO_lock_t _IO_stdfile_##FD##_lock = _IO_lock_initializer; \
   struct _IO_FILE_plus NAME \
     = {FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps}
 #else

@@ -13,7 +13,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
-$(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/syscall.h
+$(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	rm -f $(@:.h=.d)
 	echo > $(@:.d=.h).new \
 	     '/* Generated at libc build time from kernel syscall list.  */'

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,20 +47,28 @@ typedef __sig_atomic_t sig_atomic_t;
 /* Type of a signal handler.  */
 typedef void (*__sighandler_t) __P ((int));
 
-/* Set the handler for the signal SIG to HANDLER,
-   returning the old handler, or SIG_ERR on error.  */
+/* Set the handler for the signal SIG to HANDLER, returning the old
+   handler, or SIG_ERR on error.
+   By default `signal' has the BSD semantic.  */
 extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
 
-#if defined __FAVOR_BSD || defined __USE_XOPEN
-/* The X/Open definition of `signal' conflicts with the BSD version.
-   So they defined another function `bsd_signal'.  We will use this
-   implementation as the official `signal' function if the BSD
-   interface is preferred.  */
-extern __sighandler_t bsd_signal __P ((int __sig, __sighandler_t __handler));
+#if defined __USE_XOPEN && !defined __USE_GNU
+/* The X/Open definition of `signal' specifies the SVID semantic.  Use
+   the additional function `sysv_signal' when X/Open compatibility is
+   requested.  */
+extern __sighandler_t __sysv_signal __P ((int __sig,
+					  __sighandler_t __handler));
+extern __sighandler_t sysv_signal __P ((int __sig, __sighandler_t __handler));
 
-#ifdef __FAVOR_BSD
-#define signal(sig, handler) bsd_signal ((sig), (handler))
+/* Make sure the used `signal' implementation is the SVID version.  */
+#define signal(sig, handler) __sysv_signal ((sig), (handler))
 #endif
+
+#ifdef __USE_XOPEN
+/* The X/Open definition of `signal' conflicts with the BSD version.
+   So they defined another function `bsd_signal'.  */
+extern __sighandler_t __bsd_signal __P ((int __sig, __sighandler_t __handler));
+extern __sighandler_t bsd_signal __P ((int __sig, __sighandler_t __handler));
 #endif
 
 /* Send signal SIG to process number PID.  If PID is zero,
@@ -103,13 +111,14 @@ extern int __sigsetmask __P ((int __mask));
 /* The `sigpause' function has two different interfaces.  The original
    BSD definition defines the argument as a mask of the signal, while
    the more modern interface in X/Open defines it as the signal
-   number.  We go with the more modern version unless the user
-   explitcly selects the BSD version.  */
+   number.  We go with the BSD version unless the user explicitly
+   selects the X/Open version.  */
 extern int __sigpause __P ((int __sig_or_mask, int __is_sig));
 
-#if defined __USE_BSD  && !defined __USE_XOPEN
+#if defined __USE_BSD || defined __USE_GNU
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
+extern int sigpause __P ((int __mask));
 #define sigpause(mask) __sigpause ((mask), 0)
 #else
 #ifdef __USE_XOPEN

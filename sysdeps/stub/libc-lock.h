@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Stub version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,10 @@
 /* Define an initialized lock variable NAME with storage class CLASS.  */
 #define __libc_lock_define_initialized(CLASS,NAME)
 
+/* Define an initialized recursive lock variable NAME with storage
+   class CLASS.  */
+#define __libc_lock_define_initialized_recursive(CLASS,NAME)
+
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
 #define __libc_lock_init(NAME)
@@ -45,14 +49,26 @@
    called on a lock variable before the containing storage is reused.  */
 #define __libc_lock_fini(NAME)
 
+/* Finalize recursive named lock.  */
+#define __libc_lock_fini_recursive(NAME)
+
 /* Lock the named lock variable.  */
 #define __libc_lock_lock(NAME)
 
-/* Try tp lock the named lock variable.  */
+/* Lock the recursive named lock variable.  */
+#define __libc_lock_lock_recursive(NAME)
+
+/* Try to lock the named lock variable.  */
 #define __libc_lock_trylock(NAME) 0
+
+/* Try to lock the recursive named lock variable.  */
+#define __libc_lock_trylock_recursive(NAME) 0
 
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME)
+
+/* Unlock the recursive named lock variable.  */
+#define __libc_lock_unlock_recursive(NAME)
 
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(FCT, ARG)

@@ -18,7 +18,7 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-#include <syscall.h>
+#include <sys/syscall.h>
 #define	HAVE_SYSCALLS
 
 /* Note that using a `PASTE' macro loses.  */

@@ -1,5 +1,5 @@
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,9 @@
 
 /* Get definition of needed basic types.  */
 #include <gnu/types.h>
+
+/* Get __FD_* definitions.  */
+#include <selectbits.h>
 
 /* Get definition of timer specification structures.  */
 #define __need_timespec

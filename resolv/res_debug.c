@@ -805,7 +805,7 @@ __p_rr(cp, msg, file)
 				n, c);
 		/* orig ttl */
 		n = _getlong((u_char*)cp);
-		if (n != tmpttl)
+		if ((u_int32_t) n != tmpttl)
 			fprintf(file, " %u", n);
 		cp += INT32SZ;
 		/* sig expire */
@@ -1434,7 +1434,7 @@ loc_ntoa(binary, ascii)
 	longval = (templ - ((unsigned)1<<31));
 
 	GETLONG(templ, cp);
-	if (templ < referencealt) { /* below WGS 84 spheroid */
+	if (templ < (u_int32_t) referencealt) { /* below WGS 84 spheroid */
 		altval = referencealt - templ;
 		altsign = -1;
 	} else {

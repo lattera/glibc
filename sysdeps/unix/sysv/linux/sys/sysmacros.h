@@ -1,5 +1,5 @@
 /* Definitions of macros to access `dev_t' values.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,9 @@
 
 #define _SYS_SYSMACROS_H	1
 
-/* Get definition from kernel header.  */
-#include <linux/kdev_t.h>
-
 /* For compatibility we provide alternative names.  */
-#define major(dev) MAJOR ((unsigned int) (dev))
-#define minor(dev) MINOR ((unsigned int) (dev))
-#define makedev(major, minor) MKDEV (major, minor)
+#define major(dev) ((dev) >> 32)
+#define minor(dev) ((dev) & 0xffffffff)
+#define makedev(major, minor) (((major) << 32) | (monor))
 
 #endif /* _SYS_SYSMACROS_H */

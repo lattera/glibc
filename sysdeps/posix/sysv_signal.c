@@ -1,5 +1,4 @@
-/* X/Open compatibility function.
-   Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +19,21 @@
 #include <errno.h>
 #include <signal.h>
 
-
-sigset_t _sigintr;		/* Set by siginterrupt.  */
+/* Tolerate non-threads versions of Posix */
+#ifndef SA_ONESHOT
+#define SA_ONESHOT 0
+#endif
+#ifndef SA_NOMASK
+#define SA_NOMASK 0
+#endif
+#ifndef SA_INTERRUPT
+#define SA_INTERRUPT 0
+#endif
 
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
 __sighandler_t
-bsd_signal (sig, handler)
+__sysv_signal (sig, handler)
      int sig;
      __sighandler_t handler;
 {
@@ -42,7 +49,8 @@ bsd_signal (sig, handler)
   act.sa_handler = handler;
   if (__sigemptyset (&act.sa_mask) < 0)
     return SIG_ERR;
-  act.sa_flags = __sigismember (&_sigintr, sig) ? 0 : SA_RESTART;
+  act.sa_flags = SA_ONESHOT | SA_NOMASK | SA_INTERRUPT;
+  act.sa_flags &= ~SA_RESTART;
   if (__sigaction (sig, &act, &oact) < 0)
     return SIG_ERR;
 

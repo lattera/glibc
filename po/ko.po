@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 1.96\n"
-"POT-Creation-Date: 1996-10-17 03:22+0200\n"
-"PO-Revision-Date: 1996-11-23 19:25+0900\n"
+"Project-Id-Version: GNU libc 1.98\n"
+"POT-Creation-Date: 1996-12-03 13:50+0100\n"
+"PO-Revision-Date: 1996-12-15 14:17+0900\n"
 "Last-Translator: Bang Jun-Young <bangjy@nownuri.nowcom.co.kr>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -62,17 +62,17 @@ msgstr "\"지역 %s\" 행과 -p 옵션은 서로 배타적입니다"
 msgid "%s in ruleless zone"
 msgstr "규칙없는 지역에 %s가 있음"
 
-#: assert/assert.c:48
+#: assert/assert.c:46
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr ""
 
-#: assert/assert-perr.c:46
+#: assert/assert-perr.c:47
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%s예기치 못한 오류: %s.\n"
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:47
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%s알 수 없는 신호 %d\n"
@@ -170,7 +170,7 @@ msgstr "%s: 명령은 '%s'였고, 결과는 %d였습니다\n"
 #: locale/programs/charmap.c:593 locale/programs/locfile.c:878
 #, c-format
 msgid "%s: error in state machine"
-msgstr ""
+msgstr "%s: 스테이트 기계에 오류 발생"
 
 #: posix/getopt.c:687
 #, c-format
@@ -223,9 +223,9 @@ msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: panic: 부적절한 좌항값 %d\n"
 
 #: locale/programs/charmap.c:600
-#, c-format, fuzzy
+#, c-format
 msgid "%s: premature end of file"
-msgstr "파일이 완결되지 않은 채 끝남"
+msgstr "%s: 파일이 완결되지 않은 채 끝남"
 
 #: posix/getopt.c:661
 #, c-format
@@ -270,19 +270,19 @@ msgstr "*표준 입력*"
 msgid ".lib section in a.out corrupted"
 msgstr "a.out의 .lib 절이 손상되었음"
 
-#: inet/rcmd.c:328
+#: inet/rcmd.c:358
 msgid ".rhosts fstat failed"
 msgstr ".rhosts fstat 실패"
 
-#: inet/rcmd.c:324
+#: inet/rcmd.c:354
 msgid ".rhosts lstat failed"
 msgstr ".rhosts lstat 실패"
 
-#: inet/rcmd.c:326
+#: inet/rcmd.c:356
 msgid ".rhosts not regular file"
 msgstr ".rhosts는 일반 파일이 아님"
 
-#: inet/rcmd.c:332
+#: inet/rcmd.c:362
 msgid ".rhosts writeable by other than owner"
 msgstr ".rhosts는 소유자가 아닌 사람이 변경할 수 있음"
 
@@ -327,7 +327,7 @@ msgstr "주소가 이미 사용 중입니다"
 msgid "Address family not supported by protocol"
 msgstr "주소군이 규약에서 지원되지 않음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:714
+#: stdio-common/../sysdeps/gnu/errlist.c:730
 msgid "Advertise error"
 msgstr ""
 
@@ -368,9 +368,13 @@ msgstr "잘못된 주소"
 msgid "Bad file descriptor"
 msgstr "잘못된 파일 기술자"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:682
+#: stdio-common/../sysdeps/gnu/errlist.c:718
 msgid "Bad font file format"
 msgstr "잘못된 폰트 파일 형식"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:610
+msgid "Bad message"
+msgstr "잘못된 메시지"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
@@ -401,6 +405,22 @@ msgstr "CPU 시간 제한 초과함"
 #: stdio-common/../sysdeps/gnu/errlist.c:758
 msgid "Can not access a needed shared library"
 msgstr "필요한 공유 라이브러리에 접근할 수 없습니다"
+
+#: nis/ypclnt.c:637
+msgid "Can't bind to server which serves this domain"
+msgstr "이 도메인을 제공하는 서버에 연결할 수 없습니다"
+
+#: nis/ypclnt.c:649
+msgid "Can't communicate with portmapper"
+msgstr "rpcinfo: 포트매퍼와 통신할 수 없습니다"
+
+#: nis/ypclnt.c:651
+msgid "Can't communicate with ypbind"
+msgstr "ypbind와 통신할 수 없습니다"
+
+#: nis/ypclnt.c:653
+msgid "Can't communicate with ypserv"
+msgstr "ypserv와 통신할 수 없습니다"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
@@ -444,7 +464,7 @@ msgstr "브로드캐스트 패킷을 보낼 수 없습니다"
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr "소켓 옵션 SO_BROADCAST를 설정할 수 없습니다"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:622
+#: stdio-common/../sysdeps/gnu/errlist.c:658
 msgid "Channel number out of range"
 msgstr "범위를 벗어난 채널 번호"
 
@@ -455,7 +475,7 @@ msgstr "자식이 종료됨"
 msgid "Client credential too weak"
 msgstr "클라이언트 자격 부여가 너무 약함"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:722
+#: stdio-common/../sysdeps/gnu/errlist.c:738
 msgid "Communication error on send"
 msgstr "전송 중 통신 오류"
 
@@ -502,8 +522,10 @@ msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
-"저작권 (C) %s Free Software Foundation, Inc.\n"
-"이 프로그램은 공개 소프트웨어입니다; 복사 조건은 소스를 참조하십시오.\n"
+
+#: nis/ypclnt.c:663
+msgid "Database is busy"
+msgstr "데이터베이스가 작업 중입니다"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
@@ -512,7 +534,7 @@ msgstr ""
 msgid "Destination address required"
 msgstr "목적지 주소가 필요함"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:686
+#: stdio-common/../sysdeps/gnu/errlist.c:638
 msgid "Device not a stream"
 msgstr "장치가 스트림이 아님"
 
@@ -543,12 +565,16 @@ msgstr "디렉토리가 비어있지 않음"
 msgid "Disc quota exceeded"
 msgstr "디스크 할당량이 초과됨"
 
+#: nis/ypclnt.c:709
+msgid "Domain not bound"
+msgstr "도메인이 바운드되지 않음"
+
 #: sunrpc/clnt_perr.c:254
 #, c-format
 msgid "Error %d"
 msgstr "오류 %d"
 
-#: string/../sysdeps/mach/_strerror.c:43
+#: string/../sysdeps/mach/_strerror.c:52
 msgid "Error in unknown error system: "
 msgstr "알 수 없는 오류 시스템에 오류: "
 
@@ -556,7 +582,7 @@ msgstr "알 수 없는 오류 시스템에 오류: "
 msgid "Error: .netrc file is readable by others."
 msgstr "오류: .netrc 파일을 다른 사람이 읽을 수 있습니다."
 
-#: stdio-common/../sysdeps/gnu/errlist.c:662
+#: stdio-common/../sysdeps/gnu/errlist.c:698
 msgid "Exchange full"
 msgstr "교환이 가득참"
 
@@ -584,7 +610,7 @@ msgstr "파일 기술자가 잘못된 상태에 있음"
 msgid "File exists"
 msgstr "파일이 존재합니다"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:678
+#: stdio-common/../sysdeps/gnu/errlist.c:714
 msgid "File locking deadlock error"
 msgstr ""
 
@@ -636,7 +662,7 @@ msgstr "입출력 가능"
 msgid "IOT trap"
 msgstr "IOT 트랩"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:618
+#: stdio-common/../sysdeps/gnu/errlist.c:614
 msgid "Identifier removed"
 msgstr "식별자 제거됨"
 
@@ -678,6 +704,14 @@ msgstr "배경 프로세스로 부적합한 동작"
 msgid "Input/output error"
 msgstr "입력/출력 오류"
 
+#: nis/ypclnt.c:643
+msgid "Internal NIS error"
+msgstr "내부 NIS 오류"
+
+#: nis/ypclnt.c:707
+msgid "Internal ypbind error"
+msgstr "내부 ypbind 오류"
+
 msgid "Interrupt"
 msgstr "인터럽트"
 
@@ -692,7 +726,7 @@ msgstr "인터럽트"
 msgid "Interrupted system call"
 msgstr "중단된 시스템 호출"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:610
+#: stdio-common/../sysdeps/gnu/errlist.c:654
 msgid "Interrupted system call should be restarted"
 msgstr "중단된 시스템 호출은 재시작되어야 합니다"
 
@@ -733,7 +767,7 @@ msgstr "\\{\\}에 부적절한 내용물이 있음"
 msgid "Invalid cross-device link"
 msgstr "장치간 연결이 부적절함"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:654
+#: stdio-common/../sysdeps/gnu/errlist.c:690
 msgid "Invalid exchange"
 msgstr "부적절한 교환"
 
@@ -755,11 +789,11 @@ msgstr "부적절한 범위 끝"
 msgid "Invalid regular expression"
 msgstr "부적절한 정규식"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:670
+#: stdio-common/../sysdeps/gnu/errlist.c:706
 msgid "Invalid request code"
 msgstr "부적절한 요청 코드"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:658
+#: stdio-common/../sysdeps/gnu/errlist.c:694
 msgid "Invalid request descriptor"
 msgstr "잘못된 요청 기술자"
 
@@ -767,7 +801,7 @@ msgstr "잘못된 요청 기술자"
 msgid "Invalid server verifier"
 msgstr "부적절한 서버 검증기"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:674
+#: stdio-common/../sysdeps/gnu/errlist.c:710
 msgid "Invalid slot"
 msgstr "부적절한 슬롯"
 
@@ -784,31 +818,39 @@ msgstr ""
 msgid "Killed"
 msgstr "죽었음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:650
+#: stdio-common/../sysdeps/gnu/errlist.c:686
 msgid "Level 2 halted"
 msgstr "등급 2 멎었음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:626
+#: stdio-common/../sysdeps/gnu/errlist.c:662
 msgid "Level 2 not synchronized"
 msgstr "등급 2가 동기화되지 않음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:630
+#: stdio-common/../sysdeps/gnu/errlist.c:666
 msgid "Level 3 halted"
 msgstr "등급 3 멎었음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:634
+#: stdio-common/../sysdeps/gnu/errlist.c:670
 msgid "Level 3 reset"
 msgstr "등급 3 리셋"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:710
+#: stdio-common/../sysdeps/gnu/errlist.c:626
 msgid "Link has been severed"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:638
+#: stdio-common/../sysdeps/gnu/errlist.c:674
 msgid "Link number out of range"
 msgstr "범위를 벗어난 링크 번호"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:702
+#: nis/ypclnt.c:655
+msgid "Local domain name not set"
+msgstr "지역 도메인명이 설정되지 않았음"
+
+#: nis/ypclnt.c:645
+msgid "Local resource allocation failure"
+msgstr "지역 자원 할당 실패"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:722
 msgid "Machine is not on the network"
 msgstr "기기가 네트워크 상에 있지 않습니다"
 
@@ -822,9 +864,17 @@ msgstr "메모리가 바닥남"
 msgid "Message too long"
 msgstr "메시지가 너무 깁니다"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:730
+#: stdio-common/../sysdeps/gnu/errlist.c:618
 msgid "Multihop attempted"
 msgstr ""
+
+#: nis/ypclnt.c:659
+msgid "NIS client/server version mismatch - can't supply service"
+msgstr "NIS 클라이언트/서버 버전 불일치 - 서비스를 제공할 수 없습니다"
+
+#: nis/ypclnt.c:657
+msgid "NIS map data base is bad"
+msgstr "NIS 지도 데이터베이스가 잘못되었습니다"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:746
 msgid "Name not unique on network"
@@ -851,7 +901,7 @@ msgstr "네트워크가 죽었습니다"
 msgid "Network is unreachable"
 msgstr "네트워크가 접근 불가능합니다"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:646
+#: stdio-common/../sysdeps/gnu/errlist.c:682
 msgid "No CSI structure available"
 msgstr "사용 가능한 CSI 구조가 없음"
 
@@ -863,7 +913,7 @@ msgstr "사용 가능한 XENIX 세마포어가 없음"
 msgid "No address associated with name"
 msgstr "이름과 대응되는 주소가 없음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:666
+#: stdio-common/../sysdeps/gnu/errlist.c:702
 msgid "No anode"
 msgstr ""
 
@@ -881,7 +931,7 @@ msgstr "사용 가능한 버퍼 공간이 없음"
 msgid "No child processes"
 msgstr "자식 프로세스가 없음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:690
+#: stdio-common/../sysdeps/gnu/errlist.c:622
 msgid "No data available"
 msgstr "사용 가능한 자료가 없음"
 
@@ -897,9 +947,13 @@ msgstr "사용가능한 잠금장치가 없음"
 msgid "No match"
 msgstr "맞는 짝 없음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:614
+#: stdio-common/../sysdeps/gnu/errlist.c:630
 msgid "No message of desired type"
 msgstr "적당한 형을 가진 메시지가 없음"
+
+#: nis/ypclnt.c:647
+msgid "No more records in map database"
+msgstr "지도 데이터베이스에 더 이상의 기록이 없음"
 
 #: posix/regex.c:5204
 msgid "No previous regular expression"
@@ -918,7 +972,7 @@ msgstr ""
 #. TRANS disk is full.
 #: stdio-common/../sysdeps/gnu/errlist.c:196
 msgid "No space left on device"
-msgstr "디바이스에 남은 공간이 없음"
+msgstr "장치에 남은 공간이 없음"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
@@ -926,6 +980,14 @@ msgstr "디바이스에 남은 공간이 없음"
 #: stdio-common/../sysdeps/gnu/errlist.c:19
 msgid "No such file or directory"
 msgstr "그런 파일이나 디렉토리가 없음"
+
+#: nis/ypclnt.c:641
+msgid "No such key in map"
+msgstr "지도에 그런 키가 없음"
+
+#: nis/ypclnt.c:639
+msgid "No such map in server's domain"
+msgstr "서버의 도메인에 그런 지도가 없음"
 
 #. TRANS No process matches the specified process ID.
 #: stdio-common/../sysdeps/gnu/errlist.c:24
@@ -935,10 +997,6 @@ msgstr "그런 프로세스가 없음"
 #: stdio-common/../sysdeps/gnu/errlist.c:786
 msgid "Not a XENIX named type file"
 msgstr ""
-
-#: stdio-common/../sysdeps/gnu/errlist.c:738
-msgid "Not a data message"
-msgstr "자료 메시지가 아님"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:140
@@ -1007,7 +1065,7 @@ msgstr "장치에서 지원되지 않는 명령"
 #. TRANS has completed; @pxref{Waiting for I/O}.
 #: stdio-common/../sysdeps/gnu/errlist.c:288
 msgid "Operation now in progress"
-msgstr "지금 진행중인 명령"
+msgstr "지금 진행 중인 명령"
 
 #. TRANS In the GNU C library, this is another name for @code{EAGAIN} (above).
 #. TRANS The values are always the same, on every operating system.
@@ -1018,16 +1076,16 @@ msgstr "지금 진행중인 명령"
 msgid "Operation would block"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:698
+#: stdio-common/../sysdeps/gnu/errlist.c:634
 msgid "Out of streams resources"
 msgstr "스트림 자원 부족"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:706
+#: stdio-common/../sysdeps/gnu/errlist.c:726
 msgid "Package not installed"
 msgstr "패키지가 설치되지 않음"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: stdio-common/../sysdeps/gnu/errlist.c:96
+#: nis/ypclnt.c:661 stdio-common/../sysdeps/gnu/errlist.c:96
 msgid "Permission denied"
 msgstr "허가 거부됨"
 
@@ -1041,11 +1099,11 @@ msgstr "정규식이 완결되지 않은 채 끝남"
 msgid "Profiling timer expired"
 msgstr "프로파일링 타이머의 시간이 초과됨"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:642
+#: stdio-common/../sysdeps/gnu/errlist.c:678
 msgid "Protocol driver not attached"
 msgstr "규약 구동기에 연결되지 않음"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:726
+#: stdio-common/../sysdeps/gnu/errlist.c:646
 msgid "Protocol error"
 msgstr "규약 오류"
 
@@ -1075,7 +1133,7 @@ msgstr "소켓에 대한 규약이 잘못됨"
 msgid "Quit"
 msgstr "종료"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:734
+#: stdio-common/../sysdeps/gnu/errlist.c:742
 msgid "RFS specific error"
 msgstr "RFS에 국한된 오류"
 
@@ -1083,6 +1141,10 @@ msgstr "RFS에 국한된 오류"
 #: stdio-common/../sysdeps/gnu/errlist.c:527
 msgid "RPC bad procedure for program"
 msgstr "RPC 프로그램의 프로시져가 잘못됨"
+
+#: nis/ypclnt.c:635
+msgid "RPC failure on NIS operation"
+msgstr ""
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:517
@@ -1180,6 +1242,10 @@ msgstr "RPC: 알 수 없는 호스트"
 msgid "RPC: Unknown protocol"
 msgstr "RPC: 알 수 없는 규약"
 
+#: elf/dlsym.c:49
+msgid "RTLD_NEXT used in code not dynamically loaded"
+msgstr "동적으로 적재되지 않은 코드에 RTLD_NEXT가 사용됨"
+
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: stdio-common/../sysdeps/gnu/errlist.c:206
 msgid "Read-only file system"
@@ -1199,20 +1265,24 @@ msgstr "원격 주소가 바뀌었음"
 
 #: inet/ruserpass.c:162
 msgid "Remove password or make file unreadable by others."
-msgstr ""
+msgstr "암호를 지우거나 다른 사람이 읽을 수 없는 파일을 만듭니다."
 
 #: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:257
 #: locale/programs/localedef.c:408
 msgid "Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr "버그는 <bug-glibc@prep.ai.mit.edu>에 보고하십시오.\n"
 
+#: nis/ypclnt.c:633
+msgid "Request arguments bad"
+msgstr ""
+
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
-msgstr "리솔버 오류 0 (오류아님)"
+msgstr "해결기 오류 0 (오류아님)"
 
-#: resolv/herror.c:115
+#: resolv/herror.c:117
 msgid "Resolver internal error"
-msgstr "리솔버 내부 오류"
+msgstr "해결기 내부 오류"
 
 #. TRANS Deadlock avoided; allocating a system resource would have resulted in a
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
@@ -1281,7 +1351,7 @@ msgstr "소켓 타입이 지원되지 않습니다"
 msgid "Software caused connection abort"
 msgstr "소프트웨어가 연결 중단을 초래했습니다"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:718
+#: stdio-common/../sysdeps/gnu/errlist.c:734
 msgid "Srmount error"
 msgstr ""
 
@@ -1311,11 +1381,16 @@ msgstr "스트림 파이프 오류"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:782
 msgid "Structure needs cleaning"
-msgstr ""
+msgstr "구조에 청소가 필요합니다"
 
-#: posix/regex.c:940 stdio-common/../sysdeps/gnu/errlist.c:7
+#: nis/ypclnt.c:631 nis/ypclnt.c:705 posix/regex.c:940
+#: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
 msgstr "성공"
+
+#: nis/ypclnt.c:711
+msgid "System resource allocation failure"
+msgstr "시스템 자원 할당 실패"
 
 msgid "Terminated"
 msgstr "종료됨"
@@ -1327,11 +1402,11 @@ msgstr "종료됨"
 #. TRANS is not an error in the GNU system; the text is copied as necessary.
 #: stdio-common/../sysdeps/gnu/errlist.c:185
 msgid "Text file busy"
-msgstr "문서 파일 사용중"
+msgstr "문서 파일 사용 중"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:694
+#: stdio-common/../sysdeps/gnu/errlist.c:650
 msgid "Timer expired"
-msgstr "타이머의 시간이 초과됨"
+msgstr "타이머 시간 초과됨"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
@@ -1416,7 +1491,7 @@ msgstr "전송 종료지점이 연결되어 있지 않습니다"
 msgid "Try `%s --help' for more information.\n"
 msgstr "더 많은 정보를 보려면 `%s --help' 하십시오.\n"
 
-#: inet/rcmd.c:121
+#: inet/rcmd.c:136
 #, c-format
 msgid "Trying %s...\n"
 msgstr "%s 시도중...\n"
@@ -1426,8 +1501,12 @@ msgstr "%s 시도중...\n"
 msgid "Unknown .netrc keyword %s"
 msgstr "알 수 없는 .netrc 키워드 %s"
 
-#: string/../sysdeps/generic/_strerror.c:36
-#: string/../sysdeps/mach/_strerror.c:58
+#: nis/ypclnt.c:665
+msgid "Unknown NIS error code"
+msgstr "알 수 없는 NIS 오류 코드"
+
+#: string/../sysdeps/generic/_strerror.c:44
+#: string/../sysdeps/mach/_strerror.c:67
 msgid "Unknown error "
 msgstr "알 수 없는 오류"
 
@@ -1435,7 +1514,7 @@ msgstr "알 수 없는 오류"
 msgid "Unknown host"
 msgstr "알 수 없는 호스트"
 
-#: resolv/herror.c:118
+#: resolv/herror.c:120
 msgid "Unknown resolver error"
 msgstr "알 수 없는 리솔버 오류"
 
@@ -1443,14 +1522,18 @@ msgstr "알 수 없는 리솔버 오류"
 msgid "Unknown server error"
 msgstr "알 수 없는 서버 오류"
 
-#: string/strsignal.c:40
+#: string/strsignal.c:41
 #, c-format
 msgid "Unknown signal %d"
 msgstr "알 수 없는 신호 %d"
 
-#: misc/error.c:94
+#: misc/error.c:95
 msgid "Unknown system error"
 msgstr "알 수 없는 시스템 오류"
+
+#: nis/ypclnt.c:713
+msgid "Unknown ypbind error"
+msgstr "알 수 없는 ypbind 오류"
 
 #: posix/regex.c:948
 msgid "Unmatched ( or \\("
@@ -1468,7 +1551,7 @@ msgstr "짝이 맞지 않는 [ 또는 [^"
 msgid "Unmatched \\{"
 msgstr "짝이 맞지 않는 \\{"
 
-#: posix/getconf.c:191
+#: posix/getconf.c:260
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "인식할 수 없는 변수 `%s'"
@@ -1499,7 +1582,7 @@ msgstr ""
 "합니다\n"
 "  -o, --output=NAME   NAME이라는 파일에 출력을 기록합니다\n"
 "  -V, --version       버전 정보를 출력하고 마칩니다\n"
-"입력-파일이 - 이면 표준 입력으로부터 입력을 읽게 됩니다.  출력-파일이\n"
+"만약 입력-파일이 - 이면 표준 입력으로부터 입력을 읽게 됩니다.  출력-파일이\n"
 "- 이면 표준 출력에 출력이 기록됩니다.\n"
 
 #: db/makedb.c:213
@@ -1547,6 +1630,19 @@ msgid ""
 "System's directory for character maps: %s\n"
 "                       locale files  : %s\n"
 msgstr ""
+"사용법: %s [옵션]... 이름\n"
+"긴 옵션에 부가되는 인수는 짧은 옵션에도 적용됩니다.\n"
+"  -c, --force               경고 메시지가 나오더라도 출력을 만듭니다\n"
+"  -h, --help                이 도움말을 표시하고 마칩니다\n"
+"  -f, --charmaps=FILE       FILE에 정의된 기호 문자 이름\n"
+"  -i, --inputfile=FILE      소스 정의가 FILE 안에 있음을 나타냅니다\n"
+"  -u, --code-set-name=NAME  ISO 10646 원소에 대응하는 코드 집합을 지정합니다\n"
+"  -v, --verbose             더 많은 메시지를 출력합니다\n"
+"  -V, --version             버전 정보를 출력하고 마칩니다\n"
+"      --posix               POSIX 안을 엄격히 준수합니다\n"
+"\n"
+"문자 지도의 시스템 디렉토리: %s\n"
+"로케일 파일의 시스템 디렉토리: %s\n"
 
 #: locale/programs/locale.c:245
 #, c-format
@@ -1562,8 +1658,18 @@ msgid ""
 "  -c, --category-name   write names of selected categories\n"
 "  -k, --keyword-name    write names of selected keywords\n"
 msgstr ""
+"사용법: %s [옵션]... 이름\n"
+"긴 옵션에 부가되는 인수는 짧은 옵션에도 적용됩니다.\n"
+"  -h, --help            이 도움말을 표시하고 마칩니다\n"
+"  -V, --version         버전 정보를 출력하고 마칩니다\n"
+"\n"
+"  -a, --all-locales     사용 가능한 로케일의 이름을 출력합니다\n"
+"  -m, --charmaps        사용 가능한 문자 지도의 이름을 출력합니다\n"
+"\n"
+"  -c, --category-name   선택된 범주의 이름을 출력합니다\n"
+"  -k, --keyword-name    선택된 핵심어의 이름을 출력합니다\n"
 
-#: posix/getconf.c:138
+#: posix/getconf.c:200
 #, c-format
 msgid "Usage: %s variable_name [pathname]\n"
 msgstr "사용법: %s 변수명 [경로명]\n"
@@ -1578,12 +1684,12 @@ msgstr "사용자 정의 신호 1"
 msgid "User defined signal 2"
 msgstr "사용자 신호 신호 2"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:742
+#: stdio-common/../sysdeps/gnu/errlist.c:642
 msgid "Value too large for defined data type"
-msgstr ""
+msgstr "정의된 자료형으로 쓰기엔 너무 큰 값"
 
 msgid "Virtual timer expired"
-msgstr "가상 타이머의 시간이 초과됨"
+msgstr "가상 타이머 시간 초과"
 
 #: time/zic.c:1844
 msgid "Wild result from command execution"
@@ -1596,7 +1702,24 @@ msgstr "윈도우 변경됨"
 #: locale/programs/localedef.c:182
 #, c-format
 msgid "Written by %s.\n"
-msgstr ""
+msgstr "저자: %s.\n"
+
+#: nis/ypclnt.c:146
+msgid "YPBINDPROC_DOMAIN: Internal error\n"
+msgstr "YPBINDPROC_DOMAIN: 내부 오류\n"
+
+#: nis/ypclnt.c:150
+#, c-format
+msgid "YPBINDPROC_DOMAIN: No server for domain %s\n"
+msgstr "YPBINDPROC_DOMAIN: 도메인 %s에 대한 서버가 없음\n"
+
+#: nis/ypclnt.c:154
+msgid "YPBINDPROC_DOMAIN: Resource allocation failure\n"
+msgstr "YPBINDPROC_DOMAIN: 자원 할당 실패\n"
+
+#: nis/ypclnt.c:158
+msgid "YPBINDPROC_DOMAIN: Unknown error\n"
+msgstr "YPBINDPROC_DOMAIN: 알 수 없는 오류\n"
 
 #. TRANS You did @strong{what}?
 #: stdio-common/../sysdeps/gnu/errlist.c:596
@@ -1610,22 +1733,22 @@ msgstr ""
 #: locale/programs/charmap.c:397 locale/programs/locfile.c:341
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
-msgstr ""
+msgstr "`%1%s' 정의가 `END %1$s'로 끝나지 않습니다"
 
 #: locale/programs/ld-monetary.c:358 locale/programs/ld-numeric.c:190
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1651
+#: locale/programs/ld-collate.c:1652
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
-msgstr ""
+msgstr "`...'는 `...'와 `UNDEFINED' 항목에만 쓰여야 합니다"
 
 #: locale/programs/locfile.c:538
 msgid "`from' expected after first argument to `collating-element'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1108
+#: locale/programs/ld-collate.c:1109
 msgid ""
 "`from' string in collation element declaration contains unknown character"
 msgstr ""
@@ -1633,24 +1756,24 @@ msgstr ""
 #: locale/programs/charmap.c:267
 #, c-format
 msgid "argument to <%s> must be a single character"
-msgstr ""
+msgstr "<%s>에 대한 인수는 단일 문자여야 합니다"
 
 #: locale/programs/locfile.c:215
 #, c-format
 msgid "argument to `%s' must be a single character"
-msgstr ""
+msgstr "`%s'에 대한 인수는 단일 문자여야 합니다"
 
 #: sunrpc/auth_unix.c:322
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr ""
 
-#: inet/rcmd.c:330
+#: inet/rcmd.c:360
 msgid "bad .rhosts owner"
 msgstr "잘못된 .rhosts 소유자"
 
 #: locale/programs/charmap.c:212 locale/programs/locfile.c:209
 msgid "bad argument"
-msgstr "인수"
+msgstr "잘못된 인수"
 
 #: time/zic.c:1172
 msgid "blank FROM field on Link line"
@@ -1662,7 +1785,7 @@ msgstr ""
 
 #: malloc/mcheck.c:189
 msgid "block freed twice"
-msgstr "블록이 두번 비워졌음"
+msgstr "블럭이 두번 비워졌음"
 
 #: malloc/mcheck.c:192
 msgid "bogus mcheck_status, library is buggy"
@@ -1694,16 +1817,16 @@ msgstr "프로시져 번호 %d를 재지정할 수 없습니다\n"
 msgid "cannot `stat' locale file `%s'"
 msgstr "로케일 파일 `%s'를 `stat'할 수 없습니다"
 
-#: locale/programs/ld-collate.c:1313
+#: locale/programs/ld-collate.c:1314
 #, c-format
 msgid "cannot insert collation element `%.*s'"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1492 locale/programs/ld-collate.c:1497
+#: locale/programs/ld-collate.c:1493 locale/programs/ld-collate.c:1498
 msgid "cannot insert into result table"
-msgstr ""
+msgstr "결과표에 삽입할 수 없습니다"
 
-#: locale/programs/ld-collate.c:1165 locale/programs/ld-collate.c:1207
+#: locale/programs/ld-collate.c:1166 locale/programs/ld-collate.c:1208
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
 msgstr ""
@@ -1733,14 +1856,14 @@ msgstr "출력 파일 `%s'를 열 수 없습니다"
 msgid "cannot open output file `%s' for category `%s'"
 msgstr "출력 파일 `%s'를 범주 `%s'에 대해 열 수 없습니다"
 
-#: locale/programs/ld-collate.c:1359
+#: locale/programs/ld-collate.c:1360
 msgid "cannot process order specification"
 msgstr ""
 
 #: locale/programs/locale.c:303
 #, c-format
 msgid "cannot read character map directory `%s'"
-msgstr ""
+msgstr "문자 지도 디렉토리 `%s'를 읽을 수 없습니다"
 
 #: locale/programs/locale.c:278
 #, c-format
@@ -1773,49 +1896,45 @@ msgstr ""
 
 #: locale/programs/ld-ctype.c:310
 msgid "character <SP> not defined in character map"
-msgstr ""
-
-#: locale/programs/ld-ctype.c:1141
-#, c-format
-msgid "character `%c' not defined while needed as default value"
-msgstr ""
+msgstr "문자 <SP>가 문자 지도에서 정의되지 않음"
 
 #: locale/programs/ld-ctype.c:939 locale/programs/ld-ctype.c:1002
 #: locale/programs/ld-ctype.c:1010 locale/programs/ld-ctype.c:1018
 #: locale/programs/ld-ctype.c:1026 locale/programs/ld-ctype.c:1034
 #: locale/programs/ld-ctype.c:1042 locale/programs/ld-ctype.c:1068
 #: locale/programs/ld-ctype.c:1076 locale/programs/ld-ctype.c:1114
-#: locale/programs/ld-ctype.c:1152
+#: locale/programs/ld-ctype.c:1141 locale/programs/ld-ctype.c:1152
 #, c-format
 msgid "character `%s' not defined while needed as default value"
-msgstr ""
+msgstr "문자 `%s'는 내정치로 필요하지만 정의되지 않았음"
 
 #: locale/programs/ld-ctype.c:801
 #, c-format
 msgid "character class `%s' already defined"
-msgstr ""
+msgstr "문자 클래스 `%s'는 이미 정의되었음"
 
 #: locale/programs/ld-ctype.c:833
 #, c-format
 msgid "character map `%s' already defined"
-msgstr ""
+msgstr "문자 지도 `%s'는 이미 정의되었음"
 
 #: locale/programs/charmap.c:76
 #, c-format
 msgid "character map file `%s' not found"
-msgstr ""
+msgstr "문자 지도 파일 `%s'를 찾지 못했음"
 
 #: sunrpc/clnt_raw.c:106
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr ""
 
-#: locale/programs/ld-collate.c:1328
+#: locale/programs/ld-collate.c:1329
 #, c-format
 msgid "collation element `%.*s' appears more than once: ignore line"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1346
-msgid "collation symbol `.*s' appears more than once: ignore line"
+#: locale/programs/ld-collate.c:1347
+#, c-format
+msgid "collation symbol `%.*s' appears more than once: ignore line"
 msgstr ""
 
 #: locale/programs/locfile.c:522
@@ -1823,7 +1942,7 @@ msgstr ""
 msgid "collation symbol expected after `%s'"
 msgstr ""
 
-#: inet/rcmd.c:114
+#: inet/rcmd.c:129
 #, c-format
 msgid "connect to address %s: "
 msgstr "주소 %s에 연결: "
@@ -1831,14 +1950,6 @@ msgstr "주소 %s에 연결: "
 #: sunrpc/svc_simple.c:70
 msgid "couldn't create an rpc server\n"
 msgstr "rpc 서버를 만들 수 없습니다\n"
-
-#: sunrpc/portmap.c:121
-msgid "couldn't do tcp_create\n"
-msgstr "tcp_create를 할 수 없습니다\n"
-
-#: sunrpc/portmap.c:99
-msgid "couldn't do udp_create\n"
-msgstr "udp_create를 할 수 없습니다\n"
 
 #: sunrpc/svc_simple.c:77
 #, c-format
@@ -1848,7 +1959,7 @@ msgstr "프로그램 %d 버전 %d를 등록할 수 없습니다\n"
 #: locale/programs/charmap.c:86
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr ""
+msgstr "기본 문자 지도 파일 `%s'를 찾지 못했음"
 
 #: locale/programs/ld-time.c:154
 #, c-format
@@ -1867,29 +1978,29 @@ msgstr ""
 #: locale/programs/charset.c:87 locale/programs/charset.c:132
 #, c-format
 msgid "duplicate character name `%s'"
-msgstr ""
+msgstr "문자 이름 `%s'이 중복됨"
 
-#: locale/programs/ld-collate.c:1140
+#: locale/programs/ld-collate.c:1141
 msgid "duplicate collating element definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1286
+#: locale/programs/ld-collate.c:1287
 #, c-format
 msgid "duplicate definition for character `%.*s'"
-msgstr ""
+msgstr "문자 `%.*s'를 중복 정의함"
 
 #: db/makedb.c:310
 msgid "duplicate key"
-msgstr ""
+msgstr "중복된 키"
 
 #: catgets/gencat.c:378
 msgid "duplicate set definition"
-msgstr ""
+msgstr "중복된 집합 정의"
 
 #: time/zic.c:965
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgstr ""
+msgstr "중복된 지역명 %s (파일 \"%s\", 행 %d)"
 
 #: catgets/gencat.c:541
 msgid "duplicated message identifier"
@@ -1899,7 +2010,7 @@ msgstr "중복된 메시지 식별자"
 msgid "duplicated message number"
 msgstr "중복된 메시지 번호"
 
-#: locale/programs/ld-collate.c:1695
+#: locale/programs/ld-collate.c:1696
 msgid "empty weight name: line ignored"
 msgstr ""
 
@@ -1919,17 +2030,17 @@ msgstr "enablecache: 캐쉬 자료를 할당할 수 없습니다"
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: 캐쉬 fifo를 할당할 수 없습니다"
 
-#: locale/programs/ld-collate.c:1418
+#: locale/programs/ld-collate.c:1419
 msgid "end point of ellipsis range is bigger then start"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1148
+#: locale/programs/ld-collate.c:1149
 msgid "error while inserting collation element into hash table"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1160
+#: locale/programs/ld-collate.c:1161
 msgid "error while inserting to hash table"
-msgstr ""
+msgstr "해쉬 테이블에 삽입하는 도중 오류 발생"
 
 #: locale/programs/locfile.c:465
 msgid "expect string argument for `copy'"
@@ -1942,7 +2053,7 @@ msgstr "예상했던 연속 행을 찾지 못했음"
 #: locale/programs/locfile.c:1010
 #, c-format
 msgid "failure while writing data for category `%s'"
-msgstr ""
+msgstr "범주 `%s'의 자료를 쓰는 데 실패했습니다"
 
 #: locale/programs/ld-monetary.c:154 locale/programs/ld-numeric.c:95
 #, c-format
@@ -1960,11 +2071,11 @@ msgstr ""
 
 #: locale/programs/linereader.c:328
 msgid "garbage at end of character code specification"
-msgstr ""
+msgstr "문자 코드 명세의 끝에 쓸모없는 것이 있음"
 
 #: locale/programs/linereader.c:214
 msgid "garbage at end of digit"
-msgstr ""
+msgstr "숫자의 끝에 쓸모없는 것이 있음"
 
 #: locale/programs/ld-time.c:183
 #, c-format
@@ -1996,11 +2107,11 @@ msgstr ""
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1766
+#: locale/programs/ld-collate.c:1767
 msgid "illegal character constant in string"
 msgstr "문자열에 잘못된 문자 상수가 있음"
 
-#: locale/programs/ld-collate.c:1115
+#: locale/programs/ld-collate.c:1116
 msgid "illegal collation element"
 msgstr ""
 
@@ -2114,11 +2225,11 @@ msgstr ""
 msgid "invalid weekday name"
 msgstr "부적절한 요일 이름"
 
-#: locale/programs/ld-collate.c:1411
+#: locale/programs/ld-collate.c:1412
 msgid "line after ellipsis must contain character definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1390
+#: locale/programs/ld-collate.c:1391
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr ""
 
@@ -2129,7 +2240,7 @@ msgstr "행이 너무 깁니다"
 #: locale/programs/localedef.c:281
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
-msgstr ""
+msgstr "`copy' 문장에서 쓰이는 로케일 파일 `%s'을 찾지 못했습니다"
 
 #: catgets/gencat.c:609
 msgid "malformed line ignored"
@@ -2144,11 +2255,15 @@ msgid "memory clobbered past end of allocated block"
 msgstr ""
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
-#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1438
-#: locale/programs/ld-collate.c:1467 locale/programs/locfile.c:940
-#: locale/programs/xmalloc.c:68 posix/getconf.c:181
+#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1439
+#: locale/programs/ld-collate.c:1468 locale/programs/locfile.c:940
+#: locale/programs/xmalloc.c:68 posix/getconf.c:250
 msgid "memory exhausted"
 msgstr "메모리가 바닥남"
+
+#: malloc/obstack.c:425
+msgid "memory exhausted\n"
+msgstr "메모리가 바닥남\n"
 
 #: malloc/mcheck.c:180
 msgid "memory is consistent, library is buggy"
@@ -2213,22 +2328,10 @@ msgstr ""
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr ""
 
-#: sunrpc/portmap.c:451
-msgid "portmap CALLIT: cannot fork.\n"
-msgstr ""
-
-#: sunrpc/portmap.c:94 sunrpc/portmap.c:116
-msgid "portmap cannot bind"
-msgstr ""
-
-#: sunrpc/portmap.c:86 sunrpc/portmap.c:112
-msgid "portmap cannot create socket"
-msgstr "포트맵이 소켓을 만들 수 없습니다"
-
 #: db/makedb.c:326
 #, c-format
 msgid "problems while reading `%s'"
-msgstr ""
+msgstr "`%s'를 읽는 동안 문제가 발생했음"
 
 #: sunrpc/rpcinfo.c:222 sunrpc/rpcinfo.c:350
 #, c-format
@@ -2246,19 +2349,19 @@ msgstr "프로그램 %lu 버전 %lu는 사용 불가능합니다\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "프로그램 %lu 버전 %lu는 준비되어 기다리고 있습니다\n"
 
-#: inet/rcmd.c:157
+#: inet/rcmd.c:171
 #, c-format
-msgid "rcmd: select (setting up stderr): %s\n"
-msgstr "rcmd: 선택 (표준오류 설정): %s\n"
+msgid "rcmd: select (setting up stderr): %m\n"
+msgstr "rcmd: 선택 (표준오류 설정): %m\n"
 
-#: inet/rcmd.c:87
+#: inet/rcmd.c:103
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: 모든 포트가 사용중\n"
 
-#: inet/rcmd.c:144
+#: inet/rcmd.c:159
 #, c-format
-msgid "rcmd: write (setting up stderr): %s\n"
-msgstr "rcmd: 쓰기 (표준오류 설정): %s\n"
+msgid "rcmd: write (setting up stderr): %m\n"
+msgstr "rcmd: 쓰기 (표준오류 설정): %m\n"
 
 #: sunrpc/svc_simple.c:83
 msgid "registerrpc: out of memory\n"
@@ -2296,19 +2399,15 @@ msgstr "rpcinfo: 포트매퍼에 연결할 수 없습니다"
 msgid "rpcinfo: can't contact portmapper: "
 msgstr "rpcinfo: 포트매퍼에 연결할 수 없습니다: "
 
-#: sunrpc/portmap.c:137
-msgid "run_svc returned unexpectedly\n"
-msgstr ""
-
 #: time/zic.c:708 time/zic.c:710
 msgid "same rule name in multiple files"
 msgstr ""
 
-#: inet/rcmd.c:161
+#: inet/rcmd.c:174
 msgid "select: protocol failure in circuit setup\n"
 msgstr "select: 회로 설정중 규약이 불이행됨\n"
 
-#: inet/rcmd.c:179
+#: inet/rcmd.c:192
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: 회로 설정중 규약이 불이행됨\n"
 
@@ -2316,7 +2415,7 @@ msgstr "socket: 회로 설정중 규약이 불이행됨\n"
 msgid "sorting order `forward' and `backward' are mutually exclusive"
 msgstr "정렬 순서 `forward'와 `backward'는 서로 배타적입니다"
 
-#: locale/programs/ld-collate.c:1567 locale/programs/ld-collate.c:1613
+#: locale/programs/ld-collate.c:1568 locale/programs/ld-collate.c:1614
 msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr ""
@@ -2367,35 +2466,35 @@ msgstr "svcudp_create - getsockname 불가능"
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: 소켓 생성 문제"
 
-#: locale/programs/ld-collate.c:1190
+#: locale/programs/ld-collate.c:1191
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates element "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1063
+#: locale/programs/ld-collate.c:1064
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other element "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1199
+#: locale/programs/ld-collate.c:1200
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other symbol "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1072
+#: locale/programs/ld-collate.c:1073
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbol "
 "definition"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1054 locale/programs/ld-collate.c:1181
+#: locale/programs/ld-collate.c:1055 locale/programs/ld-collate.c:1182
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbolic name "
@@ -2408,7 +2507,7 @@ msgstr ""
 #: locale/programs/charmap.c:576
 #, c-format
 msgid "syntax error in %s definition: %s"
-msgstr ""
+msgstr "%s 정의부에 문법 오류 있음: %s"
 
 #: locale/programs/locfile.c:620
 msgid "syntax error in `order_start' directive"
@@ -2432,7 +2531,7 @@ msgstr ""
 
 #: locale/programs/locfile.c:335
 msgid "syntax error in definition of LC_CTYPE category"
-msgstr ""
+msgstr "LC_CTYPE 범주의 정의부에 문법 오류 있음"
 
 #: locale/programs/locfile.c:278
 msgid "syntax error in definition of new character class"
@@ -2440,19 +2539,19 @@ msgstr ""
 
 #: locale/programs/locfile.c:288
 msgid "syntax error in definition of new character map"
-msgstr ""
+msgstr "새로운 문자 지도 정의부에 문법 오류 있음"
 
 #: locale/programs/locfile.c:873
 msgid "syntax error in message locale definition"
-msgstr ""
+msgstr "메시지 로케일 정의부에 문법 오류 있음"
 
 #: locale/programs/locfile.c:784
 msgid "syntax error in monetary locale definition"
-msgstr ""
+msgstr "화폐 로케일 정의부에 문법 오류 있음"
 
 #: locale/programs/locfile.c:811
 msgid "syntax error in numeric locale definition"
-msgstr ""
+msgstr "숫자 로케일 정의부에 문법 오류 있음"
 
 #: locale/programs/locfile.c:722
 msgid "syntax error in order specification"
@@ -2465,7 +2564,7 @@ msgstr ""
 
 #: locale/programs/locfile.c:849
 msgid "syntax error in time locale definition"
-msgstr ""
+msgstr "시간 로케일 정의부에 문법 오류 있음"
 
 #: locale/programs/locfile.c:255
 msgid "syntax error: not inside a locale definition section"
@@ -2507,7 +2606,7 @@ msgstr "지역시의 종류가 너무 많음"
 msgid "too many transitions?!"
 msgstr ""
 
-#: locale/programs/ld-collate.c:1622
+#: locale/programs/ld-collate.c:1623
 msgid "too many weights"
 msgstr ""
 
@@ -2524,13 +2623,17 @@ msgstr ""
 msgid "trouble replying to prog %d\n"
 msgstr "프로그램 %d에 응답하는 데 문제가 있음\n"
 
-#: locale/programs/ld-collate.c:1382
+#: locale/programs/ld-collate.c:1383
 msgid "two lines in a row containing `...' are not allowed"
 msgstr ""
 
 #: time/zic.c:1283
 msgid "typed single year"
 msgstr ""
+
+#: posix/getconf.c:239
+msgid "undefined"
+msgstr "정의되지 않음"
 
 #: locale/programs/charmap.c:617 locale/programs/charmap.c:628
 #, c-format
@@ -2561,8 +2664,8 @@ msgstr "알 수 없는 설정 `%s'"
 msgid "unknown signal"
 msgstr "알 수 없는 신호"
 
-#: locale/programs/ld-collate.c:1366 locale/programs/ld-collate.c:1557
-#: locale/programs/ld-collate.c:1731
+#: locale/programs/ld-collate.c:1367 locale/programs/ld-collate.c:1558
+#: locale/programs/ld-collate.c:1732
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
 msgstr "알 수 없는 기호 `%.*s': 행 무시됨"
@@ -2583,13 +2686,13 @@ msgstr "종료되지 않은 문자열"
 msgid "unterminated symbolic name"
 msgstr "종료되지 않은 기호 이름"
 
-#: locale/programs/ld-collate.c:1684
+#: locale/programs/ld-collate.c:1685
 msgid "unterminated weight name"
 msgstr ""
 
 #: locale/programs/charset.c:119
 msgid "upper limit in range is not smaller then lower limit"
-msgstr ""
+msgstr "범위의 상한은 하한보다 작지 않아야 합니다"
 
 #: time/zic.c:2025
 msgid "use of 2/29 in non leap-year"
@@ -2635,7 +2738,7 @@ msgstr ""
 msgid "values for field `%s' in category `%s' must not be zero"
 msgstr ""
 
-#: login/setutent_r.c:47
+#: login/utmp_file.c:84
 msgid "while opening UTMP file"
 msgstr "UTMP 파일을 여는 동안"
 
@@ -2674,3 +2777,15 @@ msgstr ""
 #: time/zic.c:939
 msgid "wrong number of fields on Zone line"
 msgstr ""
+
+#: nis/ypclnt.c:570
+msgid "yp_all: clnttcp_create failed"
+msgstr "yp_all: clnttcp_create 실패"
+
+#: nis/ypclnt.c:772
+msgid "yp_update: cannot convert host to netname\n"
+msgstr ""
+
+#: nis/ypclnt.c:784
+msgid "yp_update: cannot get server address\n"
+msgstr "yp_update: 서버 주소를 얻을 수 없습니다\n"

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -178,7 +178,7 @@ main (int argc, char *argv[])
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1995, 1996");
+"), "1995, 1996, 1997");
       printf (_("Written by %s.\n"), "Ulrich Drepper");
 
       exit (0);
@@ -405,7 +405,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 System's directory for character maps: %s\n\
                        locale files  : %s\n"),
 	      program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
-      fputs (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
+      fputs (gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
 	     stdout);
     }
 

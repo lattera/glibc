@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ routines	:= signal raise killpg \
 		   sigstack sigaltstack sigintr \
 		   sigsetops sigempty sigfillset sigaddset sigdelset sigismem \
 		   sigreturn \
-		   siggetmask bsd_signal
+		   siggetmask sysv_signal
 
 tests		:= tst-signal
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ian Lance Taylor (ian@airs.com).
 
@@ -36,7 +36,7 @@
 
 static int
 ftw_dir (DIR **dirs, int level, int descriptors, char *dir, size_t len,
-	 int (*func) (const char *file, struct stat *status, int flag))
+	 int (*func) (const char *file, const struct stat *status, int flag))
 {
   int got;
   struct dirent *entry;
@@ -151,7 +151,7 @@ ftw_dir (DIR **dirs, int level, int descriptors, char *dir, size_t len,
 
 int
 ftw (const char *dir,
-     int (*func) (const char *file, struct stat *status, int flag),
+     int (*func) (const char *file, const struct stat *status, int flag),
      int descriptors)
 {
   DIR **dirs;

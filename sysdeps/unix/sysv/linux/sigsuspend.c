@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <stddef.h>
 #include <unistd.h>
 
-extern int __syscall_sigsuspend (int, unsigned long, unsigned long);
+extern int __syscall_sigsuspend (int, unsigned long int, unsigned long int);
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
@@ -28,6 +28,10 @@ int
 __sigsuspend (set)
      const sigset_t *set;
 {
-  return __syscall_sigsuspend (0, 0, *set);
+  /* XXX This will have to be changed once the kernel knows about
+     larger sigsets.  */
+  unsigned long int word = set->__val[0];
+
+  return __syscall_sigsuspend (0, 0, word);
 }
 weak_alias (__sigsuspend, sigsuspend)

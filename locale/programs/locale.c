@@ -1,5 +1,5 @@
 /* locale - Implementation of the locale program according to POSIX 1003.2
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -188,7 +188,7 @@ main (int argc, char *argv[])
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1995, 1996");
+"), "1995, 1996, 1997");
       printf (_("Written by %s.\n"), "Ulrich Drepper");
 
       exit (EXIT_SUCCESS);
@@ -254,7 +254,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --category-name   write names of selected categories\n\
   -k, --keyword-name    write names of selected keywords\n"),
 	      __progname);
-      fputs (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
+      fputs (gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
 	     stdout);
     }
 

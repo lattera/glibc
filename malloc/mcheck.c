@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990,91,92,93,94,95,96 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,92,93,94,95,96,97 Free Software Foundation, Inc.
    Written May 1989 by Mike Haertel.
 
    This library is free software; you can redistribute it and/or
@@ -49,6 +49,7 @@ struct hdr
   };
 
 #if	defined(_LIBC) || defined(STDC_HEADERS) || defined(USG)
+#include <string.h>
 #define flood memset
 #else
 static void flood __P ((__ptr_t, int, __malloc_size_t));

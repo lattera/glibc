@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* BSD-like signal function.
+   Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +21,12 @@
 #include <signal.h>
 
 
+sigset_t _sigintr;		/* Set by siginterrupt.  */
+
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
 __sighandler_t
-signal (sig, handler)
+__bsd_signal (sig, handler)
      int sig;
      __sighandler_t handler;
 {
@@ -39,12 +42,12 @@ signal (sig, handler)
   act.sa_handler = handler;
   if (__sigemptyset (&act.sa_mask) < 0)
     return SIG_ERR;
-  act.sa_flags = SA_ONESHOT | SA_NOMASK | SA_INTERRUPT;
-  act.sa_flags &= ~SA_RESTART;
+  act.sa_flags = __sigismember (&_sigintr, sig) ? 0 : SA_RESTART;
   if (__sigaction (sig, &act, &oact) < 0)
     return SIG_ERR;
 
   return oact.sa_handler;
 }
-
-weak_alias (signal, ssignal)
+weak_alias (__bsd_signal, bsd_signal)
+weak_alias (__bsd_signal, signal)
+weak_alias (__bsd_signal, ssignal)

@@ -1,5 +1,5 @@
 /* makedb -- create simple DB database from textual input.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -121,7 +121,7 @@ main (argc, argv)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1996");
+"), "1996, 1997");
       printf (_("Written by %s.\n"), "Ulrich Drepper");
 
       exit (EXIT_SUCCESS);
@@ -224,7 +224,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 If INPUT-FILE is -, input is read from standard input.\n"),
 	      program_invocation_name, program_invocation_name,
 	      program_invocation_name);
-      fputs (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
+      fputs (gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
 	     stdout);
     }
 

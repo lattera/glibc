@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __sigpause (sig_or_mask, is_sig)
     {
       /* The modern X/Open implementation is requested.  */
       if (sigprocmask (0, NULL, &set) < 0
-	  /* Yes, we call `sigaddset' and not `__sigaddset'.  */
+	  /* Yes, we call `sigdelset' and not `__sigdelset'.  */
 	  || sigdelset (&set, sig_or_mask) < 0)
 	return -1;
     }
@@ -66,4 +66,5 @@ __default_sigpause (mask)
 {
   return __sigpause (mask, 0);
 }
+#undef sigpause
 weak_alias (__default_sigpause, sigpause)

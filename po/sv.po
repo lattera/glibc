@@ -56,7 +56,7 @@ msgstr "\"Zone %s\"-rad och flaggan -l är ömsesidigt uteslutande"
 #: time/zic.c:953
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
-msgstr "\"Zone %s\" rad och -p flagga är ömsesidigt uteslutande"
+msgstr "\"Zone %s\"-rad och flaggan -p är ömsesidigt uteslutande"
 
 #: time/zic.c:758
 #, c-format
@@ -66,7 +66,7 @@ msgstr "%s i zon utan regel"
 #: assert/assert.c:46
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-msgstr "%s%s%s:%u: %s%sFörsäkran \"%s\" falskt.\n"
+msgstr "%s%s%s:%u: %s%sFörsäkran \"%s\" falsk.\n"
 
 #: assert/assert-perr.c:47
 #, c-format
@@ -693,7 +693,7 @@ msgstr "Filtyp eller format olämplig"
 #. TRANS modes on an ordinary file.
 #: stdio-common/../sysdeps/gnu/errlist.c:176
 msgid "Inappropriate ioctl for device"
-msgstr "Ioctl för enhet olämplig"
+msgstr "Olämplig \"ioctl\" för enhet"
 
 #. TRANS In the GNU system, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
@@ -1902,16 +1902,16 @@ msgstr "kategoridata begärd mer än en gång: borde inte inträffa"
 #: locale/programs/ld-ctype.c:265
 #, c-format
 msgid "character %s'%s' in class `%s' must be in class `%s'"
-msgstr "tecken %s\"%s\" i klass \"%s\" måste vara i klass \"%s\""
+msgstr "tecknet %s\"%s\" i klass \"%s\" måste vara i klass \"%s\""
 
 #: locale/programs/ld-ctype.c:289
 #, c-format
 msgid "character %s'%s' in class `%s' must not be in class `%s'"
-msgstr "tecken %s\"%s\" i klass \"%s\" kan inte vara i klass \"%s\""
+msgstr "tecknet %s\"%s\" i klass \"%s\" kan inte vara i klass \"%s\""
 
 #: locale/programs/ld-ctype.c:310
 msgid "character <SP> not defined in character map"
-msgstr "tecken <SP> inte definierat i teckenuppsättning"
+msgstr "tecknet <SP> inte definierat i teckenuppsättning"
 
 #: locale/programs/ld-ctype.c:939 locale/programs/ld-ctype.c:1002
 #: locale/programs/ld-ctype.c:1010 locale/programs/ld-ctype.c:1018
@@ -1921,7 +1921,7 @@ msgstr "tecken <SP> inte definierat i teckenuppsättning"
 #: locale/programs/ld-ctype.c:1141 locale/programs/ld-ctype.c:1152
 #, c-format
 msgid "character `%s' not defined while needed as default value"
-msgstr "tecken \"%s\" inte definierad men behövs som standardvärde"
+msgstr "tecknet \"%s\" inte definierat men behövs som standardvärde"
 
 #: locale/programs/ld-ctype.c:801
 #, c-format
@@ -1992,7 +1992,7 @@ msgid ""
 "character"
 msgstr ""
 "riktningsflagga i sträng %d i \"era\"-fält i kategori \"%s\" är inte ett "
-"tecken"
+"enskilt tecken"
 
 #: locale/programs/charset.c:87 locale/programs/charset.c:132
 #, c-format
@@ -2251,7 +2251,7 @@ msgstr "ogiltigt veckodagsnamn"
 
 #: locale/programs/ld-collate.c:1412
 msgid "line after ellipsis must contain character definition"
-msgstr "rad efter ... får inte innehålla teckendefinition"
+msgstr "rad efter ... måste innehålla teckendefinition"
 
 #: locale/programs/ld-collate.c:1391
 msgid "line before ellipsis does not contain definition for character constant"
@@ -2296,12 +2296,12 @@ msgstr "minnet är konsistent, biblioteket är felaktigt"
 #: locale/programs/ld-time.c:348
 #, c-format
 msgid "missing era format in string %d in `era' field in category `%s'"
-msgstr "saknar eraformat i sträng %d i \"era\"-fält i kategori \"%s\""
+msgstr "eraformat i sträng %d i \"era\"-fält i kategori \"%s\" saknas"
 
 #: locale/programs/ld-time.c:337
 #, c-format
 msgid "missing era name in string %d in `era' fieldin category `%s'"
-msgstr "saknar eranamn i sträng %d i \"era\"-fält i kategori \"%s\""
+msgstr "eranamn i sträng %d i \"era\"-fält i kategori \"%s\" saknas"
 
 #: time/zic.c:915
 msgid "nameless rule"
@@ -2393,7 +2393,7 @@ msgstr "registerrpc: minnet slut\n"
 
 #: time/zic.c:1794
 msgid "repeated leap second moment"
-msgstr "upprepad skottsekundstillfälle"
+msgstr "upprepat skottsekundstillfälle"
 
 #: sunrpc/rpcinfo.c:659
 #, c-format
@@ -2408,7 +2408,7 @@ msgstr "rpcinfo: %s är en okänd tjänst\n"
 #: sunrpc/rpcinfo.c:600
 #, c-format
 msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-msgstr "rpcinfo: Kunde inte ta bort registrering för prog %s version %s\n"
+msgstr "rpcinfo: Kunde inte ta bort registrering av prog %s version %s\n"
 
 #: sunrpc/rpcinfo.c:576
 #, c-format
@@ -2735,17 +2735,17 @@ msgstr "använder 29/2 i icke-skottår"
 #: locale/programs/charmap.c:438 locale/programs/charmap.c:492
 #, c-format
 msgid "value for %s must be an integer"
-msgstr "värdet för %s måste vara heltal"
+msgstr "värdet på %s måste vara heltal"
 
 #: locale/programs/charmap.c:233
 #, c-format
 msgid "value for <%s> must lie between 1 and 4"
-msgstr "värde för <%s> måste vara mellan 1 och 4"
+msgstr "värde på <%s> måste vara mellan 1 och 4"
 
 #: locale/programs/ld-monetary.c:148 locale/programs/ld-numeric.c:89
 #, c-format
 msgid "value for field `%s' in category `%s' must not be the empty string"
-msgstr "värde för fält \"%s\" i kategori \"%s\" får inte vara tom sträng"
+msgstr "värde på fält \"%s\" i kategori \"%s\" får inte vara tom sträng"
 
 #: locale/programs/charmap.c:245
 msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"

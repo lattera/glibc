@@ -732,5 +732,8 @@ else
   config_makefile=Makefile
 fi
 
-AC_OUTPUT(config.make ${config_makefile} ${config_uname}, ,
+VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
+AC_SUBST(VERSION)
+
+AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
           [echo '$config_vars' >> config.make])

@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 
 #define _SYS_PTRACE_H	1
 #include <features.h>
+
+#include <asm/ptrace.h>
 
 __BEGIN_DECLS
 

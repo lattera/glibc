@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ian Lance Taylor <ian@cygnus.com>.
 
@@ -463,6 +463,14 @@ typedef struct
 #define DT_LOPROC	0x70000000	/* Start of processor-specific */
 #define DT_HIPROC	0x7fffffff	/* End of processor-specific */
 #define	DT_PROCNUM	DT_MIPS_NUM	/* Most used by any processor */
+
+/* Sun added these machine-independent extensions in the "processor-specific"
+   range.  Be compatible.  */
+#define DT_AUXILIARY    0x7ffffffd      /* Shared object to load before self */
+#define DT_FILTER       0x7fffffff      /* Shared object to get values from */
+#define DT_EXTRATAGIDX(tag)	((Elf32_Word)-((Elf32_Sword) (tag) <<1>>1)-1)
+#define DT_EXTRANUM	3
+
 
 /* Auxiliary vector.  */
 

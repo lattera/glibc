@@ -28,3 +28,15 @@ __sigpause (sig_or_mask, is_sig)
   return -1;
 }
 stub_warning (__sigpause)
+
+
+int __default_sigpause __P ((int mask));
+int
+__default_sigpause (mask)
+     int mask;
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+weak_alias (__default_sigpause, sigpause)
+stub_warning (sigpause)

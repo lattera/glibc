@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,33 +32,65 @@ _dl_map_object_deps (struct link_map *map,
       struct link_map *map;
       struct list *next;
     };
-  struct list head[1 + npreloads], *tailp, *scanp;
+  struct list head[2 + npreloads], *tailp, *scanp;
   struct list duphead, *duptailp;
-  unsigned int nlist;
   unsigned int nduplist;
-
-  /* Start the search list with one element: MAP itself.  */
-  head[0].map = map;
-
-  /* We use `l_reserved' as a mark bit to detect objects we have already
-     put in the search list and avoid adding duplicate elements later in
-     the list.  */
-  map->l_reserved = 1;
-
-  /* Add the preloaded items after MAP but before any of its dependencies.  */
-  for (nlist = 0; nlist < npreloads; ++nlist)
+  unsigned int nlist, naux, i;
+  inline void preload (struct link_map *map)
     {
       head[nlist].next = &head[nlist + 1];
-      head[nlist + 1].map = preloads[nlist];
-      preloads[nlist]->l_reserved = 1;
+      head[nlist++].map = map;
+
+      /* We use `l_reserved' as a mark bit to detect objects we have
+	 already put in the search list and avoid adding duplicate
+	 elements later in the list.  */
+      map->l_reserved = 1;
     }
 
+  naux = nlist = 0;
+
+#define AUXTAG	(DT_NUM + DT_PROCNUM + DT_EXTRATAGIDX (DT_AUXILIARY))
+
+  if (map->l_info[AUXTAG])
+    {
+      /* There is an auxiliary library specified.  We try to load it,
+	 and if we can, use its symbols in preference to our own.
+	 But if we can't load it, we just silently ignore it.
+	 XXX support multiple DT_AUXILIARYs?
+       */
+      struct link_map *aux;
+      void openaux (void)
+	{
+	  const char *strtab
+	    = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+	  aux = _dl_map_object (map, strtab + map->l_info[AUXTAG]->d_un.d_val,
+				map->l_type == lt_executable ? lt_library :
+				map->l_type, trace_mode);
+	}
+      char *errstring;
+      const char *objname;
+      if (! _dl_catch_error (&errstring, &objname, &openaux))
+	{
+	  /* The auxiliary object is actually there.  Use it
+	     as the first search element, even before MAP itself.  */
+	  preload (aux);
+	  naux = 1;
+	}
+    }
+
+  /* Start the search list with one element: MAP itself.  */
+  preload (map);
+
+  /* Add the preloaded items after MAP but before any of its dependencies.  */
+  for (i = 0; i < npreloads; ++i)
+    preload (preloads[i]);
+
   /* Terminate the lists.  */
-  head[nlist].next = NULL;
+  head[nlist - 1].next = NULL;
   duphead.next = NULL;
 
   /* Start here for adding dependencies to the list.  */
-  tailp = &head[nlist++];
+  tailp = &head[nlist - 1];
 
   /* Until now we have the same number of libraries in the normal and
      the list with duplicates.  */
@@ -104,7 +136,7 @@ _dl_map_object_deps (struct link_map *map,
 		    dep->l_reserved = 1;
 		  }
 
-		/* In any case Append DEP to the duplicates search list.  */
+		/* In any case append DEP to the duplicates search list.  */
 		duptailp->next = alloca (sizeof *duptailp);
 		duptailp = duptailp->next;
 		duptailp->map = dep;
@@ -117,6 +149,9 @@ _dl_map_object_deps (struct link_map *map,
   /* Store the search list we built in the object.  It will be used for
      searches in the scope of this object.  */
   map->l_searchlist = malloc (nlist * sizeof (struct link_map *));
+  if (map->l_searchlist == NULL)
+    _dl_signal_error (ENOMEM, map->l_name,
+		      "cannot allocate symbol search list");
   map->l_nsearchlist = nlist;
 
   nlist = 0;
@@ -130,9 +165,12 @@ _dl_map_object_deps (struct link_map *map,
     }
 
   map->l_dupsearchlist = malloc (nduplist * sizeof (struct link_map *));
+  if (map->l_dupsearchlist == NULL)
+    _dl_signal_error (ENOMEM, map->l_name,
+		      "cannot allocate symbol search list");
   map->l_ndupsearchlist = nduplist;
 
-  for (nlist = 0; nlist < npreloads + 1; ++nlist)
+  for (nlist = 0; nlist < naux + 1 + npreloads; ++nlist)
     map->l_dupsearchlist[nlist] = head[nlist].map;
   for (scanp = duphead.next; scanp; scanp = scanp->next)
     map->l_dupsearchlist[nlist++] = scanp->map;

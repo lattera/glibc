@@ -33,6 +33,7 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 
 #define _G_HAVE_PRINTF_FP 1
 #define _G_HAVE_MMAP 1
+#define _G_HAVE_LONG_DOUBLE_IO 1
 
 /* This is defined by <statbuf.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)

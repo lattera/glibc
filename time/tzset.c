@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,14 +77,20 @@ static int compute_change __P ((tz_rule *rule, int year));
 static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
-void __tzset_internal __P ((void));
+void __tzset_internal __P ((int always));
 void
-__tzset_internal ()
+__tzset_internal (always)
+     int always;
 {
+  static int is_initialized = 0;
   register const char *tz;
   register size_t l;
   unsigned short int hh, mm, ss;
   unsigned short int whichrule;
+
+  if (is_initialized && !always)
+    return;
+  is_initialized = 1;
 
   /* Examine the TZ environment variable.  */
   tz = getenv ("TZ");
@@ -375,7 +381,7 @@ size_t __tzname_cur_max;
 long int
 __tzname_max ()
 {
-  __tzset_internal ();
+  __tzset_internal (0);
 
   return __tzname_cur_max;
 }
@@ -473,7 +479,7 @@ __tz_compute (timer, tm)
      time_t timer;
      const struct tm *tm;
 {
-  __tzset_internal ();
+  __tzset_internal (0);
 
   if (! compute_change (&tz_rules[0], 1900 + tm->tm_year) ||
       ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
@@ -510,7 +516,7 @@ __tzset (void)
 {
   __libc_lock_lock (__tzset_lock);
 
-  __tzset_internal ();
+  __tzset_internal (1);
 
   if (!__use_tzfile)
     {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,10 +24,39 @@
 #define	__need_time_t
 #include <time.h>
 
-/* Get needed constants.  */
-#include <linux/acct.h>
 
 __BEGIN_DECLS
+
+#define ACCT_COMM 16
+
+struct acct
+  {
+    char ac_comm[ACCT_COMM];		/* Accounting command name.  */
+    time_t ac_utime;			/* Accounting user time.  */
+    time_t ac_stime;			/* Accounting system time.  */
+    time_t ac_etime;			/* Accounting elapsed time.  */
+    time_t ac_btime;			/* Beginning time.  */
+    unsigned short int ac_uid;		/* Accounting user ID.  */
+    unsigned short int ac_gid;		/* Accounting group ID.  */
+    unsigned short int ac_tty;		/* Controlling tty.  */
+    /* Please note that the value of the `ac_tty' field, a device number,
+       is encoded differently in the kernel and for the libc dev_t type.  */
+    char ac_flag;			/* Accounting flag.  */
+    long int ac_minflt;			/* Accounting minor pagefaults.  */
+    long int ac_majflt;			/* Accounting major pagefaults.  */
+    long int ac_exitcode;		/* Accounting process exitcode.  */
+  };
+
+enum
+  {
+    AFORK = 0001,		/* Has executed fork, but no exec.  */
+    ASU = 0002,			/* Used super-user privileges.  */
+    ACORE = 0004,		/* Dumped core.  */
+    AXSIG = 0010		/* Killed by a signal.  */
+  };
+
+#define AHZ     100
+
 
 /* Switch process accounting on and off.  */
 extern int acct __P ((__const char *__filename));

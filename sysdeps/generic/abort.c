@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,12 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 /* Try to get a machine dependent instruction which will make the
    program crash.  This is used in case everything else fails.  */
-#include "abort-instr.h"
+#include <abort-instr.h>
 #ifndef ABORT_INSTRUCTION
 /* No such instruction is available.  */
 # define ABORT_INSTRUCTION
@@ -46,7 +47,7 @@ abort (void)
   sigset_t sigs;
 
   /* First acquire the lock.  */
-  __libc_lock_lock (lock);
+  __libc_lock_lock_recursive (lock);
 
   /* Now it's for sure we are alone.  But recursive calls are possible.  */
 
@@ -70,8 +71,19 @@ abort (void)
   /* Send signal which possibly calls a user handler.  */
   if (stage == 2)
     {
-      ++stage;
+      /* This stage is special: we must allow repeated calls of
+	 `abort' when a user defined handler for SIGABRT is installed.
+	 This is risky since the `raise' implementation might also
+	 fail but I don't see another possiblity.  */
+      int save_stage = stage;
+
+      stage = 0;
+      __libc_lock_unlock_recursive (lock);
+
       raise (SIGABRT);
+
+      __libc_lock_lock_recursive (lock);
+      stage = save_stage + 1;
     }
 
   /* There was a handler installed.  Now remove it.  */

@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,8 +97,11 @@ struct link_map
     const char *l_libname;	/* Name requested (before search).  */
     /* Indexed pointers to dynamic section.
        [0,DT_NUM) are indexed by the processor-independent tags.
-       [DT_NUM,DT_NUM+DT_PROCNUM] are indexed by the tag minus DT_LOPROC.  */
-    ElfW(Dyn) *l_info[DT_NUM + DT_PROCNUM];
+       [DT_NUM,DT_NUM+DT_PROCNUM) are indexed by the tag minus DT_LOPROC.
+       [DT_NUM+DT_PROCNUM,DT_NUM+DT_PROCNUM+DT_EXTRANUM) are indexed
+       by DT_EXTRATAGIDX(tagvalue) (see <elf.h>).  */
+
+    ElfW(Dyn) *l_info[DT_NUM + DT_PROCNUM + DT_EXTRANUM];
     const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
     ElfW(Addr) l_entry;		/* Entry point location.  */
     ElfW(Half) l_phnum;		/* Number of program header entries.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <malloc.h>
+#include <mcheck.h>
 
 /* Prints the time in the form "hh:mm ?M", where ? is A or P.
    A simple test for strftime().  */
 int
-main (int argc, char **argv)
+main (int argc, char *argv[])
 {
   char buf[20];
   time_t t;
@@ -32,14 +33,13 @@ main (int argc, char **argv)
   mcheck (NULL);
 
   if (argc != 1)
-    fprintf(stderr, "Usage: %s\n", argv[0]);
+    fprintf (stderr, "Usage: %s\n", argv[0]);
 
-  t = time((time_t *) NULL);
-  if (strftime(buf, sizeof(buf), "%I:%M %p", localtime(&t)) == 0)
-    exit(EXIT_FAILURE);
+  t = time ((time_t *) NULL);
+  if (strftime (buf, sizeof (buf), "%I:%M %p", localtime (&t)) == 0)
+    exit (EXIT_FAILURE);
 
-  puts(buf);
+  puts (buf);
 
-  exit(EXIT_SUCCESS);
   return EXIT_SUCCESS;
 }

@@ -1,5 +1,5 @@
 /* Inline functions for dynamic linking.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,12 @@
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
 static inline void __attribute__ ((unused))
-elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Dyn) *info[DT_NUM + DT_PROCNUM])
+elf_get_dynamic_info (ElfW(Dyn) *dyn,
+		      ElfW(Dyn) *info[DT_NUM + DT_PROCNUM + DT_EXTRANUM])
 {
   unsigned int i;
 
-  for (i = 0; i < DT_NUM + DT_PROCNUM; ++i)
+  for (i = 0; i < DT_NUM + DT_PROCNUM + DT_EXTRANUM; ++i)
     info[i] = NULL;
 
   if (! dyn)
@@ -42,6 +43,8 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Dyn) *info[DT_NUM + DT_PROCNUM])
       else if (dyn->d_tag >= DT_LOPROC &&
 	       dyn->d_tag < DT_LOPROC + DT_PROCNUM)
 	info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
+      else if ((Elf32_Word) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
+	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_PROCNUM] = dyn;
       else
 	assert (! "bad dynamic tag");
       dyn++;

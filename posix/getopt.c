@@ -3,7 +3,7 @@
    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu
    before changing it!
 
-   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 1996
+   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97
    	Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -249,11 +249,30 @@ extern int strlen (const char *);
 static int first_nonopt;
 static int last_nonopt;
 
+#ifdef _LIBC
 /* Bash 2.0 gives us an environment variable containing flags
    indicating ARGV elements that should not be considered arguments.  */
 
 static const char *nonoption_flags;
 static int nonoption_flags_len;
+
+static int original_argc;
+static char *const *original_argv;
+
+/* Make sure the environment variable bash 2.0 puts in the environment
+   is valid for the getopt call we must make sure that the ARGV passed
+   to getopt is that one passed to the process.  */
+static void store_args (int argc, char *const *argv) __attribute__ ((unused));
+static void
+store_args (int argc, char *const *argv)
+{
+  /* XXX This is no good solution.  We should rather copy the args so
+     that we can compare them later.  But we must not use malloc(3).  */
+  original_argc = argc;
+  original_argv = argv;
+}
+text_set_element (__libc_subinit, store_args);
+#endif
 
 /* Exchange two adjacent subsequences of ARGV.
    One subsequence is elements [first_nonopt,last_nonopt)
@@ -327,10 +346,12 @@ exchange (argv)
 /* Initialize the internal data when the first call is made.  */
 
 #if defined (__STDC__) && __STDC__
-static const char *_getopt_initialize (const char *);
+static const char *_getopt_initialize (int, char *const *, const char *);
 #endif
 static const char *
-_getopt_initialize (optstring)
+_getopt_initialize (argc, argv, optstring)
+     int argc;
+     char *const *argv;
      const char *optstring;
 {
   /* Start processing options with ARGV-element 1 (since ARGV-element 0
@@ -360,7 +381,9 @@ _getopt_initialize (optstring)
   else
     ordering = PERMUTE;
 
-  if (posixly_correct == NULL)
+#ifdef _LIBC
+  if (posixly_correct == NULL
+      && argc == original_argc && argv == original_argv)
     {
       /* Bash 2.0 puts a special variable in the environment for each
 	 command it runs, specifying which ARGV elements are the results of
@@ -374,6 +397,9 @@ _getopt_initialize (optstring)
       else
 	nonoption_flags_len = strlen (nonoption_flags);
     }
+  else
+    nonoption_flags_len = 0;
+#endif
 
   return optstring;
 }
@@ -445,19 +471,24 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 {
   optarg = NULL;
 
-  if (!__getopt_initialized)
+  if (!__getopt_initialized || optind == 0)
     {
-      optstring = _getopt_initialize (optstring);
+      optstring = _getopt_initialize (argc, argv, optstring);
       optind = 1;		/* Don't scan ARGV[0], the program name.  */
       __getopt_initialized = 1;
     }
 
   /* Test whether ARGV[optind] points to a non-option argument.
      Either it does not have option syntax, or there is an environment flag
-     from the shell indicating it is not an option.  */
+     from the shell indicating it is not an option.  The later information
+     is only used when the used in the GNU libc.  */
+#ifdef _LIBC
 #define NONOPTION_P (argv[optind][0] != '-' || argv[optind][1] == '\0'	      \
 		     || (optind < nonoption_flags_len			      \
 			 && nonoption_flags[optind] == '1'))
+#else
+#define NONOPTION_P (argv[optind][0] != '-' || argv[optind][1] == '\0')
+#endif
 
   if (nextchar == NULL || *nextchar == '\0')
     {

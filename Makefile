@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,7 @@ endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
+config.status: configure version.h; $(SHELL) ./config.status --recheck
 
 include Makeconfig
 
@@ -94,6 +95,7 @@ install-others = $(includedir)/gnu/stubs.h
 ifeq (yes,$(build-shared))
 install-others += $(includedir)/gnu/lib-names.h
 endif
+install-bin = glibcbug
 
 ifeq (yes,$(gnu-ld))
 libc-init = set-init
@@ -205,6 +207,11 @@ $(includedir)/gnu/lib-names.h: $(common-objpfx)soversions.mk
 	else $(INSTALL_DATA) $(objpfx)lib-names.h $@; fi
 	rm -f $(objpfx)lib-names.h
 endif
+
+# The `glibcbug' script contains the version number and it shall be rebuild
+# whenever this changes or the `glibcbug.in' file.
+glibcbug: glibcbug.in config.status
+	CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
 # This makes the Info or DVI file of the documentation from the Texinfo source.
 .PHONY: info dvi

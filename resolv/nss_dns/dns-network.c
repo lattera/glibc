@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -99,12 +99,12 @@ typedef union querybuf
 /* Prototypes for local functions.  */
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    struct netent *result, char *buffer,
-				    int buflen, lookup_method net_i);
+				    size_t buflen, lookup_method net_i);
 
 
 enum nss_status
 _nss_dns_getnetbyname_r (const char *name, struct netent *result,
-			 char *buffer, int buflen)
+			 char *buffer, size_t buflen)
 {
   /* Return entry for network with NAME.  */
   querybuf net_buffer;
@@ -127,7 +127,7 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
 
 enum nss_status
 _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
-			 char *buffer, int buflen)
+			 char *buffer, size_t buflen)
 {
   /* Return entry for network with NAME.  */
   enum nss_status status;
@@ -196,7 +196,7 @@ _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
 
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, struct netent *result,
-	     char *buffer, int buflen, lookup_method net_i)
+	     char *buffer, size_t buflen, lookup_method net_i)
 {
   /*
    * Find first satisfactory answer

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -333,6 +333,9 @@ extern int dup2 __P ((int __fd, int __fd2));
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
+#ifdef __USE_GNU
+extern char **environ;
+#endif
 
 
 /* Replace the current process, executing PATH with arguments ARGV and

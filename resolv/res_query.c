@@ -340,7 +340,8 @@ res_querydomain(name, domain, class, type, answer, anslen)
 		 * copy without '.' if present.
 		 */
 		n = strlen(name) - 1;
-		if (n != (0 - 1) && name[n] == '.' && n < sizeof(nbuf) - 1) {
+		if (n != (0 - 1) && name[n] == '.'
+		    && n < (int) (sizeof(nbuf) - 1)) {
 			bcopy(name, nbuf, n);
 			nbuf[n] = '\0';
 		} else

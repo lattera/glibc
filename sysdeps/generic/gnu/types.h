@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,17 +29,17 @@ typedef unsigned long __u_long;
 #ifdef __GNUC__
 typedef unsigned long long int __u_quad_t;
 typedef long long int __quad_t;
-typedef __quad_t *__qaddr_t;
 #else
 typedef struct
 {
-  long val[2];
+  long __val[2];
 } __quad_t;
 typedef struct
 {
-  __u_long val[2];
+  __u_long __val[2];
 } __u_quad_t;
 #endif
+typedef __quad_t *__qaddr_t;
 typedef int __dev_t;		/* Type of device numbers.  */
 typedef unsigned int __uid_t;	/* Type of user identifications.  */
 typedef unsigned int __gid_t;	/* Type of group identifications.  */
@@ -72,17 +72,10 @@ typedef long int __key_t;	/* Type of an IPC key */
 
 typedef struct
   {
-    /* Some braindead old software uses this member name.  */
+    /* XPG4.2 requires this member name.  */
     unsigned long int fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
   } __fd_set;
 
-typedef unsigned long __fd_mask;
-
-/* This line MUST be split!  Otherwise m4 will not change it.  */
-#define	__FD_ZERO(set)	\
-  ((void) memset ((__ptr_t) (set), 0, sizeof (fd_set)))
-#define	__FD_SET(d, set)	((set)->fds_bits[__FDELT(d)] |= __FDMASK(d))
-#define	__FD_CLR(d, set)	((set)->fds_bits[__FDELT(d)] &= ~__FDMASK(d))
-#define	__FD_ISSET(d, set)	((set)->fds_bits[__FDELT(d)] & __FDMASK(d))
+typedef unsigned long int __fd_mask;
 
 #endif /* gnu/types.h */

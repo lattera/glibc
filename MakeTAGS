@@ -147,14 +147,7 @@ else
 	$(extract)
 endif
 
-#$P/siglist.pot: $(common-objpfx)stdio-common/siglist.c; $(extract)
-$P/siglist.pot: siglist.c; $(extract)
-
-# Extract all strings from this file; its strings are not marked.
-# Their surroundings are also not interesting.
-XGETTEXTFLAGS-siglist.pot = -a --no-location
-
-all-pot = $P/libc-top.pot $P/subdirs.pot $P/siglist.pot
+all-pot = $P/libc-top.pot $P/subdirs.pot
 
 ifndef subdir
 # Collect all the subdir messages, massaging the file names in comments

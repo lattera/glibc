@@ -1894,6 +1894,9 @@ else
   config_makefile=Makefile
 fi
 
+VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
+
+
 trap '' 1 2 15
 cat > confcache <<\EOF
 # This file is a shell script that caches the results of configure
@@ -1995,7 +1998,7 @@ done
 ac_given_srcdir=$srcdir
 ac_given_INSTALL="$INSTALL"
 
-trap 'rm -fr `echo "config.make ${config_makefile} ${config_uname} config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+trap 'rm -fr `echo "config.make glibcbug ${config_makefile} ${config_uname} config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -2067,6 +2070,7 @@ s%@shared@%$shared%g
 s%@profile@%$profile%g
 s%@omitfp@%$omitfp%g
 s%@DEFINES@%$DEFINES%g
+s%@VERSION@%$VERSION%g
 
 CEOF
 EOF
@@ -2108,7 +2112,7 @@ EOF
 
 cat >> $CONFIG_STATUS <<EOF
 
-CONFIG_FILES=\${CONFIG_FILES-"config.make ${config_makefile} ${config_uname}"}
+CONFIG_FILES=\${CONFIG_FILES-"config.make glibcbug ${config_makefile} ${config_uname}"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then

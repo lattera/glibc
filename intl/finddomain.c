@@ -1,5 +1,5 @@
 /* finddomain.c -- handle list of needed message catalogs
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -63,18 +63,6 @@ void free ();
 #endif
 
 /* @@ end of prolog @@ */
-
-#ifdef _LIBC
-/* Rename the non ANSI C functions.  This is required by the standard
-   because some ANSI C functions will require linking with this object
-   file and the name space must not be polluted.  */
-# define stpcpy(dest, src) __stpcpy(dest, src)
-#else
-# ifndef HAVE_STPCPY
-static char *stpcpy PARAMS ((char *dest, const char *src));
-# endif
-#endif
-
 /* List of already loaded domains.  */
 static struct loaded_l10nfile *_nl_loaded_domains;
 
@@ -200,21 +188,3 @@ _nl_find_domain (dirname, locale, domainname)
 
   return retval;
 }
-
-/* @@ begin of epilog @@ */
-
-/* We don't want libintl.a to depend on any other library.  So we
-   avoid the non-standard function stpcpy.  In GNU C Library this
-   function is available, though.  Also allow the symbol HAVE_STPCPY
-   to be defined.  */
-#if !_LIBC && !HAVE_STPCPY
-static char *
-stpcpy (dest, src)
-     char *dest;
-     const char *src;
-{
-  while ((*dest++ = *src++) != '\0')
-    /* Do nothing. */ ;
-  return dest - 1;
-}
-#endif

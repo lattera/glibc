@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -95,7 +95,7 @@
 /* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
 #if defined _BSD_SOURCE && \
     !(defined _POSIX_SOURCE || defined _POSIX_C_SOURCE || \
-      defined _XOPEN_SOURCE || defined _XOPEN_SOURCE_DEFINED || \
+      defined _XOPEN_SOURCE || defined _XOPEN_SOURCE_EXTENDED || \
       defined _GNU_SOURCE || defined _SVID_SOURCE)
 # define __FAVOR_BSD	1
 #endif

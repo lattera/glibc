@@ -1,5 +1,5 @@
 /* Convert `time_t' to `struct tm' in local time zone.
-   Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 struct tm _tmbuf;
 
 /* Prototype for the internal function to get information based on TZ.  */
-extern void __tzset_internal __P ((void));
+extern void __tzset_internal __P ((int always));
 extern int __tz_compute __P ((time_t timer, struct tm *tp));
 extern int __tzfile_compute __P ((time_t timer,
 				  long int *leap_correct, int *leap_hit));
@@ -90,8 +90,8 @@ localtime (timer)
 
   __libc_lock_lock (__tzset_lock);
 
-  /* Make sure the database is initialized.  */
-  __tzset_internal ();
+  /* Update internal database according to current TZ setting.  */
+  __tzset_internal (1);
 
   result = localtime_internal (timer, &_tmbuf);
 
@@ -109,6 +109,9 @@ __localtime_r (timer, tp)
   struct tm *result;
 
   __libc_lock_lock (__tzset_lock);
+
+  /* Make sure the database is initialized.  */
+  __tzset_internal (0);
 
   result = localtime_internal (timer, tp);
 

@@ -1,21 +1,21 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -170,7 +170,7 @@ main (int argc, char *argv[])
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1996");
+"), "1996, 1997");
       printf (_("Written by %s.\n"), "Ulrich Drepper");
 
       exit (EXIT_SUCCESS);
@@ -221,7 +221,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n\
 is -, output is written to standard output.\n"),
 	      program_invocation_name, program_invocation_name);
-      fputs (gettext ("Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
+      fputs (gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
 	     stdout);
     }
 
@@ -270,7 +271,7 @@ read_input_file (struct catalog *current, const char *fname)
       current->last_set = 0;
       current->current_set = find_set (current, NL_SETD);
 
-#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
       obstack_init (&current->mem_pool);
     }

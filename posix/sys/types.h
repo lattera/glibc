@@ -59,7 +59,7 @@ typedef __daddr_t daddr_t;
 typedef __caddr_t caddr_t;
 #endif
 
-#ifdef  __USE_SVID
+#if defined __USE_SVID || defined __USE_XOPEN
 typedef __key_t key_t;
 #endif
 

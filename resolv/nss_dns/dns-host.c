@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -119,12 +119,12 @@ typedef union querybuf
 
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    const char *qname, int qtype,
-				    struct hostent *result,
-				    char *buffer, int buflen, int *h_errnop);
+				    struct hostent *result, char *buffer,
+				    size_t buflen, int *h_errnop);
 
 enum nss_status
 _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
-			   char *buffer, int buflen, int *h_errnop)
+			   char *buffer, size_t buflen, int *h_errnop)
 {
   struct host_data
   {
@@ -253,7 +253,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 
 enum nss_status
 _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
-			  char *buffer, int buflen, int *h_errnop)
+			  char *buffer, size_t buflen, int *h_errnop)
 {
   enum nss_status status = NSS_STATUS_NOTFOUND;
 
@@ -270,7 +270,7 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
 
 enum nss_status
 _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
-			  struct hostent *result, char *buffer, int buflen,
+			  struct hostent *result, char *buffer, size_t buflen,
 			  int *h_errnop)
 {
   static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
@@ -368,7 +368,8 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
 
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
-	     struct hostent *result, char *buffer, int buflen, int *h_errnop)
+	     struct hostent *result, char *buffer, size_t buflen,
+	     int *h_errnop)
 {
   struct host_data
   {
