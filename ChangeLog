@@ -1,3 +1,7 @@
+2001-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/Makefile (distribute): Add fd_to_filename.h.
+
 2001-04-05  David S. Miller  <davem@redhat.com>
 
 	Add hp-timing support for sparcv9/sparc64 targets.

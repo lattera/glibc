@@ -812,16 +812,14 @@ otherwise the character @var{wc} is returned.
 @comment POSIX
 @deftypefun int fputc_unlocked (int @var{c}, FILE *@var{stream})
 The @code{fputc_unlocked} function is equivalent to the @code{fputc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 @end deftypefun
 
 @comment wchar.h
 @comment POSIX
 @deftypefun wint_t fputwc_unlocked (wint_t @var{wc}, FILE *@var{stream})
 The @code{fputwc_unlocked} function is equivalent to the @code{fputwc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -850,16 +848,14 @@ use for writing a single wide character.
 @comment POSIX
 @deftypefun int putc_unlocked (int @var{c}, FILE *@var{stream})
 The @code{putc_unlocked} function is equivalent to the @code{putc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 @end deftypefun
 
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t putwc_unlocked (wchar_t @var{wc}, FILE *@var{stream})
 The @code{putwc_unlocked} function is equivalent to the @code{putwc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -882,16 +878,14 @@ The @code{putwchar} function is equivalent to @code{putwc} with
 @comment POSIX
 @deftypefun int putchar_unlocked (int @var{c})
 The @code{putchar_unlocked} function is equivalent to the @code{putchar}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 @end deftypefun
 
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t putwchar_unlocked (wchar_t @var{wc})
 The @code{putwchar_unlocked} function is equivalent to the @code{putwchar}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -935,8 +929,7 @@ a non-negative value.
 @comment GNU
 @deftypefun int fputs_unlocked (const char *@var{s}, FILE *@var{stream})
 The @code{fputs_unlocked} function is equivalent to the @code{fputs}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -945,8 +938,7 @@ This function is a GNU extension.
 @comment GNU
 @deftypefun int fputws_unlocked (const wchar_t *@var{ws}, FILE *@var{stream})
 The @code{fputws_unlocked} function is equivalent to the @code{fputws}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -1023,16 +1015,14 @@ occurs, @code{WEOF} is returned instead.
 @comment POSIX
 @deftypefun int fgetc_unlocked (FILE *@var{stream})
 The @code{fgetc_unlocked} function is equivalent to the @code{fgetc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 @end deftypefun
 
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t fgetwc_unlocked (FILE *@var{stream})
 The @code{fgetwc_unlocked} function is equivalent to the @code{fgetwc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -1060,16 +1050,14 @@ best function to use to read a single wide character.
 @comment POSIX
 @deftypefun int getc_unlocked (FILE *@var{stream})
 The @code{getc_unlocked} function is equivalent to the @code{getc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 @end deftypefun
 
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t getwc_unlocked (FILE *@var{stream})
 The @code{getwc_unlocked} function is equivalent to the @code{getwc}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -1092,16 +1080,14 @@ as the value of the @var{stream} argument.
 @comment POSIX
 @deftypefun int getchar_unlocked (void)
 The @code{getchar_unlocked} function is equivalent to the @code{getchar}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 @end deftypefun
 
 @comment wchar.h
 @comment GNU
 @deftypefun wint_t getwchar_unlocked (void)
 The @code{getwchar_unlocked} function is equivalent to the @code{getwchar}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -1278,8 +1264,7 @@ message.
 @comment GNU
 @deftypefun {char *} fgets_unlocked (char *@var{s}, int @var{count}, FILE *@var{stream})
 The @code{fgets_unlocked} function is equivalent to the @code{fgets}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -1288,8 +1273,7 @@ This function is a GNU extension.
 @comment GNU
 @deftypefun {wchar_t *} fgetws_unlocked (wchar_t *@var{ws}, int @var{count}, FILE *@var{stream})
 The @code{fgetws_unlocked} function is equivalent to the @code{fgetws}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -1497,8 +1481,7 @@ object.  Therefore, the stream remains at the actual end of the file.
 @comment GNU
 @deftypefun size_t fread_unlocked (void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
 The @code{fread_unlocked} function is equivalent to the @code{fread}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -1516,8 +1499,7 @@ some sort of error, such as running out of space.
 @comment GNU
 @deftypefun size_t fwrite_unlocked (const void *@var{data}, size_t @var{size}, size_t @var{count}, FILE *@var{stream})
 The @code{fwrite_unlocked} function is equivalent to the @code{fwrite}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -3966,8 +3948,7 @@ This symbol is declared in @file{stdio.h}.
 @comment GNU
 @deftypefun int feof_unlocked (FILE *@var{stream})
 The @code{feof_unlocked} function is equivalent to the @code{feof}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 
@@ -3988,8 +3969,7 @@ This symbol is declared in @file{stdio.h}.
 @comment GNU
 @deftypefun int ferror_unlocked (FILE *@var{stream})
 The @code{ferror_unlocked} function is equivalent to the @code{ferror}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 
@@ -4026,8 +4006,7 @@ end-of-file indicator for the stream.
 @comment GNU
 @deftypefun void clearerr_unlocked (FILE *@var{stream})
 The @code{clearerr_unlocked} function is equivalent to the @code{clearerr}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 
 This function is a GNU extension.
 @end deftypefun
@@ -4564,8 +4543,7 @@ otherwise.
 @comment POSIX
 @deftypefun int fflush_unlocked (FILE *@var{stream})
 The @code{fflush_unlocked} function is equivalent to the @code{fflush}
-function except that it does not implicitly lock the stream if the state
-is @code{FSETLOCKING_INTERNAL}.
+function except that it does not implicitly lock the stream.
 @end deftypefun
 
 The @code{fflush} function can be used to flush all streams currently

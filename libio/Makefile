@@ -93,7 +93,8 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 		       oldiofgetpos oldiofgetpos64 oldiofsetpos		\
 		       oldiofsetpos64
 
-distribute := iolibio.h libioP.h strfile.h Banner test-freopen.sh
+distribute := iolibio.h libioP.h strfile.h Banner test-freopen.sh \
+	      fd_to_filename.h
 
 include ../Rules
 
