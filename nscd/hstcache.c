@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -30,12 +30,10 @@
 #include <unistd.h>
 #include <libintl.h>
 #include <arpa/inet.h>
+#include <arpa/nameser.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
-
-/* Get implementation for some internal functions.  */
-#include "../resolv/mapv4v6addr.h"
 
 
 /* This is the standard reply in case the service is disabled.  */
@@ -160,8 +158,8 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 		+ h_name_len
 		+ h_aliases_cnt * sizeof (size_t)
 		+ h_addr_list_cnt * (hst->h_length
-				     + (hst->h_length == INADDRSZ
-					? IN6ADDRSZ : 0)));
+				     + (hst->h_length == NS_INADDRSZ
+					? NS_IN6ADDRSZ : 0)));
 
       data = (struct hostdata *) malloc (total + req->key_len);
       if (data == NULL)
@@ -186,14 +184,6 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
 	cp = mempcpy (cp, hst->h_addr_list[cnt], hst->h_length);
 
-      /* And the generated IPv6 addresses if necessary.  */
-      if (hst->h_length == INADDRSZ)
-	{
-	  /* Generate the IPv6 addresses.  */
-	  for (cnt = 0; cnt < h_addr_list_cnt; cp += IN6ADDRSZ, ++cnt)
-	    map_v4v6_address (hst->h_addr_list[cnt], cp);
-	}
-
       /* Then the aliases.  */
       aliases = cp;
       for (cnt = 0; cnt < h_aliases_cnt; ++cnt)
@@ -214,7 +204,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	 unnecessarily let the receiver wait.  */
       written = write (fd, data, total);
 
-      addr_list_type = (hst->h_length == INADDRSZ
+      addr_list_type = (hst->h_length == NS_INADDRSZ
 			? GETHOSTBYADDR : GETHOSTBYADDRv6);
 
       /* Compute the timeout time.  */
@@ -349,7 +339,7 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (__gethostbyaddr_r (key, INADDRSZ, AF_INET, &resultbuf, buffer,
+  while (__gethostbyaddr_r (key, NS_INADDRSZ, AF_INET, &resultbuf, buffer,
   			    buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
@@ -438,7 +428,7 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (__gethostbyaddr_r (key, IN6ADDRSZ, AF_INET6, &resultbuf,
+  while (__gethostbyaddr_r (key, NS_IN6ADDRSZ, AF_INET6, &resultbuf,
   			    buffer, buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)

@@ -69,7 +69,7 @@ const char *serv2str[LASTREQ] =
 static struct database dbs[lastdb] =
 {
   [pwddb] = {
-    lock: PTHREAD_RWLOCK_INITIALIZER,
+    lock: PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     enabled: 0,
     check_file: 1,
     filename: "/etc/passwd",
@@ -79,7 +79,7 @@ static struct database dbs[lastdb] =
     negtimeout: 20
   },
   [grpdb] = {
-    lock: PTHREAD_RWLOCK_INITIALIZER,
+    lock: PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     enabled: 0,
     check_file: 1,
     filename: "/etc/group",
@@ -89,7 +89,7 @@ static struct database dbs[lastdb] =
     negtimeout: 60
   },
   [hstdb] = {
-    lock: PTHREAD_RWLOCK_INITIALIZER,
+    lock: PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     enabled: 0,
     check_file: 1,
     filename: "/etc/hosts",
@@ -461,11 +461,11 @@ nscd_run (void *p)
 #endif
 
 	  /* It should not be possible to crash the nscd with a silly
-	     request (i.e., a terribly large key.  We limit the size
+	     request (i.e., a terribly large key).  We limit the size
 	     to 1kb.  */
 	  if (req.key_len < 0 || req.key_len > 1024)
 	    {
-	      dbg_log (_("key length in request too long: %Zd"), req.key_len);
+	      dbg_log (_("key length in request too long: %zd"), req.key_len);
 	      close (fd);
 	      continue;
 	    }
@@ -504,7 +504,7 @@ nscd_run (void *p)
 void
 start_threads (void)
 {
-  long i;
+  long int i;
   pthread_attr_t attr;
   pthread_t th;
 

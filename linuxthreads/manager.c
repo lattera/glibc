@@ -315,8 +315,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       else
         {
           /* Put a bad page at the bottom of the stack */
-          guardaddr = (void *)new_thread_bottom - stacksize;
           guardsize = attr->__guardsize;
+	  guardaddr = (void *)new_thread_bottom - guardsize;
           if (mmap ((caddr_t) guardaddr, guardsize, 0, MAP_FIXED, -1, 0)
               == MAP_FAILED)
             {
@@ -512,7 +512,7 @@ static void pthread_free(pthread_descr th)
   /* One fewer threads in __pthread_handles */
   __pthread_handles_num--;
 
-  /* Destroy read lock list, and list of free read lock structures. 
+  /* Destroy read lock list, and list of free read lock structures.
      If the former is not empty, it means the thread exited while
      holding read locks! */
 

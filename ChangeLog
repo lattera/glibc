@@ -1,5 +1,12 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/connections.c (dbs): Use
+	PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP for .lock.
+	Pretty printing.
+
+	* nscd/hstcache.c (cache_addhst): Don't automatically add IPv6
+	address.  Suggested by Philip Blundell.
+
 	* posix/TESTS: Fix expected result for test cases with * with no
 	leading expression.
 
