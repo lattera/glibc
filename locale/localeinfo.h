@@ -107,7 +107,14 @@ struct era_entry
   int32_t offset;
   int32_t start_date[3];
   int32_t stop_date[3];
-  const char name_fmt[0];
+  const char *era_name;
+  const char *era_format;
+  const wchar_t *era_wname;
+  const wchar_t *era_wformat;
+  int absolute_direction;
+  /* absolute direction:
+     +1 indicates that year number is higher in the future. (like A.D.)
+     -1 indicates that year number is higher in the past. (like B.C.)  */
 };
 
 
@@ -160,17 +167,14 @@ extern void _nl_unload_locale (struct locale_data *locale);
 extern void _nl_remove_locale (int locale, struct locale_data *data);
 
 
+/* initialize `era' entries */
+extern void _nl_init_era_entries (void);
+
 /* Return `era' entry which corresponds to TP.  Used in strftime.  */
 extern struct era_entry *_nl_get_era_entry (const struct tm *tp);
 
-/* Return `era' string of the cnt'th `category' entry.  */
-extern const void *_nl_get_era_nf_entry (int cnt, int category);
-
-/* Return a offset of `era' year of the cnt'th entry.  */
-extern int _nl_get_era_year_offset (int cnt, int category);
-
-/* Return a start of `era' year of the cnt'th entry.  */
-extern int _nl_get_era_year_start (int cnt);
+/* Return `era' cnt'th entry .  Used in strptime.  */
+extern struct era_entry *_nl_select_era_entry (int cnt);
 
 /* Return `alt_digit' which corresponds to NUMBER.  Used in strftime.  */
 extern const char *_nl_get_alt_digit (unsigned int number);

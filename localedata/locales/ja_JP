@@ -3,8 +3,8 @@ comment_char  %
 repertoiremap mnemonic.ja
 
 % Name:    localedef for ja_JP
-% Version: 0.6
-% Date:    1999-11-28
+% Version: 0.7
+% Date:    1999-12-05
 % Write:   HANATAKA, Shinya <hanataka@abyss.rim.or.jp>
 
 LC_CTYPE
@@ -76,7 +76,7 @@ cntrl	<alert>;<backspace>;<tab>;<newline>;<vertical-tab>;/
 	<NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;<SO>;<SI>;/
 	<DLE>;<DC1>;<DC2>;<DC3>;<DC4>;<NAK>;<SYN>;<ETB>;<CAN>;/
 	<EM>;<SUB>;<ESC>;<IS4>;<IS3>;<IS2>;<IS1>;<DEL>;/
-	<PBH>;<HOP>;<BPH>;<NBH>;<IND>;<NEL>;<SSA>;<ESA>;<HTS>;<HTJ>;/
+	<PAD>;<HOP>;<BPH>;<NBH>;<IND>;<NEL>;<SSA>;<ESA>;<HTS>;<HTJ>;/
 	<VTS>;<PLD>;<PLU>;<RI>;<DCS>;<PU1>;<PU2>;<STS>;<CCH>;<MW>;/
 	<SPA>;<EPA>;<SOS>;<SGCI>;<SCI>;<CSI>;<ST>;<OSC>;<PM>;<APC>
 
@@ -1652,7 +1652,7 @@ era	"+:2:1990//01//01:+*:<j4231><j3214>:%EC%Ey<j3915>";/
 	"+:2:1912//07//30:1912//12//31:<j3471><j3221>:%EC<j2421><j3915>";/
 	"+:6:1873//01//01:1912//07//29:<j4432><j2803>:%EC%Ey<j3915>";/
 	"+:1:0001//01//01:1872//12//31:<j3230><j4681>:%EC%Ey<j3915>";/
-	"-:1:0000//12//31:-*:<j2110><j2421><j3316>:%EC%Ey<j3915>"
+	"+:1:-0001//12//31:-*:<j2110><j2421><j3316>:%EC%Ey<j3915>"
 
 era_d_fmt	"%EY%m<j2378>%d<j3892>"
 

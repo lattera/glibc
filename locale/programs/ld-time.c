@@ -285,6 +285,9 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	      else
 		str = endp + 1;
 	      time->era_entries[idx].start_date[0] -= 1900;
+	      /* year -1 represent 1 B.C. (not -1 A.D.) */
+	      if (time->era_entries[idx].start_date[0] < -1900)
+		++time->era_entries[idx].start_date[0];
 
 	      time->era_entries[idx].start_date[1] = strtol (str, &endp, 10);
 	      if (endp == str || *endp != '/')
@@ -359,6 +362,9 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	      else
 		str = endp + 1;
 	      time->era_entries[idx].stop_date[0] -= 1900;
+	      /* year -1 represent 1 B.C. (not -1 A.D.) */
+	      if (time->era_entries[idx].stop_date[0] < -1900)
+		++time->era_entries[idx].stop_date[0];
 
 	      time->era_entries[idx].stop_date[1] = strtol (str, &endp, 10);
 	      if (endp == str || *endp != '/')

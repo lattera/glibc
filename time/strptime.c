@@ -151,7 +151,7 @@ localtime_r (t, tp)
 #endif
 #define recursive(new_fmt) \
   (*(new_fmt) != '\0'							      \
-   && (rp = strptime_internal (rp, (new_fmt), tm, decided)) != NULL)
+   && (rp = strptime_internal (rp, (new_fmt), tm, decided, era_cnt)) != NULL)
 
 
 #ifdef _LIBC
@@ -250,34 +250,38 @@ static char *
 #ifdef _LIBC
 internal_function
 #endif
-strptime_internal __P ((const char *buf, const char *format, struct tm *tm,
-			enum locale_status *decided));
+strptime_internal __P ((const char *rp, const char *fmt, struct tm *tm,
+			enum locale_status *decided, int era_cnt));
 
 static char *
 #ifdef _LIBC
 internal_function
 #endif
-strptime_internal (buf, format, tm, decided)
-     const char *buf;
-     const char *format;
+strptime_internal (rp, fmt, tm, decided, era_cnt)
+     const char *rp;
+     const char *fmt;
      struct tm *tm;
      enum locale_status *decided;
+     int era_cnt;
 {
-  const char *rp;
-  const char *fmt;
+  const char *rp_backup;
   int cnt;
   size_t val;
   int have_I, is_pm;
   int century, want_century;
+  int want_era;
   int have_wday, want_xday;
   int have_yday;
   int have_mon, have_mday;
+  size_t num_eras;
+  struct era_entry *era;
 
-  rp = buf;
-  fmt = format;
   have_I = is_pm = 0;
   century = -1;
   want_century = 0;
+  want_era = 0;
+  era = NULL;
+
   have_wday = want_xday = have_yday = have_mon = have_mday = 0;
 
   while (*fmt != '\0')
@@ -305,6 +309,10 @@ strptime_internal (buf, format, tm, decided)
       /* We need this for handling the `E' modifier.  */
     start_over:
 #endif
+
+      /* Make back up of current processing pointer.  */
+      rp_backup = rp;
+
       switch (*fmt++)
 	{
 	case '%':
@@ -400,6 +408,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -418,6 +428,7 @@ strptime_internal (buf, format, tm, decided)
 	  break;
 	case 'C':
 	  /* Match century number.  */
+	match_century:
 	  get_number (0, 99, 2);
 	  century = val;
 	  want_xday = 1;
@@ -443,6 +454,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -534,6 +547,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -588,6 +603,8 @@ strptime_internal (buf, format, tm, decided)
 		{
 		  if (*decided == loc)
 		    return NULL;
+		  else
+		    rp = rp_backup;
 		}
 	      else
 		{
@@ -635,6 +652,7 @@ strptime_internal (buf, format, tm, decided)
 	  have_wday = 1;
 	  break;
 	case 'y':
+	match_year_in_century:
 	  /* Match year within century.  */
 	  get_number (0, 99, 2);
 	  /* The "Year 2000: The Millennium Rollover" paper suggests that
@@ -671,6 +689,8 @@ strptime_internal (buf, format, tm, decided)
 		    {
 		      if (*decided == loc)
 			return NULL;
+		      else
+			rp = rp_backup;
 		    }
 		  else
 		    {
@@ -688,12 +708,90 @@ strptime_internal (buf, format, tm, decided)
 	      want_xday = 1;
 	      break;
 	    case 'C':
-	    case 'y':
+	      if (*decided != raw)
+		{
+		  if (era_cnt >= 0)
+		    {
+		      era = _nl_select_era_entry (era_cnt);
+		      if (match_string (era->era_name, rp))
+			{
+			  *decided = loc;
+			  break;
+			}
+		      else
+			return NULL;
+		    }
+		  else
+		    {
+		      num_eras = _NL_CURRENT_WORD (LC_TIME,
+						   _NL_TIME_ERA_NUM_ENTRIES);
+		      for (era_cnt = 0; era_cnt < num_eras;
+			   ++era_cnt, rp = rp_backup)
+			{
+			  era = _nl_select_era_entry (era_cnt);
+			  if (match_string (era->era_name, rp))
+			    {
+			      *decided = loc;
+			      break;
+			    }
+			}
+		      if (era_cnt == num_eras)
+			{
+			  era_cnt = -1;
+			  if (*decided == loc)
+			    return NULL;
+			}
+		      else
+			break;
+		    }
+
+		  *decided = raw;
+		}
+	      /* The C locale has no era information, so use the
+		 normal representation.  */
+	      goto match_century;
+ 	    case 'y':
+	      if (*decided == raw)
+		goto match_year_in_century;
+
+	      get_number(0, 9999, 4);
+	      tm->tm_year = val;
+	      want_era = 1;
+	      want_xday = 1;
+	      break;
 	    case 'Y':
-	      /* Match name of base year in locale's alternate
-		 representation.  */
-	      /* XXX This is currently not implemented.  It should
-		 use the value _NL_CURRENT (LC_TIME, ERA).  */
+	      if (*decided != raw)
+		{
+		  num_eras = _NL_CURRENT_WORD (LC_TIME,
+					       _NL_TIME_ERA_NUM_ENTRIES);
+		  for (era_cnt = 0; era_cnt < num_eras;
+		       ++era_cnt, rp = rp_backup)
+		    {
+		      era = _nl_select_era_entry (era_cnt);
+		      if (recursive (era->era_format))
+			break;
+		    }
+		  if (era_cnt == num_eras)
+		    {
+		      era_cnt = -1;
+		      if (*decided == loc)
+			return NULL;
+		      else
+			rp = rp_backup;
+		    }
+		  else
+		    {
+		      *decided = loc;
+		      era_cnt = -1;
+		      break;
+		    }
+
+		  *decided = raw;
+		}
+	      get_number (0, 9999, 4);
+	      tm->tm_year = val - 1900;
+	      want_century = 0;
+	      want_xday = 1;
 	      break;
 	    case 'x':
 	      if (*decided != raw)
@@ -707,6 +805,8 @@ strptime_internal (buf, format, tm, decided)
 		    {
 		      if (*decided == loc)
 			return NULL;
+		      else
+			rp = rp_backup;
 		    }
 		  else
 		    {
@@ -731,6 +831,8 @@ strptime_internal (buf, format, tm, decided)
 		    {
 		      if (*decided == loc)
 			return NULL;
+		      else
+			rp = rp_backup;
 		    }
 		  else
 		    {
@@ -839,19 +941,38 @@ strptime_internal (buf, format, tm, decided)
 	tm->tm_year = (century - 19) * 100;
     }
 
-  if (want_xday && !have_wday) {
-      if ( !(have_mon && have_mday) && have_yday)  {
-	  /* we don't have tm_mon and/or tm_mday, compute them */
+  if (era_cnt != -1)
+    {
+      era = _nl_select_era_entry(era_cnt);
+      if (want_era)
+	tm->tm_year = (era->start_date[0]
+		       + ((tm->tm_year - era->offset)
+			  * era->absolute_direction));
+      else
+	/* Era start year assumed.  */
+	tm->tm_year = era->start_date[0];
+    }
+  else
+    if (want_era)
+      return NULL;
+
+  if (want_xday && !have_wday)
+    {
+      if ( !(have_mon && have_mday) && have_yday)
+	{
+	  /* We don't have tm_mon and/or tm_mday, compute them.  */
 	  int t_mon = 0;
 	  while (__mon_yday[__isleap(1900 + tm->tm_year)][t_mon] <= tm->tm_yday)
 	      t_mon++;
 	  if (!have_mon)
 	      tm->tm_mon = t_mon - 1;
 	  if (!have_mday)
-	      tm->tm_mday = tm->tm_yday - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1;
-      }
+	      tm->tm_mday =
+		(tm->tm_yday
+		 - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1);
+	}
       day_of_the_week (tm);
-  }
+    }
   if (want_xday && !have_yday)
     day_of_the_year (tm);
 
@@ -866,10 +987,11 @@ strptime (buf, format, tm)
      struct tm *tm;
 {
   enum locale_status decided;
+
 #ifdef _NL_CURRENT
   decided = not;
 #else
   decided = raw;
 #endif
-  return strptime_internal (buf, format, tm, &decided);
+  return strptime_internal (buf, format, tm, &decided, -1);
 }

@@ -834,19 +834,11 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  /* The wide name is after the multi byte name and
-                     format.  */
-		  wchar_t *ws;
-		  size_t len;
-		  char *tcp = strchr (era->name_fmt, '\0') + 1;
-		  tcp = strchr (tcp, '\0') + 1;
-		  tcp += 3 - (((tcp - era->name_fmt) + 3) & 3);
-		  ws = (wchar_t *) tcp;
-		  len = wcslen (ws);
-		  cpy (len, ws);
+		  size_t len = strlen (era->era_name);
+		  cpy (len, era->era_name);
 # else
-		  size_t len = strlen (era->name_fmt);
-		  cpy (len, era->name_fmt);
+		  size_t len = strlen (era->era_name);
+		  cpy (len, era->era_name);
 # endif
 		  break;
 		}
@@ -1199,15 +1191,9 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  /* The wide name is after the multi byte name and
-                     format.  */
-		  char *tcp = strchr (era->name_fmt, '\0') + 1;
-		  tcp = strchr (tcp, '\0') + 1;
-		  tcp += 3 - (((tcp - era->name_fmt) + 3) & 3);
-		  subfmt = (wchar_t *) tcp;
-		  subfmt = wcschr (subfmt, L'\0') + 1;
+		  subfmt = era->era_wformat;
 # else
-		  subfmt = strchr (era->name_fmt, '\0') + 1;
+		  subfmt = era->era_format;
 # endif
 		  goto subformat;
 		}
@@ -1231,7 +1217,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 		{
 		  int delta = tp->tm_year - era->start_date[0];
 		  DO_NUMBER (1, (era->offset
-				 + (era->direction == '-' ? -delta : delta)));
+				 + delta * era->absolute_direction));
 		}
 #else
 # if HAVE_STRFTIME

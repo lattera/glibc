@@ -1,3 +1,28 @@
+1999-12-21  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
+
+	* locale/lc-time.c: Extend structure era_entry.
+	* locale/localeinfo.h: Likewise.
+	* locale/lc-time.c: Handle '-' direction used in locale's era part
+	properly.
+	* time/strptime.c: Likewise.
+	* time/strftime.c: Likewise.
+	* locale/programs/ld-time.c: Consider negative values in era part
+	of locale as B.C..
+	* time/strptime.c (strptime_internal): Merged Yoshiyama's
+	%E[CyY] implementation.
+
+1999-12-21  Akira Yoshiyama  <yosshy@debian.or.jp>
+
+	* time/strptime.c (strptime_internal): Fix segV bugs of a couple
+	of recursive() call.
+	* time/strptime.c (strptime_internal): Implement `%EC',`%Ey',`%EY'
+	parsing.
+
+1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/arm/dl-machine.c (CLEAR_CACHE): Fix a2 value.
+	Patch by Scott Bambrough <scottb@netwinder.org>.
+
 1999-12-21  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/pread.c: Fix typo.
