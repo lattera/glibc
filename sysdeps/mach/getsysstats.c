@@ -1,5 +1,5 @@
 /* System dependent pieces of sysconf; Mach version
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,8 @@ __get_nprocs_conf ()
   kern_return_t err;
   mach_msg_type_number_t cnt = HOST_BASIC_INFO_COUNT;
 
-  err = __host_info (__mach_host_self (), HOST_BASIC_INFO, &hbi, &cnt);
+  err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
+		     (host_info_t) &hbi, &cnt);
   if (err)
     return __hurd_fail (err);
   else if (cnt != HOST_BASIC_INFO_COUNT)
@@ -48,7 +49,8 @@ __get_nprocs ()
   kern_return_t err;
   mach_msg_type_number_t cnt = HOST_BASIC_INFO_COUNT;
 
-  err = __host_info (__mach_host_self (), HOST_BASIC_INFO, &hbi, &cnt);
+  err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
+		     (host_info_t) &hbi, &cnt);
   if (err)
     return __hurd_fail (err);
   else if (cnt != HOST_BASIC_INFO_COUNT)
@@ -65,7 +67,8 @@ __get_phys_pages ()
   kern_return_t err;
   mach_msg_type_number_t cnt = HOST_BASIC_INFO_COUNT;
 
-  err = __host_info (__mach_host_self (), HOST_BASIC_INFO, &hbi, &cnt);
+  err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
+		     (host_info_t) &hbi, &cnt);
   if (err)
     return __hurd_fail (err);
   else if (cnt != HOST_BASIC_INFO_COUNT)
