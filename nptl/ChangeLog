@@ -1,3 +1,8 @@
+2003-11-30  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/pthread/configure.in: Remove broken declaration in C
+	cleanup handling check.
+
 2003-11-30  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile (CFLAGS-pt-initfini.s): Add $(fno_unit_at_a_time).
