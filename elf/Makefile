@@ -51,4 +51,5 @@ $(objpfx)ld.so: $(rtld-routines:%=$(objpfx)%.so) \
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 	$(patsubst %/,cd %;,$(objpfx)) \
 	$(LINK.o) -shared -o $(@:$(objpfx)%=%) \
-		  $(LDFLAGS-dl.so) -Wl,--whole-archive $(^:$(objpfx)%=%)
+		  $(LDFLAGS.so) $(LDFLAGS-dl.so) \
+		  -Wl,--whole-archive $(^:$(objpfx)%=%)
