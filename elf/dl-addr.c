@@ -28,7 +28,7 @@ _dl_addr (const void *address, Dl_info *info,
 	  struct link_map **mapp, const ElfW(Sym) **symbolp)
 {
   const ElfW(Addr) addr = DL_LOOKUP_ADDRESS (address);
-  struct link_map *l, *match;
+  struct link_map *match;
   const ElfW(Sym) *symtab, *matchsym, *symtabend;
   const char *strtab;
   ElfW(Word) strtabsize;
@@ -38,7 +38,7 @@ _dl_addr (const void *address, Dl_info *info,
 
   /* Find the highest-addressed object that ADDRESS is not below.  */
   match = NULL;
-  for (l = GL(dl_loaded); l; l = l->l_next)
+  for (struct link_map *l = GL(dl_loaded); l; l = l->l_next)
     if (addr >= l->l_map_start && addr < l->l_map_end)
       {
 	/* We know ADDRESS lies within L if in any shared object.
@@ -67,8 +67,8 @@ _dl_addr (const void *address, Dl_info *info,
       info->dli_fbase = (void *) match->l_map_start;
 
       /* If this is the main program the information is incomplete.  */
-      if (__builtin_expect (l->l_name[0], 'a') == '\0'
-	  && l->l_type == lt_executable)
+      if (__builtin_expect (match->l_name[0], 'a') == '\0'
+	  && match->l_type == lt_executable)
 	info->dli_fname = _dl_argv[0];
 
       symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
