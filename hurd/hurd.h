@@ -227,6 +227,23 @@ extern error_t _hurd_exec (task_t task,
 extern void _hurd_exit (int status) __attribute__ ((noreturn));
 
 
+/* Initialize Mach RPCs and essential Hurd things (_hurd_preinit_hook); do
+   initial handshake with the exec server (or extract the arguments from
+   the stack in the case of the bootstrap task); if cthreads is in use,
+   initialize it now and switch the calling thread to a cthread stack;
+   finally, call *MAIN with the information gleaned.  That function is not
+   expected to return.  ARGPTR should be the address of the first argument
+   of the entry point function that is called with the stack exactly as the
+   exec server or kernel sets it.  */
+
+extern void _hurd_startup (void **argptr,
+			   void (*main) (int argc, char **argv, char **envp,
+					 mach_port_t *portarray,
+					 mach_msg_type_number_t portarraysize,
+					 int *intarray,
+					 mach_msg_type_number_t intarraysize))
+     __attribute__ ((noreturn));
+
 /* Initialize the library data structures from the
    ints and ports passed to us by the exec server.
    Then vm_deallocate PORTARRAY and INTARRAY.  */

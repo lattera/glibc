@@ -195,4 +195,10 @@ ifdef interface-library
 $(interface-library)-routines = $(interface-routines)
 extra-libs += $(interface-library)
 
+# Avoid -lmachuser requiring -lc, which may not be built yet.  If the
+# shared object is absent, ld may choose a static library someplace and
+# produce a bogus libmachuser.so.
+interface.so = $(interface-library:lib%=%.so)
+LDFLAGS-$(interface.so) = -nostdlib
+
 endif

@@ -177,8 +177,8 @@ res_init()
 		_res.retrans = RES_TIMEOUT;
 	if (!_res.retry)
 		_res.retry = 4;
-	if (!_res.options)
-		_res.options = RES_DEFAULT;
+	if (!(_res.options & RES_INIT))
+		_res.options |= RES_DEFAULT;
 
 #ifdef USELOOPBACK
 	_res.nsaddr.sin_addr = inet_makeaddr(IN_LOOPBACKNET, 1);

@@ -1,3 +1,33 @@
+Sat Apr 22 14:48:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* mach/Machrules [interface-library]
+ 	(LDFLAGS-$(interface-library:lib%=%.so)): New variable, set to
+ 	-nostdlib.
+
+	* sysdeps/mach/hurd/fork.c: Subfunction `unlockss' removed.  Lock
+ 	_hurd_siglock only around initial task creation in parent.  Use
+ 	_hurd_critical_section_unlock at end.  Handle dead name rights
+ 	properly, and deal with a send right dying while we try to copy
+ 	it.  For the time being, use assert_perror for kernel and proc RPC
+ 	failures.
+
+Fri Apr 21 01:10:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* extra-lib.mk: Don't include $(o-iterator); construct it by hand
+ 	using $(object-suffixes-$(lib)) instead.
+
+	* sysdeps/mach/hurd/Makefile (LDLIBS-c.so): New variable.
+
+	* Makerules (lib%.so: lib%_pic.a): Pass $(LDFLAGS-$(notdir $*).so).
+	(LDFLAGS-c.so): New variable.
+
+	* resolv/res_init.c (res_init): Don't clobber _res.options with
+ 	RES_DEFAULT.  If RES_INIT is clear, OR in RES_DEFAULT.
+
+	* hurd/hurd.h: Declare _hurd_startup.
+	* hurd/hurdstartup.c: New file.
+	* hurd/Makefile (routines): Add hurdstartup.
+
 Thu Apr 20 22:23:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c: Use assert_perror for many calls which should

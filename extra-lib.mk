@@ -33,4 +33,4 @@ $(objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
   $($(lib)-routines:%=$(objpfx)%$o); $$(build-extra-lib)
 endef
 object-suffixes-left = $(object-suffixes-$(lib))
-include $(o-iterator)
+include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-$(lib)))

@@ -39,7 +39,8 @@ user-interfaces		:= $(addprefix hurd/,\
 				       fs fsys io term socket ifsock)
 server-interfaces	:= hurd/msg
 
-routines = hurdinit hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
+routines = hurdstartup hurdinit \
+	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
 	   setauth \
 	   pid2task task2pid \
 	   getuids setuids getumask fchroot \

@@ -342,8 +342,14 @@ ifeq (yes,$(build-shared))
 # on other shared objects.
 lib%.so: lib%_pic.a
 	$(LINK.o) -shared -o $@ -Wl,--whole-archive $< \
+		  $(LDFLAGS-$(notdir $*).so) \
 		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
 		  $(LDLIBS-$(notdir $*).so)
+
+# Don't try to use -lc when making libc.so itself.
+# Also omits crti.o and crtn.o, which we do not want
+# since we define our own `.init' section specially.
+LDFLAGS-c.so = -nostdlib
 endif
 
 libobjs: $(foreach o,$(object-suffixes),\
