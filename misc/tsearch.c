@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bernd Schmidt <crux@Pool.Informatik.RWTH-Aachen.DE>, 1997.
 
@@ -97,6 +97,7 @@ typedef struct node_t
   struct node_t *right;
   unsigned int red:1;
 } *node;
+typedef const struct node_t *const_node;
 
 #undef DEBUGGING
 
@@ -594,7 +595,7 @@ static void
 internal_function
 trecurse (const void *vroot, __action_fn_t action, int level)
 {
-  node root = (node ) vroot;
+  const_node root = (const_node) vroot;
 
   if (root->left == NULL && root->right == NULL)
     (*action) (root, leaf, level);
@@ -617,7 +618,7 @@ trecurse (const void *vroot, __action_fn_t action, int level)
 void
 __twalk (const void *vroot, __action_fn_t action)
 {
-  const node root = (node) vroot;
+  const_node root = (const_node) vroot;
 
   CHECK_TREE (root);
 

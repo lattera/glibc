@@ -22,7 +22,7 @@ compare (const void *p1, const void *p2)
 	}
     }
 
-  return *(uint32_t *) p1 - *(uint32_t *) p2;
+  return *(const uint32_t *) p1 - *(const uint32_t *) p2;
 }
 
 

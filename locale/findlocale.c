@@ -167,7 +167,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   /* Determine the locale name for which loading succeeded.  This
      information comes from the file name.  The form is
      <path>/<locale>/LC_foo.  We must extract the <locale> part.  */
-  if (((struct locale_data *) locale_file->data)->name == NULL)
+  if (((const struct locale_data *) locale_file->data)->name == NULL)
     {
       char *cp, *endp;
 
@@ -185,7 +185,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
     ((struct locale_data *) locale_file->data)->use_translit = 1;
 
   /* Increment the usage count.  */
-  if (((struct locale_data *) locale_file->data)->usage_count
+  if (((const struct locale_data *) locale_file->data)->usage_count
       < MAX_USAGE_COUNT)
     ++((struct locale_data *) locale_file->data)->usage_count;
 

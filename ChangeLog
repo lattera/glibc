@@ -1,5 +1,17 @@
 2000-11-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/findlocale.c: Add casts to avoid warnings.
+	* locale/localeinfo.h (LIMAGIC): Add cast to avoid warnings.
+	* misc/efgcvt_r.c (fcvt_r): Use ssize_t instead of int and add cast
+	to avoid warnings.
+	* misc/tsearch.c (const_node): New type.
+	(trecurse): Correct casts to avoid warnings.
+	(__twalk): Likewise.
+	* stdlib/tst-limits.c: Add z modifier to formats for WORD_BIT and
+	LONG_BIT.
+
+	* debug/backtrace-tst.c (compare): Add casts to avoid warnings.
+
 	* test-skeleton.c: Mark local functions as static to avoid warnings.
 
 2000-11-23  H.J. Lu  <hjl@gnu.org>

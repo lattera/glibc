@@ -33,7 +33,7 @@
 #include <intl/loadinfo.h>	/* For loaded_l10nfile definition.  */
 
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
-#define	LIMAGIC(category)	(0x20000828 ^ (category))
+#define	LIMAGIC(category)	((unsigned int) (0x20000828 ^ (category)))
 
 /* Two special weight constants for the collation data.  */
 #define IGNORE_CHAR	2

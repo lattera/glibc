@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting, reentrant versions.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,8 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
      char *buf;
      size_t len;
 {
-  int n, i;
+  ssize_t n;
+  ssize_t i;
   int left;
 
   if (buf == NULL)
@@ -102,7 +103,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
   n = __snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", MIN (ndigit, NDIGIT_MAX),
 		  value);
   /* Check for a too small buffer.  */
-  if (n >= len)
+  if (n >= (ssize_t) len)
     return -1;
 
   i = 0;
