@@ -656,6 +656,8 @@ ldouble: 4096
 Test "gamma (-0.5) == log(2*sqrt(pi))":
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 
 # hypot
 Test "hypot (-0.7, -12.4) == 12.419742348374220601176836866763271":
@@ -833,6 +835,8 @@ ildouble: 1
 Test "lgamma (-0.5) == log(2*sqrt(pi))":
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 Test "lgamma (0.7) == 0.26086724653166651439":
 double: 1
 float: 1
@@ -843,6 +847,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ldouble: 1
+ildouble: 1
 
 # log
 Test "log (0.7) == -0.35667494393873237891":
@@ -969,6 +975,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "tgamma (0.5) == sqrt (pi)":
 float: 1
 ifloat: 1
@@ -1515,6 +1523,8 @@ ldouble: 4096
 Function: "gamma":
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 
 Function: "hypot":
 float: 1
@@ -1549,6 +1559,8 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ldouble: 1
+ildouble: 1
 
 Function: "log":
 double: 1
@@ -1629,6 +1641,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ldouble: 1
+ildouble: 1
 
 Function: "y0":
 double: 2

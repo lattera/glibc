@@ -1,5 +1,7 @@
 2001-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/fpu/libm-test-ulps: Adjust for addition of lgammal.
+
 	* rt/lib_listio.c: Add a few asserts.
 
 	* elf/global.c: New file.
