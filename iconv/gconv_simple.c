@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -255,8 +255,11 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
       }									      \
     else								      \
       {									      \
-	if ((ch & 0xe0) == 0xc0)					      \
+ 	if (ch >= 0xc2 && ch < 0xe0)					      \
 	  {								      \
+ 	    /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
+ 	       otherwise the wide character could have been represented	      \
+ 	       using a single byte.  */					      \
 	    cnt = 2;							      \
 	    ch &= 0x1f;							      \
 	  }								      \
@@ -304,15 +307,23 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	    uint32_t byte = inptr[i];					      \
 									      \
 	    if ((byte & 0xc0) != 0x80)					      \
-	      {								      \
-		/* This is an illegal encoding.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
+	      /* This is an illegal encoding.  */			      \
+	      break;							      \
 									      \
 	    ch <<= 6;							      \
 	    ch |= byte & 0x3f;						      \
 	  }								      \
+ 									      \
+	/* If i < cnt, some trail byte was not >= 0x80, < 0xc0.		      \
+	   If cnt > 2 and ch < 2^(5*cnt-4), the wide character ch could	      \
+	   have been represented with fewer than cnt bytes.  */		      \
+	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0))	      \
+	  {								      \
+	    /* This is an illegal encoding.  */				      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
 	inptr += cnt;							      \
       }									      \
 									      \
