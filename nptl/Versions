@@ -25,6 +25,10 @@ libc {
     pthread_cond_wait; pthread_cond_signal;
     pthread_cond_broadcast;
   }
+  GLIBC_PRIVATE {
+    # Internal libc interface to libpthread
+    __libc_dl_error_tsd;
+  }
 }
 
 libpthread {
