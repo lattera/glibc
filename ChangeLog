@@ -1,3 +1,7 @@
+1998-08-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-reloc.c (_dl_relocate_object): Implement DT_BIND_NOW.
+
 1998-07-31 17:59  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/bits/byteswap.h: Fix problems with side effects.

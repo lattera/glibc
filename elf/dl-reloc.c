@@ -33,9 +33,15 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy,
   if (l->l_relocated)
     return;
 
+  /* If DT_BIND_NOW is set relocate all references in this object.  We
+     do not do this if we are profiling, of course.  */
+  if (!consider_profiling && l->l_info[DT_BIND_NOW])
+    lazy = 0;
+
   if (_dl_debug_reloc)
     _dl_debug_message (1, "\nrelocation processing: ",
-		       l->l_name[0] ? l->l_name : _dl_argv[0], "\n", NULL);
+		       l->l_name[0] ? l->l_name : _dl_argv[0],
+		       lazy ? " (lazy)\n" : "\n", NULL);
 
   if (l->l_info[DT_TEXTREL])
     {
