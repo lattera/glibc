@@ -1,4 +1,4 @@
-# Copyright (C) 1995 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,8 @@ subdir	:= sysvipc
 headers	:= sys/ipc.h sys/msg.h sys/sem.h sys/shm.h \
 	   sys/ipc_buf.h sys/msq_buf.h sys/sem_buf.h sys/shm_buf.h
 
-routines := msgsnd msgrcv msgget msgctl \
+routines := ftok \
+	    msgsnd msgrcv msgget msgctl \
 	    semop semget semctl \
 	    shmat shmdt shmget shmctl
 

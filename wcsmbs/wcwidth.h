@@ -1,6 +1,7 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Internal header containing implementation of wcwidth() function.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edi>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,21 +18,23 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <sys/ipc.h>
-#include <sys/stat.h>
+#include <wchar.h>
+#include "cname-lookup.h"
 
-key_t
-ftok (pathname, proj_id)
-     char *pathname;
-     char proj_id;
+/* Array containing width information.  */
+extern unsigned char *__ctype_width;
+
+static __inline int
+internal_wcwidth (wint_t ch)
 {
-  struct stat st;
-  key_t key;
+  size_t idx;
 
-  if (__stat (pathname, &st) < 0)
-    return (key_t) -1;
+  if (ch == L'\0')
+    return 0;
 
-  key = (st.st_ino & 0xffff) | ((st.st_dev & 0xff) << 16) | (proj_id << 24);
+  idx = cname_lookup (ch);
+  if (idx == ~((size_t) 0))
+    return -1;
 
-  return key;
+  return (int) __ctype_width[idx];
 }

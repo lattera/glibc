@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
 Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-Contributed by Ulrich Drepper.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 This file is part of the GNU C Library.
 
@@ -15,18 +15,39 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.	 If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-/* Configuration part.  These macros are defined by `strtold.c' and `strtof.c'
-   to produce the `long double' and `float' versions of the reader.  */
+/* Configuration part.  These macros are defined by `strtold.c',
+   `strtof.c', `wcstod.c', `wcstold.c', and `wcstof.c' to produce the
+   `long double' and `float' versions of the reader.  */
 #ifndef FLOAT
-#define	FLOAT		double
-#define	FLT		DBL
-#define	STRTOF		strtod
-#define	MPN2FLOAT	__mpn_construct_double
-#define	FLOAT_HUGE_VAL	HUGE_VAL
+# define FLOAT		double
+# define FLT		DBL
+# ifdef USE_WIDE_CHAR
+#  define STRTOF	wcstod
+# else
+#  define STRTOF	strtod
+# endif
+# define MPN2FLOAT	__mpn_construct_double
+# define FLOAT_HUGE_VAL	HUGE_VAL
+#endif
+
+#ifdef USE_WIDE_CHAR
+# include <wctype.h>
+# include <wchar.h>
+# define STRING_TYPE wchar_t
+# define CHAR_TYPE wint_t
+# define L_(Ch) L##Ch
+# define ISSPACE(Ch) iswspace (Ch)
+# define TOLOWER(Ch) towlower (Ch)
+#else
+# define STRING_TYPE char
+# define CHAR_TYPE char
+# define L_(Ch) Ch
+# define ISSPACE(Ch) isspace (Ch)
+# define TOLOWER(Ch) tolower (Ch)
 #endif
 /* End of configuration part.  */
 
@@ -103,8 +124,9 @@ static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 #define NDIG			(MAX_10_EXP - MIN_10_EXP + 2 * MANT_DIG)
 #define	RETURN_LIMB_SIZE		howmany (MANT_DIG, BITS_PER_MP_LIMB)
 
-#define RETURN(val,end) \
-    do { if (endptr != 0) *endptr = (char *) (end); return val; } while (0)
+#define RETURN(val,end)							      \
+    do { if (endptr != NULL) *endptr = (STRING_TYPE *) (end);		      \
+	 return val; } while (0)
 
 /* Maximum size necessary for mpn integers to hold floating point numbers.  */
 #define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) \
@@ -206,8 +228,8 @@ round_and_return (mp_limb *retval, int exponent, int negative,
    character od the string that is not part of the integer as the function
    value.  If the EXPONENT is small enough to be taken as an additional
    factor for the resulting number (see code) multiply by it.  */
-static inline const char *
-str_to_mpn (const char *str, int digcnt, mp_limb *n, mp_size_t *nsize,
+static inline const STRING_TYPE *
+str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb *n, mp_size_t *nsize,
 	    int *exponent)
 {
   /* Number of digits for actual limb.  */
@@ -239,9 +261,9 @@ str_to_mpn (const char *str, int digcnt, mp_limb *n, mp_size_t *nsize,
       /* There might be thousands separators or radix characters in the string.
 	 But these all can be ignored because we know the format of the number
 	 is correct and we have an exact number of characters to read.  */
-      while (!isdigit (*str))
+      while (*str < L_('0') || *str > L_('9'))
 	++str;
-      low = low * 10 + *str++ - '0';
+      low = low * 10 + *str++ - L_('0');
       ++cnt;
     }
   while (--digcnt > 0);
@@ -311,8 +333,8 @@ __mpn_lshift_1 (mp_limb *ptr, mp_size_t size, unsigned int count, mp_limb limb)
    ERANGE and return HUGE_VAL with the approriate sign.  */
 FLOAT
 INTERNAL (STRTOF) (nptr, endptr, group)
-     const char *nptr;
-     char **endptr;
+     const STRING_TYPE *nptr;
+     STRING_TYPE **endptr;
      int group;
 {
   int negative;			/* The sign of the number.  */
@@ -330,15 +352,15 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   int bits;
 
   /* Running pointer after the last character processed in the string.  */
-  const char *cp, *tp;
+  const STRING_TYPE *cp, *tp;
   /* Start of significant part of the number.  */
-  const char *startp, *start_of_digits;
+  const STRING_TYPE *startp, *start_of_digits;
   /* Points at the character following the integer and fractional digits.  */
-  const char *expp;
+  const STRING_TYPE *expp;
   /* Total number of digit and number of digits in integer part.  */
   int dig_no, int_no, lead_zero;
   /* Contains the last character read.  */
-  char c;
+  CHAR_TYPE c;
 
   /* The radix character of the current locale.  */
   wchar_t decimal;
@@ -386,32 +408,33 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* Ignore leading white space.  */
   do
     c = *++cp;
-  while (isspace (c));
+  while (ISSPACE (c));
 
   /* Get sign of the result.  */
-  if (c == '-')
+  if (c == L_('-'))
     {
       negative = 1;
       c = *++cp;
     }
-  else if (c == '+')
+  else if (c == L_('+'))
     c = *++cp;
 
   /* Return 0.0 if no legal string is found.
      No character is used even if a sign was found.  */
-  if (!isdigit (c) && (c != decimal || !isdigit (cp[1])))
+  if ((c < L_('0') || c > L_('9'))
+      && (c != decimal || cp[1] < L_('0') || cp[1] > L_('9')))
     RETURN (0.0, nptr);
 
   /* Record the start of the digits, in case we will check their grouping.  */
   start_of_digits = startp = cp;
 
   /* Ignore leading zeroes.  This helps us to avoid useless computations.  */
-  while (c == '0' || (thousands != L'\0' && c == thousands))
+  while (c == L_('0') || (thousands != L'\0' && c == thousands))
     c = *++cp;
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if (!isdigit (c) && c != decimal)
+  if ((c < L_('0') || c > L_('9')) && c != decimal)
     {
       tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
       /* If TP is at the start of the digits, there was no correctly
@@ -428,7 +451,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	    so we can check all the grouping separators.  */
 	 grouping)
     {
-      if (isdigit (c))
+      if (c >= L_('0') && c <= L_('9'))
 	++dig_no;
       else if (thousands == L'\0' || c != thousands)
 	/* Not a digit or separator: end of the integer part.  */
@@ -458,7 +481,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	  cp = tp;
 	  dig_no = 0;
 	  for (tp = startp; tp < cp; ++tp)
-	    if (isdigit (*tp))
+	    if (*tp >= L_('0') && *tp <= L_('9'))
 	      ++dig_no;
 
 	  int_no = dig_no;
@@ -481,31 +504,35 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* Read the fractional digits.  A special case are the 'american style'
      numbers like `16.' i.e. with decimal but without trailing digits.  */
   if (c == decimal)
-    while (isdigit (c = *++cp))
-      {
-	if (c != '0' && lead_zero == -1)
-	  lead_zero = dig_no - int_no;
-	++dig_no;
-      }
+    {
+      c = *++cp;
+      while (c >= L_('0') && c <= L_('9'))
+	{
+	  if (c != L_('0') && lead_zero == -1)
+	    lead_zero = dig_no - int_no;
+	  ++dig_no;
+	  c = *++cp;
+	}
+    }
 
   /* Remember start of exponent (if any).  */
   expp = cp;
 
   /* Read exponent.  */
-  if (tolower (c) == 'e')
+  if (TOLOWER (c) == L_('e'))
     {
       int exp_negative = 0;
 
       c = *++cp;
-      if (c == '-')
+      if (c == L_('-'))
 	{
 	  exp_negative = 1;
 	  c = *++cp;
 	}
-      else if (c == '+')
+      else if (c == L_('+'))
 	c = *++cp;
 
-      if (isdigit (c))
+      if (c >= L_('0') && c <= L_('9'))
 	{
 	  int exp_limit;
 
@@ -532,16 +559,16 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		  /* Accept all following digits as part of the exponent.  */
 		  do
 		    ++cp;
-		  while (isdigit (*cp));
+		  while (*cp >= L_('0') && *cp <= L_('9'));
 
 		  RETURN (retval, cp);
 		  /* NOTREACHED */
 		}
 
-	      exponent += c - '0';
+	      exponent += c - L_('0');
 	      c = *++cp;
 	    }
-	  while (isdigit (c));
+	  while (c >= L_('0') && c <= L_('9'));
 
 	  if (exp_negative)
 	    exponent = -exponent;
@@ -553,7 +580,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* We don't want to have to work with trailing zeroes after the radix.  */
   if (dig_no > int_no)
     {
-      while (expp[-1] == '0')
+      while (expp[-1] == L_('0'))
 	{
 	  --expp;
 	  --dig_no;
@@ -565,7 +592,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
   /* The whole string is parsed.  Store the address of the next character.  */
   if (endptr)
-    *endptr = (char *) cp;
+    *endptr = (STRING_TYPE *) cp;
 
   if (dig_no == 0)
     return 0.0;
@@ -573,7 +600,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   if (lead_zero)
     {
       /* Find the decimal point */
-      while (*startp != decimal) startp++;
+      while (*startp != decimal)
+	++startp;
       startp += lead_zero + 1;
       exponent -= lead_zero;
       dig_no -= lead_zero;
@@ -1131,8 +1159,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
 FLOAT
 STRTOF (nptr, endptr)
-     const char *nptr;
-     char **endptr;
+     const STRING_TYPE *nptr;
+     STRING_TYPE **endptr;
 {
   return INTERNAL (STRTOF) (nptr, endptr, 0);
 }

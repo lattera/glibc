@@ -107,6 +107,7 @@ struct locale_ctype_t
   u32_t **map_el;
   u32_t *class_name_ptr;
   u32_t *map_name_ptr;
+  unsigned char *width;
 };
 
 
@@ -120,7 +121,8 @@ static u32_t *find_idx (struct locale_ctype_t *ctype, u32_t **table,
 			size_t *max, size_t *act, unsigned int idx);
 static void set_class_defaults (struct locale_ctype_t *ctype,
 				struct charset_t *charset);
-static void allocate_arrays (struct locale_ctype_t *ctype);
+static void allocate_arrays (struct locale_ctype_t *ctype,
+			     struct charset_t *charset);
 
 
 void
@@ -321,20 +323,33 @@ character %s'%s' in class `%s' must not be in class `%s'"),
            valid_table[cnt].name);
   else
     ELEM (ctype, class_collection, , space_value) |= BIT (tok_print);
+
+  /* Now that the tests are done make sure the name array contains all
+     characters which are handled in the WIDTH section of the
+     character set definition file.  */
+  if (charset->width_rules != NULL)
+    for (cnt = 0; cnt < charset->nwidth_rules; ++cnt)
+      {
+	size_t inner;
+	for (inner = charset->width_rules[cnt].from;
+	     inner <= charset->width_rules[cnt].to; ++inner)
+	  (void) find_idx (ctype, NULL, NULL, NULL, inner);
+      }
 }
 
 
 void
-ctype_output (struct localedef_t *locale, const char *output_path)
+ctype_output (struct localedef_t *locale, struct charset_t *charset,
+	      const char *output_path)
 {
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   const size_t nelems = (_NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)
 			 + 2 * (ctype->map_collection_nr - 2));
-  struct iovec iov[2 + nelems + (ctype->nr_charclass + 1)
-		  + (ctype->map_collection_nr + 1)];
+  struct iovec iov[2 + nelems + ctype->nr_charclass
+		  + ctype->map_collection_nr];
   struct locale_file data;
   u32_t idx[nelems];
-  size_t elem, cnt, offset;
+  size_t elem, cnt, offset, total;
 
 
   if ((locale->binary & (1 << LC_CTYPE)) != 0)
@@ -349,7 +364,7 @@ ctype_output (struct localedef_t *locale, const char *output_path)
 
 
   /* Now prepare the output: Find the sizes of the table we can use.  */
-  allocate_arrays (ctype);
+  allocate_arrays (ctype, charset);
 
   data.magic = LIMAGIC (LC_CTYPE);
   data.n = nelems;
@@ -369,8 +384,10 @@ ctype_output (struct localedef_t *locale, const char *output_path)
 	  {
 #define CTYPE_DATA(name, base, len)					      \
 	  case _NL_ITEM_INDEX (name):					      \
-	    iov[2 + elem].iov_base = base;				      \
-	    iov[2 + elem].iov_len = len;				      \
+	    iov[2 + elem + offset].iov_base = base;			      \
+	    iov[2 + elem + offset].iov_len = len;			      \
+	    if (elem + 1 < nelems)					      \
+	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;     \
 	    break
 
 	  CTYPE_DATA (_NL_CTYPE_CLASS,
@@ -412,15 +429,46 @@ ctype_output (struct localedef_t *locale, const char *output_path)
 	  CTYPE_DATA (_NL_CTYPE_HASH_LAYERS,
 		      &ctype->plane_cnt, sizeof (u32_t));
 
-	  CTYPE_DATA (_NL_CTYPE_CLASS_NAMES,
-		      ctype->class_name_ptr,
-		      ctype->nr_charclass * sizeof (u32_t));
-	  CTYPE_DATA (_NL_CTYPE_MAP_NAMES,
-		      ctype->map_name_ptr,
-		      ctype->map_collection_nr * sizeof (u32_t));
+	  case _NL_ITEM_INDEX (_NL_CTYPE_CLASS_NAMES):
+	    /* The class name array.  */
+	    total = 0;
+	    for (cnt = 0; cnt < ctype->nr_charclass; ++cnt, ++offset)
+	      {
+		iov[2 + elem + offset].iov_base
+		  = (void *) ctype->classnames[cnt];
+		iov[2 + elem + offset].iov_len
+		  = strlen (ctype->classnames[cnt]) + 1;
+		total += iov[2 + elem + offset].iov_len;
+	      }
+	    iov[2 + elem + offset].iov_base = (void *) "";
+	    iov[2 + elem + offset].iov_len = 1;
+	    ++total;
+
+	    if (elem + 1 < nelems)
+	      idx[elem + 1] = idx[elem] + total;
+	    break;
+
+	  case _NL_ITEM_INDEX (_NL_CTYPE_MAP_NAMES):
+	    /* The class name array.  */
+	    total = 0;
+	    for (cnt = 0; cnt < ctype->map_collection_nr; ++cnt, ++offset)
+	      {
+		iov[2 + elem + offset].iov_base
+		  = (void *) ctype->mapnames[cnt];
+		iov[2 + elem + offset].iov_len
+		  = strlen (ctype->mapnames[cnt]) + 1;
+		total += iov[2 + elem + offset].iov_len;
+	      }
+	    iov[2 + elem + offset].iov_base = (void *) "";
+	    iov[2 + elem + offset].iov_len = 1;
+	    ++total;
+
+	    if (elem + 1 < nelems)
+	      idx[elem + 1] = idx[elem] + total;
+	    break;
 
 	  CTYPE_DATA (_NL_CTYPE_WIDTH,
-		      NULL, 0);		/* Not yet implemented.  */
+		      ctype->width, ctype->plane_size * ctype->plane_cnt);
 
 	  default:
 	    assert (! "unknown CTYPE element");
@@ -431,49 +479,23 @@ ctype_output (struct localedef_t *locale, const char *output_path)
 	  size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) >> 1;
 
 	  if (((elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) & 1) == 0)
-	    iov[2 + elem].iov_base = ctype->map_eb[nr];
+	    iov[2 + elem + offset].iov_base = ctype->map_eb[nr];
 	  else
-	    iov[2 + elem].iov_base = ctype->map_el[nr];
+	    iov[2 + elem + offset].iov_base = ctype->map_el[nr];
 
-	  iov[2 + elem].iov_len = ((ctype->plane_size * ctype->plane_cnt + 128)
-				   * sizeof (u32_t));
+	  iov[2 + elem + offset].iov_len = ((ctype->plane_size
+					     * ctype->plane_cnt + 128)
+					    * sizeof (u32_t));
+
+	  if (elem + 1 < nelems)
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	}
-
-      if (elem + 1 < nelems)
-	idx[elem + 1] = idx[elem] + iov[2 + elem].iov_len;
     }
 
-  offset = idx[elem - 1] + iov[2 + elem - 1].iov_len;
+  assert (2 + elem + offset == (nelems + ctype->nr_charclass
+				+ ctype->map_collection_nr + 2));
 
-  /* The class name array.  */
-  for (cnt = 0; cnt < ctype->nr_charclass; ++cnt, ++elem)
-    {
-      iov[2 + elem].iov_base = (void *) ctype->classnames[cnt];
-      iov[2 + elem].iov_len = strlen (ctype->classnames[cnt]) + 1;
-
-      ctype->class_name_ptr[cnt] = offset;
-      offset += iov[2 + elem].iov_len;
-    }
-  iov[2 + elem].iov_base = (void *) "";
-  iov[2 + elem].iov_len = 1;
-  ++elem;
-
-  /* The map name array.  */
-  for (cnt = 0; cnt < ctype->map_collection_nr; ++cnt, ++elem)
-    {
-      iov[2 + elem].iov_base = (void *) ctype->mapnames[cnt];
-      iov[2 + elem].iov_len = strlen (ctype->mapnames[cnt]) + 1;
-
-      ctype->map_name_ptr[cnt] = offset;
-      offset += iov[2 + elem].iov_len;
-    }
-  iov[2 + elem].iov_base = (void *) "";
-  iov[2 + elem].iov_len = 1;
-  ++elem;
-
-  assert (elem == nelems + ctype->nr_charclass + ctype->map_collection_nr + 2);
-
-  write_locale_data (output_path, "LC_CTYPE", 2 + elem, iov);
+  write_locale_data (output_path, "LC_CTYPE", 2 + elem + offset, iov);
 }
 
 
@@ -813,6 +835,8 @@ implementation limit: no more than %d character maps allowed"),
 }
 
 
+/* We have to be prepared that TABLE, MAX, and ACT can be NULL.  This
+   is possible if we only want ot extend the name array.  */
 static u32_t *
 find_idx (struct locale_ctype_t *ctype, u32_t **table, size_t *max,
 	  size_t *act, unsigned int idx)
@@ -820,7 +844,7 @@ find_idx (struct locale_ctype_t *ctype, u32_t **table, size_t *max,
   size_t cnt;
 
   if (idx < 256)
-    return &(*table)[idx];
+    return table == NULL ? NULL : &(*table)[idx];
 
   for (cnt = 256; cnt < ctype->charnames_act; ++cnt)
     if (ctype->charnames[cnt] == idx)
@@ -839,6 +863,10 @@ find_idx (struct locale_ctype_t *ctype, u32_t **table, size_t *max,
 	}
       ctype->charnames[ctype->charnames_act++] = idx;
     }
+
+  if (table == NULL)
+    /* We have done everything we are asked to do.  */
+    return NULL;
 
   if (cnt >= *act)
     {
@@ -1126,7 +1154,7 @@ character `%s' not defined while needed as default value"),
 
 
 static void
-allocate_arrays (struct locale_ctype_t *ctype)
+allocate_arrays (struct locale_ctype_t *ctype, struct charset_t *charset)
 {
   size_t idx;
 
@@ -1181,6 +1209,7 @@ Computing table size for character classes might take a while..."),
     }
 
   fprintf (stderr, _(" done\n"));
+
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 # define NAMES_B1 ctype->names_el
@@ -1246,8 +1275,9 @@ Computing table size for character classes might take a while..."),
       ctype->ctype_b[128 + ctype->charnames[idx]]
 	= TRANS (ctype->class_collection[idx]);
 
-  /* Mirror first 128 entries.  */
-  for (idx = 0; idx < 128; ++idx)
+  /* Mirror first 127 entries.  We must take care that entry -1 is not
+     mirrored because EOF == -1.  */
+  for (idx = 0; idx < 127; ++idx)
     ctype->ctype_b[idx] = ctype->ctype_b[256 + idx];
 
   /* The 32 bit array contains all characters.  */
@@ -1292,10 +1322,13 @@ Computing table size for character classes might take a while..."),
 	  MAP_B1[idx][128 + ctype->charnames[idx2]] =
 	    ctype->map_collection[idx][idx2];
 
-      /* Mirror first 128 entries.  */
-      for (idx2 = 0; idx2 < 128; ++idx2)
+      /* Mirror first 127 entries.  We must take care not to map entry
+	 -1 because EOF == -1.  */
+      for (idx2 = 0; idx2 < 127; ++idx2)
 	MAP_B1[idx][idx2] = MAP_B1[idx][256 + idx2];
 
+      /* EOF must map to EOF.  */
+      MAP_B1[idx][127] = EOF;
 
       /* And now the other byte order.  */
       for (idx2 = 0; idx2 < ctype->plane_size * ctype->plane_cnt + 128; ++idx2)
@@ -1307,4 +1340,33 @@ Computing table size for character classes might take a while..."),
 					     * sizeof (u32_t));
   ctype->map_name_ptr = (u32_t *) xmalloc (ctype->map_collection_nr
 					   * sizeof (u32_t));
+
+  /* Array for width information.  Because the expected width are very
+     small we use only one single byte.  This save space and we need
+     not provide the information twice with both endianesses.  */
+  ctype->width = (unsigned char *) xmalloc (ctype->plane_size
+					    * ctype->plane_cnt);
+  /* Initialize with default width value.  */
+  memset (ctype->width, charset->width_default,
+	  ctype->plane_size * ctype->plane_cnt);
+  if (charset->width_rules != NULL)
+    {
+      size_t cnt;
+
+      for (cnt = 0; cnt < charset->nwidth_rules; ++cnt)
+	if (charset->width_rules[cnt].width != charset->width_default)
+	  for (idx = charset->width_rules[cnt].from;
+	       idx <= charset->width_rules[cnt].to; ++idx)
+	    {
+	      size_t nr = idx % ctype->plane_size;
+	      size_t depth = 0;
+
+	      while (NAMES_B1[nr + depth * ctype->plane_size] != nr)
+		++depth;
+	      assert (depth < ctype->plane_cnt);
+
+	      ctype->width[nr + depth * ctype->plane_size]
+		= charset->width_rules[cnt].width;
+	    }
+    }
 }

@@ -36,7 +36,13 @@ enum
 #define	_PC_CHOWN_RESTRICTED	_PC_CHOWN_RESTRICTED
     _PC_NO_TRUNC,
 #define	_PC_NO_TRUNC		_PC_NO_TRUNC
-    _PC_VDISABLE
+    _PC_VDISABLE,
+    _PC_SYNC_IO,
+#define	_PC_SYNC_IO		_PC_SYNC_IO
+    _PC_ASYNC_IO,
+#define	_PC_ASYNC_IO		_PC_ASYNC_IO
+    _PC_PRIO_IO
+#define	_PC_PRIO_IO		_PC_PRIO_IO
   };
 
 /* Values for the argument to `sysconf'.  */
@@ -113,6 +119,8 @@ enum
 #define	_SC_LINE_MAX		_SC_LINE_MAX
     _SC_RE_DUP_MAX,
 #define	_SC_RE_DUP_MAX		_SC_RE_DUP_MAX
+    _SC_CHARCLASS_NAME_MAX,
+#define	_SC_CHARCLASS_NAME_MAX	_SC_CHARCLASS_NAME_MAX
 
     _SC_2_VERSION,
 #define	_SC_2_VERSION		_SC_2_VERSION

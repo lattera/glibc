@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/signal.h>
+#include <argz.h>
 
 /* Overlay TASK, executing FILE with arguments ARGV and environment ENVP.
    If TASK == mach_task_self (), some ports are dealloc'd by the exec server.
@@ -47,36 +48,10 @@ _hurd_exec (task_t task, file_t file,
   struct hurd_sigstate *ss;
   mach_port_t *please_dealloc, *pdp;
 
-
-  /* Pack the arguments into an array with nulls separating the elements.  */
-  argslen = 0;
-  if (argv != NULL)
-    {
-      p = argv;
-      while (*p != NULL)
-	argslen += strlen (*p++) + 1;
-      args = __alloca (argslen);
-      ap = args;
-      for (p = argv; *p != NULL; ++p)
-	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
-    }
-  else
-    args = NULL;
-
-  /* Pack the environment into an array with nulls separating elements.  */
-  envlen = 0;
-  if (envp != NULL)
-    {
-      p = envp;
-      while (*p != NULL)
-	envlen += strlen (*p++) + 1;
-      env = __alloca (envlen);
-      ap = env;
-      for (p = envp; *p != NULL; ++p)
-	ap = __memccpy (ap, *p, '\0', ULONG_MAX);
-    }
-  else
-    env = NULL;
+  if (err = __argz_create (argv, &args, &argslen))
+    return err;
+  if (err = __argz_create (envp, &env, &envlen))
+    goto outargs;
 
   /* Load up the ports to give to the new program.  */
   for (i = 0; i < _hurd_nports; ++i)
@@ -88,7 +63,7 @@ _hurd_exec (task_t task, file_t file,
 	  {
 	    while (--i > 0)
 	      _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
-	    return err;
+	    goto outenv;
 	  }
       }
     else
@@ -254,5 +229,9 @@ _hurd_exec (task_t task, file_t file,
       __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
   }
 
+ outargs:
+  free (args);
+ outenv:
+  free (env);
   return err;
 }

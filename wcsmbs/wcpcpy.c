@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,21 +17,31 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <sys/ipc.h>
-#include <sys/stat.h>
+#include <wchar.h>
 
-key_t
-ftok (pathname, proj_id)
-     char *pathname;
-     char proj_id;
+#define __need_ptrdiff_t
+#include <stddef.h>
+
+
+/* Copy SRC to DEST, returning the address of the terminating L'\0' in
+   DEST.  */
+wchar_t *
+__wcpcpy (dest, src)
+     wchar_t *dest;
+     const wchar_t *src;
 {
-  struct stat st;
-  key_t key;
+  wchar_t *wcp = (wchar_t *) dest - 1;
+  wint_t c;
+  const ptrdiff_t off = src - dest + 1;
 
-  if (__stat (pathname, &st) < 0)
-    return (key_t) -1;
+  do
+    {
+      c = wcp[off];
+      *++wcp = c;
+    }
+  while (c != L'\0');
 
-  key = (st.st_ino & 0xffff) | ((st.st_dev & 0xff) << 16) | (proj_id << 24);
-
-  return key;
+  return wcp;
 }
+
+weak_alias (__wcpcpy, wcpcpy)

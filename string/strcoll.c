@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Written by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -25,6 +25,7 @@ Boston, MA 02111-1307, USA.  */
 # define STRING_TYPE char
 # define USTRING_TYPE unsigned char
 # define STRCOLL strcoll
+# define STRCMP strcmp
 #endif
 
 /* Include the shared helper functions.  `strxfrm'/`wcsxfrm' also use
@@ -49,7 +50,7 @@ STRCOLL (s1, s2)
   /* If the current locale does not specify locale data we use normal
      8-bit string comparison.  */
   if (collate_nrules == 0)
-    return strcmp (s1, s2);
+    return STRCMP (s1, s2);
 
   /* Get full information about the strings.  This means we get
      information for all passes in a special data structure.  */

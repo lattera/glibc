@@ -25,6 +25,7 @@ Boston, MA 02111-1307, USA.  */
 #include <fcntl.h>
 #include <locale.h>
 #include <malloc.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -913,10 +914,11 @@ check_all_categories (struct localedef_t *locale, struct charset_t *charset)
 
 
 void
-write_all_categories (struct localedef_t *locale, const char *output_path)
+write_all_categories (struct localedef_t *locale, struct charset_t *charset,
+		      const char *output_path)
 {
   /* Call all functions to write locale data.  */
-  ctype_output (locale, output_path);
+  ctype_output (locale, charset, output_path);
   collate_output (locale, output_path);
   monetary_output (locale, output_path);
   numeric_output (locale, output_path);

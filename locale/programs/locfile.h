@@ -66,7 +66,7 @@ void check_all_categories (struct localedef_t *locale,
 			   struct charset_t *charset);
 
 void write_all_categories (struct localedef_t *locale,
-			   const char *output_path);
+			   struct charset_t *charset, const char *output_path);
 
 
 void write_locale_data (const char *output_path, const char *category,

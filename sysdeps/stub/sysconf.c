@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,20 @@ DEFUN(__sysconf, (name), int name)
     case _SC_OPEN_MAX:
     case _SC_JOB_CONTROL:
     case _SC_SAVED_IDS:
+    case _SC_REALTIME_SIGNALS:
+    case _SC_PRIORITY_SCHEDULING:
+    case _SC_TIMERS:
+    case _SC_ASYNCHRONOUS_IO:
+    case _SC_PRIORITIZED_IO:
+    case _SC_SYNCHRONIZED_IO:
+    case _SC_FSYNC:
+    case _SC_MAPPED_FILES:
+    case _SC_MEMLOCK:
+    case _SC_MEMLOCK_RANGE:
+    case _SC_MEMORY_PROTECTION:
+    case _SC_MESSAGE_PASSING:
+    case _SC_SEMAPHORES:
+    case _SC_SHARED_MEMORY_OBJECTS:
     case _SC_VERSION:
 
     case _SC_BC_BASE_MAX:
@@ -53,6 +67,7 @@ DEFUN(__sysconf, (name), int name)
     case _SC_EXPR_NEST_MAX:
     case _SC_LINE_MAX:
     case _SC_RE_DUP_MAX:
+    case _SC_CHARCLASS_NAME_MAX:
     case _SC_2_VERSION:
     case _SC_2_C_BIND:
     case _SC_2_C_DEV:

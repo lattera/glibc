@@ -231,7 +231,7 @@ main (int argc, char *argv[])
       for (act_add_locdef = copy_list; act_add_locdef != NULL;
 	   act_add_locdef = act_add_locdef->next)
 	{
-	  for (cat = LC_COLLATE; cat <= LC_MESSAGES; ++cat)
+	  for (cat = LC_CTYPE; cat <= LC_MESSAGES; ++cat)
 	    if ((act_add_locdef->mask & (1 << cat)) != 0)
 	      {
 		act_add_locdef->mask &= ~(1 << cat);
@@ -335,7 +335,7 @@ cannot `stat' locale file `%s'"),
 	error (4, cannot_write_why, _("cannot write output files to `%s'"),
 	       output_path);
       else
-	write_all_categories (localedef, output_path);
+	write_all_categories (localedef, charset, output_path);
     }
   else
     error (4, 0, _("no output file produced because warning were issued"));

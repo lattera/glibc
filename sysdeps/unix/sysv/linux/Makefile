@@ -15,7 +15,7 @@ sysdep_routines += fxstat lxstat xstat
 endif
 
 ifeq ($(subdir), misc)
-sysdep_routines += xmknod s_ptrace
+sysdep_routines += xmknod s_ptrace s_sysctl sysctl
 headers += sys/mount.h
 endif
 
@@ -36,4 +36,3 @@ rtld-installed-name = ld-gnu.so.1
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
-

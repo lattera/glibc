@@ -1,6 +1,6 @@
 /* Internal header for proving correct grouping in strings of numbers.
-Copyright (C) 1995 Free Software Foundation, Inc.
-Contributed by Ulrich Drepper.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -28,16 +28,16 @@ Cambridge, MA 02139, USA.  */
    satisfies the grouping rules.  It is assumed that at least one digit
    follows BEGIN directly.  */
 
-static inline const char *
-correctly_grouped_prefix (const char *begin, const char *end,
+static inline const STRING_TYPE *
+correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
 			  wchar_t thousands, const char *grouping)
 {
-  if (! grouping)
+  if (grouping == NULL)
     return end;
 
   while (end > begin)
     {
-      const char *cp = end - 1;
+      const STRING_TYPE *cp = end - 1;
       const char *gp = grouping;
 
       /* Check first group.  */
@@ -48,7 +48,7 @@ correctly_grouped_prefix (const char *begin, const char *end,
 	{
 	  /* This group matches the specification.  */
 
-	  const char *new_end;
+	  const STRING_TYPE *new_end;
 
 	  if (cp < begin)
 	    /* There is just one complete group.  We are done.  */
@@ -66,7 +66,7 @@ correctly_grouped_prefix (const char *begin, const char *end,
 	      /* Get the next grouping rule.  */
 	      ++gp;
 	      if (*gp == 0)
-		/* If end is reached use last rule.  */ 
+		/* If end is reached use last rule.  */
 	        --gp;
 
 	      /* Skip the thousands separator.  */
@@ -85,7 +85,7 @@ correctly_grouped_prefix (const char *begin, const char *end,
 	      else
 	        {
 		  /* Check the next group.  */
-	          const char *group_end = cp;
+	          const STRING_TYPE *group_end = cp;
 
 		  while (cp >= begin && (wchar_t) *cp != thousands)
 		    --cp;
@@ -120,4 +120,4 @@ correctly_grouped_prefix (const char *begin, const char *end,
     }
 
   return MAX (begin, end);
-} 
+}

@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Written by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -36,10 +36,7 @@ Boston, MA 02111-1307, USA.  */
 
 /* Write 32 bit value UTF-8 encoded but only if enough space is left.  */
 static __inline size_t
-print_val (u_int32_t value,
-	   STRING_TYPE *dest,
-	   size_t max,
-	   size_t act)
+print_val (u_int32_t value, STRING_TYPE *dest, size_t max, size_t act)
 {
   char tmp[6];
   int idx = 0;
@@ -101,10 +98,7 @@ print_val (u_int32_t value,
    their transformation.  The transformed string is put in at
    most N characters of DEST and its length is returned.  */
 size_t
-STRXFRM (dest, src, n)
-     STRING_TYPE *dest;
-     const STRING_TYPE *src;
-     size_t n;
+STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
 {
   weight_t *forw = NULL;
   weight_t *backw = NULL;

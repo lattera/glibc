@@ -1,5 +1,6 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -13,23 +14,22 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-/* This is almost copied from strncpy.c, written by Torbjorn Granlund.  */
-
-#include <ansidecl.h>
-#include <string.h>
-#include <memcopy.h>
+#include <wchar.h>
 
 
-/* Copy no more than N characters of SRC to DEST, returning the address of
-   the last character written into DEST.  */
-char *
-DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
+/* Copy no more than N wide-characters of SRC to DEST, returning the
+   address of the last character written into DEST.  */
+wchar_t *
+__wcpncpy (dest, src, n)
+     wchar_t *dest;
+     const wchar_t *src;
+     size_t n;
 {
-  reg_char c;
-  char *s = dest;
+  wint_t c;
+  wchar_t *const s = dest;
 
   --dest;
 
@@ -41,19 +41,19 @@ DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
 	{
 	  c = *src++;
 	  *++dest = c;
-	  if (c == '\0')
+	  if (c == L'\0')
 	    break;
 	  c = *src++;
 	  *++dest = c;
-	  if (c == '\0')
+	  if (c == L'\0')
 	    break;
 	  c = *src++;
 	  *++dest = c;
-	  if (c == '\0')
+	  if (c == L'\0')
 	    break;
 	  c = *src++;
 	  *++dest = c;
-	  if (c == '\0')
+	  if (c == L'\0')
 	    break;
 	  if (--n4 == 0)
 	    goto last_chars;
@@ -76,13 +76,14 @@ DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
       if (--n == 0)
 	return dest;
     }
-  while (c != '\0');
+  while (c != L'\0');
 
  zero_fill:
-  while (n-- > 0)
-    dest[n] = '\0';
+  do
+    *++dest = L'\0';
+  while (--n > 0);
 
   return dest;
 }
 
-weak_alias (__stpncpy, stpncpy)
+weak_alias (__wcpncpy, wcpncpy)

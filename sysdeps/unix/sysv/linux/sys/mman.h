@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.  Linux version.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -87,6 +87,14 @@ int mlock __P ((__caddr_t __addr, size_t __len));
 
 /* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
 int munlock __P ((__caddr_t __addr, size_t __len));
+
+/* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
+   NEW_LEN.  If MAY_MOVE is MREMAP_MAXMOVE the returned address may
+   differ from ADDR.  */
+__caddr_t __mremap __P ((__caddr_t __addr, size_t __old_len, size_t __new_len,
+			 int __may_move));
+__caddr_t mremap __P ((__caddr_t __addr, size_t __old_len, size_t __new_len,
+		       int __may_move));
 
 __END_DECLS
 

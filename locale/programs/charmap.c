@@ -47,7 +47,9 @@ void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
 static struct charset_t *parse_charmap (const char *filename);
-
+static void new_width (struct linereader *cmfile, struct charset_t *result,
+		       const char *from, const char *to,
+		       unsigned long int width);
 
 
 struct charset_t *
@@ -123,6 +125,8 @@ parse_charmap (const char *filename)
   /* Allocate room for result.  */
   result = (struct charset_t *) xmalloc (sizeof (struct charset_t));
   memset (result, '\0', sizeof (struct charset_t));
+  /* The default DEFAULT_WIDTH is 1.  */
+  result->width_default = 1;
 
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free
@@ -399,6 +403,10 @@ argument to <%s> must be a single character"),
 
 	case 91:
 	  /* Waiting for WIDTH... */
+	  if (nowtok == tok_eol)
+	    /* Ignore empty lines.  */
+	    continue;
+
 	  if (nowtok == tok_width_default)
 	    {
 	      state = 92;
@@ -474,7 +482,10 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 
 	case 94:
 	  if (nowtok == tok_ellipsis)
-	    state = 95;
+	    {
+	      state = 95;
+	      continue;
+	    }
 
 	case 96:
 	  if (nowtok != tok_number)
@@ -482,8 +493,11 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 		      "WIDTH");
 	  else
 	    {
-	      /* XXX Store width for chars.  */
+	      /* Store width for chars.  */
+	      new_width (cmfile, result, from_name, to_name, now->val.num);
+
 	      from_name = NULL;
+	      to_name = NULL;
 	    }
 
 	  lr_ignore_rest (cmfile, nowtok == tok_number);
@@ -506,8 +520,6 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	  to_name = (char *) obstack_copy0 (&result->mem_pool,
 					    now->val.str.start,
 					    now->val.str.len);
-
-	  lr_ignore_rest (cmfile, 1);
 
 	  state = 96;
 	  continue;
@@ -590,4 +602,51 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
   lr_close (cmfile);
 
   return result;
+}
+
+
+static void
+new_width (struct linereader *cmfile, struct charset_t *result,
+	   const char *from, const char *to, unsigned long int width)
+{
+  unsigned int from_val, to_val;
+
+  from_val = charset_find_value (result, from, strlen (from));
+  if (from_val == ILLEGAL_CHAR_VALUE)
+    {
+      lr_error (cmfile, _("unknown character `%s'"), from);
+      return;
+    }
+
+  if (to == NULL)
+    to_val = from_val;
+  else
+    {
+      to_val = charset_find_value (result, to, strlen (to));
+      if (to_val == ILLEGAL_CHAR_VALUE)
+	{
+	  lr_error (cmfile, _("unknown character `%s'"), to);
+	  return;
+	}
+    }
+
+  if (result->nwidth_rules >= result->nwidth_rules_max)
+    {
+      size_t new_size = result->nwidth_rules + 32;
+      struct width_rule *new_rules =
+	(struct width_rule *) obstack_alloc (&result->mem_pool,
+					     (new_size
+					      * sizeof (struct width_rule)));
+
+      memcpy (new_rules, result->width_rules,
+	      result->nwidth_rules_max * sizeof (struct width_rule));
+
+      result->width_rules = new_rules;
+      result->nwidth_rules_max = new_size;
+    }
+
+  result->width_rules[result->nwidth_rules].from = from_val;
+  result->width_rules[result->nwidth_rules].to = to_val;
+  result->width_rules[result->nwidth_rules].width = (unsigned int) width;
+  ++result->nwidth_rules;
 }

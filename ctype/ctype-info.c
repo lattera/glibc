@@ -25,11 +25,13 @@ extern const char _nl_C_LC_CTYPE_class32[];
 extern const char _nl_C_LC_CTYPE_toupper[];
 extern const char _nl_C_LC_CTYPE_tolower[];
 extern const char _nl_C_LC_CTYPE_names[];
+extern const char _nl_C_LC_CTYPE_width[];
 
-#define b(u,x,o) (((const u int *) _nl_C_LC_CTYPE_##x) + o);
+#define b(t,x,o) (((const t *) _nl_C_LC_CTYPE_##x) + o);
 
-const unsigned short int *__ctype_b = b (unsigned short, class, 128);
-const unsigned int *__ctype32_b = b (unsigned, class32, 0);
-const int *__ctype_tolower = b (, tolower, 128);
-const int *__ctype_toupper = b (, toupper, 128);
-const unsigned int *__ctype_names = b (unsigned, names, 0);
+const unsigned short int *__ctype_b = b (unsigned short int, class, 128);
+const unsigned int *__ctype32_b = b (unsigned int, class32, 0);
+const int *__ctype_tolower = b (int, tolower, 128);
+const int *__ctype_toupper = b (int, toupper, 128);
+const unsigned int *__ctype_names = b (unsigned int, names, 0);
+const unsigned char *__ctype_width = b (unsigned char, width, 0);

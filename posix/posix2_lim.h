@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,31 +22,34 @@ Cambridge, MA 02139, USA.  */
 
 
 /* The maximum `ibase' and `obase' values allowed by the `bc' utility.  */
-#define	_POSIX2_BC_BASE_MAX	99
+#define	_POSIX2_BC_BASE_MAX		99
 
 /* The maximum number of elements allowed in an array by the `bc' utility.  */
-#define	_POSIX2_BC_DIM_MAX	2048
+#define	_POSIX2_BC_DIM_MAX		2048
 
 /* The maximum `scale' value allowed by the `bc' utility.  */
-#define	_POSIX2_BC_SCALE_MAX	99
+#define	_POSIX2_BC_SCALE_MAX		99
 
 /* The maximum length of a string constant accepted by the `bc' utility.  */
-#define	_POSIX2_BC_STRING_MAX	1000
+#define	_POSIX2_BC_STRING_MAX		1000
 
 /* The maximum number of weights that can be assigned to an entry of
    the LC_COLLATE category `order' keyword in a locale definition.  */
-#define	_POSIX2_EQUIV_CLASS_MAX	2
+#define	_POSIX2_EQUIV_CLASS_MAX		2
 
 /* The maximum number of expressions that can be nested
    within parentheses by the `expr' utility.  */
-#define	_POSIX2_EXPR_NEST_MAX	32
+#define	_POSIX2_EXPR_NEST_MAX		32
 
 /* The maximum length, in bytes, of an input line.  */
-#define	_POSIX2_LINE_MAX	2048
+#define	_POSIX2_LINE_MAX		2048
 
 /* The maximum number of repeated occurrences of a regular expression
    permitted when using the interval notation `\{M,N\}'.  */
-#define	_POSIX2_RE_DUP_MAX	255
+#define	_POSIX2_RE_DUP_MAX		255
+
+/* The manimum number of bytes in a character class name.  */
+#define	_POSIX2_CHARCLASS_NAME_MAX	14
 
 
 /* These values are implementation-specific,
@@ -54,28 +57,31 @@ Cambridge, MA 02139, USA.  */
    Their precise values can be obtained from sysconf.  */
 
 #ifndef	BC_BASE_MAX
-#define	BC_BASE_MAX	_POSIX2_BC_BASE_MAX
+#define	BC_BASE_MAX		_POSIX2_BC_BASE_MAX
 #endif
 #ifndef	BC_DIM_MAX
-#define	BC_DIM_MAX	_POSIX2_BC_DIM_MAX
+#define	BC_DIM_MAX		_POSIX2_BC_DIM_MAX
 #endif
 #ifndef	BC_SCALE_MAX
-#define	BC_SCALE_MAX	_POSIX2_BC_SCALE_MAX
+#define	BC_SCALE_MAX		_POSIX2_BC_SCALE_MAX
 #endif
 #ifndef	BC_STRING_MAX
-#define	BC_STRING_MAX	_POSIX2_BC_STRING_MAX
+#define	BC_STRING_MAX		_POSIX2_BC_STRING_MAX
 #endif
 #ifndef	EQUIV_CLASS_MAX
-#define	EQUIV_CLASS_MAX	_POSIX2_EQUIV_CLASS_MAX
+#define	EQUIV_CLASS_MAX		_POSIX2_EQUIV_CLASS_MAX
 #endif
 #ifndef	EXPR_NEST_MAX
-#define	EXPR_NEST_MAX	_POSIX2_EXPR_NEST_MAX
+#define	EXPR_NEST_MAX		_POSIX2_EXPR_NEST_MAX
 #endif
 #ifndef	LINE_MAX
-#define	LINE_MAX	_POSIX2_LINE_MAX
+#define	LINE_MAX		_POSIX2_LINE_MAX
 #endif
 #ifndef	RE_DUP_MAX
-#define	RE_DUP_MAX	_POSIX2_RE_DUP_MAX
+#define	RE_DUP_MAX		_POSIX2_RE_DUP_MAX
+#endif
+#ifndef	CHARCLASS_NAME_MAX
+#define	CHARCLASS_NAME_MAX	_POSIX2_CHARCLASS_NAME_MAX
 #endif
 
 

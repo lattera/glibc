@@ -59,7 +59,11 @@ typedef int mbstate_t; /* FIXME */
    hold any value corresponding to members of the extended character
    set, as well as at least one value that does not correspond to any
    member of the extended character set.  */
+#ifndef __have_wint_t_defined
+#define __have_wint_t_defined 1
+/* This is a hack!!! */
 typedef unsigned int wint_t;
+#endif
 #endif
 
 
@@ -80,6 +84,14 @@ extern int wcscmp __P ((__const wchar_t *__s1, __const wchar_t *__s2));
 /* Compare N wide-characters of S1 and S2.  */
 extern int wcsncmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
 			 size_t __n));
+
+/* Compare S1 and S2, both interpreted as appropriate to the
+   LC_COLLATE category of the current locale.  */
+extern int wcscoll __P ((__const wchar_t *__s1, __const wchar_t *__s2));
+/* Transform S2 into array pointed to by S1 such that if wcscmp is
+   applied to two transformed strings the result is the as applying
+   `wcscoll' to the original strings.  */
+extern size_t wcsxfrm __P ((wchar_t *__s1, __const wchar_t *__s2, size_t __n));
 
 /* Duplicate S, returning an identical malloc'd string.  */
 extern wchar_t *wcsdup __P ((__const wchar_t *__s));
@@ -162,6 +174,127 @@ extern size_t mbsrtowcs __P ((wchar_t *__dst, __const char **__src,
    SRC to DST.  */
 extern size_t wcsrtombs __P ((char *__dst, __const wchar_t **__src,
 			      size_t __len, mbstate_t *__ps));
+
+
+#ifdef	__USE_GNU
+/* The following functions are extensions found in X/Open CAE.  */
+
+/* Determine number of column positions required for C.  */
+extern int wcwidth __P ((wint_t __c));
+
+/* Determine number of column positions required for first N wide
+   characters (or fewer if S ends before this) in S.  */
+extern int wcswidth __P ((__const wchar_t *__s, size_t __n));
+#endif	/* use GNU */
+
+
+/* Convert initial portion of the wide string NPTR to `double'
+   representation.  */
+extern double wcstod __P ((__const wchar_t *__nptr, wchar_t **__endptr));
+
+#ifdef USE_GNU
+/* Likewise for `float' and `long double' sizes of floating-point numbers.  */
+extern float wcstof __P ((__const wchar_t *__nptr, wchar_t **__endptr));
+extern __long_double_t wcstold __P ((__const wchar_t *__nptr,
+				     wchar_t **__endptr));
+#endif /* GNU */
+
+
+/* Convert initial portion of wide string NPTR to `long int'
+   representation.  */
+extern long int wcstol __P ((__const wchar_t *__nptr, wchar_t **__endptr,
+			     int __base));
+
+/* Convert initial portion of wide string NPTR to `unsigned long int'
+   representation.  */
+extern unsigned long int wcstoul __P ((__const wchar_t *__nptr,
+				       wchar_t **__endptr, int __base));
+
+#if defined (__GNUC__) && defined (__USE_GNU)
+/* Convert initial portion of wide string NPTR to `long int'
+   representation.  */
+extern long long int wcstoq __P ((__const wchar_t *__nptr, wchar_t **__endptr,
+				  int __base));
+
+/* Convert initial portion of wide string NPTR to `unsigned long long int'
+   representation.  */
+extern unsigned long long int wcstouq __P ((__const wchar_t *__nptr,
+					    wchar_t **__endptr, int __base));
+#endif /* GCC and use GNU.  */
+
+
+/* The internal entry points for `wcstoX' take an extra flag argument
+   saying whether or not to parse locale-dependent number grouping.  */
+extern double __wcstod_internal __P ((__const wchar_t *__nptr,
+				      wchar_t **_endptr, int __group));
+extern float __wcstof_internal __P ((__const wchar_t *__nptr,
+				     wchar_t **_endptr, int __group));
+extern __long_double_t __wcstold_internal __P ((__const wchar_t *__nptr,
+						wchar_t **_endptr,
+						int __group));
+
+extern long int __wcstol_internal __P ((__const wchar_t *__nptr,
+					wchar_t **__endptr, int __base,
+					int __group));
+extern unsigned long int __wcstoul_internal __P ((__const wchar_t *__nptr,
+						  wchar_t **__endptr,
+						  int __base, int __group));
+#ifdef __GNUC__
+extern long long int __wcstoq_internal __P ((__const wchar_t *__nptr,
+					     wchar_t **__endptr, int __base,
+					     int __group));
+extern unsigned long long int __wcstouq_internal __P ((__const wchar_t *__nptr,
+						       wchar_t **__endptr,
+						       int __base,
+						       int __group));
+#endif /* GCC */
+
+
+#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+/* Define inline functions which call the internal entry points.  */
+
+extern __inline double wcstod (__const wchar_t *__nptr, wchar_t **__endptr)
+{ return __wcstod_internal (__nptr, __endptr, 0); }
+extern __inline long int wcstol (__const wchar_t *__nptr,
+                                 wchar_t **__endptr, int __base)
+{ return __wcstol_internal (__nptr, __endptr, __base, 0); }
+extern __inline unsigned long int wcstoul (__const wchar_t *__nptr,
+                                           wchar_t **__endptr, int __base)
+{ return __wcstoul_internal (__nptr, __endptr, __base, 0); }
+
+#ifdef __USE_GNU
+extern __inline float wcstof (__const wchar_t *__nptr, wchar_t **__endptr)
+{ return __wcstof_internal (__nptr, __endptr, 0); }
+extern __inline __long_double_t wcstold (__const wchar_t *__nptr,
+					 wchar_t **__endptr)
+{ return __wcstold_internal (__nptr, __endptr, 0); }
+#endif
+
+#ifdef __USE_BSD
+extern __inline long long int wcstoq (__const wchar_t *__nptr,
+				      wchar_t **__endptr, int __base)
+{ return __wcstoq_internal (__nptr, __endptr, __base, 0); }
+extern __inline unsigned long long int wcstouq (__const wchar_t *__nptr,
+						wchar_t **__endptr, int __base)
+{ return __wcstouq_internal (__nptr, __endptr, __base, 0); }
+#endif
+#endif /* Optimizing GCC >=2.  */
+
+
+#ifdef	__USE_GNU
+/* Copy SRC to DEST, returning the address of the terminating L'\0' in
+   DEST.  */
+extern wchar_t *__wcpcpy __P ((wchar_t *__dest, __const wchar_t *__src));
+extern wchar_t *wcpcpy __P ((wchar_t *__dest, __const wchar_t *__src));
+
+/* Copy no more than N characters of SRC to DEST, returning the address of
+   the last character written into DEST.  */
+extern wchar_t *__wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
+				size_t __n));
+extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
+			      size_t __n));
+#endif	/* use GNU */
+
 
 __END_DECLS
 

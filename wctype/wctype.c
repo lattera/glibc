@@ -45,12 +45,6 @@ wctype (const char *property)
 # define SWAPU32(w) \
   (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
 
-# define SWAPU16(w) \
-  (((w) >> 8) | ((w) << 8))
-
-  if (sizeof (wctype_t) == 4)
-    return SWAPU32 (result);
-  else
-    return SWAPU16 (result);
+  return SWAPU32 (result);
 #endif
 }

@@ -1,5 +1,5 @@
 /* Initial program startup for running under the GNU Hurd.
-Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@ Cambridge, MA 02139, USA.  */
 #include "set-hooks.h"
 #include "hurdmalloc.h"		/* XXX */
 #include "hurdstartup.h"
+#include <argz.h>
 
 mach_port_t *_hurd_init_dtable;
 mach_msg_type_number_t _hurd_init_dtablesize;
@@ -44,9 +45,6 @@ unsigned long int __hurd_sigthread_stack_end;
 unsigned long int *__hurd_sigthread_variables;
 
 extern void __mach_init (void);
-
-int _hurd_split_args (char *, size_t, char **);
-
 
 /* Entry point.  This is the first thing in the text segment.
 
@@ -125,9 +123,9 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 	 arguments and environment into vectors of pointers to strings.  */
 
       /* Count up the arguments so we can allocate ARGV.  */
-      argc = _hurd_split_args (args, argslen, NULL);
+      argc = __argz_count (args, argslen);
       /* Count up the environment variables so we can allocate ENVP.  */
-      envc = _hurd_split_args (env, envlen, NULL);
+      envc = __argz_count (env, envlen);
 
       /* There were some arguments.  Allocate space for the vectors of
 	 pointers and fill them in.  We allocate the space for the
@@ -138,11 +136,11 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 			  sizeof (struct hurd_startup_data));
       *argcptr = argc;
       argv = (void *) (argcptr + 1);
-      _hurd_split_args (args, argslen, argv);
+      __argz_extract (args, argslen, argv);
 
       /* There was some environment.  */
       envp = &argv[argc + 1];
-      _hurd_split_args (env, envlen, envp);
+      __argz_extract (env, envlen, envp);
     }
 
   if (err || in_bootstrap == MACH_PORT_NULL)
@@ -196,36 +194,4 @@ _hurd_startup (void **argptr, void (*main) (int *data))
   /* Should never get here.  */
   LOSE;
   abort ();
-}
-
-/* Split ARGSLEN bytes at ARGS into words, breaking at NUL characters.  If
-   ARGV is not a null pointer, store a pointer to the start of each word in
-   ARGV[n], and null-terminate ARGV.  Return the number of words split.  */
-
-int
-_hurd_split_args (char *args, size_t argslen, char **argv)
-{
-  char *p = args;
-  size_t n = argslen;
-  int argc = 0;
-
-  while (n > 0)
-    {
-      char *end = memchr (p, '\0', n);
-
-      if (argv)
-	argv[argc] = p;
-      ++argc;
-
-      if (end == NULL)
-	/* The last argument is unterminated.  */
-	break;
-
-      n -= end + 1 - p;
-      p = end + 1;
-    }
-
-  if (argv)
-    argv[argc] = NULL;
-  return argc;
 }

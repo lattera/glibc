@@ -251,6 +251,12 @@ DEFUN(__sysconf, (name), int name)
       return -1;
 #endif
 
+    case _SC_CHARCLASS_NAME_MAX:
+#ifdef	CHARCLASS_NAME_MAX
+      return CHARCLASS_NAME_MAX;
+#else
+      return -1;
+#endif
 
     case _SC_2_VERSION:
       /* This is actually supposed to return the version

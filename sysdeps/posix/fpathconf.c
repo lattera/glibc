@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -104,6 +104,27 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
     case _PC_VDISABLE:
 #ifdef	_POSIX_VDISABLE
       return _POSIX_VDISABLE;
+#else
+      return -1;
+#endif
+
+    case _PC_SYNC_IO:
+#ifdef	_POSIX_SYNC_IO
+      return _POSIX_SYNC_IO;
+#else
+      return -1;
+#endif
+
+    case _PC_ASYNC_IO:
+#ifdef	_POSIX_ASYNC_IO
+      return _POSIX_ASYNC_IO;
+#else
+      return -1;
+#endif
+
+    case _PC_PRIO_IO:
+#ifdef	_POSIX_PRIO_IO
+      return _POSIX_PRIO_IO;
 #else
       return -1;
 #endif

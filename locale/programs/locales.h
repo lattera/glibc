@@ -79,129 +79,130 @@ charclass_to_bit (enum token_t tok)
 
 /* Remember name of newly created charclass.  */
 void ctype_startup (struct linereader *lr, struct localedef_t *locale,
-		    struct charset_t *__charset);
-void ctype_finish (struct localedef_t *__locale, struct charset_t *__charset);
+		    struct charset_t *charset);
+void ctype_finish (struct localedef_t *locale, struct charset_t *charset);
 
-void ctype_output (struct localedef_t *locale, const char *output_path);
+void ctype_output (struct localedef_t *locale, struct charset_t *charset,
+		   const char *output_path);
 
 int ctype_is_charclass (struct linereader *lr, struct localedef_t *locale,
-			const char *__name);
+			const char *name);
 void ctype_class_new (struct linereader *lr, struct localedef_t *locale,
-		      enum token_t __tok, struct token *__code,
-		      struct charset_t *__charset);
+		      enum token_t tok, struct token *code,
+		      struct charset_t *charset);
 void ctype_class_start (struct linereader *lr, struct localedef_t *locale,
-			enum token_t __tok, const char *__name,
-			struct charset_t *__charset);
+			enum token_t tok, const char *name,
+			struct charset_t *charset);
 void ctype_class_from (struct linereader *lr, struct localedef_t *locale,
-		       struct token *__code, struct charset_t *__charset);
+		       struct token *code, struct charset_t *charset);
 void ctype_class_to (struct linereader *lr, struct localedef_t *locale,
-		     struct token *__code, struct charset_t *__charset);
+		     struct token *code, struct charset_t *charset);
 void ctype_class_end (struct linereader *lr, struct localedef_t *locale);
 
 int ctype_is_charmap (struct linereader *lr, struct localedef_t *locale,
-		      const char *__name);
+		      const char *name);
 void ctype_map_new (struct linereader *lr, struct localedef_t *locale,
-		    enum token_t __tok, struct token *__code,
-		    struct charset_t *__charset);
+		    enum token_t tok, struct token *code,
+		    struct charset_t *charset);
 void ctype_map_start (struct linereader *lr, struct localedef_t *locale,
-		      enum token_t __tok, const char *__name,
-		      struct charset_t *__charset);
+		      enum token_t tok, const char *name,
+		      struct charset_t *charset);
 void ctype_map_from (struct linereader *lr, struct localedef_t *locale,
-		     struct token *__code, struct charset_t *__charset);
+		     struct token *code, struct charset_t *charset);
 void ctype_map_to (struct linereader *lr, struct localedef_t *locale,
-		   struct token *__code, struct charset_t *__charset);
+		   struct token *code, struct charset_t *charset);
 void ctype_map_end (struct linereader *lr, struct localedef_t *locale);
 
 
 /* Handle LC_COLLATE category.  */
 
-void collate_startup (struct linereader *__lr, struct localedef_t *__locale,
-		      struct charset_t *__charset);
+void collate_startup (struct linereader *lr, struct localedef_t *locale,
+		      struct charset_t *charset);
 
-void collate_finish (struct localedef_t *__locale,
-		     struct charset_t *__charset);
+void collate_finish (struct localedef_t *locale,
+		     struct charset_t *charset);
 
 void collate_output (struct localedef_t *locale, const char *output_path);
 
-void collate_element_to (struct linereader *__lr, struct localedef_t *__locale,
-			 struct token *__code, struct charset_t *__charset);
-void collate_element_from (struct linereader *__lr,
-			   struct localedef_t *__locale, struct token *__code,
-			   struct charset_t *__charset);
-void collate_symbol (struct linereader *__lr, struct localedef_t *__locale,
-		     struct token *__code, struct charset_t *__charset);
-void collate_new_order (struct linereader *__lr, struct localedef_t *__locale,
-			enum coll_sort_rule __sort_rule);
-void collate_build_arrays (struct linereader *__lr,
-			   struct localedef_t *__locale);
-int collate_order_elem (struct linereader *__lr, struct localedef_t *__locale,
-			struct token *__code, struct charset_t *__charset);
-int collate_weight_bsymbol (struct linereader *__lr,
-			    struct localedef_t *__locale,
-			    struct token *__code, struct charset_t *__charset);
-int collate_next_weight (struct linereader *__lr,
-			 struct localedef_t *__locale);
-int collate_simple_weight (struct linereader *__lr,
-			   struct localedef_t *__locale,
-			   struct token *__code, struct charset_t *__charset);
-void collate_end_weight (struct linereader *__lr,
-			 struct localedef_t *__locale);
+void collate_element_to (struct linereader *lr, struct localedef_t *locale,
+			 struct token *code, struct charset_t *charset);
+void collate_element_from (struct linereader *lr,
+			   struct localedef_t *locale, struct token *code,
+			   struct charset_t *charset);
+void collate_symbol (struct linereader *lr, struct localedef_t *locale,
+		     struct token *code, struct charset_t *charset);
+void collate_new_order (struct linereader *lr, struct localedef_t *locale,
+			enum coll_sort_rule sort_rule);
+void collate_build_arrays (struct linereader *lr,
+			   struct localedef_t *locale);
+int collate_order_elem (struct linereader *lr, struct localedef_t *locale,
+			struct token *code, struct charset_t *charset);
+int collate_weight_bsymbol (struct linereader *lr,
+			    struct localedef_t *locale,
+			    struct token *code, struct charset_t *charset);
+int collate_next_weight (struct linereader *lr,
+			 struct localedef_t *locale);
+int collate_simple_weight (struct linereader *lr,
+			   struct localedef_t *locale,
+			   struct token *code, struct charset_t *charset);
+void collate_end_weight (struct linereader *lr,
+			 struct localedef_t *locale);
 
 
 /* Handle LC_MONETARY category.  */
 
-void monetary_startup (struct linereader *__lr, struct localedef_t *__locale,
-		       struct charset_t *__charset);
+void monetary_startup (struct linereader *lr, struct localedef_t *locale,
+		       struct charset_t *charset);
 
-void monetary_finish (struct localedef_t *__locale);
+void monetary_finish (struct localedef_t *locale);
 
 void monetary_output (struct localedef_t *locale, const char *output_path);
 
 void monetary_add (struct linereader *lr, struct localedef_t *locale,
-		   enum token_t __tok, struct token *__code,
-		   struct charset_t *__charset);
+		   enum token_t tok, struct token *code,
+		   struct charset_t *charset);
 
 
 /* Handle LC_NUMERIC category.  */
 
-void numeric_startup (struct linereader *__lr, struct localedef_t *__locale,
-		      struct charset_t *__charset);
+void numeric_startup (struct linereader *lr, struct localedef_t *locale,
+		      struct charset_t *charset);
 
-void numeric_finish (struct localedef_t *__locale);
+void numeric_finish (struct localedef_t *locale);
 
 void numeric_output (struct localedef_t *locale, const char *output_path);
 
 void numeric_add (struct linereader *lr, struct localedef_t *locale,
-		  enum token_t __tok, struct token *__code,
-		  struct charset_t *__charset);
+		  enum token_t tok, struct token *code,
+		  struct charset_t *charset);
 
 
 /* Handle LC_TIME category.  */
 
-void time_startup (struct linereader *__lr, struct localedef_t *__locale,
-		   struct charset_t *__charset);
+void time_startup (struct linereader *lr, struct localedef_t *locale,
+		   struct charset_t *charset);
 
-void time_finish (struct localedef_t *__locale);
+void time_finish (struct localedef_t *locale);
 
 void time_output (struct localedef_t *locale, const char *output_path);
 
 void time_add (struct linereader *lr, struct localedef_t *locale,
-	       enum token_t __tok, struct token *__code,
-	       struct charset_t *__charset);
+	       enum token_t tok, struct token *code,
+	       struct charset_t *charset);
 
 
 /* Handle LC_MESSAGES category.  */
 
-void messages_startup (struct linereader *__lr, struct localedef_t *__locale,
-		       struct charset_t *__charset);
+void messages_startup (struct linereader *lr, struct localedef_t *locale,
+		       struct charset_t *charset);
 
-void messages_finish (struct localedef_t *__locale);
+void messages_finish (struct localedef_t *locale);
 
 void messages_output (struct localedef_t *locale, const char *output_path);
 
 void messages_add (struct linereader *lr, struct localedef_t *locale,
-		   enum token_t __tok, struct token *__code,
-		   struct charset_t *__charset);
+		   enum token_t tok, struct token *code,
+		   struct charset_t *charset);
 
 
 #endif /* locales.h */

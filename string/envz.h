@@ -1,6 +1,6 @@
 /* Routines for dealing with '\0' separated environment vectors
 
-   Copyright (C) 1995 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -28,11 +28,11 @@
 #include <argz.h>
 
 /* Returns a pointer to the entry in ENVZ for NAME, or 0 if there is none.  */
-char *envz_entry (char *envz, unsigned envz_len, char *name);
+char *envz_entry (const char *envz, size_t envz_len, const char *name);
 
 /* Returns a pointer to the value portion of the entry in ENVZ for NAME, or 0
    if there is none.  */
-char *envz_get (char *envz, unsigned envz_len, char *name);
+char *envz_get (const char *envz, size_t envz_len, const char *name);
 
 /* Adds an entry for NAME with value VALUE to ENVZ & ENVZ_LEN.  If an entry
    with the same name already exists in ENVZ, it is removed.  If VALUE is
@@ -40,16 +40,17 @@ char *envz_get (char *envz, unsigned envz_len, char *name);
    return NULL, although envz_entry will still return an entry; this is handy
    because when merging with another envz, the null entry can override an
    entry in the other one.  Null entries can be removed with envz_strip ().  */
-error_t envz_add (char **envz, unsigned *envz_len, char *name, char *value);
+error_t envz_add (char **envz, size_t *envz_len,
+		  const char *name, const char *value);
 
 /* Adds each entry in ENVZ2 to ENVZ & ENVZ_LEN, as if with envz_add().  If
    OVERRIDE is true, then values in ENVZ2 will supercede those with the same
    name in ENV, otherwise not.  */
-error_t
-envz_merge (char **envz, unsigned *envz_len, char *envz2, unsigned envz2_len,
-	    int override);
+error_t envz_merge (char **envz, size_t *envz_len,
+		    const char *envz2, size_t envz2_len,
+		    int override);
 
 /* Remove null entries.  */
-void envz_strip (char **envz, unsigned *envz_len);
+void envz_strip (char **envz, size_t *envz_len);
 
 #endif /* __ENVZ_H__ */

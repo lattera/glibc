@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -27,7 +27,7 @@ wcsncpy (dest, src, n)
      const wchar_t *src;
      size_t n;
 {
-  wchar_t c;
+  wint_t c;
   wchar_t *const s = dest;
 
   --dest;

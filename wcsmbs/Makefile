@@ -22,11 +22,26 @@
 subdir	:= wcsmbs
 
 headers	:= wchar.h
+distribute := wcwidth.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsncmp wcsncpy wcspbrk wcsrchr wcsspn wcstok wcsstr wmemchr \
-	    wmemcmp wmemcpy wmemmove wmemset \
+	    wmemcmp wmemcpy wmemmove wmemset wcpcpy wcpncpy \
 	    btowc wctob mbsinit \
-	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs
+	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs \
+	    wcstol wcstoul wcstoq wcstouq wcstod wcstold wcstof \
+	    wcscoll wcsxfrm \
+	    wcwidth wcswidth
 
 include ../Rules
+
+CFLAGS-wcwidth.c = -I../wctype
+CFLAGS-wcswidth.c = -I../wctype
+
+CFLAGS-wcstol.c = -I../stdlib
+CFLAGS-wcstoul.c = -I../stdlib
+CFLAGS-wcstoq.c = -I../stdlib
+CFLAGS-wcstouq.c = -I../stdlib
+CFLAGS-wcstod.c = -I../stdlib
+CFLAGS-wcstold.c = -I../stdlib
+CFLAGS-wcstof.c = -I../stdlib

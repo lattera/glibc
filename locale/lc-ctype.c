@@ -43,14 +43,17 @@ _nl_postload_ctype (void)
 #define paste(a,b) paste1(a,b)
 #define paste1(a,b) a##b
 
-#define current(unsigned,x) \
-  ((const unsigned int *) _NL_CURRENT (LC_CTYPE, paste(_NL_CTYPE_,x)) \
-   + 128)
+#define current(type,x,offset) \
+  ((const type *) _NL_CURRENT (LC_CTYPE, paste(_NL_CTYPE_,x)) + offset)
 
+  extern const unsigned int *__ctype32_b;
   extern const unsigned int *__ctype_names;
+  extern const unsigned char *__ctype_width;
 
-  __ctype_b = current (unsigned short, CLASS);
-  __ctype_toupper = current (, bo (TOUPPER));
-  __ctype_tolower = current (, bo (TOLOWER));
-  __ctype_names = current (unsigned, bo (NAMES));
+  __ctype_b = current (unsigned short int, CLASS, 128);
+  __ctype_toupper = current (int, bo (TOUPPER), 128);
+  __ctype_tolower = current (int, bo (TOLOWER), 128);
+  __ctype32_b = current (unsigned int, CLASS32, 0);
+  __ctype_names = current (unsigned int, bo (NAMES), 0);
+  __ctype_width = current (unsigned char, WIDTH, 0);
 }

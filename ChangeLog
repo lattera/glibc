@@ -1,3 +1,166 @@
+Wed May  1 09:10:04 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/strftime.c: Use canonical autoconf nugget for time.h+sys/time.h
+	include.
+
+Mon Apr 29 02:48:26 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* ctype/ctype-info.c: (__ctype_width): New variable.
+	(__ctype_names): Initialize correctly without offset.
+
+	* locale/C-collate.c, locale/C-ctype.c,
+	locale/C-messages.c, locale/C-monetary.c,
+	locale/C-numeric.c, locale/C-time.c: Change copyright.
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_class32): Correct
+	endianess for initialization value.
+
+	* locale/lc-ctype.c (current): Add parameter for offset.
+	(__ctype32_b, __ctype_width): Add initialization for these
+	variables.
+
+	* locale/programs/charmap.c: Finish support for WIDTH information.
+	(new_width): New function.
+
+	* locale/programs/charset.h (width_rule): new data structure.
+	(charset_t): Add elements for width information.
+
+	* locale/programs/ld-ctype.c (locale_ctype_t): Add element
+	for width information.
+	(allocate_arrays): Add new argument for charset.
+	(ctype_finish): Make sure all characters named in charset
+	width table are known to name table.
+	(ctype_output): Correct handling of class and map name
+	information and write out width information.
+	(find_idx): Prepare for being called with NULL pointer as
+	TABLE argument.  This means only allocate name entry.
+	(allocate_arrays): Correct handling of array element -1.
+	Because EOF == -1 the value of element 127 must *not* be
+	mirrored here.
+	Fill width information from charset tables.
+
+	* locale/programs/localedef.c (main): Correct loop over all
+	categories after change of order from Thu Mar 28 14:22:51 1996.
+	Add new charset argument to call of `write_all_categories'.
+
+	* locale/programs/locales.h (ctype_finish, ctype_output): New
+	charset argument.
+
+	* locale/programs/locfile.c (write_all_categories): Call
+	`ctype_output' with additional argument charset.
+
+	* posix/getconf.c (vars): Add _POSIX_SYNC_IO, _POSIX_ASYNC_IO,
+	and _POSIX_PRIO_IO definitions.
+
+	* posix/posix2_lim.h: Add definition of _POSIX2_CHARCLASS_NAME_MAX
+	and CHARCLASS_NAME_MAX.
+
+	* posix/unistd.h: Document _POSIX_SYNC_IO, _POSIX_ASYNC_IO,
+	and _POSIX_PRIO_IO.
+
+	* stdlib/grouping.h: Prepare for use in wide string functions.
+
+	* stdlib/stdlib.h: Correct prototypes for __strto*_internal
+	functions.
+
+	* stdlib/strtod.c: Extend for use as `wcsto{f,d,ld}'.
+
+	* stdlib/strtol.c: Extend for use as `wcsto{l,ul,q,uq}'.
+
+	* string/strcoll.c: Extend for use as `wcscoll'.
+
+	* string/strxfrm.c: Extend for use as `wcsxfrm'.
+
+	* sysdeps/generic/confname.h: Add definition of _PC_SYNC_IO,
+	_PC_ASYNC_IO, _PC_PRIO_IO and _SC_CHARCLASS_NAME_MAX.
+
+	* sysdeps/generic/stpncpy.c: Correct return value.
+
+	* sysdeps/posix/fpathconf.c: Add handling of _PC_SYNC_IO,
+	_PC_ASYNC_IO, and _PC_PRIO_IO.
+
+	* sysdeps/posix/sysconf.c: Add handling of _SC_REALTIME_SIGNALS,
+	_SC_PRIORITY_SCHEDULING, _SC_TIMERS, _SC_ASYNCHRONOUS_IO,
+	_SC_PRIORITIZED_IO, _SC_SYNCHRONIZED_IO, _SC_FSYNC,
+	_SC_MAPPED_FILES, _SC_MEMLOCK, _SC_MEMLOCK_RANGE,
+	_SC_MEMORY_PROTECTION, _SC_MESSAGE_PASSING, _SC_SEMAPHORES,
+	_SC_SHARED_MEMORY_OBJECTS, and _SC_CHARCLASS_NAME_MAX.
+	* sysdeps/stub/sysconf.c: Ditto.
+	* sysdeps/unix/sysv/sysv4/sysconf.c: Ditto.
+
+	* sysdeps/unix/sysv/linux/Dist: Add sys/sysctl.h.
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir == misc]
+	(sysdep_routines): Add s_sysctl and sysctl.
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: Add declaration of mremap.
+
+	* sysdeps/unix/sysv/linux/sys/socket.h: New file.  Wrapper
+	around kernel header.
+
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: New file.  Define
+	interface to `sysctl' function.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add mremap and _sysctl.
+
+	* sysdeps/unix/sysv/linux/sysconf.c: Add handling of
+	_SC_CHARCLASS_NAME_MAX.
+
+	* sysdeps/unix/sysv/linux/sysctl.c: new file.  Implement caller
+	of _sysctl system call.
+
+	* sysvipc/Makefile (routines): Add ftok.
+
+	* sysvipc/ftok.c: use variable `proj_id' not `id'.  Patch by
+	David Mosberger-Tang.
+
+	* wcsmbs/Makefile (routines): Add wcpcpy, wcpncpy, wcstol,
+        wcstoul, wcstoq, wcstouq, wcstod, wcstold, wcstof, wcscoll,
+        wcsxfrm, wcwidth, and wcswidth.
+
+	* wcsmbs/wchar.h: Add declarations for wcpcpy, wcpncpy, wcstol,
+        wcstoul, wcstoq, wcstouq, wcstod, wcstold, wcstof, wcscoll,
+        wcsxfrm, wcwidth, and wcswidth.
+	Declare internal interfaces for wcsto* functions.
+	[OPTIMIZE]: Define inline functions for wcsto* functions to
+	call internal interface functions.
+
+	* wcsmbs/wcpcpy.c, wcsmbs/wcpncpy.c: New files.  Implement non-
+	standard function equivalent to stpcpy/stpncpy.
+
+	* wcsmbs/wcscoll.c: Implement `wcscoll' function by using
+        `strcoll' implementation.
+
+	* wcsmbs/wcscpy.c, wcsmbs/wcsncpy.c: Use wint_t instead of
+        wchar_t.
+
+	* wcsmbs/wcstod.c: Implement `wcstod' function by using `strtod'
+        implementation.
+	* wcsmbs/wcstof.c: Same for `wcstof'.
+	* wcsmbs/wcstold.c: Same for `strtold'.
+
+	* wcsmbs/wcstol.c: Implement `wcstol' function by using `strtol'
+        implementation.
+	* wcsmbs/wcstoq.c: Same for `wcstoq'.
+	* wcsmbs/wcstoul.c: Same for `wcstoul'.
+	* wcsmbs/wcstouq.c: Same for `wcstouq'.
+
+	* wcsmbs/wcswidth.c: Implement `wcswidth' function from X/Open
+        CAE.
+	* wcsmbs/wcwidth.c: Ditto for `wcwidth'.
+	* wcsmbs/wcwidth.h: Common function for definitions of above two
+	functions.
+
+	* wcsmbs/wcsxfrm.c: Implement `wcsxfrm function by using
+        `strxfrm implementation.
+
+	* wctype/wctype.c: Remove case for `wctype_t' being 16 bit type.
+
+	* wctype/wctype.h (wint_t): Protect against multiple definition.
+	(wctype_t): Always define as `unsigned long int'.
+
+	* wctype.h: New file.  Wrapper around wctype/wctype.h.
+
 Tue Apr 30 17:30:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (_hurdsig_abort_rpcs): Add timeout argument to
@@ -8,6 +171,11 @@ Tue Apr 30 17:30:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	in DESCRIPTION for the digits in I.
 
 Mon Apr 29 00:11:59 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* hurd/hurdstartup.c (_hurd_split_args): Function removed.
+	(_hurd_startup): Use argz functions.
+
+	* hurd/hurdexec.c: Use argz functions.
 
 	* errno.h [!__error_t_defined] (error_t): New type.
 	* sysdeps/mach/hurd/errnos.awk: #define __error_t_defined after the

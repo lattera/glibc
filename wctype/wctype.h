@@ -38,7 +38,11 @@ __BEGIN_DECLS
    hold any value corresponding to members of the extended character
    set, as well as at least one value that does not correspond to any
    member of the extended character set.  */
+#ifndef __have_wint_t_defined
+#define __have_wint_t_defined 1
+/* This is a hack!!! */
 typedef unsigned int wint_t;
+#endif
 #endif
 
 /* Scalar type that can hold values which represent locale-specific
@@ -47,13 +51,7 @@ typedef const unsigned int *wctrans_t;
 
 /* Scalar type that can hold values which represent locale-specific
    character classifications.  */
-#if 0
 typedef unsigned long int wctype_t;
-#else
-/* For compatibility reasons we have to use shorts for now.  */
-typedef unsigned short int wctype_t;
-#endif
-
 
 /* Constant expression of type `wint_t' whose value does not correspond
    to any member of the extended character set.  */

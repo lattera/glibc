@@ -30,8 +30,9 @@ __BEGIN_DECLS
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from sysconf.  */
 
-/* POSIX Standard approved as IEEE Std 1003.1 as of August, 1988.  */
-#define	_POSIX_VERSION	199009L
+/* POSIX Standard approved as IEEE Std 1003.1 as of August, 1988 and
+   extended by P1003.1b (aka POSIX.4).  */
+#define	_POSIX_VERSION	199309L
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
@@ -94,6 +95,9 @@ __BEGIN_DECLS
 				`c_cc' member of `struct termios' is
 				_POSIX_VDISABLE, no character will have the
 				effect associated with that element.
+   _POSIX_SYNC_IO		Synchronous I/O may be performed.
+   _POSIX_ASYNC_IO		Asynchronous I/O may be performed.
+   _POSIX_PRIO_IO		Prioritized Asynchronous I/O may be performed.
    */
 
 #include <posix_opt.h>

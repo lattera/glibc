@@ -102,22 +102,26 @@ extern unsigned long long int strtouq __P ((__const char *__nptr,
 /* The internal entry points for `strtoX' take an extra flag argument
    saying whether or not to parse locale-dependent number grouping.  */
 
-extern double __strtod_internal (__const char *__nptr,
-				 char **__endptr, int __group);
-extern float __strtof_internal (__const char *__nptr, char **__endptr,
-				int __group);
-extern __long_double_t __strtold_internal (__const char *__nptr,
-					   char **__endptr, int __group);
-extern long int __strtol_internal (__const char *__nptr, char **__endptr,
-				   int __base, int __group);
-extern unsigned long int __strtoul_internal (__const char *__nptr,
-					     char **__endptr, int __base,
-					     int __group);
-extern long long int __strtoq_internal (__const char *__nptr, char **__endptr,
-					int __base, int __group);
-extern unsigned long long int __strtouq_internal (__const char *__nptr,
+extern double __strtod_internal __P ((__const char *__nptr,
+				      char **__endptr, int __group));
+extern float __strtof_internal __P ((__const char *__nptr, char **__endptr,
+				     int __group));
+extern __long_double_t __strtold_internal __P ((__const char *__nptr,
+						char **__endptr, int __group));
+extern long int __strtol_internal __P ((__const char *__nptr, char **__endptr,
+					int __base, int __group));
+extern unsigned long int __strtoul_internal __P ((__const char *__nptr,
 						  char **__endptr, int __base,
-						  int __group);
+						  int __group));
+#ifdef __GNUC__
+extern long long int __strtoq_internal __P ((__const char *__nptr,
+					     char **__endptr, int __base,
+					     int __group));
+extern unsigned long long int __strtouq_internal __P ((__const char *__nptr,
+						       char **__endptr,
+						       int __base,
+						       int __group));
+#endif /* GCC */
 
 #if defined (__OPTIMIZE__) && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
@@ -143,7 +147,7 @@ extern __inline long long int strtoq (__const char *__nptr, char **__endptr,
 				      int __base)
 { return __strtoq_internal (__nptr, __endptr, __base, 0); }
 extern __inline unsigned long long int strtouq (__const char *__nptr,
-					    char **__endptr, int __base)
+						char **__endptr, int __base)
 { return __strtouq_internal (__nptr, __endptr, __base, 0); }
 #endif
 

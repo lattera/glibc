@@ -26,11 +26,23 @@ Boston, MA 02111-1307, USA.  */
 #include "linereader.h"
 
 
+struct width_rule
+{
+  unsigned int from;
+  unsigned int to;
+  unsigned int width;
+};
+
+
 struct charset_t
 {
   const char *code_set_name;
   int mb_cur_min;
   int mb_cur_max;
+
+  struct width_rule *width_rules;
+  size_t nwidth_rules;
+  size_t nwidth_rules_max;
   int width_default;
 
   struct obstack mem_pool;
