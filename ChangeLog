@@ -1,5 +1,14 @@
 1998-12-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/powerpc/dl-machine.h (elf_machine_matches_host): Mark
+	static inline, not extern inline.
+	(elf_machine_dynamic): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	(elf_machine_plt_value): Likewise.
+	* sysdeps/powerpc/backtrace.c: Include stddef.h to get NULL
+	definition.
+	Patches by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 	* sysdeps/mips/dl-machine.h (elf_machine_rel): Fixl_addr parameter
 	type.  Reported by job bogan <job@piquin.uchicago.edu>.
 

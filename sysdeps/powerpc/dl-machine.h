@@ -25,7 +25,7 @@
 #include <assert.h>
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
-extern inline int
+static inline int
 elf_machine_matches_host (Elf32_Half e_machine)
 {
   return e_machine == EM_PPC;
@@ -34,7 +34,7 @@ elf_machine_matches_host (Elf32_Half e_machine)
 
 /* Return the link-time address of _DYNAMIC, stored as
    the first value in the GOT. */
-extern inline Elf32_Addr
+static inline Elf32_Addr
 elf_machine_dynamic (void)
 {
   Elf32_Addr *got;
@@ -238,7 +238,7 @@ extern int __elf_machine_runtime_setup (struct link_map *map,
 					int lazy, int profile);
 #define elf_machine_runtime_setup __elf_machine_runtime_setup
 
-extern inline void
+static inline void
 elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   /* elf_machine_runtime_setup handles this. */
@@ -252,7 +252,7 @@ extern void __elf_machine_fixup_plt(struct link_map *map,
 #define elf_machine_fixup_plt __elf_machine_fixup_plt
 
 /* Return the final value of a plt relocation.  */
-extern inline Elf32_Addr
+static inline Elf32_Addr
 elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
 		       Elf32_Addr value)
 {

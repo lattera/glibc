@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <execinfo.h>
+#include <stddef.h>
 
 /* This is the stack layout we see with every stack frame.
    Note that every routine is required by the ABI to lay out the stack
@@ -40,7 +41,7 @@ __backtrace (void **array, int size)
 {
   struct layout *current;
   int count;
-  
+
   /* Force gcc to spill LR.  */
   asm volatile ("" : "=l"(current));
 
