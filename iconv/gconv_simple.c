@@ -238,7 +238,7 @@ ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 	  return __GCONV_ILLEGAL_INPUT;
 	}
 
-      *((uint32_t *) outptr)++ = bswap_32 (*(uint32_t *) inptr);
+      *((uint32_t *) outptr)++ = inval;
     }
 
   *inptrp = inptr;
@@ -297,18 +297,6 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
       outptr[2] = inptr[2];
       outptr[3] = inptr[3];
 # endif
-
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-      outptr[3] = inptr[0];
-      outptr[2] = inptr[1];
-      outptr[1] = inptr[2];
-      outptr[0] = inptr[3];
-# else
-      outptr[0] = inptr[0];
-      outptr[1] = inptr[1];
-      outptr[2] = inptr[2];
-      outptr[3] = inptr[3];
-# endif
     }
 
   *inptrp = inptr;
@@ -353,7 +341,10 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
     {
       /* The value is too large.  */
       if (!(flags & __GCONV_IGNORE_ERRORS))
-	return __GCONV_ILLEGAL_INPUT;
+	{
+	  *inptrp -= cnt - (state->__count & 7);
+	  return __GCONV_ILLEGAL_INPUT;
+	}
     }
   else
     {
@@ -448,7 +439,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
   /* Sigh, we have to do some real work.  */
   size_t cnt;
 
-  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
+  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4, outptr += 4)
     {
       outptr[0] = inptr[3];
       outptr[1] = inptr[2];
@@ -566,7 +557,7 @@ ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 	  return __GCONV_ILLEGAL_INPUT;
 	}
 
-      *((uint32_t *) outptr)++ = bswap_32 (*(uint32_t *) inptr);
+      *((uint32_t *) outptr)++ = inval;
     }
 
   *inptrp = inptr;
@@ -752,6 +743,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
+    /* XXX unaligned.  */						      \
     if (__builtin_expect (*((uint32_t *) inptr), 0) > 0x7f)		      \
       {									      \
 	if (! ignore_errors_p ())					      \
@@ -766,7 +758,6 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
-      /* XXX unaligned.  */						      \
       *outptr++ = *((uint32_t *) inptr)++;				      \
   }
 #include <iconv/loop.c>
@@ -875,13 +866,13 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	    cnt = 2;							      \
 	    ch &= 0x1f;							      \
 	  }								      \
-        else if (__builtin_expect (ch & 0xf0, 0xf0) == 0xe0)		      \
+        else if (__builtin_expect (ch & 0xf0, 0xe0) == 0xe0)		      \
 	  {								      \
 	    /* We expect three bytes.  */				      \
 	    cnt = 3;							      \
 	    ch &= 0x0f;							      \
 	  }								      \
-	else if (__builtin_expect (ch & 0xf8, 0xf8) == 0xf0)		      \
+	else if (__builtin_expect (ch & 0xf8, 0xf0) == 0xf0)		      \
 	  {								      \
 	    /* We expect four bytes.  */				      \
 	    cnt = 4;							      \
@@ -1012,13 +1003,13 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	cnt = 3;							      \
 	ch &= 0x0f;							      \
       }									      \
-    else if (__builtin_expect (ch & 0xf8, 0xf8) == 0xf0)		      \
+    else if (__builtin_expect (ch & 0xf8, 0xf0) == 0xf0)		      \
       {									      \
 	/* We expect four bytes.  */					      \
 	cnt = 4;							      \
 	ch &= 0x07;							      \
       }									      \
-    else if (__builtin_expect (ch & 0xfc, 0xfc) == 0xf8)		      \
+    else if (__builtin_expect (ch & 0xfc, 0xf8) == 0xf8)		      \
       {									      \
 	/* We expect five bytes.  */					      \
 	cnt = 5;							      \
