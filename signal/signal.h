@@ -335,8 +335,8 @@ extern int sigstack __P ((__const struct sigstack *__ss,
 typedef struct sigaltstack
   {
     __ptr_t ss_sp;
-    size_t ss_size;
     int ss_flags;
+    size_t ss_size;
   } stack_t;
 
 extern int sigaltstack __P ((__const struct sigaltstack *__ss,

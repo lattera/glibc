@@ -1,3 +1,42 @@
+1998-05-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/signal.h: Move definitions of struct sigstack and
+	struct sigaltstack into separate file and include it.
+	* sysdeps/generic/bits/sigstack.h: New file.
+	* sysdeps/unix/sysv/linux/bits/sigstack.h: New file.
+	* signal/Makefile (headers): Add bits/sigstack.h.
+
+1998-05-03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (dl_main): Fix check for number of references to
+	interpreter object.
+
+1998-05-03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (dl_main): Check has_interp after executing platform
+	specific code.
+
+1998-05-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/run-iconv-test.sh: Fix typo.
+
+1998-05-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (+depfiles): Add depfiles for $(tests-static).
+	Simplified.
+
+1998-05-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/terminal.texi (Special Characters): Fix description of
+	c_cc indexes.
+
+1998-05-01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/tcsetattr.c: Use memcpy to copy the c_cc
+	array.
+	* sysdeps/unix/sysv/linux/tcgetattr.c: Likewise.  Initialize rest
+	of c_cc array.
+
 1998-04-30 14:15  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* sysdeps/unix/sysv/linux/netrose/rose.h: Don't include kernel headers.

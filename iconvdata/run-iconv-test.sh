@@ -68,7 +68,7 @@ while read from to subset targets; do
 	  failed=1; continue; }
     else
       $ICONV -f ASCII -t $to testdata/suntzus |
-      $ICONV -f $to -f ASCII > $temp1 ||
+      $ICONV -f $to -t ASCII > $temp1 ||
         { echo "*** conversion ASCII->$to->ASCII of suntzus failed";
 	  failed=1; continue; }
 	cmp testdata/suntzus $temp1 ||
