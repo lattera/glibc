@@ -220,8 +220,12 @@ elf_hash (__const char *__name)
       __hash = (__hash << 4) + *__name++;
       __hi = __hash & 0xf0000000;
       if (__hi != 0)
-	__hash ^= __hi >> 24;
-      __hash &= ~__hi;
+	{
+	  __hash ^= __hi >> 24;
+	  /* The ELF ABI says `hash &= ~hi', but this is equivalent
+	     in this case and on some machines one insn instead of two.  */
+	  __hash ^= __hi;
+	}
     }
   return __hash;
 }

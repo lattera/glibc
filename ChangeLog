@@ -1,3 +1,8 @@
+Thu Apr 13 09:45:01 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/libelf.h (elf_hash): Use XOR instead of ANDN when the bits
+ 	being cleared are already known to be set.  Thanks Ulrich.
+
 Wed Apr 12 23:27:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/environ.c: Add weak alias `_environ'.
