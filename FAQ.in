@@ -146,8 +146,6 @@ them.
   A full build of the PowerPC library took 1h on a PowerPC 750@400Mhz w/
   64MB of RAM, and about 9h on a 601@60Mhz w/ 72Mb.
 
-  If you have some more measurements let me know.
-
 ??	What version of the Linux kernel headers should be used?
 
 {AJ,UD} The headers from the most recent Linux kernel should be used.  The
