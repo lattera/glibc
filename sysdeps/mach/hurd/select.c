@@ -244,13 +244,13 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 	    }
 	}
 
-    if (err == MACH_RCV_TIMED_OUT)
-      /* This is the normal value for ERR.  We might have timed out and
-         read no messages.  Otherwise, after receiving the first message,
-         we poll for more messages.  We receive with a timeout of 0 to
-         effect a poll, so ERR is MACH_RCV_TIMED_OUT when the poll finds no
-         message waiting.  */
-      err = 0;
+      if (err == MACH_RCV_TIMED_OUT)
+	/* This is the normal value for ERR.  We might have timed out and
+	   read no messages.  Otherwise, after receiving the first message,
+	   we poll for more messages.  We receive with a timeout of 0 to
+	   effect a poll, so ERR is MACH_RCV_TIMED_OUT when the poll finds no
+	   message waiting.  */
+	err = 0;
 
       if (got && err == EINTR)
 	/* Some calls were interrupted, but at least one descriptor
@@ -266,12 +266,6 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
        but the descriptor may have changed to a different server.  */
     __mach_port_destroy (__mach_task_self (), port);
 
-  if (timeout && got == 0 && err == MACH_RCV_TIMED_OUT)
-    /* No io_select call returned success immediately, and the last call
-       blocked for our full timeout period and then timed out.  So the
-       multiplex times out too.  */
-    return 0;
-
   if (err)
     return __hurd_fail (err);
 
@@ -281,25 +275,25 @@ DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
 
   /* Set the user bitarrays.  We only ever have to clear bits, as all desired
      ones are initially set.  */
-  for (i = 0; i < nfds; ++i)
+  for (i = firstfd; i < lastfd; ++i)
     {
       int type = types[i];
 
       if ((type & SELECT_RETURNED) == 0)
 	type = 0;
 
-      if (readfds != NULL && (type & SELECT_READ) == 0)
+      if (type & SELECT_READ)
+	got++;
+      else
 	FD_CLR (i, readfds);
-      else
+      if (type & SELECT_WRITE)
 	got++;
-      if (writefds != NULL && (type & SELECT_WRITE) == 0)
+      else
 	FD_CLR (i, writefds);
-      else
+      if (type & SELECT_URG)
 	got++;
-      if (exceptfds != NULL && (type & SELECT_URG) == 0)
+      else
 	FD_CLR (i, exceptfds);
-      else
-	got++;
     }
 
   return got;
