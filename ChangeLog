@@ -1,3 +1,11 @@
+Sun Jul 21 06:48:38 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/generic/setenv.c (__environ): Change conditional for #define
+	from [!HAVE_GNU_LD] to [!_LIBC].
+	[_LIBC]: Include <libc-lock.h> and define a lock.
+	(LOCK, UNLOCK): New macros, no-ops for [! _LIBC].
+	(setenv, unsetenv): Use them.
+
 Sun Jul 21 01:44:39 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* locale/programs/locfile.c (write_locale_data): Deal with missing
@@ -5,6 +13,15 @@ Sun Jul 21 01:44:39 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/socket.c (socket): Make TYPE an int.
 	* sysdeps/mach/hurd/socketpair.c (socketpair): Likewise.
+
+Sat Jul 20 21:55:31 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	Win32 hacks from <Rob_Tulloh@tivoli.com>.
+	* posix/glob.c [WIN32]: Don't include <pwd.h>; don't use d_ino;
+	use void * for my_realloc; include <malloc.h> for alloca.
+	(glob) [WIN32]: Use "c:/users/default" for ~ if no HOME variable.
+	* posix/fnmatch.h [WIN32]: Use prototypes even if [!__STDC__].
+	* posix/glob.h: Likewise.
 
 Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
@@ -16,7 +33,7 @@ Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/uname.c (uname): Deref UNAME to get nodename.
 	<unistd.h>: New include.
-	
+
 	* sysdeps/mach/libc-lock.h (__libc_lock_define): Backslashify
 	continuation line.
 
