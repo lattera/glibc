@@ -16,6 +16,33 @@ comment_char  %
 % Distribution and use is free, also
 % for commercial purposes.
 
+LC_IDENTIFICATION
+title      "English locale for Botswana"
+source     "RAP"
+address    ""
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "English"
+territory  "Botswana"
+revision   "1.0"
+date       "2000-06-29"
+%
+category  "en_BW:2000";LC_IDENTIFICATION
+category  "en_BW:2000";LC_CTYPE
+category  "en_BW:2000";LC_COLLATE
+category  "en_BW:2000";LC_TIME
+category  "en_BW:2000";LC_NUMERIC
+category  "en_BW:2000";LC_MONETARY
+category  "en_BW:2000";LC_MESSAGES
+category  "en_BW:2000";LC_PAPER
+category  "en_BW:2000";LC_NAME
+category  "en_BW:2000";LC_ADDRESS
+category  "en_BW:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
 LC_CTYPE
 copy "en_ZA"
 END LC_CTYPE
@@ -25,13 +52,13 @@ copy "en_ZA"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol         "<B><W><P><SP>"
-currency_symbol         "<P><u>"
-mon_decimal_point       "<.>"
-mon_thousands_sep       "<,>"
+int_curr_symbol         "<U0042><U0057><U0050><U0020>"
+currency_symbol         "<U0050><U0075>"
+mon_decimal_point       "<U002E>"
+mon_thousands_sep       "<U002C>"
 mon_grouping            3;3
 positive_sign           ""
-negative_sign           "<->"
+negative_sign           "<U002D>"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -53,3 +80,33 @@ END LC_TIME
 LC_MESSAGES
 copy "en_ZA"
 END LC_MESSAGES
+
+LC_PAPER
+% FIXME
+height   297
+% FIXME
+width    210
+END LC_PAPER
+
+LC_TELEPHONE
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+% FIXME
+measurement    1
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+END LC_ADDRESS

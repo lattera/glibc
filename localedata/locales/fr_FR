@@ -22,7 +22,7 @@ escape_char  /
 LC_IDENTIFICATION
 title      "French locale for France"
 source     "RAP"
-address    "Sankt Jo//rgens Alle 8, DK-1615 Ko//benhavn V, Danmark"
+address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
 contact    "Keld Simonsen"
 email      "bug-glibc@gnu.org"
 tel        ""

@@ -1,6 +1,5 @@
 comment_char %
 escape_char  /
-repertoiremap mnemonic.ds
 %
 % Hebrew Language Locale for Israel
 % Source: RAP
@@ -20,22 +19,49 @@ repertoiremap mnemonic.ds
 % Distribution and use is free, also
 % for commercial purposes.
 
+LC_IDENTIFICATION
+title      "Hebrew locale for Israel"
+source     "RAP"
+address    "Sankt Jo/rgens Alle 8, DK-1615 Ko/benhavn V, Danmark"
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "Hebrew"
+territory  "Israel"
+revision   "1.0"
+date       "2000-06-29"
+%
+category  "he_IL:2000";LC_IDENTIFICATION
+category  "he_IL:2000";LC_CTYPE
+category  "he_IL:2000";LC_COLLATE
+category  "he_IL:2000";LC_TIME
+category  "he_IL:2000";LC_NUMERIC
+category  "he_IL:2000";LC_MONETARY
+category  "he_IL:2000";LC_MESSAGES
+category  "he_IL:2000";LC_PAPER
+category  "he_IL:2000";LC_NAME
+category  "he_IL:2000";LC_ADDRESS
+category  "he_IL:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
 LC_CTYPE
-copy "en_DK"
+copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE
-copy "en_DK"
+copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol   "<I><L><S><SP>"
-currency_symbol   "<Sh><X+>"
-mon_decimal_point "<.>"
-mon_thousands_sep "<,>"
+int_curr_symbol   "<U0049><U004C><U0053><U0020>"
+currency_symbol   "<U05E9><U05D7>"
+mon_decimal_point "<U002E>"
+mon_thousands_sep "<U002C>"
 mon_grouping      3;3
 positive_sign     ""
-negative_sign     "<->"
+negative_sign     "<U002D>"
 int_frac_digits   2
 frac_digits       2
 p_cs_precedes     1
@@ -47,48 +73,78 @@ n_sign_posn       2
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point     "<.>"
-thousands_sep     "<,>"
+decimal_point     "<U002E>"
+thousands_sep     "<U002C>"
 grouping          3;3
 END LC_NUMERIC
 
 LC_TIME
-abday   "<A+><'>";"<B+><'>";"<G+><'>";/
-        "<D+><'>";"<H+><'>";"<W+><'>";/
-	"<Sh><'>"
-day     "<R+><A+><Sh><W+><N%>";/
-        "<Sh><N+><J+>";/
-        "<Sh><L+><J+><Sh><J+>";/
-        "<R+><B+><J+><E+><J+>";/
-        "<X+><M+><J+><Sh><J+>";/
-        "<Sh><J+><Sh><J+>";/
-        "<Sh><B+><T+>"
-mon     "<J+><N+><W+><A+><R+>";/
-        "<P+><B+><R+><W+><A+><R+>";/
-        "<M+><R+><Zj>";/
-        "<A+><P+><R+><J+><L+>";/
-        "<M+><A+><J+>";/
-        "<J+><W+><N+><J+>";/
-        "<J+><W+><L+><J+>";/
-        "<A+><W+><G+><W+><S+><Tj>";/
-        "<S+><P+><Tj><M+><B+><R+>";/
-        "<A+><W+><Q+><Tj><W+><B+><R+>";/
-        "<N+><W+><B+><M+><B+><R+>";/
-        "<D+><ZJ><M+><B+><R+>"
-abmon   "<J+><N+><W+>";"<P+><B+><R+>";/
-        "<M+><R+><Zj>";"<A+><P+><R+>";/
-        "<M+><A+><J+>";"<J+><W+><N+>";/
-        "<J+><W+><L+>";"<A+><W+><G+>";/
-        "<S+><P+><Tj>";"<A+><W+><Q+>";/
-        "<N+><W+><B+>";"<D+><ZJ><M+>"
-d_t_fmt "<%><Z><SP><%><H><:><%><M><:><%><S><SP><%><Y><SP><%><b><SP><%><d><SP><%><a>"
-d_fmt   "<%><d><//><%><m><//><%><y>"
-t_fmt   "<%><H><:><%><M><:><%><S>"
-am_pm   "<A><M>";"<P><M>"
-t_fmt_ampm  "<%><I><:><%><M><:><%><S><SP><%><P>"
+abday   "<U05D0><U0027>";"<U05D1><U0027>";"<U05D2><U0027>";/
+        "<U05D3><U0027>";"<U05D4><U0027>";"<U05D5><U0027>";/
+	"<U05E9><U0027>"
+day     "<U05E8><U05D0><U05E9><U05D5><U05DF>";/
+        "<U05E9><U05E0><U05D9>";/
+        "<U05E9><U05DC><U05D9><U05E9><U05D9>";/
+        "<U05E8><U05D1><U05D9><U05E2><U05D9>";/
+        "<U05D7><U05DE><U05D9><U05E9><U05D9>";/
+        "<U05E9><U05D9><U05E9><U05D9>";/
+        "<U05E9><U05D1><U05EA>"
+mon     "<U05D9><U05E0><U05D5><U05D0><U05E8>";/
+        "<U05E4><U05D1><U05E8><U05D5><U05D0><U05E8>";/
+        "<U05DE><U05E8><U05E5>";/
+        "<U05D0><U05E4><U05E8><U05D9><U05DC>";/
+        "<U05DE><U05D0><U05D9>";/
+        "<U05D9><U05D5><U05E0><U05D9>";/
+        "<U05D9><U05D5><U05DC><U05D9>";/
+        "<U05D0><U05D5><U05D2><U05D5><U05E1><U05D8>";/
+        "<U05E1><U05E4><U05D8><U05DE><U05D1><U05E8>";/
+        "<U05D0><U05D5><U05E7><U05D8><U05D5><U05D1><U05E8>";/
+        "<U05E0><U05D5><U05D1><U05DE><U05D1><U05E8>";/
+        "<U05D3><U05E6><U05DE><U05D1><U05E8>"
+abmon   "<U05D9><U05E0><U05D5>";"<U05E4><U05D1><U05E8>";/
+        "<U05DE><U05E8><U05E5>";"<U05D0><U05E4><U05E8>";/
+        "<U05DE><U05D0><U05D9>";"<U05D9><U05D5><U05E0>";/
+        "<U05D9><U05D5><U05DC>";"<U05D0><U05D5><U05D2>";/
+        "<U05E1><U05E4><U05D8>";"<U05D0><U05D5><U05E7>";/
+        "<U05E0><U05D5><U05D1>";"<U05D3><U05E6><U05DE>"
+d_t_fmt "<U0025><U005A><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0059><U0020><U0025><U0062><U0020><U0025><U0064><U0020><U0025><U0061>"
+d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
+t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
+am_pm   "<U0041><U004D>";"<U0050><U004D>"
+t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0050>"
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "<'/>><<(><Y><y><K+><)/>><.><*>"
-noexpr  "<'/>><<(><N><n><L+><)/>><.><*>"
+yesexpr "<U005E><U005B><U0059><U0079><U05DB><U005D><U002E><U002A>"
+noexpr  "<U005E><U005B><U004E><U006E><U05DC><U005D><U002E><U002A>"
 END LC_MESSAGES
+
+LC_PAPER
+% FIXME
+height   297
+% FIXME
+width    210
+END LC_PAPER
+
+LC_TELEPHONE
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+% FIXME
+measurement    1
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+END LC_ADDRESS

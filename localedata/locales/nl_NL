@@ -1,6 +1,5 @@
 comment_char %
 escape_char  /
-repertoiremap mnemonic.ds
 %
 % Dutch Language Locale for the Netherlands
 % Source: RAP
@@ -20,27 +19,54 @@ repertoiremap mnemonic.ds
 % Distribution and use is free, also
 % for commercial purposes.
 
+LC_IDENTIFICATION
+title      "Dutch locale for the Netherlands"
+source     "RAP"
+address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "Dutch"
+territory  "Netherlands"
+revision   "1.0"
+date       "2000-06-29"
+%
+category  "nl_NL:2000";LC_IDENTIFICATION
+category  "nl_NL:2000";LC_CTYPE
+category  "nl_NL:2000";LC_COLLATE
+category  "nl_NL:2000";LC_TIME
+category  "nl_NL:2000";LC_NUMERIC
+category  "nl_NL:2000";LC_MONETARY
+category  "nl_NL:2000";LC_MESSAGES
+category  "nl_NL:2000";LC_PAPER
+category  "nl_NL:2000";LC_NAME
+category  "nl_NL:2000";LC_ADDRESS
+category  "nl_NL:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
 LC_CTYPE
-copy "en_DK"
+copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE
-copy "en_DK"
+copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "<'/>><<(><j><J><y><Y><)/>><.><*>"
-noexpr  "<'/>><<(><n><N><)/>><.><*>"
+yesexpr "<U005E><U005B><U006A><U004A><U0079><U0059><U005D><U002E><U002A>"
+noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<N><L><G><SP>"
-currency_symbol           "<f><l>"
-mon_decimal_point         "<,>"
-mon_thousands_sep         "<SP>"
+int_curr_symbol           "<U004E><U004C><U0047><U0020>"
+currency_symbol           "<U0066><U006C>"
+mon_decimal_point         "<U002C>"
+mon_thousands_sep         "<U0020>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<->"
+negative_sign             "<U002D>"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             1
@@ -52,43 +78,73 @@ n_sign_posn               2
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<,>"
+decimal_point             "<U002C>"
 thousands_sep             ""
 grouping                  0;0
 END LC_NUMERIC
 
 LC_TIME
-abday   "<z><o>";"<m><a>";"<d><i>";/
-        "<w><o>";"<d><o>";"<v><r>";/
-        "<z><a>"
-day     "<z><o><n><d><a><g>";/
-        "<m><a><a><n><d><a><g>";/
-        "<d><i><n><s><d><a><g>";/
-        "<w><o><e><n><s><d><a><g>";/
-        "<d><o><n><d><e><r><d><a><g>";/
-        "<v><r><i><j><d><a><g>";/
-        "<z><a><t><e><r><d><a><g>"
-abmon   "<j><a><n>";"<f><e><b>";/
-        "<m><r><t>";"<a><p><r>";/
-        "<m><e><i>";"<j><u><n>";/
-        "<j><u><l>";"<a><u><g>";/
-        "<s><e><p>";"<o><k><t>";/
-        "<n><o><v>";"<d><e><c>"
-mon     "<j><a><n><u><a><r><i>";/
-        "<f><e><b><r><u><a><r><i>";/
-        "<m><a><a><r><t>";/
-        "<a><p><r><i><l>";/
-        "<m><e><i>";/
-        "<j><u><n><i>";/
-        "<j><u><l><i>";/
-        "<a><u><g><u><s><t><u><s>";/
-        "<s><e><p><t><e><m><b><e><r>";/
-        "<o><k><t><o><b><e><r>";/
-        "<n><o><v><e><m><b><e><r>";/
-        "<d><e><c><e><m><b><e><r>"
-d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
-d_fmt   "<%><d><-><%><m><-><%><y>"
-t_fmt   "<%><T>"
+abday   "<U007A><U006F>";"<U006D><U0061>";"<U0064><U0069>";/
+        "<U0077><U006F>";"<U0064><U006F>";"<U0076><U0072>";/
+        "<U007A><U0061>"
+day     "<U007A><U006F><U006E><U0064><U0061><U0067>";/
+        "<U006D><U0061><U0061><U006E><U0064><U0061><U0067>";/
+        "<U0064><U0069><U006E><U0073><U0064><U0061><U0067>";/
+        "<U0077><U006F><U0065><U006E><U0073><U0064><U0061><U0067>";/
+        "<U0064><U006F><U006E><U0064><U0065><U0072><U0064><U0061><U0067>";/
+        "<U0076><U0072><U0069><U006A><U0064><U0061><U0067>";/
+        "<U007A><U0061><U0074><U0065><U0072><U0064><U0061><U0067>"
+abmon   "<U006A><U0061><U006E>";"<U0066><U0065><U0062>";/
+        "<U006D><U0072><U0074>";"<U0061><U0070><U0072>";/
+        "<U006D><U0065><U0069>";"<U006A><U0075><U006E>";/
+        "<U006A><U0075><U006C>";"<U0061><U0075><U0067>";/
+        "<U0073><U0065><U0070>";"<U006F><U006B><U0074>";/
+        "<U006E><U006F><U0076>";"<U0064><U0065><U0063>"
+mon     "<U006A><U0061><U006E><U0075><U0061><U0072><U0069>";/
+        "<U0066><U0065><U0062><U0072><U0075><U0061><U0072><U0069>";/
+        "<U006D><U0061><U0061><U0072><U0074>";/
+        "<U0061><U0070><U0072><U0069><U006C>";/
+        "<U006D><U0065><U0069>";/
+        "<U006A><U0075><U006E><U0069>";/
+        "<U006A><U0075><U006C><U0069>";/
+        "<U0061><U0075><U0067><U0075><U0073><U0074><U0075><U0073>";/
+        "<U0073><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
+        "<U006F><U006B><U0074><U006F><U0062><U0065><U0072>";/
+        "<U006E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
+        "<U0064><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_fmt   "<U0025><U0064><U002D><U0025><U006D><U002D><U0025><U0079>"
+t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
 END LC_TIME
+
+LC_PAPER
+% FIXME
+height   297
+% FIXME
+width    210
+END LC_PAPER
+
+LC_TELEPHONE
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+% FIXME
+measurement    1
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+END LC_ADDRESS

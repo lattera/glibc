@@ -1,6 +1,5 @@
 escape_char  /
 comment_char  %
-repertoiremap mnemonic.ds
 
 % English language locale for Ireland
 % Source: RAP
@@ -20,24 +19,51 @@ repertoiremap mnemonic.ds
 % Distribution and use is free, also
 % for commercial purposes.
 
+LC_IDENTIFICATION
+title      "English locale for Ireland"
+source     "RAP"
+address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "English"
+territory  "Ireland"
+revision   "1.0"
+date       "2000-06-29"
+%
+category  "en_IE:2000";LC_IDENTIFICATION
+category  "en_IE:2000";LC_CTYPE
+category  "en_IE:2000";LC_COLLATE
+category  "en_IE:2000";LC_TIME
+category  "en_IE:2000";LC_NUMERIC
+category  "en_IE:2000";LC_MONETARY
+category  "en_IE:2000";LC_MESSAGES
+category  "en_IE:2000";LC_PAPER
+category  "en_IE:2000";LC_NAME
+category  "en_IE:2000";LC_ADDRESS
+category  "en_IE:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
 LC_CTYPE
-copy "en_DK"
+copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE
-copy "en_DK"
+copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
 
 % int_curr_symbol according to ISO 4217
-int_curr_symbol         "<I><E><P><SP>"
-currency_symbol         "<Pd>"
-mon_decimal_point       "<.>"
-mon_thousands_sep       "<,>"
+int_curr_symbol         "<U0049><U0045><U0050><U0020>"
+currency_symbol         "<U00A3>"
+mon_decimal_point       "<U002E>"
+mon_thousands_sep       "<U002C>"
 mon_grouping            3;3
 positive_sign           ""
-negative_sign           "<->"
+negative_sign           "<U002D>"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -55,38 +81,38 @@ END LC_NUMERIC
 
 LC_TIME
 % copy "en_GB"
-abday       "<S><u><n>";"<M><o><n>";/
-            "<T><u><e>";"<W><e><d>";/
-            "<T><h><u>";"<F><r><i>";/
-            "<S><a><t>"
-day         "<S><u><n><d><a><y>";/
-            "<M><o><n><d><a><y>";/
-            "<T><u><e><s><d><a><y>";/
-            "<W><e><d><n><e><s><d><a><y>";/
-            "<T><h><u><r><s><d><a><y>";/
-            "<F><r><i><d><a><y>";/
-            "<S><a><t><u><r><d><a><y>"
-abmon       "<J><a><n>";"<F><e><b>";/
-            "<M><a><r>";"<A><p><r>";/
-            "<M><a><y>";"<J><u><n>";/
-            "<J><u><l>";"<A><u><g>";/
-            "<S><e><p>";"<O><c><t>";/
-            "<N><o><v>";"<D><e><c>"
-mon         "<J><a><n><u><a><r><y>";/
-            "<F><e><b><r><u><a><r><y>";/
-            "<M><a><r><c><h>";/
-            "<A><p><r><i><l>";/
-            "<M><a><y>";/
-            "<J><u><n><e>";/
-            "<J><u><l><y>";/
-            "<A><u><g><u><s><t>";/
-            "<S><e><p><t><e><m><b><e><r>";/
-            "<O><c><t><o><b><e><r>";/
-            "<N><o><v><e><m><b><e><r>";/
-            "<D><e><c><e><m><b><e><r>"
-d_t_fmt     "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
-d_fmt       "<%><d><//><%><m><//><%><y>"
-t_fmt       "<%><T>"
+abday       "<U0053><U0075><U006E>";"<U004D><U006F><U006E>";/
+            "<U0054><U0075><U0065>";"<U0057><U0065><U0064>";/
+            "<U0054><U0068><U0075>";"<U0046><U0072><U0069>";/
+            "<U0053><U0061><U0074>"
+day         "<U0053><U0075><U006E><U0064><U0061><U0079>";/
+            "<U004D><U006F><U006E><U0064><U0061><U0079>";/
+            "<U0054><U0075><U0065><U0073><U0064><U0061><U0079>";/
+            "<U0057><U0065><U0064><U006E><U0065><U0073><U0064><U0061><U0079>";/
+            "<U0054><U0068><U0075><U0072><U0073><U0064><U0061><U0079>";/
+            "<U0046><U0072><U0069><U0064><U0061><U0079>";/
+            "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
+abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
+            "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
+            "<U004D><U0061><U0079>";"<U004A><U0075><U006E>";/
+            "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
+            "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
+            "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
+mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
+            "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";/
+            "<U004D><U0061><U0072><U0063><U0068>";/
+            "<U0041><U0070><U0072><U0069><U006C>";/
+            "<U004D><U0061><U0079>";/
+            "<U004A><U0075><U006E><U0065>";/
+            "<U004A><U0075><U006C><U0079>";/
+            "<U0041><U0075><U0067><U0075><U0073><U0074>";/
+            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
+            "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";/
+            "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
+            "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
+t_fmt       "<U0025><U0054>"
 am_pm       "";""
 t_fmt_ampm  ""
 END LC_TIME
@@ -94,3 +120,33 @@ END LC_TIME
 LC_MESSAGES
 copy   "en_GB"
 END LC_MESSAGES
+
+LC_PAPER
+% FIXME
+height   297
+% FIXME
+width    210
+END LC_PAPER
+
+LC_TELEPHONE
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+% FIXME
+measurement    1
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+END LC_ADDRESS

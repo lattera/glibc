@@ -1,6 +1,5 @@
 escape_char /
 comment_char %
-repertoiremap mnemonic.ds
 %
 % Slovak Language Locale for Slovak
 % Source:
@@ -32,8 +31,35 @@ repertoiremap mnemonic.ds
 
 % Definícia typov znakov
 
+LC_IDENTIFICATION
+title      "Slovak locale for Slovak"
+source     ""
+address    "Narcisov<U00E1> 56, SK-821 01 Bratislava, Slovak Republic"
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "Slovak"
+territory  "Slovak"
+revision   "1.0"
+date       "2000-06-29"
+%
+category  "sk_SK:2000";LC_IDENTIFICATION
+category  "sk_SK:2000";LC_CTYPE
+category  "sk_SK:2000";LC_COLLATE
+category  "sk_SK:2000";LC_TIME
+category  "sk_SK:2000";LC_NUMERIC
+category  "sk_SK:2000";LC_MONETARY
+category  "sk_SK:2000";LC_MESSAGES
+category  "sk_SK:2000";LC_PAPER
+category  "sk_SK:2000";LC_NAME
+category  "sk_SK:2000";LC_ADDRESS
+category  "sk_SK:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
 LC_CTYPE
-copy "en_DK"
+copy "i18n"
 END LC_CTYPE
 
 % Triedenie
@@ -49,10 +75,10 @@ END LC_COLLATE
 
 LC_MESSAGES
 
-yesexpr		"<<(><a><A><a'><A'><y><Y><)/>><.><*>"
-noexpr  	"<<(><n><N><)/>><.><*>"
-yesstr		"<a'><n><o>"
-nostr		"<n><i><e>"
+yesexpr		"<U005B><U0061><U0041><U00E1><U00C1><U0079><U0059><U005D><U002E><U002A>"
+noexpr  	"<U005B><U006E><U004E><U005D><U002E><U002A>"
+yesstr		"<U00E1><U006E><U006F>"
+nostr		"<U006E><U0069><U0065>"
 
 END LC_MESSAGES
 
@@ -61,13 +87,13 @@ END LC_MESSAGES
 
 LC_MONETARY
 
-int_curr_symbol		"<S><K><K><SP>"
-currency_symbol		"<S><k>"
-mon_decimal_point	"<,>"
-mon_thousands_sep	"<NS>"
+int_curr_symbol		"<U0053><U004B><U004B><U0020>"
+currency_symbol		"<U0053><U006B>"
+mon_decimal_point	"<U002C>"
+mon_thousands_sep	"<U00A0>"
 mon_grouping      	3;3
 positive_sign		""
-negative_sign		"<->"
+negative_sign		"<U002D>"
 int_frac_digits		2
 frac_digits		2
 p_cs_precedes		0
@@ -84,8 +110,8 @@ END LC_MONETARY
 
 LC_NUMERIC
 
-decimal_point		"<,>"
-thousands_sep		"<NS>"
+decimal_point		"<U002C>"
+thousands_sep		"<U00A0>"
 grouping		3;3
 
 END LC_NUMERIC
@@ -95,57 +121,57 @@ END LC_NUMERIC
 LC_TIME
 
 
-abday		"<N><e>";/
-		"<P><o>";/
-		"<U><t>";/
-		"<S><t>";/
-		"<S<><t>";/
-		"<P><i>";/
-		"<S><o>"
+abday		"<U004E><U0065>";/
+		"<U0050><U006F>";/
+		"<U0055><U0074>";/
+		"<U0053><U0074>";/
+		"<U0160><U0074>";/
+		"<U0050><U0069>";/
+		"<U0053><U006F>"
 
-day		"<N><e><d><e><l<><a>";/
-		"<P><o><n><d><e><l><o><k>";/
-		"<U><t><o><r><o><k>";/
-		"<S><t><r><e><d><a>";/
-		"<S<><t><v><r><t><o><k>";/
-		"<P><i><a><t><o><k>";/
-		"<S><o><b><o><t><a>"
+day		"<U004E><U0065><U0064><U0065><U013E><U0061>";/
+		"<U0050><U006F><U006E><U0064><U0065><U006C><U006F><U006B>";/
+		"<U0055><U0074><U006F><U0072><U006F><U006B>";/
+		"<U0053><U0074><U0072><U0065><U0064><U0061>";/
+		"<U0160><U0074><U0076><U0072><U0074><U006F><U006B>";/
+		"<U0050><U0069><U0061><U0074><U006F><U006B>";/
+		"<U0053><U006F><U0062><U006F><U0074><U0061>"
 
-mon		"<j><a><n><u><a'><r>";/
-		"<f><e><b><r><u><a'><r>";/
-		"<m><a><r><e><c>";/
-		"<a><p><r><i'><l>";/
-		"<m><a'><j>";/
-		"<j><u'><n>";/
-		"<j><u'><l>";/
-		"<a><u><g><u><s><t>";/
-		"<s><e><p><t><e><m><b><e><r>";/
-		"<o><k><t><o'><b><e><r>";/
-		"<n><o><v><e><m><b><e><r>";/
-		"<d><e><c><e><m><b><e><r>"
+mon		"<U006A><U0061><U006E><U0075><U00E1><U0072>";/
+		"<U0066><U0065><U0062><U0072><U0075><U00E1><U0072>";/
+		"<U006D><U0061><U0072><U0065><U0063>";/
+		"<U0061><U0070><U0072><U00ED><U006C>";/
+		"<U006D><U00E1><U006A>";/
+		"<U006A><U00FA><U006E>";/
+		"<U006A><U00FA><U006C>";/
+		"<U0061><U0075><U0067><U0075><U0073><U0074>";/
+		"<U0073><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
+		"<U006F><U006B><U0074><U00F3><U0062><U0065><U0072>";/
+		"<U006E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
+		"<U0064><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
 
 % Hm - máme zau¾ívané skratky pre mesiace ?
 
-abmon		"<j><a><n>";/
-		"<f><e><b>";/
-		"<m><a><r>";/
-		"<a><p><r>";/
-		"<m><a'><j>";/
-		"<j><u'><n>";/
-		"<j><u'><l>";/
-		"<a><u><g>";/
-		"<s><e><p>";/
-		"<o><k><t>";/
-		"<n><o><v>";/
-		"<d><e><c>"
+abmon		"<U006A><U0061><U006E>";/
+		"<U0066><U0065><U0062>";/
+		"<U006D><U0061><U0072>";/
+		"<U0061><U0070><U0072>";/
+		"<U006D><U00E1><U006A>";/
+		"<U006A><U00FA><U006E>";/
+		"<U006A><U00FA><U006C>";/
+		"<U0061><U0075><U0067>";/
+		"<U0073><U0065><U0070>";/
+		"<U006F><U006B><U0074>";/
+		"<U006E><U006F><U0076>";/
+		"<U0064><U0065><U0063>"
 
-d_t_fmt		"<%><a><NS><%><e><.><NS><%><B><NS><%><Y><,><NS><%><H><:><%><M><:><%><S><NS><%><Z>"
+d_t_fmt		"<U0025><U0061><U00A0><U0025><U0065><U002E><U00A0><U0025><U0042><U00A0><U0025><U0059><U002C><U00A0><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U00A0><U0025><U005A>"
 
-d_fmt 		"<%><d><.><%><m><.><%><Y>"
+d_fmt 		"<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 
-t_fmt		"<%><H><:><%><M><:><%><S>"
+t_fmt		"<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 
-t_fmt_ampm	"<%><I><:><%><M><:><%><S>"
+t_fmt_ampm	"<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>"
 
 am_pm   	"";""
 
@@ -153,3 +179,33 @@ END LC_TIME
 
 %% END OF LOCALIZATION FILE for sk_SK.ISO-8859-2
 %% Koniec lokalizaèného súboru pre slovenské prostredie
+
+LC_PAPER
+% FIXME
+height   297
+% FIXME
+width    210
+END LC_PAPER
+
+LC_TELEPHONE
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
+<U006C>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+% FIXME
+measurement    1
+END LC_MEASUREMENT
+
+LC_NAME
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
+<U0025><U006D><U0025><U0074><U0025><U0066>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
+<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
+<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
+<U004E><U0025><U0063><U0025><U004E>"
+END LC_ADDRESS
