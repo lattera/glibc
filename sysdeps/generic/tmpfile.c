@@ -23,7 +23,9 @@
 #ifdef USE_IN_LIBIO
 # include <iolibio.h>
 # define __fdopen INTUSE(_IO_fdopen)
-# define tmpfile __new_tmpfile
+# ifndef tmpfile
+#  define tmpfile __new_tmpfile
+# endif
 #endif
 
 #ifndef GEN_THIS
@@ -57,7 +59,7 @@ tmpfile (void)
   return f;
 }
 
-#ifdef USE_IN_LIBIO
+#if defined USE_IN_LIBIO && GEN_THIS == __GT_FILE /* Not for tmpfile64.  */
 # undef tmpfile
 # include <shlib-compat.h>
 versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);

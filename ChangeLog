@@ -1,3 +1,10 @@
+2002-06-12  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/generic/tmpfile.c [USE_IN_LIBIO] (tmpfile): Don't #define
+	if already defined.
+	[USE_IN_LIBIO]: Conditionalize versioned_symbol use on
+	[GEN_THIS == __GT_FILE] so that tmpfile64.c's inclusion doesn't get it.
+
 2002-06-11  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/xstat64.c: Conditionalize entire contents of the
