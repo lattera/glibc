@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -16,37 +16,10 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifndef mach-srcdir-computed
-mach-srcdir-computed := yes
-
-# If we were configured with `--with-mach=DIR', then config.make sets
-# mach-srcdir to DIR.  Otherwise guess we are in a big source tree.
-ifndef mach-srcdir
-mach-srcdir = ../mach
-endif
-
-# mach-srcdir is now set to the logical directory name.  This name might be
-# relative to $(objdir), might be relative to the source directory $(..), or
-# might be absolute.  We choose among these possibilities by looking for a
-# canonical file in each of those places (in that order).
-f := mach/mach.defs # Random file that identifies the Mach source dir.
-f := $(strip $f)
-mach-srcdir := $(firstword $(patsubst %/$f,%,$(wildcard $(addsuffix /$f,\
-	       $(objpfx)$(mach-srcdir) $(..)$(mach-srcdir)))) $(mach-srcdir))
-
-endif	# ! mach-srcdir-computed
-
 ifdef in-Makerules
 
 # Look for header files in mach/ under the top-level library source directory.
 includes += -I$(..)mach
-
-# When compiling, use the Mach header files directly from the kernel sources.
-includes += -I$(mach-srcdir)
-
-# Find Mach header files in the kernel source.
-vpath mach/%.h $(mach-srcdir)
-vpath device/%.h $(mach-srcdir)
 
 ifneq (mach,$(subdir))
 # Subdirectories other than mach/ might use the generated Mach headers.

@@ -34,7 +34,7 @@ BEGIN {
     print "enum __error_t_codes\n{";
     errnoh = 0;
     maxerrno = 0;
-    in_mach_errors = 0;
+    in_mach_errors = "";
     in_math = 0;
     edom = erange = "";
     print "#undef EDOM\n#undef ERANGE";
@@ -76,22 +76,22 @@ errnoh == 3 && $1 == "@comment" && $2 == "errno" {
 
 NF == 3 && $1 == "#define" && $2 == "MACH_SEND_IN_PROGRESS" \
   {
-    in_mach_errors = 1;
+    in_mach_errors = FILENAME;
     print "\n\t/* Errors from <mach/message.h>.  */";
   }
 NF == 3 && $1 == "#define" && $2 == "KERN_SUCCESS" \
   {
-    in_mach_errors = 1;
+    in_mach_errors = FILENAME;
     print "\n\t/* Errors from <mach/kern_return.h>.  */";
     next;
   }
 
-in_mach_errors && $2 == "MACH_IPC_COMPAT" \
+in_mach_errors != "" && $2 == "MACH_IPC_COMPAT" \
   {
-    in_mach_errors = 0;
+    in_mach_errors = "";
   }
 
-in_mach_errors == 1 && NF == 3 && $1 == "#define" \
+in_mach_errors == FILENAME && NF == 3 && $1 == "#define" \
   {
     printf "\t%-32s= %s,\n", "E" $2, $3;
   }

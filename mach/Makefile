@@ -57,57 +57,21 @@ distribute += Machrules syscalls.awk shortcut.awk \
 # Clear any environment	value.
 generated =
 
-# Get the proper definition of `mach-srcdir'.
-include ../sysdeps/mach/Makefile
-
-# Use and install the Mach header files directly out of the Mach kernel source.
-
-# Find the MiG defs files in the kernel source.
-vpath %.defs $(mach-srcdir)
-
-# Install all .h and .defs files we find in some of the kernel's source
-# directories and their subdirectories (in MK82, max one level deep).
-mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
-					     $(base-machine),\
-					 $(addprefix $(mach-srcdir)/$(dir)/,\
-						     *.defs *.h \
-						     */*.defs */*.h)))
-# Exclude mach/machine/*.  A symlink will be installed for mach/machine.
-# Exclude $(headers) for Mach files we have our own versions of.
-mach-headers = $(filter-out mach/machine/% $(headers),\
-			    $(mach-src-headers:$(mach-srcdir)/%=%))
-# Rename Mach's sys/version.h to mach/version.h.
-mach-headers := $(patsubst sys/version.h,mach/version.h,$(mach-headers))
-
-# Don't distribute the Mach headers; they are in the Mach distribution.
-dont_distribute = $(mach-headers)
-
-# DO NOT try to remake these in any way!!!
-$(addprefix $(mach-srcdir)/,$(mach-headers)) : ;
-install-others += $(addprefix $(includedir)/,$(mach-headers))
-$(includedir)/%: $(mach-srcdir)/%; $(do-install)
-
-# Make symlinks for machine and mach/machine in the include directory.
-install-others += $(includedir)/mach/machine $(includedir)/machine
-$(includedir)/mach/machine $(includedir)/machine: $(common-objpfx)config.make
-	-rm -f $@
-	cd $(@D); ln -s $(base-machine) $(@F)
-
-# Install Mach's <sys/version.h> as <mach/version.h>.
-install-others += $(includedir)/mach/version.h
-$(includedir)/mach/version.h: $(mach-srcdir)/sys/version.h; $(do-install)
-
 # Define mach-syscalls and sysno-*.
 ifndef no_deps
 ifndef inhibit_mach_syscalls
 include $(objpfx)mach-syscalls.mk
 endif
 endif
-$(objpfx)mach-syscalls.mk: mach/syscall_sw.h syscalls.awk
+$(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 # Go kludges!!!
-	sed -n -e '/Unix server implement them/,$$d' \
-	       -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\
-	< $< | awk -f $(word 2,$^) > $@-new
+	echo '#include <mach/syscall_sw.h>' | \
+	DEPENDENCIES_OUTPUT='$@-dep $@' \
+	$(CC) $(CPPFLAGS) -E -x c-header - \
+	      -D_MACH_`echo $(base-machine) | tr a-z A-Z`_SYSCALL_SW_H_=1 | \
+	sed -n -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\
+	| awk -f $< > $@-new
+	cat $@-dep >> $@-new; rm -f $@-dep
 	mv $@-new $@
 generated += mach-syscalls.mk
 
@@ -169,22 +133,6 @@ before-compile += $(objpfx)mach-shortcuts.h
 include Machrules
 include ../Rules
 
-
-# There is already a mach.h, so mach.defs generates mach_interface.h.
-$(objpfx)mach/mach_interface.defs: $(mach-srcdir)/mach/mach.defs
-	ln $< $@ || cp $< $@
-# There is already a memory_object.h,
-# so memory_object.defs generates memory_object_user.h.
-$(objpfx)mach/memory_object_user.defs: $(mach-srcdir)/mach/memory_object.defs
-	ln $< $@ || cp $< $@
-
-ifdef objdir
-vpath mach/mach_interface.defs $(objdir)
-vpath mach/memory_object_user.defs $(objdir)
-endif
-
-# Be sure not to make these with implicit rules from foo.defs.
-mach.h mach/memory_object.h: ;
 
 # A gcc bug prevents the generated file from working properly,
 # so we have one in the distribution for the time being.

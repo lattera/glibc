@@ -16,50 +16,12 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-# Get mach-srcdir defined.
-old-in-Makerules := $(in-Makerules)
-in-Makerules :=
-include $(..)sysdeps/mach/Makefile
-in-Makerules := $(old-in-Makerules)
-
-
-ifndef hurd-srcdir-computed
-hurd-srcdir-computed := yes
-
-# If we were configured with `--with-hurd=DIR', then config.make sets
-# hurd-srcdir to DIR.  Otherwise guess we are in a big source tree.
-ifndef hurd-srcdir
-hurd-srcdir = ../hurd
-endif
-
-# hurd-srcdir is now set to the logical directory name.  This name might be
-# relative to $(objdir), might be relative to the source directory $(..), or
-# might be absolute.  We choose among these possibilities by looking for a
-# canonical file in each of those places (in that order).
-f := hurd/hurd_types.defs # Random file that identifies the Hurd source dir.
-f := $(strip $f)
-hurd-srcdir := $(firstword $(patsubst %/$f,%,$(wildcard $(addsuffix /$f,\
-	       $(objpfx)$(hurd-srcdir) $(..)$(hurd-srcdir)))) $(hurd-srcdir))
-
-endif	# ! hurd-srcdir-computed
-
 ifdef in-Makerules
 
 subdirs := $(filter-out sunrpc,$(subdirs)) # XXX skip broken dirs
 
 # Look for header files in hurd/ under the top-level library source directory.
 includes += -I$(..)hurd
-
-# When compiling, use the Hurd header files directly from the sources.
-includes += -I$(hurd-srcdir)
-
-# When compiling, find cthreads.h in the Hurd cthreads source.
-# This directory has some other (private) header file with
-# conflicting names, so we put it last.
-last-includes += -I$(hurd-srcdir)/libthreads
-
-# Find the Hurd header files in the Hurd source.
-vpath hurd/%.h $(hurd-srcdir)
 
 # Do not use any assembly code from sysdeps/unix (and subdirectories).
 # This bypasses all the system call stubs and uses any existing posix or
@@ -98,19 +60,36 @@ errno.texinfo = $(..)manual/errno.texi
 
 hurd = $(..)sysdeps/mach/hurd
 
-$(hurd)/errnos.h: $(objpfx)stamp-errnos ;
-$(objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
-		       $(mach-srcdir)/mach/message.h \
-		       $(mach-srcdir)/mach/kern_return.h \
-		       $(mach-srcdir)/mach/mig_errors.h \
-		       $(mach-srcdir)/device/device_types.h
+define mach-errno-h
+($(foreach h,mach/message.h \
+	     mach/kern_return.h \
+	     mach/mig_errors.h \
+	     device/device_types.h,\
+ echo '#include <$h>';\
+ ))
+endef
+
+# We use the compiler to generate a list of absolute file names for
+# the headers we want to search for Mach error codes, listed above (and
+# incidentally, all other headers those include).
+-include $(common-objpfx)errnos.d
+$(common-objpfx)errnos.d: $(mach-errnos-deps)
+	$(mach-errno-h) | \
+	$(CC) $(CPPFLAGS) -M -x c - | \
+	sed -e 's,- *:,mach-errnos-deps :=,' > $@t
+	mv -f $@t $@
+
+$(hurd)/errnos.h: $(common-objpfx)stamp-errnos ;
+$(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
+			      $(mach-errnos-deps)
 	gawk -f $^ > $(hurd)/errnos.h-tmp
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $(hurd)/errnos.h-tmp
 	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
-	test ! -d CVS || \
-	  (cd $(hurd); cvs commit -m'Regenerated from $^' errnos.h)
+#	test ! -d CVS || \
+#	  (cd $(hurd); cvs commit -m'Regenerated from $^' errnos.h)
 	touch $@
+generated += errnos.d stamp-errnos
 
 $(hurd)/errlist.c: $(hurd)/errlist.awk $(errno.texinfo)
 	gawk -f $^ > $@-tmp

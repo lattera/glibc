@@ -281,7 +281,7 @@ $(sed-remove-objpfx) > $(@:.d=.T)
 mv -f $(@:.d=.T) $@
 endef
 ifneq (,$(objpfx))
-sed-remove-objpfx = -e 's@ $(subst .,\., \
+sed-remove-objpfx = -e 's@ $(subst .,\.,\
 				     $(subst @,\@,$(objpfx)))@ $$(objpfx)@g' \
 		    -e 's@^$(subst .,\.,$(subst @,\@,$(objpfx)))@$$(objpfx)@g'
 endif
@@ -569,7 +569,9 @@ ifdef libc.so-version
 $(slibdir)/libc.so$(libc.so-version): $(slibdir)/libc-$(version).so
 	$(make-link)
 $(slibdir)/libc-$(version).so: $(common-objpfx)libc.so; $(do-install-program)
+install: $(slibdir)/libc.so$(libc.so-version)
 
+ifndef subdir
 # What we install as libc.so for programs to link against is in fact an
 # archive.  It contains the various $(static-only-routines) objects, and
 # the special object libc-syms.so that contains just the dynamic symbol
@@ -585,6 +587,7 @@ $(common-objpfx)libc-syms.so: $(common-objpfx)libc.so
 	./extract-dynsym $< $@
 ifndef subdir
 generated += libc-syms.so
+endif
 endif
 
 else

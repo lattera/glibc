@@ -26,7 +26,6 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <string.h>
 
-
 #ifdef	__GNUC__
 #define	HAVE_LONGLONG
 #define	LONGLONG	long long
@@ -82,6 +81,8 @@ Cambridge, MA 02139, USA.  */
          return EOF;							      \
        }								      \
     } while (0)
+# define flockfile(S) _IO_flockfile (S)
+# define funlockfile(S) _IO_funlockfile (S)
 #else
 # define inchar()	((c = getc (s)), (void) ++read_in, c)
 # define conv_error()	do {						      \
@@ -108,6 +109,8 @@ Cambridge, MA 02139, USA.  */
 	  return EOF;							      \
 	}								      \
     } while (0)
+# define flockfile(S) /* nothing */
+# define funlockfile(S) /* nothing */
 #endif
 
 
@@ -196,7 +199,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
   /* Lock the stream.  */
   flockfile (s);
-  
+
   c = inchar ();
 
   /* Run through the format string.  */
@@ -807,7 +810,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
   /* Unlock stream.  */
   funlockfile (s);
-  
+
   return ((void) (c == EOF || ungetc (c, s)), done);
 }
 

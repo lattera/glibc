@@ -1,5 +1,5 @@
 /* Call the termination functions of loaded shared objects.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,5 +26,9 @@ _dl_fini (void)
 
   for (l = _dl_loaded; l; l = l->l_next)
     if (l->l_init_called && l->l_info[DT_FINI])
-      (*(void (*) (void)) (l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
+      {
+	(*(void (*) (void)) (l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
+	/* Make sure nothing happens if we are called twice.  */
+	l->l_init_called = 0;
+      }
 }

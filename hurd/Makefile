@@ -38,7 +38,7 @@ user-interfaces		:= $(addprefix hurd/,\
 				       msg msg_reply msg_request \
 				       exec exec_startup crash interrupt \
 				       fs fsys io term tioctl socket ifsock)
-server-interfaces	:= hurd/msg
+server-interfaces	:= hurd/msg faultexc
 
 routines = hurdstartup hurdinit \
 	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
@@ -53,7 +53,7 @@ routines = hurdstartup hurdinit \
  	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
 	   $(sig) $(dtable) hurdinline port-cleanup report-wait
-sig	= hurdsig hurdfault faultexc siginfo hurd-raise preempt-sig \
+sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
 	  thread-self thread-cancel intr-msg catch-signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
@@ -64,28 +64,6 @@ dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 routines += hurdmalloc
 distribute += hurdmalloc.h
 
-# Get the proper definition of `hurd-srcdir'.
-include ../sysdeps/mach/hurd/Makefile
-
-# Use and install the Hurd header files directly out of the Hurd source.
-
-# Find the MiG defs files in the Hurd source.
-vpath %.defs $(hurd-srcdir)
-
-# Install all .h and .defs files we find in the Hurd's hurd/ directory.
-hurd-headers := $(patsubst $(hurd-srcdir)/%,%,\
-			   $(wildcard $(addprefix $(hurd-srcdir)/hurd/,\
-						  *.defs *.h)))
-
-
-# Don't distribute the Hurd headers; they are in the Hurd distribution.
-dont_distribute = $(hurd-headers)
-
-# DO NOT try to remake these in any way!!!
-$(addprefix $(hurd-srcdir)/,$(hurd-headers)) : ;
-install-others += $(addprefix $(includedir)/,$(hurd-headers))
-$(includedir)/hurd/%: $(hurd-srcdir)/hurd/%; $(do-install)
-
 include ../mach/Machrules
 include ../Rules
 
@@ -94,13 +72,9 @@ include ../Rules
 # _hurd_intr_rpc_mach_msg.
 user-MIGFLAGS += -imacros intr-rpc.defs
 
-$(objpfx)fault%.c $(objpfx)fault%.h: $(mach-srcdir)/mach/%.defs
-	$(MIG) $(MIGFLAGS) -prefix _hurdsig_fault_ \
-	       -server $(@:.h=.c) -sheader $(@:.c=.h) \
-	       -user /dev/null -header /dev/null \
-	       $<
-generated += faultexc.c faultexc.h
+# The special exc server for sigthread faults uses a special prefix.
+MIGFLAGS-faultexc = -prefix _hurdsig_fault_
 
 # We need this static dependency to get faultexc.h generated the first time.
 $(objpfx)hurdfault.o $(objpfx)hurdfault.d: \
-	$(objpfx)faultexc.h $(objpfx)faultexc.c
+	$(objpfx)faultexc_server.h $(objpfx)faultexc_server.c

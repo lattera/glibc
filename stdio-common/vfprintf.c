@@ -103,7 +103,7 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
     } while (0)
 # define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
 # define flockfile(S) _IO_flockfile (S)
-# define fUNlockfile(S) _IO_funlockfile (S)
+# define funlockfile(S) _IO_funlockfile (S)
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
@@ -125,6 +125,8 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
     }									      \
    while (0)
 # define UNBUFFERED_P(s) ((s)->__buffer == NULL)
+# define flockfile(S) /* nothing */
+# define funlockfile(S) /* nothing */
 #endif /* USE_IN_LIBIO */
 
 
@@ -805,7 +807,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Lock stream.  */
   flockfile (s);
-  
+
   /* Write the literal text before the first format.  */
   outstring ((const UCHAR_T *) format,
 	     lead_str_end - (const UCHAR_T *) format);
@@ -1001,7 +1003,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Unlock stream.  */
   funlockfile (s);
-  
+
   /* We processed the whole format without any positional parameters.  */
   return done;
 
@@ -1263,7 +1265,7 @@ do_positional:
 
   /* Unlock the stream.  */
   funlockfile (s);
-  
+
   return done;
 }
 

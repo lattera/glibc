@@ -1,4 +1,82 @@
+Sun May 12 11:16:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* mach/Machrules (%.udeps rule): Write deps for %_server.[ch] too.
+	(%_server.[ch] rule): Don't depend on %.defs; use #include to get
+	installed .defs file.
+
+	* stdio-common/vfprintf.c (flockfile, funlockfile): Define to
+	nothing for stdio.  Fix fUNlockfile -> funlockfile for libio.
+	* stdio-common/vfscanf.c: Likewise.
+
+Sat May 11 13:43:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* hurd/hurdfault.c: Include faultexc_server.h instead of faultexc.h.
+
+	* mach/Machrules (%.ir rule): Don't produce deps for imports.
+
+	* elf/dl-fini.c (_dl_fini): Clear L->l_init_called after calling fn.
+
+	* Makerules (install): Depend on $(slibdir)/libc.so$(libc.so-version).
+	[!subdir] ($(libdir)/libc.so, $(common-objpfx)/libc-syms.so): Protect
+	these targets and install dep on $(libdir)/libc.so with this.
+
+	* hurd/Makefile: Removed all rules and defns for using code from Hurd
+	sources and installing headers from there.
+
+	* sysdeps/mach/hurd/errnos.awk: Set in_mach_errors to FILENAME when we
+ 	set it.  In Mach error matching clause, only match if FILENAME is
+ 	still the same value.
+
+	* sysdeps/mach/hurd/Makefile: Don't include sysdeps/mach/Makefile;
+	$(mach-srcdir) no longer exists.
+	(hurd-srcdir): Variable removed.
+	(includes): Don't append -I$(hurd-srcdir).
+	(last-includes): Variable removed.
+	Remove vpath specs using $(hurd-srcdir).
+	(mach-errno-h): New canned sequence.
+	($(common-objpfx)errnos.d): New target, generated included makefile
+	to determine absolute file names of Mach headers to search for error
+	codes and set variable mach-errnos-deps.
+	($(common-objpfx)stamp-errnos): Depend on $(mach-errnos-deps) instead
+	of prior explicit list.
+	(generated): Add errnos.d, stamp-errnos.
+
+	* mach/Machrules (some-if-rtn): New variable and target; compute deps
+	of some if routine and make all if routines depend on that .d file
+	instead of static list of .h files.
+
+	* mach/Makefile (mach/mach_interface.defs,
+	mach/memory_object_user.defs): Targets removed.
+	($(objpfx)mach-syscalls.mk): Tweak this kludge so it doesn't depend
+	directly on Mach sources.
+
+	* sysdeps/mach/Makefile (mach-srcdir): Variable removed.
+	(includes): Don't append -I$(mach-srcdir).
+	Remove vpath specs using $(mach-srcdir).
+
+	* hurd/Makefile (server-interfaces): Add faultexc.
+	(sig): Remove it from here.
+	(fault%.[ch]): Rule removed.
+	(MIGFLAGS-faultexc): New variable.
+
+	* hurd/faultexc.defs: New file.
+
+	* mach/Machrules (%.ustamp rule): Pass $(MIGFLAGS-$*) to mig.
+	(%_server.[ch] rule): Likewise.
+
+	* mach/Makefile: Removed all rules and defns for using code from Mach
+	sources and installing headers from there.
+
+	* Makeconfig [$(build-shared)=yes] (link-libc): Append
+	$(libc.so-version) to libc.so.
+
 Fri May 10 18:36:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* mach/Machrules (%.ustamp rule): Don't depend on %.defs.
+	(%.udeps): New rule parallel to that one, generating included
+	makefiles with -M output from `#include <%.defs>'.
+
+	* Makerules (sed-remove-objpfx): Remove space before \ at eol.
 
 	* Makefile (distribute): Add FAQ.
 	* FAQ: New file contributed by drepper.
