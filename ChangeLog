@@ -8,6 +8,24 @@
 
 2004-06-18  Roland McGrath  <roland@frob.com>
 
+	* Makerules (compile-mkdep-flags): Add -MT $@.
+
+	* Makefile (dist, tag-for-dist): New targets.
+	(files-for-dist, tag-of-stem): New variables.
+	(glibc-%.tar glibc-linuxthreads-%.tar): New pattern rule.
+	Make tar files using cvs export.
+	(%.bz2, %.gz, tag-%): New pattern rules.
+	(distribute): Variable removed.
+	(+subdir_targets): Remove distinfo targets.
+	(echo_subdirs, echo-distinfo, parent_echo-distinfo): Targets removed.
+	(rpm/%): Pattern rule removed.
+	* rpm/Makefile, rpm/rpmrc, rpm/template: Ancient cruft files removed.
+	* Rules (subdir_echo-headers, subdir_echo-distinfo, subdir_dist):
+	Targets removed.
+	* Makerules (dist, subdir_distinfo): Targets removed.
+	($(objpfx)distinfo): Depend on $(distribute).
+	* Make-dist: File removed.
+
 	* NEWS: Fix a typo.  Update bug-reporting instructions.
 
 2004-06-17  Thorsten Kukuk  <kukuk@suse.de>

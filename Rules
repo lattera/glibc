@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2000,2002,2003 Free Software Foundation, Inc.
+# Copyright (C) 1991-2000,2002,2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -159,23 +159,14 @@ subdir_testclean: do-tests-clean
 realclean: distclean
 distclean: clean
 
-.PHONY: subdir_echo-headers
-subdir_echo-headers: echo-headers
-
-.PHONY: subdir_echo-distinfo
-subdir_echo-distinfo:
-	@echo $(addprefix +header+,$(headers) $(filter %.h,$(distribute))) \
-	      $(addprefix +nodist+,$(generated) $(common-generated) $(dont_distribute))
-
 # We want to install everything except the library itself, but update all
 # our portions of the library because the parent make will install it later
 # (likewise the stubs file).
 .PHONY: subdir_install
 subdir_install: install-no-libc.a lib-noranlib stubs
 
-.PHONY: subdir_TAGS subdir_dist
+.PHONY: subdir_TAGS
 subdir_TAGS: TAGS
-subdir_dist: dist
 
 # Target required by the Hurd to ensure that all the MiG-generated
 # headers are in place before building a subdirectory.

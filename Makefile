@@ -61,8 +61,8 @@ endif # $(AUTOCONF) = no
 +subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
 		   subdir_clean subdir_distclean subdir_realclean	\
 		   tests xtests subdir_lint.out				\
-		   subdir_update-abi subdir_check-abi subdir_distinfo	\
-		   subdir_echo-headers subdir_echo-distinfo		\
+		   subdir_update-abi subdir_check-abi 			\
+		   subdir_echo-headers 					\
 		   subdir_install					\
 		   subdir_testclean					\
 		   $(addprefix install-, no-libc.a bin lib data headers others)
@@ -259,47 +259,9 @@ ifdef objdir
 endif
 	-rm -f $(sysdep-$(distclean-1))
 
-.PHONY: echo_subdirs
-echo_subdirs:;@echo '$(subdirs)'
-
-.PHONY: echo-distinfo parent_echo-distinfo
-echo-distinfo: parent_echo-distinfo subdir_echo-distinfo
-parent_echo-distinfo:
-	@echo $(addprefix +header+,$(headers)) \
-	      $(addprefix +nodist+,$(generated))
-
-
 # Make the distribution tarfile.
+.PHONY: dist tag-for-dist
 
-distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
-		PROJECTS COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]	\
-		ChangeLog.1[0-9] Makefile Makeconfig Makerules Rules	\
-		Make-dist MakeTAGS extra-lib.mk o-iterator.mk configure	\
-		extra-modules.mk					\
-		configure.in aclocal.m4 config.h.in config.make.in	\
-		config-name.in Makefile.in sysdep.h set-hooks.h		\
-		libc-symbols.h version.h shlib-versions rpm/Makefile	\
-		rpm/template rpm/rpmrc abi-tags stub-tag.h		\
-		test-skeleton.c include/des.h include/libc-internal.h	\
-		include/shlib-compat.h include/pthread.h Versions.def	\
-		cppflags-iterator.mk tls.make.c include/caller.h	\
-		include/stubs-prologue.h include/gnu/stubs.h		\
-		include/atomic.h bits/atomic.h symbol-hacks.h		\
-		INTERFACE CONFORMANCE NAMESPACE LICENSES	        \
-		$(addprefix scripts/,					\
-			    rellns-sh config.sub config.guess		\
-			    mkinstalldirs move-if-change install-sh	\
-			    test-installation.pl gen-FAQ.pl versions.awk\
-			    gen-sorted.awk abi-versions.awk abilist.awk	\
-			    firstversions.awk documented.sh cpp		\
-			    output-format.sed gen-as-const.awk		\
-			    merge-abilist.awk extract-abilist.awk	\
-			    rpm2dynsym.sh				\
-			    )						\
-		$(wildcard scripts/data/*.data)				\
-		$(wildcard abilist/*.abilist)
-
-distribute := $(strip $(distribute))
 generated := $(generated) stubs.h
 
 README: README.template version.h
@@ -310,6 +272,30 @@ README: README.template version.h
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'Remade for $(release)-$(version)' $@
 endif
+
+files-for-dist := README FAQ INSTALL NOTES configure
+
+tag-of-stem = glibc-$(subst .,_,$*)
+
+glibc-%.tar glibc-linuxthreads-%.tar: $(files-for-dist)
+	@rm -fr glibc-$*
+	cvs $(CVSOPTS) -Q export -d glibc-$* -r $(tag-of-stem) libc
+	tar cf glibc-linuxthreads-$*.tar -C glibc-$* \
+	    linuxthreads linuxthreads_db
+	rm -rf $(addprefix glibc-$*/,linuxthreads linuxthreads_db)
+	tar cf glibc-$*.tar glibc-$*
+	rm -fr glibc-$*
+
+%.bz2: %; bzip2 -9vk $<
+%.gz: %; gzip -9vnc $< > $@.new && mv -f $@.new $@
+
+dist: $(foreach Z,.bz2 .gz,glibc-$(version).tar$Z \
+		           glibc-linuxthreads-$(version).tar$Z)
+	md5sum $^
+
+tag-for-dist: tag-$(version)
+tag-%: $(files-for-dist)
+	cvs $(CVSOPTS) -Q tag -c $(tag-of-stem)
 
 define format-me
 @rm -f $@
@@ -326,9 +312,6 @@ ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated:  $(PERL) $^' $@
 endif
 FORCE:
-
-rpm/%: subdir_distinfo
-	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
 iconvdata/% localedata/% po/% manual/%:
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
