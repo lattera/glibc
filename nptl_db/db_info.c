@@ -93,8 +93,8 @@ DESC (_thread_db_pthread_dtvp,
 # define REGISTER_THREAD_AREA(bits, regofs, scale) \
   DB_DEFINE_DESC (_thread_db_register##bits##_thread_area, \
 		  bits, (scale), (regofs));
-# define REGISTER(bits, regofs, bias) \
-  DB_DEFINE_DESC (_thread_db_register##bits, bits, (uint32_t)(bias), (regofs));
+# define REGISTER(bits, size, regofs, bias) \
+  DB_DEFINE_DESC (_thread_db_register##bits, size, (uint32_t)(bias), (regofs));
 
 DB_THREAD_SELF
 #endif
