@@ -1,5 +1,8 @@
 1998-12-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wctype/wctype.h (_ISwbit): Protext use of parameter with
+	parentheses.
+
 	* locale/Versions: Make experimental locale interface available in
 	GLIBC_2.1.
 
