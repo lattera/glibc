@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,2002 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
    This file is part of the GNU C Library.
 
@@ -86,6 +86,7 @@
 
 	.align 3
 UFUNC_NAME:
+$udiv_entry:
 	lda	sp, -STACK(sp)
 	.frame	sp, STACK, retaddr, 0
 #ifdef PROF
@@ -206,7 +207,7 @@ SFUNC_NAME:
 	cmovge	AT, AT, arg2
 
 	/* Do the unsigned division.  */
-	bsr	retaddr, UFUNC_NAME
+	bsr	retaddr, $udiv_entry
 
 	/* Restore originals and adjust the sign of the result.  */
 	ldq	arg1, 0(sp)

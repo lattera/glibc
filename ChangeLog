@@ -1,3 +1,8 @@
+2002-06-15  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/alpha/divrem.h: Use local label instead of global one for
+	jump to local subroutine.
+
 2002-06-14  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/i386/Makeconfig: File moved to ...
