@@ -1,6 +1,7 @@
 2002-08-02  Roland McGrath  <roland@redhat.com>
 
 	* include/rpc/rpc.h: Declare RPC_VARS tsd as extern.
+	* sunrpc/rpc_thread.c: Define it without static.
 
 2002-08-02  Roland McGrath  <roland@frob.com>
 
