@@ -1,5 +1,5 @@
-/* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996,1997,1998,1999,2000,01,02 Free Software Foundation, Inc.
+  /* Malloc implementation for multiple threads without lock contention.
+   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -3474,6 +3474,7 @@ public_mEMALIGn(size_t alignment, size_t bytes)
 	 ar_ptr == arena_for_chunk(mem2chunk(p)));
   return p;
 }
+strong_alias (public_mEMALIGn, __memalign_internal)
 
 Void_t*
 public_vALLOc(size_t bytes)
@@ -5353,7 +5354,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
   if (alignment % sizeof (void *) != 0 || !powerof2 (alignment) != 0)
     return EINVAL;
 
-  mem = __libc_memalign (alignment, size);
+  mem = __memalign_internal (alignment, size);
 
   if (mem != NULL) {
     *memptr = mem;
