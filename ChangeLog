@@ -1,3 +1,21 @@
+Sat May 13 02:16:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* configure.in (os=gnu*): Always set elf=yes, not just for os=gnu*elf*.
+
+Fri May 12 15:31:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/elf.h (ELFMAG, SELFMAG): New macros.
+
+Fri May 12 11:24:53 1995  Michael I Bushnell  <mib@duality.gnu.ai.mit.edu>
+
+	* hurd/alloc-fd.c (_hurd_alloc_fd): Don't reduce FIRST_FD in
+	the case where it starts out less than _hurd_dtablesize.
+
+Thu May 11 20:51:05 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/alloc-fd.c (_hurd_alloc_fd): When expanding the dtable,
+ 	make sure the new size exceeds FIRST_FD.
+
 Wed May 10 21:00:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/i386/sysdep.h (RETURN_TO): New macro.
