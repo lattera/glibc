@@ -86,13 +86,13 @@ enum
 #endif
 
 /* Definitions taken from the kernel headers.  */
-struct _fpreg
+struct _libc_fpreg
 {
   unsigned short int significand[4];
   unsigned short int exponent;
 };
 
-struct _fpstate
+struct _libc_fpstate
 {
   unsigned long int cw;
   unsigned long int sw;
@@ -101,12 +101,12 @@ struct _fpstate
   unsigned long int cssel;
   unsigned long int dataoff;
   unsigned long int datasel;
-  struct _fpreg _st[8];
+  struct _libc_fpreg _st[8];
   unsigned long int status;
 };
 
 /* Structure to describe FPU registers.  */
-typedef struct _fpstate *fpregset_t;
+typedef struct _libc_fpstate *fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
@@ -127,7 +127,7 @@ typedef struct ucontext
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     __sigset_t uc_sigmask;
-    struct _fpstate __fpregs_mem;
+    struct _libc_fpstate __fpregs_mem;
   } ucontext_t;
 
 #endif /* sys/ucontext.h */

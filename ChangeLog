@@ -1,7 +1,7 @@
 2000-02-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Add definition of
-	_fpreg and _fpstate and use it to define fpregset_t.
+	_libc_fpreg and _libc_fpstate and use it to define fpregset_t.
 	* sysdeps/unix/sysv/linux/i386/sys/procfs.h (prgregset_t): Define
 	using elf_gregset_t.
 	(prfpregset_t): Define using elf_fpregset_t.
