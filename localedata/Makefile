@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS %~), \
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1 \
-	      hr_HR.ISO-8859-2 
+	      hr_HR.ISO-8859-2 # once it is fixed: cs_CZ.ISO-8859-2
 test-input-data = $(addsuffix .in, $(basename $(test-input)))
 test-output := $(foreach s, .out .xout, \
 			 $(addsuffix $s, $(basename $(test-input))))

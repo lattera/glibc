@@ -1,3 +1,9 @@
+1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (test-input): Prepare for cs_CZ test.
+	* locales/cs_CZ: New version from Vladimir Michl <michlv@risc.upol.cz>.
+	* cs_CZ.in: New file.
+
 1999-02-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/it_CH: New file.
