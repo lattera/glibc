@@ -26,6 +26,10 @@ extern void __libc_init_first (int argc, char **argv, char **envp);
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
+
+extern int __cache_line_size;
+weak_extern (__cache_line_size)
+
 extern int __libc_multiple_libcs;
 extern void *__libc_stack_end;
 
@@ -37,12 +41,33 @@ struct startup_info
   void (*fini) (void);
 };
 
+/* Scan the Aux Vector for the "Data Cache Block Size" entry.  If found
+   verify that the static extern __cache_line_size is defined by checking
+   for not NULL.  If it is defined then assign the cache block size 
+   value to __cache_line_size.  */
+static inline void
+__aux_init_cache (ElfW(auxv_t) *av)
+{
+  for (; av->a_type != AT_NULL; ++av)
+    switch (av->a_type)
+      {
+      case AT_DCACHEBSIZE:
+        {
+          int *cls = & __cache_line_size;
+          if (cls != NULL)
+            *cls = av->a_un.a_val;
+        }
+        break;
+      }
+}
+
+
 int
 /* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
    BPs in the arglist of startup_info.main and startup_info.init. */
 BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
 		   char *__unbounded *__unbounded ubp_ev,
-		   void *__unbounded auxvec, void (*rtld_fini) (void),
+		   ElfW(auxv_t) *__unbounded auxvec, void (*rtld_fini) (void),
 		   struct startup_info *__unbounded stinfo,
 		   char *__unbounded *__unbounded stack_on_entry)
 {
@@ -66,6 +91,7 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
      as a statically-linked program by Linux...	 */
   if (*stack_on_entry != NULL)
     {
+      char *__unbounded *__unbounded temp;
       /* ...in which case, we have argc as the top thing on the
 	 stack, followed by argv (NULL-terminated), envp (likewise),
 	 and the auxilary vector.  */
@@ -73,10 +99,12 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
       ubp_av = stack_on_entry + 1;
       ubp_ev = ubp_av + argc + 1;
 #ifdef HAVE_AUX_VECTOR
-      auxvec = ubp_ev;
-      while (*(char *__unbounded *__unbounded) auxvec != NULL)
-	++auxvec;
-      ++auxvec;
+      temp = ubp_ev;
+      while (*temp != NULL)
+        ++temp;
+      auxvec = (ElfW(auxv_t) *)++temp;
+      
+
 # ifndef SHARED
       _dl_aux_init ((ElfW(auxv_t) *) auxvec);
 # endif
@@ -85,6 +113,9 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
     }
 
   INIT_ARGV_and_ENVIRON;
+    
+  /* Initialize the __cache_line_size variable from the aux vector.  */
+  __aux_init_cache((ElfW(auxv_t) *) auxvec);
 
   /* Store something that has some relationship to the end of the
      stack, for backtraces.  This variable should be thread-specific.  */

@@ -1,3 +1,18 @@
+2002-08-22  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/elf/libc-start.c 
+	(__cache_line_size): Declare.
+	(__aux_init_cache): New.
+	(__libc_start_main): Change type of `auxvec' parameter to
+	`ElfW(auxv_t) *'.  Correct walking of aux vector.  Call
+	__aux_init_cache.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c 
+	(__cache_line_size): Declare.
+	(__aux_init_cache): New.
+	(DL_PLATFORM_INIT): Define.
+	* sysdeps/powerpc/memset.S: Define __cache_line_size and use its
+	value to select the correct stride for dcbz.
+
 2002-08-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Fix arguments of

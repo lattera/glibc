@@ -21,12 +21,26 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
+/* Define a global static that can hold the cache line size.  The 
+   assumption is that startup code will access the "aux vector" to
+   to obtain the value set by the kernel and store it into this 
+   variable.  */
+   
+	.globl __cache_line_size
+	.section	".data","aw"
+	.align 2
+	.type	 __cache_line_size,@object
+	.size	 __cache_line_size,4
+__cache_line_size:
+	.long 0
+	.section	".text"
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.
 
-   The memset is done in three sizes: byte (8 bits), word (32 bits),
-   cache line (256 bits). There is a special case for setting cache lines
-   to 0, to take advantage of the dcbz instruction.  */
+   The memset is done in four sizes: byte (8 bits), word (32 bits),
+   32-byte blocks (256 bits) and __cache_line_size (128, 256, 1024 bits).
+   There is a special case for setting whole cache lines to 0, which 
+   takes advantage of the dcbz instruction.  */
 
 EALIGN (BP_SYM (memset), 5, 1)
 
@@ -49,6 +63,10 @@ EALIGN (BP_SYM (memset), 5, 1)
 #define rPOS32	r7	/* constant +32 for clearing with dcbz */
 #define rNEG64	r8	/* constant -64 for clearing with dcbz */
 #define rNEG32	r9	/* constant -32 for clearing with dcbz */
+
+#define rGOT	r9	/* Address of the Global Offset Table.  */
+#define rCLS	r8	/* Cache line size obtained from static.  */
+#define rCLM	r9	/* Cache line size mask to check for cache alignment.  */
 
 #if __BOUNDED_POINTERS__
 	cmplwi	cr1, rRTN, 0
@@ -105,7 +123,17 @@ L(caligned):
 	cmplwi	cr1, rCHR, 0
 	clrrwi.	rALIGN, rLEN, 5
 	mtcrf	0x01, rLEN	/* 40th instruction from .align */
-	beq	cr1, L(zloopstart) /* special case for clearing memory using dcbz */
+	
+/* Check if we can use the special case for clearing memory using dcbz.
+   This requires that we know the correct cache line size for this    
+   processor.  Getting the __cache_line_size may require establishing GOT
+   addressability, so branch out of line to set this up.  */
+	beq	cr1, L(checklinesize) 
+	
+/* Store blocks of 32-bytes (256-bits) starting on a 32-byte boundary. 
+   Can't assume that rCHR is zero or that the cache line size is either
+   32-bytes or even known.  */
+L(nondcbz):
 	srwi	rTMP, rALIGN, 5
 	mtctr	rTMP
 	beq	L(medium)	/* we may not actually get to do a full line */
@@ -114,7 +142,9 @@ L(caligned):
 	li	rNEG64, -0x40
 	bdz	L(cloopdone)	/* 48th instruction from .align */
 
-L(c3):	dcbz	rNEG64, rMEMP
+/* We can't use dcbz here as we don't know the cache line size.  We can
+   use "data cache block touch for store", which is safe.  */
+L(c3):	dcbtst rNEG64, rMEMP
 	stw	rCHR, -4(rMEMP)
 	stw	rCHR, -8(rMEMP)
 	stw	rCHR, -12(rMEMP)
@@ -142,7 +172,10 @@ L(cloopdone):
 
 	.align 5
 	nop
-/* Clear lines of memory in 128-byte chunks.  */
+/* Clear cache lines of memory in 128-byte chunks.  
+   This code is optimized for processors with 32-byte cache lines.
+   It is further optimized for the 601 processor, which requires
+   some care in how the code is aligned in the i-cache.  */
 L(zloopstart):
 	clrlwi	rLEN, rLEN, 27
 	mtcrf	0x02, rALIGN
@@ -226,4 +259,80 @@ L(medium_28t):
 	stw	rCHR, -4(rMEMP)
 	stw	rCHR, -8(rMEMP)
 	blr
+	
+L(checklinesize):
+#ifdef SHARED
+	mflr rTMP
+/* If the remaining length is less the 32 bytes then don't bother getting
+	 the cache line size.  */
+	beq	L(medium)	
+/* Establishes GOT addressability so we can load __cache_line_size 
+   from static. This value was set from the aux vector during startup.  */
+	bl   _GLOBAL_OFFSET_TABLE_@local-4
+	mflr rGOT
+	lwz	 rGOT,__cache_line_size@got(rGOT)
+	lwz	 rCLS,0(rGOT)
+	mtlr rTMP
+#else 
+/* Load __cache_line_size from static. This value was set from the 
+   aux vector during startup.  */
+	lis	 rCLS,__cache_line_size@ha
+/* If the remaining length is less the 32 bytes then don't bother getting
+	 the cache line size.  */
+	beq	L(medium)
+	lwz  rCLS,__cache_line_size@l(rCLS)
+#endif
+	
+/*If the cache line size was not set then goto to L(nondcbz), which is
+	safe for any cache line size.  */	
+	cmplwi cr1,rCLS,0
+	beq	cr1,L(nondcbz)
+	
+/* If the cache line size is 32 bytes then goto to L(zloopstart),
+	 which is coded specificly for 32-byte lines (and 601).  */	
+	cmplwi cr1,rCLS,32
+	beq	cr1,L(zloopstart)
+	
+/* Now we know the cache line size and it is not 32-bytes.  However 
+	 we may not yet be aligned to the cache line and may have a partial 
+	 line to fill.  Touch it 1st to fetch the cache line.  */	
+	dcbtst 0,rMEMP	
+	
+	addi rCLM,rCLS,-1
+L(getCacheAligned):
+	cmplwi cr1,rLEN,32
+	and. rTMP,rCLM,rMEMP
+	blt	 cr1,L(handletail32)
+	beq	 L(cacheAligned)
+/* We are not aligned to start of a cache line yet.  Store 32-byte
+   of data and test again.  */
+	addi rMEMP,rMEMP,32
+	addi rLEN,rLEN,-32
+	stw	 rCHR,-32(rMEMP)
+	stw	 rCHR,-28(rMEMP)
+	stw	 rCHR,-24(rMEMP)
+	stw	 rCHR,-20(rMEMP)
+	stw	 rCHR,-16(rMEMP)
+	stw	 rCHR,-12(rMEMP)
+	stw	 rCHR,-8(rMEMP)
+	stw	 rCHR,-4(rMEMP)
+	b	 L(getCacheAligned)
+	
+/* Now we are aligned to the cache line and can use dcbz.  */	
+L(cacheAligned):
+	cmplw cr1,rLEN,rCLS
+	blt	 cr1,L(handletail32)
+	dcbz 0,rMEMP
+	subf rLEN,rCLS,rLEN
+	add	 rMEMP,rMEMP,rCLS
+	b	 L(cacheAligned)
+
+/* We are here because; the cache line size was set, it was not 
+   32-bytes, and the remainder (rLEN) is now less than the actual cache 
+   line size.  Set up the preconditions for L(nondcbz) and go there to 
+   store the remaining bytes.  */			
+L(handletail32):
+	clrrwi.	rALIGN, rLEN, 5
+	b		L(nondcbz)
+		
 END (BP_SYM (memset))

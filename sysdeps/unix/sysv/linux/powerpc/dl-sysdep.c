@@ -20,6 +20,32 @@
 
 #include "config.h"
 #include "kernel-features.h"
+#include <ldsodefs.h>
+
+extern int __cache_line_size;
+weak_extern (__cache_line_size)
+
+#define DL_PLATFORM_INIT __aux_init_cache(_dl_auxv)
+
+/* Scan the Aux Vector for the "Data Cache Block Size" entry.  If found
+   verify that the static extern __cache_line_size is defined by checking
+   for not NULL.  If it is defined then assign the cache block size 
+   value to __cache_line_size.  */
+static inline void
+__aux_init_cache (ElfW(auxv_t) *av)
+{
+  for (; av->a_type != AT_NULL; ++av)
+    switch (av->a_type)
+      {
+        case AT_DCACHEBSIZE:
+          {
+            int *cls = & __cache_line_size;
+            if (cls != NULL)
+              *cls = av->a_un.a_val;
+          }
+        break;
+      }
+}
 
 #ifndef __ASSUME_STD_AUXV
 
