@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  alpha
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 Contributed by David Mosberger (davidm@cs.arizona.edu).
 This file is part of the GNU C Library.
 
@@ -41,6 +41,7 @@ respectively in gmon.c language...). */
 	.set	noreorder
 
 LEAF(_mcount, 0xb0)
+weak_alias (_mcount, mcount)
 	.prologue 0
 
 	subq	 sp, 0xb0, sp

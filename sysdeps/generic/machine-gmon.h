@@ -42,3 +42,7 @@ void _mcount (void)							      \
   mcount_internal ((u_long) __builtin_return_address (0),		      \
 		   (u_long) __builtin_return_address (1));		      \
 }
+
+#ifdef NO_UNDERSCORES
+weak_alias (_mcount, mcount)
+#endif
