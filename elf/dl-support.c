@@ -59,7 +59,7 @@ non_dynamic_init (void)
 
   /* Initialize the data structures for the search paths for shared
      objects.  */
-  _dl_init_paths (NULL);
+  _dl_init_paths (getenv ("LD_LIBRARY_PATH"));
 
 #ifdef DL_PLATFORM_INIT
   DL_PLATFORM_INIT;

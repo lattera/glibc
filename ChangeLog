@@ -6,6 +6,8 @@
 	calling getenv.
 	* elf/dl-load.c (_dl_init_paths): Don't call getenv to get
 	LD_LIBRARY_PATH value, this comes with the parameter.
+	* elf/dl-support.c (non_dynamic_init): Pass return value of getenv
+	("LD_LIBRARY_PATH") to _dl_init_paths.
 
 1998-03-08 22:55  Ulrich Drepper  <drepper@cygnus.com>
 
