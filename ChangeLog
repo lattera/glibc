@@ -1,3 +1,27 @@
+2002-09-30  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex_internal.h (re_match_context_t): Add a new member.
+	(re_fail_stack_ent_t): New structure.
+	(re_fail_stack_t): Likewise.
+	* posix/regexec.c (re_search_internal): Use the new member of
+	re_match_context_t.
+	Use fail stack only if it has back references and there are plural
+	matching candidates.
+	(proceed_next_node): Use fail stack if it is indicated.
+	(set_regs): Likewise.
+	(push_fail_stack): New function.
+	(pop_fail_stack): New function.
+	(check_dst_limits): Likewise.
+	(check_dst_limits_calc_pos): Likewise.
+	(search_subexp): Check the limitations on the top of subexpressions.
+	(sift_states_bkref): Check the limitations of the destination node.
+	Reuse the array sctx->sifted_states.
+
+2002-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c: Shuffle a few lines around to help the
+	compiler optimizing.  No semantical changes intended.
+
 2002-09-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/strncpy.S: Only segfault in .recovery2 if some bits

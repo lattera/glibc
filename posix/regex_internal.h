@@ -419,6 +419,7 @@ typedef struct
   int eflags;
   /* Where the matching ends.  */
   int match_last;
+  int last_node;
   /* The string object corresponding to the input string.  */
   re_string_t *input;
   /* The state log used by the matcher.  */
@@ -445,6 +446,21 @@ typedef struct
   int last_str_idx;
   int check_subexp;
 } re_sift_context_t;
+
+struct re_fail_stack_ent_t
+{
+  int idx;
+  int node;
+  regmatch_t *regs;
+  re_node_set eps_via_nodes;
+};
+
+struct re_fail_stack_t
+{
+  int num;
+  int alloc;
+  struct re_fail_stack_ent_t *stack;
+};
 
 struct re_dfa_t
 {
