@@ -1,5 +1,5 @@
 /* Structure and constand definitions for sigaction et al.  OSF/1 version.
-   Copyright (C) 1993 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1996 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -14,7 +14,7 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /* Structure describing the action to be taken when a signal arrives.  */
