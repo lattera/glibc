@@ -1,17 +1,17 @@
 # GNU libc message catalog for swedish
-# Copyright © 1996, 1998, 2001 Free Software Foundation, Inc.
-# Jan Djärv <Jan.Djarv@mbox200.swipnet.se>, 1996, 1998, 2001.
-# Revision: 1.32
+# Copyright © 1996, 1998, 2001, 2002 Free Software Foundation, Inc.
+# Jan Djärv <Jan.Djarv@mbox200.swipnet.se>, 1996, 1998, 2001, 2002.
+# Revision: 1.37
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.2.4\n"
-"POT-Creation-Date: 2001-08-13 15:08-0700\n"
-"PO-Revision-Date: 2001-08-24 21:50+0200\n"
+"Project-Id-Version: libc 2.2.5\n"
+"POT-Creation-Date: 2001-08-17 13:03-0700\n"
+"PO-Revision-Date: 2002-02-10 17:57+0100\n"
 "Last-Translator: Jan Djärv <Jan.Djarv@mbox200.swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: locale/programs/ld-monetary.c:278
@@ -307,17 +307,17 @@ msgstr "%s är inte en symbolisk länk\n"
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s är inte en ELF-fil, den har inte rätt magiskt tal i början.\n"
 
-#: assert/assert.c:52
+#: assert/assert.c:54
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sFörsäkran \"%s\" falsk.\n"
 
-#: assert/assert-perr.c:54
+#: assert/assert-perr.c:56
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sOväntat fel: %s.\n"
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:62
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sOkänd signal %d\n"
@@ -625,7 +625,7 @@ msgstr "%s: skräp i slutet av startdatum i sträng %Zd i \"era\"-fält"
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: skräp i slutet av slutdatum i sträng %Zd i \"era\"-fält"
 
-#: posix/getopt.c:788
+#: posix/getopt.c:887 posix/getopt.c:890
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: otillåten flagga -- %c\n"
@@ -661,7 +661,7 @@ msgstr "%s: ogiltigt tal för tilläggsvärde i sträng %Zd i \"era\"-fält"
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: ogiltigt antal sorteringsregler"
 
-#: posix/getopt.c:791
+#: posix/getopt.c:896 posix/getopt.c:899
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: ogiltig flagga -- %c\n"
@@ -685,6 +685,46 @@ msgstr "%s: ogiltigt värde för fält \"%s\""
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "%s: språkförkortning \"%s\" inte definierad"
+
+#: resolv/res_hconf.c:366
+#, c-format
+msgid "%s: line %d: bad command `%s'\n"
+msgstr "%s: rad %d: okänt kommando \"%s\"\n"
+
+#: resolv/res_hconf.c:165
+#, c-format
+msgid "%s: line %d: cannot specify more than %d services"
+msgstr "%s: rad %d: kan inte ange fler än %d tjänster"
+
+#: resolv/res_hconf.c:231
+#, c-format
+msgid "%s: line %d: cannot specify more than %d trim domains"
+msgstr "%s: rad %d: kan inte ange fler än %d filterdomäner"
+
+#: resolv/res_hconf.c:319
+#, c-format
+msgid "%s: line %d: expected `on' or `off', found `%s'\n"
+msgstr "%s: rad %d: förväntade \"on\" eller \"off\", hittade \"%s\"\n"
+
+#: resolv/res_hconf.c:147
+#, c-format
+msgid "%s: line %d: expected service, found `%s'\n"
+msgstr "%s: rad %d: förväntade tjänst, hittade \"%s\"\n"
+
+#: resolv/res_hconf.c:395
+#, c-format
+msgid "%s: line %d: ignoring trailing garbage `%s'\n"
+msgstr "%s: rad %d: ignorerar avslutande skräp \"%s\"\n"
+
+#: resolv/res_hconf.c:256
+#, c-format
+msgid "%s: line %d: list delimiter not followed by domain"
+msgstr "%s: rad %d: listavskiljare följs inte av domän"
+
+#: resolv/res_hconf.c:191
+#, c-format
+msgid "%s: line %d: list delimiter not followed by keyword"
+msgstr "%s: rad %d: listavskiljare följs inte av nyckelord"
 
 #: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365
 #: locale/programs/ld-collate.c:3716
@@ -747,37 +787,39 @@ msgstr "%s: inte tillräckligt med sorteringsregler"
 msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: numerisk landkod \"%d\" är inte giltig"
 
-#: posix/getopt.c:711
+#: posix/getopt.c:743 posix/getopt.c:748
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: flaggan \"%c%s\" tar inget argument\n"
 
-#: posix/getopt.c:681
+#: posix/getopt.c:688 posix/getopt.c:698
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: flaggan \"%s\" är tvetydig\n"
 
-#: posix/getopt.c:729 posix/getopt.c:902
+#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070
+#: posix/getopt.c:1082
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: flaggan \"%s\" behöver ett argument\n"
 
-#: posix/getopt.c:706
+#: posix/getopt.c:730 posix/getopt.c:734
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: flaggan \"--%s\" tar inget argument\n"
 
-#: posix/getopt.c:886
+#: posix/getopt.c:1038 posix/getopt.c:1049
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: flaggan \"-W %s\" tar inget argument\n"
 
-#: posix/getopt.c:868
+#: posix/getopt.c:1004 posix/getopt.c:1014
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: flaggan \"-W %s\" är tvetydig\n"
 
-#: posix/getopt.c:821 posix/getopt.c:951
+#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136
+#: posix/getopt.c:1147
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: flaggan behöver ett argument -- %c\n"
@@ -964,12 +1006,12 @@ msgstr "%s: okänt sektionsnamn \"%s\""
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: okänd symbol \"%s\" i ekvivalensdefinition"
 
-#: posix/getopt.c:762
+#: posix/getopt.c:841 posix/getopt.c:844
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: okänd flagga \"%c%s\"\n"
 
-#: posix/getopt.c:758
+#: posix/getopt.c:830 posix/getopt.c:833
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: okänd flagga \"--%s\"\n"
@@ -1055,7 +1097,7 @@ msgstr "(PROGRAMFEL) Flagga skulle känts igen!?"
 msgid "(Unknown object)\n"
 msgstr "(Okänt objekt)\n"
 
-#: sunrpc/clnt_perr.c:132
+#: sunrpc/clnt_perr.c:133
 #, c-format
 msgid "(unknown authentication error - %d)"
 msgstr "(okänt fel vid äkthetskontroll - %d)"
@@ -1091,12 +1133,12 @@ msgstr ""
 msgid ".lib section in a.out corrupted"
 msgstr ".lib-sektion i a.out korrupt"
 
-#: sunrpc/clnt_perr.c:118 sunrpc/clnt_perr.c:139
+#: sunrpc/clnt_perr.c:119 sunrpc/clnt_perr.c:140
 #, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr "; undre version = %lu, övre version = %lu"
 
-#: sunrpc/clnt_perr.c:125
+#: sunrpc/clnt_perr.c:126
 msgid "; why = "
 msgstr "; varför = "
 
@@ -1213,7 +1255,7 @@ msgstr "Försök att länka in fler delade bibliotek än systemgränsen"
 msgid "Attempting to link in too many shared libraries"
 msgstr "Försöker att länka in för många delade bibliotek"
 
-#: sunrpc/clnt_perr.c:338
+#: sunrpc/clnt_perr.c:354
 msgid "Authentication OK"
 msgstr "Äkthetskontroll OK"
 
@@ -1516,7 +1558,7 @@ msgstr "Teckenseparator: %c\n"
 msgid "Child exited"
 msgstr "Barnprocess avslutad"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:373
 msgid "Client credential too weak"
 msgstr "Klientens referenser är för svaga"
 
@@ -1945,7 +1987,7 @@ msgstr "FATALT: systemet definierar inte \"_POSIX2_LOCALEDEF\""
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "FIL innehåller avbildning från symboliska namn till UCS4-värden"
 
-#: sunrpc/clnt_perr.c:365
+#: sunrpc/clnt_perr.c:381
 msgid "Failed (unspecified error)"
 msgstr "Misslyckades (ospecificerat fel)"
 
@@ -2273,27 +2315,27 @@ msgstr "Avbrutet systemanrop borde omstartas"
 msgid "Invalid argument"
 msgstr "Ogiltigt argument"
 
-#: posix/regex.c:1380
+#: posix/regex.c:1384
 msgid "Invalid back reference"
 msgstr "Ogiltig bakåtreferens"
 
-#: posix/regex.c:1374
+#: posix/regex.c:1378
 msgid "Invalid character class name"
 msgstr "Ogiltigt teckenklassnamn"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid client credential"
 msgstr "Ogiltiga klientreferenser"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:365
 msgid "Invalid client verifier"
 msgstr "Ogiltig klientverifierare"
 
-#: posix/regex.c:1371
+#: posix/regex.c:1375
 msgid "Invalid collation character"
 msgstr "Ogiltigt kollationeringstecken"
 
-#: posix/regex.c:1392
+#: posix/regex.c:1396
 msgid "Invalid content of \\{\\}"
 msgstr "Ogiltigt innehåll i \\{\\}"
 
@@ -2318,15 +2360,15 @@ msgstr "Ogiltigt objekt för operationen"
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ogiltig eller inte komplett flerbyte- eller brett tecken"
 
-#: posix/regex.c:1401
+#: posix/regex.c:1405
 msgid "Invalid preceding regular expression"
 msgstr "Ogiltigt föregående reguljärt uttryck"
 
-#: posix/regex.c:1395
+#: posix/regex.c:1399
 msgid "Invalid range end"
 msgstr "Ogiltigt intervallslut"
 
-#: posix/regex.c:1368
+#: posix/regex.c:1372
 msgid "Invalid regular expression"
 msgstr "Ogiltigt reguljärt uttryck"
 
@@ -2338,7 +2380,7 @@ msgstr "Ogiltig åtkomstkod"
 msgid "Invalid request descriptor"
 msgstr "Ogiltig frågedeskriptor"
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:377
 msgid "Invalid server verifier"
 msgstr "Ogiltig serververifierare"
 
@@ -2463,7 +2505,7 @@ msgstr "Huvudserver är upptagen, full dump omskedulerad."
 msgid "Memory allocation failure"
 msgstr "Minnesallokeringsfel"
 
-#: posix/regex.c:1398
+#: posix/regex.c:1402
 msgid "Memory exhausted"
 msgstr "Minnet slut"
 
@@ -2539,7 +2581,7 @@ msgstr "NIS+ servers kan inte nås"
 
 #: nis/nis_error.c:70
 msgid "NIS+ service is unavailable or not installed"
-msgstr "NIS+ service är otillgänglig eller inte installerad"
+msgstr "NIS+-tjänst är otillgänglig eller inte installerad"
 
 #: nis/nis_print.c:112
 msgid "NO OBJECT\n"
@@ -2683,7 +2725,7 @@ msgstr "Ingen länk skapad eftersom \"soname\" inte hittades för %s"
 msgid "No locks available"
 msgstr "Inga lås tillgängliga"
 
-#: posix/regex.c:1365
+#: posix/regex.c:1369
 msgid "No match"
 msgstr "Ingen träff"
 
@@ -2700,7 +2742,7 @@ msgstr "Inget meddelande av önskad typ"
 msgid "No more records in map database"
 msgstr "Inga fler poster i tabelldatabasen"
 
-#: posix/regex.c:7919
+#: posix/regex.c:7956
 msgid "No previous regular expression"
 msgstr "Inget föregående reguljärt uttryck"
 
@@ -3029,7 +3071,7 @@ msgstr "Åtkomst nekas"
 msgid "Power failure"
 msgstr "Strömavbrott"
 
-#: posix/regex.c:1404
+#: posix/regex.c:1408
 msgid "Premature end of regular expression"
 msgstr "För tidigt slut på reguljärt uttryck"
 
@@ -3146,79 +3188,79 @@ msgstr "RPC-struktur dålig"
 msgid "RPC version wrong"
 msgstr "RPC-version fel"
 
-#: sunrpc/clnt_perr.c:278
+#: sunrpc/clnt_perr.c:284
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (okänd felkod)"
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:203
 msgid "RPC: Authentication error"
 msgstr "RPC: Fel vid äkthetskontroll"
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:183
 msgid "RPC: Can't decode result"
 msgstr "RPC: Kan inte avkoda resultatet"
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:179
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: Kan inte koda argumentet"
 
-#: sunrpc/clnt_perr.c:237
+#: sunrpc/clnt_perr.c:243
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: Misslyckades (ospecificerat fel)"
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:199
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: Inkompatibla versioner av RPC"
 
-#: sunrpc/clnt_perr.c:229
+#: sunrpc/clnt_perr.c:235
 msgid "RPC: Port mapper failure"
 msgstr "RPC: Fel i portöversättare"
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:215
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: Procedur inte tillgänglig"
 
-#: sunrpc/clnt_perr.c:233
+#: sunrpc/clnt_perr.c:239
 msgid "RPC: Program not registered"
 msgstr "RPC: Programmet inte registrerat"
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:207
 msgid "RPC: Program unavailable"
 msgstr "RPC: Programmet otillgängligt"
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:211
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: Program/version-inkompatibilitet"
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:223
 msgid "RPC: Remote system error"
 msgstr "RPC: Fjärrsystemsfel"
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:219
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: Server kan inte avkoda argumenten"
 
-#: sunrpc/clnt_perr.c:170
+#: sunrpc/clnt_perr.c:176
 msgid "RPC: Success"
 msgstr "RPC: Lyckat"
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:195
 msgid "RPC: Timed out"
 msgstr "RPC: Tiden löpte ut"
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:191
 msgid "RPC: Unable to receive"
 msgstr "RPC: Kan inte ta emot"
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:187
 msgid "RPC: Unable to send"
 msgstr "RPC: Kan inte skicka"
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:227
 msgid "RPC: Unknown host"
 msgstr "RPC: Okänd värdmaskin"
 
-#: sunrpc/clnt_perr.c:225
+#: sunrpc/clnt_perr.c:231
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Okänt protokoll"
 
@@ -3250,7 +3292,7 @@ msgstr "Filsystemet endast läsbart"
 msgid "Real-time signal %d"
 msgstr "Realtidssignal %d"
 
-#: posix/regex.c:1407
+#: posix/regex.c:1411
 msgid "Regular expression too big"
 msgstr "Reguljärt uttryck för stort"
 
@@ -3394,11 +3436,11 @@ msgstr "Server upptagen, försök igen"
 msgid "Server out of memory"
 msgstr "Server har slut på minne"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:361
 msgid "Server rejected credential"
 msgstr "Server förkastade kreditiv"
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:369
 msgid "Server rejected verifier"
 msgstr "Server förkastade verifierare"
 
@@ -3496,7 +3538,7 @@ msgstr "Streams-rörfel"
 msgid "Structure needs cleaning"
 msgstr "Strukturen behöver städas"
 
-#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1362
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366
 #: stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr "Lyckat"
@@ -3667,7 +3709,7 @@ msgstr "För många användare"
 msgid "Trace/breakpoint trap"
 msgstr "Spårningsfälla"
 
-#: posix/regex.c:1377
+#: posix/regex.c:1381
 msgid "Trailing backslash"
 msgstr "Avslutande omvänt snedstreck"
 
@@ -3698,6 +3740,11 @@ msgstr "Transportslutpunkten är inte förbunden"
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Försök med \"%s --help\" eller \"%s --usage\" för mer information\n"
+
+#: inet/rcmd.c:223
+#, c-format
+msgid "Trying %s...\n"
+msgstr "Provar %s...\n"
 
 #: nis/nis_print.c:167
 #, c-format
@@ -3788,7 +3835,7 @@ msgstr "Okänt fel hos server"
 msgid "Unknown signal %d"
 msgstr "Okänd signal %d"
 
-#: misc/error.c:113 timezone/zic.c:390
+#: misc/error.c:117 timezone/zic.c:390
 msgid "Unknown system error"
 msgstr "Okänt systemfel"
 
@@ -3796,19 +3843,19 @@ msgstr "Okänt systemfel"
 msgid "Unknown ypbind error"
 msgstr "Okänt ypbind-fel"
 
-#: posix/regex.c:1386
+#: posix/regex.c:1390
 msgid "Unmatched ( or \\("
 msgstr "Obalanserade ( eller \\("
 
-#: posix/regex.c:1410
+#: posix/regex.c:1414
 msgid "Unmatched ) or \\)"
 msgstr "Obalanserade ) eller \\)"
 
-#: posix/regex.c:1383
+#: posix/regex.c:1387
 msgid "Unmatched [ or [^"
 msgstr "Obalanserade [ eller [^"
 
-#: posix/regex.c:1389
+#: posix/regex.c:1393
 msgid "Unmatched \\{"
 msgstr "Obalanserad \\{"
 
@@ -3905,7 +3952,7 @@ msgstr "Skrivning av cache-data misslyckades."
 #: nss/getent.c:68 posix/getconf.c:909
 #, c-format
 msgid "Written by %s.\n"
-msgstr "Skriven av %s.\n"
+msgstr "Skrivet av %s.\n"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:837
 msgid "Wrong medium type"
@@ -4007,11 +4054,12 @@ msgstr "argumentet till <%s> måste vara ett enskilt tecken"
 msgid "argument to `%s' must be a single character"
 msgstr "argumentet till \"%s\" måste vara ett enskilt tecken"
 
-#: sunrpc/auth_unix.c:311
+#: sunrpc/auth_unix.c:322
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr "auth_none.c - Fatalt kodningsproblem"
 
-#: sunrpc/auth_unix.c:106 sunrpc/auth_unix.c:112 sunrpc/auth_unix.c:142
+#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150
+#: sunrpc/auth_unix.c:153
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: minnet slut\n"
 
@@ -4020,7 +4068,7 @@ msgstr "authunix_create: minnet slut\n"
 msgid "bad argument"
 msgstr "dåligt argument"
 
-#: inet/rcmd.c:425
+#: inet/rcmd.c:514
 msgid "bad owner"
 msgstr "olämplig ägare"
 
@@ -4048,15 +4096,15 @@ msgstr "utsändning: ioctl (hämta gränssnittskonfiguration)"
 msgid "broadcast: ioctl (get interface flags)"
 msgstr "utsändning: ioctl (hämta gränssnittsflaggor)"
 
-#: sunrpc/svc_udp.c:528
+#: sunrpc/svc_udp.c:541
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr "cache_set: kunde inte allokera ny rpc-buffert"
 
-#: sunrpc/svc_udp.c:522
+#: sunrpc/svc_udp.c:535
 msgid "cache_set: victim alloc failed"
 msgstr "cache_set: offerallokering misslyckades"
 
-#: sunrpc/svc_udp.c:511
+#: sunrpc/svc_udp.c:524
 msgid "cache_set: victim not found"
 msgstr "cache_set: offer hittades inte"
 
@@ -4064,7 +4112,7 @@ msgstr "cache_set: offer hittades inte"
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan inte avgöra tidszonsförkortning att använda just efter \"until\"-tid"
 
-#: sunrpc/svc_simple.c:85
+#: sunrpc/svc_simple.c:88
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "kan inte ändra procedurnummer %ld\n"
@@ -4187,7 +4235,7 @@ msgstr "kan inte göra segment skrivbart för relokering"
 msgid "cannot map zero-fill pages"
 msgstr "kan inte mappa nollfyllda sidor"
 
-#: inet/rcmd.c:421
+#: inet/rcmd.c:510
 msgid "cannot open"
 msgstr "kan inte öppna"
 
@@ -4357,17 +4405,22 @@ msgstr "cirkulärt beroende mellan lokaldefinitioner"
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - Fatalt fel vid serialisering"
 
-#: sunrpc/clnt_tcp.c:127 sunrpc/clnt_tcp.c:136
+#: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
 msgid "clnttcp_create: out of memory\n"
 msgstr "clnttcp_create: minnet slut\n"
 
-#: sunrpc/clnt_udp.c:132 sunrpc/clnt_udp.c:143
+#: sunrpc/clnt_udp.c:141 sunrpc/clnt_udp.c:144
 msgid "clntudp_create: out of memory\n"
 msgstr "clntudp_create: minnet slut\n"
 
-#: sunrpc/clnt_unix.c:125 sunrpc/clnt_unix.c:134
+#: sunrpc/clnt_unix.c:131 sunrpc/clnt_unix.c:134
 msgid "clntunix_create: out of memory\n"
 msgstr "clntunix_create: minnet slut\n"
+
+#: inet/rcmd.c:209
+#, c-format
+msgid "connect to address %s: "
+msgstr "anslut till adress %s: "
 
 #: sunrpc/rpc_scan.c:116
 msgid "constant or identifier expected"
@@ -4390,11 +4443,11 @@ msgstr "omvandlingsvärde kan inte vara noll"
 msgid "conversion stopped due to problem in writing the output"
 msgstr "konvertering avslutades på grund av problem med att skriva resultatet"
 
-#: sunrpc/svc_simple.c:93
+#: sunrpc/svc_simple.c:97
 msgid "couldn't create an rpc server\n"
 msgstr "kunde inte skapa en rpc-server\n"
 
-#: sunrpc/svc_simple.c:101
+#: sunrpc/svc_simple.c:105
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr "kunde inte registrera prog %ld vers %ld\n"
@@ -4456,19 +4509,19 @@ msgstr "substitution av \"dynamic string token\" är tom"
 msgid "empty dynamics string token substitution"
 msgstr "substitution av \"dynamic string token\" är tom"
 
-#: sunrpc/svc_udp.c:454
+#: sunrpc/svc_udp.c:467
 msgid "enablecache: cache already enabled"
 msgstr "enablecache: cache redan påslagen"
 
-#: sunrpc/svc_udp.c:460
+#: sunrpc/svc_udp.c:473
 msgid "enablecache: could not allocate cache"
 msgstr "enablecache: kunde inte allokera cache"
 
-#: sunrpc/svc_udp.c:468
+#: sunrpc/svc_udp.c:481
 msgid "enablecache: could not allocate cache data"
 msgstr "enablecache: kunde inte allokera cache-data"
 
-#: sunrpc/svc_udp.c:475
+#: sunrpc/svc_udp.c:488
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: kunde inte allokera cache-fifo"
 
@@ -4561,7 +4614,7 @@ msgstr "fil \"%s\" finns redan och kan bli överskriven\n"
 msgid "file too short"
 msgstr "fil för kort"
 
-#: inet/rcmd.c:423
+#: inet/rcmd.c:512
 msgid "fstat failed"
 msgstr "misslyckades ta status (fstat)"
 
@@ -4598,7 +4651,7 @@ msgstr "handle_request: begäran mottagen (version = %d)"
 msgid "hard link failed, symbolic link used"
 msgstr "hård länk misslyckades, använder symbolisk länk"
 
-#: inet/rcmd.c:429
+#: inet/rcmd.c:518
 msgid "hard linked somewhere"
 msgstr "hårdlänkad någonstans"
 
@@ -4802,7 +4855,7 @@ msgstr "visa alla kända teckenuppsättningar"
 msgid "locale name should consist only of portable characters"
 msgstr "lokalnamn får endast bestå av portabla tecken"
 
-#: inet/rcmd.c:414
+#: inet/rcmd.c:503
 msgid "lstat failed"
 msgstr "misslyckades ta status (lstat)"
 
@@ -4838,7 +4891,8 @@ msgstr "minnet förstört före allokerat block\n"
 msgid "memory clobbered past end of allocated block\n"
 msgstr "minnet förstört efter slutet på allokerat block\n"
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:484 posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493
+#: posix/getconf.c:996
 msgid "memory exhausted"
 msgstr "minne slut"
 
@@ -4890,7 +4944,7 @@ msgstr "netname2user: principalnamn \"%s\" för långt"
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: borde inte ha uid 0"
 
-#: sunrpc/svc_simple.c:168
+#: sunrpc/svc_simple.c:183
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "aldrig registrerat prog %d\n"
@@ -4950,7 +5004,7 @@ msgstr "alla tecken i \"outdigit\" är inte tillgängliga i teckenuppsättningen"
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "alla tecken i \"outdigit\" är inte tillgängliga i repertoaren"
 
-#: inet/rcmd.c:416
+#: inet/rcmd.c:505
 msgid "not regular file"
 msgstr "inte en normal fil"
 
@@ -4992,17 +5046,21 @@ msgstr "ordningsföljd för \"%.*s\" redan definierad vid %s:%Zu"
 
 #: inet/ruserpass.c:170 inet/ruserpass.c:193
 msgid "out of memory"
-msgstr "slut på minne"
+msgstr "minnet slut"
 
 #: iconv/iconv_prog.c:66
 msgid "output file"
 msgstr "resultatfil"
 
+#: posix/../sysdeps/generic/wordexp.c:1801
+msgid "parameter null or not set"
+msgstr "parameter är tom eller inte satt"
+
 #: sunrpc/pm_getmaps.c:74
 msgid "pmap_getmaps rpc problem"
 msgstr "pmap_getmaps rpc problem"
 
-#: inet/rcmd.c:234
+#: inet/rcmd.c:293
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: protokollfel i förbindelseuppsättning\n"
 
@@ -5048,26 +5106,26 @@ msgstr "program %lu version %lu är inte tillgängligt\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "program %lu version %lu redo och väntar\n"
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:354
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: läsning gav för lite data"
 
-#: inet/rcmd.c:231
+#: inet/rcmd.c:290
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (sätter upp standard fel): %m\n"
 
-#: inet/rcmd.c:159
+#: inet/rcmd.c:172 inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: uttag (socket): Alla portar används\n"
 
-#: inet/rcmd.c:221
+#: inet/rcmd.c:270
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write: (sätter upp standard fel): %m\n"
 
-#: sunrpc/svc_simple.c:108
+#: sunrpc/svc_simple.c:112
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: minnet slut\n"
 
@@ -5143,7 +5201,7 @@ msgstr "fattas data vid läsning av begäran: %s"
 msgid "short write in %s: %s"
 msgstr "ofullständig skrivning i %s: %s"
 
-#: inet/rcmd.c:261
+#: inet/rcmd.c:335
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "uttag (socket): protokollfel i förbindelseuppsättning\n"
 
@@ -5175,51 +5233,51 @@ msgstr "utelämna varningar"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - poll misslyckades"
 
-#: sunrpc/svc_tcp.c:170
+#: sunrpc/svc_tcp.c:171
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr "svc_tcp.c - kan inte anropa getsockname eller listen"
 
-#: sunrpc/svc_tcp.c:155
+#: sunrpc/svc_tcp.c:156
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr "svc_tcp.c - problem att skapa tcp-uttag (socket)"
 
-#: sunrpc/svc_tcp.c:219 sunrpc/svc_tcp.c:225
+#: sunrpc/svc_tcp.c:224 sunrpc/svc_tcp.c:227
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr "svc_tcp: makefd_xprt: minnet slut\n"
 
-#: sunrpc/svc_unix.c:146
+#: sunrpc/svc_unix.c:150
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr "svc_unix.c - problem att skapa AF_UNIX uttag (socket)"
 
-#: sunrpc/svc_unix.c:162
+#: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - kan inte anropa getsockname eller listen"
 
-#: sunrpc/svc_unix.c:212 sunrpc/svc_unix.c:218
+#: sunrpc/svc_unix.c:220 sunrpc/svc_unix.c:223
 msgid "svc_unix: makefd_xprt: out of memory\n"
 msgstr "svc_unix: makefd_xprt: minnet slut\n"
 
-#: sunrpc/svc_tcp.c:178 sunrpc/svc_tcp.c:186
+#: sunrpc/svc_tcp.c:182 sunrpc/svc_tcp.c:185
 msgid "svctcp_create: out of memory\n"
 msgstr "svctcp_create: minnet slut\n"
 
-#: sunrpc/svc_udp.c:141
+#: sunrpc/svc_udp.c:143
 msgid "svcudp_create - cannot getsockname"
 msgstr "svcudp_create - kan inte anropa getsockname"
 
-#: sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:161
+#: sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:158
 msgid "svcudp_create: out of memory\n"
 msgstr "svcudb_create: minnet slut\n"
 
-#: sunrpc/svc_udp.c:127
+#: sunrpc/svc_udp.c:129
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: problem att skapa uttag (socket)"
 
-#: sunrpc/svc_udp.c:177
+#: sunrpc/svc_udp.c:179 sunrpc/svc_udp.c:182
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr "svcudp_create: xp_pad är för liten för IP_PKTINFO\n"
 
-#: sunrpc/svc_unix.c:171 sunrpc/svc_unix.c:179
+#: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
 msgid "svcunix_create: out of memory\n"
 msgstr "svcunix_create: minnet slut\n"
 
@@ -5326,7 +5384,7 @@ msgstr "för många eller för långa tidszonförkortningar"
 msgid "trailing garbage at end of line"
 msgstr "avslutande skräp vid radslutet"
 
-#: sunrpc/svc_simple.c:160
+#: sunrpc/svc_simple.c:175
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "problem att svara till prog %d\n"
@@ -5481,7 +5539,7 @@ msgstr "med symboliska namn som intervallvärden kan inte absoluta intervallet \"
 msgid "write incomplete"
 msgstr "ofullständing skrivning"
 
-#: inet/rcmd.c:427
+#: inet/rcmd.c:516
 msgid "writeable by other than owner"
 msgstr "skrivbar för andra än ägaren"
 
@@ -5509,11 +5567,23 @@ msgstr "fel antal fält på \"Zone\"-fortsättningsrad"
 msgid "wrong number of fields on Zone line"
 msgstr "fel antal fält på \"Zone\"-rad"
 
-#: sunrpc/xdr_ref.c:85
+#: sunrpc/xdr_array.c:106 sunrpc/xdr_array.c:109
+msgid "xdr_array: out of memory\n"
+msgstr "xdr_array: minnet slut\n"
+
+#: sunrpc/xdr.c:558 sunrpc/xdr.c:561
+msgid "xdr_bytes: out of memory\n"
+msgstr "xdr_bytes: minnet slut\n"
+
+#: sunrpc/xdr_ref.c:89 sunrpc/xdr_ref.c:92
 msgid "xdr_reference: out of memory\n"
 msgstr "xdr_reference: minnet slut\n"
 
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+#: sunrpc/xdr.c:710 sunrpc/xdr.c:713
+msgid "xdr_string: out of memory\n"
+msgstr "xdr_string: minnet slut\n"
+
+#: sunrpc/xdr_rec.c:155 sunrpc/xdr_rec.c:158
 msgid "xdrrec_create: out of memory\n"
 msgstr "xdrrec_create: minnet slut\n"
 
