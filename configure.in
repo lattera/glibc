@@ -1624,6 +1624,22 @@ if test "$libc_cv_gcc___thread" = yes; then
   AC_DEFINE(HAVE___THREAD)
 fi
 
+if test "$libc_cv_gcc___thread" = yes; then
+  dnl Check whether the compiler supports the tls_model attribute.
+  AC_CACHE_CHECK([for tls_model attribute], libc_cv_gcc_tls_model_attr, [dnl
+  cat > conftest.c <<\EOF
+extern __thread int a __attribute__((tls_model ("initial-exec")));
+EOF
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS -S -Werror conftest.c >&AC_FD_CC]); then
+    libc_cv_gcc_tls_model_attr=yes
+  else
+    libc_cv_gcc_tls_model_attr=no
+  fi
+  rm -f conftest*])
+  if test "$libc_cv_gcc_tls_model_attr" = yes; then
+    AC_DEFINE(HAVE_TLS_MODEL_ATTRIBUTE)
+  fi
+fi
 
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)

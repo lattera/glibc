@@ -16,7 +16,10 @@
 #  include <tls.h>
 #  if USE___THREAD
 #   undef _res
-extern __thread struct __res_state _res;
+#   ifndef NOT_IN_libc
+#    define _res __libc_res
+#   endif
+extern __thread struct __res_state _res attribute_tls_model_ie;
 #  endif
 # else
 #  ifndef __BIND_NOSTATIC

@@ -6,8 +6,12 @@
 #  include <tls.h>
 #  if USE___THREAD
 #   undef  h_errno
-#   define h_errno h_errno	/* For #ifndef h_errno tests.  */
-extern __thread int h_errno;
+#   ifndef NOT_IN_libc
+#    define h_errno __libc_h_errno
+#   else
+#    define h_errno h_errno	/* For #ifndef h_errno tests.  */
+#   endif
+extern __thread int h_errno attribute_tls_model_ie;
 #   define __set_h_errno(x)	(h_errno = (x))
 #  else
 static inline int

@@ -24,8 +24,12 @@ extern int errno attribute_hidden;
 
 #  if USE___THREAD
 #   undef  errno
-#   define errno errno		/* For #ifndef errno tests.  */
-extern __thread int errno;
+#   ifndef NOT_IN_libc
+#    define errno __libc_errno
+#   else
+#    define errno errno		/* For #ifndef errno tests.  */
+#   endif
+extern __thread int errno attribute_tls_model_ie;
 #   define __set_errno(val) (errno = (val))
 #  else
 #   define __set_errno(val) (*__errno_location ()) = (val)

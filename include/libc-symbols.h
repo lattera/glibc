@@ -445,6 +445,12 @@
 # define attribute_hidden
 #endif
 
+#if defined HAVE_TLS_MODEL_ATTRIBUTE
+# define attribute_tls_model_ie __attribute__ ((tls_model ("initial-exec")))
+#else
+# define attribute_tls_model_ie
+#endif
+
 /* Handling on non-exported internal names.  We have to do this only
    for shared code.  */
 #ifdef SHARED

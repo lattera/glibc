@@ -20,11 +20,9 @@
 
 #include <errno.h>
 #include <tls.h>
-#undef errno
 
-#if USE_TLS && HAVE___THREAD
-extern __thread int errno;
-#else
+#if !(USE_TLS && HAVE___THREAD)
+#undef errno
 extern int errno;
 #endif
 

@@ -27,6 +27,9 @@
 
 #if USE_TLS && HAVE___THREAD
 __thread int h_errno;
+extern __thread int __libc_h_errno __attribute__ ((alias ("h_errno")))
+  attribute_hidden;
+# define h_errno __libc_h_errno
 #else
 int h_errno = 0;
 weak_alias (h_errno, _h_errno)

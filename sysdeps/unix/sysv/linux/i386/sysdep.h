@@ -114,7 +114,7 @@ __i686.get_pc_thunk.reg:						      \
 #   define SYSCALL_ERROR_HANDLER					      \
 0:SETUP_PIC_REG (cx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
-  movl errno@gotntpoff(%ecx), %ecx;					      \
+  movl __libc_errno@GOTNTPOFF(%ecx), %ecx;				      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
   movl %edx, %gs:0(%ecx);						      \

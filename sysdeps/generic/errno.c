@@ -23,6 +23,8 @@
 
 #if USE___THREAD
 __thread int errno;
+extern __thread int __libc_errno __attribute__ ((alias ("errno")))
+  attribute_hidden;
 #else
 /* This differs from plain `int errno;' in that it doesn't create
    a common definition, but a plain symbol that resides in .bss,

@@ -52,7 +52,8 @@
    translate directly into variables by macro magic.  */
 
 #if USE___THREAD
-# define __libc_tsd_define(CLASS, KEY)	CLASS __thread void *__libc_tsd_##KEY;
+# define __libc_tsd_define(CLASS, KEY)	\
+  CLASS __thread void *__libc_tsd_##KEY attribute_tls_model_ie;
 
 # define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY)
 # define __libc_tsd_get(KEY)		(__libc_tsd_##KEY)

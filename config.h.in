@@ -101,6 +101,9 @@
 /* Define if the __thread keyword is supported.  */
 #undef HAVE___THREAD
 
+/* Define if the compiler supports __attribute__((tls_model(""))).  */
+#undef HAVE_TLS_MODEL_ATTRIBUTE
+
 /* Define if the regparm attribute shall be used for local functions
    (gcc on ix86 only).  */
 #undef	USE_REGPARMS

@@ -3772,6 +3772,31 @@ EOF
 
 fi
 
+if test "$libc_cv_gcc___thread" = yes; then
+    echo $ac_n "checking for tls_model attribute""... $ac_c" 1>&6
+echo "configure:3778: checking for tls_model attribute" >&5
+if eval "test \"`echo '$''{'libc_cv_gcc_tls_model_attr'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+    cat > conftest.c <<\EOF
+extern __thread int a __attribute__((tls_model ("initial-exec")));
+EOF
+  if { ac_try='${CC-cc} $CFLAGS -S -Werror conftest.c >&5'; { (eval echo configure:3785: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+    libc_cv_gcc_tls_model_attr=yes
+  else
+    libc_cv_gcc_tls_model_attr=no
+  fi
+  rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_gcc_tls_model_attr" 1>&6
+  if test "$libc_cv_gcc_tls_model_attr" = yes; then
+    cat >> confdefs.h <<\EOF
+#define HAVE_TLS_MODEL_ATTRIBUTE 1
+EOF
+
+  fi
+fi
 
 echo $ac_n "checking for libgd""... $ac_c" 1>&6
 echo "configure:3778: checking for libgd" >&5

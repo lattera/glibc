@@ -95,7 +95,7 @@
 #elif USE___THREAD
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
-  movq errno@GOTTPOFF(%rip), %rcx;		\
+  movq __libc_errno@GOTTPOFF(%rip), %rcx;	\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, %fs:(%rcx);			\
