@@ -1,3 +1,7 @@
+2003-05-02  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (do-stamp): Do $(make-target-directory).
+
 2003-04-07  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/generic/dl-fptr.c: Modify to remove the lock.
