@@ -19,9 +19,9 @@
 #include "div_libc.h"
 
 
-/* 64-bit signed long divide.  These are not normal C functions.  Argument
-   registers are t10 and t11, the result goes in t12.  Only t12 and AT may
-   be clobbered.
+/* 64-bit unsigned long divide.  These are not normal C functions.  Argument
+   registers are t10 and t11, the result goes in t12.  Only t12 and AT may be
+   clobbered.
 
    Theory of operation here is that we can use the FPU divider for virtually
    all operands that we see: all dividend values between -2**53 and 2**53-1
@@ -37,13 +37,13 @@
 
 	.text
 	.align	4
-	.globl	__divq
-	.type	__divq, @function
-	.usepv	__divq, no
+	.globl	__divqu
+	.type	__divqu, @function
+	.usepv	__divqu, no
 
 	cfi_startproc
 	cfi_return_column (RA)
-__divq:
+__divqu:
 	lda	sp, -FRAME(sp)
 	cfi_def_cfa_offset (FRAME)
 	CALL_MCOUNT
@@ -65,14 +65,18 @@ __divq:
 
 	cvtqt	$f0, $f0
 	cvtqt	$f1, $f1
+	blt	X, $x_is_neg
 	divt/c	$f0, $f1, $f0
 
-	/* Check to see if X fit in the double as an exact value.  */
-	sll	X, (64-53), AT
+	/* Check to see if Y was mis-converted as signed value.  */
 	ldt	$f1, 8(sp)
-	sra	AT, (64-53), AT
-	cmpeq	X, AT, AT
-	beq	AT, $x_big
+	unop
+	nop
+	blt	Y, $y_is_neg
+
+	/* Check to see if X fit in the double as an exact value.  */
+	srl	X, 53, AT
+	bne	AT, $x_big
 
 	/* If we get here, we're expecting exact results from the division.
 	   Do nothing else besides convert and clean up.  */
@@ -81,15 +85,40 @@ __divq:
 
 	ldq	RV, 16(sp)
 	ldt	$f0, 0(sp)
-	cfi_restore ($f1)
 	cfi_remember_state
 	cfi_restore ($f0)
+	cfi_restore ($f1)
 	cfi_def_cfa_offset (0)
 	lda	sp, FRAME(sp)
 	ret	$31, (RA), 1
 
 	.align	4
 	cfi_restore_state
+$x_is_neg:
+	/* If we get here, X is so big that bit 63 is set, which made the
+	   conversion come out negative.  Fix it up lest we not even get
+	   a good estimate.  */
+	ldah	AT, 0x5f80		/* 2**64 as float.  */
+	stt	$f2, 24(sp)
+	cfi_rel_offset ($f2, 24)
+	stl	AT, 16(sp)
+	lds	$f2, 16(sp)
+
+	addt	$f0, $f2, $f0
+	unop
+	divt/c	$f0, $f1, $f0
+	unop
+
+	/* Ok, we've now the divide issued.  Continue with other checks.  */
+	ldt	$f1, 8(sp)
+	unop
+	ldt	$f2, 24(sp)
+	blt	Y, $y_is_neg
+	cfi_restore ($f1)
+	cfi_restore ($f2)
+	cfi_remember_state	/* for y_is_neg */
+
+	.align	4
 $x_big:
 	/* If we get here, X is large enough that we don't expect exact
 	   results, and neither X nor Y got mis-translated for the fp
@@ -98,11 +127,11 @@ $x_big:
 	stq	t0, 16(sp)
 	stq	t1, 24(sp)
 	stq	t2, 32(sp)
-	stq	t5, 40(sp)
+	stq	t3, 40(sp)
 	cfi_rel_offset (t0, 16)
 	cfi_rel_offset (t1, 24)
 	cfi_rel_offset (t2, 32)
-	cfi_rel_offset (t5, 40)
+	cfi_rel_offset (t3, 40)
 
 #define Q	RV		/* quotient */
 #define R	t0		/* remainder */
@@ -110,26 +139,17 @@ $x_big:
 #define S	t2		/* scalar */
 #define QY	t3		/* Q*Y */
 
-	/* The fixup code below can only handle unsigned values.  */
-	or	X, Y, AT
-	mov	$31, t5
-	blt	AT, $fix_sign_in
-$fix_sign_in_ret1:
 	cvttq/c	$f0, $f0
-
 	stt	$f0, 8(sp)
 	ldq	Q, 8(sp)
-$fix_sign_in_ret2:
 	mulq	Q, Y, QY
-	stq	t4, 8(sp)
 
+	stq	t4, 8(sp)
+	unop
 	ldt	$f0, 0(sp)
 	unop
 	cfi_rel_offset (t4, 8)
 	cfi_restore ($f0)
-	stq	t3, 0(sp)
-	unop
-	cfi_rel_offset (t3, 0)
 
 	subq	QY, X, R
 	mov	Y, SY
@@ -143,15 +163,12 @@ $q_high_ret:
 	bgt	R, $q_low
 
 $q_low_ret:
+	ldq	t4, 8(sp)
 	ldq	t0, 16(sp)
 	ldq	t1, 24(sp)
 	ldq	t2, 32(sp)
-	bne	t5, $fix_sign_out
 
-$fix_sign_out_ret:
-	ldq	t3, 0(sp)
-	ldq	t4, 8(sp)
-	ldq	t5, 40(sp)
+	ldq	t3, 40(sp)
 	lda	sp, FRAME(sp)
 	cfi_remember_state
 	cfi_restore (t0)
@@ -159,7 +176,6 @@ $fix_sign_out_ret:
 	cfi_restore (t2)
 	cfi_restore (t3)
 	cfi_restore (t4)
-	cfi_restore (t5)
 	cfi_def_cfa_offset (0)
 	ret	$31, (RA), 1
 
@@ -210,56 +226,19 @@ $q_low:
 	br	$q_low_ret
 
 	.align	4
-$fix_sign_in:
-	/* If we got here, then X|Y is negative.  Need to adjust everything
-	   such that we're doing unsigned division in the fixup loop.  */
-	/* T5 records the changes we had to make:
-		bit 0:	set if result should be negative.
-		bit 2:	set if X was negated.
-		bit 3:	set if Y was negated.
-	*/
-	xor	X, Y, AT
-	cmplt	AT, 0, t5
-	cmplt	X, 0, AT
-	negq	X, t0
-
-	s4addq	AT, t5, t5
-	cmovne	AT, t0, X
-	cmplt	Y, 0, AT
-	negq	Y, t0
-
-	s8addq	AT, t5, t5
-	cmovne	AT, t0, Y
-	unop
-	blbc	t5, $fix_sign_in_ret1
-
-	cvttq/c	$f0, $f0
-	stt	$f0, 8(sp)
-	ldq	Q, 8(sp)
-	unop
-
-	negq	Q, Q
-	br	$fix_sign_in_ret2
-
-	.align	4
-$fix_sign_out:
-	/* Now we get to undo what we did above.  */
-	/* ??? Is this really faster than just increasing the size of
-	   the stack frame and storing X and Y in memory?  */
-	and	t5, 8, AT
-	negq	Y, t4
-	cmovne	AT, t4, Y
-
-	and	t5, 4, AT
-	negq	X, t4
-	cmovne	AT, t4, X
-
-	negq	RV, t4
-	cmovlbs	t5, t4, RV
-
-	br	$fix_sign_out_ret
+	cfi_restore_state
+$y_is_neg:
+	/* If we get here, Y is so big that bit 63 is set.  The results
+	   from the divide will be completely wrong.  Fortunately, the
+	   quotient must be either 0 or 1, so just compute it directly.  */
+	cmpult	Y, X, RV
+	ldt	$f0, 0(sp)
+	lda	sp, FRAME(sp)
+	cfi_restore ($f0)
+	cfi_def_cfa_offset (0)
+	ret	$31, (RA), 1
 
 	cfi_endproc
-	.size	__divq, .-__divq
+	.size	__divqu, .-__divqu
 
 	DO_DIVBYZERO
