@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -100,10 +101,10 @@
 
 #ifdef USE_TLS
 #define inline_syscall_r0_asm
-#define inline_syscall_r0_constraint	"v"
+#define inline_syscall_r0_out_constraint	"=v"
 #else
-#define inline_syscall_r0_asm		__asm__("$0")
-#define inline_syscall_r0_constraint	"r"
+#define inline_syscall_r0_asm			__asm__("$0")
+#define inline_syscall_r0_out_constraint	"=r"
 #endif
 
 /* It is moderately important optimization-wise to limit the lifetime
@@ -117,7 +118,7 @@
 								\
 	_sc_0 = __NR_##name;					\
 	__asm__("callsys # %0 %1 <= %2"				\
-		: "=" inline_syscall_r0_constraint (_sc_0),	\
+		: inline_syscall_r0_out_constraint (_sc_0),	\
 	          "=r"(_sc_19)					\
 		: "0"(_sc_0)					\
 		: inline_syscall_clobbers,			\
@@ -134,7 +135,7 @@
 	_sc_0 = __NR_##name;					\
 	_sc_16 = (long) (arg1);					\
 	__asm__("callsys # %0 %1 <= %2 %3"			\
-		: "=" inline_syscall_r0_constraint (_sc_0),	\
+		: inline_syscall_r0_out_constraint (_sc_0),	\
 		  "=r"(_sc_19), "=r"(_sc_16)			\
 		: "0"(_sc_0), "2"(_sc_16)			\
 		: inline_syscall_clobbers,			\
@@ -153,7 +154,7 @@
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
 	__asm__("callsys # %0 %1 <= %2 %3 %4"			\
-		: "=" inline_syscall_r0_constraint (_sc_0),	\
+		: inline_syscall_r0_out_constraint (_sc_0),	\
 		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17)	\
 		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17)		\
 		: inline_syscall_clobbers,			\
@@ -174,7 +175,7 @@
 	_sc_17 = (long) (arg2);					\
 	_sc_18 = (long) (arg3);					\
 	__asm__("callsys # %0 %1 <= %2 %3 %4 %5"		\
-		: "=" inline_syscall_r0_constraint (_sc_0),	\
+		: inline_syscall_r0_out_constraint (_sc_0),	\
 		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),	\
 		  "=r"(_sc_18)					\
 		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
@@ -197,7 +198,7 @@
 	_sc_18 = (long) (arg3);					\
 	_sc_19 = (long) (arg4);					\
 	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6"		\
-		: "=" inline_syscall_r0_constraint (_sc_0),	\
+		: inline_syscall_r0_out_constraint (_sc_0),	\
 		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),	\
 		  "=r"(_sc_18)					\
 		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
@@ -222,7 +223,7 @@
 	_sc_19 = (long) (arg4);					\
 	_sc_20 = (long) (arg5);					\
 	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7"		\
-		: "=" inline_syscall_r0_constraint (_sc_0),	\
+		: inline_syscall_r0_out_constraint (_sc_0),	\
 		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),	\
 		  "=r"(_sc_18),	"=r"(_sc_20)			\
 		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
@@ -249,7 +250,7 @@
 	_sc_20 = (long) (arg5);					\
 	_sc_21 = (long) (arg6);					\
 	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"	\
-		: "=" inline_syscall_r0_constraint (_sc_0),	\
+		: inline_syscall_r0_out_constraint (_sc_0),	\
 		  "=r"(_sc_19) "=r"(_sc_16), "=r"(_sc_17),	\
 		  "=r"(_sc_18), "=r"(_sc_20), "=r"(_sc_21)	\
 		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\

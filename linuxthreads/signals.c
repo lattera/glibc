@@ -195,3 +195,6 @@ int __pthread_raise (int sig)
 #ifdef SHARED
 strong_alias (__pthread_raise, raise)
 #endif
+
+/* This files handles cancellation internally.  */
+LIBC_CANCEL_HANDLED ();

@@ -475,14 +475,21 @@ extern pid_t __pthread_fork (struct fork_block *b) attribute_hidden;
   __libc_enable_asynccancel ()
 # define LIBC_CANCEL_RESET(oldtype) \
   __libc_disable_asynccancel (oldtype)
+# define LIBC_CANCEL_HANDLED() \
+  __asm (".globl " __SYMBOL_PREFIX "__libc_enable_asynccancel"); \
+  __asm (".globl " __SYMBOL_PREFIX "__libc_disable_asynccancel")
 #elif defined NOT_IN_libc && defined IS_IN_libpthread
 # define LIBC_CANCEL_ASYNC() \
   __pthread_enable_asynccancel ()
 # define LIBC_CANCEL_RESET(oldtype) \
   __pthread_disable_asynccancel (oldtype)
+# define LIBC_CANCEL_HANDLED() \
+  __asm (".globl " __SYMBOL_PREFIX "__pthread_enable_asynccancel"); \
+  __asm (".globl " __SYMBOL_PREFIX "__pthread_disable_asynccancel")
 #else
 # define LIBC_CANCEL_ASYNC()    0 /* Just a dummy value.  */
 # define LIBC_CANCEL_RESET(val) ((void)(val)) /* Nothing, but evaluate it.  */
+# define LIBC_CANCEL_HANDLED()	/* Nothing.  */
 #endif
 
 /* Data type shared with libc.  The libc uses it to pass on calls to

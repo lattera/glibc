@@ -1,3 +1,31 @@
+2003-01-06  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/powerpc32/sysdep.h (PSEUDO_RET): Add branch hint.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S: Add cancellation
+	support.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Remove
+	ftruncate64, truncate64, pread64 and pwrite64 entries.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INLINE_SYSCALL): Add __builtin_expect.
+	(LOADARGS_n): Add argument size safety checks.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite64.c: New file.
+
+2003-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/sysdep-cancel.h (LIBC_CANCEL_HANDLED): Define.
+	* sysdeps/generic/creat.c: Include sysdep-cancel.h.
+	(LIBC_CANCEL_HANDLED): Add.
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h
+	(inline_syscall_r0_constraint): Rename to...
+	(inline_syscall_r0_out_constraint): ... this.  Add =.
+	(inline_syscall[0-6]): Use inline_syscall_r0_out_constraint.
+
 2003-01-06  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Make

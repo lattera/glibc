@@ -116,7 +116,7 @@
     DO_CALL (SYS_ify (syscall_name));
 
 #define PSEUDO_RET							      \
-    bnslr;								      \
+    bnslr+;								      \
     b JUMPTARGET(__syscall_error)
 #define ret PSEUDO_RET
 

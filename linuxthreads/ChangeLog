@@ -1,3 +1,17 @@
+2003-01-06  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: New file.
+
+2003-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* internals.h (LIBC_CANCEL_HANDLED): Define.
+	* sysdeps/unix/sysv/linux/sigwait.c (LIBC_CANCEL_HANDLED): Add.
+	* signals.c (LIBC_CANCEL_HANDLED): Add.
+	* pt-system.c (LIBC_CANCEL_HANDLED): Add.
+	* tst-cancel-wrappers.sh: Remove all exceptions.
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile: New file.
+
 2003-01-05  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/Makefile: New file, use -fPIC for nonshared

@@ -85,7 +85,7 @@
        : "cr0", "ctr", "memory");					\
     err = r0;								\
     ret = r3;								\
-    if (err & (1 << 28))						\
+    if (__builtin_expect (err & (1 << 28), 0))				\
       {									\
 	__set_errno (ret);						\
 	ret = -1L;							\
@@ -99,7 +99,7 @@
    gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
    the negation of the return value in the kernel gets reverted.  */
 
-#undef INTERNAL_SYSCALL
+# undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, nr, args...)				\
   ({									\
     register long r0  __asm__ ("r0");					\
@@ -127,31 +127,43 @@
     (int) r3;								\
   })
   
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)   ((unsigned long) (val) >= -4095U)
+# undef INTERNAL_SYSCALL_ERROR_P
+# define INTERNAL_SYSCALL_ERROR_P(val)   ((unsigned long) (val) >= 0xfffff001u)
   
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)     (-(val))
+# undef INTERNAL_SYSCALL_ERRNO
+# define INTERNAL_SYSCALL_ERRNO(val)     (-(val))
 
 # define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name
 # define LOADARGS_1(name, arg1) \
 	LOADARGS_0(name, 0); \
+	extern void __illegally_sized_syscall_##name##_arg1 (void); \
+	if (sizeof (arg1) > 4) __illegally_sized_syscall_##name##_arg1 (); \
 	r3 = (long) (arg1)
 # define LOADARGS_2(name, arg1, arg2) \
 	LOADARGS_1(name, arg1); \
+	extern void __illegally_sized_syscall_##name##_arg2 (void); \
+	if (sizeof (arg2) > 4) __illegally_sized_syscall_##name##_arg2 (); \
 	r4 = (long) (arg2)
 # define LOADARGS_3(name, arg1, arg2, arg3) \
 	LOADARGS_2(name, arg1, arg2); \
+	extern void __illegally_sized_syscall_##name##_arg3 (void); \
+	if (sizeof (arg3) > 4) __illegally_sized_syscall_##name##_arg3 (); \
 	r5 = (long) (arg3)
 # define LOADARGS_4(name, arg1, arg2, arg3, arg4) \
 	LOADARGS_3(name, arg1, arg2, arg3); \
+	extern void __illegally_sized_syscall_##name##_arg4 (void); \
+	if (sizeof (arg4) > 4) __illegally_sized_syscall_##name##_arg4 (); \
 	r6 = (long) (arg4)
 # define LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5) \
 	LOADARGS_4(name, arg1, arg2, arg3, arg4); \
+	extern void __illegally_sized_syscall_##name##_arg5 (void); \
+	if (sizeof (arg5) > 4) __illegally_sized_syscall_##name##_arg5 (); \
 	r7 = (long) (arg5)
 # define LOADARGS_6(name, arg1, arg2, arg3, arg4, arg5, arg6) \
 	LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5); \
+	extern void __illegally_sized_syscall_##name##_arg6 (void); \
+	if (sizeof (arg6) > 4) __illegally_sized_syscall_##name##_arg6 (); \
 	r8 = (long) (arg6)
 
 # define ASM_INPUT_0 "0" (r0)

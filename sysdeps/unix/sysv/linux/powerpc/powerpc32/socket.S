@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 #define P(a, b) P2(a, b)
@@ -75,11 +75,41 @@ ENTRY(__socket)
 #if NARGS >= 9
 #error too many arguments!
 #endif
+
+#if defined NEED_CANCELLATION && defined CENABLE
+	SINGLE_THREAD_P
+	bne-	.Lsocket_cancel
+#endif
+
 	li	r3,P(SOCKOP_,socket)
 	addi	r4,r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
 	addi	r1,r1,48
 	PSEUDO_RET
+
+#if defined NEED_CANCELLATION && defined CENABLE
+.Lsocket_cancel:
+	mflr	r9
+	stw	r9,52(r1)
+	CENABLE
+	stw	r3,16(r1)
+	li	r3,P(SOCKOP_,socket)
+	addi	r4,r1,stackblock
+	DO_CALL(SYS_ify(socketcall))
+	mfcr	r0
+	stw	r3,8(r1)
+	stw	r0,12(r1)
+	lwz	r3,16(r1)
+	CDISABLE
+	lwz	r4,52(r1)
+	lwz	r0,12(r1)
+	lwz	r3,8(r1)
+	mtlr	r4
+	mtcr	r0
+	addi	r1,r1,48
+	PSEUDO_RET
+#endif
+
 PSEUDO_END (__socket)
 
 weak_alias (__socket, socket)

@@ -82,3 +82,6 @@ __sigwait (set, sig)
 libc_hidden_def (__sigwait)
 weak_alias (__sigwait, sigwait)
 strong_alias (__sigwait, __libc_sigwait)
+
+/* Cancellation is handled in __pthread_sigwait.  */
+LIBC_CANCEL_HANDLED ();
