@@ -32,6 +32,8 @@ __fesetenv (const fenv_t *envp)
 
   if (envp == FE_DFL_ENV)
     _FPU_SETCW (_FPU_DEFAULT);
+  else if (envp == FE_NOMASK_ENV)
+    _FPU_SETCW (_FPU_IEEE);
   else
     _FPU_SETCW (envp->__fp_control_register);
 
