@@ -23,6 +23,10 @@
 #ifndef	_BITS_TYPES_H
 #define	_BITS_TYPES_H	1
 
+#include <features.h>
+
+#define __need_size_t
+#include <stddef.h>
 
 /* Convenience types.  */
 typedef unsigned char __u_char;
