@@ -57,7 +57,7 @@ __pathconf (const char *path, int name)
       /* Determine the filesystem type.  */
       if (__statfs (path, &fsbuf) < 0)
 	/* not possible, return the default value.  */
-	return LINK_MAX;
+	return LINUX_LINK_MAX;
 
       switch (fsbuf.f_type)
 	{
@@ -87,7 +87,7 @@ __pathconf (const char *path, int name)
 	  return UFS_LINK_MAX;
 
 	default:
-	  return LINK_MAX;
+	  return LINUX_LINK_MAX;
 	}
     }
 
