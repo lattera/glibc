@@ -1,3 +1,8 @@
+2000-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_open.c (__gconv_open): Set res to __GCONV_NOMEM is
+	malloc fails.
+
 2000-09-01  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/fcntl.h: Always fail.
