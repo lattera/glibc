@@ -35,7 +35,7 @@ LC_CTYPE
 copy "i18n"
 space <U1361>
 translit_start
-include "trans_et";""
+include "translit_et";""
 translit_end
 END LC_CTYPE
 

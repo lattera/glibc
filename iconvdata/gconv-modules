@@ -1430,3 +1430,7 @@ module	INTERNAL		GB18030//		GB18030		1
 #	from			to			module		cost
 module	VISCII//		INTERNAL		VISCII		1
 module	INTERNAL		VISCII//		VISCII		1
+
+#	from			to			module		cost
+module	KOI8-T//		INTERNAL		KOI8-T		1
+module	INTERNAL		KOI8-T//		KOI8-T		1

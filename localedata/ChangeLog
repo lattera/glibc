@@ -1,3 +1,7 @@
+2001-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/KOI8-T: New file.
+
 2001-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/af_ZA: Use generic LC_COLLATE data.
@@ -24,7 +28,7 @@
 	* locales/ti_ET: New file.
 	* locales/tl_PH: New file.
 	* locales/tt_RU: New file.
-	* locales/ur_OK: New file.
+	* locales/ur_PK: New file.
 	* locales/uz_UZ: New file.
 	* locales/yi_US: New file.
 	Patches by Pablo Saratxaga <pablo@mandrakesoft.com>.
