@@ -170,12 +170,12 @@ typedef __sighandler_t sig_t;
 #endif /* <signal.h> included.  */
 
 
-# if !defined __sigset_t_defined \
+#if !defined __sigset_t_defined \
     && ((defined _SIGNAL_H  && defined __USE_POSIX) || defined __need_sigset_t)
 typedef __sigset_t sigset_t;
-#  define __sigset_t_defined	1
-# endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
-# undef __need_sigset_t
+# define __sigset_t_defined	1
+#endif /* `sigset_t' not defined and <signal.h> or need `sigset_t'.  */
+#undef __need_sigset_t
 
 #ifdef __USE_POSIX
 

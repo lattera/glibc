@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 /* Get libc version number.  */
 #include "../version.h"
@@ -100,6 +101,7 @@ main (argc, argv)
   DB *db_file;
   int status;
   int remaining;
+  int mode = 0666;
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -157,15 +159,22 @@ main (argc, argv)
     input_file = stdin;
   else
     {
+      struct stat st;
+
       input_file = fopen (input_name, "r");
       if (input_file == NULL)
 	error (EXIT_FAILURE, errno, gettext ("cannot open input file `%s'"),
 	       input_name);
+
+      /* Get the access rights from the source file.  The output file should
+	 have the same.  */
+      if (fstat (fileno (input_file), &st) >= 0)
+	mode = st.st_mode & ACCESSPERMS;
     }
 
   /* Open output file.  This must not be standard output so we don't
      handle "-" and "/dev/stdout" special.  */
-  db_file = dbopen (output_name, O_CREAT | O_RDWR | O_TRUNC, 0666,
+  db_file = dbopen (output_name, O_CREAT | O_RDWR | O_TRUNC, mode,
 		    DB_BTREE, NULL);
   if (db_file == NULL)
     error (EXIT_FAILURE, errno, gettext ("cannot open output file `%s'"),

@@ -1,3 +1,19 @@
+1998-08-04 16:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/tmpfile.c: Include unistd.h for close prototype.
+	* stdio-common/tmpfile64.c: Likewise.
+
+	* db2/makedb.c: Generate output file with same access permissions
+	the input file has.
+
+	* signal/signal.h: Pretty printing.
+
+1998-08-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/mktemp.c: Add include <stlib.h> for prototype, remove
+	unneccessary includes.
+	* misc/mkstemp.c: Likewise.
+
 1998-08-03 16:36  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/catgets.c: Use mmap/munmap only is _POSIX_MAPPED_FILES

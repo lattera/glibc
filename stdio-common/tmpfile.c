@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+#include <unistd.h>
 
 #ifdef _USE_IN_LIBIO
 # define fdopen _IO_new_fdopen
