@@ -1,5 +1,9 @@
 1999-04-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/mbsrtowcs.c (__mbsrtowcs): Correctly initialize outbufend
+	for dst==NULL.
+	Fixes PR libc/1084.
+
 	* socket/sys/socket.h: Define SHUT_RD, SHUT_WR, and SHUT_RDWR.
 	Fixes PR libc/1083.
 
