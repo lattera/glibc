@@ -34,7 +34,7 @@ elide-routines.so = $(dl-routines) dl-support
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
-		  soinit.c sofini.c ldd.sh.in
+		  soinit.c sofini.c ldd.sh.in eval.c
 
 extra-libs	= libdl
 libdl-routines	:= dlopen dlclose dlsym dlerror dladdr
@@ -108,4 +108,5 @@ $(objpfx)ldd: ldd.sh.in Makefile
 
 # muwahaha
 
+LDFLAGS-dl.so = -Wl,-dynamic-linker,$(slibdir)/$(rtld-installed-name)
 $(objpfx)libdl.so: $(objpfx)eval.so

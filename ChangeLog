@@ -1,5 +1,10 @@
 Wed Jul  3 11:26:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/Makefile (LDFLAGS-dl.so): New variable.
+	(libdl.so): Depend on eval.so.
+	(distribute): Add eval.c.
+	* elf/eval.c: New file.
+
 	* time/strftime.c (strftime: do_number): Adjust P and I after sprintf
 	in case it wrote fewer than MAXDIGITS chars.
 
