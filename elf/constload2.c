@@ -5,6 +5,7 @@
 extern int bar (void);
 extern int baz (void);
 extern int foo (void);
+extern void __attribute__ ((__constructor__)) init (void);
 
 void *h;
 
@@ -19,6 +20,7 @@ baz (void)
 {
   return -21;
 }
+
 
 void
 __attribute__ ((__constructor__))
