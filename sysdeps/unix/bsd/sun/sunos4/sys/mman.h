@@ -101,6 +101,10 @@ int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
    unpredictable before this is done.  */
 int msync __P ((caddr_t __addr, size_t __len, int __flags));
 
+/* Advise the system about particular usage patterns the program follows
+   for the region starting at ADDR and extending LEN bytes.  */
+int madvise __P ((__caddr_t __addr, size_t __len, int __advice));
+
 __END_DECLS
 
 
