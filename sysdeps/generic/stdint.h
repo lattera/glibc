@@ -26,6 +26,7 @@
 #include <features.h>
 #define __need_wchar_t
 #include <stddef.h>
+#include <bits/wchar.h>
 #include <bits/wordsize.h>
 
 /* Exact integral types.  */
@@ -169,8 +170,8 @@ typedef unsigned long long int	uintmax_t;
 # define INT64_MAX		(__INT64_C(9223372036854775807))
 
 /* Maximum of unsigned integral types.  */
-# define UINT8_MAX		(255U)
-# define UINT16_MAX		(65535U)
+# define UINT8_MAX		(255)
+# define UINT16_MAX		(65535)
 # define UINT32_MAX		(4294967295U)
 # define UINT64_MAX		(__UINT64_C(18446744073709551615))
 
@@ -187,8 +188,8 @@ typedef unsigned long long int	uintmax_t;
 # define INT_LEAST64_MAX	(__INT64_C(9223372036854775807))
 
 /* Maximum of unsigned integral types having a minimum size.  */
-# define UINT_LEAST8_MAX	(255U)
-# define UINT_LEAST16_MAX	(65535U)
+# define UINT_LEAST8_MAX	(255)
+# define UINT_LEAST16_MAX	(65535)
 # define UINT_LEAST32_MAX	(4294967295U)
 # define UINT_LEAST64_MAX	(__UINT64_C(18446744073709551615))
 
@@ -215,7 +216,7 @@ typedef unsigned long long int	uintmax_t;
 # define INT_FAST64_MAX		(__INT64_C(9223372036854775807))
 
 /* Maximum of fast unsigned integral types having a minimum size.  */
-# define UINT_FAST8_MAX		(255U)
+# define UINT_FAST8_MAX		(255)
 # if __WORDSIZE == 64
 #  define UINT_FAST16_MAX	(18446744073709551615UL)
 #  define UINT_FAST32_MAX	(18446744073709551615UL)
@@ -272,13 +273,13 @@ typedef unsigned long long int	uintmax_t;
 /* Limits of `wchar_t'.  */
 # ifndef WCHAR_MIN
 /* These constants might also be defined in <wchar.h>.  */
-#  define WCHAR_MIN		(0)
-#  define WCHAR_MAX		(2147483647)
+#  define WCHAR_MIN		__WCHAR_MIN
+#  define WCHAR_MAX		__WCHAR_MAX
 # endif
 
 /* Limits of `wint_t'.  */
-# define WINT_MIN		(0)
-# define WINT_MAX		(2147483647)
+# define WINT_MIN		(0u)
+# define WINT_MAX		(2147483647u)
 
 #endif	/* C++ && limit macros */
 

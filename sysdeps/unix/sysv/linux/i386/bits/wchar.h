@@ -1,4 +1,5 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* wchar_t type related definitions.
+   Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Ugly trick ahead to make the alias work.  */
-#define imaxdiv __libc_imaxdiv
+#ifndef _BITS_WCHAR_H
+#define _BITS_WCHAR_H	1
 
-#include <inttypes.h>
+#define __WCHAR_MIN	(-127l)
+#define __WCHAR_MAX	(2147483647l)
 
-#include <sysdeps/generic/ldiv.c>
-
-#undef imaxdiv
-weak_alias (ldiv, imaxdiv)
+#endif	/* bits/wchar.h */

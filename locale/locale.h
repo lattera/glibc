@@ -90,6 +90,7 @@ struct lconv
      4 The sign string immediately follows the currency_symbol.  */
   char p_sign_posn;
   char n_sign_posn;
+#ifdef __USE_ISOC99
   /* 1 if int_curr_symbol precedes a positive value, 0 if succeeds.  */
   char int_p_cs_precedes;
   /* 1 iff a space separates int_curr_symbol from a positive value.  */
@@ -106,6 +107,14 @@ struct lconv
      4 The sign string immediately follows the int_curr_symbol.  */
   char int_p_sign_posn;
   char int_n_sign_posn;
+#else
+  char __int_p_cs_precedes;
+  char __int_p_sep_by_space;
+  char __int_n_cs_precedes;
+  char __int_n_sep_by_space;
+  char __int_p_sign_posn;
+  char __int_n_sign_posn;
+#endif
 };
 
 

@@ -37,8 +37,8 @@ typedef double double_t;	/* `double' expressions are evaluated as
 
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
-# define FP_ILOGB0	0x80000001
-# define FP_ILOGBNAN	0x7fffffff
+# define FP_ILOGB0	(-2147483647)
+# define FP_ILOGBNAN	(2147483647)
 
 /* Number of decimal digits for the `double' type.  */
 # define DECIMAL_DIG	15

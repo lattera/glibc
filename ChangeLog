@@ -1,7 +1,41 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/Makefile (headers): Add bits/wchar.h.
+	* sysdeps/unix/sysv/linux/i386/bits/wchar.h: New file.
+	* sysdeps/generic/bits/wchar.h: New file.
+	* sysdeps/generic/stdint.h: Include <bits/wchar.h>.  Use values in this
+	file to define WCHAR_MIN and WCHAR_MAX.
+	Change UINT*8_MAX and UIN*16_MAX value to type int.
+	* wcsmbs/wchar.h: Include <bits/wchar.h>.  Use values in this
+	file to define WCHAR_MIN and WCHAR_MAX.
+	* sysdeps/alpha/fpu/bits/mathdef.h: Make FP_ILOGB0 and FP_ILOGBNAN
+	int values.
+	* sysdeps/arm/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/generic/bits/mathdef.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/powerpc/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathdef.h: Likewise.
+	* locale/locale.h (struct lconv): Add __ prefix to the new members
+	if not C99.
+	* sysdeps/generic/inttypes.h: Remove unnecessary imaxabs and
+	imaxdiv optimizations.
+	* sysdeps/wordsize-32/lldiv.c: Add hack to make alias work.
+	* sysdeps/wordsize-64/ldiv.c: Likewise.
+	* sysdeps/alpha/fpu/bits/fenv.h: Change type of FE_*_ENV macros to
+	const fenv_t*.
+	* sysdeps/generic/bits/fenv.h: Likewise.
+	* sysdeps/i386/fpu/bits/fenv.h: Likewise.
+	* sysdeps/ia64/bits/fenv.h: Likewise.
+	* sysdeps/m68k/fpu/bits/fenv.h: Likewise.
+	* sysdeps/mips/bits/fenv.h: Likewise.
+	* sysdeps/s390/fpu/bits/fenv.h: Likewise.
+	* sysdeps/sparc/fpu/bits/fenv.h: Likewise.
+	Reported by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 	* inet/rcmd.c: Use *stat64 instead of *stat internally.
 	* inet/ruserpass.c: Likewise.
+	* catgets/open_catalog.c: Likewise.
 	* intl/loadmsgcat.c: Likewise.
 	* io/getdirname.c: Likewise.
 	* locale/loadlocale.c: Likewise.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -262,34 +262,20 @@ __BEGIN_DECLS
 #if __WORDSIZE == 64
 
 /* We have to define the `uintmax_t' type using `ldiv_t'.  */
-# ifndef __ldiv_t_defined
-/* Returned by `ldiv'.  */
 typedef struct
   {
     long int quot;		/* Quotient.  */
     long int rem;		/* Remainder.  */
-  } ldiv_t;
-#  define __ldiv_t_defined	1
-# endif
-
-/* Returned by `imaxdiv'.  */
-typedef ldiv_t imaxdiv_t;
+  } imaxdiv_t;
 
 #else
 
 /* We have to define the `uintmax_t' type using `lldiv_t'.  */
-# ifndef __lldiv_t_defined
-/* Returned by `lldiv'.  */
-__extension__ typedef struct
+typedef struct
   {
     long long int quot;		/* Quotient.  */
     long long int rem;		/* Remainder.  */
-  } lldiv_t;
-#  define __lldiv_t_defined	1
-# endif
-
-/* Returned by `imaxdiv'.  */
-typedef lldiv_t imaxdiv_t;
+  } imaxdiv_t;
 
 #endif
 
@@ -320,28 +306,6 @@ extern uintmax_t wcstoumax (__const wchar_t * __restrict __nptr,
 #ifdef __USE_EXTERN_INLINES
 
 # if __WORDSIZE == 64
-
-/* We ant to use the appropriate functions from <stdlib.h> but cannot
-   assume the header is read already.  */
-__extension__ extern long int labs (long int __x)
-      __THROW __attribute__ ((__const__));
-__extension__ extern ldiv_t ldiv (long int __numer, long int __denom)
-      __THROW __attribute__ ((__const__));
-
-
-/* Compute absolute value of N.  */
-extern __inline intmax_t
-imaxabs (intmax_t __n) __THROW
-{
-  return labs (__n);
-}
-
-/* Return the `imaxdiv_t' representation of the value of NUMER over DENOM. */
-extern __inline imaxdiv_t
-imaxdiv (intmax_t __numer, intmax_t __denom) __THROW
-{
-  return ldiv (__numer, __denom);
-}
 
 /* Like `strtol' but convert to `intmax_t'.  */
 #  ifndef __strtol_internal_defined
@@ -404,29 +368,6 @@ wcstoumax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
 }
 
 # else /* __WORDSIZE == 32 */
-
-/* We want to use the appropriate functions from <stdlib.h> but cannot
-   assume the header is read already.  */
-__extension__ extern long long int llabs (long long int __x)
-      __THROW __attribute__ ((__const__));
-__extension__ extern lldiv_t lldiv (long long int __numer,
-				    long long int __denom)
-     __THROW __attribute__ ((__const__));
-
-
-/* Compute absolute value of N.  */
-extern __inline intmax_t
-imaxabs (intmax_t __n) __THROW
-{
-  return llabs (__n);
-}
-
-/* Return the `imaxdiv_t' representation of the value of NUMER over DENOM. */
-extern __inline imaxdiv_t
-imaxdiv (intmax_t __numer, intmax_t __denom) __THROW
-{
-  return lldiv (__numer, __denom);
-}
 
 /* Like `strtol' but convert to `intmax_t'.  */
 #  ifndef __strtoll_internal_defined

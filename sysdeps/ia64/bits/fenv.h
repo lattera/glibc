@@ -73,10 +73,10 @@ typedef unsigned long fexcept_t;
 typedef unsigned long fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((fenv_t *) 0xc009804c0270033fUL)
+#define FE_DFL_ENV	((__const fenv_t *) 0xc009804c0270033fUL)
 
 #ifdef __USE_GNU
 /* Floating-point environment where only FE_UNNORMAL is masked since this
    exception is not generally supported by glibc.  */
-# define FE_NOMASK_ENV	((fenv_t *) 0xc009804c02700302UL)
+# define FE_NOMASK_ENV	((__const fenv_t *) 0xc009804c02700302UL)
 #endif

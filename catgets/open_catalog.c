@@ -39,7 +39,7 @@ void
 __open_catalog (__nl_catd catalog)
 {
   int fd = -1;
-  struct stat st;
+  struct stat64 st;
   int swapping;
   size_t cnt;
   size_t max_offset;
@@ -199,7 +199,7 @@ __open_catalog (__nl_catd catalog)
       goto unlock_return;
     }
 
-  if (__builtin_expect (__fxstat (_STAT_VER, fd, &st), 0) < 0)
+  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
     {
       catalog->status = nonexisting;
       goto close_unlock_return;

@@ -37,12 +37,11 @@ enum
 #define FE_INEXACT	FE_INEXACT
   };
 /* We dont use the y bit of the DXC in the floating point control register
- * as glibc has no FE encoding for fe inexact incremented
- * or fe inexact truncated.
- * We currently  use the flag bits in the fpc
- * as these are sticky for feholdenv & feupdatenv as it is defined
- * in the HP Manpages.
- */
+   as glibc has no FE encoding for fe inexact incremented
+   or fe inexact truncated.
+   We currently  use the flag bits in the fpc
+   as these are sticky for feholdenv & feupdatenv as it is defined
+   in the HP Manpages.  */
 
 
 #define FE_ALL_EXCEPT \
@@ -69,15 +68,15 @@ typedef unsigned int fexcept_t; /* size of fpc */
    to the layout of the block written by the `fstenv'.  */
 typedef struct
 {
-	fexcept_t fpc;
-	void *ieee_instruction_pointer;
-	/* failing instruction for ieee exceptions */
+  fexcept_t fpc;
+  void *ieee_instruction_pointer;
+  /* failing instruction for ieee exceptions */
 } fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((fenv_t *) -1)
+#define FE_DFL_ENV	((__const fenv_t *) -1)
 
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
-#define FE_NOMASK_ENV	((fenv_t *) -2)
+# define FE_NOMASK_ENV	((__const fenv_t *) -2)
 #endif
