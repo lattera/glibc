@@ -577,6 +577,7 @@ struct gaicb
 #  define AI_IDN	0x0040	/* IDN encode input (assuming it is encoded
 				   in the current locale's character set)
 				   before looking it up. */
+#  define AI_CANONIDN	0x0080	/* Translate canonical name from IDN format. */
 # endif
 
 /* Error values for `getaddrinfo' function.  */

@@ -55,8 +55,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nsswitch.h>
 #include <not-cancel.h>
 
+#ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
-#define IDNA_SUCCESS 0
+extern int __idna_to_unicode_lzlz (const char *input, char **output,
+				   int flags);
+# include <libidn/idna.h>
+#endif
 
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
@@ -548,9 +552,20 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  char *p = NULL;
 	  rc = __idna_to_ascii_lz (name, &p, 0);
 	  if (rc != IDNA_SUCCESS)
-	    return -EAI_IDN_ENCODE;
-	  name = strdupa (p);
-	  free (p);
+	    {
+	      if (rc == IDNA_MALLOC_ERROR)
+		return -EAI_MEMORY;
+	      if (rc == IDNA_DLOPEN_ERROR)
+		return -EAI_SYSTEM;
+	      return -EAI_IDN_ENCODE;
+	    }
+	  /* In case the output string is the same as the input string
+	     no new string has been allocated.  */
+	  if (p != name)
+	    {
+	      name = strdupa (p);
+	      free (p);
+	    }
 	}
 #endif
 
@@ -819,6 +834,29 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	    if (c == NULL)
 	      return GAIH_OKIFUNSPEC | -EAI_NONAME;
+
+#ifdef HAVE_LIBIDN
+	    if (req->ai_flags & AI_CANONIDN)
+	      {
+		char *out;
+		int rc = __idna_to_unicode_lzlz (c, &out, 0);
+		if (rc != IDNA_SUCCESS)
+		  {
+		    if (rc == IDNA_MALLOC_ERROR)
+		      return -EAI_MEMORY;
+		    if (rc == IDNA_DLOPEN_ERROR)
+		      return -EAI_SYSTEM;
+		    return -EAI_IDN_ENCODE;
+		  }
+		/* In case the output string is the same as the input
+		   string no new string has been allocated.  */
+		if (out != c)
+		  {
+		    c = strdupa (out);
+		    free (out);
+		  }
+	      }
+#endif
 
 	    namelen = strlen (c) + 1;
 	  }
@@ -1268,7 +1306,7 @@ getaddrinfo (const char *name, const char *service,
   if (hints->ai_flags
       & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST|AI_ADDRCONFIG|AI_V4MAPPED
 #ifdef HAVE_LIBIDN
-	  |AI_IDN
+	  |AI_IDN|AI_CANONIDN
 #endif
 	  |AI_ALL))
     return EAI_BADFLAGS;
