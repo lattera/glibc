@@ -710,3 +710,41 @@ __find_thread_by_id (pid_t tid)
   return result;
 }
 #endif
+
+static inline void __attribute__((always_inline))
+init_one_static_tls (struct pthread *curp, struct link_map *map)
+{
+  dtv_t *dtv = GET_DTV (TLS_TPADJ (curp));
+# if TLS_TCB_AT_TP
+  void *dest = (char *) curp - map->l_tls_offset;
+# elif TLS_DTV_AT_TP
+  void *dest = (char *) curp + map->l_tls_offset + TLS_PRE_TCB_SIZE;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
+  dtv[map->l_tls_modid].pointer = dest;
+
+  /* Initialize the memory.  */
+  memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
+	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
+}
+
+void
+attribute_hidden
+__pthread_init_static_tls (struct link_map *map)
+{
+  lll_lock (stack_cache_lock);
+
+  /* Iterate over the list with system-allocated threads first.  */
+  list_t *runp;
+  list_for_each (runp, &stack_used)
+    init_one_static_tls (list_entry (runp, struct pthread, list), map);
+
+  /* Now the list with threads using user-allocated stacks.  */
+  list_for_each (runp, &__stack_user)
+    init_one_static_tls (list_entry (runp, struct pthread, list), map);  
+
+  lll_unlock (stack_cache_lock);
+}

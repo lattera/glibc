@@ -390,6 +390,8 @@ struct rtld_global
   EXTERN void *_dl_initial_dtv;
   /* Generation counter for the dtv.  */
   EXTERN size_t _dl_tls_generation;
+
+  EXTERN void (*_dl_init_static_tls) (struct link_map *);
 #endif
 
 #ifdef NEED_DL_SYSINFO
@@ -797,7 +799,7 @@ rtld_hidden_proto (_dl_allocate_tls)
 extern void _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
      internal_function;
 
-extern int _dl_allocate_static_tls (struct link_map *map)
+extern void _dl_allocate_static_tls (struct link_map *map)
      internal_function attribute_hidden;
 
 /* These are internal entry points to the two halves of _dl_allocate_tls,
@@ -815,6 +817,10 @@ rtld_hidden_proto (_dl_deallocate_tls)
    the symbol record.  */
 extern void *_dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
      internal_function;
+
+#if defined USE_TLS
+extern void _dl_nothread_init_static_tls (struct link_map *) attribute_hidden;
+#endif
 
 __END_DECLS
 

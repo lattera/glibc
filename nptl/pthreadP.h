@@ -257,6 +257,8 @@ extern int *__libc_multiple_threads_ptr attribute_hidden;
 /* Find a thread given its TID.  */
 extern struct pthread *__find_thread_by_id (pid_t tid) attribute_hidden;
 
+extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
+
 
 /* Namespace save aliases.  */
 extern int __pthread_getschedparam (pthread_t thread_id, int *policy,

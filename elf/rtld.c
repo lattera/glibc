@@ -622,6 +622,10 @@ dl_main (const ElfW(Phdr) *phdr,
   GL(dl_error_catch_tsd) = &_dl_initial_error_catch_tsd;
 #endif
 
+#ifdef USE_TLS
+  GL(dl_init_static_tls) = &_dl_nothread_init_static_tls;
+#endif
+
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode);
 

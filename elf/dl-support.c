@@ -98,6 +98,10 @@ int _dl_starting_up = 1;
 hp_timing_t _dl_cpuclock_offset;
 #endif
 
+#ifdef USE_TLS
+void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
+#endif
+
 /* This is zero at program start to signal that the global scope map is
    allocated by rtld.  Later it keeps the size of the map.  It might be
    reset if in _dl_close if the last global object is removed.  */

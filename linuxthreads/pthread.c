@@ -462,6 +462,44 @@ __libc_dl_error_tsd (void)
 # endif
 #endif
 
+#ifdef USE_TLS
+static inline void __attribute__((always_inline))
+init_one_static_tls (pthread_descr descr, struct link_map *map)
+{
+# if TLS_TCB_AT_TP
+  dtv_t *dtv = GET_DTV (descr);
+  void *dest = (char *) descr - map->l_tls_offset;
+# elif TLS_DTV_AT_TP
+  dtv_t *dtv = GET_DTV ((pthread_descr) ((char *) descr + TLS_PRE_TCB_SIZE));
+  void *dest = (char *) descr + map->l_tls_offset + TLS_PRE_TCB_SIZE;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
+  dtv[map->l_tls_modid].pointer = dest;
+
+  /* Initialize the memory.  */
+  memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
+	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
+}
+
+static void
+__pthread_init_static_tls (struct link_map *map)
+{
+  size_t i;
+
+  for (i = 0; i < PTHREAD_THREADS_MAX; ++i)
+    if (__pthread_handles[i].h_descr != NULL && i != 1)
+      {
+        __pthread_lock (&__pthread_handles[i].h_lock, NULL);
+	if (__pthread_handles[i].h_descr != NULL)
+	  init_one_static_tls (__pthread_handles[i].h_descr, map);
+        __pthread_unlock (&__pthread_handles[i].h_lock);
+      }
+}
+#endif
+
 static void pthread_initialize(void)
 {
   struct sigaction sa;
@@ -550,6 +588,10 @@ static void pthread_initialize(void)
   /* Transfer the old value from the dynamic linker's internal location.  */
   *__libc_dl_error_tsd () = *(*GL(dl_error_catch_tsd)) ();
   GL(dl_error_catch_tsd) = &__libc_dl_error_tsd;
+#endif
+
+#ifdef USE_TLS
+  GL(dl_init_static_tls) = &__pthread_init_static_tls;
 #endif
 }
 

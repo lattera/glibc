@@ -1,3 +1,20 @@
+2003-07-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-reloc.c (_dl_allocate_static_tls): Don't return any value,
+	call dl_signal_error directly.  If already relocated, call
+	GL(dl_init_static_tls) directly, otherwise queue it for later.
+	(CHECK_STATIC_TLS): Undo 2003-07-24 change.
+	* elf/rtld.c (dl_main): Initialize GL(dl_init_static_tls).
+	* elf/dl-open.c (dl_open_worker): Call GL_dl_init_static_tls
+	for all static TLS initializations delayed in _dl_allocate_static_tls.
+	* elf/dl-support.c (_dl_init_static_tls): New variable.
+	* include/link.h (struct link_map): Add l_need_tls_init.
+	* sysdeps/generic/ldsodefs.h (_rtld_global): Add _dl_init_static_tls.
+	(_dl_nothread_init_static_tls): New prototype.
+	(_dl_allocate_static_tls): Adjust prototype.
+
+	* elf/tls-macros.h (VAR_INT_DEF): Add alignment directive.
+
 2003-07-31  Alexandre Oliva  <aoliva@redhat.com>
 
 	* elf/dynamic-link.h (elf_machine_rel, elf_machine_rela,
@@ -26,7 +43,7 @@
 	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela,
 	elf_machine_rela_relative): Adjust.
 	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela,
-	elf_machine_rela_relative): 
+	elf_machine_rela_relative): Adjust.
 	* sysdeps/sh/dl-machine.h (elf_machine_rela,
 	elf_machine_rela_relative): Adjust.
 	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
@@ -123,7 +140,7 @@
 	* elf/rtld.c (_dl_start_final, _dl_start, dl_main): Likewise.
 	* elf/dl-reloc.c (_dl_allocate_static_tls): Change return type to int.
 	Take l_tls_firstbyte_offset information into account.
-	(CHECK_STATIS_TLS): _dl_allocate_static_tls can fail now.
+	(CHECK_STATIC_TLS): _dl_allocate_static_tls can fail now.
 	* sysdeps/generic/ldsodefs.h: Adjust _dl_allocate_static_tls prototype.
 	* elf/Makefile: Add rules to build and run tst-tls14.
 	* elf/tst-tls14.c: New file.

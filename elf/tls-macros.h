@@ -9,6 +9,7 @@
 #define VAR_INT_DEF(x) \
   asm (".section .tdata\n\t"						      \
        ".globl " #x "\n"						      \
+       ".balign 4\n"							      \
        #x ":\t.long 0\n\t"						      \
        ".size " #x ",4\n\t"						      \
        ".previous")

@@ -1,3 +1,9 @@
+2003-07-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread.c (init_one_static_tls, __pthread_init_static_tls): New
+	functions.
+	(pthread_initialize): Initialize GL(dl_init_static_tls).
+
 2003-06-19  Daniel Jacobowitz  <drow@mvista.com>
 
 	* sysdeps/pthread/timer_create.c (timer_create): Call timer_delref

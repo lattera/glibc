@@ -303,6 +303,16 @@ dl_open_worker (void *a)
     }
 
 #ifdef USE_TLS
+  /* Do static TLS initialization now if it has been delayed because
+     the TLS template might not be fully relocated at _dl_allocate_static_tls
+     time.  */
+  for (l = new; l; l = l->l_next)
+    if (l->l_need_tls_init)
+      {
+	l->l_need_tls_init = 0;
+	GL(dl_init_static_tls) (l);
+      }
+
   /* We normally don't bump the TLS generation counter.  There must be
      actually a need to do this.  */
   any_tls = false;

@@ -1,3 +1,19 @@
+2003-07-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Initialize
+	GL(dl_init_static_tls).
+	* pthreadP.h (__pthread_init_static_tls): New prototype.
+	* allocatestack.c (init_one_static_tls, __pthread_init_static_tls):
+	New functions.
+	* Makefile (tests): Add tst-tls4.
+	(modules-names): Add tst-tls4moda and tst-tls4modb.
+	($(objpfx)tst-tls4): Link against libdl and libpthread.
+	($(objpfx)tst-tls4.out): Depend on tst-tls4moda.so and
+	tst-tls4modb.so.
+	* tst-tls4.c: New file.
+	* tst-tls4moda.c: New file.
+	* tst-tls4modb.c: New file.
+
 2003-06-19  Daniel Jacobowitz  <drow@mvista.com>
 
 	* sysdeps/pthread/timer_create.c (timer_create): Call timer_delref

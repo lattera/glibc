@@ -272,6 +272,8 @@ __pthread_initialize_minimal_internal (void)
   GL(dl_error_catch_tsd) = &__libc_dl_error_tsd;
 #endif
 
+  GL(dl_init_static_tls) = &__pthread_init_static_tls;
+
   /* Register the fork generation counter with the libc.  */
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
   __libc_multiple_threads_ptr =
