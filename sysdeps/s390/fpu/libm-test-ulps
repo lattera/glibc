@@ -640,6 +640,12 @@ float: 1
 idouble: 1
 ifloat: 1
 
+Test "tanh (-0.7) == -0.60436777711716349631":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
 # tgamma
 Test "tgamma (-0.5) == -2 sqrt (pi)":
 double: 1

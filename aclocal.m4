@@ -3,8 +3,8 @@ dnl which appears in configure.in before the sysdep configure scripts are run.
 dnl Each sysdep configure.in does GLIBC_PROVIDES first, to avoid any
 dnl AC_REQUIREs or AC_BEFOREs duplicating their code.
 dnl
-define(AC_FD_MSG,6)dnl Autoconf lossage.
-define(AC_FD_CC,5)dnl Autoconf lossage.
+define([AC_FD_MSG],6)dnl Autoconf lossage.
+define([AC_FD_CC],5)dnl Autoconf lossage.
 AC_DEFUN([GLIBC_PROVIDES], [dnl
 AC_PROVIDE([AC_PROG_INSTALL])dnl
 AC_PROVIDE([AC_PROG_RANLIB])dnl
