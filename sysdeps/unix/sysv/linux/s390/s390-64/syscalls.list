@@ -1,6 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-llseek		EXTRA	lseek		C:3	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64 __GI___lseek
+llseek		EXTRA	lseek		C:3	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
 lseek		llseek	-
 pread		-	pread		C:4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
 pwrite		-	pwrite		C:4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
@@ -27,7 +27,7 @@ semget		-	semget		i:iii	__semget	semget
 semctl		-	semctl		i:iiii	__semctl	semctl
 
 # proper socket implementations:
-accept		-	accept		Ci:iBN	__libc_accept	__accept accept __GI_accept
+accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
 connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername

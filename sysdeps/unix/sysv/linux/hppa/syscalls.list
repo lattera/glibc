@@ -14,7 +14,7 @@ semget		-	semget		i:iii	__semget	semget
 semctl		-	semctl		i:iiii	__semctl	semctl
 
 # proper socket implementations:
-accept		-	accept		Ci:iBN	__libc_accept	__accept accept __GI_accept
+accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
 connect		-	connect		Ci:ipi	__libc_connect	__connect_internal __connect connect 
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
