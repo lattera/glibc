@@ -1,5 +1,10 @@
 2000-09-24  Andreas Jaeger  <aj@suse.de>
 
+	* elf/ldconfig.c (add_dir): Move logic to add entry to list to new
+	function add_single_dir.
+	(add_single_dir): New function. 
+	(search_dir): Use add_single_dir instead of recursing.
+
 	* sysdeps/generic/dl-cache.h: Include stdint.h.
 	(struct file_entry_new): Use fixed sizes for interoperability
 	between 32bit and 64bit systems, add __unused to make alignment

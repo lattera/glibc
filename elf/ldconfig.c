@@ -258,12 +258,42 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	   "Andreas Jaeger");
 }
 
+/* Add a single directory entry.  */
+static void
+add_single_dir (struct dir_entry *entry, int verbose)
+{
+  struct dir_entry *ptr, *prev;
+
+  ptr = dir_entries;
+  prev = ptr;
+  while (ptr != NULL)
+    {
+      /* Check for duplicates.  */
+      if (strcmp (ptr->path, entry->path) == 0)
+	{
+	  if (opt_verbose && verbose)
+	    error (0, 0, _("Path `%s' given more than once"), entry->path);
+	  /* Use the newer information.  */
+	  ptr->flag = entry->flag;
+	  free (entry);
+	  break;
+	}
+      prev = ptr;
+      ptr = ptr->next;
+    }
+  /* Is this the first entry?  */
+  if (ptr == NULL && dir_entries == NULL)
+    dir_entries = entry;
+  else if (ptr == NULL)
+    prev->next = entry;
+}
+
 /* Add one directory to the list of directories to process.  */
 static void
 add_dir (const char *line)
 {
   char *equal_sign;
-  struct dir_entry *entry, *ptr, *prev;
+  struct dir_entry *entry;
   unsigned int i;
 
   entry = xmalloc (sizeof (struct dir_entry));
@@ -299,28 +329,7 @@ add_dir (const char *line)
       --i;
     }
 
-  ptr = dir_entries;
-  prev = ptr;
-  while (ptr != NULL)
-    {
-      /* Check for duplicates.  */
-      if (strcmp (ptr->path, entry->path) == 0)
-	{
-	  if (opt_verbose)
-	    error (0, 0, _("Path `%s' given more than once"), entry->path);
-	  /* Use the newer information.  */
-	  ptr->flag = entry->flag;
-	  free (entry);
-	  break;
-	}
-      prev = ptr;
-      ptr = ptr->next;
-    }
-  /* Is this the first entry?  */
-  if (ptr == NULL && dir_entries == NULL)
-    dir_entries = entry;
-  else if (ptr == NULL)
-    prev->next = entry;
+  add_single_dir (entry, 1);
 }
 
 
@@ -571,12 +580,15 @@ search_dir (const struct dir_entry *entry)
 
       if (S_ISDIR (stat_buf.st_mode) && is_hwcap (direntry->d_name))
 	{
-	  /* Handle subdirectory also, make a recursive call.  */
-	  struct dir_entry new_entry;
-	  new_entry.path = buf;
-	  new_entry.flag = entry->flag;
-	  new_entry.next = NULL;
-	  search_dir (&new_entry);
+	  /* Handle subdirectory later.  */
+	  struct dir_entry *new_entry;
+
+	  new_entry = xmalloc (sizeof (struct dir_entry));
+
+	  new_entry->path = buf;
+	  new_entry->flag = entry->flag;
+	  new_entry->next = NULL;
+	  add_single_dir (new_entry, 0);
 	  continue;
 	}
       else if (!S_ISREG (stat_buf.st_mode) && !S_ISLNK (stat_buf.st_mode))

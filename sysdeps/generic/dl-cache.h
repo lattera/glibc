@@ -17,6 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdint.h>
+
 #ifndef _DL_CACHE_DEFAULT_ID
 # define _DL_CACHE_DEFAULT_ID	3
 #endif
@@ -66,25 +68,27 @@ struct cache_file
 };
 
 #define CACHEMAGIC_NEW "glibc-ld.so.cache"
-#define CACHE_VERSION "1.0"
+#define CACHE_VERSION "1.1"
 
 
 struct file_entry_new
 {
-  int flags;			/* This is 1 for an ELF library.  */
-  unsigned int key, value;	/* String table indices.  */
-  unsigned long hwcap;		/* Hwcap entry.  */
+  int32_t flags;		/* This is 1 for an ELF library.  */
+  uint32_t key, value;		/* String table indices.  */
+  uint32_t __unused;		/* Align next field always on 8 byte boundary.	*/
+  uint64_t hwcap;		/* Hwcap entry.	 */
 };
 
 struct cache_file_new
 {
   char magic[sizeof CACHEMAGIC_NEW - 1];
   char version[sizeof CACHE_VERSION - 1];
-  unsigned int nlibs;		/* Number of entries.  */
-  unsigned int len_strings;	/* Size of string table. */
-  unsigned int unused[4];	/* Leave space for future extensions.  */
+  uint32_t nlibs;		/* Number of entries.  */
+  uint32_t len_strings;		/* Size of string table. */
+  uint32_t unused[5];		/* Leave space for future extensions
+				   and align to 8 byte boundary.  */
   struct file_entry_new libs[0]; /* Entries describing libraries.  */
-  /* After this the string table of size len_strings is found.  */
+  /* After this the string table of size len_strings is found.	*/
 };
 
 /* Used to align cache_file_new.  */
