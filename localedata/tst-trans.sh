@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test character mapping definitions.
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ common_objpfx=$1
 I18NPATH=. \
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${common_objpfx}locale/localedef --quiet \
--i tests/trans.def -f ISO-8859-1 -u mnemonic.ds \
+-i tests/trans.def -f charmaps/ISO-8859-1 -u repertoiremaps/mnemonic.ds \
 ${common_objpfx}localedata/tt_TT ||
 exit 1
 

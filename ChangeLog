@@ -1,5 +1,16 @@
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* io/ftw.c (process_entry): Cache object dev/inode only for
+	directories (PR libc/1514).
+
+2000-01-05  Andreas Schwab  <schwab@suse.de>
+
+	* locale/programs/charmap.c (charmap_read): Fix typo.
+
+2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/charset.c: Removed.
+
 	* iconvdata/Makefile: Add rules for ISO-8859-16 module.
 	* iconvdata/gconv-modules: Likewise.
 	* iconvdata/iso8859-16.c: New file.

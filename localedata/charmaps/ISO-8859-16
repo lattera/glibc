@@ -4,8 +4,8 @@
 % automatically generated from the charDB
 
 % alias ISO-IR-226
-% alias LATIN10   
-% alias L10       
+% alias LATIN10
+% alias L10
 CHARMAP
 <NU>                   /x00         <U0000> NULL
 <NUL>                  /x00         <U0000> NULL
@@ -273,7 +273,7 @@ CHARMAP
 <DG>                   /xB0         <U00B0> DEGREE SIGN
 <+->                   /xB1         <U00B1> PLUS-MINUS SIGN
 <C<>                   /xB2         <U010C> LATIN CAPITAL LETTER C WITH CARON
-<c<>                   /xB3         <U010D> LATIN SMALL LETTER C WITH CARON
+<l/>                   /xB3         <U0142> LATIN SMALL LETTER L WITH STROKE
 <Z<>                   /xB4         <U017D> LATIN CAPITAL LETTER Z WITH CARON
 <"9>                   /xB5         <U201D> RIGHT DOUBLE QUOTATION MARK
 <PI>                   /xB6         <U00B6> PILCROW SIGN
@@ -284,7 +284,7 @@ CHARMAP
 </>/>>                 /xBB         <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
 <OE>                   /xBC         <U0152> LATIN CAPITAL LIGATURE OE
 <oe>                   /xBD         <U0153> LATIN SMALL LIGATURE OE
-<Z.>                   /xBE         <U017B> LATIN CAPITAL LETTER Z WITH DOT ABOVE
+<Y:>                   /xBE         <U0178> LATIN CAPITAL LETTER Y WITH DIAERESIS
 <z.>                   /xBF         <U017C> LATIN SMALL LETTER Z WITH DOT ABOVE
 <A!>                   /xC0         <U00C0> LATIN CAPITAL LETTER A WITH GRAVE
 <A'>                   /xC1         <U00C1> LATIN CAPITAL LETTER A WITH ACUTE

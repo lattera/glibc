@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -288,12 +288,12 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
       && (flag == FTW_NS
 	  || !(data->flags & FTW_MOUNT) || st.st_dev == data->dev))
     {
-      if ((data->flags & FTW_PHYS) || flag == FTW_NS
-	  || (!find_object (data, &st)
-	      /* Remember the object.  */
-	      && (result = add_object (data, &st)) == 0))
+      if (flag == FTW_D)
 	{
-	  if (flag == FTW_D)
+	  if ((data->flags & FTW_PHYS)
+	      || (!find_object (data, &st)
+		  /* Remember the object.  */
+		  && (result = add_object (data, &st)) == 0))
 	    {
 	      result = ftw_dir (data, &st);
 
@@ -325,10 +325,10 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 		    }
 		}
 	    }
-	  else
-	    result = (*data->func) (data->dirbuf, &st, data->cvt_arr[flag],
-				    &data->ftw);
 	}
+      else
+	result = (*data->func) (data->dirbuf, &st, data->cvt_arr[flag],
+				&data->ftw);
     }
 
   return result;

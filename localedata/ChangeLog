@@ -1,5 +1,8 @@
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* tst-trans.sh: Add directory names to charmap and repertoire file
+	names.
+
 	* charmaps/ISO-8859-16: New file.
 
 	* SUPPORTED: Change lv_LV entry to use ISO-8859-13.
