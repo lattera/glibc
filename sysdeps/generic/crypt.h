@@ -1,7 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
+ * Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -47,12 +47,10 @@ struct crypt_data
 extern char *crypt __P ((__const char *__key, __const char *__salt));
 
 
-#ifdef __USE_REENTRANT
 /* Reentrant versions of the functions above.  The additional argument
    points to a structure where the results are placed in.  */
 extern char *crypt_r __P ((__const char *__key, __const char *__salt,
 			   struct crypt_data *__data));
-#endif /* reentrant */
 
 __END_DECLS
 

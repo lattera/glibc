@@ -94,10 +94,13 @@ extern struct passwd *getpwuid __P ((__uid_t __uid));
 /* Search for an entry with a matching username.  */
 extern struct passwd *getpwnam __P ((__const char *__name));
 
-#if defined __USE_POSIX || defined __USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_MISC
+
+#ifdef __USE_MISC
 /* Reasonable value for the buffer sized used in the reentrant
    functions below.  But better use `sysconf'.  */
-#define	NSS_BUFLEN_PASSWD	1024
+#define NSS_BUFLEN_PASSWD	1024
+#endif
 
 /* Reentrant versions of some of the functions above.
 

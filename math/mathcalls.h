@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -210,7 +210,7 @@ __MATHCALL (yn,, (int, _Mdouble_));
 /* This variable is used by `gamma' and `lgamma'.  */
 extern int signgam;
 
-#ifdef __USE_REENTRANT
+#ifdef __USE_MISC
 
 /* Reentrant versions of gamma and lgamma.  Those functions use the global
    variable `signgam'.  The reentrant versions instead take a pointer and

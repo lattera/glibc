@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ extern struct utmp *getutline __P ((__const struct utmp *__line));
 extern struct utmp *pututline __P ((__const struct utmp *__utmp_ptr));
 
 
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 /* Reentrant versions of the file for handling utmp files.  */
 extern int __getutent_r __P ((struct utmp *__buffer, struct utmp **__result));
 extern int getutent_r __P ((struct utmp *__buffer, struct utmp **__result));
@@ -92,7 +92,7 @@ extern int __getutline_r __P ((__const struct utmp *__line,
 extern int getutline_r __P ((__const struct utmp *__line,
 			     struct utmp *__buffer, struct utmp **__result));
 
-#endif	/* Use reentrant.  */
+#endif	/* Use misc.  */
 
 __END_DECLS
 

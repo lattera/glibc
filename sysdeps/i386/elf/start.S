@@ -1,21 +1,21 @@
 /* Startup code compliant to the ELF i386 ABI.
-Copyright (C) 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* This is the canonical entry point, usually the first thing in the text
    segment.  The SVR4/i386 ABI (pages 3-31, 3-32) says that when the entry
@@ -36,12 +36,12 @@ Cambridge, MA 02139, USA.  */
 					NULL
 */
 
-	.text	
+	.text
 	.globl _start
 _start:
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */
-	movl $0, %ebp
+	xorl %ebp, %ebp
 
 	/* %edx contains the address of the shared library termination
 	   function, which we will register with `atexit' to be called by
@@ -53,7 +53,8 @@ _start:
 	jz nofini
 	pushl %edx
 	call atexit
-	addl $4, %esp
+	popl %eax		/* Pop value to unused register to remove
+				   argument from stack.  */
 nofini:
 
 	/* Do essential libc initialization.  In statically linked
@@ -66,9 +67,15 @@ nofini:
 	popl %esi		/* Pop the argument count.  */
 	leal 4(%esp,%esi,4), %eax /* envp = &argv[argc + 1] */
 	movl %eax, _environ	/* Store it in the global variable.  */
+	movl %esp, %edx		/* argv starts just at the current stack top.*/
+
+	/* Before pushing the arguments align the stack to a double word
+	   boundary to avoid penalties from misaligned accesses.  Thanks
+	   to Edward Seidl <seidl@janed.com> for pointing this out.  */
+	andl $0xfffffff8, %esp
+
 	pushl %eax		/* Push third argument: envp.  */
-	leal 4(%esp), %eax	/* argv starts just above that word.  */
-	pushl %eax		/* Push second argument: argv.  */
+	pushl %edx		/* Push second argument: argv.  */
 	pushl %esi		/* Push first argument: argc.  */
 
 	/* Call `_init', which is the entry point to our own `.init'
@@ -77,13 +84,13 @@ nofini:
 	call _init
 	pushl $_fini
 	call atexit
-	addl $4, %esp
+	popl %eax
 
 	/* Call the user's main function, and exit with its value.  */
 	call main
 	pushl %eax
-	call exit		/* This should never return.  */
-	hlt			/* Crash if somehow it does return.  */
+	call exit
+	hlt			/* Crash if somehow `exit' does return.  */
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

@@ -1,5 +1,5 @@
-/* errnos.h - error constants.  Linux specific version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+/* Error constants.  Linux specific version.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ __set_errno (int __err)
 #   endif /* _LIBC_REENTRANT */
 #  endif /* _LIBC */
 
-#  if defined __USE_REENTRANT && (!defined _LIBC || defined _LIBC_REENTRANT)
+#  if !defined _LIBC || defined _LIBC_REENTRANT
 /* When using threads, errno is a per-thread value.  */
 #   define errno (*__errno_location ())
 #  endif

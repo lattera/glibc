@@ -1,5 +1,5 @@
-/* error.h -- declaration for error-reporting function
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Declaration for error-reporting function
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.

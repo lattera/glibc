@@ -116,14 +116,14 @@ extern int closedir __P ((DIR *__dirp));
 extern struct dirent *__readdir __P ((DIR *__dirp));
 extern struct dirent *readdir __P ((DIR *__dirp));
 
-#if defined __USE_POSIX || defined __USE_REENTRANT
+#if defined __USE_POSIX
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
 extern int __readdir_r __P ((DIR *__dirp, struct dirent *entry,
 			     struct dirent **result));
 extern int readdir_r __P ((DIR *__dirp, struct dirent *entry,
 			   struct dirent **result));
-#endif	/* POSIX or reentrant */
+#endif	/* POSIX */
 
 /* Rewind DIRP to the beginning of the directory.  */
 extern void rewinddir __P ((DIR *__dirp));

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -63,7 +63,7 @@ __set_h_errno (int __err)
 #endif /* _LIBC */
 
 
-#if defined __USE_REENTRANT && (!defined _LIBC || defined _LIBC_REENTRANT)
+#if !defined _LIBC || defined _LIBC_REENTRANT
 /* Use a macro to access always the thread specific `h_errno' variable.  */
 # define h_errno (*__h_errno_location ())
 #endif
@@ -125,7 +125,7 @@ extern struct hostent *gethostbyname __P ((__const char *__name));
    for IPv6.  */
 extern struct hostent *gethostbyname2 __P ((__const char *__name, int __af));
 
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  The last
    argument is a pointer to a variable which gets the value which
@@ -164,7 +164,7 @@ extern int gethostbyname2_r __P ((__const char *__name, int __af,
 				  struct hostent *__result_buf, char *__buf,
 				  size_t __buflen, struct hostent **__result,
 				  int *__h_errnop));
-#endif	/* reentrant */
+#endif	/* misc */
 
 
 /* Description of data base entry for a single network.  NOTE: here a
@@ -197,7 +197,7 @@ extern struct netent *getnetbyaddr __P ((unsigned long int __net,
 /* Return entry from network data base for network with NAME.  */
 extern struct netent *getnetbyname __P ((__const char *__name));
 
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  The last
    argument is a pointer to a variable which gets the value which
@@ -227,7 +227,7 @@ extern int getnetbyname_r __P ((__const char *__name,
 				struct netent *__result_buf, char *__buf,
 				size_t __buflen, struct netent **__result,
 				int *__h_errnop));
-#endif	/* reentrant */
+#endif	/* misc */
 
 
 /* Description of data base entry for a single service.  */
@@ -260,7 +260,7 @@ extern struct servent *getservbyname __P ((__const char *__name,
 extern struct servent *getservbyport __P ((int __port, __const char *__proto));
 
 
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  */
 extern int __getservent_r __P ((struct servent *__result_buf, char *__buf,
@@ -283,7 +283,7 @@ extern int __getservbyport_r __P ((int __port, __const char *__proto,
 extern int getservbyport_r __P ((int __port, __const char *__proto,
 				 struct servent *__result_buf, char *__buf,
 				 size_t __buflen, struct servent **__result));
-#endif	/* reentrant */
+#endif	/* misc */
 
 
 /* Description of data base entry for a single service.  */
@@ -312,7 +312,7 @@ extern struct protoent *getprotobyname __P ((__const char *__name));
 extern struct protoent *getprotobynumber __P ((int __proto));
 
 
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  */
 extern int __getprotoent_r __P ((struct protoent *__result_buf, char *__buf,
@@ -335,7 +335,7 @@ extern int __getprotobynumber_r __P ((int __proto, struct protoent *__res_buf,
 extern int getprotobynumber_r __P ((int __proto, struct protoent *__result_buf,
 				    char *__buf, size_t __buflen,
 				    struct protoent **__result));
-#endif	/* reentrant */
+#endif	/* misc */
 
 
 /* Establish network group NETGROUP for enumeration.  */
@@ -353,7 +353,7 @@ extern int getnetgrent __P ((char **__hostp, char **__userp,
 extern int innetgr __P ((__const char *__netgroup, __const char *__host,
 			 __const char *__user, __const char *domain));
 
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 /* Reentrant version of `getnetgrent' where result is placed in BUFFER.  */
 extern int __getnetgrent_r __P ((char **__hostp, char **__userp,
 				 char **__domainp,
@@ -361,7 +361,7 @@ extern int __getnetgrent_r __P ((char **__hostp, char **__userp,
 extern int getnetgrent_r __P ((char **__hostp, char **__userp,
 			       char **__domainp,
 			       char *__buffer, size_t __buflen));
-#endif
+#endif	/* misc */
 
 
 /* Extension from POSIX.1g.  */

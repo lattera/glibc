@@ -138,7 +138,7 @@ extern char *strstr __P ((__const char *__haystack, __const char *__needle));
 /* Divide S into tokens separated by characters in DELIM.  */
 extern char *strtok __P ((char *__s, __const char *__delim));
 
-#if defined __USE_POSIX || defined __USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_MISC
 /* Divide S into tokens separated by characters in DELIM.  Information
    passed between calls are stored in SAVE_PTR.  */
 extern char *strtok_r __P ((char *__s, __const char *__delim,
@@ -175,7 +175,7 @@ strnlen (__const char *__string, size_t __maxlen)
 
 /* Return a string describing the meaning of the `errno' code in ERRNUM.  */
 extern char *strerror __P ((int __errnum));
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 /* Reentrant version of `strerror'.  If a temporary buffer is required, at
    most BUFLEN bytes of BUF will be used.  */
 extern char *__strerror_r __P ((int __errnum, char *__buf, size_t __buflen));

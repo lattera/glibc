@@ -171,7 +171,7 @@ extern struct tm *gmtime __P ((__const time_t *__timer));
    of *TIMER in the local timezone.  */
 extern struct tm *localtime __P ((__const time_t *__timer));
 
-#if defined __USE_POSIX || defined __USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_MISC
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
 extern struct tm *__gmtime_r __P ((__const time_t *__timer,
@@ -185,7 +185,7 @@ extern struct tm *__localtime_r __P ((__const time_t *__timer,
 				      struct tm *__tp));
 extern struct tm *localtime_r __P ((__const time_t *__timer,
 				    struct tm *__tp));
-#endif	/* POSIX or reentrant */
+#endif	/* POSIX or misc */
 
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,
@@ -201,7 +201,7 @@ extern char *asctime __P ((__const struct tm *__tp));
 /* Equivalent to `asctime (localtime (timer))'.  */
 extern char *ctime __P ((__const time_t *__timer));
 
-#if defined __USE_POSIX || defined __USE_REENTRANT
+#if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant versions of the above functions.  */
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
@@ -211,7 +211,7 @@ extern char *asctime_r __P ((__const struct tm *__tp, char *__buf));
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
 extern char *ctime_r __P ((__const time_t *__timer, char *__buf));
-#endif	/* POSIX or reentrant */
+#endif	/* POSIX or misc */
 
 
 /* Defined in localtime.c.  */

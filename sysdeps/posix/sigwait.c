@@ -1,5 +1,5 @@
-/* sigwait - implementation of sigwait function from POSIX.1c.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+/* Implementation of sigwait function from POSIX.1c.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,7 +21,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <signal.h>
-
+#include <stddef.h>		/* For NULL.  */
 
 /* This is our dummy signal handler we use here.  */
 static void ignore_signal (int sig);

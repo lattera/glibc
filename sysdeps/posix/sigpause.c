@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <stddef.h>		/* For NULL.  */
 
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */

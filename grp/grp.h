@@ -91,10 +91,13 @@ extern struct group *getgrgid __P ((__gid_t __gid));
 /* Search for an entry with a matching group name.  */
 extern struct group *getgrnam __P ((__const char *__name));
 
-#if defined __USE_POSIX || defined __USE_REENTRENT
+#if defined __USE_POSIX || defined __USE_MISC
+
+#ifdef __USE_MISC
 /* Reasonable value for the buffer sized used in the reentrant
    functions below.  But better use `sysconf'.  */
 #define	NSS_BUFLEN_GROUP	1024
+#endif
 
 /* Reentrant versions of some of the functions above.
 

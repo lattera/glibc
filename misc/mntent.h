@@ -1,5 +1,5 @@
-/* <mntent.h> -- Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Utilities for reading/writing fstab, mtab, etc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,7 +72,7 @@ extern FILE *setmntent __P ((__const char *__file, __const char *__mode));
    check).  */
 extern struct mntent *getmntent __P ((FILE *__stream));
 
-#ifdef __USE_REENTRANT
+#ifdef __USE_MISC
 /* Reentrant version of the above function.  */
 extern struct mntent *__getmntent_r __P ((FILE *__stream,
 					  struct mntent *__result,

@@ -1,6 +1,6 @@
 /* This is part of the iostream/stdio library, providing -*- C -*- I/O.
    Define ANSI C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public
@@ -138,7 +138,7 @@ extern int sprintf __P ((char*, __const char* format, ...));
 extern int sscanf __P ((__const char* string, __const char* format, ...));
 extern FILE* tmpfile __P ((void));
 extern char* tmpnam __P ((char*));
-#ifdef	__USE_REENTRANT
+#ifdef	__USE_MISC
 extern char* tmpnam_r __P ((char*));
 #endif
 #if defined(__USE_SVID) || defined(__USE_XOPEN)
@@ -224,7 +224,7 @@ extern const char *const _sys_errlist[];
 #endif
 
 /* Handle locking of streams.  */
-#ifdef __USE_REENTRANT
+#ifdef __USE_MISC
 extern void clearerr_locked __P ((FILE *));
 extern void clearerr_unlocked __P ((FILE *));
 extern int feof_locked __P ((FILE *));
@@ -233,9 +233,6 @@ extern int ferror_locked __P ((FILE*));
 extern int ferror_unlocked __P ((FILE*));
 extern int fileno_locked __P ((FILE *));
 extern int fileno_unlocked __P ((FILE *));
-extern void flockfile __P ((FILE *));
-extern void funlockfile __P ((FILE *));
-extern int ftrylockfile __P ((FILE *));
 extern int fclose_unlocked __P ((FILE *));
 extern int fflush_locked __P ((FILE *));
 extern int fflush_unlocked __P ((FILE *));
@@ -245,24 +242,35 @@ extern size_t fwrite_unlocked __P ((const void *, size_t, size_t, FILE *));
 extern int fputc_locked __P ((int, FILE*));
 extern int fputc_unlocked __P ((int, FILE*));
 extern int getc_locked __P ((FILE *));
-extern int getc_unlocked __P ((FILE *));
 extern int getchar_locked __P ((void));
-extern int getchar_unlocked __P ((void));
 extern int putc_locked __P ((int, FILE *));
-extern int putc_unlocked __P ((int, FILE *));
 extern int putchar_locked __P ((int));
+
+# ifndef _LIBC
+#  define getc_locked(fp) _IO_getc (fp)
+#  define getchar_locked() _IO_getc (stdin)
+#  define putchar_locked(c) _IO_putc (c, stdout)
+# endif
+#endif
+
+#if defined __USE_POSIX || defined __USE_MISC
+/* These are defined in POSIX.1:1996.  */
+extern void flockfile __P ((FILE *));
+extern void funlockfile __P ((FILE *));
+extern int ftrylockfile __P ((FILE *));
+
+extern int getc_unlocked __P ((FILE *));
+extern int getchar_unlocked __P ((void));
+extern int putc_unlocked __P ((int, FILE *));
 extern int putchar_unlocked __P ((int));
 
 # ifndef _LIBC
 #  define getc_unlocked(fp) _IO_getc_unlocked (fp)
-#  define getc_locked(fp) _IO_getc (fp)
 #  define getchar_unlocked() _IO_getc_unlocked (stdin)
-#  define getchar_locked() _IO_getc (stdin)
-#  define putchar_unlocked(c) _IO_putc_unlocked (c, stdout)
-#  define putchar_locked(c) _IO_putc (c, stdout)
+#  define putc_unlocked(c, fp) _IO_putc_unlocked ((c), (fp))
+#  define putchar_unlocked(c) _IO_putc_unlocked ((c), stdout)
 # endif
-
-#endif /* __USE_REENTRANT */
+#endif /* POSIX || misc */
 
 #define getc(_fp) _IO_getc (_fp)
 #define putc(_ch, _fp) _IO_putc (_ch, _fp)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,12 +28,12 @@ __BEGIN_DECLS
 
 /* Structure to represent one entry of the alias data base.  */
 struct aliasent
-{
-  char *alias_name;
-  size_t alias_members_len;
-  char **alias_members;
-  int alias_local;
-};
+  {
+    char *alias_name;
+    size_t alias_members_len;
+    char **alias_members;
+    int alias_local;
+  };
 
 
 /* Open alias data base files.  */
@@ -45,19 +45,18 @@ extern void endaliasent __P ((void));
 /* Get the next entry from the alias data base.  */
 extern struct aliasent *getaliasent __P ((void));
 
-/* Get alias entry corresponding to NAME.  */
-extern struct aliasent *getaliasbyname __P ((__const char *__name));
-
-#ifdef __USE_REENTRANT
-/* Reentrant versions of some of the functions above.  */
+/* Get the next entry from the alias data base and put it in RESULT_BUF.  */
 extern int getaliasent_r __P ((struct aliasent *__result_buf, char *__buffer,
 			       size_t __buflen, struct aliasent **__result));
 
+/* Get alias entry corresponding to NAME.  */
+extern struct aliasent *getaliasbyname __P ((__const char *__name));
+
+/* Get alias entry corresponding to NAME and put it in RESULT_BUF.  */
 extern int getaliasbyname_r __P ((__const char *__name,
 				  struct aliasent *__result_buf,
 				  char *__buffer, size_t __buflen,
 				  struct aliasent **__result));
-#endif /* reentrant */
 
 __END_DECLS
 

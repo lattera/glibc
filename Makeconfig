@@ -91,7 +91,8 @@ export full-config-sysdirs := $(full-config-sysdirs)
 # changes and so config.status would be run every time; the dependence of
 # config.make should suffice to force regeneration and re-exec, and the new
 # image will notice if config.h changed.
-$(common-objpfx)config.make: $(common-objpfx)config.status $(..)config.h.in
+$(common-objpfx)config.make: $(common-objpfx)config.status \
+			     $(..)config.make.in $(..)config.h.in
 	cd $(<D); $(SHELL) $(<F)
 
 # Find all the sysdeps configure fragments, to make sure we re-run

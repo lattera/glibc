@@ -54,7 +54,7 @@ extern struct rpcent *getrpcbyname __P ((__const char *__name));
 extern struct rpcent *getrpcbynumber __P ((int __number));
 extern struct rpcent *getrpcent __P ((void));
 
-#ifdef __USE_REENTRANT
+#ifdef __USE_MISC
 extern int getrpcbyname_r __P ((__const char *__name,
 				struct rpcent *__result_buf, char *__buffer,
 				size_t __buflen, struct rpcent **__result));

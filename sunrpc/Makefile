@@ -53,11 +53,11 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 			   pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
 			   svc_auth.h types.h xdr.h auth_des.h) \
 	  $(rpcsvc:%=rpcsvc/%)
+install-others = $(inst_sysconfdir)/rpc
 ifeq (no,$(cross-compiling))
 headers += $(rpcsvc:%.x=rpcsvc/%.h)
+install-others += $(inst_includedir)/rpcsvc/bootparam_prot.h
 endif
-install-others = $(inst_includedir)/rpcsvc/bootparam_prot.h \
-		 $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c)
 
 routines := auth_none auth_unix authuxprot bindrsvprt \

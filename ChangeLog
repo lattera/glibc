@@ -1,3 +1,91 @@
+1997-01-30 03:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/elf/start.S (_start): Align stack pointer to
+	double word boundary before pushing args for main.  This way we
+	don't get penalties for misaligned memory accesses.  Reported by
+	Edward Seidl <seidl@janed.com>.
+
+	* Makefile: Correct *my* changes of Richards patch of 1997-01-28 10:51.
+	Patch by HJ Lu.
+
+	* misc/bsd-compat.c: Update copyright.
+	* misc/efgcvt.c: Likewise.
+	* misc/efgcvt_r.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/error.h: Likewise.
+	* misc/fstab.c: Likewise.
+	* misc/init-misc.c: Likewise.
+	* misc/lsearch.c: Likewise.
+	* misc/mntent.c: Likewise.
+	* misc/qefgcvt.c: Likewise.
+	* misc/qefgcvt_r.c: Likewise.
+	* nss/databases.def: Likewise.
+	* nss/db-Makefile: Likewise.
+	* nss/ethers-lookup.c: Likewise.
+	* nss/hosts-lookup.c: Likewise.
+	* nss/netgrp-lookup.c: Likewise.
+	* nss/nsswitch.h: Likewise.
+	* nss/proto-lookup.c: Likewise.
+	* nss/rpc-lookup.c: Likewise.
+	* nss/service-lookup.c: Likewise.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_files/files-grp.c: Likewise.
+	* nss/nss_files/files-hosts.c: Likewise.
+	* nss/nss_files/files-network.c: Likewise.
+	* nss/nss_files/files-proto.c: Likewise.
+	* nss/nss_files/files-pwd.c: Likewise.
+	* nss/nss_files/files-rpc.c: Likewise.
+	* nss/nss_files/files-service.c: Likewise.
+	* nss/nss_files/files-spwd.c: Likewise.
+	* shadow/fgetspent.c: Likewise.
+	* shadow/fgetspent_r.c: Likewise.
+	* shadow/getspent.c: Likewise.
+	* shadow/getspent_r.c: Likewise.
+	* shadow/getspnam.c: Likewise.
+	* shadow/getspnam_r.c: Likewise.
+	* shadow/putspent.c: Likewise.
+	* shadow/sgetspent.c: Likewise.
+	* shadow/sgetspent_r.c: Likewise.
+	* sysdeps/i386/init-first.c: Likewise.
+	* sysdeps/unix/i386/sysdep.S: Likewise.
+
+	* shadow/shadow.h: Don't use __USE_REENTRENT.  All code must be
+	prepared to be running in a multi-threaded environment.  Change
+	to __USE_MISC unless the function is defined in POSIX.1 (in this
+	case also test for __USE_POSIX).
+	* dirent/dirent.h: Likewise.
+	* grp/grp.h: Likewise.
+	* inet/aliases.h: Likewise.
+	* libio/libio.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* login/utmp.h: Likewise.
+	* math/mathcalls.h: Likewise.
+	* misc/mntent.h: Likewise.
+	* pwd/pwd.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/string.h: Likewise.
+	* sunrpc/rpc/netdb.h: Likewise.
+	* sysdeps/generic/crypt.h: Likewise.
+	* sysdeps/unix/sysv/linux/errnos.h: Likewise.
+	* time/time.h: Likewise.
+
+1997-01-30 00:27  Fila Kolodny  <fila@ibi.com>
+
+	* sunrpc/Makefile (install-others): Add rpcsvc/bootparam_prot.h
+	only if not cross compiling.
+
+1997-01-29 16:16  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/posix/sigpause.c: Include <stddef.h> to get definition of
+	NULL.
+	* sysdeps/posix/sigwait.c: Likewise.
+
+1997-01-28 23:42  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig ($(common-objpfx)config.make): Depend on
+	$(..)config.make.in.
+
 1997-01-29 04:30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/Makefile: Don't generate headers derived from .x files when

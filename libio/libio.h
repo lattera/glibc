@@ -292,7 +292,10 @@ extern int _IO_ftrylockfile __P ((_IO_FILE *));
 # define _IO_cleanup_region_end(_Doit) /**/
 #endif /* !_IO_MTSAFE_IO */
 
-#ifdef __USE_REENTRANT
+/* XXX Should we allow a symbol to be defined which selects the efficient
+  implementation when the user is really sure no threaded functions ever
+  will be used?  */
+#if 1
 # define _IO_getc(_fp) _IO_getc (_fp)
 # define _IO_peekc(_fp) _IO_peekc_locked (_fp)
 # define _IO_putc(_ch, _fp) _IO_putc (_ch, _fp)

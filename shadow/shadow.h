@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,20 +38,20 @@ __BEGIN_DECLS
 
 /* Structure of the password file.  */
 struct spwd
-{
-  char *sp_namp;		/* Login name.  */
-  char *sp_pwdp;		/* Encrypted password.  */
-  long int sp_lstchg;		/* Date of last change.  */
-  long int sp_min;		/* Minimum number of days between changes.  */
-  long int sp_max;		/* Maximum number of days between changes.  */
-  long int sp_warn;		/* Number of days to warn user to change
+  {
+    char *sp_namp;		/* Login name.  */
+    char *sp_pwdp;		/* Encrypted password.  */
+    long int sp_lstchg;		/* Date of last change.  */
+    long int sp_min;		/* Minimum number of days between changes.  */
+    long int sp_max;		/* Maximum number of days between changes.  */
+    long int sp_warn;		/* Number of days to warn user to change
 				   the password.  */
-  long int sp_inact;		/* Number of days the account may be
+    long int sp_inact;		/* Number of days the account may be
 				   inactive.  */
-  long int sp_expire;		/* Number of days since 1970-01-01 until
+    long int sp_expire;		/* Number of days since 1970-01-01 until
 				   account expires.  */
-  unsigned long int sp_flag;	/* Reserved.  */
-};
+    unsigned long int sp_flag;	/* Reserved.  */
+  };
 
 
 /* Open database for reading.  */
@@ -76,7 +76,7 @@ extern struct spwd *fgetspent __P ((FILE *__stream));
 extern int putspent __P ((__const struct spwd *__p, FILE *__stream));
 
 
-#ifdef	__USE_REENTRANT
+#ifdef __USE_MISC
 /* Reentrant versions of some of the functions above.  */
 extern int __getspent_r __P ((struct spwd *__result_buf, char *__buffer,
 			      size_t __buflen, struct spwd **__result));
@@ -103,8 +103,7 @@ extern int __fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
 extern int fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
 			     char *__buffer, size_t __buflen,
 			     struct spwd **__result));
-#endif	/* reentrant */
-
+#endif	/* misc */
 
 /* Protect password file against multi writers.  */
 extern int __lckpwdf __P ((void));

@@ -74,6 +74,9 @@ please let me know.
 
 [Q20]	``How can I compile gcc 2.7.2.1 from the gcc source code using
 	  glibc 2.x?
+
+[Q21]    ``On Linux I've got problems with the declarations in Linux
+           kernel headers.''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -605,9 +608,25 @@ is very tricky to compile gcc 2.7.2.1 using glibc 2.x. You have to
 build it manually or with one pass only. You also have to use the
 specs file in this FAQ while compiling gcc.
 
-A pre-compiled binary version of gcc 2.7.2.1 linked with glibc 2.x for
-Linux/x86 is available in the same directory at the glibc 2.x source
-code ftp sites.
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q21]    ``On Linux I've got problems with the declarations in Linux
+           kernel headers.''
+
+[A21] {UD,AJ} On Linux, the use of kernel headers is reduced to a very
+minimum.  Besides giving Linus the possibility to change the headers
+more freely it has another reason: user level programs now do not
+always use the same types like the kernel does.
+
+I.e., the libc abstracts the use of types.  E.g., the sigset_t type is
+in the kernel 32 or 64 bits wide.  In glibc it is 1024 bits wide, in
+preparation for future development.  The reasons are obvious: we don't
+want to have a new major release when the Linux kernel gets these
+functionality. Consult the headers for more information about the changes.
+
+Therefore you shouldn't include Linux kernel header files directly if
+glibc has defined a replacement. Otherwise you might get undefined
+results because of type conflicts.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
