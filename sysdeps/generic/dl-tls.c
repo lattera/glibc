@@ -248,7 +248,6 @@ _dl_allocate_tls_init (void *result)
 {
   dtv_t *dtv = GET_DTV (result);
   struct dtv_slotinfo_list *listp;
-  bool first_block = true;
   size_t total = 0;
 
   /* We have to look prepare the dtv for all currently loaded
@@ -259,7 +258,7 @@ _dl_allocate_tls_init (void *result)
     {
       size_t cnt;
 
-      for (cnt = first_block ? 1 : 0; cnt < listp->len; ++cnt)
+      for (cnt = total == 0 ? 1 : 0; cnt < listp->len; ++cnt)
 	{
 	  struct link_map *map;
 	  void *dest;
@@ -300,7 +299,7 @@ _dl_allocate_tls_init (void *result)
 	}
 
       total += cnt;
-      if (total > GL(dl_tls_max_dtv_idx))
+      if (total >= GL(dl_tls_max_dtv_idx))
 	break;
 
       listp = listp->next;

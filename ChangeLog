@@ -1,3 +1,12 @@
+2002-08-12  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Fix inner loop
+	start count condition, use TOTAL instead of variable that was never
+	set.  Fix outer loop termination condition to TOTAL >= after update.
+
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Initialize
+	dl_tls_static_align and dl_tls_static_nelem.
+
 2002-08-11  Roland McGrath  <roland@redhat.com>
 
 	* elf/tst-tlsmod4.c (in_dso): Insert a random library call before use
