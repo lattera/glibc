@@ -29,6 +29,8 @@
 	* libio/oldiofsetpos64.c: Check for compatibility with glibc 2.1.
 	* libio/oldiofgetpos64.c: Likewise.
 
+	* soft-fp/Makefile (distribute): Remove configure.
+
 	* sysdeps/sparc/sparc64/soft-fp/Versions: Use version glibc 2.2.
 
 	* soft-fp/configure: Remove.
