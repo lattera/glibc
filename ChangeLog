@@ -1,5 +1,8 @@
 2002-11-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/Makefile (tests): Add tst-iconv4.
+	* iconv/tst-iconv4.c: New file.
+
 	* iconv/gconv_simple.c (internal_ucs4le_loop_unaligned): Return
 	__GCONV_EMPTY_INPUT only if input is really empty.  Otherwise
 	__GCONV_INCOMPLETE_INPUT.
