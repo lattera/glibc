@@ -1,6 +1,6 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -53,6 +53,8 @@ struct localedef_t
   size_t len[6];
 };
 
+/* Declared in localedef.c.  */
+extern int be_quiet;
 
 /* Found in localedef.c.  */
 void def_to_process (const char *name, int category);

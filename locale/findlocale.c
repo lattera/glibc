@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -20,23 +20,13 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 
 #include "localeinfo.h"
 
 
 /* Constant data defined in setlocale.c.  */
-extern const struct locale_data *const _nl_C[];
-
-
-static inline char *
-copy (const char *string)
-{
-  size_t len;
-  char *new;
-  len = strlen (string) + 1;
-  new = (char *) malloc (len);
-  return new != NULL ? memcpy (new, string, len) : NULL;
-}
+extern struct locale_data *const _nl_C[];
 
 
 /* For each category we keep a list of records for the locale files
@@ -44,9 +34,9 @@ copy (const char *string)
 static struct loaded_l10nfile *locale_file_list[LC_ALL];
 
 
-const struct locale_data *
+struct locale_data *
 _nl_find_locale (const char *locale_path, size_t locale_path_len,
-		 int category, char **name)
+		 int category, const char **name)
 {
   int mask;
   /* Name of the locale for this category.  */
@@ -88,10 +78,10 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   loc_name = (char *) _nl_expand_alias (*name);
   if (loc_name == NULL)
     /* It is no alias.  */
-    loc_name = *name;
+    loc_name = (char *) *name;
 
   /* Make a writable copy of the locale name.  */
-  loc_name = copy (loc_name);
+  loc_name = __strdup (loc_name);
 
   /* LOCALE can consist of up to four recognized parts for the XPG syntax:
 
@@ -141,9 +131,9 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	return NULL;
     }
   else
-    /* If the addressed locale is already available it should be freed.
-       If we would not do this switching back and force between two
-       locales would slowly eat up all memory.*/
+    /* If the addressed locale is already available it should be
+       freed.  If we would not do this switching back and force
+       between two locales would slowly eat up all memory.  */
     free ((void *) loc_name);
 
   if (locale_file->decided == 0)
@@ -184,5 +174,51 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
     }
   *name = (char *) ((struct locale_data *) locale_file->data)->name;
 
+  /* Increment the usage count.  */
+  if (((struct locale_data *) locale_file->data)->usage_count
+      != MAX_USAGE_COUNT)
+    ++((struct locale_data *) locale_file->data)->usage_count;
+
   return (struct locale_data *) locale_file->data;
+}
+
+
+/* Calling this function assumes the lock for handling global locale data
+   is acquired.  */
+void
+_nl_remove_locale (int locale, struct locale_data *data)
+{
+  if (--data->usage_count == 0)
+    {
+      /* First search the entry in the list of loaded files.  */
+      struct loaded_l10nfile *ptr = locale_file_list[locale];
+
+      /* Search for the entry.  It must be in the list.  Otherwise it
+	 is a bug and we crash badly.  */
+      while ((struct locale_data *) ptr->data != data)
+	ptr = ptr->next;
+
+      /* Mark the data as not available anymore.  So when the data has
+	 to be used again it is reloaded.  */
+      ptr->decided = 0;
+      ptr->data = NULL;
+
+      /* Really delete the data.  First delete the real data.  */
+      if (data->mmaped)
+	{
+	  /* Try to unmap the area.  If this fails we mark the area as
+	     permanent.  */
+	  if (__munmap ((caddr_t) data->filedata, data->filesize) != 0)
+	    {
+	      data->usage_count = MAX_USAGE_COUNT;
+	      return;
+	    }
+	}
+      else
+	/* The memory was malloced.  */
+	free ((void *) data->filedata);
+
+      /* Now free the structure itself.  */
+      free (data);
+    }
 }

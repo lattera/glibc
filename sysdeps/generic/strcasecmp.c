@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <ctype.h>
+#include <string.h>
+
+#ifndef weak_alias
+# define __strcasecmp strcasecmp
+#endif
 
 /* Compare S1 and S2, ignoring case, returning less than, equal to or
    greater than zero if S1 is lexicographically less than,
    equal to or greater than S2.  */
 int
-__strcasecmp (const char *s1, const char *s2)
+__strcasecmp (s1, s2)
+     const char *s1;
+     const char *s2;
 {
-  register const unsigned char *p1 = (const unsigned char *) s1;
-  register const unsigned char *p2 = (const unsigned char *) s2;
+  const unsigned char *p1 = (const unsigned char *) s1;
+  const unsigned char *p2 = (const unsigned char *) s2;
   unsigned char c1, c2;
 
   if (p1 == p2)
@@ -43,4 +53,6 @@ __strcasecmp (const char *s1, const char *s2)
 
   return c1 - c2;
 }
+#ifdef weak_alias
 weak_alias (__strcasecmp, strcasecmp)
+#endif

@@ -36,7 +36,7 @@ __vsnprintf (char *s, size_t maxlen, const char *format, va_list arg)
   if (maxlen == 0)
     return 0;
 
-  memset((void *) &f, 0, sizeof(f));
+  memset ((void *) &f, 0, sizeof (f));
   f.__magic = _IOMAGIC;
   f.__mode.__write = 1;
   /* The buffer size is one less than MAXLEN
@@ -51,7 +51,7 @@ __vsnprintf (char *s, size_t maxlen, const char *format, va_list arg)
   f.__io_funcs.__write = NULL;
   f.__seen = 1;
 
-  done = vfprintf(&f, format, arg);
+  done = vfprintf (&f, format, arg);
   *f.__bufp = '\0';
 
   return done;

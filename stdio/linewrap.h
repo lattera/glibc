@@ -1,21 +1,21 @@
 /* Word-wrapping and line-truncating streams.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef __LINEWRAP_H__
 #define __LINEWRAP_H__
@@ -63,32 +63,32 @@ FILE *line_wrap_stream (FILE *stream,
 void line_unwrap_stream (FILE *stream);
 
 /* Returns true if STREAM is line wrapped.  */
-extern inline int line_wrapped (FILE *stream); 
+extern inline int line_wrapped (FILE *stream);
 
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
-extern size_t line_wrap_lmargin (FILE *stream); 
+extern size_t line_wrap_lmargin (FILE *stream);
 
 /* If STREAM is not line-wrapped return -1, else set its left margin to
    LMARGIN and return the old value.  */
-extern size_t line_wrap_set_lmargin (FILE *stream, size_t lmargin); 
+extern size_t line_wrap_set_lmargin (FILE *stream, size_t lmargin);
 
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
-extern size_t line_wrap_rmargin (FILE *stream); 
+extern size_t line_wrap_rmargin (FILE *stream);
 
 /* If STREAM is not line-wrapped return -1, else set its right margin to
    RMARGIN and return the old value.  */
-extern size_t line_wrap_set_rmargin (FILE *stream, size_t rmargin); 
+extern size_t line_wrap_set_rmargin (FILE *stream, size_t rmargin);
 
 /* If STREAM is not line-wrapped return -1, else return its wrap margin.  */
-extern size_t line_wrap_wmargin (FILE *stream); 
+extern size_t line_wrap_wmargin (FILE *stream);
 
 /* If STREAM is not line-wrapped return -1, else set its left margin to
    WMARGIN and return the old value.  */
-extern size_t line_wrap_set_wmargin (FILE *stream, size_t wmargin); 
+extern size_t line_wrap_set_wmargin (FILE *stream, size_t wmargin);
 
 /* If STREAM is not line-wrapped return -1, else return the column number of
    the current output point.  */
-extern size_t line_wrap_point (FILE *stream); 
+extern size_t line_wrap_point (FILE *stream);
 
 #ifdef	__OPTIMIZE__
 

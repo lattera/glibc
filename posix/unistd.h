@@ -235,6 +235,7 @@ extern unsigned int alarm __P ((unsigned int __seconds));
    SIGALRM signal while inside `sleep' call, the handling of the SIGALRM
    signal afterwards is undefined.  There is no return value to indicate
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
+extern unsigned int __sleep __P ((unsigned int __seconds));
 extern unsigned int sleep __P ((unsigned int __seconds));
 
 #if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)

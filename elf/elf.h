@@ -504,6 +504,20 @@ typedef struct
 					   entry */
 } Elf32_Verdef;
 
+/* XXX We have no information what types should be used for 64 bit
+   architectures.  What is following is only an intelligent guess.  */
+typedef struct
+{
+  Elf64_Half	vd_version;		/* Version revision */
+  Elf64_Half	vd_flags;		/* Version information */
+  Elf64_Half	vd_ndx;			/* Version Index */
+  Elf64_Half	vd_cnt;			/* Number of associated aux entries */
+  Elf64_Word	vd_hash;		/* Version name hash value */
+  Elf64_Word	vd_aux;			/* Offset in bytes to verdaux array */
+  Elf64_Word	vd_next;		/* Offset in bytes to next verdef
+					   entry */
+} Elf64_Verdef;
+
 /* Legal values for vd_version (version revision).  */
 #define VER_DEF_NONE	0		/* No version */
 #define VER_DEF_CURRENT	1		/* Current version */
@@ -522,6 +536,15 @@ typedef struct
 					   entry */
 } Elf32_Verdaux;
 
+/* XXX We have no information what types should be used for 64 bit
+   architectures.  What is following is only an intelligent guess.  */
+typedef struct
+{
+  Elf64_Addr	vda_name;		/* Version or dependency names */
+  Elf64_Word	vda_next;		/* Offset in bytes to next verdaux
+					   entry */
+} Elf64_Verdaux;
+
 /* Version dependency section.  */
 
 typedef struct
@@ -534,6 +557,19 @@ typedef struct
   Elf32_Word	vn_next;		/* Offset in bytes to next verneed
 					   entry */
 } Elf32_Verneed;
+
+/* XXX We have no information what types should be used for 64 bit
+   architectures.  What is following is only an intelligent guess.  */
+typedef struct
+{
+  Elf64_Half	vn_version;		/* Version of structure */
+  Elf64_Half	vn_cnt;			/* Number of associated aux entries */
+  Elf64_Addr	vn_file;		/* Offset of filename for this
+					   dependency */
+  Elf64_Word	vn_aux;			/* Offset in bytes to vernaux array */
+  Elf64_Word	vn_next;		/* Offset in bytes to next verneed
+					   entry */
+} Elf64_Verneed;
 
 /* Legal values for vn_version (version revision).  */
 #define VER_NEED_NONE	 0		/* No version */
@@ -551,6 +587,18 @@ typedef struct
   Elf32_Word	vna_next;		/* Offset in bytes to next vernaux
 					   entry */
 } Elf32_Vernaux;
+
+/* XXX We have no information what types should be used for 64 bit
+   architectures.  What is following is only an intelligent guess.  */
+typedef struct
+{
+  Elf64_Word	vna_hash;		/* Hash value of dependency name */
+  Elf64_Half	vna_flags;		/* Dependency specific information */
+  Elf64_Half	vna_other;		/* Unused */
+  Elf64_Addr	vna_name;		/* Dependency name string offset */
+  Elf64_Word	vna_next;		/* Offset in bytes to next vernaux
+					   entry */
+} Elf64_Vernaux;
 
 /* Legal values for vna_flags.  */
 #define VER_FLG_WEAK	0x2		/* Weak verison identifier */

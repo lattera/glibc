@@ -1,21 +1,21 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -262,10 +262,11 @@ ctype_finish (struct localedef_t *locale, struct charset_t *charset)
 			  cp += sprintf (cp, "\\%o", (value >> 8) & 0xff);
 			sprintf (cp, "\\%o", value & 0xff);
 
-			error (0, 0, _("\
+			if (!be_quiet)
+			  error (0, 0, _("\
 character %s'%s' in class `%s' must be in class `%s'"), value > 256 ? "L" : "",
-			       cp, valid_table[cls1].name,
-			       valid_table[cls2].name);
+				 cp, valid_table[cls1].name,
+				 valid_table[cls2].name);
 		      }
 		    break;
 
@@ -286,10 +287,12 @@ character %s'%s' in class `%s' must be in class `%s'"), value > 256 ? "L" : "",
 			  cp += sprintf (cp, "\\%o", (value >> 8) & 0xff);
 			sprintf (cp, "\\%o", value & 0xff);
 
-			error (0, 0, _("\
+			if (!be_quiet)
+			  error (0, 0, _("\
 character %s'%s' in class `%s' must not be in class `%s'"),
-			       value > 256 ? "L" : "", cp,
-			       valid_table[cls1].name, valid_table[cls2].name);
+				 value > 256 ? "L" : "", cp,
+				 valid_table[cls1].name,
+				 valid_table[cls2].name);
 		      }
 		    break;
 
@@ -306,23 +309,25 @@ character %s'%s' in class `%s' must not be in class `%s'"),
 
   /* ... and now test <SP> as a special case.  */
   space_value = charset_find_value (charset, "SP", 2);
-  if ((wchar_t) space_value == ILLEGAL_CHAR_VALUE)
+  if ((wchar_t) space_value == ILLEGAL_CHAR_VALUE && !be_quiet)
     error (0, 0, _("character <SP> not defined in character map"));
-  else if ((cnt = BITPOS (tok_space),
-            (ELEM (ctype, class_collection, , space_value)
-	     & BIT (tok_space)) == 0)
-           || (cnt = BITPOS (tok_blank),
-               (ELEM (ctype, class_collection, , space_value)
-		& BIT (tok_blank)) == 0))
+  else if (((cnt = BITPOS (tok_space),
+	     (ELEM (ctype, class_collection, , space_value)
+	      & BIT (tok_space)) == 0)
+	    || (cnt = BITPOS (tok_blank),
+		(ELEM (ctype, class_collection, , space_value)
+		 & BIT (tok_blank)) == 0))
+	   && !be_quiet)
     error (0, 0, _("<SP> character not in class `%s'"),
            valid_table[cnt].name);
-  else if ((cnt = BITPOS (tok_punct),
-            (ELEM (ctype, class_collection, , space_value)
-	     & BIT (tok_punct)) != 0)
-           || (cnt = BITPOS (tok_graph),
-               (ELEM (ctype, class_collection, , space_value)
-		& BIT (tok_graph))
-	       != 0))
+  else if (((cnt = BITPOS (tok_punct),
+	     (ELEM (ctype, class_collection, , space_value)
+	      & BIT (tok_punct)) != 0)
+	    || (cnt = BITPOS (tok_graph),
+		(ELEM (ctype, class_collection, , space_value)
+		 & BIT (tok_graph))
+		!= 0))
+	   && !be_quiet)
     error (0, 0, _("<SP> character must not be in class `%s'"),
            valid_table[cnt].name);
   else
@@ -934,7 +939,7 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charset_t *charset)
 	  tmp[0] = ch;
 
 	  value = charset_find_value (charset, tmp, 1);
-	  if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	  if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	    {
 	      error (0, 0, _("\
 character `%s' not defined while needed as default value"),
@@ -998,7 +1003,7 @@ character `%s' not defined while needed as default value"),
       unsigned int value;
 
       value = charset_find_value (charset, "space", 5);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<space>");
@@ -1006,7 +1011,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "form-feed", 9);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<form-feed>");
@@ -1014,7 +1019,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "newline", 7);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<newline>");
@@ -1022,7 +1027,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "carriage-return", 15);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<carriage-return>");
@@ -1030,7 +1035,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "tab", 3);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<tab>");
@@ -1038,7 +1043,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "vertical-tab", 12);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<vertical-tab>");
@@ -1064,7 +1069,7 @@ character `%s' not defined while needed as default value"),
       unsigned int value;
 
       value = charset_find_value (charset, "space", 5);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<space>");
@@ -1072,7 +1077,7 @@ character `%s' not defined while needed as default value"),
 	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
 
       value = charset_find_value (charset, "tab", 3);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<tab>");
@@ -1110,7 +1115,7 @@ character `%s' not defined while needed as default value"),
 	  ctype->class_collection[cnt] |= BIT (tok_print);
 
       space = charset_find_value (charset, "space", 5);
-      if (space == ILLEGAL_CHAR_VALUE)
+      if (space == ILLEGAL_CHAR_VALUE && !be_quiet)
 	error (0, 0, _("\
 character `%s' not defined while needed as default value"),
 	       "<space>");
@@ -1136,7 +1141,7 @@ character `%s' not defined while needed as default value"),
 	  tmp[1] = (char) ch;
 
 	  value_from = charset_find_value (charset, &tmp[1], 1);
-	  if ((wchar_t) value_from == ILLEGAL_CHAR_VALUE)
+	  if ((wchar_t) value_from == ILLEGAL_CHAR_VALUE && !be_quiet)
 	    {
 	      error (0, 0, _("\
 character `%s' not defined while needed as default value"),
@@ -1147,7 +1152,7 @@ character `%s' not defined while needed as default value"),
 	  /* This conversion is implementation defined.  */
 	  tmp[1] = (char) (ch + ('A' - 'a'));
 	  value_to = charset_find_value (charset, &tmp[1], 1);
-	  if ((wchar_t) value_to == ILLEGAL_CHAR_VALUE)
+	  if ((wchar_t) value_to == ILLEGAL_CHAR_VALUE && !be_quiet)
 	    {
 	      error (0, 0, _("\
 character `%s' not defined while needed as default value"),
@@ -1195,9 +1200,10 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charset_t *charset)
   size_t min_total = UINT_MAX;
   size_t act_size = 256;
 
-  fputs (_("\
+  if (!be_quiet)
+    fputs (_("\
 Computing table size for character classes might take a while..."),
-	 stderr);
+	   stderr);
 
   while (act_size < min_total)
     {
@@ -1232,7 +1238,8 @@ Computing table size for character classes might take a while..."),
       ++act_size;
     }
 
-  fprintf (stderr, _(" done\n"));
+  if (!be_quiet)
+    fputs (_(" done\n"), stderr);
 
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN

@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,14 @@
    `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.  */
 
 #ifdef DO_RELA
-#define elf_dynamic_do_rel	elf_dynamic_do_rela
-#define	Rel			Rela
-#define elf_machine_rel		elf_machine_rela
+# define elf_dynamic_do_rel	elf_dynamic_do_rela
+# define Rel			Rela
+# define elf_machine_rel	elf_machine_rela
 #endif
 
+#ifndef VERSYMIDX
+# define VERSYMIDX(sym)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (sym))
+#endif
 
 /* Perform the relocations in MAP on the running program image as specified
    by RELTAG, SZTAG.  If LAZY is nonzero, this is the first pass on PLT
@@ -37,8 +40,6 @@ elf_dynamic_do_rel (struct link_map *map,
 		    int reltag, int sztag,
 		    int lazy)
 {
-  const ElfW(Sym) *const symtab
-    = (const ElfW(Sym) *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
   const ElfW(Rel) *r
     = (const ElfW(Rel) *) (map->l_addr + map->l_info[reltag]->d_un.d_ptr);
   const ElfW(Rel) *end = &r[map->l_info[sztag]->d_un.d_val / sizeof *r];
@@ -48,8 +49,27 @@ elf_dynamic_do_rel (struct link_map *map,
     for (; r < end; ++r)
       elf_machine_lazy_rel (map, r);
   else
-    for (; r < end; ++r)
-      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)]);
+    {
+      const ElfW(Sym) *const symtab =
+	(const ElfW(Sym) *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+
+      if (map->l_info[VERSYMIDX (DT_VERNEEDNUM)])
+	{
+	  const ElfW(Half) *const version =
+	    (const ElfW(Half) *) (map->l_addr
+				  + map->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
+
+	  for (; r < end; ++r)
+	    {
+	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)];
+	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
+			       &map->l_versions[ndx]);
+	    }
+	}
+      else
+	for (; r < end; ++r)
+	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL);
+    }
 }
 
 #undef elf_dynamic_do_rel

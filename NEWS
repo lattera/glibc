@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  26 January 1997
+GNU C Library NEWS -- history of user-visible changes.  1997-02-13
 
 Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -6,6 +6,17 @@ See the end for copying conditions.
 Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.ai.mit.edu>.  Questions and suggestions should be send to
 <bug-glibc@prep.ai.mit.edu>.
+
+Version 2.1
+
+* An additional locale model to support C++ Standard Library locale
+  model an probably more was implemented by Ulrich Drepper.
+
+* Eric Youngdale and Ulrich Drepper implement versioning of objects on
+  symbol level.
+
+* Miles Bader provided the `argp' function family to support hierachical
+  command line argument parsing, layered on top of getopt.
 
 Version 2.0.2
 

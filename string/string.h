@@ -83,6 +83,20 @@ extern int strcoll __P ((__const char *__s1, __const char *__s2));
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
 extern size_t strxfrm __P ((char *__dest, __const char *__src, size_t __n));
 
+#ifdef __USE_GNU
+/* The following functions are equivalent to the both above but they
+   take the locale they use for the collation as an extra argument.
+   This is not standardsized but something like will come.  */
+# include <xlocale.h>
+
+/* Compare the collated forms of S1 and S2 using rules from L.  */
+extern int __strcoll_l __P ((__const char *__s1, __const char *__s2,
+			     __locale_t __l));
+/* Put a transformation of SRC into no more than N bytes of DEST.  */
+extern size_t __strxfrm_l __P ((char *__dest, __const char *__src, size_t __n,
+				__locale_t __l));
+#endif
+
 #if defined(__USE_SVID) || defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *__strdup __P ((__const char *__s));

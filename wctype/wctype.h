@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -200,10 +200,109 @@ extern wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
 extern __const int *__ctype_tolower; /* Case conversions.  */
 extern __const int *__ctype_toupper; /* Case conversions.  */
 
-#define	towlower(wc)	towctrans (wc, __ctype_tolower)
-#define	towupper(wc)	towctrans (wc, __ctype_toupper)
+#define	towlower(wc)	towctrans ((wc), __ctype_tolower)
+#define	towupper(wc)	towctrans ((wc), __ctype_toupper)
 
 #endif /* Not __NO_WCTYPE.  */
+
+#ifdef __USE_GNU
+/* Declare the interface to extended locale model.  */
+# include <xlocale.h>
+
+/* Test for any wide character for which `iswalpha' or `iswdigit' is
+   true.  */
+extern int __iswalnum_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any wide character for which `iswupper' or 'iswlower' is
+   true, or any wide character that is one of a locale-specific set of
+   wide-characters for which none of `iswcntrl', `iswdigit',
+   `iswpunct', or `iswspace' is true.  */
+extern int __iswalpha_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any control wide character.  */
+extern int __iswcntrl_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any wide character that corresponds to a decimal-digit
+   character.  */
+extern int __iswdigit_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any wide character for which `iswprint' is true and
+   `iswspace' is false.  */
+extern int __iswgraph_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any wide character that corresponds to a lowercase letter
+   or is one of a locale-specific set of wide characters for which
+   none of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
+extern int __iswlower_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any printing wide character.  */
+extern int __iswprint_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any printing wide character that is one of a
+   locale-specific et of wide characters for which neither `iswspace'
+   nor `iswalnum' is true.  */
+extern int __iswpunct_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any wide character that corresponds to a locale-specific
+   set of wide characters for which none of `iswalnum', `iswgraph', or
+   `iswpunct' is true.  */
+extern int __iswspace_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any wide character that corresponds to an uppercase letter
+   or is one of a locale-specific set of wide character for which none
+   of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
+extern int __iswupper_l __P ((wint_t __wc, __locale_t __locale));
+
+/* Test for any wide character that corresponds to a hexadecimal-digit
+   character equivalent to that performed be the functions described
+   in the previous subclause.  */
+extern int __iswxdigit_l __P ((wint_t __wc, __locale_t __locale));
+
+
+/* Determine whether the wide-character WC has the property described by
+   DESC.  */
+extern int __iswctype_l __P ((wint_t __wc, wctype_t __desc,
+			      __locale_t locale));
+
+
+/*
+ * Wide-character case-mapping functions: 7.15.3.1.
+ */
+
+/* Converts an uppercase letter to the corresponding lowercase letter.  */
+extern wint_t __towlower_l __P ((wint_t __wc, __locale_t locale));
+
+/* Converts an lowercase letter to the corresponding uppercase letter.  */
+extern wint_t __towupper_l __P ((wint_t __wc, __locale_t locale));
+
+/* Map the wide character WC using the mapping described by DESC.  */
+extern wint_t __towctrans_l __P ((wint_t __wc, wctrans_t __desc,
+				  __locale_t locale));
+
+
+#ifndef	__NO_WCTYPE
+#define	__iswalnum_l(wc, loc)	__iswctype_l ((wc), _ISalnum, (loc))
+#define	__iswalpha_l(wc, loc)	__iswctype_l ((wc), _ISalpha, (loc))
+#define	__iswcntrl_l(wc, loc)	__iswctype_l ((wc), _IScntrl, (loc))
+#define	__iswdigit_l(wc, loc)	__iswctype_l ((wc), _ISdigit, (loc))
+#define	__iswlower_l(wc, loc)	__iswctype_l ((wc), _ISlower, (loc))
+#define	__iswgraph_l(wc, loc)	__iswctype_l ((wc), _ISgraph, (loc))
+#define	__iswprint_l(wc, loc)	__iswctype_l ((wc), _ISprint, (loc))
+#define	__iswpunct_l(wc, loc)	__iswctype_l ((wc), _ISpunct, (loc))
+#define	__iswspace_l(wc, loc)	__iswctype_l ((wc), _ISspace, (loc))
+#define	__iswupper_l(wc, loc)	__iswctype_l ((wc), _ISupper, (loc))
+#define	__iswxdigit_l(wc, loc)	__iswctype_l ((wc), _ISxdigit, (loc))
+
+#define	__iswblank_l(wc, loc)	__iswctype_l ((wc), _ISblank, (loc))
+
+#define	__towlower_l(wc, loc)	__towctrans_l ((wc), (loc)->__ctype_tolower, \
+					       (loc))
+#define	__towupper_l(wc, loc)	__towctrans_l ((wc), (loc)->__ctype_toupper, \
+					       (loc))
+
+#endif /* Not __NO_WCTYPE.  */
+
+#endif /* Use GNU.  */
 
 __END_DECLS
 

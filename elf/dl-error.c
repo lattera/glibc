@@ -66,9 +66,9 @@ _dl_signal_error (int errcode,
   else if (receiver)
     {
       /* We are inside _dl_receive_error.  Call the user supplied
-	 handler and resume the work.  The receiver will still
+	 handler and resume the work.  The receiver will still be
 	 installed.  */
-      (*receiver) (errstring, objname);
+      (*receiver) (errcode, objname, errstring);
     }
   else
     {

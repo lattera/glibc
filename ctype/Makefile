@@ -21,7 +21,7 @@
 #
 subdir	:= ctype
 
-routines	:= ctype ctype-extn
+routines	:= ctype ctype-extn ctype_l
 aux		:= ctype-info
 
 tests	:= test_ctype

@@ -28,7 +28,7 @@ extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 int mmap_prot);
 
 #ifndef LD_SO_CACHE
-#define LD_SO_CACHE "/etc/ld.so.cache"
+# define LD_SO_CACHE "/etc/ld.so.cache"
 #endif
 
 #define CACHEMAGIC "ld.so-1.7.0"

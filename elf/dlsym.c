@@ -1,5 +1,5 @@
-/* dlsym -- Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Look up a symbol in a shared object loaded by `dlopen'.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

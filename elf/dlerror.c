@@ -1,5 +1,5 @@
-/* dlerror -- Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Return error detail for failing <dlfcn.h> functions.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

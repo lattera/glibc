@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -74,7 +74,7 @@ numeric_finish (struct localedef_t *locale)
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
 
 #define TEST_ELEM(cat)							      \
-  if (numeric->cat == NULL)						      \
+  if (numeric->cat == NULL && !be_quiet)				      \
     error (0, 0, _("field `%s' in category `%s' not defined"),		      \
 	   #cat, "LC_NUMERIC")
 
@@ -84,14 +84,14 @@ numeric_finish (struct localedef_t *locale)
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
      != "".  */
-  if (numeric->decimal_point[0] == '\0')
+  if (numeric->decimal_point[0] == '\0' && !be_quiet)
     {
       error (0, 0, _("\
 value for field `%s' in category `%s' must not be the empty string"),
 	     "decimal_point", "LC_NUMERIC");
     }
 
-  if (numeric->grouping_act == 0)
+  if (numeric->grouping_act == 0 && !be_quiet)
     error (0, 0, _("field `%s' in category `%s' not defined"),
 	   "grouping", "LC_NUMERIC");
 }

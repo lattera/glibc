@@ -32,7 +32,8 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    mbsnrtowcs wcsnrtombs \
 	    wcstol wcstoul wcstoq wcstouq wcstod wcstold wcstof \
 	    wcscoll wcsxfrm \
-	    wcwidth wcswidth
+	    wcwidth wcswidth \
+	    wcscoll_l wcsxfrm_l
 
 include ../Rules
 

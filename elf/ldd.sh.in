@@ -25,7 +25,8 @@
 # variable LD_TRACE_LOADED_OBJECTS to a non-empty value.
 
 RTLD=@RTLD@
-RELOCS=
+warn=
+bind_now=
 
 while test $# -gt 0; do
   case "$1" in
@@ -45,12 +46,13 @@ Report bugs using the \`glibcbug' script to <bugs@gnu.ai.mit.edu>."
     exit 0 ;;
   -d | --d | --da | --dat | --data | --data- | --data-r | --data-re | \
   --data-rel | --data-relo | --data-reloc | --data-relocs)
-    RELOCS='--data-relocs'
+    warn=yes
     shift ;;
   -r | --f | --fu | --fun | --func | --funct | --functi | --functio | \
   --function | --function- | --function-r | --function-re | --function-rel | \
   --function-relo | --function-reloc | --function-relocs)
-    RELOCS='--function-relocs'
+    warn=yes
+    bind_now=yes
     shift ;;
   --)		# Stop option processing.
     shift; break ;;
@@ -84,7 +86,8 @@ Try \`ldd --help' for more information."
       test -x "$file" ||
 	echo "ldd: warning: you do not have execution permission for \`$file'"
       if ${RTLD} --verify "$file"; then
-	LD_TRACE_LOADED_OBJECTS=1 exec ${RTLD} ${RELOCS} "$file" || exit 1
+	LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now \
+	 exec ${RTLD} "$file" || exit 1
       else
 	echo '	not a dynamic executable'
 	exit 1
@@ -112,7 +115,8 @@ Try \`ldd --help' for more information."
 	test -x "$file" || echo "\
 ldd: warning: you do not have execution permission for \`$file'"
 	if ${RTLD} --verify "$file"; then
-	  LD_TRACE_LOADED_OBJECTS=1 ${RTLD} ${RELOCS} "$file" || result=1
+	  LD_TRACE_LOADED_OBJECTS=1 LD_WARN=$warn LD_BIND_NOW=$bind_now \
+	   ${RTLD} "$file" || result=1
 	else
 	  echo '	not a dynamic executable'
 	  result=1

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -105,9 +105,8 @@ extern struct lconv *localeconv __P ((void));
    Attention: all these functions are *not* standardized in any form.
    This is a proof-of-concept implementation.  */
 
-/* Structure for reentrant locale using functions.  This is an opaque
-   type for the user level programs.  */
-typedef struct locale_data *locale_t[LC_ALL];
+/* Get locale datatype definition.  */
+# include <xlocale.h>
 
 /* Return a reference to a data structure representing a set of locale
    datasets.  Unlike for the CATEGORY parameter for `setlocale' the
@@ -115,13 +114,17 @@ typedef struct locale_data *locale_t[LC_ALL];
    I.e., 1 << LC_CTYPE means to load data for this category.  If
    BASE is non-null the appropriate category information in the BASE
    record is replaced.  */
-extern __const locale_t *__newlocale __P ((int __category_mask,
-					   __const char *__locale,
-					   __const locale_t *__base));
+extern __locale_t __newlocale __P ((int __category_mask,
+				     __const char *__locale,
+				     __locale_t __base));
+
+/* Return a duplicate of the set of locale in DATASET.  All usage
+   counters are increased if necessary.  */
+extern __locale_t __duplocale __P ((__locale_t __dataset));
 
 /* Free the data associated with a locale dataset previously returned
    by a call to `setlocale_r'.  */
-extern void __freelocale __P ((__const locale_t *__dataset));
+extern void __freelocale __P ((__locale_t __dataset));
 #endif
 
 __END_DECLS

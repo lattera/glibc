@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -88,6 +88,22 @@ extern int wcscoll __P ((__const wchar_t *__s1, __const wchar_t *__s2));
    applied to two transformed strings the result is the as applying
    `wcscoll' to the original strings.  */
 extern size_t wcsxfrm __P ((wchar_t *__s1, __const wchar_t *__s2, size_t __n));
+
+#ifdef __USE_GNU
+/* Similar to the two functions above but take the information from
+   the provided locale and not the global locale.  */
+# include <xlocale.h>
+
+/* Compare S1 and S2, both interpreted as appropriate to the
+   LC_COLLATE category of the given locale.  */
+extern int __wcscoll_l __P ((__const wchar_t *__s1, __const wchar_t *__s2,
+			     __locale_t loc));
+/* Transform S2 into array pointed to by S1 such that if wcscmp is
+   applied to two transformed strings the result is the as applying
+   `wcscoll' to the original strings.  */
+extern size_t __wcsxfrm_l __P ((wchar_t *__s1, __const wchar_t *__s2,
+				size_t __n, __locale_t loc));
+#endif
 
 /* Duplicate S, returning an identical malloc'd string.  */
 extern wchar_t *wcsdup __P ((__const wchar_t *__s));

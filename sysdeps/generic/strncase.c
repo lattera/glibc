@@ -1,35 +1,42 @@
-/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Compare at most N characters of two strings without taking care for
+   the case.
+   Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
 #include <ctype.h>
+
+#ifndef weak_alias
+# define __strncasecmp strncasecmp
+#endif
 
 /* Compare no more than N characters of S1 and S2,
    ignoring case, returning less than, equal to or
    greater than zero if S1 is lexicographically less
    than, equal to or greater than S2.  */
 int
-DEFUN(__strncasecmp, (s1, s2, n),
-      CONST char *s1 AND CONST char *s2 AND size_t n)
+__strncasecmp (s1, s2, n)
+     const char *s1;
+     const char *s2;
+     size_t n;
 {
-  register CONST unsigned char *p1 = (CONST unsigned char *) s1;
-  register CONST unsigned char *p2 = (CONST unsigned char *) s2;
+  const unsigned char *p1 = (const unsigned char *) s1;
+  const unsigned char *p2 = (const unsigned char *) s2;
   unsigned char c1, c2;
 
   if (p1 == p2 || n == 0)
@@ -45,4 +52,6 @@ DEFUN(__strncasecmp, (s1, s2, n),
 
   return c1 - c2;
 }
+#ifdef weak_alias
 weak_alias (__strncasecmp, strncasecmp)
+#endif

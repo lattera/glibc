@@ -1,4 +1,5 @@
-/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+/* Return the offset of one string within another.
+   Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +26,13 @@
  *
  * Stephen R. van den Berg, berg@pool.informatik.rwth-aachen.de	*/
 
-#include <string.h>
-#include <sys/types.h>
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#if defined _LIBC || defined HAVE_STRING_H
+# include <string.h>
+#endif
 
 typedef unsigned chartype;
 

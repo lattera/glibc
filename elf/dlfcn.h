@@ -1,5 +1,5 @@
-/* dlfcn.h -- User functions for run-time dynamic loading.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* User functions for run-time dynamic loading.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,6 +51,15 @@ extern int dlclose __P ((void *__handle));
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME.  */
 extern void *dlsym __P ((void *__handle, __const char *__name));
+
+#ifdef __USE_GNU
+/* Find the run-time address in the shared object HANDLE refers to
+   of the symbol called NAME with VERSION.  */
+extern void *__dlvsym __P ((void *__handle, __const char *__name,
+			    __const char *__version));
+extern void *dlvsym __P ((void *__handle, __const char *__name,
+			  __const char *__version));
+#endif
 
 /* When any of the above functions fails, call this function
    to return a string describing the error.  Each call resets

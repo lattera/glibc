@@ -70,6 +70,8 @@ int posix_conformance;
 /* If not zero give a lot more messages.  */
 int verbose;
 
+/* If not zero suppress warnings and information messages.  */
+int be_quiet;
 
 
 /* Long options.  */
@@ -81,6 +83,7 @@ static const struct option long_options[] =
   { "force", no_argument, NULL, 'c' },
   { "inputfile", required_argument, NULL, 'i' },
   { "posix", no_argument, &posix_conformance, 1 },
+  { "quiet", no_argument, NULL, 'q' },
   { "verbose", no_argument, &verbose, 1},
   { "version", no_argument, NULL, 'V' },
   { NULL, 0, NULL, 0 }
@@ -149,12 +152,18 @@ main (int argc, char *argv[])
 	input_file = optarg;
         break;
 
+      case 'q':
+	be_quiet = 1;
+	verbose = 0;
+	break;
+
       case 'u':
 	ucs_csn = optarg;
 	break;
 
-	case 'v':
+      case 'v':
         verbose = 1;
+	be_quiet = 0;
         break;
 
       case 'V':
@@ -397,6 +406,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -h, --help                display this help and exit\n\
   -f, --charmap=FILE        symbolic character names defined in FILE\n\
   -i, --inputfile=FILE      source definitions are found in FILE\n\
+      --quiet               Suppress warnings and information messages\n\
   -u, --code-set-name=NAME  specify code set for mapping ISO 10646 elements\n\
   -v, --verbose             print more messages\n\
   -V, --version             output version information and exit\n\

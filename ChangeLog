@@ -1,3 +1,502 @@
+1997-02-15 02:41  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp-help.c: Gettextize sources.
+	* argp/argp-parse.c: Likewise.
+
+1997-02-13 22:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* features.h (__GLIBC_MINOR__): Bump to 1.
+
+	* xlocale.h: New file.  Wrapper around locale/xlocale.h.
+	* Makefile (distribute): Add xlocale.h.
+	* locale/Makefile (routines): Add ctype_l.
+	* locale/ctype-extn.c: Update copyright. De-ANSI-declfy.
+	Add __isblank_l, __toascii_l and __isascii_l.
+	* ctype/ctype.h: Add definitions and declarations for *_l functions.
+	* locale/Makefile (headers): Add xlocale.h.
+	(routines): Add newlocale, duplocale, and freelocale.
+	* locale/localeinfo.h (MAX_USAGE_COUNT): New macro.
+	(struct locale_data): Add new fields mmaped and usage_count.
+	Correct various declarations.
+	* locale/C-collate.c: Define value for new fields mmaped and
+	usage_count.
+	* locale/C-ctype.c: Likewise.
+	* locale/C-messages.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-numeric.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* locale/loadlocale.c (_nl_load_locale): Initialize mmaped and
+	usage_count fields.
+	* locale/locale.h: Don't define locale_t here (moved to xlocale.h).
+	Correct prototypes for __newlocale and __freelocale.
+	Add prototype for __duplocale.
+	* locale/findlocale.c (copy): Remove function.  Use __strdup instead.
+	(_nl_remove_locale): New function.
+	* locale/nl_langinfo.c: Don't declare locale_data objects as const.
+	* locale/setlocale.c: Likewise.
+	* locale/weight.h: Change for use with locale objects.
+	* locale/xlocale.h: New file.  Define __locale_t type.
+	* locale/newlocale.c: New file.  Create new locale object.
+	* locale/freelocale.c: New file.  Destroy locale object.
+	* locale/duplocale.c: New file.  Create copy of locale object.
+	* stdlib/Makefile (routines): Add strfmon_l.
+	* stdlib/monetary.h [__USE_GNU]: Declare __strfmon_l.
+	* stdlib/strfmon.c: Add support for use in extended locale model.
+	* stdlib/strfmon_l.c: New file.
+	* string/Makefile (routines): Add strcoll_l and strxfrm_l.
+	* string/strcoll.c: Change for use in extended locale model.
+	* string/strxfrm.c: Likewise.
+	* string/strcoll_l.c: New file.  Implement __strcoll_l function.
+	* string/strxfrm_l.c: New file.  Implement __strxfrm_l function.
+	* wcsmbs/Makefile (routines): Add wcscoll_l and wcsxfrm_l.
+	* wcsmbs/wchar.h [__USE_GNU]: Declare wcscoll_l and wcsxfrm_l.
+	* wcsmbs/wcscoll.c: Change for use in extended locale model.
+	* wcsmbs/wcscoll_l.c: New file.  Implement __wcscoll_l function.
+	* wcsmbs/wcsxfrm_l.c: New file.  Implement __wcsxfrm_l function.
+	* wctype/Makefile (routines): Add wcextra, wcfuncs_l, iswctype_l,
+	and towctrans_l.
+	* wctype/cname-lookup.h: Prepare for use in extended locale model.
+	* wctype/iswctype_l.c: New file.  Implement character classification
+	functions for use with locale objects.
+	* wctype/wctype.h: Declare functions for use with locale objects.
+	* wctype/towctrans_l.c: New file.  Implement __towctrans_l function
+	for use with locale objects.
+	* wctype/wcfuncs_l.c: New file.  Implement wide character
+	classification functions for use with locale objects.
+	* wctype/wcextra.c: New file.  Implement real functions for
+	non-standard classification functions.
+
+	* elf/ldd.bash.in: Don't use --data-relocs and --function-relocs
+	parameters to ld.so.  Use environment variables.
+	* elf/ldd.sh.in: Likewise.
+	* elf/rtld.c: Remove handling of --data-relocs and --function-relocs
+	options.  Instead read environment variables.
+
+	* elf/link.h (receiver_fct): Add new argument to take error code.
+	* elf/dl-error.c (_dl_signal_error): Call receiver function with
+	another argument.
+
+	* elf/dl-object.c (_dl_new_object): Create new object with list of
+	names in l_libname member.
+	* elf/dl-load.c (_dl_map_object_from_fd): Add name which was used to
+	find to object to the list in the link_map variable.
+	(_dl_map_object): Use _dl_does_name_match_p to compare with all
+	available names of the object.
+	Optimize handling of LD_LIBRARY_PATH a bit.
+	* elf/rtld.c: Initialize l_libname member of _dl_rtld_map.
+
+	* elf/dl-lookup.c (_dl_elf_hash): Optimize function.
+
+	* elf/Makefile (routines): Add dl-version.
+	* elf/link.h (hash_name_pair): New type.  Group pointer to string
+	and its hash value.
+	(struct link_map): Change l_libname member to be a list of names,
+	not a single pointer to a name.
+	Add new members l_nversions and l_versions.
+	(_dl_does_name_match_p): New function to test for all names of an
+	object.
+	Add prototypes for new lookup and versioning functions.
+	* elf/dl-lookup.c (do_lookup): Add new argument and handle case
+	when versioned symbol is requested.
+	(_dl_lookup_symbol): Call do_lookup with another argument.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): New function.  Handle lookup of
+	versioned symbol.
+	(_dl_lookup_versioned_symbol_skip): Likewise, similar to
+	_dl_lookup_symbol_skip.
+	* elf/dl-reloc.c (RESOLVE): Call _dl_lookup_versioned_symbol or
+	_dl_lookup_symbol depending on availability of version information.
+	* elf/dl-runtime.c (RESOLVE): Likewise.
+	(fixup): Call elf_machine_relplt with additional argument to point
+	to versioning information if available.
+	* elf/do-rel.h (elf_dynamic_do_rel): Likewise.
+	* elf/dl-open.c (_dl_open): Call _dl_check_map_versions to check
+	for correct versions.
+	* elf/dl-version.c: New file.  Check library versions and extract
+	version information for easier access.
+	* elf/dlfcn.h [__USE_GNU]: Add prototype for dlvsym.
+	* elf/dlvsym.c: New file.  Implementation of function similar to
+	dlsym, but looks for versioned symbol.
+	* elf/elf.h: Add types and macros for versioning.
+	* elf/rtld.c (dl_main): Check availability of needed versions.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Add additional
+	argument for version information.  Call RESOLVE with additional
+	argument.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+
+	* elf/dlerror.c: Change comment to align with guidelines.
+	* elf/dlopen.c: Likewise.
+	* elf/dlsym.c: Likewise.
+
+	* locale/programs/localedef.c: Implement --quiet option.
+	* locale/programs/charset.h: Declare be_quiet variable.
+	* locale/programs/locfile.h: Likewise.
+	* locale/programs/charmap.c: Don't print warnings if quiet option
+	was given.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/locfile.c: Likewise.
+
+	* Makefile (subdirs): Add argp.
+
+	* catgets/catgets.c (catopen): Little code improvement.
+
+	* posix/execl.c: Remove restriction to 1024 arguments.
+	* posix/execle.c: Likewise.
+	* posix/execlp.c: Likewise.
+
+	* posix/getopt.c [_LIBC]: Define global objects with __ prefix
+	and make regular names weak aliases.
+	* posix/getopt1.c: Likewise.
+	* posix/getopt.h [_LIBC]: Provide prototypes and declarations for
+	__ protected forms.
+
+	* posix/unistd.h: Add prototype for __sleep.
+	* sysdeps/mach/sleep.c: Make sleep weak alias of __sleep.
+	* sysdeps/posix/sleep.c: Likewise.
+	* sysdeps/stub/sleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c: Likewise.
+
+	* ctype/ctype-info.c: Update copyright.
+	* ctype/ctype.c: Likewise.
+	* ctype/test_ctype.c: Likewise.
+	* dirent/alphasort.c: Likewise.
+	* dirent/list.c: Likewise.
+	* gmon/bb_exit_func.c: Likewise.
+	* grp/fgetgrent.c: Likewise.
+	* grp/getgrent.c: Likewise.
+	* grp/getgrent_r.c: Likewise.
+	* grp/getgrgid.c: Likewise.
+	* grp/getgrgid_r.c: Likewise.
+	* grp/getgrnam.c: Likewise.
+	* grp/getgrnam_r.c: Likewise.
+	* hurd/alloc-fd.c: Likewise.
+	* hurd/catch-exc.c: Likewise.
+	* hurd/ctty-input.c: Likewise.
+	* hurd/ctty-output.c: Likewise.
+	* hurd/dtable.c: Likewise.
+	* hurd/fchroot.c: Likewise.
+	* hurd/fd-close.c: Likewise.
+	* hurd/fd-read.c: Likewise.
+	* hurd/fd-write.c: Likewise.
+	* hurd/fopenport.c: Likewise.
+	* hurd/get-host.c: Likewise.
+	* hurd/getdport.c: Likewise.
+	* hurd/getuids.c: Likewise.
+	* hurd/getumask.c: Likewise.
+	* hurd/hurd-raise.c: Likewise.
+	* hurd/hurd.h: Likewise.
+	* hurd/hurdauth.c: Likewise.
+	* hurd/hurdexec.c: Likewise.
+	* hurd/hurdhost.h: Likewise.
+	* hurd/hurdid.c: Likewise.
+	* hurd/hurdinit.c: Likewise.
+	* hurd/hurdioctl.c: Likewise.
+	* hurd/hurdkill.c: Likewise.
+	* hurd/hurdlookup.c: Likewise.
+	* hurd/hurdmsg.c: Likewise.
+	* hurd/hurdpid.c: Likewise.
+	* hurd/hurdports.c: Likewise.
+	* hurd/hurdprio.c: Likewise.
+	* hurd/hurdrlimit.c: Likewise.
+	* hurd/hurdsock.c: Likewise.
+	* hurd/hurdstartup.c: Likewise.
+	* hurd/hurdstartup.h: Likewise.
+	* hurd/intern-fd.c: Likewise.
+	* hurd/intr-msg.c: Likewise.
+	* hurd/intr-rpc.defs: Likewise.
+	* hurd/intr-rpc.h: Likewise.
+	* hurd/msgportdemux.c: Likewise.
+	* hurd/new-fd.c: Likewise.
+	* hurd/openport.c: Likewise.
+	* hurd/pid2task.c: Likewise.
+	* hurd/port-cleanup.c: Likewise.
+	* hurd/port2fd.c: Likewise.
+	* hurd/ports-get.c: Likewise.
+	* hurd/ports-set.c: Likewise.
+	* hurd/privports.c: Likewise.
+	* hurd/report-wait.c: Likewise.
+	* hurd/set-host.c: Likewise.
+	* hurd/setauth.c: Likewise.
+	* hurd/setuids.c: Likewise.
+	* hurd/siginfo.c: Likewise.
+	* hurd/sigunwind.c: Likewise.
+	* hurd/task2pid.c: Likewise.
+	* hurd/thread-cancel.c: Likewise.
+	* hurd/thread-self.c: Likewise.
+	* hurd/vpprintf.c: Likewise.
+	* hurd/hurd/fd.h: Likewise.
+	* hurd/hurd/id.h: Likewise.
+	* hurd/hurd/ioctl.h: Likewise.
+	* hurd/hurd/lookup.h: Likewise.
+	* hurd/hurd/port.h: Likewise.
+	* hurd/hurd/resource.h: Likewise.
+	* hurd/hurd/threadvar.h: Likewise.
+	* hurd/hurd/userlink.h: Likewise.
+	* inet/ether_aton.c: Likewise.
+	* inet/ether_aton_r.c: Likewise.
+	* inet/ether_ntoa.c: Likewise.
+	* inet/ether_ntoa_r.c: Likewise.
+	* inet/gethstbyad.c: Likewise.
+	* inet/gethstbyad_r.c: Likewise.
+	* inet/gethstent.c: Likewise.
+	* inet/getnetbyad.c: Likewise.
+	* inet/getnetbyad_r.c: Likewise.
+	* inet/getnetbynm.c: Likewise.
+	* inet/getnetbynm_r.c: Likewise.
+	* inet/getnetent.c: Likewise.
+	* inet/getnetent_r.c: Likewise.
+	* inet/getproto.c: Likewise.
+	* inet/getproto_r.c: Likewise.
+	* inet/getprtent.c: Likewise.
+	* inet/getprtent_r.c: Likewise.
+	* inet/getprtname.c: Likewise.
+	* inet/getrpcbyname.c: Likewise.
+	* inet/getrpcbyname_r.c: Likewise.
+	* inet/getrpcbynumber.c: Likewise.
+	* inet/getrpcbynumber_r.c: Likewise.
+	* inet/getrpcent.c: Likewise.
+	* inet/getrpcent_r.c: Likewise.
+	* inet/getservent.c: Likewise.
+	* inet/getservent_r.c: Likewise.
+	* inet/getsrvbynm.c: Likewise.
+	* inet/getsrvbynm_r.c: Likewise.
+	* inet/getsrvbypt.c: Likewise.
+	* inet/getsrvbypt_r.c: Likewise.
+	* inet/herrno.c: Likewise.
+	* inet/netgroup.h: Likewise.
+	* ient/netinet/ether.h: Likewise.
+	* intl/bindtextdom.c: Likewise.
+	* intl/dcgettext.c: Likewise.
+	* intl/dgettext.c: Likewise.
+	* intl/gettext.c: Likewise.
+	* intl/gettext.h: Likewise.
+	* intl/gettextP.h: Likewise.
+	* intl/hash-string.h: Likewise.
+	* intl/loadmsgcat.c: Likewise.
+	* intl/localealias.c: Likewise.
+	* intl/textdomain.c: Likewise.
+	* io/creat.c: Likewise.
+	* io/getdirname.c: Likewise.
+	* io/lockf.c: Likewise.
+	* io/pwd.c: Likewise.
+	* io/test-utime.c: Likewise.
+	* locale/categories.def: Likewise.
+	* locale/codeset_name.c: Likewise.
+	* locale/lc-collate.c: Likewise.
+	* locale/lc-ctype.c: Likewise.
+	* locale/lc-messages.c: Likewise.
+	* locale/lc-monetary.c: Likewise.
+	* locale/lc-numeric.c: Likewise.
+	* locale/lc-time.c: Likewise.
+	* locale/loadlocale.c: Likewise.
+	* locale/localeconv.c: Likewise.
+	* locale/nl_langinfo.c: Likewise.
+	* locale/setlocale.c: Likewise.
+	* locale/strlen-hash.h: Likewise.
+	* locale/programs/charmap-kw.gperf: Likewise.
+	* locale/programs/charmap-kw.h: Likewise.
+	* locale/programs/charset.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/linereader.h: Likewise.
+	* locale/programs/locale-spec.c: Likewise.
+	* locale/programs/locales.h: Likewise.
+	* locale/programs/locfile-kw.gperf: Likewise.
+	* locale/programs/locfile-kw.h: Likewise.
+	* locale/programs/locfile-token.h: Likewise.
+	* locale/programs/simple-hash.h: Likewise.
+	* locale/programs/stringtrans.c: Likewise.
+	* locale/programs/stringtrans.h: Likewise.
+	* login/logout.c: Likewise.
+	* mach/bootprivport.c: Likewise.
+	* mach/devstream.c: Likewise.
+	* mach/hello.c: Likewise.
+	* mach/mach.h: Likewise.
+	* mach/mach_init.c: Likewise.
+	* mach/mach_init.h: Likewise.
+	* mach/mig-alloc.c: Likewise.
+	* mach/mig-dealloc.c: Likewise.
+	* mach/mutex-init.c: Likewise.
+	* mach/mutex-solid.c: Likewise.
+	* mach/setup-thread.c: Likewise.
+	* mach/spin-lock.h: Likewise.
+	* mach/spin-solid.c: Likewise.
+	* mach/mach/mig_support.h: Likewise.
+	* md5-crypt/md5-crypt.c: Likewise.
+	* misc/nlist.h: Likewise.
+	* nss/nss_files/files-ether.c: Likewise.
+	* posix/confstr.c: Likewise.
+	* posix/execl.c: Likewise.
+	* posix/execle.c: Likewise.
+	* posix/execlp.c: Likewise.
+	* posix/execv.c: Likewise.
+	* posix/execvp.c: Likewise.
+	* posix/fnmatch.c: Likewise.
+	* posix/getopt.c: Likewise.
+	* posix/getopt.h: Likewise.
+	* posix/getopt1.c: Likewise.
+	* posix/id.c: Likewise.
+	* posix/regex.c: Likewise.
+	* posix/setpgrp.c: Likewise.
+	* posix/unistd.h: Likewise.
+	* posix/wordexp.c: Likewise.
+	* pwd/fgetpwent.c: Likewise.
+	* pwd/getpwent.c: Likewise.
+	* pwd/getpwent_r.c: Likewise.
+	* pwd/getpwnam.c: Likewise.
+	* pwd/getpwnam_r.c: Likewise.
+	* pwd/getpwuid.c: Likewise.
+	* pwd/getpwuid_r.c: Likewise.
+	* pwd/putpwent.c: Likewise.
+	* resolv/gethnamaddr.c: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* resolv/res_hconf.h: Likewise.
+	* setjmp/longjmp.c: Likewise.
+	* setjmp/sigjmp.c: Likewise.
+	* setjmp/tst-setjmp.c: Likewise.
+	* stdio/clearerr.c: Likewise.
+	* stdio/ferror.c: Likewise.
+	* stdio/fgetc.c: Likewise.
+	* stdio/fgetpos.c: Likewise.
+	* stdio/fgets.c: Likewise.
+	* stdio/fileno.c: Likewise.
+	* stdio/fmemopen.c: Likewise.
+	* stdio/fopen.c: Likewise.
+	* stdio/fopncook.c: Likewise.
+	* stdio/fputc.c: Likewise.
+	* stdio/fputs.c: Likewise.
+	* stdio/fread.c: Likewise.
+	* stdio/freopen.c: Likewise.
+	* stdio/fseek.c: Likewise.
+	* stdio/fsetpos.c: Likewise.
+	* stdio/ftell.c: Likewise.
+	* stdio/fwrite.c: Likewise.
+	* stdio/getchar.c: Likewise.
+	* stdio/getdelim.c: Likewise.
+	* stdio/gets.c: Likewise.
+	* stdio/glue.c: Likewise.
+	* stdio/internals.c: Likewise.
+	* stdio/linewrap.c: Likewise.
+	* stdio/linewrap.h: Likewise.
+	* stdio/memstream.c: Likewise.
+	* stdio/newstream.c: Likewise.
+	* stdio/putchar.c: Likewise.
+	* stdio/puts.c: Likewise.
+	* stdio/rewind.c: Likewise.
+	* stdio/setbuf.c: Likewise.
+	* stdio/setbuffer.c: Likewise.
+	* stdio/setlinebuf.c: Likewise.
+	* stdio/setvbuf.c: Likewise.
+	* stdio/ungetc.c: Likewise.
+	* stdio/vasprintf.c: Likewise.
+	* stdio/vscanf.c: Likewise.
+	* stdio/vsnprintf.c: Likewise.
+	* stdio/vsprintf.c: Likewise.
+	* stdio/vsscanf.c: Likewise.
+	* stdio-common/asprintf.c: Likewise.
+	* stdio-common/dprintf.c: Likewise.
+	* stdio-common/errnobug.c: Likewise.
+	* stdio-common/fprintf.c: Likewise.
+	* stdio-common/getline.c: Likewise.
+	* stdio-common/getw.c: Likewise.
+	* stdio-common/perror.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* stdio-common/putw.c: Likewise.
+	* stdio-common/reg-printf.c: Likewise.
+	* stdio-common/scanf.c: Likewise.
+	* stdio-common/snprintf.c: Likewise.
+	* stdio-common/sprintf.c: Likewise.
+	* stdio-common/tempnam.c: Likewise.
+	* stdio-common/test_rdwr.c: Likewise.
+	* stdio-common/tst-fileno.c: Likewise.
+	* stdio-common/tst-printf.c: Likewise.
+	* stdio-common/tstgetln.c: Likewise.
+	* stdio-common/vprintf.c: Likewise.
+	* stdlib/drand48.c: Likewise.
+	* stdlib/drand48_r.c: Likewise.
+	* stdlib/erand48.c: Likewise.
+	* stdlib/erand48_r.c: Likewise.
+	* stdlib/exit.h: Likewise.
+	* stdlib/strtoq.c: Likewise.
+	* stdlib/strtoul.c: Likewise.
+	* stdlib/strtouq.c: Likewise.
+	* stdlib/test-canon.c: Likewise.
+	* stdlib/testdiv.c: Likewise.
+	* stdlib/testrand.c: Likewise.
+	* string/argz-append.c: Likewise.
+	* string/argz-count.c: Likewise.
+	* string/argz-create.c: Likewise.
+	* string/argz-ctsep.c: Likewise.
+	* string/argz-delete.c: Likewise.
+	* string/argz-extract.c: Likewise.
+	* string/argz-insert.c: Likewise.
+	* string/argz-next.c: Likewise.
+	* string/argz-stringify.c: Likewise.
+	* string/basename.c: Likewise.
+	* string/envz.c: Likewise.
+	* string/memfrob.c: Likewise.
+	* string/strcoll.c: Likewise.
+	* string/strdup.c: Likewise.
+	* string/string.h: Likewise.
+	* string/strndup.c: Likewise.
+	* string/strnlen.c: Likewise.
+	* string/strsignal.c: Likewise.
+	* string/strxfrm.c: Likewise.
+	* string/test-ffs.c: Likewise.
+	* string/testcopy.c: Likewise.
+	* sysdeps/generic/enbl-secure.c: Likewise.
+	* sysdeps/generic/memcopy.h: Likewise.
+	* sysdeps/generic/stpncpy.c: Likewise.
+	* sysdeps/generic/strcasecmp.c: Likewise.
+	* sysdeps/generic/strcat.c: Likewise.
+	* sysdeps/generic/strchr.c: Likewise.
+	* sysdeps/generic/strcpy.c: Likewise.
+	* sysdeps/generic/strcspn.c: Likewise.
+	* sysdeps/generic/strlen.c: Likewise.
+	* sysdeps/generic/strncase.c: Likewise.
+	* sysdeps/generic/strncat.c: Likewise.
+	* sysdeps/generic/strncpy.c: Likewise.
+	* sysdeps/generic/strpbrk.c: Likewise.
+	* sysdeps/generic/strsep.c: Likewise.
+	* sysdeps/generic/strspn.c: Likewise.
+	* sysdeps/generic/strstr.c: Likewise.
+	* sysdeps/generic/strtok.c: Likewise.
+	* sysdeps/generic/strtok_r.c: Likewise.
+	* sysdeps/mach/sleep.c: Likewise.
+	* sysdeps/posix/sleep.c: Likewise.
+	* sysdeps/stub/sleep.c: Likewise.
+	* time/date.c: Likewise.
+	* time/test_time.c: Likewise.
+	* wcsmbs/wmemcpy.c: Likewise.
+	* wctye/test_wctype.c: Likewise.
+	* wctye/towctrans.c: Likewise.
+	* wctye/wcfuncs.c: Likewise.
+	* wctye/wctrans.c: Likewise.
+
+1997-02-13 22:15  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/Makefile: New file.
+	* argp/argp.h: Likewise.
+	* argp/argp-ba.c: Likewise.
+	* argp/argp-fmtstream.c: Likewise.
+	* argp/argp-fmtstream.h: Likewise.
+	* argp/argp-fs-xinl.c: Likewise.
+	* argp/argp-help.c: Likewise.
+	* argp/argp-namefrob.h: Likewise.
+	* argp/argp-parse.c: Likewise.
+	* argp/argp-pv.c: Likewise.
+	* argp/argp-pvh.c: Likewise.
+	* argp/argp-test.c: Likewise.
+	* argp/argp-xinl.c: Likewise.
+
 1997-02-13 11:44  Andreas Jaeger  <aj@arthur.pfalz.de>
 
 	* stdlib/qsort.c: Add prototype for _quicksort.
@@ -14,13 +513,10 @@
 
 1997-02-13 17:55  Ulrich Drepper  <drepper@cygnus.com>
 
-	* libio/_G_config.h: Make sure win_t is also defined for old gcc
+	* libio/_G_config.h: Make sure wint_t is also defined for old gcc
 	versions.  Reported by Andreas Jaeger.
 
 1997-02-13 11:44  Andreas Jaeger  <aj@arthur.pfalz.de>
-
-	* db/btree/bt_split.c (bt_psplit): Fix typo in  change of
-	1997-02-12.
 
 	* time/tzfile.c (__tzfile_read): Change comment to follow
 	change of 1997-02-12.
@@ -78,14 +574,13 @@
 	of $(object-suffixes).
 	* sysdeps/unix/make-syscalls.sh: Likewise.  Fix comment.
 
-1997-02-11 05:27  Ulrich Drepper  <drepper@cygnus.com>
-
-	* locale/weight.h (collate_rules): It's an u_int32_t array.
-	(get_weight): Compute initial SLOT value correctly.
-
 1997-02-10 17:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/argz-ctsep.c: Initialize *LEN when successful.
+
+1997-02-09 04:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/_itoa.h: Update copyright.
 
 1997-02-09 02:59  Ulrich Drepper  <drepper@cygnus.com>
 

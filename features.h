@@ -190,7 +190,7 @@
 /* Major and minor version number of the GNU C library package.  Use
    these macros to test for features in specific releases.  */
 #define	__GLIBC__	2
-#define	__GLIBC_MINOR__	0
+#define	__GLIBC_MINOR__	1
 
 
 #if !defined __GNUC__ || __GNUC__ < 2

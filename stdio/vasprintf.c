@@ -1,22 +1,21 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -27,17 +26,18 @@ Cambridge, MA 02139, USA.  */
 
 /* Enlarge STREAM's buffer.  */
 static void
-DEFUN(enlarge_buffer, (stream, c),
-      register FILE *stream AND int c)
+enlarge_buffer (stream, c)
+     FILE *stream;
+     int c;
 {
   ptrdiff_t bufp_offset = stream->__bufp - stream->__buffer;
   char *newbuf;
 
   stream->__bufsize += 100;
-  newbuf = (char *) realloc ((PTR) stream->__buffer, stream->__bufsize);
+  newbuf = (char *) realloc ((void *) stream->__buffer, stream->__bufsize);
   if (newbuf == NULL)
     {
-      free ((PTR) stream->__buffer);
+      free ((void *) stream->__buffer);
       stream->__buffer = stream->__bufp
 	= stream->__put_limit = stream->__get_limit = NULL;
       stream->__error = 1;
@@ -56,13 +56,15 @@ DEFUN(enlarge_buffer, (stream, c),
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
 int
-DEFUN(vasprintf, (string_ptr, format, args),
-      char **string_ptr AND CONST char *format AND va_list args)
+vasprintf (string_ptr, format, args)
+     char **string_ptr;
+     const char *format;
+     va_list args;
 {
   FILE f;
   int done;
 
-  memset ((PTR) &f, 0, sizeof (f));
+  memset ((void *) &f, 0, sizeof (f));
   f.__magic = _IOMAGIC;
   f.__bufsize = 100;
   f.__buffer = (char *) malloc (f.__bufsize);

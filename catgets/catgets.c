@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -34,6 +34,7 @@ catopen (const char *cat_name, int flag)
 {
   __nl_catd result;
   const char *env_var;
+  const char *nlspath;
 
   result = (__nl_catd) malloc (sizeof (*result));
   if (result == NULL)
@@ -82,10 +83,9 @@ catopen (const char *cat_name, int flag)
 	  return (nl_catd) -1;
 	}
 
-      if (__secure_getenv ("NLSPATH") != NULL)
-	result->nlspath = __strdup (getenv ("NLSPATH"));
-      else
-	result->nlspath = __strdup (NLSPATH);
+      nlspath = __secure_getenv ("NLSPATH");
+      result->nlspath = __strdup (nlspath != NULL && *nlspath != '\0'
+				  ? nlspath : NLSPATH);
 
       if (result->nlspath == NULL)
 	{

@@ -154,11 +154,34 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   for (l = _dl_loaded; l; l = l->l_next)
     if (! strcmp (realname, l->l_name))
       {
+	struct libname_list *lnp, *lastp;
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
 	__close (fd);
-	free (name);
+
+	/* If the name is not in the list of names for this object add
+	   it.  */
 	free (realname);
+	lastp = NULL;
+	for (lnp = l->l_libname; lnp != NULL; lastp = lnp, lnp = lnp->next)
+	  if (strcmp (name, lnp->name) == 0)
+	    {
+	      free (name);
+	      break;
+	    }
+	if (lnp == NULL)
+	  {
+	    struct libname_list *newname = malloc (sizeof *newname);
+	    if (newname == NULL)
+	      /* No more memory.  */
+	      lose (ENOMEM, "cannot allocate name record");
+	    /* The object should have a libname set.  */
+	    assert (lastp != NULL);
+
+	    newname->name = name;
+	    newname->next = NULL;
+	    lastp->next = newname;
+	  }
 	++l->l_opencount;
 	return l;
       }
@@ -517,8 +540,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
-    if (! strcmp (name, l->l_libname) || /* NAME was requested before.  */
-	! strcmp (name, l->l_name) || /* NAME was found before.  */
+    if (_dl_does_name_match_p (name, l) ||
 	/* If the requested name matches the soname of a loaded object,
 	   use that object.  */
 	(l->l_info[DT_SONAME] &&
@@ -559,15 +581,17 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 				 l->l_info[DT_STRTAB]->d_un.d_ptr +
 				 l->l_info[DT_RPATH]->d_un.d_val), NULL);
       /* Try an environment variable (unless setuid).  */
-      if (fd == -1 && ! __libc_enable_secure)
+      if (fd == -1)
 	{
 	  static const char *trusted_dirs[] =
 	  {
 #include "trusted-dirs.h"
 	    NULL
 	  };
+	  const char *ld_library_path = getenv ("LD_LIBRARY_PATH");
 
-	  trypath (getenv ("LD_LIBRARY_PATH"), trusted_dirs);
+	  if (ld_library_path != NULL && *ld_library_path != '\0')
+	    trypath (ld_library_path, trusted_dirs);
 	}
       if (fd == -1)
 	{

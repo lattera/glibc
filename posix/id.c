@@ -1,22 +1,21 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1995, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -27,61 +26,65 @@ Cambridge, MA 02139, USA.  */
 
 
 static void
-DEFUN(print_grpname, (id, parens),
-      gid_t id AND int parens)
+print_grpname (id, parens)
+     gid_t id;
+     int parens;
 {
-  CONST struct group *CONST g = getgrgid(id);
+  const struct group *const g = getgrgid (id);
   if (g == NULL)
     {
       if (parens)
 	return;
       else
 	{
-	  fprintf(stderr, _("Couldn't find name for group %d\n"), id);
-	  exit(EXIT_FAILURE);
+	  fprintf (stderr, _("Couldn't find name for group %d\n"), id);
+	  exit (EXIT_FAILURE);
 	}
     }
 
   if (parens)
-    printf("(%s)", g->gr_name);
+    printf ("(%s)", g->gr_name);
   else
-    puts(g->gr_name);
+    puts (g->gr_name);
 }
 
 static void
-DEFUN(print_pwdname, (id, parens),
-      uid_t id AND int parens)
+print_pwdname (id, parens)
+     uid_t id;
+     int parens;
 {
-  CONST struct passwd *CONST p = getpwuid(id);
+  const struct passwd *const p = getpwuid (id);
   if (p == NULL)
     {
       if (parens)
 	return;
       else
 	{
-	  fprintf(stderr, _("Couldn't find name for user %d\n"), (int) id);
-	  exit(EXIT_FAILURE);
+	  fprintf (stderr, _("Couldn't find name for user %d\n"), (int) id);
+	  exit (EXIT_FAILURE);
 	}
     }
 
   if (parens)
-    printf("(%s)", p->pw_name);
+    printf ("(%s)", p->pw_name);
   else
-    puts(p->pw_name);
+    puts (p->pw_name);
 }
 
 int
-DEFUN(main, (argc, argv), int argc AND char **argv)
+main (argc, argv)
+     int argc;
+     char **argv;
 {
   int print_gid = 1, print_uid = 1;
   int real = 0, name = 0;
   int error = 0;
-  register int c;
+  int c;
 
-  uid_t ruid = getuid(), euid = geteuid();
-  gid_t rgid = getgid(), egid = getegid();
+  uid_t ruid = getuid (), euid = geteuid ();
+  gid_t rgid = getgid (), egid = getegid ();
 
-  while ((c = getopt(argc, argv, "gurn")) != -1)
+  while ((c = getopt (argc, argv, "gurn")) != -1)
     switch (c)
       {
       default:
@@ -109,65 +112,65 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   if (error || argc != optind)
     {
-      fputs(_("Usage: id [-gurn]\n"), stderr);
-      exit(EXIT_FAILURE);
+      fputs (_("Usage: id [-gurn]\n"), stderr);
+      exit (EXIT_FAILURE);
     }
 
   if (print_uid && !print_gid)
     {
-      CONST uid_t uid = real ? ruid : euid;
+      const uid_t uid = real ? ruid : euid;
       if (name)
-	print_pwdname(uid, 0);
+	print_pwdname (uid, 0);
       else
-	printf("%d\n", (int) uid);
+	printf ("%d\n", (int) uid);
     }
   else if (print_gid && !print_uid)
     {
-      CONST gid_t gid = real ? rgid : egid;
+      const gid_t gid = real ? rgid : egid;
       if (name)
-	print_grpname(gid, 0);
+	print_grpname (gid, 0);
       else
-	printf("%d\n", (int) gid);
+	printf ("%d\n", (int) gid);
     }
   else
     {
 #if	NGROUPS_MAX > 0
       gid_t groups[NGROUPS_MAX];
       int ngroups;
-      ngroups = getgroups(NGROUPS_MAX, groups);
+      ngroups = getgroups (NGROUPS_MAX, groups);
 #endif
 
-      printf("uid=%d", (int) ruid);
-      print_pwdname(ruid, 1);
-      printf(" gid=%d", (int) rgid);
-      print_grpname(rgid, 1);
+      printf ("uid=%d", (int) ruid);
+      print_pwdname (ruid, 1);
+      printf (" gid=%d", (int) rgid);
+      print_grpname (rgid, 1);
       if (euid != ruid)
 	{
-	  printf(" euid=%d", (int) euid);
-	  print_pwdname(euid, 1);
+	  printf (" euid=%d", (int) euid);
+	  print_pwdname (euid, 1);
 	}
       if (egid != rgid)
 	{
-	  printf(" egid=%d", (int) egid);
-	  print_grpname(egid, 1);
+	  printf (" egid=%d", (int) egid);
+	  print_grpname (egid, 1);
 	}
 
 #if	NGROUPS > 0
       if (ngroups > 0)
 	{
-	  register size_t i;
-	  printf(" groups=%d", (int) groups[0]);
-	  print_grpname(groups[0], 1);
+	  size_t i;
+	  printf (" groups=%d", (int) groups[0]);
+	  print_grpname (groups[0], 1);
 	  for (i = 1; i < ngroups; ++i)
 	    {
-	      printf(", %d", (int) groups[i]);
-	      print_grpname(groups[i], 1);
+	      printf (", %d", (int) groups[i]);
+	      print_grpname (groups[i], 1);
 	    }
 	}
 #endif
 
-      putchar('\n');
+      putchar ('\n');
     }
 
-  exit(EXIT_SUCCESS);
+  exit (EXIT_SUCCESS);
 }

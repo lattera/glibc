@@ -203,8 +203,8 @@ _dl_start_user:\n\
    MAP is the object containing the reloc.  */
 
 static inline void
-elf_machine_rel (struct link_map *map,
-		 const Elf32_Rel *reloc, const Elf32_Sym *sym)
+elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
+		 const Elf32_Sym *sym, const hash_name_pair *version)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase;
@@ -212,15 +212,15 @@ elf_machine_rel (struct link_map *map,
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_386_COPY:
-      loadbase = RESOLVE (&sym, DL_LOOKUP_NOEXEC);
+      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOEXEC);
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_386_GLOB_DAT:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_JMP_SLOT:
-      loadbase = RESOLVE (&sym, DL_LOOKUP_NOPLT);
+      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOPLT);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_32:
@@ -241,7 +241,7 @@ elf_machine_rel (struct link_map *map,
 	     built-in definitions used while loading those libraries.  */
 	  undo = map->l_addr + sym->st_value;
 #endif
-	loadbase = RESOLVE (&sym, 0);
+	loadbase = RESOLVE (&sym, version, 0);
 	*reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
 	break;
       }
@@ -252,7 +252,7 @@ elf_machine_rel (struct link_map *map,
 	*reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *reloc_addr += ((sym ? (loadbase + sym->st_value) : 0) -
 		      (Elf32_Addr) reloc_addr);
       break;

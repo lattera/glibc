@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    bug fix and commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -20,17 +20,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
 
 
 /* Find the first occurrence of C in S.  */
 
 char *
-DEFUN(strchr, (s, c), CONST char *s AND int c)
+strchr (s, c)
+     const char *s;
+     int c;
 {
-  CONST unsigned char *char_ptr;
-  CONST unsigned long int *longword_ptr;
+  const unsigned char *char_ptr;
+  const unsigned long int *longword_ptr;
   unsigned long int longword, magic_bits, charmask;
 
   c = (unsigned char) c;
@@ -41,7 +42,7 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
 		      & (sizeof (longword) - 1)) != 0;
        ++char_ptr)
     if (*char_ptr == c)
-      return (PTR) char_ptr;
+      return (void *) char_ptr;
     else if (*char_ptr == '\0')
       return NULL;
 
@@ -134,7 +135,7 @@ DEFUN(strchr, (s, c), CONST char *s AND int c)
 	  /* Which of the bytes was C or zero?
 	     If none of them were, it was a misfire; continue the search.  */
 
-	  CONST unsigned char *cp = (CONST unsigned char *) (longword_ptr - 1);
+	  const unsigned char *cp = (const unsigned char *) (longword_ptr - 1);
 
 	  if (*cp == c)
 	    return (char *) cp;

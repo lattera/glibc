@@ -72,7 +72,7 @@ charmap_read (const char *filename)
 
       result = parse_charmap (pathnfile);
 
-      if (result == NULL)
+      if (result == NULL && !be_quiet)
 	error (0, errno, _("character map file `%s' not found"), filename);
     }
 
@@ -171,7 +171,7 @@ parse_charmap (const char *filename)
 		result->mb_cur_max = 1;
 	      if (result->mb_cur_min == 0)
 		result->mb_cur_min = result->mb_cur_max;
-	      if (result->mb_cur_min > result->mb_cur_max)
+	      if (result->mb_cur_min > result->mb_cur_max && !be_quiet)
 		{
 		  error (0, 0, _("\
 %s: <mb_cur_max> must be greater than <mb_cur_min>\n"),
@@ -596,7 +596,7 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
       break;
     }
 
-  if (state != 91)
+  if (state != 91 && !be_quiet)
     error (0, 0, _("%s: premature end of file"), cmfile->fname);
 
   lr_close (cmfile);

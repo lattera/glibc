@@ -1,22 +1,22 @@
 /* Functions to read locale data files.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <fcntl.h>
@@ -70,6 +70,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   struct locale_data *newdata;
   int save_err;
   int swap = 0;
+  int mmaped = 1;
   size_t cnt;
   inline unsigned int SWAP (const unsigned int *inw)
     {
@@ -131,6 +132,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       if (errno == ENOSYS)
 	{
 	  /* No mmap; allocate a buffer and read from the file.  */
+	  mmaped = 0;
 	  filedata = malloc (st.st_size);
 	  if (filedata != NULL)
 	    {
@@ -197,6 +199,8 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   newdata->name = NULL;	/* This will be filled if necessary in findlocale.c. */
   newdata->filedata = (void *) filedata;
   newdata->filesize = st.st_size;
+  newdata->mmaped = mmaped;
+  newdata->usage_count = 0;
   newdata->nstrings = _nl_category_num_items[category];
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {

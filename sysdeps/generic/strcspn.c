@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#if defined _LIBC || HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+# ifndef strchr
+#  define strchr index
+# endif
+#endif
 
 /* Return the length of the maximum initial segment of S
    which contains no characters from REJECT.  */
 size_t
 strcspn (s, reject)
-     register const char *s;
-     register const char *reject;
+     const char *s;
+     const char *reject;
 {
-  register size_t count = 0;
+  size_t count = 0;
 
   while (*s != '\0')
     if (strchr (reject, *s++) == NULL)

@@ -22,6 +22,7 @@
 
 #include <stddef.h>
 #include <langinfo.h>
+#include <limits.h>
 #include <time.h>
 #include <sys/types.h>
 
@@ -35,12 +36,19 @@
 #define ELLIPSIS_CHAR ((wchar_t) 0xfffffffe)
 #define IGNORE_CHAR ((wchar_t) 0xffffffff)
 
+/* We use a special value for the usage counter in `locale_data' to
+   signal that this data must never be removed anymore.  */
+#define MAX_USAGE_COUNT UINT_MAX
+
 /* Structure describing locale data in core for a category.  */
 struct locale_data
 {
   const char *name;
   const char *filedata;		/* Region mapping the file data.  */
   off_t filesize;		/* Size of the file (and the region).  */
+  int mmaped;			/* If nonzero the data is mmaped.  */
+
+  unsigned int usage_count;	/* Counter for users.  */
 
   unsigned int nstrings;	/* Number of strings below.  */
   union locale_data_value
@@ -90,13 +98,13 @@ struct era_entry
 
 /* For each category declare the variable for the current locale data.  */
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
-extern const struct locale_data *_nl_current_##category;
+extern struct locale_data *_nl_current_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
 extern const char *const _nl_category_names[LC_ALL + 1];
 extern const size_t _nl_category_name_sizes[LC_ALL + 1];
-extern const struct locale_data * *const _nl_current[LC_ALL];
+extern struct locale_data * *const _nl_current[LC_ALL];
 
 /* Name of the standard locale.  */
 extern const char _nl_C_name[];
@@ -111,26 +119,29 @@ extern const char _nl_C_name[];
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 #define _NL_CURRENT_DEFINE(category) \
-  extern const struct locale_data _nl_C_##category; \
-  const struct locale_data *_nl_current_##category = &_nl_C_##category
+  extern struct locale_data _nl_C_##category; \
+  struct locale_data *_nl_current_##category = &_nl_C_##category
 
 /* Load the locale data for CATEGORY from the file specified by *NAME.
    If *NAME is "", use environment variables as specified by POSIX,
    and fill in *NAME with the actual name used.  The directories
    listed in LOCALE_PATH are searched for the locale files.  */
-extern const struct locale_data *_nl_find_locale (const char *locale_path,
-						  size_t locale_path_len,
-						  int category, char **name);
+extern struct locale_data *_nl_find_locale (const char *locale_path,
+					    size_t locale_path_len,
+					    int category, const char **name);
 
 /* Try to load the file described by FILE.  */
 extern void _nl_load_locale (struct loaded_l10nfile *file, int category);
 
+/* Free the locale and give back all memory if the usage count is one.  */
+extern void _nl_remove_locale (int locale, struct locale_data *data);
+
 
 /* Return `era' entry which corresponds to TP.  Used in strftime.  */
-struct era_entry *_nl_get_era_entry (const struct tm *tp);
+extern struct era_entry *_nl_get_era_entry (const struct tm *tp);
 
 /* Return `alt_digit' which corresponds to NUMBER.  Used in strftime.  */
-const char *_nl_get_alt_digit (unsigned int number);
+extern const char *_nl_get_alt_digit (unsigned int number);
 
 
 /* Global variables for LC_COLLATE category data.  */

@@ -324,7 +324,8 @@ elf_alpha_fix_plt(struct link_map *l,
 static inline void
 elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
-		  const Elf64_Sym *sym)
+		  const Elf64_Sym *sym,
+		  const hash_name_pair *version)
 {
   Elf64_Addr * const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
   unsigned long const r_info = ELF64_R_TYPE (reloc->r_info);
@@ -355,7 +356,7 @@ elf_machine_rela (struct link_map *map,
     {
       Elf64_Addr loadbase, sym_value;
 
-      loadbase = RESOLVE (&sym,
+      loadbase = RESOLVE (&sym, version,
 			  r_info == R_ALPHA_JMP_SLOT ? DL_LOOKUP_NOPLT : 0);
       sym_value = sym ? loadbase + sym->st_value : 0;
 

@@ -74,6 +74,13 @@ extern struct r_debug _r_debug;
 
 extern ElfW(Dyn) _DYNAMIC[];
 
+/* For the version handling we need an array with only names and their
+   hash values.  */
+typedef struct
+{
+  const char *name;
+  ElfW(Word) hash;
+} hash_name_pair;
 
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
@@ -94,7 +101,11 @@ struct link_map
     /* All following members are internal to the dynamic linker.
        They may change without notice.  */
 
-    const char *l_libname;	/* Name requested (before search).  */
+    struct libname_list
+      {
+	const char *name;	/* Name requested (before search).  */
+	struct libname_list *next; /* Link to next name for this object.  */
+      } *l_libname;
     /* Indexed pointers to dynamic section.
        [0,DT_NUM) are indexed by the processor-independent tags.
        [DT_NUM,DT_NUM+DT_PROCNUM) are indexed by the tag minus DT_LOPROC.
@@ -139,13 +150,34 @@ struct link_map
     unsigned int l_init_running:1; /* Nonzero while DT_INIT function runs.  */
     unsigned int l_global:1;	/* Nonzero if object in _dl_global_scope.  */
     unsigned int l_reserved:2;	/* Reserved for internal use.  */
+
+    /* Array with version names.  */
+    unsigned int l_nversions;
+    hash_name_pair *l_versions;
   };
 
 
+/* Test whether given NAME matches any of the names of the given object.  */
+static inline int
+__attribute__ ((unused))
+_dl_does_name_match_p (const char *__name, struct link_map *__map)
+{
+  int __found = strcmp (__name, __map->l_name) == 0;
+  struct libname_list *__runp = __map->l_libname;
+
+  while (! __found && __runp != NULL)
+    if (strcmp (__name, __runp->name) == 0)
+      __found = 1;
+    else
+      __runp = __runp->next;
+
+  return __found;
+}
+
 /* Function used as argument for `_dl_receive_error' function.  The
-   arguments are the error string and the objname the error occurred
-   in.  */
-typedef void (*receiver_fct) (const char *, const char *);
+   arguments are the error code, error string, and the objname the
+   error occurred in.  */
+typedef void (*receiver_fct) (int, const char *, const char *);
 
 /* Internal functions of the run-time dynamic linker.
    These can be accessed if you link again the dynamic linker
@@ -264,6 +296,14 @@ extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 				     const char *reference_name,
 				     int flags);
 
+/* Lookup versioned symbol.  */
+extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
+					       const ElfW(Sym) **sym,
+					       struct link_map *symbol_scope[],
+					       const char *reference_name,
+					       const hash_name_pair *version,
+					       int flags);
+
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
 extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
 					  const ElfW(Sym) **sym,
@@ -271,6 +311,16 @@ extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
 					  const char *reference_name,
 					  struct link_map *skip_this,
 					  int flags);
+
+/* For handling RTLD_NEXT with versioned symbols we must be able to
+   skip shared objects.  */
+extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
+						    const ElfW(Sym) **sym,
+						    struct link_map *symbol_scope[],
+						    const char *reference_name,
+						    const char *version_name,
+						    struct link_map *skip_this,
+						    int flags);
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);
@@ -318,6 +368,14 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
 extern void _dl_relocate_object (struct link_map *map,
 				 struct link_map *scope[],
 				 int lazy);
+
+/* Check the version dependencies of all objects available through
+   MAP.  If VERBOSE print some more diagnostics.  */
+extern int _dl_check_all_versions (struct link_map *map, int verbose);
+
+/* Check the version dependencies for MAP.  If VERBOSE print some more
+   diagnostics.  */
+extern int _dl_check_map_versions (struct link_map *map, int verbose);
 
 /* Return the address of the next initializer function for MAP or one of
    its dependencies that has not yet been run.  When there are no more

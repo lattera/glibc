@@ -106,10 +106,10 @@ time_finish (struct localedef_t *locale)
   struct locale_time_t *time = locale->categories[LC_TIME].time;
 
 #define TESTARR_ELEM(cat, max)						      \
-  if (time->cur_num_##cat == 0)						      \
+  if (time->cur_num_##cat == 0 && !be_quiet)				      \
     error (0, 0, _("field `%s' in category `%s' not defined"),		      \
 	   #cat, "LC_TIME");						      \
-  else if (time->cur_num_##cat != max)					      \
+  else if (time->cur_num_##cat != max && !be_quiet)			      \
     error (0, 0, _("field `%s' in category `%s' has not enough values"),      \
 	   #cat, "LC_TIME")
 
@@ -120,7 +120,7 @@ time_finish (struct localedef_t *locale)
   TESTARR_ELEM (am_pm, 2);
 
 #define TEST_ELEM(cat)							      \
-  if (time->cat == NULL)						      \
+  if (time->cat == NULL && !be_quiet)					      \
     error (0, 0, _("field `%s' in category `%s' not defined"),		      \
 	   #cat, "LC_TIME")
 
@@ -149,7 +149,7 @@ time_finish (struct localedef_t *locale)
 	  memcpy (str, time->era[idx], era_len + 1);
 
 	  /* First character must be + or - for the direction.  */
-	  if (*str != '+' && *str != '-')
+	  if (*str != '+' && *str != '-' && !be_quiet)
 	    {
 	      error (0, 0, _("direction flag in string %d in `era' field"
 			     " in category `%s' is not '+' nor '-'"),
@@ -159,7 +159,7 @@ time_finish (struct localedef_t *locale)
 	    }
 	  else
 	    time->era_entries[idx].direction = *str;
-	  if (*++str != ':')
+	  if (*++str != ':' && !be_quiet)
 	    {
 	      error (0, 0, _("direction flag in string %d in `era' field"
 			     " in category `%s' is not a single character"),
@@ -171,14 +171,14 @@ time_finish (struct localedef_t *locale)
 
 	  /* Now the offset year.  */
 	  time->era_entries[idx].offset = strtol (str, &endp, 10);
-	  if (endp == str)
+	  if (endp == str && !be_quiet)
 	    {
 	      error (0, 0, _("illegal number for offset in string %d in"
 			     " `era' field in category `%s'"),
 		     idx + 1, "LC_TIME");
 	      (void) strsep (&str, ":");
 	    }
-	  else if (*endp != ':')
+	  else if (*endp != ':' && !be_quiet)
 	    {
 	      error (0, 0, _("garbage at end of offset value in string %d in"
 			     " `era' field in category `%s'"),
@@ -224,7 +224,7 @@ time_finish (struct localedef_t *locale)
 	      time->era_entries[idx].start_date[1] -= 1;
 
 	      time->era_entries[idx].start_date[2] = strtol (str, &endp, 10);
-	      if (endp == str)
+	      if (endp == str && !be_quiet)
 		{
 		invalid_start_date:
 		  error (0, 0, _("illegal starting date in string %d in"
@@ -232,7 +232,7 @@ time_finish (struct localedef_t *locale)
 			 idx + 1, "LC_TIME");
 		  (void) strsep (&str, ":");
 		}
-	      else if (*endp != ':')
+	      else if (*endp != ':' && !be_quiet)
 		{
 		garbage_start_date:
 		  error (0, 0, _("garbage at end of starting date in string %d"
@@ -245,14 +245,15 @@ time_finish (struct localedef_t *locale)
 		  str = endp + 1;
 
 		  /* Check for valid value.  */
-		  if (time->era_entries[idx].start_date[1] < 0
-		      || time->era_entries[idx].start_date[1] >= 12
-		      || time->era_entries[idx].start_date[2] < 0
-		      || (time->era_entries[idx].start_date[2]
-			  > days_per_month[time->era_entries[idx].start_date[1]])
-		      || (time->era_entries[idx].start_date[1] == 2
-			  && time->era_entries[idx].start_date[2] == 29
-			  && !__isleap (time->era_entries[idx].start_date[0])))
+		  if ((time->era_entries[idx].start_date[1] < 0
+		       || time->era_entries[idx].start_date[1] >= 12
+		       || time->era_entries[idx].start_date[2] < 0
+		       || (time->era_entries[idx].start_date[2]
+			   > days_per_month[time->era_entries[idx].start_date[1]])
+		       || (time->era_entries[idx].start_date[1] == 2
+			   && time->era_entries[idx].start_date[2] == 29
+			   && !__isleap (time->era_entries[idx].start_date[0])))
+		      && !be_quiet)
 			  error (0, 0, _("starting date is illegal in"
 					 " string %d in `era' field in"
 					 " category `%s'"),
@@ -296,7 +297,7 @@ time_finish (struct localedef_t *locale)
 	      time->era_entries[idx].stop_date[1] -= 1;
 
 	      time->era_entries[idx].stop_date[2] = strtol (str, &endp, 10);
-	      if (endp == str)
+	      if (endp == str && !be_quiet)
 		{
 		invalid_stop_date:
 		  error (0, 0, _("illegal stopping date in string %d in"
@@ -304,7 +305,7 @@ time_finish (struct localedef_t *locale)
 			 idx + 1, "LC_TIME");
 		  (void) strsep (&str, ":");
 		}
-	      else if (*endp != ':')
+	      else if (*endp != ':' && !be_quiet)
 		{
 		garbage_stop_date:
 		  error (0, 0, _("garbage at end of stopping date in string %d"
@@ -317,14 +318,15 @@ time_finish (struct localedef_t *locale)
 		  str = endp + 1;
 
 		  /* Check for valid value.  */
-		  if (time->era_entries[idx].stop_date[1] < 0
-		      || time->era_entries[idx].stop_date[1] >= 12
-		      || time->era_entries[idx].stop_date[2] < 0
-		      || (time->era_entries[idx].stop_date[2]
-			  > days_per_month[time->era_entries[idx].stop_date[1]])
-		      || (time->era_entries[idx].stop_date[1] == 2
-			  && time->era_entries[idx].stop_date[2] == 29
-			  && !__isleap (time->era_entries[idx].stop_date[0])))
+		  if ((time->era_entries[idx].stop_date[1] < 0
+		       || time->era_entries[idx].stop_date[1] >= 12
+		       || time->era_entries[idx].stop_date[2] < 0
+		       || (time->era_entries[idx].stop_date[2]
+			   > days_per_month[time->era_entries[idx].stop_date[1]])
+		       || (time->era_entries[idx].stop_date[1] == 2
+			   && time->era_entries[idx].stop_date[2] == 29
+			   && !__isleap (time->era_entries[idx].stop_date[0])))
+		      && !be_quiet)
 			  error (0, 0, _("stopping date is illegal in"
 					 " string %d in `era' field in"
 					 " category `%s'"),
@@ -332,7 +334,7 @@ time_finish (struct localedef_t *locale)
 		}
 	    }
 
-	  if (str == NULL || *str == '\0')
+	  if ((str == NULL || *str == '\0') && !be_quiet)
 	    {
 	      error (0, 0, _("missing era name in string %d in `era' field"
 			     " in category `%s'"), idx + 1, "LC_TIME");
@@ -343,7 +345,7 @@ time_finish (struct localedef_t *locale)
 	    {
 	      time->era_entries[idx].name = strsep (&str, ":");
 
-	      if (str == NULL || *str == '\0')
+	      if ((str == NULL || *str == '\0') && !be_quiet)
 		{
 		  error (0, 0, _("missing era format in string %d in `era'"
 				 " field in category `%s'"),

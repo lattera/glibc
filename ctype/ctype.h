@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -158,6 +158,83 @@ __exctype (_tolower);
 #endif
 
 #endif /* Not __NO_CTYPE.  */
+
+
+#ifdef __USE_GNU
+/* The concept of one static locale per category is not very well
+   thought out.  Many applications will need to process its data using
+   information from several different locales.  Another application is
+   the implementation of the internationalization handling in the
+   upcoming ISO C++ standard library.  To support this another set of
+   the functions using locale data exist which have an additional
+   argument.
+
+   Attention: all these functions are *not* standardized in any form.
+   This is a proof-of-concept implementation.  */
+
+/* Structure for reentrant locale using functions.  This is an
+   (almost) opaque type for the user level programs.  */
+# include <xlocale.h>
+
+/* These definitions are similar to the ones above but all functions
+   take as an argument a handle for the locale which shall be used.  */
+#define	__isctype_l(c, type, locale) \
+  ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
+
+#define	__tolower_l(c, locale)	((int) (locale)->__ctype_tolower[(int) (c)])
+#define	__toupper_l(c, locale)	((int) (locale)->__ctype_toupper[(int) (c)])
+
+#define	__exctype_l(name)	extern int name __P ((int, __locale_t))
+
+/* The following names are all functions:
+     int isCHARACTERISTIC(int c, locale_t *locale);
+   which return nonzero iff C has CHARACTERISTIC.
+   For the meaning of the characteristic names, see the `enum' above.  */
+__exctype_l (__isalnum_l);
+__exctype_l (__isalpha_l);
+__exctype_l (__iscntrl_l);
+__exctype_l (__isdigit_l);
+__exctype_l (__islower_l);
+__exctype_l (__isgraph_l);
+__exctype_l (__isprint_l);
+__exctype_l (__ispunct_l);
+__exctype_l (__isspace_l);
+__exctype_l (__isupper_l);
+__exctype_l (__isxdigit_l);
+
+__exctype_l (__isblank_l);
+
+
+/* Return the lowercase version of C in locale L.  */
+extern int __tolower_l __P ((int __c, __locale_t __l));
+
+/* Return the uppercase version of C.  */
+extern int __toupper_l __P ((int __c, __locale_t __l));
+
+
+#ifndef	__NO_CTYPE
+#define	__isalnum_l(c,l)	__isctype_l((c), _ISalnum, (l))
+#define	__isalpha_l(c,l)	__isctype_l((c), _ISalpha, (l))
+#define	__iscntrl_l(c,l)	__isctype_l((c), _IScntrl, (l))
+#define	__isdigit_l(c,l)	__isctype_l((c), _ISdigit, (l))
+#define	__islower_l(c,l)	__isctype_l((c), _ISlower, (l))
+#define	__isgraph_l(c,l)	__isctype_l((c), _ISgraph, (l))
+#define	__isprint_l(c,l)	__isctype_l((c), _ISprint, (l))
+#define	__ispunct_l(c,l)	__isctype_l((c), _ISpunct, (l))
+#define	__isspace_l(c,l)	__isctype_l((c), _ISspace, (l))
+#define	__isupper_l(c,l)	__isctype_l((c), _ISupper, (l))
+#define	__isxdigit_l(c,l)	__isctype_l((c), _ISxdigit, (l))
+
+#define	__isblank_l(c,l)	__isctype_l((c), _ISblank, (l))
+
+#if defined(__USE_SVID) || defined(__USE_MISC) || defined(__USE_XOPEN)
+#define	__isascii_l(c,l)	__isascii(c)
+#define	__toascii_l(c,l)	__toascii(c)
+#endif
+
+#endif /* Not __NO_CTYPE.  */
+
+#endif /* Use GNU.  */
 
 __END_DECLS
 

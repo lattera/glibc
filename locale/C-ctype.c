@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -341,7 +341,8 @@ const char _nl_C_LC_CTYPE_width[256] =
 const struct locale_data _nl_C_LC_CTYPE =
 {
   _nl_C_name,
-  NULL, 0, /* no file mapped */
+  NULL, 0, 0, /* no file mapped */
+  MAX_USAGE_COUNT,
   15,
   {
     { string: _nl_C_LC_CTYPE_class },
@@ -367,6 +368,6 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: "tolower\0" "toupper\0" },
     { string: _nl_C_LC_CTYPE_width },
     { word: 2 },
-    { string: "ISO_646.IRV:1983" }
+    { string: "ISO_646.IRV" }
   }
 };

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -146,7 +146,8 @@ const u_int32_t _nl_C_LC_COLLATE_symbol_classes[256] =
 const struct locale_data _nl_C_LC_COLLATE =
 {
   _nl_C_name,
-  NULL, 0, /* no file mapped */
+  NULL, 0, 0, /* no file mapped */
+  MAX_USAGE_COUNT,
   21,
   {
     { word: 0 },

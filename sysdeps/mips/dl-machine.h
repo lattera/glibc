@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -422,8 +422,8 @@ _dl_start_user:\n\
    MAP is the object containing the reloc.  */
 
 static inline void
-elf_machine_rel (struct link_map *map,
-		 const ElfW(Rel) *reloc, const ElfW(Sym) *sym)
+elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
+		 const ElfW(Sym) *sym, const hash_name_pair *version)
 {
   ElfW(Addr) *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   ElfW(Addr) loadbase, undo;
@@ -454,7 +454,7 @@ elf_machine_rel (struct link_map *map,
 	  else
 #endif
 	    undo = 0;
-	  loadbase = RESOLVE (&sym, 0);
+	  loadbase = RESOLVE (&sym, version, 0);
 	  *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
 	}
       break;

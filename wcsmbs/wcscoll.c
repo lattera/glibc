@@ -21,7 +21,11 @@
 
 #define STRING_TYPE wchar_t
 #define USTRING_TYPE wint_t
-#define STRCOLL wcscoll
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# define STRCOLL __wcscoll_l
+#else
+# define STRCOLL wcscoll
+#endif
 #define STRCMP wcscmp
 
 #include "../string/strcoll.c"

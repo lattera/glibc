@@ -22,6 +22,12 @@ if test $# -ne 2; then
   exit 1
 fi
 
+# We only handle the case where SOURCE is the name of an existing file
+if test ! -f $1; then
+  echo "rellns: $1 must name an existing file" >&2
+  exit 1
+fi
+
 case $1 in
 /*)
   # Make both paths absolute.

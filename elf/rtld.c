@@ -45,7 +45,12 @@ extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 int mmap_prot);
 
 /* Helper function to handle errors while resolving symbols.  */
-static void print_unresolved (const char *errstring, const char *objname);
+static void print_unresolved (int errcode, const char *objname,
+			      const char *errsting);
+
+/* Helper function to handle errors when a version is missing.  */
+static void print_missing_version (int errcode, const char *objname,
+				   const char *errsting);
 
 
 int _dl_argc;
@@ -66,6 +71,7 @@ static void dl_main (const ElfW(Phdr) *phdr,
 		     ElfW(Addr) *user_entry);
 
 struct link_map _dl_rtld_map;
+struct libname_list _dl_rtld_libname;
 
 #ifdef RTLD_START
 RTLD_START
@@ -81,7 +87,7 @@ _dl_start (void *arg)
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
 #define RTLD_BOOTSTRAP
-#define RESOLVE(sym, flags) bootstrap_map.l_addr
+#define RESOLVE(sym, version, flags) bootstrap_map.l_addr
 #include "dynamic-link.h"
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
@@ -155,7 +161,8 @@ dl_main (const ElfW(Phdr) *phdr,
   /* LAZY is determined by the parameters --datadeps and --function-deps
      if we trace the binary.  */
   if (mode == trace)
-    lazy = -1;
+    lazy = (*(getenv ("LD_WARN") ?: "") == '\0' ? -1
+	    : (*(getenv ("LD_BIND_NOW") ?: "") == '\0' ? 1 : 0));
   else
     lazy = !__libc_enable_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
@@ -211,24 +218,6 @@ of this helper program; chances are you did not intend to run this program.\n",
 	else if (! strcmp (_dl_argv[1], "--verify"))
 	  {
 	    mode = verify;
-
-	    ++_dl_skip_args;
-	    --_dl_argc;
-	    ++_dl_argv;
-	  }
-	else if (! strcmp (_dl_argv[1], "--data-relocs"))
-	  {
-	    mode = trace;
-	    lazy = 1;	/* This means do only data relocation analysis.  */
-
-	    ++_dl_skip_args;
-	    --_dl_argc;
-	    ++_dl_argv;
-	  }
-	else if (! strcmp (_dl_argv[1], "--function-relocs"))
-	  {
-	    mode = trace;
-	    lazy = 0;	/* This means do also function relocation analysis.  */
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
@@ -307,12 +296,19 @@ of this helper program; chances are you did not intend to run this program.\n",
 	   dlopen call or DT_NEEDED entry, for something that wants to link
 	   against the dynamic linker as a shared library, will know that
 	   the shared object is already loaded.  */
-	_dl_rtld_map.l_libname = (const char *) l->l_addr + ph->p_vaddr;
+	_dl_rtld_libname.name = (const char *) l->l_addr + ph->p_vaddr;
+	_dl_rtld_libname.next = NULL;
+	_dl_rtld_map.l_libname = &_dl_rtld_libname;
 	break;
       }
   if (! _dl_rtld_map.l_libname && _dl_rtld_map.l_name)
-    /* We were invoked directly, so the program might not have a PT_INTERP.  */
-    _dl_rtld_map.l_libname = _dl_rtld_map.l_name;
+    {
+      /* We were invoked directly, so the program might not have a
+	 PT_INTERP.  */
+      _dl_rtld_libname.name = _dl_rtld_map.l_name;
+      _dl_rtld_libname.next = NULL;
+      _dl_rtld_map.l_libname =  &_dl_rtld_libname;
+    }
   else
     assert (_dl_rtld_map.l_libname); /* How else did we get here?  */
 
@@ -332,7 +328,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   if (! _dl_rtld_map.l_name)
     /* If not invoked directly, the dynamic linker shared object file was
        found by the PT_INTERP name.  */
-    _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname;
+    _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname->name;
   _dl_rtld_map.l_type = lt_library;
   while (l->l_next)
     l = l->l_next;
@@ -481,6 +477,19 @@ of this helper program; chances are you did not intend to run this program.\n",
 	}
     }
 
+  /* Now let us see whether all libraries are available in the
+     versions we need.  */
+  {
+    void doit (void)
+      {
+	if (_dl_check_all_versions (l, 1) && mode == normal)
+	  /* We cannot start the application.  Abort now.  */
+	  _exit (1);
+      }
+
+    _dl_receive_error (print_missing_version, doit);
+  }
+
   if (mode != normal)
     {
       /* We were run just to list the shared libraries.  It is
@@ -496,7 +505,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	for (l = _dl_loaded->l_next; l; l = l->l_next)
 	  if (l->l_opencount == 0)
 	    /* The library was not found.  */
-	    _dl_sysdep_message ("\t", l->l_libname, " => not found\n", NULL);
+	    _dl_sysdep_message ("\t", l->l_libname->name, " => not found\n",
+				NULL);
 	  else
 	    {
 	      char buf[20], *bp;
@@ -505,7 +515,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      while ((size_t) (&buf[sizeof buf - 1] - bp)
 		     < sizeof l->l_addr * 2)
 		*--bp = '0';
-	      _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
+	      _dl_sysdep_message ("\t", l->l_libname->name, " => ", l->l_name,
 				  " (0x", bp, ")\n", NULL);
 	    }
 
@@ -629,7 +639,18 @@ of this helper program; chances are you did not intend to run this program.\n",
 /* This is a little helper function for resolving symbols while
    tracing the binary.  */
 static void
-print_unresolved (const char *errstring, const char *objname)
+print_unresolved (int errcode __attribute__ ((unused)), const char *objname,
+		  const char *errstring)
 {
   _dl_sysdep_error (errstring, "	(", objname, ")\n", NULL);
+}
+
+/* This is a little helper function for resolving symbols while
+   tracing the binary.  */
+static void
+print_missing_version (int errcode __attribute__ ((unused)),
+		       const char *objname, const char *errstring)
+{
+  _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>", ": ",
+		    objname, ": ", errstring, "\n", NULL);
 }

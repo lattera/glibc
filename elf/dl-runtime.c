@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,14 +74,18 @@ _dl_object_relocation_scope (struct link_map *l)
 #define elf_machine_rel 1
 #define elf_machine_rela 2
 #if elf_machine_relplt == elf_machine_rel
-#define PLTREL ElfW(Rel)
+# define PLTREL ElfW(Rel)
 #elif elf_machine_relplt == elf_machine_rela
-#define PLTREL ElfW(Rela)
+# define PLTREL ElfW(Rela)
 #else
-#error "dl-machine.h bug: elf_machine_relplt not rel or rela"
+# error "dl-machine.h bug: elf_machine_relplt not rel or rela"
 #endif
 #undef elf_machine_rel
 #undef elf_machine_rela
+
+#ifndef VERSYMIDX
+# define VERSYMIDX(sym)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (sym))
+#endif
 
 /* We need to define the function as a local symbol so that the reference
    in the trampoline code will be a local PC-relative call.  Tell the
@@ -122,13 +126,28 @@ fixup (
 
   {
     /* This macro is used as a callback from the elf_machine_relplt code.  */
-#define RESOLVE(ref, flags) \
-  (_dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope, \
-		      l->l_name, flags))
+#define RESOLVE(ref, version, flags) \
+  ((version) != NULL && (version)->hash != 0				      \
+   ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, (ref), scope,     \
+				  l->l_name, (version), (flags))	      \
+   : _dl_lookup_symbol (strtab + (*ref)->st_name, (ref), scope,		      \
+			l->l_name, (flags)))
 #include "dynamic-link.h"
 
     /* Perform the specified relocation.  */
-    elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)]);
+    if (l->l_info[VERSYMIDX (DT_VERNEEDNUM)])
+      {
+	const ElfW(Half) * version =
+	  (const ElfW(Half) *) (l->l_addr +
+				l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
+	ElfW(Half) ndx = version[ELFW(R_SYM) (reloc->r_info)];
+
+	elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
+			    &l->l_versions[ndx]);
+      }
+    else
+      elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
+			  NULL);
   }
 
   *_dl_global_scope_end = NULL;

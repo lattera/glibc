@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -25,7 +25,11 @@
 # define STRING_TYPE char
 # define USTRING_TYPE unsigned char
 # define L_(Ch) Ch
-# define STRXFRM strxfrm
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define STRXFRM __strxfrm_l
+# else
+#  define STRXFRM strxfrm
+# endif
 # define STRLEN strlen
 # define STPNCPY __stpncpy
 #endif
@@ -141,9 +145,30 @@ print_val (u_int32_t value, wchar_t *dest, size_t max, size_t act)
    the same as the result of strcoll on the two strings before
    their transformation.  The transformed string is put in at
    most N characters of DEST and its length is returned.  */
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
 size_t
 STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
+#else
+size_t
+STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
+#endif
 {
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  struct locale_data *current = l->__locales[LC_COLLATE];
+# if BYTE_ORDER == BIG_ENDIAN
+  const u_int32_t *collate_table = (const u_int32_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLE_EB)].string;
+  const u_int32_t *collate_extra = (const u_int32_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRA_EB)].string;
+# elif BYTE_ORDER == LITTLE_ENDIAN
+  const u_int32_t *collate_table = (const u_int32_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLE_EL)].string;
+  const u_int32_t *collate_extra = (const u_int32_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRA_EL)].string;
+# else
+#  error bizarre byte order
+# endif
+#endif
   weight_t *forw = NULL;
   weight_t *backw = NULL;
   size_t pass;

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= locale
 
-headers		= locale.h langinfo.h
+headers		= locale.h langinfo.h xlocale.h
 distribute	= localeinfo.h categories.def iso-4217.def weight.h \
 		  strlen-hash.h \
 		  $(addprefix programs/, \
@@ -32,7 +32,8 @@ distribute	= localeinfo.h categories.def iso-4217.def weight.h \
 			      locfile-kw.gperf locfile-kw.h linereader.h \
 			      locales.h locfile.h stringtrans.h charset.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
-		  mb_cur_max codeset_name
+		  mb_cur_max codeset_name \
+		  newlocale duplocale freelocale
 categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name
 others		= localedef locale

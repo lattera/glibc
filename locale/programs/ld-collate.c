@@ -239,7 +239,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
       else
 	value = 0;
 
-      if (value == 0)
+      if (value == 0 && !be_quiet)
 	error_at_line (0, 0, patch->fname, patch->lineno,
 		       _("no weight defined for symbol `%s'"), patch->token);
       else
@@ -256,7 +256,8 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
       \**************************************************************/
       u_int32_t weight;
 
-      error (0, 0, _("no definition of `UNDEFINED'"));
+      if (!be_quiet)
+	error (0, 0, _("no definition of `UNDEFINED'"));
 
       collate->undefined.ordering_len = collate->nrules;
       weight = ++collate->order_cnt;
@@ -324,9 +325,10 @@ collate_output (struct localedef_t *locale, struct charset_t *charset,
   level_best = 0xffff;
 
   /* Compute table size.  */
-  fputs (_("\
+  if (!be_quiet)
+    fputs (_("\
 Computing table size for collation information might take a while..."),
-	 stderr);
+	   stderr);
   for (table_size = 256; table_size < sum_best; ++table_size)
     {
       size_t hits[table_size];
@@ -357,7 +359,8 @@ Computing table size for collation information might take a while..."),
 	}
     }
   assert (table_best != 0xffff || level_best != 0xffff);
-  fputs (_(" done\n"), stderr);
+  if (!be_quiet)
+    fputs (_(" done\n"), stderr);
 
   obstack_init (&non_simple);
   obstack_init (&string_pool);

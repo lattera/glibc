@@ -23,7 +23,11 @@
 #define STRING_TYPE wchar_t
 #define USTRING_TYPE wint_t
 #define L_(Ch) L##Ch
-#define STRXFRM wcsxfrm
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# define STRXFRM __wcsxfrm_l
+#else
+# define STRXFRM wcsxfrm
+#endif
 #define STRLEN wcslen
 #define STPNCPY __wcpncpy
 

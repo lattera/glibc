@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,12 +34,15 @@ struct link_map *
 _dl_new_object (char *realname, const char *libname, int type)
 {
   struct link_map *new = malloc (sizeof *new);
-  if (! new)
+  struct libname_list *newname = malloc (sizeof *newname);
+  if (! new || ! newname)
     return NULL;
 
   memset (new, 0, sizeof *new);
   new->l_name = realname;
-  new->l_libname = libname;
+  newname->name = libname;
+  newname->next = NULL;
+  new->l_libname = newname;
   new->l_type = type;
 
   if (_dl_loaded == NULL)

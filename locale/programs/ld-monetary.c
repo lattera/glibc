@@ -1,21 +1,21 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -115,7 +115,7 @@ monetary_finish (struct localedef_t *locale)
     = locale->categories[LC_MONETARY].monetary;
 
 #define TEST_ELEM(cat)							      \
-  if (monetary->cat == NULL)						      \
+  if (monetary->cat == NULL && !be_quiet)				      \
     error (0, 0, _("field `%s' in category `%s' not defined"),		      \
 	   #cat, "LC_MONETARY")
 
@@ -129,12 +129,13 @@ monetary_finish (struct localedef_t *locale)
   /* The international currency symbol must come from ISO 4217.  */
   if (monetary->int_curr_symbol != NULL)
     {
-      if (strlen (monetary->int_curr_symbol) != 4)
+      if (strlen (monetary->int_curr_symbol) != 4 && !be_quiet)
 	error (0, 0, _("\
 value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"));
       else if (bsearch (monetary->int_curr_symbol, valid_int_curr,
 			NR_VALID_INT_CURR, sizeof (const char *),
-			(comparison_fn_t) curr_strcmp) == NULL)
+			(comparison_fn_t) curr_strcmp) == NULL
+	       && !be_quiet)
 	error (0, 0, _("\
 value of field `int_curr_symbol' in category `LC_MONETARY' does \
 not correspond to a valid name in ISO 4217"));
@@ -143,23 +144,23 @@ not correspond to a valid name in ISO 4217"));
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
      != "".  */
-  if (monetary->mon_decimal_point[0] == '\0')
+  if (monetary->mon_decimal_point[0] == '\0' && !be_quiet)
     {
       error (0, 0, _("\
 value for field `%s' in category `%s' must not be the empty string"),
 	     "mon_decimal_point", "LC_MONETARY");
     }
 
-  if (monetary->mon_grouping_act == 0)
+  if (monetary->mon_grouping_act == 0 && !be_quiet)
     error (0, 0, _("field `%s' in category `%s' not defined"),
 	   "mon_grouping", "LC_MONETARY");
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, min, max)					      \
-  if (monetary->cat == -2)						      \
+  if (monetary->cat == -2 && !be_quiet)					      \
     error (0, 0, _("field `%s' in category `%s' not defined"),		      \
 	   #cat, "LC_MONETARY");					      \
-  else if (monetary->cat < min || monetary->cat > max)			      \
+  else if ((monetary->cat < min || monetary->cat > max) && !be_quiet)	      \
     error (0, 0, _("\
 value for field `%s' in category `%s' must be in range %d...%d"),	      \
 	   #cat, "LC_MONETARY", min, max)
