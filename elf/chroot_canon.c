@@ -1,5 +1,6 @@
 /* Return the canonical absolute name of a given file inside chroot.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,6 +60,9 @@ chroot_canon (const char *chroot, const char *name)
     }
 
   rpath = malloc (chroot_len + PATH_MAX);
+  if (rpath == NULL)
+    return NULL;
+
   rpath_limit = rpath + chroot_len + PATH_MAX;
 
   rpath_root = (char *) mempcpy (rpath, chroot, chroot_len) - 1;
@@ -108,7 +112,7 @@ chroot_canon (const char *chroot, const char *name)
 		new_size += PATH_MAX;
 	      new_rpath = (char *) realloc (rpath, new_size);
 	      if (new_rpath == NULL)
-		return NULL;
+		goto error;
 	      rpath = new_rpath;
 	      rpath_limit = rpath + new_size;
 

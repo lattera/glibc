@@ -1,3 +1,12 @@
+2004-06-08  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #199]
+	* crypt/md5-crypt.c (__md5_crypt): Only update buflen if realloc
+	succeeds.  Reported by Miles Ohlrich <miles@cray.com>.
+
+	* elf/chroot_canon.c (chroot_canon): Avoid segfault if first malloc
+	fails.  Avoid memory leak if realloc fails.
+
 2004-06-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/setenv.c (setenv): Return -1/EINVAL if name is

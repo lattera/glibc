@@ -1,6 +1,7 @@
 /* One way encryption based on MD5 sum.
    Compatible with the behavior of MD5 crypt introduced in FreeBSD 2.0.
-   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -250,15 +251,12 @@ __md5_crypt (const char *key, const char *salt)
 
   if (buflen < needed)
     {
-      char *new_buffer;
-
-      buflen = needed;
-
-      new_buffer = (char *) realloc (buffer, buflen);
+      char *new_buffer = (char *) realloc (buffer, needed);
       if (new_buffer == NULL)
 	return NULL;
 
       buffer = new_buffer;
+      buflen = needed;
     }
 
   return __md5_crypt_r (key, salt, buffer, buflen);
