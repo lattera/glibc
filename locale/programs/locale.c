@@ -222,7 +222,7 @@ main (int argc, char *argv[])
 
   /* Specific information about the current locale are requested.
      Change to this locale now.  */
-  if (setlocale (LC_ALL, "") = NULL)
+  if (setlocale (LC_ALL, "") == NULL)
     error (0, errno, gettext ("Cannot set LC_ALL to default locale"));
 
   /* If no real argument is given we have to print the contents of the

@@ -1,5 +1,7 @@
 2003-05-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/locale.c (main): Fix typo in last patch.
+
 	* csu/elf-init.c: Mark __preinit_array_start, __preinit_array_end,
 	__init_array_start, __init_array_end, __fini_array_start, and
 	__fini_array_end as hidden.
