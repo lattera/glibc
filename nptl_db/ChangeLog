@@ -1,3 +1,7 @@
+2003-03-14  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Use `header.' prefix.
+
 2003-03-10  Roland McGrath  <roland@redhat.com>
 
 	* td_ta_thr_iter.c (iterate_thread_list): Don't use `header.data.'
