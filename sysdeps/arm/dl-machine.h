@@ -255,26 +255,27 @@ _dl_runtime_profile:\n\
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
+	@ we are PIC code, so get global offset table\n\
+	ldr	sl, .L_GET_GOT\n\
+	@ See if we were run as a command with the executable file\n\
+	@ name as an extra leading argument.\n\
+	ldr	r4, .L_SKIP_ARGS\n\
 	@ at start time, all the args are on the stack\n\
 	mov	r0, sp\n\
 	bl	_dl_start\n\
 	@ returns user entry point in r0\n\
 _dl_start_user:\n\
-	mov	r6, r0\n\
-	@ we are PIC code, so get global offset table\n\
-	ldr	sl, .L_GET_GOT\n\
 	add	sl, pc, sl\n\
 .L_GOT_GOT:\n\
-	@ See if we were run as a command with the executable file\n\
-	@ name as an extra leading argument.\n\
-	ldr	r4, .L_SKIP_ARGS\n\
 	ldr	r4, [sl, r4]\n\
 	@ get the original arg count\n\
 	ldr	r1, [sp]\n\
-	@ subtract _dl_skip_args from it\n\
-	sub	r1, r1, r4\n\
-	@ adjust the stack pointer to skip them\n\
+	@ save the entry point in another register\n\
+	mov	r6, r0\n\
+	@ adjust the stack pointer to skip the extra args\n\
 	add	sp, sp, r4, lsl #2\n\
+	@ subtract _dl_skip_args from original arg count\n\
+	sub	r1, r1, r4\n\
 	@ get the argv address\n\
 	add	r2, sp, #4\n\
 	@ store the new argc in the new stack location\n\
@@ -286,29 +287,21 @@ _dl_start_user:\n\
 	@ now we call _dl_init\n\
 	ldr	r0, .L_LOADED\n\
 	ldr	r0, [sl, r0]\n\
-	ldr	r0, [r0]\n\
 	@ call _dl_init\n\
 	bl	_dl_init_internal(PLT)\n\
-	@ clear the startup flag\n\
-	ldr	r2, .L_STARTUP_FLAG\n\
-	ldr	r1, [sl, r2]\n\
-	mov	r0, #0\n\
-	str	r0, [r1]\n\
 	@ load the finalizer function\n\
 	ldr	r0, .L_FINI_PROC\n\
-	ldr	r0, [sl, r0]\n\
+	add	r0, sl, r0\n\
 	@ jump to the user_s entry point\n\
 	mov	pc, r6\n\
 .L_GET_GOT:\n\
 	.word	_GLOBAL_OFFSET_TABLE_ - .L_GOT_GOT - 4\n\
 .L_SKIP_ARGS:\n\
 	.word	_dl_skip_args(GOTOFF)\n\
-.L_STARTUP_FLAG:\n\
-	.word	_dl_starting_up(GOT)\n\
 .L_FINI_PROC:\n\
-	.word	_dl_fini(GOT)\n\
+	.word	_dl_fini(GOTOFF)\n\
 .L_LOADED:\n\
-	.word	_rtld_local(GOT)\n\
+	.word	_rtld_local(GOTOFF)\n\
 .previous\n\
 ");
 
