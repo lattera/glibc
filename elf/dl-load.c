@@ -430,8 +430,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
       }
   }
 
-  if (type == ET_EXEC)
-    l->l_type = lt_executable;
+  l->l_type = type == ET_EXEC ? lt_executable : lt_library;
 
   if (l->l_ld == 0)
     {

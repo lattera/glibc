@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -269,7 +269,6 @@ of this helper program; chances are you did not intend to run this program.\n",
 		  {
 		    struct link_map *new;
 		    new = _dl_map_object (l, strtab + d->d_un.d_val);
-		    new->l_type = lt_library;
 		    if (!before_rtld && new == &rtld_map)
 		      before_rtld = last;
 		    last = new;

@@ -8,7 +8,6 @@ getpgid		-	getpgid		1	getpgid
 getpgrp		-	getpgrp		0	getpgrp
 getppid		-	getppid		0	__getppid	getppid
 getsid		-	getsid		1	getsid
-gtty		-	gtty		2	gtty
 ipc		msgget	ipc		5	__ipc
 mlock		-	mlock		2	__mlock	mlock
 mlockall	-	mlockall	1	__mlockall	mlockall
@@ -23,6 +22,5 @@ s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 setpgid		-	setpgid		2	setpgid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
-stty		-	stty		2	stty
 umount		-	umount		1	__umount	umount
 wait4		-	wait4		4	__wait4		wait4

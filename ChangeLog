@@ -1,4 +1,23 @@
+Wed Mar 20 09:42:11 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Always set L->l_type; if not
+	lt_executable, then lt_library.
+	* elf/rtld.c (dl_main): Don't set NEW->l_type after _dl_map_object.
+
+Wed Mar 20 00:08:23 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove gtty and stty.
+
+Tue Mar 19 16:31:06 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/termbits.h (CRTSCTS, CBAUDEX, VEOL,
+	VEOL2, VMIN, VTIME): Corrected.
+	(PAGEOUT, WRAP, VDSUSP): Deleted.
+
 Tue Mar 19 14:18:42 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/readdir.c: Test [! _DIRENT_HAVE_D_RECLEN] instead of
+	(sizeof (DP->d_name) > 1) to detect fixed-size dir entries.
 
 	* sysdeps/i386/fpu/__math.h (asinh): Call log1p instead of __log1p.
 

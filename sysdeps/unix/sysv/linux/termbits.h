@@ -84,8 +84,6 @@ struct termios
 #define	FFDLY	0x00008000
 #define	FF0	0
 #define	FF1	0x00008000
-#define	PAGEOUT	0x00010000
-#define	WRAP	0x00020000
 #endif
 
   /* Control modes.  */
@@ -102,9 +100,9 @@ struct termios
 #define	HUPCL	0x00000400	/* Hang up on last close.  */
 #define	CLOCAL	0x00000800	/* Ignore modem status lines.  */
 #ifdef	__USE_BSD
-#define	CRTSCTS	0x08000000
+#define	CRTSCTS	0x80000000
 #define	CBAUD	0x0000000f	/* Mask for speed from c_cflag.  */
-#define CBAUDEX	0x00010000	/* Mask for extended speed from c_cflag.  */
+#define CBAUDEX	0x00001000	/* Mask for extended speed from c_cflag.  */
 #endif
 
   /* Local modes.  */
@@ -133,9 +131,9 @@ struct termios
 
   /* Control characters.  */
 #define	VEOF	4		/* End-of-file character [ICANON].  */
-#define	VEOL	5		/* End-of-line character [ICANON].  */
+#define	VEOL	11		/* End-of-line character [ICANON].  */
 #ifdef	__USE_BSD
-#define	VEOL2	6		/* Second EOL character [ICANON].  */
+#define	VEOL2	16		/* Second EOL character [ICANON].  */
 #define	VSWTCH	7		/* ??? */
 #endif
 #define	VERASE	2		/* Erase character [ICANON].  */
@@ -149,17 +147,14 @@ struct termios
 #define	VINTR	0		/* Interrupt character [ISIG].  */
 #define	VQUIT	1		/* Quit character [ISIG].  */
 #define	VSUSP	10		/* Suspend character [ISIG].  */
-#ifdef	__USE_BSD
-#define	VDSUSP	11		/* Delayed suspend character [ISIG].  */
-#endif
 #define	VSTART	8		/* Start (X-ON) character [IXON, IXOFF].  */
 #define	VSTOP	9		/* Stop (X-OFF) character [IXON, IXOFF].  */
 #ifdef	__USE_BSD
 #define	VLNEXT	15		/* Literal-next character [IEXTEN].  */
 #define	VDISCARD 13		/* Discard character [IEXTEN].  */
 #endif
-#define	VMIN	VEOF		/* Minimum number of bytes read at once [!ICANON].  */
-#define	VTIME	VEOL		/* Time-out value (tenths of a second) [!ICANON].  */
+#define	VMIN	6		/* Minimum number of bytes read at once [!ICANON].  */
+#define	VTIME	5		/* Time-out value (tenths of a second) [!ICANON].  */
 #define	NCCS	19
   cc_t c_cc[NCCS];
 };
