@@ -104,6 +104,9 @@ alpha.*-.*-linux.*	libcrypt=1.1
 
 # The gross patch for programs assuming broken locale implementations.
 alpha.*-.*-linux.*	libBrokenLocale=1.1
+ia64-.*-.*		libBrokenLocale=1	GLIBC_2.2
+sh.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
+sparc64-.*-.*		libBrokenLocale=1	GLIBC_2.2
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.

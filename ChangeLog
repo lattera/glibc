@@ -1,3 +1,8 @@
+2000-09-13  Andreas Jaeger  <aj@suse.de>
+
+	* shlib-versions: libBrokenLocale needs minimal version for ia64,
+	sparc64 and sh to synch with libc.
+
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile (modules): Add ISO-2022-CN-EXT.
