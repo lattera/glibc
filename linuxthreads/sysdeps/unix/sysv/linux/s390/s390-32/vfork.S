@@ -27,7 +27,7 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
-	SINGLE_THREAD_P
+	SINGLE_THREAD_P(%r1)
 	jne	0f
 
 	/* Do vfork system call.  */

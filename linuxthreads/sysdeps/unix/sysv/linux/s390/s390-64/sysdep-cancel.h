@@ -28,14 +28,6 @@
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
 	.text;								      \
-ENTRY(name)								      \
-	SINGLE_THREAD_P							      \
-	jne	L(pseudo_cancel);					      \
-	DO_CALL(syscall_name, args);					      \
-	lghi	%r4,-4095;						      \
-	clgr	%r2,%r4;						      \
-	jnl	SYSCALL_ERROR_LABEL;					      \
-	br	%r14;							      \
 L(pseudo_cancel):							      \
 	STM_##args							      \
 	stmg	%r13,%r15,104(%r15);					      \
@@ -51,6 +43,12 @@ L(pseudo_cancel):							      \
 	brasl	%r14,CDISABLE;						      \
 	lgr	%r2,%r13;						      \
 	lmg	%r13,%r15,104+160(%r15);				      \
+	j	L(pseudo_check);					      \
+ENTRY(name)								      \
+	SINGLE_THREAD_P							      \
+	jne	L(pseudo_cancel);					      \
+	DO_CALL(syscall_name, args);					      \
+L(pseudo_check):							      \
 	lghi	%r4,-4095;						      \
 	clgr	%r2,%r4;						      \
 	jnl	SYSCALL_ERROR_LABEL;					      \

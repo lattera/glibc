@@ -80,12 +80,12 @@
 #define mcount		_mcount
 #endif
 
-#define	PSEUDO(name, syscall_name, args)				      \
-lose: SYSCALL_PIC_SETUP							      \
-  JUMPTARGET(syscall_error)						      \
-  .globl syscall_error;							      \
-  ENTRY (name)								      \
-  DO_CALL (syscall_name, args);						      \
+#define	PSEUDO(name, syscall_name, args) \
+lose: SYSCALL_PIC_SETUP			\
+  jg JUMPTARGET(syscall_error);		\
+  .globl syscall_error;			\
+  ENTRY (name)				\
+  DO_CALL (syscall_name, args);		\
   jm lose
 
 #undef	PSEUDO_END
@@ -94,13 +94,11 @@ lose: SYSCALL_PIC_SETUP							      \
 
 #undef JUMPTARGET
 #ifdef PIC
-#define JUMPTARGET(name)  \
-    brasl name##@PLT
+#define JUMPTARGET(name)	name##@PLT
 #define SYSCALL_PIC_SETUP \
     larl  %r12,_GLOBAL_OFFSET_TABLE_
 #else
-#define JUMPTARGET(name)  \
-    brasl name
+#define JUMPTARGET(name)	name
 #define SYSCALL_PIC_SETUP	/* Nothing.  */
 #endif
 

@@ -37,101 +37,101 @@
    * crtn.s puts the corresponding function epilogues
    in the .init and .fini sections. */
 
-__asm__ ("
-
-#include \"defs.h\"
-
-/*@HEADER_ENDS*/
-
-/*@TESTS_BEGIN*/
-
-/*@TESTS_END*/
-
-/*@_init_PROLOG_BEGINS*/
-
-	.section .init
-#NO_APP
-	.align 4
-.globl _init
-	.type	 _init,@function
-_init:
-#	leaf function           0
-#	automatics              0
-#	outgoing args           0
-#	need frame pointer      0
-#	call alloca             0
-#	has varargs             0
-#	incoming args (stack)   0
-#	function length         36
-	STMG	6,15,48(15)
-	LGR	1,15
-	AGHI	15,-160
-	STG	1,0(15)
-	LARL	12,_GLOBAL_OFFSET_TABLE_
-	BRASL	14,__pthread_initialize_minimal@PLT
-	LARL	1,__gmon_start__@GOTENT
-	LG	1,0(1)
-	LTGR	1,1
-	JE	.L22
-	BASR	14,1
-.L22:
-#APP
-	.align 4,0x07
-	END_INIT
-
-/*@_init_PROLOG_ENDS*/
-
-/*@_init_EPILOG_BEGINS*/
-	.align 4
-	.section .init
-#NO_APP
-	.align 4
-	LG	4,272(15)
-	LMG	6,15,208(15)
-	BR	4
-#APP
-	END_INIT
-
-/*@_init_EPILOG_ENDS*/
-
-/*@_fini_PROLOG_BEGINS*/
-	.section .fini
-#NO_APP
-	.align 4
-.globl _fini
-	.type	 _fini,@function
-_fini:
-#	leaf function           0
-#	automatics              0
-#	outgoing args           0
-#	need frame pointer      0
-#	call alloca             0
-#	has varargs             0
-#	incoming args (stack)   0
-#	function length         30
-	STMG	6,15,48(15)
-	LGR	1,15
-	AGHI	15,-160
-	STG	1,0(15)
-	LARL	12,_GLOBAL_OFFSET_TABLE_
-#APP
-	.align 4,0x07
-	END_FINI
-
-/*@_fini_PROLOG_ENDS*/
-
-/*@_fini_EPILOG_BEGINS*/
-	.align 4
-	.section .fini
-#NO_APP
-	.align 4
-	LG	4,272(15)
-	LMG	6,15,208(15)
-	BR	4
-#APP
-	END_FINI
-
-/*@_fini_EPILOG_ENDS*/
-
-/*@TRAILER_BEGINS*/
-");
+__asm__ ("\
+\n\
+#include \"defs.h\"\n\
+\n\
+/*@HEADER_ENDS*/\n\
+\n\
+/*@TESTS_BEGIN*/\n\
+\n\
+/*@TESTS_END*/\n\
+\n\
+/*@_init_PROLOG_BEGINS*/\n\
+\n\
+	.section .init\n\
+#NO_APP\n\
+	.align 4\n\
+.globl _init\n\
+	.type	 _init,@function\n\
+_init:\n\
+#	leaf function           0\n\
+#	automatics              0\n\
+#	outgoing args           0\n\
+#	need frame pointer      0\n\
+#	call alloca             0\n\
+#	has varargs             0\n\
+#	incoming args (stack)   0\n\
+#	function length         36\n\
+	STMG	6,15,48(15)\n\
+	LGR	1,15\n\
+	AGHI	15,-160\n\
+	STG	1,0(15)\n\
+	LARL	12,_GLOBAL_OFFSET_TABLE_\n\
+	BRASL	14,__pthread_initialize_minimal@PLT\n\
+	LARL	1,__gmon_start__@GOTENT\n\
+	LG	1,0(1)\n\
+	LTGR	1,1\n\
+	JE	.L22\n\
+	BASR	14,1\n\
+.L22:\n\
+#APP\n\
+	.align 4,0x07\n\
+	END_INIT\n\
+\n\
+/*@_init_PROLOG_ENDS*/\n\
+\n\
+/*@_init_EPILOG_BEGINS*/\n\
+	.align 4\n\
+	.section .init\n\
+#NO_APP\n\
+	.align 4\n\
+	LG	4,272(15)\n\
+	LMG	6,15,208(15)\n\
+	BR	4\n\
+#APP\n\
+	END_INIT\n\
+\n\
+/*@_init_EPILOG_ENDS*/\n\
+\n\
+/*@_fini_PROLOG_BEGINS*/\n\
+	.section .fini\n\
+#NO_APP\n\
+	.align 4\n\
+.globl _fini\n\
+	.type	 _fini,@function\n\
+_fini:\n\
+#	leaf function           0\n\
+#	automatics              0\n\
+#	outgoing args           0\n\
+#	need frame pointer      0\n\
+#	call alloca             0\n\
+#	has varargs             0\n\
+#	incoming args (stack)   0\n\
+#	function length         30\n\
+	STMG	6,15,48(15)\n\
+	LGR	1,15\n\
+	AGHI	15,-160\n\
+	STG	1,0(15)\n\
+	LARL	12,_GLOBAL_OFFSET_TABLE_\n\
+#APP\n\
+	.align 4,0x07\n\
+	END_FINI\n\
+\n\
+/*@_fini_PROLOG_ENDS*/\n\
+\n\
+/*@_fini_EPILOG_BEGINS*/\n\
+	.align 4\n\
+	.section .fini\n\
+#NO_APP\n\
+	.align 4\n\
+	LG	4,272(15)\n\
+	LMG	6,15,208(15)\n\
+	BR	4\n\
+#APP\n\
+	END_FINI\n\
+\n\
+/*@_fini_EPILOG_ENDS*/\n\
+\n\
+/*@TRAILER_BEGINS*/\n\
+	");

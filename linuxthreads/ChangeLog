@@ -1,3 +1,21 @@
+2003-01-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c: Avoid
+	unterminated string literals.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c: Likewise.
+
+2003-01-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h
+	(PSEUDO): Code reordering.  Move CENABLE and CDISABLE literals from
+	PSEUDO_END to PSEUDO.
+	(PSEUDO_END): Remove.
+	(SINGLE_THREAD_P): Save an instruction.
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S (__vfork): Add missing
+	parameter to SINGLE_THREAD_P call.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO):
+	Code reordering.
+
 2003-01-10  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/vfork.S: New file.

@@ -28,14 +28,6 @@
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
 	.text;								      \
-ENTRY(name)								      \
-	SINGLE_THREAD_P(%r1)						      \
-	jne	L(pseudo_cancel);					      \
-	DO_CALL(syscall_name, args);					      \
-	lhi	%r4,-4095;						      \
-	clr	%r2,%r4;						      \
-	jnl	SYSCALL_ERROR_LABEL;					      \
-	br	%r14;							      \
 L(pseudo_cancel):							      \
 	STM_##args							      \
 	stm	%r12,%r15,48(%r15);					      \
@@ -43,28 +35,29 @@ L(pseudo_cancel):							      \
 	ahi	%r15,-96;						      \
 	st	%r14,0(%r15);						      \
 	basr    %r13,0;							      \
-200301:	l	%r1,200302f-200301b(%r13);				      \
+0:	l	%r1,1f-0b(%r13);					      \
 	bas	%r14,0(%r1,%r13);					      \
 	lr	%r0,%r2;						      \
 	LM_##args							      \
 	DO_CALL(syscall_name, args);					      \
-	l	%r1,200303f-200301b(%r13);				      \
+	l	%r1,2f-0b(%r13);					      \
 	lr	%r12,%r2;						      \
 	lr	%r2,%r0;						      \
 	bas	%r14,0(%r1,%r13);					      \
 	lr	%r2,%r12;						      \
 	lm	%r12,%r15,48+96(%r15);					      \
+	j	L(pseudo_check);					      \
+1:	.long	CENABLE-0b;						      \
+2:	.long	CDISABLE-0b;						      \
+ENTRY(name)								      \
+	SINGLE_THREAD_P(%r1)						      \
+	jne	L(pseudo_cancel);					      \
+	DO_CALL(syscall_name, args);					      \
+L(pseudo_check):							      \
 	lhi	%r4,-4095;						      \
 	clr	%r2,%r4;						      \
 	jnl	SYSCALL_ERROR_LABEL;					      \
 L(pseudo_end):
-
-#undef PSEUDO_END
-#define PSEUDO_END(name)						      \
-  SYSCALL_ERROR_HANDLER;						      \
-200302:	.long	CENABLE-200301b;					      \
-200303:	.long	CDISABLE-200301b;					      \
-    END (name)
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	__pthread_enable_asynccancel
@@ -95,8 +88,7 @@ L(pseudo_end):
 # else
 #  define SINGLE_THREAD_P(reg) \
 	ear	reg,%a0;						      \
-	l	reg,MULTIPLE_THREADS_OFFSET(reg);			      \
-	ltr	reg,reg;
+	icm	reg,15,MULTIPLE_THREADS_OFFSET(reg);
 # endif
 
 #elif !defined __ASSEMBLER__
