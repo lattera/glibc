@@ -424,8 +424,8 @@ static const mp_limb_t __tens[] =
   0x8bd2b496d868b275, 0xc234d8f51c5563f4, 0xf9151ffff868e970,
   0x271133eeae7be4a2, 0x25254932bb0fd922, 0x104bcd64a60a9fc0,
   0x0000006230290145
-};
 #endif
+};
 
 #else
 # error "mp_limb_t size " BITS_PER_MP_LIMB "not accounted for"
