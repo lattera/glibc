@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <ctype.h>
-#include <localeinfo.h>
+#include "../locale/localeinfo.h"
 
-/* Defined in locale/locale-C-ct.c.  */
-extern CONST unsigned short int __ctype_b_C[];
-extern CONST short int __ctype_tolower_C[];
-extern CONST short int __ctype_toupper_C[];
+/* Defined in locale/C-ctype.c.  */
+extern const char _nl_C_LC_CTYPE_class[];
+extern const char _nl_C_LC_CTYPE_toupper[];
+extern const char _nl_C_LC_CTYPE_tolower[];
 
-CONST unsigned short int *__ctype_b = __ctype_b_C + 1;
-CONST short int *__ctype_tolower = __ctype_tolower_C + 1;
-CONST short int *__ctype_toupper = __ctype_toupper_C + 1;
+#define b(u,x) (((u short int *) _nl_C_LC_CTYPE_##x) + 128);
+
+const unsigned short int *__ctype_b = b(unsigned, class);
+const short int *__ctype_tolower = b(, tolower);
+const short int *__ctype_toupper = b(, toupper);

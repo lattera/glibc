@@ -19,6 +19,9 @@ Sun Mar  5 19:40:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	(categories): New variable.
 	(aux): Use that to get C-category and lc-category.
 	* ctype/ctype.h (_IS*): Use independent bits for all but _ISalnum.
+	* ctype/ctype-info.c: For initial tables, use
+	_nl_C_LC_CTYPE_{class,toupper,tolower} constant tables defined in
+	locale/C-ctype.c. 
 	* locale/C-ctype.c, locale/C-messages.c: New files.
  	* locale/C-monetary.c, locale/C-numeric.c, locale/C-time.c:
 	Default "C" locale data updated for new locale system.
