@@ -1,5 +1,5 @@
 /* Linux/sparc32 version of processor capability information handling macros.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
@@ -50,7 +50,7 @@ _dl_hwcap_string (int idx)
 };
 
 static inline int
-__attribute__ ((unused))
+__attribute__ ((unused, always_inline))
 _dl_string_hwcap (const char *str)
 {
   int i;

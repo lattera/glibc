@@ -1,5 +1,15 @@
 2003-08-26  Jakub Jelinek  <jakub@redhat.com>
 
+	* login/programs/utmpdump.c (print_entry): Cast tv_usec to long
+	to match format string.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c (union semun): Add
+	__old_buf.
+	(__new_semctl): Shut up warning.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h
+	(_dl_string_hwcap): Add __attribute__ ((always_inline)).
+
+2003-08-26  Jakub Jelinek  <jakub@redhat.com>
+
 	* elf/ldconfig.c (search_dir): When checking for GNU-style .so
 	link file use the real file name, not the resolved name we got by
 	following the symlinks.
