@@ -81,4 +81,11 @@ macro IN6_IS_ADDR_MC_LINKLOCAL
 macro IN6_IS_ADDR_MC_SITELOCAL
 macro IN6_IS_ADDR_MC_ORGLOCAL
 macro IN6_IS_ADDR_MC_GLOBAL
+
+allow IMPLINK_*
+allow IN_*
+allow IP_*
+allow IPPORT_*
+allow IPPROTO_*
+allow SOCK_*
 #endif
