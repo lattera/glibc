@@ -5,6 +5,7 @@
 
 	* locale/programs/ld-address.c (iso639): Correct length of string
 	elements.
+	(iso3166): Likewise.
 
 	* sysdeps/unix/sysv/linux/i386/sys/elf.h (elf_fpxregset_t): Define.
 

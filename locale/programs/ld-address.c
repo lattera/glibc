@@ -35,8 +35,8 @@
 
 static struct
 {
-  const char ab2[2];
-  const char ab3[3];
+  const char ab2[3];
+  const char ab3[4];
   uint32_t num;
 } iso3166[] =
 {
