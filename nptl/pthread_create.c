@@ -25,6 +25,7 @@
 #include <hp-timing.h>
 #include <ldsodefs.h>
 #include <atomic.h>
+#include <libc-internal.h>
 
 #include <shlib-compat.h>
 
@@ -227,6 +228,8 @@ start_thread (void *arg)
       pd->result = pd->start_routine (pd->arg);
     }
 
+  /* Clean up any state libc stored in thread-local variables.  */
+  __libc_thread_freeres ();
 
   /* If this is the last thread we terminate the process now.  We
      do not notify the debugger, it might just irritate it if there
@@ -234,7 +237,6 @@ start_thread (void *arg)
   if (__builtin_expect (atomic_decrement_and_test (&__nptl_nthreads), 0))
     /* This was the last thread.  */
     exit (0);
-
 
   /* Report the death of the thread if this is wanted.  */
   if (__builtin_expect (pd->report_events, 0))
