@@ -47,7 +47,7 @@ extern int _IO_obstack_vprintf __P ((struct obstack *, const char *,
 				     _IO_va_list));
 extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
 #ifndef _IO_pos_BAD
-#define _IO_pos_BAD ((_IO_fpos_t)(-1))
+#define _IO_pos_BAD ((_IO_fpos64_t)(-1))
 #endif
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \
