@@ -474,7 +474,7 @@ enum
 # define THOUSANDS_SEP		__THOUSANDS_SEP
 #endif
   THOUSEP = __THOUSANDS_SEP,
-#define THOUSANDS_SEP		__THOUSANDS_SEP
+#define THOUSEP			THOUSEP
   __GROUPING,
 #ifdef __USE_GNU
 # define GROUPING		__GROUPING
@@ -493,7 +493,7 @@ enum
 #endif
   __NOSTR,			/* Output string for ``no''.  */
 #if defined __USE_GNU || (defined __USE_XOPEN || !defined __USE_XOPEN2K)
-# define	NOSTR		__NOSTR
+# define NOSTR			__NOSTR
 #endif
   _NL_NUM_LC_MESSAGES,
 
