@@ -23,7 +23,7 @@
 #endif
 
 /* Clone the calling process, but without copying the whole address space.
-   The calling process is suspended until the the new process exits or is
+   The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 .globl ___vfork
