@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -293,7 +293,7 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 	  {								      \
 	    const ElfW(Half) *vernum =					      \
 	      (const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);	      \
-	    ElfW(Half) ndx = vernum[sym_index & 0x7fff];		      \
+	    ElfW(Half) ndx = vernum[sym_index] & 0x7fff;		      \
 	    const struct r_found_version *version = &l->l_versions[ndx];      \
 									      \
 	    if (version->hash != 0)					      \

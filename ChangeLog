@@ -1,3 +1,9 @@
+2003-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE): Fix
+	masking of version index.
+	Patch by Lance Larsh <Lance.Larsh@oracle.com>.
+
 2003-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Compute alignment
