@@ -1,6 +1,6 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1993.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -143,15 +143,6 @@ hsearch_r (item, action, retval, htab)
   unsigned int len = strlen (item.key);
   unsigned int idx;
 
-  /* If table is full and another entry should be entered return with
-     error.  */
-  if (action == ENTER && htab->filled == htab->size)
-    {
-      __set_errno (ENOMEM);
-      *retval = NULL;
-      return 0;
-    }
-
   /* Compute an value for the given string. Perhaps use a better method. */
   hval = len;
   count = len;
@@ -213,6 +204,15 @@ hsearch_r (item, action, retval, htab)
   /* An empty bucket has been found. */
   if (action == ENTER)
     {
+      /* If table is full and another entry should be entered return
+	 with error.  */
+      if (action == ENTER && htab->filled == htab->size)
+	{
+	  __set_errno (ENOMEM);
+	  *retval = NULL;
+	  return 0;
+	}
+
       htab->table[idx].used  = hval;
       htab->table[idx].entry = item;
 

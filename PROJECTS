@@ -107,7 +107,3 @@ contact <bug-glibc@prep.ai.mit.edu>
 		int foo __P ((int, int, int, int));
 
      Blargh!
-
-[16] Write an nss_hesiod module.  The Hesiod daemon from the MIT Athena
-     project should be available.  The goal is to avoid the ugly NIS
-     emulation interface and contacting the daemon directly.

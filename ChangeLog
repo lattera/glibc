@@ -1,3 +1,91 @@
+1997-09-21 03:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/libio.h: More libstdc++ cleanups.  Define _IO_USE_DTOA if
+	_G_HAVE_PRINTF_FP is not defined.
+	* libio/strops.c: Undo patch of 1997-07-08 02:18.  Must find a
+	different solution for the problem.
+
+	* misc/search.h [__USE_GNU]: Define comparison_fn_t.
+	* stdlib/stdlib.h: Define comparison_fn_t only if __COMPAR_FN_T is
+	not defined.
+	Fix typo.  Pretty print inline functions.
+
+	* sysdeps/i386/i486/string.h (__stpcpy_small): Increment __cp not cp.
+	Patch by HJ Lu <hjl@gnu.ai.mit.edu>.
+
+1997-09-20 16:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* hesiod/hesiod.c (hesiod_init): Use __secure_getenv to get
+	HES_DOMAIN environment variable.
+	Suggested by Mark Kettenis <kettenis@phys.uva.nl>.
+
+	* hesiod/README.hesiod: A bit of information about Hesiod and how
+	to use it.  Written by Mark Kettenis <kettenis@phys.uva.nl>.
+
+1997-09-20 05:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/maint.texi: Update requirement list.
+
+	* io/ftw.h: Don't use parameter names from global namespace in
+	prototypes.
+
+	* stdlib/strtol.c: If used outside glibc handle broken systems
+	which have character classification functions which are not 8-bit
+	clean gracefully.  Patch by Bruno Haible <haible@ilog.fr>.
+
+1997-09-19 21:42  David S. Miller  <davem@tanya.rutgers.edu>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: ssize_t is
+	a long long int.
+
+1997-09-19 15:12  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* posix/Makefile (test-srcs): New, set to globtest.
+
+1997-09-20 00:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/filesys.texi: Document ftw, nftw and needed data types.
+
+1997-09-19 12:53  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/i386/i486/bits/string.h: Fix typo.
+
+1997-09-19 14:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/ftwtest.c (cb): Print level.
+	* io/ftwtest-sh: Updated for ftwtest.c change.
+
+	* string/argz.h (__argz_next): Cast NULL to char * to satisfy C++
+	compilers.
+	Reported by Mirko Streckenbach <mirko@ramz.ing.tu-bs.de>.
+
+	* catgets/catgets.c (catopen): Correctly allocate string of nlspath.
+	Reported by Charles C. Fu <ccwf@klab.caltech.edu>.
+
+1997-09-18 13:30  Klaus Espenlaub  <kespenla@student.informatik.uni-ulm.de>
+
+	* sysdeps/i386/init-first.c: Call __getopt_clean_environment with
+	additional argument.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/stub/init-first.c: Likewise.
+
+1997-09-18 03:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/search.texi: Document lsearch, lfind, the hsearch and
+	tsearch functions.
+
+1997-09-18 00:04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/hsearch_r.c (hsearch_r): Only return error for ENTER action
+	if the table is full and we *really* have to enter a new entry.
+
+1997-09-17 19:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Get rid
+	of hack for handling flush opcode.
+	Patch by Richard Henderson <rth@cygnus.com>.
+
 1997-09-16 23:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/fileops.c: Define __set_errno if necessary.

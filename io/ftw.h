@@ -86,22 +86,23 @@ struct FTW
 
 
 /* Convenient types for callback functions.  */
-typedef int (*__ftw_func_t) __P ((__const char *filename,
-				  __const struct stat *status, int flag));
+typedef int (*__ftw_func_t) __P ((__const char *__filename,
+				  __const struct stat *__status, int __flag));
 #ifdef __USE_XOPEN_EXTENDED
-typedef int (*__nftw_func_t) __P ((__const char *filename,
-				   __const struct stat *status, int flag,
-				   struct FTW *));
+typedef int (*__nftw_func_t) __P ((__const char *__filename,
+				   __const struct stat *__status, int __flag,
+				   struct FTW *__info));
 #endif
 
 /* Call a function on every element in a directory tree.  */
-extern int ftw __P ((__const char *dir, __ftw_func_t func, int descriptors));
+extern int ftw __P ((__const char *__dir, __ftw_func_t __func,
+		     int __descriptors));
 
 #ifdef __USE_XOPEN_EXTENDED
 /* Call a function on every element in a directory tree.  FLAG allows
    to specify the behaviour more detailed.  */
-extern int nftw __P ((__const char *dir, __nftw_func_t func,
-		      int descriptors, int flag));
+extern int nftw __P ((__const char *__dir, __nftw_func_t __func,
+		      int __descriptors, int __flag));
 #endif
 
 __END_DECLS

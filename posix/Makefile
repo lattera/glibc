@@ -52,6 +52,7 @@ routines :=								      \
 
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests
+test-srcs	:= globtest
 others		:= getconf
 install-bin	:= getconf
 install-lib	:= libposix.a

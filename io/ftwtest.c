@@ -42,7 +42,7 @@ cb (const char *name, const struct stat *st, int flag, struct FTW *f)
       printf (", cwd = %s", cwd);
       free (cwd);
     }
-  puts ("");
+  printf (", level = %d\n", f->level);
   return 0;
 }
 

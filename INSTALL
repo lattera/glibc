@@ -47,11 +47,13 @@ you run `configure':
 `--prefix=DIRECTORY'
      Install machine-independent data files in subdirectories of
      `DIRECTORY'.  (You can also set this in `configparms'; see below.)
+     The default is to install in `/usr/local'.
 
 `--exec-prefix=DIRECTORY'
      Install the library and other machine-dependent files in
      subdirectories of `DIRECTORY'.  (You can also set this in
-     `configparms'; see below.)
+     `configparms'; see below.)  The default is to use <prefix>/bin and
+     <prefix>/sbin.
 
 `--enable-shared'
 `--disable-shared'
@@ -75,23 +77,6 @@ you run `configure':
      (which makes the binaries substantially smaller).  An additional
      static library is compiled with no optimization and full debugging
      information, and installed as `-lc_g'.
-
-`--enable-bounded'
-`--disable-bounded'
-     Enable or disable building of the C library with support for bounded
-     pointers.  To do this one need the enhanced version of the GNU CC
-     with can generate code for bounded pointers.  This version of the
-     C library is necessary to run code which is also compiled using the
-     enhanced gcc for debugging purposes.
-
-There are two more options:
-
-`--with-gmp'
-`--with-gettext'
-     These options are not of much use for the normal installer of the
-     GNU libc.  Only maintainers need this to get automatic updates of
-     the files from these packages in the GNU C library source tree.
-
 
    The simplest way to run `configure' is to do it in the directory
 that contains the library sources.  This prepares to build the library
@@ -127,7 +112,7 @@ and define in that file the parameters you want to specify.
 `configparms' should *not* be an edited copy of `Makeconfig'; specify
 only the parameters that you want to override.  To see how to set these
 parameters, find the section of `Makeconfig' that says "These are the
-configuration variables." Then for each parameter that you want to
+configuration variables."  Then for each parameter that you want to
 change, copy the definition from `Makeconfig' to your new `configparms'
 file, and change the value as appropriate for your system.
 
@@ -155,11 +140,15 @@ library facilities, type `make check'.  This will produce several files
 with names like `PROGRAM.out'.
 
    To format the `GNU C Library Reference Manual' for printing, type
-`make dvi'.
+`make dvi'.  You need a working TeX installation to do this.
 
    To install the library and its header files, and the Info files of
 the manual, type `make install'.  This will build things if necessary,
-before installing them.
+before installing them.  If you want to install the files in a different
+place than the one specified at configuration time you can specify a
+value for the Makefile variable `install_root' on the command line.
+This is useful to create chroot'ed environment or to prepare binary
+releases.
 
 Recommended Tools to Install the GNU C Library
 ----------------------------------------------
@@ -167,26 +156,56 @@ Recommended Tools to Install the GNU C Library
    We recommend installing the following GNU tools before attempting to
 build the GNU C library:
 
-   * `make' 3.75
+   * `make' 3.76.1
 
      You need the latest version of GNU `make'.  Modifying the GNU C
      Library to work with other `make' programs would be so hard that we
-     recommend you port GNU `make' instead.  *Really.* We recommend
-     version GNU `make' version 3.75 or later.
+     recommend you port GNU `make' instead.  *Really.*  We recommend
+     version GNU `make' version 3.75, 3.76.1 or later.  Version 3.76 is
+     known to have a bug which only shows up in big projects like GNU
+     `libc'.
 
-   * GCC 2.7.2.1
+   * GCC 2.7.2.3
 
      On most platforms, the GNU C library can only be compiled with the
      GNU C compiler.  We recommend GCC version 2.7.2 or later; earlier
      versions may have problems.
 
-   * `binutils' 2.7
+     On PowerPC, GCC versions dated earlier than 970904 are known not
+     to work (they crash), including 2.7.2.
+
+   * `binutils' 2.8.1
 
      Using the GNU `binutils' (assembler, linker, and related tools) is
      preferable when possible, and they are required to build an ELF
-     shared C library.  We recommend `binutils' version 2.7 or later;
+     shared C library.  We recommend `binutils' version 2.8.1 or later;
      earlier versions are known to have problems or to not support all
      architectures.
+
+   * `texinfo' 3.11
+
+     To correctly translate and install the Texinfo documentation you
+     need this version of the `texinfo' package.  Former versions did
+     not understand all the tags used in the document and also the
+     installation mechanisms for the info files was not present or
+     worked differently.
+
+     On some Debian Linux based systems the used `install-info' program
+     works differently.  Here you have to run make like this:
+
+          make INSTALL_INFO=/path/to/GNU/install-info install
+
+   If you change any configuration file you will need also
+
+   * `autoconf' 2.12
+
+and if you change any of the message translation files you will also
+need
+
+   * `GNU gettext' 0.10 or later
+
+If you upgrade your source tree using the patches made available you
+probably will need those package above in any case.
 
 Supported Configurations
 ------------------------
@@ -195,18 +214,16 @@ Supported Configurations
 following patterns:
 
      alpha-ANYTHING-linux
-     alpha-ANYTHING-linuxecoff
      iX86-ANYTHING-gnu
      iX86-ANYTHING-linux
      m68k-ANYTHING-linux
-     mips-ANYTHING-linux
-     sparc-ANYTHING-linux
      powerpc-ANYTHING-linux
 
-   Former versions of this library used to support the following
-configurations but the current status is unknown:
+   Former releases of this library (version 1.09.1 and perhaps earlier
+versions) used to run on the following configurations:
 
      alpha-dec-osf1
+     alpha-ANYTHING-linuxecoff
      iX86-ANYTHING-bsd4.3
      iX86-ANYTHING-isc2.2
      iX86-ANYTHING-isc3.N
@@ -227,6 +244,12 @@ configurations but the current status is unknown:
      mips-sgi-irix4.N
      sparc-sun-solaris2.N
      sparc-sun-sunos4.N
+
+   Since no one has volunteered to test and fix the above
+configurations, these are not supported at the moment.  It's expected
+that these don't work anymore.  Porting the library is not hard.  If
+you are interested in doing a port, please contact the glibc
+maintainers by sending electronic mail to <bug-glibc@prep.ai.mit.edu>.
 
    Each case of `iX86' can be `i386', `i486', `i586', or `i686'.  All
 of those configurations produce a library that can run on any of these
@@ -278,11 +301,11 @@ and `config.make' which are created by running `configure'; they will
 be in whatever directory was current when you ran `configure'.
 
    If you think you have found some way in which the GNU C library does
-not conform to the ANSI and POSIX standards (*note Standards and
+not conform to the ISO and POSIX standards (*note Standards and
 Portability::.), that is definitely a bug.  Report it!
 
-   Send bug reports to the Internet address `bug-glibc@prep.ai.mit.edu'
-or the UUCP path `mit-eddie!prep.ai.mit.edu!bug-glibc'.  If you have
+   Send bug reports to the Internet address <bug-glibc@prep.ai.mit.edu>
+or the UUCP path <mit-eddie!prep.ai.mit.edu!bug-glibc>.  If you have
 other problems with installation or use, please report those as well.
 
    If you are not sure how a function should behave, and this manual
@@ -290,8 +313,8 @@ doesn't tell you, that's a bug in the manual.  Report that too!  If the
 function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
 errors or omissions in this manual, please report them to the Internet
-address `bug-glibc-manual@prep.ai.mit.edu' or the UUCP path
-`mit-eddie!prep.ai.mit.edu!bug-glibc-manual'.
+address <bug-glibc-manual@prep.ai.mit.edu> or the UUCP path
+<mit-eddie!prep.ai.mit.edu!bug-glibc-manual>.
 
 Adding New Functions
 ====================
@@ -672,10 +695,11 @@ level of the `sysdeps' hierarchy.  This directory contains
 subdirectories (and subdirectory trees) for various Unix variants.
 
    The functions which are system calls in most Unix systems are
-automatically generated from the `syscalls.list' files for the appropriate
-archirecture.  The format of the syscalls.list files is quite easy: only
-a few informations are necessary line the system call name, the number of
-arguments and such.  The files are run through the C preprocessor.
+implemented in assembly code, which is generated automatically from
+specifications in the file `sysdeps/unix/syscalls.list'.  Some special
+system calls are implemented in files that are named with a suffix of
+`.S'; for example, `_exit.S'.  Files ending in `.S' are run through the
+C preprocessor before being fed to the assembler.
 
    These files all use a set of macros that should be defined in
 `sysdep.h'.  The `sysdep.h' file in `sysdeps/unix' partially defines
@@ -711,7 +735,7 @@ parts of the library were contributed or worked on by other people.
      related code were written by Michael J. Haertel.
 
    * Fast implementations of many of the string functions (`memcpy',
-     `strlen', etc.) were written by Torbjorn Granlund.
+     `strlen', etc.) were written by Torbj"orn Granlund.
 
    * The `tar.h' header file was written by David J. MacKenzie.
 
@@ -722,7 +746,7 @@ parts of the library were contributed or worked on by other people.
    * The DES encryption function `crypt' and related functions were
      contributed by Michael Glad.
 
-   * The `ftw' function was contributed by Ian Lance Taylor.
+   * The `ftw' and `nftw' function was contributed by Ulrich Drepper.
 
    * The startup code to support SunOS shared libraries was contributed
      by Tom Quinn.
@@ -749,7 +773,7 @@ parts of the library were contributed or worked on by other people.
      and the floating-point reading function used by `scanf', `strtod'
      and friends were written by Ulrich Drepper.  The multi-precision
      integer functions used in those functions are taken from GNU MP,
-     which was contributed by Torbjorn Granlund.
+     which was contributed by Torbj"orn Granlund.
 
    * The internationalization support in the library, and the support
      programs `locale' and `localedef', were written by Ulrich Drepper.
@@ -771,15 +795,21 @@ parts of the library were contributed or worked on by other people.
    * The port to Linux/m68k (`m68k-ANYTHING-linux') was contributed by
      Andreas Schwab.
 
-   * The ports to Linux/ARM (`arm-ANYTHING-linuxaout') and ARM standalone
-     (`arm-ANYTHING-none'), as well as parts of the IPv6 support code, were
-     contributed by Philip Blundell.
+   * The ports to Linux/ARM (`arm-ANYTHING-linuxaout') and ARM
+     standalone (`arm-ANYTHING-none'), as well as parts of the IPv6
+     support code, were contributed by Philip Blundell.
 
    * Richard Henderson contributed the ELF dynamic linking code and
      other support for the Alpha processor.
 
    * David Mosberger-Tang contributed the port to Linux/Alpha
      (`alpha-ANYTHING-linux').
+
+   * The port to Linux on PowerPC (`powerpc-ANYTHING-linux') was
+     contributed by Geoffrey Keating.
+
+   * Miles Bader wrote the argp argument-parsing package, and the
+     argz/envz interfaces.
 
    * Stephen R. van den Berg contributed a highly-optimized `strstr'
      function.
@@ -797,10 +827,9 @@ parts of the library were contributed or worked on by other people.
      platforms was written by Per Bothner and modified by Ulrich
      Drepper.
 
-   * Some of the Internet-related code (most of the `inet'
-     subdirectory) and several other miscellaneous functions and
-     header files have been included from 4.4 BSD with little or no
-     modification.
+   * The Internet-related code (most of the `inet' subdirectory) and
+     several other miscellaneous functions and header files have been
+     included from 4.4 BSD with little or no modification.
 
      All code incorporated from 4.4 BSD is under the following
      copyright:
@@ -851,7 +880,7 @@ parts of the library were contributed or worked on by other people.
      `rand' and `srand' functions, were written by Earl T. Cohen for
      the University of California at Berkeley and are copyrighted by the
      Regents of the University of California.  They have undergone minor
-     changes to fit into the GNU C library and to fit the ANSI C
+     changes to fit into the GNU C library and to fit the ISO C
      standard, but the functional code is Berkeley's.
 
    * The Internet resolver code is taken directly from BIND 4.9.5,
@@ -938,187 +967,7 @@ parts of the library were contributed or worked on by other people.
                 Carnegie Mellon University
                 Pittsburgh PA 15213-3890
 
-          or `Software.Distribution@CS.CMU.EDU' any improvements or
+          or <Software.Distribution@CS.CMU.EDU> any improvements or
           extensions that they make and grant Carnegie Mellon the
           rights to redistribute these changes.
 
-   * The `getaddrinfo' function is written by Craig Metz and it has the
-     following copyright:
-
-	The Inner Net License, Version 2.00
-	===================================
-
-	The author(s) grant permission for redistribution and use in source and
-	binary forms, with or without modification, of the software
-	and documentation provided that the following conditions are met:
-
-	0. If you receive a version of the software that is
-	   specifically labelled as not being for redistribution
-	   (check the version message and/or README), you are not
-	   permitted to redistribute that version of the software in
-	   any way or form.
-	1. All terms of the all other applicable copyrights and
-	   licenses must be followed.
-	2. Redistributions of source code must retain the authors'
-	   copyright notice(s), this list of conditions, and the
-	   following disclaimer.
-	3. Redistributions in binary form must reproduce the authors'
-	   copyright notice(s), this list of conditions, and the
-	   following disclaimer in the documentation and/or other
-	   materials provided with the distribution.
-	4. All advertising materials mentioning features or use of
-	   this software must display the following acknowledgement
-	   with the name(s) of the authors as specified in the
-	   copyright notice(s) substituted where indicated:
-
-	This product includes software developed by <name(s)>, The Inner
-	Net, and other contributors.
-
-	5. Neither the name(s) of the author(s) nor the names of its
-	   contributors may be used to endorse or promote products
-	   derived from this software without specific prior written
-	   permission.
-
-	THIS SOFTWARE IS PROVIDED BY ITS AUTHORS AND CONTRIBUTORS ``AS
-	IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-	FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-	SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-	INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-	OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
-	OF SUCH DAMAGE.
-
-	If these license terms cause you a real problem, contact the author.
-+
-   * The `db' library is taken from the db-2.3.4 distribution by Sleepycat
-     Software, and is covered by the following terms:
-
-	/*-
-	 * @(#)LICENSE	10.4 (Sleepycat) 7/24/97
-	 */
-
-	The following are the copyrights and redistribution conditions
-	that apply to this copy of the DB software.  For a license to use,
-	redistribute or sell DB software under conditions other than those
-	described here, or to purchase support for this software, please
-	contact Sleepycat Software at one of the following addresses:
-
-		Sleepycat Software		db@sleepycat.com
-		394 E. Riding Dr.		+1-508-287-4781
-		Carlisle, MA 01741
-		USA
-
-	=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-	/*
-	 * Copyright (c) 1990, 1993, 1994, 1995, 1996, 1997
-	 *	Sleepycat Software.  All rights reserved.
-	 *
-	 * Redistribution and use in source and binary forms, with or without
-	 * modification, are permitted provided that the following conditions
-	 * are met:
-	 * 1. Redistributions of source code must retain the above copyright
-	 *    notice, this list of conditions and the following disclaimer.
-	 * 2. Redistributions in binary form must reproduce the above copyright
-	 *    notice, this list of conditions and the following disclaimer in
-	 *    the documentation and/or other materials provided with the
-	 *    distribution.
-	 * 3. Redistributions in any form must be accompanied by information on
-	 *    how to obtain complete source code for the DB software and any
-	 *    accompanying software that uses the DB software.  The source code
-	 *    must either be included in the distribution or be available for
-	 *    no more than the cost of distribution plus a nominal fee, and
-	 *    must be freely redistributable under reasonable conditions.  For
-	 *    an executable file, complete source code means the source code
-	 *    for all modules it contains.  It does not mean source code for
-	 *    modules or files that typically accompany the operating system
-	 *    on which the executable file runs, e.g., standard library
-	 *    modules or system header files.
-	 *
-	 * THIS SOFTWARE IS PROVIDED BY SLEEPYCAT SOFTWARE ``AS IS'' AND
-	 * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-	 * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-	 * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL SLEEPYCAT
-	 * SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	 * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-	 * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-	 * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-	 * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-	 * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-	 * SUCH DAMAGE.
-	 */
-	/*
-	 * Copyright (c) 1990, 1993, 1994, 1995
-	 *	The Regents of the University of California.  All rights
-	 *      reserved.
-	 *
-	 * Redistribution and use in source and binary forms, with or without
-	 * modification, are permitted provided that the following conditions
-	 * are met:
-	 * 1. Redistributions of source code must retain the above copyright
-	 *    notice, this list of conditions and the following disclaimer.
-	 * 2. Redistributions in binary form must reproduce the above copyright
-	 *    notice, this list of conditions and the following disclaimer in
-	 *    the documentation and/or other materials provided with the
-	 *    distribution.
-	 * 3. All advertising materials mentioning features or use of this
-	 *    software must display the following acknowledgement:
-	 *	This product includes software developed by the University of
-	 *	California, Berkeley and its contributors.
-	 * 4. Neither the name of the University nor the names of its
-	 *    contributors may be used to endorse or promote products derived
-	 *    from this software without specific prior written permission.
-	 *
-	 * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS''
-	 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-	 * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-	 * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS
-	 * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-	 * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-	 * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-	 * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-	 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-	 * THE POSSIBILITY OF SUCH DAMAGE.
-	 */
-	/*
-	 * Copyright (c) 1995, 1996
-	 *	The President and Fellows of Harvard University.  All rights
-	 *      reserved.
-	 *
-	 * Redistribution and use in source and binary forms, with or without
-	 * modification, are permitted provided that the following conditions
-	 * are met:
-	 * 1. Redistributions of source code must retain the above copyright
-	 *    notice, this list of conditions and the following disclaimer.
-	 * 2. Redistributions in binary form must reproduce the above copyright
-	 *    notice, this list of conditions and the following disclaimer in
-	 *    the documentation and/or other materials provided with the
-	 *    distribution.
-	 * 3. All advertising materials mentioning features or use of this
-	 *    software must display the following acknowledgement:
-	 *	This product includes software developed by Harvard University
-	 *	and its contributors.
-	 * 4. Neither the name of the University nor the names of its
-	 *    contributors may be used to endorse or promote products derived
- 	 *    from this software without specific prior written permission.
-	 *
-	 * THIS SOFTWARE IS PROVIDED BY HARVARD AND ITS CONTRIBUTORS ``AS IS''
-	 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-	 * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-	 * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL HARVARD OR
-	 * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-	 * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-	 * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-	 * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-	 * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-	 * POSSIBILITY OF SUCH DAMAGE.
-	 */

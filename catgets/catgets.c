@@ -94,8 +94,9 @@ catopen (const char *cat_name, int flag)
 	  nlspath = tmp;
 	}
       else
-	result->nlspath = __strdup (NLSPATH);
+	nlspath = NLSPATH;
 
+      result->nlspath = __strdup (NLSPATH);
       if (result->nlspath == NULL)
 	{
 	  free ((void *) result->cat_name);

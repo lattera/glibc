@@ -27,7 +27,7 @@
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
-extern void __getopt_clean_environment (void);
+extern void __getopt_clean_environment (char **);
 extern void __libc_global_ctors (void);
 
 unsigned int __hurd_threadvar_max;
@@ -109,7 +109,7 @@ init1 (int argc, char *arg0, ...)
   __libc_init (argc, argv, __environ);
 
   /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment ();
+  __getopt_clean_environment (envp);
 
 #ifdef PIC
   __libc_global_ctors ();
@@ -170,7 +170,7 @@ init (int *data)
       /* Force NEWSP into %ecx and &init1 into %eax, which are not restored
 	 by function return.  */
       asm volatile ("# a %0 c %1" : : "a" (newsp), "c" (&init1));
-    } 
+    }
   else
     {
       /* The argument data is just above the stack frame we will unwind by
@@ -202,7 +202,7 @@ init (int *data)
      init1's return address, and then jump there.  */
   asm volatile ("pushl %eax; jmp *%ecx");
   /* NOTREACHED */
-}  
+}
 
 
 #ifdef PIC
@@ -223,7 +223,7 @@ _init (int argc, ...)
   __mach_init ();
 
   RUN_HOOK (_hurd_preinit_hook, ());
-  
+
   init (&argc);
 }
 #endif
@@ -256,7 +256,7 @@ __libc_init_first (int argc __attribute__ ((unused)), ...)
   __mach_init ();
 
   RUN_HOOK (_hurd_preinit_hook, ());
-  
+
   _hurd_startup ((void **) &argc, &doinit);
 #endif
 }
@@ -267,8 +267,8 @@ __libc_init_first (int argc __attribute__ ((unused)), ...)
    in ld.so causes disaster, because the _init definition above will
    cause ld.so to gain an init function, which is not a cool thing. */
 
-void 
-_dl_start (void) 
-{ 
-  abort (); 
+void
+_dl_start (void)
+{
+  abort ();
 }

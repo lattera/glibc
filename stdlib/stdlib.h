@@ -210,58 +210,90 @@ extern unsigned long long int __strtoull_internal __P ((__const char *
 #if defined __OPTIMIZE__ && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
 
-extern __inline double strtod (__const char *__restrict __nptr,
-			       char **__restrict __endptr)
-{ return __strtod_internal (__nptr, __endptr, 0); }
-extern __inline long int strtol (__const char *__restrict __nptr,
-				 char **__restrict __endptr, int __base)
-{ return __strtol_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long int strtoul (__const char *__restrict __nptr,
-					   char **__restrict __endptr,
-					   int __base)
-{ return __strtoul_internal (__nptr, __endptr, __base, 0); }
+extern __inline double
+strtod (__const char *__restrict __nptr, char **__restrict __endptr)
+{
+  return __strtod_internal (__nptr, __endptr, 0);
+}
+extern __inline long int
+strtol (__const char *__restrict __nptr, char **__restrict __endptr,
+	int __base)
+{
+  return __strtol_internal (__nptr, __endptr, __base, 0);
+}
+extern __inline unsigned long int
+strtoul (__const char *__restrict __nptr, char **__restrict __endptr,
+	 int __base)
+{
+  return __strtoul_internal (__nptr, __endptr, __base, 0);
+}
 
-#ifdef __USE_GNU
-extern __inline float strtof (__const char *__restrict __nptr,
-			      char **__restrict __endptr)
-{ return __strtof_internal (__nptr, __endptr, 0); }
-extern __inline __long_double_t strtold (__const char *__restrict __nptr,
-					 char **__restrict __endptr)
-{ return __strtold_internal (__nptr, __endptr, 0); }
-#endif
+# ifdef __USE_GNU
+extern __inline float
+strtof (__const char *__restrict __nptr, char **__restrict __endptr)
+{
+  return __strtof_internal (__nptr, __endptr, 0);
+}
+extern __inline __long_double_t
+strtold (__const char *__restrict __nptr, char **__restrict __endptr)
+{
+  return __strtold_internal (__nptr, __endptr, 0);
+}
+# endif
 
-#ifdef __USE_BSD
-extern __inline long long int strtoq (__const char *__restrict __nptr,
-				      char **__restrict __endptr, int __base)
-{ return __strtoll_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long long int strtouq (__const char *__restrict __nptr,
-						char **__restrict __endptr,
-						int __base)
-{ return __strtoull_internal (__nptr, __endptr, __base, 0); }
-#endif
+# ifdef __USE_BSD
+extern __inline long long int
+strtoq (__const char *__restrict __nptr, char **__restrict __endptr,
+	int __base)
+{
+  return __strtoll_internal (__nptr, __endptr, __base, 0);
+}
+extern __inline unsigned long long int
+strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
+	 int __base)
+{
+  return __strtoull_internal (__nptr, __endptr, __base, 0);
+}
+# endif
 
-#if defined __USE_MISC || defined __USE_ISOC9X
-extern __inline long long int strtoll (__const char *__restrict __nptr,
-				       char **__restrict __endptr, int __base)
-{ return __strtoll_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long long int strtoull (__const char *
-						 __restrict __nptr,
-						 char **__restrict __endptr,
-						 int __base)
-{ return __strtoull_internal (__nptr, __endptr, __base, 0); }
-#endif
+# if defined __USE_MISC || defined __USE_ISOC9X
+extern __inline long long int
+strtoll (__const char *__restrict __nptr, char **__restrict __endptr,
+	 int __base)
+{
+  return __strtoll_internal (__nptr, __endptr, __base, 0);
+}
+extern __inline unsigned long long int
+strtoull (__const char * __restrict __nptr, char **__restrict __endptr,
+	  int __base)
+{
+  return __strtoull_internal (__nptr, __endptr, __base, 0);
+}
+# endif
 
-extern __inline double atof (__const char *__nptr)
-{ return strtod (__nptr, (char **) NULL); }
-extern __inline int atoi (__const char *__nptr)
-{ return (int) strtol (__nptr, (char **) NULL, 10); }
-extern __inline long int atol (__const char *__nptr)
-{ return strtol (__nptr, (char **) NULL, 10); }
+extern __inline double
+atof (__const char *__nptr)
+{
+  return strtod (__nptr, (char **) NULL);
+}
+extern __inline int
+atoi (__const char *__nptr)
+{
+  return (int) strtol (__nptr, (char **) NULL, 10);
+}
+extern __inline long int
+atol (__const char *__nptr)
+{
+  return strtol (__nptr, (char **) NULL, 10);
+}
 
-#if defined __USE_MISC || defined __USE_ISOC9X
-extern __inline long long int atoll (__const char *__nptr)
-{ return strtoll (__nptr, (char **) NULL, 10); }
-#endif
+# if defined __USE_MISC || defined __USE_ISOC9X
+extern __inline long long int
+atoll (__const char *__nptr)
+{
+  return strtoll (__nptr, (char **) NULL, 10);
+}
+# endif
 #endif /* Optimizing GCC >=2.  */
 
 
@@ -304,7 +336,7 @@ extern __ptr_t __setstate __P ((__ptr_t __statebuf));
 extern __ptr_t setstate __P ((__ptr_t __statebuf));
 
 
-#ifdef __USE_MISC
+# ifdef __USE_MISC
 /* Reentrant versions of the `random' family of functions.
    These functions all use the following data structure to contain
    state, rather than global state variables.  */
@@ -333,7 +365,7 @@ extern int initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
 
 extern int __setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
 extern int setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
-#endif	/* Use misc.  */
+# endif	/* Use misc.  */
 #endif	/* Use SVID || extended X/Open.  */
 
 
@@ -441,7 +473,7 @@ extern void cfree __P ((__ptr_t __ptr));
 #endif /* Use misc.  */
 
 #if defined __USE_GNU || defined __USE_BSD || defined __USE_MISC
-#include <alloca.h>
+# include <alloca.h>
 #endif /* Use GNU, BSD, or misc.  */
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -545,12 +577,12 @@ extern char *realpath __P ((__const char *__name, char *__resolved));
 
 /* Shorthand for type of comparison functions.  */
 #ifndef __COMPAR_FN_T
-#define __COMPAR_FN_T
+# define __COMPAR_FN_T
 typedef int (*__compar_fn_t) __P ((__const __ptr_t, __const __ptr_t));
-#endif
 
-#ifdef	__USE_GNU
+# ifdef	__USE_GNU
 typedef __compar_fn_t comparison_fn_t;
+# endif
 #endif
 
 /* Do a binary search for KEY in BASE, which consists of NMEMB elements
@@ -568,7 +600,7 @@ extern void qsort __P ((__ptr_t __base, size_t __nmemb, size_t __size,
 /* Return the absolute value of X.  */
 extern int abs __P ((int __x)) __attribute__ ((__const__));
 extern long int labs __P ((long int __x)) __attribute__ ((__const__));
-#if defined __USE_ISOC9X
+#ifdef __USE_ISOC9X
 extern long long int llabs __P ((long long int __x))
      __attribute__ ((__const__));
 #endif
@@ -643,8 +675,11 @@ extern int mbtowc __P ((wchar_t *__restrict __pwc,
 extern int wctomb __P ((char *__s, wchar_t __wchar));
 
 #if defined __OPTIMIZE__ && __GNUC__ >= 2
-extern __inline int mblen (__const char *__s, size_t __n)
-{ return mbtowc ((wchar_t *) NULL, __s, __n); }
+extern __inline int
+mblen (__const char *__s, size_t __n)
+{
+  return mbtowc ((wchar_t *) NULL, __s, __n);
+}
 #endif /* Optimizing GCC >=2.  */
 
 
@@ -671,7 +706,7 @@ extern int rpmatch __P ((__const char *__response));
    optional value introduced by an equal sign.  If the suboption is
    not part of TOKENS return in *VALUEP beginning of unknown
    suboption.  On exit *OPTIONP is set to the beginning of the next
-   otken or at the terminating NUL character.  */
+   token or at the terminating NUL character.  */
 extern int getsubopt __P ((char **__optionp, __const char *__const *__tokens,
 			   char **__valuep));
 #endif

@@ -23,7 +23,7 @@
 int __libc_multiple_libcs = 1;
 
 extern void __libc_init (int, char **, char **);
-extern void __getopt_clean_environment (void);
+extern void __getopt_clean_environment (char **);
 
 pid_t __libc_pid;
 
@@ -51,5 +51,5 @@ void __libc_init_first
   __libc_init (argc, argv, envp);
 
   /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment ();
+  __getopt_clean_environment (envp);
 }

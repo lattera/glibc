@@ -308,10 +308,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  /* For thread safety, write the instructions from the bottom and
 	     flush before we overwrite the critical "b,a".  */
 	  reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
-	  if (1 || (_dl_hwcap & 1)) /* HWCAP_SPARC_FLUSH */
+	  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
 	    __asm __volatile ("flush %0+8" : : "r"(reloc_addr));
 	  reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
-	  if (1 || (_dl_hwcap & 1)) /* HWCAP_SPARC_FLUSH */
+	  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
 	    __asm __volatile ("flush %0+4" : : "r"(reloc_addr));
 	  break;
 	case R_SPARC_8:

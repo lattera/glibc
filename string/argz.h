@@ -27,7 +27,7 @@
 #include <string.h>		/* Need size_t, and strchr is called below.  */
 
 #ifndef __const
-#define __const const
+# define __const const
 #endif
 
 #ifndef __error_t_defined
@@ -133,7 +133,7 @@ extern char *__argz_next __P ((char *argz, size_t __argz_len,
 extern char *argz_next __P ((char *argz, size_t __argz_len,
 			     __const char *entry));
 
-#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+#if defined __OPTIMIZE__ && __GNUC__ >= 2
 extern inline char *
 __argz_next (char *__argz, size_t __argz_len, __const char *__entry)
 {
@@ -142,7 +142,7 @@ __argz_next (char *__argz, size_t __argz_len, __const char *__entry)
       if (__entry < __argz + __argz_len)
 	__entry = strchr (__entry, '\0') + 1;
 
-      return __entry >= __argz + __argz_len ? NULL : (char *) __entry;
+      return __entry >= __argz + __argz_len ? (char *) NULL : (char *) __entry;
     }
   else
     return __argz_len > 0 ? __argz : 0;

@@ -1,6 +1,6 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Unix.
-     Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
-     This file is part of the GNU C Library.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -20,7 +20,7 @@
 #include <unistd.h>
 
 extern void __libc_init (int, char **, char **);
-extern void __getopt_clean_environment (void);
+extern void __getopt_clean_environment (char **);
 extern void __libc_global_ctors (void);
 
 int __libc_multiple_libcs = 1;
@@ -36,7 +36,7 @@ init (int *data)
   __libc_init (argc, argv, envp);
 
   /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment ();
+  __getopt_clean_environment (envp);
 }
 
 #ifdef PIC

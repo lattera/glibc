@@ -17,6 +17,8 @@ access permissions and modification times.
 				 file names.
 * Accessing Directories::       Finding out what files a directory
 				 contains.
+* Working on Directory Trees::  Apply actions to all files or a selectable
+                                 subset of a directory hierachy.
 * Hard Links::                  Adding alternate names to a file.
 * Symbolic Links::              A file that ``points to'' a file name.
 * Deleting Files::              How to delete a file, and what that means.
@@ -498,6 +500,210 @@ used.
 
 Please note the simple selector function for this example.  Since
 we want to see all directory entries we always return @code{1}.
+
+
+@node Working on Directory Trees
+@section Working on Directory Trees
+@cindex directory hierachy
+@cindex hierachy, directory
+@cindex tree, directory
+
+The functions to handle files in directories described so far allowed to
+retrieve all the information in small pieces or process all files in a
+directory (see @code{scandir}).  Sometimes it is useful to process whole
+hierachies of directories and the contained files.  The X/Open
+specification define two functions to do this.  The simpler form is
+derived from an early definition in @w{System V} systems and therefore
+this function is available on SVID derived systems.  The prototypes and
+required definitions can be found in the @file{ftw.h} header.
+
+Both functions of this @code{ftw} family take as one of the arguments a
+reference to a callback function.  The functions must be of these types.
+
+@deftp {Data Type} __ftw_func_t
+
+@smallexample
+int (*) (const char *, const struct stat *, int)
+@end smallexample
+
+Type for callback functions given to the @code{ftw} function.  The first
+parameter will contain a pointer to the filename, the second parameter
+will point to an object of type @code{struct stat} which will be filled
+for the file named by the first parameter.
+
+@noindent
+The last parameter is a flag given more information about the current
+file.  It can have the following values:
+
+@vindex FTW_F
+@vindex FTW_D
+@vindex FTW_NS
+@vindex FTW_DNR
+@vindex FTW_SL
+@table @code
+@item FTW_F
+The current item is a normal file or files which do not fit into one of
+the following categories.  This means especially special files, sockets
+etc.
+@item FTW_D
+The current item is a directory.
+@item FTW_NS
+The @code{stat} call to fill the object pointed to by the second
+parameter failed and so the information is invalid.
+@item FTW_DNR
+The item is a directory which cannot be read.
+@item FTW_SL
+The item is a symbolic link.  Since symbolic links are normally followed
+seeing this value in a @code{ftw} callback function means the referenced
+file does not exist.  The situation for @code{nftw} is different.
+
+This value is only available if the program is compiled with
+@code{_BSD_SOURCE} or @code{_XOPEN_EXTENDED} defined before including
+the first header.  The original SVID systems do not have symbolic links.
+@end table
+@end deftp
+
+@deftp {Data Type} __nftw_func_t
+
+@smallexample
+int (*) (const char *, const struct stat *, int, struct FTW *)
+@end smallexample
+
+@vindex FTW_DP
+@vindex FTW_SLN
+The first three arguments have the same as for the @code{__ftw_func_t}
+type.  A difference is that for the third argument some additional
+values are defined to allow finer differentiation:
+@table @code
+@item FTW_DP
+The current item is a directory and all subdirectories have already been
+visited and reported.  This flag is returned instead of @code{FTW_D} if
+the @code{FTW_DEPTH} flag is given to @code{nftw} (see below).
+@item FTW_SLN
+The current item is a stale symbolic link.  The file it points to does
+not exist.
+@end table
+
+The last parameter of the callback function is a pointer to a structure
+with some extra information as described below.
+@end deftp
+
+@deftp {Data Type} {struct FTW}
+The contained information helps to interpret the name parameter and
+gives some information about current state of the traversal of the
+directory hierachy.
+
+@table @code
+@item int base
+The value specifies which part of the filename argument given in the
+first parameter to the callback function is the name of the file.  The
+rest of the string is the path to locate the file.  This information is
+especially important if the @code{FTW_CHDIR} flag for @code{nftw} was
+set since then the current directory is the one the current item is
+found in.
+@item int level
+While processing the directory the functions tracks how many directories
+have been examine to find the current item.  This nesting level is
+@math{0} for the item given starting item (file or directory) and is
+incremented by one for each entered directory.
+@end table
+@end deftp
+
+
+@comment ftw.h
+@comment SVID
+@deftypefun int ftw (const char *@var{filename}, __ftw_func_t @var{func}, int @var{descriptors})
+The @code{ftw} function calls the callback function given in the
+parameter @var{func} for every item which is found in the directory
+specified by @var{filename} and all directories below.  The function
+follows symbolic links if necessary but does not process an item twice.
+If @var{filename} names no directory this item is the only object
+reported by calling the callback function.
+
+The filename given to the callback function is constructed by taking the
+@var{filename} parameter and appending the names of all passed
+directories and then the local file name.  So the callback function can
+use this parameter to access the file.  Before the callback function is
+called @code{ftw} calls @code{stat} for this file and passes the
+information up to the callback function.  If this @code{stat} call was
+not successful the failure is indicated by setting the falg argument of
+the callback function to @code{FTW_NS}.  Otherwise the flag is set
+according to the description given in the description of
+@code{__ftw_func_t} above.
+
+The callback function is expected to return @math{0} to indicate that no
+error occurred and the processing should be continued.  If an error
+occurred in the callback function or the call to @code{ftw} shall return
+immediately the callback function can return a value other than
+@math{0}.  This is the only correct way to stop the function.  The
+program must not use @code{setjmp} or similar techniques to continue the
+program in another place.  This would leave the resources allocated in
+the @code{ftw} function allocated.
+
+The @var{descriptors} parameter to the @code{ftw} function specifies how
+many file descriptors the @code{ftw} function is allowed to consume.
+The more descriptors can be used the faster the function can run.  For
+each level of directories at most one descriptor is used so that for
+very deep directory hierachies the limit on open file descriptors for
+the process or the system can be exceeded.  Beside this the limit on
+file descriptors is counted together for all threads in a multi-threaded
+program and therefore it is always good too limit the maximal number of
+open descriptors to a reasonable number.
+
+The return value of the @code{ftw} function is @math{0} if all callback
+function calls returned @math{0} and all actions performed by the
+@code{ftw} succeeded.  If some function call failed (other than calling
+@code{stat} on an item) the function return @math{-1}.  If a callback
+function returns a value other than @math{0} this value is returned as
+the return value of @code{ftw}.
+@end deftypefun
+
+@comment ftw.h
+@comment XPG4.2
+@deftypefun int nftw (const char *@var{filename}, __nftw_func_t @var{func}, int @var{descriptors}, int @var{flag})
+The @code{nftw} functions works like the @code{ftw} functions.  It calls
+the callback function @var{func} for all items it finds in the directory
+@var{filename} and below.  At most @var{descriptors} file descriptors
+are consumed during the @code{nftw} call.
+
+The differences are that for one the callback function is of a different
+type.  It is of type @w{@code{struct FTW *}} and provides the callback
+functions the information described above.
+
+The second difference is that @code{nftw} takes an additional fourth
+argument which is @math{0} or a combination of any of the following
+values, combined using bitwise OR.
+
+@table @code
+@item FTW_PHYS
+While traversing the directory symbolic links are not followed.  I.e.,
+if this flag is given symbolic links are reported using the
+@code{FTW_SL} value for the type parameter to the callback function.
+Please note that if this flag is used the appearence of @code{FTW_SL} in
+a callback function does not mean the referenced file does not exist.
+To indicate this the extra value @code{FTW_SLN} exists.
+@item FTW_MOUNT
+The callback function is only called for items which are on the same
+mounted filesystem as the directory given as the @var{filename}
+parameter to @code{nftw}.
+@item FTW_CHDIR
+If this flag is given the current working directory is changed to the
+directory containing the reported object before the callback function is
+called.
+@item FTW_DEPTH
+If this option is given the function visits first all files and
+subdirectories before the callback function is called for the directory
+itself (depth-first processing).  This also means the type flag given to
+the callback function is @code{FTW_DP} and not @code{FTW_D}.
+@end table
+
+The return value is computed in the same way as for @code{ftw}.
+@code{nftw} return @math{0} if no failure occurred in @code{nftw} and
+all callback function call return values are also @math{0}.  For
+internal errors such as memory problems @math{-1} is returned and
+@var{errno} is set accordingly.  If the return value of a callback
+invocation is nonzero this very same value is returned.
+@end deftypefun
 
 
 @node Hard Links

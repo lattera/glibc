@@ -471,7 +471,7 @@ __strcpy_g (char *__dest, __const char *__src)
 		      case 2:						      \
 			*((__uint16_t *) __cp) =			      \
 			  __STRING_SMALL_GET16 (src, 0);		      \
-			++cp;						      \
+			++__cp;						      \
 			break;						      \
 		      case 3:						      \
 			*((__uint16_t *) __cp)++ =			      \
@@ -481,7 +481,7 @@ __strcpy_g (char *__dest, __const char *__src)
 		      case 4:						      \
 			*((__uint32_t *) __cp) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			cp += 3;					      \
+			__cp += 3;					      \
 			break;						      \
 		      case 5:						      \
 			*((__uint32_t *) __cp)++ =			      \
@@ -493,7 +493,7 @@ __strcpy_g (char *__dest, __const char *__src)
 			  __STRING_SMALL_GET32 (src, 0);		      \
 			*((__uint16_t *) __cp) =			      \
 			  __STRING_SMALL_GET16 (src, 4);		      \
-			++cp;						      \
+			++__cp;						      \
 			break;						      \
 		      case 7:						      \
 			*((__uint32_t *) __cp)++ =			      \
@@ -507,7 +507,7 @@ __strcpy_g (char *__dest, __const char *__src)
 			  __STRING_SMALL_GET32 (src, 0);		      \
 			*((__uint32_t *) __cp) =			      \
 			  __STRING_SMALL_GET32 (src, 4);		      \
-			cp += 3;					      \
+			__cp += 3;					      \
 			break;						      \
 		      }							      \
 		    __cp; }))

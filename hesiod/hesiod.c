@@ -89,7 +89,7 @@ int hesiod_init(void **context)
       if (read_config_file(ctx, configname) >= 0)
 	{
 	  /* The default rhs can be overridden by an environment variable. */
-	  p = getenv("HES_DOMAIN");
+	  p = __secure_getenv("HES_DOMAIN");
 	  if (p)
 	    {
 	      if (ctx->rhs)

@@ -184,6 +184,11 @@ extern int errno;
 #  define TOUPPER(Ch) towupper (Ch)
 # endif
 # else
+#  if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
+#   define IN_CTYPE_DOMAIN(c) 1
+#  else
+#   define IN_CTYPE_DOMAIN(c) isascii(c)
+#  endif
 #  define L_(Ch) Ch
 #  define UCHAR_TYPE unsigned char
 #  define STRING_TYPE char
@@ -192,9 +197,9 @@ extern int errno;
 #  define ISALPHA(Ch) __isalpha_l ((Ch), loc)
 #  define TOUPPER(Ch) __toupper_l ((Ch), loc)
 # else
-#  define ISSPACE(Ch) isspace (Ch)
-#  define ISALPHA(Ch) isalpha (Ch)
-#  define TOUPPER(Ch) toupper (Ch)
+#  define ISSPACE(Ch) (IN_CTYPE_DOMAIN (Ch) && isspace (Ch))
+#  define ISALPHA(Ch) (IN_CTYPE_DOMAIN (Ch) && isalpha (Ch))
+#  define TOUPPER(Ch) (IN_CTYPE_DOMAIN (Ch) ? toupper (Ch) : (Ch))
 # endif
 #endif
 
