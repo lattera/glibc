@@ -1,3 +1,8 @@
+2000-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Define expm1 inline only if
+	__FAST_MATH__ is defined.
+
 2000-05-22  Andreas Jaeger  <aj@suse.de>
 
 	* math/Makefile: Add -D__FAST_MATH__ to CFLAGS-test-ifloat.c,

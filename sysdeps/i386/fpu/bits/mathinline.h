@@ -566,7 +566,9 @@ ldexp (double __x, int __y)
 /* Optimized versions for some non-standardized functions.  */
 #if defined __USE_ISOC99 || defined __USE_MISC
 
+# ifdef __FAST_MATH__
 __inline_mathcodeNP (expm1, __x, __expm1_code)
+# endif
 
 /* We cannot rely on M_SQRT being defined.  So we do it for ourself
    here.  */
