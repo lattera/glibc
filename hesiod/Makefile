@@ -1,4 +1,4 @@
-# Copyright (C) 1997 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,9 +31,8 @@ vpath %.c nss_hesiod
 
 libnss_hesiod-routines	:= hesiod hesiod-grp hesiod-pwd hesiod-service
 libnss_hesiod-map	:= libnss_hesiod.map
-ifneq ($(build-static-nss),yes)
+# Build only shared library
 libnss_hesiod-inhibit-o	= $(filter-out .os,$(object-suffixes))
-endif
 
 include ../Rules
 

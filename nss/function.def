@@ -1,5 +1,5 @@
-/* List of all functions defined for the NSS in GNU C Library.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* List of functions defined for static NSS in GNU C Library.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,23 +17,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/*
+  This is a minimal config.  Only services `files' and `dns' are supported.
+*/
+
 /* aliases */
 DEFINE_ENT (files, alias)
 DEFINE_GETBY (files, alias, name)
-DEFINE_ENT (db, alias)
-DEFINE_GETBY (db, alias, name)
 
 /* ethers */
 DEFINE_ENT (files, ether)
-DEFINE_ENT (db, ether)
 
 /* group */
 DEFINE_ENT (files, gr)
 DEFINE_GET (files, grgid)
 DEFINE_GET (files, grnam)
-DEFINE_ENT (db, gr)
-DEFINE_GET (db, grgid)
-DEFINE_GET (db, grnam)
 
 /* hosts */
 DEFINE_ENT (files, host)
@@ -47,7 +45,6 @@ DEFINE_GETBY (dns, host, name2)
 
 /* netgroup */
 DEFINE_ENT (files, netgr)
-DEFINE_ENT (db, netgr)
 
 /* networks */
 DEFINE_ENT (files, net)
@@ -60,36 +57,22 @@ DEFINE_GETBY (dns, net, addr)
 DEFINE_ENT (files, proto)
 DEFINE_GETBY (files, proto, name)
 DEFINE_GETBY (files, proto, number)
-DEFINE_ENT (db, proto)
-DEFINE_GETBY (db, proto, name)
-DEFINE_GETBY (db, proto, number)
 
 /* passwd */
 DEFINE_ENT (files, pw)
 DEFINE_GET (files, pwnam)
 DEFINE_GET (files, pwuid)
-DEFINE_ENT (db, pw)
-DEFINE_GET (db, pwnam)
-DEFINE_GET (db, pwuid)
 
 /* rpc */
 DEFINE_ENT (files, rpc)
 DEFINE_GETBY (files, rpc, name)
 DEFINE_GETBY (files, rpc, number)
-DEFINE_ENT (db, rpc)
-DEFINE_GETBY (db, rpc, name)
-DEFINE_GETBY (db, rpc, number)
 
 /* services */
 DEFINE_ENT (files, serv)
 DEFINE_GETBY (files, serv, name)
 DEFINE_GETBY (files, serv, port)
-DEFINE_ENT (db, serv)
-DEFINE_GETBY (db, serv, name)
-DEFINE_GETBY (db, serv, port)
 
 /* shadow */
 DEFINE_ENT (files, sp)
 DEFINE_GET (files, spnam)
-DEFINE_ENT (db, sp)
-DEFINE_GET (db, spnam)

@@ -68,11 +68,12 @@ libnss_ldap-routines	:= $(addprefix ldap-,proto) util ldap-nss
 libnss_ldap-map		:= libnss_ldap.map
 
 
+# Build static module if requested
 ifneq ($(build-static-nss),yes)
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
+endif
 libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
 libnss_ldap-inhibit-o	= $(filter-out .os,$(object-suffixes))
-endif
 
 # If we compile the LDAP module we need the headers from the LDAP library.
 ifneq ($(LDAP),)

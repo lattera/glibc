@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <wordexp.h>
 
-#define IFS ", \n\t"
+#define IFS " \n\t"
 
 struct test_case_struct
 {
@@ -35,117 +35,118 @@ struct test_case_struct
   int flags;
   int wordc;
   const char *wordv[10];
+  const char *ifs;
 } test_case[] =
   {
     /* Simple field-splitting */
-    { 0, NULL, "one", 0, 1, { "one", } },
-    { 0, NULL, "one two", 0, 2, { "one", "two", } },
-    { 0, NULL, "one two three", 0, 3, { "one", "two", "three", } },
-    { 0, NULL, " \tfoo\t\tbar ", 0, 2, { "foo", "bar", } },
-    { 0, NULL, "  red  , white blue", 0, 3, { "red", "white", "blue", } },
+    { 0, NULL, "one", 0, 1, { "one", }, IFS },
+    { 0, NULL, "one two", 0, 2, { "one", "two", }, IFS },
+    { 0, NULL, "one two three", 0, 3, { "one", "two", "three", }, IFS },
+    { 0, NULL, " \tfoo\t\tbar ", 0, 2, { "foo", "bar", }, IFS },
+    { 0, NULL, "  red  , white blue", 0, 3, { "red", "white", "blue", }, ", \n\t" },
 
     /* Simple parameter expansion */
-    { 0, "foo", "${var}", 0, 1, { "foo", } },
-    { 0, "foo", "$var", 0, 1, { "foo", } },
-    { 0, "foo", "\\\"$var\\\"", 0, 1, { "\"foo\"", } },
-    { 0, "foo", "%$var%", 0, 1, { "%foo%", } },
-    { 0, "foo", "-$var-", 0, 1, { "-foo-", } },
+    { 0, "foo", "${var}", 0, 1, { "foo", }, IFS },
+    { 0, "foo", "$var", 0, 1, { "foo", }, IFS },
+    { 0, "foo", "\\\"$var\\\"", 0, 1, { "\"foo\"", }, IFS },
+    { 0, "foo", "%$var%", 0, 1, { "%foo%", }, IFS },
+    { 0, "foo", "-$var-", 0, 1, { "-foo-", }, IFS },
 
     /* Simple quote removal */
-    { 0, NULL, "\"quoted\"", 0, 1, { "quoted", } },
-    { 0, "foo", "\"$var\"\"$var\"", 0, 1, { "foofoo", } },
-    { 0, NULL, "'singly-quoted'", 0, 1, { "singly-quoted", } },
+    { 0, NULL, "\"quoted\"", 0, 1, { "quoted", }, IFS },
+    { 0, "foo", "\"$var\"\"$var\"", 0, 1, { "foofoo", }, IFS },
+    { 0, NULL, "'singly-quoted'", 0, 1, { "singly-quoted", }, IFS },
 
     /* Simple command substitution */
-    { 0, NULL, "$(echo hello)", 0, 1, { "hello", } },
-    { 0, NULL, "$( (echo hello) )", 0, 1, { "hello", } },
-    { 0, NULL, "$((echo hello);(echo there))", 0, 2, { "hello", "there", } },
-    { 0, NULL, "`echo one two`", 0, 2, { "one", "two", } },
-    { 0, NULL, "$(echo ')')", 0, 1, { ")" } },
-    { 0, NULL, "$(echo hello; echo)", 0, 1, { "hello", } },
+    { 0, NULL, "$(echo hello)", 0, 1, { "hello", }, IFS },
+    { 0, NULL, "$( (echo hello) )", 0, 1, { "hello", }, IFS },
+    { 0, NULL, "$((echo hello);(echo there))", 0, 2, { "hello", "there", }, IFS },
+    { 0, NULL, "`echo one two`", 0, 2, { "one", "two", }, IFS },
+    { 0, NULL, "$(echo ')')", 0, 1, { ")" }, IFS },
+    { 0, NULL, "$(echo hello; echo)", 0, 1, { "hello", }, IFS },
 
     /* Simple arithmetic expansion */
-    { 0, NULL, "$((1 + 1))", 0, 1, { "2", } },
-    { 0, NULL, "$((2-3))", 0, 1, { "-1", } },
-    { 0, NULL, "$((-1))", 0, 1, { "-1", } },
-    { 0, NULL, "$[50+20]", 0, 1, { "70", } },
-    { 0, NULL, "$(((2+3)*(4+5)))", 0, 1, { "45", } },
+    { 0, NULL, "$((1 + 1))", 0, 1, { "2", }, IFS },
+    { 0, NULL, "$((2-3))", 0, 1, { "-1", }, IFS },
+    { 0, NULL, "$((-1))", 0, 1, { "-1", }, IFS },
+    { 0, NULL, "$[50+20]", 0, 1, { "70", }, IFS },
+    { 0, NULL, "$(((2+3)*(4+5)))", 0, 1, { "45", }, IFS },
 
     /* Advanced parameter expansion */
-    { 0, NULL, "${var:-bar}", 0, 1, { "bar", } },
-    { 0, NULL, "${var-bar}", 0, 1, { "bar", } },
-    { 0, "", "${var:-bar}", 0, 1, { "bar", } },
-    { 0, "foo", "${var:-bar}", 0, 1, { "foo", } },
-    { 0, "", "${var-bar}", 0, 0, { NULL, } },
-    { 0, NULL, "${var:=bar}", 0, 1, { "bar", } },
-    { 0, NULL, "${var=bar}", 0, 1, { "bar", } },
-    { 0, "", "${var:=bar}", 0, 1, { "bar", } },
-    { 0, "foo", "${var:=bar}", 0, 1, { "foo", } },
-    { 0, "", "${var=bar}", 0, 0, { NULL, } },
-    { 0, "foo", "${var:?bar}", 0, 1, { "foo", } },
-    { 0, NULL, "${var:+bar}", 0, 0, { NULL, } },
-    { 0, NULL, "${var+bar}", 0, 0, { NULL, } },
-    { 0, "", "${var:+bar}", 0, 0, { NULL, } },
-    { 0, "foo", "${var:+bar}", 0, 1, { "bar", } },
-    { 0, "", "${var+bar}", 0, 1, { "bar", } },
-    { 0, "12345", "${#var}", 0, 1, { "5", } },
-    { 0, NULL, "${var:-'}'}", 0, 1, { "}", } },
-    { 0, NULL, "${var-}", 0, 0, { NULL } },
+    { 0, NULL, "${var:-bar}", 0, 1, { "bar", }, IFS },
+    { 0, NULL, "${var-bar}", 0, 1, { "bar", }, IFS },
+    { 0, "", "${var:-bar}", 0, 1, { "bar", }, IFS },
+    { 0, "foo", "${var:-bar}", 0, 1, { "foo", }, IFS },
+    { 0, "", "${var-bar}", 0, 0, { NULL, }, IFS },
+    { 0, NULL, "${var:=bar}", 0, 1, { "bar", }, IFS },
+    { 0, NULL, "${var=bar}", 0, 1, { "bar", }, IFS },
+    { 0, "", "${var:=bar}", 0, 1, { "bar", }, IFS },
+    { 0, "foo", "${var:=bar}", 0, 1, { "foo", }, IFS },
+    { 0, "", "${var=bar}", 0, 0, { NULL, }, IFS },
+    { 0, "foo", "${var:?bar}", 0, 1, { "foo", }, IFS },
+    { 0, NULL, "${var:+bar}", 0, 0, { NULL, }, IFS },
+    { 0, NULL, "${var+bar}", 0, 0, { NULL, }, IFS },
+    { 0, "", "${var:+bar}", 0, 0, { NULL, }, IFS },
+    { 0, "foo", "${var:+bar}", 0, 1, { "bar", }, IFS },
+    { 0, "", "${var+bar}", 0, 1, { "bar", }, IFS },
+    { 0, "12345", "${#var}", 0, 1, { "5", }, IFS },
+    { 0, NULL, "${var:-'}'}", 0, 1, { "}", }, IFS },
+    { 0, NULL, "${var-}", 0, 0, { NULL }, IFS },
 
-    { 0, "banana", "${var%na*}", 0, 1, { "bana", } },
-    { 0, "banana", "${var%%na*}", 0, 1, { "ba", } },
-    { 0, "borabora-island", "${var#*bora}", 0, 1, { "bora-island", } },
-    { 0, "borabora-island", "${var##*bora}", 0, 1, {"-island", } },
-    { 0, "100%", "${var%0%}", 0, 1, { "10" } },
+    { 0, "banana", "${var%na*}", 0, 1, { "bana", }, IFS },
+    { 0, "banana", "${var%%na*}", 0, 1, { "ba", }, IFS },
+    { 0, "borabora-island", "${var#*bora}", 0, 1, { "bora-island", }, IFS },
+    { 0, "borabora-island", "${var##*bora}", 0, 1, {"-island", }, IFS },
+    { 0, "100%", "${var%0%}", 0, 1, { "10" }, IFS },
 
     /* Pathname expansion */
-    { 0, NULL, "???", 0, 2, { "one", "two", } },
-    { 0, NULL, "[ot]??", 0, 2, { "one", "two", } },
-    { 0, NULL, "t*", 0, 2, { "three", "two", } },
-    { 0, NULL, "\"t\"*", 0, 2, { "three", "two", } },
+    { 0, NULL, "???", 0, 2, { "one", "two", }, IFS },
+    { 0, NULL, "[ot]??", 0, 2, { "one", "two", }, IFS },
+    { 0, NULL, "t*", 0, 2, { "three", "two", }, IFS },
+    { 0, NULL, "\"t\"*", 0, 2, { "three", "two", }, IFS },
 
     /* Nested constructs */
-    { 0, "one two", "$var", 0, 2, { "one", "two", } },
-    { 0, "one two three", "$var", 0, 3, { "one", "two", "three", } },
-    { 0, " \tfoo\t\tbar ", "$var", 0, 2, { "foo", "bar", } },
-    { 0, "  red  , white blue", "$var", 0, 3, { "red", "white", "blue", } },
-    { 0, "  red  , white blue", "\"$var\"", 0, 1, { "  red  , white blue", } },
-    { 0, NULL, "\"$(echo hello there)\"", 0, 1, { "hello there", } },
-    { 0, NULL, "\"$(echo \"hello there\")\"", 0, 1, { "hello there", } },
-    { 0, NULL, "${var=one two} \"$var\"", 0, 3, { "one", "two", "one two", } },
-    { 0, "1", "$(( $(echo 3)+$var ))", 0, 1, { "4", } },
-    { 0, NULL, "\"$(echo \"*\")\"", 0, 1, { "*", } },
-    { 0, "foo", "*$var*", 0, 1, { "*foo*", } },
-    { 0, "o thr", "*$var*", 0, 2, { "two", "three" } },
+    { 0, "one two", "$var", 0, 2, { "one", "two", }, IFS },
+    { 0, "one two three", "$var", 0, 3, { "one", "two", "three", }, IFS },
+    { 0, " \tfoo\t\tbar ", "$var", 0, 2, { "foo", "bar", }, IFS },
+    { 0, "  red  , white blue", "$var", 0, 3, { "red", "white", "blue", }, ", \n\t" },
+    { 0, "  red  , white blue", "\"$var\"", 0, 1, { "  red  , white blue", }, ", \n\t" },
+    { 0, NULL, "\"$(echo hello there)\"", 0, 1, { "hello there", }, IFS },
+    { 0, NULL, "\"$(echo \"hello there\")\"", 0, 1, { "hello there", }, IFS },
+    { 0, NULL, "${var=one two} \"$var\"", 0, 3, { "one", "two", "one two", }, IFS },
+    { 0, "1", "$(( $(echo 3)+$var ))", 0, 1, { "4", }, IFS },
+    { 0, NULL, "\"$(echo \"*\")\"", 0, 1, { "*", }, IFS },
+    { 0, "foo", "*$var*", 0, 1, { "*foo*", }, IFS },
+    { 0, "o thr", "*$var*", 0, 2, { "two", "three" }, IFS },
 
     /* Other things that should succeed */
-    { 0, NULL, "\\*\"|&;<>\"\\(\\)\\{\\}", 0, 1, { "*|&;<>(){}", } },
-    { 0, "???", "$var", 0, 1, { "???", } },
-    { 0, NULL, "$var", 0, 0, { NULL, } },
-    { 0, NULL, "\"\\n\"", 0, 1, { "\\n", } },
-    { 0, NULL, "", 0, 0, { NULL, } },
+    { 0, NULL, "\\*\"|&;<>\"\\(\\)\\{\\}", 0, 1, { "*|&;<>(){}", }, IFS },
+    { 0, "???", "$var", 0, 1, { "???", }, IFS },
+    { 0, NULL, "$var", 0, 0, { NULL, }, IFS },
+    { 0, NULL, "\"\\n\"", 0, 1, { "\\n", }, IFS },
+    { 0, NULL, "", 0, 0, { NULL, }, IFS },
 
     /* Things that should fail */
-    { WRDE_BADCHAR, NULL, "new\nline", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "pipe|symbol", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "&ampersand", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "semi;colon", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "<greater", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "less>", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "(open-paren", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "close-paren)", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "{open-brace", 0, 0, { NULL, } },
-    { WRDE_BADCHAR, NULL, "close-brace}", 0, 0, { NULL, } },
-    { WRDE_CMDSUB, NULL, "$(ls)", WRDE_NOCMD, 0, { NULL, } },
-    { WRDE_BADVAL, NULL, "$var", WRDE_UNDEF, 0, { NULL, } },
-    { WRDE_BADVAL, NULL, "$9", WRDE_UNDEF, 0, { NULL, } },
-    { WRDE_SYNTAX, NULL, "$[50+20))", 0, 0, { NULL, } },
-    { WRDE_SYNTAX, NULL, "${%%noparam}", 0, 0, { NULL, } },
-    { WRDE_SYNTAX, NULL, "${missing-brace", 0, 0, { NULL, } },
-    { WRDE_SYNTAX, NULL, "$((2+))", 0, 0, { NULL, } },
-    { WRDE_SYNTAX, NULL, "`", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "new\nline", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "pipe|symbol", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "&ampersand", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "semi;colon", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "<greater", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "less>", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "(open-paren", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "close-paren)", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "{open-brace", 0, 0, { NULL, }, IFS },
+    { WRDE_BADCHAR, NULL, "close-brace}", 0, 0, { NULL, }, IFS },
+    { WRDE_CMDSUB, NULL, "$(ls)", WRDE_NOCMD, 0, { NULL, }, IFS },
+    { WRDE_BADVAL, NULL, "$var", WRDE_UNDEF, 0, { NULL, }, IFS },
+    { WRDE_BADVAL, NULL, "$9", WRDE_UNDEF, 0, { NULL, }, IFS },
+    { WRDE_SYNTAX, NULL, "$[50+20))", 0, 0, { NULL, }, IFS },
+    { WRDE_SYNTAX, NULL, "${%%noparam}", 0, 0, { NULL, }, IFS },
+    { WRDE_SYNTAX, NULL, "${missing-brace", 0, 0, { NULL, }, IFS },
+    { WRDE_SYNTAX, NULL, "$((2+))", 0, 0, { NULL, }, IFS },
+    { WRDE_SYNTAX, NULL, "`", 0, 0, { NULL, }, IFS },
 
-    { -1, NULL, NULL, 0, 0, { NULL, } },
+    { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
   };
 
 static int testit (struct test_case_struct *tc);
@@ -179,7 +180,6 @@ main (int argc, char *argv[])
     }
 
   cwd = getcwd (NULL, 0);
-  setenv ("IFS", IFS, 1);
 
   /* Set up arena for pathname expansion */
   tmpnam (tmpdir);
@@ -242,6 +242,11 @@ testit (struct test_case_struct *tc)
     setenv ("var", tc->env, 1);
   else
     unsetenv ("var");
+
+  if (tc->ifs)
+    setenv ("IFS", tc->ifs, 1);
+  else
+    unsetenv ("IFS");
 
   printf ("Test %d: ", ++test);
   retval = wordexp (tc->words, &we, tc->flags);

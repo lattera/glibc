@@ -625,6 +625,33 @@ If you're upgrading from glibc 2.0.x to 2.1 you have to recompile
 libstdc++ since the library compiled for 2.0 is not compatible due to the new
 Large File Support (LFS) in version 2.1.
 
+??	Even statically linked programs need some shared libraries
+	which is not acceptable for me.  What can I do?
+
+{AJ} NSS (for details just type `info libc "Name Service Switch"')
+won't work properly without shared libraries.  NSS allows using
+different services (e.g. NIS, files, db, hesiod) by just changing one
+configuration file (/etc/nsswitch.conf) without relinking any
+programs.  The only disadvantage is that now static libraries need to
+access shared libraries.  This is handled transparently by the GNU C
+library.
+
+A solution is to configure glibc with --enable-static-nss.  In this
+case you can create a static binary that will use only the services
+dns and files (change /etc/nsswitch.conf for this).  You need
+to link explicitly against all these services. For example:
+
+  gcc -static test-netdb.c -o test-netdb.c \
+    -lc -lnss_files -lnss_dns -lresolv
+
+The problem with this approach is that you've got to link every static
+program that uses NSS routines with all those libraries.
+
+{UD} In fact, one cannot say anymore that a libc compiled with this
+option is using NSS.  There is no switch anymore.  Therefore it is
+*highly* recommended *not* to use --enable-static-nss since this makes
+the behaviour of the programs on the system inconsistent.
+
 ? Source and binary incompatibilities, and what to do about them
 
 ??	I expect GNU libc to be 100% source code compatible with

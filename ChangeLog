@@ -1,3 +1,25 @@
+1998-04-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/Makefile: Include ../Makeconfig - needed for building
+	static NSS module.
+
+1998-04-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* hesiod/Makefile (libnss_hesiod-inhibit-o): Remove condition for
+	static-nss since we don't want hesiod in the static NSS.
+
+	* nss/Makefile: Build only nss_files as static.
+
+	* nss/function.def: Remove support for service db.
+
+1998-04-04 09:44  H.J. Lu  <hjl@gnu.org>
+
+	* Makeconfig (CPPFLAGS-.oS): Add -DPIC.
+
+1998-04-04 18:29  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Make IFS per test-case.
+
 1998-04-07 17:50  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* glibcbug.in: Report version of gcc in use.  Remove unused variable

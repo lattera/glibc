@@ -1,4 +1,4 @@
-# Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,8 @@ distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 	      Banner
 
 routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init
+
+include ../Makeconfig
 
 extra-libs := libresolv libnss_dns
 extra-libs-others = $(extra-libs)
