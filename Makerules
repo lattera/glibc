@@ -278,7 +278,7 @@ no_deps=t
 endif
 
 # Generate version maps, but wait until sysdep-subdirs is known
-ifdef sysd-dirs-done
+ifeq ($(sysd-sorted-done),t)
 ifeq ($(versioning),yes)
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
@@ -313,7 +313,7 @@ $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 	mv -f $@T $@
 endif # avoid-generated
 endif # $(versioning) = yes
-endif # sysd-dirs-done
+endif # sysd-sorted-done
 
 
 ifndef compile-command.S

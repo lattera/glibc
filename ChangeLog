@@ -1,5 +1,8 @@
 2000-03-19  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* Makerules (Versions.all, sysd-versions): Test $(sysd-sorted-done)
+	rather than $(sysd-dirs-done) to protect these rules.
+
 	* Makerules (version-renames.def): Target removed.
 	(Versions.all): Depend on soversions.i directly and parse it.
 
