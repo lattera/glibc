@@ -45,6 +45,6 @@ __poll (fds, nfds, timeout)
       to = &ts;
     }
 
-  return _hurd_select (nfds, fds, NULL, NULL, NULL, &ts, NULL);
+  return _hurd_select (nfds, fds, NULL, NULL, NULL, to, NULL);
 }
 weak_alias (__poll, poll)
