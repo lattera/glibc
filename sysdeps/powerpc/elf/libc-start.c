@@ -129,6 +129,14 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
   __libc_stack_end = stack_on_entry + 8;
 
 #ifndef SHARED
+# ifdef DL_SYSDEP_OSCHECK
+  if (!__libc_multiple_libcs)
+    {
+      /* This needs to run to initiliaze _dl_osversion before TLS
+	 setup might check it.  */
+      DL_SYSDEP_OSCHECK (__libc_fatal);
+    }
+# endif
   /* Initialize the thread library at least a bit since the libgcc
      functions are using thread functions if these are available and
      we need to setup errno.  If there is no thread library and we
