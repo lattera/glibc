@@ -111,6 +111,10 @@
 /* Define if binutils support TLS handling.  */
 #undef	HAVE_TLS_SUPPORT
 
+/* Define if the linker supports .preinit_array/.init_array/.fini_array
+   sections.  */
+#undef	HAVE_INITFINI_ARRAY
+
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */

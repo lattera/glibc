@@ -1,3 +1,11 @@
+2002-03-15  H.J. Lu  <hjl@gnu.org>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Check for availability of
+	init_array/fini_array/preinit_array handling in binutils.
+	* config.h.in (HAVE_INITFINI_ARRAY): New macro.
+	* config.make.in (have-initfini-array): New variable.
+
 2002-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/tst-printf.c (main): Comment out one test which

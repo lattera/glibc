@@ -1039,6 +1039,35 @@ EOF
     fi
   fi
 
+  AC_CACHE_CHECK(for .preinit_array/.init_array/.fini_array support,
+		 libc_cv_initfinit_array, [dnl
+  cat > conftest.c <<EOF
+int _start (void) { return 0; }
+int __start (void) { return 0; }
+int foo (void) { return 1; }
+#ifdef __i386__
+asm (".section .init_array\n\t.long foo");
+#else
+# error "define appropriately for the architecture"
+#endif
+EOF
+  if AC_TRY_COMMAND([${CC-cc} -o conftest conftest.c
+		     -static -nostartfiles -nostdlib 1>&AC_FD_CC])
+  then
+    if readelf -S conftest | fgrep INIT_ARRAY > /dev/null; then
+      libc_cv_initfinit_array=yes
+    else
+      libc_cv_initfinit_array=no
+    fi
+  else
+    libc_cv_initfinit_array=no
+  fi
+  rm -f conftest*])
+  AC_SUBST(libc_cv_initfinit_array)
+  if test $libc_cv_initfinit_array = yes; then
+    AC_DEFINE(HAVE_INITFINI_ARRAY)
+  fi
+
   AC_CACHE_CHECK(for -z nodelete option,
 		 libc_cv_z_nodelete, [dnl
   cat > conftest.c <<EOF
