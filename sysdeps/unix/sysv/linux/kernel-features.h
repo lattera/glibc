@@ -229,8 +229,8 @@
 # define __ASSUME_SET_THREAD_AREA_SYSCALL	1
 #endif
 
-/* The vfork syscall on x86 was definitely available in 2.4.  */
-#if __LINUX_KERNEL_VERSION >= 132097 && defined __i386__
+/* The vfork syscall on x86 and arm was definitely available in 2.4.  */
+#if __LINUX_KERNEL_VERSION >= 132097 && (defined __i386__ || defined __arm__)
 # define __ASSUME_VFORK_SYSCALL		1
 #endif
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <kernel-features.h>
 
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
@@ -33,17 +34,23 @@ ENTRY (__vfork)
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
 
+# ifdef __ASSUME_VFORK_SYSCALL
+	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+# else
 	/* Check if vfork syscall is known at all.  */
 	ldr	a2, =-ENOSYS
 	teq	a1, a2
 	bne	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+# endif
 #endif
 
+#ifndef __ASSUME_VFORK_SYSCALL
 	/* If we don't have vfork, fork is close enough.  */
 	swi	__NR_fork
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+#endif
 
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
