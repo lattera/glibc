@@ -1,5 +1,9 @@
 2004-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/Makefile: When using compilers without -fpie support, also
+	link with -lselinux if necessary.
+	Patch by Arkadiusz Miskiewicz <arekm@pld-linux.org>.
+
 	* nscd/connections.c (nscd_init): Remove file if not persistent
 	and not shared.  Patch by Jerome Borsboom <j.borsboom@erasmusmc.nl>.
 

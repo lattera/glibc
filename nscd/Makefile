@@ -123,10 +123,10 @@ $(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o
 
 ifeq ($(build-shared),yes)
 $(objpfx)nscd: $(common-objpfx)rt/librt.so $(shared-thread-library) \
-	       $(common-objpfx)nis/libnsl.so
+	       $(common-objpfx)nis/libnsl.so $(selinux-LIBS)
 $(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.so
 else
 $(objpfx)nscd: $(common-objpfx)rt/librt.a $(static-thread-library) \
-	       $(common-objpfx)nis/libnsl.a
+	       $(common-objpfx)nis/libnsl.a $(selinux-LIBS)
 $(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.a
 endif
