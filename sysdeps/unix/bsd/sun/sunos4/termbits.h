@@ -103,8 +103,10 @@ struct termios
 #define	CLOCAL	0x00000800	/* Ignore modem status lines.  */
 #ifdef	__USE_BSD
 #define	LOBLK	0x00001000
-#define	CIBAUD	0x000f0000
 #define	CRTSCTS	0x80000000
+#define	CIBAUD	0x000f0000	/* Mask for input speed from c_cflag.  */
+#define	CBAUD	0x0000000f	/* Mask for output speed from c_cflag.  */
+#define	IBSHIFT	16		/* Bits to shift for input speed.  */
 #endif
 
   /* Local modes.  */
