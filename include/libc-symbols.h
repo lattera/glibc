@@ -420,10 +420,10 @@ for linking")
 #  ifdef HAVE_ASM_GLOBAL_DOT_NAME
 #   define _symbol_version(real, name, version) \
      .symver real, name##@##version ASM_LINE_SEP			\
-     .symver .##real, .##name##@##version
+     .symver C_SYMBOL_DOT_NAME(real), C_SYMBOL_DOT_NAME(name##@##version)
 #   define _default_symbol_version(real, name, version) \
      .symver real, name##@##@##version ASM_LINE_SEP			\
-     .symver .##real, .##name##@##@##version
+     .symver C_SYMBOL_DOT_NAME(real), C_SYMBOL_DOT_NAME(name##@##@##version)
 #  else
 #   define _symbol_version(real, name, version) \
      .symver real, name##@##version

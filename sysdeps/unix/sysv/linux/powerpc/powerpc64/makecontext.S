@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,8 +54,8 @@ ENTRY(__makecontext)
   add   r7,r7,r0
   clrrdi  r7,r7,4
   li    r0,0
-  stdu  r0,-48(r7)
-  std   r3,24(r7)
+  stdu  r0,-64(r7)
+  std   r3,FRAME_PARM1_SAVE(r7) /* Store context in dummy parm1.  */
   mflr  r0
   std   r2,FRAME_TOC_SAVE(r7)  /* Store the TOC pointer for later.  */
   std   r0,FRAME_LR_SAVE(r7)
@@ -135,7 +135,7 @@ L(noparms):
 L(exitcode):
    /* Recover the ucontext and TOC from the dummy frame.  */
   ld    r1,FRAME_BACKCHAIN(r1)  /* Unstack the parameter save area frame.  */
-  ld    r3,FRAME_COMPILER_DW(r1)
+  ld    r3,FRAME_PARM1_SAVE(r1)
   ld    r2,FRAME_TOC_SAVE(r1)
   ld    r3,UCONTEXT_LINK(r3)  /* Load the resume context.  */
   cmpdi r3,0

@@ -24,4 +24,7 @@ libc {
     posix_fadvise64; posix_fallocate64;
     setcontext; getcontext; swapcontext; makecontext;
   }
+  GLIBC_2.3.4 {
+    setcontext; getcontext; swapcontext; makecontext;
+  }
 }

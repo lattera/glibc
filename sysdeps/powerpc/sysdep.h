@@ -100,6 +100,42 @@
 #define cr6	6
 #define cr7	7
 
+/* Vector registers. */
+#define v0	0
+#define v1	1
+#define v2	2
+#define v3	3
+#define v4	4
+#define v5	5
+#define v6	6
+#define v7	7
+#define v8	8
+#define v9	9
+#define v10	10
+#define v11	11
+#define v12	12
+#define v13	13
+#define v14	14
+#define v15	15
+#define v16	16
+#define v17	17
+#define v18	18
+#define v19	19
+#define v20	20
+#define v21	21
+#define v22	22
+#define v23	23
+#define v24	24
+#define v25	25
+#define v26	26
+#define v27	27
+#define v28	28
+#define v29	29
+#define v30	30
+#define v31	31
+
+#define VRSAVE	256
+
 
 #ifdef __ELF__
 
@@ -111,5 +147,18 @@
 
 #endif /* __ELF__ */
 
+/* 
+ * Powerpc Feature masks for the Aux Vector Hardware Capabilities (AT_HWCAP). 
+ * This entry is copied to _dl_hwcap or rtld_global._dl_hwcap during startup.
+ * The following must match the kernels linux/asm/cputable.h.  
+ */
+#define PPC_FEATURE_32			0x80000000 /* 32-bit mode. */
+#define PPC_FEATURE_64			0x40000000 /* 64-bit mode. */
+#define PPC_FEATURE_601_INSTR		0x20000000 /* 601 chip, Old POWER ISA.  */
+#define PPC_FEATURE_HAS_ALTIVEC		0x10000000 /* SIMD/Vector Unit.  */
+#define PPC_FEATURE_HAS_FPU		0x08000000 /* Floating Point Unit.  */
+#define PPC_FEATURE_HAS_MMU		0x04000000 /* Memory Management Unit.  */
+#define PPC_FEATURE_HAS_4xxMAC		0x02000000 /* 4xx Multiply Accumulator.  */
+#define PPC_FEATURE_UNIFIED_CACHE	0x01000000 /* Unified I/D cache.  */
 
 #endif	/* __ASSEMBLER__ */

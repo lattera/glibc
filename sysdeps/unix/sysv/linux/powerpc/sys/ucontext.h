@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 #if __WORDSIZE == 32
 
 /* Number of general registers.  */
-#define NGREG	48
+# define NGREG	48
 
 /* Container for all general registers.  */
 typedef unsigned long gregset_t[NGREG];
@@ -62,8 +62,74 @@ typedef struct
 
 #else
 
-/* For 64-bit, a machine context is exactly a sigcontext.  */
-typedef struct sigcontext mcontext_t;
+/* For 64-bit kernels with Altivec support, a machine context is exactly 
+ * a sigcontext.  For older kernel (without Altivec) the sigcontext matches 
+ * the mcontext upto but not including the v_regs field.  For kernels that 
+ * don't AT_HWCAP or return AT_HWCAP without PPC_FEATURE_HAS_ALTIVEC the 
+ * v_regs field may not exit and should not be referenced.  The v_regd field
+ * can be refernced safely only after verifying that PPC_FEATURE_HAS_ALTIVEC
+ * is set in AT_HWCAP.  */
+    
+# include <asm/types.h>
+
+/* Number of general registers.  */
+# define NGREG	48	/* includes r0-r31, nip, msr, lr, etc.   */
+# define NFPREG	33	/* includes fp0-fp31 &fpscr.  */
+# define NVRREG	34	/* includes v0-v31, vscr, & vrsave in split vectors */
+
+typedef unsigned long gregset_t[NGREG];
+typedef double fpregset_t[NFPREG];
+
+/* Container for Altivec/VMX Vector Status and Control Register.  Only 32-bits
+   but can only be copied to/from a 128-bit vector register.  So we allocated 
+   a whole quadword speedup save/restore.  */
+typedef struct _libc_vscr
+{
+	unsigned int __pad[3];
+	unsigned int vscr_word;
+} vscr_t;
+
+/* Container for Altivec/VMX registers and status.
+   Must to be aligned on a 16-byte boundary. */
+typedef struct _libc_vrstate
+{
+	unsigned int	vrregs[32][4];
+	vscr_t		vscr;
+	unsigned int	vrsave;
+	unsigned int	__pad[3];
+} vrregset_t  __attribute__((__aligned__(16)));
+
+typedef struct {
+	unsigned long	__unused[4];
+	int		signal;
+	int		__pad0;
+	unsigned long	handler;
+	unsigned long	oldmask;
+	struct pt_regs	*regs;
+	gregset_t	gp_regs;
+	fpregset_t	fp_regs;
+/*
+ * To maintain compatibility with current implementations the sigcontext is 
+ * extended by appending a pointer (v_regs) to a quadword type (elf_vrreg_t) 
+ * followed by an unstructured (vmx_reserve) field of 69 doublewords.  This 
+ * allows the array of vector registers to be quadword aligned independent of 
+ * the alignment of the containing sigcontext or ucontext. It is the 
+ * responsibility of the code setting the sigcontext to set this pointer to 
+ * either NULL (if this processor does not support the VMX feature) or the 
+ * address of the first quadword within the allocated (vmx_reserve) area.
+ *
+ * The pointer (v_regs) of vector type (elf_vrreg_t) is essentually  
+ * an array of 34 quadword entries.  The entries with 
+ * indexes 0-31 contain the corresponding vector registers.  The entry with 
+ * index 32 contains the vscr as the last word (offset 12) within the 
+ * quadword.  This allows the vscr to be stored as either a quadword (since 
+ * it must be copied via a vector register to/from storage) or as a word.  
+ * The entry with index 33 contains the vrsave as the first word (offset 0) 
+ * within the quadword.
+ */
+	vrregset_t	*v_regs;
+	long		vmx_reserve[NVRREG+NVRREG+1];
+} mcontext_t;
 
 #endif
 

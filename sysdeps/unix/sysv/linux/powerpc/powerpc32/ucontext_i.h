@@ -21,6 +21,13 @@
 #define SIG_BLOCK	0
 #define SIG_SETMASK	2
 
+#define _FRAME_BACKCHAIN	0
+#define _FRAME_LR_SAVE	4
+#define _FRAME_PARM_SAVE1	8
+#define _FRAME_PARM_SAVE2	12
+#define _FRAME_PARM_SAVE3	16
+#define _FRAME_PARM_SAVE4	20
+
 #define _UC_LINK	4
 #define _UC_STACK_SP	8
 #define _UC_STACK_SIZE	16
@@ -32,3 +39,5 @@
 #define _UC_GREGS	0
 #define _UC_FREGS	192
 #define _UC_VREGS	464
+#define _UC_VSCR	976
+#define _UC_VRSAVE	980

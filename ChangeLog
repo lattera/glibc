@@ -1,3 +1,70 @@
+2004-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* include/libc-symbols.h [HAVE_ASM_GLOBAL_DOT_NAME]
+	(_symbol_version): Use C_SYMBOL_DOT_NAME to create '.'ed symbols.
+	(_default_symbol_version): Use C_SYMBOL_DOT_NAME to create '.'ed
+	symbols.
+	* sysdeps/powerpc/Makefile: Add rtld-global-offsets.sym to
+	gen-as-const-headers.
+	* sysdeps/powerpc/elf/rtld-global-offsets.sym: New file.
+	* sysdeps/powerpc/sysdep.h: Define v# symbols for vector registers.
+	Define PPC_FEATURE_* masks for Aux Vector AT_HWCAP.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SWAPCONTEXT_SYSCALL): Define for PPC and 2.6.0 kernels.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h [!__WORDSIZE == 32]:
+	Declare mcontext_t inline and include altivec state for 64-bit.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: Add GLIBC_2.3.4
+	versions for setcontext, getcontext, and swapcontext.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: Add GLIBC_2.3.4
+	versions for setcontext, getcontext, swapcontext, and makecontext.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S
+	(__getcontext):  Upgrade to save Altivec regs and version GLIBC_2_3_4.
+	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)](__novec_getcontext):
+	Compatible with GLIBC_2.3.3 release.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(__makecontext): Use parm save area instead of compiler_dw to hold
+	context pointer.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(__setcontext):  Upgrade to restore Altivec regs and version
+	GLIBC_2_3_4.
+	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)](__novec_setcontext):
+	Compatible with GLIBC_2.3.3 release.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__swapcontext): Upgrade to swap Altivec regs and version GLIBC_2_3_4.
+	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)](__novec_swapcontext):
+	Compatible with GLIBC_2.3.3 release.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h
+	(SIGCONTEXT_V_REGS_PTR, SIGCONTEXT_V_RESERVE): Defined.
+
+
+2004-01-12  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions: Add GLIBC_2.3.4
+	versions for setcontext, getcontext, swapcontext, and makecontext.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S
+	(__getcontext):  Upgrade to save Altivec regs and version GLIBC_2_3_4.
+	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)](__novec_getcontext):
+	Compatible with GLIBC_2.3.3 release.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S
+	(__makecontext): Upgrade to align for Altivec regs and version
+	GLIBC_2_3_4.
+	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)](__novec_makecontext):
+	Compatible with GLIBC_2.3.3 release.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S
+	(__setcontext):  Upgrade to restore Altivec regs and version
+	GLIBC_2_3_4.
+	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)](__novec_setcontext):
+	Compatible with GLIBC_2.3.3 release.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
+	(__swapcontext): Upgrade to swap Altivec regs and version GLIBC_2_3_4.
+	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)]
+	(__novec_swapcontext): Compatible with GLIBC_2.3.3 release.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.h:
+	(_UC_VSCR, _UC_VRSAVE): Define.
+	(_FRAME_BACKCHAIN, _FRAME_LR_SAVE,_FRAME_PARM_SAVE1,_FRAME_PARM_SAVE2,
+	_FRAME_PARM_SAVE3, _FRAME_PARM_SAVE4): Defined.
+
 2004-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c: Handle platforms with HP_TIMING_NONAVAIL defined.

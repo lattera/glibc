@@ -1,5 +1,5 @@
 /* Save current context.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <rtld-global-offsets.h>
 #include <shlib-compat.h>
 
 #define __ASSEMBLY__
@@ -25,6 +26,231 @@
 #include "ucontext_i.h"
 
 ENTRY(__getcontext)
+	stw	r3,_FRAME_PARM_SAVE1(r1)
+	addi	r3,r3,_UC_REG_SPACE+12
+	clrrwi  r3,r3,4
+	stw	r0,_UC_GREGS+(PT_R0*4)(r3)
+	mflr	r0
+	stw	r1,_UC_GREGS+(PT_R1*4)(r3)
+	stwu	r1,-16(r1)
+	stw	r0,_UC_GREGS+(PT_LNK*4)(r3)
+	stw	r0,_UC_GREGS+(PT_NIP*4)(r3)
+	stw	r0,_FRAME_LR_SAVE+16(r1)
+	stw	r2,_UC_GREGS+(PT_R2*4)(r3)
+	stw	r4,_UC_GREGS+(PT_R4*4)(r3)
+	stw	r5,_UC_GREGS+(PT_R5*4)(r3)
+	stw	r6,_UC_GREGS+(PT_R6*4)(r3)
+	stw	r7,_UC_GREGS+(PT_R7*4)(r3)
+	stw	r8,_UC_GREGS+(PT_R8*4)(r3)
+	stw	r9,_UC_GREGS+(PT_R9*4)(r3)
+	stw	r10,_UC_GREGS+(PT_R10*4)(r3)
+	stw	r11,_UC_GREGS+(PT_R11*4)(r3)
+	stw	r12,_UC_GREGS+(PT_R12*4)(r3)
+	stw	r13,_UC_GREGS+(PT_R13*4)(r3)
+	stw	r14,_UC_GREGS+(PT_R14*4)(r3)
+	stw	r15,_UC_GREGS+(PT_R15*4)(r3)
+	stw	r16,_UC_GREGS+(PT_R16*4)(r3)
+	stw	r17,_UC_GREGS+(PT_R17*4)(r3)
+	stw	r18,_UC_GREGS+(PT_R18*4)(r3)
+	stw	r19,_UC_GREGS+(PT_R19*4)(r3)
+	stw	r20,_UC_GREGS+(PT_R20*4)(r3)
+	stw	r21,_UC_GREGS+(PT_R21*4)(r3)
+	stw	r22,_UC_GREGS+(PT_R22*4)(r3)
+	stw	r23,_UC_GREGS+(PT_R23*4)(r3)
+	stw	r24,_UC_GREGS+(PT_R24*4)(r3)
+	stw	r25,_UC_GREGS+(PT_R25*4)(r3)
+	stw	r26,_UC_GREGS+(PT_R26*4)(r3)
+	stw	r27,_UC_GREGS+(PT_R27*4)(r3)
+	stw	r28,_UC_GREGS+(PT_R28*4)(r3)
+	stw	r29,_UC_GREGS+(PT_R29*4)(r3)
+	stw	r30,_UC_GREGS+(PT_R30*4)(r3)
+	stw	r31,_UC_GREGS+(PT_R31*4)(r3)
+	mfctr	r0
+	stw	r0,_UC_GREGS+(PT_CTR*4)(r3)
+	mfxer	r0
+	stw	r0,_UC_GREGS+(PT_XER*4)(r3)
+	mfcr	r0
+	stw	r0,_UC_GREGS+(PT_CCR*4)(r3)
+
+	/* Set the return value of getcontext to "success".  R3 is the only 
+	   register whose value is not preserved in the saved context.  */
+	li	r0,0
+	stw	r0,_UC_GREGS+(PT_R3*4)(r3)
+
+	/* Zero fill fields that can't be set in user state. */
+	stw	r0,_UC_GREGS+(PT_MSR*4)(r3)
+	stw	r0,_UC_GREGS+(PT_MQ*4)(r3)
+
+	/* Save the floating-point registers */
+	stfd	fp0,_UC_FREGS+(0*8)(r3)
+	stfd	fp1,_UC_FREGS+(1*8)(r3)
+	stfd	fp2,_UC_FREGS+(2*8)(r3)
+	stfd	fp3,_UC_FREGS+(3*8)(r3)
+	stfd	fp4,_UC_FREGS+(4*8)(r3)
+	stfd	fp5,_UC_FREGS+(5*8)(r3)
+	stfd	fp6,_UC_FREGS+(6*8)(r3)
+	stfd	fp7,_UC_FREGS+(7*8)(r3)
+	stfd	fp8,_UC_FREGS+(8*8)(r3)
+	stfd	fp9,_UC_FREGS+(9*8)(r3)
+	stfd	fp10,_UC_FREGS+(10*8)(r3)
+	stfd	fp11,_UC_FREGS+(11*8)(r3)
+	stfd	fp12,_UC_FREGS+(12*8)(r3)
+	stfd	fp13,_UC_FREGS+(13*8)(r3)
+	stfd	fp14,_UC_FREGS+(14*8)(r3)
+	stfd	fp15,_UC_FREGS+(15*8)(r3)
+	stfd	fp16,_UC_FREGS+(16*8)(r3)
+	stfd	fp17,_UC_FREGS+(17*8)(r3)
+	stfd	fp18,_UC_FREGS+(18*8)(r3)
+	stfd	fp19,_UC_FREGS+(19*8)(r3)
+	stfd	fp20,_UC_FREGS+(20*8)(r3)
+	stfd	fp21,_UC_FREGS+(21*8)(r3)
+	stfd	fp22,_UC_FREGS+(22*8)(r3)
+	stfd	fp23,_UC_FREGS+(23*8)(r3)
+	stfd	fp24,_UC_FREGS+(24*8)(r3)
+	stfd	fp25,_UC_FREGS+(25*8)(r3)
+	stfd	fp26,_UC_FREGS+(26*8)(r3)
+	stfd	fp27,_UC_FREGS+(27*8)(r3)
+	stfd	fp28,_UC_FREGS+(28*8)(r3)
+	stfd	fp29,_UC_FREGS+(29*8)(r3)
+	mffs	fp0
+	stfd	fp30,_UC_FREGS+(30*8)(r3)
+	stfd	fp31,_UC_FREGS+(31*8)(r3)
+	stfd	fp0,_UC_FREGS+(32*8)(r3)
+
+#ifdef PIC
+	mflr    r8
+	bl      _GLOBAL_OFFSET_TABLE_@local-4
+	mflr    r7
+#ifdef SHARED	
+	lwz     r7,_rtld_global@got(r7)
+	mtlr    r8
+	lwz     r7,RTLD_GLOBAL_DL_HWCAP_OFFSET(r7)
+#else	
+	lwz     r7,_dl_hwcap@got(r7)
+	mtlr    r8
+	lwz     r7,0(r7)
+#endif
+#else
+	lis	r7,_dl_hwcap@ha
+	lwz     r7,_dl_hwcap@l(r7)
+#endif
+	andis.	r7,r7,(PPC_FEATURE_HAS_ALTIVEC >> 16)
+	beq	L(no_vec)
+  
+	la	r10,(_UC_VREGS)(r3)
+	la	r9,(_UC_VREGS+16)(r3)
+
+	stvx  v0,0,r10  
+	stvx  v1,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v2,0,r10  
+	stvx  v3,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v4,0,r10  
+	stvx  v5,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v6,0,r10  
+	stvx  v7,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v8,0,r10  
+	stvx  v9,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v10,0,r10  
+	stvx  v11,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v12,0,r10  
+	stvx  v13,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v14,0,r10  
+	stvx  v15,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v16,0,r10  
+	stvx  v17,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v18,0,r10  
+	stvx  v11,0,r9
+	addi  r19,r10,32
+	addi  r9,r9,32
+
+	stvx  v20,0,r10  
+	stvx  v21,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v22,0,r10  
+	stvx  v23,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v24,0,r10  
+	stvx  v25,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v26,0,r10  
+	stvx  v27,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v28,0,r10  
+	stvx  v29,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v30,0,r10  
+	stvx  v31,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+
+	stvx  v10,0,r10  
+	stvx  v11,0,r9
+	addi  r10,r10,32
+	addi  r9,r9,32
+  
+	mfvscr	v0
+	mfspr	r0,VRSAVE
+	stvx	v0,0,r10
+	sync
+ 	stw	r0,0(r10)
+
+L(no_vec):
+/* Restore ucontext (parm1) from stack.  */
+	lwz	r12,_FRAME_PARM_SAVE1+16(r1)
+	li	r4,0
+	stw	r3,_UC_REGS_PTR(r12)
+	addi	r5,r12,_UC_SIGMASK
+	li	r3,SIG_BLOCK
+	bl	JUMPTARGET(sigprocmask)
+
+	lwz	r0,_FRAME_LR_SAVE+16(r1)
+	addi	r1,r1,16
+	mtlr	r0
+	blr
+PSEUDO_END(__getcontext)
+
+versioned_symbol (libc, __getcontext, getcontext, GLIBC_2_3_4)
+
+#if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
+
+ENTRY(__novec_getcontext)
 	/*
 	 * Since we are not attempting to save the altivec registers,
 	 * there is no need to get the register storage space
@@ -119,7 +345,7 @@ ENTRY(__getcontext)
 	stfd	fp30,_UC_FREGS+(30*8)(r3)
 	stfd	fp31,_UC_FREGS+(31*8)(r3)
 	stfd	fp0,_UC_FREGS+(32*8)(r3)
-
+	
 	addi	r5,r3,_UC_SIGMASK - _UC_REG_SPACE
 	li	r4,0
 	li	r3,SIG_BLOCK
@@ -129,9 +355,11 @@ ENTRY(__getcontext)
 	addi	r1,r1,16
 	mtlr	r0
 	blr
-PSEUDO_END(__getcontext)
+PSEUDO_END(__novec_getcontext)
 
-versioned_symbol (libc, __getcontext, getcontext, GLIBC_2_3_3)
+compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3_3)
+
+#endif
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3_3)
 

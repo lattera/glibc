@@ -379,3 +379,10 @@
 #if __LINUX_KERNEL_VERSION >= 132609
 # define __ASSUME_PROT_GROWSUPDOWN	1
 #endif
+
+/* Starting with 2.6.0 PowerPC adds signal/swapcontext support for Vector 
+   SIMD (AKA Altivec, VMX) instructions and register state.  This changes 
+   the overall size of the sigcontext and adds the swapcontext syscall.  */
+#if __LINUX_KERNEL_VERSION >= (132608) && defined __powerpc__
+# define __ASSUME_SWAPCONTEXT_SYSCALL		1
+#endif

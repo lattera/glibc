@@ -14,4 +14,9 @@ libc {
     # s*
     scandir64; 
   }
+  GLIBC_2.3.4 {
+    getcontext;
+    setcontext; 
+    swapcontext;
+  }
 }
