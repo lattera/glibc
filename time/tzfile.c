@@ -54,10 +54,26 @@ static char *zone_names = NULL;
 static size_t num_leaps;
 static struct leap *leaps = NULL;
 
-#define	uc2ul(x)	_uc2ul((unsigned char *) (x))
-#define	_uc2ul(x)							      \
-  ((x)[3] + ((x)[2] << CHAR_BIT) + ((x)[1] << (2 * CHAR_BIT)) +		      \
-   ((x)[0] << (3 * CHAR_BIT)))
+#include <endian.h>
+
+/* Decode the four bytes at PTR as a signed integer in network byte order.  */
+static inline int
+decode (const void *ptr)
+{
+#if BYTE_ORDER == BIG_ENDIAN
+  return *(const int *) ptr;
+#else
+  const unsigned char *p = ptr;
+  int result = 0;
+
+  result = (result << 8) | *p++;
+  result = (result << 8) | *p++;
+  result = (result << 8) | *p++;
+  result = (result << 8) | *p++;
+
+  return result;
+#endif
+}
 
 void
 DEFUN(__tzfile_read, (file), CONST char *file)
@@ -107,12 +123,12 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   if (fread((PTR) &tzhead, sizeof(tzhead), 1, f) != 1)
     goto lose;
 
-  num_transitions = (size_t) uc2ul(tzhead.tzh_timecnt);
-  num_types = (size_t) uc2ul (tzhead.tzh_typecnt);
-  chars = (size_t) uc2ul (tzhead.tzh_charcnt);
-  num_leaps = (size_t) uc2ul (tzhead.tzh_leapcnt);
-  num_isstd = (size_t) uc2ul (tzhead.tzh_ttisstdcnt);
-  num_isgmt = (size_t) uc2ul (tzhead.tzh_ttisgmtcnt);
+  num_transitions = (size_t) decode (tzhead.tzh_timecnt);
+  num_types = (size_t) decode (tzhead.tzh_typecnt);
+  chars = (size_t) decode (tzhead.tzh_charcnt);
+  num_leaps = (size_t) decode (tzhead.tzh_leapcnt);
+  num_isstd = (size_t) decode (tzhead.tzh_ttisstdcnt);
+  num_isgmt = (size_t) decode (tzhead.tzh_ttisgmtcnt);
 
   if (num_transitions > 0)
     {
@@ -142,13 +158,20 @@ DEFUN(__tzfile_read, (file), CONST char *file)
 	goto lose;
     }
 
-  if (fread((PTR) transitions, sizeof(time_t),
-	    num_transitions, f) != num_transitions ||
+  if (fread((PTR) transitions, 4, num_transitions, f) != num_transitions ||
       fread((PTR) type_idxs, 1, num_transitions, f) != num_transitions)
     goto lose;
 
-  for (i = 0; i < num_transitions; ++i)
-    transitions[i] = uc2ul (&transitions[i]);
+  if (BYTE_ORDER != BIG_ENDIAN || sizeof (time_t) != 4)
+    {
+      /* Decode the transition times, stored as 4-byte integers in
+	 network (big-endian) byte order.  We work from the end of
+	 the array so as not to clobber the next element to be
+	 processed when sizeof (time_t) > 4.  */
+      i = num_transitions;
+      while (num_transitions-- > 0)
+	transitions[i] = decode ((char *) transitions + i*4);
+    }
 
   for (i = 0; i < num_types; ++i)
     {
@@ -157,7 +180,7 @@ DEFUN(__tzfile_read, (file), CONST char *file)
 	  fread((PTR) &types[i].isdst, 1, 1, f) != 1 ||
 	  fread((PTR) &types[i].idx, 1, 1, f) != 1)
 	goto lose;
-      types[i].offset = (long int) uc2ul(x);
+      types[i].offset = (long int) decode (x);
     }
 
   if (fread((PTR) zone_names, 1, chars, f) != chars)
@@ -168,10 +191,10 @@ DEFUN(__tzfile_read, (file), CONST char *file)
       unsigned char x[4];
       if (fread((PTR) x, 1, sizeof(x), f) != sizeof(x))
 	goto lose;
-      leaps[i].transition = (time_t) uc2ul(x);
+      leaps[i].transition = (time_t) decode (x);
       if (fread((PTR) x, 1, sizeof(x), f) != sizeof(x))
 	goto lose;
-      leaps[i].change = (long int) uc2ul(x);
+      leaps[i].change = (long int) decode (x);
     }
 
   for (i = 0; i < num_isstd; ++i)
