@@ -1,5 +1,9 @@
 Wed Feb  7 18:48:30 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makefile (subdirs): Added wcsmbs.
+	* wcsmbs: New directory of wide char/multibyte char functions from
+	drepper.
+
 	* hurd/hurdmsg.c (_S_msg_report_wait): Function removed.
 	* hurd/report-wait.c: New file.
 	* hurd/Makefile (routines): Added report-wait.
