@@ -1,3 +1,12 @@
+2000-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FCNTL64):
+	Define for 2.4.1 on sparc as well.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Fill in correct values
+	for F_GETLK64, F_SETLK64, and F_SETLKW64.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fcntl.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lockf64.c: New file.
+
 2000-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/fts.c (fts_stat): Recognize DT_WHT only if S_IFWHT is also
