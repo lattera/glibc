@@ -1,3 +1,12 @@
+2002-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/Makefile (routines): Remove lockfile.  Add
+	flockfile, ftrylockfile, and funlockfile.
+	* sysdeps/generic/lockfile.c: Removed.  Each function has its own file.
+	* sysdeps/generic/flockfile.c: New file.
+	* sysdeps/generic/ftrylockfile.c: New file.
+	* sysdeps/generic/funlockfile.c: New file.
+
 2002-12-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/socket.S: Use CENABLE and CDISABLE

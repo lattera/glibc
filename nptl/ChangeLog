@@ -1,3 +1,12 @@
+2002-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* flockfile.c: Moved to...
+	* sysdeps/pthread/flockfile.c: ...here.  New file.
+	* funlockfile.c: Moved to...
+	* sysdeps/pthread/funlockfile.c: ...here.  New file.
+	* ftrylockfile.c: Moved to...
+	* sysdeps/pthread/ftrylockfile.c: ...here.  New file.
+
 2002-12-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* libc-cancellation.c: Guard both function with

@@ -34,7 +34,7 @@ routines	:=							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
 	getline getw putw						      \
 	remove rename							      \
-	lockfile
+	flockfile ftrylockfile funlockfile
 
 install-others = $(inst_includedir)/bits/stdio_lim.h
 
@@ -87,8 +87,6 @@ tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
 test-vfprintf-ENV = LOCPATH=$(common-objpfx)localedata
 
-ifeq ($(stdio),libio)
 ifneq (,$(filter %REENTRANT, $(defines)))
 CPPFLAGS += -D_IO_MTSAFE_IO
-endif
 endif

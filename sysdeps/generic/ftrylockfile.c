@@ -1,5 +1,5 @@
-/* lockfile - Handle locking and unlocking of stream.  Singlethreaded version.
-   Copyright (C) 1996,97,2000 Free Software Foundation, Inc.
+/* Try locking I/O stream.  Singlethreaded version.
+   Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,31 +19,7 @@
 
 #include <stdio.h>
 
-#undef _IO_flockfile
-#undef _IO_funlockfile
 #undef _IO_ftrylockfile
-
-void
-__flockfile (FILE *stream)
-{
-  /* Do nothing.  Using this version does not do any locking.  */
-}
-weak_alias (__flockfile, flockfile);
-#ifdef USE_IN_LIBIO
-weak_alias (__flockfile, _IO_flockfile)
-#endif
-
-
-void
-__funlockfile (FILE *stream)
-{
-  /* Do nothing.  Using this version does not do any locking.  */
-}
-#ifdef USE_IN_LIBIO
-weak_alias (__funlockfile, _IO_funlockfile)
-#endif
-weak_alias (__funlockfile, funlockfile);
-
 
 int
 __ftrylockfile (FILE *stream)
@@ -52,6 +28,4 @@ __ftrylockfile (FILE *stream)
   return 1;
 }
 weak_alias (__ftrylockfile, ftrylockfile);
-#ifdef USE_IN_LIBIO
 weak_alias (__ftrylockfile, _IO_ftrylockfile)
-#endif

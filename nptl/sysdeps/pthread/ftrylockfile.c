@@ -24,9 +24,10 @@
 
 
 int
-ftrylockfile (stream)
+__ftrylockfile (stream)
      FILE *stream;
 {
   return _IO_lock_trylock (*stream->_lock);
 }
-strong_alias (ftrylockfile, _IO_ftrylockfile)
+strong_alias (__ftrylockfile, _IO_ftrylockfile)
+weak_alias (__ftrylockfile, ftrylockfile)
