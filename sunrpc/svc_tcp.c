@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -32,7 +32,7 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #endif
 
 /*
- * svc_tcp.c, Server side for TCP/IP based RPC. 
+ * svc_tcp.c, Server side for TCP/IP based RPC.
  *
  * Copyright (C) 1984, Sun Microsystems, Inc.
  *
@@ -131,7 +131,7 @@ svctcp_create(sock, sendsize, recvsize)
 
 	if (sock == RPC_ANYSOCK) {
 		if ((sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
-			perror("svctcp_.c - udp socket creation problem");
+			perror(_("svctcp_.c - udp socket creation problem"));
 			return ((SVCXPRT *)NULL);
 		}
 		madesock = TRUE;
@@ -144,21 +144,21 @@ svctcp_create(sock, sendsize, recvsize)
 	}
 	if ((getsockname(sock, (struct sockaddr *)&addr, &len) != 0)  ||
 	    (listen(sock, 2) != 0)) {
-		perror("svctcp_.c - cannot getsockname or listen");
+		perror(_("svctcp_.c - cannot getsockname or listen"));
 		if (madesock)
 		       (void)close(sock);
 		return ((SVCXPRT *)NULL);
 	}
 	r = (struct tcp_rendezvous *)mem_alloc(sizeof(*r));
 	if (r == NULL) {
-		(void) fprintf(stderr, "svctcp_create: out of memory\n");
+		(void) fprintf(stderr, _("svctcp_create: out of memory\n"));
 		return (NULL);
 	}
 	r->sendsize = sendsize;
 	r->recvsize = recvsize;
 	xprt = (SVCXPRT *)mem_alloc(sizeof(SVCXPRT));
 	if (xprt == NULL) {
-		(void) fprintf(stderr, "svctcp_create: out of memory\n");
+		(void) fprintf(stderr, _("svctcp_create: out of memory\n"));
 		return (NULL);
 	}
 	xprt->xp_p2 = NULL;
@@ -193,15 +193,15 @@ makefd_xprt(fd, sendsize, recvsize)
 {
 	register SVCXPRT *xprt;
 	register struct tcp_conn *cd;
- 
+
 	xprt = (SVCXPRT *)mem_alloc(sizeof(SVCXPRT));
 	if (xprt == (SVCXPRT *)NULL) {
-		(void) fprintf(stderr, "svc_tcp: makefd_xprt: out of memory\n");
+		(void) fprintf(stderr, _("svc_tcp: makefd_xprt: out of memory\n"));
 		goto done;
 	}
 	cd = (struct tcp_conn *)mem_alloc(sizeof(struct tcp_conn));
 	if (cd == (struct tcp_conn *)NULL) {
-		(void) fprintf(stderr, "svc_tcp: makefd_xprt: out of memory\n");
+		(void) fprintf(stderr, _("svc_tcp: makefd_xprt: out of memory\n"));
 		mem_free((char *) xprt, sizeof(SVCXPRT));
 		xprt = (SVCXPRT *)NULL;
 		goto done;
@@ -304,7 +304,7 @@ readtcp(xprt, buf, len)
 #endif /* def FD_SETSIZE */
 	do {
 		readfds = mask;
-		if (select(_rpc_dtablesize(), &readfds, (int*)NULL, (int*)NULL, 
+		if (select(_rpc_dtablesize(), &readfds, (int*)NULL, (int*)NULL,
 			   &wait_per_try) <= 0) {
 			if (errno == EINTR) {
 				continue;

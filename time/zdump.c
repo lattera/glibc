@@ -132,7 +132,7 @@ char *	argv[];
 	if (c != EOF ||
 		(optind == argc - 1 && strcmp(argv[optind], "=") == 0)) {
 			(void) fprintf(stderr,
-"%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n",
+_("%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"),
 				argv[0], argv[0]);
 			(void) exit(EXIT_FAILURE);
 	}
@@ -224,9 +224,9 @@ char *	argv[];
 		show(argv[i], t, TRUE);
 	}
 	if (fflush(stdout) || ferror(stdout)) {
-		(void) fprintf(stderr, "%s: Error writing standard output ",
+		(void) fprintf(stderr, _("%s: Error writing standard output "),
 			argv[0]);
-		(void) perror("standard output");
+		(void) perror(_("standard output"));
 		(void) exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);

@@ -386,10 +386,10 @@ const char * const	string;
 	**	zic ... 2>&1 | error -t "*" -v
 	** on BSD systems.
 	*/
-	(void) fprintf(stderr, "\"%s\", line %d: %s",
+	(void) fprintf(stderr, _("\"%s\", line %d: %s"),
 		filename, linenum, string);
 	if (rfilename != NULL)
-		(void) fprintf(stderr, " (rule from \"%s\", line %d)",
+		(void) fprintf(stderr, _(" (rule from \"%s\", line %d)"),
 			rfilename, rlinenum);
 	(void) fprintf(stderr, "\n");
 	++errors;
@@ -398,9 +398,9 @@ const char * const	string;
 static void
 usage P((void))
 {
-	(void) fprintf(stderr, "%s: usage is %s \
+	(void) fprintf(stderr, _("%s: usage is %s \
 [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n\
-\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n",
+\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"),
 		progname, progname);
 	(void) exit(EXIT_FAILURE);
 }
@@ -434,7 +434,7 @@ char *	argv[];
 					directory = optarg;
 				else {
 					(void) fprintf(stderr,
-"%s: More than one -d option specified\n",
+_("%s: More than one -d option specified\n"),
 						progname);
 					(void) exit(EXIT_FAILURE);
 				}
@@ -444,7 +444,7 @@ char *	argv[];
 					lcltime = optarg;
 				else {
 					(void) fprintf(stderr,
-"%s: More than one -l option specified\n",
+_("%s: More than one -l option specified\n"),
 						progname);
 					(void) exit(EXIT_FAILURE);
 				}
@@ -454,7 +454,7 @@ char *	argv[];
 					psxrules = optarg;
 				else {
 					(void) fprintf(stderr,
-"%s: More than one -p option specified\n",
+_("%s: More than one -p option specified\n"),
 						progname);
 					(void) exit(EXIT_FAILURE);
 				}
@@ -464,7 +464,7 @@ char *	argv[];
 					yitcommand = optarg;
 				else {
 					(void) fprintf(stderr,
-"%s: More than one -y option specified\n",
+_("%s: More than one -y option specified\n"),
 						progname);
 					(void) exit(EXIT_FAILURE);
 				}
@@ -474,7 +474,7 @@ char *	argv[];
 					leapsec = optarg;
 				else {
 					(void) fprintf(stderr,
-"%s: More than one -L option specified\n",
+_("%s: More than one -L option specified\n"),
 						progname);
 					(void) exit(EXIT_FAILURE);
 				}
@@ -557,7 +557,7 @@ const char * const	tofile;
 		if (mkdirs(toname) != 0)
 			(void) exit(EXIT_FAILURE);
 		if (link(fromname, toname) != 0) {
-			(void) fprintf(stderr, "%s: Can't link from %s to ",
+			(void) fprintf(stderr, _("%s: Can't link from %s to "),
 				progname, fromname);
 			(void) perror(toname);
 			(void) exit(EXIT_FAILURE);
@@ -672,7 +672,7 @@ associate P((void))
 			** a '%s' in the format is a bad thing.
 			*/
 			if (strchr(zp->z_format, '%') != 0)
-				error("%s in ruleless zone");
+				error(_("%s in ruleless zone"));
 		}
 	}
 	if (errors)
@@ -693,10 +693,10 @@ const char *	name;
 	char				buf[BUFSIZ];
 
 	if (strcmp(name, "-") == 0) {
-		name = "standard input";
+		name = _("standard input");
 		fp = stdin;
 	} else if ((fp = fopen(name, "r")) == NULL) {
-		(void) fprintf(stderr, "%s: Can't open ", progname);
+		(void) fprintf(stderr, _("%s: Can't open "), progname);
 		(void) perror(name);
 		(void) exit(EXIT_FAILURE);
 	}
@@ -707,7 +707,7 @@ const char *	name;
 			break;
 		cp = strchr(buf, '\n');
 		if (cp == NULL) {
-			error("line too long");
+			error(_("line too long"));
 			(void) exit(EXIT_FAILURE);
 		}
 		*cp = '\0';
@@ -727,7 +727,7 @@ const char *	name;
 		} else {
 			lp = byword(fields[0], line_codes);
 			if (lp == NULL)
-				error("input line of unknown type");
+				error(_("input line of unknown type"));
 			else switch ((int) (lp->l_value)) {
 				case LC_RULE:
 					inrule(fields, nfields);
@@ -743,14 +743,14 @@ const char *	name;
 				case LC_LEAP:
 					if (name != leapsec)
 						(void) fprintf(stderr,
-"%s: Leap line in non leap seconds file %s\n",
+_("%s: Leap line in non leap seconds file %s\n"),
 							progname, name);
 					else	inleap(fields, nfields);
 					wantcont = FALSE;
 					break;
 				default:	/* "cannot happen" */
 					(void) fprintf(stderr,
-"%s: panic: Invalid l_value %d\n",
+_("%s: panic: Invalid l_value %d\n"),
 						progname, lp->l_value);
 					(void) exit(EXIT_FAILURE);
 			}
@@ -758,17 +758,17 @@ const char *	name;
 		ifree((char *) fields);
 	}
 	if (ferror(fp)) {
-		(void) fprintf(stderr, "%s: Error reading ", progname);
+		(void) fprintf(stderr, _("%s: Error reading "), progname);
 		(void) perror(filename);
 		(void) exit(EXIT_FAILURE);
 	}
 	if (fp != stdin && fclose(fp)) {
-		(void) fprintf(stderr, "%s: Error closing ", progname);
+		(void) fprintf(stderr, _("%s: Error closing "), progname);
 		(void) perror(filename);
 		(void) exit(EXIT_FAILURE);
 	}
 	if (wantcont)
-		error("expected continuation line not found");
+		error(_("expected continuation line not found"));
 }
 
 /*
@@ -823,16 +823,16 @@ const int		nfields;
 	static struct rule	r;
 
 	if (nfields != RULE_FIELDS) {
-		error("wrong number of fields on Rule line");
+		error(_("wrong number of fields on Rule line"));
 		return;
 	}
 	if (*fields[RF_NAME] == '\0') {
-		error("nameless rule");
+		error(_("nameless rule"));
 		return;
 	}
 	r.r_filename = filename;
 	r.r_linenum = linenum;
-	r.r_stdoff = gethms(fields[RF_STDOFF], "invalid saved time", TRUE);
+	r.r_stdoff = gethms(fields[RF_STDOFF], _("invalid saved time"), TRUE);
 	rulesub(&r, fields[RF_LOYEAR], fields[RF_HIYEAR], fields[RF_COMMAND],
 		fields[RF_MONTH], fields[RF_DAY], fields[RF_TOD]);
 	r.r_name = ecpyalloc(fields[RF_NAME]);
@@ -851,13 +851,13 @@ const int		nfields;
 	static char *	buf;
 
 	if (nfields < ZONE_MINFIELDS || nfields > ZONE_MAXFIELDS) {
-		error("wrong number of fields on Zone line");
+		error(_("wrong number of fields on Zone line"));
 		return FALSE;
 	}
 	if (strcmp(fields[ZF_NAME], TZDEFAULT) == 0 && lcltime != NULL) {
 		buf = erealloc(buf, (int) (132 + strlen(TZDEFAULT)));
 		(void) sprintf(buf,
-"\"Zone %s\" line and -l option are mutually exclusive",
+_("\"Zone %s\" line and -l option are mutually exclusive"),
 			TZDEFAULT);
 		error(buf);
 		return FALSE;
@@ -865,7 +865,7 @@ const int		nfields;
 	if (strcmp(fields[ZF_NAME], TZDEFRULES) == 0 && psxrules != NULL) {
 		buf = erealloc(buf, (int) (132 + strlen(TZDEFRULES)));
 		(void) sprintf(buf,
-"\"Zone %s\" line and -p option are mutually exclusive",
+_("\"Zone %s\" line and -p option are mutually exclusive"),
 			TZDEFRULES);
 		error(buf);
 		return FALSE;
@@ -877,7 +877,7 @@ const int		nfields;
 					strlen(fields[ZF_NAME]) +
 					strlen(zones[i].z_filename)));
 				(void) sprintf(buf,
-"duplicate zone name %s (file \"%s\", line %d)",
+_("duplicate zone name %s (file \"%s\", line %d)"),
 					fields[ZF_NAME],
 					zones[i].z_filename,
 					zones[i].z_linenum);
@@ -893,7 +893,7 @@ register char ** const	fields;
 const int		nfields;
 {
 	if (nfields < ZONEC_MINFIELDS || nfields > ZONEC_MAXFIELDS) {
-		error("wrong number of fields on Zone continuation line");
+		error(_("wrong number of fields on Zone continuation line"));
 		return FALSE;
 	}
 	return inzsub(fields, nfields, TRUE);
@@ -933,10 +933,10 @@ const int		iscont;
 	}
 	z.z_filename = filename;
 	z.z_linenum = linenum;
-	z.z_gmtoff = gethms(fields[i_gmtoff], "invalid GMT offset", TRUE);
+	z.z_gmtoff = gethms(fields[i_gmtoff], _("invalid GMT offset"), TRUE);
 	if ((cp = strchr(fields[i_format], '%')) != 0) {
 		if (*++cp != 's' || strchr(cp, '%') != 0) {
-			error("invalid abbreviation format");
+			error(_("invalid abbreviation format"));
 			return FALSE;
 		}
 	}
@@ -962,8 +962,8 @@ const int		iscont;
 			zones[nzones - 1].z_untiltime > min_time &&
 			zones[nzones - 1].z_untiltime < max_time &&
 			zones[nzones - 1].z_untiltime >= z.z_untiltime) {
-				error("Zone continuation line end time is not \
-after end time of previous line");
+				error(_("Zone continuation line end time is \
+not after end time of previous line"));
 				return FALSE;
 		}
 	}
@@ -990,7 +990,7 @@ const int		nfields;
 	time_t				t;
 
 	if (nfields != LEAP_FIELDS) {
-		error("wrong number of fields on Leap line");
+		error(_("wrong number of fields on Leap line"));
 		return;
 	}
 	dayoff = 0;
@@ -999,7 +999,7 @@ const int		nfields;
 			/*
 			 * Leapin' Lizards!
 			 */
-			error("invalid leaping year");
+			error(_("invalid leaping year"));
 			return;
 	}
 	j = EPOCH_YEAR;
@@ -1014,7 +1014,7 @@ const int		nfields;
 		dayoff = oadd(dayoff, eitol(i));
 	}
 	if ((lp = byword(fields[LP_MONTH], mon_names)) == NULL) {
-		error("invalid month name");
+		error(_("invalid month name"));
 		return;
 	}
 	month = lp->l_value;
@@ -1027,12 +1027,12 @@ const int		nfields;
 	cp = fields[LP_DAY];
 	if (sscanf(cp, scheck(cp, "%d"), &day) != 1 ||
 		day <= 0 || day > len_months[isleap(year)][month]) {
-			error("invalid day of month");
+			error(_("invalid day of month"));
 			return;
 	}
 	dayoff = oadd(dayoff, eitol(day - 1));
 	if (dayoff < 0 && !tt_signed) {
-		error("time before zero");
+		error(_("time before zero"));
 		return;
 	}
 	t = (time_t) dayoff * SECSPERDAY;
@@ -1040,7 +1040,7 @@ const int		nfields;
 	** Cheap overflow check.
 	*/
 	if (t / SECSPERDAY != dayoff) {
-		error("time overflow");
+		error(_("time overflow"));
 		return;
 	}
 	tod = gethms(fields[LP_TIME], "invalid time of day", FALSE);
@@ -1062,11 +1062,11 @@ const int		nfields;
 			positive = TRUE;
 			count = 2;
 		} else {
-			error("illegal CORRECTION field on Leap line");
+			error(_("illegal CORRECTION field on Leap line"));
 			return;
 		}
 		if ((lp = byword(fields[LP_ROLL], leap_types)) == NULL) {
-			error("illegal Rolling/Stationary field on Leap line");
+			error(_("illegal Rolling/Stationary field on Leap line"));
 			return;
 		}
 		leapadd(tadd(t, tod), positive, lp->l_value, count);
@@ -1081,15 +1081,15 @@ const int		nfields;
 	struct link	l;
 
 	if (nfields != LINK_FIELDS) {
-		error("wrong number of fields on Link line");
+		error(_("wrong number of fields on Link line"));
 		return;
 	}
 	if (*fields[LF_FROM] == '\0') {
-		error("blank FROM field on Link line");
+		error(_("blank FROM field on Link line"));
 		return;
 	}
 	if (*fields[LF_TO] == '\0') {
-		error("blank TO field on Link line");
+		error(_("blank TO field on Link line"));
 		return;
 	}
 	l.l_filename = filename;
@@ -1117,7 +1117,7 @@ const char * const		timep;
 	register char *			ep;
 
 	if ((lp = byword(monthp, mon_names)) == NULL) {
-		error("invalid month name");
+		error(_("invalid month name"));
 		return;
 	}
 	rp->r_month = lp->l_value;
@@ -1161,11 +1161,11 @@ const char * const		timep;
 			break;
 		default:	/* "cannot happen" */
 			(void) fprintf(stderr,
-				"%s: panic: Invalid l_value %d\n",
+				_("%s: panic: Invalid l_value %d\n"),
 				progname, lp->l_value);
 			(void) exit(EXIT_FAILURE);
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_loyear) != 1) {
-		error("invalid starting year");
+		error(_("invalid starting year"));
 		return;
 	}
 	cp = hiyearp;
@@ -1181,22 +1181,22 @@ const char * const		timep;
 			break;
 		default:	/* "cannot happen" */
 			(void) fprintf(stderr,
-				"%s: panic: Invalid l_value %d\n",
+				_("%s: panic: Invalid l_value %d\n"),
 				progname, lp->l_value);
 			(void) exit(EXIT_FAILURE);
 	} else if (sscanf(cp, scheck(cp, "%d"), &rp->r_hiyear) != 1) {
-		error("invalid ending year");
+		error(_("invalid ending year"));
 		return;
 	}
 	if (rp->r_loyear > rp->r_hiyear) {
-		error("starting year greater than ending year");
+		error(_("starting year greater than ending year"));
 		return;
 	}
 	if (*typep == '\0')
 		rp->r_yrtype = NULL;
 	else {
 		if (rp->r_loyear == rp->r_hiyear) {
-			error("typed single year");
+			error(_("typed single year"));
 			return;
 		}
 		rp->r_yrtype = ecpyalloc(typep);
@@ -1226,12 +1226,12 @@ const char * const		timep;
 		if (rp->r_dycode != DC_DOM) {
 			*ep++ = 0;
 			if (*ep++ != '=') {
-				error("invalid day of month");
+				error(_("invalid day of month"));
 				ifree(dp);
 				return;
 			}
 			if ((lp = byword(dp, wday_names)) == NULL) {
-				error("invalid weekday name");
+				error(_("invalid weekday name"));
 				ifree(dp);
 				return;
 			}
@@ -1240,7 +1240,7 @@ const char * const		timep;
 		if (sscanf(ep, scheck(ep, "%d"), &rp->r_dayofmonth) != 1 ||
 			rp->r_dayofmonth <= 0 ||
 			(rp->r_dayofmonth > len_months[1][rp->r_month])) {
-				error("invalid day of month");
+				error(_("invalid day of month"));
 				ifree(dp);
 				return;
 		}
@@ -1287,7 +1287,8 @@ const char * const	name;
 		if (mkdirs(fullname) != 0)
 			(void) exit(EXIT_FAILURE);
 		if ((fp = fopen(fullname, "wb")) == NULL) {
-			(void) fprintf(stderr, "%s: Can't create ", progname);
+			(void) fprintf(stderr, _("%s: Can't create "),
+				       progname);
 			(void) perror(fullname);
 			(void) exit(EXIT_FAILURE);
 		}
@@ -1352,7 +1353,7 @@ const char * const	name;
 	for (i = 0; i < typecnt; ++i)
 		(void) putc(ttisgmts[i], fp);
 	if (ferror(fp) || fclose(fp)) {
-		(void) fprintf(stderr, "%s: Write error on ", progname);
+		(void) fprintf(stderr, _("%s: Write error on "), progname);
 		(void) perror(fullname);
 		(void) exit(EXIT_FAILURE);
 	}
@@ -1570,7 +1571,7 @@ const int	type;
 	if (timecnt == 0 && type == 0 && isdsts[0] == 0)
 		return; /* handled by default rule */
 	if (timecnt >= TZ_MAX_TIMES) {
-		error("too many transitions?!");
+		error(_("too many transitions?!"));
 		(void) exit(EXIT_FAILURE);
 	}
 	ats[timecnt] = starttime;
@@ -1604,7 +1605,7 @@ const int		ttisgmt;
 	** many.
 	*/
 	if (typecnt >= TZ_MAX_TYPES) {
-		error("too many local time types");
+		error(_("too many local time types"));
 		(void) exit(EXIT_FAILURE);
 	}
 	gmtoffs[i] = gmtoff;
@@ -1632,13 +1633,13 @@ int		count;
 	register int	i, j;
 
 	if (leapcnt + (positive ? count : 1) > TZ_MAX_LEAPS) {
-		error("too many leap seconds");
+		error(_("too many leap seconds"));
 		(void) exit(EXIT_FAILURE);
 	}
 	for (i = 0; i < leapcnt; ++i)
 		if (t <= trans[i]) {
 			if (t == trans[i]) {
-				error("repeated leap second moment");
+				error(_("repeated leap second moment"));
 				(void) exit(EXIT_FAILURE);
 			}
 			break;
@@ -1688,8 +1689,8 @@ const char * const	type;
 		return TRUE;
 	if (result == (1 << 8))
 		return FALSE;
-	error("Wild result from command execution");
-	(void) fprintf(stderr, "%s: command was '%s', result was %d\n",
+	error(_("Wild result from command execution"));
+	(void) fprintf(stderr, _("%s: command was '%s', result was %d\n"),
 		progname, buf, result);
 	for ( ; ; )
 		(void) exit(EXIT_FAILURE);
@@ -1781,7 +1782,7 @@ register char *	cp;
 			else while ((*dp = *cp++) != '"')
 				if (*dp != '\0')
 					++dp;
-				else	error("Odd number of quotation marks");
+				else	error(_("Odd number of quotation marks"));
 		} while (*cp != '\0' && *cp != '#' &&
 			(!isascii(*cp) || !isspace(*cp)));
 		if (isascii(*cp) && isspace(*cp))
@@ -1801,7 +1802,7 @@ const long	t2;
 
 	t = t1 + t2;
 	if ((t2 > 0 && t <= t1) || (t2 < 0 && t >= t1)) {
-		error("time overflow");
+		error(_("time overflow"));
 		(void) exit(EXIT_FAILURE);
 	}
 	return t;
@@ -1820,7 +1821,7 @@ const long	t2;
 		return min_time;
 	t = t1 + t2;
 	if ((t2 > 0 && t <= t1) || (t2 < 0 && t >= t1)) {
-		error("time overflow");
+		error(_("time overflow"));
 		(void) exit(EXIT_FAILURE);
 	}
 	return t;
@@ -1867,7 +1868,7 @@ register const int			wantedy;
 		if (rp->r_dycode == DC_DOWLEQ)
 			--i;
 		else {
-			error("use of 2/29 in non leap-year");
+			error(_("use of 2/29 in non leap-year"));
 			(void) exit(EXIT_FAILURE);
 		}
 	}
@@ -1901,7 +1902,7 @@ register const int			wantedy;
 				--i;
 			}
 		if (i < 0 || i >= len_months[isleap(y)][m]) {
-			error("no day in month matches rule");
+			error(_("no day in month matches rule"));
 			(void) exit(EXIT_FAILURE);
 		}
 	}
@@ -1924,7 +1925,7 @@ const char * const	string;
 
 	i = strlen(string) + 1;
 	if (charcnt + i > TZ_MAX_CHARS) {
-		error("too many, or too long, time zone abbreviations");
+		error(_("too many, or too long, time zone abbreviations"));
 		(void) exit(EXIT_FAILURE);
 	}
 	(void) strcpy(&chars[charcnt], string);
@@ -1959,7 +1960,7 @@ char * const	argname;
 			*/
 			if (mkdir(name, 0755) != 0) {
 				(void) fprintf(stderr,
-					"%s: Can't create directory ",
+					_("%s: Can't create directory "),
 					progname);
 				(void) perror(name);
 				ifree(name);
@@ -1981,7 +1982,7 @@ const int	i;
 	l = i;
 	if ((i < 0 && l >= 0) || (i == 0 && l != 0) || (i > 0 && l <= 0)) {
 		(void) fprintf(stderr,
-			"%s: %d did not sign extend correctly\n",
+			_("%s: %d did not sign extend correctly\n"),
 			progname, i);
 		(void) exit(EXIT_FAILURE);
 	}

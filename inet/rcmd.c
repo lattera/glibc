@@ -83,7 +83,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		if (s < 0) {
 			if (errno == EAGAIN)
 				(void)fprintf(stderr,
-				    "rcmd: socket: All ports in use\n");
+				    _("rcmd: socket: All ports in use\n"));
 			else
 				(void)fprintf(stderr, "rcmd: socket: %s\n",
 				    strerror(errno));
@@ -109,13 +109,13 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		if (hp->h_addr_list[1] != NULL) {
 			int oerrno = errno;
 
-			(void)fprintf(stderr, "connect to address %s: ",
+			(void)fprintf(stderr, _("connect to address %s: "),
 			    inet_ntoa(sin.sin_addr));
 			errno = oerrno;
 			perror(0);
 			hp->h_addr_list++;
 			bcopy(hp->h_addr_list[0], &sin.sin_addr, hp->h_length);
-			(void)fprintf(stderr, "Trying %s...\n",
+			(void)fprintf(stderr, _("Trying %s...\n"),
 			    inet_ntoa(sin.sin_addr));
 			continue;
 		}
@@ -138,7 +138,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		(void)snprintf(num, sizeof(num), "%d", lport);
 		if (write(s, num, strlen(num)+1) != strlen(num)+1) {
 			(void)fprintf(stderr,
-			    "rcmd: write (setting up stderr): %s\n",
+			    _("rcmd: write (setting up stderr): %s\n"),
 			    strerror(errno));
 			(void)close(s2);
 			goto bad;
@@ -151,11 +151,11 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		    !FD_ISSET(s2, &reads)) {
 			if (errno != 0)
 				(void)fprintf(stderr,
-				    "rcmd: select (setting up stderr): %s\n",
-				    strerror(errno));
+				   _("rcmd: select (setting up stderr): %s\n"),
+				   strerror(errno));
 			else
 				(void)fprintf(stderr,
-				"select: protocol failure in circuit setup\n");
+			     _("select: protocol failure in circuit setup\n"));
 			(void)close(s2);
 			goto bad;
 		}
@@ -173,7 +173,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		    from.sin_port >= IPPORT_RESERVED ||
 		    from.sin_port < IPPORT_RESERVED / 2) {
 			(void)fprintf(stderr,
-			    "socket: protocol failure in circuit setup.\n");
+			    _("socket: protocol failure in circuit setup.\n"));
 			goto bad2;
 		}
 	}
@@ -318,15 +318,15 @@ again:
 		 */
 		cp = NULL;
 		if (lstat(pbuf, &sbuf) < 0)
-			cp = ".rhosts lstat failed";
+			cp = _(".rhosts lstat failed");
 		else if (!S_ISREG(sbuf.st_mode))
-			cp = ".rhosts not regular file";
+			cp = _(".rhosts not regular file");
 		else if (fstat(fileno(hostf), &sbuf) < 0)
-			cp = ".rhosts fstat failed";
+			cp = _(".rhosts fstat failed");
 		else if (sbuf.st_uid && sbuf.st_uid != pwd->pw_uid)
-			cp = "bad .rhosts owner";
+			cp = _("bad .rhosts owner");
 		else if (sbuf.st_mode & (S_IWGRP|S_IWOTH))
-			cp = ".rhosts writeable by other than owner";
+			cp = _(".rhosts writeable by other than owner");
 		/* If there were any problems, quit. */
 		if (cp) {
 			__rcmd_errstr = cp;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ DEFUN(print_grpname, (id, parens),
 	return;
       else
 	{
-	  fprintf(stderr, "Couldn't find name for group %d\n", id);
+	  fprintf(stderr, _("Couldn't find name for group %d\n"), id);
 	  exit(EXIT_FAILURE);
 	}
     }
@@ -59,7 +59,7 @@ DEFUN(print_pwdname, (id, parens),
 	return;
       else
 	{
-	  fprintf(stderr, "Couldn't find name for user %d\n", (int) id);
+	  fprintf(stderr, _("Couldn't find name for user %d\n"), (int) id);
 	  exit(EXIT_FAILURE);
 	}
     }
@@ -109,7 +109,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 
   if (error || argc != optind)
     {
-      fputs("Usage: id [-gurn]\n", stderr);
+      fputs(_("Usage: id [-gurn]\n"), stderr);
       exit(EXIT_FAILURE);
     }
 

@@ -19,23 +19,23 @@ static	char sccsid[] = "@(#)portmap.c 1.32 87/08/06 Copyr 1984 Sun Micro";
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -84,7 +84,7 @@ main()
  	}
 #endif
 	if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-		perror("portmap cannot create socket");
+		perror(_("portmap cannot create socket"));
 		exit(1);
 	}
 
@@ -92,12 +92,12 @@ main()
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(PMAPPORT);
 	if (bind(sock, (struct sockaddr *)&addr, len) != 0) {
-		perror("portmap cannot bind");
+		perror(_("portmap cannot bind"));
 		exit(1);
 	}
 
 	if ((xprt = svcudp_create(sock)) == (SVCXPRT *)NULL) {
-		fprintf(stderr, "couldn't do udp_create\n");
+		fprintf(stderr, _("couldn't do udp_create\n"));
 		exit(1);
 	}
 	/* make an entry for ourself */
@@ -110,16 +110,16 @@ main()
 	pmaplist = pml;
 
 	if ((sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
-		perror("portmap cannot create socket");
+		perror(_("portmap cannot create socket"));
 		exit(1);
 	}
 	if (bind(sock, (struct sockaddr *)&addr, len) != 0) {
-		perror("portmap cannot bind");
+		perror(_("portmap cannot bind"));
 		exit(1);
 	}
 	if ((xprt = svctcp_create(sock, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE))
 	    == (SVCXPRT *)NULL) {
-		fprintf(stderr, "couldn't do tcp_create\n");
+		fprintf(stderr, _("couldn't do tcp_create\n"));
 		exit(1);
 	}
 	/* make an entry for ourself */
@@ -135,7 +135,7 @@ main()
 
 	(void)signal(SIGCHLD, reap);
 	svc_run();
-	fprintf(stderr, "run_svc returned unexpectedly\n");
+	fprintf(stderr, _("run_svc returned unexpectedly\n"));
 	abort();
 }
 
@@ -158,7 +158,7 @@ find_service(prog, vers, prot)
 	return (hit);
 }
 
-/* 
+/*
  * 1 OK, 0 not
  */
 reg_service(rqstp, xprt)
@@ -169,7 +169,7 @@ reg_service(rqstp, xprt)
 	struct pmaplist *pml, *prevpml, *fnd;
 	int ans, port;
 	caddr_t t;
-	
+
 #ifdef DEBUG
 	fprintf(stderr, "server: about do a switch\n");
 #endif
@@ -207,7 +207,7 @@ reg_service(rqstp, xprt)
 					goto done;
 				}
 			} else {
-				/* 
+				/*
 				 * add to END of list
 				 */
 				pml = (struct pmaplist *)
@@ -306,7 +306,7 @@ reg_service(rqstp, xprt)
 		 * Calls a procedure on the local machine.  If the requested
 		 * procedure is not registered this procedure does not return
 		 * error information!!
-		 * This procedure is only supported on rpc/udp and calls via 
+		 * This procedure is only supported on rpc/udp and calls via
 		 * rpc/udp.  It passes null authentication parameters.
 		 */
 		callit(rqstp, xprt);
@@ -418,7 +418,7 @@ xdr_len_opaque_parms(xdrs, cap)
  * a machine should shut-up instead of complain, less the requestor be
  * overrun with complaints at the expense of not hearing a valid reply ...
  *
- * This now forks so that the program & process that it calls can call 
+ * This now forks so that the program & process that it calls can call
  * back to the portmapper.
  */
 static
@@ -449,7 +449,7 @@ callit(rqstp, xprt)
 	 */
 	if ((pid = fork()) != 0) {
 		if (debugging && (pid < 0)) {
-			fprintf(stderr, "portmap CALLIT: cannot fork.\n");
+			fprintf(stderr, _("portmap CALLIT: cannot fork.\n"));
 		}
 		return;
 	}

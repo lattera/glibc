@@ -3,7 +3,7 @@
  * -
  * Copyright (c) 1987, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,7 +19,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,14 +33,14 @@
  * SUCH DAMAGE.
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -69,11 +69,11 @@ static char rcsid[] = "$Id$";
 #endif
 
 const char *h_errlist[] = {
-	"Resolver Error 0 (no error)",
-	"Unknown host",				/* 1 HOST_NOT_FOUND */
-	"Host name lookup failure",		/* 2 TRY_AGAIN */
-	"Unknown server error",			/* 3 NO_RECOVERY */
-	"No address associated with name",	/* 4 NO_ADDRESS */
+	N_("Resolver Error 0 (no error)"),
+	N_("Unknown host"),			/* 1 HOST_NOT_FOUND */
+	N_("Host name lookup failure"),		/* 2 TRY_AGAIN */
+	N_("Unknown server error"),		/* 3 NO_RECOVERY */
+	N_("No address associated with name"),	/* 4 NO_ADDRESS */
 };
 int	h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
 
@@ -111,8 +111,8 @@ hstrerror(err)
 	int err;
 {
 	if (err < 0)
-		return ("Resolver internal error");
+		return _("Resolver internal error");
 	else if (err < h_nerr)
-		return (h_errlist[err]);
-	return ("Unknown resolver error");
+		return _(h_errlist[err]);
+	return _("Unknown resolver error");
 }

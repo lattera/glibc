@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -156,7 +156,7 @@ xdr_rmtcallres(xdrs, crp)
 
 /*
  * The following is kludged-up support for simple rpc broadcasts.
- * Someday a large, complicated system will replace these trivial 
+ * Someday a large, complicated system will replace these trivial
  * routines which only support udp/ip .
  */
 
@@ -174,14 +174,14 @@ getbroadcastnets(addrs, sock, buf)
         ifc.ifc_len = UDPMSGSIZE;
         ifc.ifc_buf = buf;
         if (ioctl(sock, SIOCGIFCONF, (char *)&ifc) < 0) {
-                perror("broadcast: ioctl (get interface configuration)");
+                perror(_("broadcast: ioctl (get interface configuration)"));
                 return (0);
         }
         ifr = ifc.ifc_req;
         for (i = 0, n = ifc.ifc_len/sizeof (struct ifreq); n > 0; n--, ifr++) {
                 ifreq = *ifr;
                 if (ioctl(sock, SIOCGIFFLAGS, (char *)&ifreq) < 0) {
-                        perror("broadcast: ioctl (get interface flags)");
+                        perror(_("broadcast: ioctl (get interface flags)"));
                         continue;
                 }
                 if ((ifreq.ifr_flags & IFF_BROADCAST) &&
@@ -209,7 +209,7 @@ getbroadcastnets(addrs, sock, buf)
 
 typedef bool_t (*resultproc_t)();
 
-enum clnt_stat 
+enum clnt_stat
 clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	u_long		prog;		/* program number */
 	u_long		vers;		/* version number */
@@ -243,7 +243,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	struct rmtcallargs a;
 	struct rmtcallres r;
 	struct rpc_msg msg;
-	struct timeval t; 
+	struct timeval t;
 	char outbuf[MAX_BROADCAST_SIZE], inbuf[UDPMSGSIZE];
 
 	/*
@@ -251,13 +251,13 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	 * preserialize the arguments into a send buffer.
 	 */
 	if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-		perror("Cannot create socket for broadcast rpc");
+		perror(_("Cannot create socket for broadcast rpc"));
 		stat = RPC_CANTSEND;
 		goto done_broad;
 	}
 #ifdef SO_BROADCAST
 	if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &on, sizeof (on)) < 0) {
-		perror("Cannot set socket option SO_BROADCAST");
+		perror(_("Cannot set socket option SO_BROADCAST"));
 		stat = RPC_CANTSEND;
 		goto done_broad;
 	}
@@ -309,7 +309,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 			if (sendto(sock, outbuf, outlen, 0,
 				(struct sockaddr *)&baddr,
 				sizeof (struct sockaddr)) != outlen) {
-				perror("Cannot send broadcast packet");
+				perror(_("Cannot send broadcast packet"));
 				stat = RPC_CANTSEND;
 				goto done_broad;
 			}
@@ -323,7 +323,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 		msg.acpted_rply.ar_results.where = (caddr_t)&r;
                 msg.acpted_rply.ar_results.proc = xdr_rmtcallres;
 		readfds = mask;
-		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL, 
+		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL,
 			       (int *)NULL, &t)) {
 
 		case 0:  /* timed out */
@@ -333,7 +333,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 		case -1:  /* some kind of error */
 			if (errno == EINTR)
 				goto recv_again;
-			perror("Broadcast select problem");
+			perror(_("Broadcast select problem"));
 			stat = RPC_CANTRECV;
 			goto done_broad;
 
@@ -345,7 +345,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 		if (inlen < 0) {
 			if (errno == EINTR)
 				goto try_again;
-			perror("Cannot receive reply to broadcast");
+			perror(_("Cannot receive reply to broadcast"));
 			stat = RPC_CANTRECV;
 			goto done_broad;
 		}

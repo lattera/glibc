@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 #endif
 
-/* 
+/*
  * svc_simple.c
  * Simplified front end to rpc.
  *
@@ -58,29 +58,29 @@ registerrpc(prognum, versnum, procnum, progname, inproc, outproc)
 	char *(*progname)();
 	xdrproc_t inproc, outproc;
 {
-	
+
 	if (procnum == NULLPROC) {
 		(void) fprintf(stderr,
-		    "can't reassign procedure number %d\n", NULLPROC);
+		    _("can't reassign procedure number %d\n"), NULLPROC);
 		return (-1);
 	}
 	if (transp == 0) {
 		transp = svcudp_create(RPC_ANYSOCK);
 		if (transp == NULL) {
-			(void) fprintf(stderr, "couldn't create an rpc server\n");
+			(void) fprintf(stderr, _("couldn't create an rpc server\n"));
 			return (-1);
 		}
 	}
 	(void) pmap_unset((u_long)prognum, (u_long)versnum);
-	if (!svc_register(transp, (u_long)prognum, (u_long)versnum, 
+	if (!svc_register(transp, (u_long)prognum, (u_long)versnum,
 	    universal, IPPROTO_UDP)) {
-	    	(void) fprintf(stderr, "couldn't register prog %d vers %d\n",
+	    	(void) fprintf(stderr, _("couldn't register prog %d vers %d\n"),
 		    prognum, versnum);
 		return (-1);
 	}
 	pl = (struct proglst *)malloc(sizeof(struct proglst));
 	if (pl == NULL) {
-		(void) fprintf(stderr, "registerrpc: out of memory\n");
+		(void) fprintf(stderr, _("registerrpc: out of memory\n"));
 		return (-1);
 	}
 	pl->p_progname = progname;
@@ -103,7 +103,7 @@ universal(rqstp, transp)
 	char xdrbuf[UDPMSGSIZE];
 	struct proglst *pl;
 
-	/* 
+	/*
 	 * enforce "procnum 0 is echo" convention
 	 */
 	if (rqstp->rq_proc == NULLPROC) {
@@ -129,7 +129,7 @@ universal(rqstp, transp)
 				return;
 			if (!svc_sendreply(transp, pl->p_outproc, outdata)) {
 				(void) fprintf(stderr,
-				    "trouble replying to prog %d\n",
+				    _("trouble replying to prog %d\n"),
 				    pl->p_prognum);
 				exit(1);
 			}
@@ -137,7 +137,7 @@ universal(rqstp, transp)
 			(void)svc_freeargs(transp, pl->p_inproc, xdrbuf);
 			return;
 		}
-	(void) fprintf(stderr, "never registered prog %d\n", prog);
+	(void) fprintf(stderr, _("never registered prog %d\n"), prog);
 	exit(1);
 }
 

@@ -38,14 +38,14 @@ CONST char *__assert_program_name;
 void
 DEFUN(__assert_fail, (assertion, file, line, function),
       CONST char *assertion AND
-      CONST char *file AND unsigned int line AND CONST char *function)      
+      CONST char *file AND unsigned int line AND CONST char *function)
 {
 #ifdef FATAL_PREPARE
   FATAL_PREPARE;
 #endif
 
   /* Print the message.  */
-  (void) fprintf (stderr, "%s%s%s:%u: %s%sAssertion `%s' failed.\n",
+  (void) fprintf (stderr, _("%s%s%s:%u: %s%sAssertion `%s' failed.\n"),
 		  __assert_program_name ? __assert_program_name : "",
 		  __assert_program_name ? ": " : "",
 		  file, line,

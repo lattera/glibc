@@ -1,3 +1,15 @@
+Sat Nov 25 02:48:47 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* assert/assert-perr.c, assert/assert.c, inet/rcmd.c,
+	malloc/mcheck.c, malloc/vm-limit.c, posix/getconf.c, posix/id.c,
+	resolv/herror.c, sunrpc/auth_unix.c, sunrpc/clnt_perr.c,
+	sunrpc/clnt_raw.c, sunrpc/get_myaddr.c, sunrpc/pmap_clnt.c,
+	sunrpc/pmap_rmt.c, sunrpc/portmap.c, sunrpc/rpc_main.c,
+	sunrpc/rpc_parse.c, sunrpc/rpc_scan.c, sunrpc/rpc_util.c,
+	sunrpc/rpcinfo.c, sunrpc/svc_simple.c, sunrpc/svc_tcp.c,
+	sunrpc/svc_udp.c, time/zdump.c, time/zic.c: Mark translatable
+	strings.
+
 Sun Nov 26 02:00:02 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 
 	* misc/syslog.c (vsyslog) [USE_IN_LIBIO]: Adapted for libio.

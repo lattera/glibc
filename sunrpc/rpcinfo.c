@@ -19,23 +19,23 @@ static	char sccsid[] = "@(#)rpcinfo.c 1.22 87/08/12 SMI";
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -179,7 +179,7 @@ main(argc, argv)
 
 	return (0);
 }
-		
+
 static void
 udpping(portnum, argc, argv)
 	u_short portnum;
@@ -194,7 +194,7 @@ udpping(portnum, argc, argv)
 	int sock = RPC_ANYSOCK;
 	struct rpc_err rpcerr;
 	int failure;
-    
+
 	if (argc < 2 || argc > 3) {
 		usage();
 		exit(1);
@@ -219,7 +219,7 @@ udpping(portnum, argc, argv)
 		if ((client = clntudp_create(&addr, prognum, (u_long)0,
 		    to, &sock)) == NULL) {
 			clnt_pcreateerror("rpcinfo");
-			printf("program %lu is not available\n",
+			printf(_("program %lu is not available\n"),
 			    prognum);
 			exit(1);
 		}
@@ -242,7 +242,7 @@ udpping(portnum, argc, argv)
 			if ((client = clntudp_create(&addr, prognum, MAX_VERS,
 			    to, &sock)) == NULL) {
 				clnt_pcreateerror("rpcinfo");
-				printf("program %lu version %lu is not available\n",
+				printf(_("program %lu version %lu is not available\n"),
 				    prognum, MAX_VERS);
 				exit(1);
 			}
@@ -279,7 +279,7 @@ udpping(portnum, argc, argv)
 			if ((client = clntudp_create(&addr, prognum, vers,
 			    to, &sock)) == NULL) {
 				clnt_pcreateerror("rpcinfo");
-				printf("program %lu version %lu is not available\n",
+				printf(_("program %lu version %lu is not available\n"),
 				    prognum, vers);
 				exit(1);
 			}
@@ -347,7 +347,7 @@ tcpping(portnum, argc, argv)
 		if ((client = clnttcp_create(&addr, prognum, MIN_VERS,
 		    &sock, 0, 0)) == NULL) {
 			clnt_pcreateerror("rpcinfo");
-			printf("program %lu is not available\n",
+			printf(_("program %lu is not available\n"),
 			    prognum);
 			exit(1);
 		}
@@ -368,7 +368,7 @@ tcpping(portnum, argc, argv)
 			if ((client = clnttcp_create(&addr, prognum, MAX_VERS,
 			    &sock, 0, 0)) == NULL) {
 				clnt_pcreateerror("rpcinfo");
-				printf("program %lu version %lu is not available\n",
+				printf(_("program %lu version %lu is not available\n"),
 				    prognum, MAX_VERS);
 				exit(1);
 			}
@@ -405,7 +405,7 @@ tcpping(portnum, argc, argv)
 			if ((client = clnttcp_create(&addr, prognum, vers,
 			    &sock, 0, 0)) == NULL) {
 				clnt_pcreateerror("rpcinfo");
-				printf("program %lu version %lu is not available\n",
+				printf(_("program %lu version %lu is not available\n"),
 				    prognum, vers);
 				exit(1);
 			}
@@ -426,7 +426,7 @@ tcpping(portnum, argc, argv)
 		if ((client = clnttcp_create(&addr, prognum, vers, &sock,
 		    0, 0)) == NULL) {
 			clnt_pcreateerror("rpcinfo");
-			printf("program %lu version %lu is not available\n",
+			printf(_("program %lu version %lu is not available\n"),
 			    prognum, vers);
 			exit(1);
 		}
@@ -459,11 +459,11 @@ pstatus(client, prognum, vers)
 	clnt_geterr(client, &rpcerr);
 	if (rpcerr.re_status != RPC_SUCCESS) {
 		clnt_perror(client, "rpcinfo");
-		printf("program %lu version %lu is not available\n",
+		printf(_("program %lu version %lu is not available\n"),
 		    prognum, vers);
 		return (-1);
 	} else {
-		printf("program %lu version %lu ready and waiting\n",
+		printf(_("program %lu version %lu ready and waiting\n"),
 		    prognum, vers);
 		return (0);
 	}
@@ -481,7 +481,7 @@ pmapdump(argc, argv)
 	struct timeval minutetimeout;
 	register CLIENT *client;
 	struct rpcent *rpc;
-	
+
 	if (argc > 1) {
 		usage();
 		exit(1);
@@ -502,19 +502,19 @@ pmapdump(argc, argv)
 	server_addr.sin_port = htons(PMAPPORT);
 	if ((client = clnttcp_create(&server_addr, PMAPPROG,
 	    PMAPVERS, &socket, 50, 500)) == NULL) {
-		clnt_pcreateerror("rpcinfo: can't contact portmapper");
+		clnt_pcreateerror(_("rpcinfo: can't contact portmapper"));
 		exit(1);
 	}
 	if (clnt_call(client, PMAPPROC_DUMP, xdr_void, NULL,
 	    xdr_pmaplist, &head, minutetimeout) != RPC_SUCCESS) {
-		fprintf(stderr, "rpcinfo: can't contact portmapper: ");
+		fprintf(stderr, _("rpcinfo: can't contact portmapper: "));
 		clnt_perror(client, "rpcinfo");
 		exit(1);
 	}
 	if (head == NULL) {
-		printf("No remote programs registered.\n");
+		printf(_("No remote programs registered.\n"));
 	} else {
-		printf("   program vers proto   port\n");
+		printf(_("   program vers proto   port\n"));
 		for (; head != NULL; head = head->pml_next) {
 			printf("%10ld%5ld",
 			    head->pml_map.pm_prog,
@@ -535,8 +535,8 @@ pmapdump(argc, argv)
 	}
 }
 
-/* 
- * reply_proc collects replies from the broadcast. 
+/*
+ * reply_proc collects replies from the broadcast.
  * to get a unique list of responses the output of rpcinfo should
  * be piped through sort(1) and then uniq(1).
  */
@@ -552,7 +552,7 @@ reply_proc(res, who)
 	hp = gethostbyaddr((char *) &who->sin_addr, sizeof who->sin_addr,
 	    AF_INET);
 	printf("%s %s\n", inet_ntoa(who->sin_addr),
-	    (hp == NULL) ? "(unknown)" : hp->h_name);
+	    (hp == NULL) ? _("(unknown)") : hp->h_name);
 	return(FALSE);
 }
 
@@ -573,7 +573,7 @@ brdcst(argc, argv)
 	rpc_stat = clnt_broadcast(prognum, vers, NULLPROC, xdr_void,
 	    (char *)NULL, xdr_void, (char *)NULL, reply_proc);
 	if ((rpc_stat != RPC_SUCCESS) && (rpc_stat != RPC_TIMEDOUT)) {
-		fprintf(stderr, "rpcinfo: broadcast failed: %s\n",
+		fprintf(stderr, _("rpcinfo: broadcast failed: %s\n"),
 		    clnt_sperrno(rpc_stat));
 		exit(1);
 	}
@@ -597,7 +597,7 @@ deletereg(argc, argv)
 	prog_num = getprognum(argv[0]);
 	version_num = getvers(argv[1]);
 	if ((pmap_unset(prog_num, version_num)) == 0) {
-		fprintf(stderr, "rpcinfo: Could not delete registration for prog %s version %s\n",
+		fprintf(stderr, _("rpcinfo: Could not delete registration for prog %s version %s\n"),
 			argv[0], argv[1]) ;
 		exit(1) ;
 	}
@@ -606,11 +606,11 @@ deletereg(argc, argv)
 static void
 usage()
 {
-	fprintf(stderr, "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n");
-	fprintf(stderr, "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n");
-	fprintf(stderr, "       rpcinfo -p [ host ]\n");
-	fprintf(stderr, "       rpcinfo -b prognum versnum\n");
-	fprintf(stderr, "       rpcinfo -d prognum versnum\n") ;
+	fprintf(stderr, _("Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"));
+	fprintf(stderr, _("       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"));
+	fprintf(stderr, _("       rpcinfo -p [ host ]\n"));
+	fprintf(stderr, _("       rpcinfo -b prognum versnum\n"));
+	fprintf(stderr, _("       rpcinfo -d prognum versnum\n")) ;
 }
 
 static u_long
@@ -623,7 +623,7 @@ getprognum(arg)
 	if (isalpha(*arg)) {
 		rpc = getrpcbyname(arg);
 		if (rpc == NULL) {
-			fprintf(stderr, "rpcinfo: %s is unknown service\n",
+			fprintf(stderr, _("rpcinfo: %s is unknown service\n"),
 			    arg);
 			exit(1);
 		}
@@ -656,7 +656,8 @@ get_inet_address(addr, host)
 	addr->sin_addr.s_addr = (u_long) inet_addr(host);
 	if (addr->sin_addr.s_addr == -1 || addr->sin_addr.s_addr == 0) {
 		if ((hp = gethostbyname(host)) == NULL) {
-			fprintf(stderr, "rpcinfo: %s is unknown host\n", host);
+			fprintf(stderr, _("rpcinfo: %s is unknown host\n"),
+				host);
 			exit(1);
 		}
 		bcopy(hp->h_addr, (char *)&addr->sin_addr, hp->h_length);

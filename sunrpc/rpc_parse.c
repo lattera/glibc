@@ -6,23 +6,23 @@
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
  * program developed by the user.
- * 
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
@@ -32,7 +32,7 @@ static char sccsid[] = "@(#)rpc_parse.c 1.4 87/04/28 (C) 1987 SMI";
 #endif
 
 /*
- * rpc_parse.c, Parser for the RPC protocol compiler 
+ * rpc_parse.c, Parser for the RPC protocol compiler
  * Copyright (C) 1987 Sun Microsystems, Inc.
  */
 #include <stdio.h>
@@ -74,7 +74,7 @@ get_definition()
 		return (NULL);
 		break;
 	default:
-		error("definition keyword expected");
+		error(_("definition keyword expected"));
 	}
 	scan(TOK_SEMICOLON, &tok);
 	isdefined(defp);
@@ -143,7 +143,7 @@ def_program(defp)
 			plist = ALLOC(proc_list);
 			get_type(&plist->res_prefix, &plist->res_type, DEF_PROGRAM);
 			if (streq(plist->res_type, "opaque")) {
-				error("illegal result type");
+				error(_("illegal result type"));
 			}
 			scan(TOK_IDENT, &tok);
 			plist->proc_name = tok.str;
@@ -302,7 +302,7 @@ get_declaration(dec, dkind)
 	dec->name = tok.str;
 	if (peekscan(TOK_LBRACKET, &tok)) {
 		if (dec->rel == REL_POINTER) {
-			error("no array-of-pointer declarations -- use typedef");
+			error(_("no array-of-pointer declarations -- use typedef"));
 		}
 		dec->rel = REL_VECTOR;
 		scan_num(&tok);
@@ -310,7 +310,7 @@ get_declaration(dec, dkind)
 		scan(TOK_RBRACKET, &tok);
 	} else if (peekscan(TOK_LANGLE, &tok)) {
 		if (dec->rel == REL_POINTER) {
-			error("no array-of-pointer declarations -- use typedef");
+			error(_("no array-of-pointer declarations -- use typedef"));
 		}
 		dec->rel = REL_ARRAY;
 		if (peekscan(TOK_RANGLE, &tok)) {
@@ -323,11 +323,11 @@ get_declaration(dec, dkind)
 	}
 	if (streq(dec->type, "opaque")) {
 		if (dec->rel != REL_ARRAY && dec->rel != REL_VECTOR) {
-			error("array declaration expected");
+			error(_("array declaration expected"));
 		}
 	} else if (streq(dec->type, "string")) {
 		if (dec->rel != REL_ARRAY) {
-			error("variable-length array declaration expected");
+			error(_("variable-length array declaration expected"));
 		}
 	}
 }
@@ -367,7 +367,7 @@ get_type(prefixp, typep, dkind)
 		break;
 	case TOK_VOID:
 		if (dkind != DEF_UNION && dkind != DEF_PROGRAM) {
-			error("voids allowed only inside union and program definitions");
+			error(_("voids allowed only inside union and program definitions"));
 		}
 		*typep = tok.str;
 		break;
@@ -381,7 +381,7 @@ get_type(prefixp, typep, dkind)
 		*typep = tok.str;
 		break;
 	default:
-		error("expected type specifier");
+		error(_("expected type specifier"));
 	}
 }
 
