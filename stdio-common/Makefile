@@ -30,7 +30,6 @@ routines	:=							      \
 	printf_size fprintf printf snprintf sprintf asprintf dprintf	      \
 	vfscanf 							      \
 	fscanf scanf sscanf						      \
-	vfwprintf vfwscanf						      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
 	getline getw putw						      \
@@ -66,6 +65,7 @@ $(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h
 	$(do-install)
 
 ifeq ($(stdio),libio)
+routines += vfwprintf vfwscanf
 ifneq (,$(filter %REENTRANT, $(defines)))
 CPPFLAGS += -D_IO_MTSAFE_IO
 endif

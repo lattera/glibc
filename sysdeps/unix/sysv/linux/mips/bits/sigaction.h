@@ -1,5 +1,5 @@
 /* The proper definitions for Linux/MIPS's sigaction.
-   Copyright (C) 1993, 1994, 1995, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,6 +60,7 @@ struct sigaction
 				    three arguments instead of one.  */
 #if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
+# define SA_RESETHAND 0x00000002 /* Reset to SIG_DFL on entry to handler.  */
 # define SA_RESTART   0x00000004 /* Restart syscall on signal return.  */
 # define SA_NODEFER   0x00000010 /* Don't automatically block the signal when
 				    its handler is being executed.  */

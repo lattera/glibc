@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if !defined _STDIO_H && !defined __need_FOPEN_MAX
+#if !defined _STDIO_H && !defined __need_FOPEN_MAX && !defined __need_IOV_MAX
 # error "Never include <bits/stdio_lim.h> directly; use <stdio.h> instead."
 #endif
 
@@ -37,5 +37,5 @@
 #endif
 
 #if defined __need_IOV_MAX && !defined IOV_MAX
-# define IOV_MAX @IOV_MAX@
+@define_IOV_MAX@
 #endif

@@ -45,9 +45,6 @@
    CHILD_MAX	Maximum number of simultaneous processes per real
 		user ID.
 
-   IOV_MAX	Maximum number of `iovec' structures that one process has
-		available for use with `readv' or writev'.
-
    OPEN_MAX	Maximum number of files that one process can have open
 		at anyone time.
 
@@ -55,13 +52,14 @@
    PAGE_SIZE	Size of bytes of a page.
 
    PASS_MAX	Maximum number of significant bytes in a password.
+
+   We only provide a fixed limit for
+
+   IOV_MAX	Maximum number of `iovec' structures that one process has
+		available for use with `readv' or writev'.
+
+   if this is indeed fixed by the underlying system.
 */
-
-/* The number of streams that one process can have open at one time.  */
-#define STREAM_MAX	FOPEN_MAX
-
-/* Maximum number of bytes supported for the name of a time zone.  */
-#define TZNAME_MAX	_POSIX_TZNAME_MAX
 
 
 /* Maximum number of `iovec' structures that one process has available

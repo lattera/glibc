@@ -169,6 +169,17 @@
 # define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
 # define inchar()	(c == EOF ? EOF					      \
 			 : ((c = getc (s)), (void) (c != EOF && ++read_in), c))
+# define MEMCPY(d, s, n)  memcpy (d, s, n)
+# define ISSPACE(Ch)      isspace (Ch)
+# define ISDIGIT(Ch)      isdigit (Ch)
+# define ISXDIGIT(Ch)     isxdigit (Ch)
+# define TOLOWER(Ch)      tolower (Ch)
+
+# define L_(Str)          Str
+# define CHAR_T           char
+# define UCHAR_T          unsigned char
+# define WINT_T           int
+
 # define encode_error()	do {						      \
 			  funlockfile (s);				      \
 			  __set_errno (EILSEQ);				      \

@@ -104,7 +104,6 @@
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
-# define PUT(F, S, N)	fwrite (S, 1, N, F)
 # define ARGCHECK(S, Format) \
   do									      \
     {									      \
@@ -127,6 +126,25 @@
     }									      \
    while (0)
 # define UNBUFFERED_P(s) ((s)->__buffer == NULL)
+
+# define CHAR_T         char
+# define UCHAR_T        unsigned char
+# define INT_T		int
+# define L_(Str)	Str
+# define ISDIGIT(Ch)	isdigit (Ch)
+
+# define PUT(F, S, N)	fwrite (S, 1, N, F)
+ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
+# define PAD(Padchar)                                                         \
+  if (width > 0)                                                              \
+    { ssize_t __res = __printf_pad (s, (Padchar), width);                     \
+      if (__res == -1)                                                        \
+        {                                                                     \
+          done = -1;                                                          \
+          goto all_done;                                                      \
+        }                                                                     \
+      done += __res; }
+# define PUTC(C, F)    putc (C, F)
 
 /* XXX These declarations should go as soon as the stdio header files
    have these prototypes.   */
@@ -1155,15 +1173,17 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Sanity check of arguments.  */
   ARGCHECK (s, format);
 
+#ifdef ORIENT
   /* Check for correct orientation.  */
   if (
-#ifdef USE_IN_LIBIO
+# ifdef USE_IN_LIBIO
       s->_vtable_offset == 0 &&
-#endif
+# endif
       _IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
       != (sizeof (CHAR_T) == 1 ? -1 : 1))
     /* The stream is already oriented otherwise.  */
     return EOF;
+#endif
 
   if (UNBUFFERED_P (s))
     /* Use a helper function which will allocate a local temporary buffer

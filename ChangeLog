@@ -1,3 +1,42 @@
+1999-08-21  Mark Kettenis  <kettenis@gnu.org>
+
+	* stdio-common/vfscanf.c [! USE_IN_LIBIO]: Add necessary
+	definitions for MEMCPY, ISSPACE, ISDIGIT, ISXDIGIT, TOLOWER, L_,
+	CHAR_T, UCHAR_T and WIN_T to make the code compile again when
+	stdio is used instead of libio.
+	* stdio-common/vfprintf.c [! USE_IN_LIBIO]: Add necessary
+	definitions for CHAR_T, UCHAR_T, INT_T, L_, ISDIGIT, PAD and PUTC
+	to make the code compile again when stdio is used instead of
+	libio.
+	(vfprintf): Only check for correct orientation if ORIENT is
+	defined.
+	* stdio-common/Makefile (routines): Only add vfwprintf and
+	vfwscanf if we're using libio.
+
+1999-08-21  Mark Kettenis  <kettenis@gnu.org>
+
+	* include/stdio.h [! USE_IN_LIBIO && __need_FILE]: Avoid defining
+	any additional prototype just as we do for libio.
+
+1999-08-21  Mark Kettenis  <kettenis@gnu.org>
+
+	* include/bits/xopen_lim.h: Do not define STREAM_MAX and
+	TZNAME_MAX.  These limits are not X/Open specific.
+	* stdio-common/stdio_lim.h.in: Allow inclusion when __need_IOV_MAX
+	is defined.
+
+1999-08-21  Mark Kettenis  <kettenis@gnu.org>
+
+	* Rules: When generated stdio_lim.h, avoid defining IOV_MAX if
+	UIO_MAXIOV is left undefined in sys/uio.h.
+	* stdio-common/stdio_lim.h.in: Adapt for change above.
+
+1999-08-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h (SA_RESETHAND): Add it.
+	* sysdeps/mips/bits/dlfcn.h: Remove SGI specific calls, add RTLD_LOCAL.
+	Patches by Ralf Baechle <ralf@uni-koblenz.de>
+
 1999-08-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/fmtmsg.h: Don't define NULL to keep namespace clean.

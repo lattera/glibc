@@ -205,14 +205,18 @@ endif
 	iov_max=`sed -n 's/^#define UIO_MAXIOV //p' $(@:st=hT)`;	\
 	fopen_max=$${fopen_max:-16};					\
 	filename_max=$${filename_max:-1024};				\
-	iov_max=$${iov_max:-_XOPEN_IOV_MAX};				\
+	if [ -z $$iov_max ]; then					\
+	  define_iov_max="# undef IOV_MAX";				\
+	else								\
+	  define_iov_max="# define IOV_MAX $$iov_max";			\
+	fi;								\
 	sed -e "s/@FOPEN_MAX@/$$fopen_max/"				\
 	    -e "s/@FILENAME_MAX@/$$filename_max/"			\
 	    -e "s/@L_tmpnam@/$(L_tmpnam)/"				\
 	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
 	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
 	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
-	    -e "s/@IOV_MAX@/$$iov_max/"					\
+	    -e "s/@define_IOV_MAX@/$$define_iov_max/"			\
 	    $< > $(@:st=h.new)
 	$(move-if-change) $(@:st=h.new) $(@:st=h)
 # Remove these last so that they can be examined if something went wrong.
