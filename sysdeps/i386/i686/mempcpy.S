@@ -31,6 +31,13 @@
 #define LEN	SRC+PTR_SIZE
 
 	.text
+#if defined PIC && !defined NOT_IN_libc
+ENTRY (__mempcpy_chk)
+	movl	12(%esp), %eax
+	cmpl	%eax, 16(%esp)
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+END (__mempcpy_chk)
+#endif
 ENTRY (BP_SYM (__mempcpy))
 	ENTER
 

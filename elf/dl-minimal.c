@@ -354,6 +354,13 @@ __strsep (char **stringp, const char *delim)
 weak_alias (__strsep, strsep)
 strong_alias (__strsep, __strsep_g)
 
+void
+__attribute__ ((noreturn))
+__chk_fail (void)
+{
+  _exit (127);
+}
+rtld_hidden_def (__chk_fail)
 
 /* The '_itoa_lower_digits' variable in libc.so is able to handle bases
    up to 36.  We don't need this here.  */

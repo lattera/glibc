@@ -63,3 +63,13 @@ typedef struct _IO_strfile_
 /* frozen: set when the program has requested that the array object not
    be altered, reallocated, or freed. */
 #define _IO_STR_FROZEN(FP) ((FP)->_f._IO_file_flags & _IO_USER_BUF)
+
+typedef struct
+{
+  _IO_strfile f;
+  /* This is used for the characters which do not fit in the buffer
+     provided by the user.  */
+  char overflow_buf[64];
+} _IO_strnfile;
+
+extern const struct _IO_jump_t _IO_strn_jumps attribute_hidden;

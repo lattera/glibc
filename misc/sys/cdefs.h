@@ -127,6 +127,11 @@
 #endif
 
 
+/* Fortify support.  */
+#define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
+#define __bos0(ptr) __builtin_object_size (ptr, 0)
+
+
 /* Support for flexible arrays.  */
 #if __GNUC_PREREQ (2,97)
 /* GCC 2.97 supports C99 flexible array members.  */

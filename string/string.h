@@ -416,6 +416,11 @@ extern char *basename (__const char *__filename) __THROW __nonnull ((1));
 /* These are generic optimizations which do not add too much inline code.  */
 #  include <bits/string2.h>
 # endif
+
+# if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+/* Functions with security checks.  */
+#  include <bits/string3.h>
+# endif
 #endif
 
 __END_DECLS

@@ -1,3 +1,122 @@
+2004-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-minimal.c (__chk_fail): New.  Add rtld_hidden_def.
+	* sysdeps/unix/sysv/linux/readonly-area.c: New file.
+	* sysdeps/i386/i686/memmove.S (__memmove_chk): Add checking
+	routine.
+	* sysdeps/i386/i686/memcpy.S (__memcpy_chk): Likewise.
+	* sysdeps/i386/i686/mempcpy.S (__mempcpy_chk): Likewise.
+	* sysdeps/i386/i686/memset.S (__memset_chk): Likewise.
+	* sysdeps/i386/i686/memmove-chk.S: New file.
+	* sysdeps/i386/i686/memcpy-chk.S: Likewise.
+	* sysdeps/i386/i686/mempcpy-chk.S: Likewise.
+	* sysdeps/i386/i686/memset-chk.S: Likewise.
+	* sysdeps/generic/strcat-chk.c (__strcat_chk): Don't __chk_fail
+	if exactly fitting into buffer.
+	* sysdeps/generic/strncat-chk.c (__strncat_chk): Likewise.
+	* sysdeps/generic/readonly-area.c: New file.
+	* sysdeps/generic/strncpy-chk.c (__strncpy_chk): Only test
+	destlen once.
+	* sysdeps/x86_64/memset.S (__memset_chk): Add checking routine.
+	* sysdeps/x86_64/memcpy.S (__memcpy_chk): Likewise.
+	* sysdeps/x86_64/mempcpy.S (__memcpy_chk): Define to __mempcpy_chk.
+	* sysdeps/x86_64/memcpy-chk.S: New file.
+	* sysdeps/x86_64/mempcpy-chk.S: Likewise.
+	* sysdeps/x86_64/memset-chk.S: Likewise.
+	* sysdeps/x86_64/strcpy-chk.S: Likewise.
+	* sysdeps/x86_64/stpcpy-chk.S: Likewise.
+	* argp/argp-xinl.c (__OPTIMIZE__): Define to 1 instead of nothing.
+	* argp/argp-fs-xinl.c (__OPTIMIZE__): Likewise.
+	* debug/tst-chk1.c: New test.
+	* debug/tst-chk2.c: Likewise.
+	* debug/tst-chk3.c: Likewise.
+	* debug/test-strcpy_chk.c: Likewise.
+	* debug/test-stpcpy_chk.c: Likewise.
+	* debug/vsprintf_chk.c (__vsprintf_chk): If flags > 0, request
+	_IO_FLAGS2_CHECK_PERCENT_N.  Add libc_hidden_def.
+	* debug/Makefile (routines): Add printf_chk, fprintf_chk, vprintf_chk,
+	vfprintf_chk, gets_chk and readonly-area.
+	(CFLAGS-*_chk.c): Set.
+	(tests): Add tst-chk1, tst-chk2, tst-chk3, test-strcpy_chk and
+	test-stpcpy_chk.
+	* debug/vprintf_chk.c: New file.
+	* debug/printf_chk.c: Likewise.
+	* debug/vfprintf_chk.c: Likewise.
+	* debug/fprintf_chk.c: Likewise.
+	* debug/gets_chk.c: Likewise.
+	* debug/chk_fail.c (__chk_fail): Add libc_hidden_def.
+	* debug/snprintf_chk.c (__snprintf_chk): Fix order of arguments
+	passed to __vsnprintf_chk.
+	* debug/Versions (libc): Export __printf_chk, __fprintf_chk,
+	__vprintf_chk, __vfprintf_chk and __gets_chk @GLIBC_2.3.4.
+	* debug/vsnprintf_chk.c (__vsnprintf_chk): Don't call
+	__vsnprintf, instead create a temporary file with
+	_IO_strn_jumps jumptable.  If flags > 0, request
+	_IO_FLAGS2_CHECK_PERCENT_N.  Add libc_hidden_def.
+	* libio/Makefile (headers): Add bits/stdio2.h.
+	* libio/stdio.h: Include <bits/stdio2.h> if __USE_FORTIFY_LEVEL.
+	(sprintf, snprintf, vsprintf, vsnprintf): Remove defines.
+	* libio/strfile.h (_IO_strnfile): New type.
+	(_IO_strn_jumps): New extern.
+	* libio/vsnprintf.c (_IO_strnfile): Remove.
+	(_IO_strn_jumps): Remove static.
+	* libio/bits/stdio2.h: New file.
+	* libio/vswprintf.c (_IO_strnfile): Rename type to...
+	(_IO_wstrnfile): ...this.  Adjust all uses.
+	* libio/libio.h (_IO_FLAGS2_CHECK_PERCENT_N): Define.
+	* stdio-common/vfprintf.c (STR_LEN): Define.
+	(vfprintf): Add readonly_format variable.
+	Handle _IO_FLAGS2_CHECK_PERCENT_N.
+	(buffered_vfprintf): Copy _flags2.
+	* include/stdio.h (__sprintf_chk, __snprintf_chk, __vsprintf_chk,
+	__vsnprintf_chk, __printf_chk, __fprintf_chk, __vprintf_chk,
+	__vfprintf_chk): New prototypes.
+	(__vsprintf_chk, __vsnprintf_chk): Add libc_hidden_proto.
+	* include/string.h (__memcpy_chk, __memmove_chk, __mempcpy_chk,
+	__memset_chk, __strcpy_chk, __stpcpy_chk, __strncpy_chk, __strcat_chk,
+	__strncat_chk): New prototypes.
+	* include/bits/string3.h: New file.
+	* include/sys/cdefs.h (__chk_fail): Add libc_hidden_proto
+	and rtld_hidden_proto.
+	* string/Makefile (headers): Add bits/string3.h.
+	* string/bits/string3.h (bcopy, bzero): New defines.
+	(memset, memcpy, memmove, strcpy, strncpy, strcat, strncat): Change
+	macros so that inlines are used only if unknown destination size
+	or side-effects in destination argument.
+	(mempcpy, stpcpy): Likewise.  Protect with #ifdef __USE_GNU.
+
+2004-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/Makefile (routines): Add *_chk.
+	* debug/Versions (libc): Export __chk_fail, __memcpy_chk,
+	__memmove_chk, __mempcpy_chk, __memset_chk, __stpcpy_chk,
+	__strcat_chk, __strcpy_chk, __strncat_chk, __strncpy_chk,
+	__sprintf_chk, __vsprintf_chk, __snprintf_chk, __vsnprintf_chk
+	@GLIBC_2.3.4.
+	* debug/chk_fail.c: New file.
+	* debug/snprintf_chk.c: Likewise.
+	* debug/sprintf_chk.c: Likewise.
+	* debug/vsnprintf_chk.c: Likewise.
+	* debug/vsprintf_chk.c: Likewise.
+	* include/features.h (_FORTIFY_SOURCE): Document, handle.
+	(__USE_FORTIFY_LEVEL): Define.
+	(__GNUC_PREREQ): Move to earlier location.
+	* include/sys/cdefs.h (__chk_fail): New prototype.
+	* libio/bits/stdio.h (sprintf, vsprintf, snprintf, vsnprintf):
+	Define if __USE_FORTIFY_LEVEL.
+	* misc/sys/cdefs.h (__bos, __bos0): Define.
+	* string/string.h: Include <bits/string3.h> if __USE_FORTIFY_LEVEL.
+	* bits/string/string3.h: New header.
+	* sysdeps/generic/memcpy_chk.c: New file.
+	* sysdeps/generic/memmove_chk.c: Likewise.
+	* sysdeps/generic/mempcpy_chk.c: Likewise.
+	* sysdeps/generic/memset_chk.c: Likewise.
+	* sysdeps/generic/stpcpy_chk.c: Likewise.
+	* sysdeps/generic/strcat_chk.c: Likewise.
+	* sysdeps/generic/strcpy_chk.c: Likewise.
+	* sysdeps/generic/strncat_chk.c: Likewise.
+	* sysdeps/generic/strncpy_chk.c: Likewise.
+
 2004-10-17  Roland McGrath  <roland@frob.com>
 
 	* manual/memory.texi (Page Lock Functions): Typo fix.

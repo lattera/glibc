@@ -27,6 +27,18 @@ extern int __vsscanf (__const char *__restrict __s,
 		      _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 
+extern int __sprintf_chk (char *, int, size_t, const char *, ...) __THROW;
+extern int __snprintf_chk (char *, size_t, int, size_t, const char *, ...)
+     __THROW;
+extern int __vsprintf_chk (char *, int, size_t, const char *,
+			   _G_va_list) __THROW;
+extern int __vsnprintf_chk (char *, size_t, int, size_t, const char *,
+			    _G_va_list) __THROW;
+extern int __printf_chk (int, const char *, ...);
+extern int __fprintf_chk (FILE *, int, const char *, ...);
+extern int __vprintf_chk (int, const char *, _G_va_list);
+extern int __vfprintf_chk (FILE *, int, const char *, _G_va_list);
+
 /* Prototypes for compatibility functions.  */
 extern FILE *__new_tmpfile (void);
 extern FILE *__old_tmpfile (void);
@@ -109,6 +121,8 @@ libc_hidden_proto (fgets_unlocked)
 libc_hidden_proto (fputs_unlocked)
 libc_hidden_proto (open_memstream)
 libc_hidden_proto (__libc_fatal)
+libc_hidden_proto (__vsprintf_chk)
+libc_hidden_proto (__vsnprintf_chk)
 
 #  if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
   && defined HAVE_VISIBILITY_ATTRIBUTE && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE\

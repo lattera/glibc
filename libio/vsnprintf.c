@@ -28,16 +28,6 @@
 #include "libioP.h"
 #include "strfile.h"
 
-
-typedef struct
-{
-  _IO_strfile f;
-  /* This is used for the characters which do not fit in the buffer
-     provided by the user.  */
-  char overflow_buf[64];
-} _IO_strnfile;
-
-
 static int _IO_strn_overflow (_IO_FILE *fp, int c) __THROW;
 
 static int
@@ -77,7 +67,7 @@ _IO_strn_overflow (fp, c)
 }
 
 
-static const struct _IO_jump_t _IO_strn_jumps =
+const struct _IO_jump_t _IO_strn_jumps attribute_hidden =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_str_finish),

@@ -1,7 +1,7 @@
 /* Copy memory block and return pointer to beginning of destination block
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,13 @@
 #define LEN	SRC+PTR_SIZE
 
 	.text
+#if defined PIC && !defined NOT_IN_libc
+ENTRY (__memcpy_chk)
+	movl	12(%esp), %eax
+	cmpl	%eax, 16(%esp)
+	jb	HIDDEN_JUMPTARGET (__chk_fail)
+END (__memcpy_chk)
+#endif
 ENTRY (BP_SYM (memcpy))
 	ENTER
 

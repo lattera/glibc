@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,11 +24,26 @@ subdir	:= debug
 headers	:= execinfo.h
 distribute = sigcontextinfo.h register-dump.h frame.h
 
-routines := backtrace backtracesyms backtracesymsfd noophooks
+routines := backtrace backtracesyms backtracesymsfd noophooks \
+	    memcpy_chk memmove_chk mempcpy_chk memset_chk stpcpy_chk \
+	    strcat_chk strcpy_chk strncat_chk strncpy_chk \
+	    sprintf_chk vsprintf_chk snprintf_chk vsnprintf_chk \
+	    printf_chk fprintf_chk vprintf_chk vfprintf_chk \
+	    gets_chk chk_fail readonly-area
 
 CFLAGS-backtrace.c = -fno-omit-frame-pointer
+CFLAGS-sprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-snprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-vsprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-vsnprintf_chk.c = -D_IO_MTSAFE_IO
+CFLAGS-printf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-fprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-vprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions) 
+CFLAGS-vfprintf_chk.c = -D_IO_MTSAFE_IO $(exceptions)
+CFLAGS-gets_chk.c = -D_IO_MTSAFE_IO $(exceptions)
 
-tests = backtrace-tst
+tests = backtrace-tst tst-chk1 tst-chk2 tst-chk3 \
+	test-strcpy_chk test-stpcpy_chk
 
 extra-libs = libSegFault libpcprofile
 extra-libs-others = $(extra-libs)

@@ -70,6 +70,7 @@
 # define INT_T		int
 # define L_(Str)	Str
 # define ISDIGIT(Ch)	((unsigned int) ((Ch) - '0') < 10)
+# define STR_LEN(Str)	strlen (Str)
 
 # define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 # define PAD(Padchar) \
@@ -86,6 +87,7 @@
 # define INT_T		wint_t
 # define L_(Str)	L##Str
 # define ISDIGIT(Ch)	((unsigned int) ((Ch) - L'0') < 10)
+# define STR_LEN(Str)	__wcslen (Str)
 
 # include "_itowa.h"
 
@@ -219,6 +221,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* For the %m format we may need the current `errno' value.  */
   int save_errno = errno;
 
+  /* 1 if format is in read-only memory, -1 if it is in writable memory,
+     0 if unknown.  */
+  int readonly_format = 0;
 
   /* This table maps a character into a number representing a
      class.  In each step there is a destination label for each
@@ -877,6 +882,19 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* NOTREACHED */							      \
 									      \
     LABEL (form_number):						      \
+      if (s->_flags2 & _IO_FLAGS2_CHECK_PERCENT_N)			      \
+	{								      \
+	  if (! readonly_format)					      \
+	    {								      \
+	      extern int __readonly_area (const void *, size_t)		      \
+		attribute_hidden;					      \
+	      readonly_format						      \
+		= __readonly_area (format, (STR_LEN (format) + 1)	      \
+					   * sizeof (CHAR_T));		      \
+	    }								      \
+	  if (readonly_format < 0)					      \
+	    __chk_fail ();						      \
+	}								      \
       /* Answer the count of characters written.  */			      \
       if (fspec == NULL)						      \
 	{								      \
@@ -2091,6 +2109,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 #ifdef _IO_MTSAFE_IO
   hp->_lock = NULL;
 #endif
+  hp->_flags2 = s->_flags2;
   _IO_JUMPS (&helper._f) = (struct _IO_jump_t *) &_IO_helper_jumps;
 
   /* Now print to helper instead.  */

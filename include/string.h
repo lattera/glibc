@@ -3,7 +3,7 @@
 #include <sys/types.h>
 
 extern void *__memccpy (void *__dest, __const void *__src,
-			  int __c, size_t __n);
+			int __c, size_t __n);
 
 extern size_t __strnlen (__const char *__string, size_t __maxlen)
      __attribute_pure__;
@@ -113,5 +113,31 @@ libc_hidden_builtin_proto (ffs)
 #   define rindex(s, c)	(strrchr ((s), (c)))
 #  endif
 # endif
+
+extern void *__memcpy_chk (void *__restrict __dest,
+			   const void *__restrict __src, size_t __len,
+			   size_t __destlen) __THROW;
+extern void *__memmove_chk (void *__dest, const void *__src, size_t __len,
+			    size_t __destlen) __THROW;
+extern void *__mempcpy_chk (void *__restrict __dest,
+			    const void *__restrict __src, size_t __len,
+			    size_t __destlen) __THROW;
+extern void *__memset_chk (void *__dest, int __ch, size_t __len,
+			   size_t __destlen) __THROW;
+extern char *__strcpy_chk (char *__restrict __dest,
+			   const char *__restrict __src,
+			   size_t __destlen) __THROW;
+extern char *__stpcpy_chk (char *__restrict __dest,
+			   const char *__restrict __src,
+			   size_t __destlen) __THROW;
+extern char *__strncpy_chk (char *__restrict __dest,
+			    const char *__restrict __src,
+			    size_t __len, size_t __destlen) __THROW;
+extern char *__strcat_chk (char *__restrict __dest,
+			   const char *__restrict __src,
+			   size_t __destlen) __THROW;
+extern char *__strncat_chk (char *__restrict __dest,
+			    const char *__restrict __src,
+			    size_t __len, size_t __destlen) __THROW;
 
 #endif

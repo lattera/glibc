@@ -10,4 +10,12 @@ libc {
     # These are to support some gcc features.
     __cyg_profile_func_enter; __cyg_profile_func_exit;
   }
+  GLIBC_2.3.4 {
+    __chk_fail;
+    __memcpy_chk; __memmove_chk; __mempcpy_chk; __memset_chk; __stpcpy_chk;
+    __strcat_chk; __strcpy_chk; __strncat_chk; __strncpy_chk;
+    __sprintf_chk; __vsprintf_chk; __snprintf_chk; __vsnprintf_chk;
+    __printf_chk; __fprintf_chk; __vprintf_chk; __vfprintf_chk;
+    __gets_chk;
+  }
 }

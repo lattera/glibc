@@ -35,7 +35,7 @@ typedef struct
   /* This is used for the characters which do not fit in the buffer
      provided by the user.  */
   wchar_t overflow_buf[64];
-} _IO_strnfile;
+} _IO_wstrnfile;
 
 
 static wint_t _IO_wstrn_overflow (_IO_FILE *fp, wint_t c) __THROW;
@@ -49,8 +49,8 @@ _IO_wstrn_overflow (fp, c)
      filled.  But since we must return the number of characters which
      would have been written in total we must provide a buffer for
      further use.  We can do this by writing on and on in the overflow
-     buffer in the _IO_strnfile structure.  */
-  _IO_strnfile *snf = (_IO_strnfile *) fp;
+     buffer in the _IO_wstrnfile structure.  */
+  _IO_wstrnfile *snf = (_IO_wstrnfile *) fp;
 
   if (fp->_wide_data->_IO_buf_base != snf->overflow_buf)
     {
@@ -107,7 +107,7 @@ _IO_vswprintf (string, maxlen, format, args)
      const wchar_t *format;
      _IO_va_list args;
 {
-  _IO_strnfile sf;
+  _IO_wstrnfile sf;
   int ret;
   struct _IO_wide_data wd;
 #ifdef _IO_MTSAFE_IO

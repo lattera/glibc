@@ -827,6 +827,9 @@ extern void funlockfile (FILE *__stream) __THROW;
 #ifdef __USE_EXTERN_INLINES
 # include <bits/stdio.h>
 #endif
+#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+# include <bits/stdio2.h>
+#endif
 
 __END_DECLS
 

@@ -41,6 +41,8 @@
    _GNU_SOURCE		All of the above, plus GNU extensions.
    _REENTRANT		Select additionally reentrant object.
    _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
+   _FORTIFY_SOURCE	If set to numeric value > 0 additional security
+			measures are defined, according to level.
 
    The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
    If none of these are defined, the default is to have _SVID_SOURCE,
@@ -69,6 +71,7 @@
    __USE_MISC		Define things common to BSD and System V Unix.
    __USE_GNU		Define GNU extensions.
    __USE_REENTRANT	Define reentrant/thread-safe *_r functions.
+   __USE_FORTIFY_LEVEL	Additional security measures used, according to level.
    __FAVOR_BSD		Favor 4.3BSD things in cases of conflict.
 
    The macros `__GNU_LIBRARY__', `__GLIBC__', and `__GLIBC_MINOR__' are
@@ -101,6 +104,7 @@
 #undef	__USE_MISC
 #undef	__USE_GNU
 #undef	__USE_REENTRANT
+#undef	__USE_FORTIFY_LEVEL
 #undef	__FAVOR_BSD
 #undef	__KERNEL_STRICT_NAMES
 
@@ -112,6 +116,20 @@
 
 /* Always use ISO C things.  */
 #define	__USE_ANSI	1
+
+/* Convenience macros to test the versions of glibc and gcc.
+   Use them like this:
+   #if __GNUC_PREREQ (2,8)
+   ... code requiring gcc 2.8 or later ...
+   #endif
+   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
+   were not defined then.  */
+#if defined __GNUC__ && defined __GNUC_MINOR__
+# define __GNUC_PREREQ(maj, min) \
+	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#else
+# define __GNUC_PREREQ(maj, min) 0
+#endif
 
 
 /* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
@@ -244,6 +262,14 @@
 # define __USE_REENTRANT	1
 #endif
 
+#if _FORTIFY_SOURCE > 0 && __GNUC_PREREQ (4, 1) && __OPTIMIZE__ > 0
+# if _FORTIFY_SOURCE == 1
+#  define __USE_FORTIFY_LEVEL 1
+# elif _FORTIFY_SOURCE > 1
+#  define __USE_FORTIFY_LEVEL 2
+# endif
+#endif
+
 /* We do support the IEC 559 math functionality, real and complex.  */
 #define __STDC_IEC_559__		1
 #define __STDC_IEC_559_COMPLEX__	1
@@ -264,20 +290,6 @@
    these macros to test for features in specific releases.  */
 #define	__GLIBC__	2
 #define	__GLIBC_MINOR__	3
-
-/* Convenience macros to test the versions of glibc and gcc.
-   Use them like this:
-   #if __GNUC_PREREQ (2,8)
-   ... code requiring gcc 2.8 or later ...
-   #endif
-   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
-   were not defined then.  */
-#if defined __GNUC__ && defined __GNUC_MINOR__
-# define __GNUC_PREREQ(maj, min) \
-	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
-#else
-# define __GNUC_PREREQ(maj, min) 0
-#endif
 
 #define __GLIBC_PREREQ(maj, min) \
 	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
