@@ -384,11 +384,17 @@
    SIMD (AKA Altivec, VMX) instructions and register state.  This changes
    the overall size of the sigcontext and adds the swapcontext syscall.  */
 #if __LINUX_KERNEL_VERSION >= 132608 && defined __powerpc__
-# define __ASSUME_SWAPCONTEXT_SYSCALL		1
+# define __ASSUME_SWAPCONTEXT_SYSCALL	1
 #endif
 
 /* The CLONE_DETACHED flag is not necessary in 2.6.2 kernels, it is
    implied.  */
 #if __LINUX_KERNEL_VERSION >= 132610
-# define __ASSUME_NO_CLONE_DETACHED		1
+# define __ASSUME_NO_CLONE_DETACHED	1
+#endif
+
+/* Starting with version 2.6.4-rc1 the getdents syscall returns d_type
+   information as well.  */
+#if __LINUX_KERNEL_VERSION >= 132612
+# define __ASSUME_GETDENTS32_D_TYPE	1
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,14 +36,18 @@
 #include "kernel-features.h"
 
 #ifdef __NR_getdents64
-#ifndef __ASSUME_GETDENTS64_SYSCALL
-#ifndef __GETDENTS
+# ifndef __ASSUME_GETDENTS64_SYSCALL
+#  ifndef __GETDENTS
 /* The variable is shared between all *getdents* calls.  */
 int __have_no_getdents64;
-#else
+#  else
 extern int __have_no_getdents64;
+#  endif
+#  define have_no_getdents64_defined 1
+# endif
 #endif
-#endif
+#ifndef have_no_getdents64_defined
+# define __have_no_getdents64 0
 #endif
 
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
@@ -94,13 +98,42 @@ ssize_t
 internal_function
 __GETDENTS (int fd, char *buf, size_t nbytes)
 {
-  off64_t last_offset = -1;
   ssize_t retval;
 
+#ifdef __ASSUME_GETDENTS32_D_TYPE
+  if (sizeof (DIRENT_TYPE) == sizeof (struct dirent))
+    {
+      retval = INLINE_SYSCALL (getdents, 3, fd, CHECK_N(buf, nbytes), nbytes);
+
+      /* The kernel added the d_type value after the name.  Change
+	 this now.  */
+      if (retval != -1)
+	{
+	  union
+	  {
+	    struct kernel_dirent k;
+	    struct dirent u;
+	  } *kbuf = (void *) buf;
+
+	  while ((char *) kbuf < buf + retval)
+	    {
+	      char d_type = *((char *) kbuf + kbuf->k.d_reclen - 1);
+	      memmove (kbuf->u.d_name, kbuf->k.d_name,
+		       strlen (kbuf->k.d_name) + 1);
+	      kbuf->u.d_type = d_type;
+
+	      kbuf = (void *) ((char *) kbuf + kbuf->k.d_reclen);
+	    }
+	}
+
+      return retval;
+    }
+#endif
+
+  off64_t last_offset = -1;
+
 #ifdef __NR_getdents64
-# ifndef __ASSUME_GETDENTS64_SYSCALL
   if (!__have_no_getdents64)
-# endif
     {
 # ifndef __ASSUME_GETDENTS64_SYSCALL
       int saved_errno = errno;

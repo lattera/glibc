@@ -1,8 +1,15 @@
+2004-03-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add support for
+	__ASSUME_GETDENTS32_D_TYPE.
+	* sysdeps/unix/sysv/linux/getdents.c: For 2.6.4+ kernels you
+	getdents syscall again since it provides d_type information.
+
 2004-02-29  Andreas Jaeger  <aj@suse.de>
 
-	* manual/install.texi (Tools for Compilation): Autoconf 2.53 is required.
+	* manual/install.texi (Tools for Compilation): Autoconf 2.53 is
+	required.
 	(Supported Configurations): Add x86_64-*-linux.
-	* INSTALL: Regenerated.
 
 2004-02-28  Ulrich Drepper  <drepper@redhat.com>
 
