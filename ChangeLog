@@ -1,3 +1,17 @@
+2003-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Define PROT_GROWSDOWN
+	and PROT_GROWSUP.
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+
 2003-09-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/syslog.c: Include locale.h.
