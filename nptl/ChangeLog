@@ -1,5 +1,9 @@
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Don't define
+	NEED_DL_SYSINFO since no processor < i686 had the sysenter opcode.
+	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h: New file.
+
 	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Use ENTER_KERNEL instead
 	of int $0x80.
 	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Likewise.

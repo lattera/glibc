@@ -1,5 +1,11 @@
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/_exit.S: Use ENTER_KERNEL instead of
+	int $0x80.
+	* sysdeps/unix/sysv/linux/i386/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/swapcontext.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Add support to use AT_SYSINFO
 	information for system calls.
 

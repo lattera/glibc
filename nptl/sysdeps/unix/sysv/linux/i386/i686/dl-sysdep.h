@@ -41,3 +41,25 @@
    of weak definitions in ld.so.  See rtld.c.  */
 
 #define RTLD_CORRECT_DYNAMIC_WEAK	1
+
+
+/* Traditionally system calls have been made using int $0x80.  A
+   second method was introduced which, if possible, will use the
+   sysenter/syscall instructions.  To signal the presence and where to
+   find the code the kernel passes an AT_SYSINFO value in the
+   auxiliary vector to the application.  */
+#define NEED_DL_SYSINFO	1
+
+#if defined NEED_DL_SYSINFO && !defined __ASSEMBLER__
+extern void _dl_sysinfo_int80 (void) attribute_hidden;
+# define DL_SYSINFO_DEFAULT _dl_sysinfo_int80
+# define DL_SYSINFO_IMPLEMENTATION \
+  asm (".type _dl_sysinfo_int80,@function\n\t"				      \
+       ".hidden _dl_sysinfo_int80\n"					      \
+       "_dl_sysinfo_int80:\n\t"						      \
+       "int $0x80;\n\t"							      \
+       "ret;\n\t"							      \
+       ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80");
+#endif
+
+#endif	/* dl-sysdep.h */
