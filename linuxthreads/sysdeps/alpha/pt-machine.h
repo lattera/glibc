@@ -76,7 +76,7 @@ testandset (int *spinlock)
 #define THREAD_SELF \
 ({									      \
   register pthread_descr __self __asm__("$0");				      \
-  __asm__ ("call_pal %1" : "=r"(__self) : "i"(PAL_rduniq) : "$0");	      \
+  __asm__ ("call_pal %1" : "=r"(__self) : "i"(PAL_rduniq));		      \
   __self;								      \
 })
 

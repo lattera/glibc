@@ -1,3 +1,8 @@
+2002-05-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/pt-machine.c (THREAD_SELF): Remove clobber.
+	Patch by Glen Nakamura <gen@flex.com>.
+
 2002-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* signals.c: Move sighandler functions to...

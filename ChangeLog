@@ -1,3 +1,12 @@
+2002-05-16  Bruno Haible  <bruno@clisp.org>
+
+	* MakeTAGS (libc.pot): Don't sort the output.
+	* po/header.pot: Update to match xgettext 0.11 output.
+
+2002-05-16  Bruno Haible  <bruno@clisp.org>
+
+	* MakeTAGS (subdirs): Remove duplicates.
+
 2002-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/errlist.c: Remove extra weak alias
