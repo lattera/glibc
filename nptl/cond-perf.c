@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <atomic.h>
 
 static pthread_cond_t cond1 = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t mut1 = PTHREAD_MUTEX_INITIALIZER;
@@ -23,7 +24,7 @@ cons (void *arg)
 
   do
     {
-      if (--ntogo == 0)
+      if (atomic_decrement_and_test (&ntogo))
 	{
 	  pthread_mutex_lock (&mut2);
 	  alldone = true;
@@ -68,11 +69,11 @@ main (int argc, char *argv[])
 
   pthread_t th[nthreads];
   int i;
-  for (i = 0; i < nthreads; ++i)
+  for (i = 0; __builtin_expect (i < nthreads, 1); ++i)
     if (__builtin_expect ((err = pthread_create (&th[i], NULL, cons, (void *) (long) i)) != 0, 0))
       printf ("pthread_create: %s\n", strerror (err));
 
-  for (i = 0; i < nrounds; ++i)
+  for (i = 0; __builtin_expect (i < nrounds, 1); ++i)
     {
       pthread_mutex_lock (&mut2);
       while (! alldone)

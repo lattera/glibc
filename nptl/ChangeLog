@@ -1,3 +1,14 @@
+2003-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (CFLAGS-tst-align.c): Add $(stack-align-test-flags).
+	* tst-align.c: Include tst-stack-align.h.
+	(tf, do_test): Use TEST_STACK_ALIGN macro.
+
+2003-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_attr_init.c (__pthread_attr_init_2_0): Remove unused
+	variable.
+
 2003-09-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_getattr_np.c (pthread_getattr_np): Correctly fill in the

@@ -86,6 +86,9 @@ include $(common-objpfx)config.make
 # What flags to give to sources which call user provided callbacks
 uses-callbacks = $(exceptions)
 
+# What flags to give to tests which test stack alignment
+stack-align-test-flags =
+
 # We have a special subdir for each binary format.
 # For now, only ELF is fully supported.
 ifeq ($(elf),yes)

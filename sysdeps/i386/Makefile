@@ -20,3 +20,38 @@ CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 CFLAGS-dl-load.c += -Wno-unused
 CFLAGS-dl-reloc.c += -Wno-unused
 endif
+
+# Most of the glibc routines don't ever call user defined callbacks
+# nor use any FPU or SSE* and as such don't need bigger %esp alignment
+# than 4 bytes.
+# Lots of routines in math will use FPU, so make math subdir an exception
+# here.
+ifeq ($(subdir),math)
+sysdep-CFLAGS += -mpreferred-stack-boundary=4
+else
+ifeq ($(subdir),csu)
+sysdep-CFLAGS += -mpreferred-stack-boundary=4
+else
+sysdep-CFLAGS += -mpreferred-stack-boundary=2
+# Likewise, any function which calls user callbacks
+uses-callbacks += -mpreferred-stack-boundary=4
+endif
+endif
+
+# And a couple of other routines
+ifeq ($(subdir),stdlib)
+CFLAGS-exit.c += -mpreferred-stack-boundary=4
+endif
+ifeq ($(subdir),elf)
+CFLAGS-dl-init.c += -mpreferred-stack-boundary=4
+CFLAGS-dl-fini.c += -mpreferred-stack-boundary=4
+CFLAGS-dl-open.c += -mpreferred-stack-boundary=4
+CFLAGS-dl-close.c += -mpreferred-stack-boundary=4
+CFLAGS-dl-error.c += -mpreferred-stack-boundary=4
+endif
+ifeq ($(subdir),dlfcn)
+CFLAGS-dlopen.c += -mpreferred-stack-boundary=4
+CFLAGS-dlopenold.c += -mpreferred-stack-boundary=4
+CFLAGS-dlclose.c += -mpreferred-stack-boundary=4
+CFLAGS-dlerror.c += -mpreferred-stack-boundary=4
+endif

@@ -1,3 +1,21 @@
+2003-09-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/Makefile (sysdep-CFLAGS): If not in math or csu
+	subdir, add -mpreferred-stack-boundary=4, with few exceptions.
+
+2003-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makeconfig (stack-align-test-flags): Set.
+	* stdlib/Makefile (CFLAGS-tst-bsearch.c): Add
+	$(stack-align-test-flags).
+	* stdlib/tst-bsearch.c: Include tst-stack-align.h.
+	(align_check): New var.
+	(comp): Use TEST_STACK_ALIGN macro.
+	(do_test): Fail if align_check != 1.
+	* sysdeps/generic/tst-stack-align.h: New file.
+	* sysdeps/i386/i686/Makefile (stack-align-test-flags): Add -msse.
+	* sysdeps/i386/i686/tst-stack-align.h: New file.
+
 2003-09-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/clone.S: Make sure child gets a

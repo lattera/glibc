@@ -96,6 +96,8 @@ ifeq (yes,$(have-protected))
 CFLAGS-atexit.c = -DHAVE_DOT_HIDDEN
 endif
 
+CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
+
 include ../Rules
 
 # Testdir has to be named stdlib and needs to be writable

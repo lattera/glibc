@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <tst-stack-align.h>
 
 struct entry
 {
@@ -40,12 +41,16 @@ struct entry
 };
 #define narr (sizeof (arr) / sizeof (arr[0]))
 
+static int align_check;
 
 static int
 comp (const void *p1, const void *p2)
 {
   struct entry *e1 = (struct entry *) p1;
   struct entry *e2 = (struct entry *) p2;
+
+  if (!align_check)
+    align_check = TEST_STACK_ALIGN () ? -1 : 1;
 
   return e1->val - e2->val;
 }
@@ -126,6 +131,17 @@ main (void)
 	  puts ("found an entry that's not there");
 	  result = 1;
 	}
+    }
+
+  if (align_check == 0)
+    {
+      puts ("alignment not checked");
+      result = 1;
+    }
+  else if (align_check == -1)
+    {
+      puts ("stack not sufficiently aligned");
+      result = 1;
     }
 
   if (result == 0)

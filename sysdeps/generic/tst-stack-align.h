@@ -1,6 +1,5 @@
 /* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,55 +16,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <pthread.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <tst-stack-align.h>
+#include <stdint.h>
 
-static void *
-tf (void *arg)
-{
-  bool ok = true;
-
-  puts ("in thread");
-
-  if (TEST_STACK_ALIGN ())
-    ok = false;
-
-  return ok ? NULL : (void *) -1l;
-}
-
-static int
-do_test (void)
-{
-  bool ok = true;
-
-  puts ("in main");
-
-  if (TEST_STACK_ALIGN ())
-    ok = false;
-
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
-    }
-
-  void *res;
-  if (pthread_join (th, &res) != 0)
-    {
-      puts ("join failed");
-      return 1;
-    }
-
-  if (res != NULL)
-    ok = false;
-
-  return ok ? 0 : 1;
-}
-
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#define TEST_STACK_ALIGN() \
+  ({									     \
+    double _d = 12.0;							     \
+    long double _ld = 15.0;						     \
+    int _ret = 0;							     \
+    printf ("double:  %g %p %zu\n", _d, &_d, __alignof (double));	     \
+    if ((((uintptr_t) &_d) & (__alignof (double) - 1)) != 0)		     \
+      _ret = 1;								     \
+									     \
+    printf ("ldouble: %Lg %p %zu\n", _ld, &_ld, __alignof (long double));    \
+    if ((((uintptr_t) &_ld) & (__alignof (long double) - 1)) != 0)	     \
+      _ret = 1;								     \
+    _ret;								     \
+    })

@@ -393,6 +393,7 @@ CFLAGS-tst-cleanupx2.c += -fexceptions
 CFLAGS-tst-cleanupx3.c += -fexceptions
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
+CFLAGS-tst-align.c += $(stack-align-test-flags)
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
