@@ -155,6 +155,9 @@ dl_open_worker (void *a)
   const char *dst;
   int lazy;
   unsigned int i;
+#ifdef USE_TLS
+  bool any_tls;
+#endif
 
   /* Maybe we have to expand a DST.  */
   dst = strchr (file, '$');
@@ -292,6 +295,12 @@ dl_open_worker (void *a)
       l = l->l_prev;
     }
 
+#ifdef USE_TLS
+  /* We normally don't bump the TLS generation counter.  There must be
+     actually a need to do this.  */
+  any_tls = false;
+#endif
+
   /* Increment the open count for all dependencies.  If the file is
      not loaded as a dependency here add the search list of the newly
      loaded object to the scope.  */
@@ -415,10 +424,14 @@ dl_open_worker (void *a)
 	/* Add the information into the slotinfo data structure.  */
 	listp->slotinfo[idx].map = new->l_searchlist.r_list[i];
 	listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+
+	/* We have to bump the generation counter.  */
+	any_tls = true;
       }
 
-  /* Bump the generation number.  */
-  ++GL(dl_tls_generation);
+  /* Bump the generation number if necessary.  */
+  if (any_tls)
+    ++GL(dl_tls_generation);
 #endif
 
   /* Run the initializer functions of new objects.  */

@@ -1,5 +1,8 @@
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-open.c (dl_open_worker): Only bump the generation counter
+	if this is really necessary.
+
 	* elf/dl-close.c (_dl_close): Implement freeing entries in the
 	slotinfo array.
 	(free_mem): Free memory for the slotinfo array if possible.
