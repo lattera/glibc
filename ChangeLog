@@ -1,3 +1,11 @@
+1998-10-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/types.h: Include
+	bits/pthreadtypes.h only not for POSIX 199506.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Likewise.
+
 1998-10-26  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/unix/sysv/linux/Versions: Move shutdown ...
