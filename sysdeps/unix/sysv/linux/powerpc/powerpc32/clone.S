@@ -48,7 +48,7 @@ ENTRY (BP_SYM (__clone))
 	beq-	cr0,L(badargs)
 
 	/* Set up stack frame for parent.  */
-	stwu	r1,-36(r1)
+	stwu	r1,-32(r1)
 #ifdef RESET_PID
 	stmw	r28,16(r1)
 #else
@@ -100,7 +100,7 @@ ENTRY (BP_SYM (__clone))
 #endif
 
 #ifdef RESET_PID
-	andis.	r0,r28,1	/* This is & CLONE_THREAD */
+	andis.	r0,r28,CLONE_THREAD>>16
 	bne+	r0,L(oldpid)
 	andi.	r0,r28,CLONE_VM
 	li	r3,-1
@@ -130,7 +130,7 @@ L(parent):
 	lmw	r30,16(r1)
 # endif
 #endif
-	addi	r1,r1,36
+	addi	r1,r1,32
 	bnslr+
 	b	JUMPTARGET(__syscall_error)
 

@@ -1,5 +1,11 @@
 2004-12-15  Steven Munroe  <sjmunroe@us.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Correct stack
+	alignment.  Clean up flag bit tests.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Correct stack
+	alignment.  Clean up flag bit tests.  Remove redundent SP assignment.
+	Add TOC register save/restore around function call.
+
 	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Make no_vmx symbol
 	local.
 	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Make no_vmx symbol
