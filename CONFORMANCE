@@ -2,7 +2,7 @@ Conformance of the GNU libc with various standards
 ==================================================
 
 The GNU libc is designed to be conformant with existing standard as
-far as possible.  TO ensure this I've run various tests.  The results
+far as possible.  To ensure this I've run various tests.  The results
 are presented here.
 
 

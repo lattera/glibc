@@ -3,7 +3,7 @@
 	* scripts/config.sub: Update from latest autoconf release.
 	* scripts/config.guess: Likewise.
 
-	* sysdeps/i386/i786: New file.
+	* sysdeps/i386/i786/Implies: New file.
 
 1999-01-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
