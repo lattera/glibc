@@ -1,3 +1,8 @@
+1999-04-26  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/get-host.c (_hurd_get_host_config): If ENOENT opening file,
+	return success with empty value.
+
 1999-04-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/fnmatch.c: Include string.h also for glibc.
