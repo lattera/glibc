@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include <libintl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <bits/libc-lock.h>
@@ -352,7 +353,8 @@ _dl_close (void *_map)
   /* If we removed any object which uses TLS bumnp the generation
      counter.  */
   if (any_tls)
-    ++GL(dl_tls_generation);
+    if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
+      __libc_fatal (gettext ("TLS generation counter wrapped!  Please send report with the 'glibcbug' script."));
 #endif
 
   /* Notify the debugger those objects are finalized and gone.  */
