@@ -1044,7 +1044,6 @@ static void pthread_handle_sigdebug(int sig)
 void __pthread_reset_main_thread(void)
 {
   pthread_descr self = thread_self();
-  struct rlimit limit;
 
   if (__pthread_manager_request != -1) {
     /* Free the thread manager stack */
@@ -1069,11 +1068,19 @@ void __pthread_reset_main_thread(void)
   THREAD_SETMEM(self, p_resp, &_res);
 #endif
 
-  if (getrlimit (RLIMIT_STACK, &limit) == 0
-      && limit.rlim_cur != limit.rlim_max) {
-    limit.rlim_cur = limit.rlim_max;
-    setrlimit(RLIMIT_STACK, &limit);
-  }
+#ifndef FLOATING_STACKS
+  /* This is to undo the setrlimit call in __pthread_init_max_stacksize.
+     XXX This can be wrong if the user set the limit during the run.  */
+ {
+   struct rlimit limit;
+   if (getrlimit (RLIMIT_STACK, &limit) == 0
+       && limit.rlim_cur != limit.rlim_max)
+     {
+       limit.rlim_cur = limit.rlim_max;
+       setrlimit(RLIMIT_STACK, &limit);
+     }
+ }
+#endif
 }
 
 /* Process-wide exec() request */

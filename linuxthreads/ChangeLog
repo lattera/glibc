@@ -1,3 +1,8 @@
+2002-09-28  Roland McGrath  <roland@redhat.com>
+
+	* pthread.c (__pthread_reset_main_thread) [FLOATING_STACKS]:
+	Don't call setrlimit, since we did no prior bogon we need to undo.
+
 2002-09-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/tls.h [__ASSEMBLER__]: Don't include <pt-machine.h>.
