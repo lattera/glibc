@@ -478,7 +478,8 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
       newstatus = 1;
     } else {
       if (self == NULL)
-	p_wait_node->thr = self;
+	self = thread_self();
+      p_wait_node->thr = self;
       newstatus = (long) p_wait_node;
     }
     p_wait_node->abandoned = 0;

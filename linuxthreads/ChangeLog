@@ -1,3 +1,8 @@
+2000-07-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* spinlock.c (__pthread_alt_timedlock): Add back one of the
+	removed thread_self calls.
+
 2000-07-18  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	* spinlock.c (__pthread_alt_lock, __pthread_alt_timedlock): Changed
