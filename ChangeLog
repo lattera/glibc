@@ -1,3 +1,7 @@
+1999-05-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/arpa/nameser.h: Add C++ protectors.
+
 1999-05-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* iconvdata/gconv-modules: Fix alias for CP1255.  Reported by

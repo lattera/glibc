@@ -249,6 +249,8 @@
 /* glibc always has byte order info in <endian.h> */
 #include <endian.h>
 
+__BEGIN_DECLS
+
 /*
  * Structure for query header.  The order of the fields is machine- and
  * compiler-dependent, depending on the byte/bit order and the layout
@@ -342,5 +344,7 @@ extern	u_int32_t	_getlong __P((const u_char *));
 	*t_cp   = t_l; \
 	(cp) += INT32SZ; \
 }
+
+__END_DECLS
 
 #endif /* arpa/nameser.h */
