@@ -2,6 +2,7 @@
 
 	* sysdeps/unix/sysv/linux/pathconf.c: Define LINUX_LINK_MAX and
 	use it instead of LINK_MAX.
+	* sysdeps/unix/sysv/linux/fpathconf.c: Likewise.
 
 2000-06-08  Andreas Jaeger  <aj@suse.de>
 

@@ -43,7 +43,7 @@ __pathconf (path, name)
       /* Determine the filesystem type.  */
       if (__statfs (path, &fsbuf) < 0)
 	/* not possible, return the default value.  */
-	return LINK_MAX;
+	return LINUX_LINK_MAX;
 
       switch (fsbuf.f_type)
 	{
