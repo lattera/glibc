@@ -387,13 +387,24 @@ $fixup_stack:							\n\
 #define RTLD_START_SPECIAL_INIT /* nothing */
 #endif
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
-   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
-   of the main executable's symbols, as for a COPY reloc, which we don't
-   use.  */
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry
+   or TLS variables, so undefined references should not be allowed
+   to define the value.
+
+   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve
+   to one of the main executable's symbols, as for a COPY reloc.
+   This is unused on Alpha.  */
+
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+#define elf_machine_type_class(type)	\
+  (((type) == R_ALPHA_JMP_SLOT		\
+    || (type) == R_ALPHA_DTPMOD64	\
+    || (type) == R_ALPHA_DTPREL64	\
+    || (type) == R_ALPHA_TPREL64) * ELF_RTYPE_CLASS_PLT)
+#else
 #define elf_machine_type_class(type)	\
   (((type) == R_ALPHA_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	 R_ALPHA_JMP_SLOT

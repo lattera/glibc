@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  linuxthreads/Alpha version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,9 +37,8 @@ typedef struct
 {
   dtv_t *dtv;
 
-  /* Reserved for the thread implementation.  In the case of LinuxThreads,
-     this is the thread descriptor.  */
-  void *tcb;
+  /* Reserved for the thread implementation.  Unused in LinuxThreads.  */
+  void *private;
 } tcbhead_t;
 #endif
 
@@ -53,58 +52,72 @@ typedef struct
 /* Get system call information.  */
 #  include <sysdep.h>
 
-/* Get the thread descriptor definition.  */
-#  include <linuxthreads/descr.h>
-
 /* This is the size of the initial TCB.  */
-#  define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
+#  define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
 
 /* Alignment requirements for the initial TCB.  */
-#  define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
+#  define TLS_INIT_TCB_ALIGN	__alignof__ (tcbhead_t)
 
 /* This is the size of the TCB.  */
-#  define TLS_TCB_SIZE sizeof (struct _pthread_descr_struct)
+#  define TLS_TCB_SIZE		sizeof (tcbhead_t)
 
 /* Alignment requirements for the TCB.  */
-#  define TLS_TCB_ALIGN __alignof__ (struct _pthread_descr_struct)
+#  define TLS_TCB_ALIGN		__alignof__ (tcbhead_t)
+
+/* This is the size we need before TCB.  */
+#  define TLS_PRE_TCB_SIZE	sizeof (struct _pthread_descr_struct)
 
 /* The DTV is allocated at the TP; the TCB is placed elsewhere.  */
 #  define TLS_DTV_AT_TP 1
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
-#  define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
+#  define INSTALL_DTV(TCBP, DTVP) \
+  (((tcbhead_t *) (TCBP))->dtv = (DTVP) + 1)
 
 /* Install new dtv for current thread.  */
 #  define INSTALL_NEW_DTV(DTV) \
   (((tcbhead_t *)__builtin_thread_pointer ())->dtv = (DTV))
 
 /* Return dtv of given thread descriptor.  */
-#  define GET_DTV(descr) \
-  (((tcbhead_t *) (descr))->dtv)
+#  define GET_DTV(TCBP) \
+  (((tcbhead_t *) (TCBP))->dtv)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(descr, secondcall)				\
-  ({								\
-    register tcbhead_t *__self = (void *)(descr);		\
-    __self->tcb = __self;					\
-    __builtin_set_thread_pointer(__self);			\
-    0;								\
-  })
+# define TLS_INIT_TP(TCBP, SECONDCALL) \
+  (__builtin_set_thread_pointer (TCBP), 0)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
   (((tcbhead_t *)__builtin_thread_pointer ())->dtv)
 
 /* Return the thread descriptor for the current thread.  */
-#undef THREAD_SELF
-#define THREAD_SELF \
-  ((pthread_descr)(((tcbhead_t *)__builtin_thread_pointer ())->tcb))
+#  undef THREAD_SELF
+#  define THREAD_SELF \
+  ((pthread_descr)__builtin_thread_pointer () - 1)
 
-#undef INIT_THREAD_SELF
+#  undef INIT_THREAD_SELF
+#  define INIT_THREAD_SELF(DESCR, NR) \
+  __builtin_set_thread_pointer ((struct _pthread_descr_struct *)(DESCR) + 1)
+
+/* Get the thread descriptor definition.  */
+#  include <linuxthreads/descr.h>
+
+/* ??? Generic bits of LinuxThreads may call these macros with
+   DESCR set to NULL.  We are expected to be able to reference
+   the "current" value.
+
+   In our case, we'd really prefer to use DESCR, since lots of
+   PAL_code calls would be expensive.  We can only trust that
+   the compiler does its job and unifies the multiple
+   __builtin_thread_pointer instances.  */
+
+#define THREAD_GETMEM(descr, member) THREAD_SELF->member
+#define THREAD_GETMEM_NC(descr, member) THREAD_SELF->member
+#define THREAD_SETMEM(descr, member, value) (THREAD_SELF->member = (value))
+#define THREAD_SETMEM_NC(descr, member, value) (THREAD_SELF->member = (value))
 
 # endif	/* HAVE_TLS_SUPPORT */
 #endif /* __ASSEMBLER__ */

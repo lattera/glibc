@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1998, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -35,9 +35,26 @@
 	   have we loaded PV with our address.  Do both.  */
 # define LOADGP		br pv, 1f; 1: ldgp gp, 0(pv)
 # define PROLOGUE	.prologue 0
+# define EPILOGUE
 #else
-# define LOADGP		ldgp gp, 0(pv)
+	/* When building the static library, we tail call here from
+	   elsewhere, which might use a different GP.  The entertaining
+	   part is that we have to return with the GP of our caller
+	   in place, so that linker relaxation works properly.  */
+	/* ??? This is so ugly.  Consider always putting the errno
+	   setting code with the syscall in the static case.  */
+# define GPSAVEREG	t10
+# define LOADGP		ldah	t11, 0(pv) !gpdisp!1;		\
+			br	1f;				\
+			.subsection 2;				\
+			1: mov	gp, GPSAVEREG;			\
+			lda	gp, 0(t11) !gpdisp!1;		\
+			br	2f;				\
+			.previous;				\
+			mov	gp, GPSAVEREG;			\
+			2:
 # define PROLOGUE	.prologue 1
+# define EPILOGUE	mov	GPSAVEREG, gp
 #endif
 
 	.align 4
@@ -61,16 +78,20 @@ __syscall_error:
 	addq	v0, t1, v0
 	stl	t0, 0(v0)
 	lda	v0, -1
+	EPILOGUE
 	ret
 
 #elif defined(_LIBC_REENTRANT)
 
 	LOADGP
-	lda	sp, -16(sp)
-	.frame	sp, 16, ra, 0
+	lda	sp, -32(sp)
+	.frame	sp, 32, ra, 0
 	stq	ra, 0(sp)
 	stq	v0, 8(sp)
-	.mask	0x4000001, -16
+#ifdef GPSAVEREG
+	stq	GPSAVEREG, 16(sp)
+#endif
+	.mask	0x4000001, -32
 	PROLOGUE
 
 	/* Find our per-thread errno address  */
@@ -78,6 +99,9 @@ __syscall_error:
 	bsr	ra, __errno_location	!samegp
 #else
 	jsr	ra, __errno_location
+#ifndef GPSAVEREG
+	ldgp	gp, 0(ra)
+#endif
 #endif
 
 	/* Store the error value.  */
@@ -87,8 +111,12 @@ __syscall_error:
 	/* And kick back a -1.  */
 	ldi	v0, -1
 
+#ifdef GPSAVEREG
+	ldq	GPSAVEREG, 16(sp)
+#endif
 	ldq	ra, 0(sp)
-	lda	sp, 16(sp)
+	lda	sp, 32(sp)
+	EPILOGUE
 	ret
 
 #else
@@ -97,8 +125,10 @@ __syscall_error:
 	PROLOGUE
 	stl	v0, errno
 	lda	v0, -1
+	EPILOGUE
 	ret
 
 #endif
 
+	.subsection 3
 	.end __syscall_error

@@ -1,3 +1,17 @@
+2003-01-17  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_type_class): Add TLS
+	relocs for class PLT.
+	* sysdeps/alpha/libc-tls.c: New file.
+	* sysdeps/unix/alpha/sysdep.S (EPILOGUE, GPSAVEREG): New.
+	(LOADGP) [!PIC]: Rewrite to preserve caller's gp.
+
+2003-01-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/dl-static.c (_dl_static_init): Use
+	__libc_lock_{,un}lock_recursive instead of __libc_lock_{,un}lock
+	on _dl_static_lock.
+
 2003-01-17  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/bug14.c: Include stdlib.h for exit prototype.
