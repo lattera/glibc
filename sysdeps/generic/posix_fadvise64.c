@@ -25,8 +25,7 @@
 int
 posix_fadvise64 (int fd, __off64_t offset, __off64_t len, int advise)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return ENOSYS;
 }
 stub_warning (posix_fadvise64)
 #include <stub-tag.h>
