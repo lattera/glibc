@@ -1,3 +1,8 @@
+2004-05-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile: mq_send.c and mq_receive.c
+	need to be compiled with exceptions.
+
 2004-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifreq.c (__ifreq): Fix memory handling.

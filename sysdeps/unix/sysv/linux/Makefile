@@ -145,3 +145,8 @@ sysdep-rtld-routines += dl-brk dl-sbrk
 
 CPPFLAGS-lddlibc4 += -DNOT_IN_libc
 endif
+
+ifeq ($(subdir),rt)
+CFLAGS-mq_send.c += -fexceptions
+CFLAGS-mq_receive.c += -fexceptions
+endif
