@@ -1,5 +1,22 @@
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/Makefile: New file.  Add rules to build timer
+	functionality.
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Add TIMER_MAX.
+
+2000-06-04  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	* sysdeps/pthread/posix-timer.h: New file.
+	* sysdeps/pthread/timer_create.c: New file.
+	* sysdeps/pthread/timer_delete.c: New file.
+	* sysdeps/pthread/timer_getoverr.c: New file.
+	* sysdeps/pthread/timer_gettime.c: New file.
+	* sysdeps/pthread/timer_routines.c: New file.
+	* sysdeps/pthread/timer_settime.c: New file.
+	* sysdeps/pthread/tst-timer.c: New file.
+
+2000-06-08  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Remove OPEN_MAX and
 	LINK_MAX definitions if necessary.
 
