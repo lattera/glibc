@@ -1,3 +1,9 @@
+2000-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add tst-dir.
+	(tst-dir-ARGS): New variable.
+	* posix/tst-dir.c: New file.
+
 2000-09-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/sys/syscall.h (SYS_getdents64): New.
