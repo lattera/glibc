@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -27,10 +27,10 @@
 double
 __floor (double x)
 {
-  /* Check not zero since floor(-0) == -0.  */
-  if (x != 0 && fabs (x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
+  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
     {
-      double __tmp1;
+      double tmp1, new_x;
+
       __asm (
 #ifdef _IEEE_FP_INEXACT
 	     "cvttq/svim %2,%1\n\t"
@@ -38,8 +38,12 @@ __floor (double x)
 	     "cvttq/svm %2,%1\n\t"
 #endif
 	     "cvtqt/m %1,%0\n\t"
-	     : "=f"(x), "=&f"(__tmp1)
+	     : "=f"(new_x), "=&f"(tmp1)
 	     : "f"(x));
+
+      /* floor(-0) == -0, and in general we'll always have the same
+	 sign as our input.  */
+      x = copysign(new_x, x);
     }
   return x;
 }

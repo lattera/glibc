@@ -1,5 +1,21 @@
 2000-03-20  Richard Henderson  <rth@cygnus.com>
 
+	* sysdeps/alpha/fpu/fraiseexcpt.c: Use get/set_fp_control instead
+	of arithmetic instructions.
+
+	* sysdeps/alpha/fpu/s_ceil.c: Use round to -inf instead of playing
+	with the fpcr.  Protect from INV exception.
+	* sysdeps/alpha/fpu/s_ceilf.c: Likewise.
+	* sysdeps/alpha/fpu/s_floor.c: Protect from INV exception.
+	* sysdeps/alpha/fpu/s_floorf.c: Likewise.
+
+	* sysdeps/alpha/fpu/s_copysign.c: New.
+	* sysdeps/alpha/fpu/s_copysignf.c: New.
+	* sysdeps/alpha/fpu/s_fabs.c: New.
+	* sysdeps/alpha/fpu/s_fabsf.c: New.
+	* sysdeps/alpha/fpu/s_rint.c: New.
+	* sysdeps/alpha/fpu/s_rintf.c: New.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Add MADV constants.
 
 	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines):

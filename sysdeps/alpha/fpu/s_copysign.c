@@ -1,7 +1,6 @@
-/* Raise given exceptions.
-   Copyright (C) 1997, 1998, 1999, 2000  Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson <rth@tamu.edu>, 1997.
+   Contributed by Richard Henderson.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,26 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
 #include <math.h>
 
-int
-__feraiseexcept (int excepts)
+double
+__copysign (double x, double y)
 {
-  unsigned long int tmp;
-
-  /* Get the current exception state.  */
-  tmp = __ieee_get_fp_control ();
-
-  /* Set all the bits that were called for.  */
-  tmp |= (excepts & FE_ALL_EXCEPT);
-
-  /* And store it back.  */
-  __ieee_set_fp_control (tmp);
-
-  /* Success.  */
-  return 0;
+  __asm ("cpys %1, %2, %0" : "=f" (x) : "f" (y), "f" (x));
+  return x;
 }
-strong_alias (__feraiseexcept, __old_feraiseexcept)
-symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
-default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.2);
+
+weak_alias (__copysign, copysign)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__copysign, __copysignl)
+weak_alias (__copysign, copysignl)
+#endif
