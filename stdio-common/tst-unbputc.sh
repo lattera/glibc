@@ -19,10 +19,11 @@
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 common_objpfx=$1; shift
+run_program_prefix=$1; shift
 
 status=0
 
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
+${run_program_prefix} \
   ${common_objpfx}stdio-common/tst-unbputc \
     2> ${common_objpfx}stdio-common/tst-unbputc.out || status=1
 

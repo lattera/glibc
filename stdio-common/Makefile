@@ -28,7 +28,7 @@ routines	:=							      \
 	_itoa _itowa _i18n_itoa _i18n_itowa itoa-digits itowa-digits	      \
 	vfprintf vprintf printf_fp reg-printf printf-prs printf_fphex	      \
 	printf_size fprintf printf snprintf sprintf asprintf dprintf	      \
-	vfscanf 							      \
+	vfscanf							      \
 	fscanf scanf sscanf						      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
@@ -60,18 +60,16 @@ test-srcs = tst-unbputc tst-printf
 
 include ../Rules
 
-ifeq (yes,$(build-shared))
 .PHONY: do-tst-unbputc do-tst-printf
 tests: do-tst-unbputc do-tst-printf
 
 do-tst-unbputc: $(objpfx)tst-unbputc.out
 $(objpfx)tst-unbputc.out: $(objpfx)tst-unbputc tst-unbputc.sh
-	$(SHELL) -e tst-unbputc.sh $(common-objpfx)
+	$(SHELL) -e tst-unbputc.sh $(common-objpfx) '$(run-program-prefix)'
 
 do-tst-printf: $(objpfx)tst-printf.out
 $(objpfx)tst-printf.out: $(objpfx)tst-printf tst-printf.sh
-	$(SHELL) -e tst-printf.sh $(common-objpfx)
-endif
+	$(SHELL) -e tst-printf.sh $(common-objpfx) '$(run-program-prefix)'
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-tst-printf.c = -Wno-format
