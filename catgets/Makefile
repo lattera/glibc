@@ -22,7 +22,7 @@
 subdir	:= catgets
 
 headers		= nl_types.h
-distribute	= catgetsinfo.h config.h xopen-msg.sed
+distribute	= catgetsinfo.h config.h xopen-msg.sed test1.msg
 routines	= catgets open_catalog
 others		= gencat
 install-bin	= gencat
@@ -41,12 +41,14 @@ $(objpfx)gencat: $(gencat-modules:%=$(objpfx)%.o)
 CPPFLAGS := -DNLSPATH='"$(localedir)/%L/%N:$(localedir)/%L/LC_MESSAGES/%N:$(localedir)/%l/%N:$(localedir)/%l/LC_MESSAGES/%N:"' \
 	    -DHAVE_CONFIG_H $(CPPFLAGS)
 
-generated = de.msg de.cat
+generated = de.msg de.cat test1.cat test1.h
 
 ifneq ($(cross-compiling),yes)
-tests: $(objpfx)de.cat
+tests: $(objpfx)de.cat $(objpfx)test1.cat
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
+$(objpfx)test1.cat: test1.msg $(objpfx)gencat
+	$(built-program-cmd) -H $(objpfx)test1.h $@ $<
 $(objpfx)de.cat: $(objpfx)de.msg $(objpfx)gencat
 	$(built-program-cmd) $@ $<
 

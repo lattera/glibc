@@ -1,5 +1,9 @@
 1998-10-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* catgets/Makefile (tests): Add rules to run gencat on test1.msg.
+	(generate): Add test1.cat and test1.h.
+	(distribute): Add test1.msg.
+
 	* catgets/gencat.c: Do a better job in initializing dynamic
 	memory [PR libc/844].
 
