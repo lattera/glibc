@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,10 +25,11 @@ Cambridge, MA 02139, USA.  */
    (and sets errno).  */
 
 int
-mprotect (caddr_t addr, size_t len, int prot)
+__mprotect (caddr_t addr, size_t len, int prot)
 {
   errno = ENOSYS;
   return -1;
 }
-	
+weak_alias (__mprotect, mprotect)
+
 stub_warning (mprotect)

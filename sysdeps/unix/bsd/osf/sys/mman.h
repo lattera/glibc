@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.  OSF/1 version.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -96,6 +96,7 @@ int munmap __P ((__caddr_t __addr, size_t __len));
 /* Change the memory protection of the region starting at ADDR and
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
+int __mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
 int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the

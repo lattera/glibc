@@ -1,5 +1,16 @@
 Sun Jun  9 01:11:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Close FD before return.
+
+	* sysdeps/mach/mprotect.c: Define with __ name and weak alias.
+	* sysdeps/stub/mprotect.c: Likewise.
+	* sysdeps/unix/mman/syscalls.list (mprotect): Likewise.
+	* sysdeps/generic/sys/mman.h: Declare __mprotect.
+	* sysdeps/unix/sysv/irix4/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/osf/sys/mman.h: Likewise.
+
 	* Make-dist ($(tardir).tar): Use sed to check for file names longer
 	than 14 chars, instead of doschk which checks for other things we
 	don't care about.

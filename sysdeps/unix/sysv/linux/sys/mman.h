@@ -61,6 +61,7 @@ int munmap __P ((__caddr_t __addr, size_t __len));
 /* Change the memory protection of the region starting at ADDR and
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
+int __mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
 int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the

@@ -2,6 +2,6 @@
 
 madvise		-	madvise		3	madvise
 mmap		-	mmap		5	__mmap		mmap
-mprotect	-	mprotect	3	mprotect
+mprotect	-	mprotect	3	__mprotect	mprotect
 msync		-	msync		2	msync
 munmap		-	munmap		2	__munmap	munmap
