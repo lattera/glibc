@@ -1,3 +1,22 @@
+1998-03-09 18:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-support.c (_dl_debug_bindings): Add definition.
+	* elf/rtld.c (_dl_debug_bindings): Add definition.
+	(process_dl_debug): Recognize bindings option.  Update help message.
+	* elf/link.h (struct link_map): Add l_versyms member.
+	(_dl_debug_bindings): Add declaration.
+	* elf/version.c (_dl_check_map_versions): Initialize l_versyms.
+	* elf/dl-object.c (_dl_new_object): Don't initialize l_rpath_dirs
+	and l_reloc_result.
+	* elf/dl-lookup.c (do_lookup): Define verstab from l_versyms.
+	(sym_val): Remove a member, add m as link_map.
+	(do_lookup): Return result appropriately.
+	(_dl_lookup_symbol): If _dl_debug_bindings is defined print message.
+	Call do_lookup correctly.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+
 1998-03-09 08:21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/chown.c: Moved to ...

@@ -273,6 +273,10 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 	  /* Store the number of available symbols.  */
 	  map->l_nversions = ndx_high + 1;
 
+	  /* Compute the pointer to the version symbols.  */
+	  map->l_versyms = ((void *) map->l_addr
+			    + map->l_info[VERSTAG (DT_VERSYM)]->d_un.d_ptr);
+
 	  if (dyn != NULL)
 	    {
 	      ElfW(Verneed) *ent;

@@ -34,8 +34,8 @@ static const char undefined_msg[] = "undefined symbol: ";
 
 struct sym_val
   {
-    ElfW(Addr) a;
     const ElfW(Sym) *s;
+    struct link_map *m;
   };
 
 
@@ -88,8 +88,8 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	continue;
 
       /* Don't search the executable when resolving a copy reloc.  */
-      if (elf_machine_lookup_noexec_p (reloc_type) &&
-	  map->l_type == lt_executable)
+      if (elf_machine_lookup_noexec_p (reloc_type)
+	  && map->l_type == lt_executable)
 	continue;
 
       /* Skip objects without symbol tables.  */
@@ -98,11 +98,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 
       symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
       strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
-      if (map->l_nversions > 0 && map->l_info[VERSTAG (DT_VERSYM)] != NULL)
-	verstab = ((void *) map->l_addr
-		   + map->l_info[VERSTAG (DT_VERSYM)]->d_un.d_ptr);
-      else
-	verstab = NULL;
+      verstab = map->l_versyms;
 
       /* Search the appropriate hash bucket in this object's symbol table
 	 for a definition for the same symbol name.  */
@@ -171,7 +167,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	    case STB_GLOBAL:
 	      /* Global definition.  Just what we need.  */
 	      result->s = sym;
-	      result->a = map->l_addr;
+	      result->m = map;
 	      return 1;
 	    case STB_WEAK:
 	      /* Weak definition.  Use this value if we don't find
@@ -179,7 +175,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      if (! result->s)
 		{
 		  result->s = sym;
-		  result->a = map->l_addr;
+		  result->m = map;
 		}
 	      break;
 	    default:
@@ -212,7 +208,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 		   int reloc_type)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { 0, NULL };
+  struct sym_val current_value = { NULL, NULL };
   struct link_map **scope;
 
   /* Search the relevant loaded objects for a definition.  */
@@ -222,14 +218,24 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 		   reference_name, NULL, NULL, reloc_type))
       break;
 
-  if (current_value.s == NULL &&
-      (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
-    /* We could find no value for a strong reference.  */
-    _dl_signal_error (0, reference_name,
-		      make_string (undefined_msg, undef_name));
+  if (current_value.s == NULL)
+    {
+      if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+	/* We could find no value for a strong reference.  */
+	_dl_signal_error (0, reference_name,
+			  make_string (undefined_msg, undef_name));
+      *ref = NULL;
+      return 0;
+    }
+
+  if (_dl_debug_bindings)
+    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+		       current_value.m->l_name[0]
+		       ? current_value.m->l_name : _dl_argv[0],
+		       ": symbol `", undef_name, "'\n", NULL);
 
   *ref = current_value.s;
-  return current_value.a;
+  return current_value.m->l_addr;
 }
 
 
@@ -245,7 +251,7 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 			struct link_map *skip_map)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { 0, NULL };
+  struct sym_val current_value = { NULL, NULL };
   struct link_map **scope;
   size_t i;
 
@@ -263,8 +269,20 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 		     reference_name, NULL, skip_map, 0))
 	break;
 
+  if (current_value.s == NULL)
+    {
+      *ref = NULL;
+      return 0;
+    }
+
+  if (_dl_debug_bindings)
+    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+		       current_value.m->l_name[0]
+		       ? current_value.m->l_name : _dl_argv[0],
+		       ": symbol `", undef_name, "'\n", NULL);
+
   *ref = current_value.s;
-  return current_value.a;
+  return current_value.m->l_addr;
 }
 
 
@@ -281,7 +299,7 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 			     int reloc_type)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { 0, NULL };
+  struct sym_val current_value = { NULL, NULL };
   struct link_map **scope;
 
   /* Search the relevant loaded objects for a definition.  */
@@ -308,15 +326,25 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 				       ? " (no version symbols)" : ""));
     }
 
-  if (current_value.s == NULL &&
-      (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
-    /* We could find no value for a strong reference.  */
-    _dl_signal_error (0, reference_name,
-		      make_string (undefined_msg, undef_name,
-				   ", version ", version->name ?: NULL));
+  if (current_value.s == NULL)
+    {
+      if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+	/* We could find no value for a strong reference.  */
+	_dl_signal_error (0, reference_name,
+			  make_string (undefined_msg, undef_name,
+				       ", version ", version->name ?: NULL));
+      *ref = NULL;
+      return 0;
+    }
+
+  if (_dl_debug_bindings)
+    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+		       current_value.m->l_name[0]
+		       ? current_value.m->l_name : _dl_argv[0],
+		       ": symbol `", undef_name, "'\n", NULL);
 
   *ref = current_value.s;
-  return current_value.a;
+  return current_value.m->l_addr;
 }
 
 
@@ -331,7 +359,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 				  struct link_map *skip_map)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { 0, NULL };
+  struct sym_val current_value = { NULL, NULL };
   struct link_map **scope;
   size_t i;
 
@@ -349,19 +377,29 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 		     reference_name, version, skip_map, 0))
 	break;
 
-  if (current_value.s == NULL &&
-      (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
+  if (current_value.s == NULL)
     {
-      /* We could find no value for a strong reference.  */
-      const size_t len = strlen (undef_name);
-      char buf[sizeof undefined_msg + len];
-      __mempcpy (__mempcpy (buf, undefined_msg, sizeof undefined_msg - 1),
-		 undef_name, len + 1);
-      _dl_signal_error (0, reference_name, buf);
+      if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+	{
+	  /* We could find no value for a strong reference.  */
+	  const size_t len = strlen (undef_name);
+	  char buf[sizeof undefined_msg + len];
+	  __mempcpy (__mempcpy (buf, undefined_msg, sizeof undefined_msg - 1),
+		     undef_name, len + 1);
+	  _dl_signal_error (0, reference_name, buf);
+	}
+      *ref = NULL;
+      return 0;
     }
 
+  if (_dl_debug_bindings)
+    _dl_debug_message ("\tbinding file ", reference_name, " to ",
+		       current_value.m->l_name[0]
+		       ? current_value.m->l_name : _dl_argv[0],
+		       ": symbol `", undef_name, "'\n", NULL);
+
   *ref = current_value.s;
-  return current_value.a;
+  return current_value.m->l_addr;
 }
 
 

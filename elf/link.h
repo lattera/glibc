@@ -197,6 +197,9 @@ struct link_map
 
     /* Collected results of relocation while profiling.  */
     ElfW(Addr) *l_reloc_result;
+
+    /* Pointer to the version information if available.  */
+    ElfW(Half) *l_versyms;
   };
 
 
@@ -248,6 +251,7 @@ extern struct link_map *_dl_profile_map;
 /* If nonzero the appropriate debug information is printed.  */
 extern int _dl_debug_libs;
 extern int _dl_debug_impcalls;
+extern int _dl_debug_bindings;
 
 /* File deccriptor to write debug messages to.  */
 extern int _dl_debug_fd;

@@ -76,6 +76,7 @@ const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
 int _dl_debug_libs;
 int _dl_debug_impcalls;
+int _dl_debug_bindings;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -928,6 +929,14 @@ process_dl_debug (char *dl_debug)
 	++dl_debug;
       if (*dl_debug != '\0')
 	{
+	  if (strncmp (dl_debug, "bindings", 8) == 0
+	      && (issep (dl_debug[8]) || dl_debug[8] == '\0'))
+	    {
+	      _dl_debug_bindings = 1;
+	      _dl_debug_impcalls = 1;
+	      any_debug = 1;
+	      dl_debug += 8;
+	    }
 	  if (strncmp (dl_debug, "libs", 4) == 0
 	      && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
 	    {
@@ -942,8 +951,13 @@ process_dl_debug (char *dl_debug)
 	      _dl_sysdep_message ("\
 Valid options for the LD_DEBUG environment variable are:\n\
 \n\
-  help    display this help message and exit
-  libs    display library search paths\n", NULL);
+  bindings  display information about symbol binding\n\
+  help      display this help message and exit\n\
+  libs      display library search paths\n\
+\n\
+To direct the debugging output into a file instead of standard output\n\
+a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
+				  NULL);
 	      _exit (0);
 	    }
 	  else
