@@ -448,6 +448,10 @@ __dl_fini_plabel:
 /* We only use RELA. */
 #define ELF_MACHINE_NO_REL 1
 
+/* Return the address of the entry point. */
+#define ELF_MACHINE_START_ADDRESS(map, start) \
+  DL_FUNCTION_ADDRESS (map, start)
+
 #endif /* !dl_machine_h */
 
 /* These are only actually used where RESOLVE_MAP is defined, anyway. */
