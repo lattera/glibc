@@ -1,5 +1,9 @@
 2000-02-01  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/lxstat.c: Removed, we can use the
+	generic function.
+	* sysdeps/unix/sysv/linux/mips/fxstat.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/init-first.h: New file, from Ralf
 	Baechle <ralf@gnu.org>.
 
