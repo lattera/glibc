@@ -1,5 +1,8 @@
 2003-09-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/if_index.c: Use only non-cancelable
+	interfaces.
+
 	* grp/Makefile (CFLAGS-getgrgid_r.c, CFLAGS-getgrnam_r.c,
 	CFLAGS-fgetgrent.c, CFLAGS-fgetgrent_r.c, CFLAGS-putgrent.c,
 	CFLAGS-initgroups.c, CFLAGS-getgrgid.c): Add -fexceptions.

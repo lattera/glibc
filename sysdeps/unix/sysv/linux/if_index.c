@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,98,99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1997,98,99,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <bits/libc-lock.h>
+#include <not-cancel.h>
 
 #include "kernel-features.h"
 
@@ -53,12 +54,12 @@ if_nametoindex (const char *ifname)
   if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
     {
       int saved_errno = errno;
-      __close (fd);
+      close_not_cancel_no_status (fd);
       if (saved_errno == EINVAL)
 	__set_errno (ENOSYS);
       return 0;
     }
-  __close (fd);
+  close_not_cancel_no_status (fd);
   return ifr.ifr_ifindex;
 #endif
 }
@@ -120,9 +121,9 @@ if_nameindex (void)
   do
     {
       ifc.ifc_buf = alloca (ifc.ifc_len = rq_len);
-      if (ifc.ifc_buf == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
+      if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0)
 	{
-	  __close (fd);
+	  close_not_cancel_no_status (fd);
 	  return NULL;
 	}
       rq_len *= 2;
@@ -134,7 +135,7 @@ if_nameindex (void)
   idx = malloc ((nifs + 1) * sizeof (struct if_nameindex));
   if (idx == NULL)
     {
-      __close (fd);
+      close_not_cancel_no_status (fd);
       __set_errno (ENOBUFS);
       return NULL;
     }
@@ -152,7 +153,7 @@ if_nameindex (void)
 	  for (j =  0; j < i; ++j)
 	    free (idx[j].if_name);
 	  free (idx);
-	  __close (fd);
+	  close_not_cancel_no_status (fd);
 	  if (saved_errno == EINVAL)
 	    saved_errno = ENOSYS;
 	  else if (saved_errno == ENOMEM)
@@ -166,7 +167,7 @@ if_nameindex (void)
   idx[i].if_index = 0;
   idx[i].if_name = NULL;
 
-  __close (fd);
+  close_not_cancel_no_status (fd);
   return idx;
 #endif
 }
@@ -208,7 +209,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
       ifr.ifr_ifindex = ifindex;
       status = __ioctl (fd, SIOCGIFNAME, &ifr);
 
-      __close (fd);
+      close_not_cancel_no_status (fd);
 
 #  if __ASSUME_SIOCGIFNAME == 0
       if (status  < 0)
@@ -288,9 +289,9 @@ __protocol_available (int *have_inet, int *have_inet6)
   do
     {
       ifc.ifc_buf = alloca (ifc.ifc_len = rq_len);
-      if (ifc.ifc_buf == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
+      if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0)
 	{
-	  __close (fd);
+	  close_not_cancel_no_status (fd);
 	  return;
 	}
       rq_len *= 2;
@@ -317,6 +318,6 @@ __protocol_available (int *have_inet, int *have_inet6)
 	  break;
       }
 
-  __close (fd);
+  close_not_cancel_no_status (fd);
 }
 #endif
