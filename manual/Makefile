@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+# Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -54,9 +54,9 @@ mkinstalldirs = $(..)scripts/mkinstalldirs
 chapters = $(addsuffix .texi, \
 		       intro errno memory ctype string charset locale	\
 		       message search pattern io stdio llio filesys	\
-		       pipe socket terminal math arith time setjmp	\
-		       signal startup process job nss users sysinfo conf\
-		       crypt)
+		       pipe socket terminal math arith time resource	\
+		       setjmp signal startup process job nss users	\
+		       sysinfo conf crypt)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi contrib.texi
 

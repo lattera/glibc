@@ -1,0 +1,644 @@
+@node Resource Usage And Limitation, Non-Local Exits, Date and Time, Top
+@c %MENU% Functions for examining resource usage and getting and setting limits
+@chapter Resource Usage And Limitation
+This chapter describes functions for examining how much of various kinds of
+resources (CPU time, memory, etc.) a process has used and getting and setting
+limits on future usage.
+
+@menu
+* Resource Usage::		Measuring various resources used.
+* Limits on Resources::		Specifying limits on resource usage.
+* Priority::			Reading or setting process run priority.
+@end menu
+
+
+@node Resource Usage
+@section Resource Usage
+
+@pindex sys/resource.h
+The function @code{getrusage} and the data type @code{struct rusage}
+are used to examine the resource usage of a process.  They are declared
+in @file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getrusage (int @var{processes}, struct rusage *@var{rusage})
+This function reports resource usage totals for processes specified by
+@var{processes}, storing the information in @code{*@var{rusage}}.
+
+In most systems, @var{processes} has only two valid values:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item RUSAGE_SELF
+Just the current process.
+
+@comment sys/resource.h
+@comment BSD
+@item RUSAGE_CHILDREN
+All child processes (direct and indirect) that have already terminated.
+@end table
+
+In the GNU system, you can also inquire about a particular child process
+by specifying its process ID.
+
+The return value of @code{getrusage} is zero for success, and @code{-1}
+for failure.
+
+@table @code
+@item EINVAL
+The argument @var{processes} is not valid.
+@end table
+@end deftypefun
+
+One way of getting resource usage for a particular child process is with
+the function @code{wait4}, which returns totals for a child when it
+terminates.  @xref{BSD Wait Functions}.
+
+@comment sys/resource.h
+@comment BSD
+@deftp {Data Type} {struct rusage}
+This data type stores various resource usage statistics.  It has the
+following members, and possibly others:
+
+@table @code
+@item struct timeval ru_utime
+Time spent executing user instructions.
+
+@item struct timeval ru_stime
+Time spent in operating system code on behalf of @var{processes}.
+
+@item long int ru_maxrss
+The maximum resident set size used, in kilobytes.  That is, the maximum
+number of kilobytes of physical memory that @var{processes} used
+simultaneously.
+
+@item long int ru_ixrss
+An integral value expressed in kilobytes times ticks of execution, which
+indicates the amount of memory used by text that was shared with other
+processes.
+
+@item long int ru_idrss
+An integral value expressed the same way, which is the amount of
+unshared memory used for data.
+
+@item long int ru_isrss
+An integral value expressed the same way, which is the amount of
+unshared memory used for stack space.
+
+@item long int ru_minflt
+The number of page faults which were serviced without requiring any I/O.
+
+@item long int ru_majflt
+The number of page faults which were serviced by doing I/O.
+
+@item long int ru_nswap
+The number of times @var{processes} was swapped entirely out of main memory.
+
+@item long int ru_inblock
+The number of times the file system had to read from the disk on behalf
+of @var{processes}.
+
+@item long int ru_oublock
+The number of times the file system had to write to the disk on behalf
+of @var{processes}.
+
+@item long int ru_msgsnd
+Number of IPC messages sent.
+
+@item long int ru_msgrcv
+Number of IPC messages received.
+
+@item long int ru_nsignals
+Number of signals received.
+
+@item long int ru_nvcsw
+The number of times @var{processes} voluntarily invoked a context switch
+(usually to wait for some service).
+
+@item long int ru_nivcsw
+The number of times an involuntary context switch took place (because
+a time slice expired, or another process of higher priority was
+scheduled).
+@end table
+@end deftp
+
+@code{vtimes} is a historical function that does some of what
+@code{getrusage} does.  @code{getrusage} is a better choice.
+
+@code{vtimes} and its @code{vtimes} data structure are declared in
+@file{sys/vtimes.h}.
+@pindex sys/vtimes.h
+@comment vtimes.h
+
+@deftypefun int vtimes (struct vtimes @var{current}, struct vtimes @var{child})
+
+@code{vtimes} reports resource usage totals for a process.
+
+If @var{current} is non-null, @code{vtimes} stores resource usage totals for
+the invoking process alone in the structure to which it points.  If
+@var{child} is non-null, @code{vtimes} stores resource usage totals for all
+past children (which have terminated) of the invoking process in the structure
+to which it points.
+
+@deftp {Data Type} {struct vtimes}
+This data type contains information about the resource usage of a process.
+Each member corresponds to a member of the @code{struct rusage} data type
+described above.
+
+@table @code
+@item vm_utime
+User CPU time.  Analogous to @code{ru_utime} in @code{struct rusage}
+@item vm_stime
+System CPU time.  Analogous to @code{ru_stime} in @code{struct rusage}
+@item vm_idsrss
+Data and stack memory.  The sum of the values that would be reported as
+@code{ru_idrss} and @code{ru_isrss} in @code{struct rusage}
+@item vm_ixrss
+Shared memory.  Analogous to @code{ru_ixrss} in @code{struct rusage}
+@item vm_maxrss
+Maximent resident set size.  Analogous to @code{ru_maxrss} in
+@code{struct rusage}
+@item vm_majflt
+Major page faults.  Analogous to @code{ru_majflt} in @code{struct rusage}
+@item vm_minflt
+Minor page faults.  Analogous to @code{ru_minflt} in @code{struct rusage}
+@item vm_nswap
+Swap count.  Analogous to @code{ru_nswap} in @code{struct rusage}
+@item vm_inblk
+Disk reads.  Analogous to @code{ru_inblk} in @code{struct rusage}
+@item vm_oublk
+Disk writes.  Analogous to @code{ru_oublk} in @code{struct rusage}
+@end table
+@end deftp
+
+
+The return value is zero if the function succeeds; @code{-1} otherwise.
+
+
+
+@end deftypefun
+An additional historical function for examining resource usage,
+@code{vtimes}, is supported but not documented here.  It is declared in
+@file{sys/vtimes.h}.
+
+@node Limits on Resources
+@section Limiting Resource Usage
+@cindex resource limits
+@cindex limits on resource usage
+@cindex usage limits
+
+You can specify limits for the resource usage of a process.  When the
+process tries to exceed a limit, it may get a signal, or the system call
+by which it tried to do so may fail, depending on the resource.  Each
+process initially inherits its limit values from its parent, but it can
+subsequently change them.
+
+There are two per-process limits associated with a resource:
+@cindex limit
+
+@table @dfn
+@item current limit
+The current limit is the value the system will not allow usage to
+exceed.  It is also called the ``soft limit'' because the process being
+limited can generally raise the current limit at will.
+@cindex current limit
+@cindex soft limit
+
+@item maximum limit
+The maximum limit is the maximum value to which a process is allowed to
+set its current limit.  It is also called the ``hard limit'' because
+there is no way for a process to get around it.  A process may lower
+its own maximum limit, but only the superuser may increase a maximum
+limit.
+@cindex maximum limit
+@cindex hard limit
+@end table
+
+@pindex sys/resource.h
+The symbols for use with @code{getrlimit}, @code{setrlimit},
+@code{getrlimit64}, and @code{seterlimit64} are defined in
+@file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getrlimit (int @var{resource}, struct rlimit *@var{rlp})
+Read the current and maximum limits for the resource @var{resource}
+and store them in @code{*@var{rlp}}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+only possible @code{errno} error condition is @code{EFAULT}.
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32-bit system this function is in fact @code{getrlimit64}.  Thus, the
+LFS interface transparently replaces the old interface.
+@end deftypefun
+
+@comment sys/resource.h
+@comment Unix98
+@deftypefun int getrlimit64 (int @var{resource}, struct rlimit64 *@var{rlp})
+This function is similar to @code{getrlimit} but its second parameter is
+a pointer to a variable of type @code{struct rlimit64}, which allows it
+to read values which wouldn't fit in the member of a @code{struct
+rlimit}.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32-bit machine, this function is available under the name
+@code{getrlimit} and so transparently replaces the old interface.
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int setrlimit (int @var{resource}, const struct rlimit *@var{rlp})
+Store the current and maximum limits for the resource @var{resource}
+in @code{*@var{rlp}}.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is possible:
+
+@table @code
+@item EPERM
+@itemize @bullet
+@item
+The process tried to raise a current limit beyond the maximum limit.
+
+@item
+The process tried to raise a maximum limit, but is not superuser.
+@end itemize
+@end table
+
+When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32-bit system this function is in fact @code{setrlimit64}.  Thus, the
+LFS interface transparently replaces the old interface.
+@end deftypefun
+
+@comment sys/resource.h
+@comment Unix98
+@deftypefun int setrlimit64 (int @var{resource}, const struct rlimit64 *@var{rlp})
+This function is similar to @code{setrlimit} but its second parameter is
+a pointer to a variable of type @code{struct rlimit64} which allows it
+to set values which wouldn't fit in the member of a @code{struct
+rlimit}.
+
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32-bit machine this function is available under the name
+@code{setrlimit} and so transparently replaces the old interface.
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftp {Data Type} {struct rlimit}
+This structure is used with @code{getrlimit} to receive limit values,
+and with @code{setrlimit} to specify limit values for a particular process
+and resource.  It has two fields:
+
+@table @code
+@item rlim_t rlim_cur
+The current limit
+
+@item rlim_t rlim_max
+The maximum limit.
+@end table
+
+For @code{getrlimit}, the structure is an output; it receives the current
+values.  For @code{setrlimit}, it specifies the new values.
+@end deftp
+
+For the LFS functions a similar type is defined in @file{sys/resource.h}.
+
+@comment sys/resource.h
+@comment Unix98
+@deftp {Data Type} {struct rlimit64}
+This structure is analogous to the @code{rlimit} structure above, but
+its components have wider ranges.  It has two fields:
+
+@table @code
+@item rlim64_t rlim_cur
+This is analogous to @code{rlimit.rlim_cur}, but with a different type.
+
+@item rlim64_t rlim_max
+This is analogous to @code{rlimit.rlim_max}, but with a different type.
+@end table
+
+@end deftp
+
+Here is a list of resources for which you can specify a limit.  Memory
+and file sizes are measured in bytes.
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_CPU
+@vindex RLIMIT_CPU
+The maximum amount of CPU time the process can use.  If it runs for
+longer than this, it gets a signal: @code{SIGXCPU}.  The value is
+measured in seconds.  @xref{Operation Error Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_FSIZE
+@vindex RLIMIT_FSIZE
+The maximum size of file the process can create.  Trying to write a
+larger file causes a signal: @code{SIGXFSZ}.  @xref{Operation Error
+Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_DATA
+@vindex RLIMIT_DATA
+The maximum size of data memory for the process.  If the process tries
+to allocate data memory beyond this amount, the allocation function
+fails.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_STACK
+@vindex RLIMIT_STACK
+The maximum stack size for the process.  If the process tries to extend
+its stack past this size, it gets a @code{SIGSEGV} signal.
+@xref{Program Error Signals}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_CORE
+@vindex RLIMIT_CORE
+The maximum size core file that this process can create.  If the process
+terminates and would dump a core file larger than this, then no core
+file is created.  So setting this limit to zero prevents core files from
+ever being created.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_RSS
+@vindex RLIMIT_RSS
+The maximum amount of physical memory that this process should get.
+This parameter is a guide for the system's scheduler and memory
+allocator; the system may give the process more memory when there is a
+surplus.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_MEMLOCK
+The maximum amount of memory that can be locked into physical memory (so
+it will never be paged out).
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_NPROC
+The maximum number of processes that can be created with the same user ID.
+If you have reached the limit for your user ID, @code{fork} will fail
+with @code{EAGAIN}.  @xref{Creating a Process}.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIMIT_NOFILE
+@vindex RLIMIT_NOFILE
+@itemx RLIMIT_OFILE
+@vindex RLIMIT_OFILE
+The maximum number of files that the process can open.  If it tries to
+open more files than this, its open attempt fails with @code{errno}
+@code{EMFILE}.  @xref{Error Codes}.  Not all systems support this limit;
+GNU does, and 4.4 BSD does.
+
+@comment sys/resource.h
+@comment Unix98
+@item RLIMIT_AS
+@vindex RLIMIT_AS
+The maximum size of total memory that this process should get.  If the
+process tries to allocate more memory beyond this amount with, for
+example, @code{brk}, @code{malloc}, @code{mmap} or @code{sbrk}, the
+allocation function fails.
+
+@comment sys/resource.h
+@comment BSD
+@item RLIM_NLIMITS
+@vindex RLIM_NLIMITS
+The number of different resource limits.  Any valid @var{resource}
+operand must be less than @code{RLIM_NLIMITS}.
+@end table
+
+@comment sys/resource.h
+@comment BSD
+@deftypevr Constant int RLIM_INFINITY
+This constant stands for a value of ``infinity'' when supplied as
+the limit value in @code{setrlimit}.
+@end deftypevr
+
+
+The following are historical functions to do some of what the functions
+above do.  The functions above are better choices.
+
+@code{ulimit} and the command symbols are declared in @file{ulimit.h}.
+@pindex ulimit.h
+@comment ulimit.h
+
+@deftypefun int ulimit (int @var{cmd}, ...)
+
+@code{ulimit} gets the current limit or sets the current and maximum
+limit for a particular resource for the calling process according to the
+command @var{cmd}.a
+
+If you are getting a limit, the command argument is the only argument.
+If you are setting a limit, there is a second argument:
+@code{long int} @var{limit} which is the value to which you are setting
+the limit.
+
+The @var{cmd} values and the operations they specify are:
+@table @code
+
+@item GETFSIZE
+Get the current limit on the size of a file, in units of 512 bytes.
+
+@item SETFSIZE
+Set the current and maximum limit on the size of a file to @var{limit} *
+512 bytes.
+
+@end table
+
+There are also some other @var{cmd} values that may do things on some
+systems, but they are not supported.
+
+Only the superuser may increase a maximum limit.
+
+When you successfully get a limit, the return value of @code{ulimit} is
+that limit, which is never negative.  When you successfully set a limit,
+the return value is zero.  When the function fails, the return value is
+@code{-1} and @code{errno} is set according to the reason:
+
+@table @code
+@item EPERM
+A process tried to increase a maximum limit, but is not superuser.
+@end table
+
+
+@end deftypefun
+
+@code{vlimit} and its resource symbols are declared in @file{sys/vlimit.h}.
+@comment sys/vlimit.h
+@pindex sys/vlimit.h
+@comment BSD
+
+@deftypefun int vlimit (int @var{resource}, int @var{limit})
+
+@code{vlimit} sets the current limit for a resource for a process.
+
+@var{resource} identifies the resource:
+
+@table @code
+@item LIM_CPU
+Maximum CPU time.  Same as @code{RLIMIT_CPU} for @code{setrlimit}.
+@item LIM_FSIZE
+Maximum file size.  Same as @code{RLIMIT_FSIZE} for @code{setrlimit}.
+@item LIM_DATA
+Maximum data memory.  Same as @code{RLIMIT_DATA} for @code{setrlimit}.
+@item LIM_STACK
+Maximum stack size.  Same as @code{RLIMIT_STACK} for @code{setrlimit}.
+@item LIM_CORE
+Maximum core file size.  Same as @code{RLIMIT_COR} for @code{setrlimit}.
+@item LIM_MAXRSS
+Maximum physical memory.  Same as @code{RLIMIT_RSS} for @code{setrlimit}.
+@end table
+
+The return value is zero for success, and @code{-1} with @code{errno} set
+accordingly for failure:
+
+@table @code
+@item EPERM
+The process tried to set its current limit beyond its maximum limit.
+@end table
+
+@end deftypefun
+
+@node Priority
+@section Process Priority
+@cindex process priority
+@cindex priority of a process
+
+@pindex sys/resource.h
+When several processes try to run, their respective priorities determine
+what share of the CPU each process gets.  This section describes how you
+can read and set the priority of a process.  All these functions and
+macros are declared in @file{sys/resource.h}.
+
+The range of valid priority values depends on the operating system, but
+typically it runs from @code{-20} to @code{20}.  A lower priority value
+means the process runs more often.  These constants describe the range of
+priority values:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item PRIO_MIN
+@vindex PRIO_MIN
+The smallest valid priority value.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_MAX
+@vindex PRIO_MAX
+The largest valid priority value.
+@end table
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int getpriority (int @var{class}, int @var{id})
+Read the priority of a class of processes; @var{class} and @var{id}
+specify which ones (see below).  If the processes specified do not all
+have the same priority, this returns the smallest value that any of them
+has.
+
+The return value is the priority value on success, and @code{-1} on
+failure.  The following @code{errno} error condition are possible for
+this function:
+
+@table @code
+@item ESRCH
+The combination of @var{class} and @var{id} does not match any existing
+process.
+
+@item EINVAL
+The value of @var{class} is not valid.
+@end table
+
+If the return value is @code{-1}, it could indicate failure, or it
+could be the priority value.  The only way to make certain is to set
+@code{errno = 0} before calling @code{getpriority}, then use @code{errno
+!= 0} afterward as the criterion for failure.
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD
+@deftypefun int setpriority (int @var{class}, int @var{id}, int @var{priority})
+Set the priority of a class of processes to @var{priority}; @var{class}
+and @var{id} specify which ones (see below).
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition are defined for this function:
+
+@table @code
+@item ESRCH
+The combination of @var{class} and @var{id} does not match any existing
+process.
+
+@item EINVAL
+The value of @var{class} is not valid.
+
+@item EPERM
+You tried to set the priority of some other user's process, and you
+don't have privileges for that.
+
+@item EACCES
+You tried to lower the priority of a process, and you don't have
+privileges for that.
+@end table
+@end deftypefun
+
+The arguments @var{class} and @var{id} together specify a set of
+processes in which you are interested.  These are the possible values of
+@var{class}:
+
+@table @code
+@comment sys/resource.h
+@comment BSD
+@item PRIO_PROCESS
+@vindex PRIO_PROCESS
+Read or set the priority of one process.  The argument @var{id} is a
+process ID.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_PGRP
+@vindex PRIO_PGRP
+Read or set the priority of one process group.  The argument @var{id} is
+a process group ID.
+
+@comment sys/resource.h
+@comment BSD
+@item PRIO_USER
+@vindex PRIO_USER
+Read or set the priority of one user's processes.  The argument @var{id}
+is a user ID.
+@end table
+
+If the argument @var{id} is 0, it stands for the current process,
+current process group, or the current user, according to @var{class}.
+
+@c ??? I don't know where we should say this comes from.
+@comment Unix
+@comment dunno.h
+@deftypefun int nice (int @var{increment})
+Increment the priority of the current process by @var{increment}.
+The return value is the same as for @code{setpriority}.
+
+Here is an equivalent definition of @code{nice}:
+
+@smallexample
+int
+nice (int increment)
+@{
+  int old = getpriority (PRIO_PROCESS, 0);
+  return setpriority (PRIO_PROCESS, 0, old + increment);
+@}
+@end smallexample
+@end deftypefun

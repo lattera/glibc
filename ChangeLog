@@ -1,5 +1,12 @@
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/Makefile (chapters): Add resource.
+
+	* manual/time.texi: Move section on resources to...
+	* manual/resource.texi: ...here.  New file.
+	* manual/setjmp.texi: Adjust back reference.
+	Patch by Bryan Henderson <bryanh@giraffe-data.com>.
+
 	* sysdeps/unix/sysv/aix/lxstat64.c: Uncomment STX_LINK and STX_64
 	definition.
 	* sysdeps/unix/sysv/aix/lxstat.c: Uncomment STX_LINK definition.
