@@ -1,3 +1,8 @@
+1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c: When resizing buffer make sure new size
+	is large enough.
+
 1999-07-07  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/getpt.c: Check that /dev/pts is mounted.

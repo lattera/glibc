@@ -135,6 +135,10 @@ extern void free ();
 # define memmove memcpy
 #endif	/* Not ANSI_STRING.  */
 
+#ifndef MAX
+# define MAX(a, b) ((a) < (b) ? (b) : (a))
+#endif
+
 #ifdef _LIBC
 # ifndef mempcpy
 #  define mempcpy __mempcpy
@@ -368,7 +372,7 @@ __getcwd (buf, size)
 		{
 		  char *tmp;
 
-		  size *= 2;
+		  size = 2 * MAX (size, namlen);
 		  tmp = realloc (path, size);
 		  if (tmp == NULL)
 		    {
