@@ -88,6 +88,53 @@ do_prepare (int argc, char *argv[])
     }
 }
 
+static void
+test_ftello (void)
+{
+  FILE *f;
+  int ret;
+  off64_t pos;
+
+  f = fopen64 (name, "w");
+
+  ret = fseeko64 (f, TWO_GB+100, SEEK_SET);
+  if (ret == -1 && errno == ENOSYS)
+    {
+      error (0, errno, "fseeko64 is not supported");
+      exit (EXIT_SUCCESS);
+    }
+  if (ret == -1 && errno == EINVAL)
+    {
+      error (0, errno, "LFS seems not to be supported ");
+      exit (EXIT_SUCCESS);
+    }
+  if (ret == -1)
+    {
+      error (0, errno, "fseeko64 failed with error: ");
+      exit (EXIT_FAILURE);
+    }
+
+  ret = fwrite ("Hello", 1, 5, f);
+  if (ret == -1 && errno == EINVAL)
+    {
+      error (0, errno, "LFS seems not to be supported.");
+      exit (EXIT_SUCCESS);
+    }
+
+  if (ret != 5)
+    error (EXIT_FAILURE, errno, "cannot write test string to large file");
+
+  pos = ftello64 (f);
+
+  if (pos != TWO_GB+105)
+    {
+      error (0, 0, "ftello64 gives wrong result.");
+      exit (EXIT_FAILURE);
+    }
+
+  fclose (f);
+}
+
 int
 do_test (int argc, char *argv[])
 {
@@ -104,6 +151,11 @@ do_test (int argc, char *argv[])
     {
       error (0, errno, "LFS seems not to be supported ");
       exit (EXIT_SUCCESS);
+    }
+  if (ret == -1)
+    {
+      error (0, errno, "lseek64 failed with error: ");
+      exit (EXIT_FAILURE);
     }
 
   ret = write (fd, "Hello", 5);
@@ -130,6 +182,8 @@ do_test (int argc, char *argv[])
   else if (statbuf.st_size != (TWO_GB + 100 + 5))
     error (EXIT_FAILURE, 0, "stat reported size %lld instead of %lld.",
 	   (long long int) statbuf.st_size, (TWO_GB + 100 + 5));
+
+  test_ftello ();
 
   return 0;
 }

@@ -1,5 +1,9 @@
 2001-02-05  Andreas Jaeger  <aj@suse.de>
 
+	* io/test-lfs.c (do_test): Test lseek64 return value, call
+	test_ftello.
+	(test_ftello): New function to test ftello64 and fseeko64.
+
 	* signal/signal.h: Move __sigaction from here to...
 	* include/signal.h: ...here.
 
