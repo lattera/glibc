@@ -1,5 +1,8 @@
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-addr.c (_dl_addr): Do exact testing of address range
+	using l_map_start and l_map_end.
+
 	* elf/dl-version.c: Add __builtin_expect in many places.
 
 	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (x86_cap_flags):
