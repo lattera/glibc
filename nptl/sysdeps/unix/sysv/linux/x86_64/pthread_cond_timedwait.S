@@ -120,6 +120,27 @@ __pthread_cond_timedwait:
 	callq	__pthread_enable_asynccancel_2
 
 	/* Get the current time.  */
+#ifdef __NR_clock_gettime
+	/* Get the clock number.  Note that the field in the condvar
+	   structure stores the number minus 1.  */
+	movq	8(%rsp), %rdi
+	movl	cond_clock(%rdi), %edi
+	/* Only clocks 0 and 1 are allowed.  Both are handled in the
+	   kernel.  */
+	leaq	24(%rsp), %rsi
+	movq	$__NR_clock_gettime, %rax
+	syscall
+# ifndef __ASSUME_POSIX_TIMERS
+	cmpq	$-ENOSYS, %rax
+	je	19f
+# endif
+
+	/* Compute relative timeout.  */
+	movq	(%r13), %rcx
+	movq	8(%r13), %rdx
+	subq	24(%rsp), %rcx
+	subq	32(%rsp), %rdx
+#else
 	leaq	24(%rsp), %rdi
 	xorq	%rsi, %rsi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
@@ -133,17 +154,18 @@ __pthread_cond_timedwait:
 	movq	8(%r13), %rdx
 	subq	24(%rsp), %rcx
 	subq	%rax, %rdx
+#endif
 	jns	12f
 	addq	$1000000000, %rdx
 	decq	%rcx
 12:	testq	%rcx, %rcx
+	movq	8(%rsp), %rdi
 	js	13f
 
 	/* Store relative timeout.  */
-	movq	%rcx, 24(%rsp)
+21:	movq	%rcx, 24(%rsp)
 	movq	%rdx, 32(%rsp)
 
-	movq	8(%rsp), %rdi
 	leaq	24(%rsp), %r10
 	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	%r12, %rdx
@@ -265,6 +287,30 @@ __pthread_cond_timedwait:
 
 17:	movq	(%rsp), %rax
 	jmp	18b
+
+#if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
+	/* clock_gettime not available.  */
+19:	leaq	24(%rsp), %rdi
+	xorq	%rsi, %rsi
+	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+	callq	*%rax
+
+	/* Compute relative timeout.  */
+	movq	32(%rsp), %rax
+	movq	$1000, %rdx
+	mul	%rdx		/* Milli seconds to nano seconds.  */
+	movq	(%r13), %rcx
+	movq	8(%r13), %rdx
+	subq	24(%rsp), %rcx
+	subq	%rax, %rdx
+	jns	20f
+	addq	$1000000000, %rdx
+	decq	%rcx
+20:	testq	%rcx, %rcx
+	movq	8(%rsp), %rdi
+	js	13b
+	jmp	21b
+#endif
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)

@@ -9,5 +9,5 @@ endif
 endif
 
 ifeq ($(subdir),posix)
-CFLAGS-confstr.c += -DLIBPTHREAD_VERSION="\"$(shell sed 's/\(.*\) by .*/\1/' ../nptl/Banner)\""
+CFLAGS-confstr.c += -DLIBPTHREAD_VERSION="\"$(shell sed 's/\(.*\) by .*/\1/' ../linuxthreads/Banner)\""
 endif

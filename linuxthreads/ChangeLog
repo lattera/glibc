@@ -1,3 +1,7 @@
+2003-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/Makefile: Fix cut&paste error.
+
 2003-03-18  Roland McGrath  <roland@redhat.com>
 
 	* Versions (libpthread: GLIBC_2.2): Remove

@@ -1,5 +1,8 @@
 2003-03-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Add
+	support for clock selection.
+
 	* sysdeps/pthread/pthread_cond_broadcast.c: Release lock before
 	signalling waiters.
 
