@@ -1,3 +1,22 @@
+2003-07-01  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/elf/pt-initfini.c: New file.
+	* sysdeps/alpha/pthread_spin_lock.S: New file.
+	* sysdeps/alpha/pthread_spin_trylock.S: New file.
+	* sysdeps/alpha/pthreaddef.h: New file.
+	* sysdeps/alpha/td_ta_map_lwp2thr.c: New file.
+	* sysdeps/alpha/tls.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/semaphore.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/createthread.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/fork.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/alpha/pthread_once.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/sem_post.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h: New file.
+
 2003-07-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Add correct
