@@ -1479,11 +1479,11 @@ the @var{size} argument specifies the maximum number of characters to
 produce.  The trailing null character is counted towards this limit, so
 you should allocate at least @var{size} characters for the string @var{s}.
 
-The return value is the number of characters which are generated for the
-given input.  If this value is greater than @var{size}, not all
-characters from the result have been stored in @var{s}.  You should
-try again with a bigger output string.  Here is an example of doing
-this:
+The return value is the number of characters which would be generated
+for the given input.  If this value is greater or equal to @var{size},
+not all characters from the result have been stored in @var{s}.  You
+should try again with a bigger output string.  Here is an example of
+doing this:
 
 @smallexample
 @group
@@ -1503,7 +1503,7 @@ make_message (char *name, char *value)
                      name, value);
 @end group
 @group
-  if (nchars) >= size)
+  if (nchars >= size)
     @{
       /* @r{Reallocate buffer now that we know how much space is needed.} */
       buffer = (char *) xrealloc (buffer, nchars + 1);

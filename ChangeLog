@@ -1,3 +1,22 @@
+1997-04-02 16:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/socket.texi: Document behaviour of inet_ntoa in multi-
+	threaded programs.
+	* manual/stdio.texi: Change wording for snprintf description a bit.
+	Correct typo in example.
+	* manual/lang.texi: Add documentation of __va_copy.
+
+	* Makefile: Add rule to easily generate dir-add.texi file.
+	* manual/Makefile: Likewise.
+
+	* manual/arith.texi: Add description of lldiv_t, lldiv, and atoll.
+	Change description of strtoll and strtoull to make clear these
+	are the preferred names.
+	Describe `inf', `inifinity', `nan', `nan(...)' inputs for strtod
+	and friends.
+	Change references to HUGE_VALf and HUGE_VALl to HUGE_VALF and
+	HUGE_VALL.
+
 1997-04-02 16:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* grp/fgetgrent.c: Don't use fixed buffer length.  Allow dynamic
@@ -31,10 +50,10 @@
 	* wcsmbs/wcstof.c: Likewise.
 	* wcsmbs/wcstold.c: Likewise.
 
-	* sysdeps/libm-ieee754/s_nan.c: Use strtod is parameter is not empty
+	* sysdeps/libm-ieee754/s_nan.c: Use strtod if parameter is not empty
 	string.
 	* sysdeps/libm-ieee754/s_nanf.c: Likewise.
-	* sysdeps/libm-ieee754/s_nanld.c: Likewise.
+	* sysdeps/libm-ieee754/s_nanl.c: Likewise.
 
 1997-04-02 13:56  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -462,6 +462,44 @@ use it except for reasons of portability.
 @refill
 @end deftypefn
 
+Sometimes it is necessary to parse the list of parameters more than once
+or one wants to remember a certain position in the parameter list.  To
+do this one will have to make a copy of the current value of the
+argument.  But @code{va_list} is an opaque type and it is not guaranteed
+that one can simply assign the value of a variable to another one of
+type @code{va_list}
+
+@comment stdarg.h
+@comment GNU
+@deftypefn {Macro} void __va_copy (va_list @var{dest}, va_list @var{src})
+The @code{__va_copy} macro allows copying of objects of type
+@code{va_list} even if this is no integral type.  The argument pointer
+in @var{dest} is initialized to point to the same argument as the
+pointer in @var{src}.
+
+This macro is a GNU extension but it will hopefully also be available in
+the next update of the ISO C standard.
+@end deftypefn
+
+If you want to use @code{__va_copy} you should always be prepared that
+this macro is not available.  On architectures where a simple assignment
+is invalid it hopefully is and so one should always write something like
+this:
+
+@smallexample
+@{
+  va_list ap, save;
+  @dots{}
+#ifdef __va_copy
+  __va_copy (save, ap);
+#else
+  save = ap;
+#endif
+  @dots{}
+@}
+@end smallexample
+
+
 @node Variadic Example
 @subsection Example of a Variadic Function
 

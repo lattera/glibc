@@ -826,6 +826,10 @@ string in the standard numbers-and-dots notation.  The return value is
 a pointer into a statically-allocated buffer.  Subsequent calls will
 overwrite the same buffer, so you should copy the string if you need
 to save it.
+
+In multi-threaded programs each thread has an own statically-allocated
+buffer.  But still subsequent calls of @code{inet_ntoa} in the same
+thread will overwrite the result of the last call.
 @end deftypefun
 
 @comment arpa/inet.h

@@ -411,7 +411,36 @@ type @code{long int} rather than @code{int}.)
 @deftypefun ldiv_t ldiv (long int @var{numerator}, long int @var{denominator})
 The @code{ldiv} function is similar to @code{div}, except that the
 arguments are of type @code{long int} and the result is returned as a
-structure of type @code{ldiv}.
+structure of type @code{ldiv_t}.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftp {Data Type} lldiv_t
+This is a structure type used to hold the result returned by the @code{lldiv}
+function.  It has the following members:
+
+@table @code
+@item long long int quot
+The quotient from the division.
+
+@item long long int rem
+The remainder from the division.
+@end table
+
+(This is identical to @code{div_t} except that the components are of
+type @code{long long int} rather than @code{int}.)
+@end deftp
+
+@comment stdlib.h
+@comment GNU
+@deftypefun lldiv_t lldiv (long long int @var{numerator}, long long int @var{denominator})
+The @code{lldiv} function is like the @code{div} function, but the
+arguments are of type @code{long long int} and the result is returned as
+a structure of type @code{lldiv_t}.
+
+The @code{lldiv} function is a GNU extension but it will eventually be
+part of the next ISO C standard.
 @end deftypefun
 
 
@@ -519,42 +548,48 @@ to @code{EINVAL} and returns @code{0ul}.
 @end deftypefun
 
 @comment stdlib.h
-@comment BSD
-@deftypefun {long long int} strtoq (const char *@var{string}, char **@var{tailptr}, int @var{base})
-The @code{strtoq} (``string-to-quad-word'') function is like
-@code{strtol} except that is deals with extra long numbers and it
-returns its value with type @code{long long int}.
+@comment GNU
+@deftypefun {long long int} strtoll (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtoll} function is like @code{strtol} except that is deals
+with extra long numbers and it returns its value with type @code{long
+long int}.
 
 If the string has valid syntax for an integer but the value is not
-representable because of overflow, @code{strtoq} returns either
+representable because of overflow, @code{strtoll} returns either
 @code{LONG_LONG_MAX} or @code{LONG_LONG_MIN} (@pxref{Range of Type}), as
 appropriate for the sign of the value.  It also sets @code{errno} to
 @code{ERANGE} to indicate there was overflow.
-@end deftypefun
 
-@comment stdlib.h
-@comment GNU
-@deftypefun {long long int} strtoll (const char *@var{string}, char **@var{tailptr}, int @var{base})
-@code{strtoll} is only an commonly used other name for the @code{strtoq}
-function.  Everything said for @code{strtoq} applies to @code{strtoll}
-as well.
+The @code{strtoll} function is a GNU extension but it will eventually be
+part of the next ISO C standard.
 @end deftypefun
 
 @comment stdlib.h
 @comment BSD
-@deftypefun {unsigned long long int} strtouq (const char *@var{string}, char **@var{tailptr}, int @var{base})
-The @code{strtouq} (``string-to-unsigned-quad-word'') function is like
-@code{strtoul} except that is deals with extra long numbers and it
-returns its value with type @code{unsigned long long int}.  The value
-returned in case of overflow is @code{ULONG_LONG_MAX} (@pxref{Range of Type}).
+@deftypefun {long long int} strtoq (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@code{strtoq} (``string-to-quad-word'') is only an commonly used other
+name for the @code{strtoll} function.  Everything said for
+@code{strtoll} applies to @code{strtoq} as well.
 @end deftypefun
 
 @comment stdlib.h
 @comment GNU
 @deftypefun {unsigned long long int} strtoull (const char *@var{string}, char **@var{tailptr}, int @var{base})
-@code{strtoull} is only an commonly used other name for the @code{strtouq}
-function.  Everything said for @code{strtouq} applies to @code{strtoull}
-as well.
+The @code{strtoull} function is like @code{strtoul} except that is deals
+with extra long numbers and it returns its value with type
+@code{unsigned long long int}.  The value returned in case of overflow
+is @code{ULONG_LONG_MAX} (@pxref{Range of Type}).
+
+The @code{strtoull} function is a GNU extension but it will eventually be
+part of the next ISO C standard.
+@end deftypefun
+
+@comment stdlib.h
+@comment BSD
+@deftypefun {unsigned long long int} strtouq (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@code{strtouq} (``string-to-unsigned-quad-word'') is only an commonly
+used other name for the @code{strtoull} function.  Everything said for
+@code{strtoull} applies to @code{strtouq} as well.
 @end deftypefun
 
 @comment stdlib.h
@@ -572,6 +607,16 @@ existing code; using @code{strtol} is more robust.
 This function is like @code{atol}, except that it returns an @code{int}
 value rather than @code{long int}.  The @code{atoi} function is also
 considered obsolete; use @code{strtol} instead.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {long long int} atoll (const char *@var{string})
+This function is similar to @code{atol}, except it returns a @code{long
+long int} value rather than @code{long int}.
+
+The @code{atoll} function is a GNU extension but it will eventually be
+part of the next ISO C standard.
 @end deftypefun
 
 The POSIX locales contain some information about how to format numbers
@@ -688,6 +733,24 @@ the sign of the value.  Similarly, if the value is not representable
 because of underflow, @code{strtod} returns zero.  It also sets @code{errno}
 to @code{ERANGE} if there was overflow or underflow.
 
+There are two more special inputs which are recognized by @code{strtod}.
+The string @code{"inf"} or @code{"infinity"} (without consideration of
+case and optionally preceded by a @code{"+"} or @code{"-"} sign) is
+changed to the floating-point value for infinity if the floating-point
+format supports this; and to the largest representable value otherwise.
+
+If the input string is @code{"nan"} or
+@code{"nan(@var{n-char-sequence})"} the return value of @code{strtod} is
+the representation of the NaN (not a number) value (if the
+flaoting-point formats supports this.  The form with the
+@var{n-char-sequence} enables in an implementation specific way to
+specify the form of the NaN value.  When using the @w{IEEE 754}
+floating-point format, the NaN value can have a lot of forms since only
+at least one bit in the mantissa must be set.  In the GNU C library
+implementation of @code{strtod} the @var{n-char-sequence} is interpreted
+as a number (as recognized by @code{strtol}, @pxref{Parsing of Integers})
+The mantissa of the return value corresponds to this given number.
+
 Since the value zero which is returned in the error case is also a valid
 result the user should set the global variable @code{errno} to zero
 before calling this function.  So one can test for failures after the
@@ -707,7 +770,7 @@ precision can require additional computation.
 
 If the string has valid syntax for a floating-point number but the value
 is not representable because of overflow, @code{strtof} returns either
-positive or negative @code{HUGE_VALf} (@pxref{Mathematics}), depending on
+positive or negative @code{HUGE_VALF} (@pxref{Mathematics}), depending on
 the sign of the value.
 
 This function is a GNU extension.
@@ -725,7 +788,7 @@ of precision are required.
 
 If the string has valid syntax for a floating-point number but the value
 is not representable because of overflow, @code{strtold} returns either
-positive or negative @code{HUGE_VALl} (@pxref{Mathematics}), depending on
+positive or negative @code{HUGE_VALL} (@pxref{Mathematics}), depending on
 the sign of the value.
 
 This function is a GNU extension.

@@ -66,10 +66,10 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texi: manual/xtract-typefun.awk $(chapters-incl)
-	if test -n "$(chapters-incl)"; then \
-	  (for i in $(chapters-incl); do \
-	     $(GAWK) -f $< < $i; \
+dir-add.texi: xtract-typefun.awk $(chapters)
+	if test -n "$(chapters)"; then \
+	  (for i in $(chapters); do \
+	     $(GAWK) -f $< < $$i; \
 	   done) | sort > $@.new; \
 	   ./move-if-change $@.new $@; \
 	fi
