@@ -17,10 +17,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Everything else is called `thread_state', but CMU's header file is
-   called `thread_status'.  Oh boy.  */
-#include <mach/thread_status.h>
-
 #define MACHINE_THREAD_STATE_FLAVOR	MIPS_THREAD_STATE
 #define MACHINE_THREAD_STATE_COUNT	MIPS_THREAD_STATE_COUNT
 
