@@ -24,6 +24,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/uio.h>
 #include <sys/un.h>
 
 #include "nscd.h"
@@ -139,82 +140,102 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 
   if (gr_resp.found == 1)
     {
-      size_t i;
+      struct iovec *vec;
+      size_t *len;
       char *p = buffer;
+      int nblocks;
+      size_t total_len;
+      uintptr_t align;
 
-      if (buflen < gr_resp.gr_name_len + 1)
+      /* A first check whether the buffer is sufficently large is possible.  */
+      if (buflen < gr_resp.gr_name_len + 1 + gr_resp.gr_passwd_len + 1)
 	{
 	  __set_errno (ERANGE);
 	  __close (sock);
 	  return -1;
 	}
-      resultbuf->gr_name = p;
+
+      /* Allocate the IOVEC.  */
+      vec = alloca ((2 + gr_resp.gr_mem_len) * sizeof (struct iovec));
+      len = alloca (gr_resp.gr_mem_len * sizeof (size_t));
+
+      vec[0].iov_base = resultbuf->gr_name = p;
+      vec[0].iov_len = gr_resp.gr_name_len;
+      total_len = gr_resp.gr_name_len;
       p += gr_resp.gr_name_len + 1;
-      buflen -= (gr_resp.gr_name_len + 1);
-      nbytes = __read (sock, resultbuf->gr_name, gr_resp.gr_name_len);
-      if (nbytes != gr_resp.gr_name_len)
-	{
-	  __close (sock);
-	  return 1;
-	}
-      resultbuf->gr_name[gr_resp.gr_name_len] = '\0';
 
-      if (buflen < gr_resp.gr_passwd_len + 1)
-	{
-	  __set_errno (ERANGE);
-	  __close (sock);
-	  return -1;
-	}
-      resultbuf->gr_passwd = p;
+      vec[1].iov_base = resultbuf->gr_passwd = p;
+      vec[1].iov_len = gr_resp.gr_passwd_len;
+      total_len += gr_resp.gr_passwd_len;
       p += gr_resp.gr_passwd_len + 1;
-      buflen -= (gr_resp.gr_passwd_len + 1);
-      nbytes = __read (sock, resultbuf->gr_passwd, gr_resp.gr_passwd_len);
-      if (nbytes != gr_resp.gr_passwd_len)
+      buflen -= total_len;
+      nblocks = 2;
+
+      if (gr_resp.gr_mem_len > 0)
+	{
+	  vec[2].iov_base = len;
+	  vec[2].iov_len = gr_resp.gr_mem_len * sizeof (size_t);
+	  total_len += gr_resp.gr_mem_len * sizeof (size_t);
+	  nblocks = 3;
+	}
+
+      /* Get this data.  */
+      if (__readv (sock, vec, nblocks) != total_len)
 	{
 	  __close (sock);
 	  return 1;
 	}
+
+      /* Now we know the sizes.  First terminate the strings we just read. */
+      resultbuf->gr_name[gr_resp.gr_name_len] = '\0';
       resultbuf->gr_passwd[gr_resp.gr_passwd_len] = '\0';
 
       resultbuf->gr_gid = gr_resp.gr_gid;
 
-      if (buflen < ((gr_resp.gr_mem_len + 1) * sizeof (char *)))
+      /* Now allocate the buffer the array for the group members.  We must
+	 align the pointer.  */
+      align = ((__alignof__ (char *) - (p - ((char *) 0)))
+	       & (__alignof__ (char *) - 1));
+      if (align + (1 + gr_resp.gr_mem_len) * sizeof (char *) > buflen)
 	{
 	  __set_errno (ERANGE);
 	  __close (sock);
 	  return -1;
 	}
-      resultbuf->gr_mem = (char **)p;
-      p += ((gr_resp.gr_mem_len + 1) * sizeof (char *));
-      buflen -= ((gr_resp.gr_mem_len + 1) * sizeof (char *));
+      p += align;
+      resultbuf->gr_mem = (char **) p;
+      p += (1 + gr_resp.gr_mem_len) * sizeof (char *);
+      buflen -= align + (1 + gr_resp.gr_mem_len) * sizeof (char *);
 
       resultbuf->gr_mem[gr_resp.gr_mem_len] = NULL;
 
-      for (i = 0; i < gr_resp.gr_mem_len; ++i)
+      if (gr_resp.gr_mem_len > 0)
 	{
-	  size_t len;
-	  nbytes = __read (sock, &len, sizeof (len));
-	  if (nbytes != sizeof (len))
+	  /* Prepare reading the group members.  */
+	  size_t i;
+
+	  total_len = 0;
+	  for (i = 0; i < gr_resp.gr_mem_len; ++i)
 	    {
-	      __close (sock);
-	      return 1;
+	      if (len[i] >= buflen)
+		{
+		  __set_errno (ERANGE);
+		  __close (sock);
+		  return -1;
+		}
+
+	      vec[i].iov_base = resultbuf->gr_mem[i] = p;
+	      vec[i].iov_len = len[i];
+	      total_len += len[i];
+	      buflen -= len[i];
+	      p += len[i];
+	      *p++ = '\0';
 	    }
 
-	  if (buflen < (len + 1))
+	  if (__readv (sock, vec, gr_resp.gr_mem_len) != total_len)
 	    {
-	      __set_errno (ERANGE);
 	      __close (sock);
 	      return -1;
-	    }
-	  resultbuf->gr_mem[i] = p;
-	  p += len + 1;
-	  buflen -= (len + 1);
-	  nbytes = __read (sock, resultbuf->gr_mem[i], len);
-	  resultbuf->gr_mem[i][len] = '\0';
-	  if (nbytes != len)
-	    {
-	      __close (sock);
-	      return 1;
 	    }
 	}
       __close (sock);

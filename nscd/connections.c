@@ -157,7 +157,7 @@ handle_new_request (int **connp, request_header **reqp, char **key)
 	read_polls[i].fd = -1;
       }
   }
-  
+
   if (found == 0)
     {
       dbg_log (_("No sockets with data found !"));
@@ -320,7 +320,10 @@ init_sockets (void)
 void
 pw_send_answer (int conn, struct passwd *pwd)
 {
+  struct iovec vec[6];
   pw_response_header resp;
+  size_t total_len;
+  int nblocks;
 
   resp.version = NSCD_VERSION;
   if (pwd != NULL)
@@ -352,40 +355,42 @@ pw_send_answer (int conn, struct passwd *pwd)
       return;
     }
 
-  /* Send response header.  */
-  if (write (sock[conn], &resp, sizeof (pw_response_header)) !=
-      sizeof (pw_response_header))
-    {
-      dbg_log (_("write incomplete on send response: %s"), strerror (errno));
-      return;
-    }
+  /* Add response header.  */
+  vec[0].iov_base = &resp;
+  vec[0].iov_len = sizeof (pw_response_header);
+  total_len = sizeof (pw_response_header);
+  nblocks = 1;
 
   if (resp.found)
     {
-      struct iovec vec[5];
+      /* Add pw_name.  */
+      vec[1].iov_base = pwd->pw_name;
+      vec[1].iov_len = resp.pw_name_len;
+      total_len += resp.pw_name_len;
+      /* Add pw_passwd.  */
+      vec[2].iov_base = pwd->pw_passwd;
+      vec[2].iov_len = resp.pw_passwd_len;
+      total_len += resp.pw_passwd_len;
+      /* Add pw_gecos.  */
+      vec[3].iov_base = pwd->pw_gecos;
+      vec[3].iov_len = resp.pw_gecos_len;
+      total_len += resp.pw_gecos_len;
+      /* Add pw_dir.  */
+      vec[4].iov_base = pwd->pw_dir;
+      vec[4].iov_len = resp.pw_dir_len;
+      total_len += resp.pw_dir_len;
+      /* Add pw_shell.  */
+      vec[5].iov_base = pwd->pw_shell;
+      vec[5].iov_len = resp.pw_shell_len;
+      total_len += resp.pw_shell_len;
 
-      /* Send pw_name.  */
-      vec[0].iov_base = pwd->pw_name;
-      vec[0].iov_len = resp.pw_name_len;
-      /* Send pw_passwd.  */
-      vec[1].iov_base = pwd->pw_passwd;
-      vec[1].iov_len = resp.pw_passwd_len;
-      /* Send pw_gecos.  */
-      vec[2].iov_base = pwd->pw_gecos;
-      vec[2].iov_len = resp.pw_gecos_len;
-      /* Send pw_dir.  */
-      vec[3].iov_base = pwd->pw_dir;
-      vec[3].iov_len = resp.pw_dir_len;
-      /* Send pw_shell.  */
-      vec[4].iov_base = pwd->pw_shell;
-      vec[4].iov_len = resp.pw_shell_len;
-
-      if (writev (sock[conn], vec, 5) != (resp.pw_name_len + resp.pw_passwd_len
-					  + resp.pw_gecos_len + resp.pw_dir_len
-					  + resp.pw_shell_len))
-	dbg_log (_("write incomplete on send passwd answer: %s"),
-		 strerror (errno));
+      nblocks = 6;
     }
+
+  /* Send all the data.  */
+  if (writev (sock[conn], vec, nblocks) != total_len)
+    dbg_log (_("write incomplete on send passwd answer: %s"),
+	     strerror (errno));
 }
 
 void
@@ -419,7 +424,11 @@ pw_send_disabled (int conn)
 void
 gr_send_answer (int conn, struct group *grp)
 {
+  struct iovec *vec;
+  size_t *len;
   gr_response_header resp;
+  size_t total_len;
+  int nblocks;
 
   resp.version = NSCD_VERSION;
   if (grp != NULL)
@@ -447,54 +456,55 @@ gr_send_answer (int conn, struct group *grp)
       return;
     }
 
-  /* Send response header.  */
-  if (write (sock[conn], &resp, sizeof (gr_response_header))
-      != sizeof (gr_response_header))
-    {
-      dbg_log (_("write incomplete on send response: %s"), strerror (errno));
-      return;
-    }
+  /* We have no fixed number of records so allocate the IOV here.  */
+  vec = alloca ((3 + 1 + resp.gr_mem_len) * sizeof (struct iovec));
+  len = alloca (resp.gr_mem_len * sizeof (size_t));
+
+  /* Add response header.  */
+  vec[0].iov_base = &resp;
+  vec[0].iov_len = sizeof (gr_response_header);
+  total_len = sizeof (gr_response_header);
+  nblocks = 1;
 
   if (resp.found)
     {
       unsigned int l = 0;
 
-      /* Send gr_name.  */
-      if (write (sock[conn], grp->gr_name, resp.gr_name_len)
-	  != resp.gr_name_len)
-	{
-	  dbg_log (_("write incomplete on send response: %s"),
-		   strerror (errno));
-	  return;
-	}
-      /* Send gr_passwd.  */
-      if (write (sock[conn], grp->gr_passwd, resp.gr_passwd_len)
-	  != resp.gr_passwd_len)
-	{
-	  dbg_log (_("write incomplete on send response: %s"),
-		   strerror (errno));
-	  return;
-	}
+      /* Add gr_name.  */
+      vec[1].iov_base = grp->gr_name;
+      vec[1].iov_len = resp.gr_name_len;
+      total_len += resp.gr_name_len;
+      /* Add gr_passwd.  */
+      vec[2].iov_base = grp->gr_passwd;
+      vec[2].iov_len = resp.gr_passwd_len;
+      total_len += resp.gr_passwd_len;
+      nblocks = 3;
 
-      while (grp->gr_mem[l])
+      if (grp->gr_mem[l])
 	{
-	  size_t len = strlen (grp->gr_mem[l]);
+	  vec[3].iov_base = len;
+	  vec[3].iov_len = resp.gr_mem_len * sizeof (size_t);
+	  total_len += resp.gr_mem_len * sizeof (size_t);
+	  nblocks = 4;
 
-	  if (write (sock[conn], &len, sizeof (len)) != sizeof (len))
+	  do
 	    {
-	      dbg_log (_("write incomplete on send response: %s"),
-		       strerror (errno));
-	      return;
+	      len[l] = strlen (grp->gr_mem[l]);
+
+	      vec[nblocks].iov_base = grp->gr_mem[l];
+	      vec[nblocks].iov_len = len[l];
+	      total_len += len[l];
+
+	      ++nblocks;
 	    }
-	  if (write (sock[conn], grp->gr_mem[l], len) != len)
-	    {
-	      dbg_log (_("write incomplete on send response: %s"),
-		       strerror (errno));
-	      return;
-	    }
-	  ++l;
+	  while (grp->gr_mem[++l]);
 	}
     }
+
+  /* Send all the data.  */
+  if (writev (sock[conn], vec, nblocks) != total_len)
+    dbg_log (_("write incomplete on send group answer: %s"),
+	     strerror (errno));
 }
 
 void

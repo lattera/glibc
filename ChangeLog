@@ -1,3 +1,12 @@
+1998-07-24 21:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/connections.c (pw_send_answer): Make one single writev call.
+	(gr_send_answer): Do the work in two writev calls.  This change
+	changes the protocol.
+
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Adjust for protocol change.
+	We now can do the job using two readv calls.
+
 1998-07-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/glob.c (glob): Fix problems with handle tilde.
