@@ -85,7 +85,9 @@ struct hurd_sigstate
        thread itself, and always inside a critical section.  */
     struct hurd_userlink *active_resources;
 
-    volatile int cancel;	/* Flag set by hurd_thread_cancel.  */
+    /* These are locked normally.  */
+    int cancel;			/* Flag set by hurd_thread_cancel.  */
+    void (*cancel_hook) (void);	/* Called on cancellation.  */
   };
 
 /* Linked list of states of all threads whose state has been asked for.  */
