@@ -94,12 +94,16 @@ typedef struct
     { nr, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
       1, 0, 0, 0, 0, 1, 0 };						      \
   int result;								      \
-  asm ("pushl %%ebx\n\t"						      \
+  asm volatile (							      \
+       "pushl %%ebx\n\t"						      \
        "movl $1, %%ebx\n\t"						      \
        "int $0x80\n\t"							      \
        "popl %%ebx"							      \
        : "=a" (result)							      \
-       : "0" (__NR_modify_ldt), "d" (sizeof (ldt_entry)), "c" (&ldt_entry));  \
+       : "0" (__NR_modify_ldt),						      \
+         /* The extra argument with the "m" constraint is necessary	      \
+	    to let the compiler know that we are accessing LDT_ENTRY here.  */\
+         "m" (ldt_entry), "c" (&ldt_entry), "d" (sizeof (ldt_entry)));	      \
   __builtin_expect (result, 0) != 0 ? -1 : nr * 8 + 7;			      \
 })
 
