@@ -30,10 +30,11 @@
    to help it optimize the function calls.  But this works only with
    gcc 2.8.x and egcs.  */
 # if defined __cplusplus && __GNUC_MINOR__ >= 8
-#  define __P(args)	args throw ()
+#  define __THROW	throw ()
 # else
-#  define __P(args)	args
+#  define __THROW
 # endif
+# define __P(args)	args __THROW
 /* This macro will be used for functions which might take C++ callback
    functions.  */
 # define __PMT(args)	args

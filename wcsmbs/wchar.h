@@ -236,8 +236,8 @@ extern size_t mbrlen __P ((__const char *__restrict __s, size_t __n,
 #if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
     && defined __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
-extern __inline size_t mbrlen __P ((__const char *__restrict __s, size_t __n,
-				    mbstate_t *__restrict __ps))
+extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
+			       mbstate_t *__restrict __ps) __THROW
 { return (__ps != NULL
 	  ? mbrtowc (NULL, __s, __n, __ps) : __mbrlen (__s, __n, NULL)); }
 #endif
@@ -440,40 +440,37 @@ extern unsigned long long int __wcstoull_internal __P ((__const wchar_t *
 #if defined __OPTIMIZE__ && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
 
-extern __inline double wcstod __P ((__const wchar_t *__restrict __nptr,
-				    wchar_t **__restrict __endptr))
+extern __inline double wcstod (__const wchar_t *__restrict __nptr,
+			       wchar_t **__restrict __endptr) __THROW
 { return __wcstod_internal (__nptr, __endptr, 0); }
-extern __inline long int wcstol __P ((__const wchar_t *__restrict __nptr,
-				      wchar_t **__restrict __endptr,
-				      int __base))
+extern __inline long int wcstol (__const wchar_t *__restrict __nptr,
+                                 wchar_t **__restrict __endptr,
+				 int __base) __THROW
 { return __wcstol_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long int wcstoul __P ((__const wchar_t *
-						__restrict __nptr,
-						wchar_t **__restrict __endptr,
-						int __base))
+extern __inline unsigned long int wcstoul (__const wchar_t *__restrict __nptr,
+                                           wchar_t **__restrict __endptr,
+					   int __base) __THROW
 { return __wcstoul_internal (__nptr, __endptr, __base, 0); }
 
 # ifdef __USE_GNU
-extern __inline float wcstof __P ((__const wchar_t *__restrict __nptr,
-				   wchar_t **__restrict __endptr))
+extern __inline float wcstof (__const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr) __THROW
 { return __wcstof_internal (__nptr, __endptr, 0); }
-extern __inline __long_double_t wcstold __P ((__const wchar_t *
-					      __restrict __nptr,
-					      wchar_t **__restrict __endptr))
+extern __inline __long_double_t wcstold (__const wchar_t *__restrict __nptr,
+					 wchar_t **__restrict __endptr) __THROW
 { return __wcstold_internal (__nptr, __endptr, 0); }
 
 
 __extension__
-extern __inline long long int wcstoq __P ((__const wchar_t *__restrict __nptr,
-					   wchar_t **__restrict __endptr,
-					   int __base))
+extern __inline long long int wcstoq (__const wchar_t *__restrict __nptr,
+				      wchar_t **__restrict __endptr,
+				      int __base) __THROW
 { return __wcstoll_internal (__nptr, __endptr, __base, 0); }
 __extension__
-extern __inline unsigned long long int wcstouq __P ((__const wchar_t *
-						     __restrict __nptr,
-						     wchar_t **
-						     __restrict __endptr,
-						     int __base))
+extern __inline unsigned long long int wcstouq (__const wchar_t *
+						__restrict __nptr,
+						wchar_t **__restrict __endptr,
+						int __base) __THROW
 { return __wcstoull_internal (__nptr, __endptr, __base, 0); }
 # endif /* Use GNU.  */
 #endif /* Optimizing GCC >=2.  */

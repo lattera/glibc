@@ -137,7 +137,8 @@ extern char *argz_next __P ((__const char *argz, size_t __argz_len,
 
 #ifdef __USE_EXTERN_INLINES
 extern inline char *
-__argz_next __P ((__const char *__argz, size_t __argz_len, __const char *__entry))
+__argz_next (__const char *__argz, size_t __argz_len,
+	     __const char *__entry) __THROW
 {
   if (__entry)
     {
@@ -150,7 +151,8 @@ __argz_next __P ((__const char *__argz, size_t __argz_len, __const char *__entry
     return __argz_len > 0 ? (char *) __argz : 0;
 }
 extern inline char *
-argz_next __P ((__const char *__argz, size_t __argz_len, __const char *__entry))
+argz_next (__const char *__argz, size_t __argz_len,
+	   __const char *__entry) __THROW
 {
   return __argz_next (__argz, __argz_len, __entry);
 }

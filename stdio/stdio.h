@@ -426,7 +426,7 @@ extern int vsprintf __P ((char *__restrict __s,
 
 #ifdef	__OPTIMIZE__
 extern __inline int
-vprintf __P ((const char *__restrict __fmt, __gnuc_va_list __arg))
+vprintf (const char *__restrict __fmt, __gnuc_va_list __arg) __THROW
 {
   return vfprintf (stdout, __fmt, __arg);
 }
@@ -500,17 +500,17 @@ extern int vsscanf __P ((__const char *__s, __const char *__format,
 
 #ifdef	__OPTIMIZE__
 extern __inline int
-vfscanf __P ((FILE *__s, const char *__fmt, __gnuc_va_list __arg))
+vfscanf (FILE *__s, const char *__fmt, __gnuc_va_list __arg) __THROW
 {
   return __vfscanf (__s, __fmt, __arg);
 }
 extern __inline int
-vscanf __P ((const char *__fmt, __gnuc_va_list __arg))
+vscanf (const char *__fmt, __gnuc_va_list __arg) __THROW
 {
   return __vfscanf (stdin, __fmt, __arg);
 }
 extern __inline int
-vsscanf __P ((const char *__s, const char *__fmt, __gnuc_va_list __arg))
+vsscanf (const char *__s, const char *__fmt, __gnuc_va_list __arg) __THROW
 {
   return __vsscanf (__s, __fmt, __arg);
 }
@@ -542,7 +542,7 @@ extern int getchar __P ((void));
 
 #ifdef	__OPTIMIZE__
 extern __inline int
-getchar __P ((void))
+getchar (void) __THROW
 {
   return __getc (stdin);
 }
@@ -555,13 +555,13 @@ extern int getchar_unlocked __P ((void));
 
 # ifdef __OPTIMIZE__
 extern __inline int
-getc_unlocked __P ((FILE *__stream))
+getc_unlocked (FILE *__stream) __THROW
 {
   return __getc (__stream);
 }
 
 extern __inline int
-getchar_unlocked __P ((void))
+getchar_unlocked (void) __THROW
 {
   return __getc (stdin);
 }
@@ -590,7 +590,7 @@ extern int putchar __P ((int __c));
 
 #ifdef __OPTIMIZE__
 extern __inline int
-putchar __P ((int __c))
+putchar (int __c) __THROW
 {
   return __putc (__c, stdout);
 }
@@ -602,7 +602,7 @@ extern int fputc_unlocked __P ((int __c, FILE *__stream));
 
 # ifdef __OPTIMIZE__
 extern __inline int
-fputc_unlocked __P ((int __c, FILE *__stream))
+fputc_unlocked (int __c, FILE *__stream) __THROW
 {
   return __putc (__c, __stream);
 }
@@ -616,13 +616,13 @@ extern int putchar_unlocked __P ((int __c));
 
 # ifdef __OPTIMIZE__
 extern __inline int
-putc_unlocked __P ((int __c, FILE *__stream))
+putc_unlocked (int __c, FILE *__stream) __THROW
 {
   return __putc (__c, __stream);
 }
 
 extern __inline int
-putchar_unlocked __P ((int __c))
+putchar_unlocked (int __c) __THROW
 {
   return __putc (__c, stdout);
 }
@@ -673,7 +673,7 @@ ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
 
 #ifdef	__OPTIMIZE__
 extern __inline ssize_t
-getline __P ((char **__lineptr, size_t *__n, FILE *__stream))
+getline (char **__lineptr, size_t *__n, FILE *__stream) __THROW
 {
   return __getdelim (__lineptr, __n, '\n', __stream);
 }

@@ -236,31 +236,31 @@ extern unsigned long long int __strtoull_internal __P ((__const char *
 /* Define inline functions which call the internal entry points.  */
 
 extern __inline double
-strtod __P ((__const char *__restrict __nptr, char **__restrict __endptr))
+strtod (__const char *__restrict __nptr, char **__restrict __endptr) __THROW
 {
   return __strtod_internal (__nptr, __endptr, 0);
 }
 extern __inline long int
-strtol __P ((__const char *__restrict __nptr, char **__restrict __endptr,
-	     int __base))
+strtol (__const char *__restrict __nptr, char **__restrict __endptr,
+	int __base) __THROW
 {
   return __strtol_internal (__nptr, __endptr, __base, 0);
 }
 extern __inline unsigned long int
-strtoul __P ((__const char *__restrict __nptr, char **__restrict __endptr,
-	      int __base))
+strtoul (__const char *__restrict __nptr, char **__restrict __endptr,
+	 int __base) __THROW
 {
   return __strtoul_internal (__nptr, __endptr, __base, 0);
 }
 
 # ifdef __USE_ISOC9X
 extern __inline float
-strtof __P ((__const char *__restrict __nptr, char **__restrict __endptr))
+strtof (__const char *__restrict __nptr, char **__restrict __endptr) __THROW
 {
   return __strtof_internal (__nptr, __endptr, 0);
 }
 extern __inline __long_double_t
-strtold __P ((__const char *__restrict __nptr, char **__restrict __endptr))
+strtold (__const char *__restrict __nptr, char **__restrict __endptr) __THROW
 {
   return __strtold_internal (__nptr, __endptr, 0);
 }
@@ -268,14 +268,14 @@ strtold __P ((__const char *__restrict __nptr, char **__restrict __endptr))
 
 # ifdef __USE_BSD
 __extension__ extern __inline long long int
-strtoq __P ((__const char *__restrict __nptr, char **__restrict __endptr,
-	     int __base))
+strtoq (__const char *__restrict __nptr, char **__restrict __endptr,
+	int __base) __THROW
 {
   return __strtoll_internal (__nptr, __endptr, __base, 0);
 }
 __extension__ extern __inline unsigned long long int
-strtouq __P ((__const char *__restrict __nptr, char **__restrict __endptr,
-	      int __base))
+strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
+	 int __base) __THROW
 {
   return __strtoull_internal (__nptr, __endptr, __base, 0);
 }
@@ -283,38 +283,38 @@ strtouq __P ((__const char *__restrict __nptr, char **__restrict __endptr,
 
 # if defined __USE_MISC || defined __USE_ISOC9X
 __extension__ extern __inline long long int
-strtoll __P ((__const char *__restrict __nptr, char **__restrict __endptr,
-	      int __base))
+strtoll (__const char *__restrict __nptr, char **__restrict __endptr,
+	 int __base) __THROW
 {
   return __strtoll_internal (__nptr, __endptr, __base, 0);
 }
 __extension__ extern __inline unsigned long long int
-strtoull __P ((__const char * __restrict __nptr, char **__restrict __endptr,
-	       int __base))
+strtoull (__const char * __restrict __nptr, char **__restrict __endptr,
+	  int __base) __THROW
 {
   return __strtoull_internal (__nptr, __endptr, __base, 0);
 }
 # endif
 
 extern __inline double
-atof __P ((__const char *__nptr))
+atof (__const char *__nptr) __THROW
 {
   return strtod (__nptr, (char **) NULL);
 }
 extern __inline int
-atoi __P ((__const char *__nptr))
+atoi (__const char *__nptr) __THROW
 {
   return (int) strtol (__nptr, (char **) NULL, 10);
 }
 extern __inline long int
-atol __P ((__const char *__nptr))
+atol (__const char *__nptr) __THROW
 {
   return strtol (__nptr, (char **) NULL, 10);
 }
 
 # if defined __USE_MISC || defined __USE_ISOC9X
 __extension__ extern __inline long long int
-atoll __P ((__const char *__nptr))
+atoll (__const char *__nptr) __THROW
 {
   return strtoll (__nptr, (char **) NULL, 10);
 }

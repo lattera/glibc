@@ -1,3 +1,31 @@
+1998-10-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Include
+	string.h to get memcpy prototype and NULL definition.
+
+1998-10-12  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* misc/sys/cdefs.h (__THROW): New macro.
+	* argp/argp.h: Use it to replace the kludgey __P in inline
+	function definitions.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* stdio/stdio.h: Likewise.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	* sysdeps/wordsize-32/inttypes.h: Likewise.
+	* string/argz.h: Likewise.
+	* io/sys/stat.h: Likewise.
+
+1998-10-12  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Rules (stdio_lim): New variable.
+	($(stdio_lim:h=st)): Use this as intermediate stamp file, depend
+	on Rules and config.make, use $(move-if-change) to avoid unnessary
+	recompilations, and cleanup command.
+	(common-generated): Add bits/stdio_lim.st.
+
 1998-10-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/Makefile (CFLAGS-ioperm.c): New

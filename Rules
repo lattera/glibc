@@ -214,19 +214,23 @@ TMP_MAX   = 238328
 L_ctermid = 9
 L_cuserid = 9
 endif
+stdio_lim = $(common-objpfx)bits/stdio_lim.h
 
-$(common-objpfx)bits/stdio_%.h $(common-objpfx)bits/stdio_%.d: 		\
-			$(..)stdio-common/stdio_%.h.in
+$(stdio_lim:lim.h=%.h) $(stdio_lim:lim.h=%.d): $(stdio_lim:lim.h=%.st); @:
+$(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
+		   $(common-objpfx)config.make
 	$(make-target-directory)
 	echo '#include "$(..)posix/bits/posix1_lim.h"' |		\
-	SUNPRO_DEPENDENCIES='$(@:.h=.d)T MARKER' 			\
-	$(CC) $(+includes) -E -dM -xc - -o $(@:.d=.h)T
-	sed -e 's!MARKER!$(@:.h=.d) $(@:.d=.h)!'			\
-	    -e 's!$(common-objpfx)!$$(common-objpfx)!g'			\
-		$(@:.h=.d)T > $(@:.h=.d)t
-	mv -f $(@:.h=.d)t $(@:.h=.d)
-	fopen_max=`sed -n 's/^#define OPEN_MAX //p' $(@:.d=.h)T`; 	\
-	filename_max=`sed -n 's/^#define PATH_MAX //p' $(@:.d=.h)T`;	\
+	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
+	$(CC) $(+includes) -E -dM -xc - -o $(@:st=hT)
+ifdef sed-remove-objpfx
+	sed $(sed-remove-objpfx) $(@:st=dT) > $(@:st=dt)
+	mv -f $(@:st=dt) $(@:st=d)
+else
+	mv -f $(@:st=dT) $(@:st=d)
+endif
+	fopen_max=`sed -n 's/^#define OPEN_MAX //p' $(@:st=hT)`; 	\
+	filename_max=`sed -n 's/^#define PATH_MAX //p' $(@:st=hT)`;	\
 	fopen_max=$${fopen_max:-16};					\
 	filename_max=$${filename_max:-1024};				\
 	sed -e "s/@FOPEN_MAX@/$$fopen_max/"				\
@@ -235,12 +239,13 @@ $(common-objpfx)bits/stdio_%.h $(common-objpfx)bits/stdio_%.d: 		\
 	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
 	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
 	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
-	    $< > $(@:.d=.h).new
-	mv -f $(@:.d=.h).new $(@:.d=.h)
+	    $< > $(@:st=h.new)
+	$(move-if-change) $(@:st=h.new) $(@:st=h)
 # Remove these last so that they can be examined if something went wrong.
-	rm -f $(@:.d=.h)T $(@:.h=.d)T
+	rm -f $(@:st=hT) $(@:st=dT)
+	touch $@
 # Get dependencies.
 ifndef no_deps
--include $(common-objpfx)bits/stdio_lim.d
+-include $(stdio_lim:h=d)
 endif
-common-generated += bits/stdio_lim.h bits/stdio_lim.d
+common-generated += bits/stdio_lim.h bits/stdio_lim.d bits/stdio_lim.st
