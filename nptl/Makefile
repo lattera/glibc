@@ -159,7 +159,8 @@ tests = tst-attr1 tst-attr2 \
 	tst-locale1 tst-locale2 \
 	tst-umask1 \
 	tst-popen1 \
-	tst-clock1
+	tst-clock1 \
+	tst-context1
 
 distribute = eintr.c
 
