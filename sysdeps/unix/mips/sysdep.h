@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -29,13 +29,13 @@
   .ent name,0;								      \
   name##:
 
-/* Note that while it's better structurally, going back to call syscall_error
+/* Note that while it's better structurally, going back to call __syscall_error
    can make things confusing if you're debugging---it looks like it's jumping
    backwards into the previous fn.  */
-#ifdef __PIC__
+#ifdef PIC
  #define PSEUDO(name, syscall_name, args) \
   .align 2;								      \
-  99: la t9,syscall_error;						      \
+  99: la t9,__syscall_error;						      \
   jr t9;								      \
   ENTRY(name)								      \
   .set noreorder;							      \
@@ -49,7 +49,7 @@ syse1:
 #define PSEUDO(name, syscall_name, args) \
   .set noreorder;							      \
   .align 2;								      \
-  99: j syscall_error;							      \
+  99: j __syscall_error;							      \
   ENTRY(name)								      \
   .set noreorder;							      \
   li v0, SYS_##syscall_name;						      \
