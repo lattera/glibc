@@ -92,6 +92,9 @@ _dl_addr (const void *address, Dl_info *info,
 	 dynamic symbol table!!  */
       for (matchsym = NULL; (void *) symtab < (void *) symtabend; ++symtab)
 	if (addr >= match->l_addr + symtab->st_value
+#if defined USE_TLS
+	    && ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
+#endif
 	    && ((symtab->st_size == 0
 		 && addr == match->l_addr + symtab->st_value)
 		|| addr < match->l_addr + symtab->st_value + symtab->st_size)
@@ -110,8 +113,10 @@ _dl_addr (const void *address, Dl_info *info,
 	{
 	  /* We found a symbol close by.  Fill in its name and exact
 	     address.  */
+	  lookup_t matchl = LOOKUP_VALUE (match);
+
 	  info->dli_sname = strtab + matchsym->st_name;
-	  info->dli_saddr = (void *) (match->l_addr + matchsym->st_value);
+	  info->dli_saddr = DL_SYMBOL_ADDRESS (matchl, matchsym);
 	}
       else
 	{
