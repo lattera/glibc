@@ -1,5 +1,8 @@
 2003-10-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ): Go
+	back to 131027 since this is what the kernel enforces.
+
 	* inet/getnameinfo.c: Move domain out of nrl_domainname scope and
 	define it with libc_freeres_ptr.
 

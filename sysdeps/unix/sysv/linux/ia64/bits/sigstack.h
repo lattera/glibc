@@ -41,8 +41,12 @@ enum
 #define SS_DISABLE	SS_DISABLE
 };
 
-/* Minimum stack size for a signal handler.  */
-#define MINSIGSTKSZ	131072
+/* Minimum stack size for a signal handler.
+
+   Yes, this should be 131072 but the constant got defined incorrectly
+   in the kernel and we have to live with it.  Users should in any case
+   use SIGSTKSZ as the size user-supplied buffers should have.  */
+#define MINSIGSTKSZ	131027
 
 /* System default stack size.  */
 #define SIGSTKSZ	262144
