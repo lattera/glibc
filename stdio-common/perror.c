@@ -19,13 +19,14 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <wchar.h>
+#ifdef USE_IN_LIBIO
+# include "libioP.h"
+#endif
 
-/* Print a line on stderr consisting of the text in S, a colon, a space,
-   a message describing the meaning of the contents of `errno' and a newline.
-   If S is NULL or "", the colon and space are omitted.  */
-void
-perror (const char *s)
+static void
+perror_internal (FILE *fp, const char *s)
 {
   char buf[1024];
   int errnum = errno;
@@ -40,9 +41,47 @@ perror (const char *s)
   errstring = __strerror_r (errnum, buf, sizeof buf);
 
 #ifdef USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    (void) fwprintf (stderr, L"%s%s%s\n", s, colon, errstring);
+  if (_IO_fwide (fp, 0) > 0)
+    (void) fwprintf (fp, L"%s%s%s\n", s, colon, errstring);
   else
 #endif
-    (void) fprintf (stderr, "%s%s%s\n", s, colon, errstring);
+    (void) fprintf (fp, "%s%s%s\n", s, colon, errstring);
+}
+
+
+/* Print a line on stderr consisting of the text in S, a colon, a space,
+   a message describing the meaning of the contents of `errno' and a newline.
+   If S is NULL or "", the colon and space are omitted.  */
+void
+perror (const char *s)
+{
+  FILE *fp;
+  int fd = -1;
+
+  /* The standard says that 'perror' must not change the orientation
+     of the stream.  What is supposed to happen when the stream isn't
+     oriented yet?  In this case we'll create a new stream which is
+     using the same underlying file descriptor.  */
+  if (__builtin_expect (_IO_fwide (stderr, 0) != 0, 1)
+      || fileno_unlocked (stderr) == -1
+      || (fd = dup (fileno_unlocked (stderr))) == -1
+      || (fp = fdopen (fd, "w+")) == NULL)
+    {
+      if (__builtin_expect (fd != -1, 0))
+	close (fd);
+
+      /* Use standard error as is.  */
+      perror_internal (stderr, s);
+    }
+  else
+    {
+      /* We don't have to do any special hacks regarding the file
+	 position.  Since the stderr stream wasn't used so far we just
+	 write to the descriptor.  */
+      perror_internal (fp, s);
+      /* Close the stream.  */
+      fclose (fp);
+
+      ((_IO_FILE *) stderr)->_offset = _IO_pos_BAD;
+    }
 }

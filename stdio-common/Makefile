@@ -55,7 +55,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tfformat tiformat tllformat tstdiomisc tst-printfsz tst-wc-printf \
 	 scanf1 scanf2 scanf3 scanf4 scanf5 scanf7 scanf8 scanf9 scanf10 \
 	 scanf12 tst-tmpnam tst-cookie tst-obprintf tst-sscanf tst-swprintf \
-	 tst-fseek tst-fmemopen test-vfprintf tst-gets
+	 tst-fseek tst-fmemopen test-vfprintf tst-gets tst-perror
 
 test-srcs = tst-unbputc tst-printf
 

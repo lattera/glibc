@@ -26,6 +26,9 @@
 
 #include <stdio.h>
 #include <libintl.h>
+#ifdef _LIBC
+# include <wchar.h>
+#endif
 
 #if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC
 # if __STDC__
@@ -117,12 +120,94 @@ private_strerror (errnum)
 # endif	/* HAVE_STRERROR_R */
 #endif	/* not _LIBC */
 
+
+#ifdef VA_START
+static void
+error_tail (int status, int errnum, const char *message, va_list args)
+{
+# if HAVE_VPRINTF || _LIBC
+#  ifdef _LIBC
+  if (_IO_fwide (stderr, 0) > 0)
+    {
+#   define ALLOCA_LIMIT	2000
+      size_t len = strlen (message) + 1;
+      wchar_t *wmessage = NULL;
+      mbstate_t st;
+      size_t res;
+      const char *tmp;
+
+      do
+	{
+	  if (len < ALLOCA_LIMIT)
+	    wmessage = (wchar_t *) alloca (len * sizeof (wchar_t));
+	  else
+	    {
+	      if (wmessage != NULL && len / 2 < ALLOCA_LIMIT)
+		wmessage = NULL;
+
+	      wmessage = (wchar_t *) realloc (wmessage,
+					      len * sizeof (wchar_t));
+
+	      if (wmessage == NULL)
+		{
+		  fputws (L"out of memory\n", stderr);
+		  return;
+		}
+	    }
+
+	  memset (&st, '\0', sizeof (st));
+	  tmp =message;
+	}
+      while ((res = mbsrtowcs (wmessage, &tmp, len, &st)) == len);
+
+      if (res == (size_t) -1)
+	/* The string cannot be converted.  */
+	wmessage = (wchar_t *) L"???";
+
+      vfwprintf (stderr, wmessage, args);
+    }
+  else
+#  endif
+    vfprintf (stderr, message, args);
+# else
+  _doprnt (message, args, stderr);
+# endif
+  va_end (args);
+
+  ++error_message_count;
+  if (errnum)
+    {
+#if defined HAVE_STRERROR_R || _LIBC
+      char errbuf[1024];
+      char *s = __strerror_r (errnum, errbuf, sizeof errbuf);
+# ifdef _LIBC
+      if (_IO_fwide (stderr, 0) > 0)
+	fwprintf (stderr, L": %s", s);
+      else
+# endif
+	fprintf (stderr, ": %s", s);
+#else
+      fprintf (stderr, ": %s", strerror (errnum));
+#endif
+    }
+#ifdef _LIBC
+  if (_IO_fwide (stderr, 0) > 0)
+    putwc (L'\n', stderr);
+  else
+#endif
+    putc ('\n', stderr);
+  fflush (stderr);
+  if (status)
+    exit (status);
+}
+#endif
+
+
 /* Print the program name and error message MESSAGE, which is a printf-style
    format string with optional args.
    If ERRNUM is nonzero, print its corresponding system error message.
    Exit with status STATUS if it is nonzero.  */
 /* VARARGS */
-
 void
 #if defined VA_START && __STDC__
 error (int status, int errnum, const char *message, ...)
@@ -139,37 +224,38 @@ error (status, errnum, message, va_alist)
 #endif
 
   fflush (stdout);
+#ifdef _LIBC
+  flockfile (stderr);
+#endif
   if (error_print_progname)
     (*error_print_progname) ();
   else
-    fprintf (stderr, "%s: ", program_name);
+    {
+#ifdef _LIBC
+      if (_IO_fwide (stderr, 0) > 0)
+	fwprintf (stderr, L"%s: ", program_name);
+      else
+#endif
+	fprintf (stderr, "%s: ", program_name);
+    }
 
 #ifdef VA_START
   VA_START (args, message);
-# if HAVE_VPRINTF || _LIBC
-  vfprintf (stderr, message, args);
-# else
-  _doprnt (message, args, stderr);
+  error_tail (status, errnum, message, args);
+# ifdef _LIBC
+  funlockfile (stderr);
 # endif
-  va_end (args);
 #else
   fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
-#endif
 
   ++error_message_count;
   if (errnum)
-    {
-#if defined HAVE_STRERROR_R || _LIBC
-      char errbuf[1024];
-      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
-#else
-      fprintf (stderr, ": %s", strerror (errnum));
-#endif
-    }
+    fprintf (stderr, ": %s", strerror (errnum));
   putc ('\n', stderr);
   fflush (stderr);
   if (status)
     exit (status);
+#endif
 }
 
 /* Sometimes we want to have at most one error per line.  This
@@ -199,8 +285,9 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
       static const char *old_file_name;
       static unsigned int old_line_number;
 
-      if (old_line_number == line_number &&
-	  (file_name == old_file_name || !strcmp (old_file_name, file_name)))
+      if (old_line_number == line_number
+	  && (file_name == old_file_name
+	      || strcmp (old_file_name, file_name) == 0))
 	/* Simply return and print nothing.  */
 	return;
 
@@ -209,40 +296,48 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     }
 
   fflush (stdout);
+#ifdef _LIBC
+  flockfile (stderr);
+#endif
   if (error_print_progname)
     (*error_print_progname) ();
   else
-    fprintf (stderr, "%s:", program_name);
+    {
+#ifdef _LIBC
+      if (_IO_fwide (stderr, 0) > 0)
+	fwprintf (stderr, L"%s: ", program_name);
+      else
+#endif
+	fprintf (stderr, "%s:", program_name);
+    }
 
   if (file_name != NULL)
-    fprintf (stderr, "%s:%d: ", file_name, line_number);
+    {
+#ifdef _LIBC
+      if (_IO_fwide (stderr, 0) > 0)
+	fwprintf (stderr, L"%s:%d: ", file_name, line_number);
+      else
+#endif
+	fprintf (stderr, "%s:%d: ", file_name, line_number);
+    }
 
 #ifdef VA_START
   VA_START (args, message);
-# if HAVE_VPRINTF || _LIBC
-  vfprintf (stderr, message, args);
-# else
-  _doprnt (message, args, stderr);
+  error_tail (status, errnum, message, args);
+# ifdef _LIBC
+  funlockfile (stderr);
 # endif
-  va_end (args);
 #else
   fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
-#endif
 
   ++error_message_count;
   if (errnum)
-    {
-#if defined HAVE_STRERROR_R || _LIBC
-      char errbuf[1024];
-      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
-#else
-      fprintf (stderr, ": %s", strerror (errnum));
-#endif
-    }
+    fprintf (stderr, ": %s", strerror (errnum));
   putc ('\n', stderr);
   fflush (stderr);
   if (status)
     exit (status);
+#endif
 }
 
 #ifdef _LIBC
