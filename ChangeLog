@@ -1,5 +1,10 @@
 2000-09-15  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/fpu/fenv_libc.h: New file.
+	* sysdeps/mips/fpu/feenablxcpt.c: Use fenv_libc.h
+	* sysdeps/mips/fpu/fegetexcept.c: Likewise.
+	* sysdeps/mips/fpu/fedisblxcpt.c: Likewise.
+
 	* sysdeps/mips/fpu/feenablxcpt.c: New file.
 	* sysdeps/mips/fpu/fegetexcept.c: New file.
 	* sysdeps/mips/fpu/fedisblxcpt.c: New file.

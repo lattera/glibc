@@ -19,10 +19,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv.h>
+#include <fenv_libc.h>
 #include <fpu_control.h>
-
-#define ENABLE_MASK 0xF80U
-#define ENABLE_SHIFT 5
 
 int
 feenableexcept (int excepts)

@@ -1,7 +1,6 @@
-/* Disable floating-point exceptions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@suse.de>, 2000.
+   Contributed by Andreas Jaeger <aj@suse.de>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,25 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
-#include <fenv_libc.h>
-#include <fpu_control.h>
+#ifndef _FENV_LIBC_H
+#define _FENV_LIBC_H    1
 
-int
-fedisableexcept (int excepts)
-{
-  unsigned int new_exc, old_exc;
+/* Mask for enabling exceptions.  */
+#define ENABLE_MASK 0xF80U
 
-  /* Get the current control word.  */
-  _FPU_GETCW (new_exc);
+/* Shift for FE_* flags.  */
+#define ENABLE_SHIFT 5
 
-  old_exc = (new_exc & ENABLE_MASK) >> ENABLE_SHIFT;
-
-  excepts &= FE_ALL_EXCEPT;
-
-  new_exc &= ~(excepts << ENABLE_SHIFT);
-  new_exc &= ~_FPU_RESERVED;
-  _FPU_SETCW (new_exc);
-
-  return old_exc;
-}
+#endif /* _FENV_LIBC_H */
