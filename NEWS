@@ -26,12 +26,16 @@ Version 2.2
 
 * ldconfig program added by Andreas Jaeger and Jakub Jelinek.
 
-* The resolver code has been updated from bind 8.2.2-5 which supports
-  threads.  The integration was done by Andreas Jaeger and Adam D. Bradley.
+* The resolver code has been updated from bind 8.2.3-T5B which supports
+  threads.  The integration was done by Andreas Jaeger, Adam D. Bradley,
+  and Mark Kettenis.
 
   This change could in some situations effect backward compatibility.  Since
   now `_res' is a thread-local instead of a global variable, modifying it
   in one thread does not have any effect in other threads.
+
+  The reoslver library was also extended to allow IPv6 as the transport
+  protocol for the requests.  This work was done by Stig Venaas.
 
 * Compatibility code for K&R C compilers has been removed from the
   header files.  A ISO C compiler is needed to use the library
