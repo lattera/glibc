@@ -1,3 +1,7 @@
+2004-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/Makefile: Don't build eval.c anymore.
+
 2004-08-20  Roland McGrath  <roland@frob.com>
 
 	* csu/Makefile ($(objpfx)version-info.h): Use printf in place
@@ -34,7 +38,7 @@
 2004-08-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Store NAME parameter
-	pointer in new variable ORIG_NAME and se this pointer when
+	pointer in new variable ORIG_NAME and use this pointer when
 	determination of canonical name failed, not the possibly IDN
 	translated value of NAME.
 
