@@ -222,6 +222,7 @@ typedef struct
    chances of collision with official or non-GNU unofficial values.  */
 
 #define EM_ALPHA	0x9026
+#define EM_S390         0xA390		/* IBM S390 */
 
 /* Legal values for e_version (version).  */
 
@@ -1926,6 +1927,30 @@ typedef Elf32_Addr Elf32_Conflict;
 #define	R_SH_GOTPC		167
 /* Keep this the last entry.  */
 #define	R_SH_NUM		256
+
+/* Additional s390 relocs */
+
+#define R_390_NONE      0              /* No reloc.  */
+#define R_390_8         1              /* Direct 8 bit.  */
+#define R_390_12        2              /* Direct 12 bit.  */
+#define R_390_16        3              /* Direct 16 bit.  */
+#define R_390_32        4              /* Direct 32 bit.  */
+#define R_390_PC32      5              /* PC relative 32 bit.  */
+#define R_390_GOT12     6              /* 12 bit GOT offset.  */
+#define R_390_GOT32     7              /* 32 bit GOT offset.  */
+#define R_390_PLT32     8              /* 32 bit PC relative PLT address.  */
+#define R_390_COPY      9              /* Copy symbol at runtime.  */
+#define R_390_GLOB_DAT  10             /* Create GOT entry.  */
+#define R_390_JMP_SLOT  11             /* Create PLT entry.  */
+#define R_390_RELATIVE  12             /* Adjust by program base.  */
+#define R_390_GOTOFF    13             /* 32 bit offset to GOT.  */
+#define R_390_GOTPC     14             /* 32 bit PC relative offset to GOT.  */
+#define R_390_GOT16     15             /* 16 bit GOT offset.  */
+#define R_390_PC16      16             /* PC relative 16 bit.  */
+#define R_390_PC16DBL   17             /* PC relative 16 bit shifted by 1.  */
+#define R_390_PLT16DBL  18             /* 32 bit PC rel. PLT shifted by 1.  */
+/* Keep this the last entry.  */
+#define R_390_NUM       19
 
 __END_DECLS
 
