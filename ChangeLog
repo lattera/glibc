@@ -1,5 +1,7 @@
 1998-09-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nis/ypclnt.c (yp_all): Close socket opened by __yp_bind.
+
 	* nis/ypclnt.c: Remove not needed close calls.
 
 1998-09-28 23:55  Ulrich Drepper  <drepper@cygnus.com>

@@ -681,7 +681,9 @@ yp_all (const char *indomain, const char *inmap,
 	  return YPERR_DOMAIN;
 	}
 
-      /* YPPROC_ALL get its own TCP channel to ypserv */
+      /* YPPROC_ALL get its own TCP channel to ypserv.  Therefore we
+	 close the socket opened by the __yp_bind call.  */
+      close (ydb->dom_socket);
       clnt_sock = RPC_ANYSOCK;
       clnt_sin = ydb->dom_server_addr;
       clnt_sin.sin_port = 0;
