@@ -1,3 +1,10 @@
+2003-02-20  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/pread.c: New file.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: New file.
+
 2003-02-19  Jiro Sekiba  <jir@yamato.ibm.com>
 
 	* iconvdata/utf-16.c (gconv_end): Fix range of low surrogate.
@@ -8,7 +15,7 @@
 
 2003-02-19  Ulrich Drepper  <drepper@redhat.com>
 
-	* stdlib/strtod.c (INTERNAL): Up the safety margin for cutting of
+	* stdlib/strtod.c (INTERNAL): Up the safety margin for cutting off
 	decimal input digits.
 	* stdlib/tst-strtod.c (main): Add test for strtof bug.
 
