@@ -27,14 +27,14 @@ ENTRY(__copysign)
    copysign(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */
 	stwu	r1,-16(r1)
-	stfd	f2,8(r1)
+	stfd	fp2,8(r1)
 	lwz	r3,8(r1)
 	cmpwi   r3,0
 	addi    r1,r1,16
 	blt     0f
-	fabs    f1,f1
+	fabs    fp1,fp1
 	blr
-0:	fnabs   f1,f1
+0:	fnabs   fp1,fp1
 	blr
 	END (__copysign)
 

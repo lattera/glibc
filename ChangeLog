@@ -1,5 +1,7 @@
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/brk.S: Adjust asm syntax.
+
 	* sysdeps/powerpc/Makefile [math] (libm-support): Remove t_sqrt.
 
 	* sysdeps/powerpc/e_sqrt.c: Moved to...
