@@ -91,7 +91,7 @@ libpthread-routines = init events version \
 		      pthread_cancel pthread_testcancel \
 		      pthread_setcancelstate pthread_setcanceltype \
 		      pthread_once \
-		      old_pthread_atfork\
+		      old_pthread_atfork pthread_atfork \
 		      pthread_getcpuclockid \
 		      pthread_clock_gettime pthread_clock_settime \
 		      sem_init sem_destroy \
@@ -117,6 +117,7 @@ libpthread-routines = init events version \
 		      pthread_kill_other_threads
 
 libpthread-shared-only-routines = version pt-allocrtsig
+libpthread-static-only-routines = pthread_atfork
 
 libpthread-nonshared = pthread_atfork
 
