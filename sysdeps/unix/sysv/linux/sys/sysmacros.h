@@ -27,11 +27,13 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 # define major(dev) ((int)(((dev) >> 8) & 0xff))
 # define minor(dev) ((int)((dev) & 0xff))
-# define makedev(major, minor) (((major) << 8) | (minor))
+# define makedev(major, minor) ((((unsigned int) (major)) << 8) \
+				| ((unsigned int) (minor)))
 #else
 # define major(dev) (((dev).__val[0] >> 8) & 0xff)
 # define minor(dev) ((dev).__val[0] & 0xff)
-# define makedev(major, minor) { (((major) << 8) | (minor)), 0 }
+# define makedev(major, minor) { ((((unsigned int) (major)) << 8) \
+				  | ((unsigned int) (minor))), 0 }
 #endif
 
 #endif /* sys/sysmacros.h */

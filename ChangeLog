@@ -1,3 +1,8 @@
+1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h (makedev): Handle signed
+	parameters.
+
 1999-06-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
