@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -32,13 +32,9 @@ __pthread_attr_getstackaddr (attr, stackaddr)
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
-  /* XXX This function has a stupid definition.  The standard
-     specifies no error value but what is if no stack address was set?
-     We return an error anyway.  */
-  if ((iattr->flags & ATTR_FLAG_STACKADDR) == 0)
-    return EINVAL;
-
-  /* Store the result.  */
+  /* Some code assumes this function to work even if no stack address
+     has been set.  Let them figure it our for themselves what the
+     value means.  Simply store the result.  */
   *stackaddr = iattr->stackaddr;
 
   return 0;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -35,49 +35,54 @@ int __nss_not_use_nscd_passwd;
 
 static int nscd_getpw_r (const char *key, size_t keylen, request_type type,
 			 struct passwd *resultbuf, char *buffer,
-			 size_t buflen) internal_function;
+			 size_t buflen, struct passwd **result)
+     internal_function;
 
 int
 __nscd_getpwnam_r (const char *name, struct passwd *resultbuf, char *buffer,
-		   size_t buflen)
+		   size_t buflen, struct passwd **result)
 {
   if (name == NULL)
     return -1;
 
   return nscd_getpw_r (name, strlen (name) + 1, GETPWBYNAME, resultbuf,
-		       buffer, buflen);
+		       buffer, buflen, result);
 }
 
 int
 __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf, char *buffer,
-		   size_t buflen)
+		   size_t buflen, struct passwd **result)
 {
   char buf[12];
   size_t n;
 
   n = __snprintf (buf, sizeof (buf), "%d", uid) + 1;
 
-  return nscd_getpw_r (buf, n, GETPWBYUID, resultbuf, buffer, buflen);
+  return nscd_getpw_r (buf, n, GETPWBYUID, resultbuf, buffer, buflen, result);
 }
 
 
 static int
 internal_function
 nscd_getpw_r (const char *key, size_t keylen, request_type type,
-	      struct passwd *resultbuf, char *buffer, size_t buflen)
+	      struct passwd *resultbuf, char *buffer, size_t buflen,
+	      struct passwd **result)
 {
   int sock = __nscd_open_socket ();
   request_header req;
   pw_response_header pw_resp;
   ssize_t nbytes;
   struct iovec vec[2];
-  int result = -1;
+  int retval = -1;
 
   if (sock == -1)
     {
       __nss_not_use_nscd_passwd = 1;
       return -1;
     }
+
+  /* No value found so far.  */
+  *result = NULL;
 
   req.version = NSCD_VERSION;
   req.type = type;
@@ -114,7 +119,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       if (__builtin_expect (buflen < total, 0))
 	{
 	  __set_errno (ERANGE);
-	  result = ERANGE;
+	  retval = ERANGE;
 	  goto out;
 	}
 
@@ -140,17 +145,21 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
 
       if (nbytes == (ssize_t) total)
-	result = 0;
+	{
+	  retval = 0;
+	  *result = resultbuf;
+	}
     }
   else
     {
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      result = ENOENT;
+      /* Even though we have not found anything, the result is zero.  */
+      retval = 0;
     }
 
  out:
   __close (sock);
 
-  return result;
+  return retval;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -30,24 +30,28 @@ extern int __nss_not_use_nscd_group attribute_hidden;
 extern int __nss_not_use_nscd_hosts attribute_hidden;
 
 extern int __nscd_getpwnam_r (const char *name, struct passwd *resultbuf,
-			      char *buffer, size_t buflen);
+			      char *buffer, size_t buflen,
+			      struct passwd **result);
 extern int __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf,
-			      char *buffer,  size_t buflen);
+			      char *buffer,  size_t buflen,
+			      struct passwd **result);
 extern int __nscd_getgrnam_r (const char *name, struct group *resultbuf,
-			      char *buffer, size_t buflen);
+			      char *buffer, size_t buflen,
+			      struct group **result);
 extern int __nscd_getgrgid_r (uid_t uid, struct group *resultbuf,
-			      char *buffer,  size_t buflen);
+			      char *buffer,  size_t buflen,
+			      struct group **result);
 extern int __nscd_gethostbyname_r (const char *name,
 				   struct hostent *resultbuf,
 				   char *buffer, size_t buflen,
-				   int *h_errnop);
+				   struct hostent **result, int *h_errnop);
 extern int __nscd_gethostbyname2_r (const char *name, int af,
 				    struct hostent *resultbuf,
 				    char *buffer, size_t buflen,
-				    int *h_errnop);
+				    struct hostent **result, int *h_errnop);
 extern int __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 				   struct hostent *resultbuf,
 				   char *buffer, size_t buflen,
-				   int *h_errnop);
+				   struct hostent **result, int *h_errnop);
 
 #endif /* _NSCD_PROTO_H */

@@ -1,3 +1,8 @@
+2004-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_attr_getstackaddr.c (__pthread_attr_getstackaddr): Don't
+	fail if stack address hasn't been set.  Just return 0.
+
 2004-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests-nolibpthread): Add tst-unload.  Don't link with

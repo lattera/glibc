@@ -1,4 +1,5 @@
-/* Copyright (C) 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -35,42 +36,44 @@ int __nss_not_use_nscd_group;
 
 static int nscd_getgr_r (const char *key, size_t keylen, request_type type,
 			 struct group *resultbuf, char *buffer,
-			 size_t buflen) internal_function;
+			 size_t buflen, struct group **result)
+     internal_function;
 
 
 int
 __nscd_getgrnam_r (const char *name, struct group *resultbuf, char *buffer,
-		   size_t buflen)
+		   size_t buflen, struct group **result)
 {
   return nscd_getgr_r (name, strlen (name) + 1, GETGRBYNAME, resultbuf,
-		       buffer, buflen);
+		       buffer, buflen, result);
 }
 
 
 int
 __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
-		   size_t buflen)
+		   size_t buflen, struct group **result)
 {
   char buf[12];
   size_t n;
 
   n = __snprintf (buf, sizeof (buf), "%d", gid) + 1;
 
-  return nscd_getgr_r (buf, n, GETGRBYGID, resultbuf, buffer, buflen);
+  return nscd_getgr_r (buf, n, GETGRBYGID, resultbuf, buffer, buflen, result);
 }
 
 
 static int
 internal_function
 nscd_getgr_r (const char *key, size_t keylen, request_type type,
-	      struct group *resultbuf, char *buffer, size_t buflen)
+	      struct group *resultbuf, char *buffer, size_t buflen,
+	      struct group **result)
 {
   int sock = __nscd_open_socket ();
   request_header req;
   gr_response_header gr_resp;
   ssize_t nbytes;
   struct iovec vec[2];
-  int result = -1;
+  int retval = -1;
 
   if (sock == -1)
     {
@@ -121,7 +124,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	{
 	no_room:
 	  __set_errno (ERANGE);
-	  result = ERANGE;
+	  retval = ERANGE;
 	  goto out;
 	}
       buflen -= total_len;
@@ -169,25 +172,28 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       if (__builtin_expect (total_len > buflen, 0))
 	goto no_room;
 
-      result = 0;
+      retval = 0;
       n = TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
 					     total_len));
       if (__builtin_expect (n != total_len, 0))
 	{
 	  /* The `errno' to some value != ERANGE.  */
 	  __set_errno (ENOENT);
-	  result = ENOENT;
+	  retval = ENOENT;
 	}
+      else
+	*result = resultbuf;
     }
   else
     {
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      result = ENOENT;
+      /* Even though we have not found anything, the result is zero.  */
+      retval = 0;
     }
 
  out:
   __close (sock);
 
-  return result;
+  return retval;
 }

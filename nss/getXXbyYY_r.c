@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -168,13 +168,10 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
   if (!NOT_USENSCD_NAME)
     {
-      nscd_status = NSCD_NAME (ADD_VARIABLES, resbuf, buffer, buflen
+      nscd_status = NSCD_NAME (ADD_VARIABLES, resbuf, buffer, buflen, result
 			       H_ERRNO_VAR);
       if (nscd_status >= 0)
-	{
-	  *result = nscd_status == 0 ? resbuf : NULL;
-	  return nscd_status;
-	}
+	return nscd_status;
     }
 #endif
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -37,39 +37,42 @@ int __nss_not_use_nscd_hosts;
 
 static int nscd_gethst_r (const char *key, size_t keylen, request_type type,
 			  struct hostent *resultbuf, char *buffer,
-			  size_t buflen, int *h_errnop) internal_function;
+			  size_t buflen, struct hostent **result,
+			  int *h_errnop) internal_function;
 
 
 int
 __nscd_gethostbyname_r (const char *name, struct hostent *resultbuf,
-			char *buffer, size_t buflen, int *h_errnop)
+			char *buffer, size_t buflen, struct hostent **result,
+			int *h_errnop)
 {
   request_type reqtype;
 
   reqtype = (_res.options & RES_USE_INET6) ? GETHOSTBYNAMEv6 : GETHOSTBYNAME;
 
   return nscd_gethst_r (name, strlen (name) + 1, reqtype, resultbuf,
-			buffer, buflen, h_errnop);
+			buffer, buflen, result, h_errnop);
 }
 
 
 int
 __nscd_gethostbyname2_r (const char *name, int af, struct hostent *resultbuf,
-			 char *buffer, size_t buflen, int *h_errnop)
+			 char *buffer, size_t buflen, struct hostent **result,
+			 int *h_errnop)
 {
   request_type reqtype;
 
   reqtype = af == AF_INET6 ? GETHOSTBYNAMEv6 : GETHOSTBYNAME;
 
   return nscd_gethst_r (name, strlen (name) + 1, reqtype, resultbuf,
-			buffer, buflen, h_errnop);
+			buffer, buflen, result, h_errnop);
 }
 
 
 int
 __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 			struct hostent *resultbuf, char *buffer, size_t buflen,
-			int *h_errnop)
+			struct hostent **result, int *h_errnop)
 {
   request_type reqtype;
 
@@ -80,7 +83,7 @@ __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 
   reqtype = type == AF_INET6 ? GETHOSTBYADDRv6 : GETHOSTBYADDR;
 
-  return nscd_gethst_r (addr, len, reqtype, resultbuf, buffer, buflen,
+  return nscd_gethst_r (addr, len, reqtype, resultbuf, buffer, buflen, result,
 			h_errnop);
 }
 
@@ -117,14 +120,14 @@ static int
 internal_function
 nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	       struct hostent *resultbuf, char *buffer, size_t buflen,
-	       int *h_errnop)
+	       struct hostent **result, int *h_errnop)
 {
   int sock = __nscd_open_socket ();
   hst_response_header hst_resp;
   request_header req;
   ssize_t nbytes;
   struct iovec vec[4];
-  int result = -1;
+  int retval = -1;
 
   if (sock == -1)
     {
@@ -184,7 +187,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	{
 	no_room:
 	  __set_errno (ERANGE);
-	  result = ERANGE;
+	  retval = ERANGE;
 	  goto out;
 	}
       cp += align1;
@@ -277,7 +280,10 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       /* And finally read the aliases.  */
       if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf->h_aliases[0],
 					       total_len)) == total_len)
-	result = 0;
+	{
+	  retval = 0;
+	  *result = resultbuf;
+	}
     }
   else
     {
@@ -286,11 +292,12 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
-      result = ENOENT;
+      /* Even though we have not found anything, the result is zero.  */
+      retval = 0;
     }
 
  out:
   __close (sock);
 
-  return result;
+  return retval;
 }

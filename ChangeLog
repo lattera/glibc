@@ -1,3 +1,25 @@
+2004-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getXXbyYY_r.c: Pass result also to the nscd_* function.  Don't
+	set *result here.
+	* nscd/nscd_proto.h: Add new argument for pointer to result pointer
+	to all nscd_* functions.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Add new parameter.  Store result
+	pointer in the address provided by the new parameter if successful.
+	Otherwise store NULL.  Return zero if no entry found.
+	(__nscd_getgrnam_r, __nscd_getgrgid_r): Add new parameter and pass
+	it on.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Add new parameter.  Store
+	result pointer in the address provided by the new parameter if
+	successful. Otherwise store NULL.  Return zero if no entry found.
+	(__nscd_gethostbyname_r, __nscd_gethostbyname2_r,
+	__nscd_gethostbyaddr_r): Add new parameter and pass it on.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Add new parameter.  Store result
+	pointer in the address provided by the new parameter if successful.
+	Otherwise store NULL.  Return zero if no entry found.
+	(__nscd_getpwnam_r, __nscd_getpwuid_r): Add new parameter and pass
+	it on.
+
 2004-02-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/clock_settime.c (SYSDEP_SETTIME): Set
