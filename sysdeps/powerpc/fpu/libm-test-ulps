@@ -7,7 +7,7 @@ ifloat: 2
 Test "asin (0.5) == pi/6":
 float: 2
 ifloat: 2
-Test "asin (0.7) == 0.7753974966107530637":
+Test "asin (0.7) == 0.77539749661075306374035335271498708":
 double: 1
 float: 2
 idouble: 1
@@ -163,12 +163,12 @@ idouble: 1
 Test "Imaginary part of: cexp (-2.0 - 3.0 i) == -0.1339809149295426134 - 0.0190985162611351964 i":
 float: 1
 ifloat: 1
-Test "Real part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
+Test "Real part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
+Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 float: 1
 ifloat: 1
 
@@ -237,7 +237,7 @@ float: 1
 ifloat: 1
 
 # cos
-Test "cos (0.7) == 0.7648421872844884262":
+Test "cos (0.7) == 0.76484218728448842625585999019186495":
 double: 1
 float: 1
 idouble: 1
@@ -362,7 +362,7 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-Test "exp10 (0.7) == 5.0118723362727228500":
+Test "exp10 (0.7) == 5.0118723362727228500155418688494574":
 float: 1
 ifloat: 1
 Test "exp10 (3) == 1000":
@@ -543,7 +543,7 @@ idouble: 1
 ifloat: 1
 
 # sincos
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842626 in cos_res":
+Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842625585999019186495 in cos_res":
 double: 1
 float: 1
 idouble: 1
@@ -553,7 +553,7 @@ double: 1
 float: 0.5
 idouble: 1
 ifloat: 0.5
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
+Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
 double: 1
 float: 1
 idouble: 1
@@ -563,7 +563,7 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "sincos (pi/6, &sin_res, &cos_res) puts 0.866025403784438646764 in cos_res":
+Test "sincos (pi/6, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in cos_res":
 float: 1
 ifloat: 1
 
