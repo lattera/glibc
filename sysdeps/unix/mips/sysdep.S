@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -24,7 +24,7 @@
 #ifdef _LIBC_REENTRANT
 
 ENTRY(__syscall_error)
-#ifdef PIC
+#ifdef __PIC__
 	.set noreorder
 	.set	noat
 	move	$1, $31
