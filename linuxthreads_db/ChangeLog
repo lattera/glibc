@@ -1,5 +1,7 @@
 1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* td_ta_map_lwp2thr.c: Add missing brace in comparison.
+
 	* thread_dbP.h (LOG): Only print message if __td_debug is nonzero.
 	* td_init.c: Add __td_debug.
 

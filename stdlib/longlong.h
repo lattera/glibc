@@ -1,5 +1,5 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
-   Copyright (C) 1991, 92, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
 
    This definition file is free software; you can redistribute it
    and/or modify it under the terms of the GNU General Public
@@ -51,14 +51,17 @@
    the msb to the first non-zero bit.  This is the number of steps X
    needs to be shifted left to set the msb.  Undefined for X == 0.
 
-   6) add_ssaaaa(high_sum, low_sum, high_addend_1, low_addend_1,
+   6) count_trailing_zeros(count, x) like count_leading_zeros, but counts
+   from the least significant end.
+
+   7) add_ssaaaa(high_sum, low_sum, high_addend_1, low_addend_1,
    high_addend_2, low_addend_2) adds two two-word unsigned integers,
    composed by HIGH_ADDEND_1 and LOW_ADDEND_1, and HIGH_ADDEND_2 and
    LOW_ADDEND_2 respectively.  The result is placed in HIGH_SUM and
    LOW_SUM.  Overflow (i.e. carry out) is not stored anywhere, and is
    lost.
 
-   7) sub_ddmmss(high_difference, low_difference, high_minuend,
+   8) sub_ddmmss(high_difference, low_difference, high_minuend,
    low_minuend, high_subtrahend, low_subtrahend) subtracts two
    two-word unsigned integers, composed by HIGH_MINUEND_1 and
    LOW_MINUEND_1, and HIGH_SUBTRAHEND_2 and LOW_SUBTRAHEND_2
@@ -373,6 +376,8 @@ UDItype __umulsidi3 (USItype, USItype);
 	     : "=r" (__cbtmp) : "rm" ((USItype) (x)));			\
     (count) = __cbtmp ^ 31;						\
   } while (0)
+#define count_trailing_zeros(count, x) \
+  __asm__ ("bsfl %1,%0" : "=r" (count) : "rm" ((USItype)(x)))
 #define UMUL_TIME 40
 #define UDIV_TIME 40
 #endif /* 80x86 */
@@ -434,7 +439,7 @@ UDItype __umulsidi3 (USItype, USItype);
 	     : "=d" (__w)						\
 	     : "%dI" ((USItype) (u)),					\
 	       "dI" ((USItype) (v)));					\
-    __w; })  
+    __w; })
 #endif /* __i960__ */
 
 #if defined (__M32R__)
@@ -663,6 +668,13 @@ UDItype __umulsidi3 (USItype, USItype);
 	   : "0" (__xx.__ll),						\
 	     "g" ((USItype) (d)));					\
   (r) = __xx.__i.__l; (q) = __xx.__i.__h; })
+#define count_trailing_zeros(count,x) \
+  do {
+    __asm__ ("ffsd     %2,%0"                                          \
+            : "=r" ((USItype) (count))                                 \
+            : "0" ((USItype) 0),                                       \
+              "r" ((USItype) (x)));                                    \
+  } while (0)
 #endif /* __ns32000__ */
 
 #if (defined (_ARCH_PPC) || defined (_IBMR2)) && W_TYPE_SIZE == 32
@@ -982,7 +994,7 @@ UDItype __umulsidi3 (USItype, USItype);
   __asm__ ("scan %1,1,%0"                                               \
            : "=r" ((USItype) (count))                                   \
            : "r" ((USItype) (x)));					\
-  } while (0)    
+  } while (0)
 #else
 /* SPARC without integer multiplication and divide instructions.
    (i.e. at least Sun4/20,40,60,65,75,110,260,280,330,360,380,470,490) */
@@ -1250,6 +1262,18 @@ extern const UQItype __clz_tab[];
       }									\
 									\
     (count) = SI_TYPE_SIZE - (__clz_tab[__xr >> __a] + __a);		\
+  } while (0)
+#endif
+
+#if !defined (count_trailing_zeros)
+/* Define count_trailing_zeros using count_leading_zeros.  The latter might be
+   defined in asm, but if it is not, the C version above is good enough.  */
+#define count_trailing_zeros(count, x) \
+  do {									\
+    USItype __ctz_x = (x);						\
+    USItype __ctz_c;							\
+    count_leading_zeros (__ctz_c, __ctz_x & -__ctz_x);			\
+    (count) = SI_TYPE_SIZE - 1 - __ctz_c;				\
   } while (0)
 #endif
 
