@@ -1,5 +1,9 @@
 Fri Dec 22 00:57:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/setgid.c: In root case, store into NEWAUX, not
+	old vector.
+	* sysdeps/mach/hurd/setuid.c: Likewise.
+
 	* sysdeps/mach/hurd/setuid.c: Rewrote ID frobnication to do the
 	right thing.
 	* sysdeps/mach/hurd/setgid.c: Likewise.
