@@ -33,6 +33,8 @@ struct mtop
     short int mt_op;		/* Operations defined below.  */
     int mt_count;		/* How many of them.  */
   };
+#define _IOT_mtop /* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (short), 1, _IOTS (int), 1, 0, 0)
 
 /* Magnetic Tape operations [Not all operations supported by all drivers].  */
 #define MTRESET 0	/* +reset drive in case of problems.  */
@@ -92,7 +94,8 @@ struct mtget
     __daddr_t mt_fileno;	/* Number of current file on tape.  */
     __daddr_t mt_blkno;		/* Current block number.  */
   };
-
+#define _IOT_mtget /* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (long), 7, 0, 0, 0, 0)
 
 
 /* Constants for mt_type. Not all of these are supported, and
@@ -156,6 +159,8 @@ struct mtpos
   {
     long int mt_blkno;	/* Current block number.  */
   };
+#define _IOT_mtpos /* Hurd ioctl type field.  */ \
+  _IOT_SIMPLE (long)
 
 
 /* Structure for MTIOCGETCONFIG/MTIOCSETCONFIG primarily intended
@@ -185,6 +190,8 @@ struct mtconfiginfo
     unsigned pad1:5;
     char reserved[10];
   };
+#define _IOT_mtconfiginfo /* Hurd ioctl type field.  */ \
+  _IOT (_IOTS (long), 2, _IOTS (short), 3, _IOTS (long), 1) /* XXX wrong */
 
 
 /* Magnetic tape I/O control commands.  */

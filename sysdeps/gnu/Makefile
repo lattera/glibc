@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,4 +39,9 @@ endif
 
 ifeq ($(subdir),inet)
 sysdep_headers += netinet/udp.h netinet/ip_icmp.h
+endif
+
+
+ifeq ($(subdir),misc)
+sysdep_headers += sys/mtio.h
 endif

@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Hurd version.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -514,9 +514,9 @@ __libc_write (int fd, const void *buf, size_t nbytes)
 {
   error_t err;
   mach_msg_type_number_t nwrote;
-	  
+
   assert (fd < _hurd_init_dtablesize);
-  
+
   err = __io_write (_hurd_init_dtable[fd], buf, nbytes, -1, &nwrote);
   if (err)
     return __hurd_fail (err);
@@ -638,11 +638,17 @@ __getpid ()
   return pid;
 }
 
+/* This is called only in some strange cases trying to guess a value
+   for $ORIGIN for the executable.  The dynamic linker copes with
+   getcwd failing (dl-object.c), and it's too much hassle to include
+   the functionality here.  (We could, it just requires duplicating or
+   reusing getcwd.c's code but using our special lookup function as in
+   `open', above.)  */
 char *
 weak_function
 __getcwd (char *buf, size_t size)
 {
-  abort ();
+  errno = ENOSYS;
   return NULL;
 }
 
