@@ -211,18 +211,6 @@ Inconsistency detected by ld.so: %s: %u: %s%sAssertion `%s' failed!\n",
 }
 INTDEF(__assert_fail)
 
-void weak_function
-__assert_perror_fail (int errnum,
-		      const char *file, unsigned int line,
-		      const char *function)
-{
-  char errbuf[64];
-  _dl_fatal_printf ("\
-Inconsistency detected by ld.so: %s: %u: %s%sUnexpected error: %s\n",
-		    file, line, function ?: "", function ? ": " : "",
-		    __strerror_r (errnum, errbuf, sizeof (errbuf)));
-}
-
 #endif
 
 unsigned long int weak_function
