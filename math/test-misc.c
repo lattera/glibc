@@ -223,7 +223,146 @@ main (void)
 	printf ("fpclassify (-FLT_MAX-epsilon) failed: %d\n", fpclassify (f));
 	result = 1;
       }
+
+    v1.f = f = 0.0625;
+    f = nextafterf (f, 0.0);
+    v2.f = f = nextafterf (f, 1.0);
+
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("0.0625f down: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0625f down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("0.0625f down: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.f = f = 0.0625;
+    f = nextafterf (f, 1.0);
+    v2.f = f = nextafterf (f, 0.0);
+
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("0.0625f up: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0625f up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("0.0625f up: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.f = f = -0.0625;
+    f = nextafterf (f, 0.0);
+    v2.f = f = nextafterf (f, -1.0);
+
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("-0.0625f up: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-0.0625f up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-0.0625f up: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.f = f = -0.0625;
+    f = nextafterf (f, -1.0);
+    v2.f = f = nextafterf (f, 0.0);
+
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("-0.0625f down: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-0.0625f down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-0.0625f down: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.f = f = 0.0f;
+    f = nextafterf (f, 1.0);
+    v2.f = nextafterf (f, -1.0);
+
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("0.0f up: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0f up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (0 != v2.ieee.negative)
+      {
+	printf ("0.0f up: negative differs: 0 vs %d\n",
+		v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.f = f = 0.0f;
+    f = nextafterf (f, -1.0);
+    v2.f = nextafterf (f, 1.0);
+
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("0.0f down: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0f down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (1 != v2.ieee.negative)
+      {
+	printf ("0.0f down: negative differs: 1 vs %d\n",
+		v2.ieee.negative);
+	result = 1;
+      }
   }
+
   {
     union ieee754_double v1;
     union ieee754_double v2;
@@ -344,7 +483,182 @@ main (void)
 	printf ("fpclassify (-DBL_MAX-epsilon) failed: %d\n", fpclassify (d));
 	result = 1;
       }
+
+    v1.d = d = 0.0625;
+    d = nextafter (d, 0.0);
+    v2.d = d = nextafter (d, 1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0625 down: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0625 down: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0625 down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("0.0625 down: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = d = 0.0625;
+    d = nextafter (d, 1.0);
+    v2.d = d = nextafter (d, 0.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0625 up: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0625 up: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0625 up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("0.0625 up: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = d = -0.0625;
+    d = nextafter (d, 0.0);
+    v2.d = d = nextafter (d, -1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("-0.0625 up: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("-0.0625 up: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-0.0625 up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-0.0625 up: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = d = -0.0625;
+    d = nextafter (d, -1.0);
+    v2.d = d = nextafter (d, 0.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("-0.0625 down: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("-0.0625 down: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-0.0625 down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-0.0625 down: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = d = 0.0;
+    d = nextafter (d, 1.0);
+    v2.d = nextafter (d, -1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0 up: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0 up: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0 up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (0 != v2.ieee.negative)
+      {
+	printf ("0.0 up: negative differs: 0 vs %d\n",
+		v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = d = 0.0;
+    d = nextafter (d, -1.0);
+    v2.d = nextafter (d, 1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0 down: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0 down: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0 down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (1 != v2.ieee.negative)
+      {
+	printf ("0.0 down: negative differs: 1 vs %d\n",
+		v2.ieee.negative);
+	result = 1;
+      }
   }
+
 #ifndef NO_LONG_DOUBLE
   {
     union ieee854_long_double v1;
@@ -467,6 +781,180 @@ main (void)
       {
 	printf ("fpclassify (-LDBL_MAX-epsilon) failed: %d\n",
 		fpclassify (ld));
+	result = 1;
+      }
+
+    v1.d = ld = 0.0625;
+    ld = nextafterl (ld, 0.0);
+    v2.d = ld = nextafterl (ld, 1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0625L down: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0625L down: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0625L down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("0.0625L down: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = ld = 0.0625;
+    ld = nextafterl (ld, 1.0);
+    v2.d = ld = nextafterl (ld, 0.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0625L up: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0625L up: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0625L up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("0.0625L up: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = ld = -0.0625;
+    ld = nextafterl (ld, 0.0);
+    v2.d = ld = nextafterl (ld, -1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("-0.0625L up: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("-0.0625L up: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-0.0625L up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-0.0625L up: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = ld = -0.0625;
+    ld = nextafterl (ld, -1.0);
+    v2.d = ld = nextafterl (ld, 0.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("-0.0625L down: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("-0.0625L down: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-0.0625L down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-0.0625L down: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = ld = 0.0;
+    ld = nextafterl (ld, 1.0);
+    v2.d = nextafterl (ld, -1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0L up: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0L up: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0L up: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (0 != v2.ieee.negative)
+      {
+	printf ("0.0L up: negative differs: 0 vs %d\n",
+		v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = ld = 0.0;
+    ld = nextafterl (ld, -1.0);
+    v2.d = nextafterl (ld, 1.0);
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("0.0L down: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("0.0L down: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("0.0L down: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (1 != v2.ieee.negative)
+      {
+	printf ("0.0L down: negative differs: 1 vs %d\n",
+		v2.ieee.negative);
 	result = 1;
       }
   }

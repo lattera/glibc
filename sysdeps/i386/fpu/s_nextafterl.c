@@ -52,12 +52,12 @@ static char rcsid[] = "$NetBSD: $";
 	   return x+y;
 	if(x==y) return y;		/* x=y, return y */
 	if((ix|hx|lx)==0) {			/* x == 0 */
-	    SET_LDOUBLE_WORDS(x,esx&0x8000,0,1);/* return +-minsubnormal */
+	    SET_LDOUBLE_WORDS(x,esy&0x8000,0,1);/* return +-minsubnormal */
 	    y = x*x;
 	    if(y==x) return y; else return x;	/* raise underflow flag */
 	}
 	if(esx>=0) {			/* x > 0 */
-	    if(ix>iy||((ix==iy) && (hx>hy||((hx==hy)&&(lx>ly))))) {
+	    if(esx>esy||((esx==esy) && (hx>hy||((hx==hy)&&(lx>ly))))) {
 	      /* x > y, x -= ulp */
 		if(lx==0) {
 		    if (hx <= 0x80000000) {
@@ -77,12 +77,14 @@ static char rcsid[] = "$NetBSD: $";
 		lx += 1;
 		if(lx==0) {
 		    hx += 1;
-		    if (hx==0 || (esx == 0 && hx == 0x80000000))
+		    if (hx==0 || (esx == 0 && hx == 0x80000000)) {
 			esx += 1;
+			hx |= 0x80000000;
+		    }
 		}
 	    }
 	} else {				/* x < 0 */
-	    if(esy>=0||(ix>iy||((ix==iy)&&(hx>hy||((hx==hy)&&(lx>ly)))))){
+	    if(esy>=0||(esx>esy||((esx==esy)&&(hx>hy||((hx==hy)&&(lx>ly)))))){
 	      /* x < y, x -= ulp */
 		if(lx==0) {
 		    if (hx <= 0x80000000) {
@@ -102,8 +104,10 @@ static char rcsid[] = "$NetBSD: $";
 		lx += 1;
 		if(lx==0) {
 		    hx += 1;
-		    if (hx==0 || (esx == 0xffff8000 && hx == 0x80000000))
-		      esx += 1;
+		    if (hx==0 || (esx == 0xffff8000 && hx == 0x80000000)) {
+			esx += 1;
+			hx |= 0x80000000;
+		    }
 		}
 	    }
 	}
