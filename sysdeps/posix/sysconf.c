@@ -515,15 +515,15 @@ __sysconf (name)
       return NSS_BUFLEN_PASSWD;
 
     case _SC_LOGIN_NAME_MAX:
-#ifdef	_POSIX_LOGIN_NAME_MAX
-      return _POSIX_LOGIN_NAME_MAX;
+#ifdef	LOGIN_NAME_MAX
+      return LOGIN_NAME_MAX;
 #else
       return -1;
 #endif
 
     case _SC_TTY_NAME_MAX:
-#ifdef	_POSIX_TTY_NAME_MAX
-      return _POSIX_TTY_NAME_MAX;
+#ifdef	TTY_NAME_MAX
+      return TTY_NAME_MAX;
 #else
       return -1;
 #endif
