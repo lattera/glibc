@@ -34,6 +34,7 @@
 
 	* csu/Makefile: Add rules to build Scrt1.o.
 	* sysdeps/i386/elf/start.S: Make code compilable with SHARED.
+	* sysdeps/x86_64/elf/start.S: Likewise.
 
 2003-05-27  Jakub Jelinek  <jakub@redhat.com>
 
