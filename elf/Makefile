@@ -138,6 +138,9 @@ tests += tst-array1 tst-array2 tst-array3 tst-array4
 endif
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static
+ifeq (yes,$(have-initfini-array))
+tests-static += tst-array1-static 
+endif
 ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
@@ -699,6 +702,10 @@ $(objpfx)tst-array1.out: $(objpfx)tst-array1
 	$(elf-objpfx)$(rtld-installed-name) \
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 	  $(objpfx)tst-array1 > $@
+	cmp $@ tst-array1.exp > /dev/null
+
+$(objpfx)tst-array1-static.out: $(objpfx)tst-array1-static
+	$(objpfx)tst-array1-static > $@
 	cmp $@ tst-array1.exp > /dev/null
 
 $(objpfx)tst-array2: $(objpfx)tst-array2dep.so

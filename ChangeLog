@@ -1,3 +1,13 @@
+2005-02-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* csu/elf-init.c (__libc_csu_fini): Enable if LIBC_NONSHARED
+	isn't defined.
+	* sysdeps/generic/libc-start.c (LIBC_START_MAIN): Call fini
+	if SHARED isn't defined.
+	* elf/Makefile (tests-static): Add tst-array1-static.
+	($(objpfx)tst-array1-static.out): New target.
+	* elf/tst-array1-static.c: New file.
+
 2005-02-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* debug/chk_fail.c (__chk_fail): Add a while (1) loop around

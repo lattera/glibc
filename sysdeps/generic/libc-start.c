@@ -81,9 +81,9 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
      __attribute__ ((noreturn));
 
 
-/* Note: the fini parameter is ignored here.  It used to be registered
-   with __cxa_atexit.  This had the disadvantage that finalizers were
-   called in more than one place.  */
+/* Note: the fini parameter is ignored here for shared library.  It
+   is registered with __cxa_atexit.  This had the disadvantage that
+   finalizers were called in more than one place.  */
 STATIC int
 LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 int argc, char *__unbounded *__unbounded ubp_av,
@@ -155,14 +155,16 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   if (__builtin_expect (rtld_fini != NULL, 1))
     __cxa_atexit ((void (*) (void *)) rtld_fini, NULL, NULL);
 
+#ifndef SHARED
   /* Call the initializer of the libc.  This is only needed here if we
      are compiling for the static library in which case we haven't
      run the constructors in `_dl_start_user'.  */
-#ifndef SHARED
   __libc_init_first (argc, argv, __environ);
-#endif
 
-#ifndef SHARED
+  /* Register the destructor of the program, if any.  */
+  if (fini)
+    __cxa_atexit ((void (*) (void *)) fini, NULL, NULL);
+
   /* Some security at this point.  Prevent starting a SUID binary where
      the standard file descriptors are not opened.  We have to do this
      only for statically linked applications since otherwise the dynamic
