@@ -26,9 +26,6 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include <shlib-compat.h>
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-
 #define _IO_USE_OLD_IO_FILE
 #ifndef _POSIX_SOURCE
 # define _POSIX_SOURCE
@@ -45,6 +42,9 @@
 #endif
 #include <sys/types.h>
 #include <sys/wait.h>
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #ifndef _IO_fork
 #ifdef _LIBC

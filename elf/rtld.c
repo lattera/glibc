@@ -191,7 +191,7 @@ _dl_start (void *arg)
 	assert (bootstrap_map.l_tls_blocksize != 0);
 	bootstrap_map.l_tls_initimage_size = phdr[cnt].p_filesz;
 	bootstrap_map.l_tls_initimage = (void *) (bootstrap_map.l_addr
-						  + phdr[cnt].p_offset);
+						  + phdr[cnt].p_vaddr);
 
 	/* We can now allocate the initial TLS block.  This can happen
 	   on the stack.  We'll get the final memory later when we
@@ -1087,13 +1087,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 for the thread descriptor.  The memory for the TLS block will
 	 never be freed.  It should be allocated accordingly.  The dtv
 	 array can be changed if dynamic loading requires it.  */
-      tcbp = INTUSE(_dl_allocate_tls) ();
+      tcbp = _dl_allocate_tls_storage ();
       if (tcbp == NULL)
 	_dl_fatal_printf ("\
 cannot allocate TLS data structures for initial thread");
-
-      /* And finally install it for the main thread.  */
-      TLS_INIT_TP (tcbp);
     }
 #endif
 
@@ -1444,6 +1441,21 @@ cannot allocate TLS data structures for initial thread");
   /* Save the information about the original global scope list since
      we need it in the memory handling later.  */
   GL(dl_initial_searchlist) = *GL(dl_main_searchlist);
+
+#ifdef USE_TLS
+# ifndef SHARED
+  if (GL(dl_tls_max_dtv_idx) > 0)
+# endif
+    {
+      /* Now that we have completed relocation, the initializer data
+	 for the TLS blocks has its final values and we can copy them
+	 into the main thread's TLS area, which we allocated above.  */
+      _dl_allocate_tls_init (tcbp);
+
+      /* And finally install it for the main thread.  */
+      TLS_INIT_TP (tcbp);
+    }
+#endif
 
   {
     /* Initialize _r_debug.  */

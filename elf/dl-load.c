@@ -949,7 +949,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	      l->l_tls_initimage_size = ph->p_filesz;
 	      /* Since we don't know the load address yet only store the
 		 offset.  We will adjust it later.  */
-	      l->l_tls_initimage = (void *) ph->p_offset;
+	      l->l_tls_initimage = (void *) ph->p_vaddr;
 
 	      /* Assign the next available module ID.  */
 	      l->l_tls_modid = _dl_next_tls_modid ();

@@ -726,7 +726,13 @@ extern void _dl_determine_tlsoffset (void) internal_function;
 
 /* Allocate memory for static TLS block and dtv.  */
 extern void *_dl_allocate_tls (void) internal_function;
-extern void *_dl_allocate_tls_internal (void) internal_function;
+
+/* These are internal entry points to the two halves of _dl_allocate_tls,
+   only used within rtld.c itself at startup time.  */
+extern void *_dl_allocate_tls_storage (void)
+  internal_function attribute_hidden;
+extern void *_dl_allocate_tls_init (void *)
+  internal_function attribute_hidden;
 
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb) internal_function;

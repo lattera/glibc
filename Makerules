@@ -1040,15 +1040,11 @@ check: tests
 .PHONY: xcheck
 xcheck: xtests
 
-ifneq (,$(tests))
-cpp-srcs-left = $(tests)
+all-tests = $(strip $(tests) $(xtests) $(test-srcs))
+ifneq (,$(all-tests))
+cpp-srcs-left = $(all-tests:=.c)
 lib := tests
-include $(patsubst %,$(..)cppflags-iterator.mk,$(tests))
-endif
-ifneq (,$(xtests))
-cpp-srcs-left = $(xtests)
-lib := tests
-include $(patsubst %,$(..)cppflags-iterator.mk,$(xtests))
+include $(patsubst %,$(..)cppflags-iterator.mk,$(all-tests))
 endif
 
 .PHONY: TAGS

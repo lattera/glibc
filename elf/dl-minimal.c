@@ -46,8 +46,9 @@ extern unsigned long int weak_function strtoul (const char *nptr,
 						char **endptr, int base);
 
 
+/* Allocate an aligned memory block.  */
 void * weak_function
-malloc (size_t n)
+__libc_memalign (size_t align, size_t n)
 {
 #ifdef MAP_ANON
 #define	_dl_zerofd (-1)
@@ -70,8 +71,8 @@ malloc (size_t n)
     }
 
   /* Make sure the allocation pointer is ideally aligned.  */
-  alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + sizeof (double) - 1)
-			    & ~(sizeof (double) - 1));
+  alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + align - 1)
+			    & ~(align - 1));
 
   if (alloc_ptr + n >= alloc_end)
     {
@@ -89,6 +90,12 @@ malloc (size_t n)
   alloc_last_block = (void *) alloc_ptr;
   alloc_ptr += n;
   return alloc_last_block;
+}
+
+void * weak_function
+malloc (size_t n)
+{
+  return __libc_memalign (sizeof (double), n);
 }
 
 /* We use this function occasionally since the real implementation may
@@ -123,15 +130,6 @@ realloc (void *ptr, size_t n)
   new = malloc (n);
   assert (new == ptr);
   return new;
-}
-
-/* Return alligned memory block.  */
-void * weak_function
-__libc_memalign (size_t align, size_t n)
-{
-  void *newp = malloc (n + align - 1);
-
-  return (void *) roundup ((uintptr_t) newp, align);
 }
 
 /* Avoid signal frobnication in setjmp/longjmp.  Keeps things smaller.  */

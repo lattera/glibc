@@ -1,3 +1,39 @@
+2002-08-04  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (cpp-srcs-left): When setting this to run
+	cppflags-iterator.mk, must append .c to $(tests) and $(xtests)
+	words.  Combine the two loops into one on the concatenated list,
+	including those as well as $(test-srcs).
+
+	* elf/dl-minimal.c (__libc_memalign): Guts of malloc moved here,
+	since we align here with optimally minimal waste anyway.
+	(malloc): Just call that.
+
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Set l_tls_offset to
+	the right variable.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Use p_vaddr, not p_offset,
+	to compute memory location for l_tls_initimage.
+	* elf/rtld.c (_dl_start): Likewise.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Likewise.
+
+	* libio/oldiopopen.c: Move #include's before #if SHLIB_COMPAT,
+	because the .d file is generated in the non-shared case and
+	so fails to catch them otherwise.
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_storage): New function,
+	split out of _dl_allocate_tls.
+	(_dl_allocate_tls_init): Likewise.
+	(_dl_allocate_tls): Call those.
+	* sysdeps/generic/ldsodefs.h: Declare them with attribute_hidden.
+	* elf/rtld.c (dl_main): Call them separately instead of calling
+	_dl_allocate_tls.  Delay _dl_allocate_tls_init until after relocation
+	is finished, so that the initializer data has been relocated before we
+	copy it into the main thread's TLS block.
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls): Fix off-by-one error in
+	loop conditions, prevented the last used module from being initialized.
+
 2002-08-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/glob.c (glob, globfree): Only use libc_hidden_def

@@ -52,7 +52,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   void *tlsblock;
   size_t memsz = 0;
   size_t filesz = 0;
-  off_t offset = 0;
+  size_t initimage = 0;
   size_t align = 0;
   size_t max_align = tcbalign;
   size_t loadaddr = ~0ul;
@@ -70,7 +70,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 	    /* Remember the values we need.  */
 	    memsz = phdr->p_memsz;
 	    filesz = phdr->p_filesz;
-	    offset = phdr->p_offset;
+	    initimage = phdr->p_vaddr;
 	    align = phdr->p_align;
 	    if (phdr->p_align > max_align)
 	      max_align = phdr->p_align;
@@ -120,7 +120,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-  memset (__mempcpy (static_dtv[2].pointer, (char *) loadaddr + offset,
+  memset (__mempcpy (static_dtv[2].pointer, (char *) loadaddr + initimage,
 		     filesz),
 	  '\0', memsz - filesz);
 
@@ -141,12 +141,12 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 # endif
 
   /* We have to create a fake link map which normally would be created
-     by the dynamic linker.  It just has to have enough informatino to
+     by the dynamic linker.  It just has to have enough information to
      make the TLS routines happy.  */
   static_map.l_tls_align = align;
   static_map.l_tls_blocksize = memsz;
   static_map.l_tls_initimage_size = filesz;
-  static_map.l_tls_offset = offset;
+  static_map.l_tls_offset = tcb_offset;
   static_map.l_type = lt_executable;
   static_map.l_tls_modid = 1;
 
