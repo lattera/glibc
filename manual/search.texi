@@ -362,9 +362,10 @@ The @code{hcreate_r} function initializes the object pointed to by
 So this function is equivalent to the @code{hcreate} function except
 that the initialized data structure is controlled by the user.
 
-This allows having more than one hashing table at one time.  The
-memory necessary for the @code{struct hsearch_data} object can be
-allocated dynamically.
+This allows having more than one hashing table at one time.  The memory
+necessary for the @code{struct hsearch_data} object can be allocated
+dynamically.  It must be initialized with zero before calling this
+function.
 
 The return value is non-zero if the operation were successful.  if the
 return value is zero something went wrong which probably means the
