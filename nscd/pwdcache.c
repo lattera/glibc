@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -84,7 +84,7 @@ struct passwddata
 
 static void
 cache_addpw (struct database *db, int fd, request_header *req, void *key,
-	     struct passwd *pwd)
+	     struct passwd *pwd, uid_t owner)
 {
   ssize_t total;
   ssize_t written;
@@ -112,7 +112,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       pthread_rwlock_rdlock (&db->lock);
 
       cache_add (req->type, copy, req->key_len, &iov_notfound,
-		 sizeof (notfound), (void *) -1, 0, t, db);
+		 sizeof (notfound), (void *) -1, 0, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
     }
@@ -175,9 +175,9 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
 
       /* We have to add the value for both, byname and byuid.  */
       cache_add (GETPWBYNAME, data->strdata, pw_name_len, data,
-		 total, data, 0, t, db);
+		 total, data, 0, t, db, owner);
 
-      cache_add (GETPWBYUID, cp, n, data, total, data, 1, t, db);
+      cache_add (GETPWBYUID, cp, n, data, total, data, 1, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
     }
@@ -192,7 +192,8 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
 
 
 void
-addpwbyname (struct database *db, int fd, request_header *req, void *key)
+addpwbyname (struct database *db, int fd, request_header *req,
+	     void *key, uid_t c_uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -202,9 +203,16 @@ addpwbyname (struct database *db, int fd, request_header *req, void *key)
   char *buffer = alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
+  uid_t oldeuid;
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in password cache!"), key);
+
+  if (secure[pwddb])
+    {
+      oldeuid = geteuid ();
+      seteuid (c_uid);
+    }
 
   while (getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
@@ -214,12 +222,16 @@ addpwbyname (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addpw (db, fd, req, key, pwd);
+  if (secure[pwddb])
+    seteuid (c_uid);
+
+  cache_addpw (db, fd, req, key, pwd, c_uid);
 }
 
 
 void
-addpwbyuid (struct database *db, int fd, request_header *req, void *key)
+addpwbyuid (struct database *db, int fd, request_header *req,
+	    void *key, uid_t c_uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -230,9 +242,16 @@ addpwbyuid (struct database *db, int fd, request_header *req, void *key)
   struct passwd resultbuf;
   struct passwd *pwd;
   uid_t uid = atol (key);
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%d\" in password cache!"), uid);
+
+  if (secure[pwddb])
+    {
+      oldeuid = geteuid ();
+      seteuid (c_uid);
+    }
 
   while (getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
@@ -242,5 +261,8 @@ addpwbyuid (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addpw (db, fd, req, key, pwd);
+  if (secure[pwddb])
+    seteuid (oldeuid);
+
+  cache_addpw (db, fd, req, key, pwd, c_uid);
 }

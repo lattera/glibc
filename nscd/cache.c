@@ -38,7 +38,8 @@
 
    This function must be called with the read-lock held.  */
 struct hashentry *
-cache_search (int type, void *key, size_t len, struct database *table)
+cache_search (int type, void *key, size_t len, struct database *table,
+	      uid_t owner)
 {
   unsigned long int hash = __nis_hash (key, len) % table->module;
   struct hashentry *work;
@@ -47,8 +48,8 @@ cache_search (int type, void *key, size_t len, struct database *table)
 
   while (work != NULL)
     {
-      if (type == work->type
-	  && len == work->len && memcmp (key, work->key, len) == 0)
+      if (type == work->type && len == work->len
+	  && memcmp (key, work->key, len) == 0 && work->owner == owner)
 	{
 	  /* We found the entry.  Increment the appropriate counter.  */
 	  if (work->data == (void *) -1)
@@ -76,7 +77,7 @@ cache_search (int type, void *key, size_t len, struct database *table)
    the readlock reduces the chance of conflicts.  */
 void
 cache_add (int type, void *key, size_t len, const void *packet, size_t total,
-	   void *data, int last, time_t t, struct database *table)
+	   void *data, int last, time_t t, struct database *table, uid_t owner)
 {
   unsigned long int hash = __nis_hash (key, len) % table->module;
   struct hashentry *newp;
@@ -88,6 +89,7 @@ cache_add (int type, void *key, size_t len, const void *packet, size_t total,
   newp->type = type;
   newp->len = len;
   newp->key = key;
+  newp->owner = owner;
   newp->data = data;
   newp->timeout = t;
   newp->packet = packet;

@@ -88,7 +88,7 @@ struct hostdata
 
 static void
 cache_addhst (struct database *db, int fd, request_header *req, void *key,
-	      struct hostent *hst)
+	      struct hostent *hst, uid_t owner)
 {
   ssize_t total;
   ssize_t written;
@@ -116,7 +116,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       pthread_rwlock_rdlock (&db->lock);
 
       cache_add (req->type, copy, req->key_len, &iov_notfound,
-		 sizeof (notfound), (void *) -1, 0, t, db);
+		 sizeof (notfound), (void *) -1, 0, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
     }
@@ -227,10 +227,10 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	{
 	  if (addr_list_type == GETHOSTBYADDR)
 	    cache_add (GETHOSTBYNAME, aliases, h_aliases_len[cnt], data, total,
-		       data, 0, t, db);
+		       data, 0, t, db, owner);
 
 	  cache_add (GETHOSTBYNAMEv6, aliases, h_aliases_len[cnt], data, total,
-		     data, 0, t, db);
+		     data, 0, t, db, owner);
 
 	  aliases += h_aliases_len[cnt];
 	}
@@ -239,7 +239,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
 	{
 	  cache_add (addr_list_type, addresses, hst->h_length, data, total,
-		     data, 0, t, db);
+		     data, 0, t, db, owner);
 	  addresses += hst->h_length;
 	}
 
@@ -248,7 +248,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
 	  {
 	    cache_add (GETHOSTBYADDRv6, addresses, IN6ADDRSZ, data, total,
-		       data, 0, t, db);
+		       data, 0, t, db, owner);
 	    addresses += IN6ADDRSZ;
 	  }
 
@@ -257,17 +257,17 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	{
 	  if (addr_list_type == GETHOSTBYADDR)
 	    cache_add (GETHOSTBYNAME, key_copy, req->key_len, data, total,
-		       data, 0, t, db);
+		       data, 0, t, db, owner);
 	  cache_add (GETHOSTBYNAMEv6, key_copy, req->key_len, data,
-		     total, data, 0, t, db);
+		     total, data, 0, t, db, owner);
 	}
 
       /* And finally the name.  We mark this as the last entry.  */
       if (addr_list_type == GETHOSTBYADDR)
 	cache_add (GETHOSTBYNAME, data->strdata, h_name_len, data, total, data,
-		   0, t, db);
+		   0, t, db, owner);
       cache_add (GETHOSTBYNAMEv6, data->strdata, h_name_len, data,
-		 total, data, 1, t, db);
+		 total, data, 1, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
     }
@@ -282,7 +282,8 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 
 
 void
-addhstbyname (struct database *db, int fd, request_header *req, void *key)
+addhstbyname (struct database *db, int fd, request_header *req,
+	      void *key, uid_t uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -292,9 +293,16 @@ addhstbyname (struct database *db, int fd, request_header *req, void *key)
   char *buffer = alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in hosts cache!"), key);
+
+  if (secure[hstdb])
+    {
+      oldeuid = geteuid ();
+      seteuid (uid);
+    }
 
   while (gethostbyname2_r (key, AF_INET, &resultbuf, buffer, buflen, &hst,
 			   &h_errno) != 0
@@ -306,12 +314,16 @@ addhstbyname (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addhst (db, fd, req, key, hst);
+  if (secure[hstdb])
+    seteuid (uid);
+
+  cache_addhst (db, fd, req, key, hst, uid);
 }
 
 
 void
-addhstbyaddr (struct database *db, int fd, request_header *req, void *key)
+addhstbyaddr (struct database *db, int fd, request_header *req,
+	      void *key, uid_t uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -321,12 +333,19 @@ addhstbyaddr (struct database *db, int fd, request_header *req, void *key)
   char *buffer = alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     {
       char buf[INET_ADDRSTRLEN];
       dbg_log (_("Haven't found \"%s\" in hosts cache!"),
 	       inet_ntop (AF_INET, key, buf, sizeof (buf)));
+    }
+
+  if (secure[hstdb])
+    {
+      oldeuid = geteuid ();
+      seteuid (uid);
     }
 
   while (gethostbyaddr_r (key, INADDRSZ, AF_INET, &resultbuf, buffer, buflen,
@@ -339,12 +358,16 @@ addhstbyaddr (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addhst (db, fd, req, key, hst);
+  if (secure[hstdb])
+    seteuid (oldeuid);
+
+  cache_addhst (db, fd, req, key, hst, uid);
 }
 
 
 void
-addhstbynamev6 (struct database *db, int fd, request_header *req, void *key)
+addhstbynamev6 (struct database *db, int fd, request_header *req,
+		void *key, uid_t uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -354,6 +377,7 @@ addhstbynamev6 (struct database *db, int fd, request_header *req, void *key)
   char *buffer = alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     {
@@ -361,6 +385,12 @@ addhstbynamev6 (struct database *db, int fd, request_header *req, void *key)
 
       dbg_log (_("Haven't found \"%s\" in hosts cache!"),
 	       inet_ntop (AF_INET6, key, buf, sizeof (buf)));
+    }
+
+  if (secure[hstdb])
+    {
+      oldeuid = geteuid ();
+      seteuid (uid);
     }
 
   while (gethostbyname2_r (key, AF_INET6, &resultbuf, buffer, buflen, &hst,
@@ -373,12 +403,16 @@ addhstbynamev6 (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addhst (db, fd, req, key, hst);
+  if (secure[hstdb])
+    seteuid (oldeuid);
+
+  cache_addhst (db, fd, req, key, hst, uid);
 }
 
 
 void
-addhstbyaddrv6 (struct database *db, int fd, request_header *req, void *key)
+addhstbyaddrv6 (struct database *db, int fd, request_header *req,
+		void *key, uid_t uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -388,12 +422,19 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req, void *key)
   char *buffer = alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     {
       char buf[INET6_ADDRSTRLEN];
       dbg_log (_("Haven't found \"%s\" in hosts cache!"),
 	       inet_ntop (AF_INET6, key, buf, sizeof (buf)));
+    }
+
+  if (secure[hstdb])
+    {
+      oldeuid = geteuid ();
+      seteuid (uid);
     }
 
   while (gethostbyaddr_r (key, IN6ADDRSZ, AF_INET6, &resultbuf, buffer, buflen,
@@ -406,5 +447,8 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addhst (db, fd, req, key, hst);
+  if (secure[hstdb])
+    seteuid (oldeuid);
+
+  cache_addhst (db, fd, req, key, hst, uid);
 }

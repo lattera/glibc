@@ -1,3 +1,16 @@
+1999-06-11  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/nscd.c: Add -S options for separate caching of data for
+	every user. So one user couldn't see the data another user
+	has gotten with his credentials.
+	* nscd/nscd.h: Add new prototypes.
+	* nscd/cache.c: Compare owner of cache entry if in secure mode.
+	* nscd/connections.c: Check on shutdown if caller really was root.
+	In secure mode get uid of caller.
+	* nscd/grpcache.c: Add support for new secure group mode.
+	* nscd/hstcache.c: Add support for new secure hosts mode.
+	* nscd/pwdcache.c: Add support for new secure passwd mode.
+
 1999-06-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Correctly track usage

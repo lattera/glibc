@@ -77,7 +77,7 @@ struct groupdata
 
 static void
 cache_addgr (struct database *db, int fd, request_header *req, void *key,
-	     struct group *grp)
+	     struct group *grp, uid_t owner)
 {
   ssize_t total;
   ssize_t written;
@@ -105,7 +105,7 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       pthread_rwlock_rdlock (&db->lock);
 
       cache_add (req->type, copy, req->key_len, &iov_notfound,
-		 sizeof (notfound), (void *) -1, 0, t, db);
+		 sizeof (notfound), (void *) -1, 0, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
     }
@@ -177,9 +177,9 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
 
       /* We have to add the value for both, byname and byuid.  */
       cache_add (GETGRBYNAME, gr_name, gr_name_len, data,
-		 total, data, 0, t, db);
+		 total, data, 0, t, db, owner);
 
-      cache_add (GETGRBYGID, cp, n, data, total, data, 1, t, db);
+      cache_add (GETGRBYGID, cp, n, data, total, data, 1, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
     }
@@ -194,7 +194,8 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
 
 
 void
-addgrbyname (struct database *db, int fd, request_header *req, void *key)
+addgrbyname (struct database *db, int fd, request_header *req,
+	     void *key, uid_t uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -204,9 +205,16 @@ addgrbyname (struct database *db, int fd, request_header *req, void *key)
   char *buffer = alloca (buflen);
   struct group resultbuf;
   struct group *grp;
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in group cache!"), key);
+
+  if (secure[grpdb])
+    {
+      oldeuid = geteuid ();
+      seteuid (uid);
+    }
 
   while (getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
@@ -216,12 +224,16 @@ addgrbyname (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addgr (db, fd, req, key, grp);
+  if (secure[grpdb])
+    seteuid (oldeuid);
+
+  cache_addgr (db, fd, req, key, grp, uid);
 }
 
 
 void
-addgrbygid (struct database *db, int fd, request_header *req, void *key)
+addgrbygid (struct database *db, int fd, request_header *req,
+	    void *key, uid_t uid)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
@@ -232,9 +244,16 @@ addgrbygid (struct database *db, int fd, request_header *req, void *key)
   struct group resultbuf;
   struct group *grp;
   gid_t gid = atol (key);
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%d\" in group cache!"), gid);
+
+  if (secure[grpdb])
+    {
+      oldeuid = geteuid ();
+      seteuid (uid);
+    }
 
   while (getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
@@ -244,5 +263,8 @@ addgrbygid (struct database *db, int fd, request_header *req, void *key)
       buffer = alloca (buflen);
     }
 
-  cache_addgr (db, fd, req, key, grp);
+  if (secure[grpdb])
+    seteuid (oldeuid);
+
+  cache_addgr (db, fd, req, key, grp, uid);
 }

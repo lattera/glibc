@@ -1,6 +1,6 @@
 /* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -58,10 +58,13 @@ typedef struct
 
 thread_info_t thread_info;
 
-int do_shutdown = 0;
-int disabled_passwd = 0;
-int disabled_group = 0;
+int do_shutdown;
+int disabled_passwd;
+int disabled_group;
 int go_background = 1;
+
+int secure[lastdb];
+int secure_in_use;
 static const char *conffile = _PATH_NSCDCONF;
 
 static int check_pid (const char *file);
@@ -81,6 +84,7 @@ static const struct argp_option options[] =
   { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
   { "statistic", 'g', NULL, 0, N_("Print current configuration statistic") },
+  { "secure", 'S', N_("TABLE,yes"), 0, N_("Use separate cache for each user")},
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -206,6 +210,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
     case 't':
       nthreads = atol (arg);
+      break;
+
+    case 'S':
+      if (strcmp (arg, "passwd,yes") == 0)
+	secure_in_use = secure[pwddb] = 1;
+      else if (strcmp (arg, "group,yes") == 0)
+	secure_in_use = secure[grpdb] = 1;
+      else if (strcmp (arg, "hosts,yes") == 0)
+	secure_in_use = secure[hstdb] = 1;
       break;
 
     default:

@@ -1,6 +1,6 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -46,6 +46,7 @@ struct hashentry
   request_type type;		/* Which type of dataset.  */
   size_t len;			/* Length of key.  */
   void *key;			/* Pointer to key.  */
+  uid_t owner;                  /* If secure table, this is the owner.  */
   struct hashentry *next;	/* Next entry in this hash bucket list.  */
   time_t timeout;		/* Time when this entry becomes invalid.  */
   ssize_t total;		/* Number of bytes in PACKET.  */
@@ -91,6 +92,9 @@ extern const struct iovec hst_iov_disabled;
 /* Number of threads to run.  */
 extern int nthreads;
 
+/* Tables for which we cache data with uid */
+extern int secure[lastdb];
+extern int secure_in_use; /* Is one of the above 1 ? */
 
 /* Prototypes for global functions.  */
 
@@ -112,33 +116,34 @@ extern int receive_print_stats (void);
 
 /* cache.c */
 extern struct hashentry *cache_search (int type, void *key, size_t len,
-				       struct database *table);
+				       struct database *table, uid_t owner);
 extern void cache_add (int type, void *key, size_t len,
 		       const void *packet, size_t iovtotal, void *data,
-		       int last, time_t t, struct database *table);
+		       int last, time_t t, struct database *table,
+		       uid_t owner);
 extern void prune_cache (struct database *table, time_t now);
 
 /* pwdcache.c */
 extern void addpwbyname (struct database *db, int fd, request_header *req,
-			 void *key);
+			 void *key, uid_t uid);
 extern void addpwbyuid (struct database *db, int fd, request_header *req,
-			void *key);
+			void *key, uid_t uid);
 
 /* grpcache.c */
 extern void addgrbyname (struct database *db, int fd, request_header *req,
-			 void *key);
+			 void *key, uid_t uid);
 extern void addgrbygid (struct database *db, int fd, request_header *req,
-			void *key);
+			void *key, uid_t uid);
 
 /* hstcache.c */
 extern void addhstbyname (struct database *db, int fd, request_header *req,
-			  void *key);
+			  void *key, uid_t uid);
 extern void addhstbyaddr (struct database *db, int fd, request_header *req,
-			  void *key);
+			  void *key, uid_t uid);
 extern void addhstbynamev6 (struct database *db, int fd, request_header *req,
-			    void *key);
+			    void *key, uid_t uid);
 extern void addhstbyaddrv6 (struct database *db, int fd, request_header *req,
-			    void *key);
+			    void *key, uid_t uid);
 
 
 #endif /* nscd.h */
