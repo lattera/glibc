@@ -37,11 +37,11 @@ main (void)
   puts (s);								      \
   result |= strcmp (s, exp) != 0;
 
-  TEST ("test", "???????");
-  TEST ("test", "???????");
-  TEST ("onemore", "?ssdf");
-  TEST ("onemore", "?ssdf");
-  TEST ("test", "???????");
+  TEST ("test", "aeoeueAEUEOEss");
+  TEST ("test", "aeoeueAEUEOEss");
+  TEST ("onemore", "AEssdf");
+  TEST ("onemore", "AEssdf");
+  TEST ("test", "aeoeueAEUEOEss");
 
   return result;
 }

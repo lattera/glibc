@@ -15,6 +15,8 @@
 	* locale/Makefile (distribute): Add C-translit.h.in, C-translit.h,
 	and gen-translit.pl.
 	Add rule to generate C-translit.h.
+	* intl/tst-translit.c (main): Update for now performed
+	transliteration.
 
 	* stdio-common/vfscanf.c: Handle input -- with format %f correctly
 	(it's no input error).
