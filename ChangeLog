@@ -1,3 +1,12 @@
+1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add __adjtimex.
+
+1998-02-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_getntohost_r):
+	Remove memset.
+
 1998-02-24 08:10  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/signum.h (_NSIG): Changed
@@ -11,7 +20,7 @@
 	* sysdeps/unix/make-syscalls.sh: Make versioned symbols only
 	for shared library.
 
-	* libc.map (adjtime, __adjtimex, adjtimex): Added for GLIBC_2.1.
+	* libc.map (adjtime, adjtimex): Added for GLIBC_2.1.
 
 	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines):
 	Added adjtimex and old_adjtimex.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -293,7 +293,6 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr,
       nis_result *result;
       char buf[255 + tablename_len];
 
-      memset (&buf, '\0', sizeof (buf));
       sprintf (buf, "[addr=%x:%x:%x:%x:%x:%x],ethers.org_dir",
 	       addr->ether_addr_octet[0], addr->ether_addr_octet[1],
 	       addr->ether_addr_octet[2], addr->ether_addr_octet[3],

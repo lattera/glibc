@@ -28,7 +28,7 @@ GLIBC_2.0 {
     __sysv_signal; __bsd_getpgrp; _longjmp; _mcount;
     __divqu; __remqu; __divqs; __remqs; __divlu; __remlu; __divls;
     __remls; __divl; __reml; __divq; __remq; __divqu; __remqu;
-    __setpgid; __getpgid;
+    __setpgid; __getpgid; __adjtimex;
 
     # functions which have an additional interface since they are
     # are cancelable.
@@ -445,7 +445,7 @@ GLIBC_2.1 {
 
     # Linux/Alpha 64-bit timeval functions.
     __select; select;
-    adjtime; adjtimex;
+    adjtime; adjtimex; __adjtimex;
     __gettimeofday;
 
     # New errlist.
