@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -123,7 +123,7 @@ ifeq (no,$(cross-compiling))
 # We have to generate locales
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 ja_JP.EUC-JP da_DK.ISO-8859-1 \
-	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS
+	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS fr_FR.ISO-8859-1
 LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
 CHARMAPS := $(shell echo "$(LOCALES)"|sed 's/[^ .]*[.]\([^ ]*\)/\1/g')
 CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))

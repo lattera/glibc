@@ -1,5 +1,10 @@
 2001-01-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/jrand48_r.c (__jrand48_r): Correct constructing of
+	results.  Reported by Jeff Higham <jhigham@algorithmics.com>.
+	* stdlib/tst-rand48.c: New file.
+	* stdlib/Makefile (tests): Add tst-rand48.
+
 	* locale/newlocale.c (__newlocale): Fix test for setting all
 	categories.
 

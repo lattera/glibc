@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test nl_langinfo.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -244,6 +244,51 @@ de_DE.UTF-8          RADIXCHAR   ,
 de_DE.UTF-8          THOUSEP     .
 de_DE.UTF-8          YESEXPR     ^[jJyY].*
 de_DE.UTF-8          NOEXPR      ^[nN].*
+fr_FR.ISO-8859-1     ABDAY_1     dim
+fr_FR.ISO-8859-1     ABDAY_2     lun
+fr_FR.ISO-8859-1     ABDAY_3     mar
+fr_FR.ISO-8859-1     ABDAY_4     mer
+fr_FR.ISO-8859-1     ABDAY_5     jeu
+fr_FR.ISO-8859-1     ABDAY_6     ven
+fr_FR.ISO-8859-1     ABDAY_7     sam
+fr_FR.ISO-8859-1     DAY_1       dimanche
+fr_FR.ISO-8859-1     DAY_2       lundi
+fr_FR.ISO-8859-1     DAY_3       mardi
+fr_FR.ISO-8859-1     DAY_4       mercredi
+fr_FR.ISO-8859-1     DAY_5       jeudi
+fr_FR.ISO-8859-1     DAY_6       vendredi
+fr_FR.ISO-8859-1     DAY_7       samedi
+fr_FR.ISO-8859-1     ABMON_1     jan
+fr_FR.ISO-8859-1     ABMON_2     fév
+fr_FR.ISO-8859-1     ABMON_3     mar
+fr_FR.ISO-8859-1     ABMON_4     avr
+fr_FR.ISO-8859-1     ABMON_5     mai
+fr_FR.ISO-8859-1     ABMON_6     jun
+fr_FR.ISO-8859-1     ABMON_7     jui
+fr_FR.ISO-8859-1     ABMON_8     aoû
+fr_FR.ISO-8859-1     ABMON_9     sep
+fr_FR.ISO-8859-1     ABMON_10    oct
+fr_FR.ISO-8859-1     ABMON_11    nov
+fr_FR.ISO-8859-1     ABMON_12    déc
+fr_FR.ISO-8859-1     MON_1       janvier
+fr_FR.ISO-8859-1     MON_2       février
+fr_FR.ISO-8859-1     MON_3       mars
+fr_FR.ISO-8859-1     MON_4       avril
+fr_FR.ISO-8859-1     MON_5       mai
+fr_FR.ISO-8859-1     MON_6       juin
+fr_FR.ISO-8859-1     MON_7       juillet
+fr_FR.ISO-8859-1     MON_8       août
+fr_FR.ISO-8859-1     MON_9       septembre
+fr_FR.ISO-8859-1     MON_10      octobre
+fr_FR.ISO-8859-1     MON_11      novembre
+fr_FR.ISO-8859-1     MON_12      décembre
+fr_FR.ISO-8859-1     D_T_FMT     "%a %d %b %Y %T %Z"
+fr_FR.ISO-8859-1     D_FMT       "%d.%m.%Y"
+fr_FR.ISO-8859-1     T_FMT       "%T"
+fr_FR.ISO-8859-1     RADIXCHAR   ,
+fr_FR.ISO-8859-1     THOUSEP     ""
+fr_FR.ISO-8859-1     YESEXPR     ^[oOyY].*
+fr_FR.ISO-8859-1     NOEXPR      ^[nN].*
 ja_JP.EUC-JP         ABDAY_1     Æü
 ja_JP.EUC-JP         ABDAY_2     ·î
 ja_JP.EUC-JP         ABDAY_3     ²Ð
