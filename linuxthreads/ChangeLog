@@ -1,3 +1,8 @@
+2000-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add _POSIX_SPAWN.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+
 2000-04-14  Andreas Jaeger  <aj@suse.de>
 
 	* weaks.c: Fix typo.
