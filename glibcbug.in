@@ -21,11 +21,10 @@ BUILD_PROFILE="@profile@"
 BUILD_OMITFP="@omitfp@"
 BUILD_BOUNDED="@bounded@"
 BUILD_STATIC_NSS="@static_nss@"
-STDIO="@stdio@"
 
 TEMP=`mktemp -q ${TMPDIR-/tmp}/glibcbugXXXXXX 2>/dev/null`
 if test $? -ne 0; then
-  TEMP={$TMPDIR-/tmp}/glibcbug.$$
+  TEMP=${TMPDIR-/tmp}/glibcbug.$$
   echo > $TEMP
   chmod 600 $TEMP
 fi
@@ -163,7 +162,6 @@ ${ORGANIZATION- $ORGANIZATION_C}
 `[ -n "$BUILD_OMITFP" ] && echo Build omitfp: $BUILD_OMITFP`
 `[ -n "$BUILD_BOUNDED" ] && echo Build bounded: $BUILD_BOUNDED`
 `[ -n "$BUILD_STATIC_NSS" ] && echo Build static-nss: $BUILD_STATIC_NSS`
-`[ -n "$STDIO" ] && echo Stdio: $STDIO`
 
 >Description:
 	$DESCRIPTION_C
