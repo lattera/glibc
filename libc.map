@@ -490,7 +490,7 @@ GLIBC_2.1 {
     authdes_create; authdes_getucred; authdes_pk_create;
 
     # c*
-    cbc_crypt; creat64;
+    capget; capset; cbc_crypt; creat64;
 
     # d*
     des_setparity;
