@@ -1,5 +1,20 @@
 2004-07-15  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/fcntl.c (__fcntl_nocancel): Remove
+	static inline __attribute ((always_inline)).  Don't define if
+	NO_CANCELLATION.
+	(__libc_fcntl): Use INLINE_SYSCALL directly instead of
+	__fcntl_nocancel.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fcntl.c (__fcntl_nocancel):
+	Remove static inline __attribute ((always_inline)).  Don't define
+	if NO_CANCELLATION.
+	(__libc_fcntl): Use INLINE_SYSCALL directly instead of
+	__fcntl_nocancel.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__fcntl_nocancel): Define to
+	__libc_fcntl if NO_CANCELLATION and __ASSUME_FCNTL64 == 0.
+	Don't define at all if NO_CANCELLATION and __ASSUME_FCNTL64 > 0.
+	(__libc_fcntl): Don't define if __fcntl_nocancel is a macro.
+
 	[BZ #262]
 	* sysdeps/i386/elf/start.S (_start): Use @GOT instead of @GOTOFF
 	for main.

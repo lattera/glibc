@@ -30,10 +30,11 @@
 int __have_no_fcntl64;
 #endif
 
-
-#ifdef NO_CANCELLATION
-static inline __attribute ((always_inline))
+#if defined NO_CANCELLATION && __ASSUME_FCNTL64 == 0
+# define __fcntl_nocancel  __libc_fcntl
 #endif
+
+#if !defined NO_CANCELLATION || __ASSUME_FCNTL64 == 0
 int
 __fcntl_nocancel (int fd, int cmd, ...)
 {
@@ -126,8 +127,10 @@ __fcntl_nocancel (int fd, int cmd, ...)
   return INLINE_SYSCALL (fcntl64, 3, fd, cmd, arg);
 #endif  /* !__ASSUME_FCNTL64  */
 }
+#endif /* NO_CANCELLATION || !__ASSUME_FCNTL64 */
 
 
+#ifndef __fcntl_nocancel
 int
 __libc_fcntl (int fd, int cmd, ...)
 {
@@ -158,6 +161,7 @@ __libc_fcntl (int fd, int cmd, ...)
 
   return result;
 }
+#endif
 libc_hidden_def (__libc_fcntl)
 
 weak_alias (__libc_fcntl, __fcntl)

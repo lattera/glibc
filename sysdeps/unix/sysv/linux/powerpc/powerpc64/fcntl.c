@@ -25,9 +25,7 @@
 #include <sys/syscall.h>
 
 
-#ifdef NO_CANCELLATION
-static inline __attribute ((always_inline))
-#endif
+#ifndef NO_CANCELLATION
 int
 __fcntl_nocancel (int fd, int cmd, ...)
 {
@@ -40,6 +38,7 @@ __fcntl_nocancel (int fd, int cmd, ...)
 
   return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
 }
+#endif
 
 
 int
@@ -56,11 +55,11 @@ __libc_fcntl (int fd, int cmd, ...)
     cmd -= F_GETLK64 - F_GETLK;
 
   if (SINGLE_THREAD_P || cmd != F_SETLKW)
-    return __fcntl_nocancel (fd, cmd, arg);
+    return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int result = __fcntl_nocancel (fd, cmd, arg);
+  int result = INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
 
   LIBC_CANCEL_RESET (oldtype);
 
