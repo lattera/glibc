@@ -210,7 +210,8 @@ _IO_wdefault_finish (fp, dummy)
     }
 
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_fini (*fp->_lock);
+  if (fp->_lock != NULL)
+    _IO_lock_fini (*fp->_lock);
 #endif
 
   _IO_un_link ((struct _IO_FILE_plus *) fp);

@@ -124,19 +124,16 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
   struct obstack_FILE
     {
       struct _IO_obstack_file ofile;
-#ifdef _IO_MTSAFE_IO
-      _IO_lock_t lock;
-#endif
   } new_f;
   int result;
   int size;
   int room;
 
 #ifdef _IO_MTSAFE_IO
-  new_f.ofile.file.file._lock = &new_f.lock;
+  new_f.ofile.file.file._lock = NULL;
 #endif
 
-  _IO_no_init (&new_f.ofile.file.file, 0, -1, NULL, NULL);
+  _IO_no_init (&new_f.ofile.file.file, _IO_USER_LOCK, -1, NULL, NULL);
   _IO_JUMPS (&new_f.ofile.file) = &_IO_obstack_jumps;
   room = obstack_room (obstack);
   size = obstack_object_size (obstack) + room;
@@ -156,7 +153,8 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
       assert (size != 0);
     }
 
-  _IO_str_init_static ((struct _IO_strfile_ *) &new_f.ofile, obstack_base (obstack),
+  _IO_str_init_static ((struct _IO_strfile_ *) &new_f.ofile,
+		       obstack_base (obstack),
 		       size, obstack_next_free (obstack));
   /* Now allocate the rest of the current chunk.  */
   assert (size == (new_f.ofile.file.file._IO_write_end
@@ -167,11 +165,8 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
   obstack_blank_fast (obstack, room);
 
   new_f.ofile.obstack = obstack;
-#ifdef _IO_MTSAFE_IO
-  __fsetlocking ((FILE *) &new_f.ofile.file, FSETLOCKING_BYCALLER);
-#endif
 
-  result = _IO_vfprintf ((_IO_FILE *) &new_f.ofile.file, format, args);
+  result = _IO_vfprintf (&new_f.ofile.file.file, format, args);
 
   /* Shrink the buffer to the space we really currently need.  */
   obstack_blank_fast (obstack, (new_f.ofile.file.file._IO_write_ptr

@@ -613,7 +613,8 @@ _IO_no_init (fp, flags, orientation, wd, jmp)
   fp->_vtable_offset = 0;
 #endif
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_init (*fp->_lock);
+  if (fp->_lock != NULL)
+    _IO_lock_init (*fp->_lock);
 #endif
   fp->_mode = orientation;
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
@@ -669,7 +670,8 @@ _IO_default_finish (fp, dummy)
     }
 
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_fini (*fp->_lock);
+  if (fp->_lock != NULL)
+    _IO_lock_fini (*fp->_lock);
 #endif
 
   _IO_un_link ((struct _IO_FILE_plus *) fp);
@@ -682,7 +684,7 @@ _IO_default_seekoff (fp, offset, dir, mode)
      int dir;
      int mode;
 {
-    return _IO_pos_BAD;
+  return _IO_pos_BAD;
 }
 
 int

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,10 +39,9 @@ vswscanf (string, format, args)
   _IO_strfile sf;
   struct _IO_wide_data wd;
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_t lock;
-  sf._sbf._f._lock = &lock;
+  sf._sbf._f._lock = NULL;
 #endif
-  _IO_no_init (&sf._sbf._f, 0, 0, &wd, &_IO_wstr_jumps);
+  _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, 0, &wd, &_IO_wstr_jumps);
   _IO_fwide (&sf._sbf._f, 1);
   _IO_wstr_init_static (&sf._sbf._f, (wchar_t *)string, 0, NULL);
   ret = _IO_vfwscanf ((_IO_FILE *) &sf._sbf, format, args, NULL);

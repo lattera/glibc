@@ -111,8 +111,7 @@ _IO_vswprintf (string, maxlen, format, args)
   int ret;
   struct _IO_wide_data wd;
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_t lock;
-  sf.f._sbf._f._lock = &lock;
+  sf.f._sbf._f._lock = NULL;
 #endif
 
   if (maxlen == 0)
@@ -120,7 +119,7 @@ _IO_vswprintf (string, maxlen, format, args)
        length of zero always makes the function fail.  */
     return -1;
 
-  _IO_no_init (&sf.f._sbf._f, 0, 0, &wd, &_IO_wstrn_jumps);
+  _IO_no_init (&sf.f._sbf._f, _IO_USER_LOCK, 0, &wd, &_IO_wstrn_jumps);
   _IO_fwide (&sf.f._sbf._f, 1);
   string[0] = L'\0';
   _IO_wstr_init_static (&sf.f._sbf._f, string, maxlen - 1, string);

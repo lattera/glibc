@@ -107,11 +107,6 @@ _IO_wstr_init_static (fp, ptr, size, pstart)
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
   (((_IO_strfile *) fp)->_s._allocate_buffer) =  (_IO_alloc_type)0;
-
-#ifdef _IO_MTSAFE_IO
-  /* We never have to lock this stream.  */
-  __fsetlocking ((FILE *) fp, FSETLOCKING_BYCALLER);
-#endif
 }
 
 void

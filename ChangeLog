@@ -5,12 +5,22 @@
 	* elf/dl-load.c (fillin_rpath): In SUID binaries, don't mark
 	non-system-dirs in LD_LIBRARY_PATH as nonexisting, simply drop them.
 
-	* libio/iovdprintf.c (_IO_vdprintf): Call __fsetlocking for temporary
-	stream.
+	* libio/iovdprintf.c (_IO_vdprintf): Set _IO_USER_LOCK flag for
+	temporary stream.  Don't define lock.
 	* libio/obprintf.c (_IO_obstack_vprintf): Likewise.
 	* libio/strops.c (_IO_str_init_static): Likewise.
 	* libio/vasprintf.c (_IO_vasprintf): Likewise.
 	* libio/wstrops.c (_IO_wstr_init_static): Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsnprintf.c: Likewise.
+	* libio/iovswprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+	* libio/iovswscanf.c: Likewise.
+	* stdio-common/vfprintf.c [USE_IN_LIBIO] (buffered_vfprintf): Likewise.
+	* libio/genops.c (_IO_no_init): Don't call _IO_lock_init if _lock
+	is NULL.
+	(_IO_default_finish): Likewise.
+	* libio/wgenops.c (_IO_wdefault_finish): Likewise.
 
 2001-08-10  Andreas Jaeger  <aj@suse.de>
 

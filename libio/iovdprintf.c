@@ -36,22 +36,19 @@ _IO_vdprintf (d, format, arg)
      _IO_va_list arg;
 {
   struct _IO_FILE_plus tmpfil;
-#ifdef _IO_MTSAFE_IO
-  _IO_lock_t lock;
-#endif
   struct _IO_wide_data wd;
   int done;
 
 #ifdef _IO_MTSAFE_IO
-  tmpfil.file._lock = &lock;
+  tmpfil.file._lock = NULL;
 #endif
-  _IO_no_init (&tmpfil.file, 0, 0, &wd, &_IO_wfile_jumps);
+  _IO_no_init (&tmpfil.file, _IO_USER_LOCK, 0, &wd, &_IO_wfile_jumps);
   _IO_JUMPS (&tmpfil) = &_IO_file_jumps;
   _IO_file_init (&tmpfil);
 #if  !_IO_UNIFIED_JUMPTABLES
   tmpfil.vtable = NULL;
 #endif
-  if (_IO_file_attach ((_IO_FILE *) &tmpfil, d) == NULL)
+  if (_IO_file_attach (&tmpfil.file, d) == NULL)
     {
       _IO_un_link (&tmpfil);
       return EOF;
@@ -60,13 +57,10 @@ _IO_vdprintf (d, format, arg)
     (_IO_mask_flags (&tmpfil.file, _IO_NO_READS,
 		     _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING)
      | _IO_DELETE_DONT_CLOSE);
-#ifdef _IO_MTSAFE_IO
-  __fsetlocking ((FILE *) &tmpfil, FSETLOCKING_BYCALLER);
-#endif
 
-  done = _IO_vfprintf ((_IO_FILE *) &tmpfil, format, arg);
+  done = _IO_vfprintf (&tmpfil.file, format, arg);
 
-  _IO_FINISH ((_IO_FILE *) &tmpfil);
+  _IO_FINISH (&tmpfil.file);
 
   return done;
 }

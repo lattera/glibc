@@ -43,9 +43,6 @@ _IO_vasprintf (result_ptr, format, args)
   const _IO_size_t init_string_size = 100;
   char *string;
   _IO_strfile sf;
-#ifdef _IO_MTSAFE_IO
-  _IO_lock_t lock;
-#endif
   int ret;
   _IO_size_t needed;
   _IO_size_t allocated;
@@ -53,18 +50,15 @@ _IO_vasprintf (result_ptr, format, args)
   if (string == NULL)
     return -1;
 #ifdef _IO_MTSAFE_IO
-  sf._sbf._f._lock = &lock;
+  sf._sbf._f._lock = NULL;
 #endif
-  _IO_no_init ((_IO_FILE *) &sf._sbf, 0, -1, NULL, NULL);
+  _IO_no_init ((_IO_FILE *) &sf._sbf, _IO_USER_LOCK, -1, NULL, NULL);
   _IO_JUMPS ((struct _IO_FILE_plus *) &sf._sbf) = &_IO_str_jumps;
   _IO_str_init_static (&sf, string, init_string_size, string);
   sf._sbf._f._flags &= ~_IO_USER_BUF;
   sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   sf._s._free_buffer = (_IO_free_type) free;
-#ifdef _IO_MTSAFE_IO
-  __fsetlocking ((FILE *) &sf, FSETLOCKING_BYCALLER);
-#endif
-  ret = _IO_vfprintf ((_IO_FILE *) &sf, format, args);
+  ret = _IO_vfprintf (&sf._sbf._f, format, args);
   if (ret < 0)
     return ret;
   /* Only use realloc if the size we need is of the same order of

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -112,8 +112,7 @@ _IO_vsnprintf (string, maxlen, format, args)
   _IO_strnfile sf;
   int ret;
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_t lock;
-  sf.f._sbf._f._lock = &lock;
+  sf.f._sbf._f._lock = NULL;
 #endif
 
   /* We need to handle the special case where MAXLEN is 0.  Use the
@@ -124,7 +123,7 @@ _IO_vsnprintf (string, maxlen, format, args)
       maxlen = sizeof (sf.overflow_buf);
     }
 
-  _IO_no_init (&sf.f._sbf._f, 0, -1, NULL, NULL);
+  _IO_no_init (&sf.f._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
   _IO_JUMPS ((struct _IO_FILE_plus *) &sf.f._sbf) = &_IO_strn_jumps;
   string[0] = '\0';
   _IO_str_init_static (&sf.f, string, maxlen - 1, string);

@@ -2073,13 +2073,12 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   _IO_setp (hp, buf, buf + sizeof buf);
   hp->_mode = -1;
 #endif
-  hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS;
+  hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS|_IO_USER_LOCK;
 #if _IO_JUMPS_OFFSET
   hp->_vtable_offset = 0;
 #endif
 #ifdef _IO_MTSAFE_IO
-  hp->_lock = &helper.lock;
-  __libc_lock_init (*hp->_lock);
+  hp->_lock = NULL;
 #endif
   _IO_JUMPS (&helper._f) = (struct _IO_jump_t *) &_IO_helper_jumps;
 
