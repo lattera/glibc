@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,10 +25,14 @@ subdir	:= login
 headers	:= utmp.h bits/utmp.h utmpx.h bits/utmpx.h lastlog.h pty.h
 
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmp_daemon utmpname updwtmp
+	    utmp_file utmp_daemon utmpname updwtmp \
+	    getpt grantpt unlockpt ptsname
 
-others = utmpd utmpdump
+CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
+
+others = utmpd utmpdump pt_chown
 install-sbin = utmpd
+install-others = $(inst_libexecdir)/pt_chown
 utmpd-routines := connection database error request xtmp
 extra-objs := $(utmpd-routines:=.o)
 
@@ -42,10 +46,14 @@ vpath %.c programs
 extra-libs      := libutil
 extra-libs-others := $(extra-libs)
 
-libutil-routines:= login login_tty logout logwtmp pty
+libutil-routines:= login login_tty logout logwtmp openpty forkpty
 libutil-map	:= libutil.map
 
 include ../Rules
+
+# pt_chown needs to be setuid root.
+$(inst_libexecdir)/pt_chown: $(objpfx)pt_chown
+	$(INSTALL) -m 4755 -o root $< $@
 
 $(objpfx)utmpd: $(utmpd-routines:%=$(objpfx)%.o)
 

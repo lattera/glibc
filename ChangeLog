@@ -1,3 +1,182 @@
+1998-01-30 19:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/cpio.h: Move to ...
+	* posix/cpio.h: ...here.
+
+	* locale/programs/ld-collate.c: Fix typo.
+
+	* signal/signal.h: Declare _sys_siglist with NSIG+1 elements.
+
+	* stdio-common/tiformat.c: Add checks for %#.0o and friends.
+
+	* login/utmp_file.c (pututline_file): Don't always report success
+	if similar entry is found.  Patch by Mark M. Kettenis.
+
+1998-01-30 16:06  Philip Blundell  <pb@nexus.co.uk>
+
+	* manual/Makefile: Don't try to install the info files if makeinfo
+	is not available.
+
+1998-01-30 12:05  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/bits/ioctls.h: Include a copy of the
+	kernel's network ioctls, rather than using <linux/sockios.h> to
+	get them.  This way we are sure of maintaining compatibility if
+	the kernel interface should change.
+
+1998-01-30 15:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add netrose/rose.h.
+
+1998-01-25 19:54  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/netrose/rose.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Install it.
+
+1998-01-27 22:29  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	Implement System V pseudoterminal handling.
+
+	* login/Makefile
+	(routines): Add getpt, grantpt, unlockpt, ptsname.
+	(libutil-routines): Remove pty. Add openpty, forkpty.
+	(distribute): New internal header pty-internal.h.
+	(others): Add the helper program, pt_chown.
+	(install-others): Install it, in $(libexecdir), mode 4755.
+
+	* login/pty-internal.h: New file.
+	* login/openpty.c: New file.
+	* login/forkpty.c: New file.
+	* login/programs/pt_chown.c: New file.
+
+	* libc.map: Add getpt, grantpt, unlockpt, ptsname, ptsname_r.
+	* stdlib/stdlib.h: Prototype them.
+
+	* config.make.in: Define $(libexecdir).
+	* Makeconfig: Define $(inst_libexecdir).
+
+	* sysdeps/generic/pty.c: Removed.
+	* sysdeps/unix/sysv/linux/pty.c: Removed.
+
+	* sysdeps/generic/getpt.c: Stub out.
+	* sysdeps/generic/grantpt.c: Likewise.
+	* sysdeps/generic/ptsname.c: Likewise.
+	* sysdeps/generic/unlockpt.c: Likewise.
+
+	* sysdeps/unix/grantpt.c: New file.
+	* sysdeps/unix/bsd/getpt.c: New file.
+	* sysdeps/unix/bsd/unlockpt.c: New file.
+	* sysdeps/unix/sysv/linux/getpt.c: New file.
+	* sysdeps/unix/sysv/linux/ptsname.c: New file.
+	* sysdeps/unix/sysv/linux/unlockpt.c: New file.
+
+1998-01-29 23:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* localedata/locales/ru_RU: Fix YESEXPR.  Patch by lav@yars.free.net.
+
+1998-01-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/Makefile (tests): Add rule for test-netdb.c.
+
+	* nss/test-netdb.c: New file.
+
+1998-01-29 02:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-open.c (_dl_open): Make sure the variable `reloc' is
+	really kept as a variable.  Patch by Richard Henderson,
+	reported by Jakub Jelinek <jj@sunsite.ms.mff.cuni.cz>.
+
+	* elf/rtld.c (dl_main): Call _dl_init_paths before handling preloading.
+	* elf/genrtldtbl.awk: Mark machine dependent directory of generated
+	entries as not existing.
+
+1998-01-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfprintf.c (process_arg): Fix printing of octal
+	zero in alternate form with precision of zero, which must produce
+	"0".  Add braces to avoid ambiguous `else'.
+
+1998-01-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_compat/compat-grp.c: Fix memory leak and trailing null
+	problem with strncpy.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/comapt-spwd.c: Likewise.
+
+1998-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* assert/assert.h (assert_perror): Correct test for errnum.  Patch
+	by uch@nop.or.jp. [PR libc/437]
+
+1997-12-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locales/pl_PL: Fix int_curr_symbol.
+
+1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/nis_cache.c: Include <unistd.h> for declaration of close.
+
+1998-01-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/test-popen.c: Include <errno.h>.
+
+	* sysdeps/unix/sysv/linux/if_index.c: Include <unistd.h> for
+	close.
+
+	* inet/getnetgrent_r.c: Include <errno.h>.
+
+	* db2/db/db_conv.c: Include <string.h> for memcpy.
+
+	* gmon/bb_exit_func.c: Include <string.h> instead of <strings.h>
+	so that memcpy is declared.
+
+	* iconv/iconv_open.c: Include <stdlib.h> for alloca.
+
+	* misc/init-misc.c: Remove unneeded inclusion of <errno.h>.
+
+1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/fgetpwent_r.c (__fgetpwent_r): Correctly handle buffer
+	overflow while reading line with fgets.
+	* grp/fgetgrent_r.c (__fgetgrent_r): Likewise.
+
+1998-01-27 00:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/types.h (__ipc_pid_t): Change to
+	unsigned short, not short.
+	Reported by Andreas Jaeger.
+
+1998-01-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Correct typo
+	(ccept->accept).
+
+	* sysdeps/generic/inttypes.h: Fix spelling.
+
+1998-01-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/arm/Dist: Add bits/mman.h.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add net/route.h.
+
+1998-01-27 00:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf.h (struct print_info): Add new bitfield is_char.
+	* stdio-common/printf-parse.h (parse_one_spec): Fill in is_char
+	field for hh modifier.
+	* stdio-common/vfprint.c: Use is_char field and do not depend in
+	is_short having the value 2.
+	Bug reported by Andreas Jaeger.
+
+1998-01-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/freopen.c (freopen): Call _IO_old_freopen only if defined
+	PIC && DO_VERSIONING.
+
+1998-01-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Rules: Add rules for $(common-objpfx)dummy$o.
+
 1998-01-26  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Dyke out the

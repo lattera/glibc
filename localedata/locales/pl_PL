@@ -2095,7 +2095,7 @@ noexpr  "<<(><n><N><)/>><.><*>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<P><L><N><SP>"
+int_curr_symbol           "<P><L><Z><SP>"
 currency_symbol           "<Z><l//>"
 mon_decimal_point         "<,>"
 mon_thousands_sep         "<.>"

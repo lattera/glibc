@@ -2091,7 +2091,7 @@ order_end
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "<<(><D=><d=><Y><Y><)/>><.><*>"
+yesexpr "<<(><D=><d=><Y><y><)/>><.><*>"
 noexpr  "<<(><N=><n=><N><n><)/>><.><*>"
 END LC_MESSAGES
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,9 +80,9 @@ __END_DECLS
 
 # ifdef	__USE_GNU
 #  define assert_perror(errnum)						      \
-  ((void) ((errnum) ? 0 : (__assert_perror_fail ((errnum),		      \
-						 __FILE__, __LINE__,	      \
-						 __ASSERT_FUNCTION), 0)))
+  ((void) (!(errnum) ? 0 : (__assert_perror_fail ((errnum),		      \
+						  __FILE__, __LINE__,	      \
+						  __ASSERT_FUNCTION), 0)))
 # endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'

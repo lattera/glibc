@@ -359,11 +359,18 @@ getspent_next_nis_netgr (const char *name, struct spwd *result, ent_t *ent,
       p2len = spwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
 	{
+	  free (outval);
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       p2 = buffer + (buflen - p2len);
       buflen -= p2len;
+      if (buflen < ((size_t) outval + 1))
+	{
+	  free (outval);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       p = strncpy (buffer, outval, buflen);
       while (isspace (*p))
 	p++;
@@ -601,6 +608,14 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
 	      give_spwd_free (&ent->pwd);
 	      return NSS_STATUS_UNAVAIL;
 	    }
+
+	  if (buflen < ((size_t) outvallen + 1))
+	    {
+	      free (outval);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  saved_first = TRUE;
 	  saved_oldkey = ent->oldkey;
 	  saved_oldlen = ent->oldkeylen;
@@ -617,6 +632,13 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
 	      ent->nis = 0;
 	      give_spwd_free (&ent->pwd);
 	      return NSS_STATUS_NOTFOUND;
+	    }
+
+	  if (buflen < ((size_t) outvallen + 1))
+	    {
+	      free (outval);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
 	    }
 
 	  saved_first = FALSE;
@@ -720,9 +742,14 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
 		    &outval, &outvallen)  != YPERR_SUCCESS)
 	return NSS_STATUS_NOTFOUND;
 
-      ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
-		     buflen : (size_t) outvallen);
-      buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
+      if (buflen < ((size_t) outvallen + 1))
+	{
+	  free (outval);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      ptr = strncpy (buffer, outval, buflen);
       free (outval);
       while (isspace (*ptr))
         ptr++;

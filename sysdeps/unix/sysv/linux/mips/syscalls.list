@@ -16,7 +16,7 @@ sigsuspend	-	sigsuspend	1	__sigsuspend	sigsuspend
 # Socket functions; Linux/MIPS doesn't use the socketcall(2) wrapper;
 # it's provided for compatibility, though.
 #
-ccept		-	accept		3	__libc_accept	__accept accept
+accept		-	accept		3	__libc_accept	__accept accept
 bind		-	bind		3	__bind		bind
 connect		-	connect		3	__libc_connect	__connect connect
 getpeername	-	getpeername	3	__getpeername	getpeername

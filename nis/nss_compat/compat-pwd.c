@@ -393,7 +393,7 @@ getpwent_next_nis_netgr (const char *name, struct passwd *result, ent_t *ent,
       if (domain != NULL && strcmp (ypdomain, domain) != 0)
 	continue;
 
-      /* If name != NULL, we are called from getpwnam */
+      /* If name != NULL, we are called from getpwnam.  */
       if (name != NULL)
 	if (strcmp (user, name) != 0)
 	  continue;
@@ -406,12 +406,21 @@ getpwent_next_nis_netgr (const char *name, struct passwd *result, ent_t *ent,
       p2len = pwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
 	{
+	  free (outval);
 	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       p2 = buffer + (buflen - p2len);
       buflen -= p2len;
+
+      if (buflen < ((size_t) outvallen + 1))
+	{
+	  free (outval);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       p = strncpy (buffer, outval, buflen);
+
       while (isspace (*p))
 	p++;
       free (outval);
@@ -650,6 +659,13 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	      return NSS_STATUS_UNAVAIL;
 	    }
 
+	  if (buflen < ((size_t) outvallen + 1))
+	    {
+	      free (outval);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  saved_first = TRUE;
 	  saved_oldkey = ent->oldkey;
 	  saved_oldlen = ent->oldkeylen;
@@ -666,6 +682,13 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	      ent->nis = 0;
 	      give_pwd_free (&ent->pwd);
 	      return NSS_STATUS_NOTFOUND;
+	    }
+
+	  if (buflen < ((size_t) outvallen + 1))
+	    {
+	      free (outval);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
 	    }
 
 	  saved_first = FALSE;
@@ -769,9 +792,13 @@ getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
 		    &outval, &outvallen) != YPERR_SUCCESS)
 	return NSS_STATUS_NOTFOUND;
 
-      ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
-		     buflen : (size_t) outvallen);
-      buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
+      if (buflen < ((size_t) outvallen + 1))
+	{
+	  free (outval);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      ptr = strncpy (buffer, outval, buflen);
       free (outval);
       while (isspace (*ptr))
 	ptr++;
@@ -1259,10 +1286,17 @@ getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
-		     buflen : (size_t) outvallen);
-      buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
+
+      if ( buflen < ((size_t) outvallen + 1))
+	{
+	  free (outval);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      ptr = strncpy (buffer, outval, buflen);
       free (outval);
+
       while (isspace (*ptr))
 	ptr++;
       parse_res = _nss_files_parse_pwent (ptr, result, data, buflen, errnop);

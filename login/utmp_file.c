@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -390,12 +390,12 @@ pututline_file (const struct utmp *data)
     }
 
   /* Write the new data.  */
-  if (write (file_fd, data, sizeof (struct utmp)) != sizeof (struct utmp)
+  if (write (file_fd, data, sizeof (struct utmp)) != sizeof (struct utmp))
+    {
       /* If we appended a new record this is only partially written.
 	 Remove it.  */
-      && found < 0)
-    {
-      (void) ftruncate (file_fd, file_offset);
+      if (found < 0)
+	(void) ftruncate (file_fd, file_offset);
       pbuf = NULL;
     }
   else

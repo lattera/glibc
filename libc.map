@@ -210,8 +210,8 @@ GLIBC_2.0 {
     getnetname; getopt; getopt_long; getopt_long_only; getpagesize;
     getpass; getpeername; getpgid; getpgrp; getpid; getppid; getpriority;
     getprotobyname; getprotobyname_r; getprotobynumber;
-    getprotobynumber_r; getprotoent; getprotoent_r; getpublickey; getpw;
-    getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
+    getprotobynumber_r; getprotoent; getprotoent_r; getpt; getpublickey;
+    getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
     getresgid; getresuid;
     getrlimit; getrlimit64; getrpcbyname; getrpcbyname_r; getrpcbynumber;
     getrpcbynumber_r; getrpcent; getrpcent_r; getrpcport; getrusage; gets;
@@ -221,7 +221,7 @@ GLIBC_2.0 {
     gettext; gettimeofday; getttyent; getttynam; getuid; getusershell;
     getutent; getutent_r; getutid; getutid_r; getutline; getutline_r;
     getutxent; getutxid; getutxline; getw; getwd; glob; glob_pattern_p;
-    globfree; gmtime; gmtime_r; group_member; gsignal; gtty;
+    globfree; gmtime; gmtime_r; grantpt; group_member; gsignal; gtty;
 
     # h*
     hasmntopt; hcreate; hcreate_r; hdestroy; hdestroy_r; herror;
@@ -305,9 +305,10 @@ GLIBC_2.0 {
     pthread_self; pthread_setcancelstate; pthread_setcanceltype;
     pthread_setschedparam;
 
-    ptrace; putc; putc_unlocked; putchar;
-    putchar_unlocked; putenv; putpwent; puts; putspent; pututline;
-    pututxline; putw; pvalloc;
+    ptrace; ptsname; ptsname_r;
+    putc; putc_unlocked; putchar; putchar_unlocked;
+    putenv; putpwent; puts; putspent; pututline; pututxline;
+    putw; pvalloc;
 
     # q*
     qecvt; qecvt_r; query_module; qfcvt; qfcvt_r; qgcvt; qsort; quotactl;
@@ -382,7 +383,7 @@ GLIBC_2.0 {
     twalk; tzset;
 
     # u*
-    ualarm; ulckpwdf; ulimit; umask; umount; uname; ungetc; unlink;
+    ualarm; ulckpwdf; ulimit; umask; umount; uname; ungetc; unlink; unlockpt;
     unsetenv; updwtmp; uselib; user2netname; usleep; ustat; utime; utimes;
     utmpname;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,11 +74,17 @@ __fgetpwent_r (FILE *stream, struct passwd *resbuf, char *buffer,
 
   do
     {
+      buffer[buflen] = '\xff';
       p = fgets (buffer, buflen, stream);
-      if (p == NULL)
+      if (p == NULL && feof (stream))
 	{
 	  *result = NULL;
 	  return errno;
+	}
+      if (p == NULL || buffer[buflen] != '\xff')
+	{
+	  *result = NULL;
+	  return errno = ERANGE;
 	}
 
       /* Skip leading blanks.  */

@@ -79,7 +79,8 @@ ifeq ($(subdir),inet)
 sysdep_headers += netinet/in_systm.h netinet/udp.h \
 		  netinet/if_fddi.h netinet/if_tr.h netinet/igmp.h \
 		  netinet/ip_fw.h  netinet/ip_icmp.h netipx/ipx.h \
-		  sys/socketvar.h netax25/ax25.h netrom/netrom.h
+		  sys/socketvar.h netax25/ax25.h netrom/netrom.h \
+		  netrose/rose.h
 endif
 
 ifeq ($(subdir),posix)

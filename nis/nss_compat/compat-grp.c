@@ -263,6 +263,14 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      ent->nis = 0;
 	      return NSS_STATUS_UNAVAIL;
 	    }
+
+	  if ( buflen < ((size_t) outvallen + 1))
+	    {
+	      free (outval);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  save_oldkey = ent->oldkey;
 	  save_oldlen = ent->oldkeylen;
 	  save_nis_first = TRUE;
@@ -280,6 +288,13 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
+	  if ( buflen < ((size_t) outvallen + 1))
+	    {
+	      free (outval);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  save_oldkey = ent->oldkey;
 	  save_oldlen = ent->oldkeylen;
 	  save_nis_first = FALSE;
@@ -287,7 +302,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	  ent->oldkeylen = outkeylen;
 	}
 
-      /* Copy the found data to our buffer  */
+      /* Copy the found data to our buffer...  */
       p = strncpy (buffer, outval, buflen);
 
       /* ...and free the data.  */
@@ -427,8 +442,17 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
 		    &outval, &outvallen) != YPERR_SUCCESS)
 	return NSS_STATUS_NOTFOUND;
 
-      p = strncpy (buffer, outval,
-                   buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
+      if (buflen < ((size_t) outvallen + 1))
+	{
+	  free (outval);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* Copy the found data to our buffer...  */
+      p = strncpy (buffer, outval, buflen);
+
+      /* ... and free the data.  */
       free (outval);
       while (isspace (*p))
         ++p;
@@ -758,9 +782,20 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
 	  *errnop = errno;
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      p = strncpy (buffer, outval,
-                   buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
+
+      if (buflen < ((size_t) outvallen + 1))
+	{
+	  free (outval);
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
+
+      /* Copy the found data to our buffer...  */
+      p = strncpy (buffer, outval, buflen);
+
+      /* ... and free the data.  */
       free (outval);
+
       while (isspace (*p))
         p++;
       parse_res = _nss_files_parse_grent (p, result, data, buflen, errnop);

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -71,7 +71,6 @@ define make-dummy-lib
 $(AR) cr$(verbose) $@ $<
 endef
 
-$(common-objpfx)dummy.o: $(common-objpfx)dummy.c; $(compile-command.c)
 $(common-objpfx)dummy.c:
 	rm -f $@
 	echo 'void __dummy__ (void) { }' > $@
@@ -157,6 +156,13 @@ generated: $(addprefix $(common-objpfx),$(common-generated)) \
 
 define o-iterator-doit
 $(common-objpfx)empty$o: $(common-objpfx)empty.c $(before-compile);
+	$$(compile-command.c)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
+
+define o-iterator-doit
+$(common-objpfx)dummy$o: $(common-objpfx)dummy.c $(before-compile);
 	$$(compile-command.c)
 endef
 object-suffixes-left := $(object-suffixes)

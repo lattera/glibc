@@ -1,5 +1,5 @@
 /* Internal header for parsing printf format strings.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -268,6 +268,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
   spec->info.is_long_double = 0;
   spec->info.is_short = 0;
   spec->info.is_long = 0;
+  spec->info.is_char = 0;
 
   if (*format == L_('h') || *format == L_('l') || *format == L_('L') ||
       *format == L_('Z') || *format == L_('q'))
@@ -278,7 +279,10 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	if (spec->info.is_short == 0)
 	  spec->info.is_short = 1;
 	else
-	  spec->info.is_short = 2;
+	  {
+	    spec->info.is_short = 0;
+	    spec->info.is_char = 1;
+	  }
 	break;
       case L_('l'):
 	/* int's are long int's.  */
@@ -329,6 +333,8 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	    spec->data_arg_type = PA_INT|PA_FLAG_LONG;
 	  else if (spec->info.is_short)
 	    spec->data_arg_type = PA_INT|PA_FLAG_SHORT;
+	  else if (spec->info.is_char)
+	    spec->data_arg_type = PA_CHAR;
 	  else
 	    spec->data_arg_type = PA_INT;
 	  break;

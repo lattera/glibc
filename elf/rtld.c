@@ -482,6 +482,10 @@ of this helper program; chances are you did not intend to run this program.\n",
   preloads = NULL;
   npreloads = 0;
 
+  /* Initialize the data structures for the search paths for shared
+     objects.  */
+  _dl_init_paths ();
+
   preloadlist = getenv ("LD_PRELOAD");
   if (preloadlist)
     {
@@ -594,10 +598,6 @@ of this helper program; chances are you did not intend to run this program.\n",
 	} while (l);
       assert (i == npreloads);
     }
-
-  /* Initialize the data structures for the search paths for shared
-     objects.  */
-  _dl_init_paths ();
 
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual

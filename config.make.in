@@ -8,6 +8,7 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 slibdir = @libc_cv_slibdir@
 sysconfdir = @libc_cv_sysconfdir@
+libexecdir = @libexecdir@
 rootsbindir = @libc_cv_rootsbindir@
 
 # If ldconfig exists.  This will go away as soon as `ldconfig' is available

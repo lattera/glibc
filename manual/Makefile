@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -149,12 +149,14 @@ realclean: distclean
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
+ifneq ($(strip $(MAKEINFO)),)
 install: $(inst_infodir)/libc.info dir-add.info
 	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
 	  test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
 	 $(INSTALL_INFO) --info-dir=$(inst_infodir) dir-add.info;\
 	else : ; fi
+endif
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;
 

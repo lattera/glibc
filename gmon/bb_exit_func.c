@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
@@ -24,7 +24,7 @@
 #include <sys/types.h>
 
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 
 /* structure emitted by -a */
 struct bb

@@ -1,6 +1,6 @@
-/* Define and initialize `__progname' et. al.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,38 +17,25 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+/* Internal constants used by the pseudoterminal handling code. */
 
-char *__progname_full = (char *) "";
-char *__progname = (char *) "";
-weak_alias (__progname_full, program_invocation_name)
-weak_alias (__progname, program_invocation_short_name)
+#ifndef _PTY_INTERNAL_H
+#define _PTY_INTERNAL_H	1
 
+/* Length of a buffer to hold a pty name. */
+#define PTYNAMELEN 15   /* "/dev/pts/65535$" */
 
-#ifdef HAVE_GNU_LD
-static
-#endif /* HAVE_GNU_LD */
-void __init_misc (int argc, char **argv, char **envp)
-  __attribute__ ((unused));
+/* Which group should pty slaves belong to: */
+#define TTY_GROUP "tty"
 
-
-#ifdef HAVE_GNU_LD
-static
-#endif /* HAVE_GNU_LD */
-void
-__init_misc (int argc, char **argv, char **envp)
+/* Communication between grantpt and pt_chown. */
+#define PTY_FD 3
+enum  /* failure modes */
 {
-  if (argv && argv[0])
-    {
-      char *p = strrchr (argv[0], '/');
-      if (p == NULL)
-	__progname = argv[0];
-      else
-	__progname = p + 1;
-      __progname_full = argv[0];
-    }
-}
+  FAIL_EBADF = 1,
+  FAIL_EINVAL,
+  FAIL_EACCES,
+  FAIL_EXEC
+};
 
-#ifdef HAVE_GNU_LD
-text_set_element (__libc_subinit, __init_misc);
 #endif

@@ -33,6 +33,7 @@ netinet/tcp.h
 netinet/udp.h
 netipx/ipx.h
 netrom/netrom.h
+netrose/rose.h
 nfs/nfs.h
 rt_sigaction.c
 rt_sigpending.c

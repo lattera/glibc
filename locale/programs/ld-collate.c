@@ -630,7 +630,7 @@ Computing table size for collation information might take a while..."),
     extra2[cnt] = SWAPU32 (extra2[cnt]);
 
   /* We need a simple hashing table to get a collation-element->chars
-     mapping.  We again use internal hasing using a secondary hashing
+     mapping.  We again use internal hashing using a secondary hashing
      function.
 
      Each string has an associate hashing value V, computed by a

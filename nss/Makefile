@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,8 @@ routines		= nsswitch $(addsuffix -lookup,$(databases))
 # in databases.def, too.
 databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp key alias
+
+tests			= test-netdb
 
 include ../Makeconfig
 

@@ -51,6 +51,7 @@ static const char sccsid[] = "@(#)db_conv.c	10.8 (Sleepycat) 1/8/98";
 #include <sys/types.h>
 
 #include <errno.h>
+#include <string.h>
 #endif
 
 #include "db_int.h"

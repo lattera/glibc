@@ -1,1 +1,1 @@
-#error "This file must be written based on the data typs sizes of the target"
+#error "This file must be written based on the data type sizes of the target"

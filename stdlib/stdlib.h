@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -720,8 +720,32 @@ extern int getsubopt __P ((char **__optionp, __const char *__const *__tokens,
 
 /* Setup DES tables according KEY.  */
 extern void setkey __P ((__const char *__key));
+
+/* X/Open pseudo terminal handling.  */
+
+/* The next four functions all take a master pseudo-tty fd and
+   perform an operation on the associated slave:  */
+
+/* Chown the slave to the calling user.  */
+extern int grantpt __P ((int __fd));
+
+/* Release an internal lock so the slave can be opened.
+   Call after grantpt().  */
+extern int unlockpt __P ((int __fd));
+
+/* Get the name of the slave.  */
+extern char *ptsname __P ((int __fd));
 #endif
 
+#ifdef __USE_GNU
+/* Reentrant version of ptsname.  */
+extern char *__ptsname_r __P ((int __fd, char *__buf, unsigned int __len));
+extern char *ptsname_r __P ((int __fd, char *__buf, unsigned int __len));
+
+/* Open a master pseudo tty and return its file descriptor.  */
+extern int __getpt __P ((void));
+extern int getpt __P ((void));
+#endif
 
 __END_DECLS
 

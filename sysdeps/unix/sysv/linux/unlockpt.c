@@ -1,6 +1,6 @@
-/* Define and initialize `__progname' et. al.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,38 +17,34 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#include <sys/ioctl.h>
+#include <termios.h>
+#include <errno.h>
+#include <stdlib.h>
 
-char *__progname_full = (char *) "";
-char *__progname = (char *) "";
-weak_alias (__progname_full, program_invocation_name)
-weak_alias (__progname, program_invocation_short_name)
-
-
-#ifdef HAVE_GNU_LD
-static
-#endif /* HAVE_GNU_LD */
-void __init_misc (int argc, char **argv, char **envp)
-  __attribute__ ((unused));
-
-
-#ifdef HAVE_GNU_LD
-static
-#endif /* HAVE_GNU_LD */
-void
-__init_misc (int argc, char **argv, char **envp)
+/* Given a fd on a master pseudoterminal, clear a kernel lock so that
+   the slave can be opened.  This is to avoid a race between opening the
+   master and calling grantpt() to take possession of the slave.  */
+int
+unlockpt (fd)
+     int fd __attribute__ ((unused));
 {
-  if (argv && argv[0])
-    {
-      char *p = strrchr (argv[0], '/');
-      if (p == NULL)
-	__progname = argv[0];
-      else
-	__progname = p + 1;
-      __progname_full = argv[0];
-    }
-}
+#ifdef TIOCSPTLCK
+  int serrno = errno;
+  int unlock = 0;
 
-#ifdef HAVE_GNU_LD
-text_set_element (__libc_subinit, __init_misc);
+  if (ioctl (fd, TIOCSPTLCK, &unlock))
+    {
+      if(errno == EINVAL)
+	{
+	  __set_errno (serrno);
+	  return 0;
+	}
+      else
+	return -1;
+    }
+#else
+  /* On pre-/dev/ptmx kernels this function should be a no-op.  */
+  return 0;
 #endif
+}
