@@ -1,0 +1,4 @@
+mips/mips64
+mips
+wordsize-64
+ieee754/ldbl-128

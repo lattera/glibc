@@ -1,5 +1,26 @@
 2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/mips64/Implies: Move wordsize-64 to...
+	* sysdeps/mips/mips64/n64/Implies: New file.
+	* sysdeps/mips/mips64/n64/Makefile: New file.
+	* sysdeps/mips/mips64/n64/el/bits/endian.h: New file.
+	* sysdeps/mips/mips64/n32/Implies: New file.
+	* sysdeps/mips/mips64/n32/Makefile: New file.
+	* sysdeps/mips/mips64/n32/el/bits/endian.h: New file.
+	* sysdeps/unix/mips/mips64/n32/sysdep.h: New file.
+	* sysdeps/unix/mips/mips64/n64/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/ldconfig.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/llseek.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/recv.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/send.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/umount.c: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S: New file.
+
 	* sysdeps/unix/sysv/linux/configure.in (libc_cv_slibdir): Use
 	lib64 for mips64/n64 and lib32 for mips64/n32.
 	(ldd_rewrite_script): Needed for all mips64 configurations.
