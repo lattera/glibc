@@ -1,3 +1,9 @@
+2000-03-15  Andreas Jaeger  <aj@suse.de>
+
+	* locales/sl_SI: Fix entries for june and july.
+	Reported by primoz.peterlin@biofiz.mf.uni-lj.si, closes PR
+	libc/1648.
+
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_DK: Correct syntax.
