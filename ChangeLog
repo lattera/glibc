@@ -1,3 +1,7 @@
+1998-03-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (__nss_nscd_not_available): Removed.
+
 1998-03-06 12:42  Ulrich Drepper  <drepper@cygnus.com>
 
 	* argp/argp.h (struct argp): Add new field domain.

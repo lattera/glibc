@@ -68,10 +68,6 @@ static struct
 
 __libc_lock_define_initialized (static, lock)
 
-
-/* Nonzero if no NSCD is available.  */
-int __nss_nscd_not_available;
-
 #if !defined DO_STATIC_NSS || defined PIC
 /* String with revision number of the shared object files.  */
 static const char *const __nss_shlib_revision = LIBNSS_FILES_SO + 15;
