@@ -1,3 +1,9 @@
+2000-05-17  Andreas Jaeger  <aj@suse.de>
+
+	* scripts/config.sub: New version.
+	* scripts/config.guess: Likewise.
+	* manual/texinfo.tex: Likewise.
+
 2000-05-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/soinit.c (__libc_global_ctors): Move

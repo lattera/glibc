@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-10-01.07}
+\def\texinfoversion{2000-05-16.11}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -4710,7 +4710,8 @@ width0pt\relax} \fi
 \def\deftypeivarheader#1#2#3{%
   \dosubind{vr}{\code{#3}}{\putwordof\ \code{#1}}% entry in variable index
   \begingroup
-    \defname{#3}{\putwordInstanceVariableof\ \code{#1}}%
+    \defname{\defheaderxcond#2\relax$$$#3}
+            {\putwordInstanceVariableof\ \code{#1}}%
     \defvarargs{#3}%
   \endgroup
 }
