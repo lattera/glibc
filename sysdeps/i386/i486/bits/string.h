@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -129,9 +129,11 @@ __memcpy_g (void *__dest, __const void *__src, size_t __n)
      "movsw\n"
      "2:\n\t"
      "rep; movsl"
-     : "=&c" (__d0), "=&D" (__d1), "=&S" (__d2)
-     : "0" (__n), "1" (__tmp), "2" (__src)
-     : "memory", "cc");
+     : "=&c" (__d0), "=&D" (__d1), "=&S" (__d2),
+       "=m" ( *(struct { __extension__ char __x[__n]; } *)__dest)
+     : "0" (__n), "1" (__tmp), "2" (__src),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__src)
+     : "cc");
   return __dest;
 }
 
@@ -148,18 +150,20 @@ memmove (void *__dest, __const void *__src, size_t __n)
     __asm__ __volatile__
       ("cld\n\t"
        "rep; movsb"
-       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
-       : "0" (__n), "1" (__src), "2" (__tmp)
-       : "memory");
+       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2),
+	 "=m" ( *(struct { __extension__ char __x[__n]; } *)__dest)
+       : "0" (__n), "1" (__src), "2" (__tmp),
+	 "m" ( *(struct { __extension__ char __x[__n]; } *)__src));
   else
     __asm__ __volatile__
       ("std\n\t"
        "rep; movsb\n\t"
        "cld"
-       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
+       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2),
+	 "=m" ( *(struct { __extension__ char __x[__n]; } *)__dest)
        : "0" (__n), "1" (__n - 1 + (__const char *) __src),
-	 "2" (__n - 1 + (char *) __tmp)
-       : "memory");
+	 "2" (__n - 1 + (char *) __tmp),
+	 "m" ( *(struct { __extension__ char __x[__n]; } *)__src));
   return __dest;
 }
 #endif
@@ -183,7 +187,9 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
      "orl	$1,%0\n"
      "1:"
      : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
-     : "0" (0), "1" (__s1), "2" (__s2), "3" (__n)
+     : "0" (0), "1" (__s1), "2" (__s2), "3" (__n),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s1),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s2)
      : "cc");
   return __res;
 }
@@ -309,9 +315,10 @@ __memset_ccn_by4 (void *__s, unsigned int __c, size_t __n)
   __asm__ __volatile__
     ("cld\n\t"
      "rep; stosl"
-     : "=&a" (__c), "=&D" (__tmp), "=&c" (__d0)
+     : "=&a" (__c), "=&D" (__tmp), "=&c" (__d0),
+       "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
-     : "memory", "cc");
+     : "cc");
 #else
   __asm__ __volatile__
     ("1:\n\t"
@@ -319,9 +326,10 @@ __memset_ccn_by4 (void *__s, unsigned int __c, size_t __n)
      "addl	$4,%1\n\t"
      "decl	%2\n\t"
      "jnz	1b\n"
-     : "=&r" (__c), "=&r" (__tmp), "=&r" (__d0)
+     : "=&r" (__c), "=&r" (__tmp), "=&r" (__d0),
+       "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
-     : "memory", "cc");
+     : "cc");
 #endif
   return __s;
 }
@@ -339,9 +347,10 @@ __memset_ccn_by2 (void *__s, unsigned int __c, size_t __n)
     ("cld\n\t"
      "rep; stosl\n"
      "stosw"
-    : "=&a" (__d0), "=&D" (__tmp), "=&c" (__d1)
+     : "=&a" (__d0), "=&D" (__tmp), "=&c" (__d1),
+       "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
-     : "memory", "cc");
+     : "cc");
 #else
   __asm__ __volatile__
     ("1:\tmovl	%0,(%1)\n\t"
@@ -349,9 +358,10 @@ __memset_ccn_by2 (void *__s, unsigned int __c, size_t __n)
      "decl	%2\n\t"
      "jnz	1b\n"
      "movw	%w0,(%1)"
-     : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1)
+     : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1),
+       "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
-     : "memory", "cc");
+     : "cc");
 #endif
   return __s;
 }
@@ -380,9 +390,10 @@ __memset_gcn_by4 (void *__s, int __c, size_t __n)
      "addl	$4,%1\n\t"
      "decl	%2\n\t"
      "jnz	1b\n"
-     : "=&q" (__c), "=&r" (__tmp), "=&r" (__d0)
+     : "=&q" (__c), "=&r" (__tmp), "=&r" (__d0),
+       "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
-     : "memory", "cc");
+     : "cc");
   return __s;
 }
 
@@ -404,9 +415,10 @@ __memset_gcn_by2 (void *__s, int __c, size_t __n)
      "decl	%2\n\t"
      "jnz	1b\n"
      "movw	%w0,(%1)"
-     : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1)
+     : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1),
+       "=m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
-     : "memory", "cc");
+     : "cc");
   return __s;
 }
 
@@ -430,7 +442,8 @@ memchr (__const void *__s, int __c, size_t __n)
      "repne; scasb\n\t"
      "cmovne %2,%0"
      : "=D" (__res), "=&c" (__d0), "=&r" (__d1)
-     : "a" (__c), "0" (__s), "1" (__n), "2" (1)
+     : "a" (__c), "0" (__s), "1" (__n), "2" (1),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
 #else
   __asm__ __volatile__
@@ -440,7 +453,8 @@ memchr (__const void *__s, int __c, size_t __n)
      "movl	$1,%0\n"
      "1:"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (__n)
+     : "a" (__c), "0" (__s), "1" (__n),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
 #endif
   return __res - 1;
@@ -466,7 +480,8 @@ __memrchr (__const void *__s, int __c, size_t __n)
      "cmovne %2,%0\n\t"
      "cld"
      : "=D" (__res), "=&c" (__d0), "=&r" (__d1)
-     : "a" (__c), "0" (__s + __n - 1), "1" (__n), "2" (-1)
+     : "a" (__c), "0" (__s + __n - 1), "1" (__n), "2" (-1),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
 # else
   __asm__ __volatile__
@@ -476,7 +491,8 @@ __memrchr (__const void *__s, int __c, size_t __n)
      "orl $-1,%0\n"
      "1:\tcld"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s + __n - 1), "1" (__n)
+     : "a" (__c), "0" (__s + __n - 1), "1" (__n),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
 # endif
   return __res + 1;
@@ -500,7 +516,8 @@ __rawmemchr (const void *__s, int __c)
     ("cld\n\t"
      "repne; scasb\n\t"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (0xffffffff)
+     : "a" (__c), "0" (__s), "1" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -534,8 +551,9 @@ __strlen_g (__const char *__str)
      "testb	%b1,%b1\n\t"
      "jne	1b"
      : "=r" (__tmp), "=&q" (__dummy)
-     : "0" (__str)
-     : "memory", "cc" );
+     : "0" (__str),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__str)
+     : "cc" );
   return __tmp - __str - 1;
 }
 
@@ -617,8 +635,9 @@ __strcpy_g (char *__dest, __const char *__src)
      "testb	%b2,%b2\n\t"
      "jne	1b"
      : "=&r" (__src), "=&r" (__tmp), "=&q" (__dummy)
-     : "0" (__src), "1" (__tmp)
-     : "memory", "cc");
+     : "0" (__src), "1" (__tmp),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__dest)
+     : "cc");
   return __dest;
 }
 
@@ -710,9 +729,11 @@ __mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
      "leal	4(%1),%1\n\t"
      "decl	%3\n\t"
      "jnz	1b"
-     : "=&r" (__d0), "=r" (__tmp), "=&r" (__src), "=&r" (__d1)
-     : "1" (__tmp), "2" (__src), "3" (__srclen / 4)
-     : "memory", "cc");
+     : "=&r" (__d0), "=r" (__tmp), "=&r" (__src), "=&r" (__d1),
+       "=m" ( *(struct { __extension__ char __x[__srclen]; } *)__dest)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 4),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
+     : "cc");
   return __tmp;
 }
 
@@ -737,9 +758,11 @@ __mempcpy_by2 (char *__dest, __const char *__src, size_t __srclen)
      "2:\n\t"
      "movw	(%2),%w0\n\t"
      "movw	%w0,(%1)"
-     : "=&q" (__d0), "=r" (__tmp), "=&r" (__src), "=&r" (__d1)
-     : "1" (__tmp), "2" (__src), "3" (__srclen / 2)
-     : "memory", "cc");
+     : "=&q" (__d0), "=r" (__tmp), "=&r" (__src), "=&r" (__d1),
+       "=m" ( *(struct { __extension__ char __x[__srclen]; } *)__dest)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 2),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
+     : "cc");
   return __tmp + 2;
 }
 
@@ -762,9 +785,11 @@ __mempcpy_byn (char *__dest, __const char *__src, size_t __srclen)
      "movsw\n"
      "2:\n\t"
      "rep; movsl"
-     : "=D" (__tmp), "=&c" (__d0), "=&S" (__d1)
-     : "0" (__tmp), "1" (__srclen), "2" (__src)
-     : "memory", "cc");
+     : "=D" (__tmp), "=&c" (__d0), "=&S" (__d1),
+       "=m" ( *(struct { __extension__ char __x[__srclen]; } *)__dest)
+     : "0" (__tmp), "1" (__srclen), "2" (__src),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
+     : "cc");
   return __tmp;
 }
 
@@ -784,9 +809,11 @@ __stpcpy_g (char *__dest, __const char *__src)
      "leal	1(%1),%1\n\t"
      "testb	%b2,%b2\n\t"
      "jne	1b"
-     : "=&r" (__src), "=r" (__tmp), "=&q" (__dummy)
-     : "0" (__src), "1" (__tmp)
-     : "memory", "cc");
+     : "=&r" (__src), "=r" (__tmp), "=&q" (__dummy),
+       "=m" ( *(struct { char __x[0xfffffff]; } *)__dest)
+     : "0" (__src), "1" (__tmp),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__src)
+     : "cc");
   return __tmp - 1;
 }
 #endif
@@ -824,9 +851,11 @@ __strncpy_by4 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
      "leal	4(%1),%1\n\t"
      "decl	%3\n\t"
      "jnz	1b"
-     : "=&r" (__dummy1), "=r" (__tmp), "=&r" (__src), "=&r" (__dummy2)
-     : "1" (__tmp), "2" (__src), "3" (__srclen / 4)
-     : "memory", "cc");
+     : "=&r" (__dummy1), "=r" (__tmp), "=&r" (__src), "=&r" (__dummy2),
+       "=m" ( *(struct { __extension__ char __x[__srclen]; } *)__dest)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 4),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
+     : "cc");
   (void) memset (__tmp, '\0', __n - __srclen);
   return __dest;
 }
@@ -852,9 +881,11 @@ __strncpy_by2 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
      "2:\n\t"
      "movw	(%2),%w0\n\t"
      "movw	%w0,(%1)\n\t"
-     : "=&q" (__dummy1), "=r" (__tmp), "=&r" (__src), "=&r" (__dummy2)
-     : "1" (__tmp), "2" (__src), "3" (__srclen / 2)
-     : "memory", "cc");
+     : "=&q" (__dummy1), "=r" (__tmp), "=&r" (__src), "=&r" (__dummy2),
+       "=m" ( *(struct { __extension__ char __x[__srclen]; } *)__dest)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 2),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
+     : "cc");
   (void) memset (__tmp + 2, '\0', __n - __srclen);
   return __dest;
 }
@@ -878,9 +909,11 @@ __strncpy_byn (char *__dest, __const char __src[], size_t __srclen, size_t __n)
      "movsw\n"
      "2:\n\t"
      "rep; movsl"
-     : "=D" (__tmp), "=&c" (__d0), "=&S" (__d1)
-     : "1" (__srclen), "0" (__tmp),"2" (__src)
-     : "memory", "cc");
+     : "=D" (__tmp), "=&c" (__d0), "=&S" (__d1),
+       "=m" ( *(struct { __extension__ char __x[__srclen]; } *)__dest)
+     : "1" (__srclen), "0" (__tmp),"2" (__src),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
+     : "cc");
   (void) memset (__tmp, '\0', __n - __srclen);
   return __dest;
 }
@@ -936,8 +969,10 @@ __strcat_c (char *__dest, __const char __src[], size_t __srclen)
   register char *__tmp;
   __asm__ __volatile__
     ("repne; scasb"
-     : "=D" (__tmp), "=&c" (__d0)
-     : "0" (__dest), "1" (0xffffffff), "a" (0)
+     : "=D" (__tmp), "=&c" (__d0),
+       "=m" ( *(struct { char __x[0xfffffff]; } *)__dest)
+     : "0" (__dest), "1" (0xffffffff), "a" (0),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
      : "cc");
   --__tmp;
 #else
@@ -947,8 +982,10 @@ __strcat_c (char *__dest, __const char __src[], size_t __srclen)
      "incl	%0\n\t"
      "cmpb	$0,(%0)\n\t"
      "jne	1b\n"
-     : "=r" (__tmp)
-     : "0" (__tmp)
+     : "=r" (__tmp),
+       "=m" ( *(struct { char __x[0xfffffff]; } *)__dest)
+     : "0" (__tmp),
+       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
      : "cc");
 #endif
   (void) memcpy (__tmp, __src, __srclen);
@@ -974,8 +1011,10 @@ __strcat_g (char *__dest, __const char *__src)
      "incl	%1\n\t"
      "testb	%b0,%b0\n\t"
      "jne	2b\n"
-     : "=&q" (__dummy), "=&r" (__tmp), "=&r" (__src)
-     : "1"  (__tmp), "2"  (__src)
+     : "=&q" (__dummy), "=&r" (__tmp), "=&r" (__src),
+       "=m" ( *(struct { char __x[0xfffffff]; } *)__dest)
+     : "1"  (__tmp), "2"  (__src),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__src)
      : "memory", "cc");
   return __dest;
 }
@@ -1141,7 +1180,9 @@ __strcmp_gg (__const char *__s1, __const char *__s2)
      "negl	%0\n"
      "3:"
      : "=q" (__res), "=&r" (__s1), "=&r" (__s2)
-     : "1" (__s1), "2" (__s2)
+     : "1" (__s1), "2" (__s2),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s1),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s2)
      : "cc");
   return __res;
 }
@@ -1183,7 +1224,9 @@ __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
      "negl	%0\n"
      "4:"
      : "=q" (__res), "=&r" (__s1), "=&r" (__s2), "=&r" (__n)
-     : "1"  (__s1), "2"  (__s2),  "3" (__n)
+     : "1"  (__s1), "2"  (__s2),  "3" (__n),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s1),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s2)
      : "cc");
   return __res;
 }
@@ -1217,7 +1260,8 @@ __strchr_c (__const char *__s, int __c)
      "xorl	%0,%0\n"
      "2:"
      : "=r" (__res), "=&a" (__d0)
-     : "0" (__s), "1" (__c)
+     : "0" (__s), "1" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -1241,7 +1285,8 @@ __strchr_g (__const char *__s, int __c)
      "xorl	%0,%0\n"
      "2:"
      : "=r" (__res), "=&a" (__d0)
-     : "0" (__s), "1" (__c)
+     : "0" (__s), "1" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -1274,7 +1319,8 @@ __strchrnul_c (__const char *__s, int __c)
      "decl	%0\n"
      "2:"
      : "=r" (__res), "=&a" (__d0)
-     : "0" (__s), "1" (__c)
+     : "0" (__s), "1" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -1298,7 +1344,8 @@ __strchrnul_g (__const char *__s, int __c)
      "decl	%0\n"
      "2:"
      : "=r" (__res), "=&a" (__d0)
-     : "0" (__s), "1" (__c)
+     : "0" (__s), "1" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -1341,7 +1388,8 @@ __strrchr_c (__const char *__s, int __c)
      "testb	%b2,%b2\n\t"
      "jne 1b"
      : "=d" (__res), "=&S" (__d0), "=&a" (__d1)
-     : "0" (1), "1" (__s), "2" (__c)
+     : "0" (1), "1" (__s), "2" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -1363,7 +1411,8 @@ __strrchr_g (__const char *__s, int __c)
      "testb	%b2,%b2\n\t"
      "jne 1b"
      : "=d" (__res), "=&S" (__d0), "=&a" (__d1)
-     : "0" (1), "1" (__s), "2" (__c)
+     : "0" (1), "1" (__s), "2" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -1386,7 +1435,8 @@ __strrchr_c (__const char *__s, int __c)
      "testb	%%al,%%al\n\t"
      "jne 1b"
      : "=d" (__res), "=&S" (__d0), "=&a" (__d1)
-     : "0" (0), "1" (__s), "2" (__c)
+     : "0" (0), "1" (__s), "2" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -1410,7 +1460,8 @@ __strrchr_g (__const char *__s, int __c)
      "testb	%%al,%%al\n\t"
      "jne 1b"
      : "=r" (__res), "=&S" (__d0), "=&a" (__d1)
-     : "0" (0), "1" (__s), "2" (__c)
+     : "0" (0), "1" (__s), "2" (__c),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -1457,7 +1508,8 @@ __strcspn_c1 (__const char *__s, int __reject)
      "jne	1b\n"
      "2:"
      : "=r" (__res), "=&a" (__d0)
-     : "0" (__s), "1" (__reject)
+     : "0" (__s), "1" (__reject),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -1483,7 +1535,9 @@ __strcspn_cg (__const char *__s, __const char __reject[], size_t __reject_len)
      "jne	1b\n"
      "2:"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "0" (__s), "d" (__reject), "g" (__reject_len)
+     : "0" (__s), "d" (__reject), "g" (__reject_len),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s),
+       "m" ( *(struct { __extension__ char __x[__reject_len]; } *)__reject)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -1515,7 +1569,7 @@ __strcspn_g (__const char *__s, __const char *__reject)
      "popl	%%ebx"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
      : "r" (__reject), "0" (__s), "1" (0), "2" (0xffffffff)
-     : "cc");
+     : "memory", "cc");
   return (__res - 1) - __s;
 }
 #else
@@ -1540,7 +1594,8 @@ __strcspn_g (__const char *__s, __const char *__reject)
      "2:"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2), "=&d" (__d3)
      : "0" (__s), "1" (0), "2" (0xffffffff), "3" (__reject), "b" (__reject)
-     : "cc");
+     /* Clobber memory, otherwise GCC cannot handle this.  */
+     : "memory", "cc");
   return (__res - 1) - __s;
 }
 #endif
@@ -1574,7 +1629,8 @@ __strspn_c1 (__const char *__s, int __accept)
      "cmpb	%h1,%b1\n\t"
      "je	1b"
      : "=r" (__res), "=&q" (__d0)
-     : "0" (__s), "1" (__accept)
+     : "0" (__s), "1" (__accept),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -1600,7 +1656,9 @@ __strspn_cg (__const char *__s, __const char __accept[], size_t __accept_len)
      "je	1b\n"
      "2:"
      : "=S" (__res), "=&d" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "0" (__s), "1" (__accept), "g" (__accept_len)
+     : "0" (__s), "1" (__accept), "g" (__accept_len),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s),
+       "m" ( *(struct { __extension__ char __x[__accept_len]; } *)__accept)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -1631,7 +1689,7 @@ __strspn_g (__const char *__s, __const char *__accept)
      "popl	%%ebx"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
      : "d" (__accept), "0" (__s), "1" (0), "2" (0xffffffff), "3" (__accept)
-     : "cc");
+     : "memory", "cc");
   return (__res - 1) - __s;
 }
 #else
@@ -1656,7 +1714,7 @@ __strspn_g (__const char *__s, __const char *__accept)
      "2:"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2), "=&d" (__d3)
      : "0" (__s), "1" (0), "2" (0xffffffff), "3" (__accept), "b" (__accept)
-     : "cc");
+     : "memory", "cc");
   return (__res - 1) - __s;
 }
 #endif
@@ -1697,7 +1755,9 @@ __strpbrk_cg (__const char *__s, __const char __accept[], size_t __accept_len)
      "xorl	%0,%0\n"
      "3:"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "0" (__s), "d" (__accept), "g" (__accept_len)
+     : "0" (__s), "d" (__accept), "g" (__accept_len),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s),
+       "m" ( *(struct { __extension__ char __x[__accept_len]; } *)__accept)
      : "cc");
   return __res;
 }
@@ -1733,7 +1793,7 @@ __strpbrk_g (__const char *__s, __const char *__accept)
      "popl	%%ebx"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
      : "d" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
-     : "cc");
+     : "memory", "cc");
   return __res;
 }
 #else
@@ -1763,7 +1823,7 @@ __strpbrk_g (__const char *__s, __const char *__accept)
      "3:"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
      : "0" (__s), "1" (0), "2" (0xffffffff), "b" (__accept)
-     : "cc");
+     : "memory", "cc");
   return __res;
 }
 #endif
@@ -1805,7 +1865,10 @@ __strstr_cg (__const char *__haystack, __const char __needle[],
      "xorl	%%eax,%%eax\n"
      "2:"
      : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
-     : "g" (__needle_len), "1" (__haystack), "d" (__needle)
+     : "g" (__needle_len), "1" (__haystack), "d" (__needle),
+       /* Since we do not know how large the memory we access it, use a really large amount.  */
+       "m" ( *(struct { char __x[0xfffffff]; } *)__haystack),
+       "m" ( *(struct { __extension__ char __x[__needle_len]; } *)__needle)
      : "cc");
   return __res;
 }
@@ -1840,7 +1903,7 @@ __strstr_g (__const char *__haystack, __const char *__needle)
      : "=a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
      : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (__needle),
        "d" (__needle)
-     : "cc");
+     : "memory", "cc");
   return __res;
 }
 #else
@@ -1869,7 +1932,7 @@ __strstr_g (__const char *__haystack, __const char *__needle)
      : "=a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2), "=&d" (__d3)
      : "0" (0), "1" (0xffffffff), "2" (__haystack), "3" (__needle),
        "b" (__needle)
-     : "cc");
+     : "memory", "cc");
   return __res;
 }
 #endif

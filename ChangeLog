@@ -1,5 +1,54 @@
 2002-03-26  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/i486/bits/string.h (__memcpy_by4): Describe memory
+	read and write accesses as detailed as possible.
+	(__memcpy_by2): Likewise.
+	(__memcpy_g): Likewise.
+	(memmove): Likewise.
+	(memcmp): Likewise.
+	(__memset_ccn_by4): Likewise.
+	(__memset_ccn_by2): Likewise.
+	(__memset_gcn_by4): Likewise.
+	(__memset_gcn_by2): Likewise.
+	(memchr): Likewise.
+	(__memrchr): Likewise.
+	(rawmemchr): Likewise.
+	(__strlen_g): Likewise.
+	(__strcpy_g): Likewise.
+	(__mempcpy_by4): Likewise.
+	(__mempcpy_by2): Likewise.
+	(__mempcpy_byn): Likewise.
+	(__stpcpy_g): Likewise.
+	(__strncpy_by4): Likewise.
+	(__strncpy_by2): Likewise.
+	(__strncpy_byn): Likewise.
+	(__strncpy_gg): Likewise.
+	(__strcat_c): Likewise.
+	(__strcat_g): Likewise.
+	(__strncat_g): Likewise.
+	(__strcmp_gg): Likewise.
+	(__strncmp_g): Likewise.
+	(__strchr_c): Likewise.
+	(__strchr_g): Likewise.
+	(__strchrnul_c): Likewise.
+	(__strchrnul_g): Likewise.
+	(__strrchr_c): Likewise.
+	(__strrchr_g): Likewise.
+	(__strrchr_c): Likewise.
+	(__strrchr_g): Likewise.
+	(__strcspn_c1): Likewise.
+	(__strcspn_cg): Likewise.
+	(__strcspn_g): Likewise.
+	(__strcspn_g): Likewise.
+	(__strspn_c1): Likewise.
+	(__strspn_cg): Likewise.
+	(__strspn_g): Likewise.
+	(__strspn_g): Likewise.
+	(__strpbrk_cg): Likewise.
+	(__strpbrk_g): Likewise.
+	(__strstr_cg): Likewise.
+	(__strstr_g): Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/sys/reg.h: Fix typo.  Reported by
 	Michal Ludvig <mludvig@suse.cz>.
 
