@@ -6,6 +6,8 @@
 	* inet/Versions [GLIBC_2.2] (libc): Add getipnodebyad and freehostent.
 	* inet/freehostent.c: New file.
 	* inet/getipnodebyad.c: New file.
+	* resolv/netdb.h: Add prototypes for getipnodebyaddr, freehostent,
+	and getipnodebyname.  The latter comes soon.
 	* nss/digits_dots.c: Fail if IPv6 is found and IPv4 is requested.
 	Add support for getipnode* functions.
 
