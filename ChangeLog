@@ -1,5 +1,7 @@
 2003-04-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/iso-639.def: Add many more languages from the current ISO 639.
+
 	* sysdeps/unix/sysv/linux/ipc_priv.h: Define IPCOP_semtimedop.
 	* sysdeps/generic/semtimedop.c: New file.
 	* sysdeps/unix/sysv/linux/i386/semtimedop.S: New file.
