@@ -139,6 +139,11 @@ define link-relocatable
 $(CC) -nostdlib -nostartfiles -r -o $@ $^
 endef
 
+# We don't want this compiled with PIC.  
+# It's never included in shared libraries, unlike the rest of libc_nonshared.a.
+$(objpfx)elf-init.oS: $(objpfx)elf-init.o
+	ln -f $< $@
+
 ifndef start-installed-name-rule
 ifeq (yes,$(elf))
 # We link the ELF startfile along with a SHT_NOTE section indicating

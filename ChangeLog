@@ -1,3 +1,8 @@
+2002-12-11  Roland McGrath  <roland@redhat.com>
+
+	* csu/Makefile ($(objpfx)elf-init.oS): New target, just clone
+	elf-init.o instead of compiling a PIC version.
+
 2002-12-11  Bruno Haible  <bruno@clisp.org>
 
 	* intl/gettext.h: Renamed to ...
