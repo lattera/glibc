@@ -1,3 +1,7 @@
+2001-08-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): Update call to _dl_lookup_symbol.
+
 2001-08-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps (float): Add ulps for new tests.
