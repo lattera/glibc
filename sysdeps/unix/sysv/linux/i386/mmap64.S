@@ -62,6 +62,12 @@ L(do_syscall):
 	popl %ebx
 	popl %ebp
 
+#ifndef __ASSUME_MMAP2_SYSCALL
+2:
+	cmp $-ENOSYS, %eax
+	je 3f
+#endif
+
 	/* If 0 > %eax > -4096 there was an error.  */
 	cmpl $-4096, %eax
 	ja SYSCALL_ERROR_LABEL
@@ -69,12 +75,6 @@ L(do_syscall):
 	/* Successful; return the syscall's value.  */
 L(pseudo_end):
 	ret
-
-#ifndef __ASSUME_MMAP2_SYSCALL
-2:
-	cmp $-ENOSYS, %eax
-	je 3f
-#endif
 
 	/* This means the offset value is too large.  */
 L(einval):
@@ -88,12 +88,11 @@ L(einval):
 
 #if !defined __ASSUME_MMAP2_SYSCALL || !defined __NR_mmap2
 
-# ifndef __NR_mmap2
+3:
 	/* Save registers.  */
 	movl %ebx, %edx
-# endif
-3:
-	cmpl $0, 44(%esp)
+
+	cmpl $0, 28(%esp)
 	jne L(einval)
 
 	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
@@ -119,6 +118,7 @@ L(pseudo_end):
 	ret
 
 L(einval):
+	movl %edx, %ebx
 	movl $-EINVAL, %eax
 	jmp SYSCALL_ERROR_LABEL
 # endif
