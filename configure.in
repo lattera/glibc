@@ -1041,11 +1041,15 @@ changequote([,])dnl
 		 [cat > conftest.c <<EOF
 		  extern int foo (int x) __asm ("xyzzy");
 		  int bar (int x) { return x; }
-                  extern __typeof (bar) foo __attribute ((weak, alias ("bar")));
+		  extern __typeof (bar) foo __attribute ((weak, alias ("bar")));
+		  extern int dfoo;
+		  extern __typeof (dfoo) dfoo __asm ("abccb");
+		  int dfoo = 1;
 EOF
 		  libc_cv_broken_alias_attribute=yes
 		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
-		    if grep 'xyzzy' conftest.s >/dev/null; then
+		    if grep 'xyzzy' conftest.s >/dev/null &&
+		       grep 'abccb' conftest.s >/dev/null; then
 		      libc_cv_broken_alias_attribute=no
 		    fi
 		  fi
