@@ -231,10 +231,11 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
 	}
     }
 
-    {
-      struct link_map *l = GL(dl_loaded);
+    struct link_map *l;
+    Lmid_t nsid;
 
-      while (l)
+    for (nsid = 0; nsid < DL_NNS; ++nsid)
+      for (l = GL(dl_ns)[nsid]._ns_loaded; l != NULL; l = l->l_next)
 	{
 	  ElfW(Addr) base, limit;
 	  const ElfW(Phdr) *p = l->l_phdr;
@@ -250,9 +251,7 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
 		    return l;
 		}
 	    }
-	  l = l->l_next;
 	}
-    }
 
   _dl_signal_error (0, NULL, NULL, "cannot find runtime link map");
   return NULL;
