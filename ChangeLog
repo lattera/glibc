@@ -1,3 +1,7 @@
+2003-03-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/ieee754.h: Remove excess #endif.
+
 2003-03-20  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/bits/atomic.h (atomic_exchange): Remove unused
