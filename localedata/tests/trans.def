@@ -110,6 +110,9 @@ toupper (<a>,<A>);/
 charconv test
 
 test (<A>,<B>);(<B>,<C>)
+
+outdigit <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>
+
 END LC_CTYPE
 
 LC_COLLATE

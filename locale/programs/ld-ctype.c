@@ -981,14 +981,14 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	       them with a NUL byte following.  The NUL byte wouldn't be
 	       necessary but it makes it easier for the user.  */
 	    total = 0;
-	    for (cnt = elem - _NL_CTYPE_INDIGITS0_MB;
+	    for (cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB);
 		 cnt < ctype->mbdigits_act; cnt += 10)
 	      total += ctype->mbdigits[cnt]->nbytes + 1;
 	    iov[2 + elem + offset].iov_base = (char *) alloca (total);
 	    iov[2 + elem + offset].iov_len = total;
 
 	    cp = iov[2 + elem + offset].iov_base;
-	    for (cnt = elem - _NL_CTYPE_INDIGITS0_MB;
+	    for (cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB);
 		 cnt < ctype->mbdigits_act; cnt += 10)
 	      {
 		cp = mempcpy (cp, ctype->mbdigits[cnt]->bytes,
@@ -1003,14 +1003,14 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	       there might be more than one.  We simply concatenate all of
 	       them with a NUL byte following.  The NUL byte wouldn't be
 	       necessary but it makes it easier for the user.  */
-	    cnt = elem - _NL_CTYPE_OUTDIGIT0_MB;
+	    cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_MB);
 	    total = ctype->mboutdigits[cnt]->nbytes + 1;
 	    iov[2 + elem + offset].iov_base = (char *) alloca (total);
 	    iov[2 + elem + offset].iov_len = total;
 
 	    *(char *) mempcpy (iov[2 + elem + offset].iov_base,
-			       ctype->mbdigits[cnt]->bytes,
-			       ctype->mbdigits[cnt]->nbytes) = '\0';
+			       ctype->mboutdigits[cnt]->bytes,
+			       ctype->mboutdigits[cnt]->nbytes) = '\0';
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
@@ -1021,7 +1021,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	      (uint32_t *) alloca (total * sizeof (uint32_t));
 	    iov[2 + elem + offset].iov_len = total * sizeof (uint32_t);
 
-	    for (cnt = elem - _NL_CTYPE_INDIGITS0_WC;
+	    for (cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC);
 		 cnt < ctype->wcdigits_act; cnt += 10)
 	      ((uint32_t *) iov[2 + elem + offset].iov_base)[cnt / 10]
 		= ctype->wcdigits[cnt];
@@ -1029,7 +1029,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC):
-	    cnt = elem - _NL_CTYPE_OUTDIGIT0_WC;
+	    cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC);
 	    iov[2 + elem + offset].iov_base = &ctype->wcoutdigits[cnt];
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;

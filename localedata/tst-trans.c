@@ -20,14 +20,18 @@
 
 #include <locale.h>
 #include <stdio.h>
+#include <wchar.h>
 #include <wctype.h>
 
 int
 main (void)
 {
+  char buf[30];
+  wchar_t wbuf[30];
   wctrans_t t;
   wint_t wch;
   int errors = 0;
+  int len;
 
   setlocale (LC_ALL, "");
 
@@ -47,6 +51,19 @@ main (void)
   printf ("towctrans (L'B', t) = %c\n", wch);
   if (wch != L'C')
     errors = 1;
+
+  /* Test the output digit handling.  */
+  swprintf (wbuf, sizeof (wbuf) / sizeof (wbuf[0]), L"%Id", 0x499602D2);
+  errors |= wcscmp (wbuf, L"bcdefghija") != 0;
+  len = wcslen (wbuf);
+  errors |= len != 10;
+  printf ("len = %d, wbuf = L\"%ls\"\n", len, wbuf);
+
+  snprintf (buf, sizeof buf, "%Id", 0x499602D2);
+  errors |= strcmp (buf, "bcdefghija") != 0;
+  len = strlen (buf);
+  errors |= len != 10;
+  printf ("len = %d, buf = \"%s\"\n", len, buf);
 
   return errors;
 }

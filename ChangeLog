@@ -1,5 +1,13 @@
 2000-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-ctype.c (ctype_output): Really write out
+	mboutdigits information.
+	* localedata/tst-trans.c: Add code to test printf's I flag with locale.
+	* localedata/tst-trans.sh: Set GCONV_PATH for compilation environment.
+	* localedata/tests/trans.def: Add outdigit information.
+
+	* localedata/tst-mbswcs3.c: Remove comment.
+
 	* stdio-common/vfprintf.c (vfprintf): Fix handling of I flag.
 	* stdio-common/tiformat.c (sprint_ints): Add tests for I flag.
 	* libio/tst_wprintf.c (main): Add test for I flag.

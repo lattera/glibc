@@ -74,22 +74,3 @@ main (void)
 
   return result;
 }
-
-/* Expected output:
-
-wcsrtombs(dst,&src,1,&state) -> 1, src = srcbuf+1, dst = buf+1
-wcsrtombs(dst,&src,1,&state) -> 1, src = srcbuf+2, dst = buf+2
-wcsrtombs(dst,&src,3,&state) -> 3, src = srcbuf+3, dst = buf+5
-wcsrtombs(dst,&src,1,&state) -> 1, src = srcbuf+3, dst = buf+6
-
-*/
-
-/* Output of a non-restarting implementation:
-
-wcsrtombs(dst,&src,1,&state) -> 1, src = srcbuf+1, dst = buf+1
-wcsrtombs(dst,&src,1,&state) -> 0, src = srcbuf+1, dst = buf+1
-wcsrtombs(dst,&src,3,&state) -> 3, src = srcbuf+2, dst = buf+4
-wcsrtombs(dst,&src,1,&state) -> 0, src = srcbuf+2, dst = buf+4
-wrong results
-
-*/

@@ -29,8 +29,8 @@ ${common_objpfx}localedata/tt_TT ||
 exit 1
 
 # Run the test program.
-LOCPATH=${common_objpfx}localedata LC_ALL=tt_TT \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
+LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
+LC_ALL=tt_TT ${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${common_objpfx}localedata/tst-trans > ${common_objpfx}localedata/tst-trans.out
 
 exit $?
