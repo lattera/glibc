@@ -1,5 +1,9 @@
 2000-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (tests): Add tst-truncate and tst-truncate64.
+	* posix/tst-truncate.c: New file.
+	* posix/tst-truncate64.c: New file.
+
 	* sysdeps/unix/sysv/linux/pread64.c: The little/big endian code
 	was switched.
 

@@ -65,7 +65,8 @@ include ../Makeconfig
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
-		   tst-getlogin tst-mmap tst-getaddrinfo
+		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
+		   tst-truncate64
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test
