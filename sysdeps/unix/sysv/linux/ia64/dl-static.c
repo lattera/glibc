@@ -1,5 +1,5 @@
 /* Variable initialization.  IA-64 version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ _dl_static_init (struct link_map *map)
   lookup_t loadbase;
   void (*f) (void *[]);
 
-  __libc_lock_lock (_dl_static_lock);
+  __libc_lock_lock_recursive (_dl_static_lock);
 
   loadbase = _dl_lookup_symbol ("_dl_var_init", map, &ref,
 				map->l_local_scope, 0, 1);
@@ -63,7 +63,7 @@ _dl_static_init (struct link_map *map)
       f (variables);
     }
 
-  __libc_lock_unlock (_dl_static_lock);
+  __libc_lock_unlock_recursive (_dl_static_lock);
 }
 
 #endif
