@@ -163,8 +163,8 @@ typedef unsigned long int __fsfilcnt_t;
 typedef __u_quad_t __fsfilcnt64_t;
 
 /* Used in XTI.  */
-typedef int __t_scalar_t;
-typedef unsigned int __t_uscalar_t;
+typedef long int __t_scalar_t;
+typedef unsigned long int __t_uscalar_t;
 
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
 #if __WORDSIZE == 64

@@ -1,3 +1,14 @@
+1999-12-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bits/stropts.h: Update with LiS types and
+	values.  Patch by David Grothe <dave@gcom.com>.
+
+	* sysdeps/unix/sysv/linux/bits/types.h (__t_scalar_t, __t_uscalar_t):
+	Make long types.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+
 1999-12-02  Akira Yoshiyama  <yosshy@debian.or.jp>
 
 	* locale/lc-time.c (_nl_get_era_entry): Separate eras

@@ -143,8 +143,8 @@ typedef __u_long __ino64_t;
 typedef __loff_t __off64_t;
 
 /* Used in XTI.  */
-typedef int __t_scalar_t;
-typedef unsigned int __t_uscalar_t;
+typedef long int __t_scalar_t;
+typedef unsigned long int __t_uscalar_t;
 
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
 typedef int __intptr_t;
