@@ -1,3 +1,11 @@
+Sun Sep 17 18:29:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/truncate.c: Call __file_set_size instead of
+	__file_truncate.
+	* sysdeps/mach/hurd/ftruncate.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/dl-machine.h: File removed.
+
 Sat Sep 16 17:47:19 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* elf/elf.h (AT_GID): Fix typo: Read -> Real.

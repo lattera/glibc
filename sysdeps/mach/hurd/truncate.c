@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ DEFUN(truncate, (file_name, length),
   if (file == MACH_PORT_NULL)
     return -1;
 
-  err = __file_truncate (file, length);
+  err = __file_set_size (file, length);
   __mach_port_deallocate (__mach_task_self (), file);
 
   if (err)

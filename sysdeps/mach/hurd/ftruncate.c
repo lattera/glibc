@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ DEFUN(ftruncate, (fd, length),
       int fd AND off_t length)
 {
   error_t err;
-  if (err = HURD_DPORT_USE (fd, __file_truncate (port, length)))
+  if (err = HURD_DPORT_USE (fd, __file_set_size (port, length)))
     return __hurd_dfail (fd, err);
   return 0;
 }
