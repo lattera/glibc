@@ -111,14 +111,14 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_exchange(mem, value) \
   ({ if (sizeof (*mem) != 4)						      \
        abort ();							      \
-     int __val, __tmp;							      \
+     int __val;								      \
       __asm __volatile (__ARCH_REL_INSTR "\n"				      \
 			"1:	lwarx	%0,0,%2\n"			      \
 			"	stwcx.	%3,0,%2\n"			      \
 			"	bne-	1b"				      \
 			: "=&r" (__val), "=m" (*mem)			      \
 			: "r" (mem), "r" (value), "1" (*mem)		      \
-			: "cr0", "memory");				      \
+			: "cr0");					      \
       __val; })
 
 

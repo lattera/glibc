@@ -112,7 +112,8 @@
 
 
 /* Decrement *MEM if it is > 0, and return the old value.  */
-#ifndef atomic_decrement_if_positive(mem) \
+#ifndef atomic_decrement_if_positive
+# define atomic_decrement_if_positive(mem)				      \
   ({ __typeof (*mem) __val;						      \
      __typeof (*mem) __oldval;						      \
      __typeof (mem) __memp;						      \
