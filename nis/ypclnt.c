@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -53,14 +53,112 @@ __libc_lock_define_initialized (static, ypbindlist_lock)
 static dom_binding *__ypbindlist = NULL;
 
 
+static void
+__yp_bind_client_create (const char *domain, dom_binding *ysd,
+			 struct ypbind_resp *ypbr)
+{
+  ysd->dom_server_addr.sin_family = AF_INET;
+  memcpy (&ysd->dom_server_addr.sin_port,
+	  ypbr->ypbind_resp_u.ypbind_bindinfo.ypbind_binding_port,
+	  sizeof (ysd->dom_server_addr.sin_port));
+  memcpy (&ysd->dom_server_addr.sin_addr.s_addr,
+	  ypbr->ypbind_resp_u.ypbind_bindinfo.ypbind_binding_addr,
+	  sizeof (ysd->dom_server_addr.sin_addr.s_addr));
+  strncpy (ysd->dom_domain, domain, YPMAXDOMAIN);
+  ysd->dom_domain[YPMAXDOMAIN] = '\0';
+
+  ysd->dom_socket = RPC_ANYSOCK;
+  ysd->dom_client = clntudp_create (&ysd->dom_server_addr, YPPROG, YPVERS,
+				    UDPTIMEOUT, &ysd->dom_socket);
+
+  if (ysd->dom_client != NULL)
+    {
+      /* If the program exits, close the socket */
+      if (fcntl (ysd->dom_socket, F_SETFD, 1) == -1)
+	perror ("fcntl: F_SETFD");
+    }
+}
+
+static void
+__yp_bind_file (const char *domain, dom_binding *ysd)
+{
+  struct ypbind_resp ypbr;
+  char path[sizeof (BINDINGDIR) + strlen (domain) + 10];
+  struct iovec vec[2];
+  unsigned short port;
+  int fd;
+
+  sprintf (path, "%s/%s.%d", BINDINGDIR, domain, YPBINDVERS);
+  fd = open (path, O_RDONLY);
+  if (fd >= 0)
+    {
+      /* We have a binding file and could save a RPC call */
+      vec[0].iov_base = &port;
+      vec[0].iov_len = sizeof (port);
+      vec[1].iov_base = &ypbr;
+      vec[1].iov_len = sizeof (ypbr);
+
+      if (readv (fd, vec, 2) == sizeof (port) + sizeof (ypbr))
+	__yp_bind_client_create (domain, ysd, &ypbr);
+
+      close (fd);
+    }
+}
+
 static int
-__yp_bind (const char *domain, dom_binding **ypdb)
+__yp_bind_ypbindprog (const char *domain, dom_binding *ysd)
 {
   struct sockaddr_in clnt_saddr;
   struct ypbind_resp ypbr;
-  dom_binding *ysd = NULL;
   int clnt_sock;
   CLIENT *client;
+
+  memset (&clnt_saddr, '\0', sizeof clnt_saddr);
+  clnt_saddr.sin_family = AF_INET;
+  clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
+  clnt_sock = RPC_ANYSOCK;
+  client = clnttcp_create (&clnt_saddr, YPBINDPROG, YPBINDVERS,
+			   &clnt_sock, 0, 0);
+  if (client == NULL)
+    return YPERR_YPBIND;
+
+  /* Check the port number -- should be < IPPORT_RESERVED.
+     If not, it's possible someone has registered a bogus
+     ypbind with the portmapper and is trying to trick us. */
+  if (ntohs (clnt_saddr.sin_port) >= IPPORT_RESERVED)
+    {
+      clnt_destroy (client);
+      return YPERR_YPBIND;
+    }
+
+  if (clnt_call (client, YPBINDPROC_DOMAIN,
+		 (xdrproc_t) xdr_domainname, (caddr_t) &domain,
+		 (xdrproc_t) xdr_ypbind_resp,
+		 (caddr_t) &ypbr, RPCTIMEOUT) != RPC_SUCCESS)
+    {
+      clnt_destroy (client);
+      return YPERR_YPBIND;
+    }
+
+  clnt_destroy (client);
+
+  if (ypbr.ypbind_status != YPBIND_SUCC_VAL)
+    {
+      fprintf (stderr, _("YPBINDPROC_DOMAIN: %s\n"),
+	       ypbinderr_string (ypbr.ypbind_resp_u.ypbind_error));
+      return YPERR_DOMAIN;
+    }
+  memset (&ysd->dom_server_addr, '\0', sizeof ysd->dom_server_addr);
+
+  __yp_bind_client_create (domain, ysd, &ypbr);
+
+  return YPERR_SUCCESS;
+}
+
+static int
+__yp_bind (const char *domain, dom_binding **ypdb)
+{
+  dom_binding *ysd = NULL;
   int is_new = 0;
 
   if (domain == NULL || domain[0] == '\0')
@@ -83,116 +181,20 @@ __yp_bind (const char *domain, dom_binding **ypdb)
     }
 
 #if USE_BINDINGDIR
-  if (ysd->dom_client == NULL)
-    {
       /* Try binding dir at first if we have no binding */
-      char path[sizeof (BINDINGDIR) + strlen (domain) + 10];
-      struct iovec vec[2];
-      unsigned short port;
-      int fd;
-
-      sprintf (path, "%s/%s.%d", BINDINGDIR, domain, YPBINDVERS);
-      fd = open (path, O_RDONLY);
-      if (fd >= 0)
-	{
-	  /* We have a binding file and could save a RPC call */
-	  vec[0].iov_base = &port;
-	  vec[0].iov_len = sizeof (port);
-	  vec[1].iov_base = &ypbr;
-	  vec[1].iov_len = sizeof (ypbr);
-
-	  if (readv (fd, vec, 2) == sizeof (port) + sizeof (ypbr))
-	    {
-	      ysd->dom_server_addr.sin_family = AF_INET;
-	      memcpy (&ysd->dom_server_addr.sin_port,
-		      ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_port,
-		      sizeof (ysd->dom_server_addr.sin_port));
-	      memcpy (&ysd->dom_server_addr.sin_addr.s_addr,
-		      ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_addr,
-		      sizeof (ysd->dom_server_addr.sin_addr.s_addr));
-	      strncpy (ysd->dom_domain, domain, YPMAXDOMAIN);
-	      ysd->dom_domain[YPMAXDOMAIN] = '\0';
-
-	      ysd->dom_socket = RPC_ANYSOCK;
-	      ysd->dom_client = clntudp_create (&ysd->dom_server_addr, YPPROG,
-						YPVERS, UDPTIMEOUT,
-						&ysd->dom_socket);
-
-	      if (ysd->dom_client != NULL)
-		/* If the program exits, close the socket */
-		if (fcntl (ysd->dom_socket, F_SETFD, 1) == -1)
-		  perror ("fcntl: F_SETFD");
-	    }
-	  close (fd);
-	}
-    }
+  if (ysd->dom_client == NULL)
+	__yp_bind_file (domain, ysd);
 #endif /* USE_BINDINGDIR */
 
   if (ysd->dom_client == NULL)
     {
-      memset (&clnt_saddr, '\0', sizeof clnt_saddr);
-      clnt_saddr.sin_family = AF_INET;
-      clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
-      clnt_sock = RPC_ANYSOCK;
-      client = clnttcp_create (&clnt_saddr, YPBINDPROG, YPBINDVERS,
-			       &clnt_sock, 0, 0);
-      if (client == NULL)
+      int retval = __yp_bind_ypbindprog (domain, ysd);
+      if (retval != YPERR_SUCCESS)
 	{
 	  if (is_new)
 	    free (ysd);
-	  return YPERR_YPBIND;
+	  return retval;
 	}
-      /* Check the port number -- should be < IPPORT_RESERVED.
-	 If not, it's possible someone has registered a bogus
-	 ypbind with the portmapper and is trying to trick us. */
-      if (ntohs (clnt_saddr.sin_port) >= IPPORT_RESERVED)
-	{
-	  clnt_destroy (client);
-	  if (is_new)
-	    free (ysd);
-	  return YPERR_YPBIND;
-	}
-
-      if (clnt_call (client, YPBINDPROC_DOMAIN,
-		     (xdrproc_t) xdr_domainname, (caddr_t) &domain,
-		     (xdrproc_t) xdr_ypbind_resp,
-		     (caddr_t) &ypbr, RPCTIMEOUT) != RPC_SUCCESS)
-	{
-	  clnt_destroy (client);
-	  if (is_new)
-	    free (ysd);
-	  return YPERR_YPBIND;
-	}
-
-      clnt_destroy (client);
-
-      if (ypbr.ypbind_status != YPBIND_SUCC_VAL)
-	{
-	  fprintf (stderr, _("YPBINDPROC_DOMAIN: %s\n"),
-		   ypbinderr_string (ypbr.ypbind_resp_u.ypbind_error));
-	  if (is_new)
-	    free (ysd);
-	  return YPERR_DOMAIN;
-	}
-      memset (&ysd->dom_server_addr, '\0', sizeof ysd->dom_server_addr);
-      ysd->dom_server_addr.sin_family = AF_INET;
-      memcpy (&ysd->dom_server_addr.sin_port,
-	      ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_port,
-	      sizeof (ysd->dom_server_addr.sin_port));
-      memcpy (&ysd->dom_server_addr.sin_addr.s_addr,
-	      ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_addr,
-	      sizeof (ysd->dom_server_addr.sin_addr.s_addr));
-      strncpy (ysd->dom_domain, domain, YPMAXDOMAIN);
-      ysd->dom_domain[YPMAXDOMAIN] = '\0';
-
-      ysd->dom_socket = RPC_ANYSOCK;
-      ysd->dom_client = clntudp_create (&ysd->dom_server_addr, YPPROG, YPVERS,
-                                        UDPTIMEOUT, &ysd->dom_socket);
-
-      if (ysd->dom_client != NULL)
-	/* If the program exits, close the socket */
-	if (fcntl (ysd->dom_socket, F_SETFD, 1) == -1)
-	  perror ("fcntl: F_SETFD");
     }
 
   if (ysd->dom_client == NULL)
@@ -215,7 +217,6 @@ static void
 __yp_unbind (dom_binding *ydb)
 {
   clnt_destroy (ydb->dom_client);
-  ydb->dom_client = NULL;
   free (ydb);
 }
 
@@ -273,16 +274,36 @@ yp_unbind (const char *indomain)
 }
 
 static int
+__ypclnt_call (const char *domain, u_long prog, xdrproc_t xargs,
+	       caddr_t req, xdrproc_t xres, caddr_t resp, dom_binding **ydb,
+	       int print_error)
+{
+  enum clnt_stat result;
+
+  result = clnt_call ((*ydb)->dom_client, prog,
+		      xargs, req, xres, resp, RPCTIMEOUT);
+
+  if (result != RPC_SUCCESS)
+    {
+      /* We don't print an error message, if we try our old,
+	 cached data. Only print this for data, which should work.  */
+      if (print_error)
+	clnt_perror ((*ydb)->dom_client, "do_ypcall: clnt_call");
+
+      return YPERR_RPC;
+    }
+
+  return YPERR_SUCCESS;
+}
+
+static int
 do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	   caddr_t req, xdrproc_t xres, caddr_t resp)
 {
-  dom_binding *ydb = NULL;
-  bool_t use_ypbindlist = FALSE;
-  int try, status;
-  enum clnt_stat result;
+  dom_binding *ydb;
+  int status;
   int saved_errno = errno;
 
-  try = 0;
   status = YPERR_YPERR;
 
   __libc_lock_lock (ypbindlist_lock);
@@ -296,60 +317,53 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
           ydb = ydb->dom_pnext;
         }
       if (ydb != NULL)
-	use_ypbindlist = TRUE;
-      else
-	__libc_lock_unlock (ypbindlist_lock);
+	{
+          if (__yp_bind (domain, &ydb) == 0)
+	    {
+	      /* Call server, print no error message, do not unbind.  */
+	      status = __ypclnt_call (domain, prog, xargs, req, xres,
+				      resp, &ydb, 0);
+	      if (status == YPERR_SUCCESS)
+	        {
+	          __set_errno (saved_errno);
+	          return status;
+	        }
+	    }
+	  /* We use ypbindlist, and the old cached data is
+	     invalid. unbind now and create a new binding */
+	  yp_unbind_locked (domain);
+	}
+      __libc_lock_unlock (ypbindlist_lock);
     }
   else
     __libc_lock_unlock (ypbindlist_lock);
 
-  while (try < MAXTRIES && status != YPERR_SUCCESS)
+  /* First try with cached data failed. Now try to get
+     current data from the system.  */
+  ydb = NULL;
+  if (__yp_bind (domain, &ydb) == 0)
     {
-      if (__yp_bind (domain, &ydb) != 0)
+      status = __ypclnt_call (domain, prog, xargs, req, xres,
+			      resp, &ydb, 1);
+      __yp_unbind (ydb);
+    }
+
+#if USE_BINDINGDIR
+  /* If we support binding dir data, we have a third chance:
+     Ask ypbind.  */
+  if (status != YPERR_SUCCESS)
+    {
+      ydb = calloc (1, sizeof (dom_binding));
+      if (__yp_bind_ypbindprog (domain, ydb) == YPERR_SUCCESS)
 	{
-	  if (use_ypbindlist)
-	    __libc_lock_unlock (ypbindlist_lock);
-	  __set_errno (saved_errno);
-	  return YPERR_DOMAIN;
-	}
-
-      result = clnt_call (ydb->dom_client, prog,
-			  xargs, req, xres, resp, RPCTIMEOUT);
-
-      if (result != RPC_SUCCESS)
-	{
-	  /* Don't print the error message on the first try. It
-	     could be that we use cached data which is now invalid. */
-	  if (try != 0)
-	    clnt_perror (ydb->dom_client, "do_ypcall: clnt_call");
-
-	  if (use_ypbindlist)
-	    {
-	      /* We use ypbindlist, and the old cached data is
-		 invalid. unbind now and create a new binding */
-	      yp_unbind_locked (domain);
-	      __libc_lock_unlock (ypbindlist_lock);
-	      use_ypbindlist = FALSE;
-	    }
-	  else
-	    __yp_unbind (ydb);
-
-	  ydb = NULL;
-	  status = YPERR_RPC;
+	  status = __ypclnt_call (domain, prog, xargs, req, xres,
+				  resp, &ydb, 1);
+	  __yp_unbind (ydb);
 	}
       else
-	status = YPERR_SUCCESS;
-
-      try++;
+	free (ydb);
     }
-  if (use_ypbindlist)
-    {
-      __libc_lock_unlock (ypbindlist_lock);
-      use_ypbindlist = FALSE;
-    }
-  else
-    if (ydb != NULL)
-      __yp_unbind (ydb);
+#endif
 
   __set_errno (saved_errno);
 

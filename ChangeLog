@@ -1,3 +1,15 @@
+2004-02-03  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/ypclnt.c (__yp_bind_client_create): New, small chunk
+	of duplicated code from __yp_bind.
+	(__yp_bind_file): New, binding dir code from __yp_bind.
+	(__yp_bind_client_create): New, ypbind code from __yp_bind.
+	(__ypclnt_call): New, make NIS query.
+	(do_ypcall): At first use cached data, then try data from
+	binding directory, after this ask ypbind for a working ypserv.
+	Based on a patch from Jeff Bastian <jmbastia@ti.com> and
+	Chris Barrera <cbarrera@ti.com>
+
 2004-01-19  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Don't set CCVERSION.
