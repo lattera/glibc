@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for SGI Irix 4.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,6 +67,8 @@
 #define F_RGETLK        20      /* Get info on a remote lock.  */
 #define F_RSETLK        21      /* Set or unlock a remote lock.  */
 #define F_RSETLKW       22      /* Set or unlock a remote lock and wait.  */
+#endif
+#if defined __USE_BSD || defined __USE_UNIX98
 #define F_GETOWN        10      /* Get owner; only works on sockets.  */
 #define F_SETOWN        11      /* Set owner; only works on sockets.  */
 #endif

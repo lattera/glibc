@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/HPPA.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2002
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -78,7 +78,7 @@
 #define F_SETLK64	9	/* Set record locking info (non-blocking).  */
 #define F_SETLKW64	10	/* Set record locking info (blocking).  */
 
-#if defined __USE_BSD || defined __USE_XOPEN2K
+#if defined __USE_BSD || defined __USE_UNIX98
 # define F_GETOWN	11	/* Get owner of socket (receiver of SIGIO).  */
 # define F_SETOWN	12	/* Set owner of socket (receiver of SIGIO).  */
 #endif
