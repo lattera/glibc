@@ -311,23 +311,25 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   /* In case we can protect the data now that the relocations are
      done, do it.  */
   if (l->l_relro_size != 0)
-    {
-      ElfW(Addr) start = ((l->l_addr + l->l_relro_addr)
-			  & ~(GL(dl_pagesize) - 1));
-      ElfW(Addr) end = ((l->l_addr + l->l_relro_addr + l->l_relro_size)
-			& ~(GL(dl_pagesize) - 1));
-
-      if (start != end
-	  && __mprotect ((void *) start, end - start, PROT_READ) < 0)
-	{
-	  errstring = N_("\
-cannot apply additional memory protection after relocation");
-	  goto call_error;
-	}
-    }
+    _dl_protect_relro (l);
 }
 INTDEF (_dl_relocate_object)
 
+void internal_function
+_dl_protect_relro (struct link_map *l)
+{
+  ElfW(Addr) start = ((l->l_addr + l->l_relro_addr) & ~(GL(dl_pagesize) - 1));
+  ElfW(Addr) end = ((l->l_addr + l->l_relro_addr + l->l_relro_size)
+		    & ~(GL(dl_pagesize) - 1));
+
+  if (start != end
+      && __mprotect ((void *) start, end - start, PROT_READ) < 0)
+    {
+      const char *errstring = N_("\
+cannot apply additional memory protection after relocation");
+      INTUSE(_dl_signal_error) (errno, l->l_name, NULL, errstring);
+    }
+}
 
 void
 internal_function __attribute_noinline__
