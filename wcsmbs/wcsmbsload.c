@@ -38,8 +38,8 @@ static struct gconv_step to_wc =
   modname: NULL,
   counter: INT_MAX,
   from_name: "ANSI_X3.4-1968",
-  to_name: "ISO-10646/UCS4/",
-  fct: __gconv_transform_ascii_ucs4,
+  to_name: "#INTERNAL#",
+  fct: __gconv_transform_ascii_internal,
   init_fct: NULL,
   end_fct: NULL,
   data: NULL
@@ -50,9 +50,9 @@ static struct gconv_step to_mb =
   shlib_handle: NULL,
   modname: NULL,
   counter: INT_MAX,
-  from_name: "ISO-10646/UCS4/",
+  from_name: "#INTERNAL#",
   to_name: "ANSI_X3.4-1968",
-  fct: __gconv_transform_ucs4_ascii,
+  fct: __gconv_transform_internal_ascii,
   init_fct: NULL,
   end_fct: NULL,
   data: NULL
@@ -113,8 +113,8 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  /* Get name of charset of the locale.  */
 	  charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
 
-	  __wcsmbs_gconv_fcts.tomb = getfct (charset_name, "ISO-10646/UCS4/");
-	  __wcsmbs_gconv_fcts.towc = getfct ("ISO-10646/UCS4/", charset_name);
+	  __wcsmbs_gconv_fcts.tomb = getfct (charset_name, "#INTERNAL#");
+	  __wcsmbs_gconv_fcts.towc = getfct ("#INTERNAL#", charset_name);
 
 	  /* If any of the conversion functions is not available we don't
 	     use any since this would mean we cannot convert back and

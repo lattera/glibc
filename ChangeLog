@@ -1,7 +1,72 @@
+1998-04-15 16:41  Ulrich Drepper  <drepper@cygnus.com>
+
+	Don't name internal representation since it might be different from
+	the external form (namely on little endian machines).
+	* iconv/gconv_builtin.h: Add UCS4 support.  Change references to
+	UCS4 into references to INTERNAL.
+	* iconv/gconv_simple.c: Implement UCS4<->INTERNAL converters.
+	Add endianess support to UCS functions.  Change references to
+	UCS4 into references to INTERNAL.
+	* iconv/gconv_int.h: Change references to UCS4 into references to
+	INTERNAL.
+	* iconv/iconv_prog.c: Don't mention INTERNAL in --list output.
+	* iconvdata/gconv-modules: Change accordingly.
+	* wcsmbs/wcsmbsload.c: Change names to use INTERNAL.
+
+	* iconv/gconv_simple.c: Adjust input buffer pointer for output buffer
+	overflow.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/euccn.c: Likewise.
+	* iconvdata/eucjp.c: Likewise.
+	* iconvdata/euckr.c: Likewise.
+	* iconvdata/euctw.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso6937.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+
+	* iconvdata/8bit-gap.c: Correct access to to_ucs4 array.
+	* iconvdata/8bit-generic.c: Likewise.
+
+	* iconvdata/TESTS: Add more tests.
+
+	* sysdeps/i386/bits/byteswap.h: Change to use "=r" when ror is used.
+
+1998-04-15 11:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Better rules to run tests.
+
+	* iconvdata/testdata/ISO-8859-1..UTF8: New file.
+	* iconvdata/testdata/ISO-8859-10: Likewise.
+	* iconvdata/testdata/ISO-8859-10..UCS2: Likewise.
+	* iconvdata/testdata/ISO-8859-2: Likewise.
+	* iconvdata/testdata/ISO-8859-2..UCS4: Likewise.
+	* iconvdata/testdata/ISO-8859-2..UTF8: Likewise.
+	* iconvdata/testdata/ISO-8859-3: Likewise.
+	* iconvdata/testdata/ISO-8859-4: Likewise.
+	* iconvdata/testdata/ISO-8859-5: Likewise.
+	* iconvdata/testdata/ISO-8859-6: Likewise.
+	* iconvdata/testdata/ISO-8859-7: Likewise.
+	* iconvdata/testdata/ISO-8859-8: Likewise.
+	* iconvdata/testdata/ISO-8859-9: Likewise.
+
 1998-04-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/run-iconv-test.sh: Handle $from..$t file to compare
+	intermediate result (if available).
 
 	* iconv/gconv_simple.c (__gconv_transform_ucs4_ascii): Fix typo in
 	last change.
+
+	* iconvdata/Makefile: Add rules to run run-iconv-test.sh.
+	(distribute): Add run-iconv-test.sh and testdata/*.
+
+	* stdlib/testmb.c (main): Simplify mbc array handling.
 
 1998-04-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -27,6 +92,7 @@
 	* iconvdata/Makefile: Add rules to run tests.
 	* iconvdata/TESTS: New file.
 	* iconvdata/run-iconv-test.sh: New file.
+	* iconvdata/testdata/ISO-8859-1: New file.
 
 	* iconv/iconv_prog.c (main): Call process_block with OUTPUT stream,
 	not stdout.

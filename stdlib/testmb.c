@@ -40,11 +40,7 @@ main (int argc, char *argv[])
     int r;
     char c = 'x';
     wchar_t wc;
-    char *mbc;
-
-    mbc = (char *) malloc (MB_CUR_MAX);
-    mbc[0] = c;
-    mbc[1] = '\0';
+    char mbc[MB_CUR_MAX];
 
     if ((r = mbtowc (&wc, &c, MB_CUR_MAX)) <= 0)
       {

@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 	  __v = __bswap_constant_16 (x);				      \
 	else								      \
 	  __asm__ __volatile__ ("rorw $8, %w0"				      \
-				: "=q" (__v)				      \
+				: "=r" (__v)				      \
 				: "0" ((unsigned short int) (x))	      \
 				: "cc");				      \
 	__v; })
@@ -59,7 +59,7 @@
 	  __asm__ __volatile__ ("rorw $8, %w0;"				      \
 				"rorl $16, %0;"				      \
 				"rorw $8, %w0"				      \
-				: "=q" (__v)				      \
+				: "=r" (__v)				      \
 				: "0" ((unsigned int) (x))		      \
 				: "cc");				      \
 	__v; })

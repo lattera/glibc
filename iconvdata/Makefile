@@ -94,7 +94,8 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c jis0208.c jis0212.c \
 	      extra-module.mk euckr.c johab.c uhc.c ksc5601.c ksc5601.h	    \
 	      iso646.c big5.c eucjp.c gb2312.c gb2312.h euccn.c euctw.c	    \
-	      cns11643l1.c cns11643l1.h cns11643.h cns11643.c
+	      cns11643l1.c cns11643l1.h cns11643.h cns11643.c		    \
+	      run-iconv-test.sh $(wildcard testdata/*)
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -208,3 +209,14 @@ $(inst_gconvdir)/gconv-modules: gconv-modules $(+force)
 endif
 
 include ../Rules
+
+.PHONY: do-iconv-test
+tests: do-iconv-test
+
+do-iconv-test: run-iconv-test.sh $(objpfx)gconv-modules \
+	       $(addprefix $(objpfx),$(modules.so)) \
+	       $(common-objdir)/iconv/iconv_prog
+	$(SHELL) -e $< $(common-objdir) > $(objpfx)iconv-test.out
+
+$(objpfx)gconv-modules: gconv-modules
+	cp $^ $@

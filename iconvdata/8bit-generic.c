@@ -97,7 +97,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	      while (cnt < inchars
 		     && (outwchars + sizeof (wchar_t) <= data->outbufsize))
 		{
-		  wchar_t ch = to_ucs4[(unsigned int) inbuf[cnt]];
+		  wchar_t ch = to_ucs4[((unsigned char *) inbuf)[cnt]];
 
 		  if (ch == L'\0' && inbuf[cnt] != '\0')
 		    {
@@ -112,6 +112,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		  ++cnt;
 		}
 	      *inbufsize -= cnt;
+	      inbuf += cnt;
 	      data->outbufavail = outwchars;
 	    }
 	  else
@@ -136,6 +137,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		  cnt += sizeof (wchar_t);
 		}
 	      *inbufsize -= cnt;
+	      inbuf += cnt;
 	      data->outbufavail = outchars;
 
 	      if (outchars < data->outbufsize)

@@ -195,6 +195,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		}
 	    out_from:
 	      *inbufsize -= cnt;
+	      inbuf += cnt;
 	      data->outbufavail = outwchars;
 	    }
 	  else
@@ -243,6 +244,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		}
 	    out_to:
 	      *inbufsize -= cnt;
+	      inbuf += cnt;
 	      data->outbufavail = outchars;
 
 	      if (outchars < data->outbufsize)

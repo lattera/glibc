@@ -18,6 +18,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <byteswap.h>
+#include <endian.h>
 #include <errno.h>
 #include <gconv.h>
 #include <stdint.h>
@@ -76,16 +78,21 @@ __gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
 }
 
 
-/* Convert from ISO 646-IRV to ISO 10646/UCS4.  */
+/* Transform from the internal, UCS4-like format, to UCS4.  The
+   difference between the internal ucs4 format and the real UCS4
+   format is, if any, the endianess.  The Unicode/ISO 10646 says that
+   unless some higher protocol specifies it differently, the byte
+   order is big endian.*/
 int
-__gconv_transform_ascii_ucs4 (struct gconv_step *step,
-			      struct gconv_step_data *data, const char *inbuf,
-			      size_t *inlen, size_t *written, int do_flush)
+__gconv_transform_internal_ucs4 (struct gconv_step *step,
+				  struct gconv_step_data *data,
+				  const char *inbuf, size_t *inlen,
+				  size_t *written, int do_flush)
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
   gconv_fct fct = next_step->fct;
-  size_t do_write;
+  size_t do_write = 0;
   int result;
 
   /* If the function is called with no input this means we have to reset
@@ -95,7 +102,6 @@ __gconv_transform_ascii_ucs4 (struct gconv_step *step,
     {
       /* Clear the state.  */
       memset (data->statep, '\0', sizeof (mbstate_t));
-      do_write = 0;
 
       /* Call the steps down the chain if there are any.  */
       if (data->is_last)
@@ -114,12 +120,126 @@ __gconv_transform_ascii_ucs4 (struct gconv_step *step,
   else
     {
       int save_errno = errno;
-      do_write = 0;
 
       result = GCONV_OK;
       do
 	{
-	  const unsigned char *newinbuf = inbuf;
+	  size_t n_convert = (MIN (*inlen,
+				   (data->outbufsize - data->outbufavail))
+			      / sizeof (wchar_t));
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+	  /* Sigh, we have to do some real work.  */
+	  wchar_t *outbuf = (wchar_t *) &data->outbuf[data->outbufavail];
+	  size_t cnt;
+
+	  for (cnt = 0; cnt < n_convert; ++cnt)
+	    outbuf[cnt] = bswap_32 (((wchar_t *) inbuf)[cnt]);
+
+#elif __BYTE_ORDER == __BIG_ENDIAN
+	  /* Simply copy the data.  */
+	  memcpy (&data->outbuf[data->outbufsize], inbuf,
+		  n_convert * sizeof (wchar_t));
+#else
+# error "This endianess is not supported."
+#endif
+
+	  *inlen -= n_convert * sizeof (wchar_t);
+	  inbuf += n_convert * sizeof (wchar_t);
+	  data->outbufavail += n_convert * sizeof (wchar_t);
+	  do_write += n_convert;
+
+	  if (*inlen > 0 && *inlen < sizeof (wchar_t))
+	    {
+	      /* We have an incomplete character at the end.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
+
+	  if (data->is_last)
+	    {
+	      /* This is the last step.  */
+	      result = (*inlen < sizeof (wchar_t)
+			? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
+	      break;
+	    }
+
+	  /* Status so far.  */
+	  result = GCONV_EMPTY_INPUT;
+
+	  if (data->outbufavail > 0)
+	    {
+	      /* Call the functions below in the chain.  */
+	      size_t newavail = data->outbufavail;
+
+	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
+			       written, 0);
+
+	      /* Correct the output buffer.  */
+	      if (newavail != data->outbufavail && newavail > 0)
+		{
+		  memmove (data->outbuf,
+			   &data->outbuf[data->outbufavail - newavail],
+			   newavail);
+		  data->outbufavail = newavail;
+		}
+	    }
+	}
+      while (*inlen >= sizeof (wchar_t) && result == GCONV_EMPTY_INPUT);
+
+      __set_errno (save_errno);
+    }
+
+  if (written != NULL && data->is_last)
+    *written = do_write;
+
+  return result;
+}
+
+
+/* Convert from ISO 646-IRV to the internal (UCS4-like) format.  */
+int
+__gconv_transform_ascii_internal (struct gconv_step *step,
+				  struct gconv_step_data *data,
+				  const char *inbuf, size_t *inlen,
+				  size_t *written, int do_flush)
+{
+  struct gconv_step *next_step = step + 1;
+  struct gconv_step_data *next_data = data + 1;
+  gconv_fct fct = next_step->fct;
+  size_t do_write = 0;
+  int result;
+
+  /* If the function is called with no input this means we have to reset
+     to the initial state.  The possibly partly converted input is
+     dropped.  */
+  if (do_flush)
+    {
+      /* Clear the state.  */
+      memset (data->statep, '\0', sizeof (mbstate_t));
+
+      /* Call the steps down the chain if there are any.  */
+      if (data->is_last)
+	result = GCONV_OK;
+      else
+	{
+	  struct gconv_step *next_step = step + 1;
+	  struct gconv_step_data *next_data = data + 1;
+
+	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
+
+	  /* Clear output buffer.  */
+	  data->outbufavail = 0;
+	}
+    }
+  else
+    {
+      const unsigned char *newinbuf = inbuf;
+      int save_errno = errno;
+
+      result = GCONV_OK;
+      do
+	{
 	  size_t actually = 0;
 	  size_t cnt = 0;
 
@@ -193,9 +313,10 @@ __gconv_transform_ascii_ucs4 (struct gconv_step *step,
 
 /* Convert from ISO 10646/UCS to ISO 646-IRV.  */
 int
-__gconv_transform_ucs4_ascii (struct gconv_step *step,
-			      struct gconv_step_data *data, const char *inbuf,
-			      size_t *inlen, size_t *written, int do_flush)
+__gconv_transform_internal_ascii (struct gconv_step *step,
+				  struct gconv_step_data *data,
+				  const char *inbuf, size_t *inlen,
+				  size_t *written, int do_flush)
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
@@ -228,13 +349,13 @@ __gconv_transform_ucs4_ascii (struct gconv_step *step,
     }
   else
     {
+      const wchar_t *newinbuf = (const wchar_t *) inbuf;
       int save_errno = errno;
       do_write = 0;
 
       result = GCONV_OK;
       do
 	{
-	  const wchar_t *newinbuf = (const wchar_t *) inbuf;
 	  size_t actually = 0;
 	  size_t cnt = 0;
 
@@ -264,11 +385,18 @@ __gconv_transform_ucs4_ascii (struct gconv_step *step,
 	  if (result != GCONV_OK)
 	    break;
 
+	  /* Check for incomplete input.  */
+	  if (*inlen > 0 && *inlen < sizeof (wchar_t))
+	    {
+	      /* We have an incomplete character at the end.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
+
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inlen < sizeof (wchar_t)
-			? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
+	      result = *inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT;
 	      break;
 	    }
 
@@ -306,9 +434,10 @@ __gconv_transform_ucs4_ascii (struct gconv_step *step,
 
 
 int
-__gconv_transform_ucs4_utf8 (struct gconv_step *step,
-			     struct gconv_step_data *data, const char *inbuf,
-			     size_t *inlen, size_t *written, int do_flush)
+__gconv_transform_internal_utf8 (struct gconv_step *step,
+				 struct gconv_step_data *data,
+				 const char *inbuf, size_t *inlen,
+				 size_t *written, int do_flush)
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
@@ -341,13 +470,13 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
     }
   else
     {
+      const wchar_t *newinbuf = (const wchar_t *) inbuf;
       int save_errno = errno;
       do_write = 0;
 
       result = GCONV_OK;
       do
 	{
-	  const wchar_t *newinbuf = (const wchar_t *) inbuf;
 	  size_t cnt = 0;
 
 	  while (data->outbufavail < data->outbufsize
@@ -397,16 +526,24 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 	  /* Remember how much we converted.  */
 	  do_write += cnt;
 	  *inlen -= cnt * sizeof (wchar_t);
+	  newinbuf += cnt;
 
 	  /* Check whether an illegal character appeared.  */
 	  if (result != GCONV_OK)
 	    break;
 
+	  /* Check for incomplete input.  */
+	  if (*inlen > 0 && *inlen < sizeof (wchar_t))
+	    {
+	      /* We have an incomplete character at the end.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
+
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inlen < sizeof (wchar_t)
-			? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
+	      result = *inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT;
 	      break;
 	    }
 
@@ -444,9 +581,10 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 
 
 int
-__gconv_transform_utf8_ucs4 (struct gconv_step *step,
-			     struct gconv_step_data *data, const char *inbuf,
-			     size_t *inlen, size_t *written, int do_flush)
+__gconv_transform_utf8_internal (struct gconv_step *step,
+				 struct gconv_step_data *data,
+				 const char *inbuf, size_t *inlen,
+				 size_t *written, int do_flush)
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
@@ -578,6 +716,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 	  /* Remember how much we converted.  */
 	  do_write += actually;
 	  *inlen -= cnt;
+	  inbuf += cnt;
 
 	  data->outbufavail += actually * sizeof (wchar_t);
 
@@ -588,7 +727,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen < extra)
+	  if (*inlen > 0 && *inlen < extra)
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;
@@ -637,9 +776,10 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 
 
 int
-__gconv_transform_ucs2_ucs4 (struct gconv_step *step,
-			     struct gconv_step_data *data, const char *inbuf,
-			     size_t *inlen, size_t *written, int do_flush)
+__gconv_transform_ucs2_internal (struct gconv_step *step,
+				 struct gconv_step_data *data,
+				 const char *inbuf, size_t *inlen,
+				 size_t *written, int do_flush)
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
@@ -669,12 +809,12 @@ __gconv_transform_ucs2_ucs4 (struct gconv_step *step,
     }
   else
     {
+      const uint16_t *newinbuf = (const uint16_t *) inbuf;
       int save_errno = errno;
       do_write = 0;
 
       do
 	{
-	  const uint16_t *newinbuf = (const uint16_t *) inbuf;
 	  wchar_t *outbuf = (wchar_t *) &data->outbuf[data->outbufavail];
 	  size_t actually = 0;
 
@@ -683,34 +823,29 @@ __gconv_transform_ucs2_ucs4 (struct gconv_step *step,
 	  while (data->outbufavail + 4 <= data->outbufsize
 		 && *inlen >= 2)
 	    {
-	      outbuf[actually++] = *newinbuf++;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+	      outbuf[actually++] = (wchar_t) bswap_16 (*newinbuf++);
+#else
+	      outbuf[actually++] = (wchar_t) *newinbuf++;
+#endif
 	      data->outbufavail += 4;
 	      *inlen -= 2;
-	    }
-
-	  if (*inlen != 1)
-	    {
-	      /* We have an incomplete input character.  */
-	      mbstate_t *state = data->statep;
-	      state->count = 1;
-	      state->value = *(uint8_t *) newinbuf;
-	      --*inlen;
 	    }
 
 	  /* Remember how much we converted.  */
 	  do_write += actually * sizeof (wchar_t);
 
+	  if (*inlen == 1)
+	    {
+	      /* We have an incomplete character at the end.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
+
 	  /* Check whether an illegal character appeared.  */
 	  if (errno != 0)
 	    {
 	      result = GCONV_ILLEGAL_INPUT;
-	      break;
-	    }
-
-	  if (*inlen == 0 && !__mbsinit (data->statep))
-	    {
-	      /* We have an incomplete character at the end.  */
-	      result = GCONV_INCOMPLETE_INPUT;
 	      break;
 	    }
 
@@ -756,9 +891,10 @@ __gconv_transform_ucs2_ucs4 (struct gconv_step *step,
 
 
 int
-__gconv_transform_ucs4_ucs2 (struct gconv_step *step,
-			     struct gconv_step_data *data, const char *inbuf,
-			     size_t *inlen, size_t *written, int do_flush)
+__gconv_transform_internal_ucs2 (struct gconv_step *step,
+				 struct gconv_step_data *data,
+				 const char *inbuf, size_t *inlen,
+				 size_t *written, int do_flush)
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
@@ -791,12 +927,12 @@ __gconv_transform_ucs4_ucs2 (struct gconv_step *step,
     }
   else
     {
+      const wchar_t *newinbuf = (const wchar_t *) inbuf;
       int save_errno = errno;
       do_write = 0;
 
       do
 	{
-	  const wchar_t *newinbuf = (const wchar_t *) inbuf;
 	  uint16_t *outbuf = (uint16_t *) &data->outbuf[data->outbufavail];
 	  size_t actually = 0;
 
@@ -810,39 +946,33 @@ __gconv_transform_ucs4_ucs2 (struct gconv_step *step,
 		  __set_errno (EILSEQ);
 		    break;
 		}
-	      outbuf[actually++] = (wchar_t) *newinbuf;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+	      /* Please note that we use the `uint32_t' pointer as a
+		 `uint16_t' pointer which works since we are on a
+		 little endian machine.  */
+	      outbuf[actually++] = bswap_16 (*((uint16_t *) newinbuf));
+	      ++newinbuf;
+#else
+	      outbuf[actually++] = *newinbuf++;
+#endif
 	      *inlen -= 4;
 	      data->outbufavail += 2;
-	    }
-
-	  if (*inlen < 4)
-	    {
-	      /* We have an incomplete input character.  */
-	      mbstate_t *state = data->statep;
-	      state->count = *inlen;
-	      state->value = 0;
-	      while (*inlen > 0)
-		{
-		  state->value <<= 8;
-		  state->value += *(uint8_t *) newinbuf;
-		  --*inlen;
-		}
 	    }
 
 	  /* Remember how much we converted.  */
 	  do_write += (const char *) newinbuf - inbuf;
 
+	  if (*inlen > 0 && *inlen < 4)
+	    {
+	      /* We have an incomplete input character.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
+
 	  /* Check whether an illegal character appeared.  */
 	  if (errno != 0)
 	    {
 	      result = GCONV_ILLEGAL_INPUT;
-	      break;
-	    }
-
-	  if (*inlen == 0 && !__mbsinit (data->statep))
-	    {
-	      /* We have an incomplete character at the end.  */
-	      result = GCONV_INCOMPLETE_INPUT;
 	      break;
 	    }
 
