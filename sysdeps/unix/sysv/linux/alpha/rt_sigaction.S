@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@cygnus.com>, 1998
 
@@ -45,7 +45,7 @@ ENTRY(__syscall_rt_sigaction)
 	ldah	a4, sigreturn(gp)		!gprelhigh
 	ldah	t1, rt_sigreturn(gp)		!gprelhigh
 	lda	a4, sigreturn(a4)		!gprellow
-	lda	t1, rt_sigreturn(a4)		!gprellow
+	lda	t1, rt_sigreturn(t1)		!gprellow
 	and	t0, 0x00000040, t0		# SA_SIGINFO
 	cmovne	t0, t1, a4
 0:	ldi	v0, __NR_rt_sigaction
