@@ -1,3 +1,7 @@
+2004-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdlib.h: No need to use __THROW in this header.
+
 2004-09-06  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__writev): Does use assert on FD
