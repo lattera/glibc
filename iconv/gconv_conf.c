@@ -443,6 +443,7 @@ __gconv_get_path (void)
 	  cwd = __getcwd (NULL, 0);
 	  cwdlen = strlen (cwd);
 	}
+      assert (default_gconv_path[0] == '/');
 
       /* In a first pass we calculate the number of elements.  */
       oldp = NULL;

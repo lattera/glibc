@@ -1,3 +1,12 @@
+2000-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED: Remove ko_KR.JOHAB.  We don't want to encourage people
+	to use it.
+
+2000-09-23  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/JOHAB: Add identity mapping for 0x7f.
+
 2000-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_GB: Update LC_PAPER and LC_MEASUREMENT information.

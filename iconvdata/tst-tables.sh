@@ -186,7 +186,7 @@ cat <<EOF |
   SJIS
   EUC-KR
   CP949
-  #JOHAB                                No charmap exists
+  JOHAB
   BIG5
   BIG5HKSCS
   EUC-JP

@@ -68,8 +68,8 @@ static const uint32_t init_to_ucs[19] =
 static const uint32_t final_to_ucs[31] =
 {
   L'\0', L'\0', 0x3133, L'\0', 0x3135, 0x3136, L'\0', L'\0',
-  0x313a, 0x313b, 0x314c, 0x313d, 0x313e, 0x313f,
-  0x3140, L'\0', L'\0', L'\0', 0x3144, L'\0', L'\0', L'\0',
+  0x313a, 0x313b, 0x313c, 0x313d, 0x313e, 0x313f,
+  0x3140, L'\0', L'\0', 0x3144, L'\0', L'\0', L'\0', L'\0',
   L'\0', L'\0', L'\0', L'\0', L'\0', L'\0', L'\0', L'\0', L'\0'
 };
 
@@ -120,11 +120,11 @@ static const uint16_t jamo_from_ucs_table[51] =
   0x9041,
   0x8446, 0x8447,
   0x9441, 0x9841, 0x9c41,
-  0x844a, 0x844b, 0x844c, 0x844d, 0x884e, 0x884f, 0x8450,
+  0x844a, 0x844b, 0x844c, 0x844d, 0x844e, 0x844f, 0x8450,
   0xa041, 0xa441, 0xa841,
   0x8454,
   0xac41, 0xb041, 0xb441, 0xb841, 0xbc41,
-  0xc041, 0xc441, 0xc841, 0xca41, 0xd041,
+  0xc041, 0xc441, 0xc841, 0xcc41, 0xd041,
   0x8461, 0x8481, 0x84a1, 0x84c1, 0x84e1,
   0x8541, 0x8561, 0x8581, 0x85a1, 0x85c1, 0x85e1,
   0x8641, 0x8661, 0x8681, 0x86a1, 0x86c1, 0x86e1,
@@ -162,15 +162,13 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
   {									      \
     uint32_t ch = *inptr;						      \
 									      \
-    /* half-width Korean Currency WON sign				      \
-       if (ch == 0x5c)							      \
-	 ch =  0x20a9;							      \
-       else if (ch < 0x7f)						      \
-	 ch = (uint32_t) ch;						      \
-    */									      \
-    if (ch < 0x7f)							      \
-      /* Plain ASCII.  */						      \
-      ++inptr;								      \
+    if (ch <= 0x7f)							      \
+      {									      \
+	/* Plain ISO646-KR.  */						      \
+	if (ch == 0x5c)							      \
+	  ch = 0x20a9; /* half-width Korean Currency WON sign */	      \
+	++inptr;							      \
+      }									      \
     /* Johab : 1. Hangul						      \
        1st byte : 0x84-0xd3						      \
        2nd byte : 0x41-0x7e, 0x81-0xfe					      \
@@ -268,8 +266,10 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		if (__builtin_expect (ch2, 0x31) < 0x31			      \
 		    || (__builtin_expect (ch2, 0x7e) > 0x7e && ch2 < 0x91)    \
 		    || __builtin_expect (ch2, 0) == 0xff		      \
+		    || (__builtin_expect (ch, 0) == 0xd9 && ch2 > 0xe5)	      \
 		    || (__builtin_expect (ch, 0) == 0xda		      \
-			&& ch2 > 0xa0 && ch2 < 0xd4))			      \
+			&& ch2 > 0xa0 && ch2 < 0xd4)			      \
+		    || (__builtin_expect (ch, 0) == 0xde && ch2 > 0xf1))      \
 		  {							      \
 		    /* This is illegal.  */				      \
 		    if (! ignore_errors_p ())				      \
@@ -346,7 +346,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	 cp = from_ucs4_lat1[ch];					      \
     */									      \
 									      \
-    if (ch < 0x7f)							      \
+    if (ch <= 0x7f && ch != 0x5c)					      \
       *outptr++ = ch;							      \
     else								      \
       {									      \
@@ -410,6 +410,8 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 									      \
 	    outptr += 2;						      \
 	  }								      \
+	else if (ch == 0x20a9)						      \
+	  *outptr++ = 0x5c;						      \
 	else								      \
 	  {								      \
 	    size_t written;						      \
@@ -421,7 +423,8 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (__builtin_expect (written, 1) == __UNKNOWN_10646_CHAR)	      \
+	    if (__builtin_expect (written, 1) == __UNKNOWN_10646_CHAR	      \
+		|| (outptr[0] == 0x22 && outptr[1] > 0x65))		      \
 	      {								      \
 		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
