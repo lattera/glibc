@@ -1,5 +1,12 @@
 2000-06-06  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/powerpc/memset.S: Define & use symbolic register names.
+	Use C comments throughout.  Line up operands column with tabs.
+	* sysdeps/powerpc/strchr.S: Likewise.
+	* sysdeps/powerpc/strcmp.S: Likewise.
+	* sysdeps/powerpc/strcpy.S: Likewise.
+	* sysdeps/powerpc/strlen.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/powerpc/brk.S [!PIC]:
 	Get low part of &__curbrk with @l.
 

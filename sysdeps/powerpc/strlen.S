@@ -1,5 +1,5 @@
 /* Optimized strlen implementation for PowerPC.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,76 +69,86 @@
    We can use condition registers cr0, cr1, cr5, cr6, and cr7 without saving
    them, the others we must save.  */
 
-ENTRY(strlen)
-/* On entry, r3 points to the string, and it's left that way.
-   We use r6 to store 0xfefefeff, and r7 to store 0x7f7f7f7f.
-   r4 is used to keep the current index into the string; r5 holds
-   the number of padding bits we prepend to the string to make it
-   start at a word boundary. r8 holds the 'current' word.
-   r9-12 are temporaries. r0 is used as a temporary and for discarded
-   results.  */
-	clrrwi r4,r3,2
-	lis   r7,0x7f7f
-	rlwinm r5,r3,3,27,28
-	lwz   r8,0(r4)
-	li    r9,-1
-	addi  r7,r7,0x7f7f
+/* int [r3] strlen (char *s [r3])  */
+
+ENTRY (strlen)
+
+#define rTMP1	r0
+#define rRTN	r3	/* incoming STR arg, outgoing result */
+#define rSTR	r4	/* current string position */
+#define rPADN	r5	/* number of padding bits we prepend to the
+			   string to make it start at a word boundary */
+#define rFEFE	r6	/* constant 0xfefefeff (-0x01010101) */
+#define r7F7F	r7	/* constant 0x7f7f7f7f */
+#define rWORD1	r8	/* current string word */
+#define rWORD2	r9	/* next string word */
+#define rMASK	r9	/* mask for first string word */
+#define rTMP2	r10
+#define rTMP3	r11
+#define rTMP4	r12
+
+	clrrwi	rSTR, rRTN, 2
+	lis	r7F7F, 0x7f7f
+	rlwinm	rPADN, rRTN, 3, 27, 28
+	lwz	rWORD1, 0(rSTR)
+	li	rMASK, -1
+	addi	r7F7F, r7F7F, 0x7f7f
 /* That's the setup done, now do the first pair of words.
    We make an exception and use method (2) on the first two words, to reduce
    overhead.  */
-	srw   r9,r9,r5
-	and   r0,r7,r8
-	or    r10,r7,r8
-	add   r0,r0,r7
-	nor   r0,r10,r0
-	and.  r8,r0,r9
-	mtcrf 0x01,r3
-	bne   L(done0)
-	lis   r6,0xfeff
-	addi  r6,r6,-0x101
+	srw	rMASK, rMASK, rPADN
+	and	rTMP1, r7F7F, rWORD1
+	or	rTMP2, r7F7F, rWORD1
+	add	rTMP1, rTMP1, r7F7F
+	nor	rTMP1, rTMP2, rTMP1
+	and.	rWORD1, rTMP1, rMASK
+	mtcrf	0x01, rRTN
+	bne	L(done0)
+	lis	rFEFE, -0x101
+	addi	rFEFE, rFEFE, -0x101
 /* Are we now aligned to a doubleword boundary?  */
-	bt    29,L(loop)
+	bt	29, L(loop)
 
 /* Handle second word of pair.  */
-	lwzu  r8,4(r4)
-	and   r0,r7,r8
-	or    r10,r7,r8
-	add   r0,r0,r7
-	nor.  r8,r10,r0
-	bne   L(done0)
+	lwzu	rWORD1, 4(rSTR)
+	and	rTMP1, r7F7F, rWORD1
+	or	rTMP2, r7F7F, rWORD1
+	add	rTMP1, rTMP1, r7F7F
+	nor.	rWORD1, rTMP2, rTMP1
+	bne	L(done0)
 
 /* The loop.  */
 
 L(loop):
-	lwz   r8,4(r4)
-	lwzu  r9,8(r4)
-	add   r0,r6,r8
-	nor   r10,r7,r8
-	and.  r0,r0,r10
-	add   r11,r6,r9
-	nor   r12,r7,r9
-	bne   L(done1)
-	and.  r0,r11,r12
-	beq   L(loop)
+	lwz	rWORD1, 4(rSTR)
+	lwzu	rWORD2, 8(rSTR)
+	add	rTMP1, rFEFE, rWORD1
+	nor	rTMP2, r7F7F, rWORD1
+	and.	rTMP1, rTMP1, rTMP2
+	add	rTMP3, rFEFE, rWORD2
+	nor	rTMP4, r7F7F, rWORD2
+	bne	L(done1)
+	and.	rTMP1, rTMP3, rTMP4
+	beq	L(loop)
 
-	and   r0,r7,r9
-	add   r0,r0,r7
-	andc  r8,r12,r0
-	b     L(done0)
+	and	rTMP1, r7F7F, rWORD2
+	add	rTMP1, rTMP1, r7F7F
+	andc	rWORD1, rTMP4, rTMP1
+	b	L(done0)
 
 L(done1):
-	and   r0,r7,r8
-	subi  r4,r4,4
-	add   r0,r0,r7
-	andc  r8,r10,r0
+	and	rTMP1, r7F7F, rWORD1
+	subi	rSTR, rSTR, 4
+	add	rTMP1, rTMP1, r7F7F
+	andc	rWORD1, rTMP2, rTMP1
 
-/* When we get to here, r4 points to the first word in the string that
-   contains a zero byte, and the most significant set bit in r8 is in that
+/* When we get to here, rSTR points to the first word in the string that
+   contains a zero byte, and the most significant set bit in rWORD1 is in that
    byte.  */
 L(done0):
-	cntlzw r11,r8
-	subf  r0,r3,r4
-	srwi  r11,r11,3
-	add   r3,r0,r11
+	cntlzw	rTMP3, rWORD1
+	subf	rTMP1, rRTN, rSTR
+	srwi	rTMP3, rTMP3, 3
+	add	rRTN, rTMP1, rTMP3
 	blr
-END(strlen)
+END (strlen)
