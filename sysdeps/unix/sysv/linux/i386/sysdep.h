@@ -93,43 +93,61 @@ Cambridge, MA 02139, USA.  */
    (2 * movl is less expensive than pushl + popl).
 
    Second unlike for the other registers we don't save the content of
-   %ecx and %edx when we have than 1 and 2 registers resp.  */
+   %ecx and %edx when we have than 1 and 2 registers resp.
+
+   The code below might look a bit long but we have to take care for
+   the pipelined processors (i586 and up).  Here the `pushl' and `popl'
+   instructions are marked as NP (not pairable) but the exception is
+   two consecutive of these instruction.  This gives no penalty on
+   i386 and i486 processors though.  */
 
 #undef	DO_CALL
 #define DO_CALL(args)					      		      \
+    PUSHARGS_##args							      \
     DOARGS_##args							      \
-    int $0x80;								      \
-    UNDOARGS_##args
+    int $0x80								      \
+    POPARGS_##args
 
+#define PUSHARGS_0	/* No arguments to push.  */
 #define	DOARGS_0	/* No arguments to frob.  */
-#define	UNDOARGS_0	/* No arguments to unfrob.  */
-#define	_DOARGS_0(n)	/* No arguments to frob.  */
-#define	_UNDOARGS_0	/* No arguments to unfrob.  */
+#define	POPARGS_0	/* No arguments to pop.  */
+#define	_PUSHARGS_0	/* No arguments to push.  */
+#define _DOARGS_0(n)	/* No arguments to frob.  */
+#define	_POPARGS_0	/* No arguments to pop.  */
 
-#define	DOARGS_1	movl %ebx, %edx; movl 4(%esp), %ebx; DOARGS_0
-#define	UNDOARGS_1	UNDOARGS_0; movl %edx, %ebx
-#define	_DOARGS_1(n)	pushl %ebx; movl n+4(%esp), %ebx; _DOARGS_0 (n)
-#define	_UNDOARGS_1	_UNDOARGS_0; popl %ebx
+#define PUSHARGS_1	movl %ebx, %edx; PUSHARGS_0
+#define	DOARGS_1	_DOARGS_1 (4)
+#define	POPARGS_1	POPARGS_0; movl %edx, %ebx
+#define	_PUSHARGS_1	pushl %ebx; _PUSHARGS_0
+#define _DOARGS_1(n)	movl n(%esp), %ebx; _DOARGS_0(n-4)
+#define	_POPARGS_1	_POPARGS_0; popl %ebx
 
-#define	DOARGS_2	movl 8(%esp), %ecx; DOARGS_1
-#define	UNDOARGS_2	UNDOARGS_1
+#define PUSHARGS_2	PUSHARGS_1
+#define	DOARGS_2	_DOARGS_2 (8)
+#define	POPARGS_2	POPARGS_1
+#define _PUSHARGS_2	_PUSHARGS_1
 #define	_DOARGS_2(n)	movl n(%esp), %ecx; _DOARGS_1 (n-4)
-#define	_UNDOARGS_2	_UNDOARGS_1
+#define	_POPARGS_2	_POPARGS_1
 
-#define DOARGS_3	_DOARGS_3 (12)
-#define UNDOARGS_3	_UNDOARGS_3
+#define PUSHARGS_3	_PUSHARGS_2
+#define DOARGS_3	_DOARGS_3 (16)
+#define POPARGS_3	_POPARGS_3
+#define _PUSHARGS_3	_PUSHARGS_2
 #define _DOARGS_3(n)	movl n(%esp), %edx; _DOARGS_2 (n-4)
-#define _UNDOARGS_3	_UNDOARGS_2
+#define _POPARGS_3	_POPARGS_2
 
-#define DOARGS_4	_DOARGS_4 (16)
-#define UNDOARGS_4	_UNDOARGS_4
-#define _DOARGS_4(n)	pushl %esi; movl n+4(%esp), %esi; _DOARGS_3 (n)
-#define _UNDOARGS_4	_UNDOARGS_3; popl %esi
+#define PUSHARGS_4	_PUSHARGS_4
+#define DOARGS_4	_DOARGS_4 (24)
+#define POPARGS_4	_POPARGS_4
+#define _PUSHARGS_4	pushl %esi; _PUSHARGS_3
+#define _DOARGS_4(n)	movl n(%esp), %esi; _DOARGS_3 (n-4)
+#define _POPARGS_4	_POPARGS_3; popl %esi
 
-#define DOARGS_5	_DOARGS_5 (20)
-#define UNDOARGS_5	_UNDOARGS_5
-#define _DOARGS_5(n)	pushl %edi; movl n+4(%esp), %edi; _DOARGS_4 (n)
-#define _UNDOARGS_5	_UNDOARGS_4; popl %edi
-
+#define PUSHARGS_5	_PUSHARGS_5
+#define DOARGS_5	_DOARGS_5 (32)
+#define POPARGS_5	_POPARGS_5
+#define _PUSHARGS_5	pushl %edi; _PUSHARGS_4
+#define _DOARGS_5(n)	movl n(%esp), %edi; _DOARGS_4 (n-4)
+#define _POPARGS_5	_POPARGS_4; popl %edi
 
 #endif	/* ASSEMBLER */

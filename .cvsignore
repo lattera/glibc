@@ -5,7 +5,7 @@ glibc-*
 
 configparms 
 
-sun4 i386 i386-gnuelf hp300-netbsd hp300 i486-linux
+sun[43]* i[345]86* hp300*
 
 ieeetest hppa-sysdeps regex
 

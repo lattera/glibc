@@ -37,8 +37,15 @@ C_SYMBOL_NAME(__mpn_addmul_1):
 
 	sll	%o2,4,%g1
 	and	%g1,(4-1)<<4,%g1
+#if PIC
+	mov	%o7,%g4			! Save return address register
+	call	1f
+	add	%o7,LL-1f,%g3
+1:	mov	%g4,%o7			! Restore return address register
+#else
 	sethi	%hi(LL),%g3
 	or	%g3,%lo(LL),%g3
+#endif
 	jmp	%g3+%g1
 	nop
 LL:

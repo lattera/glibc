@@ -1,3 +1,43 @@
+Sat Oct 14 02:52:36 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* malloc/malloc.c (_malloc_internal): Performance fix.  Move
+	if statement out of loop.
+
+	* stdio/_itoa.c, stdio/_itoa.h: Complete rewrite.  Much faster
+	implementation using GMP functions.  Contributed by
+	Torbjorn Granlund and Ulrich Drepper.
+
+	* stdio/test_rdwr.c: Include <errno.h>.
+
+	* sysdeps/i386/i586/Implies: New file.
+
+	New highly optimized string functions for i[345]86.
+	* sysdeps/i386/memchr.S, sysdeps/i386/memcmp.S: New files.
+        * sysdeps/i386/stpcpy.S, sysdeps/i386/stpncpy.S: New files.
+        * sysdeps/i386/strchr.S, sysdeps/i386/strcspn.S: New files.
+        * sysdeps/i386/strpbrk.S, sysdeps/i386/strrchr.S: New files.
+        * sysdeps/i386/strspn.S, sysdeps/i386/i486/strcat.S: New files.
+        * sysdeps/i386/i486/strlen.S, sysdeps/i386/i586/strchr.S: New files.
+        * sysdeps/i386/i586/strlen.S: New file.
+	* sysdeps/i386/memchr.c: Removed.  There is now an assembler version.
+
+	* sysdeps/i386/i586/memcopy.h (WORD_COPY_BWD): Parameters did
+	not correspond to used values.
+
+	* sysdeps/unix/sysv/linux/nfs/nfs.h: New file.  Simply a wrapper
+        around a kernel header file.
+	* sysdeps/unix/sysv/linux/Dist: Add it.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=sunrpc] (headers):
+	Likewise.
+
+	* sysdeps/unix/sysv/linux/local_lim.h: Rewrite.  Instead of
+        defining ourself we use a kernel header file.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (DO_CALL): Optimize system
+        call handler for i586.
+
+	* sysdeps/unix/sysv/linux/sys/param.h: Add copyright and clean up.
+
 Wed Oct 11 00:00:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Use +=, not =, to

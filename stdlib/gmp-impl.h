@@ -19,8 +19,14 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, write to
 the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 #if ! defined (alloca)
-#if defined (__GNUC__) || defined (__sparc__) || defined (sparc)
+#if defined (__GNUC__)
 #define alloca __builtin_alloca
+#endif
+#endif
+
+#if ! defined (alloca)
+#if defined (__sparc__) || defined (sparc) || defined (__sgi)
+#include <alloca.h>
 #endif
 #endif
 
@@ -168,6 +174,7 @@ void _mp_default_free ();
     else								\
       ____mpn_sqr_n (prodp, up, size, tspace);				\
   } while (0);
+#define assert(trueval) do {if (!(trueval)) abort ();} while (0)
 
 /* Structure for conversion between internal binary format and
    strings in base 2..36.  */
@@ -197,9 +204,11 @@ struct bases
 extern const struct bases __mp_bases[];
 extern mp_size_t __gmp_default_fp_limb_precision;
 
-/* Divide the two-limb number in (NH,,NL) by D, with DI being a 32 bit
-   approximation to (2**(2*BITS_PER_MP_LIMB))/D - (2**BITS_PER_MP_LIMB).
-   Put the quotient in Q and the remainder in R.  */
+/* Divide the two-limb number in (NH,,NL) by D, with DI being the largest
+   limb not larger than (2**(2*BITS_PER_MP_LIMB))/D - (2**BITS_PER_MP_LIMB).
+   If this would yield overflow, DI should be the largest possible number
+   (i.e., only ones).  For correct operation, the most significant bit of D
+   has to be set.  Put the quotient in Q and the remainder in R.  */
 #define udiv_qrnnd_preinv(q, r, nh, nl, d, di) \
   do {									\
     mp_limb _q, _ql, _r;						\
@@ -226,6 +235,8 @@ extern mp_size_t __gmp_default_fp_limb_precision;
     (r) = _r;								\
     (q) = _q;								\
   } while (0)
+/* Like udiv_qrnnd_preinv, but for for any value D.  DNORM is D shifted left
+   so that its most significant bit is set.  LGUP is ceil(log2(D)).  */
 #define udiv_qrnnd_preinv2gen(q, r, nh, nl, d, di, dnorm, lgup) \
   do {									\
     mp_limb n2, n10, n1, nadj, q1;					\
@@ -243,6 +254,8 @@ extern mp_size_t __gmp_default_fp_limb_precision;
     (r) = _xl + ((d) & _xh);						\
     (q) = _xh - q1;							\
   } while (0)
+/* Exactly like udiv_qrnnd_preinv, but branch-free.  It is not clear which
+   version to use.  */
 #define udiv_qrnnd_preinv2norm(q, r, nh, nl, d, di) \
   do {									\
     mp_limb n2, n10, n1, nadj, q1;					\
@@ -262,22 +275,49 @@ extern mp_size_t __gmp_default_fp_limb_precision;
   } while (0)
 
 #if defined (__GNUC__)
-/* Define stuff for longlong.h asm macros.  */
-#if __GNUC_NEW_ATTR_MODE_SYNTAX
-typedef unsigned int UQItype	__attribute__ ((mode ("QI")));
-typedef 	 int SItype	__attribute__ ((mode ("SI")));
-typedef unsigned int USItype	__attribute__ ((mode ("SI")));
-typedef		 int DItype	__attribute__ ((mode ("DI")));
-typedef unsigned int UDItype	__attribute__ ((mode ("DI")));
-#else
+/* Define stuff for longlong.h.  */
 typedef unsigned int UQItype	__attribute__ ((mode (QI)));
 typedef 	 int SItype	__attribute__ ((mode (SI)));
 typedef unsigned int USItype	__attribute__ ((mode (SI)));
 typedef		 int DItype	__attribute__ ((mode (DI)));
 typedef unsigned int UDItype	__attribute__ ((mode (DI)));
-#endif
+#else
+typedef unsigned char UQItype;
+typedef 	 long SItype;
+typedef unsigned long USItype;
 #endif
 
 typedef mp_limb UWtype;
 typedef unsigned int UHWtype;
 #define W_TYPE_SIZE BITS_PER_MP_LIMB
+
+
+#ifndef IEEE_DOUBLE_BIG_ENDIAN
+#define IEEE_DOUBLE_BIG_ENDIAN 1
+#endif
+
+#if IEEE_DOUBLE_BIG_ENDIAN
+union ieee_double_extract
+{
+  struct
+    {
+      unsigned long sig:1;
+      unsigned long exp:11;
+      unsigned long manh:20;
+      unsigned long manl:32;
+    } s;
+  double d;
+};
+#else
+union ieee_double_extract
+{
+  struct
+    {
+      unsigned long manl:32;
+      unsigned long manh:20;
+      unsigned long exp:11;
+      unsigned long sig:1;
+    } s;
+  double d;
+};
+#endif

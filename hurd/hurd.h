@@ -77,10 +77,15 @@ extern struct hurd_port *_hurd_ports;
 extern unsigned int _hurd_nports;
 extern volatile mode_t _hurd_umask;
 
-/* Shorthand macro for referencing _hurd_ports (see <hurd/port.h>).  */
+/* Shorthand macro for internal library code referencing _hurd_ports (see
+   <hurd/port.h>).  */
 
 #define	__USEPORT(which, expr) \
   HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))
+
+/* Function version of __USEPORT: calls OPERATE with a send right.  */
+
+extern error_t _hurd_ports_use (int which, error_t (*operate) (mach_port_t));
 
 
 /* Base address and size of the initial stack set up by the exec server.
@@ -150,52 +155,6 @@ extern int setcttyid (mach_port_t);
 extern int __setauth (auth_t), setauth (auth_t);
 
 
-/* Split FILE into a directory and a name within the directory.  Look up a
-   port for the directory and store it in *DIR; store in *NAME a pointer
-   into FILE where the name within directory begins.  The directory lookup
-   uses CRDIR for the root directory and CWDIR for the current directory.
-   Returns zero on success or an error code.  */
-
-extern error_t __hurd_file_name_split (file_t crdir, file_t cwdir,
-				       const char *file,
-				       file_t *dir, char **name);
-extern error_t hurd_file_name_split (file_t crdir, file_t cwdir,
-				     const char *file,
-				     file_t *dir, char **name);
-
-/* Open a port to FILE with the given FLAGS and MODE (see <fcntl.h>).
-   The file lookup uses CRDIR for the root directory and CWDIR for the
-   current directory.  If successful, returns zero and store the port
-   to FILE in *PORT; otherwise returns an error code. */
-
-extern error_t __hurd_file_name_lookup (file_t crdir, file_t cwdir,
-					const char *file,
-					int flags, mode_t mode,
-					file_t *port);
-extern error_t hurd_file_name_lookup (file_t crdir, file_t cwdir,
-				      const char *filename,
-				      int flags, mode_t mode,
-				      file_t *port);
-
-/* Process the values returned by `dir_lookup' et al, and loop doing
-   `dir_lookup' calls until one returns FS_RETRY_NONE.  CRDIR is the
-   root directory used for things like symlinks to absolute file names; the
-   other arguments should be those just passed to and/or returned from
-   `dir_lookup', `fsys_getroot', or `file_invoke_translator'.  This
-   function consumes the reference in *RESULT even if it returns an error.  */
-
-extern error_t __hurd_file_name_lookup_retry (file_t crdir,
-					      enum retry_type doretry,
-					      char retryname[1024],
-					      int flags, mode_t mode,
-					      file_t *result);
-extern error_t hurd_file_name_lookup_retry (file_t crdir,
-					    enum retry_type doretry,
-					    char retryname[1024],
-					    int flags, mode_t mode,
-					    file_t *result);
-
-
 /* Split FILE into a directory and a name within the directory.  The
    directory lookup uses the current root and working directory.  If
    successful, stores in *NAME a pointer into FILE where the name
@@ -213,15 +172,15 @@ extern file_t file_name_split (const char *file, char **name);
 extern file_t __file_name_lookup (const char *file, int flags, mode_t mode);
 extern file_t file_name_lookup (const char *file, int flags, mode_t mode);
 
-/* Invoke any translator set on the node FILE represents, and return in
-   *TRANSLATED a port to the translated node.  FLAGS are as for
-   `dir_lookup' et al, but the returned port will not necessarily have
-   any more access rights than FILE does.  */
+/* Open a port to FILE with the given FLAGS and MODE (see <fcntl.h>).  The
+   file lookup uses the current root directory, but uses STARTDIR as the
+   "working directory" for file relative names.  Returns a port to the file
+   if successful; otherwise sets `errno' and returns MACH_PORT_NULL.  */
 
-extern error_t __hurd_invoke_translator (file_t file, int flags,
-					 file_t *translated);
-extern error_t hurd_invoke_translator (file_t file, int flags,
-				       file_t *translated);
+extern file_t __file_name_lookup_under (file_t startdir, const char *file,
+					int flags, mode_t mode);
+extern file_t file_name_lookup_under (file_t startdir, const char *file,
+				      int flags, mode_t mode);
 
 
 /* Open a file descriptor on a port.  FLAGS are as for `open'; flags

@@ -31,6 +31,12 @@ struct hurd_port *_hurd_ports;
 unsigned int _hurd_nports;
 mode_t _hurd_umask;
 
+error_t
+_hurd_ports_use (int which, error_t (*operate) (mach_port_t))
+{
+  return HURD_PORT_USE (&_hurd_ports[which], (*operate) (port));
+}
+
 void _hurd_proc_init (char **argv);
 
 DEFINE_HOOK (_hurd_subinit, (void));

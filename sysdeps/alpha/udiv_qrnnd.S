@@ -134,7 +134,7 @@ Loop2:	cmplt	n0,0,tmp
 	ret	$31,($26),1
 
 Odd:
-	/* q' in n0.  r' in n1.  */
+	/* q' in n0. r' in n1 */
 	addq	n1,n0,n1
 	cmpult	n1,n0,tmp	# tmp := carry from addq
 	beq	tmp,LLp6

@@ -1,7 +1,7 @@
 ! sparc __mpn_add_n -- Add two limb vectors of the same length > 0 and store
 ! sum in a third limb vector.
 
-! Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+! Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 
 ! This file is part of the GNU MP Library.
 
@@ -39,20 +39,25 @@ C_SYMBOL_NAME(__mpn_add_n):
 	sub	%g0,%o3,%o3
 	andcc	%o3,(16-1),%o3
 	be	Lzero
-	 nop
+	 mov	%o4,%g2			! put first s1_limb in g2 too
 
 	sll	%o3,2,%o3		! multiply by 4
 	sub	%o0,%o3,%o0		! adjust res_ptr
 	sub	%o1,%o3,%o1		! adjust s1_ptr
 	sub	%o2,%o3,%o2		! adjust s2_ptr
 
-	mov	%o4,%g2
-
+#if PIC
+	mov	%o7,%g4			! Save return address register
+	call	1f
+	add	%o7,Lbase-1f,%g3
+1:	mov	%g4,%o7			! Restore return address register
+#else
 	sethi	%hi(Lbase),%g3
 	or	%g3,%lo(Lbase),%g3
+#endif
 	sll	%o3,2,%o3		! multiply by 4
 	jmp	%g3+%o3
-	 mov	%o5,%g3
+	 mov	%o5,%g3			! put first s2_limb in g3 too
 
 Loop:	addxcc	%g2,%g3,%o3
 	add	%o1,64,%o1

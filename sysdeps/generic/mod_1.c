@@ -3,8 +3,6 @@
    Return the single-limb remainder.
    There are no constraints on the value of the divisor.
 
-   QUOT_PTR and DIVIDEND_PTR might point to the same limb.
-
 Copyright (C) 1991, 1993, 1994, Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.

@@ -1,7 +1,7 @@
 /* i80386 __mpn_sub_n -- Add two limb vectors of the same length > 0 and store
    sum in a third limb vector.
 
-Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -37,10 +37,10 @@ C_SYMBOL_NAME(__mpn_sub_n:)
 	pushl %edi
 	pushl %esi
 
-	movl 12(%esp),%edi	/* res_ptr */
-	movl 16(%esp),%esi	/* s1_ptr */
-	movl 20(%esp),%edx	/* s2_ptr */
-	movl 24(%esp),%ecx	/* size */
+	movl 12(%esp),%edi		/* res_ptr */
+	movl 16(%esp),%esi		/* s1_ptr */
+	movl 20(%esp),%edx		/* s2_ptr */
+	movl 24(%esp),%ecx		/* size */
 
 	movl	%ecx,%eax
 	shrl	$3,%ecx			/* compute count for unrolled loop */
@@ -54,14 +54,18 @@ C_SYMBOL_NAME(__mpn_sub_n:)
 	subl	%eax,%edx		/* ... enter the loop */
 	shrl	$2,%eax			/* restore previous value */
 #ifdef PIC
-	call	here
-here:	leal	(Loop - 3 - here)(%eax,%eax,8),%eax
-	addl	%eax,(%esp)
-	ret
+/* Calculate start address in loop for PIC.  Due to limitations in some
+   assemblers, Loop-L0-3 cannot be put into the leal */
+	call	L0
+L0:	leal	(%eax,%eax,8),%eax
+	addl	(%esp),%eax
+	addl	$(Loop-L0-3),%eax 
+	addl	$4,%esp
 #else
-	leal	(Loop - 3)(%eax,%eax,8),%eax	/* calc start addr in loop */
-	jmp	*%eax			/* jump into loop */
+/* Calculate start address in loop for non-PIC.  */
+ 	leal	(Loop - 3)(%eax,%eax,8),%eax
 #endif
+	jmp	*%eax			/* jump into loop */
 	ALIGN (3)
 Loop:	movl	(%esi),%eax
 	sbbl	(%edx),%eax

@@ -1,6 +1,6 @@
-/* Minimum guaranteed maximum values for system limits.  Hurd version.
+/* Minimum guaranteed maximum values for system limits.  Linux version.
 
-Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,14 +18,5 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Linux has a fixed limit of supplementary groups allocated with a
-   process.  This value is determined by the size of the `groups'
-   member of the `task_struct' structure in <linux/sched.h>.  */
-   
-#define NGROUPS_MAX	32
-
-
-/* Maximum size of file names.  Not all file system types support
-   this size but it is only a maximum value.  */
-
-#define NAME_MAX	255
+/* The kernel sources contain a file with all the needed information.  */
+#include <linux/limits.h>

@@ -20,7 +20,11 @@ sysdep_routines := $(sysdep_routines) ipc
 endif
 
 ifeq ($(subdir), socket)
-headers += sys/socketcall.h 
+headers += sys/socketcall.h
+endif
+
+ifeq ($(subdir), sunrpc)
+headers += nfs/nfs.h
 endif
 
 config-LDFLAGS = -Wl,-dynamic-linker=/lib/ld-gnu.so.1

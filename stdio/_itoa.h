@@ -21,8 +21,6 @@ Cambridge, MA 02139, USA.  */
 #define _ITOA_H
 #include <sys/cdefs.h>
 
-extern const char _itoa_lower_digits[], _itoa_upper_digits[];
-
 /* Convert VALUE into ASCII in base BASE (2..36).
    Write backwards starting the character just before BUFLIM.
    Return the address of the first (left-to-right) character in the number.
@@ -30,29 +28,5 @@ extern const char _itoa_lower_digits[], _itoa_upper_digits[];
 
 extern char *_itoa __P ((unsigned long long int value, char *buflim,
 			 unsigned int base, int upper_case));
-
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline 
-#endif
-
-_EXTERN_INLINE
-char *
-_itoa (unsigned long long int value, char *buflim,
-       unsigned int base, int upper_case)
-{
-  /* Base-36 digits for numbers.  */
-  const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
-
-  register char *bp = buflim;
-
-  while (value > 0)
-    {
-      *--bp = digits[value % base];
-      value /= base;
-    }
-
-  return bp;
-}
-
 
 #endif	/* itoa.h */

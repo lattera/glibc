@@ -1,5 +1,5 @@
 /* memcopy.h -- definitions for memory copy functions.  Pentium version.
-   Copyright (C) 1994 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 This file is part of the GNU C Library.
@@ -88,7 +88,7 @@ Cambridge, MA 02139, USA.  */
 		    "subl	$32,%2\n"				\
 		    "jns	1b\n"					\
 		    "2: addl	$32,%2" :				\
-		    "=r" (dst_bp), "=r" (src_bp), "=r" (nbytes_left) :	\
-		    "0" (dst_bp), "1" (src_bp), "2" (nbytes) :		\
+		    "=r" (dst_ep), "=r" (src_ep), "=r" (nbytes_left) :	\
+		    "0" (dst_ep), "1" (src_ep), "2" (nbytes) :		\
 		    "ax", "dx");					\
     } while (0)

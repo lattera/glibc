@@ -83,14 +83,12 @@ __mpn_divmod_1 (quot_ptr, dividend_ptr, dividend_size, divisor_limb)
 	     result is a (N+1)-bit approximation to 1/DIVISOR_LIMB, with the
 	     most significant bit (with weight 2**N) implicit.  */
 
-#if 0 /* This can't happen when normalization_steps != 0 */
 	  /* Special case for DIVISOR_LIMB == 100...000.  */
 	  if (divisor_limb << 1 == 0)
 	    divisor_limb_inverted = ~(mp_limb) 0;
 	  else
-#endif
-	  udiv_qrnnd (divisor_limb_inverted, dummy,
-		      -divisor_limb, 0, divisor_limb);
+	    udiv_qrnnd (divisor_limb_inverted, dummy,
+			-divisor_limb, 0, divisor_limb);
 
 	  n1 = dividend_ptr[dividend_size - 1];
 	  r = n1 >> (BITS_PER_MP_LIMB - normalization_steps);
