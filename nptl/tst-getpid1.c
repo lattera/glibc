@@ -1,5 +1,6 @@
 #include <sched.h>
 #include <signal.h>
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -66,6 +67,27 @@ do_test (void)
       }
   while  (si.si_signo != sig || si.si_code != SI_QUEUE);
 
+  int e;
+  if (waitpid (p, &e, __WCLONE) != p)
+    {
+      puts ("waitpid failed");
+      kill (p, SIGKILL);
+      return 1;
+    }
+  if (!WIFEXITED (e))
+    {
+      if (WIFSIGNALED (e))
+	printf ("died from signal %s\n", strsignal (WTERMSIG (e)));
+      else
+	puts ("did not terminate correctly");
+      return 1;
+    }
+  if (WEXITSTATUS (e) != 0)
+    {
+      printf ("exit code %d\n", WEXITSTATUS (e));
+      return 1;
+    }
+
   if (si.si_int != (int) p)
     {
       printf ("expected PID %d, got si_int %d\n", (int) p, si.si_int);
@@ -77,24 +99,6 @@ do_test (void)
     {
       printf ("expected PID %d, got si_pid %d\n", (int) p, (int) si.si_pid);
       kill (p, SIGKILL);
-      return 1;
-    }
-
-  int e;
-  if (waitpid (p, &e, __WCLONE) != p)
-    {
-      puts ("waitpid failed");
-      kill (p, SIGKILL);
-      return 1;
-    }
-  if (!WIFEXITED (e))
-    {
-      puts ("did not terminate correctly");
-      return 1;
-    }
-  if (WEXITSTATUS (e) != 0)
-    {
-      printf ("exit code %d\n", WEXITSTATUS (e));
       return 1;
     }
 
