@@ -27,6 +27,7 @@
 
 #include "libioP.h"
 #include "stdio.h"
+#include <stdlib.h>
 
 #include <shlib-compat.h>
 #include <fd_to_filename.h>

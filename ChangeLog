@@ -1,5 +1,8 @@
 2001-07-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/freopen.c: Include <stdlib.h> for free declaration.
+	* libio/freopen64.c: Likewise.
+
 	* sysdeps/alpha/fpu/libm-test-ulps: Add deltas for tanh(-0.7).
 
 2001-07-06  Jakub Jelinek  <jakub@redhat.com>
