@@ -1,5 +1,8 @@
 2003-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-cancel8.
+	* tst-cancel8.c: New file.
+
 	* sysdeps/unix/sysv/linux/i386/pthread_once.S (clear_once_control): Fix
 	clearing of control variable.
 	* Makefile (tests): Add tst-once3 and tst-once4.
