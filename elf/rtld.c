@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,13 +91,6 @@ struct rtld_global _rtld_global =
     /* Get architecture specific initializer.  */
 #include <dl-procinfo.c>
     ._dl_debug_fd = STDERR_FILENO,
-#ifndef RTLD_CORRECT_DYNAMIC_WEAK
-    /* XXX I know about at least one case where we depend on the old
-       weak behavior (it has to do with librt).  Until we get DSO
-       groups implemented we have to make this the default.
-       Bummer. --drepper  */
-    ._dl_dynamic_weak = 1,
-#endif
 #ifdef NEED_DL_SYSINFO
     ._dl_sysinfo = DL_SYSINFO_DEFAULT,
 #endif

@@ -1,3 +1,8 @@
+2003-01-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (_rtld_global): Remove _dl_dynamic_weak initializer.
+	* elf/dl-support.c (_dl_dynamic_weak): Initialize to 0.
+
 2003-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/libm-test.inc (significand_test): New function.

@@ -1,5 +1,5 @@
 /* System-specific settings for dynamic linker code.  IA-32 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,15 +34,6 @@
 # define RTLD_PRIVATE_ERRNO 0
 #endif
 
-/* This configuration has in libc.so cancellable functions and other
-   functions which have to behave differently if the application uses
-   threads.  It is not necessary that the thread library's definitions
-   are used.  Therefore we can finally enabled the correct handling
-   of weak definitions in ld.so.  See rtld.c.  */
-
-#define RTLD_CORRECT_DYNAMIC_WEAK	1
-
-
 /* Traditionally system calls have been made using int $0x80.  A
    second method was introduced which, if possible, will use the
    sysenter/syscall instructions.  To signal the presence and where to
@@ -55,12 +46,14 @@
 extern void _dl_sysinfo_int80 (void) attribute_hidden;
 # define DL_SYSINFO_DEFAULT (uintptr_t) _dl_sysinfo_int80
 # define DL_SYSINFO_IMPLEMENTATION \
-  asm (".type _dl_sysinfo_int80,@function\n\t"				      \
+  asm (".text\n\t"							      \
+       ".type _dl_sysinfo_int80,@function\n\t"				      \
        ".hidden _dl_sysinfo_int80\n"					      \
        "_dl_sysinfo_int80:\n\t"						      \
        "int $0x80;\n\t"							      \
        "ret;\n\t"							      \
-       ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80");
+       ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80\n\t"		      \
+       ".previous");
 #endif
 
 #endif	/* dl-sysdep.h */

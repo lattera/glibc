@@ -1,3 +1,12 @@
+2003-01-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h
+	(RTLD_CORRECT_DYNAMIC_WEAK): Remove.
+	(DL_SYSINFO_IMPLEMENTATION): Change into .text section and back.
+	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h
+	(RTLD_CORRECT_DYNAMIC_WEAK): Remove.
+	(DL_SYSINFO_IMPLEMENTATION): Change into .text section and back.
+
 2003-01-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthreadP.h (LIBC_CANCEL_HANDLED): Define.

@@ -51,14 +51,14 @@
    pow, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
    scalb, scalbn, scalbln, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc,
-   y0, y1, yn
+   y0, y1, yn, significand
 
    and for the following complex math functions:
    cabs, cacos, cacosh, carg, casin, casinh, catan, catanh,
    ccos, ccosh, cexp, clog, cpow, cproj, csin, csinh, csqrt, ctan, ctanh.
 
    At the moment the following functions aren't tested:
-   drem, significand, nan
+   drem, nan
 
    Parameter handling is primitive in the moment:
    --verbose=[0..3] for different levels of output:

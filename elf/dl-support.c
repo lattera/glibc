@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,14 +41,7 @@ size_t _dl_platformlen;
 
 int _dl_debug_mask;
 int _dl_lazy;
-/* XXX I know about at least one case where we depend on the old weak
-   behavior (it has to do with librt).  Until we get DSO groups implemented
-   we have to make this the default.  Bummer. --drepper  */
-#if 0
 int _dl_dynamic_weak;
-#else
-int _dl_dynamic_weak = 1;
-#endif
 
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;
