@@ -144,14 +144,42 @@ typedef __locale_t locale_t;
 
 /* Return a reference to a data structure representing a set of locale
    datasets.  Unlike for the CATEGORY parameter for `setlocale' the
-   CATEGORY_MASK parameter here uses a single bit for each category.
-   I.e., 1 << LC_CTYPE means to load data for this category.  If
-   BASE is non-null the appropriate category information in the BASE
-   record is replaced.  */
+   CATEGORY_MASK parameter here uses a single bit for each category,
+   made by OR'ing together LC_*_MASK bits above.  */
 extern __locale_t __newlocale (int __category_mask, __const char *__locale,
 			       __locale_t __base) __THROW;
 extern __locale_t newlocale (int __category_mask, __const char *__locale,
 			     __locale_t __base) __THROW;
+
+/* These are the bits that can be set in the CATEGORY_MASK argument to
+   `newlocale'.  In the GNU implementation, LC_FOO_MASK has the value
+   of (1 << LC_FOO), but this is not a part of the interface that
+   callers can assume will be true.  */
+# define LC_CTYPE_MASK		(1 << __LC_CTYPE)
+# define LC_NUMERIC_MASK	(1 << __LC_NUMERIC)
+# define LC_TIME_MASK		(1 << __LC_TIME)
+# define LC_COLLATE_MASK	(1 << __LC_COLLATE)
+# define LC_MONETARY_MASK	(1 << __LC_MONETARY)
+# define LC_MESSAGES_MASK	(1 << __LC_MESSAGES)
+# define LC_PAPER_MASK		(1 << __LC_PAPER)
+# define LC_NAME_MASK		(1 << __LC_NAME)
+# define LC_ADDRESS_MASK	(1 << __LC_ADDRESS)
+# define LC_TELEPHONE_MASK	(1 << __LC_TELEPHONE)
+# define LC_MEASUREMENT_MASK	(1 << __LC_MEASUREMENT)
+# define LC_IDENTIFICATION_MASK	(1 << __LC_IDENTIFICATION)
+# define LC_ALL_MASK		(LC_CTYPE_MASK \
+				 | LC_NUMERIC_MASK \
+				 | LC_TIME_MASK \
+				 | LC_COLLATE_MASK \
+				 | LC_MONETARY_MASK \
+				 | LC_MESSAGES_MASK \
+				 | LC_PAPER_MASK \
+				 | LC_NAME_MASK \
+				 | LC_ADDRESS_MASK \
+				 | LC_TELEPHONE_MASK \
+				 | LC_MEASUREMENT_MASK \
+				 | LC_IDENTIFICATION_MASK \
+				 )
 
 /* Return a duplicate of the set of locale in DATASET.  All usage
    counters are increased if necessary.  */

@@ -104,6 +104,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
       /* This is a composite name.  Make a copy and split it up.  */
       char *np = strdupa (locale);
       char *cp;
+      int specified_mask = 0;
 
       while ((cp = strchr (np, '=')) != NULL)
 	{
@@ -118,6 +119,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 	    ERROR_RETURN;
 
 	  /* Found the category this clause sets.  */
+	  specified_mask |= 1 << cnt;
 	  newnames[cnt] = ++cp;
 	  cp = strchr (cp, ';');
 	  if (cp != NULL)
@@ -131,11 +133,9 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 	    break;
 	}
 
-      for (cnt = 0; cnt < __LC_LAST; ++cnt)
-	if (cnt != LC_ALL
-	    && (category_mask & 1 << cnt) != 0 && newnames[cnt] == locale)
-	  /* The composite name did not specify the category we need.  */
-	  ERROR_RETURN;
+      if (category_mask &~ specified_mask)
+	/* The composite name did not specify all categories we need.  */
+	ERROR_RETURN;
     }
 
   /* Now process all categories we are interested in.  */

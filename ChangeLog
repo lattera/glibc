@@ -1,7 +1,19 @@
+2002-08-07  Roland McGrath  <roland@redhat.com>
+
+	* inet/getnetgrent_r.c (endnetgrent, __getnetgrent_r): Actually call
+	the static symbols added in the last change (doofus is me).
+
+	* locale/newlocale.c (__newlocale): Use a bit mask instead of a second
+	loop to notice missing categories in a composite name.
+
+	* locale/locale.h (LC_CTYPE_MASK, LC_NUMERIC_MASK, LC_TIME_MASK,
+	LC_COLLATE_MASK, LC_MONETARY_MASK, LC_MESSAGES_MASK, LC_ALL_MASK,
+	LC_PAPER_MASK, LC_NAME_MASK, LC_ADDRESS_MASK, LC_TELEPHONE_MASK,
+	LC_MEASUREMENT_MASK, LC_IDENTIFICATION_MASK, LC_ALL_MASK): New macros.
+
 2002-08-07  Ulrich Drepper  <drepper@redhat.com>
 
-	* malloc/tst-calloc.c: Add tests for one or both parameters being
-	zero.
+	* malloc/tst-calloc.c: Add tests for one or both parameters being zero.
 
 2002-08-07  Roland McGrath  <roland@redhat.com>
 
