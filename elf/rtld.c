@@ -1039,9 +1039,8 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       /* Extract the contents of the dynamic section for easy access.  */
       elf_get_dynamic_info (GL(dl_loaded), NULL);
-      if (GL(dl_loaded)->l_info[DT_HASH])
-	/* Set up our cache of pointers into the hash table.  */
-	_dl_setup_hash (GL(dl_loaded));
+      /* Set up our cache of pointers into the hash table.  */
+      _dl_setup_hash (GL(dl_loaded));
     }
 
   if (__builtin_expect (mode, normal) == verify)

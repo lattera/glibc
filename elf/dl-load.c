@@ -1126,20 +1126,19 @@ cannot allocate TLS data structures for initial thread");
 
 	goto postmap;
       }
-    else
-      {
-	/* This object is loaded at a fixed address.  This must never
-           happen for objects loaded with dlopen().  */
-	if (__builtin_expect ((mode & __RTLD_OPENEXEC) == 0, 0))
-	  {
-	    errstring = N_("cannot dynamically load executable");
-	    goto call_lose;
-	  }
 
-	/* Notify ELF_PREFERRED_ADDRESS that we have to load this one
-	   fixed.  */
-	ELF_FIXED_ADDRESS (loader, c->mapstart);
+    /* This object is loaded at a fixed address.  This must never
+       happen for objects loaded with dlopen().  */
+    if (__builtin_expect ((mode & __RTLD_OPENEXEC) == 0, 0))
+      {
+	errstring = N_("cannot dynamically load executable");
+	goto call_lose;
       }
+
+    /* Notify ELF_PREFERRED_ADDRESS that we have to load this one
+       fixed.  */
+    ELF_FIXED_ADDRESS (loader, c->mapstart);
+
 
     /* Remember which part of the address space this object uses.  */
     l->l_map_start = c->mapstart + l->l_addr;
@@ -1220,42 +1219,7 @@ cannot allocate TLS data structures for initial thread");
 
 	++c;
       }
-
-    if (l->l_phdr == NULL)
-      {
-	/* The program header is not contained in any of the segments.
-	   We have to allocate memory ourself and copy it over from
-	   out temporary place.  */
-	ElfW(Phdr) *newp = (ElfW(Phdr) *) malloc (header->e_phnum
-						  * sizeof (ElfW(Phdr)));
-	if (newp == NULL)
-	  {
-	    errstring = N_("cannot allocate memory for program header");
-	    goto call_lose_errno;
-	  }
-
-	l->l_phdr = memcpy (newp, phdr,
-			    (header->e_phnum * sizeof (ElfW(Phdr))));
-	l->l_phdr_allocated = 1;
-      }
-    else
-      /* Adjust the PT_PHDR value by the runtime load address.  */
-      l->l_phdr = (ElfW(Phdr) *) ((ElfW(Addr)) l->l_phdr + l->l_addr);
   }
-
-#ifdef USE_TLS
-    /* Adjust the address of the TLS initialization image.  */
-    if (l->l_tls_initimage != NULL)
-      l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
-#endif
-
-  /* We are done mapping in the file.  We no longer need the descriptor.  */
-  __close (fd);
-  /* Signal that we closed the file.  */
-  fd = -1;
-
-  if (l->l_type == lt_library && type == ET_EXEC)
-    l->l_type = lt_executable;
 
   if (l->l_ld == 0)
     {
@@ -1268,27 +1232,10 @@ cannot allocate TLS data structures for initial thread");
   else
     l->l_ld = (ElfW(Dyn) *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 
-  l->l_entry += l->l_addr;
-
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-    _dl_debug_printf ("\
-  dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n\
-    entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
-			   (int) sizeof (void *) * 2,
-			   (unsigned long int) l->l_ld,
-			   (int) sizeof (void *) * 2,
-			   (unsigned long int) l->l_addr,
-			   (int) sizeof (void *) * 2, maplength,
-			   (int) sizeof (void *) * 2,
-			   (unsigned long int) l->l_entry,
-			   (int) sizeof (void *) * 2,
-			   (unsigned long int) l->l_phdr,
-			   (int) sizeof (void *) * 2, l->l_phnum);
-
   elf_get_dynamic_info (l, NULL);
 
-  /* Make sure we are not dlopen'ing an object
-     that has the DF_1_NOOPEN flag set.  */
+  /* Make sure we are not dlopen'ing an object that has the
+     DF_1_NOOPEN flag set.  */
   if (__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
       && (mode & __RTLD_DLOPEN))
     {
@@ -1304,6 +1251,27 @@ cannot allocate TLS data structures for initial thread");
       errstring = N_("shared object cannot be dlopen()ed");
       goto call_lose;
     }
+
+  if (l->l_phdr == NULL)
+    {
+      /* The program header is not contained in any of the segments.
+	 We have to allocate memory ourself and copy it over from out
+	 temporary place.  */
+      ElfW(Phdr) *newp = (ElfW(Phdr) *) malloc (header->e_phnum
+						* sizeof (ElfW(Phdr)));
+      if (newp == NULL)
+	{
+	  errstring = N_("cannot allocate memory for program header");
+	  goto call_lose_errno;
+	}
+
+      l->l_phdr = memcpy (newp, phdr,
+			  (header->e_phnum * sizeof (ElfW(Phdr))));
+      l->l_phdr_allocated = 1;
+    }
+  else
+    /* Adjust the PT_PHDR value by the runtime load address.  */
+    l->l_phdr = (ElfW(Phdr) *) ((ElfW(Addr)) l->l_phdr + l->l_addr);
 
   if (__builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
     {
@@ -1334,8 +1302,43 @@ cannot enable executable stack as shared object requires");
 	}
     }
 
-  if (l->l_info[DT_HASH])
-    _dl_setup_hash (l);
+#ifdef USE_TLS
+  /* Adjust the address of the TLS initialization image.  */
+  if (l->l_tls_initimage != NULL)
+    l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
+#endif
+
+  /* We are done mapping in the file.  We no longer need the descriptor.  */
+  if (__builtin_expect (__close (fd) != 0, 0))
+    {
+      errstring = N_("cannot close file descriptor");
+      goto call_lose_errno;
+    }
+  /* Signal that we closed the file.  */
+  fd = -1;
+
+  if (l->l_type == lt_library && type == ET_EXEC)
+    l->l_type = lt_executable;
+
+  l->l_entry += l->l_addr;
+
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
+    _dl_debug_printf ("\
+  dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n\
+    entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
+			   (int) sizeof (void *) * 2,
+			   (unsigned long int) l->l_ld,
+			   (int) sizeof (void *) * 2,
+			   (unsigned long int) l->l_addr,
+			   (int) sizeof (void *) * 2, maplength,
+			   (int) sizeof (void *) * 2,
+			   (unsigned long int) l->l_entry,
+			   (int) sizeof (void *) * 2,
+			   (unsigned long int) l->l_phdr,
+			   (int) sizeof (void *) * 2, l->l_phnum);
+
+  /* Set up the symbol hash table.  */
+  _dl_setup_hash (l);
 
   /* If this object has DT_SYMBOLIC set modify now its scope.  We don't
      have to do this for the main map.  */

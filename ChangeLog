@@ -1,3 +1,10 @@
+2004-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Add some error checking.
+	Reorder code slightly.
+	* elf/rtld.c (dl_main): No need to check whether l_info[DT_HASH]
+	is non-null, _dl_setup_hash will do that.
+
 2004-09-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/setegid.c [HAVE_PTR__NPTL_SETXID]: Call
