@@ -160,6 +160,10 @@ sigcancel_handler (int sig __attribute ((unused)))
 }
 
 
+/* When using __thread for this, we do it in libc so as not
+   to give libpthread its own TLS segment just for this.  */
+extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
+
 
 void
 __pthread_initialize_minimal_internal (void)
@@ -230,6 +234,12 @@ __pthread_initialize_minimal_internal (void)
   if (STACK_ALIGN > __static_tls_align)
     __static_tls_align = STACK_ALIGN;
   __static_tls_size = roundup (__static_tls_size, __static_tls_align);
+
+#ifdef SHARED
+  /* Transfer the old value from the dynamic linker's internal location.  */
+  *__libc_dl_error_tsd () = *(*GL(dl_error_catch_tsd)) ();
+  GL(dl_error_catch_tsd) = &__libc_dl_error_tsd;
+#endif
 
   /* Register the fork generation counter with the libc.  */
   __libc_pthread_init (&__fork_generation, __reclaim_stacks,

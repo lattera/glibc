@@ -1,3 +1,9 @@
+2003-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Set
+	GL(dl_error_catch_tsd) to __libc_dl_error_tsd.
+	* Versions (libc:GLIBC_PRIVATE): Export __libc_dl_error_tsd.
+
 2003-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sem_open.c (sem_open): Fix handling of O_CREAT without O_EXCL.
