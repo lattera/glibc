@@ -27,6 +27,16 @@
 
 2002-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/string.h: Use libc_hidden_proto for __stpcpy.
+	* sysdeps/alpha/stpcpy.S (__stpcpy): Add libc_hidden_def.
+	* sysdeps/alpha/alphaev67/stpcpy.S: Likewise.
+	* sysdeps/generic/stpcpy.c: Likewise.
+	* sysdeps/i386/stpcpy.S: Likewise.
+	* sysdeps/i386/i586/stpcpy.S: Likewise.
+	* sysdeps/powerpc/stpcpy.S: Likewise.
+	* sysdeps/sparc/sparc32/stpcpy.S: Likewise.
+	* sysdeps/sparc/sparc64/stpcpy.S: Likewise.
+
 	* include/string.h: Use libc_hidden_proto for __strcasecmp_l,
 	__strncasecmp_l, __strdup, __strndup, __strerror_r.
 	* sysdeps/generic/strcasecmp_l.c (__strcasecmp_l): Add
