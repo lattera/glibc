@@ -670,7 +670,7 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
   idx[1 + last_idx] = idx[last_idx];
   for (num = 0; num < time->num_era; ++num)
     {
-      size_t l;
+      size_t l, l2;
 
       iov[2 + cnt].iov_base = (void *) &time->era_entries[num].direction;
       iov[2 + cnt].iov_len = sizeof (int32_t);
@@ -699,15 +699,14 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
 
       l = ((char *) rawmemchr (time->era_entries[num].format, '\0')
 	   - time->era_entries[num].name) + 1;
-      l = (l + 3) & ~3;
-      iov[2 + cnt].iov_base = alloca (l);
-      /* This time we *really* want to use the properties of strncpy.  */
-      strncpy (iov[2 + cnt].iov_base, time->era_entries[num].name,
-	       l);
-      iov[2 + cnt].iov_len = l;
+      l2 = (l + 3) & ~3;
+      iov[2 + cnt].iov_base = alloca (l2);
+      memset (mempcpy (iov[2 + cnt].iov_base, time->era_entries[num].name, l),
+	      '\0', l2 - l);
+      iov[2 + cnt].iov_len = l2;
       ++cnt;
 
-      idx[1 + last_idx] += 8 * sizeof (int32_t) + l;
+      idx[1 + last_idx] += 8 * sizeof (int32_t) + l2;
 
       assert (idx[1 + last_idx] % 4 == 0);
 
