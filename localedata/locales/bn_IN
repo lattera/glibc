@@ -8,7 +8,7 @@ LC_IDENTIFICATION
 title       "Bengali language locale for India"
 source     "IBM Globalization Center of Competency, Yamato Software Laboratory"
 address    "1623-14, Shimotsuruma, Yamato-shi, Kanagawa-ken, 242-8502, Japan"
-email      "bug-glibc@gnu.org"
+email      "libc-locales@sources.redhat.com"
 tel         ""
 fax         ""
 language    "Bengali"
