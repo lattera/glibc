@@ -60,9 +60,8 @@ fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
 
 generated := $(test-input) $(test-output)
-generated-dirs := $(basename $(test-input)) $(ld-test-names) tt_TT	\
-		  de_DE.437 $(addprefix tstfmon_,$(fmon-tests))		\
-		  en_US.ANSI_X3.4-1968 ja_JP.EUC-JP
+generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
+		  $(addprefix tstfmon_,$(fmon-tests))			\
 
 distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\
@@ -125,6 +124,8 @@ LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
 CHARMAPS := $(shell echo "$(LOCALES)"|sed 's/[^ .]*[.]\([^ ]*\)/\1/g')
 CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))
+
+generated-dirs += $(LOCALES)
 
 # Dependency for the locale files.  We actually make it depend only on
 # one of the files.

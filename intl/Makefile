@@ -34,6 +34,7 @@ before-compile = $(objpfx)msgs.h
 install-others = $(inst_msgcatdir)/locale.alias
 
 generated = msgs.h
+generated-dirs := domaindir
 
 plural.c: plural.y
 	$(YACC) $(YFLAGS) $@ $^
@@ -91,4 +92,3 @@ endef
 endif
 
 endif
-

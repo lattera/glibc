@@ -2128,7 +2128,7 @@ else
 fi
 
 
-for ac_prog in gawk mawk nawk awk
+for ac_prog in mawk gawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3333,8 +3333,7 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 
 
 echo '*** Do NOT install this release on any production system!'
-echo '*** It is known to be broken and will be so for quite some time.'
-echo '*** Use the latest released version instead.'
+echo '*** We are in early testing stages.'
 
 trap '' 1 2 15
 cat > confcache <<\EOF

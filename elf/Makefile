@@ -49,7 +49,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 
 include ../Makeconfig
 
-before-compile = $(objpfx)trusted-dirs.h
+before-compile  = $(objpfx)trusted-dirs.h
+generated	:= trusted-dirs.h trusted-dirs.st
 
 ifeq ($(versioning),yes)
 ld-map		= $(common-objpfx)ld.map
@@ -57,10 +58,9 @@ endif
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os interp.os
-generated	= librtld.os dl-allobjs.os ld.so trusted-dirs.h trusted-dirs.st
+generated	+= librtld.os dl-allobjs.os ld.so ldd
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
-generated      += ldd
 endif
 
 others		= sprof sln

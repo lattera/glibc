@@ -1,3 +1,8 @@
+2000-07-01  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (generated-dirs): LOCALES are also generated.
+	(generated-dirs): Remove obsolete entry.
+
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (distribute): Add locale test suite files, fmon test

@@ -44,7 +44,7 @@ install-bin = pcprofiledump xtrace
 
 include ../Makeconfig
 
-distribute += catchsegv.sh
+distribute += catchsegv.sh xtrace.sh
 ifeq ($(elf),yes)
 ifeq ($(build-shared),yes)
 install-bin += catchsegv

@@ -1,3 +1,15 @@
+2000-07-01  Andreas Jaeger  <aj@suse.de>
+
+	* intl/Makefile (generated-dirs): New.
+
+	* elf/Makefile (generated): trusted-dirs.h is always generated,
+	move out of build-shared condition.
+	(generated): Merge the two entries for build-shared.
+
+2000-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/Makefile (distribute): Add xtrace.sh.
+
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.1.91.
