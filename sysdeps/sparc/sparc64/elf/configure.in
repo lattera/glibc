@@ -4,6 +4,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and linker.
 AC_CACHE_CHECK(for sparc64 TLS support, libc_cv_sparc64_tls, [dnl
+changequote(,)dnl
 cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
 	.globl foo
@@ -31,6 +32,7 @@ main:	sethi	%tgd_hi22(foo), %l1
 	sethi	%tle_hix22(foo), %l1
 	xor	%l1, %tle_lox10(foo), %l1
 EOF
+changequote([,])dnl
 dnl
 if AC_TRY_COMMAND(${CC-cc} -o conftest.bin $CFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
   libc_cv_sparc64_tls=yes

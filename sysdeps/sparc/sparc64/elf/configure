@@ -1,0 +1,90 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/sparc/sparc64/elf.
+
+if test "$usetls" != no; then
+# Check for support of thread-local storage handling in assembler and linker.
+echo "$as_me:$LINENO: checking for sparc64 TLS support" >&5
+echo $ECHO_N "checking for sparc64 TLS support... $ECHO_C" >&6
+if test "${libc_cv_sparc64_tls+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat > conftest.s <<\EOF
+	.section ".tdata", "awT", @progbits
+	.globl foo
+foo:	.word	1
+	.section ".tbss", "awT", @nobits
+	.globl bar
+bar:	.skip	4
+	.text
+	.globl main
+main:	sethi	%tgd_hi22(foo), %l1
+	add	%l1, %tgd_lo10(foo), %l1
+	add	%l7, %l1, %o0, %tgd_add(foo)
+	call	__tls_get_addr, %tgd_call(foo)
+	sethi	%tldm_hi22(bar), %l1
+	add	%l1, %tldm_lo10(bar), %l1
+	add	%l7, %l1, %o0, %tldm_add(bar)
+	call	__tls_get_addr, %tldm_call(bar)
+	sethi	%tldo_hix22(bar), %l1
+	xor	%l1, %tldo_lox10(bar), %l1
+	add	%o0, %l1, %l1, %tldo_add(bar)
+	sethi	%tie_hi22(foo), %l1
+	add	%l1, %tie_lo10(foo), %l1
+	ldx	[%l7 + %l1], %l1, %tie_ldx(foo)
+	add	%g7, %l1, %l1, %tie_add(foo)
+	sethi	%tle_hix22(foo), %l1
+	xor	%l1, %tle_lox10(foo), %l1
+EOF
+if { ac_try='${CC-cc} -o conftest.bin $CFLAGS conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_sparc64_tls=yes
+else
+  libc_cv_sparc64_tls=no
+fi
+rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_sparc64_tls" >&5
+echo "${ECHO_T}$libc_cv_sparc64_tls" >&6
+if test $libc_cv_sparc64_tls = yes; then
+  cat >>confdefs.h <<\_ACEOF
+#define HAVE_TLS_SUPPORT 1
+_ACEOF
+
+fi
+fi
+
+# Check for broken WDISP22 in the linker.
+echo "$as_me:$LINENO: checking for sparc64 ld WDISP22 handling" >&5
+echo $ECHO_N "checking for sparc64 ld WDISP22 handling... $ECHO_C" >&6
+if test "${libc_cv_sparc64_wdisp22+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  echo 'bne foo; nop' > conftest1.s
+echo '.globl foo; .hidden foo; foo: nop' > conftest2.s
+libc_cv_sparc64_wdisp22=unknown
+if { ac_try='${CC-cc} -nostdlib -shared $CFLAGS conftest1.s conftest2.s -o conftest.so 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  if readelf -r conftest.so | grep -q R_SPARC_WDISP22; then
+    libc_cv_sparc64_wdisp22=broken
+  else
+    libc_cv_sparc64_wdisp22=ok
+  fi
+fi
+rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_sparc64_wdisp22" >&5
+echo "${ECHO_T}$libc_cv_sparc64_wdisp22" >&6
+if test $libc_cv_sparc64_wdisp22 != ok; then
+  cat >>confdefs.h <<\_ACEOF
+#define BROKEN_SPARC_WDISP22 1
+_ACEOF
+
+fi
