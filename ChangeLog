@@ -1,5 +1,11 @@
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/Makefile (test-srcs): Add tst-mtrace.
+	(distribute): Add tst-mtrace.sh.
+	Add rule to run tst-mtrace.sh.
+	* malloc/tst-mtrace.c: New file.
+	* malloc/tst-mtrace.sh: New file.
+
 	* include/signal.h: Declare __libc_sigaction.
 	* sysdeps/unix/sysv/linux/Versions: Export __libc_sigaction.
 	* sysdeps/unix/sysv/linux/sigaction.c: Add __libc_sigaction alias.

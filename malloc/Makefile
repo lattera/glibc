@@ -26,9 +26,10 @@ all:
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc
+test-srcs = tst-mtrace
 
 distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memusage.h \
-	     memusage.sh memusagestat.c
+	     memusage.sh memusagestat.c tst-mtrace.sh
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore
@@ -90,6 +91,11 @@ $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 
 lib: $(objpfx)libmcheck.a
 
+
+.PHONY: do-tst-mtrace
+tests: do-tst-mtrace
+do-tst-mtrace: tst-mtrace.sh $(objpfx)tst-mtrace
+	$(SHELL) -e $< $(common-objpfx)
 
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG
