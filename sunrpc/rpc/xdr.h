@@ -115,7 +115,7 @@ typedef struct XDR XDR;
 struct XDR
   {
     enum xdr_op x_op;		/* operation; fast additional param */
-    const struct xdr_ops
+    struct xdr_ops
       {
 	bool_t (*x_getlong) __P ((XDR * __xdrs, long *__lp));
 	/* get a long from underlying stream */
