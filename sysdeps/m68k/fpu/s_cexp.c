@@ -40,18 +40,24 @@ __complex__ float_type
 s(__cexp) (__complex__ float_type x)
 {
   __complex__ float_type retval;
-  float_type sin_ix, cos_ix;
 
   if (m81(__finite) (__real__ x))
     {
       if (m81(__finite) (__imag__ x))
 	{
-	  float_type exp_val = s(__exp) (__real__ x);
+	  float_type exp_val = m81(__ieee754_exp) (__real__ x);
 
-	  __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
-		 : "f" (__imag__ x));
-	  __real__ retval = exp_val * cos_ix;
-	  __imag__ retval = exp_val * sin_ix;
+	  __real__ retval = __imag__ retval = exp_val;
+	  if (m81(__finite) (exp_val))
+	    {
+	      float_type sin_ix, cos_ix;
+	      __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
+		     : "f" (__imag__ x));
+	      __real__ retval *= cos_ix;
+	      __imag__ retval *= sin_ix;
+	    }
+	  else
+	    goto fix_sign;
 	}
       else
 	/* If the imaginary part is +-inf or NaN and the real part is
@@ -62,16 +68,41 @@ s(__cexp) (__complex__ float_type x)
     {
       if (m81(__finite) (__imag__ x))
 	{
-	  if (m81(__signbit) (__real__ x) == 0 && __imag__ x == 0.0)
-	    retval = huge_val;
+	  float_type value = m81(__signbit) (__real__ x) ? 0.0 : huge_val;
+
+	  if (__imag__ x == 0.0)
+	    {
+	      __real__ retval = value;
+	      __imag__ retval = __imag__ x;
+	    }
 	  else
 	    {
-	      float_type value = m81(__signbit) (__real__ x) ? 0.0 : huge_val;
+	      float_type remainder, pi_2;
+	      int quadrant;
+	      __real__ retval = value;
+	      __imag__ retval = value;
 
-	      __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
-		     : "f" (__imag__ x));
-	      __real__ retval = value * cos_ix;
-	      __imag__ retval = value * sin_ix;
+	    fix_sign:
+	      __asm ("fmovecr %#0,%0\n\tfscale%.w %#-1,%0" : "=f" (pi_2));
+	      __asm ("fmod%.x %2,%0\n\tfmove%.l %/fpsr,%1"
+		     : "=f" (remainder), "=dm" (quadrant)
+		     : "f" (pi_2), "0" (__imag__ x));
+	      quadrant = (quadrant >> 16) & 0x83;
+	      if (quadrant & 0x80)
+		quadrant ^= 0x83;
+	      switch (quadrant)
+		{
+		default:
+		  break;
+		case 1:
+		  __real__ retval = -__real__ retval;
+		  break;
+		case 2:
+		  __real__ retval = -__real__ retval;
+		case 3:
+		  __imag__ retval = -__imag__ retval;
+		  break;
+		}
 	    }
 	}
       else if (m81(__signbit) (__real__ x) == 0)
@@ -80,7 +111,10 @@ s(__cexp) (__complex__ float_type x)
 	  __imag__ retval = 0.0/0.0;
 	}
       else
-	retval = 0.0;
+	{
+	  __real__ retval = 0.0;
+	  __imag__ retval = s(__copysign) (0.0, __imag__ x);
+	}
     }
   else
     /* If the real part is NaN the result is NaN + iNaN.  */
