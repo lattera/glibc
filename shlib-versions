@@ -40,6 +40,7 @@ alpha-*-linux*		libc=6
 # names given in /etc/nsswitch.conf.
 *-*-*			libnss_files=1
 *-*-*			libnss_dns=1
+*-*-*			libnss_db=1
 
 # We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
 *-*-*			libdb=2
