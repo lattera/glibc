@@ -20,6 +20,7 @@ libc {
     __mach_msg;
     __mig_allocate; __mig_deallocate; __mig_dealloc_reply_port;
     __mig_get_reply_port; __mig_put_reply_port;
+    __mig_strncpy;
 
     # variables in normal name space
     vm_page_size;
