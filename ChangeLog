@@ -1,3 +1,9 @@
+1999-06-07  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* db2/os/os_oflags.c (__db_oflags): Fix checking of O_ACCMODE bits to
+	be POSIX compliant.  Prior definition was broken for Hurd.
+	Reported by Mark Kettenis <kettenis@gnu.org>.
+
 1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* ctype/ctype.h: Protect __tobody code by __extension__.
