@@ -27,6 +27,7 @@
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/syslog.h>
+#include <execinfo.h>
 
 /* Abort with an error message.  */
 #include <not-cancel.h>
