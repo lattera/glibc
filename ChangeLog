@@ -1,5 +1,8 @@
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
+	* stdlib/tst-setcontext.c (main): If makecontext does nothing,
+	presume it's the stub and bail without error.
+
 	* nss/getnssent_r.c (__nss_getent_r): Return ENOENT if status is
 	neither SUCCESS nor TRYAGAIN (see 2002-08-25 change [PR libc/4259]).
 

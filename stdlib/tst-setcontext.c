@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ucontext.h>
 
 static ucontext_t ctx[3];
@@ -104,7 +105,17 @@ main (void)
   ctx[1].uc_stack.ss_sp = st1;
   ctx[1].uc_stack.ss_size = sizeof st1;
   ctx[1].uc_link = &ctx[0];
-  makecontext (&ctx[1], (void (*) (void)) f1, 4, 1, 2, 3, -4);
+  {
+    ucontext_t tempctx = ctx[1];
+    makecontext (&ctx[1], (void (*) (void)) f1, 4, 1, 2, 3, -4);
+
+    /* Without this check, a stub makecontext can make us spin forever.  */
+    if (memcmp (&tempctx, &ctx[1], sizeof ctx[1]) == 0)
+      {
+	puts ("makecontext was a no-op, presuming not implemented");
+	return 0;
+      }
+  }
 
   if (getcontext (&ctx[2]) != 0)
     {
