@@ -372,7 +372,7 @@ see @ref{Stream Buffering}.
 
 In some situations it is useful to know whether a given stream is
 available for reading or writing.  This information is normally not
-available and would have have to be remembered separately.  Solaris
+available and would have to be remembered separately.  Solaris
 introduced a few functions to get this information from the stream
 descriptor and these functions are also available in the GNU C library.
 
@@ -388,7 +388,7 @@ This function is declared in @file{stdio_ext.h}.
 
 @comment stdio_ext.h
 @comment GNU
-@deftypefun int __fwritaable (FILE *@var{stream})
+@deftypefun int __fwritable (FILE *@var{stream})
 The @code{__fwritable} function determines whether the stream
 @var{stream} was opened to allow writing.  In this case the return value
 is nonzero.  For read-only streams the function returns zero.
@@ -396,7 +396,7 @@ is nonzero.  For read-only streams the function returns zero.
 This function is declared in @file{stdio_ext.h}.
 @end deftypefun
 
-For a slightly different kind of problems there are two more functions.
+For slightly different kind of problems there are two more functions.
 They provide even finer-grained information.
 
 @comment stdio_ext.h
@@ -432,7 +432,7 @@ are used in single-threaded applications.  But the programmer must be
 aware of a the possible complications.  It is important to know about
 these also if the program one writes never use threads since the design
 and implementation of many stream functions is heavily influenced by the
-requierements added by multi-threaded programming.
+requirements added by multi-threaded programming.
 
 The POSIX standard requires that by default the stream operations are
 atomic.  I.e., issueing two stream operations for the same stream in two
@@ -455,7 +455,7 @@ perform the stream locking in the application code.
 @comment POSIX
 @deftypefun void flockfile (FILE *@var{stream})
 The @code{flockfile} function acquires the internal locking object
-associated with the stream @var{stream}.  This ensure that no other
+associated with the stream @var{stream}.  This ensures that no other
 thread can explicitly through @code{flockfile}/@code{ftrylockfile} or
 implicit through a call of a stream function lock the stream.  The
 thread will block until the lock is acquired.  An explicit call to
@@ -465,7 +465,7 @@ thread will block until the lock is acquired.  An explicit call to
 @comment stdio.h
 @comment POSIX
 @deftypefun int ftrylockfile (FILE *@var{stream})
-The@code{ftrylockfile} function tries to acquire the internal locking
+The @code{ftrylockfile} function tries to acquire the internal locking
 object associated with the stream @var{stream} just like
 @code{flockfile}.  But unlike @code{flockfile} this function does not
 block if the lock is not available.  @code{ftrylockfile} returns zero if
@@ -530,7 +530,7 @@ if the @code{ftrylockfile} function succeeded in locking the stream.  It
 is therefore always wrong to ignore the result of @code{ftrylockfile}.
 And it makes no sense since otherwise one would use @code{flockfile}.
 The result of code like that above is that either @code{funlockfile}
-tries to free a stream hasn't been locked by the current thread or it
+tries to free a stream that hasn't been locked by the current thread or it
 frees the stream prematurely.  The code should look like this:
 
 @smallexample
@@ -546,7 +546,7 @@ foo (FILE *fp)
 @end smallexample
 
 Now that we covered why it is necessary to have these locking it is
-necessary to talk about siuations when locking is unwanted and what can
+necessary to talk about situations when locking is unwanted and what can
 be done.  The locking operations (explicit or implicit) don't come for
 free.  Even if a lock is not taken the cost is not zero.  The operations
 which have to be performed require memory operations which are save in
@@ -564,7 +564,7 @@ standard defines quite a few of those and the GNU library adds a few
 more.  These variants of the functions behave just like the functions
 with the name without the suffix except that they are not locking the
 stream.  Using these functions is very desirable since they are
-potentially very much faster.  This is not only because the locking
+potentially much faster.  This is not only because the locking
 operation itself is avoided.  More importantly, functions like
 @code{putc} and @code{getc} are very simple and tradionally (before the
 introduction of threads) were implemented as macros which are very fast

@@ -1,3 +1,7 @@
+2001-02-08  Andreas Jaeger  <aj@suse.de>
+
+	* manual/stdio.texi (Closing Streams): Fix typos.
+
 2001-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/alphaev67/strncat.S: Align last write address.
