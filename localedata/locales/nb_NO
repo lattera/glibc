@@ -21,29 +21,29 @@ comment_char    %
 % for commercial purposes.
 
 LC_IDENTIFICATION
-title      "Norwegian locale for Norway"
+title      "Norwegian (Bokmal) locale for Norway"
 source     "Norsk Standardiseringsforbund"
 address    "University Library,, Drammensveien 41, N-9242 Oslo, Norge"
 contact    ""
 email      "bug-glibc@gnu.org"
 tel        ""
 fax        ""
-language   "Norwegian"
+language   "Norwegian Bokm<U00E5>l"
 territory  "Norway"
 revision   "1.0"
 date       "2000-06-29"
 %
-category  "no_NO:2000";LC_IDENTIFICATION
-category  "no_NO:2000";LC_CTYPE
-category  "no_NO:2000";LC_COLLATE
-category  "no_NO:2000";LC_TIME
-category  "no_NO:2000";LC_NUMERIC
-category  "no_NO:2000";LC_MONETARY
-category  "no_NO:2000";LC_MESSAGES
-category  "no_NO:2000";LC_PAPER
-category  "no_NO:2000";LC_NAME
-category  "no_NO:2000";LC_ADDRESS
-category  "no_NO:2000";LC_TELEPHONE
+category  "nb_NO:2000";LC_IDENTIFICATION
+category  "nb_NO:2000";LC_CTYPE
+category  "nb_NO:2000";LC_COLLATE
+category  "nb_NO:2000";LC_TIME
+category  "nb_NO:2000";LC_NUMERIC
+category  "nb_NO:2000";LC_MONETARY
+category  "nb_NO:2000";LC_MESSAGES
+category  "nb_NO:2000";LC_PAPER
+category  "nb_NO:2000";LC_NAME
+category  "nb_NO:2000";LC_ADDRESS
+category  "nb_NO:2000";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 

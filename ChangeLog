@@ -1,5 +1,7 @@
 2003-11-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/locale.alias: nb_NO is now the correct name, not no_NO.
+
 	* locale/iso-639.def: Add Blin.
 	Patch by Daniel Yacob <locales@geez.org>.
 
