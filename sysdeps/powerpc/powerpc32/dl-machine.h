@@ -233,7 +233,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   else
     {
       sym_map = RESOLVE_MAP (&sym, version, r_type);
-      value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
     }
   value += reloc->r_addend;
 #else
