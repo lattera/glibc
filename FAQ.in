@@ -76,7 +76,7 @@ Make up your own decision.
 GNU CC versions 2.95 and above are derived from egcs, and they may do even
 better.
 
-Please note that gcc 2.95 and 2.95.1 cannot compile glibc on Alpha due to
+Please note that gcc 2.95 and 2.95.x cannot compile glibc on Alpha due to
 problems in the complex float support.
 
 ??	When I try to compile glibc I get only error messages.
@@ -165,7 +165,7 @@ Binutils 2.9.1.0.16 or later is also required.
   (Motorola 68030 @ 32 Mhz, 34 Mb memory)
 
   A full build of the PowerPC library took 1h on a PowerPC 750@400Mhz w/
-  64MB of RAM, and about 9h on a 601@60Mhz w/ 72Mb. 
+  64MB of RAM, and about 9h on a 601@60Mhz w/ 72Mb.
 
   If you have some more measurements let me know.
 
@@ -611,7 +611,7 @@ handling is implemented using an older method; the people making the
 distributions are a little ahead of their time.
 
 A quick solution to this is to find the libgcc.a file that came with the
-distribution (it would have been installed under /usr/lib/gcc-lib), do 
+distribution (it would have been installed under /usr/lib/gcc-lib), do
 `ar x libgcc.a frame.o' to get the frame.o file out, and add a line saying
 `LDLIBS-c.so += frame.o' to the file `configparms' in the directory you're
 building in.  You can check you've got the right `frame.o' file by running
@@ -860,7 +860,7 @@ limits imposed by the `fd_set' type.  Instead all places where the
 functionality is needed the `poll' function is used.
 
 If you increase the number of file descriptors in the kernel you don't need
-to recompile the C library. 
+to recompile the C library.
 
 {UD} You can always get the maximum number of file descriptors a process is
 allowed to have open at any time using

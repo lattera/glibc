@@ -839,7 +839,7 @@ occur, you can use the following two functions.
 @deftypefun int feenableexcept (int @var{excepts})
 This functions enables traps for each of the exceptions as indicated by
 the parameter @var{except}.  The individual excepetions are described in
-@ref{Examining the FPU status word}.  Only the specified exceptions are
+@ref{Status bit operations}.  Only the specified exceptions are
 enabled, the status of the other exceptions is not changed.
 
 The function returns the previous enabled exceptions in case the
@@ -851,7 +851,7 @@ operation was successful, @code{-1} otherwise.
 @deftypefun int fedisableexcept (int @var{excepts})
 This functions disables traps for each of the exceptions as indicated by
 the parameter @var{except}.  The individual excepetions are described in
-@ref{Examining the FPU status word}.  Only the specified exceptions are
+@ref{Status bit operations}.  Only the specified exceptions are
 disabled, the status of the other exceptions is not changed.
 
 The function returns the previous enabled exceptions in case the
@@ -863,6 +863,7 @@ operation was successful, @code{-1} otherwise.
 @deftypefun int fegetexcept (int @var{excepts})
 The function returns a bitmask of all currently enabled exceptions.  It
 returns @code{-1} in case of failure.
+@end deftypefun
 
 @node Arithmetic Functions
 @section Arithmetic Functions

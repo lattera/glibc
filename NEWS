@@ -17,6 +17,9 @@ Version 2.2
 
 * functions from the extended socket API added by Ulrich Drepper.
 
+* Functions feenableexcept and fedisableexcept to control the
+  behaviour of individual exceptions have been added by Andreas Jaeger.
+
 
 Version 2.1.2
 

@@ -1,3 +1,7 @@
+1999-11-16  Andreas Jaeger  <aj@suse.de>
+
+	* math/fenv.h: Fix typos in comments.  Reported by Andreas Schwab.
+
 1999-11-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c (set_class_defaults): Set default
