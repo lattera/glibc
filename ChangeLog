@@ -1,7 +1,11 @@
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
-	* math/test-misc.c (main): Test for pseudo denormal numbers on x86.
-	* sysdeps/i386/fpu/fpclassify.c: New file.
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Hopefully fix
+	the handling of denormalized numbers.
+
+	* math/test-misc.c (main): Test for fpclassify and pseudo denormal
+	numbers on x86.
+	* sysdeps/i386/fpu/fpclassifyl.c: New file.
 
 	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Handle the
 	pseudo denormal representation of LDBL_MIN.

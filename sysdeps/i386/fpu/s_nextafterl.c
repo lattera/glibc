@@ -59,8 +59,17 @@ static char rcsid[] = "$NetBSD: $";
 	    if(ix>iy||((ix==iy) && (hx>hy||((hx==hy)&&(lx>ly))))) {
 	      /* x > y, x -= ulp */
 		if(lx==0) {
-		    if (hx==0) esx -= 1;
-		    hx -= 1;
+		    if (hx <= 0x80000000) {
+		      if (esx == 0)
+			hx = 0;
+		      else {
+			esx -= 1;
+			hx = hx - 1;
+			if (esx > 0)
+			  hx |= 0x80000000;
+		      }
+		    } else
+		      hx -= 1;
 		}
 		lx -= 1;
 	    } else {				/* x < y, x += ulp */
@@ -75,8 +84,17 @@ static char rcsid[] = "$NetBSD: $";
 	    if(esy>=0||(ix>iy||((ix==iy)&&(hx>hy||((hx==hy)&&(lx>ly)))))){
 	      /* x < y, x -= ulp */
 		if(lx==0) {
-		    if (hx==0) esx -= 1;
-		    hx -= 1;
+		    if (hx <= 0x80000000) {
+		      if (esx == 0)
+			hx = 0;
+		      else {
+			esx -= 1;
+			hx = hx - 1;
+			if (esx > 0)
+			  hx |= 0x80000000;
+		      }
+		    } else
+		      hx -= 1;
 		}
 		lx -= 1;
 	    } else {				/* x > y, x += ulp */
