@@ -1,5 +1,13 @@
 1999-01-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/Makefile (routines): Remove fgetc.
+	* libio/fgetc.c: Removed.
+	* libio/getc.c: Add fgetc alias.
+	* libio/Versions [GLIBC_2.1]: Add fgetc_unlocked.
+	* libio/getc_u.c: Rename functio to __getc_unlocked and make
+	getc_unlocked and fgetc_unlocked weak aliases.
+	* libio/stdio.h: Add prototype for fgetc_unlocked.
+
 	* sysdeps/gnu/bits/utmp.h: Don't prepend exit_status elements with
 	__ since utmp.h is not mentioned in any standard.
 

@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ routines	:=							      \
 	iovsprintf iovsscanf						      \
 	iofgetpos64 iofopen64 iofsetpos64				      \
 									      \
-	clearerr feof ferror fgetc fileno fputc freopen fseek getc getchar    \
+	clearerr feof ferror fileno fputc freopen fseek getc getchar	      \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
 	iovdprintf vscanf vsnprintf obprintf fcloseall fseeko ftello	      \
 	freopen64 fseeko64 ftello64					      \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -29,9 +29,12 @@
 #undef getc_unlocked
 
 int
-getc_unlocked (fp)
+__getc_unlocked (fp)
      FILE *fp;
 {
   CHECK_FILE (fp, EOF);
   return _IO_getc_unlocked (fp);
 }
+
+weak_alias (__getc_unlocked, getc_unlocked)
+weak_alias (__getc_unlocked, fgetc_unlocked)

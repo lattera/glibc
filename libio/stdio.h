@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -346,6 +346,11 @@ extern int getchar __P ((void));
 extern int getc_unlocked __P ((FILE *__stream));
 extern int getchar_unlocked __P ((void));
 #endif /* Use POSIX or MISC.  */
+
+#ifdef __USE_MISC
+/* Faster version when locking is not necessary.  */
+extern int fgetc_unlocked __P ((FILE *__stream));
+#endif /* Use MISC.  */
 
 
 /* Write a character to STREAM.  */

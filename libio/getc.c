@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -46,4 +46,5 @@ _IO_getc (fp)
 
 #ifdef weak_alias
 weak_alias (_IO_getc, getc)
+weak_alias (_IO_getc, fgetc)
 #endif
