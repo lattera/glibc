@@ -125,7 +125,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
       /* The beginning of the PLT does:
 
-	 	save %sp, -64, %sp
+		save %sp, -64, %sp
 	 pltpc:	call _dl_runtime_resolve
 		nop
 		.word MAP
@@ -168,7 +168,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.previous")
 
 #ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE 			\
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
   TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
   TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup);
 #else
@@ -396,7 +396,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = value;
 	  break;
 	case R_SPARC_JMP_SLOT:
-	  elf_machine_fixup_plt(map, reloc, reloc_addr, value);
+	  elf_machine_fixup_plt(map, NULL, reloc, reloc_addr, value);
 	  break;
 	case R_SPARC_8:
 	  *(char *) reloc_addr = value;

@@ -252,7 +252,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.end " #tramp_name)
 
 #ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE 				\
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
   TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
   TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup, /* nop */);
 #else
@@ -497,7 +497,7 @@ elf_machine_rela (struct link_map *map,
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
       else if (r_type == R_ALPHA_JMP_SLOT)
-	elf_machine_fixup_plt (map, reloc, reloc_addr, sym_value);
+	elf_machine_fixup_plt (map, NULL, reloc, reloc_addr, sym_value);
       else if (r_type == R_ALPHA_REFQUAD)
 	{
 	  sym_value += *reloc_addr;

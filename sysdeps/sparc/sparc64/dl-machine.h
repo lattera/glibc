@@ -313,7 +313,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 
 	case R_SPARC_JMP_SLOT:
-	  elf_machine_fixup_plt(map, reloc, reloc_addr, value);
+	  elf_machine_fixup_plt(map, NULL, reloc, reloc_addr, value);
 	  break;
 
 	default:
@@ -486,7 +486,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.previous");
 
 #ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE 			\
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
   TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
   TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup);
 #else
