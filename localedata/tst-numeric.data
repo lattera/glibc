@@ -43,7 +43,7 @@ C	%9g	-1.23	    -1.23
 #
 # check both the norwegian locales and snprintf with that data
 #
-no_NO.ISO-8859-1	%'g	123.45	123,45
-no_NO.ISO-8859-1	%'g	-123.45	-123,45
+nb_NO.ISO-8859-1	%'g	123.45	123,45
+nb_NO.ISO-8859-1	%'g	-123.45	-123,45
 nn_NO.ISO-8859-1	%'g	123.45	123,45
 nn_NO.ISO-8859-1	%'g	-123.45	-123,45
