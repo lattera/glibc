@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -398,7 +398,7 @@ struct addrinfo
 /* Possible values for `ai_flags' field in `addrinfo' structure.  */
 # define AI_PASSIVE	1	/* Socket address is intended for `bind'.  */
 # define AI_CANONNAME	2	/* Request for canonical name.  */
-# define AI_NUMERICHOST	3	/* Don't use name resolution.  */
+# define AI_NUMERICHOST	4	/* Don't use name resolution.  */
 
 /* Error values for `getaddrinfo' function.  */
 # define EAI_BADFLAGS	-1	/* Invalid value for `ai_flags' field.  */

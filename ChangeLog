@@ -1,3 +1,8 @@
+1999-02-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/netdb.h (AI_NUMERICHOST): Change to 4.
+	Reported by Craig Metz <cmetz@inner.net> .
+
 1999-02-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* stdio-common/Makefile (tests): tllformat added.
