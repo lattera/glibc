@@ -31,9 +31,12 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     {
       if (__builtin_expect (ch, 0) == 0x20a9)
 	{
-	  /* Half-width Korean Currency WON sign.  */
-	  cp[0] = '\\';
-	  cp[1] = '\0';
+	  /* Half-width Korean Currency WON sign.  There is no
+             equivalent in EUC-KR.  Some mappings use \x5c because
+             this is what some old Korean ASCII variants used but this
+             is causing problems.  We map it to the FULL WIDTH WON SIGN.  */
+	  cp[0] = '\xa3';
+	  cp[1] = '\xdc';
 	}
       else if (__builtin_expect (ucs4_to_ksc5601 (ch, cp, 2), 0)
 	  != __UNKNOWN_10646_CHAR)
@@ -75,13 +78,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     uint32_t ch = *inptr;						      \
 									      \
     if (ch <= 0x9f)							      \
-      {									      \
-	/* Plain ASCII with one exception.  */				      \
-	if (ch == 0x5c)							      \
-	  /* Half-width Korean Currency WON sign.  */			      \
-	  ch = 0x20a9;							      \
-	++inptr;							      \
-      }									      \
+      ++inptr;								      \
     /* 0xfe(->0x7e : row 94) and 0xc9(->0x59 : row 41) are		      \
        user-defined areas.  */						      \
     else if (__builtin_expect (ch, 0xa1) == 0xa0			      \

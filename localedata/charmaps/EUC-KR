@@ -100,7 +100,7 @@ CHARMAP
 <U0059>     /x59         LATIN CAPITAL LETTER Y
 <U005A>     /x5a         LATIN CAPITAL LETTER Z
 <U005B>     /x5b         LEFT SQUARE BRACKET
-<U20A9>     /x5c         WON SIGN
+<U005C>     /x5c         REVERSE SOLIDUS
 <U005D>     /x5d         RIGHT SQUARE BRACKET
 <U005E>     /x5e         CIRCUMFLEX ACCENT
 <U005F>     /x5f         LOW LINE

@@ -1,3 +1,10 @@
+2000-11-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_MESSAGE_PASSING):
+	Don't define it.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+	Reported by Christopher Yeoh <cyeoh@linuxcare.com.au>.
+
 2000-11-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* cancel.c (pthread_cancel): Always set p_canceled, even if we are

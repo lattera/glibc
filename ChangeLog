@@ -1,3 +1,11 @@
+2000-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/euc-kr.c (euckr_from_ucs4): Map 0x20a9 to \xa3dc.
+	(BODY from direction): Remove special handling of \x5c.
+	* iconvdata/EUC-KR.irreversible: Adjust for this change.
+	* iconvdata/testdata/EUC-KR..UTF8: Likewise.
+	Reported by Jungshik Shin <jshin@pantheon.yale.edu>.
+
 2000-11-07  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/sh3/setjmp.S (__sigsetjmp): Skip FPU fields.

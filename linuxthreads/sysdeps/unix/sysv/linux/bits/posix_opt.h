@@ -135,6 +135,6 @@
 #define _POSIX_BARRIERS	200912L
 
 /* POSIX message queues are not yet supported.  */
-#define	_POSIX_MESSAGE_PASSING	(-1)
+#undef	_POSIX_MESSAGE_PASSING
 
 #endif /* posix_opt.h */
