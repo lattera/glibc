@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
@@ -20,24 +20,12 @@
 /* __bb_exit_func() dumps all the basic-block statistics linked into
    the __bb_head chain to .d files.  */
 
+#include <sys/gmon.h>
 #include <sys/gmon_out.h>
 #include <sys/types.h>
 
 #include <stdio.h>
 #include <string.h>
-
-/* structure emitted by -a */
-struct bb
-  {
-    long int zero_word;
-    const char *filename;
-    long int *counts;
-    long int ncounts;
-    struct bb *next;
-    const unsigned long	int *addresses;
-  };
-
-extern struct bb *__bb_head;	/* from gmon.c */
 
 #define OUT_NAME	"gmon.out"
 
@@ -47,7 +35,7 @@ __bb_exit_func (void)
 {
   const int version = GMON_VERSION;
   struct gmon_hdr ghdr;
-  struct bb *ptr;
+  struct __bb *ptr;
   FILE *fp;
   fp = fopen (OUT_NAME, "wb");
   if (!fp)

@@ -136,6 +136,7 @@ print_funcdef (definition *def)
       pprogramdef (def);
       break;
     default:
+      break;
       /* ?... shouldn't happen I guess */
     }
 }

@@ -739,6 +739,7 @@ emit_inline (int indent, declaration * decl, int flag)
       f_print (fout, "}\n");
       break;
     default:
+      break;
       /* ?... do nothing I guess */
     }
 }

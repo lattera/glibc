@@ -1,5 +1,8 @@
 2000-12-28  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/generic/ldsodefs.h: Add noreturn attribute to
+	_dl_reloc_bad_type.
+
 	* sunrpc/rpc_hout.c (print_funcdef): Add break statement to shut
 	up GCC's warning about "deprecated use of label at end of compound
 	statement."
