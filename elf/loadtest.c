@@ -7,7 +7,7 @@
 
 
 /* How many load/unload operations do we do.  */
-#define TEST_ROUNDS	100
+#define TEST_ROUNDS	1000
 
 
 static struct
@@ -21,6 +21,9 @@ static struct
   { "testobj1.so", NULL },
   { "testobj2.so", NULL },
   { "testobj3.so", NULL },
+  { "testobj4.so", NULL },
+  { "testobj5.so", NULL },
+  { "testobj6.so", NULL },
 };
 #define NOBJS	(sizeof (testobjs) / sizeof (testobjs[0]))
 
@@ -47,6 +50,18 @@ static const struct
   { "obj3func1", 2, RTLD_LAZY | RTLD_GLOBAL },
   { "obj3func1", 2, RTLD_NOW },
   { "obj3func2", 2, RTLD_NOW | RTLD_GLOBAL },
+  { "obj4func2", 3, RTLD_LAZY },
+  { "obj4func1", 3, RTLD_LAZY | RTLD_GLOBAL },
+  { "obj4func1", 3, RTLD_NOW },
+  { "obj4func2", 3, RTLD_NOW | RTLD_GLOBAL },
+  { "obj5func2", 4, RTLD_LAZY },
+  { "obj5func1", 4, RTLD_LAZY | RTLD_GLOBAL },
+  { "obj5func1", 4, RTLD_NOW },
+  { "obj5func2", 4, RTLD_NOW | RTLD_GLOBAL },
+  { "obj6func2", 5, RTLD_LAZY },
+  { "obj6func1", 5, RTLD_LAZY | RTLD_GLOBAL },
+  { "obj6func1", 5, RTLD_NOW },
+  { "obj6func2", 5, RTLD_NOW | RTLD_GLOBAL },
 };
 #define NTESTS	(sizeof (tests) / sizeof (tests[0]))
 

@@ -1,15 +1,15 @@
 #include <dlfcn.h>
 
 int
-obj1func1 (int a __attribute__ ((unused)))
+obj5func1 (int a __attribute__ ((unused)))
 {
-  return 42;
+  return 66;
 }
 
 int
-obj1func2 (int a)
+obj5func2 (int a)
 {
-  return foo (a) + 10;
+  return foo (a) + 44;
 }
 
 int

@@ -1,3 +1,18 @@
+1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (tests): Add preloadtest.  Add rules to build more test
+	modules and the preloadtest binary.
+	* elf/loadtest.c (TEST_ROUNDS): Increase to 1000.
+	(testobjs): Add more modules.
+	(tests): Add entries for new modules.
+	* elf/preloadtest.c: New file.  Test for LD_PRELOAD.
+	* elf/testobj1.c: Add 'preload' function.
+	* elf/testobj2.c: Likewise.
+	* elf/testobj3.c: Likewise.
+	* elf/testobj4.c: New file.
+	* elf/testobj5.c: New file.
+	* elf/testobj6.c: New file.
+
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-object.c (_dl_new_object): Micro-optimization.

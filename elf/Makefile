@@ -75,7 +75,7 @@ others		+= ldconfig
 install-rootsbin += ldconfig
 endif
 
-tests = loadtest restest1
+tests = loadtest restest1 preloadtest
 
 include ../Rules
 
@@ -214,14 +214,20 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
 endef
 
-modules-names = testobj1 testobj2 testobj3 testobj1_1
+modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
+		testobj1_1
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(test-modules)
 
+LDLIBS-testobj1.so = -ldl
 $(objpfx)testobj1_1.so: $(objpfx)testobj1.so
 LDLIBS-testobj1_1.so = $(objpfx)testobj1.so
 $(objpfx)testobj2.so: $(objpfx)testobj1.so
-LDLIBS-testobj2.so = $(objpfx)testobj1.so
+LDLIBS-testobj2.so = $(objpfx)testobj1.so -ldl
+LDLIBS-testobj3.so = -ldl
+LDLIBS-testobj4.so = -ldl
+LDLIBS-testobj5.so = -ldl
+LDLIBS-testobj6.so = -ldl
 
 $(test-modules): $(objpfx)%.so: %.c
 	$(build-module)
@@ -235,6 +241,10 @@ $(objpfx)restest1: $(objpfx)libdl.so
 LDFLAGS-restest1 = -rdynamic $(objpfx)testobj1.so $(objpfx)testobj1_1.so
 
 $(objpfx)restest1.out: $(test-modules)
+
+$(objpfx)preloadtest.out: $(test-modules)
+LDFLAGS-preloadtest = -rdynamic $(objpfx)testobj6.so
+preloadtest-ENV = LD_PRELOAD=testobj1.so:testobj2.so:testobj3.so:testobj4.so:testobj5.so
 
 # muwahaha
 
