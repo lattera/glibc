@@ -20,6 +20,10 @@
 	* sysdeps/mips/sys/regdef.h: New file, enhanced versions of
 	deleted linux specific files.
 
+1998-12-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: New file.
+
 1999-01-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* misc/regexp.h (compile): Correct end-of-line check, fix typo in
