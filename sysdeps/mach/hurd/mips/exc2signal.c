@@ -26,8 +26,10 @@ Cambridge, MA 02139, USA.  */
 
 void
 _hurd_exception2signal (int exception, int code, int subcode,
-			int *signo, int *sigcode)
+			int *signo, int *sigcode, int *error)
 {
+  *error = 0;
+
   switch (exception)
     {
     default:
@@ -41,6 +43,7 @@ _hurd_exception2signal (int exception, int code, int subcode,
       else
 	*signo = SIGBUS;
       *sigcode = subcode;
+      *error = code;
       break;
 
     case EXC_BAD_INSTRUCTION:
