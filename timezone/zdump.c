@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	7.61";
+static char	elsieid[] = "@(#)zdump.c	7.64";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -175,12 +175,13 @@ time_t *	tp;
 			(void) fprintf(stderr, "\n%s: ", progname);
 			(void) fprintf(stderr, tformat(), *tp);
 			(void) fprintf(stderr, " ->");
-			(void) fprintf(stderr, " sec %d", tmp->tm_sec);
-			(void) fprintf(stderr, " min %d", tmp->tm_min);
-			(void) fprintf(stderr, " hour %d", tmp->tm_hour);
-			(void) fprintf(stderr, " mday %d", tmp->tm_mday);
-			(void) fprintf(stderr, " mon %d", tmp->tm_mon);
-			(void) fprintf(stderr, " year %d", tmp->tm_year);
+			(void) fprintf(stderr, " year=%d", tmp->tm_year);
+			(void) fprintf(stderr, " mon=%d", tmp->tm_mon);
+			(void) fprintf(stderr, " mday=%d", tmp->tm_mday);
+			(void) fprintf(stderr, " hour=%d", tmp->tm_hour);
+			(void) fprintf(stderr, " min=%d", tmp->tm_min);
+			(void) fprintf(stderr, " sec=%d", tmp->tm_sec);
+			(void) fprintf(stderr, " isdst=%d", tmp->tm_isdst);
 			(void) fprintf(stderr, " -> ");
 			(void) fprintf(stderr, tformat(), t);
 			(void) fprintf(stderr, "\n");
@@ -318,7 +319,7 @@ _("%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"),
 			newtmp = localtime(&newt);
 			if (newtmp != NULL)
 				newtm = *newtmp;
-			if ((tmp == NULL || newtmp == NULL) ?  (tmp != newtmp) :
+			if ((tmp == NULL || newtmp == NULL) ? (tmp != newtmp) :
 				(delta(&newtm, &tm) != (newt - t) ||
 				newtm.tm_isdst != tm.tm_isdst ||
 				strcmp(abbr(&newtm), buf) != 0)) {

@@ -1,3 +1,25 @@
+2005-04-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/pmap_rmt.c (xdr_rmtcall_args): Use a dummy arglen instead
+	of trying to encode uninitialized arglen.
+
+2005-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/scheck.c: Update from tzcode2005h.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
+	* timezone/antarctica: Update from tzdata2005h.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/etcetera: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/iso3166.tab: Likewise.
+
 2005-03-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/fpu/libm_cpu_defs.h: Update copyright.
