@@ -149,7 +149,19 @@ static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
 #endif
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
   {
-    return (testandset(&lock->__spinlock) ? EBUSY : 0);
+    int res = EBUSY;
+
+    if (testandset(&lock->__spinlock) == 0)
+      {
+	if (lock->__status == 0)
+	  {
+	    lock->__status = 1;
+	    WRITE_MEMORY_BARRIER();
+	    res = 0;
+	  }
+	lock->__spinlock = 0;
+      }
+    return res;
   }
 #endif
 

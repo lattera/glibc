@@ -1,5 +1,8 @@
 2000-07-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* spinlock.h (__pthread_alt_trylock): Fix code used if no
+	compare&swap is available.
+
 	* spinlock.h (__pthread_trylock): Use __compare_and_swap, not
 	compare_and_swap.
 
