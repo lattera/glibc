@@ -97,59 +97,61 @@ __STRING2_COPY_TYPE (8);
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
 		  ? ((n) == 1						      \
 		     ? __memset_1 (s, c)				      \
-		     : __memset_gc (s, (((__uint8_t) c) * 0x1010101), n))     \
+		     : __memset_gc (s, c, n))				      \
 		  : (__builtin_constant_p (c) && (c) == '\0'		      \
 		     ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
 		     : memset (s, c, n))))
 
-#define __memset_1(s, c) ({ void *__s = (s); *((__uint8_t *) __s) = c; __s; })
+#define __memset_1(s, c) ({ void *__s = (s);				      \
+			    *((__uint8_t *) __s) = (__uint8_t) c; __s; })
 
 #define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
      __uint32_t *__ts = (__uint32_t *) __s;				      \
+     __uint8_t __c = (__uint8_t) (c);					      \
      									      \
      /* This `switch' statement will be removed at compile-time.  */	      \
      switch (n)								      \
        {								      \
        case 15:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 11:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 7:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 3:								      \
-	 *((__uint16_t *) __ts)++ = c;					      \
-	 *((__uint8_t *) __ts) = c;					      \
+	 *((__uint16_t *) __ts)++ = __c * 0x0101;			      \
+	 *((__uint8_t *) __ts) = __c;					      \
 	 break;								      \
 									      \
        case 14:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 10:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 6:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 2:								      \
-	 *((__uint16_t *) __ts) = c;					      \
+	 *((__uint16_t *) __ts) = __c * 0x0101;				      \
 	 break;								      \
 									      \
        case 13:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 9:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 5:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 1:								      \
-	 *((__uint8_t *) __ts) = c;					      \
+	 *((__uint8_t *) __ts) = __c;					      \
 	 break;								      \
 									      \
        case 16:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 12:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 8:								      \
-	 *__ts++ = c;							      \
+	 *__ts++ = __c * 0x01010101;					      \
        case 4:								      \
-	 *__ts = c;							      \
+	 *__ts = __c * 0x01010101;					      \
        case 0:								      \
 	 break;								      \
        }								      \
