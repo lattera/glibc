@@ -1,3 +1,8 @@
+1998-07-29 21:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Define more EM_* constants, ELFCLASSNUM, ELFDATANUM,
+	EV_NUM, Elf32_Nhdr, Elf64_Nhdr and various note section values.
+
 1998-07-29  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__lseek): New function.

@@ -126,11 +126,13 @@ typedef struct
 #define ELFCLASSNONE	0		/* Invalid class */
 #define ELFCLASS32	1		/* 32-bit objects */
 #define ELFCLASS64	2		/* 64-bit objects */
+#define ELFCLASSNUM	3
 
 #define EI_DATA		5		/* Data encoding byte index */
 #define ELFDATANONE	0		/* Invalid data encoding */
 #define ELFDATA2LSB	1		/* 2's complement, little endian */
 #define ELFDATA2MSB	2		/* 2's complement, big endian */
+#define ELFDATANUM	3
 
 #define EI_VERSION	6		/* File version byte index */
 					/* Value must be EV_CURRENT */
@@ -150,27 +152,34 @@ typedef struct
 
 /* Legal values for e_machine (architecture).  */
 
-#define EM_NONE		0		/* No machine */
-#define EM_M32		1		/* AT&T WE 32100 */
-#define EM_SPARC	2		/* SUN SPARC */
-#define EM_386		3		/* Intel 80386 */
-#define EM_68K		4		/* Motorola m68k family */
-#define EM_88K		5		/* Motorola m88k family */
-#define EM_486		6		/* Intel 80486 */
-#define EM_860		7		/* Intel 80860 */
-#define EM_MIPS		8		/* MIPS R3000 big-endian */
-#define EM_S370		9		/* Amdahl */
-#define EM_MIPS_RS4_BE 10		/* MIPS R4000 big-endian */
+#define EM_NONE		 0		/* No machine */
+#define EM_M32		 1		/* AT&T WE 32100 */
+#define EM_SPARC	 2		/* SUN SPARC */
+#define EM_386		 3		/* Intel 80386 */
+#define EM_68K		 4		/* Motorola m68k family */
+#define EM_88K		 5		/* Motorola m88k family */
+#define EM_486		 6		/* Intel 80486 */
+#define EM_860		 7		/* Intel 80860 */
+#define EM_MIPS		 8		/* MIPS R3000 big-endian */
+#define EM_S370		 9		/* Amdahl */
+#define EM_MIPS_RS4_BE	10		/* MIPS R4000 big-endian */
+#define EM_RS6000	11		/* RS6000 */
 
-#define EM_PARISC      15		/* HPPA */
+#define EM_PARISC	15		/* HPPA */
+#define EM_nCUBE	16		/* nCUBE */
+#define EM_VPP500	17		/* Fujitsu VPP500 */
+#define EM_SPARC32PLUS	18		/* Sun's "v8plus" */
+#define EM_960		19		/* Intel 80960 */
+#define EM_PPC		20		/* PowerPC */
 
-#define EM_SPARC32PLUS 18		/* Sun's "v8plus" */
-
-#define EM_PPC         20		/* PowerPC */
-
+#define EM_V800		36		/* NEC V800 series */
+#define EM_FR20		37		/* Fujitsu FR20 */
+#define EM_RH32		38		/* TRW RH32 */
+#define EM_MMA		39		/* Fujitsu MMA */
 #define EM_ARM		40		/* ARM */
-
-#define EM_SPARCV9     43		/* SPARC v9 64-bit */
+#define EM_OLD_ALPHA	41		/* Digital Alpha */
+#define EM_SH		42		/* Hitachi SH */
+#define EM_SPARCV9	43		/* SPARC v9 64-bit */
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
@@ -182,6 +191,7 @@ typedef struct
 
 #define EV_NONE		0		/* Invalid ELF version */
 #define EV_CURRENT	1		/* Current version */
+#define EV_NUM		2
 
 /* Section header.  */
 
@@ -659,6 +669,56 @@ typedef struct
 #define AT_PLATFORM	15		/* String identifying platform.  */
 #define AT_HWCAP	16		/* Machine dependent hints about
 					   processor capabilities.  */
+
+
+/* Note section contents.  Each entry in the note section begins with
+   a header of a fixed form.  */
+
+typedef struct
+{
+  Elf32_Word n_namesz;			/* Length of the note's name.  */
+  Elf32_Word n_descsz;			/* Length of the note's descriptor.  */
+  Elf32_Word n_type;			/* Type of the note.  */
+} Elf32_Nhdr;
+
+typedef struct
+{
+  Elf64_Word n_namesz;			/* Length of the note's name.  */
+  Elf64_Word n_descsz;			/* Length of the note's descriptor.  */
+  Elf64_Word n_type;			/* Type of the note.  */
+} Elf64_Nhdr;
+
+/* Known names of notes.  */
+
+/* Solaris entries in the note section have this name.  */
+#define ELF_NOTE_SOLARIS	"SUNW Solaris"
+
+/* Note entries for GNU systems have this name.  */
+#define ELF_NOTE_GNU		"GNU"
+
+
+/* Defined types of notes for Solaris.  */
+
+/* Value of descriptor (one word) is desired pagesize for the binary.  */
+#define ELF_NOTE_PAGESIZE_HINT	1
+
+
+/* Defined note types for GNU systems.  */
+
+/* ABI information.  The descriptor consists of words:
+   word 0: OS descriptor
+   word 1: major version of the ABI
+   word 2: minor version of the ABI
+   word 3: subminor version of the ABI
+*/
+#define ELF_NOTE_ABI		1
+
+/* Known OSes.  These value can appear in word 0 of an ELF_NOTE_ABI
+   note section entry.  */
+#define ELF_NOTE_OS_LINUX	0
+#define ELF_NOTE_OS_GNU		1
+#define ELF_NOTE_OS_SOLARIS2	2
+
 
 /* Motorola 68k specific definitions.  */
 
