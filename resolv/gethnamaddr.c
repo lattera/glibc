@@ -420,6 +420,10 @@ getanswer(answer, anslen, qname, qtype)
 				buflen -= nn;
 			}
 
+			/* XXX: when incrementing bp, we have to decrement
+			 * buflen by the same amount --okir */
+			buflen -= sizeof(align) - ((u_long)bp % sizeof(align));
+
 			bp += sizeof(align) - ((u_long)bp % sizeof(align));
 
 			if (bp + n >= &hostbuf[sizeof hostbuf]) {

@@ -1,5 +1,8 @@
 1999-10-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* resolv/gethnamaddr.c: Account bytes needed for alignment in
+	buflen.  Patch by Olaf Kibrch <okir@lst.de>.
+
 	* md5-crypt/md5test.c: Correct names of MD5 functions after
 	removing of public names.
 
