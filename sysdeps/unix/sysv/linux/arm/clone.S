@@ -41,13 +41,13 @@ ENTRY(__clone)
 	str	r0, [r1]
 
 	@ do the system call
-	@ get flags 
+	@ get flags
 	mov	r0, r2
 	@ new sp is already in r1
 	swi	SYS_ify(clone)
-	cmn	a1, $4096
-	bhs	PLTJMP(C_SYMBOL_NAME(__syscall_error))
-	RETINSTR(movne,pc,lr)
+	movs	a1, a1
+	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+	RETINSTR(movne, pc, lr)
 
 	@ pick the function arg and call address off the stack and execute
 	ldr	r0, [sp, #4]
