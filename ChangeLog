@@ -1,3 +1,13 @@
+2000-09-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/dl-cache.h: Include stdint.h.
+	(struct file_entry_new): Use fixed sizes for interoperability
+	between 32bit and 64bit systems, add __unused to make alignment
+	explicit.
+	(CACHE_VERSION): Increment.
+	(struct cache_file_new): Use fixed sizes, add one more unused
+	entry to make alignment explicit.
+
 2000-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/ldconfig.c (search_dir): Make more use of d_type
