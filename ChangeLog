@@ -1,5 +1,8 @@
 2002-06-15  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/unix/sysv/linux/bits/ustat.h: Moved to ...
+	* sysdeps/generic/bits/ustat.h: ... here (was almost identical).
+
 	* sysdeps/alpha/divrem.h: Use local label instead of global one for
 	jump to local subroutine.
 
