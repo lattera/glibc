@@ -1,3 +1,8 @@
+1999-12-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-collate.c (collate_read): Make symbolic
+	ellipsis work.  Remove old and unused code.
+
 1999-12-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (collate_read): Implement
