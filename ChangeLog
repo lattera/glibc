@@ -1,3 +1,8 @@
+2003-03-22  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/m68020/bits/atomic.h: New file.
+	* sysdeps/m68k/m68020/atomicity.h: Removed.
+
 2003-03-22  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/elf/ldsodefs.h: Add mips-specific elf64 relocation
