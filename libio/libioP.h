@@ -479,6 +479,7 @@ extern int _IO_new_fgetpos64 __P ((_IO_FILE *, _IO_fpos64_t *));
 extern int _IO_old_fgetpos64 __P ((_IO_FILE *, _IO_fpos64_t *));
 extern int _IO_new_fsetpos64 __P ((_IO_FILE *, const _IO_fpos64_t *));
 extern int _IO_old_fsetpos64 __P ((_IO_FILE *, const _IO_fpos64_t *));
+extern void _IO_old_init __P ((_IO_FILE *fp, int flags));
 
 
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T

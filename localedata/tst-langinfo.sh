@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test nl_langinfo.
-# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -155,13 +155,13 @@ en_US.ISO-8859-1     RADIXCHAR   .
 en_US.ISO-8859-1     THOUSEP     ,
 en_US.ISO-8859-1     YESEXPR     ^[yY].*
 en_US.ISO-8859-1     NOEXPR      ^[nN].*
-de_DE.ISO-8859-1     ABDAY_1     Son
-de_DE.ISO-8859-1     ABDAY_2     Mon
-de_DE.ISO-8859-1     ABDAY_3     Die
-de_DE.ISO-8859-1     ABDAY_4     Mit
-de_DE.ISO-8859-1     ABDAY_5     Don
-de_DE.ISO-8859-1     ABDAY_6     Fre
-de_DE.ISO-8859-1     ABDAY_7     Sam
+de_DE.ISO-8859-1     ABDAY_1     So
+de_DE.ISO-8859-1     ABDAY_2     Mo
+de_DE.ISO-8859-1     ABDAY_3     Di
+de_DE.ISO-8859-1     ABDAY_4     Mi
+de_DE.ISO-8859-1     ABDAY_5     Do
+de_DE.ISO-8859-1     ABDAY_6     Fr
+de_DE.ISO-8859-1     ABDAY_7     Sa
 de_DE.ISO-8859-1     DAY_1       Sonntag
 de_DE.ISO-8859-1     DAY_2       Montag
 de_DE.ISO-8859-1     DAY_3       Dienstag
@@ -200,13 +200,13 @@ de_DE.ISO-8859-1     RADIXCHAR   ,
 de_DE.ISO-8859-1     THOUSEP     .
 de_DE.ISO-8859-1     YESEXPR     ^[jJyY].*
 de_DE.ISO-8859-1     NOEXPR      ^[nN].*
-de_DE.UTF-8          ABDAY_1     Son
-de_DE.UTF-8          ABDAY_2     Mon
-de_DE.UTF-8          ABDAY_3     Die
-de_DE.UTF-8          ABDAY_4     Mit
-de_DE.UTF-8          ABDAY_5     Don
-de_DE.UTF-8          ABDAY_6     Fre
-de_DE.UTF-8          ABDAY_7     Sam
+de_DE.UTF-8          ABDAY_1     So
+de_DE.UTF-8          ABDAY_2     Mo
+de_DE.UTF-8          ABDAY_3     Di
+de_DE.UTF-8          ABDAY_4     Mi
+de_DE.UTF-8          ABDAY_5     Do
+de_DE.UTF-8          ABDAY_6     Fr
+de_DE.UTF-8          ABDAY_7     Sa
 de_DE.UTF-8          DAY_1       Sonntag
 de_DE.UTF-8          DAY_2       Montag
 de_DE.UTF-8          DAY_3       Dienstag

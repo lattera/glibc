@@ -1,3 +1,11 @@
+2003-05-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/oldiofdopen.c (_IO_old_fdopen): Use _IO_old_init not _IO_init.
+	* libio/oldiofopen.c (_IO_old_fopen): Likewise.
+	* libio/libioP.h: Declare _IO_old_init.
+	* libio/genops.c (_IO_no_init): Split in two.  New function
+	_IO_old_init.
+
 2003-05-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/enbl-secure.c (__libc_enable_secure_decided): New

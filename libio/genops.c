@@ -602,12 +602,9 @@ _IO_init (fp, flags)
 INTDEF(_IO_init)
 
 void
-_IO_no_init (fp, flags, orientation, wd, jmp)
+_IO_old_init (fp, flags)
      _IO_FILE *fp;
      int flags;
-     int orientation;
-     struct _IO_wide_data *wd;
-     struct _IO_jump_t *jmp;
 {
   fp->_flags = _IO_MAGIC|flags;
   fp->_flags2 = 0;
@@ -633,6 +630,17 @@ _IO_no_init (fp, flags, orientation, wd, jmp)
   if (fp->_lock != NULL)
     _IO_lock_init (*fp->_lock);
 #endif
+}
+
+void
+_IO_no_init (fp, flags, orientation, wd, jmp)
+     _IO_FILE *fp;
+     int flags;
+     int orientation;
+     struct _IO_wide_data *wd;
+     struct _IO_jump_t *jmp;
+{
+  _IO_old_init (fp, flags);
   fp->_mode = orientation;
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   if (orientation >= 0)
