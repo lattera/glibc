@@ -73,6 +73,7 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
  * Send query to name server and wait for reply.
  */
 
+#include <assert.h>
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/time.h>
@@ -808,7 +809,7 @@ send_dg(res_state statp,
         int ptimeout;
 	struct sockaddr_in6 from;
 	static int socket_pf = 0;
-	int fromlen, resplen, seconds, n, s;
+	int fromlen, resplen, seconds, n;
 
 	if (EXT(statp).nssocks[ns] == -1) {
 		/* only try IPv6 if IPv6 NS and if not failed before */
@@ -854,7 +855,7 @@ send_dg(res_state statp,
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; new DG socket\n"))
 	}
-	s = EXT(statp).nssocks[ns];
+
 	/*
 	 * Compute time for the total operation.
 	 */
@@ -867,13 +868,25 @@ send_dg(res_state statp,
 	evConsTime(&timeout, seconds, 0);
 	evAddTime(&finish, &now, &timeout);
 	int need_recompute = 0;
- resend:
+	int nwritten = 0;
+	pfd[0].fd = EXT(statp).nssocks[ns];
+	pfd[0].events = POLLOUT;
+ wait:
+	if (need_recompute) {
+		evNowTime(&now);
+		if (evCmpTime(finish, now) <= 0) {
+			Perror(statp, stderr, "select", errno);
+			res_nclose(statp);
+			return (0);
+		}
+		evSubTime(&timeout, &finish, &now);
+	}
         /* Convert struct timespec in milliseconds.  */
 	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
 
-	pfd[0].fd = s;
-	pfd[0].events = POLLOUT;
-	n = __poll (pfd, 1, 0);
+	n = 0;
+	if (nwritten == 0)
+	  n = __poll (pfd, 1, 0);
 	if (__builtin_expect (n == 0, 0)) {
 		n = __poll (pfd, 1, ptimeout);
 		need_recompute = 1;
@@ -890,7 +903,7 @@ send_dg(res_state statp,
 			evNowTime(&now);
 			if (evCmpTime(finish, now) > 0) {
 				evSubTime(&timeout, &finish, &now);
-				goto resend;
+				goto wait;
 			}
 		}
 		Perror(statp, stderr, "select", errno);
@@ -898,149 +911,126 @@ send_dg(res_state statp,
 		return (0);
 	}
 	__set_errno (0);
-	if (send(s, (char*)buf, buflen, 0) != buflen) {
-		if (errno == EINTR || errno == EAGAIN)
-			goto recompute_resend;
-		Perror(statp, stderr, "send", errno);
-		res_nclose(statp);
-		return (0);
-	}
-
- wait:
-	if (need_recompute) {
-		evNowTime(&now);
-		if (evCmpTime(finish, now) <= 0) {
-		err_return:
-			Perror(statp, stderr, "select", errno);
+	if (pfd[0].revents & POLLOUT) {
+		if (send(pfd[0].fd, (char*)buf, buflen, 0) != buflen) {
+			if (errno == EINTR || errno == EAGAIN)
+				goto recompute_resend;
+			Perror(statp, stderr, "send", errno);
 			res_nclose(statp);
 			return (0);
 		}
-		evSubTime(&timeout, &finish, &now);
-	}
-        /* Convert struct timespec in milliseconds.  */
-	ptimeout = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
+		pfd[0].events = POLLIN;
+		++nwritten;
+		goto wait;
+	} else {
+		assert(pfd[0].revents & POLLIN);
 
-	pfd[0].events = POLLIN;
-	n = __poll (pfd, 1, ptimeout);
-	if (n == 0) {
-		Dprint(statp->options & RES_DEBUG, (stdout,
-						    ";; timeout receiving\n"));
-		*gotsomewhere = 1;
-		return (0);
-	}
-	if (n < 0) {
-		if (errno == EINTR) {
-			need_recompute = 1;
-			goto wait;
-		}
-		goto err_return;
-	}
-	__set_errno (0);
-	fromlen = sizeof(struct sockaddr_in6);
-	if (anssiz < MAXPACKET
-	    && anscp
-	    && (ioctl (s, FIONREAD, &resplen) < 0
+		fromlen = sizeof(struct sockaddr_in6);
+		if (anssiz < MAXPACKET
+		    && anscp
+		    && (ioctl (pfd[0].fd, FIONREAD, &resplen) < 0
 		|| anssiz < resplen)) {
-		ans = malloc (MAXPACKET);
-		if (ans == NULL)
-			ans = *ansp;
-		else {
-			anssiz = MAXPACKET;
-			*anssizp = MAXPACKET;
-			*ansp = ans;
-			*anscp = ans;
-			anhp = (HEADER *) ans;
+			ans = malloc (MAXPACKET);
+			if (ans == NULL)
+				ans = *ansp;
+			else {
+				anssiz = MAXPACKET;
+				*anssizp = MAXPACKET;
+				*ansp = ans;
+				*anscp = ans;
+				anhp = (HEADER *) ans;
+			}
 		}
-	}
-	resplen = recvfrom(s, (char*)ans, anssiz,0,
-			   (struct sockaddr *)&from, &fromlen);
-	if (resplen <= 0) {
-		if (errno == EINTR || errno == EAGAIN) {
-			need_recompute = 1;
+		resplen = recvfrom(pfd[0].fd, (char*)ans, anssiz,0,
+				   (struct sockaddr *)&from, &fromlen);
+		if (resplen <= 0) {
+			if (errno == EINTR || errno == EAGAIN) {
+				need_recompute = 1;
+				goto wait;
+			}
+			Perror(statp, stderr, "recvfrom", errno);
+			res_nclose(statp);
+			return (0);
+		}
+		*gotsomewhere = 1;
+		if (resplen < HFIXEDSZ) {
+			/*
+			 * Undersized message.
+			 */
+			Dprint(statp->options & RES_DEBUG,
+			       (stdout, ";; undersized: %d\n",
+				resplen));
+			*terrno = EMSGSIZE;
+			res_nclose(statp);
+			return (0);
+		}
+		if (hp->id != anhp->id) {
+			/*
+			 * response from old query, ignore it.
+			 * XXX - potential security hazard could
+			 *	 be detected here.
+			 */
+			DprintQ((statp->options & RES_DEBUG) ||
+				(statp->pfcode & RES_PRF_REPLY),
+				(stdout, ";; old answer:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
 			goto wait;
 		}
-		Perror(statp, stderr, "recvfrom", errno);
-		res_nclose(statp);
-		return (0);
-	}
-	*gotsomewhere = 1;
-	if (resplen < HFIXEDSZ) {
+		if (!(statp->options & RES_INSECURE1) &&
+		    !res_ourserver_p(statp, &from)) {
+			/*
+			 * response from wrong server? ignore it.
+			 * XXX - potential security hazard could
+			 *	 be detected here.
+			 */
+			DprintQ((statp->options & RES_DEBUG) ||
+				(statp->pfcode & RES_PRF_REPLY),
+				(stdout, ";; not our server:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			goto wait;
+		}
+		if (!(statp->options & RES_INSECURE2) &&
+		    !res_queriesmatch(buf, buf + buflen,
+				      ans, ans + anssiz)) {
+			/*
+			 * response contains wrong query? ignore it.
+			 * XXX - potential security hazard could
+			 *	 be detected here.
+			 */
+			DprintQ((statp->options & RES_DEBUG) ||
+				(statp->pfcode & RES_PRF_REPLY),
+				(stdout, ";; wrong query name:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			goto wait;
+		}
+		if (anhp->rcode == SERVFAIL ||
+		    anhp->rcode == NOTIMP ||
+		    anhp->rcode == REFUSED) {
+			DprintQ(statp->options & RES_DEBUG,
+				(stdout, "server rejected query:\n"),
+				ans, (resplen > anssiz) ? anssiz : resplen);
+			res_nclose(statp);
+			/* don't retry if called from dig */
+			if (!statp->pfcode)
+				return (0);
+		}
+		if (!(statp->options & RES_IGNTC) && anhp->tc) {
+			/*
+			 * To get the rest of answer,
+			 * use TCP with same server.
+			 */
+			Dprint(statp->options & RES_DEBUG,
+			       (stdout, ";; truncated answer\n"));
+			*v_circuit = 1;
+			res_nclose(statp);
+			return (1);
+		}
 		/*
-		 * Undersized message.
+		 * All is well, or the error is fatal.  Signal that the
+		 * next nameserver ought not be tried.
 		 */
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; undersized: %d\n",
-			resplen));
-		*terrno = EMSGSIZE;
-		res_nclose(statp);
-		return (0);
+		return (resplen);
 	}
-	if (hp->id != anhp->id) {
-		/*
-		 * response from old query, ignore it.
-		 * XXX - potential security hazard could
-		 *	 be detected here.
-		 */
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ";; old answer:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
-	}
-	if (!(statp->options & RES_INSECURE1) &&
-	    !res_ourserver_p(statp, &from)) {
-		/*
-		 * response from wrong server? ignore it.
-		 * XXX - potential security hazard could
-		 *	 be detected here.
-		 */
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ";; not our server:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
-	}
-	if (!(statp->options & RES_INSECURE2) &&
-	    !res_queriesmatch(buf, buf + buflen,
-			      ans, ans + anssiz)) {
-		/*
-		 * response contains wrong query? ignore it.
-		 * XXX - potential security hazard could
-		 *	 be detected here.
-		 */
-		DprintQ((statp->options & RES_DEBUG) ||
-			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ";; wrong query name:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		goto wait;
-	}
-	if (anhp->rcode == SERVFAIL ||
-	    anhp->rcode == NOTIMP ||
-	    anhp->rcode == REFUSED) {
-		DprintQ(statp->options & RES_DEBUG,
-			(stdout, "server rejected query:\n"),
-			ans, (resplen > anssiz) ? anssiz : resplen);
-		res_nclose(statp);
-		/* don't retry if called from dig */
-		if (!statp->pfcode)
-			return (0);
-	}
-	if (!(statp->options & RES_IGNTC) && anhp->tc) {
-		/*
-		 * To get the rest of answer,
-		 * use TCP with same server.
-		 */
-		Dprint(statp->options & RES_DEBUG,
-		       (stdout, ";; truncated answer\n"));
-		*v_circuit = 1;
-		res_nclose(statp);
-		return (1);
-	}
-	/*
-	 * All is well, or the error is fatal.  Signal that the
-	 * next nameserver ought not be tried.
-	 */
-	return (resplen);
 }
 
 #ifdef DEBUG
