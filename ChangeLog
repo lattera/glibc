@@ -1,3 +1,17 @@
+1999-12-07  Scott Bambrough <scottb@netwinder.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Fixup R_ARM_PC24
+	relocs if possible.
+
+1999-12-06  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/setrlimit.c: First find out wether the
+	ugetrlimit syscall exists.
+
+	* sysdeps/unix/sysv/linux/getrlimit.c: Only put versions on
+	exported symbols.
+	* sysdeps/unix/sysv/linux/setrlimit.c: Likewise.
+
 1999-12-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/ansi_x3.110.c (from_ansi_x3_110): Don't increment

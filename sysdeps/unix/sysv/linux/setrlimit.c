@@ -45,30 +45,21 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
   struct rlimit rlimits_small;
 
 # ifdef __NR_ugetrlimit
-  if (__have_no_new_getrlimit <= 0)
+  if (__have_no_new_getrlimit == 0)
     {
-      int result = INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
-
-      /* Return if the values are not out of range or if we positively
-         know that the ugetrlimit system call exists.  */
-      if (result != -1 || errno != EINVAL || __have_no_new_getrlimit < 0)
-	return result;
-
-      /* Check if the new ugetrlimit syscall exists.  */
-      if (INLINE_SYSCALL (ugetrlimit, 2, resource, &rlimits_small) != -1
-	  || errno != ENOSYS)
-	{
-	  /* There was some other error, probably RESOURCE out of range.
-             Remember that the ugetrlimit system call really exists.  */
-	  __have_no_new_getrlimit = -1;
-	  /* Restore previous errno value.  */
-	  __set_errno (EINVAL);
-	  return result;
-	}
-
-      /* Remember that the kernel uses the old interface.  */
-      __have_no_new_getrlimit = 1;
+      /* Check if the new ugetrlimit syscall exists.  We must do this
+	 first because older kernels don't reject negative rlimit
+	 values in setrlimit.  */
+      result = INLINE_SYSCALL (ugetrlimit, 2, resource, &rlimits_small);
+      if (result != -1 || errno != ENOSYS)
+	/* The syscall exists.  */
+	__have_no_new_getrlimit = -1;
+      else
+	/* The syscall does not exist.  */
+	__have_no_new_getrlimit = 1;
     }
+  if (__have_no_new_getrlimit < 0)
+    return INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
 # endif
 
   /* We might have to correct the limits values.  Since the old values
@@ -78,16 +69,14 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
   rlimits_small.rlim_max = MIN ((unsigned long int) rlimits->rlim_max,
 				RLIM_INFINITY >> 1);
 
-  /* Try again with the adjusted values.  */
+  /* Use the adjusted values.  */
   return INLINE_SYSCALL (setrlimit, 2, resource, &rlimits_small);
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_setrlimit, __setrlimit, GLIBC_2.1.3);
-strong_alias (__new_setrlimit, _new_setrlimit);
-default_symbol_version (_new_setrlimit, setrlimit, GLIBC_2.1.3);
-#else
 weak_alias (__new_setrlimit, __setrlimit);
+#if defined PIC && DO_VERSIONING
+default_symbol_version (__new_setrlimit, setrlimit, GLIBC_2.1.3);
+#else
 weak_alias (__new_setrlimit, setrlimit);
 #endif

@@ -77,11 +77,9 @@ __new_getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_getrlimit, __getrlimit, GLIBC_2.1.3);
-strong_alias (__new_getrlimit, _new_getrlimit);
-default_symbol_version (_new_getrlimit, getrlimit, GLIBC_2.1.3);
-#else
 weak_alias (__new_getrlimit, __getrlimit);
+#if defined PIC && DO_VERSIONING
+default_symbol_version (__new_getrlimit, getrlimit, GLIBC_2.1.3);
+#else
 weak_alias (__new_getrlimit, getrlimit);
 #endif

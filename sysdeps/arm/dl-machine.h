@@ -443,6 +443,23 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    *reloc_addr += value;
 	    break;
 	  }
+	case R_ARM_PC24:
+	  {
+	     signed int addend;
+
+	     addend = *reloc_addr & 0x00ffffff;
+	     if (addend & 0x00800000) addend |= 0xff000000;
+
+	     value = value - (unsigned int)reloc_addr + (addend << 2);
+	     if (value & 0xfc000003)
+	       _dl_signal_error (0, map->l_name,
+			  "R_ARM_PC24 relocation out of range");
+	       
+	     value = value >> 2;
+	     value = (*reloc_addr & 0xff000000) | (value & 0x00ffffff);
+	     *reloc_addr = value;
+	  }
+	break;
 	default:
 	  _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 0);
 	  break;
