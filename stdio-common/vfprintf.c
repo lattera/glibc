@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@
 #  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 #  define PAD(Padchar) \
   if (width > 0)							      \
-    done += _IO_padn (s, (Padchar), width)
+    done += INTUSE(_IO_padn) (s, (Padchar), width)
 #  define PUTC(C, F)	_IO_putc_unlocked (C, F)
 #  define ORIENT	if (s->_vtable_offset == 0 && _IO_fwide (s, -1) != -1)\
 			  return -1
@@ -2006,18 +2006,18 @@ _IO_helper_overflow (_IO_FILE *s, int c)
 static const struct _IO_jump_t _IO_helper_jumps =
 {
   JUMP_INIT_DUMMY,
-  JUMP_INIT (finish, _IO_wdefault_finish),
+  JUMP_INIT (finish, INTUSE(_IO_wdefault_finish)),
   JUMP_INIT (overflow, _IO_helper_overflow),
   JUMP_INIT (underflow, _IO_default_underflow),
-  JUMP_INIT (uflow, _IO_default_uflow),
-  JUMP_INIT (pbackfail, (_IO_pbackfail_t) _IO_wdefault_pbackfail),
-  JUMP_INIT (xsputn, _IO_wdefault_xsputn),
-  JUMP_INIT (xsgetn, _IO_wdefault_xsgetn),
+  JUMP_INIT (uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT (pbackfail, (_IO_pbackfail_t) INTUSE(_IO_wdefault_pbackfail)),
+  JUMP_INIT (xsputn, INTUSE(_IO_wdefault_xsputn)),
+  JUMP_INIT (xsgetn, INTUSE(_IO_wdefault_xsgetn)),
   JUMP_INIT (seekoff, _IO_default_seekoff),
   JUMP_INIT (seekpos, _IO_default_seekpos),
-  JUMP_INIT (setbuf,(_IO_setbuf_t)  _IO_wdefault_setbuf),
+  JUMP_INIT (setbuf,(_IO_setbuf_t)  INTUSE(_IO_wdefault_setbuf)),
   JUMP_INIT (sync, _IO_default_sync),
-  JUMP_INIT (doallocate, _IO_wdefault_doallocate),
+  JUMP_INIT (doallocate, INTUSE(_IO_wdefault_doallocate)),
   JUMP_INIT (read, _IO_default_read),
   JUMP_INIT (write, _IO_default_write),
   JUMP_INIT (seek, _IO_default_seek),
@@ -2028,18 +2028,18 @@ static const struct _IO_jump_t _IO_helper_jumps =
 static const struct _IO_jump_t _IO_helper_jumps =
 {
   JUMP_INIT_DUMMY,
-  JUMP_INIT (finish, _IO_default_finish),
+  JUMP_INIT (finish, INTUSE(_IO_default_finish)),
   JUMP_INIT (overflow, _IO_helper_overflow),
   JUMP_INIT (underflow, _IO_default_underflow),
-  JUMP_INIT (uflow, _IO_default_uflow),
-  JUMP_INIT (pbackfail, _IO_default_pbackfail),
-  JUMP_INIT (xsputn, _IO_default_xsputn),
-  JUMP_INIT (xsgetn, _IO_default_xsgetn),
+  JUMP_INIT (uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT (pbackfail, INTUSE(_IO_default_pbackfail)),
+  JUMP_INIT (xsputn, INTUSE(_IO_default_xsputn)),
+  JUMP_INIT (xsgetn, INTUSE(_IO_default_xsgetn)),
   JUMP_INIT (seekoff, _IO_default_seekoff),
   JUMP_INIT (seekpos, _IO_default_seekpos),
   JUMP_INIT (setbuf, _IO_default_setbuf),
   JUMP_INIT (sync, _IO_default_sync),
-  JUMP_INIT (doallocate, _IO_default_doallocate),
+  JUMP_INIT (doallocate, INTUSE(_IO_default_doallocate)),
   JUMP_INIT (read, _IO_default_read),
   JUMP_INIT (write, _IO_default_write),
   JUMP_INIT (seek, _IO_default_seek),
@@ -2083,7 +2083,11 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   _IO_JUMPS (&helper._f) = (struct _IO_jump_t *) &_IO_helper_jumps;
 
   /* Now print to helper instead.  */
+#if defined USE_IN_LIBIO && !defined COMPILE_WPRINTF
+  result = INTUSE(_IO_vfprintf) (hp, format, args);
+#else
   result = vfprintf (hp, format, args);
+#endif
 
   /* Lock stream.  */
   __libc_cleanup_region_start (1, (void (*) (void *)) &_IO_funlockfile, s);
@@ -2186,6 +2190,7 @@ strong_alias (_IO_vfwprintf, __vfwprintf);
 weak_alias (_IO_vfwprintf, vfwprintf);
 #  else
 strong_alias (_IO_vfprintf, vfprintf);
+INTDEF(_IO_vfprintf)
 #  endif
 # else
 #  if defined __ELF__ || defined __GNU_LIBRARY__

@@ -1,5 +1,5 @@
 /* Print size value using units for orders of magnitude.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on a proposal by Larry McVoy <lm@sgi.com>.
@@ -34,7 +34,7 @@
    the GNU I/O library.	 */
 #ifdef USE_IN_LIBIO
 # define PUT(f, s, n) _IO_sputn (f, s, n)
-# define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
+# define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : INTUSE(_IO_padn) (f, c, n))
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
 # undef putc

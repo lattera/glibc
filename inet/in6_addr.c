@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pjb27@cam.ac.uk>, 1997.
 
@@ -21,5 +21,6 @@
 
 const struct in6_addr in6addr_any =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } } };
+INTDEF(in6addr_any)
 const struct in6_addr in6addr_loopback =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 } } };

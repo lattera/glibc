@@ -228,8 +228,8 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
       return NULL;
     }
   cd->strm_stat = XPRT_IDLE;
-  xdrrec_create (&(cd->xdrs), sendsize, recvsize,
-		 (caddr_t) xprt, readunix, writeunix);
+  INTUSE(xdrrec_create) (&(cd->xdrs), sendsize, recvsize,
+			 (caddr_t) xprt, readunix, writeunix);
   xprt->xp_p2 = NULL;
   xprt->xp_p1 = (caddr_t) cd;
   xprt->xp_verf.oa_base = cd->verf_body;
@@ -472,7 +472,7 @@ svcunix_stat (SVCXPRT *xprt)
 
   if (cd->strm_stat == XPRT_DIED)
     return XPRT_DIED;
-  if (!xdrrec_eof (&(cd->xdrs)))
+  if (!INTUSE(xdrrec_eof) (&(cd->xdrs)))
     return XPRT_MOREREQS;
   return XPRT_IDLE;
 }
@@ -484,8 +484,8 @@ svcunix_recv (SVCXPRT *xprt, struct rpc_msg *msg)
   XDR *xdrs = &(cd->xdrs);
 
   xdrs->x_op = XDR_DECODE;
-  xdrrec_skiprecord (xdrs);
-  if (xdr_callmsg (xdrs, msg))
+  INTUSE(xdrrec_skiprecord) (xdrs);
+  if (INTUSE(xdr_callmsg) (xdrs, msg))
     {
       cd->x_id = msg->rm_xid;
       /* set up verifiers */
@@ -525,7 +525,7 @@ svcunix_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 
   xdrs->x_op = XDR_ENCODE;
   msg->rm_xid = cd->x_id;
-  stat = xdr_replymsg (xdrs, msg);
-  (void) xdrrec_endofrecord (xdrs, TRUE);
+  stat = INTUSE(xdr_replymsg) (xdrs, msg);
+  (void) INTUSE(xdrrec_endofrecord) (xdrs, TRUE);
   return stat;
 }

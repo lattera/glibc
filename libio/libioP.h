@@ -37,6 +37,18 @@
 
 #include "iolibio.h"
 
+/* Control of exported symbols.  Used in glibc.  By default we don't
+   do anything.  */
+#ifndef INTUSE
+# define INTUSE(name) name
+#endif
+#ifndef INTDEF
+# define INTDEF(name)
+#endif
+#ifndef INTDEF2
+# define INTDEF2(name)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -445,15 +457,15 @@ extern int _IO_old_fsetpos64 __P ((_IO_FILE *, const _IO_fpos64_t *));
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # define _IO_do_flush(_f) \
   ((_f)->_mode <= 0							      \
-   ? _IO_do_write(_f, (_f)->_IO_write_base,				      \
-		  (_f)->_IO_write_ptr-(_f)->_IO_write_base)		      \
-   : _IO_wdo_write(_f, (_f)->_wide_data->_IO_write_base,		      \
-		   ((_f)->_wide_data->_IO_write_ptr			      \
-		    - (_f)->_wide_data->_IO_write_base)))
+   ? INTUSE(_IO_do_write)(_f, (_f)->_IO_write_base,			      \
+			  (_f)->_IO_write_ptr-(_f)->_IO_write_base)	      \
+   : INTUSE(_IO_wdo_write)(_f, (_f)->_wide_data->_IO_write_base,	      \
+			   ((_f)->_wide_data->_IO_write_ptr		      \
+			    - (_f)->_wide_data->_IO_write_base)))
 #else
 # define _IO_do_flush(_f) \
-   _IO_do_write(_f, (_f)->_IO_write_base,				      \
-		(_f)->_IO_write_ptr-(_f)->_IO_write_base)
+   INTUSE(_IO_do_write)(_f, (_f)->_IO_write_base,			      \
+			(_f)->_IO_write_ptr-(_f)->_IO_write_base)
 #endif
 #define _IO_old_do_flush(_f) \
   _IO_old_do_write(_f, (_f)->_IO_write_base, \
@@ -609,6 +621,109 @@ extern int _IO_outfloat __P ((double __value, _IO_FILE *__sb, int __type,
 
 extern struct _IO_FILE_plus *_IO_list_all;
 extern void (*_IO_cleanup_registration_needed) __PMT ((void));
+
+/* Prototype for functions with alternative entry point.  */
+extern int _IO_flush_all_internal __P ((void));
+extern unsigned _IO_adjust_column_internal __P ((unsigned, const char *, int));
+
+extern int _IO_default_uflow_internal __P ((_IO_FILE *));
+extern void _IO_default_finish_internal __P ((_IO_FILE *, int));
+extern int _IO_default_pbackfail_internal __P ((_IO_FILE *, int));
+extern _IO_size_t _IO_default_xsputn_internal __P ((_IO_FILE *, const void *,
+						    _IO_size_t));
+extern _IO_size_t _IO_default_xsgetn_internal __P ((_IO_FILE *, void *,
+						    _IO_size_t));
+extern int _IO_default_doallocate_internal __P ((_IO_FILE *));
+extern void _IO_wdefault_finish_internal __P ((_IO_FILE *, int));
+extern wint_t _IO_wdefault_pbackfail_internal __P ((_IO_FILE *, wint_t));
+extern _IO_size_t _IO_wdefault_xsputn_internal __P ((_IO_FILE *, const void *,
+						     _IO_size_t));
+extern _IO_size_t _IO_wdefault_xsgetn_internal __P ((_IO_FILE *, void *,
+						     _IO_size_t));
+extern _IO_FILE* _IO_wdefault_setbuf_internal __P ((_IO_FILE *, wchar_t *,
+						    _IO_ssize_t));
+extern int _IO_wdefault_doallocate_internal __P ((_IO_FILE *));
+extern wint_t _IO_wdefault_uflow_internal __P ((_IO_FILE *));
+
+extern int _IO_file_doallocate_internal __P ((_IO_FILE *));
+extern _IO_FILE* _IO_file_setbuf_internal __P ((_IO_FILE *, char *,
+						_IO_ssize_t));
+extern _IO_off64_t _IO_file_seekoff_internal __P ((_IO_FILE *, _IO_off64_t,
+						   int, int));
+extern _IO_size_t _IO_file_xsputn_internal __P ((_IO_FILE *, const void *,
+						 _IO_size_t));
+extern _IO_size_t _IO_file_xsgetn_internal __P ((_IO_FILE *, void *,
+						 _IO_size_t));
+extern int _IO_file_stat_internal __P ((_IO_FILE *, void *));
+extern int _IO_file_close_internal __P ((_IO_FILE *));
+extern int _IO_file_close_it_internal __P ((_IO_FILE *));
+extern int _IO_file_underflow_internal __P ((_IO_FILE *));
+extern int _IO_file_overflow_internal __P ((_IO_FILE *, int));
+extern void _IO_file_init_internal __P ((struct _IO_FILE_plus *));
+extern _IO_FILE* _IO_file_attach_internal __P ((_IO_FILE *, int));
+extern _IO_FILE* _IO_file_fopen_internal __P ((_IO_FILE *, const char *,
+					       const char *, int));
+extern _IO_ssize_t _IO_file_read_internal __P ((_IO_FILE *, void *,
+						_IO_ssize_t));
+extern int _IO_file_sync_internal __P ((_IO_FILE *));
+extern _IO_off64_t _IO_file_seek_internal __P ((_IO_FILE *, _IO_off64_t, int));
+extern void _IO_file_finish_internal __P ((_IO_FILE *, int));
+
+extern _IO_size_t _IO_wfile_xsputn_internal __P ((_IO_FILE *, const void *,
+						  _IO_size_t));
+extern _IO_off64_t _IO_wfile_seekoff_internal __P ((_IO_FILE *, _IO_off64_t,
+						    int, int));
+extern wint_t _IO_wfile_sync_internal __P ((_IO_FILE *));
+
+extern int _IO_str_underflow_internal __P ((_IO_FILE *));
+extern int _IO_str_overflow_internal __P ((_IO_FILE *, int));
+extern int _IO_str_pbackfail_internal __P ((_IO_FILE *, int));
+extern _IO_off64_t _IO_str_seekoff_internal __P ((_IO_FILE *, _IO_off64_t,
+						  int, int));
+extern void _IO_str_init_static_internal __P ((struct _IO_strfile_ *, char *,
+					       int, char *));
+
+extern struct _IO_jump_t _IO_file_jumps_internal;
+extern struct _IO_jump_t _IO_wfile_jumps_internal;
+
+extern struct _IO_FILE_plus *_IO_list_all_internal;
+
+extern void _IO_link_in_internal __P ((struct _IO_FILE_plus *));
+extern int _IO_sputbackc_internal __P ((_IO_FILE *, int));
+extern void _IO_wdoallocbuf_internal __P ((_IO_FILE *));
+
+extern _IO_size_t _IO_sgetn_internal (_IO_FILE *, void *, _IO_size_t);
+extern void _IO_flush_all_linebuffered_internal __P ((void));
+extern int _IO_switch_to_wget_mode_internal __P ((_IO_FILE *));
+extern void _IO_unsave_markers_internal __P ((_IO_FILE *));
+extern void _IO_switch_to_main_wget_area_internal __P ((_IO_FILE *));
+extern int _IO_wdo_write_internal __P ((_IO_FILE *, const wchar_t *,
+					_IO_size_t));
+extern int _IO_do_write_internal __P ((_IO_FILE *, const char *, _IO_size_t));
+extern _IO_ssize_t _IO_padn_internal (_IO_FILE *, int, _IO_ssize_t);
+extern _IO_size_t _IO_getline_info_internal __P ((_IO_FILE *,char *,
+						  _IO_size_t, int, int,
+						  int *));
+extern _IO_size_t _IO_getline_internal __P ((_IO_FILE *, char *, _IO_size_t,
+					     int, int));
+extern void _IO_free_wbackup_area_internal (_IO_FILE *);
+extern void _IO_free_backup_area_internal (_IO_FILE *);
+extern void _IO_switch_to_wbackup_area_internal __P ((_IO_FILE *));
+extern void _IO_setb_internal __P ((_IO_FILE *, char *, char *, int));
+extern wint_t _IO_sputbackwc_internal __P ((_IO_FILE *, wint_t));
+extern int _IO_switch_to_get_mode_internal __P ((_IO_FILE *));
+extern int _IO_vfscanf_internal (_IO_FILE * __restrict,
+				 const char * __restrict,
+				 _IO_va_list, int *__restrict);
+extern int _IO_vfprintf_internal (_IO_FILE *__restrict, const char *__restrict,
+				  _IO_va_list);
+extern void _IO_doallocbuf_internal __P ((_IO_FILE *));
+extern void _IO_wsetb_internal __P ((_IO_FILE *, wchar_t *, wchar_t *, int));
+extern _IO_off64_t _IO_seekoff_internal (_IO_FILE *, _IO_off64_t, int, int);
+extern _IO_off64_t _IO_seekpos_internal (_IO_FILE *, _IO_off64_t, int);
+extern int _IO_putc_internal (int __c, _IO_FILE *__fp);
+extern void _IO_init_internal __P ((_IO_FILE *, int));
+extern void _IO_un_link_internal __P ((struct _IO_FILE_plus *));
 
 #ifndef EOF
 # define EOF (-1)

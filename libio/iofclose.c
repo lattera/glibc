@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,16 +55,17 @@ _IO_new_fclose (fp)
 
   /* First unlink the stream.  */
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
-    _IO_un_link ((struct _IO_FILE_plus *) fp);
+    INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
 
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
-    status = _IO_file_close_it (fp);
+    status = INTUSE(_IO_file_close_it) (fp);
   else
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
   _IO_FINISH (fp);
   _IO_funlockfile (fp);
+  _IO_cleanup_region_end (0);
   if (fp->_mode > 0)
     {
 #if _LIBC
@@ -75,10 +76,15 @@ _IO_new_fclose (fp)
       __gconv_release_step (cc->__cd_in.__cd.__steps);
       __gconv_release_step (cc->__cd_out.__cd.__steps);
 #endif
+
+      if (_IO_have_wbackup (fp))
+	INTUSE(_IO_free_wbackup_area) (fp);
     }
-  _IO_cleanup_region_end (0);
-  if (_IO_have_backup (fp))
-    _IO_free_backup_area (fp);
+  else
+    {
+      if (_IO_have_backup (fp))
+	INTUSE(_IO_free_backup_area) (fp);
+    }
   if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
     {
       fp->_IO_file_flags = 0;

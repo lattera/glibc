@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#ifdef USE_IN_LIBIO
+# include <libioP.h>
+#endif
+
 
 /* Read formatted input from stdin according to the format string FORMAT.  */
 /* VARARGS1 */
@@ -30,7 +34,7 @@ scanf (const char *format, ...)
 
   va_start (arg, format);
 #ifdef USE_IN_LIBIO
-  done = _IO_vfscanf (stdin, format, arg, NULL);
+  done = INTUSE(_IO_vfscanf) (stdin, format, arg, NULL);
 #else
   done = vfscanf (stdin, format, arg);
 #endif

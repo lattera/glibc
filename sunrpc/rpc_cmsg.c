@@ -132,8 +132,8 @@ xdr_callmsg (XDR *xdrs, struct rpc_msg *cmsg)
 	      buf = XDR_INLINE (xdrs, RNDUP (oa->oa_length));
 	      if (buf == NULL)
 		{
-		  if (xdr_opaque (xdrs, oa->oa_base,
-				  oa->oa_length) == FALSE)
+		  if (INTUSE(xdr_opaque) (xdrs, oa->oa_base,
+					  oa->oa_length) == FALSE)
 		    return FALSE;
 		}
 	      else
@@ -149,8 +149,8 @@ xdr_callmsg (XDR *xdrs, struct rpc_msg *cmsg)
 	  buf = XDR_INLINE (xdrs, 2 * BYTES_PER_XDR_UNIT);
 	  if (buf == NULL)
 	    {
-	      if (xdr_enum (xdrs, &oa->oa_flavor) == FALSE ||
-		  xdr_u_int (xdrs, &oa->oa_length) == FALSE)
+	      if (INTUSE(xdr_enum) (xdrs, &oa->oa_flavor) == FALSE ||
+		  INTUSE(xdr_u_int) (xdrs, &oa->oa_length) == FALSE)
 		{
 		  return FALSE;
 		}
@@ -172,8 +172,8 @@ xdr_callmsg (XDR *xdrs, struct rpc_msg *cmsg)
 	      buf = XDR_INLINE (xdrs, RNDUP (oa->oa_length));
 	      if (buf == NULL)
 		{
-		  if (xdr_opaque (xdrs, oa->oa_base,
-				  oa->oa_length) == FALSE)
+		  if (INTUSE(xdr_opaque) (xdrs, oa->oa_base,
+					  oa->oa_length) == FALSE)
 		    return FALSE;
 		}
 	      else
@@ -189,15 +189,16 @@ xdr_callmsg (XDR *xdrs, struct rpc_msg *cmsg)
 	}
     }
   if (
-       xdr_u_long (xdrs, &(cmsg->rm_xid)) &&
-       xdr_enum (xdrs, (enum_t *) & (cmsg->rm_direction)) &&
+       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_xid)) &&
+       INTUSE(xdr_enum) (xdrs, (enum_t *) & (cmsg->rm_direction)) &&
        (cmsg->rm_direction == CALL) &&
-       xdr_u_long (xdrs, &(cmsg->rm_call.cb_rpcvers)) &&
+       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_call.cb_rpcvers)) &&
        (cmsg->rm_call.cb_rpcvers == RPC_MSG_VERSION) &&
-       xdr_u_long (xdrs, &(cmsg->rm_call.cb_prog)) &&
-       xdr_u_long (xdrs, &(cmsg->rm_call.cb_vers)) &&
-       xdr_u_long (xdrs, &(cmsg->rm_call.cb_proc)) &&
-       xdr_opaque_auth (xdrs, &(cmsg->rm_call.cb_cred)))
-    return xdr_opaque_auth (xdrs, &(cmsg->rm_call.cb_verf));
+       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_call.cb_prog)) &&
+       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_call.cb_vers)) &&
+       INTUSE(xdr_u_long) (xdrs, &(cmsg->rm_call.cb_proc)) &&
+       INTUSE(xdr_opaque_auth) (xdrs, &(cmsg->rm_call.cb_cred)))
+    return INTUSE(xdr_opaque_auth) (xdrs, &(cmsg->rm_call.cb_verf));
   return FALSE;
 }
+INTDEF(xdr_callmsg)

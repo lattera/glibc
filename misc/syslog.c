@@ -56,7 +56,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
-# define ftell(s) _IO_ftell (s)
+# define ftell(s) INTUSE(_IO_ftell) (s)
 #endif
 
 static int	LogType = SOCK_DGRAM;	/* type of socket connection */

@@ -1,5 +1,5 @@
 /* Print output of stream to given obstack.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -153,9 +153,9 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
       assert (size != 0);
     }
 
-  _IO_str_init_static ((struct _IO_strfile_ *) &new_f.ofile,
-		       obstack_base (obstack),
-		       size, obstack_next_free (obstack));
+  INTUSE(_IO_str_init_static) ((struct _IO_strfile_ *) &new_f.ofile,
+			       obstack_base (obstack),
+			       size, obstack_next_free (obstack));
   /* Now allocate the rest of the current chunk.  */
   assert (size == (new_f.ofile.file.file._IO_write_end
 		   - new_f.ofile.file.file._IO_write_base));
@@ -166,7 +166,7 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 
   new_f.ofile.obstack = obstack;
 
-  result = _IO_vfprintf (&new_f.ofile.file.file, format, args);
+  result = INTUSE(_IO_vfprintf) (&new_f.ofile.file.file, format, args);
 
   /* Shrink the buffer to the space we really currently need.  */
   obstack_blank_fast (obstack, (new_f.ofile.file.file._IO_write_ptr

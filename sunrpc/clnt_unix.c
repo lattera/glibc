@@ -181,8 +181,9 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
   /*
    * pre-serialize the static part of the call msg and stash it away
    */
-  xdrmem_create (&(ct->ct_xdrs), ct->ct_mcall, MCALL_MSG_SIZE, XDR_ENCODE);
-  if (!xdr_callhdr (&(ct->ct_xdrs), &call_msg))
+  INTUSE(xdrmem_create) (&(ct->ct_xdrs), ct->ct_mcall, MCALL_MSG_SIZE,
+			 XDR_ENCODE);
+  if (!INTUSE(xdr_callhdr) (&(ct->ct_xdrs), &call_msg))
     {
       if (ct->ct_closeit)
 	__close (*sockp);
@@ -195,8 +196,8 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
    * Create a client handle which uses xdrrec for serialization
    * and authnone for authentication.
    */
-  xdrrec_create (&(ct->ct_xdrs), sendsz, recvsz,
-		 (caddr_t) ct, readunix, writeunix);
+  INTUSE(xdrrec_create) (&(ct->ct_xdrs), sendsz, recvsz,
+			 (caddr_t) ct, readunix, writeunix);
   h->cl_ops = &unix_ops;
   h->cl_private = (caddr_t) ct;
   h->cl_auth = authnone_create ();
@@ -249,10 +250,10 @@ call_again:
     {
       if (ct->ct_error.re_status == RPC_SUCCESS)
 	ct->ct_error.re_status = RPC_CANTENCODEARGS;
-      (void) xdrrec_endofrecord (xdrs, TRUE);
+      (void) INTUSE(xdrrec_endofrecord) (xdrs, TRUE);
       return ct->ct_error.re_status;
     }
-  if (!xdrrec_endofrecord (xdrs, shipnow))
+  if (!INTUSE(xdrrec_endofrecord) (xdrs, shipnow))
     return ct->ct_error.re_status = RPC_CANTSEND;
   if (!shipnow)
     return RPC_SUCCESS;
@@ -271,11 +272,11 @@ call_again:
     {
       reply_msg.acpted_rply.ar_verf = _null_auth;
       reply_msg.acpted_rply.ar_results.where = NULL;
-      reply_msg.acpted_rply.ar_results.proc = (xdrproc_t)xdr_void;
-      if (!xdrrec_skiprecord (xdrs))
+      reply_msg.acpted_rply.ar_results.proc = (xdrproc_t)INTUSE(xdr_void);
+      if (!INTUSE(xdrrec_skiprecord) (xdrs))
 	return ct->ct_error.re_status;
       /* now decode and validate the response header */
-      if (!xdr_replymsg (xdrs, &reply_msg))
+      if (!INTUSE(xdr_replymsg) (xdrs, &reply_msg))
 	{
 	  if (ct->ct_error.re_status == RPC_SUCCESS)
 	    continue;
@@ -305,7 +306,8 @@ call_again:
       if (reply_msg.acpted_rply.ar_verf.oa_base != NULL)
 	{
 	  xdrs->x_op = XDR_FREE;
-	  (void) xdr_opaque_auth (xdrs, &(reply_msg.acpted_rply.ar_verf));
+	  (void) INTUSE(xdr_opaque_auth) (xdrs,
+					  &(reply_msg.acpted_rply.ar_verf));
 	}
     }				/* end successful completion */
   else

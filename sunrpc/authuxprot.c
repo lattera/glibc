@@ -46,20 +46,22 @@
 bool_t
 xdr_authunix_parms (XDR * xdrs, struct authunix_parms *p)
 {
-  if (xdr_u_long (xdrs, &(p->aup_time))
-      && xdr_string (xdrs, &(p->aup_machname), MAX_MACHINE_NAME)
+  if (INTUSE(xdr_u_long) (xdrs, &(p->aup_time))
+      && INTUSE(xdr_string) (xdrs, &(p->aup_machname), MAX_MACHINE_NAME)
       && (sizeof (uid_t) == sizeof (short int)
-	  ? xdr_u_short (xdrs, (u_short *) & (p->aup_uid))
-	  : xdr_u_int (xdrs, (u_int *) & (p->aup_uid)))
+	  ? INTUSE(xdr_u_short) (xdrs, (u_short *) & (p->aup_uid))
+	  : INTUSE(xdr_u_int) (xdrs, (u_int *) & (p->aup_uid)))
       && (sizeof (gid_t) == sizeof (short int)
-	  ? xdr_u_short (xdrs, (u_short *) & (p->aup_gid))
-	  : xdr_u_int (xdrs, (u_int *) & (p->aup_gid)))
-      && xdr_array (xdrs, (caddr_t *) & (p->aup_gids),
-		    & (p->aup_len), NGRPS, sizeof (gid_t),
-		      (sizeof (gid_t) == sizeof (short int)
-		       ? (xdrproc_t) xdr_u_short : (xdrproc_t) xdr_u_int)))
+	  ? INTUSE(xdr_u_short) (xdrs, (u_short *) & (p->aup_gid))
+	  : INTUSE(xdr_u_int) (xdrs, (u_int *) & (p->aup_gid)))
+      && INTUSE(xdr_array) (xdrs, (caddr_t *) & (p->aup_gids),
+			    & (p->aup_len), NGRPS, sizeof (gid_t),
+			    (sizeof (gid_t) == sizeof (short int)
+			     ? (xdrproc_t) INTUSE(xdr_u_short)
+			     : (xdrproc_t) INTUSE(xdr_u_int))))
     {
       return TRUE;
     }
   return FALSE;
 }
+INTDEF(xdr_authunix_parms)

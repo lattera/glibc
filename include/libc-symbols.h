@@ -354,9 +354,11 @@
 #ifdef SHARED
 # define INTUSE(name) name##_internal
 # define INTDEF(name) strong_alias (name, name##_internal);
+# define INTDEF2(name, newname) strong_alias (name, newname##_internal);
 #else
 # define INTUSE(name) name
 # define INTDEF(name)
+# define INTDEF2(name, newname)
 #endif
 
 #endif /* libc-symbols.h */

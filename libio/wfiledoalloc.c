@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,7 +79,7 @@ _IO_wfile_doallocate (fp)
 
   /* Allocate room for the external buffer.  */
   if (fp->_IO_buf_base == NULL)
-    _IO_file_doallocate (fp);
+    INTUSE(_IO_file_doallocate) (fp);
 
   if (fp->_fileno < 0 || _IO_SYSSTAT (fp, &st) < 0)
     {
@@ -100,7 +100,7 @@ _IO_wfile_doallocate (fp)
 #endif
     }
   ALLOC_WBUF (p, size * sizeof (wchar_t), EOF);
-  _IO_wsetb (fp, p, p + size, 1);
+  INTUSE(_IO_wsetb) (fp, p, p + size, 1);
   if (couldbetty && isatty (fp->_fileno))
     fp->_flags |= _IO_LINE_BUF;
   return 1;

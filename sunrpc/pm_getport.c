@@ -75,8 +75,8 @@ pmap_getport (address, program, version, protocol)
       parms.pm_vers = version;
       parms.pm_prot = protocol;
       parms.pm_port = 0;	/* not needed or used */
-      if (CLNT_CALL (client, PMAPPROC_GETPORT, (xdrproc_t)xdr_pmap,
-		     (caddr_t)&parms, (xdrproc_t)xdr_u_short,
+      if (CLNT_CALL (client, PMAPPROC_GETPORT, (xdrproc_t)INTUSE(xdr_pmap),
+		     (caddr_t)&parms, (xdrproc_t)INTUSE(xdr_u_short),
 		     (caddr_t)&port, tottimeout) != RPC_SUCCESS)
 	{
 	  ce->cf_stat = RPC_PMAPFAILURE;

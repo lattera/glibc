@@ -109,8 +109,8 @@ clntraw_create (u_long prog, u_long vers)
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = prog;
   call_msg.rm_call.cb_vers = vers;
-  xdrmem_create (xdrs, clp->mashl_callmsg, MCALL_MSG_SIZE, XDR_ENCODE);
-  if (!xdr_callhdr (xdrs, &call_msg))
+  INTUSE(xdrmem_create) (xdrs, clp->mashl_callmsg, MCALL_MSG_SIZE, XDR_ENCODE);
+  if (!INTUSE(xdr_callhdr) (xdrs, &call_msg))
     {
       perror (_ ("clnt_raw.c - Fatal header serialization error."));
     }
@@ -120,7 +120,7 @@ clntraw_create (u_long prog, u_long vers)
   /*
    * Set xdrmem for client/server shared buffer
    */
-  xdrmem_create (xdrs, clp->_raw_buf, UDPMSGSIZE, XDR_FREE);
+  INTUSE(xdrmem_create) (xdrs, clp->_raw_buf, UDPMSGSIZE, XDR_FREE);
 
   /*
    * create client handle
@@ -178,7 +178,7 @@ call_again:
   msg.acpted_rply.ar_verf = _null_auth;
   msg.acpted_rply.ar_results.where = resultsp;
   msg.acpted_rply.ar_results.proc = xresults;
-  if (!xdr_replymsg (xdrs, &msg))
+  if (!INTUSE(xdr_replymsg) (xdrs, &msg))
     return RPC_CANTDECODERES;
   _seterr_reply (&msg, &error);
   status = error.re_status;
@@ -205,7 +205,7 @@ call_again:
       if (msg.acpted_rply.ar_verf.oa_base != NULL)
 	{
 	  xdrs->x_op = XDR_FREE;
-	  (void) xdr_opaque_auth (xdrs, &(msg.acpted_rply.ar_verf));
+	  (void) INTUSE(xdr_opaque_auth) (xdrs, &(msg.acpted_rply.ar_verf));
 	}
     }
 

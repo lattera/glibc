@@ -98,7 +98,7 @@ xdr_pmaplist (xdrs, rp)
   while (TRUE)
     {
       more_elements = (bool_t) (*rp != NULL);
-      if (!xdr_bool (xdrs, &more_elements))
+      if (!INTUSE(xdr_bool) (xdrs, &more_elements))
 	return FALSE;
       if (!more_elements)
 	return TRUE;		/* we are done */
@@ -109,10 +109,11 @@ xdr_pmaplist (xdrs, rp)
        */
       if (freeing)
 	next = &((*rp)->pml_next);
-      if (!xdr_reference (xdrs, (caddr_t *) rp,
-			  (u_int) sizeof (struct pmaplist),
-			  (xdrproc_t) xdr_pmap))
+      if (!INTUSE(xdr_reference) (xdrs, (caddr_t *) rp,
+				  (u_int) sizeof (struct pmaplist),
+				  (xdrproc_t) INTUSE(xdr_pmap)))
 	  return FALSE;
       rp = freeing ? next : &((*rp)->pml_next);
     }
 }
+INTDEF(xdr_pmaplist)

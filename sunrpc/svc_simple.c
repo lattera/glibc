@@ -50,7 +50,7 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) _IO_fputs (s, f)
+# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 struct proglst_
@@ -146,7 +146,8 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
    */
   if (rqstp->rq_proc == NULLPROC)
     {
-      if (svc_sendreply (transp_l, (xdrproc_t)xdr_void, (char *) NULL) == FALSE)
+      if (svc_sendreply (transp_l, (xdrproc_t)INTUSE(xdr_void), (char *) NULL)
+	  == FALSE)
 	{
 	  __write (STDERR_FILENO, "xxx\n", 4);
 	  exit (1);
@@ -166,7 +167,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
 	    return;
 	  }
 	outdata = (*(pl->p_progname)) (xdrbuf);
-	if (outdata == NULL && pl->p_outproc != (xdrproc_t)xdr_void)
+	if (outdata == NULL && pl->p_outproc != (xdrproc_t)INTUSE(xdr_void))
 	  /* there was an error */
 	  return;
 	if (!svc_sendreply (transp_l, pl->p_outproc, outdata))

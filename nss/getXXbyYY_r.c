@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -79,9 +79,11 @@
 #define STRINGIZE(name) STRINGIZE1 (name)
 #define STRINGIZE1(name) #name
 
-#define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup)
-#define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
-#define CONCAT3_2(Pre, Name, Post) Pre##Name##Post
+#ifndef DB_LOOKUP_FCT
+# define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup)
+# define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
+# define CONCAT3_2(Pre, Name, Post) Pre##Name##Post
+#endif
 
 /* Sometimes we need to store error codes in the `h_errno' variable.  */
 #ifdef NEED_H_ERRNO

@@ -1,4 +1,4 @@
-# Copyright (C) 1995,96,97,98,99,2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \
 	iofopncook iofputs iofread iofsetpos ioftell wfiledoalloc	      \
 	iofwrite iogetdelim iogetline iogets iopadn iopopen ioputs	      \
-	ioseekoff ioseekpos iosetbuffer iosetvbuf iosprintf ioungetc	      \
+	ioseekoff ioseekpos iosetbuffer iosetvbuf ioungetc		      \
 	iovsprintf iovsscanf						      \
 	iofgetpos64 iofopen64 iofsetpos64				      \
 	fputwc fputwc_u getwc getwc_u getwchar getwchar_u iofgetws iofgetws_u \

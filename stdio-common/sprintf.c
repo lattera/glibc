@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,15 +21,13 @@
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
-# define vsprintf(s, f, a) _IO_vsprintf (s, f, a)
+# define vsprintf(s, f, a) INTUSE(_IO_vsprintf) (s, f, a)
 #endif
 
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-sprintf (s, format)
-     char *s;
-     const char *format;
+sprintf (char *s, const char *format, ...)
 {
   va_list arg;
   int done;
@@ -40,3 +38,7 @@ sprintf (s, format)
 
   return done;
 }
+
+#ifdef USE_IN_LIBIO
+strong_alias(sprintf, _IO_sprintf)
+#endif

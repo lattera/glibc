@@ -49,7 +49,7 @@ static char sccsid[] = "@(#)xdr_reference.c 1.11 87/08/11 SMI";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) _IO_fputs (s, f)
+# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 #define LASTUNSIGNED	((u_int)0-1)
@@ -107,6 +107,7 @@ xdr_reference (xdrs, pp, size, proc)
     }
   return stat;
 }
+INTDEF(xdr_reference)
 
 
 /*
@@ -139,7 +140,7 @@ xdr_pointer (xdrs, objpp, obj_size, xdr_obj)
   bool_t more_data;
 
   more_data = (*objpp != NULL);
-  if (!xdr_bool (xdrs, &more_data))
+  if (!INTUSE(xdr_bool) (xdrs, &more_data))
     {
       return FALSE;
     }
@@ -148,5 +149,5 @@ xdr_pointer (xdrs, objpp, obj_size, xdr_obj)
       *objpp = NULL;
       return TRUE;
     }
-  return xdr_reference (xdrs, objpp, obj_size, xdr_obj);
+  return INTUSE(xdr_reference) (xdrs, objpp, obj_size, xdr_obj);
 }

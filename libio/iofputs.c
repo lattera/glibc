@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1996,1997,1998,1999,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,7 @@ _IO_fputs (str, fp)
   _IO_cleanup_region_end (0);
   return result;
 }
+INTDEF(_IO_fputs)
 
 #ifdef weak_alias
 weak_alias (_IO_fputs, fputs)

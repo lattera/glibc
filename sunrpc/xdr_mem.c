@@ -80,6 +80,7 @@ xdrmem_create (XDR *xdrs, const caddr_t addr, u_int size, enum xdr_op op)
   xdrs->x_private = xdrs->x_base = addr;
   xdrs->x_handy = size;
 }
+INTDEF(xdrmem_create)
 
 /*
  * Nothing needs to be done for the memory case.  The argument is clearly

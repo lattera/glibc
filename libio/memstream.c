@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,17 +40,17 @@ static struct _IO_jump_t _IO_mem_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT (finish, _IO_mem_finish),
-  JUMP_INIT (overflow, _IO_str_overflow),
-  JUMP_INIT (underflow, _IO_str_underflow),
-  JUMP_INIT (uflow, _IO_default_uflow),
-  JUMP_INIT (pbackfail, _IO_str_pbackfail),
-  JUMP_INIT (xsputn, _IO_default_xsputn),
-  JUMP_INIT (xsgetn, _IO_default_xsgetn),
-  JUMP_INIT (seekoff, _IO_str_seekoff),
+  JUMP_INIT (overflow, INTUSE(_IO_str_overflow)),
+  JUMP_INIT (underflow, INTUSE(_IO_str_underflow)),
+  JUMP_INIT (uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT (pbackfail, INTUSE(_IO_str_pbackfail)),
+  JUMP_INIT (xsputn, INTUSE(_IO_default_xsputn)),
+  JUMP_INIT (xsgetn, INTUSE(_IO_default_xsgetn)),
+  JUMP_INIT (seekoff, INTUSE(_IO_str_seekoff)),
   JUMP_INIT (seekpos, _IO_default_seekpos),
   JUMP_INIT (setbuf, _IO_default_setbuf),
   JUMP_INIT (sync, _IO_mem_sync),
-  JUMP_INIT (doallocate, _IO_default_doallocate),
+  JUMP_INIT (doallocate, INTUSE(_IO_default_doallocate)),
   JUMP_INIT (read, _IO_default_read),
   JUMP_INIT (write, _IO_default_write),
   JUMP_INIT (seek, _IO_default_seek),
@@ -66,15 +66,15 @@ static struct _IO_jump_t _IO_wmem_jumps =
   JUMP_INIT (finish, (_IO_finish_t) _IO_wmem_finish),
   JUMP_INIT (overflow, (_IO_overflow_t) _IO_wstr_overflow),
   JUMP_INIT (underflow, (_IO_underflow_t) _IO_wstr_underflow),
-  JUMP_INIT (uflow, (_IO_underflow_t) _IO_wdefault_uflow),
+  JUMP_INIT (uflow, (_IO_underflow_t) INTUSE(_IO_wdefault_uflow)),
   JUMP_INIT (pbackfail, (_IO_pbackfail_t) _IO_wstr_pbackfail),
-  JUMP_INIT (xsputn, (_IO_xsputn_t) _IO_wdefault_xsputn),
-  JUMP_INIT (xsgetn, (_IO_xsgetn_t) _IO_wdefault_xsgetn),
+  JUMP_INIT (xsputn, (_IO_xsputn_t) INTUSE(_IO_wdefault_xsputn)),
+  JUMP_INIT (xsgetn, (_IO_xsgetn_t) INTUSE(_IO_wdefault_xsgetn)),
   JUMP_INIT (seekoff, _IO_wstr_seekoff),
   JUMP_INIT (seekpos, _IO_default_seekpos),
-  JUMP_INIT (setbuf, (_IO_setbuf_t) _IO_wdefault_setbuf),
+  JUMP_INIT (setbuf, (_IO_setbuf_t) INTUSE(_IO_wdefault_setbuf)),
   JUMP_INIT (sync, (_IO_sync_t) _IO_wmem_sync),
-  JUMP_INIT (doallocate, _IO_wdefault_doallocate),
+  JUMP_INIT (doallocate, INTUSE(_IO_wdefault_doallocate)),
   JUMP_INIT (read, _IO_default_read),
   JUMP_INIT (write, _IO_default_write),
   JUMP_INIT (seek, _IO_default_seek),
@@ -114,7 +114,7 @@ open_memstream (bufloc, sizeloc)
     return NULL;
   _IO_no_init (&new_f->fp._sf._sbf._f, 0, 0, &new_f->wd, &_IO_wmem_jumps);
   _IO_JUMPS ((struct _IO_FILE_plus *) &new_f->fp._sf._sbf) = &_IO_mem_jumps;
-  _IO_str_init_static (&new_f->fp._sf, buf, _IO_BUFSIZ, buf);
+  INTUSE(_IO_str_init_static) (&new_f->fp._sf, buf, _IO_BUFSIZ, buf);
   new_f->fp._sf._sbf._f._flags &= ~_IO_USER_BUF;
   new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   new_f->fp._sf._s._free_buffer = (_IO_free_type) free;
@@ -139,7 +139,7 @@ _IO_mem_sync (fp)
 
   if (fp->_IO_write_ptr == fp->_IO_write_end)
     {
-      _IO_str_overflow (fp, '\0');
+      INTUSE(_IO_str_overflow) (fp, '\0');
       --fp->_IO_write_ptr;
     }
   else
@@ -169,7 +169,7 @@ _IO_mem_finish (fp, dummy)
 
   fp->_IO_buf_base = NULL;
 
-  _IO_default_finish (fp, 0);
+  INTUSE(_IO_default_finish) (fp, 0);
 }
 
 
@@ -221,5 +221,5 @@ _IO_wmem_finish (fp, dummy)
 
   fp->_wide_data->_IO_buf_base = NULL;
 
-  _IO_default_finish (fp, 0);
+  INTUSE(_IO_default_finish) (fp, 0);
 }

@@ -124,15 +124,15 @@ _IO_new_fdopen (fd, mode)
 #ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
 #endif
-  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
-  _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp);
+  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &INTUSE(_IO_wfile_jumps));
+  _IO_JUMPS (&new_f->fp) = &INTUSE(_IO_file_jumps);
+  INTUSE(_IO_file_init) (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_attach ((_IO_FILE *) &new_f->fp, fd) == NULL)
+  if (INTUSE(_IO_file_attach) ((_IO_FILE *) &new_f->fp, fd) == NULL)
     {
-      _IO_un_link (&new_f->fp);
+      INTUSE(_IO_un_link) (&new_f->fp);
       free (new_f);
       return NULL;
     }
@@ -144,6 +144,7 @@ _IO_new_fdopen (fd, mode)
 
   return __fopen_maybe_mmap (&new_f->fp.file);
 }
+INTDEF2(_IO_new_fdopen, _IO_fdopen)
 
 strong_alias (_IO_new_fdopen, __new_fdopen)
 versioned_symbol (libc, _IO_new_fdopen, _IO_fdopen, GLIBC_2_1);

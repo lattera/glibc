@@ -95,8 +95,9 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
       r.port_ptr = port_ptr;
       r.results_ptr = resp;
       r.xdr_results = xdrres;
-      stat = CLNT_CALL (client, PMAPPROC_CALLIT, (xdrproc_t)xdr_rmtcall_args,
-			(caddr_t)&a, (xdrproc_t)xdr_rmtcallres,
+      stat = CLNT_CALL (client, PMAPPROC_CALLIT,
+			(xdrproc_t)INTUSE(xdr_rmtcall_args),
+			(caddr_t)&a, (xdrproc_t)INTUSE(xdr_rmtcallres),
 			(caddr_t)&r, tout);
       CLNT_DESTROY (client);
     }
@@ -119,12 +120,12 @@ xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
 {
   u_int lenposition, argposition, position;
 
-  if (xdr_u_long (xdrs, &(cap->prog)) &&
-      xdr_u_long (xdrs, &(cap->vers)) &&
-      xdr_u_long (xdrs, &(cap->proc)))
+  if (INTUSE(xdr_u_long) (xdrs, &(cap->prog)) &&
+      INTUSE(xdr_u_long) (xdrs, &(cap->vers)) &&
+      INTUSE(xdr_u_long) (xdrs, &(cap->proc)))
     {
       lenposition = XDR_GETPOS (xdrs);
-      if (!xdr_u_long (xdrs, &(cap->arglen)))
+      if (!INTUSE(xdr_u_long) (xdrs, &(cap->arglen)))
 	return FALSE;
       argposition = XDR_GETPOS (xdrs);
       if (!(*(cap->xdr_args)) (xdrs, cap->args_ptr))
@@ -132,13 +133,14 @@ xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
       position = XDR_GETPOS (xdrs);
       cap->arglen = (u_long) position - (u_long) argposition;
       XDR_SETPOS (xdrs, lenposition);
-      if (!xdr_u_long (xdrs, &(cap->arglen)))
+      if (!INTUSE(xdr_u_long) (xdrs, &(cap->arglen)))
 	return FALSE;
       XDR_SETPOS (xdrs, position);
       return TRUE;
     }
   return FALSE;
 }
+INTDEF(xdr_rmtcall_args)
 
 /*
  * XDR remote call results
@@ -152,14 +154,16 @@ xdr_rmtcallres (xdrs, crp)
   caddr_t port_ptr;
 
   port_ptr = (caddr_t) crp->port_ptr;
-  if (xdr_reference (xdrs, &port_ptr, sizeof (u_long), (xdrproc_t) xdr_u_long)
-      && xdr_u_long (xdrs, &crp->resultslen))
+  if (INTUSE(xdr_reference) (xdrs, &port_ptr, sizeof (u_long),
+			     (xdrproc_t) INTUSE(xdr_u_long))
+      && INTUSE(xdr_u_long) (xdrs, &crp->resultslen))
     {
       crp->port_ptr = (u_long *) port_ptr;
       return (*(crp->xdr_results)) (xdrs, crp->results_ptr);
     }
   return FALSE;
 }
+INTDEF(xdr_rmtcallres)
 
 
 /*
@@ -299,8 +303,9 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   r.port_ptr = &port;
   r.xdr_results = xresults;
   r.results_ptr = resultsp;
-  xdrmem_create (xdrs, outbuf, MAX_BROADCAST_SIZE, XDR_ENCODE);
-  if ((!xdr_callmsg (xdrs, &msg)) || (!xdr_rmtcall_args (xdrs, &a)))
+  INTUSE(xdrmem_create) (xdrs, outbuf, MAX_BROADCAST_SIZE, XDR_ENCODE);
+  if ((!INTUSE(xdr_callmsg) (xdrs, &msg))
+      || (!INTUSE(xdr_rmtcall_args) (xdrs, &a)))
     {
       stat = RPC_CANTENCODEARGS;
       goto done_broad;
@@ -333,7 +338,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
     recv_again:
       msg.acpted_rply.ar_verf = _null_auth;
       msg.acpted_rply.ar_results.where = (caddr_t) & r;
-      msg.acpted_rply.ar_results.proc = (xdrproc_t) xdr_rmtcallres;
+      msg.acpted_rply.ar_results.proc = (xdrproc_t) INTUSE(xdr_rmtcallres);
       milliseconds = t.tv_sec * 1000 + t.tv_usec / 1000;
       switch (__poll(&fd, 1, milliseconds))
 	{
@@ -368,8 +373,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
        * see if reply transaction id matches sent id.
        * If so, decode the results.
        */
-      xdrmem_create (xdrs, inbuf, (u_int) inlen, XDR_DECODE);
-      if (xdr_replymsg (xdrs, &msg))
+      INTUSE(xdrmem_create) (xdrs, inbuf, (u_int) inlen, XDR_DECODE);
+      if (INTUSE(xdr_replymsg) (xdrs, &msg))
 	{
 	  if (((u_int32_t) msg.rm_xid == (u_int32_t) xid) &&
 	      (msg.rm_reply.rp_stat == MSG_ACCEPTED) &&
@@ -390,8 +395,8 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 #endif
 	}
       xdrs->x_op = XDR_FREE;
-      msg.acpted_rply.ar_results.proc = (xdrproc_t)xdr_void;
-      (void) xdr_replymsg (xdrs, &msg);
+      msg.acpted_rply.ar_results.proc = (xdrproc_t)INTUSE(xdr_void);
+      (void) INTUSE(xdr_replymsg) (xdrs, &msg);
       (void) (*xresults) (xdrs, resultsp);
       xdr_destroy (xdrs);
       if (done)

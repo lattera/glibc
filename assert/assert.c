@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1994,1995,1996,1998,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1994-1996,1998,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ extern const char *__progname;
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fflush(s) _IO_fflush (s)
+# define fflush(s) INTUSE(_IO_fflush) (s)
 #endif
 
 /* This function, when passed a string containing an asserted

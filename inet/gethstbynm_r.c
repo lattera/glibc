@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -38,5 +38,8 @@
 
 #define HANDLE_DIGITS_DOTS	1
 #define HAVE_LOOKUP_BUFFER	1
+
+/* Special name for the lookup function.  */
+#define DB_LOOKUP_FCT INTUSE(__nss_hosts_lookup)
 
 #include "../nss/getXXbyYY_r.c"

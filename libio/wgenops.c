@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -64,6 +64,7 @@ _IO_least_wmarker (fp, end_p)
       least_so_far = mark->_pos;
   return least_so_far;
 }
+INTDEF(_IO_least_wmarker)
 
 /* Switch current get area from backup buffer to (start of) main get area. */
 void
@@ -83,6 +84,7 @@ _IO_switch_to_main_wget_area (fp)
   /* Set _IO_read_ptr. */
   fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_base;
 }
+INTDEF(_IO_switch_to_main_wget_area)
 
 
 /* Switch current get area from main get area to (end of) backup area. */
@@ -103,6 +105,7 @@ _IO_switch_to_wbackup_area (fp)
   /* Set _IO_read_ptr.  */
   fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
 }
+INTDEF(_IO_switch_to_wbackup_area)
 
 
 void
@@ -121,6 +124,7 @@ _IO_wsetb (f, b, eb, a)
   else
     f->_flags |= _IO_USER_BUF;
 }
+INTDEF(_IO_wsetb)
 
 
 wint_t
@@ -160,7 +164,7 @@ _IO_wdefault_pbackfail (fp, c)
 	      fp->_wide_data->_IO_backup_base = fp->_wide_data->_IO_save_end;
 	    }
 	  fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_ptr;
-	  _IO_switch_to_wbackup_area (fp);
+	  INTUSE(_IO_switch_to_wbackup_area) (fp);
 	}
       else if (fp->_wide_data->_IO_read_ptr <= fp->_wide_data->_IO_read_base)
 	{
@@ -185,6 +189,7 @@ _IO_wdefault_pbackfail (fp, c)
     }
   return c;
 }
+INTDEF(_IO_wdefault_pbackfail)
 
 
 void
@@ -214,8 +219,9 @@ _IO_wdefault_finish (fp, dummy)
     _IO_lock_fini (*fp->_lock);
 #endif
 
-  _IO_un_link ((struct _IO_FILE_plus *) fp);
+  INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
 }
+INTDEF(_IO_wdefault_finish)
 
 
 wint_t
@@ -228,6 +234,7 @@ _IO_wdefault_uflow (fp)
     return WEOF;
   return *fp->_wide_data->_IO_read_ptr++;
 }
+INTDEF(_IO_wdefault_uflow)
 
 
 wint_t
@@ -251,13 +258,13 @@ __wuflow (fp)
   if (fp->_mode == 0)
     _IO_fwide (fp, 1);
   if (_IO_in_put_mode (fp))
-    if (_IO_switch_to_wget_mode (fp) == EOF)
+    if (INTUSE(_IO_switch_to_wget_mode) (fp) == EOF)
       return WEOF;
   if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
     return *fp->_wide_data->_IO_read_ptr++;
   if (_IO_in_backup (fp))
     {
-      _IO_switch_to_main_wget_area (fp);
+      INTUSE(_IO_switch_to_main_wget_area) (fp);
       if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
 	return *fp->_wide_data->_IO_read_ptr++;
     }
@@ -267,7 +274,7 @@ __wuflow (fp)
 	return WEOF;
     }
   else if (_IO_have_wbackup (fp))
-    _IO_free_wbackup_area (fp);
+    INTUSE(_IO_free_wbackup_area) (fp);
   return _IO_UFLOW (fp);
 }
 
@@ -282,13 +289,13 @@ __wunderflow (fp)
   if (fp->_mode == 0)
     _IO_fwide (fp, 1);
   if (_IO_in_put_mode (fp))
-    if (_IO_switch_to_wget_mode (fp) == EOF)
+    if (INTUSE(_IO_switch_to_wget_mode) (fp) == EOF)
       return WEOF;
   if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
     return *fp->_wide_data->_IO_read_ptr;
   if (_IO_in_backup (fp))
     {
-      _IO_switch_to_main_wget_area (fp);
+      INTUSE(_IO_switch_to_main_wget_area) (fp);
       if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
 	return *fp->_wide_data->_IO_read_ptr;
     }
@@ -298,7 +305,7 @@ __wunderflow (fp)
 	return WEOF;
     }
   else if (_IO_have_backup (fp))
-    _IO_free_wbackup_area (fp);
+    INTUSE(_IO_free_wbackup_area) (fp);
   return _IO_UNDERFLOW (fp);
 }
 
@@ -351,6 +358,7 @@ _IO_wdefault_xsputn (f, data, n)
     }
   return n - more;
 }
+INTDEF(_IO_wdefault_xsputn)
 
 
 _IO_size_t
@@ -397,6 +405,7 @@ _IO_wdefault_xsgetn (fp, data, n)
     }
   return n - more;
 }
+INTDEF(_IO_wdefault_xsgetn)
 
 
 void
@@ -408,8 +417,10 @@ _IO_wdoallocbuf (fp)
   if (!(fp->_flags & _IO_UNBUFFERED))
     if ((wint_t)_IO_WDOALLOCATE (fp) != WEOF)
       return;
-  _IO_wsetb (fp, fp->_wide_data->_shortbuf, fp->_wide_data->_shortbuf + 1, 0);
+  INTUSE(_IO_wsetb) (fp, fp->_wide_data->_shortbuf,
+		     fp->_wide_data->_shortbuf + 1, 0);
 }
+INTDEF(_IO_wdoallocbuf)
 
 
 _IO_FILE *
@@ -423,13 +434,13 @@ _IO_wdefault_setbuf (fp, p, len)
   if (p == NULL || len == 0)
     {
       fp->_flags |= _IO_UNBUFFERED;
-      _IO_wsetb (fp, fp->_wide_data->_shortbuf, fp->_wide_data->_shortbuf + 1,
-		 0);
+      INTUSE(_IO_wsetb) (fp, fp->_wide_data->_shortbuf,
+			 fp->_wide_data->_shortbuf + 1, 0);
     }
   else
     {
       fp->_flags &= ~_IO_UNBUFFERED;
-      _IO_wsetb (fp, p, p + len, 0);
+      INTUSE(_IO_wsetb) (fp, p, p + len, 0);
     }
   fp->_wide_data->_IO_write_base = fp->_wide_data->_IO_write_ptr
     = fp->_wide_data->_IO_write_end = 0;
@@ -437,6 +448,7 @@ _IO_wdefault_setbuf (fp, p, len)
     = fp->_wide_data->_IO_read_end = 0;
   return fp;
 }
+INTDEF(_IO_wdefault_setbuf)
 
 
 int
@@ -446,9 +458,10 @@ _IO_wdefault_doallocate (fp)
   wchar_t *buf;
 
   ALLOC_WBUF (buf, _IO_BUFSIZ, EOF);
-  _IO_wsetb (fp, buf, buf + _IO_BUFSIZ, 1);
+  INTUSE(_IO_wsetb) (fp, buf, buf + _IO_BUFSIZ, 1);
   return 1;
 }
+INTDEF(_IO_wdefault_doallocate)
 
 
 int
@@ -474,18 +487,20 @@ _IO_switch_to_wget_mode (fp)
   fp->_flags &= ~_IO_CURRENTLY_PUTTING;
   return 0;
 }
+INTDEF(_IO_switch_to_wget_mode)
 
 void
 _IO_free_wbackup_area (fp)
      _IO_FILE *fp;
 {
   if (_IO_in_backup (fp))
-    _IO_switch_to_main_wget_area (fp);  /* Just in case. */
+    INTUSE(_IO_switch_to_main_wget_area) (fp);  /* Just in case. */
   free (fp->_wide_data->_IO_save_base);
   fp->_wide_data->_IO_save_base = NULL;
   fp->_wide_data->_IO_save_end = NULL;
   fp->_wide_data->_IO_backup_base = NULL;
 }
+INTDEF(_IO_free_wbackup_area)
 
 #if 0
 int
@@ -517,7 +532,7 @@ save_for_wbackup (fp, end_p)
      wchar_t *end_p;
 {
   /* Append [_IO_read_base..end_p] to backup area. */
-  _IO_ssize_t least_mark = _IO_least_wmarker (fp, end_p);
+  _IO_ssize_t least_mark = INTUSE(_IO_least_wmarker) (fp, end_p);
   /* needed_size is how much space we need in the backup area. */
   _IO_size_t needed_size = ((end_p - fp->_wide_data->_IO_read_base)
 			    - least_mark);
@@ -630,6 +645,7 @@ _IO_sputbackwc (fp, c)
 
   return result;
 }
+INTDEF(_IO_sputbackwc)
 
 wint_t
 _IO_sungetwc (fp)
@@ -672,7 +688,7 @@ _IO_init_wmarker (marker, fp)
 {
   marker->_sbuf = fp;
   if (_IO_in_put_mode (fp))
-    _IO_switch_to_wget_mode (fp);
+    INTUSE(_IO_switch_to_wget_mode) (fp);
   if (_IO_in_backup (fp))
     marker->_pos = fp->_wide_data->_IO_read_ptr - fp->_wide_data->_IO_read_end;
   else
@@ -714,14 +730,14 @@ _IO_seekwmark (fp, mark, delta)
  if (mark->_pos >= 0)
     {
       if (_IO_in_backup (fp))
-	_IO_switch_to_main_wget_area (fp);
+	INTUSE(_IO_switch_to_main_wget_area) (fp);
       fp->_wide_data->_IO_read_ptr = (fp->_wide_data->_IO_read_base
 				      + mark->_pos);
     }
   else
     {
       if (!_IO_in_backup (fp))
-	_IO_switch_to_wbackup_area (fp);
+	INTUSE(_IO_switch_to_wbackup_area) (fp);
       fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end + mark->_pos;
     }
   return 0;
@@ -752,5 +768,5 @@ _IO_unsave_wmarkers (fp)
     }
 
   if (_IO_have_backup (fp))
-    _IO_free_wbackup_area (fp);
+    INTUSE(_IO_free_wbackup_area) (fp);
 }

@@ -86,6 +86,7 @@ xdr_void (void)
 {
   return TRUE;
 }
+INTDEF(xdr_void)
 
 /*
  * XDR integers
@@ -114,13 +115,14 @@ xdr_int (XDR *xdrs, int *ip)
     }
   return FALSE;
 #elif INT_MAX == LONG_MAX
-  return xdr_long (xdrs, (long *) ip);
+  return INTUSE(xdr_long) (xdrs, (long *) ip);
 #elif INT_MAX == SHRT_MAX
-  return xdr_short (xdrs, (short *) ip);
+  return INTUSE(xdr_short) (xdrs, (short *) ip);
 #else
 #error unexpected integer sizes in_xdr_int()
 #endif
 }
+INTDEF(xdr_int)
 
 /*
  * XDR unsigned integers
@@ -148,13 +150,14 @@ xdr_u_int (XDR *xdrs, u_int *up)
     }
   return FALSE;
 #elif UINT_MAX == ULONG_MAX
-  return xdr_u_long (xdrs, (u_long *) up);
+  return INTUSE(xdr_u_long) (xdrs, (u_long *) up);
 #elif UINT_MAX == USHRT_MAX
-  return xdr_short (xdrs, (short *) up);
+  return INTUSE(xdr_short) (xdrs, (short *) up);
 #else
 #error unexpected integer sizes in_xdr_u_int()
 #endif
 }
+INTDEF(xdr_u_int)
 
 /*
  * XDR long integers
@@ -178,6 +181,7 @@ xdr_long (XDR *xdrs, long *lp)
 
   return FALSE;
 }
+INTDEF(xdr_long)
 
 /*
  * XDR unsigned long integers
@@ -212,6 +216,7 @@ xdr_u_long (XDR *xdrs, u_long *ulp)
     }
   return FALSE;
 }
+INTDEF(xdr_u_long)
 
 /*
  * XDR hyper integers
@@ -244,6 +249,7 @@ xdr_hyper (XDR *xdrs, quad_t *llp)
 
   return FALSE;
 }
+INTDEF(xdr_hyper)
 
 
 /*
@@ -277,17 +283,18 @@ xdr_u_hyper (XDR *xdrs, u_quad_t *ullp)
 
   return FALSE;
 }
+INTDEF(xdr_u_hyper)
 
 bool_t
 xdr_longlong_t (XDR *xdrs, quad_t *llp)
 {
-  return xdr_hyper (xdrs, llp);
+  return INTUSE(xdr_hyper) (xdrs, llp);
 }
 
 bool_t
 xdr_u_longlong_t (XDR *xdrs, u_quad_t *ullp)
 {
-  return xdr_u_hyper (xdrs, ullp);
+  return INTUSE(xdr_u_hyper) (xdrs, ullp);
 }
 
 /*
@@ -317,6 +324,7 @@ xdr_short (XDR *xdrs, short *sp)
     }
   return FALSE;
 }
+INTDEF(xdr_short)
 
 /*
  * XDR unsigned short integers
@@ -345,6 +353,7 @@ xdr_u_short (XDR *xdrs, u_short *usp)
     }
   return FALSE;
 }
+INTDEF(xdr_u_short)
 
 
 /*
@@ -356,7 +365,7 @@ xdr_char (XDR *xdrs, char *cp)
   int i;
 
   i = (*cp);
-  if (!xdr_int (xdrs, &i))
+  if (!INTUSE(xdr_int) (xdrs, &i))
     {
       return FALSE;
     }
@@ -373,7 +382,7 @@ xdr_u_char (XDR *xdrs, u_char *cp)
   u_int u;
 
   u = (*cp);
-  if (!xdr_u_int (xdrs, &u))
+  if (!INTUSE(xdr_u_int) (xdrs, &u))
     {
       return FALSE;
     }
@@ -408,6 +417,7 @@ xdr_bool (XDR *xdrs, bool_t *bp)
     }
   return FALSE;
 }
+INTDEF(xdr_bool)
 
 /*
  * XDR enumerations
@@ -446,18 +456,19 @@ xdr_enum (XDR *xdrs, enum_t *ep)
 	}
       return FALSE;
 #else
-      return xdr_long (xdrs, (long *) ep);
+      return INTUSE(xdr_long) (xdrs, (long *) ep);
 #endif
     }
   else if (sizeof (enum sizecheck) == sizeof (short))
     {
-      return xdr_short (xdrs, (short *) ep);
+      return INTUSE(xdr_short) (xdrs, (short *) ep);
     }
   else
     {
       return FALSE;
     }
 }
+INTDEF(xdr_enum)
 
 /*
  * XDR opaque data
@@ -508,6 +519,7 @@ xdr_opaque (XDR *xdrs, caddr_t cp, u_int cnt)
     }
   return FALSE;
 }
+INTDEF(xdr_opaque)
 
 /*
  * XDR counted bytes
@@ -527,7 +539,7 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
   /*
    * first deal with the length since xdr bytes are counted
    */
-  if (!xdr_u_int (xdrs, sizep))
+  if (!INTUSE(xdr_u_int) (xdrs, sizep))
     {
       return FALSE;
     }
@@ -564,7 +576,7 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
       /* fall into ... */
 
     case XDR_ENCODE:
-      return xdr_opaque (xdrs, sp, nodesize);
+      return INTUSE(xdr_opaque) (xdrs, sp, nodesize);
 
     case XDR_FREE:
       if (sp != NULL)
@@ -576,6 +588,7 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
     }
   return FALSE;
 }
+INTDEF(xdr_bytes)
 
 /*
  * Implemented here due to commonality of the object.
@@ -586,8 +599,9 @@ xdr_netobj (xdrs, np)
      struct netobj *np;
 {
 
-  return xdr_bytes (xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ);
+  return INTUSE(xdr_bytes) (xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ);
 }
+INTDEF(xdr_netobj)
 
 /*
  * XDR a discriminated union
@@ -613,7 +627,7 @@ xdr_union (xdrs, dscmp, unp, choices, dfault)
   /*
    * we deal with the discriminator;  it's an enum
    */
-  if (!xdr_enum (xdrs, dscmp))
+  if (!INTUSE(xdr_enum) (xdrs, dscmp))
     {
       return FALSE;
     }
@@ -635,6 +649,7 @@ xdr_union (xdrs, dscmp, unp, choices, dfault)
   return ((dfault == NULL_xdrproc_t) ? FALSE :
 	  (*dfault) (xdrs, unp, LASTUNSIGNED));
 }
+INTDEF(xdr_union)
 
 
 /*
@@ -680,7 +695,7 @@ xdr_string (xdrs, cpp, maxsize)
     case XDR_DECODE:
       break;
     }
-  if (!xdr_u_int (xdrs, &size))
+  if (!INTUSE(xdr_u_int) (xdrs, &size))
     {
       return FALSE;
     }
@@ -717,7 +732,7 @@ xdr_string (xdrs, cpp, maxsize)
       /* fall into ... */
 
     case XDR_ENCODE:
-      return xdr_opaque (xdrs, sp, size);
+      return INTUSE(xdr_opaque) (xdrs, sp, size);
 
     case XDR_FREE:
       mem_free (sp, nodesize);
@@ -726,6 +741,7 @@ xdr_string (xdrs, cpp, maxsize)
     }
   return FALSE;
 }
+INTDEF(xdr_string)
 
 /*
  * Wrapper for xdr_string that can be called directly from
@@ -736,7 +752,7 @@ xdr_wrapstring (xdrs, cpp)
      XDR *xdrs;
      char **cpp;
 {
-  if (xdr_string (xdrs, cpp, LASTUNSIGNED))
+  if (INTUSE(xdr_string) (xdrs, cpp, LASTUNSIGNED))
     {
       return TRUE;
     }

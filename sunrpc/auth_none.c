@@ -87,10 +87,10 @@ authnone_create (void)
       ap->no_client.ah_cred = ap->no_client.ah_verf = _null_auth;
       ap->no_client.ah_ops = &ops;
       xdrs = &xdr_stream;
-      xdrmem_create (xdrs, ap->marshalled_client, (u_int) MAX_MARSHEL_SIZE,
-		     XDR_ENCODE);
-      (void) xdr_opaque_auth (xdrs, &ap->no_client.ah_cred);
-      (void) xdr_opaque_auth (xdrs, &ap->no_client.ah_verf);
+      INTUSE(xdrmem_create) (xdrs, ap->marshalled_client,
+			     (u_int) MAX_MARSHEL_SIZE, XDR_ENCODE);
+      (void) INTUSE(xdr_opaque_auth) (xdrs, &ap->no_client.ah_cred);
+      (void) INTUSE(xdr_opaque_auth) (xdrs, &ap->no_client.ah_verf);
       ap->mcnt = XDR_GETPOS (xdrs);
       XDR_DESTROY (xdrs);
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,8 @@ _IO_un_link (fp)
       run_fp = (_IO_FILE *) fp;
       _IO_flockfile ((_IO_FILE *) fp);
 #endif
-      for (f = &_IO_list_all; *f; f = (struct _IO_FILE_plus **) &(*f)->file._chain)
+      for (f = &INTUSE(_IO_list_all); *f;
+	   f = (struct _IO_FILE_plus **) &(*f)->file._chain)
 	{
 	  if (*f == fp)
 	    {
@@ -84,6 +85,7 @@ _IO_un_link (fp)
 #endif
     }
 }
+INTDEF(_IO_un_link)
 
 void
 _IO_link_in (fp)
@@ -98,8 +100,8 @@ _IO_link_in (fp)
       run_fp = (_IO_FILE *) fp;
       _IO_flockfile ((_IO_FILE *) fp);
 #endif
-      fp->file._chain = (_IO_FILE *) _IO_list_all;
-      _IO_list_all = fp;
+      fp->file._chain = (_IO_FILE *) INTUSE(_IO_list_all);
+      INTUSE(_IO_list_all) = fp;
       ++_IO_list_all_stamp;
 #ifdef _IO_MTSAFE_IO
       _IO_funlockfile ((_IO_FILE *) fp);
@@ -109,6 +111,7 @@ _IO_link_in (fp)
 #endif
     }
 }
+INTDEF(_IO_link_in)
 
 /* Return minimum _pos markers
    Assumes the current get area is the main get area. */
@@ -189,6 +192,7 @@ _IO_switch_to_get_mode (fp)
   fp->_flags &= ~_IO_CURRENTLY_PUTTING;
   return 0;
 }
+INTDEF(_IO_switch_to_get_mode)
 
 void
 _IO_free_backup_area (fp)
@@ -201,6 +205,7 @@ _IO_free_backup_area (fp)
   fp->_IO_save_end = NULL;
   fp->_IO_backup_base = NULL;
 }
+INTDEF(_IO_free_backup_area)
 
 #if 0
 int
@@ -325,7 +330,7 @@ __underflow (fp)
   if (fp->_mode == 0)
     _IO_fwide (fp, -1);
   if (_IO_in_put_mode (fp))
-    if (_IO_switch_to_get_mode (fp) == EOF)
+    if (INTUSE(_IO_switch_to_get_mode) (fp) == EOF)
       return EOF;
   if (fp->_IO_read_ptr < fp->_IO_read_end)
     return *(unsigned char *) fp->_IO_read_ptr;
@@ -341,7 +346,7 @@ __underflow (fp)
 	return EOF;
     }
   else if (_IO_have_backup (fp))
-    _IO_free_backup_area (fp);
+    INTUSE(_IO_free_backup_area) (fp);
   return _IO_UNDERFLOW (fp);
 }
 
@@ -357,7 +362,7 @@ __uflow (fp)
   if (fp->_mode == 0)
     _IO_fwide (fp, -11);
   if (_IO_in_put_mode (fp))
-    if (_IO_switch_to_get_mode (fp) == EOF)
+    if (INTUSE(_IO_switch_to_get_mode) (fp) == EOF)
       return EOF;
   if (fp->_IO_read_ptr < fp->_IO_read_end)
     return *(unsigned char *) fp->_IO_read_ptr++;
@@ -373,7 +378,7 @@ __uflow (fp)
 	return EOF;
     }
   else if (_IO_have_backup (fp))
-    _IO_free_backup_area (fp);
+    INTUSE(_IO_free_backup_area) (fp);
   return _IO_UFLOW (fp);
 }
 
@@ -393,6 +398,7 @@ _IO_setb (f, b, eb, a)
   else
     f->_flags |= _IO_USER_BUF;
 }
+INTDEF(_IO_setb)
 
 void
 _IO_doallocbuf (fp)
@@ -403,8 +409,9 @@ _IO_doallocbuf (fp)
   if (!(fp->_flags & _IO_UNBUFFERED) || fp->_mode > 0)
     if (_IO_DOALLOCATE (fp) != EOF)
       return;
-  _IO_setb (fp, fp->_shortbuf, fp->_shortbuf+1, 0);
+  INTUSE(_IO_setb) (fp, fp->_shortbuf, fp->_shortbuf+1, 0);
 }
+INTDEF(_IO_doallocbuf)
 
 int
 _IO_default_underflow (fp)
@@ -422,6 +429,7 @@ _IO_default_uflow (fp)
     return EOF;
   return *(unsigned char *) fp->_IO_read_ptr++;
 }
+INTDEF(_IO_default_uflow)
 
 _IO_size_t
 _IO_default_xsputn (f, data, n)
@@ -469,6 +477,7 @@ _IO_default_xsputn (f, data, n)
     }
   return n - more;
 }
+INTDEF(_IO_default_xsputn)
 
 _IO_size_t
 _IO_sgetn (fp, data, n)
@@ -479,6 +488,7 @@ _IO_sgetn (fp, data, n)
   /* FIXME handle putback buffer here! */
   return _IO_XSGETN (fp, data, n);
 }
+INTDEF(_IO_sgetn)
 
 _IO_size_t
 _IO_default_xsgetn (fp, data, n)
@@ -523,6 +533,7 @@ _IO_default_xsgetn (fp, data, n)
     }
   return n - more;
 }
+INTDEF(_IO_default_xsgetn)
 
 #if 0
 /* Seems not to be needed. --drepper */
@@ -545,12 +556,12 @@ _IO_default_setbuf (fp, p, len)
     if (p == NULL || len == 0)
       {
 	fp->_flags |= _IO_UNBUFFERED;
-	_IO_setb (fp, fp->_shortbuf, fp->_shortbuf+1, 0);
+	INTUSE(_IO_setb) (fp, fp->_shortbuf, fp->_shortbuf+1, 0);
       }
     else
       {
 	fp->_flags &= ~_IO_UNBUFFERED;
-	_IO_setb (fp, p, p+len, 0);
+	INTUSE(_IO_setb) (fp, p, p+len, 0);
       }
     fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end = 0;
     fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_read_end = 0;
@@ -573,9 +584,10 @@ _IO_default_doallocate (fp)
   char *buf;
 
   ALLOC_BUF (buf, _IO_BUFSIZ, EOF);
-  _IO_setb (fp, buf, buf+_IO_BUFSIZ, 1);
+  INTUSE(_IO_setb) (fp, buf, buf+_IO_BUFSIZ, 1);
   return 1;
 }
+INTDEF(_IO_default_doallocate)
 
 void
 _IO_init (fp, flags)
@@ -584,6 +596,7 @@ _IO_init (fp, flags)
 {
   _IO_no_init (fp, flags, -1, NULL, NULL);
 }
+INTDEF(_IO_init)
 
 void
 _IO_no_init (fp, flags, orientation, wd, jmp)
@@ -674,8 +687,9 @@ _IO_default_finish (fp, dummy)
     _IO_lock_fini (*fp->_lock);
 #endif
 
-  _IO_un_link ((struct _IO_FILE_plus *) fp);
+  INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
 }
+INTDEF(_IO_default_finish)
 
 _IO_off64_t
 _IO_default_seekoff (fp, offset, dir, mode)
@@ -708,6 +722,7 @@ _IO_sputbackc (fp, c)
 
   return result;
 }
+INTDEF(_IO_sputbackc)
 
 int
 _IO_sungetc (fp)
@@ -767,6 +782,7 @@ _IO_adjust_column (start, line, count)
       return line + count - ptr - 1;
   return start + count;
 }
+INTDEF(_IO_adjust_column)
 
 #if 0
 /* Seems not to be needed. --drepper */
@@ -797,7 +813,7 @@ _IO_flush_all_lockp (int do_lock)
 #endif
 
   last_stamp = _IO_list_all_stamp;
-  fp = (_IO_FILE *) _IO_list_all;
+  fp = (_IO_FILE *) INTUSE(_IO_list_all);
   while (fp != NULL)
     {
       run_fp = fp;
@@ -821,7 +837,7 @@ _IO_flush_all_lockp (int do_lock)
       if (last_stamp != _IO_list_all_stamp)
 	{
 	  /* Something was added to the list.  Start all over again.  */
-	  fp = (_IO_FILE *) _IO_list_all;
+	  fp = (_IO_FILE *) INTUSE(_IO_list_all);
 	  last_stamp = _IO_list_all_stamp;
 	}
       else
@@ -844,6 +860,7 @@ _IO_flush_all ()
   /* We want locking.  */
   return _IO_flush_all_lockp (1);
 }
+INTDEF(_IO_flush_all)
 
 void
 _IO_flush_all_linebuffered ()
@@ -857,7 +874,7 @@ _IO_flush_all_linebuffered ()
 #endif
 
   last_stamp = _IO_list_all_stamp;
-  fp = (_IO_FILE *) _IO_list_all;
+  fp = (_IO_FILE *) INTUSE(_IO_list_all);
   while (fp != NULL)
     {
       run_fp = fp;
@@ -872,7 +889,7 @@ _IO_flush_all_linebuffered ()
       if (last_stamp != _IO_list_all_stamp)
 	{
 	  /* Something was added to the list.  Start all over again.  */
-	  fp = (_IO_FILE *) _IO_list_all;
+	  fp = (_IO_FILE *) INTUSE(_IO_list_all);
 	  last_stamp = _IO_list_all_stamp;
 	}
       else
@@ -884,6 +901,7 @@ _IO_flush_all_linebuffered ()
   _IO_cleanup_region_end (0);
 #endif
 }
+INTDEF(_IO_flush_all_linebuffered)
 #ifdef _LIBC
 weak_alias (_IO_flush_all_linebuffered, _flushlbf)
 #endif
@@ -894,7 +912,7 @@ static void
 _IO_unbuffer_write ()
 {
   struct _IO_FILE *fp;
-  for (fp = (_IO_FILE *) _IO_list_all; fp; fp = fp->_chain)
+  for (fp = (_IO_FILE *) INTUSE(_IO_list_all); fp; fp = fp->_chain)
     {
       if (! (fp->_flags & _IO_UNBUFFERED)
 	  && (! (fp->_flags & _IO_NO_WRITES)
@@ -912,7 +930,7 @@ _IO_unbuffer_write ()
 int
 _IO_cleanup ()
 {
-  int result = _IO_flush_all ();
+  int result = INTUSE(_IO_flush_all) ();
 
   /* We currently don't have a reliable mechanism for making sure that
      C++ static destructors are executed in the correct order.
@@ -934,7 +952,7 @@ _IO_init_marker (marker, fp)
 {
   marker->_sbuf = fp;
   if (_IO_in_put_mode (fp))
-    _IO_switch_to_get_mode (fp);
+    INTUSE(_IO_switch_to_get_mode) (fp);
   if (_IO_in_backup (fp))
     marker->_pos = fp->_IO_read_ptr - fp->_IO_read_end;
   else
@@ -1040,8 +1058,9 @@ _IO_unsave_markers (fp)
     }
 
   if (_IO_have_backup (fp))
-    _IO_free_backup_area (fp);
+    INTUSE(_IO_free_backup_area) (fp);
 }
+INTDEF(_IO_unsave_markers)
 
 #if 0
 /* Seems not to be needed. --drepper */
@@ -1115,6 +1134,7 @@ _IO_default_pbackfail (fp, c)
     }
   return (unsigned char) c;
 }
+INTDEF(_IO_default_pbackfail)
 
 _IO_off64_t
 _IO_default_seek (fp, offset, dir)
@@ -1168,7 +1188,7 @@ _IO_default_imbue (fp, locale)
 _IO_ITER
 _IO_iter_begin()
 {
-  return (_IO_ITER) _IO_list_all;
+  return (_IO_ITER) INTUSE(_IO_list_all);
 }
 
 _IO_ITER

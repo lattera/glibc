@@ -71,7 +71,7 @@ __fopen_maybe_mmap (fp)
 		 and use a special jump table with simplified
 		 underflow functions which never tries to read
 		 anything from the file.  */
-	      _IO_setb (fp, p, (char *) p + st.st_size, 0);
+	      INTUSE(_IO_setb) (fp, p, (char *) p + st.st_size, 0);
 	      _IO_setg (fp, p, p, p);
 
 	      if (fp->_mode <= 0)
@@ -110,19 +110,20 @@ __fopen_internal (filename, mode, is32)
   new_f->fp.file._lock = &new_f->lock;
 #endif
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
+  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &INTUSE(_IO_wfile_jumps));
 #else
   _IO_no_init (&new_f->fp.file, 1, 0, NULL, NULL);
 #endif
-  _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp);
+  _IO_JUMPS (&new_f->fp) = &INTUSE(_IO_file_jumps);
+  INTUSE(_IO_file_init) (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_fopen ((_IO_FILE *) new_f, filename, mode, is32) != NULL)
+  if (INTUSE(_IO_file_fopen) ((_IO_FILE *) new_f, filename, mode, is32)
+      != NULL)
     return __fopen_maybe_mmap (&new_f->fp.file);
 
-  _IO_un_link (&new_f->fp);
+  INTUSE(_IO_un_link) (&new_f->fp);
   free (new_f);
   return NULL;
 }

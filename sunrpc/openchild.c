@@ -45,8 +45,8 @@
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
-# define fflush(s) _IO_fflush (s)
-# define __fdopen(fd,m) _IO_fdopen (fd,m)
+# define fflush(s) INTUSE(_IO_fflush) (s)
+# define __fdopen(fd,m) INTUSE(_IO_fdopen) (fd,m)
 #endif
 
 /*

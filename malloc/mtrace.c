@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991-1994,1996-1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1991-1994,1996-2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
@@ -41,7 +41,7 @@
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
 # define fopen(f, n) _IO_fopen64 (f, n)
-# define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
+# define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
 #endif
 
 #define TRACE_BUFFER_SIZE 512

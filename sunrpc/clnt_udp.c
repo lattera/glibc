@@ -172,9 +172,8 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = program;
   call_msg.rm_call.cb_vers = version;
-  xdrmem_create (&(cu->cu_outxdrs), cu->cu_outbuf,
-		 sendsz, XDR_ENCODE);
-  if (!xdr_callhdr (&(cu->cu_outxdrs), &call_msg))
+  INTUSE(xdrmem_create) (&(cu->cu_outxdrs), cu->cu_outbuf, sendsz, XDR_ENCODE);
+  if (!INTUSE(xdr_callhdr) (&(cu->cu_outxdrs), &call_msg))
     {
       goto fooy;
     }
@@ -448,8 +447,8 @@ send_again:
   /*
    * now decode and validate the response
    */
-  xdrmem_create (&reply_xdrs, cu->cu_inbuf, (u_int) inlen, XDR_DECODE);
-  ok = xdr_replymsg (&reply_xdrs, &reply_msg);
+  INTUSE(xdrmem_create) (&reply_xdrs, cu->cu_inbuf, (u_int) inlen, XDR_DECODE);
+  ok = INTUSE(xdr_replymsg) (&reply_xdrs, &reply_msg);
   /* XDR_DESTROY(&reply_xdrs);  save a few cycles on noop destroy */
   if (ok)
     {
@@ -465,8 +464,8 @@ send_again:
 	  if (reply_msg.acpted_rply.ar_verf.oa_base != NULL)
 	    {
 	      xdrs->x_op = XDR_FREE;
-	      (void) xdr_opaque_auth (xdrs,
-				      &(reply_msg.acpted_rply.ar_verf));
+	      (void) INTUSE(xdr_opaque_auth) (xdrs,
+					      &(reply_msg.acpted_rply.ar_verf));
 	    }
 	}			/* end successful completion */
       else

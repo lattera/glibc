@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -531,9 +531,10 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 # ifdef _IO_MTSAFE_IO
       f._sbf._f._lock = &lock;
 # endif
-      _IO_init ((_IO_FILE *) &f, 0);
+      INTUSE(_IO_init) ((_IO_FILE *) &f, 0);
       _IO_JUMPS ((struct _IO_FILE_plus *) &f) = &_IO_str_jumps;
-      _IO_str_init_static ((_IO_strfile *) &f, dest, (s + maxsize) - dest, dest);
+      INTUSE(_IO_str_init_static) ((_IO_strfile *) &f, dest,
+				   (s + maxsize) - dest, dest);
 #else
       memset ((void *) &f, 0, sizeof (f));
       f.__magic = _IOMAGIC;

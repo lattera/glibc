@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997,1998,1999,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,11 +41,12 @@ _IO_fread (buf, size, count, fp)
     return 0;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
+  bytes_read = INTUSE(_IO_sgetn) (fp, (char *) buf, bytes_requested);
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
+INTDEF(_IO_fread)
 
 #ifdef weak_alias
 weak_alias (_IO_fread, fread)

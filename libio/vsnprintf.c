@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,8 +59,8 @@ _IO_strn_overflow (fp, c)
 	 a size to make this possible.  */
       *fp->_IO_write_ptr = '\0';
 
-      _IO_setb (fp, snf->overflow_buf,
-		snf->overflow_buf + sizeof (snf->overflow_buf), 0);
+      INTUSE(_IO_setb) (fp, snf->overflow_buf,
+			snf->overflow_buf + sizeof (snf->overflow_buf), 0);
 
       fp->_IO_write_base = snf->overflow_buf;
       fp->_IO_read_base = snf->overflow_buf;
@@ -82,16 +82,16 @@ static struct _IO_jump_t _IO_strn_jumps =
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_str_finish),
   JUMP_INIT(overflow, _IO_strn_overflow),
-  JUMP_INIT(underflow, _IO_str_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_str_pbackfail),
-  JUMP_INIT(xsputn, _IO_default_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_str_seekoff),
+  JUMP_INIT(underflow, INTUSE(_IO_str_underflow)),
+  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT(pbackfail, INTUSE(_IO_str_pbackfail)),
+  JUMP_INIT(xsputn, INTUSE(_IO_default_xsputn)),
+  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
+  JUMP_INIT(seekoff, INTUSE(_IO_str_seekoff)),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_default_setbuf),
   JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, _IO_default_doallocate),
+  JUMP_INIT(doallocate, INTUSE(_IO_default_doallocate)),
   JUMP_INIT(read, _IO_default_read),
   JUMP_INIT(write, _IO_default_write),
   JUMP_INIT(seek, _IO_default_seek),
@@ -126,8 +126,8 @@ _IO_vsnprintf (string, maxlen, format, args)
   _IO_no_init (&sf.f._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
   _IO_JUMPS ((struct _IO_FILE_plus *) &sf.f._sbf) = &_IO_strn_jumps;
   string[0] = '\0';
-  _IO_str_init_static (&sf.f, string, maxlen - 1, string);
-  ret = _IO_vfprintf ((_IO_FILE *) &sf.f._sbf, format, args);
+  INTUSE(_IO_str_init_static) (&sf.f, string, maxlen - 1, string);
+  ret = INTUSE(_IO_vfprintf) ((_IO_FILE *) &sf.f._sbf, format, args);
 
   if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
     *sf.f._sbf._f._IO_write_ptr = '\0';

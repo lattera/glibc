@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,96,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,96,97,99,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,8 +68,6 @@ extern FILE *stdin;
 extern FILE *stdout;
 extern FILE *stderr;
 
-extern struct _IO_FILE_plus *_IO_list_all;
-
 static void _IO_check_libio __P ((void)) __attribute__ ((constructor));
 
 /* This function determines which shared C library the application
@@ -85,7 +83,7 @@ _IO_check_libio ()
       _IO_stdin = stdin = (_IO_FILE *) &_IO_stdin_;
       _IO_stdout = stdout = (_IO_FILE *) &_IO_stdout_;
       _IO_stderr = stderr = (_IO_FILE *) &_IO_stderr_;
-      _IO_list_all = &_IO_stderr_;
+      INTUSE(_IO_list_all) = &_IO_stderr_;
       _IO_stdin->_vtable_offset = _IO_stdout->_vtable_offset =
 	_IO_stderr->_vtable_offset = stdin->_vtable_offset =
 	stdout->_vtable_offset = stderr->_vtable_offset =

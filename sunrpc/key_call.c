@@ -75,8 +75,8 @@ key_setsecret (char *secretkey)
 {
   keystatus status;
 
-  if (!key_call ((u_long) KEY_SET, (xdrproc_t) xdr_keybuf, secretkey,
-		 (xdrproc_t) xdr_keystatus, (char *) &status))
+  if (!key_call ((u_long) KEY_SET, (xdrproc_t) INTUSE(xdr_keybuf), secretkey,
+		 (xdrproc_t) INTUSE(xdr_keystatus), (char *) &status))
     return -1;
   if (status != KEY_SUCCESS)
     {
@@ -98,8 +98,9 @@ key_secretkey_is_set (void)
   struct key_netstres kres;
 
   memset (&kres, 0, sizeof (kres));
-  if (key_call ((u_long) KEY_NET_GET, (xdrproc_t) xdr_void, (char *) NULL,
-		(xdrproc_t) xdr_key_netstres, (char *) &kres) &&
+  if (key_call ((u_long) KEY_NET_GET, (xdrproc_t) INTUSE(xdr_void),
+		(char *) NULL, (xdrproc_t) INTUSE(xdr_key_netstres),
+		(char *) &kres) &&
       (kres.status == KEY_SUCCESS) &&
       (kres.key_netstres_u.knet.st_priv_key[0] != 0))
     {
@@ -118,8 +119,9 @@ key_encryptsession (char *remotename, des_block *deskey)
 
   arg.remotename = remotename;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_ENCRYPT, (xdrproc_t) xdr_cryptkeyarg,
-		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres, (char *) &res))
+  if (!key_call ((u_long) KEY_ENCRYPT, (xdrproc_t) INTUSE(xdr_cryptkeyarg),
+		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+		 (char *) &res))
     return -1;
 
   if (res.status != KEY_SUCCESS)
@@ -139,8 +141,9 @@ key_decryptsession (char *remotename, des_block *deskey)
 
   arg.remotename = remotename;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_DECRYPT, (xdrproc_t) xdr_cryptkeyarg,
-		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres, (char *) &res))
+  if (!key_call ((u_long) KEY_DECRYPT, (xdrproc_t) INTUSE(xdr_cryptkeyarg),
+		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+		 (char *) &res))
     return -1;
   if (res.status != KEY_SUCCESS)
     {
@@ -161,8 +164,9 @@ key_encryptsession_pk (char *remotename, netobj *remotekey,
   arg.remotename = remotename;
   arg.remotekey = *remotekey;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_ENCRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2,
-		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres, (char *) &res))
+  if (!key_call ((u_long) KEY_ENCRYPT_PK, (xdrproc_t) INTUSE(xdr_cryptkeyarg2),
+		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+		 (char *) &res))
     return -1;
 
   if (res.status != KEY_SUCCESS)
@@ -184,8 +188,9 @@ key_decryptsession_pk (char *remotename, netobj *remotekey,
   arg.remotename = remotename;
   arg.remotekey = *remotekey;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_DECRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2,
-		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres, (char *) &res))
+  if (!key_call ((u_long) KEY_DECRYPT_PK, (xdrproc_t) INTUSE(xdr_cryptkeyarg2),
+		 (char *) &arg, (xdrproc_t) INTUSE(xdr_cryptkeyres),
+		 (char *) &res))
     return -1;
 
   if (res.status != KEY_SUCCESS)
@@ -216,8 +221,9 @@ key_gendes (des_block *key)
   if (client == NULL)
     return -1;
 
-  stat = clnt_call (client, KEY_GEN, (xdrproc_t) xdr_void, NULL,
-		    (xdrproc_t) xdr_des_block, (caddr_t) key, tottimeout);
+  stat = clnt_call (client, KEY_GEN, (xdrproc_t) INTUSE(xdr_void), NULL,
+		    (xdrproc_t) INTUSE(xdr_des_block), (caddr_t) key,
+		    tottimeout);
   clnt_destroy (client);
   __close (socket);
   if (stat != RPC_SUCCESS)
@@ -231,8 +237,9 @@ key_setnet (struct key_netstarg *arg)
 {
   keystatus status;
 
-  if (!key_call ((u_long) KEY_NET_PUT, (xdrproc_t) xdr_key_netstarg,
-		 (char *) arg,(xdrproc_t) xdr_keystatus, (char *) &status))
+  if (!key_call ((u_long) KEY_NET_PUT, (xdrproc_t) INTUSE(xdr_key_netstarg),
+		 (char *) arg,(xdrproc_t) INTUSE(xdr_keystatus),
+		 (char *) &status))
     return -1;
 
   if (status != KEY_SUCCESS)
@@ -248,8 +255,8 @@ key_get_conv (char *pkey, des_block *deskey)
 {
   cryptkeyres res;
 
-  if (!key_call ((u_long) KEY_GET_CONV, (xdrproc_t) xdr_keybuf, pkey,
-		 (xdrproc_t) xdr_cryptkeyres, (char *) &res))
+  if (!key_call ((u_long) KEY_GET_CONV, (xdrproc_t) INTUSE(xdr_keybuf), pkey,
+		 (xdrproc_t) INTUSE(xdr_cryptkeyres), (char *) &res))
     return -1;
 
   if (res.status != KEY_SUCCESS)
@@ -317,7 +324,7 @@ key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
   xdrstdio_create (&xdrargs, fargs, XDR_ENCODE);
   xdrstdio_create (&xdrrslt, frslt, XDR_DECODE);
 
-  if (!xdr_u_long (&xdrargs, &proc) || !(*xdr_arg) (&xdrargs, arg))
+  if (!INTUSE(xdr_u_long) (&xdrargs, &proc) || !(*xdr_arg) (&xdrargs, arg))
     {
       debug ("xdr args");
       success = 0;
@@ -514,7 +521,8 @@ key_call_door (u_long proc, xdrproc_t xdr_arg, char *arg,
   if (data_ptr == NULL)
     return 0;
 
-  xdrmem_create (&xdrs, &data_ptr[2 * sizeof (u_long)], data_len, XDR_ENCODE);
+  INTUSE(xdrmem_create) (&xdrs, &data_ptr[2 * sizeof (u_long)], data_len,
+			 XDR_ENCODE);
   if (!xdr_arg (&xdrs, arg))
     {
       xdr_destroy (&xdrs);
@@ -545,8 +553,8 @@ key_call_door (u_long proc, xdrproc_t xdr_arg, char *arg,
     return 0;
 
   memcpy (&data_len, &args.data_ptr[sizeof (u_long)], sizeof (u_long));
-  xdrmem_create (&xdrs, &args.data_ptr[2 * sizeof (u_long)],
-                 data_len, XDR_DECODE);
+  INTUSE(xdrmem_create) (&xdrs, &args.data_ptr[2 * sizeof (u_long)],
+			 data_len, XDR_DECODE);
   if (!xdr_rslt (&xdrs, rslt))
     {
       xdr_destroy (&xdrs);

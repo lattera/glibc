@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996-1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996-1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ ungetwc (c, fp)
   if (c == WEOF)
     result = WEOF;
   else
-    result = _IO_sputbackwc (fp, c);
+    result = INTUSE(_IO_sputbackwc) (fp, c);
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   return result;

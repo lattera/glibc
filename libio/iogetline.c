@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,8 +38,10 @@ _IO_getline (fp, buf, n, delim, extract_delim)
      int delim;
      int extract_delim;
 {
-  return _IO_getline_info (fp, buf, n, delim, extract_delim, (int *) 0);
+  return INTUSE(_IO_getline_info) (fp, buf, n, delim, extract_delim,
+				   (int *) 0);
 }
+INTDEF(_IO_getline)
 
 /* Algorithm based on that used by Berkeley pre-4.4 fgets implementation.
 
@@ -79,7 +81,7 @@ _IO_getline_info (fp, buf, n, delim, extract_delim, eof)
  	      if (extract_delim > 0)
 		*ptr++ = c;
 	      else if (extract_delim < 0)
-		_IO_sputbackc (fp, c);
+		INTUSE(_IO_sputbackc) (fp, c);
 	      if (extract_delim > 0)
 		++len;
 	      return ptr - buf;
@@ -115,5 +117,6 @@ _IO_getline_info (fp, buf, n, delim, extract_delim, eof)
     }
   return ptr - buf;
 }
+INTDEF(_IO_getline_info)
 
 #endif /* Defined _LIBC || !_G_HAVE_IO_GETLINE_INFO */

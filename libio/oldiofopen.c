@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ _IO_old_fopen (filename, mode)
 #ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
 #endif
-  _IO_init (&new_f->fp.file, 0);
+  INTUSE(_IO_init) (&new_f->fp.file, 0);
   _IO_JUMPS (&new_f->fp) = &_IO_old_file_jumps;
   _IO_old_file_init (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
@@ -61,7 +61,7 @@ _IO_old_fopen (filename, mode)
 #endif
   if (_IO_old_file_fopen ((_IO_FILE *) &new_f->fp, filename, mode) != NULL)
     return (_IO_FILE *) &new_f->fp;
-  _IO_un_link (&new_f->fp);
+  INTUSE(_IO_un_link) (&new_f->fp);
   free (new_f);
   return NULL;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ _IO_ftell (fp)
   CHECK_FILE (fp, -1L);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
+  pos = INTUSE(_IO_seekoff) (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
     {
       if (fp->_vtable_offset != 0 || fp->_mode <= 0)
@@ -56,6 +56,7 @@ _IO_ftell (fp)
     }
   return pos;
 }
+INTDEF(_IO_ftell)
 
 #ifdef weak_alias
 weak_alias (_IO_ftell, ftell)

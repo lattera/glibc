@@ -69,7 +69,8 @@ _svcauth_unix (struct svc_req *rqst, struct rpc_msg *msg)
   aup->aup_machname = area->area_machname;
   aup->aup_gids = area->area_gids;
   auth_len = (u_int) msg->rm_call.cb_cred.oa_length;
-  xdrmem_create (&xdrs, msg->rm_call.cb_cred.oa_base, auth_len, XDR_DECODE);
+  INTUSE(xdrmem_create) (&xdrs, msg->rm_call.cb_cred.oa_base, auth_len,
+			 XDR_DECODE);
   buf = XDR_INLINE (&xdrs, auth_len);
   if (buf != NULL)
     {
@@ -109,10 +110,10 @@ _svcauth_unix (struct svc_req *rqst, struct rpc_msg *msg)
 	  goto done;
 	}
     }
-  else if (!xdr_authunix_parms (&xdrs, aup))
+  else if (!INTUSE(xdr_authunix_parms) (&xdrs, aup))
     {
       xdrs.x_op = XDR_FREE;
-      (void) xdr_authunix_parms (&xdrs, aup);
+      (void) INTUSE(xdr_authunix_parms) (&xdrs, aup);
       stat = AUTH_BADCRED;
       goto done;
     }

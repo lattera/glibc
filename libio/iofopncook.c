@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,99,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,18 +96,18 @@ _IO_cookie_close (fp)
 
 static struct _IO_jump_t _IO_cookie_jumps = {
   JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_file_seekoff),
+  JUMP_INIT(finish, INTUSE(_IO_file_finish)),
+  JUMP_INIT(overflow, INTUSE(_IO_file_overflow)),
+  JUMP_INIT(underflow, INTUSE(_IO_file_underflow)),
+  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
+  JUMP_INIT(xsputn, INTUSE(_IO_file_xsputn)),
+  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
+  JUMP_INIT(seekoff, INTUSE(_IO_file_seekoff)),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_file_setbuf),
-  JUMP_INIT(sync, _IO_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
+  JUMP_INIT(setbuf, INTUSE(_IO_file_setbuf)),
+  JUMP_INIT(sync, INTUSE(_IO_file_sync)),
+  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
   JUMP_INIT(read, _IO_cookie_read),
   JUMP_INIT(write, _IO_cookie_write),
   JUMP_INIT(seek, _IO_cookie_seek),
@@ -122,13 +122,13 @@ void
 _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
 		 void *cookie, _IO_cookie_io_functions_t io_functions)
 {
-  _IO_init (&cfile->__fp.file, 0);
+  INTUSE(_IO_init) (&cfile->__fp.file, 0);
   _IO_JUMPS (&cfile->__fp) = &_IO_cookie_jumps;
 
   cfile->__cookie = cookie;
   cfile->__io_functions = io_functions;
 
-  _IO_file_init(&cfile->__fp);
+  INTUSE(_IO_file_init) (&cfile->__fp);
 
   cfile->__fp.file._IO_file_flags =
     _IO_mask_flags (&cfile->__fp.file, read_write,
@@ -215,18 +215,18 @@ _IO_old_cookie_seek (fp, offset, dir)
 
 static struct _IO_jump_t _IO_old_cookie_jumps = {
   JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_file_seekoff),
+  JUMP_INIT(finish, INTUSE(_IO_file_finish)),
+  JUMP_INIT(overflow, INTUSE(_IO_file_overflow)),
+  JUMP_INIT(underflow, INTUSE(_IO_file_underflow)),
+  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
+  JUMP_INIT(xsputn, INTUSE(_IO_file_xsputn)),
+  JUMP_INIT(xsgetn, INTUSE(_IO_default_xsgetn)),
+  JUMP_INIT(seekoff, INTUSE(_IO_file_seekoff)),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_file_setbuf),
-  JUMP_INIT(sync, _IO_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
+  JUMP_INIT(setbuf, INTUSE(_IO_file_setbuf)),
+  JUMP_INIT(sync, INTUSE(_IO_file_sync)),
+  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
   JUMP_INIT(read, _IO_cookie_read),
   JUMP_INIT(write, _IO_cookie_write),
   JUMP_INIT(seek, _IO_old_cookie_seek),

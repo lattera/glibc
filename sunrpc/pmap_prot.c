@@ -49,9 +49,10 @@ xdr_pmap (xdrs, regs)
      struct pmap *regs;
 {
 
-  if (xdr_u_long (xdrs, &regs->pm_prog) &&
-      xdr_u_long (xdrs, &regs->pm_vers) &&
-      xdr_u_long (xdrs, &regs->pm_prot))
-    return xdr_u_long (xdrs, &regs->pm_port);
+  if (INTUSE(xdr_u_long) (xdrs, &regs->pm_prog) &&
+      INTUSE(xdr_u_long) (xdrs, &regs->pm_vers) &&
+      INTUSE(xdr_u_long) (xdrs, &regs->pm_prot))
+    return INTUSE(xdr_u_long) (xdrs, &regs->pm_port);
   return FALSE;
 }
+INTDEF(xdr_pmap)

@@ -74,6 +74,9 @@ extern wint_t __getwc_unlocked (FILE *__fp);
 #  endif
 
 
+extern __const char *__const _sys_errlist_internal[];
+extern int _sys_nerr_internal;
+
 # endif
 
 #endif

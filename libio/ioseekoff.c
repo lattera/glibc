@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,8 @@ _IO_seekoff (fp, offset, dir, mode)
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
 
-  if (mode != 0 && _IO_have_backup (fp))
+  if (mode != 0 && ((_IO_fwide (fp, 0) < 0 && _IO_have_backup (fp))
+		    || (_IO_fwide (fp, 0) > 0 && _IO_have_wbackup (fp))))
     {
       if (dir == _IO_seek_cur && _IO_in_backup (fp))
 	{
@@ -65,7 +66,10 @@ _IO_seekoff (fp, offset, dir, mode)
 	  else
 	    abort ();
 	}
-      _IO_free_backup_area (fp);
+      if (_IO_fwide (fp, 0) < 0)
+	INTUSE(_IO_free_backup_area) (fp);
+      else
+	INTUSE(_IO_free_wbackup_area) (fp);
     }
 
   retval = _IO_SEEKOFF (fp, offset, dir, mode);
@@ -74,3 +78,4 @@ _IO_seekoff (fp, offset, dir, mode)
   _IO_cleanup_region_end (0);
   return retval;
 }
+INTDEF(_IO_seekoff)

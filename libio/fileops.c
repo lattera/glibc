@@ -148,9 +148,10 @@ _IO_new_file_init (fp)
   fp->file._offset = _IO_pos_BAD;
   fp->file._IO_file_flags |= CLOSED_FILEBUF_FLAGS;
 
-  _IO_link_in (fp);
+  INTUSE(_IO_link_in) (fp);
   fp->file._fileno = -1;
 }
+INTDEF2(_IO_new_file_init, _IO_file_init)
 
 int
 _IO_new_file_close_it (fp)
@@ -162,33 +163,34 @@ _IO_new_file_close_it (fp)
 
   write_status = _IO_do_flush (fp);
 
-  _IO_unsave_markers(fp);
+  INTUSE(_IO_unsave_markers) (fp);
 
   close_status = _IO_SYSCLOSE (fp);
 
   /* Free buffer. */
   if (fp->_mode <= 0)
     {
-      _IO_setb (fp, NULL, NULL, 0);
+      INTUSE(_IO_setb) (fp, NULL, NULL, 0);
       _IO_setg (fp, NULL, NULL, NULL);
       _IO_setp (fp, NULL, NULL);
     }
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   else
     {
-      _IO_wsetb (fp, NULL, NULL, 0);
+      INTUSE(_IO_wsetb) (fp, NULL, NULL, 0);
       _IO_wsetg (fp, NULL, NULL, NULL);
       _IO_wsetp (fp, NULL, NULL);
     }
 #endif
 
-  _IO_un_link ((struct _IO_FILE_plus *) fp);
+  INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
   fp->_fileno = -1;
   fp->_offset = _IO_pos_BAD;
 
   return close_status ? close_status : write_status;
 }
+INTDEF2(_IO_new_file_close_it, _IO_file_close_it)
 
 void
 _IO_new_file_finish (fp, dummy)
@@ -201,8 +203,9 @@ _IO_new_file_finish (fp, dummy)
       if (!(fp->_flags & _IO_DELETE_DONT_CLOSE))
 	_IO_SYSCLOSE (fp);
     }
-  _IO_default_finish (fp, 0);
+  INTUSE(_IO_default_finish) (fp, 0);
 }
+INTDEF2(_IO_new_file_finish, _IO_file_finish)
 
 #if defined __GNUC__ && __GNUC__ >= 2
 __inline__
@@ -232,7 +235,7 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
     if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
 	== _IO_pos_BAD && errno != ESPIPE)
       return NULL;
-  _IO_link_in ((struct _IO_FILE_plus *) fp);
+  INTUSE(_IO_link_in) ((struct _IO_FILE_plus *) fp);
   return fp;
 }
 
@@ -389,6 +392,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 
   return result;
 }
+INTDEF2(_IO_new_file_fopen, _IO_file_fopen)
 
 _IO_FILE *
 _IO_new_file_attach (fp, fd)
@@ -408,6 +412,7 @@ _IO_new_file_attach (fp, fd)
     return NULL;
   return fp;
 }
+INTDEF2(_IO_new_file_attach, _IO_file_attach)
 
 _IO_FILE *
 _IO_new_file_setbuf (fp, p, len)
@@ -424,6 +429,7 @@ _IO_new_file_setbuf (fp, p, len)
 
   return fp;
 }
+INTDEF2(_IO_new_file_setbuf, _IO_file_setbuf)
 
 static int new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 
@@ -438,6 +444,7 @@ _IO_new_do_write (fp, data, to_do)
 {
   return (to_do == 0 || new_do_write (fp, data, to_do) == to_do) ? 0 : EOF;
 }
+INTDEF2(_IO_new_do_write, _IO_do_write)
 
 static
 int
@@ -464,7 +471,8 @@ new_do_write (fp, data, to_do)
     }
   count = _IO_SYSWRITE (fp, data, to_do);
   if (fp->_cur_column && count)
-    fp->_cur_column = _IO_adjust_column (fp->_cur_column - 1, data, count) + 1;
+    fp->_cur_column = INTUSE(_IO_adjust_column) (fp->_cur_column - 1, data,
+						 count) + 1;
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
   fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_buf_base;
   fp->_IO_write_end = (fp->_mode <= 0
@@ -501,7 +509,7 @@ _IO_new_file_underflow (fp)
 	  free (fp->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      _IO_doallocbuf (fp);
+      INTUSE(_IO_doallocbuf) (fp);
     }
 
   /* Flush all line buffered files before reading. */
@@ -509,7 +517,7 @@ _IO_new_file_underflow (fp)
   if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
     {
 #if 0
-      _IO_flush_all_linebuffered ();
+      INTUSE(_IO_flush_all_linebuffered) ();
 #else
       /* We used to flush all line-buffered stream.  This really isn't
 	 required by any standard.  My recollection is that
@@ -529,7 +537,7 @@ _IO_new_file_underflow (fp)
 #endif
     }
 
-  _IO_switch_to_get_mode (fp);
+  INTUSE(_IO_switch_to_get_mode) (fp);
 
   /* This is very tricky. We have to adjust those
      pointers before we call _IO_SYSREAD () since
@@ -556,6 +564,7 @@ _IO_new_file_underflow (fp)
     _IO_pos_adjust (fp->_offset, count);
   return *(unsigned char *) fp->_IO_read_ptr;
 }
+INTDEF2(_IO_new_file_underflow, _IO_file_underflow)
 
 /* Special callback replacing the underflow callbacks if we mmap the
    file.  */
@@ -603,7 +612,7 @@ _IO_new_file_overflow (f, ch)
       /* Allocate a buffer if needed. */
       if (f->_IO_write_base == 0)
 	{
-	  _IO_doallocbuf (f);
+	  INTUSE(_IO_doallocbuf) (f);
 	  _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
 	}
       /* Otherwise must be currently reading.
@@ -638,6 +647,7 @@ _IO_new_file_overflow (f, ch)
       return EOF;
   return (unsigned char) ch;
 }
+INTDEF2(_IO_new_file_overflow, _IO_file_overflow)
 
 int
 _IO_new_file_sync (fp)
@@ -672,6 +682,7 @@ _IO_new_file_sync (fp)
   /*    setg(base(), ptr, ptr); */
   return retval;
 }
+INTDEF2(_IO_new_file_sync, _IO_file_sync)
 
 _IO_off64_t
 _IO_new_file_seekoff (fp, offset, dir, mode)
@@ -700,7 +711,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
      FIXME: simulate mem-papped files. */
 
   if (fp->_IO_write_ptr > fp->_IO_write_base || _IO_in_put_mode (fp))
-    if (_IO_switch_to_get_mode (fp))
+    if (INTUSE(_IO_switch_to_get_mode) (fp))
       return EOF;
 
   if (fp->_IO_buf_base == NULL)
@@ -711,7 +722,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 	  free (fp->_IO_read_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      _IO_doallocbuf (fp);
+      INTUSE(_IO_doallocbuf) (fp);
       _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
       _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
     }
@@ -797,7 +808,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
     }
 
 #ifdef TODO
-  _IO_unsave_markers (fp);
+  INTUSE(_IO_unsave_markers) (fp);
 #endif
 
   if (fp->_flags & _IO_NO_READS)
@@ -837,7 +848,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
   return offset;
  dumb:
 
-  _IO_unsave_markers (fp);
+  INTUSE(_IO_unsave_markers) (fp);
   result = _IO_SYSSEEK (fp, offset, dir);
   if (result != EOF)
     {
@@ -858,6 +869,7 @@ resync:
 
   return offset;
 }
+INTDEF2(_IO_new_file_seekoff, _IO_file_seekoff)
 
 _IO_off64_t
 _IO_file_seekoff_mmap (fp, offset, dir, mode)
@@ -913,6 +925,7 @@ _IO_file_read (fp, buf, size)
 {
   return read (fp->_fileno, buf, size);
 }
+INTDEF(_IO_file_read)
 
 _IO_off64_t
 _IO_file_seek (fp, offset, dir)
@@ -926,6 +939,7 @@ _IO_file_seek (fp, offset, dir)
   return lseek (fp->_fileno, offset, dir);
 #endif
 }
+INTDEF(_IO_file_seek)
 
 int
 _IO_file_stat (fp, st)
@@ -938,6 +952,7 @@ _IO_file_stat (fp, st)
   return fstat (fp->_fileno, (struct stat *) st);
 #endif
 }
+INTDEF(_IO_file_stat)
 
 int
 _IO_file_close_mmap (fp)
@@ -956,6 +971,7 @@ _IO_file_close (fp)
 {
   return close (fp->_fileno);
 }
+INTDEF(_IO_file_close)
 
 _IO_ssize_t
 _IO_new_file_write (f, data, n)
@@ -1066,10 +1082,11 @@ _IO_new_file_xsputn (f, data, n)
 	 buffer, but it's somewhat messier for line-buffered files,
 	 so we let _IO_default_xsputn handle the general case. */
       if (to_do)
-	to_do -= _IO_default_xsputn (f, s+do_write, to_do);
+	to_do -= INTUSE(_IO_default_xsputn) (f, s+do_write, to_do);
     }
   return n - to_do;
 }
+INTDEF2(_IO_new_file_xsputn, _IO_file_xsputn)
 
 _IO_size_t
 _IO_file_xsgetn (fp, data, n)
@@ -1091,7 +1108,7 @@ _IO_file_xsgetn (fp, data, n)
 	  free (fp->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      _IO_doallocbuf (fp);
+      INTUSE(_IO_doallocbuf) (fp);
     }
 
   while (want > 0)
@@ -1169,6 +1186,7 @@ _IO_file_xsgetn (fp, data, n)
 
   return n - want;
 }
+INTDEF(_IO_file_xsgetn)
 
 static _IO_size_t _IO_file_xsgetn_mmap __P ((_IO_FILE *, void *, _IO_size_t));
 static _IO_size_t
@@ -1206,47 +1224,48 @@ _IO_file_xsgetn_mmap (fp, data, n)
 struct _IO_jump_t _IO_file_jumps =
 {
   JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_new_file_finish),
-  JUMP_INIT(overflow, _IO_new_file_overflow),
-  JUMP_INIT(underflow, _IO_new_file_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_new_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_file_xsgetn),
+  JUMP_INIT(finish, INTUSE(_IO_file_finish)),
+  JUMP_INIT(overflow, INTUSE(_IO_file_overflow)),
+  JUMP_INIT(underflow, INTUSE(_IO_file_underflow)),
+  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
+  JUMP_INIT(xsputn, INTUSE(_IO_file_xsputn)),
+  JUMP_INIT(xsgetn, INTUSE(_IO_file_xsgetn)),
   JUMP_INIT(seekoff, _IO_new_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_new_file_setbuf),
   JUMP_INIT(sync, _IO_new_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
-  JUMP_INIT(read, _IO_file_read),
+  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
+  JUMP_INIT(read, INTUSE(_IO_file_read)),
   JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, _IO_file_seek),
-  JUMP_INIT(close, _IO_file_close),
-  JUMP_INIT(stat, _IO_file_stat),
+  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
+  JUMP_INIT(close, INTUSE(_IO_file_close)),
+  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
+INTDEF(_IO_file_jumps)
 
 struct _IO_jump_t _IO_file_jumps_mmap =
 {
   JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_new_file_finish),
-  JUMP_INIT(overflow, _IO_new_file_overflow),
+  JUMP_INIT(finish, INTUSE(_IO_file_finish)),
+  JUMP_INIT(overflow, INTUSE(_IO_file_overflow)),
   JUMP_INIT(underflow, _IO_file_underflow_mmap),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
+  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
   JUMP_INIT(xsputn, _IO_new_file_xsputn),
   JUMP_INIT(xsgetn, _IO_file_xsgetn_mmap),
   JUMP_INIT(seekoff, _IO_file_seekoff_mmap),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_new_file_setbuf),
   JUMP_INIT(sync, _IO_new_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
-  JUMP_INIT(read, _IO_file_read),
+  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
+  JUMP_INIT(read, INTUSE(_IO_file_read)),
   JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, _IO_file_seek),
+  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
   JUMP_INIT(close, _IO_file_close_mmap),
-  JUMP_INIT(stat, _IO_file_stat),
+  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };

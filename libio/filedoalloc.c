@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,6 +106,7 @@ _IO_file_doallocate (fp)
 #endif
     }
   ALLOC_BUF (p, size, EOF);
-  _IO_setb (fp, p, p + size, 1);
+  INTUSE(_IO_setb) (fp, p, p + size, 1);
   return 1;
 }
+INTDEF(_IO_file_doallocate)

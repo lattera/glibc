@@ -58,7 +58,7 @@ _IO_wfile_setbuf (fp, p, len)
      wchar_t *p;
      _IO_ssize_t len;
 {
-  if (_IO_wdefault_setbuf (fp, p, len) == NULL)
+  if (INTUSE(_IO_wdefault_setbuf) (fp, p, len) == NULL)
     return NULL;
 
   fp->_wide_data->_IO_write_base = fp->_wide_data->_IO_write_ptr =
@@ -131,6 +131,7 @@ _IO_wdo_write (fp, data, to_do)
 
   return to_do == 0 ? 0 : WEOF;
 }
+INTDEF(_IO_wdo_write)
 
 
 wint_t
@@ -202,7 +203,7 @@ _IO_wfile_underflow (fp)
 	  free (fp->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      _IO_doallocbuf (fp);
+      INTUSE(_IO_doallocbuf) (fp);
 
       fp->_IO_read_base = fp->_IO_read_ptr = fp->_IO_read_end =
 	fp->_IO_buf_base;
@@ -219,7 +220,7 @@ _IO_wfile_underflow (fp)
 	  free (fp->_wide_data->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      _IO_wdoallocbuf (fp);
+      INTUSE(_IO_wdoallocbuf) (fp);
     }
 
   /* Flush all line buffered files before reading. */
@@ -227,7 +228,7 @@ _IO_wfile_underflow (fp)
   if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
     {
 #if 0
-      _IO_flush_all_linebuffered ();
+      INTUSE(_IO_flush_all_linebuffered) ();
 #else
       /* We used to flush all line-buffered stream.  This really isn't
 	 required by any standard.  My recollection is that
@@ -247,7 +248,7 @@ _IO_wfile_underflow (fp)
 #endif
     }
 
-  _IO_switch_to_get_mode (fp);
+  INTUSE(_IO_switch_to_get_mode) (fp);
 
   fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_ptr =
     fp->_wide_data->_IO_buf_base;
@@ -306,6 +307,7 @@ _IO_wfile_underflow (fp)
 
   return *fp->_wide_data->_IO_read_ptr;
 }
+INTDEF(_IO_wfile_underflow)
 
 
 static wint_t
@@ -347,7 +349,7 @@ _IO_wfile_underflow_mmap (_IO_FILE *fp)
 	  free (fp->_wide_data->_IO_save_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      _IO_wdoallocbuf (fp);
+      INTUSE(_IO_wdoallocbuf) (fp);
     }
 
   fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
@@ -390,13 +392,13 @@ _IO_wfile_overflow (f, wch)
       /* Allocate a buffer if needed. */
       if (f->_wide_data->_IO_write_base == 0)
 	{
-	  _IO_wdoallocbuf (f);
+	  INTUSE(_IO_wdoallocbuf) (f);
 	  _IO_wsetg (f, f->_wide_data->_IO_buf_base,
 		     f->_wide_data->_IO_buf_base, f->_wide_data->_IO_buf_base);
 
 	  if (f->_IO_write_base == NULL)
 	    {
-	      _IO_doallocbuf (f);
+	      INTUSE(_IO_doallocbuf) (f);
 	      _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
 	    }
 	}
@@ -445,6 +447,7 @@ _IO_wfile_overflow (f, wch)
       return WEOF;
   return wch;
 }
+INTDEF(_IO_wfile_overflow)
 
 wint_t
 _IO_wfile_sync (fp)
@@ -506,6 +509,7 @@ _IO_wfile_sync (fp)
   /*    setg(base(), ptr, ptr); */
   return retval;
 }
+INTDEF(_IO_wfile_sync)
 
 _IO_off64_t
 _IO_wfile_seekoff (fp, offset, dir, mode)
@@ -542,7 +546,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 
 	  /* There is no more data in the backup buffer.  We can
 	     switch back.  */
-	  _IO_switch_to_main_wget_area (fp);
+	  INTUSE(_IO_switch_to_main_wget_area) (fp);
 	}
 
       dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
@@ -558,7 +562,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 
   if (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_write_base
       || _IO_in_put_mode (fp))
-    if (_IO_switch_to_wget_mode (fp))
+    if (INTUSE(_IO_switch_to_wget_mode) (fp))
       return WEOF;
 
   if (fp->_wide_data->_IO_buf_base == NULL)
@@ -569,7 +573,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 	  free (fp->_wide_data->_IO_read_base);
 	  fp->_flags &= ~_IO_IN_BACKUP;
 	}
-      _IO_doallocbuf (fp);
+      INTUSE(_IO_doallocbuf) (fp);
       _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
       _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
       _IO_wsetp (fp, fp->_wide_data->_IO_buf_base,
@@ -692,7 +696,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
     }
 
 #ifdef TODO
-  _IO_unsave_markers (fp);
+  INTUSE(_IO_unsave_markers) (fp);
 #endif
 
   if (fp->_flags & _IO_NO_READS)
@@ -732,7 +736,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
   return offset;
  dumb:
 
-  _IO_unsave_markers (fp);
+  INTUSE(_IO_unsave_markers) (fp);
   result = _IO_SYSSEEK (fp, offset, dir);
   if (result != EOF)
     {
@@ -757,6 +761,7 @@ resync:
 
   return offset;
 }
+INTDEF(_IO_wfile_seekoff)
 
 
 _IO_size_t
@@ -822,62 +827,64 @@ _IO_wfile_xsputn (f, data, n)
       to_do -= count;
     }
   if (to_do > 0)
-    to_do -= _IO_wdefault_xsputn (f, s, to_do);
+    to_do -= INTUSE(_IO_wdefault_xsputn) (f, s, to_do);
   if (must_flush
       && f->_wide_data->_IO_write_ptr != f->_wide_data->_IO_write_base)
-    _IO_wdo_write (f, f->_wide_data->_IO_write_base,
-		   f->_wide_data->_IO_write_ptr
-		   - f->_wide_data->_IO_write_base);
+    INTUSE(_IO_wdo_write) (f, f->_wide_data->_IO_write_base,
+			   f->_wide_data->_IO_write_ptr
+			   - f->_wide_data->_IO_write_base);
 
   return n - to_do;
 }
+INTDEF(_IO_wfile_xsputn)
 
 
 struct _IO_jump_t _IO_wfile_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_new_file_finish),
-  JUMP_INIT(overflow, (_IO_overflow_t) _IO_wfile_overflow),
-  JUMP_INIT(underflow, (_IO_underflow_t) _IO_wfile_underflow),
-  JUMP_INIT(uflow, (_IO_underflow_t) _IO_wdefault_uflow),
-  JUMP_INIT(pbackfail, (_IO_pbackfail_t) _IO_wdefault_pbackfail),
-  JUMP_INIT(xsputn, _IO_wfile_xsputn),
-  JUMP_INIT(xsgetn, _IO_file_xsgetn),
-  JUMP_INIT(seekoff, _IO_wfile_seekoff),
+  JUMP_INIT(overflow, (_IO_overflow_t) INTUSE(_IO_wfile_overflow)),
+  JUMP_INIT(underflow, (_IO_underflow_t) INTUSE(_IO_wfile_underflow)),
+  JUMP_INIT(uflow, (_IO_underflow_t) INTUSE(_IO_wdefault_uflow)),
+  JUMP_INIT(pbackfail, (_IO_pbackfail_t) INTUSE(_IO_wdefault_pbackfail)),
+  JUMP_INIT(xsputn, INTUSE(_IO_wfile_xsputn)),
+  JUMP_INIT(xsgetn, INTUSE(_IO_file_xsgetn)),
+  JUMP_INIT(seekoff, INTUSE(_IO_wfile_seekoff)),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_new_file_setbuf),
-  JUMP_INIT(sync, (_IO_sync_t) _IO_wfile_sync),
+  JUMP_INIT(sync, (_IO_sync_t) INTUSE(_IO_wfile_sync)),
   JUMP_INIT(doallocate, _IO_wfile_doallocate),
-  JUMP_INIT(read, _IO_file_read),
+  JUMP_INIT(read, INTUSE(_IO_file_read)),
   JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, _IO_file_seek),
-  JUMP_INIT(close, _IO_file_close),
-  JUMP_INIT(stat, _IO_file_stat),
+  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
+  JUMP_INIT(close, INTUSE(_IO_file_close)),
+  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
+INTDEF(_IO_wfile_jumps)
 
 
 struct _IO_jump_t _IO_wfile_jumps_mmap =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_new_file_finish),
-  JUMP_INIT(overflow, (_IO_overflow_t) _IO_wfile_overflow),
+  JUMP_INIT(overflow, (_IO_overflow_t) INTUSE(_IO_wfile_overflow)),
   JUMP_INIT(underflow, (_IO_underflow_t) _IO_wfile_underflow_mmap),
-  JUMP_INIT(uflow, (_IO_underflow_t) _IO_wdefault_uflow),
-  JUMP_INIT(pbackfail, (_IO_pbackfail_t) _IO_wdefault_pbackfail),
-  JUMP_INIT(xsputn, _IO_wfile_xsputn),
-  JUMP_INIT(xsgetn, _IO_file_xsgetn),
-  JUMP_INIT(seekoff, _IO_wfile_seekoff),
+  JUMP_INIT(uflow, (_IO_underflow_t) INTUSE(_IO_wdefault_uflow)),
+  JUMP_INIT(pbackfail, (_IO_pbackfail_t) INTUSE(_IO_wdefault_pbackfail)),
+  JUMP_INIT(xsputn, INTUSE(_IO_wfile_xsputn)),
+  JUMP_INIT(xsgetn, INTUSE(_IO_file_xsgetn)),
+  JUMP_INIT(seekoff, INTUSE(_IO_wfile_seekoff)),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_new_file_setbuf),
-  JUMP_INIT(sync, (_IO_sync_t) _IO_wfile_sync),
+  JUMP_INIT(sync, (_IO_sync_t) INTUSE(_IO_wfile_sync)),
   JUMP_INIT(doallocate, _IO_wfile_doallocate),
-  JUMP_INIT(read, _IO_file_read),
+  JUMP_INIT(read, INTUSE(_IO_file_read)),
   JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, _IO_file_seek),
+  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
   JUMP_INIT(close, _IO_file_close_mmap),
-  JUMP_INIT(stat, _IO_file_stat),
+  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };

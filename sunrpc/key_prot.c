@@ -37,63 +37,68 @@
 bool_t
 xdr_keystatus (XDR * xdrs, keystatus * objp)
 {
-  if (!xdr_enum (xdrs, (enum_t *) objp))
+  if (!INTUSE(xdr_enum) (xdrs, (enum_t *) objp))
     return FALSE;
 
   return TRUE;
 }
+INTDEF(xdr_keystatus)
 
 bool_t
 xdr_keybuf (XDR * xdrs, keybuf objp)
 {
-  if (!xdr_opaque (xdrs, objp, HEXKEYBYTES))
+  if (!INTUSE(xdr_opaque) (xdrs, objp, HEXKEYBYTES))
     return FALSE;
 
   return TRUE;
 }
+INTDEF(xdr_keybuf)
 
 bool_t
 xdr_netnamestr (XDR * xdrs, netnamestr * objp)
 {
-  if (!xdr_string (xdrs, objp, MAXNETNAMELEN))
+  if (!INTUSE(xdr_string) (xdrs, objp, MAXNETNAMELEN))
     return FALSE;
 
   return TRUE;
 }
+INTDEF(xdr_netnamestr)
 
 bool_t
 xdr_cryptkeyarg (XDR * xdrs, cryptkeyarg * objp)
 {
-  if (!xdr_netnamestr (xdrs, &objp->remotename))
+  if (!INTUSE(xdr_netnamestr) (xdrs, &objp->remotename))
     return FALSE;
 
-  if (!xdr_des_block (xdrs, &objp->deskey))
+  if (!INTUSE(xdr_des_block) (xdrs, &objp->deskey))
     return FALSE;
 
   return TRUE;
 }
+INTDEF(xdr_cryptkeyarg)
 
 bool_t
 xdr_cryptkeyarg2 (XDR * xdrs, cryptkeyarg2 * objp)
 {
-  if (!xdr_netnamestr (xdrs, &objp->remotename))
+  if (!INTUSE(xdr_netnamestr) (xdrs, &objp->remotename))
     return FALSE;
-  if (!xdr_netobj (xdrs, &objp->remotekey))
+  if (!INTUSE(xdr_netobj) (xdrs, &objp->remotekey))
     return FALSE;
-  if (!xdr_des_block (xdrs, &objp->deskey))
+  if (!INTUSE(xdr_des_block) (xdrs, &objp->deskey))
     return FALSE;
   return TRUE;
 }
+INTDEF(xdr_cryptkeyarg2)
 
 bool_t
 xdr_cryptkeyres (XDR * xdrs, cryptkeyres * objp)
 {
-  if (!xdr_keystatus (xdrs, &objp->status))
+  if (!INTUSE(xdr_keystatus) (xdrs, &objp->status))
     return FALSE;
   switch (objp->status)
     {
     case KEY_SUCCESS:
-      if (!xdr_des_block (xdrs, &objp->cryptkeyres_u.deskey))
+      if (!INTUSE(xdr_des_block) (xdrs, &objp->cryptkeyres_u.deskey))
 	return FALSE;
       break;
     default:
@@ -101,30 +106,32 @@ xdr_cryptkeyres (XDR * xdrs, cryptkeyres * objp)
     }
   return TRUE;
 }
+INTDEF(xdr_cryptkeyres)
 
 bool_t
 xdr_unixcred (XDR * xdrs, unixcred * objp)
 {
-  if (!xdr_u_int (xdrs, &objp->uid))
+  if (!INTUSE(xdr_u_int) (xdrs, &objp->uid))
     return FALSE;
-  if (!xdr_u_int (xdrs, &objp->gid))
+  if (!INTUSE(xdr_u_int) (xdrs, &objp->gid))
     return FALSE;
-  if (!xdr_array (xdrs, (char **) &objp->gids.gids_val,
-		  (u_int *) & objp->gids.gids_len, MAXGIDS,
-		  sizeof (u_int), (xdrproc_t) xdr_u_int))
+  if (!INTUSE(xdr_array) (xdrs, (char **) &objp->gids.gids_val,
+			  (u_int *) & objp->gids.gids_len, MAXGIDS,
+			  sizeof (u_int), (xdrproc_t) INTUSE(xdr_u_int)))
     return FALSE;
   return TRUE;
 }
+INTDEF(xdr_unixcred)
 
 bool_t
 xdr_getcredres (XDR * xdrs, getcredres * objp)
 {
-  if (!xdr_keystatus (xdrs, &objp->status))
+  if (!INTUSE(xdr_keystatus) (xdrs, &objp->status))
     return FALSE;
   switch (objp->status)
     {
     case KEY_SUCCESS:
-      if (!xdr_unixcred (xdrs, &objp->getcredres_u.cred))
+      if (!INTUSE(xdr_unixcred) (xdrs, &objp->getcredres_u.cred))
 	return FALSE;
       break;
     default:
@@ -136,24 +143,25 @@ xdr_getcredres (XDR * xdrs, getcredres * objp)
 bool_t
 xdr_key_netstarg (XDR * xdrs, key_netstarg * objp)
 {
-  if (!xdr_keybuf (xdrs, objp->st_priv_key))
+  if (!INTUSE(xdr_keybuf) (xdrs, objp->st_priv_key))
     return FALSE;
-  if (!xdr_keybuf (xdrs, objp->st_pub_key))
+  if (!INTUSE(xdr_keybuf) (xdrs, objp->st_pub_key))
     return FALSE;
-  if (!xdr_netnamestr (xdrs, &objp->st_netname))
+  if (!INTUSE(xdr_netnamestr) (xdrs, &objp->st_netname))
     return FALSE;
   return TRUE;
 }
+INTDEF(xdr_key_netstarg)
 
 bool_t
 xdr_key_netstres (XDR * xdrs, key_netstres * objp)
 {
-  if (!xdr_keystatus (xdrs, &objp->status))
+  if (!INTUSE(xdr_keystatus) (xdrs, &objp->status))
     return FALSE;
   switch (objp->status)
     {
     case KEY_SUCCESS:
-      if (!xdr_key_netstarg (xdrs, &objp->key_netstres_u.knet))
+      if (!INTUSE(xdr_key_netstarg) (xdrs, &objp->key_netstres_u.knet))
 	return FALSE;
       break;
     default:
@@ -161,3 +169,4 @@ xdr_key_netstres (XDR * xdrs, key_netstres * objp)
     }
   return TRUE;
 }
+INTDEF(xdr_key_netstres)

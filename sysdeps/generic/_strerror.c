@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,95,96,97,98,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,8 @@
 char *
 __strerror_r (int errnum, char *buf, size_t buflen)
 {
-  if (errnum < 0 || errnum >= _sys_nerr || _sys_errlist[errnum] == NULL)
+  if (errnum < 0 || errnum >= INTUSE(_sys_nerr)
+      || INTUSE(_sys_errlist)[errnum] == NULL)
     {
       /* Buffer we use to print the number in.  For a maximum size for
 	 `int' of 8 bytes we never need more than 20 digits.  */
@@ -65,6 +66,6 @@ __strerror_r (int errnum, char *buf, size_t buflen)
       return buf;
     }
 
-  return (char *) _(_sys_errlist[errnum]);
+  return (char *) _(INTUSE(_sys_errlist)[errnum]);
 }
 weak_alias (__strerror_r, strerror_r)

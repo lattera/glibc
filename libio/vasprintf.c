@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,11 +54,11 @@ _IO_vasprintf (result_ptr, format, args)
 #endif
   _IO_no_init ((_IO_FILE *) &sf._sbf, _IO_USER_LOCK, -1, NULL, NULL);
   _IO_JUMPS ((struct _IO_FILE_plus *) &sf._sbf) = &_IO_str_jumps;
-  _IO_str_init_static (&sf, string, init_string_size, string);
+  INTUSE(_IO_str_init_static) (&sf, string, init_string_size, string);
   sf._sbf._f._flags &= ~_IO_USER_BUF;
   sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   sf._s._free_buffer = (_IO_free_type) free;
-  ret = _IO_vfprintf (&sf._sbf._f, format, args);
+  ret = INTUSE(_IO_vfprintf) (&sf._sbf._f, format, args);
   if (ret < 0)
     {
       free (sf._sbf._f._IO_buf_base);

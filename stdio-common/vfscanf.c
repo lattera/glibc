@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,9 +75,9 @@
 # ifdef COMPILE_WSCANF
 #  define ungetc(c, s)	((void) (c == WEOF				      \
 				 || (--read_in,				      \
-				     _IO_sputbackwc (s, c))))
+				     INTUSE(_IO_sputbackwc) (s, c))))
 #  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
-					 _IO_sputbackwc (s, c)))
+					 INTUSE(_IO_sputbackwc) (s, c)))
 #  define inchar()	(c == WEOF ? WEOF				      \
 			 : ((c = _IO_getwc_unlocked (s)),		      \
 			    (void) (c != WEOF && ++read_in), c))
@@ -105,9 +105,9 @@
 # else
 #  define ungetc(c, s)	((void) ((int) c == EOF				      \
 				 || (--read_in,				      \
-				     _IO_sputbackc (s, (unsigned char) c))))
+				     INTUSE(_IO_sputbackc) (s, (unsigned char) c))))
 #  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
-					 _IO_sputbackc (s, (unsigned char) c)))
+					 INTUSE(_IO_sputbackc) (s, (unsigned char) c)))
 #  define inchar()	(c == EOF ? EOF					      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
 			    (void) (c != EOF && ++read_in), c))
@@ -2435,7 +2435,7 @@ __vfwscanf (FILE *s, const wchar_t *format, va_list argptr)
 int
 __vfscanf (FILE *s, const char *format, va_list argptr)
 {
-  return _IO_vfscanf (s, format, argptr, NULL);
+  return INTUSE(_IO_vfscanf) (s, format, argptr, NULL);
 }
 # endif
 #endif
@@ -2444,4 +2444,5 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 weak_alias (__vfwscanf, vfwscanf)
 #else
 weak_alias (__vfscanf, vfscanf)
+INTDEF(_IO_vfscanf)
 #endif

@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) _IO_fputs (s, f)
+# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 static char *auth_errmsg (enum auth_stat stat) internal_function;

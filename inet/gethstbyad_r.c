@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -33,7 +33,7 @@
    be performed.  */
 #define PREPROCESS \
   if (len == sizeof (struct in6_addr)					      \
-      && __builtin_expect (memcmp (&in6addr_any, addr,			      \
+      && __builtin_expect (memcmp (&INTUSE(in6addr_any), addr,		      \
 				   sizeof (struct in6_addr)), 1) == 0)	      \
     {									      \
       *h_errnop = HOST_NOT_FOUND;					      \
@@ -46,5 +46,8 @@
       _res_hconf_reorder_addrs (resbuf);				      \
       _res_hconf_trim_domains (resbuf);					      \
     }
+
+/* Special name for the lookup function.  */
+#define DB_LOOKUP_FCT INTUSE(__nss_hosts_lookup)
 
 #include "../nss/getXXbyYY_r.c"

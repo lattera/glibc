@@ -139,8 +139,8 @@ no_memory:
   /*
    * Serialize the parameters into origcred
    */
-  xdrmem_create (&xdrs, mymem, MAX_AUTH_BYTES, XDR_ENCODE);
-  if (!xdr_authunix_parms (&xdrs, &aup))
+  INTUSE(xdrmem_create) (&xdrs, mymem, MAX_AUTH_BYTES, XDR_ENCODE);
+  if (!INTUSE(xdr_authunix_parms) (&xdrs, &aup))
     abort ();
   au->au_origcred.oa_length = len = XDR_GETPOS (&xdrs);
   au->au_origcred.oa_flavor = AUTH_UNIX;
@@ -212,8 +212,8 @@ authunix_validate (AUTH *auth, struct opaque_auth *verf)
   if (verf->oa_flavor == AUTH_SHORT)
     {
       au = AUTH_PRIVATE (auth);
-      xdrmem_create (&xdrs, verf->oa_base, verf->oa_length,
-		     XDR_DECODE);
+      INTUSE(xdrmem_create) (&xdrs, verf->oa_base, verf->oa_length,
+			     XDR_DECODE);
 
       if (au->au_shcred.oa_base != NULL)
 	{
@@ -221,14 +221,14 @@ authunix_validate (AUTH *auth, struct opaque_auth *verf)
 		    au->au_shcred.oa_length);
 	  au->au_shcred.oa_base = NULL;
 	}
-      if (xdr_opaque_auth (&xdrs, &au->au_shcred))
+      if (INTUSE(xdr_opaque_auth) (&xdrs, &au->au_shcred))
 	{
 	  auth->ah_cred = au->au_shcred;
 	}
       else
 	{
 	  xdrs.x_op = XDR_FREE;
-	  (void) xdr_opaque_auth (&xdrs, &au->au_shcred);
+	  (void) INTUSE(xdr_opaque_auth) (&xdrs, &au->au_shcred);
 	  au->au_shcred.oa_base = NULL;
 	  auth->ah_cred = au->au_origcred;
 	}
@@ -256,9 +256,9 @@ authunix_refresh (AUTH *auth)
   /* first deserialize the creds back into a struct authunix_parms */
   aup.aup_machname = NULL;
   aup.aup_gids = (gid_t *) NULL;
-  xdrmem_create (&xdrs, au->au_origcred.oa_base,
-		 au->au_origcred.oa_length, XDR_DECODE);
-  stat = xdr_authunix_parms (&xdrs, &aup);
+  INTUSE(xdrmem_create) (&xdrs, au->au_origcred.oa_base,
+			 au->au_origcred.oa_length, XDR_DECODE);
+  stat = INTUSE(xdr_authunix_parms) (&xdrs, &aup);
   if (!stat)
     goto done;
 
@@ -267,7 +267,7 @@ authunix_refresh (AUTH *auth)
   aup.aup_time = now.tv_sec;
   xdrs.x_op = XDR_ENCODE;
   XDR_SETPOS (&xdrs, 0);
-  stat = xdr_authunix_parms (&xdrs, &aup);
+  stat = INTUSE(xdr_authunix_parms) (&xdrs, &aup);
   if (!stat)
     goto done;
   auth->ah_cred = au->au_origcred;
@@ -275,7 +275,7 @@ authunix_refresh (AUTH *auth)
 done:
   /* free the struct authunix_parms created by deserializing */
   xdrs.x_op = XDR_FREE;
-  (void) xdr_authunix_parms (&xdrs, &aup);
+  (void) INTUSE(xdr_authunix_parms) (&xdrs, &aup);
   XDR_DESTROY (&xdrs);
   return stat;
 }
@@ -310,9 +310,9 @@ marshal_new_auth (AUTH *auth)
   XDR *xdrs = &xdr_stream;
   struct audata *au = AUTH_PRIVATE (auth);
 
-  xdrmem_create (xdrs, au->au_marshed, MAX_AUTH_BYTES, XDR_ENCODE);
-  if ((!xdr_opaque_auth (xdrs, &(auth->ah_cred))) ||
-      (!xdr_opaque_auth (xdrs, &(auth->ah_verf))))
+  INTUSE(xdrmem_create) (xdrs, au->au_marshed, MAX_AUTH_BYTES, XDR_ENCODE);
+  if ((!INTUSE(xdr_opaque_auth) (xdrs, &(auth->ah_cred))) ||
+      (!INTUSE(xdr_opaque_auth) (xdrs, &(auth->ah_verf))))
     perror (_("auth_none.c - Fatal marshalling problem"));
   else
     au->au_mpos = XDR_GETPOS (xdrs);

@@ -52,8 +52,8 @@
 
 #define debug(msg)		/* printf("%s\n", msg) */
 
-extern bool_t xdr_authdes_cred (XDR *, struct authdes_cred *);
-extern bool_t xdr_authdes_verf (XDR *, struct authdes_verf *);
+extern bool_t INTUSE(xdr_authdes_cred) (XDR *, struct authdes_cred *);
+extern bool_t INTUSE(xdr_authdes_verf) (XDR *, struct authdes_verf *);
 
 /*
  * DES authenticator operations vector
@@ -309,7 +309,7 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
       ATTEMPT (xdr_putint32 (xdrs, &auth->ah_cred.oa_flavor));
       ATTEMPT (xdr_putint32 (xdrs, &len));
     }
-  ATTEMPT (xdr_authdes_cred (xdrs, cred));
+  ATTEMPT (INTUSE(xdr_authdes_cred) (xdrs, cred));
 
   len = (2 + 1) * BYTES_PER_XDR_UNIT;
   if ((ixdr = xdr_inline (xdrs, 2 * BYTES_PER_XDR_UNIT)) != NULL)
@@ -322,7 +322,7 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
       ATTEMPT (xdr_putint32 (xdrs, &auth->ah_verf.oa_flavor));
       ATTEMPT (xdr_putint32 (xdrs, &len));
     }
-  ATTEMPT (xdr_authdes_verf (xdrs, verf));
+  ATTEMPT (INTUSE(xdr_authdes_verf) (xdrs, verf));
 
   return TRUE;
 }

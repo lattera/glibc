@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1996,1997,1998,1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1996-1999,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 #ifdef USE_IN_LIBIO
 # include <iolibio.h>
-# define __fdopen _IO_fdopen
+# define __fdopen INTUSE(_IO_fdopen)
 #endif
 
 /* This returns a new stream opened on a temporary file (generated

@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -88,7 +88,9 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 
 # ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
-#  define fflush(s) _IO_fflush (s)
+#  define fflush(s) INTUSE(_IO_fflush) (s)
+#  undef putc
+#  define putc(c, fp) INTUSE(_IO_putc) (c, fp)
 # endif
 
 #else /* not _LIBC */

@@ -76,7 +76,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
   u_int nodesize;
 
   /* like strings, arrays are really counted arrays */
-  if (!xdr_u_int (xdrs, sizep))
+  if (!INTUSE(xdr_u_int) (xdrs, sizep))
     {
       return FALSE;
     }
@@ -137,6 +137,7 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
     }
   return stat;
 }
+INTDEF(xdr_array)
 
 /*
  * xdr_vector():

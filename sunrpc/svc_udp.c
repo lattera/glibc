@@ -54,7 +54,7 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 # include <libio/iolibio.h>
-# define fputs(s, f) _IO_fputs (s, f)
+# define fputs(s, f) INTUSE(_IO_fputs) (s, f)
 #endif
 
 #define rpc_buffer(xprt) ((xprt)->xp_p1)
@@ -163,7 +163,8 @@ svcudp_bufcreate (sock, sendsz, recvsz)
     }
   su->su_iosz = ((MAX (sendsz, recvsz) + 3) / 4) * 4;
   rpc_buffer (xprt) = buf;
-  xdrmem_create (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz, XDR_DECODE);
+  INTUSE(xdrmem_create) (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz,
+			 XDR_DECODE);
   su->su_cache = NULL;
   xprt->xp_p2 = (caddr_t) su;
   xprt->xp_verf.oa_base = su->su_verfbody;
@@ -271,7 +272,7 @@ again:
     return FALSE;
   xdrs->x_op = XDR_DECODE;
   XDR_SETPOS (xdrs, 0);
-  if (!xdr_callmsg (xdrs, msg))
+  if (!INTUSE(xdr_callmsg) (xdrs, msg))
     return FALSE;
   su->su_xid = msg->rm_xid;
   if (su->su_cache != NULL)
@@ -312,7 +313,7 @@ svcudp_reply (xprt, msg)
   xdrs->x_op = XDR_ENCODE;
   XDR_SETPOS (xdrs, 0);
   msg->rm_xid = su->su_xid;
-  if (xdr_replymsg (xdrs, msg))
+  if (INTUSE(xdr_replymsg) (xdrs, msg))
     {
       slen = (int) XDR_GETPOS (xdrs);
 #ifdef IP_PKTINFO
@@ -552,7 +553,8 @@ cache_set (SVCXPRT *xprt, u_long replylen)
   victim->cache_replylen = replylen;
   victim->cache_reply = rpc_buffer (xprt);
   rpc_buffer (xprt) = newbuf;
-  xdrmem_create (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz, XDR_ENCODE);
+  INTUSE(xdrmem_create) (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz,
+			 XDR_ENCODE);
   victim->cache_xid = su->su_xid;
   victim->cache_proc = uc->uc_proc;
   victim->cache_vers = uc->uc_vers;
