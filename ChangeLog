@@ -1,5 +1,7 @@
 2000-11-15  Andreas Jaeger  <aj@suse.de>
 
+	* elf/chroot_canon.c: Include <stdint.h>.
+
 	* elf/cache.c (struct cache_entry): Use uint64_t for hwcap.
 	(print_entry): Likewise.
 	(add_to_cache): Likewise.

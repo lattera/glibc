@@ -25,6 +25,8 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <stddef.h>
+#include <stdint.h>
+
 #include "ldconfig.h"
 
 #ifndef PATH_MAX
