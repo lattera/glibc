@@ -47,6 +47,7 @@
 #define EPROTOTYPE	19
 #define ESRCH		20
 #define EPERM		21
+#define ENOTDIR         22
 #endif
 
 #define __set_errno(val) errno = (val)
