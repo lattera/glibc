@@ -70,9 +70,9 @@ endif
 $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 # Go kludges!!!
 	$(make-target-directory)
+# We must use $(CFLAGS) to get -O flags that affect #if's in header files.
 	echo '#include <mach/syscall_sw.h>' | \
 	DEPENDENCIES_OUTPUT='$@-dep $@' \
-# We must use $(CFLAGS) to get -O flags that affect #if's in header files.
 	$(CC) $(CFLAGS) $(CPPFLAGS) -E -x c-header - \
 	      -D_MACH_`echo $(base-machine) | tr a-z A-Z`_SYSCALL_SW_H_=1 | \
 	sed -n -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\

@@ -1,5 +1,7 @@
 2001-12-02  Roland McGrath  <roland@frob.com>
 
+	* mach/Makefile, mach/Machrules: Move comments out of \ continuations.
+
 	* hurd/hurd.h (__hurd_fail): Add `break;' to silence new gcc-3 warning.
 	Reported by Jeff Bailey <jbailey@nisa.net>.
 
