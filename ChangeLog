@@ -1,5 +1,8 @@
 2004-09-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_helper.c (get_mapping): Correctly check cmsg length.
+	Avoid file descriptor leak in case of size mismatch.
+
 	* nscd/nscd-client.h: Fix database structure layout for biarch.
 	* nscd/mem.c (gc): Add casts to avoid warnings.
 

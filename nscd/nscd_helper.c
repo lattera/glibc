@@ -138,9 +138,11 @@ get_mapping (request_type type, const char *key,
     /* Failure or timeout.  */
     goto out_close2;
 
-  if (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, 0)) != keylen
-      || msg.msg_controllen != CMSG_LEN (sizeof (int)))
+  if (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, 0)) != keylen)
     goto out_close2;
+
+  if (CMSG_FIRSTHDR (&msg)->cmsg_len != CMSG_LEN (sizeof (int)))
+    goto out_close;
 
   mapfd = *(int *) CMSG_DATA (cmsg);
 
