@@ -1,3 +1,9 @@
+2003-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h (class __pthread_cleanup_class): Add
+	missing closing braces.
+	Patch by Christophe Saout <christophe@saout.de>.
+
 2003-06-24  Roland McGrath  <roland@redhat.com>
 
 	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Typo fix.
