@@ -69,6 +69,13 @@ struct timer_node
 };
 
 
+/* The limit is not published if we are compiled with kernel timer support.
+   But we still compiled in this implementation with its limit unless built
+   to require the kernel support.  */
+#ifndef TIMER_MAX
+# define TIMER_MAX 256
+#endif
+
 /* Static array with the structures for all the timers.  */
 extern struct timer_node __timer_array[TIMER_MAX];
 
@@ -111,7 +118,7 @@ timer_ptr2id (struct timer_node *timer)
   return timer - __timer_array;
 }
 #else
-# define timer_id2ptr(timerid) ((struct timed_node *) timerid)
+# define timer_id2ptr(timerid) ((struct timer_node *) timerid)
 # define timer_ptr2id(timerid) ((void *) timerid)
 #endif
 
