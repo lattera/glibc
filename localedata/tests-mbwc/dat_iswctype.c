@@ -411,7 +411,7 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0x32CB, "digit"  }, { 0,1,0 }  },	   /* IDEO.TEL.SYM.DEC12 */
       /* 21: */
       {	 { 0x33FE, "digit"  }, { 0,1,0 }  },	   /* CJK IDEO.TEL.31th	 */
-      {	 { 0xFF19, "digit"  }, { 0,0,0 }  },	   /* FULL 9		 */
+      {	 { 0xFF19, "digit"  }, { 0,1,0 }  },	   /* FULL 9		 */
       {	 { 0x3000, "graph"  }, { 0,1,0 }  },	   /* IDEO. SPACE	 */
       {	 { 0x3020, "graph"  }, { 0,1,0 }  },	   /* POSTAL MARK FACE	 */
       {	 { 0x3029, "graph"  }, { 0,1,0 }  },	   /* Hangzhou NUM9	 */

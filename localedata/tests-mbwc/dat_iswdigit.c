@@ -101,7 +101,7 @@ TST_ISW_LOC (DIGIT, digit) = {
 	{  { 0x9FA5 }, { 0,1,0 }  },	/* CJK UNI.IDEO.      */
 	{  { 0xFE4F }, { 0,1,0 }  },	/* CJK UNI.IDEO.      */
 	{  { 0xFF0F }, { 0,1,0 }  },	/* FULL SLASH	      */
-	{  { 0xFF19 }, { 0,0,0 }  },	/* FULL 9	      */
+	{  { 0xFF19 }, { 0,1,0 }  },	/* FULL 9	      */
 	{  { 0xFF20 }, { 0,1,0 }  },	/* FULL @	      */
 	{  { 0xFF3A }, { 0,1,0 }  },	/* FULL Z	      */
 	{  { 0xFF40 }, { 0,1,0 }  },	/* FULL GRAVE ACC.    */
