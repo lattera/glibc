@@ -1,3 +1,8 @@
+2003-01-04  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (+mkdep): Add -MP flag.
+	Suggested by Art Haas <ahaas@airmail.net>.
+
 2003-01-05  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/Makefile (CFLAGS-.oS): Append -fPIC.
