@@ -76,6 +76,9 @@ Make up your own decision.
 GNU CC versions 2.95 and above are derived from egcs, and they may do even
 better.
 
+Please note that gcc 2.95 and 2.95.1 cannot compile glibc on Alpha due to
+problems in the complex float support.
+
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
 

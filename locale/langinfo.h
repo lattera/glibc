@@ -335,7 +335,7 @@ enum
 #define NOEXPR			NOEXPR
   __YESSTR,			/* Output string for ``yes''.  */
   __NOSTR,			/* Output string for ``no''.  */
-#ifndef __USE_XOPEN2K
+#if !defined __USE_XOPEN2K || defined __USE_GNU
 # define YESSTR			__YESSTR
 # define NOSTR			__NOSTR
 #endif
