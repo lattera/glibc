@@ -1,3 +1,18 @@
+2000-04-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: init-first.h has been
+	removed, remove it here also.
+	* sysdeps/unix/sysv/linux/arm/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: Likewise.
+
+2000-04-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/register-dump.h: Don't
+	include bits/sigcontext.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h: Likewise.
+
 2000-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (collate_read): Handle ellipsis in

@@ -1,5 +1,4 @@
 clone.S
 kernel_stat.h
-init-first.h
 setfsuid.c
 setfsgid.c

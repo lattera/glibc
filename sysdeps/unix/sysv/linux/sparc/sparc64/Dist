@@ -3,4 +3,3 @@ kernel_stat.h
 getcontext.S
 setcontext.S
 sizes.h
-init-first.h

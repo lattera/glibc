@@ -3,7 +3,6 @@ alpha/regdef.h
 clone.S
 ieee_get_fp_control.S
 ieee_set_fp_control.S
-init-first.h
 ioperm.c
 ipc_priv.h
 kernel_sigaction.h
