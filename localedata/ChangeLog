@@ -1,3 +1,9 @@
+2000-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/pt_BR: Revert last change partly.  Full weekday and month
+	names are written with lowercase first letter.
+	Patch by Henrique M. Holschuh <hmh@rcm.org.br>.
+
 2000-06-21  Andreas Jaeger  <aj@suse.de>
 
 	* tst-trans.c: Include <stdlib.h> and <string.h>.
