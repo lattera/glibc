@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -111,8 +111,8 @@ extern int __gconv_close (__gconv_t cd)
 
 /* Transform at most *INBYTESLEFT bytes from buffer starting at *INBUF
    according to rules described by CD and place up to *OUTBYTESLEFT
-   bytes in buffer starting at *OUTBUF.  Return number of written
-   characters in *CONVERTED if this pointer is not null.  */
+   bytes in buffer starting at *OUTBUF.  Return number of non-identical
+   conversions in *CONVERTED if this pointer is not null.  */
 extern int __gconv (__gconv_t __cd, const unsigned char **__inbuf,
 		    const unsigned char *inbufend, unsigned char **__outbuf,
 		    unsigned char *outbufend, size_t *converted)

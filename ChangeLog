@@ -1,3 +1,10 @@
+2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/loop.c (COUNT_CONVERTED): Remove macro, comment, and all uses.
+	Remove done variable and all uses.
+	* iconv/skeleton.c: Update comment for *written modification.
+	* iconv/gconv_int.h (__gconv): Update comment.
+
 2000-01-18  Bruno Haible  <haible@ilog.fr>
 
 	* posix/fnmatch.c (ISWCTYPE): New macro.

@@ -1,5 +1,5 @@
 /* Skeleton for a conversion module.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -264,7 +264,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	      /* Store information about how many bytes are available.  */
 	      data->__outbuf = outbuf;
 
-	      /* Remember how many characters we converted.  */
+	      /* Remember how many non-identical characters we converted.  */
 	      *written += converted;
 
 	      break;

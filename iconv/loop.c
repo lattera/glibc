@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -35,11 +35,6 @@
      LOOPFCT		name of the function created.  If not specified
 			the name is `loop' but this prevents the use
 			of multiple functions in the same file.
-
-     COUNT_CONVERTED	optional macro which is used to count the actual
-			number of characters converted.  For some conversion
-			it is easy to compute the value afterwards, but for
-			others explicit counting is cheaper.
 
      BODY		this is supposed to expand to the body of the loop.
 			The user must provide this.
@@ -87,30 +82,6 @@
 # error "Definition of BODY missing for function" LOOPFCT
 #endif
 
-/* We can calculate the number of converted characters easily if one
-   of the character sets has a fixed width.  */
-#ifndef COUNT_CONVERTED
-# if MIN_NEEDED_INPUT == MAX_NEEDED_INPUT
-#  if MIN_NEEDED_OUTPUT == MAX_NEEDED_OUTPUT
-/* Decide whether one of the charsets has size 1.  */
-#   if MIN_NEEDED_INPUT == 1
-#    define COUNT_CONVERTED	(inptr - *inptrp)
-#   elif MIN_NEEDED_OUTPUT == 1
-#    define COUNT_CONVERTED	(outptr - *outptrp)
-#   else
-/* Else we should see whether one of the two numbers is a power of 2.  */
-#    define COUNT_CONVERTED \
-  ((MIN_NEEDED_INPUT & (-MIN_NEEDED_INPUT)) == MIN_NEEDED_INPUT		      \
-   ? (inptr - *inptrp) : (outptr - *outptrp))
-#   endif
-#  else
-#   define COUNT_CONVERTED	((inptr - *inptrp) / MIN_NEEDED_INPUT)
-#  endif
-# elif MIN_NEEDED_OUTPUT == MAX_NEEDED_OUTPUT
-#  define COUNT_CONVERTED	((outptr - *outptrp) / MIN_NEEDED_OUTPUT)
-# endif
-#endif
-
 
 /* If no arguments have to passed to the loop function define the macro
    as empty.  */
@@ -128,9 +99,6 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
   int result = __GCONV_OK;
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
-#ifndef COUNT_CONVERTED
-  size_t done = 0;
-#endif
 
   /* We run one loop where we avoid checks for underflow/overflow of the
      buffers to speed up the conversion a bit.  */
@@ -151,11 +119,6 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 	 vary in size), GCONV_ILLEGAL_INPUT, or GCONV_FULL_OUTPUT (if the
 	 output characters vary in size.  */
       BODY
-
-      /* If necessary count the successful conversion.  */
-#ifndef COUNT_CONVERTED
-      ++done;
-#endif
     }
 
   if (result == __GCONV_OK)
@@ -205,21 +168,9 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 	     input characters vary in size), GCONV_ILLEGAL_INPUT, or
 	     GCONV_FULL_OUTPUT (if the output characters vary in size).  */
 	  BODY
-
-	  /* If necessary count the successful conversion.  */
-# ifndef COUNT_CONVERTED
-	  ++done;
-# endif
 	}
 #endif	/* Input and output charset are not both fixed width.  */
     }
-
-  /* Add the number of characters we actually converted.  */
-#ifdef COUNT_CONVERTED
-  *converted += COUNT_CONVERTED;
-#else
-  *converted += done;
-#endif
 
   /* Update the pointers pointed to by the parameters.  */
   *inptrp = inptr;
@@ -239,7 +190,6 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 #undef MIN_NEEDED_OUTPUT
 #undef MAX_NEEDED_OUTPUT
 #undef LOOPFCT
-#undef COUNT_CONVERTED
 #undef BODY
 #undef LOOPFCT
 #undef EXTRA_LOOP_DECLS
