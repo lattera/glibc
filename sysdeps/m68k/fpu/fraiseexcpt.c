@@ -34,9 +34,8 @@ feraiseexcept (int excepts)
   if (excepts & FE_INVALID)
     {
       /* One example of a invalid operation is 0 * Infinity.  */
-      double d = 0.0 * HUGE_VAL;
-      /* Now force the exception.  */
-      __asm__ __volatile__ ("fnop" : : "f" (d));
+      double d = HUGE_VAL;
+      __asm__ __volatile__ ("fmul%.s %#0r0,%0; fnop" : "=f" (d) : "0" (d));
     }
 
   /* Next: division by zero.  */
@@ -49,26 +48,21 @@ feraiseexcept (int excepts)
   /* Next: overflow.  */
   if (excepts & FE_OVERFLOW)
     {
-      long double d = LDBL_MAX * LDBL_MAX;
-      /* Now force the exception.  */
-      __asm__ __volatile__ ("fnop" : : "f" (d));
+      long double d = LDBL_MAX;
+      __asm__ __volatile__ ("fmul%.x %0,%0; fnop" : "=f" (d) : "0" (d));
     }
 
   /* Next: underflow.  */
   if (excepts & FE_UNDERFLOW)
     {
-      long double d = LDBL_MIN / 16.0;
-      /* Now force the exception.  */
-      __asm__ __volatile__ ("fnop" : : "f" (d));
+      long double d = LDBL_MIN;
+      __asm__ __volatile__ ("fdiv%.s %#0r16,%0; fnop" : "=f" (d) : "0" (d));
     }
 
   /* Last: inexact.  */
   if (excepts & FE_INEXACT)
     {
-      long double d1, d2 = 1.0;
-      __asm__ __volatile__ ("fmovecr %#0,%0\n\t"
-			    "fdiv%.x %1,%0\n\t"
-			    "fnop"
-			    : "=&f" (d1) : "f" (d2));
+      long double d = 1.0;
+      __asm__ __volatile__ ("fdiv%.s %#0r3,%0; fnop" : "=f" (d) : "0" (d));
     }
 }
