@@ -15,7 +15,7 @@ sparc.*-.*-.*		libm=6
 alpha.*-.*-linux.*	libm=6.1
 alpha.*-.*-.*		libm=6
 powerpc-.*-.*		libm=6
-mips-.*-.*		libm=6
+mips.*-.*-.*		libm=6
 arm.*-.*-.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
