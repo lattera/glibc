@@ -1,3 +1,7 @@
+2005-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/unistd.h: Declare ftruncate for POSIX 2003.  [BZ #640]
+
 2004-12-22  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* math/libm-test.inc (rint_test_tonearest): New test.
