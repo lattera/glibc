@@ -52,7 +52,8 @@ DEFUN(__sigaction, (sig, act, oact),
   if (act != NULL)
     ss->actions[sig] = a;
 
-  if (act != NULL && sig == SIGCHLD)
+  if (act != NULL && sig == SIGCHLD &&
+      (a.sa_flags & SA_NOCLDSTOP) != (old.sa_flags & SA_NOCLDSTOP))
     {
       ss->critical_section = 1;
       __spin_unlock (&ss->lock);
