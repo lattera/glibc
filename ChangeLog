@@ -1,3 +1,9 @@
+2005-03-13  Roland McGrath  <roland@redhat.com>
+
+	* elf/tls-macros.h: #include_next <tls-macros.h> to get a sysdeps
+	version if there is one.  Only #error if macros are then undefined.
+	* sysdeps/generic/tls-macros.h: New file.
+
 2005-03-10  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sysdeps/hppa/configure.in: Remove old Makefile leftovers.

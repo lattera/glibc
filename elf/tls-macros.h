@@ -16,6 +16,7 @@
 /* XXX Until we get compiler support we don't need declarations.  */
 #define VAR_INT_DECL(x)
 
+#include_next <tls-macros.h>
 
   /* XXX Each architecture must have its own asm for now.  */
 #ifdef __i386__
@@ -731,6 +732,7 @@ register void *__gp __asm__("$29");
       __result;  \
   })
 
-#else
+#elif !defined TLS_LE || !defined TLS_IE \
+      || !defined TLS_LD || !defined TLS_GD(x)
 # error "No support for this architecture so far."
 #endif
