@@ -49,6 +49,8 @@ routines	:=							      \
 
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen
+test-srcs = test-freopen
+distribute = test-freopen.sh
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -95,3 +97,8 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 distribute := iolibio.h libioP.h strfile.h Banner
 
 include ../Rules
+
+tests: $(objpfx)test-freopen.out
+
+$(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)libio/

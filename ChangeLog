@@ -5,6 +5,10 @@
 	* libio/freopen64.c (freopen64): Likewise.
 	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
 
+	* libio/Makefile: Add rules to build and run test-freopen.
+	* libio/test-freopen.c: New file.
+	* libio/test-freopen.sh: New file.
+
 2000-11-15  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/generic/ldsodefs.h (DL_DT_INIT_ADDRESS): Defined if
