@@ -1,3 +1,10 @@
+2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #263]
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Don't store
+	outside the buffer if the read returns 0.  __strtod_l can't set
+	endp to NULL, so remove a test for that case.
+
 2004-07-12  Roland McGrath  <roland@redhat.com>
 
 	* manual/signal.texi (Interrupted Primitives): Make clear that

@@ -45,7 +45,7 @@ getloadavg (double loadavg[], int nelem)
 
       nread = read_not_cancel (fd, buf, sizeof buf - 1);
       close_not_cancel_no_status (fd);
-      if (nread < 0)
+      if (nread <= 0)
 	return -1;
       buf[nread - 1] = '\0';
 
@@ -56,7 +56,7 @@ getloadavg (double loadavg[], int nelem)
 	{
 	  char *endp;
 	  loadavg[i] = __strtod_l (p, &endp, &_nl_C_locobj);
-	  if (endp == NULL || endp == p)
+	  if (endp == p)
 	    /* This should not happen.  The format of /proc/loadavg
 	       must have changed.  Don't return with what we have,
 	       signal an error.  */
