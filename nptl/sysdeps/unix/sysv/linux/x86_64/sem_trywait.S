@@ -27,10 +27,6 @@
 # define
 #endif
 
-#define SYS_futex		202
-#define FUTEX_WAKE		1
-
-
 	.text
 
 	.globl	sem_trywait

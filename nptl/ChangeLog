@@ -1,3 +1,9 @@
+2003-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S: Remove futex
+	related macros.
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: Likewise.
+
 2003-05-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-sem6.c: New file.
