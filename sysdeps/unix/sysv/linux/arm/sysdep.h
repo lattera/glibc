@@ -64,6 +64,22 @@
   SYSCALL_ERROR_HANDLER							      \
   END (name)
 
+#undef	PSEUDO_NOERRNO
+#define	PSEUDO_NOERRNO(name, syscall_name, args)			      \
+  .text;								      \
+  ENTRY (name);								      \
+    DO_CALL (syscall_name, args);
+
+#define PSEUDO_RET_NOERRNO						      \
+    RETINSTR(movcc, pc, lr);						      \
+    nop
+#undef ret_NOERRNO
+#define ret_NOERRNO PSEUDO_RET_NOERRNO
+
+#undef	PSEUDO_END_NOERRNO
+#define	PSEUDO_END_NOERRNO(name)					      \
+  END (name)
+
 #if NOT_IN_libc
 # define SYSCALL_ERROR __local_syscall_error
 # define SYSCALL_ERROR_HANDLER					\

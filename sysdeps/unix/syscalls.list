@@ -14,13 +14,13 @@ fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl __fcntl_internal fcntl
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
 fsync		-	fsync		Ci:i	__libc_fsync	fsync
 getdomain	-	getdomainname	i:si	getdomainname
-getgid		-	getgid		i:	__getgid	getgid
+getgid		-	getgid		Ei:	__getgid	getgid
 getgroups	-	getgroups	i:ip	__getgroups	getgroups
 getitimer	-	getitimer	i:ip	__getitimer	getitimer
-getpid		-	getpid		i:	__getpid	getpid
+getpid		-	getpid		Ei:	__getpid	getpid
 getpriority	-	getpriority	i:ii	getpriority
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
-getuid		-	getuid		i:	__getuid	getuid
+getuid		-	getuid		Ei:	__getuid	getuid
 ioctl		-	ioctl		i:iiI	__ioctl		ioctl
 kill		-	kill		i:ii	__kill		kill
 link		-	link		i:ss	__link		link

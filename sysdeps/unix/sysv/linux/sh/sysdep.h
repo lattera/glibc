@@ -65,6 +65,18 @@
 #define	PSEUDO_END(name) \
   END (name)
 
+#undef	PSEUDO_NOERRNO
+#define	PSEUDO_NOERRNO(name, syscall_name, args) \
+ .text; \
+ ENTRY (name); \
+    DO_CALL (syscall_name, args)
+
+#undef	PSEUDO_END_NOERRNO
+#define	PSEUDO_END_NOERRNO(name) \
+  END (name)
+
+#define ret_NOERRNO ret
+
 #ifndef PIC
 # define SYSCALL_ERROR_HANDLER	\
 	mov.l 0f,r1; \

@@ -59,6 +59,16 @@
   SYSCALL_ERROR_HANDLER;						      \
   END (name)
 
+#undef PSEUDO
+#define	PSEUDO_NOERRNO(name, syscall_name, args)			      \
+  .text;                                                                      \
+  ENTRY (name)							              \
+    DO_CALL (syscall_name, args)
+
+#undef PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(name)					      \
+  END (name)
+
 #ifndef PIC
 # define SYSCALL_ERROR_LABEL 0f
 # define SYSCALL_ERROR_HANDLER \
@@ -141,6 +151,9 @@
   .endif
 
 #define ret                                                                   \
+    br      14
+
+#define ret_NOERRNO							      \
     br      14
 
 #endif /* __ASSEMBLER__ */

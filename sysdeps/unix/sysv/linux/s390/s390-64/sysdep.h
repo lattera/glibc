@@ -1,5 +1,5 @@
 /* Assembler macros for 64 bit S/390.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -69,6 +69,17 @@
 
 #undef PSEUDO_END
 #define PSEUDO_END(name)						      \
+  SYSCALL_ERROR_HANDLER;						      \
+  END (name)
+
+#undef PSEUDO_NOERRNO
+#define	PSEUDO_NOERRNO(name, syscall_name, args)			      \
+  .text;								      \
+  ENTRY (name)								      \
+    DO_CALL (syscall_name, args)
+
+#undef PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(name)					      \
   SYSCALL_ERROR_HANDLER;						      \
   END (name)
 
@@ -142,6 +153,9 @@
   .endif
 
 #define ret								      \
+    br	    14
+
+#define ret_NOERRNO							      \
     br	    14
 
 #endif /* __ASSEMBLER__ */

@@ -35,6 +35,7 @@
 
 /* Linux/SPARC uses a different trap number */
 #undef PSEUDO
+#undef PSEUDO_NOERRNO
 #undef ENTRY
 #undef END
 #undef LOC
@@ -107,6 +108,12 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	bcs __syscall_error_handler;				\
 	 nop;							\
 	SYSCALL_ERROR_HANDLER
+
+#define PSEUDO_NOERRNO(name, syscall_name, args)		\
+	.text;							\
+	ENTRY(name);						\
+	LOADSYSCALL(syscall_name);				\
+	ta 0x10
 
 #else  /* __ASSEMBLER__ */
 

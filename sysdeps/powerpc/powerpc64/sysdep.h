@@ -225,6 +225,20 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #define	PSEUDO_END(name) \
   END (name)
 
+#define PSEUDO_NOERRNO(name, syscall_name, args) \
+  .section ".text";	\
+  ENTRY (name) \
+  DO_CALL (SYS_ify (syscall_name));
+
+#define PSEUDO_RET_NOERRNO \
+    blr
+
+#define ret_NOERRNO PSEUDO_RET_NOERRNO
+
+#undef	PSEUDO_END_NOERRNO
+#define	PSEUDO_END_NOERRO(name) \
+  END (name)
+
 /* Label in text section.  */
 /* ppc64 function descriptors which requires . notation */
 #define C_TEXT(name) .##name

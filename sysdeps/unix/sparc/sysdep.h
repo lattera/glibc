@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,14 @@
   jmp %g1 + %lo(syscall_error);	nop;		\
 1:
 
+#define	PSEUDO_NOERRNO(name, syscall_name, args) \
+  .global syscall_error;			\
+  ENTRY (name)					\
+  mov SYS_ify(syscall_name), %g1;		\
+  ta 0
+
 #define	ret		retl; nop
+#define	ret_NOERRNO	retl; nop
 #define	r0		%o0
 #define	r1		%o1
 #define	MOVE(x,y)	mov x, y

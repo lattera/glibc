@@ -1,3 +1,29 @@
+2003-03-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/make-syscalls.sh: Recognize 'E' in first position of
+	the parameter description to denote no error checking.  Generate
+	appropriate pseudo asm code.
+	* sysdeps/unix/syscalls.list: Mark getgid, getpid, getuid with 'E'.
+	* sysdeps/unix/sysv/linux/syscalls.list: Mark getegid, geteuid,
+	getpgrp, and getppid with 'E'.
+	* sysdeps/powerpc/powerpc32/sysdep.h: Define PSEUDO_NOERRNO,
+	PSEUDO_END_NOERRNO, and ret_NOERRNO.
+	* sysdeps/powerpc/powerpc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysdep.h: Likewise.
+	* sysdeps/unix/alpha/sysdep.h: Likewise.
+	* sysdeps/unix/sparc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/cris/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+
 2003-03-23  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (+includes): Don't use $(last-includes).

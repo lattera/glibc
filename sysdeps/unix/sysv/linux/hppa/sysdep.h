@@ -1,5 +1,5 @@
 /* Assembler macros for PA-RISC.
-   Copyright (C) 1999,2001,02 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@cygnus.com>, August 1999.
    Linux/PA-RISC changes by Philipp Rumpf, <prumpf@tux.org>, March 2000.
@@ -84,6 +84,10 @@
 	bv 0(2)					ASM_LINE_SEP	\
 	nop
 
+#define ret_NOERRNO \
+	bv 0(2)					ASM_LINE_SEP	\
+	nop
+
 #undef	END
 #define END(name)						\
 1:	.size	C_SYMBOL_NAME(name),1b-C_SYMBOL_NAME(name)
@@ -113,6 +117,15 @@
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \
+  END (name)
+
+#define	PSEUDO_NOERRNO(name, syscall_name, args)			      \
+  ENTRY (name)								      \
+  DO_CALL(syscall_name, args)					ASM_LINE_SEP  \
+  nop
+
+#undef	PSEUDO_END_NOERRNO
+#define	PSEUDO_END_NOERRNO(name)					      \
   END (name)
 
 #define JUMPTARGET(name)	name

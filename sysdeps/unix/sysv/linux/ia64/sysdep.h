@@ -96,12 +96,21 @@
 #undef PSEUDO_END
 #define PSEUDO_END(name)	.endp C_SYMBOL_NAME(name);
 
+#undef PSEUDO_NOERRNO
+#define	PSEUDO_NOERRNO(name, syscall_name, args)	\
+  ENTRY(name)						\
+    DO_CALL (SYS_ify(syscall_name));
+
+#undef PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(name)	.endp C_SYMBOL_NAME(name);
+
 #undef END
 #define END(name)						\
 	.size	C_SYMBOL_NAME(name), . - C_SYMBOL_NAME(name) ;	\
 	.endp	C_SYMBOL_NAME(name)
 
 #define ret			br.ret.sptk.few b0
+#define ret_NOERRNO		br.ret.sptk.few b0
 
 #else /* not __ASSEMBLER__ */
 

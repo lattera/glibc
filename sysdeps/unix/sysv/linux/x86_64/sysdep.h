@@ -81,6 +81,18 @@
   SYSCALL_ERROR_HANDLER							      \
   END (name)
 
+#undef	PSEUDO_NOERRNO
+#define	PSEUDO_NOERRNO(name, syscall_name, args) \
+  .text;								      \
+  ENTRY (name)								      \
+    DO_CALL (syscall_name, args)
+
+#undef	PSEUDO_END_NOERRNO
+#define	PSEUDO_END_NOERRNO(name) \
+  END (name)
+
+#define ret_NOERRNO ret
+
 #ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #elif RTLD_PRIVATE_ERRNO
@@ -168,7 +180,7 @@
     called the stack is not aligned since the return address has just
     been pushed.
 
-     
+
     Syscalls of more than 6 arguments are not supported.  */
 
 #undef	DO_CALL

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 98, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,9 @@
    to generate correct debugging information.  */
 #ifndef PSEUDO_END
 #define PSEUDO_END(sym)
+#endif
+#ifndef PSEUDO_END_NOENTRY
+#define PSEUDO_END_NOENTRY(sym)
 #endif
 
 /* Wrappers around system calls should normally inline the system call code.

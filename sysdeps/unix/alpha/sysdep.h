@@ -119,6 +119,21 @@ $syscall_error:					\
 	END(sym)
 #endif
 
+#define PSEUDO_NOERRNO(name, syscall_name, args)	\
+	.globl name;					\
+	.align 4;					\
+	.ent name,0;					\
+__LABEL(name)						\
+	PSEUDO_PROLOGUE;				\
+	PSEUDO_PREPARE_ARGS				\
+	lda	v0, SYS_ify(syscall_name);		\
+	call_pal PAL_callsys;
+
+#undef PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(sym)  END(sym)
+
+#define ret_NOERRNO ret
+
 #define r0	v0
 #define r1	a4
 
@@ -167,8 +182,8 @@ $syscall_error:					\
 /* If TLS is in use, we have a conflict between the PAL_rduniq primitive,
    as modeled within GCC, and explicit use of the R0 register.  If we use
    the register via the asm, the scheduler may place the PAL_rduniq insn
-   before we've copied the data from R0 into _sc_ret.  If this happens 
-   we'll get a reload abort, since R0 is live at the same time it is 
+   before we've copied the data from R0 into _sc_ret.  If this happens
+   we'll get a reload abort, since R0 is live at the same time it is
    needed for the PAL_rduniq.
 
    Solve this by using the "v" constraint instead of an asm for the syscall
