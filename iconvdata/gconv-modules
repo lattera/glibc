@@ -1214,3 +1214,7 @@ module	INTERNAL		UTF-7//			UTF-7		1
 #	from			to			module		cost
 module	GB18030//		INTERNAL		GB18030		1
 module	INTERNAL		GB18030//		GB18030		1
+
+#	from			to			module		cost
+module	VISCII//		INTERNAL		VISCII		1
+module	INTERNAL		VISCII//		VISCII		1

@@ -179,6 +179,7 @@ cat <<EOF |
   ISO-IR-197
   TIS-620
   KOI8-U
+  VISCII
   #ISIRI-3342                         This charset concept is completely broken
   #
   # Multibyte encodings come here

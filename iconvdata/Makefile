@@ -46,7 +46,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO_5428 ISO_10367-BOX MAC-IS MAC-UK NATS-DANO NATS-SEFI	 \
 	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342 GBGBK	 \
 	   ISO-2022-CN libISOIR165 UTF-16 UNICODE UTF-7 BIG5HKSCS	 \
-	   GB18030 ISO-2022-CN-EXT
+	   GB18030 ISO-2022-CN-EXT VISCII
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -147,8 +147,7 @@ extra-objs	+= $(modules.so)
 install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 		  $(inst_gconvdir)/gconv-modules
 
-# If we have the localedata add-on available we can build the conversion
-# tables for numerous charsets.
+# We can build the conversion tables for numerous charsets automatically.
 
 gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
 		    hp-roman8 ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr	    \
@@ -156,7 +155,7 @@ gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
 		    ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a ebcdic-fr	    \
 		    ebcdic-is-friss ebcdic-it ebcdic-pt ebcdic-uk ebcdic-us \
 		    ibm037 ibm038 ibm274 ibm275 ibm423 ibm500 ibm870 ibm871 \
-		    ibm891 ibm903 ibm904 ibm905 ibm1047 iso8859-16
+		    ibm891 ibm903 ibm904 ibm905 ibm1047 iso8859-16 viscii
 
 gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm277 ibm278 ibm280 ibm281 ibm284 ibm285 ibm290   \

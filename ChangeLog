@@ -1,3 +1,11 @@
+2000-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add VISCII.
+	(gen-8bit-modules): Add viscii.
+	* iconvdata/viscii.c: New file.
+	* iconvdata/gconv-modules: Add entries for VISCII.
+	* iconvdata/tst-tables.sh: Add VISCII.
+
 2000-10-27  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Add some more ulps.

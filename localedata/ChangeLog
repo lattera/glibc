@@ -1,3 +1,7 @@
+2000-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/VISCII: New file.
+
 2000-10-27  Bruno Haible  <haible@clisp.cons.org>
 
 	* locales/sr_YU@cyrillic: New file. Based on a locale file by
