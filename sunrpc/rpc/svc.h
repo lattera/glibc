@@ -1,4 +1,3 @@
-/* @(#)svc.h	2.2 88/07/29 4.0 RPCSRC; from 1.20 88/02/08 SMI */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -147,12 +146,12 @@ struct SVCXPRT {
  * Service request
  */
 struct svc_req {
-	u_long		rq_prog;	/* service program number */
-	u_long		rq_vers;	/* service protocol version */
-	u_long		rq_proc;	/* the desired procedure */
-	struct opaque_auth rq_cred;	/* raw creds from the wire */
-	caddr_t		rq_clntcred;	/* read only cooked cred */
-	SVCXPRT	*rq_xprt;		/* associated transport */
+  rpcprog_t rq_prog;            /* service program number */
+  rpcvers_t rq_vers;            /* service protocol version */
+  rpcproc_t rq_proc;            /* the desired procedure */
+  struct opaque_auth rq_cred;   /* raw creds from the wire */
+  caddr_t rq_clntcred;          /* read only cooked cred */
+  SVCXPRT *rq_xprt;             /* associated transport */
 };
 
 #ifndef __DISPATCH_FN_T
@@ -165,23 +164,23 @@ typedef void (*__dispatch_fn_t) __PMT ((struct svc_req*, SVCXPRT*));
  *
  * svc_register(xprt, prog, vers, dispatch, protocol)
  *	SVCXPRT *xprt;
- *	u_long prog;
- *	u_long vers;
+ *	rpcprog_t prog;
+ *	rpcvers_t vers;
  *	void (*dispatch)();
- *	u_long protocol;  like TCP or UDP, zero means do not register
+ *	rpcprot_t protocol;  like TCP or UDP, zero means do not register
  */
-extern bool_t	svc_register __P ((SVCXPRT *__xprt, u_long __prog,
-				   u_long __vers, __dispatch_fn_t __dispatch,
-				   u_long __protocol));
+extern bool_t svc_register __P ((SVCXPRT *__xprt, rpcprog_t __prog,
+				 rpcvers_t __vers, __dispatch_fn_t __dispatch,
+				 rpcprot_t __protocol));
 
 /*
  * Service un-registration
  *
  * svc_unregister(prog, vers)
- *	u_long prog;
- *	u_long vers;
+ *	rpcprog_t prog;
+ *	rpcvers_t vers;
  */
-extern void	svc_unregister __P ((u_long __prog, u_long __vers));
+extern void svc_unregister __P ((rpcprog_t __prog, rpcvers_t __vers));
 
 /*
  * Transport registration.
@@ -189,7 +188,7 @@ extern void	svc_unregister __P ((u_long __prog, u_long __vers));
  * xprt_register(xprt)
  *	SVCXPRT *xprt;
  */
-extern void	xprt_register __P ((SVCXPRT *__xprt));
+extern void xprt_register __P ((SVCXPRT *__xprt));
 
 /*
  * Transport un-register
@@ -197,9 +196,7 @@ extern void	xprt_register __P ((SVCXPRT *__xprt));
  * xprt_unregister(xprt)
  *	SVCXPRT *xprt;
  */
-extern void	xprt_unregister __P ((SVCXPRT *__xprt));
-
-
+extern void xprt_unregister __P ((SVCXPRT *__xprt));
 
 
 /*
@@ -237,8 +234,8 @@ extern void	svcerr_weakauth __P ((SVCXPRT *__xprt));
 
 extern void	svcerr_noproc __P ((SVCXPRT *__xprt));
 
-extern void	svcerr_progvers __P ((SVCXPRT *__xprt, u_long __low_vers,
-				      u_long __high_vers));
+extern void	svcerr_progvers __P ((SVCXPRT *__xprt, rpcvers_t __low_vers,
+				      rpcvers_t __high_vers));
 
 extern void	svcerr_auth __P ((SVCXPRT *__xprt, enum auth_stat __why));
 
@@ -261,19 +258,20 @@ extern void	svcerr_systemerr __P ((SVCXPRT *__xprt));
  * Global keeper of rpc service descriptors in use
  * dynamic; must be inspected before each call to select
  */
-#ifdef FD_SETSIZE
+
+extern struct pollfd *svc_pollfd;
+extern int svc_max_pollfd;
 extern fd_set svc_fdset;
 #define svc_fds svc_fdset.fds_bits[0]	/* compatibility */
-#else
-extern int svc_fds;
-#endif /* def FD_SETSIZE */
 
 /*
  * a small program implemented by the svc_rpc implementation itself;
  * also see clnt.h for protocol numbers.
  */
 extern void svc_getreq __P ((int __rdfds));
+extern void svc_getreq_common __P ((const int __fd));
 extern void svc_getreqset __P ((fd_set *__readfds));
+extern void svc_getreq_poll __P ((struct pollfd *, const int));
 extern void svc_exit __P ((void));
 extern void svc_run __P ((void));
 

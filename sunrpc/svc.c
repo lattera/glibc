@@ -1,4 +1,3 @@
-/* @(#)svc.c	2.4 88/08/11 4.0 RPCSRC; from 1.44 88/02/08 SMI */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,10 +26,6 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)svc.c 1.41 87/10/13 Copyr 1984 Sun Micro";
-#endif
-
 /*
  * svc.c, Server-side remote procedure call interface.
  *
@@ -42,170 +37,99 @@ static char sccsid[] = "@(#)svc.c 1.41 87/10/13 Copyr 1984 Sun Micro";
  */
 
 #include <errno.h>
+#include <unistd.h>
 #include <rpc/rpc.h>
 #include <rpc/svc.h>
 #include <rpc/pmap_clnt.h>
+#include <sys/poll.h>
 
-#ifndef errno
-extern int errno;
-#endif
-
-#ifdef FD_SETSIZE
 static SVCXPRT **xports;
-#else
-#define NOFILE 32
-
-static SVCXPRT *xports[NOFILE];
-#endif /* def FD_SETSIZE */
 
 #define NULL_SVC ((struct svc_callout *)0)
 #define	RQCRED_SIZE	400	/* this size is excessive */
 
-/*
- * The services list
- * Each entry represents a set of procedures (an rpc program).
- * The dispatch routine takes request structs and runs the
- * appropriate procedure.
- */
-static struct svc_callout
-  {
-    struct svc_callout *sc_next;
-    u_long sc_prog;
-    u_long sc_vers;
-    void (*sc_dispatch) (struct svc_req *, SVCXPRT *);
-  }
- *svc_head;
-
-static struct svc_callout *svc_find (u_long, u_long, struct svc_callout **);
+/* The services list
+   Each entry represents a set of procedures (an rpc program).
+   The dispatch routine takes request structs and runs the
+   appropriate procedure. */
+static struct svc_callout {
+  struct svc_callout *sc_next;
+  rpcprog_t sc_prog;
+  rpcvers_t sc_vers;
+  void (*sc_dispatch) (struct svc_req *, SVCXPRT *);
+} *svc_head;
 
 /* ***************  SVCXPRT related stuff **************** */
 
-/*
- * Activate a transport handle.
- */
+/* Activate a transport handle. */
 void
 xprt_register (SVCXPRT *xprt)
 {
   register int sock = xprt->xp_sock;
+  register int i;
 
-#ifdef FD_SETSIZE
   if (xports == NULL)
     {
-      xports = (SVCXPRT **)
-	mem_alloc (FD_SETSIZE * sizeof (SVCXPRT *));
+      xports = (SVCXPRT **) malloc (_rpc_dtablesize () * sizeof (SVCXPRT *));
+      if (xports == NULL) /* Don´t add handle */
+	return;
     }
+
   if (sock < _rpc_dtablesize ())
     {
       xports[sock] = xprt;
-      FD_SET (sock, &svc_fdset);
-    }
-#else
-  if (sock < NOFILE)
-    {
-      xports[sock] = xprt;
-      svc_fds |= (1 << sock);
-    }
-#endif /* def FD_SETSIZE */
+      if (sock < FD_SETSIZE)
+	FD_SET (sock, &svc_fdset);
 
+      /* Check if we have an empty slot */
+      for (i = 0; i < svc_max_pollfd; ++i)
+	if (svc_pollfd[i].fd == -1)
+	  {
+	    svc_pollfd[i].fd = sock;
+	    svc_pollfd[i].events = (POLLIN | POLLPRI |
+				    POLLRDNORM | POLLRDBAND);
+	    return;
+	  }
+
+      ++svc_max_pollfd;
+      svc_pollfd = realloc (svc_pollfd,
+			    sizeof (struct pollfd) * svc_max_pollfd);
+      if (svc_pollfd == NULL) /* Out of memory */
+	return;
+
+      svc_pollfd[svc_max_pollfd - 1].fd = sock;
+      svc_pollfd[svc_max_pollfd - 1].events = (POLLIN | POLLPRI |
+					       POLLRDNORM | POLLRDBAND);
+    }
 }
 
-/*
- * De-activate a transport handle.
- */
+/* De-activate a transport handle. */
 void
-xprt_unregister (xprt)
-     SVCXPRT *xprt;
+xprt_unregister (SVCXPRT *xprt)
 {
   register int sock = xprt->xp_sock;
+  register int i;
 
-#ifdef FD_SETSIZE
   if ((sock < _rpc_dtablesize ()) && (xports[sock] == xprt))
     {
       xports[sock] = (SVCXPRT *) 0;
-      FD_CLR (sock, &svc_fdset);
+
+      if (sock < FD_SETSIZE)
+	FD_CLR (sock, &svc_fdset);
+
+      for (i = 0; i < svc_max_pollfd; ++i)
+	if (svc_pollfd[i].fd == sock)
+	  svc_pollfd[i].fd = -1;
     }
-#else
-  if ((sock < NOFILE) && (xports[sock] == xprt))
-    {
-      xports[sock] = (SVCXPRT *) 0;
-      svc_fds &= ~(1 << sock);
-    }
-#endif /* def FD_SETSIZE */
 }
 
 
 /* ********************** CALLOUT list related stuff ************* */
 
-/*
- * Add a service program to the callout list.
- * The dispatch routine will be called when a rpc request for this
- * program number comes in.
- */
-bool_t
-svc_register (SVCXPRT *xprt, u_long prog, u_long vers,
-	      void (*dispatch) (struct svc_req *, SVCXPRT *), u_long protocol)
-{
-  struct svc_callout *prev;
-  register struct svc_callout *s;
-
-  if ((s = svc_find (prog, vers, &prev)) != NULL_SVC)
-    {
-      if (s->sc_dispatch == dispatch)
-	goto pmap_it;		/* he is registering another xptr */
-      return FALSE;
-    }
-  s = (struct svc_callout *) mem_alloc (sizeof (struct svc_callout));
-  if (s == (struct svc_callout *) 0)
-    {
-      return FALSE;
-    }
-  s->sc_prog = prog;
-  s->sc_vers = vers;
-  s->sc_dispatch = dispatch;
-  s->sc_next = svc_head;
-  svc_head = s;
-pmap_it:
-  /* now register the information with the local binder service */
-  if (protocol)
-    {
-      return pmap_set (prog, vers, protocol, xprt->xp_port);
-    }
-  return TRUE;
-}
-
-/*
- * Remove a service program from the callout list.
- */
-void
-svc_unregister (prog, vers)
-     u_long prog;
-     u_long vers;
-{
-  struct svc_callout *prev;
-  register struct svc_callout *s;
-
-  if ((s = svc_find (prog, vers, &prev)) == NULL_SVC)
-    return;
-  if (prev == NULL_SVC)
-    {
-      svc_head = s->sc_next;
-    }
-  else
-    {
-      prev->sc_next = s->sc_next;
-    }
-  s->sc_next = NULL_SVC;
-  mem_free ((char *) s, (u_int) sizeof (struct svc_callout));
-  /* now unregister the information with the local binder service */
-  (void) pmap_unset (prog, vers);
-}
-
-/*
- * Search the callout list for a program number, return the callout
- * struct.
- */
+/* Search the callout list for a program number, return the callout
+   struct. */
 static struct svc_callout *
-svc_find (u_long prog, u_long vers, struct svc_callout **prev)
+svc_find (rpcprog_t prog, rpcvers_t vers, struct svc_callout **prev)
 {
   register struct svc_callout *s, *p;
 
@@ -221,16 +145,68 @@ done:
   return s;
 }
 
+/* Add a service program to the callout list.
+   The dispatch routine will be called when a rpc request for this
+   program number comes in. */
+bool_t
+svc_register (SVCXPRT * xprt, rpcprog_t prog, rpcvers_t vers,
+	      void (*dispatch) (struct svc_req *, SVCXPRT *),
+	      rpcproc_t protocol)
+{
+  struct svc_callout *prev;
+  register struct svc_callout *s;
+
+  if ((s = svc_find (prog, vers, &prev)) != NULL_SVC)
+    {
+      if (s->sc_dispatch == dispatch)
+	goto pmap_it;		/* he is registering another xptr */
+      return FALSE;
+    }
+  s = (struct svc_callout *) mem_alloc (sizeof (struct svc_callout));
+  if (s == (struct svc_callout *) 0)
+    return FALSE;
+
+  s->sc_prog = prog;
+  s->sc_vers = vers;
+  s->sc_dispatch = dispatch;
+  s->sc_next = svc_head;
+  svc_head = s;
+
+pmap_it:
+  /* now register the information with the local binder service */
+  if (protocol)
+    return pmap_set (prog, vers, protocol, xprt->xp_port);
+
+  return TRUE;
+}
+
+/* Remove a service program from the callout list. */
+void
+svc_unregister (rpcprog_t prog, rpcvers_t vers)
+{
+  struct svc_callout *prev;
+  register struct svc_callout *s;
+
+  if ((s = svc_find (prog, vers, &prev)) == NULL_SVC)
+    return;
+
+  if (prev == NULL_SVC)
+    svc_head = s->sc_next;
+  else
+    prev->sc_next = s->sc_next;
+
+  s->sc_next = NULL_SVC;
+  mem_free ((char *) s, (u_int) sizeof (struct svc_callout));
+  /* now unregister the information with the local binder service */
+  pmap_unset (prog, vers);
+}
+
 /* ******************* REPLY GENERATION ROUTINES  ************ */
 
-/*
- * Send a reply to an rpc request
- */
+/* Send a reply to an rpc request */
 bool_t
-svc_sendreply (xprt, xdr_results, xdr_location)
-     register SVCXPRT *xprt;
-     xdrproc_t xdr_results;
-     caddr_t xdr_location;
+svc_sendreply (register SVCXPRT *xprt, xdrproc_t xdr_results,
+	       caddr_t xdr_location)
 {
   struct rpc_msg rply;
 
@@ -243,12 +219,9 @@ svc_sendreply (xprt, xdr_results, xdr_location)
   return SVC_REPLY (xprt, &rply);
 }
 
-/*
- * No procedure error reply
- */
+/* No procedure error reply */
 void
-svcerr_noproc (xprt)
-     register SVCXPRT *xprt;
+svcerr_noproc (register SVCXPRT *xprt)
 {
   struct rpc_msg rply;
 
@@ -259,12 +232,9 @@ svcerr_noproc (xprt)
   SVC_REPLY (xprt, &rply);
 }
 
-/*
- * Can't decode args error reply
- */
+/* Can't decode args error reply */
 void
-svcerr_decode (xprt)
-     register SVCXPRT *xprt;
+svcerr_decode (register SVCXPRT *xprt)
 {
   struct rpc_msg rply;
 
@@ -275,12 +245,9 @@ svcerr_decode (xprt)
   SVC_REPLY (xprt, &rply);
 }
 
-/*
- * Some system error
- */
+/* Some system error */
 void
-svcerr_systemerr (xprt)
-     register SVCXPRT *xprt;
+svcerr_systemerr (register SVCXPRT *xprt)
 {
   struct rpc_msg rply;
 
@@ -291,13 +258,9 @@ svcerr_systemerr (xprt)
   SVC_REPLY (xprt, &rply);
 }
 
-/*
- * Authentication error reply
- */
+/* Authentication error reply */
 void
-svcerr_auth (xprt, why)
-     SVCXPRT *xprt;
-     enum auth_stat why;
+svcerr_auth (SVCXPRT *xprt, enum auth_stat why)
 {
   struct rpc_msg rply;
 
@@ -308,23 +271,16 @@ svcerr_auth (xprt, why)
   SVC_REPLY (xprt, &rply);
 }
 
-/*
- * Auth too weak error reply
- */
+/* Auth too weak error reply */
 void
-svcerr_weakauth (xprt)
-     SVCXPRT *xprt;
+svcerr_weakauth (SVCXPRT *xprt)
 {
-
   svcerr_auth (xprt, AUTH_TOOWEAK);
 }
 
-/*
- * Program unavailable error reply
- */
+/* Program unavailable error reply */
 void
-svcerr_noprog (xprt)
-     register SVCXPRT *xprt;
+svcerr_noprog (register SVCXPRT *xprt)
 {
   struct rpc_msg rply;
 
@@ -335,14 +291,10 @@ svcerr_noprog (xprt)
   SVC_REPLY (xprt, &rply);
 }
 
-/*
- * Program version mismatch error reply
- */
+/* Program version mismatch error reply */
 void
-svcerr_progvers (xprt, low_vers, high_vers)
-     register SVCXPRT *xprt;
-     u_long low_vers;
-     u_long high_vers;
+svcerr_progvers (register SVCXPRT *xprt, rpcvers_t low_vers,
+		 rpcvers_t high_vers)
 {
   struct rpc_msg rply;
 
@@ -376,127 +328,139 @@ svcerr_progvers (xprt, low_vers, high_vers)
 void
 svc_getreq (int rdfds)
 {
-#ifdef FD_SETSIZE
   fd_set readfds;
 
   FD_ZERO (&readfds);
   readfds.fds_bits[0] = rdfds;
   svc_getreqset (&readfds);
-#else
-  int readfds = rdfds & svc_fds;
-
-  svc_getreqset (&readfds);
-#endif /* def FD_SETSIZE */
 }
 
 void
-svc_getreqset (readfds)
-#ifdef FD_SETSIZE
-     fd_set *readfds;
+svc_getreqset (fd_set *readfds)
 {
-#else
-     int *readfds;
-{
-  int readfds_local = *readfds;
-#endif /* def FD_SETSIZE */
-  enum xprt_stat stat;
-  struct rpc_msg msg;
-  int prog_found;
-  u_long low_vers;
-  u_long high_vers;
-  struct svc_req r;
-  register SVCXPRT *xprt;
-  register u_long mask;
-  register int bit;
+  register u_int32_t mask;
   register u_int32_t *maskp;
   register int setsize;
   register int sock;
-  char cred_area[2 * MAX_AUTH_BYTES + RQCRED_SIZE];
-  msg.rm_call.cb_cred.oa_base = cred_area;
-  msg.rm_call.cb_verf.oa_base = &(cred_area[MAX_AUTH_BYTES]);
-  r.rq_clntcred = &(cred_area[2 * MAX_AUTH_BYTES]);
+  register int bit;
 
-
-#ifdef FD_SETSIZE
   setsize = _rpc_dtablesize ();
   maskp = (u_int32_t *) readfds->fds_bits;
   for (sock = 0; sock < setsize; sock += 32)
+    for (mask = *maskp++; (bit = ffs (mask)); mask ^= (1 << (bit - 1)))
+      svc_getreq_common (sock + bit - 1);
+}
+
+void
+svc_getreq_poll (struct pollfd *pfdp, int pollretval)
+{
+  register int i;
+  register int fds_found;
+
+  for (i = fds_found = 0; i < svc_max_pollfd && fds_found < pollretval; ++i)
     {
-      for (mask = *maskp++; (bit = ffs (mask)); mask ^= (1 << (bit - 1)))
+      register struct pollfd *p = &pfdp[i];
+
+      if (p->fd != -1 && p->revents)
 	{
-	  /* sock has input waiting */
-	  xprt = xports[sock + bit - 1];
-#else
-  for (sock = 0; readfds_local != 0; sock++, readfds_local >>= 1)
-    {
-      if ((readfds_local & 1) != 0)
-	{
-	  /* sock has input waiting */
-	  xprt = xports[sock];
-#endif /* def FD_SETSIZE */
-	  if (xprt == NULL)
-	    /* But do we control sock? */
-	    continue;
+	  /* fd has input waiting */
+	  ++fds_found;
 
-	  /* now receive msgs from xprtprt (support batch calls) */
-	  do
-	    {
-	      if (SVC_RECV (xprt, &msg))
-		{
-
-		  /* now find the exported program and call it */
-		  register struct svc_callout *s;
-		  enum auth_stat why;
-
-		  r.rq_xprt = xprt;
-		  r.rq_prog = msg.rm_call.cb_prog;
-		  r.rq_vers = msg.rm_call.cb_vers;
-		  r.rq_proc = msg.rm_call.cb_proc;
-		  r.rq_cred = msg.rm_call.cb_cred;
-		  /* first authenticate the message */
-		  if ((why = _authenticate (&r, &msg)) != AUTH_OK)
-		    {
-		      svcerr_auth (xprt, why);
-		      goto call_done;
-		    }
-		  /* now match message with a registered service */
-		  prog_found = FALSE;
-		  low_vers = 0 - 1;
-		  high_vers = 0;
-		  for (s = svc_head; s != NULL_SVC; s = s->sc_next)
-		    {
-		      if (s->sc_prog == r.rq_prog)
-			{
-			  if (s->sc_vers == r.rq_vers)
-			    {
-			      (*s->sc_dispatch) (&r, xprt);
-			      goto call_done;
-			    }	/* found correct version */
-			  prog_found = TRUE;
-			  if (s->sc_vers < low_vers)
-			    low_vers = s->sc_vers;
-			  if (s->sc_vers > high_vers)
-			    high_vers = s->sc_vers;
-			}	/* found correct program */
-		    }
-		  /*
-		   * if we got here, the program or version
-		   * is not served ...
-		   */
-		  if (prog_found)
-		    svcerr_progvers (xprt, low_vers, high_vers);
-		  else
-		    svcerr_noprog (xprt);
-		  /* Fall through to ... */
-		}
-	    call_done:
-	      if ((stat = SVC_STAT (xprt)) == XPRT_DIED)
-		{
-		  SVC_DESTROY (xprt);
-		  break;
-		}
-	    }
-	  while (stat == XPRT_MOREREQS);
+	  if (p->revents & POLLNVAL)
+	    xprt_unregister (p->fd);
+	  else
+	    svc_getreq_common (p->fd);
 	}
     }
+}
+
+
+void
+svc_getreq_common (const int fd)
+{
+  enum xprt_stat stat;
+  struct rpc_msg msg;
+  register SVCXPRT *xprt;
+  char cred_area[2 * MAX_AUTH_BYTES + RQCRED_SIZE];
+  msg.rm_call.cb_cred.oa_base = cred_area;
+  msg.rm_call.cb_verf.oa_base = &(cred_area[MAX_AUTH_BYTES]);
+
+  xprt = xports[fd];
+  /* Do we control fd? */
+  if (xprt == NULL)
+     return;
+
+  /* now receive msgs from xprtprt (support batch calls) */
+  do
+    {
+      if (SVC_RECV (xprt, &msg))
+	{
+	  /* now find the exported program and call it */
+	  struct svc_callout *s;
+	  struct svc_req r;
+	  enum auth_stat why;
+	  rpcvers_t low_vers;
+	  rpcvers_t high_vers;
+	  int prog_found;
+
+	  r.rq_clntcred = &(cred_area[2 * MAX_AUTH_BYTES]);
+	  r.rq_xprt = xprt;
+	  r.rq_prog = msg.rm_call.cb_prog;
+	  r.rq_vers = msg.rm_call.cb_vers;
+	  r.rq_proc = msg.rm_call.cb_proc;
+	  r.rq_cred = msg.rm_call.cb_cred;
+
+	  /* first authenticate the message */
+	  /* Check for null flavor and bypass these calls if possible */
+
+	  if (msg.rm_call.cb_cred.oa_flavor == AUTH_NULL)
+	    {
+	      r.rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
+	      r.rq_xprt->xp_verf.oa_length = 0;
+	    }
+	  else if ((why = _authenticate (&r, &msg)) != AUTH_OK)
+	    {
+	      svcerr_auth (xprt, why);
+	      goto call_done;
+	    }
+
+	  /* now match message with a registered service */
+	  prog_found = FALSE;
+	  low_vers = 0 - 1;
+	  high_vers = 0;
+
+	  for (s = svc_head; s != NULL_SVC; s = s->sc_next)
+	    {
+	      if (s->sc_prog == r.rq_prog)
+		{
+		  if (s->sc_vers == r.rq_vers)
+		    {
+		      (*s->sc_dispatch) (&r, xprt);
+		      goto call_done;
+		    }
+		  /* found correct version */
+		  prog_found = TRUE;
+		  if (s->sc_vers < low_vers)
+		    low_vers = s->sc_vers;
+		  if (s->sc_vers > high_vers)
+		    high_vers = s->sc_vers;
+		}
+	      /* found correct program */
+	    }
+	  /* if we got here, the program or version
+	     is not served ... */
+	  if (prog_found)
+	    svcerr_progvers (xprt, low_vers, high_vers);
+	  else
+	    svcerr_noprog (xprt);
+	  /* Fall through to ... */
+	}
+    call_done:
+      if ((stat = SVC_STAT (xprt)) == XPRT_DIED)
+	{
+	  SVC_DESTROY (xprt);
+	  break;
+	}
+    }
+  while (stat == XPRT_MOREREQS);
 }

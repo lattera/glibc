@@ -40,4 +40,9 @@ _IO_putc (c, fp)
 
 #ifdef weak_alias
 weak_alias (_IO_putc, putc)
+
+#ifndef _IO_MTSAFE_IO
+#undef putc_unlocked
+weak_alias (_IO_putc, putc_unlocked)
+#endif
 #endif

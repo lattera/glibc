@@ -1,4 +1,3 @@
-/* @(#)types.h	2.3 88/08/15 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,8 +26,6 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-/*      @(#)types.h 1.18 87/07/24 SMI      */
-
 /* fixincludes should not add extern "C" to this file */
 /*
  * Rpc additions to <sys/types.h>
@@ -38,6 +35,12 @@
 
 typedef int bool_t;
 typedef int enum_t;
+/* This needs to be changed to uint32_t in the future */
+typedef unsigned long rpcprog_t;
+typedef unsigned long rpcvers_t;
+typedef unsigned long rpcproc_t;
+typedef unsigned long rpcprot_t;
+typedef unsigned long rpcport_t;
 
 #define        __dontcare__    -1
 

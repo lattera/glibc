@@ -40,3 +40,8 @@ getchar ()
   _IO_cleanup_region_end (0);
   return result;
 }
+
+#if defined weak_alias && !defined _IO_MTSAFE_IO
+#undef getchar_unlocked
+weak_alias (getchar, getchar_unlocked)
+#endif

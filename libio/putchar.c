@@ -34,3 +34,8 @@ putchar (c)
   _IO_cleanup_region_end (0);
   return result;
 }
+
+#if defined weak_alias && !defined _IO_MTSAFE_IO
+#undef putchar_unlocked
+weak_alias (putchar, putchar_unlocked)
+#endif

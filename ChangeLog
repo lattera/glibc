@@ -1,3 +1,53 @@
+1999-07-30  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (GET_NPROCS_PARSER): New
+	definition.
+	(__get_nprocs): Use it.
+	(__get_nprocs_conf): Define as separate function if
+	GET_NPROCS_CONF_PARSER is defined.
+	* sysdeps/unix/sysv/linux/alpha/getsysstats.c: New file.
+
+	* include/sys/sysinfo.h: New file.
+	* sysdeps/generic/sys/sysinfo.h: Remove declaration of internal
+	interface.
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Likewise.
+
+1999-07-30  H.J. Lu  <hjl@gnu.org>
+
+	* libio/iofflush.c (fflush_unlocked): Weak aliase if
+	_IO_MTSAFE_IO is not defined.
+	* libio/clearerr.c (clearerr_unlocked): Likewise.
+	* libio/feof.c (feof_unlocked): Likewise.
+	* libio/ferror.c (ferror_unlocked): Likewise.
+	* libio/fputc.c (fputc_unlocked): Likewise.
+	* libio/getc.c (getc_unlocked, fgetc_unlocked): Likewise.
+	* libio/getchar.c (getchar_unlocked): Likewise.
+	* libio/putc.c (putc_unlocked): Likewise.
+	* libio/putchar.c (putchar_unlocked): Likewise.
+
+1999-07-30  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/Versions: Add svc_getreq_common, svc_getreq_poll,
+	  svc_max_pollfd and svc_pollfd to GLIBC_2.2
+	* sunrpc/rpc/svc.h: Use rpc*_t types, add new prototypes
+	  for svc_run/poll interface.
+	* sunrpc/rpc/types.h: Add rpc*_t typedefs.
+	* sunrpc/rpc_common.c: Add svc_pollfd and svc_max_pollfd as
+	  global variable.
+	* sunrpc/svc.c: Add svc_getreq_poll and svc_getreq_common,
+	  rewrite other svc_getreq* functions to use svc_getreq_common.
+	* sunrpc/svc_run.c: Use poll().
+
+1999-07-30  Andreas Schwab  <schwab@suse.de>
+
+	* Makerules: Put sysd-versions and Versions.all on
+	postclean-generated instead of common-generated.
+
+1999-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/time.texi (Basic CPU Time): Note that clock_t can wrap
+	around and CLOCKS_PER_SEC is 1e6.
+
 1999-07-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Add test for local label subtraction.

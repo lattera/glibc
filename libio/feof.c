@@ -40,4 +40,9 @@ _IO_feof (fp)
 
 #ifdef weak_alias
 weak_alias (_IO_feof, feof)
+
+#ifndef _IO_MTSAFE_IO
+#undef feof_unlocked
+weak_alias (_IO_feof, feof_unlocked)
+#endif
 #endif

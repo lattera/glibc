@@ -1,8 +1,3 @@
-/* @(#)svc_run.c	2.1 88/07/29 4.0 RPCSRC */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)svc_run.c 1.1 87/10/13 Copyr 1984 Sun Micro";
-#endif
-
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -31,60 +26,58 @@ static char sccsid[] = "@(#)svc_run.c 1.1 87/10/13 Copyr 1984 Sun Micro";
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-
 /*
  * This is the rpc server side idle loop
  * Wait for input, call server program.
  */
-#include <errno.h>
-#include <libintl.h>
-#include <rpc/rpc.h>
 
-static int svc_stop;
+#include <errno.h>
+#include <unistd.h>
+#include <libintl.h>
+#include <sys/poll.h>
+#include <rpc/rpc.h>
 
 /* This function can be used as a signal handler to terminate the
    server loop.  */
 void
 svc_exit (void)
 {
-  svc_stop = 1;
+  free (svc_pollfd);
+  svc_pollfd = NULL;
+  svc_max_pollfd = 0;
 }
 
 void
 svc_run (void)
 {
-#ifdef FD_SETSIZE
-  fd_set readfds;
-#else
-  int readfds;
-#endif /* def FD_SETSIZE */
-
-  svc_stop = 0;
+  int i;
 
   for (;;)
     {
-      if (svc_stop)
+      struct pollfd *my_pollfd;
+
+      if (svc_max_pollfd == 0 && svc_pollfd == NULL)
 	return;
 
-#ifdef FD_SETSIZE
-      readfds = svc_fdset;
-#else
-      readfds = svc_fds;
-#endif /* def FD_SETSIZE */
-      switch (__select (_rpc_dtablesize (), &readfds, (fd_set *)NULL,
-			(fd_set *)NULL, (struct timeval *) 0))
+      my_pollfd = malloc (sizeof (struct pollfd) * svc_max_pollfd);
+      for (i = 0; i < svc_max_pollfd; ++i)
+	{
+	  my_pollfd[i].fd = svc_pollfd[i].fd;
+	  my_pollfd[i].events = svc_pollfd[i].events;
+	  my_pollfd[i].revents = 0;
+	}
+
+      switch (i = __poll (my_pollfd, svc_max_pollfd, -1))
 	{
 	case -1:
 	  if (errno == EINTR)
-	    {
-	      continue;
-	    }
-	  perror (_("svc_run: - select failed"));
+	    continue;
+	  perror (_("svc_run: - poll failed"));
 	  return;
 	case 0:
 	  continue;
 	default:
-	  svc_getreqset (&readfds);
+	  svc_getreq_poll (my_pollfd, i);
 	}
     }
 }

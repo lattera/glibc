@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -67,6 +67,25 @@ get_proc_path (char *buffer, size_t bufsize)
 
    But not all systems have support for the /proc filesystem.  If it
    is not available we simply return 1 since there is no way.  */
+
+/* Other architectures use different formats for /proc/cpuinfo.  This
+   provides a hook for alternative parsers.  */
+#ifndef GET_NPROCS_PARSER
+# define GET_NPROCS_PARSER(FP, BUFFER, RESULT)				\
+  do									\
+    {									\
+      (RESULT) = 0;							\
+      /* Read all lines and count the lines starting with the string	\
+	 "processor".  We don't have to fear extremely long lines since	\
+	 the kernel will not generate them.  8192 bytes are really	\
+	 enough.  */							\
+      while (fgets_unlocked (BUFFER, sizeof (BUFFER), FP) != NULL)	\
+	if (strncmp (BUFFER, "processor", 9) == 0)			\
+	  ++(RESULT);							\
+    }									\
+  while (0)
+#endif
+
 int
 __get_nprocs ()
 {
@@ -89,15 +108,7 @@ __get_nprocs ()
       fp = fopen (proc_cpuinfo, "r");
       if (fp != NULL)
 	{
-	  result = 0;
-	  /* Read all lines and count the lines starting with the
-	     string "processor".  We don't have to fear extremely long
-	     lines since the kernel will not generate them.  8192
-	     bytes are really enough.  */
-	  while (fgets_unlocked (buffer, sizeof buffer, fp) != NULL)
-	    if (strncmp (buffer, "processor", 9) == 0)
-	      ++result;
-
+	  GET_NPROCS_PARSER (fp, buffer, result);
 	  fclose (fp);
 	}
     }
@@ -106,12 +117,46 @@ __get_nprocs ()
 }
 weak_alias (__get_nprocs, get_nprocs)
 
+
+#ifdef GET_NPROCS_CONF_PARSER
+/* On some architectures it is possible to distinguish between configured
+   and active cpus.  */
+int
+__get_nprocs_conf ()
+{
+  FILE *fp;
+  char buffer[8192];
+  char *proc_path;
+  int result = 1;
+
+  /* XXX Here will come a test for the new system call.  */
+
+  /* Get mount point of proc filesystem.  */
+  proc_path = get_proc_path (buffer, sizeof buffer);
+
+  /* If we haven't found an appropriate entry return 1.  */
+  if (proc_path != NULL)
+    {
+      char *proc_cpuinfo = alloca (strlen (proc_path) + sizeof ("/cpuinfo"));
+      __stpcpy (__stpcpy (proc_cpuinfo, proc_path), "/cpuinfo");
+
+      fp = fopen (proc_cpuinfo, "r");
+      if (fp != NULL)
+	{
+	  GET_NPROCS_CONF_PARSER (fp, buffer, result);
+	  fclose (fp);
+	}
+    }
+
+  return result;
+}
+#else
 /* As far as I know Linux has no separate numbers for configured and
    available processors.  So make the `get_nprocs_conf' function an
    alias.  */
 strong_alias (__get_nprocs, __get_nprocs_conf)
-weak_alias (__get_nprocs, get_nprocs_conf)
-
+#endif
+weak_alias (__get_nprocs_conf, get_nprocs_conf)
 
 /* General function to get information about memory status from proc
    filesystem.  */

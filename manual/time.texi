@@ -95,11 +95,16 @@ to @code{double}, as in the example above, makes sure that operations
 such as arithmetic and printing work properly and consistently no matter
 what the underlying representation is.
 
+Note that the clock can wrap around.  On a 32bit system with
+@code{CLOCKS_PER_SEC} set to one million a wrap around happens after
+around 36 minutes.
+
 @comment time.h
 @comment ISO
 @deftypevr Macro int CLOCKS_PER_SEC
 The value of this macro is the number of clock ticks per second measured
-by the @code{clock} function.
+by the @code{clock} function.  POSIX requires that this value is one
+million independend of the actual resolution.
 @end deftypevr
 
 @comment time.h

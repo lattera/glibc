@@ -40,4 +40,9 @@ _IO_ferror (fp)
 
 #ifdef weak_alias
 weak_alias (_IO_ferror, ferror)
+
+#ifndef _IO_MTSAFE_IO
+#undef ferror_unlocked
+weak_alias (_IO_ferror, ferror_unlocked)
+#endif
 #endif

@@ -107,4 +107,6 @@ libc {
     xdr_hyper; xdr_u_hyper; xdr_longlong_t; xdr_u_longlong_t;
     xdr_int64_t; xdr_uint64_t;
   }
+  GLIBC_2.2 {
+    svc_getreq_common; svc_getreq_poll; svc_max_pollfd; svc_pollfd;
 }
