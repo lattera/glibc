@@ -307,9 +307,11 @@
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
-   For ia64, s390*, PPC we pick 2.5.64 as the first version with support.  */
+   For ia64, s390*, PPC, x86-64 we pick 2.5.64 as the first version
+   with support.  */
 #if __LINUX_KERNEL_VERSION >= 132416 \
-    && (defined __ia64__ || defined __s390__ || defined __powerpc__)
+    && (defined __ia64__ || defined __s390__ || defined __powerpc__ \
+	|| defined __x86_64__)
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
 
@@ -349,17 +351,21 @@
 
 /* The tgkill syscall was instroduced for i386 in 2.5.75.  For Alpha
    it was introduced in 2.6.0-test1 which unfortunately cannot be
-   distinguished from 2.6.0.  */
+   distinguished from 2.6.0.  On x86-64 it was introduced in
+   2.6.0-test3. */
 #if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__)
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__) \
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __x86_64__)
 # define __ASSUME_TGKILL	1
 #endif
 
 /* The utimes syscall has been available for some architectures
-   forever.  For x86 it was introduced after 2.5.75.  */
+   forever.  For x86 it was introduced after 2.5.75, for x86-64 in
+   2.6.0-test3.  */
 #if defined __alpha__ || defined __ia64__ || defined __hppa__ \
     || defined __sparc__ \
-    || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__)
+    || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
+    || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__)
 # define __ASSUME_UTIMES	1
 #endif
 
@@ -369,7 +375,8 @@
 #endif
 
 /* The fixed version of the posix_fadvise64 syscall appeared in
-   2.6.0-test3.  At least for x86.  */
-#if __LINUX_KERNEL_VERSION >= 132609 && defined __i386__
+   2.6.0-test3.  At least for x86 and amd64.  */
+#if __LINUX_KERNEL_VERSION >= 132609
+     && (defined __i386__ || defined __x86_64__)
 # define __ASSUME_FADVISE64_64_SYSCALL	1
 #endif
