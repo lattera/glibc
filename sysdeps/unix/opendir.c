@@ -131,7 +131,8 @@ __opendir (const char *name)
     goto lose;
 
 #ifdef _STATBUF_ST_BLKSIZE
-  if (__builtin_expect (statbuf.st_blksize < sizeof (struct dirent), 0))
+  if (__builtin_expect ((size_t) statbuf.st_blksize < sizeof (struct dirent),
+			0))
     allocation = sizeof (struct dirent);
   else
     allocation = statbuf.st_blksize;

@@ -1,5 +1,7 @@
 2000-11-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/opendir.c (__opendir): Add cast to avoid warning.
+
 	* inet/getnameinfo.c: Adjust casts to avoid warnings.
 	* inet/rcmd.c: Likewise.
 	* inet/ruserpass.c: Likewise.
