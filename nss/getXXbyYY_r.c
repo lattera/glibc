@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -247,8 +247,7 @@ done:
 #ifdef POSTPROCESS
   POSTPROCESS;
 #endif
-  return (status == NSS_STATUS_SUCCESS ? 0
-	  : status != NSS_STATUS_TRYAGAIN ? ENOENT
+  return (status != NSS_STATUS_TRYAGAIN ? 0
 #ifdef NEED_H_ERRNO
 	  /* These functions only set errno if h_errno is NETDB_INTERNAL.  */
 	  : *h_errnop != NETDB_INTERNAL ? EAGAIN
@@ -269,7 +268,7 @@ OLD (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   int ret = INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, resbuf, buffer,
 				       buflen, result H_ERRNO_VAR);
 
-  if (ret != 0)
+  if (ret != 0 || result == NULL)
     ret = -1;
 
   return ret;

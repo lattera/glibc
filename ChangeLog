@@ -1,5 +1,8 @@
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Return 0 is no entry has
+	been found.
+
 	* sysdeps/posix/sysconf.c (__sysconf): Test for LOGIN_NAME_MAX and
 	TTY_NAME_MAX and not the _POSIX_* minimal value macros.
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Define TTY_NAME_MAX
