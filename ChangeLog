@@ -1,3 +1,10 @@
+1998-09-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/stdio.h: Fix comment.
+
+	* stdio/stdio.h: Make vfscanf, vscanf and vsscanf available if
+	__USE_ISOC9X.
+
 1998-09-06 09:53 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* Makeconfig (+gccwarn): Remove -Wno-parentheses.

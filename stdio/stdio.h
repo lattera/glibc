@@ -480,7 +480,7 @@ extern int scanf __P ((__const char *__restrict __format, ...));
 extern int sscanf __P ((__const char *__restrict __s,
 			__const char *__restrict __format, ...));
 
-#ifdef	__USE_GNU
+#ifdef	__USE_ISOC9X
 /* Read formatted input from S into argument list ARG.  */
 extern int __vfscanf __P ((FILE *__s, __const char *__format,
 			   __gnuc_va_list __arg));
@@ -515,7 +515,7 @@ vsscanf (const char *__s, const char *__fmt, __gnuc_va_list __arg)
   return __vsscanf (__s, __fmt, __arg);
 }
 #endif /* Optimizing.  */
-#endif /* Use GNU.  */
+#endif /* Use ISO C9x.  */
 
 
 /* This does actual reading when necessary, filling STREAM's

@@ -350,7 +350,7 @@ extern int vsscanf __P ((__const char *__restrict __s,
 			 __const char *__restrict __format,
 			 _G_va_list __arg))
      __attribute__ ((__format__ (__scanf__, 2, 0)));
-#endif /* Use GNU.  */
+#endif /* Use ISO C9x.  */
 
 
 /* Read a character from STREAM.  */
