@@ -28,7 +28,7 @@
 void
 __updwtmp (const char *wtmp_file, const struct utmp *utmp)
 {
-  file_name = TRANSFORM_UTMP_FILE_NAME (wtmp_file);
+  const char *file_name = TRANSFORM_UTMP_FILE_NAME (wtmp_file);
 
   (*__libc_utmp_file_functions.updwtmp) (file_name, utmp);
 }
