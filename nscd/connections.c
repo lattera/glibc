@@ -207,7 +207,8 @@ invalidate_cache (char *key)
     number = hstdb;
   else return;
 
-  prune_cache (&dbs[number], LONG_MAX);
+  if (dbs[number].enabled)
+    prune_cache (&dbs[number], LONG_MAX);
 }
 
 

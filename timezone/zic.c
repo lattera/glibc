@@ -465,6 +465,7 @@ char *	argv[];
 	(void) umask(umask(S_IWGRP | S_IWOTH) | (S_IWGRP | S_IWOTH));
 #endif /* defined unix */
 #if HAVE_GETTEXT - 0
+	(void) setlocale(LC_CTYPE, "");
 	(void) setlocale(LC_MESSAGES, "");
 #ifdef TZ_DOMAINDIR
 	(void) bindtextdomain(TZ_DOMAIN, TZ_DOMAINDIR);

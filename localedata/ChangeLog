@@ -1,3 +1,7 @@
+2000-10-22  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/BIG5HKSCS: Add 9 commented irreversible mappings.
+
 2000-10-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1: Handle Macedonian correctly.

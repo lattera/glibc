@@ -1,3 +1,7 @@
+2000-10-23  Andreas Schwab  <schwab@suse.de>
+
+	* Examples/ex14.c (TIMEOUT): Override default timeout.
+
 2000-10-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* specific.c: Protect tsd array modification in thread data

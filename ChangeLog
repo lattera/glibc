@@ -1,3 +1,19 @@
+2000-10-22  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/big5hkscs.c (big5hkscs_to_ucs): Add irreversible mappings
+	for 0x8BF8, 0xA27E..0xA2A7.
+	* iconvdata/BIG5HKSCS.irreversible: New file.
+
+2000-10-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* timezone/zdump.c (main): setlocale LC_CTYPE as well as LC_MESSAGES.
+	* timezone/zic.c (main): Likewise.
+
+2000-10-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/connections.c (invalidate_cache): Don't invalidate a cache
+	if it is not enabled.
+
 2000-10-23  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/s390/fpu/libm-test-ulps: New ulps.
