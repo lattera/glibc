@@ -42,6 +42,15 @@
 #define __MPN(x) __##x
 #endif
 
+#ifndef __P
+# if defined __GNUC__ || (defined (__STDC__) && __STDC__) \
+     || defined (__cplusplus)
+#  define __P(args)	args
+# else
+#  define __P(args)	()
+# endif
+#endif
+
 /* Define auxiliary asm macros.
 
    1) umul_ppmm(high_prod, low_prod, multipler, multiplicand) multiplies two

@@ -1,5 +1,8 @@
 1999-06-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/longlong.h: Provide __P definition if not already
+	defined.
+
 	* include/wchar.h: Use __gnuc_va_list not va_list in prototype.
 
 1999-06-18  Thorsten Kukuk  <kukuk@suse.de>
