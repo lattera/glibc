@@ -1,5 +1,7 @@
 2002-12-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_cond_timedwait.c: Include <stdlib.h>.
+
 	* Makefile (tests): Add tst-fork2 and tst-fork3.
 	* tst-fork2.c: New file.
 	* tst-fork3.c: New file.
