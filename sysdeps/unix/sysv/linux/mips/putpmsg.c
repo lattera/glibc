@@ -1,1 +1,1 @@
-include <sysdeps/unix/sysv/linux/i386/putpmsg.c>
+#include <sysdeps/unix/sysv/linux/i386/putpmsg.c>
