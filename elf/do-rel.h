@@ -59,8 +59,21 @@ elf_dynamic_do_rel (struct link_map *map,
 	(const void *) D_PTR (map, l_info[DT_SYMTAB]);
       ElfW(Word) nrelative = (map->l_info[RELCOUNT_IDX] == NULL
 			      ? 0 : map->l_info[RELCOUNT_IDX]->d_un.d_val);
-      const ElfW(Rel) *endrel = end;
-      end -= nrelative;
+      const ElfW(Rel) *endrel = r + nrelative;
+
+#ifndef RTLD_BOOTSTRAP
+      /* This is defined in rtld.c, but nowhere in the static libc.a; make
+	 the reference weak so static programs can still link.  This
+	 declaration cannot be done when compiling rtld.c (i.e. #ifdef
+	 RTLD_BOOTSTRAP) because rtld.c contains the common defn for
+	 _dl_rtld_map, which is incompatible with a weak decl in the same
+	 file.  */
+      weak_extern (_dl_rtld_map);
+      if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+#endif
+	for (; r < endrel; ++r)
+	  elf_machine_rel_relative (l_addr, r,
+				    (void *) (l_addr + r->r_offset));
 
       if (map->l_info[VERSYMIDX (DT_VERSYM)])
 	{
@@ -79,20 +92,6 @@ elf_dynamic_do_rel (struct link_map *map,
 	for (; r < end; ++r)
 	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
 			   (void *) (l_addr + r->r_offset));
-
-#ifndef RTLD_BOOTSTRAP
-      /* This is defined in rtld.c, but nowhere in the static libc.a; make
-	 the reference weak so static programs can still link.  This
-	 declaration cannot be done when compiling rtld.c (i.e. #ifdef
-	 RTLD_BOOTSTRAP) because rtld.c contains the common defn for
-	 _dl_rtld_map, which is incompatible with a weak decl in the same
-	 file.  */
-      weak_extern (_dl_rtld_map);
-      if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
-#endif
-	for (; r < endrel; ++r)
-	  elf_machine_rel_relative (l_addr, r,
-				    (void *) (l_addr + r->r_offset));
     }
 }
 
