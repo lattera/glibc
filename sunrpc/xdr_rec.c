@@ -51,6 +51,7 @@
 #include <libintl.h>
 
 #ifdef USE_IN_LIBIO
+# include <wchar.h>
 # include <libio/iolibio.h>
 # define fputs(s, f) _IO_fputs (s, f)
 #endif
@@ -145,10 +146,16 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
 {
   RECSTREAM *rstrm = (RECSTREAM *) mem_alloc (sizeof (RECSTREAM));
   caddr_t tmp;
+  char *buf = mem_alloc (sendsize + recvsize + BYTES_PER_XDR_UNIT);
 
-  if (rstrm == NULL)
+  if (rstrm == NULL || buf == NULL)
     {
-      (void) fputs (_("xdrrec_create: out of memory\n"), stderr);
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s", _("xdrrec_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("xdrrec_create: out of memory\n"), stderr);
       /*
        *  This is bad.  Should rework xdrrec_create to
        *  return a handle, and in this case return NULL
@@ -160,12 +167,7 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
    */
   rstrm->sendsize = sendsize = fix_buf_size (sendsize);
   rstrm->recvsize = recvsize = fix_buf_size (recvsize);
-  rstrm->the_buffer = mem_alloc (sendsize + recvsize + BYTES_PER_XDR_UNIT);
-  if (rstrm->the_buffer == NULL)
-    {
-      (void) fputs (_("xdrrec_create: out of memory\n"), stderr);
-      return;
-    }
+  rstrm->the_buffer = buf;
   tmp = rstrm->the_buffer;
   if ((size_t)tmp % BYTES_PER_XDR_UNIT)
     tmp += BYTES_PER_XDR_UNIT - (size_t)tmp % BYTES_PER_XDR_UNIT;

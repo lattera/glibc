@@ -43,6 +43,7 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 
 #ifdef USE_IN_LIBIO
+# include <wchar.h>
 # include <libio/iolibio.h>
 # define fputs(s, f) _IO_fputs (s, f)
 #endif
@@ -154,7 +155,12 @@ clnt_sperror (CLIENT * rpch, const char *msg)
 void
 clnt_perror (CLIENT * rpch, const char *msg)
 {
-  (void) fputs (clnt_sperror (rpch, msg), stderr);
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    (void) __fwprintf (stderr, L"%s", clnt_sperror (rpch, msg));
+  else
+#endif
+    (void) fputs (clnt_sperror (rpch, msg), stderr);
 }
 
 
@@ -281,7 +287,12 @@ clnt_sperrno (enum clnt_stat stat)
 void
 clnt_perrno (enum clnt_stat num)
 {
-  (void) fputs (clnt_sperrno (num), stderr);
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    (void) __fwprintf (stderr, L"%s", clnt_sperrno (num));
+  else
+#endif
+    (void) fputs (clnt_sperrno (num), stderr);
 }
 
 
@@ -323,7 +334,12 @@ clnt_spcreateerror (const char *msg)
 void
 clnt_pcreateerror (const char *msg)
 {
-  (void) fputs (clnt_spcreateerror (msg), stderr);
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    (void) __fwprintf (stderr, L"%s", clnt_spcreateerror (msg));
+  else
+#endif
+    (void) fputs (clnt_spcreateerror (msg), stderr);
 }
 
 struct auth_errtab

@@ -331,8 +331,14 @@ write_gmon (void)
 	  {
 	    char buf[300];
 	    int errnum = errno;
-	    fprintf (stderr, "_mcleanup: gmon.out: %s\n",
-		     __strerror_r (errnum, buf, sizeof buf));
+#ifdef USE_IN_LIBIO
+	    if (_IO_fwide (stderr, 0) > 0)
+	      __fwprintf (stderr, L"_mcleanup: gmon.out: %s\n",
+			  __strerror_r (errnum, buf, sizeof buf));
+	    else
+#endif
+	      fprintf (stderr, "_mcleanup: gmon.out: %s\n",
+		       __strerror_r (errnum, buf, sizeof buf));
 	    return;
 	  }
       }

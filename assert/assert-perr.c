@@ -17,16 +17,17 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sysdep.h>
-#include <libintl.h>
 
 
 extern const char *__progname;
 
 #ifdef USE_IN_LIBIO
+# include <wchar.h>
 # include <libio/iolibio.h>
 # define fflush(s) _IO_fflush (s)
 #endif
@@ -46,17 +47,31 @@ __assert_perror_fail (int errnum,
 		      const char *function)
 {
   char errbuf[1024];
+  char *buf;
+
 #ifdef FATAL_PREPARE
   FATAL_PREPARE;
 #endif
 
+  (void) __asprintf (&buf, _("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
+		     __progname, __progname[0] ? ": " : "",
+		     file, line,
+		     function ? function : "", function ? ": " : "",
+		     __strerror_r (errnum, errbuf, sizeof errbuf));
+
   /* Print the message.  */
-  (void) fprintf (stderr, _("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
-		  __progname, __progname[0] ? ": " : "",
-		  file, line,
-		  function ? function : "", function ? ": " : "",
-		  __strerror_r (errnum, errbuf, sizeof errbuf));
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    (void) __fwprintf (stderr, L"%s", buf);
+  else
+#endif
+    (void) fputs (buf, stderr);
+
   (void) fflush (stderr);
+
+  /* We have to free the buffer since the appplication might catch the
+     SIGABRT.  */
+  free (buf);
 
   abort ();
 }

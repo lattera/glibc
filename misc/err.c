@@ -83,7 +83,7 @@ convert_and_print (const char *format, __gnuc_va_list ap)
     /* The string cannot be converted.  */
     wformat = (wchar_t *) L"???";
 
-  vfwprintf (stderr, wformat, ap);
+  __vfwprintf (stderr, wformat, ap);
 }
 #endif
 
@@ -94,7 +94,7 @@ vwarnx (const char *format, __gnuc_va_list ap)
 #ifdef USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     {
-      fwprintf (stderr, L"%s: ", __progname);
+      __fwprintf (stderr, L"%s: ", __progname);
       convert_and_print (format, ap);
       putwc_unlocked (L'\n', stderr);
     }
@@ -118,14 +118,14 @@ vwarn (const char *format, __gnuc_va_list ap)
 #ifdef USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     {
-      fwprintf (stderr, L"%s: ", __progname);
+      __fwprintf (stderr, L"%s: ", __progname);
       if (format)
 	{
 	  convert_and_print (format, ap);
 	  fputws_unlocked (L": ", stderr);
 	}
       __set_errno (error);
-      fwprintf (stderr, L"%m\n");
+      __fwprintf (stderr, L"%m\n");
     }
   else
 #endif

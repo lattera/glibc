@@ -31,6 +31,7 @@
 
 #include <errno.h>
 #include <ctype.h>
+#include <libintl.h>
 #include <memory.h>
 #include <stdio.h>
 #include <stdio_ext.h>
@@ -43,6 +44,9 @@
 #include <bits/libc-lock.h>
 #include "ifreq.h"
 #include "res_hconf.h"
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 #define _PATH_HOSTCONF	"/etc/host.conf"
 
@@ -138,14 +142,37 @@ arg_service_list (const char *fname, int line_num, const char *args,
       }
       if (service == SERVICE_NONE)
 	{
-	  fprintf (stderr, "%s: line %d: expected service, found `%s'\n",
-		   fname, line_num, start);
+	  char *buf;
+
+	  __asprintf (&buf, _("%s: line %d: expected service, found `%s'\n"),
+		      fname, line_num, start);
+
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stderr, 0) > 0)
+	    fwprintf (stderr, L"%s", buf);
+	  else
+#endif
+	    fputs (buf, stderr);
+
+	  free (buf);
 	  return 0;
 	}
       if (_res_hconf.num_services >= SERVICE_MAX)
 	{
-	  fprintf (stderr, "%s: line %d: cannot specify more than %d services",
-		   fname, line_num, SERVICE_MAX);
+	  char *buf;
+
+	  __asprintf (&buf,
+		      _("%s: line %d: cannot specify more than %d services"),
+		      fname, line_num, SERVICE_MAX);
+
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stderr, 0) > 0)
+	    fwprintf (stderr, L"%s", buf);
+	  else
+#endif
+	    fputs (buf, stderr);
+
+	  free (buf);
 	  return 0;
 	}
       _res_hconf.service[_res_hconf.num_services++] = service;
@@ -159,9 +186,20 @@ arg_service_list (const char *fname, int line_num, const char *args,
 	  args = skip_ws (++args);
 	  if (!*args || *args == '#')
 	    {
-	      fprintf (stderr,
-		       "%s: line %d: list delimiter not followed by keyword",
-		       fname, line_num);
+	      char *buf;
+
+	      __asprintf (&buf, _("\
+%s: line %d: list delimiter not followed by keyword"),
+			  fname, line_num);
+
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stderr, 0) > 0)
+		fwprintf (stderr, L"%s", buf);
+	      else
+#endif
+		fputs (buf, stderr);
+
+	      free (buf);
 	      return 0;
 	    }
 	default:
@@ -188,9 +226,20 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 
       if (_res_hconf.num_trimdomains >= TRIMDOMAINS_MAX)
 	{
-	  fprintf (stderr,
-		   "%s: line %d: cannot specify more than %d trim domains",
-		   fname, line_num, TRIMDOMAINS_MAX);
+	  char *buf;
+
+	  __asprintf (&buf, _("\
+%s: line %d: cannot specify more than %d trim domains"),
+		      fname, line_num, TRIMDOMAINS_MAX);
+
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stderr, 0) > 0)
+		fwprintf (stderr, L"%s", buf);
+	      else
+#endif
+		fputs (buf, stderr);
+
+	      free (buf);
 	  return 0;
 	}
       _res_hconf.trimdomain[_res_hconf.num_trimdomains++] =
@@ -202,9 +251,20 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 	  args = skip_ws (++args);
 	  if (!*args || *args == '#')
 	    {
-	      fprintf (stderr,
-		       "%s: line %d: list delimiter not followed by domain",
-		       fname, line_num);
+	      char *buf;
+
+	      __asprintf (&buf, _("\
+%s: line %d: list delimiter not followed by domain"),
+			  fname, line_num);
+
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stderr, 0) > 0)
+		fwprintf (stderr, L"%s", buf);
+	      else
+#endif
+		fputs (buf, stderr);
+
+	      free (buf);
 	      return 0;
 	    }
 	default:
@@ -253,8 +313,20 @@ arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
     }
   else
     {
-      fprintf (stderr, "%s: line %d: expected `on' or `off', found `%s'\n",
-	       fname, line_num, args);
+      char *buf;
+
+      __asprintf (&buf,
+		  _("%s: line %d: expected `on' or `off', found `%s'\n"),
+		  fname, line_num, args);
+
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	fwprintf (stderr, L"%s", buf);
+      else
+#endif
+	fputs (buf, stderr);
+
+      free (buf);
       return 0;
     }
   return args;
@@ -289,8 +361,19 @@ parse_line (const char *fname, int line_num, const char *str)
     }
   if (c == NULL)
     {
-      fprintf (stderr, "%s: line %d: bad command `%s'\n",
-	       fname, line_num, start);
+      char *buf;
+
+      __asprintf (&buf, _("%s: line %d: bad command `%s'\n"),
+		  fname, line_num, start);
+
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	fwprintf (stderr, L"%s", buf);
+      else
+#endif
+	fputs (buf, stderr);
+
+      free (buf);
       return;
     }
 
@@ -305,8 +388,22 @@ parse_line (const char *fname, int line_num, const char *str)
     {
       if (!isspace (*str)) {
 	if (*str != '#')
-	  fprintf (stderr, "%s: line %d: ignoring trailing garbage `%s'\n",
-		   fname, line_num, str);
+	  {
+	    char *buf;
+
+	    __asprintf (&buf,
+			_("%s: line %d: ignoring trailing garbage `%s'\n"),
+		      fname, line_num, str);
+
+#ifdef USE_IN_LIBIO
+	    if (_IO_fwide (stderr, 0) > 0)
+	      __fwprintf (stderr, L"%s", buf);
+	    else
+#endif
+	      fputs (buf, stderr);
+
+	    free (buf);
+	  }
 	break;
       }
       ++str;

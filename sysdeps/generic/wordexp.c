@@ -18,25 +18,29 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <wordexp.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <pwd.h>
-#include <sys/types.h>
-#include <string.h>
-#include <glob.h>
 #include <ctype.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <fnmatch.h>
+#include <glob.h>
+#include <libintl.h>
+#include <paths.h>
+#include <pwd.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <paths.h>
-#include <errno.h>
-#include <sys/param.h>
-#include <stdio.h>
-#include <fnmatch.h>
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
+#include <wordexp.h>
 
 #include <stdio-common/_itoa.h>
 
@@ -1789,12 +1793,19 @@ envsubst:
 	  if (!colon_seen && value)
 	    /* Substitute NULL */
 	    ;
-	  else if (*pattern)
-	    fprintf (stderr, "%s: %s\n", env, pattern);
 	  else
 	    {
-	      fprintf (stderr, "%s: parameter null or not set\n", env);
-	      error = WRDE_BADVAL;
+	      const char *str = pattern;
+
+	      if (str[0] == '\0')
+		str = gettext ("parameter null or not set");
+
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stderr, 0) > 0)
+		__fwprintf (stderr, L"%s: %s\n", env, str);
+	      else
+#endif
+		fprintf (stderr, "%s: %s\n", env, str);
 	    }
 
 	  if (free_value)

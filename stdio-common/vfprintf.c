@@ -2182,7 +2182,8 @@ __wprintf_pad (FILE *s, wchar_t pad, size_t count)
 # ifdef strong_alias
 /* This is for glibc.  */
 #  ifdef COMPILE_WPRINTF
-strong_alias (_IO_vfwprintf, vfwprintf);
+strong_alias (_IO_vfwprintf, __vfwprintf);
+weak_alias (_IO_vfwprintf, vfwprintf);
 #  else
 strong_alias (_IO_vfprintf, vfprintf);
 #  endif

@@ -79,7 +79,12 @@ getpass (prompt)
     tty_changed = 0;
 
   /* Write the prompt.  */
-  fputs_unlocked (prompt, out);
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (out, 0) > 0)
+    __fwprintf (out, L"%s", prompt);
+  else
+#endif
+    fputs_unlocked (prompt, out);
   fflush_unlocked (out);
 
   /* Read the password.  */
@@ -93,8 +98,15 @@ getpass (prompt)
 	  /* Remove the newline.  */
 	  buf[nread - 1] = '\0';
 	  if (tty_changed)
-	    /* Write the newline that was not echoed.  */
-	    putc_unlocked ('\n', out);
+	    {
+	      /* Write the newline that was not echoed.  */
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (out, 0) > 0)
+		putwc_unlocked (L'\n', out);
+	      else
+#endif
+		putc_unlocked ('\n', out);
+	    }
 	}
     }
 

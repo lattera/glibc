@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995,1996,1997,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,11 @@
 
 #include <stdio.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <libintl.h>
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 
 #ifndef	HAVE_GNU_LD
@@ -43,7 +47,27 @@ psignal (int sig, const char *s)
     colon = ": ";
 
   if (sig >= 0 && sig < NSIG && (desc = _sys_siglist[sig]) != NULL)
-    (void) fprintf (stderr, "%s%s%s\n", s, colon, _(desc));
+    {
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s%s%s\n", s, colon, _(desc));
+      else
+#endif
+	(void) fprintf (stderr, "%s%s%s\n", s, colon, _(desc));
+    }
   else
-    (void) fprintf (stderr, _("%s%sUnknown signal %d\n"), s, colon, sig);
+    {
+      char *buf;
+
+      (void) __asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig);
+
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",  buf);
+      else
+#endif
+	(void) fputs (buf, stderr);
+
+      free (buf);
+    }
 }

@@ -50,6 +50,10 @@
 #include <rpc/auth.h>
 #include <rpc/auth_unix.h>
 
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
+
 /*
  * Unix authenticator operations vector
  */
@@ -101,15 +105,16 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
    * Allocate and set up auth handle
    */
   auth = (AUTH *) mem_alloc (sizeof (*auth));
-  if (auth == NULL)
-    {
-      (void) fprintf (stderr, _("authunix_create: out of memory\n"));
-      return NULL;
-    }
   au = (struct audata *) mem_alloc (sizeof (*au));
-  if (au == NULL)
+  if (auth == NULL || au == NULL)
     {
-      (void) fprintf (stderr, _("authunix_create: out of memory\n"));
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("authunix_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("authunix_create: out of memory\n"), stderr);
       return NULL;
     }
   auth->ah_ops = &auth_unix_ops;
@@ -139,7 +144,13 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
   au->au_origcred.oa_base = mem_alloc ((u_int) len);
   if (au->au_origcred.oa_base == NULL)
     {
-      (void) fputs (_("authunix_create: out of memory\n"), stderr);
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("authunix_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("authunix_create: out of memory\n"), stderr);
       return NULL;
     }
   memcpy(au->au_origcred.oa_base, mymem, (u_int) len);

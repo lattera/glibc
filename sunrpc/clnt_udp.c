@@ -50,6 +50,9 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <rpc/pmap_clnt.h>
 #include <net/if.h>
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 #ifdef IP_RECVERR
 #include <errqueue.h>
@@ -126,23 +129,21 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   struct rpc_msg call_msg;
 
   cl = (CLIENT *) mem_alloc (sizeof (CLIENT));
-  if (cl == NULL)
-    {
-      struct rpc_createerr *ce = &get_rpc_createerr ();
-      (void) fprintf (stderr, _("clntudp_create: out of memory\n"));
-      ce->cf_stat = RPC_SYSTEMERROR;
-      ce->cf_error.re_errno = errno;
-      goto fooy;
-    }
   sendsz = ((sendsz + 3) / 4) * 4;
   recvsz = ((recvsz + 3) / 4) * 4;
   cu = (struct cu_data *) mem_alloc (sizeof (*cu) + sendsz + recvsz);
-  if (cu == NULL)
+  if (cl == NULL || cu == NULL)
     {
       struct rpc_createerr *ce = &get_rpc_createerr ();
-      (void) fprintf (stderr, _("clntudp_create: out of memory\n"));
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("clntudp_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("clntudp_create: out of memory\n"), stderr);
       ce->cf_stat = RPC_SYSTEMERROR;
-      ce->cf_error.re_errno = errno;
+      ce->cf_error.re_errno = ENOMEM;
       goto fooy;
     }
   cu->cu_outbuf = &cu->cu_inbuf[recvsz];

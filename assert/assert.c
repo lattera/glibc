@@ -17,15 +17,16 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sysdep.h>
-#include <libintl.h>
 
 
 extern const char *__progname;
 
 #ifdef USE_IN_LIBIO
+# include <wchar.h>
 # include <libio/iolibio.h>
 # define fflush(s) _IO_fflush (s)
 #endif
@@ -44,17 +45,31 @@ void
 __assert_fail (const char *assertion, const char *file, unsigned int line,
 	       const char *function)
 {
+  char *buf;
+
 #ifdef FATAL_PREPARE
   FATAL_PREPARE;
 #endif
 
+  (void) __asprintf (&buf, _("%s%s%s:%u: %s%sAssertion `%s' failed.\n"),
+		     __progname, __progname[0] ? ": " : "",
+		     file, line,
+		     function ? function : "", function ? ": " : "",
+		     assertion);
+
   /* Print the message.  */
-  (void) fprintf (stderr, _("%s%s%s:%u: %s%sAssertion `%s' failed.\n"),
-		  __progname, __progname[0] ? ": " : "",
-		  file, line,
-		  function ? function : "", function ? ": " : "",
-		  assertion);
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    (void) __fwprintf (stderr, L"%s", buf);
+  else
+#endif
+    (void) fputs (buf, stderr);
+
   (void) fflush (stderr);
+
+  /* We have to free the buffer since the appplication might catch the
+     SIGABRT.  */
+  free (buf);
 
   abort ();
 }

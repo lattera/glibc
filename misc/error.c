@@ -164,7 +164,7 @@ error_tail (int status, int errnum, const char *message, va_list args)
 	/* The string cannot be converted.  */
 	wmessage = (wchar_t *) L"???";
 
-      vfwprintf (stderr, wmessage, args);
+      __vfwprintf (stderr, wmessage, args);
     }
   else
 #  endif
@@ -182,7 +182,7 @@ error_tail (int status, int errnum, const char *message, va_list args)
       char *s = __strerror_r (errnum, errbuf, sizeof errbuf);
 # ifdef _LIBC
       if (_IO_fwide (stderr, 0) > 0)
-	fwprintf (stderr, L": %s", s);
+	__fwprintf (stderr, L": %s", s);
       else
 # endif
 	fprintf (stderr, ": %s", s);
@@ -233,7 +233,7 @@ error (status, errnum, message, va_alist)
     {
 #ifdef _LIBC
       if (_IO_fwide (stderr, 0) > 0)
-	fwprintf (stderr, L"%s: ", program_name);
+	__fwprintf (stderr, L"%s: ", program_name);
       else
 #endif
 	fprintf (stderr, "%s: ", program_name);
@@ -305,7 +305,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     {
 #ifdef _LIBC
       if (_IO_fwide (stderr, 0) > 0)
-	fwprintf (stderr, L"%s: ", program_name);
+	__fwprintf (stderr, L"%s: ", program_name);
       else
 #endif
 	fprintf (stderr, "%s:", program_name);
@@ -315,7 +315,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     {
 #ifdef _LIBC
       if (_IO_fwide (stderr, 0) > 0)
-	fwprintf (stderr, L"%s:%d: ", file_name, line_number);
+	__fwprintf (stderr, L"%s:%d: ", file_name, line_number);
       else
 #endif
 	fprintf (stderr, "%s:%d: ", file_name, line_number);

@@ -42,7 +42,7 @@ perror_internal (FILE *fp, const char *s)
 
 #ifdef USE_IN_LIBIO
   if (_IO_fwide (fp, 0) > 0)
-    (void) fwprintf (fp, L"%s%s%s\n", s, colon, errstring);
+    (void) __fwprintf (fp, L"%s%s%s\n", s, colon, errstring);
   else
 #endif
     (void) fprintf (fp, "%s%s%s\n", s, colon, errstring);

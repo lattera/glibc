@@ -44,9 +44,14 @@ static char sccsid[] = "@(#)xdr.c 1.35 87/08/12";
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
+#include <libintl.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
+
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 /*
  * constants specific to the xdr "protocol"
@@ -548,7 +553,12 @@ xdr_bytes (xdrs, cpp, sizep, maxsize)
 	}
       if (sp == NULL)
 	{
-	  (void) fprintf (stderr, "xdr_bytes: out of memory\n");
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stderr, 0) > 0)
+	    (void) __fwprintf (stderr, L"%s", _("xdr_bytes: out of memory\n"));
+	  else
+#endif
+	    (void) fputs (_("xdr_bytes: out of memory\n"), stderr);
 	  return FALSE;
 	}
       /* fall into ... */
@@ -694,7 +704,13 @@ xdr_string (xdrs, cpp, maxsize)
 	*cpp = sp = (char *) mem_alloc (nodesize);
       if (sp == NULL)
 	{
-	  (void) fprintf (stderr, "xdr_string: out of memory\n");
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stderr, 0) > 0)
+	    (void) __fwprintf (stderr, L"%s",
+			       _("xdr_string: out of memory\n"));
+	  else
+#endif
+	    (void) fputs (_("xdr_string: out of memory\n"), stderr);
 	  return FALSE;
 	}
       sp[size] = 0;

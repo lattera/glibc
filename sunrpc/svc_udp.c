@@ -52,6 +52,7 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #endif
 
 #ifdef USE_IN_LIBIO
+# include <wchar.h>
 # include <libio/iolibio.h>
 # define fputs(s, f) _IO_fputs (s, f)
 #endif
@@ -118,7 +119,8 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   struct svcudp_data *su;
   struct sockaddr_in addr;
   socklen_t len = sizeof (struct sockaddr_in);
-  int pad; 
+  int pad;
+  void *buf;
 
   if (sock == RPC_ANYSOCK)
     {
@@ -144,23 +146,20 @@ svcudp_bufcreate (sock, sendsz, recvsz)
       return (SVCXPRT *) NULL;
     }
   xprt = (SVCXPRT *) mem_alloc (sizeof (SVCXPRT));
-  if (xprt == NULL)
-    {
-      (void) fputs (_("svcudp_create: out of memory\n"), stderr);
-      return NULL;
-    }
   su = (struct svcudp_data *) mem_alloc (sizeof (*su));
-  if (su == NULL)
+  buf = mem_alloc (((MAX (sendsz, recvsz) + 3) / 4) * 4);
+  if (xprt == NULL || su == NULL || buf == NULL)
     {
-      (void) fputs (_("svcudp_create: out of memory\n"), stderr);
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s", _("svcudp_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("svcudp_create: out of memory\n"), stderr);
       return NULL;
     }
   su->su_iosz = ((MAX (sendsz, recvsz) + 3) / 4) * 4;
-  if ((rpc_buffer (xprt) = mem_alloc (su->su_iosz)) == NULL)
-    {
-      (void) fputs (_("svcudp_create: out of memory\n"), stderr);
-      return NULL;
-    }
+  rpc_buffer (xprt) = buf;
   xdrmem_create (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz, XDR_DECODE);
   su->su_cache = NULL;
   xprt->xp_p2 = (caddr_t) su;
@@ -174,8 +173,14 @@ svcudp_bufcreate (sock, sendsz, recvsz)
        + sizeof(struct cmsghdr) + sizeof (struct in_pktinfo))
       > sizeof (xprt->xp_pad))
     {
-      (void) fputs (_("svcudp_create: xp_pad is too small for IP_PKTINFO\n"),
-		    stderr);
+# ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("svcudp_create: xp_pad is too small for IP_PKTINFO\n"));
+      else
+# endif
+	(void) fputs (_("svcudp_create: xp_pad is too small for IP_PKTINFO\n"),
+		      stderr);
       return NULL;
     }
   pad = 1;
@@ -380,8 +385,16 @@ svcudp_destroy (xprt)
 
 #define SPARSENESS 4		/* 75% sparse */
 
-#define CACHE_PERROR(msg)	\
+#ifdef USE_IN_LIBIO
+# define CACHE_PERROR(msg)	\
+	if (_IO_fwide (stderr, 0) > 0)					      \
+		(void) __fwprintf(stderr, L"%s\n", msg);		      \
+	else								      \
+		(void) fprintf(stderr, "%s\n", msg)
+#else
+# define CACHE_PERROR(msg)	\
 	(void) fprintf(stderr,"%s\n", msg)
+#endif
 
 #define ALLOC(type, size)	\
 	(type *) mem_alloc((unsigned) (sizeof(type) * (size)))

@@ -59,6 +59,9 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 #include <sys/poll.h>
 #include <sys/socket.h>
 #include <rpc/pmap_clnt.h>
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 extern u_long _create_xid (void);
 
@@ -117,25 +120,23 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
 		int *sockp, u_int sendsz, u_int recvsz)
 {
   CLIENT *h;
-  struct ct_data *ct = (struct ct_data *) mem_alloc (sizeof (*ct));
+  struct ct_data *ct;
   struct rpc_msg call_msg;
 
   h = (CLIENT *) mem_alloc (sizeof (*h));
-  if (h == NULL)
+  ct = (struct ct_data *) mem_alloc (sizeof (*ct));
+  if (h == NULL || ct == NULL)
     {
       struct rpc_createerr *ce = &get_rpc_createerr ();
-      (void) fprintf (stderr, _("clnttcp_create: out of memory\n"));
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("clnttcp_create: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("clnttcp_create: out of memory\n"), stderr);
       ce->cf_stat = RPC_SYSTEMERROR;
-      ce->cf_error.re_errno = errno;
-      goto fooy;
-    }
-  /*  ct = (struct ct_data *) mem_alloc (sizeof (*ct)); */
-  if (ct == NULL)
-    {
-      struct rpc_createerr *ce = &get_rpc_createerr ();
-      (void) fprintf (stderr, _("clnttcp_create: out of memory\n"));
-      ce->cf_stat = RPC_SYSTEMERROR;
-      ce->cf_error.re_errno = errno;
+      ce->cf_error.re_errno = ENOMEM;
       goto fooy;
     }
 

@@ -49,6 +49,10 @@
 #include <stdlib.h>
 #include <libintl.h>
 
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
+
 /*
  * Ops vector for AF_UNIX based rpc service handle
  */
@@ -166,19 +170,19 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
     }
 
   r = (struct unix_rendezvous *) mem_alloc (sizeof (*r));
-  if (r == NULL)
+  xprt = (SVCXPRT *) mem_alloc (sizeof (SVCXPRT));
+  if (r == NULL || xprt == NULL)
     {
-      fputs (_("svcunix_create: out of memory\n"), stderr);
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	__fwprintf (stderr, L"%s", _("svcunix_create: out of memory\n"));
+      else
+#endif
+	fputs (_("svcunix_create: out of memory\n"), stderr);
       return NULL;
     }
   r->sendsize = sendsize;
   r->recvsize = recvsize;
-  xprt = (SVCXPRT *) mem_alloc (sizeof (SVCXPRT));
-  if (xprt == NULL)
-    {
-      fputs (_("svcunix_create: out of memory\n"), stderr);
-      return NULL;
-    }
   xprt->xp_p2 = NULL;
   xprt->xp_p1 = (caddr_t) r;
   xprt->xp_verf = _null_auth;
@@ -207,18 +211,17 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
   struct unix_conn *cd;
 
   xprt = (SVCXPRT *) mem_alloc (sizeof (SVCXPRT));
-  if (xprt == (SVCXPRT *) NULL)
-    {
-      (void) fputs (_("svc_unix: makefd_xprt: out of memory\n"), stderr);
-      goto done;
-    }
   cd = (struct unix_conn *) mem_alloc (sizeof (struct unix_conn));
-  if (cd == (struct unix_conn *) NULL)
+  if (xprt == (SVCXPRT *) NULL || cd == (struct unix_conn *) NULL)
     {
-      (void) fputs (_("svc_unix: makefd_xprt: out of memory\n"), stderr);
-      mem_free ((char *) xprt, sizeof (SVCXPRT));
-      xprt = (SVCXPRT *) NULL;
-      goto done;
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	(void) __fwprintf (stderr, L"%s",
+			   _("svc_unix: makefd_xprt: out of memory\n"));
+      else
+#endif
+	(void) fputs (_("svc_unix: makefd_xprt: out of memory\n"), stderr);
+      return NULL;
     }
   cd->strm_stat = XPRT_IDLE;
   xdrrec_create (&(cd->xdrs), sendsize, recvsize,
@@ -231,7 +234,6 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
   xprt->xp_port = 0;		/* this is a connection, not a rendezvouser */
   xprt->xp_sock = fd;
   xprt_register (xprt);
-done:
   return xprt;
 }
 

@@ -1,8 +1,42 @@
 2001-08-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/tst-ungetwc2.c (main): Define str const.
+
+	* include/wchar.h: Add prototypes for __fwprintf and __vfwprintf.
+	* libio/fwprintf.c: Also define __fwprintf.
+	* stdio-common/vfprintf.c [COMPILE_WPRINTF]: Also define __vfwprintf.
+	* argp/argp-fmtstream.c: Handle wide oriented stderr stream.
+	* assert/assert-perr.c: Likewise.
+	* assert/assert.c: Likewise.
+	* gmon/gmon.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* malloc/obstack.c: Likewise.
+	* misc/err.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/getpass.c: Likewise.
+	* posix/getopt.c: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* stdio-common/perror.c: Likewise.
+	* stdio-common/psignal.c: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sysdeps/generic/wordexp.c: Likewise.
+
 	* po/it.po: Update from translation team.
 
-	* misc/err.c: Handle wide oriented stderr.
+	* misc/err.c: Handle wide oriented stderr stream.
 
 2001-08-14  Tom Rix  <trix@redhat.com>
 

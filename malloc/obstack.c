@@ -481,8 +481,15 @@ static void
 __attribute__ ((noreturn))
 print_and_abort ()
 {
-  fputs (_("memory exhausted"), stderr);
-  fputc ('\n', stderr);
+#if defined _LIBC && defined USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    __fwprintf (stderr, L"%s\n", _("memory exhausted"));
+  else
+#endif
+    {
+      fputs (_("memory exhausted"), stderr);
+      fputc ('\n', stderr);
+    }
   exit (obstack_exit_failure);
 }
 

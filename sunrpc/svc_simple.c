@@ -41,12 +41,14 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 #include <stdio.h>
 #include <string.h>
 #include <libintl.h>
+#include <unistd.h>
 #include <rpc/rpc.h>
 #include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
 #include <netdb.h>
 
 #ifdef USE_IN_LIBIO
+# include <wchar.h>
 # include <libio/iolibio.h>
 # define fputs(s, f) _IO_fputs (s, f)
 #endif
@@ -78,35 +80,37 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
 	     char *(*progname) (char *), xdrproc_t inproc, xdrproc_t outproc)
 {
   struct proglst_ *pl;
+  char *buf;
 
   if (procnum == NULLPROC)
     {
-      (void) fprintf (stderr,
-		      _("can't reassign procedure number %ld\n"), NULLPROC);
-      return -1;
+
+      (void) __asprintf (&buf, _("can't reassign procedure number %ld\n"),
+			 NULLPROC);
+      goto err_out;
     }
   if (transp == 0)
     {
       transp = svcudp_create (RPC_ANYSOCK);
       if (transp == NULL)
 	{
-	  (void) fputs (_("couldn't create an rpc server\n"), stderr);
-	  return -1;
+	  buf = strdup (_("couldn't create an rpc server\n"));
+	  goto err_out;
 	}
     }
   (void) pmap_unset ((u_long) prognum, (u_long) versnum);
   if (!svc_register (transp, (u_long) prognum, (u_long) versnum,
 		     universal, IPPROTO_UDP))
     {
-      (void) fprintf (stderr, _("couldn't register prog %ld vers %ld\n"),
-		      prognum, versnum);
-      return -1;
+      (void) __asprintf (&buf, _("couldn't register prog %ld vers %ld\n"),
+			 prognum, versnum);
+      goto err_out;
     }
   pl = (struct proglst_ *) malloc (sizeof (struct proglst_));
   if (pl == NULL)
     {
-      (void) fprintf (stderr, _("registerrpc: out of memory\n"));
-      return -1;
+      buf = strdup (_("registerrpc: out of memory\n"));
+      goto err_out;
     }
   pl->p_progname = progname;
   pl->p_prognum = prognum;
@@ -116,6 +120,16 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
   pl->p_nxt = proglst;
   proglst = pl;
   return 0;
+
+ err_out:
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    (void) fwprintf (stderr, L"%s", buf);
+  else
+#endif
+    (void) fputs (buf, stderr);
+  free (buf);
+  return -1;
 }
 
 static void
@@ -125,6 +139,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
   char *outdata;
   char xdrbuf[UDPMSGSIZE];
   struct proglst_ *pl;
+  char *buf = NULL;
 
   /*
    * enforce "procnum 0 is echo" convention
@@ -133,7 +148,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
     {
       if (svc_sendreply (transp_l, (xdrproc_t)xdr_void, (char *) NULL) == FALSE)
 	{
-	  (void) fprintf (stderr, "xxx\n");
+	  write (STDERR_FILENO, "xxx\n", 4);
 	  exit (1);
 	}
       return;
@@ -156,15 +171,22 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
 	  return;
 	if (!svc_sendreply (transp_l, pl->p_outproc, outdata))
 	  {
-	    (void) fprintf (stderr,
-			    _ ("trouble replying to prog %d\n"),
-			    pl->p_prognum);
+	    (void) __asprintf (&buf,
+			       _("trouble replying to prog %d\n"),
+			       pl->p_prognum);
 	    exit (1);
 	  }
 	/* free the decoded arguments */
 	(void) svc_freeargs (transp_l, pl->p_inproc, xdrbuf);
 	return;
       }
-  (void) fprintf (stderr, _ ("never registered prog %d\n"), prog);
+  (void) __asprintf (&buf, _("never registered prog %d\n"), prog);
+#ifdef USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    __fwprintf (stderr, L"%s", buf);
+  else
+#endif
+    fputs (buf, stderr);
+  free (buf);
   exit (1);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,6 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/syslog.h>
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 
 /* We have global data, protect the modification.  */
@@ -143,20 +146,42 @@ fmtmsg (long int classification, const char *label, int severity,
       int do_action = (print & action_mask) && action != MM_NULLACT;
       int do_tag = (print & tag_mask) && tag != MM_NULLTAG;
 
-      if (fprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
-		   do_label ? label : "",
-		   do_label && (do_severity | do_text | do_action | do_tag)
-		   ? ": " : "",
-		   do_severity ? severity_rec->string : "",
-		   do_severity && (do_text | do_action | do_tag) ? ": " : "",
-		   do_text ? text : "",
-		   do_text && (do_action | do_tag) ? "\n" : "",
-		   do_action ? "TO FIX: " : "",
-		   do_action ? action : "",
-		   do_action && do_tag ? "  " : "",
-		   do_tag ? tag : "") == EOF)
-	/* Oh, oh.  An error occurred during the output.  */
-	result = MM_NOMSG;
+#ifdef USE_IN_LIBIO
+      if (_IO_fwide (stderr, 0) > 0)
+	{
+	  if (__fwprintf (stderr, L"%s%s%s%s%s%s%s%s%s%s\n",
+			  do_label ? label : "",
+			  do_label
+			  && (do_severity | do_text | do_action | do_tag)
+			  ? ": " : "",
+			  do_severity ? severity_rec->string : "",
+			  do_severity && (do_text | do_action | do_tag)
+			  ? ": " : "",
+			  do_text ? text : "",
+			  do_text && (do_action | do_tag) ? "\n" : "",
+			  do_action ? "TO FIX: " : "",
+			  do_action ? action : "",
+			  do_action && do_tag ? "  " : "",
+			  do_tag ? tag : "") == WEOF)
+	    /* Oh, oh.  An error occurred during the output.  */
+	    result = MM_NOMSG;
+	}
+      else
+#endif
+	if (fprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
+		     do_label ? label : "",
+		     do_label && (do_severity | do_text | do_action | do_tag)
+		     ? ": " : "",
+		     do_severity ? severity_rec->string : "",
+		     do_severity && (do_text | do_action | do_tag) ? ": " : "",
+		     do_text ? text : "",
+		     do_text && (do_action | do_tag) ? "\n" : "",
+		     do_action ? "TO FIX: " : "",
+		     do_action ? action : "",
+		     do_action && do_tag ? "  " : "",
+		     do_tag ? tag : "") == EOF)
+	  /* Oh, oh.  An error occurred during the output.  */
+	  result = MM_NOMSG;
     }
 
   if (classification & MM_CONSOLE)

@@ -11,7 +11,7 @@ int
 main (void)
 {
   FILE *fp;
-  char *str = "abcdef";
+  const char *str = "abcdef";
   wint_t ret, wc;
   char fname[] = "/tmp/tst-ungetwc2.out.XXXXXX";
   int fd;

@@ -80,6 +80,9 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <string.h>
 #include <libintl.h>
 #include <stdlib.h>
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 
 int __ivaliduser (FILE *, u_int32_t, const char *, const char *);
@@ -133,8 +136,14 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	(void)__snprintf(num, sizeof(num), "%d", ntohs(rport));
 	error = getaddrinfo(*ahost, num, &hints, &res);
 	if (error) {
-	    fprintf(stderr, "rcmd: getaddrinfo: %s\n",
-		    gai_strerror(error));
+#ifdef USE_IN_LIBIO
+		if (_IO_fwide (stderr, 0) > 0)
+			__fwprintf(stderr, L"rcmd: getaddrinfo: %s\n",
+				   gai_strerror(error));
+		else
+#endif
+			fprintf(stderr, "rcmd: getaddrinfo: %s\n",
+				gai_strerror(error));
                 return (-1);
 	}
 
@@ -152,13 +161,28 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	refused = 0;
 	oldmask = __sigblock(sigmask(SIGURG));
 	for (timo = 1, lport = IPPORT_RESERVED - 1;;) {
+		char errbuf[200];
+
 		s = rresvport_af(&lport, ai->ai_family);
 		if (s < 0) {
-			if (errno == EAGAIN)
-				fprintf(stderr,
-					_("rcmd: socket: All ports in use\n"));
-			else
-				fprintf(stderr, "rcmd: socket: %m\n");
+			if (errno == EAGAIN) {
+#ifdef USE_IN_LIBIO
+				if (_IO_fwide (stderr, 0) > 0)
+					__fwprintf(stderr, L"%s",
+						   _("rcmd: socket: All ports in use\n"));
+				else
+#endif
+					fputs(_("rcmd: socket: All ports in use\n"),
+					      stderr);
+			} else {
+#ifdef USE_IN_LIBIO
+				if (_IO_fwide (stderr, 0) > 0)
+					__fwprintf(stderr,
+						   L"rcmd: socket: %m\n");
+				else
+#endif
+					fprintf(stderr, "rcmd: socket: %m\n");
+			}
 			__sigsetmask(oldmask);
 			freeaddrinfo(res);
 			return -1;
@@ -175,12 +199,20 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			refused = 1;
 		if (ai->ai_next != NULL) {
 			int oerrno = errno;
+			char *buf = NULL;
 
 			getnameinfo(ai->ai_addr, ai->ai_addrlen,
 				    paddr, sizeof(paddr),
 				    NULL, 0,
 				    NI_NUMERICHOST);
-			fprintf(stderr, "connect to address %s: ", paddr);
+
+			asprintf (&buf, _("connect to address %s: "), paddr);
+#ifdef USE_IN_LIBIO
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf(stderr, L"%s", buf);
+			else
+#endif
+				fputs (buf, stderr);
 			__set_errno (oerrno);
 			perror(0);
 			ai = ai->ai_next;
@@ -188,7 +220,14 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 				    paddr, sizeof(paddr),
 				    NULL, 0,
 				    NI_NUMERICHOST);
-			fprintf(stderr, "Trying %s...\n", paddr);
+			asprintf (&buf, _("Trying %s...\n"), paddr);
+#ifdef USE_IN_LIBIO
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf (stderr, L"%s", buf);
+			else
+#endif
+				fputs (buf, stderr);
+			free (buf);
 			continue;
 		}
 		if (refused && timo <= 16) {
@@ -199,7 +238,16 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			continue;
 		}
 		freeaddrinfo(res);
-		(void)fprintf(stderr, "%s: %s\n", *ahost, strerror(errno));
+#ifdef USE_IN_LIBIO
+		if (_IO_fwide (stderr, 0) > 0)
+			(void)__fwprintf(stderr, L"%s: %s\n", *ahost,
+					 __strerror_r(errno,
+						      errbuf, sizeof (errbuf)));
+		else
+#endif
+			(void)fprintf(stderr, "%s: %s\n", *ahost,
+				      __strerror_r(errno,
+						   errbuf, sizeof (errbuf)));
 		__sigsetmask(oldmask);
 		return -1;
 	}
@@ -217,8 +265,17 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		listen(s2, 1);
 		(void)__snprintf(num, sizeof(num), "%d", lport);
 		if (__write(s, num, strlen(num)+1) != (ssize_t)strlen(num)+1) {
-			(void)fprintf(stderr,
-			    _("rcmd: write (setting up stderr): %m\n"));
+			char *buf = NULL;
+
+			asprintf (&buf,
+				  _("rcmd: write (setting up stderr): %m\n"));
+#ifdef USE_IN_LIBIO
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf(stderr, L"%s", buf);
+			else
+#endif
+				fputs (buf, stderr);
+			free (buf);
 			(void)__close(s2);
 			goto bad;
 		}
@@ -226,12 +283,21 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		pfd[1].fd = s2;
 		__set_errno (0);
 		if (__poll (pfd, 2, -1) < 1 || (pfd[1].revents & POLLIN) == 0){
+			char *buf = NULL;
+
 			if (errno != 0)
-				(void)fprintf(stderr,
+				asprintf(&buf,
 				  _("rcmd: poll (setting up stderr): %m\n"));
 			else
-				(void)fprintf(stderr,
+				asprintf(&buf,
 			     _("poll: protocol failure in circuit setup\n"));
+#ifdef USE_IN_LIBIO
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf (stderr, L"%s", buf);
+			else
+#endif
+				fputs (buf, stderr);
+			free  (buf);
 			(void)__close(s2);
 			goto bad;
 		}
@@ -249,16 +315,31 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		}
 		(void)__close(s2);
 		if (s3 < 0) {
-			(void)fprintf(stderr,
-			    "rcmd: accept: %m\n");
+#ifdef USE_IN_LIBIO
+			if (_IO_fwide (stderr, 0) > 0)
+				(void)__fwprintf(stderr,
+						 L"rcmd: accept: %m\n");
+			else
+#endif
+				(void)fprintf(stderr,
+					      "rcmd: accept: %m\n");
 			lport = 0;
 			goto bad;
 		}
 		*fd2p = s3;
 
 		if (rport >= IPPORT_RESERVED || rport < IPPORT_RESERVED / 2){
-			(void)fprintf(stderr,
-			_("socket: protocol failure in circuit setup\n"));
+			char *buf = NULL;
+
+			asprintf(&buf,
+			     _("socket: protocol failure in circuit setup\n"));
+#ifdef USE_IN_LIBIO
+			if (_IO_fwide (stderr, 0) > 0)
+				__fwprintf (stderr, L"%s", buf);
+			else
+#endif
+				fputs (buf, stderr);
+			free (buf);
 			goto bad2;
 		}
 	}
@@ -267,11 +348,19 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	(void)__write(s, cmd, strlen(cmd)+1);
 	n = __read(s, &c, 1);
 	if (n != 1) {
+		char *buf = NULL;
+
 		if (n == 0)
-			(void)fprintf(stderr, _("rcmd: %s: short read"),
-				      *ahost);
+			asprintf(&buf, _("rcmd: %s: short read"), *ahost);
 		else
-			(void)fprintf(stderr, "rcmd: %s: %m\n", *ahost);
+			asprintf(&buf, "rcmd: %s: %m\n", *ahost);
+#ifdef USE_IN_LIBIO
+		if (_IO_fwide (stderr, 0) > 0)
+			__fwprintf (stderr, L"%s", buf);
+		else
+#endif
+			fputs (buf, stderr);
+		free (buf);
 		goto bad2;
 	}
 	if (c != 0) {
