@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <alloca.h>
 #include <argp.h>
 #include <dirent.h>
 #include <elf.h>
@@ -337,15 +338,17 @@ add_dir (const char *line)
 static void
 create_links (const char *path, const char *libname, const char *soname)
 {
-  char full_libname [PATH_MAX], full_soname [PATH_MAX];
+  char *full_libname, *full_soname;
   struct stat stat_lib, stat_so, lstat_so;
   int do_link = 1;
   int do_remove = 1;
   /* XXX: The logics in this function should be simplified.  */
 
   /* Get complete path.  */
-  snprintf (full_libname, sizeof full_libname, "%s/%s", path, libname);
-  snprintf (full_soname, sizeof full_soname, "%s/%s", path, soname);
+  full_libname = alloca (strlen (path) + strlen (libname) + 2);
+  full_soname = alloca (strlen (path) + strlen (libname) + 2);
+  sprintf (full_libname, "%s/%s", path, libname);
+  sprintf (full_soname, "%s/%s", path, soname);
 
   /* Does soname already exist and point to the right library?  */
   if (stat (full_soname, &stat_so) == 0)
@@ -511,15 +514,18 @@ search_dir (const struct dir_entry *entry)
 {
   DIR *dir;
   struct dirent *direntry;
-  char buf [PATH_MAX];
+  char *file_name;
+  int file_name_len, len;
   char *soname;
   struct dlib_entry *dlibs;
   struct dlib_entry *dlib_ptr;
-  int nchars;
   struct stat stat_buf;
   int is_link;
   unsigned long int hwcap = path_hwcap (entry->path);
 
+  file_name_len = PATH_MAX;
+  file_name = alloca (file_name_len);
+  
   dlibs = NULL;
 
   if (opt_verbose)
@@ -558,23 +564,21 @@ search_dir (const struct dir_entry *entry)
 	   || strstr (direntry->d_name, ".so") == NULL)
 	  && !is_hwcap (direntry->d_name))
 	continue;
-      nchars = snprintf (buf, sizeof (buf), "%s/%s", entry->path,
-			 direntry->d_name);
-      /* Check for overflow.  */
-      if (nchars >= (int) sizeof (buf))
+      len = strlen (entry->path) + strlen (direntry->d_name);
+      if (len > file_name_len)
 	{
-	  error (0, 0, _("buffer for snprintf too small for %s/%s--file is ignored\n"),
-		 entry->path, direntry->d_name);
-	  continue;
+	  file_name_len = len + 1;
+	  file_name = alloca (file_name_len);
 	}
+      sprintf (file_name , "%s/%s", entry->path, direntry->d_name);      
 #ifdef _DIRENT_HAVE_D_TYPE
       if (direntry->d_type != DT_UNKNOWN)
 	stat_buf.st_mode = DTTOIF (direntry->d_type);
       else
 #endif
-	if (lstat (buf, &stat_buf))
+	if (lstat (file_name, &stat_buf))
 	  {
-	    error (0, errno, _("Can't lstat %s"), buf);
+	    error (0, errno, _("Can't lstat %s"), file_name);
 	    continue;
 	  }
 
@@ -584,8 +588,7 @@ search_dir (const struct dir_entry *entry)
 	  struct dir_entry *new_entry;
 
 	  new_entry = xmalloc (sizeof (struct dir_entry));
-
-	  new_entry->path = buf;
+	  new_entry->path = xstrdup (file_name);
 	  new_entry->flag = entry->flag;
 	  new_entry->next = NULL;
 	  add_single_dir (new_entry, 0);
@@ -596,7 +599,7 @@ search_dir (const struct dir_entry *entry)
 
       is_link = S_ISLNK (stat_buf.st_mode);
 
-      if (process_file (buf, direntry->d_name, &flag, &soname, is_link))
+      if (process_file (file_name, direntry->d_name, &flag, &soname, is_link))
 	continue;
 
       /* Links will just point to itself.  */
@@ -615,13 +618,13 @@ search_dir (const struct dir_entry *entry)
 	{
 	  if (flag == FLAG_ELF_LIBC5 && entry->flag != FLAG_ELF_LIBC5
 	      && entry->flag != FLAG_ANY)
-	    error (0, 0, _("libc5 library %s in wrong directory"), buf);
+	    error (0, 0, _("libc5 library %s in wrong directory"), file_name);
 	  if (flag == FLAG_ELF_LIBC6 && entry->flag != FLAG_ELF_LIBC6
 	      && entry->flag != FLAG_ANY)
-	    error (0, 0, _("libc6 library %s in wrong directory"), buf);
+	    error (0, 0, _("libc6 library %s in wrong directory"), file_name);
 	  if (flag == FLAG_LIBC4 && entry->flag != FLAG_LIBC4
 	      && entry->flag != FLAG_ANY)
-	    error (0, 0, _("libc4 library %s in wrong directory"), buf);
+	    error (0, 0, _("libc4 library %s in wrong directory"), file_name);
 	}
 
       /* Add library to list.  */
