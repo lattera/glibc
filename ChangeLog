@@ -1,3 +1,8 @@
+1999-01-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/canonicalize.c (canonicalize): Update write pointer after
+	realloc.  Minor optimizations.
+
 1999-01-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/no.po: Update from norwegian translation team.

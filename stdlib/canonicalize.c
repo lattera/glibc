@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,16 +92,18 @@ canonicalize (const char *name, char *resolved)
       int n;
 
       /* Skip sequence of multiple path-separators.  */
-      while (*start == '/') ++start;
+      while (*start == '/')
+	++start;
 
       /* Find end of path component.  */
-      for (end = start; *end && *end != '/'; ++end);
+      for (end = start; *end && *end != '/'; ++end)
+	/* Nothing.  */;
 
       if (end - start == 0)
 	break;
-      else if (strncmp (start, ".", end - start) == 0)
+      else if (end - start == 1 && start[0] == '.')
 	/* nothing */;
-      else if (strncmp (start, "..", end - start) == 0)
+      else if (end - start == 2 && start[0] == '.' && start[1] == '.')
 	{
 	  /* Back up to previous component, ignore if at root already.  */
 	  if (dest > rpath + 1)
@@ -116,6 +118,8 @@ canonicalize (const char *name, char *resolved)
 
 	  if (dest + (end - start) >= rpath_limit)
 	    {
+	      ptrdiff_t dest_offset = dest - rpath;
+
 	      if (resolved)
 		{
 		  __set_errno (ENAMETOOLONG);
@@ -128,8 +132,10 @@ canonicalize (const char *name, char *resolved)
 		new_size += path_max;
 	      rpath = realloc (rpath, new_size);
 	      rpath_limit = rpath + new_size;
-	      if (!rpath)
+	      if (rpath == NULL)
 		return NULL;
+
+	      dest = rpath + dest_offset;
 	    }
 
 	  dest = __mempcpy (dest, start, end - start);
@@ -166,8 +172,7 @@ canonicalize (const char *name, char *resolved)
 
 	      /* Careful here, end may be a pointer into extra_buf... */
 	      memmove (&extra_buf[n], end, len + 1);
-	      memcpy (extra_buf, buf, n);
-	      name = end = extra_buf;
+	      name = end = memcpy (extra_buf, buf, n);
 
 	      if (buf[0] == '/')
 		dest = rpath + 1;	/* It's an absolute symlink */
@@ -182,7 +187,7 @@ canonicalize (const char *name, char *resolved)
     --dest;
   *dest = '\0';
 
-  return resolved ? strcpy (resolved, rpath) : rpath;
+  return resolved ? memcpy (resolved, rpath, dest - rpath + 1) : rpath;
 
 error:
   if (resolved)
