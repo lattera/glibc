@@ -112,8 +112,10 @@ xdr_int(xdrs, ip)
 			return FALSE;
 		}
 		*ip = (int) l;
+	      case XDR_FREE:
 		return TRUE;
 	}
+	return FALSE;
 # elif INT_MAX == LONG_MAX
 	return xdr_long(xdrs, (long *)ip);
 # elif INT_MAX == SHRT_MAX
@@ -149,8 +151,10 @@ xdr_u_int(xdrs, up)
 			return FALSE;
 		}
 		*up = (u_int) l;
+	      case XDR_FREE:
 		return TRUE;
 	}
+	return FALSE;
 # elif UINT_MAX == ULONG_MAX
 	return xdr_u_long(xdrs, (u_long *)up);
 # elif UINT_MAX == USHRT_MAX
@@ -192,14 +196,17 @@ xdr_u_long(xdrs, ulp)
 	register XDR *xdrs;
 	u_long *ulp;
 {
+	switch (xdrs->x_op) {
+	      case XDR_DECODE:
+		return XDR_GETLONG(xdrs, (long *)ulp);
 
-	if (xdrs->x_op == XDR_DECODE)
-		return (XDR_GETLONG(xdrs, (long *)ulp));
-	if (xdrs->x_op == XDR_ENCODE)
-		return (XDR_PUTLONG(xdrs, (long *)ulp));
-	if (xdrs->x_op == XDR_FREE)
-		return (TRUE);
-	return (FALSE);
+	      case XDR_ENCODE:
+		return XDR_PUTLONG(xdrs, (long *)ulp);
+
+	      case XDR_FREE:
+		return TRUE;
+	}
+	return FALSE;
 }
 
 /*
@@ -213,22 +220,21 @@ xdr_short(xdrs, sp)
 	long l;
 
 	switch (xdrs->x_op) {
-
-	case XDR_ENCODE:
+	      case XDR_ENCODE:
 		l = (long) *sp;
-		return (XDR_PUTLONG(xdrs, &l));
+		return XDR_PUTLONG(xdrs, &l);
 
-	case XDR_DECODE:
+	      case XDR_DECODE:
 		if (!XDR_GETLONG(xdrs, &l)) {
-			return (FALSE);
+			return FALSE;
 		}
 		*sp = (short) l;
-		return (TRUE);
+		return TRUE;
 
-	case XDR_FREE:
-		return (TRUE);
+	      case XDR_FREE:
+		return TRUE;
 	}
-	return (FALSE);
+	return FALSE;
 }
 
 /*
@@ -242,22 +248,21 @@ xdr_u_short(xdrs, usp)
 	u_long l;
 
 	switch (xdrs->x_op) {
-
-	case XDR_ENCODE:
+	      case XDR_ENCODE:
 		l = (u_long) *usp;
-		return (XDR_PUTLONG(xdrs, &l));
+		return XDR_PUTLONG(xdrs, &l);
 
-	case XDR_DECODE:
+	      case XDR_DECODE:
 		if (!XDR_GETLONG(xdrs, &l)) {
-			return (FALSE);
+			return FALSE;
 		}
 		*usp = (u_short) l;
-		return (TRUE);
+		return TRUE;
 
-	case XDR_FREE:
-		return (TRUE);
+	      case XDR_FREE:
+		return TRUE;
 	}
-	return (FALSE);
+	return FALSE;
 }
 
 
@@ -273,10 +278,10 @@ xdr_char(xdrs, cp)
 
 	i = (*cp);
 	if (!xdr_int(xdrs, &i)) {
-		return (FALSE);
+		return FALSE;
 	}
 	*cp = i;
-	return (TRUE);
+	return TRUE;
 }
 
 /*
@@ -285,16 +290,16 @@ xdr_char(xdrs, cp)
 bool_t
 xdr_u_char(xdrs, cp)
 	XDR *xdrs;
-	char *cp;
+	u_char *cp;
 {
 	u_int u;
 
 	u = (*cp);
 	if (!xdr_u_int(xdrs, &u)) {
-		return (FALSE);
+		return FALSE;
 	}
 	*cp = u;
-	return (TRUE);
+	return TRUE;
 }
 
 /*
@@ -308,22 +313,21 @@ xdr_bool(xdrs, bp)
 	long lb;
 
 	switch (xdrs->x_op) {
-
-	case XDR_ENCODE:
+	      case XDR_ENCODE:
 		lb = *bp ? XDR_TRUE : XDR_FALSE;
-		return (XDR_PUTLONG(xdrs, &lb));
+		return XDR_PUTLONG(xdrs, &lb);
 
-	case XDR_DECODE:
+	      case XDR_DECODE:
 		if (!XDR_GETLONG(xdrs, &lb)) {
-			return (FALSE);
+			return FALSE;
 		}
 		*bp = (lb == XDR_FALSE) ? FALSE : TRUE;
-		return (TRUE);
+		return TRUE;
 
-	case XDR_FREE:
-		return (TRUE);
+	      case XDR_FREE:
+		return TRUE;
 	}
-	return (FALSE);
+	return FALSE;
 }
 
 /*
@@ -341,16 +345,36 @@ xdr_enum(xdrs, ep)
 	 * enums are treated as ints
 	 */
 	if (sizeof (enum sizecheck) == 4) {
+# if INT_MAX < LONG_MAX
+		long l;
+
+		switch (xdrs->x_op) {
+		      case XDR_ENCODE:
+			l = *ep;
+			return XDR_PUTLONG(xdrs, &l);
+
+		      case XDR_DECODE:
+			if (!XDR_GETLONG(xdrs, &l)) {
+				return FALSE;
+			}
+			*ep = l;
+		      case XDR_FREE:
+			return TRUE;
+
+		}
+		return FALSE;
+# else
 		return (xdr_long(xdrs, (long *)ep));
+# endif
 	} else if (sizeof (enum sizecheck) == sizeof (short)) {
-		return (xdr_short(xdrs, (short *)ep));
+		return xdr_short(xdrs, (short *)ep);
 	} else {
-		return (FALSE);
+		return FALSE;
 	}
-#else
+#else /* lint */
 	(void) (xdr_short(xdrs, (short *)ep));
 	return (xdr_long(xdrs, (long *)ep));
-#endif
+#endif /* lint */
 }
 
 /*
@@ -371,7 +395,7 @@ xdr_opaque(xdrs, cp, cnt)
 	 * if no data we are done
 	 */
 	if (cnt == 0)
-		return (TRUE);
+		return TRUE;
 
 	/*
 	 * round byte count to full xdr units
@@ -380,29 +404,27 @@ xdr_opaque(xdrs, cp, cnt)
 	if (rndup > 0)
 		rndup = BYTES_PER_XDR_UNIT - rndup;
 
-	if (xdrs->x_op == XDR_DECODE) {
+	switch (xdrs->x_op) {
+	      case XDR_DECODE:
 		if (!XDR_GETBYTES(xdrs, cp, cnt)) {
-			return (FALSE);
+			return FALSE;
 		}
 		if (rndup == 0)
-			return (TRUE);
-		return (XDR_GETBYTES(xdrs, crud, rndup));
-	}
+			return TRUE;
+		return XDR_GETBYTES(xdrs, crud, rndup);
 
-	if (xdrs->x_op == XDR_ENCODE) {
+	      case XDR_ENCODE:
 		if (!XDR_PUTBYTES(xdrs, cp, cnt)) {
-			return (FALSE);
+			return FALSE;
 		}
 		if (rndup == 0)
-			return (TRUE);
-		return (XDR_PUTBYTES(xdrs, xdr_zero, rndup));
-	}
+			return TRUE;
+		return XDR_PUTBYTES(xdrs, xdr_zero, rndup);
 
-	if (xdrs->x_op == XDR_FREE) {
-		return (TRUE);
+	      case XDR_FREE:
+		return TRUE;
 	}
-
-	return (FALSE);
+	return FALSE;
 }
 
 /*
@@ -424,42 +446,41 @@ xdr_bytes(xdrs, cpp, sizep, maxsize)
 	 * first deal with the length since xdr bytes are counted
 	 */
 	if (! xdr_u_int(xdrs, sizep)) {
-		return (FALSE);
+		return FALSE;
 	}
 	nodesize = *sizep;
 	if ((nodesize > maxsize) && (xdrs->x_op != XDR_FREE)) {
-		return (FALSE);
+		return FALSE;
 	}
 
 	/*
 	 * now deal with the actual bytes
 	 */
 	switch (xdrs->x_op) {
-
-	case XDR_DECODE:
+	      case XDR_DECODE:
 		if (nodesize == 0) {
-			return (TRUE);
+			return TRUE;
 		}
 		if (sp == NULL) {
 			*cpp = sp = (char *)mem_alloc(nodesize);
 		}
 		if (sp == NULL) {
 			(void) fprintf(stderr, "xdr_bytes: out of memory\n");
-			return (FALSE);
+			return FALSE;
 		}
 		/* fall into ... */
 
-	case XDR_ENCODE:
-		return (xdr_opaque(xdrs, sp, nodesize));
+	      case XDR_ENCODE:
+		return xdr_opaque(xdrs, sp, nodesize);
 
-	case XDR_FREE:
+	      case XDR_FREE:
 		if (sp != NULL) {
 			mem_free(sp, nodesize);
 			*cpp = NULL;
 		}
-		return (TRUE);
+		return TRUE;
 	}
-	return (FALSE);
+	return FALSE;
 }
 
 /*
@@ -471,7 +492,7 @@ xdr_netobj(xdrs, np)
 	struct netobj *np;
 {
 
-	return (xdr_bytes(xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ));
+	return xdr_bytes(xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ);
 }
 
 /*
@@ -499,7 +520,7 @@ xdr_union(xdrs, dscmp, unp, choices, dfault)
 	 * we deal with the discriminator;  it's an enum
 	 */
 	if (! xdr_enum(xdrs, dscmp)) {
-		return (FALSE);
+		return FALSE;
 	}
 	dscm = *dscmp;
 
@@ -509,7 +530,7 @@ xdr_union(xdrs, dscmp, unp, choices, dfault)
 	 */
 	for (; choices->proc != NULL_xdrproc_t; choices++) {
 		if (choices->value == dscm)
-			return ((*(choices->proc))(xdrs, unp, LASTUNSIGNED));
+			return (*(choices->proc))(xdrs, unp, LASTUNSIGNED);
 	}
 
 	/*
@@ -548,20 +569,20 @@ xdr_string(xdrs, cpp, maxsize)
 	 * first deal with the length since xdr strings are counted-strings
 	 */
 	switch (xdrs->x_op) {
-	case XDR_FREE:
+	      case XDR_FREE:
 		if (sp == NULL) {
-			return(TRUE);	/* already free */
+			return TRUE;	/* already free */
 		}
 		/* fall through... */
-	case XDR_ENCODE:
+	      case XDR_ENCODE:
 		size = strlen(sp);
 		break;
 	}
 	if (! xdr_u_int(xdrs, &size)) {
-		return (FALSE);
+		return FALSE;
 	}
 	if (size > maxsize) {
-		return (FALSE);
+		return FALSE;
 	}
 	nodesize = size + 1;
 
@@ -569,29 +590,28 @@ xdr_string(xdrs, cpp, maxsize)
 	 * now deal with the actual bytes
 	 */
 	switch (xdrs->x_op) {
-
-	case XDR_DECODE:
+	      case XDR_DECODE:
 		if (nodesize == 0) {
-			return (TRUE);
+			return TRUE;
 		}
 		if (sp == NULL)
 			*cpp = sp = (char *)mem_alloc(nodesize);
 		if (sp == NULL) {
 			(void) fprintf(stderr, "xdr_string: out of memory\n");
-			return (FALSE);
+			return FALSE;
 		}
 		sp[size] = 0;
 		/* fall into ... */
 
-	case XDR_ENCODE:
-		return (xdr_opaque(xdrs, sp, size));
+	      case XDR_ENCODE:
+		return xdr_opaque(xdrs, sp, size);
 
-	case XDR_FREE:
+	      case XDR_FREE:
 		mem_free(sp, nodesize);
 		*cpp = NULL;
-		return (TRUE);
+		return TRUE;
 	}
-	return (FALSE);
+	return FALSE;
 }
 
 /*
@@ -604,7 +624,7 @@ xdr_wrapstring(xdrs, cpp)
 	char **cpp;
 {
 	if (xdr_string(xdrs, cpp, LASTUNSIGNED)) {
-		return (TRUE);
+		return TRUE;
 	}
-	return (FALSE);
+	return FALSE;
 }

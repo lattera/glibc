@@ -412,7 +412,7 @@ svc_getreqset(readfds)
 #ifdef FD_SETSIZE
 	setsize = _rpc_dtablesize();	
 	maskp = (u_int32_t *)readfds->fds_bits;
-	for (sock = 0; sock < setsize; sock += NFDBITS) {
+	for (sock = 0; sock < setsize; sock += 32) {
 	    for (mask = *maskp++; bit = ffs(mask); mask ^= (1 << (bit - 1))) {
 		/* sock has input waiting */
 		xprt = xports[sock + bit - 1];

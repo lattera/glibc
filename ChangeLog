@@ -1,3 +1,40 @@
+Sat Jul 20 07:15:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* crypt/Makefile, crypt/nocrypt.c: Removed.  It is illegal to export
+ 	from the USA any software that even makes it easy to drop in an
+ 	encryption module of foreign origin.
+	* Makerules (cryptobjdir): Variable removed.
+	($(libdir)/libc.so): Remove dep on libcrypt.so$(libcrypt.so-version).
+	* Makefile (subdirs): Remove crypt.
+
+Fri Jul 19 15:10:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sunrpc/xdr_mem.c (xdrmem_putlong): Don't cast LP to int32 (the
+ 	old code would have failed on a big-endian 64-bit architecture).
+	* sunrpc/xdr_stdio.c (xdrstdio_putlong): Ditto.
+
+	* sunrpc/xdr.c (xdr_int): Handle XDR_FREE case.
+	(xdr_u_long): Use switch instead of chain of if-statements.
+  	Remove gratitous parentheses around return expressions.
+	(xdr_enum): Open code case where INT_MAX<LONG_MAX.
+
+	* sunrpc/svc.c (svc_getreqset): Increment SOCK by 32, not NFDBITS.
+
+	* sunrpc/portmap.c (reg_service): Declare ANS and PORT as long,
+ 	not int.
+
+Fri Jul 19 16:56:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* dlfcn.h, db.h: New wrapper headers.
+
+	* posix/glob.h [!_AMIGA && !VMS]: Check this instead of just [!_AMIGA]
+	for `struct stat;' forward decl.
+
+Fri Jul 19 22:25:19 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/iso-4217.def: Add some more standardized currency
+	symbols.
+
 Fri Jul 19 13:18:02 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* hurd/report-wait.c (describe_number): Use unsigned long int for J.

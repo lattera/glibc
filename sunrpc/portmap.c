@@ -166,7 +166,7 @@ reg_service(rqstp, xprt)
 {
 	struct pmap reg;
 	struct pmaplist *pml, *prevpml, *fnd;
-	int ans, port;
+	long ans, port;
 	caddr_t t;
 
 #ifdef DEBUG

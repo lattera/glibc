@@ -118,7 +118,7 @@ xdrstdio_putlong(xdrs, lp)
 	long *lp;
 {
 
-	int32_t  mycopy = htonl(*(int32_t*)lp);
+	int32_t  mycopy = htonl(*lp);
 	lp = &mycopy;
 	if (fwrite((caddr_t)lp, 4, 1, (FILE *)xdrs->x_private) != 1)
 		return (FALSE);

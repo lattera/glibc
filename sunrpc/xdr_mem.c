@@ -112,7 +112,7 @@ xdrmem_putlong(xdrs, lp)
 
 	if ((xdrs->x_handy -= 4) < 0)
 		return (FALSE);
-	*(int32_t *)xdrs->x_private = (long)htonl((u_long)(*(int32_t*)lp));
+	*(int32_t *)xdrs->x_private = htonl(*lp);
 	xdrs->x_private += 4;
 	return (TRUE);
 }

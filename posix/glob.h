@@ -65,7 +65,7 @@ extern "C"
 #define	GLOB_NOMATCH	3	/* No matches found.  */
 
 /* Structure describing a globbing run.  */
-#ifndef _AMIGA			/* Buggy compiler.   */
+#if !defined (_AMIGA) && !defined (VMS) /* Buggy compiler.   */
 struct stat;
 #endif
 typedef struct

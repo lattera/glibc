@@ -2,35 +2,170 @@
  * Defines the valid international currency symbols according to ISO-4217.
  * This is used in monetary.c(monetary_check).
  *
+ * If you find something missing or wrong contact <bug-glibc@prep.ai.mit.edu>
+ *
  * !!! The list has to be sorted !!!
  */
-DEFINE_INT_CURR("ATS ")		/* Austria  */
-DEFINE_INT_CURR("BEF ")		/* Belgium  */
+DEFINE_INT_CURR("AED ")		/* United Arab Emirats  */
+DEFINE_INT_CURR("AFA ")		/* Afghanistan  */
+DEFINE_INT_CURR("ALL ")		/* Albania  */
+DEFINE_INT_CURR("ANG ")		/* Netherlands Antilles  */
+DEFINE_INT_CURR("AOK ")		/* Angola  */
+DEFINE_INT_CURR("ARP ")		/* Argentina  */
+DEFINE_INT_CURR("ATS ")		/* Austria   */
+DEFINE_INT_CURR("AUD ")		/* Australia  */
+DEFINE_INT_CURR("BBD ")		/* Barbados  */
+DEFINE_INT_CURR("BDT ")		/* Bangladesh  */
+DEFINE_INT_CURR("BEF ")		/* Belgium   */
+DEFINE_INT_CURR("BGL ")		/* Bulgaria  */
+DEFINE_INT_CURR("BHD ")		/* Bahrain  */
+DEFINE_INT_CURR("BIF ")		/* Burundi  */
+DEFINE_INT_CURR("BMD ")		/* Burmuda  */
+DEFINE_INT_CURR("BND ")		/* Brunei  */
+DEFINE_INT_CURR("BOP ")		/* Bolivia  */
+DEFINE_INT_CURR("BRC ")		/* Brazil  */
+DEFINE_INT_CURR("BSD ")		/* Bahamas  */
+DEFINE_INT_CURR("BUK ")		/* Burma  */
+DEFINE_INT_CURR("BWP ")		/* Botswana  */
+DEFINE_INT_CURR("BZD ")		/* Belize  */
 DEFINE_INT_CURR("CAD ")		/* Canada  */
-DEFINE_INT_CURR("CHF ")		/* Switzerland  */
+DEFINE_INT_CURR("CHF ")		/* Switzerland, Liechtenstein  */
+DEFINE_INT_CURR("CLP ")		/* Chile  */
+DEFINE_INT_CURR("CNY ")		/* China  */
+DEFINE_INT_CURR("COP ")		/* Colombia  */
+DEFINE_INT_CURR("CRC ")		/* Costa Rica  */
+DEFINE_INT_CURR("CSK ")		/* Czechoslovakia  */
+DEFINE_INT_CURR("CUP ")		/* Cuba  */
+DEFINE_INT_CURR("CVE ")		/* Cape Verde  */
+DEFINE_INT_CURR("CYP ")		/* Cyprus  */
 DEFINE_INT_CURR("DEM ")		/* Germany  */
+DEFINE_INT_CURR("DJF ")		/* Djibouti  */
 DEFINE_INT_CURR("DKK ")		/* Denmark  */
+DEFINE_INT_CURR("DOP ")		/* Dominican Republic  */
+DEFINE_INT_CURR("DZD ")		/* Algeria  */
+DEFINE_INT_CURR("ECS ")		/* Ecuador  */
 DEFINE_INT_CURR("EEK ")		/* Estonia  */
+DEFINE_INT_CURR("EGP ")		/* Egypt  */
 DEFINE_INT_CURR("ESP ")		/* Spain  */
+DEFINE_INT_CURR("ETB ")		/* Ethiopia  */
 DEFINE_INT_CURR("FIM ")		/* Finland  */
+DEFINE_INT_CURR("FJD ")		/* Fiji  */
+DEFINE_INT_CURR("FKP ")		/* Falkland Islands (Malvinas)  */
 DEFINE_INT_CURR("FRF ")		/* France  */
 DEFINE_INT_CURR("GBP ")		/* Great Britain  */
+DEFINE_INT_CURR("GHC ")		/* Ghana  */
+DEFINE_INT_CURR("GIP ")		/* Gibraltar  */
+DEFINE_INT_CURR("GMD ")		/* Gambia  */
+DEFINE_INT_CURR("GNS ")		/* Guinea  */
+DEFINE_INT_CURR("GQE ")		/* Equatorial Guinea  */
 DEFINE_INT_CURR("GRD ")		/* Greece  */
+DEFINE_INT_CURR("GTQ ")		/* Guatemala  */
+DEFINE_INT_CURR("GWP ")		/* Guinea-Bissau  */
+DEFINE_INT_CURR("GYD ")		/* Guyana  */
+DEFINE_INT_CURR("HKD ")		/* Hong Kong  */
+DEFINE_INT_CURR("HNL ")		/* Honduras  */
 DEFINE_INT_CURR("HRD ")		/* Croatia  */
+DEFINE_INT_CURR("HTG ")		/* Haiti  */
 DEFINE_INT_CURR("HUF ")		/* Hungary  */
+DEFINE_INT_CURR("IDR ")		/* Indonesia  */
 DEFINE_INT_CURR("IEP ")		/* Ireland  */
 DEFINE_INT_CURR("ILS ")		/* Israel  */
+DEFINE_INT_CURR("INR ")		/* Bhutan  */
+DEFINE_INT_CURR("IQD ")		/* Iraq  */
+DEFINE_INT_CURR("IRR ")		/* Iran  */
 DEFINE_INT_CURR("ISK ")		/* Iceland  */
 DEFINE_INT_CURR("ITL ")		/* Italy  */
+DEFINE_INT_CURR("JMD ")		/* Jamaica  */
+DEFINE_INT_CURR("JOD ")		/* Jordan  */
+DEFINE_INT_CURR("JPY ")		/* Japan  */
+DEFINE_INT_CURR("KES ")		/* Kenya  */
+DEFINE_INT_CURR("KHR ")		/* Democratic Kampuchea  */
+DEFINE_INT_CURR("KMF ")		/* Comoros  */
+DEFINE_INT_CURR("KPW ")		/* Democratic People's of Korea  */
+DEFINE_INT_CURR("KRW ")		/* Republic of Korea  */
+DEFINE_INT_CURR("KWD ")		/* Kuwait  */
+DEFINE_INT_CURR("KYD ")		/* Cayman Islands  */
+DEFINE_INT_CURR("LAK ")		/* Lao People's Democratic Republic */
+DEFINE_INT_CURR("LBP ")		/* Lebanon  */
+DEFINE_INT_CURR("LKR ")		/* Sri Lanka  */
+DEFINE_INT_CURR("LRD ")		/* Liberia  */
+DEFINE_INT_CURR("LSM ")		/* Lesotho  */
 DEFINE_INT_CURR("LTL ")		/* Lithuania  */
 DEFINE_INT_CURR("LUF ")		/* Luxemburg  */
 DEFINE_INT_CURR("LVL ")		/* Latvia  */
+DEFINE_INT_CURR("LYD ")		/* Libyan Arab Jamahiriya  */
+DEFINE_INT_CURR("MAD ")		/* Morocco  */
+DEFINE_INT_CURR("MGF ")		/* Madagascar  */
+DEFINE_INT_CURR("MLF ")		/* Mali  */
+DEFINE_INT_CURR("MNT ")		/* Mongolia  */
+DEFINE_INT_CURR("MOP ")		/* Macau  */
+DEFINE_INT_CURR("MRO ")		/* Mauritania  */
+DEFINE_INT_CURR("MTP ")		/* Malta  */
+DEFINE_INT_CURR("MUR ")		/* Mauritius  */
+DEFINE_INT_CURR("MVR ")		/* Maldives  */
+DEFINE_INT_CURR("MWK ")		/* Malawi  */
+DEFINE_INT_CURR("MXP ")		/* Mexico  */
+DEFINE_INT_CURR("MYR ")		/* Malaysia  */
+DEFINE_INT_CURR("MZM ")		/* Mozambique  */
+DEFINE_INT_CURR("NGN ")		/* Nigeria  */
+DEFINE_INT_CURR("NIC ")		/* Nicaragua  */
 DEFINE_INT_CURR("NLG ")		/* Netherlands  */
 DEFINE_INT_CURR("NOK ")		/* Norway  */
+DEFINE_INT_CURR("NPR ")		/* Nepal  */
+DEFINE_INT_CURR("NZD ")		/* New Zealand  */
+DEFINE_INT_CURR("OMR ")		/* Oman  */
+DEFINE_INT_CURR("PAB ")		/* Panama  */
+DEFINE_INT_CURR("PES ")		/* Peru  */
+DEFINE_INT_CURR("PGK ")		/* Papau New Guinea  */
+DEFINE_INT_CURR("PHP ")		/* Philippines  */
+DEFINE_INT_CURR("PKR ")		/* Pakistan  */
 DEFINE_INT_CURR("PLZ ")		/* Poland  */
 DEFINE_INT_CURR("PTE ")		/* Portugal  */
+DEFINE_INT_CURR("PYG ")		/* Paraguay  */
+DEFINE_INT_CURR("QAR ")		/* Qatar  */
 DEFINE_INT_CURR("ROL ")		/* Romania  */
 DEFINE_INT_CURR("RUR ")		/* Russia  */
+DEFINE_INT_CURR("RWF ")		/* Rwanda  */
+DEFINE_INT_CURR("SAR ")		/* Saudi Arabia  */
+DEFINE_INT_CURR("SBD ")		/* Solomon Islands  */
+DEFINE_INT_CURR("SCR ")		/* Seychelles  */
+DEFINE_INT_CURR("SDP ")		/* Sudan  */
 DEFINE_INT_CURR("SEK ")		/* Sweden  */
+DEFINE_INT_CURR("SGD ")		/* Singapore  */
+DEFINE_INT_CURR("SHP ")		/* St. Helena  */
 DEFINE_INT_CURR("SIT ")		/* Slovenia  */
+DEFINE_INT_CURR("SLL ")		/* Sierra Leone  */
+DEFINE_INT_CURR("SOS ")		/* Somalia  */
+DEFINE_INT_CURR("SRG ")		/* Suriname  */
+DEFINE_INT_CURR("STD ")		/* Sao Tome and Principe  */
+DEFINE_INT_CURR("SUR ")		/* Ukrainian, Byelorussion  */
+DEFINE_INT_CURR("SVC ")		/* El Salvador  */
+DEFINE_INT_CURR("SYP ")		/* Syrian Arab Republic  */
+DEFINE_INT_CURR("SZL ")		/* Swaziland  */
+DEFINE_INT_CURR("THB ")		/* Thailand  */
+DEFINE_INT_CURR("TND ")		/* Tunisia  */
+DEFINE_INT_CURR("TOP ")		/* Tonga  */
+DEFINE_INT_CURR("TPE ")		/* East Timor  */
+DEFINE_INT_CURR("TRL ")		/* Turkey  */
+DEFINE_INT_CURR("TTD ")		/* Trinidad and Tobago  */
+DEFINE_INT_CURR("TWD ")		/* Taiwan, Province of China  */
+DEFINE_INT_CURR("TZS ")		/* United Republic of Tanzania  */
+DEFINE_INT_CURR("UGS ")		/* Uganda  */
 DEFINE_INT_CURR("USD ")		/* United States  */
+DEFINE_INT_CURR("UYP ")		/* Uruguay  */
+DEFINE_INT_CURR("VEB ")		/* Venezuela  */
+DEFINE_INT_CURR("VND ")		/* Viet Nam  */
+DEFINE_INT_CURR("VUV ")		/* Vanuatu  */
+DEFINE_INT_CURR("WST ")		/* Samoa  */
+DEFINE_INT_CURR("XAF ")		/* United Republic of Cameroon, Central African Republic, Chad, Congo, Gabon  */
+DEFINE_INT_CURR("XCD ")		/* Antiqua, Dominica, Grenada, Montserrat, St. Kitts-Nevis-Anguilla, Saint Lucia, Saint Vincent and the Grenadines  */
+DEFINE_INT_CURR("XOF ")		/* Benin, Ivory Coast, Niger, Senegal, Togo, Upper Volta  */
+DEFINE_INT_CURR("XPF ")		/* French polynesia, New Caledonia, Wallis and Futuna Islands  */
+DEFINE_INT_CURR("YDD ")		/* Democratic Yemen  */
+DEFINE_INT_CURR("YER ")		/* Yemen  */
+DEFINE_INT_CURR("YUD ")		/* Yugoslavia  */
+DEFINE_INT_CURR("ZAL ")		/* South Africa  */
+DEFINE_INT_CURR("ZAR ")		/* Lesotho, Namibia  */
+DEFINE_INT_CURR("ZMK ")		/* Zambia  */
+DEFINE_INT_CURR("ZRZ ")		/* Zaire  */
+DEFINE_INT_CURR("ZWD ")		/* Zimbabwe  */
