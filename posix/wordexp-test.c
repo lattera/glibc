@@ -152,11 +152,12 @@ command_line_test (const char *words)
 int
 main (int argc, char *argv[])
 {
+  const char *globfile[] = { "one", "two", "three", NULL };
   char tmpdir[32];
   struct passwd *pw;
   int test;
   int fail = 0;
-  int fd;
+  int i;
 
   if (argc > 1)
     {
@@ -164,16 +165,22 @@ main (int argc, char *argv[])
       return 0;
     }
 
+  cwd = getcwd (NULL, 0);
   setenv ("IFS", IFS, 1);
 
   /* Set up arena for pathname expansion */
   tmpnam (tmpdir);
-  if (mkdir (tmpdir, S_IRWXU) ||
-      chdir (tmpdir) ||
-      (fd = creat ("one", S_IRWXU)) == -1 || close (fd) ||
-      (fd = creat ("two", S_IRWXU)) == -1 || close (fd) ||
-      (fd = creat ("three", S_IRWXU)) == -1 || close (fd))
+  if (mkdir (tmpdir, S_IRWXU) || chdir (tmpdir))
     return -1;
+  else
+    {
+      int fd;
+
+      for (i = 0; globfile[i]; ++i)
+	if ((fd = creat (globfile[i], S_IRUSR | S_IWUSR)) == -1
+	    || close (fd))
+	  return -1;
+    }
 
   for (test = 0; test_case[test].retval != -1; test++)
     if (testit (&test_case[test]))
@@ -194,6 +201,16 @@ main (int argc, char *argv[])
       if (testit (&ts))
 	++fail;
     }
+
+  /* Clean up */
+  for (i = 0; globfile[i]; ++i)
+    remove (globfile[i]);
+
+  if (cwd = NULL)
+    strcpy (cwd, "..");
+
+  chdir (cwd);
+  rmdir (tmpdir);
 
   return fail != 0;
 }

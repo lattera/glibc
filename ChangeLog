@@ -1,3 +1,10 @@
+1998-03-16 13:02  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-tst.sh: Store test results in the
+	${common_objpfx}posix directory.
+
+	* posix/wordexp-test.c: Remove temporary directory afterwards.
+
 1998-03-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* libc.map: Export internal versions of cancelable functions.

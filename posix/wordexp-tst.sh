@@ -8,7 +8,7 @@ common_objpfx=$1; shift
 elf_objpfx=$1; shift
 rtld_installed_name=$1; shift
 
-: ${TMPDIR=/tmp}
+: ${TMPDIR=${common_objpfx}posix}
 testout=$TMPDIR/wordexp-test-result
 
 failed=0
