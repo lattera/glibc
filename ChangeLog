@@ -1,5 +1,7 @@
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getdtsz.c: New file.
+
 	* sysdeps/unix/sysv/linux/sys/param.h: Define NOFILE directly as
 	256 and don't use OPEN_MAX.
 
