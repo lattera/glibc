@@ -67,7 +67,6 @@ typedef struct siginfo
 	  {
 	    int si_tid;		/* Timer ID.  */
 	    int si_overrun;	/* Overrun count.  */
-	    char _pad[sizeof (__uid_t) - sizeof (int)];
 	    sigval_t si_sigval;	/* Signal value.  */
 	  } _timer;
 
