@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -438,7 +438,10 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
 
       if (yp_match (domain, "group.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
@@ -784,8 +787,8 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
 	{
-	  *errnop = errno;
-	  return NSS_STATUS_TRYAGAIN;
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
 	}
 
       snprintf (buf, sizeof (buf), "%d", gid);
@@ -793,8 +796,8 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
       if (yp_match (domain, "group.bygid", buf, strlen (buf),
 		    &outval, &outvallen) != YPERR_SUCCESS)
 	{
-	  *errnop = errno;
-	  return NSS_STATUS_TRYAGAIN;
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
 	}
 
       if (buflen < ((size_t) outvallen + 1))

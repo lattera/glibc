@@ -1,3 +1,8 @@
+1999-09-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_compat/compat-grp.c (getgrgid_plusgroup): Correct
+	returned errno value in some cases.
+
 1999-09-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Add also -mcpu=i386
@@ -24,7 +29,7 @@
 
 	* sysdeps/unix/sysv/linux/arm/sys/user.h: Added members
 	'unsigned char ftype[8]', and 'unsigned int init_flag' to
-	struct user_fp.  Tnese were added in version 2.2.12 of the
+	struct user_fp.  These were added in version 2.2.12 of the
 	ARM Linux kernel.
 	* sysdeps/unix/sysv/linux/arm/sys/elf.h: New file.
 	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: New file.
