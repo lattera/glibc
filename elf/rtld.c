@@ -1396,7 +1396,7 @@ process_envvars (enum mode *modep, int *lazyp)
   if (__builtin_expect (mode, normal) == trace)
     *lazyp = _dl_verbose ? !bind_now : -1;
   else
-    *lazyp = !__libc_enable_secure && !bind_now;
+    *lazyp = !bind_now;
 
   *modep = mode;
 }
