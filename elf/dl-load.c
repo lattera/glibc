@@ -281,16 +281,41 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 static struct r_search_path_elem **
 internal_function
-decompose_rpath (const char *rpath, size_t additional_room,
-		 const char *what, const char *where)
+decompose_rpath (const char *rpath, size_t additional_room, const char *where)
 {
   /* Make a copy we can work with.  */
-  char *copy = local_strdup (rpath);
+  char *copy;
   char *cp;
   struct r_search_path_elem **result;
-  /* First count the number of necessary elements in the result array.  */
-  size_t nelems = 0;
+  size_t nelems;
 
+  /* First see whether we must forget the RPATH from this object.  */
+  if (_dl_ignore_rpath != NULL && !__libc_enable_secure)
+    {
+      const char *found = strstr (_dl_ignore_rpath, where);
+      if (found != NULL)
+	{
+	  size_t len = strlen (where);
+	  if ((found == _dl_ignore_rpath || found[-1] == ':')
+	      && (found[len] == '\0' || found[len] == ':'))
+	    {
+	      /* This object is on the list of objects for which the RPATH
+		 must not be used.  */
+	      result = (struct r_search_path_elem **)
+		malloc ((additional_room + 1) * sizeof (*result));
+	      if (result == NULL)
+		_dl_signal_error (ENOMEM, NULL,
+				  "cannot create cache for search path");
+	      result[0] = NULL;
+
+	      return result;
+	    }
+	}
+    }
+
+  /* Count the number of necessary elements in the result array.  */
+  copy = local_strdup (rpath);
+  nelems = 0;
   for (cp = copy; *cp != '\0'; ++cp)
     if (*cp == ':')
       ++nelems;
@@ -303,7 +328,7 @@ decompose_rpath (const char *rpath, size_t additional_room,
   if (result == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
 
-  return fillin_rpath (copy, result, ":", NULL, what, where);
+  return fillin_rpath (copy, result, ":", NULL, "RPATH", where);
 }
 
 
@@ -399,7 +424,7 @@ _dl_init_paths (const char *llp)
 	    decompose_rpath ((const char *)
 			     (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
 			      + l->l_info[DT_RPATH]->d_un.d_val),
-			     nllp, "RPATH", l->l_name);
+			     nllp, l->l_name);
 	}
       else
 	{
@@ -1056,8 +1081,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 				 + l->l_info[DT_STRTAB]->d_un.d_ptr
 				 + l->l_info[DT_RPATH]->d_un.d_val);
 		l->l_rpath_dirs =
-		  decompose_rpath ((const char *) ptrval, 0,
-				   "RPATH", l->l_name);
+		  decompose_rpath ((const char *) ptrval, 0, l->l_name);
 	      }
 
 	    if (l->l_rpath_dirs != (struct r_search_path_elem **) -1l)

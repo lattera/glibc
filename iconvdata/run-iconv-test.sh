@@ -36,7 +36,8 @@ export GCONV_PATH
 LIBPATH=$codir:$codir/iconvdata
 
 # How the start the iconv(1) program.
-ICONV="$codir/elf/ld.so --library-path $LIBPATH $codir/iconv/iconv_prog"
+ICONV='$codir/elf/ld.so --library-path $LIBPATH --ignore-rpath ${from}.so \
+       $codir/iconv/iconv_prog'
 
 # We read the file named TESTS.  All non-empty lines not starting with
 # `#' are interpreted as commands.
@@ -45,14 +46,17 @@ while read from to subset targets; do
   # Ignore empty and comment lines.
   if test -z "$targets" || test "$from" = '#'; then continue; fi
 
+  # Expand the variables now.
+  PROG=`eval echo $ICONV`
+
   for t in $targets; do
-    $ICONV -f $from -t $t testdata/$from > $temp1 ||
+    $PROG -f $from -t $t testdata/$from > $temp1 ||
       { echo "*** conversion from $from to $t failed"; failed=1; continue; }
     if test -s testdata/$from..$t; then
       cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
 	{ echo "*** $from -> $t conversion failed"; failed=1; continue; }
     fi
-    $ICONV -f $t -t $to -o $temp2 $temp1 ||
+    $PROG -f $t -t $to -o $temp2 $temp1 ||
       { echo "*** conversion from $t to $to failed"; failed=1; continue; }
     test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
       { echo "*** $from -> t -> $to conversion failed"; failed=1; continue; }
@@ -62,16 +66,16 @@ while read from to subset targets; do
     # of the coded character set we test we convert the test to this
     # coded character set.  Otherwise we convert to all the TARGETS.
     if test $subset = Y; then
-      $ICONV -f $from -t $t testdata/suntzus |
-      $ICONV -f $t -t $to > $temp1 ||
+      $PROG -f $from -t $t testdata/suntzus |
+      $PROG -f $t -t $to > $temp1 ||
 	{ echo "*** conversion $from->$t->$to of suntzus failed"; failed=1;
 	  continue; }
       cmp testdata/suntzus $temp1 ||
 	{ echo "*** conversion $from->$t->$to of suntzus incorrect";
 	  failed=1; continue; }
     else
-      $ICONV -f ASCII -t $to testdata/suntzus |
-      $ICONV -f $to -t ASCII > $temp1 ||
+      $PROG -f ASCII -t $to testdata/suntzus |
+      $PROG -f $to -t ASCII > $temp1 ||
         { echo "*** conversion ASCII->$to->ASCII of suntzus failed";
 	  failed=1; continue; }
 	cmp testdata/suntzus $temp1 ||

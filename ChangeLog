@@ -1,3 +1,18 @@
+1998-05-19 23:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c: Recognize --ignore-rpath argument and set _dl_ignore_path
+	variable using the value.
+	* elf/ldsodefs.h: Declare _dl_ignore_path.
+	* elf/dl-load.c (decompose_rpath): Compare name of handled shared
+	object against list in _dl_ignore_path and ignore RPATH if on the list.
+	* elf/dl-support.c: Define _dl_ignore_path for static binaries.
+	* iconvdata/run-iconv-test.sh: Call ld.so with --ignore-rpath parameter
+	to make sure we get the correct helper libraries loaded.
+
+	* elf/dl-load.c (decompose_rpath): Remove `room' parameter.  Use
+	"RPATH" string in call to fillin_rpath instead.
+	(_dl_init_paths): Remove this parameter from call to decompose_rpath.
+
 1998-05-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/i486/bits/string.h (__strstr_g): Initialize %edx
