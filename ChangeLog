@@ -1,3 +1,7 @@
+2000-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/Makefile: Undo last change.
+
 2000-08-02  Andreas Jaeger  <aj@suse.de>
 
 	* elf/elf.h (EM_S390): Added.
