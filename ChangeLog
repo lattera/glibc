@@ -1,5 +1,9 @@
 2003-03-20  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/bits/setjmp.h: n32 has only 6 call-saved fpregs.
+	* sysdeps/mips/mips64/setjmp_aux.c (__sigsetjmp_aux): Adjust.
+	* sysdeps/mips/mips64/__longjmp.c (__longjmp): Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/pread.c: Don't break up offset
 	into high and low halves on n64.
 	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.

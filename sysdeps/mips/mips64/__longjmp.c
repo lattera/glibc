@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -38,6 +38,7 @@ __longjmp (env, val_arg)
   register int val asm ("a1");
 
   /* Pull back the floating point callee-saved registers.  */
+#if defined _ABI64 && _MIPS_SIM == _ABI64
   asm volatile ("l.d $f24, %0" : : "m" (env[0].__fpregs[0]));
   asm volatile ("l.d $f25, %0" : : "m" (env[0].__fpregs[1]));
   asm volatile ("l.d $f26, %0" : : "m" (env[0].__fpregs[2]));
@@ -46,6 +47,14 @@ __longjmp (env, val_arg)
   asm volatile ("l.d $f29, %0" : : "m" (env[0].__fpregs[5]));
   asm volatile ("l.d $f30, %0" : : "m" (env[0].__fpregs[6]));
   asm volatile ("l.d $f31, %0" : : "m" (env[0].__fpregs[7]));
+#else
+  asm volatile ("l.d $f20, %0" : : "m" (env[0].__fpregs[0]));
+  asm volatile ("l.d $f22, %0" : : "m" (env[0].__fpregs[1]));
+  asm volatile ("l.d $f24, %0" : : "m" (env[0].__fpregs[2]));
+  asm volatile ("l.d $f26, %0" : : "m" (env[0].__fpregs[3]));
+  asm volatile ("l.d $f28, %0" : : "m" (env[0].__fpregs[4]));
+  asm volatile ("l.d $f30, %0" : : "m" (env[0].__fpregs[5]));
+#endif
 
   /* Get and reconstruct the floating point csr.  */
   asm volatile ("lw $2, %0" : : "m" (env[0].__fpc_csr));
