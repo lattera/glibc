@@ -1,3 +1,9 @@
+1999-04-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* locale/langinfo.h (THOUSEP): Rename second occurence of
+	THOUSANDS_SEP to THOUSEP.
+	Reported by Roman Belenov <roman@nstl.nnov.ru>.
+
 1999-04-05  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/STATUS: File removed.  Moved items that are still relevant into
