@@ -1,5 +1,7 @@
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (distribute): Add include/shlib-compat.h.
+
 	* Make-dist: Search for tests also in sysdeps hierachy.
 
 	* crypt/Makefile (distribute): Add ufc-crypt.h, crypt-private.h,

@@ -45,7 +45,8 @@ test-output := $(foreach s, .out .xout, \
 ld-test-names := test1 test2 test3 test4 test5 test6
 ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .def,$(ld-test-names)) \
-				   $(addsuffix .ds,$(ld-test-names)))
+				   $(addsuffix .ds,test5 test6) \
+				   test6.c trans.def)
 
 fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
@@ -58,7 +59,7 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\
 	      tst-rpmatch.sh tst-locale.sh tst-fmon.sh sort-test.sh	\
 	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
-	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh trans.def
+	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
