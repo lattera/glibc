@@ -141,6 +141,8 @@ __libc_message (int do_abort, const char *fmt, ...)
   if (! written)
     vsyslog (LOG_ERR, fmt, ap_copy);
 
+  va_end (ap_copy);
+
   if (do_abort)
     /* Terminate the process.  */
     abort ();

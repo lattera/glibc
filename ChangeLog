@@ -1,5 +1,8 @@
 2004-11-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (_int_free): Remove test for NULL parameter.
+	(_int_realloc): Call _int_free only if memory parameter is not NULL.
+
 	* sysdeps/unix/sysv/linux/libc_fatal.c: Add new function __libc_message
 	which performs the printing and simple format string handling.  The
 	string is written to tty, stderr, syslog in this order, stopping after
