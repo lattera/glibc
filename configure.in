@@ -68,9 +68,11 @@ AC_ARG_WITH(elf, dnl
 AC_ARG_WITH(cvs, dnl
 [  --without-cvs           if CVS should not be used],
 	    with_cvs=$withval, with_cvs=yes)
-if test "$with_cvs" = yes && test -d CVS && grep :pserver: CVS/Root > /dev/null
-then
-  with_cvs=no
+if test "$with_cvs" = yes; then
+  if test -d $srcdir/CVS && grep :pserver: $srcdir/CVS/Root > /dev/null
+  then
+    with_cvs=no
+  fi
 fi
 AC_SUBST(with_cvs)
 

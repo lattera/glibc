@@ -1,3 +1,7 @@
+2000-12-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Correct test for pserver CVS access.
+
 2000-11-28  H.J. Lu  <hjl@gnu.org>
 
 	* libio/libio.h: Remove extra "#if ... #endif".
