@@ -32,7 +32,7 @@ CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
 others = utmpdump pt_chown
 install-others = $(inst_libexecdir)/pt_chown
 
-distribute := utmp-private.h programs/xtmp.h pty-private.h
+distribute := utmp-private.h pty-private.h
 
 subdir-dirs = programs
 vpath %.c programs

@@ -473,10 +473,12 @@ endif
 override sources := $(addsuffix .c,\
 			$(filter-out $(elided-routines),\
 			    $(routines) $(aux) \
-			    $(sysdep_routines)) \
-			    $(addprefix $(bppfx),\
-				$(filter $(routines) $(sysdep_routines),\
-				    $(bp-thunks))))
+			    $(sysdep_routines)))
+# XXX The following was introduced here in the BP patches but it belongs
+# XXX somewhere else since adding it here breaks `make dist'.
+#			    $(addprefix $(bppfx),\
+#				$(filter $(routines) $(sysdep_routines),\
+#				    $(bp-thunks))))
 sysdep_routines := $(sysdep_routines)
 
 headers := $(headers) $(sysdep_headers)
