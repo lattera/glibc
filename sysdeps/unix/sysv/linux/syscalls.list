@@ -7,7 +7,7 @@ delete_module	EXTRA	delete_module	3	delete_module
 fdatasync	-	fdatasync	1	fdatasync
 flock		-	flock		2	__flock		flock
 fork		-	fork		0	__fork		fork
-get_kernel_syms	-	get_kernel_syms	1	get_kernel_syms
+get_kernel_syms	EXTRA	get_kernel_syms	1	get_kernel_syms
 getegid		-	getegid		0	__getegid	getegid
 geteuid		-	geteuid		0	__geteuid	geteuid
 getpgid		-	getpgid		1	__getpgid	getpgid
@@ -18,19 +18,19 @@ init_module	EXTRA	init_module	5	init_module
 ioperm		-	ioperm		3	ioperm
 iopl		-	iopl		1	iopl
 ipc		msgget	ipc		5	__ipc
-llseek		-	_llseek		5	llseek
+llseek		EXTRA	_llseek		5	llseek
 mlock		-	mlock		2	__mlock	mlock
 mlockall	-	mlockall	1	__mlockall	mlockall
-mount		-	mount		5	__mount	mount
+mount		EXTRA	mount		5	__mount	mount
 mremap		-	mremap		4	__mremap	mremap
 munlock		-	munlock		2	__munlock	munlock
 munlockall	-	munlockall	0	__munlockall	munlockall
 nanosleep	-	nanosleep	2	nanosleep
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
-s_reboot	-	reboot		3	__syscall_reboot
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
+s_reboot	EXTRA	reboot		3	__syscall_reboot
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 sched_setp	-	sched_setparam	2	__sched_setparam	sched_setparam
 sched_getp	-	sched_getparam	2	__sched_getparam	sched_getparam
@@ -41,15 +41,15 @@ sched_primax	-	sched_get_priority_max	1	__sched_get_priority_max	sched_get_prior
 sched_primin	-	sched_get_priority_min	1	__sched_get_priority_min	sched_get_priority_min
 sched_rr_gi	-	sched_rr_get_interval	2	__sched_rr_get_interval	sched_rr_get_interval
 select		-	_newselect	5	__select	select
-setfsgid	-	setfsgid	1	setfsgid
-setfsuid	-	setfsuid	1	setfsuid
+setfsgid	EXTRA	setfsgid	1	setfsgid
+setfsuid	EXTRA	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
-sysinfo		-	sysinfo		1	sysinfo
+sysinfo		EXTRA	sysinfo		1	sysinfo
 swapon		-	swapon		2	swapon
 klogctl		EXTRA	syslog		3	klogctl
-umount		-	umount		1	__umount	umount
-uselib		-	uselib		1	uselib
+umount		EXTRA	umount		1	__umount	umount
+uselib		EXTRA	uselib		1	uselib
 wait4		-	wait4		4	__wait4		wait4
