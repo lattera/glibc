@@ -441,7 +441,7 @@ _dl_start_user:\n\
 	# Save back the modified argument count.\n\
 	sw $4, 0($29)\n\
 1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
-	lw $4, _rtld_global\n\
+	lw $4, _rtld_local\n\
 	lw $5, 0($29)\n\
 	la $6, 4($29)\n\
 	sll $7, $5, 2\n\

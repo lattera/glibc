@@ -480,7 +480,7 @@ _dl_start_user:\n\
 	# Save back the modified argument count.\n\
 	sd $4, 0($29)\n\
 1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
-	ld $4, _rtld_global\n\
+	ld $4, _rtld_local\n\
 	ld $5, 0($29)\n\
 	dla $6, 4($29)\n\
 	dla $7, 8($29)\n\
@@ -492,7 +492,7 @@ _dl_start_user:\n\
 	dla $31, _dl_fini\n\
 	# Jump to the user entry point.\n\
 1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
-	lw $4, _rtld_global\n\
+	lw $4, _rtld_local\n\
 	lw $5, 0($29)\n\
 	la $6, 4($29)\n\
 	la $7, 8($29)\n\

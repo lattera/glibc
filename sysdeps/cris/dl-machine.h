@@ -212,7 +212,7 @@ _dl_start_user:
 	move.d	$sp,$r12
 	addq	4,$r12
 	;  main_map: at _dl_loaded.
-	move.d	[$r0+_rtld_global:GOT16],$r9
+	move.d	[$r0+_rtld_local:GOT16],$r9
 	move.d	[$r9],$r10
 	move.d	_dl_init_internal:PLTG,$r9
 	add.d	$r0,$r9
