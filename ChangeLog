@@ -1,5 +1,7 @@
 1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/bug1.c: Avoid memory leak.
+
 	* sysdeps/i386/fpu/e_pow.S: Use addl instead of pop/pop to keep
 	program deterministic.
 	* sysdeps/i386/fpu/e_powf.S: Likewise.

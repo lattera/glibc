@@ -23,5 +23,7 @@ main (void)
 
   puts (lose ? "Test FAILED!" : "Test succeeded.");
 
+  free (bp);
+
   return lose;
 }
