@@ -272,10 +272,11 @@ __pthread_initialize_minimal_internal (void)
 
   (void) __libc_sigaction (SIGSETXID, &sa, NULL);
 
-  /* The parent process might have left the signal blocked.  Just in
+  /* The parent process might have left the signals blocked.  Just in
      case, unblock it.  We reuse the signal mask in the sigaction
      structure.  It is already cleared.  */
   __sigaddset (&sa.sa_mask, SIGCANCEL);
+  __sigaddset (&sa.sa_mask, SIGSETXID);
   (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
 			   NULL, _NSIG / 8);
 
