@@ -1,5 +1,7 @@
 2003-07-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/statfs.h (_STATFS_F_FRSIZE): Define.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_UTIMES for x86 and kernels > 2.5.75.
 
