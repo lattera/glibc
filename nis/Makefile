@@ -55,7 +55,7 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_clone_res
 
 libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd initgroups) \
-			   nisplus-parser nss-nis
+			   nisplus-parser nss-nis nss-nisplus
 libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
 libnss_nis-routines	:= $(addprefix nis-,$(databases)) nis-initgroups \

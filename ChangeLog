@@ -3,6 +3,8 @@
 	* nis/nss-nis.h: Correct test for invalid error number.
 	* nis/nss-nisplus.h: Likewise.
 
+	* nis/Makefile (libnss_compat-rountines): Add nss-nisplus.
+
 2001-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add getunwind.
