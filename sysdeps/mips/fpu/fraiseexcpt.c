@@ -1,7 +1,7 @@
-/* Install given floating-point environment.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Raise given exceptions.
+   Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@suse.de>, 1998.
+   Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -23,24 +23,24 @@
 #include <shlib-compat.h>
 
 int
-__fesetenv (const fenv_t *envp)
+__feraiseexcept (int excepts)
 {
   fpu_control_t cw;
 
-  /* Read first current state to flush fpu pipeline.  */
+  /* Get current state.  */
   _FPU_GETCW (cw);
 
-  if (envp == FE_DFL_ENV)
-    _FPU_SETCW (_FPU_DEFAULT);
-  else
-    _FPU_SETCW (envp->__fp_control_register);
+  /* Set exceptions bits.  */
+  cw |= (excepts & FE_ALL_EXCEPT);
 
-  /* Success.  */
+  /* Set new state.  */
+  _FPU_SETCW (cw);
+
   return 0;
 }
 
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fesetenv, __old_fesetenv)
-compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
+strong_alias (__feraiseexcept, __old_feraiseexcept)
+compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
 #endif
-versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
+versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
