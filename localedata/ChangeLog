@@ -1,3 +1,13 @@
+2003-05-31  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/fi_FI: Add URL to a reference documenting Finish in
+	Finland
+	* locales/fi_FI [LC_MONETARY]: Correct mon_thousands_sep from
+	period (U002E) to non-break space (U00A0).
+	suggestion from Eero Häkkinen.
+	[LC_NUMERIC]: Correct thousands_sep from period (U002E) to
+	non-break space (U00A0).  Based on suggestion from Eero Häkkinen.
+
 2003-06-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/lo_LA: New file.

@@ -1,3 +1,9 @@
+2003-05-29  Jim Meyering  <jim@meyering.net>
+
+	* time/strftime.c (my_strftime) [!defined _NL_CURRENT
+	&& HAVE_STRFTIME]: Use underlying_strftime for %r.
+	Suggested by Daniel Yacob <locales@geez.org>.
+
 2003-06-12  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (RTLD_START): Replace
