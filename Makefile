@@ -282,7 +282,7 @@ FORCE:
 rpm/%: subdir_distinfo
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
-iconvdata/%:
+iconvdata/% localedata/%:
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
 # This is a special goal for people making binary distributions.  Normally

@@ -80,13 +80,11 @@ do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch do-tst-fmon
 endif
 
 # Sometimes the whole collection of locale files should be installed.
-ifneq ($(install_root),)
-LOCALEDEF=chroot $(install_root) $(bindir)/localedef
-else
 LOCALEDEF=$(common-objpfx)elf/ld.so --library-path $(rpath-link) $(common-objpfx)locale/localedef
-endif
 install-locales:
 	while read locale charset; do \
 	   case $$locale in \#*) continue;; esac; \
-	   $(LOCALEDEF) -c -i $$locale -f $$charset $$locale; \
+	   $(LOCALEDEF) -c -i locales/$$locale -f charmaps/$$charset \
+			-u repertoiremaps/mnemonic.ds \
+			$(inst_localedir)/$$locale; \
 	done < SUPPORTED

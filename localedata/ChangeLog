@@ -1,6 +1,6 @@
 1998-09-23  Ulrich Drepper  <drepper@cygnus.com>
 
-	* Makefile [no install_root] (LOCALEDEF): Run localedef using jsut
+	* Makefile [no install_root] (LOCALEDEF): Run localedef using just
 	built ld.so.
 
 1998-06-15  Ulrich Drepper  <drepper@cygnus.com>
