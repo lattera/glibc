@@ -1,3 +1,8 @@
+2002-07-04  Andreas Jaeger  <aj@suse.de>
+
+	* scripts/config.guess: New upstream version.
+	* scripts/config.sub: Likewise.
+
 2002-07-02  Andreas Schwab  <schwab@suse.de>
 
 	* resolv/nss_dns/dns-network.c (getanswer_r): Reduce linebuflen
