@@ -1,3 +1,7 @@
+1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/gnu/netinet/tcp.h: Add TCP_CORK definition.
+
 1999-11-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/scsi/scsi_ioctl.h: New file with some
