@@ -2870,7 +2870,7 @@ file is created another process might have created a file with the same
 name using @code{tmpnam}, leading to a possible security hole.  The
 implementation generates names which can hardly be predicted, but when
 opening the file you should use the @code{O_EXCL} flag.  Using
-@code{tmpfile} is a safe way to avoid this problem.
+@code{tmpfile} or @code{mkstemp} is a safe way to avoid this problem.
 @end deftypefun
 
 @comment stdio.h
@@ -2881,6 +2881,9 @@ that if @var{result} is a null pointer it returns a null pointer.
 
 This guarantees reentrancy because the non-reentrant situation of
 @code{tmpnam} cannot happen here.
+
+@strong{Warning}: This function has the same security problems as
+@code{tmpnam}.
 @end deftypefun
 
 @comment stdio.h
@@ -2937,6 +2940,13 @@ The directory @file{/tmp}.
 @end itemize
 
 This function is defined for SVID compatibility.
+
+@strong{Warning:} Between the time the pathname is constructed and the
+file is created another process might have created a file with the same
+name using @code{tempnam}, leading to a possible security hole.  The
+implementation generates names which can hardly be predicted, but when
+opening the file you should use the @code{O_EXCL} flag.  Using
+@code{tmpfile} or @code{mkstemp} is a safe way to avoid this problem.
 @end deftypefun
 @cindex TMPDIR environment variable
 

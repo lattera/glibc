@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1996,1997,1998,1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1996-1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,3 +33,6 @@ tmpnam_r (char *s)
 
   return s;
 }
+
+link_warning (tmpnam_r,
+	      "the use of `tmpnam_r' is dangerous, better use `mkstemp'")

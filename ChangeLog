@@ -1,4 +1,14 @@
+2000-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c (sethostid): Use O_TRUNC to
+	remove possible garbage at the end of the file.
+
 2000-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tmpnam_r.c: Warn about insecure tmpnam_r.
+	* stdio-common/tmpnam.c: Warn about insecure tmpnam.
+	* stdio-common/tempnam.c: Warn about insecure tempnam.
+	* misc/mktemp.c: Warn about insecure mktemp.
 
 	* sysdeps/unix/sysv/linux/check_fds.c: New file.
 	* sysdeps/generic/check_fds.c: Check that file opened is really

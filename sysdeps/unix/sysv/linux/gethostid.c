@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1998, 1999, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -40,7 +40,7 @@ sethostid (id)
     }
 
   /* Open file for writing.  Everybody is allowed to read this file.  */
-  fd = __open (HOSTIDFILE, O_CREAT|O_WRONLY, 0644);
+  fd = __open (HOSTIDFILE, O_CREAT|O_WRONLY|O_TRUNC, 0644);
   if (fd < 0)
     return -1;
 
