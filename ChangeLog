@@ -1,5 +1,13 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/tst-tls3.c: New file.
+	* elf/tst-tlsmod1.c: New file.
+	* elf/Makefile: Add rules to build and run tst-tls3.
+
+	* sysdeps/i386/dl-machine.h: Include <tls.h>.
+	(elf_machine_type_class): Set ELF_RTYPE_CLASS_PLT also for the three
+	TLS relocations.
+
 	* elf/do-lookup.h (FCT): st_value can be zero for STT_TLS symbols.
 
 	* po/fr.po: Update from translation team.

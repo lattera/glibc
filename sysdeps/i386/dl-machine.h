@@ -24,6 +24,8 @@
 
 #include <sys/param.h>
 
+#include <tls.h>
+
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
 elf_machine_matches_host (const Elf32_Ehdr *ehdr)
@@ -255,13 +257,22 @@ _dl_start_user:\n\
 # define RTLD_START_SPECIAL_INIT /* nothing */
 #endif
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
+   TLS variable, so undefined references should not be allowed to
+   define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_type_class(type) \
-  ((((type) == R_386_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+#ifdef USE_TLS
+# define elf_machine_type_class(type) \
+  ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32		      \
+     || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32)	      \
+    * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
+# define elf_machine_type_class(type) \
+  ((((type) == R_386_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)			      \
+   | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_386_JMP_SLOT
