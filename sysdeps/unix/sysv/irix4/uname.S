@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,5 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 ENTRY(uname)
-SYSCALL (utssys, 1)
-	ret
+	li a2, 0
+	li a3, 0
+SYSCALL__ (utssys, 1)
+	j ra
+	move v0, zero

@@ -16,7 +16,17 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
+#include <ansidecl.h>
+#include <errno.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <sys/syssgi.h>
 
-SYSCALL__ (syssgi, 2)
-	ret
+extern int __syssgi __P ((int, ...));
+
+/* Get file-specific information about PATH.  */
+long int
+DEFUN(__pathconf, (path, name), CONST char *path AND int name)
+{
+  return __syssgi (SGI_PATHCONF, PATHCONF, path, name);
+}

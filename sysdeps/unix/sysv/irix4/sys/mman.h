@@ -1,4 +1,4 @@
-/* Definitions for BSD-style memory management.  SunOS 4 version.
+/* Definitions for BSD-style memory management.  Irix 4 version.
 Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -33,9 +33,10 @@ Cambridge, MA 02139, USA.  */
    allowed without PROT_WRITE and no access will be allowed for PROT_NONE. */
 
 #define	PROT_NONE	0x00	/* No access.  */
-#define	PROT_READ	0x01	/* Pages can be read.  */
+#define	PROT_READ	0x04	/* Pages can be read.  */
 #define	PROT_WRITE	0x02	/* Pages can be written.  */
-#define	PROT_EXEC	0x04	/* Pages can be executed.  */
+#define	PROT_EXEC	0x01	/* Pages can be executed.  */
+#define	PROT_EXECUTE	PROT_EXEC
 
 
 /* Sharing types (must choose one and only one of these).  */
@@ -45,16 +46,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Other flags.  */
 #define	MAP_FIXED	0x10	/* Map address must be exactly as requested. */
-/* The following three flags are not actually implemented in SunOS 4.1.  */
 #define	MAP_RENAME	0x20	/* Rename private pages to file.  */
-#define	MAP_NORESERVE	0x40	/* Don't reserve needed swap area.  */
-#define	MAP_INHERIT	0x80	/* Region is retained after exec.  */
-
-/* This is an internal flag that is always set in `mmap' system calls.  In
-   older versions of SunOS 4 `mmap' did not return the actual mapping
-   address, but always returned zero.  This flag says to return the
-   address; the `mmap' C library function always sets it.  */
-#define	_MAP_NEW	0x80000000
+#define	MAP_AUTOGROW	0x40	/* Grow file as pages are written.  */
+#define	MAP_LOCAL	0x80	/* Copy the mapped region on fork.  */
 
 /* Advice to `madvise'.  */
 #define	MADV_NORMAL	0	/* No further special treatment.  */

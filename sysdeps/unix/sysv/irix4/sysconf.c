@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,17 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
+#include <unistd.h>
 #include <sys/syssgi.h>
+
+extern int __syssgi __P ((int, ...));
 
 /* Get the value of the system variable NAME.  */
 long int
 DEFUN(__sysconf, (name), int name)
 {
-  return syssgi(SGI_SYSCONF, name);
+  if (name == _SC_TZNAME_MAX)
+    return __tzname_max ();
+
+  return __syssgi (SGI_SYSCONF, name);
 }
