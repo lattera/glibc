@@ -1,3 +1,17 @@
+2004-07-19  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #258]
+	* math/libm-test.inc (max_value, min_value): New variables.
+	(initialize): Initialize them.
+	(pow_test): Add a couple of new tests.
+	* sysdeps/i386/fpu/e_powf.S (__ieee754_powf): Don't generate invalid
+	exception if |y| >= 1U<<31.
+	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Don't generate invalid
+	exception if |y| >= 1L<<63.
+	* sysdeps/i386/fpu/e_powl.S (__ieee754_powl): Likewise.
+	If y*log2(x) overflows to +-inf, return still +inf/+0 instead of NaN.
+	* sysdeps/x86_64/fpu/e_powl.S (__ieee754_powl): Likewise.
+
 2004-07-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/pwdcache.c (cache_addpw): Optimize case of unsuccessful

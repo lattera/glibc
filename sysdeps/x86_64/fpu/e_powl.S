@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -48,6 +48,10 @@ one:	.double 1.0
 	ASM_TYPE_DIRECTIVE(limit,@object)
 limit:	.double 0.29
 	ASM_SIZE_DIRECTIVE(limit)
+	ASM_TYPE_DIRECTIVE(p63,@object)
+p63:
+	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x43
+	ASM_SIZE_DIRECTIVE(p63)
 
 #ifdef PIC
 #define MO(op) op##(%rip)
@@ -86,6 +90,14 @@ ENTRY(__ieee754_powl)
 	je	15f		// x is ±inf
 
 	fxch			// y : x
+
+	/* fistpll raises invalid exception for |y| >= 1L<<63.  */
+	fldl	MO(p63)		// 1L<<63 : y : x
+	fld	%st(1)		// y : 1L<<63 : y : x
+	fabs			// |y| : 1L<<63 : y : x
+	fcomip	%st(1), %st	// 1L<<63 : y : x
+	fstp	%st(0)		// y : x
+	jnc	2f
 
 	/* First see whether `y' is a natural number.  In this case we
 	   can use a more precise algorithm.  */
@@ -148,6 +160,11 @@ ENTRY(__ieee754_powl)
 
 7:	fyl2x			// log2(x) : y
 8:	fmul	%st(1)		// y*log2(x) : y
+	fxam
+	fnstsw
+	andb	$0x45, %ah
+	cmpb	$0x05, %ah      // is y*log2(x) == ±inf ?
+	je	28f
 	fst	%st(1)		// y*log2(x) : y*log2(x)
 	frndint			// int(y*log2(x)) : y*log2(x)
 	fsubr	%st, %st(1)	// int(y*log2(x)) : fract(y*log2(x))
@@ -158,6 +175,11 @@ ENTRY(__ieee754_powl)
 	fstp	%st(1)		// 2^fract(y*log2(x))*2^int(y*log2(x))
 	ret
 
+28:	fstp	%st(1)		// y*log2(x)
+	fldl	MO(one)		// 1 : y*log2(x)
+	fscale			// 2^(y*log2(x)) : y*log2(x)
+	fstp	%st(1)		// 2^(y*log2(x))
+	ret
 
 	// pow(x,±0) = 1
 	.align ALIGNARG(4)

@@ -169,7 +169,7 @@ static int output_points;	/* Should the single function results printed?  */
 static int ignore_max_ulp;	/* Should we ignore max_ulp?  */
 
 static FLOAT minus_zero, plus_zero;
-static FLOAT plus_infty, minus_infty, nan_value;
+static FLOAT plus_infty, minus_infty, nan_value, max_value, min_value;
 
 static FLOAT max_error, real_max_error, imag_max_error;
 
@@ -3593,6 +3593,28 @@ pow_test (void)
   TEST_ff_f (pow, -1, plus_infty, 1);
   TEST_ff_f (pow, 1, minus_infty, 1);
   TEST_ff_f (pow, -1, minus_infty, 1);
+  TEST_ff_f (pow, 1, 1, 1);
+  TEST_ff_f (pow, 1, -1, 1);
+  TEST_ff_f (pow, 1, 1.25, 1);
+  TEST_ff_f (pow, 1, -1.25, 1);
+  TEST_ff_f (pow, 1, 0x1p62L, 1);
+  TEST_ff_f (pow, 1, 0x1p63L, 1);
+  TEST_ff_f (pow, 1, 0x1p64L, 1);
+  TEST_ff_f (pow, 1, 0x1p72L, 1);
+
+  /* pow (x, +-0) == 1.  */
+  TEST_ff_f (pow, plus_infty, 0, 1);
+  TEST_ff_f (pow, plus_infty, minus_zero, 1);
+  TEST_ff_f (pow, minus_infty, 0, 1);
+  TEST_ff_f (pow, minus_infty, minus_zero, 1);
+  TEST_ff_f (pow, 32.75L, 0, 1);
+  TEST_ff_f (pow, 32.75L, minus_zero, 1);
+  TEST_ff_f (pow, -32.75L, 0, 1);
+  TEST_ff_f (pow, -32.75L, minus_zero, 1);
+  TEST_ff_f (pow, 0x1p72L, 0, 1);
+  TEST_ff_f (pow, 0x1p72L, minus_zero, 1);
+  TEST_ff_f (pow, 0x1p-72L, 0, 1);
+  TEST_ff_f (pow, 0x1p-72L, minus_zero, 1);
 
   TEST_ff_f (pow, -0.1L, 1.1L, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -0.1L, -1.1L, nan_value, INVALID_EXCEPTION);
@@ -3609,6 +3631,10 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
 
+  TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty);
+  TEST_ff_f (pow, 10, -0x1p72L, 0);
+  TEST_ff_f (pow, max_value, max_value, plus_infty);
+  TEST_ff_f (pow, 10, -max_value, 0);
 
   TEST_ff_f (pow, 0, 1, 0);
   TEST_ff_f (pow, 0, 11, 0);
@@ -3623,6 +3649,8 @@ pow_test (void)
 
   TEST_ff_f (pow, minus_zero, 2, 0);
   TEST_ff_f (pow, minus_zero, 11.1L, 0);
+  TEST_ff_f (pow, 0, plus_infty, 0);
+  TEST_ff_f (pow, minus_zero, plus_infty, 0);
 
 #ifndef TEST_INLINE
   /* pow (x, +inf) == +inf for |x| > 1.  */
@@ -3666,6 +3694,11 @@ pow_test (void)
 
   /* pow (-0, y) == +0 for y > 0 and not an odd integer.  */
   TEST_ff_f (pow, minus_zero, 4, 0.0);
+
+  TEST_ff_f (pow, 16, 0.25L, 2);
+  TEST_ff_f (pow, 0x1p64L, 0.125L, 256);
+  TEST_ff_f (pow, 2, 4, 16);
+  TEST_ff_f (pow, 256, 8, 0x1p64L);
 
   TEST_ff_f (pow, 0.75L, 1.25L, 0.697953644326574699205914060237425566L);
 
@@ -4312,12 +4345,18 @@ initialize (void)
 		       HUGE_VALL, HUGE_VAL, HUGE_VALF);
   minus_infty = CHOOSE (-HUGE_VALL, -HUGE_VAL, -HUGE_VALF,
 			-HUGE_VALL, -HUGE_VAL, -HUGE_VALF);
+  max_value = CHOOSE (LDBL_MAX, DBL_MAX, FLT_MAX,
+		      LDBL_MAX, DBL_MAX, FLT_MAX);
+  min_value = CHOOSE (LDBL_MIN, DBL_MIN, FLT_MIN,
+		      LDBL_MIN, DBL_MIN, FLT_MIN);
 
   (void) &plus_zero;
   (void) &nan_value;
   (void) &minus_zero;
   (void) &plus_infty;
   (void) &minus_infty;
+  (void) &max_value;
+  (void) &min_value;
 
   /* Clear all exceptions.  From now on we must not get random exceptions.  */
   feclearexcept (FE_ALL_EXCEPT);
