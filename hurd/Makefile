@@ -28,6 +28,9 @@ headers = hurd.h $(interface-headers) \
 	  $(addprefix hurd/,fd.h id.h port.h signal.h sigpreempt.h ioctl.h\
 			    userlink.h resource.h threadvar.h lookup.h)
 
+inline-headers = hurd.h $(addprefix hurd/,fd.h signal.h \
+				          userlink.h threadvar.h port.h)
+
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser
 user-interfaces		:= $(addprefix hurd/,\
@@ -54,13 +57,14 @@ routines = hurdstartup hurdinit \
 	   fopenport \
 	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
-	   $(sig) $(dtable) hurdinline port-cleanup report-wait
+	   $(sig) $(dtable) $(inlines) port-cleanup report-wait
 sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
 	  thread-self thread-cancel intr-msg catch-signal
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
+inlines = $(inline-headers:%.h=%-inlines)
 distribute = hurdstartup.h hurdfault.h hurdhost.h \
 	     faultexc.defs intr-rpc.defs intr-rpc.h intr-msg.h Notes
 
@@ -74,6 +78,15 @@ routines += compat-20
 endif
 
 shared-only-routines = compat-20
+
+# For each of the $(inline-headers), generate a trivial source
+# file that will #include it to define its inline functions as real functions.
+$(inlines:%=$(objpfx)%.c): $(objpfx)%-inlines.c: %.h
+	(h="`echo $(subst /,_,$*) | tr '[a-z]' '[A-Z]'`"; \
+	 echo "#define _$${h}_H_EXTERN_INLINE /* Define real function.  */"; \
+	 echo '#include "$<"') > $@-new
+	mv -f $@-new $@
+generated += $(inlines:=.c)
 
 include ../mach/Machrules
 include ../Rules

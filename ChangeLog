@@ -1,5 +1,16 @@
 1999-06-25  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* hurd.h, hurd/hurd/fd.h, hurd/hurd/port.h, hurd/hurd/signal.h,
+	hurd/hurd/threadvar.h, hurd/hurd/userlink.h: Instead of
+	_EXTERN_INLINE, use a macro specific to each file,
+	_HURD_FD_H_EXTERN_INLINE and the like.
+	* hurd/Makefile (inline-headers): New variable.
+	(routines): Remove hurdinline.  Add $(inlines).
+	(inlines): New variable.
+	($(inlines:%=$(objpfx)%.c)): New static pattern rule to generate them.
+	(generated): Append those here.
+	* hurd/hurdinline.c: File removed.
+
 	* sysdeps/generic/glob64.c: Include <stddef.h> for NULL.
 
 	* mach/Versions (libc: GLIBC_2.0): Add __mig_strncpy.

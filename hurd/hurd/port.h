@@ -1,5 +1,5 @@
 /* Lightweight user references for ports.
-   Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1995, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,14 +54,14 @@ struct hurd_port
      __result; })
 
 
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
+#ifndef _HURD_PORT_H_EXTERN_INLINE
+#define _HURD_PORT_H_EXTERN_INLINE extern __inline
 #endif
 
 
 /* Initialize *PORT to INIT.  */
 
-_EXTERN_INLINE void
+_HURD_PORT_H_EXTERN_INLINE void
 _hurd_port_init (struct hurd_port *port, mach_port_t init)
 {
   __spin_lock_init (&port->lock);
@@ -76,7 +76,7 @@ extern void _hurd_port_cleanup (void *, jmp_buf, int);
 /* Get a reference to *PORT, which is locked.
    Pass return value and LINK to _hurd_port_free when done.  */
 
-_EXTERN_INLINE mach_port_t
+_HURD_PORT_H_EXTERN_INLINE mach_port_t
 _hurd_port_locked_get (struct hurd_port *port,
 		       struct hurd_userlink *link)
 {
@@ -94,7 +94,7 @@ _hurd_port_locked_get (struct hurd_port *port,
 
 /* Same, but locks PORT first.  */
 
-_EXTERN_INLINE mach_port_t
+_HURD_PORT_H_EXTERN_INLINE mach_port_t
 _hurd_port_get (struct hurd_port *port,
 		struct hurd_userlink *link)
 {
@@ -109,7 +109,7 @@ _hurd_port_get (struct hurd_port *port,
 
 /* Free a reference gotten with `USED_PORT = _hurd_port_get (PORT, LINK);' */
 
-_EXTERN_INLINE void
+_HURD_PORT_H_EXTERN_INLINE void
 _hurd_port_free (struct hurd_port *port,
 		 struct hurd_userlink *link,
 		 mach_port_t used_port)
@@ -133,7 +133,7 @@ _hurd_port_free (struct hurd_port *port,
 /* Set *PORT's port to NEWPORT.  NEWPORT's reference is consumed by PORT->port.
    PORT->lock is locked.  */
 
-_EXTERN_INLINE void
+_HURD_PORT_H_EXTERN_INLINE void
 _hurd_port_locked_set (struct hurd_port *port, mach_port_t newport)
 {
   mach_port_t old;
@@ -146,7 +146,7 @@ _hurd_port_locked_set (struct hurd_port *port, mach_port_t newport)
 
 /* Same, but locks PORT first.  */
 
-_EXTERN_INLINE void
+_HURD_PORT_H_EXTERN_INLINE void
 _hurd_port_set (struct hurd_port *port, mach_port_t newport)
 {
   HURD_CRITICAL_BEGIN;

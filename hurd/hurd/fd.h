@@ -49,15 +49,15 @@ extern struct mutex _hurd_dtable_lock; /* Locks those two variables.  */
 #include <hurd/signal.h>
 #include <lock-intern.h>
 
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
+#ifndef _HURD_FD_H_EXTERN_INLINE
+#define _HURD_FD_H_EXTERN_INLINE extern __inline
 #endif
 
 /* Returns the descriptor cell for FD.  If FD is invalid or unused, return
    NULL.  The cell is unlocked; when ready to use it, lock it and check for
    it being unused.  */
 
-_EXTERN_INLINE struct hurd_fd *
+_HURD_FD_H_EXTERN_INLINE struct hurd_fd *
 _hurd_fd_get (int fd)
 {
   struct hurd_fd *descriptor;
@@ -134,7 +134,7 @@ _hurd_fd_get (int fd)
 /* Check if ERR should generate a signal.
    Returns the signal to take, or zero if none.  */
 
-_EXTERN_INLINE error_t
+_HURD_FD_H_EXTERN_INLINE error_t
 _hurd_fd_error_signal (error_t err)
 {
   switch (err)
@@ -155,7 +155,7 @@ _hurd_fd_error_signal (error_t err)
    always use this function to handle errors from RPCs made on file
    descriptor ports.  Some errors are translated into signals.  */
 
-_EXTERN_INLINE error_t
+_HURD_FD_H_EXTERN_INLINE error_t
 _hurd_fd_error (int fd, error_t err)
 {
   int signo = _hurd_fd_error_signal (err);
@@ -171,7 +171,7 @@ _hurd_fd_error (int fd, error_t err)
 /* Handle error code ERR from an RPC on file descriptor FD's port.
    Set `errno' to the appropriate error code, and always return -1.  */
 
-_EXTERN_INLINE int
+_HURD_FD_H_EXTERN_INLINE int
 __hurd_dfail (int fd, error_t err)
 {
   errno = _hurd_fd_error (fd, err);

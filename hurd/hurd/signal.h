@@ -1,5 +1,5 @@
 /* Implementing POSIX.1 signals under the Hurd.
-   Copyright (C) 1993, 94, 95, 96, 98 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,7 +124,11 @@ extern struct hurd_sigstate *_hurd_self_sigstate (void)
 	by different threads.  */
      __attribute__ ((__const__));
 
-_EXTERN_INLINE struct hurd_sigstate *
+#ifndef _HURD_SIGNAL_H_EXTERN_INLINE
+#define _HURD_SIGNAL_H_EXTERN_INLINE extern __inline
+#endif
+
+_HURD_SIGNAL_H_EXTERN_INLINE struct hurd_sigstate *
 _hurd_self_sigstate (void)
 {
   struct hurd_sigstate **location =
@@ -159,7 +163,7 @@ extern int _hurd_core_limit;
    interrupted lest the signal handler try to take the same lock and
    deadlock result.  */
 
-_EXTERN_INLINE void *
+_HURD_SIGNAL_H_EXTERN_INLINE void *
 _hurd_critical_section_lock (void)
 {
   struct hurd_sigstate **location =
@@ -185,7 +189,7 @@ _hurd_critical_section_lock (void)
   return ss;
 }
 
-_EXTERN_INLINE void
+_HURD_SIGNAL_H_EXTERN_INLINE void
 _hurd_critical_section_unlock (void *our_lock)
 {
   if (our_lock == NULL)
