@@ -11,10 +11,22 @@ ldouble: 1
 ildouble: 1
 
 # asin
+Test "asin (0.5) == pi/6":
+ldouble: 1
+ildouble: 1
+Test "asin (-0.5) == -pi/6":
+ldouble: 1
+ildouble: 1
+Test "asin (1.0) == pi/2":
+ldouble: 1
+ildouble: 1
+Test "asin (-1.0) == -pi/2":
+ldouble: 1
+ildouble: 1
 Test "asin (0.7) == 0.77539749661075306374035335271498708":
 double: 1
-ildouble: 1147
-ldouble: 1147
+ldouble: 1
+ildouble: 1
 
 # asinh
 Test "asinh (0.7) == 0.652666566082355786":
@@ -1146,8 +1158,8 @@ ldouble: 1
 
 Function: "asin":
 double: 1
-ildouble: 1147
-ldouble: 1147
+ldouble: 1
+ildouble: 1
 
 Function: "asinh":
 ildouble: 656
