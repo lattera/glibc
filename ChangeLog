@@ -1,3 +1,8 @@
+Fri Jun 28 23:25:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/login.c (login): Initialize DATA so that setutent_r will
+ 	actually do something.
+
 Fri Jun 28 07:27:10 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* string/strndup.c (strndup): Always terminate the string.
