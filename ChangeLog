@@ -1,5 +1,8 @@
 1999-05-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/_itoa.c (_itoa): Fix special 32bit platform case
+	with specific bases and only few bits set in second word.
+
 	* timezone/Makefile (install-others): Create target directory
 	before creating tzfiles.
 

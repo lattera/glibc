@@ -175,46 +175,49 @@ _itoa (value, buflim, base, upper_case)
 
   switch (base)
     {
-#define RUN_2N(BITS)							  \
-      do								  \
-        {								  \
-	  /* `unsigned long long int' always has 64 bits.  */		  \
-	  mp_limb_t work_hi = value >> (64 - BITS_PER_MP_LIMB);		  \
-									  \
-	  if (BITS_PER_MP_LIMB == 32)					  \
-	    {								  \
-	      if (work_hi != 0)						  \
-		{							  \
-		  mp_limb_t work_lo;					  \
-		  int cnt;						  \
-									  \
-		  work_lo = value & 0xfffffffful;			  \
-		  for (cnt = BITS_PER_MP_LIMB / BITS; cnt > 0; --cnt)	  \
-		    {							  \
-		      *--bp = digits[work_lo & ((1ul << BITS) - 1)];	  \
-		      work_lo >>= BITS;					  \
-		    }							  \
-		  if (BITS_PER_MP_LIMB % BITS != 0)			  \
-		    {							  \
-		      work_lo						  \
-			|= ((work_hi					  \
-			     & ((1 << (BITS - BITS_PER_MP_LIMB%BITS))	  \
-				- 1))					  \
-			    << BITS_PER_MP_LIMB % BITS);		  \
-		      *--bp = digits[work_lo];				  \
-		      work_hi >>= BITS - BITS_PER_MP_LIMB % BITS;	  \
-		    }							  \
-		}							  \
-	      else							  \
-		work_hi = value & 0xfffffffful;				  \
-	    }								  \
-	  do								  \
-	    {								  \
-	      *--bp = digits[work_hi & ((1 << BITS) - 1)];		  \
-	      work_hi >>= BITS;						  \
-	    }								  \
-	  while (work_hi != 0);						  \
-	}								  \
+#define RUN_2N(BITS) \
+      do								      \
+        {								      \
+	  /* `unsigned long long int' always has 64 bits.  */		      \
+	  mp_limb_t work_hi = value >> (64 - BITS_PER_MP_LIMB);		      \
+									      \
+	  if (BITS_PER_MP_LIMB == 32)					      \
+	    {								      \
+	      if (work_hi != 0)						      \
+		{							      \
+		  mp_limb_t work_lo;					      \
+		  int cnt;						      \
+									      \
+		  work_lo = value & 0xfffffffful;			      \
+		  for (cnt = BITS_PER_MP_LIMB / BITS; cnt > 0; --cnt)	      \
+		    {							      \
+		      *--bp = digits[work_lo & ((1ul << BITS) - 1)];	      \
+		      work_lo >>= BITS;					      \
+		    }							      \
+		  if (BITS_PER_MP_LIMB % BITS != 0)			      \
+		    {							      \
+		      work_lo						      \
+			|= ((work_hi					      \
+			     & ((1 << (BITS - BITS_PER_MP_LIMB%BITS))	      \
+				- 1))					      \
+			    << BITS_PER_MP_LIMB % BITS);		      \
+		      work_hi >>= BITS - BITS_PER_MP_LIMB % BITS;	      \
+		      if (work_hi == 0)					      \
+			work_hi = work_lo;				      \
+		      else						      \
+			*--bp = digits[work_lo];			      \
+		    }							      \
+		}							      \
+	      else							      \
+		work_hi = value & 0xfffffffful;				      \
+	    }								      \
+	  do								      \
+	    {								      \
+	      *--bp = digits[work_hi & ((1 << BITS) - 1)];		      \
+	      work_hi >>= BITS;						      \
+	    }								      \
+	  while (work_hi != 0);						      \
+	}								      \
       while (0)
     case 8:
       RUN_2N (3);

@@ -226,7 +226,7 @@ value for the actions are normally what you want, and only need to be
 changed in exceptional cases.
 
 If the optional @code{!} is placed before the @var{status} this means
-the following action is used for all statii but @var{status} itself.
+the following action is used for all statuses but @var{status} itself.
 I.e., @code{!} is negation as in the C language (and others).
 
 Before we explain the exception which makes this action item necessary
