@@ -140,7 +140,7 @@ some platforms was written by Per Bothner and modified by Ulrich Drepper.
 
 @item
 Eric Youngdale and Ulrich Drepper implemented versioning of objects on
- symbol level.
+the symbol level.
 
 @item
 Thorsten Kukuk provided an implementation for NIS (YP) and NIS+,
@@ -168,48 +168,9 @@ Mark Kettenis provided a Hesiod NSS module.
 @item
 The Internet-related code (most of the @file{inet} subdirectory) and
 several other miscellaneous functions and header files have been
-included from 4.4 BSD with little or no modification.
-
-All code incorporated from 4.4 BSD is under the following copyright:
-
-@quotation
-@display
-Copyright @copyright{} 1991 Regents of the University of California.
-All rights reserved.
-@end display
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-@enumerate
-@item
-Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-@item
-Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-@item
-[This condition was removed.]
-@item
-Neither the name of the University nor the names of its contributors
-may be used to endorse or promote products derived from this software
-without specific prior written permission.
-@end enumerate
-
-@sc{this software is provided by the regents and contributors ``as is'' and
-any express or implied warranties, including, but not limited to, the
-implied warranties of merchantability and fitness for a particular purpose
-are disclaimed.  in no event shall the regents or contributors be liable
-for any direct, indirect, incidental, special, exemplary, or consequential
-damages (including, but not limited to, procurement of substitute goods
-or services; loss of use, data, or profits; or business interruption)
-however caused and on any theory of liability, whether in contract, strict
-liability, or tort (including negligence or otherwise) arising in any way
-out of the use of this software, even if advised of the possibility of
-such damage.}
-@end quotation
+included from 4.4 BSD with little or no modification.  The copying
+permission notice for this code can be found in the file @file{LICENSES}
+in the source distribution.
 
 @item
 The random number generation functions @code{random}, @code{srandom},
@@ -221,210 +182,34 @@ changes to fit into the GNU C library and to fit the @w{ISO C} standard,
 but the functional code is Berkeley's.@refill
 
 @item
-The DNS resolver code is taken directly from BIND 4.9.5, which is
-under both the Berkeley copyright above and also:
-
-@quotation
-Portions Copyright @copyright{} 1993 by Digital Equipment Corporation.
-
-Permission to use, copy, modify, and distribute this software for any
-purpose with or without fee is hereby granted, provided that the above
-copyright notice and this permission notice appear in all copies, and
-that the name of Digital Equipment Corporation not be used in
-advertising or publicity pertaining to distribution of the document or
-software without specific, written prior permission.
-
-@sc{the software is provided ``as is'' and digital equipment corp.
-disclaims all warranties with regard to this software, including all
-implied warranties of merchantability and fitness.  in no event shall
-digital equipment corporation be liable for any special, direct,
-indirect, or consequential damages or any damages whatsoever resulting
-from loss of use, data or profits, whether in an action of contract,
-negligence or other tortious action, arising out of or in connection
-with the use or performance of this software.}
-@end quotation
+The DNS resolver code is taken directly from BIND 4.9.5, which
+includes copyrighted code from UC Berkeley and from Digital Equipment
+Corporation.  See the file @file{LICENSES} for the text of the DEC license.
 
 @item
 The code to support Sun RPC is taken verbatim from Sun's
-@w{@sc{rpcsrc-4.0}} distribution, and is covered by this copyright:
-
-@quotation
-@display
-Copyright @copyright{} 1984, Sun Microsystems, Inc.
-@end display
-
-Sun RPC is a product of Sun Microsystems, Inc. and is provided for
-unrestricted use provided that this legend is included on all tape media
-and as a part of the software program in whole or part.  Users may copy
-or modify Sun RPC without charge, but are not authorized to license or
-distribute it to anyone else except as part of a product or program
-developed by the user.
-
-@sc{sun rpc is provided as is with no warranties of any kind including the
-warranties of design, merchantibility and fitness for a particular
-purpose, or arising from a course of dealing, usage or trade practice.}
-
-Sun RPC is provided with no support and without any obligation on the
-part of Sun Microsystems, Inc. to assist in its use, correction,
-modification or enhancement.
-
-@sc{sun microsystems, inc. shall have no liability with respect to the
-infringement of copyrights, trade secrets or any patents by sun rpc
-or any part thereof.}
-
-In no event will Sun Microsystems, Inc. be liable for any lost revenue
-or profits or other special, indirect and consequential damages, even if
-Sun has been advised of the possibility of such damages.
-
-@display
-Sun Microsystems, Inc.
-2550 Garcia Avenue
-Mountain View, California  94043
-@end display
-@end quotation
+@w{@sc{rpcsrc-4.0}} distribution; see the file @file{LICENSES} for the
+text of the license.
 
 @item
-Some of the support code for Mach is taken from Mach 3.0 by CMU,
-and is under the following copyright terms:
-
-@quotation
-@display
-Mach Operating System
-Copyright @copyright{} 1991,1990,1989 Carnegie Mellon University
-All Rights Reserved.
-@end display
-
-Permission to use, copy, modify and distribute this software and its
-documentation is hereby granted, provided that both the copyright
-notice and this permission notice appear in all copies of the
-software, derivative works or modified versions, and any portions
-thereof, and that both notices appear in supporting documentation.
-
-@sc{carnegie mellon allows free use of this software in its ``as is''
-condition.  carnegie mellon disclaims any liability of any kind for
-any damages whatsoever resulting from the use of this software.}
-
-Carnegie Mellon requests users of this software to return to
-
-@display
- Software Distribution Coordinator
- School of Computer Science
- Carnegie Mellon University
- Pittsburgh PA 15213-3890
-@end display
-
-@noindent
-or @email{Software.Distribution@@CS.CMU.EDU} any improvements or
-extensions that they make and grant Carnegie Mellon the rights to
-redistribute these changes.
-@end quotation
+Some of the support code for Mach is taken from Mach 3.0 by CMU;
+the file if_ppp.h is also copyright by CMU, but under a different license;
+see the file @file{LICENSES} for the text of the licenses.
 
 @item
-The code for the database library @file{libdb} comes from the 2.3
-release of Berkeley DB. That code is under the same copyright as 4.4 BSD
-and also:
+Many of the IA64 math functions are taken from a collection of
+``Highly Optimized Mathematical Functions for Itanium'' that Intel
+makes available under a free license; see the file @file{LICENSES} for
+details.
 
-@quotation
-@display
-Copyright @copyright{} 1990, 1993, 1994, 1995, 1996, 1997
-Sleepycat Software.  All rights reserved.
-@end display
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-@enumerate
 @item
-Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
+The @code{getaddrinfo} and @code{getnameinfo} functions and supporting
+code were written by Craig Metz; see the file @file{LICENSES} for
+details on their licensing.
+
 @item
-Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-@item
-Redistributions in any form must be accompanied by information on
-how to obtain complete source code for the DB software and any
-accompanying software that uses the DB software.  The source code
-must either be included in the distribution or be available for no
-more than the cost of distribution plus a nominal fee, and must be
-freely redistributable under reasonable conditions.  For an
-executable file, complete source code means the source code for all
-modules it contains.  It does not mean source code for modules or
-files that typically accompany the operating system on which the
-executable file runs, e.g., standard library modules or system
-header files.
-@end enumerate
-
-@sc{this software is provided by sleepycat software ``as is'' and
-any express or implied warranties, including, but not limited to, the
-implied warranties of merchantability and fitness for a particular purpose
-are disclaimed.  in no event shall sleepycat software be liable
-for any direct, indirect, incidental, special, exemplary, or consequential
-damages (including, but not limited to, procurement of substitute goods
-or services; loss of use, data, or profits; or business interruption)
-however caused and on any theory of liability, whether in contract, strict
-liability, or tort (including negligence or otherwise) arising in any way
-out of the use of this software, even if advised of the possibility of
-such damage.}
-
-@display
-Portions copyright @copyright{} 1995, 1996
-The President and Fellows of Harvard University.
-All rights reserved.
-@end display
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-@enumerate
-@item
-Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-@item
-Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
-@item
-All advertising materials mentioning features or use of this software
-must display the following acknowledgement:
-@quotation
- This product includes software developed by Harvard University
- and its contributors.
-@end quotation
-@item
-Neither the name of the University nor the names of its contributors
-may be used to endorse or promote products derived from this software
-without specific prior written permission.
-@end enumerate
-
-@sc{this software is provided by harvard and its contributors ``as is'' and
-any express or implied warranties, including, but not limited to, the
-implied warranties of merchantability and fitness for a particular purpose
-are disclaimed.  in no event shall harvard or its contributors be liable
-for any direct, indirect, incidental, special, exemplary, or consequential
-damages (including, but not limited to, procurement of substitute goods
-or services; loss of use, data, or profits; or business interruption)
-however caused and on any theory of liability, whether in contract, strict
-liability, or tort (including negligence or otherwise) arising in any way
-out of the use of this software, even if advised of the possibility of
-such damage.}
-
-@noindent
-For a license to use, redistribute or sell DB software under conditions
-other than those described above, or to purchase support for this
-software, please contact Sleepycat Software at
-
-@display
- Sleepycat Software
- 394 E. Riding Dr.
- Carlisle, MA 01741
- USA
- +1-508-287-4781
-@end display
-
-or @email{db@@sleepycat.com}.
-
-@end quotation
+Many of the IEEE 64-bit double precision math functions
+(in the @file{sysdeps/ieee754/dbl-64} subdirectory) come
+from the IBM Accurate Mathematical Library, contributed by IBM.
 
 @end itemize

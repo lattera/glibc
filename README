@@ -81,4 +81,5 @@ you can still send bug reports to <bug-glibc@gnu.org> as normal electronic
 mails.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
-conditions.
+conditions, and LICENSES for notices about a few contributions that require
+these additional notices to be distributed.
