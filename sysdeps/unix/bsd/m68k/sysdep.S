@@ -34,7 +34,7 @@ store:	move.l d0, _errno
 	moveq.l #-1, d0
 #else
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
-	cmpl d0, #EWOULDBLOCK_sys
+	cmpl #EWOULDBLOCK_sys, d0
 	bne 0f
 	moveq #EAGAIN, d0
 #endif
