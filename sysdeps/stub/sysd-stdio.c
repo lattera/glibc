@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -96,16 +96,10 @@ DEFUN(__stdio_reopen, (filename, m, cookieptr),
 }
 
 
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(__stdio_read);
-stub_warning(__stdio_write);
-stub_warning(__stdio_seek);
-stub_warning(__stdio_close);
-stub_warning(__stdio_fileno);
-stub_warning(__stdio_open);
-stub_warning(__stdio_reopen);
-
-#endif	/* GNU stabs.  */
+stub_warning (__stdio_read)
+stub_warning (__stdio_write)
+stub_warning (__stdio_seek)
+stub_warning (__stdio_close)
+stub_warning (__stdio_fileno)
+stub_warning (__stdio_open)
+stub_warning (__stdio_reopen)

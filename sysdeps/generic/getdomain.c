@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <sys/utsname.h>
+#include <string.h>
 
 #if _UTSNAME_DOMAIN_LENGTH
 /* The `uname' information includes the domain name.  */

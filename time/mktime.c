@@ -413,7 +413,7 @@ localtime_r (t, tp)
 { 
   struct tm *l = localtime (t);
   if (! l)
-    return NULL;
+    return 0;
   *tp = *l;
   return tp;
 }

@@ -199,12 +199,12 @@ moncontrol(mode)
 
 	if (mode) {
 		/* start */
-		profil((char *)p->kcount, p->kcountsize, (int)p->lowpc,
+		profil(p->kcount, p->kcountsize, (int)p->lowpc,
 		    s_scale);
 		p->state = GMON_PROF_ON;
 	} else {
 		/* stop */
-		profil((char *)0, 0, 0, 0);
+		profil(0, 0, 0, 0);
 		p->state = GMON_PROF_OFF;
 	}
 }

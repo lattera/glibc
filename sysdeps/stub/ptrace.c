@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -99,10 +99,4 @@ DEFUN(ptrace, (request), enum __ptrace_request request DOTS)
 }
 
 
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(ptrace);
-
-#endif	/* GNU stabs.  */
+stub_warning (ptrace)

@@ -1,6 +1,6 @@
 /* Definitions of global stdio data structures.
 
-Copyright (C) 1991 Free Software Foundation, Inc.
+Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,5 @@ DEFUN_VOID(_cleanup)
 
 
 #ifdef	HAVE_GNU_LD
-#include <gnu-stabs.h>
-
-text_set_element(__libc_atexit, _cleanup);
+text_set_element (__libc_atexit, _cleanup);
 #endif

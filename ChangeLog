@@ -1,5 +1,105 @@
 Wed Sep 27 00:27:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/i386/sysdep.h [HAVE_ELF] (ASM_TYPE_DIRECTIVE):
+	Don't use `type' for arg name, since we are using it as a keyword
+	in the rhs. 
+
+	* sysdeps/unix/configure.in: Check for syscalls getpriority,
+	setpriority, getrlimit, setrlimit.
+
+	* sysdeps/posix/truncate.c: Include fcntl.h.
+
+	* sysdeps/generic/getdomain.c: Include string.h for strncpy decl.
+
+	* sysdeps/stub/getpriority.c: Don't include obsolete gnu-stabs.h;
+	use new stub_warning syntax.
+	* sysdeps/stub/setpriority.c: Likewise.
+	* sysdeps/stub/__longjmp.c: Likewise.
+	* sysdeps/stub/_exit.c: Likewise.
+	* sysdeps/stub/accept.c: Likewise.
+	* sysdeps/stub/acos.c: Likewise.
+	* sysdeps/stub/alarm.c: Likewise.
+	* sysdeps/stub/asin.c: Likewise.
+	* sysdeps/stub/atan2.c: Likewise.
+	* sysdeps/stub/bind.c: Likewise.
+	* sysdeps/stub/cbrt.c: Likewise.
+	* sysdeps/stub/chroot.c: Likewise.
+	* sysdeps/stub/closedir.c: Likewise.
+	* sysdeps/stub/connect.c: Likewise.
+	* sysdeps/stub/cos.c: Likewise.
+	* sysdeps/stub/cosh.c: Likewise.
+	* sysdeps/stub/ctermid.c: Likewise.
+	* sysdeps/stub/cuserid.c: Likewise.
+	* sysdeps/stub/defs.c: Likewise.
+	* sysdeps/stub/exp.c: Likewise.
+	* sysdeps/stub/fmod.c: Likewise.
+	* sysdeps/stub/frexp.c: Likewise.
+	* sysdeps/stub/fsync.c: Likewise.
+	* sysdeps/stub/getcwd.c: Likewise.
+	* sysdeps/stub/getenv.c: Likewise.
+	* sysdeps/stub/gethostid.c: Likewise.
+	* sysdeps/stub/getlogin.c: Likewise.
+	* sysdeps/stub/getpeername.c: Likewise.
+	* sysdeps/stub/getrlimit.c: Likewise.
+	* sysdeps/stub/getsockname.c: Likewise.
+	* sysdeps/stub/getsockopt.c: Likewise.
+	* sysdeps/stub/listen.c: Likewise.
+	* sysdeps/stub/log.c: Likewise.
+	* sysdeps/stub/log10.c: Likewise.
+	* sysdeps/stub/mkfifo.c: Likewise.
+	* sysdeps/stub/morecore.c: Likewise.
+	* sysdeps/stub/nice.c: Likewise.
+	* sysdeps/stub/nlist.c: Likewise.
+	* sysdeps/stub/opendir.c: Likewise.
+	* sysdeps/stub/pipestream.c: Likewise.
+	* sysdeps/stub/ptrace.c: Likewise.
+	* sysdeps/stub/putenv.c: Likewise.
+	* sysdeps/stub/readdir.c: Likewise.
+	* sysdeps/stub/reboot.c: Likewise.
+	* sysdeps/stub/recv.c: Likewise.
+	* sysdeps/stub/recvfrom.c: Likewise.
+	* sysdeps/stub/rename.c: Likewise.
+	* sysdeps/stub/rewinddir.c: Likewise.
+	* sysdeps/stub/seekdir.c: Likewise.
+	* sysdeps/stub/send.c: Likewise.
+	* sysdeps/stub/sendto.c: Likewise.
+	* sysdeps/stub/setegid.c: Likewise.
+	* sysdeps/stub/seteuid.c: Likewise.
+	* sysdeps/stub/setgroups.c: Likewise.
+	* sysdeps/stub/sethostid.c: Likewise.
+	* sysdeps/stub/sethostname.c: Likewise.
+	* sysdeps/stub/setjmp.c: Likewise.
+	* sysdeps/stub/setrlimit.c: Likewise.
+	* sysdeps/stub/setsockopt.c: Likewise.
+	* sysdeps/stub/shutdown.c: Likewise.
+	* sysdeps/stub/signal.c: Likewise.
+	* sysdeps/stub/sigsuspend.c: Likewise.
+	* sysdeps/stub/sin.c: Likewise.
+	* sysdeps/stub/sinh.c: Likewise.
+	* sysdeps/stub/socket.c: Likewise.
+	* sysdeps/stub/socketpair.c: Likewise.
+	* sysdeps/stub/sqrt.c: Likewise.
+	* sysdeps/stub/sync.c: Likewise.
+M sysd-stdio.c
+	* sysdeps/stub/system.c: Likewise.
+	* sysdeps/stub/tan.c: Likewise.
+	* sysdeps/stub/tanh.c: Likewise.
+	* sysdeps/stub/tcdrain.c: Likewise.
+	* sysdeps/stub/tcflow.c: Likewise.
+	* sysdeps/stub/tcgetpgrp.c: Likewise.
+	* sysdeps/stub/tcsendbrk.c: Likewise.
+	* sysdeps/stub/tcsetattr.c: Likewise.
+	* sysdeps/stub/tcsetpgrp.c: Likewise.
+	* sysdeps/stub/telldir.c: Likewise.
+	* sysdeps/stub/tempname.c: Likewise.
+	* sysdeps/stub/ttyname.c: Likewise.
+	* sysdeps/stub/ttyname_r.c: Likewise.
+	* sysdeps/stub/utime.c: Likewise.
+
+	* gmon/gmon.c (moncontrol): Don't cast buffer arg to profil.
+
+	* time/mktime.c (localtime_r): Use 0 instead of NULL.
+
 	* config.make.in (AS): New variable; set to `$(CC) -c'.
 
 	* posix/unistd.h [__USE_BSD]: Declare profil.

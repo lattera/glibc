@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,10 +38,4 @@ DEFUN(mkfifo, (path, mode), CONST char *path AND mode_t mode)
 }
 
 
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(mkfifo);
-
-#endif	/* GNU stabs.  */
+stub_warning (mkfifo)

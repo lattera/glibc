@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -34,10 +34,4 @@ DEFUN(__default_morecore, (increment), ptrdiff_t increment)
 }
 
 
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(__default_morecore);
-
-#endif	/* GNU stabs.  */
+stub_warning (__default_morecore)

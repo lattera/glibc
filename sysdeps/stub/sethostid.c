@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,10 +30,4 @@ DEFUN(sethostid, (id), long int id)
 }
 
 
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(sethostid);
-
-#endif	/* GNU stabs.  */
+stub_warning (sethostid)

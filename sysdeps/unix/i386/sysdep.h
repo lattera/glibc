@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
 
 /* For ELF we need the `.type' directive to make shared libs work right.  */
 #ifdef HAVE_ELF
-#define ASM_TYPE_DIRECTIVE(name,type)	.type name,type;
+#define ASM_TYPE_DIRECTIVE(name,typearg)	.type name,typearg;
 #else
 #define ASM_TYPE_DIRECTIVE(name,type) /* Nothing is specified.  */
 #endif

@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <errno.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 /* Truncate PATH to LENGTH bytes.  */
 int

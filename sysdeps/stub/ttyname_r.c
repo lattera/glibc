@@ -33,10 +33,4 @@ ttyname_r (fd, buf, buflen)
 }
 
 
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(ttyname_r);
-
-#endif	/* GNU stabs.  */
+stub_warning (ttyname_r)

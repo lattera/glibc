@@ -72,7 +72,9 @@ for unix_function in \
   getitimer setitimer \
   getdomainname/getdomain=bsd/bsd4.4 \
   setdomainname/setdomain=bsd/bsd4.4 \
-  profil=bsd
+  profil=bsd \
+  getpriority setpriority \
+  getrlimit setrlimit
 do
 
   # $unix_function  =>	$unix_syscall		$unix_srcname
