@@ -1,3 +1,22 @@
+2004-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c: Major rewrite.  The data is now optionally kept in
+	a mmaped memory region which is automatically mirrored on disk.
+	This implements persistent data storage.  The Memory handled
+	needed to be completely revamped, it now uses a garbage collection
+	mechanism instead of malloc.
+	* nscd/connections.c: Likewise.
+	* nscd/nscd.c: Likewise.
+	* nscd/nscd.h: Likewise.
+	* nscd/nscd_conf.c: Likewise.
+	* nscd/nscd_stat.c: Likewise.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c:: Likewise.
+	* nscd/pwdcache.c:: Likewise.
+	* nscd/Makefile: Add rules to build mem.c.
+	* nscd/mem.c: New file.
+	* nscd/nscd.conf: Describe new configuration options.
+
 2004-08-26  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/mips/pread.c: Include sgidefs.h only if

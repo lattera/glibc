@@ -44,7 +44,7 @@ const char *dbnames[lastdb] =
 };
 
 int
-nscd_parse_file (const char *fname, struct database dbs[lastdb])
+nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 {
   FILE *fp;
   char *line, *cp, *entry, *arg1, *arg2;
@@ -117,7 +117,7 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
 		break;
 	      }
 	  if (cnt == lastdb)
-	    dbg_log ("server %s is not supported\n", arg1);
+	    dbg_log ("database %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "negative-time-to-live") == 0)
 	{
@@ -128,18 +128,18 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
 		break;
 	      }
 	  if (cnt == lastdb)
-	    dbg_log ("server %s is not supported\n", arg1);
+	    dbg_log ("database %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "suggested-size") == 0)
 	{
 	  for (cnt = 0; cnt < lastdb; ++cnt)
 	    if (strcmp (arg1, dbnames[cnt]) == 0)
 	      {
-		dbs[cnt].module = atol (arg2);
+		dbs[cnt].suggested_module = atol (arg2);
 		break;
 	      }
 	  if (cnt == lastdb)
-	    dbg_log ("server %s is not supported\n", arg1);
+	    dbg_log ("database %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "enable-cache") == 0)
 	{
@@ -153,7 +153,7 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
 		break;
 	      }
 	  if (cnt == lastdb)
-	    dbg_log ("server %s is not supported\n", arg1);
+	    dbg_log ("database %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "check-files") == 0)
 	{
@@ -167,7 +167,7 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
 		break;
 	      }
 	  if (cnt == lastdb)
-	    dbg_log ("server %s is not supported\n", arg1);
+	    dbg_log ("database %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "logfile") == 0)
 	set_logfile (arg1);
@@ -202,6 +202,35 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
 		stat_uid = pw->pw_uid;
 	    }
         }
+      else if (strcmp (entry, "persistent") == 0)
+	{
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		if (strcmp (arg2, "no") == 0)
+		  dbs[cnt].persistent = 0;
+		else if (strcmp (arg2, "yes") == 0)
+		  dbs[cnt].persistent = 1;
+		break;
+	      }
+	  if (cnt == lastdb)
+	    dbg_log ("database %s is not supported\n", arg1);
+	}
+      else if (strcmp (entry, "reload-count") == 0)
+	{
+	  if (strcasecmp (arg1, "unlimited") == 0)
+	    reload_count = UINT_MAX;
+	  else
+	    {
+	      unsigned int count = strtoul (arg1, NULL, 0);
+	      if (count > UINT8_MAX - 1)
+		reload_count = UINT_MAX;
+	      else if (count >= 0)
+	    reload_count = count;
+	      else
+		dbg_log (_("invalid value for 'reload-count': %u"), count);
+	    }
+	}
       else
 	dbg_log (_("Unknown option: %s %s %s"), entry, arg1, arg2);
     }

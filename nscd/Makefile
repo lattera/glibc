@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ vpath %.c ../locale/programs
 
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
-		dbg_log nscd_conf nscd_stat cache xmalloc xstrdup
+		dbg_log nscd_conf nscd_stat cache mem xmalloc xstrdup
 
 ifeq ($(have-thread-library),yes)
 
@@ -78,6 +78,7 @@ CFLAGS-nscd_stat.c = -fpie
 CFLAGS-cache.c = -fpie
 CFLAGS-xmalloc.c = -fpie
 CFLAGS-xstrdup.c = -fpie
+CFLAGS-mem.c = -fpie
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	$(LINK.o) -pie -Wl,-O1 \

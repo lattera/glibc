@@ -19,8 +19,10 @@
    02111-1307 USA.  */
 
 #include <alloca.h>
+#include <assert.h>
 #include <errno.h>
 #include <error.h>
+#include <libintl.h>
 #include <pwd.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -29,7 +31,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include <libintl.h>
+#include <sys/mman.h>
 #include <stackinfo.h>
 
 #include "nscd.h"
@@ -72,83 +74,153 @@ static const pw_response_header notfound =
 };
 
 
-struct passwddata
-{
-  pw_response_header resp;
-  char strdata[0];
-};
-
-
 static void
-cache_addpw (struct database *db, int fd, request_header *req, void *key,
-	     struct passwd *pwd, uid_t owner, int type)
+cache_addpw (struct database_dyn *db, int fd, request_header *req,
+	     const void *key, struct passwd *pwd, uid_t owner,
+	     struct hashentry *he, struct datahead *dh, int errval)
 {
   ssize_t total;
   ssize_t written;
   time_t t = time (NULL);
 
+  /* We allocate all data in one memory block: the iov vector,
+     the response header and the dataset itself.  */
+  struct dataset
+  {
+    struct datahead head;
+    pw_response_header resp;
+    char strdata[0];
+  } *dataset;
+
+  assert (offsetof (struct dataset, resp) == offsetof (struct datahead, data));
+
   if (pwd == NULL)
     {
-      /* We have no data.  This means we send the standard reply for this
-	 case.  */
-      total = sizeof (notfound);
-
-      written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
-
-      void *copy = malloc (req->key_len);
-      /* If we cannot allocate memory simply do not cache the information.  */
-      if (copy != NULL)
+      if (he != NULL && errval == EAGAIN)
 	{
-	  memcpy (copy, key, req->key_len);
+	  /* If we have an old record available but cannot find one
+	     now because the service is not available we keep the old
+	     record and make sure it does not get removed.  */
+	  if (reload_count != UINT_MAX && dh->nreloads == reload_count)
+	    /* Do not reset the value if we never not reload the record.  */
+	    dh->nreloads = reload_count - 1;
 
-	  /* Compute the timeout time.  */
-	  t += db->negtimeout;
+	  written = total = 0;
+	}
+      else
+	{
+	  /* We have no data.  This means we send the standard reply for this
+	     case.  */
+	  written = total = sizeof (notfound);
 
-	  /* Now get the lock to safely insert the records.  */
-	  pthread_rwlock_rdlock (&db->lock);
+	  if (fd != -1)
+	    written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
 
-	  cache_add (req->type, copy, req->key_len, &notfound,
-		     sizeof (notfound), (void *) -1, 0, t, db, owner);
+	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
+	  /* If we cannot permanently store the result, so be it.  */
+	  if (dataset != NULL)
+	    {
+	      dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
+	      dataset->head.recsize = total;
+	      dataset->head.notfound = true;
+	      dataset->head.nreloads = 0;
+	      dataset->head.usable = true;
 
-	  pthread_rwlock_unlock (&db->lock);
+	      /* Compute the timeout time.  */
+	      dataset->head.timeout = t + db->negtimeout;
+
+	      /* This is the reply.  */
+	      memcpy (&dataset->resp, &notfound, total);
+
+	      /* Copy the key data.  */
+	      char *key_copy = memcpy (dataset->strdata, key, req->key_len);
+
+	      /* Now get the lock to safely insert the records.  */
+	      pthread_rwlock_rdlock (&db->lock);
+
+	      if (cache_add (req->type, key_copy, req->key_len,
+			     &dataset->head, true, db, owner) < 0)
+		/* Ensure the data can be recovered.  */
+		dataset->head.usable = false;
+
+
+	      pthread_rwlock_unlock (&db->lock);
+
+	      /* Mark the old entry as obsolete.  */
+	      if (dh != NULL)
+		dh->usable = false;
+	    }
+	  else
+	    ++db->head->addfailed;
 	}
     }
   else
     {
       /* Determine the I/O structure.  */
-      struct passwddata *data;
       size_t pw_name_len = strlen (pwd->pw_name) + 1;
       size_t pw_passwd_len = strlen (pwd->pw_passwd) + 1;
       size_t pw_gecos_len = strlen (pwd->pw_gecos) + 1;
       size_t pw_dir_len = strlen (pwd->pw_dir) + 1;
       size_t pw_shell_len = strlen (pwd->pw_shell) + 1;
       char *cp;
-      char buf[12];
+      const size_t key_len = strlen (key);
+      const size_t buf_len = 3 * sizeof (pwd->pw_uid) + key_len + 1;
+      char *buf = alloca (buf_len);
       ssize_t n;
 
       /* We need this to insert the `byuid' entry.  */
-      n = snprintf (buf, sizeof (buf), "%d", pwd->pw_uid) + 1;
+      int key_offset;
+      n = snprintf (buf, buf_len, "%d%c%n%s", pwd->pw_uid, '\0',
+		    &key_offset, (char *) key) + 1;
 
-      /* We allocate all data in one memory block: the iov vector,
-	 the response header and the dataset itself.  */
-      total = (sizeof (struct passwddata) + pw_name_len + pw_passwd_len
-	       + pw_gecos_len + pw_dir_len + pw_shell_len);
-      data = (struct passwddata *) malloc (total + n + req->key_len);
-      if (data == NULL)
-	/* There is no reason to go on.  */
-	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
+      written = total = (sizeof (struct dataset) + pw_name_len + pw_passwd_len
+			 + pw_gecos_len + pw_dir_len + pw_shell_len);
 
-      data->resp.version = NSCD_VERSION;
-      data->resp.found = 1;
-      data->resp.pw_name_len = pw_name_len;
-      data->resp.pw_passwd_len = pw_passwd_len;
-      data->resp.pw_uid = pwd->pw_uid;
-      data->resp.pw_gid = pwd->pw_gid;
-      data->resp.pw_gecos_len = pw_gecos_len;
-      data->resp.pw_dir_len = pw_dir_len;
-      data->resp.pw_shell_len = pw_shell_len;
+      /* If we refill the cache, first assume the reconrd did not
+	 change.  Allocate memory on the cache since it is likely
+	 discarded anyway.  If it turns out to be necessary to have a
+	 new record we can still allocate real memory.  */
+      bool alloca_used = false;
+      dataset = NULL;
 
-      cp = data->strdata;
+      if (he == NULL)
+	{
+	  dataset = (struct dataset *) mempool_alloc (db, total + n);
+	  if (dataset == NULL)
+	    ++db->head->addfailed;
+	}
+
+      if (dataset == NULL)
+	{
+	  /* We cannot permanently add the result in the moment.  But
+	     we can provide the result as is.  Store the data in some
+	     temporary memory.  */
+	  dataset = (struct dataset *) alloca (total + n);
+
+	  /* We cannot add this record to the permanent database.  */
+	  alloca_used = true;
+	}
+
+      dataset->head.allocsize = total + n;
+      dataset->head.recsize = total - offsetof (struct dataset, resp);
+      dataset->head.notfound = false;
+      dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
+      dataset->head.usable = true;
+
+      /* Compute the timeout time.  */
+      dataset->head.timeout = t + db->postimeout;
+
+      dataset->resp.version = NSCD_VERSION;
+      dataset->resp.found = 1;
+      dataset->resp.pw_name_len = pw_name_len;
+      dataset->resp.pw_passwd_len = pw_passwd_len;
+      dataset->resp.pw_uid = pwd->pw_uid;
+      dataset->resp.pw_gid = pwd->pw_gid;
+      dataset->resp.pw_gecos_len = pw_gecos_len;
+      dataset->resp.pw_dir_len = pw_dir_len;
+      dataset->resp.pw_shell_len = pw_shell_len;
+
+      cp = dataset->strdata;
 
       /* Copy the strings over into the buffer.  */
       cp = mempcpy (cp, pwd->pw_name, pw_name_len);
@@ -157,35 +229,120 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       cp = mempcpy (cp, pwd->pw_dir, pw_dir_len);
       cp = mempcpy (cp, pwd->pw_shell, pw_shell_len);
 
-      /* Next the stringified UID value.  */
+      /* Finally the stringified UID value.  */
       memcpy (cp, buf, n);
+      char *key_copy = cp + key_offset;
+      assert (key_copy == (char *) rawmemchr (cp, '\0') + 1);
 
-      /* Copy of the key in case it differs.  */
-      char *key_copy = memcpy (cp + n, key, req->key_len);
+      /* Now we can determine whether on refill we have to create a new
+	 record or not.  */
+      if (he != NULL)
+	{
+	  assert (fd == -1);
 
-      /* We write the dataset before inserting it to the database
-	 since while inserting this thread might block and so would
-	 unnecessarily let the receiver wait.  */
-      written = TEMP_FAILURE_RETRY (write (fd, &data->resp, total));
+	  if (total + n == dh->allocsize
+	      && total - offsetof (struct dataset, resp) == dh->recsize
+	      && memcmp (&dataset->resp, dh->data,
+			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
+	    {
+	      /* The sata has not changed.  We will just bump the
+		 timeout value.  Note that the new record has been
+		 allocated on the stack and need not be freed.  */
+	      dh->timeout = dataset->head.timeout;
+	      ++dh->nreloads;
+	    }
+	  else
+	    {
+	      /* We have to create a new record.  Just allocate
+		 appropriate memory and copy it.  */
+	      struct dataset *newp
+		= (struct dataset *) mempool_alloc (db, total + n);
+	      if (newp != NULL)
+		{
+		  /* Adjust pointer into the memory block.  */
+		  cp = (char *) newp + (cp - (char *) dataset);
 
-      /* Compute the timeout time.  */
-      t += db->postimeout;
+		  dataset = memcpy (newp, dataset, total + n);
+		  alloca_used = false;
+		}
 
-      /* Now get the lock to safely insert the records.  */
-      pthread_rwlock_rdlock (&db->lock);
+	      /* Mark the old record as obsolete.  */
+	      dh->usable = false;
+	    }
+	}
+      else
+	{
+	  /* We write the dataset before inserting it to the database
+	     since while inserting this thread might block and so would
+	     unnecessarily let the receiver wait.  */
+	  assert (fd != -1);
 
-      /* We have to add the value for both, byname and byuid.  */
-      cache_add (GETPWBYNAME, data->strdata, pw_name_len, data,
-		 total, data, 0, t, db, owner);
+	  written = TEMP_FAILURE_RETRY (write (fd, &dataset->resp, total));
+	}
 
-      /* If the key is different from the name add a separate entry.  */
-      if (type == GETPWBYNAME && strcmp (key_copy, data->strdata) != 0)
-	cache_add (GETPWBYNAME, key_copy, req->key_len, data,
-		   total, data, 0, t, db, owner);
 
-      cache_add (GETPWBYUID, cp, n, data, total, data, 1, t, db, owner);
+      /* Add the record to the database.  But only if it has not been
+	 stored on the stack.  */
+      if (! alloca_used)
+	{
+	  /* If necessary, we also propagate the data to disk.  */
+	  if (db->persistent)
+	    // XXX async OK?
+	    msync (dataset, total + n, MS_ASYNC);
 
-      pthread_rwlock_unlock (&db->lock);
+	  /* Now get the lock to safely insert the records.  */
+	  pthread_rwlock_rdlock (&db->lock);
+
+	  /* NB: in the following code we always must add the entry
+	     marked with FIRST first.  Otherwise we end up with
+	     dangling "pointers" in case a latter hash entry cannot be
+	     added.  */
+	  bool first = req->type == GETPWBYNAME;
+
+	  /* If the request was by UID, add that entry first.  */
+	  if (req->type != GETPWBYNAME)
+	    {
+	      if (cache_add (GETPWBYUID, cp, n, &dataset->head, true, db,
+			     owner) < 0)
+		{
+		  /* Could not allocate memory.  Make sure the data gets
+		     discarded.  */
+		  dataset->head.usable = false;
+		  goto out;
+		}
+	    }
+	  /* If the key is different from the name add a separate entry.  */
+	  else if (strcmp (key_copy, dataset->strdata) != 0)
+	    {
+	      if (cache_add (GETPWBYNAME, key_copy, key_len + 1,
+			     &dataset->head, first, db, owner) < 0)
+		{
+		  /* Could not allocate memory.  Make sure the data gets
+		     discarded.  */
+		  dataset->head.usable = false;
+		  goto out;
+		}
+
+	      first = false;
+	    }
+
+	  /* We have to add the value for both, byname and byuid.  */
+	  if (__builtin_expect (cache_add (GETPWBYNAME, dataset->strdata,
+					   pw_name_len, &dataset->head, first,
+					   db, owner) == 0, 1))
+	    {
+	      if (req->type == GETPWBYNAME)
+		(void) cache_add (GETPWBYUID, cp, n, &dataset->head,
+				  req->type != GETPWBYNAME, db, owner);
+	    }
+	  else if (first)
+	    /* Could not allocate memory.  Make sure the data gets
+	       discarded.  */
+	    dataset->head.usable = false;
+
+	out:
+	  pthread_rwlock_unlock (&db->lock);
+	}
     }
 
   if (__builtin_expect (written != total, 0) && debug_level > 0)
@@ -197,32 +354,57 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
 }
 
 
-void
-addpwbyname (struct database *db, int fd, request_header *req,
-	     void *key, uid_t c_uid)
+union keytype
+{
+  void *v;
+  uid_t u;
+};
+
+
+static int
+lookup (int type, union keytype key, struct passwd *resultbufp, char *buffer,
+	size_t buflen, struct passwd **pwd)
+{
+  if (type == GETPWBYNAME)
+    return __getpwnam_r (key.v, resultbufp, buffer, buflen, pwd);
+  else
+    return __getpwuid_r (key.u, resultbufp, buffer, buflen, pwd);
+}
+
+
+static void
+addpwbyX (struct database_dyn *db, int fd, request_header *req,
+	  union keytype key, const char *keystr, uid_t c_uid,
+	  struct hashentry *he, struct datahead *dh)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 1024;
+  size_t buflen = 1024;
   char *buffer = (char *) alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
   uid_t oldeuid = 0;
   bool use_malloc = false;
+  int errval = 0;
 
   if (__builtin_expect (debug_level > 0, 0))
-    dbg_log (_("Haven't found \"%s\" in password cache!"), (char *) key);
+    {
+      if (he == NULL)
+	dbg_log (_("Haven't found \"%s\" in password cache!"), keystr);
+      else
+	dbg_log (_("Reloading \"%s\" in password cache!"), keystr);
+    }
 
-  if (secure[pwddb])
+  if (db->secure)
     {
       oldeuid = geteuid ();
       seteuid (c_uid);
     }
 
-  while (__getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
-	 && errno == ERANGE)
+  while (lookup (req->type, key, &resultbuf, buffer, buflen, &pwd) != 0
+	 && (errval = errno) == ERANGE)
     {
       char *old_buffer = buffer;
       errno = 0;
@@ -239,6 +421,11 @@ addpwbyname (struct database *db, int fd, request_header *req,
 		 never happen.  */
 	      pwd = NULL;
 	      buffer = old_buffer;
+
+	      /* We set the error to indicate this is (possibly) a
+		 temporary error and that it does not mean the entry
+		 is not available at all.  */
+	      errval = EAGAIN;
 	      break;
 	    }
 	  use_malloc = true;
@@ -249,10 +436,11 @@ addpwbyname (struct database *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
-  if (secure[pwddb])
+  if (db->secure)
     seteuid (oldeuid);
 
-  cache_addpw (db, fd, req, key, pwd, c_uid, GETPWBYNAME);
+  /* Add the entry to the cache.  */
+  cache_addpw (db, fd, req, keystr, pwd, c_uid, he, dh, errval);
 
   if (use_malloc)
     free (buffer);
@@ -260,21 +448,36 @@ addpwbyname (struct database *db, int fd, request_header *req,
 
 
 void
-addpwbyuid (struct database *db, int fd, request_header *req,
+addpwbyname (struct database_dyn *db, int fd, request_header *req,
+	     void *key, uid_t c_uid)
+{
+  union keytype u = { .v = key };
+
+  addpwbyX (db, fd, req, u, key, c_uid, NULL, NULL);
+}
+
+
+void
+readdpwbyname (struct database_dyn *db, struct hashentry *he,
+	       struct datahead *dh)
+{
+  request_header req =
+    {
+      .type = GETPWBYNAME,
+      .key_len = he->len
+    };
+  union keytype u = { .v = db->data + he->key };
+
+  addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+}
+
+
+void
+addpwbyuid (struct database_dyn *db, int fd, request_header *req,
 	    void *key, uid_t c_uid)
 {
-  /* Search for the entry matching the key.  Please note that we don't
-     look again in the table whether the dataset is now available.  We
-     simply insert it.  It does not matter if it is in there twice.  The
-     pruning function only will look at the timestamp.  */
-  int buflen = 256;
-  char *buffer = (char *) alloca (buflen);
-  struct passwd resultbuf;
-  struct passwd *pwd;
-  uid_t oldeuid = 0;
   char *ep;
   uid_t uid = strtoul ((char *) key, &ep, 10);
-  bool use_malloc = false;
 
   if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric uid */
     {
@@ -285,47 +488,28 @@ addpwbyuid (struct database *db, int fd, request_header *req,
       return;
     }
 
-  if (__builtin_expect (debug_level > 0, 0))
-    dbg_log (_("Haven't found \"%d\" in password cache!"), uid);
+  union keytype u = { .u = uid };
 
-  if (secure[pwddb])
+  addpwbyX (db, fd, req, u, key, c_uid, NULL, NULL);
+}
+
+
+void
+readdpwbyuid (struct database_dyn *db, struct hashentry *he,
+	      struct datahead *dh)
+{
+  char *ep;
+  uid_t uid = strtoul (db->data + he->key, &ep, 10);
+
+  /* Since the key has been added before it must be OK.  */
+  assert (*(db->data + he->key) != '\0' && *ep == '\0');
+
+  request_header req =
     {
-      oldeuid = geteuid ();
-      seteuid (c_uid);
-    }
+      .type = GETPWBYUID,
+      .key_len = he->len
+    };
+  union keytype u = { .u = uid };
 
-  while (__getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
-	 && errno == ERANGE)
-    {
-      char *old_buffer = buffer;
-      errno = 0;
-
-      if (__builtin_expect (buflen > 32768, 0))
-	{
-	  buflen += 1024;
-	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
-	  if (buffer == NULL)
-	    {
-	      /* We ran out of memory.  We cannot do anything but
-		 sending a negative response.  In reality this should
-		 never happen.  */
-	      pwd = NULL;
-	      buffer = old_buffer;
-	      break;
-	    }
-	  use_malloc = true;
-	}
-      else
-	/* Allocate a new buffer on the stack.  If possible combine it
-	   with the previously allocated buffer.  */
-	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
-    }
-
-  if (secure[pwddb])
-    seteuid (oldeuid);
-
-  cache_addpw (db, fd, req, key, pwd, c_uid, GETPWBYUID);
-
-  if (use_malloc)
-    free (buffer);
+  addpwbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
 }

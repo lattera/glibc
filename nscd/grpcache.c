@@ -19,9 +19,11 @@
    02111-1307 USA.  */
 
 #include <alloca.h>
+#include <assert.h>
 #include <errno.h>
 #include <error.h>
 #include <grp.h>
+#include <libintl.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -29,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <libintl.h>
+#include <sys/mman.h>
 #include <stackinfo.h>
 
 #include "nscd.h"
@@ -66,51 +68,87 @@ static const gr_response_header notfound =
 };
 
 
-struct groupdata
-{
-  gr_response_header resp;
-  char strdata[0];
-};
-
-
 static void
-cache_addgr (struct database *db, int fd, request_header *req, void *key,
-	     struct group *grp, uid_t owner, int type)
+cache_addgr (struct database_dyn *db, int fd, request_header *req,
+	     const void *key, struct group *grp, uid_t owner,
+	     struct hashentry *he, struct datahead *dh, int errval)
 {
   ssize_t total;
   ssize_t written;
   time_t t = time (NULL);
 
+  /* We allocate all data in one memory block: the iov vector,
+     the response header and the dataset itself.  */
+  struct dataset
+  {
+    struct datahead head;
+    gr_response_header resp;
+    char strdata[0];
+  } *dataset;
+
+  assert (offsetof (struct dataset, resp) == offsetof (struct datahead, data));
+
   if (grp == NULL)
     {
-      /* We have no data.  This means we send the standard reply for this
-	 case.  */
-      total = sizeof (notfound);
-
-      written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
-
-      void *copy = malloc (req->key_len);
-      /* If we cannot allocate memory simply do not cache the information.  */
-      if (copy != NULL)
+      if (he != NULL && errval == EAGAIN)
 	{
-	  memcpy (copy, key, req->key_len);
+	  /* If we have an old record available but cannot find one
+	     now because the service is not available we keep the old
+	     record and make sure it does not get removed.  */
+	  if (reload_count != UINT_MAX)
+	    /* Do not reset the value if we never not reload the record.  */
+	    dh->nreloads = reload_count - 1;
 
-	  /* Compute the timeout time.  */
-	  t += db->negtimeout;
+	  written = total = 0;
+	}
+      else
+	{
+	  /* We have no data.  This means we send the standard reply for this
+	     case.  */
+	  total = sizeof (notfound);
 
-	  /* Now get the lock to safely insert the records.  */
-	  pthread_rwlock_rdlock (&db->lock);
+	  written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
 
-	  cache_add (req->type, copy, req->key_len, &notfound,
-		     sizeof (notfound), (void *) -1, 0, t, db, owner);
+	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len);
+	  /* If we cannot permanently store the result, so be it.  */
+	  if (dataset != NULL)
+	    {
+	      dataset->head.allocsize = sizeof (struct dataset) + req->key_len;
+	      dataset->head.recsize = total;
+	      dataset->head.notfound = true;
+	      dataset->head.nreloads = 0;
+	      dataset->head.usable = true;
 
-	  pthread_rwlock_unlock (&db->lock);
+	      /* Compute the timeout time.  */
+	      dataset->head.timeout = t + db->negtimeout;
+
+	      /* This is the reply.  */
+	      memcpy (&dataset->resp, &notfound, total);
+
+	      /* Copy the key data.  */
+	      memcpy (dataset->strdata, key, req->key_len);
+
+	      /* Now get the lock to safely insert the records.  */
+	      pthread_rwlock_rdlock (&db->lock);
+
+	      if (cache_add (req->type, &dataset->strdata, req->key_len,
+			     &dataset->head, true, db, owner) < 0)
+		/* Ensure the data can be recovered.  */
+		dataset->head.usable = false;
+
+	      pthread_rwlock_unlock (&db->lock);
+
+	      /* Mark the old entry as obsolete.  */
+	      if (dh != NULL)
+		dh->usable = false;
+	    }
+	  else
+	    ++db->head->addfailed;
 	}
     }
   else
     {
       /* Determine the I/O structure.  */
-      struct groupdata *data;
       size_t gr_name_len = strlen (grp->gr_name) + 1;
       size_t gr_passwd_len = strlen (grp->gr_passwd) + 1;
       size_t gr_mem_cnt = 0;
@@ -118,12 +156,16 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       size_t gr_mem_len_total = 0;
       char *gr_name;
       char *cp;
-      char buf[12];
+      const size_t key_len = strlen (key);
+      const size_t buf_len = 3 + sizeof (grp->gr_gid) + key_len + 1;
+      char *buf = alloca (buf_len);
       ssize_t n;
       size_t cnt;
 
       /* We need this to insert the `bygid' entry.  */
-      n = snprintf (buf, sizeof (buf), "%d", grp->gr_gid) + 1;
+      int key_offset;
+      n = snprintf (buf, buf_len, "%d%c%n%s", grp->gr_gid, '\0',
+		    &key_offset, (char *) key) + 1;
 
       /* Determine the length of all members.  */
       while (grp->gr_mem[gr_mem_cnt])
@@ -135,24 +177,52 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
 	  gr_mem_len_total += gr_mem_len[gr_mem_cnt];
 	}
 
-      /* We allocate all data in one memory block: the iov vector,
-	 the response header and the dataset itself.  */
-      total = (sizeof (struct groupdata)
-	       + gr_mem_cnt * sizeof (uint32_t)
-	       + gr_name_len + gr_passwd_len + gr_mem_len_total);
-      data = (struct groupdata *) malloc (total + n + req->key_len);
-      if (data == NULL)
-	/* There is no reason to go on.  */
-	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
+      written = total = (sizeof (struct dataset)
+			 + gr_mem_cnt * sizeof (uint32_t)
+			 + gr_name_len + gr_passwd_len + gr_mem_len_total);
 
-      data->resp.version = NSCD_VERSION;
-      data->resp.found = 1;
-      data->resp.gr_name_len = gr_name_len;
-      data->resp.gr_passwd_len = gr_passwd_len;
-      data->resp.gr_gid = grp->gr_gid;
-      data->resp.gr_mem_cnt = gr_mem_cnt;
+      /* If we refill the cache, first assume the reconrd did not
+	 change.  Allocate memory on the cache since it is likely
+	 discarded anyway.  If it turns out to be necessary to have a
+	 new record we can still allocate real memory.  */
+      bool alloca_used = false;
+      dataset = NULL;
 
-      cp = data->strdata;
+      if (he == NULL)
+	{
+	  dataset = (struct dataset *) mempool_alloc (db, total + n);
+	  if (dataset == NULL)
+	    ++db->head->addfailed;
+	}
+
+      if (dataset == NULL)
+	{
+	  /* We cannot permanently add the result in the moment.  But
+	     we can provide the result as is.  Store the data in some
+	     temporary memory.  */
+	  dataset = (struct dataset *) alloca (total + n);
+
+	  /* We cannot add this record to the permanent database.  */
+	  alloca_used = true;
+	}
+
+      dataset->head.allocsize = total + n;
+      dataset->head.recsize = total - offsetof (struct dataset, resp);
+      dataset->head.notfound = false;
+      dataset->head.nreloads = he == NULL ? 0 : (dh->nreloads + 1);
+      dataset->head.usable = true;
+
+      /* Compute the timeout time.  */
+      dataset->head.timeout = t + db->postimeout;
+
+      dataset->resp.version = NSCD_VERSION;
+      dataset->resp.found = 1;
+      dataset->resp.gr_name_len = gr_name_len;
+      dataset->resp.gr_passwd_len = gr_passwd_len;
+      dataset->resp.gr_gid = grp->gr_gid;
+      dataset->resp.gr_mem_cnt = gr_mem_cnt;
+
+      cp = dataset->strdata;
 
       /* This is the member string length array.  */
       cp = mempcpy (cp, gr_mem_len, gr_mem_cnt * sizeof (uint32_t));
@@ -163,33 +233,120 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       for (cnt = 0; cnt < gr_mem_cnt; ++cnt)
 	cp = mempcpy (cp, grp->gr_mem[cnt], gr_mem_len[cnt]);
 
-      /* Next the stringified GID value.  */
+      /* Finally the stringified GID value.  */
       memcpy (cp, buf, n);
+      char *key_copy = cp + key_offset;
+      assert (key_copy == (char *) rawmemchr (cp, '\0') + 1);
 
-      /* Copy of the key in case it differs.  */
-      char *key_copy = memcpy (cp + n, key, req->key_len);
+      /* Now we can determine whether on refill we have to create a new
+	 record or not.  */
+      if (he != NULL)
+	{
+	  assert (fd == -1);
 
-      /* Write the result.  */
-      written = TEMP_FAILURE_RETRY (write (fd, &data->resp, total));
+	  if (total + n == dh->allocsize
+	      && total - offsetof (struct dataset, resp) == dh->recsize
+	      && memcmp (&dataset->resp, dh->data,
+			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
+	    {
+	      /* The data has not changed.  We will just bump the
+		 timeout value.  Note that the new record has been
+		 allocated on the stack and need not be freed.  */
+	      dh->timeout = dataset->head.timeout;
+	      ++dh->nreloads;
+	    }
+	  else
+	    {
+	      /* We have to create a new record.  Just allocate
+		 appropriate memory and copy it.  */
+	      struct dataset *newp
+		= (struct dataset *) mempool_alloc (db, total + n);
+	      if (newp != NULL)
+		{
+		  /* Adjust pointers into the memory block.  */
+		  gr_name = (char *) newp + (gr_name - (char *) dataset);
+		  cp = (char *) newp + (cp - (char *) dataset);
 
-      /* Compute the timeout time.  */
-      t += db->postimeout;
+		  dataset = memcpy (newp, dataset, total + n);
+		  alloca_used = false;
+		}
 
-      /* Now get the lock to safely insert the records.  */
-      pthread_rwlock_rdlock (&db->lock);
+	      /* Mark the old record as obsolete.  */
+	      dh->usable = false;
+	    }
+	}
+      else
+	{
+	  /* We write the dataset before inserting it to the database
+	     since while inserting this thread might block and so would
+	     unnecessarily let the receiver wait.  */
+	  assert (fd != -1);
 
-      /* We have to add the value for both, byname and byuid.  */
-      cache_add (GETGRBYNAME, gr_name, gr_name_len, data,
-		 total, data, 0, t, db, owner);
+	  written = TEMP_FAILURE_RETRY (write (fd, &dataset->resp, total));
+	}
 
-      /* If the key is different from the name add a separate entry.  */
-      if (type == GETGRBYNAME && strcmp (key_copy, gr_name) != 0)
-	cache_add (GETGRBYNAME, key_copy, req->key_len, data,
-		   total, data, 0, t, db, owner);
+      /* Add the record to the database.  But only if it has not been
+	 stored on the stack.  */
+      if (! alloca_used)
+	{
+	  /* If necessary, we also propagate the data to disk.  */
+	  if (db->persistent)
+	    // XXX async OK?
+	    msync (dataset, total + n, MS_ASYNC);
 
-      cache_add (GETGRBYGID, cp, n, data, total, data, 1, t, db, owner);
+	  /* Now get the lock to safely insert the records.  */
+	  pthread_rwlock_rdlock (&db->lock);
 
-      pthread_rwlock_unlock (&db->lock);
+	  /* NB: in the following code we always must add the entry
+	     marked with FIRST first.  Otherwise we end up with
+	     dangling "pointers" in case a latter hash entry cannot be
+	     added.  */
+	  bool first = req->type == GETGRBYNAME;
+
+	  /* If the request was by GID, add that entry first.  */
+	  if (req->type != GETGRBYNAME)
+	    {
+	      if (cache_add (GETGRBYGID, cp, n, &dataset->head, true, db,
+			     owner) < 0)
+		{
+		  /* Could not allocate memory.  Make sure the data gets
+		     discarded.  */
+		  dataset->head.usable = false;
+		  goto out;
+		}
+	    }
+	  /* If the key is different from the name add a separate entry.  */
+	  else if (strcmp (key_copy, gr_name) != 0)
+	    {
+	      if (cache_add (GETGRBYNAME, key_copy, key_len + 1,
+			     &dataset->head, first, db, owner) < 0)
+		{
+		  /* Could not allocate memory.  Make sure the data gets
+		     discarded.  */
+		  dataset->head.usable = false;
+		  goto out;
+		}
+
+	      first = false;
+	    }
+
+	  /* We have to add the value for both, byname and byuid.  */
+	  if (__builtin_expect (cache_add (GETGRBYNAME, gr_name, gr_name_len,
+					   &dataset->head, first, db, owner)
+				== 0, 1))
+	    {
+	      if (req->type == GETGRBYNAME)
+		(void) cache_add (GETGRBYGID, cp, n, &dataset->head,
+				  req->type != GETGRBYNAME, db, owner);
+	    }
+	  else if (first)
+	    /* Could not allocate memory.  Make sure the data gets
+	       discarded.  */
+	    dataset->head.usable = false;
+
+	out:
+	  pthread_rwlock_unlock (&db->lock);
+	}
     }
 
   if (__builtin_expect (written != total, 0) && debug_level > 0)
@@ -201,32 +358,57 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
 }
 
 
-void
-addgrbyname (struct database *db, int fd, request_header *req,
-	     void *key, uid_t uid)
+union keytype
+{
+  void *v;
+  gid_t g;
+};
+
+
+static int
+lookup (int type, union keytype key, struct group *resultbufp, char *buffer,
+	size_t buflen, struct group **grp)
+{
+  if (type == GETGRBYNAME)
+    return __getgrnam_r (key.v, resultbufp, buffer, buflen, grp);
+  else
+    return __getgrgid_r (key.g, resultbufp, buffer, buflen, grp);
+}
+
+
+static void
+addgrbyX (struct database_dyn *db, int fd, request_header *req,
+	  union keytype key, const char *keystr, uid_t uid,
+	  struct hashentry *he, struct datahead *dh)
 {
   /* Search for the entry matching the key.  Please note that we don't
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 1024;
+  size_t buflen = 1024;
   char *buffer = (char *) alloca (buflen);
   struct group resultbuf;
   struct group *grp;
   uid_t oldeuid = 0;
   bool use_malloc = false;
+  int errval = 0;
 
   if (__builtin_expect (debug_level > 0, 0))
-    dbg_log (_("Haven't found \"%s\" in group cache!"), (char *) key);
+    {
+      if (he == NULL)
+	dbg_log (_("Haven't found \"%s\" in group cache!"), keystr);
+      else
+	dbg_log (_("Reloading \"%s\" in group cache!"), keystr);
+    }
 
-  if (secure[grpdb])
+  if (db->secure)
     {
       oldeuid = geteuid ();
       seteuid (uid);
     }
 
-  while (__getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
-	 && errno == ERANGE)
+  while (lookup (req->type, key, &resultbuf, buffer, buflen, &grp) != 0
+	 && (errval = errno) == ERANGE)
     {
       char *old_buffer = buffer;
       errno = 0;
@@ -243,6 +425,11 @@ addgrbyname (struct database *db, int fd, request_header *req,
 		 never happen.  */
 	      grp = NULL;
 	      buffer = old_buffer;
+
+	      /* We set the error to indicate this is (possibly) a
+		 temporary error and that it does not mean the entry
+		 is not available at all.  */
+	      errval = EAGAIN;
 	      break;
 	    }
 	  use_malloc = true;
@@ -253,10 +440,10 @@ addgrbyname (struct database *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
-  if (secure[grpdb])
+  if (db->secure)
     seteuid (oldeuid);
 
-  cache_addgr (db, fd, req, key, grp, uid, GETGRBYNAME);
+  cache_addgr (db, fd, req, keystr, grp, uid, he, dh, errval);
 
   if (use_malloc)
     free (buffer);
@@ -264,23 +451,38 @@ addgrbyname (struct database *db, int fd, request_header *req,
 
 
 void
-addgrbygid (struct database *db, int fd, request_header *req,
+addgrbyname (struct database_dyn *db, int fd, request_header *req,
+	     void *key, uid_t uid)
+{
+  union keytype u = { .v = key };
+
+  addgrbyX (db, fd, req, u, key, uid, NULL, NULL);
+}
+
+
+void
+readdgrbyname (struct database_dyn *db, struct hashentry *he,
+	       struct datahead *dh)
+{
+  request_header req =
+    {
+      .type = GETGRBYNAME,
+      .key_len = he->len
+    };
+  union keytype u = { .v = db->data + he->key };
+
+  addgrbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
+}
+
+
+void
+addgrbygid (struct database_dyn *db, int fd, request_header *req,
 	    void *key, uid_t uid)
 {
-  /* Search for the entry matching the key.  Please note that we don't
-     look again in the table whether the dataset is now available.  We
-     simply insert it.  It does not matter if it is in there twice.  The
-     pruning function only will look at the timestamp.  */
-  int buflen = 1024;
-  char *buffer = (char *) alloca (buflen);
-  struct group resultbuf;
-  struct group *grp;
-  uid_t oldeuid = 0;
   char *ep;
-  gid_t gid = strtoul ((char *)key, &ep, 10);
-  bool use_malloc = false;
+  gid_t gid = strtoul ((char *) key, &ep, 10);
 
-  if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric gid */
+  if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric uid */
     {
       if (debug_level > 0)
         dbg_log (_("Invalid numeric gid \"%s\"!"), (char *) key);
@@ -289,47 +491,28 @@ addgrbygid (struct database *db, int fd, request_header *req,
       return;
     }
 
-  if (__builtin_expect (debug_level > 0, 0))
-    dbg_log (_("Haven't found \"%d\" in group cache!"), gid);
+  union keytype u = { .g = gid };
 
-  if (secure[grpdb])
+  addgrbyX (db, fd, req, u, key, uid, NULL, NULL);
+}
+
+
+void
+readdgrbygid (struct database_dyn *db, struct hashentry *he,
+	      struct datahead *dh)
+{
+  char *ep;
+  gid_t gid = strtoul (db->data + he->key, &ep, 10);
+
+  /* Since the key has been added before it must be OK.  */
+  assert (*(db->data + he->key) != '\0' && *ep == '\0');
+
+  request_header req =
     {
-      oldeuid = geteuid ();
-      seteuid (uid);
-    }
+      .type = GETGRBYGID,
+      .key_len = he->len
+    };
+  union keytype u = { .g = gid };
 
-  while (__getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
-	 && errno == ERANGE)
-    {
-      char *old_buffer = buffer;
-      errno = 0;
-
-      if (__builtin_expect (buflen > 32768, 0))
-	{
-	  buflen += INCR;
-	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
-	  if (buffer == NULL)
-	    {
-	      /* We ran out of memory.  We cannot do anything but
-		 sending a negative response.  In reality this should
-		 never happen.  */
-	      grp = NULL;
-	      buffer = old_buffer;
-	      break;
-	    }
-	  use_malloc = true;
-	}
-      else
-	/* Allocate a new buffer on the stack.  If possible combine it
-	   with the previously allocated buffer.  */
-	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
-    }
-
-  if (secure[grpdb])
-    seteuid (oldeuid);
-
-  cache_addgr (db, fd, req, key, grp, uid, GETGRBYGID);
-
-  if (use_malloc)
-    free (buffer);
+  addgrbyX (db, -1, &req, u, db->data + he->key, he->owner, he, dh);
 }

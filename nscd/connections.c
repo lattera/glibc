@@ -24,14 +24,15 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <grp.h>
+#include <libintl.h>
 #include <pthread.h>
 #include <pwd.h>
 #include <resolv.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <libintl.h>
 #include <arpa/inet.h>
+#include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
@@ -40,6 +41,11 @@
 
 #include "nscd.h"
 #include "dbg_log.h"
+
+
+/* Number of bytes of data we initially reserve for each hash table bucket.  */
+#define DEFAULT_DATASIZE_PER_BUCKET 1024
+
 
 /* Wrapper functions with error checking for standard functions.  */
 extern void *xmalloc (size_t n);
@@ -56,24 +62,10 @@ static gid_t *server_groups;
 #ifndef NGROUPS
 # define NGROUPS 32
 #endif
-static int server_ngroups = NGROUPS;
+static int server_ngroups;
 
 static void begin_drop_privileges (void);
 static void finish_drop_privileges (void);
-
-
-/* Mapping of request type to database.  */
-static const dbtype serv2db[LASTDBREQ + 1] =
-{
-  [GETPWBYNAME] = pwddb,
-  [GETPWBYUID] = pwddb,
-  [GETGRBYNAME] = grpdb,
-  [GETGRBYGID] = grpdb,
-  [GETHOSTBYNAME] = hstdb,
-  [GETHOSTBYNAMEv6] = hstdb,
-  [GETHOSTBYADDR] = hstdb,
-  [GETHOSTBYADDRv6] = hstdb,
-};
 
 /* Map request type to a string.  */
 const char *serv2str[LASTREQ] =
@@ -92,42 +84,70 @@ const char *serv2str[LASTREQ] =
 };
 
 /* The control data structures for the services.  */
-struct database dbs[lastdb] =
+struct database_dyn dbs[lastdb] =
 {
   [pwddb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .enabled = 0,
     .check_file = 1,
+    .persistent = 0,
     .filename = "/etc/passwd",
-    .module = 211,
+    .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
     .postimeout = 3600,
-    .negtimeout = 20
+    .negtimeout = 20,
+    .wr_fd = -1,
+    .ro_fd = -1,
+    .mmap_used = false
   },
   [grpdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .enabled = 0,
     .check_file = 1,
+    .persistent = 0,
     .filename = "/etc/group",
-    .module = 211,
+    .db_filename = _PATH_NSCD_GROUP_DB,
     .disabled_iov = &grp_iov_disabled,
     .postimeout = 3600,
-    .negtimeout = 60
+    .negtimeout = 60,
+    .wr_fd = -1,
+    .ro_fd = -1,
+    .mmap_used = false
   },
   [hstdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .enabled = 0,
     .check_file = 1,
+    .persistent = 0,
     .filename = "/etc/hosts",
-    .module = 211,
+    .db_filename = _PATH_NSCD_HOSTS_DB,
     .disabled_iov = &hst_iov_disabled,
     .postimeout = 3600,
-    .negtimeout = 20
+    .negtimeout = 20,
+    .wr_fd = -1,
+    .ro_fd = -1,
+    .mmap_used = false
   }
 };
 
+
+/* Mapping of request type to database.  */
+static struct database_dyn *const serv2db[LASTDBREQ + 1] =
+{
+  [GETPWBYNAME] = &dbs[pwddb],
+  [GETPWBYUID] = &dbs[pwddb],
+  [GETGRBYNAME] = &dbs[grpdb],
+  [GETGRBYGID] = &dbs[grpdb],
+  [GETHOSTBYNAME] = &dbs[hstdb],
+  [GETHOSTBYNAMEv6] = &dbs[hstdb],
+  [GETHOSTBYADDR] = &dbs[hstdb],
+  [GETHOSTBYADDRv6] = &dbs[hstdb]
+};
+
+
 /* Number of seconds between two cache pruning runs.  */
 #define CACHE_PRUNE_INTERVAL	15
+
 
 /* Number of threads to use.  */
 int nthreads = -1;
@@ -137,6 +157,9 @@ static int sock;
 
 /* Number of times clients had to wait.  */
 unsigned long int client_queued;
+
+/* Alignment requirement of the beginning of the data region.  */
+#define ALIGN 16
 
 
 /* Initialize database information structures.  */
@@ -166,13 +189,256 @@ nscd_init (void)
     if (dbs[cnt].enabled)
       {
 	pthread_rwlock_init (&dbs[cnt].lock, NULL);
+	pthread_mutex_init (&dbs[cnt].memlock, NULL);
 
-	dbs[cnt].array = (struct hashentry **)
-	  calloc (dbs[cnt].module, sizeof (struct hashentry *));
-	if (dbs[cnt].array == NULL)
+	if (dbs[cnt].persistent)
 	  {
-	    dbg_log (_("while allocating cache: %s"), strerror (errno));
-	    exit (1);
+	    /* Try to open the appropriate file on disk.  */
+	    int fd = open (dbs[cnt].db_filename, O_RDWR);
+	    if (fd != -1)
+	      {
+		struct stat64 st;
+		void *mem;
+		size_t total;
+		struct database_pers_head head;
+		ssize_t n = TEMP_FAILURE_RETRY (read (fd, &head,
+						      sizeof (head)));
+		if (n != sizeof (head) || fstat64 (fd, &st) != 0)
+		  {
+		  fail_db:
+		    dbg_log (_("invalid persistent database file \"%s\": %s"),
+			     dbs[cnt].db_filename, strerror (errno));
+		    dbs[cnt].persistent = 0;
+		  }
+		else if (head.module == 0 && head.data_size == 0)
+		  {
+		    /* The file has been created, but the head has not been
+		       initialized yet.  Remove the old file.  */
+		    unlink (dbs[cnt].db_filename);
+		  }
+		else if (head.header_size != (int) sizeof (head))
+		  {
+		    dbg_log (_("invalid persistent database file \"%s\": %s"),
+			     dbs[cnt].db_filename,
+			     _("header size does not match"));
+		    dbs[cnt].persistent = 0;
+		  }
+		else if ((total = (sizeof (head)
+				   + roundup (head.module
+					      * sizeof (struct hashentry),
+					      ALIGN)
+				   + head.data_size))
+			 < st.st_size)
+		  {
+		    dbg_log (_("invalid persistent database file \"%s\": %s"),
+			     dbs[cnt].db_filename,
+			     _("file size does not match"));
+		    dbs[cnt].persistent = 0;
+		  }
+		else if ((mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
+				      MAP_SHARED, fd, 0)) == MAP_FAILED)
+		  goto fail_db;
+		else
+		  {
+		    /* Success.  We have the database.  */
+		    dbs[cnt].head = mem;
+		    dbs[cnt].memsize = total;
+		    dbs[cnt].data = (char *)
+		      &dbs[cnt].head->array[roundup (dbs[cnt].head->module,
+						     ALIGN / sizeof (ref_t))];
+		    dbs[cnt].mmap_used = true;
+
+		    if (dbs[cnt].suggested_module > head.module)
+		      dbg_log (_("suggested size of table for database %s larger than the persistent database's table"),
+			       dbnames[cnt]);
+
+		    dbs[cnt].wr_fd = fd;
+		    fd = -1;
+		    /* We also need a read-only descriptor.  */
+		    dbs[cnt].ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
+		    if (dbs[cnt].ro_fd == -1)
+		      dbg_log (_("\
+cannot create read-only descriptor for \"%s\"; no mmap"),
+			       dbs[cnt].db_filename);
+
+		    // XXX Shall we test whether the descriptors actually
+		    // XXX point to the same file?
+		  }
+
+		/* Close the file descriptors in case something went
+		   wrong in which case the variable have not been
+		   assigned -1.  */
+		if (fd != -1)
+		  close (fd);
+	      }
+	  }
+
+	if (dbs[cnt].head == NULL)
+	  {
+	    /* No database loaded.  Allocate the data structure,
+	       possibly on disk.  */
+	    struct database_pers_head head;
+	    size_t total = (sizeof (head)
+			    + roundup (dbs[cnt].suggested_module
+				       * sizeof (ref_t), ALIGN)
+			    + (dbs[cnt].suggested_module
+			       * DEFAULT_DATASIZE_PER_BUCKET));
+
+	    /* Try to create the database.  If we do not need a
+	       persistent database create a temporary file.  */
+	    int fd;
+	    int ro_fd = -1;
+	    if (dbs[cnt].persistent)
+	      {
+		fd = open (dbs[cnt].db_filename,
+			   O_RDWR | O_CREAT | O_EXCL | O_TRUNC,
+			   S_IRUSR | S_IWUSR);
+		if (fd != -1)
+		  ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
+	      }
+	    else
+	      {
+		size_t slen = strlen (dbs[cnt].db_filename);
+		char fname[slen + 8];
+		strcpy (mempcpy (fname, dbs[cnt].db_filename, slen),
+			".XXXXXX");
+		fd = mkstemp (fname);
+
+		/* We do not need the file name anymore after we
+		   opened another file descriptor in read-only mode.  */
+		if (fd != -1)
+		  {
+		    ro_fd = open (fname, O_RDONLY);
+
+		    unlink (fname);
+		  }
+	      }
+
+	    if (fd == -1)
+	      {
+		if (errno == EEXIST)
+		  {
+		    dbg_log (_("database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"),
+			     dbnames[cnt], dbs[cnt].db_filename);
+		    // XXX Correct way to terminate?
+		    exit (1);
+		  }
+
+		if  (dbs[cnt].persistent)
+		  dbg_log (_("cannot create %s; no persistent database used"),
+			   dbs[cnt].db_filename);
+		else
+		  dbg_log (_("cannot create %s; no sharing possible"),
+			   dbs[cnt].db_filename);
+
+		dbs[cnt].persistent = 0;
+		// XXX remember: no mmap
+	      }
+	    else
+	      {
+		/* Tell the user if we could not create the read-only
+		   descriptor.  */
+		if (ro_fd == -1)
+		  dbg_log (_("\
+cannot create read-only descriptor for \"%s\"; no mmap"),
+			   dbs[cnt].db_filename);
+
+		/* Before we create the header, initialiye the hash
+		   table.  So that if we get interrupted if writing
+		   the header we can recognize a partially initialized
+		   database.  */
+		size_t ps = sysconf (_SC_PAGESIZE);
+		char tmpbuf[ps];
+		assert (~ENDREF == 0);
+		memset (tmpbuf, '\xff', ps);
+
+		size_t remaining = dbs[cnt].suggested_module * sizeof (ref_t);
+		off_t offset = sizeof (head);
+
+		size_t towrite;
+		if (offset % ps != 0)
+		  {
+		    towrite = MIN (remaining, ps - (offset % ps));
+		    pwrite (fd, tmpbuf, towrite, offset);
+		    offset += towrite;
+		    remaining -= towrite;
+		  }
+
+		while (remaining > ps)
+		  {
+		    pwrite (fd, tmpbuf, ps, offset);
+		    offset += ps;
+		    remaining -= ps;
+		  }
+
+		if (remaining > 0)
+		  pwrite (fd, tmpbuf, remaining, offset);
+
+		/* Create the header of the file.  */
+		struct database_pers_head head =
+		  {
+		    .version = DB_VERSION,
+		    .header_size = sizeof (head),
+		    .module = dbs[cnt].suggested_module,
+		    .data_size = (dbs[cnt].suggested_module
+				  * DEFAULT_DATASIZE_PER_BUCKET),
+		    .first_free = 0
+		  };
+		void *mem;
+
+		if ((TEMP_FAILURE_RETRY (write (fd, &head, sizeof (head)))
+		     != sizeof (head))
+		    || ftruncate (fd, total) != 0
+		    || (mem = mmap (NULL, total, PROT_READ | PROT_WRITE,
+				    MAP_SHARED, fd, 0)) == MAP_FAILED)
+		  {
+		    unlink (dbs[cnt].db_filename);
+		    dbg_log (_("cannot write to database file %s: %s"),
+			     dbs[cnt].db_filename, strerror (errno));
+		    dbs[cnt].persistent = 0;
+		  }
+		else
+		  {
+		    /* Success.  */
+		    dbs[cnt].head = mem;
+		    dbs[cnt].data = (char *)
+		      &dbs[cnt].head->array[roundup (dbs[cnt].head->module,
+						     ALIGN / sizeof (ref_t))];
+		    dbs[cnt].memsize = total;
+		    dbs[cnt].mmap_used = true;
+
+		    /* Remember the descriptors.  */
+		    dbs[cnt].wr_fd = fd;
+		    dbs[cnt].ro_fd = ro_fd;
+		    fd = -1;
+		    ro_fd = -1;
+		  }
+
+		if (fd != -1)
+		  close (fd);
+		if (ro_fd != -1)
+		  close (ro_fd);
+	      }
+	  }
+
+	if (dbs[cnt].head == NULL)
+	  {
+	    /* We do not use the persistent database.  Just
+	       create an in-memory data structure.  */
+	    assert (! dbs[cnt].persistent);
+
+	    dbs[cnt].head = xmalloc (sizeof (struct database_pers_head)
+				     + (dbs[cnt].suggested_module
+					* sizeof (ref_t)));
+	    memset (dbs[cnt].head, '\0', sizeof (dbs[cnt].head));
+	    assert (~ENDREF == 0);
+	    memset (dbs[cnt].head->array, '\xff',
+		    dbs[cnt].suggested_module * sizeof (ref_t));
+	    dbs[cnt].head->module = dbs[cnt].suggested_module;
+	    dbs[cnt].head->data_size = (DEFAULT_DATASIZE_PER_BUCKET
+					* dbs[cnt].head->module);
+	    dbs[cnt].data = xmalloc (dbs[cnt].head->data_size);
+	    dbs[cnt].head->first_free = 0;
 	  }
 
 	if (dbs[cnt].check_file)
@@ -215,7 +481,7 @@ nscd_init (void)
     fcntl (sock, F_SETFL, fl | O_NONBLOCK);
 
   /* Set permissions for the socket.  */
-  chmod (_PATH_NSCDSOCKET, 0666);
+  chmod (_PATH_NSCDSOCKET, DEFFILEMODE);
 
   /* Set the socket up to accept connections.  */
   if (listen (sock, SOMAXCONN) < 0)
@@ -276,12 +542,11 @@ cannot handle old request version %d; current version is %d"),
       return;
     }
 
+  struct database_dyn *db = serv2db[req->type];
+
   if (__builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
       && __builtin_expect (req->type, LASTDBREQ) <= LASTDBREQ)
     {
-      struct hashentry *cached;
-      struct database *db = &dbs[serv2db[req->type]];
-
       if (__builtin_expect (debug_level, 0) > 0)
 	{
 	  if (req->type == GETHOSTBYADDR || req->type == GETHOSTBYADDRv6)
@@ -294,7 +559,7 @@ cannot handle old request version %d; current version is %d"),
 				  key, buf, sizeof (buf)));
 	    }
 	  else
-	    dbg_log ("\t%s (%s)", serv2str[req->type], (char *)key);
+	    dbg_log ("\t%s (%s)", serv2str[req->type], (char *) key);
 	}
 
       /* Is this service enabled?  */
@@ -318,18 +583,19 @@ cannot handle old request version %d; current version is %d"),
       /* Be sure we can read the data.  */
       if (__builtin_expect (pthread_rwlock_tryrdlock (&db->lock) != 0, 0))
 	{
-	  ++db->rdlockdelayed;
+	  ++db->head->rdlockdelayed;
 	  pthread_rwlock_rdlock (&db->lock);
 	}
 
       /* See whether we can handle it from the cache.  */
-      cached = (struct hashentry *) cache_search (req->type, key, req->key_len,
-						  db, uid);
+      struct datahead *cached;
+      cached = (struct datahead *) cache_search (req->type, key, req->key_len,
+						 db, uid);
       if (cached != NULL)
 	{
 	  /* Hurray it's in the cache.  */
-	  if (TEMP_FAILURE_RETRY (write (fd, cached->packet, cached->total))
-	      != cached->total
+	  if (TEMP_FAILURE_RETRY (write (fd, cached->data, cached->recsize))
+	      != cached->recsize
 	      && __builtin_expect (debug_level, 0) > 0)
 	    {
 	      /* We have problems sending the result.  */
@@ -349,45 +615,43 @@ cannot handle old request version %d; current version is %d"),
     {
       if (req->type == INVALIDATE)
 	dbg_log ("\t%s (%s)", serv2str[req->type], (char *)key);
-      else if (req->type > LASTDBREQ && req->type < LASTREQ)
-	dbg_log ("\t%s", serv2str[req->type]);
       else
-	dbg_log (_("\tinvalid request type %d"), req->type);
+	dbg_log ("\t%s", serv2str[req->type]);
     }
 
   /* Handle the request.  */
   switch (req->type)
     {
     case GETPWBYNAME:
-      addpwbyname (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addpwbyname (db, fd, req, key, uid);
       break;
 
     case GETPWBYUID:
-      addpwbyuid (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addpwbyuid (db, fd, req, key, uid);
       break;
 
     case GETGRBYNAME:
-      addgrbyname (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addgrbyname (db, fd, req, key, uid);
       break;
 
     case GETGRBYGID:
-      addgrbygid (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addgrbygid (db, fd, req, key, uid);
       break;
 
     case GETHOSTBYNAME:
-      addhstbyname (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addhstbyname (db, fd, req, key, uid);
       break;
 
     case GETHOSTBYNAMEv6:
-      addhstbynamev6 (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addhstbynamev6 (db, fd, req, key, uid);
       break;
 
     case GETHOSTBYADDR:
-      addhstbyaddr (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addhstbyaddr (db, fd, req, key, uid);
       break;
 
     case GETHOSTBYADDRv6:
-      addhstbyaddrv6 (&dbs[serv2db[req->type]], fd, req, key, uid);
+      addhstbyaddrv6 (db, fd, req, key, uid);
       break;
 
     case GETSTAT:
@@ -484,6 +748,7 @@ nscd_run (void *p)
 	      prune_cache (&dbs[my_number], time(NULL));
 	      now = time (NULL);
 	      next_prune = now + CACHE_PRUNE_INTERVAL;
+
 	      goto try_get;
 	    }
 	}
@@ -538,7 +803,7 @@ nscd_run (void *p)
 	    }
 
 	  if (req.type < GETPWBYNAME || req.type > LASTDBREQ
-	      || secure[serv2db[req.type]])
+	      || serv2db[req.type]->secure)
 	    uid = caller.uid;
 
 	  pid = caller.pid;
@@ -646,9 +911,7 @@ start_threads (void)
 static void
 begin_drop_privileges (void)
 {
-  struct passwd *pwd;
-
-  pwd = getpwnam (server_user);
+  struct passwd *pwd = getpwnam (server_user);
 
   if (pwd == NULL)
     {
@@ -660,14 +923,14 @@ begin_drop_privileges (void)
   server_uid = pwd->pw_uid;
   server_gid = pwd->pw_gid;
 
+  if (getgrouplist (server_user, server_gid, NULL, &server_ngroups) == 0)
+    {
+      /* This really must never happen.  */
+      dbg_log (_("Failed to run nscd as user '%s'"), server_user);
+      error (EXIT_FAILURE, errno, _("initial getgrouplist failed"));
+    }
+
   server_groups = (gid_t *) xmalloc (server_ngroups * sizeof (gid_t));
-
-  if (getgrouplist (server_user, server_gid, server_groups, &server_ngroups)
-      == 0)
-    return;
-
-  server_groups = (gid_t *) xrealloc (server_groups,
-				      server_ngroups * sizeof (gid_t));
 
   if (getgrouplist (server_user, server_gid, server_groups, &server_ngroups)
       == -1)

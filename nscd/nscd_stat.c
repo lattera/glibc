@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2003 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <error.h>
+#include <inttypes.h>
 #include <langinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,17 +43,21 @@ struct dbstat
   unsigned long int postimeout;
   unsigned long int negtimeout;
 
-  unsigned long int poshit;
-  unsigned long int neghit;
-  unsigned long int posmiss;
-  unsigned long int negmiss;
+  size_t nentries;
+  size_t maxnentries;
+  size_t maxnsearched;
+  size_t datasize;
+  size_t dataused;
 
-  unsigned long int nentries;
-  unsigned long int maxnentries;
-  unsigned long int maxnsearched;
+  uintmax_t poshit;
+  uintmax_t neghit;
+  uintmax_t posmiss;
+  uintmax_t negmiss;
 
-  unsigned long int rdlockdelayed;
-  unsigned long int wrlockdelayed;
+  uintmax_t rdlockdelayed;
+  uintmax_t wrlockdelayed;
+
+  uintmax_t addfailed;
 };
 
 /* Record for transmitting statistics.  */
@@ -68,7 +73,7 @@ struct statdata
 
 
 void
-send_stats (int fd, struct database dbs[lastdb])
+send_stats (int fd, struct database_dyn dbs[lastdb])
 {
   struct statdata data;
   int cnt;
@@ -83,18 +88,21 @@ send_stats (int fd, struct database dbs[lastdb])
     {
       data.dbs[cnt].enabled = dbs[cnt].enabled;
       data.dbs[cnt].check_file = dbs[cnt].check_file;
-      data.dbs[cnt].module = dbs[cnt].module;
+      data.dbs[cnt].module = dbs[cnt].head->module;
       data.dbs[cnt].postimeout = dbs[cnt].postimeout;
       data.dbs[cnt].negtimeout = dbs[cnt].negtimeout;
-      data.dbs[cnt].poshit = dbs[cnt].poshit;
-      data.dbs[cnt].neghit = dbs[cnt].neghit;
-      data.dbs[cnt].posmiss = dbs[cnt].posmiss;
-      data.dbs[cnt].negmiss = dbs[cnt].negmiss;
-      data.dbs[cnt].nentries = dbs[cnt].nentries;
-      data.dbs[cnt].maxnentries = dbs[cnt].maxnentries;
-      data.dbs[cnt].maxnsearched = dbs[cnt].maxnsearched;
-      data.dbs[cnt].rdlockdelayed = dbs[cnt].rdlockdelayed;
-      data.dbs[cnt].wrlockdelayed = dbs[cnt].wrlockdelayed;
+      data.dbs[cnt].poshit = dbs[cnt].head->poshit;
+      data.dbs[cnt].neghit = dbs[cnt].head->neghit;
+      data.dbs[cnt].posmiss = dbs[cnt].head->posmiss;
+      data.dbs[cnt].negmiss = dbs[cnt].head->negmiss;
+      data.dbs[cnt].nentries = dbs[cnt].head->nentries;
+      data.dbs[cnt].maxnentries = dbs[cnt].head->maxnentries;
+      data.dbs[cnt].datasize = dbs[cnt].head->data_size;
+      data.dbs[cnt].dataused = dbs[cnt].head->first_free;
+      data.dbs[cnt].maxnsearched = dbs[cnt].head->maxnsearched;
+      data.dbs[cnt].rdlockdelayed = dbs[cnt].head->rdlockdelayed;
+      data.dbs[cnt].wrlockdelayed = dbs[cnt].head->wrlockdelayed;
+      data.dbs[cnt].addfailed = dbs[cnt].head->addfailed;
     }
 
   if (TEMP_FAILURE_RETRY (write (fd, &data, sizeof (data))) != sizeof (data))
@@ -220,22 +228,26 @@ receive_print_stats (void)
 
       printf (_("\n%s cache:\n\n"
 		"%15s  cache is enabled\n"
-		"%15Zu  suggested size\n"
+		"%15zu  suggested size\n"
+		"%15zu  total data pool size\n"
+		"%15zu  used data pool size\n"
 		"%15lu  seconds time to live for positive entries\n"
 		"%15lu  seconds time to live for negative entries\n"
-		"%15lu  cache hits on positive entries\n"
-		"%15lu  cache hits on negative entries\n"
-		"%15lu  cache misses on positive entries\n"
-		"%15lu  cache misses on negative entries\n"
+		"%15" PRIuMAX "  cache hits on positive entries\n"
+		"%15" PRIuMAX "  cache hits on negative entries\n"
+		"%15" PRIuMAX "  cache misses on positive entries\n"
+		"%15" PRIuMAX "  cache misses on negative entries\n"
 		"%15lu%% cache hit rate\n"
-		"%15lu  current number of cached values\n"
-		"%15lu  maximum number of cached values\n"
-		"%15lu  maximum chain length searched\n"
-		"%15lu  number of delays on rdlock\n"
-		"%15lu  number of delays on wrlock\n"
+		"%15zu  current number of cached values\n"
+		"%15zu  maximum number of cached values\n"
+		"%15zu  maximum chain length searched\n"
+		"%15" PRIuMAX "  number of delays on rdlock\n"
+		"%15" PRIuMAX "  number of delays on wrlock\n"
+		"%15" PRIuMAX "  memory allocations failed\n"
 		"%15s  check /etc/%s for changes\n"),
 	      dbnames[i], enabled,
 	      data.dbs[i].module,
+	      data.dbs[i].datasize, data.dbs[i].dataused,
 	      data.dbs[i].postimeout, data.dbs[i].negtimeout,
 	      data.dbs[i].poshit, data.dbs[i].neghit,
 	      data.dbs[i].posmiss, data.dbs[i].negmiss,
@@ -243,7 +255,8 @@ receive_print_stats (void)
 	      data.dbs[i].nentries, data.dbs[i].maxnentries,
 	      data.dbs[i].maxnsearched,
 	      data.dbs[i].rdlockdelayed,
-	      data.dbs[i].wrlockdelayed, check_file, dbnames[i]);
+	      data.dbs[i].wrlockdelayed,
+	      data.dbs[i].addfailed, check_file, dbnames[i]);
     }
 
   close (fd);

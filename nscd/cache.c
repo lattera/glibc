@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <atomic.h>
 #include <errno.h>
 #include <error.h>
@@ -26,6 +27,7 @@
 #include <libintl.h>
 #include <arpa/inet.h>
 #include <rpcsvc/nis.h>
+#include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
@@ -33,44 +35,69 @@
 #include "nscd.h"
 #include "dbg_log.h"
 
+
+/* Number of times a value is reloaded without being used.  UINT_MAX
+   means unlimited.  */
+unsigned int reload_count = DEFAULT_RELOAD_LIMIT;
+
+
 /* Search the cache for a matching entry and return it when found.  If
    this fails search the negative cache and return (void *) -1 if this
    search was successful.  Otherwise return NULL.
 
    This function must be called with the read-lock held.  */
-struct hashentry *
-cache_search (request_type type, void *key, size_t len, struct database *table,
-	      uid_t owner)
+struct datahead *
+cache_search (request_type type, void *key, size_t len,
+	      struct database_dyn *table, uid_t owner)
 {
-  unsigned long int hash = __nis_hash (key, len) % table->module;
-  struct hashentry *work;
+  unsigned long int hash = __nis_hash (key, len) % table->head->module;
+
   unsigned long int nsearched = 0;
+  struct datahead *result = NULL;
 
-  work = table->array[hash];
-
-  while (work != NULL)
+  ref_t work = table->head->array[hash];
+  while (work != ENDREF)
     {
       ++nsearched;
 
-      if (type == work->type && len == work->len
-	  && memcmp (key, work->key, len) == 0 && work->owner == owner)
+      struct hashentry *here = (struct hashentry *) (table->data + work);
+
+      if (type == here->type && len == here->len
+	  && memcmp (key, table->data + here->key, len) == 0
+	  && here->owner == owner)
 	{
 	  /* We found the entry.  Increment the appropriate counter.  */
-	  if (work->data == (void *) -1)
-	    ++table->neghit;
-	  else
-	    ++table->poshit;
+	  struct datahead *dh
+	    = (struct datahead *) (table->data + here->packet);
 
-	  break;
+	  /* See whether we must ignore the entry.  */
+	  if (dh->usable)
+	    {
+	      /* We do not synchronize the memory here.  The statistics
+		 data is not crucial, we synchronize only once in a while
+		 in the cleanup threads.  */
+	      if (dh->notfound)
+		++table->head->neghit;
+	      else
+		{
+		  ++table->head->poshit;
+
+		  if (dh->nreloads != 0)
+		    dh->nreloads = 0;
+		}
+
+	      result = dh;
+	      break;
+	    }
 	}
 
-      work = work->next;
+      work = here->next;
     }
 
-  if (nsearched > table->maxnsearched)
-    table->maxnsearched = nsearched;
+  if (nsearched > table->head->maxnsearched)
+    table->head->maxnsearched = nsearched;
 
-  return work;
+  return result;
 }
 
 /* Add a new entry to the cache.  The return value is zero if the function
@@ -82,45 +109,57 @@ cache_search (request_type type, void *key, size_t len, struct database *table,
    This is ok since we use operations which would be safe even without
    locking, given that the `prune_cache' function never runs.  Using
    the readlock reduces the chance of conflicts.  */
-void
-cache_add (int type, void *key, size_t len, const void *packet, size_t total,
-	   void *data, int last, time_t t, struct database *table, uid_t owner)
+int
+cache_add (int type, const void *key, size_t len, struct datahead *packet,
+	   bool first, struct database_dyn *table,
+	   uid_t owner)
 {
-  unsigned long int hash = __nis_hash (key, len) % table->module;
+  if (__builtin_expect (debug_level >= 2, 0))
+    dbg_log (_("add new entry \"%s\" of type %s for %s to cache%s"),
+	     (const char *) key, serv2str[type], dbnames[table - dbs],
+	     first ? " (first)" : "");
+
+  unsigned long int hash = __nis_hash (key, len) % table->head->module;
   struct hashentry *newp;
 
-  newp = malloc (sizeof (struct hashentry));
+  newp = mempool_alloc (table, sizeof (struct hashentry));
+  /* If we cannot allocate memory, just do not do anything.  */
   if (newp == NULL)
-    error (EXIT_FAILURE, errno, _("while allocating hash table entry"));
+    return -1;
 
   newp->type = type;
+  newp->first = first;
   newp->len = len;
-  newp->key = key;
+  newp->key = (char *) key - table->data;
+  assert (newp->key + newp->len <= table->head->first_free);
   newp->owner = owner;
-  newp->data = data;
-  newp->timeout = t;
-  newp->packet = packet;
-  newp->total = total;
-
-  newp->last = last;
+  newp->packet = (char *) packet - table->data;
 
   /* Put the new entry in the first position.  */
   do
-    newp->next = table->array[hash];
-  while (atomic_compare_and_exchange_bool_acq (&table->array[hash], newp,
-					       newp->next));
+    newp->next = table->head->array[hash];
+  while (atomic_compare_and_exchange_bool_acq (&table->head->array[hash],
+					       (ref_t) ((char *) newp
+							- table->data),
+					       (ref_t) newp->next));
 
   /* Update the statistics.  */
-  if (data == (void *) -1)
-    ++table->negmiss;
-  else if (last)
-    ++table->posmiss;
+  if (packet->notfound)
+    ++table->head->negmiss;
+  else if (first)
+    ++table->head->posmiss;
 
-  /* Instead of slowing down the normal process for statistics
-     collection we accept living with some incorrect data.  */
-  unsigned long int nentries = ++table->nentries;
-  if (nentries > table->maxnentries)
-    table->maxnentries = nentries;
+  /* We depend on this value being correct and at least as high as the
+     real number of entries.  */
+  atomic_increment (&table->head->nentries);
+
+  /* It does not matter that we are not loading the just increment
+     value, this is just for statistics.  */
+  unsigned long int nentries = table->head->nentries;
+  if (nentries > table->head->maxnentries)
+    table->head->maxnentries = nentries;
+
+  return 0;
 }
 
 /* Walk through the table and remove all entries which lifetime ended.
@@ -136,13 +175,9 @@ cache_add (int type, void *key, size_t len, const void *packet, size_t total,
    free the data structures since some hash table entries share the same
    data.  */
 void
-prune_cache (struct database *table, time_t now)
+prune_cache (struct database_dyn *table, time_t now)
 {
-  size_t cnt = table->module;
-  int mark[cnt];
-  int anything = 0;
-  size_t first = cnt + 1;
-  size_t last = 0;
+  size_t cnt = table->head->module;
 
   /* If this table is not actually used don't do anything.  */
   if (cnt == 0)
@@ -181,27 +216,112 @@ prune_cache (struct database *table, time_t now)
      we don't need to get any lock.  It is at all timed assured that the
      linked lists are set up correctly and that no second thread prunes
      the cache.  */
+  bool mark[cnt];
+  size_t first = cnt + 1;
+  size_t last = 0;
+  char *const data = table->data;
+  bool any = false;
+
   do
     {
-      struct hashentry *runp = table->array[--cnt];
+      ref_t run = table->head->array[--cnt];
 
-      mark[cnt] = 0;
-
-      while (runp != NULL)
+      while (run != ENDREF)
 	{
-	  if (runp->timeout < now)
+	  struct hashentry *runp = (struct hashentry *) (data + run);
+	  struct datahead *dh = (struct datahead *) (data + runp->packet);
+
+	  /* Check whether the entry timed out.  */
+	  if (dh->timeout < now)
 	    {
-	      ++mark[cnt];
-	      anything = 1;
+	      /* This hash bucket could contain entries which need to
+		 be looked at.  */
+	      mark[cnt] = true;
+
 	      first = MIN (first, cnt);
 	      last = MAX (last, cnt);
+
+	      /* We only have to look at the data of the first entries
+		 since the count information is kept in the data part
+		 which is shared.  */
+	      if (runp->first)
+		{
+
+		  /* At this point there are two choices: we reload the
+		     value or we discard it.  Do not change NRELOADS if
+		     we never not reload the record.  */
+		  if ((reload_count != UINT_MAX
+		       && __builtin_expect (dh->nreloads >= reload_count, 0))
+		      /* We always remove negative entries.  */
+		      || dh->notfound
+		      /* Discard everything if the user explicitly
+			 requests it.  */
+		      || now == LONG_MAX)
+		    {
+		      /* Remove the value.  */
+		      dh->usable = false;
+
+		      /* We definitely have some garbage entries now.  */
+		      any = true;
+		    }
+		  else
+		    {
+		      /* Reload the value.  We do this only for the
+			 initially used key, not the additionally
+			 added derived value.  */
+		      switch (runp->type)
+			{
+			case GETPWBYNAME:
+			  readdpwbyname (table, runp, dh);
+			  break;
+
+			case GETPWBYUID:
+			  readdpwbyuid (table, runp, dh);
+			  break;
+
+			case GETGRBYNAME:
+			  readdgrbyname (table, runp, dh);
+			  break;
+
+			case GETGRBYGID:
+			  readdgrbygid (table, runp, dh);
+			  break;
+
+			case GETHOSTBYNAME:
+			  readdhstbyname (table, runp, dh);
+			  break;
+
+			case GETHOSTBYNAMEv6:
+			  readdhstbynamev6 (table, runp, dh);
+			  break;
+
+			case GETHOSTBYADDR:
+			  readdhstbyaddr (table, runp, dh);
+			  break;
+
+			case GETHOSTBYADDRv6:
+			  readdhstbyaddrv6 (table, runp, dh);
+			  break;
+
+			default:
+			  assert (! "should never happen");
+			}
+
+		      /* If the entry has been replaced, we might need
+			 cleanup.  */
+		      any |= !dh->usable;
+		    }
+		}
 	    }
-	  runp = runp->next;
+	  else
+	    assert (dh->usable);
+
+	  run = runp->next;
 	}
     }
   while (cnt > 0);
 
-  if (anything)
+  if (first <= last)
     {
       struct hashentry *head = NULL;
 
@@ -209,46 +329,56 @@ prune_cache (struct database *table, time_t now)
 	 the table.  */
       if (__builtin_expect (pthread_rwlock_trywrlock (&table->lock) != 0, 0))
 	{
-	  ++table->wrlockdelayed;
+	  ++table->head->wrlockdelayed;
 	  pthread_rwlock_wrlock (&table->lock);
 	}
 
       while (first <= last)
 	{
-	  if (mark[first] > 0)
+	  if (mark[first])
 	    {
-	      struct hashentry *runp;
+	      ref_t *old = &table->head->array[first];
+	      ref_t run = table->head->array[first];
 
-	      while (table->array[first]->timeout < now)
+	      while (run != ENDREF)
 		{
-		  table->array[first]->dellist = head;
-		  head = table->array[first];
-		  table->array[first] = head->next;
-		  --table->nentries;
-		  if (--mark[first] == 0)
-		    break;
-		}
+		  struct hashentry *runp = (struct hashentry *) (data + run);
+		  struct datahead *dh
+		    = (struct datahead *) (data + runp->packet);
 
-	      runp = table->array[first];
-	      while (mark[first] > 0)
-		{
-		  if (runp->next->timeout < now)
+		  if (! dh->usable)
 		    {
-		      runp->next->dellist = head;
-		      head = runp->next;
-		      runp->next = head->next;
-		      --mark[first];
-		      --table->nentries;
+		      /* We need the list only for debugging but it is
+			 more costly to avoid creating the list than
+			 doing it.  */
+		      runp->dellist = head;
+		      head = runp;
+
+		      /* No need for an atomic operation, we have the
+			 write lock.  */
+		      --table->head->nentries;
+
+		      run = *old = runp->next;
 		    }
 		  else
-		    runp = runp->next;
+		    {
+		      old = &runp->next;
+		      run = runp->next;
+		    }
 		}
 	    }
+
 	  ++first;
 	}
 
       /* It's all done.  */
       pthread_rwlock_unlock (&table->lock);
+
+      /* Make sure the data is saved to disk.  */
+      if (table->persistent)
+	msync (table->head,
+	       table->data + table->head->first_free - (char *) table->head,
+	       MS_ASYNC);
 
       /* One extra pass if we do debugging.  */
       if (__builtin_expect (debug_level > 0, 0))
@@ -263,33 +393,20 @@ prune_cache (struct database *table, time_t now)
 	      if (runp->type == GETHOSTBYADDR || runp->type == GETHOSTBYADDRv6)
 		{
 		  inet_ntop (runp->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
-			     runp->key, buf, sizeof (buf));
+			     table->data + runp->key, buf, sizeof (buf));
 		  str = buf;
 		}
 	      else
-		str = runp->key;
+		str = table->data + runp->key;
 
 	      dbg_log ("remove %s entry \"%s\"", serv2str[runp->type], str);
 
 	      runp = runp->dellist;
 	    }
 	}
-
-      /* And another run to free the data.  */
-      do
-	{
-	  struct hashentry *old = head;
-
-	  /* Free the data structures.  */
-	  if (old->data == (void *) -1)
-	    free (old->key);
-	  else if (old->last)
-	    free (old->data);
-
-	  head = head->dellist;
-
-	  free (old);
-	}
-      while (head != NULL);
     }
+
+  /* Run garbage collection if any entry has been removed or replaced.  */
+  if (any)
+    gc (table);
 }

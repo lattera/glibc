@@ -1,4 +1,5 @@
-/* Copyright (c) 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000, 2001, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -21,6 +22,7 @@
 #define _NSCD_H	1
 
 #include <pthread.h>
+#include <stdbool.h>
 #include <time.h>
 #include <sys/uio.h>
 
@@ -40,56 +42,134 @@ typedef enum
 } dbtype;
 
 
+/* Head of record in data part of database.  */
+struct datahead
+{
+  size_t allocsize;	/* Allocated Bytes.  */
+  size_t recsize;	/* Size of the record.  */
+  time_t timeout;	/* Time when this entry becomes invalid.  */
+  bool notfound;	/* Nonzero if data for key has not been found.  */
+  uint8_t nreloads;	/* Reloads without use.  */
+  bool usable;		/* False if the entry must be ignored.  */
+
+  /* We need to have the following element aligned for the response
+     header data types and their use in the 'struct dataset' types
+     defined in the XXXcache.c files.  */
+  union
+  {
+    pw_response_header pwdata;
+    gr_response_header grdata;
+    hst_response_header hstdata;
+    ssize_t align1;
+    time_t align2;
+  } data[0];
+};
+
+
+/* Default limit on the number of times a value gets reloaded without
+   being used in the meantime.  NSCD does not throw a value out as
+   soon as it times out.  It tries to reload the value from the
+   server.  Only if the value has not been used for so many rounds it
+   is removed.  */
+#define DEFAULT_RELOAD_LIMIT 5
+
+
+/* Type for offsets in data part of database.  */
+typedef uint32_t ref_t;
+/* Value for invalid/no reference.  */
+#define ENDREF	UINT32_MAX
+
+
 /* Structure for one hash table entry.  */
 struct hashentry
 {
-  request_type type;		/* Which type of dataset.  */
+  request_type type:8;		/* Which type of dataset.  */
+  bool first;			/* True if this was the original key.  */
   size_t len;			/* Length of key.  */
-  void *key;			/* Pointer to key.  */
-  uid_t owner;                  /* If secure table, this is the owner.  */
-  struct hashentry *next;	/* Next entry in this hash bucket list.  */
-  time_t timeout;		/* Time when this entry becomes invalid.  */
-  ssize_t total;		/* Number of bytes in PACKET.  */
-  const void *packet;		/* Records for the result.  */
-  void *data;			/* The malloc()ed respond record.  */
-  int last;			/* Nonzero if DATA should be free()d.  */
-  struct hashentry *dellist;	/* Next record to be deleted.  */
+  ref_t key;			/* Pointer to key.  */
+  uid_t owner;			/* If secure table, this is the owner.  */
+  ref_t next;			/* Next entry in this hash bucket list.  */
+  ref_t packet;			/* Records for the result.  */
+  union
+  {
+    struct hashentry *dellist;	/* Next record to be deleted.  This can be a
+				   pointer since only nscd uses this field.  */
+    ref_t *prevp;		/* Pointer to field containing forward
+				   reference.  */
+  };
 };
 
-/* Structure describing one database.  */
-struct database
+
+/* Current persistent database version.  */
+#define DB_VERSION	1
+
+/* Header of persistent database file.  */
+struct database_pers_head
+{
+  int version;
+  int header_size;
+
+  size_t module;
+  size_t data_size;
+
+  size_t first_free;		/* Offset of first free byte in data area.  */
+
+  size_t nentries;
+  size_t maxnentries;
+  size_t maxnsearched;
+
+  uintmax_t poshit;
+  uintmax_t neghit;
+  uintmax_t posmiss;
+  uintmax_t negmiss;
+
+  uintmax_t rdlockdelayed;
+  uintmax_t wrlockdelayed;
+
+  uintmax_t addfailed;
+
+  ref_t array[0];
+};
+
+/* Structure describing dynamic part of one database.  */
+struct database_dyn
 {
   pthread_rwlock_t lock;
 
   int enabled;
   int check_file;
+  int persistent;
   const char *filename;
+  const char *db_filename;
   time_t file_mtime;
-  size_t module;
+  size_t suggested_module;
+  int secure;
+
+  unsigned long int postimeout;	/* In seconds.  */
+  unsigned long int negtimeout;	/* In seconds.  */
+
+  int wr_fd;			/* Writable file descriptor.  */
+  int ro_fd;			/* Unwritable file descriptor.  */
 
   const struct iovec *disabled_iov;
 
-  unsigned long int postimeout;
-  unsigned long int negtimeout;
-
-  unsigned long int poshit;
-  unsigned long int neghit;
-  unsigned long int posmiss;
-  unsigned long int negmiss;
-
-  unsigned long int nentries;
-  unsigned long int maxnentries;
-  unsigned long int maxnsearched;
-
-  unsigned long int rdlockdelayed;
-  unsigned long int wrlockdelayed;
-
-  struct hashentry **array;
+  struct database_pers_head *head;
+  char *data;
+  size_t memsize;
+  pthread_mutex_t memlock;
+  bool mmap_used;
+  bool last_alloc_failed;
 };
 
 
+/* Paths of the file for the persistent storage.  */
+#define _PATH_NSCD_PASSWD_DB	"/var/run/nscd/passwd"
+#define _PATH_NSCD_GROUP_DB	"/var/run/nscd/group"
+#define _PATH_NSCD_HOSTS_DB	"/var/run/nscd/hosts"
+
+
 /* Global variables.  */
-extern struct database dbs[lastdb];
+extern struct database_dyn dbs[lastdb];
 extern const char *dbnames[lastdb];
 extern const char *serv2str[LASTREQ];
 
@@ -97,11 +177,11 @@ extern const struct iovec pwd_iov_disabled;
 extern const struct iovec grp_iov_disabled;
 extern const struct iovec hst_iov_disabled;
 
+
 /* Number of threads to run.  */
 extern int nthreads;
 
 /* Tables for which we cache data with uid.  */
-extern int secure[lastdb];
 extern int secure_in_use; /* Is one of the above 1?  */
 
 /* User name to run server processes as.  */
@@ -117,6 +197,13 @@ extern time_t start_time;
 /* Number of times clients had to wait.  */
 extern unsigned long int client_queued;
 
+/* Maximum needed alignment.  */
+extern const size_t block_align;
+
+/* Number of times a value is reloaded without being used.  UINT_MAX
+   means unlimited.  */
+extern unsigned int reload_count;
+
 /* Prototypes for global functions.  */
 
 /* nscd.c */
@@ -129,42 +216,63 @@ extern void close_sockets (void);
 extern void start_threads (void) __attribute__ ((__noreturn__));
 
 /* nscd_conf.c */
-extern int nscd_parse_file (const char *fname, struct database dbs[lastdb]);
+extern int nscd_parse_file (const char *fname,
+			    struct database_dyn dbs[lastdb]);
 
 /* nscd_stat.c */
-extern void send_stats (int fd, struct database dbs[lastdb]);
+extern void send_stats (int fd, struct database_dyn dbs[lastdb]);
 extern int receive_print_stats (void) __attribute__ ((__noreturn__));
 
 /* cache.c */
-extern struct hashentry *cache_search (request_type, void *key, size_t len,
-				       struct database *table, uid_t owner);
-extern void cache_add (int type, void *key, size_t len,
-		       const void *packet, size_t iovtotal, void *data,
-		       int last, time_t t, struct database *table,
-		       uid_t owner);
-extern void prune_cache (struct database *table, time_t now);
+extern struct datahead *cache_search (request_type, void *key, size_t len,
+				      struct database_dyn *table,
+				      uid_t owner);
+extern int cache_add (int type, const void *key, size_t len,
+		      struct datahead *packet, bool first,
+		      struct database_dyn *table, uid_t owner);
+extern void prune_cache (struct database_dyn *table, time_t now);
 
 /* pwdcache.c */
-extern void addpwbyname (struct database *db, int fd, request_header *req,
+extern void addpwbyname (struct database_dyn *db, int fd, request_header *req,
 			 void *key, uid_t uid);
-extern void addpwbyuid (struct database *db, int fd, request_header *req,
+extern void addpwbyuid (struct database_dyn *db, int fd, request_header *req,
 			void *key, uid_t uid);
+extern void readdpwbyname (struct database_dyn *db, struct hashentry *he,
+			   struct datahead *dh);
+extern void readdpwbyuid (struct database_dyn *db, struct hashentry *he,
+			  struct datahead *dh);
 
 /* grpcache.c */
-extern void addgrbyname (struct database *db, int fd, request_header *req,
+extern void addgrbyname (struct database_dyn *db, int fd, request_header *req,
 			 void *key, uid_t uid);
-extern void addgrbygid (struct database *db, int fd, request_header *req,
+extern void addgrbygid (struct database_dyn *db, int fd, request_header *req,
 			void *key, uid_t uid);
+extern void readdgrbyname (struct database_dyn *db, struct hashentry *he,
+			   struct datahead *dh);
+extern void readdgrbygid (struct database_dyn *db, struct hashentry *he,
+			  struct datahead *dh);
 
 /* hstcache.c */
-extern void addhstbyname (struct database *db, int fd, request_header *req,
+extern void addhstbyname (struct database_dyn *db, int fd, request_header *req,
 			  void *key, uid_t uid);
-extern void addhstbyaddr (struct database *db, int fd, request_header *req,
+extern void addhstbyaddr (struct database_dyn *db, int fd, request_header *req,
 			  void *key, uid_t uid);
-extern void addhstbynamev6 (struct database *db, int fd, request_header *req,
-			    void *key, uid_t uid);
-extern void addhstbyaddrv6 (struct database *db, int fd, request_header *req,
-			    void *key, uid_t uid);
+extern void addhstbynamev6 (struct database_dyn *db, int fd,
+			    request_header *req, void *key, uid_t uid);
+extern void addhstbyaddrv6 (struct database_dyn *db, int fd,
+			    request_header *req, void *key, uid_t uid);
+extern void readdhstbyname (struct database_dyn *db, struct hashentry *he,
+			    struct datahead *dh);
+extern void readdhstbyaddr (struct database_dyn *db, struct hashentry *he,
+			    struct datahead *dh);
+extern void readdhstbynamev6 (struct database_dyn *db, struct hashentry *he,
+			      struct datahead *dh);
+extern void readdhstbyaddrv6 (struct database_dyn *db, struct hashentry *he,
+			      struct datahead *dh);
 
+
+/* mem.c */
+extern void *mempool_alloc (struct database_dyn *db, size_t len);
+extern void gc (struct database_dyn *db);
 
 #endif /* nscd.h */

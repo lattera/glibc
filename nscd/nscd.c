@@ -36,6 +36,7 @@
 #include <string.h>
 #include <syslog.h>
 #include <unistd.h>
+#include <sys/mman.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/un.h>
@@ -69,7 +70,6 @@ int disabled_passwd;
 int disabled_group;
 int go_background = 1;
 
-int secure[lastdb];
 int secure_in_use;
 static const char *conffile = _PATH_NSCDCONF;
 
@@ -342,11 +342,11 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
     case 'S':
       if (strcmp (arg, "passwd,yes") == 0)
-	secure_in_use = secure[pwddb] = 1;
+	secure_in_use = dbs[pwddb].secure = 1;
       else if (strcmp (arg, "group,yes") == 0)
-	secure_in_use = secure[grpdb] = 1;
+	secure_in_use = dbs[grpdb].secure = 1;
       else if (strcmp (arg, "hosts,yes") == 0)
-	secure_in_use = secure[hstdb] = 1;
+	secure_in_use = dbs[hstdb].secure = 1;
       break;
 
     default:
@@ -405,6 +405,14 @@ termination_handler (int signum)
 
   /* Clean up pid file.  */
   unlink (_PATH_NSCDPID);
+
+  // XXX Terminate threads.
+
+  /* Synchronize memory.  */
+  for (int cnt = 0; cnt < lastdb; ++cnt)
+    if (dbs[cnt].persistent)
+      // XXX async OK?
+      msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
 
   _exit (EXIT_SUCCESS);
 }
