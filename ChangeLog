@@ -1,3 +1,10 @@
+Wed Mar  1 00:57:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* misc/search.h: New file.
+	* misc/Makefile (headers): Add search.h.
+	* misc/insremque.c: Include search.h.
+	(struct qelem): Type removed.
+
 Mon Feb 27 07:00:57 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/libelf.h: New file.
