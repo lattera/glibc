@@ -1,0 +1,67 @@
+Semaphores pseudocode
+==============================
+
+       int sem_wait(sem_t * sem);
+       int sem_trywait(sem_t * sem);
+       int sem_post(sem_t * sem);
+       int sem_getvalue(sem_t * sem, int * sval);
+
+struct sem_t {
+
+   unsigned int lock:
+         - internal mutex
+
+   unsigned int count;
+         - current semaphore count, also used as a futex
+
+   unsigned int waiters;
+         - number of threads queued in sem_wait().
+}
+
+sem_wait(sem_t *sem)
+{
+  lll_lock(sem->lock);
+  for (;;) {
+
+    if (sem->count)
+      break;
+
+    sem->waiters++;
+    lll_unlock(sem->lock);
+
+    futex_wait(&sem->count, 0)
+
+    lll_lock(sem->lock);
+    sem->waiters--;
+  }
+  sem->count--;
+  lll_unlock(sem->lock);
+}
+
+sem_post(sem_t *sem)
+{
+  lll_lock(sem->lock);
+  sem->count++;
+  if (sem->waiters)
+    futex_wake(&sem->count, sem->count);
+  lll_unlock(sem->lock);
+}
+
+sem_trywait(sem_t *sem)
+{
+  lll_lock(sem->lock);
+  if (sem->count) {
+    sem->count--;
+    lll_unlock(sem->lock);
+    return 0;
+  } else {
+    lll_unlock(sem->lock);
+    return -EAGAIN;
+  }
+}
+
+sem_getvalue(sem_t *sem, int *sval)
+{
+  *sval = sem->count;
+  read_barrier();
+}

@@ -1,0 +1,26 @@
+- setuid/setgid must effect process
+  + test syscalls (getuid) afterwards
+  + test core file content
+
+  + use UID/GID in access(2), chmod(2), chown(2), link(2)
+
+- nice level is process property
+
+- process file creation mask (mkdir, mkfifo, open, creat) after umask call
+
+- getppid(() must return process ID of parent process of the thread
+  group leader
+  + test syscall
+  + test core file content (psinfo)
+
+- rlimit should be process-wide and SIGXCPU should be sent if all threads
+  together exceed the limit
+
+- getrusage() must return resource utilization for the process
+
+- sigaltstack must be per-thread (???)
+
+   I've an interpretation request outstanding
+
+- the scheduler must be thread group-aware, i.e., it has to give time to
+  the thread group not proportional to the number of threads.

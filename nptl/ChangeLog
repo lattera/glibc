@@ -1,0 +1,259 @@
+2002-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (queue_stack): Don't remove stack from list here.
+	Do it in the caller.  Correct condition to prematurely terminate
+	loop to free stacks.
+	(__deallocate_stack): Remove stack from list here.
+
+2002-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-stack1.
+	* tst-stack1.c: New file.
+
+	* allocatestack.c (allocate_stack): Initialize the TCB on a user
+	provided stack.
+
+	* pthread_attr_getstack.c: Return bottom of the thread area.
+
+2002-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libpthread-routines): Add pt-allocrtsig and
+	pthread_kill_other_threads.
+	* pt-allocrtsig.c: New file.
+	* pthread_kill_other_threads.c: New file.
+	* sysdeps/unix/sysv/linux/allocrtsig.c: Add additional aliases for
+	all three functions.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove
+	allocrtsig.
+	* sysdeps/unix/sysv/linux/Versions (libc:GLIBC_PRIVATE): Export
+	__libc_current_sigrtmin_private, __libc_current_sigrtmax_private,
+	and __libc_allocate_rtsig_private.
+	* Versions (libpthread): Export pthread_kill_other_threads_np,
+	__libc_current_sigrtmin, and __libc_current_sigrtmax.
+
+2002-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): stackaddr in attribute points to
+	the end of the stack.  Adjust computations.
+	When mprotect call fails dequeue stack and free it.
+	* pthread_attr_setstack.c: Store top of the stack in stackaddr
+	attribute.
+	* pthread_getattr_np.c: Likewise.
+
+	* descr.h (IS_DETACHED): Add some more parenthesis to prevent
+	surprises.
+
+2002-11-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_self): __THROW must come before
+	attribute definitions.  Patch by Luca Barbieri <ldb@ldb.ods.org>.
+
+2002-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_getspecific.c: Optimize access to first 2nd-level array.
+	* pthread_setspecific.c: Likewise.
+
+2002-11-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/createthread.c: Remove CLONE_ flags
+	definitions.  Get them from the official place.
+	* sysdeps/unix/sysv/linux/i386/fork.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/createthread.c: Update CLONE_* flags.
+	Use new CLONE_ flags in clone() calls.
+
+	* sysdeps/unix/sysv/linux/fork.c: Use ARCH_FORK to actually fork.
+	* sysdeps/unix/sysv/linux/i386/fork.c: New file.
+
+	* Versions: Add pthread_* functions for libc.
+	* forward.c: New file.
+
+	* sysdeps/pthread/Makefile (libpthread-sysdeps_routines): Add
+	errno-loc.
+	* herrno.c: New file.
+	* res.c: New file.
+
+	* Makefile (libpthread-routines): Remove sem_post, sem_wait,
+	sem_trywait, and sem_timedwait.  Add herrno and res.
+	* sem_init.c: Don't initialize lock and waiters members.
+	* sem_open.c: Likewise.
+	* sem_post.c: Removed.
+	* sem_wait.c: Removed.
+	* sem_trywait.c: Removed.
+	* sem_timedwait.c: Removed.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelsem.S: Complete rewrite.
+	Includes full implementations of sem_post, sem_wait, sem_trywait,
+	and sem_timedwait.
+	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h (lll_sem_post): Adjust
+	for new implementation.
+	* sysdeps/unix/sysv/linux/internaltypes.h (struct sem): Remove lock
+	and waiters fields.
+
+	* tst-sem3.c: Improve error message.
+	* tst-signal3.c: Likewise.
+
+	* init.c (__pthread_initialize_minimal): Use set_tid_address syscall
+	to tell the kernel about the termination futex and to initialize tid
+	member.  Don't initialize main_thread.
+	* descr.h (struct pthread): Remove main_thread member.
+	* cancelllation.c (__do_cancel): Remove code handling main thread.
+	The main thread is not special anymore.
+
+	* allocatestack.c (__reclaim_stacks): Mark stacks as unused.  Add
+	size of the stacks to stack_cache_actsize.
+
+	* pt-readv.c: Add missing "defined".
+	* pt-sigwait.c: Likewise.
+	* pt-writev.c: Likewise.
+
+2002-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions: Export __connect from libpthread.
+	Patch by Luca Barbieri <ldb@ldb.ods.org>.
+
+	* Makefile (libpthread-routines): Add pt-raise.
+	* sysdeps/unix/sysv/linux/raise.c: New file.
+	* sysdeps/unix/sysv/linux/pt-raise.c: New file.
+	* sysdeps/generic/pt-raise.c: New file.
+
+	* pthread_cond_init.c: Initialize all data elements of the condvar
+	structure.  Patch by Luca Barbieri <ldb@ldb.ods.org>.
+
+	* pthread_attr_init.c: Actually implement 2.0 compatibility version.
+	* pthread_create.c: Likewise.
+
+	* Makefile (tests): Add tst-key1, tst-key2, tst-key3.
+	* tst-key1.c: New file.
+	* tst-key2.c: New file.
+	* tst-key3.c: New file.
+
+	* Versions: Export pthread_detach for version GLIBC_2.0.
+	Reported by Saurabh Desai <sdesai@austin.ibm.com>.
+
+2002-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_key_create.c: Terminate search after an unused key was found.
+	Patch by Luca Barbieri <ldb@ldb.ods.org>.
+
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Return zero.
+	Patch by Luca Barbieri <ldb@ldb.ods.org>.
+
+2002-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelsem.S: Use slow generic
+	dynamic lookup for errno in PIC.
+
+	* allocatestack.c (get_cached_stack): Rearrange code slightly to
+	release the stack lock as soon as possible.
+	Call _dl_allocate_tls_init for TCB from the cache to re-initialize
+	the static TLS block.
+	(allocate_stack): Call _dl_allocate_tls_init for user-provided stack.
+
+	* cancellation.c: Renamed from cancelation.c.
+	* Makefile: Adjust accordingly.
+	* pthreadP.h (CANCELLATION_P): Renamed from CANCELATION_P.
+	* cleanup_defer.c: Use CANCELLATION_P.
+	* pthread_testcancel.c: Likewise.
+	* descr.h: Fix spelling in comments.
+	* init.c: Likewise.
+	* pthread_getattr_np.c: Likewise.
+	* pthread_getschedparam.c: Likewise.
+	* pthread_setschedparam.c: Likewise.
+	* Versions: Likewise.
+
+	* pt-pselect.c: New file.
+	* Makefile (libpthread-routines): Add pt-pselect.
+	* Versions: Add pselect.
+
+	* tst-cancel4.c: New file.
+	* Makefile (tests): Add tst-cancel4.
+
+2002-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_mutex_lock.c: Always record lock ownership.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+
+	* pt-readv.c: New file.
+	* pt-writev.c: New file.
+	* pt-creat.c: New file.
+	* pt-msgrcv.c: New file.
+	* pt-msgsnd.c: New file.
+	* pt-poll.c: New file.
+	* pt-select.c: New file.
+	* pt-sigpause.c: New file.
+	* pt-sigsuspend.c: New file.
+	* pt-sigwait.c: New file.
+	* pt-sigwaitinfo.c: New file.
+	* pt-waitid.c: New file.
+	* Makefile (libpthread-routines): Add pt-readv, pt-writev, pt-creat,
+	pt-msgrcv, pt-msgsnd, pt-poll, pt-select, pt-sigpause, pt-sigsuspend,
+	pt-sigwait, pt-sigwaitinfo, and pt-waitid.
+	* Versions: Add all the new functions.
+
+	* tst-exit1.c: New file.
+	* Makefile (tests): Add tst-exit1.
+
+	* sem_timedwait.c: Minor optimization for more optimal fastpath.
+
+2002-10-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* pt-fcntl.c: Only enable asynchronous cancellation for F_SETLKW.
+
+	* pthread_join.c: Enable asynchronous cancellation around lll_wait_tid
+	call.  pthread_join is an official cancellation point.
+	* pthread_timedjoin.c: Likewise.
+
+	* pthread_cond_wait.c: Revert order in which internal lock are dropped
+	and the condvar's mutex are retrieved.
+	* pthread_cond_timedwait.c: Likewise.
+	Reported by dice@saros.East.Sun.COM.
+
+2002-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h: Cut out all type definitions and move them...
+	* sysdeps/unix/sysv/linux/internaltypes.h: ...here.  New file.
+	* pthreadP.h: Include <internaltypes.h>.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h (lll_sem_post): Little
+	performance tweaks.
+
+	* sem_trywait.c: Shuffle #includes around to get right order.
+	* sem_timedwait.c: Likewise.
+	* sem_post.c: Likewise.
+	* sem_wait.c: Likewise.
+
+	* nptl 0.3 released.
+
+	* Makefile (tests): Add tst-signal3.
+	* tst-signal3.c: New file.
+
+2002-10-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h: Tell the compiler that
+	the asms modify the sem object.
+	(__lll_sem_timedwait): Now takes struct sem* as first parameter.
+
+	* sysdeps/unix/sysv/linux/i386/bits/semaphore.h (sem_t): Don't expose
+	the actual members.
+	* pthreadP.h (struct sem): New type.  Actual semaphore type.
+	* semaphoreP.h: Include pthreadP.h.
+	* sem_getvalue.c: Adjust to sem_t change.
+	* sem_init.c: Likewise.
+	* sem_open.c: Likewise.
+	* sem_post.c: Likewise.
+	* sem_timedwait.c: Likewise.
+	* sem_trywait.c: Likewise.
+	* sem_wait.c: Likewise.
+
+2002-10-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-basic2, tst-exec1, tst-exec3, tst-exec3.
+	* tst-basic2.c: New file.
+	* tst-exec1.c: New file.
+	* tst-exec2.c: New file.
+	* tst-exec3.c: New file.
+
+	* tst-fork1.c: Remove extra */.
+
+	* nptl 0.2 released.  The API for IA-32 is complete.

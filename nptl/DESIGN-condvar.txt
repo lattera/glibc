@@ -1,0 +1,90 @@
+Conditional Variable pseudocode.
+================================
+
+       int pthread_cond_timedwait (pthread_cond_t *cv, pthread_mutex_t *mutex);
+       int pthread_cond_signal    (pthread_cond_t *cv);
+       int pthread_cond_broadcast (pthread_cond_t *cv);
+
+struct pthread_cond_t {
+
+   unsigned int lock:
+
+         internal mutex
+
+   unsigned int nr_wakers:
+
+         number of threads signalled to be woken up.
+
+   unsigned int nr_sleepers:
+
+         number of threads waiting for the cv.
+
+}
+
+#define ALL_THREADS (1 << (BITS_PER_LONG-1))
+
+cond_wait_timeout(cv, mutex, timeout):
+{
+   lll_lock(cv->lock);
+   mutex_unlock(mutex);
+
+   cv->nr_sleepers++;
+   for (;;) {
+
+       if (cv->nr_wakers) {
+           cv->nr_wakers--;
+           break;
+       }
+       val = cv->nr_wakers;
+
+       lll_unlock(cv->lock);
+
+       ret = FUTEX WAIT (cv->nr_wakers, val, timeout)
+
+       lll_lock(cv->lock);
+
+       if (ret == TIMEOUT)
+         break;
+       ret = 0;
+   }
+   if (!--cv->nr_sleepers)
+     cv->nr_wakers = 0; /* no memory of wakeups */
+   lll_unlock(cv->lock);
+   mutex_lock(mutex);
+
+   return ret;
+}
+
+cond_signal(cv)
+{
+   int do_wakeup = 0;
+
+   lll_lock(cv->lock);
+   if (cv->nr_sleepers) {
+     if (!++cv->nr_wakers) /* overflow detection for the nutcase */
+       cv->nr_wakers = ALL_THREADS;
+     do_wakeup = 1;
+   }
+   lll_unlock(cv->lock);
+   if (do_wakeup)
+     FUTEX WAKE (cv->nr_wakers, 1)
+}
+
+cond_broadcast(cv)
+{
+   int do_wakeup = 0;
+
+   lll_lock(cv->lock);
+   if (cv->nr_sleepers) {
+     cv->nr_wakers |= ALL_THREADS;
+     do_wakeup = 1;
+   }
+   lll_unlock(cv->lock);
+   if (do_wakeup)
+     FUTEX WAKE (cv->nr_wakers, ALL_THREADS);
+}
+
+weaknesses of the implementation:
+
+ it might generate spurious wakeups in the broadcast case, but those are
+ allowed by POSIX.
