@@ -1,3 +1,7 @@
+1998-04-24  5:45  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/bits/setjmp.h (_JMPBUF_UNWINDS): Added.
+
 Wed Apr 22 11:06:09 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/bits/setjmp.h (_JMPBUF_UNWINDS): Added.
