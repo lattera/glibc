@@ -1,5 +1,14 @@
 2000-04-17  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Optimize a bit
+	as suggested by Ulrich Drepper.
+	(__dl_runtime_resolve): Remove unused variable, initialize sym
+	directly.
+	(RTLD_START): Document OFFSET_GP_GOT.
+	(OFFSET_GP_GOT): New magic value.
+	(elf_mips_got_from_gpreg): Use OFFSET_GP_GOT.
+	(elf_machine_got_rel): Only declare strtab if needed.
+
 	* sysdeps/mips/add_n.S: Add newline at EOF.
 	* sysdeps/mips/rshift.S: Likewise.
 	* sysdeps/mips/mul_1.S: Likewise.
